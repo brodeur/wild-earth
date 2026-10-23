@@ -20,7 +20,7 @@ export class RavenFlight {
     this.yaw += yawIn * turn * dt;
     this.pitch = THREE.MathUtils.clamp(this.pitch + pitchIn * pitchRate * dt, -1.2, 0.9);
     if (!pitchIn) this.pitch = THREE.MathUtils.lerp(this.pitch, -0.05, 1 - Math.exp(-dt * 0.6));   // settle toward a shallow glide
-    this.roll = THREE.MathUtils.lerp(this.roll, -yawIn * 0.6, 1 - Math.exp(-dt * 4));
+    this.roll = THREE.MathUtils.lerp(this.roll, yawIn * 0.6, 1 - Math.exp(-dt * 4));   // bank into the turn: left turn dips the left wing
     if (k.has('KeyW')) this.speed += 8 * dt; if (k.has('KeyS')) this.speed -= 8 * dt;
     if (k.has('ShiftLeft') || k.has('ShiftRight')) this.speed += 20 * dt;
     // Diving speeds up, climbing slows down; gliding settles toward cruise.

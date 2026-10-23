@@ -1,8 +1,8 @@
 # Wild Earth
 
 A federated MMO set in the real world as it would be with no humans, played as animals.
-This repository is the proof of concept for one tile: the Sierra foothills cell that
-contains Placerville, CA.
+This repository is the proof of concept, currently two tiles in the Sierra foothills
+around Placerville, CA. The goal is in [docs/brief.md](docs/brief.md).
 
 Three workstreams share one contract, the [tile package spec](docs/tile-spec.md):
 
@@ -105,12 +105,9 @@ Resource scores are first-guess tables, meant to be tuned in the viewer. Species
 keep edits in the browser and export them as JSON; appending them to the manifest's
 `edits` log is the next step for the local-knowledge workflow.
 
-## Next
+## Where things stand
 
-1. Erase masked landforms from the DEM (vegetation backfill is done).
-2. Density surfaces per species from CWHR habitat suitability, then the +10 year delta.
-3. Hand-drawn mask polygons in the viewer (mining scars, ditches, terraces).
-4. Animals: rigged glTF models for the demo species, driven by the activity calendar,
-   with the perception matrix deciding who is rendered for whom.
-5. Unreal import of `terrain/dem.tif` as a Landscape with PCG scattering, when fidelity
-   beyond the browser is needed.
+- [docs/brief.md](docs/brief.md): the goal.
+- [docs/decisions.md](docs/decisions.md): what was decided, what was rejected, and why.
+- [docs/roadmap.md](docs/roadmap.md): done, next in order, then, parked. Kept current at
+  each commit.
