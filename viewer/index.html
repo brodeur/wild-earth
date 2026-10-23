@@ -39,6 +39,8 @@
   .acts li { margin:4px 0; }
   .acts b { color:var(--accent); font-weight:600; }
   .res { color:var(--muted); }
+  .res b { color:var(--muted); font-weight:500; cursor:pointer; border-bottom:1px dotted var(--muted); }
+  .res b.on { color:var(--accent); border-color:var(--accent); }
   table { width:100%; border-collapse:collapse; font-size:12px; }
   td { padding:3px 4px; border-bottom:1px solid var(--line); vertical-align:top; }
   td:first-child { color:var(--muted); white-space:nowrap; }
@@ -64,11 +66,13 @@
 
     <h2>View</h2>
     <div class="row seg"><button id="v2d" class="on">2D</button><button id="v3d">3D</button></div>
-    <div class="row seg"><button id="texRewild" class="on">Rewilded (hillshade)</button><button id="texReal">Real (NAIP)</button></div>
+    <div class="row seg"><button id="texRewild" class="on">Rewilded</button><button id="texHill">Hillshade</button><button id="texReal">Real (NAIP)</button></div>
     <div class="row"><span class="sub" style="width:95px">Exaggeration</span><input id="exag" type="range" min="1" max="3" step="0.25" value="1.5" style="flex:1"><span id="exagv" class="sub">1.5×</span></div>
     <label class="chk"><input type="checkbox" id="lyMask" checked> Human footprint (vector)</label>
     <label class="chk"><input type="checkbox" id="lyMaskR"> Erase mask (raster)</label>
     <label class="chk"><input type="checkbox" id="lyHydro" checked> Streams and waterbodies</label>
+    <label class="chk"><input type="checkbox" id="lyVeg"> Habitat (vegetation)</label>
+    <label class="chk" style="padding-left:22px"><input type="checkbox" id="lyVegPresent"> present-day, before backfill</label>
     <label class="chk"><input type="checkbox" id="lyPts" checked> Species occurrences</label>
     <label class="chk"><input type="checkbox" id="lyHeat"> Density heatmap (2D only)</label>
 
@@ -80,6 +84,7 @@
     <div class="row seg" id="seasons"></div>
     <label class="chk"><input type="checkbox" id="seasonFilter" checked> Only show occurrences from this season</label>
     <ul class="acts" id="acts" style="padding-left:18px;margin:6px 0"></ul>
+    <div class="row"><span class="sub" style="width:95px">Resource map</span><select id="resSel" style="flex:1"><option value="none">none</option></select></div>
 
     <h2>Species <span class="sub" id="spCount"></span></h2>
     <div id="species"></div>
@@ -103,7 +108,7 @@ const MASK_COLORS = { building:[240,80,80], road:[255,170,60], rail:[200,120,255
 const DEFAULT_SEASONS = { winter:[12,1,2], spring:[3,4,5], summer:[6,7,8], fall:[9,10,11] };
 
 const S = { tiles:[], tile:null, m:null, data:{}, view3d:false, texture:'rewilded', exag:1.5,
-  layers:{ mask:true, maskR:false, hydro:true, pts:true, heat:false }, observer:null, season:null,
+  layers:{ mask:true, maskR:false, hydro:true, pts:true, heat:false, veg:false, vegPresent:false }, resource:'none', observer:null, season:null,
   seasonFilter:true, hidden:new Set(), edits:[] };
 
 const $ = id => document.getElementById(id);
@@ -140,6 +145,7 @@ async function loadTile(id){
     ['seasonal', 'species/seasonal.json', true], ['inventory', 'species/inventory.json', true],
     ['perception', 'perception.json', true], ['calendar', 'calendar.json', true],
     ['mask', 'footprint/mask.geojson', true], ['flow', 'hydro/flowlines.geojson', true], ['water', 'hydro/waterbodies.geojson', true],
+    ['veg', 'vegetation/classes.json', true], ['res', 'resources/resources.json', true],
   ];
   await Promise.all(want.map(async ([k,rel,opt]) => { d[k] = await getJSON(rel, opt); }));
   d.species = d.species || []; d.seasons = d.calendar?.seasons || DEFAULT_SEASONS;
@@ -158,12 +164,17 @@ function renderSide(){
   $('statusBadges').innerHTML = [
     `<span class="badge ${st.human_landforms_removed?'ok':'warn'}">landforms ${st.human_landforms_removed?'rewilded':'present-day'}</span>`,
     `<span class="badge ${st.hydrology_rewilded?'ok':'warn'}">hydrology ${st.hydrology_rewilded?'rewilded':'present-day'}</span>`,
+    `<span class="badge ${st.vegetation_backfilled?'ok':'warn'}">vegetation ${st.vegetation_backfilled?'backfilled':'present-day'}</span>`,
     `<span class="badge">+${st.projection_years||0} yr</span>`,
     `<span class="badge">${m.crs}</span>`].join(' ');
   $('observer').innerHTML = d.species.map(s=>`<option value="${s.code}">${s.common} (${s.role})</option>`).join('');
   $('observer').value = S.observer;
   $('seasons').innerHTML = Object.keys(d.seasons).map(k=>`<button data-s="${k}" class="${k===S.season?'on':''}">${k}</button>`).join('');
   $('seasons').querySelectorAll('button').forEach(b=> b.onclick = ()=>{ S.season=b.dataset.s; renderSide(); render(); });
+  const res = d.res?.resources || [];
+  $('resSel').innerHTML = '<option value="none">none</option>' + res.map(r=>`<option value="${r}">${r.replace(/_/g,' ')}</option>`).join('');
+  if(!res.includes(S.resource)) S.resource='none';
+  $('resSel').value = S.resource;
   renderObserver(); renderSpecies(); renderInventory(); renderPipeline(); renderEdits();
 }
 
@@ -176,8 +187,10 @@ function renderObserver(){
     Object.entries(se).map(([k,v])=>`${k} ${v.range_m} m${v.color?' · '+v.color:''}`).join(' · ');
   const acts = S.data.calendar?.activities?.[S.observer]?.[S.season] || [];
   const names = Object.fromEntries(S.data.species.map(s=>[s.code,s.common]));
-  $('acts').innerHTML = acts.length ? acts.map(a=>`<li><b>${a.activity}</b>${a.goal?' — '+a.goal:''}<br><span class="res">needs: ${a.resources.map(r=>names[r]||r).join(', ')||'–'}</span></li>`).join('')
+  const resList = S.data.res?.resources || [];
+  $('acts').innerHTML = acts.length ? acts.map(a=>`<li><b>${a.activity}</b>${a.goal?' — '+a.goal:''}<br><span class="res">needs: ${a.resources.map(r=> resList.includes(r) ? `<b data-res="${r}" class="${S.resource===r?'on':''}">${r.replace(/_/g,' ')}</b>` : (names[r]||r)).join(', ')||'–'}</span></li>`).join('')
     : '<li class="sub">no activities defined for this season</li>';
+  $('acts').querySelectorAll('b[data-res]').forEach(el=> el.onclick = ()=>{ S.resource = S.resource===el.dataset.res ? 'none' : el.dataset.res; $('resSel').value=S.resource; renderObserver(); render(); });
 }
 
 function renderSpecies(){
@@ -279,7 +292,8 @@ function render(){
   const hasTerrain = !!L['terrain.terrain_rgb'];
   // Drape/offset onto terrain only when a terrain layer exists; otherwise draped layers never draw.
   const ext = hasTerrain && TerrainExt ? [new TerrainExt()] : [];
-  const texture = S.texture==='real' && L['imagery.naip_png'] ? base()+L['imagery.naip_png'].path : (L['terrain.hillshade'] ? base()+L['terrain.hillshade'].path : null);
+  const texPath = S.texture==='real' ? L['imagery.naip_png'] : S.texture==='hillshade' ? L['terrain.hillshade'] : (L['terrain.rewilded'] || L['terrain.hillshade']);
+  const texture = texPath ? base()+texPath.path : null;
   if(hasTerrain){
     layers.push(new deck.TerrainLayer({ id:'terrain', elevationData: base()+L['terrain.terrain_rgb'].path, texture, bounds:[w,s,e,n],
       elevationDecoder: elevationDecoder(), meshMaxError: 4, material:false, operation:'terrain+draw',
@@ -289,6 +303,12 @@ function render(){
   }
   if(S.layers.maskR && L['footprint.mask_raster'])
     layers.push(new deck.BitmapLayer({ id:'maskR', image: base()+L['footprint.mask_raster'].path, bounds:[w,s,e,n], tintColor:[255,70,50], opacity:.55, transparentColor:[0,0,0,0], extensions:ext, terrainDrawMode:'drape' }));
+  const vegKey = S.layers.vegPresent ? 'vegetation.habitat_present_png' : 'vegetation.habitat_png';
+  if(S.layers.veg && L[vegKey])
+    layers.push(new deck.BitmapLayer({ id:'veg', image: base()+L[vegKey].path, bounds:[w,s,e,n], opacity:.8, extensions:ext, terrainDrawMode:'drape' }));
+  const resPng = S.resource!=='none' && d.res?.png?.[S.resource]?.[S.season];
+  if(resPng)
+    layers.push(new deck.BitmapLayer({ id:'res', image: base()+resPng, bounds: d.res.png_bounds || [w,s,e,n], opacity:1, extensions:ext, terrainDrawMode:'drape' }));
   if(S.layers.hydro && d.water)
     layers.push(new deck.GeoJsonLayer({ id:'water', data:d.water, filled:true, stroked:true, getFillColor:[70,130,220,120], getLineColor:[90,160,255,200], lineWidthMinPixels:1, pickable:true, extensions:ext, terrainDrawMode:'drape' }));
   if(S.layers.hydro && d.flow)
@@ -303,7 +323,16 @@ function render(){
     layers.push(new deck.ScatterplotLayer({ id:'occ', data:occ, getPosition:f=>f.geometry.coordinates, getFillColor:f=>[...colorOf[f.properties.species_code], f.properties.species_code===S.observer?255:190],
       getRadius:f=> f.properties.species_code===S.observer?14:9, radiusUnits:'pixels', radiusMinPixels:3, stroked:true, getLineColor:[0,0,0,160], lineWidthMinPixels:1, pickable:true, extensions:ext, terrainDrawMode:'offset' }));
   deckgl.setProps({ layers });
-  $('legend').innerHTML = Object.entries(MASK_COLORS).filter(([k])=> (d.mask?.features||[]).some(f=>f.properties.class===k)).map(([k,c])=>`<div><span class="sw" style="background:rgb(${c})"></span>${k}</div>`).join('') + `<div><span class="sw" style="background:rgb(90,170,255)"></span>stream</div>`;
+  let legend = '';
+  if(S.layers.mask) legend += Object.entries(MASK_COLORS).filter(([k])=> (d.mask?.features||[]).some(f=>f.properties.class===k)).map(([k,c])=>`<div><span class="sw" style="background:rgb(${c})"></span>${k}</div>`).join('');
+  if(S.layers.hydro) legend += `<div><span class="sw" style="background:rgb(90,170,255)"></span>stream</div>`;
+  const hab = d.veg?.habitat;
+  if((S.layers.veg || S.texture==='rewilded') && hab){
+    const fr = L[S.layers.vegPresent ? 'vegetation.habitat_present' : 'vegetation.habitat']?.fractions || {};
+    legend += `<div style="margin-top:6px;color:var(--muted)">habitat${S.layers.vegPresent?' (present-day)':' (rewilded)'}</div>` + Object.values(hab).filter(h=>fr[h.name]!=null).sort((a,b)=>fr[b.name]-fr[a.name]).map(h=>`<div><span class="sw" style="background:rgb(${h.color});height:8px"></span>${h.name.replace(/_/g,' ')} <span style="opacity:.6">${(fr[h.name]*100).toFixed(0)}%</span></div>`).join('');
+  }
+  if(resPng) legend += `<div style="margin-top:6px"><span class="sw" style="background:rgb(${d.res.colors[S.resource]});height:8px"></span>${S.resource.replace(/_/g,' ')} · ${S.season} · mean ${d.res.mean_score?.[S.resource]?.[S.season] ?? '?'}/100</div>`;
+  $('legend').innerHTML = legend;
   $('status').textContent = `${S.tile} · ${occ.length} occurrences shown · ${S.season}` + (perceived()?` · as ${d.species.find(x=>x.code===S.observer)?.common}`:'');
 }
 
@@ -311,10 +340,11 @@ function render(){
 $('tileSel').onchange = e=> loadTile(e.target.value);
 $('v2d').onclick = ()=>{ S.view3d=false; $('v2d').classList.add('on'); $('v3d').classList.remove('on'); initDeck(); render(); };
 $('v3d').onclick = ()=>{ S.view3d=true; $('v3d').classList.add('on'); $('v2d').classList.remove('on'); initDeck(); render(); };
-$('texRewild').onclick = ()=>{ S.texture='rewilded'; $('texRewild').classList.add('on'); $('texReal').classList.remove('on'); render(); };
-$('texReal').onclick = ()=>{ S.texture='real'; $('texReal').classList.add('on'); $('texRewild').classList.remove('on'); render(); };
+for (const [id,t] of [['texRewild','rewilded'],['texHill','hillshade'],['texReal','real']])
+  $(id).onclick = ()=>{ S.texture=t; ['texRewild','texHill','texReal'].forEach(i=>$(i).classList.toggle('on', i===id)); render(); };
+$('resSel').onchange = e=>{ S.resource=e.target.value; renderObserver(); render(); };
 $('exag').oninput = e=>{ S.exag=+e.target.value; $('exagv').textContent=S.exag+'×'; render(); };
-for (const [id,k] of [['lyMask','mask'],['lyMaskR','maskR'],['lyHydro','hydro'],['lyPts','pts'],['lyHeat','heat']])
+for (const [id,k] of [['lyMask','mask'],['lyMaskR','maskR'],['lyHydro','hydro'],['lyPts','pts'],['lyHeat','heat'],['lyVeg','veg'],['lyVegPresent','vegPresent']])
   $(id).onchange = e=>{ S.layers[k]=e.target.checked; render(); };
 $('observer').onchange = e=>{ S.observer=e.target.value; renderObserver(); renderSpecies(); render(); };
 $('seasonFilter').onchange = e=>{ S.seasonFilter=e.target.checked; render(); };

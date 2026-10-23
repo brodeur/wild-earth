@@ -1,5 +1,5 @@
 {
- "spec_version": "0.1.0",
+ "spec_version": "0.2.0",
  "tile_id": "utm10n_690_4280",
  "crs": "EPSG:32610",
  "bounds": [
@@ -15,15 +15,16 @@
   38.73825606650576
  ],
  "size_m": 10000,
- "generated_at": "2026-10-23T15:58:07Z",
+ "generated_at": "2026-10-23T16:50:39Z",
  "generator": {
   "name": "wild-earth-pipeline",
-  "version": "0.1.0"
+  "version": "0.2.0"
  },
  "status": {
   "human_landforms_removed": false,
   "hydrology_rewilded": false,
-  "projection_years": 0
+  "projection_years": 0,
+  "vegetation_backfilled": true
  },
  "layers": {
   "footprint.mask": {
@@ -212,6 +213,216 @@
    "derived_from": "imagery.naip",
    "sha256": "27819ac01761dd0de7fa2c30616247e0e004fba700bcdd89bb449426410b099e",
    "bytes": 12540162
+  },
+  "vegetation.evt": {
+   "path": "vegetation/evt.tif",
+   "kind": "raster",
+   "resolution_m": 30.0,
+   "source": "landfire",
+   "classes": 44,
+   "sha256": "f48c6219979d517d5b7e4ea4c01d94b06e3d3de9e21e18bbf9fe96d2915d37a7",
+   "bytes": 64429
+  },
+  "vegetation.evc": {
+   "path": "vegetation/evc.tif",
+   "kind": "raster",
+   "resolution_m": 30.0,
+   "source": "landfire",
+   "classes": 192,
+   "sha256": "2679e72f7474feb13aa451b75cc33affbeb7c92a2e83f1faf4c98f66b9e6a0f8",
+   "bytes": 111985
+  },
+  "vegetation.evh": {
+   "path": "vegetation/evh.tif",
+   "kind": "raster",
+   "resolution_m": 30.0,
+   "source": "landfire",
+   "classes": 89,
+   "sha256": "a160249e6ee65065968f1a783f2cb551596409e108909b64f93d677600af6db2",
+   "bytes": 99742
+  },
+  "vegetation.bps": {
+   "path": "vegetation/bps.tif",
+   "kind": "raster",
+   "resolution_m": 30.0,
+   "source": "landfire",
+   "classes": 18,
+   "sha256": "c6305d2fcdb29bea931449f38285de3cdce8c4d654b91f8914fae507a86d205f",
+   "bytes": 30209
+  },
+  "vegetation.habitat_present": {
+   "path": "vegetation/habitat_present.tif",
+   "kind": "raster",
+   "resolution_m": 30.0,
+   "derived_from": "vegetation.evt",
+   "fractions": {
+    "oak_woodland": 0.1091,
+    "conifer_forest": 0.4078,
+    "mixed_forest": 0.097,
+    "chaparral": 0.0423,
+    "grassland": 0.0584,
+    "riparian": 0.0228,
+    "water": 0.0023,
+    "barren": 0.0044,
+    "human": 0.2558
+   },
+   "sha256": "c4a31db5b9eaa3652dd956b2cf0991babc8df8bbfedfadad8b89301a83ef31d3",
+   "bytes": 30974
+  },
+  "vegetation.habitat": {
+   "path": "vegetation/habitat.tif",
+   "kind": "raster",
+   "resolution_m": 30.0,
+   "derived_from": [
+    "vegetation.evt",
+    "vegetation.bps"
+   ],
+   "backfilled_fraction": 0.2558,
+   "fractions": {
+    "oak_woodland": 0.3089,
+    "conifer_forest": 0.4217,
+    "mixed_forest": 0.1117,
+    "chaparral": 0.055,
+    "grassland": 0.0584,
+    "riparian": 0.0361,
+    "water": 0.0023,
+    "barren": 0.0058
+   },
+   "sha256": "a45bc274d3eac0bc77bd9b2e8c53de956fae990bbc3c1382db239f4857038154",
+   "bytes": 29400
+  },
+  "vegetation.classes": {
+   "path": "vegetation/classes.json",
+   "kind": "table",
+   "sha256": "99b7d20ec071af2aff5d4678a17bb136478a34eb1fa48bb3a215ce31a3a8c0c5",
+   "bytes": 34562
+  },
+  "vegetation.habitat_png": {
+   "path": "vegetation/habitat.png",
+   "kind": "raster",
+   "crs": "EPSG:4326",
+   "bounds": [
+    -120.81668392006142,
+    38.64600291531168,
+    -120.69897205117006,
+    38.73825606650576
+   ],
+   "pixels": 668,
+   "derived_from": "vegetation.habitat",
+   "sha256": "5121d1b7391e2758b3b5aa0266f6a24559c7e44419c8effafe83c18b7eeccf6a",
+   "bytes": 94354
+  },
+  "vegetation.habitat_present_png": {
+   "path": "vegetation/habitat_present.png",
+   "kind": "raster",
+   "crs": "EPSG:4326",
+   "bounds": [
+    -120.81668392006142,
+    38.64600291531168,
+    -120.69897205117006,
+    38.73825606650576
+   ],
+   "pixels": 668,
+   "derived_from": "vegetation.habitat_present",
+   "sha256": "0e8245e23fc7e443b2f6de655964daf30079ad005dd7575369b1ec386d7d5379",
+   "bytes": 103400
+  },
+  "terrain.rewilded": {
+   "path": "terrain/rewilded.png",
+   "kind": "raster",
+   "crs": "EPSG:4326",
+   "bounds": [
+    -120.81668392006142,
+    38.64600291531168,
+    -120.69897205117006,
+    38.73825606650576
+   ],
+   "pixels": 2000,
+   "derived_from": [
+    "terrain.hillshade",
+    "vegetation.habitat"
+   ],
+   "sha256": "214dc12f36c7785bdc9d44afedf6ceb20609fc7919efd8c207b36cbc8aeba707",
+   "bytes": 4365890
+  },
+  "resources": {
+   "path": "resources/resources.json",
+   "kind": "table",
+   "derived_from": [
+    "vegetation.habitat",
+    "vegetation.evc",
+    "terrain.dem",
+    "hydro.flowlines"
+   ],
+   "resources": [
+    "acorn_mast",
+    "grass_forbs",
+    "browse",
+    "cover",
+    "insects",
+    "cavity",
+    "cliff_or_snag",
+    "burrow",
+    "water"
+   ],
+   "mean_score": {
+    "acorn_mast": {
+     "winter": 19.3,
+     "spring": 3.9,
+     "summer": 1.9,
+     "fall": 38.7
+    },
+    "grass_forbs": {
+     "winter": 18.2,
+     "spring": 30.3,
+     "summer": 6.1,
+     "fall": 9.1
+    },
+    "browse": {
+     "winter": 24.7,
+     "spring": 41.2,
+     "summer": 28.8,
+     "fall": 20.6
+    },
+    "cover": {
+     "winter": 61.2,
+     "spring": 72.0,
+     "summer": 72.0,
+     "fall": 72.0
+    },
+    "insects": {
+     "winter": 5.1,
+     "spring": 51.1,
+     "summer": 40.9,
+     "fall": 20.4
+    },
+    "cavity": {
+     "winter": 44.0,
+     "spring": 44.0,
+     "summer": 44.0,
+     "fall": 44.0
+    },
+    "cliff_or_snag": {
+     "winter": 50.8,
+     "spring": 50.8,
+     "summer": 50.8,
+     "fall": 50.8
+    },
+    "burrow": {
+     "winter": 31.4,
+     "spring": 39.3,
+     "summer": 39.3,
+     "fall": 39.3
+    },
+    "water": {
+     "winter": 58.4,
+     "spring": 58.4,
+     "summer": 19.3,
+     "fall": 19.3
+    }
+   },
+   "sha256": "8b39e5b4b334c293a30db073dff61725a49b832f07941cee4b0654278b27ac17",
+   "bytes": 5140
   }
  },
  "sources": {
@@ -242,6 +453,12 @@
   "usgs_3dep": {
    "name": "USGS 3D Elevation Program (3DEP) bare-earth DEM",
    "url": "https://elevation.nationalmap.gov/arcgis/rest/services/3DEPElevation/ImageServer",
+   "license": "public domain",
+   "retrieved": "2026-10-23"
+  },
+  "landfire": {
+   "name": "LANDFIRE LF 2025 (EVT, EVC, EVH) and LF 2016 Biophysical Settings",
+   "url": "https://landfire.gov",
    "license": "public domain",
    "retrieved": "2026-10-23"
   }
@@ -321,6 +538,18 @@
    "step": "derive",
    "at": "2026-10-23T15:58:07Z",
    "seconds": 8.5,
+   "ok": true
+  },
+  {
+   "step": "veg",
+   "at": "2026-10-23T16:50:21Z",
+   "seconds": 10.0,
+   "ok": true
+  },
+  {
+   "step": "derive",
+   "at": "2026-10-23T16:50:39Z",
+   "seconds": 17.2,
    "ok": true
   }
  ]

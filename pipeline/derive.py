@@ -123,3 +123,38 @@ def naip_png(tile: Tile, max_px=2500) -> dict:
     img = np.dstack([np.moveaxis(warped, 0, -1), alpha])
     Image.fromarray(img, "RGBA").save(tile.path("imagery/naip.png"), optimize=True)
     return _meta("imagery/naip.png", tile, size, {"derived_from": "imagery.naip"})
+
+
+def _habitat_rgba(tile: Tile, rel: str, size: int) -> np.ndarray:
+    from .habitat import COLORS
+    with rasterio.open(tile.path(rel)) as src:
+        hab = src.read(1)
+        tr = src.transform
+    warped = _to_wgs84(hab, tr, tile, Resampling.nearest, fill=0, size=size)
+    rgba = np.zeros((size, size, 4), "uint8")
+    for code, rgb in COLORS.items():
+        m = warped == code
+        rgba[m, :3] = rgb
+        rgba[m, 3] = 255
+    return rgba
+
+
+def habitat_png(tile: Tile, size=668) -> dict:
+    out = {}
+    for name, rel in (("habitat", "vegetation/habitat.tif"), ("habitat_present", "vegetation/habitat_present.tif")):
+        rgba = _habitat_rgba(tile, rel, size)
+        Image.fromarray(rgba, "RGBA").save(tile.path(f"vegetation/{name}.png"), optimize=True)
+        out[f"vegetation.{name}_png"] = _meta(f"vegetation/{name}.png", tile, size, {"derived_from": f"vegetation.{name}"})
+    return out
+
+
+def rewilded_texture(tile: Tile) -> dict:
+    """Hillshade modulated by rewilded habitat color: the 'no humans' map."""
+    hs = np.asarray(Image.open(tile.path("terrain/hillshade.png")).convert("RGBA"))
+    size = hs.shape[0]
+    hab = _habitat_rgba(tile, "vegetation/habitat.tif", size).astype("float32")
+    shade = hs[..., 0:1].astype("float32") / 255.0
+    rgb = (hab[..., :3] * (0.35 + 0.75 * shade)).clip(0, 255).astype("uint8")
+    alpha = np.minimum(hs[..., 3], hab[..., 3].astype("uint8"))
+    Image.fromarray(np.dstack([rgb, alpha]), "RGBA").save(tile.path("terrain/rewilded.png"), optimize=True)
+    return _meta("terrain/rewilded.png", tile, size, {"derived_from": ["terrain.hillshade", "vegetation.habitat"]})

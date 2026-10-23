@@ -1,6 +1,6 @@
 # Tile package spec
 
-**Version 0.1.0.** A tile package is the contract between the three workstreams:
+**Version 0.2.0.** A tile package is the contract between the three workstreams:
 the pipeline writes it, the viewer inspects and edits it, the renderer consumes it.
 Later it is the unit of exchange between federated nodes.
 
@@ -29,8 +29,18 @@ tiles/<tile_id>/
   footprint/mask.png            derived   rasterised mask, 0/255, same grid as dem
   hydro/flowlines.geojson       required  stream network
   hydro/waterbodies.geojson     required  lakes, ponds, reservoirs
-  vegetation/bps.tif            optional  LANDFIRE Biophysical Settings (what would grow)
-  vegetation/evt.tif            optional  LANDFIRE Existing Vegetation Type (what grows now)
+  vegetation/evt.tif            required  LANDFIRE Existing Vegetation Type (what grows now), 30 m
+  vegetation/evc.tif            required  LANDFIRE Existing Vegetation Cover (percent, coded)
+  vegetation/evh.tif            optional  LANDFIRE Existing Vegetation Height (coded)
+  vegetation/bps.tif            required  LANDFIRE Biophysical Settings (what would grow)
+  vegetation/habitat_present.tif required habitat class per pixel from EVT (human pixels = 9)
+  vegetation/habitat.tif        required  habitat class with human pixels backfilled from BpS
+  vegetation/classes.json       required  code tables for the codes present, incl. habitat mapping
+  vegetation/habitat.png        derived   RGBA habitat for viewers; habitat_present.png likewise
+  terrain/rewilded.png          derived   hillshade shaded by rewilded habitat color
+  resources/<resource>.tif      required  0-100 score, 4 bands = winter, spring, summer, fall, 30 m
+  resources/<resource>_<season>.png derived RGBA for viewers
+  resources/resources.json      required  resource list, tables used, png paths, mean scores
   species/species.json          required  species list with roles, senses, sources
   species/occurrences.geojson   required  occurrence points for listed species
   species/seasonal.json         derived   per-species counts by month (phenology proxy)
@@ -56,6 +66,7 @@ share the DEM grid unless the manifest says otherwise.
   "status": {
     "human_landforms_removed": false,
     "hydrology_rewilded": false,
+    "vegetation_backfilled": true,
     "projection_years": 0
   },
   "layers": {
@@ -85,6 +96,27 @@ Features carry `class` from this list, so the renderer knows what to backfill wi
 `cleared` are expected to come largely from hand-drawn edits in the viewer; the
 foothills carry hydraulic mining scars, ditches and orchard terraces that bare-earth
 lidar does not remove.
+
+## Habitat classes
+
+`habitat.tif` collapses LANDFIRE into nine classes gameplay and rendering can reason
+about: `oak_woodland`, `conifer_forest`, `mixed_forest`, `chaparral`, `grassland`,
+`riparian`, `water`, `barren`, `human`. Rules live in `pipeline/habitat.py`. `human`
+appears only in `habitat_present.tif`; in `habitat.tif` those pixels are replaced by
+the Biophysical Settings class (BpS `human` or unknown falls back to grassland).
+`status.vegetation_backfilled` is true once this has happened. The manifest records
+`backfilled_fraction` so the size of the rewrite is visible.
+
+## Resources
+
+Each resource named in `calendar.json` that is a map layer (not a prey species) has a
+raster: `acorn_mast`, `grass_forbs`, `browse`, `cover`, `insects`, `cavity`,
+`cliff_or_snag`, `burrow`, `water`. Scores are 0-100 per 30 m pixel per season, from a
+base score by habitat class times a seasonal multiplier, adjusted by canopy cover
+(cover, cavity), slope (cliff_or_snag) and distance to perennial or intermittent
+water (water). `resources.json` carries the tables used so the viewer can show them
+and a later version can tune them. `carrion` and `small_mammals` are entity classes,
+resolved at run time from species, not rasters.
 
 ## Species
 

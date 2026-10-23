@@ -11,8 +11,8 @@ from pathlib import Path
 
 from pyproj import CRS, Transformer
 
-SPEC_VERSION = "0.1.0"
-GENERATOR = {"name": "wild-earth-pipeline", "version": "0.1.0"}
+SPEC_VERSION = "0.2.0"
+GENERATOR = {"name": "wild-earth-pipeline", "version": "0.2.0"}
 USER_AGENT = "wild-earth-pipeline/0.1 (https://github.com/aaronbrodeur/wild-earth)"
 REPO_ROOT = Path(__file__).resolve().parent.parent
 TILES_DIR = REPO_ROOT / "tiles"

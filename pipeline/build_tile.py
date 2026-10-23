@@ -14,7 +14,7 @@ from .config import (GENERATOR, SOURCES, SPEC_VERSION, TILES_DIR, Tile, now_iso,
                      sha256, today, write_json)
 from .species_data import CALENDAR, PERCEPTION, SEASONS
 
-ALL_STEPS = ["dem", "naip", "osm", "hydro", "species", "derive"]
+ALL_STEPS = ["dem", "naip", "osm", "hydro", "veg", "species", "derive"]
 
 
 def load_manifest(tile: Tile) -> dict:
@@ -44,6 +44,7 @@ def add_layer(m: dict, tile: Tile, name: str, info: dict) -> None:
 
 def run(tile: Tile, steps: list[str], force=False) -> dict:
     m = load_manifest(tile)
+    m["spec_version"], m["generator"] = SPEC_VERSION, GENERATOR
     for step in steps:
         t0 = time.time()
         print(f"[{tile.tile_id}] {step} ...", flush=True)
@@ -61,6 +62,11 @@ def run(tile: Tile, steps: list[str], force=False) -> dict:
                 from .fetch_hydro import fetch_hydro
                 for k, v in fetch_hydro(tile, force).items():
                     add_layer(m, tile, k, v)
+            elif step == "veg":
+                from .fetch_vegetation import fetch_vegetation
+                for k, v in fetch_vegetation(tile, force).items():
+                    add_layer(m, tile, k, v)
+                m["status"]["vegetation_backfilled"] = True
             elif step == "species":
                 from .fetch_species import fetch_species
                 for k, v in fetch_species(tile, force).items():
@@ -78,6 +84,14 @@ def run(tile: Tile, steps: list[str], force=False) -> dict:
                         add_layer(m, tile, "footprint.mask_raster", derive.mask_raster(tile))
                 if "imagery.naip" in m["layers"]:
                     add_layer(m, tile, "imagery.naip_png", derive.naip_png(tile))
+                if "vegetation.habitat" in m["layers"]:
+                    for k, v in derive.habitat_png(tile).items():
+                        add_layer(m, tile, k, v)
+                    if "terrain.hillshade" in m["layers"]:
+                        add_layer(m, tile, "terrain.rewilded", derive.rewilded_texture(tile))
+                    if "hydro.flowlines" in m["layers"] and "terrain.dem" in m["layers"]:
+                        from .resources import derive_resources
+                        add_layer(m, tile, "resources", derive_resources(tile))
             else:
                 raise ValueError(f"unknown step {step}")
             m["log"].append({"step": step, "at": now_iso(), "seconds": round(time.time() - t0, 1), "ok": True})

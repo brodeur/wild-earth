@@ -1,5 +1,5 @@
 {
- "spec_version": "0.1.0",
+ "spec_version": "0.2.0",
  "tiles": [
   {
    "tile_id": "utm10n_690_4280",
@@ -9,7 +9,7 @@
     -120.69897205117006,
     38.73825606650576
    ],
-   "generated_at": "2026-10-23T15:58:07Z",
+   "generated_at": "2026-10-23T16:50:39Z",
    "layers": [
     "calendar",
     "footprint.mask",
@@ -19,13 +19,24 @@
     "imagery.naip",
     "imagery.naip_png",
     "perception",
+    "resources",
     "species.inventory",
     "species.list",
     "species.occurrences",
     "species.seasonal",
     "terrain.dem",
     "terrain.hillshade",
-    "terrain.terrain_rgb"
+    "terrain.rewilded",
+    "terrain.terrain_rgb",
+    "vegetation.bps",
+    "vegetation.classes",
+    "vegetation.evc",
+    "vegetation.evh",
+    "vegetation.evt",
+    "vegetation.habitat",
+    "vegetation.habitat_png",
+    "vegetation.habitat_present",
+    "vegetation.habitat_present_png"
    ]
   }
  ]

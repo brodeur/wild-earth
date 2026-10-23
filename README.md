@@ -50,6 +50,13 @@ Then open <http://127.0.0.1:8781/viewer/>.
 - Human footprint: OpenStreetMap buildings, roads, rail, power, canals, quarries,
   reservoirs, agriculture via Overpass. This is the erase-and-backfill mask.
 - Hydrology: NHDPlus HR flowlines and waterbodies, with reservoirs flagged.
+- Vegetation: LANDFIRE LF 2025 existing vegetation type, cover and height plus LF 2016
+  Biophysical Settings from the LANDFIRE image services (synchronous, fast). Collapsed
+  into nine habitat classes; human pixels are backfilled from Biophysical Settings.
+  In the home tile that rewrites a quarter of the land, mostly back to blue oak woodland.
+- Resources: per-season 0-100 rasters for every map resource the activity calendar
+  names (acorn mast, grass and forbs, browse, cover, insects, cavities, cliffs and
+  snags, burrows, water), from habitat class, canopy cover, slope and water proximity.
 - Species: GBIF occurrences for the ten demo species (GBIF carries iNaturalist and
   eBird records), monthly counts as a phenology proxy, and an inventory of the most
   recorded birds and mammals in the tile.
@@ -62,15 +69,15 @@ committed.
 ## What is honest about v0
 
 The manifest's `status` says so: landforms and hydrology are present-day, the
-projection is zero years. The footprint mask marks what to erase; nothing is erased
-yet. Species records are occurrences, not densities. The viewer's verify/flag buttons
+projection is zero years. Vegetation is backfilled, so the "rewilded" texture in the
+viewer is a real map, but the footprint mask is not yet erased from the terrain.
+Resource scores are first-guess tables, meant to be tuned in the viewer. Species records are occurrences, not densities. The viewer's verify/flag buttons
 keep edits in the browser and export them as JSON; appending them to the manifest's
 `edits` log is the next step for the local-knowledge workflow.
 
 ## Next
 
-1. Erase and backfill: remove masked landforms from the DEM, backfill vegetation from
-   LANDFIRE Biophysical Settings.
+1. Erase masked landforms from the DEM (vegetation backfill is done).
 2. Density surfaces per species from CWHR habitat suitability, then the +10 year delta.
 3. Hand-drawn mask polygons in the viewer (mining scars, ditches, terraces).
 4. Unreal import of `terrain/dem.tif` as a Landscape with PCG scattering.
