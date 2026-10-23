@@ -45,6 +45,10 @@ tiles/<tile_id>/
   client/texture.png            derived   rewilded texture on the metric tile grid
   client/habitat.png            derived   habitat class code in R, 30 m grid
   client/canopy.png             derived   tree / shrub / herb cover percent in R / G / B, 30 m grid
+  unreal/heightmap.png          derived   16-bit Landscape heightmap at a valid size (2017 px)
+  unreal/weights/<class>.png    derived   8-bit weight-blended layer per habitat class
+  unreal/canopy_<kind>.png      derived   8-bit tree / shrub / herb cover for PCG density
+  unreal/unreal.json            derived   Landscape scale, actor Z, component layout, layer list
   species/species.json          required  species list with roles, senses, sources
   species/occurrences.geojson   required  occurrence points for listed species
   species/seasonal.json         derived   per-species counts by month (phenology proxy)
@@ -190,6 +194,15 @@ nothing else from the package to render terrain and vegetation: heights, texture
 habitat class and canopy cover. Trees are not stored; the client grows them from
 habitat and canopy with a deterministic seed per 30 m cell, so every player sees the
 same tree in the same place without the package carrying a tree list.
+
+## Unreal export
+
+`unreal/` is the same tile as an Unreal Engine 5 Landscape. The heightmap uses
+Unreal's encoding (0-65535 spans -256..+256 m at Z scale 100), with the Z scale chosen
+to fit the tile's relief and the actor's Z location carrying the mid elevation, so
+`unreal.json` has every number the import dialog needs. Weight layers are one per
+habitat class, soft-edged across 30 m cells and normalised to sum to 255. Nothing in
+the package is engine-specific except this folder and `client/`.
 
 ## Versioning
 

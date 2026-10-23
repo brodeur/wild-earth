@@ -80,6 +80,22 @@ follows the time slider. No animals yet beyond the player.
 Large rasters are git-ignored and regenerated; the manifest and vector layers are
 committed.
 
+## Unreal Engine import
+
+Every tile also exports as an Unreal Landscape (`pipeline.build_tile --steps unreal`,
+run by default). In `tiles/<id>/unreal/`:
+
+1. Create a Landscape, choose Import from File, pick `heightmap.png`.
+2. Set Section Size 63x63 quads, Sections per Component 1x1, Number of Components
+   32x32 for the 2017 px export (`unreal.json` lists these).
+3. Set the Landscape scale to the X, Y, Z values in `unreal.json` and the actor's Z
+   location to `actor_location_cm.z`.
+4. Add a weight-blended Layer Info for each file in `weights/` and import them as layers.
+5. Feed `canopy_tree.png` and the weight layers to a PCG graph for vegetation density
+   and species mix.
+
+Unreal is not required to produce the export; it is written by the pipeline alone.
+
 ## What is honest about v0
 
 The manifest's `status` says so: landforms and hydrology are present-day, the

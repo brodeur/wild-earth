@@ -14,7 +14,7 @@ from .config import (GENERATOR, SOURCES, SPEC_VERSION, TILES_DIR, Tile, now_iso,
                      sha256, today, write_json)
 from .species_data import CALENDAR, PERCEPTION, SEASONS
 
-ALL_STEPS = ["dem", "naip", "osm", "hydro", "veg", "species", "derive"]
+ALL_STEPS = ["dem", "naip", "osm", "hydro", "veg", "species", "derive", "unreal"]
 
 
 def load_manifest(tile: Tile) -> dict:
@@ -95,6 +95,9 @@ def run(tile: Tile, steps: list[str], force=False) -> dict:
                     if "hydro.flowlines" in m["layers"] and "terrain.dem" in m["layers"]:
                         from .resources import derive_resources
                         add_layer(m, tile, "resources", derive_resources(tile))
+            elif step == "unreal":
+                from .export_unreal import export_unreal
+                add_layer(m, tile, "unreal", export_unreal(tile))
             else:
                 raise ValueError(f"unknown step {step}")
             m["log"].append({"step": step, "at": now_iso(), "seconds": round(time.time() - t0, 1), "ok": True})

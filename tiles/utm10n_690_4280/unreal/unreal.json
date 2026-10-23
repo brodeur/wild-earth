@@ -1,0 +1,79 @@
+{
+ "tile_id": "utm10n_690_4280",
+ "crs": "EPSG:32610",
+ "bounds": [
+  690000,
+  4280000,
+  700000,
+  4290000
+ ],
+ "heightmap": {
+  "path": "unreal/heightmap.png",
+  "format": "16-bit PNG",
+  "size_px": 2017
+ },
+ "landscape": {
+  "overall_resolution": "2017 x 2017",
+  "section_size_quads": 63,
+  "sections_per_component": 1,
+  "components": "32 x 32",
+  "scale_cm": {
+   "x": 496.0317,
+   "y": 496.0317,
+   "z": 120.1624
+  },
+  "actor_location_cm": {
+   "x": 0,
+   "y": 0,
+   "z": 62985.8
+  },
+  "note": "Place the actor so its centre is the tile centre; Unreal's Y points south, which matches image row order (row 0 = north edge), so no flip is needed."
+ },
+ "elevation_m": {
+  "min": 336.89,
+  "max": 922.83,
+  "mid": 629.86,
+  "encoded_span": 615.23,
+  "vertical_step_m": 0.0094
+ },
+ "layers": {
+  "oak_woodland": {
+   "path": "unreal/weights/oak_woodland.png",
+   "coverage": 0.3089
+  },
+  "conifer_forest": {
+   "path": "unreal/weights/conifer_forest.png",
+   "coverage": 0.4217
+  },
+  "mixed_forest": {
+   "path": "unreal/weights/mixed_forest.png",
+   "coverage": 0.1117
+  },
+  "chaparral": {
+   "path": "unreal/weights/chaparral.png",
+   "coverage": 0.055
+  },
+  "grassland": {
+   "path": "unreal/weights/grassland.png",
+   "coverage": 0.0584
+  },
+  "riparian": {
+   "path": "unreal/weights/riparian.png",
+   "coverage": 0.0361
+  },
+  "water": {
+   "path": "unreal/weights/water.png",
+   "coverage": 0.0023
+  },
+  "barren": {
+   "path": "unreal/weights/barren.png",
+   "coverage": 0.0058
+  }
+ },
+ "canopy": {
+  "tree": "unreal/canopy_tree.png",
+  "shrub": "unreal/canopy_shrub.png",
+  "herb": "unreal/canopy_herb.png"
+ },
+ "pcg_hint": "Sample canopy_tree.png for tree density and the weight layers for species mix; seed points by (tile_id, cell) so placement matches the web client."
+}

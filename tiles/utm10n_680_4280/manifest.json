@@ -15,7 +15,7 @@
   38.74035063713964
  ],
  "size_m": 10000,
- "generated_at": "2026-10-23T18:14:35Z",
+ "generated_at": "2026-10-23T18:37:32Z",
  "generator": {
   "name": "wild-earth-pipeline",
   "version": "0.2.0"
@@ -487,6 +487,33 @@
    ],
    "sha256": "03e1791519b9aa95a7bf89155d9a97f824ab8d50ff5ada03bd293561cd578195",
    "bytes": 4467695
+  },
+  "unreal": {
+   "path": "unreal/unreal.json",
+   "kind": "table",
+   "derived_from": [
+    "terrain.dem",
+    "vegetation.habitat",
+    "vegetation.evc"
+   ],
+   "size_px": 2017,
+   "scale_cm": {
+    "x": 496.0317,
+    "y": 496.0317,
+    "z": 78.6018
+   },
+   "layers": [
+    "barren",
+    "chaparral",
+    "conifer_forest",
+    "grassland",
+    "mixed_forest",
+    "oak_woodland",
+    "riparian",
+    "water"
+   ],
+   "sha256": "8189d6fbdc9af3c605b10a6c391c3fca32ffccbb1aff741946179cf7455e27ea",
+   "bytes": 1793
   }
  },
  "sources": {
@@ -587,6 +614,12 @@
    "step": "derive",
    "at": "2026-10-23T18:14:35Z",
    "seconds": 23.6,
+   "ok": true
+  },
+  {
+   "step": "unreal",
+   "at": "2026-10-23T18:37:32Z",
+   "seconds": 1.7,
    "ok": true
   }
  ]
