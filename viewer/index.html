@@ -1,0 +1,325 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Wild Earth tile viewer</title>
+<script src="https://unpkg.com/deck.gl@9.0.38/dist.min.js"></script>
+<style>
+  :root { --bg:#0f1512; --panel:#161e19; --line:#263128; --text:#e6ede7; --muted:#8fa094; --accent:#8fd18a; --warn:#f0b35a; --bad:#e36f6f; }
+  * { box-sizing:border-box; }
+  html,body { margin:0; height:100%; background:var(--bg); color:var(--text); font:13px/1.45 -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif; }
+  #app { display:grid; grid-template-columns:360px 1fr; height:100%; }
+  #side { background:var(--panel); border-right:1px solid var(--line); overflow:auto; padding:14px 16px 40px; }
+  #map { position:relative; }
+  #map canvas { outline:none; }
+  h1 { font-size:15px; margin:0 0 2px; letter-spacing:.2px; }
+  h2 { font-size:11px; text-transform:uppercase; letter-spacing:.08em; color:var(--muted); margin:18px 0 8px; }
+  .sub { color:var(--muted); font-size:12px; }
+  select, button, input[type=range] { font:inherit; }
+  select { width:100%; background:#0d1310; color:var(--text); border:1px solid var(--line); border-radius:6px; padding:6px 8px; }
+  button { background:#1f2a23; color:var(--text); border:1px solid var(--line); border-radius:6px; padding:4px 9px; cursor:pointer; }
+  button:hover { border-color:var(--accent); }
+  button.on { background:var(--accent); color:#0b140d; border-color:var(--accent); }
+  .row { display:flex; gap:6px; flex-wrap:wrap; align-items:center; margin:4px 0; }
+  .seg button { flex:1; }
+  label.chk { display:flex; align-items:center; gap:8px; padding:3px 0; cursor:pointer; }
+  .badge { display:inline-block; padding:1px 7px; border-radius:10px; font-size:11px; border:1px solid var(--line); color:var(--muted); }
+  .badge.ok { color:var(--accent); border-color:#2d4a31; }
+  .badge.warn { color:var(--warn); border-color:#5a4423; }
+  .badge.bad { color:var(--bad); border-color:#5a2a2a; }
+  .sp { display:grid; grid-template-columns:10px 1fr auto; gap:8px; align-items:center; padding:5px 0; border-bottom:1px solid var(--line); }
+  .sp.dim { opacity:.35; }
+  .sp .sw { width:10px; height:10px; border-radius:50%; }
+  .sp .name { cursor:pointer; }
+  .sp .name small { color:var(--muted); display:block; }
+  .spark { display:flex; gap:1px; align-items:flex-end; height:16px; width:60px; }
+  .spark i { flex:1; background:var(--muted); min-height:1px; display:block; }
+  .spark i.in { background:var(--accent); }
+  .acts li { margin:4px 0; }
+  .acts b { color:var(--accent); font-weight:600; }
+  .res { color:var(--muted); }
+  table { width:100%; border-collapse:collapse; font-size:12px; }
+  td { padding:3px 4px; border-bottom:1px solid var(--line); vertical-align:top; }
+  td:first-child { color:var(--muted); white-space:nowrap; }
+  details summary { cursor:pointer; color:var(--muted); font-size:11px; text-transform:uppercase; letter-spacing:.08em; margin:18px 0 8px; }
+  #tip { position:absolute; pointer-events:none; background:#000c; color:#fff; padding:6px 8px; border-radius:6px; font-size:12px; max-width:260px; z-index:5; }
+  #legend { position:absolute; left:12px; bottom:12px; background:#0f1512cc; padding:8px 10px; border-radius:8px; font-size:12px; z-index:4; }
+  #legend div { display:flex; align-items:center; gap:6px; }
+  #legend .sw { width:14px; height:3px; }
+  #status { position:absolute; top:12px; left:12px; background:#0f1512cc; padding:6px 10px; border-radius:8px; font-size:12px; z-index:4; color:var(--muted); }
+  .note { font-size:12px; color:var(--muted); background:#0d1310; border:1px solid var(--line); border-radius:6px; padding:8px; }
+  @media (max-width: 800px) { #app { grid-template-columns:1fr; grid-template-rows:45% 55%; } #side { border-right:0; border-bottom:1px solid var(--line); } }
+</style>
+</head>
+<body>
+<div id="app">
+  <div id="side">
+    <h1>Wild Earth</h1>
+    <div class="sub">Tile viewer · spec <span id="specv">–</span></div>
+
+    <h2>Tile</h2>
+    <select id="tileSel"></select>
+    <div class="row" id="statusBadges" style="margin-top:6px"></div>
+
+    <h2>View</h2>
+    <div class="row seg"><button id="v2d" class="on">2D</button><button id="v3d">3D</button></div>
+    <div class="row seg"><button id="texRewild" class="on">Rewilded (hillshade)</button><button id="texReal">Real (NAIP)</button></div>
+    <div class="row"><span class="sub" style="width:95px">Exaggeration</span><input id="exag" type="range" min="1" max="3" step="0.25" value="1.5" style="flex:1"><span id="exagv" class="sub">1.5×</span></div>
+    <label class="chk"><input type="checkbox" id="lyMask" checked> Human footprint (vector)</label>
+    <label class="chk"><input type="checkbox" id="lyMaskR"> Erase mask (raster)</label>
+    <label class="chk"><input type="checkbox" id="lyHydro" checked> Streams and waterbodies</label>
+    <label class="chk"><input type="checkbox" id="lyPts" checked> Species occurrences</label>
+    <label class="chk"><input type="checkbox" id="lyHeat"> Density heatmap (2D only)</label>
+
+    <h2>Play as</h2>
+    <select id="observer"></select>
+    <div id="senses" class="sub" style="margin-top:6px"></div>
+
+    <h2>Season</h2>
+    <div class="row seg" id="seasons"></div>
+    <label class="chk"><input type="checkbox" id="seasonFilter" checked> Only show occurrences from this season</label>
+    <ul class="acts" id="acts" style="padding-left:18px;margin:6px 0"></ul>
+
+    <h2>Species <span class="sub" id="spCount"></span></h2>
+    <div id="species"></div>
+    <div class="note" style="margin-top:8px">Verify or flag a species to record local knowledge. Edits stay in this browser until exported, then get appended to the manifest's <code>edits</code> log.</div>
+    <div class="row" style="margin-top:6px"><span class="sub" id="editCount">0 edits</span><button id="exportEdits">Export edits.json</button><button id="clearEdits">Clear</button></div>
+
+    <details><summary>Species inventory (GBIF, top recorded)</summary><div id="inventory"></div></details>
+    <details><summary>Pipeline status</summary><div id="pipeline"></div></details>
+    <details><summary>Sources</summary><div id="sources"></div></details>
+  </div>
+  <div id="map">
+    <div id="status">loading…</div>
+    <div id="legend"></div>
+  </div>
+</div>
+
+<script>
+const PALETTE = ['#8fd18a','#f0b35a','#6fb7f0','#e36f6f','#c89bf0','#f0e36f','#6ff0d6','#f09b6f','#b0b0b0','#f06fc8'];
+const MASK_COLORS = { building:[240,80,80], road:[255,170,60], rail:[200,120,255], power:[120,200,255],
+  canal:[80,200,220], mine:[255,100,180], reservoir:[90,140,255], agriculture:[220,220,100], cleared:[200,200,200], other:[180,180,180] };
+const DEFAULT_SEASONS = { winter:[12,1,2], spring:[3,4,5], summer:[6,7,8], fall:[9,10,11] };
+
+const S = { tiles:[], tile:null, m:null, data:{}, view3d:false, texture:'rewilded', exag:1.5,
+  layers:{ mask:true, maskR:false, hydro:true, pts:true, heat:false }, observer:null, season:null,
+  seasonFilter:true, hidden:new Set(), edits:[] };
+
+const $ = id => document.getElementById(id);
+const base = () => `../tiles/${S.tile}/`;
+const TerrainExt = deck.TerrainExtension || deck._TerrainExtension;
+
+function seasonOf(month, seasons){ for (const [k,ms] of Object.entries(seasons)) if (ms.includes(month)) return k; return 'fall'; }
+function hex2rgb(h){ return [parseInt(h.slice(1,3),16), parseInt(h.slice(3,5),16), parseInt(h.slice(5,7),16)]; }
+function fmtBytes(b){ if(!b) return ''; const u=['B','KB','MB','GB']; let i=0; while(b>1024&&i<3){b/=1024;i++;} return b.toFixed(i?1:0)+' '+u[i]; }
+
+async function getJSON(rel, optional=false){
+  try { const r = await fetch(base()+rel, {cache:'no-cache'}); if(!r.ok) throw new Error(r.status); return await r.json(); }
+  catch(e){ if(optional) return null; throw new Error(`failed to load ${rel}: ${e.message}`); }
+}
+
+async function loadIndex(){
+  const r = await fetch('../tiles/index.json', {cache:'no-cache'});
+  if(!r.ok){ $('status').textContent = 'No tiles/index.json. Run the pipeline first.'; return; }
+  const idx = await r.json();
+  S.tiles = idx.tiles; $('specv').textContent = idx.spec_version;
+  $('tileSel').innerHTML = S.tiles.map(t=>`<option value="${t.tile_id}">${t.tile_id}</option>`).join('');
+  const want = new URLSearchParams(location.search).get('tile');
+  await loadTile(want && S.tiles.some(t=>t.tile_id===want) ? want : S.tiles[0]?.tile_id);
+}
+
+async function loadTile(id){
+  if(!id) return;
+  S.tile = id; $('tileSel').value = id; $('status').textContent = 'loading '+id+'…';
+  const m = S.m = await getJSON('manifest.json');
+  const L = m.layers;
+  const d = S.data = {};
+  const want = [
+    ['species', 'species/species.json', true], ['occ', 'species/occurrences.geojson', true],
+    ['seasonal', 'species/seasonal.json', true], ['inventory', 'species/inventory.json', true],
+    ['perception', 'perception.json', true], ['calendar', 'calendar.json', true],
+    ['mask', 'footprint/mask.geojson', true], ['flow', 'hydro/flowlines.geojson', true], ['water', 'hydro/waterbodies.geojson', true],
+  ];
+  await Promise.all(want.map(async ([k,rel,opt]) => { d[k] = await getJSON(rel, opt); }));
+  d.species = d.species || []; d.seasons = d.calendar?.seasons || DEFAULT_SEASONS;
+  d.species.forEach((s,i)=> s.color = hex2rgb(PALETTE[i % PALETTE.length]));
+  S.edits = loadEdits();
+  S.observer = d.species.find(s=>s.role==='playable')?.code || d.species[0]?.code || null;
+  S.season = seasonOf(new Date().getMonth()+1, d.seasons);
+  renderSide(); initDeck(); render();
+  history.replaceState(null,'',`?tile=${id}`);
+}
+
+/* ---------- side panel ---------- */
+function renderSide(){
+  const m = S.m, d = S.data;
+  const st = m.status || {};
+  $('statusBadges').innerHTML = [
+    `<span class="badge ${st.human_landforms_removed?'ok':'warn'}">landforms ${st.human_landforms_removed?'rewilded':'present-day'}</span>`,
+    `<span class="badge ${st.hydrology_rewilded?'ok':'warn'}">hydrology ${st.hydrology_rewilded?'rewilded':'present-day'}</span>`,
+    `<span class="badge">+${st.projection_years||0} yr</span>`,
+    `<span class="badge">${m.crs}</span>`].join(' ');
+  $('observer').innerHTML = d.species.map(s=>`<option value="${s.code}">${s.common} (${s.role})</option>`).join('');
+  $('observer').value = S.observer;
+  $('seasons').innerHTML = Object.keys(d.seasons).map(k=>`<button data-s="${k}" class="${k===S.season?'on':''}">${k}</button>`).join('');
+  $('seasons').querySelectorAll('button').forEach(b=> b.onclick = ()=>{ S.season=b.dataset.s; renderSide(); render(); });
+  renderObserver(); renderSpecies(); renderInventory(); renderPipeline(); renderEdits();
+}
+
+function perceived(){ const p = S.data.perception?.perceives?.[S.observer]; return p ? new Set(p) : null; }
+
+function renderObserver(){
+  const sp = S.data.species.find(s=>s.code===S.observer); if(!sp) return;
+  const se = sp.senses||{};
+  $('senses').innerHTML = `<i>${sp.scientific}</i> · scale: ${sp.scale}<br>` +
+    Object.entries(se).map(([k,v])=>`${k} ${v.range_m} m${v.color?' · '+v.color:''}`).join(' · ');
+  const acts = S.data.calendar?.activities?.[S.observer]?.[S.season] || [];
+  const names = Object.fromEntries(S.data.species.map(s=>[s.code,s.common]));
+  $('acts').innerHTML = acts.length ? acts.map(a=>`<li><b>${a.activity}</b>${a.goal?' — '+a.goal:''}<br><span class="res">needs: ${a.resources.map(r=>names[r]||r).join(', ')||'–'}</span></li>`).join('')
+    : '<li class="sub">no activities defined for this season</li>';
+}
+
+function renderSpecies(){
+  const d = S.data, P = perceived();
+  const sm = S.data.seasons[S.season] || [];
+  const conf = code => S.edits.filter(e=>e.species_code===code).slice(-1)[0]?.value;
+  const rows = d.species.map(s=>{
+    const counts = d.seasonal?.counts?.[s.code] || []; const max = Math.max(1,...counts);
+    const spark = counts.length ? `<div class="spark" title="occurrences by month">${counts.map((c,i)=>`<i class="${sm.includes(i+1)?'in':''}" style="height:${Math.max(1,c/max*16)}px"></i>`).join('')}</div>` : '';
+    const c = conf(s.code) || s.confidence || 'unverified';
+    const dim = P && !P.has(s.code);
+    return `<div class="sp ${dim?'dim':''}" data-code="${s.code}">
+      <span class="sw" style="background:rgb(${s.color})"></span>
+      <div class="name" title="toggle visibility"><span style="${S.hidden.has(s.code)?'text-decoration:line-through':''}">${s.common}</span> <span class="badge">${s.role}</span>
+        <small>${s.occurrence_count ?? 0} records · <span class="badge ${c==='verified'?'ok':c==='flagged'?'bad':''}">${c}</span>${dim?' · not perceived':''}</small></div>
+      <div style="text-align:right">${spark}<div class="row" style="justify-content:flex-end;margin-top:2px"><button data-v="verified" title="Verify: this species is here">✓</button><button data-v="flagged" title="Flag: wrong or missing">⚑</button></div></div>
+    </div>`;
+  });
+  $('species').innerHTML = rows.join('');
+  $('spCount').textContent = `${d.species.length} listed, ${(d.occ?.features||[]).length} records`;
+  $('species').querySelectorAll('.sp').forEach(el=>{
+    const code = el.dataset.code;
+    el.querySelector('.name').onclick = ()=>{ S.hidden.has(code)?S.hidden.delete(code):S.hidden.add(code); renderSpecies(); render(); };
+    el.querySelectorAll('button').forEach(b=> b.onclick = ()=>{
+      const note = prompt(`${b.dataset.v==='verified'?'Verify':'Flag'} ${code}: add a note (optional)`) ;
+      if(note===null) return;
+      S.edits.push({type:'species_confidence', species_code:code, value:b.dataset.v, note:note||undefined, at:new Date().toISOString()});
+      saveEdits(); renderSpecies(); renderEdits();
+    });
+  });
+}
+
+function renderInventory(){
+  const inv = S.data.inventory || []; const have = new Set(S.data.species.map(s=>s.gbif_key));
+  $('inventory').innerHTML = inv.length ? `<table>${inv.sort((a,b)=>b.occurrences-a.occurrences).map(r=>
+    `<tr><td>${r.group}</td><td>${r.common||'–'}<br><i class="sub">${r.scientific||''}</i></td><td style="text-align:right">${r.occurrences}${have.has(r.gbif_key)?' <span class="badge ok">listed</span>':''}</td></tr>`).join('')}</table>` : '<div class="sub">none</div>';
+}
+
+function renderPipeline(){
+  const m = S.m;
+  const log = (m.log||[]).map(l=>`<tr><td>${l.step}</td><td>${l.ok?'<span class="badge ok">ok</span>':'<span class="badge bad">failed</span>'} ${l.seconds}s${l.error?'<br><span class="sub">'+l.error+'</span>':''}</td></tr>`).join('');
+  const layers = Object.entries(m.layers||{}).map(([k,v])=>`<tr><td>${k}</td><td>${v.path}<br><span class="sub">${[v.kind, v.resolution_m?v.resolution_m+' m':null, v.feature_count!=null?v.feature_count+' features':null, v.count!=null?v.count+' rows':null, fmtBytes(v.bytes), v.masked_fraction!=null?(v.masked_fraction*100).toFixed(1)+'% masked':null].filter(Boolean).join(' · ')}</span></td></tr>`).join('');
+  $('pipeline').innerHTML = `<div class="sub">generated ${m.generated_at} by ${m.generator?.name} ${m.generator?.version}</div><table>${log}</table><h2>Layers</h2><table>${layers}</table>`;
+  $('sources').innerHTML = `<table>${Object.entries(m.sources||{}).map(([k,v])=>`<tr><td>${k}</td><td>${v.name}<br><span class="sub">${v.license} · retrieved ${v.retrieved}</span></td></tr>`).join('')}</table>`;
+}
+
+/* ---------- edits (local-knowledge prototype) ---------- */
+const editsKey = () => `wild-earth-edits:${S.tile}`;
+function loadEdits(){ try { return JSON.parse(localStorage.getItem(editsKey())||'[]'); } catch(e){ return []; } }
+function saveEdits(){ try { localStorage.setItem(editsKey(), JSON.stringify(S.edits)); } catch(e){} }
+function renderEdits(){ $('editCount').textContent = `${S.edits.length} edit${S.edits.length===1?'':'s'}`; }
+$('exportEdits').onclick = ()=>{
+  const blob = new Blob([JSON.stringify({tile_id:S.tile, spec_version:S.m.spec_version, edits:S.edits}, null, 1)], {type:'application/json'});
+  const a = document.createElement('a'); a.href = URL.createObjectURL(blob); a.download = `${S.tile}-edits.json`; a.click();
+};
+$('clearEdits').onclick = ()=>{ if(confirm('Discard local edits?')){ S.edits=[]; saveEdits(); renderSpecies(); renderEdits(); } };
+
+/* ---------- deck.gl ---------- */
+let deckgl = null;
+function initDeck(){
+  const [w,s,e,n] = S.m.bounds_wgs84;
+  const vs = { longitude:(w+e)/2, latitude:(s+n)/2, zoom:11.6, pitch:S.view3d?55:0, bearing:S.view3d?-20:0, maxPitch:85 };
+  if(deckgl){ deckgl.setProps({ initialViewState: vs }); return; }
+  deckgl = new deck.DeckGL({
+    container: $('map'), initialViewState: vs, controller:{ touchRotate:true, inertia:true },
+    views: new deck.MapView({ repeat:false }),
+    getTooltip: tooltip, style:{ background:'#0b0f0d' },
+    onLoad: ()=> $('status').textContent = S.tile,
+  });
+}
+
+function tooltip({object, layer}){
+  if(!object) return null;
+  const p = object.properties || object;
+  if(layer.id==='occ'){ const sp = S.data.species.find(s=>s.code===p.species_code);
+    return {html:`<b>${sp?.common||p.species_code}</b><br>${p.date||'no date'} · ${p.basis||''}<br><span style="opacity:.7">${p.license||''}</span>`}; }
+  if(layer.id==='mask') return {html:`<b>${p.class}</b>${p.name?' · '+p.name:''}<br><span style="opacity:.7">${p.highway||p.building||p.landuse||''} · ${p.osm_id}</span>`};
+  if(layer.id==='flow') return {html:`<b>${p.gnis_name||'unnamed stream'}</b><br>order ${p.streamorde??'?'} · ${p.ftype||''}`};
+  if(layer.id==='water') return {html:`<b>${p.gnis_name||'waterbody'}</b><br>${p.ftype||''} · fcode ${p.fcode||''}`};
+  return null;
+}
+
+function elevationDecoder(){ const k=S.exag; return { rScaler:6553.6*k, gScaler:25.6*k, bScaler:0.1*k, offset:-10000*k }; }
+
+function occFeatures(){
+  const P = perceived(); const sm = S.data.seasons[S.season]||[];
+  return (S.data.occ?.features||[]).filter(f=>{ const p=f.properties;
+    if(S.hidden.has(p.species_code)) return false;
+    if(P && !P.has(p.species_code)) return false;
+    if(S.seasonFilter && p.month && !sm.includes(p.month)) return false;
+    return true; });
+}
+
+function render(){
+  if(!deckgl || !S.m) return;
+  const m = S.m, L = m.layers, d = S.data, [w,s,e,n] = m.bounds_wgs84;
+  const colorOf = Object.fromEntries(d.species.map(sp=>[sp.code, sp.color]));
+  const layers = [];
+  const hasTerrain = !!L['terrain.terrain_rgb'];
+  // Drape/offset onto terrain only when a terrain layer exists; otherwise draped layers never draw.
+  const ext = hasTerrain && TerrainExt ? [new TerrainExt()] : [];
+  const texture = S.texture==='real' && L['imagery.naip_png'] ? base()+L['imagery.naip_png'].path : (L['terrain.hillshade'] ? base()+L['terrain.hillshade'].path : null);
+  if(hasTerrain){
+    layers.push(new deck.TerrainLayer({ id:'terrain', elevationData: base()+L['terrain.terrain_rgb'].path, texture, bounds:[w,s,e,n],
+      elevationDecoder: elevationDecoder(), meshMaxError: 4, material:false, operation:'terrain+draw',
+      updateTriggers:{ elevationDecoder:[S.exag] }, color:[255,255,255] }));
+  } else if(texture){
+    layers.push(new deck.BitmapLayer({ id:'tex', image:texture, bounds:[w,s,e,n] }));
+  }
+  if(S.layers.maskR && L['footprint.mask_raster'])
+    layers.push(new deck.BitmapLayer({ id:'maskR', image: base()+L['footprint.mask_raster'].path, bounds:[w,s,e,n], tintColor:[255,70,50], opacity:.55, transparentColor:[0,0,0,0], extensions:ext, terrainDrawMode:'drape' }));
+  if(S.layers.hydro && d.water)
+    layers.push(new deck.GeoJsonLayer({ id:'water', data:d.water, filled:true, stroked:true, getFillColor:[70,130,220,120], getLineColor:[90,160,255,200], lineWidthMinPixels:1, pickable:true, extensions:ext, terrainDrawMode:'drape' }));
+  if(S.layers.hydro && d.flow)
+    layers.push(new deck.GeoJsonLayer({ id:'flow', data:d.flow, getLineColor:[90,170,255,220], getLineWidth:f=>Math.max(1,(f.properties.streamorde||1)), lineWidthUnits:'pixels', lineWidthMinPixels:1, pickable:true, extensions:ext, terrainDrawMode:'drape' }));
+  if(S.layers.mask && d.mask)
+    layers.push(new deck.GeoJsonLayer({ id:'mask', data:d.mask, filled:true, stroked:true, getFillColor:f=>[...(MASK_COLORS[f.properties.class]||[200,200,200]),150], getLineColor:f=>[...(MASK_COLORS[f.properties.class]||[200,200,200]),230],
+      getLineWidth:f=> (f.properties.buffer_m||1)*2, lineWidthUnits:'meters', lineWidthMinPixels:1, pickable:true, extensions:ext, terrainDrawMode:'drape' }));
+  const occ = occFeatures();
+  if(S.layers.heat && !S.view3d && occ.length)
+    layers.push(new deck.HeatmapLayer({ id:'heat', data:occ, getPosition:f=>f.geometry.coordinates, radiusPixels:40, intensity:1, threshold:.05, opacity:.6 }));
+  if(S.layers.pts && occ.length)
+    layers.push(new deck.ScatterplotLayer({ id:'occ', data:occ, getPosition:f=>f.geometry.coordinates, getFillColor:f=>[...colorOf[f.properties.species_code], f.properties.species_code===S.observer?255:190],
+      getRadius:f=> f.properties.species_code===S.observer?14:9, radiusUnits:'pixels', radiusMinPixels:3, stroked:true, getLineColor:[0,0,0,160], lineWidthMinPixels:1, pickable:true, extensions:ext, terrainDrawMode:'offset' }));
+  deckgl.setProps({ layers });
+  $('legend').innerHTML = Object.entries(MASK_COLORS).filter(([k])=> (d.mask?.features||[]).some(f=>f.properties.class===k)).map(([k,c])=>`<div><span class="sw" style="background:rgb(${c})"></span>${k}</div>`).join('') + `<div><span class="sw" style="background:rgb(90,170,255)"></span>stream</div>`;
+  $('status').textContent = `${S.tile} · ${occ.length} occurrences shown · ${S.season}` + (perceived()?` · as ${d.species.find(x=>x.code===S.observer)?.common}`:'');
+}
+
+/* ---------- controls ---------- */
+$('tileSel').onchange = e=> loadTile(e.target.value);
+$('v2d').onclick = ()=>{ S.view3d=false; $('v2d').classList.add('on'); $('v3d').classList.remove('on'); initDeck(); render(); };
+$('v3d').onclick = ()=>{ S.view3d=true; $('v3d').classList.add('on'); $('v2d').classList.remove('on'); initDeck(); render(); };
+$('texRewild').onclick = ()=>{ S.texture='rewilded'; $('texRewild').classList.add('on'); $('texReal').classList.remove('on'); render(); };
+$('texReal').onclick = ()=>{ S.texture='real'; $('texReal').classList.add('on'); $('texRewild').classList.remove('on'); render(); };
+$('exag').oninput = e=>{ S.exag=+e.target.value; $('exagv').textContent=S.exag+'×'; render(); };
+for (const [id,k] of [['lyMask','mask'],['lyMaskR','maskR'],['lyHydro','hydro'],['lyPts','pts'],['lyHeat','heat']])
+  $(id).onchange = e=>{ S.layers[k]=e.target.checked; render(); };
+$('observer').onchange = e=>{ S.observer=e.target.value; renderObserver(); renderSpecies(); render(); };
+$('seasonFilter').onchange = e=>{ S.seasonFilter=e.target.checked; render(); };
+
+loadIndex().catch(e=>{ $('status').textContent = e.message; console.error(e); });
+</script>
+</body>
+</html>

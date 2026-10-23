@@ -1,0 +1,327 @@
+{
+ "spec_version": "0.1.0",
+ "tile_id": "utm10n_690_4280",
+ "crs": "EPSG:32610",
+ "bounds": [
+  690000,
+  4280000,
+  700000,
+  4290000
+ ],
+ "bounds_wgs84": [
+  -120.81668392006142,
+  38.64600291531168,
+  -120.69897205117006,
+  38.73825606650576
+ ],
+ "size_m": 10000,
+ "generated_at": "2026-10-23T15:58:07Z",
+ "generator": {
+  "name": "wild-earth-pipeline",
+  "version": "0.1.0"
+ },
+ "status": {
+  "human_landforms_removed": false,
+  "hydrology_rewilded": false,
+  "projection_years": 0
+ },
+ "layers": {
+  "footprint.mask": {
+   "path": "footprint/mask.geojson",
+   "kind": "vector",
+   "source": "osm",
+   "feature_count": 6353,
+   "class_counts": {
+    "road": 3425,
+    "power": 15,
+    "cleared": 53,
+    "building": 2801,
+    "agriculture": 56,
+    "mine": 2,
+    "other": 1
+   },
+   "sha256": "af922092711a5c3f7518fe0930228a0bcf1fa45274fe1a47136b795901f0fd5d",
+   "bytes": 5027214
+  },
+  "species.list": {
+   "path": "species/species.json",
+   "kind": "table",
+   "source": "gbif",
+   "count": 10,
+   "sha256": "e511f0b06278d96cbfda595586c75e41ca6e03c09d4041871c42d23fab717c27",
+   "bytes": 4400
+  },
+  "species.occurrences": {
+   "path": "species/occurrences.geojson",
+   "kind": "vector",
+   "source": "gbif",
+   "feature_count": 1597,
+   "sha256": "928e80a9a3792587d8bcc5ffbca62a8baf2f4aa81ef2a6551a21bb8eb128aa32",
+   "bytes": 711410
+  },
+  "species.seasonal": {
+   "path": "species/seasonal.json",
+   "kind": "table",
+   "source": "gbif",
+   "sha256": "7d58806befb47f006a89c494c2d2b1c817117122f9a35515bf7344dd62f1f76a",
+   "bytes": 1150
+  },
+  "species.inventory": {
+   "path": "species/inventory.json",
+   "kind": "table",
+   "source": "gbif",
+   "sha256": "a63d746e0eaa97040ea27d05400670df869359a94b8f2e12000a773e105fa4f0",
+   "bytes": 10147
+  },
+  "perception": {
+   "path": "perception.json",
+   "kind": "table",
+   "sha256": "f4f94936bfb8c5e2c948938c59df6306688ffb5ff4194d44462f6c72b2d21a25",
+   "bytes": 2330
+  },
+  "calendar": {
+   "path": "calendar.json",
+   "kind": "table",
+   "sha256": "4c658772d36539c51a0a25bdbfad21deb49d80832f9765c710edd5c0571becaf",
+   "bytes": 8306
+  },
+  "hydro.flowlines": {
+   "path": "hydro/flowlines.geojson",
+   "kind": "vector",
+   "source": "nhdplus_hr",
+   "feature_count": 627,
+   "sha256": "1d52146b6f2b4247683ca5035ee8631d956e4a986473a2289a20a0501ac97462",
+   "bytes": 650684
+  },
+  "hydro.waterbodies": {
+   "path": "hydro/waterbodies.geojson",
+   "kind": "vector",
+   "source": "nhdplus_hr",
+   "feature_count": 61,
+   "reservoirs": [
+    null,
+    null,
+    null,
+    null,
+    null,
+    null,
+    null,
+    null,
+    null
+   ],
+   "sha256": "7869e084bed1e70d1afa4986e7377c2d496c2cd873bc701d09b0eedd0eb55c91",
+   "bytes": 63929
+  },
+  "imagery.naip": {
+   "path": "imagery/naip.tif",
+   "kind": "raster",
+   "resolution_m": 2.5,
+   "bands": [
+    "red",
+    "green",
+    "blue"
+   ],
+   "source": "pc_naip",
+   "naip_year": 2022,
+   "cached": true,
+   "sha256": "f33a985ccb9cde30abba5bc2254a7dba7b3faa1172493d0394c7a30ffa2c12f5",
+   "bytes": 48164193
+  },
+  "terrain.dem": {
+   "path": "terrain/dem.tif",
+   "kind": "raster",
+   "resolution_m": 5.0,
+   "units": "m",
+   "nodata": -9999.0,
+   "source": "usgs_3dep",
+   "source_resolution_m": 1.0,
+   "stats": {
+    "min": 336.7909851074219,
+    "max": 922.87255859375,
+    "valid_fraction": 1.0
+   },
+   "sha256": "73b69e261f539e0972f2619ef887aeb626b313faa532446449a65bcb6bff8367",
+   "bytes": 12019971
+  },
+  "terrain.hillshade": {
+   "path": "terrain/hillshade.png",
+   "kind": "raster",
+   "crs": "EPSG:4326",
+   "bounds": [
+    -120.81668392006142,
+    38.64600291531168,
+    -120.69897205117006,
+    38.73825606650576
+   ],
+   "pixels": 2000,
+   "derived_from": "terrain.dem",
+   "params": {
+    "azimuth": 315.0,
+    "altitude": 45.0
+   },
+   "sha256": "efcec8597d9bd428846b325e017afaa6d6fe341669efe422d07af297d35c95c4",
+   "bytes": 3477592
+  },
+  "terrain.terrain_rgb": {
+   "path": "terrain/terrain_rgb.png",
+   "kind": "raster",
+   "crs": "EPSG:4326",
+   "bounds": [
+    -120.81668392006142,
+    38.64600291531168,
+    -120.69897205117006,
+    38.73825606650576
+   ],
+   "pixels": 2000,
+   "derived_from": "terrain.dem",
+   "encoding": "mapbox-terrain-rgb",
+   "elevation_range_m": [
+    336.90380859375,
+    922.8080444335938
+   ],
+   "sha256": "f2773f3d10d8889eaf3003873e98ccfd576d215054bdddcf1b659c2abbfdf2ce",
+   "bytes": 2811763
+  },
+  "footprint.mask_raster": {
+   "path": "footprint/mask.png",
+   "kind": "raster",
+   "crs": "EPSG:4326",
+   "bounds": [
+    -120.81668392006142,
+    38.64600291531168,
+    -120.69897205117006,
+    38.73825606650576
+   ],
+   "pixels": 2000,
+   "derived_from": "footprint.mask",
+   "masked_fraction": 0.07580975,
+   "sha256": "4e65df5f9b40b2dc8308b07154d280e7d101ac674b60712b94ee1d46b75a0e73",
+   "bytes": 137427
+  },
+  "imagery.naip_png": {
+   "path": "imagery/naip.png",
+   "kind": "raster",
+   "crs": "EPSG:4326",
+   "bounds": [
+    -120.81668392006142,
+    38.64600291531168,
+    -120.69897205117006,
+    38.73825606650576
+   ],
+   "pixels": 2500,
+   "derived_from": "imagery.naip",
+   "sha256": "27819ac01761dd0de7fa2c30616247e0e004fba700bcdd89bb449426410b099e",
+   "bytes": 12540162
+  }
+ },
+ "sources": {
+  "osm": {
+   "name": "OpenStreetMap via Overpass API",
+   "url": "https://overpass-api.de/api/interpreter",
+   "license": "ODbL 1.0",
+   "retrieved": "2026-10-23"
+  },
+  "gbif": {
+   "name": "GBIF occurrence API (includes iNaturalist research-grade and eBird)",
+   "url": "https://api.gbif.org/v1/occurrence/search",
+   "license": "per dataset (CC0 / CC BY / CC BY-NC); see occurrence properties",
+   "retrieved": "2026-10-23"
+  },
+  "nhdplus_hr": {
+   "name": "USGS NHDPlus High Resolution",
+   "url": "https://hydro.nationalmap.gov/arcgis/rest/services/NHDPlus_HR/MapServer",
+   "license": "public domain",
+   "retrieved": "2026-10-23"
+  },
+  "pc_naip": {
+   "name": "USDA NAIP via Microsoft Planetary Computer",
+   "url": "https://planetarycomputer.microsoft.com/dataset/naip",
+   "license": "public domain",
+   "retrieved": "2026-10-23"
+  },
+  "usgs_3dep": {
+   "name": "USGS 3D Elevation Program (3DEP) bare-earth DEM",
+   "url": "https://elevation.nationalmap.gov/arcgis/rest/services/3DEPElevation/ImageServer",
+   "license": "public domain",
+   "retrieved": "2026-10-23"
+  }
+ },
+ "edits": [],
+ "log": [
+  {
+   "step": "dem",
+   "at": "2026-10-23T03:44:06Z",
+   "seconds": 103.1,
+   "ok": false,
+   "error": "504 from https://elevation.nationalmap.gov/arcgis/rest/services/3DEPElevation/ImageServer/exportImage"
+  },
+  {
+   "step": "naip",
+   "at": "2026-10-23T03:45:49Z",
+   "seconds": 102.9,
+   "ok": false,
+   "error": "504 from https://imagery.nationalmap.gov/arcgis/rest/services/USGSNAIPPlus/ImageServer/exportImage"
+  },
+  {
+   "step": "osm",
+   "at": "2026-10-23T03:47:42Z",
+   "seconds": 112.4,
+   "ok": true
+  },
+  {
+   "step": "hydro",
+   "at": "2026-10-23T03:50:55Z",
+   "seconds": 193.2,
+   "ok": false,
+   "error": "504 from https://hydro.nationalmap.gov/arcgis/rest/services/NHDPlus_HR/MapServer/3/query"
+  },
+  {
+   "step": "species",
+   "at": "2026-10-23T03:52:43Z",
+   "seconds": 108.3,
+   "ok": true
+  },
+  {
+   "step": "derive",
+   "at": "2026-10-23T03:52:43Z",
+   "seconds": 0.1,
+   "ok": true
+  },
+  {
+   "step": "hydro",
+   "at": "2026-10-23T03:57:38Z",
+   "seconds": 63.2,
+   "ok": true
+  },
+  {
+   "step": "naip",
+   "at": "2026-10-23T04:01:08Z",
+   "seconds": 0.2,
+   "ok": true
+  },
+  {
+   "step": "dem",
+   "at": "2026-10-23T04:02:07Z",
+   "seconds": 24.0,
+   "ok": true
+  },
+  {
+   "step": "derive",
+   "at": "2026-10-23T04:02:16Z",
+   "seconds": 8.6,
+   "ok": true
+  },
+  {
+   "step": "species",
+   "at": "2026-10-23T15:57:58Z",
+   "seconds": 160.5,
+   "ok": true
+  },
+  {
+   "step": "derive",
+   "at": "2026-10-23T15:58:07Z",
+   "seconds": 8.5,
+   "ok": true
+  }
+ ]
+}
