@@ -15,7 +15,7 @@
   38.73825606650576
  ],
  "size_m": 10000,
- "generated_at": "2026-10-23T16:50:39Z",
+ "generated_at": "2026-10-23T18:14:58Z",
  "generator": {
   "name": "wild-earth-pipeline",
   "version": "0.2.0"
@@ -423,6 +423,77 @@
    },
    "sha256": "8b39e5b4b334c293a30db073dff61725a49b832f07941cee4b0654278b27ac17",
    "bytes": 5140
+  },
+  "client.heights": {
+   "path": "client/heights.png",
+   "kind": "raster",
+   "crs": "EPSG:32610",
+   "bounds": [
+    690000,
+    4280000,
+    700000,
+    4290000
+   ],
+   "pixels": 2000,
+   "resolution_m": 5.0,
+   "encoding": "mapbox-terrain-rgb",
+   "elevation_range_m": [
+    336.7909851074219,
+    922.87255859375
+   ],
+   "sha256": "ebf10610a1b389487696d0b68ee0180de52c849d9c757d992ceb20bb2edd4aa8",
+   "bytes": 3109055
+  },
+  "client.habitat": {
+   "path": "client/habitat.png",
+   "kind": "raster",
+   "crs": "EPSG:32610",
+   "bounds": [
+    690000,
+    4280000,
+    700000,
+    4290000
+   ],
+   "pixels": 333,
+   "resolution_m": 30.03003003003003,
+   "encoding": "R = habitat class code",
+   "sha256": "47353d9e5b99a414d7a3e4c5da9c31219c67c302489a2373b83e7a32e2d05b9d",
+   "bytes": 32197
+  },
+  "client.canopy": {
+   "path": "client/canopy.png",
+   "kind": "raster",
+   "crs": "EPSG:32610",
+   "bounds": [
+    690000,
+    4280000,
+    700000,
+    4290000
+   ],
+   "pixels": 333,
+   "resolution_m": 30.03003003003003,
+   "encoding": "R tree %, G shrub %, B herb %",
+   "sha256": "8261fabdadf70cb1a06ade45bbac2d1e7df625af49be7417ac1a223fe35923eb",
+   "bytes": 116533
+  },
+  "client.texture": {
+   "path": "client/texture.png",
+   "kind": "raster",
+   "crs": "EPSG:32610",
+   "bounds": [
+    690000,
+    4280000,
+    700000,
+    4290000
+   ],
+   "pixels": 2000,
+   "resolution_m": 5.0,
+   "derived_from": [
+    "terrain.dem",
+    "vegetation.habitat"
+   ],
+   "sha256": "a275944cb6c9b1a4f46f3583510f422c804a4b17184555474421792f07d59f45",
+   "bytes": 4480191
   }
  },
  "sources": {
@@ -550,6 +621,12 @@
    "step": "derive",
    "at": "2026-10-23T16:50:39Z",
    "seconds": 17.2,
+   "ok": true
+  },
+  {
+   "step": "derive",
+   "at": "2026-10-23T18:14:58Z",
+   "seconds": 22.8,
    "ok": true
   }
  ]

@@ -158,3 +158,61 @@ def rewilded_texture(tile: Tile) -> dict:
     alpha = np.minimum(hs[..., 3], hab[..., 3].astype("uint8"))
     Image.fromarray(np.dstack([rgb, alpha]), "RGBA").save(tile.path("terrain/rewilded.png"), optimize=True)
     return _meta("terrain/rewilded.png", tile, size, {"derived_from": ["terrain.hillshade", "vegetation.habitat"]})
+
+
+# ---------------------------------------------------------------------------
+# Client rasters: the same products on the metric tile grid (no WGS84 warp), so a
+# game client can work in tile-local meters. Written under <tile>/client/.
+# ---------------------------------------------------------------------------
+
+def _hillshade_array(z: np.ndarray, res: float, azimuth=315.0, altitude=45.0) -> np.ndarray:
+    dy, dx = np.gradient(z, res)
+    slope = np.arctan(np.hypot(dx, dy))
+    aspect = np.arctan2(-dx, dy)
+    az, alt = np.radians(azimuth), np.radians(altitude)
+    shade = np.sin(alt) * np.cos(slope) + np.cos(alt) * np.sin(slope) * np.cos(az - aspect)
+    return np.clip(shade, 0, 1)
+
+
+def client_rasters(tile: Tile) -> dict:
+    from .habitat import COLORS
+    z, res, _ = _dem(tile)
+    n = z.shape[0]
+    out = {}
+
+    # heights.png: Mapbox Terrain-RGB on the tile grid
+    v = np.round((z + 10000) / 0.1).astype("int64")
+    rgb = np.stack([(v >> 16) & 255, (v >> 8) & 255, v & 255], axis=-1).astype("uint8")
+    Image.fromarray(rgb, "RGB").save(tile.path("client/heights.png"), optimize=True)
+    out["client.heights"] = {"path": "client/heights.png", "kind": "raster", "crs": tile.crs, "bounds": list(tile.bounds),
+                             "pixels": n, "resolution_m": res, "encoding": "mapbox-terrain-rgb",
+                             "elevation_range_m": [float(z.min()), float(z.max())]}
+
+    # habitat.png (R = class code) and canopy.png (R tree %, G shrub %, B herb %) on the 30 m grid
+    with rasterio.open(tile.path("vegetation/habitat.tif")) as src:
+        hab = src.read(1)
+        hres = src.res[0]
+    with rasterio.open(tile.path("vegetation/evc.tif")) as src:
+        evc = src.read(1)
+    tree = np.where((evc >= 101) & (evc <= 199), evc - 100, 0)
+    shrub = np.where((evc >= 201) & (evc <= 299), evc - 200, 0)
+    herb = np.where((evc >= 301) & (evc <= 399), evc - 300, 0)
+    Image.fromarray(hab.astype("uint8"), "L").save(tile.path("client/habitat.png"), optimize=True)
+    Image.fromarray(np.dstack([tree, shrub, herb]).astype("uint8"), "RGB").save(tile.path("client/canopy.png"), optimize=True)
+    m = hab.shape[0]
+    out["client.habitat"] = {"path": "client/habitat.png", "kind": "raster", "crs": tile.crs, "bounds": list(tile.bounds),
+                             "pixels": m, "resolution_m": hres, "encoding": "R = habitat class code"}
+    out["client.canopy"] = {"path": "client/canopy.png", "kind": "raster", "crs": tile.crs, "bounds": list(tile.bounds),
+                            "pixels": m, "resolution_m": hres, "encoding": "R tree %, G shrub %, B herb %"}
+
+    # texture.png: hillshade modulated by habitat color, on the DEM grid
+    shade = _hillshade_array(z, res)
+    hab_up = np.repeat(np.repeat(hab, -(-n // m), axis=0), -(-n // m), axis=1)[:n, :n]
+    color = np.zeros((n, n, 3), "float32")
+    for code, c in COLORS.items():
+        color[hab_up == code] = c
+    tex = (color * (0.35 + 0.75 * shade[..., None])).clip(0, 255).astype("uint8")
+    Image.fromarray(tex, "RGB").save(tile.path("client/texture.png"), optimize=True)
+    out["client.texture"] = {"path": "client/texture.png", "kind": "raster", "crs": tile.crs, "bounds": list(tile.bounds),
+                             "pixels": n, "resolution_m": res, "derived_from": ["terrain.dem", "vegetation.habitat"]}
+    return out

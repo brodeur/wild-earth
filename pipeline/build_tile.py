@@ -89,6 +89,9 @@ def run(tile: Tile, steps: list[str], force=False) -> dict:
                         add_layer(m, tile, k, v)
                     if "terrain.hillshade" in m["layers"]:
                         add_layer(m, tile, "terrain.rewilded", derive.rewilded_texture(tile))
+                    if "terrain.dem" in m["layers"]:
+                        for k, v in derive.client_rasters(tile).items():
+                            add_layer(m, tile, k, v)
                     if "hydro.flowlines" in m["layers"] and "terrain.dem" in m["layers"]:
                         from .resources import derive_resources
                         add_layer(m, tile, "resources", derive_resources(tile))

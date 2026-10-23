@@ -1,0 +1,53 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Wild Earth — raven flight</title>
+<style>
+  html,body { margin:0; height:100%; background:#0b0f0d; color:#e6ede7; font:13px/1.4 -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif; overflow:hidden; }
+  canvas { display:block; }
+  #hud { position:fixed; left:14px; top:12px; background:#0f1512bb; padding:10px 12px; border-radius:8px; min-width:220px; backdrop-filter:blur(4px); }
+  #hud h1 { font-size:14px; margin:0 0 4px; }
+  #hud .row { display:flex; justify-content:space-between; gap:12px; color:#b7c4ba; }
+  #hud .row b { color:#e6ede7; font-weight:600; font-variant-numeric:tabular-nums; }
+  #panel { position:fixed; right:14px; top:12px; background:#0f1512bb; padding:10px 12px; border-radius:8px; width:230px; backdrop-filter:blur(4px); }
+  #panel label { display:block; color:#b7c4ba; margin:6px 0 2px; font-size:11px; text-transform:uppercase; letter-spacing:.06em; }
+  #panel select, #panel input[type=range] { width:100%; }
+  #panel select { background:#0d1310; color:#e6ede7; border:1px solid #263128; border-radius:6px; padding:4px 6px; font:inherit; }
+  #help { position:fixed; left:14px; bottom:12px; background:#0f1512bb; padding:8px 12px; border-radius:8px; color:#b7c4ba; font-size:12px; }
+  #help kbd { background:#1f2a23; border:1px solid #263128; border-radius:4px; padding:0 5px; color:#e6ede7; font:inherit; }
+  #status { position:fixed; left:50%; top:45%; transform:translate(-50%,-50%); background:#0f1512dd; padding:14px 18px; border-radius:10px; font-size:14px; }
+  #status.hidden { display:none; }
+  .muted { color:#8fa094; }
+</style>
+<script type="importmap">
+{ "imports": { "three": "https://unpkg.com/three@0.170.0/build/three.module.js",
+               "three/addons/": "https://unpkg.com/three@0.170.0/examples/jsm/" } }
+</script>
+</head>
+<body>
+<div id="hud">
+  <h1>common raven <span class="muted">· <span id="tileName">–</span></span></h1>
+  <div class="row"><span>altitude above ground</span><b id="agl">–</b></div>
+  <div class="row"><span>elevation</span><b id="elev">–</b></div>
+  <div class="row"><span>airspeed</span><b id="speed">–</b></div>
+  <div class="row"><span>heading</span><b id="heading">–</b></div>
+  <div class="row"><span>below me</span><b id="habitat">–</b></div>
+  <div class="row"><span>trees in view</span><b id="trees">–</b></div>
+</div>
+<div id="panel">
+  <label>Season <span class="muted" id="seasonNote"></span></label>
+  <select id="season"><option value="auto">tracks today's date</option><option value="winter">winter</option><option value="spring">spring</option><option value="summer">summer</option><option value="fall">fall</option></select>
+  <label>Time of day <span class="muted" id="timeLabel"></span></label>
+  <input id="time" type="range" min="5.5" max="19.5" step="0.1" value="9">
+  <label>Forest detail</label>
+  <select id="detail"><option value="900">near (900 m)</option><option value="1500" selected>normal (1.5 km)</option><option value="2400">far (2.4 km, slow)</option></select>
+  <label>Perceives</label>
+  <div class="muted" id="perceives">–</div>
+</div>
+<div id="help"><kbd>↑</kbd><kbd>↓</kbd> pitch · <kbd>←</kbd><kbd>→</kbd> turn · <kbd>W</kbd><kbd>S</kbd> speed · <kbd>space</kbd> flap · <kbd>R</kbd> reset · drag mouse to look</div>
+<div id="status">loading tile…</div>
+<script type="module" src="./src/main.js"></script>
+</body>
+</html>

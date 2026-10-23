@@ -10,7 +10,8 @@ Three workstreams share one contract, the [tile package spec](docs/tile-spec.md)
 |---|---|---|
 | Dataset pipeline | `pipeline/` | fetches terrain, imagery, footprint, hydrology, species for a tile |
 | Admin/viewer | `viewer/` | 2D/3D inspection, perception filter, season calendar, verify/flag |
-| Renderer | (Unreal, later) | the viewer's 3D terrain mode stands in for now |
+| Client | `client/` | first playable slice: fly the tile as a raven in three.js |
+| Renderer | (Unreal, later) | the browser client stands in for now |
 
 ## Run it
 
@@ -37,7 +38,20 @@ Serve the repo root and open the viewer:
 python3 -m http.server 8781 --bind 127.0.0.1
 ```
 
-Then open <http://127.0.0.1:8781/viewer/>.
+Then open <http://127.0.0.1:8781/viewer/> for the admin viewer, or
+<http://127.0.0.1:8781/client/?tile=utm10n_680_4280> to fly the tile as a raven.
+
+## The client
+
+`client/` is a three.js app with no build step. It reads a tile package's `client/`
+rasters and builds a 10 m terrain mesh, a vegetation-shaded texture that recolors grass
+and oaks by season, a physically placed sun for the tile's latitude, and a forest of
+procedural trees grown per 30 m cell from habitat class and canopy cover: blue oak,
+interior live oak, gray pine, ponderosa pine, manzanita and chamise, each a parameter
+set in `client/src/trees.js`. Trees are seeded by cell coordinates, so they are the same
+for everyone. Flight is first person: arrows to pitch and turn, W/S for speed, space to
+flap, gliding sinks slowly. Season follows today's date unless overridden; the sun
+follows the time slider. No animals yet beyond the player.
 
 ## What the pipeline produces
 
@@ -80,4 +94,7 @@ keep edits in the browser and export them as JSON; appending them to the manifes
 1. Erase masked landforms from the DEM (vegetation backfill is done).
 2. Density surfaces per species from CWHR habitat suitability, then the +10 year delta.
 3. Hand-drawn mask polygons in the viewer (mining scars, ditches, terraces).
-4. Unreal import of `terrain/dem.tif` as a Landscape with PCG scattering.
+4. Animals: rigged glTF models for the demo species, driven by the activity calendar,
+   with the perception matrix deciding who is rendered for whom.
+5. Unreal import of `terrain/dem.tif` as a Landscape with PCG scattering, when fidelity
+   beyond the browser is needed.

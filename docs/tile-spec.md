@@ -41,6 +41,10 @@ tiles/<tile_id>/
   resources/<resource>.tif      required  0-100 score, 4 bands = winter, spring, summer, fall, 30 m
   resources/<resource>_<season>.png derived RGBA for viewers
   resources/resources.json      required  resource list, tables used, png paths, mean scores
+  client/heights.png            derived   Terrain-RGB heights on the metric tile grid (no warp)
+  client/texture.png            derived   rewilded texture on the metric tile grid
+  client/habitat.png            derived   habitat class code in R, 30 m grid
+  client/canopy.png             derived   tree / shrub / herb cover percent in R / G / B, 30 m grid
   species/species.json          required  species list with roles, senses, sources
   species/occurrences.geojson   required  occurrence points for listed species
   species/seasonal.json         derived   per-species counts by month (phenology proxy)
@@ -177,6 +181,15 @@ Resources are named layers or entity classes a verb needs:
   }
 }
 ```
+
+## Client rasters
+
+Game clients work in tile-local meters (x east, north from the south edge, elevation
+up), so `client/` carries the same products on the unwarped tile grid. A client needs
+nothing else from the package to render terrain and vegetation: heights, texture,
+habitat class and canopy cover. Trees are not stored; the client grows them from
+habitat and canopy with a deterministic seed per 30 m cell, so every player sees the
+same tree in the same place without the package carrying a tree list.
 
 ## Versioning
 
