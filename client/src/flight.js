@@ -12,7 +12,7 @@ export class RavenFlight {
     window.addEventListener('pointerup', () => this.drag = null);
     window.addEventListener('pointermove', e => { if (!this.drag) return; this.yaw -= (e.clientX - this.drag.x) * 0.0035; this.pitch -= (e.clientY - this.drag.y) * 0.0025; this.drag = { x: e.clientX, y: e.clientY }; });
   }
-  reset(x, z, agl = 120) { this.pos.set(x, this.heights.atXZ(x, z) + agl, z); this.yaw = Math.PI; this.pitch = -0.08; this.speed = 12; }
+  reset(x, z, agl = 120) { this.pos.set(x, this.heights.atXZ(x, z) + agl, z); this.yaw = 0; this.pitch = -0.08; this.speed = 12; }  // yaw 0 faces north (-z)
   update(dt) {
     const k = this.keys, turn = 1.4, pitchRate = 1.0;
     let yawIn = (k.has('ArrowLeft') || k.has('KeyA') ? 1 : 0) - (k.has('ArrowRight') || k.has('KeyD') ? 1 : 0);
@@ -26,7 +26,9 @@ export class RavenFlight {
     // Diving speeds up, climbing slows down; gliding settles toward cruise.
     this.speed += -Math.sin(this.pitch) * 6 * dt - (this.speed - 12) * 0.15 * dt;
     this.speed = THREE.MathUtils.clamp(this.speed, 5, 40);
-    const dir = new THREE.Vector3(Math.sin(this.yaw) * Math.cos(this.pitch), Math.sin(this.pitch), Math.cos(this.yaw) * Math.cos(this.pitch));
+    // Orient the camera first, then fly along the direction it actually looks, so view and motion never disagree.
+    this.camera.quaternion.setFromEuler(new THREE.Euler(this.pitch, this.yaw, 0, 'YXZ'));
+    const dir = this.camera.getWorldDirection(new THREE.Vector3());
     this.pos.addScaledVector(dir, this.speed * dt);
     this.pos.y += (this.flap * 6 - 0.6) * dt;            // flap climbs, gliding sinks slowly
     this.flap = Math.max(0, this.flap - dt * 2.5);
@@ -35,7 +37,6 @@ export class RavenFlight {
     this.pos.x = THREE.MathUtils.clamp(this.pos.x, 50, this.heights.size - 50);
     this.pos.z = THREE.MathUtils.clamp(this.pos.z, -this.heights.size + 50, -50);
     this.camera.position.copy(this.pos);
-    this.camera.quaternion.setFromEuler(new THREE.Euler(this.pitch, this.yaw, 0, 'YXZ'));
     this.camera.rotateZ(this.roll);
     return { agl: this.pos.y - ground, elev: this.pos.y, speed: this.speed, heading: ((Math.atan2(dir.x, -dir.z) * 180 / Math.PI) + 360) % 360 };
   }

@@ -49,6 +49,7 @@ async function main() {
   }
   applySeason();
   status('');
+  window.__we = { tile, flight, camera, veg, terrain };   // debugging handle
 
   let last = performance.now(), hudT = 0;
   function frame(now) {
