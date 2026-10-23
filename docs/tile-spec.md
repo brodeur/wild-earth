@@ -15,6 +15,13 @@ layer used for region naming and privacy snapping; the data and render unit is s
   e.g. `utm10n_690_4280` for E 690 000–700 000, N 4 280 000–4 290 000 in EPSG:32610.
 - The anchor a player supplies is never stored. Only the snapped cell is.
 
+## Worlds
+
+A joinable world is a tile plus a season: `utm10n_680_4280/fall`. The package is the
+same for all four; the season selects resource bands, calendar entries and the look.
+Player state (nests, caches, dens, edits made in play) is keyed by world, not tile.
+Whether state flows from one season's world to the next is an open decision.
+
 ## Layout
 
 ```

@@ -87,3 +87,21 @@ and ambient wildlife. The loop comes when the world has earned it.
 deck.gl's aggregation layers fail in any deck that has drawn terrain. Occurrences are
 binned into 300 m cells and drawn as extruded columns. Technical, but it will bite
 anyone who tries to add a heatmap back.
+
+## 2026-10-23: a world is a location plus a season
+
+Aaron's proposal. Each tile exists as four joinable worlds, one per season, rather
+than one world locked to the calendar. The world whose season matches today's date is
+the live one and can take live signals (this week's observations, weather); the other
+three are stable and replayable. Onboarding becomes three choices: where, when, who.
+Rejected: a single real-time world per tile (players joining in October would not see
+spring until April) and spoofed in-game seasons (breaks the real-calendar honesty).
+Consequences: persistent state (nests, caches, dens) belongs to a world, not a tile;
+four worlds per tile shard multiplayer naturally; a federated node may host one season
+of a tile; a season-world keeps a day cycle and loops its own three months rather
+than freezing at a midpoint.
+
+**Open:** whether state flows between seasons. One-way flow in calendar order (what a
+raven caches in the fall world is recoverable in the winter world) makes the seasonal
+loops work and is harder to add later; fully independent worlds are simpler to run.
+To be decided per state type before the first persistent state is built.

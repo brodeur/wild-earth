@@ -36,6 +36,13 @@ of verbs parameterised per species (forage, cache, hunt, nest, den, court, rear,
 disperse, shelter), not bespoke mini-games, and the best encounters are asymmetric:
 a hawk's hunt and a squirrel's forage are the same moment from two sides.
 
+## Worlds: a location plus a season
+
+A tile exists as four joinable worlds, one per season. The one matching today's date
+is live; the others are stable places you can go. Joining is three choices: where,
+when, who. Persistent state belongs to a world. Whether state flows forward from one
+season's world to the next is still open (see the decision log). (Added 2026-10-23.)
+
 ## The experience comes first
 
 The world has to be beautiful enough to carry itself before any loop is tuned. Motion

@@ -31,6 +31,9 @@ browser stays the renderer.
 
 ## Then
 
+- Decide state flow between season-worlds before the first persistent state is built
+  (open question in the decision log).
+
 - First animals with behaviour from the activity calendar; perception matrix decides
   who is rendered for whom.
 - The forage-and-cache loop (raven in fall, squirrels as competitors) as the first
@@ -41,6 +44,8 @@ browser stays the renderer.
   appending viewer edits to the manifest's `edits` log.
 - Ground-truth the footprint mask on foot with the viewer on a phone.
 - Neighbouring tiles side by side in the viewer and client.
+- World selection in the client (where, when, who) as the opening screen; the live
+  season marked as such.
 - Test the Unreal import on a real install.
 
 ## Parked (in the brief, not started)
