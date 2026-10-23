@@ -18,7 +18,7 @@ from rasterio.warp import Resampling, reproject
 from shapely.geometry import shape
 from shapely.ops import transform as shp_transform
 
-from .config import Tile
+from .config import TILE_SIZE_M, Tile
 
 Image.MAX_IMAGE_PIXELS = None
 
@@ -232,4 +232,96 @@ def client_rasters(tile: Tile) -> dict:
     Image.fromarray(masks, "RGB").save(tile.path("client/masks.png"), optimize=True)
     out["client.masks"] = {"path": "client/masks.png", "kind": "raster", "crs": tile.crs, "bounds": list(tile.bounds),
                            "pixels": n, "resolution_m": res, "encoding": "R grassland, G oak woodland, B chaparral weights"}
+
+    # Mini-map products: present-day imagery and features, deliberately the real world, not the rewilded one.
+    imagery = client_imagery(tile)
+    if imagery:
+        out["client.imagery"] = imagery
+    features = client_features(tile)
+    if features:
+        out["client.features"] = features
     return out
+
+
+def client_imagery(tile: Tile, size=1024) -> dict | None:
+    """NAIP RGB downsampled onto the metric tile grid for the client mini-map."""
+    src_path = tile.dir / "imagery/naip.tif"
+    if not src_path.exists():
+        return None
+    with rasterio.open(src_path) as src:
+        data = src.read(indexes=[1, 2, 3])
+    img = Image.fromarray(np.moveaxis(data, 0, -1).astype("uint8"), "RGB").resize((size, size), Image.LANCZOS)
+    img.save(tile.path("client/imagery.png"), optimize=True)
+    return {"path": "client/imagery.png", "kind": "raster", "crs": tile.crs, "bounds": list(tile.bounds),
+            "pixels": size, "resolution_m": TILE_SIZE_M / size, "derived_from": "imagery.naip"}
+
+
+MINIMAP_ROADS = ("motorway", "motorway_link", "trunk", "primary", "secondary", "tertiary", "residential", "unclassified")
+MAJOR_ROADS = ("motorway", "trunk", "primary", "secondary")
+
+
+def _lines(geom: dict) -> list:
+    t, c = geom.get("type"), geom.get("coordinates")
+    return [c] if t == "LineString" else list(c) if t == "MultiLineString" else []
+
+
+def _rings(geom: dict) -> list:
+    t, c = geom.get("type"), geom.get("coordinates")
+    return [c[0]] if t == "Polygon" and c else [p[0] for p in c if p] if t == "MultiPolygon" else []
+
+
+def client_features(tile: Tile) -> dict | None:
+    """Present-day roads, streams and waterbodies in tile-local metres (x east, north from the south edge)."""
+    to_tile = Transformer.from_crs("EPSG:4326", tile.crs, always_xy=True)
+    x0, y0 = tile.bounds[0], tile.bounds[1]
+
+    def local(coords):
+        lon, lat = zip(*[(c[0], c[1]) for c in coords])
+        xs, ys = to_tile.transform(lon, lat)
+        return [[round(x - x0, 1), round(y - y0, 1)] for x, y in zip(xs, ys)]
+
+    def load(rel):
+        p = tile.dir / rel
+        if not p.exists():
+            return None
+        with open(p) as f:
+            return json.load(f)["features"]
+
+    roads, streams, waterbodies, found = [], [], [], False
+    feats = load("footprint/mask.geojson")
+    if feats is not None:
+        found = True
+        for ft in feats:
+            pr = ft.get("properties") or {}
+            kind = pr.get("highway")
+            if pr.get("class") != "road" or kind not in MINIMAP_ROADS:
+                continue
+            for line in _lines(ft.get("geometry") or {}):
+                if len(line) >= 2:
+                    roads.append({"name": pr.get("name"), "kind": kind, "major": kind in MAJOR_ROADS, "path": local(line)})
+    feats = load("hydro/flowlines.geojson")
+    if feats is not None:
+        found = True
+        for ft in feats:
+            pr = ft.get("properties") or {}
+            for line in _lines(ft.get("geometry") or {}):
+                if len(line) >= 2:
+                    streams.append({"name": pr.get("gnis_name") or pr.get("name"), "path": local(line)})
+    feats = load("hydro/waterbodies.geojson")
+    if feats is not None:
+        found = True
+        for ft in feats:
+            pr = ft.get("properties") or {}
+            for ring in _rings(ft.get("geometry") or {}):
+                if len(ring) >= 3:
+                    waterbodies.append({"name": pr.get("gnis_name") or pr.get("name"), "ring": local(ring)})
+    if not found:
+        return None
+    path = tile.path("client/features.json")
+    with open(path, "w") as f:
+        json.dump({"roads": roads, "streams": streams, "waterbodies": waterbodies, "size_m": TILE_SIZE_M},
+                  f, separators=(",", ":"))
+    return {"path": "client/features.json", "kind": "vector", "crs": tile.crs, "bounds": list(tile.bounds),
+            "encoding": "tile-local metres [x east, north from south edge]",
+            "counts": {"roads": len(roads), "streams": len(streams), "waterbodies": len(waterbodies)},
+            "derived_from": ["footprint.mask", "hydro.flowlines", "hydro.waterbodies"]}

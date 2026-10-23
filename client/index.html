@@ -19,7 +19,15 @@
   #help kbd { background:#1f2a23; border:1px solid #263128; border-radius:4px; padding:0 5px; color:#e6ede7; font:inherit; }
   #status { position:fixed; left:50%; top:45%; transform:translate(-50%,-50%); background:#0f1512dd; padding:14px 18px; border-radius:10px; font-size:14px; }
   #status.hidden { display:none; }
+  #minimap { position:fixed; right:14px; bottom:12px; background:#0f1512bb; padding:6px; border-radius:8px; backdrop-filter:blur(4px); line-height:0; }
+  #minimap canvas { border-radius:4px; cursor:crosshair; }
+  #help { max-width:calc(100vw - 310px); }   /* wrap rather than run under the mini-map */
   .muted { color:#8fa094; }
+  #goto { display:flex; gap:6px; }
+  #goto input { flex:1; min-width:0; background:#0d1310; color:#e6ede7; border:1px solid #263128; border-radius:6px; padding:4px 6px; font:inherit; }
+  #goto button { background:#1f2a23; color:#e6ede7; border:1px solid #263128; border-radius:6px; padding:4px 10px; font:inherit; cursor:pointer; }
+  #gotoStatus { font-size:11px; margin-top:3px; min-height:1em; word-break:break-word; }
+  #gotoStatus.err { color:#e8a98f; }
 </style>
 <script type="importmap">
 { "imports": { "three": "https://unpkg.com/three@0.170.0/build/three.module.js",
@@ -37,6 +45,9 @@
   <div class="row"><span>trees in view</span><b id="trees">–</b></div>
 </div>
 <div id="panel">
+  <label for="gotoInput">Location</label>
+  <div id="goto"><input id="gotoInput" placeholder="lat, lon" autocomplete="off" spellcheck="false"><button id="gotoBtn">Go</button></div>
+  <div class="muted" id="gotoStatus"></div>
   <label>Season <span class="muted" id="seasonNote"></span></label>
   <select id="season"><option value="auto">tracks today's date</option><option value="winter">winter</option><option value="spring">spring</option><option value="summer">summer</option><option value="fall">fall</option></select>
   <label>Time of day <span class="muted" id="timeLabel"></span></label>
@@ -46,7 +57,8 @@
   <label>Perceives</label>
   <div class="muted" id="perceives">–</div>
 </div>
-<div id="help"><kbd>↑</kbd><kbd>↓</kbd> pitch · <kbd>←</kbd><kbd>→</kbd> turn · <kbd>W</kbd><kbd>S</kbd> speed · <kbd>X</kbd><kbd>Z</kbd> climb / descend · <kbd>space</kbd> flap · <kbd>R</kbd> reset · drag mouse to look</div>
+<div id="help"><kbd>↑</kbd><kbd>↓</kbd> pitch · <kbd>←</kbd><kbd>→</kbd> turn · <kbd>W</kbd><kbd>S</kbd> speed · <kbd>X</kbd><kbd>Z</kbd> climb / descend · <kbd>space</kbd> flap · <kbd>R</kbd> reset · <kbd>M</kbd> map · drag mouse to look</div>
+<div id="minimap"></div>
 <div id="status">loading tile…</div>
 <script type="module" src="./src/main.js"></script>
 </body>

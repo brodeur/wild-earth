@@ -15,7 +15,7 @@
   38.73825606650576
  ],
  "size_m": 10000,
- "generated_at": "2026-10-23T21:01:27Z",
+ "generated_at": "2026-10-23T21:24:47Z",
  "generator": {
   "name": "wild-earth-pipeline",
   "version": "0.2.0"
@@ -538,6 +538,46 @@
    "encoding": "R grassland, G oak woodland, B chaparral weights",
    "sha256": "5376a4a8b5ae2ee099815b2aa4fe0b54d47dcdd4b652f72ce20a51786a33a823",
    "bytes": 1868580
+  },
+  "client.imagery": {
+   "path": "client/imagery.png",
+   "kind": "raster",
+   "crs": "EPSG:32610",
+   "bounds": [
+    690000,
+    4280000,
+    700000,
+    4290000
+   ],
+   "pixels": 1024,
+   "resolution_m": 9.765625,
+   "derived_from": "imagery.naip",
+   "sha256": "6dc1243f4e7ff6d668629b56e2983f102c901ad4200a1e4a4ce5f46fb5cacf18",
+   "bytes": 2216084
+  },
+  "client.features": {
+   "path": "client/features.json",
+   "kind": "vector",
+   "crs": "EPSG:32610",
+   "bounds": [
+    690000,
+    4280000,
+    700000,
+    4290000
+   ],
+   "encoding": "tile-local metres [x east, north from south edge]",
+   "counts": {
+    "roads": 1000,
+    "streams": 627,
+    "waterbodies": 61
+   },
+   "derived_from": [
+    "footprint.mask",
+    "hydro.flowlines",
+    "hydro.waterbodies"
+   ],
+   "sha256": "4adf32be950c739d410ee2cbc30ba9e050fc5206ed81974b87297b9850796316",
+   "bytes": 512013
   }
  },
  "sources": {
@@ -683,6 +723,12 @@
    "step": "derive",
    "at": "2026-10-23T21:01:27Z",
    "seconds": 22.9,
+   "ok": true
+  },
+  {
+   "step": "derive",
+   "at": "2026-10-23T21:24:47Z",
+   "seconds": 24.7,
    "ok": true
   }
  ]

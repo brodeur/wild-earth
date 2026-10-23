@@ -12,7 +12,9 @@ sequenced; Parked is in the brief but deliberately not started.
 - Admin viewer: 2D/3D, three textures, habitat and resource layers, perception filter,
   season calendar, verify/flag edits exported as JSON, density grid, pipeline status.
 - Client: fly the tile as a raven; 10 m terrain, season-recolored texture, latitude
-  sun, procedural forest of six species, ~30k instances at 65 fps.
+  sun, procedural forest of six species, ~30k instances at 65 fps; X/Z altitude keys;
+  mini-map of present-day imagery, roads, streams and the raven's trail (M toggles,
+  click to fly there).
 
 ## Next: the visual pass, in order of effect per hour
 

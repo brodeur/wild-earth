@@ -32,14 +32,18 @@ Re-run single steps for an existing tile:
 .venv/bin/python -m pipeline.build_tile --tile utm10n_690_4280 --steps species,derive
 ```
 
-Serve the repo root and open the viewer:
+Run the dev server (static files from the repo root plus a small tile API):
 
 ```bash
-python3 -m http.server 8781 --bind 127.0.0.1
+.venv/bin/python server.py --port 8781 --bind 127.0.0.1
 ```
 
 Then open <http://127.0.0.1:8781/viewer/> for the admin viewer, or
 <http://127.0.0.1:8781/client/?tile=utm10n_680_4280> to fly the tile as a raven.
+The API answers which tile holds a point (`POST /api/tile {lon, lat}`) and builds a missing
+one in the background (`POST /api/build`, progress at `GET /api/build/<tile_id>`); the
+client's Location box uses it to fly, switch tiles, or build. Points are snapped to a tile
+and never logged or stored.
 
 ## The client
 
@@ -54,6 +58,7 @@ descend, space to flap, gliding sinks slowly. Season follows today's date unless
 follows the time slider. Beyond the near forest, every forested 30 m cell carries two
 impostor clusters so the tree line runs to the tile edge; grass tufts sway near the
 camera. No animals yet beyond the player.
+A mini-map (M to toggle, click to fly there) shows present-day NAIP imagery, roads and streams by design: the rewilded world laid against the real one.
 
 `pipeline.audit_licenses` counts occurrence records by license per tile; see the
 decision log for what the numbers mean.

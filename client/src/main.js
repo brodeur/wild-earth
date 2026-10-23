@@ -6,6 +6,8 @@ import { RavenFlight } from './flight.js';
 import { Vegetation } from './vegetation.js';
 import { Impostors } from './impostors.js';
 import { Grass } from './grass.js';
+import { MiniMap } from './minimap.js';
+import { setupGoTo, takePendingPoint, builtTileFor } from './goto.js';
 import { SEASON_LOOK, seasonOfDate, sunDirection } from './season.js';
 
 const $ = id => document.getElementById(id);
@@ -13,7 +15,11 @@ const status = t => { $('status').textContent = t; $('status').classList.toggle(
 
 async function main() {
   const params = new URLSearchParams(location.search);
-  const tile = await loadTile(params.get('tile'));
+  const pending = takePendingPoint(params);   // a lat/lon to land at, read once
+  let tileId = params.get('tile');
+  if (pending && !tileId) tileId = await builtTileFor(pending);   // null -> loader picks the first tile
+  const tile = await loadTile(tileId);
+  if (pending) history.replaceState(null, '', `?tile=${tile.id}`);   // never keep the point in the URL
   $('tileName').textContent = tile.id;
   status('building terrain…');
   await new Promise(r => setTimeout(r, 20));
@@ -35,6 +41,9 @@ async function main() {
   const flight = new RavenFlight(camera, tile.heights, renderer.domElement);
   flight.reset(tile.size / 2, -tile.size / 2, 150);
   veg.radius = +$('detail').value; veg.update(flight.pos.x, flight.pos.z, true);
+  const minimap = new MiniMap({ container: $('minimap'), sizeM: tile.size, imagery: tile.imagery, features: tile.features, flight });
+  const goto = setupGoTo({ tile, flight, input: $('gotoInput'), button: $('gotoBtn'), line: $('gotoStatus') });
+  if (pending) goto.go(pending, { fromLoad: true });
 
   const state = { season: 'auto', hour: +$('time').value };
   const seasonNow = () => state.season === 'auto' ? seasonOfDate() : state.season;
@@ -53,7 +62,7 @@ async function main() {
   }
   applySeason();
   status('');
-  window.__we = { tile, flight, camera, veg, terrain, far, grass, scene, renderer };   // debugging handle
+  window.__we = { tile, flight, camera, veg, terrain, far, grass, scene, renderer, minimap };   // debugging handle
 
   let last = performance.now(), hudT = 0;
   function frame(now) {
@@ -67,6 +76,7 @@ async function main() {
     terrain.setLook(look, sun); terrain.uniforms.sunColor.value.copy(lights.sunColor).multiplyScalar(sky.sun.intensity * 0.45); terrain.uniforms.skyColor.value.copy(lights.skyColor);
     terrain.uniforms.fogColor.value.copy(scene.fog.color); terrain.uniforms.fogNear.value = scene.fog.near; terrain.uniforms.fogFar.value = scene.fog.far;
     renderer.render(scene, camera);
+    minimap.update(flight.pos, f.heading);
     hudT += dt;
     if (hudT > 0.15) {
       hudT = 0;
