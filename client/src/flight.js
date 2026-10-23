@@ -31,6 +31,8 @@ export class RavenFlight {
     const dir = this.camera.getWorldDirection(new THREE.Vector3());
     this.pos.addScaledVector(dir, this.speed * dt);
     this.pos.y += (this.flap * 6 - 0.6) * dt;            // flap climbs, gliding sinks slowly
+    const vert = (k.has('KeyX') ? 1 : 0) - (k.has('KeyZ') ? 1 : 0);   // X climbs, Z descends
+    this.pos.y += vert * 9 * dt;
     this.flap = Math.max(0, this.flap - dt * 2.5);
     const ground = this.heights.atXZ(this.pos.x, this.pos.z);
     if (this.pos.y < ground + 2) { this.pos.y = ground + 2; this.pitch = Math.max(this.pitch, 0.05); }

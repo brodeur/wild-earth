@@ -49,8 +49,8 @@ and oaks by season, a physically placed sun for the tile's latitude, and a fores
 procedural trees grown per 30 m cell from habitat class and canopy cover: blue oak,
 interior live oak, gray pine, ponderosa pine, manzanita and chamise, each a parameter
 set in `client/src/trees.js`. Trees are seeded by cell coordinates, so they are the same
-for everyone. Flight is first person: arrows to pitch and turn, W/S for speed, space to
-flap, gliding sinks slowly. Season follows today's date unless overridden; the sun
+for everyone. Flight is first person: arrows to pitch and turn, W/S for speed, X/Z to climb or
+descend, space to flap, gliding sinks slowly. Season follows today's date unless overridden; the sun
 follows the time slider. Beyond the near forest, every forested 30 m cell carries two
 impostor clusters so the tree line runs to the tile edge; grass tufts sway near the
 camera. No animals yet beyond the player.
