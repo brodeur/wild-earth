@@ -1,0 +1,516 @@
+{
+ "spec_version": "0.2.0",
+ "tile_id": "utm10n_680_4280",
+ "crs": "EPSG:32610",
+ "bounds": [
+  680000,
+  4280000,
+  690000,
+  4290000
+ ],
+ "bounds_wgs84": [
+  -120.93152384283707,
+  38.64820341500411,
+  -120.81394357647186,
+  38.74035063713964
+ ],
+ "size_m": 10000,
+ "generated_at": "2026-10-23T17:47:25Z",
+ "generator": {
+  "name": "wild-earth-pipeline",
+  "version": "0.2.0"
+ },
+ "status": {
+  "human_landforms_removed": false,
+  "hydrology_rewilded": false,
+  "projection_years": 0,
+  "vegetation_backfilled": true
+ },
+ "layers": {
+  "terrain.dem": {
+   "path": "terrain/dem.tif",
+   "kind": "raster",
+   "resolution_m": 5.0,
+   "units": "m",
+   "nodata": -9999.0,
+   "source": "usgs_3dep",
+   "source_resolution_m": 1.0,
+   "stats": {
+    "min": 275.17584228515625,
+    "max": 658.517333984375,
+    "valid_fraction": 1.0
+   },
+   "sha256": "1c057c25c3a05259fd9bc8b4567099eb7c7e2386495b84d3a69b25310948ca3d",
+   "bytes": 12129841
+  },
+  "imagery.naip": {
+   "path": "imagery/naip.tif",
+   "kind": "raster",
+   "resolution_m": 2.5,
+   "bands": [
+    "red",
+    "green",
+    "blue"
+   ],
+   "source": "pc_naip",
+   "naip_year": 2022,
+   "items": 6,
+   "coverage": 1.0,
+   "sha256": "16bef21a3a9223af99f1eee66e135cd5bf409ff16d8949a7e7551c48054bf81f",
+   "bytes": 52025702
+  },
+  "footprint.mask": {
+   "path": "footprint/mask.geojson",
+   "kind": "vector",
+   "source": "osm",
+   "feature_count": 6682,
+   "class_counts": {
+    "road": 4129,
+    "power": 21,
+    "building": 2492,
+    "cleared": 19,
+    "agriculture": 9,
+    "reservoir": 6,
+    "mine": 1,
+    "rail": 4,
+    "other": 1
+   },
+   "sha256": "97411f011e2f4be84e223f181581e6ff81d479622dba0b25cd1c454759aa9ec6",
+   "bytes": 5081341
+  },
+  "hydro.flowlines": {
+   "path": "hydro/flowlines.geojson",
+   "kind": "vector",
+   "source": "nhdplus_hr",
+   "feature_count": 433,
+   "sha256": "5a262ac42612dc6aa5cafac62cf08b34c6e43e413f05d177dcea71bd5309883b",
+   "bytes": 358359
+  },
+  "hydro.waterbodies": {
+   "path": "hydro/waterbodies.geojson",
+   "kind": "vector",
+   "source": "nhdplus_hr",
+   "feature_count": 49,
+   "reservoirs": [],
+   "sha256": "360d9b33d32a99ef8ef16982096ac37cd3787b9b0ffbf3cbac80877dd7d69ae6",
+   "bytes": 62166
+  },
+  "vegetation.evt": {
+   "path": "vegetation/evt.tif",
+   "kind": "raster",
+   "resolution_m": 30.0,
+   "source": "landfire",
+   "classes": 43,
+   "sha256": "7a10657d8ce5d90cd9367f91e24305c4314b82adc24bd4833b1c71dc97d7b31f",
+   "bytes": 75411
+  },
+  "vegetation.evc": {
+   "path": "vegetation/evc.tif",
+   "kind": "raster",
+   "resolution_m": 30.0,
+   "source": "landfire",
+   "classes": 198,
+   "sha256": "af036fd261520f2f8e30764954b3890c7bdd2dddedf1c20e3d06465f45b4284f",
+   "bytes": 115582
+  },
+  "vegetation.evh": {
+   "path": "vegetation/evh.tif",
+   "kind": "raster",
+   "resolution_m": 30.0,
+   "source": "landfire",
+   "classes": 90,
+   "sha256": "381e1fb2b7875404800e51d19a015253d1a93a4979c692b116180bfb0f524d1a",
+   "bytes": 101597
+  },
+  "vegetation.bps": {
+   "path": "vegetation/bps.tif",
+   "kind": "raster",
+   "resolution_m": 30.0,
+   "source": "landfire",
+   "classes": 13,
+   "sha256": "edbef59aa3f826dbe136f76f5d0cb54abb172f015b59b21341894db64c5ba007",
+   "bytes": 24482
+  },
+  "vegetation.habitat_present": {
+   "path": "vegetation/habitat_present.tif",
+   "kind": "raster",
+   "resolution_m": 30.0,
+   "derived_from": "vegetation.evt",
+   "fractions": {
+    "oak_woodland": 0.0875,
+    "conifer_forest": 0.1031,
+    "mixed_forest": 0.1175,
+    "chaparral": 0.1543,
+    "grassland": 0.1272,
+    "riparian": 0.0419,
+    "water": 0.0041,
+    "barren": 0.005,
+    "human": 0.3594
+   },
+   "sha256": "46e15f7beae41d7703ab3f5ab4527c921cd5ae6ef0c9c68451fe0eedc5f3ba8a",
+   "bytes": 34571
+  },
+  "vegetation.habitat": {
+   "path": "vegetation/habitat.tif",
+   "kind": "raster",
+   "resolution_m": 30.0,
+   "derived_from": [
+    "vegetation.evt",
+    "vegetation.bps"
+   ],
+   "backfilled_fraction": 0.3594,
+   "fractions": {
+    "oak_woodland": 0.3821,
+    "conifer_forest": 0.1031,
+    "mixed_forest": 0.1175,
+    "chaparral": 0.2014,
+    "grassland": 0.1272,
+    "riparian": 0.0584,
+    "water": 0.0041,
+    "barren": 0.0062
+   },
+   "sha256": "5670e82187c44a7d62a27152db74675f3c9323bd8ed4855f1eb4dc7356329328",
+   "bytes": 32758
+  },
+  "vegetation.classes": {
+   "path": "vegetation/classes.json",
+   "kind": "table",
+   "sha256": "534adc8edc381f390635270fb061579f00c34121a45725d9805ac9000d798b20",
+   "bytes": 33653
+  },
+  "species.list": {
+   "path": "species/species.json",
+   "kind": "table",
+   "source": "gbif",
+   "count": 10,
+   "sha256": "5c768b03857e15eeb616af049b93748e76bf4d12e5d6050fcbd9043729a25184",
+   "bytes": 4398
+  },
+  "species.occurrences": {
+   "path": "species/occurrences.geojson",
+   "kind": "vector",
+   "source": "gbif",
+   "feature_count": 767,
+   "sha256": "f6270e17eb1243c64c8180c401d987a657d6296348ff6def175c25c3858b79b0",
+   "bytes": 342033
+  },
+  "species.seasonal": {
+   "path": "species/seasonal.json",
+   "kind": "table",
+   "source": "gbif",
+   "sha256": "2a6574a793599c8e5c1f383816f87711cc5fbd3375865b8031e152bb56cd340e",
+   "bytes": 1145
+  },
+  "species.inventory": {
+   "path": "species/inventory.json",
+   "kind": "table",
+   "source": "gbif",
+   "sha256": "eb512af3e48d1a9430426bba2e1a724bf85bd86e724e42c9c1b71c0eb4a53b9e",
+   "bytes": 8249
+  },
+  "perception": {
+   "path": "perception.json",
+   "kind": "table",
+   "sha256": "f4f94936bfb8c5e2c948938c59df6306688ffb5ff4194d44462f6c72b2d21a25",
+   "bytes": 2330
+  },
+  "calendar": {
+   "path": "calendar.json",
+   "kind": "table",
+   "sha256": "4c658772d36539c51a0a25bdbfad21deb49d80832f9765c710edd5c0571becaf",
+   "bytes": 8306
+  },
+  "terrain.hillshade": {
+   "path": "terrain/hillshade.png",
+   "kind": "raster",
+   "crs": "EPSG:4326",
+   "bounds": [
+    -120.93152384283707,
+    38.64820341500411,
+    -120.81394357647186,
+    38.74035063713964
+   ],
+   "pixels": 2000,
+   "derived_from": "terrain.dem",
+   "params": {
+    "azimuth": 315.0,
+    "altitude": 45.0
+   },
+   "sha256": "211ee22b4c55decd78ddeff17176affae7eddf98c4e92a0824158383d5e46e26",
+   "bytes": 3211504
+  },
+  "terrain.terrain_rgb": {
+   "path": "terrain/terrain_rgb.png",
+   "kind": "raster",
+   "crs": "EPSG:4326",
+   "bounds": [
+    -120.93152384283707,
+    38.64820341500411,
+    -120.81394357647186,
+    38.74035063713964
+   ],
+   "pixels": 2000,
+   "derived_from": "terrain.dem",
+   "encoding": "mapbox-terrain-rgb",
+   "elevation_range_m": [
+    275.2411804199219,
+    658.447021484375
+   ],
+   "sha256": "ab8241bab8675619928924823b6843d7cb8a76e9327468ae13d15a347a5e2ed5",
+   "bytes": 2483211
+  },
+  "footprint.mask_raster": {
+   "path": "footprint/mask.png",
+   "kind": "raster",
+   "crs": "EPSG:4326",
+   "bounds": [
+    -120.93152384283707,
+    38.64820341500411,
+    -120.81394357647186,
+    38.74035063713964
+   ],
+   "pixels": 2000,
+   "derived_from": "footprint.mask",
+   "masked_fraction": 0.08933275,
+   "sha256": "0afbe4450599f2f98846e02b6db51151f57425837c9c65d0d124fdf2cbe7b4b8",
+   "bytes": 157272
+  },
+  "imagery.naip_png": {
+   "path": "imagery/naip.png",
+   "kind": "raster",
+   "crs": "EPSG:4326",
+   "bounds": [
+    -120.93152384283707,
+    38.64820341500411,
+    -120.81394357647186,
+    38.74035063713964
+   ],
+   "pixels": 2500,
+   "derived_from": "imagery.naip",
+   "sha256": "12545f44186da4ac235943633e2c7305ff1d0d93143c6141608537b974c905a2",
+   "bytes": 13479664
+  },
+  "vegetation.habitat_png": {
+   "path": "vegetation/habitat.png",
+   "kind": "raster",
+   "crs": "EPSG:4326",
+   "bounds": [
+    -120.93152384283707,
+    38.64820341500411,
+    -120.81394357647186,
+    38.74035063713964
+   ],
+   "pixels": 668,
+   "derived_from": "vegetation.habitat",
+   "sha256": "d570c07fd62b489e69d04cc4ff7e2545e87d3aafa67d3c7e3b87a90866c7c46e",
+   "bytes": 110458
+  },
+  "vegetation.habitat_present_png": {
+   "path": "vegetation/habitat_present.png",
+   "kind": "raster",
+   "crs": "EPSG:4326",
+   "bounds": [
+    -120.93152384283707,
+    38.64820341500411,
+    -120.81394357647186,
+    38.74035063713964
+   ],
+   "pixels": 668,
+   "derived_from": "vegetation.habitat_present",
+   "sha256": "e8f45c263113764e041eb8ddddff79c22c477aab5beeaa63bbc7dd26ed6b0d87",
+   "bytes": 118889
+  },
+  "terrain.rewilded": {
+   "path": "terrain/rewilded.png",
+   "kind": "raster",
+   "crs": "EPSG:4326",
+   "bounds": [
+    -120.93152384283707,
+    38.64820341500411,
+    -120.81394357647186,
+    38.74035063713964
+   ],
+   "pixels": 2000,
+   "derived_from": [
+    "terrain.hillshade",
+    "vegetation.habitat"
+   ],
+   "sha256": "53cca87a447134e86e56d7a4b345acfa1d35cbc6fb1626c4f1248791adb6b134",
+   "bytes": 4310631
+  },
+  "resources": {
+   "path": "resources/resources.json",
+   "kind": "table",
+   "derived_from": [
+    "vegetation.habitat",
+    "vegetation.evc",
+    "terrain.dem",
+    "hydro.flowlines"
+   ],
+   "resources": [
+    "acorn_mast",
+    "grass_forbs",
+    "browse",
+    "cover",
+    "insects",
+    "cavity",
+    "cliff_or_snag",
+    "burrow",
+    "water"
+   ],
+   "mean_score": {
+    "acorn_mast": {
+     "winter": 21.5,
+     "spring": 4.3,
+     "summer": 2.2,
+     "fall": 43.1
+    },
+    "grass_forbs": {
+     "winter": 25.0,
+     "spring": 41.6,
+     "summer": 8.3,
+     "fall": 12.5
+    },
+    "browse": {
+     "winter": 29.7,
+     "spring": 49.5,
+     "summer": 34.7,
+     "fall": 24.8
+    },
+    "cover": {
+     "winter": 55.7,
+     "spring": 65.5,
+     "summer": 65.5,
+     "fall": 65.5
+    },
+    "insects": {
+     "winter": 5.7,
+     "spring": 57.2,
+     "summer": 45.7,
+     "fall": 22.9
+    },
+    "cavity": {
+     "winter": 30.1,
+     "spring": 30.1,
+     "summer": 30.1,
+     "fall": 30.1
+    },
+    "cliff_or_snag": {
+     "winter": 32.3,
+     "spring": 32.3,
+     "summer": 32.3,
+     "fall": 32.3
+    },
+    "burrow": {
+     "winter": 41.0,
+     "spring": 51.2,
+     "summer": 51.2,
+     "fall": 51.2
+    },
+    "water": {
+     "winter": 54.6,
+     "spring": 54.6,
+     "summer": 16.6,
+     "fall": 16.6
+    }
+   },
+   "sha256": "0a847c82dc38557e755581fd70354c552c69251b49991671380e7ff1ec746fe1",
+   "bytes": 5141
+  }
+ },
+ "sources": {
+  "usgs_3dep": {
+   "name": "USGS 3D Elevation Program (3DEP) bare-earth DEM",
+   "url": "https://elevation.nationalmap.gov/arcgis/rest/services/3DEPElevation/ImageServer",
+   "license": "public domain",
+   "retrieved": "2026-10-23"
+  },
+  "pc_naip": {
+   "name": "USDA NAIP via Microsoft Planetary Computer",
+   "url": "https://planetarycomputer.microsoft.com/dataset/naip",
+   "license": "public domain",
+   "retrieved": "2026-10-23"
+  },
+  "osm": {
+   "name": "OpenStreetMap via Overpass API",
+   "url": "https://overpass-api.de/api/interpreter",
+   "license": "ODbL 1.0",
+   "retrieved": "2026-10-23"
+  },
+  "landfire": {
+   "name": "LANDFIRE LF 2025 (EVT, EVC, EVH) and LF 2016 Biophysical Settings",
+   "url": "https://landfire.gov",
+   "license": "public domain",
+   "retrieved": "2026-10-23"
+  },
+  "gbif": {
+   "name": "GBIF occurrence API (includes iNaturalist research-grade and eBird)",
+   "url": "https://api.gbif.org/v1/occurrence/search",
+   "license": "per dataset (CC0 / CC BY / CC BY-NC); see occurrence properties",
+   "retrieved": "2026-10-23"
+  },
+  "nhdplus_hr": {
+   "name": "USGS NHDPlus High Resolution",
+   "url": "https://hydro.nationalmap.gov/arcgis/rest/services/NHDPlus_HR/MapServer",
+   "license": "public domain",
+   "retrieved": "2026-10-23"
+  }
+ },
+ "edits": [],
+ "log": [
+  {
+   "step": "dem",
+   "at": "2026-10-23T16:59:23Z",
+   "seconds": 24.3,
+   "ok": true
+  },
+  {
+   "step": "naip",
+   "at": "2026-10-23T17:01:08Z",
+   "seconds": 105.5,
+   "ok": true
+  },
+  {
+   "step": "osm",
+   "at": "2026-10-23T17:23:53Z",
+   "seconds": 1365.0,
+   "ok": true
+  },
+  {
+   "step": "hydro",
+   "at": "2026-10-23T17:37:35Z",
+   "seconds": 821.9,
+   "ok": true
+  },
+  {
+   "step": "veg",
+   "at": "2026-10-23T17:37:41Z",
+   "seconds": 5.3,
+   "ok": true
+  },
+  {
+   "step": "species",
+   "at": "2026-10-23T17:39:21Z",
+   "seconds": 100.4,
+   "ok": true
+  },
+  {
+   "step": "derive",
+   "at": "2026-10-23T17:39:37Z",
+   "seconds": 16.5,
+   "ok": true
+  },
+  {
+   "step": "hydro",
+   "at": "2026-10-23T17:47:08Z",
+   "seconds": 424.5,
+   "ok": true
+  },
+  {
+   "step": "derive",
+   "at": "2026-10-23T17:47:25Z",
+   "seconds": 17.0,
+   "ok": true
+  }
+ ]
+}

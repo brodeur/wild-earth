@@ -2,6 +2,44 @@
  "spec_version": "0.2.0",
  "tiles": [
   {
+   "tile_id": "utm10n_680_4280",
+   "bounds_wgs84": [
+    -120.93152384283707,
+    38.64820341500411,
+    -120.81394357647186,
+    38.74035063713964
+   ],
+   "generated_at": "2026-10-23T17:47:25Z",
+   "layers": [
+    "calendar",
+    "footprint.mask",
+    "footprint.mask_raster",
+    "hydro.flowlines",
+    "hydro.waterbodies",
+    "imagery.naip",
+    "imagery.naip_png",
+    "perception",
+    "resources",
+    "species.inventory",
+    "species.list",
+    "species.occurrences",
+    "species.seasonal",
+    "terrain.dem",
+    "terrain.hillshade",
+    "terrain.rewilded",
+    "terrain.terrain_rgb",
+    "vegetation.bps",
+    "vegetation.classes",
+    "vegetation.evc",
+    "vegetation.evh",
+    "vegetation.evt",
+    "vegetation.habitat",
+    "vegetation.habitat_png",
+    "vegetation.habitat_present",
+    "vegetation.habitat_present_png"
+   ]
+  },
+  {
    "tile_id": "utm10n_690_4280",
    "bounds_wgs84": [
     -120.81668392006142,

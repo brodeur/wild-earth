@@ -1,0 +1,262 @@
+[
+ {
+  "code": "corvus_corax",
+  "common": "common raven",
+  "scientific": "Corvus corax",
+  "group": "bird",
+  "role": "playable",
+  "scale": "bird",
+  "senses": {
+   "vision": {
+    "range_m": 1500,
+    "color": "tetrachromat"
+   },
+   "hearing": {
+    "range_m": 500
+   },
+   "smell": {
+    "range_m": 50
+   }
+  },
+  "gbif_key": 2482492,
+  "sources": [
+   "gbif"
+  ],
+  "confidence": "unverified",
+  "occurrence_count": 212
+ },
+ {
+  "code": "buteo_jamaicensis",
+  "common": "red-tailed hawk",
+  "scientific": "Buteo jamaicensis",
+  "group": "bird",
+  "role": "playable",
+  "scale": "bird",
+  "senses": {
+   "vision": {
+    "range_m": 2000,
+    "color": "tetrachromat"
+   },
+   "hearing": {
+    "range_m": 300
+   },
+   "smell": {
+    "range_m": 20
+   }
+  },
+  "gbif_key": 2480542,
+  "sources": [
+   "gbif"
+  ],
+  "confidence": "unverified",
+  "occurrence_count": 207
+ },
+ {
+  "code": "odocoileus_hemionus",
+  "common": "black-tailed deer",
+  "scientific": "Odocoileus hemionus",
+  "group": "mammal",
+  "role": "playable",
+  "scale": "deer",
+  "senses": {
+   "vision": {
+    "range_m": 400,
+    "color": "dichromat"
+   },
+   "hearing": {
+    "range_m": 600
+   },
+   "smell": {
+    "range_m": 800
+   }
+  },
+  "gbif_key": 2440974,
+  "sources": [
+   "gbif"
+  ],
+  "confidence": "unverified",
+  "occurrence_count": 40
+ },
+ {
+  "code": "urocyon_cinereoargenteus",
+  "common": "gray fox",
+  "scientific": "Urocyon cinereoargenteus",
+  "group": "mammal",
+  "role": "playable",
+  "scale": "fox",
+  "senses": {
+   "vision": {
+    "range_m": 300,
+    "color": "dichromat"
+   },
+   "hearing": {
+    "range_m": 400
+   },
+   "smell": {
+    "range_m": 600
+   }
+  },
+  "gbif_key": 2434566,
+  "sources": [
+   "gbif"
+  ],
+  "confidence": "unverified",
+  "occurrence_count": 6
+ },
+ {
+  "code": "sciurus_griseus",
+  "common": "western gray squirrel",
+  "scientific": "Sciurus griseus",
+  "group": "mammal",
+  "role": "playable",
+  "scale": "squirrel",
+  "senses": {
+   "vision": {
+    "range_m": 150,
+    "color": "dichromat"
+   },
+   "hearing": {
+    "range_m": 200
+   },
+   "smell": {
+    "range_m": 100
+   }
+  },
+  "gbif_key": 5219672,
+  "sources": [
+   "gbif"
+  ],
+  "confidence": "unverified",
+  "occurrence_count": 11
+ },
+ {
+  "code": "callipepla_californica",
+  "common": "California quail",
+  "scientific": "Callipepla californica",
+  "group": "bird",
+  "role": "ambient",
+  "scale": "bird",
+  "senses": {
+   "vision": {
+    "range_m": 300,
+    "color": "tetrachromat"
+   },
+   "hearing": {
+    "range_m": 300
+   },
+   "smell": {
+    "range_m": 20
+   }
+  },
+  "gbif_key": 5228080,
+  "sources": [
+   "gbif"
+  ],
+  "confidence": "unverified",
+  "occurrence_count": 285
+ },
+ {
+  "code": "sylvilagus_bachmani",
+  "common": "brush rabbit",
+  "scientific": "Sylvilagus bachmani",
+  "group": "mammal",
+  "role": "ambient",
+  "scale": "squirrel",
+  "senses": {
+   "vision": {
+    "range_m": 200,
+    "color": "dichromat"
+   },
+   "hearing": {
+    "range_m": 400
+   },
+   "smell": {
+    "range_m": 200
+   }
+  },
+  "gbif_key": 2436846,
+  "sources": [
+   "gbif"
+  ],
+  "confidence": "unverified",
+  "occurrence_count": 1
+ },
+ {
+  "code": "microtus_californicus",
+  "common": "California vole",
+  "scientific": "Microtus californicus",
+  "group": "mammal",
+  "role": "ambient",
+  "scale": "vole",
+  "senses": {
+   "vision": {
+    "range_m": 30,
+    "color": "dichromat"
+   },
+   "hearing": {
+    "range_m": 100
+   },
+   "smell": {
+    "range_m": 50
+   }
+  },
+  "gbif_key": 2438603,
+  "sources": [
+   "gbif"
+  ],
+  "confidence": "unverified",
+  "occurrence_count": 2
+ },
+ {
+  "code": "canis_latrans",
+  "common": "coyote",
+  "scientific": "Canis latrans",
+  "group": "mammal",
+  "role": "ambient",
+  "scale": "fox",
+  "senses": {
+   "vision": {
+    "range_m": 400,
+    "color": "dichromat"
+   },
+   "hearing": {
+    "range_m": 800
+   },
+   "smell": {
+    "range_m": 1500
+   }
+  },
+  "gbif_key": 5219153,
+  "sources": [
+   "gbif"
+  ],
+  "confidence": "unverified",
+  "occurrence_count": 2
+ },
+ {
+  "code": "puma_concolor",
+  "common": "mountain lion",
+  "scientific": "Puma concolor",
+  "group": "mammal",
+  "role": "ambient",
+  "scale": "deer",
+  "senses": {
+   "vision": {
+    "range_m": 500,
+    "color": "dichromat"
+   },
+   "hearing": {
+    "range_m": 600
+   },
+   "smell": {
+    "range_m": 500
+   }
+  },
+  "gbif_key": 2435099,
+  "sources": [
+   "gbif"
+  ],
+  "confidence": "unverified",
+  "occurrence_count": 1
+ }
+]

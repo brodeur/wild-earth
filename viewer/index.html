@@ -74,7 +74,7 @@
     <label class="chk"><input type="checkbox" id="lyVeg"> Habitat (vegetation)</label>
     <label class="chk" style="padding-left:22px"><input type="checkbox" id="lyVegPresent"> present-day, before backfill</label>
     <label class="chk"><input type="checkbox" id="lyPts" checked> Species occurrences</label>
-    <label class="chk"><input type="checkbox" id="lyHeat"> Density heatmap (2D only)</label>
+    <label class="chk"><input type="checkbox" id="lyHeat"> Density grid (300 m cells)</label>
 
     <h2>Play as</h2>
     <select id="observer"></select>
@@ -267,6 +267,7 @@ function tooltip({object, layer}){
   const p = object.properties || object;
   if(layer.id==='occ'){ const sp = S.data.species.find(s=>s.code===p.species_code);
     return {html:`<b>${sp?.common||p.species_code}</b><br>${p.date||'no date'} · ${p.basis||''}<br><span style="opacity:.7">${p.license||''}</span>`}; }
+  if(layer.id==='heat') return {html:`<b>${p.count}</b> occurrence${p.count===1?'':'s'} in this 300 m cell`};
   if(layer.id==='mask') return {html:`<b>${p.class}</b>${p.name?' · '+p.name:''}<br><span style="opacity:.7">${p.highway||p.building||p.landuse||''} · ${p.osm_id}</span>`};
   if(layer.id==='flow') return {html:`<b>${p.gnis_name||'unnamed stream'}</b><br>order ${p.streamorde??'?'} · ${p.ftype||''}`};
   if(layer.id==='water') return {html:`<b>${p.gnis_name||'waterbody'}</b><br>${p.ftype||''} · fcode ${p.fcode||''}`};
@@ -282,6 +283,15 @@ function occFeatures(){
     if(P && !P.has(p.species_code)) return false;
     if(S.seasonFilter && p.month && !sm.includes(p.month)) return false;
     return true; });
+}
+
+function densityCells(features, sizeM){
+  const [w,s,e,n] = S.m.bounds_wgs84; const lat0=(s+n)/2;
+  const dlat = sizeM/111320, dlon = dlat/Math.cos(lat0*Math.PI/180);
+  const bins = new Map();
+  for(const f of features){ const [x,y]=f.geometry.coordinates; const i=Math.floor((x-w)/dlon), j=Math.floor((y-s)/dlat); const k=i+','+j; bins.set(k,(bins.get(k)||0)+1); }
+  const max = Math.max(1,...bins.values());
+  return [...bins].map(([k,c])=>{ const [i,j]=k.split(',').map(Number); return { pos:[w+i*dlon, s+j*dlat], count:c, t:Math.sqrt(c/max) }; });
 }
 
 function render(){
@@ -317,8 +327,12 @@ function render(){
     layers.push(new deck.GeoJsonLayer({ id:'mask', data:d.mask, filled:true, stroked:true, getFillColor:f=>[...(MASK_COLORS[f.properties.class]||[200,200,200]),150], getLineColor:f=>[...(MASK_COLORS[f.properties.class]||[200,200,200]),230],
       getLineWidth:f=> (f.properties.buffer_m||1)*2, lineWidthUnits:'meters', lineWidthMinPixels:1, pickable:true, extensions:ext, terrainDrawMode:'drape' }));
   const occ = occFeatures();
-  if(S.layers.heat && !S.view3d && occ.length)
-    layers.push(new deck.HeatmapLayer({ id:'heat', data:occ, getPosition:f=>f.geometry.coordinates, radiusPixels:40, intensity:1, threshold:.05, opacity:.6 }));
+  // deck.gl's GPU aggregation layers (HeatmapLayer etc.) break in a deck that has a terrain pass,
+  // so density is binned here and drawn as draped squares.
+  if(S.layers.heat && occ.length)
+    layers.push(new deck.GridCellLayer({ id:'heat', data:densityCells(occ, 300), cellSize:300, extruded:true,
+      getPosition:d=>d.pos, getElevation:d=>40+d.count*40*S.exag, getFillColor:d=>[255, Math.round(230-180*d.t), 40, 210],
+      pickable:true, extensions:ext, terrainDrawMode:'offset', updateTriggers:{getElevation:[S.exag]} }));
   if(S.layers.pts && occ.length)
     layers.push(new deck.ScatterplotLayer({ id:'occ', data:occ, getPosition:f=>f.geometry.coordinates, getFillColor:f=>[...colorOf[f.properties.species_code], f.properties.species_code===S.observer?255:190],
       getRadius:f=> f.properties.species_code===S.observer?14:9, radiusUnits:'pixels', radiusMinPixels:3, stroked:true, getLineColor:[0,0,0,160], lineWidthMinPixels:1, pickable:true, extensions:ext, terrainDrawMode:'offset' }));
