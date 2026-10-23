@@ -15,7 +15,7 @@
   38.74035063713964
  ],
  "size_m": 10000,
- "generated_at": "2026-10-23T18:37:32Z",
+ "generated_at": "2026-10-23T21:01:04Z",
  "generator": {
   "name": "wild-earth-pipeline",
   "version": "0.2.0"
@@ -483,10 +483,11 @@
    "resolution_m": 5.0,
    "derived_from": [
     "terrain.dem",
-    "vegetation.habitat"
+    "vegetation.habitat",
+    "vegetation.evc"
    ],
-   "sha256": "03e1791519b9aa95a7bf89155d9a97f824ab8d50ff5ada03bd293561cd578195",
-   "bytes": 4467695
+   "sha256": "379310fbe1f42d43557149647ad02575f4888f6666726b788990814d0030d636",
+   "bytes": 5423025
   },
   "unreal": {
    "path": "unreal/unreal.json",
@@ -514,6 +515,22 @@
    ],
    "sha256": "8189d6fbdc9af3c605b10a6c391c3fca32ffccbb1aff741946179cf7455e27ea",
    "bytes": 1793
+  },
+  "client.masks": {
+   "path": "client/masks.png",
+   "kind": "raster",
+   "crs": "EPSG:32610",
+   "bounds": [
+    680000,
+    4280000,
+    690000,
+    4290000
+   ],
+   "pixels": 2000,
+   "resolution_m": 5.0,
+   "encoding": "R grassland, G oak woodland, B chaparral weights",
+   "sha256": "9a63ec1ba4c0d856cddb40b4244ac0fb07f9a8cb558be34ac4a5a14692c7c5f8",
+   "bytes": 2704900
   }
  },
  "sources": {
@@ -620,6 +637,12 @@
    "step": "unreal",
    "at": "2026-10-23T18:37:32Z",
    "seconds": 1.7,
+   "ok": true
+  },
+  {
+   "step": "derive",
+   "at": "2026-10-23T21:01:04Z",
+   "seconds": 26.3,
    "ok": true
   }
  ]

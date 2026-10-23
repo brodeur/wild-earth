@@ -105,3 +105,14 @@ than freezing at a midpoint.
 raven caches in the fall world is recoverable in the winter world) makes the seasonal
 loops work and is harder to add later; fully independent worlds are simpler to run.
 To be decided per state type before the first persistent state is built.
+
+## 2026-10-23: species record licensing is a mammal problem, not a bird problem
+
+Audit (`pipeline.audit_licenses`): non-commercial records are 8% of the home tile and
+2% of the Placerville tile overall, but birds come from eBird under CC BY while most
+mammal records come from iNaturalist under CC BY-NC: deer 70% NC in the home tile,
+mountain lion 100%. Decision: occurrence records are used only as evidence for
+building density models and for the local-knowledge review in the viewer; no record
+is shipped into a game client. Whether a density surface derived partly from NC
+records is itself commercial use is **open** and needs a lawyer before any paid
+product. The viewer shows each record's license.

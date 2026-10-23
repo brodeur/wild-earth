@@ -16,10 +16,11 @@ sequenced; Parked is in the brief but deliberately not started.
 
 ## Next: the visual pass, in order of effect per hour
 
-1. Horizon: distant forest beyond the detail radius (impostors or a canopy pass) so the
-   tree line never ends.
-2. Ground: blend habitat boundaries, near-camera instanced grass, colour variation
-   within a class.
+1. ~~Horizon~~ done 2026-10-23: two crossed-quad impostors with a canopy cap per
+   30 m forested cell across the whole tile, fading where the near forest begins.
+2. ~~Ground~~ done 2026-10-23: habitat colour upsampled bilinearly, darkened by canopy,
+   broken with value noise; soft season masks; 2 m detail noise in the shader; grass
+   tufts within 220 m. Still to do: cloud shadows and distance haze (step 3).
 3. Atmosphere: haze by distance and time of day, warmer low sun, cloud shadows.
 4. Wind: vertex sway in canopies and grass, stronger on ridges.
 5. Water: streams and ponds from the hydrology layer, with reflection.
@@ -33,6 +34,8 @@ browser stays the renderer.
 
 - Decide state flow between season-worlds before the first persistent state is built
   (open question in the decision log).
+- Get a licensing read on density surfaces derived from CC BY-NC mammal records
+  before any paid product (open question in the decision log).
 
 - First animals with behaviour from the activity calendar; perception matrix decides
   who is rendered for whom.

@@ -205,14 +205,31 @@ def client_rasters(tile: Tile) -> dict:
     out["client.canopy"] = {"path": "client/canopy.png", "kind": "raster", "crs": tile.crs, "bounds": list(tile.bounds),
                             "pixels": m, "resolution_m": hres, "encoding": "R tree %, G shrub %, B herb %"}
 
-    # texture.png: hillshade modulated by habitat color, on the DEM grid
+    # texture.png: hillshade modulated by habitat color, on the DEM grid.
+    # Habitat colour is upsampled bilinearly (soft edges across 30 m cells), darkened by
+    # canopy cover, and broken up with low-frequency value noise so a class is not one flat tone.
     shade = _hillshade_array(z, res)
-    hab_up = np.repeat(np.repeat(hab, -(-n // m), axis=0), -(-n // m), axis=1)[:n, :n]
-    color = np.zeros((n, n, 3), "float32")
+    color_small = np.zeros((m, m, 3), "float32")
     for code, c in COLORS.items():
-        color[hab_up == code] = c
-    tex = (color * (0.35 + 0.75 * shade[..., None])).clip(0, 255).astype("uint8")
+        color_small[hab == code] = c
+    color = np.asarray(Image.fromarray(color_small.clip(0, 255).astype("uint8"), "RGB").resize((n, n), Image.BILINEAR)).astype("float32")
+    cover = np.asarray(Image.fromarray(np.clip(tree + shrub * 0.6, 0, 100).astype("uint8"), "L").resize((n, n), Image.BILINEAR)).astype("float32") / 100
+    rng = np.random.default_rng(int.from_bytes(tile.tile_id.encode(), "little") % (2**32))
+    noise = np.zeros((n, n), "float32")
+    for cells, amp in ((12, 0.10), (40, 0.07), (160, 0.05)):
+        small = rng.random((cells, cells)).astype("float32")
+        noise += (np.asarray(Image.fromarray((small * 255).astype("uint8"), "L").resize((n, n), Image.BICUBIC)).astype("float32") / 255 - 0.5) * 2 * amp
+    canopy_dark = 1.0 - 0.35 * cover
+    tex = (color * (0.35 + 0.75 * shade[..., None]) * (canopy_dark * (1 + noise))[..., None]).clip(0, 255).astype("uint8")
     Image.fromarray(tex, "RGB").save(tile.path("client/texture.png"), optimize=True)
     out["client.texture"] = {"path": "client/texture.png", "kind": "raster", "crs": tile.crs, "bounds": list(tile.bounds),
-                             "pixels": n, "resolution_m": res, "derived_from": ["terrain.dem", "vegetation.habitat"]}
+                             "pixels": n, "resolution_m": res, "derived_from": ["terrain.dem", "vegetation.habitat", "vegetation.evc"]}
+
+    # masks.png: soft per-class weights for season recolouring in the client shader
+    # (R grassland, G oak woodland, B chaparral), blurred across cell edges like the colour.
+    masks = np.dstack([(hab == 5), (hab == 1), (hab == 4)]).astype("uint8") * 255
+    masks = np.asarray(Image.fromarray(masks, "RGB").resize((n, n), Image.BILINEAR))
+    Image.fromarray(masks, "RGB").save(tile.path("client/masks.png"), optimize=True)
+    out["client.masks"] = {"path": "client/masks.png", "kind": "raster", "crs": tile.crs, "bounds": list(tile.bounds),
+                           "pixels": n, "resolution_m": res, "encoding": "R grassland, G oak woodland, B chaparral weights"}
     return out

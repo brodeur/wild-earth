@@ -4,6 +4,8 @@ import { Terrain } from './terrain.js';
 import { SkyDome } from './sky.js';
 import { RavenFlight } from './flight.js';
 import { Vegetation } from './vegetation.js';
+import { Impostors } from './impostors.js';
+import { Grass } from './grass.js';
 import { SEASON_LOOK, seasonOfDate, sunDirection } from './season.js';
 
 const $ = id => document.getElementById(id);
@@ -28,6 +30,8 @@ async function main() {
   const sky = new SkyDome(scene, renderer);
   status('growing forest…'); await new Promise(r => setTimeout(r, 20));
   const veg = new Vegetation(tile, scene);
+  const far = new Impostors(tile, scene);
+  const grass = new Grass(tile, scene);
   const flight = new RavenFlight(camera, tile.heights, renderer.domElement);
   flight.reset(tile.size / 2, -tile.size / 2, 150);
   veg.radius = +$('detail').value; veg.update(flight.pos.x, flight.pos.z, true);
@@ -49,7 +53,7 @@ async function main() {
   }
   applySeason();
   status('');
-  window.__we = { tile, flight, camera, veg, terrain };   // debugging handle
+  window.__we = { tile, flight, camera, veg, terrain, far, grass, scene, renderer };   // debugging handle
 
   let last = performance.now(), hudT = 0;
   function frame(now) {
@@ -58,6 +62,8 @@ async function main() {
     const f = flight.update(dt);
     veg.update(flight.pos.x, flight.pos.z);
     const lights = sky.update(sun, look, camera);
+    far.update(camera, veg.radius, lights.sunColor, lights.skyColor, scene.fog);
+    grass.update(flight.pos.x, flight.pos.z, dt, camera, look, lights.skyColor.clone().multiplyScalar(0.8).add(lights.sunColor.clone().multiplyScalar(0.5)), scene.fog);
     terrain.setLook(look, sun); terrain.uniforms.sunColor.value.copy(lights.sunColor).multiplyScalar(sky.sun.intensity * 0.45); terrain.uniforms.skyColor.value.copy(lights.skyColor);
     terrain.uniforms.fogColor.value.copy(scene.fog.color); terrain.uniforms.fogNear.value = scene.fog.near; terrain.uniforms.fogFar.value = scene.fog.far;
     renderer.render(scene, camera);
@@ -67,7 +73,7 @@ async function main() {
       $('agl').textContent = `${f.agl.toFixed(0)} m`; $('elev').textContent = `${f.elev.toFixed(0)} m`;
       $('speed').textContent = `${f.speed.toFixed(1)} m/s`; $('heading').textContent = `${f.heading.toFixed(0)}°`;
       $('habitat').textContent = HABITAT_NAMES[tile.habitat.at(flight.pos.x, -flight.pos.z)] || '–';
-      $('trees').textContent = veg.count.toLocaleString();
+      $('trees').textContent = `${veg.count.toLocaleString()} near · ${far.count.toLocaleString()} far`;
       const h = Math.floor(state.hour), mnt = Math.round((state.hour - h) * 60); $('timeLabel').textContent = `${h}:${String(mnt).padStart(2, '0')} · sun ${(sun.elevation * 180 / Math.PI).toFixed(0)}°`;
     }
     requestAnimationFrame(frame);

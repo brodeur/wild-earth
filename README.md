@@ -51,7 +51,12 @@ interior live oak, gray pine, ponderosa pine, manzanita and chamise, each a para
 set in `client/src/trees.js`. Trees are seeded by cell coordinates, so they are the same
 for everyone. Flight is first person: arrows to pitch and turn, W/S for speed, space to
 flap, gliding sinks slowly. Season follows today's date unless overridden; the sun
-follows the time slider. No animals yet beyond the player.
+follows the time slider. Beyond the near forest, every forested 30 m cell carries two
+impostor clusters so the tree line runs to the tile edge; grass tufts sway near the
+camera. No animals yet beyond the player.
+
+`pipeline.audit_licenses` counts occurrence records by license per tile; see the
+decision log for what the numbers mean.
 
 ## What the pipeline produces
 

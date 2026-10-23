@@ -10,16 +10,22 @@ const VERT = /* glsl */`
     #include <fog_vertex>
   }`;
 const FRAG = /* glsl */`
-  uniform sampler2D map; uniform sampler2D habitat; uniform vec3 sunDir; uniform vec3 sunColor; uniform vec3 skyColor;
+  uniform sampler2D map; uniform sampler2D masks; uniform vec3 sunDir; uniform vec3 sunColor; uniform vec3 skyColor;
   uniform vec3 grassTint; uniform vec3 oakTint; uniform float oakMix;
   varying vec2 vUv; varying vec3 vNormalW; varying vec3 vPosW;
   #include <fog_pars_fragment>
+  float hash(vec2 p){ return fract(sin(dot(p, vec2(127.1, 311.7))) * 43758.5453); }
+  float vnoise(vec2 p){ vec2 i = floor(p), f = fract(p); f = f * f * (3.0 - 2.0 * f);
+    return mix(mix(hash(i), hash(i + vec2(1,0)), f.x), mix(hash(i + vec2(0,1)), hash(i + vec2(1,1)), f.x), f.y); }
   void main(){
     vec3 c = texture2D(map, vUv).rgb;
-    float hab = texture2D(habitat, vUv).r * 255.0;
+    vec3 w = texture2D(masks, vUv).rgb;                 // soft weights: grassland, oak woodland, chaparral
     // The texture is habitat colour times hillshade; re-colour grass and oak by season.
-    if (abs(hab - 5.0) < 0.5) c = c * grassTint / vec3(0.84, 0.77, 0.47);
-    if (abs(hab - 1.0) < 0.5) c = mix(c, c * oakTint / vec3(0.67, 0.59, 0.28), oakMix);
+    c = mix(c, c * grassTint / vec3(0.84, 0.77, 0.47), w.r);
+    c = mix(c, c * oakTint / vec3(0.67, 0.59, 0.28), w.g * oakMix);
+    // Fine detail so the ground is not a blurred photo up close: 2 m and 9 m value noise.
+    float d = 0.86 + 0.14 * vnoise(vPosW.xz * 0.5) + 0.10 * (vnoise(vPosW.xz * 0.11) - 0.5);
+    c *= d;
     vec3 n = normalize(vNormalW);
     float diff = max(dot(n, sunDir), 0.0);
     vec3 light = sunColor * diff + skyColor * (0.55 + 0.45 * n.y);
@@ -32,10 +38,9 @@ export class Terrain {
     this.tile = tile; this.group = new THREE.Group();
     const tex = new THREE.Texture(tile.textureImage); tex.needsUpdate = true; tex.colorSpace = THREE.SRGBColorSpace;
     tex.anisotropy = 8; tex.minFilter = THREE.LinearMipmapLinearFilter;
-    const hab = new THREE.Texture(tile.habitat.img.image); hab.needsUpdate = true;
-    hab.magFilter = THREE.NearestFilter; hab.minFilter = THREE.NearestFilter; hab.generateMipmaps = false;
+    const masks = new THREE.Texture(tile.masksImage); masks.needsUpdate = true;
     this.uniforms = {
-      map: { value: tex }, habitat: { value: hab },
+      map: { value: tex }, masks: { value: masks },
       sunDir: { value: new THREE.Vector3(0, 1, 0) }, sunColor: { value: new THREE.Color(1, 0.95, 0.85) }, skyColor: { value: new THREE.Color(0.45, 0.55, 0.7) },
       grassTint: { value: new THREE.Color(0.8, 0.68, 0.36) }, oakTint: { value: new THREE.Color(0.55, 0.45, 0.22) }, oakMix: { value: 0 },
       ...THREE.UniformsUtils.clone(THREE.UniformsLib.fog),

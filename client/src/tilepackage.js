@@ -54,11 +54,12 @@ export async function loadTile(tileId, base = '../tiles/') {
   const dir = `${base}${id}/`;
   const m = await (await fetch(dir + 'manifest.json', { cache: 'no-cache' })).json();
   const L = m.layers;
-  for (const k of ['client.heights', 'client.texture', 'client.habitat', 'client.canopy'])
+  for (const k of ['client.heights', 'client.texture', 'client.habitat', 'client.canopy', 'client.masks'])
     if (!L[k]) throw new Error(`tile ${id} lacks ${k}; run the derive step`);
-  const [heights, texture, habitat, canopy, species, perception, calendar] = await Promise.all([
+  const [heights, texture, habitat, canopy, masks, species, perception, calendar] = await Promise.all([
     loadImageData(dir + L['client.heights'].path), loadImageData(dir + L['client.texture'].path),
     loadImageData(dir + L['client.habitat'].path), loadImageData(dir + L['client.canopy'].path),
+    loadImageData(dir + L['client.masks'].path),
     fetch(dir + 'species/species.json').then(r => r.json()).catch(() => []),
     fetch(dir + 'perception.json').then(r => r.json()).catch(() => null),
     fetch(dir + 'calendar.json').then(r => r.json()).catch(() => null),
@@ -66,7 +67,7 @@ export async function loadTile(tileId, base = '../tiles/') {
   const size = m.size_m || 10000;
   return {
     id, manifest: m, size, dir,
-    heights: new Heightfield(heights, size), textureImage: texture.image,
+    heights: new Heightfield(heights, size), textureImage: texture.image, masksImage: masks.image,
     habitat: new Grid8(habitat, size), canopy: new Grid8(canopy, size),
     species, perception, calendar,
     latitude: (m.bounds_wgs84[1] + m.bounds_wgs84[3]) / 2,
