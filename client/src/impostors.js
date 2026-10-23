@@ -59,6 +59,7 @@ export class Impostors {
       for (let k = 0; k < 2; k++) {
         const h1 = ((i * 31 + j * 17 + k * 101) % 13) / 13, h2 = ((i * 7 + j * 29 + k * 53) % 11) / 11;
         const px = x + (h1 - 0.5) * res * 0.9, pn = north + (h2 - 0.5) * res * 0.9;
+        if (tile.roads && tile.roads.at(px, pn) > 140) continue;   // no forest on decayed pavement
         const vary = 0.78 + h1 * 0.4, hv = height * (0.8 + h2 * 0.5);
         cells[kind].push({ x: px, z: -pn, y: tile.heights.at(px, pn), height: hv, width: Math.max(10, hv * (kind === 'conifer' ? 0.9 : 1.5)), color: [c[0] * vary, c[1] * vary, c[2] * vary] });
       }

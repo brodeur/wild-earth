@@ -11,7 +11,7 @@ const VERT = /* glsl */`
   }`;
 const FRAG = /* glsl */`
   uniform sampler2D map; uniform sampler2D masks; uniform vec3 sunDir; uniform vec3 sunColor; uniform vec3 skyColor;
-  uniform vec3 grassTint; uniform vec3 oakTint; uniform float oakMix;
+  uniform vec3 grassTint; uniform vec3 oakTint; uniform float oakMix; uniform sampler2D roads;
   varying vec2 vUv; varying vec3 vNormalW; varying vec3 vPosW;
   #include <fog_pars_fragment>
   float hash(vec2 p){ return fract(sin(dot(p, vec2(127.1, 311.7))) * 43758.5453); }
@@ -20,6 +20,7 @@ const FRAG = /* glsl */`
   void main(){
     vec3 c = texture2D(map, vUv).rgb;
     vec3 w = texture2D(masks, vUv).rgb;                 // soft weights: grassland, oak woodland, chaparral
+    w *= 1.0 - smoothstep(0.55, 0.75, texture2D(roads, vUv).r);   // decayed pavement keeps its grey
     // The texture is habitat colour times hillshade; re-colour grass and oak by season.
     c = mix(c, c * grassTint / vec3(0.84, 0.77, 0.47), w.r);
     c = mix(c, c * oakTint / vec3(0.67, 0.59, 0.28), w.g * oakMix);
@@ -39,8 +40,9 @@ export class Terrain {
     const tex = new THREE.Texture(tile.textureImage); tex.needsUpdate = true; tex.colorSpace = THREE.SRGBColorSpace;
     tex.anisotropy = 8; tex.minFilter = THREE.LinearMipmapLinearFilter;
     const masks = new THREE.Texture(tile.masksImage); masks.needsUpdate = true;
+    const roads = tile.roadsImage ? new THREE.Texture(tile.roadsImage) : new THREE.DataTexture(new Uint8Array(4), 1, 1); roads.needsUpdate = true;
     this.uniforms = {
-      map: { value: tex }, masks: { value: masks },
+      map: { value: tex }, masks: { value: masks }, roads: { value: roads },
       sunDir: { value: new THREE.Vector3(0, 1, 0) }, sunColor: { value: new THREE.Color(1, 0.95, 0.85) }, skyColor: { value: new THREE.Color(0.45, 0.55, 0.7) },
       grassTint: { value: new THREE.Color(0.8, 0.68, 0.36) }, oakTint: { value: new THREE.Color(0.55, 0.45, 0.22) }, oakMix: { value: 0 },
       ...THREE.UniformsUtils.clone(THREE.UniformsLib.fog),

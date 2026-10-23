@@ -7,6 +7,7 @@ import { Vegetation } from './vegetation.js';
 import { Impostors } from './impostors.js';
 import { Grass } from './grass.js';
 import { MiniMap } from './minimap.js';
+import { RoadsOverlay } from './roadsOverlay.js';
 import { setupGoTo, takePendingPoint, builtTileFor } from './goto.js';
 import { SEASON_LOOK, seasonOfDate, sunDirection } from './season.js';
 
@@ -38,6 +39,7 @@ async function main() {
   const veg = new Vegetation(tile, scene);
   const far = new Impostors(tile, scene);
   const grass = new Grass(tile, scene);
+  const roads = new RoadsOverlay(tile, scene);   // ghost roads, G to toggle
   const flight = new RavenFlight(camera, tile.heights, renderer.domElement);
   flight.reset(tile.size / 2, -tile.size / 2, 150);
   veg.radius = +$('detail').value; veg.update(flight.pos.x, flight.pos.z, true);
@@ -62,7 +64,7 @@ async function main() {
   }
   applySeason();
   status('');
-  window.__we = { tile, flight, camera, veg, terrain, far, grass, scene, renderer, minimap };   // debugging handle
+  window.__we = { tile, flight, camera, veg, terrain, far, grass, roads, scene, renderer, minimap };   // debugging handle
 
   let last = performance.now(), hudT = 0;
   function frame(now) {

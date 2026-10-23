@@ -41,7 +41,7 @@ export class Heightfield {
 }
 
 export class Grid8 {
-  // 8-bit per-channel grid on the tile (habitat classes, canopy percentages)
+  // 8-bit per-channel grid on the tile (habitat classes, canopy percentages, road weight); res follows the image width
   constructor(img, sizeM) { this.img = img; this.size = sizeM; this.res = sizeM / img.width; }
   cellOf(x, north) {
     const i = Math.min(Math.max(Math.floor(x / this.res), 0), this.img.width - 1);
@@ -61,7 +61,7 @@ export async function loadTile(tileId, base = '../tiles/') {
   const L = m.layers;
   for (const k of ['client.heights', 'client.texture', 'client.habitat', 'client.canopy', 'client.masks'])
     if (!L[k]) throw new Error(`tile ${id} lacks ${k}; run the derive step`);
-  const [heights, texture, habitat, canopy, masks, species, perception, calendar, imagery, features] = await Promise.all([
+  const [heights, texture, habitat, canopy, masks, species, perception, calendar, imagery, features, roads] = await Promise.all([
     loadImageData(dir + L['client.heights'].path), loadImageData(dir + L['client.texture'].path),
     loadImageData(dir + L['client.habitat'].path), loadImageData(dir + L['client.canopy'].path),
     loadImageData(dir + L['client.masks'].path),
@@ -71,12 +71,15 @@ export async function loadTile(tileId, base = '../tiles/') {
     // mini-map products (present-day imagery and features); optional
     L['client.imagery'] ? loadOptionalImage(dir + L['client.imagery'].path) : null,
     L['client.features'] ? fetch(dir + L['client.features'].path).then(r => r.ok ? r.json() : null).catch(() => null) : null,
+    // decayed-road weight on the 5 m grid (255 pavement, falling to 0 over the verge); optional
+    L['client.roads'] ? loadImageData(dir + L['client.roads'].path).catch(() => null) : null,
   ]);
   const size = m.size_m || 10000;
   return {
     id, manifest: m, size, dir,
     heights: new Heightfield(heights, size), textureImage: texture.image, masksImage: masks.image,
     habitat: new Grid8(habitat, size), canopy: new Grid8(canopy, size),
+    roads: roads ? new Grid8(roads, size) : null, roadsImage: roads?.image || null,
     species, perception, calendar, imagery, features,
     latitude: (m.bounds_wgs84[1] + m.bounds_wgs84[3]) / 2,
   };

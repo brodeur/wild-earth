@@ -46,7 +46,7 @@ export class Vegetation {
   update(x, z, force = false) {
     if (!force && this.lastCenter && Math.hypot(x - this.lastCenter[0], z - this.lastCenter[1]) < 200) return;
     this.lastCenter = [x, z];
-    const hab = this.tile.habitat, can = this.tile.canopy, res = hab.res, size = this.tile.size, heights = this.tile.heights;
+    const hab = this.tile.habitat, can = this.tile.canopy, res = hab.res, size = this.tile.size, heights = this.tile.heights, roads = this.tile.roads;
     for (const arr of Object.values(this.meshes)) for (const m of arr) m.n = 0;
     const north = -z, r = this.radius, cells = Math.ceil(r / res);
     const [ci, cj] = hab.cellOf(x, north);
@@ -66,9 +66,12 @@ export class Vegetation {
         const variants = this.meshes[name], m = variants[Math.floor(rnd() * variants.length)];
         if (m.n >= m.cap) continue;
         const px = (i + rnd()) * res, pn = size - (j + rnd()) * res;
-        const s = 0.75 + rnd() * 0.5;
+        const s = 0.75 + rnd() * 0.5, rot = rnd() * Math.PI * 2;   // all draws before any skip, so neighbours keep their place
+        // Decayed roads: nothing on the pavement; trees thin out across the verge (shrubs creep in).
+        const rw = roads ? roads.at(px, pn) : 0;
+        if (rw > 140 || (isTree && rw > 0 && hash(k, i + j * 4096, 13) / 4294967296 < rw / 255)) continue;
         this.tmp.position.set(px, heights.at(px, pn) - 0.3, -pn);
-        this.tmp.rotation.set(0, rnd() * Math.PI * 2, 0); this.tmp.scale.setScalar(s); this.tmp.updateMatrix();
+        this.tmp.rotation.set(0, rot, 0); this.tmp.scale.setScalar(s); this.tmp.updateMatrix();
         m.trunk.setMatrixAt(m.n, this.tmp.matrix); m.canopy.setMatrixAt(m.n, this.tmp.matrix); m.n++; total++;
       }
     }

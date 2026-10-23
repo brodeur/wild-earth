@@ -15,7 +15,7 @@
   38.74035063713964
  ],
  "size_m": 10000,
- "generated_at": "2026-10-23T22:25:35Z",
+ "generated_at": "2026-10-23T23:10:53Z",
  "generator": {
   "name": "wild-earth-pipeline",
   "version": "0.2.0"
@@ -484,10 +484,11 @@
    "derived_from": [
     "terrain.dem",
     "vegetation.habitat",
-    "vegetation.evc"
+    "vegetation.evc",
+    "footprint.mask"
    ],
-   "sha256": "379310fbe1f42d43557149647ad02575f4888f6666726b788990814d0030d636",
-   "bytes": 5423025
+   "sha256": "4e9147b21106ef631a0a66f506db05c7d829b71d2fc7a8aa627c1729b79c551e",
+   "bytes": 5953842
   },
   "unreal": {
    "path": "unreal/unreal.json",
@@ -571,6 +572,24 @@
    ],
    "sha256": "ec4fe4a4679f746a671040749fbb67eac84e1f5d627639d3e00723bcf01cc467",
    "bytes": 426015
+  },
+  "client.roads": {
+   "path": "client/roads.png",
+   "kind": "raster",
+   "crs": "EPSG:32610",
+   "bounds": [
+    680000,
+    4280000,
+    690000,
+    4290000
+   ],
+   "pixels": 2000,
+   "resolution_m": 5.0,
+   "derived_from": "footprint.mask",
+   "encoding": "road weight 0..255 (255 pavement, verge 136 falling to 0; tracks half weight)",
+   "road_fraction": 0.04805575,
+   "sha256": "7c2883a030122caa6f4b735e74c19ef3c18731fcf7c8717b0b0e2e44ccb3d5d8",
+   "bytes": 350710
   }
  },
  "sources": {
@@ -695,6 +714,30 @@
    "step": "derive",
    "at": "2026-10-23T22:25:35Z",
    "seconds": 27.3,
+   "ok": true
+  },
+  {
+   "step": "derive",
+   "at": "2026-10-23T23:02:36Z",
+   "seconds": 33.1,
+   "ok": true
+  },
+  {
+   "step": "derive",
+   "at": "2026-10-23T23:04:20Z",
+   "seconds": 32.0,
+   "ok": true
+  },
+  {
+   "step": "derive",
+   "at": "2026-10-23T23:06:40Z",
+   "seconds": 30.8,
+   "ok": true
+  },
+  {
+   "step": "derive",
+   "at": "2026-10-23T23:10:53Z",
+   "seconds": 29.1,
    "ok": true
   }
  ]

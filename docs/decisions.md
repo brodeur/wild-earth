@@ -116,3 +116,14 @@ building density models and for the local-knowledge review in the viewer; no rec
 is shipped into a game client. Whether a density surface derived partly from NC
 records is itself commercial use is **open** and needs a lawyer before any paid
 product. The viewer shows each record's license.
+
+## 2026-10-24: roads are decayed, not erased
+
+Aaron's question ("roads are an important place marker"). Ten years after humans a
+paved road is still a linear clearing: cracked pavement with grass in the seams, shrubs
+at the edges, no trees on it yet. Client products now render roads that way, and a
+ghost overlay (G) draws every road with its name for orientation. Rejected: erasing
+roads entirely (loses place recognition, which is the experiential hook, and is less
+true to the premise) and rendering present-day asphalt (breaks the fiction). This
+refines the "no humans" rule from erased to decayed; buildings and other footprint
+classes still await their own treatment, and the terrain's road cuts remain untouched.

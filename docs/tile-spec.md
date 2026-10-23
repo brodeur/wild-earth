@@ -52,6 +52,7 @@ tiles/<tile_id>/
   client/texture.png            derived   rewilded texture on the metric tile grid
   client/habitat.png            derived   habitat class code in R, 30 m grid
   client/canopy.png             derived   tree / shrub / herb cover percent in R / G / B, 30 m grid
+  client/roads.png              derived   decayed-road weight, 8-bit on the DEM grid: 255 pavement, verge falls to 0
   unreal/heightmap.png          derived   16-bit Landscape heightmap at a valid size (2017 px)
   unreal/weights/<class>.png    derived   8-bit weight-blended layer per habitat class
   unreal/canopy_<kind>.png      derived   8-bit tree / shrub / herb cover for PCG density
@@ -111,6 +112,10 @@ Features carry `class` from this list, so the renderer knows what to backfill wi
 `cleared` are expected to come largely from hand-drawn edits in the viewer; the
 foothills carry hydraulic mining scars, ditches and orchard terraces that bare-earth
 lidar does not remove.
+
+In client products roads are decayed, not erased: `client/roads.png` and the baked
+`client/texture.png` keep them as treeless strips of worn pavement (paths, footways,
+cycleways, bridleways and steps excluded; tracks at half weight), so players keep their landmarks.
 
 ## Habitat classes
 

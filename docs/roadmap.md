@@ -14,7 +14,8 @@ sequenced; Parked is in the brief but deliberately not started.
 - Client: fly the tile as a raven; 10 m terrain, season-recolored texture, latitude
   sun, procedural forest of six species, ~30k instances at 65 fps; X/Z altitude keys;
   mini-map of present-day imagery, roads, streams and the raven's trail (M toggles,
-  click to fly there).
+  click to fly there); lat/long location box with a dev server build API; decayed
+  roads (worn pavement, no trees on it) and a G-key ghost overlay with names.
 
 ## Next: the visual pass, in order of effect per hour
 

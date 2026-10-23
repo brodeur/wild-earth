@@ -58,6 +58,7 @@ descend, space to flap, gliding sinks slowly. Season follows today's date unless
 follows the time slider. Beyond the near forest, every forested 30 m cell carries two
 impostor clusters so the tree line runs to the tile edge; grass tufts sway near the
 camera. No animals yet beyond the player.
+Roads are decayed, not erased: ten years on they are linear clearings of cracked grey pavement with grass in the seams and a thinning verge, so US 50 still reads from the air; G toggles a ghost overlay of present-day roads with names on the major ones.
 A mini-map (M to toggle, click to fly there) shows present-day NAIP imagery, roads and streams by design: the rewilded world laid against the real one.
 
 `pipeline.audit_licenses` counts occurrence records by license per tile; see the

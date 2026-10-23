@@ -51,7 +51,7 @@ export class Grass {
     this.uniforms.fogColor.value.copy(fog.color); this.uniforms.fogNear.value = fog.near; this.uniforms.fogFar.value = fog.far;
     if (this.lastCenter && Math.hypot(x - this.lastCenter[0], z - this.lastCenter[1]) < 40) return;
     this.lastCenter = [x, z];
-    const hab = this.tile.habitat, can = this.tile.canopy, res = hab.res, size = this.tile.size, heights = this.tile.heights;
+    const hab = this.tile.habitat, can = this.tile.canopy, res = hab.res, size = this.tile.size, heights = this.tile.heights, roads = this.tile.roads;
     const north = -z, cells = Math.ceil(this.radius / res), [ci, cj] = hab.cellOf(x, north);
     let n = 0;
     for (let j = cj - cells; j <= cj + cells; j++) for (let i = ci - cells; i <= ci + cells; i++) {
@@ -61,9 +61,13 @@ export class Grass {
       const herb = Math.max(0.3, can.channel(i, j, 2) / 100), per = Math.round((cls === 5 ? 140 : 50) * herb);
       const rnd = mulberry32((i * 92821) ^ (j * 68917) ^ 11);
       for (let k = 0; k < per && n < this.cap; k++) {
-        const px = (i + rnd()) * res, pn = size - (j + rnd()) * res;
-        this.tmp.position.set(px, heights.at(px, pn), -pn); this.tmp.rotation.set(0, rnd() * Math.PI, 0);
-        const s = 0.7 + rnd() * 0.8; this.tmp.scale.set(s, s * (0.8 + rnd() * 0.6), s); this.tmp.updateMatrix();
+        const px = (i + rnd()) * res, pn = size - (j + rnd()) * res, rot = rnd() * Math.PI;
+        const s = 0.7 + rnd() * 0.8, sy = s * (0.8 + rnd() * 0.6);
+        // Decayed roads: no tufts on the pavement, half density across the verge.
+        const rw = roads ? roads.at(px, pn) : 0;
+        if (rw > 140 || (rw > 0 && (k & 1))) continue;
+        this.tmp.position.set(px, heights.at(px, pn), -pn); this.tmp.rotation.set(0, rot, 0);
+        this.tmp.scale.set(s, sy, s); this.tmp.updateMatrix();
         this.mesh.setMatrixAt(n++, this.tmp.matrix);
       }
     }

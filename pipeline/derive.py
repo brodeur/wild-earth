@@ -174,9 +174,64 @@ def _hillshade_array(z: np.ndarray, res: float, azimuth=315.0, altitude=45.0) ->
     return np.clip(shade, 0, 1)
 
 
+# Roads are decayed, not erased: ten years on, a paved road is a linear clearing of cracked
+# pavement with grass in the seams and shrubs creeping in from the verge.
+ROAD_SKIP = ("path", "footway", "steps", "cycleway", "bridleway")
+ROAD_RINGS = 6     # verge falloff steps beyond the pavement edge
+# Half-widths (m) per OSM way for the decayed pavement. OSM's mapping widths in fetch_osm are
+# generous (they size the erase mask); a decayed road only keeps its actual paved width.
+DECAY_HALF_WIDTH = {"motorway": 8, "motorway_link": 4, "trunk": 7, "trunk_link": 4, "primary": 6, "primary_link": 3.5,
+                    "secondary": 5, "secondary_link": 3, "tertiary": 4.5, "residential": 3.5, "unclassified": 3.5,
+                    "living_street": 3, "service": 2.5, "track": 2}
+ROAD_VERGE = 136   # weight at the verge's inner edge, just below the client's pavement threshold
+
+
+def _road_weights(tile: Tile, z_shape, res: float, tr):
+    """(weight 0..255, major mask) on the DEM grid, or None without a footprint mask.
+
+    Pavement (buffer_m) is 255; the verge beyond it (another 2x buffer_m) starts just under the
+    client's pavement threshold (140) and falls linearly to 0, so "> 140" means pavement exactly.
+    Tracks count at half weight. Major = motorway..secondary and their links, for the pavement tone."""
+    import shapely
+    p = tile.dir / "footprint/mask.geojson"
+    if not p.exists():
+        return None
+    with open(p) as f:
+        fc = json.load(f)
+    to_tile = Transformer.from_crs("EPSG:4326", tile.crs, always_xy=True).transform
+    geoms, bufs, scale, major = [], [], [], []
+    for feat in fc["features"]:
+        pr = feat.get("properties") or {}
+        hw = pr.get("highway")
+        if pr.get("class") != "road" or hw in ROAD_SKIP:
+            continue
+        g = shp_transform(to_tile, shape(feat["geometry"]))
+        if g.is_empty:
+            continue
+        geoms.append(g)
+        bufs.append(max(DECAY_HALF_WIDTH.get(hw, pr.get("buffer_m") or 0), res / 2))
+        scale.append(0.5 if hw == "track" else 1.0)
+        major.append((hw or "").removesuffix("_link") in MAJOR_ROADS)
+    if not geoms:
+        return np.zeros(z_shape, "uint8"), np.zeros(z_shape, bool)
+    geoms, bufs, scale = np.array(geoms, dtype=object), np.array(bufs), np.array(scale)
+    shapes = []
+    for k in range(ROAD_RINGS, -1, -1):          # outermost ring first; later (higher) values overwrite
+        frac = k / ROAD_RINGS
+        rings = shapely.buffer(geoms, bufs * (1 + 2 * frac))
+        vals = np.round((255 if k == 0 else ROAD_VERGE * (1 - (k - 1) / ROAD_RINGS)) * scale).astype(int)
+        shapes += [(g, int(v)) for g, v in zip(rings, vals) if v > 0]
+    shapes.sort(key=lambda gv: gv[1])            # rasterize draws in order: the highest weight wins
+    w = rasterize(shapes, out_shape=z_shape, transform=tr, fill=0, dtype="uint8")
+    mj = np.array(major)
+    maj = (rasterize([(g, 1) for g in shapely.buffer(geoms[mj], bufs[mj] * 3)], out_shape=z_shape,
+                     transform=tr, fill=0, dtype="uint8").astype(bool) if mj.any() else np.zeros(z_shape, bool))
+    return w, maj
+
+
 def client_rasters(tile: Tile) -> dict:
     from .habitat import COLORS
-    z, res, _ = _dem(tile)
+    z, res, tr = _dem(tile)
     n = z.shape[0]
     out = {}
 
@@ -220,10 +275,32 @@ def client_rasters(tile: Tile) -> dict:
         small = rng.random((cells, cells)).astype("float32")
         noise += (np.asarray(Image.fromarray((small * 255).astype("uint8"), "L").resize((n, n), Image.BICUBIC)).astype("float32") / 255 - 0.5) * 2 * amp
     canopy_dark = 1.0 - 0.35 * cover
-    tex = (color * (0.35 + 0.75 * shade[..., None]) * (canopy_dark * (1 + noise))[..., None]).clip(0, 255).astype("uint8")
+    tex = color * (0.35 + 0.75 * shade[..., None]) * (canopy_dark * (1 + noise))[..., None]
+
+    # roads.png: decayed-road weight (255 pavement, falling to 0 across the verge), and the
+    # same roads baked into the texture as worn grey pavement with darker seams and grass in the cracks.
+    roads = _road_weights(tile, z.shape, res, tr)
+    if roads is not None:
+        rw, major = roads
+        Image.fromarray(rw, "L").save(tile.path("client/roads.png"), optimize=True)
+        out["client.roads"] = {"path": "client/roads.png", "kind": "raster", "crs": tile.crs, "bounds": list(tile.bounds),
+                               "pixels": n, "resolution_m": res, "derived_from": "footprint.mask",
+                               "encoding": "road weight 0..255 (255 pavement, verge 136 falling to 0; tracks half weight)",
+                               "road_fraction": float((rw > 140).mean())}
+        wt = rw.astype("float32") / 255
+        lit = (0.35 + 0.75 * shade)[..., None] * (1 + 0.5 * noise)[..., None]
+        pave = np.where(major[..., None], np.float32([170, 164, 154]), np.float32([158, 148, 130])) * lit   # weathered, sun-bleached
+        seam = rng.random((n, n)).astype("float32")
+        on = wt > 0.55
+        pave *= np.where(on & (seam < 0.25), 0.86, 1.0)[..., None]                      # cracks: 25% of pixels a shade darker
+        grassy = (on & (seam > 0.96))[..., None]                                         # 4%: grass up through the seams
+        pave = np.where(grassy, pave * 0.55 + np.float32([128, 138, 84]) * lit * 0.45, pave)
+        t = (wt ** 2)[..., None]   # squared: the verge stays mostly vegetation, the pavement reads crisp
+        tex = tex * (1 - t) + pave * t
+    tex = tex.clip(0, 255).astype("uint8")
     Image.fromarray(tex, "RGB").save(tile.path("client/texture.png"), optimize=True)
     out["client.texture"] = {"path": "client/texture.png", "kind": "raster", "crs": tile.crs, "bounds": list(tile.bounds),
-                             "pixels": n, "resolution_m": res, "derived_from": ["terrain.dem", "vegetation.habitat", "vegetation.evc"]}
+                             "pixels": n, "resolution_m": res, "derived_from": ["terrain.dem", "vegetation.habitat", "vegetation.evc", "footprint.mask"]}
 
     # masks.png: soft per-class weights for season recolouring in the client shader
     # (R grassland, G oak woodland, B chaparral), blurred across cell edges like the colour.
