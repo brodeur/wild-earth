@@ -1,11 +1,15 @@
 import * as THREE from 'three';
 
 // Shared atmosphere: one set of uniforms and one GLSL chunk used by every material, so the
-// terrain, trees, impostors, grass and sky dome all see the same air. Aerial perspective is an
-// exponential height haze whose far colour is the sky dome's own horizon radiance (computed
-// here with the dome's Preetham model), so distant ridges dissolve into the sky rather than into
-// a fog colour. Clouds are one tileable noise texture on a plane above the tile; the ground
-// samples it along the sun direction for shadows and the dome samples it for the clouds you see.
+// terrain, trees, impostors, grass and sky dome all see the same air. Aerial perspective is two
+// exponential height hazes: Rayleigh air (strongly chromatic, 8 km scale height), which turns the
+// middle distance blue, and Mie aerosol (nearly grey, 800 m scale height, thickest in summer),
+// which whitens the valleys. Their far colour is the sky dome's own horizon radiance (computed here
+// with the dome's Preetham model, its low-sun lobe tinted gold), so distant ridges dissolve into
+// the sky rather than into a fog colour; a mild contrast weight keeps dark crowns darker than the
+// grass beside them while they do. Clouds are one tileable noise texture on a plane above the
+// tile; the ground samples it along the sun direction for shadows and the dome samples it for the
+// clouds you see.
 
 export const CLOUD_PERIOD = 2500;      // metres per repeat of the cloud texture
 const WIND = new THREE.Vector2(6, 0);  // m/s, along +x
@@ -21,8 +25,12 @@ export const uniforms = {
   skyHorizon: { value: new THREE.Color(1.3, 1.5, 1.7) },   // dome at the horizon, away from the sun
   skySun: { value: new THREE.Color(2.0, 2.0, 2.0) },       // dome at the horizon, under the sun
   hazePhase: { value: new THREE.Vector4(0.6, 0, 1, 1) },   // x Mie weight, y hg(-c), z 1/(hg(c)-hg(-c)), w c = cos(sun elevation)
-  hazeDensity: { value: 3e-4 },                            // extinction per metre at hazeBase
-  hazeHeightFalloff: { value: 1 / 500 },                   // 1 / scale height
+  hazeDensity: { value: 7.5e-5 },                          // Mie (aerosol) extinction per metre at hazeBase
+  hazeHeightFalloff: { value: 1 / 800 },                   // 1 / Mie scale height
+  hazeRayleigh: { value: new THREE.Vector3(1.2e-5, 2.7e-5, 6.6e-5) },   // Rayleigh extinction per metre (r, g, b) at hazeBase
+  hazeRayleighFalloff: { value: 1 / 8000 },                // 1 / Rayleigh scale height
+  hazeContrast: { value: 0.4 },                            // how much less air light a dark surface gets than a bright one
+  sunGlowTint: { value: new THREE.Color(1, 1, 1) },        // gold on the dome's sun lobe when the sun is low (also in skySun)
   hazeBase: { value: 0 },                                  // y of the densest air (tile floor)
   landHeight: { value: 0 },                                // the dome draws a hazy plain at this y below the horizon, past the tile
   cloudMap: { value: null },
@@ -44,6 +52,7 @@ export const ATMOSPHERE_GLSL = /* glsl */`
   uniform vec3 sunDir; uniform vec3 sunColor; uniform vec3 sunLight; uniform vec3 ambientSky; uniform vec3 ambientGround;
   uniform vec3 skyZenith; uniform vec3 skyHorizon; uniform vec3 skySun; uniform vec4 hazePhase;
   uniform float hazeDensity; uniform float hazeHeightFalloff; uniform float hazeBase; uniform float landHeight;
+  uniform vec3 hazeRayleigh; uniform float hazeRayleighFalloff; uniform float hazeContrast; uniform vec3 sunGlowTint;
   uniform sampler2D cloudMap; uniform vec2 cloudOffset; uniform float cloudStrength; uniform float cloudOpacity; uniform float cloudCover; uniform float cloudHeight;
 
   // ---- Cascaded sun shadow. Three depth maps with hardware compare (each tap is a bilinear 2x2
@@ -97,28 +106,47 @@ export const ATMOSPHERE_GLSL = /* glsl */`
   float cloudShadow(vec3 worldPos) {
     return cloudOnly(worldPos) * csmShadow(worldPos, vec3(0.0), 0.0, 2.0, 0.0);
   }
-  // Horizon radiance of the dome in direction v: a Henyey-Greenstein (g = 0.8) Mie lobe plus a
-  // broad linear term, blended so the haze toward the sun matches the dome's glow.
-  vec3 atmoInscatter(vec3 v) {
-    float mu = dot(v, sunDir), c = hazePhase.w;
-    float d = 1.64 - 1.6 * mu;
-    float wm = clamp((1.0 / (d * sqrt(d)) - hazePhase.y) * hazePhase.z, 0.0, 1.0);
-    float wl = clamp(0.5 + 0.5 * mu / c, 0.0, 1.0);
-    return mix(skyHorizon, skySun, mix(wl, wm, hazePhase.x));
-  }
-  // Transmittance along r (camera to point): optical depth through air whose density falls off
-  // exponentially with height, so valleys hold more haze than ridges.
-  vec3 atmoTransmittance(vec3 r, float cameraY) {
-    float dist = length(r), t = hazeHeightFalloff * r.y;
+  float atmoLum(vec3 c) { return dot(c, vec3(0.2126, 0.7152, 0.0722)); }
+  // Weight of the sun-side horizon colour in direction v: a Henyey-Greenstein (g = 0.8) Mie lobe plus
+  // a broad linear term, blended so the haze toward the sun matches the dome's glow.
+  float atmoMieLobe(vec3 v) { float d = 1.64 - 1.6 * dot(v, sunDir); return clamp((1.0 / (d * sqrt(d)) - hazePhase.y) * hazePhase.z, 0.0, 1.0); }
+  float atmoLobe(vec3 v) { return mix(clamp(0.5 + 0.5 * dot(v, sunDir) / hazePhase.w, 0.0, 1.0), atmoMieLobe(v), hazePhase.x); }
+  // Horizon radiance of the dome in direction v: what an infinitely long path of air looks like.
+  vec3 atmoSky(vec3 v) { return mix(skyHorizon, skySun, atmoLobe(v)); }
+  // Optical depth (per unit extinction at hazeBase) along r through air whose density falls off
+  // exponentially with height at rate k, so valleys hold more haze than ridges.
+  float atmoDepth(float k, float dist, float ry, float cameraY) {
+    float t = k * ry;
     float f = abs(t) > 1e-3 ? (1.0 - exp(-t)) / t : 1.0 - 0.5 * t;
-    float depth = hazeDensity * dist * exp(-hazeHeightFalloff * (cameraY - hazeBase)) * f;
-    return exp(-depth * vec3(0.85, 1.0, 1.2));   // slightly chromatic: far light loses blue, the air adds it
+    return dist * exp(-k * (cameraY - hazeBase)) * f;
   }
+  // Rayleigh takes blue first (far light reddens, the air adds blue); Mie is nearly grey.
+  vec3 atmoT(vec3 r, float cameraY) {
+    float dist = length(r);
+    return exp(-(hazeRayleigh * atmoDepth(hazeRayleighFalloff, dist, r.y, cameraY)
+               + hazeDensity * atmoDepth(hazeHeightFalloff, dist, r.y, cameraY) * vec3(0.92, 1.0, 1.08)));
+  }
+  // Local contrast: a surface of luminance k (relative to the haze colour) gets air light scaled by
+  // 1 - hazeContrast * (1 - k) * T, so dark crowns are lifted less than bright grass beside them,
+  // and the weight fades out as T falls to 0, where everything meets the sky.
+  float atmoContrast(float k, float T) { return 1.0 - hazeContrast * (1.0 - clamp(k, 0.0, 1.0)) * T; }
+  // Callers that split the haze themselves as c * T + atmoInscatter(v) * (1 - T) (impostors.js, per
+  // tree in the vertex shader) cannot pass the surface colour: atmoTransmittance remembers its T and
+  // the following atmoInscatter applies the contrast weight for a surface of luminance ATMO_SPLIT_K
+  // (far tree crowns). Define ATMO_SPLIT_K before this chunk to change it. Without a preceding
+  // atmoTransmittance call in the same invocation (water reflections), atmoInscatter is the plain sky.
+  #ifndef ATMO_SPLIT_K
+  #define ATMO_SPLIT_K 0.12
+  #endif
+  float atmoSplitT = 0.0;
+  vec3 atmoTransmittance(vec3 r, float cameraY) { vec3 T = atmoT(r, cameraY); atmoSplitT = T.g; return T; }
+  vec3 atmoInscatter(vec3 v) { return atmoSky(v) * atmoContrast(ATMO_SPLIT_K, atmoSplitT); }
   // Aerial perspective: the surface colour fades toward the sky's horizon radiance in that direction.
   vec3 atmosphereApply(vec3 color, vec3 worldPos, vec3 cameraPos) {
     vec3 r = worldPos - cameraPos;
-    vec3 T = atmoTransmittance(r, cameraPos.y);
-    return color * T + atmoInscatter(r / max(length(r), 1e-3)) * (1.0 - T);
+    vec3 T = atmoT(r, cameraPos.y);
+    vec3 S = atmoSky(r / max(length(r), 1e-3));
+    return color * T + S * (1.0 - T) * atmoContrast(atmoLum(color) / max(atmoLum(S), 1e-3), T.g);
   }
 `;
 
@@ -212,7 +240,10 @@ export class Atmosphere {
     this.sun = new THREE.Vector3(); this.sunIntensity = 3; this.exposure = 0.6;
     // Look tunables. Light is in the dome's radiance units: the sun is about 5x the sky light, and
     // sunlit ground ends up a little under the horizon sky, as outdoors, so haze lifts rather than greys.
-    this.tune = { sun: 11, ambient: 1.4, ambientSat: 0.6, haze: 0.75, exposure: 0.62 };
+    // Haze: mie scales the aerosol (x SEASON_LOOK haze^2), mieHeight its scale height in metres, rayleigh
+    // the clear-air blue (x sea-level Rayleigh), contrast the dark-surface air-light reduction, gold the
+    // blue taken out of a low sun's glow.
+    this.tune = { sun: 11, ambient: 1.4, ambientSat: 0.6, exposure: 0.62, mie: 1.0, mieHeight: 800, rayleigh: 2.0, contrast: 0.4, gold: 1.0 };
     this.time = 0; this._v = new THREE.Vector3(); this._c = new THREE.Color(); this._c2 = new THREE.Color();
   }
   // Sky dome material hooks: drive its parameters from the same haze state and draw the clouds.
@@ -221,12 +252,16 @@ export class Atmosphere {
     sky.material.onBeforeCompile = shader => {
       Object.assign(shader.uniforms, uniforms);
       shader.fragmentShader = ATMOSPHERE_GLSL + shader.fragmentShader.replace('gl_FragColor = vec4( retColor, 1.0 );', /* glsl */`
+        // A low sun's glow is gold, not cream: the same lobe the haze uses carries the tint.
+        // At the horizon it follows the haze's lobe exactly (so land and sky meet in one colour); higher up
+        // only the forward-scattering halo around the sun.
+        retColor *= mix(vec3(1.0), sunGlowTint, max(sqrt(atmoMieLobe(direction)), atmoLobe(direction) * (1.0 - smoothstep(0.0, 0.35, direction.y))));
         if (direction.y < 0.0 && cameraPosition.y > landHeight) {
-          // Below the horizon: the land goes on past the tile as a hazy plain, so the world has no bright rim.
+          // Below the horizon: the land goes on past the tile as a hazy plain of wooded foothills, hazed
+          // exactly like the terrain, so it meets the far ridges in the same air with no pale strip.
           vec3 r = direction * min((cameraPosition.y - landHeight) / -direction.y, 80000.0);
-          vec3 land = vec3(0.10, 0.10, 0.065) * (sunLight * max(sunDir.y, 0.0) + ambientSky) * 0.3183099;
-          vec3 T = atmoTransmittance(r, cameraPosition.y);
-          retColor = land * T + retColor * (1.0 - T);
+          vec3 land = vec3(0.15, 0.145, 0.095) * (sunLight * max(sunDir.y, 0.0) + ambientSky) * 0.3183099;
+          retColor = atmosphereApply(land, cameraPosition + r, cameraPosition);
         }
         if (direction.y > 0.0) {
           float t = (cloudHeight - cameraPosition.y) / direction.y;
@@ -234,7 +269,7 @@ export class Atmosphere {
           float a = smoothstep(0.45, 0.75, n) * smoothstep(0.05, 0.3, direction.y) * cloudOpacity;   // fade before the 2.5 km repeat shows in rows
           float thick = smoothstep(0.7, 1.05, n);   // seen from below, thick cores are darker and thin edges glow
           vec3 lit = sunLight * (0.22 + 0.25 * max(dot(direction, sunDir), 0.0)) * (1.25 - 0.75 * thick) + ambientSky * (0.6 - 0.2 * thick);
-          lit = mix(lit, atmoInscatter(direction), 1.0 - exp(-t * hazeDensity * 0.25));   // far clouds sink into the haze
+          lit = mix(lit, atmoSky(direction), 1.0 - exp(-t * (hazeDensity + hazeRayleigh.g) * 0.5));   // far clouds sink into the haze
           retColor = mix(retColor, lit, a * 0.9);
         }
         gl_FragColor = vec4( retColor, 1.0 );`);
@@ -297,6 +332,13 @@ export class Atmosphere {
     const wSide = span > 1e-4 ? (lum(side) - lum(uniforms.skyHorizon.value)) / span : 0.5;
     const wm0 = (hg(0) - hgMin) / (hgMax - hgMin);
     uniforms.hazePhase.value.set(THREE.MathUtils.clamp((0.5 - wSide) / Math.max(0.5 - wm0, 1e-3), 0, 1), hgMin, 1 / (hgMax - hgMin), c);
+    // The Preetham halo is neutral (even greenish) around a low sun and tone maps to cream. Light scattered
+    // forward by aerosol has the colour of the reddened sun, so the lobe goes gold (from 26 degrees, full by 6): in
+    // the dome (sunGlowTint) and in the haze toward the sun (skySun). The target is about the colour of an
+    // 8-degree sun and a little dimmer, since ACES only keeps hue below its shoulder.
+    const gold = this.tune.gold * (1 - THREE.MathUtils.smoothstep(elDeg, 6, 26));
+    uniforms.sunGlowTint.value.setRGB(1 - 0.06 * gold, 1 - 0.32 * gold, 1 - 0.64 * gold);
+    uniforms.skySun.value.multiply(uniforms.sunGlowTint.value);
 
     // Sun: colour by elevation, intensity fading through the last few degrees above the horizon.
     sunRamp(elDeg, uniforms.sunColor.value);
@@ -310,8 +352,12 @@ export class Atmosphere {
     amb.setRGB(ambL + (amb.r - ambL) * tune.ambientSat, ambL + (amb.g - ambL) * tune.ambientSat, ambL + (amb.b - ambL) * tune.ambientSat);
     uniforms.ambientGround.value.setRGB(0.30, 0.24, 0.16).multiplyScalar(this.sunIntensity * 0.12 + ambL * 0.4);
 
-    // Haze: season sets the base (summer thickest, winter clearest); low sun thickens it.
-    uniforms.hazeDensity.value = tune.haze * 3.0e-4 * Math.pow(haze, 1.5) * (1 + 0.5 * lowSun);
+    // Haze: clear air is the same all year; the aerosol is set by the season (summer dust and smoke
+    // thickest, rain-washed winter clearest) and thickens toward a low sun.
+    uniforms.hazeDensity.value = tune.mie * 7.5e-5 * haze * haze * (1 + 0.5 * lowSun);
+    uniforms.hazeHeightFalloff.value = 1 / tune.mieHeight;
+    uniforms.hazeRayleigh.value.set(5.8e-6, 13.5e-6, 33.1e-6).multiplyScalar(tune.rayleigh);
+    uniforms.hazeContrast.value = tune.contrast;
 
     // Clouds drift with the wind; the offset wraps so it never loses precision.
     const [strength, cover] = CLOUDS[season] || CLOUDS.fall;
@@ -326,7 +372,7 @@ export class Atmosphere {
     const fwd = camera.getWorldDirection(this._v);
     const glare = Math.pow(Math.max(fwd.dot(s), 0), 6) * lum(uniforms.skySun.value);
     // A high sun on bare summer grass is about twice the light of a mid-morning one, so stop down for it too.
-    const key = 0.7 * lum(side) + 0.1 * this.sunIntensity + 0.35 * glare;
+    const key = 0.7 * lum(side) + 0.1 * this.sunIntensity + 0.5 * glare;
     const ground = this.sunIntensity * Math.max(s.y, 0) + ambL;
     const target = THREE.MathUtils.clamp(tune.exposure * Math.pow(Math.max(key, 1e-3) / 1.7, -0.35) * Math.min(1, Math.pow(ground / 5.8, -0.5)), 0.25, 2.2);
     this.exposure += (target - this.exposure) * (1 - Math.exp(-dt * 2.5));
