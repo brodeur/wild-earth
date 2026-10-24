@@ -10,7 +10,7 @@ import { SEASON_LOOK } from './season.js';
 // ephemeral ones only in winter. Ponds are flat polygons at their water level. One merged geometry
 // per class, so a season change is a few visibility flags.
 //
-// The terrain is a fixed mesh of 10 m quads (terrain.js) with no banks at the scale of a 2-7 m
+// The terrain is a fixed mesh of 10 m quads (terrain.js) with no banks at the scale of a 2-30 m
 // channel, so a surface sunk below it would simply vanish. Instead the ribbons are draped on the
 // exact mesh triangles (the same height function grass.js uses for blade roots) and pulled a
 // little toward the camera in the vertex shader, along the view ray, so they win the depth test
@@ -32,7 +32,12 @@ export const WATER_SEASONS = {
   summer: { ephemeral: false, intermittent: false, perennial: true, ponds: false },
   fall:   { ephemeral: false, intermittent: false, perennial: true, ponds: false },
 };
-const WIDTH_BY_ORDER = [0, 1.5, 2.5, 4, 7];                       // water width (m) by Strahler order, 4+ = 7
+// Water width (m) by Strahler order, 7+ = 30. Orders 5-6 are rivers: the North Fork Cosumnes
+// (order 6) runs about 20 m wide at spring flow.
+const WIDTH_BY_ORDER = [0, 1.5, 2.5, 4, 7, 12, 20, 30];
+const MAX_ORDER = WIDTH_BY_ORDER.length - 1;
+const POND_BIG = 10000;     // m2: above ~1 ha a pond's level comes from its shoreline, below it the stock-pond rule
+const POND_FADE = 1.5;      // m: alpha fade inside a pond's shoreline
 const WATER_WIDTH_SCALE = { ephemeral: 0.6, intermittent: 0.8, perennial: 1 };   // a runoff trickle is narrower than the creek it becomes
 const BED_STRENGTH = { ephemeral: 0.4, intermittent: 0.75, perennial: 0.95 };   // a grassy order-1 swale barely shows a bed
 const STEP = 10;                                                  // metres between cross-sections along a path
@@ -179,8 +184,9 @@ const WATER_FRAG = /* glsl */`
     float glint = Fs * (shin + 8.0) / 25.13 * pow(max(dot(N, H), 0.0), shin) * max(sunDir.y, 0.0);
     vec3 col = body * (1.0 - F) + skyR * F + sunLight * glint * sh;
     // Soft banks: ribbons fade over their outer third onto the bed under them.
-    float edge = pond > 0.5 ? 1.0 : 1.0 - smoothstep(0.55, 1.0, abs(vFlow.y) / vFlow.z);
-    float a = clamp(edge * mix(opacity, 1.0, F) + glint * 0.5, 0.0, 1.0);
+    // Ponds carry their shoreline fade in vExtra.x (0 on the ring, 1 a metre or two inside).
+    float edge = pond > 0.5 ? smoothstep(0.0, 1.0, vExtra.x) : 1.0 - smoothstep(0.55, 1.0, abs(vFlow.y) / vFlow.z);
+    float a = clamp(edge * mix(opacity, 1.0, F) + glint * 0.5 * (pond > 0.5 ? edge : 1.0), 0.0, 1.0);
     gl_FragColor = vec4(atmosphereApply(col, vPosW, cameraPosition), a);
     #include <tonemapping_fragment>
     #include <colorspace_fragment>
@@ -248,11 +254,17 @@ export class Water {
     this.setSeason('summer');
   }
 
-  // Ponds: flat polygons at the water level. The larger ponds are hydro-flattened in the DEM (the
-  // interior median equals its minimum), so the water lies on that flat (5 cm up; the depth pull
-  // does the rest; a level below it would be hidden under the mesh). Small stock ponds are 1-4 m
-  // bowls in the DEM, where the minimum would leave a puddle: the level rises toward the interior
-  // median (at most 1.5 m) and the rendered shore triangles above it cut the shoreline.
+  // Ponds: flat polygons at the water level. Large ponds and reservoirs (> ~1 ha) are
+  // hydro-flattened in the DEM at the level of the day the lidar flew, often below the NHD shoreline,
+  // with the bank sloping up to the ring; a surface at that flat stops 20-40 m inside the polygon.
+  // Their level is the shoreline's own height instead: the 60th percentile of the mesh along the
+  // ring (sampled every 2.5 m), sunk 10 cm, so the water reaches the ring nearly everywhere; the
+  // polygon bounds it, so it cannot flood past the shore, and the depth pull hides the few
+  // decimetres it floats over the lower stretches. Small stock ponds are 1-4 m bowls in the DEM,
+  // where the minimum would leave a puddle: the level rises toward the interior median (at most
+  // 1.5 m) and the rendered shore triangles above it cut the shoreline. Every pond fades from
+  // transparent on its ring to full over POND_FADE metres inside it (an inset skirt), so the
+  // shoreline is not a crisp polygon edge.
   buildPonds(waterbodies, H) {
     const permanent = [], seasonal = [], dry = [], rings = [];
     let skipped = 0;
@@ -261,38 +273,35 @@ export class Water {
       if (ring.length > 3 && ring[0][0] === ring.at(-1)[0] && ring[0][1] === ring.at(-1)[1]) ring.pop();
       if (ring.length < 3) continue;
       if (selfIntersects(ring)) { skipped++; continue; }
+      let area = signedArea(ring);
+      if (area < 0) { ring.reverse(); area = -area; }   // counter-clockwise in (x, north): inward is to the left
       let x0 = Infinity, x1 = -Infinity, y0 = Infinity, y1 = -Infinity;
       for (const [x, y] of ring) { x0 = Math.min(x0, x); x1 = Math.max(x1, x); y0 = Math.min(y0, y); y1 = Math.max(y1, y); }
       // Lowest mesh height: on the ring itself and on a grid inside it (2.5 m, capped at ~4000 samples).
-      let lo = Infinity;
-      for (const [x, y] of ring) lo = Math.min(lo, H(x, y));
+      const shore = [];
+      for (let i = 0; i < ring.length; i++) {
+        const [ax, ay] = ring[i], [bx, by] = ring[(i + 1) % ring.length], k = Math.max(1, Math.ceil(Math.hypot(bx - ax, by - ay) / 2.5));
+        for (let j = 0; j < k; j++) shore.push(H(ax + (bx - ax) * j / k, ay + (by - ay) * j / k));
+      }
+      shore.sort((a, b) => a - b);
+      let lo = shore[0];
       const step = Math.max(2.5, Math.sqrt((x1 - x0) * (y1 - y0) / 4000));
       const inside = [];
       for (let y = y0 + step / 2; y < y1; y += step) for (let x = x0 + step / 2; x < x1; x += step)
         if (inRing(x, y, ring)) { const h = H(x, y); inside.push(h); lo = Math.min(lo, h); }
       inside.sort((a, b) => a - b);
       const med = inside.length ? inside[inside.length >> 1] : lo;
-      const level = lo + Math.min(Math.max(med - lo, 0), 1.5) + 0.05;
-      const shape = new THREE.Shape(ring.map(([x, y]) => new THREE.Vector2(x, y)));
-      const g = new THREE.ShapeGeometry(shape);
-      // ShapeGeometry builds in xy; move to xz at the water level (y = north -> z = -north).
-      const p = g.attributes.position;
-      for (let k = 0; k < p.count; k++) { const x = p.getX(k), n = p.getY(k); p.setXYZ(k, x, level, -n); }
-      g.deleteAttribute('uv');
-      const nv = p.count;
-      g.setAttribute('normal', new THREE.Float32BufferAttribute(new Float32Array(nv * 3).map((_, i) => (i % 3 === 1 ? 1 : 0)), 3));
-      // Pond shader takes flow from world xz; the bed shader needs a large half-width so it is not faded.
-      const flow = new Float32Array(nv * 4), dir = new Float32Array(nv * 2), extra = new Float32Array(nv * 2);
-      for (let k = 0; k < nv; k++) { flow[k * 4] = p.getX(k); flow[k * 4 + 1] = -p.getZ(k); flow[k * 4 + 2] = 1e6; dir[k * 2] = 1; extra[k * 2] = 1; extra[k * 2 + 1] = 1; }
-      g.setAttribute('aFlow', new THREE.BufferAttribute(flow, 4));
-      g.setAttribute('aDir', new THREE.BufferAttribute(dir, 2));
-      g.setAttribute('aExtra', new THREE.BufferAttribute(extra, 2));
+      const level = area > POND_BIG
+        ? Math.max(lo + 0.05, shore[Math.floor(0.6 * (shore.length - 1))] - 0.1)
+        : lo + Math.min(Math.max(med - lo, 0), 1.5) + 0.05;
+      const g = pondGeometry(ring, level, Math.min(POND_FADE, Math.sqrt(area) * 0.08));
       const intermittent = POND_INTERMITTENT.has(w.fcode);
       if (intermittent) { seasonal.push(g); dry.push(g.clone()); } else permanent.push(g);
-      rings.push({ ring, bbox: [x0, y0, x1, y1], intermittent, level });
+      rings.push({ ring, bbox: [x0, y0, x1, y1], intermittent, level, area });
     }
     const merge = list => (list.length ? mergeGeometries(list) : new THREE.BufferGeometry());
     this.stats.skippedRings = skipped; this.stats.ponds = { permanent: permanent.length, seasonal: seasonal.length };
+    this.pondRings = rings;
     if (skipped) console.info(`water: skipped ${skipped} self-intersecting waterbody ring(s)`);
     // Perennial ponds always hold water; intermittent ones hold it in the wet season and show
     // their dry pan (the bed shader) the rest of the year.
@@ -312,7 +321,8 @@ export class Water {
     for (const st of streams) {
       const cls = st.fcode in STREAM_CLASS ? STREAM_CLASS[st.fcode] : 'intermittent';
       if (!cls || !st.path || st.path.length < 2) continue;
-      const order = Math.max(1, Math.min(4, st.order || 1)), ci = CLASSES.indexOf(cls);
+      const order = Math.max(1, Math.min(MAX_ORDER, st.order || 1)), ci = CLASSES.indexOf(cls);
+      // The dry bed (gravel bars, the flood channel) is half again the water's width plus a metre.
       const ww = WIDTH_BY_ORDER[order] * WATER_WIDTH_SCALE[cls], bw = WIDTH_BY_ORDER[order] * 1.5 + 1.0;
       const speed = 0.35 + 0.15 * order;
       // Resample at <= STEP m, keeping the original vertices.
@@ -358,10 +368,12 @@ export class Water {
             buf.idx.push(a, c, b, b, c, d);
           }
         };
-        // A centre vertex lets a wide bed fold into a V-valley; a bed under ~6 m fits inside one 10 m
-        // terrain quad and needs only its two edges (half the triangles, most of the network).
-        strip(bed, bw / 2, bw > 6 ? [-bw / 2, 0, bw / 2] : [-bw / 2, bw / 2], BED_STRENGTH[cls] * (order === 1 ? 0.8 : 1), 0, bMod);
-        strip(water[cls], ww / 2, [-ww / 2, ww / 2], 1, speed, wMod);
+        // Interior vertices (at most ~5 m apart) let a wide ribbon fold into a V-valley instead of
+        // bridging it; a ribbon under ~6 m fits inside one 10 m terrain quad and needs only its two
+        // edges (half the triangles, most of the network).
+        const across = w => { const k = w > 6 ? Math.max(2, Math.ceil(w / 5)) : 1; return Array.from({ length: k + 1 }, (_, i) => -w / 2 + w * i / k); };
+        strip(bed, bw / 2, across(bw), BED_STRENGTH[cls] * (order === 1 ? 0.8 : 1), 0, bMod);
+        strip(water[cls], ww / 2, across(ww), 1, speed, wMod);
       }
     }
     this.stats.reaches = reaches;
@@ -391,6 +403,57 @@ export class Water {
     this.uniforms.uTime.value = (this.uniforms.uTime.value + dt) % 3600;
     if (look && look !== this.look) { this.look = look; const s = seasonOf(look); if (s !== this.season) this.setSeason(s); }
   }
+}
+
+// Twice-halved shoelace: positive when the ring runs counter-clockwise in (x, north).
+function signedArea(ring) {
+  let a = 0;
+  for (let i = 0, j = ring.length - 1; i < ring.length; j = i++) a += ring[j][0] * ring[i][1] - ring[i][0] * ring[j][1];
+  return a / 2;
+}
+
+// The ring moved `d` metres inward (counter-clockwise ring): each vertex along the bisector of its
+// two edges' inward normals, the miter capped at 3d. Null when the result folds over itself.
+function insetRing(ring, d) {
+  const n = ring.length, out = [];
+  for (let i = 0; i < n; i++) {
+    const p = ring[(i + n - 1) % n], c = ring[i], q = ring[(i + 1) % n];
+    let ax = c[0] - p[0], ay = c[1] - p[1], bx = q[0] - c[0], by = q[1] - c[1];
+    const la = Math.hypot(ax, ay) || 1, lb = Math.hypot(bx, by) || 1; ax /= la; ay /= la; bx /= lb; by /= lb;
+    let mx = -ay - by, my = ax + bx; const lm = Math.hypot(mx, my);
+    if (lm < 1e-6) { mx = -ay; my = ax; } else { mx /= lm; my /= lm; }
+    const k = d / Math.max(mx * -ay + my * ax, 1 / 3);
+    out.push([c[0] + mx * k, c[1] + my * k]);
+  }
+  return signedArea(out) > 0 && !selfIntersects(out) ? out : null;
+}
+
+// A pond's water polygon at `level`: the inset ring triangulated at full alpha, plus a skirt of
+// quads out to the shoreline where aExtra.x (edge alpha) falls to 0. Without a clean inset (a
+// ring narrower than the fade) the plain polygon is drawn at full alpha.
+function pondGeometry(ring, level, fade) {
+  let inner = null;
+  for (let d = fade; !inner && d > 0.2; d /= 2) inner = insetRing(ring, d);
+  const n = ring.length, verts = inner ? inner.concat(ring) : ring;
+  const tris = THREE.ShapeUtils.triangulateShape((inner || ring).map(([x, y]) => new THREE.Vector2(x, y)), []);
+  const idx = tris.flat();
+  if (inner) for (let i = 0; i < n; i++) { const j = (i + 1) % n; idx.push(i, j, n + i, j, n + j, n + i); }
+  const nv = verts.length, pos = new Float32Array(nv * 3), nrm = new Float32Array(nv * 3);
+  const flow = new Float32Array(nv * 4), dir = new Float32Array(nv * 2), extra = new Float32Array(nv * 2);
+  verts.forEach(([x, y], k) => {
+    pos.set([x, level, -y], k * 3); nrm[k * 3 + 1] = 1;
+    // Pond shader takes flow from world xz; the bed shader needs a large half-width so it is not faded.
+    flow.set([x, y, 1e6, 0], k * 4); dir[k * 2] = 1;
+    extra[k * 2] = inner && k >= n ? 0 : 1; extra[k * 2 + 1] = 1;
+  });
+  const g = new THREE.BufferGeometry();
+  g.setAttribute('position', new THREE.BufferAttribute(pos, 3));
+  g.setAttribute('normal', new THREE.BufferAttribute(nrm, 3));
+  g.setAttribute('aFlow', new THREE.BufferAttribute(flow, 4));
+  g.setAttribute('aDir', new THREE.BufferAttribute(dir, 2));
+  g.setAttribute('aExtra', new THREE.BufferAttribute(extra, 2));
+  g.setIndex(idx);
+  return g;
 }
 
 // Minimal merge for geometries with identical attribute layouts (avoids pulling in the addons path).
