@@ -50,6 +50,14 @@
   #legend div { display:flex; align-items:center; gap:6px; }
   #legend .sw { width:14px; height:3px; }
   #status { position:absolute; top:12px; left:12px; background:#0f1512cc; padding:6px 10px; border-radius:8px; font-size:12px; z-index:4; color:var(--muted); }
+  textarea { width:100%; font:inherit; background:#0d1310; color:var(--text); border:1px solid var(--line); border-radius:6px; padding:6px 8px; resize:vertical; margin:4px 0; }
+  #editLog table td { color:var(--text); white-space:normal; }
+  #editLog table td.t { color:var(--muted); white-space:nowrap; }
+  #editLog tr.geo { cursor:pointer; }
+  #editLog tr.geo:hover td { background:#1c2620; }
+  #drawBar { position:absolute; top:12px; left:50%; transform:translateX(-50%); background:#2a2410ee; color:#ffe680; border:1px solid #6b5a1e; padding:6px 12px; border-radius:8px; font-size:12px; z-index:6; display:none; white-space:nowrap; }
+  #drawBar.on { display:block; }
+  #map.drawing canvas { cursor:crosshair !important; }
   .note { font-size:12px; color:var(--muted); background:#0d1310; border:1px solid var(--line); border-radius:6px; padding:8px; }
   @media (max-width: 800px) { #app { grid-template-columns:1fr; grid-template-rows:45% 55%; } #side { border-right:0; border-bottom:1px solid var(--line); } }
 </style>
@@ -88,8 +96,27 @@
 
     <h2>Species <span class="sub" id="spCount"></span></h2>
     <div id="species"></div>
-    <div class="note" style="margin-top:8px">Verify or flag a species to record local knowledge. Edits stay in this browser until exported, then get appended to the manifest's <code>edits</code> log.</div>
-    <div class="row" style="margin-top:6px"><span class="sub" id="editCount">0 edits</span><button id="exportEdits">Export edits.json</button><button id="clearEdits">Clear</button></div>
+    <div class="note" style="margin-top:8px" id="editNote">Verify or flag a species to record local knowledge.</div>
+    <div class="row" style="margin-top:6px"><span id="editMode" class="badge"></span><span class="sub" id="editCount">0 edits</span></div>
+    <div class="row"><button id="syncEdits" hidden></button><button id="exportEdits">Export edits.json</button><button id="clearEdits">Clear</button></div>
+
+    <h2>Species note</h2>
+    <select id="noteSp"></select>
+    <textarea id="noteText" rows="3" maxlength="2000" placeholder="e.g. blue oaks here drop acorns in late September"></textarea>
+    <div class="row"><button id="noteSave">Save note</button><span class="sub" id="noteMsg"></span></div>
+
+    <h2>Mask polygons</h2>
+    <div class="row"><button id="drawBtn">Draw mask polygon</button><button id="drawUndo" hidden>Undo vertex</button><button id="drawDone" hidden>Finish</button><button id="drawCancel" hidden>Cancel</button></div>
+    <div class="sub" id="drawHint">Outline a mining scar, ditch, orchard or clearing the OSM footprint misses.</div>
+    <div id="drawForm" hidden>
+      <div class="row"><span class="sub" style="width:60px">Class</span><select id="drawClass" style="flex:1"></select></div>
+      <textarea id="drawNote" rows="2" maxlength="2000" placeholder="Note (optional): what it is, how sure you are"></textarea>
+      <div class="row"><button id="drawSave" class="on">Save polygon</button><span class="sub" id="drawMsg"></span></div>
+    </div>
+    <label class="chk"><input type="checkbox" id="lyEdits" checked> Show hand-drawn polygons (edit log)</label>
+    <div class="sub">No home locations, addresses or people's names in notes.</div>
+
+    <details id="editLogBox"><summary>Edit log <span id="editLogCount"></span></summary><div id="editLog"></div></details>
 
     <details><summary>Species inventory (GBIF, top recorded)</summary><div id="inventory"></div></details>
     <details><summary>Pipeline status</summary><div id="pipeline"></div></details>
@@ -97,6 +124,7 @@
   </div>
   <div id="map">
     <div id="status">loading…</div>
+    <div id="drawBar"></div>
     <div id="legend"></div>
   </div>
 </div>
@@ -109,7 +137,8 @@ const DEFAULT_SEASONS = { winter:[12,1,2], spring:[3,4,5], summer:[6,7,8], fall:
 
 const S = { tiles:[], tile:null, m:null, data:{}, view3d:false, texture:'rewilded', exag:1.5,
   layers:{ mask:true, maskR:false, hydro:true, pts:true, heat:false, veg:false, vegPresent:false }, resource:'none', observer:null, season:null,
-  seasonFilter:true, hidden:new Set(), edits:[] };
+  seasonFilter:true, hidden:new Set(), edits:[], local:[], api:false, library:[] };
+S.layers.edits = true;
 
 const $ = id => document.getElementById(id);
 const base = () => `../tiles/${S.tile}/`;
@@ -129,6 +158,7 @@ async function loadIndex(){
   if(!r.ok){ $('status').textContent = 'No tiles/index.json. Run the pipeline first.'; return; }
   const idx = await r.json();
   S.tiles = idx.tiles; $('specv').textContent = idx.spec_version;
+  S.library = await loadLibrary();
   $('tileSel').innerHTML = S.tiles.map(t=>`<option value="${t.tile_id}">${t.tile_id}</option>`).join('');
   const want = new URLSearchParams(location.search).get('tile');
   await loadTile(want && S.tiles.some(t=>t.tile_id===want) ? want : S.tiles[0]?.tile_id);
@@ -150,7 +180,8 @@ async function loadTile(id){
   await Promise.all(want.map(async ([k,rel,opt]) => { d[k] = await getJSON(rel, opt); }));
   d.species = d.species || []; d.seasons = d.calendar?.seasons || DEFAULT_SEASONS;
   d.species.forEach((s,i)=> s.color = hex2rgb(PALETTE[i % PALETTE.length]));
-  S.edits = loadEdits();
+  cancelDraw(true);
+  await loadEdits();
   S.observer = d.species.find(s=>s.role==='playable')?.code || d.species[0]?.code || null;
   S.season = seasonOf(new Date().getMonth()+1, d.seasons);
   renderSide(); initDeck(); render();
@@ -175,6 +206,11 @@ function renderSide(){
   $('resSel').innerHTML = '<option value="none">none</option>' + res.map(r=>`<option value="${r}">${r.replace(/_/g,' ')}</option>`).join('');
   if(!res.includes(S.resource)) S.resource='none';
   $('resSel').value = S.resource;
+  const opt = s=>`<option value="${s.code}">${esc(s.common||s.code)}${s.scientific?' — '+esc(s.scientific):''}</option>`;
+  const keep = $('noteSp').value;
+  $('noteSp').innerHTML = `<optgroup label="Recorded in this tile">${d.species.map(opt).join('')}</optgroup>` +
+    (S.library.length ? `<optgroup label="Plants (species library)">${S.library.map(opt).join('')}</optgroup>` : '');
+  if(keep && [...$('noteSp').options].some(o=>o.value===keep)) $('noteSp').value = keep;
   renderObserver(); renderSpecies(); renderInventory(); renderPipeline(); renderEdits();
 }
 
@@ -196,7 +232,8 @@ function renderObserver(){
 function renderSpecies(){
   const d = S.data, P = perceived();
   const sm = S.data.seasons[S.season] || [];
-  const conf = code => S.edits.filter(e=>e.species_code===code).slice(-1)[0]?.value;
+  const conf = code => S.edits.filter(e=>e.type==='species_confidence' && e.species_code===code).slice(-1)[0]?.value;
+  const nNotes = code => S.edits.filter(e=>e.type==='species_note' && e.species_code===code).length;
   const rows = d.species.map(s=>{
     const counts = d.seasonal?.counts?.[s.code] || []; const max = Math.max(1,...counts);
     const spark = counts.length ? `<div class="spark" title="occurrences by month">${counts.map((c,i)=>`<i class="${sm.includes(i+1)?'in':''}" style="height:${Math.max(1,c/max*16)}px"></i>`).join('')}</div>` : '';
@@ -205,7 +242,7 @@ function renderSpecies(){
     return `<div class="sp ${dim?'dim':''}" data-code="${s.code}">
       <span class="sw" style="background:rgb(${s.color})"></span>
       <div class="name" title="toggle visibility"><span style="${S.hidden.has(s.code)?'text-decoration:line-through':''}">${s.common}</span> <span class="badge">${s.role}</span>
-        <small>${s.occurrence_count ?? 0} records · <span class="badge ${c==='verified'?'ok':c==='flagged'?'bad':''}">${c}</span>${dim?' · not perceived':''}</small></div>
+        <small>${s.occurrence_count ?? 0} records · <span class="badge ${c==='verified'?'ok':c==='flagged'?'bad':''}">${c}</span>${nNotes(s.code)?` · ${nNotes(s.code)} note${nNotes(s.code)>1?'s':''}`:''}${dim?' · not perceived':''}</small></div>
       <div style="text-align:right">${spark}<div class="row" style="justify-content:flex-end;margin-top:2px"><button data-v="verified" title="Verify: this species is here">✓</button><button data-v="flagged" title="Flag: wrong or missing">⚑</button></div></div>
     </div>`;
   });
@@ -214,11 +251,12 @@ function renderSpecies(){
   $('species').querySelectorAll('.sp').forEach(el=>{
     const code = el.dataset.code;
     el.querySelector('.name').onclick = ()=>{ S.hidden.has(code)?S.hidden.delete(code):S.hidden.add(code); renderSpecies(); render(); };
-    el.querySelectorAll('button').forEach(b=> b.onclick = ()=>{
+    el.querySelectorAll('button').forEach(b=> b.onclick = async ()=>{
       const note = prompt(`${b.dataset.v==='verified'?'Verify':'Flag'} ${code}: add a note (optional)`) ;
       if(note===null) return;
-      S.edits.push({type:'species_confidence', species_code:code, value:b.dataset.v, note:note||undefined, at:new Date().toISOString()});
-      saveEdits(); renderSpecies(); renderEdits();
+      const e = {type:'species_confidence', species_code:code, value:b.dataset.v};
+      if(note.trim()) e.note = note.trim();
+      try { await addEdits([e]); } catch(err){ alert('Could not save the edit: '+err.message); }
     });
   });
 }
@@ -237,16 +275,208 @@ function renderPipeline(){
   $('sources').innerHTML = `<table>${Object.entries(m.sources||{}).map(([k,v])=>`<tr><td>${k}</td><td>${v.name}<br><span class="sub">${v.license} · retrieved ${v.retrieved}</span></td></tr>`).join('')}</table>`;
 }
 
-/* ---------- edits (local-knowledge prototype) ---------- */
+/* ---------- edits: local knowledge for the manifest's append-only edits log ----------
+   With the dev server's /api/edits each edit is appended to tiles/<id>/manifest.json at once.
+   Opened as static files (no API), edits stay in this browser and can be exported. */
+const EDIT_MASK_CLASSES = ['mine','canal','agriculture','cleared','other'];
+const esc = v => String(v ?? '').replace(/[&<>"']/g, c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 const editsKey = () => `wild-earth-edits:${S.tile}`;
-function loadEdits(){ try { return JSON.parse(localStorage.getItem(editsKey())||'[]'); } catch(e){ return []; } }
-function saveEdits(){ try { localStorage.setItem(editsKey(), JSON.stringify(S.edits)); } catch(e){} }
-function renderEdits(){ $('editCount').textContent = `${S.edits.length} edit${S.edits.length===1?'':'s'}`; }
+const apiUrl = () => `../api/edits/${S.tile}`;
+function loadLocal(){ try { return JSON.parse(localStorage.getItem(editsKey())||'[]'); } catch(e){ return []; } }
+function saveLocal(){ try { localStorage.setItem(editsKey(), JSON.stringify(S.local)); } catch(e){} }
+
+async function loadLibrary(){
+  try {
+    const r = await fetch('../library/species/index.json', {cache:'no-cache'}); if(!r.ok) return [];
+    const ids = (await r.json()).species || [];
+    const out = await Promise.all(ids.map(id=> fetch(`../library/species/${id}.json`, {cache:'no-cache'}).then(r=>r.ok?r.json():null).catch(()=>null)));
+    return out.filter(Boolean).map(x=>({code:x.id, common:x.common, scientific:x.scientific}));
+  } catch(e){ return []; }
+}
+
+async function loadEdits(){
+  S.local = loadLocal();
+  try {
+    const r = await fetch(apiUrl(), {cache:'no-cache'});
+    const j = r.ok ? await r.json() : null;
+    if(Array.isArray(j)){ S.api = true; S.edits = j; return; }
+  } catch(e){}
+  S.api = false; S.edits = S.local;
+}
+
+// Append edits (objects without id/at). Server stamps id and at; offline we stamp at only.
+async function addEdits(list){
+  if(S.api){
+    const r = await fetch(apiUrl(), {method:'POST', headers:{'Content-Type':'application/json'}, body:JSON.stringify(list)});
+    const j = await r.json().catch(()=>({}));
+    if(!r.ok) throw new Error(j.error || `server answered ${r.status}`);
+    S.edits.push(...j.added);
+  } else {
+    const at = new Date().toISOString();
+    S.local.push(...list.map(e=>({...e, at}))); saveLocal(); S.edits = S.local;
+  }
+  renderSpecies(); renderEdits(); render();
+}
+
+function spName(code){ const s = [...S.data.species, ...S.library].find(x=>x.code===code); return s ? s.common : code; }
+function fmtTime(t){ const d = new Date(t); return isNaN(d) ? '' : d.toLocaleString([], {year:'numeric', month:'short', day:'numeric', hour:'2-digit', minute:'2-digit'}); }
+
+function renderEdits(){
+  const n = S.edits.length, pl = n===1?'':'s';
+  $('editMode').className = 'badge ' + (S.api ? 'ok' : 'warn');
+  $('editMode').textContent = S.api ? 'saved to server' : 'this browser only';
+  $('editCount').textContent = S.api ? `${n} edit${pl} in the manifest log` : `${n} edit${pl} in this browser`;
+  $('editNote').innerHTML = S.api
+    ? 'Verify or flag a species to record local knowledge. Each edit is appended to this tile\'s <code>manifest.json</code> <code>edits</code> log right away, so it survives pipeline re-runs.'
+    : 'Verify or flag a species to record local knowledge. No edit server here (open the viewer through <code>server.py</code> to save to the manifest), so edits stay in this browser until exported.';
+  $('clearEdits').hidden = S.api;     // the server log is append-only
+  const pending = S.api ? S.local.length : 0;
+  $('syncEdits').hidden = !pending;
+  $('syncEdits').textContent = `Send ${pending} browser edit${pending===1?'':'s'} to server`;
+  $('editLogCount').textContent = `(${n})`;
+  const rows = [...S.edits].reverse().map(e=>{
+    const subject = e.species_code ? esc(spName(e.species_code)) + (e.value ? ` <span class="badge ${e.value==='verified'?'ok':'bad'}">${esc(e.value)}</span>` : '')
+      : e.class ? `<span class="sw" style="display:inline-block;width:8px;height:8px;border-radius:2px;background:rgb(${MASK_COLORS[e.class]||[200,200,200]})"></span> ${esc(e.class)}` : '–';
+    const geo = e.geometry ? ` class="geo" data-id="${esc(e.id||e.at)}" title="zoom to this edit"` : '';
+    return `<tr${geo}><td class="t">${esc(fmtTime(e.at))}<br>${esc(e.type.replace(/_/g,' '))}</td><td>${subject}${e.note?`<br><span class="sub">${esc(e.note)}</span>`:''}</td></tr>`;
+  });
+  $('editLog').innerHTML = rows.length ? `<table>${rows.join('')}</table>` : '<div class="sub">no edits yet</div>';
+  $('editLog').querySelectorAll('tr.geo').forEach(tr=> tr.onclick = ()=>{
+    const e = S.edits.find(x=>(x.id||x.at)===tr.dataset.id); if(e) flyTo(e.geometry);
+  });
+}
+
+function flyTo(g){
+  const pts = g.type==='Point' ? [g.coordinates] : g.coordinates[0];
+  const xs = pts.map(p=>p[0]), ys = pts.map(p=>p[1]);
+  const lon = (Math.min(...xs)+Math.max(...xs))/2, lat = (Math.min(...ys)+Math.max(...ys))/2;
+  const span = Math.max(Math.max(...xs)-Math.min(...xs), (Math.max(...ys)-Math.min(...ys))*1.3, 0.002);
+  const zoom = Math.min(16, Math.log2(360/span) - 0.5);
+  deckgl.setProps({ initialViewState:{ longitude:lon, latitude:lat, zoom, pitch:S.view3d?55:0, bearing:S.view3d?-20:0, maxPitch:85, transitionDuration:600 } });
+}
+
 $('exportEdits').onclick = ()=>{
   const blob = new Blob([JSON.stringify({tile_id:S.tile, spec_version:S.m.spec_version, edits:S.edits}, null, 1)], {type:'application/json'});
   const a = document.createElement('a'); a.href = URL.createObjectURL(blob); a.download = `${S.tile}-edits.json`; a.click();
 };
-$('clearEdits').onclick = ()=>{ if(confirm('Discard local edits?')){ S.edits=[]; saveEdits(); renderSpecies(); renderEdits(); } };
+$('clearEdits').onclick = ()=>{ if(confirm('Discard the edits kept in this browser?')){ S.local.length = 0; saveLocal(); S.edits = S.local; renderSpecies(); renderEdits(); render(); } };
+$('syncEdits').onclick = async ()=>{
+  const list = S.local.map(({at, ...e})=>({...e, client_at:at}));
+  try { await addEdits(list); S.local = []; saveLocal(); renderEdits(); }
+  catch(err){ alert('Could not send browser edits: '+err.message); }
+};
+
+$('noteSave').onclick = async ()=>{
+  const note = $('noteText').value.trim(), code = $('noteSp').value;
+  if(!code){ $('noteMsg').textContent = 'pick a species'; return; }
+  if(!note){ $('noteMsg').textContent = 'write a note first'; return; }
+  $('noteSave').disabled = true;
+  try { await addEdits([{type:'species_note', species_code:code, note}]); $('noteText').value=''; $('noteMsg').textContent = `saved for ${spName(code)}`; }
+  catch(err){ $('noteMsg').textContent = 'not saved: '+err.message; }
+  $('noteSave').disabled = false;
+};
+
+/* ---------- mask polygon drawing: click adds a vertex, double-click finishes ---------- */
+const D = { on:false, pts:[], pending:null };
+$('drawClass').innerHTML = EDIT_MASK_CLASSES.map(c=>`<option value="${c}">${c}</option>`).join('');
+function updateDrawUI(){
+  const drawing = D.on, pend = !!D.pending;
+  $('drawBtn').hidden = drawing || pend;
+  $('drawUndo').hidden = !drawing; $('drawDone').hidden = !drawing; $('drawCancel').hidden = !(drawing || pend);
+  $('drawUndo').disabled = !D.pts.length; $('drawDone').disabled = D.pts.length < 3;
+  $('drawForm').hidden = !pend;
+  $('drawHint').textContent = drawing ? `${D.pts.length} vertex${D.pts.length===1?'':'es'} · click the map to add, double-click or Finish to close` :
+    pend ? 'Choose a class and save.' : 'Outline a mining scar, ditch, orchard or clearing the OSM footprint misses.';
+  $('drawBar').classList.toggle('on', drawing);
+  $('drawBar').textContent = `Drawing a mask polygon: click to add vertices (${D.pts.length}), double-click to finish · Backspace undoes · Esc cancels`;
+  $('map').classList.toggle('drawing', drawing);
+}
+function startDraw(){ loadElevation(); D.on = true; D.pts = []; D.pending = null; $('drawMsg').textContent=''; updateDrawUI(); render(); }
+function cancelDraw(quiet){ D.on = false; D.pts = []; D.pending = null; updateDrawUI(); if(!quiet) render(); }
+function samePlace(a, b){   // within ~4 screen pixels (the two clicks of a double-click)
+  try { const vp = deckgl.getViewports()[0]; const p = vp.project(a), q = vp.project(b); return Math.hypot(p[0]-q[0], p[1]-q[1]) < 4; }
+  catch(e){ return Math.abs(a[0]-b[0]) < 1e-6 && Math.abs(a[1]-b[1]) < 1e-6; }
+}
+function finishDraw(){
+  const pts = D.pts.filter((p,i,a)=> i===0 || !samePlace(p, a[i-1]));
+  if(pts.length > 2 && samePlace(pts[0], pts[pts.length-1])) pts.pop();
+  if(pts.length < 3){ D.pts = pts; updateDrawUI(); return; }
+  D.on = false; D.pts = pts; D.pending = [...pts, pts[0]];
+  updateDrawUI(); render(); $('drawClass').focus();
+}
+// Elevation lookup from the tile's terrain-RGB PNG (same decoding as the TerrainLayer), so a
+// click in 3D lands where the ray meets the ground rather than on the z=0 plane.
+const ELEV = { tile:null, grid:null };
+async function loadElevation(){
+  const L = S.m?.layers?.['terrain.terrain_rgb'];
+  if(!L || ELEV.tile===S.tile) return;
+  ELEV.tile = S.tile; ELEV.grid = null;
+  try {
+    // No colour management: the RGB bytes are encoded heights, not colours.
+    const blob = await (await fetch(base()+L.path)).blob();
+    const img = await createImageBitmap(blob, { colorSpaceConversion:'none', premultiplyAlpha:'none' });
+    const c = document.createElement('canvas'); c.width = img.width; c.height = img.height;
+    const g = c.getContext('2d', { willReadFrequently:true }); g.drawImage(img, 0, 0);
+    ELEV.grid = { w:img.width, h:img.height, data:g.getImageData(0, 0, img.width, img.height).data, bounds:S.m.bounds_wgs84 };
+  } catch(e){ ELEV.tile = null; }
+}
+function elevAt(lon, lat){
+  const G = ELEV.grid; if(!G) return 0;
+  const [w,s,e,n] = G.bounds;
+  const i = Math.round((lon-w)/(e-w)*(G.w-1)), j = Math.round((n-lat)/(n-s)*(G.h-1));
+  if(i<0 || j<0 || i>=G.w || j>=G.h) return 0;
+  const k = (j*G.w+i)*4, d = G.data;
+  return (d[k]*65536 + d[k+1]*256 + d[k+2])*0.1 - 10000;
+}
+function pickCoord(x, y){
+  let vp; try { vp = deckgl.getViewports()[0]; } catch(e){ return null; }
+  let c = vp.unproject([x, y]);
+  if(S.view3d && ELEV.grid && ELEV.tile===S.tile){
+    // Fixed-point walk along the view ray: z -> ground height under the ray at z.
+    for(let it = 0; it < 12; it++){
+      const z = elevAt(c[0], c[1]) * S.exag, nc = vp.unproject([x, y], { targetZ:z });
+      const moved = Math.abs(nc[0]-c[0]) + Math.abs(nc[1]-c[1]); c = nc;
+      if(moved < 1e-7) break;
+    }
+  }
+  return c;
+}
+// Vertices come from DOM pointer events rather than deck's onClick, whose clicks pass through
+// deck's double-tap recognizer and were dropped in testing; a pan (pointer moved) is ignored.
+let downAt = null;
+$('map').addEventListener('pointerdown', e=>{ downAt = D.on && e.button===0 ? [e.clientX, e.clientY] : null; }, true);
+$('map').addEventListener('click', e=>{
+  if(!D.on || !downAt || e.target.tagName !== 'CANVAS') return;
+  const moved = Math.hypot(e.clientX-downAt[0], e.clientY-downAt[1]); downAt = null;
+  if(moved > 5) return;                       // a pan, not a click
+  const r = e.target.getBoundingClientRect();
+  const c = pickCoord(e.clientX - r.left, e.clientY - r.top); if(!c) return;
+  D.pts.push([+c[0].toFixed(7), +c[1].toFixed(7)]); updateDrawUI(); render();
+}, true);
+$('drawBtn').onclick = startDraw;
+$('drawCancel').onclick = ()=> cancelDraw();
+$('drawDone').onclick = finishDraw;
+$('drawUndo').onclick = ()=>{ D.pts.pop(); updateDrawUI(); render(); };
+$('map').addEventListener('dblclick', e=>{ if(D.on){ e.preventDefault(); e.stopPropagation(); finishDraw(); } });
+document.addEventListener('keydown', e=>{
+  if(!D.on || /INPUT|TEXTAREA|SELECT/.test(document.activeElement?.tagName)) return;
+  if(e.key==='Escape') cancelDraw();
+  else if(e.key==='Enter') finishDraw();
+  else if(e.key==='Backspace'){ e.preventDefault(); D.pts.pop(); updateDrawUI(); render(); }
+});
+$('drawSave').onclick = async ()=>{
+  if(!D.pending) return;
+  const e = { type:'mask_polygon', class:$('drawClass').value, geometry:{ type:'Polygon', coordinates:[D.pending] } };
+  const note = $('drawNote').value.trim(); if(note) e.note = note;
+  $('drawSave').disabled = true;
+  try { await addEdits([e]); $('drawNote').value=''; cancelDraw(true); $('drawMsg').textContent = `saved ${e.class} polygon`; render(); }
+  catch(err){ $('drawMsg').textContent = 'not saved: '+err.message; }
+  $('drawSave').disabled = false;
+};
+
+function editFeatures(){
+  return S.edits.filter(e=>e.geometry).map(e=>({ type:'Feature', geometry:e.geometry, properties:e }));
+}
 
 /* ---------- deck.gl ---------- */
 let deckgl = null;
@@ -255,7 +485,9 @@ function initDeck(){
   const vs = { longitude:(w+e)/2, latitude:(s+n)/2, zoom:11.6, pitch:S.view3d?55:0, bearing:S.view3d?-20:0, maxPitch:85 };
   if(deckgl){ deckgl.setProps({ initialViewState: vs }); return; }
   deckgl = new deck.DeckGL({
-    container: $('map'), initialViewState: vs, controller:{ touchRotate:true, inertia:true },
+    // Double-click finishes a mask polygon, so it does not zoom (deck's controller options
+    // cannot be toggled reliably at runtime). Scroll, pinch and keyboard still zoom.
+    container: $('map'), initialViewState: vs, controller:{ touchRotate:true, inertia:true, doubleClickZoom:false },
     views: new deck.MapView({ repeat:false }),
     getTooltip: tooltip, style:{ background:'#0b0f0d' },
     onLoad: ()=> $('status').textContent = S.tile,
@@ -269,6 +501,7 @@ function tooltip({object, layer}){
     return {html:`<b>${sp?.common||p.species_code}</b><br>${p.date||'no date'} · ${p.basis||''}<br><span style="opacity:.7">${p.license||''}</span>`}; }
   if(layer.id==='heat') return {html:`<b>${p.count}</b> occurrence${p.count===1?'':'s'} in this 300 m cell`};
   if(layer.id==='mask') return {html:`<b>${p.class}</b>${p.name?' · '+p.name:''}<br><span style="opacity:.7">${p.highway||p.building||p.landuse||''} · ${p.osm_id}</span>`};
+  if(layer.id==='edits') return {html:`<b>${esc(p.class || p.type.replace(/_/g,' '))}</b> · hand-drawn edit<br>${p.note?esc(p.note)+'<br>':''}<span style="opacity:.7">${esc(fmtTime(p.at))}</span>`};
   if(layer.id==='flow') return {html:`<b>${p.gnis_name||'unnamed stream'}</b><br>order ${p.streamorde??'?'} · ${p.ftype||''}`};
   if(layer.id==='water') return {html:`<b>${p.gnis_name||'waterbody'}</b><br>${p.ftype||''} · fcode ${p.fcode||''}`};
   return null;
@@ -326,6 +559,23 @@ function render(){
   if(S.layers.mask && d.mask)
     layers.push(new deck.GeoJsonLayer({ id:'mask', data:d.mask, filled:true, stroked:true, getFillColor:f=>[...(MASK_COLORS[f.properties.class]||[200,200,200]),150], getLineColor:f=>[...(MASK_COLORS[f.properties.class]||[200,200,200]),230],
       getLineWidth:f=> (f.properties.buffer_m||1)*2, lineWidthUnits:'meters', lineWidthMinPixels:1, pickable:true, extensions:ext, terrainDrawMode:'drape' }));
+  // Hand-drawn edits: dashed white outline over a faint class fill, so they read apart from OSM.
+  const dash = deck.PathStyleExtension ? [new deck.PathStyleExtension({ dash:true })] : [];
+  const ef = S.layers.edits ? editFeatures() : [];
+  if(ef.length)
+    layers.push(new deck.GeoJsonLayer({ id:'edits', data:{type:'FeatureCollection', features:ef}, filled:true, stroked:true,
+      getFillColor:f=>[...(MASK_COLORS[f.properties.class]||[255,255,255]),70], getLineColor:[255,255,255,240], getLineWidth:2.5,
+      lineWidthUnits:'pixels', getDashArray:[5,3], dashJustified:true, pointType:'circle', getPointRadius:6, pointRadiusUnits:'pixels',
+      pickable:!D.on, extensions:[...ext, ...dash], terrainDrawMode:'drape' }));
+  const dp = D.pending || D.pts;
+  if(dp.length){
+    const Y = [255,226,80];
+    if(dp.length >= 3)
+      layers.push(new deck.PolygonLayer({ id:'draw-fill', data:[{p:dp}], getPolygon:d=>d.p, filled:true, stroked:false, getFillColor:[...Y,55], extensions:ext, terrainDrawMode:'drape' }));
+    layers.push(new deck.PathLayer({ id:'draw-line', data:[{p:dp}], getPath:d=>d.p, getColor:[...Y,255], getWidth:2, widthUnits:'pixels', extensions:ext, terrainDrawMode:'drape' }));
+    layers.push(new deck.ScatterplotLayer({ id:'draw-pts', data:D.pending ? D.pending.slice(0,-1) : D.pts, getPosition:p=>p, getRadius:4, radiusUnits:'pixels',
+      getFillColor:[255,255,255], stroked:true, getLineColor:[...Y,255], lineWidthMinPixels:2, extensions:ext, terrainDrawMode:'offset' }));
+  }
   const occ = occFeatures();
   // deck.gl's GPU aggregation layers (HeatmapLayer etc.) break in a deck that has a terrain pass,
   // so density is binned here and drawn as draped squares.
@@ -339,6 +589,7 @@ function render(){
   deckgl.setProps({ layers });
   let legend = '';
   if(S.layers.mask) legend += Object.entries(MASK_COLORS).filter(([k])=> (d.mask?.features||[]).some(f=>f.properties.class===k)).map(([k,c])=>`<div><span class="sw" style="background:rgb(${c})"></span>${k}</div>`).join('');
+  if(ef.some(f=>f.properties.type==='mask_polygon')) legend += `<div><span class="sw" style="background:none;border-top:2px dashed #fff;height:0"></span>hand-drawn (edit log)</div>`;
   if(S.layers.hydro) legend += `<div><span class="sw" style="background:rgb(90,170,255)"></span>stream</div>`;
   const hab = d.veg?.habitat;
   if((S.layers.veg || S.texture==='rewilded') && hab){
@@ -358,7 +609,7 @@ for (const [id,t] of [['texRewild','rewilded'],['texHill','hillshade'],['texReal
   $(id).onclick = ()=>{ S.texture=t; ['texRewild','texHill','texReal'].forEach(i=>$(i).classList.toggle('on', i===id)); render(); };
 $('resSel').onchange = e=>{ S.resource=e.target.value; renderObserver(); render(); };
 $('exag').oninput = e=>{ S.exag=+e.target.value; $('exagv').textContent=S.exag+'×'; render(); };
-for (const [id,k] of [['lyMask','mask'],['lyMaskR','maskR'],['lyHydro','hydro'],['lyPts','pts'],['lyHeat','heat'],['lyVeg','veg'],['lyVegPresent','vegPresent']])
+for (const [id,k] of [['lyMask','mask'],['lyMaskR','maskR'],['lyHydro','hydro'],['lyPts','pts'],['lyHeat','heat'],['lyVeg','veg'],['lyVegPresent','vegPresent'],['lyEdits','edits']])
   $(id).onchange = e=>{ S.layers[k]=e.target.checked; render(); };
 $('observer').onchange = e=>{ S.observer=e.target.value; renderObserver(); renderSpecies(); render(); };
 $('seasonFilter').onchange = e=>{ S.seasonFilter=e.target.checked; render(); };

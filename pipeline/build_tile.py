@@ -115,9 +115,28 @@ def run(tile: Tile, steps: list[str], force=False) -> dict:
                              "ok": False, "error": str(e)[:500]})
             print(f"[{tile.tile_id}] {step} FAILED: {e}", file=sys.stderr, flush=True)
         m["generated_at"] = now_iso()
+        _merge_edits_from_disk(tile, m)   # never drop edits saved by the viewer while this step ran
         write_json(tile.dir / "manifest.json", m)
         update_index()
     return m
+
+
+def _merge_edits_from_disk(tile: Tile, m: dict) -> None:
+    """The manifest's `edits` log is append-only and may grow (via server.py) while a build
+    step holds the manifest in memory. Re-read it and union by id before writing."""
+    p = tile.dir / "manifest.json"
+    if not p.exists():
+        return
+    try:
+        on_disk = read_json(p).get("edits", [])
+    except Exception:  # noqa: BLE001
+        return
+    seen = {e.get("id") for e in m.get("edits", []) if e.get("id")}
+    for e in on_disk:
+        if not e.get("id") or e["id"] not in seen:
+            m.setdefault("edits", []).append(e)
+            if e.get("id"):
+                seen.add(e["id"])
 
 
 def update_index() -> None:
