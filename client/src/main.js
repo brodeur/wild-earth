@@ -88,6 +88,7 @@ async function main() {
   function applySeason() {
     const s = seasonNow(); $('seasonNote').textContent = state.season === 'auto' ? `(${s})` : '';
     veg.setLook(SEASON_LOOK[s]);
+    if (far.setSeason) far.setSeason(s);   // far impostors follow the season too
   }
   applySeason();
 

@@ -5,7 +5,8 @@ import { SEASON_LOOK } from './season.js';
 
 // Species mix per habitat class (codes from pipeline/habitat.py). Weights sum to 1. Ids may be the
 // short aliases; trees.js maps them to the species library (library/species/<id>.json).
-const MIX = {
+// Exported with pick, hash and variantSeed so the far impostors (impostors.js) place the same trees.
+export const MIX = {
   1: { blue_oak: 0.55, live_oak: 0.25, gray_pine: 0.2 },                       // oak woodland
   2: { ponderosa: 0.7, gray_pine: 0.12, live_oak: 0.18 },                      // conifer forest
   3: { ponderosa: 0.3, live_oak: 0.3, blue_oak: 0.2, gray_pine: 0.2 },         // mixed forest
@@ -13,8 +14,13 @@ const MIX = {
   5: { blue_oak: 0.85, gray_pine: 0.15 },                                      // grassland / savanna
   6: { live_oak: 0.6, blue_oak: 0.2, ponderosa: 0.2 },                         // riparian (stand-ins)
 };
-const SHRUB_MIX = { 4: { chamise: 0.6, manzanita: 0.4 }, 1: { manzanita: 1 }, 3: { manzanita: 1 }, 2: { manzanita: 1 }, 6: { manzanita: 1 }, 5: { chamise: 1 } };
-const VARIANTS = 3, CAP = 24000;
+export const SHRUB_MIX = { 4: { chamise: 0.6, manzanita: 0.4 }, 1: { manzanita: 1 }, 3: { manzanita: 1 }, 2: { manzanita: 1 }, 6: { manzanita: 1 }, 5: { chamise: 1 } };
+export const VARIANTS = 3;
+const CAP = 24000;
+export const variantSeed = (id, v) => 1000 + v * 17 + id.length;   // canonical species id, variant 0..VARIANTS-1
+// The mid set's extent: every cell whose centre is within `radius` of `center` ([x, z]) is placed here,
+// so the far impostors (impostors.js) draw exactly the cells outside it, each tree once.
+export const midSet = { center: null, radius: 0, version: 0 };
 // Two LODs. Every placed plant is in the mid set (rebuilt by the cell scan every 200 m); the near set
 // holds the plants within NEAR_R + NEAR_MARGIN of where it was last refreshed (every NEAR_MOVE m, a
 // copy out of the mid set, no cell scan). The switch itself is per frame in the vertex shader: near
@@ -29,8 +35,8 @@ const NEAR_MARGIN = 60, NEAR_MOVE = 40, NEAR_CAP = { tree: 1500, shrub: 3000 };
 export const CLOSE_R = 90;
 const CLOSE_BAND = 20, CLOSE_MOVE = 15, CLOSE_CAP = { tree: 600, shrub: 1500 };
 
-function pick(mix, r) { let acc = 0; for (const [k, w] of Object.entries(mix)) { acc += w; if (r <= acc) return k; } return Object.keys(mix)[0]; }
-function hash(i, j, salt) { let h = (i * 73856093) ^ (j * 19349663) ^ (salt * 83492791); return h >>> 0; }
+export function pick(mix, r) { let acc = 0; for (const [k, w] of Object.entries(mix)) { acc += w; if (r <= acc) return k; } return Object.keys(mix)[0]; }
+export function hash(i, j, salt) { let h = (i * 73856093) ^ (j * 19349663) ^ (salt * 83492791); return h >>> 0; }
 
 // Collapse instances on the wrong side of the switch. Canopies cross-fade over +/-LOD_BAND m with
 // complementary screen-space dither (both LODs draw in the band, each keeps the pixels the other drops);
@@ -87,7 +93,7 @@ export class Vegetation {
         close: lodPatch(canopyMaterial(spec, 'close', patch), this.lodU, 'close', true) };
       this.meshes[id] = [];
       for (let v = 0; v < VARIANTS; v++) {
-        const seed = 1000 + v * 17 + id.length, entry = {};
+        const seed = variantSeed(id, v), entry = {};
         for (const lod of ['near', 'mid']) {
           const t = buildTree(id, seed, lod);
           const cap = lod === 'mid' ? (spec.shrub ? CAP : CAP / 2) : NEAR_CAP[spec.shrub ? 'shrub' : 'tree'];
@@ -128,6 +134,7 @@ export class Vegetation {
       return;
     }
     this.lastCenter = [x, z];
+    midSet.center = this.lastCenter; midSet.radius = this.radius; midSet.version++;
     const hab = this.tile.habitat, can = this.tile.canopy, res = hab.res, size = this.tile.size, heights = this.tile.heights, roads = this.tile.roads;
     for (const arr of Object.values(this.meshes)) for (const e of arr) e.mid.n = 0;
     const oaks = [];
