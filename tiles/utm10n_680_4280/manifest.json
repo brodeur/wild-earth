@@ -15,7 +15,7 @@
   38.74035063713964
  ],
  "size_m": 10000,
- "generated_at": "2026-10-24T03:09:41Z",
+ "generated_at": "2026-10-24T05:26:42Z",
  "generator": {
   "name": "wild-earth-pipeline",
   "version": "0.2.0"
@@ -183,24 +183,24 @@
    "path": "species/species.json",
    "kind": "table",
    "source": "gbif",
-   "count": 10,
-   "sha256": "5c768b03857e15eeb616af049b93748e76bf4d12e5d6050fcbd9043729a25184",
-   "bytes": 4398
+   "count": 12,
+   "sha256": "42bc4ab01bc1eef7879453b32d66a05298f57ac6e489d122b7ba057a7c532087",
+   "bytes": 5307
   },
   "species.occurrences": {
    "path": "species/occurrences.geojson",
    "kind": "vector",
    "source": "gbif",
-   "feature_count": 767,
-   "sha256": "f6270e17eb1243c64c8180c401d987a657d6296348ff6def175c25c3858b79b0",
-   "bytes": 342033
+   "feature_count": 2293,
+   "sha256": "11b30233c46634fc66a725884d90250c63c1969286ef033490ff64bb03a58722",
+   "bytes": 1028869
   },
   "species.seasonal": {
    "path": "species/seasonal.json",
    "kind": "table",
    "source": "gbif",
-   "sha256": "2a6574a793599c8e5c1f383816f87711cc5fbd3375865b8031e152bb56cd340e",
-   "bytes": 1145
+   "sha256": "19bc9496608ce47ad86c84fce942987146fe96b00493386e38e1e80e4a39f0e2",
+   "bytes": 1383
   },
   "species.inventory": {
    "path": "species/inventory.json",
@@ -212,14 +212,14 @@
   "perception": {
    "path": "perception.json",
    "kind": "table",
-   "sha256": "f4f94936bfb8c5e2c948938c59df6306688ffb5ff4194d44462f6c72b2d21a25",
-   "bytes": 2330
+   "sha256": "27a00546cdcc17e5196e256e75db0ac4d3a3a3be5b43ab34d4d5795b093c4bd7",
+   "bytes": 3128
   },
   "calendar": {
    "path": "calendar.json",
    "kind": "table",
-   "sha256": "4c658772d36539c51a0a25bdbfad21deb49d80832f9765c710edd5c0571becaf",
-   "bytes": 8306
+   "sha256": "c07aca1f3ba6c065363530fd63aa9e97c2eaad6c9223979c9bd583b15542c2f4",
+   "bytes": 10330
   },
   "terrain.hillshade": {
    "path": "terrain/hillshade.png",
@@ -660,6 +660,112 @@
    "encoding": "R = fall acorn_mast score 0..100",
    "sha256": "82338eb143fdab6c74a0b46a052c91c727c0f1cc7b422b61a82ab5a95030cb4d",
    "bytes": 44290
+  },
+  "client.texture_present": {
+   "path": "client/texture_present.jpg",
+   "kind": "raster",
+   "crs": "EPSG:32610",
+   "bounds": [
+    680000,
+    4280000,
+    690000,
+    4290000
+   ],
+   "pixels": 4000,
+   "resolution_m": 2.5,
+   "source": "pc_naip",
+   "derived_from": [
+    "imagery.naip"
+   ],
+   "encoding": "NAIP 2022 RGB as captured (present day, human footprint kept); JPEG q88",
+   "sha256": "68b4e2deb33c97296fabecee24b5080ec465ce5c433dcc48b796687ce9e89cb7",
+   "bytes": 5403589
+  },
+  "client.species_mix": {
+   "path": "client/species_mix.json",
+   "kind": "raster",
+   "crs": "EPSG:32610",
+   "bounds": [
+    680000,
+    4280000,
+    690000,
+    4290000
+   ],
+   "pixels": 333,
+   "resolution_m": 30.03003003003003,
+   "files": {
+    "client/species_mix_a.png": {
+     "sha256": "069092d2a283ff99b36f7e3139ddd9ae4081f91ecc43fbda2bd48d7ec1e121d8",
+     "bytes": 91022
+    },
+    "client/species_mix_b.png": {
+     "sha256": "95060b2bf2eaf3f18bc8747aac9174d575081a35b7ef4ca3d4b0fea16d0dc8b7",
+     "bytes": 119971
+    },
+    "client/species_mix_index.png": {
+     "sha256": "2b990736c80d6ca8e806cc7dd4d54440bfed6b7f4956384f9b273f208c235e8b",
+     "bytes": 58116
+    }
+   },
+   "derived_from": [
+    "vegetation.evt",
+    "vegetation.bps",
+    "vegetation.classes",
+    "vegetation.habitat",
+    "vegetation.evc"
+   ],
+   "encoding": "species_mix_a RGBA = blue oak, live oak, gray pine, ponderosa weights; species_mix_b RGBA = manzanita, chamise weights, tree_density, shrub_density (byte/100); species_mix_index L = row in mixes",
+   "mixes": 36,
+   "unmatched": 0,
+   "fractions": {
+    "from_evt": 0.6406,
+    "from_bps_backfill": 0.3594,
+    "tree_share": {
+     "blue_oak": 0.4474,
+     "live_oak": 0.1944,
+     "gray_pine": 0.2444,
+     "ponderosa": 0.1138
+    },
+    "tree_share_by_canopy": {
+     "blue_oak": 0.2607,
+     "live_oak": 0.276,
+     "gray_pine": 0.2399,
+     "ponderosa": 0.2234
+    },
+    "shrub_share": {
+     "manzanita": 0.4976,
+     "chamise": 0.5024
+    },
+    "mean_tree_density": 0.8655,
+    "mean_shrub_density": 0.6247,
+    "rules": {
+     "blue_oak_foothill_pine": 0.2943,
+     "grassland_savanna": 0.1272,
+     "foothill_pine": 0.1172,
+     "lower_montane_conifer": 0.0989,
+     "ruderal_forest": 0.0872,
+     "mixed_oak": 0.0754,
+     "dry_mesic_chaparral": 0.075,
+     "ruderal_scrub": 0.0313,
+     "riparian": 0.0279,
+     "montane_riparian": 0.0165,
+     "wet_meadow_marsh": 0.0118,
+     "blue_oak": 0.0107,
+     "mesic_chaparral": 0.0072,
+     "sparse_rock": 0.0062,
+     "open_water": 0.0041,
+     "serpentine_woodland": 0.0031,
+     "riparian_shrubland": 0.0022,
+     "black_oak": 0.002,
+     "dry_mesic_mixed_conifer": 0.0011,
+     "montane_woodland_chaparral": 0.0005,
+     "black_oak_conifer": 0.0002,
+     "xeric_chaparral": 0.0002,
+     "great_basin_shrub": 0.0002
+    }
+   },
+   "sha256": "bd3ed1980ec7413680822a845c3628e638d42b9e1ec8df35a9b413f2b967b0f9",
+   "bytes": 22161
   }
  },
  "sources": {
@@ -691,7 +797,7 @@
    "name": "GBIF occurrence API (includes iNaturalist research-grade and eBird)",
    "url": "https://api.gbif.org/v1/occurrence/search",
    "license": "per dataset (CC0 / CC BY / CC BY-NC); see occurrence properties",
-   "retrieved": "2026-10-23"
+   "retrieved": "2026-10-24"
   },
   "nhdplus_hr": {
    "name": "USGS NHDPlus High Resolution",
@@ -700,7 +806,107 @@
    "retrieved": "2026-10-23"
   }
  },
- "edits": [],
+ "edits": [
+  {
+   "id": "d8d30de61697",
+   "at": "2026-10-24T05:21:37Z",
+   "type": "species_note",
+   "species_code": "blue_oak",
+   "note": "TEST blue oaks here drop acorns in late September"
+  },
+  {
+   "id": "3ea369fceff6",
+   "at": "2026-10-24T05:21:44Z",
+   "type": "mask_polygon",
+   "class": "mine",
+   "geometry": {
+    "type": "Polygon",
+    "coordinates": [
+     [
+      [
+       -120.88,
+       38.69
+      ],
+      [
+       -120.87,
+       38.69
+      ],
+      [
+       -120.87,
+       38.7
+      ],
+      [
+       -120.88,
+       38.69
+      ]
+     ]
+    ]
+   },
+   "note": "TEST hydraulic pit"
+  },
+  {
+   "id": "7b233638d478",
+   "at": "2026-10-24T05:21:44Z",
+   "type": "species_confidence",
+   "species_code": "sciurus_griseus",
+   "value": "verified"
+  },
+  {
+   "id": "86b142fbb7bf",
+   "at": "2026-10-24T05:21:44Z",
+   "type": "place_note",
+   "note": "TEST spring runs till July"
+  },
+  {
+   "id": "99761a1b13e7",
+   "at": "2026-10-24T05:28:27Z",
+   "type": "species_confidence",
+   "species_code": "canis_latrans",
+   "value": "flagged",
+   "note": "TEST no coyote sign this year"
+  },
+  {
+   "id": "817198ab8496",
+   "at": "2026-10-24T05:30:33Z",
+   "type": "mask_polygon",
+   "class": "canal",
+   "geometry": {
+    "type": "Polygon",
+    "coordinates": [
+     [
+      [
+       -120.8935725,
+       38.7119537
+      ],
+      [
+       -120.8580107,
+       38.7149583
+      ],
+      [
+       -120.8500829,
+       38.6872051
+      ],
+      [
+       -120.8856447,
+       38.6810167
+      ],
+      [
+       -120.8935725,
+       38.7119537
+      ]
+     ]
+    ]
+   },
+   "note": "TEST mining ditch along the contour"
+  },
+  {
+   "id": "ac827458387b",
+   "at": "2026-10-24T05:30:34Z",
+   "type": "species_note",
+   "species_code": "quercus_douglasii",
+   "note": "TEST blue oaks here drop acorns in late September"
+  }
+ ],
  "log": [
   {
    "step": "dem",
@@ -856,6 +1062,18 @@
    "step": "derive",
    "at": "2026-10-24T03:09:41Z",
    "seconds": 30.0,
+   "ok": true
+  },
+  {
+   "step": "derive",
+   "at": "2026-10-24T05:24:34Z",
+   "seconds": 33.3,
+   "ok": true
+  },
+  {
+   "step": "species",
+   "at": "2026-10-24T05:26:42Z",
+   "seconds": 127.4,
    "ok": true
   }
  ]

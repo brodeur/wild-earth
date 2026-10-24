@@ -130,6 +130,32 @@
   "occurrence_count": 11
  },
  {
+  "code": "melanerpes_formicivorus",
+  "common": "acorn woodpecker",
+  "scientific": "Melanerpes formicivorus",
+  "group": "bird",
+  "role": "playable",
+  "scale": "bird",
+  "senses": {
+   "vision": {
+    "range_m": 300,
+    "color": "tetrachromat"
+   },
+   "hearing": {
+    "range_m": 400
+   },
+   "smell": {
+    "range_m": 20
+   }
+  },
+  "gbif_key": 2478133,
+  "sources": [
+   "gbif"
+  ],
+  "confidence": "unverified",
+  "occurrence_count": 665
+ },
+ {
   "code": "callipepla_californica",
   "common": "California quail",
   "scientific": "Callipepla californica",
@@ -154,6 +180,32 @@
   ],
   "confidence": "unverified",
   "occurrence_count": 285
+ },
+ {
+  "code": "aphelocoma_californica",
+  "common": "California scrub-jay",
+  "scientific": "Aphelocoma californica",
+  "group": "bird",
+  "role": "ambient",
+  "scale": "bird",
+  "senses": {
+   "vision": {
+    "range_m": 400,
+    "color": "tetrachromat"
+   },
+   "hearing": {
+    "range_m": 300
+   },
+   "smell": {
+    "range_m": 20
+   }
+  },
+  "gbif_key": 2482414,
+  "sources": [
+   "gbif"
+  ],
+  "confidence": "unverified",
+  "occurrence_count": 861
  },
  {
   "code": "sylvilagus_bachmani",

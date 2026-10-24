@@ -326,6 +326,9 @@ def client_rasters(tile: Tile) -> dict:
     imagery = client_imagery(tile)
     if imagery:
         out["client.imagery"] = imagery
+    present = client_texture_present(tile)
+    if present:
+        out["client.texture_present"] = present
     features = client_features(tile)
     if features:
         out["client.features"] = features
@@ -343,6 +346,28 @@ def client_imagery(tile: Tile, size=1024) -> dict | None:
     img.save(tile.path("client/imagery.png"), optimize=True)
     return {"path": "client/imagery.png", "kind": "raster", "crs": tile.crs, "bounds": list(tile.bounds),
             "pixels": size, "resolution_m": TILE_SIZE_M / size, "derived_from": "imagery.naip"}
+
+
+def client_texture_present(tile: Tile, size=4000) -> dict | None:
+    """Present-day NAIP, untouched, on the metric tile grid: the "present day peek" texture.
+
+    Same grid and shape as client/texture_imagery.jpg (the erased imagery), so the client can swap
+    or cross-fade the two with one set of UVs."""
+    src_path = tile.dir / "imagery/naip.tif"
+    if not src_path.exists():
+        return None
+    with rasterio.open(src_path) as src:
+        data = src.read(indexes=[1, 2, 3])
+        tags = src.tags()
+    img = Image.fromarray(np.moveaxis(data, 0, -1).astype("uint8"), "RGB")
+    if img.size != (size, size):
+        img = img.resize((size, size), Image.LANCZOS)
+    img.save(tile.path("client/texture_present.jpg"), quality=88)
+    year = tags.get("WE_NAIP_YEAR")
+    return {"path": "client/texture_present.jpg", "kind": "raster", "crs": tile.crs, "bounds": list(tile.bounds),
+            "pixels": size, "resolution_m": TILE_SIZE_M / size, "source": tags.get("WE_SOURCE", "pc_naip"),
+            "derived_from": ["imagery.naip"],
+            "encoding": f"NAIP {year + ' ' if year else ''}RGB as captured (present day, human footprint kept); JPEG q88"}
 
 
 MINIMAP_ROADS = ("motorway", "motorway_link", "trunk", "primary", "secondary", "tertiary", "residential", "unclassified")

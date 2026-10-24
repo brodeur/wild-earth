@@ -92,6 +92,9 @@ def run(tile: Tile, steps: list[str], force=False) -> dict:
                     if "terrain.dem" in m["layers"]:
                         for k, v in derive.client_rasters(tile).items():
                             add_layer(m, tile, k, v)
+                    if "vegetation.evt" in m["layers"] and "vegetation.bps" in m["layers"]:
+                        from .species_mix import species_mix
+                        add_layer(m, tile, "client.species_mix", species_mix(tile))
                     if "hydro.flowlines" in m["layers"] and "terrain.dem" in m["layers"]:
                         from .resources import derive_resources
                         add_layer(m, tile, "resources", derive_resources(tile))

@@ -55,6 +55,14 @@ tiles/<tile_id>/
   client/roads.png              derived   decayed-road weight, 8-bit on the DEM grid: 255 pavement, verge falls to 0
   client/mast.png               derived   fall acorn_mast score 0..100 in R, 30 m grid (from resources/acorn_mast.tif band 4; optional)
   client/texture_imagery.jpg    derived   NAIP with the human footprint erased and pavement bleached, 4000 px (2.5 m) JPEG
+  client/texture_present.jpg    derived   present-day NAIP as captured, same 4000 px metric grid as texture_imagery, JPEG q88
+  client/imagery.png            derived   present-day NAIP for the mini-map, 1024 px on the metric tile grid
+  client/features.json          derived   present-day roads, streams and waterbodies in tile-local metres for the mini-map
+  client/masks.png              derived   soft season-recolour weights: R grassland, G oak woodland, B chaparral
+  client/species_mix_a.png      derived   tree weights per 30 m cell, RGBA = blue oak, live oak, gray pine, ponderosa (sum 255; A is data)
+  client/species_mix_b.png      derived   RGBA = manzanita, chamise weights (sum 255), tree_density, shrub_density (byte / 100)
+  client/species_mix_index.png  derived   8-bit row index into species_mix.json mixes (0 = none), canvas-safe form of the two above
+  client/species_mix.json       derived   channel order, EVT/BpS name -> species mix table used, per-tile fractions
   unreal/heightmap.png          derived   16-bit Landscape heightmap at a valid size (2017 px)
   unreal/weights/<class>.png    derived   8-bit weight-blended layer per habitat class
   unreal/canopy_<kind>.png      derived   8-bit tree / shrub / herb cover for PCG density

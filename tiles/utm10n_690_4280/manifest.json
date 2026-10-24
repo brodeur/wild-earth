@@ -15,7 +15,7 @@
   38.73825606650576
  ],
  "size_m": 10000,
- "generated_at": "2026-10-24T03:10:09Z",
+ "generated_at": "2026-10-24T05:30:20Z",
  "generator": {
   "name": "wild-earth-pipeline",
   "version": "0.2.0"
@@ -49,24 +49,24 @@
    "path": "species/species.json",
    "kind": "table",
    "source": "gbif",
-   "count": 10,
-   "sha256": "e511f0b06278d96cbfda595586c75e41ca6e03c09d4041871c42d23fab717c27",
-   "bytes": 4400
+   "count": 12,
+   "sha256": "9c77e5372dd1327cee725cf7ecbe24749b151da2fa9694f3e54787c9393de87d",
+   "bytes": 5310
   },
   "species.occurrences": {
    "path": "species/occurrences.geojson",
    "kind": "vector",
    "source": "gbif",
-   "feature_count": 1597,
-   "sha256": "928e80a9a3792587d8bcc5ffbca62a8baf2f4aa81ef2a6551a21bb8eb128aa32",
-   "bytes": 711410
+   "feature_count": 3513,
+   "sha256": "6c940158acd814155a86b4140eff29efb4cb774b25e45d9f686bd52227c7df92",
+   "bytes": 1574058
   },
   "species.seasonal": {
    "path": "species/seasonal.json",
    "kind": "table",
    "source": "gbif",
-   "sha256": "7d58806befb47f006a89c494c2d2b1c817117122f9a35515bf7344dd62f1f76a",
-   "bytes": 1150
+   "sha256": "a9b032c72c6edf798f7f3cc9be1190bc3ed0de04583503b21435140f6cf528cf",
+   "bytes": 1392
   },
   "species.inventory": {
    "path": "species/inventory.json",
@@ -78,14 +78,14 @@
   "perception": {
    "path": "perception.json",
    "kind": "table",
-   "sha256": "f4f94936bfb8c5e2c948938c59df6306688ffb5ff4194d44462f6c72b2d21a25",
-   "bytes": 2330
+   "sha256": "27a00546cdcc17e5196e256e75db0ac4d3a3a3be5b43ab34d4d5795b093c4bd7",
+   "bytes": 3128
   },
   "calendar": {
    "path": "calendar.json",
    "kind": "table",
-   "sha256": "4c658772d36539c51a0a25bdbfad21deb49d80832f9765c710edd5c0571becaf",
-   "bytes": 8306
+   "sha256": "c07aca1f3ba6c065363530fd63aa9e97c2eaad6c9223979c9bd583b15542c2f4",
+   "bytes": 10330
   },
   "hydro.flowlines": {
    "path": "hydro/flowlines.geojson",
@@ -667,6 +667,114 @@
    "encoding": "R = fall acorn_mast score 0..100",
    "sha256": "eac953c51923acae55e0937e36b76b74dbd4bb87ac7a13fdfb117a243de7b7b4",
    "bytes": 39179
+  },
+  "client.texture_present": {
+   "path": "client/texture_present.jpg",
+   "kind": "raster",
+   "crs": "EPSG:32610",
+   "bounds": [
+    690000,
+    4280000,
+    700000,
+    4290000
+   ],
+   "pixels": 4000,
+   "resolution_m": 2.5,
+   "source": "pc_naip",
+   "derived_from": [
+    "imagery.naip"
+   ],
+   "encoding": "NAIP 2022 RGB as captured (present day, human footprint kept); JPEG q88",
+   "sha256": "291d864667c444af621ab92fe428de679dba008fb5c8825f39a4b873aa1255a5",
+   "bytes": 5041562
+  },
+  "client.species_mix": {
+   "path": "client/species_mix.json",
+   "kind": "raster",
+   "crs": "EPSG:32610",
+   "bounds": [
+    690000,
+    4280000,
+    700000,
+    4290000
+   ],
+   "pixels": 333,
+   "resolution_m": 30.03003003003003,
+   "files": {
+    "client/species_mix_a.png": {
+     "sha256": "50a4774fe6a0055543f5be85448ead5605d82a216fd0244be5eb6eabe43ca3f7",
+     "bytes": 84422
+    },
+    "client/species_mix_b.png": {
+     "sha256": "854fc71b5f4ff8aef2657297a50a434567a6c893e647c24abe147c2740204b2d",
+     "bytes": 97294
+    },
+    "client/species_mix_index.png": {
+     "sha256": "b2c39bf3d57471d0f22c53e9550b601786dc71079c47beb9f80d1c637b7cb897",
+     "bytes": 55337
+    }
+   },
+   "derived_from": [
+    "vegetation.evt",
+    "vegetation.bps",
+    "vegetation.classes",
+    "vegetation.habitat",
+    "vegetation.evc"
+   ],
+   "encoding": "species_mix_a RGBA = blue oak, live oak, gray pine, ponderosa weights; species_mix_b RGBA = manzanita, chamise weights, tree_density, shrub_density (byte/100); species_mix_index L = row in mixes",
+   "mixes": 41,
+   "unmatched": 0,
+   "fractions": {
+    "from_evt": 0.7442,
+    "from_bps_backfill": 0.2558,
+    "tree_share": {
+     "blue_oak": 0.234,
+     "live_oak": 0.2196,
+     "gray_pine": 0.1438,
+     "ponderosa": 0.4027
+    },
+    "tree_share_by_canopy": {
+     "blue_oak": 0.0901,
+     "live_oak": 0.2497,
+     "gray_pine": 0.1113,
+     "ponderosa": 0.5489
+    },
+    "shrub_share": {
+     "manzanita": 0.6895,
+     "chamise": 0.3105
+    },
+    "mean_tree_density": 0.9688,
+    "mean_shrub_density": 0.5807,
+    "rules": {
+     "lower_montane_conifer": 0.3658,
+     "blue_oak_foothill_pine": 0.1957,
+     "mixed_oak": 0.0841,
+     "black_oak_conifer": 0.0786,
+     "grassland_savanna": 0.0584,
+     "foothill_pine": 0.032,
+     "dry_mesic_chaparral": 0.0299,
+     "dry_mesic_mixed_conifer": 0.0299,
+     "black_oak": 0.0272,
+     "mesic_mixed_conifer": 0.0224,
+     "riparian": 0.018,
+     "ruderal_forest": 0.0164,
+     "montane_riparian": 0.0133,
+     "sparse_rock": 0.0058,
+     "wet_meadow_marsh": 0.0041,
+     "mesic_chaparral": 0.0036,
+     "blue_oak": 0.0031,
+     "mixed_evergreen": 0.0027,
+     "montane_woodland_chaparral": 0.0025,
+     "ruderal_scrub": 0.0024,
+     "open_water": 0.0023,
+     "ponderosa_jeffrey": 0.0008,
+     "riparian_shrubland": 0.0007,
+     "great_basin_shrub": 0.0002,
+     "serpentine_woodland": 0.0001
+    }
+   },
+   "sha256": "7913fd22c1840383eed26b415cebd50c0a3e4f74f706c28e85ad14b25058e205",
+   "bytes": 25013
   }
  },
  "sources": {
@@ -680,7 +788,7 @@
    "name": "GBIF occurrence API (includes iNaturalist research-grade and eBird)",
    "url": "https://api.gbif.org/v1/occurrence/search",
    "license": "per dataset (CC0 / CC BY / CC BY-NC); see occurrence properties",
-   "retrieved": "2026-10-23"
+   "retrieved": "2026-10-24"
   },
   "nhdplus_hr": {
    "name": "USGS NHDPlus High Resolution",
@@ -860,6 +968,18 @@
    "step": "derive",
    "at": "2026-10-24T03:10:09Z",
    "seconds": 28.5,
+   "ok": true
+  },
+  {
+   "step": "derive",
+   "at": "2026-10-24T05:27:23Z",
+   "seconds": 40.4,
+   "ok": true
+  },
+  {
+   "step": "species",
+   "at": "2026-10-24T05:30:20Z",
+   "seconds": 177.3,
    "ok": true
   }
  ]

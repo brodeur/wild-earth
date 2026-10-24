@@ -316,6 +316,130 @@
     }
    ]
   },
+  "melanerpes_formicivorus": {
+   "winter": [
+    {
+     "activity": "forage",
+     "resources": [
+      "acorn_mast"
+     ],
+     "goal": "eat acorns cached in the granary"
+    },
+    {
+     "activity": "shelter",
+     "resources": [
+      "cavity"
+     ],
+     "goal": "roost in tree cavities"
+    }
+   ],
+   "spring": [
+    {
+     "activity": "nest",
+     "resources": [
+      "cavity"
+     ],
+     "goal": "excavate or reuse a cavity, nest cooperatively"
+    },
+    {
+     "activity": "court",
+     "resources": [],
+     "goal": "drumming and wakka calls"
+    }
+   ],
+   "summer": [
+    {
+     "activity": "forage",
+     "resources": [
+      "insects"
+     ],
+     "goal": "flycatch from snags"
+    },
+    {
+     "activity": "rear",
+     "resources": [
+      "insects"
+     ],
+     "goal": "feed nestlings"
+    }
+   ],
+   "fall": [
+    {
+     "activity": "forage",
+     "resources": [
+      "acorn_mast"
+     ]
+    },
+    {
+     "activity": "cache",
+     "resources": [
+      "acorn_mast",
+      "cliff_or_snag"
+     ],
+     "goal": "store acorns in granary holes in a snag or oak"
+    }
+   ]
+  },
+  "aphelocoma_californica": {
+   "winter": [
+    {
+     "activity": "forage",
+     "resources": [
+      "acorn_mast"
+     ],
+     "goal": "recover buried acorns"
+    },
+    {
+     "activity": "shelter",
+     "resources": [
+      "cover"
+     ]
+    }
+   ],
+   "spring": [
+    {
+     "activity": "court",
+     "resources": []
+    },
+    {
+     "activity": "nest",
+     "resources": [
+      "cover"
+     ],
+     "goal": "cup nest in a shrub or small oak"
+    }
+   ],
+   "summer": [
+    {
+     "activity": "rear",
+     "resources": [
+      "insects",
+      "cover"
+     ]
+    },
+    {
+     "activity": "forage",
+     "resources": [
+      "insects"
+     ]
+    }
+   ],
+   "fall": [
+    {
+     "activity": "forage",
+     "resources": [
+      "acorn_mast"
+     ]
+    },
+    {
+     "activity": "cache",
+     "resources": [
+      "acorn_mast"
+     ],
+     "goal": "scatter-hoard acorns in the ground, one at a time"
+    }
+   ]
+  },
   "callipepla_californica": {
    "winter": [
     {
