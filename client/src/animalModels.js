@@ -1,5 +1,6 @@
 import * as THREE from 'three';
 import { mergeGeometries } from 'three/addons/utils/BufferGeometryUtils.js';
+import { uniforms as atmo } from './atmosphere.js';
 
 // Procedural low-poly animals for the ambient population (animals.js). Each species is one merged,
 // non-indexed geometry built from scaled spheres, boxes and cones, flat shaded, coloured per vertex.
@@ -125,6 +126,102 @@ export function buildDeer() {
   return finish(p, { amp: [0.3, 0.6, 1.5, 0], pose: [0.12, 0, -0.15, 0] });
 }
 
+// A wing slab hinged at `pivot` on side s (+1 left, -1 right), raised by `dihedral` (rad) about the
+// body axis: its centre sits `dx` out along the raised span and `dz` fore (+) or aft (-) of the pivot.
+// `under`: a second, slightly lower slab in another colour, so the wing reads one way from above
+// (the raven's view) and another from below (the player looking up).
+function wingSlab(s, pivot, { dx, dz = 0, len, chord, thick = 0.012, dihedral = 0, color, under = null }) {
+  const part = s > 0 ? PART.WING_L : PART.WING_R, c = Math.cos(dihedral), sn = Math.sin(dihedral);
+  const at = dy => [pivot[0] + s * dx * c - s * dy * sn, pivot[1] + dx * sn + dy * c, pivot[2] + dz];
+  const out = [box({ color, part, pivot, pos: at(thick * 0.5), rot: [0, 0, s * dihedral], scale: [len, thick, chord] })];
+  if (under) out.push(box({ color: under, part, pivot, pos: at(-thick * 0.5), rot: [0, 0, s * dihedral], scale: [len * 0.98, thick, chord * 0.98] }));
+  return out;
+}
+
+// California quail, ~0.25 m: plump, blue-grey breast and brown back, scaled buff belly, black face
+// and the forward-curling black topknot. Runs on quick legs; bursts off the ground on short round
+// wings beating ~20 times a second, then sets them and glides in.
+export function buildQuail() {
+  const back = 0x6f604f, breast = 0x5f6874, belly = 0xb79c74, face = 0x18181a, wingc = 0x7a6853, cap = 0x6b4a32;
+  const head = { part: PART.HEAD, pivot: [0, 0.11, 0.06] };
+  const wp = s => [s * 0.04, 0.1, 0.0];
+  const p = [
+    ball({ color: back, pos: [0, 0.085, -0.005], scale: [0.062, 0.058, 0.1] }),
+    ball({ color: breast, pos: [0, 0.08, 0.04], scale: [0.054, 0.055, 0.06] }),
+    ball({ color: belly, pos: [0, 0.062, 0.0], scale: [0.05, 0.04, 0.075] }, 5, 3),
+    ball({ color: cap, ...head, pos: [0, 0.135, 0.075], scale: [0.03, 0.03, 0.034] }, 5, 3),
+    ball({ color: face, ...head, pos: [0, 0.128, 0.095], scale: [0.024, 0.02, 0.016] }, 5, 3),
+    cone({ color: face, ...head, pos: [0, 0.185, 0.09], rot: [0.55, 0, 0], scale: [0.012, 0.05, 0.016] }),   // topknot
+    cone({ color: 0x2a2a2a, ...head, pos: [0, 0.128, 0.112], rot: FWD, scale: [0.007, 0.016, 0.006] }),
+    box({ color: back, part: PART.TAIL, pivot: [0, 0.09, -0.08], pos: [0, 0.09, -0.11], rot: [0.2, 0, 0], scale: [0.045, 0.01, 0.06] }),
+    ...mirror(s => box({ color: 0x8a7560, part: s > 0 ? PART.LEG_A : PART.LEG_B, pivot: [s * 0.022, 0.05, 0.005], pos: [s * 0.022, 0.025, 0.005], scale: [0.01, 0.05, 0.012] })),
+    ...mirror(s => wingSlab(s, wp(s), { dx: 0.085, len: 0.17, chord: 0.085, thick: 0.008, dihedral: 0.05, color: wingc, under: 0xb7a58b })).flat(),
+  ];
+  // wings fold hard (pose 1.5) on the ground, where they read as part of the body
+  return finish(p, { amp: [0.9, 0.25, 0.5, 1.0], pose: [0.5, 0, 0, 1.5] });
+}
+
+// California scrub-jay, ~0.29 m: blue head, wings and long tail, grey-brown back, whitish below.
+// Rowing flight on rounded wings with glides between beats and a swoop up to the perch.
+export function buildJay() {
+  const blue = 0x2f5fae, deep = 0x24498a, back = 0x8a8074, white = 0xd9d6cf;
+  const head = { part: PART.HEAD, pivot: [0, 0.07, 0.06] };
+  const wp = s => [s * 0.03, 0.07, 0.01];
+  const p = [
+    ball({ color: white, pos: [0, 0.055, 0], scale: [0.038, 0.04, 0.085] }),
+    ball({ color: back, pos: [0, 0.07, -0.005], scale: [0.034, 0.025, 0.07] }, 5, 3),
+    ball({ color: blue, ...head, pos: [0, 0.085, 0.08], scale: [0.03, 0.03, 0.035] }),
+    cone({ color: 0x1b1b1f, ...head, pos: [0, 0.083, 0.12], rot: FWD, scale: [0.008, 0.03, 0.007] }),
+    box({ color: deep, part: PART.TAIL, pivot: [0, 0.06, -0.07], pos: [0, 0.058, -0.14], rot: [0.12, 0, 0], scale: [0.045, 0.008, 0.14] }),
+    ...mirror(s => box({ color: 0x2b2b2e, part: s > 0 ? PART.LEG_A : PART.LEG_B, pivot: [s * 0.016, 0.03, 0], pos: [s * 0.016, 0.015, 0], scale: [0.007, 0.03, 0.008] })),
+    ...mirror(s => wingSlab(s, wp(s), { dx: 0.08, len: 0.16, chord: 0.075, thick: 0.007, dihedral: 0.04, color: blue, under: 0x8a8f99 })).flat(),
+  ];
+  return finish(p, { amp: [0.5, 0.35, 0.4, 1.0], pose: [0.6, 0.15, 0, 1.45] });
+}
+
+// Red-tailed hawk, ~0.55 m, 1.25 m span: dark brown above with paler mottled scapulars and the
+// brick-red tail that names it; pale below with a dark belly band and dark leading edges.
+// Soars on broad flat wings with a slight dihedral, folds them back to stoop.
+export function buildHawk() {
+  const brown = 0x5a3f2a, mottle = 0x8a6a4c, rufous = 0xb4502b, cream = 0xe3d7bf, band = 0x6a4c34;
+  const head = { part: PART.HEAD, pivot: [0, 0.11, 0.15] };
+  const wp = s => [s * 0.06, 0.11, 0.02];
+  const p = [
+    ball({ color: cream, pos: [0, 0.085, 0.01], scale: [0.078, 0.07, 0.19] }),
+    ball({ color: brown, pos: [0, 0.11, -0.01], scale: [0.085, 0.065, 0.2] }),
+    ball({ color: band, pos: [0, 0.07, 0.03], scale: [0.07, 0.035, 0.07] }, 5, 3),
+    ball({ color: brown, ...head, pos: [0, 0.125, 0.19], scale: [0.05, 0.05, 0.06] }),
+    cone({ color: 0x2a2622, ...head, pos: [0, 0.115, 0.255], rot: FWD, scale: [0.016, 0.04, 0.016] }),
+    box({ color: rufous, part: PART.TAIL, pivot: [0, 0.1, -0.16], pos: [0, 0.1, -0.26], scale: [0.15, 0.012, 0.2] }),
+    ...mirror(s => wingSlab(s, wp(s), { dx: 0.17, dz: 0.0, len: 0.3, chord: 0.3, thick: 0.014, dihedral: 0.07, color: mottle, under: cream })).flat(),
+    ...mirror(s => wingSlab(s, wp(s), { dx: 0.47, dz: -0.01, len: 0.32, chord: 0.24, thick: 0.012, dihedral: 0.07, color: brown, under: 0xd8ccb6 })).flat(),
+    ...mirror(s => box({ color: 0xc9b25a, pos: [s * 0.035, 0.03, 0.02], scale: [0.016, 0.05, 0.016] })),
+  ];
+  return finish(p, { amp: [0, 0.15, 0.3, 0.6], pose: [1, -0.2, 0, 1.4] });
+}
+
+// Turkey vulture, ~0.7 m, 1.75 m span: blackish-brown above with browner flight feathers, the
+// two-toned underwing (black lining, silver flight feathers) and a small bare red head. Holds its
+// long wings in a raised V (dihedral ~17 degrees) and teeters from side to side; almost never flaps.
+export function buildVulture() {
+  const black = 0x231d19, flight = 0x3f352d, silver = 0xa7a7a2, red = 0xb2392c;
+  const head = { part: PART.HEAD, pivot: [0, 0.11, 0.16] };
+  const wp = s => [s * 0.07, 0.11, 0.02], D = 0.3;
+  const p = [
+    ball({ color: black, pos: [0, 0.1, 0], scale: [0.09, 0.08, 0.26] }),
+    ball({ color: red, ...head, pos: [0, 0.115, 0.27], scale: [0.032, 0.032, 0.05] }, 5, 3),
+    cone({ color: 0xe8dccb, ...head, pos: [0, 0.11, 0.325], rot: FWD, scale: [0.012, 0.03, 0.012] }),
+    box({ color: black, part: PART.TAIL, pivot: [0, 0.1, -0.2], pos: [0, 0.1, -0.33], scale: [0.15, 0.012, 0.28] }),
+    // inner wing: black lining in front, flight feathers behind (silver underneath)
+    ...mirror(s => wingSlab(s, wp(s), { dx: 0.2, dz: 0.06, len: 0.36, chord: 0.14, thick: 0.014, dihedral: D, color: black, under: black })).flat(),
+    ...mirror(s => wingSlab(s, wp(s), { dx: 0.2, dz: -0.09, len: 0.36, chord: 0.17, thick: 0.012, dihedral: D, color: flight, under: silver })).flat(),
+    // outer wing and fingered tip
+    ...mirror(s => wingSlab(s, wp(s), { dx: 0.56, dz: -0.02, len: 0.38, chord: 0.26, thick: 0.012, dihedral: D, color: flight, under: silver })).flat(),
+    ...mirror(s => wingSlab(s, wp(s), { dx: 0.82, dz: -0.04, len: 0.16, chord: 0.15, thick: 0.01, dihedral: D + 0.08, color: black, under: 0x8d8d88 })).flat(),
+  ];
+  return finish(p, { amp: [0, 0.15, 0.25, 0.45], pose: [1, 0, 0, 1.3] });
+}
+
 // Lambert, flat shaded, vertex coloured, patched by the atmosphere (sun, sky, cloud shadow, haze)
 // like the trees and the player's raven, then chained with the part animation.
 const ANIM_DECL = `
@@ -172,4 +269,55 @@ export function animalMaterial(atmosphere, model) {
   m.customProgramCacheKey = () => key;
   m.needsUpdate = true;
   return m;
+}
+
+
+// Depth-only twin of animalMaterial for the shadow scene (shadows.js renders it with colorWrite off):
+// same part animation, so a flapping wing's shadow flaps.
+export function animalDepthMaterial(model) {
+  const v4 = a => `vec4(${a.map(x => x.toFixed(4)).join(', ')})`;
+  return new THREE.ShaderMaterial({
+    vertexShader: `${ANIM_DECL}
+const vec4 uAmp = ${v4(model.amp)};
+const vec4 uPose = ${v4(model.pose)};
+void main() {
+${ANIM_BODY}
+  gl_Position = projectionMatrix * viewMatrix * modelMatrix * instanceMatrix * vec4(transformed, 1.0);
+}`,
+    fragmentShader: 'void main() { gl_FragColor = vec4(1.0); }',
+    colorWrite: false, side: THREE.DoubleSide,
+  });
+}
+
+// Planar sun shadow for ground animals: the posed model squashed onto the plane through its feet
+// along the sun direction, drawn as one translucent dark shape. Works at any height (the cascaded
+// maps only re-render the near cascade per frame, and it switches off above ~110 m). The plane is
+// lifted for bedded deer (pose lowers the body by `drop` m). Overlaps of body parts in the merged
+// mesh are drawn once each: the stencil-free trick is depthWrite with depthFunc Less on a plane, so
+// a second fragment at the same depth fails.
+export function planarShadowMaterial(model, { drop = 0, opacity = 0.42 } = {}) {
+  const v4 = a => `vec4(${a.map(x => x.toFixed(4)).join(', ')})`;
+  return new THREE.ShaderMaterial({
+    uniforms: { sunDir: atmo.sunDir, csmStrength: atmo.csmStrength, opacity: { value: opacity } },
+    vertexShader: `${ANIM_DECL}
+const vec4 uAmp = ${v4(model.amp)};
+const vec4 uPose = ${v4(model.pose)};
+uniform vec3 sunDir; uniform float csmStrength;
+varying float vFade;
+void main() {
+${ANIM_BODY}
+  mat4 m = modelMatrix * instanceMatrix;
+  vec4 w = m * vec4(transformed, 1.0);
+  float ground = m[3].y + ${drop.toFixed(3)} * aAnim.z + 0.08;
+  vec3 L = sunDir; L.y = max(L.y, 0.12);
+  w.xyz -= L * (max(w.y - ground, 0.0) / L.y);
+  w.y = ground;
+  vFade = csmStrength * smoothstep(0.03, 0.15, sunDir.y);
+  gl_Position = projectionMatrix * viewMatrix * w;
+}`,
+    fragmentShader: `uniform float opacity; varying float vFade;
+void main() { gl_FragColor = vec4(0.02, 0.025, 0.02, opacity * vFade); }`,
+    transparent: true, depthWrite: true, depthFunc: THREE.LessDepth, side: THREE.DoubleSide,
+    polygonOffset: true, polygonOffsetFactor: -2, polygonOffsetUnits: -2,
+  });
 }
