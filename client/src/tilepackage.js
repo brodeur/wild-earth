@@ -61,7 +61,7 @@ export async function loadTile(tileId, base = '../tiles/') {
   const L = m.layers;
   for (const k of ['client.heights', 'client.texture', 'client.habitat', 'client.canopy', 'client.masks'])
     if (!L[k]) throw new Error(`tile ${id} lacks ${k}; run the derive step`);
-  const [heights, texture, habitat, canopy, masks, species, perception, calendar, imagery, features, roads] = await Promise.all([
+  const [heights, texture, habitat, canopy, masks, species, perception, calendar, imagery, features, roads, imageryTexture] = await Promise.all([
     loadImageData(dir + L['client.heights'].path), loadImageData(dir + L['client.texture'].path),
     loadImageData(dir + L['client.habitat'].path), loadImageData(dir + L['client.canopy'].path),
     loadImageData(dir + L['client.masks'].path),
@@ -73,13 +73,18 @@ export async function loadTile(tileId, base = '../tiles/') {
     L['client.features'] ? fetch(dir + L['client.features'].path).then(r => r.ok ? r.json() : null).catch(() => null) : null,
     // decayed-road weight on the 5 m grid (255 pavement, falling to 0 over the verge); optional
     L['client.roads'] ? loadImageData(dir + L['client.roads'].path).catch(() => null) : null,
+    // NAIP with humans erased (JPEG, 4000 px); only the image is needed, not its pixels. Optional.
+    L['client.texture_imagery'] ? loadOptionalImage(dir + L['client.texture_imagery'].path) : null,
   ]);
+  const ti = L['client.texture_imagery'];
   const size = m.size_m || 10000;
   return {
     id, manifest: m, size, dir,
     heights: new Heightfield(heights, size), textureImage: texture.image, masksImage: masks.image,
     habitat: new Grid8(habitat, size), canopy: new Grid8(canopy, size),
     roads: roads ? new Grid8(roads, size) : null, roadsImage: roads?.image || null,
+    // the imagery's own summer grass and oak means (sRGB 0..1), the baseline for season recolouring
+    imageryTextureImage: imageryTexture, imageryRef: imageryTexture ? { grass_mean: ti.grass_mean, oak_mean: ti.oak_mean } : null,
     species, perception, calendar, imagery, features,
     latitude: (m.bounds_wgs84[1] + m.bounds_wgs84[3]) / 2,
   };

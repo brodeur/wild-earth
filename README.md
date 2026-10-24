@@ -16,7 +16,7 @@ Three workstreams share one contract, the [tile package spec](docs/tile-spec.md)
 ## Run it
 
 ```bash
-python3 -m venv .venv && .venv/bin/pip install rasterio numpy pyproj shapely requests pillow
+python3 -m venv .venv && .venv/bin/pip install rasterio numpy pyproj shapely requests pillow opencv-python-headless
 ```
 
 Build the tile that contains an anchor point. The anchor is snapped to a 10 km UTM
@@ -59,6 +59,7 @@ follows the time slider. Beyond the near forest, every forested 30 m cell carrie
 impostor clusters so the tree line runs to the tile edge; grass tufts sway near the
 camera. No animals yet beyond the player.
 Roads are decayed, not erased: ten years on they are linear clearings of cracked grey pavement with grass in the seams and a thinning verge, so US 50 still reads from the air; G toggles a ghost overlay of present-day roads with names on the major ones.
+The default ground is the Imagery texture: NAIP 2022 with buildings, lots, lawns and fields erased (thin features inpainted, towns synthesized from real imagery of the backfilled habitat class) and pavement bleached, recoloured by season; Rewilded switches to the habitat-colour texture.
 A mini-map (M to toggle, click to fly there) shows present-day NAIP imagery, roads and streams by design: the rewilded world laid against the real one.
 
 `pipeline.audit_licenses` counts occurrence records by license per tile; see the

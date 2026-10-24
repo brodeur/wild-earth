@@ -47,6 +47,19 @@ async function main() {
   const goto = setupGoTo({ tile, flight, input: $('gotoInput'), button: $('gotoBtn'), line: $('gotoStatus') });
   if (pending) goto.go(pending, { fromLoad: true });
 
+  // Base texture: the erased imagery when the tile has it, else the rewilded habitat texture.
+  function setTexture(kind) {
+    const imagery = kind === 'imagery' && tile.imageryTextureImage;
+    terrain.setTexture(imagery ? tile.imageryTextureImage : tile.textureImage);
+    terrain.setImagery(!!imagery, tile.imageryRef);
+    $('texImagery').classList.toggle('on', !!imagery); $('texRewild').classList.toggle('on', !imagery);
+  }
+  $('texImagery').disabled = !tile.imageryTextureImage;
+  if (!tile.imageryTextureImage) $('texImagery').title = 'this tile has no erased imagery; run the erase step';
+  $('texImagery').onclick = () => setTexture('imagery');
+  $('texRewild').onclick = () => setTexture('rewilded');
+  setTexture(tile.imageryTextureImage ? 'imagery' : 'rewilded');
+
   const state = { season: 'auto', hour: +$('time').value };
   const seasonNow = () => state.season === 'auto' ? seasonOfDate() : state.season;
   $('season').onchange = e => { state.season = e.target.value; applySeason(); };

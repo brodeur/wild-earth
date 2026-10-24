@@ -53,6 +53,7 @@ tiles/<tile_id>/
   client/habitat.png            derived   habitat class code in R, 30 m grid
   client/canopy.png             derived   tree / shrub / herb cover percent in R / G / B, 30 m grid
   client/roads.png              derived   decayed-road weight, 8-bit on the DEM grid: 255 pavement, verge falls to 0
+  client/texture_imagery.jpg    derived   NAIP with the human footprint erased and pavement bleached, 4000 px (2.5 m) JPEG
   unreal/heightmap.png          derived   16-bit Landscape heightmap at a valid size (2017 px)
   unreal/weights/<class>.png    derived   8-bit weight-blended layer per habitat class
   unreal/canopy_<kind>.png      derived   8-bit tree / shrub / herb cover for PCG density
@@ -126,6 +127,23 @@ appears only in `habitat_present.tif`; in `habitat.tif` those pixels are replace
 the Biophysical Settings class (BpS `human` or unknown falls back to grassland).
 `status.vegetation_backfilled` is true once this has happened. The manifest records
 `backfilled_fraction` so the size of the rewrite is visible.
+
+## Imagery erasure
+
+`client/texture_imagery.jpg` is the NAIP imagery with humans taken out, on the NAIP grid.
+The erase mask is every footprint feature except roads, buffered by its `buffer_m` (plus
+12 m around buildings for yards, driveways and lots), united with the `human` cells of
+`habitat_present.tif` (lawns and lots OSM lacks), minus road pavement (`roads.png` > 140).
+Each connected component of the mask is either inpainted from its surroundings (OpenCV
+Telea, with grain from the synthesized texture laid over it) when it is small or thin
+(under 4,000 m², or never more than 12 m from its edge), or synthesized: image quilting
+from 32 px windows of clean imagery elsewhere in the tile whose majority class is the
+backfilled habitat class there, chosen to agree with neighbouring pixels and with the
+brightness of clean ground within 100 m, and joined along minimum-error seams. Pavement
+is desaturated and blended halfway to sun-bleached grey; the verge is left alone. The
+layer records `mask_fraction`, `inpainted_fraction` and `synthesized_fraction`, plus
+`grass_mean` and `oak_mean` (sRGB 0..1), the imagery's own summer colours, which the
+client recolours by season relative to. `status.imagery_erased` is true once this has run.
 
 ## Resources
 

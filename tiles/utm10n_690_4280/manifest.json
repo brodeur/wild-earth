@@ -15,7 +15,7 @@
   38.73825606650576
  ],
  "size_m": 10000,
- "generated_at": "2026-10-23T23:11:20Z",
+ "generated_at": "2026-10-24T02:18:44Z",
  "generator": {
   "name": "wild-earth-pipeline",
   "version": "0.2.0"
@@ -24,7 +24,8 @@
   "human_landforms_removed": false,
   "hydrology_rewilded": false,
   "projection_years": 0,
-  "vegetation_backfilled": true
+  "vegetation_backfilled": true,
+  "imagery_erased": true
  },
  "layers": {
   "footprint.mask": {
@@ -597,6 +598,58 @@
    "road_fraction": 0.03791225,
    "sha256": "915e87d9661131f2c9fd00e0beb555e5d2666b5eb4be99cfe8fa910b8fed8ee3",
    "bytes": 306771
+  },
+  "client.texture_imagery": {
+   "path": "client/texture_imagery.jpg",
+   "kind": "raster",
+   "crs": "EPSG:32610",
+   "bounds": [
+    690000,
+    4280000,
+    700000,
+    4290000
+   ],
+   "pixels": 4000,
+   "resolution_m": 2.5,
+   "source": "pc_naip",
+   "derived_from": [
+    "imagery.naip",
+    "footprint.mask",
+    "vegetation.habitat_present",
+    "vegetation.habitat",
+    "client.roads"
+   ],
+   "mask_fraction": 0.2306,
+   "inpainted_fraction": 0.0455,
+   "synthesized_fraction": 0.1851,
+   "components": {
+    "inpainted": 3548,
+    "synthesized": 1087,
+    "patches": 17598
+   },
+   "source_windows": {
+    "1": 9448,
+    "2": 54552,
+    "3": 6051,
+    "4": 1894,
+    "5": 3841,
+    "6": 1279,
+    "7": 170,
+    "8": 15
+   },
+   "grass_mean": [
+    0.4064,
+    0.4118,
+    0.331
+   ],
+   "oak_mean": [
+    0.2417,
+    0.3211,
+    0.2599
+   ],
+   "encoding": "NAIP 2022 RGB with human footprint inpainted or synthesized, pavement bleached; JPEG q88",
+   "sha256": "3a444c5ba63b3bbbe91fbbe666ba07da53e4456dd0742cfb9439bfa5d3da2784",
+   "bytes": 4871986
   }
  },
  "sources": {
@@ -772,6 +825,18 @@
    "step": "derive",
    "at": "2026-10-23T23:11:20Z",
    "seconds": 27.6,
+   "ok": true
+  },
+  {
+   "step": "erase",
+   "at": "2026-10-24T02:12:30Z",
+   "seconds": 39.1,
+   "ok": true
+  },
+  {
+   "step": "erase",
+   "at": "2026-10-24T02:18:44Z",
+   "seconds": 40.0,
    "ok": true
   }
  ]

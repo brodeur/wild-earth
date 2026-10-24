@@ -15,7 +15,7 @@
   38.74035063713964
  ],
  "size_m": 10000,
- "generated_at": "2026-10-23T23:10:53Z",
+ "generated_at": "2026-10-24T02:18:04Z",
  "generator": {
   "name": "wild-earth-pipeline",
   "version": "0.2.0"
@@ -24,7 +24,8 @@
   "human_landforms_removed": false,
   "hydrology_rewilded": false,
   "projection_years": 0,
-  "vegetation_backfilled": true
+  "vegetation_backfilled": true,
+  "imagery_erased": true
  },
  "layers": {
   "terrain.dem": {
@@ -590,6 +591,58 @@
    "road_fraction": 0.04805575,
    "sha256": "7c2883a030122caa6f4b735e74c19ef3c18731fcf7c8717b0b0e2e44ccb3d5d8",
    "bytes": 350710
+  },
+  "client.texture_imagery": {
+   "path": "client/texture_imagery.jpg",
+   "kind": "raster",
+   "crs": "EPSG:32610",
+   "bounds": [
+    680000,
+    4280000,
+    690000,
+    4290000
+   ],
+   "pixels": 4000,
+   "resolution_m": 2.5,
+   "source": "pc_naip",
+   "derived_from": [
+    "imagery.naip",
+    "footprint.mask",
+    "vegetation.habitat_present",
+    "vegetation.habitat",
+    "client.roads"
+   ],
+   "mask_fraction": 0.3179,
+   "inpainted_fraction": 0.0448,
+   "synthesized_fraction": 0.2731,
+   "components": {
+    "inpainted": 3838,
+    "synthesized": 1236,
+    "patches": 21540
+   },
+   "source_windows": {
+    "1": 5579,
+    "2": 9995,
+    "3": 5995,
+    "4": 9255,
+    "5": 10871,
+    "6": 2292,
+    "7": 195,
+    "8": 23
+   },
+   "grass_mean": [
+    0.49,
+    0.4717,
+    0.3785
+   ],
+   "oak_mean": [
+    0.2735,
+    0.34,
+    0.2717
+   ],
+   "encoding": "NAIP 2022 RGB with human footprint inpainted or synthesized, pavement bleached; JPEG q88",
+   "sha256": "b507621a8ce40d9615852d8aa3a1a822c8847910d1b0639a255773475d0664c8",
+   "bytes": 5221018
   }
  },
  "sources": {
@@ -738,6 +791,48 @@
    "step": "derive",
    "at": "2026-10-23T23:10:53Z",
    "seconds": 29.1,
+   "ok": true
+  },
+  {
+   "step": "erase",
+   "at": "2026-10-24T02:01:56Z",
+   "seconds": 7.1,
+   "ok": true
+  },
+  {
+   "step": "erase",
+   "at": "2026-10-24T02:03:15Z",
+   "seconds": 9.4,
+   "ok": true
+  },
+  {
+   "step": "erase",
+   "at": "2026-10-24T02:06:48Z",
+   "seconds": 47.6,
+   "ok": true
+  },
+  {
+   "step": "erase",
+   "at": "2026-10-24T02:08:37Z",
+   "seconds": 45.9,
+   "ok": true
+  },
+  {
+   "step": "erase",
+   "at": "2026-10-24T02:10:18Z",
+   "seconds": 51.2,
+   "ok": true
+  },
+  {
+   "step": "erase",
+   "at": "2026-10-24T02:11:51Z",
+   "seconds": 46.5,
+   "ok": true
+  },
+  {
+   "step": "erase",
+   "at": "2026-10-24T02:18:04Z",
+   "seconds": 46.8,
    "ok": true
   }
  ]

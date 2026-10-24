@@ -127,3 +127,20 @@ roads entirely (loses place recognition, which is the experiential hook, and is 
 true to the premise) and rendering present-day asphalt (breaks the fiction). This
 refines the "no humans" rule from erased to decayed; buildings and other footprint
 classes still await their own treatment, and the terrain's road cuts remain untouched.
+
+## 2026-10-24: satellite imagery as the base texture, with humans erased
+
+Aaron's proposal, ahead of the atmosphere step. NAIP imagery becomes the default ground
+texture in the client because real pixels carry more beauty than nine habitat colours.
+The premise is kept by erasure: an erase mask (OSM footprint except roads, buffered
+buildings, LANDFIRE human cells, minus pavement) is inpainted where thin and
+synthesized where large from clean pixels of the same backfilled habitat class, with
+local brightness matching; highways and county roads stay as bleached pavement while
+residential streets, service roads and tracks fade toward the surrounding ground (a
+first look showed a bleached subdivision grid reading as a bright maze). The manifest records the
+mask, inpainted and synthesized fractions and sets `status.imagery_erased`. The
+habitat-colour texture stays as the fallback for places without free imagery (NAIP is
+US-only) and as the "map" view. Rejected: showing imagery unedited (breaks the world),
+and waiting for Unreal to do this (the erase step is engine-agnostic and the Unreal
+export can consume the same texture). Known limits: summer baseline recoloured by
+season relative to the imagery's own means; tree shadows baked in; 2.5 m pixels.

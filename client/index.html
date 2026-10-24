@@ -28,6 +28,12 @@
   #goto button { background:#1f2a23; color:#e6ede7; border:1px solid #263128; border-radius:6px; padding:4px 10px; font:inherit; cursor:pointer; }
   #gotoStatus { font-size:11px; margin-top:3px; min-height:1em; word-break:break-word; }
   #gotoStatus.err { color:#e8a98f; }
+  .seg { display:flex; gap:0; }
+  .seg button { flex:1; background:#0d1310; color:#b7c4ba; border:1px solid #263128; padding:4px 6px; font:inherit; font-size:12px; cursor:pointer; }
+  .seg button:first-child { border-radius:6px 0 0 6px; } .seg button:last-child { border-radius:0 6px 6px 0; }
+  .seg button + button { border-left:none; }
+  .seg button.on { background:#1f2a23; color:#e6ede7; }
+  .seg button:disabled { opacity:.4; cursor:default; }
 </style>
 <script type="importmap">
 { "imports": { "three": "https://unpkg.com/three@0.170.0/build/three.module.js",
@@ -48,6 +54,8 @@
   <label for="gotoInput">Location</label>
   <div id="goto"><input id="gotoInput" placeholder="lat, lon" autocomplete="off" spellcheck="false"><button id="gotoBtn">Go</button></div>
   <div class="muted" id="gotoStatus"></div>
+  <label>Texture</label>
+  <div class="seg"><button id="texImagery" title="NAIP 2022 with buildings, lots and fields erased">Imagery</button><button id="texRewild" class="on" title="habitat colour over hillshade">Rewilded</button></div>
   <label>Season <span class="muted" id="seasonNote"></span></label>
   <select id="season"><option value="auto">tracks today's date</option><option value="winter">winter</option><option value="spring">spring</option><option value="summer">summer</option><option value="fall">fall</option></select>
   <label>Time of day <span class="muted" id="timeLabel"></span></label>

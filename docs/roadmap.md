@@ -24,6 +24,11 @@ sequenced; Parked is in the brief but deliberately not started.
 2. ~~Ground~~ done 2026-10-23: habitat colour upsampled bilinearly, darkened by canopy,
    broken with value noise; soft season masks; 2 m detail noise in the shader; grass
    tufts within 220 m. Still to do: cloud shadows and distance haze (step 3).
+   Imagery base done 2026-10-24: NAIP as the default texture with the human footprint
+   inpainted (thin) or synthesized from same-habitat pixels (large); highways and
+   county roads stay as bleached pavement, minor streets fade to faint traces. Open
+   blemishes: small unmapped structures and tank pads survive, baked tree shadows,
+   the Placerville airport runway (aeroway is not a footprint class yet).
 3. Atmosphere: haze by distance and time of day, warmer low sun, cloud shadows.
 4. Wind: vertex sway in canopies and grass, stronger on ridges.
 5. Water: streams and ponds from the hydrology layer, with reflection.
