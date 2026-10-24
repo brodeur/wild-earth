@@ -10,7 +10,8 @@ import { Impostors } from './impostors.js';
 import { Grass } from './grass.js';
 import { MiniMap } from './minimap.js';
 import { RoadsOverlay } from './roadsOverlay.js';
-import { setupGoTo, takePendingPoint, builtTileFor } from './goto.js';
+import { setupGoTo, takePendingPoint, builtTileFor, takeCarry, localXY } from './goto.js';
+import { OpeningScreen, Arrival, lastTile, rememberTile } from './arrival.js';
 import { SEASON_LOOK, seasonOfDate, sunDirection } from './season.js';
 import { AcornGame } from './acorns.js';
 import { Identify } from './identify.js';
@@ -21,15 +22,38 @@ import { Animals } from './animals.js';
 import { Water } from './water.js';
 
 const $ = id => document.getElementById(id);
-const status = t => { $('status').textContent = t; $('status').classList.toggle('hidden', !t); };
+const html = document.documentElement;
+let screen = null, screenOpen = false;   // the opening screen (arrival.js) while it is up
+const status = t => {
+  if (screenOpen) { screen.setPrep(t ? `preparing ${screen.tileId}: ${t}` : ''); $('status').classList.add('hidden'); return; }
+  $('status').textContent = t; $('status').classList.toggle('hidden', !t);
+};
 
 async function main() {
   const params = new URLSearchParams(location.search);
   const pending = takePendingPoint(params);   // a lat/lon to land at, read once
+  const carry = takeCarry();                  // choices carried across a tile switch, read once
+  // ?game=1 and ?skip=1 go straight in, as before the opening screen (agents and tests rely on it).
+  // An in-game Go to another tile carries { arrive } and goes straight into an arrival. Otherwise
+  // the opening screen asks where, when and who while the preselected tile builds behind it.
+  const direct = params.get('game') === '1' || params.get('skip') === '1';
+  const carried = !direct && carry?.arrive ? carry.arrive : null;
+  html.classList.toggle('opening', !direct && !carried); html.classList.toggle('arriving', !!carried);
   let tileId = params.get('tile');
   if (pending && !tileId) tileId = await builtTileFor(pending);   // null -> loader picks the first tile
+  let chosen = null, enter = null;   // the screen's choice; enter() once the world exists
+  if (!direct && !carried) {
+    const index = await (await fetch('../tiles/index.json', { cache: 'no-cache' })).json();
+    const ids = index.tiles.map(t => t.tile_id);
+    if (!ids.includes(tileId)) tileId = ids.includes(lastTile()) ? lastTile() : ids[0];
+    if (!tileId) throw new Error('no tiles built');
+    screen = new OpeningScreen({ root: $('opening'), index, tileId, pending, carried: carry?.screen,
+      onBegin: c => { chosen = c; if (enter) enter(c, true); } });
+    screenOpen = true;
+  }
   const tile = await loadTile(tileId);
-  if (pending) history.replaceState(null, '', `?tile=${tile.id}${params.get('game') === '1' ? '&game=1' : ''}`);   // never keep the point in the URL
+  const flags = ['game', 'skip'].filter(k => params.get(k) === '1').map(k => `&${k}=1`).join('');
+  if (pending) history.replaceState(null, '', `?tile=${tile.id}${flags}`);   // never keep the point in the URL
   $('tileName').textContent = tile.id;
   status('building terrain…');
   await new Promise(r => setTimeout(r, 20));
@@ -59,8 +83,16 @@ async function main() {
   veg.radius = +$('detail').value; veg.update(flight.pos.x, flight.pos.z, true);
   const minimap = new MiniMap({ container: $('minimap'), sizeM: tile.size, imagery: tile.imagery, features: tile.features, flight, rewildImage: tile.textureImage });
   const places = new PlaceNames(tile.features, tile.size);   // nearest named road, stream or water, for the HUD
-  const goto = setupGoTo({ tile, flight, input: $('gotoInput'), button: $('gotoBtn'), line: $('gotoStatus') });
-  if (pending) goto.go(pending, { fromLoad: true });
+  const goto = setupGoTo({ tile, flight, input: $('gotoInput'), button: $('gotoBtn'), line: $('gotoStatus'),
+    carry: () => ({ arrive: { season: seasonNow(), species: window.__we?.playerSpecies || 'corvus_corax' } }) });
+  if (pending && direct) goto.go(pending, { fromLoad: true });
+  if (pending && !direct) $('gotoInput').value = `${pending.lat}, ${pending.lon}`;
+  // The scripted arrival (arrival.js); behind the screen the bird waits at its start so the forest streams in there.
+  const arrival = new Arrival({ flight, camera, heights: tile.heights, size: tile.size, caption: $('caption') });
+  const carriedPoint = carried && pending ? localXY(tile, pending.lat, pending.lon) : null;
+  if (screen) { screen.onPoint = p => { arrival.plan(p); arrival.hold(); }; arrival.plan(screen.point); }
+  else if (carried) arrival.plan(carriedPoint);
+  if (!direct) { arrival.hold(); veg.update(flight.pos.x, flight.pos.z, true); }
 
   // Base texture: the erased imagery when the tile has it, else the rewilded habitat texture.
   const peek = { want: false, shown: false, pending: null, present: null, roadsWere: false };   // present-day peek, below
@@ -79,7 +111,7 @@ async function main() {
   $('texRewild').onclick = () => setTexture('rewilded');
   setTexture(tile.imageryTextureImage ? 'imagery' : 'rewilded');
 
-  const state = { season: 'auto', hour: +$('time').value };
+  const state = { season: 'auto', hour: +$('time').value };   // 'auto' tracks today's date
   const seasonNow = () => state.season === 'auto' ? seasonOfDate() : state.season;
   $('season').onchange = e => { state.season = e.target.value; applySeason(); };
   $('time').oninput = e => { state.hour = +e.target.value; };
@@ -172,17 +204,56 @@ async function main() {
   });
   $('peekBtn').addEventListener('click', e => { if (e.detail === 0) setPeek(!peek.want); });   // keyboard activation toggles
 
-  // Soundscape (sound.js): starts on the first click or key; N mutes, C calls.
-  const sound = new Soundscape({ tile, flight, raven, camera, els: { button: $('soundBtn'), volume: $('soundVol') } });
+  // Soundscape (sound.js): starts on the first click or key; N mutes, C calls. Behind the opening
+  // screen it is made at Begin and started by that press, so choosing cards stays quiet.
+  let sound = null;
+  const makeSound = () => {
+    if (!sound) { sound = new Soundscape({ tile, flight, raven, camera, els: { button: $('soundBtn'), volume: $('soundVol') } }); window.__we.sound = sound; }
+    return sound;
+  };
 
+  window.__we = { tile, flight, raven, camera, veg, terrain, far, grass, roads, scene, renderer, minimap, atmosphere, sky, acorns, identify, places, peek, setPeek, sound, animals, arrival };   // debugging handle
+  if (!screen) makeSound();
+
+  // Into the world: season, observer, sound, then the arrival flight over the chosen point.
+  const captionFor = (point, season, species) => {
+    const near = places.nearest(point?.x ?? tile.size / 2, point?.north ?? tile.size / 2);
+    const who = names[species] || species;
+    return `${near ? `${near.over ? 'over' : 'near'} ${near.name}` : tile.id} · ${season} · ${who}`;
+  };
+  enter = (c, gesture) => {
+    rememberTile(tile.id);
+    state.season = c.season === seasonOfDate() ? 'auto' : c.season; $('season').value = state.season; applySeason();
+    window.__we.playerSpecies = c.species; animals.setObserver(c.species);
+    const snd = makeSound();
+    if (gesture) {
+      snd.start();   // inside the Begin click when the world was ready; otherwise the press already activated the page
+      if (snd.ctx?.state === 'suspended') {   // a stricter browser: resume on the next press
+        const kick = () => { removeEventListener('pointerdown', kick, true); removeEventListener('keydown', kick, true); if (!snd.muted) snd.ctx.resume(); };
+        addEventListener('pointerdown', kick, true); addEventListener('keydown', kick, true);
+      }
+    }
+    arrival.plan(c.point);
+    arrival.onDone = () => { html.classList.remove('arriving'); };
+    arrival.start(c.caption || captionFor(c.point, c.season, c.species));
+    html.classList.add('arriving'); html.classList.remove('opening');
+    if (screen) { screen.close(); screenOpen = false; }
+  };
+  if (screen) screen.setReady();
   status('');
-  window.__we = { tile, flight, raven, camera, veg, terrain, far, grass, roads, scene, renderer, minimap, atmosphere, sky, acorns, identify, places, peek, setPeek, sound, animals };   // debugging handle
+  if (direct) { /* as before: the bird is at the tile centre, flying */ }
+  else if (carried) enter({ season: carried.season, species: carried.species || 'corvus_corax', point: carriedPoint }, false);
+  else if (chosen) enter(chosen, true);   // Begin was pressed while the world was loading
 
-  let last = performance.now(), hudT = 0;
+  let last = performance.now(), hudT = 0, heldAt = 0;
   function frame(now) {
+    if (screenOpen) {   // behind the opening screen: a few frames a second, enough to stream the world in and compile shaders
+      if (now - heldAt < 150) { requestAnimationFrame(frame); return; }
+      heldAt = now;
+    }
     const dt = Math.min((now - last) / 1000, 0.1); last = now;
     const s = seasonNow(), look = SEASON_LOOK[s], sun = sunDirection(tile.latitude, s, state.hour);
-    const f = flight.update(dt);
+    const f = screenOpen ? arrival.hold() : arrival.active ? arrival.update(dt) : flight.update(dt);
     raven.update(dt, flight.flapping, flight.speed);
     veg.update(flight.pos.x, flight.pos.z);
     veg.updateClose(camera.position);
@@ -196,7 +267,7 @@ async function main() {
     if (!peek.shown) terrain.setLook(look);
     shadows.update(camera);
     renderer.render(scene, camera);
-    sound.update(dt, { season: s, hour: state.hour, sunElevation: sun.elevation });
+    sound?.update(dt, { season: s, hour: state.hour, sunElevation: sun.elevation });
     if (peek.pending !== null) { if (peek.pending !== peek.shown) { crossFade(); applyPeek(peek.pending); } peek.pending = null; }
     minimap.update(flight.pos, f.heading);
     hudT += dt;
@@ -209,7 +280,7 @@ async function main() {
       $('trees').textContent = peek.shown ? 'hidden (present day)' : `${veg.count.toLocaleString()} near · ${far.count.toLocaleString()} far`;
       identify.tick(now);
       const where = places.describe(flight.pos.x, -flight.pos.z);
-      $('soundNow').textContent = sound.describe();
+      $('soundNow').textContent = sound ? sound.describe() : '–';
       $('animalsNear').textContent = animals.describe(now);
       $('over').textContent = where.text; minimap.place = where.place;
       const h = Math.floor(state.hour), mnt = Math.round((state.hour - h) * 60); $('timeLabel').textContent = `${h}:${String(mnt).padStart(2, '0')} · sun ${(sun.elevation * 180 / Math.PI).toFixed(0)}°`;
