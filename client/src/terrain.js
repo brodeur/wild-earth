@@ -11,12 +11,15 @@ export const groundUniforms = {
   grassTint: { value: new THREE.Color(0.8, 0.68, 0.36) }, oakTint: { value: new THREE.Color(0.55, 0.45, 0.22) }, oakMix: { value: 0 },
   groundFx: { value: 1 },   // 0 turns off the sward grain, gust sheen and chaparral mottle (A/B timing)
   imagery: { value: 0 }, grassRef: { value: new THREE.Vector3(0.49, 0.47, 0.38) }, oakRef: { value: new THREE.Vector3(0.27, 0.34, 0.27) },
+  canopyMap: { value: null },   // tile canopy raster: r = tree cover %, g = shrub cover % (8-bit percent)
+  contactAO: { value: null },   // shadows.js: top-down sky occlusion under each near tree (r = 0 open .. 1 at the trunk)
+  contactAOMatrix: { value: new THREE.Matrix4().set(0, 0, 0, 10, 0, 0, 0, 10, 0, 0, 0, 10, 0, 0, 0, 1) },   // world -> its uv
 };
 export const GROUND_GLSL = /* glsl */`
   uniform sampler2D map; uniform sampler2D masks; uniform sampler2D roads; uniform float tileSize;
   uniform vec3 grassTint; uniform vec3 oakTint; uniform float oakMix;
   uniform float imagery; uniform vec3 grassRef; uniform vec3 oakRef;   // imagery: 1 when map is the erased NAIP
-  uniform float groundFx;
+  uniform float groundFx; uniform sampler2D canopyMap; uniform sampler2D contactAO; uniform mat4 contactAOMatrix;
   const vec3 G_LUMA = vec3(0.299, 0.587, 0.114);
   vec2 groundUv(vec3 posW) { return vec2(posW.x, -posW.z) / tileSize; }
   // Season recolour of a texel (linear) given its soft habitat weights (grassland, oak, chaparral).
@@ -39,6 +42,21 @@ export const GROUND_GLSL = /* glsl */`
   // Habitat weights with decayed pavement removed (pavement keeps its grey).
   vec3 groundWeights(vec2 uv, float lod) {
     return textureLod(masks, uv, lod).rgb * (1.0 - smoothstep(0.55, 0.75, textureLod(roads, uv, lod).r));
+  }
+  // Sky light reaching the ground under the canopy: up to 35% less under full tree cover (and a
+  // little under dense shrubs). Bilinear over the ~30 m cover cells, so it reads as soft woodland
+  // floor shade, the ambient half of what a cast shadow does for the sun.
+  float groundSkyOcclusion(vec2 uv) {
+    vec2 cov = texture(canopyMap, uv).rg * 2.55;   // 8-bit percent -> 0..1
+    return 1.0 - 0.35 * clamp(cov.r, 0.0, 1.0) - 0.1 * clamp(cov.g, 0.0, 1.0);
+  }
+  // Sky light reaching the ground at a trunk: a soft blob per near tree out to its crown edge
+  // (rendered by shadows.js around the camera, faded out at the map's edge).
+  float groundContactAO(vec3 posW) {
+    vec2 uv = (contactAOMatrix * vec4(posW, 1.0)).xy;
+    vec2 e = abs(uv - 0.5) * 2.0;
+    if (max(e.x, e.y) >= 1.0) return 1.0;
+    return 1.0 - texture(contactAO, uv).r * (1.0 - smoothstep(0.8, 1.0, max(e.x, e.y)));
   }
   // Ground albedo at a point, for vertex shaders (explicit mip level; lod 1 is ~5 m on the NAIP).
   vec3 groundAlbedo(vec3 posW, float lod, out vec3 w) {
@@ -98,9 +116,13 @@ const FRAG = /* glsl */`
     }
     c *= d;
     vec3 n = normalize(vNormalW);
-    // Same light as the lambert trees: sun (under cloud shadow) plus hemisphere sky, over pi.
+    // Same light as the lambert trees: sun (under cloud and cast shadow) plus hemisphere sky, over pi.
+    // The terrain casts with its back faces (shadows.js), so a sunlit slope never shadows itself
+    // and the normal offset here only has to clear the tree casters' depth.
     float diff = max(dot(n, sunDir), 0.0);
-    vec3 light = sunLight * diff * cloudShadow(vPosW) + mix(ambientGround, ambientSky, 0.5 + 0.5 * n.y);
+    float sunVis = diff > 0.0 ? csmShadow(vPosW, n, 1.0, 1.0, 1.0) : 1.0;
+    vec3 light = sunLight * diff * cloudOnly(vPosW) * sunVis
+      + mix(ambientGround, ambientSky, 0.5 + 0.5 * n.y) * groundSkyOcclusion(vUv) * groundContactAO(vPosW);
     gl_FragColor = vec4(atmosphereApply(c * light * 0.3183099, vPosW, cameraPosition), 1.0);
     #include <tonemapping_fragment>
     #include <colorspace_fragment>
@@ -116,6 +138,11 @@ export class Terrain {
     const roads = tile.roadsImage ? new THREE.Texture(tile.roadsImage) : new THREE.DataTexture(new Uint8Array(4), 1, 1); roads.needsUpdate = true;
     if (tile.roadsImage) { roads.generateMipmaps = true; roads.minFilter = THREE.LinearMipmapLinearFilter; }
     G.masks.value = masks; G.roads.value = roads; G.tileSize.value = tile.size;
+    if (tile.canopy?.img?.image) {   // same orientation as the masks (image rows north to south, flipY)
+      const canopy = new THREE.Texture(tile.canopy.img.image); canopy.needsUpdate = true;
+      canopy.colorSpace = THREE.NoColorSpace; canopy.generateMipmaps = true; canopy.minFilter = THREE.LinearMipmapLinearFilter;
+      G.canopyMap.value = canopy;
+    } else { G.canopyMap.value = new THREE.DataTexture(new Uint8Array(4), 1, 1); G.canopyMap.value.needsUpdate = true; }
     this.uniforms = { ...G, ...windUniforms, ...atmo };   // shared objects, so one update reaches every material
     this.material = new THREE.ShaderMaterial({ vertexShader: VERT, fragmentShader: FRAG, uniforms: this.uniforms });
     const size = tile.size, cs = size / chunks, nv = Math.round(cs / spacing) + 1;

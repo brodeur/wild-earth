@@ -16,6 +16,8 @@ import { AcornGame } from './acorns.js';
 import { Identify } from './identify.js';
 import { PlaceNames } from './placenames.js';
 import { Soundscape } from './sound.js';
+import { Shadows } from './shadows.js';
+import { Animals } from './animals.js';
 
 const $ = id => document.getElementById(id);
 const status = t => { $('status').textContent = t; $('status').classList.toggle('hidden', !t); };
@@ -50,6 +52,7 @@ async function main() {
   const flight = new RavenFlight(camera, tile.heights, renderer.domElement);
   scene.add(flight.body);
   const raven = new Raven(flight.body, atmosphere);   // the bird you see from the chase camera
+  const shadows = new Shadows({ renderer, scene, tile, terrain, veg, raven, grass });   // cascaded sun shadows (shadows.js)
   flight.reset(tile.size / 2, -tile.size / 2, 150);
   veg.radius = +$('detail').value; veg.update(flight.pos.x, flight.pos.z, true);
   const minimap = new MiniMap({ container: $('minimap'), sizeM: tile.size, imagery: tile.imagery, features: tile.features, flight, rewildImage: tile.textureImage });
@@ -108,6 +111,9 @@ async function main() {
   const identify = new Identify({ veg, camera, dom: renderer.domElement, scene, flight, acorns, seasonNow,
     els: { nearest: $('nearestTree'), around: $('aroundYou'), card: $('speciesCard') } });
 
+  // Ambient animals (animals.js): squirrels, acorn woodpeckers, other ravens, deer, filtered by perception.
+  const animals = new Animals({ tile, scene, flight, veg, atmosphere, camera, identify });
+
   // Present-day peek (hold P, or the panel button): the ground shows today's NAIP with the human
   // footprint still in it, the forest and grass step aside and the ghost roads come on, so a player
   // can see the parking lot they know at the exact spot they are flying over. The swap happens just
@@ -127,7 +133,7 @@ async function main() {
   }
   function applyPeek(on) {
     peek.shown = on;
-    for (const o of [veg, far, grass]) o.group.visible = !on;
+    for (const o of [veg, far, grass, animals]) o.group.visible = !on;
     identify.tagGroup.visible = !on && identify.tagsOn;
     acorns.group.visible = !on && acorns.running;
     if (on) { peek.roadsWere = roads.group.visible; roads.group.visible = true; } else roads.group.visible = peek.roadsWere;
@@ -168,7 +174,7 @@ async function main() {
   const sound = new Soundscape({ tile, flight, raven, camera, els: { button: $('soundBtn'), volume: $('soundVol') } });
 
   status('');
-  window.__we = { tile, flight, raven, camera, veg, terrain, far, grass, roads, scene, renderer, minimap, atmosphere, sky, acorns, identify, places, peek, setPeek, sound };   // debugging handle
+  window.__we = { tile, flight, raven, camera, veg, terrain, far, grass, roads, scene, renderer, minimap, atmosphere, sky, acorns, identify, places, peek, setPeek, sound, animals };   // debugging handle
 
   let last = performance.now(), hudT = 0;
   function frame(now) {
@@ -183,7 +189,9 @@ async function main() {
     far.update(camera, veg.radius);
     grass.update(flight.pos.x, flight.pos.z, dt, camera, look);
     acorns.update(dt, camera, s);
+    animals.update(dt, s, state.hour);
     if (!peek.shown) terrain.setLook(look);
+    shadows.update(camera);
     renderer.render(scene, camera);
     sound.update(dt, { season: s, hour: state.hour, sunElevation: sun.elevation });
     if (peek.pending !== null) { if (peek.pending !== peek.shown) { crossFade(); applyPeek(peek.pending); } peek.pending = null; }
@@ -199,6 +207,7 @@ async function main() {
       identify.tick(now);
       const where = places.describe(flight.pos.x, -flight.pos.z);
       $('soundNow').textContent = sound.describe();
+      $('animalsNear').textContent = animals.describe(now);
       $('over').textContent = where.text; minimap.place = where.place;
       const h = Math.floor(state.hour), mnt = Math.round((state.hour - h) * 60); $('timeLabel').textContent = `${h}:${String(mnt).padStart(2, '0')} · sun ${(sun.elevation * 180 / Math.PI).toFixed(0)}°`;
     }

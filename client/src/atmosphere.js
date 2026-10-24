@@ -31,6 +31,13 @@ export const uniforms = {
   cloudOpacity: { value: 0.8 },                            // visible clouds in the dome
   cloudCover: { value: 0 },                                // added to the noise before the coverage ramp
   cloudHeight: { value: 2000 },
+  // Cascaded sun shadows (shadows.js renders the maps and sets these). Until it runs, every
+  // matrix maps the world outside its cascade, so the lookup returns 1 (lit).
+  csmMap0: { value: null }, csmMap1: { value: null }, csmMap2: { value: null },
+  csmMatrix: { value: [0, 1, 2].map(() => new THREE.Matrix4().set(0, 0, 0, 10, 0, 0, 0, 10, 0, 0, 0, 10, 0, 0, 0, 1)) },
+  csmTexel: { value: new THREE.Vector3(1, 1, 1) },     // metres per shadow texel, per cascade
+  csmInvSize: { value: new THREE.Vector3(1, 1, 1) },   // 1 / map size, per cascade
+  csmStrength: { value: 0 },                           // 0 below ~3 degrees of sun, 1 by 6
 };
 
 export const ATMOSPHERE_GLSL = /* glsl */`
@@ -39,14 +46,56 @@ export const ATMOSPHERE_GLSL = /* glsl */`
   uniform float hazeDensity; uniform float hazeHeightFalloff; uniform float hazeBase; uniform float landHeight;
   uniform sampler2D cloudMap; uniform vec2 cloudOffset; uniform float cloudStrength; uniform float cloudOpacity; uniform float cloudCover; uniform float cloudHeight;
 
+  // ---- Cascaded sun shadow. Three depth maps with hardware compare (each tap is a bilinear 2x2
+  // PCF); a point uses the sharpest cascade whose box holds it and blends into the next over the
+  // box's outer 12%. Offsets are in texels of the cascade used: kN along the surface normal, kL
+  // toward the sun, so the bias scales with the texel and never needs tuning per cascade.
+  uniform highp sampler2DShadow csmMap0; uniform highp sampler2DShadow csmMap1; uniform highp sampler2DShadow csmMap2;
+  uniform mat4 csmMatrix[3]; uniform vec3 csmTexel; uniform vec3 csmInvSize; uniform float csmStrength;
+  ${[0, 1, 2].map(i => `float csmTap${i}(vec3 c, float soft) {
+    if (soft < 0.5) return texture(csmMap${i}, c);
+    float d = csmInvSize[${i}];
+    return 0.25 * (texture(csmMap${i}, vec3(c.xy + vec2(-0.6, -1.4) * d, c.z)) + texture(csmMap${i}, vec3(c.xy + vec2(1.4, -0.6) * d, c.z))
+                 + texture(csmMap${i}, vec3(c.xy + vec2(0.6, 1.4) * d, c.z)) + texture(csmMap${i}, vec3(c.xy + vec2(-1.4, 0.6) * d, c.z)));
+  }
+  vec3 csmCoord${i}(vec3 p, vec3 o) { return (csmMatrix[${i}] * vec4(p + o * csmTexel[${i}], 1.0)).xyz; }`).join('\n  ')}
+  float csmEdge(vec3 c) { vec2 a = abs(c.xy - 0.5) * 2.0; return c.z > 1.0 ? 2.0 : max(a.x, a.y); }
+  // 1 lit, 0 in a cast shadow. soft: 1 for four PCF taps (fragment shaders), 0 for one (per-vertex callers).
+  float csmShadow(vec3 p, vec3 n, float kN, float kL, float soft) {
+    if (csmStrength <= 0.0) return 1.0;
+    const float BAND = 0.12;
+    vec3 o = n * kN + sunDir * kL, c1, c2;
+    float s, b, e1, e2;
+    vec3 c0 = csmCoord0(p, o); float e0 = csmEdge(c0);
+    if (e0 < 1.0) {
+      s = csmTap0(c0, soft); b = smoothstep(1.0 - BAND, 1.0, e0);
+      if (b > 0.0) { c1 = csmCoord1(p, o); s = mix(s, csmEdge(c1) < 1.0 ? csmTap1(c1, soft) : 1.0, b); }
+    } else {
+      c1 = csmCoord1(p, o); e1 = csmEdge(c1);
+      if (e1 < 1.0) {
+        s = csmTap1(c1, soft); b = smoothstep(1.0 - BAND, 1.0, e1);
+        if (b > 0.0) { c2 = csmCoord2(p, o); s = mix(s, csmEdge(c2) < 1.0 ? csmTap2(c2, soft) : 1.0, b); }
+      } else {
+        c2 = csmCoord2(p, o); e2 = csmEdge(c2);
+        s = e2 < 1.0 ? mix(csmTap2(c2, soft), 1.0, smoothstep(1.0 - BAND, 1.0, e2)) : 1.0;
+      }
+    }
+    return mix(1.0, s, csmStrength);
+  }
+
   float atmoCloudDensity(vec2 xz) {
     return smoothstep(0.45, 0.75, texture2D(cloudMap, xz / ${CLOUD_PERIOD.toFixed(1)} + cloudOffset).r + cloudCover);
   }
   // 1 in sun, darker under a cloud: follows the sun ray up to the cloud plane, so shadows sit
   // where the visible clouds are and stretch away from a low sun.
-  float cloudShadow(vec3 worldPos) {
+  float cloudOnly(vec3 worldPos) {
     vec2 xz = worldPos.xz + sunDir.xz * (cloudHeight - worldPos.y) / max(sunDir.y, 0.12);
     return 1.0 - cloudStrength * atmoCloudDensity(xz);
+  }
+  // Everything that shades by the sun without a normal (grass, shrubs, impostors, per vertex) gets
+  // the cast shadow here too: one hardware-PCF tap, offset two texels toward the sun.
+  float cloudShadow(vec3 worldPos) {
+    return cloudOnly(worldPos) * csmShadow(worldPos, vec3(0.0), 0.0, 2.0, 0.0);
   }
   // Horizon radiance of the dome in direction v: a Henyey-Greenstein (g = 0.8) Mie lobe plus a
   // broad linear term, blended so the haze toward the sun matches the dome's glow.
@@ -207,7 +256,10 @@ export class Atmosphere {
           vAtmoPos = (modelMatrix * atmoWP).xyz;`);
       shader.fragmentShader = shader.fragmentShader
         .replace('#include <common>', '#include <common>\nvarying vec3 vAtmoPos;\n' + ATMOSPHERE_GLSL)
-        .replace('#include <aomap_fragment>', '#include <aomap_fragment>\nreflectedLight.directDiffuse *= cloudShadow(vAtmoPos);')
+        // Sun term only: the hemisphere light is indirect. The normal offset uses the shading normal
+        // (crown-shaped on the leaf cards), which keeps the lit side of a crown free of acne.
+        .replace('#include <aomap_fragment>', `#include <aomap_fragment>
+          reflectedLight.directDiffuse *= cloudOnly(vAtmoPos) * csmShadow(vAtmoPos, inverseTransformDirection(normal, viewMatrix), 1.5, 1.5, 1.0);`)
         .replace('#include <opaque_fragment>', 'outgoingLight = atmosphereApply(outgoingLight, vAtmoPos, cameraPosition);\n#include <opaque_fragment>');
     };
     material.customProgramCacheKey = () => 'atmosphere-lambert';
