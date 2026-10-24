@@ -1,7 +1,7 @@
 import * as THREE from 'three';
 import { uniforms as atmo, ATMOSPHERE_GLSL } from './atmosphere.js';
 import { SPECIES, SPECIES_IDS, mulberry32, resolveSpecies } from './trees.js';
-import { MIX, SHRUB_MIX, VARIANTS, pick, hash, variantSeed, midSet } from './vegetation.js';
+import { VARIANTS, pick, hash, variantSeed, midSet, cellPlan, placementSkip } from './vegetation.js';
 import { bakeImpostors, VIEWS, SIDE_VIEWS, ALPHA_REF } from './impostorBake.js';
 import { seasonOfDate } from './season.js';
 
@@ -211,27 +211,25 @@ export class Impostors {
     return g;
   }
 
-  // Every plant vegetation.js would place on the tile, with the same per-cell random stream (see
-  // Vegetation.update: keep the draws in step with it), grouped by chunk and sorted by a thinning rank.
+  // Every plant vegetation.js would place on the tile, grouped by chunk and sorted by a thinning rank.
+  // The per-cell plan (counts, LANDFIRE species mix, savanna oak) and the skips (roads, ponds, stream
+  // channels, riparian thinning) are vegetation.js's own cellPlan and placementSkip, and the six draws
+  // per plant are taken in Vegetation.update's order, so each record is the tree that replaces it.
   buildRecords() {
-    const tile = this.tile, hab = tile.habitat, can = tile.canopy, res = hab.res, size = tile.size, heights = tile.heights, roads = tile.roads;
+    const tile = this.tile, hab = tile.habitat, res = hab.res, size = tile.size, heights = tile.heights;
     const treeIdx = {}; SPECIES_IDS.forEach((id, k) => treeIdx[id] = k * VARIANTS);
     let rec = new Float32Array(400000 * STRIDE), chunkOf = new Int32Array(400000), n = 0;
     const NC = Math.ceil(size / CHUNK); this.NC = NC;
     for (let j = 0; j < hab.img.height; j++) for (let i = 0; i < hab.img.width; i++) {
-      const cls = hab.channel(i, j, 0); if (!MIX[cls] && !SHRUB_MIX[cls]) continue;
-      const tree = can.channel(i, j, 0) / 100, shrub = can.channel(i, j, 1) / 100;
-      const rnd = mulberry32(hash(i, j, 7));
-      const nTrees = MIX[cls] ? Math.round(tree * (cls === 5 ? 3 : 11) + (rnd() < (tree * 11) % 1 ? 1 : 0)) : 0;
-      const nShrubs = SHRUB_MIX[cls] ? Math.round(shrub * (cls === 4 ? 18 : 6)) : 0;
+      const plan = cellPlan(tile, i, j); if (!plan) continue;
+      const { rnd, nTrees, nShrubs, treeMix, shrubMix } = plan;
       for (let k = 0; k < nTrees + nShrubs; k++) {
         const isTree = k < nTrees;
-        const name = pick(isTree ? MIX[cls] : SHRUB_MIX[cls], rnd());
+        const name = pick(isTree ? treeMix : shrubMix, rnd());
         const variant = Math.floor(rnd() * VARIANTS);
         const px = (i + rnd()) * res, pn = size - (j + rnd()) * res;
         const s = 0.75 + rnd() * 0.5, rot = rnd() * Math.PI * 2;
-        const rw = roads ? roads.at(px, pn) : 0;
-        if (rw > 140 || (isTree && rw > 0 && hash(k, i + j * 4096, 13) / 4294967296 < rw / 255)) continue;
+        if (placementSkip(tile, i, j, k, px, pn, isTree)) continue;
         if (n >= chunkOf.length) { const r2 = new Float32Array(rec.length * 2); r2.set(rec); rec = r2; const c2 = new Int32Array(chunkOf.length * 2); c2.set(chunkOf); chunkOf = c2; }
         const own = mulberry32(hash(i, j, k + 7001) ^ 0x5bd1e995);   // the impostor's own draws, outside the shared stream
         const o = n * STRIDE;
