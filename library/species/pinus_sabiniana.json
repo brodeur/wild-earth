@@ -1,0 +1,51 @@
+{
+  "id": "pinus_sabiniana",
+  "aliases": ["gray_pine"],
+  "scientific": "Pinus sabiniana",
+  "common": "gray pine",
+  "form": "tree",
+  "architectural_model": "Rauh",
+  "deciduous": false,
+  "height_m": [12, 22],
+  "variants": 3,
+  "description": "A thin, often forked or leaning pine whose sparse gray-green needles, 20-30 cm long in bundles of three, make a crown you can see the sky through; 12-22 m tall here. It grows only in California, scattered among blue oaks on the hottest, driest foothill slopes, and its heavy cones hold large, hard-shelled seeds eaten by squirrels and jays and long gathered as food by Native Californians.",
+  "season_notes": {
+    "winter": "Evergreen: the gray-green needles look hazy against the hills, and heavy cones from past years still hang in the crown.",
+    "spring": "Pollen cones shed yellow pollen (March-April) and new needles grow at the branch tips.",
+    "summer": "Second-year cones swell to full size; the open crown gives little shade.",
+    "fall": "Ripe cones open and drop big, hard-shelled seeds that squirrels, jays and woodpeckers gather."
+  },
+  "status": "agent draft, needs local sign-off",
+  "trunk": {
+    "length_ratio": 0.95, "radius_ratio": 0.03, "taper": 0.9, "flare": 1.2,
+    "bole_ratio": 0.25, "base_size": 0.3,
+    "curve_deg": 25, "curve_var_deg": 25, "segments": 6, "lean_deg": 14,
+    "stems": [1, 1], "stem_spread_deg": 0,
+    "split_prob": 0.55, "split_count": 2, "split_angle_deg": 22,
+    "bark_rgb": [90, 85, 78], "bark_pattern": "furrowed", "twig_rgb": [106, 100, 90]
+  },
+  "crown": { "shape": "spherical" },
+  "levels": [
+    { "count": 18, "whorl": 3, "down_angle_deg": 65, "down_angle_tip_deg": 45, "down_angle_var_deg": 20, "rotation_deg": 50, "rotation_var_deg": 30,
+      "length_ratio": 0.38, "length_var": 0.3, "curve_deg": 25, "curve_var_deg": 25, "tropism": 0.06,
+      "taper": 0.95, "radius_ratio": 0.4, "segments": 3 },
+    { "count": 4, "start": 0.3, "down_angle_deg": 40, "down_angle_var_deg": 15, "rotation_deg": 140, "rotation_var_deg": 40,
+      "length_ratio": 0.4, "length_var": 0.3, "curve_deg": 20, "curve_var_deg": 20, "tropism": 0.04,
+      "taper": 1.0, "radius_ratio": 0.5, "segments": 1 }
+  ],
+  "foliage": {
+    "type": "needle", "leaf_size_m": 0.27, "leaf_shape": "needle_cluster", "cluster_m": 1.4, "density": 6,
+    "start": 0.4, "parent_start": 0.4, "orientation": "along", "droop": 0.6,
+    "colors": { "winter": [108, 122, 98], "spring": [112, 128, 98], "summer": [116, 126, 102], "fall": [114, 124, 100] },
+    "leaf_on": { "winter": 1.0, "spring": 1.0, "summer": 1.0, "fall": 1.0 }
+  },
+  "lod": { "near_tris_budget": 1400, "near_sides": [7, 4, 3], "mid_blobs": 5, "mid_branches": 6, "mid_blob_scale": 0.7 },
+  "notes": "Endemic foothill pine of hot, dry slopes, mixed into blue oak woodland and chaparral. 12-25 m (rarely to 32 m). The look is the opposite of ponderosa: a crooked, leaning trunk that often forks into two or more leaders (split_prob 0.55, lean up to 14 degrees, high curve variance), and a sparse, open, irregular crown you can see the sky through (low foliage density, few short level-2 twigs). Pines follow Rauh's model (monopodial trunk, rhythmic whorled branching), but gray pine's whorls are irregular and its branches ascend steeply in the upper crown (down angle 65 at the base of the crown to 45 at the top). Needles 20-32 cm in bundles of three, grey-green and drooping, in loose tufts at branch ends: needle_cluster cards with droop. Bark dark grey-brown, irregularly furrowed. The very large cones (15-25 cm) are ignored for now. Colour barely changes with season.",
+  "sources": [
+    "https://www.fs.usda.gov/database/feis/plants/tree/pinsab/all.html",
+    "https://en.wikipedia.org/wiki/Pinus_sabiniana",
+    "https://ucjeps.berkeley.edu/eflora/ (Pinus sabiniana)"
+  ],
+  "authors": ["Wild Earth (agent draft, 2026-10-23); needs local sign-off"],
+  "license": "CC BY-SA 4.0"
+}

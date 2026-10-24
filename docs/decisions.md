@@ -184,3 +184,27 @@ lambert-plus-atmosphere material the trees use. Wings beat while climbing, boost
 flapping and glide otherwise, cross-faded. This is the "rigged animals are sourced"
 exception in practice. Rejected: a paid crow (Nestaeric, $68, 22 clips) until the look
 of the world asks for feather detail; a Blender-free path (the file is .blend only).
+
+## 2026-10-24: trees come from a species parameter library
+
+Each species is a JSON parameter file (architectural model, trunk, branch levels,
+foliage, seasonal colours, LOD budgets, notes, CC BY-SA 4.0) grown by one Weber-Penn
+style generator; tiles reference species by id and carry no geometry. This is the seed
+of the shared asset library in the brief: an agent or a resident writes a file from a
+species' morphology, reviews it on the lineup page against photographs, and a local
+signs it off. Rejected: hand-modelled or purchased tree meshes (not shareable, not
+scalable to a region's species list). Far foliage defaults to leaf cards over blobs,
+trading about ten frames per second for a continuous forest.
+
+## 2026-10-24: browser first, then the three-species acorn game; no Rust client
+
+Aaron's direction after the engine discussion: see how far the browser can be pushed,
+then make the acorn game with woodpeckers, squirrels and ravens all collecting acorns,
+a species leaderboard, and many of each species always present (AI or human). Rejected:
+a Rust client (it would mean writing an engine before a game; Rust stays a candidate
+for the federation node and simulation server), and starting the Unreal probe now
+(kept as the hedge; the export step stays). The realism target is "recognisable":
+someone who lives in a tile should find their own hill from the air. Open: which
+open-source engine, if any, could astonish at Unreal's level (Godot 4, Bevy, O3DE are
+the candidates; none is there today), versus the browser with WebGPU being the
+astonishing thing because the place is real.

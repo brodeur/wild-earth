@@ -13,6 +13,7 @@ import { RoadsOverlay } from './roadsOverlay.js';
 import { setupGoTo, takePendingPoint, builtTileFor } from './goto.js';
 import { SEASON_LOOK, seasonOfDate, sunDirection } from './season.js';
 import { AcornGame } from './acorns.js';
+import { Identify } from './identify.js';
 
 const $ = id => document.getElementById(id);
 const status = t => { $('status').textContent = t; $('status').classList.toggle('hidden', !t); };
@@ -95,8 +96,12 @@ async function main() {
   $('hoverBtn').onclick = () => { flight.setHover(!flight.hover); renderer.domElement.focus?.(); };
   if (params.get('game') === '1') setGame(true);
 
+  // Species identification: HUD rows, click a tree for its card, T toggles name tags (identify.js).
+  const identify = new Identify({ veg, camera, dom: renderer.domElement, scene, flight, acorns, seasonNow,
+    els: { nearest: $('nearestTree'), around: $('aroundYou'), card: $('speciesCard') } });
+
   status('');
-  window.__we = { tile, flight, raven, camera, veg, terrain, far, grass, roads, scene, renderer, minimap, atmosphere, sky, acorns };   // debugging handle
+  window.__we = { tile, flight, raven, camera, veg, terrain, far, grass, roads, scene, renderer, minimap, atmosphere, sky, acorns, identify };   // debugging handle
 
   let last = performance.now(), hudT = 0;
   function frame(now) {
@@ -105,6 +110,7 @@ async function main() {
     const f = flight.update(dt);
     raven.update(dt, flight.flapping, flight.speed);
     veg.update(flight.pos.x, flight.pos.z);
+    veg.updateClose(camera.position);
     atmosphere.update(dt, sun, look, s, state.hour, camera);
     sky.update(camera);
     far.update(camera, veg.radius);
@@ -121,6 +127,7 @@ async function main() {
       $('speed').textContent = `${f.speed.toFixed(1)} m/s`; $('heading').textContent = `${f.heading.toFixed(0)}°`;
       $('habitat').textContent = HABITAT_NAMES[tile.habitat.at(flight.pos.x, -flight.pos.z)] || '–';
       $('trees').textContent = `${veg.count.toLocaleString()} near · ${far.count.toLocaleString()} far`;
+      identify.tick(now);
       const h = Math.floor(state.hour), mnt = Math.round((state.hour - h) * 60); $('timeLabel').textContent = `${h}:${String(mnt).padStart(2, '0')} · sun ${(sun.elevation * 180 / Math.PI).toFixed(0)}°`;
     }
     requestAnimationFrame(frame);

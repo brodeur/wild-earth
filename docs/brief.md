@@ -54,6 +54,23 @@ is live; the others are stable places you can go. Joining is three choices: wher
 when, who. Persistent state belongs to a world. Whether state flows forward from one
 season's world to the next is still open (see the decision log). (Added 2026-10-23.)
 
+## Direction (2026-10-24)
+
+Push the browser as far as it will go before any native engine. Then the first game:
+the acorn game as a living world where acorn woodpeckers, western gray squirrels and
+common ravens all collect acorns in their own ways, many of each species are always
+present, controlled by AI or by people, and a species-level leaderboard keeps score.
+The goal of the game is to recognise one's home in a new way; realism serves
+recognition. The open question is whether an open-source engine can be made to
+astonish people the way Unreal does, or whether the browser plus real-place data is
+itself the astonishing thing.
+
+## Success metric for the demo
+
+Someone who lives in the tile can fly from the tile centre to their own hill from the
+air, without the mini-map. When that is true the world is real enough, whatever engine
+drew it. (Adopted 2026-10-24.)
+
 ## The experience comes first
 
 The world has to be beautiful enough to carry itself before any loop is tuned. Motion

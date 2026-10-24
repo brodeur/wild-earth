@@ -1,0 +1,51 @@
+{
+  "id": "quercus_wislizeni",
+  "aliases": ["live_oak"],
+  "scientific": "Quercus wislizeni",
+  "common": "interior live oak",
+  "form": "tree",
+  "architectural_model": "Rauh",
+  "deciduous": false,
+  "height_m": [8, 15],
+  "variants": 3,
+  "description": "An evergreen oak with a dense, dark green, rounded crown, often several trunks, and small shiny leaves that are smooth-edged or spiny like holly; 8-15 m tall here. It grows on steeper, moister slopes and along ravines through the blue oak woodland and up into the lower conifer forest, and California scrub-jays bury its acorns, planting new oaks with the ones they never come back for.",
+  "season_notes": {
+    "winter": "Evergreen: still in full dark leaf, the green that picks it out among the bare blue oaks.",
+    "spring": "New pale leaves and catkins (March-May); the flowers become acorns that take two years to ripen.",
+    "summer": "A dense crown casting the deepest shade in the woodland; last year's flowers are now small green acorns.",
+    "fall": "Acorns that began in the spring of last year ripen and drop (September-November)."
+  },
+  "status": "agent draft, needs local sign-off",
+  "trunk": {
+    "length_ratio": 0.5, "radius_ratio": 0.05, "taper": 0.6, "flare": 1.35,
+    "bole_ratio": 0.22, "base_size": 0.22,
+    "curve_deg": 18, "curve_var_deg": 15, "segments": 5, "lean_deg": 8,
+    "stems": [1, 2], "stem_spread_deg": 25,
+    "split_prob": 0.5, "split_count": 2, "split_angle_deg": 30,
+    "bark_rgb": [92, 88, 82], "bark_pattern": "furrowed", "twig_rgb": [85, 80, 72]
+  },
+  "crown": { "shape": "hemispherical" },
+  "levels": [
+    { "count": 11, "down_angle_deg": 42, "down_angle_var_deg": 15, "rotation_deg": 140, "rotation_var_deg": 30,
+      "length_ratio": 0.85, "length_var": 0.2, "curve_deg": 15, "curve_var_deg": 15, "tropism": 0.04,
+      "taper": 0.9, "radius_ratio": 0.45, "segments": 4 },
+    { "count": 9, "start": 0.15, "down_angle_deg": 50, "down_angle_var_deg": 15, "rotation_deg": 140, "rotation_var_deg": 30,
+      "length_ratio": 0.5, "length_var": 0.25, "curve_deg": 20, "curve_var_deg": 15, "tropism": 0.04,
+      "taper": 1.0, "radius_ratio": 0.45, "segments": 2 }
+  ],
+  "foliage": {
+    "type": "broadleaf", "leaf_size_m": 0.04, "leaf_shape": "oval", "cluster_m": 1.5, "density": 16,
+    "start": 0.0, "parent_start": 0.4, "orientation": "outward",
+    "colors": { "winter": [56, 76, 48], "spring": [82, 108, 58], "summer": [60, 82, 50], "fall": [62, 82, 50] },
+    "leaf_on": { "winter": 1.0, "spring": 1.0, "summer": 1.0, "fall": 1.0 }
+  },
+  "lod": { "near_tris_budget": 2000, "near_sides": [7, 5, 0], "mid_blobs": 5, "mid_branches": 4, "mid_blob_scale": 0.95 },
+  "notes": "Evergreen oak of foothill woodland, canyons and chaparral edges; a tree 8-22 m or a shrub on poor sites. Here 8-15 m. Often several trunks from the base or a low fork (stems 1-2, split_prob 0.5), short bole, dense rounded dark crown that hides most of the wood, so mid LOD draws only four limbs. Rauh's model with a decurrent crown like blue oak but denser (more level-1 and level-2 branches, higher foliage density). Bark smooth grey when young, darker grey and furrowed with age. Leaves 2.5-5 cm, oblong to lanceolate, flat (not cupped like coast live oak), entire or spiny-toothed, glossy dark green on both faces; new growth in spring is lighter. No seasonal leaf drop to speak of (leaves live about two years), so leaf_on is 1 all year.",
+  "sources": [
+    "https://www.fs.usda.gov/database/feis/plants/tree/quewis/all.html",
+    "https://en.wikipedia.org/wiki/Quercus_wislizeni",
+    "https://ucjeps.berkeley.edu/eflora/ (Quercus wislizeni)"
+  ],
+  "authors": ["Wild Earth (agent draft, 2026-10-23); needs local sign-off"],
+  "license": "CC BY-SA 4.0"
+}

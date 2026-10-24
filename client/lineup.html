@@ -1,0 +1,43 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Species lineup</title>
+<style>
+  html,body { margin:0; height:100%; background:#d7dde0; color:#1d2420; font:13px/1.4 -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif; overflow:hidden; }
+  canvas { display:block; }
+  #panel { position:fixed; left:14px; top:12px; background:#ffffffd9; padding:10px 12px; border-radius:8px; width:240px; box-shadow:0 1px 4px #0002; }
+  #panel h1 { font-size:14px; margin:0 0 6px; }
+  #panel label { display:block; color:#56625a; margin:8px 0 2px; font-size:11px; text-transform:uppercase; letter-spacing:.06em; }
+  #panel select { width:100%; font:inherit; padding:3px 4px; }
+  #panel .check { text-transform:none; letter-spacing:0; font-size:13px; color:#1d2420; display:flex; gap:6px; align-items:center; }
+  #panel .muted, .lab .muted { color:#5d6a62; }
+  #warn { color:#9a3b12; font-size:12px; margin-top:6px; }
+  #labels { position:fixed; inset:0; pointer-events:none; }
+  .lab { position:absolute; transform:translate(-50%, 0); background:#ffffffd9; padding:4px 8px; border-radius:6px; font-size:12px; white-space:nowrap; text-align:center; box-shadow:0 1px 3px #0002; }
+  .lab b { font-size:13px; }
+  .lab i { color:#2f3b33; }
+</style>
+<script type="importmap">
+{ "imports": { "three": "https://unpkg.com/three@0.170.0/build/three.module.js",
+               "three/addons/": "https://unpkg.com/three@0.170.0/examples/jsm/" } }
+</script>
+</head>
+<body>
+<div id="panel">
+  <h1>Species lineup</h1>
+  <div class="muted">library/species, three seeds each. Poles and ground bars are 5 m in 1 m bands.</div>
+  <label for="season">Season</label>
+  <select id="season"><option>winter</option><option>spring</option><option selected>summer</option><option>fall</option></select>
+  <label for="focus">View</label>
+  <select id="focus"><option value="all">all species</option></select>
+  <label class="check"><input type="checkbox" id="mid"> mid LOD (what you see past 180 m)</label>
+  <label class="check"><input type="checkbox" id="shadows" checked> shadows</label>
+  <div id="stats" class="muted" style="margin-top:8px"></div>
+  <div id="warn"></div>
+</div>
+<div id="labels"></div>
+<script type="module" src="src/lineup.js"></script>
+</body>
+</html>

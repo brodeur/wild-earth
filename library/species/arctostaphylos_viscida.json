@@ -1,0 +1,51 @@
+{
+  "id": "arctostaphylos_viscida",
+  "aliases": ["manzanita"],
+  "scientific": "Arctostaphylos viscida",
+  "common": "whiteleaf manzanita",
+  "form": "shrub",
+  "architectural_model": "Leeuwenberg",
+  "deciduous": false,
+  "height_m": [1.5, 3.5],
+  "variants": 3,
+  "description": "A crooked, many-stemmed shrub with smooth, polished red-brown bark and stiff, round, pale gray-green (almost white) leaves held edge-on to the sun; 1.5-3.5 m tall here. It grows in chaparral and in openings of the woodland and pine forest on dry, rocky ridges, and its late-winter flowers are among the first nectar of the year for hummingbirds and native bees, while its berries feed birds, foxes, coyotes and bears.",
+  "season_notes": {
+    "winter": "Flowering in late winter (February-March): small white-to-pink urn-shaped flowers, early nectar for hummingbirds and native bees.",
+    "spring": "Flowers give way to sticky green berries.",
+    "summer": "The berries ('little apples', which is what manzanita means) ripen red-brown, and the red bark peels in thin curls.",
+    "fall": "Evergreen and dormant through the dry season; next winter's flower buds are already set at the branch tips."
+  },
+  "status": "agent draft, needs local sign-off",
+  "trunk": {
+    "length_ratio": 0.75, "radius_ratio": 0.035, "taper": 0.7, "flare": 1.6,
+    "bole_ratio": 0.1, "base_size": 0.25,
+    "curve_deg": 35, "curve_var_deg": 30, "segments": 4, "lean_deg": 0,
+    "stems": [3, 5], "stem_spread_deg": 35,
+    "split_prob": 0.0, "split_count": 2, "split_angle_deg": 20,
+    "bark_rgb": [116, 40, 28], "bark_pattern": "smooth", "twig_rgb": [128, 52, 36]
+  },
+  "crown": { "shape": "hemispherical" },
+  "levels": [
+    { "count": 5, "down_angle_deg": 35, "down_angle_var_deg": 15, "rotation_deg": 140, "rotation_var_deg": 30,
+      "length_ratio": 0.55, "length_var": 0.25, "curve_deg": 30, "curve_var_deg": 25, "tropism": 0.08,
+      "taper": 0.9, "radius_ratio": 0.6, "segments": 2 },
+    { "count": 4, "start": 0.3, "down_angle_deg": 35, "down_angle_var_deg": 15, "rotation_deg": 140, "rotation_var_deg": 30,
+      "length_ratio": 0.45, "length_var": 0.25, "curve_deg": 20, "curve_var_deg": 20, "tropism": 0.08,
+      "taper": 1.0, "radius_ratio": 0.5, "segments": 1 }
+  ],
+  "foliage": {
+    "type": "broadleaf", "leaf_size_m": 0.035, "leaf_shape": "oval", "cluster_m": 0.5, "density": 18,
+    "start": 0.35, "orientation": "vertical",
+    "colors": { "winter": [100, 114, 94], "spring": [122, 122, 106], "summer": [110, 122, 100], "fall": [104, 116, 96] },
+    "leaf_on": { "winter": 1.0, "spring": 1.0, "summer": 1.0, "fall": 1.0 }
+  },
+  "lod": { "near_tris_budget": 1000, "near_sides": [5, 3, 0], "mid_blobs": 3, "mid_branches": 6 },
+  "notes": "Common manzanita of foothill chaparral and the understory of open oak and pine woodland, 1-4 m. An obligate seeder (no burl): a short base divides at once into several crooked, stiff, upswept stems (stems 3-5 spreading 35 degrees, high curve variance, upward tropism). Bark smooth, polished red-brown to mahogany, peeling in thin curls: the most recognisable thing about it, so the bark colour is saturated and the bark pattern smooth. Branching is sympodial with terminal inflorescences (Leeuwenberg's model): each shoot ends in a flower cluster and growth continues from lateral buds below it, which gives the forked, zigzag look. Leaves 2-5 cm, oval to round, thick, glaucous whitish grey-green, and held vertically (edge-on to the midday sun): orientation 'vertical'. Flowers white to pink, January-April, which lightens the spring colour. Evergreen.",
+  "sources": [
+    "https://www.fs.usda.gov/database/feis/plants/shrub/arcvis/all.html",
+    "https://en.wikipedia.org/wiki/Arctostaphylos_viscida",
+    "https://ucjeps.berkeley.edu/eflora/ (Arctostaphylos viscida)"
+  ],
+  "authors": ["Wild Earth (agent draft, 2026-10-23); needs local sign-off"],
+  "license": "CC BY-SA 4.0"
+}

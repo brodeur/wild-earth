@@ -1,0 +1,53 @@
+{
+  "id": "pinus_ponderosa",
+  "aliases": ["ponderosa"],
+  "scientific": "Pinus ponderosa",
+  "common": "ponderosa pine",
+  "form": "tree",
+  "architectural_model": "Rauh",
+  "deciduous": false,
+  "height_m": [22, 38],
+  "variants": 3,
+  "description": "A tall, straight pine with a clear trunk, thick bark broken into cinnamon-orange plates between black fissures, and long needles (12-25 cm, in threes) in tufts at the branch tips; 22-38 m tall here. It grows above the oak woodland in the lower conifer forest, from about 600 m up, and its thick bark lets old trees survive the frequent low fires that once kept these forests open.",
+  "season_notes": {
+    "winter": "Evergreen: needles stay on for about three years, so the crown is full in every season.",
+    "spring": "Pollen cones release clouds of yellow pollen (May-June) and new shoots extend at the branch tips.",
+    "summer": "Second-year seed cones grow to full size and turn from green to red-brown.",
+    "fall": "Cones open and drop winged seeds (September-October) for squirrels, chipmunks and birds; the oldest needles yellow and fall."
+  },
+  "status": "agent draft, needs local sign-off",
+  "trunk": {
+    "length_ratio": 1.0, "radius_ratio": 0.03, "taper": 1.0, "flare": 1.25,
+    "bole_ratio": 0.45, "base_size": 0.45,
+    "curve_deg": 4, "curve_var_deg": 4, "segments": 7, "lean_deg": 3,
+    "stems": [1, 1], "stem_spread_deg": 0,
+    "split_prob": 0.03, "split_count": 2, "split_angle_deg": 12,
+    "bark_rgb": [176, 108, 66], "bark_pattern": "plates", "twig_rgb": [92, 74, 60]
+  },
+  "crown": { "shape": "tapered_cylindrical" },
+  "levels": [
+    { "count": 30, "whorl": 3, "down_angle_deg": 92, "down_angle_tip_deg": 58, "down_angle_var_deg": 10, "rotation_deg": 37, "rotation_var_deg": 25,
+      "length_ratio": 0.26, "length_var": 0.2, "curve_deg": 0, "curve_var_deg": 16, "tropism": 0.02,
+      "droop_deg": 34, "upturn_deg": 40,
+      "taper": 0.95, "radius_ratio": 0.32, "segments": 4 },
+    { "count": 6, "start": 0.3, "down_angle_deg": 50, "down_angle_var_deg": 15, "rotation_deg": -90, "rotation_var_deg": 30,
+      "length_ratio": 0.3, "length_var": 0.3, "curve_deg": 10, "curve_var_deg": 10, "tropism": 0.12,
+      "taper": 1.0, "radius_ratio": 0.5, "segments": 1 }
+  ],
+  "foliage": {
+    "type": "needle", "leaf_size_m": 0.2, "leaf_shape": "needle_cluster", "cluster_m": 1.8, "density": 6,
+    "start": 0.4, "parent_start": 0.35, "orientation": "along",
+    "colors": { "winter": [48, 70, 44], "spring": [60, 86, 48], "summer": [52, 78, 46], "fall": [58, 78, 44] },
+    "leaf_on": { "winter": 1.0, "spring": 1.0, "summer": 1.0, "fall": 1.0 }
+  },
+  "lod": { "near_tris_budget": 2000, "near_sides": [8, 3, 0], "mid_blobs": 5, "mid_branches": 6, "mid_blob_scale": 0.7 },
+  "notes": "The dominant pine of the lower montane conifer forest above the foothills. Mature trees here 22-38 m (to 70 m elsewhere), dbh 0.6-1.2 m (dbh/height about 0.03), with a tall, straight, barely tapering trunk clear of branches for nearly half its height (bole_ratio and base_size 0.45; lower limbs self-prune). Excurrent Rauh's model: the leader runs to the top (length_ratio 1, taper 1) and level-1 branches are whorled (about three per visible whorl in old trees), roughly horizontal: the lowest droop slightly below horizontal (98 degrees) and arch down and turn up again at the tips (droop_deg 34 over the inner half, upturn_deg 40 over the outer half, because in-world review found the limbs too straight), the upper ones ascend (58 degrees). Old crowns are open, narrowly rounded to flat-topped, hence the tapered_cylindrical shape (long branches persist near the top). Bark of mature 'yellow pine' is the signature: thick cinnamon-orange plates separated by deep black fissures ('plates' pattern); young trees ('blackjacks') are dark. Needles 12-25 cm in bundles of three, dark yellow-green, held in dense brush-like tufts at the ends of the twigs, so level-2 twigs carry only foliage (near_sides 0) and cards are needle_cluster tufts aligned with the twig.",
+  "sources": [
+    "https://www.fs.usda.gov/database/feis/plants/tree/pinponp/all.html",
+    "https://en.wikipedia.org/wiki/Pinus_ponderosa",
+    "Oliver and Ryker 1990, Silvics of North America vol. 1, Pinus ponderosa",
+    "Halle, Oldeman and Tomlinson 1978 (Rauh's model; Pinus as example)"
+  ],
+  "authors": ["Wild Earth (agent draft, 2026-10-23); needs local sign-off"],
+  "license": "CC BY-SA 4.0"
+}

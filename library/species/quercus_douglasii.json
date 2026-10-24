@@ -1,0 +1,52 @@
+{
+  "id": "quercus_douglasii",
+  "aliases": ["blue_oak"],
+  "scientific": "Quercus douglasii",
+  "common": "blue oak",
+  "form": "tree",
+  "architectural_model": "Rauh",
+  "deciduous": true,
+  "height_m": [6, 12],
+  "variants": 3,
+  "description": "A small, round-crowned oak with blue-green, shallowly lobed leaves and pale gray bark broken into small checks, usually 6-12 m tall here. It covers the dry, rocky slopes of the foothill woodland below about 1,200 m, often as open savanna with grass between the trees, and its acorns feed deer, western gray squirrels, scrub-jays and acorn woodpeckers.",
+  "season_notes": {
+    "winter": "Bare: blue oak drops its leaves in late fall, and the checkered gray bark and clumps of oak mistletoe show until leaf-out in March.",
+    "spring": "Leafing out in pale green with hanging catkins (March-April); this year's acorns start on the new twigs.",
+    "summer": "In full blue-gray leaf, the colour that names it; in a dry year it drops leaves early to save water.",
+    "fall": "Acorns ripen and drop (September-October), then the leaves brown and fall."
+  },
+  "status": "agent draft, needs local sign-off",
+  "trunk": {
+    "length_ratio": 0.55, "radius_ratio": 0.05, "taper": 0.6, "flare": 1.3,
+    "bole_ratio": 0.3, "base_size": 0.3,
+    "curve_deg": 15, "curve_var_deg": 14, "segments": 5, "lean_deg": 6,
+    "stems": [1, 1], "stem_spread_deg": 0,
+    "split_prob": 0.35, "split_count": 2, "split_angle_deg": 28,
+    "bark_rgb": [140, 136, 126], "bark_pattern": "checkered", "twig_rgb": [112, 104, 94]
+  },
+  "crown": { "shape": "hemispherical" },
+  "levels": [
+    { "count": 8, "down_angle_deg": 52, "down_angle_var_deg": 15, "rotation_deg": 140, "rotation_var_deg": 30,
+      "length_ratio": 0.85, "length_var": 0.2, "curve_deg": 22, "curve_var_deg": 18, "tropism": 0.04,
+      "taper": 0.9, "radius_ratio": 0.55, "segments": 4 },
+    { "count": 7, "start": 0.2, "down_angle_deg": 45, "down_angle_var_deg": 15, "rotation_deg": 140, "rotation_var_deg": 30,
+      "length_ratio": 0.5, "length_var": 0.25, "curve_deg": 20, "curve_var_deg": 20, "tropism": 0.06,
+      "taper": 1.0, "radius_ratio": 0.45, "segments": 2 }
+  ],
+  "foliage": {
+    "type": "broadleaf", "leaf_size_m": 0.06, "leaf_shape": "lobed", "cluster_m": 1.0, "density": 8,
+    "start": 0.25, "orientation": "outward",
+    "colors": { "winter": [138, 122, 96], "spring": [134, 160, 92], "summer": [118, 140, 112], "fall": [156, 138, 90] },
+    "leaf_on": { "winter": 0.0, "spring": 1.0, "summer": 0.95, "fall": 0.6 }
+  },
+  "lod": { "near_tris_budget": 1800, "near_sides": [7, 5, 3], "mid_blobs": 5, "mid_branches": 6, "mid_blob_scale": 0.85 },
+  "notes": "Endemic to the California foothills; the signature tree of foothill savanna and oak woodland on dry, shallow soils. Usually 6-12 m (rarely to 20 m) with a single short, stout trunk (dbh 0.3-0.6 m, so dbh/height about 0.05), a clear bole of 1.5-3 m and a broad, rounded, irregular crown about as wide as the tree is tall. Oaks follow Rauh's model (rhythmic growth, orthotropic branches) but the crown is decurrent: the leader dissolves into a few big ascending limbs, so trunk.length_ratio is short (0.55) and level-1 limbs are long (0.85 of the trunk, hemispherical shape: the lowest limbs are the longest and most spreading). Limbs are crooked, hence high curve variance. Bark is light grey, finely checkered into small scales (the lightest-barked oak in the foothills). Leaves 3-10 cm, oblong, entire to shallowly lobed, distinctly blue-green and glaucous in summer; leaf_shape 'lobed'. Drought-deciduous: leaves out March-April with fresh yellow-green colour, blue-green by June, yellow-brown and partly shed by fall (shed earlier in dry years), bare December-February, hence leaf_on. Trunks of older trees often fork at the bole (split_prob 0.35). Acorns and stash holes in the acorn game sit on the straight bole (stem.len).",
+  "sources": [
+    "https://www.fs.usda.gov/database/feis/plants/tree/quedou/all.html",
+    "https://en.wikipedia.org/wiki/Quercus_douglasii",
+    "https://ucjeps.berkeley.edu/eflora/ (Quercus douglasii)",
+    "Halle, Oldeman and Tomlinson 1978, Tropical Trees and Forests (Rauh's model; Quercus as example)"
+  ],
+  "authors": ["Wild Earth (agent draft, 2026-10-23); needs local sign-off"],
+  "license": "CC BY-SA 4.0"
+}

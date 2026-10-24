@@ -181,6 +181,18 @@ resolved at run time from species, not rasters.
 `squirrel`, `fox`, `deer`, `bird`). `confidence` is `unverified`, `verified` or
 `flagged`, set from the viewer.
 
+## Species library
+
+Plants are not in the package. A tile references plant species by id only (the same
+lowercase scientific-name codes as `species.json`, e.g. `quercus_douglasii`), through
+the habitat classes and species mixes, and never carries tree or shrub geometry, tree
+lists or positions. The client grows every plant from that species' parameter file in
+the shared library, `library/species/<id>.json`, placing it per 30 m cell with a seed
+derived from the cell's coordinates, so every node renders the same tree in the same
+place. A species written once is available to every tile and region that has it.
+Parameter files are CC BY-SA 4.0 and are reviewed on the lineup page; the schema and
+the review process are in [species-library.md](species-library.md).
+
 ## perception.json
 
 ```json

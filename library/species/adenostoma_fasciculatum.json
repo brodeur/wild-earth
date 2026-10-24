@@ -1,0 +1,48 @@
+{
+  "id": "adenostoma_fasciculatum",
+  "aliases": ["chamise"],
+  "scientific": "Adenostoma fasciculatum",
+  "common": "chamise",
+  "form": "shrub",
+  "architectural_model": "Leeuwenberg (provisional)",
+  "deciduous": false,
+  "height_m": [1.2, 2.4],
+  "variants": 3,
+  "description": "A dense, many-stemmed shrub with tiny needle-like leaves in bundles along stiff, upright branches, and clusters of small white flowers at the tips in early summer; 1.2-2.4 m tall here. It is the most common chaparral shrub in California, forming thick stands on hot, dry slopes with thin soil, where it resprouts from a woody burl after fire and gives cover to quail, brush rabbits and wrentits.",
+  "season_notes": {
+    "winter": "Evergreen: winter rain brings new shoots, and stands burned in recent years sprout from their burls.",
+    "spring": "Fresh green growth, then clusters of small white flowers at the branch tips (May-June).",
+    "summer": "The flowers fade to rust-brown; the resinous leaves dry out, and chamise is one of the most flammable plants in the chaparral.",
+    "fall": "Rust-brown seed heads still cap the stems while the shrubs wait out the dry season for the first rain."
+  },
+  "status": "agent draft, needs local sign-off",
+  "trunk": {
+    "length_ratio": 0.85, "radius_ratio": 0.02, "taper": 0.85, "flare": 1.5,
+    "bole_ratio": 0.05, "base_size": 0.3,
+    "curve_deg": 15, "curve_var_deg": 20, "segments": 3, "lean_deg": 0,
+    "stems": [6, 10], "stem_spread_deg": 22,
+    "split_prob": 0.0, "split_count": 2, "split_angle_deg": 20,
+    "bark_rgb": [96, 76, 62], "bark_pattern": "furrowed", "twig_rgb": [106, 90, 74]
+  },
+  "crown": { "shape": "hemispherical" },
+  "levels": [
+    { "count": 4, "down_angle_deg": 28, "down_angle_var_deg": 10, "rotation_deg": 140, "rotation_var_deg": 30,
+      "length_ratio": 0.42, "length_var": 0.3, "curve_deg": 10, "curve_var_deg": 15, "tropism": 0.1,
+      "taper": 1.0, "radius_ratio": 0.6, "segments": 1 }
+  ],
+  "foliage": {
+    "type": "needle", "leaf_size_m": 0.008, "leaf_shape": "needle_fascicle", "cluster_m": 0.42, "density": 24,
+    "start": 0.3, "orientation": "outward",
+    "colors": { "winter": [82, 96, 64], "spring": [150, 152, 120], "summer": [116, 120, 94], "fall": [124, 104, 80] },
+    "leaf_on": { "winter": 1.0, "spring": 1.0, "summer": 1.0, "fall": 1.0 }
+  },
+  "lod": { "near_tris_budget": 900, "near_sides": [3, 3], "mid_blobs": 3, "mid_branches": 0, "mid_sides": [3, 3] },
+  "notes": "The commonest chaparral shrub in California; dense, even stands on dry slopes. 0.6-3.5 m, here 1.2-2.4 m. Many slender stems rise from a basal burl (lignotuber), from which it resprouts after fire: stems 6-10 spreading about 22 degrees, thin (dbh/height 0.02). Stiff, upright, twiggy branchlets (one dense branch level, steep down angle, upward tropism). Bark grey-brown and shreddy on old stems. Leaves 4-10 mm, linear and needle-like, in bundles (fascicles) on short spur shoots, so the foliage is a fine dark-to-grey-green texture rather than leaves you can see: leaf_shape 'needle_fascicle'. Colour by season: darkest and greenest after winter rain, cream-tinged in late spring when dense terminal panicles of small white flowers open (May-June), greyer and dustier through the summer drought, rusty brown in fall from the dried flower heads. The architectural model is provisional: branching is sympodial with terminal inflorescences, which fits Leeuwenberg's model, but the basitonic, resprouting multi-stem habit is the stronger visual cue and is carried by trunk.stems. Needs a botanist's check.",
+  "sources": [
+    "https://www.fs.usda.gov/database/feis/plants/shrub/adefas/all.html",
+    "https://en.wikipedia.org/wiki/Adenostoma_fasciculatum",
+    "https://ucjeps.berkeley.edu/eflora/ (Adenostoma fasciculatum)"
+  ],
+  "authors": ["Wild Earth (agent draft, 2026-10-23); needs local sign-off"],
+  "license": "CC BY-SA 4.0"
+}

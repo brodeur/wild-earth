@@ -25,6 +25,14 @@ sequenced; Parked is in the brief but deliberately not started.
   saved per world (tile plus season) in the browser. Flight gained hover (H and a
   button), S slows to a stop then reverses, and slower pitch and bank settling.
 
+- Species library, 2026-10-24: parametric trees from per-species parameter files
+  (`library/species/`, Weber-Penn style generator, Hallé architectural model per
+  species, two levels of detail, far foliage as leaf cards), six foothill species as
+  agent drafts awaiting local sign-off, and a lineup review page (`client/lineup.html`).
+  Start view went from ~38 to ~50-60 fps. Weak: chaparral reads far too sparse (shrub
+  counts were tuned for blobs), ponderosa limbs too straight, leaf cards alias under
+  5 m, no wind in canopies yet.
+
 ## Next: the visual pass, in order of effect per hour
 
 1. ~~Horizon~~ done 2026-10-23: two crossed-quad impostors with a canopy cap per
@@ -55,6 +63,30 @@ sequenced; Parked is in the brief but deliberately not started.
 
 Then judge the result against the "beautiful enough" bar and decide whether the
 browser stays the renderer.
+
+## Browser push (before any native engine)
+
+1. WebGPU renderer evaluation (three.js WebGPURenderer): compute-driven grass at
+   Tsushima scale, far more foliage instances, and a path to real-time GI.
+2. Cast shadows from trees and terrain (cascaded shadow maps), canopy wind.
+3. Chaparral density and a shrub-field layer; octahedral impostors for far trees.
+4. Close-range grass band (ground-colour sampling, camera-aware tilt, wind waves,
+   shells), already specified.
+5. Volumetric clouds and water in the streams.
+   Judge each against the success metric in the brief (a resident finds their own hill
+   from the air without the mini-map), not against Unreal.
+
+## The acorn game, version two
+
+- Three player species: acorn woodpecker (granary trees drilled with hundreds of
+  holes), western gray squirrel (scatter-hoarding in the ground), common raven
+  (caching). Each has its own pickup, stash and theft rules.
+- Many of each species always present, driven by AI foraging behaviour; a person can
+  take over any individual. Perception matrix decides who sees whom.
+- Species-level leaderboard per world (tile plus season), persistent on the server.
+- Needs: acorn woodpecker added to the species list and pipeline; an authoritative game
+  server (the dev server grows into it; Rust is the candidate for the real node);
+  WebSocket multiplayer; AI behaviour trees driven by the activity calendar.
 
 ## Then
 

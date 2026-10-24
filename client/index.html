@@ -46,6 +46,20 @@
   #gameHint { font-size:12px; margin-top:4px; max-width:280px; }
   #game.flash { animation:gameflash .7s ease-out; }
   @keyframes gameflash { from { background:#8a5a1ccc; } to { background:#0f1512bb; } }
+  #hud .row.wide b { text-align:right; max-width:300px; font-weight:500; }
+  #hud .row.wide b i { color:#b7c4ba; font-weight:400; }
+  #speciesCard { position:fixed; left:14px; bottom:58px; width:320px; max-width:calc(100vw - 28px); max-height:calc(100vh - 70px); overflow:auto; box-sizing:border-box; z-index:5;
+    background:#0f1512dd; padding:10px 12px; border-radius:8px; backdrop-filter:blur(4px); color:#b7c4ba; }
+  #speciesCard.hidden { display:none; }
+  #speciesCard h1 { font-size:15px; margin:0; color:#e6ede7; padding-right:24px; }
+  #speciesCard .sci { margin:0 0 6px; color:#b7c4ba; }
+  #speciesCard .row { display:flex; justify-content:space-between; gap:12px; }
+  #speciesCard .row b { color:#e6ede7; font-weight:600; text-align:right; }
+  #speciesCard p { margin:6px 0 0; color:#d3ddd5; font-size:12.5px; }
+  #speciesCard p.season b { color:#e6ede7; }
+  #speciesCard .status { margin-top:6px; font-size:11px; color:#8fa094; }
+  #speciesCard .close { position:absolute; right:8px; top:6px; background:none; border:none; color:#b7c4ba; font-size:18px; line-height:1; cursor:pointer; padding:2px 6px; }
+  #speciesCard .close:hover { color:#e6ede7; }
 </style>
 <script type="importmap">
 { "imports": { "three": "https://unpkg.com/three@0.170.0/build/three.module.js",
@@ -60,6 +74,8 @@
   <div class="row"><span>airspeed</span><b id="speed">–</b></div>
   <div class="row"><span>heading</span><b id="heading">–</b></div>
   <div class="row"><span>below me</span><b id="habitat">–</b></div>
+  <div class="row wide"><span>nearest tree</span><b id="nearestTree">–</b></div>
+  <div class="row wide"><span>around you</span><b id="aroundYou">–</b></div>
   <div class="row"><span>trees in view</span><b id="trees">–</b></div>
 </div>
 <div id="panel">
@@ -79,7 +95,8 @@
   <label>Perceives</label>
   <div class="muted" id="perceives">–</div>
 </div>
-<div id="help"><kbd>↑</kbd><kbd>↓</kbd> pitch · <kbd>←</kbd><kbd>→</kbd> turn · <kbd>W</kbd><kbd>S</kbd> speed · <kbd>X</kbd><kbd>Z</kbd> climb / descend · <kbd>space</kbd> flap · <kbd>H</kbd> hover · <kbd>V</kbd> view · <kbd>R</kbd> reset · <kbd>M</kbd> map · <kbd>G</kbd> roads · drag mouse to look</div>
+<div id="help"><kbd>↑</kbd><kbd>↓</kbd> pitch · <kbd>←</kbd><kbd>→</kbd> turn · <kbd>W</kbd><kbd>S</kbd> speed · <kbd>X</kbd><kbd>Z</kbd> climb / descend · <kbd>space</kbd> flap · <kbd>H</kbd> hover · <kbd>V</kbd> view · <kbd>R</kbd> reset · <kbd>M</kbd> map · <kbd>G</kbd> roads · <kbd>T</kbd> tags · click a tree to identify · drag mouse to look</div>
+<div id="speciesCard" class="hidden"></div>
 <div id="game" class="hidden">
   <h1>acorn stash</h1>
   <div class="row"><span>carrying</span><b id="gameCarried">0 / 3</b></div>
