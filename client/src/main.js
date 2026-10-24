@@ -15,6 +15,7 @@ import { SEASON_LOOK, seasonOfDate, sunDirection } from './season.js';
 import { AcornGame } from './acorns.js';
 import { Identify } from './identify.js';
 import { PlaceNames } from './placenames.js';
+import { Soundscape } from './sound.js';
 
 const $ = id => document.getElementById(id);
 const status = t => { $('status').textContent = t; $('status').classList.toggle('hidden', !t); };
@@ -162,8 +163,11 @@ async function main() {
   });
   $('peekBtn').addEventListener('click', e => { if (e.detail === 0) setPeek(!peek.want); });   // keyboard activation toggles
 
+  // Soundscape (sound.js): starts on the first click or key; N mutes, C calls.
+  const sound = new Soundscape({ tile, flight, raven, camera, els: { button: $('soundBtn'), volume: $('soundVol') } });
+
   status('');
-  window.__we = { tile, flight, raven, camera, veg, terrain, far, grass, roads, scene, renderer, minimap, atmosphere, sky, acorns, identify, places, peek, setPeek };   // debugging handle
+  window.__we = { tile, flight, raven, camera, veg, terrain, far, grass, roads, scene, renderer, minimap, atmosphere, sky, acorns, identify, places, peek, setPeek, sound };   // debugging handle
 
   let last = performance.now(), hudT = 0;
   function frame(now) {
@@ -180,6 +184,7 @@ async function main() {
     acorns.update(dt, camera, s);
     if (!peek.shown) terrain.setLook(look);
     renderer.render(scene, camera);
+    sound.update(dt, { season: s, hour: state.hour, sunElevation: sun.elevation });
     if (peek.pending !== null) { if (peek.pending !== peek.shown) { crossFade(); applyPeek(peek.pending); } peek.pending = null; }
     minimap.update(flight.pos, f.heading);
     hudT += dt;
@@ -192,6 +197,7 @@ async function main() {
       $('trees').textContent = peek.shown ? 'hidden (present day)' : `${veg.count.toLocaleString()} near · ${far.count.toLocaleString()} far`;
       identify.tick(now);
       const where = places.describe(flight.pos.x, -flight.pos.z);
+      $('soundNow').textContent = sound.describe();
       $('over').textContent = where.text; minimap.place = where.place;
       const h = Math.floor(state.hour), mnt = Math.round((state.hour - h) * 60); $('timeLabel').textContent = `${h}:${String(mnt).padStart(2, '0')} · sun ${(sun.elevation * 180 / Math.PI).toFixed(0)}°`;
     }

@@ -64,6 +64,10 @@
   #peekBtn.on { background:#3a3320; border-color:#7a6a3a; }
   #peekBanner { position:fixed; left:50%; top:12px; transform:translateX(-50%); z-index:6; background:#1b1708dd; border:1px solid #7a6a3a; color:#ffe9b0; padding:6px 16px; border-radius:16px; font-weight:600; letter-spacing:.04em; pointer-events:none; backdrop-filter:blur(4px); }
   #peekBanner.hidden { display:none; }
+  #soundRow { display:flex; gap:8px; align-items:center; margin-top:6px; }
+  #soundBtn { flex:none; background:#1f2a23; color:#e6ede7; border:1px solid #263128; border-radius:6px; padding:5px 10px; font:inherit; cursor:pointer; }
+  #soundBtn.on { background:#1d3340; border-color:#2f5a73; }
+  #panel #soundRow input[type=range] { flex:1; min-width:0; width:auto; }
   #peekFade { position:fixed; inset:0; width:100%; height:100%; pointer-events:none; opacity:0; }
 </style>
 <script type="importmap">
@@ -83,6 +87,7 @@
   <div class="row wide"><span>nearest tree</span><b id="nearestTree">–</b></div>
   <div class="row wide"><span>around you</span><b id="aroundYou">–</b></div>
   <div class="row"><span>trees in view</span><b id="trees">–</b></div>
+  <div class="row wide"><span>sound</span><b id="soundNow">–</b></div>
 </div>
 <div id="panel">
   <label for="gotoInput">Location</label>
@@ -91,6 +96,7 @@
   <button id="gameBtn" title="acorn stash: pick up glowing acorns under oaks and cache them in stash holes">Start game</button>
   <button id="hoverBtn" title="hold position and look around (H)">Hover</button>
   <button id="peekBtn" title="hold to see today's world at this spot (P); tap to toggle on touch">Present day</button>
+  <div id="soundRow"><button id="soundBtn">Sound</button><input id="soundVol" type="range" min="0" max="1" step="0.05" value="0.5" title="master volume" aria-label="master volume"></div>
   <label>Texture</label>
   <div class="seg"><button id="texImagery" title="NAIP 2022 with buildings, lots and fields erased">Imagery</button><button id="texRewild" class="on" title="habitat colour over hillshade">Rewilded</button></div>
   <label>Season <span class="muted" id="seasonNote"></span></label>
@@ -102,7 +108,7 @@
   <label>Perceives</label>
   <div class="muted" id="perceives">–</div>
 </div>
-<div id="help"><kbd>↑</kbd><kbd>↓</kbd> pitch · <kbd>←</kbd><kbd>→</kbd> turn · <kbd>W</kbd><kbd>S</kbd> speed · <kbd>X</kbd><kbd>Z</kbd> climb / descend · <kbd>space</kbd> flap · <kbd>H</kbd> hover · <kbd>V</kbd> view · <kbd>R</kbd> reset · <kbd>M</kbd> map · <kbd>G</kbd> roads · <kbd>P</kbd> present day · <kbd>T</kbd> tags · click a tree to identify · drag mouse to look</div>
+<div id="help"><kbd>↑</kbd><kbd>↓</kbd> pitch · <kbd>←</kbd><kbd>→</kbd> turn · <kbd>W</kbd><kbd>S</kbd> speed · <kbd>X</kbd><kbd>Z</kbd> climb / descend · <kbd>space</kbd> flap · <kbd>H</kbd> hover · <kbd>V</kbd> view · <kbd>R</kbd> reset · <kbd>M</kbd> map · <kbd>G</kbd> roads · <kbd>P</kbd> present day · <kbd>T</kbd> tags · <kbd>N</kbd> mute · <kbd>C</kbd> call · click a tree to identify · drag mouse to look</div>
 <div id="speciesCard" class="hidden"></div>
 <div id="game" class="hidden">
   <h1>acorn stash</h1>
