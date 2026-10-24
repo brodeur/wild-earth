@@ -15,7 +15,7 @@
   38.73825606650576
  ],
  "size_m": 10000,
- "generated_at": "2026-10-24T06:46:48Z",
+ "generated_at": "2026-10-24T07:23:43Z",
  "generator": {
   "name": "wild-earth-pipeline",
   "version": "0.2.0"
@@ -49,24 +49,24 @@
    "path": "species/species.json",
    "kind": "table",
    "source": "gbif",
-   "count": 12,
-   "sha256": "9c77e5372dd1327cee725cf7ecbe24749b151da2fa9694f3e54787c9393de87d",
-   "bytes": 5310
+   "count": 14,
+   "sha256": "aaa65d9341d3fac244cb71c5469e21b83ff2ffae4c3a308e69cef17724749acc",
+   "bytes": 6188
   },
   "species.occurrences": {
    "path": "species/occurrences.geojson",
    "kind": "vector",
    "source": "gbif",
-   "feature_count": 3513,
-   "sha256": "6c940158acd814155a86b4140eff29efb4cb774b25e45d9f686bd52227c7df92",
-   "bytes": 1574058
+   "feature_count": 4528,
+   "sha256": "967c471e3c385084b8a222ee1b0f50f48da3aba2ed3692588518a03c13043ba8",
+   "bytes": 2023866
   },
   "species.seasonal": {
    "path": "species/seasonal.json",
    "kind": "table",
    "source": "gbif",
-   "sha256": "a9b032c72c6edf798f7f3cc9be1190bc3ed0de04583503b21435140f6cf528cf",
-   "bytes": 1392
+   "sha256": "1994447435e2170796c8cded1ee8a7ba1bf603d17ac79b3cd9b5d6a6c82a1abd",
+   "bytes": 1615
   },
   "species.inventory": {
    "path": "species/inventory.json",
@@ -78,14 +78,14 @@
   "perception": {
    "path": "perception.json",
    "kind": "table",
-   "sha256": "27a00546cdcc17e5196e256e75db0ac4d3a3a3be5b43ab34d4d5795b093c4bd7",
-   "bytes": 3128
+   "sha256": "3624729878515b5614e5176f6a5d3da2ee4e0e862fbc451efee3bf5432761386",
+   "bytes": 3918
   },
   "calendar": {
    "path": "calendar.json",
    "kind": "table",
-   "sha256": "c07aca1f3ba6c065363530fd63aa9e97c2eaad6c9223979c9bd583b15542c2f4",
-   "bytes": 10330
+   "sha256": "0e29872641cda472cf3ca2e4ccfb32606f3a2d1ffcf13971602a72885438ec7c",
+   "bytes": 11940
   },
   "hydro.flowlines": {
    "path": "hydro/flowlines.geojson",
@@ -986,6 +986,12 @@
    "step": "derive",
    "at": "2026-10-24T06:46:48Z",
    "seconds": 33.1,
+   "ok": true
+  },
+  {
+   "step": "species",
+   "at": "2026-10-24T07:23:43Z",
+   "seconds": 154.4,
    "ok": true
   }
  ]

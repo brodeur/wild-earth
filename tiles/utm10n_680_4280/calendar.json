@@ -440,6 +440,103 @@
     }
    ]
   },
+  "cyanocitta_stelleri": {
+   "winter": [
+    {
+     "activity": "forage",
+     "resources": [
+      "acorn_mast"
+     ],
+     "goal": "recover cached acorns in conifer and mixed forest"
+    }
+   ],
+   "spring": [
+    {
+     "activity": "nest",
+     "resources": [
+      "cover"
+     ],
+     "goal": "bulky nest in a young conifer"
+    },
+    {
+     "activity": "court",
+     "resources": []
+    }
+   ],
+   "summer": [
+    {
+     "activity": "rear",
+     "resources": [
+      "insects"
+     ],
+     "goal": "feed nestlings"
+    }
+   ],
+   "fall": [
+    {
+     "activity": "forage",
+     "resources": [
+      "acorn_mast"
+     ]
+    },
+    {
+     "activity": "cache",
+     "resources": [
+      "acorn_mast"
+     ],
+     "goal": "carry acorns up from the oaks and hoard them under the conifers"
+    }
+   ]
+  },
+  "cathartes_aura": {
+   "winter": [
+    {
+     "activity": "forage",
+     "resources": [
+      "carrion"
+     ],
+     "goal": "soar and sniff out carcasses"
+    }
+   ],
+   "spring": [
+    {
+     "activity": "forage",
+     "resources": [
+      "carrion"
+     ]
+    },
+    {
+     "activity": "court",
+     "resources": [],
+     "goal": "ground display, wings spread"
+    }
+   ],
+   "summer": [
+    {
+     "activity": "forage",
+     "resources": [
+      "carrion"
+     ]
+    },
+    {
+     "activity": "rear",
+     "resources": [
+      "cliff_or_snag",
+      "cavity"
+     ],
+     "goal": "raise chicks in a cliff or snag cavity, no nest built"
+    }
+   ],
+   "fall": [
+    {
+     "activity": "forage",
+     "resources": [
+      "carrion"
+     ],
+     "goal": "roost communally on snags"
+    }
+   ]
+  },
   "callipepla_californica": {
    "winter": [
     {
