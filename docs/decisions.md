@@ -155,3 +155,18 @@ input), a carry limit of three, acorn counts driven by the fall acorn_mast resou
 deterministic stash holes per tree, and persistence per world (tile plus season) in
 the browser as the first persistent player state. Rejected for now: competitors, cache
 recovery in winter, scoring.
+
+## 2026-10-24: third person, with a sourced raven
+
+Aaron's call: the player sees the raven, not just the world through its eyes. The
+camera chases from 5.5 m behind and 1.6 m above in the heading frame, follows half the
+pitch so a dive still shows the ground, smooths its offset (not its position, so forward
+flight never lags), and tilts a third of the bank into the horizon. V returns to first
+person. The bird is the CC0 "Raven" by Teh_Bucket (OpenGameArt, 2015, ~1.2k triangles
+after the mirror), exported from Blender 4.1 to `client/assets/raven.glb` with its fly
+cycle and a glide clip added by holding the cycle's frame 28 (wings out, tips just above
+the shoulders); the client scales it to a 1.3 m wingspan and relights it with the
+lambert-plus-atmosphere material the trees use. Wings beat while climbing, boosting or
+flapping and glide otherwise, cross-faded. This is the "rigged animals are sourced"
+exception in practice. Rejected: a paid crow (Nestaeric, $68, 22 clips) until the look
+of the world asks for feather detail; a Blender-free path (the file is .blend only).

@@ -4,6 +4,7 @@ import { Terrain } from './terrain.js';
 import { SkyDome } from './sky.js';
 import { Atmosphere } from './atmosphere.js';
 import { RavenFlight } from './flight.js';
+import { Raven } from './raven.js';
 import { Vegetation } from './vegetation.js';
 import { Impostors } from './impostors.js';
 import { Grass } from './grass.js';
@@ -43,6 +44,8 @@ async function main() {
   const grass = new Grass(tile, scene);
   const roads = new RoadsOverlay(tile, scene);   // ghost roads, G to toggle
   const flight = new RavenFlight(camera, tile.heights, renderer.domElement);
+  scene.add(flight.body);
+  const raven = new Raven(flight.body, atmosphere);   // the bird you see from the chase camera
   flight.reset(tile.size / 2, -tile.size / 2, 150);
   veg.radius = +$('detail').value; veg.update(flight.pos.x, flight.pos.z, true);
   const minimap = new MiniMap({ container: $('minimap'), sizeM: tile.size, imagery: tile.imagery, features: tile.features, flight });
@@ -79,13 +82,14 @@ async function main() {
   }
   applySeason();
   status('');
-  window.__we = { tile, flight, camera, veg, terrain, far, grass, roads, scene, renderer, minimap, atmosphere, sky };   // debugging handle
+  window.__we = { tile, flight, raven, camera, veg, terrain, far, grass, roads, scene, renderer, minimap, atmosphere, sky };   // debugging handle
 
   let last = performance.now(), hudT = 0;
   function frame(now) {
     const dt = Math.min((now - last) / 1000, 0.1); last = now;
     const s = seasonNow(), look = SEASON_LOOK[s], sun = sunDirection(tile.latitude, s, state.hour);
     const f = flight.update(dt);
+    raven.update(dt, flight.flapping, flight.speed);
     veg.update(flight.pos.x, flight.pos.z);
     atmosphere.update(dt, sun, look, s, state.hour, camera);
     sky.update(camera);

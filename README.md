@@ -47,7 +47,9 @@ and never logged or stored.
 
 ## The client
 
-`client/` is a three.js app with no build step. It reads a tile package's `client/`
+`client/` is a three.js app with no build step. The raven model (`client/assets/raven.glb`)
+is "Raven" by Teh_Bucket on OpenGameArt, CC0, re-exported from Blender with a glide clip.
+It reads a tile package's `client/`
 rasters and builds a 10 m terrain mesh, a vegetation-shaded texture that recolors grass
 and oaks by season, a physically placed sun for the tile's latitude, and a forest of
 procedural trees grown per 30 m cell from habitat class and canopy cover: blue oak,
