@@ -1,0 +1,272 @@
+// Field guide: the small cards that turn the acorn game into something a child carries outside
+// (docs/brief.md: "A child plays the acorn game and then goes outside to pick up acorns under a real oak").
+//   - acorn card: the first acorn picked up this session, and again for each new oak species, with a
+//     drawing of that species' acorn, its names, three facts and an invitation to find a real one.
+//   - stash card: the first acorn put in a stash hole this session, about caching.
+// One DOM element (#fieldGuide), created here; it never takes pointer input except its close button,
+// Esc closes it, and it closes itself after a few seconds. Nothing runs per frame.
+
+import { resolveSpecies } from './trees.js';
+
+const SHOW_MS = 8000, ASKED_MS = 20000, NEXT_GAP_MS = 350;
+
+// Text for a curious ten-year-old: concrete, kind, no exclamation marks.
+export const ACORN_FACTS = [
+  ['What it is', 'An acorn is a seed in a cup. The nut holds a tiny oak and the food it needs to start growing.'],
+  ['Who eats it here', 'Acorn woodpeckers store thousands in granary trees. Scrub-jays and gray squirrels bury them and forget some, and those can grow into new oaks. Deer eat them whole.'],
+  ['When', 'They drop in September and October.'],
+];
+export const ACORNS = {
+  quercus_douglasii: {
+    common: 'blue oak', scientific: 'Quercus douglasii',
+    looks: 'Long and tapered, with a shallow, bumpy cap.',
+    invite: 'Find a real one: look under a blue oak in October. The cap often stays on the tree.',
+  },
+  quercus_wislizeni: {
+    common: 'interior live oak', scientific: 'Quercus wislizeni',
+    looks: 'Slender and pointed, with a deep cap that hugs the nut.',
+    invite: 'Find a real one: look under an interior live oak in October. Its acorns take two years to grow on the branch.',
+  },
+};
+export const STASH_FACTS = [
+  'Ravens hide food and remember hundreds of spots.',
+  'Gray squirrels bury acorns one by one, each in its own small hole.',
+  'Acorn woodpeckers drill holes in a granary tree and tap an acorn into each one.',
+  'Some forgotten caches become new trees.',
+];
+export const STASH_INVITE = 'Try it: hide three acorns outside and come back tomorrow.';
+// One line for the species card (identify.js), from the same text.
+export const acornLine = id => ACORNS[id] ? `${ACORN_FACTS[0][1].split('. ')[0]}. ${ACORNS[id].looks} ${ACORN_FACTS[2][1]}` : null;
+export const acornSpecies = name => { const id = resolveSpecies(name); return ACORNS[id] ? id : null; };
+
+const esc = s => String(s ?? '').replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' })[c]);
+
+const CSS = `
+#fieldGuide { position:fixed; z-index:6; width:330px; max-width:calc(100vw - 28px); box-sizing:border-box; padding:10px 12px 10px;
+  background:#0f1512e8; border:1px solid #3a3020; border-radius:8px; backdrop-filter:blur(4px); color:#d3ddd5; font-size:12.5px; line-height:1.4;
+  pointer-events:none; opacity:1; transition:opacity .35s; }
+#fieldGuide.hidden { display:none; }
+#fieldGuide.fading { opacity:0; }
+#fieldGuide .close { pointer-events:auto; position:absolute; right:6px; top:4px; background:none; border:none; color:#b7c4ba; font-size:18px; line-height:1; cursor:pointer; padding:2px 6px; }
+#fieldGuide .close:hover { color:#e6ede7; }
+#fieldGuide .kicker { font-size:11px; letter-spacing:.06em; text-transform:uppercase; color:#ffd08a; margin:0 0 6px; }
+#fieldGuide .head { display:flex; gap:10px; align-items:center; }
+#fieldGuide canvas { flex:none; width:64px; height:84px; }
+#fieldGuide h1 { font-size:15px; margin:0; color:#e6ede7; padding-right:20px; }
+#fieldGuide .sci { color:#b7c4ba; font-style:italic; }
+#fieldGuide .looks { color:#b7c4ba; margin-top:3px; font-size:12px; }
+#fieldGuide ul { margin:8px 0 0; padding:0 0 0 16px; }
+#fieldGuide li { margin:3px 0; }
+#fieldGuide li b { color:#e6ede7; font-weight:600; }
+#fieldGuide .invite { margin:8px 0 0; padding-top:7px; border-top:1px solid #263128; color:#ffe2b0; }
+#game .row.fg-notes b { font-weight:500; text-align:right; max-width:190px; }
+#speciesCard p.acorns b { color:#ffd08a; }
+#speciesCard .fg-open { background:none; border:1px solid #6b4a2b; color:#ffd08a; border-radius:5px; font:inherit; font-size:11.5px; padding:1px 7px; margin-left:4px; cursor:pointer; }
+#speciesCard .fg-open:hover { background:#3a2c17; }
+`;
+
+class FieldGuide {
+  constructor() { this.el = null; this.timer = 0; this.fadeTimer = 0; this.seen = new Set(); this.stashSeen = false; this.queue = []; }
+
+  mount() {
+    if (this.el) return this.el;
+    const st = document.createElement('style'); st.id = 'fieldGuideStyle'; st.textContent = CSS; document.head.appendChild(st);
+    const el = this.el = document.createElement('div'); el.id = 'fieldGuide'; el.className = 'hidden';
+    el.setAttribute('role', 'status'); el.setAttribute('aria-live', 'polite');
+    document.body.appendChild(el);
+    el.addEventListener('click', e => { if (e.target.closest('[data-close]')) this.next(); });
+    // Capture phase, so identify.js can tell this Esc already closed a field-guide card.
+    addEventListener('keydown', e => { if (e.code === 'Escape' && this.isOpen()) { this.queue.length = 0; this.hide(); e.fieldGuideClosed = true; } }, true);
+    return el;
+  }
+  isOpen() { return !!this.el && !this.el.classList.contains('hidden'); }
+
+  // Game hooks: they show a card only the first time per session (per species for acorns).
+  acornPicked(name, anchor) {
+    const id = acornSpecies(name); if (!id || this.seen.has(id)) return;
+    this.seen.add(id); this.showAcorn(id, anchor);
+  }
+  stashFilled(anchor) {
+    if (this.stashSeen) return;
+    this.stashSeen = true; this.showStash(anchor);
+  }
+
+  // asked: opened from the species card, so it shows at once and stays longer.
+  showAcorn(name, anchor, asked = false) {
+    const id = acornSpecies(name); if (!id) return;
+    const a = ACORNS[id];
+    this.show(`<button class="close" data-close title="close (Esc)">×</button>
+      <div class="kicker">field guide · acorn</div>
+      <div class="head"><canvas width="128" height="168"></canvas>
+        <div><h1>${esc(a.common)}</h1><div class="sci">${esc(a.scientific)}</div><div class="looks">${esc(a.looks)}</div></div></div>
+      <ul>${ACORN_FACTS.map(([k, v]) => `<li><b>${esc(k)}:</b> ${esc(v)}</li>`).join('')}</ul>
+      <p class="invite">${esc(a.invite)}</p>`, anchor, asked, g => drawAcorn(g, id));
+  }
+  showStash(anchor) {
+    this.show(`<button class="close" data-close title="close (Esc)">×</button>
+      <div class="kicker">field guide · caching</div>
+      <div class="head"><canvas width="128" height="168"></canvas>
+        <div><h1>Hiding food for later</h1><div class="looks">Many animals here store food when there is plenty and come back for it in winter.</div></div></div>
+      <ul>${STASH_FACTS.map(t => `<li>${esc(t)}</li>`).join('')}</ul>
+      <p class="invite">${esc(STASH_INVITE)}</p>`, anchor, false, drawGranary);
+  }
+
+  // A game card that arrives while another is open waits its turn (pickup and stash often come
+  // within a second of each other), so each is on screen for SHOW_MS or until closed.
+  show(html, anchor, asked, draw) {
+    const card = { html, anchor, ms: asked ? ASKED_MS : SHOW_MS, draw };
+    if (!asked && this.isOpen()) { this.queue.push(card); return; }
+    this.queue.length = asked ? 0 : this.queue.length;
+    this.render(card);
+  }
+  render({ html, anchor, ms, draw }) {
+    const el = this.mount();
+    clearTimeout(this.timer); clearTimeout(this.fadeTimer);
+    el.innerHTML = html; el.classList.remove('hidden', 'fading');
+    const c = el.querySelector('canvas'); if (c && draw) draw(c.getContext('2d'));
+    this.place(anchor);
+    this.timer = setTimeout(() => { el.classList.add('fading'); this.fadeTimer = setTimeout(() => this.next(), 400); }, ms);
+  }
+  // Close the open card and bring on the next waiting one, if any.
+  next() {
+    this.hide();
+    if (this.queue.length) this.timer = setTimeout(() => this.render(this.queue.shift()), NEXT_GAP_MS);
+  }
+  // Beside the game HUD (right of it, or below it on a narrow screen); top centre when there is no HUD.
+  place(anchor) {
+    const el = this.el, w = el.offsetWidth, h = el.offsetHeight, W = innerWidth, H = innerHeight;
+    const r = anchor && !anchor.classList.contains('hidden') ? anchor.getBoundingClientRect() : null;
+    // keep clear of the side panels: the right panel's left edge and the left HUD's right edge
+    const box = id => { const b = document.getElementById(id)?.getBoundingClientRect(); return b && b.width ? b : null; };   // fixed elements: no offsetParent
+    const pr = box('panel'), hr = box('hud');
+    const maxX = (pr ? pr.left : W) - 10, minX = (hr ? hr.right : 0) + 10;
+    let x, y;
+    if (r && r.width) {
+      if (r.right + 10 + w <= maxX) { x = r.right + 10; y = r.top; }                 // right of the game HUD
+      else if (r.left - 10 - w >= minX) { x = r.left - 10 - w; y = r.top; }          // left of it
+      else { x = r.left + r.width / 2 - w / 2; y = r.bottom + 8; }                   // below it
+    } else { x = W / 2 - w / 2; y = 12; }
+    el.style.left = `${Math.round(Math.max(10, Math.min(x, W - w - 10)))}px`;
+    el.style.top = `${Math.round(Math.max(10, Math.min(y, H - h - 10)))}px`;
+  }
+  hide() {
+    clearTimeout(this.timer); clearTimeout(this.fadeTimer);
+    if (this.el) this.el.classList.add('hidden');
+  }
+}
+
+export const fieldGuide = new FieldGuide();
+
+// ---- drawings (2D canvas, 128 x 168 px drawn in a 64 x 84 unit space) -----------------------------
+
+// Nut outline: an oval that swells just below the cap rim, then narrows to a point at the tip
+// (`tip` is the half-width near the point: larger is blunter).
+function nutPath(cx, top, bottom, w, tip) {
+  const p = new Path2D(), L = bottom - top, hw = w / 2;
+  p.moveTo(cx - hw * 0.9, top - 6);
+  p.bezierCurveTo(cx - hw * 1.08, top + L * 0.08, cx - hw * 1.08, top + L * 0.3, cx - hw, top + L * 0.48);
+  p.bezierCurveTo(cx - hw * 0.88, top + L * 0.8, cx - hw * tip, bottom - L * 0.04, cx, bottom);
+  p.bezierCurveTo(cx + hw * tip, bottom - L * 0.04, cx + hw * 0.88, top + L * 0.8, cx + hw, top + L * 0.48);
+  p.bezierCurveTo(cx + hw * 1.08, top + L * 0.3, cx + hw * 1.08, top + L * 0.08, cx + hw * 0.9, top - 6);
+  p.closePath();
+  return p;
+}
+// Cap: a cup open downward, rim at rimY, dome rising `depth` above it.
+function capPath(cx, rimY, cw, depth) {
+  const p = new Path2D(), hw = cw / 2;
+  p.moveTo(cx - hw, rimY);
+  p.bezierCurveTo(cx - hw * 1.04, rimY - depth * 0.85, cx - hw * 0.62, rimY - depth, cx, rimY - depth);
+  p.bezierCurveTo(cx + hw * 0.62, rimY - depth, cx + hw * 1.04, rimY - depth * 0.85, cx + hw, rimY);
+  p.quadraticCurveTo(cx, rimY + 3, cx - hw, rimY);
+  p.closePath();
+  return p;
+}
+
+function drawAcorn(g, id) {
+  g.save(); g.scale(2, 2); g.lineJoin = 'round'; g.lineCap = 'round';
+  const blue = id === 'quercus_douglasii';
+  // shapes: blue oak long and tapered, shallow warty cap; interior live oak slender and pointed, deep cap
+  const cx = 32, nw = blue ? 24 : 17, rim = blue ? 20 : 32, tip = blue ? 80 : 81, taper = blue ? 0.3 : 0.16;
+  const cw = blue ? 27 : 21, depth = blue ? 8 : 15;
+  const nut = nutPath(cx, rim, tip, nw, taper);
+  // soft shadow, then the nut body: a warm brown with a lit left side and faint lengthwise stripes
+  g.save(); g.shadowColor = 'rgba(0,0,0,0.45)'; g.shadowBlur = 5; g.shadowOffsetY = 2;
+  const body = g.createLinearGradient(cx - nw / 2, 0, cx + nw / 2, 0);
+  if (blue) { body.addColorStop(0, '#8a6538'); body.addColorStop(0.35, '#c79a5c'); body.addColorStop(1, '#6a4a26'); }
+  else { body.addColorStop(0, '#5e3d1f'); body.addColorStop(0.35, '#9a6a38'); body.addColorStop(1, '#4a2f17'); }
+  g.fillStyle = body; g.fill(nut); g.restore();
+  g.save(); g.clip(nut);
+  g.strokeStyle = blue ? 'rgba(90,60,30,0.35)' : 'rgba(40,24,10,0.4)'; g.lineWidth = 0.7;
+  for (const f of [-0.28, 0, 0.28]) {
+    g.beginPath(); g.moveTo(cx + f * nw, rim); g.quadraticCurveTo(cx + f * nw * 1.1, (rim + tip) / 2, cx + f * nw * 0.2, tip - 2); g.stroke();
+  }
+  g.fillStyle = 'rgba(255,240,210,0.28)';   // highlight
+  g.beginPath(); g.ellipse(cx - nw * 0.2, rim + (tip - rim) * 0.32, nw * 0.1, (tip - rim) * 0.22, -0.08, 0, Math.PI * 2); g.fill();
+  g.restore();
+  g.strokeStyle = 'rgba(30,18,8,0.8)'; g.lineWidth = 0.9; g.stroke(nut);
+  g.fillStyle = '#3a2412'; g.beginPath(); g.arc(cx, tip - 0.6, 1.1, 0, Math.PI * 2); g.fill();   // the point at the tip
+  // cap
+  const cap = capPath(cx, rim, cw, depth);
+  const cg = g.createLinearGradient(cx - cw / 2, 0, cx + cw / 2, 0);
+  cg.addColorStop(0, '#7d6c4c'); cg.addColorStop(0.4, '#b5a27a'); cg.addColorStop(1, '#5f5138');
+  g.fillStyle = cg; g.fill(cap);
+  g.save(); g.clip(cap);
+  if (blue) {
+    // warty: rows of round knobs, each with a lit top and a dark underside
+    for (let r = 0; r < 4; r++) {
+      const y = rim - 1.5 - r * 2.6, n = 8 - r, span = cw * (1 - r * 0.16);
+      for (let k = 0; k < n; k++) {
+        const x = cx - span / 2 + (k + 0.5 + (r % 2) * 0.35) * span / n;
+        g.fillStyle = 'rgba(60,48,30,0.7)'; g.beginPath(); g.arc(x, y + 0.5, 1.45, 0, Math.PI * 2); g.fill();
+        g.fillStyle = 'rgba(214,198,160,0.9)'; g.beginPath(); g.arc(x - 0.2, y - 0.2, 1.05, 0, Math.PI * 2); g.fill();
+      }
+    }
+  } else {
+    // thin, flat, overlapping scales in rows up the deep cup, with a fine fuzz of hairs
+    for (let r = 0; r < 6; r++) {
+      const y = rim - 1.2 - r * 2.4, n = 8, span = cw * (1.04 - Math.pow(r / 6, 2) * 0.5);
+      for (let k = 0; k < n; k++) {
+        const x = cx - span / 2 + (k + 0.5 + (r % 2) * 0.5) * span / n;
+        g.strokeStyle = 'rgba(70,58,40,0.38)'; g.lineWidth = 0.55;
+        g.beginPath(); g.moveTo(x - 1.2, y + 0.4); g.quadraticCurveTo(x, y - 0.8, x + 1.2, y + 0.4); g.stroke();
+      }
+    }
+    g.strokeStyle = 'rgba(225,210,175,0.25)'; g.lineWidth = 0.4;
+    for (let k = 0; k < 40; k++) {
+      const x = cx - cw / 2 + ((k * 37) % 41) / 41 * cw, y = rim - ((k * 23) % 29) / 29 * depth;
+      g.beginPath(); g.moveTo(x, y); g.lineTo(x + 0.8, y - 0.9); g.stroke();
+    }
+  }
+  g.restore();
+  g.strokeStyle = 'rgba(30,22,10,0.85)'; g.lineWidth = 0.9; g.stroke(cap);
+  // a short stalk nub
+  g.strokeStyle = '#5a4a32'; g.lineWidth = 2.2;
+  g.beginPath(); g.moveTo(cx, rim - depth + 0.5); g.lineTo(cx + 1, rim - depth - 4); g.stroke();
+  g.restore();
+}
+
+// A piece of granary-tree bark with drilled holes, some holding an acorn end-on.
+function drawGranary(g) {
+  g.save(); g.scale(2, 2);
+  const x0 = 6, y0 = 4, w = 52, h = 76;
+  const bark = g.createLinearGradient(x0, 0, x0 + w, 0);
+  bark.addColorStop(0, '#4a4036'); bark.addColorStop(0.5, '#7a6c5c'); bark.addColorStop(1, '#3e352c');
+  g.fillStyle = bark; g.beginPath(); g.roundRect(x0, y0, w, h, 6); g.fill();
+  g.save(); g.clip();
+  g.strokeStyle = 'rgba(30,24,18,0.55)'; g.lineWidth = 1;
+  for (let i = 0; i < 6; i++) {
+    const x = x0 + 5 + i * 9; g.beginPath(); g.moveTo(x, y0); g.bezierCurveTo(x + 3, y0 + h * 0.35, x - 3, y0 + h * 0.65, x + 1, y0 + h); g.stroke();
+  }
+  const filled = [1, 1, 0, 1, 0, 1, 1, 1, 0, 1, 1, 0];
+  for (let r = 0; r < 4; r++) for (let c = 0; c < 3; c++) {
+    const x = x0 + 11 + c * 15 + (r % 2) * 3, y = y0 + 12 + r * 17;
+    g.fillStyle = '#1a120b'; g.beginPath(); g.ellipse(x, y, 4.6, 5.2, 0, 0, Math.PI * 2); g.fill();
+    if (filled[r * 3 + c]) {
+      const ng = g.createRadialGradient(x - 1.2, y - 1.4, 0.5, x, y, 4);
+      ng.addColorStop(0, '#d0a066'); ng.addColorStop(1, '#6a4524');
+      g.fillStyle = ng; g.beginPath(); g.ellipse(x, y, 3.6, 4.1, 0, 0, Math.PI * 2); g.fill();
+      g.fillStyle = '#3a2412'; g.beginPath(); g.arc(x, y, 0.8, 0, Math.PI * 2); g.fill();   // the acorn's tip, facing out
+    }
+  }
+  g.restore(); g.restore();
+}

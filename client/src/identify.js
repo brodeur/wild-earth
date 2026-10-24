@@ -1,6 +1,7 @@
 import * as THREE from 'three';
 import { SPECIES } from './trees.js';
 import { CLOSE_R } from './vegetation.js';
+import { fieldGuide, acornLine, acornSpecies } from './fieldguide.js';
 
 // Species identification: the project's mission is to connect people to their bioregion, so the
 // player should be able to learn what they are looking at.
@@ -40,10 +41,14 @@ export class Identify {
     });
     addEventListener('keydown', e => {
       if (e.target instanceof HTMLInputElement || e.target instanceof HTMLSelectElement || e.target instanceof HTMLTextAreaElement) return;
-      if (e.code === 'Escape') this.hideCard();
+      if (e.code === 'Escape' && !e.fieldGuideClosed) this.hideCard();   // Esc closes a field-guide card first
       if (e.code === 'KeyT') this.setTags(!this.tagsOn);
     });
-    els.card.addEventListener('click', e => { if (e.target.closest('[data-close]')) this.hideCard(); });
+    els.card.addEventListener('click', e => {
+      if (e.target.closest('[data-close]')) this.hideCard();
+      const g = e.target.closest('[data-guide]');
+      if (g) fieldGuide.showAcorn(g.dataset.guide, this.acorns?.running ? this.acorns.ui.box : null, true);
+    });
   }
 
   setTags(on) { this.tagsOn = on; this.tagGroup.visible = on; if (on) this.lastScan = -1e9; }
@@ -144,7 +149,7 @@ export class Identify {
             for (const h of hits) {
               if (best && h.distance >= best.distance) break;
               if (map && !this.opaque(geo, map, h, leafOn)) continue;
-              best = { distance: h.distance, species: id, id: e.near.ids[i], point: h.point.clone() };
+              best = { distance: h.distance, species: id, id: e.near.ids[i], point: h.point.clone(), x: a[b + 12], z: a[b + 14] };
               break;
             }
           }
@@ -195,9 +200,28 @@ export class Identify {
       <div class="row"><span>height here</span><b>${esc(h)}</b></div>
       ${s.description ? `<p>${esc(s.description)}</p>` : ''}
       <p class="season"><b>${esc(SEASON_WORD[season] || season)}:</b> ${esc(note || (s.deciduous ? 'deciduous: the crown empties in winter.' : 'evergreen: in leaf all year.'))}</p>
+      ${this.acornHtml(hit)}
       <div class="status">status: ${esc(s.status || 'agent draft, needs local sign-off')}</div>`;
     card.classList.remove('hidden');
     this.lastScan = -1e9;   // drop its tag on the next tick
+  }
+  // Oaks: one acorns line from the field guide, and how many acorns this tree holds if the game is on.
+  acornHtml(hit) {
+    const sp = acornSpecies(hit.species); if (!sp) return '';
+    let count = '';
+    const g = this.acorns;
+    if (g?.running && hit.x !== undefined) {
+      const oak = g.oakAt(hit.x, hit.z), on = oak && g.acornsOn(oak.id);
+      if (on) {
+        const n = k => `${k} acorn${k === 1 ? '' : 's'}`, took = on.total - on.left;
+        count = on.total === 0 ? ' No acorns on this tree right now.'
+          : on.left === 0 ? ` You picked up all ${on.total === 1 ? 'the acorn' : on.total + ' acorns'} from this tree.`
+          : took ? ` This tree still has ${n(on.left)}; you picked up ${took}.`
+          : ` This tree has ${n(on.left)}.`;
+        if (on.stash && g.revealed) count += ` Stash hole: ${on.stash.count} / ${on.stash.capacity}.`;
+      }
+    }
+    return `<p class="acorns"><b>acorns:</b> ${esc(acornLine(sp))}${esc(count)} <button class="fg-open" data-guide="${esc(sp)}" title="open the field guide card">field guide</button></p>`;
   }
   hideCard() {
     this.els.card.classList.add('hidden'); this.selected = null; this.lastScan = -1e9;

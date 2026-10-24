@@ -1,5 +1,6 @@
 import * as THREE from 'three';
 import { mulberry32 } from './trees.js';
+import { fieldGuide, acornSpecies, ACORNS } from './fieldguide.js';
 
 // Acorn stash, the raven's fall forage-and-cache loop (docs/game-acorn-stash.md).
 // Oaks near the raven carry acorns and, about one in eight, a stash hole on the trunk. Everything
@@ -141,7 +142,7 @@ export class AcornGame {
     this.tile = tile; this.scene = scene; this.flight = flight; this.veg = veg; this.ui = ui;
     this.running = false; this.season = null; this.elapsed = 0;
     this.carried = 0; this.depositT = 0; this.hudT = 0; this.refreshT = 0; this.nearFull = false;
-    this.state = { picked: new Set(), stashes: {}, totals: { stashed: 0 } };
+    this.state = { picked: new Set(), stashes: {}, totals: { stashed: 0 }, species: [] };   // species: acorn kinds found in this world
     this.revealed = false;          // stash holes visible: first pickup this session, or the world already has stash contents
     this.cache = new Map();         // oak id -> oakInfo for the current season
     this.liveAcorns = [];           // { key, x, y, z }, index-aligned with the acorn instances
@@ -161,6 +162,14 @@ export class AcornGame {
     for (const m of [this.nuts, this.acornGlow, this.holes, this.ringGlow]) { m.count = 0; m.frustumCulled = false; this.group.add(m); }
     this.acornGlow.renderOrder = this.ringGlow.renderOrder = 10;
     this.tmp = new THREE.Object3D();
+    this.oakIndex = null; this.oakIndexVersion = -1;
+    // Field notes: one HUD row, added here so index.html stays untouched (fieldguide.js holds its CSS).
+    fieldGuide.mount();
+    if (ui.box && !ui.notes) {
+      const row = document.createElement('div'); row.className = 'row fg-notes';
+      row.innerHTML = '<span>acorns found</span><b></b>';
+      ui.box.insertBefore(row, ui.hint || null); ui.notes = row.querySelector('b');
+    }
   }
 
   get key() { return `wild-earth:stash:${this.tile.id}/${this.season}`; }
@@ -180,7 +189,7 @@ export class AcornGame {
   setWorld(season) {
     if (this.season) this.save();
     this.season = season; this.cache.clear(); this.carried = 0; this.nearFull = false;
-    this.state = { picked: new Set(), stashes: {}, totals: { stashed: 0 } };
+    this.state = { picked: new Set(), stashes: {}, totals: { stashed: 0 }, species: [] };
     try {
       const raw = localStorage.getItem(this.key);
       if (raw) {
@@ -188,6 +197,7 @@ export class AcornGame {
         this.state.picked = new Set(d.picked || []);
         this.state.stashes = d.stashes || {};
         this.state.totals = { stashed: 0, ...(d.totals || {}) };
+        this.state.species = Array.isArray(d.species) ? d.species.filter(id => ACORNS[id]) : [];
       }
     } catch (e) { console.warn('acorns: could not load state', e); }
     this.revealed = Object.values(this.state.stashes).some(c => c > 0);
@@ -199,7 +209,7 @@ export class AcornGame {
   }
   save() {
     try {
-      localStorage.setItem(this.key, JSON.stringify({ picked: [...this.state.picked], stashes: this.state.stashes, totals: this.state.totals }));
+      localStorage.setItem(this.key, JSON.stringify({ picked: [...this.state.picked], stashes: this.state.stashes, totals: this.state.totals, species: this.state.species }));
     } catch (e) { console.warn('acorns: could not save state', e); }
   }
 
@@ -234,7 +244,7 @@ export class AcornGame {
         t.position.set(a.x, a.y, a.z); t.rotation.set(0.3 * (a.spin - 0.5), a.spin * 6.283, 1.2 * (a.spin - 0.5)); t.scale.setScalar(1); t.updateMatrix();
         this.nuts.setMatrixAt(na, t.matrix);
         t.rotation.set(0, 0, 0); t.updateMatrix(); this.acornGlow.setMatrixAt(na, t.matrix);
-        this.liveAcorns.push({ key, x: a.x, y: a.y, z: a.z }); na++;
+        this.liveAcorns.push({ key, x: a.x, y: a.y, z: a.z, species: o.species }); na++;
       }
       const st = inf.stash;
       if (st && ns < STASH_CAP) {
@@ -318,6 +328,33 @@ export class AcornGame {
     this.nuts.instanceMatrix.needsUpdate = this.acornGlow.instanceMatrix.needsUpdate = true;
   }
 
+  // ---- lookups for the species card (identify.js) ----------------------------------------------
+  // The oak record placed at (x, z) (a clicked trunk's position), or null. Oaks are the trees of the
+  // last forest rebuild, so any tree in the near set is among them.
+  oakAt(x, z, tol = 0.5) {
+    let best = null, bd = tol * tol;
+    for (const o of this.veg.oaks) {
+      const dx = o.x - x, dz = o.z - z, d2 = dx * dx + dz * dz;
+      if (d2 < bd) { bd = d2; best = o; }
+    }
+    return best;
+  }
+  oakById(id) {
+    if (this.oakIndexVersion !== this.veg.version) {
+      this.oakIndex = new Map(this.veg.oaks.map(o => [o.id, o])); this.oakIndexVersion = this.veg.version;
+    }
+    return this.oakIndex.get(id) || null;
+  }
+  // Acorns on one oak in the current world: { species, total, left, stash: { count, capacity } | null },
+  // or null when the game has no world yet or the id is not a placed oak.
+  acornsOn(id) {
+    const o = this.oakById(id); if (!o || !this.season) return null;
+    const inf = this.info(o);
+    const left = inf.acorns.filter(a => !this.state.picked.has(`${o.id}:${a.n}`)).length;
+    return { species: acornSpecies(o.species), total: inf.acorns.length, left,
+      stash: inf.stash ? { count: this.state.stashes[o.id] || 0, capacity: inf.stash.capacity } : null };
+  }
+
   update(dt, camera, season) {
     if (season && season !== this.season) this.setWorld(season);
     if (!this.running) return;
@@ -339,8 +376,12 @@ export class AcornGame {
         if (d2 < bd) { bd = d2; best = i; }
       }
       if (best >= 0) {
-        this.state.picked.add(this.liveAcorns[best].key); this.removeAcorn(best);
+        const got = this.liveAcorns[best];
+        this.state.picked.add(got.key); this.removeAcorn(best);
         this.carried++;
+        const sp = acornSpecies(got.species);
+        if (sp && !this.state.species.includes(sp)) this.state.species.push(sp);
+        fieldGuide.acornPicked(got.species, this.ui.box);
         if (!this.revealed) { this.revealed = true; this.applyReveal(); }
         this.save(); this.hud(true);
       }
@@ -368,6 +409,7 @@ export class AcornGame {
         this.marker(s);
       }
       this.label(s); this.save(); this.hud(true);
+      fieldGuide.stashFilled(this.ui.box);
     }
     this.hudT += dt;
     if (this.hudT > 0.25) { this.hudT = 0; this.hud(); }
@@ -379,6 +421,10 @@ export class AcornGame {
     u.carried.textContent = `${this.carried} / ${CARRY_MAX}`;
     u.stashed.textContent = this.state.totals.stashed;
     u.found.textContent = found;
+    if (u.notes) {
+      const notes = this.state.species.map(id => ACORNS[id].common).join(', ') || 'none yet';
+      if (u.notes.textContent !== notes) u.notes.textContent = notes;
+    }
     const sec = Math.floor(this.elapsed);
     u.time.textContent = `${String(Math.floor(sec / 60)).padStart(2, '0')}:${String(sec % 60).padStart(2, '0')}`;
     u.hint.textContent = this.carried > 0 && this.nearFull && !this.depositing ? 'stash full, find another'
