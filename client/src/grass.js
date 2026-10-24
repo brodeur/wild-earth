@@ -3,6 +3,10 @@ import { mulberry32 } from './trees.js';
 import { uniforms as atmo, ATMOSPHERE_GLSL } from './atmosphere.js';
 import { SEASON_LOOK } from './season.js';
 import { buildAnnualClump, buildBunchClump, buildTuft } from './grassBlades.js';
+import { windUniforms, WIND_GLSL } from './wind.js';
+import { groundUniforms, GROUND_GLSL } from './terrain.js';
+import { ShrubField, GrassClumps } from './shrubfield.js';
+import { GrassShells } from './grassShells.js';
 
 // Grass in the Sierra foothill savanna: non-native annuals (wild oat, bromes, medusahead) over
 // purple needlegrass bunchgrass. Two LODs in one system, three draw calls:
@@ -14,6 +18,10 @@ import { buildAnnualClump, buildBunchClump, buildTuft } from './grassBlades.js';
 // tuft grows in at its own distance in the same band, so there is no seam line and no dither noise.
 // Placement is deterministic per 30 m habitat cell and cached, so nothing re-rolls as you move;
 // each frame only the cells in view are submitted to the GPU (see cull).
+// Seen from the air (docs/grass-notes.md) three more layers hang off this class: sward shells for
+// 8-60 m up (grassShells.js), needlegrass tussock and chaparral shrub impostors (shrubfield.js).
+// Every grass material takes its colour from the ground texture under it (terrain.js GROUND_GLSL)
+// and moves with the shared gust field (wind.js), which the terrain also paints as a sheen.
 
 const NEAR_FADE = [55, 85], NEAR_REBUILD = 25, NEAR_PLACE = NEAR_FADE[1] + NEAR_REBUILD + 2;
 const MID_END = 250, MID_REBUILD = 60, MID_PLACE = MID_END + MID_REBUILD;
@@ -53,7 +61,9 @@ const THATCH = [0.58, 0.54, 0.45];   // last year's grey dead leaves, in among t
 
 // ---- GLSL shared by both LODs ---------------------------------------------------------------
 const COMMON_VERT = /* glsl */`
-  uniform float time; uniform vec2 windDir; uniform float windStrength; uniform vec2 nearFade; uniform vec2 closeFade; uniform float midEnd;
+  ${WIND_GLSL}
+  ${GROUND_GLSL}
+  uniform vec2 nearFade; uniform vec2 closeFade; uniform float midEnd; uniform float groundK; uniform float matchOn; uniform float tiltOn;
   uniform float heightScale; uniform float heads; uniform float thatch; uniform float leafScale;
   uniform vec3 aRoot; uniform vec3 aTip; uniform vec3 aHead; uniform vec3 aAwn;
   uniform vec3 bRoot; uniform vec3 bTip; uniform vec3 bHead; uniform vec3 bAwn; uniform vec3 thatchCol;
@@ -62,14 +72,6 @@ const COMMON_VERT = /* glsl */`
   float h21(vec2 p) { return fract(sin(dot(p, vec2(127.1, 311.7))) * 43758.5453); }
   float vnoise(vec2 p) { vec2 i = floor(p), f = fract(p); f = f * f * (3.0 - 2.0 * f);
     return mix(mix(h21(i), h21(i + vec2(1, 0)), f.x), mix(h21(i + vec2(0, 1)), h21(i + vec2(1, 1)), f.x), f.y); }
-  // Gust field: slow ~20 m gust cells advected downwind (the waves you see run across a field),
-  // over two octaves of travelling sin/cos ripples. About 0.15 in a lull to 1.25 in a gust.
-  float gust(vec2 p) {
-    float slow = vnoise((p - windDir * time * 4.0) * 0.045);
-    float o1 = sin(dot(p, vec2(0.21, 0.13)) - time * 1.9) * cos(dot(p, vec2(-0.07, 0.17)) - time * 1.3);
-    float o2 = sin(dot(p, vec2(0.53, -0.41)) - time * 3.7);
-    return 0.15 + 0.85 * smoothstep(0.25, 0.85, slow) + 0.16 * o1 + 0.06 * o2;
-  }
   // Instance outside the view frustum (bounding sphere of radius r around a point r above the
   // root)? Lets the vertex shader skip the shading work for the ~2/3 of instances off screen.
   bool offscreen(vec3 root, float r) {
@@ -94,6 +96,36 @@ const COMMON_VERT = /* glsl */`
     c *= mix(vec3(0.94, 1.02, 1.05), vec3(1.06, 0.99, 0.88), v1) * (0.86 + 0.26 * v2);
     c *= mix(vec3(0.95, 1.03, 1.0), vec3(1.06, 0.98, 0.9), vnoise(wxz * 0.05)) * (0.92 + 0.16 * vnoise(wxz * 0.13 + 7.0));
     return c;
+  }
+  // Tie a grass albedo to the ground under the root. Up close (m = 0) the blade keeps its palette,
+  // which stands out paler than the ground as real wisps do, and takes only the ground's local
+  // patchiness (the texel over a ~600 m regional mean). Toward the hand-over (m = 1) it keeps its
+  // own variation (its ratio to its type's mean leaf colour) but takes the mean from the ground,
+  // so the far sward is the colour of the texture it hands over to. Grassland (and grass under oaks) only.
+  vec3 groundMatch(vec3 c, float type, vec3 root, float m) {
+    if (matchOn < 0.5) return c;
+    vec3 gw; vec3 g = groundAlbedo(root, 1.0, gw);
+    float on = smoothstep(0.05, 0.4, gw.r + 0.5 * gw.g);
+    if (on < 0.01) return c;
+    vec3 gr = groundRecolour(textureLod(map, groundUv(root), 8.0).rgb, gw);
+    vec3 local = c * clamp(g / max(gr, vec3(1e-3)), vec3(0.75), vec3(1.3));
+    vec3 mean = type > 0.5 ? mix(bRoot, bTip, 0.6) : mix(aRoot, aTip, 0.6);
+    float ml = dot(mean, G_LUMA), gl = dot(g, G_LUMA);
+    g *= clamp(gl, 0.6 * ml, 1.5 * ml) / max(gl, 1e-4);   // the photo's dark smudges do not make black grass
+    return mix(c, mix(local, c / max(mean, vec3(1e-3)) * g * groundK, m), on);
+  }
+  // Lean away from the camera by part of the view's depression angle, so blades seen from above
+  // show their faces rather than their edges (Horizon's camera tilt); nothing at eye level.
+  vec2 tiltCS(vec3 root) {
+    vec3 r = root - cameraPosition; float hd = length(r.xz);
+    float a = clamp(atan(-r.y, hd) * 0.5, 0.0, 0.45) * tiltOn;
+    return vec2(cos(a), sin(a));
+  }
+  vec3 tilt(vec3 v, vec3 root, vec2 cs) {
+    vec2 away = normalize(root.xz - cameraPosition.xz + vec2(1e-4, 0.0));
+    float along = dot(v.xz, away), na = along * cs.x + v.y * cs.y;
+    v.xz += away * (na - along); v.y = v.y * cs.x - along * cs.y;
+    return v;
   }
 `;
 // Shading runs per vertex (blades are 4-5 vertex rows tall, so Gouraud loses nothing visible and
@@ -148,6 +180,7 @@ const NEAR_VERT = /* glsl */`
     p.y *= H * mix(0.2, 1.0, s);
     vec3 w = vec3(yawRot(p.xz, iPos.w), p.y).xzy;
     vec3 n = vec3(yawRot(normal.xz, iPos.w), normal.y).xzy;
+    vec2 cs = tiltCS(iPos.xyz); w = tilt(w, iPos.xyz, cs); n = tilt(n, iPos.xyz, cs);
     // Wind: bend grows with t^2 so the root stays put; blades differ in stiffness and flutter.
     float g = gust(iPos.xz);
     float b = windStrength * g * (0.75 + 0.5 * h11(br * 3.7 + seed));
@@ -156,7 +189,8 @@ const NEAR_VERT = /* glsl */`
     w.xz += off; w.y -= 0.5 * dot(off, off) / max(H, 0.2) * t;   // roughly keep the blade's length
     vec3 wp = iPos.xyz + w;
     // papery glumes and awns glow against the sun
-    vColor = grassShade(grassAlbedo(type, t, part, br, seed, iPos.xz), n, wp, t, mix(0.35, 1.0, smoothstep(0.0, 0.7, t)), part > 1.5 ? 1.6 : 1.0);
+    vec3 alb = groundMatch(grassAlbedo(type, t, part, br, seed, iPos.xz), type, iPos.xyz, smoothstep(12.0, 45.0, d));
+    vColor = grassShade(alb, n, wp, t, mix(0.35, 1.0, smoothstep(0.0, 0.7, t)), part > 1.5 ? 1.6 : 1.0);
     gl_Position = projectionMatrix * viewMatrix * vec4(wp, 1.0);
   }`;
 const NEAR_FRAG = /* glsl */`
@@ -188,12 +222,13 @@ const MID_VERT = /* glsl */`
     p.y *= H * mix(0.2, 1.0, s);
     vec3 w = vec3(yawRot(p.xz, iPos.w), p.y).xzy;
     vec3 n = vec3(yawRot(normal.xz, iPos.w), normal.y).xzy;
+    vec2 cs = tiltCS(iPos.xyz); w = tilt(w, iPos.xyz, cs); n = tilt(n, iPos.xyz, cs);
     vec2 off = windDir * windStrength * gust(iPos.xz) * uv.y * uv.y * max(H, 0.2);
     w.xz += off; w.y -= 0.5 * dot(off, off) / max(H, 0.2) * uv.y;
     vec3 wp = iPos.xyz + w;
     vUv = uv; vKey = seed * 31.7 + aPetal * 3.1; vType = type;
-    vec3 leafC = grassShade(grassAlbedo(type, uv.y, 0.0, aPetal * 0.21 + 0.05, seed, iPos.xz), n, wp, uv.y, mix(0.35, 1.0, uv.y), 1.0);
-    vHead = grassShade(grassAlbedo(type, 1.0, bunch > 0.5 ? 3.0 : 2.0, 0.5, seed, iPos.xz), n, wp, 1.0, 1.0, 1.6);
+    vec3 leafC = grassShade(groundMatch(grassAlbedo(type, uv.y, 0.0, aPetal * 0.21 + 0.05, seed, iPos.xz), type, iPos.xyz, 1.0), n, wp, uv.y, mix(0.35, 1.0, uv.y), 1.0);
+    vHead = grassShade(groundMatch(grassAlbedo(type, 1.0, bunch > 0.5 ? 3.0 : 2.0, 0.5, seed, iPos.xz), type, iPos.xyz, 0.6), n, wp, 1.0, 1.0, 1.6);
     // bunch tufts in flower: the awns tint the top of the tuft
     vColor = mix(leafC, vHead, uv.y * uv.y * 0.6 * heads * bunch);
     gl_Position = projectionMatrix * viewMatrix * vec4(wp, 1.0);
@@ -274,7 +309,7 @@ export class Grass {
     this.buildDensityGrid();
     const col = () => new THREE.Color();
     this.uniforms = {
-      time: { value: 0 }, windDir: { value: new THREE.Vector2(1, 0.25).normalize() }, windStrength: { value: 0.42 },
+      ...windUniforms, ...groundUniforms, groundK: { value: 1.12 }, matchOn: { value: 1 }, tiltOn: { value: 1 },
       nearFade: { value: new THREE.Vector2(...NEAR_FADE) }, closeFade: { value: new THREE.Vector2(...CLOSE_FADE) }, midEnd: { value: MID_END },
       heightScale: { value: 1 }, heads: { value: 1 }, thatch: { value: 0 }, leafScale: { value: 1 },
       aRoot: { value: col() }, aTip: { value: col() }, aHead: { value: col() }, aAwn: { value: col() },
@@ -294,6 +329,14 @@ export class Grass {
     this.group = new THREE.Group(); this.group.name = 'grass';
     for (const s of Object.values(this.sets)) this.group.add(s.mesh);
     scene.add(this.group);
+    // Chaparral's closed shrub canopy, and grass clumps for the 12-140 m band (shrubfield.js).
+    this.shrubs = ShrubField(tile, this.ground, this.uniforms);
+    this.clumps = GrassClumps(tile, this.ground, this.uniforms, this.dens, (x, n) => this.swardDensity(x, n),
+      (x, n) => (HABITAT[tile.habitat.at(x, n)] || { annual: 0.6 }).annual);
+    this.group.add(this.shrubs.mesh, this.clumps.mesh);
+    // Sward shells for the 8-60 m band (grassShells.js), at the density the clumps are placed with.
+    this.shells = new GrassShells(tile, this.ground, (x, n) => this.swardDensity(x, n), {});
+    this.group.add(this.shells.mesh);
     this.mesh = this.sets.mid.mesh;   // kept for debugging handles that used the old single mesh
   }
   // Instances placed (staged) and drawn this frame, per LOD.
@@ -335,6 +378,15 @@ export class Grass {
     const i0 = Math.min(Math.max(i, 0), W - 1), i1 = Math.min(Math.max(i + 1, 0), W - 1);
     const r0 = Math.min(Math.max(j, 0), H1) * W, r1 = Math.min(Math.max(j + 1, 0), H1) * W;
     return (grid[r0 + i0] * (1 - fx) + grid[r0 + i1] * fx) * (1 - fy) + (grid[r1 + i0] * (1 - fx) + grid[r1 + i1] * fx) * fy;
+  }
+
+  // Grass density at a point as the clump placement sees it (habitat x herb cover, bare patches,
+  // decayed pavement and its verge), for the shells.
+  swardDensity(x, n) {
+    const dens = this.sample(this.dens, x, n);
+    if (dens <= 0) return 0;
+    const herb = this.sample(this.herb, x, n), thr = 0.28 + 0.14 * (1 - herb), rw = this.tile.roads ? this.tile.roads.at(x, n) : 0;
+    return Math.min(dens * smooth(thr - 0.1, thr + 0.1, bareField(x, n)) * (rw > 140 ? 0 : rw > 0 ? 0.5 : 1) * 1.15, 1);
   }
 
   // Instances of one cell for one layer, generated once and cached, sorted into groups by mesh
@@ -473,7 +525,13 @@ export class Grass {
     const key = look.grass.join(',') + (look === SEASON_LOOK[this.season] ? '' : '?');
     if (key !== this.lookKey) { this.lookKey = key; this.applyLook(look); }
     const cp = camera.position, north = -cp.z, agl = cp.y - this.ground(cp.x, north);
-    const nearOn = agl < NEAR_FADE[1] + 3, midOn = agl < MID_END;
+    // From the air the blade clumps are sub-pixel and the shells and tussocks carry the sward, so the
+    // blades hand over to the tufts nearer the camera the higher it is: 55-85 m below 8 m, 30-45 m
+    // from 28 m up (the tufts grow in over the same band, so no gap opens).
+    const k = this.altLod === false ? 0 : smooth(8, 28, agl), nf = this.uniforms.nearFade.value;   // altLod: false for A/B timing
+    nf.set(NEAR_FADE[0] + (30 - NEAR_FADE[0]) * k, NEAR_FADE[1] + (45 - NEAR_FADE[1]) * k);
+    this.sets.annual.bands[0][1] = nf.y + 3; this.sets.mid.bands[0][0] = nf.x - 3;
+    const nearOn = agl < nf.y + 3, midOn = agl < MID_END;
     const moved = last => Math.hypot(cp.x - last[0], north - last[1]);
     if (this.queue.size) this.drain();
     const moveNear = !this.lastNear || moved(this.lastNear) > NEAR_REBUILD, moveMid = !this.lastMid || moved(this.lastMid) > MID_REBUILD;
@@ -493,5 +551,10 @@ export class Grass {
     S.mid.mesh.visible = midOn && S.mid.staged > 0;
     this.cull(camera);
     for (const set of Object.values(S)) if (set.n === 0) set.mesh.visible = false;
+    // Shrub impostors read as shrubs from above; low down, the 3D shrubs of vegetation.js carry the near field.
+    this.shrubs.update(camera, true, agl < 8 ? [25, 40, 370, 430] : [3, 8, 370, 430]);
+    // Tussock impostors: from 12 m when seen from the air; low down the blade clumps carry the near field.
+    this.clumps.update(camera, agl < 150, agl < 8 ? [45, 60, 90, 120] : [12, 20, 90, 120]);
+    this.shells.update(camera, agl, this.uniforms.heightScale.value);
   }
 }
