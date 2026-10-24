@@ -22,7 +22,7 @@ import { windUniforms, WIND_GLSL } from './wind.js';
 //     sprays of culms and panicles standing above the cured sward.
 //
 // Both use the same density LOD ("clump models that change with distance"): past D0 a field thins
-// as (D0/d)^2 and the survivors grow by 1/sqrt(keep), so cover is kept while the clumps per screen
+// as (D0/d)^2 (each clump dithers out at its own rank, never shrinking) and the survivors grow by 1/sqrt(keep), so cover is kept while the clumps per screen
 // area (and the cost) stay about constant; a grown impostor is drawn with more, smaller lobes, so
 // far away it stands for a patch of several plants rather than one swollen plant. Each cell's
 // clumps are stored in random order and the CPU submits only the prefix the LOD can keep.
@@ -43,18 +43,32 @@ const VERT = /* glsl */`
   attribute vec4 iPos; attribute vec4 iVar;   // root x y z, crown radius | height, seed, kind, rank
   varying vec2 vQ; varying vec3 vRight; varying vec3 vUp; varying vec3 vView;
   varying vec3 vAlbedo; varying vec3 vSun; varying vec3 vAmb; varying vec3 vAmbUp; varying vec3 vT; varying vec3 vIn;
-  varying float vSeed; varying float vKind; varying float vLobes; varying float vYS; varying float vVar; varying float vDry;
+  varying float vSeed; varying float vKind; varying float vLobes; varying float vYS; varying float vVar; varying float vDry; varying float vFade;
   float hh(float n) { return fract(sin(n) * 43758.5453123); }
+  // A stable random per plant from its root position (cm grid), independent of the 400 seed values.
+  float ph(vec2 p, uint salt) {
+    uvec2 q = uvec2(ivec2(floor(p * 64.0)) + 4194304);
+    uint h = (q.x * 1597334677u) ^ (q.y * 3812015801u) ^ (salt * 2798796415u);
+    h = (h ^ (h >> 15)) * 2246822519u; h ^= h >> 13;
+    return float(h) * (1.0 / 4294967296.0);
+  }
   void main() {
     float R = iPos.w, H = iVar.x, seed = iVar.y, kind = iVar.z, rank = iVar.w;
     bool grass = kind > 1.5, stalk = kind > 3.5;
     float d = distance(cameraPosition, iPos.xyz);
     float keep = clamp(kParams.x * kParams.x / max(d * d, 1.0), kParams.y, 1.0);
-    float s = smoothstep(0.0, 0.05, keep - rank) * smoothstep(band.x, band.y, d) * (1.0 - smoothstep(band.z, band.w, d));
+    // Fades never change a plant's size (a scaled fade reads as plants growing out of the ground and
+    // sinking back into it): each plant has its own in and out distances inside the band edges and
+    // dithers out over a short window around them (vFade, screen-space dither in the fragment), so
+    // the field thins and fills plant by plant. The density LOD's rank cut is dithered the same way.
+    float din = mix(band.x, band.y, ph(iPos.xz, 1u)), dout = mix(band.z, band.w, ph(iPos.xz, 2u));
+    float wi = max(0.12 * (band.y - band.x), 0.4), wo = max(0.12 * (band.w - band.z), 0.4);
+    float s = clamp((keep - rank) / 0.05, 0.0, 1.0) * smoothstep(din - wi, din + wi, d) * (1.0 - smoothstep(dout - wo, dout + wo, d));
     if (s < 0.01) { gl_Position = vec4(0.0, 0.0, 2.0, 1.0); return; }
+    vFade = s;
     float grow = inversesqrt(keep);
     if (grass) H *= heightScale;
-    R *= grow * s; H *= sqrt(grow) * s;
+    R *= grow; H *= sqrt(grow);
     vec3 C = iPos.xyz + vec3(0.0, H * 0.5, 0.0);
     // Wind: woody shrubs lean a few cm in gusts, grass clumps sway.
     float g = gust(iPos.xz);
@@ -114,7 +128,7 @@ const FRAG = /* glsl */`
   uniform vec3 sunDir; uniform float heads;
   varying vec2 vQ; varying vec3 vRight; varying vec3 vUp; varying vec3 vView;
   varying vec3 vAlbedo; varying vec3 vSun; varying vec3 vAmb; varying vec3 vAmbUp; varying vec3 vT; varying vec3 vIn;
-  varying float vSeed; varying float vKind; varying float vLobes; varying float vYS; varying float vVar; varying float vDry;
+  varying float vSeed; varying float vKind; varying float vLobes; varying float vYS; varying float vVar; varying float vDry; varying float vFade;
   float h3(vec3 p) {
     uvec3 q = uvec3(ivec3(floor(p)) + 4096);
     uint h = (q.x * 1597334677u) ^ (q.y * 3812015801u) ^ (q.z * 2798796415u);
@@ -128,6 +142,9 @@ const FRAG = /* glsl */`
   }
   float h2(vec2 p) { return fract(sin(dot(p, vec2(127.1, 311.7))) * 43758.5453); }
   void main() {
+    // Distance fades: screen-space dither (the interleaved gradient noise the tree tiers hand over
+    // with), never a size change.
+    if (vFade < 0.995 && fract(52.9829189 * fract(dot(gl_FragCoord.xy, vec2(0.06711056, 0.00583715)))) >= vFade) discard;
     float kind = vKind, vv = vVar;
     bool manz = kind > 0.5 && kind < 1.5, grass = kind > 1.5, bunch = kind > 2.5 && kind < 3.5, stalk = kind > 3.5;
     vec2 q = vQ;
@@ -286,7 +303,8 @@ const smooth = (a, b, x) => { const t = Math.min(Math.max((x - a) / (b - a), 0),
 //   meanArea         mean crown area, m^2
 //   plant(x, n, rnd, cover) -> [kind, R, H, variant 0..3]
 //   D0, KMIN         LOD: full density to D0, then keep (D0/d)^2, never below KMIN
-//   band             [in0, in1, out0, out1] distance fades; range is out1
+//   band             [in0, in1, out0, out1] distance fades (per-plant cut-offs spread over each pair,
+//                    dithered, no size change); range is out1
 //   now              cells nearer than this are generated at once, the rest a couple of ms per frame
 //   cap, salt, roadsMax
 //   riparian         0..1: share of clumps thinned out at a stream centreline, less across the
@@ -419,7 +437,7 @@ export function ShrubField(tile, ground, uniforms) {
     name: 'shrubfield', salt: 0x5eed, cap: 140000, roadsMax: 60,
     cellAny: anyAround(cover, W, H), coverAt, coverMax: 0.85,
     meanArea: 1.3 * (0.6 * Math.PI * 0.8 ** 2 + 0.4 * Math.PI * 1.1 ** 2),   // (x1.3: the crowns grew 1.15x)
-    D0: 115, KMIN: 0.12, band: [3, 8, 370, 430], now: 140,   // gone only right at the camera (the 3D shrubs are there)
+    D0: 115, KMIN: 0.12, band: [3, 8, 370, 430], now: 140,   // gone only right at the camera, at every height (the 3D shrubs are too few to carry the cover)
     plant(px, pn, rnd, cov) {
       // Stands: manzanita and chamise clump into patches tens of metres across (~40% manzanita).
       const manz = rnd() < 0.1 + 0.75 * smooth(0.35, 0.75, vnoise(px / 45, pn / 45, 9));

@@ -14,8 +14,10 @@ import { GrassShells } from './grassShells.js';
 //                    plus a denser close tier of the same clumps within ~30 m;
 //   mid (to 250 m):  leaning tuft cards whose blades are cut out in the fragment shader.
 // Past 250 m the ground texture carries it. The handover is stochastic: each near clump has its
-// own cut-off distance in 55-85 m and shrinks into the ground over a few metres there, while each
-// tuft grows in at its own distance in the same band, so there is no seam line and no dither noise.
+// own cut-off distance in 55-85 m and thins out blade by blade over a few metres there (each blade
+// has its own threshold), while each tuft dithers in at its own distance in the same band, so there
+// is no seam line. Nothing changes size in a handover: a scaled fade reads as plants growing out of
+// the ground and sinking back into it.
 // Placement is deterministic per 30 m habitat cell and cached, so nothing re-rolls as you move;
 // each frame only the cells in view are submitted to the GPU (see cull).
 // Seen from the air (docs/grass-notes.md) three more layers hang off this class: sward shells for
@@ -27,7 +29,7 @@ const NEAR_FADE = [55, 85], NEAR_REBUILD = 25, NEAR_PLACE = NEAR_FADE[1] + NEAR_
 const MID_END = 250, MID_REBUILD = 60, MID_PLACE = MID_END + MID_REBUILD;
 const NEAR_PER_M2 = 1 / 1.35, MID_PER_M2 = 1 / 4;
 // Close tier: extra clumps near the camera, where a 1.35 m^2 spacing reads as bare ground between
-// wisps. They hand over (shrink away) between 16 and 30 m, where the grazing view fills in anyway.
+// wisps. They hand over (thin out) between 16 and 30 m, where the grazing view fills in anyway.
 const CLOSE_FADE = [16, 30], CLOSE_PLACE = CLOSE_FADE[1] + NEAR_REBUILD + 2, CLOSE_PER_M2 = 1 / 0.18;
 // Placement layers, each cached per cell. `now`: a cell nearer than this is visible already and is
 // generated at once; farther ones (the new ring at the edge of the placement radius) are queued
@@ -163,8 +165,10 @@ const NEAR_VERT = /* glsl */`
     float d = distance(cameraPosition, iPos.xyz);
     vec2 band = iVar.w > 1.5 ? closeFade : nearFade;
     float dOut = mix(band.x, band.y, h11(seed * 517.3 + 0.37));   // this clump's own hand-over distance
-    float s = 1.0 - smoothstep(dOut - 3.0, dOut + 3.0, d);
     float hb = h11(seed * 71.9 + br * 131.7);
+    // Hand-over: the clump thins blade by blade over dOut +/- 3 m (a stable threshold per blade),
+    // at full height; no fragment discard, so the opaque blades keep their hidden-surface removal.
+    float s = step(h11(seed * 23.9 + br * 97.3), 1.0 - smoothstep(dOut - 3.0, dOut + 3.0, d));
     if (part > 0.5) s *= step(hb, heads * (type < 0.5 ? 0.9 : 0.85));   // culms (~1/3 of blades): none in winter
     // Distance LOD (collapsed triangles never reach the tiler, and sub-pixel triangles are what
     // this GPU pays for): main-tier clumps thin to 40% from 30 to 80 m, leaves to half from 25 to
@@ -181,7 +185,7 @@ const NEAR_VERT = /* glsl */`
     p.xz += vec2(cos(la), sin(la)) * t * t * 0.07;
     float H = iVar.y * heightScale;
     p.xz *= iVar.x * mix(0.8, 1.0, heightScale);
-    p.y *= H * mix(0.2, 1.0, s);
+    p.y *= H;
     vec3 w = vec3(yawRot(p.xz, iPos.w), p.y).xzy;
     vec3 n = vec3(yawRot(normal.xz, iPos.w), normal.y).xzy;
     vec2 cs = tiltCS(iPos.xyz); w = tilt(w, iPos.xyz, cs); n = tilt(n, iPos.xyz, cs);
@@ -209,7 +213,7 @@ const MID_VERT = /* glsl */`
   ${COMMON_VERT}
   ${SHADE_VERT}
   attribute float aPetal;
-  varying vec2 vUv; varying float vKey; varying float vType; varying vec3 vColor; varying vec3 vHead;
+  varying vec2 vUv; varying float vKey; varying float vType; varying vec3 vColor; varying vec3 vHead; varying float vFade;
   void main() {
     float seed = iVar.z, type = iVar.w;
     float d = distance(cameraPosition, iPos.xyz);
@@ -217,13 +221,15 @@ const MID_VERT = /* glsl */`
     float grow = smoothstep(dIn - 3.0, dIn + 3.0, d);
     // Thin out with distance (survivors widen to keep the cover) and end at midEnd.
     float keep = mix(1.0, 0.4, smoothstep(110.0, 220.0, d)) * (1.0 - smoothstep(midEnd - 35.0, midEnd, d));
-    float s = grow * smoothstep(0.0, 0.06, keep - h11(seed * 91.3 + 0.71));
+    // Both fades are alpha only (dithered in the fragment shader): a tuft is drawn at full height or not.
+    float s = grow * clamp((keep - h11(seed * 91.3 + 0.71)) / 0.06, 0.0, 1.0);
     if (s < 0.01 || offscreen(iPos.xyz, 0.6 * max(iVar.y, iVar.x) * 1.6)) { gl_Position = vec4(0.0, 0.0, 2.0, 1.0); return; }
     float bunch = step(0.5, type);
     float H = iVar.y * heightScale * mix(0.62, 0.42, bunch);
     vec3 p = position;
     p.xz *= iVar.x * mix(0.6, 0.5, bunch) * mix(1.0, inversesqrt(max(keep, 0.4)), 0.5);
-    p.y *= H * mix(0.2, 1.0, s);
+    p.y *= H;
+    vFade = s;
     vec3 w = vec3(yawRot(p.xz, iPos.w), p.y).xzy;
     vec3 n = vec3(yawRot(normal.xz, iPos.w), normal.y).xzy;
     vec2 cs = tiltCS(iPos.xyz); w = tilt(w, iPos.xyz, cs); n = tilt(n, iPos.xyz, cs);
@@ -240,9 +246,11 @@ const MID_VERT = /* glsl */`
   }`;
 const MID_FRAG = /* glsl */`
   uniform float heads;
-  varying vec2 vUv; varying float vKey; varying float vType; varying vec3 vColor; varying vec3 vHead;
+  varying vec2 vUv; varying float vKey; varying float vType; varying vec3 vColor; varying vec3 vHead; varying float vFade;
   float hf(float n) { return fract(sin(n) * 43758.5453123); }
   void main() {
+    // Distance fades: screen-space dither (the interleaved gradient noise the tree tiers use).
+    if (vFade < 0.995 && fract(52.9829189 * fract(dot(gl_FragCoord.xy, vec2(0.06711056, 0.00583715)))) >= vFade) discard;
     // Seven thin blades fanning out of each card (about as wide as the near blades, so the two
     // LODs give the same sub-pixel cover from above); on annual tufts some carry a seed head.
     // Coverage per blade is limited by its width over the pixel's: a blade narrower than a pixel
@@ -537,7 +545,7 @@ export class Grass {
     const cp = camera.position, north = -cp.z, agl = cp.y - this.ground(cp.x, north);
     // From the air the blade clumps are sub-pixel and the shells and tussocks carry the sward, so the
     // blades hand over to the tufts nearer the camera the higher it is: 55-85 m below 8 m, 30-45 m
-    // from 28 m up (the tufts grow in over the same band, so no gap opens).
+    // from 28 m up (the tufts dither in over the same band, so no gap opens).
     const k = this.altLod === false ? 0 : smooth(8, 28, agl), nf = this.uniforms.nearFade.value;   // altLod: false for A/B timing
     nf.set(NEAR_FADE[0] + (30 - NEAR_FADE[0]) * k, NEAR_FADE[1] + (45 - NEAR_FADE[1]) * k);
     this.sets.annual.bands[0][1] = nf.y + 3; this.sets.mid.bands[0][0] = nf.x - 3;
@@ -561,14 +569,20 @@ export class Grass {
     S.mid.mesh.visible = midOn && S.mid.staged > 0;
     this.cull(camera);
     for (const set of Object.values(S)) if (set.n === 0) set.mesh.visible = false;
-    // Shrub impostors read as shrubs from above; low down, the 3D shrubs of vegetation.js carry the near field.
-    this.shrubs.update(camera, true, agl < 8 ? [25, 40, 370, 430] : [3, 8, 370, 430]);
+    // Shrub impostors: drawn to within 3-8 m of the camera at every height. The 3D shrubs of
+    // vegetation.js are a few per 30 m cell (~6% cover against the 30-85% canopy shrub cover the
+    // impostors fill to), so handing the near field over to them below 8 m (as this once did, at
+    // 25-40 m) emptied a disc around the camera: the stand sank away as you came down to it.
+    this.shrubs.update(camera, true, null);
+    // The tussock and oat impostors' near edges move with height over 6-10 m (it was a hard switch at
+    // 8 m); every fade is a dither, so a moving edge thins plants, it never resizes them.
+    const up = smooth(6, 10, agl), mixB = (low, high) => [low[0] + (high[0] - low[0]) * up, low[1] + (high[1] - low[1]) * up, high[2], high[3]];
     // Tussock impostors: from 12 m when seen from the air (low down the blade clumps carry the near
     // field) out to 225 m, so the sward keeps a grain from 60-200 m up. Wild oat stands likewise,
     // while the grass is cured.
     const cb = CLUMP_BAND, sb = STALK_BAND;
-    this.clumps.update(camera, agl < cb[3], agl < 8 ? [45, 60, cb[2], cb[3]] : cb);
-    this.stalks.update(camera, agl < sb[3] && this.uniforms.dry.value > 0.3, agl < 8 ? [30, 45, sb[2], sb[3]] : sb);
+    this.clumps.update(camera, agl < cb[3], mixB([45, 60], cb));
+    this.stalks.update(camera, agl < sb[3] && this.uniforms.dry.value > 0.3, mixB([30, 45], sb));
     this.shells.update(camera, agl, this.uniforms.heightScale.value);
   }
 }
