@@ -17,35 +17,48 @@
   },
   "status": "agent draft, needs local sign-off",
   "trunk": {
-    "length_ratio": 0.75, "radius_ratio": 0.035, "taper": 0.7, "flare": 1.6,
-    "bole_ratio": 0.1, "base_size": 0.25,
-    "curve_deg": 35, "curve_var_deg": 30, "segments": 4, "lean_deg": 0,
-    "stems": [3, 5], "stem_spread_deg": 35,
-    "split_prob": 0.0, "split_count": 2, "split_angle_deg": 20,
-    "bark_rgb": [116, 40, 28], "bark_pattern": "smooth", "twig_rgb": [128, 52, 36]
+    "length_ratio": 0.75, "radius_ratio": 0.035, "taper": 0.7, "flare": 1.6, "bole_ratio": 0.1, "base_size": 0.2,
+    "curve_deg": 20, "curve_var_deg": 18, "segments": 4, "lean_deg": 0, "stems": [4, 7], "stem_spread_deg": 45,
+    "split_prob": 0.0, "split_count": 2, "split_angle_deg": 20, "bark_rgb": [128, 58, 50], "bark_pattern": "smooth",
+    "twig_rgb": [132, 66, 54], "sinuous_deg": 16, "bark": {"tile_m": [0.2, 0.4], "contrast": 1.0, "relief": 0.6}
   },
-  "crown": { "shape": "hemispherical" },
+  "crown": {
+    "shape": "cylindrical",
+    "envelope": {"profile": [[0.0, 0.54], [0.15, 0.744], [0.35, 0.84], [0.55, 0.792], [0.75, 0.624], [0.9, 0.384], [1.0, 0.12]], "lobes": 3, "lobe_depth": 0.1, "asymmetry": 0.12, "fill": 0.6, "edge": 1.06}
+  },
   "levels": [
-    { "count": 5, "down_angle_deg": 35, "down_angle_var_deg": 15, "rotation_deg": 140, "rotation_var_deg": 30,
-      "length_ratio": 0.55, "length_var": 0.25, "curve_deg": 30, "curve_var_deg": 25, "tropism": 0.08,
-      "taper": 0.9, "radius_ratio": 0.6, "segments": 2 },
-    { "count": 4, "start": 0.3, "down_angle_deg": 35, "down_angle_var_deg": 15, "rotation_deg": 140, "rotation_var_deg": 30,
-      "length_ratio": 0.45, "length_var": 0.25, "curve_deg": 20, "curve_var_deg": 20, "tropism": 0.08,
-      "taper": 1.0, "radius_ratio": 0.5, "segments": 1 }
+    {
+      "count": 4, "down_angle_deg": 35, "down_angle_var_deg": 15, "rotation_deg": 140, "rotation_var_deg": 30,
+      "length_ratio": 0.75, "length_var": 0.25, "curve_deg": 30, "curve_var_deg": 14, "tropism": 0.08, "taper": 0.9,
+      "radius_ratio": 0.6, "segments": 2, "sinuous_deg": 18
+    },
+    {
+      "count": 4, "start": 0.3, "down_angle_deg": 35, "down_angle_var_deg": 15, "rotation_deg": 140,
+      "rotation_var_deg": 30, "length_ratio": 0.45, "length_var": 0.25, "curve_deg": 20, "curve_var_deg": 20,
+      "tropism": 0.08, "taper": 1.0, "radius_ratio": 0.5, "segments": 1
+    }
   ],
   "foliage": {
-    "type": "broadleaf", "leaf_size_m": 0.035, "leaf_shape": "oval", "cluster_m": 0.5, "density": 18,
-    "start": 0.35, "orientation": "vertical",
-    "colors": { "winter": [100, 114, 94], "spring": [122, 122, 106], "summer": [110, 122, 100], "fall": [104, 116, 96] },
-    "leaf_on": { "winter": 1.0, "spring": 1.0, "summer": 1.0, "fall": 1.0 }
+    "type": "broadleaf", "leaf_size_m": 0.035, "leaf_shape": "round_vertical", "cluster_m": 0.5, "density": 24,
+    "start": 0.25, "orientation": "vertical",
+    "colors": {"winter": [131, 139, 118], "spring": [160, 149, 134], "summer": [144, 149, 126], "fall": [136, 142, 121]},
+    "leaf_on": {"winter": 1.0, "spring": 1.0, "summer": 1.0, "fall": 1.0},
+    "clumps": {"radius_m": 0.4, "cards_per_clump": 6, "shell": 0.5, "flatten": 0.8, "tip_bias": 1.3}, "ao_min": 0.8,
+    "color_var": [0.07, 0.03]
   },
-  "lod": { "near_tris_budget": 1000, "near_sides": [5, 3, 0], "mid_blobs": 3, "mid_branches": 6 },
+  "deadwood": {
+    "fraction": 0.15, "where": "inner", "levels": [1, 2], "shorten": 0.6, "rgb": [140, 136, 128]
+  },
+  "lod": {
+    "near_tris_budget": 1100, "near_sides": [4, 3, 0], "mid_blobs": 3, "mid_branches": 6, "mid_sides": [3, 0],
+    "mid_cards": 40
+  },
+  "targets": {
+    "crown_width_ratio": 1.4, "crown_base_ratio": 0.15, "porosity": 0.1, "foliage_rg": 0.95, "foliage_bg": 0.68,
+    "from": "reference photographs, docs/tree-likeness-review.md: 01, 02 habit (crown r/g 0.91-0.96, b/g 0.59-0.74), 06 crown texture"
+  },
   "notes": "Common manzanita of foothill chaparral and the understory of open oak and pine woodland, 1-4 m. An obligate seeder (no burl): a short base divides at once into several crooked, stiff, upswept stems (stems 3-5 spreading 35 degrees, high curve variance, upward tropism). Bark smooth, polished red-brown to mahogany, peeling in thin curls: the most recognisable thing about it, so the bark colour is saturated and the bark pattern smooth. Branching is sympodial with terminal inflorescences (Leeuwenberg's model): each shoot ends in a flower cluster and growth continues from lateral buds below it, which gives the forked, zigzag look. Leaves 2-5 cm, oval to round, thick, glaucous whitish grey-green, and held vertically (edge-on to the midday sun): orientation 'vertical'. Flowers white to pink, January-April, which lightens the spring colour. Evergreen.",
-  "sources": [
-    "https://www.fs.usda.gov/database/feis/plants/shrub/arcvis/all.html",
-    "https://en.wikipedia.org/wiki/Arctostaphylos_viscida",
-    "https://ucjeps.berkeley.edu/eflora/ (Arctostaphylos viscida)"
-  ],
+  "sources": ["https://www.fs.usda.gov/database/feis/plants/shrub/arcvis/all.html", "https://en.wikipedia.org/wiki/Arctostaphylos_viscida", "https://ucjeps.berkeley.edu/eflora/ (Arctostaphylos viscida)"],
   "authors": ["Wild Earth (agent draft, 2026-10-23); needs local sign-off"],
   "license": "CC BY-SA 4.0"
 }

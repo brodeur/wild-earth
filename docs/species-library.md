@@ -194,8 +194,9 @@ counts are 204-290.
 
 - Leaf cards are sprays, not single leaves: close up (under about 5 m) the spray
   texture is visible, and the alpha-tested edges alias.
-- Bark is vertex colour on 5-8 sided tubes; there is no bark texture or normal map yet.
-- Cones, flowers and fruit are colour shifts at most.
+- Bark texture and normal map are drawn per species (see "Likeness fields" below) and used within the
+  near distance; the mid trunks are plain vertex colour with the same mean.
+- Cones and fruit are not drawn. Chamise flower and seed heads are coloured wand tips (`foliage.tips`).
 - No wind yet. The skeleton has what wind needs (per-level stems), but nothing animates it.
 - Mid-LOD blobs are axis-aligned and lumpy. From 180 m to about 400 m they read as
   clumps of balls, denser and smoother than the near crowns, so the switch at 180 m
@@ -240,3 +241,34 @@ no tree pops. The close tier is empty at altitude and costs nothing there.
 `client/src/identify.js`: the HUD names the nearest tree and counts species within
 100 m four times a second; a click on a tree (not a drag) opens the species card built
 from the file; T toggles name tags over one tree in ten within 160 m.
+
+## Likeness fields (2026-10-24)
+
+From the photo comparison in [tree-likeness-review.md](tree-likeness-review.md). Every field is
+optional and its default reproduces the tree as it was grown before, so older files are unchanged.
+
+| field | meaning |
+|---|---|
+| `crown.envelope` | crown outline traced from photographs: `profile` `[[h, r], ...]` (crown radius r at height h, both fractions of tree height), `lobes` and `lobe_depth` (bulges around the crown), `asymmetry` (one heavier side), `fill` (how far a level-1 limb may grow to reach the outline, 0.3 = 30% longer), `edge` (slack for twigs past the outline). Limbs and twigs are shortened (or lengthened, up to `fill`) so their tips land on the outline, Weber and Penn's pruning. Shrub stems are fitted too (the chamise vase) |
+| `trunk.split_height` | where the trunk forks, as a fraction of its length; default the bole top. Gray pine forks high |
+| `trunk.sinuous_deg`, `levels[].sinuous_deg` | smooth S-bends per segment (manzanita stems) |
+| `levels[].zigzag_deg` | alternating turn per segment, the growth-unit zig-zag of oak limbs and twigs |
+| `trunk.stubs` | `{ count: [min, max], length_m, radius_ratio }`: short dead stubs on the clear bole (ponderosa) |
+| `trunk.bark` | bark texture: `tile_m` [width, height] of one tile in metres, `plate_m` [w, h] of a plate or check, `ridge_m`/`block_m` (furrowed), `fissure` (0-1), `contrast`, `lichen` (0-1), `relief` (normal-map strength). The pattern is `bark_pattern`, now also `shreddy`; `bark_rgb` stays the mean colour |
+| `deadwood` | `{ fraction, where: lower / inner / any, levels, shorten, rgb }`: grey dead branches (or shrub stems with `levels: [0]`) without foliage |
+| `epiphytes.mistletoe` | `{ prob, count: [min, max], radius_m }`: evergreen balls on the outer limbs, drawn with the wood so they show in a bare crown |
+| `foliage.clumps` | `{ radius_m, cards_per_clump, shell, flatten, tip_bias }`: cards gathered into clumps at twig ends with gaps between them; `shell` drops clumps from the inner crown (fraction of the crown radius). Mid cards are then one per clump, sized to its leaf area |
+| `foliage.leaf_shape` | adds `oblong_wavy` (blue oak), `elliptic_glossy` (live oak), `round_vertical` (manzanita), `needle_drooping` (gray pine), `needle_brush` (ponderosa), `fascicle_wand` (chamise) |
+| `foliage.palette` | `[[weight, [r, g, b]], ...]`: per-leaf tints drawn into the texture (old yellow leaves in live oak) |
+| `foliage.tips` | `{ season: [r, g, b] }`: colour of flowers or seed heads at the wand tips (chamise: cream in spring, rust in summer and fall) |
+| `foliage.winter_twigs` | for deciduous species, the fraction of cards that show bare zig-zag twigs (coloured `trunk.twig_rgb`) when the crown is leafless |
+| `foliage.twist_deg` | needle tufts turned about their twig by up to this much, so a pine crown has volume rather than sheets |
+| `foliage.ao_min` | floor of the inner-crown darkening (default 0.62); higher for pale, low-contrast crowns |
+| `foliage.color_var`, `foliage.leaf_on_var` | per-plant variation from a hash of the plant's position: `[value, yellow-blue]` colour spread, and how much whole plants leaf out or drop leaves early or late |
+| `lod.mid_tex_scale` | size of the mid cards' texture relative to the near card (default 2) |
+| `targets` | photo-measured `crown_width_ratio`, `crown_base_ratio`, `porosity`, `foliage_rg`, `foliage_bg` and where they came from. The lineup measures each seed the same way and prints measured / target under the label (green within tolerance); `?metrics=0` turns it off |
+
+`trunkMaterial(patch, spec)` returns the species' bark material; without `spec` it is the
+shared plain material as before. `applySeason` also switches card textures (season tips,
+winter twigs).
+

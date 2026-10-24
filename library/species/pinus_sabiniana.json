@@ -17,35 +17,49 @@
   },
   "status": "agent draft, needs local sign-off",
   "trunk": {
-    "length_ratio": 0.95, "radius_ratio": 0.03, "taper": 0.9, "flare": 1.2,
-    "bole_ratio": 0.25, "base_size": 0.3,
-    "curve_deg": 25, "curve_var_deg": 25, "segments": 6, "lean_deg": 14,
-    "stems": [1, 1], "stem_spread_deg": 0,
-    "split_prob": 0.55, "split_count": 2, "split_angle_deg": 22,
-    "bark_rgb": [90, 85, 78], "bark_pattern": "furrowed", "twig_rgb": [106, 100, 90]
+    "length_ratio": 0.95, "radius_ratio": 0.03, "taper": 0.9, "flare": 1.2, "bole_ratio": 0.25, "base_size": 0.28,
+    "curve_deg": 25, "curve_var_deg": 25, "segments": 6, "lean_deg": 14, "stems": [1, 1], "stem_spread_deg": 0,
+    "split_prob": 0.6, "split_count": 2, "split_angle_deg": 18, "bark_rgb": [112, 104, 92],
+    "bark_pattern": "furrowed", "twig_rgb": [106, 100, 90], "split_height": 0.55,
+    "bark": {"tile_m": [0.5, 1.0], "ridge_m": 0.09, "block_m": 0.12, "fissure": 0.7, "contrast": 1.2, "relief": 1.5}
   },
-  "crown": { "shape": "spherical" },
+  "crown": {
+    "shape": "spherical",
+    "envelope": {"profile": [[0.22, 0.16], [0.38, 0.29], [0.55, 0.33], [0.7, 0.31], [0.84, 0.23], [0.94, 0.13], [1.0, 0.04]], "lobes": 3, "lobe_depth": 0.16, "asymmetry": 0.15, "fill": 0.35, "edge": 1.1}
+  },
   "levels": [
-    { "count": 18, "whorl": 3, "down_angle_deg": 65, "down_angle_tip_deg": 45, "down_angle_var_deg": 20, "rotation_deg": 50, "rotation_var_deg": 30,
-      "length_ratio": 0.38, "length_var": 0.3, "curve_deg": 25, "curve_var_deg": 25, "tropism": 0.06,
-      "taper": 0.95, "radius_ratio": 0.4, "segments": 3 },
-    { "count": 4, "start": 0.3, "down_angle_deg": 40, "down_angle_var_deg": 15, "rotation_deg": 140, "rotation_var_deg": 40,
-      "length_ratio": 0.4, "length_var": 0.3, "curve_deg": 20, "curve_var_deg": 20, "tropism": 0.04,
-      "taper": 1.0, "radius_ratio": 0.5, "segments": 1 }
+    {
+      "count": 30, "whorl": 2, "down_angle_deg": 72, "down_angle_tip_deg": 40, "down_angle_var_deg": 18,
+      "rotation_deg": 70, "rotation_var_deg": 40, "length_ratio": 0.3, "length_var": 0.35, "curve_deg": 10,
+      "curve_var_deg": 28, "tropism": 0.05, "taper": 0.95, "radius_ratio": 0.4, "segments": 2
+    },
+    {
+      "count": 4, "start": 0.35, "down_angle_deg": 45, "down_angle_var_deg": 15, "rotation_deg": 140,
+      "rotation_var_deg": 40, "length_ratio": 0.45, "length_var": 0.3, "curve_deg": 15, "curve_var_deg": 20,
+      "tropism": 0.03, "taper": 1.0, "radius_ratio": 0.5, "segments": 1
+    }
   ],
   "foliage": {
-    "type": "needle", "leaf_size_m": 0.27, "leaf_shape": "needle_cluster", "cluster_m": 1.4, "density": 6,
-    "start": 0.4, "parent_start": 0.4, "orientation": "along", "droop": 0.6,
-    "colors": { "winter": [108, 122, 98], "spring": [112, 128, 98], "summer": [116, 126, 102], "fall": [114, 124, 100] },
-    "leaf_on": { "winter": 1.0, "spring": 1.0, "summer": 1.0, "fall": 1.0 }
+    "type": "needle", "leaf_size_m": 0.27, "leaf_shape": "needle_drooping", "cluster_m": 1.5, "density": 12,
+    "start": 0.45, "parent_start": 0.55, "orientation": "along", "droop": 0.8,
+    "colors": {"winter": [116, 129, 116], "spring": [121, 135, 116], "summer": [125, 133, 121], "fall": [123, 131, 119]},
+    "leaf_on": {"winter": 1.0, "spring": 1.0, "summer": 1.0, "fall": 1.0}, "twist_deg": 70,
+    "clumps": {"radius_m": 0.65, "cards_per_clump": 5, "shell": 0, "flatten": 0.85, "tip_bias": 2.0},
+    "palette": [[0.9, [1, 1, 1]], [0.1, [1.3, 1.1, 0.8]]], "ao_min": 0.75, "color_var": [0.08, 0.03]
   },
-  "lod": { "near_tris_budget": 1400, "near_sides": [7, 4, 3], "mid_blobs": 5, "mid_branches": 6, "mid_blob_scale": 0.7 },
+  "deadwood": {
+    "fraction": 0.22, "where": "lower", "levels": [1], "shorten": 0.7, "rgb": [138, 132, 122]
+  },
+  "lod": {
+    "near_tris_budget": 1800, "near_sides": [7, 3, 0], "mid_blobs": 5, "mid_branches": 6, "mid_blob_scale": 0.7,
+    "close_factor": 2
+  },
+  "targets": {
+    "crown_width_ratio": 0.65, "crown_base_ratio": 0.3, "porosity": 0.4, "foliage_rg": 0.88, "foliage_bg": 0.82,
+    "from": "reference photographs, docs/tree-likeness-review.md: 01 with blue oaks, 02 leaning (crown porosity 0.53), 03 single (0.32), 05 Mt Diablo"
+  },
   "notes": "Endemic foothill pine of hot, dry slopes, mixed into blue oak woodland and chaparral. 12-25 m (rarely to 32 m). The look is the opposite of ponderosa: a crooked, leaning trunk that often forks into two or more leaders (split_prob 0.55, lean up to 14 degrees, high curve variance), and a sparse, open, irregular crown you can see the sky through (low foliage density, few short level-2 twigs). Pines follow Rauh's model (monopodial trunk, rhythmic whorled branching), but gray pine's whorls are irregular and its branches ascend steeply in the upper crown (down angle 65 at the base of the crown to 45 at the top). Needles 20-32 cm in bundles of three, grey-green and drooping, in loose tufts at branch ends: needle_cluster cards with droop. Bark dark grey-brown, irregularly furrowed. The very large cones (15-25 cm) are ignored for now. Colour barely changes with season.",
-  "sources": [
-    "https://www.fs.usda.gov/database/feis/plants/tree/pinsab/all.html",
-    "https://en.wikipedia.org/wiki/Pinus_sabiniana",
-    "https://ucjeps.berkeley.edu/eflora/ (Pinus sabiniana)"
-  ],
+  "sources": ["https://www.fs.usda.gov/database/feis/plants/tree/pinsab/all.html", "https://en.wikipedia.org/wiki/Pinus_sabiniana", "https://ucjeps.berkeley.edu/eflora/ (Pinus sabiniana)"],
   "authors": ["Wild Earth (agent draft, 2026-10-23); needs local sign-off"],
   "license": "CC BY-SA 4.0"
 }

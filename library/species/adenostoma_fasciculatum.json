@@ -17,32 +17,43 @@
   },
   "status": "agent draft, needs local sign-off",
   "trunk": {
-    "length_ratio": 0.85, "radius_ratio": 0.02, "taper": 0.85, "flare": 1.5,
-    "bole_ratio": 0.05, "base_size": 0.3,
-    "curve_deg": 15, "curve_var_deg": 20, "segments": 3, "lean_deg": 0,
-    "stems": [6, 10], "stem_spread_deg": 22,
-    "split_prob": 0.0, "split_count": 2, "split_angle_deg": 20,
-    "bark_rgb": [96, 76, 62], "bark_pattern": "furrowed", "twig_rgb": [106, 90, 74]
+    "length_ratio": 1.0, "radius_ratio": 0.012, "taper": 0.9, "flare": 1.5, "bole_ratio": 0.05, "base_size": 0.3,
+    "curve_deg": 8, "curve_var_deg": 16, "segments": 3, "lean_deg": 0, "stems": [16, 28], "stem_spread_deg": 33,
+    "split_prob": 0.0, "split_count": 2, "split_angle_deg": 20, "bark_rgb": [96, 76, 62], "bark_pattern": "shreddy",
+    "twig_rgb": [106, 90, 74], "bark": {"tile_m": [0.1, 0.4]}
   },
-  "crown": { "shape": "hemispherical" },
+  "crown": {
+    "shape": "cylindrical",
+    "envelope": {"profile": [[0.0, 0.12], [0.25, 0.3], [0.5, 0.47], [0.75, 0.6], [0.92, 0.6], [1.0, 0.42]], "lobes": 5, "lobe_depth": 0.15, "asymmetry": 0.12, "fill": 0.4, "edge": 1.1}
+  },
   "levels": [
-    { "count": 4, "down_angle_deg": 28, "down_angle_var_deg": 10, "rotation_deg": 140, "rotation_var_deg": 30,
-      "length_ratio": 0.42, "length_var": 0.3, "curve_deg": 10, "curve_var_deg": 15, "tropism": 0.1,
-      "taper": 1.0, "radius_ratio": 0.6, "segments": 1 }
+    {
+      "count": 3, "start": 0.4, "down_angle_deg": 22, "down_angle_var_deg": 10, "rotation_deg": 140,
+      "rotation_var_deg": 30, "length_ratio": 0.22, "length_var": 0.4, "curve_deg": 5, "curve_var_deg": 15,
+      "tropism": 0.08, "taper": 1.0, "radius_ratio": 0.6, "segments": 1
+    }
   ],
   "foliage": {
-    "type": "needle", "leaf_size_m": 0.008, "leaf_shape": "needle_fascicle", "cluster_m": 0.42, "density": 24,
-    "start": 0.3, "orientation": "outward",
-    "colors": { "winter": [82, 96, 64], "spring": [150, 152, 120], "summer": [116, 120, 94], "fall": [124, 104, 80] },
-    "leaf_on": { "winter": 1.0, "spring": 1.0, "summer": 1.0, "fall": 1.0 }
+    "type": "needle", "leaf_size_m": 0.008, "leaf_shape": "fascicle_wand", "cluster_m": 0.42, "density": 22,
+    "start": 0.1, "orientation": "along",
+    "colors": {"winter": [82, 94, 67], "spring": [150, 149, 125], "summer": [116, 118, 98], "fall": [124, 102, 83]},
+    "leaf_on": {"winter": 1.0, "spring": 1.0, "summer": 1.0, "fall": 1.0}, "parent_start": 0.2, "twist_deg": 60,
+    "tips": {"spring": [236, 232, 214], "summer": [170, 120, 80], "fall": [150, 90, 60], "winter": [120, 84, 62]},
+    "ao_min": 0.72, "color_var": [0.1, 0.06]
   },
-  "lod": { "near_tris_budget": 900, "near_sides": [3, 3], "mid_blobs": 3, "mid_branches": 0, "mid_sides": [3, 3] },
+  "deadwood": {
+    "fraction": 0.3, "levels": [0], "shorten": 0.85, "rgb": [132, 128, 122]
+  },
+  "lod": {
+    "near_tris_budget": 1000, "near_sides": [3, 0], "mid_blobs": 3, "mid_branches": 0, "mid_sides": [0, 0],
+    "mid_cards": 40
+  },
+  "targets": {
+    "crown_width_ratio": 1.2, "crown_base_ratio": 0.1, "porosity": 0.15, "foliage_rg": 1.0, "foliage_bg": 0.7,
+    "from": "reference photographs, docs/tree-likeness-review.md: 01 El Dorado Hills, 02 Darrington Trail, 03 (porosity 0.17), 04"
+  },
   "notes": "The commonest chaparral shrub in California; dense, even stands on dry slopes. 0.6-3.5 m, here 1.2-2.4 m. Many slender stems rise from a basal burl (lignotuber), from which it resprouts after fire: stems 6-10 spreading about 22 degrees, thin (dbh/height 0.02). Stiff, upright, twiggy branchlets (one dense branch level, steep down angle, upward tropism). Bark grey-brown and shreddy on old stems. Leaves 4-10 mm, linear and needle-like, in bundles (fascicles) on short spur shoots, so the foliage is a fine dark-to-grey-green texture rather than leaves you can see: leaf_shape 'needle_fascicle'. Colour by season: darkest and greenest after winter rain, cream-tinged in late spring when dense terminal panicles of small white flowers open (May-June), greyer and dustier through the summer drought, rusty brown in fall from the dried flower heads. The architectural model is provisional: branching is sympodial with terminal inflorescences, which fits Leeuwenberg's model, but the basitonic, resprouting multi-stem habit is the stronger visual cue and is carried by trunk.stems. Needs a botanist's check.",
-  "sources": [
-    "https://www.fs.usda.gov/database/feis/plants/shrub/adefas/all.html",
-    "https://en.wikipedia.org/wiki/Adenostoma_fasciculatum",
-    "https://ucjeps.berkeley.edu/eflora/ (Adenostoma fasciculatum)"
-  ],
+  "sources": ["https://www.fs.usda.gov/database/feis/plants/shrub/adefas/all.html", "https://en.wikipedia.org/wiki/Adenostoma_fasciculatum", "https://ucjeps.berkeley.edu/eflora/ (Adenostoma fasciculatum)"],
   "authors": ["Wild Earth (agent draft, 2026-10-23); needs local sign-off"],
   "license": "CC BY-SA 4.0"
 }

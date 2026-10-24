@@ -83,7 +83,8 @@ export class Vegetation {
     this.closeCount = 0; this.lastClose = null; this.closeVersion = -1;
     this.lodU = { lodEye: { value: new THREE.Vector3() }, lodR: { value: NEAR_R }, closeEye: { value: new THREE.Vector3(0, 1e9, 0) }, closeR: { value: CLOSE_R } };
     const patch = m => atmosphere.patchLambert(m);   // cloud shadow + aerial perspective
-    this.trunkMat = { near: lodPatch(trunkMaterial(patch), this.lodU, 'near'), mid: lodPatch(trunkMaterial(patch), this.lodU, 'mid') };
+    this.trunkMat = { near: lodPatch(trunkMaterial(patch), this.lodU, 'near'), mid: lodPatch(trunkMaterial(patch), this.lodU, 'mid') };   // shared (shadow casters use it)
+    this.barkMat = {};     // species id -> { near, mid }: the species' bark texture and normal map (treegen barkTexture)
     this.canopyMat = {};   // species id -> { near, mid, close }
     this.meshes = {};      // species id -> [{ near: {trunk, canopy, cap, n, ids}, mid: {...}, close: {canopy, cap, n}, stem, height, tris }]
     this.stats = {};
@@ -91,13 +92,14 @@ export class Vegetation {
       const spec = SPECIES[id];
       this.canopyMat[id] = { near: lodPatch(canopyMaterial(spec, 'near', patch), this.lodU, 'near', true, true), mid: lodPatch(canopyMaterial(spec, 'mid', patch), this.lodU, 'mid', true),
         close: lodPatch(canopyMaterial(spec, 'close', patch), this.lodU, 'close', true) };
+      this.barkMat[id] = { near: lodPatch(trunkMaterial(patch, spec), this.lodU, 'near'), mid: this.trunkMat.mid };   // bark texture within NEAR_R; beyond, plain vertex colour (same mean)
       this.meshes[id] = [];
       for (let v = 0; v < VARIANTS; v++) {
         const seed = variantSeed(id, v), entry = {};
         for (const lod of ['near', 'mid']) {
           const t = buildTree(id, seed, lod);
           const cap = lod === 'mid' ? (spec.shrub ? CAP : CAP / 2) : NEAR_CAP[spec.shrub ? 'shrub' : 'tree'];
-          const trunk = new THREE.InstancedMesh(t.trunk, this.trunkMat[lod], cap);
+          const trunk = new THREE.InstancedMesh(t.trunk, this.barkMat[id][lod], cap);
           const canopy = new THREE.InstancedMesh(t.canopy, this.canopyMat[id][lod], cap);
           canopy.instanceMatrix = trunk.instanceMatrix;   // one matrix buffer for both parts
           trunk.count = canopy.count = 0; trunk.frustumCulled = canopy.frustumCulled = false;

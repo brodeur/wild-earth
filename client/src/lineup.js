@@ -40,13 +40,13 @@ function scale5() {
   return g;
 }
 
-const trunkMat = trunkMaterial();
 const groups = [];
 let x = 0;
 for (const id of ids) {
   const spec = LIBRARY[id];
-  const g = { id, spec, near: new THREE.Group(), mid: new THREE.Group(), mats: { near: canopyMaterial(spec, 'near'), mid: canopyMaterial(spec, 'mid') }, canopies: [], tris: { near: [], mid: [] } };
+  const g = { id, spec, built: null, near: new THREE.Group(), mid: new THREE.Group(), mats: { near: canopyMaterial(spec, 'near'), mid: canopyMaterial(spec, 'mid'), trunk: trunkMaterial(null, spec) }, canopies: [], tris: { near: [], mid: [] } };
   const built = SEEDS.map(seed => ({ near: buildTree(id, seed + id.length, 'near'), mid: buildTree(id, seed + id.length, 'mid') }));
+  g.built = built;
   const widths = built.map(b => { b.near.canopy.computeBoundingBox(); const bb = b.near.canopy.boundingBox; return { w: Math.max(bb.max.x - bb.min.x, bb.max.z - bb.min.z, 1), cx: (bb.max.x + bb.min.x) / 2 }; });
   const gap = Math.max(1, spec.height_m[1] * 0.12);
   const x0 = x;
@@ -54,7 +54,7 @@ for (const id of ids) {
   built.forEach((b, i) => {
     x += widths[i].w / 2;
     for (const lod of ['near', 'mid']) {
-      const t = new THREE.Mesh(b[lod].trunk, trunkMat), c = new THREE.Mesh(b[lod].canopy, g.mats[lod]);
+      const t = new THREE.Mesh(b[lod].trunk, g.mats.trunk), c = new THREE.Mesh(b[lod].canopy, g.mats[lod]);
       t.castShadow = c.castShadow = true; t.receiveShadow = c.receiveShadow = true;
       t.position.x = c.position.x = x - widths[i].cx;
       g[lod].add(t, c); g.canopies.push(c);
@@ -75,6 +75,90 @@ for (const id of ids) {
   $('labels').appendChild(el); g.label = el;
 }
 const totalW = x;
+
+// Measured silhouette and colour per species, the same measures docs/tree-likeness-review.md took
+// from the reference photographs (stored as `targets` in each species file): each seed is drawn
+// side-on with an orthographic camera into a small offscreen target (two views, 90 degrees apart).
+//   W/H: widest row of the plant (1st to 99th percentile of its pixels) / plant height
+//   base: lowest crown pixels (5th percentile of canopy rows) / plant height
+//   porosity: sky inside that row span, median over the upper 70% of the crown
+//   r/g, b/g: mean canopy colour in linear light under a fixed sun (exposure-free ratios)
+const MS = 256, mTarget = new THREE.WebGLRenderTarget(MS, MS), mBuf = new Uint8Array(MS * MS * 4);
+const mScene = new THREE.Scene(), mCam = new THREE.OrthographicCamera(-1, 1, 1, -1, 0.1, 500);
+const mFlat = new THREE.MeshBasicMaterial({ color: 0x000000 });
+const mSun = new THREE.DirectionalLight(0xffffff, 2.2); mSun.position.set(-0.6, 1, 0.8);
+mScene.add(new THREE.HemisphereLight(0xffffff, 0x8c8270, 0.9), mSun, mSun.target);
+function measureView(objs, bb, axis, colour) {
+  const c = bb.getCenter(new THREE.Vector3()), size = bb.getSize(new THREE.Vector3()), half = 0.52 * Math.max(size.x, size.y, size.z);
+  mCam.left = -half; mCam.right = half; mCam.top = half; mCam.bottom = -half; mCam.updateProjectionMatrix();
+  mCam.position.copy(c).add(axis === 'z' ? new THREE.Vector3(0, 0, 200) : new THREE.Vector3(200, 0, 0)); mCam.lookAt(c);
+  mScene.background = new THREE.Color(1, 1, 1);
+  for (const o of objs) mScene.add(o);
+  renderer.setRenderTarget(mTarget); renderer.clear(); renderer.render(mScene, mCam); renderer.setRenderTarget(null);
+  renderer.readRenderTargetPixels(mTarget, 0, 0, MS, MS, mBuf);
+  for (const o of objs) mScene.remove(o);
+  const mask = new Uint8Array(MS * MS); let r = 0, g = 0, b = 0, n = 0;
+  for (let i = 0; i < MS * MS; i++) {
+    const R = mBuf[4 * i], G = mBuf[4 * i + 1], B = mBuf[4 * i + 2];
+    if (R + G + B < 3 * 250) { mask[i] = 1; if (colour) { r += R; g += G; b += B; n++; } }
+  }
+  return { mask, rg: n ? r / g : 0, bg: n ? b / g : 0 };   // the target is linear (no tone mapping), so these are linear ratios
+}
+function rowsOf(mask) {   // rows top (0) to bottom, from a bottom-up pixel buffer
+  const rows = [];
+  for (let y = MS - 1; y >= 0; y--) { const xs = []; for (let x = 0; x < MS; x++) if (mask[y * MS + x]) xs.push(x); rows.push(xs); }
+  return rows;
+}
+function measureTree(b, mat) {
+  const t = new THREE.Mesh(b.trunk, mFlat), cFlat = new THREE.Mesh(b.canopy, mat), cCol = new THREE.Mesh(b.canopy, mat);
+  const bb = new THREE.Box3().setFromObject(t).union(new THREE.Box3().setFromObject(cFlat));
+  const out = { wh: 0, base: 0, por: 0, rg: 0, bg: 0 };
+  for (const axis of ['z', 'x']) {
+    const all = rowsOf(measureView([t, cFlat], bb, axis).mask);
+    const top = all.findIndex(r => r.length), bot = all.length - 1 - [...all].reverse().findIndex(r => r.length), h = Math.max(1, bot - top + 1);
+    let wmax = 0; const por = [];
+    all.forEach((xs, i) => {
+      if (xs.length < 2) return;
+      const a = xs[Math.floor(xs.length * 0.01)], z = xs[Math.min(xs.length - 1, Math.floor(xs.length * 0.99))], span = z - a + 1;
+      wmax = Math.max(wmax, span);
+      if (i >= top && i <= top + 0.7 * h) { let f = 0; for (const x of xs) if (x >= a && x <= z) f++; por.push(1 - f / span); }
+    });
+    const can = measureView([cCol], bb, axis, true), crow = rowsOf(can.mask), ys = [];
+    crow.forEach((xs, i) => { for (let k = 0; k < xs.length; k++) ys.push(i); });
+    ys.sort((p, q) => q - p);
+    const lowest = ys.length ? ys[Math.floor(ys.length * 0.05)] : bot;
+    por.sort((p, q) => p - q);
+    out.wh += wmax / h / 2; out.base += Math.max(0, (bot - lowest) / h) / 2; out.por += (por.length ? por[Math.floor(por.length / 2)] : 0) / 2;
+    out.rg += can.rg / 2; out.bg += can.bg / 2;
+  }
+  return out;
+}
+function measureAll() {
+  const res = {};
+  for (const g of groups) {
+    // measured without the per-plant tint (color_var), which would otherwise depend on where the seed stands
+    const plain = { ...g.spec, foliage: { ...g.spec.foliage, color_var: [0, 0], leaf_on_var: 0 } }, mat = canopyMaterial(plain, 'near');
+    applySeason(mat, plain, 'summer');
+    const ms = g.built.map(b => measureTree(b.near, mat));
+    const avg = k => ms.reduce((s, m) => s + m[k], 0) / ms.length;
+    res[g.id] = { wh: avg('wh'), base: avg('base'), por: avg('por'), rg: avg('rg'), bg: avg('bg'), target: g.spec.targets || null };
+  }
+  return res;
+}
+const fmt = (v, t, tol) => {
+  const ok = t == null ? '' : Math.abs(v - t) <= tol ? 'color:#1d6b35' : 'color:#9a3b12';
+  return `<span style="${ok}">${v.toFixed(2)}</span>${t == null ? '' : `<span class="muted">/${t}</span>`}`;
+};
+let METRICS = null;
+function showMetrics() {
+  if (params.get('metrics') === '0') return;
+  METRICS = measureAll();
+  for (const g of groups) {
+    const m = METRICS[g.id], t = m.target || {};
+    g.label.insertAdjacentHTML('beforeend', `<br><span class="muted" style="font-size:11px">W/H ${fmt(m.wh, t.crown_width_ratio, Math.max(0.1, 0.15 * (t.crown_width_ratio || 1)))} · base ${fmt(m.base, t.crown_base_ratio, 0.07)} · gaps ${fmt(m.por, t.porosity, 0.07)}<br>r/g ${fmt(m.rg, t.foliage_rg, 0.06)} · b/g ${fmt(m.bg, t.foliage_bg, 0.06)} <i>(measured / photo target)</i></span>`);
+  }
+}
+window.__lineupMetrics = () => METRICS && Object.fromEntries(Object.entries(METRICS).map(([k, m]) => [k, { wh: +m.wh.toFixed(2), base: +m.base.toFixed(2), por: +m.por.toFixed(2), rg: +m.rg.toFixed(2), bg: +m.bg.toFixed(2), target: m.target && { wh: m.target.crown_width_ratio, base: m.target.crown_base_ratio, por: m.target.porosity, rg: m.target.foliage_rg, bg: m.target.foliage_bg } }]));
 
 // Warn when the fetched files and the built-in fallback differ (run library/embed_builtin.py).
 const strip = r => { const c = { ...r }; delete c.notes; delete c.sources; delete c.authors; return JSON.stringify(c); };
@@ -114,6 +198,7 @@ $('shadows').onchange = e => { state.shadows = e.target.checked; apply(); };
 $('focus').onchange = e => { state.focus = e.target.value; frame(state.focus); };
 addEventListener('resize', () => { camera.aspect = innerWidth / innerHeight; camera.updateProjectionMatrix(); renderer.setSize(innerWidth, innerHeight); frame(state.focus); });
 if (params.get('ui') === '0') $('panel').style.display = 'none';   // clean captures for docs
+showMetrics();
 apply(); frame(state.focus);
 
 const v = new THREE.Vector3();

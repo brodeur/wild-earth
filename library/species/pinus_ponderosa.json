@@ -17,37 +17,48 @@
   },
   "status": "agent draft, needs local sign-off",
   "trunk": {
-    "length_ratio": 1.0, "radius_ratio": 0.03, "taper": 1.0, "flare": 1.25,
-    "bole_ratio": 0.45, "base_size": 0.45,
-    "curve_deg": 4, "curve_var_deg": 4, "segments": 7, "lean_deg": 3,
-    "stems": [1, 1], "stem_spread_deg": 0,
-    "split_prob": 0.03, "split_count": 2, "split_angle_deg": 12,
-    "bark_rgb": [176, 108, 66], "bark_pattern": "plates", "twig_rgb": [92, 74, 60]
+    "length_ratio": 1.0, "radius_ratio": 0.03, "taper": 1.0, "flare": 1.25, "bole_ratio": 0.45, "base_size": 0.48,
+    "curve_deg": 4, "curve_var_deg": 4, "segments": 7, "lean_deg": 3, "stems": [1, 1], "stem_spread_deg": 0,
+    "split_prob": 0.03, "split_count": 2, "split_angle_deg": 12, "bark_rgb": [168, 116, 82],
+    "bark_pattern": "plates", "twig_rgb": [92, 74, 60],
+    "stubs": {"count": [6, 14], "length_m": 0.5, "radius_ratio": 0.12},
+    "bark": {"tile_m": [0.7, 1.4], "plate_m": [0.2, 0.6], "fissure": 0.95, "contrast": 1.15, "relief": 1.4}
   },
-  "crown": { "shape": "tapered_cylindrical" },
+  "crown": {
+    "shape": "tapered_cylindrical",
+    "envelope": {"profile": [[0.4, 0.2], [0.6, 0.22], [0.8, 0.2], [0.92, 0.13], [1.0, 0.04]], "lobes": 3, "lobe_depth": 0.1, "asymmetry": 0.1, "fill": 0.15, "edge": 1.1}
+  },
   "levels": [
-    { "count": 30, "whorl": 3, "down_angle_deg": 92, "down_angle_tip_deg": 58, "down_angle_var_deg": 10, "rotation_deg": 37, "rotation_var_deg": 25,
-      "length_ratio": 0.26, "length_var": 0.2, "curve_deg": 0, "curve_var_deg": 16, "tropism": 0.02,
-      "droop_deg": 34, "upturn_deg": 40,
-      "taper": 0.95, "radius_ratio": 0.32, "segments": 4 },
-    { "count": 6, "start": 0.3, "down_angle_deg": 50, "down_angle_var_deg": 15, "rotation_deg": -90, "rotation_var_deg": 30,
-      "length_ratio": 0.3, "length_var": 0.3, "curve_deg": 10, "curve_var_deg": 10, "tropism": 0.12,
-      "taper": 1.0, "radius_ratio": 0.5, "segments": 1 }
+    {
+      "count": 30, "whorl": 3, "down_angle_deg": 92, "down_angle_tip_deg": 58, "down_angle_var_deg": 10,
+      "rotation_deg": 37, "rotation_var_deg": 25, "length_ratio": 0.26, "length_var": 0.2, "curve_deg": 0,
+      "curve_var_deg": 16, "tropism": 0.02, "droop_deg": 34, "upturn_deg": 40, "taper": 0.95, "radius_ratio": 0.32,
+      "segments": 4
+    },
+    {
+      "count": 6, "start": 0.3, "down_angle_deg": 50, "down_angle_var_deg": 15, "rotation_deg": -90,
+      "rotation_var_deg": 30, "length_ratio": 0.3, "length_var": 0.3, "curve_deg": 10, "curve_var_deg": 10,
+      "tropism": 0.12, "taper": 1.0, "radius_ratio": 0.5, "segments": 1
+    }
   ],
   "foliage": {
-    "type": "needle", "leaf_size_m": 0.2, "leaf_shape": "needle_cluster", "cluster_m": 1.8, "density": 6,
-    "start": 0.4, "parent_start": 0.35, "orientation": "along",
-    "colors": { "winter": [48, 70, 44], "spring": [60, 86, 48], "summer": [52, 78, 46], "fall": [58, 78, 44] },
-    "leaf_on": { "winter": 1.0, "spring": 1.0, "summer": 1.0, "fall": 1.0 }
+    "type": "needle", "leaf_size_m": 0.2, "leaf_shape": "needle_brush", "cluster_m": 1.8, "density": 7, "start": 0.4,
+    "parent_start": 0.35, "orientation": "along",
+    "colors": {"winter": [74, 77, 57], "spring": [92, 95, 63], "summer": [80, 86, 60], "fall": [89, 86, 57]},
+    "leaf_on": {"winter": 1.0, "spring": 1.0, "summer": 1.0, "fall": 1.0}, "twist_deg": 50,
+    "clumps": {"radius_m": 0.75, "cards_per_clump": 7, "shell": 0, "flatten": 0.75, "tip_bias": 2.6}, "ao_min": 0.7,
+    "color_var": [0.07, 0.03]
   },
-  "lod": { "near_tris_budget": 2000, "near_sides": [8, 3, 0], "mid_blobs": 5, "mid_branches": 6, "mid_blob_scale": 0.7 },
+  "lod": {
+    "near_tris_budget": 2200, "near_sides": [8, 3, 0], "mid_blobs": 5, "mid_branches": 6, "mid_blob_scale": 0.7,
+    "close_factor": 2
+  },
+  "targets": {
+    "crown_width_ratio": 0.4, "crown_base_ratio": 0.45, "porosity": 0.35, "foliage_rg": 0.95, "foliage_bg": 0.47,
+    "from": "reference photographs, docs/tree-likeness-review.md: 02, 03 mature (clear bole 40-60%), 04 old flat top (crown porosity 0.14); young trees are conical to the ground"
+  },
   "notes": "The dominant pine of the lower montane conifer forest above the foothills. Mature trees here 22-38 m (to 70 m elsewhere), dbh 0.6-1.2 m (dbh/height about 0.03), with a tall, straight, barely tapering trunk clear of branches for nearly half its height (bole_ratio and base_size 0.45; lower limbs self-prune). Excurrent Rauh's model: the leader runs to the top (length_ratio 1, taper 1) and level-1 branches are whorled (about three per visible whorl in old trees), roughly horizontal: the lowest droop slightly below horizontal (98 degrees) and arch down and turn up again at the tips (droop_deg 34 over the inner half, upturn_deg 40 over the outer half, because in-world review found the limbs too straight), the upper ones ascend (58 degrees). Old crowns are open, narrowly rounded to flat-topped, hence the tapered_cylindrical shape (long branches persist near the top). Bark of mature 'yellow pine' is the signature: thick cinnamon-orange plates separated by deep black fissures ('plates' pattern); young trees ('blackjacks') are dark. Needles 12-25 cm in bundles of three, dark yellow-green, held in dense brush-like tufts at the ends of the twigs, so level-2 twigs carry only foliage (near_sides 0) and cards are needle_cluster tufts aligned with the twig.",
-  "sources": [
-    "https://www.fs.usda.gov/database/feis/plants/tree/pinponp/all.html",
-    "https://en.wikipedia.org/wiki/Pinus_ponderosa",
-    "Oliver and Ryker 1990, Silvics of North America vol. 1, Pinus ponderosa",
-    "Halle, Oldeman and Tomlinson 1978 (Rauh's model; Pinus as example)"
-  ],
+  "sources": ["https://www.fs.usda.gov/database/feis/plants/tree/pinponp/all.html", "https://en.wikipedia.org/wiki/Pinus_ponderosa", "Oliver and Ryker 1990, Silvics of North America vol. 1, Pinus ponderosa", "Halle, Oldeman and Tomlinson 1978 (Rauh's model; Pinus as example)"],
   "authors": ["Wild Earth (agent draft, 2026-10-23); needs local sign-off"],
   "license": "CC BY-SA 4.0"
 }

@@ -82,7 +82,10 @@ browser stays the renderer.
 3. ~~Chaparral density and a shrub-field layer; impostors for far trees~~ done overnight.
 4. ~~Close-range grass band~~ done overnight (grassland still reads as photo at 120 m).
 5. Volumetric clouds and water in the streams.
-6. Consume the per-cell species mix (client/species_mix_*.png) in vegetation.js so the
+6. Tree frame cost: the photo-fitted crowns, clumped foliage, bark textures and
+   winter twigs cost about 20% at the start view (38 fps in a small pane under load).
+   Levers: fewer far cards per tree, less close-tier card overlap, bark within 120 m.
+7. Consume the per-cell species mix (client/species_mix_*.png) in vegetation.js so the
    forest composition follows LANDFIRE instead of a fixed mix per habitat class.
    Judge each against the success metric in the brief (a resident finds their own hill
    from the air without the mini-map), not against Unreal.

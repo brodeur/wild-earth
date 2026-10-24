@@ -17,35 +17,47 @@
   },
   "status": "agent draft, needs local sign-off",
   "trunk": {
-    "length_ratio": 0.5, "radius_ratio": 0.05, "taper": 0.6, "flare": 1.35,
-    "bole_ratio": 0.22, "base_size": 0.22,
-    "curve_deg": 18, "curve_var_deg": 15, "segments": 5, "lean_deg": 8,
-    "stems": [1, 2], "stem_spread_deg": 25,
-    "split_prob": 0.5, "split_count": 2, "split_angle_deg": 30,
-    "bark_rgb": [92, 88, 82], "bark_pattern": "furrowed", "twig_rgb": [85, 80, 72]
+    "length_ratio": 0.42, "radius_ratio": 0.05, "taper": 0.6, "flare": 1.35, "bole_ratio": 0.3, "base_size": 0.2,
+    "curve_deg": 18, "curve_var_deg": 15, "segments": 5, "lean_deg": 8, "stems": [1, 3], "stem_spread_deg": 22,
+    "split_prob": 0.5, "split_count": 2, "split_angle_deg": 30, "bark_rgb": [100, 96, 88],
+    "bark_pattern": "furrowed", "twig_rgb": [85, 80, 72],
+    "bark": {"tile_m": [0.3, 0.6], "ridge_m": 0.03, "block_m": 0.06, "fissure": 0.3, "contrast": 0.7, "lichen": 0.4, "relief": 0.8}
   },
-  "crown": { "shape": "hemispherical" },
+  "crown": {
+    "shape": "cylindrical",
+    "envelope": {"profile": [[0.04, 0.493], [0.15, 0.638], [0.35, 0.683], [0.55, 0.65], [0.72, 0.538], [0.86, 0.358], [1.0, 0.09]], "lobes": 5, "lobe_depth": 0.1, "asymmetry": 0.12, "fill": 0.5, "edge": 1.06}
+  },
   "levels": [
-    { "count": 11, "down_angle_deg": 42, "down_angle_var_deg": 15, "rotation_deg": 140, "rotation_var_deg": 30,
-      "length_ratio": 0.85, "length_var": 0.2, "curve_deg": 15, "curve_var_deg": 15, "tropism": 0.04,
-      "taper": 0.9, "radius_ratio": 0.45, "segments": 4 },
-    { "count": 9, "start": 0.15, "down_angle_deg": 50, "down_angle_var_deg": 15, "rotation_deg": 140, "rotation_var_deg": 30,
-      "length_ratio": 0.5, "length_var": 0.25, "curve_deg": 20, "curve_var_deg": 15, "tropism": 0.04,
-      "taper": 1.0, "radius_ratio": 0.45, "segments": 2 }
+    {
+      "count": 11, "down_angle_deg": 64, "down_angle_var_deg": 15, "rotation_deg": 140, "rotation_var_deg": 30,
+      "length_ratio": 1.9, "length_var": 0.2, "curve_deg": 15, "curve_var_deg": 15, "tropism": 0.04, "taper": 0.9,
+      "radius_ratio": 0.45, "segments": 4, "down_angle_tip_deg": 36, "droop_deg": 10, "zigzag_deg": 6
+    },
+    {
+      "count": 7, "start": 0.15, "down_angle_deg": 50, "down_angle_var_deg": 15, "rotation_deg": 140,
+      "rotation_var_deg": 30, "length_ratio": 0.5, "length_var": 0.25, "curve_deg": 20, "curve_var_deg": 15,
+      "tropism": 0.04, "taper": 1.0, "radius_ratio": 0.45, "segments": 2, "zigzag_deg": 10
+    }
   ],
   "foliage": {
-    "type": "broadleaf", "leaf_size_m": 0.04, "leaf_shape": "oval", "cluster_m": 1.5, "density": 16,
+    "type": "broadleaf", "leaf_size_m": 0.04, "leaf_shape": "elliptic_glossy", "cluster_m": 1.4, "density": 20,
     "start": 0.0, "parent_start": 0.4, "orientation": "outward",
-    "colors": { "winter": [56, 76, 48], "spring": [82, 108, 58], "summer": [60, 82, 50], "fall": [62, 82, 50] },
-    "leaf_on": { "winter": 1.0, "spring": 1.0, "summer": 1.0, "fall": 1.0 }
+    "colors": {"winter": [80, 88, 66], "spring": [118, 125, 80], "summer": [86, 95, 69], "fall": [89, 95, 69]},
+    "leaf_on": {"winter": 1.0, "spring": 1.0, "summer": 1.0, "fall": 1.0},
+    "clumps": {"radius_m": 1.1, "cards_per_clump": 12, "shell": 0.2, "flatten": 0.8, "tip_bias": 1.3},
+    "palette": [[0.85, [1, 1, 1]], [0.1, [1.35, 1.25, 0.7]], [0.05, [1.3, 1.0, 0.6]]], "ao_min": 0.72,
+    "color_var": [0.08, 0.03]
   },
-  "lod": { "near_tris_budget": 2000, "near_sides": [7, 5, 0], "mid_blobs": 5, "mid_branches": 4, "mid_blob_scale": 0.95 },
+  "lod": {
+    "near_tris_budget": 2000, "near_sides": [6, 4, 0], "mid_blobs": 5, "mid_branches": 4, "mid_blob_scale": 0.95,
+    "close_factor": 2
+  },
+  "targets": {
+    "crown_width_ratio": 1.2, "crown_base_ratio": 0.08, "porosity": 0.12, "foliage_rg": 0.85, "foliage_bg": 0.5,
+    "from": "reference photographs, docs/tree-likeness-review.md: 01 Pilot Hill (W/H 1.13), 02 park tree (about 1.5), 04 crown on slope"
+  },
   "notes": "Evergreen oak of foothill woodland, canyons and chaparral edges; a tree 8-22 m or a shrub on poor sites. Here 8-15 m. Often several trunks from the base or a low fork (stems 1-2, split_prob 0.5), short bole, dense rounded dark crown that hides most of the wood, so mid LOD draws only four limbs. Rauh's model with a decurrent crown like blue oak but denser (more level-1 and level-2 branches, higher foliage density). Bark smooth grey when young, darker grey and furrowed with age. Leaves 2.5-5 cm, oblong to lanceolate, flat (not cupped like coast live oak), entire or spiny-toothed, glossy dark green on both faces; new growth in spring is lighter. No seasonal leaf drop to speak of (leaves live about two years), so leaf_on is 1 all year.",
-  "sources": [
-    "https://www.fs.usda.gov/database/feis/plants/tree/quewis/all.html",
-    "https://en.wikipedia.org/wiki/Quercus_wislizeni",
-    "https://ucjeps.berkeley.edu/eflora/ (Quercus wislizeni)"
-  ],
+  "sources": ["https://www.fs.usda.gov/database/feis/plants/tree/quewis/all.html", "https://en.wikipedia.org/wiki/Quercus_wislizeni", "https://ucjeps.berkeley.edu/eflora/ (Quercus wislizeni)"],
   "authors": ["Wild Earth (agent draft, 2026-10-23); needs local sign-off"],
   "license": "CC BY-SA 4.0"
 }
