@@ -58,6 +58,7 @@ descend, space to flap, gliding sinks slowly. Season follows today's date unless
 follows the time slider. Beyond the near forest, every forested 30 m cell carries two
 impostor clusters so the tree line runs to the tile edge; grass tufts sway near the
 camera. No animals yet beyond the player.
+The air is one shared atmosphere: height haze that fades distant ridges into the sky's own horizon colour (thickest in summer, clearest in winter, glowing toward a low sun), a sun that warms and dims toward the horizon with exposure to match, and drifting clouds whose shadows cross the terrain and trees.
 Roads are decayed, not erased: ten years on they are linear clearings of cracked grey pavement with grass in the seams and a thinning verge, so US 50 still reads from the air; G toggles a ghost overlay of present-day roads with names on the major ones.
 The default ground is the Imagery texture: NAIP 2022 with buildings, lots, lawns and fields erased (thin features inpainted, towns synthesized from real imagery of the backfilled habitat class) and pavement bleached, recoloured by season; Rewilded switches to the habitat-colour texture.
 A mini-map (M to toggle, click to fly there) shows present-day NAIP imagery, roads and streams by design: the rewilded world laid against the real one.

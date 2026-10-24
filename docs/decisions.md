@@ -144,3 +144,14 @@ US-only) and as the "map" view. Rejected: showing imagery unedited (breaks the w
 and waiting for Unreal to do this (the erase step is engine-agnostic and the Unreal
 export can consume the same texture). Known limits: summer baseline recoloured by
 season relative to the imagery's own means; tree shadows baked in; 2.5 m pixels.
+
+## 2026-10-24: the first game is the acorn stash
+
+Aaron's call to start the gameplay loop now that the world looks like a place: oaks
+carry acorns that glow as the raven nears, picking one up reveals stash holes in some
+oaks, depositing shows current / capacity. Design in `docs/game-acorn-stash.md`.
+Decisions inside it: proximity pickup and deposit (no button, flight stays the
+input), a carry limit of three, acorn counts driven by the fall acorn_mast resource,
+deterministic stash holes per tree, and persistence per world (tile plus season) in
+the browser as the first persistent player state. Rejected for now: competitors, cache
+recovery in winter, scoring.

@@ -1,20 +1,19 @@
 import * as THREE from 'three';
+import { uniforms as atmo, ATMOSPHERE_GLSL } from './atmosphere.js';
 
 const VERT = /* glsl */`
   varying vec2 vUv; varying vec3 vNormalW; varying vec3 vPosW;
-  #include <fog_pars_vertex>
   void main(){
     vUv = uv; vNormalW = normalize(mat3(modelMatrix) * normal);
     vec4 wp = modelMatrix * vec4(position, 1.0); vPosW = wp.xyz;
     vec4 mvPosition = viewMatrix * wp; gl_Position = projectionMatrix * mvPosition;
-    #include <fog_vertex>
   }`;
 const FRAG = /* glsl */`
-  uniform sampler2D map; uniform sampler2D masks; uniform vec3 sunDir; uniform vec3 sunColor; uniform vec3 skyColor;
+  uniform sampler2D map; uniform sampler2D masks;
   uniform vec3 grassTint; uniform vec3 oakTint; uniform float oakMix; uniform sampler2D roads;
   uniform float imagery; uniform vec3 grassRef; uniform vec3 oakRef;   // imagery: 1 when map is the erased NAIP
   varying vec2 vUv; varying vec3 vNormalW; varying vec3 vPosW;
-  #include <fog_pars_fragment>
+  ${ATMOSPHERE_GLSL}
   const vec3 LUMA = vec3(0.299, 0.587, 0.114);
   float hash(vec2 p){ return fract(sin(dot(p, vec2(127.1, 311.7))) * 43758.5453); }
   float vnoise(vec2 p){ vec2 i = floor(p), f = fract(p); f = f * f * (3.0 - 2.0 * f);
@@ -40,10 +39,12 @@ const FRAG = /* glsl */`
     float d = 0.86 + 0.14 * vnoise(vPosW.xz * 0.5) + 0.10 * (vnoise(vPosW.xz * 0.11) - 0.5);
     c *= d;
     vec3 n = normalize(vNormalW);
+    // Same light as the lambert trees: sun (under cloud shadow) plus hemisphere sky, over pi.
     float diff = max(dot(n, sunDir), 0.0);
-    vec3 light = sunColor * diff + skyColor * (0.55 + 0.45 * n.y);
-    gl_FragColor = vec4(c * light, 1.0);
-    #include <fog_fragment>
+    vec3 light = sunLight * diff * cloudShadow(vPosW) + mix(ambientGround, ambientSky, 0.5 + 0.5 * n.y);
+    gl_FragColor = vec4(atmosphereApply(c * light * 0.3183099, vPosW, cameraPosition), 1.0);
+    #include <tonemapping_fragment>
+    #include <colorspace_fragment>
   }`;
 
 export class Terrain {
@@ -54,12 +55,11 @@ export class Terrain {
     const roads = tile.roadsImage ? new THREE.Texture(tile.roadsImage) : new THREE.DataTexture(new Uint8Array(4), 1, 1); roads.needsUpdate = true;
     this.uniforms = {
       map: { value: tex }, masks: { value: masks }, roads: { value: roads },
-      sunDir: { value: new THREE.Vector3(0, 1, 0) }, sunColor: { value: new THREE.Color(1, 0.95, 0.85) }, skyColor: { value: new THREE.Color(0.45, 0.55, 0.7) },
       grassTint: { value: new THREE.Color(0.8, 0.68, 0.36) }, oakTint: { value: new THREE.Color(0.55, 0.45, 0.22) }, oakMix: { value: 0 },
       imagery: { value: 0 }, grassRef: { value: new THREE.Vector3(0.49, 0.47, 0.38) }, oakRef: { value: new THREE.Vector3(0.27, 0.34, 0.27) },
-      ...THREE.UniformsUtils.clone(THREE.UniformsLib.fog),
+      ...atmo,   // shared atmosphere uniforms (same objects, so one update reaches every material)
     };
-    this.material = new THREE.ShaderMaterial({ vertexShader: VERT, fragmentShader: FRAG, uniforms: this.uniforms, fog: true });
+    this.material = new THREE.ShaderMaterial({ vertexShader: VERT, fragmentShader: FRAG, uniforms: this.uniforms });
     const size = tile.size, cs = size / chunks, nv = Math.round(cs / spacing) + 1;
     for (let cj = 0; cj < chunks; cj++) for (let ci = 0; ci < chunks; ci++) {
       const g = new THREE.PlaneGeometry(cs, cs, nv - 1, nv - 1);
@@ -94,10 +94,9 @@ export class Terrain {
     if (ref?.grass_mean) this.uniforms.grassRef.value.set(...ref.grass_mean);
     if (ref?.oak_mean) this.uniforms.oakRef.value.set(...ref.oak_mean);
   }
-  setLook(look, sun) {
+  setLook(look) {
     this.uniforms.grassTint.value.setRGB(...look.grass);
     this.uniforms.oakTint.value.setRGB(...look.oakLeaf);
     this.uniforms.oakMix.value = 1 - look.oakLeafOn;
-    this.uniforms.sunDir.value.set(...sun.dir);
   }
 }

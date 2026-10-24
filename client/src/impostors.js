@@ -1,4 +1,5 @@
 import * as THREE from 'three';
+import { uniforms as atmo, ATMOSPHERE_GLSL } from './atmosphere.js';
 
 // Distant forest: one crossed-quad impostor per 30 m cell with tree cover, for the whole
 // tile, fading out where the near forest takes over. Two sprite shapes: broadleaf and conifer.
@@ -19,26 +20,27 @@ function sprite(kind) {
 const VERT = /* glsl */`
   attribute vec3 instanceColor;
   uniform float nearRadius; uniform vec3 eye;
-  varying vec2 vUv; varying vec3 vColor; varying float vFade;
-  #include <fog_pars_vertex>
+  varying vec2 vUv; varying vec3 vColor; varying float vFade; varying vec3 vPosW;
   void main(){
     vUv = uv; vColor = instanceColor;
     vec4 wp = modelMatrix * instanceMatrix * vec4(position, 1.0);
     float d = distance(wp.xz, eye.xz);
     vFade = smoothstep(nearRadius - 350.0, nearRadius + 150.0, d);   // hidden where real trees exist
+    vPosW = wp.xyz;
     vec4 mvPosition = viewMatrix * wp; gl_Position = projectionMatrix * mvPosition;
-    #include <fog_vertex>
   }`;
 const FRAG = /* glsl */`
-  uniform sampler2D map; uniform vec3 sunColor; uniform vec3 skyColor;
-  varying vec2 vUv; varying vec3 vColor; varying float vFade;
-  #include <fog_pars_fragment>
+  uniform sampler2D map;
+  varying vec2 vUv; varying vec3 vColor; varying float vFade; varying vec3 vPosW;
+  ${ATMOSPHERE_GLSL}
   void main(){
     float a = texture2D(map, vUv).a * vFade;
     if (a < 0.4) discard;
-    vec3 light = skyColor * 0.9 + sunColor * 0.5;
-    gl_FragColor = vec4(vColor * light, 1.0);
-    #include <fog_fragment>
+    // A clump lit from all sides: about half the sun reaches the visible face, plus sky light.
+    vec3 light = sunLight * (0.3 + 0.35 * max(sunDir.y, 0.0)) * cloudShadow(vPosW) + ambientSky * 0.85 + ambientGround * 0.15;
+    gl_FragColor = vec4(atmosphereApply(vColor * light * 0.3183099, vPosW, cameraPosition), 1.0);
+    #include <tonemapping_fragment>
+    #include <colorspace_fragment>
   }`;
 
 export class Impostors {
@@ -61,11 +63,10 @@ export class Impostors {
         const px = x + (h1 - 0.5) * res * 0.9, pn = north + (h2 - 0.5) * res * 0.9;
         if (tile.roads && tile.roads.at(px, pn) > 140) continue;   // no forest on decayed pavement
         const vary = 0.78 + h1 * 0.4, hv = height * (0.8 + h2 * 0.5);
-        cells[kind].push({ x: px, z: -pn, y: tile.heights.at(px, pn), height: hv, width: Math.max(10, hv * (kind === 'conifer' ? 0.9 : 1.5)), color: [c[0] * vary, c[1] * vary, c[2] * vary] });
+        cells[kind].push({ x: px, z: -pn, y: tile.heights.at(px, pn), height: hv, width: Math.max(10, hv * (kind === 'conifer' ? 0.9 : 1.5)), color: [c[0] * vary, c[1] * vary, c[2] * vary].map(v => Math.pow(v, 2.2)) });   // sRGB-authored, used linear
       }
     }
-    this.uniforms = { map: { value: null }, nearRadius: { value: 1500 }, eye: { value: new THREE.Vector3() },
-      sunColor: { value: new THREE.Color(1, 1, 1) }, skyColor: { value: new THREE.Color(0.5, 0.6, 0.7) }, ...THREE.UniformsUtils.clone(THREE.UniformsLib.fog) };
+    this.uniforms = { map: { value: null }, nearRadius: { value: 1500 }, eye: { value: new THREE.Vector3() }, ...atmo };
     this.meshes = [];
     for (const kind of ['broadleaf', 'conifer']) {
       const list = cells[kind]; if (!list.length) continue;
@@ -73,7 +74,7 @@ export class Impostors {
       const quad2 = quad.clone(); quad2.rotateY(Math.PI / 2);
       const cap = new THREE.PlaneGeometry(0.9, 0.9); cap.rotateX(-Math.PI / 2); cap.translate(0, kind === 'conifer' ? 0.55 : 0.72, 0);   // seen from above
       const geom = mergeTwo(mergeTwo(quad, quad2), cap);
-      const mat = new THREE.ShaderMaterial({ vertexShader: VERT, fragmentShader: FRAG, fog: true, side: THREE.DoubleSide,
+      const mat = new THREE.ShaderMaterial({ vertexShader: VERT, fragmentShader: FRAG, side: THREE.DoubleSide,
         uniforms: { ...this.uniforms, map: { value: sprite(kind) } } });
       const mesh = new THREE.InstancedMesh(geom, mat, list.length); mesh.frustumCulled = false;
       const o = new THREE.Object3D(), colors = new Float32Array(list.length * 3);
@@ -83,9 +84,8 @@ export class Impostors {
     }
     this.count = cells.broadleaf.length + cells.conifer.length;
   }
-  update(camera, nearRadius, sunColor, skyColor, fog) {
-    for (const m of this.meshes) { const u = m.material.uniforms; u.eye.value.copy(camera.position); u.nearRadius.value = nearRadius;
-      u.sunColor.value.copy(sunColor); u.skyColor.value.copy(skyColor); u.fogColor.value.copy(fog.color); u.fogNear.value = fog.near; u.fogFar.value = fog.far; }
+  update(camera, nearRadius) {
+    for (const m of this.meshes) { const u = m.material.uniforms; u.eye.value.copy(camera.position); u.nearRadius.value = nearRadius; }
   }
 }
 

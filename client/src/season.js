@@ -7,9 +7,10 @@ export function seasonOfDate(d = new Date()) {
   return m === 12 || m <= 2 ? 'winter' : m <= 5 ? 'spring' : m <= 8 ? 'summer' : 'fall';
 }
 
-// Foothill (Mediterranean) palette per season: grass, deciduous oak canopy, deciduous leaf-on fraction.
+// Foothill (Mediterranean) palette per season: grass, deciduous oak canopy, deciduous leaf-on fraction,
+// and haze (aerial perspective and sky turbidity): rain-washed winter clearest, summer dust and smoke thickest.
 export const SEASON_LOOK = {
-  winter: { grass: [0.55, 0.68, 0.40], oakLeaf: [0.45, 0.40, 0.25], oakLeafOn: 0.0, haze: 0.9 },
+  winter: { grass: [0.55, 0.68, 0.40], oakLeaf: [0.45, 0.40, 0.25], oakLeafOn: 0.0, haze: 0.55 },
   spring: { grass: [0.52, 0.72, 0.32], oakLeaf: [0.40, 0.55, 0.25], oakLeafOn: 1.0, haze: 0.7 },
   summer: { grass: [0.80, 0.68, 0.36], oakLeaf: [0.33, 0.45, 0.22], oakLeafOn: 1.0, haze: 1.2 },
   fall:   { grass: [0.76, 0.64, 0.38], oakLeaf: [0.55, 0.45, 0.22], oakLeafOn: 0.8, haze: 1.0 },

@@ -29,7 +29,11 @@ sequenced; Parked is in the brief but deliberately not started.
    county roads stay as bleached pavement, minor streets fade to faint traces. Open
    blemishes: small unmapped structures and tank pads survive, baked tree shadows,
    the Placerville airport runway (aeroway is not a footprint class yet).
-3. Atmosphere: haze by distance and time of day, warmer low sun, cloud shadows.
+3. ~~Atmosphere~~ done 2026-10-24: aerial perspective fitted to the sky dome each
+   frame (warm toward the sun, blue-grey away), haze by season and sun elevation,
+   exposure by sky brightness, procedural cumulus with shadows cast along the sun
+   ray, one tone-mapped lighting pipeline for all materials. Open: clouds repeat
+   every 2.5 km, no cast shadows from terrain or trees, summer noon ground is bright.
 4. Wind: vertex sway in canopies and grass, stronger on ridges.
 5. Water: streams and ponds from the hydrology layer, with reflection.
 6. Life: a circling hawk and a deer herd as placeholder motion, filtered by the

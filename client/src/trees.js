@@ -20,7 +20,8 @@ export function mulberry32(a) {
 
 function colored(geom, rgb, jitter, rnd) {
   const n = geom.attributes.position.count, col = new Float32Array(n * 3);
-  for (let i = 0; i < n; i++) { const j = 1 + (rnd() - 0.5) * jitter; col[i * 3] = rgb[0] / 255 * j; col[i * 3 + 1] = rgb[1] / 255 * j; col[i * 3 + 2] = rgb[2] / 255 * j; }
+  const lin = rgb.map(v => Math.pow(v / 255, 2.2));   // colours are authored as sRGB hex; lighting is linear
+  for (let i = 0; i < n; i++) { const j = 1 + (rnd() - 0.5) * jitter; col[i * 3] = lin[0] * j; col[i * 3 + 1] = lin[1] * j; col[i * 3 + 2] = lin[2] * j; }
   geom.setAttribute('color', new THREE.BufferAttribute(col, 3));
   return geom;
 }

@@ -2,6 +2,7 @@ import * as THREE from 'three';
 import { loadTile, HABITAT_NAMES } from './tilepackage.js';
 import { Terrain } from './terrain.js';
 import { SkyDome } from './sky.js';
+import { Atmosphere } from './atmosphere.js';
 import { RavenFlight } from './flight.js';
 import { Vegetation } from './vegetation.js';
 import { Impostors } from './impostors.js';
@@ -33,10 +34,11 @@ async function main() {
   const camera = new THREE.PerspectiveCamera(70, innerWidth / innerHeight, 0.5, 60000);
   addEventListener('resize', () => { camera.aspect = innerWidth / innerHeight; camera.updateProjectionMatrix(); renderer.setSize(innerWidth, innerHeight); });
 
+  const atmosphere = new Atmosphere(tile);   // shared haze, sun, sky light and clouds
   const terrain = new Terrain(tile); scene.add(terrain.group);
-  const sky = new SkyDome(scene, renderer);
+  const sky = new SkyDome(scene, renderer, atmosphere);
   status('growing forest…'); await new Promise(r => setTimeout(r, 20));
-  const veg = new Vegetation(tile, scene);
+  const veg = new Vegetation(tile, scene, atmosphere);
   const far = new Impostors(tile, scene);
   const grass = new Grass(tile, scene);
   const roads = new RoadsOverlay(tile, scene);   // ghost roads, G to toggle
@@ -77,7 +79,7 @@ async function main() {
   }
   applySeason();
   status('');
-  window.__we = { tile, flight, camera, veg, terrain, far, grass, roads, scene, renderer, minimap };   // debugging handle
+  window.__we = { tile, flight, camera, veg, terrain, far, grass, roads, scene, renderer, minimap, atmosphere, sky };   // debugging handle
 
   let last = performance.now(), hudT = 0;
   function frame(now) {
@@ -85,11 +87,11 @@ async function main() {
     const s = seasonNow(), look = SEASON_LOOK[s], sun = sunDirection(tile.latitude, s, state.hour);
     const f = flight.update(dt);
     veg.update(flight.pos.x, flight.pos.z);
-    const lights = sky.update(sun, look, camera);
-    far.update(camera, veg.radius, lights.sunColor, lights.skyColor, scene.fog);
-    grass.update(flight.pos.x, flight.pos.z, dt, camera, look, lights.skyColor.clone().multiplyScalar(0.8).add(lights.sunColor.clone().multiplyScalar(0.5)), scene.fog);
-    terrain.setLook(look, sun); terrain.uniforms.sunColor.value.copy(lights.sunColor).multiplyScalar(sky.sun.intensity * 0.45); terrain.uniforms.skyColor.value.copy(lights.skyColor);
-    terrain.uniforms.fogColor.value.copy(scene.fog.color); terrain.uniforms.fogNear.value = scene.fog.near; terrain.uniforms.fogFar.value = scene.fog.far;
+    atmosphere.update(dt, sun, look, s, state.hour, camera);
+    sky.update(camera);
+    far.update(camera, veg.radius);
+    grass.update(flight.pos.x, flight.pos.z, dt, camera, look);
+    terrain.setLook(look);
     renderer.render(scene, camera);
     minimap.update(flight.pos, f.heading);
     hudT += dt;

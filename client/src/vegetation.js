@@ -17,12 +17,13 @@ function pick(mix, r) { let acc = 0; for (const [k, w] of Object.entries(mix)) {
 function hash(i, j, salt) { let h = (i * 73856093) ^ (j * 19349663) ^ (salt * 83492791); return h >>> 0; }
 
 export class Vegetation {
-  constructor(tile, scene) {
+  constructor(tile, scene, atmosphere) {
     this.tile = tile; this.scene = scene; this.group = new THREE.Group(); scene.add(this.group);
     this.radius = 1500; this.lastCenter = null; this.count = 0;
     this.trunkMat = new THREE.MeshLambertMaterial({ vertexColors: true });
     this.canopyMat = new THREE.MeshLambertMaterial({ vertexColors: true });
     this.deciduousMat = new THREE.MeshLambertMaterial({ vertexColors: true, color: 0xffffff });
+    for (const m of [this.trunkMat, this.canopyMat, this.deciduousMat]) atmosphere.patchLambert(m);   // cloud shadow + aerial perspective
     this.meshes = {}; // species -> [{trunk, canopy, cap}]
     for (const name of Object.keys(SPECIES)) {
       this.meshes[name] = [];
