@@ -33,6 +33,15 @@ sequenced; Parked is in the brief but deliberately not started.
   counts were tuned for blobs), ponderosa limbs too straight, leaf cards alias under
   5 m, no wind in canopies yet.
 
+- Overnight 2026-10-24/25 (Aaron asleep, standing authorization): present-day peek (P)
+  with place names; pipeline present-day texture, LANDFIRE species mix per cell, acorn
+  woodpecker and scrub-jay; local-knowledge edits saved to the manifest from the viewer
+  (verify/flag, mask polygons, species notes) with a contributing guide and a fix for
+  builds dropping edits; a synthesised soundscape (wind, wingbeats, raven call,
+  habitat birds, stream, crickets); grass and chaparral for the third-person camera
+  (shells, shrub field, ground wind); horizon silhouettes as one baked impostor per
+  real tree. Each verified in the browser and pushed separately.
+
 ## Next: the visual pass, in order of effect per hour
 
 1. ~~Horizon~~ done 2026-10-23: two crossed-quad impostors with a canopy cap per
@@ -68,11 +77,13 @@ browser stays the renderer.
 
 1. WebGPU renderer evaluation (three.js WebGPURenderer): compute-driven grass at
    Tsushima scale, far more foliage instances, and a path to real-time GI.
-2. Cast shadows from trees and terrain (cascaded shadow maps), canopy wind.
-3. Chaparral density and a shrub-field layer; octahedral impostors for far trees.
-4. Close-range grass band (ground-colour sampling, camera-aware tilt, wind waves,
-   shells), already specified.
+2. Cast shadows from trees and terrain (cascaded shadow maps): in progress overnight.
+   Canopy wind: with the likeness work.
+3. ~~Chaparral density and a shrub-field layer; impostors for far trees~~ done overnight.
+4. ~~Close-range grass band~~ done overnight (grassland still reads as photo at 120 m).
 5. Volumetric clouds and water in the streams.
+6. Consume the per-cell species mix (client/species_mix_*.png) in vegetation.js so the
+   forest composition follows LANDFIRE instead of a fixed mix per habitat class.
    Judge each against the success metric in the brief (a resident finds their own hill
    from the air without the mini-map), not against Unreal.
 
