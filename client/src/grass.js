@@ -5,7 +5,7 @@ import { SEASON_LOOK } from './season.js';
 import { buildAnnualClump, buildBunchClump, buildTuft } from './grassBlades.js';
 import { windUniforms, WIND_GLSL } from './wind.js';
 import { groundUniforms, GROUND_GLSL } from './terrain.js';
-import { ShrubField, GrassClumps } from './shrubfield.js';
+import { ShrubField, GrassClumps, StalkClumps, CLUMP_BAND, STALK_BAND } from './shrubfield.js';
 import { GrassShells } from './grassShells.js';
 
 // Grass in the Sierra foothill savanna: non-native annuals (wild oat, bromes, medusahead) over
@@ -19,7 +19,7 @@ import { GrassShells } from './grassShells.js';
 // Placement is deterministic per 30 m habitat cell and cached, so nothing re-rolls as you move;
 // each frame only the cells in view are submitted to the GPU (see cull).
 // Seen from the air (docs/grass-notes.md) three more layers hang off this class: sward shells for
-// 8-60 m up (grassShells.js), needlegrass tussock and chaparral shrub impostors (shrubfield.js).
+// 8-60 m up (grassShells.js); needlegrass tussock, dry wild oat and chaparral shrub impostors (shrubfield.js).
 // Every grass material takes its colour from the ground texture under it (terrain.js GROUND_GLSL)
 // and moves with the shared gust field (wind.js), which the terrain also paints as a sheen.
 
@@ -44,16 +44,16 @@ const STRIDE = 8;   // per instance: x, y, z, yaw | scale xz, scale y, seed, typ
 // Season palettes (sRGB). Annuals: wild oat and bromes; bunch: purple needlegrass. The season's
 // `grass` tint stays the overall tone: these are scaled by tint / SEASON_LOOK[season].grass.
 const PALETTE = {
-  winter: { height: 0.5, heads: 0, thatch: 0.35, leaf: 1.0,
+  winter: { dry: 0, height: 0.5, heads: 0, thatch: 0.35, leaf: 1.0,
     annual: { root: [0.22, 0.29, 0.15], tip: [0.47, 0.66, 0.30], head: [0.62, 0.66, 0.36], awn: [0.62, 0.66, 0.40] },
     bunch: { root: [0.29, 0.33, 0.24], tip: [0.43, 0.57, 0.32], head: [0.50, 0.52, 0.40], awn: [0.55, 0.52, 0.45] } },
-  spring: { height: 1.0, heads: 1, thatch: 0.08, leaf: 1.0,
+  spring: { dry: 0.15, height: 1.0, heads: 1, thatch: 0.08, leaf: 1.0,
     annual: { root: [0.21, 0.31, 0.12], tip: [0.50, 0.70, 0.26], head: [0.74, 0.77, 0.38], awn: [0.70, 0.74, 0.40] },
     bunch: { root: [0.27, 0.35, 0.21], tip: [0.45, 0.61, 0.28], head: [0.52, 0.44, 0.44], awn: [0.55, 0.42, 0.50] } },   // needlegrass awns: dusky purple
-  summer: { height: 0.9, heads: 1, thatch: 0.0, leaf: 0.8,
+  summer: { dry: 1, height: 0.9, heads: 1, thatch: 0.0, leaf: 0.8,
     annual: { root: [0.46, 0.40, 0.27], tip: [0.86, 0.75, 0.48], head: [0.93, 0.86, 0.64], awn: [0.88, 0.80, 0.60] },
     bunch: { root: [0.37, 0.41, 0.32], tip: [0.73, 0.66, 0.47], head: [0.80, 0.75, 0.62], awn: [0.84, 0.79, 0.66] } },
-  fall: { height: 0.8, heads: 1, thatch: 0.0, leaf: 0.7,
+  fall: { dry: 0.85, height: 0.8, heads: 1, thatch: 0.0, leaf: 0.7,
     annual: { root: [0.41, 0.37, 0.28], tip: [0.78, 0.69, 0.50], head: [0.83, 0.78, 0.63], awn: [0.79, 0.75, 0.63] },
     bunch: { root: [0.35, 0.39, 0.31], tip: [0.67, 0.62, 0.47], head: [0.74, 0.71, 0.62], awn: [0.76, 0.73, 0.64] } },
 };
@@ -114,6 +114,10 @@ const COMMON_VERT = /* glsl */`
     g *= clamp(gl, 0.6 * ml, 1.5 * ml) / max(gl, 1e-4);   // the photo's dark smudges do not make black grass
     return mix(c, mix(local, c / max(mean, vec3(1e-3)) * g * groundK, m), on);
   }
+  // Sky light reaching a plant at its root: the canopy cover's soft woodland shade and the contact
+  // AO blob under each near tree, exactly the terms the terrain's ambient takes, so grass under an
+  // oak is as much darker than open grass as the ground under it is (sun shadow: cloudShadow).
+  float skyOcc(vec3 root) { return groundSkyOcclusion(groundUv(root)) * groundContactAO(root); }
   // Lean away from the camera by part of the view's depression angle, so blades seen from above
   // show their faces rather than their edges (Horizon's camera tilt); nothing at eye level.
   vec2 tiltCS(vec3 root) {
@@ -190,7 +194,7 @@ const NEAR_VERT = /* glsl */`
     vec3 wp = iPos.xyz + w;
     // papery glumes and awns glow against the sun
     vec3 alb = groundMatch(grassAlbedo(type, t, part, br, seed, iPos.xz), type, iPos.xyz, smoothstep(12.0, 45.0, d));
-    vColor = grassShade(alb, n, wp, t, mix(0.35, 1.0, smoothstep(0.0, 0.7, t)), part > 1.5 ? 1.6 : 1.0);
+    vColor = grassShade(alb, n, wp, t, mix(0.35, 1.0, smoothstep(0.0, 0.7, t)) * skyOcc(iPos.xyz), part > 1.5 ? 1.6 : 1.0);
     gl_Position = projectionMatrix * viewMatrix * vec4(wp, 1.0);
   }`;
 const NEAR_FRAG = /* glsl */`
@@ -227,8 +231,9 @@ const MID_VERT = /* glsl */`
     w.xz += off; w.y -= 0.5 * dot(off, off) / max(H, 0.2) * uv.y;
     vec3 wp = iPos.xyz + w;
     vUv = uv; vKey = seed * 31.7 + aPetal * 3.1; vType = type;
-    vec3 leafC = grassShade(groundMatch(grassAlbedo(type, uv.y, 0.0, aPetal * 0.21 + 0.05, seed, iPos.xz), type, iPos.xyz, 1.0), n, wp, uv.y, mix(0.35, 1.0, uv.y), 1.0);
-    vHead = grassShade(groundMatch(grassAlbedo(type, 1.0, bunch > 0.5 ? 3.0 : 2.0, 0.5, seed, iPos.xz), type, iPos.xyz, 0.6), n, wp, 1.0, 1.0, 1.6);
+    float occ = skyOcc(iPos.xyz);
+    vec3 leafC = grassShade(groundMatch(grassAlbedo(type, uv.y, 0.0, aPetal * 0.21 + 0.05, seed, iPos.xz), type, iPos.xyz, 1.0), n, wp, uv.y, mix(0.35, 1.0, uv.y) * occ, 1.0);
+    vHead = grassShade(groundMatch(grassAlbedo(type, 1.0, bunch > 0.5 ? 3.0 : 2.0, 0.5, seed, iPos.xz), type, iPos.xyz, 0.6), n, wp, 1.0, occ, 1.6);
     // bunch tufts in flower: the awns tint the top of the tuft
     vColor = mix(leafC, vHead, uv.y * uv.y * 0.6 * heads * bunch);
     gl_Position = projectionMatrix * viewMatrix * vec4(wp, 1.0);
@@ -311,7 +316,7 @@ export class Grass {
     this.uniforms = {
       ...windUniforms, ...groundUniforms, groundK: { value: 1.12 }, matchOn: { value: 1 }, tiltOn: { value: 1 },
       nearFade: { value: new THREE.Vector2(...NEAR_FADE) }, closeFade: { value: new THREE.Vector2(...CLOSE_FADE) }, midEnd: { value: MID_END },
-      heightScale: { value: 1 }, heads: { value: 1 }, thatch: { value: 0 }, leafScale: { value: 1 },
+      heightScale: { value: 1 }, heads: { value: 1 }, thatch: { value: 0 }, leafScale: { value: 1 }, dry: { value: 1 },
       aRoot: { value: col() }, aTip: { value: col() }, aHead: { value: col() }, aAwn: { value: col() },
       bRoot: { value: col() }, bTip: { value: col() }, bHead: { value: col() }, bAwn: { value: col() },
       thatchCol: { value: col().setRGB(...THATCH, THREE.SRGBColorSpace) },
@@ -333,7 +338,10 @@ export class Grass {
     this.shrubs = ShrubField(tile, this.ground, this.uniforms);
     this.clumps = GrassClumps(tile, this.ground, this.uniforms, this.dens, (x, n) => this.swardDensity(x, n),
       (x, n) => (HABITAT[tile.habitat.at(x, n)] || { annual: 0.6 }).annual);
-    this.group.add(this.shrubs.mesh, this.clumps.mesh);
+    // Dry wild oat stands above the cured sward in summer and fall (shrubfield.js).
+    this.stalks = StalkClumps(tile, this.ground, this.uniforms, this.dens, (x, n) => this.swardDensity(x, n),
+      (x, n) => (HABITAT[tile.habitat.at(x, n)] || { annual: 0.6 }).annual);
+    this.group.add(this.shrubs.mesh, this.clumps.mesh, this.stalks.mesh);
     // Sward shells for the 8-60 m band (grassShells.js), at the density the clumps are placed with.
     this.shells = new GrassShells(tile, this.ground, (x, n) => this.swardDensity(x, n), {});
     this.group.add(this.shells.mesh);
@@ -515,7 +523,7 @@ export class Grass {
     const set = (uni, rgb) => uni.value.setRGB(rgb[0] * k[0], rgb[1] * k[1], rgb[2] * k[2], THREE.SRGBColorSpace);
     set(u.aRoot, P.annual.root); set(u.aTip, P.annual.tip); set(u.aHead, P.annual.head); set(u.aAwn, P.annual.awn);
     set(u.bRoot, P.bunch.root); set(u.bTip, P.bunch.tip); set(u.bHead, P.bunch.head); set(u.bAwn, P.bunch.awn);
-    u.heightScale.value = P.height; u.heads.value = P.heads; u.thatch.value = P.thatch; u.leafScale.value = P.leaf;
+    u.heightScale.value = P.height; u.heads.value = P.heads; u.thatch.value = P.thatch; u.leafScale.value = P.leaf; u.dry.value = P.dry;
     this.season = season;
   }
 
@@ -553,8 +561,12 @@ export class Grass {
     for (const set of Object.values(S)) if (set.n === 0) set.mesh.visible = false;
     // Shrub impostors read as shrubs from above; low down, the 3D shrubs of vegetation.js carry the near field.
     this.shrubs.update(camera, true, agl < 8 ? [25, 40, 370, 430] : [3, 8, 370, 430]);
-    // Tussock impostors: from 12 m when seen from the air; low down the blade clumps carry the near field.
-    this.clumps.update(camera, agl < 150, agl < 8 ? [45, 60, 90, 120] : [12, 20, 90, 120]);
+    // Tussock impostors: from 12 m when seen from the air (low down the blade clumps carry the near
+    // field) out to 225 m, so the sward keeps a grain from 60-200 m up. Wild oat stands likewise,
+    // while the grass is cured.
+    const cb = CLUMP_BAND, sb = STALK_BAND;
+    this.clumps.update(camera, agl < cb[3], agl < 8 ? [45, 60, cb[2], cb[3]] : cb);
+    this.stalks.update(camera, agl < sb[3] && this.uniforms.dry.value > 0.3, agl < 8 ? [30, 45, sb[2], sb[3]] : sb);
     this.shells.update(camera, agl, this.uniforms.heightScale.value);
   }
 }

@@ -121,10 +121,63 @@ For a raven at 5-150 m:
   they stay on the plant as the camera turns.
   - Density LOD: full density to D0, then (D0/d)^2 kept, with survivors grown by 1/sqrt(keep). The
     CPU submits only the prefix of each cell's randomly ordered list that the LOD can keep.
-  - ShrubField: chaparral cells filled to their canopy shrub % (floor 30%) with chamise (rounded,
-    twiggy, grey-green) and manzanita (taller, upswept, darker, red-brown stems under the crown),
-    in stands ~45 m across, out to 430 m.
-  - GrassClumps: purple needlegrass tussocks at 12-120 m.
+  - ShrubField: chaparral cells filled to their canopy shrub % (floor 30%) with chamise and
+    manzanita in stands ~45 m across, out to 430 m (silhouettes: see the second pass below).
+  - GrassClumps: purple needlegrass tussocks at 12-225 m.
+  - StalkClumps: dry wild oat stands, summer and fall, 10-240 m.
+
+## Second pass: canopy shade, the sward from 120 m, shrub silhouettes
+
+**Canopy occlusion.** terrain.js exports `groundSkyOcclusion(uv)` (tree and shrub cover from the
+canopy raster) and `groundContactAO(posW)` (a soft blob under each near tree, from shadows.js).
+Every grass and shrub material now multiplies its sky/ambient term by both, as the terrain does:
+blades and tufts (per vertex, at the root, `skyOcc` in grass.js), shells (per vertex), tussocks
+and oat stands (per instance). Shrub crowns take only the tree part of the cover term: they are the
+shrub layer, so the shrub-cover share would darken them for shading themselves. The sun term
+already had the cast shadow (cloudShadow). Measured on screen in oak woodland at 20 m, the sward
+is 2.3% darker in mean luma with the terms than without, and the same in the open to within 0.5%.
+That is the terrain's own factor: ambient is a small share of a sunlit pixel, so the cast shadow
+still does most of the work under a crown.
+
+**Grassland from 60-200 m.** At 120 m the far tussock tier had ended (120 m) and what was left
+was the photo plus the terrain grain, so an annual hillside read as a smooth print.
+- The tussock tier runs to 225 m. LOD: D0 34 m, floor 0.14, so far survivors grow ~2.7x and an
+  impostor stands for a patch of tussocks. Tussocks are placed in drifts (18 m and 6 m noise),
+  not an even sprinkle: needlegrass holds some ground and the annuals the rest.
+- In the dry season tussocks are darker and greyer than the sward (needlegrass stays grey-green
+  while the annuals cure gold). The bright fountain rim fades out on a grown far impostor.
+- Clump colour exaggerates the photo's patches: the texel against its ~80 m mean (mip 6.5), as a
+  luminance ratio^0.7 and a hue shift, so swales and greener or more cured patches carry into the
+  clumps instead of being averaged out.
+- Wild oat stands (StalkClumps, kind 4): sparse pale sprays of culms and panicles, 0.85-1.3 m
+  tall, in stands 10-30 m across where annuals are thickest, plus a thin scatter; off in winter
+  and spring (`dry` < 0.3, a per-season palette value). The colour is the ground's times a
+  paler-yellower factor, never an absolute straw: an absolute straw colour turned to snow on pale
+  slopes. The shading has no outline: density falls off from the centre, panicles are fine specks,
+  culms vertical streaks, and far off the specks coarsen with the pixel footprint and fill in, so a
+  stand reads as a paler patch. A separate field, so it is not among shadows.js's clump casters:
+  a solid ellipse shadow under an airy spray would print a dark blob.
+- Tried: a disc-edged stand with an absolute straw colour (white "cotton balls" at 30-60 m, the
+  same failure as the first pass's annual clumps); brighter specks (read as litter or flowers).
+
+**Shrub silhouettes.** Variants ride in the instance seed's fractional part, so the instance
+layout, and shadows.js's casters, are unchanged.
+- Every crown is a cluster: a main crown and two smaller ones offset to the sides; each pixel is
+  shaded on the dome of the crown it is deepest inside, so the outline is lumpy and the shading
+  has hollows between masses. A mid octave of lobes and vertically stretched "stem" noise break
+  the edge into spikes rather than bumps. Up close, a fine octave cuts small dark gaps between
+  sprays.
+- Chamise: rounded (~40%), ragged vase (narrow base, spiky top), and vase with grey dead stems
+  poking past the leafy outline (more in old stands). In summer and fall some carry rust-brown
+  dried flower clusters on the top.
+- Manzanita (whiteleaf): upswept with its red-mahogany trunks showing under the foliage and in the
+  deepest holes, sprawling (H/D 0.5-0.7, more on thin cover), and open (more holes, more red).
+- Size follows the canopy shrub % (x0.62 + 0.62 * cover) and a 28 m stand-age noise. Openings of
+  a few to ~15 m in about a tenth of the ground, more where cover is thin.
+- Palette: chamise dark olive, manzanita paler grey-green to glaucous, each varied per plant from
+  cool grey-green to warm olive-yellow and by stand (a 40 m noise).
+- Limits: the red branching is legible from 10-30 m but not from 60 m (it is under the crown);
+  below ~12 m a crown is still a soft impostor, and the 3D shrubs of vegetation.js carry that range.
 
 ## Tried and dropped
 

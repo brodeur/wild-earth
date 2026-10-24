@@ -37,7 +37,10 @@ const VERT = /* glsl */`
     float gs = clamp((gust(p.xz) - 0.7) / 0.55, -1.0, 1.0);
     vCol = g * (lt < 0.3 ? 0.9 : mix(1.02, 1.25, (lt - 0.5) * 2.0)) * (1.0 + 0.07 * gs);
     float diff = max(dot(normal, sunDir), 0.0);
-    vec3 light = sunLight * diff * cloudShadow(p) * mix(0.92, 1.0, lt) + mix(ambientGround, ambientSky, 0.5 + 0.5 * normal.y) * mix(0.85, 1.0, lt);
+    // Sky light under the canopy as the terrain takes it (woodland shade, contact AO at trunks), so the
+    // sward under an oak stays as much darker than open grass as the ground there is.
+    float occ = groundSkyOcclusion(groundUv(p)) * groundContactAO(p);
+    vec3 light = sunLight * diff * cloudShadow(p) * mix(0.92, 1.0, lt) + mix(ambientGround, ambientSky, 0.5 + 0.5 * normal.y) * mix(0.85, 1.0, lt) * occ;
     vCol *= light * 0.3183099;
     vIn = atmosphereApply(vec3(0.0), p, cameraPosition);
     vT = atmosphereApply(vec3(1.0), p, cameraPosition) - vIn;
