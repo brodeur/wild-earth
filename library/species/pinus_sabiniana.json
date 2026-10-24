@@ -7,7 +7,12 @@
   "architectural_model": "Rauh",
   "deciduous": false,
   "height_m": [12, 22],
-  "variants": 3,
+  "variants": [
+    {"name": "young", "weight": 0.3, "height_m": [6, 12], "trunk_radius": 0.8, "crown_scale": 0.8, "branches": 0.8, "deadwood": 0.12, "set": {"trunk": {"split_prob": 0.15, "lean_deg": 8}}, "note": "a single leaning leader, crown open and narrow"},
+    {"name": "mature", "weight": 0.5, "seeds": 2, "note": "the file as written"},
+    {"name": "veteran", "weight": 0.2, "height_m": [15, 24], "trunk_radius": 1.25, "crown_scale": 1.15, "deadwood": 0.32, "set": {"trunk": {"split_prob": 1.0, "split_count": 3, "split_height": 0.42, "split_angle_deg": 24, "lean_deg": 18}}, "note": "forked into three leaders, many dead lower limbs"}
+  ],
+  "snag": {"fraction": 0.05, "from": "veteran", "limbs": 0.45, "twigs": 0, "levels": 1, "broken_top": [0.7, 0.95], "shorten": [0.4, 0.9], "rgb": [150, 146, 138], "height_m": [12, 20]},
   "description": "A thin, often forked or leaning pine whose sparse gray-green needles, 20-30 cm long in bundles of three, make a crown you can see the sky through; 12-22 m tall here. It grows only in California, scattered among blue oaks on the hottest, driest foothill slopes, and its heavy cones hold large, hard-shelled seeds eaten by squirrels and jays and long gathered as food by Native Californians.",
   "season_notes": {
     "winter": "Evergreen: the gray-green needles look hazy against the hills, and heavy cones from past years still hang in the crown.",

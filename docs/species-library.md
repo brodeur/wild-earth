@@ -284,3 +284,75 @@ winter twigs).
 Mid cards thin with distance beyond 300 m: the outer 20% always stay, inner cards fall
 to a 25% floor and grow to hold cover. Bark textures draw within 120 m. The lineup can
 measure any tier: `__lineupMetrics('mid' | 'close')`, and `__lineupMetrics('mid', 900)`.
+
+
+## Age classes and snags (2026-10-24)
+
+Phase 2 step 7 of [tree-likeness-review.md](tree-likeness-review.md). A woodland is not one
+tree repeated: it has saplings, young trees, mature trees, a few veterans and some dead ones.
+`variants` may now be a list of weighted age classes instead of a count, and `snag` adds a
+dead tree. A file with `"variants": 3` is grown exactly as before.
+
+| field | meaning |
+|---|---|
+| `variants` | `[{ name, weight, ... }, ...]`: age classes. Each class is the file plus the overrides below. The class marked `"base": true` (else the one named `mature`, else the heaviest) is the file as written and keeps the old seeds, so its trees, the lineup's measured seeds and every metric are unchanged |
+| `variants[].height_m` | the class's height range (replaces the file's) |
+| `variants[].trunk_radius` | multiplies `trunk.radius_ratio` (slender saplings, thick veterans) |
+| `variants[].crown_scale` | multiplies the crown envelope's radii and the level-1 limb length (broader veterans) |
+| `variants[].branches` | multiplies every level's branch `count` |
+| `variants[].gnarl` | multiplies curve variance and lean of trunk and limbs, and their zig-zag |
+| `variants[].leaf_density` | multiplies `foliage.density` |
+| `variants[].deadwood` | a fraction (keeps the file's `deadwood` block, else inner limbs and twigs, levels 1 and 2) or a `deadwood` block merged over the file's: dead limbs without leaves inside a living crown, or grey dead shrub stems with level 0 |
+| `variants[].set` | any other fields, merged over the file before the multipliers (objects merge, arrays replace, `levels` merge by index), e.g. a class's own `crown.envelope`, `trunk.bark_rgb` or `lod.near_tris_budget` |
+| `variants[].seeds` | distinct trees grown for the class (default 1; mature classes use 2 so half the woodland is not one tree) |
+| `variants[].note` | what the class should look like, for reviewers |
+| `snag` | `{ fraction, from, height_m, limbs, twigs, levels, broken_top, shorten, rgb, set }`: a dead tree grown as class `from`, then stripped: no foliage or mistletoe, grey wood (`rgb`), branches deeper than `levels` removed except a `twigs` fraction, a `limbs` fraction of level-1 limbs kept (the rest broken to stubs or gone), every kept stem broken back to `shorten` [min, max] of its length, and for conifers the top snapped at `broken_top` [min, max] of the height with a splintered point |
+
+Materials stay per species (leaf texture, bark texture, colours), so a class must not change
+`foliage.leaf_shape`, `leaf_size_m`, `cluster_m` or the season colours; geometry and vertex
+colour (bark tone, dead wood) may change freely.
+
+**Slots.** Every plant draws one variant slot, `Math.floor(rnd() * VARIANTS)`, exactly where it
+always drew its variant, so positions, species and acorn-stash ids do not move.
+`VARIANTS = SLOTS = 12` (`treegen.js`), and `variantSlots(id)` hands the slots to the classes
+and the snag by largest remainder in proportion to the weights, every class getting at least
+one. Shares are therefore in twelfths: a 3% snag becomes 1/12 (8%). Slots of one class cycle
+through its `seeds` trees. Vegetation builds one mesh set per distinct tree and points the
+slots at them (`veg.meshes[id]`: distinct trees, `veg.slots[id]`: the 12 slots). The far
+impostors (`impostors.js`) bake every slot from `variantSeed(id, v)` and draw the same slot per
+plant, so a far tree is still its own impostor, snags included. A class tree's seed carries the
+class (`(class index + 1) * 0x10000 + 1000 + 17 * copy + id length`); base-class seeds are the
+old `1000 + 17 * copy + id length`.
+
+| species | classes (share of plants, height) | snag |
+|---|---|---|
+| blue oak | sapling 8% (2-4 m), young 17% (5-8 m), mature 50% (file, 6-12 m), veteran 17% (10-14 m: thick, broad, gnarled, dead limbs, more mistletoe) | 8%, from veteran, 8-13 m, keeps 60% of limbs and some twigs, pale grey |
+| ponderosa pine | pole 25% (8-15 m: blackjack bark, conical crown to 22% of height), mature 50% (file), old-growth 17% (30-40 m: flat top, clear bole to 62%, pale yellow plates, dead lower limbs) | 8%, from mature, top broken at 55-85%, 30% of limbs |
+| gray pine | young 25% (6-12 m: single leaning leader), mature 50% (file), veteran 17% (15-24 m: forked into three, many dead limbs) | 8%, from veteran (forked), 12-20 m, top broken at 70-95% |
+| interior live oak | young 25% (4-8 m, one or two stems), mature 58% (file), veteran 17% (11-16 m: two to four heavy stems, some dead limbs) | none (resprouts) |
+| whiteleaf manzanita | young 25% (0.7-1.5 m), mature 50% (file), decadent 25% (2-3.5 m: grey dead stems among the red) | none |
+| chamise | young 25% (0.6-1.3 m, dense), mature 50% (file), decadent 25% (1.5-2.6 m: half the stems grey) | none |
+
+A snag's canopy holds six zero-size cards along its upper trunk, so its canopy geometry is never
+empty: the shadow proxy built from the mid canopy bounds is then a slim spire, not a crown, and
+the impostor bake gets a cap height. The near trunk (limbs included) casts the real snag
+shadow.
+
+**Lineup.** "all variants" (`?classes=1`) shows one tree per class plus the snag for every
+species, labelled with the class, the tree's height, the class range and its share of plants.
+The measured layout (three base-class seeds) is unchanged and its metrics are identical.
+
+**Cost** (start view, same pose, A/B against the previous commit): frame rate unchanged (51 fps
+both, GPU-bound on the test machine), 169 draw calls instead of 130, triangles 5.8 M instead of
+6.1 M (saplings and young trees are smaller), render CPU 0.92 ms instead of 0.85 ms. 28 distinct
+trees instead of 18. The impostor atlas holds 72 slots instead of 18: 60 MB with mips instead of
+15 MB, and the bake takes about 1.3 s instead of 0.4 s at load.
+
+**Known limits.**
+- Shares are twelfths, so the rarest classes are over-represented (snags 8% instead of 3-5%).
+  More slots cost atlas memory and bake time linearly (20 slots: 100 MB, about 2.2 s).
+- Far impostors beyond about 1.75 km rescale every tree's height into the species' `height_m`
+  (the base class's range), so a sapling slot there is stretched taller and a snag gets a
+  living tree's height. At that range a tree is a few pixels.
+- Acorn-stash holes sit on whichever class the oak is: on a sapling they are low (under 0.5 m)
+  on a 3 cm stem, and a snag can hold a stash (acorn woodpeckers do use dead oaks).

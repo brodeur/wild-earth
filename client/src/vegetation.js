@@ -1,6 +1,6 @@
 import * as THREE from 'three';
 import { SPECIES, SPECIES_IDS, mulberry32, resolveSpecies } from './trees.js';
-import { buildTree, canopyMaterial, trunkMaterial, applySeason, chainShader } from './treegen.js';
+import { buildTree, canopyMaterial, trunkMaterial, applySeason, chainShader, SLOTS, variantSlots } from './treegen.js';
 import { SEASON_LOOK } from './season.js';
 
 // Species mix per habitat class (codes from pipeline/habitat.py). Weights sum to 1. Ids may be the
@@ -15,9 +15,12 @@ export const MIX = {
   6: { live_oak: 0.6, blue_oak: 0.2, ponderosa: 0.2 },                         // riparian (stand-ins)
 };
 export const SHRUB_MIX = { 4: { chamise: 0.6, manzanita: 0.4 }, 1: { manzanita: 1 }, 3: { manzanita: 1 }, 2: { manzanita: 1 }, 6: { manzanita: 1 }, 5: { chamise: 1 } };
-export const VARIANTS = 3;
+// Variant slots per species: each plant draws one (one random number, as always) and treegen.variantSlots
+// maps the slots to the species' age classes and snag in proportion to their weights (12 slots: shares in
+// twelfths). Slots of the same tree share one set of meshes; the far impostors bake every slot.
+export const VARIANTS = SLOTS;
 const CAP = 24000;
-export const variantSeed = (id, v) => 1000 + v * 17 + id.length;   // canonical species id, variant 0..VARIANTS-1
+export const variantSeed = (id, v) => variantSlots(id, VARIANTS)[v].seed;   // canonical species id, slot 0..VARIANTS-1
 // The mid set's extent: every cell whose centre is within `radius` of `center` ([x, z]) is placed here,
 // so the far impostors (impostors.js) draw exactly the cells outside it, each tree once.
 export const midSet = { center: null, radius: 0, version: 0 };
@@ -130,16 +133,21 @@ export class Vegetation {
     this.trunkMat = { near: lodPatch(trunkMaterial(patch), this.lodU, 'near'), mid: lodPatch(trunkMaterial(patch), this.lodU, 'mid') };   // shared (shadow casters use it)
     this.barkMat = {};     // species id -> { near, mid }: the species' bark texture and normal map (treegen barkTexture)
     this.canopyMat = {};   // species id -> { near, mid, close }
-    this.meshes = {};      // species id -> [{ near: {trunk, canopy, cap, n, ids}, mid: {...}, close: {canopy, cap, n}, stem, height, tris }]
+    this.meshes = {};      // species id -> [{ near: {trunk, canopy, cap, n, ids}, mid: {...}, close: {canopy, cap, n}, stem, height, tris, cls }], one per distinct tree
+    this.slots = {};       // species id -> VARIANTS entries of this.meshes (a class with several slots repeats its entries)
     this.stats = {};
     for (const id of SPECIES_IDS) {
       const spec = SPECIES[id];
       this.canopyMat[id] = { near: lodPatch(canopyMaterial(spec, 'near', patch), this.lodU, 'near', true, true), mid: lodPatch(canopyMaterial(spec, 'mid', patch), this.lodU, 'mid', true),
         close: lodPatch(canopyMaterial(spec, 'close', patch), this.lodU, 'close', true) };
       this.barkMat[id] = { near: lodPatch(trunkMaterial(patch, spec), this.lodU, 'near'), mid: this.trunkMat.mid };   // bark texture within NEAR_R; beyond, plain vertex colour (same mean)
-      this.meshes[id] = [];
+      this.meshes[id] = []; this.slots[id] = [];
+      const bySeed = new Map();
       for (let v = 0; v < VARIANTS; v++) {
-        const seed = variantSeed(id, v), entry = {};
+        const seed = variantSeed(id, v);
+        if (bySeed.has(seed)) { this.slots[id].push(bySeed.get(seed)); continue; }
+        const entry = { seed, cls: variantSlots(id, VARIANTS)[v].cls };
+        bySeed.set(seed, entry); this.slots[id].push(entry);
         for (const lod of ['near', 'mid']) {
           const t = buildTree(id, seed, lod);
           const cap = lod === 'mid' ? (spec.shrub ? CAP : CAP / 2) : NEAR_CAP[spec.shrub ? 'shrub' : 'tree'];
@@ -158,7 +166,7 @@ export class Vegetation {
         entry.close = { canopy: closeCanopy, cap: ccap, n: 0, tris: c.tris.canopy };
         this.meshes[id].push(entry);
       }
-      const avg = lod => Math.round(this.meshes[id].reduce((s, e) => s + e[lod].tris, 0) / VARIANTS);
+      const avg = lod => Math.round(this.meshes[id].reduce((s, e) => s + e[lod].tris, 0) / this.meshes[id].length);
       this.stats[id] = { near: avg('near'), mid: avg('mid'), closeCanopy: avg('close') };
     }
     this.tmp = new THREE.Object3D();
@@ -196,7 +204,7 @@ export class Vegetation {
       for (let k = 0; k < nTrees + nShrubs; k++) {
         const isTree = k < nTrees;
         const name = pick(isTree ? treeMix : shrubMix, rnd());
-        const variants = this.meshes[resolveSpecies(name)], e = variants[Math.floor(rnd() * variants.length)], m = e.mid;
+        const variants = this.slots[resolveSpecies(name)], e = variants[Math.floor(rnd() * variants.length)], m = e.mid;   // slot draw as before: VARIANTS slots, weighted by class
         const px = (i + rnd()) * res, pn = size - (j + rnd()) * res;
         const s = 0.75 + rnd() * 0.5, rot = rnd() * Math.PI * 2;   // all draws before any skip, so neighbours keep their place
         if (m.n >= m.cap) continue;   // after the draws: a full model slot must not shift the rest of the cell (impostors use the same sequence)

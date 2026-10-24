@@ -7,7 +7,11 @@
   "architectural_model": "Leeuwenberg",
   "deciduous": false,
   "height_m": [1.5, 3.5],
-  "variants": 3,
+  "variants": [
+    {"name": "young", "weight": 0.25, "height_m": [0.7, 1.5], "deadwood": 0.05, "set": {"trunk": {"stems": [3, 5]}}, "note": "a low rounded young shrub"},
+    {"name": "mature", "weight": 0.5, "seeds": 2, "note": "the file as written"},
+    {"name": "decadent", "weight": 0.25, "height_m": [2, 3.5], "gnarl": 1.15, "leaf_density": 0.75, "deadwood": {"fraction": 0.35, "levels": [0, 1, 2]}, "note": "an old shrub: grey dead stems among the red"}
+  ],
   "description": "A crooked, many-stemmed shrub with smooth, polished red-brown bark and stiff, round, pale gray-green (almost white) leaves held edge-on to the sun; 1.5-3.5 m tall here. It grows in chaparral and in openings of the woodland and pine forest on dry, rocky ridges, and its late-winter flowers are among the first nectar of the year for hummingbirds and native bees, while its berries feed birds, foxes, coyotes and bears.",
   "season_notes": {
     "winter": "Flowering in late winter (February-March): small white-to-pink urn-shaped flowers, early nectar for hummingbirds and native bees.",

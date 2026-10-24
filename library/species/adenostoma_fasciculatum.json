@@ -7,7 +7,11 @@
   "architectural_model": "Leeuwenberg (provisional)",
   "deciduous": false,
   "height_m": [1.2, 2.4],
-  "variants": 3,
+  "variants": [
+    {"name": "young", "weight": 0.25, "height_m": [0.6, 1.3], "deadwood": 0.08, "set": {"trunk": {"stems": [8, 14]}}, "note": "a few years after fire: a low, dense green clump"},
+    {"name": "mature", "weight": 0.5, "seeds": 2, "note": "the file as written"},
+    {"name": "decadent", "weight": 0.25, "height_m": [1.5, 2.6], "deadwood": 0.55, "leaf_density": 0.75, "set": {"trunk": {"stems": [22, 34]}}, "note": "decades without fire: half the stems grey and dead"}
+  ],
   "description": "A dense, many-stemmed shrub with tiny needle-like leaves in bundles along stiff, upright branches, and clusters of small white flowers at the tips in early summer; 1.2-2.4 m tall here. It is the most common chaparral shrub in California, forming thick stands on hot, dry slopes with thin soil, where it resprouts from a woody burl after fire and gives cover to quail, brush rabbits and wrentits.",
   "season_notes": {
     "winter": "Evergreen: winter rain brings new shoots, and stands burned in recent years sprout from their burls.",

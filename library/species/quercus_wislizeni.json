@@ -7,7 +7,11 @@
   "architectural_model": "Rauh",
   "deciduous": false,
   "height_m": [8, 15],
-  "variants": 3,
+  "variants": [
+    {"name": "young", "weight": 0.25, "height_m": [4, 8], "trunk_radius": 0.7, "crown_scale": 0.9, "branches": 0.85, "set": {"trunk": {"stems": [1, 2]}}, "note": "dense, rounded and low, from one or two stems"},
+    {"name": "mature", "weight": 0.55, "seeds": 2, "note": "the file as written"},
+    {"name": "veteran", "weight": 0.2, "height_m": [11, 16], "trunk_radius": 1.25, "crown_scale": 1.08, "gnarl": 1.15, "deadwood": {"fraction": 0.12, "levels": [1, 2], "where": "inner", "rgb": [118, 112, 104]}, "set": {"trunk": {"stems": [2, 4]}, "lod": {"near_tris_budget": 2800}}, "note": "several heavy stems, a few dead limbs"}
+  ],
   "description": "An evergreen oak with a dense, dark green, rounded crown, often several trunks, and small shiny leaves that are smooth-edged or spiny like holly; 8-15 m tall here. It grows on steeper, moister slopes and along ravines through the blue oak woodland and up into the lower conifer forest, and California scrub-jays bury its acorns, planting new oaks with the ones they never come back for.",
   "season_notes": {
     "winter": "Evergreen: still in full dark leaf, the green that picks it out among the bare blue oaks.",

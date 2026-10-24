@@ -7,7 +7,12 @@
   "architectural_model": "Rauh",
   "deciduous": false,
   "height_m": [22, 38],
-  "variants": 3,
+  "variants": [
+    {"name": "pole", "weight": 0.25, "height_m": [8, 15], "trunk_radius": 0.8, "branches": 0.7, "set": {"trunk": {"base_size": 0.22, "bole_ratio": 0.15, "bark_rgb": [98, 80, 68], "stubs": {"count": [0, 3]}}, "crown": {"envelope": {"profile": [[0.18, 0.2], [0.4, 0.19], [0.6, 0.15], [0.8, 0.09], [1.0, 0.02]]}}, "levels": [{"droop_deg": 20, "upturn_deg": 30}]}, "note": "blackjack: dark bark, a conical crown reaching down to a quarter of the height"},
+    {"name": "mature", "weight": 0.5, "seeds": 2, "note": "the file as written"},
+    {"name": "old-growth", "weight": 0.2, "height_m": [30, 40], "trunk_radius": 1.35, "branches": 0.8, "deadwood": {"fraction": 0.12, "levels": [1], "where": "lower", "shorten": 0.5, "rgb": [130, 118, 104]}, "set": {"trunk": {"base_size": 0.62, "bole_ratio": 0.6, "bark_rgb": [188, 132, 92], "stubs": {"count": [10, 20]}, "length_ratio": 0.92}, "crown": {"envelope": {"profile": [[0.58, 0.2], [0.72, 0.25], [0.86, 0.26], [0.95, 0.21], [1.0, 0.12]]}, "shape": "cylindrical"}, "levels": [{"droop_deg": 40, "upturn_deg": 30}], "lod": {"near_tris_budget": 2600}}, "note": "flat-topped, a long clear bole of pale yellow plates, heavy limbs"}
+  ],
+  "snag": {"fraction": 0.04, "from": "mature", "limbs": 0.3, "twigs": 0, "levels": 1, "broken_top": [0.55, 0.85], "shorten": [0.3, 0.8], "rgb": [140, 124, 108]},
   "description": "A tall, straight pine with a clear trunk, thick bark broken into cinnamon-orange plates between black fissures, and long needles (12-25 cm, in threes) in tufts at the branch tips; 22-38 m tall here. It grows above the oak woodland in the lower conifer forest, from about 600 m up, and its thick bark lets old trees survive the frequent low fires that once kept these forests open.",
   "season_notes": {
     "winter": "Evergreen: needles stay on for about three years, so the crown is full in every season.",

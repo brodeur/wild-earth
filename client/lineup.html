@@ -18,6 +18,8 @@
   .lab { position:absolute; transform:translate(-50%, 0); background:#ffffffd9; padding:4px 8px; border-radius:6px; font-size:12px; white-space:nowrap; text-align:center; box-shadow:0 1px 3px #0002; }
   .lab b { font-size:13px; }
   .lab i { color:#2f3b33; }
+  .lab.sub { font-size:11px; padding:2px 6px; }
+  .lab.sub b { font-size:12px; }
 </style>
 <script type="importmap">
 { "imports": { "three": "https://unpkg.com/three@0.170.0/build/three.module.js",
@@ -33,6 +35,7 @@
   <label for="focus">View</label>
   <select id="focus"><option value="all">all species</option></select>
   <label class="check"><input type="checkbox" id="mid"> mid LOD (what you see past 180 m)</label>
+  <label class="check"><input type="checkbox" id="classes"> all variants (age classes and a snag)</label>
   <label class="check"><input type="checkbox" id="shadows" checked> shadows</label>
   <div id="stats" class="muted" style="margin-top:8px"></div>
   <div id="warn"></div>

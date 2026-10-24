@@ -1,9 +1,10 @@
 import * as THREE from 'three';
 import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
-import { LIBRARY, LIBRARY_SOURCE, LIBRARY_RAW, BUILTIN, buildTree, canopyMaterial, trunkMaterial, applySeason, thinMidCanopy } from './treegen.js';
+import { LIBRARY, LIBRARY_SOURCE, LIBRARY_RAW, BUILTIN, buildTree, canopyMaterial, trunkMaterial, applySeason, thinMidCanopy, ageClasses, SLOTS } from './treegen.js';
 
 // Review page for the species library (docs/species-library.md): every species, three seeds,
 // near or mid LOD, any season, against 5 m scale poles. URL: ?season=winter&mid=1&focus=<id>&shadows=0&ui=0
+// ?classes=1 ("all variants"): one tree per age class plus the snag, labelled with class, height and share.
 
 const $ = id => document.getElementById(id);
 const params = new URLSearchParams(location.search);
@@ -40,14 +41,22 @@ function scale5() {
   return g;
 }
 
-const groups = [];
+// Layouts: 'seeds' (the three measured seeds of the base class, as before) or 'classes' (one tree per age
+// class plus the snag). Each is built into its own root group and label set; the toggle swaps them.
+const mats = {};   // species id -> canopy and trunk materials, shared by both layouts
+const matsOf = (id, spec) => mats[id] || (mats[id] = { near: canopyMaterial(spec, 'near'), mid: canopyMaterial(spec, 'mid'), trunk: trunkMaterial(null, spec) });
+function buildLayout(kind) {
+const root = new THREE.Group(), labels = document.createElement('div'), groups = [];
 let x = 0;
 for (const id of ids) {
   const spec = LIBRARY[id];
-  const g = { id, spec, built: null, near: new THREE.Group(), mid: new THREE.Group(), mats: { near: canopyMaterial(spec, 'near'), mid: canopyMaterial(spec, 'mid'), trunk: trunkMaterial(null, spec) }, canopies: [], tris: { near: [], mid: [] } };
-  const built = SEEDS.map(seed => ({ near: buildTree(id, seed + id.length, 'near'), mid: buildTree(id, seed + id.length, 'mid'), close: buildTree(id, seed + id.length, 'close') }));
+  const g = { id, spec, built: null, near: new THREE.Group(), mid: new THREE.Group(), mats: matsOf(id, spec), canopies: [], tris: { near: [], mid: [] }, trees: [] };
+  const rows = kind === 'classes' ? ageClasses(id) : SEEDS.map(seed => ({ seed: seed + id.length }));
+  const built = rows.map(r => ({ row: r, near: buildTree(id, r.seed, 'near'), mid: buildTree(id, r.seed, 'mid'), close: buildTree(id, r.seed, 'close') }));
   g.built = built;
-  const widths = built.map(b => { b.near.canopy.computeBoundingBox(); const bb = b.near.canopy.boundingBox; return { w: Math.max(bb.max.x - bb.min.x, bb.max.z - bb.min.z, 1), cx: (bb.max.x + bb.min.x) / 2 }; });
+  const widths = built.map(b => { b.near.canopy.computeBoundingBox(); const bb = b.near.canopy.boundingBox.clone();
+    if (kind === 'classes') { b.near.trunk.computeBoundingBox(); bb.union(b.near.trunk.boundingBox); }   // a snag's width is its wood
+    return { w: Math.max(bb.max.x - bb.min.x, bb.max.z - bb.min.z, kind === 'classes' ? 7 : 1), cx: (bb.max.x + bb.min.x) / 2 }; });   // classes: room for each tree's label
   const gap = Math.max(1, spec.height_m[1] * 0.12);
   const x0 = x;
   x += 1.5;   // room for the pole
@@ -60,21 +69,33 @@ for (const id of ids) {
       g[lod].add(t, c); g.canopies.push(c);
       g.tris[lod].push(b[lod].trunk.index.count / 3 + b[lod].canopy.index.count / 3);
     }
+    if (kind === 'classes') {   // per-tree label: class, height of this tree, share of plants
+      const r = b.row, el = document.createElement('div'); el.className = 'lab sub';
+      el.innerHTML = `<b>${r.name}</b><br>${b.near.height.toFixed(1)} m <span class="muted">(${r.height_m[0]}–${r.height_m[1]})</span><br><span class="muted">${Math.round(r.share * 100)}% of plants</span>`;
+      labels.appendChild(el); g.trees.push({ x, el });
+    }
     x += widths[i].w / 2 + gap;
   });
-  const pole = scale5(); pole.position.x = x0 + 0.3; scene.add(pole);
+  const pole = scale5(); pole.position.x = x0 + 0.3; root.add(pole);
   g.x0 = x0; g.x1 = x - gap; g.h = Math.max(...built.map(b => b.near.height));
-  scene.add(g.near, g.mid);
+  root.add(g.near, g.mid);
   groups.push(g);
   x += Math.max(4, spec.height_m[1] * 0.25);
-  $('focus').insertAdjacentHTML('beforeend', `<option value="${id}">${spec.common}</option>`);
   // label
   const avg = a => Math.round(a.reduce((s, v) => s + v, 0) / a.length);
   const el = document.createElement('div'); el.className = 'lab';
-  el.innerHTML = `<b>${spec.common}</b><br><i>${spec.scientific}</i><br><span class="muted">${spec.architectural_model} · ${spec.height_m[0]}–${spec.height_m[1]} m<br>near ${avg(g.tris.near)} · mid ${avg(g.tris.mid)} tris</span>`;
-  $('labels').appendChild(el); g.label = el;
+  el.innerHTML = kind === 'classes'
+    ? `<b>${spec.common}</b><br><i>${spec.scientific}</i><br><span class="muted">${built.length} variants of ${SLOTS} slots</span>`
+    : `<b>${spec.common}</b><br><i>${spec.scientific}</i><br><span class="muted">${spec.architectural_model} · ${spec.height_m[0]}–${spec.height_m[1]} m<br>near ${avg(g.tris.near)} · mid ${avg(g.tris.mid)} tris</span>`;
+  labels.appendChild(el); g.label = el;
 }
-const totalW = x;
+scene.add(root); $('labels').appendChild(labels);
+return { kind, root, labels, groups, totalW: x };
+}
+for (const id of ids) $('focus').insertAdjacentHTML('beforeend', `<option value="${id}">${LIBRARY[id].common}</option>`);
+const layouts = { seeds: buildLayout('seeds'), classes: null };
+const groups = layouts.seeds.groups;   // the measured layout
+let L = layouts.seeds;
 
 // Measured silhouette and colour per species, the same measures docs/tree-likeness-review.md took
 // from the reference photographs (stored as `targets` in each species file): each seed is drawn
@@ -175,8 +196,8 @@ $('warn').textContent = (fromBuiltin.length ? `library not reachable for ${fromB
   + (stale.length ? `built-in copy out of date for ${stale.join(', ')}: run python3 library/embed_builtin.py` : '');
 
 function frame(focus) {
-  let x0 = 0, x1 = totalW, h = Math.max(...groups.map(g => g.h));
-  if (focus !== 'all') { const g = groups.find(g => g.id === focus); x0 = g.x0 - 1; x1 = g.x1 + 1; h = g.h; }
+  let x0 = 0, x1 = L.totalW, h = Math.max(...L.groups.map(g => g.h));
+  if (focus !== 'all') { const g = L.groups.find(g => g.id === focus); x0 = g.x0 - 1; x1 = g.x1 + 1; h = g.h; }
   const cx = (x0 + x1) / 2, w = x1 - x0, aspect = innerWidth / innerHeight, vfov = camera.fov * Math.PI / 180;
   const dist = Math.max((h * 1.25) / (2 * Math.tan(vfov / 2)), (w * 1.08) / (2 * Math.tan(vfov / 2) * aspect));
   camera.position.set(cx, h * 0.45 + dist * 0.12, dist);
@@ -185,10 +206,13 @@ function frame(focus) {
   const sc = sun.shadow.camera, half = Math.max(w, h * 2) * 0.62; sc.left = -half; sc.right = half; sc.top = half; sc.bottom = -half; sc.near = 1; sc.far = 4000; sc.updateProjectionMatrix();
 }
 
-const state = { season: params.get('season') || 'summer', mid: params.get('mid') === '1', focus: params.get('focus') || 'all', shadows: params.get('shadows') !== '0' };
-$('season').value = state.season; $('mid').checked = state.mid; $('focus').value = state.focus; $('shadows').checked = state.shadows;
+const state = { season: params.get('season') || 'summer', mid: params.get('mid') === '1', focus: params.get('focus') || 'all', shadows: params.get('shadows') !== '0', classes: params.get('classes') === '1' };
+$('season').value = state.season; $('mid').checked = state.mid; $('focus').value = state.focus; $('shadows').checked = state.shadows; $('classes').checked = state.classes;
 function apply() {
-  for (const g of groups) {
+  if (state.classes && !layouts.classes) layouts.classes = buildLayout('classes');
+  L = state.classes ? layouts.classes : layouts.seeds;
+  for (const k of ['seeds', 'classes']) if (layouts[k]) { layouts[k].root.visible = layouts[k] === L; layouts[k].labels.style.display = layouts[k] === L ? '' : 'none'; }
+  for (const g of L.groups) {
     for (const lod of ['near', 'mid']) {
       const on = applySeason(g.mats[lod], g.spec, state.season);
       g[lod].visible = (lod === 'mid') === state.mid;
@@ -196,12 +220,13 @@ function apply() {
     }
   }
   renderer.shadowMap.enabled = state.shadows; scene.traverse(o => { if (o.material) o.material.needsUpdate = true; });
-  const tot = groups.reduce((s, g) => s + g.tris[state.mid ? 'mid' : 'near'].reduce((a, b) => a + b, 0), 0);
-  $('stats').textContent = `${state.mid ? 'mid' : 'near'} LOD · ${tot.toLocaleString()} triangles for ${groups.length * SEEDS.length} plants`;
+  const tot = L.groups.reduce((s, g) => s + g.tris[state.mid ? 'mid' : 'near'].reduce((a, b) => a + b, 0), 0);
+  $('stats').textContent = `${state.mid ? 'mid' : 'near'} LOD · ${tot.toLocaleString()} triangles for ${L.groups.reduce((s, g) => s + g.built.length, 0)} plants`;
 }
 $('season').onchange = e => { state.season = e.target.value; apply(); };
 $('mid').onchange = e => { state.mid = e.target.checked; apply(); };
 $('shadows').onchange = e => { state.shadows = e.target.checked; apply(); };
+$('classes').onchange = e => { state.classes = e.target.checked; apply(); frame(state.focus); };
 $('focus').onchange = e => { state.focus = e.target.value; frame(state.focus); };
 addEventListener('resize', () => { camera.aspect = innerWidth / innerHeight; camera.updateProjectionMatrix(); renderer.setSize(innerWidth, innerHeight); frame(state.focus); });
 if (params.get('ui') === '0') $('panel').style.display = 'none';   // clean captures for docs
@@ -212,14 +237,21 @@ const v = new THREE.Vector3();
 function loop() {
   controls.update();
   renderer.render(scene, camera);
-  for (const g of groups) {
-    v.set((g.x0 + g.x1) / 2, 0, 1.2).project(camera);
+  for (const g of L.groups) {
+    const sub = L.kind === 'classes';
+    v.set((g.x0 + g.x1) / 2, sub ? g.h * 1.08 : 0, 1.2).project(camera);
     const on = v.z < 1 && Math.abs(v.x) < 1.1;
     g.label.style.display = on ? '' : 'none';
-    g.label.style.left = `${(v.x * 0.5 + 0.5) * innerWidth}px`; g.label.style.top = `${(-v.y * 0.5 + 0.5) * innerHeight + 6 + (state.focus === 'all' && groups.indexOf(g) % 2 ? 78 : 0)}px`;
+    g.label.style.left = `${(v.x * 0.5 + 0.5) * innerWidth}px`;
+    g.label.style.top = sub ? `${(-v.y * 0.5 + 0.5) * innerHeight - 64}px` : `${(-v.y * 0.5 + 0.5) * innerHeight + 6 + (state.focus === 'all' && L.groups.indexOf(g) % 2 ? 78 : 0)}px`;
+    for (const [k, t] of g.trees.entries()) {   // class labels under each tree, staggered when crowded
+      v.set(t.x, 0, 1.2).project(camera);
+      t.el.style.display = v.z < 1 && Math.abs(v.x) < 1.1 ? '' : 'none';
+      t.el.style.left = `${(v.x * 0.5 + 0.5) * innerWidth}px`; t.el.style.top = `${(-v.y * 0.5 + 0.5) * innerHeight + 6 + (state.focus === 'all' ? (k % 3) * 46 : 0)}px`;
+    }
   }
   requestAnimationFrame(loop);
 }
 loop();
-window.__lineup = { groups, scene, camera, renderer, state, apply, frame };
+window.__lineup = { groups, layouts, scene, camera, renderer, state, apply, frame };
 document.body.dataset.ready = '1';
