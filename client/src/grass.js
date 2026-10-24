@@ -5,7 +5,7 @@ import { SEASON_LOOK } from './season.js';
 import { buildAnnualClump, buildBunchClump, buildTuft } from './grassBlades.js';
 import { windUniforms, WIND_GLSL } from './wind.js';
 import { groundUniforms, GROUND_GLSL } from './terrain.js';
-import { ShrubField, GrassClumps, StalkClumps, CLUMP_BAND, STALK_BAND } from './shrubfield.js';
+import { ShrubField, GrassClumps, StalkClumps, CLUMP_BAND, STALK_BAND, waterAt } from './shrubfield.js';
 import { GrassShells } from './grassShells.js';
 
 // Grass in the Sierra foothill savanna: non-native annuals (wild oat, bromes, medusahead) over
@@ -389,10 +389,10 @@ export class Grass {
   }
 
   // Grass density at a point as the clump placement sees it (habitat x herb cover, bare patches,
-  // decayed pavement and its verge), for the shells.
+  // decayed pavement and its verge, none on ponds or in stream channels), for the shells, tussocks and oats.
   swardDensity(x, n) {
     const dens = this.sample(this.dens, x, n);
-    if (dens <= 0) return 0;
+    if (dens <= 0 || waterAt(this.tile.waterMask, x, n) === 255) return 0;
     const herb = this.sample(this.herb, x, n), thr = 0.28 + 0.14 * (1 - herb), rw = this.tile.roads ? this.tile.roads.at(x, n) : 0;
     return Math.min(dens * smooth(thr - 0.1, thr + 0.1, bareField(x, n)) * (rw > 140 ? 0 : rw > 0 ? 0.5 : 1) * 1.15, 1);
   }
@@ -403,7 +403,7 @@ export class Grass {
     const key = j * this.W + i, cache = this.cache[layer], L = LAYERS[layer], mid = layer === 2;
     let groups = cache.get(key);
     if (groups) return groups;
-    const { habitat: hab, size, roads } = this.tile, res = hab.res;
+    const { habitat: hab, size, roads, waterMask: wm } = this.tile, res = hab.res;
     let any = false;
     for (let dj = -1; dj <= 1 && !any; dj++) for (let di = -1; di <= 1; di++) {
       const a = i + di, b = j + dj;
@@ -422,6 +422,8 @@ export class Grass {
         // Decayed roads: no grass on the pavement, half density across the verge.
         const rw = roads ? roads.at(px, pn) : 0;
         if (rw > 140 || (rw > 0 && verge < 0.5)) continue;
+        // None on ponds or in stream channels (the riparian band keeps its grass).
+        if (wm && waterAt(wm, px, pn) === 255) continue;
         // Bare patches, more of them where herb cover is thin, thinning out over a feathered edge;
         // clumps also shorten toward them.
         const herb = this.sample(this.herb, px, pn), bare = bareField(px, pn), thr = 0.28 + 0.14 * (1 - herb);

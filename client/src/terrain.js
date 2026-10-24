@@ -78,7 +78,12 @@ const FRAG = /* glsl */`
   ${ATMOSPHERE_GLSL}
   ${GROUND_GLSL}
   ${WIND_GLSL}
-  float hash(vec2 p){ return fract(sin(dot(p, vec2(127.1, 311.7))) * 43758.5453); }
+  // Integer lattice hash. The usual fract(sin(dot(p, k)) * 43758) breaks down here: lattice
+  // coordinates reach ~5e4 (0.22 m cells over a 10 km tile), so the sin argument is ~1e7, past
+  // where the GPU's sin is accurate, and neighbouring cells' values come out correlated row by
+  // row: from 60-150 m up the 0.8 m sward grain showed as a regular grid. Exact for any cell.
+  float hash(vec2 p){ uvec2 q = uvec2(ivec2(p) + 65536); uint h = q.x * 1597334677u ^ q.y * 3812015801u;
+    h = (h ^ (h >> 15)) * 2246822519u; h ^= h >> 13; return float(h) * (1.0 / 4294967296.0); }
   float vnoise(vec2 p){ vec2 i = floor(p), f = fract(p); f = f * f * (3.0 - 2.0 * f);
     return mix(mix(hash(i), hash(i + vec2(1,0)), f.x), mix(hash(i + vec2(0,1)), hash(i + vec2(1,1)), f.x), f.y); }
   // Value noise on a rotated, scaled lattice: octaves on different rotations never line up into
@@ -88,8 +93,9 @@ const FRAG = /* glsl */`
     vec3 w = texture2D(masks, vUv).rgb;                 // soft weights: grassland, oak woodland, chaparral
     w *= 1.0 - smoothstep(0.55, 0.75, texture2D(roads, vUv).r);   // decayed pavement keeps its grey
     vec3 c = groundRecolour(texture2D(map, vUv).rgb, w);
-    // Fine detail so the ground is not a blurred photo up close: 2 m and 9 m value noise.
-    float d = 0.86 + 0.14 * vnoise(vPosW.xz * 0.5) + 0.10 * (vnoise(vPosW.xz * 0.11) - 0.5);
+    // Fine detail so the ground is not a blurred photo up close: 2 m and 9 m value noise, on
+    // lattices turned to two different angles so neither lines up with the world axes.
+    float d = 0.86 + 0.14 * rnoise(vPosW.xz, 0.35, 2.0) + 0.10 * (rnoise(vPosW.xz + 6.3, 1.45, 9.1) - 0.5);
     float dist = distance(vPosW, cameraPosition);
     if (dist < 420.0 && groundFx > 0.5) {
       // Metres per pixel here: each pattern fades out before it gets small enough to shimmer.

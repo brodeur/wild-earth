@@ -256,6 +256,21 @@ const FRAG = /* glsl */`
     #include <colorspace_fragment>
   }`;
 
+// Water at a point, for vegetation placement: 255 in a pond or a stream channel, 1..200 in the
+// riparian band (200 at the centreline), 0 on dry land, from tile.waterMask's 5 m grid. The grid
+// settles open water and dry land; within a pixel of a shore or a channel the exact test decides, so
+// nothing stands on the water and no 5 m bare margin opens along a bank. Deterministic per point.
+export function waterAt(wm, x, n) {
+  if (!wm) return 0;
+  const W = wm.width, r = wm.res;
+  const i = Math.min(Math.max(Math.floor(x / r), 0), W - 1), j = Math.min(Math.max(Math.floor((wm.size - n) / r), 0), W - 1);
+  const g = wm.channel(i, j);
+  const a = wm.channel(Math.max(i - 1, 0), j), b = wm.channel(Math.min(i + 1, W - 1), j);
+  const c = wm.channel(i, Math.max(j - 1, 0)), d = wm.channel(i, Math.min(j + 1, W - 1));
+  if (g === 255 && a === 255 && b === 255 && c === 255 && d === 255) return 255;
+  if (g === 0 && a !== 255 && b !== 255 && c !== 255 && d !== 255) return 0;
+  return wm.inWater(x, n) ? 255 : g === 255 ? 200 : g;
+}
 function hash2(i, j, s) { let h = (i * 374761393 + j * 668265263 + s * 982451653) | 0; h = Math.imul(h ^ (h >>> 13), 1274126177); return ((h ^ (h >>> 16)) >>> 0) / 4294967296; }
 function vnoise(x, y, s) {
   const i = Math.floor(x), j = Math.floor(y); let fx = x - i, fy = y - j; fx = fx * fx * (3 - 2 * fx); fy = fy * fy * (3 - 2 * fy);
@@ -274,6 +289,8 @@ const smooth = (a, b, x) => { const t = Math.min(Math.max((x - a) / (b - a), 0),
 //   band             [in0, in1, out0, out1] distance fades; range is out1
 //   now              cells nearer than this are generated at once, the rest a couple of ms per frame
 //   cap, salt, roadsMax
+//   riparian         0..1: share of clumps thinned out at a stream centreline, less across the
+//                    riparian band (none in water whatever this is)
 export class ClumpField {
   constructor(tile, ground, uniforms, cfg) {
     this.tile = tile; this.ground = ground; this.cfg = cfg;
@@ -300,7 +317,7 @@ export class ClumpField {
     const key = j * this.W + i, cfg = this.cfg;
     let c = this.cache.get(key);
     if (c) return c;
-    const { habitat: hab, size, roads } = this.tile, res = hab.res, out = [];
+    const { habitat: hab, size, roads, waterMask: wm } = this.tile, res = hab.res, out = [];
     if (cfg.cellAny(i, j)) {
       const n = Math.round(this.lamMax * res * res / cfg.meanArea), rnd = mulberry32((i * 73856093) ^ (j * 19349663) ^ cfg.salt);
       for (let k = 0; k < n; k++) {
@@ -308,6 +325,9 @@ export class ClumpField {
         const cov = cfg.coverAt(px, pn);
         if (cov <= 0 || keep * this.lamMax >= lam(cov)) { rnd(); rnd(); rnd(); rnd(); continue; }
         if (roads && roads.at(px, pn) > cfg.roadsMax) { rnd(); rnd(); rnd(); rnd(); continue; }
+        // Nothing in ponds or stream channels; tussocks and oats thin out toward a creek.
+        const wv = waterAt(wm, px, pn);
+        if (wv === 255 || (wv && cfg.riparian && keep * this.lamMax >= lam(cov) * (1 - cfg.riparian * wv / 200))) { rnd(); rnd(); rnd(); rnd(); continue; }
         const [kind, R, Hh, variant = 0] = cfg.plant(px, pn, rnd, cov);
         out.push(px, this.ground(px, pn), -pn, R, Hh, Math.floor(rnd() * 100) + (variant + 0.5) / 4, kind, 0);
       }
@@ -432,7 +452,7 @@ export const CLUMP_BAND = [12, 20, 185, 225];
 export function GrassClumps(tile, ground, uniforms, densGrid, density, annualShare) {
   const W = tile.habitat.img.width, H = tile.habitat.img.height;
   return new ClumpField(tile, ground, uniforms, {
-    name: 'grassclumps', salt: 0x6a55, cap: 60000, roadsMax: 140,
+    name: 'grassclumps', salt: 0x6a55, cap: 60000, roadsMax: 140, riparian: 0.75,
     // Tussocks only: annual grass is a continuous sward (the shells and the terrain grain carry it);
     // drawn as discrete clumps it reads as cotton balls from the air.
     // In patches (needlegrass holds the thin-soiled knolls and old ground, the annuals the rest), so
@@ -455,7 +475,7 @@ export const STALK_BAND = [10, 18, 200, 240];
 export function StalkClumps(tile, ground, uniforms, densGrid, density, annualShare) {
   const W = tile.habitat.img.width, H = tile.habitat.img.height;
   return new ClumpField(tile, ground, uniforms, {
-    name: 'grassstalks', salt: 0x57a1, cap: 30000, roadsMax: 120,
+    name: 'grassstalks', salt: 0x57a1, cap: 30000, roadsMax: 120, riparian: 0.85,
     cellAny: anyAround(densGrid, W, H),
     coverAt: (x, n) => {
       const d = density(x, n);
