@@ -22,7 +22,7 @@ import { WIND_GLSL } from './wind.js';
 //   0 (+-120 m, 2048): terrain (back faces), every near-set plant's leaf cards (the near tier's,
 //      also inside the close tier's range: same spray texture, half the triangles of the close
 //      cards) and trunk (the mid tier's trunk mesh on the near matrices: same skeleton, a tenth of
-//      the triangles), the raven
+//      the triangles), the raven, and whatever was registered with addCaster (the animals)
 //   1 (+-600 m, 2048): terrain; within NEAR_R of the bird the near trees as in cascade 0, beyond
 //      it a depth-only ellipsoid per crown on the mid-tier matrices. This is the map the start view
 //      (150 m up) sees everything through, so it gets 0.6 m texels and real crowns where they are
@@ -36,6 +36,17 @@ import { WIND_GLSL } from './wind.js';
 // i.e. those in view).
 // The terrain draws only its back faces from the sun: the ridge silhouettes that cast are kept,
 // and a sunlit slope has nothing of its own in the map to self-shadow against.
+//
+// Moving casters from other modules: addCaster(object3d, { cascades, simple, material }) gives every
+// mesh under object3d a depth proxy in the shadow scene that shares its geometry (and, for an
+// InstancedMesh, its instance buffer: the proxy draws the source's live count) and copies its world
+// matrix, visibility and skin every frame; removeCaster(object3d) takes them out. simple: a plain
+// depth material (the rigid shape, skinning included); otherwise `material`, else the source's
+// customDepthMaterial, so a vertex-shader pose (a wingbeat) is in the shadow too. Cascade 0 is
+// re-rendered every frame, so casters there move with their objects; in cascades 1 and 2 a caster
+// moves only when that map re-renders for its own reasons. The module-level addCaster/removeCaster
+// below route to the live Shadows (and queue until one exists), so a module that is not handed the
+// Shadows instance can still register: animals.js does.
 
 const DEG = Math.PI / 180;
 // grid: snap step for the box centre, in texels. double: cascade 0 re-renders every frame, so it is
@@ -159,6 +170,11 @@ const AO_FRAG = /* glsl */`
   }`;
 const AO_RANGE = 128, AO_SIZE = 512, AO_MOVE = 48;
 
+let current = null;            // the live Shadows, for the module-level addCaster / removeCaster
+const queued = new Map();      // object3d -> options, registered before a Shadows existed
+export function addCaster(object3d, opts) { if (current) current.addCaster(object3d, opts); else queued.set(object3d, opts); return object3d; }
+export function removeCaster(object3d) { queued.delete(object3d); current?.removeCaster(object3d); }
+
 const BIAS = new THREE.Matrix4().set(0.5, 0, 0, 0.5, 0, 0.5, 0, 0.5, 0, 0, 0.5, 0.5, 0, 0, 0, 1);
 const OUTSIDE = new THREE.Matrix4().set(0, 0, 0, 10, 0, 0, 0, 10, 0, 0, 0, 10, 0, 0, 0, 1);
 
@@ -256,8 +272,37 @@ export class Shadows {
     }
     renderer.setRenderTarget(this.ao.rt); renderer.clear(true, false, false); renderer.setRenderTarget(prev);
     groundUniforms.contactAO.value = this.ao.rt.texture;
-    this.ravenProxies = null;   // the model loads asynchronously
-    window.__shadows = this;    // debugging handle
+    this.ravenCaster = false;   // the model loads asynchronously (sync() registers it)
+    // addCaster registry: object3d -> proxies; casterVersion joins the caster signatures
+    this.casters = new Map(); this.casterVersion = 0;
+    this.simpleDepth = new THREE.MeshBasicMaterial({ colorWrite: false, side: THREE.DoubleSide });
+    current = this;
+    for (const [o, opts] of queued) this.addCaster(o, opts);
+    queued.clear();
+    window.__shadows = this;    // alias for debugging only: register casters with addCaster
+  }
+  // See the header. cascades: indices into CASCADES (default [0]). Returns object3d.
+  addCaster(object3d, { cascades = [0], simple = false, material = null } = {}) {
+    if (this.casters.has(object3d)) this.removeCaster(object3d);
+    let layers = 0; for (const i of cascades) layers |= 1 << (i + 1);
+    const proxies = [];
+    object3d.traverse(src => {
+      if (!src.isMesh) return;
+      const m = simple ? this.simpleDepth : material || src.customDepthMaterial || this.simpleDepth;
+      let p;
+      if (src.isInstancedMesh) { p = new THREE.InstancedMesh(src.geometry, m, 1); p.instanceMatrix = src.instanceMatrix; p.count = 0; }
+      else if (src.isSkinnedMesh) { p = new THREE.SkinnedMesh(src.geometry, m); p.bind(src.skeleton, src.bindMatrix); p.bindMode = src.bindMode; }
+      else p = new THREE.Mesh(src.geometry, m);
+      p.name = (src.name || 'mesh') + ' caster';
+      proxies.push(this.add(p, src, layers));
+    });
+    this.casters.set(object3d, proxies); this.casterVersion++;
+    return object3d;
+  }
+  removeCaster(object3d) {
+    const proxies = this.casters.get(object3d); if (!proxies) return;
+    for (const p of proxies) this.scene.remove(p);   // geometry and materials belong to the source
+    this.casters.delete(object3d); this.casterVersion++;
   }
   add(proxy, src, layers) {
     proxy.matrixAutoUpdate = false; proxy.matrixWorld.copy(src.matrixWorld); proxy.frustumCulled = false;
@@ -274,16 +319,10 @@ export class Shadows {
     this.vegProxies.push(this.add(p, src, layers));
   }
   buildRaven() {
-    const meshes = [];
-    this.raven.group.traverse(o => { if (o.isMesh) meshes.push(o); });
-    if (!meshes.length) return;
-    const m = new THREE.MeshBasicMaterial({ colorWrite: false, side: THREE.DoubleSide });
-    this.ravenProxies = meshes.map(src => {
-      let p;
-      if (src.isSkinnedMesh) { p = new THREE.SkinnedMesh(src.geometry, m); p.bind(src.skeleton, src.bindMatrix); p.bindMode = src.bindMode; }
-      else p = new THREE.Mesh(src.geometry, m);
-      return this.add(p, src, L0);
-    });
+    let n = 0; this.raven.group.traverse(o => { if (o.isMesh) n++; });
+    if (!n) return;
+    this.addCaster(this.raven.group, { cascades: [0], simple: true });
+    this.ravenCaster = true;
   }
   // Mirror counts, visibility and transforms of the real meshes. Returns signatures of the caster
   // sets: [near tier (cascades 0, 1), mid tier (cascades 1, 2)].
@@ -297,15 +336,18 @@ export class Shadows {
       if (!p.visible) continue;
       if (p.layers.mask & L2) hm = (hm * 31 + n * 7 + i) | 0; else hn = (hn * 31 + n * 7 + i) | 0;
     }
-    if (!this.ravenProxies && this.raven.mixer) this.buildRaven();
+    if (!this.ravenCaster && this.raven.mixer) this.buildRaven();
     const shown = o => { for (; o; o = o.parent) if (!o.visible) return false; return true; };
-    if (this.ravenProxies) for (const p of this.ravenProxies) {
+    for (const proxies of this.casters.values()) for (const p of proxies) {
       const s = p.userData.src;
-      p.visible = shown(s); p.matrixWorld.copy(s.matrixWorld);
+      if (s.isInstancedMesh) { p.instanceMatrix = s.instanceMatrix; p.count = s.count; p.visible = s.count > 0 && shown(s); }
+      else p.visible = shown(s);
+      if (!p.visible) continue;
+      p.matrixWorld.copy(s.matrixWorld);
       if (p.isSkinnedMesh) p.bindMatrixInverse.copy(s.bindMatrixInverse);
     }
     for (const p of this.clumpProxies) p.visible = shown(p.userData.src) && p.geometry.instanceCount > 0;
-    return [`${hn}|${this.veg.nearVersion}`, `${hm}|${this.veg.version}`];
+    return [`${hn}|${this.veg.nearVersion}|${this.casterVersion}`, `${hm}|${this.veg.version}|${this.casterVersion}`];
   }
   // Contact AO around the camera: re-rendered when the near set changes or the camera has moved AO_MOVE m.
   updateAO(camera) {

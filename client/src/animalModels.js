@@ -295,14 +295,17 @@ ${ANIM_BODY}
 // lifted for bedded deer (pose lowers the body by `drop` m). Overlaps of body parts in the merged
 // mesh are drawn once each: the stencil-free trick is depthWrite with depthFunc Less on a plane, so
 // a second fragment at the same depth fails.
-export function planarShadowMaterial(model, { drop = 0, opacity = 0.42 } = {}) {
+// nearFade: the caster is also in shadows.js cascade 0 (addCaster), so fade the planar shadow out
+// where the animal's feet are inside that map (csmMatrix[0] maps them into [0, 1]; it maps everything
+// far outside while the cascade is off), handing over across the outer 2-8 % of the box.
+export function planarShadowMaterial(model, { drop = 0, opacity = 0.42, nearFade = false } = {}) {
   const v4 = a => `vec4(${a.map(x => x.toFixed(4)).join(', ')})`;
   return new THREE.ShaderMaterial({
-    uniforms: { sunDir: atmo.sunDir, csmStrength: atmo.csmStrength, opacity: { value: opacity } },
+    uniforms: { sunDir: atmo.sunDir, csmStrength: atmo.csmStrength, opacity: { value: opacity }, csm0: { value: atmo.csmMatrix.value[0] } },
     vertexShader: `${ANIM_DECL}
 const vec4 uAmp = ${v4(model.amp)};
 const vec4 uPose = ${v4(model.pose)};
-uniform vec3 sunDir; uniform float csmStrength;
+uniform vec3 sunDir; uniform float csmStrength; uniform mat4 csm0;
 varying float vFade;
 void main() {
 ${ANIM_BODY}
@@ -313,6 +316,9 @@ ${ANIM_BODY}
   w.xyz -= L * (max(w.y - ground, 0.0) / L.y);
   w.y = ground;
   vFade = csmStrength * smoothstep(0.03, 0.15, sunDir.y);
+  ${nearFade ? `vec3 c0 = (csm0 * vec4(m[3].xyz, 1.0)).xyz;
+  float edge = min(min(c0.x, 1.0 - c0.x), min(min(c0.y, 1.0 - c0.y), min(c0.z, 1.0 - c0.z)));
+  vFade *= 1.0 - smoothstep(0.02, 0.08, edge);` : ''}
   gl_Position = projectionMatrix * viewMatrix * w;
 }`,
     fragmentShader: `uniform float opacity; varying float vFade;

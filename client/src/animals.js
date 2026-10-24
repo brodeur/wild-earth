@@ -2,6 +2,7 @@ import * as THREE from 'three';
 import { mulberry32 } from './trees.js';
 import { hash } from './vegetation.js';
 import { localXY } from './goto.js';
+import { addCaster, removeCaster } from './shadows.js';
 import { buildSquirrel, buildWoodpecker, buildRaven, buildDeer, buildQuail, buildJay, buildHawk, buildVulture,
   animalMaterial, animalDepthMaterial, planarShadowMaterial } from './animalModels.js';
 
@@ -31,18 +32,23 @@ import { buildSquirrel, buildWoodpecker, buildRaven, buildDeer, buildQuail, buil
 // Turkey vulture is not in the tile's species list or perception matrix yet: it is a visual only,
 // seen by every observer (VISUAL_ONLY) until the pipeline adds it.
 //
-// Shadows: animals receive the cascaded sun shadows through patchLambert. To cast, each bird and
-// squirrel species has a depth-only twin (animalDepthMaterial) in the shadow scene of shadows.js,
-// on the near cascade only (the only one re-rendered every frame; it is off above ~110 m camera
-// height). Deer cast a planar shadow instead: the posed model projected onto the plane through its
-// feet along the sun, which works at any height and gives the long dawn and dusk shadows that make
-// a herd readable from the air.
+// Shadows: animals receive the cascaded sun shadows through patchLambert. To cast, every species'
+// InstancedMesh is registered with shadows.js addCaster on the near cascade (the only one
+// re-rendered every frame, so the shadows move with the animals; it is off above ~110 m camera
+// height), drawn with its customDepthMaterial (animalDepthMaterial: the same part animation, so a
+// wingbeat's shadow beats). Deer also keep a planar shadow: the posed model projected onto the
+// plane through its feet along the sun, which works at any height and gives the long dawn and dusk
+// shadows that make a herd readable from the air; it fades out inside cascade 0's map, where the
+// real shadow is drawn, so the ground under a near deer is not darkened twice.
+//
+// Events (for sound.js): on(type, fn) / off(type, fn). 'flush' { group, x, y, z, n, cause } when a
+// quail covey bursts up (x, y, z: where it takes off; cause 'raven', 'hawk', 'self' or 'debug');
+// 'stoop' { animal, x, y, z, target } when a red-tailed hawk tips into a stoop.
 
 const LIVE_R = 400, REBUILD_MOVE = 100, NEAR_R = 150, TAG_R = 40, TAG_MAX = 6, BUCKET = 30;
 const LOD_R2 = 250 * 250;   // ground animals farther than this from the eye think on alternate frames (with the summed dt)
 const FLY_NEAR = 30, FLY_FAR = 100, FLY_GROW = 0.6;   // birds in flight: true size within FLY_NEAR m of the eye, 1.6x beyond FLY_FAR
 const VISUAL_ONLY = new Set(['cathartes_aura']);     // not in the species list or perception matrix yet: seen by everyone
-const L0 = 1 << 1;                                   // shadows.js layer bit of the near cascade
 const TAU = Math.PI * 2;
 const CLING_PITCH = -1.72;   // a clinging woodpecker: nose up, tipped just past vertical so the tail braces on the bark
 
@@ -144,26 +150,20 @@ export class Animals {
       sp.tris = model.tris; sp.model = model;
       return mesh;
     });
-    // Shadow casters. Birds and squirrels: a depth twin per species in shadows.js's shadow scene, on
-    // the near cascade, sharing the geometry and the instance buffers (the public debugging handle
-    // window.__shadows; nothing registers there otherwise). Deer: a planar shadow (see the header).
-    this.casters = [];
-    const sh = typeof window !== 'undefined' ? window.__shadows : null;
+    // Shadow casters (see the header): every species on the near cascade through shadows.js
+    // addCaster, which follows the mesh's count, visibility and instance buffer itself; deer also a
+    // planar shadow.
+    this.listeners = {};
     SPECIES.forEach((sp, k) => {
       const mesh = this.meshes[k];
+      mesh.customDepthMaterial = animalDepthMaterial(sp.model);
+      addCaster(mesh, { cascades: [0], simple: false });
       if (k === DR) {
-        const ps = new THREE.InstancedMesh(mesh.geometry, planarShadowMaterial(sp.model, { drop: 0.6 }), sp.cap);
+        const ps = new THREE.InstancedMesh(mesh.geometry, planarShadowMaterial(sp.model, { drop: 0.6, nearFade: true }), sp.cap);
         ps.instanceMatrix = mesh.instanceMatrix; ps.count = 0; ps.frustumCulled = false; ps.name = 'deer shadow'; ps.renderOrder = 1;
         this.group.add(ps); this.planar = ps;
-        return;
       }
-      if (!sh?.scene) return;
-      const p = new THREE.InstancedMesh(mesh.geometry, animalDepthMaterial(sp.model), sp.cap);
-      p.instanceMatrix = mesh.instanceMatrix; p.count = 0; p.frustumCulled = false; p.matrixAutoUpdate = false;
-      p.layers.mask = L0; p.userData.src = mesh; p.name = sp.one + ' caster';
-      sh.scene.add(p); this.casters.push(p);
     });
-    this.castersOn = this.casters.length > 0;
     this.tris = Object.fromEntries(SPECIES.map(sp => [sp.one, sp.tris]));
     // oak lookup (rebuilt when the vegetation rebuilds)
     this.oaks = []; this.oakGrid = new Map(); this.granary = new Uint8Array(0);
@@ -176,6 +176,16 @@ export class Animals {
     this.tagPool = []; this.tagMats = {}; this.tagged = [];
     this.setObserver((typeof window !== 'undefined' && window.__we?.playerSpecies) || 'corvus_corax');
   }
+
+  // ---- events (see the header) --------------------------------------------------------------------
+  on(type, fn) { (this.listeners[type] ||= []).push(fn); return () => this.off(type, fn); }
+  off(type, fn) { const a = this.listeners[type]; if (a) { const i = a.indexOf(fn); if (i >= 0) a.splice(i, 1); } }
+  emit(type, e) {
+    const a = this.listeners[type]; if (!a) return;
+    for (const fn of a.slice()) { try { fn(e); } catch (err) { console.error(`animals: '${type}' listener`, err); } }
+  }
+  // Unregister the shadow casters (a teardown; main.js keeps one Animals for the page's life).
+  dispose() { for (const m of this.meshes) removeCaster(m); this.group.removeFromParent(); }
 
   // ---- perception --------------------------------------------------------------------------------
   setObserver(code) {
@@ -735,8 +745,8 @@ export class Animals {
     g.t -= dt; g.cool -= dt;
     if (g.state !== G_SETTLE && g.cool <= 0) {
       const dx = px - g.x, dz = pz - g.z;
-      if (dx * dx + dz * dz < 48 * 48 && py - H.atXZ(g.x, g.z) < 42) { this.flushCovey(g, px, pz); return; }
-      if (r() < dt / 160) { const ang = r() * TAU; this.flushCovey(g, g.x + Math.cos(ang) * 30, g.z + Math.sin(ang) * 30); return; }
+      if (dx * dx + dz * dz < 48 * 48 && py - H.atXZ(g.x, g.z) < 42) { this.flushCovey(g, px, pz, 'raven'); return; }
+      if (r() < dt / 160) { const ang = r() * TAU; this.flushCovey(g, g.x + Math.cos(ang) * 30, g.z + Math.sin(ang) * 30, 'self'); return; }
     }
     if (g.state === G_FORAGE) {
       if (g.t <= 0) {   // run across an opening: 15-40 m, back toward home when strayed
@@ -752,9 +762,11 @@ export class Animals {
       else { g.x += ex / d * step; g.z += ez / d * step; }
     } else if (g.t <= 0) { g.state = G_FORAGE; g.t = 20 + r() * 30; }   // G_SETTLE: everyone down, regrouping
   }
-  flushCovey(g, fx, fz) {
+  flushCovey(g, fx, fz, cause = 'raven') {
     if (g.state === G_SETTLE) return;
     const r = g.leader.rng;
+    let n = 0; for (const a of this.bySpecies[QU]) if (a.group === g) n++;
+    if (n) this.emit('flush', { group: g, x: g.x, y: this.heights.atXZ(g.x, g.z), z: g.z, n, cause });
     let ang = Math.atan2(g.z - fz, g.x - fx) + (r() - 0.5) * 0.8;   // away from the threat
     const d = 35 + r() * 40;
     let lx = g.x + Math.cos(ang) * d, lz = g.z + Math.sin(ang) * d;
@@ -926,6 +938,7 @@ export class Animals {
         if (cov || this.openness(tx, tz) > 0.5) {
           a.group = cov; a.sx = a.x; a.sy = a.y; a.sz = a.z; a.tx = tx; a.tz = tz; a.ty = H.atXZ(tx, tz) + 2.5;
           a.dur = Math.hypot(a.tx - a.sx, a.ty - a.sy, a.tz - a.sz) / 24 + 0.8; a.u = 0; a.state = H_STOOP;
+          this.emit('stoop', { animal: a, x: a.x, y: a.y, z: a.z, target: cov });
         } else a.t = 15 + r() * 30;
       }
     } else if (a.state === H_STOOP) {
@@ -936,7 +949,7 @@ export class Animals {
       if (vh > 1e-5) a.yaw = Math.atan2(vx, vz);
       a.pitch = damp(a.pitch, -Math.atan2(vy, vh + 1e-5) * 0.9, 4, dt); a.roll = damp(a.roll, 0, 4, dt);
       a.amp = damp(a.amp, 0, 6, dt); a.pose = damp(a.pose, u > 0.15 ? 0.75 : 0.2, 3, dt);   // wings swept back
-      if (u > 0.9 && a.group) { this.flushCovey(a.group, a.x, a.z); a.group = null; }
+      if (u > 0.9 && a.group) { this.flushCovey(a.group, a.x, a.z, 'hawk'); a.group = null; }
       if (u >= 1) { a.state = H_PULL; a.t = 2.5; a.speed = 18; }
     } else {   // H_PULL: wings open, flap up out of the dive, then rejoin a circle and climb in it
       a.speed = damp(a.speed, 9, 0.8, dt);
@@ -984,12 +997,29 @@ export class Animals {
     for (let k = 0; k < arr.length; k++) { const a = arr[k], dx = a.x - x, dy = a.y - y, dz = a.z - z, d2 = dx * dx + dy * dy + dz * dz; if (d2 < bd) { bd = d2; best = a; } }
     return best;
   }
+  // Every animal of a species within maxR of (x, y, z), pushed into out (cleared first). For sound.js.
+  within(code, x, y, z, maxR, out = []) {
+    out.length = 0;
+    const s = INDEX[code]; if (s === undefined || !this.meshes[s].visible) return out;
+    const arr = this.bySpecies[s], r2 = maxR * maxR;
+    for (let k = 0; k < arr.length; k++) { const a = arr[k], dx = a.x - x, dy = a.y - y, dz = a.z - z; if (dx * dx + dy * dy + dz * dz < r2) out.push(a); }
+    return out;
+  }
+  // Is this animal still in the live set (not dropped by a rebuild)?
+  alive(a) { return this.byId.get(a.id) === a; }
   // debugging: flush the covey nearest to the player, as if the raven had dropped onto it
   flush() {
     const P = this.flight.pos; let best = null, bd = Infinity;
     for (const g of this.coveys) { const d = Math.hypot(g.x - P.x, g.z - P.z); if (d < bd) { bd = d; best = g; } }
-    if (best) { best.cool = 0; this.flushCovey(best, P.x, P.z); }
+    if (best) { best.cool = 0; if (best.state === G_SETTLE) best.state = G_FORAGE; this.flushCovey(best, P.x, P.z, 'debug'); }
     return best ? Math.round(bd) : null;
+  }
+  // debugging: send the hawk nearest the player into a stoop on its next frame
+  stoop() {
+    const P = this.flight.pos, h = this.nearestOf('buteo_jamaicensis', P.x, P.y, P.z);
+    if (!h) return null;
+    if (h.state === H_SOAR) h.t = 0;
+    return Math.round(Math.hypot(h.x - P.x, h.y - P.y, h.z - P.z));
   }
 
   // ---- frame --------------------------------------------------------------------------------------
@@ -1044,12 +1074,7 @@ export class Animals {
       mesh.instanceMatrix.clearUpdateRanges(); mesh.instanceMatrix.addUpdateRange(0, n * 16); mesh.instanceMatrix.needsUpdate = true;
       const an = mesh.geometry.attributes.aAnim; an.clearUpdateRanges(); an.addUpdateRange(0, n * 4); an.needsUpdate = true;
     }
-    // shadow casters follow the real meshes
-    const on = this.group.visible;
-    for (let k = 0; k < this.casters.length; k++) {
-      const c = this.casters[k], src = c.userData.src;
-      c.count = src.count; c.visible = on && src.visible && src.count > 0;
-    }
+    // (the shadow casters follow the meshes inside shadows.js)
     if (this.planar) { const d = this.meshes[DR]; this.planar.count = d.count; this.planar.visible = d.visible && d.count > 0; }
     this.placeTags();
     this.ms = this.ms * 0.95 + (performance.now() - t0) * 0.05;

@@ -7,10 +7,17 @@
 //   wings    a band-passed noise whoosh on each downstroke of the raven's fly clip; a hard flap (space)
 //            gives three quick beats. Gliding is silent.
 //   voice    a procedural raven "kraa" (sawtooth with FM rasp, noise, two formants, pitch falling): C calls,
-//            and a distant raven calls every 20-60 s and sometimes answers yours.
-//   birds    short synthesised calls placed 50-300 m around the raven with HRTF panners, the species drawn
-//            from the habitat class sampled where the call is placed, the rate from sun height (dawn and
-//            dusk chorus, quiet at noon and night) and season (spring loudest).
+//            and the ambient ravens of animals.js within 300 m answer from where they are (one, sometimes
+//            its mate too); with none near, now and then a distant one answers from a random spot. A
+//            raven calls every 20-60 s, a real one within 450 m when there is one.
+//   birds    short synthesised calls with HRTF panners, the species drawn from the habitat class at a
+//            random spot 50-300 m around the raven, the rate from sun height (dawn and dusk chorus, quiet
+//            at noon and night) and season (spring loudest). When animals.js has a bird of that species
+//            within 300 m the call comes from it (a random one of those in range) and the panner follows
+//            it while it calls; otherwise from the random spot (the fallback, and always for the Steller's
+//            jay, which animals.js does not model). Two calls are events of animals.js instead of chance:
+//            a quail covey's flush (a whirring burst of wingbeats, one per bird, staggered as they go up,
+//            and a few alarm "pit"s) and a red-tailed hawk's stoop (its scream, on the hawk).
 //   water    a stream wash plus gurgle, on a panner kept at the nearest point of the nearest flowline, so it
 //            fades in within ~80 m and comes from the right side; quieter in summer and fall.
 //   insects  a pre-rendered loop of field-cricket chirps at dusk in summer and fall over grassland.
@@ -26,6 +33,9 @@ const rand = (a, b) => a + Math.random() * (b - a);
 const typing = e => e.target instanceof HTMLInputElement || e.target instanceof HTMLSelectElement || e.target instanceof HTMLTextAreaElement;
 const STORE = 'wildearth.sound';
 const MAX_VOICES = 14;
+const REAL_R = 300;        // a call goes on a real bird of its species within this range of the raven
+const EVENT_R = 600;       // flushes and stoops farther than this from the listener are not heard
+const LOG_N = 24;          // recent calls kept for debugging (lastCalls())
 
 const SEASON_BIRDS = { winter: 0.4, spring: 1.0, summer: 0.6, fall: 0.5 };
 const SEASON_STREAM = { winter: 1.0, spring: 1.0, summer: 0.35, fall: 0.3 };   // intermittent streams dry out
@@ -92,15 +102,17 @@ function env(p, t, pts) {
 
 export class Soundscape {
   // els: { button, volume, hud } (all optional). camera supplies the listener; flight and raven the motion.
-  constructor({ tile, flight, raven, camera, els = {} }) {
-    Object.assign(this, { tile, flight, raven, camera, els });
+  // animals (optional): animals.js; when not passed it is looked up as window.__we.animals at call time.
+  constructor({ tile, flight, raven, camera, els = {}, animals = null }) {
+    Object.assign(this, { tile, flight, raven, camera, els, animals });
     const prefs = loadPrefs();
     this.volume = clamp(prefs.volume ?? 0.5); this.muted = !!prefs.muted;
     this.ctx = null; this.voices = []; this.created = 0; this.disconnected = 0;
     this.heard = {}; this.t = 0; this.paramT = 0; this.habT = 1; this.waterT = 1; this.gurgleT = 0;
     this.gustWalk = 0; this.gust = 0.6; this.pine = 0; this.grassFrac = 0; this.habFrac = new Float32Array(10);
     this.waterLevel = 0; this.cricketLevel = 0; this.windLevel = 0; this.water = null;
-    this.nextRaven = rand(20, 60); this.reply = null;
+    this.nextRaven = rand(20, 60); this.replies = [];
+    this.log = []; this.sources = { animal: 0, habitat: 0, event: 0, answer: 0 }; this._near = []; this._hooked = null; this._unhook = null;
     this.clipPrev = null; this.flapPrev = 0; this.hardUntil = 0; this.phase = 0;
     const codes = new Set((tile.species || []).map(s => s.code));
     this.callers = CALLERS.filter(c => !codes.size || codes.has(c.code) || c.extra);
@@ -233,8 +245,9 @@ export class Soundscape {
 
   // ---- short voices --------------------------------------------------------------------------------------
   // A voice owns the nodes of one call or whoosh; update() disconnects them once `end` has passed.
-  _voice(pos, gain, bus) {
-    const ctx = this.ctx, v = { nodes: [], end: ctx.currentTime };
+  // follow: an animal whose position the panner tracks while the voice plays.
+  _voice(pos, gain, bus, follow = null) {
+    const ctx = this.ctx, v = { nodes: [], end: ctx.currentTime, follow, pan: null };
     v.add = n => { this.created++; v.nodes.push(n); return n; };
     v.gain = g => v.add(new GainNode(ctx, { gain: g }));
     v.filter = (type, frequency, Q = 0.7) => v.add(new BiquadFilterNode(ctx, { type, frequency, Q }));
@@ -247,7 +260,7 @@ export class Soundscape {
       const pan = v.add(new PannerNode(ctx, { panningModel: 'HRTF', distanceModel: 'inverse', refDistance: 25, maxDistance: 5000, rolloffFactor: 1,
         positionX: pos.x, positionY: pos.y, positionZ: pos.z }));
       v.input.connect(air).connect(pan).connect(bus);
-      v.dist = d;
+      v.dist = d; v.pan = pan;
     } else v.input.connect(bus);
     this.voices.push(v);
     return v;
@@ -351,30 +364,119 @@ export class Soundscape {
     }
   }
 
+  // A covey flushing: n quail burst up, each a run of wingbeats (16-22 Hz) for 0.6-1.0 s, staggered by
+  // up to half a second as in animals.js (flushCovey: rank * 0.04 + 0-0.45 s), then gliding. One noise
+  // source through a low thrum and a band-passed whirr, under one gain curve summed over the birds;
+  // and two or three alarm "pit"s from the covey.
+  _flush(v, t, n) {
+    const birds = Math.max(1, Math.min(n, 12)), RATE = 400, total = 1.9, N = Math.ceil(total * RATE);
+    const curve = new Float32Array(N);
+    for (let b = 0; b < birds; b++) {
+      const t0 = b * 0.04 + Math.random() * 0.45, len = rand(0.6, 1.0), f = rand(16, 22), amp = rand(0.55, 1), ph = Math.random() * 6.28;
+      for (let i = Math.floor(t0 * RATE); i < N; i++) {
+        const tt = i / RATE - t0; if (tt > len) break;
+        const e = Math.min(1, tt / 0.04) * Math.pow(1 - tt / len, 0.6), beat = Math.pow(0.5 + 0.5 * Math.sin(6.2832 * f * tt + ph), 3);
+        curve[i] += amp * e * (0.3 + 0.7 * beat);
+      }
+    }
+    let peak = 0; for (let i = 0; i < N; i++) peak = Math.max(peak, curve[i]);
+    const k = 1 / Math.max(peak, 1e-3) * Math.min(1, 0.55 + 0.08 * birds); curve[N - 1] = 0;
+    for (let i = 0; i < N; i++) curve[i] *= k;
+    const ns = v.noise(t, t + total), bp = v.filter('bandpass', rand(1000, 1300), 0.9), lp = v.filter('lowpass', 320, 0.7);
+    const gl = v.gain(1.4), mix = v.gain(1), g = v.gain(0);
+    ns.connect(bp).connect(mix); ns.connect(lp).connect(gl).connect(mix); mix.connect(g).connect(v.input);
+    g.gain.setValueCurveAtTime(curve, t, total);
+    // alarm "pit"s: short falling chips
+    const pits = 2 + (Math.random() < 0.5), o = v.osc('sine', 2600, t + 0.1, t + 0.1 + pits * 0.17 + 0.1), pg = v.gain(0);
+    o.connect(pg).connect(v.input); pg.gain.setValueAtTime(0, t);
+    for (let i = 0; i < pits; i++) {
+      const s = t + 0.1 + i * rand(0.13, 0.19);
+      o.frequency.setValueAtTime(2900, s); o.frequency.exponentialRampToValueAtTime(2100, s + 0.05);
+      env(pg.gain, s, [[0, 0], [0.006, 0.35], [0.05, 0]]);
+    }
+  }
+
+  // ---- calls on animals ----------------------------------------------------------------------------------
+  // animals.js, passed in or found on the debugging handle at call time (main.js builds it after us)
+  _animals() { return this.animals || (typeof window !== 'undefined' ? window.__we?.animals : null) || null; }
+  // Subscribe to the animals' flush and stoop events (once per animals instance).
+  _hook() {
+    const A = this._animals(); if (!A?.on || A === this._hooked) return;
+    if (this._unhook) for (const off of this._unhook) off();
+    this._unhook = [A.on('flush', e => this._onFlush(e)), A.on('stoop', e => this._onStoop(e))];
+    this._hooked = A;
+  }
+  // A random animal of this species within r of the raven, or null.
+  _pick(code, r) {
+    const A = this._animals(), p = this.flight.pos; if (!A?.within) return null;
+    const list = A.within(code, p.x, p.y, p.z, r, this._near);
+    return list.length ? list[Math.floor(Math.random() * list.length)] : null;
+  }
+  _live() { return this.ctx && this.ctx.state === 'running' && !this.muted; }
+  _listenerDist(x, y, z) { const c = this.camera.position; return Math.hypot(x - c.x, y - c.y, z - c.z); }
+  // Play a species call ('raven' or a CALLERS key) at pos, following `animal` when given. source: how it
+  // was placed (animal, habitat, event, answer), for the log.
+  _play(key, pos, animal, source, synth = null) {
+    if (!this.ctx || this.voices.length >= MAX_VOICES) return null;
+    const t = this.ctx.currentTime + 0.03;
+    let v, label;
+    if (key === 'raven') {
+      v = this._voice(pos, 0.7, this.birdBus, animal); label = 'raven';
+      this._kraa(v, t, 1 + Math.floor(Math.random() * 3), rand(0.9, 1.12));
+    } else {
+      const c = CALLERS.find(c => c.key === key); if (!c) return null;
+      v = this._voice(pos, c.gain, this.birdBus, animal); label = c.label;
+      if (synth) synth(v, t); else this['_' + c.synth](v, t);
+    }
+    this._heard(label, v.dist);
+    this.sources[source] = (this.sources[source] || 0) + 1;
+    this.log.push({ at: +this.t.toFixed(2), key, label, source, id: animal?.id ?? null, x: pos.x, y: pos.y, z: pos.z, dist: Math.round(v.dist), voice: v, animal });
+    if (this.log.length > LOG_N) this.log.shift();
+    return v;
+  }
+  _onAnimal(a) { return { x: a.x, y: a.y + 0.3, z: a.z }; }
+  _onFlush(e) {
+    if (!this._live() || this._listenerDist(e.x, e.y, e.z) > EVENT_R) return;
+    this._play('quail', { x: e.x, y: e.y + 0.5, z: e.z }, e.group?.leader || null, 'event', (v, t) => this._flush(v, t, e.n));
+  }
+  _onStoop(e) {
+    if (!this._live() || this._listenerDist(e.x, e.y, e.z) > EVENT_R + 200) return;
+    this._play('hawk', this._onAnimal(e.animal), e.animal, 'event');
+  }
+
   // ---- public actions ------------------------------------------------------------------------------------
-  // The player's raven calls (C); now and then a distant raven answers.
+  // The player's raven calls (C). Ambient ravens within REAL_R answer from where they are: one (85 %),
+  // and a second, often its mate (35 %); with none in range a distant raven answers now and then.
   call() {
     if (!this.ctx || this.muted) return;
     const t = this.ctx.currentTime + 0.02;
     this._kraa(this._voice(null, 0.5, this.voiceBus), t, 1 + (Math.random() < 0.35), 1);
-    if (Math.random() < 0.4) this.reply = this.t + rand(1.2, 3.5);
+    const A = this._animals(), p = this.flight.pos;
+    const near = A?.within ? A.within('corvus_corax', p.x, p.y, p.z, REAL_R, []) : [];
+    if (near.length) {
+      near.sort((a, b) => Math.hypot(a.x - p.x, a.y - p.y, a.z - p.z) - Math.hypot(b.x - p.x, b.y - p.y, b.z - p.z));
+      let at = this.t + rand(0.8, 2.4);
+      if (Math.random() < 0.85) this.replies.push({ t: at, animal: near[0] });
+      if (near.length > 1 && Math.random() < 0.35) this.replies.push({ t: at + rand(0.6, 1.8), animal: near[1] });
+    } else if (Math.random() < 0.4) this.replies.push({ t: this.t + rand(1.2, 3.5), animal: null });
+    return near.length;
   }
 
   // A call placed `dist` metres away in a random direction: a species key from CALLERS, or 'raven'.
-  callAt(key, dist, height) {
-    if (!this.ctx || this.voices.length >= MAX_VOICES) return null;
+  callAt(key, dist, height, source = 'habitat') {
+    if (!this.ctx) return null;
     const p = this.flight.pos, a = Math.random() * Math.PI * 2, size = this.tile.size;
     const x = clamp(p.x + Math.cos(a) * dist, 0, size), z = clamp(p.z + Math.sin(a) * dist, -size, 0);
-    const ground = this.tile.heights.atXZ(x, z), t = this.ctx.currentTime + 0.03;
-    if (key === 'raven') {
-      const v = this._voice({ x, y: ground + (height ?? rand(15, 80)), z }, 0.7, this.birdBus);
-      this._kraa(v, t, 1 + Math.floor(Math.random() * 3), rand(0.9, 1.12));
-      this._heard('raven', v.dist); return v;
-    }
-    const c = CALLERS.find(c => c.key === key); if (!c) return null;
-    const v = this._voice({ x, y: ground + (height ?? rand(...c.height)), z }, c.gain, this.birdBus);
-    this['_' + c.synth](v, t);
-    this._heard(c.label, v.dist); return v;
+    const ground = this.tile.heights.atXZ(x, z);
+    const c = key === 'raven' ? { height: [15, 80] } : CALLERS.find(c => c.key === key); if (!c) return null;
+    return this._play(key, { x, y: ground + (height ?? rand(...c.height)), z }, null, source);
+  }
+  // A call from a real animal of the species within r (default REAL_R), or null when there is none.
+  callOn(key, r = REAL_R) {
+    if (!this.ctx) return null;
+    const code = key === 'raven' ? 'corvus_corax' : CALLERS.find(c => c.key === key)?.code;
+    const a = code && this._pick(code, r);
+    return a ? this._play(key, this._onAnimal(a), a, 'animal') : null;
   }
 
   _heard(label, d) { this.heard[label] = (this.heard[label] || 0) + Math.min(1, 40 / Math.max(1, d)); }
@@ -389,15 +491,15 @@ export class Soundscape {
     for (const c of this.callers) { const wi = (c.hab[h] || 0) * c.rate * c.tod(act.chorus, act.day, act.noon) * act.season; w.push(wi); total += wi; }
     if (Math.random() >= Math.min(1, total)) return;
     let r = Math.random() * total, i = 0; while (i < w.length - 1 && (r -= w[i]) > 0) i++;
-    const c = this.callers[i], ground = this.tile.heights.atXZ(x, z), t = this.ctx.currentTime + 0.03;
-    const v = this._voice({ x, y: ground + rand(...c.height), z }, c.gain, this.birdBus);
-    this['_' + c.synth](v, t);
-    this._heard(c.label, v.dist);
+    const c = this.callers[i], bird = this._pick(c.code, REAL_R);
+    if (bird) this._play(c.key, this._onAnimal(bird), bird, 'animal');
+    else this._play(c.key, { x, y: this.tile.heights.atXZ(x, z) + rand(...c.height), z }, null, 'habitat');
   }
 
   // ---- per frame -----------------------------------------------------------------------------------------
   // env: { season, hour, sunElevation (radians) }. Call after the render so camera.matrixWorld is current.
   update(dt, { season = 'spring', hour = 12, sunElevation = 0.5 } = {}) {
+    this._hook();
     const ctx = this.ctx; if (!ctx) return;
     this.t += dt;
     // retire finished voices whatever the state, so nothing accumulates
@@ -413,6 +515,11 @@ export class Soundscape {
     if (ctx.state !== 'running' || this.muted) return;
 
     const f = this.flight, cam = this.camera, now = ctx.currentTime;
+    // calls on animals: the panner follows the bird while it calls
+    for (const v of this.voices) {
+      const a = v.follow; if (!a || !v.pan || now > v.end) continue;
+      const P = v.pan; P.positionX.setTargetAtTime(a.x, now, 0.04); P.positionY.setTargetAtTime(a.y + 0.3, now, 0.04); P.positionZ.setTargetAtTime(a.z, now, 0.04);
+    }
     // listener = the camera
     const Lr = ctx.listener, e = cam.matrixWorld.elements, cp = cam.position;
     if (Lr.positionX) {
@@ -514,8 +621,13 @@ export class Soundscape {
     const act = { day, noon, chorus, season: SEASON_BIRDS[season] ?? 0.6 };
     if (this.voices.length < MAX_VOICES && Math.random() < dt * 1.0) this._attempt(act);
     // a distant raven every 20-60 s, and the answer to the player's call
-    if (this.t > this.nextRaven) { this.nextRaven = this.t + rand(20, 60); this.callAt('raven', rand(150, 450)); }
-    if (this.reply !== null && this.t > this.reply) { this.reply = null; this.callAt('raven', rand(120, 350)); }
+    if (this.t > this.nextRaven) { this.nextRaven = this.t + rand(20, 60); this.callOn('raven', 450) || this.callAt('raven', rand(150, 450)); }
+    if (this.replies.length && this.t > this.replies[0].t) {
+      const r = this.replies.shift(), A = this._animals();
+      if (r.animal && (!A?.alive || A.alive(r.animal))) this._play('raven', this._onAnimal(r.animal), r.animal, 'answer');
+      else this.callAt('raven', rand(120, 350), undefined, 'answer');
+      this.replies.sort((a, b) => a.t - b.t);
+    }
   }
 
   // HUD: the loudest recent birds plus water, insects, pines; cheap.
@@ -534,7 +646,21 @@ export class Soundscape {
   // Debugging: node counts (a steady `live` means no leak) and the RMS (dBFS) of master and each bus.
   stats() {
     return { created: this.created, disconnected: this.disconnected, live: this.created - this.disconnected,
-      voices: this.voices.length, state: this.ctx?.state || 'not started' };
+      voices: this.voices.length, state: this.ctx?.state || 'not started', sources: { ...this.sources } };
+  }
+  // Debugging: the recent calls, where each was placed and, for calls on animals, how far the panner is
+  // from the animal now (it stops following when the call ends) and how far the animal is from the raven.
+  lastCalls(n = 8) {
+    const p = this.flight.pos;
+    return this.log.slice(-n).map(({ voice, animal, ...c }) => {
+      const P = voice.pan, o = { ...c, playing: !!this.ctx && this.ctx.currentTime < voice.end };
+      if (P) o.pan = [P.positionX.value, P.positionY.value, P.positionZ.value].map(v => +v.toFixed(1));
+      if (animal) {
+        o.animalToRaven = Math.round(Math.hypot(animal.x - p.x, animal.y - p.y, animal.z - p.z));
+        if (P) o.panToAnimal = +Math.hypot(P.positionX.value - animal.x, P.positionY.value - animal.y - 0.3, P.positionZ.value - animal.z).toFixed(2);
+      }
+      return o;
+    });
   }
   meter() {
     if (!this.ctx) return null;
