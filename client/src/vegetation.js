@@ -197,9 +197,9 @@ export class Vegetation {
         const isTree = k < nTrees;
         const name = pick(isTree ? treeMix : shrubMix, rnd());
         const variants = this.meshes[resolveSpecies(name)], e = variants[Math.floor(rnd() * variants.length)], m = e.mid;
-        if (m.n >= m.cap) continue;
         const px = (i + rnd()) * res, pn = size - (j + rnd()) * res;
         const s = 0.75 + rnd() * 0.5, rot = rnd() * Math.PI * 2;   // all draws before any skip, so neighbours keep their place
+        if (m.n >= m.cap) continue;   // after the draws: a full model slot must not shift the rest of the cell (impostors use the same sequence)
         // Decayed roads: nothing on the pavement; trees thin out across the verge (shrubs creep in).
         // Nothing in ponds or stream channels; trees thin out toward a stream (placementSkip).
         if (placementSkip(tile, i, j, k, px, pn, isTree)) continue;
