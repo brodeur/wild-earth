@@ -389,17 +389,24 @@ export class AcornGame {
 }
 
 
+// Full-stash marker: the Lucide "nut" icon (https://lucide.dev/icons/nut), ISC licence,
+// Copyright (c) Lucide Icons and Contributors, drawn as strokes over a soft amber glow.
+const LUCIDE_NUT = [
+  'M16.847 5.847 20 9a7.23 7.23 0 011.551 7.516C21.241 17.352 21 17.932 21 19v1a1 1 0 01-1 1h-1c-1.069 0-1.648.242-2.485.552A7.2 7.2 0 019.002 20l-3.155-3.153',
+  'M18.21 5.43c-1.71.69-5.07 1.07-6.71 1.07.46 1.38.91 2.74.61 4.88a.88.88 0 01-.73.74c-1.78.28-3.54-.17-4.88-.62 0 1.64-.38 5-1.07 6.71-.21.52-.82.55-1.17.12A10 10 0 0118.33 4.26c.43.35.4.97-.12 1.17',
+  'M4.93 4.93 3 3a.7.7 0 010-1',
+];
 function makeAcornIcon() {
   const c = document.createElement('canvas'); c.width = c.height = 128; const g = c.getContext('2d');
-  const glow = g.createRadialGradient(64, 64, 6, 64, 64, 62);
-  glow.addColorStop(0, 'rgba(255,200,110,0.95)'); glow.addColorStop(0.45, 'rgba(255,160,64,0.45)'); glow.addColorStop(1, 'rgba(255,140,40,0)');
+  const glow = g.createRadialGradient(64, 64, 8, 64, 64, 62);
+  glow.addColorStop(0, 'rgba(255,190,100,0.85)'); glow.addColorStop(0.5, 'rgba(255,150,60,0.35)'); glow.addColorStop(1, 'rgba(255,140,40,0)');
   g.fillStyle = glow; g.fillRect(0, 0, 128, 128);
-  // nut
-  g.fillStyle = '#8a5a2b'; g.beginPath(); g.ellipse(64, 74, 20, 26, 0, 0, Math.PI * 2); g.fill();
-  g.fillStyle = '#a66d35'; g.beginPath(); g.ellipse(58, 72, 7, 16, -0.3, 0, Math.PI * 2); g.fill();
-  // cap
-  g.fillStyle = '#5b3a1e'; g.beginPath(); g.ellipse(64, 54, 24, 12, 0, Math.PI, 0); g.lineTo(88, 54); g.lineTo(40, 54); g.closePath(); g.fill();
-  g.fillRect(40, 50, 48, 6);
-  g.strokeStyle = '#3e2712'; g.lineWidth = 2; g.beginPath(); g.moveTo(64, 42); g.lineTo(66, 34); g.stroke();
+  g.save(); g.translate(16, 16); g.scale(4, 4);            // 24-unit icon drawn at 96 px, centred
+  g.lineCap = 'round'; g.lineJoin = 'round';
+  for (const [color, width] of [['rgba(30,18,8,0.9)', 3.6], ['#ffd9a0', 2]]) {   // dark halo stroke, then the icon
+    g.strokeStyle = color; g.lineWidth = width;
+    for (const d of LUCIDE_NUT) g.stroke(new Path2D(d));
+  }
+  g.restore();
   const t = new THREE.CanvasTexture(c); t.colorSpace = THREE.SRGBColorSpace; return t;
 }

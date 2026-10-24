@@ -42,7 +42,13 @@ sequenced; Parked is in the brief but deliberately not started.
    exposure by sky brightness, procedural cumulus with shadows cast along the sun
    ray, one tone-mapped lighting pipeline for all materials. Open: clouds repeat
    every 2.5 km, no cast shadows from terrain or trees, summer noon ground is bright.
-4. Wind: vertex sway in canopies and grass, stronger on ridges.
+   Grass done 2026-10-24: procedural blade clumps up close (wild oat, bromes,
+   medusahead over purple needlegrass), seed heads and awns, wind with gusts, backlight,
+   season palettes and heights, tuft cards to 250 m, 3 draw calls, ~2.6 ms at ground
+   level and ~0 at altitude. Weak: from 10-40 m up the grass reads as stubble and the
+   ground texture carries it; a mid-height grass impression (denser tufts or a shaded
+   ground cover) is a follow-up.
+4. Wind: vertex sway in canopies (grass has it), stronger on ridges.
 5. Water: streams and ponds from the hydrology layer, with reflection.
 6. Life: a circling hawk and a deer herd as placeholder motion, filtered by the
    perception matrix.

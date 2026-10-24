@@ -128,3 +128,8 @@ keep edits in the browser and export them as JSON; appending them to the manifes
 - [docs/decisions.md](docs/decisions.md): what was decided, what was rejected, and why.
 - [docs/roadmap.md](docs/roadmap.md): done, next in order, then, parked. Kept current at
   each commit.
+
+## Credits
+
+Icons: [Lucide](https://lucide.dev) (ISC licence). Data sources are listed per tile in
+each manifest and in the tile spec.

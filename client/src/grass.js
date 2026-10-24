@@ -1,77 +1,497 @@
 import * as THREE from 'three';
 import { mulberry32 } from './trees.js';
 import { uniforms as atmo, ATMOSPHERE_GLSL } from './atmosphere.js';
+import { SEASON_LOOK } from './season.js';
+import { buildAnnualClump, buildBunchClump, buildTuft } from './grassBlades.js';
 
-// Near-camera grass: crossed-quad tufts in grassland and savanna cells within a short
-// radius, coloured by the season's grass tint, re-seeded deterministically per cell.
-const VERT = /* glsl */`
-  uniform float time; uniform vec3 eye; uniform float radius;
-  varying vec2 vUv; varying float vFade; varying vec3 vPosW;
-  void main(){
-    vUv = uv;
-    vec3 p = position;
-    vec4 wp = modelMatrix * instanceMatrix * vec4(p, 1.0);
-    float sway = sin(time * 1.7 + wp.x * 0.15 + wp.z * 0.11) * 0.12 * uv.y;   // wind: tips move, roots stay
-    wp.x += sway; wp.z += sway * 0.6;
-    float d = distance(wp.xz, eye.xz);
-    vFade = 1.0 - smoothstep(radius * 0.7, radius, d);
-    vPosW = wp.xyz;
-    vec4 mvPosition = viewMatrix * wp; gl_Position = projectionMatrix * mvPosition;
-  }`;
-const FRAG = /* glsl */`
-  uniform vec3 tint;
-  varying vec2 vUv; varying float vFade; varying vec3 vPosW;
+// Grass in the Sierra foothill savanna: non-native annuals (wild oat, bromes, medusahead) over
+// purple needlegrass bunchgrass. Two LODs in one system, three draw calls:
+//   near (to ~70 m): instanced clumps of real blade geometry, one mesh per type (annual, bunch),
+//                    plus a denser close tier of the same clumps within ~30 m;
+//   mid (to 250 m):  leaning tuft cards whose blades are cut out in the fragment shader.
+// Past 250 m the ground texture carries it. The handover is stochastic: each near clump has its
+// own cut-off distance in 55-85 m and shrinks into the ground over a few metres there, while each
+// tuft grows in at its own distance in the same band, so there is no seam line and no dither noise.
+// Placement is deterministic per 30 m habitat cell and cached, so nothing re-rolls as you move;
+// each frame only the cells in view are submitted to the GPU (see cull).
+
+const NEAR_FADE = [55, 85], NEAR_REBUILD = 25, NEAR_PLACE = NEAR_FADE[1] + NEAR_REBUILD + 2;
+const MID_END = 250, MID_REBUILD = 60, MID_PLACE = MID_END + MID_REBUILD;
+const NEAR_PER_M2 = 1 / 1.35, MID_PER_M2 = 1 / 4;
+// Close tier: extra clumps near the camera, where a 1.35 m^2 spacing reads as bare ground between
+// wisps. They hand over (shrink away) between 16 and 30 m, where the grazing view fills in anyway.
+const CLOSE_FADE = [16, 30], CLOSE_PLACE = CLOSE_FADE[1] + NEAR_REBUILD + 2, CLOSE_PER_M2 = 1 / 0.18;
+// Placement layers, each cached per cell. `now`: a cell nearer than this is visible already and is
+// generated at once; farther ones (the new ring at the edge of the placement radius) are queued
+// and built a few per frame, so flying into new ground does not stall a frame.
+const LAYERS = [
+  { perM2: NEAR_PER_M2, tier: 0, salt: 11, now: NEAR_FADE[1] + 3 },                  // near, main
+  { perM2: CLOSE_PER_M2 - NEAR_PER_M2, tier: 1, salt: 37, now: CLOSE_FADE[1] + 3 },  // near, close
+  { perM2: MID_PER_M2, tier: 0, salt: 23, now: MID_END },                            // mid tufts
+];
+// Habitat class -> relative density and the annual share (the rest is needlegrass).
+const HABITAT = { 5: { dens: 1.0, annual: 0.75 }, 1: { dens: 0.5, annual: 0.55 }, 6: { dens: 0.12, annual: 0.5 } };
+const STRIDE = 8;   // per instance: x, y, z, yaw | scale xz, scale y, seed, type + 2 * tier (type 0 annual, 1 bunch; tier 1 close)
+
+// Season palettes (sRGB). Annuals: wild oat and bromes; bunch: purple needlegrass. The season's
+// `grass` tint stays the overall tone: these are scaled by tint / SEASON_LOOK[season].grass.
+const PALETTE = {
+  winter: { height: 0.5, heads: 0, thatch: 0.35, leaf: 1.0,
+    annual: { root: [0.22, 0.29, 0.15], tip: [0.47, 0.66, 0.30], head: [0.62, 0.66, 0.36], awn: [0.62, 0.66, 0.40] },
+    bunch: { root: [0.29, 0.33, 0.24], tip: [0.43, 0.57, 0.32], head: [0.50, 0.52, 0.40], awn: [0.55, 0.52, 0.45] } },
+  spring: { height: 1.0, heads: 1, thatch: 0.08, leaf: 1.0,
+    annual: { root: [0.21, 0.31, 0.12], tip: [0.50, 0.70, 0.26], head: [0.74, 0.77, 0.38], awn: [0.70, 0.74, 0.40] },
+    bunch: { root: [0.27, 0.35, 0.21], tip: [0.45, 0.61, 0.28], head: [0.52, 0.44, 0.44], awn: [0.55, 0.42, 0.50] } },   // needlegrass awns: dusky purple
+  summer: { height: 0.9, heads: 1, thatch: 0.0, leaf: 0.8,
+    annual: { root: [0.46, 0.40, 0.27], tip: [0.86, 0.75, 0.48], head: [0.93, 0.86, 0.64], awn: [0.88, 0.80, 0.60] },
+    bunch: { root: [0.37, 0.41, 0.32], tip: [0.73, 0.66, 0.47], head: [0.80, 0.75, 0.62], awn: [0.84, 0.79, 0.66] } },
+  fall: { height: 0.8, heads: 1, thatch: 0.0, leaf: 0.7,
+    annual: { root: [0.41, 0.37, 0.28], tip: [0.78, 0.69, 0.50], head: [0.83, 0.78, 0.63], awn: [0.79, 0.75, 0.63] },
+    bunch: { root: [0.35, 0.39, 0.31], tip: [0.67, 0.62, 0.47], head: [0.74, 0.71, 0.62], awn: [0.76, 0.73, 0.64] } },
+};
+const THATCH = [0.58, 0.54, 0.45];   // last year's grey dead leaves, in among the new growth
+
+// ---- GLSL shared by both LODs ---------------------------------------------------------------
+const COMMON_VERT = /* glsl */`
+  uniform float time; uniform vec2 windDir; uniform float windStrength; uniform vec2 nearFade; uniform vec2 closeFade; uniform float midEnd;
+  uniform float heightScale; uniform float heads; uniform float thatch; uniform float leafScale;
+  uniform vec3 aRoot; uniform vec3 aTip; uniform vec3 aHead; uniform vec3 aAwn;
+  uniform vec3 bRoot; uniform vec3 bTip; uniform vec3 bHead; uniform vec3 bAwn; uniform vec3 thatchCol;
+  attribute vec4 iPos; attribute vec4 iVar;   // x y z yaw | scale xz, scale y, seed, type
+  float h11(float n) { return fract(sin(n) * 43758.5453123); }
+  float h21(vec2 p) { return fract(sin(dot(p, vec2(127.1, 311.7))) * 43758.5453); }
+  float vnoise(vec2 p) { vec2 i = floor(p), f = fract(p); f = f * f * (3.0 - 2.0 * f);
+    return mix(mix(h21(i), h21(i + vec2(1, 0)), f.x), mix(h21(i + vec2(0, 1)), h21(i + vec2(1, 1)), f.x), f.y); }
+  // Gust field: slow ~20 m gust cells advected downwind (the waves you see run across a field),
+  // over two octaves of travelling sin/cos ripples. About 0.15 in a lull to 1.25 in a gust.
+  float gust(vec2 p) {
+    float slow = vnoise((p - windDir * time * 4.0) * 0.045);
+    float o1 = sin(dot(p, vec2(0.21, 0.13)) - time * 1.9) * cos(dot(p, vec2(-0.07, 0.17)) - time * 1.3);
+    float o2 = sin(dot(p, vec2(0.53, -0.41)) - time * 3.7);
+    return 0.15 + 0.85 * smoothstep(0.25, 0.85, slow) + 0.16 * o1 + 0.06 * o2;
+  }
+  // Instance outside the view frustum (bounding sphere of radius r around a point r above the
+  // root)? Lets the vertex shader skip the shading work for the ~2/3 of instances off screen.
+  bool offscreen(vec3 root, float r) {
+    vec4 c = projectionMatrix * (viewMatrix * vec4(root + vec3(0.0, r, 0.0), 1.0));
+    float m = r * 2.0 * max(projectionMatrix[0][0], projectionMatrix[1][1]);
+    return c.w < -r || abs(c.x) > c.w + m || abs(c.y) > c.w + m;
+  }
+  vec2 yawRot(vec2 v, float a) { float c = cos(a), s = sin(a); return vec2(c * v.x + s * v.y, -s * v.x + c * v.y); }
+  // Albedo (linear): root-to-tip gradient per type, culms grading to the head colour, last year's
+  // thatch in the green seasons, per-blade and per-clump hue/brightness, and field-scale patches.
+  vec3 grassAlbedo(float type, float t, float part, float br, float seed, vec2 wxz) {
+    bool bunch = type > 0.5;
+    vec3 root = bunch ? bRoot : aRoot, tip = bunch ? bTip : aTip, head = bunch ? bHead : aHead, awn = bunch ? bAwn : aAwn;
+    vec3 c;
+    if (part < 0.5) {
+      c = mix(root, tip, smoothstep(0.0, 0.9, t));
+      if (h11(br * 17.3 + seed * 3.7) < thatch) c = thatchCol * mix(0.75, 1.05, t);
+      else c *= 0.88 + 0.24 * h11(br * 91.7 + seed * 13.1);
+    } else if (part < 1.5) c = mix(root, mix(tip, head, 0.6), smoothstep(0.1, 1.0, t));
+    else c = part < 2.5 ? head : awn;
+    float v1 = h11(seed * 7.7 + 0.1), v2 = h11(seed * 3.3 + 1.0);
+    c *= mix(vec3(0.94, 1.02, 1.05), vec3(1.06, 0.99, 0.88), v1) * (0.86 + 0.26 * v2);
+    c *= mix(vec3(0.95, 1.03, 1.0), vec3(1.06, 0.98, 0.9), vnoise(wxz * 0.05)) * (0.92 + 0.16 * vnoise(wxz * 0.13 + 7.0));
+    return c;
+  }
+`;
+// Shading runs per vertex (blades are 4-5 vertex rows tall, so Gouraud loses nothing visible and
+// the thin, overlapping blades no longer pay for haze and cloud shadow per fragment).
+const SHADE_VERT = /* glsl */`
   ${ATMOSPHERE_GLSL}
-  void main(){
-    float blade = smoothstep(0.0, 0.08, 0.5 - abs(vUv.x - 0.5) - vUv.y * 0.42);   // tapered blade silhouette
-    if (blade * vFade < 0.3) discard;
-    vec3 light = sunLight * (0.25 + 0.45 * max(sunDir.y, 0.0)) * cloudShadow(vPosW) + mix(ambientGround, ambientSky, 0.4 + 0.5 * vUv.y);
-    vec3 c = pow(tint, vec3(2.2)) * (0.55 + 0.55 * vUv.y) * light * 0.3183099;   // tint is sRGB-authored
-    gl_FragColor = vec4(atmosphereApply(c, vPosW, cameraPosition), 1.0);
+  // Light on a blade in a sward: diffuse on the camera-facing side, bent toward the ground normal
+  // (blades share the ground's light), fewer sun flecks low in the sward, ambient occlusion toward
+  // the root, and light through the blade when the sun is behind it, strongest looking into the sun.
+  vec3 grassShade(vec3 albedo, vec3 N, vec3 posW, float t, float ao, float glow) {
+    vec3 V = normalize(cameraPosition - posW);
+    N = normalize(N); if (dot(N, V) < 0.0) N = -N;
+    vec3 Nl = normalize(N + vec3(0.0, 1.0, 0.0));
+    float sh = cloudShadow(posW), sunUp = smoothstep(-0.03, 0.08, sunDir.y);
+    float diff = max(dot(Nl, sunDir), 0.0) * mix(0.45, 1.0, t);
+    float back = (max(-dot(N, sunDir), 0.0) * 0.3 + pow(max(dot(-V, sunDir), 0.0), 5.0) * 0.55 * t) * glow * sunUp;
+    vec3 trans = albedo * normalize(albedo + 1e-4) * 1.7;   // light through a blade comes out more saturated
+    vec3 amb = mix(ambientGround, ambientSky, 0.3 + 0.6 * t) * ao;
+    vec3 c = (albedo * (sunLight * diff * sh + amb) + trans * sunLight * back * sh) * 0.3183099;
+    return atmosphereApply(c, posW, cameraPosition);
+  }
+`;
+
+const NEAR_VERT = /* glsl */`
+  ${COMMON_VERT}
+  ${SHADE_VERT}
+  attribute vec4 aBlade;   // t, blade random, part, -
+  varying vec3 vColor;
+  void main() {
+    float t = aBlade.x, br = aBlade.y, part = aBlade.z, seed = iVar.z, type = mod(iVar.w, 2.0);
+    float d = distance(cameraPosition, iPos.xyz);
+    vec2 band = iVar.w > 1.5 ? closeFade : nearFade;
+    float dOut = mix(band.x, band.y, h11(seed * 517.3 + 0.37));   // this clump's own hand-over distance
+    float s = 1.0 - smoothstep(dOut - 3.0, dOut + 3.0, d);
+    float hb = h11(seed * 71.9 + br * 131.7);
+    if (part > 0.5) s *= step(hb, heads * (type < 0.5 ? 0.9 : 0.85));   // culms (~1/3 of blades): none in winter
+    // Distance LOD (collapsed triangles never reach the tiler, and sub-pixel triangles are what
+    // this GPU pays for): main-tier clumps thin to 40% from 30 to 80 m, leaves to half from 25 to
+    // 50 m, awns go once sub-pixel. The grazing view keeps the far band looking full regardless.
+    // Far blades are NOT widened: tried, and the fattened blades cost ~4 ms of overdraw.
+    if (iVar.w < 1.5) s *= step(h11(seed * 41.3), mix(1.0, 0.4, smoothstep(30.0, 80.0, d)));
+    if (part > 2.5) s *= step(d, 25.0 + 10.0 * hb);
+    if (part < 0.5) s *= step(hb, mix(1.0, 0.5, smoothstep(25.0, 50.0, d)));
+    if (s < 0.01 || offscreen(iPos.xyz, 0.6 * max(iVar.y, iVar.x))) { gl_Position = vec4(0.0, 0.0, 2.0, 1.0); return; }
+    vec3 p = position;
+    // Per blade per clump: height and a lean, so one clump mesh never repeats exactly.
+    p.y *= (0.75 + 0.5 * h11(seed * 13.7 + br * 57.1)) * (part < 0.5 ? leafScale : 1.0);
+    float la = h11(seed * 3.1 + br * 7.9) * 6.2832;
+    p.xz += vec2(cos(la), sin(la)) * t * t * 0.07;
+    float H = iVar.y * heightScale;
+    p.xz *= iVar.x * mix(0.8, 1.0, heightScale);
+    p.y *= H * mix(0.2, 1.0, s);
+    vec3 w = vec3(yawRot(p.xz, iPos.w), p.y).xzy;
+    vec3 n = vec3(yawRot(normal.xz, iPos.w), normal.y).xzy;
+    // Wind: bend grows with t^2 so the root stays put; blades differ in stiffness and flutter.
+    float g = gust(iPos.xz);
+    float b = windStrength * g * (0.75 + 0.5 * h11(br * 3.7 + seed));
+    float fl = sin(time * (4.0 + 3.0 * hb) + br * 40.0 + iPos.x * 0.6) * (0.025 + 0.045 * g);
+    vec2 off = (windDir * b + vec2(-windDir.y, windDir.x) * fl) * t * t * max(H, 0.2);
+    w.xz += off; w.y -= 0.5 * dot(off, off) / max(H, 0.2) * t;   // roughly keep the blade's length
+    vec3 wp = iPos.xyz + w;
+    // papery glumes and awns glow against the sun
+    vColor = grassShade(grassAlbedo(type, t, part, br, seed, iPos.xz), n, wp, t, mix(0.35, 1.0, smoothstep(0.0, 0.7, t)), part > 1.5 ? 1.6 : 1.0);
+    gl_Position = projectionMatrix * viewMatrix * vec4(wp, 1.0);
+  }`;
+const NEAR_FRAG = /* glsl */`
+  varying vec3 vColor;
+  void main() {
+    gl_FragColor = vec4(vColor, 1.0);
     #include <tonemapping_fragment>
     #include <colorspace_fragment>
   }`;
 
-export class Grass {
-  constructor(tile, scene, cap = 24000) {
-    this.tile = tile; this.cap = cap; this.radius = 220; this.lastCenter = null;
-    const quad = new THREE.PlaneGeometry(0.9, 0.9); quad.translate(0, 0.45, 0);
-    const q2 = quad.clone(); q2.rotateY(Math.PI / 2);
-    const pos = new Float32Array([...quad.attributes.position.array, ...q2.attributes.position.array]);
-    const uv = new Float32Array([...quad.attributes.uv.array, ...q2.attributes.uv.array]);
-    const idx = [...quad.index.array, ...Array.from(q2.index.array, i => i + 4)];
-    const g = new THREE.BufferGeometry(); g.setAttribute('position', new THREE.BufferAttribute(pos, 3)); g.setAttribute('uv', new THREE.BufferAttribute(uv, 2)); g.setIndex(idx);
-    this.uniforms = { time: { value: 0 }, eye: { value: new THREE.Vector3() }, radius: { value: this.radius }, tint: { value: new THREE.Color(0.8, 0.68, 0.36) },
-      ...atmo };
-    this.mesh = new THREE.InstancedMesh(g, new THREE.ShaderMaterial({ vertexShader: VERT, fragmentShader: FRAG, uniforms: this.uniforms, side: THREE.DoubleSide }), cap);
-    this.mesh.count = 0; this.mesh.frustumCulled = false; scene.add(this.mesh);
-    this.tmp = new THREE.Object3D();
-  }
-  update(x, z, dt, camera, look) {
-    this.uniforms.time.value += dt; this.uniforms.eye.value.copy(camera.position);
-    this.uniforms.tint.value.setRGB(...look.grass);
-    if (this.lastCenter && Math.hypot(x - this.lastCenter[0], z - this.lastCenter[1]) < 40) return;
-    this.lastCenter = [x, z];
-    const hab = this.tile.habitat, can = this.tile.canopy, res = hab.res, size = this.tile.size, heights = this.tile.heights, roads = this.tile.roads;
-    const north = -z, cells = Math.ceil(this.radius / res), [ci, cj] = hab.cellOf(x, north);
-    let n = 0;
-    for (let j = cj - cells; j <= cj + cells; j++) for (let i = ci - cells; i <= ci + cells; i++) {
-      if (i < 0 || j < 0 || i >= hab.img.width || j >= hab.img.height) continue;
-      const cls = hab.channel(i, j, 0); if (cls !== 5 && cls !== 1 && cls !== 6) continue;
-      const cx = (i + 0.5) * res, cn = size - (j + 0.5) * res; if (Math.hypot(cx - x, cn - north) > this.radius) continue;
-      const herb = Math.max(0.3, can.channel(i, j, 2) / 100), per = Math.round((cls === 5 ? 140 : 50) * herb);
-      const rnd = mulberry32((i * 92821) ^ (j * 68917) ^ 11);
-      for (let k = 0; k < per && n < this.cap; k++) {
-        const px = (i + rnd()) * res, pn = size - (j + rnd()) * res, rot = rnd() * Math.PI;
-        const s = 0.7 + rnd() * 0.8, sy = s * (0.8 + rnd() * 0.6);
-        // Decayed roads: no tufts on the pavement, half density across the verge.
-        const rw = roads ? roads.at(px, pn) : 0;
-        if (rw > 140 || (rw > 0 && (k & 1))) continue;
-        this.tmp.position.set(px, heights.at(px, pn), -pn); this.tmp.rotation.set(0, rot, 0);
-        this.tmp.scale.set(s, sy, s); this.tmp.updateMatrix();
-        this.mesh.setMatrixAt(n++, this.tmp.matrix);
+const MID_VERT = /* glsl */`
+  ${COMMON_VERT}
+  ${SHADE_VERT}
+  attribute float aPetal;
+  varying vec2 vUv; varying float vKey; varying float vType; varying vec3 vColor; varying vec3 vHead;
+  void main() {
+    float seed = iVar.z, type = iVar.w;
+    float d = distance(cameraPosition, iPos.xyz);
+    float dIn = mix(nearFade.x, nearFade.y, h11(seed * 517.3 + 0.37));
+    float grow = smoothstep(dIn - 3.0, dIn + 3.0, d);
+    // Thin out with distance (survivors widen to keep the cover) and end at midEnd.
+    float keep = mix(1.0, 0.4, smoothstep(110.0, 220.0, d)) * (1.0 - smoothstep(midEnd - 35.0, midEnd, d));
+    float s = grow * smoothstep(0.0, 0.06, keep - h11(seed * 91.3 + 0.71));
+    if (s < 0.01 || offscreen(iPos.xyz, 0.6 * max(iVar.y, iVar.x) * 1.6)) { gl_Position = vec4(0.0, 0.0, 2.0, 1.0); return; }
+    float bunch = step(0.5, type);
+    float H = iVar.y * heightScale * mix(0.62, 0.42, bunch);
+    vec3 p = position;
+    p.xz *= iVar.x * mix(0.6, 0.5, bunch) * mix(1.0, inversesqrt(max(keep, 0.4)), 0.5);
+    p.y *= H * mix(0.2, 1.0, s);
+    vec3 w = vec3(yawRot(p.xz, iPos.w), p.y).xzy;
+    vec3 n = vec3(yawRot(normal.xz, iPos.w), normal.y).xzy;
+    vec2 off = windDir * windStrength * gust(iPos.xz) * uv.y * uv.y * max(H, 0.2);
+    w.xz += off; w.y -= 0.5 * dot(off, off) / max(H, 0.2) * uv.y;
+    vec3 wp = iPos.xyz + w;
+    vUv = uv; vKey = seed * 31.7 + aPetal * 3.1; vType = type;
+    vec3 leafC = grassShade(grassAlbedo(type, uv.y, 0.0, aPetal * 0.21 + 0.05, seed, iPos.xz), n, wp, uv.y, mix(0.35, 1.0, uv.y), 1.0);
+    vHead = grassShade(grassAlbedo(type, 1.0, bunch > 0.5 ? 3.0 : 2.0, 0.5, seed, iPos.xz), n, wp, 1.0, 1.0, 1.6);
+    // bunch tufts in flower: the awns tint the top of the tuft
+    vColor = mix(leafC, vHead, uv.y * uv.y * 0.6 * heads * bunch);
+    gl_Position = projectionMatrix * viewMatrix * vec4(wp, 1.0);
+  }`;
+const MID_FRAG = /* glsl */`
+  uniform float heads;
+  varying vec2 vUv; varying float vKey; varying float vType; varying vec3 vColor; varying vec3 vHead;
+  float hf(float n) { return fract(sin(n) * 43758.5453123); }
+  void main() {
+    // Seven thin blades fanning out of each card (about as wide as the near blades, so the two
+    // LODs give the same sub-pixel cover from above); on annual tufts some carry a seed head.
+    // Coverage per blade is limited by its width over the pixel's: a blade narrower than a pixel
+    // must not paint the whole pixel, or far tufts turn into opaque blobs.
+    float bunch = step(0.5, vType), aa = max(fwidth(vUv.x), 1e-4), a1 = 0.0, a2 = 0.0;
+    for (int k = 0; k < 7; k++) {
+      float fk = float(k), r = hf(vKey + fk * 7.31);
+      float hk = mix(0.5 + 0.5 * r, 0.45 + 0.4 * r, bunch);
+      float x0 = (fk + 0.5) / 7.0 + (r - 0.5) * 0.1;
+      float xc = x0 + (x0 - 0.5) * vUv.y * mix(0.5, 0.9, bunch) + (r - 0.5) * 0.25 * vUv.y * vUv.y;
+      float hw = 0.018 * (1.0 - vUv.y / hk);
+      a1 = max(a1, clamp((hw - abs(vUv.x - xc)) / aa + 0.5, 0.0, 1.0) * min(1.0, 2.0 * hw / aa));
+      if (heads > 0.5 && bunch < 0.5 && r > 0.6) {
+        a1 = max(a1, clamp((0.008 - abs(vUv.x - x0 - (x0 - 0.5) * vUv.y * 0.35)) / aa + 0.5, 0.0, 1.0) * min(1.0, 0.016 / aa) * step(vUv.y, 0.8));
+        vec2 q = (vUv - vec2(x0 + (x0 - 0.5) * 0.3, 0.86)) / vec2(0.03, 0.1);
+        a2 = max(a2, clamp((1.0 - length(q)) * 0.03 / aa + 0.5, 0.0, 1.0) * min(1.0, 0.06 / aa));
       }
     }
-    this.mesh.count = n; this.mesh.instanceMatrix.needsUpdate = true;
+    float alpha = max(a1, a2);
+    if (alpha < 0.04) discard;
+    gl_FragColor = vec4(a2 > a1 ? vHead : vColor, alpha);   // alpha drives MSAA coverage
+    #include <tonemapping_fragment>
+    #include <colorspace_fragment>
+  }`;
+
+// ---- placement helpers ----------------------------------------------------------------------
+function hash2(i, j, s) { let h = (i * 374761393 + j * 668265263 + s * 982451653) | 0; h = Math.imul(h ^ (h >>> 13), 1274126177); return ((h ^ (h >>> 16)) >>> 0) / 4294967296; }
+function vnoise(x, y, s) {
+  const i = Math.floor(x), j = Math.floor(y); let fx = x - i, fy = y - j; fx = fx * fx * (3 - 2 * fx); fy = fy * fy * (3 - 2 * fy);
+  const a = hash2(i, j, s), b = hash2(i + 1, j, s), c = hash2(i, j + 1, s), d = hash2(i + 1, j + 1, s);
+  return a + (b - a) * fx + (c - a) * fy + (a - b - c + d) * fx * fy;
+}
+// Field for bare patches (gopher workings, rock, trails), 11 m and 4 m: a few metres across, not
+// the 30 m bald spots a coarser field gave.
+const bareField = (x, n) => 0.6 * vnoise(x / 11, n / 11, 3) + 0.4 * vnoise(x / 4, n / 4, 4);
+const smooth = (a, b, x) => { const t = Math.min(Math.max((x - a) / (b - a), 0), 1); return t * t * (3 - 2 * t); };
+
+// Ground height on the rendered terrain mesh (Terrain's default 10 chunks of ~10 m quads, split
+// NW-SE as PlaneGeometry does), so roots sit exactly on the triangles rather than the heightfield.
+function terrainHeight(tile) {
+  const size = tile.size, cs = size / 10, sp = cs / Math.round(cs / 10), H = tile.heights;
+  return (x, north) => {
+    const u = x / sp, v = (size - north) / sp, i = Math.floor(u), j = Math.floor(v), fx = u - i, fy = v - j;
+    const x0 = i * sp, x1 = x0 + sp, n0 = size - j * sp, n1 = n0 - sp;
+    const b = H.at(x0, n1), d = H.at(x1, n0);
+    if (fx + fy <= 1) { const a = H.at(x0, n0); return a + (d - a) * fx + (b - a) * fy; }
+    const c = H.at(x1, n1); return c + (b - c) * (1 - fx) + (d - c) * (1 - fy);
+  };
+}
+
+function seasonOf(look) {
+  let best = 'summer', bd = Infinity;
+  for (const [k, v] of Object.entries(SEASON_LOOK)) {
+    if (v === look) return k;
+    const d = v.grass.reduce((s, c, i) => s + (c - look.grass[i]) ** 2, 0);
+    if (d < bd) { bd = d; best = k; }
+  }
+  return best;
+}
+
+export class Grass {
+  // cap: mid-LOD tuft capacity (the near LOD stages up to 90k).
+  constructor(tile, scene, cap = 64000) {
+    this.tile = tile; this.nearCap = 90000; this.midCap = cap;
+    this.ground = terrainHeight(tile);
+    this.lastNear = null; this.lastMid = null; this.lookKey = '';
+    this.cache = LAYERS.map(() => new Map());   // per layer: cell index -> instance groups
+    this.queue = new Map(); this.dirty = [false, false];   // cells waiting to be generated; LODs to refill
+    this.buildDensityGrid();
+    const col = () => new THREE.Color();
+    this.uniforms = {
+      time: { value: 0 }, windDir: { value: new THREE.Vector2(1, 0.25).normalize() }, windStrength: { value: 0.42 },
+      nearFade: { value: new THREE.Vector2(...NEAR_FADE) }, closeFade: { value: new THREE.Vector2(...CLOSE_FADE) }, midEnd: { value: MID_END },
+      heightScale: { value: 1 }, heads: { value: 1 }, thatch: { value: 0 }, leafScale: { value: 1 },
+      aRoot: { value: col() }, aTip: { value: col() }, aHead: { value: col() }, aAwn: { value: col() },
+      bRoot: { value: col() }, bTip: { value: col() }, bHead: { value: col() }, bAwn: { value: col() },
+      thatchCol: { value: col().setRGB(...THATCH, THREE.SRGBColorSpace) },
+      ...atmo,
+    };
+    const nearMat = new THREE.ShaderMaterial({ vertexShader: NEAR_VERT, fragmentShader: NEAR_FRAG, uniforms: this.uniforms, side: THREE.DoubleSide });
+    const midMat = new THREE.ShaderMaterial({ vertexShader: MID_VERT, fragmentShader: MID_FRAG, uniforms: this.uniforms, side: THREE.DoubleSide, alphaToCoverage: true });
+    const nearBands = [[0, NEAR_FADE[1] + 3], [0, CLOSE_FADE[1] + 3]];   // visible distance per tier
+    this._frustum = new THREE.Frustum(); this._m = new THREE.Matrix4(); this._inv = new THREE.Matrix4(); this._sphere = new THREE.Sphere(); this._pick = [];
+    this.sets = {
+      annual: this.makeSet(buildAnnualClump(), nearMat, this.nearCap, nearBands),
+      bunch: this.makeSet(buildBunchClump(), nearMat, this.nearCap, nearBands),
+      mid: this.makeSet(buildTuft(), midMat, this.midCap, [[NEAR_FADE[0] - 3, MID_END]]),
+    };
+    this.group = new THREE.Group(); this.group.name = 'grass';
+    for (const s of Object.values(this.sets)) this.group.add(s.mesh);
+    scene.add(this.group);
+    this.mesh = this.sets.mid.mesh;   // kept for debugging handles that used the old single mesh
+  }
+  // Instances placed (staged) and drawn this frame, per LOD.
+  get counts() {
+    const s = this.sets;
+    return { nearPlaced: s.annual.staged + s.bunch.staged, nearDrawn: s.annual.n + s.bunch.n, annualDrawn: s.annual.n, bunchDrawn: s.bunch.n, midPlaced: s.mid.staged, midDrawn: s.mid.n };
+  }
+
+  // An instanced mesh plus a CPU staging copy of every placed instance, grouped in blocks (one
+  // per cell and tier). Each frame only the blocks in view and in their distance band are copied
+  // to the GPU buffer: the cost is per instance submitted (every vertex runs, even when the shader
+  // throws it away), so drawing the ~1/3 that can be seen is the main saving.
+  makeSet(geo, material, cap, bands) {
+    const g = new THREE.InstancedBufferGeometry();
+    g.index = geo.index;
+    for (const [k, a] of Object.entries(geo.attributes)) g.setAttribute(k, a);
+    const buf = new THREE.InstancedInterleavedBuffer(new Float32Array(cap * STRIDE), STRIDE, 1).setUsage(THREE.DynamicDrawUsage);
+    g.setAttribute('iPos', new THREE.InterleavedBufferAttribute(buf, 4, 0));
+    g.setAttribute('iVar', new THREE.InterleavedBufferAttribute(buf, 4, 4));
+    g.instanceCount = 0;
+    const mesh = new THREE.Mesh(g, material); mesh.frustumCulled = false; mesh.visible = false;
+    return { mesh, buf, cap, bands, stage: new Float32Array(cap * STRIDE), blocks: [], staged: 0, n: 0, sig: NaN };
+  }
+
+  // Per-cell density (habitat factor x herb cover) and herb cover, sampled bilinearly between
+  // cell centres so density and size change smoothly instead of in 30 m squares.
+  buildDensityGrid() {
+    const hab = this.tile.habitat, can = this.tile.canopy, W = hab.img.width, Hh = hab.img.height;
+    this.W = W; this.Hh = Hh; this.dens = new Float32Array(W * Hh); this.herb = new Float32Array(W * Hh);
+    for (let j = 0; j < Hh; j++) for (let i = 0; i < W; i++) {
+      // herb floored at 0.3 as before: a 0 is more often a data gap (or an oak's shade) than bare dirt
+      const h = Math.min(Math.max(can.channel(i, j, 2) / 100, 0.3), 1), k = j * W + i, hb = HABITAT[hab.channel(i, j, 0)];
+      this.herb[k] = h; this.dens[k] = hb ? hb.dens * (0.6 + 0.4 * h) : 0;
+    }
+  }
+  sample(grid, x, north) {
+    const res = this.tile.habitat.res, u = x / res - 0.5, v = (this.tile.size - north) / res - 0.5;
+    const i = Math.floor(u), j = Math.floor(v), fx = u - i, fy = v - j, W = this.W, H1 = this.Hh - 1;
+    const i0 = Math.min(Math.max(i, 0), W - 1), i1 = Math.min(Math.max(i + 1, 0), W - 1);
+    const r0 = Math.min(Math.max(j, 0), H1) * W, r1 = Math.min(Math.max(j + 1, 0), H1) * W;
+    return (grid[r0 + i0] * (1 - fx) + grid[r0 + i1] * fx) * (1 - fy) + (grid[r1 + i0] * (1 - fx) + grid[r1 + i1] * fx) * fy;
+  }
+
+  // Instances of one cell for one layer, generated once and cached, sorted into groups by mesh
+  // (annual, bunch; the mid layer has one), each with a bounding sphere.
+  cellData(i, j, layer) {
+    const key = j * this.W + i, cache = this.cache[layer], L = LAYERS[layer], mid = layer === 2;
+    let groups = cache.get(key);
+    if (groups) return groups;
+    const { habitat: hab, size, roads } = this.tile, res = hab.res;
+    let any = false;
+    for (let dj = -1; dj <= 1 && !any; dj++) for (let di = -1; di <= 1; di++) {
+      const a = i + di, b = j + dj;
+      if (a >= 0 && b >= 0 && a < this.W && b < this.Hh && this.dens[b * this.W + a] > 0) { any = true; break; }
+    }
+    const out = [[], []];   // by type for the near layers; out[0] for the mid
+    if (any) {
+      const hb = HABITAT[hab.channel(i, j, 0)], annualShare = hb ? hb.annual : 0.6;
+      const n = Math.round(res * res * L.perM2), tier = L.tier;   // tier: 0 main, 1 close
+      const rnd = mulberry32((i * 92821) ^ (j * 68917) ^ L.salt);
+      for (let k = 0; k < n; k++) {
+        const px = (i + rnd()) * res, pn = size - (j + rnd()) * res;
+        const keep = rnd(), yaw = rnd() * Math.PI * 2, sv = rnd(), sj = rnd(), type = rnd() < annualShare ? 0 : 1, seed = rnd(), verge = rnd();
+        const dens = this.sample(this.dens, px, pn);
+        if (keep >= dens) continue;
+        // Decayed roads: no grass on the pavement, half density across the verge.
+        const rw = roads ? roads.at(px, pn) : 0;
+        if (rw > 140 || (rw > 0 && verge < 0.5)) continue;
+        // Bare patches, more of them where herb cover is thin, thinning out over a feathered edge;
+        // clumps also shorten toward them.
+        const herb = this.sample(this.herb, px, pn), bare = bareField(px, pn), thr = 0.28 + 0.14 * (1 - herb);
+        if (keep >= dens * smooth(thr - 0.06, thr + 0.06, bare)) continue;
+        const s = (0.75 + 0.5 * sv) * (0.7 + 0.45 * herb) * (0.45 + 0.55 * smooth(thr, thr + 0.15, bare));
+        out[mid ? 0 : type].push(px, this.ground(px, pn), -pn, yaw, s * (0.85 + 0.3 * sj), s, seed, type + 2 * tier);
+      }
+    }
+    groups = [];
+    out.forEach((a, g) => {
+      if (!a.length) return;
+      let x0 = Infinity, x1 = -Infinity, y0 = Infinity, y1 = -Infinity, z0 = Infinity, z1 = -Infinity, sy = 0;
+      for (let o = 0; o < a.length; o += STRIDE) {
+        x0 = Math.min(x0, a[o]); x1 = Math.max(x1, a[o]); y0 = Math.min(y0, a[o + 1]); y1 = Math.max(y1, a[o + 1]);
+        z0 = Math.min(z0, a[o + 2]); z1 = Math.max(z1, a[o + 2]); sy = Math.max(sy, a[o + 5]);
+      }
+      const h = 1.2 * sy + 0.3;   // grass height above the highest root
+      groups.push({ mesh: g, tier: L.tier, data: new Float32Array(a), x: (x0 + x1) / 2, y: (y0 + y1 + h) / 2, z: (z0 + z1) / 2,
+        r: Math.hypot((x1 - x0) / 2 + 0.6, (y1 - y0 + h) / 2, (z1 - z0) / 2 + 0.6) });
+    });
+    if (cache.size > (mid ? 3000 : 400)) cache.clear();   // bounded at a few tens of MB
+    cache.set(key, groups);
+    return groups;
+  }
+
+  // Cells within r of (x, north), nearest first, so a full buffer drops the farthest.
+  cellsAround(x, north, r) {
+    const hab = this.tile.habitat, res = hab.res, size = this.tile.size, cells = [];
+    const i0 = Math.max(0, Math.floor((x - r) / res)), i1 = Math.min(this.W - 1, Math.floor((x + r) / res));
+    const j0 = Math.max(0, Math.floor((size - north - r) / res)), j1 = Math.min(this.Hh - 1, Math.floor((size - north + r) / res));
+    for (let j = j0; j <= j1; j++) for (let i = i0; i <= i1; i++) {
+      const cx = (i + 0.5) * res, cn = size - (j + 0.5) * res, d = Math.hypot(cx - x, cn - north);
+      if (d <= r + res * 0.71) cells.push([d, i, j]);
+    }
+    return cells.sort((a, b) => a[0] - b[0]);
+  }
+
+  // Stage the cells within r (close-layer cells within rClose) of (x, north), nearest first, one
+  // block per cell group: plain copies, so a refill costs no per-instance work. Cells not yet
+  // generated are made now if they are visible, else queued (see update).
+  fill(x, north, r, lod, targets, cap, rClose = r) {
+    const half = this.tile.habitat.res * 0.71, layers = lod ? [2] : [0, 1];
+    for (const t of targets) { t.staged = 0; t.blocks.length = 0; t.sig = NaN; }
+    for (const [k, q] of this.queue) if (layers.includes(q[2])) this.queue.delete(k);   // re-queued below if still wanted
+    for (const [d, i, j] of this.cellsAround(x, north, r)) {
+      for (const layer of layers) {
+        if (layer === 1 && d - half > rClose) continue;
+        const key = j * this.W + i;
+        if (!this.cache[layer].has(key) && d - half > LAYERS[layer].now) { this.queue.set(layer * 1e7 + key, [i, j, layer]); continue; }
+        for (const g of this.cellData(i, j, layer)) {
+          const t = targets[g.mesh], n = g.data.length / STRIDE;
+          if (t.staged + n > cap) continue;
+          t.stage.set(g.data, t.staged * STRIDE);
+          t.blocks.push({ x: g.x, y: g.y, z: g.z, r: g.r, tier: g.tier, start: t.staged, count: n });
+          t.staged += n;
+        }
+      }
+    }
+  }
+
+  // Generate queued cells for up to `budget` ms, then mark their LODs for a refill.
+  drain(budget = 3) {
+    const t0 = performance.now();
+    for (const [k, [i, j, layer]] of this.queue) {
+      this.queue.delete(k);
+      if (this.cache[layer].has(j * this.W + i)) continue;
+      this.cellData(i, j, layer); this.dirty[layer === 2 ? 1 : 0] = true;
+      if (performance.now() - t0 > budget) break;
+    }
+  }
+
+  // Copy the blocks in view and inside their distance band to the GPU buffer.
+  cull(camera) {
+    camera.updateMatrixWorld();
+    this._m.multiplyMatrices(camera.projectionMatrix, this._inv.copy(camera.matrixWorld).invert());
+    this._frustum.setFromProjectionMatrix(this._m);
+    const cp = camera.position, sph = this._sphere;
+    for (const set of Object.values(this.sets)) {
+      if (!set.mesh.visible) continue;
+      const pick = this._pick; pick.length = 0; let sig = 0;
+      for (let b = 0; b < set.blocks.length; b++) {
+        const k = set.blocks[b], band = set.bands[k.tier], d = Math.hypot(k.x - cp.x, k.y - cp.y, k.z - cp.z);
+        if (d + k.r < band[0] || d - k.r > band[1]) continue;
+        sph.center.set(k.x, k.y, k.z); sph.radius = k.r;
+        if (!this._frustum.intersectsSphere(sph)) continue;
+        pick.push(k); sig = (Math.imul(sig, 31) + b + 1) | 0;
+      }
+      if (sig === set.sig) continue;
+      set.sig = sig; let n = 0;
+      for (const k of pick) { set.buf.array.set(set.stage.subarray(k.start * STRIDE, (k.start + k.count) * STRIDE), n * STRIDE); n += k.count; }
+      set.n = n; set.mesh.geometry.instanceCount = n;
+      set.buf.clearUpdateRanges(); set.buf.addUpdateRange(0, Math.max(n, 1) * STRIDE); set.buf.needsUpdate = true;
+    }
+  }
+
+  applyLook(look) {
+    const season = seasonOf(look), P = PALETTE[season], ref = SEASON_LOOK[season].grass, u = this.uniforms;
+    const k = look.grass.map((v, i) => Math.min(Math.max(v / ref[i], 0.6), 1.6));   // the tint sets the overall tone
+    const set = (uni, rgb) => uni.value.setRGB(rgb[0] * k[0], rgb[1] * k[1], rgb[2] * k[2], THREE.SRGBColorSpace);
+    set(u.aRoot, P.annual.root); set(u.aTip, P.annual.tip); set(u.aHead, P.annual.head); set(u.aAwn, P.annual.awn);
+    set(u.bRoot, P.bunch.root); set(u.bTip, P.bunch.tip); set(u.bHead, P.bunch.head); set(u.bAwn, P.bunch.awn);
+    u.heightScale.value = P.height; u.heads.value = P.heads; u.thatch.value = P.thatch; u.leafScale.value = P.leaf;
+    this.season = season;
+  }
+
+  // x, z (the flight position) are kept for the caller's signature; the camera position is used.
+  update(x, z, dt, camera, look) {
+    this.uniforms.time.value += dt;
+    const key = look.grass.join(',') + (look === SEASON_LOOK[this.season] ? '' : '?');
+    if (key !== this.lookKey) { this.lookKey = key; this.applyLook(look); }
+    const cp = camera.position, north = -cp.z, agl = cp.y - this.ground(cp.x, north);
+    const nearOn = agl < NEAR_FADE[1] + 3, midOn = agl < MID_END;
+    const moved = last => Math.hypot(cp.x - last[0], north - last[1]);
+    if (this.queue.size) this.drain();
+    const moveNear = !this.lastNear || moved(this.lastNear) > NEAR_REBUILD, moveMid = !this.lastMid || moved(this.lastMid) > MID_REBUILD;
+    if (nearOn && (moveNear || this.dirty[0])) {
+      if (moveNear) this.lastNear = [cp.x, north];
+      this.dirty[0] = false;
+      this.fill(this.lastNear[0], this.lastNear[1], NEAR_PLACE, 0, [this.sets.annual, this.sets.bunch], this.nearCap, CLOSE_PLACE);
+    }
+    if (midOn && (moveMid || this.dirty[1])) {
+      if (moveMid) this.lastMid = [cp.x, north];
+      this.dirty[1] = false;
+      this.fill(this.lastMid[0], this.lastMid[1], MID_PLACE, 1, [this.sets.mid], this.midCap);
+    }
+    const S = this.sets;
+    S.annual.mesh.visible = nearOn && S.annual.staged > 0;
+    S.bunch.mesh.visible = nearOn && S.bunch.staged > 0;
+    S.mid.mesh.visible = midOn && S.mid.staged > 0;
+    this.cull(camera);
+    for (const set of Object.values(S)) if (set.n === 0) set.mesh.visible = false;
   }
 }
