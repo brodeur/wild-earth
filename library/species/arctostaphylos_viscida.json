@@ -50,8 +50,8 @@
     "fraction": 0.15, "where": "inner", "levels": [1, 2], "shorten": 0.6, "rgb": [140, 136, 128]
   },
   "lod": {
-    "near_tris_budget": 1100, "near_sides": [4, 3, 0], "mid_blobs": 3, "mid_branches": 6, "mid_sides": [3, 0],
-    "mid_cards": 40
+    "near_tris_budget": 1100, "near_sides": [4, 3, 0], "mid_blobs": 3, "mid_branches": 0, "mid_sides": [0, 0],
+    "mid_cards": 24
   },
   "targets": {
     "crown_width_ratio": 1.4, "crown_base_ratio": 0.15, "porosity": 0.1, "foliage_rg": 0.95, "foliage_bg": 0.68,

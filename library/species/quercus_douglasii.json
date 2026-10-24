@@ -55,7 +55,7 @@
     "mistletoe": {"prob": 0.4, "count": [1, 3], "radius_m": 0.35}
   },
   "lod": {
-    "near_tris_budget": 1900, "near_sides": [7, 4, 3], "mid_blobs": 5, "mid_branches": 6, "mid_blob_scale": 0.85,
+    "near_tris_budget": 1900, "near_sides": [7, 4, 3], "mid_blobs": 5, "mid_branches": 4, "mid_segments": [3, 2], "mid_blob_scale": 0.85,
     "close_factor": 2
   },
   "targets": {

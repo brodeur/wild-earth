@@ -272,3 +272,15 @@ optional and its default reproduces the tree as it was grown before, so older fi
 shared plain material as before. `applySeason` also switches card textures (season tips,
 winter twigs).
 
+
+## Frame-cost fields (2026-10-25)
+
+| field | meaning |
+|---|---|
+| `lod.mid_cards` | cap on far-tier cards per plant after merging interior clumps (default 40 trees, 24 shrubs); the outline keeps its lumps |
+| `lod.mid_segments` | segments per branch level in the mid tier (default `[3, 1]`); mid trunks default to 4 sides |
+| `lod.mid_branches` | limbs kept in the mid tier (ponderosa 2, gray pine 3, blue oak 4, live oak 2) |
+
+Mid cards thin with distance beyond 300 m: the outer 20% always stay, inner cards fall
+to a 25% floor and grow to hold cover. Bark textures draw within 120 m. The lineup can
+measure any tier: `__lineupMetrics('mid' | 'close')`, and `__lineupMetrics('mid', 900)`.

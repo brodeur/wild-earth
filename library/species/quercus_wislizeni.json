@@ -49,7 +49,7 @@
     "color_var": [0.08, 0.03]
   },
   "lod": {
-    "near_tris_budget": 2000, "near_sides": [6, 4, 0], "mid_blobs": 5, "mid_branches": 4, "mid_blob_scale": 0.95,
+    "near_tris_budget": 2000, "near_sides": [6, 4, 0], "mid_blobs": 5, "mid_branches": 2, "mid_sides": [3, 3], "mid_segments": [2, 1], "mid_blob_scale": 0.95,
     "close_factor": 2
   },
   "targets": {

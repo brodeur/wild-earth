@@ -1,6 +1,6 @@
 import * as THREE from 'three';
 import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
-import { LIBRARY, LIBRARY_SOURCE, LIBRARY_RAW, BUILTIN, buildTree, canopyMaterial, trunkMaterial, applySeason } from './treegen.js';
+import { LIBRARY, LIBRARY_SOURCE, LIBRARY_RAW, BUILTIN, buildTree, canopyMaterial, trunkMaterial, applySeason, thinMidCanopy } from './treegen.js';
 
 // Review page for the species library (docs/species-library.md): every species, three seeds,
 // near or mid LOD, any season, against 5 m scale poles. URL: ?season=winter&mid=1&focus=<id>&shadows=0&ui=0
@@ -45,7 +45,7 @@ let x = 0;
 for (const id of ids) {
   const spec = LIBRARY[id];
   const g = { id, spec, built: null, near: new THREE.Group(), mid: new THREE.Group(), mats: { near: canopyMaterial(spec, 'near'), mid: canopyMaterial(spec, 'mid'), trunk: trunkMaterial(null, spec) }, canopies: [], tris: { near: [], mid: [] } };
-  const built = SEEDS.map(seed => ({ near: buildTree(id, seed + id.length, 'near'), mid: buildTree(id, seed + id.length, 'mid') }));
+  const built = SEEDS.map(seed => ({ near: buildTree(id, seed + id.length, 'near'), mid: buildTree(id, seed + id.length, 'mid'), close: buildTree(id, seed + id.length, 'close') }));
   g.built = built;
   const widths = built.map(b => { b.near.canopy.computeBoundingBox(); const bb = b.near.canopy.boundingBox; return { w: Math.max(bb.max.x - bb.min.x, bb.max.z - bb.min.z, 1), cx: (bb.max.x + bb.min.x) / 2 }; });
   const gap = Math.max(1, spec.height_m[1] * 0.12);
@@ -133,13 +133,17 @@ function measureTree(b, mat) {
   }
   return out;
 }
-function measureAll() {
+// lod: 'near' (the photo comparison), 'mid' (past 180 m) or 'close' (under about 90 m: the near trunk
+// with the close canopy), so a change to one tier can be checked against the same targets. `dist`
+// (mid only): measure the mid crown as the mid material thins it at that camera distance in metres.
+function measureAll(lod = 'near', dist = 0) {
   const res = {};
   for (const g of groups) {
     // measured without the per-plant tint (color_var), which would otherwise depend on where the seed stands
-    const plain = { ...g.spec, foliage: { ...g.spec.foliage, color_var: [0, 0], leaf_on_var: 0 } }, mat = canopyMaterial(plain, 'near');
+    const plain = { ...g.spec, foliage: { ...g.spec.foliage, color_var: [0, 0], leaf_on_var: 0 } }, mat = canopyMaterial(plain, lod);
     applySeason(mat, plain, 'summer');
-    const ms = g.built.map(b => measureTree(b.near, mat));
+    const ms = g.built.map(b => measureTree(lod === 'close' ? { trunk: b.near.trunk, canopy: b.close.canopy }
+      : lod === 'mid' && dist ? { trunk: b.mid.trunk, canopy: thinMidCanopy(b.mid.canopy, dist) } : b[lod], mat));
     const avg = k => ms.reduce((s, m) => s + m[k], 0) / ms.length;
     res[g.id] = { wh: avg('wh'), base: avg('base'), por: avg('por'), rg: avg('rg'), bg: avg('bg'), target: g.spec.targets || null };
   }
@@ -158,7 +162,10 @@ function showMetrics() {
     g.label.insertAdjacentHTML('beforeend', `<br><span class="muted" style="font-size:11px">W/H ${fmt(m.wh, t.crown_width_ratio, Math.max(0.1, 0.15 * (t.crown_width_ratio || 1)))} · base ${fmt(m.base, t.crown_base_ratio, 0.07)} · gaps ${fmt(m.por, t.porosity, 0.07)}<br>r/g ${fmt(m.rg, t.foliage_rg, 0.06)} · b/g ${fmt(m.bg, t.foliage_bg, 0.06)} <i>(measured / photo target)</i></span>`);
   }
 }
-window.__lineupMetrics = () => METRICS && Object.fromEntries(Object.entries(METRICS).map(([k, m]) => [k, { wh: +m.wh.toFixed(2), base: +m.base.toFixed(2), por: +m.por.toFixed(2), rg: +m.rg.toFixed(2), bg: +m.bg.toFixed(2), target: m.target && { wh: m.target.crown_width_ratio, base: m.target.crown_base_ratio, por: m.target.porosity, rg: m.target.foliage_rg, bg: m.target.foliage_bg } }]));
+const round = res => Object.fromEntries(Object.entries(res).map(([k, m]) => [k, { wh: +m.wh.toFixed(2), base: +m.base.toFixed(2), por: +m.por.toFixed(2), rg: +m.rg.toFixed(2), bg: +m.bg.toFixed(2), target: m.target && { wh: m.target.crown_width_ratio, base: m.target.crown_base_ratio, por: m.target.porosity, rg: m.target.foliage_rg, bg: m.target.foliage_bg } }]));
+// __lineupMetrics() is the near-LOD table shown on the labels; __lineupMetrics('mid' | 'close') measures that
+// tier, and __lineupMetrics('mid', 800) the mid tier as thinned for a camera 800 m away.
+window.__lineupMetrics = (lod = 'near', dist = 0) => lod === 'near' && !dist ? METRICS && round(METRICS) : round(measureAll(lod, dist));
 
 // Warn when the fetched files and the built-in fallback differ (run library/embed_builtin.py).
 const strip = r => { const c = { ...r }; delete c.notes; delete c.sources; delete c.authors; return JSON.stringify(c); };
