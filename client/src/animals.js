@@ -713,7 +713,7 @@ export class Animals {
           else { speed = 1.1; a.x += ex / d * speed * dt; a.z += ez / d * speed * dt; a.yaw += wrapAngle(Math.atan2(ex, ez) - a.yaw) * Math.min(1, dt * 2); }
         }
       } else {   // walking: single file behind the leader; grazing: spread around it
-        const L = g.leader, walking = L.state === D_WALK;
+        const L = g.leader || a, walking = L.state === D_WALK;   // a herd can lose its leader; follow yourself
         let tx, tz;
         if (walking) {
           const fx = Math.sin(L.yaw), fz = Math.cos(L.yaw), back = a.rank * 2.6, side = a.ox * 0.18;
@@ -740,8 +740,14 @@ export class Animals {
   // The covey is the unit: it forages in a loose knot, now and then runs across an opening in a
   // stream, and flushes all at once (staggered by a few tenths of a second) away from a threat: the
   // raven low overhead, a stooping hawk, or now and then nothing anyone can see.
+  groupRng(g, list) {
+    // A group can lose its leader (member cap hit while placing, or a rebuild mid-season); adopt any member.
+    if (!g.leader || !g.leader.rng) { g.leader = null; for (const a of list) if (a.group === g) { g.leader = a; break; } }
+    return g.leader ? g.leader.rng : null;
+  }
   coveyUpdate(g, dt, px, py, pz) {
-    const r = g.leader.rng, H = this.heights;
+    const r = this.groupRng(g, this.bySpecies[QU]); if (!r) return;
+    const H = this.heights;
     g.t -= dt; g.cool -= dt;
     if (g.state !== G_SETTLE && g.cool <= 0) {
       const dx = px - g.x, dz = pz - g.z;
@@ -764,7 +770,7 @@ export class Animals {
   }
   flushCovey(g, fx, fz, cause = 'raven') {
     if (g.state === G_SETTLE) return;
-    const r = g.leader.rng;
+    const r = this.groupRng(g, this.bySpecies[QU]); if (!r) return;
     let n = 0; for (const a of this.bySpecies[QU]) if (a.group === g) n++;
     if (n) this.emit('flush', { group: g, x: g.x, y: this.heights.atXZ(g.x, g.z), z: g.z, n, cause });
     let ang = Math.atan2(g.z - fz, g.x - fx) + (r() - 0.5) * 0.8;   // away from the threat
