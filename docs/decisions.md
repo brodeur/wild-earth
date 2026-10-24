@@ -155,3 +155,17 @@ input), a carry limit of three, acorn counts driven by the fall acorn_mast resou
 deterministic stash holes per tree, and persistence per world (tile plus season) in
 the browser as the first persistent player state. Rejected for now: competitors, cache
 recovery in winter, scoring.
+
+## 2026-10-24: mission stated; open source and community-built
+
+Aaron: "The goal of this is to connect modern people directly to their bioregion in a
+fun and engaging way. I'm hoping to make it open source / crowdware." Recorded at the
+top of the brief. Consequences: bioregions (watersheds, ecoregions) become the social
+unit for communities, funding and local knowledge, with the tile as the technical
+unit; the species parameter library and tile spec are public goods; contribution paths
+(verify/flag, species parameters, mask edits) matter as much as features. **Open:**
+the licences. Candidates: AGPL-3.0 for code so federated node operators share their
+changes, or MIT/Apache-2.0 for maximum adoption; CC BY-SA 4.0 for generated assets and
+species parameter sets; CC0 for the spec. Also open: whether CC BY-NC species records
+are acceptable inputs for an open, non-commercial project (likely yes for display and
+modelling, but derived assets should not inherit NC terms).

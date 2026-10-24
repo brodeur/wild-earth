@@ -34,6 +34,18 @@
   .seg button + button { border-left:none; }
   .seg button.on { background:#1f2a23; color:#e6ede7; }
   .seg button:disabled { opacity:.4; cursor:default; }
+  #gameBtn { width:100%; margin-top:6px; background:#1f2a23; color:#e6ede7; border:1px solid #263128; border-radius:6px; padding:5px 10px; font:inherit; cursor:pointer; }
+  #gameBtn.on { background:#3a2c17; border-color:#6b4a2b; }
+  #hoverBtn { width:100%; margin-top:6px; background:#1f2a23; color:#e6ede7; border:1px solid #263128; border-radius:6px; padding:5px 10px; font:inherit; cursor:pointer; }
+  #hoverBtn.on { background:#1d3340; border-color:#2f5a73; }
+  #game { position:fixed; left:50%; top:12px; transform:translateX(-50%); background:#0f1512bb; padding:8px 14px; border-radius:8px; min-width:240px; backdrop-filter:blur(4px); transition:background .6s; }
+  #game.hidden { display:none; }
+  #game h1 { font-size:13px; margin:0 0 4px; color:#ffd08a; }
+  #game .row { display:flex; justify-content:space-between; gap:12px; color:#b7c4ba; }
+  #game .row b { color:#e6ede7; font-weight:600; font-variant-numeric:tabular-nums; }
+  #gameHint { font-size:12px; margin-top:4px; max-width:280px; }
+  #game.flash { animation:gameflash .7s ease-out; }
+  @keyframes gameflash { from { background:#8a5a1ccc; } to { background:#0f1512bb; } }
 </style>
 <script type="importmap">
 { "imports": { "three": "https://unpkg.com/three@0.170.0/build/three.module.js",
@@ -54,6 +66,8 @@
   <label for="gotoInput">Location</label>
   <div id="goto"><input id="gotoInput" placeholder="lat, lon" autocomplete="off" spellcheck="false"><button id="gotoBtn">Go</button></div>
   <div class="muted" id="gotoStatus"></div>
+  <button id="gameBtn" title="acorn stash: pick up glowing acorns under oaks and cache them in stash holes">Start game</button>
+  <button id="hoverBtn" title="hold position and look around (H)">Hover</button>
   <label>Texture</label>
   <div class="seg"><button id="texImagery" title="NAIP 2022 with buildings, lots and fields erased">Imagery</button><button id="texRewild" class="on" title="habitat colour over hillshade">Rewilded</button></div>
   <label>Season <span class="muted" id="seasonNote"></span></label>
@@ -65,7 +79,15 @@
   <label>Perceives</label>
   <div class="muted" id="perceives">–</div>
 </div>
-<div id="help"><kbd>↑</kbd><kbd>↓</kbd> pitch · <kbd>←</kbd><kbd>→</kbd> turn · <kbd>W</kbd><kbd>S</kbd> speed · <kbd>X</kbd><kbd>Z</kbd> climb / descend · <kbd>space</kbd> flap · <kbd>R</kbd> reset · <kbd>M</kbd> map · <kbd>G</kbd> roads · drag mouse to look</div>
+<div id="help"><kbd>↑</kbd><kbd>↓</kbd> pitch · <kbd>←</kbd><kbd>→</kbd> turn · <kbd>W</kbd><kbd>S</kbd> speed · <kbd>X</kbd><kbd>Z</kbd> climb / descend · <kbd>space</kbd> flap · <kbd>H</kbd> hover · <kbd>R</kbd> reset · <kbd>M</kbd> map · <kbd>G</kbd> roads · drag mouse to look</div>
+<div id="game" class="hidden">
+  <h1>acorn stash</h1>
+  <div class="row"><span>carrying</span><b id="gameCarried">0 / 3</b></div>
+  <div class="row"><span>acorns stashed</span><b id="gameStashed">0</b></div>
+  <div class="row"><span>stashes found</span><b id="gameFound">0</b></div>
+  <div class="row"><span>time</span><b id="gameTime">00:00</b></div>
+  <div class="muted" id="gameHint"></div>
+</div>
 <div id="minimap"></div>
 <div id="status">loading tile…</div>
 <script type="module" src="./src/main.js"></script>

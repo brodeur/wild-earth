@@ -20,6 +20,7 @@ export class Vegetation {
   constructor(tile, scene, atmosphere) {
     this.tile = tile; this.scene = scene; this.group = new THREE.Group(); scene.add(this.group);
     this.radius = 1500; this.lastCenter = null; this.count = 0;
+    this.oaks = []; this.version = 0;   // oaks placed by the last update (acorn game) and a counter bumped per rebuild
     this.trunkMat = new THREE.MeshLambertMaterial({ vertexColors: true });
     this.canopyMat = new THREE.MeshLambertMaterial({ vertexColors: true });
     this.deciduousMat = new THREE.MeshLambertMaterial({ vertexColors: true, color: 0xffffff });
@@ -33,7 +34,7 @@ export class Vegetation {
         const trunk = new THREE.InstancedMesh(t.trunk, this.trunkMat, cap);
         const canopy = new THREE.InstancedMesh(t.canopy, SPECIES[name].deciduous ? this.deciduousMat : this.canopyMat, cap);
         trunk.count = canopy.count = 0; trunk.frustumCulled = canopy.frustumCulled = false;
-        this.group.add(trunk, canopy); this.meshes[name].push({ trunk, canopy, cap, n: 0 });
+        this.group.add(trunk, canopy); this.meshes[name].push({ trunk, canopy, cap, n: 0, stem: t.stem, height: t.height });
       }
     }
     this.tmp = new THREE.Object3D();
@@ -49,6 +50,7 @@ export class Vegetation {
     this.lastCenter = [x, z];
     const hab = this.tile.habitat, can = this.tile.canopy, res = hab.res, size = this.tile.size, heights = this.tile.heights, roads = this.tile.roads;
     for (const arr of Object.values(this.meshes)) for (const m of arr) m.n = 0;
+    const oaks = [];
     const north = -z, r = this.radius, cells = Math.ceil(r / res);
     const [ci, cj] = hab.cellOf(x, north);
     let total = 0;
@@ -74,11 +76,12 @@ export class Vegetation {
         this.tmp.position.set(px, heights.at(px, pn) - 0.3, -pn);
         this.tmp.rotation.set(0, rot, 0); this.tmp.scale.setScalar(s); this.tmp.updateMatrix();
         m.trunk.setMatrixAt(m.n, this.tmp.matrix); m.canopy.setMatrixAt(m.n, this.tmp.matrix); m.n++; total++;
+        if (name === 'blue_oak' || name === 'live_oak') oaks.push({ id: `${i},${j},${k}`, x: px, z: -pn, y: this.tmp.position.y + 0.3, scale: s, species: name, rot, stem: m.stem, height: m.height });
       }
     }
     for (const arr of Object.values(this.meshes)) for (const m of arr) {
       m.trunk.count = m.canopy.count = m.n; m.trunk.instanceMatrix.needsUpdate = true; m.canopy.instanceMatrix.needsUpdate = true;
     }
-    this.count = total;
+    this.count = total; this.oaks = oaks; this.version++;
   }
 }

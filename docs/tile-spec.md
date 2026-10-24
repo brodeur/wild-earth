@@ -53,6 +53,7 @@ tiles/<tile_id>/
   client/habitat.png            derived   habitat class code in R, 30 m grid
   client/canopy.png             derived   tree / shrub / herb cover percent in R / G / B, 30 m grid
   client/roads.png              derived   decayed-road weight, 8-bit on the DEM grid: 255 pavement, verge falls to 0
+  client/mast.png               derived   fall acorn_mast score 0..100 in R, 30 m grid (from resources/acorn_mast.tif band 4; optional)
   client/texture_imagery.jpg    derived   NAIP with the human footprint erased and pavement bleached, 4000 px (2.5 m) JPEG
   unreal/heightmap.png          derived   16-bit Landscape heightmap at a valid size (2017 px)
   unreal/weights/<class>.png    derived   8-bit weight-blended layer per habitat class

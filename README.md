@@ -63,6 +63,8 @@ Roads are decayed, not erased: ten years on they are linear clearings of cracked
 The default ground is the Imagery texture: NAIP 2022 with buildings, lots, lawns and fields erased (thin features inpainted, towns synthesized from real imagery of the backfilled habitat class) and pavement bleached, recoloured by season; Rewilded switches to the habitat-colour texture.
 A mini-map (M to toggle, click to fly there) shows present-day NAIP imagery, roads and streams by design: the rewilded world laid against the real one.
 
+The first game is the acorn stash ([design](docs/game-acorn-stash.md)), opt-in with **Start game** in the panel (or `?game=1`). Oaks within 300 m carry acorns, more where the tile's fall acorn_mast score (`client/mast.png`) is high, and about one oak in eight has a stash hole on its trunk. Acorns glow as you close in from about 60 m; fly within 6 m to pick one up (you carry up to 3). After the first pickup stash holes glow blue-white; fly within 6 m of one to deposit, one acorn per beat, until it shows `capacity / capacity` and stops glowing. There are no new keys: it is all flying. Everything about an oak is hashed from its id, so every player finds the same acorns and holes, and picks and stash contents persist per world (tile and season) in the browser's localStorage.
+
 `pipeline.audit_licenses` counts occurrence records by license per tile; see the
 decision log for what the numbers mean.
 

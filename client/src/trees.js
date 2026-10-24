@@ -65,5 +65,7 @@ export function buildTree(name, seed = 1) {
   const trunkG = colored(mergeGeometries(trunkParts.map(g => g.index ? g.toNonIndexed() : g), false), p.bark, 0.25, rnd);
   const canopyG = colored(mergeGeometries(canopyParts.map(g => g.index ? g.toNonIndexed() : g), false), p.leaf, 0.35, rnd);
   trunkG.computeVertexNormals(); canopyG.computeVertexNormals();
-  return { trunk: trunkG, canopy: canopyG, height: H };
+  // trunk shape (geometry space, before instance scale/rotation): limb along +y, then rotateZ(lean), rotateY(leanDir)
+  const stem = { len: trunkLen, r0: p.trunkR * H / 10 * (p.shrub ? 10 : 1), r1: p.trunkR * 0.5 * H / 10 * (p.shrub ? 10 : 1), lean, leanDir };
+  return { trunk: trunkG, canopy: canopyG, height: H, stem };
 }
