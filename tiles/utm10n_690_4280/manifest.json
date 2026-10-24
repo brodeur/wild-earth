@@ -15,7 +15,7 @@
   38.73825606650576
  ],
  "size_m": 10000,
- "generated_at": "2026-10-24T02:18:44Z",
+ "generated_at": "2026-10-24T03:10:09Z",
  "generator": {
   "name": "wild-earth-pipeline",
   "version": "0.2.0"
@@ -650,6 +650,23 @@
    "encoding": "NAIP 2022 RGB with human footprint inpainted or synthesized, pavement bleached; JPEG q88",
    "sha256": "3a444c5ba63b3bbbe91fbbe666ba07da53e4456dd0742cfb9439bfa5d3da2784",
    "bytes": 4871986
+  },
+  "client.mast": {
+   "path": "client/mast.png",
+   "kind": "raster",
+   "crs": "EPSG:32610",
+   "bounds": [
+    690000,
+    4280000,
+    700000,
+    4290000
+   ],
+   "pixels": 333,
+   "resolution_m": 30.03003003003003,
+   "derived_from": "resources.acorn_mast",
+   "encoding": "R = fall acorn_mast score 0..100",
+   "sha256": "eac953c51923acae55e0937e36b76b74dbd4bb87ac7a13fdfb117a243de7b7b4",
+   "bytes": 39179
   }
  },
  "sources": {
@@ -837,6 +854,12 @@
    "step": "erase",
    "at": "2026-10-24T02:18:44Z",
    "seconds": 40.0,
+   "ok": true
+  },
+  {
+   "step": "derive",
+   "at": "2026-10-24T03:10:09Z",
+   "seconds": 28.5,
    "ok": true
   }
  ]

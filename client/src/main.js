@@ -12,6 +12,7 @@ import { MiniMap } from './minimap.js';
 import { RoadsOverlay } from './roadsOverlay.js';
 import { setupGoTo, takePendingPoint, builtTileFor } from './goto.js';
 import { SEASON_LOOK, seasonOfDate, sunDirection } from './season.js';
+import { AcornGame } from './acorns.js';
 
 const $ = id => document.getElementById(id);
 const status = t => { $('status').textContent = t; $('status').classList.toggle('hidden', !t); };
@@ -22,7 +23,7 @@ async function main() {
   let tileId = params.get('tile');
   if (pending && !tileId) tileId = await builtTileFor(pending);   // null -> loader picks the first tile
   const tile = await loadTile(tileId);
-  if (pending) history.replaceState(null, '', `?tile=${tile.id}`);   // never keep the point in the URL
+  if (pending) history.replaceState(null, '', `?tile=${tile.id}${params.get('game') === '1' ? '&game=1' : ''}`);   // never keep the point in the URL
   $('tileName').textContent = tile.id;
   status('building terrain…');
   await new Promise(r => setTimeout(r, 20));
@@ -81,8 +82,21 @@ async function main() {
     veg.setLook(SEASON_LOOK[s]);
   }
   applySeason();
+
+  // Acorn stash game (docs/game-acorn-stash.md): opt-in, so flying stays the default.
+  const acorns = new AcornGame(tile, scene, flight, veg, {
+    box: $('game'), carried: $('gameCarried'), stashed: $('gameStashed'), found: $('gameFound'), time: $('gameTime'), hint: $('gameHint'),
+  });
+  const setGame = on => {
+    if (on) acorns.start(seasonNow()); else acorns.stop();
+    $('gameBtn').textContent = on ? 'Stop game' : 'Start game'; $('gameBtn').classList.toggle('on', on);
+  };
+  $('gameBtn').onclick = () => setGame(!acorns.running);
+  $('hoverBtn').onclick = () => { flight.setHover(!flight.hover); renderer.domElement.focus?.(); };
+  if (params.get('game') === '1') setGame(true);
+
   status('');
-  window.__we = { tile, flight, raven, camera, veg, terrain, far, grass, roads, scene, renderer, minimap, atmosphere, sky };   // debugging handle
+  window.__we = { tile, flight, raven, camera, veg, terrain, far, grass, roads, scene, renderer, minimap, atmosphere, sky, acorns };   // debugging handle
 
   let last = performance.now(), hudT = 0;
   function frame(now) {
@@ -95,12 +109,14 @@ async function main() {
     sky.update(camera);
     far.update(camera, veg.radius);
     grass.update(flight.pos.x, flight.pos.z, dt, camera, look);
+    acorns.update(dt, camera, s);
     terrain.setLook(look);
     renderer.render(scene, camera);
     minimap.update(flight.pos, f.heading);
     hudT += dt;
     if (hudT > 0.15) {
       hudT = 0;
+      $('hoverBtn').classList.toggle('on', !!f.hover); $('hoverBtn').textContent = f.hover ? 'Resume flight' : 'Hover';
       $('agl').textContent = `${f.agl.toFixed(0)} m`; $('elev').textContent = `${f.elev.toFixed(0)} m`;
       $('speed').textContent = `${f.speed.toFixed(1)} m/s`; $('heading').textContent = `${f.heading.toFixed(0)}°`;
       $('habitat').textContent = HABITAT_NAMES[tile.habitat.at(flight.pos.x, -flight.pos.z)] || '–';

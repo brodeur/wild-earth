@@ -4,6 +4,15 @@ Working title. This is the standing statement of the goal. Decisions that change
 are in [decisions.md](decisions.md); what is built and what is next is in
 [roadmap.md](roadmap.md). Start here.
 
+## Mission
+
+Connect modern people directly to their bioregion, in a fun and engaging way. Everything
+else in this brief serves that: the real terrain, the real species, the real seasons,
+and the local knowledge of the people who live there. The project is intended to be
+open source and community-built ("crowdware"): the code, the tile package spec, and
+the species and asset library are meant to be shared, and regions are built by the
+people who live in them with help from agents, not by a studio. (Stated 2026-10-24.)
+
 ## Core concept (decided)
 
 - A federated MMO set in the real world as it would be with no humans, played as animals.
@@ -27,6 +36,8 @@ are in [decisions.md](decisions.md); what is built and what is next is in
   size (insect scale versus bird scale). The demo starts at larger scales; insect scale
   comes later.
 - Shared asset library: species built for one region are free everywhere.
+- Bioregions are the social unit: communities, funding and local knowledge organise
+  around watersheds and ecoregions, while the 10 km tile stays the technical unit.
 
 ## What players do
 

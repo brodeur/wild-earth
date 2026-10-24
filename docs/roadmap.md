@@ -19,6 +19,12 @@ sequenced; Parked is in the brief but deliberately not started.
   third-person chase camera on a CC0 rigged raven with flap and glide clips (V
   toggles first person).
 
+- First game, 2026-10-24: the acorn stash (`docs/game-acorn-stash.md`): glowing acorns
+  on oaks, proximity pickup (carry three), stash holes revealed on first pickup with
+  current / capacity labels, a screen-constant acorn marker over full stashes, state
+  saved per world (tile plus season) in the browser. Flight gained hover (H and a
+  button), S slows to a stop then reverses, and slower pitch and bank settling.
+
 ## Next: the visual pass, in order of effect per hour
 
 1. ~~Horizon~~ done 2026-10-23: two crossed-quad impostors with a canopy cap per
@@ -46,6 +52,9 @@ browser stays the renderer.
 
 ## Then
 
+- Choose licences (code, assets and species parameters, spec), add LICENSE and a short
+  CONTRIBUTING with the contribution paths; set up the public repository.
+
 - Decide state flow between season-worlds before the first persistent state is built
   (open question in the decision log).
 - Get a licensing read on density surfaces derived from CC BY-NC mammal records
@@ -53,8 +62,8 @@ browser stays the renderer.
 
 - First animals with behaviour from the activity calendar; perception matrix decides
   who is rendered for whom.
-- The forage-and-cache loop (raven in fall, squirrels as competitors) as the first
-  test of play.
+- Competitors for the acorn stash (squirrels, other ravens) and cache recovery in the
+  winter world.
 - Species density surfaces from CWHR habitat suitability; then the +10-year delta.
 - Erase masked landforms from the DEM (vegetation backfill is done; terrain is not).
 - Hand-drawn mask polygons in the viewer (mining scars, ditches, terraces) and

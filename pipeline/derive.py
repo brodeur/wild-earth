@@ -260,6 +260,18 @@ def client_rasters(tile: Tile) -> dict:
     out["client.canopy"] = {"path": "client/canopy.png", "kind": "raster", "crs": tile.crs, "bounds": list(tile.bounds),
                             "pixels": m, "resolution_m": hres, "encoding": "R tree %, G shrub %, B herb %"}
 
+    # mast.png: fall acorn_mast score (0..100) in R on the resource's own metric 30 m grid, for the acorn game.
+    mast_tif = tile.path("resources/acorn_mast.tif")
+    if mast_tif.exists():
+        with rasterio.open(mast_tif) as src:
+            fall = list(src.descriptions).index("fall") + 1 if "fall" in (src.descriptions or ()) else 4
+            mast = src.read(fall)
+            mres = src.res[0]
+        Image.fromarray(np.clip(mast, 0, 100).astype("uint8"), "L").save(tile.path("client/mast.png"), optimize=True)
+        out["client.mast"] = {"path": "client/mast.png", "kind": "raster", "crs": tile.crs, "bounds": list(tile.bounds),
+                              "pixels": mast.shape[0], "resolution_m": mres, "derived_from": "resources.acorn_mast",
+                              "encoding": "R = fall acorn_mast score 0..100"}
+
     # texture.png: hillshade modulated by habitat color, on the DEM grid.
     # Habitat colour is upsampled bilinearly (soft edges across 30 m cells), darkened by
     # canopy cover, and broken up with low-frequency value noise so a class is not one flat tone.
