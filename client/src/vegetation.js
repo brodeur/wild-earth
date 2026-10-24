@@ -35,6 +35,50 @@ const NEAR_MARGIN = 60, NEAR_MOVE = 40, NEAR_CAP = { tree: 1500, shrub: 3000 };
 export const CLOSE_R = 90;
 const CLOSE_BAND = 20, CLOSE_MOVE = 15, CLOSE_CAP = { tree: 600, shrub: 1500 };
 
+// Per-cell plan, shared by every placer (Vegetation.update; impostors.js should call it too, so the far
+// trees follow the same mix). The cell's random stream is the one placement has always used: this
+// draws its first number (the stochastic extra tree) only where the class has a tree mix, exactly as
+// before, and the caller then draws six per plant (species, variant, x, north, scale, rotation), so a
+// plant k sits where it always did and only the mapping of its species draw changed.
+// With tile.speciesMix (LANDFIRE weights per cell) the species come from the cell's mix and the counts
+// scale by its density multipliers (clamped DENSITY); without it, or where the cell has no mix, the
+// fixed class MIX / SHRUB_MIX and multiplier 1 apply. Returns null for a cell that grows nothing.
+const DENSITY = [0.3, 2.0];
+const OAKS_ONLY = { blue_oak: 1 };
+const oakMixes = new Map();   // savanna rows -> their oak weights, renormalised
+const oakMix = row => {
+  let m = oakMixes.get(row); if (m) return m;
+  const b = row.weights.blue_oak, l = row.weights.live_oak;
+  m = l ? { blue_oak: b / (b + l), live_oak: l / (b + l) } : OAKS_ONLY; oakMixes.set(row, m); return m;
+};
+export function cellPlan(tile, i, j) {
+  const cls = tile.habitat.channel(i, j, 0); if (!MIX[cls] && !SHRUB_MIX[cls]) return null;
+  const can = tile.canopy, tree = can.channel(i, j, 0) / 100, shrub = can.channel(i, j, 1) / 100;
+  const row = tile.speciesMix ? tile.speciesMix.at(i, j) : null;
+  const clampD = v => Math.min(DENSITY[1], Math.max(DENSITY[0], v));
+  const td = row ? clampD(row.treeDensity) : 1, sd = row ? clampD(row.shrubDensity) : 1;
+  const treeMix = row && row.treeSum ? row.trees : MIX[cls], shrubMix = row && row.shrubSum ? row.shrubs : SHRUB_MIX[cls];
+  const rnd = mulberry32(hash(i, j, 7)), t = tree * td;
+  let nTrees = MIX[cls] ? Math.round(t * (cls === 5 ? 3 : 11) + (rnd() < (t * 11) % 1 ? 1 : 0)) : 0;
+  const nShrubs = SHRUB_MIX[cls] ? Math.round(shrub * sd * (cls === 4 ? 18 : 6)) : 0;
+  // Blue oak savanna the canopy layer calls treeless (EVC tree cover 0): about one oak per two cells.
+  let savannaOak = false;
+  if (!nTrees && tree === 0 && row?.savanna && (cls === 5 || cls === 1) && (hash(i, j, 23) & 1)) { nTrees = 1; savannaOak = true; }
+  return { cls, rnd, nTrees, nShrubs, treeMix: savannaOak ? oakMix(row) : treeMix, shrubMix };
+}
+// Whether plant k of cell (i, j) at (px, pn) is skipped: road pavement and verge (as before), ponds
+// and stream channels (tile.waterMask), and riparian thinning: a tree within RIPARIAN_M of a stream
+// centreline is kept with odds rising from 0.35 at the channel to 1 at the band's edge. Uses hashes,
+// never the cell's random stream, so a skip moves nothing else.
+export function placementSkip(tile, i, j, k, px, pn, isTree) {
+  const roads = tile.roads, rw = roads ? roads.at(px, pn) : 0;
+  if (rw > 140 || (isTree && rw > 0 && hash(k, i + j * 4096, 13) / 4294967296 < rw / 255)) return true;
+  const wm = tile.waterMask; if (!wm) return false;
+  if (wm.inWater(px, pn)) return true;
+  if (isTree) { const d = wm.streamDist(px, pn); if (d < 8 && hash(k, i + j * 4096, 29) / 4294967296 > 0.35 + 0.65 * d / 8) return true; }
+  return false;
+}
+
 export function pick(mix, r) { let acc = 0; for (const [k, w] of Object.entries(mix)) { acc += w; if (r <= acc) return k; } return Object.keys(mix)[0]; }
 export function hash(i, j, salt) { let h = (i * 73856093) ^ (j * 19349663) ^ (salt * 83492791); return h >>> 0; }
 
@@ -137,7 +181,7 @@ export class Vegetation {
     }
     this.lastCenter = [x, z];
     midSet.center = this.lastCenter; midSet.radius = this.radius; midSet.version++;
-    const hab = this.tile.habitat, can = this.tile.canopy, res = hab.res, size = this.tile.size, heights = this.tile.heights, roads = this.tile.roads;
+    const tile = this.tile, hab = tile.habitat, res = hab.res, size = tile.size, heights = tile.heights;
     for (const arr of Object.values(this.meshes)) for (const e of arr) e.mid.n = 0;
     const oaks = [];
     const north = -z, r = this.radius, cells = Math.ceil(r / res);
@@ -147,21 +191,18 @@ export class Vegetation {
       if (i < 0 || j < 0 || i >= hab.img.width || j >= hab.img.height) continue;
       const cx = (i + 0.5) * res, cn = size - (j + 0.5) * res;
       if (Math.hypot(cx - x, cn - north) > r) continue;
-      const cls = hab.channel(i, j, 0); if (!MIX[cls] && !SHRUB_MIX[cls]) continue;
-      const tree = can.channel(i, j, 0) / 100, shrub = can.channel(i, j, 1) / 100;
-      const rnd = mulberry32(hash(i, j, 7));
-      const nTrees = MIX[cls] ? Math.round(tree * (cls === 5 ? 3 : 11) + (rnd() < (tree * 11) % 1 ? 1 : 0)) : 0;
-      const nShrubs = SHRUB_MIX[cls] ? Math.round(shrub * (cls === 4 ? 18 : 6)) : 0;
+      const plan = cellPlan(tile, i, j); if (!plan) continue;
+      const { rnd, nTrees, nShrubs, treeMix, shrubMix } = plan;
       for (let k = 0; k < nTrees + nShrubs; k++) {
         const isTree = k < nTrees;
-        const name = pick(isTree ? MIX[cls] : SHRUB_MIX[cls], rnd());
+        const name = pick(isTree ? treeMix : shrubMix, rnd());
         const variants = this.meshes[resolveSpecies(name)], e = variants[Math.floor(rnd() * variants.length)], m = e.mid;
         if (m.n >= m.cap) continue;
         const px = (i + rnd()) * res, pn = size - (j + rnd()) * res;
         const s = 0.75 + rnd() * 0.5, rot = rnd() * Math.PI * 2;   // all draws before any skip, so neighbours keep their place
         // Decayed roads: nothing on the pavement; trees thin out across the verge (shrubs creep in).
-        const rw = roads ? roads.at(px, pn) : 0;
-        if (rw > 140 || (isTree && rw > 0 && hash(k, i + j * 4096, 13) / 4294967296 < rw / 255)) continue;
+        // Nothing in ponds or stream channels; trees thin out toward a stream (placementSkip).
+        if (placementSkip(tile, i, j, k, px, pn, isTree)) continue;
         this.tmp.position.set(px, heights.at(px, pn) - 0.3, -pn);
         this.tmp.rotation.set(0, rot, 0); this.tmp.scale.setScalar(s); this.tmp.updateMatrix();
         m.trunk.setMatrixAt(m.n, this.tmp.matrix); m.ids[m.n] = hash(i, j, k + 101); m.n++; total++;
