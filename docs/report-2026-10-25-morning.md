@@ -57,35 +57,66 @@ pushed separately. Main is at the last commit listed. Hard-refresh the client.
     wild-oat stands, shrub silhouettes in three shapes per species. (10dc487)
 13. **Pipeline:** turkey vulture and Steller's jay as real species. (939eafe)
 
-## Still running when this was written
+## Landed after the draft above
 
-- Forest composition from the LANDFIRE per-cell mix, and trees kept out of ponds and
-  stream channels.
-- Tree frame-cost tuning (target: recover 10% without losing the photo metrics).
+14. **Forest composition from LANDFIRE per cell** and no vegetation in ponds or stream
+    channels, with a savanna oak minimum where the data says blue oak savanna. Whole-tile
+    blue oak 18% -> 25%, gray pine 26% -> 19%. (4cc9511)
+15. **Far impostors use the real forest's placement**, so every tree has an identical
+    far twin and nothing changes species on approach; zero impostors in water. (766746a)
+16. **Grass and shrubs out of water; the grid in the ground grain fixed** (a sin-based
+    noise hash losing precision at kilometre coordinates). (8d54bc6)
+17. **Water fixes:** large ponds reach their shoreline with a soft edge; rivers of order
+    5-7 widened to 12/20/30 m. (9263c5b)
+18. **Sound comes from real birds;** quail flushes and hawk stoops are events with their
+    sounds; C gets an answer from the nearest real raven; a proper shadow-caster API,
+    and all animals cast animated shadows. (2d2c76e)
+19. **Tree frame cost recovered:** far-tier cards capped per tree and thinned with
+    distance, cheaper mid trunks; tree GPU time cut 40-58%, likeness metrics unchanged.
+    (f967a1f)
+20. **Opening screen and arrival:** where (tile cards, typed place), when (season cards,
+    "today" marked), who (species cards showing what each perceives; only the raven
+    flyable), then a 12 s descent over your hills under a caption like "near Greenstone
+    Road · fall · common raven". The first five minutes now have a shape. (949205a)
+21. **Tree age classes and snags** for all six species on twelve variant slots (saplings
+    to flat-topped old-growth ponderosa, forked gray pine veterans, grey snags that cast
+    shadows and get impostors). Snags come out at 8%, a little high. (e1bb2bd)
+22. **Haze rework:** two-term haze keeps far crowns dark against pale grass at 3-4 km;
+    gold low sun; the pale horizon strip eased. (645dc6a, with an animals fix)
+23. **Animals:** coveys and herds survive losing their leader (a crash after a season
+    switch). (645dc6a)
+24. **Far impostors keep each slot's own height; no acorns or stashes on saplings and
+    snags.** (60425e6)
+
+## Final measurements (one tab, nothing else rendering, 893x357 pane at 2x)
+
+| View | Frame rate | Triangles | Draw calls |
+|---|---|---|---|
+| Start view, 150 m up | 68-69 fps | 5.5 M | 179 |
+| 20 m low pass, oak woodland | 61 fps | 5.5 M | 214 |
+
+Faster than the start of the night (about 50 fps at the start view after shadows):
+the tree tuning more than paid for shadows, likeness, water, animals and sound.
 
 ## What I judged and left alone
 
-- The close-tier crown interiors still read as sprays, not leaves; the likeness pass
-  improved edges more than interiors.
-- From altitude the animals are invisible without the HUD. That is true of real
-  wildlife too, but it means the "alive" feeling at 100 m comes from birds in flight,
-  shadows and sound rather than from ground animals.
-- Grassland at 120 m is better but still mostly the photo. The terrain grain shows a
-  faint grid from the air; terrain.js owns that.
-- Rivers of order 5-6 are drawn too narrow; no incised banks at 10 m terrain.
-- The far forest is pale in the haze beyond 3 km.
-
-## Frame rate
-
-Measured in a small, contended pane: about 38 fps at the start view and at a 20 m
-low pass after the likeness pass, down from ~48-50 after shadows. Shadows cost 7% at
-the start view and 14% low; likeness about 20%. The tuning agent's result will be
-appended below.
+- Close-tier crown interiors still read as sprays rather than leaves; the likeness pass
+  fixed edges more than interiors. Winter blue oak twigs read as a brownish haze.
+- From altitude, ground animals are invisible without the HUD, as real ones are; the
+  alive feeling at 100 m comes from birds in flight, shadows, sound and the HUD.
+- Grassland at 120 m is better but still mostly the photo.
+- Snag share is 8% because variant slots are twelfths; 24 slots would cost a 120 MB atlas.
+- No incised stream banks at 10 m terrain resolution; a few low spots inside the
+  reservoir ring still show as land.
+- Summer-noon ground near the camera is bright; that is exposure, not haze.
+- Impostor bake at load is now 1.3 s with a 60 MB atlas.
 
 ## For you to decide
 
-- The species files are agent drafts "needing local sign-off"; the lineup page
-  (client/lineup.html) now shows photo targets per species. Your eye on blue oak and
-  gray pine would settle them.
-- Licence choice is still open (AGPL-3.0 vs MIT; CC BY-SA for assets; CC0 spec).
-- Whether the turkey vulture's smell-based perception matters for gameplay.
+- Species sign-off: the lineup page (client/lineup.html) shows each species' classes,
+  snags and photo targets; your eye on blue oak and gray pine would settle them.
+- Licence (AGPL-3.0 vs MIT for code; CC BY-SA assets; CC0 spec) before the repo is
+  shared more widely.
+- Whether 8% snags is too many for the foothills you know.
+- The opening screen's species cards promise five more playable species; the next game
+  step (three-species acorn game, server, leaderboard) is on the roadmap.

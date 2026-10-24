@@ -77,15 +77,14 @@ browser stays the renderer.
 
 1. WebGPU renderer evaluation (three.js WebGPURenderer): compute-driven grass at
    Tsushima scale, far more foliage instances, and a path to real-time GI.
-2. Cast shadows from trees and terrain (cascaded shadow maps): in progress overnight.
-   Canopy wind: with the likeness work.
+2. ~~Cast shadows from trees and terrain~~ done overnight (three cascades, contact AO).
+   Canopy wind: still to do.
 3. ~~Chaparral density and a shrub-field layer; impostors for far trees~~ done overnight.
 4. ~~Close-range grass band~~ done overnight (grassland still reads as photo at 120 m).
-5. Volumetric clouds and water in the streams.
-6. Tree frame cost: the photo-fitted crowns, clumped foliage, bark textures and
-   winter twigs cost about 20% at the start view (38 fps in a small pane under load).
-   Levers: fewer far cards per tree, less close-tier card overlap, bark within 120 m.
-7. Consume the per-cell species mix (client/species_mix_*.png) in vegetation.js so the
+5. ~~Water in the streams~~ done overnight (seasonal surfaces, dry beds, ponds). Volumetric
+   clouds: still to do.
+6. ~~Tree frame cost~~ recovered overnight (far cards capped and thinned).
+7. ~~Consume the per-cell species mix~~ done overnight (client/species_mix_*.png) in vegetation.js so the
    forest composition follows LANDFIRE instead of a fixed mix per habitat class.
    Judge each against the success metric in the brief (a resident finds their own hill
    from the air without the mini-map), not against Unreal.
@@ -122,8 +121,7 @@ browser stays the renderer.
   appending viewer edits to the manifest's `edits` log.
 - Ground-truth the footprint mask on foot with the viewer on a phone.
 - Neighbouring tiles side by side in the viewer and client.
-- World selection in the client (where, when, who) as the opening screen; the live
-  season marked as such.
+- ~~World selection in the client (where, when, who) as the opening screen~~ done overnight.
 - Test the Unreal import on a real install.
 
 ## Parked (in the brief, not started)
