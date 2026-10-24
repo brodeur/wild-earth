@@ -3,7 +3,7 @@ import { mulberry32 } from './trees.js';
 import { fieldGuide, acornSpecies, ACORNS } from './fieldguide.js';
 
 // Acorn stash, the raven's fall forage-and-cache loop (docs/game-acorn-stash.md).
-// Oaks near the raven carry acorns and, about one in eight, a stash hole on the trunk. Everything
+// Living oaks past the sapling stage near the raven carry acorns and, about one in eight, a stash hole on the trunk. Everything
 // about an oak (acorn count and places, whether it has a hole, its capacity and height) is derived
 // from a hash of the tree's stable id, so every player finds the same acorns in the same trees.
 // Only oaks within LIVE_R of the raven get objects. Glows are billboards whose intensity is
@@ -33,7 +33,11 @@ export function acornCount(mast, season, r) {
 }
 
 // Everything deterministic about one oak. `oak` is a record from Vegetation.oaks.
+// A snag (dead) drops no acorns and a sapling bears none; neither gets a stash hole. Every other oak
+// keeps its own hashed streams, so the same mature and veteran trees carry the same acorns and holes.
+export const bearsAcorns = oak => !oak.snag && oak.cls !== 'sapling';
 export function oakInfo(oak, mast, season, heights) {
+  if (!bearsAcorns(oak)) return { acorns: [], stash: null };
   const s = oak.scale;
   const rnd = mulberry32(seedOf(oak.id, 0xacc0));
   const count = acornCount(mast, season, rnd());

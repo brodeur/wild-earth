@@ -40,7 +40,8 @@ const FRAG = /* glsl */`
   }`;
 
 // trees: [{ id, seed }] (canonical or alias ids). Returns { albedo, normal, frames, grid, ms, bytes }.
-// frames[k] = { W, H, y0, capY, height, hmin, hmax, shrub, species } for tree k, in metres of the unscaled tree.
+// frames[k] = { W, H, y0, capY, height, hmin, hmax, shrub, species } for tree k, in metres of the unscaled tree:
+// height is this slot's own tree (a sapling or snag is its own size), hmin/hmax the species' mature range.
 // extents: per cell (tree * VIEWS + view) [u0, u1, v0, v1], the covered part of the cell (0..1), so the
 // live quads can be trimmed to it.
 export function bakeImpostors(trees) {

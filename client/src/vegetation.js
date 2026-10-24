@@ -146,7 +146,7 @@ export class Vegetation {
       for (let v = 0; v < VARIANTS; v++) {
         const seed = variantSeed(id, v);
         if (bySeed.has(seed)) { this.slots[id].push(bySeed.get(seed)); continue; }
-        const entry = { seed, cls: variantSlots(id, VARIANTS)[v].cls };
+        const slot = variantSlots(id, VARIANTS)[v], entry = { seed, cls: slot.cls, snag: slot.snag };
         bySeed.set(seed, entry); this.slots[id].push(entry);
         for (const lod of ['near', 'mid']) {
           const t = buildTree(id, seed, lod);
@@ -214,7 +214,7 @@ export class Vegetation {
         this.tmp.position.set(px, heights.at(px, pn) - 0.3, -pn);
         this.tmp.rotation.set(0, rot, 0); this.tmp.scale.setScalar(s); this.tmp.updateMatrix();
         m.trunk.setMatrixAt(m.n, this.tmp.matrix); m.ids[m.n] = hash(i, j, k + 101); m.n++; total++;
-        if (name === 'blue_oak' || name === 'live_oak') oaks.push({ id: `${i},${j},${k}`, x: px, z: -pn, y: this.tmp.position.y + 0.3, scale: s, species: name, rot, stem: e.stem, height: e.height });
+        if (name === 'blue_oak' || name === 'live_oak') oaks.push({ id: `${i},${j},${k}`, x: px, z: -pn, y: this.tmp.position.y + 0.3, scale: s, species: name, rot, stem: e.stem, height: e.height, cls: e.cls, snag: e.snag });
       }
     }
     for (const arr of Object.values(this.meshes)) for (const e of arr) {

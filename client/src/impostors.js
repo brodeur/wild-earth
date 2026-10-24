@@ -22,7 +22,7 @@ import { seasonOfDate } from './season.js';
 //     when the mid set moves (every 200 m) the trees on its edge swap for their own impostors.
 //   - Thinning: beyond that edge (at most nearRadius + 200 from the eye) plus a margin, only a fraction
 //     (thin/d)^P of trees is kept (by a per-tree rank) and the survivors widen to keep the canopy
-//     cover; trees there also pick up height from the species' range, width and a slight lean, so
+//     cover; trees there also pick up height variance (about their own slot's height), width and a slight lean, so
 //     repeated variants do not read as copies. Far shrubs stand for patches of chaparral.
 // Trees are precomputed per 250 m chunk sorted by rank; every MOVE m the kept prefix of each chunk is
 // copied either into the ring mesh (chunks that can reach the crossed band: two side quads and the cap)
@@ -169,7 +169,10 @@ export class Impostors {
       albedoMap: { value: bake.albedo }, normalMap: { value: bake.normal },
       frame: { value: bake.frames.map(f => new THREE.Vector4(f.W, f.H, f.y0, f.capY)) },
       vext: { value: bake.extents.map(e => new THREE.Vector4(...e)) },
-      hrange: { value: bake.frames.map(f => new THREE.Vector4(f.hmin / f.height, f.hmax / f.height, f.shrub ? 1 : 0, SPECIES_IDS.indexOf(f.species))) },
+      // Far height: the slot's own baked tree (a sapling or snag stays its size), varied per tree by the
+      // species range's relative spread about it ([6, 12] m: +-1/3), not stretched to the mature range.
+      hrange: { value: bake.frames.map(f => { const v = (f.hmax - f.hmin) / (f.hmax + f.hmin);
+        return new THREE.Vector4(1 - v, 1 + v, f.shrub ? 1 : 0, SPECIES_IDS.indexOf(f.species)); }) },
       tint: { value: SPECIES_IDS.map(() => new THREE.Vector3(1, 1, 1)) },
       eye: { value: new THREE.Vector3() }, nearRadius: { value: 1500 }, thin: { value: new THREE.Vector4() },
       mid: { value: new THREE.Vector4() }, cells: { value: new THREE.Vector3(tile.habitat.res, tile.size, tile.habitat.img.width) },

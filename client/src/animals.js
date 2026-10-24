@@ -59,7 +59,7 @@ function seedOf(str, salt = 0) {
   for (let i = 0; i < str.length; i++) { h ^= str.charCodeAt(i); h = Math.imul(h, 16777619); }
   return h >>> 0;
 }
-const isStashTree = oak => mulberry32(seedOf(oak.id, 0x57a5))() < 1 / 8;
+const isStashTree = oak => oak.cls !== 'sapling' && mulberry32(seedOf(oak.id, 0x57a5))() < 1 / 8;   // snags are real granaries; saplings are not
 
 // Suitability by habitat class (pipeline/habitat.py codes): 1 oak woodland, 2 conifer, 3 mixed,
 // 4 chaparral, 5 grassland, 6 riparian, 7 water, 8 barren, 9 human (rewilded: treat as grassland).
