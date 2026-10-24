@@ -18,6 +18,7 @@ import { PlaceNames } from './placenames.js';
 import { Soundscape } from './sound.js';
 import { Shadows } from './shadows.js';
 import { Animals } from './animals.js';
+import { Water } from './water.js';
 
 const $ = id => document.getElementById(id);
 const status = t => { $('status').textContent = t; $('status').classList.toggle('hidden', !t); };
@@ -48,6 +49,7 @@ async function main() {
   const veg = new Vegetation(tile, scene, atmosphere);
   const far = new Impostors(tile, scene);
   const grass = new Grass(tile, scene);
+  const water = new Water(tile, scene);   // streams, dry beds and ponds by season (water.js)
   const roads = new RoadsOverlay(tile, scene);   // ghost roads, G to toggle
   const flight = new RavenFlight(camera, tile.heights, renderer.domElement);
   scene.add(flight.body);
@@ -188,6 +190,7 @@ async function main() {
     sky.update(camera);
     far.update(camera, veg.radius);
     grass.update(flight.pos.x, flight.pos.z, dt, camera, look);
+    water.update(dt, look);
     acorns.update(dt, camera, s);
     animals.update(dt, s, state.hour);
     if (!peek.shown) terrain.setLook(look);

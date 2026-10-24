@@ -420,7 +420,10 @@ def client_features(tile: Tile) -> dict | None:
             pr = ft.get("properties") or {}
             for line in _lines(ft.get("geometry") or {}):
                 if len(line) >= 2:
-                    streams.append({"name": pr.get("gnis_name") or pr.get("name"), "path": local(line)})
+                    # fcode (NHD: 46006 perennial, 46003 intermittent, 46007 ephemeral, 55800 artificial path)
+                    # and Strahler order drive the client's seasonal water (water.js)
+                    streams.append({"name": pr.get("gnis_name") or pr.get("name"), "fcode": pr.get("fcode"),
+                                    "order": pr.get("streamorde"), "path": local(line)})
     feats = load("hydro/waterbodies.geojson")
     if feats is not None:
         found = True
@@ -428,7 +431,8 @@ def client_features(tile: Tile) -> dict | None:
             pr = ft.get("properties") or {}
             for ring in _rings(ft.get("geometry") or {}):
                 if len(ring) >= 3:
-                    waterbodies.append({"name": pr.get("gnis_name") or pr.get("name"), "ring": local(ring)})
+                    waterbodies.append({"name": pr.get("gnis_name") or pr.get("name"), "fcode": pr.get("fcode"),
+                                        "ring": local(ring)})
     if not found:
         return None
     path = tile.path("client/features.json")

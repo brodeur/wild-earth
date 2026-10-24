@@ -15,7 +15,7 @@
   38.74035063713964
  ],
  "size_m": 10000,
- "generated_at": "2026-10-24T05:26:42Z",
+ "generated_at": "2026-10-24T06:46:14Z",
  "generator": {
   "name": "wild-earth-pipeline",
   "version": "0.2.0"
@@ -571,8 +571,8 @@
     "hydro.flowlines",
     "hydro.waterbodies"
    ],
-   "sha256": "ec4fe4a4679f746a671040749fbb67eac84e1f5d627639d3e00723bcf01cc467",
-   "bytes": 426015
+   "sha256": "5acd8ac7a25520409118c3855ee9c6160aa709e8ed8bb15a972c8dcd2cef4260",
+   "bytes": 437093
   },
   "client.roads": {
    "path": "client/roads.png",
@@ -974,6 +974,12 @@
    "step": "species",
    "at": "2026-10-24T05:26:42Z",
    "seconds": 127.4,
+   "ok": true
+  },
+  {
+   "step": "derive",
+   "at": "2026-10-24T06:46:14Z",
+   "seconds": 45.4,
    "ok": true
   }
  ]
