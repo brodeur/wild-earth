@@ -45,6 +45,10 @@ tiles/<tile_id>/
   vegetation/habitat.tif        required  habitat class with human pixels backfilled from BpS
   vegetation/classes.json       required  code tables for the codes present, incl. habitat mapping
   vegetation/habitat.png        derived   RGBA habitat for viewers; habitat_present.png likewise
+  geology/units.geojson         optional  bedrock map units clipped to the tile: name, lithology, age, rock_class, source, licence (see Geology and soils)
+  geology/classes.json          optional  unit index -> name, lithology, age, rock_class; rock class rules and resistances; which source was used
+  soils/mapunits.geojson        optional  SSURGO map unit polygons with dominant-component texture, fragments, depth to bedrock, parent material
+  soils/classes.json            optional  soil map unit index -> mukey, name and those attributes, plus the rules used
   terrain/rewilded.png          derived   hillshade shaded by rewilded habitat color
   resources/<resource>.tif      required  0-100 score, 4 bands = winter, spring, summer, fall, 30 m
   resources/<resource>_<season>.png derived RGBA for viewers
@@ -55,6 +59,10 @@ tiles/<tile_id>/
   client/canopy.png             derived   tree / shrub / herb cover percent in R / G / B, 30 m grid
   client/roads.png              derived   decayed-road weight, 8-bit on the DEM grid: 255 pavement, verge falls to 0
   client/mast.png               derived   fall acorn_mast score 0..100 in R, 30 m grid (from resources/acorn_mast.tif band 4; optional)
+  client/geology.png            derived   R geology unit index (geology/classes.json), G rock class index (1-based), 30 m grid
+  client/soils.png              derived   R soil map unit index, G surface rock fragments % 0-100, B depth to bedrock dm (255 none/unknown), 30 m grid
+  client/outcrop.png            derived   outcrop likelihood 0-255 in R, 30 m grid (formula in the manifest layer)
+  client/ground_classes.json    derived   rock classes, unit and map unit tables for the two PNGs, per-tile fractions, outcrop summary
   client/texture_imagery.jpg    derived   NAIP with the human footprint erased and pavement bleached, 4000 px (2.5 m) JPEG
   client/texture_present.jpg    derived   present-day NAIP as captured, same 4000 px metric grid as texture_imagery, JPEG q88
   client/imagery.png            derived   present-day NAIP for the mini-map, 1024 px on the metric tile grid
@@ -147,6 +155,37 @@ DEM channel nearby but with the DEM draining at least the threshold there are ke
 `in_waterbody` for pieces inside a waterbody ring (drawn as the pond, not as a channel). The
 manifest layer `hydro.channels` records the parameters and match statistics, including the median
 lateral offset between DEM channels and the NHD lines they matched.
+
+## Geology and soils
+
+Rocks come from data, not slope and noise (build step `ground`, after `veg`). Bedrock units come
+from the Macrostrat API (`geologic_units/map`, point queries sampled on a 5 x 5 grid and then at
+every uncovered part of the tile until it is covered), at the finest Burwell scale that answers
+everywhere in the tile, preferring the USGS State Geologic Map Compilation (Macrostrat source 133);
+if Macrostrat fails, the SGMC feature service is queried directly. In the Sierra foothills the
+finest available map is Jennings 2010, 1:750 000, so contacts are generalised to a few hundred
+metres. Each unit gets one rock class by keyword rules over its major lithologies, then its name,
+then its description (`pipeline/fetch_geology.py`): `greenstone_metavolcanic`, `serpentinite`,
+`slate_phyllite`, `schist`, `granitic`, `volcanic`, `sandstone_conglomerate`, `limestone_marble`,
+`alluvium`, `other`. Volcanic rocks Jurassic or older (bottom age >= 145 Ma) are counted as
+metavolcanic.
+
+Soils are SSURGO from USDA Soil Data Access: one SQL request per table for the map units
+intersecting the tile, polygons clipped server-side. Each map unit takes its dominant component
+(highest `comppct_r`): taxonomic order and subgroup, surface texture (first mineral horizon,
+litter skipped), surface rock fragments (`chfrags.fragvol_r` summed; 100 for rock land and rock
+outcrop), depth to bedrock (shallowest lithic or paralithic restriction, else the deepest horizon
+with `bedrock_restriction: false`), parent material, slope and drainage. `rock_outcrop_pct` (the
+map unit's Rock outcrop components) is recorded too but is not yet used.
+
+`client/outcrop.png` is resistance by rock class (greenstone 0.9, granitic and serpentinite 0.8,
+volcanic and limestone 0.7, schist and slate 0.6, sandstone and other 0.4, alluvium 0) times
+shallowness (1 at <= 25 cm to bedrock, 0 at >= 150 cm) times terrain (slope / 35 degrees capped
+at 1, plus 0.5 times convexity, the 30 m cell's height above its 150 m neighbourhood over 1.5 m)
+times (1 - tree cover / 100 x 0.5), clipped to 0..1, and 0 on water. The manifest layer
+`client.outcrop` records the formula and parameters. The client places boulders and outcrop
+clusters from it, and takes gravel and dirt colour from the soil texture and fragments.
+Geology polygons from SGMC are public domain (through Macrostrat, CC-BY 4.0); SSURGO is public domain.
 
 ## Habitat classes
 

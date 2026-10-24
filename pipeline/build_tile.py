@@ -14,7 +14,7 @@ from .config import (GENERATOR, SOURCES, SPEC_VERSION, TILES_DIR, Tile, now_iso,
                      sha256, today, write_json)
 from .species_data import CALENDAR, PERCEPTION, SEASONS
 
-ALL_STEPS = ["dem", "naip", "osm", "hydro", "channels", "veg", "species", "derive", "erase", "unreal"]
+ALL_STEPS = ["dem", "naip", "osm", "hydro", "channels", "veg", "ground", "species", "derive", "erase", "unreal"]
 
 
 def load_manifest(tile: Tile) -> dict:
@@ -71,6 +71,17 @@ def run(tile: Tile, steps: list[str], force=False) -> dict:
                 for k, v in fetch_vegetation(tile, force).items():
                     add_layer(m, tile, k, v)
                 m["status"]["vegetation_backfilled"] = True
+            elif step == "ground":
+                from .config import SOURCES as _SOURCES
+                from .ground import build_ground
+                layers, errors = build_ground(tile, force)
+                for k, v in layers.items():
+                    add_layer(m, tile, k, v)
+                    for src in v.get("sources_used", []):
+                        if src in _SOURCES:
+                            m["sources"][src] = {**_SOURCES[src], "retrieved": today()}
+                if errors:
+                    raise RuntimeError("; ".join(errors))
             elif step == "species":
                 from .fetch_species import fetch_species
                 for k, v in fetch_species(tile, force).items():

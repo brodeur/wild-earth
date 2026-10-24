@@ -1,0 +1,4 @@
+# Extra dependencies for the "ground" build step (pipeline/fetch_geology.py, fetch_soils.py, ground.py):
+# geology from the Macrostrat API (fallback USGS SGMC feature service), soils from USDA Soil Data Access.
+# Everything else (requests, numpy, rasterio, shapely, pyproj, Pillow) is in the base pipeline environment.
+scipy>=1.13

@@ -1,0 +1,181 @@
+{
+ "rock_classes": [
+  "greenstone_metavolcanic",
+  "serpentinite",
+  "slate_phyllite",
+  "schist",
+  "granitic",
+  "volcanic",
+  "sandstone_conglomerate",
+  "limestone_marble",
+  "alluvium",
+  "other"
+ ],
+ "resistance": {
+  "greenstone_metavolcanic": 0.9,
+  "granitic": 0.8,
+  "serpentinite": 0.8,
+  "schist": 0.6,
+  "slate_phyllite": 0.6,
+  "volcanic": 0.7,
+  "sandstone_conglomerate": 0.4,
+  "limestone_marble": 0.7,
+  "alluvium": 0.0,
+  "other": 0.4
+ },
+ "units": {
+  "1": {
+   "name": "pre-Cenozoic metasedimentary and metavolcanic rocks undivided",
+   "lithology": "Major: schist, gneiss; Minor: quartzite, argillite; Incidental: phyllite, metavolcanic, slate, hornfels, marble, chert, sandstone, mudstone, conglomerate",
+   "age": "Paleoproterozoic to Cretaceous",
+   "age_bottom_ma": 2500,
+   "age_top_ma": 66,
+   "rock_class": "schist",
+   "rock_class_index": 4,
+   "water": false,
+   "description": "Undivided pre-Cenozoic metasedimentary and metavolcanic rocks of great variety. Mostly slate, quartzite, hornfels, chert, phyllite, mylonite, schist, gneiss, and minor marble.",
+   "reference": "Saucedo, G.J., Bedford, D.R., Raines, G.L., Miller, R.J., and Wentworth, C.M., 2000, GIS Data for the Geologic Map of California, California Department of Conservation, Division of Mines and Geology, CD-ROM 2000-07, scale 1:750,000. Primary reference: Jennings, C.W., with modifications by Gutierrez, C., Bryant, W., Saucedo, G., and Wills, C., 2010, Geologic map of California, Version 2.0 (California Geological Survey 150th Anniversary Edition), Department of Conservation, California Geological Survey: California Geologic Data Map Series, GDM No. 2, scale 1:750,000.",
+   "color": "#FFFFFF",
+   "fraction": 0.2948
+  },
+  "2": {
+   "name": "Jurassic marine rocks, unit 1 (Western Sierra Nevada and Western Klamath Mountains)",
+   "lithology": "Major: slate, graywacke; Minor: siltstone, conglomerate; Incidental: chert, volcanic, basalt",
+   "age": "Triassic to Late Jurassic",
+   "age_bottom_ma": 158.85,
+   "age_top_ma": 153.4,
+   "rock_class": "slate_phyllite",
+   "rock_class_index": 3,
+   "water": false,
+   "description": "Shale, sandstone, minor conglomerate, chert, slate, limestone; minor pyroclastic rocks",
+   "reference": "Saucedo, G.J., Bedford, D.R., Raines, G.L., Miller, R.J., and Wentworth, C.M., 2000, GIS Data for the Geologic Map of California, California Department of Conservation, Division of Mines and Geology, CD-ROM 2000-07, scale 1:750,000. Primary reference: Jennings, C.W., with modifications by Gutierrez, C., Bryant, W., Saucedo, G., and Wills, C., 2010, Geologic map of California, Version 2.0 (California Geological Survey 150th Anniversary Edition), Department of Conservation, California Geological Survey: California Geologic Data Map Series, GDM No. 2, scale 1:750,000.",
+   "color": "#C6EAF3",
+   "fraction": 0.2087
+  },
+  "3": {
+   "name": "Mesozoic volcanic rocks, unit 2 (Western Sierra Foothills and Western Klamath Mountains)",
+   "lithology": "Major: mafic volcanic; Minor: felsic volcanic; Incidental: chert, sandstone, conglomerate",
+   "age": "Jurassic",
+   "age_bottom_ma": 165.45,
+   "age_top_ma": 153.4,
+   "rock_class": "greenstone_metavolcanic",
+   "rock_class_index": 1,
+   "water": false,
+   "description": "Undivided Mesozoic volcanic and metavolcanic rocks. Andesite and rhyolite flow rocks, greenstone, volcanic breccia and other pyroclastic rocks; in part strongly metamorphosed. Includes volcanic rocks of Franciscan Complex: basaltic pillow lava, diabase, greenstone, and minor pyroclastic rocks.",
+   "reference": "Saucedo, G.J., Bedford, D.R., Raines, G.L., Miller, R.J., and Wentworth, C.M., 2000, GIS Data for the Geologic Map of California, California Department of Conservation, Division of Mines and Geology, CD-ROM 2000-07, scale 1:750,000. Primary reference: Jennings, C.W., with modifications by Gutierrez, C., Bryant, W., Saucedo, G., and Wills, C., 2010, Geologic map of California, Version 2.0 (California Geological Survey 150th Anniversary Edition), Department of Conservation, California Geological Survey: California Geologic Data Map Series, GDM No. 2, scale 1:750,000.",
+   "color": "#34B2C9",
+   "fraction": 0.1696
+  },
+  "4": {
+   "name": "Mesozoic granitic rocks, unit 3 (Sierra Nevada, Death Valley area, Northern Mojave Desert and Transverse Ranges)",
+   "lithology": "Major: granodiorite; Minor: granite, tonalite, quartz diorite, quartz monzonite; Incidental: diorite, quartz syenite, quartz monzodiorite, gabbro, trondhjemite, monzonite, monzodiorite, pegmatite, alaskite, aplite",
+   "age": "Lopingian to Tertiary",
+   "age_bottom_ma": 259.1,
+   "age_top_ma": 2.588,
+   "rock_class": "granitic",
+   "rock_class_index": 5,
+   "water": false,
+   "description": "Mesozoic granite, quartz monzonite, granodiorite, and quartz diorite",
+   "reference": "Saucedo, G.J., Bedford, D.R., Raines, G.L., Miller, R.J., and Wentworth, C.M., 2000, GIS Data for the Geologic Map of California, California Department of Conservation, Division of Mines and Geology, CD-ROM 2000-07, scale 1:750,000. Primary reference: Jennings, C.W., with modifications by Gutierrez, C., Bryant, W., Saucedo, G., and Wills, C., 2010, Geologic map of California, Version 2.0 (California Geological Survey 150th Anniversary Edition), Department of Conservation, California Geological Survey: California Geologic Data Map Series, GDM No. 2, scale 1:750,000.",
+   "color": "#9AD9DD",
+   "fraction": 0.229
+  },
+  "5": {
+   "name": "Ultramafic rocks, chiefly Mesozoic, unit 2 (Western Sierra Nevada and Klamath Mountains)",
+   "lithology": "Major: peridotite, serpentinite; Minor: pyroxenite",
+   "age": "Neoproterozoic to Early Jurassic",
+   "age_bottom_ma": 1000,
+   "age_top_ma": 174.1,
+   "rock_class": "serpentinite",
+   "rock_class_index": 2,
+   "water": false,
+   "description": "Ultramafic rocks, mostly serpentine. Minor peridotite, gabbro, and diabase. Chiefly Mesozoic unit 2",
+   "reference": "Saucedo, G.J., Bedford, D.R., Raines, G.L., Miller, R.J., and Wentworth, C.M., 2000, GIS Data for the Geologic Map of California, California Department of Conservation, Division of Mines and Geology, CD-ROM 2000-07, scale 1:750,000. Primary reference: Jennings, C.W., with modifications by Gutierrez, C., Bryant, W., Saucedo, G., and Wills, C., 2010, Geologic map of California, Version 2.0 (California Geological Survey 150th Anniversary Edition), Department of Conservation, California Geological Survey: California Geologic Data Map Series, GDM No. 2, scale 1:750,000.",
+   "color": "#FFFFFF",
+   "fraction": 0.0955
+  },
+  "6": {
+   "name": "water",
+   "lithology": "",
+   "age": null,
+   "age_bottom_ma": null,
+   "age_top_ma": null,
+   "rock_class": "other",
+   "rock_class_index": 10,
+   "water": true,
+   "description": null,
+   "reference": "Saucedo, G.J., Bedford, D.R., Raines, G.L., Miller, R.J., and Wentworth, C.M., 2000, GIS Data for the Geologic Map of California, California Department of Conservation, Division of Mines and Geology, CD-ROM 2000-07, scale 1:750,000. Primary reference: Jennings, C.W., with modifications by Gutierrez, C., Bryant, W., Saucedo, G., and Wills, C., 2010, Geologic map of California, Version 2.0 (California Geological Survey 150th Anniversary Edition), Department of Conservation, California Geological Survey: California Geologic Data Map Series, GDM No. 2, scale 1:750,000.",
+   "color": "",
+   "fraction": 0.0024
+  },
+  "7": {
+   "name": "Paleozoic marine rocks, undivided, unit 4 (Western Sierra Nevada)",
+   "lithology": "Major: argillite, quartzite, phyllite; Minor: mudstone, sandstone, chert; Incidental: schist, marble, conglomerate, sedimentary breccia, limestone, basalt",
+   "age": "Ordovician to Triassic",
+   "age_bottom_ma": 485.4,
+   "age_top_ma": 201.3,
+   "rock_class": "slate_phyllite",
+   "rock_class_index": 3,
+   "water": false,
+   "description": "Undivided Paleozoic metasedimentary rocks. Includes slate, sandstone, shale, chert, conglomerate, limestone, dolomite, marble, phyllite, schist, hornfels, and quartzite",
+   "reference": "Saucedo, G.J., Bedford, D.R., Raines, G.L., Miller, R.J., and Wentworth, C.M., 2000, GIS Data for the Geologic Map of California, California Department of Conservation, Division of Mines and Geology, CD-ROM 2000-07, scale 1:750,000. Primary reference: Jennings, C.W., with modifications by Gutierrez, C., Bryant, W., Saucedo, G., and Wills, C., 2010, Geologic map of California, Version 2.0 (California Geological Survey 150th Anniversary Edition), Department of Conservation, California Geological Survey: California Geologic Data Map Series, GDM No. 2, scale 1:750,000.",
+   "color": "#9AD9DD",
+   "fraction": 0.0
+  }
+ },
+ "rules": [
+  [
+   "serpentinite",
+   "serpentin|ultramafic|peridotit|dunite|harzburgite|pyroxenite"
+  ],
+  [
+   "greenstone_metavolcanic",
+   "greenstone|meta-?volcanic|metabasalt|meta-?andesite|amphibolite|spilite"
+  ],
+  [
+   "slate_phyllite",
+   "slate|phyllite|argillite"
+  ],
+  [
+   "schist",
+   "schist|gneiss|hornfels|quartzite|metasediment"
+  ],
+  [
+   "limestone_marble",
+   "limestone|marble|dolomite|dolostone|carbonate"
+  ],
+  [
+   "granitic",
+   "granit|granodiorit|tonalit|diorit|monzonit|syenit|gabbro|trondhjemit|plutonic|intrusive|pegmatit|aplite"
+  ],
+  [
+   "volcanic",
+   "volcanic|andesit|basalt|rhyolit|dacit|tuff|pyroclastic|lahar|mudflow|latite"
+  ],
+  [
+   "alluvium",
+   "alluvi|terrace|alluvial fan|unconsolidated|colluvi|landslide|surficial|\\bgravels?\\b|\\bsands?\\b"
+  ],
+  [
+   "sandstone_conglomerate",
+   "sandstone|conglomerate|gr[ae]ywacke|siltstone|mudstone|shale|breccia|clastic|sedimentary"
+  ]
+ ],
+ "rule_notes": "first match over major lithologies, then name, then description; volcanic with bottom age >= 145.0 Ma -> greenstone_metavolcanic; clastic sedimentary with bottom age <= 2.58 Ma -> alluvium; 'water' -> other",
+ "source": {
+  "source": "macrostrat",
+  "endpoint": "https://macrostrat.org/api/v2/geologic_units/map",
+  "scale": "medium",
+  "macrostrat_source_id": 133,
+  "scale_coverage_of_sample_points": {
+   "large": 0,
+   "medium": 25,
+   "small": 25,
+   "tiny": 25
+  },
+  "sample_points": 25,
+  "requests": 28,
+  "uncovered_pieces": 0,
+  "fallback_errors": []
+ }
+}

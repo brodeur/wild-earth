@@ -15,7 +15,7 @@
   38.73825606650576
  ],
  "size_m": 10000,
- "generated_at": "2026-10-24T22:16:07Z",
+ "generated_at": "2026-10-24T22:31:17Z",
  "generator": {
   "name": "wild-earth-pipeline",
   "version": "0.2.0"
@@ -855,6 +855,202 @@
    "encoding": "uint8 decimetres: mean DEM on a 20 m ring minus the channel cell, clamped 0-25 m, x10; 0 off channel",
    "sha256": "917eb5c52f7a9913e15eeb5c6dcc804037f2a2ba280e467d779f58e524b9f534",
    "bytes": 78647
+  },
+  "geology.units": {
+   "path": "geology/units.geojson",
+   "kind": "vector",
+   "source": "macrostrat",
+   "sources_used": [
+    "macrostrat",
+    "usgs_sgmc"
+   ],
+   "feature_count": 10,
+   "units": 7,
+   "fetch": {
+    "source": "macrostrat",
+    "endpoint": "https://macrostrat.org/api/v2/geologic_units/map",
+    "scale": "medium",
+    "macrostrat_source_id": 133,
+    "scale_coverage_of_sample_points": {
+     "large": 0,
+     "medium": 25,
+     "small": 25,
+     "tiny": 25
+    },
+    "sample_points": 25,
+    "requests": 28,
+    "uncovered_pieces": 0,
+    "fallback_errors": []
+   },
+   "licence": "public domain (USGS SGMC) via Macrostrat, CC-BY 4.0",
+   "sha256": "91fe8e354eba768d9ec00d5badafbe6f3d17e9df2daecfb8bca28624f2e088ab",
+   "bytes": 48850
+  },
+  "geology.classes": {
+   "path": "geology/classes.json",
+   "kind": "table",
+   "source": "macrostrat",
+   "sha256": "bde6911fd73c965243ab9ff9a46d2bf8509f70f78e3c30719335a27f54e3da2a",
+   "bytes": 10288
+  },
+  "client.geology": {
+   "path": "client/geology.png",
+   "kind": "raster",
+   "crs": "EPSG:32610",
+   "bounds": [
+    690000,
+    4280000,
+    700000,
+    4290000
+   ],
+   "pixels": 333,
+   "resolution_m": 30.03003003003003,
+   "derived_from": "geology.units",
+   "encoding": "R = geology unit index (geology/classes.json units; 0 none), G = rock class index (1-based into rock_classes)",
+   "rock_class_fractions": {
+    "greenstone_metavolcanic": 0.0227,
+    "serpentinite": 0.0238,
+    "slate_phyllite": 0.6645,
+    "granitic": 0.2421,
+    "volcanic": 0.0114,
+    "sandstone_conglomerate": 0.0355
+   },
+   "sha256": "c0802a9ce3faa095c6c1fc5e1f0bf6d36849b0dd97db52e93ea9aaa5b3a88a66",
+   "bytes": 2431
+  },
+  "soils.mapunits": {
+   "path": "soils/mapunits.geojson",
+   "kind": "vector",
+   "source": "usda_ssurgo",
+   "feature_count": 317,
+   "mapunits": 73,
+   "licence": "public domain",
+   "fetch": {
+    "endpoint": "https://sdmdataaccess.sc.egov.usda.gov/Tabular/post.rest",
+    "requests": 8
+   },
+   "sha256": "9a5b100b9e9971a5a39aeafc74c9bcf6d40bcbc871ae4e3fbc0f059b275b182d",
+   "bytes": 2759489
+  },
+  "soils.classes": {
+   "path": "soils/classes.json",
+   "kind": "table",
+   "source": "usda_ssurgo",
+   "sha256": "0a2cceecf9787ae978a5cbe18b801bcb355c2fb65eb93c8b4690234c6c2b699f",
+   "bytes": 62931
+  },
+  "client.soils": {
+   "path": "client/soils.png",
+   "kind": "raster",
+   "crs": "EPSG:32610",
+   "bounds": [
+    690000,
+    4280000,
+    700000,
+    4290000
+   ],
+   "pixels": 333,
+   "resolution_m": 30.03003003003003,
+   "derived_from": "soils.mapunits",
+   "encoding": "R = soil map unit index (soils/classes.json; 0 none), G = surface rock fragments % 0-100, B = depth to bedrock dm (255 = none or unknown)",
+   "nodata_fraction": 0.0,
+   "sha256": "e6047e53194f3765a4bc11255dd3d8c2cd5be5944c2b8cd3fce1f58074806ca8",
+   "bytes": 20620
+  },
+  "client.outcrop": {
+   "path": "client/outcrop.png",
+   "kind": "raster",
+   "crs": "EPSG:32610",
+   "bounds": [
+    690000,
+    4280000,
+    700000,
+    4290000
+   ],
+   "pixels": 333,
+   "resolution_m": 30.03003003003003,
+   "encoding": "R = outcrop likelihood 0..255 (0..1)",
+   "derived_from": [
+    "client.geology",
+    "client.soils",
+    "terrain.dem",
+    "vegetation.evc"
+   ],
+   "formula": "outcrop = clip(resistance[rock_class] * shallowness * terrain * (1 - tree_cover_pct/100 * 0.5), 0, 1); shallowness = clip((150 - depth_to_bedrock_cm) / (150 - 25), 0, 1) (0 where depth unknown); terrain = min(slope_deg / 35, 1) + 0.5 * clip(TPI_m / 1.5, 0, 1), TPI = z - mean(z, 150 m window) on the DEM averaged to 30 m; tree cover from LANDFIRE EVC; water = 0",
+   "resistance": {
+    "greenstone_metavolcanic": 0.9,
+    "granitic": 0.8,
+    "serpentinite": 0.8,
+    "schist": 0.6,
+    "slate_phyllite": 0.6,
+    "volcanic": 0.7,
+    "sandstone_conglomerate": 0.4,
+    "limestone_marble": 0.7,
+    "alluvium": 0.0,
+    "other": 0.4
+   },
+   "params": {
+    "shallow_cm": 25.0,
+    "deep_cm": 150.0,
+    "slope_full_deg": 35.0,
+    "tpi_window_m": 150.15015015015015,
+    "tpi_full_m": 1.5,
+    "convex_bonus": 0.5,
+    "canopy_damp": 0.5
+   },
+   "mean": 0.1179,
+   "fraction_above_0.5": 0.0158,
+   "fraction_above_0.25": 0.1558,
+   "slope_deg_mean": 12.29,
+   "convex_fraction": 0.5013,
+   "sha256": "215006b46e8bf3913630758a421ae8a715e28ade41dc6244ab37049781ca2b3b",
+   "bytes": 72851
+  },
+  "client.ground_classes": {
+   "path": "client/ground_classes.json",
+   "kind": "table",
+   "derived_from": [
+    "client.geology",
+    "client.soils",
+    "client.outcrop"
+   ],
+   "fractions": {
+    "rock_class": {
+     "greenstone_metavolcanic": 0.0227,
+     "serpentinite": 0.0238,
+     "slate_phyllite": 0.6645,
+     "granitic": 0.2421,
+     "volcanic": 0.0114,
+     "sandstone_conglomerate": 0.0355
+    },
+    "texture_class": {
+     "loam": 0.3595,
+     "silt loam": 0.3177,
+     "coarse sandy loam": 0.1506,
+     "fine sandy loam": 0.0549,
+     "sandy loam": 0.0508,
+     "very fine sandy loam": 0.0295,
+     "bedrock": 0.0206,
+     "fragmental material": 0.013,
+     "water": 0.0025,
+     "unknown": 0.001
+    },
+    "texture_modifier": {
+     "gravelly": 0.4322,
+     "none": 0.4111,
+     "cobbly": 0.1568
+    },
+    "depth_to_bedrock": {
+     "0-25": 0.0211,
+     "25-50": 0.0298,
+     "50-100": 0.4393,
+     "100-150": 0.3356,
+     ">=150": 0.1708,
+     "none_or_unknown": 0.0035
+    }
+   },
+   "sha256": "74391d295bc492a94f75eddfdf5813605df44a105853e7618567340c09f3333c",
+   "bytes": 44939
   }
  },
  "sources": {
@@ -893,6 +1089,24 @@
    "url": "https://landfire.gov",
    "license": "public domain",
    "retrieved": "2026-10-23"
+  },
+  "macrostrat": {
+   "name": "Macrostrat API geologic_units/map (Burwell map compilation)",
+   "url": "https://macrostrat.org/api/v2/geologic_units/map",
+   "license": "CC-BY 4.0 (Macrostrat); SGMC polygons public domain",
+   "retrieved": "2026-10-24"
+  },
+  "usgs_sgmc": {
+   "name": "USGS State Geologic Map Compilation (Horton et al. 2017, DS 1052, doi:10.3133/ds1052)",
+   "url": "https://services.arcgis.com/v01gqwM5QqNysAAi/ArcGIS/rest/services/SB_5888bf4fe4b05ccb964bab9d_USGS_SGMC_feature/FeatureServer/3",
+   "license": "public domain",
+   "retrieved": "2026-10-24"
+  },
+  "usda_ssurgo": {
+   "name": "USDA NRCS SSURGO via Soil Data Access",
+   "url": "https://sdmdataaccess.sc.egov.usda.gov/Tabular/post.rest",
+   "license": "public domain",
+   "retrieved": "2026-10-24"
   }
  },
  "edits": [],
@@ -1084,6 +1298,18 @@
    "step": "derive",
    "at": "2026-10-24T22:16:07Z",
    "seconds": 35.8,
+   "ok": true
+  },
+  {
+   "step": "ground",
+   "at": "2026-10-24T22:30:55Z",
+   "seconds": 11.0,
+   "ok": true
+  },
+  {
+   "step": "ground",
+   "at": "2026-10-24T22:31:17Z",
+   "seconds": 1.2,
    "ok": true
   }
  ]
