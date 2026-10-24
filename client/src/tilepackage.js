@@ -94,3 +94,15 @@ export async function loadTile(tileId, base = '../tiles/') {
 }
 
 export const HABITAT_NAMES = { 0: 'nodata', 1: 'oak woodland', 2: 'conifer forest', 3: 'mixed forest', 4: 'chaparral', 5: 'grassland', 6: 'riparian', 7: 'water', 8: 'barren', 9: 'human' };
+
+// Present-day imagery for the peek (P): NAIP with the human footprint still in it. Prefers the
+// 4000 px `client.texture_present` (same UTM grid as the terrain), loaded lazily on first use and
+// cached on the tile; falls back to the 1024 px mini-map imagery already in memory.
+export function loadPresentTexture(tile) {
+  if (tile._present) return tile._present;
+  const L = tile.manifest.layers, p = L['client.texture_present'];
+  const fallback = () => tile.imagery ? { image: tile.imagery, source: 'client.imagery', px: tile.imagery.width } : null;
+  tile._present = (p ? loadOptionalImage(tile.dir + p.path) : Promise.resolve(null))
+    .then(img => img ? { image: img, source: 'client.texture_present', px: img.width, year: p.year || p.naip_year } : fallback());
+  return tile._present;
+}

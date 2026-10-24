@@ -60,6 +60,11 @@
   #speciesCard .status { margin-top:6px; font-size:11px; color:#8fa094; }
   #speciesCard .close { position:absolute; right:8px; top:6px; background:none; border:none; color:#b7c4ba; font-size:18px; line-height:1; cursor:pointer; padding:2px 6px; }
   #speciesCard .close:hover { color:#e6ede7; }
+  #peekBtn { width:100%; margin-top:6px; background:#1f2a23; color:#e6ede7; border:1px solid #263128; border-radius:6px; padding:5px 10px; font:inherit; cursor:pointer; touch-action:none; user-select:none; -webkit-user-select:none; }
+  #peekBtn.on { background:#3a3320; border-color:#7a6a3a; }
+  #peekBanner { position:fixed; left:50%; top:12px; transform:translateX(-50%); z-index:6; background:#1b1708dd; border:1px solid #7a6a3a; color:#ffe9b0; padding:6px 16px; border-radius:16px; font-weight:600; letter-spacing:.04em; pointer-events:none; backdrop-filter:blur(4px); }
+  #peekBanner.hidden { display:none; }
+  #peekFade { position:fixed; inset:0; width:100%; height:100%; pointer-events:none; opacity:0; }
 </style>
 <script type="importmap">
 { "imports": { "three": "https://unpkg.com/three@0.170.0/build/three.module.js",
@@ -74,6 +79,7 @@
   <div class="row"><span>airspeed</span><b id="speed">–</b></div>
   <div class="row"><span>heading</span><b id="heading">–</b></div>
   <div class="row"><span>below me</span><b id="habitat">–</b></div>
+  <div class="row wide" title="nearest named present-day road, stream or water"><span>today</span><b id="over">–</b></div>
   <div class="row wide"><span>nearest tree</span><b id="nearestTree">–</b></div>
   <div class="row wide"><span>around you</span><b id="aroundYou">–</b></div>
   <div class="row"><span>trees in view</span><b id="trees">–</b></div>
@@ -84,6 +90,7 @@
   <div class="muted" id="gotoStatus"></div>
   <button id="gameBtn" title="acorn stash: pick up glowing acorns under oaks and cache them in stash holes">Start game</button>
   <button id="hoverBtn" title="hold position and look around (H)">Hover</button>
+  <button id="peekBtn" title="hold to see today's world at this spot (P); tap to toggle on touch">Present day</button>
   <label>Texture</label>
   <div class="seg"><button id="texImagery" title="NAIP 2022 with buildings, lots and fields erased">Imagery</button><button id="texRewild" class="on" title="habitat colour over hillshade">Rewilded</button></div>
   <label>Season <span class="muted" id="seasonNote"></span></label>
@@ -95,7 +102,7 @@
   <label>Perceives</label>
   <div class="muted" id="perceives">–</div>
 </div>
-<div id="help"><kbd>↑</kbd><kbd>↓</kbd> pitch · <kbd>←</kbd><kbd>→</kbd> turn · <kbd>W</kbd><kbd>S</kbd> speed · <kbd>X</kbd><kbd>Z</kbd> climb / descend · <kbd>space</kbd> flap · <kbd>H</kbd> hover · <kbd>V</kbd> view · <kbd>R</kbd> reset · <kbd>M</kbd> map · <kbd>G</kbd> roads · <kbd>T</kbd> tags · click a tree to identify · drag mouse to look</div>
+<div id="help"><kbd>↑</kbd><kbd>↓</kbd> pitch · <kbd>←</kbd><kbd>→</kbd> turn · <kbd>W</kbd><kbd>S</kbd> speed · <kbd>X</kbd><kbd>Z</kbd> climb / descend · <kbd>space</kbd> flap · <kbd>H</kbd> hover · <kbd>V</kbd> view · <kbd>R</kbd> reset · <kbd>M</kbd> map · <kbd>G</kbd> roads · <kbd>P</kbd> present day · <kbd>T</kbd> tags · click a tree to identify · drag mouse to look</div>
 <div id="speciesCard" class="hidden"></div>
 <div id="game" class="hidden">
   <h1>acorn stash</h1>
@@ -106,6 +113,7 @@
   <div class="muted" id="gameHint"></div>
 </div>
 <div id="minimap"></div>
+<div id="peekBanner" class="hidden">present day · 2022 imagery</div>
 <div id="status">loading tile…</div>
 <script type="module" src="./src/main.js"></script>
 </body>

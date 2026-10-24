@@ -65,6 +65,13 @@ recognition. The open question is whether an open-source engine can be made to
 astonish people the way Unreal does, or whether the browser plus real-place data is
 itself the astonishing thing.
 
+## What success looks like for a person
+
+A child plays the acorn game and then goes outside to pick up acorns under a real oak.
+An adult flies over the parking lot they use every week and sees it as the oak woodland
+it was and could be again. Every feature should be traceable to one of those two
+moments. (Aaron, 2026-10-24.)
+
 ## Success metric for the demo
 
 Someone who lives in the tile can fly from the tile centre to their own hill from the

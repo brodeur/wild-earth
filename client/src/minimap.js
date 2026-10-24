@@ -2,6 +2,8 @@
 // raven on it. It shows the real world on purpose, so the player can see where they are in the
 // rewilded one relative to roads and towns that are no longer there.
 // The static base is drawn once to an offscreen canvas; each frame only blits it and draws the raven.
+// During the present-day peek (P) the roles swap: the main view shows the real photo and the
+// mini-map shows the rewilded texture instead (drawn once, on first peek).
 
 const CSS_SIZE = 240;
 const TRAIL_MAX = 200;
@@ -9,8 +11,9 @@ const TRAIL_STEP_M = 20;       // record a trail point every 20 m flown (~4 km o
 const TRAIL_BREAK_M = 500;     // a jump this long starts a new trail
 
 export class MiniMap {
-  constructor({ container, sizeM, imagery, features, flight }) {
-    this.sizeM = sizeM; this.flight = flight;
+  constructor({ container, sizeM, imagery, features, flight, rewildImage = null }) {
+    this.sizeM = sizeM; this.flight = flight; this.features = features; this.rewildImage = rewildImage;
+    this.place = null;   // nearest present-day place name, drawn beside the raven (set by main)
     this.dpr = Math.min(devicePixelRatio || 1, 2);
     const px = Math.round(CSS_SIZE * this.dpr);
     this.canvas = document.createElement('canvas');
@@ -21,9 +24,29 @@ export class MiniMap {
     this.container = container;
     this.ctx = this.canvas.getContext('2d');
     this.trail = [];
-    this.base = this.drawBase(px, imagery, features);
+    this.base = this.presentBase = this.drawBase(px, imagery, features);
+    this.caption(this.presentBase, 'today');
     this.canvas.addEventListener('click', e => this.jump(e));
     addEventListener('keydown', e => { if (e.code === 'KeyM' && !e.repeat) this.toggle(); });
+  }
+
+  // peek on: show the rewilded texture (streams and water kept, roads gone); off: the present day
+  setPeek(on) {
+    if (on && !this.rewildBase && this.rewildImage) {
+      this.rewildBase = this.drawBase(this.canvas.width, this.rewildImage, this.features, { roads: false, dim: 0.1 });
+      this.caption(this.rewildBase, 'rewilded');
+    }
+    this.base = on && this.rewildBase ? this.rewildBase : this.presentBase;
+    this.canvas.title = on ? 'rewilded map · click to fly there' : 'present-day map · click to fly there';
+  }
+
+  caption(c, text) {
+    const g = c.getContext('2d');
+    g.setTransform(this.dpr, 0, 0, this.dpr, 0, 0);
+    g.font = '600 10px -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif';
+    g.textAlign = 'left'; g.textBaseline = 'bottom'; g.lineJoin = 'round';
+    g.lineWidth = 3; g.strokeStyle = 'rgba(10,15,12,0.85)'; g.strokeText(text, 5, CSS_SIZE - 4);
+    g.fillStyle = '#e6ede7'; g.fillText(text, 5, CSS_SIZE - 4);
   }
 
   get visible() { return this.container.style.display !== 'none'; }
@@ -32,7 +55,7 @@ export class MiniMap {
   // tile-local metres -> CSS pixels on the map (north up)
   toMap(x, north) { const s = CSS_SIZE / this.sizeM; return [x * s, (this.sizeM - north) * s]; }
 
-  drawBase(px, imagery, features) {
+  drawBase(px, imagery, features, { roads: withRoads = true, dim = 0.25 } = {}) {
     const c = document.createElement('canvas'); c.width = c.height = px;
     const g = c.getContext('2d');
     g.setTransform(this.dpr, 0, 0, this.dpr, 0, 0);
@@ -40,7 +63,7 @@ export class MiniMap {
     if (imagery) {
       g.imageSmoothingQuality = 'high';
       g.drawImage(imagery, 0, 0, CSS_SIZE, CSS_SIZE);
-      g.fillStyle = 'rgba(10,15,12,0.25)'; g.fillRect(0, 0, CSS_SIZE, CSS_SIZE);   // dim so lines read on bright fields
+      g.fillStyle = `rgba(10,15,12,${dim})`; g.fillRect(0, 0, CSS_SIZE, CSS_SIZE);   // dim so lines read on bright fields
     }
     g.save();
     g.beginPath(); g.rect(0, 0, CSS_SIZE, CSS_SIZE); g.clip();
@@ -54,7 +77,7 @@ export class MiniMap {
       for (const w of features.waterbodies || []) { trace(w.ring); g.closePath(); g.fill(); }
       g.strokeStyle = 'rgba(150,210,255,0.85)'; g.lineWidth = 0.9;
       for (const s of features.streams || []) { trace(s.path); g.stroke(); }
-      const roads = features.roads || [];
+      const roads = withRoads ? features.roads || [] : [];
       g.strokeStyle = 'rgba(255,240,220,0.45)'; g.lineWidth = 0.6;
       for (const r of roads) if (!r.major) { trace(r.path); g.stroke(); }
       g.strokeStyle = 'rgba(40,20,0,0.6)'; g.lineWidth = 3.2;           // dark casing under major roads
@@ -63,7 +86,7 @@ export class MiniMap {
       for (const r of roads) if (r.major) { trace(r.path); g.stroke(); }
     }
     g.restore();
-    if (features) this.drawLabels(g, features.roads || []);
+    if (features && withRoads) this.drawLabels(g, features.roads || []);
     // border and north marker
     g.strokeStyle = 'rgba(230,237,231,0.6)'; g.lineWidth = 1; g.strokeRect(0.5, 0.5, CSS_SIZE - 1, CSS_SIZE - 1);
     g.font = '600 11px -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif';
@@ -161,5 +184,14 @@ export class MiniMap {
     g.fillStyle = '#ffe14d'; g.fill();
     g.lineWidth = 1.2; g.strokeStyle = '#111'; g.stroke();
     g.restore();
+    if (this.place) {   // the nearest place name, under the raven (above it near the bottom edge)
+      g.font = '600 10px -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif';
+      g.textBaseline = 'middle'; g.lineJoin = 'round';
+      const w = g.measureText(this.place).width;
+      const tx = Math.min(Math.max(u, w / 2 + 3), CSS_SIZE - w / 2 - 3), ty = v > CSS_SIZE - 22 ? v - 14 : v + 14;
+      g.textAlign = 'center';
+      g.lineWidth = 3; g.strokeStyle = 'rgba(10,15,12,0.9)'; g.strokeText(this.place, tx, ty);
+      g.fillStyle = '#fff3b0'; g.fillText(this.place, tx, ty);
+    }
   }
 }

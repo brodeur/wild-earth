@@ -1,5 +1,5 @@
 import * as THREE from 'three';
-import { loadTile, HABITAT_NAMES } from './tilepackage.js';
+import { loadTile, loadPresentTexture, HABITAT_NAMES } from './tilepackage.js';
 import { Terrain } from './terrain.js';
 import { SkyDome } from './sky.js';
 import { Atmosphere } from './atmosphere.js';
@@ -14,6 +14,7 @@ import { setupGoTo, takePendingPoint, builtTileFor } from './goto.js';
 import { SEASON_LOOK, seasonOfDate, sunDirection } from './season.js';
 import { AcornGame } from './acorns.js';
 import { Identify } from './identify.js';
+import { PlaceNames } from './placenames.js';
 
 const $ = id => document.getElementById(id);
 const status = t => { $('status').textContent = t; $('status').classList.toggle('hidden', !t); };
@@ -50,12 +51,17 @@ async function main() {
   const raven = new Raven(flight.body, atmosphere);   // the bird you see from the chase camera
   flight.reset(tile.size / 2, -tile.size / 2, 150);
   veg.radius = +$('detail').value; veg.update(flight.pos.x, flight.pos.z, true);
-  const minimap = new MiniMap({ container: $('minimap'), sizeM: tile.size, imagery: tile.imagery, features: tile.features, flight });
+  const minimap = new MiniMap({ container: $('minimap'), sizeM: tile.size, imagery: tile.imagery, features: tile.features, flight, rewildImage: tile.textureImage });
+  const places = new PlaceNames(tile.features, tile.size);   // nearest named road, stream or water, for the HUD
   const goto = setupGoTo({ tile, flight, input: $('gotoInput'), button: $('gotoBtn'), line: $('gotoStatus') });
   if (pending) goto.go(pending, { fromLoad: true });
 
   // Base texture: the erased imagery when the tile has it, else the rewilded habitat texture.
+  const peek = { want: false, shown: false, pending: null, present: null, roadsWere: false };   // present-day peek, below
+  let texKind = 'rewilded';
   function setTexture(kind) {
+    texKind = kind;
+    if (peek.shown) return;   // applied when the peek ends
     const imagery = kind === 'imagery' && tile.imageryTextureImage;
     terrain.setTexture(imagery ? tile.imageryTextureImage : tile.textureImage);
     terrain.setImagery(!!imagery, tile.imageryRef);
@@ -100,8 +106,64 @@ async function main() {
   const identify = new Identify({ veg, camera, dom: renderer.domElement, scene, flight, acorns, seasonNow,
     els: { nearest: $('nearestTree'), around: $('aroundYou'), card: $('speciesCard') } });
 
+  // Present-day peek (hold P, or the panel button): the ground shows today's NAIP with the human
+  // footprint still in it, the forest and grass step aside and the ghost roads come on, so a player
+  // can see the parking lot they know at the exact spot they are flying over. The swap happens just
+  // after a frame is rendered: that frame is copied to an overlay canvas which then fades out over
+  // 300 ms, a screen-space cross-fade (terrain.setTexture has one map, so the shader cannot blend).
+  const fade = document.createElement('canvas'); fade.id = 'peekFade'; renderer.domElement.after(fade);
+  async function setPeek(on) {
+    if (on === peek.want) return;
+    peek.want = on; $('peekBtn').classList.toggle('on', on);
+    if (!on && !peek.shown) $('peekBanner').classList.add('hidden');   // released while loading
+    if (on && !peek.present) {
+      $('peekBanner').textContent = 'present day · loading…'; $('peekBanner').classList.remove('hidden');
+      peek.present = await loadPresentTexture(tile);
+      if (!peek.present) { $('peekBanner').textContent = 'no present-day imagery in this tile'; return; }
+    }
+    peek.pending = peek.want;   // frame() applies it right after the next render
+  }
+  function applyPeek(on) {
+    peek.shown = on;
+    for (const o of [veg, far, grass]) o.group.visible = !on;
+    identify.tagGroup.visible = !on && identify.tagsOn;
+    acorns.group.visible = !on && acorns.running;
+    if (on) { peek.roadsWere = roads.group.visible; roads.group.visible = true; } else roads.group.visible = peek.roadsWere;
+    if (on) {
+      terrain.setTexture(peek.present.image);
+      // Season recolour off without touching terrain.js: in imagery mode the shader multiplies by
+      // grassTint / grassRef (normalised) and by oakTint / oakRef times oakMix, so equal tint and ref
+      // and oakMix 0 leave the photo's colour as it is. frame() skips setLook while peeking.
+      terrain.setImagery(true, null);
+      const u = terrain.uniforms; u.grassTint.value.setRGB(u.grassRef.value.x, u.grassRef.value.y, u.grassRef.value.z); u.oakMix.value = 0;
+    } else setTexture(texKind);
+    minimap.setPeek(on);
+    $('peekBanner').textContent = `present day · ${peek.present?.year || 2022} imagery`;
+    $('peekBanner').classList.toggle('hidden', !on);
+  }
+  function crossFade() {
+    const c = renderer.domElement;
+    if (fade.width !== c.width || fade.height !== c.height) { fade.width = c.width; fade.height = c.height; }
+    fade.getContext('2d').drawImage(c, 0, 0);   // same task as the render, so the drawing buffer is intact
+    fade.getAnimations().forEach(a => a.cancel());
+    fade.animate([{ opacity: 1 }, { opacity: 0 }], { duration: 300, easing: 'ease-in-out' });
+  }
+  const typing = e => e.target instanceof HTMLInputElement || e.target instanceof HTMLSelectElement;
+  addEventListener('keydown', e => { if (e.code === 'KeyP' && !e.repeat && !typing(e)) setPeek(true); });
+  addEventListener('keyup', e => { if (e.code === 'KeyP') setPeek(false); });
+  addEventListener('blur', () => setPeek(false));   // a keyup or pointerup lost to another window
+  // mouse or pen: pressed while held; touch: a tap toggles
+  $('peekBtn').addEventListener('pointerdown', e => {
+    e.preventDefault();
+    if (e.pointerType === 'touch') { setPeek(!peek.want); return; }
+    setPeek(true);
+    const up = () => { setPeek(false); removeEventListener('pointerup', up); removeEventListener('pointercancel', up); };
+    addEventListener('pointerup', up); addEventListener('pointercancel', up);
+  });
+  $('peekBtn').addEventListener('click', e => { if (e.detail === 0) setPeek(!peek.want); });   // keyboard activation toggles
+
   status('');
-  window.__we = { tile, flight, raven, camera, veg, terrain, far, grass, roads, scene, renderer, minimap, atmosphere, sky, acorns, identify };   // debugging handle
+  window.__we = { tile, flight, raven, camera, veg, terrain, far, grass, roads, scene, renderer, minimap, atmosphere, sky, acorns, identify, places, peek, setPeek };   // debugging handle
 
   let last = performance.now(), hudT = 0;
   function frame(now) {
@@ -116,8 +178,9 @@ async function main() {
     far.update(camera, veg.radius);
     grass.update(flight.pos.x, flight.pos.z, dt, camera, look);
     acorns.update(dt, camera, s);
-    terrain.setLook(look);
+    if (!peek.shown) terrain.setLook(look);
     renderer.render(scene, camera);
+    if (peek.pending !== null) { if (peek.pending !== peek.shown) { crossFade(); applyPeek(peek.pending); } peek.pending = null; }
     minimap.update(flight.pos, f.heading);
     hudT += dt;
     if (hudT > 0.15) {
@@ -126,8 +189,10 @@ async function main() {
       $('agl').textContent = `${f.agl.toFixed(0)} m`; $('elev').textContent = `${f.elev.toFixed(0)} m`;
       $('speed').textContent = `${f.speed.toFixed(1)} m/s`; $('heading').textContent = `${f.heading.toFixed(0)}°`;
       $('habitat').textContent = HABITAT_NAMES[tile.habitat.at(flight.pos.x, -flight.pos.z)] || '–';
-      $('trees').textContent = `${veg.count.toLocaleString()} near · ${far.count.toLocaleString()} far`;
+      $('trees').textContent = peek.shown ? 'hidden (present day)' : `${veg.count.toLocaleString()} near · ${far.count.toLocaleString()} far`;
       identify.tick(now);
+      const where = places.describe(flight.pos.x, -flight.pos.z);
+      $('over').textContent = where.text; minimap.place = where.place;
       const h = Math.floor(state.hour), mnt = Math.round((state.hour - h) * 60); $('timeLabel').textContent = `${h}:${String(mnt).padStart(2, '0')} · sun ${(sun.elevation * 180 / Math.PI).toFixed(0)}°`;
     }
     requestAnimationFrame(frame);
