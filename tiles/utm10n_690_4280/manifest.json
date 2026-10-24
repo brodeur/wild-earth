@@ -15,7 +15,7 @@
   38.73825606650576
  ],
  "size_m": 10000,
- "generated_at": "2026-10-24T07:23:43Z",
+ "generated_at": "2026-10-24T22:16:07Z",
  "generator": {
   "name": "wild-earth-pipeline",
   "version": "0.2.0"
@@ -570,16 +570,17 @@
    "encoding": "tile-local metres [x east, north from south edge]",
    "counts": {
     "roads": 1000,
-    "streams": 627,
+    "streams": 426,
     "waterbodies": 61
    },
+   "streams_from": "hydro.channels",
    "derived_from": [
     "footprint.mask",
-    "hydro.flowlines",
+    "hydro.channels",
     "hydro.waterbodies"
    ],
-   "sha256": "1b5ba5e5e8182a0a76cc0c569b7aa39b334bb3c82532dd34a68038d40a0f97f4",
-   "bytes": 527915
+   "sha256": "cf1c41f9678c1479a96c85d69d5aad70b63bd3d3e8bbab610273d3b07b0bb0c9",
+   "bytes": 631364
   },
   "client.roads": {
    "path": "client/roads.png",
@@ -775,6 +776,85 @@
    },
    "sha256": "7913fd22c1840383eed26b415cebd50c0a3e4f74f706c28e85ad14b25058e205",
    "bytes": 25013
+  },
+  "hydro.channels": {
+   "path": "hydro/channels.geojson",
+   "kind": "vector",
+   "source": "usgs_3dep",
+   "derived_from": [
+    "terrain.dem",
+    "hydro.flowlines",
+    "hydro.waterbodies"
+   ],
+   "feature_count": 426,
+   "method": "least-cost breach (<= 300 m) of depressions >= 1 m outside waterbodies, then pysheds fill + resolve_flats, D8, NHD-seeded inflow",
+   "params": {
+    "threshold_km2": 0.15,
+    "min_reach_m": 40.0,
+    "match_radius_m": 60.0,
+    "width": "1.6*A^0.45 clamp 1-30",
+    "bed_width": "1.5*width+1"
+   },
+   "stats": {
+    "threshold_km2": 0.15,
+    "seeds": 33,
+    "breaches": 405,
+    "breach_cells": 1918,
+    "unresolved_flat_cells": 9,
+    "pruned_stubs": 7,
+    "interior_outlets": 0,
+    "channel_cells": 31348,
+    "dem_reaches": 364,
+    "dem_matched": 289,
+    "dem_unmatched": 75,
+    "nhd_flowlines": 627,
+    "nhd_covered": 372,
+    "nhd_partial": 114,
+    "nhd_uncovered": 117,
+    "nhd_kept_reaches": 17,
+    "nhd_tips_dropped": 285,
+    "nhd_tips_length_km": 87.25,
+    "dem_length_km": 172.58,
+    "nhd_kept_length_km": 5.62,
+    "nhd_length_km": 241.46,
+    "nhd_covered_length_km": 146.74,
+    "median_offset_m": 11.1,
+    "median_reach_offset_m": 11.6,
+    "p90_offset_m": 28.9,
+    "in_waterbody_pieces": 28,
+    "features": 426,
+    "downhill_check": {
+     "points": 200,
+     "step_m": 10.0,
+     "tolerance_m": 0.5,
+     "violations": 2,
+     "violation_rate": 0.01,
+     "max_rise_m": 0.9
+    },
+    "max_area_km2": 433.76
+   },
+   "sha256": "8bab30499ee1ad1103f6d74104e0b18fa038b4e8170e0d48f06629d85638075f",
+   "bytes": 872942
+  },
+  "client.channel_depth": {
+   "path": "client/channel_depth.png",
+   "kind": "raster",
+   "crs": "EPSG:32610",
+   "bounds": [
+    690000,
+    4280000,
+    700000,
+    4290000
+   ],
+   "pixels": 2000,
+   "resolution_m": 5.0,
+   "derived_from": [
+    "terrain.dem",
+    "hydro.channels"
+   ],
+   "encoding": "uint8 decimetres: mean DEM on a 20 m ring minus the channel cell, clamped 0-25 m, x10; 0 off channel",
+   "sha256": "917eb5c52f7a9913e15eeb5c6dcc804037f2a2ba280e467d779f58e524b9f534",
+   "bytes": 78647
   }
  },
  "sources": {
@@ -806,7 +886,7 @@
    "name": "USGS 3D Elevation Program (3DEP) bare-earth DEM",
    "url": "https://elevation.nationalmap.gov/arcgis/rest/services/3DEPElevation/ImageServer",
    "license": "public domain",
-   "retrieved": "2026-10-23"
+   "retrieved": "2026-10-24"
   },
   "landfire": {
    "name": "LANDFIRE LF 2025 (EVT, EVC, EVH) and LF 2016 Biophysical Settings",
@@ -992,6 +1072,18 @@
    "step": "species",
    "at": "2026-10-24T07:23:43Z",
    "seconds": 154.4,
+   "ok": true
+  },
+  {
+   "step": "channels",
+   "at": "2026-10-24T22:15:31Z",
+   "seconds": 33.2,
+   "ok": true
+  },
+  {
+   "step": "derive",
+   "at": "2026-10-24T22:16:07Z",
+   "seconds": 35.8,
    "ok": true
   }
  ]

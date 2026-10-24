@@ -14,7 +14,7 @@ from .config import (GENERATOR, SOURCES, SPEC_VERSION, TILES_DIR, Tile, now_iso,
                      sha256, today, write_json)
 from .species_data import CALENDAR, PERCEPTION, SEASONS
 
-ALL_STEPS = ["dem", "naip", "osm", "hydro", "veg", "species", "derive", "erase", "unreal"]
+ALL_STEPS = ["dem", "naip", "osm", "hydro", "channels", "veg", "species", "derive", "erase", "unreal"]
 
 
 def load_manifest(tile: Tile) -> dict:
@@ -61,6 +61,10 @@ def run(tile: Tile, steps: list[str], force=False) -> dict:
             elif step == "hydro":
                 from .fetch_hydro import fetch_hydro
                 for k, v in fetch_hydro(tile, force).items():
+                    add_layer(m, tile, k, v)
+            elif step == "channels":
+                from .channels import build_channels
+                for k, v in build_channels(tile).items():
                     add_layer(m, tile, k, v)
             elif step == "veg":
                 from .fetch_vegetation import fetch_vegetation

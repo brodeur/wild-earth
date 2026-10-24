@@ -15,7 +15,7 @@
   38.74035063713964
  ],
  "size_m": 10000,
- "generated_at": "2026-10-24T07:23:19Z",
+ "generated_at": "2026-10-24T22:14:57Z",
  "generator": {
   "name": "wild-earth-pipeline",
   "version": "0.2.0"
@@ -566,13 +566,14 @@
     "streams": 433,
     "waterbodies": 49
    },
+   "streams_from": "hydro.channels",
    "derived_from": [
     "footprint.mask",
-    "hydro.flowlines",
+    "hydro.channels",
     "hydro.waterbodies"
    ],
-   "sha256": "5acd8ac7a25520409118c3855ee9c6160aa709e8ed8bb15a972c8dcd2cef4260",
-   "bytes": 437093
+   "sha256": "aab5803daef648c913b93e149c5f32ab3f1277dc6fe94908dc69b7e651bebec2",
+   "bytes": 634851
   },
   "client.roads": {
    "path": "client/roads.png",
@@ -766,6 +767,85 @@
    },
    "sha256": "bd3ed1980ec7413680822a845c3628e638d42b9e1ec8df35a9b413f2b967b0f9",
    "bytes": 22161
+  },
+  "hydro.channels": {
+   "path": "hydro/channels.geojson",
+   "kind": "vector",
+   "source": "usgs_3dep",
+   "derived_from": [
+    "terrain.dem",
+    "hydro.flowlines",
+    "hydro.waterbodies"
+   ],
+   "feature_count": 433,
+   "method": "least-cost breach (<= 300 m) of depressions >= 1 m outside waterbodies, then pysheds fill + resolve_flats, D8, NHD-seeded inflow",
+   "params": {
+    "threshold_km2": 0.15,
+    "min_reach_m": 40.0,
+    "match_radius_m": 60.0,
+    "width": "1.6*A^0.45 clamp 1-30",
+    "bed_width": "1.5*width+1"
+   },
+   "stats": {
+    "threshold_km2": 0.15,
+    "seeds": 28,
+    "breaches": 562,
+    "breach_cells": 3424,
+    "unresolved_flat_cells": 24,
+    "pruned_stubs": 7,
+    "interior_outlets": 0,
+    "channel_cells": 32135,
+    "dem_reaches": 350,
+    "dem_matched": 260,
+    "dem_unmatched": 90,
+    "nhd_flowlines": 433,
+    "nhd_covered": 275,
+    "nhd_partial": 62,
+    "nhd_uncovered": 73,
+    "nhd_kept_reaches": 17,
+    "nhd_tips_dropped": 192,
+    "nhd_tips_length_km": 57.88,
+    "dem_length_km": 175.78,
+    "nhd_kept_length_km": 0.85,
+    "nhd_length_km": 194.05,
+    "nhd_covered_length_km": 133.37,
+    "median_offset_m": 11.2,
+    "median_reach_offset_m": 10.9,
+    "p90_offset_m": 30.5,
+    "in_waterbody_pieces": 47,
+    "features": 433,
+    "downhill_check": {
+     "points": 200,
+     "step_m": 10.0,
+     "tolerance_m": 0.5,
+     "violations": 7,
+     "violation_rate": 0.035,
+     "max_rise_m": 3.57
+    },
+    "max_area_km2": 130.56
+   },
+   "sha256": "59c83823d550ae84d262632e18e98f5b0b3164ee6271c27205dca4b4a0eb40c8",
+   "bytes": 910775
+  },
+  "client.channel_depth": {
+   "path": "client/channel_depth.png",
+   "kind": "raster",
+   "crs": "EPSG:32610",
+   "bounds": [
+    680000,
+    4280000,
+    690000,
+    4290000
+   ],
+   "pixels": 2000,
+   "resolution_m": 5.0,
+   "derived_from": [
+    "terrain.dem",
+    "hydro.channels"
+   ],
+   "encoding": "uint8 decimetres: mean DEM on a 20 m ring minus the channel cell, clamped 0-25 m, x10; 0 off channel",
+   "sha256": "a6456f9d9190c45efa7c9cf525fd968fcaa33f8516f32d4fdbf46eee8e2c0c7a",
+   "bytes": 75266
   }
  },
  "sources": {
@@ -773,7 +853,7 @@
    "name": "USGS 3D Elevation Program (3DEP) bare-earth DEM",
    "url": "https://elevation.nationalmap.gov/arcgis/rest/services/3DEPElevation/ImageServer",
    "license": "public domain",
-   "retrieved": "2026-10-23"
+   "retrieved": "2026-10-24"
   },
   "pc_naip": {
    "name": "USDA NAIP via Microsoft Planetary Computer",
@@ -986,6 +1066,18 @@
    "step": "species",
    "at": "2026-10-24T07:23:19Z",
    "seconds": 130.8,
+   "ok": true
+  },
+  {
+   "step": "channels",
+   "at": "2026-10-24T22:14:18Z",
+   "seconds": 35.6,
+   "ok": true
+  },
+  {
+   "step": "derive",
+   "at": "2026-10-24T22:14:57Z",
+   "seconds": 39.0,
    "ok": true
   }
  ]

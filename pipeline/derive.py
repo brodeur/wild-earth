@@ -413,8 +413,24 @@ def client_features(tile: Tile) -> dict | None:
             for line in _lines(ft.get("geometry") or {}):
                 if len(line) >= 2:
                     roads.append({"name": pr.get("name"), "kind": kind, "major": kind in MAJOR_ROADS, "path": local(line)})
-    feats = load("hydro/flowlines.geojson")
+    # Streams: the gravity-routed channels (hydro/channels.geojson, pipeline/channels.py) when built,
+    # else the NHD flowlines as fetched.
+    feats = load("hydro/channels.geojson")
+    stream_source = "hydro.channels"
     if feats is not None:
+        found = True
+        for ft in feats:
+            pr = ft.get("properties") or {}
+            for line in _lines(ft.get("geometry") or {}):
+                if len(line) >= 2:
+                    streams.append({"name": pr.get("name"), "fcode": pr.get("fcode"), "order": pr.get("order"),
+                                    "area_km2": pr.get("area_km2"), "width": pr.get("width"), "bed_width": pr.get("bed_width"),
+                                    "source": pr.get("source"), "in_waterbody": bool(pr.get("in_waterbody")),
+                                    "path": local(line)})
+    else:
+        feats = load("hydro/flowlines.geojson")
+        stream_source = "hydro.flowlines"
+    if stream_source == "hydro.flowlines" and feats is not None:
         found = True
         for ft in feats:
             pr = ft.get("properties") or {}
@@ -423,7 +439,7 @@ def client_features(tile: Tile) -> dict | None:
                     # fcode (NHD: 46006 perennial, 46003 intermittent, 46007 ephemeral, 55800 artificial path)
                     # and Strahler order drive the client's seasonal water (water.js)
                     streams.append({"name": pr.get("gnis_name") or pr.get("name"), "fcode": pr.get("fcode"),
-                                    "order": pr.get("streamorde"), "path": local(line)})
+                                    "order": pr.get("streamorde"), "source": "nhd", "path": local(line)})
     feats = load("hydro/waterbodies.geojson")
     if feats is not None:
         found = True
@@ -442,4 +458,5 @@ def client_features(tile: Tile) -> dict | None:
     return {"path": "client/features.json", "kind": "vector", "crs": tile.crs, "bounds": list(tile.bounds),
             "encoding": "tile-local metres [x east, north from south edge]",
             "counts": {"roads": len(roads), "streams": len(streams), "waterbodies": len(waterbodies)},
-            "derived_from": ["footprint.mask", "hydro.flowlines", "hydro.waterbodies"]}
+            "streams_from": stream_source,
+            "derived_from": ["footprint.mask", stream_source, "hydro.waterbodies"]}

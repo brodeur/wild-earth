@@ -103,6 +103,11 @@ browser stays the renderer.
 
 ## Then
 
+- Geology and soils step (SGMC/Macrostrat lithology; SSURGO texture, fragments, depth
+  to bedrock): client rasters and an outcrop likelihood; then procedural boulders and
+  outcrops in the client, and gravel/dirt detail driven by soil data. (After the
+  channels step lands, which holds the pipeline files.)
+
 - Choose licences (code, assets and species parameters, spec), add LICENSE and a short
   CONTRIBUTING with the contribution paths; set up the public repository.
 

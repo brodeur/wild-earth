@@ -4,7 +4,10 @@ import { SEASON_LOOK } from './season.js';
 
 // Water in the streams and ponds, by season (docs/roadmap.md, browser push item 5).
 //
-// Every NHD flowline gets a pale sand-and-gravel bed ribbon, drawn in every season: in the dry
+// Streams are the gravity-routed channels from the pipeline (pipeline/channels.py: D8 on the lidar
+// DEM, named and classed by NHD), each carrying its water and bed width from drainage area; tiles
+// built before that step carry raw NHD flowlines and fall back to widths by Strahler order.
+// Every reach gets a pale sand-and-gravel bed ribbon, drawn in every season: in the dry
 // half of the year it is what marks a channel from the air. On top of it a narrower water ribbon
 // runs when the reach does: perennial creeks all year, intermittent ones in winter and spring,
 // ephemeral ones only in winter. Ponds are flat polygons at their water level. One merged geometry
@@ -32,7 +35,8 @@ export const WATER_SEASONS = {
   summer: { ephemeral: false, intermittent: false, perennial: true, ponds: false },
   fall:   { ephemeral: false, intermittent: false, perennial: true, ponds: false },
 };
-// Water width (m) by Strahler order, 7+ = 30. Orders 5-6 are rivers: the North Fork Cosumnes
+// Fallback water width (m) by Strahler order, 7+ = 30, for streams without a `width` (NHD-only
+// tiles). Orders 5-6 are rivers: the North Fork Cosumnes
 // (order 6) runs about 20 m wide at spring flow.
 const WIDTH_BY_ORDER = [0, 1.5, 2.5, 4, 7, 12, 20, 30];
 const MAX_ORDER = WIDTH_BY_ORDER.length - 1;
@@ -41,6 +45,7 @@ const POND_FADE = 1.5;      // m: alpha fade inside a pond's shoreline
 const WATER_WIDTH_SCALE = { ephemeral: 0.6, intermittent: 0.8, perennial: 1 };   // a runoff trickle is narrower than the creek it becomes
 const BED_STRENGTH = { ephemeral: 0.4, intermittent: 0.75, perennial: 0.95 };   // a grassy order-1 swale barely shows a bed
 const STEP = 10;                                                  // metres between cross-sections along a path
+const DEM_PREFERRED_M = 15;   // an NHD-sourced stretch within this of a DEM channel is a duplicate of it
 
 // Rendered terrain height: Terrain's 10 chunks of ~10 m quads split as PlaneGeometry does
 // (same function as grass.js), so draped vertices sit exactly on the visible triangles.
@@ -317,13 +322,22 @@ export class Water {
     const inPond = (x, y) => ponds.some(p => x >= p.bbox[0] && x <= p.bbox[2] && y >= p.bbox[1] && y <= p.bbox[3] && inRing(x, y, p.ring));
     const nrm = new THREE.Vector3();
     const normalAt = (x, n) => nrm.set(H(x - 2, n) - H(x + 2, n), 4, -(H(x, n - 2) - H(x, n + 2))).normalize();
+    // Prefer the DEM's geometry: NHD-sourced stretches (kept where the DEM found no channel) are cut
+    // wherever a DEM channel runs within DEM_PREFERRED_M of them, so a stream is never drawn twice.
+    const nearDem = demIndex(streams, DEM_PREFERRED_M);
+    let skippedInPond = 0;
     let reaches = 0;
     for (const st of streams) {
       const cls = st.fcode in STREAM_CLASS ? STREAM_CLASS[st.fcode] : 'intermittent';
       if (!cls || !st.path || st.path.length < 2) continue;
+      // A reach inside a waterbody ring is drawn as the pond, where the pond is drawn (a ring
+      // skipped as self-intersecting leaves its reach to be drawn as a stream).
+      if (st.in_waterbody) { const m = st.path[st.path.length >> 1]; if (inPond(m[0], m[1])) { skippedInPond++; continue; } }
       const order = Math.max(1, Math.min(MAX_ORDER, st.order || 1)), ci = CLASSES.indexOf(cls);
-      // The dry bed (gravel bars, the flood channel) is half again the water's width plus a metre.
-      const ww = WIDTH_BY_ORDER[order] * WATER_WIDTH_SCALE[cls], bw = WIDTH_BY_ORDER[order] * 1.5 + 1.0;
+      // Widths from drainage area when the pipeline gives them (water 1.6 A^0.45 m, bed 1.5 w + 1);
+      // else by order, with the dry bed (gravel bars, the flood channel) half again the water plus a metre.
+      const ww = st.width > 0 ? st.width : WIDTH_BY_ORDER[order] * WATER_WIDTH_SCALE[cls];
+      const bw = st.bed_width > 0 ? st.bed_width : WIDTH_BY_ORDER[order] * 1.5 + 1.0;
       const speed = 0.35 + 0.15 * order;
       // Resample at <= STEP m, keeping the original vertices.
       const pts = [];
@@ -334,7 +348,8 @@ export class Water {
       pts.push(st.path.at(-1));
       // Split into runs outside ponds (the pond surface covers the artificial path through it).
       const runs = []; let run = [];
-      for (const p of pts) { if (inPond(p[0], p[1])) { if (run.length > 1) runs.push(run); run = []; } else run.push(p); }
+      const dup = st.source === 'nhd' && nearDem ? nearDem : null;
+      for (const p of pts) { if (inPond(p[0], p[1]) || (dup && dup(p[0], p[1]))) { if (run.length > 1) runs.push(run); run = []; } else run.push(p); }
       if (run.length > 1) runs.push(run);
       if (runs.length) reaches++;
       // Width wanders along a reach (pools and riffles, gravel bars): two incommensurate sines with
@@ -376,7 +391,7 @@ export class Water {
         strip(water[cls], ww / 2, across(ww), 1, speed, wMod);
       }
     }
-    this.stats.reaches = reaches;
+    this.stats.reaches = reaches; this.stats.skippedInPond = skippedInPond;
     this.beds = new THREE.Mesh(bed.geometry(), this.bedMaterial);
     this.streams = {};
     for (const c of CLASSES) { this.streams[c] = new THREE.Mesh(water[c].geometry(), this.waterMaterial); this.group.add(this.streams[c]); }
@@ -403,6 +418,31 @@ export class Water {
     this.uniforms.uTime.value = (this.uniforms.uTime.value + dt) % 3600;
     if (look && look !== this.look) { this.look = look; const s = seasonOf(look); if (s !== this.season) this.setSeason(s); }
   }
+}
+
+// (x, north) -> true within `r` metres of a DEM-sourced reach's centreline; null without DEM reaches.
+function demIndex(streams, r) {
+  const B = 50, cells = new Map(), segs = [];
+  for (const st of streams) {
+    if (st.source !== 'dem' || !st.path) continue;
+    for (let i = 0; i < st.path.length - 1; i++) {
+      const s = [st.path[i][0], st.path[i][1], st.path[i + 1][0], st.path[i + 1][1]];
+      for (let j = Math.floor((Math.min(s[1], s[3]) - r) / B); j <= Math.floor((Math.max(s[1], s[3]) + r) / B); j++)
+        for (let k = Math.floor((Math.min(s[0], s[2]) - r) / B); k <= Math.floor((Math.max(s[0], s[2]) + r) / B); k++) {
+          const key = j * 1000 + k; let c = cells.get(key); if (!c) cells.set(key, c = []); c.push(segs.length);
+        }
+      segs.push(s);
+    }
+  }
+  if (!segs.length) return null;
+  return (x, y) => {
+    for (const n of cells.get(Math.floor(y / B) * 1000 + Math.floor(x / B)) || []) {
+      const [ax, ay, bx, by] = segs[n], dx = bx - ax, dy = by - ay, L = dx * dx + dy * dy;
+      const t = L ? Math.min(1, Math.max(0, ((x - ax) * dx + (y - ay) * dy) / L)) : 0;
+      if ((ax + dx * t - x) ** 2 + (ay + dy * t - y) ** 2 < r * r) return true;
+    }
+    return false;
+  };
 }
 
 // Twice-halved shoelace: positive when the ring runs counter-clockwise in (x, north).

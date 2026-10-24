@@ -36,6 +36,7 @@ tiles/<tile_id>/
   footprint/mask.png            derived   rasterised mask, 0/255, same grid as dem
   hydro/flowlines.geojson       required  stream network
   hydro/waterbodies.geojson     required  lakes, ponds, reservoirs
+  hydro/channels.geojson        derived   stream channels routed by gravity on the DEM, named and classed by NHD (see Channels)
   vegetation/evt.tif            required  LANDFIRE Existing Vegetation Type (what grows now), 30 m
   vegetation/evc.tif            required  LANDFIRE Existing Vegetation Cover (percent, coded)
   vegetation/evh.tif            optional  LANDFIRE Existing Vegetation Height (coded)
@@ -57,7 +58,8 @@ tiles/<tile_id>/
   client/texture_imagery.jpg    derived   NAIP with the human footprint erased and pavement bleached, 4000 px (2.5 m) JPEG
   client/texture_present.jpg    derived   present-day NAIP as captured, same 4000 px metric grid as texture_imagery, JPEG q88
   client/imagery.png            derived   present-day NAIP for the mini-map, 1024 px on the metric tile grid
-  client/features.json          derived   present-day roads, streams and waterbodies in tile-local metres for the mini-map
+  client/features.json          derived   present-day roads, streams (from hydro/channels.geojson when built) and waterbodies in tile-local metres
+  client/channel_depth.png      derived   channel incision, uint8 decimetres on the DEM grid: mean DEM on a 20 m ring minus the channel cell, 0-25 m; 0 off channel
   client/masks.png              derived   soft season-recolour weights: R grassland, G oak woodland, B chaparral
   client/species_mix_a.png      derived   tree weights per 30 m cell, RGBA = blue oak, live oak, gray pine, ponderosa (sum 255; A is data)
   client/species_mix_b.png      derived   RGBA = manzanita, chamise weights (sum 255), tree_density, shrub_density (byte / 100)
@@ -126,6 +128,25 @@ lidar does not remove.
 In client products roads are decayed, not erased: `client/roads.png` and the baked
 `client/texture.png` keep them as treeless strips of worn pavement (paths, footways,
 cycleways, bridleways and steps excluded; tracks at half weight), so players keep their landmarks.
+
+## Channels
+
+NHD says roughly where the streams are; the DEM says where water goes. `hydro/channels.geojson`
+is the stream network routed by gravity on the 5 m bare-earth DEM (`pipeline/channels.py`, build
+step `channels`): depressions at least 1 m deep outside mapped waterbodies are breached along the
+least-cost path to lower ground (lidar sees a road embankment over a culvert as a dam), the rest
+filled with the tile border as the outlet, flats resolved, D8 flow directions and accumulation,
+with the upstream area of creeks entering the tile seeded where NHD flowlines cross its edge.
+Cells draining 0.15 km² or more are channels; reaches run between heads and junctions, carry
+Strahler order on that network, and are lightly smoothed. NHD supplies names and permanence: a
+reach takes the `gnis_name` and `fcode` of the NHD flowlines within 60 m running the same way;
+unmatched reaches are ephemeral (46007), or intermittent (46003) from 2 km². NHD stretches with no
+DEM channel nearby but with the DEM draining at least the threshold there are kept with `source:
+"nhd"`. Every feature carries `name`, `fcode`, `order`, `area_km2`, `source` (`dem` or `nhd`),
+`width` (water, m, 1.6 · A^0.45 clamped 1-30) and `bed_width` (1.5 · width + 1), and
+`in_waterbody` for pieces inside a waterbody ring (drawn as the pond, not as a channel). The
+manifest layer `hydro.channels` records the parameters and match statistics, including the median
+lateral offset between DEM channels and the NHD lines they matched.
 
 ## Habitat classes
 

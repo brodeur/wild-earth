@@ -208,3 +208,16 @@ someone who lives in a tile should find their own hill from the air. Open: which
 open-source engine, if any, could astonish at Unreal's level (Godot 4, Bevy, O3DE are
 the candidates; none is there today), versus the browser with WebGPU being the
 astonishing thing because the place is real.
+
+## 2026-10-25: rocks come from geology and soils data, not from slope alone
+
+Aaron: "For rocks look for a pipeline route that is reproducible. soil types, rock
+types etc." Bedrock units from the USGS State Geologic Map Compilation or the
+Macrostrat API (lithology, age, description) map to rock classes with a look each
+(Mother Lode greenstone, serpentinite, slate and phyllite, granite); SSURGO via Soil
+Data Access gives surface texture, rock fragment percentage, depth to bedrock and
+parent material per map unit. A pipeline step writes per-cell geology and soil rasters
+plus an outcrop likelihood (lithology resistance x shallow soil x convexity x slope,
+later x lidar roughness); the client places procedural boulders and outcrop clusters
+from it and the ground-detail shader takes gravel and dirt colour from the soil data.
+Rejected: placing rocks by slope and noise alone (not reproducible, not local).

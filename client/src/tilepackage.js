@@ -86,8 +86,8 @@ export class SpeciesMix {
 
 // Where the water is, from tile.features (rings and paths in tile-local metres, y = north). Ponds:
 // inside any waterbody ring. Channels: perennial and intermittent reaches (NHD fcode, as water.js
-// classes them), within the order's water width (1: 1.5 m, 2: 2.5, 3: 4, 4+: 7) / 2 + 1 m of the
-// centreline. Riparian band: within RIPARIAN_M of any stream centreline (ephemeral swales included;
+// classes them), within the reach's water width / 2 + 1 m of the centreline: `width` from drainage
+// area (pipeline/channels.py: 1.6 A^0.45 m, 1-30), else by order (1: 1.5 m, 2: 2.5, 3: 4, 4+: 7). Riparian band: within RIPARIAN_M of any stream centreline (ephemeral swales included;
 // canals, 33600, are human footprint and ignored).
 //   inWater(x, north) -> bool, exact (vegetation placement)
 //   streamDist(x, north) -> metres to the nearest stream centreline, Infinity beyond RIPARIAN_M
@@ -120,7 +120,8 @@ export class WaterMask {
     for (const st of features?.streams || []) {
       const kind = st.fcode in STREAM_KIND ? STREAM_KIND[st.fcode] : 'intermittent';
       if (!kind || !st.path || st.path.length < 2) continue;
-      const hw = kind === 'ephemeral' ? 0 : WATER_WIDTH[Math.max(1, Math.min(4, st.order || 1))] / 2 + 1;
+      const ww = st.width > 0 ? st.width : WATER_WIDTH[Math.max(1, Math.min(4, st.order || 1))];
+      const hw = kind === 'ephemeral' ? 0 : ww / 2 + 1;
       const reach = Math.max(RIPARIAN_M, hw);
       for (let n = 0; n < st.path.length - 1; n++) {
         const [ax, ay] = st.path[n], [bx, by] = st.path[n + 1], s = [ax, ay, bx, by, hw];

@@ -1,0 +1,6 @@
+# Extra dependencies for the "channels" build step (pipeline/channels.py): DEM hydrologic routing.
+# pysheds pulls in numba, scipy and scikit-image (channels.py also uses scipy.ndimage and
+# skimage.morphology directly).
+pysheds==0.5
+scipy>=1.13
+scikit-image>=0.24
