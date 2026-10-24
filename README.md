@@ -16,7 +16,7 @@ Three workstreams share one contract, the [tile package spec](docs/tile-spec.md)
 ## Run it
 
 ```bash
-python3 -m venv .venv && .venv/bin/pip install rasterio numpy pyproj shapely requests pillow opencv-python-headless && .venv/bin/pip install -r pipeline/requirements-hydro.txt
+python3 -m venv .venv && .venv/bin/pip install rasterio numpy pyproj shapely requests pillow opencv-python-headless && .venv/bin/pip install -r pipeline/requirements-hydro.txt -r pipeline/requirements-ground.txt
 ```
 
 Build the tile that contains an anchor point. The anchor is snapped to a 10 km UTM
@@ -132,5 +132,5 @@ keep edits in the browser and export them as JSON; appending them to the manifes
 
 ## Credits
 
-Icons: [Lucide](https://lucide.dev) (ISC licence). Data sources are listed per tile in
+Icons: [Lucide](https://lucide.dev) (ISC licence). Ground detail textures are CC0 scans from [Poly Haven](https://polyhaven.com), credited in client/assets/ground/ATTRIBUTION.md. Data sources are listed per tile in
 each manifest and in the tile spec.

@@ -221,3 +221,20 @@ plus an outcrop likelihood (lithology resistance x shallow soil x convexity x sl
 later x lidar roughness); the client places procedural boulders and outcrop clusters
 from it and the ground-detail shader takes gravel and dirt colour from the soil data.
 Rejected: placing rocks by slope and noise alone (not reproducible, not local).
+
+## 2026-10-25: near-ground detail is CC0 scans multiplied over the photo, chosen from data
+
+The aerial photo blurs to paint inside about 50 m. The fix is a detail layer rather than
+a higher-resolution photo: five tileable CC0 ground scans (dry thatch, oak leaf litter,
+gravelly dirt, cobbles and rock, worn pavement) with normal maps, normalised to a mean
+of one and multiplied over the photo inside 250 m, so the photo still supplies colour
+and the grass and shrub roots still match the ground. Which surface shows at a pixel
+comes from data already in the tile: habitat (thatch in open grassland, litter under
+canopy, gravel in chaparral), slope and curvature from the heights (rock above about
+30 degrees and in concave channels), a bare-ground term from the photo, and the roads
+mask for pavement. Tiling is broken with two UV warps and a fade as each repeat shrinks
+on screen. Cost is about one GPU millisecond at 3 m and nothing at the start view.
+Rejected: triplanar everywhere (budget), and detail that replaces the photo colour (it
+would fight the recoloured seasons and the grass). Next: the soils raster from the
+geology step drives the gravel and dirt choice, and outcrops are placed from the
+outcrop likelihood.
