@@ -9,15 +9,16 @@ import { ShrubField, GrassClumps, StalkClumps, CLUMP_BAND, STALK_BAND, waterAt }
 import { GrassShells } from './grassShells.js';
 
 // Grass in the Sierra foothill savanna: non-native annuals (wild oat, bromes, medusahead) over
-// purple needlegrass bunchgrass. Two LODs in one system, three draw calls:
+// purple needlegrass bunchgrass. Two LODs in one system, five draw calls:
 //   near (to ~70 m): instanced clumps of real blade geometry, one mesh per type (annual, bunch),
-//                    plus a denser close tier of the same clumps within ~30 m;
+//                    plus a denser close tier of the same clumps within ~30 m, and a denser ground
+//                    tier again within ~16 m (its own pair of meshes, refilled more often);
 //   mid (to 250 m):  leaning tuft cards whose blades are cut out in the fragment shader.
-// Past 250 m the ground texture carries it. The handover is stochastic: each near clump has its
-// own cut-off distance in 55-85 m and thins out blade by blade over a few metres there (each blade
-// has its own threshold), while each tuft dithers in at its own distance in the same band, so there
-// is no seam line. Nothing changes size in a handover: a scaled fade reads as plants growing out of
-// the ground and sinking back into it.
+// Past 250 m the ground texture carries it. The handovers are stochastic: each near clump has its
+// own cut-off distance in its tier's band (ground 10-16 m, close 16-30 m, main 55-85 m) and thins
+// out blade by blade over a few metres there (each blade has its own threshold), while each tuft
+// dithers in at its own distance in 26-38 m, so there is no seam line. Nothing changes size in a
+// handover: a scaled fade reads as plants growing out of the ground and sinking back into it.
 // Placement is deterministic per 30 m habitat cell and cached, so nothing re-rolls as you move;
 // each frame only the cells in view are submitted to the GPU (see cull).
 // Seen from the air (docs/grass-notes.md) three more layers hang off this class: sward shells for
@@ -31,17 +32,38 @@ const NEAR_PER_M2 = 1 / 1.35, MID_PER_M2 = 1 / 4;
 // Close tier: extra clumps near the camera, where a 1.35 m^2 spacing reads as bare ground between
 // wisps. They hand over (thin out) between 16 and 30 m, where the grazing view fills in anyway.
 const CLOSE_FADE = [16, 30], CLOSE_PLACE = CLOSE_FADE[1] + NEAR_REBUILD + 2, CLOSE_PER_M2 = 1 / 0.18;
+// Ground tier: more clumps again within ~16 m. The chase camera sits 3.5-5 m up even with the raven
+// on the ground, so it looks down 15-50 degrees at this ring, and the close tier alone (tuned for a
+// level eye at 2 m, where the grazing view stacks blades into a solid sward) covered only a few per
+// cent of the screen there: a bare disc around the camera. Its own meshes, refilled every 8 m, so it
+// is placed only to 34 m (two refills beyond the cells that must exist now, so a cell entering the
+// radius is always queued and built in the background before it is needed); cheap to draw, since
+// the ring is small and culled in 10 m blocks.
+const GROUND_FADE = [10, 16], GROUND_REBUILD = 8, GROUND_PLACE = GROUND_FADE[1] + 2 * GROUND_REBUILD + 2, GROUND_PER_M2 = 8;
+// Tufts dither in over 26-38 m, just past the close tier's hand-over, whatever the blades do: the main
+// tier alone (one clump per 1.35 m^2) is too thin to carry 30-55 m from a camera a few metres up.
+const MID_IN = [26, 38];
 // Placement layers, each cached per cell. `now`: a cell nearer than this is visible already and is
 // generated at once; farther ones (the new ring at the edge of the placement radius) are queued
-// and built a few per frame, so flying into new ground does not stall a frame.
+// and built a few per frame, so flying into new ground does not stall a frame. `place`: placement
+// radius. `sub`: block size (m) a cell's instances are split into for culling; the near tiers use
+// 10 m, since a 30 m cell block submitted ~2.4x the instances actually in view.
 const LAYERS = [
-  { perM2: NEAR_PER_M2, tier: 0, salt: 11, now: NEAR_FADE[1] + 3 },                  // near, main
-  { perM2: CLOSE_PER_M2 - NEAR_PER_M2, tier: 1, salt: 37, now: CLOSE_FADE[1] + 3 },  // near, close
-  { perM2: MID_PER_M2, tier: 0, salt: 23, now: MID_END },                            // mid tufts
+  { perM2: NEAR_PER_M2, tier: 0, salt: 11, now: NEAR_FADE[1] + 3, place: NEAR_PLACE, sub: 10, pool: 'near' },                   // near, main
+  { perM2: CLOSE_PER_M2 - NEAR_PER_M2, tier: 1, salt: 37, now: CLOSE_FADE[1] + 3, place: CLOSE_PLACE, sub: 10, pool: 'near' },  // near, close
+  { perM2: GROUND_PER_M2, tier: 2, salt: 53, now: GROUND_FADE[1] + 3, place: GROUND_PLACE, sub: 10, pool: 'ground' },           // near, ground
+  { perM2: MID_PER_M2, tier: 0, salt: 23, now: MID_END, place: MID_PLACE, sub: 30, pool: 'mid', mid: true },                    // mid tufts
 ];
+// Refill pools: each restages its own meshes (by type for the blades) from its layers when the camera
+// has moved `rebuild` metres from where it last filled, out to `place`.
+const POOLS = {
+  near: { layers: [0, 1], sets: ['annual', 'bunch'], rebuild: NEAR_REBUILD, place: NEAR_PLACE },
+  ground: { layers: [2], sets: ['groundA', 'groundB'], rebuild: GROUND_REBUILD, place: GROUND_PLACE },
+  mid: { layers: [3], sets: ['mid'], rebuild: MID_REBUILD, place: MID_PLACE },
+};
 // Habitat class -> relative density and the annual share (the rest is needlegrass).
 const HABITAT = { 5: { dens: 1.0, annual: 0.75 }, 1: { dens: 0.5, annual: 0.55 }, 6: { dens: 0.12, annual: 0.5 } };
-const STRIDE = 8;   // per instance: x, y, z, yaw | scale xz, scale y, seed, type + 2 * tier (type 0 annual, 1 bunch; tier 1 close)
+const STRIDE = 8;   // per instance: x, y, z, yaw | scale xz, scale y, seed, type + 2 * tier (type 0 annual, 1 bunch; tier 1 close, 2 ground)
 
 // Season palettes (sRGB). Annuals: wild oat and bromes; bunch: purple needlegrass. The season's
 // `grass` tint stays the overall tone: these are scaled by tint / SEASON_LOOK[season].grass.
@@ -65,7 +87,7 @@ const THATCH = [0.58, 0.54, 0.45];   // last year's grey dead leaves, in among t
 const COMMON_VERT = /* glsl */`
   ${WIND_GLSL}
   ${GROUND_GLSL}
-  uniform vec2 nearFade; uniform vec2 closeFade; uniform float midEnd; uniform float groundK; uniform float matchOn; uniform float tiltOn;
+  uniform vec2 nearFade; uniform vec2 closeFade; uniform vec2 groundFade; uniform vec2 midIn; uniform float midEnd; uniform float groundK; uniform float matchOn; uniform float tiltOn;
   uniform float heightScale; uniform float heads; uniform float thatch; uniform float leafScale;
   uniform vec3 aRoot; uniform vec3 aTip; uniform vec3 aHead; uniform vec3 aAwn;
   uniform vec3 bRoot; uniform vec3 bTip; uniform vec3 bHead; uniform vec3 bAwn; uniform vec3 thatchCol;
@@ -163,7 +185,7 @@ const NEAR_VERT = /* glsl */`
   void main() {
     float t = aBlade.x, br = aBlade.y, part = aBlade.z, seed = iVar.z, type = mod(iVar.w, 2.0);
     float d = distance(cameraPosition, iPos.xyz);
-    vec2 band = iVar.w > 1.5 ? closeFade : nearFade;
+    vec2 band = iVar.w > 3.5 ? groundFade : iVar.w > 1.5 ? closeFade : nearFade;
     float dOut = mix(band.x, band.y, h11(seed * 517.3 + 0.37));   // this clump's own hand-over distance
     float hb = h11(seed * 71.9 + br * 131.7);
     // Hand-over: the clump thins blade by blade over dOut +/- 3 m (a stable threshold per blade),
@@ -217,7 +239,7 @@ const MID_VERT = /* glsl */`
   void main() {
     float seed = iVar.z, type = iVar.w;
     float d = distance(cameraPosition, iPos.xyz);
-    float dIn = mix(nearFade.x, nearFade.y, h11(seed * 517.3 + 0.37));
+    float dIn = mix(midIn.x, midIn.y, h11(seed * 517.3 + 0.37));
     float grow = smoothstep(dIn - 3.0, dIn + 3.0, d);
     // Thin out with distance (survivors widen to keep the cover) and end at midEnd.
     float keep = mix(1.0, 0.4, smoothstep(110.0, 220.0, d)) * (1.0 - smoothstep(midEnd - 35.0, midEnd, d));
@@ -312,18 +334,19 @@ function seasonOf(look) {
 }
 
 export class Grass {
-  // cap: mid-LOD tuft capacity (the near LOD stages up to 90k).
+  // cap: mid-LOD tuft capacity (the near blade meshes stage up to 90k each, the ground tier's 50k).
   constructor(tile, scene, cap = 64000) {
-    this.tile = tile; this.nearCap = 90000; this.midCap = cap;
+    this.tile = tile; this.nearCap = 90000; this.groundCap = 50000; this.midCap = cap;
     this.ground = terrainHeight(tile);
-    this.lastNear = null; this.lastMid = null; this.lookKey = '';
+    this.last = { near: null, ground: null, mid: null }; this.lookKey = '';
     this.cache = LAYERS.map(() => new Map());   // per layer: cell index -> instance groups
-    this.queue = new Map(); this.dirty = [false, false];   // cells waiting to be generated; LODs to refill
+    this.queue = new Map(); this.dirty = { near: false, ground: false, mid: false };   // cells waiting to be generated; pools to refill
     this.buildDensityGrid();
     const col = () => new THREE.Color();
     this.uniforms = {
       ...windUniforms, ...groundUniforms, groundK: { value: 1.12 }, matchOn: { value: 1 }, tiltOn: { value: 1 },
-      nearFade: { value: new THREE.Vector2(...NEAR_FADE) }, closeFade: { value: new THREE.Vector2(...CLOSE_FADE) }, midEnd: { value: MID_END },
+      nearFade: { value: new THREE.Vector2(...NEAR_FADE) }, closeFade: { value: new THREE.Vector2(...CLOSE_FADE) },
+      groundFade: { value: new THREE.Vector2(...GROUND_FADE) }, midIn: { value: new THREE.Vector2(...MID_IN) }, midEnd: { value: MID_END },
       heightScale: { value: 1 }, heads: { value: 1 }, thatch: { value: 0 }, leafScale: { value: 1 }, dry: { value: 1 },
       aRoot: { value: col() }, aTip: { value: col() }, aHead: { value: col() }, aAwn: { value: col() },
       bRoot: { value: col() }, bTip: { value: col() }, bHead: { value: col() }, bAwn: { value: col() },
@@ -332,12 +355,16 @@ export class Grass {
     };
     const nearMat = new THREE.ShaderMaterial({ vertexShader: NEAR_VERT, fragmentShader: NEAR_FRAG, uniforms: this.uniforms, side: THREE.DoubleSide });
     const midMat = new THREE.ShaderMaterial({ vertexShader: MID_VERT, fragmentShader: MID_FRAG, uniforms: this.uniforms, side: THREE.DoubleSide, alphaToCoverage: true });
-    const nearBands = [[0, NEAR_FADE[1] + 3], [0, CLOSE_FADE[1] + 3]];   // visible distance per tier
+    // Visible distance per tier (indexed by tier; update moves the main tier's with height).
+    const nearBands = [[0, NEAR_FADE[1] + 3], [0, CLOSE_FADE[1] + 3]], groundBands = [null, null, [0, GROUND_FADE[1] + 3]];
     this._frustum = new THREE.Frustum(); this._m = new THREE.Matrix4(); this._inv = new THREE.Matrix4(); this._sphere = new THREE.Sphere(); this._pick = [];
+    const annualGeo = buildAnnualClump(), bunchGeo = buildBunchClump();
     this.sets = {
-      annual: this.makeSet(buildAnnualClump(), nearMat, this.nearCap, nearBands),
-      bunch: this.makeSet(buildBunchClump(), nearMat, this.nearCap, nearBands),
-      mid: this.makeSet(buildTuft(), midMat, this.midCap, [[NEAR_FADE[0] - 3, MID_END]]),
+      annual: this.makeSet(annualGeo, nearMat, this.nearCap, nearBands),
+      bunch: this.makeSet(bunchGeo, nearMat, this.nearCap, nearBands),
+      groundA: this.makeSet(annualGeo, nearMat, this.groundCap, groundBands),
+      groundB: this.makeSet(bunchGeo, nearMat, this.groundCap, groundBands),
+      mid: this.makeSet(buildTuft(), midMat, this.midCap, [[MID_IN[0] - 3, MID_END]]),
     };
     this.group = new THREE.Group(); this.group.name = 'grass';
     for (const s of Object.values(this.sets)) this.group.add(s.mesh);
@@ -358,7 +385,9 @@ export class Grass {
   // Instances placed (staged) and drawn this frame, per LOD.
   get counts() {
     const s = this.sets;
-    return { nearPlaced: s.annual.staged + s.bunch.staged, nearDrawn: s.annual.n + s.bunch.n, annualDrawn: s.annual.n, bunchDrawn: s.bunch.n, midPlaced: s.mid.staged, midDrawn: s.mid.n };
+    return { nearPlaced: s.annual.staged + s.bunch.staged + s.groundA.staged + s.groundB.staged,
+      nearDrawn: s.annual.n + s.bunch.n + s.groundA.n + s.groundB.n, annualDrawn: s.annual.n + s.groundA.n, bunchDrawn: s.bunch.n + s.groundB.n,
+      groundDrawn: s.groundA.n + s.groundB.n, midPlaced: s.mid.staged, midDrawn: s.mid.n };
   }
 
   // An instanced mesh plus a CPU staging copy of every placed instance, grouped in blocks (one
@@ -406,9 +435,9 @@ export class Grass {
   }
 
   // Instances of one cell for one layer, generated once and cached, sorted into groups by mesh
-  // (annual, bunch; the mid layer has one), each with a bounding sphere.
+  // (annual, bunch; the mid layer has one) and by L.sub-metre block, each with a bounding sphere.
   cellData(i, j, layer) {
-    const key = j * this.W + i, cache = this.cache[layer], L = LAYERS[layer], mid = layer === 2;
+    const key = j * this.W + i, cache = this.cache[layer], L = LAYERS[layer], mid = !!L.mid;
     let groups = cache.get(key);
     if (groups) return groups;
     const { habitat: hab, size, roads, waterMask: wm } = this.tile, res = hab.res;
@@ -417,13 +446,14 @@ export class Grass {
       const a = i + di, b = j + dj;
       if (a >= 0 && b >= 0 && a < this.W && b < this.Hh && this.dens[b * this.W + a] > 0) { any = true; break; }
     }
-    const out = [[], []];   // by type for the near layers; out[0] for the mid
+    const ns = Math.max(1, Math.round(res / L.sub)), nb = ns * ns;
+    const out = Array.from({ length: 2 * nb }, () => []);   // by type, then block; the mid layer uses type 0 only
     if (any) {
       const hb = HABITAT[hab.channel(i, j, 0)], annualShare = hb ? hb.annual : 0.6;
-      const n = Math.round(res * res * L.perM2), tier = L.tier;   // tier: 0 main, 1 close
+      const n = Math.round(res * res * L.perM2), tier = L.tier;   // tier: 0 main, 1 close, 2 ground
       const rnd = mulberry32((i * 92821) ^ (j * 68917) ^ L.salt);
       for (let k = 0; k < n; k++) {
-        const px = (i + rnd()) * res, pn = size - (j + rnd()) * res;
+        const ux = rnd(), uy = rnd(), px = (i + ux) * res, pn = size - (j + uy) * res;
         const keep = rnd(), yaw = rnd() * Math.PI * 2, sv = rnd(), sj = rnd(), type = rnd() < annualShare ? 0 : 1, seed = rnd(), verge = rnd();
         const dens = this.sample(this.dens, px, pn);
         if (keep >= dens) continue;
@@ -433,11 +463,16 @@ export class Grass {
         // None on ponds or in stream channels (the riparian band keeps its grass).
         if (wm && waterAt(wm, px, pn) === 255) continue;
         // Bare patches, more of them where herb cover is thin, thinning out over a feathered edge;
-        // clumps also shorten toward them.
+        // clumps also shorten toward them. The blade tiers keep 40% of their (shorter) clumps in a
+        // patch: seen from the chase camera a few metres up, an empty patch (they are often 10-30 m
+        // across) read as the grass vanishing around you rather than as thin ground. The tufts (and
+        // the shells) still leave it open, so the patches show from the air as before.
         const herb = this.sample(this.herb, px, pn), bare = bareField(px, pn), thr = 0.28 + 0.14 * (1 - herb);
-        if (keep >= dens * smooth(thr - 0.06, thr + 0.06, bare)) continue;
-        const s = (0.75 + 0.5 * sv) * (0.7 + 0.45 * herb) * (0.45 + 0.55 * smooth(thr, thr + 0.15, bare));
-        out[mid ? 0 : type].push(px, this.ground(px, pn), -pn, yaw, s * (0.85 + 0.3 * sj), s, seed, type + 2 * tier);
+        const open = smooth(thr - 0.06, thr + 0.06, bare);
+        if (keep >= dens * (mid ? open : 0.4 + 0.6 * open)) continue;
+        const s = (0.75 + 0.5 * sv) * (0.7 + 0.45 * herb) * (0.6 + 0.4 * smooth(thr, thr + 0.15, bare));
+        const blk = Math.min(Math.floor(uy * ns), ns - 1) * ns + Math.min(Math.floor(ux * ns), ns - 1);
+        out[(mid ? 0 : type) * nb + blk].push(px, this.ground(px, pn), -pn, yaw, s * (0.85 + 0.3 * sj), s, seed, type + 2 * tier);
       }
     }
     groups = [];
@@ -449,7 +484,7 @@ export class Grass {
         z0 = Math.min(z0, a[o + 2]); z1 = Math.max(z1, a[o + 2]); sy = Math.max(sy, a[o + 5]);
       }
       const h = 1.2 * sy + 0.3;   // grass height above the highest root
-      groups.push({ mesh: g, tier: L.tier, data: new Float32Array(a), x: (x0 + x1) / 2, y: (y0 + y1 + h) / 2, z: (z0 + z1) / 2,
+      groups.push({ mesh: Math.floor(g / nb), tier: L.tier, data: new Float32Array(a), x: (x0 + x1) / 2, y: (y0 + y1 + h) / 2, z: (z0 + z1) / 2,
         r: Math.hypot((x1 - x0) / 2 + 0.6, (y1 - y0 + h) / 2, (z1 - z0) / 2 + 0.6) });
     });
     if (cache.size > (mid ? 3000 : 400)) cache.clear();   // bounded at a few tens of MB
@@ -469,21 +504,24 @@ export class Grass {
     return cells.sort((a, b) => a[0] - b[0]);
   }
 
-  // Stage the cells within r (close-layer cells within rClose) of (x, north), nearest first, one
-  // block per cell group: plain copies, so a refill costs no per-instance work. Cells not yet
-  // generated are made now if they are visible, else queued (see update).
-  fill(x, north, r, lod, targets, cap, rClose = r) {
-    const half = this.tile.habitat.res * 0.71, layers = lod ? [2] : [0, 1];
+  // Stage one pool's layers around (x, north), each out to its own placement radius, nearest cell
+  // first, one block per cell group (blocks wholly outside the radius are skipped): plain copies, so
+  // a refill costs no per-instance work. Cells not yet generated are made now if they are visible,
+  // else queued (see update).
+  fill(x, north, pool) {
+    const P = POOLS[pool], targets = P.sets.map(k => this.sets[k]), half = this.tile.habitat.res * 0.71, layers = P.layers;
     for (const t of targets) { t.staged = 0; t.blocks.length = 0; t.sig = NaN; }
     for (const [k, q] of this.queue) if (layers.includes(q[2])) this.queue.delete(k);   // re-queued below if still wanted
-    for (const [d, i, j] of this.cellsAround(x, north, r)) {
+    for (const [d, i, j] of this.cellsAround(x, north, P.place)) {
       for (const layer of layers) {
-        if (layer === 1 && d - half > rClose) continue;
+        const L = LAYERS[layer];
+        if (d - half > L.place) continue;
         const key = j * this.W + i;
-        if (!this.cache[layer].has(key) && d - half > LAYERS[layer].now) { this.queue.set(layer * 1e7 + key, [i, j, layer]); continue; }
+        if (!this.cache[layer].has(key) && d - half > L.now) { this.queue.set(layer * 1e7 + key, [i, j, layer]); continue; }
         for (const g of this.cellData(i, j, layer)) {
+          if (Math.hypot(g.x - x, g.z + north) - g.r > L.place) continue;
           const t = targets[g.mesh], n = g.data.length / STRIDE;
-          if (t.staged + n > cap) continue;
+          if (t.staged + n > t.cap) continue;
           t.stage.set(g.data, t.staged * STRIDE);
           t.blocks.push({ x: g.x, y: g.y, z: g.z, r: g.r, tier: g.tier, start: t.staged, count: n });
           t.staged += n;
@@ -492,13 +530,14 @@ export class Grass {
     }
   }
 
-  // Generate queued cells for up to `budget` ms, then mark their LODs for a refill.
-  drain(budget = 3) {
+  // Generate queued cells for up to `budget` ms, then mark their pools for a refill. The budget is
+  // checked after each cell, and a ground-tier cell takes ~2 ms, so 2 ms means one such cell a frame.
+  drain(budget = 2) {
     const t0 = performance.now();
     for (const [k, [i, j, layer]] of this.queue) {
       this.queue.delete(k);
       if (this.cache[layer].has(j * this.W + i)) continue;
-      this.cellData(i, j, layer); this.dirty[layer === 2 ? 1 : 0] = true;
+      this.cellData(i, j, layer); this.dirty[LAYERS[layer].pool] = true;
       if (performance.now() - t0 > budget) break;
     }
   }
@@ -544,29 +583,28 @@ export class Grass {
     if (key !== this.lookKey) { this.lookKey = key; this.applyLook(look); }
     const cp = camera.position, north = -cp.z, agl = cp.y - this.ground(cp.x, north);
     // From the air the blade clumps are sub-pixel and the shells and tussocks carry the sward, so the
-    // blades hand over to the tufts nearer the camera the higher it is: 55-85 m below 8 m, 30-45 m
-    // from 28 m up (the tufts dither in over the same band, so no gap opens).
+    // blades hand over nearer the camera the higher it is: 55-85 m below 8 m, 30-45 m from 28 m up
+    // (the tufts have dithered in by 38 m at every height, so no gap opens).
     const k = this.altLod === false ? 0 : smooth(8, 28, agl), nf = this.uniforms.nearFade.value;   // altLod: false for A/B timing
     nf.set(NEAR_FADE[0] + (30 - NEAR_FADE[0]) * k, NEAR_FADE[1] + (45 - NEAR_FADE[1]) * k);
-    this.sets.annual.bands[0][1] = nf.y + 3; this.sets.mid.bands[0][0] = nf.x - 3;
-    const nearOn = agl < nf.y + 3, midOn = agl < MID_END;
-    const moved = last => Math.hypot(cp.x - last[0], north - last[1]);
+    this.sets.annual.bands[0][1] = nf.y + 3;
+    // The ground tier is for the low chase camera looking down at the ring around it; once the shells
+    // carry the sward (camera 10 m up and more) it is mostly under them, so it thins out blade by
+    // blade from the camera outward over 8-14 m and is off above that.
+    const gk = 1 - smooth(8, 14, agl);
+    this.uniforms.groundFade.value.set(GROUND_FADE[0] * gk, GROUND_FADE[1] * gk);
+    const on = { near: agl < nf.y + 3, ground: agl < 14, mid: agl < MID_END };
     if (this.queue.size) this.drain();
-    const moveNear = !this.lastNear || moved(this.lastNear) > NEAR_REBUILD, moveMid = !this.lastMid || moved(this.lastMid) > MID_REBUILD;
-    if (nearOn && (moveNear || this.dirty[0])) {
-      if (moveNear) this.lastNear = [cp.x, north];
-      this.dirty[0] = false;
-      this.fill(this.lastNear[0], this.lastNear[1], NEAR_PLACE, 0, [this.sets.annual, this.sets.bunch], this.nearCap, CLOSE_PLACE);
-    }
-    if (midOn && (moveMid || this.dirty[1])) {
-      if (moveMid) this.lastMid = [cp.x, north];
-      this.dirty[1] = false;
-      this.fill(this.lastMid[0], this.lastMid[1], MID_PLACE, 1, [this.sets.mid], this.midCap);
+    for (const pool of ['near', 'ground', 'mid']) {
+      if (!on[pool]) continue;
+      const last = this.last[pool], move = !last || Math.hypot(cp.x - last[0], north - last[1]) > POOLS[pool].rebuild;
+      if (!move && !this.dirty[pool]) continue;
+      if (move) this.last[pool] = [cp.x, north];
+      this.dirty[pool] = false;
+      this.fill(this.last[pool][0], this.last[pool][1], pool);
     }
     const S = this.sets;
-    S.annual.mesh.visible = nearOn && S.annual.staged > 0;
-    S.bunch.mesh.visible = nearOn && S.bunch.staged > 0;
-    S.mid.mesh.visible = midOn && S.mid.staged > 0;
+    for (const [pool, P] of Object.entries(POOLS)) for (const k of P.sets) S[k].mesh.visible = on[pool] && S[k].staged > 0;
     this.cull(camera);
     for (const set of Object.values(S)) if (set.n === 0) set.mesh.visible = false;
     // Shrub impostors: drawn to within 3-8 m of the camera at every height. The 3D shrubs of
@@ -577,9 +615,10 @@ export class Grass {
     // The tussock and oat impostors' near edges move with height over 6-10 m (it was a hard switch at
     // 8 m); every fade is a dither, so a moving edge thins plants, it never resizes them.
     const up = smooth(6, 10, agl), mixB = (low, high) => [low[0] + (high[0] - low[0]) * up, low[1] + (high[1] - low[1]) * up, high[2], high[3]];
-    // Tussock impostors: from 12 m when seen from the air (low down the blade clumps carry the near
-    // field) out to 225 m, so the sward keeps a grain from 60-200 m up. Wild oat stands likewise,
-    // while the grass is cured.
+    // Tussock impostors: from 12 m when seen from the air (low down the blade clumps and the tufts carry
+    // the near field; a tussock impostor nearer than ~40 m to a low camera reads as a cotton ball) out
+    // to 225 m, so the sward keeps a grain from 60-200 m up. Wild oat stands likewise, while the grass
+    // is cured.
     const cb = CLUMP_BAND, sb = STALK_BAND;
     this.clumps.update(camera, agl < cb[3], mixB([45, 60], cb));
     this.stalks.update(camera, agl < sb[3] && this.uniforms.dry.value > 0.3, mixB([30, 45], sb));

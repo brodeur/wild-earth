@@ -187,3 +187,17 @@ layout, and shadows.js's casters, are unchanged.
 - **Single-lattice dots on the terrain:** the grid showed from the air.
 
 Costs and screenshots are in the hand-off report for this work.
+
+## Third pass (2026-10-25): the bare ring at ground level
+
+Report: "about 30 m around me becomes invisible". Cause: the near blades were tuned for
+a level eye at 2 m, but since the third-person camera landed it sits ~4 m up and 5.5 m
+behind the bird, looking down 15-50° at the near ring, where 5-15 cm fall blades covered
+only 1-6% of the lower screen; past the close tier's 16-30 m handover only the sparse
+main tier remained, and tufts did not start until 55-85 m. Changes: a ground tier of
+8 extra clumps/m² within ~16 m (thinning as the camera climbs 8-14 m where the shells
+take over), tufts dithering in at 26-38 m, near clumps culled in 10 m blocks (which
+pays for the ground tier), and bare patches keep 40% of their clumps so they read as
+thin ground rather than holes. Shells stay off below 6-10 m (they bury the blades up
+close); tussocks stay at 45-60 m. No extra GPU cost; low flight is smoother (worst
+frame 109 -> 30 ms).
