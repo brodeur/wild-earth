@@ -82,14 +82,16 @@ export function cellPlan(tile, i, j) {
 }
 // Whether plant k of cell (i, j) at (px, pn) is skipped: road pavement and verge (as before), ponds
 // and stream channels (tile.waterMask), and riparian thinning: a tree within RIPARIAN_M of a stream
-// centreline is kept with odds rising from 0.35 at the channel to 1 at the band's edge. Uses hashes,
-// never the cell's random stream, so a skip moves nothing else.
+// centreline is kept with odds rising from 0.35 at the channel to 1 at the band's edge, except the
+// streamside species (BANK: willow, alder), which belong in the band; `name` (any alias) says which
+// species it is, and a caller that leaves it out thins every tree as before. Uses hashes, never the
+// cell's random stream, so a skip moves nothing else.
 // Plants (not rocks: rocks.js passes plant = false) also thin on outcrop cells by tilepackage's rockKeep.
 // Rewilded water beds (tile.rewild, pipeline species_mix rows rewilded_meadow / rewilded_riparian): a
 // corridor cell's trees keep to the 12 m corridor along the restored channel (on the open bed beside
 // it 85% of them are skipped), so the gallery follows the channel instead of filling 30 m squares;
 // the meadow cells' scattered oaks are cellPlan's savanna rule and are left alone.
-export function placementSkip(tile, i, j, k, px, pn, isTree, plant = true) {
+export function placementSkip(tile, i, j, k, px, pn, isTree, plant = true, name = null) {
   const roads = tile.roads, rw = roads ? roads.at(px, pn) : 0;
   if (rw > 140 || (isTree && rw > 0 && hash(k, i + j * 4096, 13) / 4294967296 < rw / 255)) return true;
   if (plant && tile.outcrop) { const rk = rockKeep(tile, px, pn); if (rk < 1 && hash(k, i + j * 4096, 41) / 4294967296 > rk) return true; }
@@ -97,8 +99,66 @@ export function placementSkip(tile, i, j, k, px, pn, isTree, plant = true) {
       && tile.rewild.at(px, pn) === 255 && hash(k, i + j * 4096, 43) / 4294967296 < 0.85) return true;
   const wm = tile.waterMask; if (!wm) return false;
   if (wm.inWater(px, pn)) return true;
-  if (isTree) { const d = wm.streamDist(px, pn); if (d < 8 && hash(k, i + j * 4096, 29) / 4294967296 > 0.35 + 0.65 * d / 8) return true; }
+  if (isTree && !(name && BANK[resolveSpecies(name)])) { const d = wm.streamDist(px, pn); if (d < 8 && hash(k, i + j * 4096, 29) / 4294967296 > 0.35 + 0.65 * d / 8) return true; }
   return false;
+}
+
+// Streamside species keep to the bank. BANK[id] = [near, far] metres from the channel's edge (the
+// water mask's channel half-width, water width / 2 + 1 m, from the centreline). A willow or alder whose
+// drawn position has a perennial or intermittent channel (not an ephemeral swale, not a pond) within
+// PULL_M of it moves straight toward that channel's nearest point (down the gradient of the distance to
+// it) to near + (far - near) * h of its edge, h from the plant's own hash (salt 47), so willows line the
+// bank in thickets and alders stand behind them; one already inside that band stays put. In a
+// rewilded_riparian cell (an old reservoir bed, tile.rewild) the restored channel counts even where it
+// is an ephemeral reach (NHD / DEM class; the corridor exists for it), and the band stops 1 m inside
+// the 12 m corridor (pipeline/rewild_hydro.py CORRIDOR_M) so the bed rule does not thin it. A move that
+// would land in water (another reach, a pond), on a road (any width) or off the tile is not made: the
+// plant keeps its drawn position. Cottonwood and every other species stay where they fall.
+const BANK = { salix_lasiolepis: [2, 10], alnus_rhombifolia: [3, 15] }, PULL_M = 30, CORRIDOR_M = 12;
+const placed = { x: 0, n: 0 };
+// Nearest channel centreline (a segment with a channel, s[4] > 0, or any reach with `swales`) within
+// PULL_M of (x, north): [distance, half-width, nearest point x, north], or null. The water mask's
+// buckets are PULL_M wide and hold every segment reaching them, so the 3 x 3 around the point suffice.
+function nearestChannel(wm, x, north, swales) {
+  const B = wm.B, bi = Math.floor(x / B), bj = Math.floor(north / B);
+  let best = PULL_M, hw = -1, qx = 0, qn = 0;
+  for (let J = bj - 1; J <= bj + 1; J++) for (let I = bi - 1; I <= bi + 1; I++) {
+    if (I < 0 || J < 0 || I >= wm.nb || J >= wm.nb) continue;
+    const b = wm.buckets.get(J * wm.nb + I); if (!b) continue;
+    for (const s of b.segs) {
+      if (!(s[4] > 0) && !swales) continue;
+      const dx = s[2] - s[0], dy = s[3] - s[1], L = dx * dx + dy * dy;
+      const t = L ? Math.min(1, Math.max(0, ((x - s[0]) * dx + (north - s[1]) * dy) / L)) : 0;
+      const ex = s[0] + t * dx, en = s[1] + t * dy, d = Math.hypot(x - ex, north - en);
+      if (d < best) { best = d; hw = s[4]; qx = ex; qn = en; }
+    }
+  }
+  return hw >= 0 ? [best, hw, qx, qn] : null;
+}
+// The shared placement of plant k of cell (i, j), drawn at (px, pn) as species `name` (alias or id):
+// null when it is skipped (placementSkip), else where it stands, { x, n } (one object, reused: copy it).
+// Every species but BANK's returns its drawn position, bit-identical to placementSkip alone; BANK
+// species are pulled to the bank first and then tested where they land. Both placers call this
+// (Vegetation.update; impostors.js buildRecords should too, in place of placementSkip, so the far
+// trees stand where the near ones do).
+export function placePlant(tile, i, j, k, name, px, pn, isTree) {
+  const bank = isTree ? BANK[resolveSpecies(name)] : null, wm = tile.waterMask;
+  if (bank && wm) {
+    const corridor = tile.rewild && tile.speciesMix?.at(i, j)?.rule === 'rewilded_riparian';
+    const c = nearestChannel(wm, px, pn, corridor);
+    if (c) {
+      const [d, hw, qx, qn] = c, lo = hw + bank[0], hi = corridor ? Math.max(lo, Math.min(hw + bank[1], CORRIDOR_M - 1)) : hw + bank[1];
+      if (d > hi || d < lo) {
+        const want = lo + (hi - lo) * (hash(k, i + j * 4096, 47) / 4294967296);
+        let ux = px - qx, un = pn - qn, L = Math.hypot(ux, un);
+        if (L < 1e-6) { ux = 1; un = 0; L = 1; }   // on the centreline: out to one side
+        const x = qx + ux / L * want, n = qn + un / L * want;
+        if (x >= 0 && n >= 0 && x < tile.size && n < tile.size && !wm.inWater(x, n) && !(tile.roads && tile.roads.at(x, n) > 0)) { px = x; pn = n; }
+      }
+    }
+  }
+  if (placementSkip(tile, i, j, k, px, pn, isTree, true, name)) return null;
+  placed.x = px; placed.n = pn; return placed;
 }
 
 export function pick(mix, r) { let acc = 0; for (const [k, w] of Object.entries(mix)) { acc += w; if (r <= acc) return k; } return Object.keys(mix)[0]; }
@@ -245,12 +305,14 @@ export class Vegetation {
         const s = 0.75 + rnd() * 0.5, rot = rnd() * Math.PI * 2;   // all draws before any skip, so neighbours keep their place
         if (m.n >= m.cap) continue;   // after the draws: a full model slot must not shift the rest of the cell (impostors use the same sequence)
         // Decayed roads: nothing on the pavement; trees thin out across the verge (shrubs creep in).
-        // Nothing in ponds or stream channels; trees thin out toward a stream (placementSkip).
-        if (placementSkip(tile, i, j, k, px, pn, isTree)) continue;
-        this.tmp.position.set(px, heights.at(px, pn) - 0.3, -pn);
+        // Nothing in ponds or stream channels; trees thin out toward a stream (placementSkip) but for
+        // willow and alder, which keep to the bank (placePlant).
+        const at = placePlant(tile, i, j, k, name, px, pn, isTree); if (!at) continue;
+        const ax = at.x, an = at.n;
+        this.tmp.position.set(ax, heights.at(ax, an) - 0.3, -an);
         this.tmp.rotation.set(0, rot, 0); this.tmp.scale.setScalar(s); this.tmp.updateMatrix();
         m.trunk.setMatrixAt(m.n, this.tmp.matrix); m.ids[m.n] = hash(i, j, k + 101); m.n++; total++;
-        if (name === 'blue_oak' || name === 'live_oak') oaks.push({ id: `${i},${j},${k}`, x: px, z: -pn, y: this.tmp.position.y + 0.3, scale: s, species: name, rot, stem: e.stem, height: e.height, cls: e.cls, snag: e.snag });
+        if (name === 'blue_oak' || name === 'live_oak') oaks.push({ id: `${i},${j},${k}`, x: ax, z: -an, y: this.tmp.position.y + 0.3, scale: s, species: name, rot, stem: e.stem, height: e.height, cls: e.cls, snag: e.snag });
       }
     }
     for (const arr of Object.values(this.meshes)) for (const e of arr) {

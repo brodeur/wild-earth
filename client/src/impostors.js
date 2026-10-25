@@ -1,7 +1,7 @@
 import * as THREE from 'three';
 import { uniforms as atmo, ATMOSPHERE_GLSL } from './atmosphere.js';
 import { SPECIES, SPECIES_IDS, mulberry32, resolveSpecies } from './trees.js';
-import { VARIANTS, pick, hash, variantSeed, handover, cellPlan, placementSkip } from './vegetation.js';
+import { VARIANTS, pick, hash, variantSeed, handover, cellPlan, placementSkip, placePlant } from './vegetation.js';
 import { bakeImpostors, VIEWS, SIDE_VIEWS, ALPHA_REF } from './impostorBake.js';
 import { seasonOfDate } from './season.js';
 
@@ -351,14 +351,17 @@ export class Impostors {
         const variant = Math.floor(rnd() * VARIANTS);
         const px = (i + rnd()) * res, pn = size - (j + rnd()) * res;
         const s = 0.75 + rnd() * 0.5, rot = rnd() * Math.PI * 2;
-        if (placementSkip(tile, i, j, k, px, pn, isTree)) continue;
+        // Same placement as the near forest (vegetation.js placePlant): skips, and willow and alder pulled
+        // to the bank, so a tree stands in one place on both sides of the hand-over. No draws from rnd.
+        const at = placePlant(tile, i, j, k, name, px, pn, isTree); if (!at) continue;
+        const ax = at.x, an = at.n;
         if (n >= chunkOf.length) { const r2 = new Float32Array(rec.length * 2); r2.set(rec); rec = r2; const c2 = new Int32Array(chunkOf.length * 2); c2.set(chunkOf); chunkOf = c2; }
         const own = mulberry32(hash(i, j, k + 7001) ^ 0x5bd1e995);   // the impostor's own draws, outside the shared stream
         const o = n * STRIDE;
-        rec[o] = px; rec[o + 1] = heights.at(px, pn) - 0.3; rec[o + 2] = -pn; rec[o + 3] = rot;
+        rec[o] = ax; rec[o + 1] = heights.at(ax, an) - 0.3; rec[o + 2] = -an; rec[o + 3] = rot;
         rec[o + 4] = s; rec[o + 5] = this.bake.index[treeIdx[resolveSpecies(name)] + variant];   // the slot's baked tree
         rec[o + 6] = own(); rec[o + 7] = i + j * hab.img.width;
-        chunkOf[n] = Math.min(NC - 1, Math.floor(px / CHUNK)) + NC * Math.min(NC - 1, Math.floor(pn / CHUNK));
+        chunkOf[n] = Math.min(NC - 1, Math.floor(ax / CHUNK)) + NC * Math.min(NC - 1, Math.floor(an / CHUNK));
         n++;
       }
     }

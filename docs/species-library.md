@@ -693,14 +693,30 @@ rounds): 64.0 / 65.7 fps against 65.2 / 66.0 (noise), draw calls 234 against 206
 (5.9-6.1 M both), 393 geometries against 324. The far impostor atlas holds 108 slots instead of 72: 35 MB
 instead of 23 MB, bake about 650 ms instead of 530 ms.
 
+**Placement on the bank** (`vegetation.js` `placePlant`, the shared placement both placers should call).
+Willow and alder are exempt from the riparian thinning (`placementSkip` takes the species as an optional
+last argument; oaks, pines and cottonwood thin as before). A willow whose drawn position has a channel
+(perennial or intermittent reach; in a `rewilded_riparian` cell the restored channel, ephemeral or not)
+within 30 m moves straight toward the channel's nearest point to 2-10 m from its edge (the water mask's
+half-width), an alder to 3-15 m (inside a rewilded corridor both stop at 11 m from the centreline), the
+distance from the plant's own hash; one already in its band stays put, and a move landing in water, on
+any road or off the tile is not made. Cottonwood stays where it falls. No random draw changed: every
+other species' placements are bit-identical on both tiles (all 332k plants of the home tile compared).
+Home tile: willows 9,370 to 10,625 and alders 6,396 to 7,202 (the thinning no longer drops them); of the
+willows with a channel within 30 m, 3,392 now stand 2-10 m from its edge (1,025 before); none in water.
+The far impostors (`impostors.js` `buildRecords`) still call `placementSkip` without the species and
+take the drawn position; for them to agree it needs `const at = placePlant(tile, i, j, k, name, px, pn,
+isTree); if (!at) continue;` in place of the `placementSkip` line, with `at.x` / `at.n` for `px` / `pn`
+in the record and chunk below it.
+
 **Known limits.**
 - Willow reads as a shrubby tree with leafy sprays rather than a thicket of upright wands, and its lowest
   foliage sits at 0.15 of its height (photos 0.05): level-1 limbs are shared among the stems.
 - At under 10 m the close-tier cards show their spray outline (broad lobes), most visibly on willow, whose
   real foliage is fine and narrow.
-- Placement is per 30 m cell: willow is not placed nearer the water than alder or oak within a cell, and
-  `vegetation.js` still thins every tree within 8 m of a stream centreline, so the willow thicket at the
-  water's edge is thinner than it should be.
+- Far impostors: until `impostors.js` calls `placePlant` (below), willows and alders beyond the hand-over
+  (about 1.2 km) stand where they were drawn and are thinned near the channel, so a handful swap places
+  across the dither band.
 - Cottonwood leaves do not flutter (no wind) and its red catkins are not drawn; alder cones are not drawn.
 - The riparian understory (blackberry, wild rose, spicebush) and valley oak, Oregon ash, bigleaf maple and box
   elder are not in the library.
