@@ -34,7 +34,9 @@ export class PlaceNames {
     this.water = [];          // named waterbodies, for the inside test: { f, ring, bbox }
     for (const w of features?.waterbodies || []) {
       if (!w.name || !w.ring?.length) continue;
-      const f = add(w.name, 'water'); addPath(w.ring, f, true);
+      // A reservoir or stock pond the pipeline rewilded (tilepackage markRewilded) is a meadow now; the
+      // name stays, as locals still use it, but the caption says what it is: "over the old bed of Patterson Lake".
+      const f = add(w.rewilded ? `the old bed of ${w.name}` : w.name, 'water'); addPath(w.ring, f, true);
       let x0 = Infinity, y0 = Infinity, x1 = -Infinity, y1 = -Infinity;
       for (const [x, y] of w.ring) { x0 = Math.min(x0, x); y0 = Math.min(y0, y); x1 = Math.max(x1, x); y1 = Math.max(y1, y); }
       this.water.push({ f, ring: w.ring, bbox: [x0, y0, x1, y1] });
