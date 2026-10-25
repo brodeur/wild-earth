@@ -1,6 +1,7 @@
 import * as THREE from 'three';
 import { uniforms as atmo, ATMOSPHERE_GLSL } from './atmosphere.js';
 import { SEASON_LOOK } from './season.js';
+import { loadImageData } from './tilepackage.js';
 
 // Water in the streams and ponds, by season (docs/roadmap.md, browser push item 5).
 //
@@ -19,6 +20,15 @@ import { SEASON_LOOK } from './season.js';
 // little toward the camera in the vertex shader, along the view ray, so they win the depth test
 // over the 10 m triangles they lie on without moving on screen; trees, ridges and the far bank of
 // a valley still occlude them normally.
+//
+// Hydrology rewilding (pipeline/rewild_hydro.py, docs/tile-spec.md "Hydrology rewilding"): the
+// reservoirs and stock ponds people made are listed in the manifest layer `hydro.human_water`; they
+// are not drawn, and the restored channel the pipeline routed through each old bed is drawn as an
+// ordinary reach. client/channel_profile.png carries each channel's thalweg depth (R, 2 cm) and
+// riffle-pool index (G) from the DEM's long profile, and the rewilded beds (B). It loads after the
+// tile; until it arrives the water keeps its plain colour and depthAt() uses a notional depth.
+// Depth darkens the water (pools dark and glassy, riffles pale, rough and quick) and is exposed
+// as depthAt(x, north) in metres.
 
 // NHD FCode -> class. 55800 artificial paths run through ponds and wide rivers (perennial);
 // 33400 connectors join reaches through culverts and gaps (treated as intermittent); 33600 canals
@@ -145,6 +155,7 @@ const WATER_FRAG = /* glsl */`
   ${ATMOSPHERE_GLSL}
   ${NOISE}
   uniform float rippleAmp; uniform float opacity; uniform float pond;
+  uniform sampler2D profileTex; uniform float hasProfile; uniform float tileSize;
   // Ripple height in flow coordinates q = (metres downstream, metres across): crests run across
   // the flow (stretched across, short along), the fine octave scrolls faster than the coarse one.
   float ripple(vec2 q, float speed, float fine) {
@@ -158,12 +169,22 @@ const WATER_FRAG = /* glsl */`
     // Flow coordinates: ribbons use arc length and offset across; ponds use world xz with a slow drift.
     vec2 q = pond > 0.5 ? vPosW.xz * 0.8 + vec2(uTime * 0.08, uTime * 0.05) : vec2(vFlow.x, vFlow.y);
     float speed = pond > 0.5 ? 0.15 : vFlow.w;
+    // Creek depth (channel_profile.png): thalweg depth R (2 cm units) across a parabolic section, and
+    // the riffle-pool index G (-1 pool .. +1 riffle). Riffles run faster and rougher, pools slower.
+    float dep = 0.4, rif = 0.0;   // without a profile: a mid-depth creek, the look before profiles
+    if (pond < 0.5 && hasProfile > 0.5) {
+      vec4 pr = texture2D(profileTex, vec2(vPosW.x, -vPosW.z) / tileSize);
+      float r = clamp(abs(vFlow.y) / max(vFlow.z, 1e-3), 0.0, 1.0);
+      dep = pr.r * 255.0 * 0.02 * (1.0 - r * r);
+      rif = pr.g > 0.0 ? pr.g * 2.0 - 1.0 : 0.0;
+      speed *= 1.0 + 0.6 * rif;
+    }
     // Fade each octave before it shrinks below a pixel (it would only shimmer), and widen the glint
     // instead, so a distant reach still glitters as a band rather than aliased sparks.
     float fine = 1.0 - smoothstep(0.04, 0.2, px), coarse = 1.0 - smoothstep(0.15, 0.8, px);
     float e = 0.12, h0 = ripple(q, speed, fine);
     vec2 g = vec2(ripple(q + vec2(e, 0.0), speed, fine) - h0, ripple(q + vec2(0.0, e), speed, fine) - h0) / e;
-    g *= rippleAmp * max(coarse, 0.15);
+    g *= rippleAmp * max(coarse, 0.15) * (1.0 + 0.9 * max(rif, 0.0) - 0.35 * max(-rif, 0.0));
     vec2 gw = pond > 0.5 ? g : g.x * dir + g.y * perp;   // gradient in world xz
     vec3 N = normalize(vec3(-gw.x, 1.0, -gw.y));
     vec3 V = normalize(cameraPosition - vPosW);
@@ -181,7 +202,14 @@ const WATER_FRAG = /* glsl */`
     skyR = mix(bank, skyR, smoothstep(pond > 0.5 ? -0.02 : 0.08, pond > 0.5 ? 0.08 : 0.3, R.y));
     skyR *= mix(0.55, 1.0, sh);
     // Body: light scattered back up out of the water column, dark blue-green.
-    vec3 body = vec3(0.020, 0.045, 0.040) * (sunLight * max(sunDir.y, 0.0) * sh + ambientSky * 2.0) * 0.3183099;
+    vec3 lit = (sunLight * max(sunDir.y, 0.0) * sh + ambientSky * 2.0) * 0.3183099;
+    vec3 body = vec3(0.020, 0.045, 0.040) * lit;
+    // Shallow water shows its bed: warm gravel through a few centimetres, the dark column from about
+    // half a metre down; riffles carry broken white water where they are steepest.
+    float column = 1.0 - exp(-dep / 0.2);
+    body = mix(vec3(0.16, 0.14, 0.09) * lit, body * mix(1.1, 0.5, smoothstep(0.25, 1.0, dep)), column);
+    float froth = pond < 0.5 ? smoothstep(0.45, 1.0, rif) * smoothstep(0.55, 0.85, wNoise(q * vec2(1.6, 2.4) - vec2(uTime * speed * 3.0, 0.0))) * coarse : 0.0;
+    body = mix(body, vec3(0.55, 0.57, 0.55) * lit, froth * 0.5);
     // Sun glint, normalised Blinn-Phong; the lobe widens with distance (see above).
     vec3 H = normalize(V + sunDir);
     float shin = mix(900.0, 90.0, smoothstep(0.03, 1.5, px));
@@ -191,7 +219,7 @@ const WATER_FRAG = /* glsl */`
     // Soft banks: ribbons fade over their outer third onto the bed under them.
     // Ponds carry their shoreline fade in vExtra.x (0 on the ring, 1 a metre or two inside).
     float edge = pond > 0.5 ? smoothstep(0.0, 1.0, vExtra.x) : 1.0 - smoothstep(0.55, 1.0, abs(vFlow.y) / vFlow.z);
-    float a = clamp(edge * mix(opacity, 1.0, F) + glint * 0.5 * (pond > 0.5 ? edge : 1.0), 0.0, 1.0);
+    float a = clamp(edge * mix(opacity * mix(0.6, 1.0, column), 1.0, F) + glint * 0.5 * (pond > 0.5 ? edge : 1.0), 0.0, 1.0);
     gl_FragColor = vec4(atmosphereApply(col, vPosW, cameraPosition), a);
     #include <tonemapping_fragment>
     #include <colorspace_fragment>
@@ -243,12 +271,18 @@ export class Water {
       return m;
     };
     this.bedMaterial = mk(BED_FRAG, { classWet: { value: new THREE.Vector3(1, 1, 1) }, opacity: { value: 1 } });
-    this.waterMaterial = mk(WATER_FRAG, { rippleAmp: { value: 0.22 }, opacity: { value: 0.88 }, pond: { value: 0 } });
-    this.pondMaterial = mk(WATER_FRAG, { rippleAmp: { value: 0.07 }, opacity: { value: 0.93 }, pond: { value: 1 } });
+    // depth profile texture, shared by both water materials (a 1 px placeholder until it loads)
+    const blank = new THREE.DataTexture(new Uint8Array(4), 1, 1); blank.needsUpdate = true;
+    const prof = { profileTex: { value: blank }, hasProfile: { value: 0 }, tileSize: { value: tile.size } };
+    this.profileUniforms = prof;
+    this.waterMaterial = mk(WATER_FRAG, { rippleAmp: { value: 0.22 }, opacity: { value: 0.88 }, pond: { value: 0 }, ...prof });
+    this.pondMaterial = mk(WATER_FRAG, { rippleAmp: { value: 0.07 }, opacity: { value: 0.93 }, pond: { value: 1 }, ...prof });
     this.pondBedMaterial = mk(BED_FRAG, { classWet: { value: new THREE.Vector3(0, 0, 0) }, opacity: { value: 0.8 } });
 
     const features = tile.features || {};
     const H = terrainHeight(tile);
+    this.H = H;
+    this.rewildList = tile.manifest?.layers?.['hydro.human_water']?.rewilded || [];
     const ponds = this.buildPonds(features.waterbodies || [], H);
     this.buildStreams(features.streams || [], H, ponds);
 
@@ -257,6 +291,64 @@ export class Water {
     this.ponds.renderOrder = 3; this.pondBeds.renderOrder = 1;
     scene.add(this.group);
     this.setSeason('summer');
+    current = this;
+    this.profile = null;
+    this.profileReady = this.loadProfile(tile);
+  }
+
+  // client/channel_profile.png: pixels for depthAt() and a texture for the water shader. Optional.
+  async loadProfile(tile) {
+    const L = tile.manifest?.layers?.['client.channel_profile'];
+    if (!L) return null;
+    try {
+      const img = await loadImageData(tile.dir + L.path);
+      this.profile = { width: img.width, data: img.data, res: tile.size / img.width, size: tile.size };
+      const tex = new THREE.Texture(img.image);
+      tex.colorSpace = THREE.NoColorSpace; tex.generateMipmaps = false;
+      tex.minFilter = THREE.LinearFilter; tex.magFilter = THREE.LinearFilter; tex.needsUpdate = true;
+      this.profileUniforms.profileTex.value = tex; this.profileUniforms.hasProfile.value = 1;
+      return this.profile;
+    } catch (e) { console.info('water: no channel profile', e.message); return null; }
+  }
+
+  // Channel profile pixel (R, G, B) at a point, or null before it loads / off the tile.
+  profileAt(x, north) {
+    const P = this.profile; if (!P || x < 0 || north < 0 || x >= P.size || north >= P.size) return null;
+    const i = Math.floor(x / P.res), j = Math.floor((P.size - north) / P.res), o = (j * P.width + i) * 4;
+    return [P.data[o], P.data[o + 1], P.data[o + 2]];
+  }
+
+  // Rewilded water under a point (channel_profile.png B): 255 a former reservoir or stock-pond bed
+  // (now a meadow or wet flat), 160 the riparian corridor along the restored channel through it, 0
+  // elsewhere (and 0 until the profile loads). The hook for vegetation and ground.
+  rewildAt(x, north) { const p = this.profileAt(x, north); return p ? p[2] : 0; }
+
+  // Water depth in metres at (x, north): in a pond holding water this season, its level over the
+  // drawn ground; in a creek running this season, the thalweg depth from the profile (pools and
+  // riffles from the DEM's long profile) across a parabolic section of the drawn ribbon's width,
+  // 0 at its edges; 0 on dry ground. Before the profile loads a creek uses a notional depth from its
+  // width. opts.anySeason: count reaches and ponds that are dry this season too.
+  depthAt(x, north, opts = {}) {
+    let best = 0;
+    for (const p of this.pondRings) {
+      const [x0, y0, x1, y1] = p.bbox;
+      if (x < x0 || x > x1 || north < y0 || north > y1) continue;
+      if (!opts.anySeason && !(p.intermittent ? this.pondsSeasonal.visible : this.ponds.visible)) continue;
+      if (inRing(x, north, p.ring)) best = Math.max(best, p.level - this.H(x, north));
+    }
+    const G = this.sectionGrid; if (!G) return Math.max(0, best);
+    for (const k of G.get(Math.floor(north / SEC_B) * 4096 + Math.floor(x / SEC_B)) || []) {
+      const S = this.sections, o = k * SEC_W, cls = S[o + 6];
+      if (!opts.anySeason && !this.streams[CLASSES[cls]].visible) continue;
+      const ax = S[o], ay = S[o + 1], bx = S[o + 7], by = S[o + 8], dx = bx - ax, dy = by - ay, L2 = dx * dx + dy * dy;
+      const t = L2 ? Math.min(1, Math.max(0, ((x - ax) * dx + (north - ay) * dy) / L2)) : 0;
+      const half = S[o + 2] + (S[o + 9] - S[o + 2]) * t; if (half <= 0) continue;
+      const r = Math.hypot(ax + dx * t - x, ay + dy * t - north); if (r >= half) continue;
+      const fx = ax + dx * t, fy = ay + dy * t, px = this.profileAt(fx, fy);
+      const D = px ? (px[0] ? px[0] * 0.02 : 0.02) : Math.min(1.2, 0.04 + 0.11 * half) * 0.6;
+      best = Math.max(best, D * (1 - (r / half) ** 2));
+    }
+    return Math.max(0, best);
   }
 
   // Ponds: flat polygons at the water level. Large ponds and reservoirs (> ~1 ha) are
@@ -271,7 +363,7 @@ export class Water {
   // transparent on its ring to full over POND_FADE metres inside it (an inset skirt), so the
   // shoreline is not a crisp polygon edge.
   buildPonds(waterbodies, H) {
-    const permanent = [], seasonal = [], dry = [], rings = [];
+    const permanent = [], seasonal = [], dry = [], rings = [], rewilded = [];
     let skipped = 0;
     for (const w of waterbodies) {
       let ring = w.ring.slice();
@@ -282,6 +374,9 @@ export class Water {
       if (area < 0) { ring.reverse(); area = -area; }   // counter-clockwise in (x, north): inward is to the left
       let x0 = Infinity, x1 = -Infinity, y0 = Infinity, y1 = -Infinity;
       for (const [x, y] of ring) { x0 = Math.min(x0, x); x1 = Math.max(x1, x); y0 = Math.min(y0, y); y1 = Math.max(y1, y); }
+      // A reservoir or stock pond the pipeline rewilded: no surface; its restored channel is a stream.
+      const rw = this.rewildList.find(r => bboxIoU(r.bbox, [x0, y0, x1, y1]) > 0.6);
+      if (rw) { rewilded.push({ ring, bbox: [x0, y0, x1, y1], id: rw.id, name: rw.name, kind: rw.kind, area }); continue; }
       // Lowest mesh height: on the ring itself and on a grid inside it (2.5 m, capped at ~4000 samples).
       const shore = [];
       for (let i = 0; i < ring.length; i++) {
@@ -305,8 +400,9 @@ export class Water {
       rings.push({ ring, bbox: [x0, y0, x1, y1], intermittent, level, area });
     }
     const merge = list => (list.length ? mergeGeometries(list) : new THREE.BufferGeometry());
-    this.stats.skippedRings = skipped; this.stats.ponds = { permanent: permanent.length, seasonal: seasonal.length };
+    this.stats.skippedRings = skipped; this.stats.ponds = { permanent: permanent.length, seasonal: seasonal.length, rewilded: rewilded.length };
     this.pondRings = rings;
+    this.rewildedRings = rewilded;   // the old shorelines of the water taken out (for placenames, vegetation, debugging)
     if (skipped) console.info(`water: skipped ${skipped} self-intersecting waterbody ring(s)`);
     // Perennial ponds always hold water; intermittent ones hold it in the wet season and show
     // their dry pan (the bed shader) the rest of the year.
@@ -319,6 +415,7 @@ export class Water {
 
   buildStreams(streams, H, ponds) {
     const bed = new RibbonBuffers(), water = Object.fromEntries(CLASSES.map(c => [c, new RibbonBuffers()]));
+    const sec = [];   // per section: x, north, half, s, tx, tz, class, has-next (SEC_W floats... see sectionIndex)
     const inPond = (x, y) => ponds.some(p => x >= p.bbox[0] && x <= p.bbox[2] && y >= p.bbox[1] && y <= p.bbox[3] && inRing(x, y, p.ring));
     const nrm = new THREE.Vector3();
     const normalAt = (x, n) => nrm.set(H(x - 2, n) - H(x + 2, n), 4, -(H(x, n - 2) - H(x, n + 2))).normalize();
@@ -365,6 +462,11 @@ export class Water {
           let tx = b[0] - a[0], tz = -(b[1] - a[1]); const tl = Math.hypot(tx, tz) || 1; tx /= tl; tz /= tl;
           return { x: p[0], n: p[1], s, tx, tz };
         });
+        // centreline sections with the drawn water half width, for depthAt()
+        for (let i = 0; i < sections.length; i++) {
+          const c = sections[i];
+          sec.push(c.x, c.n, ww / 2 * wMod(c.s), c.s, c.tx, c.tz, ci, i + 1 < sections.length ? 1 : 0);
+        }
         // Strip with `cols` cross-section vertices at offsets `offs` (metres, along the perp).
         const strip = (buf, half0, offs, strength, sp, mod) => {
           const cols = offs.length; let first = -1;
@@ -392,6 +494,7 @@ export class Water {
       }
     }
     this.stats.reaches = reaches; this.stats.skippedInPond = skippedInPond;
+    this.sectionIndex(sec);
     this.beds = new THREE.Mesh(bed.geometry(), this.bedMaterial);
     this.streams = {};
     for (const c of CLASSES) { this.streams[c] = new THREE.Mesh(water[c].geometry(), this.waterMaterial); this.group.add(this.streams[c]); }
@@ -402,6 +505,25 @@ export class Water {
       ponds: tri(this.ponds) + tri(this.pondsSeasonal), pondBeds: tri(this.pondBeds),
     };
     this.stats.triangles.total = Object.values(this.stats.triangles).reduce((a, b) => a + b, 0);
+  }
+
+  // Segments between consecutive centreline sections on a SEC_B m grid (padded by the half width).
+  // this.sections holds SEC_W floats per segment: a (x, north, half, s, tx, tz), class, then b (x, north, half).
+  sectionIndex(sec) {
+    const W = 8, segs = [];
+    for (let i = 0; i + W <= sec.length; i += W) if (sec[i + 7]) segs.push(i);
+    const S = new Float32Array(segs.length * SEC_W), G = new Map();
+    segs.forEach((i, k) => {
+      const o = k * SEC_W;
+      S[o] = sec[i]; S[o + 1] = sec[i + 1]; S[o + 2] = sec[i + 2]; S[o + 3] = sec[i + 3]; S[o + 4] = sec[i + 4]; S[o + 5] = sec[i + 5];
+      S[o + 6] = sec[i + 6]; S[o + 7] = sec[i + W]; S[o + 8] = sec[i + W + 1]; S[o + 9] = sec[i + W + 2];
+      const pad = Math.max(S[o + 2], S[o + 9]);
+      for (let j = Math.floor((Math.min(S[o + 1], S[o + 8]) - pad) / SEC_B); j <= Math.floor((Math.max(S[o + 1], S[o + 8]) + pad) / SEC_B); j++)
+        for (let q = Math.floor((Math.min(S[o], S[o + 7]) - pad) / SEC_B); q <= Math.floor((Math.max(S[o], S[o + 7]) + pad) / SEC_B); q++) {
+          const key = j * 4096 + q; let l = G.get(key); if (!l) G.set(key, l = []); l.push(k);
+        }
+    });
+    this.sections = S; this.sectionGrid = G;
   }
 
   // Season name ('winter' | 'spring' | 'summer' | 'fall'): which classes carry water.
@@ -418,6 +540,19 @@ export class Water {
     this.uniforms.uTime.value = (this.uniforms.uTime.value + dt) % 3600;
     if (look && look !== this.look) { this.look = look; const s = seasonOf(look); if (s !== this.season) this.setSeason(s); }
   }
+}
+
+// The Water built last (one per world): depthAt(x, north) and rewildAt(x, north) without a reference.
+let current = null;
+const SEC_B = 20, SEC_W = 10;   // depthAt section grid (m) and floats per segment
+export function depthAt(x, north, opts) { return current ? current.depthAt(x, north, opts) : 0; }
+export function rewildAt(x, north) { return current ? current.rewildAt(x, north) : 0; }
+
+function bboxIoU(a, b) {
+  const ix = Math.min(a[2], b[2]) - Math.max(a[0], b[0]), iy = Math.min(a[3], b[3]) - Math.max(a[1], b[1]);
+  if (ix <= 0 || iy <= 0) return 0;
+  const i = ix * iy, u = (a[2] - a[0]) * (a[3] - a[1]) + (b[2] - b[0]) * (b[3] - b[1]) - i;
+  return u > 0 ? i / u : 0;
 }
 
 // (x, north) -> true within `r` metres of a DEM-sourced reach's centreline; null without DEM reaches.

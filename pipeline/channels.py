@@ -54,6 +54,7 @@ MATCH_FRACTION = 0.5        # share of a reach's samples that must match for it 
 AREA_RATIO = 6.0            # DEM vs NHD drainage area must agree within this factor to match
 INTERMITTENT_KM2 = 2.0      # unmatched DEM channels this big are intermittent, smaller ones ephemeral
 DEPTH_RING_M = 20.0         # radius of the ring around a channel cell for channel_depth
+BREACH_MAX_M = 300.0        # longest breach (box half-size); hydro/human_water.geojson may raise it
 PERENNIAL, INTERMITTENT, EPHEMERAL = 46006, 46003, 46007
 CANAL = 33600
 # D8 encoding (pysheds default order N, NE, E, SE, S, SW, W, NW)
@@ -131,13 +132,15 @@ def _route(dem_path, weights: np.ndarray, z: np.ndarray):
     return zf, down, acc.reshape(fdir.shape), unresolved
 
 
-def breach(z: np.ndarray, keep: np.ndarray, min_depth=1.0, max_dist_m=300.0, res=5.0):
+def breach(z: np.ndarray, keep: np.ndarray, min_depth=1.0, max_dist_m=BREACH_MAX_M, res=5.0, log=None):
     """Least-cost breaching of depressions (Lindsay 2016, bounded): for each depression at least
     `min_depth` deep whose bottom is not in `keep` (mapped ponds and reservoirs, which should
     fill), find the cheapest path from its bottom to any lower cell within `max_dist_m`, cost =
     sum of how far each cell must be lowered, and carve it as a straight downward grade.
     Lidar sees a road embankment over a culvert as a dam; filling would pond the creek behind it
     and send it out over the lowest spill, often far from the channel (or out of the tile).
+    `log`, if a list, gets one entry per depression tried: bottom cell, depth, and the carved path
+    (length m, deepest cut m) or None when no lower cell lies within reach.
     Returns (breached z, number of breaches, carved cells)."""
     import heapq
     from scipy.ndimage import label
@@ -191,6 +194,8 @@ def breach(z: np.ndarray, keep: np.ndarray, min_depth=1.0, max_dist_m=300.0, res
                     prev[j] = i
                     heapq.heappush(heap, (nd, j))
         if target < 0:
+            if log is not None:
+                log.append({"bottom": int(b), "depth_m": float(depth.flat[cells].max()), "path": None})
             continue
         path = [target]
         while path[-1] != b:
@@ -198,8 +203,16 @@ def breach(z: np.ndarray, keep: np.ndarray, min_depth=1.0, max_dist_m=300.0, res
         path.reverse()                      # bottom ... target
         zt = zb.flat[target]
         m = len(path) - 1
+        cut = 0.0
         for s_, i in enumerate(path[1:-1], 1):
-            zb.flat[i] = min(zb.flat[i], zp + (zt - zp) * s_ / m)
+            znew = min(zb.flat[i], zp + (zt - zp) * s_ / m)
+            cut = max(cut, zb.flat[i] - znew)
+            zb.flat[i] = znew
+        if log is not None:
+            pa = np.asarray(path)
+            plen = float(np.hypot(np.diff(pa // nc), np.diff(pa % nc)).sum() * res)
+            log.append({"bottom": int(b), "depth_m": float(depth.flat[cells].max()), "path": path,
+                        "length_m": plen, "max_cut_m": float(cut)})
         n_breach += 1
         carved += m - 1
     return zb, n_breach, carved
@@ -401,14 +414,33 @@ def _best_match(pt, tang, area, lines, tree, props_area):
 # Main step
 # ---------------------------------------------------------------------------
 
+def rewild_inputs(tile: Tile):
+    """The hydrology rewilding (pipeline/rewild_hydro.py), when it has run: the NHD waterbody ids
+    taken out (no longer held as ponds, so their dams are breached and the channel through them is
+    an ordinary reach), the derived DEM with the thalweg carved through their beds, and the breach
+    limit. None on a present-day tile."""
+    p = tile.dir / "hydro/human_water.geojson"
+    if not p.exists():
+        return None
+    fc = json.load(open(p))
+    ids = {f["properties"].get("nhd_id") for f in fc.get("features", [])
+           if f["properties"].get("rewilded") and f["properties"].get("nhd_id")}
+    dem = tile.dir / "terrain/dem_rewilded.tif"
+    return {"ids": ids, "dem": dem if dem.exists() else None,
+            "breach_max_m": float(fc.get("breach_max_m") or BREACH_MAX_M)}
+
+
 def build_channels(tile: Tile, threshold_km2: float = THRESHOLD_KM2) -> dict:
     dem_path = tile.path("terrain/dem.tif")
-    with rasterio.open(dem_path) as src:
+    rw = rewild_inputs(tile)
+    # routing runs on the rewilded copy of the DEM when there is one (terrain/dem.tif is never edited)
+    with rasterio.open(rw["dem"] if rw and rw["dem"] else dem_path) as src:
         z = src.read(1).astype("float64")
         res = src.res[0]
         nodata = src.nodata
     if nodata is not None and (z == nodata).any():
         z[z == nodata] = z[z != nodata].mean()
+    breach_max = rw["breach_max_m"] if rw else BREACH_MAX_M
     nr, nc = z.shape
     cell_km2 = res * res / 1e6
     to_tile = Transformer.from_crs("EPSG:4326", tile.crs, always_xy=True).transform
@@ -435,14 +467,18 @@ def build_channels(tile: Tile, threshold_km2: float = THRESHOLD_KM2) -> dict:
         for part in (g.geoms if g.geom_type == "MultiLineString" else [g]):
             if part.length > 0:
                 nhd.append({"line": part, "props": ft.get("properties") or {}})
-    ponds = []
+    ponds, rewilded = [], []
     for ft in load("hydro/waterbodies.geojson"):
         g = ft.get("geometry")
         if g:
             g = local(shape(g))
             if not g.is_valid:
                 g = g.buffer(0)
-            if not g.is_empty:
+            if g.is_empty:
+                continue
+            if rw and (ft.get("properties") or {}).get("permanent_identifier") in rw["ids"]:
+                rewilded.append((ft["properties"]["permanent_identifier"], g))
+            else:
                 ponds.append(g)
     pond_union = shapely.union_all(ponds) if ponds else None
 
@@ -451,12 +487,37 @@ def build_channels(tile: Tile, threshold_km2: float = THRESHOLD_KM2) -> dict:
     tr = rasterio.transform.from_origin(0, TILE_SIZE_M, res, res)   # tile-local metres
     keep = (rasterize([(g, 1) for g in ponds], out_shape=z.shape, transform=tr, fill=0, dtype="uint8").astype(bool)
             if ponds else np.zeros(z.shape, bool))
-    zb, n_breach, carved = breach(z, keep, res=res)
+    blog = []
+    zb, n_breach, carved = breach(z, keep, res=res, max_dist_m=breach_max, log=blog)
     seeds = _inflow_seeds(tile, nhd, res, nr)
     weights = np.ones((nr, nc))
     for s in seeds:
         weights[s["row"], s["col"]] += s["area_km2"] / cell_km2
     zf, down, acc, unresolved = _route(dem_path, weights, zb)
+    # rewilded waterbodies: did the breach cut their outlet, and is any water still held in the bed?
+    rewild_check = {}
+    if rewilded and rw["dem"]:
+        with rasterio.open(dem_path) as src:
+            carved_all = (src.read(1).astype("float64") - z) > 1e-4   # the thalwegs carved into the copy
+    else:
+        carved_all = np.zeros(z.shape, bool)
+    for pid, g in rewilded:
+        m = rasterize([(g, 1)], out_shape=z.shape, transform=tr, fill=0, dtype="uint8").astype(bool)
+        if not m.any():
+            continue
+        cuts = [e for e in blog if m.flat[e["bottom"]]]
+        ok = [e for e in cuts if e["path"] is not None]
+        held = zf - zb
+        th = carved_all & m
+        rewild_check[pid] = {"breaches": len(ok), "unbreached": len(cuts) - len(ok),
+                             "breach_length_m": round(max((e["length_m"] for e in ok), default=0.0), 1),
+                             "breach_max_cut_m": round(max((e["max_cut_m"] for e in ok), default=0.0), 2),
+                             # water still held after routing: on the carved thalweg (a dam the breach did not
+                             # cut), and the share of the old bed under more than 0.3 m (hollows left in the flat)
+                             "held_on_thalweg_m": round(float(held[th].max()), 2) if th.any() else None,
+                             "thalweg_held_fraction": round(float((held[th] > 0.3).mean()), 3) if th.any() else None,
+                             "bed_held_fraction": round(float((held[m] > 0.3).mean()), 3),
+                             "bed_held_max_m": round(float(held[m].max()), 2), "cells": int(m.sum())}
     acc_km2 = acc * cell_km2
     acc_flat = acc_km2.ravel()
 
@@ -498,7 +559,14 @@ def build_channels(tile: Tile, threshold_km2: float = THRESHOLD_KM2) -> dict:
                             "head": bool(nin[p[0]] == 0)})
 
     # 3. NHD matching (DEM -> NHD): names, permanence, lateral offset
-    nhd_in = [f for f in nhd if f["props"].get("fcode") != CANAL]
+    # An NHD artificial path (55800) through a rewilded reservoir says nothing about the creek that
+    # ran there before the dam: it is left out of the votes (the restored reach takes its permanence
+    # from the reaches above and below it like any unmatched DEM reach would).
+    rw_union = shapely.union_all([g for _, g in rewilded]) if rewilded else None
+    def _through_rewilded(f):
+        return (rw_union is not None and f["props"].get("fcode") == 55800
+                and f["line"].interpolate(0.5, normalized=True).within(rw_union))
+    nhd_in = [f for f in nhd if f["props"].get("fcode") != CANAL and not _through_rewilded(f)]
     nhd_lines = [f["line"] for f in nhd_in]
     nhd_area = [f["props"].get("totdasqkm") for f in nhd_in]
     tree = shapely.STRtree(nhd_lines) if nhd_lines else None
@@ -541,6 +609,8 @@ def build_channels(tile: Tile, threshold_km2: float = THRESHOLD_KM2) -> dict:
     nhd_stats = Counter()
     tips_dropped, tips_len = 0, 0.0
     for f in nhd:
+        if _through_rewilded(f):
+            continue
         pr = f["props"]
         g = f["line"].intersection(box)
         parts = [p for p in getattr(g, "geoms", [g]) if p.geom_type == "LineString" and p.length > 0]
@@ -606,7 +676,7 @@ def build_channels(tile: Tile, threshold_km2: float = THRESHOLD_KM2) -> dict:
         emit(k["line"], {"name": k["name"], "fcode": k["fcode"], "order": k["order"],
                          "area_km2": round(k["area_km2"], 4), "source": "nhd", "nhd_matched": True})
 
-    write_json(tile.path("hydro/channels.geojson"), {"type": "FeatureCollection", "features": feats})
+    write_json(tile.path("hydro/channels.geojson"), {"type": "FeatureCollection", "rewilded": bool(rw), "features": feats})
 
     # channel_depth.png: local incision of channel cells below a 20 m ring, decimetres
     depth = channel_depth(z, ch, res)
@@ -632,12 +702,19 @@ def build_channels(tile: Tile, threshold_km2: float = THRESHOLD_KM2) -> dict:
         "in_waterbody_pieces": sum(f["properties"]["in_waterbody"] for f in feats),
         "features": len(feats), "downhill_check": climb,
         "max_area_km2": round(float(acc_km2.max()), 2),
+        "breach_max_m": breach_max,
     }
-    print("channels:", json.dumps(stats))
+    if rw:
+        stats["rewilded_waterbodies"] = len(rewilded)
+        stats["rewild_check"] = rewild_check
+        stats["routed_on"] = "terrain/dem_rewilded.tif" if rw["dem"] else "terrain/dem.tif"
+    print("channels:", json.dumps({k: v for k, v in stats.items() if k != "rewild_check"}))
     return {
         "hydro.channels": {"path": "hydro/channels.geojson", "kind": "vector", "source": "usgs_3dep",
-                           "derived_from": ["terrain.dem", "hydro.flowlines", "hydro.waterbodies"],
-                           "feature_count": len(feats), "method": "least-cost breach (<= 300 m) of depressions >= 1 m outside waterbodies, then pysheds fill + resolve_flats, D8, NHD-seeded inflow",
+                           "derived_from": ["terrain.dem", "hydro.flowlines", "hydro.waterbodies"] + (["hydro.human_water", "terrain.dem_rewilded"] if rw else []),
+                           "feature_count": len(feats), "method": f"least-cost breach (<= {breach_max:g} m) of depressions >= 1 m outside waterbodies"
+                                     + (" (human water rewilded: not held as ponds, routed on terrain/dem_rewilded.tif)" if rw else "")
+                                     + ", then pysheds fill + resolve_flats, D8, NHD-seeded inflow",
                            "params": {"threshold_km2": threshold_km2, "min_reach_m": MIN_REACH_M,
                                       "match_radius_m": MATCH_RADIUS_M, "width": "1.6*A^0.45 clamp 1-30",
                                       "bed_width": "1.5*width+1"},

@@ -156,5 +156,11 @@ browser stays the renderer.
 - Crowdfunding, matching pool, invites.
 - CARE-aligned governance for community-held knowledge.
 - Insect scale and the full progressive LOD system.
-- Pre-dam channel reconstruction (no large reservoirs in either tile so far).
+- ~~Pre-dam channel reconstruction~~ first pass 2026-10-25: build step `rewild_hydro` takes out
+  reservoirs and dammed stock ponds (30 in the home tile, 53.9 ha, Patterson Lake and Indian Creek
+  Reservoir the largest; 41 in Placerville, 15.1 ha), carves the restored channel through each bed,
+  exports creek depth with pools and riffles from the DEM profile (`depthAt()` in water.js) and a
+  rewilded-bed mask. Still open: the beds keep the photo's water and no vegetation until the erase
+  and vegetation read the mask; the dams stay in the terrain; the squirrel still uses its own
+  notional creek depth.
 - Sound.

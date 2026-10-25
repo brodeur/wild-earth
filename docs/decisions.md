@@ -488,3 +488,29 @@ impostor minus real over the hand-over band (green, six views): -1.8% to +1.3% a
 mid set moves is a representation change on a ring of trees at about 1.5 km (subtle, not a seam);
 impostors cast no shadows (beyond the mid set the ground between far trees is unshaded); far
 crowns of 2-4 px are still single blobs whose shape is set by 4x4-texel mips.
+
+## 2026-10-25: human water is rewilded: reservoirs and stock ponds out, creeks restored through their beds
+
+The foothill tiles have no large dam, but they are full of small ones: of 109 NHD waterbodies in
+the two tiles, 71 are reservoirs or dammed stock ponds (69 ha), and the client drew every one as
+open water the creeks ran into. A new build step after `channels` judges each waterbody from data
+(NHD FType 436, OSM reservoir and basin tags, OSM and National Inventory of Dams points) and, for the
+unmapped stock ponds, from the DEM: a pond under 1.5 ha whose ring is straight at its outlet with
+the ground falling 1.5 m or more within 45 m beyond it has a dam. The test is stricter on creeks
+draining 5 km² or more so their wide spots stay, and anything irregular or uncertain is kept (37
+kept). Rewilded beds are not held as ponds by the routing; a shallow thalweg (0.2 m at the inflow
+to 1.2 m at the outlet, one 5 m cell wide, down the middle of the flat by least-cost path away
+from the old shore) is carved into a derived copy of the DEM, carried at grade through the
+spillway or dam until the ground falls below it, and the channels step routes on that copy, never
+on an edited `dem.tif`. The 300 m breach limit was never the problem: what held water after the
+first attempts was a sill under 1 m (below the breach threshold, so filled) at the outlet; carrying
+the grade past the outlet fixed it, and no tile needed a longer breach. Creek depth comes from the
+DEM's long profile (local slope against the reach's own: steps are riffles, flats are pools) scaled
+by a hydraulic-geometry mean depth from drainage area, and goes to the client as a 5 m RGB raster
+that also carries the rewilded beds for vegetation and the erase to read later. Judging is always
+against the present-day routing (snapshotted), so reruns agree. Alternatives rejected: drawing
+the old reservoirs as dry pans (the dams would still be implied), refilling the beds to a guessed
+pre-dam valley (no data under hydro-flattened water), a fixed sine pool-riffle pattern (the squirrel
+had one; it ignores the terrain). Known misses: a 4 ha pond on Indian Creek with an irregular edge
+is kept though it is very likely impounded; the dams themselves remain in the terrain
+(`human_landforms_removed` stays false).

@@ -1,0 +1,6162 @@
+{
+ "type": "FeatureCollection",
+ "breach_max_m": 300.0,
+ "features": [
+  {
+   "type": "Feature",
+   "geometry": {
+    "type": "Polygon",
+    "coordinates": [
+     [
+      [
+       -120.890161,
+       38.66871799999999
+      ],
+      [
+       -120.89001800000001,
+       38.668885
+      ],
+      [
+       -120.88985200000002,
+       38.668907999999995
+      ],
+      [
+       -120.88966099999999,
+       38.66886099999999
+      ],
+      [
+       -120.88963700000001,
+       38.668718
+      ],
+      [
+       -120.88985200000002,
+       38.668385
+      ],
+      [
+       -120.889828,
+       38.668218
+      ],
+      [
+       -120.889875,
+       38.668099
+      ],
+      [
+       -120.890042,
+       38.668052
+      ],
+      [
+       -120.890161,
+       38.668076
+      ],
+      [
+       -120.89030399999999,
+       38.66814699999999
+      ],
+      [
+       -120.890423,
+       38.66826600000001
+      ],
+      [
+       -120.890423,
+       38.668479999999995
+      ],
+      [
+       -120.890351,
+       38.66859900000001
+      ],
+      [
+       -120.890161,
+       38.66871799999999
+      ]
+     ]
+    ]
+   },
+   "properties": {
+    "id": "nhd:{37A397CC-109C-4136-9F13-F05FEF483C6F}",
+    "nhd_id": "{37A397CC-109C-4136-9F13-F05FEF483C6F}",
+    "name": null,
+    "source": "nhd",
+    "fcode": 39005,
+    "ftype": 390,
+    "evidence": {
+     "area_m2": 4209.9,
+     "level_m": 461.43,
+     "outlet": [
+      3587.1,
+      2104.6
+     ],
+     "drop_below_m": 6.57,
+     "crest_above_m": 1.42,
+     "edge_len_m": 43.6,
+     "edge_rms": 0.018,
+     "dam_evidence": true
+    },
+    "reasons": [
+     "stock pond: 0.42 ha off the routed network (a hillside tank fed by a swale under 0.15 km2), straight 44 m downstream edge, ground 6.6 m below the water within 45 m of it, crest +1.4 m"
+    ],
+    "kind": "stock_pond",
+    "carve": null,
+    "breach": {
+     "breaches": 1,
+     "unbreached": 0,
+     "breach_length_m": 38.3,
+     "breach_max_cut_m": 2.03,
+     "held_on_thalweg_m": null,
+     "thalweg_held_fraction": null,
+     "bed_held_fraction": 0.0,
+     "bed_held_max_m": 0.08,
+     "cells": 168
+    },
+    "rewilded": true,
+    "area_m2": 4209.9
+   }
+  },
+  {
+   "type": "Feature",
+   "geometry": {
+    "type": "Polygon",
+    "coordinates": [
+     [
+      [
+       -120.85562,
+       38.719268
+      ],
+      [
+       -120.85569699999999,
+       38.71936600000001
+      ],
+      [
+       -120.855747,
+       38.719514999999994
+      ],
+      [
+       -120.855677,
+       38.719696
+      ],
+      [
+       -120.85548,
+       38.719751
+      ],
+      [
+       -120.855221,
+       38.719778000000005
+      ],
+      [
+       -120.855095,
+       38.719724
+      ],
+      [
+       -120.855151,
+       38.719652
+      ],
+      [
+       -120.855326,
+       38.71961400000001
+      ],
+      [
+       -120.85536100000002,
+       38.71955899999999
+      ],
+      [
+       -120.855396,
+       38.719366
+      ],
+      [
+       -120.85543099999998,
+       38.71923999999999
+      ],
+      [
+       -120.85562,
+       38.719268
+      ]
+     ]
+    ]
+   },
+   "properties": {
+    "id": "nhd:63423742",
+    "nhd_id": "63423742",
+    "name": null,
+    "source": "nhd",
+    "fcode": 39004,
+    "ftype": 390,
+    "evidence": {
+     "area_m2": 1800.5,
+     "osm": [
+      {
+       "natural": "water",
+       "osm_id": "way/165786161"
+      }
+     ],
+     "level_m": 479.08,
+     "channel_area_km2": 0.442,
+     "channel_fcode": 46007,
+     "channel_name": null,
+     "outlet": [
+      6416.8,
+      7828.1
+     ],
+     "drop_below_m": 1.9,
+     "crest_above_m": 2.09,
+     "edge_len_m": 28.5,
+     "edge_rms": 0.035,
+     "dam_evidence": true
+    },
+    "reasons": [
+     "stock pond: 0.18 ha on a routed channel (0.44 km2), straight 29 m downstream edge, ground 1.9 m below the water within 45 m of it, crest +2.1 m"
+    ],
+    "kind": "stock_pond",
+    "carve": {
+     "inflows": 1,
+     "length_m": 32.1,
+     "cells": 17,
+     "outlet_tail_m": 27.5,
+     "outlet_tail_max_cut_m": 3.57,
+     "max_cut_m": 1.38,
+     "outlet": [
+      6416.8,
+      7828.1
+     ],
+     "level_m": 479.06
+    },
+    "breach": {
+     "breaches": 0,
+     "unbreached": 0,
+     "breach_length_m": 0.0,
+     "breach_max_cut_m": 0.0,
+     "held_on_thalweg_m": 0.0,
+     "thalweg_held_fraction": 0.0,
+     "bed_held_fraction": 0.0,
+     "bed_held_max_m": 0.09,
+     "cells": 73
+    },
+    "rewilded": true,
+    "area_m2": 1800.5
+   }
+  },
+  {
+   "type": "Feature",
+   "geometry": {
+    "type": "Polygon",
+    "coordinates": [
+     [
+      [
+       -120.855609,
+       38.69441
+      ],
+      [
+       -120.85530799999998,
+       38.69419099999999
+      ],
+      [
+       -120.855294,
+       38.694092000000005
+      ],
+      [
+       -120.855378,
+       38.69406399999999
+      ],
+      [
+       -120.85562299999998,
+       38.694108
+      ],
+      [
+       -120.85596,
+       38.694162999999996
+      ],
+      [
+       -120.856191,
+       38.694245
+      ],
+      [
+       -120.856226,
+       38.69434400000001
+      ],
+      [
+       -120.856135,
+       38.694427000000005
+      ],
+      [
+       -120.85582,
+       38.69463
+      ],
+      [
+       -120.855609,
+       38.69441
+      ]
+     ]
+    ]
+   },
+   "properties": {
+    "id": "nhd:63423780",
+    "nhd_id": "63423780",
+    "name": null,
+    "source": "nhd",
+    "fcode": 39004,
+    "ftype": 390,
+    "evidence": {
+     "area_m2": 2636.6,
+     "osm": [
+      {
+       "natural": "water",
+       "osm_id": "way/165785978"
+      }
+     ],
+     "level_m": 498.39,
+     "outlet": [
+      6442.1,
+      5028.7
+     ],
+     "drop_below_m": 5.05,
+     "crest_above_m": 0.56,
+     "edge_len_m": 27.5,
+     "edge_rms": 0.113,
+     "dam_evidence": true
+    },
+    "reasons": [
+     "stock pond: 0.26 ha off the routed network (a hillside tank fed by a swale under 0.15 km2), straight 27 m downstream edge, ground 5.1 m below the water within 45 m of it, crest +0.6 m"
+    ],
+    "kind": "stock_pond",
+    "carve": null,
+    "breach": {
+     "breaches": 0,
+     "unbreached": 0,
+     "breach_length_m": 0.0,
+     "breach_max_cut_m": 0.0,
+     "held_on_thalweg_m": null,
+     "thalweg_held_fraction": null,
+     "bed_held_fraction": 0.75,
+     "bed_held_max_m": 0.42,
+     "cells": 108
+    },
+    "rewilded": true,
+    "area_m2": 2636.6
+   }
+  },
+  {
+   "type": "Feature",
+   "geometry": {
+    "type": "Polygon",
+    "coordinates": [
+     [
+      [
+       -120.888351,
+       38.724271999999985
+      ],
+      [
+       -120.88865500000001,
+       38.724404
+      ],
+      [
+       -120.888774,
+       38.72451099999999
+      ],
+      [
+       -120.88881000000002,
+       38.724689
+      ],
+      [
+       -120.888691,
+       38.724892
+      ],
+      [
+       -120.88827400000001,
+       38.72512999999999
+      ],
+      [
+       -120.888072,
+       38.725225
+      ],
+      [
+       -120.88791699999999,
+       38.72507
+      ],
+      [
+       -120.887656,
+       38.725237
+      ],
+      [
+       -120.887453,
+       38.72534399999999
+      ],
+      [
+       -120.887251,
+       38.725439
+      ],
+      [
+       -120.88706099999999,
+       38.725522000000005
+      ],
+      [
+       -120.88698900000001,
+       38.72539100000001
+      ],
+      [
+       -120.88701300000001,
+       38.72525999999999
+      ],
+      [
+       -120.887037,
+       38.725094
+      ],
+      [
+       -120.88707299999999,
+       38.724939
+      ],
+      [
+       -120.887348,
+       38.72479299999999
+      ],
+      [
+       -120.88754399999999,
+       38.72464
+      ],
+      [
+       -120.887944,
+       38.724162
+      ],
+      [
+       -120.888246,
+       38.724162
+      ],
+      [
+       -120.888351,
+       38.724217
+      ],
+      [
+       -120.888351,
+       38.724271999999985
+      ]
+     ]
+    ]
+   },
+   "properties": {
+    "id": "nhd:63430314",
+    "nhd_id": "63430314",
+    "name": null,
+    "source": "nhd",
+    "fcode": 39004,
+    "ftype": 390,
+    "evidence": {
+     "area_m2": 12341.5,
+     "osm": [
+      {
+       "natural": "water",
+       "water": "reservoir",
+       "osm_id": "way/165785965"
+      },
+      {
+       "osm_id": "way/165785965",
+       "water": "reservoir",
+       "name": null
+      }
+     ],
+     "level_m": 429.73,
+     "channel_area_km2": 0.585,
+     "channel_fcode": 46007,
+     "channel_name": null,
+     "outlet": [
+      3572.6,
+      8287.2
+     ],
+     "drop_below_m": 3.37,
+     "crest_above_m": 3.73,
+     "edge_len_m": 70.0,
+     "edge_rms": 0.071,
+     "dam_evidence": true
+    },
+    "reasons": [
+     "OSM water=reservoir (way/165785965)",
+     "stock pond: 1.23 ha on a routed channel (0.58 km2), straight 70 m downstream edge, ground 3.4 m below the water within 45 m of it, crest +3.7 m"
+    ],
+    "kind": "reservoir",
+    "carve": {
+     "inflows": 1,
+     "length_m": 180.6,
+     "cells": 41,
+     "outlet_tail_m": 35.0,
+     "outlet_tail_max_cut_m": 4.23,
+     "max_cut_m": 5.62,
+     "outlet": [
+      3572.6,
+      8287.2
+     ],
+     "level_m": 429.07
+    },
+    "breach": {
+     "breaches": 0,
+     "unbreached": 0,
+     "breach_length_m": 0.0,
+     "breach_max_cut_m": 0.0,
+     "held_on_thalweg_m": 0.0,
+     "thalweg_held_fraction": 0.0,
+     "bed_held_fraction": 0.0,
+     "bed_held_max_m": 0.02,
+     "cells": 492
+    },
+    "rewilded": true,
+    "area_m2": 12341.5
+   }
+  },
+  {
+   "type": "Feature",
+   "geometry": {
+    "type": "Polygon",
+    "coordinates": [
+     [
+      [
+       -120.89769200000002,
+       38.732306
+      ],
+      [
+       -120.89757300000001,
+       38.73197900000001
+      ],
+      [
+       -120.89715700000002,
+       38.731741
+      ],
+      [
+       -120.8968,
+       38.731265
+      ],
+      [
+       -120.896502,
+       38.73090799999999
+      ],
+      [
+       -120.89677000000002,
+       38.730788999999994
+      ],
+      [
+       -120.89730500000002,
+       38.73096699999999
+      ],
+      [
+       -120.8979,
+       38.73114600000001
+      ],
+      [
+       -120.898114,
+       38.731317
+      ],
+      [
+       -120.898346,
+       38.731503
+      ],
+      [
+       -120.898703,
+       38.73212699999999
+      ],
+      [
+       -120.89787000000001,
+       38.732544000000004
+      ],
+      [
+       -120.89769200000002,
+       38.732306
+      ]
+     ]
+    ]
+   },
+   "properties": {
+    "id": "nhd:{426E12C5-DAF9-4D20-A0D4-7578832D6EEB}",
+    "nhd_id": "{426E12C5-DAF9-4D20-A0D4-7578832D6EEB}",
+    "name": null,
+    "source": "nhd",
+    "fcode": 39000,
+    "ftype": 390,
+    "evidence": {
+     "area_m2": 16427.5,
+     "osm": [
+      {
+       "natural": "water",
+       "water": "reservoir",
+       "osm_id": "way/172373562"
+      },
+      {
+       "osm_id": "way/172373562",
+       "water": "reservoir",
+       "name": null
+      }
+     ],
+     "level_m": 417.69,
+     "channel_area_km2": 0.373,
+     "channel_fcode": 46007,
+     "channel_name": null,
+     "outlet": [
+      2669.4,
+      9102.3
+     ],
+     "drop_below_m": 2.13,
+     "crest_above_m": 1.2,
+     "edge_len_m": 88.4,
+     "edge_rms": 0.014,
+     "dam_evidence": true
+    },
+    "reasons": [
+     "OSM water=reservoir (way/172373562)"
+    ],
+    "kind": "reservoir",
+    "carve": {
+     "inflows": 1,
+     "length_m": 105.7,
+     "cells": 39,
+     "outlet_tail_m": 60.0,
+     "outlet_tail_max_cut_m": 3.8,
+     "max_cut_m": 3.15,
+     "outlet": [
+      2669.4,
+      9102.3
+     ],
+     "level_m": 417.69
+    },
+    "breach": {
+     "breaches": 0,
+     "unbreached": 0,
+     "breach_length_m": 0.0,
+     "breach_max_cut_m": 0.0,
+     "held_on_thalweg_m": 0.0,
+     "thalweg_held_fraction": 0.0,
+     "bed_held_fraction": 0.0,
+     "bed_held_max_m": 0.0,
+     "cells": 660
+    },
+    "rewilded": true,
+    "area_m2": 16427.5
+   }
+  },
+  {
+   "type": "Feature",
+   "geometry": {
+    "type": "Polygon",
+    "coordinates": [
+     [
+      [
+       -120.922197,
+       38.67947099999999
+      ],
+      [
+       -120.922339,
+       38.67959
+      ],
+      [
+       -120.92238700000001,
+       38.679946999999984
+      ],
+      [
+       -120.92257699999999,
+       38.680137000000016
+      ],
+      [
+       -120.92260100000001,
+       38.680304
+      ],
+      [
+       -120.922435,
+       38.680423
+      ],
+      [
+       -120.922268,
+       38.680493999999996
+      ],
+      [
+       -120.922006,
+       38.680494
+      ],
+      [
+       -120.92167300000001,
+       38.680447
+      ],
+      [
+       -120.92164900000002,
+       38.68020899999999
+      ],
+      [
+       -120.92181600000002,
+       38.679923
+      ],
+      [
+       -120.92202999999999,
+       38.679566
+      ],
+      [
+       -120.922197,
+       38.67947099999999
+      ]
+     ]
+    ]
+   },
+   "properties": {
+    "id": "nhd:{098B4B4D-62D8-4FDB-8414-82C97240182C}",
+    "nhd_id": "{098B4B4D-62D8-4FDB-8414-82C97240182C}",
+    "name": null,
+    "source": "nhd",
+    "fcode": 39001,
+    "ftype": 390,
+    "evidence": {
+     "area_m2": 5983.7,
+     "level_m": 410.48,
+     "channel_area_km2": 0.509,
+     "channel_fcode": 46007,
+     "channel_name": null,
+     "outlet": [
+      768.0,
+      3368.2
+     ],
+     "drop_below_m": 4.75,
+     "crest_above_m": 2.1,
+     "edge_len_m": 47.3,
+     "edge_rms": 0.09,
+     "dam_evidence": true
+    },
+    "reasons": [
+     "stock pond: 0.60 ha on a routed channel (0.51 km2), straight 47 m downstream edge, ground 4.7 m below the water within 45 m of it, crest +2.1 m"
+    ],
+    "kind": "stock_pond",
+    "carve": {
+     "inflows": 1,
+     "length_m": 114.5,
+     "cells": 25,
+     "outlet_tail_m": 12.5,
+     "outlet_tail_max_cut_m": 3.32,
+     "max_cut_m": 2.51,
+     "outlet": [
+      768.0,
+      3368.2
+     ],
+     "level_m": 410.47
+    },
+    "breach": {
+     "breaches": 0,
+     "unbreached": 0,
+     "breach_length_m": 0.0,
+     "breach_max_cut_m": 0.0,
+     "held_on_thalweg_m": 0.0,
+     "thalweg_held_fraction": 0.0,
+     "bed_held_fraction": 0.0,
+     "bed_held_max_m": 0.03,
+     "cells": 236
+    },
+    "rewilded": true,
+    "area_m2": 5983.7
+   }
+  },
+  {
+   "type": "Feature",
+   "geometry": {
+    "type": "Polygon",
+    "coordinates": [
+     [
+      [
+       -120.840044,
+       38.686598
+      ],
+      [
+       -120.840074,
+       38.68649699999998
+      ],
+      [
+       -120.84009699999999,
+       38.686384
+      ],
+      [
+       -120.84011500000001,
+       38.68628799999999
+      ],
+      [
+       -120.84027600000002,
+       38.68624700000001
+      ],
+      [
+       -120.840371,
+       38.686241
+      ],
+      [
+       -120.84044800000001,
+       38.68635999999999
+      ],
+      [
+       -120.84041500000001,
+       38.68657600000001
+      ],
+      [
+       -120.840401,
+       38.686729
+      ],
+      [
+       -120.84001899999998,
+       38.68683899999999
+      ],
+      [
+       -120.840044,
+       38.686598
+      ]
+     ]
+    ]
+   },
+   "properties": {
+    "id": "nhd:{D741C9B0-80AB-418E-8CAE-CD365C848F8C}",
+    "nhd_id": "{D741C9B0-80AB-418E-8CAE-CD365C848F8C}",
+    "name": null,
+    "source": "nhd",
+    "fcode": 39000,
+    "ftype": 390,
+    "evidence": {
+     "area_m2": 1778.4,
+     "level_m": 509.34,
+     "outlet": [
+      7832.0,
+      4185.7
+     ],
+     "drop_below_m": 3.31,
+     "crest_above_m": 2.2,
+     "edge_len_m": 27.7,
+     "edge_rms": 0.045,
+     "dam_evidence": true
+    },
+    "reasons": [
+     "stock pond: 0.18 ha off the routed network (a hillside tank fed by a swale under 0.15 km2), straight 28 m downstream edge, ground 3.3 m below the water within 45 m of it, crest +2.2 m"
+    ],
+    "kind": "stock_pond",
+    "carve": null,
+    "breach": {
+     "breaches": 1,
+     "unbreached": 0,
+     "breach_length_m": 41.2,
+     "breach_max_cut_m": 2.11,
+     "held_on_thalweg_m": null,
+     "thalweg_held_fraction": null,
+     "bed_held_fraction": 0.0,
+     "bed_held_max_m": 0.02,
+     "cells": 70
+    },
+    "rewilded": true,
+    "area_m2": 1778.4
+   }
+  },
+  {
+   "type": "Feature",
+   "geometry": {
+    "type": "Polygon",
+    "coordinates": [
+     [
+      [
+       -120.843703,
+       38.707983
+      ],
+      [
+       -120.843656,
+       38.708097
+      ],
+      [
+       -120.843332,
+       38.708297
+      ],
+      [
+       -120.843152,
+       38.70845400000001
+      ],
+      [
+       -120.843113,
+       38.708487
+      ],
+      [
+       -120.842752,
+       38.708724999999994
+      ],
+      [
+       -120.842552,
+       38.708744
+      ],
+      [
+       -120.84236099999998,
+       38.70860199999999
+      ],
+      [
+       -120.84216200000002,
+       38.70836400000001
+      ],
+      [
+       -120.84196199999998,
+       38.708173
+      ],
+      [
+       -120.841857,
+       38.70809699999999
+      ],
+      [
+       -120.84178100000001,
+       38.708012
+      ],
+      [
+       -120.84174,
+       38.707850999999984
+      ],
+      [
+       -120.84195199999999,
+       38.707801999999994
+      ],
+      [
+       -120.84210400000002,
+       38.70777399999999
+      ],
+      [
+       -120.84221399999998,
+       38.70772700000001
+      ],
+      [
+       -120.84223800000001,
+       38.707717
+      ],
+      [
+       -120.842428,
+       38.70764
+      ],
+      [
+       -120.842609,
+       38.70762099999999
+      ],
+      [
+       -120.84278000000002,
+       38.70764
+      ],
+      [
+       -120.842971,
+       38.707688
+      ],
+      [
+       -120.843199,
+       38.707774
+      ],
+      [
+       -120.843478,
+       38.70786199999999
+      ],
+      [
+       -120.843646,
+       38.707878
+      ],
+      [
+       -120.843703,
+       38.707983
+      ]
+     ]
+    ]
+   },
+   "properties": {
+    "id": "nhd:63423754",
+    "nhd_id": "63423754",
+    "name": null,
+    "source": "nhd",
+    "fcode": 39004,
+    "ftype": 390,
+    "evidence": {
+     "area_m2": 12626.2,
+     "osm": [
+      {
+       "natural": "water",
+       "osm_id": "way/165786488"
+      }
+     ],
+     "level_m": 526.76,
+     "channel_area_km2": 0.673,
+     "channel_fcode": 46003,
+     "channel_name": "Mound Springs Creek",
+     "outlet": [
+      7511.1,
+      6604.0
+     ],
+     "drop_below_m": 5.65,
+     "crest_above_m": 2.18,
+     "edge_len_m": 76.0,
+     "edge_rms": 0.093,
+     "dam_evidence": true
+    },
+    "reasons": [
+     "stock pond: 1.26 ha on a routed channel (0.67 km2), straight 76 m downstream edge, ground 5.6 m below the water within 45 m of it, crest +2.2 m"
+    ],
+    "kind": "stock_pond",
+    "carve": {
+     "inflows": 1,
+     "length_m": 114.5,
+     "cells": 26,
+     "outlet_tail_m": 15.0,
+     "outlet_tail_max_cut_m": 3.48,
+     "max_cut_m": 1.36,
+     "outlet": [
+      7511.1,
+      6604.0
+     ],
+     "level_m": 526.74
+    },
+    "breach": {
+     "breaches": 0,
+     "unbreached": 0,
+     "breach_length_m": 0.0,
+     "breach_max_cut_m": 0.0,
+     "held_on_thalweg_m": 0.0,
+     "thalweg_held_fraction": 0.0,
+     "bed_held_fraction": 0.0,
+     "bed_held_max_m": 0.05,
+     "cells": 509
+    },
+    "rewilded": true,
+    "area_m2": 12626.2
+   }
+  },
+  {
+   "type": "Feature",
+   "geometry": {
+    "type": "Polygon",
+    "coordinates": [
+     [
+      [
+       -120.92236900000002,
+       38.705371
+      ],
+      [
+       -120.922404,
+       38.70491500000001
+      ],
+      [
+       -120.922509,
+       38.70441
+      ],
+      [
+       -120.922474,
+       38.703915
+      ],
+      [
+       -120.922503,
+       38.703844
+      ],
+      [
+       -120.922657,
+       38.703810999999995
+      ],
+      [
+       -120.922825,
+       38.703899
+      ],
+      [
+       -120.92298599999998,
+       38.704052999999995
+      ],
+      [
+       -120.92321000000001,
+       38.70477799999999
+      ],
+      [
+       -120.923582,
+       38.704959
+      ],
+      [
+       -120.923652,
+       38.705052
+      ],
+      [
+       -120.923511,
+       38.705481
+      ],
+      [
+       -120.92277500000002,
+       38.705464
+      ],
+      [
+       -120.92236900000002,
+       38.705371
+      ]
+     ]
+    ]
+   },
+   "properties": {
+    "id": "nhd:63430364",
+    "nhd_id": "63430364",
+    "name": null,
+    "source": "nhd",
+    "fcode": 39004,
+    "ftype": 390,
+    "evidence": {
+     "area_m2": 12608.2,
+     "osm": [
+      {
+       "natural": "water",
+       "osm_id": "way/165786182"
+      }
+     ],
+     "level_m": 359.56,
+     "channel_area_km2": 1.674,
+     "channel_fcode": 46007,
+     "channel_name": null,
+     "outlet": [
+      595.4,
+      6140.5
+     ],
+     "drop_below_m": 7.37,
+     "crest_above_m": -1.01,
+     "edge_len_m": 77.5,
+     "edge_rms": 0.017,
+     "dam_evidence": true
+    },
+    "reasons": [
+     "stock pond: 1.26 ha on a routed channel (1.67 km2), straight 77 m downstream edge, ground 7.4 m below the water within 45 m of it, crest -1.0 m"
+    ],
+    "kind": "stock_pond",
+    "carve": {
+     "inflows": 1,
+     "length_m": 196.6,
+     "cells": 37,
+     "outlet_tail_m": 0.0,
+     "outlet_tail_max_cut_m": 0.0,
+     "max_cut_m": 3.98,
+     "outlet": [
+      595.4,
+      6140.5
+     ],
+     "level_m": 359.56
+    },
+    "breach": {
+     "breaches": 0,
+     "unbreached": 0,
+     "breach_length_m": 0.0,
+     "breach_max_cut_m": 0.0,
+     "held_on_thalweg_m": 0.0,
+     "thalweg_held_fraction": 0.0,
+     "bed_held_fraction": 0.0,
+     "bed_held_max_m": 0.0,
+     "cells": 499
+    },
+    "rewilded": true,
+    "area_m2": 12608.2
+   }
+  },
+  {
+   "type": "Feature",
+   "geometry": {
+    "type": "Polygon",
+    "coordinates": [
+     [
+      [
+       -120.85947199999998,
+       38.685452999999995
+      ],
+      [
+       -120.859451,
+       38.685627999999994
+      ],
+      [
+       -120.85938100000001,
+       38.68581
+      ],
+      [
+       -120.859206,
+       38.685810000000004
+      ],
+      [
+       -120.85908700000002,
+       38.68572699999999
+      ],
+      [
+       -120.859101,
+       38.685534999999994
+      ],
+      [
+       -120.859367,
+       38.685326
+      ],
+      [
+       -120.85947199999998,
+       38.685452999999995
+      ]
+     ]
+    ]
+   },
+   "properties": {
+    "id": "nhd:63423814",
+    "nhd_id": "63423814",
+    "name": null,
+    "source": "nhd",
+    "fcode": 39004,
+    "ftype": 390,
+    "evidence": {
+     "area_m2": 1261.9,
+     "osm": [
+      {
+       "natural": "water",
+       "osm_id": "way/165786782"
+      }
+     ],
+     "level_m": 482.46,
+     "outlet": [
+      6184.6,
+      4079.2
+     ],
+     "drop_below_m": 2.43,
+     "crest_above_m": 0.3,
+     "edge_len_m": 27.2,
+     "edge_rms": 0.087,
+     "dam_evidence": true
+    },
+    "reasons": [
+     "stock pond: 0.13 ha off the routed network (a hillside tank fed by a swale under 0.15 km2), straight 27 m downstream edge, ground 2.4 m below the water within 45 m of it, crest +0.3 m"
+    ],
+    "kind": "stock_pond",
+    "carve": null,
+    "breach": {
+     "breaches": 0,
+     "unbreached": 0,
+     "breach_length_m": 0.0,
+     "breach_max_cut_m": 0.0,
+     "held_on_thalweg_m": null,
+     "thalweg_held_fraction": null,
+     "bed_held_fraction": 0.0,
+     "bed_held_max_m": 0.0,
+     "cells": 49
+    },
+    "rewilded": true,
+    "area_m2": 1261.9
+   }
+  },
+  {
+   "type": "Feature",
+   "geometry": {
+    "type": "Polygon",
+    "coordinates": [
+     [
+      [
+       -120.874431,
+       38.686781
+      ],
+      [
+       -120.87438199999998,
+       38.686973
+      ],
+      [
+       -120.874277,
+       38.687191999999996
+      ],
+      [
+       -120.874102,
+       38.687301999999995
+      ],
+      [
+       -120.87376599999999,
+       38.687302999999986
+      ],
+      [
+       -120.87364000000001,
+       38.68718200000001
+      ],
+      [
+       -120.873485,
+       38.687045000000005
+      ],
+      [
+       -120.873359,
+       38.686946
+      ],
+      [
+       -120.87341500000001,
+       38.686797999999996
+      ],
+      [
+       -120.873569,
+       38.686644
+      ],
+      [
+       -120.873744,
+       38.686605
+      ],
+      [
+       -120.87415099999998,
+       38.686671
+      ],
+      [
+       -120.874431,
+       38.686781
+      ]
+     ]
+    ]
+   },
+   "properties": {
+    "id": "nhd:63423812",
+    "nhd_id": "63423812",
+    "name": null,
+    "source": "nhd",
+    "fcode": 39004,
+    "ftype": 390,
+    "evidence": {
+     "area_m2": 5167.4,
+     "osm": [
+      {
+       "natural": "water",
+       "osm_id": "way/165786151"
+      }
+     ],
+     "level_m": 474.86,
+     "outlet": [
+      4901.8,
+      4151.2
+     ],
+     "drop_below_m": 1.87,
+     "crest_above_m": 1.63,
+     "edge_len_m": 48.9,
+     "edge_rms": 0.019,
+     "dam_evidence": true
+    },
+    "reasons": [
+     "stock pond: 0.52 ha off the routed network (a hillside tank fed by a swale under 0.15 km2), straight 49 m downstream edge, ground 1.9 m below the water within 45 m of it, crest +1.6 m"
+    ],
+    "kind": "stock_pond",
+    "carve": null,
+    "breach": {
+     "breaches": 1,
+     "unbreached": 0,
+     "breach_length_m": 58.3,
+     "breach_max_cut_m": 3.09,
+     "held_on_thalweg_m": null,
+     "thalweg_held_fraction": null,
+     "bed_held_fraction": 0.019,
+     "bed_held_max_m": 0.55,
+     "cells": 207
+    },
+    "rewilded": true,
+    "area_m2": 5167.4
+   }
+  },
+  {
+   "type": "Feature",
+   "geometry": {
+    "type": "Polygon",
+    "coordinates": [
+     [
+      [
+       -120.85071399999998,
+       38.699832
+      ],
+      [
+       -120.850819,
+       38.69989699999999
+      ],
+      [
+       -120.85064400000002,
+       38.70009
+      ],
+      [
+       -120.850609,
+       38.700281999999994
+      ],
+      [
+       -120.85053900000001,
+       38.70029800000001
+      ],
+      [
+       -120.850434,
+       38.700227
+      ],
+      [
+       -120.85041299999999,
+       38.700134
+      ],
+      [
+       -120.85041299999999,
+       38.700035
+      ],
+      [
+       -120.850504,
+       38.699969
+      ],
+      [
+       -120.85062300000001,
+       38.69986999999999
+      ],
+      [
+       -120.85071399999998,
+       38.699832
+      ]
+     ]
+    ]
+   },
+   "properties": {
+    "id": "nhd:63423954",
+    "nhd_id": "63423954",
+    "name": null,
+    "source": "nhd",
+    "fcode": 39004,
+    "ftype": 390,
+    "evidence": {
+     "area_m2": 909.8,
+     "level_m": 516.69,
+     "outlet": [
+      6927.2,
+      5704.3
+     ],
+     "drop_below_m": 5.87,
+     "crest_above_m": 0.34,
+     "edge_len_m": 26.1,
+     "edge_rms": 0.076,
+     "dam_evidence": true
+    },
+    "reasons": [
+     "stock pond: 0.09 ha off the routed network (a hillside tank fed by a swale under 0.15 km2), straight 26 m downstream edge, ground 5.9 m below the water within 45 m of it, crest +0.3 m"
+    ],
+    "kind": "stock_pond",
+    "carve": null,
+    "breach": {
+     "breaches": 0,
+     "unbreached": 0,
+     "breach_length_m": 0.0,
+     "breach_max_cut_m": 0.0,
+     "held_on_thalweg_m": null,
+     "thalweg_held_fraction": null,
+     "bed_held_fraction": 0.0,
+     "bed_held_max_m": 0.0,
+     "cells": 39
+    },
+    "rewilded": true,
+    "area_m2": 909.8
+   }
+  },
+  {
+   "type": "Feature",
+   "geometry": {
+    "type": "Polygon",
+    "coordinates": [
+     [
+      [
+       -120.84084700000001,
+       38.68635999999999
+      ],
+      [
+       -120.840912,
+       38.68633599999999
+      ],
+      [
+       -120.84104899999998,
+       38.68631799999999
+      ],
+      [
+       -120.84119200000002,
+       38.686324000000006
+      ],
+      [
+       -120.841311,
+       38.68622299999999
+      ],
+      [
+       -120.84145399999998,
+       38.68629400000001
+      ],
+      [
+       -120.841471,
+       38.686371000000015
+      ],
+      [
+       -120.841424,
+       38.68641900000001
+      ],
+      [
+       -120.841281,
+       38.686455
+      ],
+      [
+       -120.84112699999999,
+       38.686496999999996
+      ],
+      [
+       -120.841008,
+       38.686519999999994
+      ],
+      [
+       -120.84090100000002,
+       38.686532
+      ],
+      [
+       -120.840828,
+       38.686445
+      ],
+      [
+       -120.84084700000001,
+       38.68635999999999
+      ]
+     ]
+    ]
+   },
+   "properties": {
+    "id": "nhd:{942D5C44-ECFC-4698-A450-86E40010F258}",
+    "nhd_id": "{942D5C44-ECFC-4698-A450-86E40010F258}",
+    "name": null,
+    "source": "nhd",
+    "fcode": 39000,
+    "ftype": 390,
+    "evidence": {
+     "area_m2": 1069.1,
+     "level_m": 506.06,
+     "outlet": [
+      7744.6,
+      4176.3
+     ],
+     "drop_below_m": 2.46,
+     "crest_above_m": 2.59,
+     "edge_len_m": 23.8,
+     "edge_rms": 0.115,
+     "dam_evidence": true
+    },
+    "reasons": [
+     "stock pond: 0.11 ha off the routed network (a hillside tank fed by a swale under 0.15 km2), straight 24 m downstream edge, ground 2.5 m below the water within 45 m of it, crest +2.6 m"
+    ],
+    "kind": "stock_pond",
+    "carve": null,
+    "breach": {
+     "breaches": 1,
+     "unbreached": 0,
+     "breach_length_m": 52.4,
+     "breach_max_cut_m": 4.0,
+     "held_on_thalweg_m": null,
+     "thalweg_held_fraction": null,
+     "bed_held_fraction": 0.0,
+     "bed_held_max_m": 0.02,
+     "cells": 43
+    },
+    "rewilded": true,
+    "area_m2": 1069.1
+   }
+  },
+  {
+   "type": "Feature",
+   "geometry": {
+    "type": "Polygon",
+    "coordinates": [
+     [
+      [
+       -120.84036699999999,
+       38.704414
+      ],
+      [
+       -120.840401,
+       38.70412899999999
+      ],
+      [
+       -120.84051400000001,
+       38.70405800000001
+      ],
+      [
+       -120.84061899999999,
+       38.704057
+      ],
+      [
+       -120.84072400000001,
+       38.704057000000006
+      ],
+      [
+       -120.84082900000001,
+       38.704057
+      ],
+      [
+       -120.840969,
+       38.70410100000001
+      ],
+      [
+       -120.841053,
+       38.704167
+      ],
+      [
+       -120.841123,
+       38.704222
+      ],
+      [
+       -120.841158,
+       38.70443099999999
+      ],
+      [
+       -120.841039,
+       38.70448600000001
+      ],
+      [
+       -120.84093400000002,
+       38.704485999999996
+      ],
+      [
+       -120.84082900000001,
+       38.704486
+      ],
+      [
+       -120.84072400000001,
+       38.704468999999996
+      ],
+      [
+       -120.84061899999999,
+       38.704468999999996
+      ],
+      [
+       -120.84051400000001,
+       38.704468999999996
+      ],
+      [
+       -120.84036699999999,
+       38.704414
+      ]
+     ]
+    ]
+   },
+   "properties": {
+    "id": "nhd:63423946",
+    "nhd_id": "63423946",
+    "name": null,
+    "source": "nhd",
+    "fcode": 39001,
+    "ftype": 390,
+    "evidence": {
+     "area_m2": 2752.1,
+     "osm": [
+      {
+       "natural": "water",
+       "osm_id": "way/165786366"
+      }
+     ],
+     "level_m": 551.38,
+     "outlet": [
+      7722.9,
+      6189.8
+     ],
+     "drop_below_m": 11.46,
+     "crest_above_m": 0.28,
+     "edge_len_m": 28.0,
+     "edge_rms": 0.117,
+     "dam_evidence": true
+    },
+    "reasons": [
+     "stock pond: 0.28 ha off the routed network (a hillside tank fed by a swale under 0.15 km2), straight 28 m downstream edge, ground 11.5 m below the water within 45 m of it, crest +0.3 m"
+    ],
+    "kind": "stock_pond",
+    "carve": null,
+    "breach": {
+     "breaches": 1,
+     "unbreached": 0,
+     "breach_length_m": 66.6,
+     "breach_max_cut_m": 4.64,
+     "held_on_thalweg_m": null,
+     "thalweg_held_fraction": null,
+     "bed_held_fraction": 0.0,
+     "bed_held_max_m": 0.02,
+     "cells": 108
+    },
+    "rewilded": true,
+    "area_m2": 2752.1
+   }
+  },
+  {
+   "type": "Feature",
+   "geometry": {
+    "type": "Polygon",
+    "coordinates": [
+     [
+      [
+       -120.82861799999999,
+       38.689935
+      ],
+      [
+       -120.82872300000001,
+       38.689989999999995
+      ],
+      [
+       -120.828737,
+       38.69019899999999
+      ],
+      [
+       -120.82882800000002,
+       38.690417999999994
+      ],
+      [
+       -120.82882800000002,
+       38.69063800000001
+      ],
+      [
+       -120.828646,
+       38.69083
+      ],
+      [
+       -120.828457,
+       38.690895999999995
+      ],
+      [
+       -120.828156,
+       38.69086899999999
+      ],
+      [
+       -120.82794500000001,
+       38.690748
+      ],
+      [
+       -120.82772600000001,
+       38.69074899999999
+      ],
+      [
+       -120.827512,
+       38.690535000000004
+      ],
+      [
+       -120.82746400000002,
+       38.690321
+      ],
+      [
+       -120.827607,
+       38.690130999999994
+      ],
+      [
+       -120.82770200000002,
+       38.690012
+      ],
+      [
+       -120.82791599999999,
+       38.690012
+      ],
+      [
+       -120.828247,
+       38.689989999999995
+      ],
+      [
+       -120.828422,
+       38.689952
+      ],
+      [
+       -120.82861799999999,
+       38.689935
+      ]
+     ]
+    ]
+   },
+   "properties": {
+    "id": "nhd:121531043",
+    "nhd_id": "121531043",
+    "name": null,
+    "source": "nhd",
+    "fcode": 39001,
+    "ftype": 390,
+    "evidence": {
+     "area_m2": 9692.3,
+     "level_m": 531.39,
+     "outlet": [
+      8889.6,
+      4614.3
+     ],
+     "drop_below_m": 2.03,
+     "crest_above_m": 0.53,
+     "edge_len_m": 67.9,
+     "edge_rms": 0.011,
+     "dam_evidence": true
+    },
+    "reasons": [
+     "stock pond: 0.97 ha off the routed network (a hillside tank fed by a swale under 0.15 km2), straight 68 m downstream edge, ground 2.0 m below the water within 45 m of it, crest +0.5 m"
+    ],
+    "kind": "stock_pond",
+    "carve": null,
+    "breach": {
+     "breaches": 0,
+     "unbreached": 0,
+     "breach_length_m": 0.0,
+     "breach_max_cut_m": 0.0,
+     "held_on_thalweg_m": null,
+     "thalweg_held_fraction": null,
+     "bed_held_fraction": 0.015,
+     "bed_held_max_m": 0.47,
+     "cells": 391
+    },
+    "rewilded": true,
+    "area_m2": 9692.3
+   }
+  },
+  {
+   "type": "Feature",
+   "geometry": {
+    "type": "Polygon",
+    "coordinates": [
+     [
+      [
+       -120.914122,
+       38.664128000000005
+      ],
+      [
+       -120.91377300000002,
+       38.66418099999999
+      ],
+      [
+       -120.913563,
+       38.664123999999994
+      ],
+      [
+       -120.913487,
+       38.664029
+      ],
+      [
+       -120.913697,
+       38.6638
+      ],
+      [
+       -120.913968,
+       38.663508
+      ],
+      [
+       -120.913751,
+       38.663327
+      ],
+      [
+       -120.913576,
+       38.663288
+      ],
+      [
+       -120.91315500000002,
+       38.663508
+      ],
+      [
+       -120.91298000000002,
+       38.663453
+      ],
+      [
+       -120.913037,
+       38.66306800000001
+      ],
+      [
+       -120.91278299999999,
+       38.662944
+      ],
+      [
+       -120.91266900000001,
+       38.662411000000006
+      ],
+      [
+       -120.91261200000001,
+       38.662163
+      ],
+      [
+       -120.912688,
+       38.66184
+      ],
+      [
+       -120.91293500000002,
+       38.661745
+      ],
+      [
+       -120.91336599999998,
+       38.661778
+      ],
+      [
+       -120.913562,
+       38.66142099999999
+      ],
+      [
+       -120.91375200000002,
+       38.661339
+      ],
+      [
+       -120.913925,
+       38.661212000000006
+      ],
+      [
+       -120.9147,
+       38.661332
+      ],
+      [
+       -120.915391,
+       38.66143999999999
+      ],
+      [
+       -120.915486,
+       38.66203000000001
+      ],
+      [
+       -120.915543,
+       38.662411000000006
+      ],
+      [
+       -120.915867,
+       38.662753
+      ],
+      [
+       -120.915981,
+       38.663019999999996
+      ],
+      [
+       -120.91609499999998,
+       38.663172
+      ],
+      [
+       -120.91612700000002,
+       38.66327699999999
+      ],
+      [
+       -120.91615200000001,
+       38.66336299999999
+      ],
+      [
+       -120.91579100000001,
+       38.66328599999999
+      ],
+      [
+       -120.915739,
+       38.66323499999999
+      ],
+      [
+       -120.91563800000002,
+       38.66313399999999
+      ],
+      [
+       -120.915448,
+       38.662963
+      ],
+      [
+       -120.915105,
+       38.66273400000001
+      ],
+      [
+       -120.914763,
+       38.66271499999999
+      ],
+      [
+       -120.914775,
+       38.66284900000001
+      ],
+      [
+       -120.91478200000002,
+       38.662925
+      ],
+      [
+       -120.91508599999999,
+       38.66307700000001
+      ],
+      [
+       -120.91521899999998,
+       38.663248
+      ],
+      [
+       -120.915448,
+       38.66370499999999
+      ],
+      [
+       -120.915486,
+       38.66393399999999
+      ],
+      [
+       -120.91563800000002,
+       38.664352
+      ],
+      [
+       -120.915733,
+       38.66444799999999
+      ],
+      [
+       -120.915448,
+       38.664505
+      ],
+      [
+       -120.91527700000002,
+       38.66458099999999
+      ],
+      [
+       -120.91510900000002,
+       38.664677999999995
+      ],
+      [
+       -120.915039,
+       38.664743999999985
+      ],
+      [
+       -120.91498300000002,
+       38.664788
+      ],
+      [
+       -120.91487800000002,
+       38.664770999999995
+      ],
+      [
+       -120.914703,
+       38.664649999999995
+      ],
+      [
+       -120.91431799999998,
+       38.664129
+      ],
+      [
+       -120.914122,
+       38.664128000000005
+      ]
+     ]
+    ]
+   },
+   "properties": {
+    "id": "nhd:121531055",
+    "nhd_id": "121531055",
+    "name": null,
+    "source": "nhd",
+    "fcode": 39004,
+    "ftype": 390,
+    "evidence": {
+     "area_m2": 69169.1,
+     "level_m": 407.21,
+     "channel_area_km2": 2.386,
+     "channel_fcode": 46003,
+     "channel_name": "Sawmill Creek",
+     "outlet": [
+      1392.4,
+      1266.2
+     ],
+     "drop_below_m": 7.89,
+     "crest_above_m": 2.52,
+     "edge_len_m": 156.8,
+     "edge_rms": 0.101,
+     "dam_evidence": true
+    },
+    "reasons": [
+     "OSM waterway=dam node/358813182 (Holiday Lake 1079 Dam) on its edge"
+    ],
+    "kind": "reservoir",
+    "carve": {
+     "inflows": 3,
+     "length_m": 420.9,
+     "cells": 99,
+     "outlet_tail_m": 27.5,
+     "outlet_tail_max_cut_m": 4.37,
+     "max_cut_m": 1.71,
+     "outlet": [
+      1392.4,
+      1266.2
+     ],
+     "level_m": 407.21
+    },
+    "breach": {
+     "breaches": 0,
+     "unbreached": 0,
+     "breach_length_m": 0.0,
+     "breach_max_cut_m": 0.0,
+     "held_on_thalweg_m": 0.0,
+     "thalweg_held_fraction": 0.0,
+     "bed_held_fraction": 0.0,
+     "bed_held_max_m": 0.22,
+     "cells": 2769
+    },
+    "rewilded": true,
+    "area_m2": 69169.1
+   }
+  },
+  {
+   "type": "Feature",
+   "geometry": {
+    "type": "Polygon",
+    "coordinates": [
+     [
+      [
+       -120.83810000000001,
+       38.72121700000001
+      ],
+      [
+       -120.838212,
+       38.7213
+      ],
+      [
+       -120.83819099999998,
+       38.721393
+      ],
+      [
+       -120.83788999999999,
+       38.721657
+      ],
+      [
+       -120.837735,
+       38.721657
+      ],
+      [
+       -120.83766499999999,
+       38.721602
+      ],
+      [
+       -120.837679,
+       38.721503
+      ],
+      [
+       -120.837945,
+       38.72118999999999
+      ],
+      [
+       -120.83810000000001,
+       38.72121700000001
+      ]
+     ]
+    ]
+   },
+   "properties": {
+    "id": "nhd:63423736",
+    "nhd_id": "63423736",
+    "name": null,
+    "source": "nhd",
+    "fcode": 39004,
+    "ftype": 390,
+    "evidence": {
+     "area_m2": 1456.0,
+     "osm": [
+      {
+       "natural": "water",
+       "osm_id": "way/165786844"
+      }
+     ],
+     "level_m": 485.98,
+     "channel_area_km2": 0.207,
+     "channel_fcode": 46007,
+     "channel_name": null,
+     "outlet": [
+      7936.4,
+      8066.7
+     ],
+     "drop_below_m": 9.32,
+     "crest_above_m": 1.88,
+     "edge_len_m": 24.2,
+     "edge_rms": 0.097,
+     "dam_evidence": true
+    },
+    "reasons": [
+     "stock pond: 0.15 ha on a routed channel (0.21 km2), straight 24 m downstream edge, ground 9.3 m below the water within 45 m of it, crest +1.9 m"
+    ],
+    "kind": "stock_pond",
+    "carve": {
+     "inflows": 1,
+     "length_m": 57.4,
+     "cells": 10,
+     "outlet_tail_m": 0.0,
+     "outlet_tail_max_cut_m": 0.0,
+     "max_cut_m": 4.19,
+     "outlet": [
+      7936.4,
+      8066.7
+     ],
+     "level_m": 485.05
+    },
+    "breach": {
+     "breaches": 0,
+     "unbreached": 0,
+     "breach_length_m": 0.0,
+     "breach_max_cut_m": 0.0,
+     "held_on_thalweg_m": 0.0,
+     "thalweg_held_fraction": 0.0,
+     "bed_held_fraction": 0.0,
+     "bed_held_max_m": 0.0,
+     "cells": 58
+    },
+    "rewilded": true,
+    "area_m2": 1456.0
+   }
+  },
+  {
+   "type": "Feature",
+   "geometry": {
+    "type": "Polygon",
+    "coordinates": [
+     [
+      [
+       -120.896419,
+       38.675006999999994
+      ],
+      [
+       -120.89644100000001,
+       38.67534299999999
+      ],
+      [
+       -120.896229,
+       38.675507
+      ],
+      [
+       -120.896049,
+       38.675497
+      ],
+      [
+       -120.895349,
+       38.675459
+      ],
+      [
+       -120.894968,
+       38.675317
+      ],
+      [
+       -120.894992,
+       38.674840999999994
+      ],
+      [
+       -120.895267,
+       38.674479999999996
+      ],
+      [
+       -120.895396,
+       38.67376999999998
+      ],
+      [
+       -120.895384,
+       38.673437
+      ],
+      [
+       -120.895304,
+       38.673125
+      ],
+      [
+       -120.895295,
+       38.672943999999994
+      ],
+      [
+       -120.895295,
+       38.672773
+      ],
+      [
+       -120.895295,
+       38.672592
+      ],
+      [
+       -120.895238,
+       38.672315999999995
+      ],
+      [
+       -120.89526600000002,
+       38.672239999999995
+      ],
+      [
+       -120.89539900000001,
+       38.67222999999999
+      ],
+      [
+       -120.89549500000001,
+       38.672277999999984
+      ],
+      [
+       -120.895628,
+       38.672363999999995
+      ],
+      [
+       -120.895799,
+       38.672459
+      ],
+      [
+       -120.89588499999999,
+       38.672516
+      ],
+      [
+       -120.89597,
+       38.67263999999999
+      ],
+      [
+       -120.89600800000001,
+       38.67280099999999
+      ],
+      [
+       -120.89603700000002,
+       38.67295399999999
+      ],
+      [
+       -120.89605600000002,
+       38.67304899999999
+      ],
+      [
+       -120.896151,
+       38.673201
+      ],
+      [
+       -120.89622700000001,
+       38.673344
+      ],
+      [
+       -120.896256,
+       38.67343
+      ],
+      [
+       -120.896313,
+       38.67360999999999
+      ],
+      [
+       -120.896361,
+       38.673772
+      ],
+      [
+       -120.896446,
+       38.673982
+      ],
+      [
+       -120.896446,
+       38.673985
+      ],
+      [
+       -120.89639800000002,
+       38.674254999999995
+      ],
+      [
+       -120.89644300000002,
+       38.674436
+      ],
+      [
+       -120.896419,
+       38.675006999999994
+      ]
+     ]
+    ]
+   },
+   "properties": {
+    "id": "nhd:63430352",
+    "nhd_id": "63430352",
+    "name": null,
+    "source": "nhd",
+    "fcode": 39004,
+    "ftype": 390,
+    "evidence": {
+     "area_m2": 31302.7,
+     "osm": [
+      {
+       "natural": "water",
+       "osm_id": "way/165786635"
+      }
+     ],
+     "level_m": 446.77,
+     "channel_area_km2": 1.163,
+     "channel_fcode": 46007,
+     "channel_name": null,
+     "outlet": [
+      3062.2,
+      2865.8
+     ],
+     "drop_below_m": 5.53,
+     "crest_above_m": 1.98,
+     "edge_len_m": 118.7,
+     "edge_rms": 0.037,
+     "dam_evidence": true
+    },
+    "reasons": [
+     "impoundment: 3.1 ha on a routed channel (1.16 km2) behind a straight 119 m edge, ground 5.5 m below the water within 45 m of it"
+    ],
+    "kind": "reservoir",
+    "carve": {
+     "inflows": 1,
+     "length_m": 381.9,
+     "cells": 76,
+     "outlet_tail_m": 12.5,
+     "outlet_tail_max_cut_m": 3.3,
+     "max_cut_m": 1.9,
+     "outlet": [
+      3062.2,
+      2865.8
+     ],
+     "level_m": 446.77
+    },
+    "breach": {
+     "breaches": 0,
+     "unbreached": 0,
+     "breach_length_m": 0.0,
+     "breach_max_cut_m": 0.0,
+     "held_on_thalweg_m": 0.0,
+     "thalweg_held_fraction": 0.0,
+     "bed_held_fraction": 0.0,
+     "bed_held_max_m": 0.0,
+     "cells": 1253
+    },
+    "rewilded": true,
+    "area_m2": 31302.7
+   }
+  },
+  {
+   "type": "Feature",
+   "geometry": {
+    "type": "Polygon",
+    "coordinates": [
+     [
+      [
+       -120.883196,
+       38.72762500000001
+      ],
+      [
+       -120.88276100000002,
+       38.72796499999998
+      ],
+      [
+       -120.88267,
+       38.72800899999999
+      ],
+      [
+       -120.88255,
+       38.727992
+      ],
+      [
+       -120.88253000000002,
+       38.72770700000001
+      ],
+      [
+       -120.882621,
+       38.72744299999999
+      ],
+      [
+       -120.882796,
+       38.72736100000001
+      ],
+      [
+       -120.88307699999999,
+       38.72746
+      ],
+      [
+       -120.883196,
+       38.72762500000001
+      ]
+     ]
+    ]
+   },
+   "properties": {
+    "id": "nhd:63430360",
+    "nhd_id": "63430360",
+    "name": null,
+    "source": "nhd",
+    "fcode": 39004,
+    "ftype": 390,
+    "evidence": {
+     "area_m2": 2607.5,
+     "osm": [
+      {
+       "natural": "water",
+       "osm_id": "way/165786860"
+      }
+     ],
+     "level_m": 455.05,
+     "outlet": [
+      4016.5,
+      8663.8
+     ],
+     "drop_below_m": 5.34,
+     "crest_above_m": 2.71,
+     "edge_len_m": 33.8,
+     "edge_rms": 0.048,
+     "dam_evidence": true
+    },
+    "reasons": [
+     "stock pond: 0.26 ha off the routed network (a hillside tank fed by a swale under 0.15 km2), straight 34 m downstream edge, ground 5.3 m below the water within 45 m of it, crest +2.7 m"
+    ],
+    "kind": "stock_pond",
+    "carve": null,
+    "breach": {
+     "breaches": 1,
+     "unbreached": 0,
+     "breach_length_m": 40.4,
+     "breach_max_cut_m": 4.49,
+     "held_on_thalweg_m": null,
+     "thalweg_held_fraction": null,
+     "bed_held_fraction": 0.0,
+     "bed_held_max_m": 0.0,
+     "cells": 106
+    },
+    "rewilded": true,
+    "area_m2": 2607.5
+   }
+  },
+  {
+   "type": "Feature",
+   "geometry": {
+    "type": "Polygon",
+    "coordinates": [
+     [
+      [
+       -120.832057,
+       38.685086
+      ],
+      [
+       -120.83212800000001,
+       38.685181
+      ],
+      [
+       -120.83217599999999,
+       38.685324
+      ],
+      [
+       -120.832066,
+       38.68535099999999
+      ],
+      [
+       -120.831985,
+       38.685372
+      ],
+      [
+       -120.831938,
+       38.68544299999999
+      ],
+      [
+       -120.83189,
+       38.685514
+      ],
+      [
+       -120.831679,
+       38.68601199999999
+      ],
+      [
+       -120.831657,
+       38.68606400000001
+      ],
+      [
+       -120.831628,
+       38.686132999999984
+      ],
+      [
+       -120.831533,
+       38.68632300000001
+      ],
+      [
+       -120.831462,
+       38.68670399999999
+      ],
+      [
+       -120.8314,
+       38.686757
+      ],
+      [
+       -120.831295,
+       38.68684699999999
+      ],
+      [
+       -120.83122399999999,
+       38.68679899999999
+      ],
+      [
+       -120.831163,
+       38.686707999999996
+      ],
+      [
+       -120.831129,
+       38.686657000000004
+      ],
+      [
+       -120.83101000000002,
+       38.68648999999999
+      ],
+      [
+       -120.83086700000001,
+       38.68639499999999
+      ],
+      [
+       -120.830676,
+       38.686395000000005
+      ],
+      [
+       -120.830439,
+       38.68653799999999
+      ],
+      [
+       -120.83032000000001,
+       38.686347
+      ],
+      [
+       -120.83022400000002,
+       38.686133
+      ],
+      [
+       -120.830362,
+       38.685773
+      ],
+      [
+       -120.83026999999998,
+       38.68561900000001
+      ],
+      [
+       -120.83034100000002,
+       38.685464999999986
+      ],
+      [
+       -120.830446,
+       38.685317
+      ],
+      [
+       -120.830446,
+       38.68485
+      ],
+      [
+       -120.830361,
+       38.684669
+      ],
+      [
+       -120.83020000000002,
+       38.684603
+      ],
+      [
+       -120.830175,
+       38.684606
+      ],
+      [
+       -120.829829,
+       38.68464099999999
+      ],
+      [
+       -120.829535,
+       38.684834
+      ],
+      [
+       -120.828743,
+       38.685674
+      ],
+      [
+       -120.828463,
+       38.685894
+      ],
+      [
+       -120.828407,
+       38.68615700000001
+      ],
+      [
+       -120.82841700000002,
+       38.686167999999995
+      ],
+      [
+       -120.828725,
+       38.686276
+      ],
+      [
+       -120.828773,
+       38.68668
+      ],
+      [
+       -120.828749,
+       38.686871
+      ],
+      [
+       -120.828749,
+       38.687085
+      ],
+      [
+       -120.82893900000002,
+       38.687394
+      ],
+      [
+       -120.82889199999998,
+       38.687632
+      ],
+      [
+       -120.82867800000001,
+       38.68789400000001
+      ],
+      [
+       -120.828511,
+       38.687775
+      ],
+      [
+       -120.828323,
+       38.68758499999999
+      ],
+      [
+       -120.828176,
+       38.68754100000001
+      ],
+      [
+       -120.827861,
+       38.687529999999995
+      ],
+      [
+       -120.827602,
+       38.687503
+      ],
+      [
+       -120.82749599999998,
+       38.68742
+      ],
+      [
+       -120.827531,
+       38.68723899999999
+      ],
+      [
+       -120.827707,
+       38.687118000000005
+      ],
+      [
+       -120.827707,
+       38.686716999999994
+      ],
+      [
+       -120.827601,
+       38.68643200000001
+      ],
+      [
+       -120.82730000000001,
+       38.68623399999999
+      ],
+      [
+       -120.82723,
+       38.68609699999999
+      ],
+      [
+       -120.827209,
+       38.685894
+      ],
+      [
+       -120.827209,
+       38.685712999999986
+      ],
+      [
+       -120.82698500000001,
+       38.685575
+      ],
+      [
+       -120.826915,
+       38.685427
+      ],
+      [
+       -120.82702000000002,
+       38.685356
+      ],
+      [
+       -120.827356,
+       38.68535599999999
+      ],
+      [
+       -120.82774100000002,
+       38.685382999999995
+      ],
+      [
+       -120.82786,
+       38.685345
+      ],
+      [
+       -120.82796600000002,
+       38.68516300000001
+      ],
+      [
+       -120.82814099999999,
+       38.684905
+      ],
+      [
+       -120.82835799999998,
+       38.684630999999996
+      ],
+      [
+       -120.82881300000001,
+       38.684328999999984
+      ],
+      [
+       -120.829128,
+       38.684191
+      ],
+      [
+       -120.82944400000001,
+       38.68402699999999
+      ],
+      [
+       -120.8295,
+       38.683752
+      ],
+      [
+       -120.82942899999999,
+       38.683516000000004
+      ],
+      [
+       -120.82932400000001,
+       38.68331299999999
+      ],
+      [
+       -120.829373,
+       38.683147999999996
+      ],
+      [
+       -120.82961899999998,
+       38.68292799999998
+      ],
+      [
+       -120.829653,
+       38.682681
+      ],
+      [
+       -120.829745,
+       38.682582
+      ],
+      [
+       -120.829941,
+       38.682548999999995
+      ],
+      [
+       -120.83005299999999,
+       38.682527
+      ],
+      [
+       -120.830172,
+       38.682511000000005
+      ],
+      [
+       -120.830375,
+       38.682472
+      ],
+      [
+       -120.830676,
+       38.682460999999996
+      ],
+      [
+       -120.83079500000001,
+       38.682527
+      ],
+      [
+       -120.83101000000002,
+       38.682587999999996
+      ],
+      [
+       -120.83108099999998,
+       38.682778
+      ],
+      [
+       -120.83110700000002,
+       38.683119
+      ],
+      [
+       -120.83118800000001,
+       38.683186
+      ],
+      [
+       -120.831632,
+       38.68332900000001
+      ],
+      [
+       -120.83177099999999,
+       38.68337299999999
+      ],
+      [
+       -120.831961,
+       38.683491999999994
+      ],
+      [
+       -120.831985,
+       38.683635
+      ],
+      [
+       -120.83174700000001,
+       38.683657999999994
+      ],
+      [
+       -120.83155700000002,
+       38.68375400000001
+      ],
+      [
+       -120.83141400000001,
+       38.683849
+      ],
+      [
+       -120.83141400000001,
+       38.68391999999999
+      ],
+      [
+       -120.831509,
+       38.68422900000001
+      ],
+      [
+       -120.83155700000002,
+       38.684610000000006
+      ],
+      [
+       -120.831593,
+       38.684682
+      ],
+      [
+       -120.831676,
+       38.684847999999995
+      ],
+      [
+       -120.831842,
+       38.68499099999999
+      ],
+      [
+       -120.832057,
+       38.685086
+      ]
+     ]
+    ]
+   },
+   "properties": {
+    "id": "nhd:121531045",
+    "nhd_id": "121531045",
+    "name": "Patterson Lake",
+    "source": "nhd",
+    "fcode": 39004,
+    "ftype": 390,
+    "evidence": {
+     "area_m2": 107322.5,
+     "osm": [
+      {
+       "natural": "water",
+       "water": "reservoir",
+       "name": "Patterson Lake",
+       "osm_id": "way/125607210"
+      },
+      {
+       "osm_id": "way/125607210",
+       "water": "reservoir",
+       "name": "Patterson Lake"
+      }
+     ],
+     "level_m": 525.2,
+     "channel_area_km2": 1.459,
+     "channel_fcode": 46006,
+     "channel_name": "Deadman Creek",
+     "outlet": [
+      8764.3,
+      3786.4
+     ],
+     "drop_below_m": 7.82,
+     "crest_above_m": 2.73,
+     "edge_len_m": 170.7,
+     "edge_rms": 0.141,
+     "dam_evidence": false
+    },
+    "reasons": [
+     "OSM water=reservoir (way/125607210, Patterson Lake)"
+    ],
+    "kind": "reservoir",
+    "carve": {
+     "inflows": 3,
+     "length_m": 679.4,
+     "cells": 143,
+     "outlet_tail_m": 7.5,
+     "outlet_tail_max_cut_m": 0.69,
+     "max_cut_m": 3.59,
+     "outlet": [
+      8764.3,
+      3786.4
+     ],
+     "level_m": 525.2
+    },
+    "breach": {
+     "breaches": 0,
+     "unbreached": 0,
+     "breach_length_m": 0.0,
+     "breach_max_cut_m": 0.0,
+     "held_on_thalweg_m": 0.0,
+     "thalweg_held_fraction": 0.0,
+     "bed_held_fraction": 0.0,
+     "bed_held_max_m": 0.0,
+     "cells": 4293
+    },
+    "rewilded": true,
+    "area_m2": 107322.5
+   }
+  },
+  {
+   "type": "Feature",
+   "geometry": {
+    "type": "Polygon",
+    "coordinates": [
+     [
+      [
+       -120.875542,
+       38.712314
+      ],
+      [
+       -120.87472300000002,
+       38.712165
+      ],
+      [
+       -120.874618,
+       38.712065
+      ],
+      [
+       -120.87451600000001,
+       38.711915
+      ],
+      [
+       -120.87451600000001,
+       38.711765
+      ],
+      [
+       -120.87446599999998,
+       38.711594000000005
+      ],
+      [
+       -120.874346,
+       38.711468999999994
+      ],
+      [
+       -120.87411399999999,
+       38.711167999999994
+      ],
+      [
+       -120.873708,
+       38.71101399999999
+      ],
+      [
+       -120.87316800000002,
+       38.71091499999999
+      ],
+      [
+       -120.87281,
+       38.71077799999999
+      ],
+      [
+       -120.872725,
+       38.710694999999994
+      ],
+      [
+       -120.872446,
+       38.710481
+      ],
+      [
+       -120.87234600000001,
+       38.710322999999995
+      ],
+      [
+       -120.87205400000002,
+       38.710166
+      ],
+      [
+       -120.87193100000002,
+       38.71001299999999
+      ],
+      [
+       -120.87190400000001,
+       38.709781
+      ],
+      [
+       -120.871947,
+       38.70966699999999
+      ],
+      [
+       -120.871882,
+       38.70953099999999
+      ],
+      [
+       -120.87178199999998,
+       38.709338
+      ],
+      [
+       -120.87149000000001,
+       38.70911699999999
+      ],
+      [
+       -120.871189,
+       38.708859999999994
+      ],
+      [
+       -120.871245,
+       38.70886
+      ],
+      [
+       -120.87196800000001,
+       38.70923100000001
+      ],
+      [
+       -120.872311,
+       38.709453
+      ],
+      [
+       -120.87247500000001,
+       38.70958099999999
+      ],
+      [
+       -120.872867,
+       38.70978799999999
+      ],
+      [
+       -120.87313200000001,
+       38.710074000000006
+      ],
+      [
+       -120.87328899999999,
+       38.710215999999996
+      ],
+      [
+       -120.87353800000001,
+       38.710365999999986
+      ],
+      [
+       -120.87378100000001,
+       38.710466
+      ],
+      [
+       -120.874309,
+       38.710551999999986
+      ],
+      [
+       -120.87464500000002,
+       38.710595000000005
+      ],
+      [
+       -120.875073,
+       38.710423
+      ],
+      [
+       -120.875101,
+       38.710415
+      ],
+      [
+       -120.87518699999998,
+       38.710388
+      ],
+      [
+       -120.87504200000001,
+       38.710671
+      ],
+      [
+       -120.874966,
+       38.71075199999999
+      ],
+      [
+       -120.875038,
+       38.710916000000005
+      ],
+      [
+       -120.875409,
+       38.71121599999999
+      ],
+      [
+       -120.875609,
+       38.71128699999999
+      ],
+      [
+       -120.87576599999998,
+       38.71138
+      ],
+      [
+       -120.87601500000001,
+       38.711715
+      ],
+      [
+       -120.876215,
+       38.711741999999994
+      ],
+      [
+       -120.876217,
+       38.711769000000004
+      ],
+      [
+       -120.876251,
+       38.71208000000001
+      ],
+      [
+       -120.876251,
+       38.71229399999999
+      ],
+      [
+       -120.876208,
+       38.71247199999999
+      ],
+      [
+       -120.87608,
+       38.712501
+      ],
+      [
+       -120.875875,
+       38.712496
+      ],
+      [
+       -120.87587400000001,
+       38.71249599999999
+      ],
+      [
+       -120.875542,
+       38.712314
+      ]
+     ]
+    ]
+   },
+   "properties": {
+    "id": "nhd:63434924",
+    "nhd_id": "63434924",
+    "name": null,
+    "source": "nhd",
+    "fcode": 39004,
+    "ftype": 390,
+    "evidence": {
+     "area_m2": 41267.8,
+     "osm": [
+      {
+       "natural": "water",
+       "osm_id": "way/165786745"
+      }
+     ],
+     "level_m": 447.86,
+     "channel_area_km2": 4.833,
+     "channel_fcode": 46006,
+     "channel_name": "Indian Creek",
+     "outlet": [
+      4751.4,
+      6790.2
+     ],
+     "drop_below_m": -1.1,
+     "crest_above_m": 3.65,
+     "edge_len_m": 95.5,
+     "edge_rms": 0.187,
+     "dam_evidence": false
+    },
+    "reasons": [
+     "OSM waterway=dam node/358813377 (Volo Mining Company 1468 Dam) on its edge"
+    ],
+    "kind": "reservoir",
+    "carve": {
+     "inflows": 1,
+     "length_m": 448.2,
+     "cells": 100,
+     "outlet_tail_m": 72.5,
+     "outlet_tail_max_cut_m": 2.71,
+     "max_cut_m": 2.9,
+     "outlet": [
+      4751.4,
+      6790.2
+     ],
+     "level_m": 447.86
+    },
+    "breach": {
+     "breaches": 0,
+     "unbreached": 0,
+     "breach_length_m": 0.0,
+     "breach_max_cut_m": 0.0,
+     "held_on_thalweg_m": 0.0,
+     "thalweg_held_fraction": 0.0,
+     "bed_held_fraction": 0.0,
+     "bed_held_max_m": 0.0,
+     "cells": 1654
+    },
+    "rewilded": true,
+    "area_m2": 41267.8
+   }
+  },
+  {
+   "type": "Feature",
+   "geometry": {
+    "type": "Polygon",
+    "coordinates": [
+     [
+      [
+       -120.82886500000001,
+       38.703058999999996
+      ],
+      [
+       -120.82886500000001,
+       38.703196999999996
+      ],
+      [
+       -120.82858500000002,
+       38.70341599999999
+      ],
+      [
+       -120.82837500000001,
+       38.703444000000005
+      ],
+      [
+       -120.828305,
+       38.703345000000006
+      ],
+      [
+       -120.82831899999998,
+       38.703196999999996
+      ],
+      [
+       -120.82865499999998,
+       38.703043
+      ],
+      [
+       -120.82886500000001,
+       38.703058999999996
+      ]
+     ]
+    ]
+   },
+   "properties": {
+    "id": "nhd:63423760",
+    "nhd_id": "63423760",
+    "name": null,
+    "source": "nhd",
+    "fcode": 39004,
+    "ftype": 390,
+    "evidence": {
+     "area_m2": 1438.1,
+     "osm": [
+      {
+       "natural": "water",
+       "osm_id": "way/165786780"
+      }
+     ],
+     "level_m": 547.79,
+     "outlet": [
+      8837.2,
+      6106.6
+     ],
+     "drop_below_m": 5.6,
+     "crest_above_m": 0.28,
+     "edge_len_m": 22.8,
+     "edge_rms": 0.113,
+     "dam_evidence": true
+    },
+    "reasons": [
+     "stock pond: 0.14 ha off the routed network (a hillside tank fed by a swale under 0.15 km2), straight 23 m downstream edge, ground 5.6 m below the water within 45 m of it, crest +0.3 m"
+    ],
+    "kind": "stock_pond",
+    "carve": null,
+    "breach": {
+     "breaches": 0,
+     "unbreached": 0,
+     "breach_length_m": 0.0,
+     "breach_max_cut_m": 0.0,
+     "held_on_thalweg_m": null,
+     "thalweg_held_fraction": null,
+     "bed_held_fraction": 0.0,
+     "bed_held_max_m": 0.0,
+     "cells": 59
+    },
+    "rewilded": true,
+    "area_m2": 1438.1
+   }
+  },
+  {
+   "type": "Feature",
+   "geometry": {
+    "type": "Polygon",
+    "coordinates": [
+     [
+      [
+       -120.87501800000001,
+       38.66732999999999
+      ],
+      [
+       -120.875263,
+       38.66725799999999
+      ],
+      [
+       -120.875473,
+       38.66728599999999
+      ],
+      [
+       -120.875634,
+       38.66734100000001
+      ],
+      [
+       -120.875578,
+       38.66743899999999
+      ],
+      [
+       -120.875494,
+       38.667533000000006
+      ],
+      [
+       -120.87520700000002,
+       38.667549
+      ],
+      [
+       -120.874962,
+       38.66747799999999
+      ],
+      [
+       -120.87501800000001,
+       38.66732999999999
+      ]
+     ]
+    ]
+   },
+   "properties": {
+    "id": "nhd:121531060",
+    "nhd_id": "121531060",
+    "name": null,
+    "source": "nhd",
+    "fcode": 39004,
+    "ftype": 390,
+    "evidence": {
+     "area_m2": 1367.0,
+     "level_m": 471.93,
+     "channel_area_km2": 0.373,
+     "channel_fcode": 46007,
+     "channel_name": null,
+     "outlet": [
+      4823.9,
+      2012.2
+     ],
+     "drop_below_m": 4.15,
+     "crest_above_m": 2.31,
+     "edge_len_m": 24.6,
+     "edge_rms": 0.117,
+     "dam_evidence": true
+    },
+    "reasons": [
+     "stock pond: 0.14 ha on a routed channel (0.37 km2), straight 25 m downstream edge, ground 4.1 m below the water within 45 m of it, crest +2.3 m"
+    ],
+    "kind": "stock_pond",
+    "carve": {
+     "inflows": 1,
+     "length_m": 52.1,
+     "cells": 27,
+     "outlet_tail_m": 42.5,
+     "outlet_tail_max_cut_m": 7.02,
+     "max_cut_m": 2.51,
+     "outlet": [
+      4823.9,
+      2012.2
+     ],
+     "level_m": 471.39
+    },
+    "breach": {
+     "breaches": 0,
+     "unbreached": 0,
+     "breach_length_m": 0.0,
+     "breach_max_cut_m": 0.0,
+     "held_on_thalweg_m": 0.0,
+     "thalweg_held_fraction": 0.0,
+     "bed_held_fraction": 0.0,
+     "bed_held_max_m": 0.0,
+     "cells": 55
+    },
+    "rewilded": true,
+    "area_m2": 1367.0
+   }
+  },
+  {
+   "type": "Feature",
+   "geometry": {
+    "type": "Polygon",
+    "coordinates": [
+     [
+      [
+       -120.920657,
+       38.724270999999995
+      ],
+      [
+       -120.921029,
+       38.724513
+      ],
+      [
+       -120.921271,
+       38.72471299999999
+      ],
+      [
+       -120.9214,
+       38.72488500000001
+      ],
+      [
+       -120.921928,
+       38.72507
+      ],
+      [
+       -120.92222800000002,
+       38.72557
+      ],
+      [
+       -120.92213800000002,
+       38.72577100000001
+      ],
+      [
+       -120.92218100000001,
+       38.725913999999996
+      ],
+      [
+       -120.92145699999999,
+       38.72635499999999
+      ],
+      [
+       -120.92138499999999,
+       38.727096999999986
+      ],
+      [
+       -120.921357,
+       38.727368999999996
+      ],
+      [
+       -120.921284,
+       38.727441999999996
+      ],
+      [
+       -120.92118600000002,
+       38.72754
+      ],
+      [
+       -120.92138499999999,
+       38.727697
+      ],
+      [
+       -120.92137099999998,
+       38.727825999999986
+      ],
+      [
+       -120.921214,
+       38.72791099999999
+      ],
+      [
+       -120.92111400000002,
+       38.727826
+      ],
+      [
+       -120.920872,
+       38.727810999999996
+      ],
+      [
+       -120.9206,
+       38.727810999999996
+      ],
+      [
+       -120.92038599999998,
+       38.727897
+      ],
+      [
+       -120.9203,
+       38.728083
+      ],
+      [
+       -120.92007200000002,
+       38.728083000000005
+      ],
+      [
+       -120.91987200000001,
+       38.728125000000006
+      ],
+      [
+       -120.919801,
+       38.728397
+      ],
+      [
+       -120.91952900000001,
+       38.728339999999996
+      ],
+      [
+       -120.91942999999999,
+       38.72816799999998
+      ],
+      [
+       -120.91942199999998,
+       38.72812199999999
+      ],
+      [
+       -120.91940100000001,
+       38.727997
+      ],
+      [
+       -120.91941500000001,
+       38.72783999999999
+      ],
+      [
+       -120.919515,
+       38.727569
+      ],
+      [
+       -120.91952900000001,
+       38.727369
+      ],
+      [
+       -120.919501,
+       38.72713999999999
+      ],
+      [
+       -120.919458,
+       38.726983
+      ],
+      [
+       -120.91924399999999,
+       38.72679800000001
+      ],
+      [
+       -120.91890100000002,
+       38.726783
+      ],
+      [
+       -120.91863,
+       38.72678299999998
+      ],
+      [
+       -120.918102,
+       38.72671199999999
+      ],
+      [
+       -120.91760199999999,
+       38.726640999999994
+      ],
+      [
+       -120.91727400000002,
+       38.726569000000005
+      ],
+      [
+       -120.917102,
+       38.726526
+      ],
+      [
+       -120.916774,
+       38.72666900000001
+      ],
+      [
+       -120.916417,
+       38.726698
+      ],
+      [
+       -120.916394,
+       38.72668999999999
+      ],
+      [
+       -120.91618400000002,
+       38.72662799999999
+      ],
+      [
+       -120.91596500000001,
+       38.726608999999996
+      ],
+      [
+       -120.91601300000002,
+       38.726552
+      ],
+      [
+       -120.91607000000002,
+       38.726448
+      ],
+      [
+       -120.916098,
+       38.726438
+      ],
+      [
+       -120.916213,
+       38.726475999999984
+      ],
+      [
+       -120.91630799999999,
+       38.726571
+      ],
+      [
+       -120.91641600000001,
+       38.72659199999999
+      ],
+      [
+       -120.91643099999999,
+       38.72652600000001
+      ],
+      [
+       -120.916503,
+       38.72635499999999
+      ],
+      [
+       -120.916546,
+       38.726169
+      ],
+      [
+       -120.916508,
+       38.72608799999999
+      ],
+      [
+       -120.91646,
+       38.725984
+      ],
+      [
+       -120.91635899999999,
+       38.72582999999999
+      ],
+      [
+       -120.91618400000002,
+       38.725742999999994
+      ],
+      [
+       -120.916327,
+       38.72572400000001
+      ],
+      [
+       -120.91646,
+       38.72561
+      ],
+      [
+       -120.91665999999998,
+       38.72547699999999
+      ],
+      [
+       -120.91686899999999,
+       38.725266999999995
+      ],
+      [
+       -120.917222,
+       38.725134000000004
+      ],
+      [
+       -120.917621,
+       38.72501
+      ],
+      [
+       -120.918164,
+       38.724839
+      ],
+      [
+       -120.91865599999998,
+       38.724726999999994
+      ],
+      [
+       -120.91903000000002,
+       38.724442
+      ],
+      [
+       -120.91935800000002,
+       38.724456
+      ],
+      [
+       -120.919644,
+       38.724313
+      ],
+      [
+       -120.919644,
+       38.724071
+      ],
+      [
+       -120.919758,
+       38.723757
+      ],
+      [
+       -120.91978100000001,
+       38.723681
+      ],
+      [
+       -120.91976999999999,
+       38.723592
+      ],
+      [
+       -120.919792,
+       38.72344900000001
+      ],
+      [
+       -120.91982000000002,
+       38.723355999999995
+      ],
+      [
+       -120.91991700000001,
+       38.723316999999994
+      ],
+      [
+       -120.91999200000001,
+       38.72338
+      ],
+      [
+       -120.92005200000001,
+       38.723431
+      ],
+      [
+       -120.920159,
+       38.72352399999999
+      ],
+      [
+       -120.92025200000002,
+       38.723642000000005
+      ],
+      [
+       -120.920288,
+       38.723708999999985
+      ],
+      [
+       -120.920315,
+       38.723825999999995
+      ],
+      [
+       -120.92051499999998,
+       38.72399899999999
+      ],
+      [
+       -120.920657,
+       38.724270999999995
+      ]
+     ]
+    ]
+   },
+   "properties": {
+    "id": "nhd:63430310",
+    "nhd_id": "63430310",
+    "name": "Indian Creek Reservoir",
+    "source": "nhd",
+    "fcode": 39004,
+    "ftype": 390,
+    "evidence": {
+     "area_m2": 133628.9,
+     "osm": [
+      {
+       "natural": "water",
+       "water": "reservoir",
+       "name": "Indian Creek Reservoir",
+       "osm_id": "relation/19948005"
+      },
+      {
+       "osm_id": "relation/19948005",
+       "water": "reservoir",
+       "name": "Indian Creek Reservoir"
+      }
+     ],
+     "level_m": 320.51,
+     "channel_area_km2": 18.03,
+     "channel_fcode": 46003,
+     "channel_name": "Indian Creek",
+     "outlet": [
+      687.9,
+      8617.3
+     ],
+     "drop_below_m": 2.37,
+     "crest_above_m": 3.75,
+     "edge_len_m": 208.2,
+     "edge_rms": 0.106,
+     "dam_evidence": false
+    },
+    "reasons": [
+     "OSM water=reservoir (relation/19948005, Indian Creek Reservoir)",
+     "OSM waterway=dam way/1457644037 (Indian Creek 1462 Dam) on its edge"
+    ],
+    "kind": "reservoir",
+    "carve": {
+     "inflows": 6,
+     "length_m": 537.6,
+     "cells": 232,
+     "outlet_tail_m": 42.5,
+     "outlet_tail_max_cut_m": 1.92,
+     "max_cut_m": 2.54,
+     "outlet": [
+      687.9,
+      8617.3
+     ],
+     "level_m": 320.51
+    },
+    "breach": {
+     "breaches": 0,
+     "unbreached": 0,
+     "breach_length_m": 0.0,
+     "breach_max_cut_m": 0.0,
+     "held_on_thalweg_m": 0.0,
+     "thalweg_held_fraction": 0.0,
+     "bed_held_fraction": 0.0,
+     "bed_held_max_m": 0.25,
+     "cells": 5353
+    },
+    "rewilded": true,
+    "area_m2": 133628.9
+   }
+  },
+  {
+   "type": "Feature",
+   "geometry": {
+    "type": "Polygon",
+    "coordinates": [
+     [
+      [
+       -120.823029,
+       38.70504
+      ],
+      [
+       -120.823155,
+       38.705864
+      ],
+      [
+       -120.82321099999999,
+       38.706062
+      ],
+      [
+       -120.823316,
+       38.70643499999999
+      ],
+      [
+       -120.823407,
+       38.70671
+      ],
+      [
+       -120.823428,
+       38.706786
+      ],
+      [
+       -120.823344,
+       38.70689599999999
+      ],
+      [
+       -120.823218,
+       38.706951
+      ],
+      [
+       -120.822854,
+       38.70700600000001
+      ],
+      [
+       -120.822763,
+       38.706935
+      ],
+      [
+       -120.822594,
+       38.706726
+      ],
+      [
+       -120.82234900000002,
+       38.706357999999994
+      ],
+      [
+       -120.82199200000001,
+       38.705573
+      ],
+      [
+       -120.821739,
+       38.70518299999999
+      ],
+      [
+       -120.821508,
+       38.704688999999995
+      ],
+      [
+       -120.821368,
+       38.70441399999999
+      ],
+      [
+       -120.821333,
+       38.704277
+      ],
+      [
+       -120.82131900000002,
+       38.704111999999995
+      ],
+      [
+       -120.821459,
+       38.70395899999999
+      ],
+      [
+       -120.8219,
+       38.70371200000001
+      ],
+      [
+       -120.822062,
+       38.703711
+      ],
+      [
+       -120.822272,
+       38.70400300000001
+      ],
+      [
+       -120.82256599999998,
+       38.704414
+      ],
+      [
+       -120.822882,
+       38.704744
+      ],
+      [
+       -120.822966,
+       38.704875999999985
+      ],
+      [
+       -120.823029,
+       38.70504
+      ]
+     ]
+    ]
+   },
+   "properties": {
+    "id": "nhd:63423948",
+    "nhd_id": "63423948",
+    "name": "Depot Lake",
+    "source": "nhd",
+    "fcode": 39001,
+    "ftype": 390,
+    "evidence": {
+     "area_m2": 32564.2,
+     "osm": [
+      {
+       "natural": "water",
+       "water": "reservoir",
+       "name": "Depot Lake",
+       "osm_id": "way/165786567"
+      },
+      {
+       "osm_id": "way/165786567",
+       "water": "reservoir",
+       "name": "Depot Lake"
+      }
+     ],
+     "level_m": 547.84,
+     "outlet": [
+      9412.0,
+      6307.5
+     ],
+     "drop_below_m": 5.39,
+     "crest_above_m": 3.14,
+     "edge_len_m": 125.1,
+     "edge_rms": 0.008,
+     "dam_evidence": true
+    },
+    "reasons": [
+     "OSM water=reservoir (way/165786567, Depot Lake)"
+    ],
+    "kind": "reservoir",
+    "carve": null,
+    "breach": {
+     "breaches": 1,
+     "unbreached": 0,
+     "breach_length_m": 160.2,
+     "breach_max_cut_m": 5.84,
+     "held_on_thalweg_m": null,
+     "thalweg_held_fraction": null,
+     "bed_held_fraction": 0.19,
+     "bed_held_max_m": 1.16,
+     "cells": 1302
+    },
+    "rewilded": true,
+    "area_m2": 32564.2
+   }
+  },
+  {
+   "type": "Feature",
+   "geometry": {
+    "type": "Polygon",
+    "coordinates": [
+     [
+      [
+       -120.858387,
+       38.66359799999999
+      ],
+      [
+       -120.858212,
+       38.66346000000001
+      ],
+      [
+       -120.85812099999998,
+       38.663267999999995
+      ],
+      [
+       -120.85817700000001,
+       38.663224
+      ],
+      [
+       -120.858317,
+       38.663197
+      ],
+      [
+       -120.858548,
+       38.663267999999995
+      ],
+      [
+       -120.858723,
+       38.66338900000001
+      ],
+      [
+       -120.858793,
+       38.663554
+      ],
+      [
+       -120.85868799999999,
+       38.663625
+      ],
+      [
+       -120.858387,
+       38.66359799999999
+      ]
+     ]
+    ]
+   },
+   "properties": {
+    "id": "nhd:121531070",
+    "nhd_id": "121531070",
+    "name": null,
+    "source": "nhd",
+    "fcode": 39004,
+    "ftype": 390,
+    "evidence": {
+     "area_m2": 1779.9,
+     "level_m": 493.09,
+     "channel_area_km2": 0.285,
+     "channel_fcode": 46007,
+     "channel_name": null,
+     "outlet": [
+      6297.2,
+      1612.0
+     ],
+     "drop_below_m": 2.81,
+     "crest_above_m": 0.55,
+     "edge_len_m": 26.2,
+     "edge_rms": 0.085,
+     "dam_evidence": true
+    },
+    "reasons": [
+     "stock pond: 0.18 ha on a routed channel (0.29 km2), straight 26 m downstream edge, ground 2.8 m below the water within 45 m of it, crest +0.6 m"
+    ],
+    "kind": "stock_pond",
+    "carve": {
+     "inflows": 1,
+     "length_m": 50.4,
+     "cells": 9,
+     "outlet_tail_m": 0.0,
+     "outlet_tail_max_cut_m": 0.0,
+     "max_cut_m": 1.15,
+     "outlet": [
+      6297.2,
+      1612.0
+     ],
+     "level_m": 492.77
+    },
+    "breach": {
+     "breaches": 1,
+     "unbreached": 0,
+     "breach_length_m": 21.2,
+     "breach_max_cut_m": 1.74,
+     "held_on_thalweg_m": 0.0,
+     "thalweg_held_fraction": 0.0,
+     "bed_held_fraction": 0.0,
+     "bed_held_max_m": 0.0,
+     "cells": 72
+    },
+    "rewilded": true,
+    "area_m2": 1779.9
+   }
+  },
+  {
+   "type": "Feature",
+   "geometry": {
+    "type": "Polygon",
+    "coordinates": [
+     [
+      [
+       -120.92036399999999,
+       38.681517
+      ],
+      [
+       -120.919984,
+       38.68147
+      ],
+      [
+       -120.919889,
+       38.681303
+      ],
+      [
+       -120.91984100000002,
+       38.681089
+      ],
+      [
+       -120.919984,
+       38.680946
+      ],
+      [
+       -120.92038799999999,
+       38.680993999999984
+      ],
+      [
+       -120.920674,
+       38.681445999999994
+      ],
+      [
+       -120.92036399999999,
+       38.681517
+      ]
+     ]
+    ]
+   },
+   "properties": {
+    "id": "nhd:{886DFD1B-C626-46CE-8DEC-44CDBF618996}",
+    "nhd_id": "{886DFD1B-C626-46CE-8DEC-44CDBF618996}",
+    "name": null,
+    "source": "nhd",
+    "fcode": 39001,
+    "ftype": 390,
+    "evidence": {
+     "area_m2": 3183.9,
+     "level_m": 410.59,
+     "outlet": [
+      918.7,
+      3483.9
+     ],
+     "drop_below_m": 6.79,
+     "crest_above_m": 2.64,
+     "edge_len_m": 36.0,
+     "edge_rms": 0.068,
+     "dam_evidence": true
+    },
+    "reasons": [
+     "stock pond: 0.32 ha off the routed network (a hillside tank fed by a swale under 0.15 km2), straight 36 m downstream edge, ground 6.8 m below the water within 45 m of it, crest +2.6 m"
+    ],
+    "kind": "stock_pond",
+    "carve": null,
+    "breach": {
+     "breaches": 1,
+     "unbreached": 0,
+     "breach_length_m": 47.4,
+     "breach_max_cut_m": 2.9,
+     "held_on_thalweg_m": null,
+     "thalweg_held_fraction": null,
+     "bed_held_fraction": 0.0,
+     "bed_held_max_m": 0.04,
+     "cells": 129
+    },
+    "rewilded": true,
+    "area_m2": 3183.9
+   }
+  },
+  {
+   "type": "Feature",
+   "geometry": {
+    "type": "Polygon",
+    "coordinates": [
+     [
+      [
+       -120.835344,
+       38.68966499999999
+      ],
+      [
+       -120.835344,
+       38.68947299999999
+      ],
+      [
+       -120.83544900000001,
+       38.689446000000004
+      ],
+      [
+       -120.835575,
+       38.68945699999999
+      ],
+      [
+       -120.835729,
+       38.689501
+      ],
+      [
+       -120.83585600000002,
+       38.689737
+      ],
+      [
+       -120.83578500000002,
+       38.689775000000004
+      ],
+      [
+       -120.835659,
+       38.689747999999994
+      ],
+      [
+       -120.83555399999999,
+       38.689719999999994
+      ],
+      [
+       -120.83544900000001,
+       38.689693000000005
+      ],
+      [
+       -120.835344,
+       38.68966499999999
+      ]
+     ]
+    ]
+   },
+   "properties": {
+    "id": "nhd:63423956",
+    "nhd_id": "63423956",
+    "name": null,
+    "source": "nhd",
+    "fcode": 39004,
+    "ftype": 390,
+    "evidence": {
+     "area_m2": 1107.5,
+     "osm": [
+      {
+       "natural": "water",
+       "osm_id": "way/165785995"
+      }
+     ],
+     "level_m": 547.71,
+     "outlet": [
+      8234.2,
+      4544.0
+     ],
+     "drop_below_m": 8.04,
+     "crest_above_m": 4.57,
+     "edge_len_m": 26.1,
+     "edge_rms": 0.065,
+     "dam_evidence": true
+    },
+    "reasons": [
+     "stock pond: 0.11 ha off the routed network (a hillside tank fed by a swale under 0.15 km2), straight 26 m downstream edge, ground 8.0 m below the water within 45 m of it, crest +4.6 m"
+    ],
+    "kind": "stock_pond",
+    "carve": null,
+    "breach": {
+     "breaches": 0,
+     "unbreached": 0,
+     "breach_length_m": 0.0,
+     "breach_max_cut_m": 0.0,
+     "held_on_thalweg_m": null,
+     "thalweg_held_fraction": null,
+     "bed_held_fraction": 0.0,
+     "bed_held_max_m": 0.02,
+     "cells": 44
+    },
+    "rewilded": true,
+    "area_m2": 1107.5
+   }
+  },
+  {
+   "type": "Feature",
+   "geometry": {
+    "type": "Polygon",
+    "coordinates": [
+     [
+      [
+       -120.84995400000001,
+       38.69212199999998
+      ],
+      [
+       -120.849604,
+       38.69245200000001
+      ],
+      [
+       -120.84938600000001,
+       38.692589
+      ],
+      [
+       -120.84917600000001,
+       38.69258899999999
+      ],
+      [
+       -120.849166,
+       38.692587
+      ],
+      [
+       -120.84903,
+       38.692507
+      ],
+      [
+       -120.848986,
+       38.69245299999999
+      ],
+      [
+       -120.84894499999999,
+       38.69233800000001
+      ],
+      [
+       -120.84883000000002,
+       38.69220299999999
+      ],
+      [
+       -120.84872599999998,
+       38.692108999999995
+      ],
+      [
+       -120.84861700000002,
+       38.692061
+      ],
+      [
+       -120.84853300000002,
+       38.69197
+      ],
+      [
+       -120.84855,
+       38.69185199999999
+      ],
+      [
+       -120.848536,
+       38.691784000000006
+      ],
+      [
+       -120.84858,
+       38.691658999999994
+      ],
+      [
+       -120.848614,
+       38.69156099999999
+      ],
+      [
+       -120.84860200000001,
+       38.691517999999995
+      ],
+      [
+       -120.84859000000002,
+       38.69147699999999
+      ],
+      [
+       -120.84855,
+       38.69141200000001
+      ],
+      [
+       -120.84851299999998,
+       38.691374999999994
+      ],
+      [
+       -120.848448,
+       38.691334999999995
+      ],
+      [
+       -120.84837700000001,
+       38.691307999999985
+      ],
+      [
+       -120.84832699999998,
+       38.691294
+      ],
+      [
+       -120.848295,
+       38.691255999999996
+      ],
+      [
+       -120.84833,
+       38.6912
+      ],
+      [
+       -120.84842500000002,
+       38.691115
+      ],
+      [
+       -120.84861700000002,
+       38.691017
+      ],
+      [
+       -120.848928,
+       38.69094299999999
+      ],
+      [
+       -120.849361,
+       38.690895
+      ],
+      [
+       -120.849483,
+       38.69089199999999
+      ],
+      [
+       -120.849513,
+       38.691000999999986
+      ],
+      [
+       -120.84961400000002,
+       38.691135
+      ],
+      [
+       -120.849679,
+       38.691262
+      ],
+      [
+       -120.849753,
+       38.691406
+      ],
+      [
+       -120.84980000000002,
+       38.691575
+      ],
+      [
+       -120.849959,
+       38.691801
+      ],
+      [
+       -120.850202,
+       38.69199400000001
+      ],
+      [
+       -120.849989,
+       38.69203999999999
+      ],
+      [
+       -120.84995400000001,
+       38.69212199999998
+      ]
+     ]
+    ]
+   },
+   "properties": {
+    "id": "nhd:63423786",
+    "nhd_id": "63423786",
+    "name": "Hagen Pond",
+    "source": "nhd",
+    "fcode": 39004,
+    "ftype": 390,
+    "evidence": {
+     "area_m2": 18079.2,
+     "osm": [
+      {
+       "natural": "water",
+       "water": "reservoir",
+       "name": "Hagen Pond",
+       "osm_id": "way/165786560"
+      },
+      {
+       "osm_id": "way/165786560",
+       "water": "reservoir",
+       "name": "Hagen Pond"
+      }
+     ],
+     "level_m": 501.6,
+     "channel_area_km2": 0.422,
+     "channel_fcode": 46007,
+     "channel_name": null,
+     "outlet": [
+      7016.0,
+      4711.5
+     ],
+     "drop_below_m": 3.62,
+     "crest_above_m": 2.42,
+     "edge_len_m": 93.3,
+     "edge_rms": 0.012,
+     "dam_evidence": true
+    },
+    "reasons": [
+     "OSM water=reservoir (way/165786560, Hagen Pond)"
+    ],
+    "kind": "reservoir",
+    "carve": {
+     "inflows": 1,
+     "length_m": 158.6,
+     "cells": 36,
+     "outlet_tail_m": 20.0,
+     "outlet_tail_max_cut_m": 3.59,
+     "max_cut_m": 1.25,
+     "outlet": [
+      7016.0,
+      4711.5
+     ],
+     "level_m": 501.29
+    },
+    "breach": {
+     "breaches": 0,
+     "unbreached": 0,
+     "breach_length_m": 0.0,
+     "breach_max_cut_m": 0.0,
+     "held_on_thalweg_m": 0.0,
+     "thalweg_held_fraction": 0.0,
+     "bed_held_fraction": 0.001,
+     "bed_held_max_m": 0.32,
+     "cells": 723
+    },
+    "rewilded": true,
+    "area_m2": 18079.2
+   }
+  },
+  {
+   "type": "Feature",
+   "geometry": {
+    "type": "Polygon",
+    "coordinates": [
+     [
+      [
+       -120.83065499999998,
+       38.678876
+      ],
+      [
+       -120.83074600000002,
+       38.678940999999995
+      ],
+      [
+       -120.830865,
+       38.679051
+      ],
+      [
+       -120.830865,
+       38.679178000000014
+      ],
+      [
+       -120.830725,
+       38.67927099999999
+      ],
+      [
+       -120.83055,
+       38.679244
+      ],
+      [
+       -120.830465,
+       38.679067999999994
+      ],
+      [
+       -120.830536,
+       38.678957999999994
+      ],
+      [
+       -120.83065499999998,
+       38.678876
+      ]
+     ]
+    ]
+   },
+   "properties": {
+    "id": "nhd:121531056",
+    "nhd_id": "121531056",
+    "name": null,
+    "source": "nhd",
+    "fcode": 39001,
+    "ftype": 390,
+    "evidence": {
+     "area_m2": 1038.6,
+     "level_m": 518.84,
+     "outlet": [
+      8684.4,
+      3408.3
+     ],
+     "drop_below_m": 2.34,
+     "crest_above_m": 0.63,
+     "edge_len_m": 26.7,
+     "edge_rms": 0.072,
+     "dam_evidence": true
+    },
+    "reasons": [
+     "stock pond: 0.10 ha off the routed network (a hillside tank fed by a swale under 0.15 km2), straight 27 m downstream edge, ground 2.3 m below the water within 45 m of it, crest +0.6 m"
+    ],
+    "kind": "stock_pond",
+    "carve": null,
+    "breach": {
+     "breaches": 0,
+     "unbreached": 0,
+     "breach_length_m": 0.0,
+     "breach_max_cut_m": 0.0,
+     "held_on_thalweg_m": null,
+     "thalweg_held_fraction": null,
+     "bed_held_fraction": 0.39,
+     "bed_held_max_m": 0.63,
+     "cells": 41
+    },
+    "rewilded": true,
+    "area_m2": 1038.6
+   }
+  },
+  {
+   "type": "Feature",
+   "geometry": {
+    "type": "Polygon",
+    "coordinates": [
+     [
+      [
+       -120.861457,
+       38.723407
+      ],
+      [
+       -120.86140800000001,
+       38.723544999999994
+      ],
+      [
+       -120.86117700000001,
+       38.723627000000015
+      ],
+      [
+       -120.860987,
+       38.723682000000004
+      ],
+      [
+       -120.860791,
+       38.72382
+      ],
+      [
+       -120.860672,
+       38.72383599999999
+      ],
+      [
+       -120.86063000000001,
+       38.723781
+      ],
+      [
+       -120.860707,
+       38.7236
+      ],
+      [
+       -120.860917,
+       38.723424
+      ],
+      [
+       -120.861268,
+       38.723342
+      ],
+      [
+       -120.861457,
+       38.723407
+      ]
+     ]
+    ]
+   },
+   "properties": {
+    "id": "nhd:63423734",
+    "nhd_id": "63423734",
+    "name": null,
+    "source": "nhd",
+    "fcode": 39004,
+    "ftype": 390,
+    "evidence": {
+     "area_m2": 1900.2,
+     "level_m": 488.37,
+     "outlet": [
+      5908.6,
+      8254.4
+     ],
+     "drop_below_m": 6.57,
+     "crest_above_m": 0.3,
+     "edge_len_m": 22.4,
+     "edge_rms": 0.13,
+     "dam_evidence": false
+    },
+    "kind": "natural",
+    "reasons": [
+     "no routed channel through it and no human tag: a natural pond or swale"
+    ],
+    "rewilded": false,
+    "area_m2": 1900.2
+   }
+  },
+  {
+   "type": "Feature",
+   "geometry": {
+    "type": "Polygon",
+    "coordinates": [
+     [
+      [
+       -120.85669199999998,
+       38.701339999999995
+      ],
+      [
+       -120.85660100000001,
+       38.701300999999994
+      ],
+      [
+       -120.85660100000001,
+       38.701246999999995
+      ],
+      [
+       -120.856762,
+       38.701219
+      ],
+      [
+       -120.856867,
+       38.701246
+      ],
+      [
+       -120.85697300000001,
+       38.701301
+      ],
+      [
+       -120.856938,
+       38.701421999999994
+      ],
+      [
+       -120.85686799999999,
+       38.70145
+      ],
+      [
+       -120.856818,
+       38.701411
+      ],
+      [
+       -120.85672699999999,
+       38.701367000000005
+      ],
+      [
+       -120.85669199999998,
+       38.701339999999995
+      ]
+     ]
+    ]
+   },
+   "properties": {
+    "id": "nhd:63423952",
+    "nhd_id": "63423952",
+    "name": null,
+    "source": "nhd",
+    "fcode": 39004,
+    "ftype": 390,
+    "evidence": {
+     "area_m2": 489.8,
+     "level_m": 479.87,
+     "channel_area_km2": 0.326,
+     "channel_fcode": 46007,
+     "channel_name": null,
+     "outlet": [
+      6357.5,
+      5819.0
+     ],
+     "drop_below_m": 1.59,
+     "crest_above_m": 2.42,
+     "edge_len_m": 20.3,
+     "edge_rms": 0.192,
+     "dam_evidence": false
+    },
+    "kind": "natural",
+    "reasons": [
+     "on a routed channel but no dam (no straight downstream edge with a drop or rim)"
+    ],
+    "rewilded": false,
+    "area_m2": 489.8
+   }
+  },
+  {
+   "type": "Feature",
+   "geometry": {
+    "type": "Polygon",
+    "coordinates": [
+     [
+      [
+       -120.820988,
+       38.68838199999999
+      ],
+      [
+       -120.820904,
+       38.68847499999999
+      ],
+      [
+       -120.820708,
+       38.68864000000001
+      ],
+      [
+       -120.82060200000001,
+       38.688629
+      ],
+      [
+       -120.82053200000001,
+       38.688545999999995
+      ],
+      [
+       -120.820567,
+       38.688409
+      ],
+      [
+       -120.820813,
+       38.68835399999999
+      ],
+      [
+       -120.820988,
+       38.68838199999999
+      ]
+     ]
+    ]
+   },
+   "properties": {
+    "id": "nhd:121531046",
+    "nhd_id": "121531046",
+    "name": null,
+    "source": "nhd",
+    "fcode": 39004,
+    "ftype": 390,
+    "evidence": {
+     "area_m2": 760.0,
+     "level_m": 536.25,
+     "outlet": [
+      9535.3,
+      4470.6
+     ],
+     "drop_below_m": -0.52,
+     "crest_above_m": 2.51,
+     "edge_len_m": 28.6,
+     "edge_rms": 0.024,
+     "dam_evidence": false
+    },
+    "kind": "natural",
+    "reasons": [
+     "no routed channel through it and no human tag: a natural pond or swale"
+    ],
+    "rewilded": false,
+    "area_m2": 760.0
+   }
+  },
+  {
+   "type": "Feature",
+   "geometry": {
+    "type": "Polygon",
+    "coordinates": [
+     [
+      [
+       -120.82124100000001,
+       38.696523
+      ],
+      [
+       -120.821026,
+       38.69638
+      ],
+      [
+       -120.820777,
+       38.696094
+      ],
+      [
+       -120.821026,
+       38.696023
+      ],
+      [
+       -120.821276,
+       38.696094
+      ],
+      [
+       -120.82124100000001,
+       38.696523
+      ]
+     ]
+    ]
+   },
+   "properties": {
+    "id": "nhd:{1CB221A1-1EA6-467C-B653-01D89696CD87}",
+    "nhd_id": "{1CB221A1-1EA6-467C-B653-01D89696CD87}",
+    "name": null,
+    "source": "nhd",
+    "fcode": 39004,
+    "ftype": 390,
+    "evidence": {
+     "area_m2": 1329.8,
+     "level_m": 541.83,
+     "outlet": [
+      9491.6,
+      5299.6
+     ],
+     "drop_below_m": 0.65,
+     "crest_above_m": 1.76,
+     "edge_len_m": 28.4,
+     "edge_rms": 0.048,
+     "dam_evidence": false
+    },
+    "kind": "natural",
+    "reasons": [
+     "no routed channel through it and no human tag: a natural pond or swale"
+    ],
+    "rewilded": false,
+    "area_m2": 1329.8
+   }
+  },
+  {
+   "type": "Feature",
+   "geometry": {
+    "type": "Polygon",
+    "coordinates": [
+     [
+      [
+       -120.846046,
+       38.679691000000005
+      ],
+      [
+       -120.846102,
+       38.67959200000001
+      ],
+      [
+       -120.846186,
+       38.67958099999999
+      ],
+      [
+       -120.84632600000002,
+       38.67960899999999
+      ],
+      [
+       -120.846452,
+       38.679636
+      ],
+      [
+       -120.846487,
+       38.67970700000001
+      ],
+      [
+       -120.846347,
+       38.679784
+      ],
+      [
+       -120.84622100000001,
+       38.67974599999999
+      ],
+      [
+       -120.846186,
+       38.679729
+      ],
+      [
+       -120.846046,
+       38.679691000000005
+      ]
+     ]
+    ]
+   },
+   "properties": {
+    "id": "nhd:63423966",
+    "nhd_id": "63423966",
+    "name": null,
+    "source": "nhd",
+    "fcode": 39004,
+    "ftype": 390,
+    "evidence": {
+     "area_m2": 536.6,
+     "osm": [
+      {
+       "natural": "water",
+       "osm_id": "way/165786888"
+      }
+     ],
+     "level_m": 494.36,
+     "outlet": [
+      7329.0,
+      3438.7
+     ],
+     "drop_below_m": 0.45,
+     "crest_above_m": 1.64,
+     "edge_len_m": 20.5,
+     "edge_rms": 0.203,
+     "dam_evidence": false
+    },
+    "kind": "natural",
+    "reasons": [
+     "no routed channel through it and no human tag: a natural pond or swale"
+    ],
+    "rewilded": false,
+    "area_m2": 536.6
+   }
+  },
+  {
+   "type": "Feature",
+   "geometry": {
+    "type": "Polygon",
+    "coordinates": [
+     [
+      [
+       -120.89602,
+       38.67989399999998
+      ],
+      [
+       -120.896188,
+       38.680081
+      ],
+      [
+       -120.896391,
+       38.680305999999995
+      ],
+      [
+       -120.895866,
+       38.680487
+      ],
+      [
+       -120.895796,
+       38.68048700000001
+      ],
+      [
+       -120.895705,
+       38.680377
+      ],
+      [
+       -120.89574000000002,
+       38.679976999999994
+      ],
+      [
+       -120.89567,
+       38.67982799999999
+      ],
+      [
+       -120.89572600000001,
+       38.679373000000005
+      ],
+      [
+       -120.89602,
+       38.67989399999998
+      ]
+     ]
+    ]
+   },
+   "properties": {
+    "id": "nhd:63430346",
+    "nhd_id": "63430346",
+    "name": null,
+    "source": "nhd",
+    "fcode": 39004,
+    "ftype": 390,
+    "evidence": {
+     "area_m2": 3491.9,
+     "osm": [
+      {
+       "natural": "water",
+       "osm_id": "way/165786857"
+      }
+     ],
+     "level_m": 431.28,
+     "channel_area_km2": 1.451,
+     "channel_fcode": 46006,
+     "channel_name": null,
+     "outlet": [
+      3027.1,
+      3421.8
+     ],
+     "drop_below_m": 2.37,
+     "crest_above_m": 2.43,
+     "edge_len_m": 32.3,
+     "edge_rms": 0.122,
+     "dam_evidence": false
+    },
+    "kind": "natural",
+    "reasons": [
+     "on a routed channel but no dam (no straight downstream edge with a drop or rim)"
+    ],
+    "rewilded": false,
+    "area_m2": 3491.9
+   }
+  },
+  {
+   "type": "Feature",
+   "geometry": {
+    "type": "Polygon",
+    "coordinates": [
+     [
+      [
+       -120.86679,
+       38.70679599999999
+      ],
+      [
+       -120.8671,
+       38.706891
+      ],
+      [
+       -120.86748,
+       38.70710600000001
+      ],
+      [
+       -120.867694,
+       38.707439
+      ],
+      [
+       -120.868613,
+       38.707929
+      ],
+      [
+       -120.86855399999999,
+       38.708144
+      ],
+      [
+       -120.86854,
+       38.708188
+      ],
+      [
+       -120.86846999999999,
+       38.708408
+      ],
+      [
+       -120.868361,
+       38.7087
+      ],
+      [
+       -120.86800400000001,
+       38.708843
+      ],
+      [
+       -120.86757499999999,
+       38.708795
+      ],
+      [
+       -120.867363,
+       38.708447
+      ],
+      [
+       -120.866862,
+       38.707961999999995
+      ],
+      [
+       -120.866354,
+       38.707370999999995
+      ],
+      [
+       -120.86591800000001,
+       38.707112999999985
+      ],
+      [
+       -120.865757,
+       38.706894
+      ],
+      [
+       -120.86563800000002,
+       38.706564
+      ],
+      [
+       -120.865441,
+       38.706097
+      ],
+      [
+       -120.86484500000002,
+       38.70565800000001
+      ],
+      [
+       -120.86463500000002,
+       38.705439
+      ],
+      [
+       -120.864564,
+       38.70513700000001
+      ],
+      [
+       -120.864438,
+       38.704890000000006
+      ],
+      [
+       -120.864031,
+       38.704577
+      ],
+      [
+       -120.864031,
+       38.70447799999999
+      ],
+      [
+       -120.86415700000002,
+       38.704423
+      ],
+      [
+       -120.864354,
+       38.704494
+      ],
+      [
+       -120.86454299999998,
+       38.704714
+      ],
+      [
+       -120.86488,
+       38.705098
+      ],
+      [
+       -120.865762,
+       38.705830000000006
+      ],
+      [
+       -120.86633800000001,
+       38.706415
+      ],
+      [
+       -120.86679,
+       38.70679599999999
+      ]
+     ]
+    ]
+   },
+   "properties": {
+    "id": "nhd:63423943",
+    "nhd_id": "63423943",
+    "name": null,
+    "source": "nhd",
+    "fcode": 39004,
+    "ftype": 390,
+    "evidence": {
+     "area_m2": 39505.1,
+     "osm": [
+      {
+       "natural": "water",
+       "osm_id": "way/165786689"
+      }
+     ],
+     "level_m": 457.47,
+     "channel_area_km2": 4.833,
+     "channel_fcode": 46006,
+     "channel_name": "Indian Creek",
+     "outlet": [
+      5380.3,
+      6624.4
+     ],
+     "drop_below_m": 1.39,
+     "crest_above_m": 2.48,
+     "edge_len_m": 98.5,
+     "edge_rms": 0.154,
+     "dam_evidence": false
+    },
+    "kind": "natural",
+    "reasons": [
+     "on a routed channel but no dam (no straight downstream edge with a drop or rim)"
+    ],
+    "rewilded": false,
+    "area_m2": 39505.1
+   }
+  },
+  {
+   "type": "Feature",
+   "geometry": {
+    "type": "Polygon",
+    "coordinates": [
+     [
+      [
+       -120.842581,
+       38.668302999999995
+      ],
+      [
+       -120.84256,
+       38.668248
+      ],
+      [
+       -120.842616,
+       38.66820400000001
+      ],
+      [
+       -120.842756,
+       38.66821999999999
+      ],
+      [
+       -120.84282599999999,
+       38.668258999999985
+      ],
+      [
+       -120.84282599999999,
+       38.668358
+      ],
+      [
+       -120.84277,
+       38.668395999999994
+      ],
+      [
+       -120.84270000000001,
+       38.668358000000005
+      ],
+      [
+       -120.842581,
+       38.668302999999995
+      ]
+     ]
+    ]
+   },
+   "properties": {
+    "id": "nhd:121531067",
+    "nhd_id": "121531067",
+    "name": null,
+    "source": "nhd",
+    "fcode": 39004,
+    "ftype": 390,
+    "evidence": {
+     "area_m2": 323.8,
+     "level_m": 567.71,
+     "outlet": [
+      7695.6,
+      2171.3
+     ],
+     "drop_below_m": 9.01,
+     "crest_above_m": 0.87,
+     "edge_len_m": 14.9,
+     "edge_rms": 0.257,
+     "dam_evidence": false
+    },
+    "kind": "natural",
+    "reasons": [
+     "no routed channel through it and no human tag: a natural pond or swale"
+    ],
+    "rewilded": false,
+    "area_m2": 323.8
+   }
+  },
+  {
+   "type": "Feature",
+   "geometry": {
+    "type": "Polygon",
+    "coordinates": [
+     [
+      [
+       -120.821919,
+       38.687942
+      ],
+      [
+       -120.82185,
+       38.688036
+      ],
+      [
+       -120.82166,
+       38.68813499999999
+      ],
+      [
+       -120.821303,
+       38.688255
+      ],
+      [
+       -120.821128,
+       38.688135
+      ],
+      [
+       -120.82116300000001,
+       38.68800799999999
+      ],
+      [
+       -120.82156899999998,
+       38.687833
+      ],
+      [
+       -120.821835,
+       38.687788999999995
+      ],
+      [
+       -120.821919,
+       38.687942
+      ]
+     ]
+    ]
+   },
+   "properties": {
+    "id": "nhd:121531047",
+    "nhd_id": "121531047",
+    "name": null,
+    "source": "nhd",
+    "fcode": 39004,
+    "ftype": 390,
+    "evidence": {
+     "area_m2": 2034.0,
+     "level_m": 537.42,
+     "outlet": [
+      9504.2,
+      4425.6
+     ],
+     "drop_below_m": 0.98,
+     "crest_above_m": 3.95,
+     "edge_len_m": 28.3,
+     "edge_rms": 0.078,
+     "dam_evidence": false
+    },
+    "kind": "natural",
+    "reasons": [
+     "no routed channel through it and no human tag: a natural pond or swale"
+    ],
+    "rewilded": false,
+    "area_m2": 2034.0
+   }
+  },
+  {
+   "type": "Feature",
+   "geometry": {
+    "type": "Polygon",
+    "coordinates": [
+     [
+      [
+       -120.865037,
+       38.658559
+      ],
+      [
+       -120.86491100000002,
+       38.658532
+      ],
+      [
+       -120.86496699999998,
+       38.65842200000001
+      ],
+      [
+       -120.865072,
+       38.65819099999999
+      ],
+      [
+       -120.865163,
+       38.65830099999998
+      ],
+      [
+       -120.86508599999999,
+       38.65852100000001
+      ],
+      [
+       -120.865037,
+       38.658559
+      ]
+     ]
+    ]
+   },
+   "properties": {
+    "id": "nhd:121531074",
+    "nhd_id": "121531074",
+    "name": null,
+    "source": "nhd",
+    "fcode": 39004,
+    "ftype": 390,
+    "evidence": {
+     "area_m2": 440.2,
+     "level_m": 478.44,
+     "outlet": [
+      5760.8,
+      1045.9
+     ],
+     "drop_below_m": 3.63,
+     "crest_above_m": 1.83,
+     "edge_len_m": 23.1,
+     "edge_rms": 0.195,
+     "dam_evidence": false
+    },
+    "kind": "natural",
+    "reasons": [
+     "no routed channel through it and no human tag: a natural pond or swale"
+    ],
+    "rewilded": false,
+    "area_m2": 440.2
+   }
+  },
+  {
+   "type": "Feature",
+   "geometry": {
+    "type": "Polygon",
+    "coordinates": [
+     [
+      [
+       -120.875641,
+       38.68452799999999
+      ],
+      [
+       -120.875929,
+       38.684512000000005
+      ],
+      [
+       -120.87596400000001,
+       38.684721
+      ],
+      [
+       -120.875908,
+       38.684951000000005
+      ],
+      [
+       -120.87583799999999,
+       38.685159999999996
+      ],
+      [
+       -120.87573300000001,
+       38.685435
+      ],
+      [
+       -120.87555800000001,
+       38.685698
+      ],
+      [
+       -120.875313,
+       38.68569799999999
+      ],
+      [
+       -120.875208,
+       38.68558900000001
+      ],
+      [
+       -120.87532700000001,
+       38.685368999999994
+      ],
+      [
+       -120.87555800000001,
+       38.68503400000001
+      ],
+      [
+       -120.87555800000001,
+       38.68480300000001
+      ],
+      [
+       -120.875641,
+       38.68452799999999
+      ]
+     ]
+    ]
+   },
+   "properties": {
+    "id": "nhd:63423822",
+    "nhd_id": "63423822",
+    "name": null,
+    "source": "nhd",
+    "fcode": 39004,
+    "ftype": 390,
+    "evidence": {
+     "area_m2": 4245.5,
+     "osm": [
+      {
+       "natural": "water",
+       "osm_id": "way/165786129"
+      }
+     ],
+     "level_m": 469.45,
+     "channel_area_km2": 0.592,
+     "channel_fcode": 46007,
+     "channel_name": null,
+     "outlet": [
+      4749.5,
+      3914.3
+     ],
+     "drop_below_m": 1.81,
+     "crest_above_m": 2.51,
+     "edge_len_m": 35.3,
+     "edge_rms": 0.137,
+     "dam_evidence": false
+    },
+    "kind": "natural",
+    "reasons": [
+     "on a routed channel but no dam (no straight downstream edge with a drop or rim)"
+    ],
+    "rewilded": false,
+    "area_m2": 4245.5
+   }
+  },
+  {
+   "type": "Feature",
+   "geometry": {
+    "type": "Polygon",
+    "coordinates": [
+     [
+      [
+       -120.87379600000001,
+       38.674645
+      ],
+      [
+       -120.873839,
+       38.674772999999995
+      ],
+      [
+       -120.87372499999998,
+       38.674886999999984
+      ],
+      [
+       -120.873839,
+       38.675216000000006
+      ],
+      [
+       -120.87392500000001,
+       38.675416
+      ],
+      [
+       -120.87282600000002,
+       38.67583
+      ],
+      [
+       -120.872711,
+       38.67567300000001
+      ],
+      [
+       -120.87254,
+       38.675501000000004
+      ],
+      [
+       -120.87255399999998,
+       38.675373
+      ],
+      [
+       -120.87274000000001,
+       38.675172999999994
+      ],
+      [
+       -120.87335400000002,
+       38.674545
+      ],
+      [
+       -120.873582,
+       38.674559
+      ],
+      [
+       -120.87379600000001,
+       38.674645
+      ]
+     ]
+    ]
+   },
+   "properties": {
+    "id": "nhd:63423864",
+    "nhd_id": "63423864",
+    "name": null,
+    "source": "nhd",
+    "fcode": 39004,
+    "ftype": 390,
+    "evidence": {
+     "area_m2": 10129.6,
+     "osm": [
+      {
+       "natural": "water",
+       "osm_id": "way/381168791"
+      }
+     ],
+     "level_m": 467.79,
+     "channel_area_km2": 0.323,
+     "channel_fcode": 46007,
+     "channel_name": null,
+     "outlet": [
+      4948.2,
+      2902.9
+     ],
+     "drop_below_m": 3.66,
+     "crest_above_m": 2.81,
+     "edge_len_m": 52.7,
+     "edge_rms": 0.127,
+     "dam_evidence": false
+    },
+    "kind": "natural",
+    "reasons": [
+     "on a routed channel but no dam (no straight downstream edge with a drop or rim)"
+    ],
+    "rewilded": false,
+    "area_m2": 10129.6
+   }
+  },
+  {
+   "type": "Feature",
+   "geometry": {
+    "type": "Polygon",
+    "coordinates": [
+     [
+      [
+       -120.882069,
+       38.68295200000001
+      ],
+      [
+       -120.88211800000002,
+       38.68309
+      ],
+      [
+       -120.88208300000001,
+       38.68318800000001
+      ],
+      [
+       -120.88046499999999,
+       38.683089
+      ],
+      [
+       -120.88052100000002,
+       38.68305
+      ],
+      [
+       -120.881103,
+       38.68300700000001
+      ],
+      [
+       -120.881677,
+       38.682804
+      ],
+      [
+       -120.88188700000002,
+       38.682804000000004
+      ],
+      [
+       -120.882069,
+       38.68295200000001
+      ]
+     ]
+    ]
+   },
+   "properties": {
+    "id": "nhd:63430344",
+    "nhd_id": "63430344",
+    "name": null,
+    "source": "nhd",
+    "fcode": 39004,
+    "ftype": 390,
+    "evidence": {
+     "area_m2": 3139.9,
+     "osm": [
+      {
+       "natural": "water",
+       "osm_id": "way/165786865"
+      }
+     ],
+     "level_m": 457.71,
+     "channel_area_km2": 0.592,
+     "channel_fcode": 46007,
+     "channel_name": null,
+     "outlet": [
+      4218.8,
+      3727.8
+     ],
+     "drop_below_m": 1.29,
+     "crest_above_m": 0.44,
+     "edge_len_m": 36.6,
+     "edge_rms": 0.054,
+     "dam_evidence": false
+    },
+    "kind": "natural",
+    "reasons": [
+     "on a routed channel but no dam (no straight downstream edge with a drop or rim)"
+    ],
+    "rewilded": false,
+    "area_m2": 3139.9
+   }
+  },
+  {
+   "type": "Feature",
+   "geometry": {
+    "type": "Polygon",
+    "coordinates": [
+     [
+      [
+       -120.896691,
+       38.68350199999999
+      ],
+      [
+       -120.89686600000002,
+       38.683502
+      ],
+      [
+       -120.89711800000002,
+       38.68363399999999
+      ],
+      [
+       -120.897237,
+       38.683898
+      ],
+      [
+       -120.897412,
+       38.68410099999999
+      ],
+      [
+       -120.897468,
+       38.684283
+      ],
+      [
+       -120.897412,
+       38.684376
+      ],
+      [
+       -120.89697700000002,
+       38.684402999999996
+      ],
+      [
+       -120.896781,
+       38.68442
+      ],
+      [
+       -120.89671100000001,
+       38.684364999999985
+      ],
+      [
+       -120.896592,
+       38.683673
+      ],
+      [
+       -120.89658499999999,
+       38.683644999999984
+      ],
+      [
+       -120.896649,
+       38.683567999999994
+      ],
+      [
+       -120.896691,
+       38.68350199999999
+      ]
+     ]
+    ]
+   },
+   "properties": {
+    "id": "nhd:63430340",
+    "nhd_id": "63430340",
+    "name": null,
+    "source": "nhd",
+    "fcode": 39004,
+    "ftype": 390,
+    "evidence": {
+     "area_m2": 5349.2,
+     "osm": [
+      {
+       "natural": "water",
+       "osm_id": "way/165786200"
+      }
+     ],
+     "level_m": 422.9,
+     "channel_area_km2": 15.365,
+     "channel_fcode": 46003,
+     "channel_name": "Slate Creek",
+     "outlet": [
+      2889.7,
+      3851.1
+     ],
+     "drop_below_m": 1.68,
+     "crest_above_m": 3.2,
+     "edge_len_m": 42.4,
+     "edge_rms": 0.113,
+     "dam_evidence": false
+    },
+    "kind": "natural",
+    "reasons": [
+     "wide spot of a creek: on a channel draining 15.4 km2 with no dam"
+    ],
+    "rewilded": false,
+    "area_m2": 5349.2
+   }
+  },
+  {
+   "type": "Feature",
+   "geometry": {
+    "type": "Polygon",
+    "coordinates": [
+     [
+      [
+       -120.884334,
+       38.690334
+      ],
+      [
+       -120.88477500000002,
+       38.690488
+      ],
+      [
+       -120.884915,
+       38.690625000000004
+      ],
+      [
+       -120.884915,
+       38.69091600000001
+      ],
+      [
+       -120.88477399999998,
+       38.69120199999999
+      ],
+      [
+       -120.884144,
+       38.691218
+      ],
+      [
+       -120.88396900000001,
+       38.691024999999996
+      ],
+      [
+       -120.88389900000001,
+       38.690861
+      ],
+      [
+       -120.883843,
+       38.690405
+      ],
+      [
+       -120.88400400000002,
+       38.690251
+      ],
+      [
+       -120.884179,
+       38.69021299999999
+      ],
+      [
+       -120.884334,
+       38.690334
+      ]
+     ]
+    ]
+   },
+   "properties": {
+    "id": "nhd:63430330",
+    "nhd_id": "63430330",
+    "name": null,
+    "source": "nhd",
+    "fcode": 39004,
+    "ftype": 390,
+    "evidence": {
+     "area_m2": 7865.6,
+     "osm": [
+      {
+       "natural": "water",
+       "osm_id": "way/165786070"
+      }
+     ],
+     "level_m": 435.17,
+     "channel_area_km2": 0.499,
+     "channel_fcode": 46007,
+     "channel_name": null,
+     "outlet": [
+      3962.8,
+      4557.2
+     ],
+     "drop_below_m": -0.4,
+     "crest_above_m": 1.59,
+     "edge_len_m": 56.8,
+     "edge_rms": 0.067,
+     "dam_evidence": false
+    },
+    "kind": "natural",
+    "reasons": [
+     "on a routed channel but no dam (no straight downstream edge with a drop or rim)"
+    ],
+    "rewilded": false,
+    "area_m2": 7865.6
+   }
+  },
+  {
+   "type": "Feature",
+   "geometry": {
+    "type": "Polygon",
+    "coordinates": [
+     [
+      [
+       -120.85271599999999,
+       38.7101
+      ],
+      [
+       -120.85269500000001,
+       38.710209
+      ],
+      [
+       -120.85259,
+       38.710308
+      ],
+      [
+       -120.85248499999999,
+       38.710347
+      ],
+      [
+       -120.85220500000001,
+       38.71030799999999
+      ],
+      [
+       -120.85214899999998,
+       38.71023699999999
+      ],
+      [
+       -120.852219,
+       38.710116
+      ],
+      [
+       -120.85259,
+       38.710017
+      ],
+      [
+       -120.85271599999999,
+       38.7101
+      ]
+     ]
+    ]
+   },
+   "properties": {
+    "id": "nhd:63423752",
+    "nhd_id": "63423752",
+    "name": null,
+    "source": "nhd",
+    "fcode": 39004,
+    "ftype": 390,
+    "evidence": {
+     "area_m2": 1229.6,
+     "osm": [
+      {
+       "natural": "water",
+       "osm_id": "way/165786866"
+      }
+     ],
+     "level_m": 510.01,
+     "outlet": [
+      6713.5,
+      6818.7
+     ],
+     "drop_below_m": 0.3,
+     "crest_above_m": 0.53,
+     "edge_len_m": 27.4,
+     "edge_rms": 0.05,
+     "dam_evidence": false
+    },
+    "kind": "natural",
+    "reasons": [
+     "no routed channel through it and no human tag: a natural pond or swale"
+    ],
+    "rewilded": false,
+    "area_m2": 1229.6
+   }
+  },
+  {
+   "type": "Feature",
+   "geometry": {
+    "type": "Polygon",
+    "coordinates": [
+     [
+      [
+       -120.817246,
+       38.725969
+      ],
+      [
+       -120.81722499999998,
+       38.72616099999999
+      ],
+      [
+       -120.81708500000002,
+       38.726315
+      ],
+      [
+       -120.81689600000001,
+       38.72637000000001
+      ],
+      [
+       -120.816791,
+       38.726288
+      ],
+      [
+       -120.816734,
+       38.726122999999994
+      ],
+      [
+       -120.816875,
+       38.725942
+      ],
+      [
+       -120.81707100000001,
+       38.725820999999996
+      ],
+      [
+       -120.817246,
+       38.725969
+      ]
+     ]
+    ]
+   },
+   "properties": {
+    "id": "nhd:63423732",
+    "nhd_id": "63423732",
+    "name": null,
+    "source": "nhd",
+    "fcode": 39004,
+    "ftype": 390,
+    "evidence": {
+     "area_m2": 1763.8,
+     "osm": [
+      {
+       "natural": "water",
+       "osm_id": "way/165786831"
+      }
+     ],
+     "level_m": 630.05,
+     "outlet": [
+      9761.1,
+      8613.4
+     ],
+     "drop_below_m": 12.41,
+     "crest_above_m": 1.78,
+     "edge_len_m": 21.1,
+     "edge_rms": 0.138,
+     "dam_evidence": false
+    },
+    "kind": "natural",
+    "reasons": [
+     "no routed channel through it and no human tag: a natural pond or swale"
+    ],
+    "rewilded": false,
+    "area_m2": 1763.8
+   }
+  },
+  {
+   "type": "Feature",
+   "geometry": {
+    "type": "Polygon",
+    "coordinates": [
+     [
+      [
+       -120.82992900000002,
+       38.689412
+      ],
+      [
+       -120.829677,
+       38.689179
+      ],
+      [
+       -120.82955799999999,
+       38.68908400000001
+      ],
+      [
+       -120.829392,
+       38.689036
+      ],
+      [
+       -120.82927299999999,
+       38.689155
+      ],
+      [
+       -120.82911300000002,
+       38.689192000000006
+      ],
+      [
+       -120.828968,
+       38.68902899999999
+      ],
+      [
+       -120.82900299999999,
+       38.688837
+      ],
+      [
+       -120.829108,
+       38.68864499999999
+      ],
+      [
+       -120.829476,
+       38.68859
+      ],
+      [
+       -120.829653,
+       38.688774
+      ],
+      [
+       -120.829867,
+       38.68886899999999
+      ],
+      [
+       -120.83032000000001,
+       38.68898800000001
+      ],
+      [
+       -120.83065699999999,
+       38.68903400000001
+      ],
+      [
+       -120.83056600000002,
+       38.68925399999999
+      ],
+      [
+       -120.83041100000001,
+       38.689364000000005
+      ],
+      [
+       -120.82992900000002,
+       38.689412
+      ]
+     ]
+    ]
+   },
+   "properties": {
+    "id": "nhd:121531044",
+    "nhd_id": "121531044",
+    "name": null,
+    "source": "nhd",
+    "fcode": 39001,
+    "ftype": 390,
+    "evidence": {
+     "area_m2": 6729.5,
+     "level_m": 527.73,
+     "channel_area_km2": 0.399,
+     "channel_fcode": 46007,
+     "channel_name": null,
+     "outlet": [
+      8816.5,
+      4473.0
+     ],
+     "drop_below_m": -0.17,
+     "crest_above_m": 2.43,
+     "edge_len_m": 51.9,
+     "edge_rms": 0.076,
+     "dam_evidence": false
+    },
+    "kind": "natural",
+    "reasons": [
+     "on a routed channel but no dam (no straight downstream edge with a drop or rim)"
+    ],
+    "rewilded": false,
+    "area_m2": 6729.5
+   }
+  }
+ ]
+}

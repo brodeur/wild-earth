@@ -42,7 +42,11 @@ tiles/<tile_id>/
   footprint/mask.png            derived   rasterised mask, 0/255, same grid as dem
   hydro/flowlines.geojson       required  stream network
   hydro/waterbodies.geojson     required  lakes, ponds, reservoirs
-  hydro/channels.geojson        derived   stream channels routed by gravity on the DEM, named and classed by NHD (see Channels)
+  hydro/channels.geojson        derived   stream channels routed by gravity on the DEM, named and classed by NHD (see Channels); rewilded once hydrology_rewilded
+  hydro/channels_present.geojson derived  the present-day routing, kept by the rewild step to judge against (see Hydrology rewilding)
+  hydro/human_water.geojson     derived   every waterbody judged: human (rewilded: true) or kept, with the reasons and evidence
+  hydro/osm_water.geojson       derived   OSM water polygons, dams and NID dam points (Overpass cache for the rewild step)
+  terrain/dem_rewilded.tif      derived   dem.tif with the restored thalwegs carved through rewilded beds (routing only; dem.tif untouched)
   vegetation/evt.tif            required  LANDFIRE Existing Vegetation Type (what grows now), 30 m
   vegetation/evc.tif            required  LANDFIRE Existing Vegetation Cover (percent, coded)
   vegetation/evh.tif            optional  LANDFIRE Existing Vegetation Height (coded)
@@ -74,6 +78,7 @@ tiles/<tile_id>/
   client/imagery.png            derived   present-day NAIP for the mini-map, 1024 px on the metric tile grid
   client/features.json          derived   present-day roads, streams (from hydro/channels.geojson when built) and waterbodies in tile-local metres
   client/channel_depth.png      derived   channel incision, uint8 decimetres on the DEM grid: mean DEM on a 20 m ring minus the channel cell, 0-25 m; 0 off channel
+  client/channel_profile.png    derived   RGB on the DEM grid: R thalweg water depth (2 cm), G riffle-pool index, B rewilded water beds (see Hydrology rewilding)
   client/masks.png              derived   soft season-recolour weights: R grassland, G oak woodland, B chaparral
   client/species_mix_a.png      derived   tree weights per 30 m cell, RGBA = blue oak, live oak, gray pine, ponderosa (sum 255; A is data)
   client/species_mix_b.png      derived   RGBA = manzanita, chamise weights (sum 255), tree_density, shrub_density (byte / 100)
@@ -161,6 +166,79 @@ DEM channel nearby but with the DEM draining at least the threshold there are ke
 `in_waterbody` for pieces inside a waterbody ring (drawn as the pond, not as a channel). The
 manifest layer `hydro.channels` records the parameters and match statistics, including the median
 lateral offset between DEM channels and the NHD lines they matched.
+
+Once the tile is rewilded (next section) the channels step reads `hydro/human_water.geojson`: the
+rewilded waterbodies are no longer held as ponds (so their beds and dams are breached like any
+other depression, and the reach through them is not `in_waterbody`), routing runs on
+`terrain/dem_rewilded.tif`, NHD artificial paths (55800) through them cast no permanence votes,
+the breach limit comes from the file (`breach_max_m`, 300 m by default), and the stats gain a
+per-waterbody `rewild_check` (breaches, water still held on the carved thalweg and in the bed).
+The FeatureCollection carries `"rewilded": true|false`.
+
+## Hydrology rewilding
+
+Build step `rewild_hydro` (`pipeline/rewild_hydro.py`, after `channels`) takes out the water
+people made and restores the creeks under it. `status.hydrology_rewilded` is true once it has run.
+
+Judging. Every NHD waterbody, and every OSM water polygon not already in NHD, is either human or
+kept. Human: NHD FType 436 (reservoir); OSM `water=reservoir|basin|wastewater|...` or
+`landuse=reservoir|basin` on an overlapping polygon (from `footprint/mask.geojson` and the Overpass
+cache `hydro/osm_water.geojson`); an OSM dam line within 25 m or a National Inventory of Dams point
+(`waterway=dam` node with `ref:US:NID`) within 80 m of the ring; or a pond under 1.5 ha with a dam
+in the DEM: its ring straight at the outlet (at least 12 m, RMS off the line under 0.12 of its
+length) and the ground 15-45 m beyond the outlet at least 1.5 m below the water. The outlet is
+where the biggest present-day routed channel leaves the ring, or for a pond off the network (fed by
+a swale under 0.15 km²) where the ground outside it is lowest. On a creek draining 5 km² or more
+the test is stricter (RMS 0.08, 2 m), so the wide spots of real creeks stay. Everything else is
+kept: ponds with no channel and no dam, irregular ponds, uncertain cases. The judging always uses
+the present-day routing (`hydro/channels_present.geojson`, snapshotted the first time the step
+sees a present-day `channels.geojson`), so a rerun reaches the same verdicts.
+`hydro/human_water.geojson` holds every waterbody with `rewilded`, `kind` (`reservoir`,
+`stock_pond`, `pond`, `natural`), `reasons` and `evidence` (level, outlet, drop, crest, edge
+length and RMS, channel area and class, overlapping OSM features), plus the carve and breach
+results.
+
+Restoring. The lakebed is the lidar's hydro-flattened water surface. Through each bed with a
+channel the step carves a thalweg into `terrain/dem_rewilded.tif`: the least-cost path over the bed
+from each inflow to the outlet, cost step x (1 + 30 / (2 + distance to the old shore in m)), so it
+runs down the middle of the flat; lowered to the old level (the bed's 20th percentile) minus a cut
+of 0.2 m at the farthest inflow growing to 1.2 m at the outlet, one 5 m cell wide; then on past the
+outlet down the present-day outflow at the same grade (at least 0.5%) until the ground falls below
+the thalweg's end, so no spillway sill or dam crest is left. Cells are only ever lowered. The
+channels step then routes on that copy. `manifest.layers["hydro.human_water"]` lists each
+rewilded waterbody (id, name, kind, area, centroid, bbox, reasons, carve, breach) and each kept
+one with its reason, the rule, counts, the total area and the breach limit used (and any widening,
+which happens only when more than a quarter of a carved thalweg still holds 0.3 m of water after
+routing, and is undone if it does not help). `terrain.dem_rewilded` records the cells lowered and
+the deepest cut.
+
+Creek depth. `client/channel_profile.png` (RGB, DEM grid, row 0 north): along every channel, every
+2.5 m, the DEM's long profile on the rewilded DEM, made non-increasing downstream, smoothed over
+max(7.5 m, 2.5 water widths) for the local slope and over max(75 m, 10 widths) for the reach slope;
+t = tanh(1.1 ln((S_local + 0.002) / (S_reach + 0.002))) is the riffle-pool index (+1 riffle, -1
+pool), and the thalweg depth is 0.10 A^0.32 m (A km²) x exp(-0.85 t): about 2.3 times the reach
+mean in the deepest pools, 0.43 times on riffles. R is that depth in 2 cm units (0-5.1 m, at least 1
+on a channel), G is 127.5 (t + 1) (local width = reach width x (1 + 0.15 t)), both spread to 4 px
+(20 m) from the centreline so a lookup anywhere on a drawn ribbon finds its thalweg value; at a
+confluence the larger stream wins. Features shorter than about 15 m are below the 5 m DEM's
+resolution: small creeks' pools and riffles are the larger steps and flats of their profile.
+
+Rewilded water. B is 255 on a former reservoir or stock-pond bed (now a meadow or wet flat), 160
+on the riparian corridor within 12 m of the restored channel through it, 0 elsewhere. This is the
+hook for vegetation and ground: a bed (255) should take the backfilled habitat's grassland or wet
+meadow (sedges, rushes, scattered valley oak at the edge) and the corridor (160) riparian (willow,
+alder, cottonwood), and the imagery erase should synthesize meadow over the photo's water there.
+Until they read it, the client's `WaterMask` still treats the old rings as water (no trees or grass
+on the bed) and the texture is the photo's water.
+
+Client. `water.js` skips the rewilded rings (matched to `client/features.json` by bounding-box
+overlap with the manifest list), draws the restored channel as an ordinary reach, loads
+`client/channel_profile.png` after the tile, and colours the water by depth (warm gravel through
+shallow riffle water with broken white water on the steepest, a dark column in the pools). It
+exposes `depthAt(x, north, {anySeason})` (water depth in metres: ponds holding water this season,
+level over the drawn ground; creeks running this season, thalweg depth across a parabolic section
+of the drawn ribbon; 0 elsewhere) and `rewildAt(x, north)` (B), both as methods of the `Water`
+object and as module functions.
 
 ## Geology and soils
 
