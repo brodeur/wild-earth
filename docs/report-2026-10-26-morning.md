@@ -61,3 +61,24 @@ tracked file.
 
 Lanes still running when this report was written are listed in `docs/roadmap.md` under
 "Now"; their commits, if they verified, appear after d69f508 in `git log`.
+
+## Later in the night (after the draft above)
+
+| Commit | What you will see |
+|---|---|
+| 5054263 | Fox, coyote, brush rabbit, vole, mountain lion and buck live in the world with their own behaviours; bucks cast, grow velvet and harden antlers through the year; bedded deer lie on the ground (animals now stand on the drawn terrain). |
+| 8534c49 | Clouds no longer repeat: cumulus with grey flat bases and lit tops in a 900 m layer, cirrus above, shadows that match. |
+| cc1290f | Acorn game v2: woodpecker families, squirrels and ravens gather the same acorns as you; species leaderboard with 10-minute rounds; the woodpecker's painted clown face. |
+| 9d87136, ded78fa | Playable western gray squirrel: bound, jump, climb trunks, pick, bury, dig; it wades and swims rather than running along creek beds. |
+| 0026e62, 2e491c4 | Game polish: the oak card says who took the acorns; cards speak in the player's voice; three-quarter squirrel camera; HUD lays out without overlaps down to 900 px; closer woodpecker camera kept out of leaves. |
+| 01d44dd | Playable acorn woodpecker: cling and hitch, undulating flight, pick from a crown, hammer acorns into the family granary. |
+| 0f7c4d2 | Chaparral shrub cards show leaves, wands and stems within 26 m. |
+
+Lanes still running at the time of this update: the raven player and ground models, the far
+forest silhouette review, shrub impostor sizes to the species' heights, synthesized calls for
+the new animals, a first multiplayer node for the acorn game, and hydrology rewilding
+(reservoirs and stock ponds returned to channels, real creek depth). Their commits, if they
+verified, follow 2e491c4 in `git log`.
+
+**Disk:** the machine had about 1.4 GB free at one point tonight; the session scratchpad was
+trimmed from 3.7 GB to 1.4 GB. The disk as a whole is close to full and is worth a look.
