@@ -4,7 +4,8 @@
 //     drawing of that species' acorn, its names, three facts and an invitation to find a real one.
 //   - stash card: the first acorn put in a stash hole this session, about caching.
 //   - witness cards (acorn game v2): the first time this session the player is close by when an acorn woodpecker
-//     hammers an acorn into its granary, a gray squirrel buries one, or a raven caches one.
+//     hammers an acorn into its granary, a gray squirrel buries one, or a raven caches one; its first line follows
+//     the player's species (watching another species, another of its own kind, or doing it itself).
 // One DOM element (#fieldGuide), created here; it never takes pointer input except its close button,
 // Esc closes it, and it closes itself after a few seconds. Nothing runs per frame.
 
@@ -67,6 +68,27 @@ export const WITNESS = {
     invite: 'Watch a raven or crow on the ground: if it pokes at the leaves and walks off, it may have hidden something.',
   },
 };
+// Who does each witnessed thing, and the card's first line for the player's species: the player watching another
+// species, another of its own kind, or doing it itself (the player as a woodpecker, squirrel or raven).
+const WITNESS_BY = {
+  granary: { code: 'melanerpes_formicivorus', one: 'acorn woodpecker',
+    other: 'You just watched another acorn woodpecker tap an acorn into its granary.',
+    self: "You just tapped an acorn into your family's granary, the way acorn woodpeckers do." },
+  bury: { code: 'sciurus_griseus', one: 'gray squirrel',
+    other: 'You just watched another gray squirrel bury an acorn.',
+    self: 'You just buried an acorn in its own small hole, the way gray squirrels do.' },
+  cache: { code: 'corvus_corax', one: 'raven',
+    other: 'You just watched another raven hide an acorn.',
+    self: 'You just hid an acorn for later, the way ravens do.' },
+};
+export function witnessLead(kind, playerSpecies, self = false) {
+  const c = WITNESS[kind], b = WITNESS_BY[kind]; if (!c) return '';
+  if (self) return b.self;
+  return playerSpecies === b.code ? b.other : c.lead;
+}
+// The player's species: the game's player record (acorns.js), else the world's choice, else the raven.
+const playerSpeciesOf = game => game?.player?.species || game?.playerSpecies
+  || (typeof window !== 'undefined' && window.__we?.playerSpecies) || 'corvus_corax';
 // One line for the species card (identify.js), from the same text.
 export const acornLine = id => ACORNS[id] ? `${ACORN_FACTS[0][1].split('. ')[0]}. ${ACORNS[id].looks} ${ACORN_FACTS[2][1]}` : null;
 export const acornSpecies = name => { const id = resolveSpecies(name); return ACORNS[id] ? id : null; };
@@ -123,13 +145,29 @@ class FieldGuide {
     this.stashSeen = true; this.showStash(anchor);
   }
 
+  // The acorn game (identify.js attaches it): its player record says which species the player is, and its deposit
+  // and burial events say who did the thing a witness card is about. acorns.js calls witness() from inside the
+  // event's dispatch, before its listeners run, so the card waits a microtask for this event's listener entry.
+  attach(game) {
+    if (!game || this.game === game) return;
+    this.game = game; this.log = []; this.logN = 0;
+    for (const t of ['deposit', 'bury']) game.on?.(t, e => { this.log[this.logN++ % 8] = e; });
+  }
+  get playerSpecies() { return playerSpeciesOf(this.game); }
+
   witness(kind, anchor) {
     const c = WITNESS[kind]; if (!c || this.witnessed.has(kind)) return;
+    const n = this.logN || 0;
+    queueMicrotask(() => this.witnessShow(kind, anchor, this.logN > n ? this.log[n % 8] : null));
+  }
+  witnessShow(kind, anchor, e) {
+    const c = WITNESS[kind]; if (this.witnessed.has(kind)) return;
     this.witnessed.add(kind);
+    const lead = witnessLead(kind, this.playerSpecies, e?.by === 'player');
     this.show(`<button class="close" data-close title="close (Esc)">×</button>
       <div class="kicker">field guide · ${esc(c.kicker)}</div>
       <div class="head"><canvas width="128" height="168"></canvas>
-        <div><h1>${esc(c.title)}</h1><div class="looks">${esc(c.lead)}</div></div></div>
+        <div><h1>${esc(c.title)}</h1><div class="looks">${esc(lead)}</div></div></div>
       <ul>${c.facts.map(t => `<li>${esc(t)}</li>`).join('')}</ul>
       <p class="invite">${esc(c.invite)}</p>`, anchor, false, kind === 'granary' ? drawGranary : g => drawDig(g, kind === 'cache'));
   }

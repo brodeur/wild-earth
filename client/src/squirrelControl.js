@@ -14,7 +14,7 @@ import { acornGeometry } from './acorns.js';
 // arrows, or a mouse drag) turn; Space jumps a short arc (a creek, onto a rock) or, on a trunk, jumps off it; Shift
 // sits up to look around; E picks up an acorn, buries the one it carries on open ground, or digs one up from a dug
 // mark. Run into a trunk (within LATCH_R) and the squirrel takes hold of the bark: W climbs, S goes down head first,
-// A / D go round the trunk, up to TOP of the tree's height; E there takes an acorn in the crown within CROWN_R, or
+// A / D go round the trunk, up to its lowest fork (topOf); E there takes an acorn in the crown within CROWN_R, or
 // runs out along a limb to one within LIMB_R.
 //
 // Climbing uses the trees of the near set (veg.nearPlants, the same instances the vegetation draws) with their
@@ -36,6 +36,8 @@ const LATCH_R = 0.8, TOP = 0.85;                             // m from the bark 
 const PICK_R = 0.9, CROWN_R = 1.2, LIMB_R = 3.2, DIG_R = 1.0, LIMB_V = 2.2;
 const WORK = { pick: 0.5, bury: 2.4, dig: 1.8 };             // s
 const CAM_BACK = 2.5, CAM_UP = 0.6, NEAR = 0.3;
+const CAM_SIDE = 0.4, CAM_SWING = 1.6;                       // rad (~23 deg) off the heading: a three-quarter view; 1/s
+const CAM_CLEAR = 0.3, CAM_SIGHT = 0.15, CAM_WATER = 0.45;   // m over the terrain round the lens, along the sight line, over a pond
 const TAU = Math.PI * 2;
 const damp = (a, b, k, dt) => b + (a - b) * Math.exp(-k * dt);
 const wrap = a => Math.atan2(Math.sin(a), Math.cos(a));
@@ -48,7 +50,7 @@ export class SquirrelControl {
     this.v = 0; this.vel = new THREE.Vector3(); this.tree = null; this.h = 0; this.face = 0; this.headUp = true;
     this.work = null; this.limb = null; this.auto = null; this.sit = 0;
     this.pose = { phase: 0, amp: 0, pose: 0, flick: 0, flickV: 0, e0: 0, e1: 0, pitch: 0, yaw: 0, roll: 0, bob: 0 };
-    this.jumpQ = false; this.actQ = false; this.camOrbit = 0; this.lastYaw = 0;
+    this.jumpQ = false; this.actQ = false; this.camOrbit = 0; this.lastYaw = 0; this.camSide = CAM_SIDE; this.camLift = 0;
     this.camOff = new THREE.Vector3(); this.aimOff = new THREE.Vector3(); this.camSettled = false;
     this.last = new THREE.Vector3(); this.trees = new Map(); this.treeVersion = -1;
     this._t = { x: 0, y: 0, z: 0, r: 0 }; this._m = new THREE.Matrix4(); this._q = new THREE.Quaternion();
@@ -154,7 +156,7 @@ export class SquirrelControl {
     if (!best || bd > 400 * 400) { this.place(x, z); this.finishArrival(false); return; }
     const tree = this.record(best);
     this.flight.yaw = this.lastYaw = Math.atan2(x - best.x, z - best.z) + Math.PI;   // facing away from the trunk, toward the point
-    this.attach(tree, wrap(this.flight.yaw - Math.PI), Math.min(1.4, TOP * tree.H));   // below the fork, so the camera is under the crown
+    this.attach(tree, wrap(this.flight.yaw - Math.PI), Math.min(1.4, this.topOf(tree)));   // below the fork, so the camera is under the crown
     this.headUp = false; this.camSettled = false;
     this.auto = { t: 0, out: 0 };
     if (caption && this.captionEl) {
@@ -357,8 +359,16 @@ export class SquirrelControl {
     ps.yaw = f.yaw + Math.PI;
   }
 
+  // How high the squirrel climbs: the lowest fork, where the straight bole ends (stem.len, as animals.js forkHeight; the
+  // trunk line trunkAt follows is straight, so above it the squirrel would float through the crown), or 60 % of the
+  // height for a tree without stem data.
+  topOf(tr) {
+    const fork = tr.stem ? Math.max(1.5, tr.scale * tr.stem.len * Math.cos(tr.stem.lean) - 0.3) : 0.6 * tr.H;
+    return Math.min(fork, TOP * tr.H);
+  }
+
   climb(dt, k, jump, act) {
-    const tr = this.tree, ps = this.pose, top = TOP * tr.H;
+    const tr = this.tree, ps = this.pose, top = this.topOf(tr);
     if (jump) {   // off the bark, outward
       const ox = Math.sin(this.face), oz = Math.cos(this.face);
       this.vel.set(ox * 3, 1.6, oz * 3); this.flight.yaw = this.face + Math.PI; this.lastYaw = this.flight.yaw;
@@ -381,7 +391,7 @@ export class SquirrelControl {
     ps.pose = 0; ps.bob = 0;
     ps.pitch = damp(ps.pitch, this.headUp ? -Math.PI / 2 : Math.PI / 2, 12, dt);
     ps.yaw = this.headUp ? this.face + Math.PI : this.face; ps.roll = 0;
-    if (this.h >= top - 0.01 && want > 0 && !this.toldTop) { this.toldTop = true; this.say('as high as it goes: the crown is too thin above'); }
+    if (this.h >= top - 0.01 && want > 0 && !this.toldTop) { this.toldTop = true; this.say(/oak|quercus/.test(tr.species) ? 'at the fork: E runs out along a limb to an acorn' : 'at the fork: as high as it climbs here'); }
     if (this.h < top - 0.5) this.toldTop = false;
   }
 
@@ -489,11 +499,18 @@ export class SquirrelControl {
     }
   }
 
-  // Chase camera: ~0.6 m up and 2.5 m behind on the ground (higher and nearer sitting up); on a trunk it stands off
-  // the bark over the squirrel's shoulder and orbits with it round the trunk (a drag orbits it further).
+  // Chase camera: ~0.6 m up and 2.5 m back on the ground (higher and nearer sitting up), a three-quarter view CAM_SIDE
+  // off the heading so the bound and the acorn in the mouth show past the tail. It sits on the inside of the last turn
+  // (turning left, the left rear), the side the chase lag already swings it to, so the two add instead of cancelling
+  // to a view of the tail, and it eases across behind when the turn changes side. On a trunk it
+  // stands off the bark over the squirrel's shoulder and orbits with it round the trunk (a drag orbits it further).
+  // Then it is kept out of the ground: above the drawn terrain round the lens (the near plane is NEAR), the sight
+  // line to the squirrel clear of a slope between them (running downhill the ground behind rises), and over a pond.
   updateCamera(dt) {
-    const f = this.flight, P = f.pos, cam = this.camera, ps = this.pose, off = this._v, aim = this._w;
+    const f = this.flight, P = f.pos, cam = this.camera, off = this._v, aim = this._w;
     let k = 7;
+    const rate = wrap(f.yaw - (this.camYaw ?? f.yaw)) / Math.max(dt, 1e-3); this.camYaw = f.yaw;   // keys or a drag
+    if (Math.abs(rate) > 0.3 && (this.mode === 'ground' || this.mode === 'air')) this.camSide = damp(this.camSide, -Math.sign(rate) * CAM_SIDE, CAM_SWING, dt);
     if ((this.mode === 'trunk' || this.mode === 'limb' || (this.mode === 'work' && this.work?.back === 'trunk')) && this.tree) {
       const tr = this.tree, ang = this.face + this.camOrbit, t = trunkAt(tr, Math.max(0, this.h), this._t);
       const out = t.r + 2.1, side = 0.55, ox = Math.sin(ang), oz = Math.cos(ang);
@@ -501,18 +518,57 @@ export class SquirrelControl {
       aim.set(0, this.headUp ? 0.5 : -0.35, 0);
       k = 5;
     } else {
-      const back = CAM_BACK - 0.5 * this.sit, up = CAM_UP + 0.45 * this.sit;
-      off.set(Math.sin(f.yaw) * back, up, Math.cos(f.yaw) * back);
+      const back = CAM_BACK - 0.5 * this.sit, up = CAM_UP + 0.45 * this.sit, a = f.yaw + this.camSide;
+      off.set(Math.sin(a) * back, up, Math.cos(a) * back);
       const fx = -Math.sin(f.yaw), fz = -Math.cos(f.yaw), look = 1.2;
       aim.set(fx * look, 0.22 + 0.25 * this.sit + Math.tan(f.pitch) * (back + look), fz * look);
     }
-    if (!this.camSettled) { this.camOff.copy(off); this.aimOff.copy(aim); this.camSettled = true; }
+    if (!this.camSettled) { this.camOff.copy(off); this.aimOff.copy(aim); this.camSettled = true; this.camLift = 0; }
     else { this.camOff.lerp(off, 1 - Math.exp(-dt * k)); this.aimOff.lerp(aim, 1 - Math.exp(-dt * k)); }
     cam.position.copy(P).add(this.camOff);
-    const g = this.heights.atXZ(cam.position.x, cam.position.z) + 0.25;
-    if (cam.position.y < g) cam.position.y = g;
+    // the lift that keeps it out of the ground: up at once, back down gently (no bob over every bump)
+    const need = this.camClear(P, cam.position) - cam.position.y;
+    this.camLift = need > this.camLift ? need : damp(this.camLift, need, 3, dt);
+    if (this.camLift > 0) cam.position.y += this.camLift;
     cam.up.set(0, 1, 0);
     cam.lookAt(aim.copy(P).add(this.aimOff));
-    void ps;
   }
+  // The lowest camera height at C (looking at the squirrel at P) that keeps the near plane out of the drawn terrain
+  // and of a pond's surface, and the line from the squirrel's back to the lens above the ground between them.
+  camClear(P, C) {
+    const H = this.heights, r = NEAR * 1.6;
+    let y = -Infinity;
+    for (const [dx, dz] of [[0, 0], [r, 0], [-r, 0], [0, r], [0, -r]]) y = Math.max(y, H.atXZ(C.x + dx, C.z + dz) + CAM_CLEAR);
+    const w = this.pondLevel(C.x, C.z); if (w !== null) y = Math.max(y, w + CAM_WATER);
+    const y0 = P.y + 0.2;
+    for (const t of [0.25, 0.5, 0.75]) {   // y0 + t (Cy - y0) >= ground + CAM_SIGHT at each point between
+      const g = H.atXZ(P.x + (C.x - P.x) * t, P.z + (C.z - P.z) * t) + CAM_SIGHT;
+      if (g > y0) y = Math.max(y, y0 + (g - y0) / t);
+    }
+    return y;
+  }
+  // The water level of a pond holding water over (x, z) (water.js: ponds are flat at their level; streams are draped on
+  // the terrain, so the terrain clearance covers them), or null.
+  pondLevel(x, z) {
+    const W = this.water ??= this.scene.children.find(o => o.userData?.water)?.userData.water ?? false;
+    if (!W?.pondRings) return null;
+    const n = -z;
+    for (const p of W.pondRings) {
+      const [x0, y0, x1, y1] = p.bbox;
+      if (x < x0 || x > x1 || n < y0 || n > y1) continue;
+      if (!(p.intermittent ? W.pondsSeasonal.visible : W.ponds.visible)) continue;
+      if (inRing(x, n, p.ring)) return p.level;
+    }
+    return null;
+  }
+}
+
+// Point in polygon (x, north rings), even-odd.
+function inRing(x, y, ring) {
+  let inside = false;
+  for (let i = 0, j = ring.length - 1; i < ring.length; j = i++) {
+    const [xi, yi] = ring[i], [xj, yj] = ring[j];
+    if ((yi > y) !== (yj > y) && x < (xj - xi) * (y - yi) / (yj - yi) + xi) inside = !inside;
+  }
+  return inside;
 }

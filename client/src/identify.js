@@ -20,10 +20,27 @@ const SEASON_WORD = { winter: 'winter', spring: 'spring', summer: 'summer', fall
 const esc = s => String(s ?? '').replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' })[c]);
 const tagged = id => ((Math.imul(id, 0x9E3779B1) >>> 0) >>> 8) % TAG_EVERY === 0;
 
+// The acorn gatherers by species, as the oak card names them (the player's own kind are "other" ones).
+const GATHERERS = { melanerpes_formicivorus: 'acorn woodpeckers', sciurus_griseus: 'gray squirrels', corvus_corax: 'ravens' };
+const gatherers = (sp, me) => GATHERERS[sp] ? (sp === me ? `other ${GATHERERS[sp].replace(/^(acorn|gray) /, '')}` : GATHERERS[sp]) : 'other animals';
+const others = me => {
+  const l = Object.keys(GATHERERS).map(sp => gatherers(sp, me)).sort((a, b) => a.startsWith('other') - b.startsWith('other'));
+  const s = `${l.slice(0, -1).join(', ')} and ${l.at(-1)}`; return s[0].toUpperCase() + s.slice(1);
+};
+
 export class Identify {
   // els: { nearest, around, card } ; seasonNow(): current season name
   constructor({ veg, camera, dom, scene, flight, acorns, seasonNow, els }) {
     Object.assign(this, { veg, camera, dom, flight, acorns, seasonNow, els });
+    // Who took each acorn (the game's world records only when): collector species and kind per acorn key, kept per
+    // world (a season has its own), from the game's pickup events. Acorns taken before this page loaded are unknown.
+    this.takenBy = new WeakMap();
+    acorns?.on?.('pickup', e => {
+      const w = acorns.world, c = w?.collectors[e.by]; if (!w || !c) return;
+      let m = this.takenBy.get(w); if (!m) this.takenBy.set(w, m = new Map());
+      m.set(e.key, { species: c.species, you: c.kind === 'player' });
+    });
+    fieldGuide.attach(acorns);
     this.lastScan = -1e9; this.selected = null;   // selected: { id, species }
     this.raycaster = new THREE.Raycaster(); this.raycaster.far = PICK_R;
     this.probe = new THREE.Mesh(new THREE.BufferGeometry(), new THREE.MeshBasicMaterial({ side: THREE.DoubleSide }));
@@ -205,7 +222,8 @@ export class Identify {
     card.classList.remove('hidden');
     this.lastScan = -1e9;   // drop its tag on the next tick
   }
-  // Oaks: one acorns line from the field guide, and how many acorns this tree holds if the game is on.
+  // Oaks: one acorns line from the field guide, and how many acorns this tree holds if the game is on. Since acorn
+  // game v2 the woodpeckers, squirrels and ravens gather too, so the taken ones are worded by who took them.
   acornHtml(hit) {
     const sp = acornSpecies(hit.species); if (!sp) return '';
     let count = '';
@@ -213,15 +231,34 @@ export class Identify {
     if (g?.running && hit.x !== undefined) {
       const oak = g.oakAt(hit.x, hit.z), on = oak && g.acornsOn(oak.id);
       if (on) {
-        const n = k => `${k} acorn${k === 1 ? '' : 's'}`, took = on.total - on.left;
-        count = on.total === 0 ? ' No acorns on this tree right now.'
-          : on.left === 0 ? ` You picked up all ${on.total === 1 ? 'the acorn' : on.total + ' acorns'} from this tree.`
-          : took ? ` This tree still has ${n(on.left)}; you picked up ${took}.`
-          : ` This tree has ${n(on.left)}.`;
+        count = on.total === 0 ? ' No acorns on this tree right now.' : ` ${this.takenLine(oak, on)}`;
         if (on.stash && g.revealed) count += ` Stash hole: ${on.stash.count} / ${on.stash.capacity}.`;
       }
     }
     return `<p class="acorns"><b>acorns:</b> ${esc(acornLine(sp))}${esc(count)} <button class="fg-open" data-guide="${esc(sp)}" title="open the field guide card">field guide</button></p>`;
+  }
+  // "This tree has 4 acorns." / "This tree still has 2 acorns; you picked up 1 and acorn woodpeckers took 1." /
+  // "You picked up all 3 acorns from this tree." / "All the acorns here are gone: ..." (unknown takers: a hint who).
+  takenLine(oak, on) {
+    const g = this.acorns, n = k => `${k} acorn${k === 1 ? '' : 's'}`, took = on.total - on.left;
+    if (!took) return `This tree has ${n(on.left)}.`;
+    const me = g.player?.species || g.playerSpecies || 'corvus_corax';
+    const m = this.takenBy.get(g.world), by = new Map();
+    let you = 0, unknown = 0;
+    for (const a of g.info(oak).acorns) {
+      if (!g.world.picked.has(a.key)) continue;
+      const t = m?.get(a.key);
+      if (!t) unknown++; else if (t.you) you++; else by.set(t.species, (by.get(t.species) || 0) + 1);
+    }
+    const parts = [];
+    if (you) parts.push(`you picked up ${you}`);
+    for (const [s, k] of by) parts.push(`${gatherers(s, me)} took ${k}`);
+    if (unknown) parts.push(parts.length ? `${unknown} more ${unknown === 1 ? 'is' : 'are'} gone` : null);
+    const list = parts.filter(Boolean), said = list.length > 1 ? `${list.slice(0, -1).join(', ')} and ${list.at(-1)}` : list[0];
+    const hint = unknown ? ` ${others(me)} gather them too.` : '';
+    if (on.left > 0) return said ? `This tree still has ${n(on.left)}; ${said}.${hint}` : `This tree still has ${n(on.left)}; ${took} ${took === 1 ? 'is' : 'are'} gone.${hint}`;
+    if (you === took) return `You picked up all ${took === 1 ? 'the acorn' : took + ' acorns'} from this tree.`;
+    return said ? `All the acorns here are gone: ${said}.${hint}` : `All the acorns here are gone.${hint}`;
   }
   hideCard() {
     this.els.card.classList.add('hidden'); this.selected = null; this.lastScan = -1e9;
