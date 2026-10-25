@@ -2,6 +2,7 @@ import * as THREE from 'three';
 import { SPECIES, SPECIES_IDS, mulberry32, resolveSpecies } from './trees.js';
 import { buildTree, canopyMaterial, trunkMaterial, applySeason, chainShader, SLOTS, variantSlots } from './treegen.js';
 import { SEASON_LOOK } from './season.js';
+import { rockKeep } from './tilepackage.js';
 
 // Species mix per habitat class (codes from pipeline/habitat.py). Weights sum to 1. Ids may be the
 // short aliases; trees.js maps them to the species library (library/species/<id>.json).
@@ -73,9 +74,11 @@ export function cellPlan(tile, i, j) {
 // and stream channels (tile.waterMask), and riparian thinning: a tree within RIPARIAN_M of a stream
 // centreline is kept with odds rising from 0.35 at the channel to 1 at the band's edge. Uses hashes,
 // never the cell's random stream, so a skip moves nothing else.
-export function placementSkip(tile, i, j, k, px, pn, isTree) {
+// Plants (not rocks: rocks.js passes plant = false) also thin on outcrop cells by tilepackage's rockKeep.
+export function placementSkip(tile, i, j, k, px, pn, isTree, plant = true) {
   const roads = tile.roads, rw = roads ? roads.at(px, pn) : 0;
   if (rw > 140 || (isTree && rw > 0 && hash(k, i + j * 4096, 13) / 4294967296 < rw / 255)) return true;
+  if (plant && tile.outcrop) { const rk = rockKeep(tile, px, pn); if (rk < 1 && hash(k, i + j * 4096, 41) / 4294967296 > rk) return true; }
   const wm = tile.waterMask; if (!wm) return false;
   if (wm.inWater(px, pn)) return true;
   if (isTree) { const d = wm.streamDist(px, pn); if (d < 8 && hash(k, i + j * 4096, 29) / 4294967296 > 0.35 + 0.65 * d / 8) return true; }

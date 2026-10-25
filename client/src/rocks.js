@@ -475,7 +475,7 @@ export class Rocks {
     out.set(el);
     return out;
   }
-  skip(i, j, k, x, north) { return x < 0 || north < 0 || x > this.tile.size || north > this.tile.size || placementSkip(this.tile, i, j, k, x, north, false); }
+  skip(i, j, k, x, north) { return x < 0 || north < 0 || x > this.tile.size || north > this.tile.size || placementSkip(this.tile, i, j, k, x, north, false, false); }   // plant = false: rocks are not thinned on outcrops
 
   // Per-cell plan: { out: [{ key, m, c }], bould: [...] } with the instance matrix and tint of each
   // rock, cached. countOnly: just the counts (the tile census).

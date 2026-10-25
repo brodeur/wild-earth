@@ -7,6 +7,7 @@ import { windUniforms, WIND_GLSL } from './wind.js';
 import { groundUniforms, GROUND_GLSL } from './terrain.js';
 import { ShrubField, GrassClumps, StalkClumps, CLUMP_BAND, STALK_BAND, waterAt } from './shrubfield.js';
 import { GrassShells } from './grassShells.js';
+import { rockKeep } from './tilepackage.js';
 
 // Grass in the Sierra foothill savanna: non-native annuals (wild oat, bromes, medusahead) over
 // purple needlegrass bunchgrass. Two LODs in one system, five draw calls:
@@ -431,7 +432,7 @@ export class Grass {
     const dens = this.sample(this.dens, x, n);
     if (dens <= 0 || waterAt(this.tile.waterMask, x, n) === 255) return 0;
     const herb = this.sample(this.herb, x, n), thr = 0.28 + 0.14 * (1 - herb), rw = this.tile.roads ? this.tile.roads.at(x, n) : 0;
-    return Math.min(dens * smooth(thr - 0.1, thr + 0.1, bareField(x, n)) * (rw > 140 ? 0 : rw > 0 ? 0.5 : 1) * 1.15, 1);
+    return Math.min(dens * smooth(thr - 0.1, thr + 0.1, bareField(x, n)) * (rw > 140 ? 0 : rw > 0 ? 0.5 : 1) * 1.15, 1) * rockKeep(this.tile, x, n);   // thin on outcrops
   }
 
   // Instances of one cell for one layer, generated once and cached, sorted into groups by mesh
@@ -455,7 +456,7 @@ export class Grass {
       for (let k = 0; k < n; k++) {
         const ux = rnd(), uy = rnd(), px = (i + ux) * res, pn = size - (j + uy) * res;
         const keep = rnd(), yaw = rnd() * Math.PI * 2, sv = rnd(), sj = rnd(), type = rnd() < annualShare ? 0 : 1, seed = rnd(), verge = rnd();
-        const dens = this.sample(this.dens, px, pn);
+        const dens = this.sample(this.dens, px, pn) * rockKeep(this.tile, px, pn);   // blades thin on outcrops too
         if (keep >= dens) continue;
         // Decayed roads: no grass on the pavement, half density across the verge.
         const rw = roads ? roads.at(px, pn) : 0;

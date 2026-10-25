@@ -268,5 +268,10 @@ bare term on outcrop cells so the rock material wins there. Honest look: slate f
 plank-straight, granite domes read as smooth eggs, and most strong outcrop cells are
 chaparral, so the shrub carpet hides the rocks from about 80 m up. Rejected: downloaded
 rock meshes (not reproducible per class), tilting rocks with the slope (fins must keep
-their dip). Next: thin grass, shrubs and the shrub impostors on outcrop cells so the
-rocks show, jagged fin edges and jointed granite, strike from the geology polygons.
+their dip). Same day: grass blades, shells, tussocks and oats, the shrub impostors and the placed
+trees and shrubs all thin on outcrop cells by one curve (tilepackage rockKeep: nothing
+below likelihood 0.4, 15% kept from 0.65 up, bilinear between cells), so an outcrop is
+open rocky ground and a greenstone ridge reads as a rocky clearing from 120 m up. Open:
+the strongest cells open fully, where real outcrops in chaparral are patchier; the
+rock detail texture's 3 m repeat shows as a grid on a big open slope from about 25 m;
+jagged fin edges and jointed granite; strike from the geology polygons.

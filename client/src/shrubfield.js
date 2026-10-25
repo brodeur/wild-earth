@@ -3,6 +3,7 @@ import { mulberry32 } from './trees.js';
 import { uniforms as atmo, ATMOSPHERE_GLSL } from './atmosphere.js';
 import { groundUniforms, GROUND_GLSL } from './terrain.js';
 import { windUniforms, WIND_GLSL } from './wind.js';
+import { rockKeep } from './tilepackage.js';
 
 // Clump fields: vegetation seen from the air as many cheap impostors, one camera-facing quad per
 // clump, shaded per pixel as an ellipsoid whose normal is rebuilt from the quad position and broken
@@ -431,7 +432,7 @@ export function ShrubField(tile, ground, uniforms) {
     const c = cellCover(x, n);
     if (c <= 0) return 0;
     const g = 0.65 * vnoise(x / 17, n / 17, 31) + 0.35 * vnoise(x / 6, n / 6, 32), t = 0.25 + 0.1 * (0.85 - c);
-    return c * smooth(t - 0.06, t + 0.06, g);
+    return c * smooth(t - 0.06, t + 0.06, g) * rockKeep(tile, x, n);   // and the outcrops of rocks.js open the stand
   };
   return new ClumpField(tile, ground, uniforms, {
     name: 'shrubfield', salt: 0x5eed, cap: 140000, roadsMax: 60,

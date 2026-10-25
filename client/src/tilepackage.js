@@ -52,6 +52,22 @@ export class Grid8 {
   at(x, north, ch = 0) { const [i, j] = this.cellOf(x, north); return this.channel(i, j, ch); }
 }
 
+// Outcrop likelihood 0..1 at a point, bilinear between the 30 m cell centres of client/outcrop.png
+// (0 on a tile without the geology step), and the share of vegetation kept there: grass blades,
+// shells, tussocks and oats, the shrub impostors and the placed trees and shrubs all thin by this one
+// curve (none below 0.4, 15% left from 0.65 up) so the outcrops of rocks.js show through.
+export function outcropAt(tile, x, north) {
+  const g = tile.outcrop; if (!g) return 0;
+  const W = g.img.width, H = g.img.height, fx = x / g.res - 0.5, fy = (g.size - north) / g.res - 0.5;
+  const x0 = Math.floor(fx), y0 = Math.floor(fy), tx = fx - x0, ty = fy - y0;
+  const v = (i, j) => g.channel(Math.min(Math.max(i, 0), W - 1), Math.min(Math.max(j, 0), H - 1), 0);
+  return ((v(x0, y0) * (1 - tx) + v(x0 + 1, y0) * tx) * (1 - ty) + (v(x0, y0 + 1) * (1 - tx) + v(x0 + 1, y0 + 1) * tx) * ty) / 255;
+}
+export function rockKeep(tile, x, north) {
+  const L = outcropAt(tile, x, north); if (L <= 0.4) return 1;
+  const t = Math.min((L - 0.4) / 0.25, 1); return 1 - 0.85 * t * t * (3 - 2 * t);
+}
+
 // Per-cell species mix from LANDFIRE (pipeline: client/species_mix*.png, species_mix.json). Read
 // through the 8-bit index PNG (canvas-safe; the RGBA forms carry data in alpha, which a 2D canvas
 // premultiplies away) and the JSON rows' `bytes`. at(i, j) on the habitat grid (same 333 px grid)
