@@ -1,0 +1,71 @@
+{
+  "species": "corvus_corax",
+  "mode": "refine",
+  "kind": "text-to-3d",
+  "task_id": "01a171a8-2db4-7256-9b99-ae6f617dea98",
+  "endpoint": "https://api.meshy.ai/openapi/v2/text-to-3d",
+  "request": {
+    "mode": "refine",
+    "preview_task_id": "01a171a4-7814-7301-b140-133459562f9f",
+    "texture_resolution": "2k",
+    "enable_pbr": false,
+    "target_formats": [
+      "glb"
+    ],
+    "texture_prompt": "Common raven, all-black plumage with a subtle blue-violet gloss on the back, scapulars and folded wings, each feather edge a slightly lighter black so the feather tracts read; matte black bill and nasal bristles, matte black scaled legs and toes, dark brown eye. Even, flat, unlit albedo: no baked shadows, no highlights, no ambient occlusion.",
+    "moderation": false
+  },
+  "prompt": "Common raven, all-black plumage with a subtle blue-violet gloss on the back, scapulars and folded wings, each feather edge a slightly lighter black so the feather tracts read; matte black bill and nasal bristles, matte black scaled legs and toes, dark brown eye. Even, flat, unlit albedo: no baked shadows, no highlights, no ambient occlusion.",
+  "image": null,
+  "preview_job": "library/animals/jobs/corvus_corax/01a171a4-7814-7301-b140-133459562f9f",
+  "estimated_credits": 10,
+  "balance_before": 2957,
+  "status": "SUCCEEDED",
+  "timestamps": {
+    "submitted": "2026-10-25T06:03:29+00:00",
+    "created_at": "2026-10-25T06:03:31+00:00",
+    "started_at": "2026-10-25T06:03:31+00:00",
+    "finished_at": "2026-10-25T06:03:56+00:00",
+    "downloaded": "2026-10-25T06:04:15+00:00"
+  },
+  "tool": "tools/meshy_generate.py",
+  "pricing_source": {
+    "url": "https://docs.meshy.ai/en/api/pricing",
+    "read": "2026-10-24"
+  },
+  "licence_note": "Generated through the Meshy API, which requires a paid plan (402 on a free plan). Meshy Terms of Use (https://www.meshy.ai/terms-of-use, last updated 2026-09-19), section 3.2: customers on a paid plan own their Customer Output to the extent permitted by law (free-plan output is owned by Meshy and offered under CC BY 4.0 with credit to Meshy). As owner, the account holder may license this model under the project's CC BY-SA 4.0 asset licence, to the extent copyright subsists in AI-generated output. Section 2.4: do not remove or alter AI-identifying metadata or watermarks Meshy embeds; carry them into adopted tiers. Section 2.5: API output is deleted by Meshy 3 days after generation, so keep this folder until the model is adopted. Credit: \"generated with Meshy (meshy.ai)\".",
+  "maintainer": "agent (Claude) for Aaron Brodeur",
+  "progress": 100,
+  "task": {
+    "id": "01a171a8-2db4-7256-9b99-ae6f617dea98",
+    "type": "text-to-3d-refine",
+    "status": "SUCCEEDED",
+    "created_at": 1792908211569,
+    "started_at": 1792908211607,
+    "finished_at": 1792908236882,
+    "consumed_credits": 10,
+    "task_error": null
+  },
+  "credits_charged": 10,
+  "files": [
+    {
+      "file": "model.glb",
+      "bytes": 4252352,
+      "sha256": "47326ad0cbb3eb03750f9ff619cfd68037c0f6a036c639db327653bc633a0273",
+      "source": "https://assets.meshy.ai/<account>/tasks/01a171a8-2db4-7256-9b99-ae6f617dea98/output/model.glb"
+    },
+    {
+      "file": "texture_base_color.png",
+      "bytes": 5565814,
+      "sha256": "b46efbd7c7d8800fd5c3ac0860f33e31df1ec1a25304b8aa1dabdd6e783e79dd",
+      "source": "https://assets.meshy.ai/<account>/tasks/01a171a8-2db4-7256-9b99-ae6f617dea98/output/texture_0.png"
+    },
+    {
+      "file": "thumbnail.png",
+      "bytes": 43731,
+      "sha256": "b9cde146fee82258b0927d09a8caf076a199b2009575f4358b09f134551341ea",
+      "source": "https://assets.meshy.ai/<account>/tasks/01a171a8-2db4-7256-9b99-ae6f617dea98/output/preview.png"
+    }
+  ],
+  "balance_after": 2927
+}

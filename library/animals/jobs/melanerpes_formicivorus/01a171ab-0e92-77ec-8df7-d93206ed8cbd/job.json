@@ -1,0 +1,66 @@
+{
+  "species": "melanerpes_formicivorus",
+  "mode": "preview",
+  "kind": "text-to-3d",
+  "task_id": "01a171ab-0e92-77ec-8df7-d93206ed8cbd",
+  "endpoint": "https://api.meshy.ai/openapi/v2/text-to-3d",
+  "request": {
+    "mode": "preview",
+    "prompt": "acorn woodpecker, Melanerpes formicivorus, clinging to a vertical tree trunk but no trunk modelled, body vertical, short legs tucked under the belly with both feet gripping forward in front of the body, zygodactyl feet with two toes pointing up and two toes pointing down, head level with the stout short chisel bill pointing straight forward, smooth rounded crown, compact chunky body, wings folded tight, stiff tail with a single pointed tip bent forward as a prop, realistic proportions, game-ready",
+    "ai_model": "latest",
+    "target_formats": [
+      "glb"
+    ],
+    "should_remesh": true,
+    "topology": "triangle",
+    "target_polycount": 20000,
+    "moderation": false
+  },
+  "prompt": "acorn woodpecker, Melanerpes formicivorus, clinging to a vertical tree trunk but no trunk modelled, body vertical, short legs tucked under the belly with both feet gripping forward in front of the body, zygodactyl feet with two toes pointing up and two toes pointing down, head level with the stout short chisel bill pointing straight forward, smooth rounded crown, compact chunky body, wings folded tight, stiff tail with a single pointed tip bent forward as a prop, realistic proportions, game-ready",
+  "image": null,
+  "preview_job": null,
+  "estimated_credits": 20,
+  "balance_before": 2887,
+  "status": "SUCCEEDED",
+  "timestamps": {
+    "submitted": "2026-10-25T06:06:37+00:00",
+    "created_at": "2026-10-25T06:06:39+00:00",
+    "started_at": "2026-10-25T06:06:39+00:00",
+    "finished_at": "2026-10-25T06:07:12+00:00",
+    "downloaded": "2026-10-25T06:07:22+00:00"
+  },
+  "tool": "tools/meshy_generate.py",
+  "pricing_source": {
+    "url": "https://docs.meshy.ai/en/api/pricing",
+    "read": "2026-10-24"
+  },
+  "licence_note": "Generated through the Meshy API, which requires a paid plan (402 on a free plan). Meshy Terms of Use (https://www.meshy.ai/terms-of-use, last updated 2026-09-19), section 3.2: customers on a paid plan own their Customer Output to the extent permitted by law (free-plan output is owned by Meshy and offered under CC BY 4.0 with credit to Meshy). As owner, the account holder may license this model under the project's CC BY-SA 4.0 asset licence, to the extent copyright subsists in AI-generated output. Section 2.4: do not remove or alter AI-identifying metadata or watermarks Meshy embeds; carry them into adopted tiers. Section 2.5: API output is deleted by Meshy 3 days after generation, so keep this folder until the model is adopted. Credit: \"generated with Meshy (meshy.ai)\".",
+  "maintainer": "agent (Claude) for Aaron Brodeur",
+  "progress": 100,
+  "task": {
+    "id": "01a171ab-0e92-77ec-8df7-d93206ed8cbd",
+    "type": "text-to-3d-preview",
+    "status": "SUCCEEDED",
+    "created_at": 1792908399854,
+    "started_at": 1792908399858,
+    "finished_at": 1792908432563,
+    "consumed_credits": 20,
+    "task_error": null
+  },
+  "credits_charged": 20,
+  "files": [
+    {
+      "file": "model.glb",
+      "bytes": 782932,
+      "sha256": "ebd26b08348dc77a5f9236c7303165f5ad18d76815e5f40b0f25cc65357c8477",
+      "source": "https://assets.meshy.ai/<account>/tasks/01a171ab-0e92-77ec-8df7-d93206ed8cbd/output/model.glb"
+    },
+    {
+      "file": "thumbnail.png",
+      "bytes": 53785,
+      "sha256": "4fbf17776a9e724ebbbbed290561f4766f389acf152db0498c9d4e3a1fc0ed22",
+      "source": "https://assets.meshy.ai/<account>/tasks/01a171ab-0e92-77ec-8df7-d93206ed8cbd/output/preview.png"
+    }
+  ],
+  "balance_after": 2867
+}
