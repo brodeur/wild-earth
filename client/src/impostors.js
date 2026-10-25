@@ -1,7 +1,7 @@
 import * as THREE from 'three';
 import { uniforms as atmo, ATMOSPHERE_GLSL } from './atmosphere.js';
 import { SPECIES, SPECIES_IDS, mulberry32, resolveSpecies } from './trees.js';
-import { VARIANTS, pick, hash, variantSeed, midSet, cellPlan, placementSkip } from './vegetation.js';
+import { VARIANTS, pick, hash, variantSeed, handover, cellPlan, placementSkip } from './vegetation.js';
 import { bakeImpostors, VIEWS, SIDE_VIEWS, ALPHA_REF } from './impostorBake.js';
 import { seasonOfDate } from './season.js';
 
@@ -23,16 +23,22 @@ import { seasonOfDate } from './season.js';
 //     backlit, the weak glow of a backlit crown) with the same fade, out by 900..1500 m from the eye,
 //     so with the near forest radius (900 m) a backlit stand no longer darkens where it hands over
 //     (compiled only where it can reach half strength, see update()).
-//   - Hand-over: vegetation.js publishes the extent of its mid set (midSet: every cell whose centre is
-//     within its radius of its last rebuild centre); the impostors draw exactly the other cells, so
-//     each tree is drawn once, as itself or as its own impostor: no band of double cover, no gap, and
-//     when the mid set moves (every 200 m) the trees on its edge swap for their own impostors.
-//   - Thinning: beyond that edge (at most nearRadius + 200 from the eye) plus a margin, only a fraction
+//   - Hand-over (vegetation.js handover): per tree, by its distance to the eye (the bird), across
+//     hand.x +/- hand.y m (1209-1279 m with the 1.5 km setting): the impostor keeps the pixels the mid
+//     tree's dither drops (FRAG), so in the band each tree is drawn once per pixel, partly as itself
+//     and partly as its own impostor, and the share moves smoothly with the eye; the mid set's rebuild
+//     every 200 m changes nothing on screen. Nothing grows, thins or varies in the band (all of that
+//     starts at nearRadius + RING, beyond the farthest the mid set reaches).
+//   - Thinning: beyond nearRadius + RING (past the farthest edge of the mid set), only a fraction
 //     (thin/d)^P of trees is kept (by a per-tree rank) and the survivors widen to keep the canopy
 //     cover (each survivor's silhouette grows by 1/keep, width keep^-0.72 and height keep^-0.28, so the
 //     cover of a stand, about 1 - exp(-density x area), holds out to the horizon instead of opening into
 //     single trees); trees there also pick up height variance (about their own slot's height), width and
 //     a slight lean, so repeated variants do not read as copies. Far shrubs stand for patches of chaparral.
+//   - Shadows: casterMaterial() draws each impostor beyond hand.x as a sun-facing ellipse of its crown,
+//     grown and thinned as the impostor is, into the largest cascade (shadows.js), where the mid set's
+//     crown ellipsoids stop: the ground and the crowns beyond the real forest are shaded by the trees
+//     drawn there.
 // Trees are precomputed per 250 m chunk sorted by rank; every MOVE m the kept prefix of each chunk is
 // copied either into the ring mesh (chunks that can reach the crossed band: two side quads and the cap)
 // or into one of six angular sectors of billboard-only meshes (one quad, a third of the vertices),
@@ -43,25 +49,50 @@ const THIN_P = 0.7;                // keep (thinStart / d)^P beyond thinStart
 const GROW_W = 0.72, GROW_H = 0.28; // a kept tree's width and height grow by keep^-GROW (GROW_W + GROW_H = 1: area / keep)
 const NEEDLE_FADE = [900, 1500];    // treegen canopyMaterial fades the needle light out over this view distance
 const NEEDLE_ON = 1200;             // compile the needle light where trees can be nearer than this (half of it left)
-const RING = 250;                  // the mid set's edge is within nearRadius +/- 200 of the eye: no thinning or variety inside +250
-const FADE = [350, 200];           // without a mid set (never in the app): dither in over nearRadius - 350..-200
+const RING = 250;                  // the mid set reaches at most nearRadius + 200 + a cell from the eye: no thinning or variety inside +250
+const CAST_KEEP = 0.5, CAST_R = 4500;   // far shadow casters: share kept, reach from the camera (see CASTER_VERT)
+const HAND_MARGIN = 15;            // rebuild() measures from the camera, the hand-over from the bird (a chase camera's offset)
 const CROSS = [150, 450];          // crossed -> billboard switch, per tree, at nearRadius + 150..450
 const srgbToLin = v => Math.pow(v / 255, 2.2);
+
+// A far tree's growth with distance d from the eye, shared by the impostor and its shadow caster:
+// x width and y height multipliers on the tree's own size, z alive (0: dropped by thinning), w variety.
+// k2 thins further on top of the distance rule (the shadow casters: CAST_KEEP), with the same growth.
+const GROWTH_GLSL = /* glsl */`
+  uniform vec4 hrange[NT]; uniform float nearRadius; uniform vec4 thin;
+  float hsh(float n) { return fract(sin(n) * 43758.5453123); }
+  vec4 farGrowth(float d, float s, float rank, vec4 hr, float k2) {
+    float keep = (d < thin.x ? 1.0 : pow(thin.x / d, thin.y)) * k2;
+    float shrubFar = hr.z * smoothstep(nearRadius + ${RING.toFixed(1)}, nearRadius + 1000.0, d);
+    keep *= 1.0 - 0.5 * shrubFar;   // far shrubs: fewer, wider and a little taller (a patch of chaparral, not a bush)
+    float alive = smoothstep(keep, keep * 0.88, rank);   // shrink out just before the rank is dropped
+    if (alive <= 0.0) return vec4(0.0);
+    float v = smoothstep(nearRadius + ${RING.toFixed(1)}, nearRadius + 1450.0, d);   // per-tree variety, none in the hand-over
+    float seed = fract(rank * 7919.131) * 100.0, r1 = hsh(seed * 12.9898 + 1.0), r2 = hsh(seed * 78.233 + 2.0);
+    float hMul = mix(1.0, mix(hr.x, hr.y, r1) / s, v) * pow(keep, -${GROW_H.toFixed(2)}) * (1.0 + 0.5 * shrubFar) * alive;
+    float wMul = mix(1.0, 0.85 + 0.3 * r2, v) * pow(keep, -${GROW_W.toFixed(2)}) * (1.0 + 2.0 * shrubFar) * alive;
+    return vec4(wMul, hMul, alive, v);
+  }`;
+// The mid tree's share of a tree's pixels in the hand-over band (vegetation.js lodPatch, the same expression).
+const HAND_GLSL = /* glsl */`
+  uniform vec3 handEye; uniform vec2 hand;
+  float midShare(vec3 base) { return clamp((hand.x + hand.y - distance(base.xz, handEye.xz)) / (2.0 * hand.y), 0.0, 1.0); }`;
 
 const VERT = /* glsl */`
   #define VIEWS ${VIEWS.toFixed(1)}
   attribute vec4 iPos; attribute vec4 iA;
-  uniform vec4 frame[NT]; uniform vec4 hrange[NT]; uniform vec4 vext[NT * ${VIEWS}]; uniform vec3 tint[NS];
+  uniform vec4 frame[NT]; uniform vec4 vext[NT * ${VIEWS}]; uniform vec3 tint[NS];
   uniform vec4 needle[NS]; uniform vec3 needleTint[NS];   // pines: wrap, translucency, scatter, mean thinness | glow tint
-  uniform vec3 eye; uniform float nearRadius; uniform vec4 thin; uniform vec2 grid;
-  uniform vec4 mid; uniform vec3 cells;   // mid set: centre x, z, radius, on | habitat cell size, tile size, cells per row
+  uniform vec3 eye; uniform vec2 grid;
+  ${GROWTH_GLSL}
+  ${HAND_GLSL}
+  varying float vMidShare;
   varying vec4 vUv; varying vec2 vMirror; varying float vBlend; varying vec3 vR; varying vec3 vU; varying vec3 vF;
   varying float vFade; varying vec3 vTint; varying vec3 vSun; varying vec3 vHazeT; varying vec3 vHazeS; varying float vSky;
   #ifdef NEEDLE
   varying vec4 vNeedle;
   #endif
   ${ATMOSPHERE_GLSL}
-  float hsh(float n) { return fract(sin(n) * 43758.5453123); }
   vec2 cellUv(float tree, float view, vec2 uv) {
     float idx = tree * VIEWS + view;
     return (vec2(mod(idx, grid.x), floor(idx / grid.x)) + clamp(uv, 0.002, 0.998)) / grid;
@@ -71,22 +102,12 @@ const VERT = /* glsl */`
     vec3 base = iPos.xyz; float rot = iPos.w, s = iA.x, rank = iA.z, seed = fract(rank * 7919.131) * 100.0;
     int ti = int(iA.y + 0.5); vec4 fr = frame[ti]; vec4 hr = hrange[ti];
     float d = distance(base.xz, eye.xz);
-    float fade;
-    if (mid.w > 0.5) {   // exactly the cells the mid set does not place (vegetation.js: cell centre beyond the radius)
-      float ci = mod(iA.w, cells.z), cj = floor(iA.w / cells.z);
-      vec2 cc = vec2((ci + 0.5) * cells.x, (cells.y - (cj + 0.5) * cells.x) * -1.0);
-      fade = distance(cc, mid.xy) > mid.z ? 1.0 : 0.0;
-    } else fade = smoothstep(nearRadius - ${FADE[0].toFixed(1)}, nearRadius - ${FADE[1].toFixed(1)}, d);
-    float keep = d < thin.x ? 1.0 : pow(thin.x / d, thin.y);
-    float shrubFar = hr.z * smoothstep(nearRadius + ${RING.toFixed(1)}, nearRadius + 1000.0, d);
-    keep *= 1.0 - 0.5 * shrubFar;   // far shrubs: fewer, wider and a little taller (a patch of chaparral, not a bush)
-    float alive = smoothstep(keep, keep * 0.88, rank);   // shrink out just before the rank is dropped
-    if (fade <= 0.0 || alive <= 0.0) { gl_Position = vec4(2.0, 2.0, 2.0, 1.0); return; }
-    float v = smoothstep(nearRadius + ${RING.toFixed(1)}, nearRadius + 1450.0, d);   // per-tree variety, none at the hand-over
-    float r1 = hsh(seed * 12.9898 + 1.0), r2 = hsh(seed * 78.233 + 2.0), r3 = hsh(seed * 37.719 + 3.0),
-          r4 = hsh(seed * 93.989 + 4.0), r5 = hsh(seed * 51.137 + 5.0), r6 = hsh(seed * 23.417 + 6.0), r7 = hsh(seed * 67.351 + 7.0);
-    float hMul = mix(1.0, mix(hr.x, hr.y, r1) / s, v) * pow(keep, -${GROW_H.toFixed(2)}) * (1.0 + 0.5 * shrubFar) * alive;
-    float wMul = mix(1.0, 0.85 + 0.3 * r2, v) * pow(keep, -${GROW_W.toFixed(2)}) * (1.0 + 2.0 * shrubFar) * alive;
+    vMidShare = midShare(base);   // the mid tree's share of the pixels (FRAG keeps the rest)
+    if (vMidShare >= 1.0) { gl_Position = vec4(2.0, 2.0, 2.0, 1.0); return; }
+    vec4 g = farGrowth(d, s, rank, hr, 1.0);
+    if (g.z <= 0.0) { gl_Position = vec4(2.0, 2.0, 2.0, 1.0); return; }
+    float fade = 1.0, v = g.w, hMul = g.y, wMul = g.x;
+    float r3 = hsh(seed * 37.719 + 3.0), r4 = hsh(seed * 93.989 + 4.0), r5 = hsh(seed * 51.137 + 5.0), r6 = hsh(seed * 23.417 + 6.0), r7 = hsh(seed * 67.351 + 7.0);
     float W = fr.x * s * wMul, H = fr.y * s * hMul, y0 = fr.z * s * hMul;
     float lean = v * (r3 - 0.5) * 0.16, ld = r4 * 6.2831853;
     vec2 leanV = vec2(cos(ld), sin(ld)) * lean;   // horizontal shift per metre of height
@@ -154,6 +175,7 @@ const VERT = /* glsl */`
   }`;
 const FRAG = /* glsl */`
   uniform sampler2D albedoMap; uniform sampler2D normalMap;
+  varying float vMidShare;
   varying vec4 vUv; varying vec2 vMirror; varying float vBlend; varying vec3 vR; varying vec3 vU; varying vec3 vF;
   varying float vFade; varying vec3 vTint; varying vec3 vSun; varying vec3 vHazeT; varying vec3 vHazeS; varying float vSky;
   #ifdef NEEDLE
@@ -167,7 +189,8 @@ const FRAG = /* glsl */`
     // Alpha to coverage, sharpened to about one pixel of soft edge at any mip level.
     float a = (c.a - ${ALPHA_REF.toFixed(2)}) / max(fwidth(c.a), 1e-4) + 0.5;
     if (a <= 0.0) discard;
-    if (vFade < 1.0 && fract(52.9829189 * fract(dot(gl_FragCoord.xy, vec2(0.06711056, 0.00583715)))) >= vFade) discard;
+    float lodN = fract(52.9829189 * fract(dot(gl_FragCoord.xy, vec2(0.06711056, 0.00583715))));
+    if (lodN < vMidShare || (vFade < 1.0 && lodN >= vFade)) discard;   // the mid tree's pixels; the cap's edge-on fade
     vec3 n0 = textureGrad(normalMap, vUv.xy, dx0, dy0).xyz * 2.0 - 1.0, n1 = textureGrad(normalMap, vUv.zw, dx1, dy1).xyz * 2.0 - 1.0;
     n0.x *= vMirror.x; n1.x *= vMirror.y;
     vec3 n = mix(n0, n1, vBlend);
@@ -195,6 +218,37 @@ const FRAG = /* glsl */`
     #include <tonemapping_fragment>
     #include <colorspace_fragment>
   }`;
+
+// Shadow caster (shadows.js, largest cascade): impostors beyond the hand-over radius as sun-facing
+// ellipses, the outline of the mid set's crown ellipsoid for the same tree (crown[t]: centre height,
+// vertical and horizontal semi-axes, unscaled metres), grown and thinned as the impostor is and then
+// thinned once more to CAST_KEEP of them, each grown by 1/CAST_KEEP in area (the cover a 4.9 m texel
+// map can show is kept; the dapple is coarser). They are their own instance buffer (casterMesh, one
+// quad per tree, chunks within CAST_R of the camera), rebuilt with the sectors: a draw costs about its
+// instance count (the sectors' 200 000 trees as casters: 1.2 ms per map render at the start view; these
+// 76 000: about 0.5 ms, only on the frames that re-render the map).
+// Inside hand.x the mid set's own ellipsoids cast (shadows.js DEPTH_VERT), so each tree casts once.
+const CASTER_VERT = /* glsl */`
+  attribute vec4 iPos; attribute vec4 iA;
+  uniform vec4 crown[NT]; uniform vec3 eye; uniform vec3 sunDir;
+  ${GROWTH_GLSL}
+  ${HAND_GLSL}
+  varying vec2 vQ;
+  void main() {
+    vec3 base = iPos.xyz; float s = iA.x, rank = iA.z; int ti = int(iA.y + 0.5);
+    vec4 g = distance(base.xz, handEye.xz) <= hand.x ? vec4(0.0) : farGrowth(distance(base.xz, eye.xz), s, rank, hrange[ti], ${CAST_KEEP.toFixed(2)});
+    if (g.z <= 0.0) { gl_Position = vec4(2.0, 2.0, 2.0, 1.0); return; }
+    vec4 cb = crown[ti];
+    float R = cb.z * s * g.x, Hh = cb.y * s * g.y;
+    vec3 C = base + vec3(0.0, cb.x * s * g.y, 0.0);
+    vec3 right = normalize(cross(vec3(0.0, 1.0, 0.0), sunDir) + vec3(1e-4, 0.0, 0.0)), up = cross(sunDir, right);
+    float ce = up.y, ev = sqrt(Hh * Hh * ce * ce + R * R * max(1.0 - ce * ce, 0.0));   // the ellipsoid's outline along up
+    vQ = vec2(position.x * 2.0, position.y * 2.0 - 1.0);
+    gl_Position = projectionMatrix * viewMatrix * vec4(C + right * (vQ.x * R) + up * (vQ.y * ev), 1.0);
+  }`;
+const CASTER_FRAG = /* glsl */`
+  varying vec2 vQ;
+  void main() { if (dot(vQ, vQ) > 1.0) discard; gl_FragColor = vec4(1.0); }`;
 
 export class Impostors {
   constructor(tile, scene) {
@@ -225,7 +279,7 @@ export class Impostors {
         return f && f.thin > 0 ? new THREE.Vector4(F.needle_wrap ?? 0.35, F.translucency ?? 2.5, F.needle_scatter ?? 0.15, f.thin) : new THREE.Vector4(); }) },
       needleTint: { value: SPECIES_IDS.map(id => new THREE.Vector3(...(SPECIES[id].foliage.translucency_rgb || [1, 1.12, 0.55]))) },
       eye: { value: new THREE.Vector3() }, nearRadius: { value: 1500 }, thin: { value: new THREE.Vector4() },
-      mid: { value: new THREE.Vector4() }, cells: { value: new THREE.Vector3(tile.habitat.res, tile.size, tile.habitat.img.width) },
+      handEye: handover.eye, hand: handover.r,
       grid: { value: new THREE.Vector2(...bake.grid) },
       ...atmo,
     };
@@ -251,11 +305,21 @@ export class Impostors {
       mesh.raycast = () => {};   // not pickable (identify.js picks real trees)
       mesh.cap = 1024; mesh.kind = kind; this.group.add(mesh); this.sectors.push(mesh);
     }
-    this.R = null; this.center = null; this.count = 0; this.mid = null; this.midVersion = -1;
+    // Far shadow casters (shadows.js draws them with casterMaterial()): not in the scene.
+    this.casterMesh = new THREE.Mesh(this.sectorGeometry(1024, 'far')); this.casterMesh.cap = 1024; this.casterMesh.kind = 'far';
+    this.R = null; this.center = null; this.count = 0; this.bakeList = bakeList;
     this.setSeason(seasonOfDate());
     this.stats = { bakeMs: Math.round(t1 - t0), bakeRenderMs: Math.round(bake.renderMs), recordsMs: Math.round(t2 - t1), atlas: bake.size,
       atlasMB: +(bake.bytes / 1048576).toFixed(1), trees: this.nRecords };
     console.info(`impostors: atlas ${bake.size.join('x')} x2 (${this.stats.atlasMB} MB with mips), ${NT} trees (${bakeList.length} slots) x ${VIEWS} views, baked in ${this.stats.bakeMs} ms; ${this.nRecords.toLocaleString()} plants indexed in ${this.stats.recordsMs} ms`);
+  }
+
+  // Depth material for the far shadow casters (see CASTER_VERT). crowns: one THREE.Vector4 per baked tree.
+  casterMaterial(crowns) {
+    const u = this.uniforms;
+    return new THREE.ShaderMaterial({ vertexShader: CASTER_VERT, fragmentShader: CASTER_FRAG, colorWrite: false, side: THREE.DoubleSide,
+      defines: { NT: this.bake.frames.length },
+      uniforms: { crown: { value: crowns }, eye: u.eye, sunDir: u.sunDir, hrange: u.hrange, nearRadius: u.nearRadius, thin: u.thin, handEye: u.handEye, hand: u.hand } });
   }
 
   sectorGeometry(cap, kind) {
@@ -324,31 +388,36 @@ export class Impostors {
     const t0 = performance.now();
     this.center = [cx, cz];
     const R = this.R, hd = CHUNK * Math.SQRT1_2, rec = this.records;
-    const lists = Array.from({ length: SECTORS + 1 }, () => ({ parts: [], n: 0, box: new THREE.Box3() }));
+    const lists = Array.from({ length: SECTORS + 2 }, () => ({ parts: [], n: 0, box: new THREE.Box3() }));   // ring, sectors, casters
+    const cast = lists[SECTORS + 1], handOut = handover.r.value.x - MOVE - HAND_MARGIN - hd;
     const v = new THREE.Vector3();
     for (const c of this.chunks) {
       const dist = Math.hypot(c.x - cx, c.z - cz), dmin = Math.max(0, dist - hd), dmax = dist + hd;
-      // entirely inside the real forest (the mid set, or the eye-based fade without one) until the next rebuild
-      if (this.mid ? Math.hypot(c.x - this.mid[0], c.z - this.mid[1]) + hd + 25 < this.mid[2] : dmax + MOVE < R - FADE[0]) continue;
+      // entirely inside the hand-over band's inner edge until the next rebuild
+      if (dmax + MOVE + HAND_MARGIN < handover.r.value.x - handover.r.value.y) continue;
       const kmax = this.keep(Math.max(0, dmin - MOVE));
-      let lo = 0, hi = c.n;   // first record with rank >= kmax
-      while (lo < hi) { const m = (lo + hi) >> 1; if (rec[(c.start + m) * STRIDE + 6] < kmax) lo = m + 1; else hi = m; }
+      const prefix = k => { let lo = 0, hi = c.n;   // first record with rank >= k
+        while (lo < hi) { const m = (lo + hi) >> 1; if (rec[(c.start + m) * STRIDE + 6] < k) lo = m + 1; else hi = m; }
+        return lo; };
+      const lo = prefix(kmax);
       if (!lo) continue;
+      if (dmin - MOVE < CAST_R && dist > handOut) { const lc = prefix(kmax * CAST_KEEP); if (lc) { cast.parts.push(c.start, lc); cast.n += lc; } }
       const k = dmin - MOVE <= R + CROSS[1] ? 0 : 1 + ((Math.floor((Math.atan2(c.z - cz, c.x - cx) / (2 * Math.PI) + 1) * SECTORS) % SECTORS) + SECTORS) % SECTORS;
       const L = lists[k]; L.parts.push(c.start, lo); L.n += lo;
       L.box.expandByPoint(v.set(c.x - CHUNK / 2, c.y0, c.z - CHUNK / 2)).expandByPoint(v.set(c.x + CHUNK / 2, c.y1 + 90, c.z + CHUNK / 2));
     }
     let total = 0;
     lists.forEach((L, k) => {
-      const mesh = this.sectors[k];
+      const mesh = k <= SECTORS ? this.sectors[k] : this.casterMesh;
       if (L.n > mesh.cap) { mesh.geometry.dispose(); mesh.cap = Math.ceil(L.n * 1.3); mesh.geometry = this.sectorGeometry(mesh.cap, mesh.kind); }
       const g = mesh.geometry, buf = g.attributes.iPos.data, arr = buf.array;
       let o = 0;
       for (let p = 0; p < L.parts.length; p += 2) { const a = L.parts[p] * STRIDE, len = L.parts[p + 1] * STRIDE; arr.set(rec.subarray(a, a + len), o); o += len; }
       g.instanceCount = L.n; mesh.visible = L.n > 0;
       if (L.n) { buf.clearUpdateRanges(); buf.addUpdateRange(0, L.n * STRIDE); buf.needsUpdate = true; L.box.expandByScalar(60).getBoundingSphere(g.boundingSphere); }
-      total += L.n;
+      if (k <= SECTORS) total += L.n;
     });
+    this.castCount = cast.n;
     this.count = total; this.lastRebuildMs = performance.now() - t0;
   }
 
@@ -375,17 +444,14 @@ export class Impostors {
       u.nearRadius.value = nearRadius; u.thin.value.set(nearRadius + RING, THIN_P, nearRadius + CROSS[0], nearRadius + CROSS[1]);
       // The needle light costs about 0.1 ms in the ring and 0.3 ms over the far sectors' many small
       // quads at the start view, so a material compiles it only when it can hold trees where the real
-      // pines still have at least half of it (NEEDLE_ON m): the ring's nearest trees are about
-      // nearRadius - 200 m away (the mid set moves every 200 m), the sectors' about nearRadius + 450 m.
-      // With the default 1.5 km forest neither does (the real pines keep at most a quarter there).
-      for (const [m, nearest] of [[this.materials.ring, nearRadius - 200], [this.materials.far, nearRadius + CROSS[1]]]) {
+      // pines still have at least half of it (NEEDLE_ON m): the ring's nearest trees are at the
+      // hand-over band's inner edge, the sectors' about nearRadius + 450 m. With the default 1.5 km
+      // forest neither does (the band starts at 1209 m; the real pines keep under half there).
+      const hand = handover.r.value;
+      for (const [m, nearest] of [[this.materials.ring, hand.x - hand.y], [this.materials.far, nearRadius + CROSS[1]]]) {
         const want = nearest < NEEDLE_ON;
         if (want !== ('NEEDLE' in m.defines)) { if (want) m.defines.NEEDLE = 1; else delete m.defines.NEEDLE; m.needsUpdate = true; }
       }
-    }
-    if (midSet.center && midSet.version !== this.midVersion) {   // the real forest moved: draw its complement
-      this.midVersion = midSet.version; this.mid = [midSet.center[0], midSet.center[1], midSet.radius]; force = true;
-      u.mid.value.set(midSet.center[0], midSet.center[1], midSet.radius, 1);
     }
     const x = camera.position.x, z = camera.position.z;
     if (force || !this.center || Math.hypot(x - this.center[0], z - this.center[1]) > MOVE) this.rebuild(x, z);

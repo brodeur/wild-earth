@@ -554,3 +554,22 @@ Rejected: a wet-meadow habitat class now (later, with sedge and rush in the gras
 erasing only the photo's water pixels inside the ring (NAIP here is RGB only: no NIR to tell murky water
 from canopy). Known: the corridor's ground is summer-green photo canopy (riparian has no season
 recolour), ponderosa is 15% of the corridor mix, and the dams are still in the terrain.
+
+## 2026-10-25: the far hand-over is per tree and dithered; far trees cast into the largest cascade
+
+The real forest used to end where the mid set (rebuilt every 200 m) ended, so each rebuild swapped a
+crescent of trees about 1.5 km out between real and impostor at once (0.7% of the screen changed at
+300 m up, the band 3% darker at 50 m). Now each tree hands over by its own distance to the bird across
+a 70 m band (1209-1279 m with the 1.5 km setting; vegetation.js `handover`), the mid tree and its
+impostor sharing the pixels with the complementary screen-space dither the tiers already use, and the
+rebuild changes nothing on screen (0.000% at 300 m). The band sits 256 m inside the setting because the
+mid set must hold every tree that can reach it until the next rebuild; moving it out by building a
+larger mid set cost 0.75 ms. Nothing grows, thins or varies inside 1750 m. Beyond the band the far
+impostors cast into cascade 2 as sun-facing crown ellipses, half of them at twice the area, within
+4.5 km (their own instance buffer, so a map render costs about 0.5 ms, not 1.2 ms). The forest floor
+1.6-3.5 km out is 2-3.5% darker, and the band just past the hand-over matches the real trees to -2.7%
+to +0.1%. GPU at the start view, five alternated loads: 8.44 ms against 8.25 ms per frame. Rejected:
+`flat` varyings for the per-tree share (0.85 ms on ANGLE/Metal), a dithered mid trunk (sub-pixel there),
+and a canopy-cover darkening in the ground shader (it would not follow the drawn trees). Still open:
+backlit summer blue oaks are paler as real trees than as impostors, now visible 250 m nearer, and the
+mid set's 15 ms rebuild still lands every 200 m.

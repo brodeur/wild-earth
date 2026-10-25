@@ -1,7 +1,7 @@
 import * as THREE from 'three';
 import { uniforms as atmo } from './atmosphere.js';
 import { groundUniforms } from './terrain.js';
-import { NEAR_R } from './vegetation.js';
+import { NEAR_R, VARIANTS, handover } from './vegetation.js';
 import { WIND_GLSL } from './wind.js';
 
 // Cascaded sun shadows, hand-rolled. Three depth maps (hardware-compare depth textures) are
@@ -27,8 +27,12 @@ import { WIND_GLSL } from './wind.js';
 //      it a depth-only ellipsoid per crown on the mid-tier matrices. This is the map the start view
 //      (150 m up) sees everything through, so it gets 0.6 m texels and real crowns where they are
 //      big on screen; it re-renders every ~19 m of travel.
-//   2 (+-2500 m, 1024): terrain and the ellipsoids for every placed plant (4.9 m texels: crowns
-//      as soft dapple, ridges as long dusk shadows).
+//   2 (+-2500 m, 1024): terrain, the ellipsoids for every mid-set plant within the far hand-over
+//      radius (vegetation.js handover), and beyond it a sun-facing ellipse of the same crown per far
+//      impostor, grown and thinned as the impostor is (impostors.js casterMaterial), so the forest
+//      beyond the real trees shades its ground and itself (4.9 m texels: crowns as soft dapple, ridges
+//      as long dusk shadows). The ellipses are their own instance buffer (half the impostors within
+//      4.5 km, each twice the area); they cost only when this map re-renders (about every 80 m).
 // The ellipsoids carry a thin post for the bare trunk under a high crown, so a pine's shadow stays
 // joined to its base. The clump fields (shrubfield.js: chaparral shrubs and grass tussocks, camera-
 // facing impostors) cast into cascades 0 and 1 as sun-facing ellipses from the same instance data,
@@ -62,7 +66,7 @@ export const CASCADES = [
 const L0 = 1 << 1, L1 = 1 << 2, L2 = 1 << 3;   // layer bits per cascade (layer 0 unused)
 
 const DEPTH_VERT = /* glsl */`
-  uniform vec3 lodEye; uniform float lodR;
+  uniform vec3 lodEye; uniform float lodR; uniform vec2 farR;
   #ifdef CANOPY
     attribute float leafRank; varying float vRank;
   #endif
@@ -85,8 +89,9 @@ const DEPTH_VERT = /* glsl */`
     #ifdef LOD_NEAR
       drop = drop || distance(base.xz, lodEye.xz) > lodR;
     #endif
-    #ifdef LOD_MID
-      drop = drop || distance(base.xz, lodEye.xz) < lodR;
+    #ifdef LOD_MID   // the near trees inside lodR, the far impostors' casters beyond the far hand-over
+      float dm = distance(base.xz, lodEye.xz);
+      drop = drop || dm < lodR || dm > farR.x;
     #endif
     gl_Position = drop ? vec4(2.0, 2.0, 2.0, 1.0) : projectionMatrix * viewMatrix * (m * vec4(position, 1.0));
   }`;
@@ -179,10 +184,10 @@ const BIAS = new THREE.Matrix4().set(0.5, 0, 0, 0.5, 0, 0.5, 0, 0.5, 0, 0, 0.5, 
 const OUTSIDE = new THREE.Matrix4().set(0, 0, 0, 10, 0, 0, 0, 10, 0, 0, 0, 10, 0, 0, 0, 1);
 
 export class Shadows {
-  constructor({ renderer, scene, tile, terrain, veg, raven, grass = null }) {
+  constructor({ renderer, scene, tile, terrain, veg, raven, grass = null, far = null }) {
     this.renderer = renderer; this.mainScene = scene; this.tile = tile; this.veg = veg; this.raven = raven;
     this.scene = new THREE.Scene(); this.scene.matrixWorldAutoUpdate = false;
-    this.U = { lodEye: { value: new THREE.Vector3() }, lodR: { value: NEAR_R } };   // near / ellipsoid hand-over (vegetation.js lodPatch)
+    this.U = { lodEye: { value: new THREE.Vector3() }, lodR: { value: NEAR_R }, farR: handover.r };   // near / ellipsoid / far hand-overs (vegetation.js)
     this.enabled = true; this.force = false;   // force: re-render every cascade every frame (worst-case timing)
     this.stats = { renders: [0, 0, 0] };
     const target = size => {
@@ -239,6 +244,19 @@ export class Shadows {
         const g = e.mid.canopy.geometry; if (!g.boundingBox) g.computeBoundingBox();
         this.addVeg(e.mid.canopy, ellipsoidDepth, L1 | L2, crownCaster(g.boundingBox, unit), e.mid.trunk);
       }
+    }
+    // Far impostors (impostors.js): a crown ellipse per tree beyond the far hand-over, in cascade 2. The
+    // crown of each baked tree is its mid canopy's bounds, as the ellipsoids above take it.
+    this.far = far; this.farProxies = [];
+    if (far) {
+      const crowns = far.bake.frames.map(() => new THREE.Vector4(0, 0, 0, 0));
+      far.bakeList.forEach(({ id, seed }, k) => {
+        const e = veg.slots[id]?.[k % VARIANTS]; if (!e || e.seed !== seed) return;
+        const g = e.mid.canopy.geometry; if (!g.boundingBox) g.computeBoundingBox();
+        const b = g.boundingBox, sz = b.getSize(this._v);
+        crowns[far.bake.index[k]].set((b.min.y + b.max.y) / 2, sz.y * 0.45, (sz.x + sz.z) / 4 * 0.85, 0);
+      });
+      this.farProxies.push(this.add(new THREE.Mesh(far.casterMesh.geometry, far.casterMaterial(crowns)), far.casterMesh, L2));
     }
     // Clump fields (shrubfield.js), sharing their instanced geometry and uniforms.
     this.viewEye = { value: new THREE.Vector3() };
@@ -347,6 +365,7 @@ export class Shadows {
       if (p.isSkinnedMesh) p.bindMatrixInverse.copy(s.bindMatrixInverse);
     }
     for (const p of this.clumpProxies) p.visible = shown(p.userData.src) && p.geometry.instanceCount > 0;
+    for (const p of this.farProxies) { const s = p.userData.src; p.geometry = s.geometry; p.visible = shown(s) && s.geometry.instanceCount > 0; }
     return [`${hn}|${this.veg.nearVersion}|${this.casterVersion}`, `${hm}|${this.veg.version}|${this.casterVersion}`];
   }
   // Contact AO around the camera: re-rendered when the near set changes or the camera has moved AO_MOVE m.

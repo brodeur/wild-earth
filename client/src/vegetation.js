@@ -22,9 +22,17 @@ export const SHRUB_MIX = { 4: { chamise: 0.6, manzanita: 0.4 }, 1: { manzanita: 
 export const VARIANTS = SLOTS;
 const CAP = 24000;
 export const variantSeed = (id, v) => variantSlots(id, VARIANTS)[v].seed;   // canonical species id, slot 0..VARIANTS-1
-// The mid set's extent: every cell whose centre is within `radius` of `center` ([x, z]) is placed here,
-// so the far impostors (impostors.js) draw exactly the cells outside it, each tree once.
-export const midSet = { center: null, radius: 0, version: 0 };
+// Hand-over to the far impostors (impostors.js), per tree and by its distance to the eye (the bird,
+// lodEye), never by where the mid set was last built: across FAR_W m either side of handover.r.x the
+// mid tree and its own impostor share the pixels with the same complementary screen-space dither as the
+// near / mid switch, so the band thins and fills tree by tree and a rebuild never flips a ring. The mid
+// set (rebuilt every MID_MOVE m, cells whose centre is within `radius` of the rebuild point) must hold
+// every tree that can reach the band's outer edge, so the hand-over sits MID_MOVE plus half a cell's
+// diagonal plus FAR_W inside `radius` (1244 m with the 1.5 km setting); mid trees beyond the band are
+// collapsed in the vertex shader. handover.eye is lodEye (the same object); handover.r = (radius, FAR_W).
+const MID_MOVE = 200, FAR_W = 35;
+export const handover = { eye: { value: new THREE.Vector3() }, r: { value: new THREE.Vector2(1e9, FAR_W) } };
+export const handoverRadius = (radius, res) => radius - MID_MOVE - res * Math.SQRT1_2 - FAR_W;
 // Two LODs. Every placed plant is in the mid set (rebuilt by the cell scan every 200 m); the near set
 // holds the plants within NEAR_R + NEAR_MARGIN of where it was last refreshed (every NEAR_MOVE m, a
 // copy out of the mid set, no cell scan). The switch itself is per frame in the vertex shader: near
@@ -77,10 +85,16 @@ export function cellPlan(tile, i, j) {
 // centreline is kept with odds rising from 0.35 at the channel to 1 at the band's edge. Uses hashes,
 // never the cell's random stream, so a skip moves nothing else.
 // Plants (not rocks: rocks.js passes plant = false) also thin on outcrop cells by tilepackage's rockKeep.
+// Rewilded water beds (tile.rewild, pipeline species_mix rows rewilded_meadow / rewilded_riparian): a
+// corridor cell's trees keep to the 12 m corridor along the restored channel (on the open bed beside
+// it 85% of them are skipped), so the gallery follows the channel instead of filling 30 m squares;
+// the meadow cells' scattered oaks are cellPlan's savanna rule and are left alone.
 export function placementSkip(tile, i, j, k, px, pn, isTree, plant = true) {
   const roads = tile.roads, rw = roads ? roads.at(px, pn) : 0;
   if (rw > 140 || (isTree && rw > 0 && hash(k, i + j * 4096, 13) / 4294967296 < rw / 255)) return true;
   if (plant && tile.outcrop) { const rk = rockKeep(tile, px, pn); if (rk < 1 && hash(k, i + j * 4096, 41) / 4294967296 > rk) return true; }
+  if (plant && isTree && tile.rewild && tile.speciesMix?.at(i, j)?.rule === 'rewilded_riparian'
+      && tile.rewild.at(px, pn) === 255 && hash(k, i + j * 4096, 43) / 4294967296 < 0.85) return true;
   const wm = tile.waterMask; if (!wm) return false;
   if (wm.inWater(px, pn)) return true;
   if (isTree) { const d = wm.streamDist(px, pn); if (d < 8 && hash(k, i + j * 4096, 29) / 4294967296 > 0.35 + 0.65 * d / 8) return true; }
@@ -95,9 +109,14 @@ export function hash(i, j, salt) { let h = (i * 73856093) ^ (j * 19349663) ^ (sa
 // trunks switch hard at NEAR_R (the two LODs share a skeleton, so they barely differ).
 // role: 'near' | 'mid' (the 2D switch at NEAR_R), or 'close' (the 3D switch at CLOSE_R). A near
 // canopy (`inner`) also hands over to the close tier inside CLOSE_R, with the complementary dither.
+// The mid canopies also hand over to the far impostors around farR.x (see handover above): each keeps
+// the pixels whose dither value is below its share of the band, and the impostor (impostors.js FRAG)
+// the others. vLodT is one value per tree (all its vertices compute the same), as the impostor's
+// share; it is not declared flat: flat varyings cost about 0.85 ms at the start view here (ANGLE on
+// Metal). Mid trunks (a fraction of a pixel there) stop at farR.x without a dither.
 const LOD_BAND = 15;
 function lodPatch(material, u, role, fade = false, inner = false) {
-  const W = fade ? LOD_BAND.toFixed(1) : '0.0', CW = CLOSE_BAND.toFixed(1), near = role === 'near';
+  const W = fade ? LOD_BAND.toFixed(1) : '0.0', CW = CLOSE_BAND.toFixed(1), near = role === 'near', mid = role === 'mid';
   const keep = role === 'close'   // vLodT: the fraction of pixels this layer gives up (near) or keeps (mid, close)
     ? `float cD = distance(lodP, closeEye);
        vLodT = clamp((closeR + ${CW} - cD) / (2.0 * ${CW}), 0.0, 1.0);
@@ -105,13 +124,17 @@ function lodPatch(material, u, role, fade = false, inner = false) {
     : `float lodD = distance(lodP.xz, lodEye.xz);
        vLodT = clamp((lodD - lodR + ${W}) / (2.0 * ${W} + 1e-4), 0.0, 1.0);
        if (lodD ${near ? '>' : '<='} lodR ${near ? '+' : '-'} ${W}) gl_Position = vec4(2.0, 2.0, 2.0, 1.0);
+       ${mid && fade ? `vLodT = min(vLodT, clamp((farR.x + farR.y - lodD) / (2.0 * farR.y), 0.0, 1.0));
+       if (lodD > farR.x + farR.y) gl_Position = vec4(2.0, 2.0, 2.0, 1.0);` : ''}
+       ${mid && !fade ? 'if (lodD > farR.x) gl_Position = vec4(2.0, 2.0, 2.0, 1.0);' : ''}
        ${inner ? `float cD = distance(lodP, closeEye);
        vLodT = max(vLodT, clamp((closeR + ${CW} - cD) / (2.0 * ${CW}), 0.0, 1.0));
        if (cD < closeR - ${CW}) gl_Position = vec4(2.0, 2.0, 2.0, 1.0);` : ''}`;
   return chainShader(material, `lod-${role}${fade ? '-fade' : ''}${inner ? '-inner' : ''}`, shader => {
     shader.uniforms.lodEye = u.lodEye; shader.uniforms.lodR = u.lodR; shader.uniforms.closeEye = u.closeEye; shader.uniforms.closeR = u.closeR;
+    shader.uniforms.farR = handover.r;
     shader.vertexShader = shader.vertexShader
-      .replace('#include <common>', '#include <common>\nuniform vec3 lodEye;\nuniform float lodR;\nuniform vec3 closeEye;\nuniform float closeR;\nvarying float vLodT;')
+      .replace('#include <common>', '#include <common>\nuniform vec3 lodEye;\nuniform float lodR;\nuniform vec3 closeEye;\nuniform float closeR;\nuniform vec2 farR;\nvarying float vLodT;')
       .replace('#include <project_vertex>', `#include <project_vertex>
         vLodT = 0.0;
         #ifdef USE_INSTANCING
@@ -133,7 +156,7 @@ export class Vegetation {
     this.oaks = []; this.version = 0;   // oaks placed by the last update (acorn game) and a counter bumped per rebuild
     this.nearPlants = []; this.nearVersion = 0;   // every plant in the near set: { id, species, x, y, z, scale, height }
     this.closeCount = 0; this.lastClose = null; this.closeVersion = -1;
-    this.lodU = { lodEye: { value: new THREE.Vector3() }, lodR: { value: NEAR_R }, closeEye: { value: new THREE.Vector3(0, 1e9, 0) }, closeR: { value: CLOSE_R } };
+    this.lodU = { lodEye: handover.eye, lodR: { value: NEAR_R }, closeEye: { value: new THREE.Vector3(0, 1e9, 0) }, closeR: { value: CLOSE_R } };
     const patch = m => atmosphere.patchLambert(m);   // cloud shadow + aerial perspective
     this.trunkMat = { near: lodPatch(trunkMaterial(patch), this.lodU, 'near'), mid: lodPatch(trunkMaterial(patch), this.lodU, 'mid') };   // shared (shadow casters use it)
     this.twigMat = lodPatch(trunkMaterial(patch), this.lodU, 'close', true);   // close twigs: plain vertex colour, dithered in like the close canopy
@@ -196,13 +219,13 @@ export class Vegetation {
   // Rebuild instances for cells within radius of (x, z). Deterministic per cell, so a tree is always in the same place.
   update(x, z, force = false) {
     this.lodU.lodEye.value.set(x, 0, z);
-    if (!force && this.lastCenter && Math.hypot(x - this.lastCenter[0], z - this.lastCenter[1]) < 200) {
+    if (!force && this.lastCenter && Math.hypot(x - this.lastCenter[0], z - this.lastCenter[1]) < MID_MOVE) {
       if (Math.hypot(x - this.lastNear[0], z - this.lastNear[1]) > NEAR_MOVE) this.refreshNear(x, z);
       return;
     }
     this.lastCenter = [x, z];
-    midSet.center = this.lastCenter; midSet.radius = this.radius; midSet.version++;
     const tile = this.tile, hab = tile.habitat, res = hab.res, size = tile.size, heights = tile.heights;
+    handover.r.value.x = this.handR = handoverRadius(this.radius, res);
     for (const arr of Object.values(this.meshes)) for (const e of arr) e.mid.n = 0;
     const oaks = [];
     const north = -z, r = this.radius, cells = Math.ceil(r / res);

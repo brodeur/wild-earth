@@ -104,7 +104,7 @@ async function main() {
   const flight = new RavenFlight(camera, tile.heights, renderer.domElement);
   scene.add(flight.body);
   const raven = new Raven(flight.body, atmosphere);   // the bird you see from the chase camera
-  const shadows = new Shadows({ renderer, scene, tile, terrain, veg, raven, grass });   // cascaded sun shadows (shadows.js)
+  const shadows = new Shadows({ renderer, scene, tile, terrain, veg, raven, grass, far });   // cascaded sun shadows (shadows.js)
   flight.reset(tile.size / 2, -tile.size / 2, 150);
   veg.radius = +$('detail').value; veg.update(flight.pos.x, flight.pos.z, true);
   const minimap = new MiniMap({ container: $('minimap'), sizeM: tile.size, imagery: tile.imagery, features: tile.features, flight, rewildImage: tile.textureImage });
