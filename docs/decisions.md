@@ -514,3 +514,19 @@ pre-dam valley (no data under hydro-flattened water), a fixed sine pool-riffle p
 had one; it ignores the terrain). Known misses: a 4 ha pond on Indian Creek with an irregular edge
 is kept though it is very likely impounded; the dams themselves remain in the terrain
 (`human_landforms_removed` stays false).
+
+## 2026-10-25: the drawn animals call where they are, from what they are doing (sound.js near layer)
+
+Decided: a "near" layer in sound.js, ticked 4x a second, that reads animals.js (species slots by mesh name,
+the AI states by value, quail coveys, the flush event) and voices the animals close to the player, all
+synthesised: the acorn woodpecker's rising "waka" rally (on landing, mostly at its granary, and now and
+then on it; it replaces the old waka) and its hammering as dry knocks in step with the AI's peck rate; the
+gray squirrel's chuffing alarm bark when the player comes within 15 m (its tail flicks on each chuff) and a
+soft chatter; jays scolding within 20 m (the Steller's jay also gains its "shaaar" and whistle); quail
+"pit" clucks near a foraging covey and a "chi-ca-go" assembly after a flush; a deer snort-wheeze once as
+the player comes within 30 m of an active herd; a gray fox's rare night bark; a brush rabbit's rare
+thump. Each has per-animal or per-group and overall cooldowns (a few calls a minute near animals), a
+tighter distance model for soft sounds, and at most 6 of the 14 voice slots. C gives the player's
+species' call (squirrel bark, woodpecker waka; a neighbour may answer). Rejected for now: hoofbeats (deer
+do not flee yet), vole sounds, and copying any recording (CC0 references only for study). Needed from
+animals.js for a closer fit: a deer flee state or event, and exported state constants.
