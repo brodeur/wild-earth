@@ -15,7 +15,7 @@
   38.65029129231017
  ],
  "size_m": 10000,
- "generated_at": "2026-10-25T13:36:03Z",
+ "generated_at": "2026-10-25T14:00:00Z",
  "generator": {
   "name": "wild-earth-pipeline",
   "version": "0.2.0"
@@ -983,14 +983,17 @@
    "source": "gbif",
    "feature_count": 585,
    "sha256": "bec66b04181612b57b2f72718280c03bce5f0d82c15de0e2599fe4ad68b508ee",
-   "bytes": 261581
+   "bytes": 261581,
+   "for_clients": false,
+   "for_clients_note": "per-record licences include CC BY-NC; clients read client.species_prior, built from CC0 and CC BY records only"
   },
   "species.seasonal": {
    "path": "species/seasonal.json",
    "kind": "table",
    "source": "gbif",
    "sha256": "a97920cc92cac2b2ceede7ba718a45e88c11dd1a7b745089449f9f964243b440",
-   "bytes": 1544
+   "bytes": 1544,
+   "for_clients": false
   },
   "species.inventory": {
    "path": "species/inventory.json",
@@ -1583,6 +1586,53 @@
    "encoding": "NAIP 2022 RGB with human footprint inpainted or synthesized, pavement bleached; JPEG q88",
    "sha256": "b9d47b7b656c254b207bc523db6f13e259d33bed30981acf054b577dd010e426",
    "bytes": 5139782
+  },
+  "client.species_prior": {
+   "path": "client/species_prior.json",
+   "kind": "raster",
+   "crs": "EPSG:32610",
+   "bounds": [
+    680000,
+    4270000,
+    690000,
+    4280000
+   ],
+   "pixels": 100,
+   "resolution_m": 100.0,
+   "source": "gbif",
+   "derived_from": "species.occurrences",
+   "encoding": "w: base64 uint8, cells x cells; w / 255 = d / (d + mean), d = usable records per 100 m cell summed over an 11 x 11 box (about 500 m radius), mean = mean of the non-zero d",
+   "use": "prior = 0.6 + 0.8 * w / 255 (0.6 unrecorded .. 1.4 heavily recorded); a species recorded only under licences a client may not carry is listed with a flat 0 (0.6); species with no record at all: 1 (neutral)",
+   "licenses_used": [
+    "CC BY 4.0",
+    "CC0 1.0"
+   ],
+   "records_used": 522,
+   "records_used_by_license": {
+    "CC0 1.0": 106,
+    "CC BY 4.0": 416
+   },
+   "records_excluded": {
+    "CC BY-NC 4.0": 25
+   },
+   "records_outside": 38,
+   "species": {
+    "aphelocoma_californica": 130,
+    "buteo_jamaicensis": 36,
+    "callipepla_californica": 54,
+    "canis_latrans": 0,
+    "cathartes_aura": 86,
+    "corvus_corax": 48,
+    "cyanocitta_stelleri": 26,
+    "melanerpes_formicivorus": 142,
+    "odocoileus_hemionus": 0,
+    "puma_concolor": 0,
+    "sciurus_griseus": 0,
+    "urocyon_cinereoargenteus": 0
+   },
+   "datasets": 3,
+   "sha256": "dbeb73adf96d90f8f6af86659635e37120677ac3492e5bfe291b6d9a810fec1b",
+   "bytes": 161583
   }
  },
  "sources": {
@@ -1895,6 +1945,18 @@
    "step": "unreal",
    "at": "2026-10-25T13:36:03Z",
    "seconds": 1.8,
+   "ok": true
+  },
+  {
+   "step": "species_prior",
+   "at": "2026-10-25T13:51:15Z",
+   "seconds": 0.2,
+   "ok": true
+  },
+  {
+   "step": "species_prior",
+   "at": "2026-10-25T14:00:00Z",
+   "seconds": 0.7,
    "ok": true
   }
  ]

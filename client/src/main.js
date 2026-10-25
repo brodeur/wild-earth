@@ -23,6 +23,7 @@ import { Water } from './water.js';
 import { Rocks } from './rocks.js';
 import { SquirrelControl } from './squirrelControl.js';
 import { WoodpeckerControl } from './woodpeckerControl.js';
+import { setupCredits } from './credits.js';
 
 const $ = id => document.getElementById(id);
 const html = document.documentElement;
@@ -79,6 +80,7 @@ async function main() {
   const flags = ['game', 'skip'].filter(k => params.get(k) === '1').map(k => `&${k}=1`).join('');
   if (pending) history.replaceState(null, '', `?tile=${tile.id}${flags}`);   // never keep the point in the URL
   $('tileName').textContent = tile.id;
+  const credits = setupCredits({ tile, link: $('creditsLink'), panel: $('credits') });   // HUD Data link: sources, licences, asset credits
   status('building terrain…');
   await new Promise(r => setTimeout(r, 20));
 
@@ -243,7 +245,7 @@ async function main() {
     return sound;
   };
 
-  window.__we = { tile, flight, raven, camera, veg, terrain, far, grass, roads, scene, renderer, minimap, atmosphere, sky, acorns, identify, places, peek, setPeek, sound, animals, arrival, rocks, squirrel, woodpecker };   // debugging handle
+  window.__we = { tile, flight, raven, camera, veg, terrain, far, grass, roads, scene, renderer, minimap, atmosphere, sky, acorns, identify, places, peek, setPeek, sound, animals, arrival, rocks, squirrel, woodpecker, credits };   // debugging handle
   if (!screen) makeSound();
 
   // Into the world: season, observer, sound, then the arrival flight over the chosen point.

@@ -15,7 +15,7 @@
   38.73825606650576
  ],
  "size_m": 10000,
- "generated_at": "2026-10-25T12:06:14Z",
+ "generated_at": "2026-10-25T13:59:59Z",
  "generator": {
   "name": "wild-earth-pipeline",
   "version": "0.2.0"
@@ -59,14 +59,17 @@
    "source": "gbif",
    "feature_count": 4528,
    "sha256": "967c471e3c385084b8a222ee1b0f50f48da3aba2ed3692588518a03c13043ba8",
-   "bytes": 2023866
+   "bytes": 2023866,
+   "for_clients": false,
+   "for_clients_note": "per-record licences include CC BY-NC; clients read client.species_prior, built from CC0 and CC BY records only"
   },
   "species.seasonal": {
    "path": "species/seasonal.json",
    "kind": "table",
    "source": "gbif",
    "sha256": "1994447435e2170796c8cded1ee8a7ba1bf603d17ac79b3cd9b5d6a6c82a1abd",
-   "bytes": 1615
+   "bytes": 1615,
+   "for_clients": false
   },
   "species.inventory": {
    "path": "species/inventory.json",
@@ -3289,6 +3292,54 @@
    },
    "sha256": "ff75466f37ba7d09f0fd1e71bf3b30d9bda4bc9260c08f4c61dfdffc94755c2c",
    "bytes": 367710
+  },
+  "client.species_prior": {
+   "path": "client/species_prior.json",
+   "kind": "raster",
+   "crs": "EPSG:32610",
+   "bounds": [
+    690000,
+    4280000,
+    700000,
+    4290000
+   ],
+   "pixels": 100,
+   "resolution_m": 100.0,
+   "source": "gbif",
+   "derived_from": "species.occurrences",
+   "encoding": "w: base64 uint8, cells x cells; w / 255 = d / (d + mean), d = usable records per 100 m cell summed over an 11 x 11 box (about 500 m radius), mean = mean of the non-zero d",
+   "use": "prior = 0.6 + 0.8 * w / 255 (0.6 unrecorded .. 1.4 heavily recorded); a species recorded only under licences a client may not carry is listed with a flat 0 (0.6); species with no record at all: 1 (neutral)",
+   "licenses_used": [
+    "CC BY 4.0",
+    "CC0 1.0"
+   ],
+   "records_used": 4424,
+   "records_used_by_license": {
+    "CC0 1.0": 346,
+    "CC BY 4.0": 4078
+   },
+   "records_excluded": {
+    "CC BY-NC 4.0": 49
+   },
+   "records_outside": 55,
+   "species": {
+    "aphelocoma_californica": 1097,
+    "buteo_jamaicensis": 476,
+    "callipepla_californica": 501,
+    "canis_latrans": 10,
+    "cathartes_aura": 734,
+    "corvus_corax": 467,
+    "cyanocitta_stelleri": 264,
+    "melanerpes_formicivorus": 784,
+    "odocoileus_hemionus": 65,
+    "puma_concolor": 0,
+    "sciurus_griseus": 8,
+    "sylvilagus_bachmani": 1,
+    "urocyon_cinereoargenteus": 17
+   },
+   "datasets": 11,
+   "sha256": "e0cf8e3d28118aa7d87b842a8540abaf5592d6bd3eacfe8715b57b1ec7f07ada",
+   "bytes": 175642
   }
  },
  "sources": {
@@ -3634,6 +3685,18 @@
    "seconds": 0.3,
    "ok": true,
    "note": "species mix only (riparian rows: willow, alder, cottonwood)"
+  },
+  {
+   "step": "species_prior",
+   "at": "2026-10-25T13:51:14Z",
+   "seconds": 0.3,
+   "ok": true
+  },
+  {
+   "step": "species_prior",
+   "at": "2026-10-25T13:59:59Z",
+   "seconds": 0.2,
+   "ok": true
   }
  ]
 }

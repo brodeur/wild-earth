@@ -1,7 +1,6 @@
 import * as THREE from 'three';
 import { mulberry32, SPECIES as PLANTS } from './trees.js';
 import { hash } from './vegetation.js';
-import { localXY } from './goto.js';
 import { addCaster, removeCaster } from './shadows.js';
 import { seasonOfDate } from './season.js';
 import { buildSquirrel, buildWoodpecker, buildRaven, buildDeer, buildQuail, buildJay, buildHawk, buildVulture, buildStellersJay,
@@ -17,11 +16,12 @@ import { buildSquirrel, buildWoodpecker, buildRaven, buildDeer, buildQuail, buil
 //
 // Population is deterministic per 30 m habitat cell, like the vegetation: a cell's hash against an
 // expected count from habitat suitability (class and tree canopy, woodland edges), a weak prior from
-// the tile's occurrence records within ~500 m, and the season. Only cells within LIVE_R of the player
-// hold animals; the set is rebuilt when the player has moved REBUILD_MOVE m, and an animal that stays
-// in the set keeps its state. Behaviour is a small state machine per animal, anchored on the oaks the
-// vegetation placed (veg.oaks). Only species the player's species perceives are created
-// (tile.perception.perceives[observer]); setObserver(code) switches.
+// the tile's CC0 / CC BY occurrence records within ~500 m (client.species_prior), and the season.
+// Only cells within LIVE_R of the player hold animals; the set is rebuilt when the player has moved
+// REBUILD_MOVE m, and an animal that stays in the set keeps its state. Behaviour is a small state
+// machine per animal, anchored on the oaks the vegetation placed (veg.oaks). Only species the
+// player's species perceives are created (tile.perception.perceives[observer]); setObserver(code)
+// switches.
 //
 // Life seen from the air (a raven at 30-150 m): birds in flight are what a real raven notices, so
 // there are flocks and flights. California quail coveys run across openings and burst into a short
@@ -508,43 +508,27 @@ export class Animals {
   }
 
   // ---- occurrence prior --------------------------------------------------------------------------
-  // Records per 100 m cell, smoothed over an 11 x 11 box (~500 m radius) with a summed-area table.
-  // prior = 0.6 + 0.8 * d / (d + dMean): 0.6 where nobody recorded the species, up to 1.4 where many did.
-  // A weak prior on purpose: records follow observers (roads, houses), not animals.
+  // The pipeline's density prior (client/species_prior.json, manifest layer client.species_prior;
+  // pipeline/derive.py species_prior), built from CC0 and CC BY occurrence records only: per species a
+  // byte per 100 m cell, w / 255 = d / (d + dMean), d = records summed over an 11 x 11 box (~500 m
+  // radius). prior = 0.6 + 0.8 w / 255: 0.6 where nobody recorded the species, up to 1.4 where many did.
+  // A weak prior on purpose: records follow observers (roads, houses), not animals. The records
+  // themselves (species/occurrences.geojson, CC BY-NC ones among them) are never fetched by a client.
   async loadPrior() {
     try {
-      const g = await (await fetch(this.tile.dir + 'species/occurrences.geojson')).json();
-      const N = Math.ceil(this.tile.size / 100), grids = {};
-      for (const f of g.features || []) {
-        const code = f.properties?.species_code, c = f.geometry?.coordinates;
-        if (!code || !c || !SPECIES.some(s => s.code === code)) continue;
-        const p = localXY(this.tile, c[1], c[0]); if (!p) continue;
-        const grid = grids[code] || (grids[code] = new Float32Array(N * N));
-        const i = Math.min(N - 1, Math.floor(p.x / 100)), j = Math.min(N - 1, Math.floor(p.north / 100));
-        grid[j * N + i]++;
-      }
+      const g = this.tile.speciesPrior;   // tilepackage.js loadSpeciesPrior
+      if (!g) throw new Error('tile has no client.species_prior layer; run the species_prior step');
       const prior = {};
-      for (const [code, grid] of Object.entries(grids)) {
-        const sat = new Float64Array((N + 1) * (N + 1));
-        for (let j = 0; j < N; j++) for (let i = 0; i < N; i++)
-          sat[(j + 1) * (N + 1) + i + 1] = grid[j * N + i] + sat[j * (N + 1) + i + 1] + sat[(j + 1) * (N + 1) + i] - sat[j * (N + 1) + i];
-        const d = new Float32Array(N * N); let sum = 0, nz = 0;
-        for (let j = 0; j < N; j++) for (let i = 0; i < N; i++) {
-          const i0 = Math.max(0, i - 5), i1 = Math.min(N, i + 6), j0 = Math.max(0, j - 5), j1 = Math.min(N, j + 6);
-          const v = sat[j1 * (N + 1) + i1] - sat[j0 * (N + 1) + i1] - sat[j1 * (N + 1) + i0] + sat[j0 * (N + 1) + i0];
-          d[j * N + i] = v; if (v > 0) { sum += v; nz++; }
-        }
-        prior[code] = { d, mean: nz ? sum / nz : 1, N };
-      }
+      for (const [code, w] of Object.entries(g.species))
+        if (SPECIES.some(sp => sp.code === code)) prior[code] = { w, N: g.cells, cell: g.cellM };
       this.prior = prior;
     } catch (e) { console.warn('animals: no occurrence prior', e); }
     this.priorReady = true; this.dirty = true;
   }
   priorAt(code, x, north) {
-    const p = this.prior?.[code]; if (!p) return 1;   // no records loaded: neutral; species with no records at all: neutral too
-    const i = Math.min(p.N - 1, Math.max(0, Math.floor(x / 100))), j = Math.min(p.N - 1, Math.max(0, Math.floor(north / 100)));
-    const d = p.d[j * p.N + i];
-    return 0.6 + 0.8 * d / (d + p.mean);
+    const p = this.prior?.[code]; if (!p) return 1;   // no prior loaded: neutral; species with no usable records: neutral too
+    const i = Math.min(p.N - 1, Math.max(0, Math.floor(x / p.cell))), j = Math.min(p.N - 1, Math.max(0, Math.floor(north / p.cell)));
+    return 0.6 + 0.8 * p.w[(p.N - 1 - j) * p.N + i] / 255;   // row 0 = north edge
   }
 
   // ---- oaks ---------------------------------------------------------------------------------------

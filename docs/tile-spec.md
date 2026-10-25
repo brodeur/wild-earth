@@ -85,13 +85,14 @@ tiles/<tile_id>/
   client/species_mix_c.png      derived   RGBA = willow, alder, cottonwood weights (sum with _a to 255), spare; present when the mix has riparian trees
   client/species_mix_index.png  derived   8-bit row index into species_mix.json mixes (0 = none), canvas-safe form of the three above
   client/species_mix.json       derived   channel order, EVT/BpS name -> species mix table used, per-tile fractions
+  client/species_prior.json     derived   animal density prior per species, a byte per 100 m cell, from CC0 and CC BY occurrence records only (see Species)
   unreal/heightmap.png          derived   16-bit Landscape heightmap at a valid size (2017 px)
   unreal/weights/<class>.png    derived   8-bit weight-blended layer per habitat class
   unreal/canopy_<kind>.png      derived   8-bit tree / shrub / herb cover for PCG density
   unreal/unreal.json            derived   Landscape scale, actor Z, component layout, layer list
   species/species.json          required  species list with roles, senses, sources
-  species/occurrences.geojson   required  occurrence points for listed species
-  species/seasonal.json         derived   per-species counts by month (phenology proxy)
+  species/occurrences.geojson   required  occurrence points for listed species; pipeline and viewer only (`for_clients: false`)
+  species/seasonal.json         derived   per-species counts by month (phenology proxy); counts every record, so `for_clients: false`
   perception.json               required  who perceives whom
   calendar.json                 required  species x season activities and resources
 ```
@@ -145,6 +146,12 @@ the v0 target. `edits` is an append-only log of viewer edits (mask polygons draw
 hand, species flags) so local knowledge survives a pipeline re-run. `sources` is described
 under Sources and attribution.
 
+A layer with `for_clients: false` (and a `for_clients_note` saying why) must not be fetched
+by a game client or copied into anything distributed: today `species.occurrences` and
+`species.seasonal`, whose records and counts include CC BY-NC ones. The viewer, a local
+review tool, may read them. A client reads the `client.*` layers, which are built from
+data a client may carry.
+
 ## Sources and attribution
 
 Every entry in the manifest's `sources` carries the licence and the credit a display must
@@ -190,8 +197,11 @@ Per source:
   CC BY records require attribution; the line credits GBIF.org and the contributing
   datasets, and the per-record dataset keys carry the rest. CC BY-NC records stay in the
   tile package as evidence for density models and the local-knowledge review and are not
-  shipped to a game client (decision log, 2026-10-23); a commercial derived work must
-  leave them out. Before a public release, register the records used as a GBIF derived
+  shipped to a game client (decision log, 2026-10-23): `species.occurrences` is marked
+  `for_clients: false`, and the client's density prior (`client/species_prior.json`) is
+  built from CC0 and CC BY records only, its layer recording the records used per licence
+  and the records left out. The prior lists the GBIF datasets it used, which the credits
+  panel links. A commercial derived work must leave the NC records out. Before a public release, register the records used as a GBIF derived
   dataset to get a citable DOI, and add it to the line.
 - **Public domain** (USGS 3DEP, NHDPlus HR, SGMC; USDA NAIP, SSURGO; LANDFIRE): no credit
   is required. The lines follow each publisher's requested citation (USGS credit
@@ -434,6 +444,19 @@ resolved at run time from species, not rasters.
 `role` is `playable` or `ambient`. `scale` is the LOD bucket (`insect`, `vole`,
 `squirrel`, `fox`, `deer`, `bird`). `confidence` is `unverified`, `verified` or
 `flagged`, set from the viewer.
+
+**Density prior.** `client/species_prior.json` (layer `client.species_prior`, build step
+`species_prior`, also run at the end of `species`; `pipeline/derive.py`) is what a client
+knows of the records. Only records whose licence is CC0 or CC BY and that fall inside the
+tile count. Per species: records per 100 m cell, summed over an 11 x 11 box (about 500 m
+radius) to `d`; `w = round(255 d / (d + mean))`, `mean` the mean of the non-zero `d`;
+stored as base64 bytes, `cells` x `cells` (100 x 100), row 0 the north edge. The client's
+prior is `0.6 + 0.8 w / 255`: 0.6 where nobody recorded the species, up to 1.4 where many
+did, a weak multiplier on habitat suitability because records follow observers. A species
+with no usable record is not in the file and gets 1 (neutral). The file also carries
+`licenses_used`, `records_used`, `records_excluded` (by licence), `records_outside` and
+`datasets` (GBIF dataset key, licence, records); the manifest layer repeats the counts
+per licence and per species.
 
 ## Species library
 

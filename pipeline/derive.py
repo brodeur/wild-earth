@@ -464,3 +464,105 @@ def client_features(tile: Tile) -> dict | None:
             "counts": {"roads": len(roads), "streams": len(streams), "waterbodies": len(waterbodies)},
             "streams_from": stream_source,
             "derived_from": ["footprint.mask", stream_source, "hydro.waterbodies"]}
+
+
+# ---- species density prior for game clients -----------------------------------------------------
+# Occurrence licences a game client may carry (tile-spec.md, Sources and attribution; decision log
+# 2026-10-23 and its 2026-10-25 addendum). CC BY-NC, unknown and anything else stay pipeline-only.
+CLIENT_LICENSES = {"cc0": "CC0 1.0", "cc_by": "CC BY 4.0"}
+PRIOR_CELL_M = 100.0
+PRIOR_BOX = 5          # box half-width in cells: an 11 x 11 sum, about a 500 m radius
+
+
+def record_license_class(url: str | None) -> str:
+    """'cc0', 'cc_by', 'cc_by_nc' or 'other' from a GBIF record's licence URL."""
+    u = (url or "").lower()
+    if "publicdomain/zero" in u:
+        return "cc0"
+    if "/licenses/by-nc" in u:
+        return "cc_by_nc"
+    if "/licenses/by/" in u:
+        return "cc_by"
+    return "other"
+
+
+def species_prior(tile: Tile) -> dict:
+    """client/species_prior.json: per species, records per 100 m cell summed over an 11 x 11 box
+    (d), from CC0 and CC BY records only, shipped as w = d / (d + mean of the non-zero d) in a byte
+    (0..255, base64, row 0 = north edge). The client's prior is 0.6 + 0.8 w / 255: 0.6 where nobody
+    recorded the species, up to 1.4 where many did. A species with no usable record is left out
+    (neutral, 1). The records themselves (species/occurrences.geojson) never reach a client."""
+    import base64
+
+    occ = json.loads(tile.path("species/occurrences.geojson").read_text())["features"]
+    size = float(TILE_SIZE_M)
+    n = int(np.ceil(size / PRIOR_CELL_M))
+    x0, y0 = tile.bounds[0], tile.bounds[1]
+    to_tile = Transformer.from_crs("EPSG:4326", tile.crs, always_xy=True)
+    used, excluded, outside, datasets = {}, {}, 0, {}
+    pts: dict[str, list] = {}
+    recorded: set = set()   # species with any record in the file, usable or not
+    for f in occ:
+        p = f.get("properties") or {}
+        code, c = p.get("species_code"), (f.get("geometry") or {}).get("coordinates")
+        if not code or not c:
+            continue
+        lic = record_license_class(p.get("license"))
+        recorded.add(code)
+        if lic not in CLIENT_LICENSES:
+            excluded[lic] = excluded.get(lic, 0) + 1
+            continue
+        e, nn = to_tile.transform(c[0], c[1])
+        x, north = e - x0, nn - y0
+        if not (0 <= x <= size and 0 <= north <= size):
+            outside += 1
+            continue
+        pts.setdefault(code, []).append((x, north))
+        used[lic] = used.get(lic, 0) + 1
+        k = p.get("dataset") or "unknown"
+        d = datasets.setdefault(k, {"key": k, "license": CLIENT_LICENSES[lic], "records": 0})
+        d["records"] += 1
+    species = {}
+    # A species recorded here only under licences a client may not carry gets a flat grid (prior 0.6,
+    # "recorded, nowhere in particular"): the tuned densities were set against those records, and a
+    # neutral 1 would raise it by two thirds. A species with no record at all stays unlisted (1).
+    for code in sorted(recorded):
+        grid = np.zeros((n, n), np.float64)          # [j = cells from the south edge, i = from the west]
+        for x, north in pts.get(code, []):
+            i, j = min(n - 1, int(x // PRIOR_CELL_M)), min(n - 1, int(north // PRIOR_CELL_M))
+            grid[j, i] += 1
+        sat = np.zeros((n + 1, n + 1))
+        sat[1:, 1:] = grid.cumsum(0).cumsum(1)
+        idx = np.arange(n)
+        lo, hi = np.clip(idx - PRIOR_BOX, 0, n), np.clip(idx + PRIOR_BOX + 1, 0, n)
+        d = (sat[hi][:, hi] - sat[lo][:, hi] - sat[hi][:, lo] + sat[lo][:, lo])
+        nz = d[d > 0]
+        mean = float(nz.mean()) if nz.size else 1.0
+        w = np.round(255 * d / (d + mean)).astype(np.uint8)[::-1]   # row 0 = north edge
+        species[code] = {"records": len(pts.get(code, [])), "mean": round(mean, 4),
+                         "w": base64.b64encode(w.tobytes()).decode("ascii")}
+    out = {
+        "tile_id": tile.tile_id, "cell_m": PRIOR_CELL_M, "cells": n, "rows": "row 0 = north edge, column 0 = west edge",
+        "encoding": "w: base64 uint8, cells x cells; w / 255 = d / (d + mean), d = usable records per 100 m cell "
+                    "summed over an 11 x 11 box (about 500 m radius), mean = mean of the non-zero d",
+        "use": "prior = 0.6 + 0.8 * w / 255 (0.6 unrecorded .. 1.4 heavily recorded); a species recorded only under licences a client may not carry is listed with a flat 0 (0.6); species with no record at all: 1 (neutral)",
+        "licenses_used": sorted(CLIENT_LICENSES[k] for k in used),
+        "records_used": sum(used.values()), "records_excluded": excluded, "records_outside": outside,
+        "datasets": sorted(datasets.values(), key=lambda r: -r["records"]),
+        "species": species,
+    }
+    p = tile.path("client/species_prior.json")
+    p.parent.mkdir(parents=True, exist_ok=True)
+    p.write_text(json.dumps(out, separators=(",", ":")) + "\n")
+    return {
+        "path": "client/species_prior.json", "kind": "raster", "crs": tile.crs, "bounds": list(tile.bounds),
+        "pixels": n, "resolution_m": PRIOR_CELL_M, "source": "gbif", "derived_from": "species.occurrences",
+        "encoding": out["encoding"], "use": out["use"],
+        "licenses_used": out["licenses_used"],
+        "records_used": out["records_used"],
+        "records_used_by_license": {CLIENT_LICENSES[k]: v for k, v in sorted(used.items())},
+        "records_excluded": {"CC BY-NC 4.0" if k == "cc_by_nc" else k: v for k, v in sorted(excluded.items())},
+        "records_outside": outside,
+        "species": {c: s["records"] for c, s in species.items()},
+        "datasets": len(datasets),
+    }

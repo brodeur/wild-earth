@@ -630,3 +630,16 @@ density prior, against the 2026-10-23 decision; the prior must be built by the
 pipeline from CC0 and CC BY records only, and the client given a credits panel.
 Open: a GBIF derived-dataset DOI before any public release; the California Geological
 Survey map's own terms under the SGMC.
+
+Addendum, fixed: the pipeline now builds the prior (`client/species_prior.json`, layer
+`client.species_prior`, build step `species_prior`) from CC0 and CC BY records only, a
+byte per species per 100 m cell, and the client reads that and never requests
+`species/occurrences.geojson`, which the manifest now marks `for_clients: false` (as
+`species/seasonal.json`, whose monthly counts include every record). So the 2026-10-23
+question of whether a surface derived partly from NC records is commercial use no longer
+arises for the client. The cost: the home tile's deer prior keeps 11 of its 39 in-tile
+records, and fox, coyote, brush rabbit and mountain lion (all their records NC) fall back
+to the neutral prior, as a species with no records always did. The HUD has a "Data" link
+to a credits panel built from the manifest's sources, required lines first, with the
+GBIF datasets behind the prior and the model, texture and icon credits; the viewer's
+sources table shows each line and its link.

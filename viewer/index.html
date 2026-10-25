@@ -44,6 +44,12 @@
   table { width:100%; border-collapse:collapse; font-size:12px; }
   td { padding:3px 4px; border-bottom:1px solid var(--line); vertical-align:top; }
   td:first-child { color:var(--muted); white-space:nowrap; }
+  th { padding:3px 4px; border-bottom:1px solid var(--line); text-align:left; color:var(--muted); font-weight:500; font-size:11px; }
+  #sources a { color:var(--accent); }
+  #sources table { table-layout:fixed; }
+  #sources td { overflow-wrap:anywhere; }
+  #sources th:nth-child(1) { width:24%; } #sources th:nth-child(2) { width:34%; }
+  #sources td:first-child { white-space:normal; overflow-wrap:normal; font-size:11px; }
   details summary { cursor:pointer; color:var(--muted); font-size:11px; text-transform:uppercase; letter-spacing:.08em; margin:18px 0 8px; }
   #tip { position:absolute; pointer-events:none; background:#000c; color:#fff; padding:6px 8px; border-radius:6px; font-size:12px; max-width:260px; z-index:5; }
   #legend { position:absolute; left:12px; bottom:12px; background:#0f1512cc; padding:8px 10px; border-radius:8px; font-size:12px; z-index:4; }
@@ -272,7 +278,12 @@ function renderPipeline(){
   const log = (m.log||[]).map(l=>`<tr><td>${l.step}</td><td>${l.ok?'<span class="badge ok">ok</span>':'<span class="badge bad">failed</span>'} ${l.seconds}s${l.error?'<br><span class="sub">'+l.error+'</span>':''}</td></tr>`).join('');
   const layers = Object.entries(m.layers||{}).map(([k,v])=>`<tr><td>${k}</td><td>${v.path}<br><span class="sub">${[v.kind, v.resolution_m?v.resolution_m+' m':null, v.feature_count!=null?v.feature_count+' features':null, v.count!=null?v.count+' rows':null, fmtBytes(v.bytes), v.masked_fraction!=null?(v.masked_fraction*100).toFixed(1)+'% masked':null].filter(Boolean).join(' · ')}</span></td></tr>`).join('');
   $('pipeline').innerHTML = `<div class="sub">generated ${m.generated_at} by ${m.generator?.name} ${m.generator?.version}</div><table>${log}</table><h2>Layers</h2><table>${layers}</table>`;
-  $('sources').innerHTML = `<table>${Object.entries(m.sources||{}).map(([k,v])=>`<tr><td>${k}</td><td>${v.name}<br><span class="sub">${v.license} · retrieved ${v.retrieved}</span></td></tr>`).join('')}</table>`;
+  // Sources with the credit line a display must show (tile-spec.md, Sources and attribution): required lines first,
+  // word for word, linked to attribution_url; the licence linked to license_url.
+  const href = u => /^https?:\/\//i.test(u||'') ? esc(u) : null;
+  const link = (text, u) => href(u) ? `<a href="${href(u)}" target="_blank" rel="noopener">${esc(text)}</a>` : esc(text);
+  const srcs = Object.entries(m.sources||{}).sort(([,a],[,b]) => (b.attribution_required===true) - (a.attribution_required===true));
+  $('sources').innerHTML = `<table><tr><th>source</th><th>data</th><th>attribution</th></tr>${srcs.map(([k,v])=>`<tr><td>${esc(k)}</td><td>${esc(v.name)}<br><span class="sub">${link(v.license, v.license_url)} · retrieved ${esc(v.retrieved)}</span></td><td>${v.attribution ? link(v.attribution, v.attribution_url) : '<span class="badge bad">missing</span>'}<br><span class="sub">${v.attribution_required===true ? '<span class="badge">required</span>' : v.attribution_required===false ? 'courtesy' : '<span class="badge bad">unmarked</span>'}${href(v.attribution_url) ? ' · '+esc(v.attribution_url.replace(/^https?:\/\/(www\.)?/,'').replace(/\/$/,'')) : ''}</span></td></tr>`).join('')}</table>`;
 }
 
 /* ---------- edits: local knowledge for the manifest's append-only edits log ----------

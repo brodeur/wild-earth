@@ -2,6 +2,7 @@
 
     python -m pipeline.build_tile --anchor -120.7985 38.7296
     python -m pipeline.build_tile --tile utm10n_690_4280 --steps species,derive
+    python -m pipeline.build_tile --tile utm10n_690_4280 --steps species_prior   # client prior only, no fetch
 """
 from __future__ import annotations
 
@@ -31,18 +32,20 @@ def load_manifest(tile: Tile) -> dict:
     }
 
 
-def add_layer(m: dict, tile: Tile, name: str, info: dict) -> None:
+def add_layer(m: dict, tile: Tile, name: str, info: dict, fetched: bool = True) -> None:
+    """`fetched=False` for a layer derived from data already in the package: its sources keep the
+    date they were retrieved on."""
     p = tile.dir / info["path"]
     if p.exists():
         info["sha256"] = sha256(p)
         info["bytes"] = p.stat().st_size
     m["layers"][name] = info
-    record_source(m, info.get("source"))
+    record_source(m, info.get("source"), fetched)
     for src in info.get("sources_used", []):
-        record_source(m, src)
+        record_source(m, src, fetched)
 
 
-def record_source(m: dict, src: str | None) -> None:
+def record_source(m: dict, src: str | None, fetched: bool = True) -> None:
     """Copy a source's registry entry (licence and attribution included) into the manifest."""
     sources = all_sources()
     if not src or src not in sources:
@@ -50,7 +53,23 @@ def record_source(m: dict, src: str | None) -> None:
     missing = [f for f in ATTRIBUTION_FIELDS if f not in sources[src]]
     if missing:
         raise ValueError(f"source {src} has no {', '.join(missing)}; see tile-spec.md, Sources")
-    m["sources"][src] = {**sources[src], "retrieved": today()}
+    prev = m["sources"].get(src, {}).get("retrieved")
+    m["sources"][src] = {**sources[src], "retrieved": today() if fetched or not prev else prev}
+
+
+def add_species_prior(m: dict, tile: Tile) -> None:
+    """The client's animal density prior from CC0 / CC BY records (derive.species_prior); the
+    records themselves are marked pipeline-only (tile-spec.md, `for_clients`)."""
+    from .derive import species_prior
+    occ = m["layers"].get("species.occurrences")
+    if not occ:
+        raise RuntimeError("no species.occurrences layer; run the species step")
+    occ["for_clients"] = False
+    occ["for_clients_note"] = ("per-record licences include CC BY-NC; clients read client.species_prior, "
+                               "built from CC0 and CC BY records only")
+    if "species.seasonal" in m["layers"]:     # monthly counts over every record, CC BY-NC included
+        m["layers"]["species.seasonal"]["for_clients"] = False
+    add_layer(m, tile, "client.species_prior", species_prior(tile), fetched=False)
 
 
 def run(tile: Tile, steps: list[str], force=False) -> dict:
@@ -102,6 +121,9 @@ def run(tile: Tile, steps: list[str], force=False) -> dict:
                 write_json(tile.path("calendar.json"), {"seasons": SEASONS, "activities": CALENDAR})
                 add_layer(m, tile, "perception", {"path": "perception.json", "kind": "table"})
                 add_layer(m, tile, "calendar", {"path": "calendar.json", "kind": "table"})
+                add_species_prior(m, tile)
+            elif step == "species_prior":
+                add_species_prior(m, tile)
             elif step == "derive":
                 from . import derive
                 if "terrain.dem" in m["layers"]:

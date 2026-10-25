@@ -271,6 +271,23 @@ function inRing(x, y, ring) {
 }
 function ringArea(ring) { let a = 0; for (let i = 0, j = ring.length - 1; i < ring.length; j = i++) a += (ring[j][0] + ring[i][0]) * (ring[j][1] - ring[i][1]); return a / 2; }
 
+// The animal density prior (client/species_prior.json, layer client.species_prior; pipeline/derive.py
+// species_prior), built from CC0 and CC BY occurrence records only: the records themselves
+// (species/occurrences.geojson, CC BY-NC ones among them) are pipeline-only and never fetched here.
+// Resolves to { cells, cellM, species: { code: Uint8Array(cells * cells), row 0 = north edge } } or null;
+// animals.js turns a byte w into the prior 0.6 + 0.8 w / 255.
+async function loadSpeciesPrior(url) {
+  const g = await fetch(url).then(r => r.ok ? r.json() : null).catch(() => null);
+  if (!g?.species || !(g.cells > 0)) return null;
+  const species = {};
+  for (const [code, s] of Object.entries(g.species)) {
+    const bin = atob(s.w || ''), w = new Uint8Array(bin.length);
+    for (let k = 0; k < bin.length; k++) w[k] = bin.charCodeAt(k);
+    if (w.length === g.cells * g.cells) species[code] = w;
+  }
+  return { cells: g.cells, cellM: g.cell_m || 100, species, datasets: g.datasets || [], licenses: g.licenses_used || [] };
+}
+
 export async function loadTile(tileId, base = '../tiles/') {
   const idx = await (await fetch(base + 'index.json', { cache: 'no-cache' })).json();
   const id = tileId && idx.tiles.some(t => t.tile_id === tileId) ? tileId : idx.tiles[0]?.tile_id;
@@ -280,7 +297,7 @@ export async function loadTile(tileId, base = '../tiles/') {
   const L = m.layers;
   for (const k of ['client.heights', 'client.texture', 'client.habitat', 'client.canopy', 'client.masks'])
     if (!L[k]) throw new Error(`tile ${id} lacks ${k}; run the derive step`);
-  const [heights, texture, habitat, canopy, masks, species, perception, calendar, imagery, features, roads, imageryTexture, mast, mixIndex, mixJson, outcrop, geology, soils, groundClasses, profile] = await Promise.all([
+  const [heights, texture, habitat, canopy, masks, species, perception, calendar, imagery, features, roads, imageryTexture, mast, mixIndex, mixJson, outcrop, geology, soils, groundClasses, profile, speciesPrior] = await Promise.all([
     loadImageData(dir + L['client.heights'].path), loadImageData(dir + L['client.texture'].path),
     loadImageData(dir + L['client.habitat'].path), loadImageData(dir + L['client.canopy'].path),
     loadImageData(dir + L['client.masks'].path),
@@ -309,6 +326,8 @@ export async function loadTile(tileId, base = '../tiles/') {
     L['client.ground_classes'] ? fetch(dir + L['client.ground_classes'].path).then(r => r.ok ? r.json() : null).catch(() => null) : null,
     // rewilded water beds and corridor (channel_profile B); optional
     L['client.channel_profile'] ? loadImageData(dir + L['client.channel_profile'].path).catch(() => null) : null,
+    // animal density prior from CC0 / CC BY records (animals.js); optional, null on older tiles
+    L['client.species_prior'] ? loadSpeciesPrior(dir + L['client.species_prior'].path) : null,
   ]);
   if (features) markRewilded(features, m);
   const rewild = profile ? new RewildGrid(profile, m.size_m || 10000) : null;
@@ -330,7 +349,7 @@ export async function loadTile(tileId, base = '../tiles/') {
     waterMask: features ? new WaterMask(features, size, roads?.width || 2000) : null,
     // the imagery's own summer grass and oak means (sRGB 0..1), the baseline for season recolouring
     imageryTextureImage: imageryTexture, imageryRef: imageryTexture ? { grass_mean: ti.grass_mean, oak_mean: ti.oak_mean } : null,
-    species, perception, calendar, imagery, features,
+    species, perception, calendar, imagery, features, speciesPrior,
     latitude: (m.bounds_wgs84[1] + m.bounds_wgs84[3]) / 2,
   };
 }
