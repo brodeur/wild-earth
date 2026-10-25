@@ -1,0 +1,75 @@
+{
+  "id": "lepus_californicus",
+  "aliases": [
+    "black_tailed_jackrabbit",
+    "jackrabbit"
+  ],
+  "scientific": "Lepus californicus",
+  "common": "black-tailed jackrabbit",
+  "body_plan": "rodent",
+  "size": {
+    "length_m": 0.55,
+    "shoulder_or_wingspan_m": 0.29,
+    "note": "Head and body 47-63 cm, ear 10-13 cm from the notch, hind foot 12-14 cm, tail 5-11 cm, 1.3-3.1 kg (brief). The build script scales head and body (nose to tail root, measured along the spine since the sit tilts the body) to 0.55 m; sitting hunched it stands 0.29 m at the back and 0.43 m to the ear tips; the visible ear measures about 13 cm."
+  },
+  "source": {
+    "kind": "cc0_download",
+    "title": "Rabbit",
+    "author": "Čestmír Dammer (OpenGameArt user CDmir), made for the game Kelgar (www.kelgar.org)",
+    "url": "https://opengameart.org/content/rabbit-0",
+    "file": "https://opengameart.org/sites/default/files/rabbit-FBX.7z",
+    "original": "FBX in a 7z archive: rigged rabbit (1,700-triangle body plus alpha fur cards and whisker strands), 10 clips, 1K diffuse and normal maps; a long-eared, long-legged hare-like rabbit. The same archive (same sha256) as the brush rabbit's source",
+    "job": "library/animals/jobs/lepus_californicus/download-opengameart/job.json",
+    "prompt": null,
+    "reference_image": null,
+    "job_id": null,
+    "date": "2026-10-25",
+    "adopted_by": "tools/build_jackrabbit.py"
+  },
+  "license": "CC0 1.0",
+  "license_detail": {
+    "source_terms": "The OpenGameArt page lists \"License(s): CC0\"; the archive's License.txt reads \"License: CC0 - Public Domain\" (Čestmír Dammer). CC0 1.0: https://creativecommons.org/publicdomain/zero/1.0/.",
+    "redistribute_under_cc_by_sa": true,
+    "note": "CC0 places no conditions, so the adopted tiers may ship in client/assets and be relicensed with the project's assets. Credit is kept anyway (build script header, GLB asset.copyright). No Meshy credits spent."
+  },
+  "tiers": {
+    "lod0": 1000,
+    "lod1": 350,
+    "lod2": 80,
+    "file": "client/assets/jackrabbit.glb",
+    "attributes": [
+      "POSITION",
+      "COLOR_0 (linear)",
+      "_PART",
+      "_PARTW",
+      "_PIVOT"
+    ]
+  },
+  "rig": "rodent template R (animalModels.js), as the brush rabbit: BODY hindquarters, CHEST (pivot at the lumbar joint), HEAD and LEG_A (fore pair, pivots at the elbows) children of the chest, LEG_B (hind pair with the long hind feet, pivots at the stifles), TAIL; from the source skin weights; parent pivots in extras.rig. No TAIL_TIP and no EARS part (the ears ride with the head; laying them flat needs an EARS part, proposed in the brief).",
+  "candidates": [
+    {
+      "title": "Jackrabbit",
+      "author": "dook (Poly by Google)",
+      "url": "https://poly.pizza/m/biNOm96olTH",
+      "license": "CC BY 3.0",
+      "cost": 0,
+      "note": "static, faceted, about 994 triangles; not downloaded; fallback only"
+    },
+    {
+      "title": "Meshy text-to-3D preview, prompt A of the brief",
+      "license": "paid-plan output, CC BY-SA 4.0",
+      "cost": "5 credits (meshy-6-lite) or 20 (latest)",
+      "note": "not run: the CC0 mesh read right"
+    }
+  ],
+  "status": "agent draft, needs local sign-off",
+  "accuracy_notes": "Fur cards and whiskers dropped; posed in the source's sitting crouch (Sitting clip frame 1), symmetrised. Made a hare: the forearms 1.12x (elbows, chest, head and ears lifted, paws kept on the ground, the lift fading along the spine to the hips), the ears 0.92x long and 1.3x broad about their base (about 13 cm from where they leave the head, inside the brief's 10-13 cm), the body 0.9x wide, the tail kept. Colour: the source texture's ticking multiplied onto the brief's palette: grizzled grey-buff back, paler flanks, buff nape and chest, creamy belly and inner legs, pale buff legs and feet, grey-buff ear backs with black tips and pale insides, black tail top and a narrow black rump stripe, tail white below, a large dark eye with a pale ring. Reads as a lean, long-eared hare sitting up, clearly not the brush rabbit. Still wrong or unchecked: the head is the source rabbit's (rounder and shorter-muzzled than a jackrabbit's); the sit is the alert one with the fore body raised rather than the low, back-rounded day rest; the ears cannot lie flat (no EARS part); the black stripe is a few large faces; the hind feet are about 12 cm with the toes, the short end of 12-14 cm; lod2 legs are spikes. The brush rabbit's build has a bug this script avoids: after symmetrize the right ear carries the left ear's group names, so build_rabbit.py scaled the right ear about the left ear's base (its right ear sits about 1 cm nearer the midline). A local check of overall colour and ear length is wanted.",
+  "authors": [
+    "Čestmír Dammer (model)",
+    "agent (Claude) for Aaron Brodeur (adoption, pose, reshaping, recolour, tiers)"
+  ],
+  "sources": [
+    "library/animals/drafts/lepus_californicus.md (field marks, sizes, palette, tiers; its sources are listed there)",
+    "https://opengameart.org/content/rabbit-0"
+  ]
+}
