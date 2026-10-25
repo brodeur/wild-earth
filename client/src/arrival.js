@@ -12,7 +12,9 @@ import { PlaceNames } from './placenames.js';
 // sessionStorage), so Begin always finds its world ready and its press can start the sound.
 // Arrival drives RavenFlight's pose and chase camera until it hands control to the player.
 
-const FLYABLE = new Set(['corvus_corax']);
+// Playable today: the raven (RavenFlight) and the western gray squirrel (squirrelControl.js). The squirrel's
+// arrival is not this flight but a short run down and out of the nearest oak (SquirrelControl.arrive).
+const PLAYABLE = new Set(['corvus_corax', 'sciurus_griseus']);
 const SEASON_LINE = {   // what the foothills are doing, hand-written; the raven half comes from calendar.json
   winter: 'Rain greens the hills; the blue oaks stand bare.',
   spring: 'Wildflowers, new oak leaves, creeks running full.',
@@ -21,10 +23,13 @@ const SEASON_LINE = {   // what the foothills are doing, hand-written; the raven
 };
 const MONTH = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
 const ROAD_WEIGHT = { motorway: 6, trunk: 5, primary: 4, secondary: 3, tertiary: 1.5 };
-const LAST_TILE = 'we.lastTile';
+const LAST_TILE = 'we.lastTile', LAST_SPECIES = 'we.lastSpecies';
 
 export const lastTile = () => { try { return localStorage.getItem(LAST_TILE); } catch { return null; } };
 export const rememberTile = id => { try { localStorage.setItem(LAST_TILE, id); } catch { /* storage off */ } };
+// The species chosen last time (the "who" card preselected on the next visit), remembered like the tile.
+export const lastSpecies = () => { try { const c = localStorage.getItem(LAST_SPECIES); return PLAYABLE.has(c) ? c : null; } catch { return null; } };
+export const rememberSpecies = code => { try { if (PLAYABLE.has(code)) localStorage.setItem(LAST_SPECIES, code); } catch { /* storage off */ } };
 
 const esc = s => String(s).replace(/[&<>"]/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' })[c]);
 const getJSON = url => fetch(url).then(r => r.ok ? r.json() : null).catch(() => null);
@@ -59,7 +64,7 @@ export class OpeningScreen {
     this.root = root; this.index = index; this.tileId = tileId; this.onBegin = onBegin;
     this.live = seasonOfDate();
     this.season = SEASONS.includes(carried?.season) ? carried.season : this.live;
-    this.species = 'corvus_corax';
+    this.species = PLAYABLE.has(carried?.species) ? carried.species : lastSpecies() || 'corvus_corax';
     this.point = null;          // { x, north } in this tile, or null for the tile centre
     this.ready = false; this.begun = false; this.places = null; this.data = {};
     this.render();
@@ -140,8 +145,9 @@ export class OpeningScreen {
     const per = this.data.perception?.perceives || {};
     const box = this.$('.op-species'); box.classList.remove('muted');
     if (!playable.length) { box.textContent = 'no species list in this tile'; return; }
+    if (!playable.some(s => s.code === this.species && PLAYABLE.has(s.code))) this.species = 'corvus_corax';   // not playable in this tile
     box.innerHTML = playable.map(s => {
-      const list = per[s.code], flyable = FLYABLE.has(s.code), n = list ? list.length : all.length;
+      const list = per[s.code], flyable = PLAYABLE.has(s.code), n = list ? list.length : all.length;
       const sees = new Set(list || all.map(a => a.code));
       const dots = all.map(a => `<i class="${sees.has(a.code) ? 'on' : ''}" title="${esc(a.common)}"></i>`).join('');
       const title = list ? `perceives: ${list.map(c => names[c] || c).join(', ')}` : 'no perception matrix: everything';
@@ -159,7 +165,7 @@ export class OpeningScreen {
   pickTile(id) {
     if (id === this.tileId) { this.point = null; this.$('.op-input').value = ''; this.say(''); this.update(); return; }
     this.say(`loading ${id}…`);
-    switchTile(id, null, { screen: { season: this.season } });
+    switchTile(id, null, { screen: { season: this.season, species: this.species } });
   }
 
   // A typed place: this tile -> arrive over it; another built tile -> switch to it; unbuilt -> offer a build.
@@ -170,7 +176,7 @@ export class OpeningScreen {
     const loc = pointInTileId(this.tileId, p);
     if (loc) { this.point = loc; this.say(`in ${this.tileId}; you will arrive over this point`); this.update(); return; }
     const other = this.index.tiles.map(t => t.tile_id).find(id => pointInTileId(id, p));
-    const carry = { screen: { season: this.season } };
+    const carry = { screen: { season: this.season, species: this.species } };
     if (other) { this.say(`in ${other}; loading…`); return switchTile(other, p, carry); }
     this.say('looking up tile…');
     try {
@@ -179,7 +185,7 @@ export class OpeningScreen {
       if (t.built) { this.say(`loading ${t.tile_id}…`); return switchTile(t.tile_id, p, carry); }
       this.say(`${t.tile_id} is not built yet. `);
       const b = document.createElement('button'); b.className = 'op-build'; b.textContent = `Build ${t.tile_id}`;
-      b.onclick = () => { b.remove(); this.say(`asking the dev server to build ${t.tile_id}…`); buildTile(p, t.tile_id, this.say, { screen: { season: this.season } }).catch(e => this.say('error: ' + e.message, true)); };
+      b.onclick = () => { b.remove(); this.say(`asking the dev server to build ${t.tile_id}…`); buildTile(p, t.tile_id, this.say, { screen: { season: this.season, species: this.species } }).catch(e => this.say('error: ' + e.message, true)); };
       this.$('.op-say').append(b);
       if (!fromLoad) b.focus();
     } catch (e) { this.say(e.message, true); }
@@ -214,6 +220,7 @@ export class OpeningScreen {
     if (this.begun) return;
     this.begun = true;
     const b = this.$('.begin'); b.disabled = true;
+    rememberSpecies(this.species);
     if (!this.ready) { b.textContent = 'Preparing…'; this.setPrep('almost ready; the world is still loading'); }
     this.onBegin({ tileId: this.tileId, season: this.season, species: this.species, point: this.point, caption: this.caption() });
   }

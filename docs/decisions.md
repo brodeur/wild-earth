@@ -395,3 +395,25 @@ during a game; claims keep two animals off one acorn but never block the player.
 with about 110 collectors live: 0.05 ms more in animals.js and 0.02-0.05 ms in the game
 per frame. Rejected for now: networking, playable squirrel and woodpecker, pilfering by
 the player, granary defence. Design and state shape in `docs/game-acorn-stash.md` (v2).
+
+## 2026-10-25: the western gray squirrel is playable, a ground and trunk controller beside the raven's
+
+Chosen at the opening screen's "who" beside the raven and remembered like the tile
+(`we.lastSpecies`). Decided: a separate controller (`client/src/squirrelControl.js`) that
+drives the same `flight.pos` and `flight.yaw` RavenFlight does, so the forest, grass,
+minimap, identify, animals, acorn game and sound follow a squirrel unchanged; main.js
+picks one controller per frame and flight.js and raven.js are untouched. The squirrel
+runs at up to 6 m/s with a bound whose stride lengthens with speed, jumps a ~0.5 m,
+3-4 m arc, sits up, and climbs any tree of the near set (not shrubs) by its drawn bole
+(the variant's stem and the instance's rotation, through animals.js trunkAt) to 85 % of
+its height; the camera chases at 0.6 m and 2.5 m, and on a trunk stands off the bark
+over its shoulder and orbits with it. The ground is the drawn terrain mesh plus the tops
+of the close rocks (a downward ray). The model is the AI squirrel's drawn mesh (a clone
+of lod0 with its own aAnim and aAnim2), posed by the rodent rig from the controller.
+Acorns: one in the mouth; E picks up, buries on open ground, digs up a dug mark, and on
+a trunk takes a crown acorn within 1.2 m or runs out a limb to one within 3.2 m; no
+stash holes. A dug-up acorn re-buried scores nothing (collector `dug` count in
+applyEvent), so a cache cannot be farmed. The arrival is a short run down and out of
+the oak nearest the chosen point. Rejected for now: a skeleton with clips (the brief's
+"needs a real skeleton" stays open), a squirrel call (C is silent for a squirrel), and
+other perception changes than the existing perception matrix.

@@ -241,7 +241,7 @@ const wrapAngle = a => Math.atan2(Math.sin(a), Math.cos(a));
 
 // A point on an oak's trunk axis at height h above the ground, following the variant's lean (the
 // same frame as acorns.js trunkPoint: limb along +y, rotateZ(lean), rotateY(leanDir + rot), scale).
-function trunkAt(oak, h, out) {
+export function trunkAt(oak, h, out) {
   const st = oak.stem, s = oak.scale;
   if (!st) { out.x = oak.x; out.y = oak.y + h; out.z = oak.z; out.r = 0.25 * s; return out; }
   const sl = Math.sin(st.lean), cl = Math.cos(st.lean), A = st.leanDir + oak.rot;
@@ -365,6 +365,15 @@ export class Animals {
     if (st.planar) for (const m of st.planar) m.visible = false;
   }
   meshOn(k) { const st = this.drawn[k]; return !!(st && st.on && st.tiers); }
+  // The player's own animal (squirrelControl.js) draws from the same model as the AI's: the drawn mesh's lod0 once it
+  // has loaded (else the procedural model), with its rig and template values. Resolves to { model, geometry, drawn, sp };
+  // sp is the species slot carryPoint() takes.
+  async playerModel(which = 'squirrel') {
+    const k = +Object.keys(DRAWN).find(i => DRAWN[i].name === which);
+    const st = this.drawn[k]; if (st?.loading) await st.loading;
+    return this.meshOn(k) ? { model: st.model, geometry: st.tiers[0].geometry, drawn: true, sp: k }
+      : { model: SPECIES[k].model, geometry: this.meshes[k].geometry, drawn: false, sp: k };
+  }
   buildTiers(k, model) {
     const sp = SPECIES[k], cap = sp.cap, D = DRAWN[k], st = this.drawn[k];
     st.model = model;
@@ -826,7 +835,8 @@ export class Animals {
   sqUpdate(a, dt, px, py, pz) {
     const r = a.rng, H = this.heights;
     const dx = a.x - px, dy = a.y - py, dz = a.z - pz, near2 = dx * dx + dy * dy + dz * dz;
-    if ((a.state === S_PAUSE || a.state === S_WORK || a.state === S_EAT || (a.state === S_RUN && a.next !== S_CLIMB)) && near2 < 15 * 15) {
+    // (a player squirrel, squirrelControl.js, is one of them: it does not send them up the trees)
+    if ((a.state === S_PAUSE || a.state === S_WORK || a.state === S_EAT || (a.state === S_RUN && a.next !== S_CLIMB)) && near2 < 15 * 15 && this.observer !== SPECIES[SQ].code) {
       if (a.task !== T_STORE) this.dropTask(a);   // an acorn it holds goes up the tree with it
       if (a.state === S_EAT) a.carry = 0;          // (dropped while eating)
       a.tree = this.nearestOak(a.x, a.z, 30) || a.anchor; a.scared = 1;

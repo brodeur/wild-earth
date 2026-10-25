@@ -21,6 +21,7 @@ const REFRESH_S = 0.5;         // s between live-set checks
 const REFRESH_MOVE = 10;       // m the raven must move (or the forest rebuild) before the live set is rebuilt
 const ACORN_CAP = 6000, STASH_CAP = 1000;
 const PICK_R = 6, DEPOSIT_R = 6, CARRY_MAX = 3, DEPOSIT_BEAT = 0.6;
+const PLAYER_CAP = { corvus_corax: CARRY_MAX, sciurus_griseus: 1, melanerpes_formicivorus: 1 };   // a squirrel or woodpecker holds one
 const STASH_ODDS = 1 / 8;
 
 // FNV-1a over a string, then a salt mix: a 32-bit seed for mulberry32.
@@ -134,7 +135,7 @@ function quad(cap) {
   return g;
 }
 
-function acornGeometry() {
+export function acornGeometry() {
   const g = new THREE.IcosahedronGeometry(0.35, 1);   // (a polyhedron is already non-indexed)
   g.scale(0.85, 1.2, 0.85);
   const pos = g.attributes.position, col = new Float32Array(pos.count * 3);
@@ -190,16 +191,19 @@ export function applyEvent(w, e) {
       if (e.cap && n >= e.cap) return false;
       into[e.oak] = n + 1; c.carrying--; score(w, c); return true;
     }
-    case 'bury':
+    case 'bury': {
       if (c.carrying <= 0) return false;
       c.carrying--;
+      const again = c.dug > 0; if (again) c.dug--;   // re-burying one it dug up scores nothing (no farming a cache)
       w.caches.push({ id: e.id, x: e.x, y: e.y, z: e.z, by: e.by, species: c.species, kind: e.kind || 'scatter', t: w.clock });
       if (w.caches.length > CACHE_MAX) w.caches.splice(0, w.caches.length - CACHE_MAX);
-      score(w, c); return true;
+      if (!again) score(w, c);
+      return true;
+    }
     case 'dig': {
       const i = w.caches.findIndex(k => k.id === e.id);
       if (i < 0 || (e.keep && c.carrying >= c.cap)) return false;
-      w.caches.splice(i, 1); if (e.keep) c.carrying++;
+      w.caches.splice(i, 1); if (e.keep) { c.carrying++; c.dug = (c.dug || 0) + 1; }
       return true;
     }
   }
@@ -297,9 +301,36 @@ export class AcornGame {
   // The player's collector record. species: the player is the raven today; a later lane sets this to play a
   // squirrel or woodpecker (the leaderboard line follows it).
   addPlayer() {
-    const p = { id: 'player', species: 'corvus_corax', kind: 'player', carrying: 0, cap: CARRY_MAX, total: this.world.you };
+    const sp = this.playerSpecies || 'corvus_corax';
+    const p = { id: 'player', species: sp, kind: 'player', carrying: 0, cap: PLAYER_CAP[sp] || CARRY_MAX, total: this.world.you };
     this.world.collectors.player = p; return p;
   }
+  // The player as another species (squirrelControl.js). A squirrel carries one acorn in its mouth and acts on a key
+  // (E: pick up, bury, dig up; the controller calls the player* methods below) instead of the raven's proximity pickup,
+  // and stash holes are the raven's, so it never deposits. The HUD rows and the board's "you" line follow the species.
+  setPlayerSpecies(code) {
+    this.playerSpecies = code; this.manual = code !== 'corvus_corax';
+    const p = this.player; p.species = code; p.cap = PLAYER_CAP[code] || CARRY_MAX; p.carrying = Math.min(p.carrying, p.cap);
+    const u = this.ui, sq = code === 'sciurus_griseus';
+    if (u.stashed?.previousElementSibling) u.stashed.previousElementSibling.textContent = sq ? 'acorns buried' : 'acorns stashed';
+    if (u.found?.parentElement) u.found.parentElement.style.display = sq ? 'none' : '';
+    this.hud();
+  }
+  // The nearest live acorn within r of (x, y, z) (3D), or null; branch: true only those in the crown, false only
+  // those on the ground, null either. { key, x, y, z, species, branch }
+  acornNear(x, y, z, r, branch = null) {
+    let best = null, bd = r * r;
+    for (const a of this.liveAcorns) {
+      if (branch !== null && a.branch !== branch) continue;
+      const dx = a.x - x, dy = a.y - y, dz = a.z - z, d2 = dx * dx + dy * dy + dz * dz;
+      if (d2 < bd) { bd = d2; best = a; }
+    }
+    return best;
+  }
+  playerPick(a) { return this.dispatch({ type: 'pickup', by: 'player', key: a.key, x: a.x, y: a.y, z: a.z, species: a.species }); }
+  playerBury(x, y, z) { return this.bury('player', x, y, z, 'scatter'); }
+  playerDig(k) { return this.dig('player', k.id, true); }
+
   // An AI collector's record, made on first use (animals.js passes the animal id and its species code).
   collector(id, species, cap = 1) {
     return this.world.collectors[id] ||= { id, species, kind: 'ai', carrying: 0, cap, total: 0 };
@@ -345,8 +376,9 @@ export class AcornGame {
       }
     } else if (e.type === 'bury') {
       this.layMarks();
+      if (mine) this.hud(true);
       if (this.near(e)) fieldGuide.witness(this.world.collectors[e.by]?.species === 'corvus_corax' ? 'cache' : 'bury', this.ui.box);
-    } else if (e.type === 'dig') this.layMarks();
+    } else if (e.type === 'dig') { this.layMarks(); if (mine) this.hud(true); }
   }
   near(e) {
     const c = this.camera?.position; if (!c || e.x === undefined) return false;
@@ -490,7 +522,7 @@ export class AcornGame {
         this.nuts.setMatrixAt(na, t.matrix); this.nuts.geometry.attributes.aGround.array[na] = a.branch ? 0 : 1;
         t.rotation.set(0, 0, 0); t.updateMatrix(); this.acornGlow.setMatrixAt(na, t.matrix);
         this.liveIdx.set(key, na);
-        this.liveAcorns.push({ key, x: a.x, y: a.y, z: a.z, species: o.species }); na++;
+        this.liveAcorns.push({ key, x: a.x, y: a.y, z: a.z, species: o.species, branch: a.branch }); na++;
       }
       const st = inf.stash;
       if (st && ns < STASH_CAP) {
@@ -678,8 +710,8 @@ export class AcornGame {
     if ((this.markT += dt) > 2) { this.markT = 0; this.layMarks(); }
 
     // pickup: the nearest live acorn within PICK_R
-    const me = this.player;
-    if (me.carrying < me.cap) {
+    const me = this.player, manual = !!this.manual;   // a squirrel player picks and buries on a key instead
+    if (!manual && me.carrying < me.cap) {
       let best = -1, bd = PICK_R * PICK_R;
       for (let i = 0; i < this.liveAcorns.length; i++) {
         const a = this.liveAcorns[i], dx = a.x - p.x, dy = a.y - p.y, dz = a.z - p.z, d2 = dx * dx + dy * dy + dz * dz;
@@ -689,7 +721,7 @@ export class AcornGame {
     }
     // deposit: one acorn per beat into a non-full stash within DEPOSIT_R
     let at = null, nearFull = false;
-    if (me.carrying > 0) {
+    if (!manual && me.carrying > 0) {
       let bd = DEPOSIT_R * DEPOSIT_R;
       for (let i = 0; i < this.liveStashes.length; i++) {
         const s = this.liveStashes[i], dx = s.x - p.x, dy = s.y - p.y, dz = s.z - p.z, d2 = dx * dx + dy * dy + dz * dz;
@@ -783,7 +815,10 @@ export class AcornGame {
     }
     const left = r ? Math.max(0, Math.ceil(r.length - r.t)) : 0;
     u.time.textContent = r?.over ? 'over' : `${String(Math.floor(left / 60)).padStart(2, '0')}:${String(left % 60).padStart(2, '0')} left`;
-    u.hint.textContent = me.carrying > 0 && this.nearFull && !this.depositing ? 'stash full, find another'
+    u.hint.textContent = me.species === 'sciurus_griseus' ? (me.carrying > 0
+        ? 'an acorn in your mouth: E on open ground buries it, one acorn to a hole'
+        : 'find an oak: E picks up an acorn under it, or climbing, in the crown; E on a dug mark digs one up. Woodpeckers, ravens and the other squirrels are gathering too.')
+      : me.carrying > 0 && this.nearFull && !this.depositing ? 'stash full, find another'
       : me.carrying > 0 ? `you carry ${me.carrying === 1 ? 'an acorn' : me.carrying + ' acorns'}${me.carrying >= me.cap ? ' (pouch full)' : ''}: stash holes now glow in some oaks`
       : 'find an oak: acorns glow when you are close. Woodpeckers, squirrels and other ravens are gathering too.';
     this.updateBoard();

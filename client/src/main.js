@@ -21,6 +21,7 @@ import { Shadows } from './shadows.js';
 import { Animals } from './animals.js';
 import { Water } from './water.js';
 import { Rocks } from './rocks.js';
+import { SquirrelControl } from './squirrelControl.js';
 
 const $ = id => document.getElementById(id);
 const html = document.documentElement;
@@ -120,9 +121,9 @@ async function main() {
   $('detail').onchange = e => { veg.radius = +e.target.value; veg.update(flight.pos.x, flight.pos.z, true); };
   addEventListener('keydown', e => { if (e.code === 'KeyR') flight.reset(tile.size / 2, -tile.size / 2, 150); });
 
-  const perceives = tile.perception?.perceives?.corvus_corax || [];
   const names = Object.fromEntries((tile.species || []).map(s => [s.code, s.common]));
-  $('perceives').textContent = perceives.length ? perceives.map(c => names[c] || c).join(', ') : 'everything (no perception matrix)';
+  const showPerceives = code => { const p = tile.perception?.perceives?.[code] || []; $('perceives').textContent = p.length ? p.map(c => names[c] || c).join(', ') : 'everything (no perception matrix)'; };
+  showPerceives('corvus_corax');
 
   function applySeason() {
     const s = seasonNow(); $('seasonNote').textContent = state.season === 'auto' ? `(${s})` : '';
@@ -150,6 +151,8 @@ async function main() {
   // Ambient animals (animals.js): squirrels, acorn woodpeckers, other ravens, deer, filtered by perception.
   // During an acorn game the woodpeckers, squirrels and ravens gather from the game's acorns (game: acorns).
   const animals = new Animals({ tile, scene, flight, veg, atmosphere, camera, identify, game: acorns });
+  // The playable squirrel (squirrelControl.js): drives flight.pos and the camera in place of the raven when chosen.
+  const squirrel = new SquirrelControl({ tile, scene, camera, flight, veg, animals, acorns, atmosphere, rocks, caption: $('caption') });
 
   // Present-day peek (hold P, or the panel button): the ground shows today's NAIP with the human
   // footprint still in it, the forest and grass step aside and the ghost roads come on, so a player
@@ -215,7 +218,7 @@ async function main() {
     return sound;
   };
 
-  window.__we = { tile, flight, raven, camera, veg, terrain, far, grass, roads, scene, renderer, minimap, atmosphere, sky, acorns, identify, places, peek, setPeek, sound, animals, arrival, rocks };   // debugging handle
+  window.__we = { tile, flight, raven, camera, veg, terrain, far, grass, roads, scene, renderer, minimap, atmosphere, sky, acorns, identify, places, peek, setPeek, sound, animals, arrival, rocks, squirrel };   // debugging handle
   if (!screen) makeSound();
 
   // Into the world: season, observer, sound, then the arrival flight over the chosen point.
@@ -227,7 +230,8 @@ async function main() {
   enter = (c, gesture) => {
     rememberTile(tile.id);
     state.season = c.season === seasonOfDate() ? 'auto' : c.season; $('season').value = state.season; applySeason();
-    window.__we.playerSpecies = c.species; animals.setObserver(c.species);
+    window.__we.playerSpecies = c.species; animals.setObserver(c.species); showPerceives(c.species);
+    squirrel.setOn(c.species === 'sciurus_griseus');
     const snd = makeSound();
     if (gesture) {
       snd.start();   // inside the Begin click when the world was ready; otherwise the press already activated the page
@@ -236,15 +240,21 @@ async function main() {
         addEventListener('pointerdown', kick, true); addEventListener('keydown', kick, true);
       }
     }
-    arrival.plan(c.point);
-    arrival.onDone = () => { html.classList.remove('arriving'); };
-    arrival.start(c.caption || captionFor(c.point, c.season, c.species));
+    if (squirrel.on) squirrel.arrive(c.point, c.caption || captionFor(c.point, c.season, c.species), () => html.classList.remove('arriving'));   // out of an oak
+    else {
+      arrival.plan(c.point);
+      arrival.onDone = () => { html.classList.remove('arriving'); };
+      arrival.start(c.caption || captionFor(c.point, c.season, c.species));
+    }
     html.classList.add('arriving'); html.classList.remove('opening');
     if (screen) { screen.close(); screenOpen = false; }
   };
   if (screen) screen.setReady();
   status('');
-  if (direct) { /* as before: the bird is at the tile centre, flying */ }
+  if (direct && params.get('as') === 'squirrel') {   // tests: ?skip=1&as=squirrel puts a squirrel by the oak nearest the centre
+    window.__we.playerSpecies = 'sciurus_griseus'; animals.setObserver('sciurus_griseus'); showPerceives('sciurus_griseus');
+    squirrel.setOn(true); squirrel.arrive(pending ? localXY(tile, pending.lat, pending.lon) : null, null);
+  } else if (direct) { /* as before: the bird is at the tile centre, flying */ }
   else if (carried) enter({ season: carried.season, species: carried.species || 'corvus_corax', point: carriedPoint }, false);
   else if (chosen) enter(chosen, true);   // Begin was pressed while the world was loading
 
@@ -256,7 +266,7 @@ async function main() {
     }
     const dt = Math.min((now - last) / 1000, 0.1); last = now;
     const s = seasonNow(), look = SEASON_LOOK[s], sun = sunDirection(tile.latitude, s, state.hour);
-    const f = screenOpen ? arrival.hold() : arrival.active ? arrival.update(dt) : flight.update(dt);
+    const f = screenOpen ? arrival.hold() : squirrel.on ? squirrel.update(dt) : arrival.active ? arrival.update(dt) : flight.update(dt);
     raven.update(dt, flight.flapping, flight.speed);
     veg.update(flight.pos.x, flight.pos.z);
     veg.updateClose(camera.position);

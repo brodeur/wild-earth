@@ -176,3 +176,61 @@ acorn the player has taken still flies there before giving up; the identify card
   both), and their perception.
 - Pilfering by the player (a raven robbing a squirrel's cache), woodpecker families
   defending the granary from jays and squirrels, and juveniles.
+
+## Playable squirrel (2026-10-25)
+
+The western gray squirrel is the second playable animal: chosen at the opening screen
+beside the raven (remembered), it arrives head down on the trunk of the oak nearest the
+chosen point and runs out onto the ground. `client/src/squirrelControl.js` replaces the
+raven's controller for the frame and moves the same player position, so everything that
+followed the raven follows the squirrel. Tests: `?skip=1&as=squirrel`.
+
+Controls: **W / S** run (a bound, up to 6 m/s) and back; **A / D** or a mouse drag turn
+(a vertical drag tilts the look); **Space** jumps (about 0.5 m high and 3-4 m long at a
+run: a creek, onto a rock) or, on a trunk, jumps off; **Shift** sits up (the camera rises
+to about 1 m); **E** acts. Run into a trunk (within 0.8 m of the bark) and the squirrel
+takes hold: **W** climbs, **S** comes down head first, **A / D** go round the trunk, up to
+85 % of the tree's height; at the bottom it steps off facing out. Every tree of the near
+set can be climbed (oaks, gray and ponderosa pines, snags), by its drawn bole.
+
+The game's verbs for a squirrel, all on **E**, all through the v2 events:
+
+- Not carrying, near a ground acorn (within 0.9 m of the nose): a half-second head-down
+  pick, a `pickup`. The carry limit is **1** (in the mouth; the HUD shows `0 / 1`).
+- On a trunk: a crown acorn within 1.2 m is picked from the bark; one within 3.2 m at
+  about the same height (and in this tree's crown) is reached by a run out along a limb
+  and back.
+- Carrying, on open ground (not water, rock or roots): two and a half seconds of digging,
+  a `bury` of kind `scatter`, the dug mark, scored for western gray squirrels and on the
+  board's line "you, a squirrel". The field guide's burying card shows the first time.
+- Not carrying, on a dug mark (any buried acorn within 1 m, anyone's: squirrels pilfer):
+  a `dig` with `keep`, so it is carried again. Re-burying an acorn the collector dug up
+  scores nothing: `applyEvent` counts dug acorns per collector (`dug`) and a burial uses
+  one up before it scores.
+
+A squirrel never deposits in stash holes (the raven's) and has no proximity pickup;
+`AcornGame.setPlayerSpecies` switches that, the carry cap and the HUD rows ("acorns
+buried"; "stashes found" hidden). AI squirrels no longer run up the trees from a player
+squirrel. The "trees in view", "around you", identify, mini-map, time and place lines
+are unchanged; perception is the tile's matrix for the squirrel.
+
+Measured (2026-10-25, home tile, fall, 9:00, the built-in browser at 1021 x 924): the
+controller costs about 0.1 ms per frame (rock rays 0.01 ms); frame rate as a squirrel
+53-67 fps against 52 fps for the raven hovering 30 m over the same oak, within noise.
+
+What reads: climbing (the splayed legs on the bark, head first coming down, the
+over-the-shoulder camera from below), the run seen from the side (the bound and the
+streaming tail), sitting up, landing on a boulder, a 4 m hop over Indian Creek. What does
+not yet: from the chase camera straight behind, the squirrel is mostly tail, so the bound
+and the acorn in its mouth hardly show; the bound is the AI's procedural rig, not a
+gallop; the climb attaches to the bole's axis, so above the fork of a blue oak the
+squirrel climbs on through the crown on an invisible extension of the trunk; v1's glowing
+acorns are still large next to a squirrel; the game panel and the HUD overlap at narrow
+windows; a frame-rate drop slows the squirrel (dt is capped at 0.1 s, as for the raven).
+
+Next, for a playable woodpecker: a perch-and-fly controller (short undulating flights
+between trees, clinging to bark with the tail braced, hitching up the trunk like the
+squirrel's climb but with the woodpecker's CLING_PITCH), E to take an acorn from a crown
+or the ground in the bill (cap 1, already in `PLAYER_CAP`), and E at its family's
+granary (the nearest stash tree) for a `deposit` into `granaries`, with the hammering
+beat; the board line follows `setPlayerSpecies`.

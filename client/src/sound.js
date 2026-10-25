@@ -127,7 +127,7 @@ export class Soundscape {
     addEventListener('keydown', e => {
       if (e.repeat || typing(e)) return;
       if (e.code === 'KeyN') this.setMuted(!this.muted);
-      if (e.code === 'KeyC') this.call();
+      if (e.code === 'KeyC' && window.__we?.playerSpecies !== 'sciurus_griseus') this.call();   // the raven's kraa; no squirrel chatter yet
     });
     document.addEventListener('visibilitychange', () => this._runState());
     if (els.button) els.button.addEventListener('click', () => {
