@@ -5,6 +5,7 @@ import { LIBRARY, LIBRARY_SOURCE, LIBRARY_RAW, BUILTIN, buildTree, canopyMateria
 // Review page for the species library (docs/species-library.md): every species, three seeds,
 // near or mid LOD, any season, against 5 m scale poles. URL: ?season=winter&mid=1&focus=<id>&shadows=0&ui=0
 // ?classes=1 ("all variants"): one tree per age class plus the snag, labelled with class, height and share.
+// ?close=1 (or the "close LOD" box): the close tier, the near trunk with the close twigs and canopy.
 
 const $ = id => document.getElementById(id);
 const params = new URLSearchParams(location.search);
@@ -44,13 +45,14 @@ function scale5() {
 // Layouts: 'seeds' (the three measured seeds of the base class, as before) or 'classes' (one tree per age
 // class plus the snag). Each is built into its own root group and label set; the toggle swaps them.
 const mats = {};   // species id -> canopy and trunk materials, shared by both layouts
-const matsOf = (id, spec) => mats[id] || (mats[id] = { near: canopyMaterial(spec, 'near'), mid: canopyMaterial(spec, 'mid'), trunk: trunkMaterial(null, spec) });
+const twigMat = trunkMaterial(null);
+const matsOf = (id, spec) => mats[id] || (mats[id] = { near: canopyMaterial(spec, 'near'), mid: canopyMaterial(spec, 'mid'), close: canopyMaterial(spec, 'close'), trunk: trunkMaterial(null, spec) });
 function buildLayout(kind) {
 const root = new THREE.Group(), labels = document.createElement('div'), groups = [];
 let x = 0;
 for (const id of ids) {
   const spec = LIBRARY[id];
-  const g = { id, spec, built: null, near: new THREE.Group(), mid: new THREE.Group(), mats: matsOf(id, spec), canopies: [], tris: { near: [], mid: [] }, trees: [] };
+  const g = { id, spec, built: null, near: new THREE.Group(), mid: new THREE.Group(), close: new THREE.Group(), mats: matsOf(id, spec), canopies: [], tris: { near: [], mid: [], close: [] }, trees: [] };
   const rows = kind === 'classes' ? ageClasses(id) : SEEDS.map(seed => ({ seed: seed + id.length }));
   const built = rows.map(r => ({ row: r, near: buildTree(id, r.seed, 'near'), mid: buildTree(id, r.seed, 'mid'), close: buildTree(id, r.seed, 'close') }));
   g.built = built;
@@ -69,6 +71,13 @@ for (const id of ids) {
       g[lod].add(t, c); g.canopies.push(c);
       g.tris[lod].push(b[lod].trunk.index.count / 3 + b[lod].canopy.index.count / 3);
     }
+    {   // close: the near trunk, the twigs and the close canopy
+      const t = new THREE.Mesh(b.near.trunk, g.mats.trunk), c = new THREE.Mesh(b.close.canopy, g.mats.close);
+      const parts = [t, c]; if (b.close.twigs) parts.push(new THREE.Mesh(b.close.twigs, twigMat));
+      for (const m of parts) { m.castShadow = m.receiveShadow = true; m.position.x = x - widths[i].cx; }
+      g.close.add(...parts);
+      g.tris.close.push(b.near.tris.trunk + b.close.tris.twigs + b.close.tris.canopy);
+    }
     if (kind === 'classes') {   // per-tree label: class, height of this tree, share of plants
       const r = b.row, el = document.createElement('div'); el.className = 'lab sub';
       el.innerHTML = `<b>${r.name}</b><br>${b.near.height.toFixed(1)} m <span class="muted">(${r.height_m[0]}–${r.height_m[1]})</span><br><span class="muted">${Math.round(r.share * 100)}% of plants</span>`;
@@ -78,7 +87,7 @@ for (const id of ids) {
   });
   const pole = scale5(); pole.position.x = x0 + 0.3; root.add(pole);
   g.x0 = x0; g.x1 = x - gap; g.h = Math.max(...built.map(b => b.near.height));
-  root.add(g.near, g.mid);
+  root.add(g.near, g.mid, g.close);
   groups.push(g);
   x += Math.max(4, spec.height_m[1] * 0.25);
   // label
@@ -133,9 +142,10 @@ function rowsOf(mask) {   // rows top (0) to bottom, from a bottom-up pixel buff
 function measureTree(b, mat) {
   const t = new THREE.Mesh(b.trunk, mFlat), cFlat = new THREE.Mesh(b.canopy, mat), cCol = new THREE.Mesh(b.canopy, mat);
   const bb = new THREE.Box3().setFromObject(t).union(new THREE.Box3().setFromObject(cFlat));
+  const wood = b.twigs ? [t, new THREE.Mesh(b.twigs, mFlat)] : [t];   // close tier: the twigs are wood in the silhouette
   const out = { wh: 0, base: 0, por: 0, rg: 0, bg: 0 };
   for (const axis of ['z', 'x']) {
-    const all = rowsOf(measureView([t, cFlat], bb, axis).mask);
+    const all = rowsOf(measureView([...wood, cFlat], bb, axis).mask);
     const top = all.findIndex(r => r.length), bot = all.length - 1 - [...all].reverse().findIndex(r => r.length), h = Math.max(1, bot - top + 1);
     let wmax = 0; const por = [];
     all.forEach((xs, i) => {
@@ -159,6 +169,7 @@ function measureTree(b, mat) {
 // (mid only): measure the mid crown as the mid material thins it at that camera distance in metres.
 // kind 'classes': one tree per age class (the "all variants" layout), reported per class as
 // { id: [{ name, h, wh, base, por, rg, bg }, ...] } (snags, which have no foliage, are left out).
+let NO_TWIGS = false;   // __lineupMetrics('close', 0, 'seeds', false): the close canopy without the twigs in the silhouette
 function measureAll(lod = 'near', dist = 0, kind = 'seeds') {
   const res = {};
   if (kind === 'classes') {
@@ -167,7 +178,7 @@ function measureAll(lod = 'near', dist = 0, kind = 'seeds') {
       const plain = { ...g.spec, foliage: { ...g.spec.foliage, color_var: [0, 0], leaf_on_var: 0 } }, mat = canopyMaterial(plain, lod);
       applySeason(mat, plain, 'summer');
       res[g.id] = g.built.filter(b => !b.row.snag).map(b => {
-        const m = measureTree(lod === 'close' ? { trunk: b.near.trunk, canopy: b.close.canopy } : b[lod], mat);
+        const m = measureTree(lod === 'close' ? { trunk: b.near.trunk, twigs: NO_TWIGS ? null : b.close.twigs, canopy: b.close.canopy } : b[lod], mat);
         return { name: b.row.name, h: +b.near.height.toFixed(1), cards: b.near.tris.cards, tris: b.near.tris.trunk + b.near.tris.canopy, mid: b.mid.tris.trunk + b.mid.tris.canopy,
           ...Object.fromEntries(Object.entries(m).map(([k, v]) => [k, +v.toFixed(2)])) };
       });
@@ -178,7 +189,7 @@ function measureAll(lod = 'near', dist = 0, kind = 'seeds') {
     // measured without the per-plant tint (color_var), which would otherwise depend on where the seed stands
     const plain = { ...g.spec, foliage: { ...g.spec.foliage, color_var: [0, 0], leaf_on_var: 0 } }, mat = canopyMaterial(plain, lod);
     applySeason(mat, plain, 'summer');
-    const ms = g.built.map(b => measureTree(lod === 'close' ? { trunk: b.near.trunk, canopy: b.close.canopy }
+    const ms = g.built.map(b => measureTree(lod === 'close' ? { trunk: b.near.trunk, twigs: NO_TWIGS ? null : b.close.twigs, canopy: b.close.canopy }
       : lod === 'mid' && dist ? { trunk: b.mid.trunk, canopy: thinMidCanopy(b.mid.canopy, dist) } : b[lod], mat));
     const avg = k => ms.reduce((s, m) => s + m[k], 0) / ms.length;
     res[g.id] = { wh: avg('wh'), base: avg('base'), por: avg('por'), rg: avg('rg'), bg: avg('bg'), target: g.spec.targets || null };
@@ -202,8 +213,8 @@ const round = res => Object.fromEntries(Object.entries(res).map(([k, m]) => [k, 
 // __lineupMetrics() is the near-LOD table shown on the labels; __lineupMetrics('mid' | 'close') measures that
 // tier, __lineupMetrics('mid', 800) the mid tier as thinned for a camera 800 m away, and
 // __lineupMetrics('near', 0, 'classes') one tree per age class.
-window.__lineupMetrics = (lod = 'near', dist = 0, kind = 'seeds') => kind === 'classes' ? measureAll(lod, dist, 'classes')
-  : lod === 'near' && !dist ? METRICS && round(METRICS) : round(measureAll(lod, dist));
+window.__lineupMetrics = (lod = 'near', dist = 0, kind = 'seeds', twigs = true) => { NO_TWIGS = !twigs; try { return kind === 'classes' ? measureAll(lod, dist, 'classes')
+  : lod === 'near' && !dist ? METRICS && round(METRICS) : round(measureAll(lod, dist)); } finally { NO_TWIGS = false; } };
 
 // Warn when the fetched files and the built-in fallback differ (run library/embed_builtin.py).
 const strip = r => { const c = { ...r }; delete c.notes; delete c.sources; delete c.authors; return JSON.stringify(c); };
@@ -223,25 +234,28 @@ function frame(focus) {
   const sc = sun.shadow.camera, half = Math.max(w, h * 2) * 0.62; sc.left = -half; sc.right = half; sc.top = half; sc.bottom = -half; sc.near = 1; sc.far = 4000; sc.updateProjectionMatrix();
 }
 
-const state = { season: params.get('season') || 'summer', mid: params.get('mid') === '1', focus: params.get('focus') || 'all', shadows: params.get('shadows') !== '0', classes: params.get('classes') === '1' };
-$('season').value = state.season; $('mid').checked = state.mid; $('focus').value = state.focus; $('shadows').checked = state.shadows; $('classes').checked = state.classes;
+$('mid').parentElement.insertAdjacentHTML('afterend', '<label class="check"><input type="checkbox" id="close"> close LOD (under 90 m: twigs, more cards)</label>');
+const state = { season: params.get('season') || 'summer', mid: params.get('mid') === '1', close: params.get('close') === '1', focus: params.get('focus') || 'all', shadows: params.get('shadows') !== '0', classes: params.get('classes') === '1' };
+$('season').value = state.season; $('mid').checked = state.mid; $('close').checked = state.close; $('focus').value = state.focus; $('shadows').checked = state.shadows; $('classes').checked = state.classes;
 function apply() {
   if (state.classes && !layouts.classes) layouts.classes = buildLayout('classes');
   L = state.classes ? layouts.classes : layouts.seeds;
   for (const k of ['seeds', 'classes']) if (layouts[k]) { layouts[k].root.visible = layouts[k] === L; layouts[k].labels.style.display = layouts[k] === L ? '' : 'none'; }
+  const tier = state.mid ? 'mid' : state.close ? 'close' : 'near';
   for (const g of L.groups) {
-    for (const lod of ['near', 'mid']) {
+    for (const lod of ['near', 'mid', 'close']) {
       const on = applySeason(g.mats[lod], g.spec, state.season);
-      g[lod].visible = (lod === 'mid') === state.mid;
+      g[lod].visible = lod === tier;
       g[lod].children.forEach(m => { if (m.material === g.mats[lod]) m.visible = on > 0; });
     }
   }
   renderer.shadowMap.enabled = state.shadows; scene.traverse(o => { if (o.material) o.material.needsUpdate = true; });
-  const tot = L.groups.reduce((s, g) => s + g.tris[state.mid ? 'mid' : 'near'].reduce((a, b) => a + b, 0), 0);
-  $('stats').textContent = `${state.mid ? 'mid' : 'near'} LOD · ${tot.toLocaleString()} triangles for ${L.groups.reduce((s, g) => s + g.built.length, 0)} plants`;
+  const tot = L.groups.reduce((s, g) => s + g.tris[tier].reduce((a, b) => a + b, 0), 0);
+  $('stats').textContent = `${tier} LOD · ${tot.toLocaleString()} triangles for ${L.groups.reduce((s, g) => s + g.built.length, 0)} plants`;
 }
 $('season').onchange = e => { state.season = e.target.value; apply(); };
 $('mid').onchange = e => { state.mid = e.target.checked; apply(); };
+$('close').onchange = e => { state.close = e.target.checked; apply(); };
 $('shadows').onchange = e => { state.shadows = e.target.checked; apply(); };
 $('classes').onchange = e => { state.classes = e.target.checked; apply(); frame(state.focus); };
 $('focus').onchange = e => { state.focus = e.target.value; frame(state.focus); };

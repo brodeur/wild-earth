@@ -55,6 +55,7 @@
     "clumps": {"radius_m": 0.6, "cards_per_clump": 2, "shell": 0, "flatten": 0.75, "tip_bias": 1.6}, "ao_min": 0.7,
     "color_var": [0.07, 0.03]
   },
+  "twigs": {"count": [1, 2], "whorl": true, "length": 0.6, "down_deg": 45, "down_var_deg": 10, "tropism": 0.2, "segments": 1, "radius_m": 0.014, "taper": 0.4, "fan_deg": 40, "jitter": 0.05},
   "lod": {
     "near_tris_budget": 2200, "near_sides": [8, 3, 0], "mid_blobs": 5, "mid_branches": 2, "mid_blob_scale": 0.7,
     "close_factor": 2, "mid_planes": 1, "mid_cards": 28

@@ -53,6 +53,7 @@
   "deadwood": {
     "fraction": 0.15, "where": "inner", "levels": [1, 2], "shorten": 0.6, "rgb": [140, 136, 128]
   },
+  "twigs": {"count": [1, 2], "length": 0.8, "down_deg": 40, "down_var_deg": 20, "zigzag_deg": 25, "curve_var_deg": 35, "segments": 2, "radius_m": 0.012, "taper": 0.5, "fan_deg": 60, "jitter": 0.25},
   "lod": {
     "near_tris_budget": 1100, "near_sides": [4, 3, 0], "mid_blobs": 3, "mid_branches": 0, "mid_sides": [0, 0],
     "mid_cards": 24

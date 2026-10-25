@@ -35,7 +35,9 @@ const NEAR_MARGIN = 60, NEAR_MOVE = 40, NEAR_CAP = { tree: 1500, shrub: 3000 };
 // cards to the denser close cards (treegen 'close'), cross-faded over CLOSE_R +/- CLOSE_BAND (70-110 m).
 // The close set is a copy of the near instances within reach, refreshed when the camera has moved
 // CLOSE_MOVE m; it is empty whenever the camera is more than about 130 m from every plant (the start
-// view), so it costs nothing there. Trunks are not duplicated: the near trunk is drawn with it.
+// view), so it costs nothing there. Trunks are not duplicated: the near trunk is drawn with it. The
+// close twigs (treegen spec.twigs, the cards' wood) are a second mesh on the close canopy's instance
+// matrices, faded in over the same band, drawn in every season.
 export const CLOSE_R = 90;
 const CLOSE_BAND = 20, CLOSE_MOVE = 15, CLOSE_CAP = { tree: 600, shrub: 1500 };
 
@@ -134,6 +136,7 @@ export class Vegetation {
     this.lodU = { lodEye: { value: new THREE.Vector3() }, lodR: { value: NEAR_R }, closeEye: { value: new THREE.Vector3(0, 1e9, 0) }, closeR: { value: CLOSE_R } };
     const patch = m => atmosphere.patchLambert(m);   // cloud shadow + aerial perspective
     this.trunkMat = { near: lodPatch(trunkMaterial(patch), this.lodU, 'near'), mid: lodPatch(trunkMaterial(patch), this.lodU, 'mid') };   // shared (shadow casters use it)
+    this.twigMat = lodPatch(trunkMaterial(patch), this.lodU, 'close', true);   // close twigs: plain vertex colour, dithered in like the close canopy
     this.barkMat = {};     // species id -> { near, mid }: the species' bark texture and normal map (treegen barkTexture)
     this.canopyMat = {};   // species id -> { near, mid, close }
     this.meshes = {};      // species id -> [{ near: {trunk, canopy, cap, n, ids}, mid: {...}, close: {canopy, cap, n}, stem, height, tris, cls }], one per distinct tree
@@ -166,11 +169,18 @@ export class Vegetation {
         const closeCanopy = new THREE.InstancedMesh(c.canopy, this.canopyMat[id].close, ccap);
         closeCanopy.count = 0; closeCanopy.frustumCulled = false; closeCanopy.visible = false;
         this.group.add(closeCanopy);
-        entry.close = { canopy: closeCanopy, cap: ccap, n: 0, tris: c.tris.canopy };
+        let closeTwigs = null;
+        if (c.twigs) {
+          closeTwigs = new THREE.InstancedMesh(c.twigs, this.twigMat, ccap);
+          closeTwigs.instanceMatrix = closeCanopy.instanceMatrix;   // one matrix buffer for both parts
+          closeTwigs.count = 0; closeTwigs.frustumCulled = false; closeTwigs.visible = false;
+          this.group.add(closeTwigs);
+        }
+        entry.close = { canopy: closeCanopy, twigs: closeTwigs, cap: ccap, n: 0, tris: c.tris.canopy, twigTris: c.tris.twigs || 0 };
         this.meshes[id].push(entry);
       }
       const avg = lod => Math.round(this.meshes[id].reduce((s, e) => s + e[lod].tris, 0) / this.meshes[id].length);
-      this.stats[id] = { near: avg('near'), mid: avg('mid'), closeCanopy: avg('close') };
+      this.stats[id] = { near: avg('near'), mid: avg('mid'), closeCanopy: avg('close'), closeTwigs: Math.round(this.meshes[id].reduce((s, e) => s + e.close.twigTris, 0) / this.meshes[id].length) };
     }
     this.tmp = new THREE.Object3D();
   }
@@ -272,6 +282,7 @@ export class Vegetation {
       if (n || c.n) { c.canopy.instanceMatrix.addUpdateRange(0, n * 16); c.canopy.instanceMatrix.needsUpdate = true; }
       c.n = c.canopy.count = n; total += n;
       c.canopy.visible = n > 0 && (this.leafOn?.[id] ?? 1) > 0;
+      if (c.twigs) { c.twigs.count = n; c.twigs.visible = n > 0; }   // bare crowns keep their twigs
     }
     this.closeCount = total;
   }

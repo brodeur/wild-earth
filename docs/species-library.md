@@ -524,3 +524,110 @@ at 40 m 34-50 fps against 46-54, and a synchronous render of that view 23.1 / 23
 - A crown's shaded side is still lit only by the sky: shadow maps treat a card as opaque, so a sparse
   gray pine has dark clumps where the real crown is lit through.
 - Close up (under about 8 m) a face-on lit tuft is still fairly uniform: a card is flat.
+
+## Twigs in the close tier (2026-10-24)
+
+Review comment: "I think the trees just need more branches when the user gets closer." Up close the
+crown was limbs and level-2 stems with foliage cards floating around them, and a bare blue oak was a
+broom of straight spikes. The close tier (within `CLOSE_R` = 90 m of the camera, at most 600 trees per
+mesh, empty at the start view) now grows one more level of short twigs, and its cards hang from them.
+The near and mid tiers, the near card list and the far impostors are untouched, so the lineup's near
+and mid metrics are identical to before.
+
+- **Twigs** (`growTwigs` in `treegen.js`). A species with a `twigs` block gets a third level (the
+  shrubs, which have one branch level, a second) grown in its own random stream from the skeleton
+  before the height fit. Clumped foliage: each clump gets `count` twigs forking from its bearing stem,
+  `length` x the clump radius long, `down_deg` off the stem, with the usual level parameters (curve,
+  zigzag, droop, upturn, tropism). The fork is moved back along the stem by `recentre` (0.5) of the
+  group's reach, so the cards on the twig tips stay round the clump's centre. Unclumped foliage
+  (chamise): `count` forks split off a bearing wand at `split` of its length. Tubes are `sides` (3)
+  sided, `segments` (1-2) long, plain vertex colour (`twigs.rgb`, else `trunk.twig_rgb`), no bark UVs.
+- **Cards on twigs** (`placeOnTwig`). The close card count and size are unchanged (`close_factor`,
+  `close_scale`). Each close card still picks its clump as before, then a twig of that clump, and hangs
+  from it: its base (where the spray's drawn stem starts; `attach` x the card size) sits on a point in
+  the outer `along` (0.5) of the twig, fanned up to `fan_deg` about the twig's direction, with a little
+  `jitter` (fraction of the clump radius). Pine cards already sit on their base (`tuft_base`). Chamise
+  cards past the split move onto a fork. A clump that got no twigs (budget) keeps its old cards.
+- **Budget.** `twigs.tris` (default half of `lod.near_tris_budget`) for the species' reference tree,
+  scaled with each tree's card count like the card cap (0.3-2.5x); over it, fewer clumps get twigs.
+  Blue oak sets 1140 (0.6x) to afford two-segment zigzag twigs, which is what its bare crown is.
+- **Deadwood and snags.** Dead stems at the bearing level get `dead` (0.5) x the twigs, grey
+  (`deadwood.rgb`), shortened like a dead limb (`deadwood.shorten`), no cards. A snag keeps its
+  `snag.twigs` fraction where the broken limb still reaches them (blue oak 0.3, pines 0).
+- **Wiring** (`vegetation.js`). `buildTree(id, seed, 'close')` returns `twigs` (geometry, or null)
+  beside `canopy`. Vegetation draws it as a second instanced mesh on the close canopy's instance
+  matrices, with the plain wood material dithered in over the close band like the close canopy, in
+  every season (a bare crown keeps its twigs). Twigs cast no shadow. The lineup has a "close LOD"
+  box (`?close=1`) and counts the twigs as wood in the close silhouette; `__lineupMetrics('close', 0,
+  'seeds', false)` leaves them out.
+
+| field (`twigs`) | meaning |
+|---|---|
+| `count`, `prob` | twigs per clump (or forks per wand) [min, max]; chance a clump gets any |
+| `length` | clump foliage: fraction of the clump radius; unclumped: fraction of the stem past `split` |
+| `down_deg`, `down_var_deg`, `whorl` | angle off the bearing stem; `whorl` spaces a group evenly round it |
+| `curve_deg`, `curve_var_deg`, `zigzag_deg`, `droop_deg`, `upturn_deg`, `tropism` | as for a level |
+| `segments`, `sides`, `radius_m`, `taper` | the tube: 1-2 segments, 3 sides, base radius (at most 0.8 x the stem's) |
+| `fan_deg`, `jitter`, `along`, `attach`, `recentre` | card placement on the twig (above) |
+| `dead`, `split`, `rgb`, `tris` | dead-limb factor, chamise fork point, colour, triangle budget |
+
+| species | twigs |
+|---|---|
+| blue oak | 1-2 per clump, stout (1.2 cm), spreading 50°, two segments zigzagging 28° |
+| interior live oak | 3-4 per clump, fine (5 mm), short, wide fan: the dense twig network |
+| ponderosa | 1-2 whorled shoots per tuft clump, stout (1.4 cm), turned up (tropism 0.2) |
+| gray pine | 1-2 per clump (forks), sparse, drooping (tropism -0.25) |
+| whiteleaf manzanita | 1-2 per clump, red (`twig_rgb`), crooked: two segments, zigzag 25°, curve 35° |
+| chamise | 1-2 stiff upright forks (14°, 4 mm) on 60% of the wands, split at 0.8 of their length |
+
+Triangles, reference tree (first measured seed): near tree (wood + cards), twigs (count), and the close
+tree (near wood + twigs + close cards) before and after.
+
+| species (`near_tris_budget`) | near | twigs | twigs / budget | close tree before → after |
+|---|---|---|---|---|
+| ponderosa (2200) | 2198 | 1068 (178) | 0.49 | 3718 → 4786 |
+| gray pine (1800) | 1552 | 948 (158) | 0.53 | 2632 → 3580 |
+| interior live oak (2000) | 2000 | 888 (148) | 0.44 | 2996 → 3884 |
+| blue oak (1900) | 1900 | 1236 (103) | 0.65 | 3054 → 4290 |
+| whiteleaf manzanita (1100) | 1100 | 564 (47) | 0.51 | 2068 → 2632 |
+| chamise (1000) | 1000 | 342 (57) | 0.34 | 1992 → 2334 |
+
+The close cards alone were already 2-3x the near cards, so "within 1.5x the near budget" is read as
+near tree plus twigs: 1.34-1.51x, blue oak 1.65x. Bigger trees get more twigs with their cards
+(ponderosa's third seed 1620, blue oak's second 1752).
+
+Lineup, close tier, mean of the three measured seeds (W/H, crown base, gaps; HEAD → twigs). Near and
+mid are unchanged; r/g and b/g move by at most 0.01.
+
+| species | W/H | base | gaps |
+|---|---|---|---|
+| ponderosa | 0.43 → 0.42 | 0.46 → 0.45 | 0.37 → 0.35 |
+| gray pine | 0.53 → 0.52 | 0.44 → 0.44 | 0.38 → 0.39 |
+| interior live oak | 1.24 → 1.19 | 0.17 → 0.17 | 0.36 → 0.35 |
+| blue oak | 1.48 → 1.43 | 0.21 → 0.20 | 0.25 → 0.26 |
+| whiteleaf manzanita | 1.24 → 1.20 | 0.20 → 0.22 | 0.36 → 0.36 |
+| chamise | 1.01 → 0.99 | 0.21 → 0.20 | 0.39 → 0.38 |
+
+For scale: drawing HEAD's close cards from another random stream moves a single tree's gaps by up to
+0.06 and W/H by 0.07, and the three-seed means by 0.01 and 0.04. One tree per class (`classes`) mostly
+stays within that; the outliers are blue oak veteran (gaps 0.38 → 0.30, W/H 1.33 → 1.24, a fuller
+crown) and manzanita young and decadent (gaps 0.23 → 0.31 and 0.37 → 0.44, more open).
+
+Cost (A/B against HEAD by swapping `treegen.js` and `vegetation.js`, raven hovering at 3, 15 and 40 m
+above ground, four rounds each, machine load 9-18, medians): oak woodland (4309, 3440) 70.2 / 69.7 /
+76.4 fps against 65.7 / 70.6 / 71.8 with twigs; ponderosa stand (2958, 9835) 77.3 / 68.9 / 64.7
+against 76.7 / 69.5 / 64.0; chaparral (3830, 1210) 57.5 / 60.5 / 63.9 against 57.4 / 59.1 / 65.1. The
+spread between rounds (up to 20 fps) is larger than any difference. A synchronous render with the twig
+meshes switched on and off in one session: ponderosa stand 13.3 against 12.9 ms (317 close plants,
+306k twig triangles), oak woodland 15.2 against 15.2 ms (49 plants), chaparral 20.8 against 21.4 ms
+(449 plants). Twigs are a pixel or two wide, so they add vertices, not fill.
+
+**Known limits.**
+- At 8-15 m in leaf the change is small: the cards still make the crown, and a 1-2 cm twig is about a
+  pixel at 10 m. It shows most in the bare blue oak (zigzag forks where there were straight spikes)
+  and in gray pine (tufts hanging from short shoots).
+- The close cards bunch more round the twig tips than they did round the clump centre, so the close
+  crown is up to 0.05 narrower (live oak, blue oak) than before; the near/close hand-over at 70-110 m
+  shows no pop in captures at 74, 89 and 109 m.
+- The winter twig texture on the close cards minifies to speckle; with the 3D twigs under it the
+  speckle now sits on wood, but the texture itself was not changed.
