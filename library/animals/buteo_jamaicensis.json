@@ -1,0 +1,50 @@
+{
+  "id": "buteo_jamaicensis",
+  "aliases": [
+    "red_tailed_hawk",
+    "redtail",
+    "hawk"
+  ],
+  "scientific": "Buteo jamaicensis calurus",
+  "common": "red-tailed hawk",
+  "body_plan": "bird",
+  "size": {
+    "length_m": 0.55,
+    "shoulder_or_wingspan_m": 1.24,
+    "note": "Length 45-65 cm, wingspan 105-145 cm, 690-1,600 g (females up to 25% larger). Meshy normalises to about 1.9 units on the span; adoption scales to 1.24 m span (the procedural hawk's) and should bring the length to 0.55 m."
+  },
+  "source": null,
+  "license": null,
+  "license_detail": null,
+  "tiers": {
+    "note": "No mesh adopted yet. The client draws buildHawk in client/src/animalModels.js (procedural, about 200 triangles); the player hawk needs its own skinned model."
+  },
+  "rig": "bird template, flight: BODY 0, TAIL 3, HEAD 6, WING_L/R 4/5 pivot (+-0.06, 0.11, 0.02) with a _PARTW falloff toward the hand; banking and circling are instance transforms",
+  "candidates": [
+    {
+      "kind": "meshy",
+      "purpose": "ambient soaring hawk seen from below and above at 100-250 m (flight tiers); not the perched or player model",
+      "job": "library/animals/jobs/buteo_jamaicensis/01a1719d-772f-76b4-9155-823815fec267/job.json",
+      "job_id": "01a1719d-772f-76b4-9155-823815fec267",
+      "mode": "text-to-3d preview, ai_model meshy-6-lite, remeshed to triangles, target 20,000 faces",
+      "prompt": "A red-tailed hawk (Buteo jamaicensis), one adult bird soaring in mid-air, wings fully spread out flat to the sides and symmetrical, about 125 cm wingspan and 55 cm long, shaped to read from below and from above. Broad rounded wings with a straight leading edge and five separated, fingered primary feathers at each wingtip. Short, broad brick-red tail fanned wide into a rounded fan. Legs and feet tucked up under the body. Big rounded head and short hooked bill projecting ahead of the wings. Pale underwing with a dark leading-edge bar and a dark wrist mark, pale breast with a dark belly band. Not an eagle, not a falcon. Single bird, no base, no perch. Game-ready, clean closed mesh.",
+      "author": "generated with Meshy (meshy.ai) by agent (Claude) for Aaron Brodeur",
+      "date": "2026-10-25 (UTC)",
+      "credits": 5,
+      "raw_triangles": 20779,
+      "license": "owned by the paid account holder (Meshy Terms of Use 3.2); to be released as CC BY-SA 4.0 with the project's assets on adoption; Terms 2.6(xi): not for training models that compete with Meshy",
+      "status": "raw preview, not adopted; geometry only. Usable spread-wing silhouette; adoptable as the ambient flight mesh with build-script fixes.",
+      "review": "A soaring raptor, exactly mirror-symmetric, wings spread with fingered tips, short fanned tail, hooked bill, legs trailing back under the tail. One main piece (one stray triangle), clean, 1.8% slivers; wings about 0.012-0.016 units thick (about 1 cm at true scale), so they never vanish edge-on. From below at 15-48 px it reads as a broad-winged bird of prey with a projecting head and a short fan tail. Faults: the wings rise in a strong V (about 24 degrees from shoulder to tip; a red-tail soars flat or at about 5 degrees), which reads as a harrier or vulture when it banks; the wing is long and narrow for a buteo (span 2.55x length against about 2.25, chord about 0.35 of half-span, nearly parallel-edged) with seven to eight long eagle-like fingers instead of five shorter slotted primaries and a rounded hand; the head and bill lean eagle. A build script would rotate each wing about its shoulder pivot down to about 5 degrees, scale the wing chord up about 1.2x (or the span down about 0.9x), shorten the hand fingers, delete the dangling feet, and colour the underwing (pale lining, dark patagial bar and wrist comma, dark belly band, red tail from above)."
+    }
+  ],
+  "status": "agent draft, needs local sign-off",
+  "accuracy_notes": "Planform and topology are very close to the turkey vulture preview from the same session; one flight source could serve both build scripts with different proportions and dihedral. A local birder should check the wing breadth and dihedral in the lineup against soaring red-tails.",
+  "authors": [
+    "agent (Claude) for Aaron Brodeur (entry, Meshy candidate)"
+  ],
+  "sources": [
+    "library/animals/drafts/buteo_jamaicensis.md (mesh brief)",
+    "docs/animal-library.md",
+    "library/animals/README.md"
+  ]
+}

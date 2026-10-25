@@ -58,6 +58,21 @@
       "license": "owned by the paid account holder (Meshy Terms of Use 3.2); to be released as CC BY-SA 4.0 with the project's assets on adoption",
       "status": "raw preview, not adopted; geometry only (no texture)",
       "review": "Side silhouette reads as a raven: heavy arched bill with a culmen ridge, shaggy throat hackles, crown and eye, layered wing coverts and primaries, long tapered tail, scaled legs with clawed toes (three forward, a hind toe). Faults: the wings stand off the flanks at the shoulders (body 0.32 m wide at raven scale against about 0.2 m), so it looks puffed or mantling rather than sleek; posture is a forward hunch; the tail is long and tapered in plan but the wedge is weak; nasal bristles are only hinted by feather shards; the underside between the legs is messy. Topology is remesher triangle soup with many feather shards and 3% slivers; 14 pieces once UV seams are welded. Fine for decimation to about 2,000 / 1,000 / 300 triangles."
+    },
+    {
+      "kind": "meshy",
+      "purpose": "standing raven on the ground, second try with the brief's prompt A (wings tight), to fix the first candidate's loose wings",
+      "job": "library/animals/jobs/corvus_corax/01a1719a-81c6-731d-8420-ff23fe388e1e/job.json",
+      "job_id": "01a1719a-81c6-731d-8420-ff23fe388e1e",
+      "mode": "text-to-3d preview, ai_model meshy-6-lite, remeshed to triangles, target 20,000 faces",
+      "prompt": "A common raven (Corvus corax), single adult standing on flat ground, side-on neutral pose, wings folded tight and sleek against the flanks, folded primaries reaching almost to the tail tip, body about one third as wide as it is long. Realistic proportions, about 60 cm long. Heavy deep black bill as long as the head with a curved culmen, matte nasal bristles over the base of the upper bill, shaggy pointed throat hackles, flat crown, dark brown eye. All-black plumage with a faint blue-violet gloss and visible feather edges. Long graduated wedge-shaped tail. Black scaled legs, three toes forward and one back, flat on the ground. No base, no perch, no rock. Game-ready, closed, symmetric.",
+      "author": "generated with Meshy (meshy.ai) by agent (Claude) for Aaron Brodeur",
+      "date": "2026-10-25 (UTC)",
+      "credits": 5,
+      "raw_triangles": 20789,
+      "license": "owned by the paid account holder (Meshy Terms of Use 3.2); to be released as CC BY-SA 4.0 with the project's assets on adoption",
+      "status": "raw preview, not adopted; geometry only (no texture). Preferred over the first candidate as the ground-raven base.",
+      "review": "Fixes the first candidate's fault: wings folded tight, body about 0.16 m wide at 0.62 m length (target about 0.2 m), clean upright standing posture, scaled legs with three forward toes and a hind toe. Bill as long as the head, deep at the base with a gently curved culmen. Clean topology: one main piece plus three stray triangles, 10 open edges, 1.7% slivers; normalised to 1.9 units long, +y up, bill toward +z. But it lost the raven marks the first candidate had: smooth throat with no hackles, domed crown instead of the flat Roman-nose profile, no nasal bristles, and the tail tip is notched (forked) where a raven's is graduated to a wedge; folded primaries stop near mid-tail rather than near the tip; legs are long and set wide (feet about 0.2 m apart at scale). Reads as a generic corvid, crow-like, until the build script fixes the tail tip and the throat. Build script: close the tail notch and graduate the outer rectrices into a wedge, add a throat-hackle ridge (or accept it, since lod0 at 1,500 triangles keeps little of it), colour the basal third of the upper bill matte for bristles, pull the feet in toward the midline, drop the stray triangles, decimate with X symmetry."
     }
   ],
   "status": "agent draft, needs local sign-off",

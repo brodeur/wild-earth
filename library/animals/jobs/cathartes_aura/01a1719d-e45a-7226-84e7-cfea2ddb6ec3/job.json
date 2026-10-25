@@ -1,0 +1,93 @@
+{
+  "species": "cathartes_aura",
+  "mode": "preview",
+  "kind": "text-to-3d",
+  "task_id": "01a1719d-e45a-7226-84e7-cfea2ddb6ec3",
+  "endpoint": "https://api.meshy.ai/openapi/v2/text-to-3d",
+  "request": {
+    "mode": "preview",
+    "prompt": "A turkey vulture (Cathartes aura), one adult bird soaring in mid-air, long fairly narrow wings fully spread and held raised in a shallow V (dihedral), about 175 cm wingspan and 70 cm long, shaped to read from below and from above. Long parallel-edged wings with six long separated, fingered primary feathers at each blunt wingtip. Long rounded tail, spread, reaching well past the tucked legs. Tiny bare red head on a thin neck, barely projecting ahead of the wings, short ivory hooked bill. Blackish-brown body; underwing two-toned, black lining in front and silvery-grey flight feathers behind. Not an eagle, not a condor, no white ruff. Single bird, no base, no perch. Game-ready, clean closed mesh.",
+    "ai_model": "meshy-6-lite",
+    "target_formats": [
+      "glb"
+    ],
+    "should_remesh": true,
+    "topology": "triangle",
+    "target_polycount": 20000,
+    "moderation": false
+  },
+  "prompt": "A turkey vulture (Cathartes aura), one adult bird soaring in mid-air, long fairly narrow wings fully spread and held raised in a shallow V (dihedral), about 175 cm wingspan and 70 cm long, shaped to read from below and from above. Long parallel-edged wings with six long separated, fingered primary feathers at each blunt wingtip. Long rounded tail, spread, reaching well past the tucked legs. Tiny bare red head on a thin neck, barely projecting ahead of the wings, short ivory hooked bill. Blackish-brown body; underwing two-toned, black lining in front and silvery-grey flight feathers behind. Not an eagle, not a condor, no white ruff. Single bird, no base, no perch. Game-ready, clean closed mesh.",
+  "image": null,
+  "preview_job": null,
+  "estimated_credits": 5,
+  "balance_before": 3012,
+  "status": "SUCCEEDED",
+  "timestamps": {
+    "submitted": "2026-10-25T05:52:15+00:00",
+    "created_at": "2026-10-25T05:52:17+00:00",
+    "started_at": "2026-10-25T05:52:17+00:00",
+    "finished_at": "2026-10-25T05:52:39+00:00",
+    "downloaded": "2026-10-25T05:52:42+00:00"
+  },
+  "tool": "tools/meshy_generate.py",
+  "pricing_source": {
+    "url": "https://docs.meshy.ai/en/api/pricing",
+    "read": "2026-10-24"
+  },
+  "licence_note": "Generated through the Meshy API, which requires a paid plan (402 on a free plan). Meshy Terms of Use (https://www.meshy.ai/terms-of-use, last updated 2026-09-19), section 3.2: customers on a paid plan own their Customer Output to the extent permitted by law (free-plan output is owned by Meshy and offered under CC BY 4.0 with credit to Meshy). As owner, the account holder may license this model under the project's CC BY-SA 4.0 asset licence, to the extent copyright subsists in AI-generated output. Section 2.4: do not remove or alter AI-identifying metadata or watermarks Meshy embeds; carry them into adopted tiers. Section 2.5: API output is deleted by Meshy 3 days after generation, so keep this folder until the model is adopted. Credit: \"generated with Meshy (meshy.ai)\".",
+  "maintainer": "agent (Claude) for Aaron Brodeur",
+  "progress": 100,
+  "task": {
+    "id": "01a1719d-e45a-7226-84e7-cfea2ddb6ec3",
+    "type": "text-to-3d-preview",
+    "status": "SUCCEEDED",
+    "created_at": 1792907537220,
+    "started_at": 1792907537224,
+    "finished_at": 1792907559909,
+    "consumed_credits": 5,
+    "task_error": null
+  },
+  "credits_charged": 5,
+  "files": [
+    {
+      "file": "model.glb",
+      "bytes": 711948,
+      "sha256": "a4099438c5852040ac54000725f7d67f4952c8145af1f456ebeb28ed2716a25b",
+      "source": "https://assets.meshy.ai/<account>/tasks/01a1719d-e45a-7226-84e7-cfea2ddb6ec3/output/model.glb"
+    },
+    {
+      "file": "thumbnail.png",
+      "bytes": 22145,
+      "sha256": "391185fabe0e08bb88bcaaaaa8c82318317d43cc760833b53c18effcb6f62a1e",
+      "source": "https://assets.meshy.ai/<account>/tasks/01a1719d-e45a-7226-84e7-cfea2ddb6ec3/output/preview.png"
+    }
+  ],
+  "balance_after": 3007,
+  "inspection": {
+    "by": "agent (Claude), 2026-10-24",
+    "triangles": 20872,
+    "vertices": 18302,
+    "welded_vertices": 10438,
+    "components_after_weld": 1,
+    "boundary_edges_after_weld": 0,
+    "non_manifold_edges_after_weld": 0,
+    "sliver_fraction": 0.0152,
+    "textures": "none (preview is mesh only; TEXCOORD_0 present, no material)",
+    "bounds_gltf": [
+      [
+        -0.951,
+        -0.2,
+        -0.37
+      ],
+      [
+        0.947,
+        0.202,
+        0.366
+      ]
+    ],
+    "axes": "+y up, +z forward (bill at +z), +x the bird's left; normalised to about 1.9 units on the longest axis",
+    "gltf_metadata": "generator \"Khronos glTF Blender I/O v4.3.47\"; no copyright, extras or AI-identifier fields found",
+    "renders": "/private/tmp/claude-501/-Users-aaronbrodeur-Sites-wild-earth/4bce79f6-b155-4cfa-8a06-3ddba225632f/scratchpad/meshy/cathartes_aura/vulture_montage.png (not kept)",
+    "verdict": "raw preview, not adopted; geometry only. Usable spread-wing silhouette; adoptable as the ambient flight mesh with build-script fixes."
+  }
+}

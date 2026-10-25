@@ -1,0 +1,93 @@
+{
+  "species": "callipepla_californica",
+  "mode": "preview",
+  "kind": "text-to-3d",
+  "task_id": "01a1719b-a621-7275-a36c-5deb473f01f5",
+  "endpoint": "https://api.meshy.ai/openapi/v2/text-to-3d",
+  "request": {
+    "mode": "preview",
+    "prompt": "A male California quail (Callipepla californica), one bird standing upright with its wings folded against a plump round body. Realistic proportions, about 25 cm long. A black teardrop-shaped topknot plume rising from the forehead and curling forward over the short black bill. Black face and throat outlined in white, white forehead line, chestnut-brown crown, slate blue-grey breast, buff belly with black-edged scaled feathers and a chestnut centre patch, olive-brown back, brown flanks with white streaks, short grey legs. No base, no rock. Game-ready, clean closed mesh.",
+    "ai_model": "meshy-6-lite",
+    "target_formats": [
+      "glb"
+    ],
+    "should_remesh": true,
+    "topology": "triangle",
+    "target_polycount": 20000,
+    "moderation": false
+  },
+  "prompt": "A male California quail (Callipepla californica), one bird standing upright with its wings folded against a plump round body. Realistic proportions, about 25 cm long. A black teardrop-shaped topknot plume rising from the forehead and curling forward over the short black bill. Black face and throat outlined in white, white forehead line, chestnut-brown crown, slate blue-grey breast, buff belly with black-edged scaled feathers and a chestnut centre patch, olive-brown back, brown flanks with white streaks, short grey legs. No base, no rock. Game-ready, clean closed mesh.",
+  "image": null,
+  "preview_job": null,
+  "estimated_credits": 5,
+  "balance_before": 3042,
+  "status": "SUCCEEDED",
+  "timestamps": {
+    "submitted": "2026-10-25T05:49:48+00:00",
+    "created_at": "2026-10-25T05:49:50+00:00",
+    "started_at": "2026-10-25T05:49:50+00:00",
+    "finished_at": "2026-10-25T05:50:17+00:00",
+    "downloaded": "2026-10-25T05:50:33+00:00"
+  },
+  "tool": "tools/meshy_generate.py",
+  "pricing_source": {
+    "url": "https://docs.meshy.ai/en/api/pricing",
+    "read": "2026-10-24"
+  },
+  "licence_note": "Generated through the Meshy API, which requires a paid plan (402 on a free plan). Meshy Terms of Use (https://www.meshy.ai/terms-of-use, last updated 2026-09-19), section 3.2: customers on a paid plan own their Customer Output to the extent permitted by law (free-plan output is owned by Meshy and offered under CC BY 4.0 with credit to Meshy). As owner, the account holder may license this model under the project's CC BY-SA 4.0 asset licence, to the extent copyright subsists in AI-generated output. Section 2.4: do not remove or alter AI-identifying metadata or watermarks Meshy embeds; carry them into adopted tiers. Section 2.5: API output is deleted by Meshy 3 days after generation, so keep this folder until the model is adopted. Credit: \"generated with Meshy (meshy.ai)\".",
+  "maintainer": "agent (Claude) for Aaron Brodeur",
+  "progress": 100,
+  "task": {
+    "id": "01a1719b-a621-7275-a36c-5deb473f01f5",
+    "type": "text-to-3d-preview",
+    "status": "SUCCEEDED",
+    "created_at": 1792907390591,
+    "started_at": 1792907390594,
+    "finished_at": 1792907417428,
+    "consumed_credits": 5,
+    "task_error": null
+  },
+  "credits_charged": 5,
+  "files": [
+    {
+      "file": "model.glb",
+      "bytes": 748804,
+      "sha256": "d192fb0514ca8c6989a2a10d4a8693868c4dd69ae0b4f59752b4443decc20304",
+      "source": "https://assets.meshy.ai/<account>/tasks/01a1719b-a621-7275-a36c-5deb473f01f5/output/model.glb"
+    },
+    {
+      "file": "thumbnail.png",
+      "bytes": 60932,
+      "sha256": "d695abcf439b117664309ab981acf29b9a407cbf7e7ca425b8ed50990cb55c42",
+      "source": "https://assets.meshy.ai/<account>/tasks/01a1719b-a621-7275-a36c-5deb473f01f5/output/preview.png"
+    }
+  ],
+  "balance_after": 3032,
+  "inspection": {
+    "by": "agent (Claude), 2026-10-24",
+    "triangles": 20737,
+    "vertices": 19479,
+    "welded_vertices": 10360,
+    "components_after_weld": 4,
+    "boundary_edges_after_weld": 6,
+    "non_manifold_edges_after_weld": 3,
+    "sliver_fraction": 0.0248,
+    "textures": "none (preview is mesh only; TEXCOORD_0 present, no material)",
+    "bounds_gltf": [
+      [
+        -0.43,
+        -0.952,
+        -0.948
+      ],
+      [
+        0.426,
+        0.946,
+        0.947
+      ]
+    ],
+    "axes": "+y up, +z forward (bill at +z), +x the bird's left; normalised to about 1.9 units on the longest axis",
+    "gltf_metadata": "generator \"Khronos glTF Blender I/O v4.3.47\"; no copyright, extras or AI-identifier fields found",
+    "renders": "/private/tmp/claude-501/-Users-aaronbrodeur-Sites-wild-earth/4bce79f6-b155-4cfa-8a06-3ddba225632f/scratchpad/meshy/callipepla_californica/quail_montage.png (not kept)",
+    "verdict": "raw preview, not adopted; geometry only (no texture). Adoptable with build-script fixes."
+  }
+}

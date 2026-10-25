@@ -1,0 +1,93 @@
+{
+  "species": "cyanocitta_stelleri",
+  "mode": "preview",
+  "kind": "text-to-3d",
+  "task_id": "01a1719c-c742-7014-901a-0afbab0fafbc",
+  "endpoint": "https://api.meshy.ai/openapi/v2/text-to-3d",
+  "request": {
+    "mode": "preview",
+    "prompt": "A Steller's jay (Cyanocitta stelleri), Sierra Nevada form, one adult bird perched with its wings folded tight against the body, side-on pose. Realistic proportions, about 31 cm long with a long tail. A tall spiky black crest, sooty black head with a few pale blue streaks on the forehead, sooty grey-brown upper back and breast, deep cobalt-blue belly, rump, wings and tail with fine black bars across the wing and tail feathers. Stout black bill, black legs, three toes forward and one back. No white on the face, wings or tail. No base, no perch. Game-ready, clean closed mesh.",
+    "ai_model": "meshy-6-lite",
+    "target_formats": [
+      "glb"
+    ],
+    "should_remesh": true,
+    "topology": "triangle",
+    "target_polycount": 20000,
+    "moderation": false
+  },
+  "prompt": "A Steller's jay (Cyanocitta stelleri), Sierra Nevada form, one adult bird perched with its wings folded tight against the body, side-on pose. Realistic proportions, about 31 cm long with a long tail. A tall spiky black crest, sooty black head with a few pale blue streaks on the forehead, sooty grey-brown upper back and breast, deep cobalt-blue belly, rump, wings and tail with fine black bars across the wing and tail feathers. Stout black bill, black legs, three toes forward and one back. No white on the face, wings or tail. No base, no perch. Game-ready, clean closed mesh.",
+  "image": null,
+  "preview_job": null,
+  "estimated_credits": 5,
+  "balance_before": 3022,
+  "status": "SUCCEEDED",
+  "timestamps": {
+    "submitted": "2026-10-25T05:51:02+00:00",
+    "created_at": "2026-10-25T05:51:03+00:00",
+    "started_at": "2026-10-25T05:51:03+00:00",
+    "finished_at": "2026-10-25T05:51:40+00:00",
+    "downloaded": "2026-10-25T05:51:46+00:00"
+  },
+  "tool": "tools/meshy_generate.py",
+  "pricing_source": {
+    "url": "https://docs.meshy.ai/en/api/pricing",
+    "read": "2026-10-24"
+  },
+  "licence_note": "Generated through the Meshy API, which requires a paid plan (402 on a free plan). Meshy Terms of Use (https://www.meshy.ai/terms-of-use, last updated 2026-09-19), section 3.2: customers on a paid plan own their Customer Output to the extent permitted by law (free-plan output is owned by Meshy and offered under CC BY 4.0 with credit to Meshy). As owner, the account holder may license this model under the project's CC BY-SA 4.0 asset licence, to the extent copyright subsists in AI-generated output. Section 2.4: do not remove or alter AI-identifying metadata or watermarks Meshy embeds; carry them into adopted tiers. Section 2.5: API output is deleted by Meshy 3 days after generation, so keep this folder until the model is adopted. Credit: \"generated with Meshy (meshy.ai)\".",
+  "maintainer": "agent (Claude) for Aaron Brodeur",
+  "progress": 100,
+  "task": {
+    "id": "01a1719c-c742-7014-901a-0afbab0fafbc",
+    "type": "text-to-3d-preview",
+    "status": "SUCCEEDED",
+    "created_at": 1792907463933,
+    "started_at": 1792907463937,
+    "finished_at": 1792907500611,
+    "consumed_credits": 5,
+    "task_error": null
+  },
+  "credits_charged": 5,
+  "files": [
+    {
+      "file": "model.glb",
+      "bytes": 1105392,
+      "sha256": "e3dc50be47613823eaa5d95f1e880343df9026a9e6536b258c6d76737a1bdeac",
+      "source": "https://assets.meshy.ai/<account>/tasks/01a1719c-c742-7014-901a-0afbab0fafbc/output/model.glb"
+    },
+    {
+      "file": "thumbnail.png",
+      "bytes": 65779,
+      "sha256": "8247506ab6b6435f5563abe25afb202d85097f570854c7da98278624c49ab9ae",
+      "source": "https://assets.meshy.ai/<account>/tasks/01a1719c-c742-7014-901a-0afbab0fafbc/output/preview.png"
+    }
+  ],
+  "balance_after": 3017,
+  "inspection": {
+    "by": "agent (Claude), 2026-10-24",
+    "triangles": 20798,
+    "vertices": 30611,
+    "welded_vertices": 10374,
+    "components_after_weld": 15,
+    "boundary_edges_after_weld": 26,
+    "non_manifold_edges_after_weld": 19,
+    "sliver_fraction": 0.0265,
+    "textures": "none (preview is mesh only; TEXCOORD_0 present, no material)",
+    "bounds_gltf": [
+      [
+        -0.951,
+        -0.6,
+        -0.77
+      ],
+      [
+        0.947,
+        0.591,
+        0.769
+      ]
+    ],
+    "axes": "+y up, +z forward (bill at +z), +x the bird's left; normalised to about 1.9 units on the longest axis",
+    "gltf_metadata": "generator \"Khronos glTF Blender I/O v4.3.47\"; no copyright, extras or AI-identifier fields found",
+    "renders": "/private/tmp/claude-501/-Users-aaronbrodeur-Sites-wild-earth/4bce79f6-b155-4cfa-8a06-3ddba225632f/scratchpad/meshy/cyanocitta_stelleri/stellersjay_montage.png (not kept)",
+    "verdict": "raw preview, rejected: wrong pose (wings spread), unusable crest and tail."
+  }
+}

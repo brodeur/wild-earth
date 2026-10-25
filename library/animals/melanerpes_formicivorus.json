@@ -1,0 +1,49 @@
+{
+  "id": "melanerpes_formicivorus",
+  "aliases": [
+    "acorn_woodpecker",
+    "woodpecker"
+  ],
+  "scientific": "Melanerpes formicivorus",
+  "common": "acorn woodpecker",
+  "body_plan": "bird",
+  "size": {
+    "length_m": 0.21,
+    "shoulder_or_wingspan_m": 0.4,
+    "note": "Length 19-23 cm, wingspan 35-43 cm, mass 65-90 g (library/animals/drafts/melanerpes_formicivorus.md). Meshy normalises its output to about 1.9 units on the longest axis; the first candidate stands upright, so its 1.9 units are vertical and include a fused perch stub."
+  },
+  "source": null,
+  "license": null,
+  "license_detail": {
+    "source_terms": "No mesh adopted yet. Candidates are Meshy API (paid plan) output: Meshy Terms of Use 3.2 (https://www.meshy.ai/terms-of-use, last updated 2026-09-19).",
+    "redistribute_under_cc_by_sa": null,
+    "note": "Set on adoption. A Meshy API candidate may ship as CC BY-SA 4.0 (owned by the paid account holder; credit \"generated with Meshy\"; 2.6(xi) no training of competing models binds the account holder)."
+  },
+  "tiers": null,
+  "rig": "planned: bird template (BODY, LEG_A/B, TAIL with spread, WING arm and HAND, HEAD with the pivot at the base of the neck), origin at the feet so a pitched bird clings by them; see the brief. Until adopted the client draws the procedural buildWoodpecker.",
+  "candidates": [
+    {
+      "kind": "meshy",
+      "purpose": "main tier: perched upright, wings folded (brief prompt A)",
+      "job": "library/animals/jobs/melanerpes_formicivorus/01a1719b-a915-7194-a516-67112f4025e7/job.json",
+      "job_id": "01a1719b-a915-7194-a516-67112f4025e7",
+      "mode": "text-to-3d preview, ai_model meshy-6-lite, remeshed to triangles, target 20,000 faces",
+      "prompt": "An acorn woodpecker (Melanerpes formicivorus), single adult male perched upright, side-on neutral pose, as if gripping a vertical trunk but no tree modelled. Realistic proportions, 21 cm long, compact body, short neck, straight chisel bill as long as the head. Clown face: black mask around bill and eye, white forehead band continuing down in front of the eye into a pale yellow throat, bright red crown, pale cream iris. Glossy blue-black back, wings and stiff pointed tail; black breast band streaking into a white belly; white rump. Wings folded. Zygodactyl feet, two toes forward, two back. No base, no branch. Game-ready, symmetric.",
+      "author": "generated with Meshy (meshy.ai) by agent (Claude) for Aaron Brodeur",
+      "date": "2026-10-25 (UTC)",
+      "credits": 5,
+      "raw_triangles": 20760,
+      "license": "owned by the paid account holder (Meshy Terms of Use 3.2); to be released as CC BY-SA 4.0 with the project's assets on adoption",
+      "status": "raw preview, not adopted; geometry only (no texture). Weak: most field-mark geometry would have to be rebuilt.",
+      "review": "Upright perched bird with folded wings and a long tail hanging down, but it reads as a generic crested woodpecker, as the brief predicted: a spiky sawtooth crest on the crown and nape (an acorn woodpecker has a smooth rounded crown), a thin needle bill rather than a stout chisel, a slim elongated body rather than a compact one, a long tail with a forked tip rather than stiff pointed central feathers. Despite \"no branch\" it stands on a fused vertical stub (the lower fifth of the model) that the toes grip, so zygodactyl toes cannot be checked. Eye is a raised bump. Topology: one watertight piece (post included), 0 open edges, 0.9% slivers; 1.9 units tall, +y up, bill toward +z. Build script would have to cut the stub below the toes and rebuild zygodactyl feet, flatten the crest, replace the bill with a chisel cone, shorten and stiffen the tail, and paint the clown face by landmark regions: little of the generated geometry beyond the body and folded-wing mass survives."
+    }
+  ],
+  "status": "agent draft, needs local sign-off",
+  "accuracy_notes": "Nothing adopted. The species is told by its clown face (black mask, white forehead band into a pale yellow throat, red cap, pale iris), the female's black band between forehead and cap, a white rump and white primary patch in flight, and a compact body braced on a stiff tail on granary trunks. The first Meshy candidate has the wrong head (crest, needle bill) and a fused perch; the face is painted from the palette in any case.",
+  "authors": [
+    "agent (Claude) for Aaron Brodeur (entry, Meshy candidate)"
+  ],
+  "sources": [
+    "library/animals/drafts/melanerpes_formicivorus.md (field marks, sizes, palette, tiers; its sources are listed there)"
+  ]
+}

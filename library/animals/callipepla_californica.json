@@ -1,0 +1,49 @@
+{
+  "id": "callipepla_californica",
+  "aliases": [
+    "quail",
+    "california_quail"
+  ],
+  "scientific": "Callipepla californica",
+  "common": "California quail",
+  "body_plan": "bird",
+  "size": {
+    "length_m": 0.25,
+    "shoulder_or_wingspan_m": 0.35,
+    "note": "Length 24-27 cm, wingspan 32-37 cm, 140-230 g. Meshy normalises to about 1.9 units on the longest axis; adoption scales the standing model to 0.25 m bill to tail."
+  },
+  "source": null,
+  "license": null,
+  "license_detail": null,
+  "tiers": {
+    "note": "No mesh adopted yet. The client draws buildQuail in client/src/animalModels.js (procedural, about 230 triangles)."
+  },
+  "rig": "bird template (brief: BODY 0, LEG_A/B pivot (+-0.022, 0.05, 0.005), TAIL 3, HEAD 6 with the topknot, folded wings as BODY, procedural wing cards for the flush)",
+  "candidates": [
+    {
+      "kind": "meshy",
+      "purpose": "standing / foraging quail on the ground (coveys); flight from procedural wing cards, per the brief",
+      "job": "library/animals/jobs/callipepla_californica/01a1719b-a621-7275-a36c-5deb473f01f5/job.json",
+      "job_id": "01a1719b-a621-7275-a36c-5deb473f01f5",
+      "mode": "text-to-3d preview, ai_model meshy-6-lite, remeshed to triangles, target 20,000 faces",
+      "prompt": "A male California quail (Callipepla californica), one bird standing upright with its wings folded against a plump round body. Realistic proportions, about 25 cm long. A black teardrop-shaped topknot plume rising from the forehead and curling forward over the short black bill. Black face and throat outlined in white, white forehead line, chestnut-brown crown, slate blue-grey breast, buff belly with black-edged scaled feathers and a chestnut centre patch, olive-brown back, brown flanks with white streaks, short grey legs. No base, no rock. Game-ready, clean closed mesh.",
+      "author": "generated with Meshy (meshy.ai) by agent (Claude) for Aaron Brodeur",
+      "date": "2026-10-25 (UTC)",
+      "credits": 5,
+      "raw_triangles": 20737,
+      "license": "owned by the paid account holder (Meshy Terms of Use 3.2); to be released as CC BY-SA 4.0 with the project's assets on adoption; Terms 2.6(xi): not for training models that compete with Meshy",
+      "status": "raw preview, not adopted; geometry only (no texture). Adoptable with build-script fixes.",
+      "review": "Reads as a quail from the side: plump teardrop body, small head, a forward-curling plume over the bill, smooth sculpt (no feather shards), one main piece with three stray single triangles. Faults: the plume is a thin curled wire plus a few crown spikes, not a teardrop; the crown is pinched into a ridge from the front; the stance is upright and tall (height about equal to length) on legs too long and thin for a quail (about a fifth of the height is bare tarsus); the tail is two long thin blades instead of a short rounded tail; the bill is slim and pointed rather than short and stout; eyes are shallow sockets. Feet: three forward toes and a hind toe, flat. A build script would delete the generated plume and add the procedural teardrop (brief section 6), cut the legs at mid-tarsus and add short grey procedural legs, trim the tail blades to a short fan, and give the body the forage pitch. No species drift to a crestless partridge; scaling and face pattern are colour only."
+    }
+  ],
+  "status": "agent draft, needs local sign-off",
+  "accuracy_notes": "The Meshy preview has the plume curling forward (checked in side view) but as a filament. Poly Pizza \"Quail\" (Poly by Google, CC BY 3.0, 950 triangles) is the alternative base named in the brief; not reviewed here. A local birder should check the plume shape, leg length and the upright versus forage posture.",
+  "authors": [
+    "agent (Claude) for Aaron Brodeur (entry, Meshy candidate)"
+  ],
+  "sources": [
+    "library/animals/drafts/callipepla_californica.md (mesh brief)",
+    "docs/animal-library.md",
+    "library/animals/README.md"
+  ]
+}

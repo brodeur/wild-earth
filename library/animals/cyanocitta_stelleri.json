@@ -1,0 +1,49 @@
+{
+  "id": "cyanocitta_stelleri",
+  "aliases": [
+    "stellers_jay",
+    "steller_jay"
+  ],
+  "scientific": "Cyanocitta stelleri frontalis",
+  "common": "Steller's jay",
+  "body_plan": "bird",
+  "size": {
+    "length_m": 0.31,
+    "shoulder_or_wingspan_m": 0.45,
+    "note": "Length 30-34 cm, wingspan 43-48 cm, 100-140 g. Meshy normalises to about 1.9 units on the longest axis (here the spread wings); adoption would scale to 0.31 m bill to tail."
+  },
+  "source": null,
+  "license": null,
+  "license_detail": null,
+  "tiers": {
+    "note": "No mesh adopted yet. The client draws not drawn (sound only, client/src/sound.js)."
+  },
+  "rig": "bird template (brief: the scrub-jay's scaled about 1.08, crest in HEAD)",
+  "candidates": [
+    {
+      "kind": "meshy",
+      "purpose": "perched Steller's jay in conifer and mixed forest",
+      "job": "library/animals/jobs/cyanocitta_stelleri/01a1719c-c742-7014-901a-0afbab0fafbc/job.json",
+      "job_id": "01a1719c-c742-7014-901a-0afbab0fafbc",
+      "mode": "text-to-3d preview, ai_model meshy-6-lite, remeshed to triangles, target 20,000 faces",
+      "prompt": "A Steller's jay (Cyanocitta stelleri), Sierra Nevada form, one adult bird perched with its wings folded tight against the body, side-on pose. Realistic proportions, about 31 cm long with a long tail. A tall spiky black crest, sooty black head with a few pale blue streaks on the forehead, sooty grey-brown upper back and breast, deep cobalt-blue belly, rump, wings and tail with fine black bars across the wing and tail feathers. Stout black bill, black legs, three toes forward and one back. No white on the face, wings or tail. No base, no perch. Game-ready, clean closed mesh.",
+      "author": "generated with Meshy (meshy.ai) by agent (Claude) for Aaron Brodeur",
+      "date": "2026-10-25 (UTC)",
+      "credits": 5,
+      "raw_triangles": 20798,
+      "license": "owned by the paid account holder (Meshy Terms of Use 3.2); to be released as CC BY-SA 4.0 with the project's assets on adoption; Terms 2.6(xi): not for training models that compete with Meshy",
+      "status": "raw preview, rejected: wrong pose (wings spread), unusable crest and tail.",
+      "review": "Failed the brief. Despite \"wings folded tight\", the wings came out spread and drooped forward in a mantling or landing pose (1.9 units across, wider than the bird is long), each a fan of soft rounded feathers that matches neither a folded nor a usable flight wing. The crest is a tall blunt block with flaps on its sides, not a spiky swept crest; the tail is a straight flat plank held level; the underside is cluttered with shards (15 pieces after welding, 26 boundary and 19 non-manifold edges). Bill short and conical, legs and feet fine. Not adoptable; a build script cannot fold these wings."
+    }
+  ],
+  "status": "agent draft, needs local sign-off",
+  "accuracy_notes": "Not adopted. Options: one more preview with a reworded pose (below), or the scrub-jay mesh scaled 1.08 with a procedural crest and the Steller's palette. A local birder should check the crest and the sooty-front, blue-back split on whatever is adopted.",
+  "authors": [
+    "agent (Claude) for Aaron Brodeur (entry, Meshy candidate)"
+  ],
+  "sources": [
+    "library/animals/drafts/cyanocitta_stelleri.md (mesh brief)",
+    "docs/animal-library.md",
+    "library/animals/README.md"
+  ]
+}
