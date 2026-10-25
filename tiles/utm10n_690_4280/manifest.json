@@ -15,7 +15,7 @@
   38.73825606650576
  ],
  "size_m": 10000,
- "generated_at": "2026-10-25T14:25:05Z",
+ "generated_at": "2026-10-25T14:28:19Z",
  "generator": {
   "name": "wild-earth-pipeline",
   "version": "0.2.0"
@@ -533,7 +533,7 @@
     "riparian",
     "water"
    ],
-   "sha256": "1b459cd7ff76767c78b906dc0ba019d4b09483724c66e454cf93a629bd0c7c5a",
+   "sha256": "642d881f3472559ff4001d021c7e0a9f74735879d731ff29f542a5723a0ed3f3",
    "bytes": 1793
   },
   "client.masks": {
@@ -3767,6 +3767,12 @@
    "step": "species",
    "at": "2026-10-25T14:25:05Z",
    "seconds": 160.1,
+   "ok": true
+  },
+  {
+   "step": "unreal",
+   "at": "2026-10-25T14:28:19Z",
+   "seconds": 1.9,
    "ok": true
   }
  ]
