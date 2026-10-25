@@ -262,6 +262,26 @@ export function buildRabbit() {
   ];
   return finish(p, { amp: [0.8, 0.6, 0.35, 0], pose: [1, 0.3, -0.35, 0] });
 }
+// Black-tailed jackrabbit, 0.55 m head and body, sitting 0.29 m at the back and 0.43 m to the ear tips: a lean
+// grizzled grey-buff hare on long legs, very long ears with black tips, a black-topped tail, creamy belly. The fallback
+// for jackrabbit.glb (?jackrabbit=proc); bounds fore pair (A) against hind pair (B), pose sits it up (alert).
+export function buildJackrabbit() {
+  const back = 0x8a7d6b, flank = 0x9d907d, nape = 0x9c8160, belly = 0xe0d9cb, leg = 0xc6b79d, ear = 0x8f8576, tip = 0x1c1814;
+  const head = { part: PART.HEAD, pivot: [0, 0.26, 0.06] };
+  const p = [
+    ball({ color: back, pos: [0, 0.19, -0.04], scale: [0.072, 0.1, 0.15] }),
+    ball({ color: flank, pos: [0, 0.13, -0.1], scale: [0.085, 0.09, 0.1] }),
+    ball({ color: belly, pos: [0, 0.14, 0.03], scale: [0.05, 0.06, 0.09] }, 5, 3),
+    ball({ color: nape, pos: [0, 0.21, 0.06], scale: [0.055, 0.075, 0.065] }),
+    ball({ color: nape, ...head, pos: [0, 0.28, 0.1], scale: [0.045, 0.05, 0.07] }),
+    ...mirror(s => box({ color: ear, ...head, pos: [s * 0.022, 0.37, 0.07], rot: [-0.2, 0, -s * 0.12], scale: [0.03, 0.12, 0.008] })),
+    ...mirror(s => box({ color: tip, ...head, pos: [s * 0.029, 0.43, 0.058], rot: [-0.2, 0, -s * 0.12], scale: [0.026, 0.03, 0.009] })),
+    box({ color: tip, part: PART.TAIL, pivot: [0, 0.13, -0.18], pos: [0, 0.14, -0.2], rot: [0.5, 0, 0], scale: [0.03, 0.03, 0.06] }),
+    ...mirror(s => box({ color: leg, part: PART.LEG_A, pivot: [s * 0.03, 0.15, 0.08], pos: [s * 0.03, 0.075, 0.085], scale: [0.016, 0.15, 0.018] })),
+    ...mirror(s => box({ color: leg, part: PART.LEG_B, pivot: [s * 0.06, 0.11, -0.08], pos: [s * 0.06, 0.012, -0.05], scale: [0.026, 0.024, 0.13] })),
+  ];
+  return finish(p, { amp: [0.95, 0.4, 0.8, 0], pose: [1, 0.2, -0.35, 0] });
+}
 // California vole, 0.17 m with the tail: a stocky cylinder of grizzled brown, blue-grey belly, a short dark tail.
 export function buildVole() {
   const back = 0x6b5a48, belly = 0x8f8b86, feet = 0xa39b91, tail = 0x3d342d;
@@ -391,6 +411,13 @@ const RIG = {
   // and flashes the white tail.
   rabbit: { amp: [0.8, 0.6, 0.35, 0], pose: [1, 0.3, 0.4, 0],
     k: { spine: 0.16, spinePhase: 1.2, sit: 0.55, foreFold: 0.5, tipLag: 0, tipWave: 0, tipCurl: 0, abduct: 0 } },
+  // Black-tailed jackrabbit (tools/build_jackrabbit.py): the brush rabbit's template on a hare (chest, no tail tip),
+  // with a longer reach in the bound (amp.x) and more chest flex; flick dips the head much further (amp.z: the nose
+  // to the grass from the raised fore body when feeding).
+  // animals.js also drives pose below 0 for the day rest: the chest pitched down, the forelegs reaching forward and
+  // the head tilted back up, a low hunch with the ears still up (there is no ears part to lay them flat).
+  jackrabbit: { amp: [0.95, 0.4, 0.85, 0], pose: [1, 0.2, 0.4, 0],
+    k: { spine: 0.26, spinePhase: 1.2, sit: 0.5, foreFold: 0.5, tipLag: 0, tipWave: 0, tipCurl: 0, abduct: 0 } },
   // California vole (tools/build_vole.py): template R without a tail part (too short; it stays with the body).
   // Scurries in quick small steps; pose lifts the chest to sit up and eat; flick dips the head to clip grass.
   vole: { amp: [0.9, 0, 0.35, 0], pose: [1, 0, 0.45, 0],
@@ -404,7 +431,7 @@ const RIG = {
 };
 const urls = { jay: '../assets/scrubjay.glb', quail: '../assets/quail.glb', squirrel: '../assets/squirrel.glb',
   stjay: '../assets/stellersjay.glb', hawk: '../assets/redtail.glb', vulture: '../assets/vulture.glb',
-  lion: '../assets/cougar.glb', rabbit: '../assets/rabbit.glb', vole: '../assets/vole.glb', ravenGround: '../assets/raven_ground.glb' };
+  lion: '../assets/cougar.glb', rabbit: '../assets/rabbit.glb', jackrabbit: '../assets/jackrabbit.glb', vole: '../assets/vole.glb', ravenGround: '../assets/raven_ground.glb' };
 function rigModel(name, opts) {
   const r = RIG[name];
   return loadTiers(new URL(urls[name], import.meta.url), { amp: r.amp, pose: r.pose, drop: r.drop || 0, poseMax: r.poseMax || 1, gait: !!r.gait, rig: { name, k: r.k } }, opts)
@@ -418,6 +445,7 @@ export const loadRedtailMesh = () => rigModel('hawk');
 export const loadVultureMesh = () => rigModel('vulture');
 export const loadCougarMesh = () => rigModel('lion');
 export const loadRabbitMesh = () => rigModel('rabbit');
+export const loadJackrabbitMesh = () => rigModel('jackrabbit');
 export const loadVoleMesh = () => rigModel('vole');
 // The common raven on the ground (client/assets/raven_ground.glb, tools/build_raven_ground.py; generated with Meshy,
 // meshy.ai, CC BY-SA 4.0): 0.62 m, origin on the ground between the feet, bill toward +z; lod0 1,496 triangles drawn

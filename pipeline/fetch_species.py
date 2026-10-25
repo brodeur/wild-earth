@@ -64,7 +64,7 @@ def inventory(tile: Tile, limit=40) -> list[dict]:
 def fetch_species(tile: Tile, force=False) -> dict:
     species, feats, seasonal = [], [], {}
     for sp in SPECIES:
-        key = match_key(sp["scientific"])
+        key = sp.get("gbif_key") or match_key(sp["scientific"])   # a pinned taxon key, else the name match
         entry = {**sp, "gbif_key": key, "sources": ["gbif"], "confidence": "unverified"}
         if key:
             occ = occurrences(tile, key)

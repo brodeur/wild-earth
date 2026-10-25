@@ -17,8 +17,9 @@
 # tail root, measured along the spine since the crouch tilts the body) to 0.33 m. Colour: the diffuse texture is sampled per face (its ticking and the eye) and multiplied
 # onto the brief's darker palette by region: grey-brown back, flanks, warmer nape and ear backs with dark rims,
 # pale grey belly, chin and inner legs, buff feet, tail dark above and pale below, dark eye with a pale ring.
-# Decimates (collapse, X symmetry; ears, eyes and face protected) to lod0 ~900, lod1 ~300, lod2 ~60
-# triangles (no eyes on lod1 and lod2). Rig, template R (rodent and lagomorph, animalModels.js): BODY 0
+# Each ear is reshaped by side (x sign), not by group name. Decimates (collapse, X symmetry; ears, eyes and face
+# protected) to lod0 ~900, lod1 ~300, lod2 ~60 triangles (no eyes on lod1 and lod2; lod2 keeps the ear tips).
+# Rig, template R (rodent and lagomorph, animalModels.js): BODY 0
 # (hindquarters and thighs), CHEST 7 (fore body, pivot at the lumbar joint; flexes in the bound, rises to sit up),
 # LEG_A 1 (fore pair, pivots at the elbows) and HEAD 6 (neck, head and ears; pivot at the neck base), both
 # children of the chest, LEG_B 2 (hind pair with the long hind feet, pivots at the stifles), TAIL 3; from the
@@ -93,12 +94,15 @@ bpy.ops.mesh.symmetrize(direction='POSITIVE_X', threshold=0.02)
 bpy.ops.object.mode_set(mode='OBJECT'); me = ob.data
 A.weld(me, 1e-4)
 
-# ears 0.55x about their base; tail 0.5x about its root
+# ears 0.55x about their base; tail 0.5x about its root. Each ear is picked by side (x sign), not by group name:
+# symmetrize copies the left half's group names onto the right, so the right ear carries Ear_L weights and was
+# once shrunk about the left ear's base (sitting about 1 cm nearer the midline)
+EARS = {'Ear_L', 'Ear_R', 'Ear_L.001', 'Ear_R.001'}
 EARB = {'L': J['Ear_L'], 'R': J['Ear_R']}
 for v in me.vertices:
-    for s in 'LR':
-        w = bw(v, {f'Ear_{s}', f'Ear_{s}.001'})
-        if w > 0: v.co = v.co.lerp(EARB[s] + (v.co - EARB[s]) * EAR, min(1.0, w))
+    s = 'L' if v.co.x > 0 else 'R'
+    w = bw(v, EARS)
+    if w > 0: v.co = v.co.lerp(EARB[s] + (v.co - EARB[s]) * EAR, min(1.0, w))
     w = bw(v, {'Tail'})
     if w > 0: v.co = v.co.lerp(J['Tail'] + (v.co - J['Tail']) * TAIL, min(1.0, w))
 for s in 'LR':
@@ -172,6 +176,10 @@ def face_color(m, p, wts):
     if n.z > 0.45: return col(BACK)
     return col(FLANK)
 EAR_TIP = max(v.co.z for v in me.vertices)
+# lod2 keeps each ear's top 4 mm: once the ears are symmetric the collapse otherwise takes them down to stubs
+tg = ob.vertex_groups.new(name='eartips')
+for v in me.vertices:
+    if bw(v, {'Ear_L', 'Ear_R', 'Ear_L.001', 'Ear_R.001'}) > 0.5 and v.co.z > EAR_TIP - 0.004: tg.add([v.index], 1.0, 'REPLACE')
 
 def vrig(m, wts):
     LA = {'FrontLeg_L', 'FrontPaw_L', 'FrontLeg_R', 'FrontPaw_R'}
@@ -192,10 +200,10 @@ def vrig(m, wts):
 
 tiers = []
 for name, target, prot in TIERS:
-    o, n0 = A.tier_copy(ob, target, protect='protect' if prot else None, protect_factor=prot)
+    o, n0 = A.tier_copy(ob, target, protect='protect' if prot else ('eartips' if name == 'lod2' else None), protect_factor=prot or 1.0)
     m = o.data
     gmap = {g.index: g.name for g in o.vertex_groups}
-    wts = {v.index: {gmap[g.group]: g.weight for g in v.groups if gmap[g.group] != 'protect'} for v in m.vertices}
+    wts = {v.index: {gmap[g.group]: g.weight for g in v.groups if gmap[g.group] not in ('protect', 'eartips')} for v in m.vertices}
     if target <= 300:   # far tiers: no eye
         fc = lambda p, m=m, wts=wts: (lambda c: c if c != A.srgb2lin(EYE) and c != tuple(A.srgb2lin(RING)) else tuple(x * 1.0 for x in A.srgb2lin(A.mix(BACK, NAPE, 0.4))))(face_color(m, p, wts))
     else:

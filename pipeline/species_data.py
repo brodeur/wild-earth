@@ -53,6 +53,15 @@ SPECIES = [
      "group": "mammal", "role": "ambient", "scale": "squirrel",
      "senses": {"vision": {"range_m": 200, "color": "dichromat"},
                 "hearing": {"range_m": 400}, "smell": {"range_m": 200}}},
+    # open grassland, savanna and pasture; far more records in the tiles than the brush rabbit (14-17 against 1).
+    # gbif_key pins the taxon (fetch_species otherwise matches the name); habitat: suitability by habitat class
+    # (pipeline/habitat.py codes), as the client's animals.js SUIT, times openness there
+    {"code": "lepus_californicus", "common": "black-tailed jackrabbit", "scientific": "Lepus californicus",
+     "group": "mammal", "role": "ambient", "scale": "squirrel", "gbif_key": 2436801,
+     "habitat": {"oak_woodland": 0.45, "mixed": 0.05, "chaparral": 0.25, "grassland": 1.0, "riparian": 0.15,
+                 "barren": 0.3, "human": 0.9},
+     "senses": {"vision": {"range_m": 300, "color": "dichromat"},
+                "hearing": {"range_m": 500}, "smell": {"range_m": 200}}},
     {"code": "microtus_californicus", "common": "California vole", "scientific": "Microtus californicus",
      "group": "mammal", "role": "ambient", "scale": "vole",
      "senses": {"vision": {"range_m": 30, "color": "dichromat"},
@@ -79,13 +88,13 @@ PERCEPTION = {
     "urocyon_cinereoargenteus": ALL,
     "sciurus_griseus": ["sciurus_griseus", "buteo_jamaicensis", "urocyon_cinereoargenteus",
                         "canis_latrans", "corvus_corax", "odocoileus_hemionus",
-                        "sylvilagus_bachmani", "callipepla_californica",
+                        "sylvilagus_bachmani", "lepus_californicus", "callipepla_californica",
                         "melanerpes_formicivorus", "aphelocoma_californica", "cyanocitta_stelleri",
                         "cathartes_aura"],
     "melanerpes_formicivorus": ["melanerpes_formicivorus", "buteo_jamaicensis", "corvus_corax",
                                 "sciurus_griseus", "aphelocoma_californica", "urocyon_cinereoargenteus",
                                 "canis_latrans", "callipepla_californica", "odocoileus_hemionus",
-                                "cyanocitta_stelleri", "cathartes_aura"],
+                                "lepus_californicus", "cyanocitta_stelleri", "cathartes_aura"],
     "aphelocoma_californica": ["aphelocoma_californica", "buteo_jamaicensis", "corvus_corax",
                                "sciurus_griseus", "melanerpes_formicivorus", "urocyon_cinereoargenteus",
                                "canis_latrans", "callipepla_californica", "cyanocitta_stelleri",
@@ -100,12 +109,15 @@ PERCEPTION = {
                                "sylvilagus_bachmani", "odocoileus_hemionus"],
     "sylvilagus_bachmani": ["sylvilagus_bachmani", "urocyon_cinereoargenteus", "canis_latrans",
                             "buteo_jamaicensis", "corvus_corax", "callipepla_californica",
-                            "odocoileus_hemionus"],
+                            "odocoileus_hemionus", "lepus_californicus"],
+    "lepus_californicus": ["lepus_californicus", "sylvilagus_bachmani", "urocyon_cinereoargenteus",
+                           "canis_latrans", "puma_concolor", "buteo_jamaicensis", "corvus_corax",
+                           "callipepla_californica", "odocoileus_hemionus"],
     "microtus_californicus": ["microtus_californicus", "urocyon_cinereoargenteus",
                               "canis_latrans", "buteo_jamaicensis", "corvus_corax"],
     "canis_latrans": ALL,
     "puma_concolor": ["puma_concolor", "odocoileus_hemionus", "canis_latrans",
-                      "urocyon_cinereoargenteus", "sylvilagus_bachmani", "sciurus_griseus",
+                      "urocyon_cinereoargenteus", "sylvilagus_bachmani", "lepus_californicus", "sciurus_griseus",
                       "callipepla_californica", "corvus_corax"],
 }
 
@@ -129,7 +141,8 @@ CALENDAR = {
         "fall": [act("forage", "acorn_mast"), act("cache", "acorn_mast", goal="hide food from other ravens")],
     },
     "buteo_jamaicensis": {
-        "winter": [act("hunt", "microtus_californicus", "sylvilagus_bachmani", goal="hunt from perches")],
+        "winter": [act("hunt", "microtus_californicus", "sylvilagus_bachmani", "lepus_californicus",
+                       goal="hunt from perches")],
         "spring": [act("court", goal="sky dance"), act("nest", "cliff_or_snag", goal="large tree or cliff")],
         "summer": [act("rear", "sciurus_griseus", "sylvilagus_bachmani", "microtus_californicus",
                        goal="feed chicks")],
@@ -197,6 +210,13 @@ CALENDAR = {
         "summer": [act("forage", "grass_forbs"), act("shelter", "cover")],
         "fall": [act("forage", "browse")],
     },
+    # in a form by day, out to feed at dusk, night and dawn; leverets from late winter to summer
+    "lepus_californicus": {
+        "winter": [act("forage", "grass_forbs", "browse"), act("shelter", "cover", goal="form under a shrub")],
+        "spring": [act("court", goal="chases and boxing"), act("rear", "grass_forbs", goal="leverets in a form")],
+        "summer": [act("forage", "grass_forbs"), act("shelter", "cover", goal="rest in shade midday")],
+        "fall": [act("forage", "grass_forbs", "browse")],
+    },
     "microtus_californicus": {
         "winter": [act("forage", "grass_forbs"), act("shelter", "burrow")],
         "spring": [act("rear", "burrow"), act("forage", "grass_forbs")],
@@ -204,7 +224,8 @@ CALENDAR = {
         "fall": [act("forage", "grass_forbs"), act("rear", "burrow")],
     },
     "canis_latrans": {
-        "winter": [act("court"), act("hunt", "sylvilagus_bachmani", "microtus_californicus", "odocoileus_hemionus")],
+        "winter": [act("court"), act("hunt", "sylvilagus_bachmani", "lepus_californicus", "microtus_californicus",
+                                     "odocoileus_hemionus")],
         "spring": [act("den", "burrow"), act("rear", "small_mammals")],
         "summer": [act("hunt", "small_mammals", "insects"), act("forage", "carrion")],
         "fall": [act("disperse"), act("forage", "acorn_mast", "carrion")],

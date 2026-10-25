@@ -33,9 +33,9 @@
     "note": "CC0 places no conditions, so the adopted tiers may ship in client/assets and be relicensed with the project's assets. Credit is kept anyway (README, build script header, GLB asset.copyright)."
   },
   "tiers": {
-    "lod0": 896,
-    "lod1": 299,
-    "lod2": 60,
+    "lod0": 898,
+    "lod1": 300,
+    "lod2": 58,
     "file": "client/assets/rabbit.glb",
     "attributes": [
       "POSITION",
@@ -47,7 +47,7 @@
   },
   "rig": "rodent template R (animalModels.js): BODY hindquarters, CHEST (pivot at the lumbar joint), HEAD and LEG_A (fore pair, pivots at the elbows) children of the chest, LEG_B (hind pair with the long hind feet, pivots at the stifles), TAIL; from the source skin weights; parent pivots in extras.rig. No TAIL_TIP (the tail is a stub) and no EARS part (ears ride with the head).",
   "status": "agent draft, needs local sign-off",
-  "accuracy_notes": "Fur cards and whiskers dropped; posed in the source's resting crouch (Sitting clip frame 1, the only low symmetric pose); ears 0.55x about their base, tail 0.5x; the diffuse texture is sampled per face for its ticking and multiplied onto the brief's darker palette. Reads as a small dark wild cottontail, not a pet bunny or a hare: short dark-rimmed ears, compact body, grey-brown back, warmer nape, pale grey belly and inner forelegs, buff feet, a tiny tail dark above and pale below, dark eye with a pale ring. Still wrong or unchecked: the pose is a sitting crouch with the fore body raised, not a level feeding crouch; the head is large and round (the source is a European rabbit); the ears measure about 4 cm above their joint, at the short end of the brief's 5-6 cm; the eye ring may be too bright; lod1 ears are blades and lod2 is a wedge with ears. A local check of ear length and overall darkness is wanted.",
+  "accuracy_notes": "Fur cards and whiskers dropped; posed in the source's resting crouch (Sitting clip frame 1, the only low symmetric pose); ears 0.55x about their base, tail 0.5x; the diffuse texture is sampled per face for its ticking and multiplied onto the brief's darker palette. Reads as a small dark wild cottontail, not a pet bunny or a hare: short dark-rimmed ears, compact body, grey-brown back, warmer nape, pale grey belly and inner forelegs, buff feet, a tiny tail dark above and pale below, dark eye with a pale ring. Still wrong or unchecked: the pose is a sitting crouch with the fore body raised, not a level feeding crouch; the head is large and round (the source is a European rabbit); the ears measure about 4 cm above their joint, at the short end of the brief's 5-6 cm; the eye ring may be too bright; lod1 ears are blades and lod2 is a wedge with ears. A local check of ear length and overall darkness is wanted. Rebuilt 2026-10-25 (ear fix): the build shrank the right ear about the left ear's base, because Blender's symmetrize copies the left half's vertex group names onto the right, so the right ear sat about 1 cm nearer the midline; each ear is now picked by side (x sign) and both tips sit at x = +-3.6 cm. lod2 now keeps each ear's top 4 mm (an eartips vertex group), since the symmetric collapse otherwise took the ears down to stubs; tiers 898 / 300 / 58.",
   "authors": [
     "Čestmír Dammer (model)",
     "agent (Claude) for Aaron Brodeur (adoption, pose, reshaping, recolour, tiers)"

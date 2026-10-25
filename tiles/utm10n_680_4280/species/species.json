@@ -286,6 +286,41 @@
   "occurrence_count": 1
  },
  {
+  "code": "lepus_californicus",
+  "common": "black-tailed jackrabbit",
+  "scientific": "Lepus californicus",
+  "group": "mammal",
+  "role": "ambient",
+  "scale": "squirrel",
+  "gbif_key": 2436801,
+  "habitat": {
+   "oak_woodland": 0.45,
+   "mixed": 0.05,
+   "chaparral": 0.25,
+   "grassland": 1.0,
+   "riparian": 0.15,
+   "barren": 0.3,
+   "human": 0.9
+  },
+  "senses": {
+   "vision": {
+    "range_m": 300,
+    "color": "dichromat"
+   },
+   "hearing": {
+    "range_m": 500
+   },
+   "smell": {
+    "range_m": 200
+   }
+  },
+  "sources": [
+   "gbif"
+  ],
+  "confidence": "unverified",
+  "occurrence_count": 14
+ },
+ {
   "code": "microtus_californicus",
   "common": "California vole",
   "scientific": "Microtus californicus",

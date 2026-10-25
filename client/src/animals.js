@@ -4,10 +4,10 @@ import { hash } from './vegetation.js';
 import { addCaster, removeCaster } from './shadows.js';
 import { seasonOfDate } from './season.js';
 import { buildSquirrel, buildWoodpecker, buildRaven, buildDeer, buildQuail, buildJay, buildHawk, buildVulture, buildStellersJay,
-  buildDeerBuck, buildFox, buildCoyote, buildCougar, buildRabbit, buildVole,
+  buildDeerBuck, buildFox, buildCoyote, buildCougar, buildRabbit, buildVole, buildJackrabbit,
   animalMaterial, animalDepthMaterial, planarShadowMaterial, loadDeerMesh, loadSquirrelMesh, loadQuailMesh, loadJayMesh,
   loadStellersJayMesh, loadRedtailMesh, loadVultureMesh, loadDeerBuckMesh, loadFoxMesh, loadCoyoteMesh, loadCougarMesh,
-  loadRabbitMesh, loadVoleMesh, loadRavenGroundMesh, RAVEN_GROUND, hasAnim2, antlerState, SEASON_MONTH } from './animalModels.js';
+  loadRabbitMesh, loadJackrabbitMesh, loadVoleMesh, loadRavenGroundMesh, RAVEN_GROUND, hasAnim2, antlerState, SEASON_MONTH } from './animalModels.js';
 
 // Ambient animals: the first step toward "many of each species always present" (docs/brief.md,
 // Direction; roadmap visual pass step 6 "Life"). Western gray squirrels, acorn woodpeckers, other
@@ -56,6 +56,12 @@ import { buildSquirrel, buildWoodpecker, buildRaven, buildDeer, buildQuail, buil
 // cover inside ~9 m, voles dash down the runway and hide. Rabbits are drawn within 120 m of the eye, voles within 40 m
 // of a camera under 10 m above the ground (and only think there). Bucks (their own species slot, BK, sharing the code
 // and the herds) are one in three or four of the herd's followers; their antlers follow the date (antlers()).
+// Black-tailed jackrabbits (2026-10-25; jkUpdate): alone or in twos on open grassland, savanna and pasture and in
+// sparse chaparral, hunched in a form by day (beside a shrub when the near set has one, else in the grass); out at
+// dawn, dusk and night to feed in short hops with head dips, sitting up now and then and loping on in 1-3 m bounds.
+// A low player within ~30 m: it freezes, ears up, then bolts in a zigzag at ~14 m/s, bounds to ~6 m, swinging
+// 30-60 degrees off its line every 2-4 bounds. Drawn within 250 m of the eye (lod 12 / 40 m). Until the tile's
+// species step has run with the jackrabbit in pipeline/species_data.py, it is seen by everyone (PENDING).
 //
 // Events (for sound.js): on(type, fn) / off(type, fn). 'flush' { group, x, y, z, n, cause } when a
 // quail covey bursts up (x, y, z: where it takes off; cause 'raven', 'hawk', 'self' or 'debug');
@@ -78,7 +84,7 @@ const LIVE_R = 400, REBUILD_MOVE = 100, NEAR_R = 150, TAG_R = 40, TAG_MAX = 6, B
 // GLB in three tiers by distance from the eye: lod0 within lod[0] m, lod1 within lod[1] m, lod2 beyond. The
 // procedural model (animalModels.js build*) still holds every animal's matrix and pose and is drawn instead
 // until the GLB has loaded, if it fails to load, or with ?<param>=proc (?deer=proc, ?squirrel=proc,
-// ?quail=proc, ?jay=proc, ?stjay=proc, ?hawk=proc, ?vulture=proc, ?fox=proc, ?coyote=proc, ?rabbit=proc, ?vole=proc,
+// ?quail=proc, ?jay=proc, ?stjay=proc, ?hawk=proc, ?vulture=proc, ?fox=proc, ?coyote=proc, ?rabbit=proc, ?jackrabbit=proc, ?vole=proc,
 // ?lion=proc or ?cougar=proc, ?buck=proc (?deer=proc covers the buck too); ?animals=proc for all) for A/B; live:
 // __we.animals.setMesh('quail', false) (and
 // __we.animals.deerMesh = false as before). __we.animals.lodForce.quail = 0/1/2 pins every quail to one tier
@@ -99,6 +105,9 @@ const LIVE_R = 400, REBUILD_MOVE = 100, NEAR_R = 150, TAG_R = 40, TAG_MAX = 6, B
 const LOD_R2 = 250 * 250;   // ground animals farther than this from the eye think on alternate frames (with the summed dt)
 const FLY_NEAR = 30, FLY_FAR = 100, FLY_GROW = 0.6;   // birds in flight: true size within FLY_NEAR m of the eye, 1.6x beyond FLY_FAR
 const VISUAL_ONLY = new Set(['cathartes_aura']);     // not in the species list or perception matrix yet: seen by everyone
+// in pipeline/species_data.py but maybe not yet in this tile's package (run its species step): seen by everyone until
+// the tile's perception matrix names it, then as the matrix says
+const PENDING = new Set(['lepus_californicus']);
 const TAU = Math.PI * 2;
 const CLING_PITCH = -1.72;   // a clinging woodpecker: nose up, tipped just past vertical so the tail braces on the bark
 
@@ -124,6 +133,7 @@ const SUIT = {
   urocyon_cinereoargenteus: { 1: 1, 2: 0.3, 3: 0.8, 4: 0.9, 5: 0.25, 6: 0.8, 9: 0.4 },   // woodland and chaparral, edges (below)
   canis_latrans:            { 1: 0.6, 2: 0.15, 3: 0.3, 4: 0.5, 5: 1, 6: 0.5, 8: 0.3, 9: 0.8 },   // grassland and savanna
   sylvilagus_bachmani:      { 1: 0.5, 3: 0.4, 4: 1, 5: 0.35, 6: 0.8, 9: 0.3 },   // brush; times the brush-edge factor
+  lepus_californicus:       { 1: 0.45, 3: 0.05, 4: 0.25, 5: 1, 6: 0.15, 8: 0.3, 9: 0.9 },   // open ground; times openness (canopy)
   microtus_californicus:    { 1: 0.35, 4: 0.1, 5: 1, 6: 0.5, 9: 0.6 },   // grass
   puma_concolor:            { 1: 1, 2: 0.4, 3: 0.7, 4: 0.9, 6: 0.6 },   // a territory's home: oak and chaparral
 };
@@ -139,6 +149,7 @@ const SEASON = {
   urocyon_cinereoargenteus: { fall: 1.1, winter: 1, spring: 1, summer: 1 },
   canis_latrans:            { fall: 1, winter: 1, spring: 1, summer: 1 },
   sylvilagus_bachmani:      { fall: 0.9, winter: 0.85, spring: 1.1, summer: 1 },
+  lepus_californicus:       { fall: 0.95, winter: 0.85, spring: 1.1, summer: 1.05 },   // leverets from late winter to summer
   microtus_californicus:    { fall: 0.8, winter: 1, spring: 1.3, summer: 0.8 },
   puma_concolor:            { fall: 1, winter: 1, spring: 1, summer: 1 },
 };
@@ -164,10 +175,12 @@ const SPECIES = [
   // the female acorn woodpecker: the woodpecker's code and families, her own colouring (a black band between the
   // white forehead and the red), so her own mesh slot
   { code: 'melanerpes_formicivorus', one: 'female woodpecker', many: 'female woodpeckers', salt: 9737, cap: 200, scale: 1, build: () => buildWoodpecker(true), variantOf: 1 },
+  // the black-tailed jackrabbit: open ground, one or two per cell, 40 at most (culled beyond 250 m of the eye)
+  { code: 'lepus_californicus', one: 'jackrabbit', many: 'jackrabbits', k: 0.12, salt: 9838, cap: 40, scale: 1, build: buildJackrabbit, liveR: 300, common: 'Black-tailed jackrabbit' },
 ];
-const SQ = 0, WP = 1, RV = 2, DR = 3, QU = 4, SJ = 5, HK = 6, TV = 7, ST = 8, FX = 9, CY = 10, RB = 11, VO = 12, ML = 13, BK = 14, WF = 15;
+const SQ = 0, WP = 1, RV = 2, DR = 3, QU = 4, SJ = 5, HK = 6, TV = 7, ST = 8, FX = 9, CY = 10, RB = 11, VO = 12, ML = 13, BK = 14, WF = 15, JR = 16;
 SPECIES[DR].planar = true;
-const TAG_DY = [0.5, 0.5, 0.7, 2.1, 0.4, 0.4, 0.7, 0.7, 0.45, 0.65, 0.95, 0.4, 0.2, 1.1, 2.2, 0.5];
+const TAG_DY = [0.5, 0.5, 0.7, 2.1, 0.4, 0.4, 0.7, 0.7, 0.45, 0.65, 0.95, 0.4, 0.2, 1.1, 2.2, 0.5, 0.6];
 const INDEX = Object.fromEntries(SPECIES.map((sp, k) => [sp.code, k]).filter(([, k]) => SPECIES[k].variantOf === undefined));
 const DRAWN = {
   [DR]: { name: 'deer', param: 'deer', load: loadDeerMesh, lod: [30, 90], planar: true },
@@ -182,6 +195,7 @@ const DRAWN = {
   [FX]: { name: 'fox', param: 'fox', load: loadFoxMesh, lod: [18, 56], planar: true },
   [CY]: { name: 'coyote', param: 'coyote', load: loadCoyoteMesh, lod: [22, 68], planar: true },
   [RB]: { name: 'rabbit', param: 'rabbit', load: loadRabbitMesh, lod: [6, 20] },
+  [JR]: { name: 'jackrabbit', param: 'jackrabbit', load: loadJackrabbitMesh, lod: [12, 40] },
   [VO]: { name: 'vole', param: 'vole', load: loadVoleMesh, lod: [3, 10] },
   [ML]: { name: 'lion', param: 'lion', alias: 'cougar', load: loadCougarMesh, lod: [40, 124], planar: true },
   [BK]: { name: 'buck', param: 'buck', alias: 'deer', load: loadDeerBuckMesh, lod: [30, 90], planar: true },
@@ -189,7 +203,7 @@ const DRAWN = {
   [RV]: { name: 'raven', param: 'ravenground', load: loadRavenGroundMesh, lod: [15, 50], hybrid: true },
 };
 const PROC_RAVEN_BODY_Y = 0.09, RAVEN_LIFT = RAVEN_GROUND.bodyY - PROC_RAVEN_BODY_Y;   // m, at size 1
-const CULL = { [RB]: 120, [VO]: 40 }, VOLE_CAM = 10;   // m from the eye; voles also only under a camera this low (m above ground)
+const CULL = { [RB]: 120, [VO]: 40, [JR]: 250 }, VOLE_CAM = 10;   // m from the eye; voles also only under a camera this low (m above ground)
 // Steller's jays perch in conifers (veg.nearPlants, the plants within ~240 m of the eye; veg.oaks holds only oaks)
 // Crown radius as a fraction of the tree's height, by height fraction (the crown envelopes in library/species/).
 const CONIFERS = new Set(['pinus_ponderosa', 'pinus_sabiniana']);
@@ -220,6 +234,15 @@ const M_BED = 80, M_STAND = 81, M_MOVE = 82, M_SNIFF = 83, M_POUNCE = 84, M_FLEE
   M_CLIMB = 86, M_TREE = 87, M_DOWN = 88, M_STALK = 89, M_CROUCH = 90;                  // fox, coyote, lion
 const B_FORM = 100, B_FORAGE = 101, B_HOP = 102, B_SIT = 103, B_FREEZE = 104, B_BOLT = 105;   // brush rabbit
 const VL_RUN = 110, VL_PAUSE = 111, VL_SIT = 112, VL_HIDE = 113;                         // vole
+const JK_FORM = 120, JK_FEED = 121, JK_HOP = 122, JK_SIT = 123, JK_FREEZE = 124, JK_BOLT = 125;   // jackrabbit
+// Jackrabbit (jkUpdate): speeds (m/s; lope a range), how far out from the form it feeds (m), the freeze and the
+// flush-at-once distances for a low player (m; in the form it sits tighter), what counts as low (m above it), the
+// bolt's length (m), the hunched day rest's pose (below 0, see animalModels.js RIG.jackrabbit) and the bound length
+// by speed (m per bound: 0.7 m at a feeding hop, 1.6 m at a 4.5 m/s lope, 4.3 m at the bolt; a high bound now and
+// then is 1.35x longer and 1.7x higher).
+const JACK = { hop: 1.2, lope: [3, 5.5], bolt: 14, out: [10, 40], range: 45, freeze: 30, flush: 10, formFlush: 7, low: 25,
+  run: [60, 150], hunch: -0.6, alert: 0.35,
+  bound: (v, k) => Math.min(6, (0.35 + 0.28 * v) * k), lift: v => 0.035 + 0.02 * v };
 // Fox, coyote and lion: speeds (m/s), stride (m per cycle at a walk; it lengthens with speed), half the body length
 // (for the slope pitch), flee and flee-to distances (m), home range (m), when they are about (hour), climbing and
 // pouncing chances.
@@ -503,6 +526,8 @@ export class Animals {
     const list = this.tile.perception?.perceives?.[code];
     this.perceived = new Set(list || SPECIES.map(s => s.code));   // no matrix: everything
     for (const c of VISUAL_ONLY) this.perceived.add(c);
+    const named = new Set(Object.values(this.tile.perception?.perceives || {}).flat());
+    for (const c of PENDING) if (!named.has(c)) this.perceived.add(c);
     SPECIES.forEach((sp, k) => { this.meshes[k].visible = this.perceived.has(sp.code); });
     this.dirty = true;
   }
@@ -697,6 +722,7 @@ export class Animals {
         else if (s === CY) f *= (1 - 0.6 * Math.min(1, tree * 1.5)) * (0.8 + 0.3 * edge);   // open grass and savanna
         else if (s === RB) f *= brushEdge;
         else if (s === VO) f *= 1 - 0.8 * Math.min(1, tree * 1.5);                    // runways in open grass
+        else if (s === JR) f *= 1 - 0.9 * Math.min(1, tree * 1.6);                    // open: grass, savanna, pasture
         else f *= 0.6 + 0.5 * edge;
         const lambda = sp.k * f * this.priorAt(sp.code, cx, cn) * (SEASON[sp.code][this.season] || 1);
         const rnd = mulberry32(hash(i, j, sp.salt));
@@ -829,6 +855,20 @@ export class Animals {
         a.hx = (o ? o.x : x) + Math.cos(ang) * d; a.hz = (o ? o.z : z) + Math.sin(ang) * d;
         a.x = a.hx; a.z = a.hz; a.y = this.heights.atXZ(a.x, a.z); a.yaw = rnd() * TAU; a.size = 0.9 + rnd() * 0.15;
         a.state = B_FORM; a.t = rnd() * 6;
+      }, keep);
+    } else if (s === JR) {   // a jackrabbit, or two a few metres apart: each its own form, beside a shrub if one is near
+      const n = rnd() < 0.3 ? 2 : 1;
+      for (let m = 0; m < n; m++) this.add(`${base}:${m}`, s, rnd, a => {
+        let fx = x + (m ? (rnd() - 0.5) * 14 : 0), fz = z + (m ? (rnd() - 0.5) * 14 : 0);
+        const sh = this.shrubSpot(fx, fz, 10); if (sh) { fx = sh.x; fz = sh.z; }
+        a.hx = fx; a.hz = fz; a.x = fx; a.z = fz; a.yaw = rnd() * TAU; a.size = 0.92 + rnd() * 0.16; a.u1 = rnd(); a.peak = 1;
+        a.state = JK_FORM; a.t = rnd() * 8; a.pose = JACK.hunch;
+        if (this.jkActive(a)) {   // spawned at night: already out on its feeding ground
+          const ang = rnd() * TAU, d = JACK.out[0] + rnd() * (JACK.out[1] - JACK.out[0]);
+          a.bx = fx + Math.cos(ang) * d; a.bz = fz + Math.sin(ang) * d;
+          if (this.landOK(a.bx, a.bz)) { a.x = a.bx; a.z = a.bz; a.state = JK_FEED; a.pose = 0; a.t = rnd() * 4; }
+        }
+        a.y = this.heights.atXZ(a.x, a.z);
       }, keep);
     } else if (s === VO) {   // a vole on its runway (two now and then): a 2-5 m track through the grass
       const n = rnd() < 0.3 ? 2 : 1;
@@ -2035,6 +2075,128 @@ export class Animals {
     a.y = H.atXZ(a.x, a.z) + lift;
   }
 
+  // ---- black-tailed jackrabbit --------------------------------------------------------------------
+  // By day hunched in its form (a.hx/hz; pose JACK.hunch); about at dawn, dusk and night, and a few by day (a.u1):
+  // it lopes 10-40 m out to a feeding ground (a.bx/bz) and feeds there in short hops (0.3-0.6 m) with the head down
+  // for a few seconds at a time (a.look, a.wait), sits up now and then, lopes on to another patch within JACK.range m
+  // of the form; back to the form (beside a shrub if the near set has one) when it is light. A low player within
+  // JACK.freeze m: it freezes, ears up, for 1-4 s (in the form, longer: it sits tight) and then, if the player is still
+  // inside it, bolts (at once inside JACK.flush m): ~14 m/s away from the player in bounds to ~6 m, 15-30 degrees to
+  // one side of that line and then the other, a 30-60 degree turn every 2-4 bounds (a.zig, a.zigT counts bounds;
+  // turned back off water and the tile edge),
+  // a high bound now and then (a.peak), for 60-150 m (a.u), then a lope and a sit, looking back (a.sx/sz).
+  jkActive(a) { const h = this.hour; return h < 8 || h > 17.5 || a.u1 < 0.08; }
+  jkGo(a, x, z, speed, next) { a.tx = x; a.tz = z; a.speed = speed; a.next = next; a.state = JK_HOP; }
+  jkLope(a) { return JACK.lope[0] + a.rng() * (JACK.lope[1] - JACK.lope[0]); }
+  jkBolt(a, px, pz) {
+    const r = a.rng;
+    if (a.state !== JK_HOP) a.speed = 2;
+    a.state = JK_BOLT; a.sx = px; a.sz = pz; a.u = JACK.run[0] + r() * (JACK.run[1] - JACK.run[0]);
+    a.zig = (r() < 0.5 ? -1 : 1) * (0.26 + r() * 0.26); a.zigT = 2 + Math.floor(r() * 3); a.peak = 1;
+  }
+  jkUpdate(a, dt, px, py, pz) {
+    const r = a.rng, H = this.heights, act = this.jkActive(a);
+    a.t -= dt;
+    const near = py - a.y < JACK.low ? Math.hypot(a.x - px, a.z - pz) : Infinity;
+    if (a.state !== JK_BOLT) {
+      const form = a.state === JK_FORM || (a.state === JK_FREEZE && a.next === JK_FORM);
+      if (near < (form ? JACK.formFlush : JACK.flush)) this.jkBolt(a, px, pz);
+      else if (near < JACK.freeze && a.state !== JK_FREEZE) {
+        a.next = a.state === JK_FORM ? JK_FORM : JK_FEED; a.state = JK_FREEZE; a.speed = 0;
+        a.t = a.next === JK_FORM ? 4 + r() * 6 : 1 + r() * 3; a.sx = px; a.sz = pz;
+      }
+    }
+    let speed = 0, wantPose = 0, wantFlick = 0;
+    switch (a.state) {
+      case JK_FORM:
+        wantPose = JACK.hunch;
+        if (a.t <= 0) {
+          if (act && near > JACK.freeze) {   // out to feed: a point 10-40 m off on dry land
+            for (let k = 0; k < 4; k++) {
+              const ang = r() * TAU, d = JACK.out[0] + r() * (JACK.out[1] - JACK.out[0]);
+              a.bx = a.hx + Math.cos(ang) * d; a.bz = a.hz + Math.sin(ang) * d;
+              if (this.landOK(a.bx, a.bz)) break;
+            }
+            this.jkGo(a, a.bx, a.bz, this.jkLope(a), JK_FEED);
+          } else a.t = 5 + r() * 10;
+        }
+        break;
+      case JK_FEED:
+        if ((a.wait -= dt) <= 0) { a.look = a.look ? 0 : 1; a.wait = a.look ? 1 + r() * 2.5 : 0.6 + r() * 1.5; }
+        wantFlick = a.look ? 0.9 : 0;   // head down, cropping; then up, chewing and watching
+        if (a.look && r() < dt * 2) a.flickV = 0.5;
+        if (a.t <= 0) {
+          const q = r();
+          if (!act) {   // light: home to the form, beside a shrub if one is near it now
+            const sh = this.shrubSpot(a.hx, a.hz, 10); if (sh) { a.hx = sh.x; a.hz = sh.z; }
+            this.jkGo(a, a.hx, a.hz, this.jkLope(a), JK_FORM);
+          } else if (q < 0.12) { a.state = JK_SIT; a.t = 2 + r() * 4; a.look = 0; }
+          else if (q < 0.22) {   // on to another patch, within range of the form
+            const ang = r() * TAU, d = 5 + r() * 15;
+            let x = a.x + Math.cos(ang) * d, z = a.z + Math.sin(ang) * d;
+            const hx = x - a.hx, hz = z - a.hz, hd = Math.hypot(hx, hz);
+            if (hd > JACK.range) { x = a.hx + hx / hd * JACK.range; z = a.hz + hz / hd * JACK.range; }
+            if (this.landOK(x, z)) this.jkGo(a, x, z, this.jkLope(a), JK_FEED); else a.t = 1 + r() * 2;
+          } else {   // a short hop: 0.3-0.6 m
+            const ang = a.yaw + (r() - 0.5) * 2.2, d = 0.3 + r() * 0.3;
+            this.jkGo(a, a.x + Math.sin(ang) * d, a.z + Math.cos(ang) * d, JACK.hop, JK_FEED);
+          }
+        }
+        break;
+      case JK_SIT: wantPose = 1; if (a.t <= 0) { a.state = JK_FEED; a.t = 1 + r() * 3; } break;
+      case JK_FREEZE:
+        wantPose = a.next === JK_FORM ? JACK.hunch * 0.3 : JACK.alert;   // ears up, still; in the form it raises its head a little
+        if (a.t <= 0) {
+          if (near < JACK.freeze) this.jkBolt(a, px, pz);
+          else if (near < JACK.freeze * 1.5) a.t = 1 + r() * 2;   // still about: stay still
+          else { a.state = a.next; a.t = a.next === JK_FORM ? 10 + r() * 20 : 1 + r() * 3; }
+        }
+        break;
+      case JK_HOP: {
+        speed = a.speed;
+        if (this.mmStep(a, dt, speed, speed > 2 ? 6 : 10)) {
+          speed = 0; a.state = a.next;
+          if (a.state === JK_FORM) { a.t = 30 + r() * 60; a.yaw += (r() - 0.5) * 2; }
+          else if (a.state === JK_SIT) { a.t = 3 + r() * 4; a.yaw = Math.atan2(a.sx - a.x, a.sz - a.z); }   // looks back
+          else a.t = 1.5 + r() * 4;
+        }
+        break;
+      }
+      case JK_BOLT: {
+        speed = a.speed = Math.min(JACK.bolt * (0.9 + 0.15 * a.size), a.speed + dt * 16);   // full speed in ~1 s
+        const T = near < 60 ? [px, pz] : [a.sx, a.sz]; a.sx = T[0]; a.sz = T[1];
+        let want = Math.atan2(a.x - a.sx, a.z - a.sz) + a.zig;
+        const ax = a.x + Math.sin(want) * 8, az = a.z + Math.cos(want) * 8;
+        if (!this.landOK(ax, az)) { a.zig = -a.zig; want = Math.atan2(a.x - a.sx, a.z - a.sz) + a.zig; }
+        a.yaw += wrapAngle(want - a.yaw) * Math.min(1, dt * 12);
+        const step = speed * dt;
+        a.x += Math.sin(a.yaw) * step; a.z += Math.cos(a.yaw) * step; a.u -= step;
+        if (a.u <= 0) {   // run out: lope a few metres on and sit up, looking back
+          a.zig = 0;
+          const d = 4 + r() * 6;
+          this.jkGo(a, a.x + Math.sin(a.yaw) * d, a.z + Math.cos(a.yaw) * d, JACK.lope[0], JK_SIT);
+          a.hx = a.x + (a.hx - a.x) * 0.5; a.hz = a.z + (a.hz - a.z) * 0.5;   // a new form between here and the old one
+        }
+        break;
+      }
+    }
+    // the bound: amplitude and length by speed, the body lifted through the flight phase of each bound
+    const prev = a.phase, L = JACK.bound(Math.max(speed, 0.5), a.peak);
+    a.amp = damp(a.amp, speed < 0.05 ? 0 : speed < 2 ? 0.7 : speed < 7 ? 1 : 1.15, 8, dt);
+    a.phase += dt * TAU * speed / L;
+    if (speed > 0.05 && Math.floor(a.phase / TAU) !== Math.floor(prev / TAU)) {   // a bound landed
+      a.peak = a.state === JK_BOLT && r() < 0.12 ? 1.35 : 1;
+      if (a.state === JK_BOLT && --a.zigT <= 0) {   // the zigzag: 15-30 degrees to the other side of the line, a 30-60 degree turn
+        a.zig = -Math.sign(a.zig || 1) * (0.26 + r() * 0.26); a.zigT = 2 + Math.floor(r() * 3);
+      }
+    }
+    const lift = speed > 0.05 ? JACK.lift(speed) * (a.peak > 1 ? 1.7 : 1) * Math.max(0, Math.sin(a.phase)) : 0;
+    a.pose = damp(a.pose, wantPose, a.state === JK_FREEZE ? 8 : 4, dt);
+    if (wantFlick) a.flick = damp(a.flick, wantFlick, 6, dt);
+    a.pitch = damp(a.pitch, speed > 0.05 ? -0.14 * Math.cos(a.phase) * Math.min(1, speed / 4 + 0.4) : 0, 12, dt);
+    a.y = H.atXZ(a.x, a.z) + lift;
+  }
+
   // ---- California vole ----------------------------------------------------------------------------
   // Up and down its runway (a.sx/sz to a.tx/tz; a.u where it is, 0-1, a.h where it is going): scurries, stops to
   // clip grass, sits up to eat; a low player within 4 m sends it down the runway, away, into a burrow (scaled out)
@@ -2155,7 +2317,7 @@ export class Animals {
       const a = list[k], sp = a.sp;
       const ex = a.x - cx, ey = a.y - cy, ez = a.z - cz, d2 = ex * ex + ey * ey + ez * ez;
       a.acc += dt0;
-      if (cull[sp]) {   // rabbits and voles: neither drawn nor thought beyond CULL (voles: also under a high camera)
+      if (cull[sp]) {   // rabbits, jackrabbits and voles: neither drawn nor thought beyond CULL (voles: also under a high camera)
         const R = CULL[sp];
         if (d2 > R * R || (sp === VO && camAGL > VOLE_CAM)) {
           if (!a.culled || fresh) { this.meshes[sp].instanceMatrix.array.fill(0, a.slot * 16, a.slot * 16 + 16); a.culled = true; }
@@ -2176,6 +2338,7 @@ export class Animals {
       else if (sp === DR || sp === BK) this.drUpdate(a, dt);
       else if (sp === FX || sp === CY || sp === ML) this.mmUpdate(a, dt, px, py, pz);
       else if (sp === RB) this.rbUpdate(a, dt, px, py, pz);
+      else if (sp === JR) this.jkUpdate(a, dt, px, py, pz);
       else if (sp === VO) this.voUpdate(a, dt, px, py, pz);
       else if (sp === QU) this.quUpdate(a, dt);
       else if (sp === SJ || sp === ST) this.sjUpdate(a, dt, px, py, pz);

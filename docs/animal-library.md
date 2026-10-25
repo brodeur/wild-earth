@@ -145,7 +145,7 @@ in a glide and tail spread for birds, leg splay (climbing) and the lagged tail-t
 colour variant (the female quail's second colour set, `_COLORB`). Per-species constants (sit-up angle, spine
 flex, hand lag, collapse and so on) are in `RIG` in `animalModels.js`; a rebuild that moves a joint needs no
 client change. Each drawn species falls back to its procedural model while loading or on error, and
-`?<name>=proc` (`deer`, `squirrel`, `quail`, `jay`, `stjay`, `hawk`, `vulture`, `fox`, `coyote`, `rabbit`, `vole`,
+`?<name>=proc` (`deer`, `squirrel`, `quail`, `jay`, `stjay`, `hawk`, `vulture`, `fox`, `coyote`, `rabbit`, `jackrabbit`, `vole`,
 `lion` or `cougar`, `buck`; `animals` for all) draws the procedural one for A/B.
 
 - **Quadruped:** the deer's parts (body, legs A/B as diagonal pairs, tail, head), on the plain path (doe, buck,
@@ -188,7 +188,23 @@ habitat, hours, groups, motions.
   and thought only within 120 m of the eye, spawned within 220 m; brush edges (brush beside grass); 1-3 around a
   patch of cover. Dawn and dusk: hops out to feed within 7 m of cover, nibbles, sits up; by day still in its form.
   A low player inside 22 m: it freezes, then hops quietly back to cover; inside 9 m (or 15 m when the freeze
-  ends) it bolts for cover in a zig-zag bound, tail up.
+  ends) it bolts for cover in a zig-zag bound, tail up. Rebuilt 2026-10-25 with the ear fix: `build_rabbit.py`
+  shrank the right ear about the left ear's base (symmetrize copies the left half's group names onto the right),
+  so it sat 1 cm nearer the midline; each ear is now picked by side (x sign), and lod2 keeps each ear's top 4 mm
+  so the now-symmetric collapse does not take the ears down to stubs (898 / 300 / 58 triangles).
+- **Black-tailed jackrabbit** (`loadJackrabbitMesh`, template R with a chest, no tail tip; `RIG.jackrabbit`: the
+  rabbit's with amp `[0.95, 0.4, 0.85, 0]` (longer reach, a deep head dip) and spine 0.26): cap 40, 12 / 40 m,
+  drawn and thought only within 250 m of the eye, spawned within 300 m; open grassland, savanna and pasture, sparse
+  chaparral (`SUIT` times openness); one or two per cell, each its own form (beside a shrub of the near set, else
+  in the grass). By day hunched in the form (pose -0.6: chest down, forelegs forward, head tilted back; the ears
+  stay up, no ears part); about before 8:00 and after 17:30 (and 8% of them by day): lopes 10-40 m out at 3-5.5
+  m/s, feeds in 0.3-0.6 m hops with the head down 1-3.5 s at a time, sits up, lopes on to another patch within
+  45 m of the form. A low player (under 25 m above it) inside 30 m: it freezes, ears up, 1-4 s (in the form 4-10 s,
+  flushing only inside 7 m), then bolts if still inside 30 m (at once inside 10 m): ~14 m/s, bounds of ~4-5 m
+  (6 m on an occasional high bound), 15-30 degrees to one side of the line away from the player and then the
+  other (a 30-60 degree turn every 2-4 bounds), 60-150 m, then a lope and a sit, looking back. Constants in
+  `animals.js` `JACK`. Until a tile's species step has run with the jackrabbit in `species_data.py` it is seen by
+  every observer (`PENDING`). Sound: a thump (the rabbit's synth, a little louder) now and then on a freeze or bolt.
 - **California vole** (`loadVoleMesh`, template R, no tail part; `RIG.vole`): cap 150, 3 / 10 m, drawn and thought
   only within 40 m of a camera under 10 m above the ground, spawned within 140 m; grass; any hour; one or two per
   2-5 m runway. Scurries, clips grass, sits up to eat; a player within 4 m sends it down the runway into a burrow.
@@ -217,7 +233,7 @@ habitat, hours, groups, motions.
   300 m when there is one).
 - Cost (2026-10-25, the start view, 281 animals): `animals.update` 0.11-0.16 ms a frame, the mammals' updates
   0.016 ms of it; frame time with the six new species shown or hidden within noise at the start view and beside a
-  herd. Debugging: `__we.animals.summon('fox' | 'coyote' | 'rabbit' | 'vole' | 'lion' | 'buck', d)` puts a group
+  herd. Debugging: `__we.animals.summon('fox' | 'coyote' | 'rabbit' | 'jackrabbit' | 'vole' | 'lion' | 'buck', d)` puts a group
   d m ahead of the camera until `clearSummoned()`; `antlerMonth` pins the antler date.
 
 ## Lineup page

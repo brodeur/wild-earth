@@ -95,7 +95,8 @@
      "activity": "hunt",
      "resources": [
       "microtus_californicus",
-      "sylvilagus_bachmani"
+      "sylvilagus_bachmani",
+      "lepus_californicus"
      ],
      "goal": "hunt from perches"
     }
@@ -629,6 +630,62 @@
     }
    ]
   },
+  "lepus_californicus": {
+   "winter": [
+    {
+     "activity": "forage",
+     "resources": [
+      "grass_forbs",
+      "browse"
+     ]
+    },
+    {
+     "activity": "shelter",
+     "resources": [
+      "cover"
+     ],
+     "goal": "form under a shrub"
+    }
+   ],
+   "spring": [
+    {
+     "activity": "court",
+     "resources": [],
+     "goal": "chases and boxing"
+    },
+    {
+     "activity": "rear",
+     "resources": [
+      "grass_forbs"
+     ],
+     "goal": "leverets in a form"
+    }
+   ],
+   "summer": [
+    {
+     "activity": "forage",
+     "resources": [
+      "grass_forbs"
+     ]
+    },
+    {
+     "activity": "shelter",
+     "resources": [
+      "cover"
+     ],
+     "goal": "rest in shade midday"
+    }
+   ],
+   "fall": [
+    {
+     "activity": "forage",
+     "resources": [
+      "grass_forbs",
+      "browse"
+     ]
+    }
+   ]
+  },
   "microtus_californicus": {
    "winter": [
     {
@@ -692,6 +749,7 @@
      "activity": "hunt",
      "resources": [
       "sylvilagus_bachmani",
+      "lepus_californicus",
       "microtus_californicus",
       "odocoileus_hemionus"
      ]

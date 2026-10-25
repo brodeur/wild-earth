@@ -27,7 +27,7 @@
 //            player within 20 m (Steller's "shaaar", the scrub-jay's "shreep"); a quail covey's "pit-pit" clucks
 //            while it forages or runs near the player and its "chi-ca-go" assembly after a flush; a deer's
 //            snort-wheeze when the player comes within 30 m of an active herd; a gray fox's bark at night,
-//            rare; a brush rabbit's foot thump, rare, when it freezes or bolts. Each kind has its own cooldowns
+//            rare; a brush rabbit's or a jackrabbit's foot thump, rare, when it freezes or bolts. Each kind has its own cooldowns
 //            (per animal or group, and overall) so near animals give a few calls a minute, and none are near,
 //            none. These voices take a tighter distance model (refDistance 4-25 m) and at most NEAR_MAX slots.
 //            Played by the player: C barks as a squirrel, gives the waka as a woodpecker; a neighbour may answer.
@@ -90,11 +90,12 @@ const NEAR = {
   snort:    { label: 'deer', gain: 1.6, ref: 12, range: 160, synth: 'snort' },
   foxbark:  { label: 'gray fox', gain: 0.7, ref: 20, range: 320, synth: 'foxBark' },
   thump:    { label: 'brush rabbit', gain: 1.0, ref: 4, range: 35, synth: 'thump' },
+  jthump:   { label: 'jackrabbit', gain: 1.3, ref: 5, range: 45, synth: 'thump' },
 };
 // animals.js state values the near layer reads (not exported there; keep in step with its constants)
 const S_PAUSE = 0, S_OUT = 3, S_SIT = 4, S_WORK = 7, S_EAT = 8;            // squirrel
 const W_CLING = 10, W_TOP = 11, W_FLY = 12, T_STORE = 2;                   // woodpecker; the acorn game's store task
-const D_BED = 32, J_FLY = 52, M_BED = 80, M_FLEE = 85, B_FREEZE = 104, B_BOLT = 105;
+const D_BED = 32, J_FLY = 52, M_BED = 80, M_FLEE = 85, B_FREEZE = 104, B_BOLT = 105, JK_FREEZE = 124, JK_BOLT = 125;
 const G_FORAGE = 0, G_RUN = 1;                                             // quail covey
 const PECK_W = 38;   // a clinging woodpecker's peck: flick = max(0, sin(time * 38)), one strike per 2pi/38 s
 
@@ -771,7 +772,7 @@ export class Soundscape {
     if (this._idxOf === A) return this._idxV;
     const by = n => A.meshes ? A.meshes.findIndex(m => m.name === n) : -1;
     this._idxV = { sq: by('squirrel'), wp: by('woodpecker'), wf: by('female woodpecker'), dr: by('deer'), bk: by('buck'), qu: by('quail'),
-      sj: by('scrub-jay'), st: by("Steller's jay"), fx: by('gray fox'), rb: by('brush rabbit') };
+      sj: by('scrub-jay'), st: by("Steller's jay"), fx: by('gray fox'), rb: by('brush rabbit'), jr: by('jackrabbit') };
     this._idxOf = A; return this._idxV;
   }
   _m(o) { let m = this.mem.get(o); if (!m) this.mem.set(o, m = { s: -1, cd: 0, in: false, bark: 0, k: 0 }); return m; }
@@ -883,6 +884,14 @@ export class Soundscape {
       const alarm = (a.state === B_FREEZE || a.state === B_BOLT) && prev !== B_FREEZE && prev !== B_BOLT && prev !== -1;
       if (alarm && ear(a, 'thump') && this._due('thump', t) && Math.random() < 0.35) {
         if (this._play('thump', { x: a.x, y: a.y + 0.05, z: a.z }, null, 'near')) this.gap.thump = t + 20;
+      }
+    });
+    // jackrabbit: the same, a little heavier
+    each(I.jr, a => {
+      const m = this._m(a), prev = m.s; m.s = a.state;
+      const alarm = (a.state === JK_FREEZE || a.state === JK_BOLT) && prev !== JK_FREEZE && prev !== JK_BOLT && prev !== -1;
+      if (alarm && ear(a, 'jthump') && this._due('jthump', t) && Math.random() < 0.3) {
+        if (this._play('jthump', { x: a.x, y: a.y + 0.05, z: a.z }, null, 'near')) this.gap.jthump = t + 20;
       }
     });
   }
