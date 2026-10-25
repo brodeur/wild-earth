@@ -96,9 +96,11 @@ Lanes still running when this report was written are listed in `docs/roadmap.md`
 | a32f8c7 | The player raven walks, hops and takes off from the ground; the model swaps at landing and take-off are hidden. |
 | 7bc2d9a | Channels rebuilt on the home and Placerville tiles with the edge-seed fix: Hangtown Creek's inflow now runs through the tile. |
 
-Lane still running at the time of this update: wiring the jackrabbit into the world and fixing
-the brush rabbit's asymmetric ear. Its commit, if it verified, follows 7bc2d9a; after it the
-species step must be re-run on all three tiles so the jackrabbit appears in their species lists.
+| cae9b66 | The jackrabbit lives in the world (freeze at 30 m, zigzag bolt at 14 m/s); the brush rabbit's ears are symmetric; all three tiles' species lists carry it. |
+
+Credits: 230 of the 1,000 spent across the night (balance 2,822); the last four animal lanes
+cost nothing. Lanes started after this update (riparian corridor colour, soarer underwing light,
+granary defence) have their commits after cae9b66 in `git log`, if they verified.
 
 **Disk:** the machine dipped to a few hundred MB free several times tonight while lanes wrote
 captures; the session scratchpad was trimmed twice and the disk ended the night at about 9 GB
