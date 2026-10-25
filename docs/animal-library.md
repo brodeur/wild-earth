@@ -147,6 +147,24 @@ flex, hand lag, collapse and so on) are in `RIG` in `animalModels.js`; a rebuild
 client change. Each drawn species falls back to its procedural model while loading or on error, and
 `?<name>=proc` (`deer`, `squirrel`, `quail`, `jay`; `animals` for all) draws the procedural one for A/B.
 
+### Soarers and the Steller's jay (2026-10-25)
+
+- **Red-tailed hawk, turkey vulture** (`tools/build_redtail.py`, `build_vulture.py`): flight meshes on the bird
+  template with the wings spread for good (`collapse` 0). The generated body, head and tail are kept and fixed
+  (feet off, nose-up pitch levelled, the vulture's head shrunk and tail stretched); the generated wings are cut at
+  the body and lofted from their traced plan outline, so dihedral (5 and 17 degrees), chord, hand shape and finger
+  count (five and six) are set by the script and the underwing pattern is rows of faces at every tier. The client's
+  existing soaring, banking, teetering, flapping and stoop drive them (arm at the shoulder, hand lagging at the
+  wrist; the hawk's hands droop and tail closes in a stoop through `aAnim2`). Tiers 2,500 / 900 / 250 at 40 and
+  150 m (hawk), 50 and 180 m (vulture); lod2 wings are 2.5x thicker so they never thin out edge-on.
+  `?hawk=proc`, `?vulture=proc`.
+- **Steller's jay** (`tools/build_stellersjay.py`): the scrub-jay's template and constants; one tail replaces the
+  generated doubled one, crest blades replace the crest block. It is a new species in `animals.js` (it was sound
+  only): the scrub-jay state machine anchored on pines from the vegetation's near set (`veg.nearPlants`; `veg.oaks`
+  holds only oaks), conifer and mixed forest, groups of 2-4, cap 60; perched birds hop up their tree branch by
+  branch and the group moves on to the next pine. Perches sit in the crown envelope, not on modelled branches.
+  `?stjay=proc`.
+
 ## Lineup page
 
 `client/lineup_animals.html` (`client/src/lineupAnimals.js`) is the sign-off page, the animals' counterpart of

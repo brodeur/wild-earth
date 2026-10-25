@@ -12,13 +12,42 @@
     "shoulder_or_wingspan_m": 1.75,
     "note": "Length 62-81 cm, wingspan 1.5-2.0 m, 0.8-2.4 kg. Meshy normalises to about 1.9 units on the span; adoption scales to 1.75 m span, which gives 0.68 m length as generated."
   },
-  "source": null,
-  "license": null,
-  "license_detail": null,
-  "tiers": {
-    "note": "No mesh adopted yet. The client draws buildVulture in client/src/animalModels.js (procedural, about 250 triangles, dihedral baked at 0.3 rad)."
+  "source": {
+    "kind": "meshy",
+    "title": "Turkey vulture (soaring)",
+    "author": "generated with Meshy (meshy.ai) by agent (Claude) for Aaron Brodeur",
+    "url": null,
+    "file": "library/animals/jobs/cathartes_aura/01a1719d-e45a-7226-84e7-cfea2ddb6ec3/model.glb (local; jobs/ meshes are not tracked)",
+    "original": "Meshy text-to-3D preview, meshy-6-lite, triangle remesh, 20,872 triangles, untextured",
+    "prompt": "A turkey vulture (Cathartes aura), one adult bird soaring in mid-air, long fairly narrow wings fully spread and held raised in a shallow V (dihedral), about 175 cm wingspan and 70 cm long, shaped to read from below and from above. Long parallel-edged wings with six long separated, fingered primary feathers at each blunt wingtip. Long rounded tail, spread, reaching well past the tucked legs. Tiny bare red head on a thin neck, barely projecting ahead of the wings, short ivory hooked bill. Blackish-brown body; underwing two-toned, black lining in front and silvery-grey flight feathers behind. Not an eagle, not a condor, no white ruff. Single bird, no base, no perch. Game-ready, clean closed mesh.",
+    "job_id": "01a1719d-e45a-7226-84e7-cfea2ddb6ec3",
+    "build": "tools/build_vulture.py"
   },
-  "rig": "bird template, flight: BODY 0, TAIL 3, HEAD 6, WING_L/R 4/5 pivot (+-0.07, 0.11, 0.02); circling, teetering and gliding are instance transforms; dihedral baked at the shoulder",
+  "license": "CC BY-SA 4.0",
+  "license_detail": {
+    "source_terms": "Meshy Terms of Use 3.2 (https://www.meshy.ai/terms-of-use, last updated 2026-09-19): API output on a paid plan is owned by the account holder, who releases it with the project's assets under CC BY-SA 4.0. Terms 2.4: AI-identifying metadata Meshy embeds is carried over (the source GLB carried none; the adopted GLB records the source in extras.source). Terms 2.6(xi): not for training models that compete with Meshy (binds the account holder).",
+    "redistribute_under_cc_by_sa": true,
+    "note": "Credit \"generated with Meshy (meshy.ai)\" in README, the build script header and the GLB asset.copyright. AI-generated output may carry little or no copyright in some jurisdictions; the licence covers what rights exist."
+  },
+  "tiers": {
+    "lod0": 2500,
+    "lod1": 900,
+    "lod2": 250,
+    "file": "client/assets/vulture.glb",
+    "attributes": [
+      "POSITION",
+      "COLOR_0 (linear)",
+      "_PART",
+      "_PARTW",
+      "_PIVOT"
+    ],
+    "lod_m": [
+      50,
+      180
+    ],
+    "note": "Ambient flight mesh, 1.75 m span, 0.73 m bill to tail. Body from the generated mesh (legs and feet deleted, pitched 6 degrees nose-down); head and neck shortened to 0.42x and shrunk to 0.62x so it looks headless from below; tail stretched 1.6x, narrowed, its wedge tip rounded and lifted 12 degrees; the wings cut off at the body and lofted from the traced outline (edges straightened with a quadratic fit) in a 17 degree V at the shoulder with six long slotted primaries; underside black lining in front of 44% chord, silver flight feathers behind, as separate rows at every tier. Triangles: lod0 2,500 = 1,972 body + 512 wings and primaries + 16 eyes; lod1 900 = 756 + 144; lod2 250 = 154 + 96 (three stations, two rows, six fingers, wing 2.5x thicker). Tiers switch at 50 and 180 m. GLB 212,240 bytes."
+  },
+  "rig": "bird rig template, flight mesh (client/src/animalModels.js RIG.vulture; PART BODY, TAIL, HEAD, WING_L/R at the shoulder, HAND_L/R at the wrist; collapse 0); dihedral baked in the mesh; circling, teetering and gliding are instance transforms",
   "candidates": [
     {
       "kind": "meshy",
@@ -32,18 +61,20 @@
       "credits": 5,
       "raw_triangles": 20872,
       "license": "owned by the paid account holder (Meshy Terms of Use 3.2); to be released as CC BY-SA 4.0 with the project's assets on adoption; Terms 2.6(xi): not for training models that compete with Meshy",
-      "status": "raw preview, not adopted; geometry only. Usable spread-wing silhouette; adoptable as the ambient flight mesh with build-script fixes.",
+      "status": "adopted 2026-10-25: tools/build_vulture.py -> client/assets/vulture.glb (body kept, head shrunk, tail stretched, wings retraced)",
       "review": "A soaring bird with long, broad, nearly parallel-edged wings and six to seven long separated fingers per tip, bare head and hooked bill with no ruff (no turkey, condor-ruff or griffon drift), span-to-length right (2.58 against about 2.5). One closed, manifold piece, 1.5% slivers; wings about 1 cm thick at true scale. Faults: no raised V: the wings are flat with a slight droop and upturned fingers (the brief wants the dihedral baked by the build script at the shoulder anyway, so a flat source is convenient); the head and neck project well ahead of the wings (0.25 of the length) where a turkey vulture looks headless from below; the tail is short (0.15 of the length behind the trailing edge) where it should be long and reach well past the feet; the feet dangle below the body. The two-toned underwing is colour only and comes from the build script. A build script would shorten the neck and shrink the head about the neck pivot, stretch the tail about 1.6x, delete the feet, rotate each wing up 17 degrees at the shoulder, and colour the underwing in two chordwise rows (black lining, silver flight feathers)."
     }
   ],
   "status": "agent draft, needs local sign-off",
-  "accuracy_notes": "The head-and-tail proportions are what separate a turkey vulture from a hawk at any distance, and this preview has them inverted; fix them before the lineup. A local birder should check head size, tail length and dihedral against soaring birds.",
+  "accuracy_notes": "Adopted 2026-10-25 from the Meshy preview as the ambient soaring vulture. Reads as a long, parallel-winged dark bird in a clear V with a long tail and a tiny red head; teetering shows the V rocking at 30-120 m; at 250-400 m it is a 4-6 px dark dash like buildVulture. Still open: from below the silver flight feathers render mid-grey in the Lambert shading, so the two-tone flash is weaker than in life; the shoulders of the generated body are a little boxy from above; no perched or horaltic variant, no juvenile grey head. A local birder should check head size, tail length and the dihedral against soaring birds.",
   "authors": [
-    "agent (Claude) for Aaron Brodeur (entry, Meshy candidate)"
+    "agent (Claude) for Aaron Brodeur (entry, Meshy candidate)",
+    "agent (Claude) for Aaron Brodeur (adoption: build script, rig, tiers)"
   ],
   "sources": [
     "library/animals/drafts/cathartes_aura.md (mesh brief)",
     "docs/animal-library.md",
-    "library/animals/README.md"
+    "library/animals/README.md",
+    "tools/build_vulture.py"
   ]
 }

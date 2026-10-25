@@ -3,8 +3,9 @@ import { mulberry32 } from './trees.js';
 import { hash } from './vegetation.js';
 import { localXY } from './goto.js';
 import { addCaster, removeCaster } from './shadows.js';
-import { buildSquirrel, buildWoodpecker, buildRaven, buildDeer, buildQuail, buildJay, buildHawk, buildVulture,
-  animalMaterial, animalDepthMaterial, planarShadowMaterial, loadDeerMesh, loadSquirrelMesh, loadQuailMesh, loadJayMesh } from './animalModels.js';
+import { buildSquirrel, buildWoodpecker, buildRaven, buildDeer, buildQuail, buildJay, buildHawk, buildVulture, buildStellersJay,
+  animalMaterial, animalDepthMaterial, planarShadowMaterial, loadDeerMesh, loadSquirrelMesh, loadQuailMesh, loadJayMesh,
+  loadStellersJayMesh, loadRedtailMesh, loadVultureMesh } from './animalModels.js';
 
 // Ambient animals: the first step toward "many of each species always present" (docs/brief.md,
 // Direction; roadmap visual pass step 6 "Life"). Western gray squirrels, acorn woodpeckers, other
@@ -24,7 +25,8 @@ import { buildSquirrel, buildWoodpecker, buildRaven, buildDeer, buildQuail, buil
 // whirring flight when the raven passes low (or a hawk stoops at them, or now and then by
 // themselves); scrub-jay groups hop tree to tree through the oaks; woodpeckers make long undulating
 // flights between granaries 50-150 m apart; red-tailed hawks soar 100-250 m up with an occasional
-// stoop; turkey vultures teeter in slow circles and long glides. Birds in flight are drawn up to 1.6x
+// stoop; turkey vultures teeter in slow circles and long glides; Steller's jays work up through the pines
+// branch by branch in small groups and glide down to the next tree. Birds in flight are drawn up to 1.6x
 // their size with distance (true size within 30 m, 1.6x beyond 100 m) so they stay a few pixels
 // wide; ground animals stay true scale. Deer move in herds of 3-6 that leave cover for open savanna
 // at dawn and dusk and walk in file. Hawks and vultures are not tied to 30 m cells but to coarse
@@ -46,12 +48,14 @@ import { buildSquirrel, buildWoodpecker, buildRaven, buildDeer, buildQuail, buil
 // 'stoop' { animal, x, y, z, target } when a red-tailed hawk tips into a stoop.
 
 const LIVE_R = 400, REBUILD_MOVE = 100, NEAR_R = 150, TAG_R = 40, TAG_MAX = 6, BUCKET = 30;
-// Drawn meshes (DRAWN below): the deer (a CC0 download, tools/build_deer.py) and the scrub-jay, quail and
-// squirrel (Meshy previews, tools/build_scrubjay.py, build_quail.py, build_squirrel.py) are drawn from a GLB
-// in three tiers by distance from the eye: lod0 within lod[0] m, lod1 within lod[1] m, lod2 beyond. The
+// Drawn meshes (DRAWN below): the deer (a CC0 download, tools/build_deer.py) and the scrub-jay, quail,
+// squirrel, Steller's jay, red-tailed hawk and turkey vulture (Meshy previews, tools/build_scrubjay.py,
+// build_quail.py, build_squirrel.py, build_stellersjay.py, build_redtail.py, build_vulture.py) are drawn from a
+// GLB in three tiers by distance from the eye: lod0 within lod[0] m, lod1 within lod[1] m, lod2 beyond. The
 // procedural model (animalModels.js build*) still holds every animal's matrix and pose and is drawn instead
 // until the GLB has loaded, if it fails to load, or with ?<param>=proc (?deer=proc, ?squirrel=proc,
-// ?quail=proc, ?jay=proc; ?animals=proc for all) for A/B; live: __we.animals.setMesh('quail', false) (and
+// ?quail=proc, ?jay=proc, ?stjay=proc, ?hawk=proc, ?vulture=proc; ?animals=proc for all) for A/B; live:
+// __we.animals.setMesh('quail', false) (and
 // __we.animals.deerMesh = false as before). __we.animals.lodForce.quail = 0/1/2 pins every quail to one tier
 // (deerLodForce still works). The drawn birds and squirrel take a second per-instance vec4 (aAnim2, see
 // animalModels.js rig templates), filled here per animal: wing bow and tail spread for birds, leg splay and
@@ -80,6 +84,7 @@ const SUIT = {
   odocoileus_hemionus:     { 1: 0.8, 2: 0.3, 3: 0.5, 4: 0.35, 5: 0.7, 6: 1, 9: 0.6 },
   callipepla_californica:  { 1: 0.6, 3: 0.3, 4: 0.75, 5: 0.85, 6: 0.7, 9: 0.8 },
   aphelocoma_californica:  { 1: 1, 2: 0.15, 3: 0.8, 4: 0.45, 5: 0.15, 6: 0.8, 9: 0.3 },
+  cyanocitta_stelleri:     { 2: 1, 3: 0.7, 6: 0.2 },   // conifer and mixed forest (sound.js uses the same weights)
 };
 // Expected individuals (or groups) per 30 m cell at suitability 1, and season multipliers.
 const SEASON = {
@@ -89,6 +94,7 @@ const SEASON = {
   odocoileus_hemionus:     { fall: 1, winter: 1, spring: 1, summer: 1 },
   callipepla_californica:  { fall: 1.1, winter: 1, spring: 1.2, summer: 1 },
   aphelocoma_californica:  { fall: 1.2, winter: 1, spring: 0.9, summer: 0.9 },
+  cyanocitta_stelleri:     { fall: 1.15, winter: 1.1, spring: 0.9, summer: 0.9 },
 };
 const SPECIES = [
   { code: 'sciurus_griseus', one: 'squirrel', many: 'squirrels', k: 0.45, salt: 9101, cap: 160, scale: 1, build: buildSquirrel },
@@ -99,16 +105,34 @@ const SPECIES = [
   { code: 'aphelocoma_californica', one: 'scrub-jay', many: 'scrub-jays', k: 0.07, salt: 9606, cap: 100, scale: 1, build: buildJay, bird: true, common: 'California scrub-jay' },
   { code: 'buteo_jamaicensis', one: 'hawk', many: 'hawks', salt: 9707, cap: 6, scale: 1, build: buildHawk, bird: true, common: 'Red-tailed hawk', grid: 500, p: 0.45 },
   { code: 'cathartes_aura', one: 'vulture', many: 'vultures', salt: 9808, cap: 6, scale: 1, build: buildVulture, bird: true, common: 'Turkey vulture', grid: 450, p: 0.4 },
+  { code: 'cyanocitta_stelleri', one: "Steller's jay", many: "Steller's jays", k: 0.06, salt: 9909, cap: 60, scale: 1, build: buildStellersJay, bird: true, common: "Steller's jay" },
 ];
-const SQ = 0, WP = 1, RV = 2, DR = 3, QU = 4, SJ = 5, HK = 6, TV = 7;
-const TAG_DY = [0.5, 0.5, 0.7, 2.1, 0.4, 0.4, 0.7, 0.7];
+const SQ = 0, WP = 1, RV = 2, DR = 3, QU = 4, SJ = 5, HK = 6, TV = 7, ST = 8;
+const TAG_DY = [0.5, 0.5, 0.7, 2.1, 0.4, 0.4, 0.7, 0.7, 0.45];
 const INDEX = Object.fromEntries(SPECIES.map((sp, k) => [sp.code, k]));
 const DRAWN = {
   [DR]: { name: 'deer', param: 'deer', load: loadDeerMesh, lod: [30, 90], planar: true },
   [SQ]: { name: 'squirrel', param: 'squirrel', load: loadSquirrelMesh, lod: [12, 40] },
   [QU]: { name: 'quail', param: 'quail', load: loadQuailMesh, lod: [12, 40] },
   [SJ]: { name: 'scrub-jay', param: 'jay', load: loadJayMesh, lod: [12, 40] },
+  [ST]: { name: 'stellers-jay', param: 'stjay', load: loadStellersJayMesh, lod: [12, 40] },
+  // soarers: seen at 100-400 m nearly always; lod0 only on pull-outs near the ground or a raven alongside
+  [HK]: { name: 'hawk', param: 'hawk', load: loadRedtailMesh, lod: [40, 150] },
+  [TV]: { name: 'vulture', param: 'vulture', load: loadVultureMesh, lod: [50, 180] },
 };
+// Steller's jays perch in conifers (veg.nearPlants, the plants within ~240 m of the eye; veg.oaks holds only oaks)
+// Crown radius as a fraction of the tree's height, by height fraction (the crown envelopes in library/species/).
+const CONIFERS = new Set(['pinus_ponderosa', 'pinus_sabiniana']);
+const CROWN = {
+  pinus_ponderosa: [[0.4, 0.2], [0.6, 0.22], [0.8, 0.2], [0.92, 0.13], [1.0, 0.04]],
+  pinus_sabiniana: [[0.22, 0.16], [0.38, 0.29], [0.55, 0.33], [0.7, 0.31], [0.84, 0.23], [0.94, 0.13], [1.0, 0.04]],
+};
+function crownR(sp, h) {
+  const t = CROWN[sp] || CROWN.pinus_ponderosa;
+  if (h <= t[0][0]) return t[0][1];
+  for (let i = 1; i < t.length; i++) if (h <= t[i][0]) return t[i - 1][1] + (t[i][1] - t[i - 1][1]) * (h - t[i - 1][0]) / (t[i][0] - t[i - 1][0]);
+  return t[t.length - 1][1];
+}
 
 // states
 const S_PAUSE = 0, S_RUN = 1, S_CLIMB = 2, S_OUT = 3, S_SIT = 4, S_IN = 5, S_DOWN = 6;   // squirrel
@@ -181,8 +205,9 @@ export class Animals {
       }
     });
     this.tris = Object.fromEntries(SPECIES.map(sp => [sp.one, sp.tris]));
-    // oak lookup (rebuilt when the vegetation rebuilds)
+    // oak lookup (rebuilt when the vegetation rebuilds); conifer lookup (rebuilt when the near set refreshes)
     this.oaks = []; this.oakGrid = new Map(); this.granary = new Uint8Array(0);
+    this.conifers = []; this.coniferGrid = new Map(); this.nearVersion = -1;
     // temporaries
     this._t = { x: 0, y: 0, z: 0, r: 0 }; this._p = new THREE.Vector3(); this._q = new THREE.Quaternion();
     this._e = new THREE.Euler(0, 0, 0, 'YXZ'); this._s = new THREE.Vector3(); this._m = new THREE.Matrix4();
@@ -392,6 +417,45 @@ export class Animals {
     return pick;
   }
 
+  // ---- conifers (Steller's jays) ------------------------------------------------------------------
+  // { x, y, z, height } per pine in the vegetation's near set; y is the ground at the trunk.
+  indexConifers() {
+    this.nearVersion = this.veg.nearVersion;
+    const had = this.conifers.length, grid = new Map(), list = [];
+    for (const pl of this.veg.nearPlants || []) {
+      if (!CONIFERS.has(pl.species) || !(pl.height > 4)) continue;
+      const o = { id: pl.id, sp: pl.species, x: pl.x, y: pl.y, z: pl.z, height: pl.height, conifer: true };
+      const key = Math.floor(o.x / BUCKET) + Math.floor(-o.z / BUCKET) * 4096;
+      let arr = grid.get(key); if (!arr) grid.set(key, arr = []);
+      arr.push(list.length); list.push(o);
+    }
+    this.conifers = list; this.coniferGrid = grid;
+    if (!had && list.length) this.dirty = true;   // the first near set: place the jays now rather than after 100 m
+  }
+  // Nearest conifer to (x, z) within r, or a random one between rMin and rMax (other than `not`); no allocation.
+  nearestConifer(x, z, r) {
+    const b = Math.ceil(r / BUCKET), bi = Math.floor(x / BUCKET), bj = Math.floor(-z / BUCKET);
+    let best = null, bd = r * r;
+    for (let j = bj - b; j <= bj + b; j++) for (let i = bi - b; i <= bi + b; i++) {
+      const arr = this.coniferGrid.get(i + j * 4096); if (!arr) continue;
+      for (let k = 0; k < arr.length; k++) { const o = this.conifers[arr[k]], dx = o.x - x, dz = o.z - z, d2 = dx * dx + dz * dz; if (d2 < bd) { bd = d2; best = o; } }
+    }
+    return best;
+  }
+  ringConifer(x, z, rMin, rMax, rng, not = null) {
+    const b = Math.ceil(rMax / BUCKET), bi = Math.floor(x / BUCKET), bj = Math.floor(-z / BUCKET);
+    let pick = null, seen = 0;
+    for (let j = bj - b; j <= bj + b; j++) for (let i = bi - b; i <= bi + b; i++) {
+      const arr = this.coniferGrid.get(i + j * 4096); if (!arr) continue;
+      for (let k = 0; k < arr.length; k++) {
+        const o = this.conifers[arr[k]]; if (o === not || (not && o.id === not.id)) continue;
+        const dx = o.x - x, dz = o.z - z, d2 = dx * dx + dz * dz; if (d2 > rMax * rMax || d2 < rMin * rMin) continue;
+        seen++; if (rng() * seen < 1) pick = o;
+      }
+    }
+    return pick;
+  }
+
   // ---- population ---------------------------------------------------------------------------------
   rebuild(px, pz) {
     this.lastCenter = [px, pz]; this.dirty = false;
@@ -423,6 +487,7 @@ export class Animals {
         else if (s === RV) f *= 0.6 + 0.6 * edge;
         else if (s === QU) f *= (0.35 + 0.65 * edge) * (1 - 0.5 * Math.min(1, tree));   // open ground with cover near
         else if (s === SJ) f *= 0.4 + 0.6 * Math.min(1, tree * 2);
+        else if (s === ST) f *= 0.3 + 0.7 * Math.min(1, tree * 1.5);
         else f *= 0.6 + 0.5 * edge;
         const lambda = sp.k * f * this.priorAt(sp.code, cx, cn) * (SEASON[sp.code][this.season] || 1);
         const rnd = mulberry32(hash(i, j, sp.salt));
@@ -494,11 +559,11 @@ export class Animals {
         a.x = x + a.ox; a.z = z + a.oz; a.y = this.heights.atXZ(a.x, a.z); a.yaw = rnd() * TAU;
         a.state = Q_FORAGE; a.pose = 1; a.t = rnd() * 3;
       }, keep);
-    } else if (s === SJ) {
-      const home = this.nearestOak(x, z, 60); if (!home) return;
+    } else if (s === SJ || s === ST) {   // a family group around a home tree (oaks; pines for the Steller's jay)
+      const home = s === ST ? this.nearestConifer(x, z, 60) : this.nearestOak(x, z, 60); if (!home) return;
       const n = 2 + Math.floor(rnd() * 3), g = { home, tree: home, leader: null, move: 0, t: 4 + rnd() * 15, ground: false };
       for (let m = 0; m < n; m++) this.add(`${base}:${m}`, s, rnd, a => {
-        a.group = g; a.rank = m; if (!m) g.leader = a; a.anchor = home;
+        a.group = g; a.rank = m; if (!m) g.leader = a; a.anchor = home; a.tree = home;
         this.jaySpot(a, home, false); a.x = a.tx; a.y = a.ty; a.z = a.tz;
         a.state = J_PERCH; a.pose = 1; a.yaw = rnd() * TAU; a.t = rnd() * 4;
       }, keep);
@@ -527,6 +592,7 @@ export class Animals {
       group: null, ox: 0, oz: 0, rank: 0, air: 0, fly: 0, acc: 0, wait: 0, moveSeen: 0, peak: 0, V: 10, rock: 0,
       e0: 0, e1: 0, variant: s === QU ? seedOf(id, 0x5e7) & 1 : 0,   // aAnim2 (drawn meshes); the quail's sex
       hopU: 1, hopX: 0, hopZ: 0, hopDX: 0, hopDZ: 0, hopH: 0,         // scrub-jay ground hop
+      hFrac: 0.5,                                                      // Steller's jay: perch height in the crown (fraction of the tree)
     };
     init(a);
     this.byId.set(id, a);
@@ -940,7 +1006,10 @@ export class Animals {
   // ---- California scrub-jay -----------------------------------------------------------------------
   // A family group moves through the oaks together: the leader flies to a tree 20-90 m off (or drops
   // to the ground under one to forage and, in fall, to bury acorns), the others follow one by one.
-  jaySpot(a, o, ground) {
+  // The Steller's jay does the same in the pines (stellerSpot), and between moves works up its tree in short hops
+  // from branch to branch (jayFly with hop > 0), then glides down to the next tree with the group.
+  jaySpot(a, o, ground, hop = 0) {
+    if (o.conifer) return this.stellerSpot(a, o, ground, hop);
     const r = a.rng, ang = r() * TAU;
     if (ground) {
       const d = (1.5 + r() * 4) * o.scale;
@@ -951,11 +1020,28 @@ export class Animals {
     }
     a.next = ground ? J_GROUND : J_PERCH;
   }
-  jayFly(a, o, ground) {
+  // A branch in a pine's crown: out along a limb (30-80 % of the crown's radius at that height), on the side
+  // facing a random direction; hop > 0 climbs that much (fraction of the height) above the present perch.
+  stellerSpot(a, o, ground, hop) {
+    const r = a.rng, H = o.height;
+    const ang = hop ? Math.atan2(a.z - o.z, a.x - o.x) + (r() - 0.5) * 1.2 : r() * TAU;   // a hop stays on the same side of the trunk
+    if (ground) {
+      const d = 1 + r() * Math.max(1.5, 0.12 * H);
+      a.tx = o.x + Math.cos(ang) * d; a.tz = o.z + Math.sin(ang) * d; a.ty = this.heights.atXZ(a.tx, a.tz);
+    } else {
+      const lo = o.sp === 'pinus_sabiniana' ? 0.3 : 0.45;
+      const h = hop ? Math.min(0.9, a.hFrac + hop) : lo + r() * 0.25; a.hFrac = h;
+      const d = H * crownR(o.sp, h) * (0.3 + 0.5 * r());
+      a.tx = o.x + Math.cos(ang) * d; a.tz = o.z + Math.sin(ang) * d; a.ty = o.y + H * h;
+    }
+    a.next = ground ? J_GROUND : J_PERCH;
+  }
+  jayFly(a, o, ground, hop = 0) {
     a.sx = a.x; a.sy = a.y; a.sz = a.z; a.tree = o;
-    this.jaySpot(a, o, ground);
+    this.jaySpot(a, o, ground, hop);
     const d = Math.hypot(a.tx - a.sx, a.tz - a.sz);
-    a.dur = Math.max(0.8, d / 9); a.u = 0; a.state = J_FLY; a.air = 1;
+    a.dur = hop ? Math.min(0.9, 0.3 + Math.hypot(d, a.ty - a.sy) / 10) : Math.max(0.8, d / 9); a.u = 0; a.state = J_FLY; a.air = 1;
+    if (hop) { a.peak = -0.3; return; }   // a short bound up to the next branch
     // a drop from the perch, low across the gap, and a swoop up into the next crown
     a.peak = ground ? -Math.min(2, d * 0.1) : Math.min(0.4 * Math.max(0, Math.min(a.sy, a.ty) - this.heights.atXZ((a.sx + a.tx) / 2, (a.sz + a.tz) / 2) - 2), d * 0.25);
   }
@@ -979,7 +1065,10 @@ export class Animals {
     }
     a.air = 0;
     a.amp = damp(a.amp, 0, 10, dt); a.pose = damp(a.pose, 1, 8, dt);
-    if (a.state === J_PERCH) { a.pitch = damp(a.pitch, -0.2, 5, dt); if (r() < dt * 0.6) a.flickV = 1; if (r() < dt * 0.3) a.yaw += (r() - 0.5) * 2; }
+    if (a.state === J_PERCH) {
+      a.pitch = damp(a.pitch, -0.2, 5, dt); if (r() < dt * 0.6) a.flickV = 1; if (r() < dt * 0.3) a.yaw += (r() - 0.5) * 2;
+      if (a.tree?.conifer && a.hFrac < 0.84 && a.moveSeen === g.move && r() < dt * 0.08) { this.jayFly(a, a.tree, false, 0.05 + 0.07 * r()); return; }
+    }
     else {   // J_GROUND: hops, probes and (in fall) pushes acorns into the ground
       a.pitch = damp(a.pitch, 0, 6, dt);
       if (a.hopU < 1) {   // a two-footed hop: a low arc over 0.16 s, tail flicked up on landing
@@ -1001,7 +1090,8 @@ export class Animals {
       g.t -= dt;
       if (g.t <= 0 || flush) {   // the group moves on
         const ground = !flush && r() < (this.season === 'fall' ? 0.4 : 0.25);
-        const o = ground && r() < 0.5 ? g.tree : (this.ringOak(g.home.x, g.home.z, 0, 90, r, false, g.tree) || g.home);
+        const o = ground && r() < 0.5 ? g.tree : g.home.conifer ? (this.ringConifer(g.home.x, g.home.z, 0, 90, r, g.tree) || g.home)
+          : (this.ringOak(g.home.x, g.home.z, 0, 90, r, false, g.tree) || g.home);
         g.tree = o; g.ground = ground; g.move++; g.t = 8 + r() * 22;
         a.moveSeen = g.move; this.jayFly(a, o, ground);
       }
@@ -1146,6 +1236,7 @@ export class Animals {
     if (want && want !== this.observer) this.setObserver(want);
     const P = this.flight.pos;
     if (this.veg.version !== this.vegVersion && this.veg.oaks.length) { this.indexOaks(); this.dirty = true; }
+    if (this.veg.nearVersion !== this.nearVersion && this.perceived.has('cyanocitta_stelleri')) this.indexConifers();
     if (!this.priorReady && performance.now() < this.priorDeadline) return;   // wait (briefly) for the occurrence prior
     let fresh = false;   // slots were reassigned: every animal writes its matrix this frame
     if (this.dirty || !this.lastCenter || Math.hypot(P.x - this.lastCenter[0], P.z - this.lastCenter[1]) > REBUILD_MOVE) { this.rebuild(P.x, P.z); fresh = true; }
@@ -1167,7 +1258,7 @@ export class Animals {
       else if (sp === RV) this.rvUpdate(a, dt);
       else if (sp === DR) this.drUpdate(a, dt);
       else if (sp === QU) this.quUpdate(a, dt);
-      else if (sp === SJ) this.sjUpdate(a, dt, px, py, pz);
+      else if (sp === SJ || sp === ST) this.sjUpdate(a, dt, px, py, pz);
       else if (sp === HK) this.hkUpdate(a, dt);
       else this.tvUpdate(a, dt);
       if (a.flickV > 0 && a.sp !== WP) { a.flick = Math.max(a.flick, Math.sin(Math.min(1, 1 - a.flickV) * Math.PI)); a.flickV -= dt * 3; }
@@ -1208,10 +1299,14 @@ export class Animals {
       const fly = a.state === Q_FLY;
       a.e0 = damp(a.e0, fly && a.amp < 0.5 ? 1 : 0, 6, dt);                          // wings set and bowed in the glide
       a.e1 = damp(a.e1, fly ? (a.u > 0.85 ? 1 : 0.4) : 0, 8, dt);                    // tail fanned to land
-    } else if (a.sp === SJ) {
+    } else if (a.sp === SJ || a.sp === ST) {
       const fly = a.state === J_FLY;
       a.e0 = damp(a.e0, fly && a.amp < 0.5 ? 0.4 : 0, 6, dt);
       a.e1 = damp(a.e1, fly ? (a.u > 0.75 ? 1 : 0.35) : 0, a.e1 > 0.9 && !fly ? 3 : 8, dt);   // fanned in, and briefly on a hop's landing
+    } else if (a.sp === HK) {
+      const stoop = a.state === H_STOOP;
+      a.e0 = damp(a.e0, stoop ? a.pose : 0, 4, dt);                                  // hands droop as the wings tuck
+      a.e1 = damp(a.e1, stoop ? -a.pose : a.state === H_PULL ? 0.3 : 0, 4, dt);       // tail closed in the dive, fanned pulling out
     }
   }
 

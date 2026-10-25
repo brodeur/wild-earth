@@ -12,13 +12,42 @@
     "shoulder_or_wingspan_m": 0.45,
     "note": "Length 30-34 cm, wingspan 43-48 cm, 100-140 g. Meshy normalises to about 1.9 units on the longest axis (here the spread wings); adoption would scale to 0.31 m bill to tail."
   },
-  "source": null,
-  "license": null,
-  "license_detail": null,
-  "tiers": {
-    "note": "No mesh adopted yet. The client draws not drawn (sound only, client/src/sound.js)."
+  "source": {
+    "kind": "meshy",
+    "title": "Steller's jay",
+    "author": "generated with Meshy (meshy.ai) by agent (Claude) for Aaron Brodeur",
+    "url": null,
+    "file": "library/animals/jobs/cyanocitta_stelleri/01a171a4-aca9-7784-b9ab-b6b6f71b0cc4/model.glb (local; jobs/ meshes are not tracked)",
+    "original": "Meshy text-to-3D preview, meshy-6-lite, triangle remesh, 20,865 triangles, untextured (second candidate)",
+    "prompt": "A Steller's jay (Cyanocitta stelleri), Sierra Nevada form, one adult bird standing on the ground, side-on pose, body horizontal, wings closed tight along the back with the wingtips resting on the base of the tail. A tall pointed crest swept back from the crown, sooty black head with a few pale blue streaks on the forehead, sooty grey-brown upper back and breast, deep cobalt-blue belly, rump, wings and tail with fine black bars. Long straight tail, stout black bill, black legs, three toes forward and one back. No white on the face, wings or tail. Realistic proportions, game-ready, no base.",
+    "job_id": "01a171a4-aca9-7784-b9ab-b6b6f71b0cc4",
+    "build": "tools/build_stellersjay.py"
   },
-  "rig": "bird template (brief: the scrub-jay's scaled about 1.08, crest in HEAD)",
+  "license": "CC BY-SA 4.0",
+  "license_detail": {
+    "source_terms": "Meshy Terms of Use 3.2 (https://www.meshy.ai/terms-of-use, last updated 2026-09-19): API output on a paid plan is owned by the account holder, who releases it with the project's assets under CC BY-SA 4.0. Terms 2.4: AI-identifying metadata Meshy embeds is carried over (the source GLB carried none; the adopted GLB records the source in extras.source). Terms 2.6(xi): not for training models that compete with Meshy (binds the account holder).",
+    "redistribute_under_cc_by_sa": true,
+    "note": "Credit \"generated with Meshy (meshy.ai)\" in README, the build script header and the GLB asset.copyright. AI-generated output may carry little or no copyright in some jurisdictions; the licence covers what rights exist."
+  },
+  "tiers": {
+    "lod0": 1000,
+    "lod1": 400,
+    "lod2": 120,
+    "file": "client/assets/stellersjay.glb",
+    "attributes": [
+      "POSITION",
+      "COLOR_0 (linear)",
+      "_PART",
+      "_PARTW",
+      "_PIVOT"
+    ],
+    "lod_m": [
+      12,
+      40
+    ],
+    "note": "Scaled to 0.31 m bill to tail. The doubled tail (an X of two plates) cut off at the rump and replaced by one long tail lofted from the upper plate's outline (1.2x wider, 10 degrees below level, tip rounded, raised along the middle; fine black bars on lod0); the crest block pressed onto the crown and replaced by thin blades swept back (crossed pairs; five on lod0, four on lod1, one on lod2); head 0.86x about the neck; body levelled 18 degrees; generated legs replaced by black procedural legs with curled toes; small black eye; flight wing cards (barred arm on lod0). Colours: sooty black head and crest with a blue-tinged forehead, sooty grey-brown breast and mantle, cobalt body, wings, rump and tail. Triangles: lod0 1,000 = 719 body + 281 legs, tail, crest, cards and eyes; lod1 400 = 297 + 103; lod2 120 = 87 + 33. Tiers switch at 12 and 40 m. GLB 107,736 bytes."
+  },
+  "rig": "bird rig template (client/src/animalModels.js RIG.stjay, the scrub-jay's constants; PART BODY, LEG_A/B procedural legs, TAIL, HEAD with crest and neck, WING_L/R and HAND_L/R cards that collapse into the shoulder on pose); aAnim2 = (wing bow, tail spread, -, -)",
   "candidates": [
     {
       "kind": "meshy",
@@ -47,18 +76,20 @@
       "credits": 5,
       "raw_triangles": 20865,
       "license": "owned by the paid account holder (Meshy Terms of Use 3.2); to be released as CC BY-SA 4.0 with the project's assets on adoption; Terms 2.6(xi): not for training models that compete with Meshy",
-      "status": "raw preview, not adopted; geometry only (no texture). Usable base if a build script removes a doubled tail and replaces the crest.",
+      "status": "adopted 2026-10-25: tools/build_stellersjay.py -> client/assets/stellersjay.glb",
       "review": "The pose is fixed: the wings are folded tight along the back with no spread or drooped feathers, the bill is stout and conical, legs and feet are clean (three toes forward, one back), and the long straight tail is about 42% of the length, close to the brief's 45%. Three faults. (1) The tail is doubled: two full-width plates (each about 0.25 units wide) leave the rump in an X seen side-on, one rising gently to y +0.18, the other drooping to y -0.40; the top view shows one forked tail because the plates overlap. (2) The crest is a tall upright block with a ragged top, leaning slightly forward like a cardinal's, not a pointed crest swept back. (3) The body is pitched up about 35 degrees rather than horizontal, on long legs. Topology: one piece of 20,864 faces plus one stray triangle (2 open edges), 1.9% slivers; 1.9 units bill to tail along +z (bill toward +z), 1.30 units tall, +y up, feet at y -0.65, symmetric about x. A build script would delete the drooping plate below the rump and keep the upper as TAIL, cut the crest block and add three to five thin blades swept back from the crown (HEAD), drop the stray triangle, optionally pitch the body down 15-20 degrees about the hips, scale to 0.31 m and paint the sooty-front, blue-back split from the palette. Much better than the first candidate; the first generated jay with usable wings."
     }
   ],
   "status": "agent draft, needs local sign-off",
-  "accuracy_notes": "Not adopted. Candidate 2 (Meshy 01a171a4) is a usable base after the build-script fixes in its review (doubled tail, crest block); the other route is the scrub-jay mesh scaled 1.08 with a procedural crest and the Steller's palette. Compare the two side by side on the lineup once the scrub-jay is adopted. A local birder should check the crest and the sooty-front, blue-back split on whatever is adopted.",
+  "accuracy_notes": "Adopted 2026-10-25 from Meshy candidate 2. At 3-10 m reads as a crested, dark-fronted, blue-backed long-tailed jay, clearly not the scrub-jay; at 40 m a dark-and-blue dot with a long tail. Behaviour (client/src/animals.js): the scrub-jay's group state machine anchored on ponderosa and gray pines (veg.nearPlants) in conifer and mixed forest, cap 60; perched birds work up their tree in short hops and the group glides on to the next pine; ground foraging under the tree. Still open: the head is still large and the folded wing barring is not drawn (tail bars only, lod0); perches are placed in the crown envelope, not on modelled branches, so a bird can sit in the needles without a limb under it; crest is fixed half-raised (no alarm raise); no juvenile. A local birder should check the crest and the sooty-front, blue-back split.",
   "authors": [
-    "agent (Claude) for Aaron Brodeur (entry, Meshy candidate)"
+    "agent (Claude) for Aaron Brodeur (entry, Meshy candidate)",
+    "agent (Claude) for Aaron Brodeur (adoption: build script, rig, tiers)"
   ],
   "sources": [
     "library/animals/drafts/cyanocitta_stelleri.md (mesh brief)",
     "docs/animal-library.md",
-    "library/animals/README.md"
+    "library/animals/README.md",
+    "tools/build_stellersjay.py"
   ]
 }

@@ -21,6 +21,8 @@ import { uniforms as atmo } from './atmosphere.js';
 //           at the shoulder) and HAND_L/R (pivot at the wrist; child of the wing). Folded wings stay body geometry;
 //           the flight wings are cards that collapse into the shoulder as pose goes to 1 (perched or on the ground).
 //           The hand lags the arm through the stroke. aAnim2 = (wing bow, tail spread, -, colour variant).
+//           The soarers (red-tailed hawk, turkey vulture) use the same template on a flight mesh: the wings are mesh,
+//           spread for good (collapse 0), the arm turning at the shoulder and the hand at the wrist.
 //   rodent  BODY (hindquarters), CHEST (pivot at the lumbar; flexes with the bound, rises to sit up), HEAD and
 //           LEG_A (fore pair), both children of the chest, LEG_B (hind pair), TAIL and TAIL_TIP (child of the
 //           tail; lags it for a wave, curls further on pose). aAnim2 = (leg splay for climbing, tail-tip lag, -, -).
@@ -185,8 +187,22 @@ const RIG = {
   // Western gray squirrel (tools/build_squirrel.py): bounds, sits up, flicks and curls the plume, climbs
   squirrel: { amp: [0.9, 0.5, 0.35, 0], pose: [1, 0.95, 0.75, 0],
     k: { spine: 0.28, spinePhase: 1.2, sit: 0.7, foreFold: 1.1, tipLag: 0.7, tipWave: 0.25, tipCurl: 1.1, abduct: 0.9 } },
+  // Steller's jay (tools/build_stellersjay.py): the scrub-jay's hops, perches and rowing flights, in the conifers
+  stjay: { amp: [0.35, 0.35, 0.4, 1.0], pose: [1, 0.15, 0, 0.2],
+    k: { handLag: 0.7, handAmp: 0.8, bow: 0.25, spread: 0.6, collapse: 1, bob: 0 } },
+  // The soarers are flight meshes, wings spread and never folded (collapse 0); amp and pose as buildHawk and
+  // buildVulture, so the client's soaring, flapping and stooping drive them unchanged. The arm turns at the
+  // shoulder, the hand at the wrist a little behind it (handLag) and a little further (handAmp); aAnim2.x bows
+  // both (the red-tail's hands droop as it tucks into a stoop), aAnim2.y closes (negative) or fans the tail.
+  // Red-tailed hawk (tools/build_redtail.py): soars on broad flat wings, flaps in short bursts, sweeps them back to stoop
+  hawk: { amp: [0, 0.15, 0.3, 0.6], pose: [1, -0.2, 0, 1.4],
+    k: { handLag: 0.5, handAmp: 1.15, bow: 0.6, spread: 0.6, collapse: 0, bob: 0 } },
+  // Turkey vulture (tools/build_vulture.py): circles and glides on its raised V, teeters, hardly ever flaps
+  vulture: { amp: [0, 0.15, 0.25, 0.45], pose: [1, 0, 0, 1.3],
+    k: { handLag: 0.5, handAmp: 1.15, bow: 0.4, spread: 0.5, collapse: 0, bob: 0 } },
 };
-const urls = { jay: '../assets/scrubjay.glb', quail: '../assets/quail.glb', squirrel: '../assets/squirrel.glb' };
+const urls = { jay: '../assets/scrubjay.glb', quail: '../assets/quail.glb', squirrel: '../assets/squirrel.glb',
+  stjay: '../assets/stellersjay.glb', hawk: '../assets/redtail.glb', vulture: '../assets/vulture.glb' };
 function rigModel(name) {
   const r = RIG[name];
   return loadTiers(new URL(urls[name], import.meta.url), { amp: r.amp, pose: r.pose, rig: { name, k: r.k } })
@@ -195,6 +211,9 @@ function rigModel(name) {
 export const loadJayMesh = () => rigModel('jay');
 export const loadQuailMesh = () => rigModel('quail');
 export const loadSquirrelMesh = () => rigModel('squirrel');
+export const loadStellersJayMesh = () => rigModel('stjay');
+export const loadRedtailMesh = () => rigModel('hawk');
+export const loadVultureMesh = () => rigModel('vulture');
 
 // A wing slab hinged at `pivot` on side s (+1 left, -1 right), raised by `dihedral` (rad) about the
 // body axis: its centre sits `dx` out along the raised span and `dz` fore (+) or aft (-) of the pivot.
@@ -245,6 +264,26 @@ export function buildJay() {
     box({ color: deep, part: PART.TAIL, pivot: [0, 0.06, -0.07], pos: [0, 0.058, -0.14], rot: [0.12, 0, 0], scale: [0.045, 0.008, 0.14] }),
     ...mirror(s => box({ color: 0x2b2b2e, part: s > 0 ? PART.LEG_A : PART.LEG_B, pivot: [s * 0.016, 0.03, 0], pos: [s * 0.016, 0.015, 0], scale: [0.007, 0.03, 0.008] })),
     ...mirror(s => wingSlab(s, wp(s), { dx: 0.08, len: 0.16, chord: 0.075, thick: 0.007, dihedral: 0.04, color: blue, under: 0x8a8f99 })).flat(),
+  ];
+  return finish(p, { amp: [0.5, 0.35, 0.4, 1.0], pose: [0.6, 0.15, 0, 1.45] });
+}
+
+// Steller's jay, ~0.31 m: the fallback for the drawn mesh (tools/build_stellersjay.py), buildJay a size up with
+// the Sierra palette (sooty black head and crest, sooty grey-brown breast and mantle, cobalt body, wings and tail)
+// and a spiky crest swept back from the crown.
+export function buildStellersJay() {
+  const blue = 0x2a4fa0, body = 0x2c4f8a, sooty = 0x3e3e44, black = 0x1c1c22;
+  const head = { part: PART.HEAD, pivot: [0, 0.076, 0.065] };
+  const wp = s => [s * 0.032, 0.076, 0.01];
+  const p = [
+    ball({ color: body, pos: [0, 0.058, -0.005], scale: [0.041, 0.042, 0.09] }),
+    ball({ color: sooty, pos: [0, 0.066, 0.03], scale: [0.038, 0.04, 0.05] }, 5, 3),
+    ball({ color: black, ...head, pos: [0, 0.092, 0.085], scale: [0.031, 0.032, 0.036] }),
+    cone({ color: black, ...head, pos: [0, 0.128, 0.068], rot: [-0.75, 0, 0], scale: [0.01, 0.05, 0.008] }),   // crest
+    cone({ color: 0x141416, ...head, pos: [0, 0.09, 0.126], rot: FWD, scale: [0.009, 0.03, 0.008] }),
+    box({ color: blue, part: PART.TAIL, pivot: [0, 0.064, -0.075], pos: [0, 0.06, -0.15], rot: [0.1, 0, 0], scale: [0.05, 0.008, 0.15] }),
+    ...mirror(s => box({ color: 0x141416, part: s > 0 ? PART.LEG_A : PART.LEG_B, pivot: [s * 0.017, 0.033, 0], pos: [s * 0.017, 0.016, 0], scale: [0.007, 0.033, 0.008] })),
+    ...mirror(s => wingSlab(s, wp(s), { dx: 0.09, len: 0.18, chord: 0.08, thick: 0.007, dihedral: 0.04, color: blue, under: 0x4a5f80 })).flat(),
   ];
   return finish(p, { amp: [0.5, 0.35, 0.4, 1.0], pose: [0.6, 0.15, 0, 1.45] });
 }

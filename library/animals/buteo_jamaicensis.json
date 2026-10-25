@@ -13,13 +13,42 @@
     "shoulder_or_wingspan_m": 1.24,
     "note": "Length 45-65 cm, wingspan 105-145 cm, 690-1,600 g (females up to 25% larger). Meshy normalises to about 1.9 units on the span; adoption scales to 1.24 m span (the procedural hawk's) and should bring the length to 0.55 m."
   },
-  "source": null,
-  "license": null,
-  "license_detail": null,
-  "tiers": {
-    "note": "No mesh adopted yet. The client draws buildHawk in client/src/animalModels.js (procedural, about 200 triangles); the player hawk needs its own skinned model."
+  "source": {
+    "kind": "meshy",
+    "title": "Red-tailed hawk (soaring)",
+    "author": "generated with Meshy (meshy.ai) by agent (Claude) for Aaron Brodeur",
+    "url": null,
+    "file": "library/animals/jobs/buteo_jamaicensis/01a1719d-772f-76b4-9155-823815fec267/model.glb (local; jobs/ meshes are not tracked)",
+    "original": "Meshy text-to-3D preview, meshy-6-lite, triangle remesh, 20,779 triangles, untextured",
+    "prompt": "A red-tailed hawk (Buteo jamaicensis), one adult bird soaring in mid-air, wings fully spread out flat to the sides and symmetrical, about 125 cm wingspan and 55 cm long, shaped to read from below and from above. Broad rounded wings with a straight leading edge and five separated, fingered primary feathers at each wingtip. Short, broad brick-red tail fanned wide into a rounded fan. Legs and feet tucked up under the body. Big rounded head and short hooked bill projecting ahead of the wings. Pale underwing with a dark leading-edge bar and a dark wrist mark, pale breast with a dark belly band. Not an eagle, not a falcon. Single bird, no base, no perch. Game-ready, clean closed mesh.",
+    "job_id": "01a1719d-772f-76b4-9155-823815fec267",
+    "build": "tools/build_redtail.py"
   },
-  "rig": "bird template, flight: BODY 0, TAIL 3, HEAD 6, WING_L/R 4/5 pivot (+-0.06, 0.11, 0.02) with a _PARTW falloff toward the hand; banking and circling are instance transforms",
+  "license": "CC BY-SA 4.0",
+  "license_detail": {
+    "source_terms": "Meshy Terms of Use 3.2 (https://www.meshy.ai/terms-of-use, last updated 2026-09-19): API output on a paid plan is owned by the account holder, who releases it with the project's assets under CC BY-SA 4.0. Terms 2.4: AI-identifying metadata Meshy embeds is carried over (the source GLB carried none; the adopted GLB records the source in extras.source). Terms 2.6(xi): not for training models that compete with Meshy (binds the account holder).",
+    "redistribute_under_cc_by_sa": true,
+    "note": "Credit \"generated with Meshy (meshy.ai)\" in README, the build script header and the GLB asset.copyright. AI-generated output may carry little or no copyright in some jurisdictions; the licence covers what rights exist."
+  },
+  "tiers": {
+    "lod0": 2498,
+    "lod1": 900,
+    "lod2": 250,
+    "file": "client/assets/redtail.glb",
+    "attributes": [
+      "POSITION",
+      "COLOR_0 (linear)",
+      "_PART",
+      "_PARTW",
+      "_PIVOT"
+    ],
+    "lod_m": [
+      40,
+      150
+    ],
+    "note": "Ambient flight mesh, 1.24 m span, 0.60 m bill to tail. Body, head and tail from the generated mesh (feet deleted, pitched 12 degrees nose-down, tail lifted 6 degrees and fanned 1.1x); the wings cut off at the body and lofted from the traced plan outline: 5 degree dihedral, chord 1.2x, rounded hand with five slotted primaries, closed cambered section; underside in chordwise rows (patagial bar, wrist comma, lining, flight feathers, dark trailing edge). Triangles: lod0 2,498 = 1,882 body + 600 wings and primaries + 16 eyes; lod1 900 = 668 + 232; lod2 250 = 138 + 112 (three stations, three rows, five fingers, wing 2.5x thicker). Tiers switch at 40 and 150 m. GLB 258,228 bytes."
+  },
+  "rig": "bird rig template, flight mesh (client/src/animalModels.js RIG.hawk; PART BODY, TAIL, HEAD with the neck, WING_L/R arm pivoting at the shoulder, HAND_L/R pivoting at the wrist; collapse 0: the wings never fold); banking and circling are instance transforms; aAnim2 = (hand droop as it tucks into a stoop, tail closed in the dive / fanned pulling out, -, -)",
   "candidates": [
     {
       "kind": "meshy",
@@ -33,18 +62,20 @@
       "credits": 5,
       "raw_triangles": 20779,
       "license": "owned by the paid account holder (Meshy Terms of Use 3.2); to be released as CC BY-SA 4.0 with the project's assets on adoption; Terms 2.6(xi): not for training models that compete with Meshy",
-      "status": "raw preview, not adopted; geometry only. Usable spread-wing silhouette; adoptable as the ambient flight mesh with build-script fixes.",
+      "status": "adopted 2026-10-25: tools/build_redtail.py -> client/assets/redtail.glb (body, head, tail kept; wings retraced)",
       "review": "A soaring raptor, exactly mirror-symmetric, wings spread with fingered tips, short fanned tail, hooked bill, legs trailing back under the tail. One main piece (one stray triangle), clean, 1.8% slivers; wings about 0.012-0.016 units thick (about 1 cm at true scale), so they never vanish edge-on. From below at 15-48 px it reads as a broad-winged bird of prey with a projecting head and a short fan tail. Faults: the wings rise in a strong V (about 24 degrees from shoulder to tip; a red-tail soars flat or at about 5 degrees), which reads as a harrier or vulture when it banks; the wing is long and narrow for a buteo (span 2.55x length against about 2.25, chord about 0.35 of half-span, nearly parallel-edged) with seven to eight long eagle-like fingers instead of five shorter slotted primaries and a rounded hand; the head and bill lean eagle. A build script would rotate each wing about its shoulder pivot down to about 5 degrees, scale the wing chord up about 1.2x (or the span down about 0.9x), shorten the hand fingers, delete the dangling feet, and colour the underwing (pale lining, dark patagial bar and wrist comma, dark belly band, red tail from above)."
     }
   ],
   "status": "agent draft, needs local sign-off",
-  "accuracy_notes": "Planform and topology are very close to the turkey vulture preview from the same session; one flight source could serve both build scripts with different proportions and dihedral. A local birder should check the wing breadth and dihedral in the lineup against soaring red-tails.",
+  "accuracy_notes": "Adopted 2026-10-25 from the Meshy preview as the ambient soaring hawk. Close up (lod0) a broad-winged buteo with a short red fan tail, pale underwing with the patagial bar and wrist comma; at 100 m it reads as a compact broad-winged raptor, at 250-400 m as a 3-6 px dot much like buildHawk. Still open: from below the pale underwing renders mid-brown in the Lambert shading (no translucency), so the light-morph pattern is weak beyond lod0; the belly band is a face mottle; no subterminal tail band; no perched model, no dark or rufous morph, no juvenile; the stoop folds the whole wing back at the shoulder (no wrist fold). A local birder should check wing breadth, finger count and the 5 degree dihedral against soaring red-tails.",
   "authors": [
-    "agent (Claude) for Aaron Brodeur (entry, Meshy candidate)"
+    "agent (Claude) for Aaron Brodeur (entry, Meshy candidate)",
+    "agent (Claude) for Aaron Brodeur (adoption: build script, rig, tiers)"
   ],
   "sources": [
     "library/animals/drafts/buteo_jamaicensis.md (mesh brief)",
     "docs/animal-library.md",
-    "library/animals/README.md"
+    "library/animals/README.md",
+    "tools/build_redtail.py"
   ]
 }
