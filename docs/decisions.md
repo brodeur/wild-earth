@@ -315,3 +315,23 @@ account, so it was not used; no account was created. Rule for animal meshes: CC0
 CC BY with the credit in README, a build script in tools/ that records source and
 licence, local species accuracy checked (ears, tail, antlers), and tiers sized for a
 herd. Open: a buck with mule-deer forked antlers; the bedded pose still looks sunk.
+
+## 2026-10-25: stones come in clusters, with talus around big rocks and cobbles along water
+
+Aaron: "Stones should appear in clusters. If there are big stones, there should be small
+stones around. If there are small stones, there should be a number of small stones
+together. Some places should have lots of stones, especially near the edges of water."
+rocks.js now places boulders in one to three tight clusters per cell rather than a
+scatter; every outcrop mass and every boulder over a metre gets a talus halo of 5 to
+30 smaller stones shrinking outward and spreading downhill; small stones only come in
+groups of 5 to 20; a pebble tier (one draw call, 80 triangles, fading by on-screen
+size) carries them; and stream beds and banks get rounded, paler water-worn cobble and
+gravel at the widths water.js draws, bigger on bigger channels, with gravel bars on the
+inside of bends and a gravel band outside pond shores, nothing on the water surface.
+Shapes reworked in the same pass: slate and schist fins swept from boxes with stepped
+crests, splintered ends and leaning flakes; granite jointed into blocks with
+exfoliation sheets and pale split faces; serpentinite as angular blocks with dark
+striated joint faces; all classes darken slightly with distance so far granite is
+grey, not white. Cost in the densest slate cell at 3 m about 1.8 ms against 1.4 ms
+before. Open: stream cobbles line both banks more than they form bars; long reefs
+still a little rail-like at 20 m; schist reads pale.
