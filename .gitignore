@@ -9,3 +9,8 @@ tiles/**/_cache/
 .DS_Store
 .claude/worktrees/
 pipeline/_cache/
+
+# Local secrets (API keys): never committed. Copy .env.example if one exists.
+.env
+.env.*
+!.env.example
