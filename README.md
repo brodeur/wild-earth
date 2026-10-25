@@ -52,6 +52,7 @@ browser) and both play in one world (`docs/game-acorn-stash.md`, v3).
 
 `client/` is a three.js app with no build step. The raven model (`client/assets/raven.glb`)
 is "Raven" by Teh_Bucket on OpenGameArt, CC0, re-exported from Blender with a glide clip.
+The player raven (`client/assets/raven_player.glb`) was generated with Meshy (meshy.ai) on the account holder's paid plan (job 01a171aa, a level glide), owned by the account holder and released under CC BY-SA 4.0, and rebuilt by `tools/build_raven_player.py` (wings split at shoulder and wrist, three tiers, fly and glide clips); the CC0 OpenGameArt raven stays as the fallback (`?raven=old`).
 The deer model (`client/assets/deer.glb`) is Deer by Quaternius, Ultimate Animated Animal Pack,
 CC0, via Poly Pizza (<https://poly.pizza/m/T6Cs7tmMHJ>), rebuilt by `tools/build_deer.py`.
 The California scrub-jay, California quail and western gray squirrel (`client/assets/scrubjay.glb`,
