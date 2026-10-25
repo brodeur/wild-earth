@@ -10,8 +10,8 @@ import sys
 import time
 import traceback
 
-from .config import (GENERATOR, SOURCES, SPEC_VERSION, TILES_DIR, Tile, now_iso, read_json,
-                     sha256, today, write_json)
+from .config import (ATTRIBUTION_FIELDS, GENERATOR, SPEC_VERSION, TILES_DIR, Tile, all_sources, now_iso,
+                     read_json, sha256, today, write_json)
 from .species_data import CALENDAR, PERCEPTION, SEASONS
 
 ALL_STEPS = ["dem", "naip", "osm", "hydro", "channels", "rewild_hydro", "veg", "ground", "species", "derive", "erase", "unreal"]
@@ -37,9 +37,20 @@ def add_layer(m: dict, tile: Tile, name: str, info: dict) -> None:
         info["sha256"] = sha256(p)
         info["bytes"] = p.stat().st_size
     m["layers"][name] = info
-    src = info.get("source")
-    if src and src in SOURCES:
-        m["sources"][src] = {**SOURCES[src], "retrieved": today()}
+    record_source(m, info.get("source"))
+    for src in info.get("sources_used", []):
+        record_source(m, src)
+
+
+def record_source(m: dict, src: str | None) -> None:
+    """Copy a source's registry entry (licence and attribution included) into the manifest."""
+    sources = all_sources()
+    if not src or src not in sources:
+        return
+    missing = [f for f in ATTRIBUTION_FIELDS if f not in sources[src]]
+    if missing:
+        raise ValueError(f"source {src} has no {', '.join(missing)}; see tile-spec.md, Sources")
+    m["sources"][src] = {**sources[src], "retrieved": today()}
 
 
 def run(tile: Tile, steps: list[str], force=False) -> dict:
@@ -77,14 +88,10 @@ def run(tile: Tile, steps: list[str], force=False) -> dict:
                     add_layer(m, tile, k, v)
                 m["status"]["vegetation_backfilled"] = True
             elif step == "ground":
-                from .config import SOURCES as _SOURCES
                 from .ground import build_ground
                 layers, errors = build_ground(tile, force)
                 for k, v in layers.items():
                     add_layer(m, tile, k, v)
-                    for src in v.get("sources_used", []):
-                        if src in _SOURCES:
-                            m["sources"][src] = {**_SOURCES[src], "retrieved": today()}
                 if errors:
                     raise RuntimeError("; ".join(errors))
             elif step == "species":

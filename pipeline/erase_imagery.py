@@ -382,7 +382,8 @@ def _bleach_roads(img: np.ndarray, pave: np.ndarray, kept: np.ndarray, clean: np
     return out.clip(0, 255).astype("uint8")
 
 
-def _comparison(before: np.ndarray, after: np.ndarray, tile: Tile, lon: float, lat: float, path, size_m=1600.0):
+def _comparison(before: np.ndarray, after: np.ndarray, tile: Tile, lon: float, lat: float, path, size_m=1600.0,
+                label="NAIP"):
     """Side-by-side crop at full resolution: NAIP left, erased right. The window is kept inside the tile."""
     n = before.shape[0]
     res = TILE_SIZE_M / n
@@ -400,7 +401,7 @@ def _comparison(before: np.ndarray, after: np.ndarray, tile: Tile, lon: float, l
         font = ImageFont.truetype("/System/Library/Fonts/Helvetica.ttc", 14)
     except OSError:
         font = ImageFont.load_default()
-    for x0, text in ((0, "NAIP 2022"), (w + gap, "erased + synthesized")):
+    for x0, text in ((0, label), (w + gap, "erased + synthesized")):
         tw = draw.textlength(text, font=font)
         draw.rectangle([x0 + 8, 8, x0 + 8 + tw + 12, 8 + cap], fill=(15, 21, 18))
         draw.text((x0 + 14, 11), text, fill=(230, 237, 231), font=font)
@@ -422,6 +423,10 @@ def erase_imagery(tile: Tile) -> dict:
     with rasterio.open(tile.path("imagery/naip.tif")) as src:
         naip = np.moveaxis(src.read(indexes=[1, 2, 3]), 0, -1).copy()
         tr = src.transform
+        tags = src.tags()
+    # The imagery's own year and source, as fetch_naip tagged them (the naip layer's naip_year).
+    naip_year, naip_source = tags.get("WE_NAIP_YEAR") or None, tags.get("WE_SOURCE") or "pc_naip"
+    naip_label = f"NAIP {naip_year}" if naip_year else "NAIP"
     n = naip.shape[0]
     res = abs(tr.a)
     px_area = res * res
@@ -532,13 +537,13 @@ def erase_imagery(tile: Tile) -> dict:
     # f. Comparison crops for the docs
     comps = []
     for lon, lat, name in COMPARISONS.get(tile.tile_id, []):
-        comps.append(_comparison(naip, out, tile, lon, lat, REPO_ROOT / "docs" / name))
+        comps.append(_comparison(naip, out, tile, lon, lat, REPO_ROOT / "docs" / name, label=naip_label))
     for c in comps:
         print(f"  comparison {c['path']} window {c['window_px']} shifted {c['shifted_m']} m", flush=True)
 
     info = {
         "path": "client/texture_imagery.jpg", "kind": "raster", "crs": tile.crs, "bounds": list(tile.bounds),
-        "pixels": n, "resolution_m": res, "source": "pc_naip",
+        "pixels": n, "resolution_m": res, "source": naip_source,
         "derived_from": ["imagery.naip", "footprint.mask", "vegetation.habitat_present", "vegetation.habitat",
                          "vegetation.evt", "client.roads", "client.channel_profile"],
         "mask_fraction": round(mask_fraction, 4),
@@ -550,7 +555,7 @@ def erase_imagery(tile: Tile) -> dict:
         "components": {"inpainted": int((~is_big[1:]).sum()), "synthesized": int(is_big[1:].sum()), "patches": patches},
         "source_windows": {str(k): int(len(v)) for k, v in windows.items()},
         "grass_mean": grass_mean, "oak_mean": oak_mean, "rewilded_beds": bed_info,
-        "encoding": "NAIP 2022 RGB with human footprint inpainted or synthesized, pavement bleached; JPEG q88",
+        "encoding": f"{naip_label} RGB with human footprint inpainted or synthesized, pavement bleached; JPEG q88",
     }
     print(f"  mask {mask_fraction:.3f}  inpainted {info['inpainted_fraction']:.3f}  "
           f"synthesized {info['synthesized_fraction']:.3f}  patches {patches}  grass {grass_mean}  oak {oak_mean}", flush=True)

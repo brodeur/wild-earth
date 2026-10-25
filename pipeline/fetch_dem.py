@@ -14,7 +14,7 @@ from rasterio.transform import from_bounds
 from rasterio.vrt import WarpedVRT
 
 from .arcgis import fetch_chipped
-from .config import SOURCES, USER_AGENT, Tile
+from .config import SOURCES, USER_AGENT, USGS_CREDITS, Tile
 from .http import HEADERS, get
 
 NODATA = -9999.0
@@ -25,6 +25,10 @@ SOURCES["pc_3dep_seamless"] = {
     "name": "USGS 3DEP seamless 1/3 arc-second DEM via Microsoft Planetary Computer",
     "url": "https://planetarycomputer.microsoft.com/dataset/3dep-seamless",
     "license": "public domain",
+    "license_url": USGS_CREDITS,
+    "attribution": "Elevation: U.S. Geological Survey, 3D Elevation Program (3DEP), via Microsoft Planetary Computer",
+    "attribution_url": "https://www.usgs.gov/3d-elevation-program",
+    "attribution_required": False,
 }
 
 

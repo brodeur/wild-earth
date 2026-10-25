@@ -125,7 +125,15 @@ share the DEM grid unless the manifest says otherwise.
   },
   "sources": {
     "usgs_3dep": {"name": "USGS 3D Elevation Program", "url": "...",
-                  "license": "public domain", "retrieved": "2026-10-22"}
+                  "license": "public domain", "license_url": "https://www.usgs.gov/...",
+                  "attribution": "Elevation: U.S. Geological Survey, 3D Elevation Program (3DEP)",
+                  "attribution_url": "https://www.usgs.gov/3d-elevation-program",
+                  "attribution_required": false, "retrieved": "2026-10-22"},
+    "osm": {"name": "OpenStreetMap via Overpass API", "url": "...",
+            "license": "ODbL 1.0", "license_url": "https://opendatacommons.org/licenses/odbl/1-0/",
+            "attribution": "© OpenStreetMap contributors",
+            "attribution_url": "https://www.openstreetmap.org/copyright",
+            "attribution_required": true, "retrieved": "2026-10-22"}
   },
   "edits": []
 }
@@ -134,7 +142,71 @@ share the DEM grid unless the manifest says otherwise.
 `status` is honest about what the tile is. A tile with `projection_years: 0` and
 `human_landforms_removed: false` is present-day terrain with a footprint mask; that is
 the v0 target. `edits` is an append-only log of viewer edits (mask polygons drawn by
-hand, species flags) so local knowledge survives a pipeline re-run.
+hand, species flags) so local knowledge survives a pipeline re-run. `sources` is described
+under Sources and attribution.
+
+## Sources and attribution
+
+Every entry in the manifest's `sources` carries the licence and the credit a display must
+show:
+
+```
+  name                  what the data are and how they were reached
+  url                   the endpoint the pipeline read
+  license               the licence or terms, as text
+  license_url           the licence text or the publisher's terms
+  attribution           the exact credit line to display, verbatim
+  attribution_url       the link the credit line carries
+  attribution_required  true when the licence makes showing the line a condition of use
+                        (ODbL, CC BY); false for public-domain data whose publisher asks
+                        for a credit but cannot require one
+  retrieved             date fetched (YYYY-MM-DD)
+```
+
+**The rule.** A client, a viewer, and any derived work (a screenshot, video, exported map,
+the Unreal export, a published texture or dataset) must show the `attribution` line of
+every source with `attribution_required: true` whose data went into what is shown or
+distributed, linked to `attribution_url` wherever the medium allows links (print the URL
+where it does not). In an interactive client the required lines are one step from the main
+view: an always-visible "Data" or credits link opening a panel built from
+`manifest.sources`, not a page somewhere else. The panel should list the other sources'
+lines too (they cost nothing and the publishers ask for them), each with its licence name
+linked to `license_url`. Show the lines as written; do not shorten or merge them.
+
+Per source:
+
+- **OpenStreetMap** (`osm`, ODbL 1.0): "© OpenStreetMap contributors" linked to
+  openstreetmap.org/copyright. Anything rendered from OSM (the game view, the ghost roads,
+  the mini-map) is a Produced Work and needs only that line. The OSM-derived layers
+  themselves (`footprint/mask.geojson`, `client/roads.png`, `client/features.json`) are
+  Derivative Databases: distributed apart from the rendering, they are under ODbL
+  (share-alike) and must carry the same notice.
+- **Macrostrat** (`macrostrat`, CC BY 4.0): CC BY asks for the credit, the licence link and
+  a note of changes, so the line says the units were clipped and reclassified. Macrostrat
+  asks that the original maps be cited too: each unit in `geology/units.geojson` carries its
+  original map in `reference`, which a geology info panel shows.
+- **GBIF** (`gbif`): licences are per record (`license` and `dataset`, a GBIF dataset key
+  resolving at `https://www.gbif.org/dataset/<key>`, in `species/occurrences.geojson`).
+  CC BY records require attribution; the line credits GBIF.org and the contributing
+  datasets, and the per-record dataset keys carry the rest. CC BY-NC records stay in the
+  tile package as evidence for density models and the local-knowledge review and are not
+  shipped to a game client (decision log, 2026-10-23); a commercial derived work must
+  leave them out. Before a public release, register the records used as a GBIF derived
+  dataset to get a citable DOI, and add it to the line.
+- **Public domain** (USGS 3DEP, NHDPlus HR, SGMC; USDA NAIP, SSURGO; LANDFIRE): no credit
+  is required. The lines follow each publisher's requested citation (USGS credit
+  guidance, LANDFIRE's citation model, the NRCS SSURGO citation) and are shown anyway.
+
+`python -m pipeline.audit_licenses` fails when a source lacks any of these fields, when a
+licence that requires attribution (ODbL, CC BY) is not marked `attribution_required: true`,
+when a required line or its link is empty, or when a layer's `source` or `sources_used`
+names a source the manifest does not list. It warns when a manifest's lines differ from
+the pipeline's registry (`pipeline.config.all_sources()`). Tiles built before these fields
+existed are patched in place by `tools/patch_attribution.py`, which inserts the fields
+after `license` and changes nothing else; `--refresh` rewrites lines that have since
+changed in the registry. A new source is registered in `SOURCES` with every field;
+`build_tile` refuses to record one without them.
+
 
 ## Footprint mask
 
@@ -324,7 +396,9 @@ is desaturated and blended halfway to sun-bleached grey; the verge is left alone
 layer records `mask_fraction`, `inpainted_fraction` and `synthesized_fraction`,
 `human_cells` (`whole_fraction`, `partial_fraction`, `partial_erased_fraction`), plus
 `grass_mean` and `oak_mean` (sRGB 0..1), the imagery's own summer colours, which the
-client recolours by season relative to. `status.imagery_erased` is true once this has run.
+client recolours by season relative to. `encoding` and the docs comparison crops name the NAIP
+year from `imagery/naip.tif` (the `imagery.naip` layer's `naip_year`), and the layer's `source` is
+the imagery's own. `status.imagery_erased` is true once this has run.
 
 ## Resources
 

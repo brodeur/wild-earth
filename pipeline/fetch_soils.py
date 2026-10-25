@@ -25,11 +25,17 @@ from shapely import wkt as shp_wkt
 from shapely.geometry import mapping
 from shapely.ops import transform as shp_transform
 
-from .config import SOURCES, USER_AGENT, Tile, write_json
+from .config import SOURCES, US_PUBLIC_DOMAIN, USER_AGENT, Tile, write_json
 from .fetch_geology import GRID_PX, grid_transform, tile_polygon
 
 SDA = "https://sdmdataaccess.sc.egov.usda.gov/Tabular/post.rest"
-SOURCES["usda_ssurgo"] = {"name": "USDA NRCS SSURGO via Soil Data Access", "url": SDA, "license": "public domain"}
+SOURCES["usda_ssurgo"] = {"name": "USDA NRCS SSURGO via Soil Data Access", "url": SDA, "license": "public domain",
+                          "license_url": US_PUBLIC_DOMAIN,
+                          # NRCS's requested citation, without the access date (that is `retrieved`).
+                          "attribution": "Soils: Soil Survey Staff, Natural Resources Conservation Service, "
+                                         "U.S. Department of Agriculture, Soil Survey Geographic (SSURGO) Database",
+                          "attribution_url": "https://www.nrcs.usda.gov/resources/data-and-reports/soil-survey-geographic-database-ssurgo",
+                          "attribution_required": False}
 
 BEDROCK_KINDS = ("lithic bedrock", "paralithic bedrock")
 ORGANIC_TEXTURES = {"SPM", "MPM", "HPM", "PEAT", "MUCK", "MPT", "MUCKY"}

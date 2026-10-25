@@ -613,3 +613,20 @@ eight more numbers from `Math.random` while loading (object UUIDs), so a seeded 
 animals diverge once time runs; this is not a rendering change. Console: no new warnings
 or errors; the existing `toNonIndexed(): BufferGeometry is already non-indexed` warning
 remains.
+
+## 2026-10-26: every source carries the credit line a client must show
+
+A fresh-tile build showed the manifests recorded licences but no attribution, and
+OpenStreetMap's ODbL requires one. Each source entry now carries license_url,
+attribution (the exact line), attribution_url and attribution_required, with the rule
+in the tile spec that a client or derived work shows every required line, linked, one
+step from the main view; build_tile refuses a source without them and
+audit_licenses.py fails on a missing or unmarked one; tools/patch_attribution.py added
+the fields to the three existing manifests without changing another byte. Required
+lines: "© OpenStreetMap contributors", Macrostrat CC BY 4.0 over the USGS SGMC, and
+GBIF with its contributing datasets. Found in passing and to fix: the game client
+downloads the full occurrence records, including CC BY-NC ones, to build its animal
+density prior, against the 2026-10-23 decision; the prior must be built by the
+pipeline from CC0 and CC BY records only, and the client given a credits panel.
+Open: a GBIF derived-dataset DOI before any public release; the California Geological
+Survey map's own terms under the SGMC.

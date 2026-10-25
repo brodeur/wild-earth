@@ -11,7 +11,7 @@ import numpy as np
 import rasterio
 from rasterio.transform import from_bounds
 
-from .config import REPO_ROOT, SOURCES, Tile, write_json
+from .config import REPO_ROOT, SOURCES, US_PUBLIC_DOMAIN, Tile, write_json
 from .habitat import CLASSES, COLORS, apply_rewilded_beds, classify_bps, classify_evt
 from .http import download, get
 
@@ -26,7 +26,12 @@ RES_M = 30.0
 NODATA = -9999
 
 SOURCES["landfire"] = {"name": "LANDFIRE LF 2025 (EVT, EVC, EVH) and LF 2016 Biophysical Settings",
-                       "url": "https://landfire.gov", "license": "public domain"}
+                       "url": "https://landfire.gov", "license": "public domain", "license_url": US_PUBLIC_DOMAIN,
+                       # Credit after LANDFIRE's citation model (https://landfire.gov/data/citation).
+                       "attribution": "Vegetation: LANDFIRE 2025 (EVT, EVC, EVH) and LANDFIRE 2016 Biophysical Settings, "
+                                      "U.S. Department of the Interior, Geological Survey, and U.S. Department of Agriculture",
+                       "attribution_url": "https://landfire.gov",
+                       "attribution_required": False}
 
 
 def _table(name: str) -> dict[int, dict]:

@@ -119,20 +119,64 @@ def read_json(path: Path):
         return json.load(f)
 
 
+# Licence and credit links shared by several sources.
+US_PUBLIC_DOMAIN = "https://www.usa.gov/government-copyright"
+USGS_CREDITS = "https://www.usgs.gov/information-policies-and-instructions/copyrights-and-credits"
+CC_BY_4 = "https://creativecommons.org/licenses/by/4.0/"
+NAIP_PAGE = "https://www.fpacbc.usda.gov/geo/imagery-programs/naip-imagery"
+
+# Every source entry carries what a credits display needs (docs/tile-spec.md, Sources):
+#   license, license_url               the terms the data are under
+#   attribution, attribution_url       the exact credit line to show, and the link it carries
+#   attribution_required               true when the licence makes showing the line a condition of use
+# Sources registered in other modules (fetch_dem, fetch_naip, fetch_vegetation, fetch_geology,
+# fetch_soils) carry the same fields; all_sources() returns the complete registry.
+ATTRIBUTION_FIELDS = ("license", "license_url", "attribution", "attribution_url", "attribution_required")
+
 SOURCES = {
     "usgs_3dep": {"name": "USGS 3D Elevation Program (3DEP) bare-earth DEM",
                   "url": "https://elevation.nationalmap.gov/arcgis/rest/services/3DEPElevation/ImageServer",
-                  "license": "public domain"},
+                  "license": "public domain", "license_url": USGS_CREDITS,
+                  "attribution": "Elevation: U.S. Geological Survey, 3D Elevation Program (3DEP)",
+                  "attribution_url": "https://www.usgs.gov/3d-elevation-program",
+                  "attribution_required": False},
     "usgs_naip": {"name": "USGS NAIP Plus orthoimagery",
                   "url": "https://imagery.nationalmap.gov/arcgis/rest/services/USGSNAIPPlus/ImageServer",
-                  "license": "public domain"},
+                  "license": "public domain", "license_url": US_PUBLIC_DOMAIN,
+                  "attribution": "Imagery: USDA National Agriculture Imagery Program (NAIP), via USGS The National Map",
+                  "attribution_url": NAIP_PAGE,
+                  "attribution_required": False},
     "osm": {"name": "OpenStreetMap via Overpass API",
             "url": "https://overpass-api.de/api/interpreter",
-            "license": "ODbL 1.0"},
+            "license": "ODbL 1.0", "license_url": "https://opendatacommons.org/licenses/odbl/1-0/",
+            "attribution": "© OpenStreetMap contributors",
+            "attribution_url": "https://www.openstreetmap.org/copyright",
+            "attribution_required": True},
     "nhdplus_hr": {"name": "USGS NHDPlus High Resolution",
                    "url": "https://hydro.nationalmap.gov/arcgis/rest/services/NHDPlus_HR/MapServer",
-                   "license": "public domain"},
+                   "license": "public domain", "license_url": USGS_CREDITS,
+                   "attribution": "Hydrography: U.S. Geological Survey, NHDPlus High Resolution",
+                   "attribution_url": "https://www.usgs.gov/national-hydrography/nhdplus-high-resolution",
+                   "attribution_required": False},
     "gbif": {"name": "GBIF occurrence API (includes iNaturalist research-grade and eBird)",
              "url": "https://api.gbif.org/v1/occurrence/search",
-             "license": "per dataset (CC0 / CC BY / CC BY-NC); see occurrence properties"},
+             "license": "per dataset (CC0 / CC BY / CC BY-NC); see occurrence properties",
+             "license_url": "https://www.gbif.org/terms",
+             "attribution": "Species occurrences: GBIF.org and its contributing datasets, including iNaturalist "
+                            "and eBird (CC0, CC BY 4.0 or CC BY-NC 4.0 per record)",
+             "attribution_url": "https://www.gbif.org/",
+             "attribution_required": True},
 }
+
+
+def all_sources() -> dict:
+    """SOURCES with every module that registers an entry imported, so the registry is complete.
+    A module whose optional dependencies are missing (requirements-ground.txt) is skipped: its
+    sources cannot be in a tile built without it."""
+    import importlib
+    for mod in ("fetch_dem", "fetch_naip", "fetch_vegetation", "fetch_geology", "fetch_soils"):
+        try:
+            importlib.import_module(f".{mod}", __package__)
+        except ImportError:
+            pass
+    return SOURCES

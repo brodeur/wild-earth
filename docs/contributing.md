@@ -41,6 +41,17 @@ Every edit appears under **Edit log** with its time. Clicking a polygon's row zo
 it. The log is append-only: to correct something, add a new edit; the latest verify or
 flag for a species wins.
 
+## Adding a data source
+
+A new source is registered in the pipeline's `SOURCES` (`pipeline/config.py`, or the fetch
+module that uses it) with `license`, `license_url`, `attribution` (the exact credit line to
+display), `attribution_url` and `attribution_required` (true when the licence makes the
+credit a condition, as ODbL and CC BY do). `build_tile` refuses to record a source without
+them, and `.venv/bin/python -m pipeline.audit_licenses` must pass before the tile is
+committed. Use the publisher's own requested citation where it gives one. Data under a
+non-commercial licence are not shipped to a game client. See Sources and attribution in
+[tile-spec.md](tile-spec.md).
+
 ## Privacy
 
 Edits are public and committed with the tile. Do not mark or describe where anyone

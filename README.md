@@ -90,8 +90,9 @@ Hold P (or the panel's Present day button; a tap toggles it on touch screens) to
 
 The first game is the acorn stash ([design](docs/game-acorn-stash.md)), opt-in with **Start game** in the panel (or `?game=1`). Oaks within 300 m carry acorns, more where the tile's fall acorn_mast score (`client/mast.png`) is high, and about one oak in eight has a stash hole on its trunk. Acorns glow as you close in from about 60 m; fly within 6 m to pick one up (you carry up to 3). After the first pickup stash holes glow blue-white; fly within 6 m of one to deposit, one acorn per beat, until it shows `capacity / capacity` and stops glowing. There are no new keys: it is all flying. Everything about an oak is hashed from its id, so every player finds the same acorns and holes, and picks and stash contents persist per world (tile and season) in the browser's localStorage.
 
-`pipeline.audit_licenses` counts occurrence records by license per tile; see the
-decision log for what the numbers mean.
+`pipeline.audit_licenses` checks that every source in each manifest carries its licence and
+the credit line a display must show (it fails when a required one is missing), and counts
+occurrence records by license per tile; see the decision log for what the numbers mean.
 
 ## What the pipeline produces
 
@@ -152,7 +153,32 @@ keep edits in the browser and export them as JSON; appending them to the manifes
 - [docs/roadmap.md](docs/roadmap.md): done, next in order, then, parked. Kept current at
   each commit.
 
+## Data credits
+
+Every tile's `manifest.json` lists its sources with the exact line to display
+(`attribution`, `attribution_url`, `attribution_required`; see the tile spec, Sources and
+attribution). Anything shown or distributed from a tile must show the lines marked
+required; the others are requested by their publishers and shown too.
+
+Required:
+
+- © OpenStreetMap contributors ([openstreetmap.org/copyright](https://www.openstreetmap.org/copyright)); ODbL 1.0
+- Geology: Macrostrat (macrostrat.org), CC BY 4.0, from the USGS State Geologic Map Compilation; clipped to the tile and reclassified ([macrostrat.org](https://macrostrat.org)); [CC BY 4.0](https://creativecommons.org/licenses/by/4.0/)
+- Species occurrences: GBIF.org and its contributing datasets, including iNaturalist and eBird (CC0, CC BY 4.0 or CC BY-NC 4.0 per record) ([gbif.org](https://www.gbif.org/)); licence per record
+
+Requested (public domain):
+
+- Elevation: U.S. Geological Survey, 3D Elevation Program (3DEP) ([usgs.gov/3d-elevation-program](https://www.usgs.gov/3d-elevation-program))
+- Imagery: USDA National Agriculture Imagery Program (NAIP), via Microsoft Planetary Computer ([USDA NAIP](https://www.fpacbc.usda.gov/geo/imagery-programs/naip-imagery))
+- Hydrography: U.S. Geological Survey, NHDPlus High Resolution ([USGS NHDPlus HR](https://www.usgs.gov/national-hydrography/nhdplus-high-resolution))
+- Vegetation: LANDFIRE 2025 (EVT, EVC, EVH) and LANDFIRE 2016 Biophysical Settings, U.S. Department of the Interior, Geological Survey, and U.S. Department of Agriculture ([landfire.gov](https://landfire.gov))
+- Geology: Horton, J.D., San Juan, C.A., and Stoeser, D.B., 2017, The State Geologic Map Compilation (SGMC) geodatabase of the conterminous United States, U.S. Geological Survey Data Series 1052 ([doi:10.3133/ds1052](https://doi.org/10.3133/ds1052))
+- Soils: Soil Survey Staff, Natural Resources Conservation Service, U.S. Department of Agriculture, Soil Survey Geographic (SSURGO) Database ([NRCS SSURGO](https://www.nrcs.usda.gov/resources/data-and-reports/soil-survey-geographic-database-ssurgo))
+
+`python -m pipeline.audit_licenses` prints each tile's lines; `tools/patch_attribution.py`
+adds them to manifests built before the fields existed.
+
 ## Credits
 
-Icons: [Lucide](https://lucide.dev) (ISC licence). Ground detail textures are CC0 scans from [Poly Haven](https://polyhaven.com), credited in client/assets/ground/ATTRIBUTION.md. Data sources are listed per tile in
-each manifest and in the tile spec.
+Icons: [Lucide](https://lucide.dev) (ISC licence). Ground detail textures are CC0 scans from [Poly Haven](https://polyhaven.com), credited in client/assets/ground/ATTRIBUTION.md. Data sources are credited under Data credits above
+and listed per tile in each manifest.

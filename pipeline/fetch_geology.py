@@ -23,7 +23,7 @@ from rasterio.features import rasterize
 from shapely.geometry import Polygon, mapping, shape
 from shapely.ops import transform as shp_transform, unary_union
 
-from .config import SOURCES, Tile, write_json
+from .config import CC_BY_4, SOURCES, USGS_CREDITS, Tile, write_json
 from .http import get
 
 MACROSTRAT = "https://macrostrat.org/api/v2/geologic_units/map"
@@ -34,10 +34,22 @@ PREFERRED_SOURCES = [133]          # Macrostrat source_id of the SGMC (USGS DS 1
 GRID_N = 5                         # initial sample grid per side
 GRID_PX = 333                      # the 30 m vegetation grid (10 000 m / 333)
 
+# Macrostrat asks for credit to Macrostrat and to the original map; CC BY 4.0 also asks that changes
+# be indicated. Each unit's original map reference is in units.geojson `reference`.
 SOURCES["macrostrat"] = {"name": "Macrostrat API geologic_units/map (Burwell map compilation)",
-                         "url": MACROSTRAT, "license": "CC-BY 4.0 (Macrostrat); SGMC polygons public domain"}
+                         "url": MACROSTRAT, "license": "CC-BY 4.0 (Macrostrat); SGMC polygons public domain",
+                         "license_url": CC_BY_4,
+                         "attribution": "Geology: Macrostrat (macrostrat.org), CC BY 4.0, from the USGS State Geologic "
+                                        "Map Compilation; clipped to the tile and reclassified",
+                         "attribution_url": "https://macrostrat.org",
+                         "attribution_required": True}
 SOURCES["usgs_sgmc"] = {"name": "USGS State Geologic Map Compilation (Horton et al. 2017, DS 1052, doi:10.3133/ds1052)",
-                        "url": SGMC, "license": "public domain"}
+                        "url": SGMC, "license": "public domain", "license_url": USGS_CREDITS,
+                        "attribution": "Geology: Horton, J.D., San Juan, C.A., and Stoeser, D.B., 2017, The State Geologic "
+                                       "Map Compilation (SGMC) geodatabase of the conterminous United States, "
+                                       "U.S. Geological Survey Data Series 1052",
+                        "attribution_url": "https://doi.org/10.3133/ds1052",
+                        "attribution_required": False}
 
 ROCK_CLASSES = ["greenstone_metavolcanic", "serpentinite", "slate_phyllite", "schist", "granitic",
                 "volcanic", "sandstone_conglomerate", "limestone_marble", "alluvium", "other"]

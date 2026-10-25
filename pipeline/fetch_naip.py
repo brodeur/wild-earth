@@ -13,7 +13,7 @@ from rasterio.transform import from_bounds
 from rasterio.vrt import WarpedVRT
 
 from .arcgis import fetch_chipped
-from .config import SOURCES, USER_AGENT, Tile
+from .config import NAIP_PAGE, SOURCES, US_PUBLIC_DOMAIN, USER_AGENT, Tile
 from .http import HEADERS, get, post
 
 STAC = "https://planetarycomputer.microsoft.com/api/stac/v1/search"
@@ -23,6 +23,10 @@ SOURCES["pc_naip"] = {
     "name": "USDA NAIP via Microsoft Planetary Computer",
     "url": "https://planetarycomputer.microsoft.com/dataset/naip",
     "license": "public domain",
+    "license_url": US_PUBLIC_DOMAIN,
+    "attribution": "Imagery: USDA National Agriculture Imagery Program (NAIP), via Microsoft Planetary Computer",
+    "attribution_url": NAIP_PAGE,
+    "attribution_required": False,
 }
 
 
