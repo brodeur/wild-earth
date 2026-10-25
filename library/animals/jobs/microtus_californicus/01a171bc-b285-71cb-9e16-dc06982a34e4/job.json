@@ -1,0 +1,66 @@
+{
+  "species": "microtus_californicus",
+  "mode": "preview",
+  "kind": "text-to-3d",
+  "task_id": "01a171bc-b285-71cb-9e16-dc06982a34e4",
+  "endpoint": "https://api.meshy.ai/openapi/v2/text-to-3d",
+  "request": {
+    "mode": "preview",
+    "prompt": "A California vole (Microtus californicus), a wild meadow vole, NOT a mouse, NOT a hamster. One adult on all fours in a neutral side-on pose, feet on the ground, head level. Realistic proportions: 17 cm long including a short 4.5 cm tail, stocky cylindrical body, short legs, blunt rounded face, small beady eyes, small round ears almost hidden in fur. Grizzled cinnamon-brown back with darker ticking, grey belly, grey feet, tail dark above and grey below. No whiskers as strands. No base, no ground. Game-ready.",
+    "ai_model": "meshy-6-lite",
+    "target_formats": [
+      "glb"
+    ],
+    "should_remesh": true,
+    "topology": "triangle",
+    "target_polycount": 20000,
+    "moderation": false
+  },
+  "prompt": "A California vole (Microtus californicus), a wild meadow vole, NOT a mouse, NOT a hamster. One adult on all fours in a neutral side-on pose, feet on the ground, head level. Realistic proportions: 17 cm long including a short 4.5 cm tail, stocky cylindrical body, short legs, blunt rounded face, small beady eyes, small round ears almost hidden in fur. Grizzled cinnamon-brown back with darker ticking, grey belly, grey feet, tail dark above and grey below. No whiskers as strands. No base, no ground. Game-ready.",
+  "image": null,
+  "preview_job": null,
+  "estimated_credits": 5,
+  "balance_before": 2827,
+  "status": "SUCCEEDED",
+  "timestamps": {
+    "submitted": "2026-10-25T06:25:53+00:00",
+    "created_at": "2026-10-25T06:25:56+00:00",
+    "started_at": "2026-10-25T06:25:56+00:00",
+    "finished_at": "2026-10-25T06:26:20+00:00",
+    "downloaded": "2026-10-25T06:26:21+00:00"
+  },
+  "tool": "tools/meshy_generate.py",
+  "pricing_source": {
+    "url": "https://docs.meshy.ai/en/api/pricing",
+    "read": "2026-10-24"
+  },
+  "licence_note": "Generated through the Meshy API, which requires a paid plan (402 on a free plan). Meshy Terms of Use (https://www.meshy.ai/terms-of-use, last updated 2026-09-19), section 3.2: customers on a paid plan own their Customer Output to the extent permitted by law (free-plan output is owned by Meshy and offered under CC BY 4.0 with credit to Meshy). As owner, the account holder may license this model under the project's CC BY-SA 4.0 asset licence, to the extent copyright subsists in AI-generated output. Section 2.4: do not remove or alter AI-identifying metadata or watermarks Meshy embeds; carry them into adopted tiers. Section 2.5: API output is deleted by Meshy 3 days after generation, so keep this folder until the model is adopted. Credit: \"generated with Meshy (meshy.ai)\".",
+  "maintainer": "agent (Claude) for Aaron Brodeur",
+  "progress": 100,
+  "task": {
+    "id": "01a171bc-b285-71cb-9e16-dc06982a34e4",
+    "type": "text-to-3d-preview",
+    "status": "SUCCEEDED",
+    "created_at": 1792909556005,
+    "started_at": 1792909556009,
+    "finished_at": 1792909580703,
+    "consumed_credits": 5,
+    "task_error": null
+  },
+  "credits_charged": 5,
+  "files": [
+    {
+      "file": "model.glb",
+      "bytes": 611192,
+      "sha256": "2e41196298d93f00af51c7a4961b8875fc8901c97acb11a489f3469094a4b3c9",
+      "source": "https://assets.meshy.ai/<account>/tasks/01a171bc-b285-71cb-9e16-dc06982a34e4/output/model.glb"
+    },
+    {
+      "file": "thumbnail.png",
+      "bytes": 28609,
+      "sha256": "399f875a83973babf97c3acea098fa1c74239d9995ca5db383048a3c4adfd8f6",
+      "source": "https://assets.meshy.ai/<account>/tasks/01a171bc-b285-71cb-9e16-dc06982a34e4/output/preview.png"
+    }
+  ],
+  "balance_after": 2822
+}

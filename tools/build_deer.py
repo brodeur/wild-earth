@@ -19,8 +19,21 @@
 # custom attributes _PART, _PARTW, _PIVOT; animalModels.js poses it in the vertex shader like the
 # procedural deer. Output: one GLB with meshes lod0, lod1, lod2 (POSITION, COLOR_0 linear, indices).
 # --preview <prefix>: also renders lod0 side, head and rear views (workbench) to <prefix>_*.png.
-import bpy, bmesh, sys, json, struct
-from mathutils import Vector
+#
+# --buck: the antlered buck instead (brief: library/animals/drafts/odocoileus_hemionus_buck.md), written to OUT
+# (client/assets/deer_buck.glb): 5% larger (Neck1 at 0.9975 m), neck 1.15x thicker about the neck line, darker
+# forehead (#3b2c22), the hooves and pasterns kept with their leg (the doe leaves them on the body part, a
+# known doe fault left alone so the doe's output does not change), and procedural mule-deer antlers built per
+# tier and never decimated with the body: burr on the frontal bone in front of and inside the ear base, the beam
+# up, out and back, an even fork at ~45% of its length, the rear branch forking again (mature 3x3), a small
+# brow tine; tubes tapering 2.5 to 0.5 cm, 6-sided on lod0, 3-sided (1 cm minimum) on lod1, one flat V per side
+# on lod2. Body tiers 2,096 / 1,000 / ~300 plus antlers make ~2,350 / ~1,100 / ~320. Antler vertices are HEAD
+# (6), weight 1, and carry _ANTLER (0 off the antler; else 0.05 + 0.95 x the fraction of the way from burr to
+# tip, for growth and the colour gradient) and _TINE (0 beam and main fork, 1 the rear branch's second fork,
+# which a forked-horn 2x2 hides, 2 the brow tine, 3 the burr ring). The burr centre is in extras.antler_burr
+# (glTF axes, the left burr; the right mirrors in x) so the shader can grow, shed and thicken (velvet) them.
+import bpy, bmesh, sys, json, struct, math
+from mathutils import Vector, Matrix
 
 argv = sys.argv[sys.argv.index('--') + 1:]
 SRC, OUT = argv[0], argv[1]
@@ -29,6 +42,10 @@ EAR = float(opt('--ear', 1.3))
 PREVIEW = opt('--preview', None)
 TIERS = [('lod0', None), ('lod1', 1000), ('lod2', 300)]
 WITHERS = 0.95          # Neck1 joint height after scaling (m): black-tailed doe, ~0.9-1.0 m at the shoulder
+BUCK = '--buck' in argv
+if BUCK:
+    WITHERS = round(0.95 * 1.05, 4)   # the buck ~5% larger: 1.0 m at the shoulder
+    NECK = 1.15             # neck thickness about the neck line (the rut swell would be ~1.3)
 
 bpy.ops.wm.read_factory_settings(use_empty=True)
 bpy.ops.import_scene.gltf(filepath=SRC)
@@ -69,6 +86,21 @@ for v in me.vertices:
         if w > 0:
             base = JS[f'Ear1.{side}']
             v.co = v.co.lerp(base + (v.co - base) * EAR, min(1.0, w))
+# buck: thicker neck, radially about the neck line, by the neck bones' weight (not the head's)
+if BUCK:
+    nl = [JS['Torso3'], JS['Neck1'], JS['Neck2'], JS['Neck3'], JS['Head']]
+    def _near(p):
+        best = (1e9, None)
+        for i in range(len(nl) - 1):
+            a, b = nl[i], nl[i + 1]; ab = b - a; t = max(0.0, min(1.0, (p - a).dot(ab) / ab.length_squared)); q = a + ab * t
+            if (p - q).length < best[0]: best = ((p - q).length, q)
+        return best[1]
+    for v in me.vertices:
+        w = sum(g.weight for g in v.groups if groups[g.group] in ('Neck1', 'Neck2', 'Neck3'))
+        tot = sum(g.weight for g in v.groups) or 1
+        w = min(1.0, w / tot)
+        if w > 0:
+            q = _near(v.co); v.co = q + (v.co - q) * (1 + (NECK - 1) * w)
 # eyes: the source eye (Eye_Black, Eye_White) is a round disc; squash it into a small almond about
 # its centre on each side: 0.5x in height, 0.8x in length
 eye_v = {i for p in me.polygons if mats[p.material_index] in ('Eye_Black', 'Eye_White') for i in p.vertices}
@@ -89,6 +121,9 @@ CATS = {
     'tail': (3, 'Tail1', ('Tail1', 'Tail2', 'Tail3')),
     'head': (6, 'Neck1', ('Neck1', 'Neck2', 'Neck3', 'Head', 'Ear1.L', 'Ear2.L', 'Ear3.L', 'Ear4.L', 'Ear1.R', 'Ear2.R', 'Ear3.R', 'Ear4.R')),
 }
+if BUCK:   # hooves and pasterns are skinned to the IK foot bones: keep them with their leg
+    for c, extra in (('fl', ('IKFrontLeg.L', 'FF.L')), ('fr', ('IKFrontLeg.R', 'FF.R')), ('hl', ('IKBackLeg.L', 'FFB.L')), ('hr', ('IKBackLeg.R', 'FFB.R'))):
+        CATS[c] = (CATS[c][0], CATS[c][1], CATS[c][2] + extra)
 BONE2CAT = {b: c for c, (_, _, bs) in CATS.items() for b in bs}
 
 def srgb2lin(h):
@@ -99,6 +134,7 @@ def srgb2lin(h):
 # animalModels.js buildDeer's palette (sRGB), plus a face tone and the darker brow
 COAT, PALE, RUMP, LEG, DARK = 0x86694b, 0xbfa98a, 0xddd2bb, 0x6f5640, 0x241a14
 FACE, BROW, EYE, NOSE = 0x7e6650, 0x4f3d2e, 0x120d0b, 0x1c1714
+if BUCK: BROW = 0x3b2c22    # the buck's darker forehead (brief palette)
 MATCOL = {'Main': COAT, 'Main_Light': PALE, 'Main_Dark': FACE, 'Hooves': 0x2a2420, 'Eye_Lighter': FACE, 'Eye_Black': EYE, 'Eye_White': EYE}
 T1, T3 = JS['Tail1'], JS['Tail3']
 EARB = JS['Ear1.L']
@@ -184,7 +220,115 @@ def build(target):
     print('TIER', target, 'tris', len(idx) // 3, 'verts', len(pos), 'from', n0)
     return dict(pos=pos, col=col, part=part, partw=partw, piv=piv, idx=idx)
 
-tiers = [(name, build(t)) for name, t in TIERS]
+# ---- buck: procedural mule-deer antlers, one set per tier (never decimated with the body) ----
+def antler_geometry(level):
+    """Triangles for both antlers: a list of ((p0, p1, p2) Blender coords, (t0, t1, t2), tine class).
+    level 0: 6-sided tubes with burr ring, brow tine, curved beam; 1: 3-sided, 1 cm minimum radius, no brow;
+    2: one flat V per side."""
+    head_v = [v.co for v in me.vertices if sum(g.weight for g in v.groups if groups[g.group] in ('Head', 'Neck3')) > 0.5]
+    bx, by = EARB.x * 0.55, EARB.y - 0.035
+    near = sorted(head_v, key=lambda c: (c.x - bx) ** 2 + (c.y - by) ** 2)[:6]
+    B = Vector((bx, by, max(c.z for c in near) - 0.008))
+    # points relative to the left burr (x out, +y back, z up) and radii (m), for a mature 3x3 black-tailed buck
+    P = {'Bb': ((0, 0, -0.012), 0.031), 'B': ((0, 0, 0), 0.025), 'P1': ((0.06, 0.04, 0.06), 0.021),
+         'P2': ((0.12, 0.06, 0.12), 0.018), 'F1': ((0.15, 0.03, 0.19), 0.012), 'Ft': ((0.155, -0.02, 0.26), 0.005),
+         'R1': ((0.16, 0.1, 0.17), 0.015), 'R2': ((0.172, 0.112, 0.19), 0.013), 'Ra': ((0.168, 0.08, 0.27), 0.005),
+         'Rb': ((0.195, 0.172, 0.24), 0.005), 'W0': ((0.012, -0.008, 0.026), 0.008), 'Wt': ((0.026, -0.045, 0.056), 0.004)}
+    if level == 0:
+        paths = [(['Bb', 'B'], 3, False), (['B', 'P1', 'P2', 'F1', 'Ft'], 0, True), (['P2', 'R1', 'R2', 'Ra'], 0, True),
+                 (['R2', 'Rb'], 1, True), (['W0', 'Wt'], 2, True)]
+        sides, rmin = 6, 0.0
+    else:
+        paths = [(['B', 'P2', 'Ft'], 0, True), (['P2', 'R2', 'Ra'], 0, True), (['R2', 'Rb'], 1, True)]
+        sides, rmin = 3, 0.01
+    # arc length from the burr along the tree, for t (0 burr, 1 tip)
+    parent = {'B': None, 'Bb': None, 'P1': 'B', 'P2': 'P1', 'F1': 'P2', 'Ft': 'F1', 'R1': 'P2', 'R2': 'R1', 'Ra': 'R2', 'Rb': 'R2', 'W0': None, 'Wt': 'W0'}
+    def dist(k):
+        d = 0.0
+        while parent[k]: d += (Vector(P[k][0]) - Vector(P[parent[k]][0])).length; k = parent[k]
+        return d
+    tip_of = {'Bb': 'Ft', 'B': 'Ft', 'P1': 'Ft', 'P2': 'Ft', 'F1': 'Ft', 'Ft': 'Ft', 'R1': 'Ra', 'R2': 'Ra', 'Ra': 'Ra', 'Rb': 'Rb', 'W0': 'Wt', 'Wt': 'Wt'}
+    def tval(k):
+        if k == 'Bb': return 0.0
+        if k.startswith('W'): return 0.15 + 0.35 * dist(k) / dist('Wt')
+        return dist(k) / dist(tip_of[k])
+    tris = []
+    for side in (1, -1):
+        def at(k): o = Vector(P[k][0]); return Vector((side * (B.x + o.x), B.y + o.y, B.z + o.z))
+        if level == 2:   # flat V: stem to the front tip and to the rear tip, a notch between, both faces
+            b, ft, ra, nt = at('B'), at('Ft'), at('Ra'), at('P2') + Vector((0, 0, 0.05))
+            nrm = (ft - b).cross(ra - b).normalized() * 0.004
+            for off, flip in ((nrm, False), (-nrm, True)):
+                for tri, tt in (((b, ft, nt), (0, 1, 0.6)), ((b, nt, ra), (0, 0.6, 1))):
+                    q = tuple(x + off for x in tri)
+                    if flip: q = (q[0], q[2], q[1]); tt = (tt[0], tt[2], tt[1])
+                    tris.append((q, tt, 0))
+            continue
+        for keys, tine, cap in paths:
+            pts = [at(k) for k in keys]; rad = [max(rmin, P[k][1]) for k in keys]; ts = [tval(k) for k in keys]
+            # ring frames by parallel transport
+            tang = []
+            for i in range(len(pts)):
+                a = pts[max(0, i - 1)]; b = pts[min(len(pts) - 1, i + 1)]; tang.append((b - a).normalized())
+            ref = Vector((0, 1, 0)) if abs(tang[0].y) < 0.9 else Vector((1, 0, 0))
+            u = (ref - tang[0] * ref.dot(tang[0])).normalized()
+            rings = []
+            for i, (c, r, tn) in enumerate(zip(pts, rad, tang)):
+                if i: u = (u - tn * u.dot(tn)).normalized()
+                w = tn.cross(u)
+                rings.append([c + (u * math.cos(2 * math.pi * k / sides) + w * math.sin(2 * math.pi * k / sides)) * r for k in range(sides)])
+            def tri(a, b, c, ta, tb, tc, axis):
+                n = (b - a).cross(c - a); cen = (a + b + c) / 3
+                if n.dot(cen - axis) < 0: a, b, c, ta, tb, tc = a, c, b, ta, tc, tb   # outward winding
+                tris.append(((a, b, c), (ta, tb, tc), tine))
+            for i in range(len(pts) - 1):
+                ax = (pts[i] + pts[i + 1]) / 2
+                for k in range(sides):
+                    k2 = (k + 1) % sides
+                    tri(rings[i][k], rings[i][k2], rings[i + 1][k2], ts[i], ts[i], ts[i + 1], ax)
+                    tri(rings[i][k], rings[i + 1][k2], rings[i + 1][k], ts[i], ts[i + 1], ts[i + 1], ax)
+            if cap:   # cone to the tip
+                apex = pts[-1] + tang[-1] * rad[-1] * 2.5
+                for k in range(sides):
+                    tri(rings[-1][k], rings[-1][(k + 1) % sides], apex, ts[-1], ts[-1], 1.0, pts[-1])
+    return tris, B
+
+ANTLER_BASE, ANTLER_TIP = 0x6b5843, 0xd9ceb5   # hard antler, burr to tip (brief palette)
+def antler_color(t):
+    t = max(0.0, min(1.0, t)) ** 1.6
+    a, b = srgb2lin(ANTLER_BASE), srgb2lin(ANTLER_TIP)
+    return tuple(x + (y - x) * t for x, y in zip(a, b))
+
+def add_antlers(t, level):
+    tris, B = antler_geometry(level)
+    n = len(t['pos'])
+    t['antler'] = [0.0] * n; t['tine'] = [0.0] * n
+    for (ps, ts, tine) in tris:
+        fc = antler_color(sum(ts) / 3)
+        for p_, tv in zip(ps, ts):
+            t['idx'].append(len(t['pos'])); t['pos'].append(to3(p_)); t['col'].append(fc)
+            t['part'].append(6.0); t['partw'].append(1.0); t['piv'].append(to3(JS['Neck1']))
+            t['antler'].append(0.05 + 0.95 * tv); t['tine'].append(float(tine))
+    return len(tris), B
+
+if BUCK:
+    BUCK_TIERS = [('lod0', 2350, 0), ('lod1', 1100, 1), ('lod2', 320, 2)]   # total triangles, antler level
+    tiers = []
+    for name, total, level in BUCK_TIERS:
+        na = len(antler_geometry(level)[0])
+        t = build(total - na)
+        nat, BURR = add_antlers(t, level)
+        print('TIER', name, 'antler tris', nat, 'total', len(t['idx']) // 3)
+        tiers.append((name, t))
+    # graze clearance: rotate the antler tips about Neck1 as the shader's flick does (glTF: +y up, +z forward)
+    piv = to3(JS['Neck1']); lo = {}
+    for a in (0.5, 1.0, 1.5):
+        c, s_ = math.cos(a), math.sin(a)
+        ys = [piv.y + s_ * (p.z - piv.z) * -1 + c * (p.y - piv.y) for p, an in zip(tiers[0][1]['pos'], tiers[0][1]['antler']) if an > 0]
+        lo[a] = round(min(ys), 3)
+    print('INFO antler lowest point (m) at head flick 0.5 / 1.0 / 1.5 rad:', lo)
+else:
+    tiers = [(name, build(t)) for name, t in TIERS]
 
 # ---- minimal GLB writer: one buffer, one mesh per tier, custom attributes _PART, _PARTW, _PIVOT ----
 buf = bytearray(); views = []; accs = []
@@ -207,6 +351,7 @@ meshes = []; nodes = []
 for name, t in tiers:
     attrs = {'POSITION': acc_f([tuple(p) for p in t['pos']], 3), 'COLOR_0': acc_f(t['col'], 3),
              '_PART': acc_f(t['part'], 1), '_PARTW': acc_f(t['partw'], 1), '_PIVOT': acc_f([tuple(p) for p in t['piv']], 3)}
+    if 'antler' in t: attrs['_ANTLER'] = acc_f(t['antler'], 1); attrs['_TINE'] = acc_f(t['tine'], 1)
     meshes.append({'name': name, 'primitives': [{'attributes': attrs, 'indices': acc_i(t['idx']), 'mode': 4}]})
     nodes.append({'name': name, 'mesh': len(meshes) - 1})
 while len(buf) % 4: buf.append(0)
@@ -215,6 +360,12 @@ gltf = {'asset': {'version': '2.0', 'generator': 'wild-earth tools/build_deer.py
         'scene': 0, 'scenes': [{'nodes': list(range(len(nodes)))}], 'nodes': nodes, 'meshes': meshes,
         'accessors': accs, 'bufferViews': views, 'buffers': [{'byteLength': len(buf)}],
         'extras': {'ear_scale': EAR, 'withers_m': WITHERS}}
+if BUCK:
+    gltf['asset']['copyright'] = 'Deer by Quaternius (quaternius.com, Ultimate Animated Animal Pack), CC0 1.0; recoloured, rest pose baked, decimated; buck: larger, thicker neck, procedural antlers (wild-earth)'
+    gltf['extras'].update({'rig': {'kind': 'quadruped', **{k: [round(x, 4) for x in to3(JS[j])] for k, j in (('head', 'Neck1'), ('tail', 'Tail1'), ('fore', 'FrontUpperLeg.L'), ('hind', 'BackUpperLeg.L'))}},
+                           'variant': 'buck', 'neck_scale': NECK, 'antler_burr': [round(x, 4) for x in to3(BURR)],
+                           'antler': '_ANTLER 0 off the antler, else 0.05 + 0.95 x fraction burr to tip; _TINE 0 beam and main fork, 1 rear second fork (mature only), 2 brow tine, 3 burr ring; right antler mirrors the left in x',
+                           'antler_tris': {n: sum(1 for k in range(0, len(t['idx']), 3) if t['antler'][t['idx'][k]] > 0) for n, t in tiers}})
 js = json.dumps(gltf, separators=(',', ':')).encode()
 while len(js) % 4: js += b' '
 glb = struct.pack('<4sII', b'glTF', 2, 12 + 8 + len(js) + 8 + len(buf)) + struct.pack('<I4s', len(js), b'JSON') + js + struct.pack('<I4s', len(buf), b'BIN\x00') + bytes(buf)

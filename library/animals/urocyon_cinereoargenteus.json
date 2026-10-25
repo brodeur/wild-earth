@@ -1,0 +1,61 @@
+{
+  "id": "urocyon_cinereoargenteus",
+  "aliases": [
+    "gray_fox",
+    "grey_fox",
+    "fox"
+  ],
+  "scientific": "Urocyon cinereoargenteus townsendi",
+  "common": "gray fox",
+  "body_plan": "quadruped",
+  "size": {
+    "length_m": 0.6,
+    "shoulder_or_wingspan_m": 0.37,
+    "note": "Head and body about 0.53-0.74 m, tail 0.28-0.44 m, 0.35-0.40 m at the shoulder (brief). The build script scales to 0.37 m at the withers (dorsal surface over the shoulders); the result measures 0.61 m nose to tail root and a 0.34 m tail."
+  },
+  "source": {
+    "kind": "cc0_download",
+    "title": "Fox",
+    "author": "Quaternius (quaternius.com)",
+    "collection": "Ultimate Animated Animal Pack",
+    "url": "https://poly.pizza/m/Bc97C66HKi",
+    "file": "https://static.poly.pizza/e18e86df-1692-48d8-ac6e-1e25ab4ad574.glb",
+    "original": "FBX2glTF export, 1,848 triangles with the eyes (page: 1,826), skinned on the Quaternius animal rig, 12 clips, flat material colours: a red fox (orange coat, black stockings, white tail tip)",
+    "job": "library/animals/jobs/urocyon_cinereoargenteus/download-polypizza/job.json",
+    "prompt": null,
+    "reference_image": null,
+    "job_id": null,
+    "date": "2026-10-24",
+    "adopted_by": "tools/build_fox.py"
+  },
+  "license": "CC0 1.0",
+  "license_detail": {
+    "source_terms": "CC0 1.0 Universal (https://creativecommons.org/publicdomain/zero/1.0/); the Poly Pizza page lists \"Licence: CC0 1.0\".",
+    "redistribute_under_cc_by_sa": true,
+    "note": "CC0 places no conditions, so the adopted tiers may ship in client/assets and be relicensed with the project's assets. Credit is kept anyway (README, build script header, GLB asset.copyright)."
+  },
+  "tiers": {
+    "lod0": 1798,
+    "lod1": 698,
+    "lod2": 200,
+    "file": "client/assets/fox.glb",
+    "attributes": [
+      "POSITION",
+      "COLOR_0 (linear)",
+      "_PART",
+      "_PARTW",
+      "_PIVOT"
+    ]
+  },
+  "rig": "procedural part rig, quadruped template Q (animalModels.js PART): LEG_A left fore + right hind, LEG_B the other diagonal (fore pivot FrontUpperLeg, hind pivot at the stifle, paws with their leg), TAIL (pivot Tail1), HEAD (neck, head, ears; pivot Neck1); pivots also in extras.rig. Source skeleton and clips dropped here; the source file keeps them for a later skinned player fox.",
+  "status": "agent draft, needs local sign-off",
+  "accuracy_notes": "Recoloured and reshaped from a red fox. Reads as a gray fox from the side and from above: grizzled grey back with per-face noise, a black line down the back and along the top of the tail, a black tail tip (no white), rusty legs (no black stockings), a rufous collar behind the white cheeks, white throat and belly line, the black stripe from the eye down the muzzle, black nose. Legs below the belly and the muzzle 0.9x, tail lowered about 34 degrees and 1.15x thicker. Still wrong or unchecked: the build is leggier and less cat-like than a real gray fox; up close the white muzzle sides between the black stripe and the lips read a little raccoon-like; the rufous lower flank band is patchy; the tail mane thins to a line on lod1 and lod2. A local naturalist should check the face mask, the amount of rust on the neck and legs, and tail carriage.",
+  "authors": [
+    "Quaternius (model)",
+    "agent (Claude) for Aaron Brodeur (adoption, reshaping, recolour, tiers)"
+  ],
+  "sources": [
+    "library/animals/drafts/urocyon_cinereoargenteus.md (field marks, sizes, palette, tiers; its sources are listed there)",
+    "https://poly.pizza/m/Bc97C66HKi"
+  ]
+}

@@ -1,0 +1,59 @@
+{
+  "id": "canis_latrans",
+  "aliases": [
+    "coyote"
+  ],
+  "scientific": "Canis latrans ochropus",
+  "common": "coyote",
+  "body_plan": "quadruped",
+  "size": {
+    "length_m": 0.85,
+    "shoulder_or_wingspan_m": 0.58,
+    "note": "Head and body 0.75-1.00 m, tail about 0.40 m, 0.53-0.61 m at the shoulder (brief). The build script scales to 0.58 m at the withers (dorsal surface) and sets the tail to 0.40 m; the result measures 0.86 m nose to tail root."
+  },
+  "source": {
+    "kind": "cc0_download",
+    "title": "Wolf",
+    "author": "Quaternius (quaternius.com)",
+    "collection": "Ultimate Animated Animal Pack",
+    "url": "https://poly.pizza/m/P1gU3Qkr9r",
+    "file": "https://static.poly.pizza/f1d12388-e39b-4157-b32a-646a1d089fc4.glb",
+    "original": "FBX2glTF export, 1,962 triangles with the eyes (page: 1,928), skinned on the Quaternius animal rig, 12 clips, flat dark grey material colours, a neck ruff",
+    "job": "library/animals/jobs/canis_latrans/download-polypizza/job.json",
+    "prompt": null,
+    "reference_image": null,
+    "job_id": null,
+    "date": "2026-10-24",
+    "adopted_by": "tools/build_coyote.py"
+  },
+  "license": "CC0 1.0",
+  "license_detail": {
+    "source_terms": "CC0 1.0 Universal (https://creativecommons.org/publicdomain/zero/1.0/); the Poly Pizza page lists \"Licence: CC0 1.0\".",
+    "redistribute_under_cc_by_sa": true,
+    "note": "CC0 places no conditions, so the adopted tiers may ship in client/assets and be relicensed with the project's assets. Credit is kept anyway (README, build script header, GLB asset.copyright)."
+  },
+  "tiers": {
+    "lod0": 1900,
+    "lod1": 798,
+    "lod2": 218,
+    "file": "client/assets/coyote.glb",
+    "attributes": [
+      "POSITION",
+      "COLOR_0 (linear)",
+      "_PART",
+      "_PARTW",
+      "_PIVOT"
+    ]
+  },
+  "rig": "procedural part rig, quadruped template Q, as the fox (LEG_A left fore + right hind, LEG_B, TAIL at Tail1, HEAD at Neck1, paws with their leg); pivots in extras.rig. Source skeleton and clips dropped.",
+  "status": "agent draft, needs local sign-off",
+  "accuracy_notes": "Built from a wolf: chest 0.85x narrower, neck 0.85x thinner, legs 0.8x thinner, muzzle 0.8x narrower, ears 1.25x, tail shortened to 0.40 m, thinned and hung low (down and back, below the back line, tip easing back). Reads as a lean tan canid with a low bushy black-tipped tail, rufous forelegs, feet, ear backs and muzzle sides, whitish chin, throat, belly and inner legs, a dark dorsal line and shoulder cross. Still wrong or unchecked: the wolf's deep chest and heavy shoulders still show in profile (only the width was narrowed); the head is broad for a coyote and the ears (about 9 cm) could be larger; small ruff spikes remain under the jaw; the coat from above is a fairly even brown, greyer grizzle may be closer to winter coyotes; the gland spot is faint. Check ear size, chest depth and tail carriage against local coyotes.",
+  "authors": [
+    "Quaternius (model)",
+    "agent (Claude) for Aaron Brodeur (adoption, reshaping, recolour, tiers)"
+  ],
+  "sources": [
+    "library/animals/drafts/canis_latrans.md (field marks, sizes, palette, tiers; its sources are listed there)",
+    "https://poly.pizza/m/P1gU3Qkr9r"
+  ]
+}

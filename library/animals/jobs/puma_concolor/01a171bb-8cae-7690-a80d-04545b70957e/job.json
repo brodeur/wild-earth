@@ -1,0 +1,66 @@
+{
+  "species": "puma_concolor",
+  "mode": "preview",
+  "kind": "text-to-3d",
+  "task_id": "01a171bb-8cae-7690-a80d-04545b70957e",
+  "endpoint": "https://api.meshy.ai/openapi/v2/text-to-3d",
+  "request": {
+    "mode": "preview",
+    "prompt": "A mountain lion (cougar, Puma concolor) of California, NOT an African lion, no mane, no spots. One adult male standing still, side-on neutral pose, four legs straight with clear gaps, big paws flat, head level. Realistic proportions: 75 cm at the shoulder, 1.3 m head and body, small round head, heavier neck and shoulders, long low muscular body, hindquarters a little higher than the shoulders, very long thick heavy tail (0.8 m) hanging low with the tip curving up. Plain tawny coat, cream muzzle, chin, throat and belly, black patches beside the muzzle, black backs of the ears, black tail tip. No base, no ground. Game-ready.",
+    "ai_model": "latest",
+    "target_formats": [
+      "glb"
+    ],
+    "should_remesh": true,
+    "topology": "triangle",
+    "target_polycount": 20000,
+    "moderation": false
+  },
+  "prompt": "A mountain lion (cougar, Puma concolor) of California, NOT an African lion, no mane, no spots. One adult male standing still, side-on neutral pose, four legs straight with clear gaps, big paws flat, head level. Realistic proportions: 75 cm at the shoulder, 1.3 m head and body, small round head, heavier neck and shoulders, long low muscular body, hindquarters a little higher than the shoulders, very long thick heavy tail (0.8 m) hanging low with the tip curving up. Plain tawny coat, cream muzzle, chin, throat and belly, black patches beside the muzzle, black backs of the ears, black tail tip. No base, no ground. Game-ready.",
+  "image": null,
+  "preview_job": null,
+  "estimated_credits": 20,
+  "balance_before": 2847,
+  "status": "SUCCEEDED",
+  "timestamps": {
+    "submitted": "2026-10-25T06:24:38+00:00",
+    "created_at": "2026-10-25T06:24:40+00:00",
+    "started_at": "2026-10-25T06:24:40+00:00",
+    "finished_at": "2026-10-25T06:25:39+00:00",
+    "downloaded": "2026-10-25T06:25:48+00:00"
+  },
+  "tool": "tools/meshy_generate.py",
+  "pricing_source": {
+    "url": "https://docs.meshy.ai/en/api/pricing",
+    "read": "2026-10-24"
+  },
+  "licence_note": "Generated through the Meshy API, which requires a paid plan (402 on a free plan). Meshy Terms of Use (https://www.meshy.ai/terms-of-use, last updated 2026-09-19), section 3.2: customers on a paid plan own their Customer Output to the extent permitted by law (free-plan output is owned by Meshy and offered under CC BY 4.0 with credit to Meshy). As owner, the account holder may license this model under the project's CC BY-SA 4.0 asset licence, to the extent copyright subsists in AI-generated output. Section 2.4: do not remove or alter AI-identifying metadata or watermarks Meshy embeds; carry them into adopted tiers. Section 2.5: API output is deleted by Meshy 3 days after generation, so keep this folder until the model is adopted. Credit: \"generated with Meshy (meshy.ai)\".",
+  "maintainer": "agent (Claude) for Aaron Brodeur",
+  "progress": 100,
+  "task": {
+    "id": "01a171bb-8cae-7690-a80d-04545b70957e",
+    "type": "text-to-3d-preview",
+    "status": "SUCCEEDED",
+    "created_at": 1792909480877,
+    "started_at": 1792909480881,
+    "finished_at": 1792909539490,
+    "consumed_credits": 20,
+    "task_error": null
+  },
+  "credits_charged": 20,
+  "files": [
+    {
+      "file": "model.glb",
+      "bytes": 732912,
+      "sha256": "cf5d7ffb49b2e7cc9cdae6c0db5e825b3c877e0491c468458843c28018e00322",
+      "source": "https://assets.meshy.ai/<account>/tasks/01a171bb-8cae-7690-a80d-04545b70957e/output/model.glb"
+    },
+    {
+      "file": "thumbnail.png",
+      "bytes": 50915,
+      "sha256": "ad2e837249e9434bb35e418d8ffaf7250d6374205c5bee30ff3cd74c7cc7056a",
+      "source": "https://assets.meshy.ai/<account>/tasks/01a171bb-8cae-7690-a80d-04545b70957e/output/preview.png"
+    }
+  ],
+  "balance_after": 2827
+}

@@ -37,8 +37,42 @@
     "attributes": ["POSITION", "COLOR_0 (linear)", "_PART", "_PARTW", "_PIVOT"]
   },
   "rig": "procedural part rig (client/src/animalModels.js PART): legs A/B in a diagonal walk (left fore and right hind are A), tail, head; the source skeleton and clips are dropped",
+  "variants": {
+    "buck": {
+      "file": "client/assets/deer_buck.glb",
+      "built_by": "tools/build_deer.py --buck (same CC0 source file; download record library/animals/jobs/odocoileus_hemionus/download-polypizza/job.json)",
+      "brief": "library/animals/drafts/odocoileus_hemionus_buck.md",
+      "size": {
+        "shoulder_m": 0.9975,
+        "note": "5% larger than the doe (Neck1 joint at 0.9975 m, the doe's 0.95)"
+      },
+      "tiers": {
+        "lod0": 2350,
+        "lod1": 1098,
+        "lod2": 318,
+        "antler_triangles": {
+          "lod0": 288,
+          "lod1": 78,
+          "lod2": 8
+        }
+      },
+      "attributes": [
+        "POSITION",
+        "COLOR_0 (linear)",
+        "_PART",
+        "_PARTW",
+        "_PIVOT",
+        "_ANTLER",
+        "_TINE"
+      ],
+      "changes": "neck 1.15x thicker about the neck line; darker forehead (#3b2c22); hooves and pasterns go with their leg part (the doe leaves them on the body, a doe fault left alone so the doe's output does not change); procedural mule-deer antlers built per tier and never decimated with the body: burr on the frontal bone in front of and inside the ear base, the beam up, out and back, an even fork at about 45% of its length, the rear branch forking again (mature 3x3), a small brow tine; tubes 2.5 to 0.5 cm, 6-sided on lod0, 3-sided with 1 cm minimum radius on lod1, one flat V per side on lod2; hard-antler colour burr #6b5843 to tip #d9ceb5",
+      "antler_flags": "_ANTLER: 0 off the antler, else 0.05 + 0.95 x the fraction of the way from burr to tip (growth, shedding, velvet thickening, colour); _TINE: 0 beam and main fork, 1 the rear branch's second fork (hide it for a forked-horn 2x2), 2 brow tine, 3 burr ring. extras.antler_burr holds the left burr centre (glTF axes; the right mirrors in x). Antler vertices are HEAD (6), weight 1, pivot Neck1.",
+      "season": "spring antlerless (collapse every antler vertex to its burr, keep tine 3 as the pedicel knob), April-August velvet (grey-brown, about 1.3x thicker about the burr, rounded tips), September-January hard, cast January-March (brief)",
+      "accuracy_notes": "Reads as an antlered black-tailed buck from the side, front and above: a forked rack sweeping out and back inside the ear spread, darker forehead, thicker neck. The rack is a construction from straight segments, so it reads geometric close up; the rut neck swell and stained hocks are not modelled; the body is the doe's scaled 5%. At a full graze dip (head flick 1.5 rad) the lowest antler point stays 0.78 m above the ground."
+    }
+  },
   "status": "agent draft, needs local sign-off",
-  "accuracy_notes": "Source is a generic stylised deer. The build script fixes what reads wrong for a Sierra foothill black-tailed doe: ears enlarged 1.3x (mule and black-tailed deer have big ears), grey-brown coat with a darker forehead and nose bridge, small dark almond eye, tail black on top and at the tip and white beneath, a clean white rump patch. Open: no buck (black-tailed bucks carry mule-deer forked antlers); the bedded pose still looks sunk into the ground; the low-poly faceting is stylised rather than realistic. A local naturalist should check tail, rump and ear proportions against does seen in the foothills.",
+  "accuracy_notes": "Source is a generic stylised deer. The build script fixes what reads wrong for a Sierra foothill black-tailed doe: ears enlarged 1.3x (mule and black-tailed deer have big ears), grey-brown coat with a darker forehead and nose bridge, small dark almond eye, tail black on top and at the tip and white beneath, a clean white rump patch. The buck is a variant (variants.buck, client/assets/deer_buck.glb). Open: the hooves and pasterns are skinned to the source's IK foot bones, which tools/build_deer.py does not map to a leg, so on the doe they stay on the body part and do not swing with the legs (the buck build fixes this); the bedded pose still looks sunk into the ground; the low-poly faceting is stylised rather than realistic. A local naturalist should check tail, rump and ear proportions against does seen in the foothills.",
   "authors": ["Quaternius (model)", "agent (Claude) for Aaron Brodeur (adoption, recolour, tiers)"],
   "sources": ["https://poly.pizza/m/T6Cs7tmMHJ", "docs/decisions.md, 2026-10-25: animals may be curated CC0 meshes"]
 }

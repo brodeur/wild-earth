@@ -1,0 +1,76 @@
+{
+  "id": "puma_concolor",
+  "aliases": [
+    "mountain_lion",
+    "cougar",
+    "puma"
+  ],
+  "scientific": "Puma concolor",
+  "common": "mountain lion",
+  "body_plan": "quadruped",
+  "size": {
+    "length_m": 1.07,
+    "shoulder_or_wingspan_m": 0.72,
+    "note": "Females 0.86-1.31 m head and body, males 1.02-1.54 m; tail 0.63-0.96 m; 0.60-0.90 m at the shoulder (brief: draw a female at 0.68 m, a male at 0.75 m). The build scales the generated male to 0.72 m at the withers; scale instances 0.94x for a female, 1.04x for a male. Result: 1.07 m nose to tail root, tail 0.69 m along its axis."
+  },
+  "source": {
+    "kind": "meshy",
+    "title": "Mountain lion (generated)",
+    "author": "generated with Meshy (meshy.ai) by agent (Claude) for Aaron Brodeur",
+    "url": "https://www.meshy.ai",
+    "file": "library/animals/jobs/puma_concolor/01a171bb-8cae-7690-a80d-04545b70957e/model.glb (local, git-ignored)",
+    "original": "text-to-3D preview, ai_model latest (meshy-7.1), triangle remesh to 20,000 faces: 20,840 triangles, one piece, untextured, with modelled whisker strands and ridged tail rings",
+    "prompt": "A mountain lion (cougar, Puma concolor) of California, NOT an African lion, no mane, no spots. One adult male standing still, side-on neutral pose, four legs straight with clear gaps, big paws flat, head level. Realistic proportions: 75 cm at the shoulder, 1.3 m head and body, small round head, heavier neck and shoulders, long low muscular body, hindquarters a little higher than the shoulders, very long thick heavy tail (0.8 m) hanging low with the tip curving up. Plain tawny coat, cream muzzle, chin, throat and belly, black patches beside the muzzle, black backs of the ears, black tail tip. No base, no ground. Game-ready.",
+    "reference_image": null,
+    "job_id": "01a171bb-8cae-7690-a80d-04545b70957e",
+    "job": "library/animals/jobs/puma_concolor/01a171bb-8cae-7690-a80d-04545b70957e/job.json",
+    "credits": 20,
+    "date": "2026-10-25 (UTC)",
+    "adopted_by": "tools/build_cougar.py"
+  },
+  "license": "CC BY-SA 4.0",
+  "license_detail": {
+    "source_terms": "Meshy Terms of Use (https://www.meshy.ai/terms-of-use, last updated 2026-09-19) 3.2: paid-plan API output is owned by the account holder, who releases it with the project's assets under CC BY-SA 4.0.",
+    "redistribute_under_cc_by_sa": true,
+    "note": "Credit \"generated with Meshy (meshy.ai)\" is kept in the build script header and the GLB asset.copyright. The file carried no Meshy metadata or watermark to carry over (Terms 2.4). Terms 2.6(xi) (no training of competing models) binds the account holder, not CC BY-SA licensees. AI output may carry little copyright in some jurisdictions; the licence covers what rights exist."
+  },
+  "tiers": {
+    "lod0": 2999,
+    "lod1": 1200,
+    "lod2": 350,
+    "file": "client/assets/cougar.glb",
+    "attributes": [
+      "POSITION",
+      "COLOR_0 (linear)",
+      "_PART",
+      "_PARTW",
+      "_PIVOT"
+    ]
+  },
+  "rig": "quadruped template Q with a two-part tail: BODY, LEG_A (left fore + right hind), LEG_B, TAIL (inner half, pivot at the root), TAIL_TIP 8 (outer half, pivot mid-tail, child of TAIL in the one-level parent chain), HEAD (neck, head, ears; pivot at the neck base). Parts found from the geometry (tail cut at the rump and traced by edge distance, legs below the belly line with pivots there: elbow and stifle, head ahead of a plane at the neck base); weights blended over 5-10 cm. Parent pivots in extras.rig.",
+  "candidates": [
+    {
+      "kind": "meshy",
+      "purpose": "brief prompt A (adult female)",
+      "job": "library/animals/jobs/puma_concolor/01a171ba-c614-73d1-9304-71ddc99f6980/job.json",
+      "job_id": "01a171ba-c614-73d1-9304-71ddc99f6980",
+      "mode": "text-to-3d preview, ai_model latest, remeshed to triangles, target 20,000 faces",
+      "prompt": "A mountain lion (cougar, Puma concolor) of California, NOT an African lion, no mane, no spots. One adult female standing still, side-on neutral pose, four legs straight with clear gaps, big paws flat, head level. Realistic proportions: 68 cm at the shoulder, 1.15 m head and body, small round head, long low muscular body, hindquarters a little higher than the shoulders, very long thick tail (0.72 m) hanging low with the tip curving up. Plain tawny coat, cream muzzle, chin, throat and belly, black patches beside the muzzle, black backs of the ears, dark tail tip. No base, no ground. Game-ready.",
+      "author": "generated with Meshy (meshy.ai) by agent (Claude) for Aaron Brodeur",
+      "date": "2026-10-25 (UTC)",
+      "credits": 20,
+      "license": "owned by the paid account holder (Meshy Terms of Use 3.2)",
+      "status": "rejected in favour of prompt B",
+      "review": "Good feline body, small head and a long J tail, but the head is turned to the side and the tail swings off the midline (asymmetric, against the brief's pitfalls), the forelegs stand crossed, and the tail is thinner. Prompt B (male) came back symmetric with the head level."
+    }
+  ],
+  "status": "agent draft, needs local sign-off",
+  "accuracy_notes": "Generated (prompt B, the male), not adopted from a download: no CC0 cougar exists. Reads as a mountain lion: small round head, long low body with the hindquarters a little higher than the shoulders, big paws, a long heavy tail hanging in a J with a black tip, plain tawny coat with a darker back, cream muzzle, chin, throat, belly and inner legs, black whisker-base patches, black ear backs, pinkish nose, small golden eye. Whisker strands removed; legs below the belly 0.9x. Still wrong or unchecked: the generator sculpted ridged rings along the tail (geometry only; the colour is plain); the eyes are narrow lids, drawn as one golden face; the J of the tail reaches the ground before curling up, lower than a walking lion carries it; male proportions (heavier neck) on a 0.72 m animal. Check tail carriage, head size and the face marks against local trail-camera photos (brief C9).",
+  "authors": [
+    "agent (Claude) for Aaron Brodeur (generation, adoption, recolour, tiers)"
+  ],
+  "sources": [
+    "library/animals/drafts/puma_concolor.md (field marks, sizes, palette, prompts; its sources are listed there)",
+    "docs/animal-library.md (Meshy terms and costs)"
+  ]
+}

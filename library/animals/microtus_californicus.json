@@ -1,0 +1,59 @@
+{
+  "id": "microtus_californicus",
+  "aliases": [
+    "california_vole",
+    "vole"
+  ],
+  "scientific": "Microtus californicus",
+  "common": "California vole",
+  "body_plan": "rodent",
+  "size": {
+    "length_m": 0.17,
+    "shoulder_or_wingspan_m": 0.055,
+    "note": "Total length 139-214 mm, tail 39-68 mm, 30-81 g (brief). The build scales head and body to 0.125 m and the tail to 0.045 m (0.17 m in all); the back stands about 5.5 cm (the brief estimates 4 cm when moving)."
+  },
+  "source": {
+    "kind": "meshy",
+    "title": "California vole (generated)",
+    "author": "generated with Meshy (meshy.ai) by agent (Claude) for Aaron Brodeur",
+    "url": "https://www.meshy.ai",
+    "file": "library/animals/jobs/microtus_californicus/01a171bc-b285-71cb-9e16-dc06982a34e4/model.glb (local, git-ignored)",
+    "original": "text-to-3D preview, ai_model meshy-6-lite, triangle remesh to 20,000 faces: 20,959 triangles, one piece, untextured, with whisker strands and a mouse's thin tail",
+    "prompt": "A California vole (Microtus californicus), a wild meadow vole, NOT a mouse, NOT a hamster. One adult on all fours in a neutral side-on pose, feet on the ground, head level. Realistic proportions: 17 cm long including a short 4.5 cm tail, stocky cylindrical body, short legs, blunt rounded face, small beady eyes, small round ears almost hidden in fur. Grizzled cinnamon-brown back with darker ticking, grey belly, grey feet, tail dark above and grey below. No whiskers as strands. No base, no ground. Game-ready.",
+    "reference_image": null,
+    "job_id": "01a171bc-b285-71cb-9e16-dc06982a34e4",
+    "job": "library/animals/jobs/microtus_californicus/01a171bc-b285-71cb-9e16-dc06982a34e4/job.json",
+    "credits": 5,
+    "date": "2026-10-25 (UTC)",
+    "adopted_by": "tools/build_vole.py"
+  },
+  "license": "CC BY-SA 4.0",
+  "license_detail": {
+    "source_terms": "Meshy Terms of Use (https://www.meshy.ai/terms-of-use, last updated 2026-09-19) 3.2: paid-plan API output is owned by the account holder, who releases it with the project's assets under CC BY-SA 4.0.",
+    "redistribute_under_cc_by_sa": true,
+    "note": "Credit \"generated with Meshy (meshy.ai)\" is kept in the build script header and the GLB asset.copyright. The file carried no Meshy metadata or watermark to carry over (Terms 2.4). Terms 2.6(xi) (no training of competing models) binds the account holder, not CC BY-SA licensees. AI output may carry little copyright in some jurisdictions; the licence covers what rights exist."
+  },
+  "tiers": {
+    "lod0": 399,
+    "lod1": 119,
+    "lod2": 23,
+    "file": "client/assets/vole.glb",
+    "attributes": [
+      "POSITION",
+      "COLOR_0 (linear)",
+      "_PART",
+      "_PARTW",
+      "_PIVOT"
+    ]
+  },
+  "rig": "rodent template R: BODY (hindquarters, with the tail, too short to animate), CHEST (pivot at the lumbar; lifts to sit up and eat), HEAD and LEG_A (fore pair, elbows) children of the chest, LEG_B (hind pair, stifles); parts from the geometry; parent pivots in extras.rig.",
+  "status": "agent draft, needs local sign-off",
+  "accuracy_notes": "Generated (one meshy-6-lite preview). Reads as a stocky short-legged vole rather than a mouse once rebuilt: tail cut to 4.5 cm (a quarter of the length) and thickened, ears pressed down 0.6x into the fur, muzzle 0.85x blunter, body 0.85x lower; grizzled brown back with a reddish midline, blue-grey belly, grey feet, tail dark above and grey below. Still wrong or unchecked: the head keeps some of the generator's rat shape (muzzle a little pointed); the thickened tail decimates to a flat blade; the eye is one dark triangle, large for a beady eye at arm's length; lod2 is a 23-triangle wedge; the back is higher than the brief's 4 cm estimate.",
+  "authors": [
+    "agent (Claude) for Aaron Brodeur (generation, adoption, recolour, tiers)"
+  ],
+  "sources": [
+    "library/animals/drafts/microtus_californicus.md (field marks, sizes, palette, prompts; its sources are listed there)",
+    "docs/animal-library.md (Meshy terms and costs)"
+  ]
+}

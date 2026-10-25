@@ -1,0 +1,59 @@
+{
+  "id": "sylvilagus_bachmani",
+  "aliases": [
+    "brush_rabbit",
+    "rabbit"
+  ],
+  "scientific": "Sylvilagus bachmani",
+  "common": "brush rabbit",
+  "body_plan": "rodent",
+  "size": {
+    "length_m": 0.33,
+    "shoulder_or_wingspan_m": 0.17,
+    "note": "Head and body 30-37 cm, ear 5-6 cm, tail 1-3 cm (brief). The build script scales head and body (nose to tail root, measured along the spine since the crouch tilts the body) to 0.33 m; the crouched rabbit stands 0.17 m at the back and 0.23 m to the ear tips."
+  },
+  "source": {
+    "kind": "cc0_download",
+    "title": "Rabbit",
+    "author": "Čestmír Dammer (OpenGameArt user CDmir), made for the game Kelgar (www.kelgar.org)",
+    "url": "https://opengameart.org/content/rabbit-0",
+    "file": "https://opengameart.org/sites/default/files/rabbit-FBX.7z",
+    "original": "FBX in a 7z archive: rigged rabbit (1,700-triangle body plus alpha fur cards and whisker strands), 10 clips, 1K diffuse and normal maps; a European rabbit or hare with long ears",
+    "job": "library/animals/jobs/sylvilagus_bachmani/download-opengameart/job.json",
+    "prompt": null,
+    "reference_image": null,
+    "job_id": null,
+    "date": "2026-10-24",
+    "adopted_by": "tools/build_rabbit.py"
+  },
+  "license": "CC0 1.0",
+  "license_detail": {
+    "source_terms": "The OpenGameArt page lists \"License(s): CC0\"; the archive's License.txt reads \"License: CC0 - Public Domain\" (Čestmír Dammer). CC0 1.0: https://creativecommons.org/publicdomain/zero/1.0/.",
+    "redistribute_under_cc_by_sa": true,
+    "note": "CC0 places no conditions, so the adopted tiers may ship in client/assets and be relicensed with the project's assets. Credit is kept anyway (README, build script header, GLB asset.copyright)."
+  },
+  "tiers": {
+    "lod0": 896,
+    "lod1": 299,
+    "lod2": 60,
+    "file": "client/assets/rabbit.glb",
+    "attributes": [
+      "POSITION",
+      "COLOR_0 (linear)",
+      "_PART",
+      "_PARTW",
+      "_PIVOT"
+    ]
+  },
+  "rig": "rodent template R (animalModels.js): BODY hindquarters, CHEST (pivot at the lumbar joint), HEAD and LEG_A (fore pair, pivots at the elbows) children of the chest, LEG_B (hind pair with the long hind feet, pivots at the stifles), TAIL; from the source skin weights; parent pivots in extras.rig. No TAIL_TIP (the tail is a stub) and no EARS part (ears ride with the head).",
+  "status": "agent draft, needs local sign-off",
+  "accuracy_notes": "Fur cards and whiskers dropped; posed in the source's resting crouch (Sitting clip frame 1, the only low symmetric pose); ears 0.55x about their base, tail 0.5x; the diffuse texture is sampled per face for its ticking and multiplied onto the brief's darker palette. Reads as a small dark wild cottontail, not a pet bunny or a hare: short dark-rimmed ears, compact body, grey-brown back, warmer nape, pale grey belly and inner forelegs, buff feet, a tiny tail dark above and pale below, dark eye with a pale ring. Still wrong or unchecked: the pose is a sitting crouch with the fore body raised, not a level feeding crouch; the head is large and round (the source is a European rabbit); the ears measure about 4 cm above their joint, at the short end of the brief's 5-6 cm; the eye ring may be too bright; lod1 ears are blades and lod2 is a wedge with ears. A local check of ear length and overall darkness is wanted.",
+  "authors": [
+    "Čestmír Dammer (model)",
+    "agent (Claude) for Aaron Brodeur (adoption, pose, reshaping, recolour, tiers)"
+  ],
+  "sources": [
+    "library/animals/drafts/sylvilagus_bachmani.md (field marks, sizes, palette, tiers; its sources are listed there)",
+    "https://opengameart.org/content/rabbit-0"
+  ]
+}
