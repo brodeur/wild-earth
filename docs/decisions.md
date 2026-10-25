@@ -298,3 +298,20 @@ stand, start view within noise. Rejected: a translucency texture per species (on
 channel of the existing card texture does it). Still open: gray pine tufts are round
 clumps rather than hanging tassels; shadow maps treat cards as opaque so sparse crowns
 get dark clumps; a twig tier for the close set is the next tree pass.
+
+## 2026-10-25: animals may be curated CC0 meshes; trees and ground stay procedural
+
+Aaron asked about Meshy models. The procedural argument (one algorithm per morphology
+scales to every species on earth) is for plants and ground, which number in the
+thousands per region; animals are a dozen species per tile, so a curated mesh per
+species is sound. First one: the black-tailed deer is now "Deer" by Quaternius
+(Ultimate Animated Animal Pack, CC0, via Poly Pizza), rebuilt by tools/build_deer.py
+into three tiers (2,096 / 1,000 / 298 triangles) with big ears, a grey-brown coat,
+black tail top and white rump, and posed by the existing procedural rig through
+per-vertex part weights rather than its own skeleton, so grazing, bedding, tail flicks,
+shadows and lighting are unchanged. The procedural deer stays as the fallback when the
+mesh fails to load. The Meshy deer the user pointed at is CC0 but its download needs an
+account, so it was not used; no account was created. Rule for animal meshes: CC0 or
+CC BY with the credit in README, a build script in tools/ that records source and
+licence, local species accuracy checked (ears, tail, antlers), and tiers sized for a
+herd. Open: a buck with mule-deer forked antlers; the bedded pose still looks sunk.

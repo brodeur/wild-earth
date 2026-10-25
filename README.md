@@ -49,7 +49,9 @@ and never logged or stored.
 
 `client/` is a three.js app with no build step. The raven model (`client/assets/raven.glb`)
 is "Raven" by Teh_Bucket on OpenGameArt, CC0, re-exported from Blender with a glide clip.
-It reads a tile package's `client/`
+The deer model (`client/assets/deer.glb`) is Deer by Quaternius, Ultimate Animated Animal Pack,
+CC0, via Poly Pizza (<https://poly.pizza/m/T6Cs7tmMHJ>), rebuilt by `tools/build_deer.py`.
+The client reads a tile package's `client/`
 rasters and builds a 10 m terrain mesh, a vegetation-shaded texture that recolors grass
 and oaks by season, a physically placed sun for the tile's latitude, and a forest of
 procedural trees grown per 30 m cell from habitat class and canopy cover: blue oak,

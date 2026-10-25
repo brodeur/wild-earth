@@ -1,5 +1,6 @@
 import * as THREE from 'three';
 import { mergeGeometries } from 'three/addons/utils/BufferGeometryUtils.js';
+import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
 import { uniforms as atmo } from './atmosphere.js';
 
 // Procedural low-poly animals for the ambient population (animals.js). Each species is one merged,
@@ -126,6 +127,27 @@ export function buildDeer() {
   return finish(p, { amp: [0.3, 0.6, 1.5, 0], pose: [0.12, 0, -0.15, 0] });
 }
 
+// The drawn black-tailed deer (animals.js; buildDeer above is the fallback): "Deer" by Quaternius
+// (Ultimate Animated Animal Pack, poly.pizza/m/T6Cs7tmMHJ), CC0, rebuilt by tools/build_deer.py (source,
+// licence and the Blender command are in its header): rest pose baked, 0.95 m at the withers, ears 1.3x,
+// recoloured with buildDeer's palette (darker brow, small dark eye, tail black on top and at the tip,
+// white rump patch), three tiers (lod0 2096, lod1 1000, lod2 ~300 triangles). Each vertex carries the
+// procedural rig's part, its pivot (the joint) and the skin weight of that part (aPartW), so the shader
+// poses it like buildDeer with the same amp and pose.
+const DEER_URL = new URL('../assets/deer.glb', import.meta.url);
+export async function loadDeerMesh() {
+  const gltf = await new GLTFLoader().loadAsync(DEER_URL.href);
+  const tiers = ['lod0', 'lod1', 'lod2'].map(n => {
+    const g = gltf.scene.getObjectByName(n).geometry;
+    g.setAttribute('aPart', g.getAttribute('_part')); g.deleteAttribute('_part');
+    g.setAttribute('aPartW', g.getAttribute('_partw')); g.deleteAttribute('_partw');
+    g.setAttribute('aPivot', g.getAttribute('_pivot')); g.deleteAttribute('_pivot');
+    g.computeVertexNormals();
+    return g;
+  });
+  return { tiers, tris: tiers.map(g => g.index.count / 3), amp: [0.3, 0.6, 1.5, 0], pose: [0.12, 0, -0.15, 0], weighted: true };
+}
+
 // A wing slab hinged at `pivot` on side s (+1 left, -1 right), raised by `dihedral` (rad) about the
 // body axis: its centre sits `dx` out along the raised span and `dz` fore (+) or aft (-) of the pivot.
 // `under`: a second, slightly lower slab in another colour, so the wing reads one way from above
@@ -224,7 +246,7 @@ export function buildVulture() {
 
 // Lambert, flat shaded, vertex coloured, patched by the atmosphere (sun, sky, cloud shadow, haze)
 // like the trees and the player's raven, then chained with the part animation.
-const ANIM_DECL = `
+const ANIM_DECL_BASE = `
 attribute float aPart; attribute vec3 aPivot; attribute vec4 aAnim;
 mat3 animRX(float a) { float c = cos(a), s = sin(a); return mat3(1.0, 0.0, 0.0, 0.0, c, s, 0.0, -s, c); }
 mat3 animRY(float a) { float c = cos(a), s = sin(a); return mat3(c, 0.0, -s, 0.0, 1.0, 0.0, s, 0.0, c); }
@@ -247,9 +269,13 @@ if (animPart == 1 || animPart == 2) {
   animR = animRY(side * animPose * uPose.w) * animRZ(side * sin(aAnim.x) * aAnim.y * uAmp.w);
 }
 vec3 transformed = animR * animP + aPivot;
+#ifdef ANIM_WEIGHTED
+  transformed = mix(position, transformed, aPartW);
+#endif
 #ifdef USE_ALPHAHASH
   vPosition = vec3( position );
 #endif`;
+const animDecl = model => (model.weighted ? '#define ANIM_WEIGHTED\nattribute float aPartW;' : '') + ANIM_DECL_BASE;
 
 export function animalMaterial(atmosphere, model) {
   const m = new THREE.MeshLambertMaterial({ vertexColors: true, flatShading: true });
@@ -259,11 +285,11 @@ export function animalMaterial(atmosphere, model) {
   // materials would otherwise share one program, and with it the first material's uniform values.
   const v4 = a => `vec4(${a.map(x => x.toFixed(4)).join(', ')})`;
   const consts = `\nconst vec4 uAmp = ${v4(model.amp)};\nconst vec4 uPose = ${v4(model.pose)};`;
-  const key = `atmosphere-lambert|animal|${model.amp.join(',')}|${model.pose.join(',')}`;
+  const key = `atmosphere-lambert|animal|${model.amp.join(',')}|${model.pose.join(',')}|${model.weighted ? 'w' : ''}`;
   m.onBeforeCompile = (shader, renderer) => {
     prev.call(m, shader, renderer);
     shader.vertexShader = shader.vertexShader
-      .replace('#include <common>', '#include <common>\n' + ANIM_DECL + consts)
+      .replace('#include <common>', '#include <common>\n' + animDecl(model) + consts)
       .replace('#include <begin_vertex>', ANIM_BODY);
   };
   m.customProgramCacheKey = () => key;
@@ -277,7 +303,7 @@ export function animalMaterial(atmosphere, model) {
 export function animalDepthMaterial(model) {
   const v4 = a => `vec4(${a.map(x => x.toFixed(4)).join(', ')})`;
   return new THREE.ShaderMaterial({
-    vertexShader: `${ANIM_DECL}
+    vertexShader: `${animDecl(model)}
 const vec4 uAmp = ${v4(model.amp)};
 const vec4 uPose = ${v4(model.pose)};
 void main() {
@@ -302,7 +328,7 @@ export function planarShadowMaterial(model, { drop = 0, opacity = 0.42, nearFade
   const v4 = a => `vec4(${a.map(x => x.toFixed(4)).join(', ')})`;
   return new THREE.ShaderMaterial({
     uniforms: { sunDir: atmo.sunDir, csmStrength: atmo.csmStrength, opacity: { value: opacity }, csm0: { value: atmo.csmMatrix.value[0] } },
-    vertexShader: `${ANIM_DECL}
+    vertexShader: `${animDecl(model)}
 const vec4 uAmp = ${v4(model.amp)};
 const vec4 uPose = ${v4(model.pose)};
 uniform vec3 sunDir; uniform float csmStrength; uniform mat4 csm0;

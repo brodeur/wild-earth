@@ -4,7 +4,7 @@ import { hash } from './vegetation.js';
 import { localXY } from './goto.js';
 import { addCaster, removeCaster } from './shadows.js';
 import { buildSquirrel, buildWoodpecker, buildRaven, buildDeer, buildQuail, buildJay, buildHawk, buildVulture,
-  animalMaterial, animalDepthMaterial, planarShadowMaterial } from './animalModels.js';
+  animalMaterial, animalDepthMaterial, planarShadowMaterial, loadDeerMesh } from './animalModels.js';
 
 // Ambient animals: the first step toward "many of each species always present" (docs/brief.md,
 // Direction; roadmap visual pass step 6 "Life"). Western gray squirrels, acorn woodpeckers, other
@@ -46,6 +46,12 @@ import { buildSquirrel, buildWoodpecker, buildRaven, buildDeer, buildQuail, buil
 // 'stoop' { animal, x, y, z, target } when a red-tailed hawk tips into a stoop.
 
 const LIVE_R = 400, REBUILD_MOVE = 100, NEAR_R = 150, TAG_R = 40, TAG_MAX = 6, BUCKET = 30;
+// Deer are drawn from a downloaded mesh (animalModels.js loadDeerMesh, built by tools/build_deer.py) in
+// three tiers by distance from the eye: lod0 within DEER_LOD[0] m, lod1 within DEER_LOD[1] m, lod2 beyond.
+// The procedural deer (buildDeer) still holds every deer's matrix and pose and is drawn instead until the
+// GLB has loaded, if it fails to load, or with ?deer=proc (live: __we.animals.deerMesh = false) for A/B.
+// __we.animals.deerLodForce = 0/1/2 pins every deer to one tier.
+const DEER_LOD = [30, 90];
 const LOD_R2 = 250 * 250;   // ground animals farther than this from the eye think on alternate frames (with the summed dt)
 const FLY_NEAR = 30, FLY_FAR = 100, FLY_GROW = 0.6;   // birds in flight: true size within FLY_NEAR m of the eye, 1.6x beyond FLY_FAR
 const VISUAL_ONLY = new Set(['cathartes_aura']);     // not in the species list or perception matrix yet: seen by everyone
@@ -125,7 +131,7 @@ const treeHeight = oak => Math.max(3, (oak.height || 8) * oak.scale);
 
 export class Animals {
   constructor({ tile, scene, flight, veg, atmosphere, camera, identify = null }) {
-    Object.assign(this, { tile, flight, veg, camera, identify });
+    Object.assign(this, { tile, flight, veg, camera, identify, atmosphere });
     this.heights = tile.heights;
     this.group = new THREE.Group(); this.group.name = 'animals'; scene.add(this.group);
     this.names = Object.fromEntries((tile.species || []).map(s => [s.code, s.common]));
@@ -175,6 +181,69 @@ export class Animals {
     this.coveys = []; this.frame = 0; this.camPos = camera.position;
     this.tagPool = []; this.tagMats = {}; this.tagged = [];
     this.setObserver((typeof window !== 'undefined' && window.__we?.playerSpecies) || 'corvus_corax');
+    this.deerMeshOn = false; this.dTiers = null; this.dPlanar = null; this.deerLodForce = null; this._dc = [0, 0, 0];
+    if (typeof location === 'undefined' || new URLSearchParams(location.search).get('deer') !== 'proc') this.deerMesh = true;
+  }
+
+  // ---- deer mesh (see DEER_LOD) -------------------------------------------------------------------
+  get deerMesh() { return this.deerMeshOn; }
+  set deerMesh(on) { this.setDeerMesh(!!on); }
+  async setDeerMesh(on) {
+    this.deerMeshOn = on;
+    if (on && !this.dTiers) {
+      if (!this.dLoading) this.dLoading = loadDeerMesh().then(model => this.buildDeerTiers(model))
+        .catch(e => console.warn('deer mesh failed to load; drawing the procedural deer', e));
+      await this.dLoading;
+    }
+    if (!this.dTiers) { this.deerMeshOn = false; return; }   // fallback: the procedural deer stays
+    const proc = this.meshes[DR], use = this.deerMeshOn;
+    proc.material.visible = !use;
+    if (use) { removeCaster(proc); for (const m of this.dTiers) addCaster(m, { cascades: [0], simple: false }); }
+    else { for (const m of this.dTiers) removeCaster(m); addCaster(proc, { cascades: [0], simple: false }); }
+    for (const m of this.dTiers) m.visible = false;
+    for (const m of this.dPlanar) m.visible = false;
+  }
+  buildDeerTiers(model) {
+    const cap = SPECIES[DR].cap;
+    this.deerModel = model;
+    this.dTiers = model.tiers.map((geo, t) => {
+      const anim = new THREE.InstancedBufferAttribute(new Float32Array(cap * 4), 4); anim.setUsage(THREE.DynamicDrawUsage);
+      geo.setAttribute('aAnim', anim);
+      const m = new THREE.InstancedMesh(geo, animalMaterial(this.atmosphere, model), cap);
+      m.instanceMatrix.setUsage(THREE.DynamicDrawUsage);
+      m.count = 0; m.frustumCulled = false; m.name = `deer mesh lod${t}`; m.visible = false;
+      m.castShadow = m.receiveShadow = true;
+      m.customDepthMaterial = animalDepthMaterial(model);
+      this.group.add(m);
+      return m;
+    });
+    this.dPlanar = this.dTiers.map((m, t) => {
+      const ps = new THREE.InstancedMesh(m.geometry, planarShadowMaterial(model, { drop: 0.6, nearFade: true }), cap);
+      ps.instanceMatrix = m.instanceMatrix; ps.count = 0; ps.frustumCulled = false; ps.name = `deer mesh shadow lod${t}`; ps.renderOrder = 1; ps.visible = false;
+      this.group.add(ps);
+      return ps;
+    });
+  }
+  // Copy each deer's matrix and pose from the procedural mesh's buffers (written by update) into its tier.
+  distributeDeer() {
+    const src = this.meshes[DR], n = src.count, M = src.instanceMatrix.array, A = src.geometry.attributes.aAnim.array;
+    const C = this.camPos, cnt = this._dc, T = this.dTiers, f = this.deerLodForce;
+    const r0 = DEER_LOD[0] * DEER_LOD[0], r1 = DEER_LOD[1] * DEER_LOD[1];
+    cnt[0] = cnt[1] = cnt[2] = 0;
+    for (let i = 0; i < n; i++) {
+      const x = M[i * 16 + 12] - C.x, y = M[i * 16 + 13] - C.y, z = M[i * 16 + 14] - C.z, d2 = x * x + y * y + z * z;
+      const t = f ?? (d2 < r0 ? 0 : d2 < r1 ? 1 : 2), m = T[t], j = cnt[t]++;
+      m.instanceMatrix.array.set(M.subarray(i * 16, i * 16 + 16), j * 16);
+      m.geometry.attributes.aAnim.array.set(A.subarray(i * 4, i * 4 + 4), j * 4);
+    }
+    for (let t = 0; t < 3; t++) {
+      const m = T[t], k = cnt[t], an = m.geometry.attributes.aAnim;
+      m.count = k; m.visible = src.visible && k > 0;
+      this.dPlanar[t].count = k; this.dPlanar[t].visible = m.visible;
+      if (!k) continue;
+      m.instanceMatrix.clearUpdateRanges(); m.instanceMatrix.addUpdateRange(0, k * 16); m.instanceMatrix.needsUpdate = true;
+      an.clearUpdateRanges(); an.addUpdateRange(0, k * 4); an.needsUpdate = true;
+    }
   }
 
   // ---- events (see the header) --------------------------------------------------------------------
@@ -1081,7 +1150,9 @@ export class Animals {
       const an = mesh.geometry.attributes.aAnim; an.clearUpdateRanges(); an.addUpdateRange(0, n * 4); an.needsUpdate = true;
     }
     // (the shadow casters follow the meshes inside shadows.js)
-    if (this.planar) { const d = this.meshes[DR]; this.planar.count = d.count; this.planar.visible = d.visible && d.count > 0; }
+    const meshDeer = this.deerMeshOn && this.dTiers;
+    if (this.planar) { const d = this.meshes[DR]; this.planar.count = d.count; this.planar.visible = d.visible && d.count > 0 && !meshDeer; }
+    if (meshDeer) this.distributeDeer();
     this.placeTags();
     this.ms = this.ms * 0.95 + (performance.now() - t0) * 0.05;
   }
