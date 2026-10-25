@@ -9,6 +9,8 @@
 //   - own cards: the same card the first time the player does the thing itself (the player woodpecker's first acorn
 //     into its family's granary, the player squirrel's first burial), in the player's voice. Counted apart from the
 //     watched showing, so a family deposit seen first does not use up the player's own card, nor the other way round.
+//   - v4 cards: the first raid the player sees or makes this session (an acorn pulled from a granary, or someone else's
+//     buried acorn dug up), and the first time the player is mobbed (the woodpecker family, or a squirrel guarding).
 // One DOM element (#fieldGuide), created here; it never takes pointer input except its close button,
 // Esc closes it, and it closes itself after a few seconds. Nothing runs per frame.
 
@@ -71,6 +73,26 @@ export const WITNESS = {
     invite: 'Watch a raven or crow on the ground: if it pokes at the leaves and walks off, it may have hidden something.',
   },
 };
+// v4: stealing and defending stores.
+export const RAID_CARD = {
+  kicker: 'stealing from the stores', title: 'Thieves at the larder',
+  facts: [
+    'A store of acorns draws thieves. Scrub-jays, Steller\'s jays and squirrels pull acorns from woodpecker granaries.',
+    'Squirrels sniff out each other\'s buried acorns, and jays and ravens dig them up too. Much of what is buried is stolen.',
+    'So the owners guard: an acorn woodpecker family chases thieves off its granary, and a squirrel that sees its acorn dug up gives chase.',
+  ],
+  invite: 'Watch a granary tree for a while in fall: a jay may slip in while the woodpeckers are away.',
+};
+export const MOBBED_CARD = {
+  kicker: 'acorn woodpecker', title: 'Mobbed',
+  facts: [
+    'Acorn woodpeckers live in family groups that share one granary and defend it together.',
+    'When a thief comes they call, a loud waka-waka, and fly at it, swooping past again and again until it leaves.',
+    'Small birds ganging up to drive off a bigger animal is called mobbing. Jays and crows mob hawks and owls the same way.',
+  ],
+  invite: 'Listen near a granary tree: a sudden burst of waka calls may be the family chasing someone off.',
+};
+const THIEF = { corvus_corax: 'raven', sciurus_griseus: 'gray squirrel', aphelocoma_californica: 'scrub-jay', cyanocitta_stelleri: "Steller's jay" };
 // Who does each witnessed thing, and the card's first line for the player's species: the player watching another
 // species, another of its own kind, or doing it itself (the player as a woodpecker, squirrel or raven).
 const WITNESS_BY = {
@@ -196,6 +218,42 @@ class FieldGuide {
         <div><h1>${esc(c.title)}</h1><div class="looks">${esc(lead)}</div></div></div>
       <ul>${c.facts.map(t => `<li>${esc(t)}</li>`).join('')}</ul>
       <p class="invite">${esc(c.invite)}</p>`, anchor, false, kind === 'granary' ? drawGranary : g => drawDig(g, kind === 'cache'));
+  }
+
+  // v4: the first raid seen or made this session (kind 'granary' or 'pilfer'; sp: the raider's species), and the first
+  // time the player is mobbed (by 'family' or 'squirrel').
+  raidSeen(kind, sp, mine, anchor) {
+    if (this.raidShown) return;
+    this.raidShown = true;
+    const who = THIEF[sp] || 'thief';
+    const lead = kind === 'granary'
+      ? (mine ? 'You just pulled an acorn out of a woodpecker family\'s granary.' : `You just watched a ${who} pull an acorn out of a woodpecker granary.`)
+      : (mine ? 'You just dug up an acorn someone else buried.' : `You just watched a ${who} dig up an acorn someone else buried.`);
+    this.storeCard(RAID_CARD, lead, anchor, kind === 'granary' ? drawGranary : g => drawDig(g, false));
+  }
+  mobbed(by, sp, anchor) {
+    if (this.mobShown) return;
+    this.mobShown = true;
+    if (by === 'squirrel') {
+      this.storeCard({ ...MOBBED_CARD, kicker: 'western gray squirrel', title: 'Chased off',
+        facts: ['A gray squirrel finds its buried acorns again mostly by smell, and so can any other squirrel close by.',
+          'Squirrels chase each other, tails flicking, when one comes too close to food it has found or hidden.',
+          'Most of the time the owner is too far off to notice, so many buried acorns are dug up by someone else.'],
+        invite: 'Watch a squirrel bury an acorn: it often looks around first, and may move it if another animal is watching.' },
+      'The squirrel whose acorn you dug up chased you off.', anchor, g => drawDig(g, false));
+      return;
+    }
+    const lead = sp === 'sciurus_griseus' ? 'The woodpecker family dived at you until you let go and left their granary.'
+      : 'The woodpecker family dived at you and drove you off their granary.';
+    this.storeCard(MOBBED_CARD, lead, anchor, drawGranary);
+  }
+  storeCard(c, lead, anchor, draw) {
+    this.show(`<button class="close" data-close title="close (Esc)">×</button>
+      <div class="kicker">field guide · ${esc(c.kicker)}</div>
+      <div class="head"><canvas width="128" height="168"></canvas>
+        <div><h1>${esc(c.title)}</h1><div class="looks">${esc(lead)}</div></div></div>
+      <ul>${c.facts.map(t => `<li>${esc(t)}</li>`).join('')}</ul>
+      <p class="invite">${esc(c.invite)}</p>`, anchor, false, draw);
   }
 
   // asked: opened from the species card, so it shows at once and stays longer.

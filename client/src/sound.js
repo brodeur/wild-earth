@@ -609,7 +609,7 @@ export class Soundscape {
   _hook() {
     const A = this._animals(); if (!A?.on || A === this._hooked) return;
     if (this._unhook) for (const off of this._unhook) off();
-    this._unhook = [A.on('flush', e => this._onFlush(e)), A.on('stoop', e => this._onStoop(e))];
+    this._unhook = [A.on('flush', e => this._onFlush(e)), A.on('stoop', e => this._onStoop(e)), A.on('rally', e => this._onRally(e))];
     this._hooked = A;
   }
   // A random animal of this species within r of the raven, or null.
@@ -655,6 +655,14 @@ export class Soundscape {
     let at = this.t + rand(4, 9);
     if (this.pending.some(p => p.covey === g)) return;
     for (let i = 0, n = 1 + (Math.random() < 0.3); i < n; i++, at += rand(2, 5)) this.pending.push({ at, key: 'assembly', animal: g.leader, covey: g });
+  }
+  // Acorn game v4: a woodpecker family rallying against a raider at its granary: the waka from the nearest bird, and a
+  // second from a family member a moment later.
+  _onRally(e) {
+    if (!this._live() || !e.animal || this._listenerDist(e.x, e.y, e.z) > NEAR.waka.range) return;
+    this._play('waka', this._onAnimal(e.animal), e.animal, 'event');
+    const A = this._animals(), mates = A?.bySpecies?.[e.animal.sp]?.filter(b => b !== e.animal && b.anchor === e.animal.anchor) || [];
+    if (mates.length) this.pending.push({ at: this.t + rand(0.35, 0.8), key: 'waka', animal: mates[Math.floor(Math.random() * mates.length)] });
   }
   _onStoop(e) {
     if (!this._live() || this._listenerDist(e.x, e.y, e.z) > EVENT_R + 200) return;

@@ -2,6 +2,7 @@ import * as THREE from 'three';
 import { mulberry32 } from './trees.js';
 import { fieldGuide, acornSpecies, ACORNS } from './fieldguide.js';
 import { GameNet } from './net.js';
+import { trunkAt } from './animals.js';
 
 // Acorn stash, the raven's fall forage-and-cache loop (docs/game-acorn-stash.md).
 // Living oaks past the sapling stage near the raven carry acorns and, about one in eight, a stash hole on the trunk. Everything
@@ -22,6 +23,14 @@ import { GameNet } from './net.js';
 // this client's events not yet answered (a prediction); dispatch sends each event, remote ones arrive through
 // remote(), a rejected one rolls back (adoptWorld). The server runs the round; the AI collectors run in one
 // browser per world (aiLocal, read by animals.js). Without the endpoint everything below is v2, offline.
+//
+// v4 (docs/game-acorn-stash.md, "v4: defence and pilfering"): stores get robbed and defended. Digging up someone
+// else's buried acorn (a pilfer) scores for the digger's species and against the owner's; a raven or squirrel (AI
+// jays and squirrels too) can pull an acorn from a woodpecker granary (a 'raid') when no family member is within
+// RAID_GUARD_R; the family defends (animals.js: the rally call, one or two birds diving at the raider), and a hit is a
+// 'mob' event: the raid interrupted, or the stolen acorn dropped, and the raider driven off for DRIVEN_S. The
+// player's raid is proximity, like the raven's deposit: hold by the granary's trunk (raven) or climb it (squirrel).
+// The board gains a "raided N" line per species (granary raids and pilfered caches, this round and this season).
 
 const LIVE_R = 300;            // m: oaks within this get acorn and stash objects
 const REFRESH_S = 0.5;         // s between live-set checks
@@ -165,10 +174,19 @@ export function acornGeometry() {
 //   { type: 'dig',     by, id, keep }                       a buried acorn dug up (eaten, or carried when keep)
 // `by` is a collector id: world.collectors[by] = { id, species, kind: 'ai' | 'player', carrying, cap, total }.
 // Deposits and burials score for the collector's species (world.board) and for the round when one is on.
+// v4 adds two events and the pilfer:
+//   { type: 'raid', by, oak }                               an acorn pulled from a woodpecker granary
+//   { type: 'mob',  by, drop }                              a raider mobbed: driven off for DRIVEN_S (drop: it lost the acorn)
+//   a 'dig' of someone else's cache (own !== by; own, osp, pil: the server's verdict when it came from the server)
+// A raid or pilfer scores for the raider (and its "raided" line) and is taken from the owner's species; what it took
+// counts as dug (storing it again scores nothing) and as loot (dropped when mobbed, the score goes back).
 export const BOARD_SPECIES = ['melanerpes_formicivorus', 'sciurus_griseus', 'corvus_corax'];
+export const RAID_SPECIES = ['corvus_corax', 'sciurus_griseus', 'aphelocoma_californica', 'cyanocitta_stelleri'];
+export const DRIVEN_S = 20;    // s of world clock a mobbed raider may not raid (server.py DRIVEN_S)
 const BOARD_NAMES = { melanerpes_formicivorus: 'acorn woodpeckers', sciurus_griseus: 'western gray squirrels', corvus_corax: 'common ravens' };
 const BOARD_ONE = { melanerpes_formicivorus: 'woodpecker', sciurus_griseus: 'squirrel', corvus_corax: 'raven' };
 const BOARD_VERB = { melanerpes_formicivorus: 'stashed', sciurus_griseus: 'buried', corvus_corax: 'cached' };
+const THIEF_ONE = { ...BOARD_ONE, aphelocoma_californica: 'scrub-jay', cyanocitta_stelleri: "Steller's jay" };
 const CACHE_MAX = 300;   // buried acorns kept in the world (the oldest are forgotten, or found by someone else)
 
 export function newWorld(tile, season) {
@@ -182,7 +200,9 @@ export function newWorld(tile, season) {
     you: 0,                       // the player's own deposits in this world
     species: [],                  // acorn kinds the player has found (field guide)
     collectors: {},
-    round: null,                  // { t, length, counts: { species: n }, you, over, winner }
+    round: null,                  // { t, length, counts: { species: n }, you, over, winner, raided, mobbed }
+    raided: Object.fromEntries(BOARD_SPECIES.map(s => [s, 0])),   // v4: acorns each species stole (raids, pilfers)
+    mobbed: {},                   // v4: times each species was driven off
   };
 }
 
@@ -196,25 +216,92 @@ export function applyEvent(w, e) {
       if (c.carrying <= 0) return false;
       const into = e.into === 'granary' ? w.granaries : w.stashes, n = into[e.oak] || 0;
       if (e.cap && n >= e.cap) return false;
-      into[e.oak] = n + 1; c.carrying--; score(w, c); return true;
+      into[e.oak] = n + 1; c.carrying--; if (stored(c)) score(w, c); return true;
     }
     case 'bury': {
       if (c.carrying <= 0) return false;
       c.carrying--;
-      const again = c.dug > 0; if (again) c.dug--;   // re-burying one it dug up scores nothing (no farming a cache)
+      const fresh = stored(c);   // re-burying one it dug up (or stole) scores nothing (no farming a cache)
       w.caches.push({ id: e.id, x: e.x, y: e.y, z: e.z, by: e.by, species: c.species, kind: e.kind || 'scatter', t: w.clock });
       if (w.caches.length > CACHE_MAX) w.caches.splice(0, w.caches.length - CACHE_MAX);
-      if (!again) score(w, c);
+      if (fresh) score(w, c);
       return true;
     }
     case 'dig': {
       const i = w.caches.findIndex(k => k.id === e.id);
       if (i < 0 || (e.keep && c.carrying >= c.cap)) return false;
+      const k = w.caches[i];
+      const own = e.own !== undefined ? e.own : (k.by ?? null), osp = e.osp !== undefined ? e.osp : k.species;
+      const pil = e.pil !== undefined ? e.pil : own !== e.by;
       w.caches.splice(i, 1); if (e.keep) { c.carrying++; c.dug = (c.dug || 0) + 1; }
+      if (pil && osp) {   // someone else's: a pilfer
+        if (e.keep) c.loot = (c.loot || 0) + 1;
+        gain(w, c); lose(w, osp, own);
+      }
+      return true;
+    }
+    case 'raid': {
+      if (!RAID_SPECIES.includes(c.species)) return false;
+      const n = w.granaries[e.oak] || 0;
+      if (n <= 0 || c.carrying >= c.cap || w.clock < (c.off || 0)) return false;
+      w.granaries[e.oak] = n - 1; c.carrying++;
+      c.dug = (c.dug || 0) + 1; c.loot = (c.loot || 0) + 1;
+      gain(w, c); lose(w, 'melanerpes_formicivorus', null);
+      return true;
+    }
+    case 'mob': {
+      if (e.drop && c.carrying <= 0) return false;
+      c.off = Math.round((w.clock + DRIVEN_S) * 100) / 100;
+      if (e.drop) {
+        c.carrying--;
+        if (c.loot > 0) { c.loot--; c.dug = Math.max(0, (c.dug || 0) - 1); ungain(w, c); }
+        else if (c.dug > 0) c.dug--;
+      }
+      w.mobbed[c.species] = (w.mobbed[c.species] || 0) + 1;
+      const r = w.round;
+      if (r && !r.over) { r.mobbed ||= {}; r.mobbed[c.species] = (r.mobbed[c.species] || 0) + 1; }
       return true;
     }
   }
   return false;
+}
+// An acorn goes into a store: one the collector dug up or stole (already scored, or its own again) uses up a dug
+// count and scores nothing. True when this one scores.
+function stored(c) {
+  if (c.dug > 0) { c.dug--; if (c.loot > 0) c.loot--; return false; }
+  return true;
+}
+// A raid or a pilfer: scored for the raider's species, the round and the species' "raided" line (board species only).
+function gain(w, c) {
+  if (!BOARD_SPECIES.includes(c.species)) return;
+  score(w, c);
+  w.raided[c.species] = (w.raided[c.species] || 0) + 1;
+  const r = w.round;
+  if (r && !r.over) { r.raided ||= {}; r.raided[c.species] = (r.raided[c.species] || 0) + 1; }
+}
+// A dropped stolen acorn: the raid's score taken back (never below 0).
+function ungain(w, c) {
+  const sp = c.species; if (!BOARD_SPECIES.includes(sp)) return;
+  w.board[sp] = Math.max(0, (w.board[sp] || 0) - 1); w.raided[sp] = Math.max(0, (w.raided[sp] || 0) - 1);
+  c.total = Math.max(0, (c.total || 0) - 1);
+  if (c.kind === 'player') w.you = Math.max(0, w.you - 1);
+  const r = w.round;
+  if (r && !r.over) {
+    r.counts[sp] = Math.max(0, (r.counts[sp] || 0) - 1); r.raided ||= {}; r.raided[sp] = Math.max(0, (r.raided[sp] || 0) - 1);
+    if (c.kind === 'player') r.you = Math.max(0, r.you - 1);
+  }
+}
+// The owner's species (and the owner, when known and still here) loses the acorn (never below 0).
+function lose(w, sp, own) {
+  if (w.board[sp] !== undefined) w.board[sp] = Math.max(0, w.board[sp] - 1);
+  const o = own != null ? w.collectors[own] : null;
+  if (o) o.total = Math.max(0, (o.total || 0) - 1);
+  if (o?.kind === 'player') w.you = Math.max(0, w.you - 1);
+  const r = w.round;
+  if (r && !r.over) {
+    if (r.counts[sp] !== undefined) r.counts[sp] = Math.max(0, r.counts[sp] - 1);
+    if (o?.kind === 'player') r.you = Math.max(0, r.you - 1);
+  }
 }
 function score(w, c) {
   if (w.board[c.species] === undefined) w.board[c.species] = 0;
@@ -233,6 +320,13 @@ const RESERVE_S = 60;             // an AI's claim on an acorn lapses after this
 const CARRY_CAP = 160, MARK_CAP = 400, MARK_FADE = [60, 240];   // marks fade out from 1 to 4 game minutes
 const SAVE_S = 2;                 // state is written at most this often
 const WITNESS_R = 30;             // m: an AI deposit or burial this close to the camera shows its field-guide card
+// v4: the player's raid. Within GRANARY_SCAN_R m of a granary that holds something, the raven within RAID_REACH m of
+// its bark (hovering, or standing at its foot), or the squirrel on its trunk, pulls for RAID_PULL s (the squirrel
+// RAID_PULL_SQ), and the acorn comes free if no family member is within RAID_GUARD_R m of the hole. Mobbed: MOBBED_S
+// s of no raiding (and the event's DRIVEN_S on the world clock); after a raid the family can still chase the raider
+// while it is within FLEE_R m of the granary with the stolen acorn.
+const GRANARY_SCAN_R = 6, RAID_REACH = 2.2, RAID_PULL = 1.5, RAID_PULL_SQ = 2.0, RAID_GUARD_R = 8;
+const MOBBED_S = 2.5, FLEE_R = 20, NEWS_S = 4.5;
 
 export class AcornGame {
   constructor(tile, scene, flight, veg, ui) {
@@ -254,6 +348,9 @@ export class AcornGame {
     this.granaryAt = new Map();     // oak id -> where the last acorn went in (the label hangs just above it)
     this.refCenter = null; this.refVersion = -1; this.dirty = true; this.camera = null;
     this.ms = 0;
+    // v4: the player's raid (raidUpdate), the mobbed state and the news line; animals.js sets this.animals
+    this.animals = null; this.raidOak = null; this.raidAt = null; this.raidPull = 0; this.raidScanT = 0; this.raidGuarded = false;
+    this.mobbedT = 0; this.mobbedBy = null; this.fleeing = null; this.newsT = 0; this._tp = { x: 0, y: 0, z: 0, r: 0 };
     const q = typeof location === 'undefined' ? new URLSearchParams() : new URLSearchParams(location.search);
     this.roundLength = +q.get('round') > 0 ? +q.get('round') : ROUND_S;
 
@@ -290,6 +387,10 @@ export class AcornGame {
     }
     if (ui.time?.previousElementSibling) ui.time.previousElementSibling.textContent = 'round';
     this.mountBoard();
+    if (ui.box && typeof document !== 'undefined') {   // v4: one line of news (a raid, a pilfer, mobbed), shown for NEWS_S
+      const n = document.createElement('div'); n.className = 'acorn-news';
+      ui.box.insertBefore(n, this.board.el); this.news = n;
+    }
     if (typeof addEventListener !== 'undefined') {
       addEventListener('keydown', e => {
         if (e.code !== 'KeyL' || e.repeat || e.target instanceof HTMLInputElement || e.target instanceof HTMLSelectElement) return;
@@ -429,7 +530,22 @@ export class AcornGame {
       this.layMarks();
       if (mine) this.hud(true);
       if (this.near(e)) fieldGuide.witness(this.world.collectors[e.by]?.species === 'corvus_corax' ? 'cache' : 'bury', this.ui.box);
-    } else if (e.type === 'dig') { this.layMarks(); if (mine) this.hud(true); }
+    } else if (e.type === 'dig') {
+      this.layMarks(); if (mine) this.hud(true);
+      if (e.pil) {   // someone else's: a pilfer
+        const sp = this.world.collectors[e.by]?.species, one = THIEF_ONE[sp] || 'thief';
+        if (mine) this.say(e.osp === sp ? `another ${THIEF_ONE[sp]}'s buried acorn: it counts for you now, not for its owner`
+          : `a ${THIEF_ONE[e.osp] || 'stranger'}'s buried acorn: +1 for ${BOARD_NAMES[sp] || 'you'}${BOARD_NAMES[e.osp] ? `, -1 for ${BOARD_NAMES[e.osp]}` : ''}`);
+        else if (e.own === 'player') this.say(`a ${one} dug up one of your buried acorns`);
+        if (mine || this.near(e)) fieldGuide.raidSeen('pilfer', sp, mine, this.ui.box);
+      }
+    } else if (e.type === 'raid') {
+      this.granaryLabel(e.oak);
+      const sp = this.world.collectors[e.by]?.species;
+      if (mine) { this.hud(true); this.say(`you pulled an acorn from the granary: +1 for ${BOARD_NAMES[sp]}, -1 for the woodpeckers`); }
+      else if (e.oak === this.family) this.say(`a ${THIEF_ONE[sp] || 'thief'} took an acorn from your family's granary`);
+      if (mine || this.near(e)) fieldGuide.raidSeen('granary', sp, mine, this.ui.box);
+    } else if (e.type === 'mob') { if (mine) this.hud(true); }
   }
   near(e) {
     const c = this.camera?.position; if (!c || e.x === undefined) return false;
@@ -459,12 +575,22 @@ export class AcornGame {
     const id = by === 'player' && this.net.live ? `b${Math.random().toString(36).slice(2, 12)}` : `${by}@${this.world.clock.toFixed(2)}`;
     return this.dispatch({ type: 'bury', by, id, x, y, z, kind });
   }
-  dig(by, id, keep = false) { return this.dispatch({ type: 'dig', by, id, keep }); }
-  // A buried acorn within r of (x, z) (kind 'scatter' or 'cache'; any when null), nearest first, or null.
-  cacheNear(x, z, r, kind = null) {
+  // A dig: the cache's place (for the guard and the field guide, local only: the server keeps no place for a player's)
+  // and whose it was (own, osp, pil: the reducer's verdict, replaced by the server's when it answers).
+  dig(by, id, keep = false) {
+    const k = this.world.caches.find(c => c.id === id), e = { type: 'dig', by, id, keep };
+    if (k) { e.x = k.x; e.y = k.y; e.z = k.z; e.own = k.by ?? null; e.osp = k.species; e.pil = e.own !== by; }
+    return this.dispatch(e);
+  }
+  // v4, for animals.js: an AI raider's raid on a granary, and a raider mobbed (drop: it loses the acorn it carries).
+  raid(by, oakId, x, y, z) { return this.dispatch({ type: 'raid', by, oak: oakId, x, y, z }); }
+  mob(by, drop) { return this.dispatch({ type: 'mob', by, drop: !!drop }); }
+  // A buried acorn within r of (x, z) (kind 'scatter' or 'cache'; any when null; notBy: not this collector's), nearest
+  // first, or null.
+  cacheNear(x, z, r, kind = null, notBy = null) {
     let best = null, bd = r * r;
     for (const k of this.world.caches) {
-      if (kind && k.kind !== kind) continue;
+      if ((kind && k.kind !== kind) || (notBy && k.by === notBy)) continue;
       const dx = k.x - x, dz = k.z - z, d2 = dx * dx + dz * dz;
       if (d2 < bd) { bd = d2; best = k; }
     }
@@ -490,7 +616,9 @@ export class AcornGame {
     if (season && season !== this.season) this.setWorld(season);
     this.running = true; this.group.visible = true; this.elapsed = 0; this.dirty = true; this.epoch++;
     const counts = Object.fromEntries(BOARD_SPECIES.map(s => [s, 0]));
-    this.world.round = { t: 0, length: this.roundLength, counts, you: 0, over: false, winner: null };
+    this.world.round = { t: 0, length: this.roundLength, counts, you: 0, over: false, winner: null,
+      raided: Object.fromEntries(BOARD_SPECIES.map(s => [s, 0])), mobbed: {} };
+    this.fleeing = null; this.raidPull = 0; this.mobbedT = 0;
     this.board.el.classList.remove('done');
     if (this.ui.box) this.ui.box.classList.remove('hidden');
     this.hud();
@@ -532,6 +660,8 @@ export class AcornGame {
         w.you = +d.you || +(d.totals?.stashed) || 0;   // v1 kept the player's count as totals.stashed
         if (!d.board) w.board.corvus_corax = Math.max(w.board.corvus_corax, w.you);
         w.species = Array.isArray(d.species) ? d.species.filter(id => ACORNS[id]) : [];
+        for (const s of BOARD_SPECIES) w.raided[s] = +(d.raided?.[s]) || 0;
+        if (d.mobbed && typeof d.mobbed === 'object') for (const [s, n] of Object.entries(d.mobbed)) w.mobbed[s] = +n || 0;
       }
     } catch (e) { console.warn('acorns: could not load state', e); }
     this.player = this.addPlayer();
@@ -555,7 +685,8 @@ export class AcornGame {
     }
     try {
       localStorage.setItem(this.key, JSON.stringify({ v: 2, clock: +w.clock.toFixed(1), picked: [...w.picked].map(([k, t]) => [k, +t.toFixed(1)]),
-        stashes: w.stashes, granaries: w.granaries, caches: w.caches, board: w.board, you: w.you, totals: { stashed: w.you }, species: w.species }));
+        stashes: w.stashes, granaries: w.granaries, caches: w.caches, board: w.board, you: w.you, totals: { stashed: w.you }, species: w.species,
+        raided: w.raided, mobbed: w.mobbed }));
     } catch (e) { console.warn('acorns: could not save state', e); }
   }
 
@@ -803,6 +934,8 @@ export class AcornGame {
       }
     }
     if (nearFull !== this.nearFull) { this.nearFull = nearFull; this.hud(); }
+    this.raidUpdate(dt, p);
+    if (this.newsT > 0 && (this.newsT -= dt) <= 0 && this.news) this.news.textContent = '';
     this.depositing = at !== null;
     if (at === null) this.depositT = DEPOSIT_BEAT / 2;   // first acorn goes in half a beat after arriving
     else if ((this.depositT -= dt) <= 0) {
@@ -818,6 +951,68 @@ export class AcornGame {
     if (this.hudT > 0.25) { this.hudT = 0; this.hud(); }
     this.ms = this.ms * 0.95 + (performance.now() - t0) * 0.05;
   }
+
+  // ---- v4: the player's raid on a woodpecker granary --------------------------------------------------
+  raidUpdate(dt, p) {
+    const me = this.player, w = this.world, A = this.animals;
+    if (this.mobbedT > 0 && (this.mobbedT -= dt) <= 0) this.ui.box?.classList.remove('mobbed');
+    if (!RAID_SPECIES.includes(me.species) || !A) { this.raidPull = 0; this.raidAt = null; this.raidOak = null; return; }
+    if ((this.raidScanT -= dt) <= 0) { this.raidScanT = 0.25; this.raidOak = this.granaryNear(p); }
+    const o = this.raidOak;
+    const at = o && (w.granaries[o.id] || 0) > 0 ? this.raidReach(o, p, me.species) : null;
+    this.raidAt = at;
+    // after a raid the family can still chase the raider off with the acorn (a squirrel drops it if hit)
+    const fl = this.fleeing;
+    if (fl && (me.carrying <= 0 || !(me.loot > 0) || Math.hypot(p.x - fl.x, p.z - fl.z) > FLEE_R)) this.fleeing = null;
+    if (this.fleeing) A.raider('player', fl.oak, p.x, p.y, p.z, () => this.playerMobbed('family'));
+    if (!at || me.carrying >= me.cap || this.mobbedT > 0 || w.clock < (me.off || 0) + 0.5) { this.raidPull = 0; this.raidGuarded = false; return; }
+    A.raider('player', o.id, p.x, p.y, p.z, () => this.playerMobbed('family'));   // the family sees a raider at its granary
+    this.raidPull += dt;
+    if (this.raidPull < (me.species === 'sciurus_griseus' ? RAID_PULL_SQ : RAID_PULL)) return;
+    this.raidGuarded = A.familyWithin(o.id, at.x, at.y, at.z, RAID_GUARD_R) > 0;   // one of them is right here: it does not come free
+    if (this.raidGuarded) return;
+    this.raidPull = 0;
+    if (this.dispatch({ type: 'raid', by: 'player', oak: o.id, x: at.x, y: at.y, z: at.z })) this.fleeing = { oak: o.id, x: at.x, z: at.z };
+  }
+  // The nearest granary holding something within GRANARY_SCAN_R m (horizontally) of p, or null.
+  granaryNear(p) {
+    let best = null, bd = GRANARY_SCAN_R * GRANARY_SCAN_R;
+    const g = this.world.granaries;
+    for (const id in g) {
+      if (!(g[id] > 0)) continue;
+      const o = this.oakById(id); if (!o) continue;
+      const dx = o.x - p.x, dz = o.z - p.z, d2 = dx * dx + dz * dz;
+      if (d2 < bd) { bd = d2; best = o; }
+    }
+    return best;
+  }
+  // Within reach of the granary's bark: the raven within RAID_REACH m (up to 2.5 m above the fork), the squirrel on
+  // the trunk (0.45 m of the bark, 0.6 m up or more). The point on the bark facing the raider (the hole), or null.
+  raidReach(o, p, sp) {
+    const fork = o.stem ? Math.max(1.5, o.scale * o.stem.len * Math.cos(o.stem.lean) - 0.3) : 2.5;
+    const sq = sp === 'sciurus_griseus', hAG = p.y - o.y;
+    if (hAG < -0.5 || hAG > fork + (sq ? 0.3 : 2.5)) return null;
+    const t = trunkAt(o, Math.min(Math.max(hAG, 0.8), fork * 0.95), this._tp);
+    const dc = Math.hypot(p.x - t.x, p.z - t.z), d = dc - t.r;
+    if (sq ? (d > 0.45 || hAG < 0.6) : d > RAID_REACH) return null;
+    const k = (t.r + 0.03) / Math.max(1e-3, dc);
+    return { x: t.x + (p.x - t.x) * k, y: t.y, z: t.z + (p.z - t.z) * k };
+  }
+  // The family (by: 'family') or a cache's owner (by: 'squirrel') hit the player: the raid is interrupted, a squirrel
+  // carrying drops the acorn, and the player is driven off (a 'mob' event; DRIVEN_S on the world clock).
+  playerMobbed(by) {
+    if (!this.active || this.mobbedT > 0) return;
+    const me = this.player, drop = me.species === 'sciurus_griseus' && me.carrying > 0;
+    this.raidPull = 0; this.fleeing = null; this.mobbedT = MOBBED_S; this.mobbedBy = by;
+    if (!this.dispatch({ type: 'mob', by: 'player', drop })) return;
+    this.ui.box?.classList.add('mobbed');
+    this.say(by === 'squirrel' ? `the squirrel whose acorn that was chased you${drop ? ': you dropped it' : ''}`
+      : `mobbed by the woodpecker family${drop ? ': you dropped the acorn' : ': the raid is off'}; they drive you off for ${DRIVEN_S} s`);
+    fieldGuide.mobbed(by, me.species, this.ui.box);
+    this.hud(true);
+  }
+  // One line of news in the game box for NEWS_S.
+  say(text) { if (!this.news) return; this.news.textContent = text; this.newsT = NEWS_S; }
 
   endRound() {
     const r = this.world.round; r.over = true;
@@ -844,6 +1039,15 @@ export class AcornGame {
       + BOARD_SPECIES.map(s => `<div class="br" data-sp="${s}"><span>${esc(BOARD_NAMES[s] || names[s] || s)} <i>${BOARD_VERB[s]}</i></span><b class="r">0</b><b class="a">0</b></div>`).join('')
       + '<div class="over"></div><div class="keys"><kbd>L</kbd> hides the board</div>';
     for (const r of el.querySelectorAll('.br')) this.board.rows[r.dataset.sp] = { el: r, r: r.querySelector('.r'), a: r.querySelector('.a') };
+    // v4: "raided N" under the raiding species (ravens, squirrels): acorns they took from a granary or someone else's
+    // cache, this round and this season, and how often they were driven off this round
+    for (const s of BOARD_SPECIES) {
+      if (!RAID_SPECIES.includes(s)) continue;
+      const row = this.board.rows[s], d = document.createElement('div');
+      d.className = 'br raid'; d.title = 'acorns taken from a woodpecker granary or from someone else\'s buried acorns';
+      d.innerHTML = '<span>raided<i></i></span><b class="r">0</b><b class="a">0</b>';
+      row.el.after(d); row.raid = { el: d, r: d.querySelector('.r'), a: d.querySelector('.a'), off: d.querySelector('i') };
+    }
     this.board.over = el.querySelector('.over');
     if (box) box.insertBefore(el, null);
   }
@@ -866,7 +1070,12 @@ export class AcornGame {
       set(row.r, r ? n : '–'); set(row.a, w.board[s] || 0);
       if (n > ln) { ln = n; lead = s; } else if (n === ln) lead = null;
     }
-    for (const s of BOARD_SPECIES) this.board.rows[s].el.classList.toggle('lead', s === lead);
+    for (const s of BOARD_SPECIES) {
+      this.board.rows[s].el.classList.toggle('lead', s === lead);
+      const rd = this.board.rows[s].raid; if (!rd) continue;
+      set(rd.r, r ? r.raided?.[s] || 0 : '–'); set(rd.a, w.raided?.[s] || 0);
+      const m = r?.mobbed?.[s] || 0; set(rd.off, m ? ` · driven off ${m}` : '');
+    }
     this.placeYou(); set(this.board.you.r, r ? r.you : '–'); set(this.board.you.a, w.you);
     let over = '';
     if (r?.over) {
@@ -875,6 +1084,21 @@ export class AcornGame {
         : `Round over: a tie. ${BOARD_SPECIES.map(s => `${BOARD_NAMES[s]} ${r.counts[s] || 0}`).join(', ')}. You gathered ${r.you}.`;
     }
     set(this.board.over, over);
+  }
+
+  // v4: what the player's raid is doing, for the hint line (null when not at a granary).
+  raidHint() {
+    const me = this.player, w = this.world, o = this.raidOak;
+    if (this.mobbedT > 0) return this.mobbedBy === 'squirrel' ? 'chased off by the owner' : 'mobbed: the woodpecker family is driving you off';
+    if (!o || !RAID_SPECIES.includes(me.species)) return null;
+    const off = (me.off || 0) + 0.5 - w.clock;
+    if (off > 0) return `driven off: ${Math.ceil(off)} s before you can try their granary again`;
+    const away = this.animals?.famAway(o.id), fam = away ? 'the family is away gathering' : 'the family is home: they will mob you';
+    if (!this.raidAt) return me.species === 'sciurus_griseus' ? `a granary (${w.granaries[o.id] || 0} acorns): climb its trunk to pull one out; ${fam}`
+      : `a granary (${w.granaries[o.id] || 0} acorns): hold by its trunk (H hovers) to pull one out; ${fam}`;
+    if (me.carrying >= me.cap) return `your ${me.species === 'corvus_corax' ? 'pouch' : 'mouth'} is full: no room for a granary acorn`;
+    if (this.raidGuarded) return 'a woodpecker is right by the hole: the acorn will not come free';
+    return `pulling an acorn from the granary… ${fam}`;
   }
 
   hud(flash = false) {
@@ -890,7 +1114,7 @@ export class AcornGame {
     }
     const left = r ? Math.max(0, Math.ceil(r.length - r.t)) : 0;
     u.time.textContent = r?.over ? 'over' : `${String(Math.floor(left / 60)).padStart(2, '0')}:${String(left % 60).padStart(2, '0')} left`;
-    u.hint.textContent = me.species === 'melanerpes_formicivorus' ? (me.carrying > 0
+    const hint = this.raidHint() || (me.species === 'melanerpes_formicivorus' ? (me.carrying > 0
         ? 'an acorn in your bill: fly to your family\'s granary, cling to it and press E to hammer it in'
         : 'find an oak: E takes an acorn in the crown (clinging near it) or on the ground; acorns glow. Your family, the squirrels and the ravens are gathering too.')
       : me.species === 'sciurus_griseus' ? (me.carrying > 0
@@ -898,7 +1122,8 @@ export class AcornGame {
         : 'find an oak: E picks up an acorn under it, or climbing, in the crown; E on a dug mark digs one up. Woodpeckers, ravens and the other squirrels are gathering too.')
       : me.carrying > 0 && this.nearFull && !this.depositing ? 'stash full, find another'
       : me.carrying > 0 ? `you carry ${me.carrying === 1 ? 'an acorn' : me.carrying + ' acorns'}${me.carrying >= me.cap ? ' (pouch full)' : ''}: stash holes now glow in some oaks`
-      : 'find an oak: acorns glow when you are close. Woodpeckers, squirrels and other ravens are gathering too.';
+      : 'find an oak: acorns glow when you are close. Woodpeckers, squirrels and other ravens are gathering too.');
+    if (u.hint.textContent !== hint) u.hint.textContent = hint;
     this.updateBoard();
     if (flash) { u.box.classList.remove('flash'); void u.box.offsetWidth; u.box.classList.add('flash'); }
   }
@@ -922,6 +1147,12 @@ const BOARD_CSS = `
 #game .acorn-board .br.you span { padding-left:12px; color:#9fb0a4; }
 #game .acorn-board .br.you b { font-weight:500; color:#cfd8d1; }
 #game .acorn-board .over:empty { display:none; }
+#game .acorn-board .br.raid span { padding-left:12px; color:#8f9c93; font-size:11.5px; }
+#game .acorn-board .br.raid span i { color:#e0a080; }
+#game .acorn-board .br.raid b { font-weight:500; color:#c9b9a4; font-size:11.5px; }
+#game .acorn-news { color:#ffd9a8; font-size:12px; margin-top:4px; max-width:300px; }
+#game .acorn-news:empty { display:none; }
+#game.mobbed { box-shadow:0 0 0 2px #c8102e88, 0 0 18px #c8102e55; }
 #game .acorn-board .over { margin-top:6px; color:#ffe2b0; max-width:290px; }
 #game .acorn-board .keys { color:#6f7c73; font-size:10.5px; margin-top:4px; }
 #game .acorn-board .keys kbd { background:#1f2a23; border:1px solid #263128; border-radius:4px; padding:0 4px; color:#b7c4ba; font:inherit; }

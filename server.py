@@ -261,8 +261,19 @@ def build_worker(tile: Tile, steps: list[str]) -> None:
 # or oak keys, never a position: a player's burial is logged as a count against the player id plus a separate
 # 'cache' line (position, anonymous k<n> id); a dig as a count plus an 'uncache' line. On every snapshot the
 # log's lines up to it are rewritten without player ids. Messages are never printed.
+# v4 (the doc's "v4: defence and pilfering"): two more events, 'raid' (an acorn pulled from a woodpecker granary) and
+# 'mob' (a raider driven off: the raid interrupted, or the acorn it carried dropped), and the dig of someone else's
+# buried acorn scores for the digger's species and against the owner's. The server has no positions of animals or
+# players, so the rule that a raid needs no family member within 8 m is checked by the raider's browser (the AI host
+# for AI raiders) and trusted here, as an acorn key's existence is; everything else is checked here: first wins, the
+# granary holds one, the raider has room, is a raiding species and is not driven off (DRIVEN_S after a 'mob').
+# A cache's owner: an AI collector's id is kept in the cache record; a player's only in memory (GameWorld.owners,
+# cleared when a round starts), never written beside the cache's position.
 GAME_SEASONS = ("spring", "summer", "fall", "winter")
 BOARD_SPECIES = ("melanerpes_formicivorus", "sciurus_griseus", "corvus_corax")
+JAY_SPECIES = ("aphelocoma_californica", "cyanocitta_stelleri")   # AI only: they dig, raid and are mobbed; not on the board
+RAID_SPECIES = ("corvus_corax", "sciurus_griseus") + JAY_SPECIES  # who may pull an acorn from a granary
+DRIVEN_S = 20.0                  # s of world clock a mobbed raider may not raid (acorns.js DRIVEN_S)
 PLAYER_CAP = {"corvus_corax": 3, "sciurus_griseus": 1, "melanerpes_formicivorus": 1}   # as acorns.js
 AI_CAP_MAX = 3
 CACHE_MAX = 300                  # buried acorns kept (acorns.js CACHE_MAX)
@@ -346,18 +357,24 @@ def clean_game_event(e, player: bool) -> dict:
     elif t == "dig":
         out["id"] = _gid(e.get("id"), "id")
         out["keep"] = bool(e.get("keep"))
+    elif t == "raid":
+        out["oak"] = _gid(e.get("oak"), "oak")
+    elif t == "mob":
+        out["drop"] = bool(e.get("drop"))
     else:
-        raise ValueError("type must be pickup, deposit, bury or dig")
-    if not player and t in ("pickup", "deposit"):
+        raise ValueError("type must be pickup, deposit, bury, dig, raid or mob")
+    if not player and t in ("pickup", "deposit", "raid"):
         for k in ("x", "y", "z"):   # an AI granary deposit's spot places the granary tag for everyone
             if _num(e.get(k)) and math.isfinite(e[k]):
                 out[k] = round(float(e[k]), 2)
     return out
 
 
-def game_reduce(w: dict, e: dict) -> str | None:
+def game_reduce(w: dict, e: dict, owners: dict | None = None) -> str | None:
     """acorns.js applyEvent on the persisted shape. Returns None when applied, else why not. A bury or dig
-    without an id is the count half of a player's (replayed from the log; its cache line is separate)."""
+    without an id is the count half of a player's (replayed from the log; its cache line is separate).
+    owners: cache id -> player id (GameWorld.owners, memory only). A dig with an id gets the server's verdict
+    written into e (own: the owner or None, osp: its species, pil: someone else's), which the clients apply."""
     c = w["collectors"].get(e["by"])
     if not c:
         return "no such collector"
@@ -383,7 +400,8 @@ def game_reduce(w: dict, e: dict) -> str | None:
                 return "stash full"
         into[e["oak"]] = n + 1
         c["carrying"] -= 1
-        _game_score(w, c)
+        if _stored(c):
+            _game_score(w, c)
         return None
     if t == "bury":
         if c["carrying"] <= 0:
@@ -391,13 +409,17 @@ def game_reduce(w: dict, e: dict) -> str | None:
         if "id" in e and any(k["id"] == e["id"] for k in w["caches"]):
             return "duplicate id"
         c["carrying"] -= 1
-        again = c.get("dug", 0) > 0
-        if again:
-            c["dug"] -= 1
+        fresh = _stored(c)
         if "id" in e:
-            add_cache(w, {"id": e["id"], "x": e["x"], "y": e["y"], "z": e["z"],
-                          "species": c["species"], "kind": e["kind"], "t": round(w["clock"], 1)})
-        if not again:
+            k = {"id": e["id"], "x": e["x"], "y": e["y"], "z": e["z"],
+                 "species": c["species"], "kind": e["kind"], "t": round(w["clock"], 1)}
+            if e["by"].startswith("p:"):
+                if owners is not None:
+                    owners[e["id"]] = e["by"]
+            elif e["by"] != "~":
+                k["by"] = e["by"]          # an AI animal's id (not a person)
+            add_cache(w, k)
+        if fresh:
             _game_score(w, c)
         return None
     if t == "dig":
@@ -409,12 +431,121 @@ def game_reduce(w: dict, e: dict) -> str | None:
         if e["keep"] and c["carrying"] >= c["cap"]:
             return "full"
         if i >= 0:
+            k = w["caches"][i]
+            own = k.get("by") or (owners or {}).get(k["id"])
+            e["own"], e["osp"], e["pil"] = own, k["species"], own != e["by"]
             del w["caches"][i]
+            if owners:
+                owners.pop(k["id"], None)
         if e["keep"]:
             c["carrying"] += 1
             c["dug"] = c.get("dug", 0) + 1
+        if e.get("pil") and e.get("osp"):   # someone else's (an old log line without a verdict: as before v4)
+            if e["keep"]:
+                c["loot"] = c.get("loot", 0) + 1
+            _gain(w, c)
+            _lose(w, e["osp"], e.get("own"))
+        return None
+    if t == "raid":
+        if c["species"] not in RAID_SPECIES:
+            return "not a raider"
+        n = w["granaries"].get(e["oak"], 0)
+        if n <= 0:
+            return "empty granary"
+        if c["carrying"] >= c["cap"]:
+            return "full"
+        if w["clock"] < c.get("off", 0):
+            return "driven off"
+        w["granaries"][e["oak"]] = n - 1
+        c["carrying"] += 1
+        c["dug"] = c.get("dug", 0) + 1     # scored now: storing it again scores nothing
+        c["loot"] = c.get("loot", 0) + 1
+        _gain(w, c)
+        _lose(w, "melanerpes_formicivorus", None)
+        return None
+    if t == "mob":
+        if e["drop"] and c["carrying"] <= 0:
+            return "empty"
+        c["off"] = round(w["clock"] + DRIVEN_S, 2)
+        if e["drop"]:
+            c["carrying"] -= 1
+            if c.get("loot", 0) > 0:      # it loses what it stole: the raid's score goes back
+                c["loot"] -= 1
+                c["dug"] = max(0, c.get("dug", 0) - 1)
+                _ungain(w, c)
+            elif c.get("dug", 0) > 0:
+                c["dug"] -= 1
+        sp = c["species"]
+        w["mobbed"][sp] = w["mobbed"].get(sp, 0) + 1
+        r = w.get("round")
+        if r and not r["over"]:
+            rm = r.setdefault("mobbed", {})
+            rm[sp] = rm.get(sp, 0) + 1
         return None
     return "unknown type"
+
+
+def _stored(c: dict) -> bool:
+    """An acorn goes into a store: one the collector dug up or stole (already scored) uses up a dug count and
+    scores nothing; True when this one scores (acorns.js stored)."""
+    if c.get("dug", 0) > 0:
+        c["dug"] -= 1
+        if c.get("loot", 0) > 0:
+            c["loot"] -= 1
+        return False
+    return True
+
+
+def _gain(w: dict, c: dict) -> None:
+    """A raid or a pilfer: scored for the raider's species, the round and its 'raided' line (board species only)."""
+    sp = c["species"]
+    if sp not in BOARD_SPECIES:
+        return
+    _game_score(w, c)
+    w["raided"][sp] = w["raided"].get(sp, 0) + 1
+    r = w.get("round")
+    if r and not r["over"]:
+        rr = r.setdefault("raided", {})
+        rr[sp] = rr.get(sp, 0) + 1
+
+
+def _ungain(w: dict, c: dict) -> None:
+    """A dropped stolen acorn: the raid's score taken back (never below 0)."""
+    sp = c["species"]
+    if sp not in BOARD_SPECIES:
+        return
+    w["board"][sp] = max(0, w["board"].get(sp, 0) - 1)
+    w["raided"][sp] = max(0, w["raided"].get(sp, 0) - 1)
+    c["total"] = max(0, c.get("total", 0) - 1)
+    r = w.get("round")
+    if r and not r["over"]:
+        r["counts"][sp] = max(0, r["counts"].get(sp, 0) - 1)
+        rr = r.setdefault("raided", {})
+        rr[sp] = max(0, rr.get(sp, 0) - 1)
+        if c["kind"] == "player" and c["id"] in r["by"]:
+            r["by"][c["id"]] = max(0, r["by"][c["id"]] - 1)
+
+
+def _lose(w: dict, sp: str, own) -> None:
+    """The owner's species (and the owner, when known and still here) loses the acorn (never below 0)."""
+    if sp in w["board"]:
+        w["board"][sp] = max(0, w["board"][sp] - 1)
+    o = w["collectors"].get(own) if own else None
+    if o:
+        o["total"] = max(0, o.get("total", 0) - 1)
+    r = w.get("round")
+    if r and not r["over"]:
+        if sp in r["counts"]:
+            r["counts"][sp] = max(0, r["counts"][sp] - 1)
+        if o and o["kind"] == "player" and own in r["by"]:
+            r["by"][own] = max(0, r["by"][own] - 1)
+
+
+def set_pre(c: dict, pre) -> None:
+    """A logged collector's state before the event: [carrying, dug] (v3), plus [loot, off] (v4)."""
+    c["carrying"], c["dug"] = pre[0], pre[1]
+    if len(pre) > 3:
+        c["loot"], c["off"] = pre[2], pre[3]
 
 
 def add_cache(w: dict, k: dict) -> None:
@@ -425,8 +556,9 @@ def add_cache(w: dict, k: dict) -> None:
 
 def scrub_line(m: dict) -> dict:
     """A log line without player ids: the event stays, whose it was goes."""
-    if m.get("t") == "ev" and str(m.get("e", {}).get("by", "")).startswith("p:"):
-        m["e"] = {k: v for k, v in m["e"].items() if k != "by"}
+    if m.get("t") == "ev" and isinstance(m.get("e"), dict):
+        e = m["e"]
+        m["e"] = {k: v for k, v in e.items() if not (k in ("by", "own") and str(v).startswith("p:"))}
     elif m.get("t") == "round" and isinstance(m.get("round"), dict):
         m["round"] = {k: v for k, v in m["round"].items() if k != "by"}
     return m
@@ -624,6 +756,7 @@ class GameWorld:
         self.conns: list[GameConn] = []      # join order: conns[0] runs the AI collectors
         self.s = self.empty()
         self.dirty, self.saved_at, self.log, self.scrubbed = False, 0.0, None, 0
+        self.owners: dict[str, str] = {}     # a player's buried acorn -> its player id: memory only (v4)
         self.sweep_t = self.sum_t = self.ping_t = 0.0
         self.load()
 
@@ -631,7 +764,7 @@ class GameWorld:
         return {"v": 3, "tile": self.tile, "season": self.season, "seq": 0, "clock": 0.0,
                 "picked": {}, "stashes": {}, "granaries": {}, "caches": [],
                 "board": {s: 0 for s in BOARD_SPECIES}, "collectors": {}, "round": None, "rounds": 0,
-                "cache_n": 0}
+                "cache_n": 0, "raided": {s: 0 for s in BOARD_SPECIES}, "mobbed": {}}
 
     # -- persistence
     def load(self) -> None:
@@ -667,14 +800,15 @@ class GameWorld:
             e = m["e"]
             if "by" not in e:     # scrubbed: the world still takes it (a log alone rebuilds all but players' counts)
                 s["collectors"]["~"] = {"id": "~", "species": m["col"]["sp"], "kind": m["col"]["k"], "cap": m["col"]["cap"],
-                                        "carrying": m["pre"][0], "dug": m["pre"][1], "total": 0}
+                                        "total": 0}
+                set_pre(s["collectors"]["~"], m["pre"])
                 game_reduce(s, {**e, "by": "~"})
                 del s["collectors"]["~"]
                 if s["round"]:
                     s["round"]["by"].pop("~", None)
                 return
             c = self.collector(e["by"], m["col"]["sp"], m["col"]["k"], m["col"]["cap"])
-            c["carrying"], c["dug"] = m["pre"]
+            set_pre(c, m["pre"])
             game_reduce(s, e)
         elif m.get("t") == "cache":
             add_cache(s, m["c"])
@@ -767,6 +901,7 @@ class GameWorld:
                 k.carry = (c["carrying"], c.get("dug", 0))
             k.stale = True
         self.s["collectors"] = {i: c for i, c in self.s["collectors"].items() if c["kind"] != "player"}
+        self.owners = {}                  # no player's caches carried into the new round's ids
 
     def reid(self, conn: GameConn, sid: str, r) -> None:
         with self.lock:
@@ -844,17 +979,19 @@ class GameWorld:
                     if self.conns[0] is not conn:
                         return conn.send({"t": "rej", "c": c, "why": "not the AI host"})
                     by = _gid(e.get("by"), "by")
-                    if by.startswith("p:") or e.get("sp") not in BOARD_SPECIES:
+                    sp_ok = e.get("sp") in BOARD_SPECIES or (e.get("sp") in JAY_SPECIES and ev["type"] in ("dig", "raid", "mob"))
+                    if by.startswith("p:") or not sp_ok:
                         raise ValueError("by / sp")
                     cap = e.get("cap") if isinstance(e.get("cap"), int) and 1 <= e["cap"] <= AI_CAP_MAX else 1
                     ev["by"] = by
                     col = self.collector(by, e["sp"], "ai", cap)
                     if isinstance(e.get("held"), int):   # the animal's own carry (a re-made animal starts empty)
                         col["carrying"] = max(0, min(e["held"], cap))
+                        col["loot"] = min(col.get("loot", 0), col["carrying"])
             except (ValueError, KeyError, TypeError):
                 return conn.send({"t": "rej", "c": c, "why": "malformed event"})
-            pre = [col["carrying"], col.get("dug", 0)]
-            why = game_reduce(self.s, ev)
+            pre = [col["carrying"], col.get("dug", 0), col.get("loot", 0), col.get("off", 0)]
+            why = game_reduce(self.s, ev, self.owners)
             if why:
                 return conn.send({"t": "rej", "c": c, "why": why})
             m = {"t": "ev", "e": ev, "pre": pre, "col": {"sp": col["species"], "k": col["kind"], "cap": col["cap"]}}
@@ -863,8 +1000,9 @@ class GameWorld:
                 self.s["cache_n"] += 1
                 log = [{**m, "e": {"type": "bury", "by": ev["by"], "kind": ev["kind"]}},
                        {"t": "cache", "c": self.s["caches"][-1]}]
-            elif player and ev["type"] == "dig":
-                log = [{**m, "e": {"type": "dig", "by": ev["by"], "keep": ev["keep"]}},
+            elif ev["type"] == "dig" and (player or str(ev.get("own") or "").startswith("p:")):
+                # a player's dig, or anyone's dig of a player's cache: the count (and whose it was) apart from the place
+                log = [{**m, "e": {k: ev[k] for k in ("type", "by", "keep", "own", "osp", "pil") if k in ev}},
                        {"t": "uncache", "id": ev["id"]}]
             self.record(m, conn, c, log)
 
@@ -878,7 +1016,8 @@ class GameWorld:
             self.new_epoch()
             self.s["rounds"] += 1
             self.s["round"] = {"id": self.s["rounds"], "start": round(self.s["clock"], 2), "length": ln,
-                               "counts": {s: 0 for s in BOARD_SPECIES}, "by": {}, "over": False, "winner": None}
+                               "counts": {s: 0 for s in BOARD_SPECIES}, "by": {}, "over": False, "winner": None,
+                               "raided": {s: 0 for s in BOARD_SPECIES}, "mobbed": {}}
             self.record({"t": "round", "round": self.s["round"]})
             print(f"[game] {self.tile}/{self.season}: round {self.s['rounds']} started ({ln} s)", flush=True)
 
@@ -908,7 +1047,8 @@ class GameWorld:
                     self.sum_t = 0.0
                     r = self.s["round"]
                     msg = {"t": "sum", "seq": self.s["seq"], "clock": round(self.s["clock"], 2), "board": self.s["board"],
-                           "rc": r["counts"] if r else None, "n": self.players()}
+                           "rc": r["counts"] if r else None, "n": self.players(),
+                           "raided": self.s["raided"], "rr": r.get("raided", {}) if r else None}
                     for k in self.conns:
                         k.send(msg)
                 if self.ping_t >= PING_S:
@@ -928,8 +1068,8 @@ class GameWorld:
             return {"tile": self.tile, "season": self.season, "seq": s["seq"], "clock": round(s["clock"], 1),
                     "players": self.players(), "board": s["board"], "picked": len(s["picked"]),
                     "caches": len(s["caches"]), "granaries": sum(s["granaries"].values()),
-                    "stashes": sum(s["stashes"].values()),
-                    "round": r and {k: r[k] for k in ("id", "length", "counts", "over", "winner")}
+                    "stashes": sum(s["stashes"].values()), "raided": s["raided"], "mobbed": s["mobbed"],
+                    "round": r and {k: r.get(k) for k in ("id", "length", "counts", "over", "winner", "raided", "mobbed")}
                     | {"left": max(0.0, round(r["start"] + r["length"] - s["clock"], 1))}}
 
 

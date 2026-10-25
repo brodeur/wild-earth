@@ -75,6 +75,19 @@ import { buildSquirrel, buildWoodpecker, buildRaven, buildDeer, buildQuail, buil
 // ground acorn now and then and cache it under a shrub (bury, kind 'cache'). The existing motions carry it out;
 // the acorn rides at the bill or mouth (carryPoint: the head part's rotation on the CPU). Acorn searches are
 // capped at SEARCHES per frame. Woodpeckers come in both sexes: the female is her own slot (WF), as bucks are.
+//
+// Acorn game v4 (docs/game-acorn-stash.md, "v4: defence and pilfering"): stores get robbed and defended. A woodpecker
+// family goes out gathering together in cycles (famAway: AWAY.out of every AWAY.cycle game seconds, phased per
+// granary from the shared world clock, so every browser sees the same family away at the same time) and is home in
+// between. A raider at a granary (raider(): the player through acorns.js, a scrub-jay or Steller's jay, a squirrel up
+// the trunk) is a threat; a family with members within DEFEND_R m of its granary rallies (the 'rally' event, sound.js
+// gives the waka), and one or two of them fly at the raider and dive through it (W_MOB) until one hits: the raid is
+// interrupted or the acorn dropped (acorns.js 'mob') and the raider is driven off. A raid comes free only when no
+// family member is within RAID_GUARD_R m of the hole. Squirrels guard their buried acorns weakly: one whose cache is
+// dug up by someone else while it is within GUARD.notice m runs to the spot, and chases the thief if it gets within
+// GUARD.chase m of it (sqGuard). AI squirrels now and then keep a pilfered acorn and bury it again; ravens glide down to
+// dig up someone else's cache (less often than they forage) and cache it again; jays on the ground dig one up and eat
+// it, and jays and squirrels raid granaries.
 
 const TERRAIN_SPACING = 10;   // terrain.js default vertex spacing (main.js builds it with the defaults)
 const LIVE_R = 400, REBUILD_MOVE = 100, NEAR_R = 150, TAG_R = 40, TAG_MAX = 6, BUCKET = 30;
@@ -258,7 +271,12 @@ const MAMMAL = {
 // Acorn game (see the header): collector tasks, acorn searches per frame, and how keen each species is to forage
 // by season (chance per decision). CARRY: where the acorn rides, in the model's space: the head part's pivot (py,
 // pz), the point at the bill or mouth (ty, tz) and how the head turns (flick and pose gains, as animalModels.js).
-const T_GET = 1, T_STORE = 2, T_DIG = 3;
+const T_GET = 1, T_STORE = 2, T_DIG = 3, T_RAID = 4;
+const S_RAIDP = 9, W_MOB = 14, J_RAID = 53;                 // v4: a squirrel or a jay at a granary hole; a woodpecker mobbing
+const AWAY = { cycle: 100, out: 40 };                        // a family's gathering cycle (game s): out, then home
+const DEFEND_R = 20, RAID_GUARD_R = 8, FLEE_R = 20, DRIVEN_T = 25;   // m, m, m (with the acorn), s an AI raider keeps off
+const GUARD = { notice: 20, chase: 5 };                      // m: a squirrel notices a dig of its cache; chases a thief this close
+const RAID_ODDS = { sq: { fall: 0.05, winter: 0.04 }, jay: { fall: 0.012, winter: 0.008 } };   // per squirrel pause; per jay-second perched
 const SEARCHES = 2;
 const FORAGE = {
   [WP]: { fall: 0.55, winter: 0.3, spring: 0.12, summer: 0.12 },
@@ -274,6 +292,8 @@ const CARRY = {
   rvGround: { py: RAVEN_GROUND.head[1], pz: RAVEN_GROUND.head[2], ty: RAVEN_GROUND.bill[1] - 0.004, tz: RAVEN_GROUND.bill[2] - 0.02, flick: 0.6, pose: 0 },
 };
 CARRY[WF] = CARRY[WP];
+CARRY[SJ] = { py: 0.07, pz: 0.06, ty: 0.083, tz: 0.13, flick: 0.4, pose: 0 };     // the procedural scrub-jay's bill (animalModels.js)
+CARRY[ST] = { py: 0.11, pz: 0.06, ty: 0.128, tz: 0.125, flick: 0.4, pose: 0 };    // the Steller's jay's
 
 const damp = (a, b, k, dt) => b + (a - b) * Math.exp(-k * dt);
 const clamp01 = x => x < 0 ? 0 : x > 1 ? 1 : x;
@@ -297,6 +317,9 @@ export class Animals {
   constructor({ tile, scene, flight, veg, atmosphere, camera, identify = null, game = null }) {
     Object.assign(this, { tile, flight, veg, camera, identify, atmosphere, game });   // game: the acorn game (acorns.js), or null
     this.searches = SEARCHES;
+    // v4: families by granary (rebuilt with the live set), raiders the families may chase
+    this.fams = new Map(); this.threats = new Map();
+    if (game) { game.animals = this; game.on?.('dig', e => this.onDig(e)); }
     // Animals stand on the rendered terrain: terrain.js draws a mesh with vertices every TERRAIN_SPACING m (heights.at
     // at the vertices, each square split along its SW-NE diagonal), which in a hollow runs up to ~0.6 m above the
     // bilinear height field and buried bedded deer (and would hide a vole). Same sampler as rocks.js meshH.
@@ -745,6 +768,8 @@ export class Animals {
     for (const a of this.list) a.culled = false;
     const cov = new Set(); for (const a of this.bySpecies[QU]) cov.add(a.group);
     this.coveys = [...cov];
+    this.fams = new Map();   // v4: each granary's family
+    for (const a of this.list) if ((a.sp === WP || a.sp === WF) && a.anchor) { let f = this.fams.get(a.anchor.id); if (!f) this.fams.set(a.anchor.id, f = []); f.push(a); }
     this.tagged.length = 0;
   }
 
@@ -912,6 +937,7 @@ export class Animals {
       e2: 0, e3: 0, vis: 1, culled: false, next2: 0, cool: 0, zig: 0, zigT: 0,   // mammals (aAnim2.z, .w; hidden; pounce lift)
       u1: 0.5, u2: 0.5, u3: 0.5, young: 0,                             // buck: antler calendar jitter, forked-horn
       task: 0, acorn: null, carry: 0, ep: -1, bx: 0, bz: 0, cid: null, work: 0,   // acorn game collector
+      raidOak: null, raidH: 0, fleeOak: null, offT: 0, eatT: 0, guard: null, mob: null, mobT: 0, dive: 0,   // v4: raids, guards, mobbing
       gm: 0, wfV: 0, wing: 0, look: 0, hopping: 0, after: 0, afterT: 0, perchY: null, perchTop: false, hop0: 0, tRest: 0,   // raven on the ground (ground model)
     };
     init(a);
@@ -946,6 +972,8 @@ export class Animals {
   }
   sqUpdate(a, dt, px, py, pz) {
     const r = a.rng, H = this.heights;
+    if (a.guard) { this.sqGuard(a, dt); return; }   // v4: off to its dug-up cache, or after the thief
+    if (a.fleeOak) this.fleeing(a);
     const dx = a.x - px, dy = a.y - py, dz = a.z - pz, near2 = dx * dx + dy * dy + dz * dz;
     // (a player squirrel, squirrelControl.js, is one of them: it does not send them up the trees)
     if ((a.state === S_PAUSE || a.state === S_WORK || a.state === S_EAT || (a.state === S_RUN && a.next !== S_CLIMB)) && near2 < 15 * 15 && this.observer !== SPECIES[SQ].code) {
@@ -998,7 +1026,8 @@ export class Animals {
         a.pitch = up ? -Math.PI / 2 : Math.PI / 2; a.yaw = up ? a.face + Math.PI : a.face;
         const t = trunkAt(a.tree, Math.max(0, Math.min(a.h, fh)), this._t), rr = t.r + 0.06;
         a.x = t.x + Math.sin(a.face) * rr; a.y = t.y; a.z = t.z + Math.cos(a.face) * rr;
-        if (up && a.h >= fh) { this.sqBranch(a); a.sx = a.x; a.sy = a.y; a.sz = a.z; a.u = 0; a.state = S_OUT; }
+        if (up && a.task === T_RAID && a.h >= a.raidH) { a.state = S_RAIDP; a.t = 1.8 + r() * 0.8; a.wait = 7; }   // v4: at the granary's holes
+        else if (up && a.h >= fh) { this.sqBranch(a); a.sx = a.x; a.sy = a.y; a.sz = a.z; a.u = 0; a.state = S_OUT; }
         else if (!up && a.h <= 0) { a.state = S_PAUSE; a.t = 1 + r() * 2; a.pitch = 0; a.yaw = a.face + (r() - 0.5) * 2; a.scared = 0; }
         break;
       }
@@ -1020,6 +1049,12 @@ export class Animals {
         a.flick = pick ? damp(a.flick, 0.9, 10, dt) : 0.45 + 0.45 * Math.sin(this.time * 15 + a.phase * 0.1);
         a.y = H.atXZ(a.x, a.z);
         if (a.t <= 0) this.sqWorkDone(a);
+        break;
+      }
+      case S_RAIDP: {  // v4: on a granary's trunk, working an acorn out of a hole
+        a.amp = damp(a.amp, 0, 10, dt); a.pose = 0; a.pitch = -Math.PI / 2; a.yaw = a.face + Math.PI;
+        a.flick = 0.4 + 0.4 * Math.sin(this.time * 14);
+        this.raidStep(a, dt, () => { a.state = S_DOWN; });
         break;
       }
       case S_EAT: {    // sitting up with it, nibbling
@@ -1059,6 +1094,13 @@ export class Animals {
       a.task = T_STORE; this.sqRunTo(a, x, z, 2.8, S_PAUSE); return true;
     }
     const se = this.season;
+    if (this.time > a.offT && r() < (RAID_ODDS.sq[se] || 0)) {   // v4: up a granary's trunk for one of the woodpeckers' acorns
+      const o = this.granaryNear(a.x, a.z, 25);
+      if (o) {
+        a.task = T_RAID; a.tree = o; a.raidOak = o; a.raidH = Math.min(forkHeight(o) * 0.9, 1.1 + r() * 1.4);
+        this.sqToTrunk(a, 3); return true;
+      }
+    }
     if (r() < (se === 'winter' ? 0.25 : se === 'fall' ? 0.06 : 0.12)) {
       const k = G.cacheNear(a.x, a.z, 30, 'scatter');
       if (k) { a.cid = k.id; a.task = T_DIG; this.sqRunTo(a, k.x, k.z, 2.5, S_PAUSE); return true; }
@@ -1081,7 +1123,13 @@ export class Animals {
       a.task = 0; a.t = 1 + r() * 2;
     } else if (task === T_DIG) {
       a.task = 0;
-      if (G.dig(a.id, a.cid)) { a.carry = 1; a.state = S_EAT; a.t = 4 + r() * 3; }   // dug up and eaten on the spot
+      // dug up and eaten on the spot; someone else's, half the time carried off and buried again elsewhere (v4)
+      const k = G.world.caches.find(c => c.id === a.cid), keep = !!k && k.by !== a.id && r() < 0.5;
+      if (keep) G.collector(a.id, SPECIES[SQ].code).carrying = a.carry;
+      if (G.dig(a.id, a.cid, keep)) {
+        a.carry = 1;
+        if (keep) { a.bx = a.x; a.bz = a.z; a.t = 0.3; } else { a.state = S_EAT; a.t = 4 + r() * 3; }
+      }
     }
   }
 
@@ -1121,6 +1169,7 @@ export class Animals {
   }
   wpUpdate(a, dt, px, py, pz) {
     const r = a.rng; a.t -= dt;
+    if (a.state === W_MOB) { this.wpMob(a, dt); return; }
     if (a.state === W_FLY) {
       a.u = Math.min(1, a.u + dt / a.dur);
       const u = a.u, d = a.speed;
@@ -1172,10 +1221,13 @@ export class Animals {
       if (r() < dt * 0.4) a.yaw += (r() - 0.5) * 2;
     }
     if (flush && a.task === T_GET) this.dropTask(a);
-    if ((a.t <= 0 || flush) && game && this.wpCollect(a, flush)) return;
+    // v4: in a game the family goes out gathering together in cycles (famAway) and keeps near home in between
+    const inGame = !!this.game?.active, away = inGame && (a.t <= 0 || flush) && !!a.anchor && this.famAway(a.anchor.id);
+    if ((a.t <= 0 || flush) && game && this.wpCollect(a, flush, away)) return;
     if (a.t <= 0 || flush) {
+      if (away && !flush) { this.wpFly(a, this.nearAnchor(a, 25) ? this.awayOak(a) : (this.randomOak(a.x, a.z, 30, r, a.tree) || a.tree), false); return; }
       const q = r(), fall = this.season === 'fall';
-      const far = !flush && r() < (fall ? 0.18 : 0.12) ? (this.ringOak(a.x, a.z, 50, 150, r, true, a.tree) || this.ringOak(a.x, a.z, 50, 120, r, false, a.tree)) : null;
+      const far = !flush && !inGame && r() < (fall ? 0.18 : 0.12) ? (this.ringOak(a.x, a.z, 50, 150, r, true, a.tree) || this.ringOak(a.x, a.z, 50, 120, r, false, a.tree)) : null;
       if (far) this.wpFly(a, far, r() < 0.3);   // a long flight to a granary (or any oak) 50-150 m off
       else if (a.tree !== a.anchor && q < (fall ? 0.55 : 0.3)) this.wpFly(a, a.anchor, false);
       else if (q < 0.8 || flush) this.wpFly(a, this.randomOak(a.anchor.x, a.anchor.z, 45, r, a.tree) || a.anchor, false);
@@ -1184,10 +1236,11 @@ export class Animals {
   }
 
   // Acorn game: the woodpecker's part at a decision point. True when it chose (and started) what to do next.
-  wpCollect(a, flush) {
+  wpCollect(a, flush, away = false) {
     const r = a.rng, G = this.game;
     if (a.state === W_PICK && !flush && a.task === T_GET) {
-      if (this.takeAcorn(a)) { a.task = T_STORE; this.wpFly(a, a.anchor, false); return true; }
+      // home with it, or (the family out gathering) on to an oak away from the granary to wait with it
+      if (this.takeAcorn(a)) { a.task = T_STORE; this.wpFly(a, away ? this.awayOak(a) : a.anchor, false); return true; }
       a.task = 0;   // someone was quicker: back to the usual round
       return false;
     }
@@ -1198,10 +1251,17 @@ export class Animals {
       a.task = 0; a.t = 1 + r() * 4; a.flickV = 0;
       return true;
     }
+    if (a.carry && away && !flush) {   // out gathering: it holds the acorn until the family goes home
+      a.task = T_STORE;
+      if (this.nearAnchor(a, 25)) this.wpFly(a, this.awayOak(a), false); else a.t = 2 + r() * 3;
+      return true;
+    }
+    if (away && !flush && !a.carry && this.nearAnchor(a, 25)) { this.wpFly(a, this.awayOak(a), false); return true; }
     if (a.carry) { a.task = T_STORE; this.wpFly(a, a.anchor, false); return true; }   // flushed with it: back to the granary
     if (flush || r() >= (FORAGE[WP][this.season] || 0.1)) return false;
     const branch = r() < 0.7;   // mostly off the tree, as they do; the ground under it when the branches are bare
-    const ac = this.findAcorn(a.anchor.x, a.anchor.z, 150, r, false, branch) || (branch && this.findAcorn(a.anchor.x, a.anchor.z, 150, r, false, false));
+    const fx = away ? a.x : a.anchor.x, fz = away ? a.z : a.anchor.z, fr = away ? 60 : 150;   // out: near where it is
+    const ac = this.findAcorn(fx, fz, fr, r, false, branch) || (branch && this.findAcorn(fx, fz, fr, r, false, false));
     if (!ac) return false;
     this.claim(a, ac);
     const ang = r() * TAU, ground = !ac.branch;
@@ -1237,6 +1297,12 @@ export class Animals {
       if (a.flapT > 0) a.phase += dt * TAU * 2.6; else a.phase = damp(a.phase, Math.round(a.phase / Math.PI) * Math.PI, 3, dt);
       a.flick = damp(a.flick, 0, 3, dt);
       if (a.t <= 0 && this.gameOn(a) && r() < (FORAGE[RV][this.season] || 0.1)) {   // acorn game: down for one on the ground
+        const k = r() < 0.2 ? this.game.cacheNear(a.cx, a.cz, 150, null, a.id) : null;   // v4: or someone else's cache to rob
+        if (k) {
+          a.task = T_DIG; a.cid = k.id; a.tree = null;
+          this.rvGlide(a, k.x + 0.3, k.z + 0.3, 0);
+          return;
+        }
         const ac = this.findAcorn(a.cx, a.cz, 150, r, true, false);
         if (ac) {
           this.claim(a, ac); a.tree = null;
@@ -1265,7 +1331,7 @@ export class Animals {
       a.amp = damp(a.amp, flap ? 1 : 0, 6, dt); a.pose = damp(a.pose, 0, 6, dt);
       if (flap) a.phase += dt * TAU * 3;
       if (u >= 1) {
-        if (a.state === R_GLIDE && a.task) { a.state = R_GROUND; a.t = a.task === T_GET ? 1 + r() * 0.6 : 2.4 + r() * 1.2; a.pitch = 0; this.rvLand(a); }
+        if (a.state === R_GLIDE && a.task) { a.state = R_GROUND; a.t = a.task === T_GET || a.task === T_DIG ? 1 + r() * 0.6 : 2.4 + r() * 1.2; a.pitch = 0; this.rvLand(a); }
         else if (a.state === R_GLIDE) { a.state = R_PERCH; a.t = 15 + r() * 35; a.pitch = 0; this.rvLand(a); }
         else { a.state = R_SOAR; a.th = Math.atan2(a.z - a.cz, a.x - a.cx); a.t = this.game?.active ? 8 + r() * 20 : 30 + r() * 60; }
       }
@@ -1319,7 +1385,7 @@ export class Animals {
   rvGroundDone(a) {
     const r = a.rng, G = this.game, task = a.task;
     a.task = 0;
-    if (this.gameOn(a) && task === T_GET && this.takeAcorn(a)) {   // got it: hop to a shrub to hide it
+    if (this.gameOn(a) && ((task === T_GET && this.takeAcorn(a)) || (task === T_DIG && this.rvDig(a)))) {   // got it: hop to a shrub to hide it
       const near = this.meshOn(RV) ? this.shrubSpot(a.x, a.z, 6) : null;
       const spot = near || this.cacheSpot(a.x, a.z, r), d = Math.hypot(spot.x - a.x, spot.z - a.z);
       a.task = T_STORE;
@@ -1331,6 +1397,12 @@ export class Animals {
     if (task === T_STORE && a.carry && this.gameOn(a) && G.bury(a.id, a.x, a.y, a.z, 'cache')) a.carry = 0;
     a.state = R_PERCH; a.t = 0.6 + r() * 1.2;   // a beat, then back up to the circle
     if (!task && a.tRest > 0) { a.t = a.tRest; a.tRest = 0; }   // cached on its own while standing about: stands on
+  }
+  // v4: dig up the cache it came down for (someone else's), to cache again; false when it is gone.
+  rvDig(a) {
+    const G = this.game; G.collector(a.id, SPECIES[RV].code).carrying = a.carry;
+    if (!G.dig(a.id, a.cid, true)) return false;
+    a.carry = 1; return true;
   }
   // Touchdown at the end of a glide (on the ground, or a treetop: perchY holds its height). The ground model takes over
   // here: its folded wings settle (a flick dying away) and the landing shuffle is short.
@@ -1413,6 +1485,199 @@ export class Animals {
       if (this.landOK(px, pz)) return { x: px, z: pz };
     }
     return { x, z };
+  }
+
+  // ---- acorn game v4: granary defence, cache guarding, raids (see the header) ----------------------------
+  // Is the family of this granary out gathering? AWAY.out of every AWAY.cycle s of the world clock, phased per granary.
+  famAway(id) {
+    const G = this.game; if (!G?.active || !id) return false;
+    return (G.world.clock + (seedOf(id, 0xa3a7) % 1000) / 1000 * AWAY.cycle) % AWAY.cycle < AWAY.out;
+  }
+  // How many of the family of granary oakId are within r m of (x, y, z).
+  familyWithin(oakId, x, y, z, r) {
+    const f = this.fams.get(oakId); if (!f) return 0;
+    let n = 0;
+    for (const a of f) { if (this.byId.get(a.id) !== a) continue; const dx = a.x - x, dy = a.y - y, dz = a.z - z; if (dx * dx + dy * dy + dz * dz < r * r) n++; }
+    return n;
+  }
+  nearAnchor(a, r) { return Math.hypot(a.x - a.anchor.x, a.z - a.anchor.z) < r; }
+  // An oak away from the granary for a family out gathering.
+  awayOak(a) { return this.ringOak(a.anchor.x, a.anchor.z, 30, 120, a.rng) || this.randomOak(a.anchor.x, a.anchor.z, 120, a.rng, a.anchor) || a.anchor; }
+  // The nearest granary holding acorns within r m of (x, z) (the world's granaries), or null.
+  granaryNear(x, z, r) {
+    const G = this.game, g = G?.world?.granaries; if (!g) return null;
+    let best = null, bd = r * r;
+    for (const id in g) {
+      if (!(g[id] > 0)) continue;
+      const o = G.oakById(id); if (!o) continue;
+      const dx = o.x - x, dz = o.z - z, d2 = dx * dx + dz * dz; if (d2 < bd) { bd = d2; best = o; }
+    }
+    return best;
+  }
+  // A raider at granary oakId (called every frame while it is at it): the family may chase it; hit() when one strikes.
+  raider(id, oakId, x, y, z, hit) {
+    let t = this.threats.get(id);
+    if (!t || t.oak !== oakId || (t.done && this.time - t.doneAt > 3)) {
+      t = { id, oak: oakId, x, y, z, hit, seen: this.time, rallied: false, again: 0, chasers: 0, done: false, doneAt: 0 };
+      this.threats.set(id, t);
+    }
+    t.x = x; t.y = y; t.z = z; t.hit = hit; t.seen = this.time;
+    return t;
+  }
+  // Each frame in a game: families with members within DEFEND_R m of their granary answer a raider there with the rally
+  // call and one or two birds flying at it (the nearest; two when three or more are home). Again after 6 s if it stays.
+  defend() {
+    if (!this.threats.size) return;
+    for (const [id, t] of this.threats) {
+      if (this.time - t.seen > 0.5) { this.threats.delete(id); continue; }   // gone, or not at it any more
+      if (t.done || t.chasers > 0 || (t.rallied && this.time < t.again)) continue;
+      const f = this.fams.get(t.oak), o = f?.[0]?.anchor; if (!o) continue;
+      let n = 0, best = null, bd = Infinity, second = null, sd = Infinity;
+      for (const a of f) {
+        if (this.byId.get(a.id) !== a || a.state === W_MOB) continue;
+        const gx = a.x - o.x, gz = a.z - o.z; if (gx * gx + gz * gz > DEFEND_R * DEFEND_R) continue;
+        n++;
+        const d = (a.x - t.x) ** 2 + (a.y - t.y) ** 2 + (a.z - t.z) ** 2;
+        if (d < bd) { second = best; sd = bd; best = a; bd = d; } else if (d < sd) { second = a; sd = d; }
+      }
+      if (!n) continue;
+      t.rallied = true; t.again = this.time + 6;
+      this.emit('rally', { animal: best, x: best.x, y: best.y, z: best.z, oak: t.oak });
+      for (const a of n > 2 && second ? [best, second] : [best]) this.wpMobStart(a, t);
+    }
+  }
+  wpMobStart(a, t) {
+    if (a.task === T_GET) this.dropTask(a);
+    a.mob = t; t.chasers++; a.state = W_MOB; a.mobT = 7; a.dive = 0; a.air = 1; a.passes = 0;
+  }
+  // Mobbing: up over the raider, then a dive straight through where it is and on past; again until one strikes (within
+  // 0.8 m: the raider's hit(); the first swoop is a warning that only brushes past) or 7 s pass, then home.
+  wpMob(a, dt) {
+    const t = a.mob; a.mobT -= dt;
+    if (!t || a.mobT <= 0 || this.time - t.seen > 0.5 || (t.done && !a.dive)) {
+      if (t) t.chasers = Math.max(0, t.chasers - 1);
+      a.mob = null; a.dive = 0; this.wpFly(a, a.anchor, false); return;
+    }
+    const ox = a.x, oy = a.y, oz = a.z;
+    if (!a.dive) {
+      const dx = t.x - a.x, dy = t.y + 2.2 - a.y, dz = t.z - a.z, d = Math.hypot(dx, dy, dz), step = Math.min(d, 10 * dt);
+      if (d < 1.2) {
+        const ex = t.x - a.x, ey = t.y + 0.15 - a.y, ez = t.z - a.z, e = Math.hypot(ex, ey, ez) || 1;
+        a.dive = 1; a.tx = ex / e; a.ty = ey / e; a.tz = ez / e; a.u = e + 2.5;
+      } else if (d > 1e-4) { a.x += dx / d * step; a.y += dy / d * step; a.z += dz / d * step; }
+    } else {
+      const step = 12 * dt; a.x += a.tx * step; a.y += a.ty * step; a.z += a.tz * step; a.u -= step;
+      if (!t.done && a.passes > 0 && Math.hypot(a.x - t.x, a.y - t.y, a.z - t.z) < 0.8) { t.done = true; t.doneAt = this.time; t.hit?.(); }
+      if (a.u <= 0) { a.dive = 0; a.passes++; }
+    }
+    a.y = Math.max(a.y, this.heights.atXZ(a.x, a.z) + 0.3);
+    a.air = 1; a.amp = damp(a.amp, a.dive ? 0.25 : 1, 20, dt); a.pose = damp(a.pose, a.dive ? 0.8 : 0, 20, dt); a.phase += dt * TAU * 13;
+    const vx = a.x - ox, vy = a.y - oy, vz = a.z - oz, vh = Math.hypot(vx, vz);
+    if (vh > 1e-5) a.yaw = Math.atan2(vx, vz);
+    a.pitch = -Math.atan2(vy, vh + 1e-5) * 0.8; a.flick = 0;
+  }
+  // An AI raider at a granary hole (a squirrel on the trunk, a jay): a threat to the family while it works; after a.t s
+  // the acorn comes free if no family member is within RAID_GUARD_R m (else it keeps at it, up to a.wait s). done(): away.
+  raidStep(a, dt, done) {
+    const G = this.game, o = a.raidOak;
+    if (!o || !this.gameOn(a)) { a.raidOak = null; a.task = 0; done(); return; }
+    this.raider(a.id, o.id, a.x, a.y, a.z, () => this.aiMobbed(a));
+    a.wait -= dt;
+    if (a.t > 0) return;
+    if (a.wait <= 0) { a.raidOak = null; a.task = 0; done(); return; }
+    if (this.familyWithin(o.id, a.x, a.y, a.z, RAID_GUARD_R)) { a.t = 0.3; return; }
+    G.collector(a.id, SPECIES[a.sp].code).carrying = a.carry;
+    if (G.raid(a.id, o.id, a.x, a.y, a.z)) { a.carry = 1; a.fleeOak = o; a.bx = a.x; a.bz = a.z; a.eatT = 0; a.task = a.sp === SQ ? T_STORE : 0; }
+    else a.task = 0;
+    a.raidOak = null; done();
+  }
+  // Off with a stolen acorn: still a target while within FLEE_R m of the granary.
+  fleeing(a) {
+    const o = a.fleeOak;
+    if (!a.carry || !this.game?.active || Math.hypot(a.x - o.x, a.z - o.z) > FLEE_R) { a.fleeOak = null; return; }
+    this.raider(a.id, o.id, a.x, a.y, a.z, () => this.aiMobbed(a));
+  }
+  jayRaid(a, o) {
+    const r = a.rng, h = Math.min(forkHeight(o) * 0.9, 1.4 + r() * 1.6), face = Math.atan2(a.x - o.x, a.z - o.z) + (r() - 0.5);
+    const t = trunkAt(o, h, this._t), rr = t.r + 0.05;
+    a.sx = a.x; a.sy = a.y; a.sz = a.z; a.tx = t.x + Math.sin(face) * rr; a.ty = t.y; a.tz = t.z + Math.cos(face) * rr;
+    a.face = face; a.raidOak = o; a.next = J_RAID; a.tree = o;
+    const d = Math.hypot(a.tx - a.sx, a.tz - a.sz); a.dur = Math.max(0.8, d / 9); a.u = 0; a.state = J_FLY; a.air = 1; a.peak = 0;
+  }
+  jayFlee(a) {
+    const r = a.rng, o = this.ringOak(a.x, a.z, 30, 70, r) || a.group?.tree || a.anchor; if (!o) return;
+    a.sx = a.x; a.sy = a.y; a.sz = a.z; a.tree = o; this.jaySpot(a, o, false);
+    const d = Math.hypot(a.tx - a.sx, a.tz - a.sz); a.dur = Math.max(0.8, d / 10); a.u = 0; a.state = J_FLY; a.air = 1; a.peak = 0;
+  }
+  // A jay on the ground probes out a buried acorn within 2.5 m (not its own) and eats it.
+  jayDig(a) {
+    const G = this.game, k = G.cacheNear(a.x, a.z, 2.5, null, a.id); if (!k) return;
+    a.yaw = Math.atan2(k.x - a.x, k.z - a.z); a.flickV = 1;
+    G.collector(a.id, SPECIES[a.sp].code).carrying = 0;
+    G.dig(a.id, k.id, false);
+  }
+  // Someone else's cache dug up (acorns.js 'dig', with the place: this browser's own digs only). Its owner, a squirrel
+  // on the ground within GUARD.notice m, runs to the spot (sqGuard).
+  onDig(e) {
+    const G = this.game;
+    if (!G?.active || !e.pil || e.x === undefined || (e.by !== 'player' && G.aiLocal === false)) return;
+    const o = e.own != null ? this.byId.get(e.own) : null;
+    if (!o || o.sp !== SQ || o.guard || o.state === S_CLIMB || o.state === S_OUT || o.state === S_SIT || o.state === S_IN
+      || o.state === S_DOWN || o.state === S_RAIDP) return;   // up a tree: it does not see
+    if (Math.hypot(o.x - e.x, o.z - e.z) > GUARD.notice) return;
+    if (o.task === T_GET) this.dropTask(o);
+    o.guard = { x: e.x, z: e.z, by: e.by, t: 10, chase: false, look: 0.5 + o.rng() * 0.6 };   // a look up first
+    o.state = S_PAUSE;
+  }
+  // The owner at its dug-up cache: a run to the spot; a thief within GUARD.chase m is chased (5.5 m/s, up to 5 s) and,
+  // caught (0.6 m), mobbed: it drops what it carries and is driven off.
+  sqGuard(a, dt) {
+    const g = a.guard, r = a.rng, H = this.heights;
+    if (g.look > 0) {   // sat up, looking: then off
+      g.look -= dt; a.amp = damp(a.amp, 0, 10, dt); a.pose = damp(a.pose, 1, 8, dt); a.pitch = damp(a.pitch, -0.3, 6, dt);
+      a.yaw = Math.atan2(g.x - a.x, g.z - a.z); if (r() < dt * 4) a.flickV = 1;
+      return;
+    }
+    g.t -= dt;
+    const p = g.by === 'player' ? this.flight.pos : this.byId.get(g.by);
+    const px = p ? p.x : g.x, pz = p ? p.z : g.z, dp = Math.hypot(px - a.x, pz - a.z);
+    if (!g.chase && p && dp < GUARD.chase) { g.chase = true; g.t = Math.min(g.t, 5); }
+    if (g.t <= 0 || (g.chase && !p)) { this.sqGuardEnd(a); return; }
+    const tx = g.chase ? px : g.x, tz = g.chase ? pz : g.z, speed = g.chase ? 5.5 : 3.2;
+    const ex = tx - a.x, ez = tz - a.z, d = Math.hypot(ex, ez), step = speed * dt;
+    a.state = S_RUN; a.next = S_PAUSE; a.tx = tx; a.tz = tz; a.speed = speed;   // drawn as a run
+    a.amp = damp(a.amp, 1, 12, dt); a.pose = damp(a.pose, 0, 10, dt); a.pitch = damp(a.pitch, 0, 8, dt);
+    a.phase += dt * TAU * speed / 0.42;
+    if (d > 1e-3) a.yaw = Math.atan2(ex, ez);
+    if (r() < dt * 3) a.flickV = 1;   // the tail going
+    const stop = g.chase ? 0.35 : 0;   // (up to the thief, not into it)
+    if (d > step + stop) { a.x += ex / d * step; a.z += ez / d * step; } else if (!g.chase) { a.x = tx; a.z = tz; }
+    a.y = H.atXZ(a.x, a.z) + Math.abs(Math.sin(a.phase)) * 0.05;
+    if (g.chase && dp < 0.6 && Math.abs(p.y - a.y) < 1.2) { this.chaseHit(g.by); this.sqGuardEnd(a); return; }
+    if (!g.chase && d < 0.3) this.sqGuardEnd(a);   // at the spot: a sniff; the thief is gone
+  }
+  sqGuardEnd(a) { a.guard = null; a.state = S_PAUSE; a.t = 1.5 + a.rng() * 2; if (a.task !== T_STORE) a.task = 0; }
+  chaseHit(by) {
+    if (by === 'player') { this.game.playerMobbed('squirrel'); return; }
+    const a = this.byId.get(by); if (a) this.aiMobbed(a);
+  }
+  // An AI raider struck by the family (or caught by a cache's owner): a 'mob' event (it drops what it carries) on the
+  // AI host, and off it goes; it keeps away from granaries for DRIVEN_T s.
+  aiMobbed(a) {
+    const G = this.game, r = a.rng;
+    if (this.gameOn(a)) {
+      G.collector(a.id, SPECIES[a.sp].code).carrying = a.carry;
+      if (G.mob(a.id, a.carry > 0) && a.carry) a.carry = 0;
+    }
+    a.raidOak = null; a.fleeOak = null; a.offT = this.time + DRIVEN_T; a.acorn = null;
+    if (a.task !== T_STORE || !a.carry) a.task = 0;
+    if (a.sp === SQ) {
+      if (a.state === S_RAIDP || a.state === S_CLIMB) { a.scared = 1; a.state = S_DOWN; }
+      else if (a.state !== S_DOWN && a.state !== S_OUT && a.state !== S_SIT && a.state !== S_IN) {
+        const ang = r() * TAU, d = 10 + r() * 10; this.sqRunTo(a, a.x + Math.cos(ang) * d, a.z + Math.sin(ang) * d, 5, S_PAUSE);
+      }
+    } else if (a.sp === SJ || a.sp === ST) this.jayFlee(a);
+    else if (a.sp === RV) { a.task = 0; a.state = R_PERCH; a.t = 0; }
   }
 
   // ---- acorn game: collectors (see the header) -------------------------------------------------------
@@ -1683,6 +1948,7 @@ export class Animals {
   sjUpdate(a, dt, px, py, pz) {
     const r = a.rng, g = a.group, H = this.heights;
     a.t -= dt;
+    if (a.fleeOak) this.fleeing(a);
     if (a.state === J_FLY) {
       a.u = Math.min(1, a.u + dt / a.dur);
       const u = a.u, ox = a.x, oy = a.y, oz = a.z;
@@ -1695,14 +1961,27 @@ export class Animals {
       const vx = a.x - ox, vy = a.y - oy, vz = a.z - oz, vh = Math.hypot(vx, vz);
       if (vh > 1e-5) a.yaw = Math.atan2(vx, vz);
       a.pitch = -Math.atan2(vy, vh + 1e-5) * 0.7;
-      if (u >= 1) { a.state = a.next; a.air = 0; a.t = 3 + r() * 8; a.pitch = 0; }
+      if (u >= 1) {
+        a.state = a.next; a.air = 0; a.t = 3 + r() * 8; a.pitch = 0;
+        if (a.state === J_RAID) { a.t = 1.4 + r() * 0.8; a.wait = 6; a.yaw = a.face + Math.PI; }   // v4: at a granary hole
+      }
       return;
     }
     a.air = 0;
+    if (a.state === J_RAID) {   // v4: clinging at a granary hole, working an acorn out
+      a.amp = damp(a.amp, 0, 10, dt); a.pose = damp(a.pose, 1, 8, dt); a.pitch = damp(a.pitch, -1.1, 8, dt); a.yaw = a.face + Math.PI;
+      if (r() < dt * 4) a.flickV = 1;
+      this.raidStep(a, dt, () => this.jayFlee(a));
+      return;
+    }
     a.amp = damp(a.amp, 0, 10, dt); a.pose = damp(a.pose, 1, 8, dt);
     if (a.state === J_PERCH) {
       a.pitch = damp(a.pitch, -0.2, 5, dt); if (r() < dt * 0.6) a.flickV = 1; if (r() < dt * 0.3) a.yaw += (r() - 0.5) * 2;
       if (a.tree?.conifer && a.hFrac < 0.84 && a.moveSeen === g.move && r() < dt * 0.08) { this.jayFly(a, a.tree, false, 0.05 + 0.07 * r()); return; }
+      if (a.carry && (a.eatT += dt) > 5) a.carry = 0;   // v4: a stolen acorn, eaten on the perch
+      if (!a.carry && this.time > a.offT && r() < dt * (RAID_ODDS.jay[this.season] || 0) && this.gameOn(a)) {   // v4: a raid on a granary
+        const o = this.granaryNear(a.x, a.z, 50); if (o) { this.jayRaid(a, o); return; }
+      }
     }
     else {   // J_GROUND: hops, probes and (in fall) pushes acorns into the ground
       a.pitch = damp(a.pitch, 0, 6, dt);
@@ -1713,6 +1992,7 @@ export class Animals {
         if (a.hopU >= 1) a.e1 = 1;
       } else {
         if (r() < dt * (this.season === 'fall' ? 1.4 : 0.8)) a.flickV = 1;   // probing, or pushing an acorn in
+        if (r() < dt * 0.04 && this.gameOn(a)) this.jayDig(a);               // v4: someone's buried acorn, dug up and eaten
         if (r() < dt * 0.5) {
           const h = 0.3 + r() * 0.4; a.yaw += (r() - 0.5) * 1.5;
           a.hopX = a.x; a.hopZ = a.z; a.hopDX = Math.sin(a.yaw) * h; a.hopDZ = Math.cos(a.yaw) * h; a.hopH = 0.03 + h * 0.1; a.hopU = 0;
@@ -2360,6 +2640,8 @@ export class Animals {
       const a2 = this.anim2[sp];
       if (a2) { this.extra(a, dt); a2[o * 4] = a.e0; a2[o * 4 + 1] = a.e1; a2[o * 4 + 2] = a.e2; a2[o * 4 + 3] = sp === QU ? a.variant : a.e3; }
     }
+    // acorn game v4: the families' defence of their granaries
+    if (this.game?.active) this.defend(); else if (this.threats.size) this.threats.clear();
     // acorn game: the acorns carried in bills and mouths, every frame (also for animals thinking on alternate frames)
     const G = this.game;
     if (G && G.active) {
@@ -2394,7 +2676,7 @@ export class Animals {
   // The drawn meshes' second channel (aAnim2.x, .y; see animalModels.js rig templates), eased per animal.
   extra(a, dt) {
     if (a.sp === SQ) {
-      a.e0 = damp(a.e0, a.state === S_CLIMB || a.state === S_DOWN ? 1 : 0, 8, dt);   // legs splayed round the trunk
+      a.e0 = damp(a.e0, a.state === S_CLIMB || a.state === S_DOWN || a.state === S_RAIDP ? 1 : 0, 8, dt);   // legs splayed round the trunk
       a.e1 = damp(a.e1, a.flick, 5, dt);                                             // the tail tip lags the flick
     } else if (a.sp === QU) {
       const fly = a.state === Q_FLY;

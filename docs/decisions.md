@@ -661,3 +661,20 @@ terrain only). Rejected: a fourth masks.png channel (a pipeline rebuild for one 
 grass-style ratio to a manifest mean (no riparian mean in the manifest). Known: the rewilded
 habitat texture's riparian colour is itself teal, so that texture still shows teal corridors in
 summer; the litter detail already wins under corridor cover, so its rule is unchanged.
+
+## 2026-10-25: raids and pilfers score against the owner; the 8 m guard rule is the raider's browser's to check
+
+Acorn game v4 (docs/game-acorn-stash.md, "v4: defence and pilfering"). A dig of someone else's
+cache and a pull from a woodpecker granary (`raid`) score +1 for the thief's species and -1 for
+the owner's (clamped at 0), and a stolen acorn counts as dug, so storing it again scores
+nothing; a `mob` event drives the raider off (20 s, refused by the server) and a dropped stolen
+acorn gives its score back. A raid comes free only when no family member is within 8 m: the
+server has no positions (players send none, AI positions are not synced), so the raider's
+browser (the AI host for the AI) checks it and the server trusts it, as it trusts acorn keys;
+everything else (first wins, the granary holds one, room, raiding species, driven off) is
+checked in both reducers. Families go out gathering 40 s in every 100 s, phased per granary
+from the shared world clock, so raiding has fair windows and every browser agrees when they
+are. A player's cache owner is kept in server memory only, never beside the cache's place.
+Rejected: positions on the wire for a server-side distance check (a player id beside a
+position, against the privacy rules) and a random away schedule per browser (the browsers
+would disagree about when a raid is fair).

@@ -14,6 +14,8 @@ import { acornSpecies } from './fieldguide.js';
 // season and round number), so the server cannot link a player across rounds, tiles or seasons; it hashes it
 // again. A new round (the server's 'round' with a new id) means a new id ('id', answered by 'you'). The season
 // total ("you", SEASON column) and the field notes (acorn species found) are kept here only, never sent.
+// v4 (raid, mob, pilfer): the server answers a dig with its verdict (own: whose cache it was, osp: its species, pil:
+// someone else's), applied in place of this client's guess; a collector's pre-event state gains loot and off.
 
 const PROTOCOL = 1;
 const SID_KEY = 'wild-earth:sid';
@@ -233,6 +235,7 @@ export class GameNet {
         const sp = acornSpecies(p.e.species); if (sp && !this.confirmed.species.includes(sp)) this.confirmed.species.push(sp);
       }
       if (e.by === 'player' && e.type === 'bury') this.needRebuild = true;   // the server named the cache (k<n>)
+      if (e.type === 'dig' || e.type === 'raid' || e.type === 'mob') this.needRebuild = true;   // its verdict and clock, not our guess
       return;                                                            // already drawn when it was predicted
     }
     this.stats.remote++;
@@ -249,6 +252,8 @@ export class GameNet {
     let off = false;
     for (const [s, n] of Object.entries(d.board || {})) if ((c.board[s] || 0) !== n) { c.board[s] = n; off = true; }
     if (d.rc && c.round) for (const [s, n] of Object.entries(d.rc)) if ((c.round.counts[s] || 0) !== n) { c.round.counts[s] = n; off = true; }
+    for (const [s, n] of Object.entries(d.raided || {})) if ((c.raided[s] || 0) !== n) { c.raided[s] = n; off = true; }
+    if (d.rr && c.round) { c.round.raided ||= {}; for (const [s, n] of Object.entries(d.rr)) if ((c.round.raided[s] || 0) !== n) { c.round.raided[s] = n; off = true; } }
     if (off) { this.stats.mismatches++; console.warn('net: counts differed from the server; corrected'); this.needRebuild = true; }
     this.players = d.n; this.line();
   }
@@ -259,8 +264,10 @@ export class GameNet {
     let c = w.collectors[by];
     if (!c) c = w.collectors[by] = { id: by, species: d.col.sp, kind: by === 'player' ? 'player' : d.col.k === 'player' ? 'remote' : 'ai', carrying: 0, cap: d.col.cap, total: 0 };
     c.species = d.col.sp; c.cap = d.col.cap;
-    if (d.pre) { c.carrying = d.pre[0]; c.dug = d.pre[1]; }
-    return { ...d.e, by };
+    if (d.pre) { c.carrying = d.pre[0]; c.dug = d.pre[1]; if (d.pre.length > 3) { c.loot = d.pre[2]; c.off = d.pre[3]; } }
+    const e = { ...d.e, by };
+    if (e.own !== undefined) e.own = e.own === this.pid ? 'player' : e.own;   // a dig's owner, in this client's terms
+    return e;
   }
   resync() {   // reconnect: the welcome is a fresh snapshot, pending events are sent again
     this.stats.reconnects++;
@@ -276,7 +283,8 @@ export class GameNet {
     if (w.round) w.round.t = Math.max(0, w.clock - w.round.start);
     for (const p of this.pending) {
       const e = { ...p.e, by: p.e.by || 'player' };
-      if (e.by !== 'player' && w.collectors[e.by] && p.e.held !== undefined) w.collectors[e.by].carrying = p.e.held;
+      const pc = w.collectors[e.by];
+      if (e.by !== 'player' && pc && p.e.held !== undefined) { pc.carrying = p.e.held; pc.loot = Math.min(pc.loot || 0, pc.carrying); }
       this.applyEvent(w, e);
     }
     this.game.adoptWorld(w);
@@ -290,10 +298,11 @@ export class GameNet {
     w.stashes = { ...s.stashes }; w.granaries = { ...s.granaries };
     w.caches = (s.caches || []).map(k => ({ ...k }));
     w.board = { ...w.board, ...s.board };
+    w.raided = { ...w.raided, ...s.raided }; w.mobbed = { ...s.mobbed };
     for (const [id, c] of Object.entries(s.collectors || {})) {
       const me = id === this.pid, lid = me ? 'player' : id;
       w.collectors[lid] = { id: lid, species: c.species, kind: me ? 'player' : c.kind === 'player' ? 'remote' : 'ai',
-        carrying: c.carrying, cap: c.cap, total: c.total || 0, dug: c.dug || 0 };
+        carrying: c.carrying, cap: c.cap, total: c.total || 0, dug: c.dug || 0, loot: c.loot || 0, off: c.off || 0 };
     }
     w.round = this.toRound(s.round, s.clock);   // (you and species: the caller's, from this browser)
     return w;
@@ -301,7 +310,7 @@ export class GameNet {
   toRound(r, clock) {
     if (!r) return null;
     return { id: r.id, start: r.start, t: Math.max(0, clock - r.start), length: r.length, counts: { ...r.counts },
-      you: r.by?.[this.pid] || 0, over: !!r.over, winner: r.winner || null };
+      you: r.by?.[this.pid] || 0, over: !!r.over, winner: r.winner || null, raided: { ...r.raided }, mobbed: { ...r.mobbed } };
   }
 
   // ---- the panel line: "N players here" ------------------------------------------------------------

@@ -494,3 +494,143 @@ SEASON column kept 6 and 1 (counted in the browser), and ended with the same win
 "You gathered 1." in both. After 986 log lines, none carried a player id once the
 snapshot covered it. Fixed on the way: a rebuilt prediction took the round's time left
 from the last confirmed message (minutes stale on a quiet client).
+
+## v4: defence and pilfering (2026-10-25)
+
+Stores get robbed and defended. The natural history (Koenig and Mumme on acorn woodpecker
+families; Vander Wall and Steele on scatter hoarders; neither mesh brief in
+`library/animals/drafts/` says it, so the field-guide text stays general): an acorn woodpecker
+family shares one granary and drives jays, squirrels and other thieves off it together, with
+calls and repeated swoops; scatter-hoarded acorns are found by smell, and much of what is
+buried is dug up by someone else.
+
+### Rules
+
+- **Pilfering.** A dig of someone else's buried acorn (a squirrel's, a raven's, a player's)
+  scores +1 for the digger's species (and its "raided" line) and -1 for the owner's species
+  (never below 0); the owner's own total drops too when it is known. A pilfered acorn that is
+  kept counts as dug, so burying or caching it again scores nothing (v3's rule). Digging one's
+  own cache is not a pilfer. Who digs: the player squirrel (E on a dug mark, as before); AI
+  squirrels as in v2 (the nearest scatter cache within 30 m, anyone's), now keeping someone
+  else's half the time and burying it again elsewhere; AI ravens, one forage decision in five,
+  glide down to the nearest cache within 150 m that is not their own and cache it again; jays
+  on the ground probe out one within 2.5 m now and then and eat it.
+- **The owner learns of it.** A squirrel on the ground within 20 m of its dug-up cache sits up
+  (0.5-1.1 s), runs to the spot and, if the thief is within 5 m of it, chases it (5.5 m/s, up
+  to 5 s); caught (0.6 m), the thief is mobbed: it drops what it carries. A player whose cache
+  is dug up gets a line in the game box ("a scrub-jay dug up one of your buried acorns").
+- **Raiding a granary.** A raven or squirrel (player or AI; AI scrub-jays and Steller's jays
+  too) can pull an acorn from a granary that holds one: the raven hovering or standing within
+  2.2 m of the bark (H hovers), for 1.5 s; the squirrel on the trunk (climbed, 0.6 m up or
+  more), for 2 s. The acorn comes free only when no family member is within **8 m** of the
+  hole; while one is, the pull holds. A raid scores +1 for the raider's species and "raided",
+  takes one from the granary's count and -1 from acorn woodpeckers. Woodpeckers do not raid.
+  AI squirrels try it from a pause near a granary (fall 5 %, winter 4 % of pauses, within
+  25 m); jays perched within 50 m of one (about one try per 80 s per jay in fall).
+- **Defence.** A raider at a granary (pulling, or leaving with a stolen acorn within 20 m) is
+  a threat. Family members within **20 m** of their granary answer: the rally call (the
+  `rally` event; sound.js plays the waka from the nearest bird and a second from a family
+  member), and the nearest one, or two when three or more are home, fly at the raider: up over
+  it, then a dive straight through it and on past, again and again. The first swoop only
+  brushes past; a later one within 0.8 m strikes (or they give up after 7 s). A strike is a
+  `mob` event: the raid is interrupted, a squirrel carrying drops its acorn (a stolen one's
+  score goes back), and the raider is driven off: **20 s** on the world clock in which the
+  server refuses its raids (the HUD counts it down), 25 s for an AI raider.
+- **Fairness: the family goes out in cycles.** In a game each family is away gathering for 40
+  of every 100 game seconds, phased per granary from the shared world clock (so every browser
+  sees the same family away at the same time). Away, birds near the granary fly out to oaks
+  30-120 m off and forage from there; one with an acorn holds it until the family goes home,
+  then hammers it in. At home they keep within ~45 m (the v2 long flights are off during a
+  game). So a raider who waits for the family to leave gets an acorn; one who goes in while
+  they are home is mobbed. The HUD says which ("the family is away gathering" / "the family
+  is home: they will mob you").
+
+### State and events
+
+`world` gains `raided` and `mobbed` (per species, this season) and the round `raided` and
+`mobbed`; a collector gains `loot` (stolen acorns it carries) and `off` (world clock until
+which it may not raid). Two new events:
+
+```
+{ type: 'raid', by, oak }      an acorn pulled from a woodpecker granary (an AI's also x, y, z)
+{ type: 'mob',  by, drop }     a raider driven off for DRIVEN_S; drop: it lost the acorn it carried
+```
+
+and `dig` gains the server's verdict (`own`: whose cache it was, `osp`: its species, `pil`:
+someone else's), which clients apply in place of their own guess. Validation, the same in
+`applyEvent` (acorns.js) and `game_reduce` (server.py), first event wins:
+
+- raid: the collector's species is a raider (raven, squirrel, scrub-jay, Steller's jay), the
+  granary holds at least one ("empty granary"), it has room ("full"), it is not driven off
+  ("driven off": the server's clock against `off`);
+- mob: a drop needs something carried ("empty"); it sets `off`;
+- dig: as before (the cache exists, room when kept); the owner is the cache record's `by` for
+  an AI's cache, the server's in-memory map for a player's.
+- AI events for jays are accepted for dig, raid and mob only (they are not on the board).
+
+**The 8 m rule is not checked by the server**: it has no positions of animals or players (a
+player's events carry none, and AI positions are never synced). The raider's browser checks
+it against the family birds it draws (the AI host for AI raiders, the player's own browser for
+the player), and the server trusts that, as it trusts that an acorn key exists. The family's
+away cycle is computable on the server (clock and oak id) but is not enforced there: members
+can still be near the granary as the family leaves or comes back.
+
+Protocol: `pre` is now `[carrying, dug, loot, off]` (a v3 log's two-element `pre` still
+replays); `sum` adds `raided` and `rr` (the round's), checked like the board. The leaderboard
+shows a line "raided N" under ravens and squirrels (this round, this season; "· driven off
+M" this round), counting granary raids and pilfered caches together; woodpeckers have no line
+(they are the raided). Field-guide cards: "Thieves at the larder" the first raid or pilfer the
+player sees within 30 m or makes, and "Mobbed" (or "Chased off" by a squirrel) the first time
+the player is mobbed.
+
+### What the node stores about a person, v4
+
+In addition to v3's list: in the snapshot, the player's `loot` (a count) and `off` (a clock
+time). In memory only: which buried acorn a current-round player owns (cleared when a round
+starts, never written beside a cache's place; after a restart a player's caches are anyone's).
+In the log, a dig of a player's cache (by anyone) is written as two lines like a player's own
+dig, the count with `own` and the place as `uncache`, and `own` is scrubbed with `by` on the
+next snapshot. Broadcast, a dig carries `own` (a player id) beside a cache id whose place every
+client already has: in memory on the clients, not stored. A raid and a mob from a player carry
+no position.
+
+### Verified (2026-10-25, home tile, fall)
+
+Reducers: the same scenario (AI burial, player burial, pilfer, mob with drop, own dig,
+re-burial, raven raid, deposit of the stolen acorn, driven off, empty granary, a woodpecker
+refused, a jay's raid and drop, a scrubbed and a v3 log line) passes in both, with the same
+counts. Offline (`&net=0`, the built-in browser): as the raven, hovering at a granary with the
+family home, a rally and two birds diving, mobbed 0.5 s after the rally (the birds were 2-3 m
+off; the first swoop is now a warning that only brushes past, and online the strike came 6.8 s
+after the rally), "driven off: 18 s"; at a granary whose family was away, the acorn came
+free after 1.5 s, the board read ravens "raided 1 / 1" and the field-guide card showed. As the
+squirrel: a pilfer of an AI squirrel's cache 9 m from its owner, which sat up, ran over,
+chased from under 5 m and caught the player ("you dropped it", raided back to what it was); a
+raid up an away family's trunk (2 s pull, granary 2 to 1); a family member coming home within
+20 m dived at the squirrel still on the trunk and it dropped the acorn (raided 10 to 9). AI:
+squirrels raiding granaries and being mobbed with drops, a raven pilfering a squirrel's cache,
+squirrels pilfering each other, a scrub-jay's raid mobbed. Online, on an isolated test node
+(port 8806, its world under the scratchpad, not `tiles/`): a raven (AI host) and a squirrel
+(`&seat=2`, a second pane tab) in a 90 s round; the server accepted the player's mob and two
+raids, the squirrel's pilfer (with its verdict), the AI's pilfers, mobs and a Steller's jay's
+raid, with no rejects and no reducer mismatches; host, second tab and the server's summary
+agreed on board, raided, mobbed, round counts and granaries at the same `seq`. The log held no
+player id at all once snapshotted; a SIGKILL restart and a rebuild from the log alone gave the
+same board, raided, mobbed, granaries and caches. Console: no errors.
+
+Per frame (the built-in browser with four other copies of the app open): the game 0.03 ms;
+`defend()` 0.002 ms; animals.js 0.43 ms with the game on against 0.34 ms off (v2 measured 0.27
+against 0.22 on a quieter machine; the difference is the collectors, mostly v2's).
+
+What reads: the HUD's pulling / family-away / driven-off lines and the mobbed glow on the game
+box; the board's "raided · driven off" line; a squirrel sitting up, running to its dug-up
+cache and chasing the thief; the jay flying in to the trunk and away again. What does not yet:
+the dive itself is hard to see from the raven's chase camera at a granary (the camera is often
+inside the crown, and the woodpecker is 15-25 px); the AI's 8 m check uses each browser's own
+birds, so another player's screen does not show why a raid was or was not stopped; woodpeckers
+gather more slowly in a game (the away cycle and the flights out; about 14 a minute from 58
+birds here against v2's 40 from 41); after a round change a player's caches from the last round are "someone
+else's" to its new id (a pilfer of one's own old cache scores +1 / -1 for the same species
+and +1 on the "you" line); the 8781 dev server runs the v3 node until it is restarted, and
+until then it refuses raid and mob events (the client rolls them back) and its dig scoring
+differs from the client's (the 5 s sum corrects it with a console warning).
