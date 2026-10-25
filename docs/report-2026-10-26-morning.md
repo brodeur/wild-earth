@@ -91,5 +91,7 @@ if it verified, follows 37d6c20 in `git log`.
 captures; the session scratchpad was trimmed twice and the disk ended the night at about 9 GB
 free. The volume as a whole is close to full and is worth a look.
 
-**To do once you are up:** restart the dev server (the shared-world endpoint is in server.py but
-the running process predates it), and decide the attribution form for generated assets.
+**To do once you are up:** decide the attribution form for generated assets. The dev server was
+restarted at the end of the night (now on port 8781) and the shared-world endpoint is live: the
+game panel shows "shared world · 1 player here". A three.js upgrade lane (0.170 to the current
+release, WebGL) was still running; its commit, if it verified, is the last in `git log`.
