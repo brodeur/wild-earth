@@ -59,9 +59,9 @@ pair), LEG_B (hind pair), HEAD; the tail is too short to animate and stays in BO
 
 | # | what it shows | link | author | licence |
 |---|---|---|---|---|
-| V1 | **image-to-3D candidate**: side view, whole vole on bare soil | [Commons](https://commons.wikimedia.org/wiki/File:California_Vole_(Microtus_californicus).jpg) | Jerry Kirkhart | CC BY 2.0 |
+| V1 | **image-to-3D candidate**: side view, whole vole on bare soil | [Commons](https://commons.wikimedia.org/wiki/File:California_Vole_%28Microtus_californicus%29.jpg) | Jerry Kirkhart | CC BY 2.0 |
 | V2 | **image-to-3D candidate**: side view on gravel, whole animal (Half Moon Bay) | [iNat photo 263221940](https://www.inaturalist.org/photos/263221940) | Cricket Raspet | CC BY |
-| V3 | cropped V1, closer | [Commons](https://commons.wikimedia.org/wiki/File:California_Vole_(Microtus_californicus)_(cropped).jpg) | Jerry Kirkhart | CC BY 2.0 |
+| V3 | cropped V1, closer | [Commons](https://commons.wikimedia.org/wiki/File:California_Vole_%28Microtus_californicus%29_%28cropped%29.jpg) | Jerry Kirkhart | CC BY 2.0 |
 | V4 | side view on ground (Berkeley) | [iNat photo 146492538](https://www.inaturalist.org/photos/146492538) | Rupert Clayton | CC BY |
 | V5 | face and eye (Ed R. Levin County Park) | [iNat photo 410769535](https://www.inaturalist.org/photos/410769535) | iNat observer | CC0 |
 | V6 | in the open (Santa Clara Co.) | [iNat photo 9227915](https://www.inaturalist.org/photos/9227915) | iNat observer | CC0 |

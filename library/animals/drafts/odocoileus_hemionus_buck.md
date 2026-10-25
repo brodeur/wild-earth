@@ -76,7 +76,7 @@ gallop), a head-high alert with the antlers up, and later sparring.
 | # | what it shows | link | author | licence |
 |---|---|---|---|---|
 | R1 | **image-to-3D candidate**: side view, whole buck, hard 3x3 antlers, summer coat, river behind | [Commons](https://commons.wikimedia.org/wiki/File:Columbian_Black-tailed_Deer_buck.jpg) | Philip Cohen | CC BY-SA 4.0 |
-| R2 | **image-to-3D candidate**: side view, antlered buck, open background | [Commons](https://commons.wikimedia.org/wiki/File:Black-tailed_deer_(7146688455).jpg) | USFWS | public domain |
+| R2 | **image-to-3D candidate**: side view, antlered buck, open background | [Commons](https://commons.wikimedia.org/wiki/File:Black-tailed_deer_%287146688455%29.jpg) | USFWS | public domain |
 | R3 | buck in October, side-on, hard antlers | [Commons](https://commons.wikimedia.org/wiki/File:2019-10-07_Black-tailed_Deer.jpg) | Allan Hack | CC BY-SA 2.0 |
 | R4 | Audubon and Bachman plate, Columbian black-tailed males: antler form | [Commons](https://commons.wikimedia.org/wiki/File:Columbian_Black-Tailed_Deer,_Cervus_Richardsonii,_Aud_%26_Bach._Males_-_DPLA_-_5d24014f21392794735894c94895be1d.jpg) | J. J. Audubon | public domain |
 | R5 | historical photo, Columbian black-tailed buck | [Commons](https://commons.wikimedia.org/wiki/File:Columbian_black-tailed_deer_buck.jpg) | Joseph Dixon | public domain |

@@ -63,12 +63,12 @@ Template Q (`odocoileus_hemionus_buck.md`). Suggested `amp [0.45, 0.3, 1.1, 0]`,
 
 | # | what it shows | link | author | licence |
 |---|---|---|---|---|
-| C1 | **image-to-3D candidate**: whole coyote on snow, near-white background, winter coat (Yosemite) | [Commons](https://commons.wikimedia.org/wiki/File:Canis_latrans_(Yosemite,_2009).jpg) | Yathin S Krishnappa | CC BY-SA 3.0 |
-| C2 | **image-to-3D candidate**: side view walking in grass | [Commons](https://commons.wikimedia.org/wiki/File:Coyote_(Canis_latrans)_(39844726795).jpg) | Jerry Kirkhart | CC BY 2.0 |
+| C1 | **image-to-3D candidate**: whole coyote on snow, near-white background, winter coat (Yosemite) | [Commons](https://commons.wikimedia.org/wiki/File:Canis_latrans_%28Yosemite,_2009%29.jpg) | Yathin S Krishnappa | CC BY-SA 3.0 |
+| C2 | **image-to-3D candidate**: side view walking in grass | [Commons](https://commons.wikimedia.org/wiki/File:Coyote_%28Canis_latrans%29_%2839844726795%29.jpg) | Jerry Kirkhart | CC BY 2.0 |
 | C3 | Golden Gate Park, standing | [Commons](https://commons.wikimedia.org/wiki/File:Canis_latrans_-_Dario_Taraborelli_-_444429592.jpeg) | Dario Taraborelli | CC0 |
-| C4 | Sobrante Ridge, Richmond | [Commons](https://commons.wikimedia.org/wiki/File:Coyote_(38132396022).jpg) | Becky Matsubara | CC BY 2.0 |
-| C5 | standing side-on on a lawn (Westminster) | [Commons](https://commons.wikimedia.org/wiki/File:Canis_latrans_DSC_0459_(52534803828).jpg) | Tracie Hall | CC BY-SA 2.0 |
-| C6 | mousing leap (Sausalito) | [Commons](https://commons.wikimedia.org/wiki/File:Coyote_(Canis_latrans)_(7147080735).jpg) | Franco Folini | CC BY-SA 2.0 |
+| C4 | Sobrante Ridge, Richmond | [Commons](https://commons.wikimedia.org/wiki/File:Coyote_%2838132396022%29.jpg) | Becky Matsubara | CC BY 2.0 |
+| C5 | standing side-on on a lawn (Westminster) | [Commons](https://commons.wikimedia.org/wiki/File:Canis_latrans_DSC_0459_%2852534803828%29.jpg) | Tracie Hall | CC BY-SA 2.0 |
+| C6 | mousing leap (Sausalito) | [Commons](https://commons.wikimedia.org/wiki/File:Coyote_%28Canis_latrans%29_%287147080735%29.jpg) | Franco Folini | CC BY-SA 2.0 |
 | C7 | side view walking on a path (Golden Gate Park) | [iNat photo 175005235](https://www.inaturalist.org/photos/175005235) | iNat observer | CC0 |
 | C8 | side view walking (Rancho San Antonio) | [iNat photo 459597155](https://www.inaturalist.org/photos/459597155) | iNat observer | CC0 |
 | C9 | bedded (Fort Mason) | [iNat photo 232940251](https://www.inaturalist.org/photos/232940251) | iNat observer | CC0 |

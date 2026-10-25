@@ -68,10 +68,10 @@ the other diagonal, TAIL, HEAD (neck, head, ears). Suggested `amp [0.5, 0.35, 1.
 |---|---|---|---|---|
 | F1 | **image-to-3D candidate**: side view, whole fox standing on a log, clean pose (Nevada) | [Commons](https://commons.wikimedia.org/wiki/File:Gray_fox.jpg) | VJAnderson | CC BY-SA 4.0 |
 | F2 | **image-to-3D candidate**: side view, whole animal (Red Rock Canyon, NV) | [Commons](https://commons.wikimedia.org/wiki/File:Gray_Fox_-_Red_Rock_Canyon,_Nevada_copy.jpg) | James Marvin Phelps | CC BY 3.0 |
-| F3 | California fox, standing (CA Dept. of Water Resources) | [Commons](https://commons.wikimedia.org/wiki/File:Grey_Fox_(Urocyon_cinereoargenteus).jpg) | CA DWR | public domain |
-| F4 | San Luis Obispo County | [Commons](https://commons.wikimedia.org/wiki/File:GRAY_FOX_(Urocyon_cinereoargenteus)_(5-29-08)_canet_rd,_slo_co,_ca_(2542733736).jpg) | Alan Schmierer | CC0 |
+| F3 | California fox, standing (CA Dept. of Water Resources) | [Commons](https://commons.wikimedia.org/wiki/File:Grey_Fox_%28Urocyon_cinereoargenteus%29.jpg) | CA DWR | public domain |
+| F4 | San Luis Obispo County | [Commons](https://commons.wikimedia.org/wiki/File:GRAY_FOX_%28Urocyon_cinereoargenteus%29_%285-29-08%29_canet_rd,_slo_co,_ca_%282542733736%29.jpg) | Alan Schmierer | CC0 |
 | F5 | profile, eastern Sierra, 7,000 ft | [Commons](https://commons.wikimedia.org/wiki/File:Urocyon_cinereoargenteus_grayFox_cameo.jpg) | Dcrjsr | CC BY 3.0 |
-| F6 | CDFW file photo | [Commons](https://commons.wikimedia.org/wiki/File:Gray_fox_02_(urocyon_cinereoargenteus)_(22170855673).jpg) | CDFW | CC BY 2.0 |
+| F6 | CDFW file photo | [Commons](https://commons.wikimedia.org/wiki/File:Gray_fox_02_%28urocyon_cinereoargenteus%29_%2822170855673%29.jpg) | CDFW | CC BY 2.0 |
 | F7 | walking side-on (Inverness, CA) | [iNat photo 524183670](https://www.inaturalist.org/photos/524183670) | datadan | CC BY |
 | F8 | **in a tree**: climbing reference (Los Angeles Co.) | [iNat photo 348131156](https://www.inaturalist.org/photos/348131156) | klicklo | CC BY |
 | F9 | in brush, side (Muir Beach) | [iNat photo 46962938](https://www.inaturalist.org/photos/46962938) | Catie Clune | CC BY |

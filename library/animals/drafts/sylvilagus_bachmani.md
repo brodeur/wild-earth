@@ -78,7 +78,7 @@ The README's rodent plan, extended as in `sciurus_griseus.md` (CHEST 7, TAIL_TIP
 | R2 | **image-to-3D candidate**: side view, crouched, plain path (San Mateo Co.) | [iNat photo 116224536](https://www.inaturalist.org/photos/116224536) | John Hibbard | CC BY |
 | R3 | side view in leaf litter | [Commons](https://commons.wikimedia.org/wiki/File:Sylvilagus_bachmani_446422261.jpg) | Cricket Raspet | CC BY 4.0 |
 | R4 | riparian brush rabbit in cover (USFWS) | [Commons](https://commons.wikimedia.org/wiki/File:Riparian_brush_rabbitt_sylvilagus_bachmani_riparius.jpg) | Brian Hansen, USFWS | public domain |
-| R5 | riparian brush rabbit, side (USFWS) | [Commons](https://commons.wikimedia.org/wiki/File:Riparian_brush_rabbit_(5614738360).jpg) | USFWS Pacific Southwest | public domain |
+| R5 | riparian brush rabbit, side (USFWS) | [Commons](https://commons.wikimedia.org/wiki/File:Riparian_brush_rabbit_%285614738360%29.jpg) | USFWS Pacific Southwest | public domain |
 | R6 | side view (Half Moon Bay) | [iNat photo 184587938](https://www.inaturalist.org/photos/184587938) | Cricket Raspet | CC BY |
 | R7 | side view in grass (San Francisco) | [iNat photo 188605509](https://www.inaturalist.org/photos/188605509) | Rudyard | CC BY |
 | R8 | sitting up, alert (Richmond) | [iNat photo 279406227](https://www.inaturalist.org/photos/279406227) | Michael Warner | CC BY |
