@@ -99,6 +99,10 @@ browser stays the renderer.
    today. Next: upgrade three to the current release on WebGL, then a standalone compute-driven
    ground-cover prototype (GPU placement measured at about 1 ms against 25-80 ms on the CPU per 100 k).
    The port, if that prototype earns it, is one cutover in the order the evaluation gives.
+   Prototype done 2026-10-25: [gpu-placement-prototype.md](gpu-placement-prototype.md). The GPU
+   places grass.js's plants exactly. It earns the port only for 4-8x denser ground cover (the CPU
+   path stalls there), as a GPU cell cache with a per-frame cull. At today's density the CPU cache
+   copes at any speed.
 2. ~~Cast shadows from trees and terrain~~ done overnight (three cascades, contact AO).
    Canopy wind: still to do.
 3. ~~Chaparral density and a shrub-field layer; impostors for far trees~~ done overnight.

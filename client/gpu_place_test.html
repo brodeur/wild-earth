@@ -1,0 +1,38 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Wild Earth — GPU ground-cover placement prototype</title>
+<!--
+  Standalone prototype for docs/gpu-placement-prototype.md. Not part of the client, and changes nothing
+  in it: it imports grass.js only to run its CPU placement (cellData, cardCell, fill, drain) as the
+  reference, on the home tile's rasters (loadTile).
+  WebGPU only (three.js r186.1 WebGPURenderer). Raw WGSL compute passes on the renderer's device
+  place every grass plant of the three blade tiers and the card roles around the camera each frame and
+  cull + compact them into an indirect draw; one TSL node material draws the survivors as crossed cards.
+  Parameters:
+    tile (utm10n_680_4280), x, n (4309, 3440: open grassland, metres east / north on the tile),
+    agl (3: camera height above ground), pitch (deg below level; default by height), yaw (deg, 0 north),
+    dens (1: candidate density multiplier; 1 is the client's placement, >1 is a stress test),
+    mode: bench (default: equality checks, timings per view, the CPU speed simulation; results in
+          window.RESULT) | view (just draw the view, for screenshots)
+    checks (1), sweep (1000 cells), cells (i,j;i,j: check only these), views (1), sim (1), w, h (1280x720), msaa (1).
+-->
+<style>
+  html,body { margin:0; background:#0b0f0d; color:#e6ede7; font:12px/1.4 ui-monospace,Menlo,monospace; }
+  canvas { display:block; }
+  #out { position:fixed; left:8px; top:8px; margin:0; background:#0f1512dd; padding:8px 10px; border-radius:6px; max-width:calc(100vw - 32px); max-height:calc(100vh - 32px); overflow:auto; white-space:pre-wrap; }
+</style>
+<script type="importmap">
+{ "imports": { "three": "https://unpkg.com/three@0.186.1/build/three.module.js",
+               "three/webgpu": "https://unpkg.com/three@0.186.1/build/three.webgpu.js",
+               "three/tsl": "https://unpkg.com/three@0.186.1/build/three.tsl.js",
+               "three/addons/": "https://unpkg.com/three@0.186.1/examples/jsm/" } }
+</script>
+</head>
+<body>
+<pre id="out">loading…</pre>
+<script type="module" src="./src/gpuPlaceTest.js"></script>
+</body>
+</html>

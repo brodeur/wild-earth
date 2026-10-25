@@ -239,6 +239,12 @@ Measure the density reachable at equal frame time against shrubfield.js and gras
 clearly beats the CPU cell cache (the Tsushima-scale grass the roadmap item names), the port
 has a reason.
 
+*Done 2026-10-25: [gpu-placement-prototype.md](gpu-placement-prototype.md).* GPU placement matches
+grass.js exactly (0 differences in 2.5 M plants). It is not needed at today's density, where the
+CPU cache does not stall up to 200 m/s. At 4-8x density the CPU path drops frames while the GPU
+places at about 1 ns per candidate. So the port has a reason only with denser ground cover, built
+as a GPU cell cache plus a per-frame cull, and drawing then becomes the limit.
+
 **The port, when it comes, is one branch and one cutover.**
 
 - **Order:**
