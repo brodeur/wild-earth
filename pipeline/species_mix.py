@@ -26,7 +26,7 @@ import rasterio
 from PIL import Image
 
 from .config import Tile, sha256
-from .habitat import CLASSES, HUMAN_PHYS_PREFIXES
+from .habitat import CLASSES, HUMAN_PHYS_PREFIXES, rewilded_cells
 
 TREES = ["quercus_douglasii", "quercus_wislizeni", "pinus_sabiniana", "pinus_ponderosa"]
 SHRUBS = ["arctostaphylos_viscida", "adenostoma_fasciculatum"]
@@ -114,6 +114,15 @@ RULES = [
        {"adenostoma_fasciculatum": 0.6, "arctostaphylos_viscida": 0.4}, 0.25, 0.3, any_of=True),
 ]
 
+# Rewilded water beds (habitat.rewilded_cells): not LANDFIRE communities, so not matched by name.
+# The library has no willow, alder, cottonwood or valley oak; the corridor takes the tile's own
+# riparian rule (the same weights LANDFIRE riparian cells get) and the meadow a few scattered oaks.
+REWILD_MEADOW = _r("rewilded_meadow", [], {"quercus_douglasii": 0.85, "quercus_wislizeni": 0.15}, {}, 0.5, 0.0,
+                   "former reservoir or stock-pond bed: wet meadow (sedge, rush, perennial grass) with scattered oaks; "
+                   "valley oak (Quercus lobata) is not in the library: quercus_douglasii stands in")
+REWILD_RIPARIAN = {**next(r for r in RULES if r["id"] == "riparian"), "id": "rewilded_riparian",
+                   "note": "riparian corridor along the restored channel through a former bed; " + RIPARIAN}
+
 # Fallback when no keyword matches: the client's original fixed mix per habitat class (vegetation.js MIX).
 HABITAT_DEFAULT = {
     1: ({"quercus_douglasii": 0.55, "quercus_wislizeni": 0.25, "pinus_sabiniana": 0.2}, {"arctostaphylos_viscida": 1}),
@@ -178,10 +187,10 @@ def species_mix(tile: Tile) -> dict:
     index = np.zeros(evt.shape, "uint8")
     unmatched = []
 
-    def row_for(source: str, code: int, name: str | None, hab_code: int) -> int:
+    def row_for(source: str, code: int, name: str | None, hab_code: int, rule: dict | None = None) -> int:
         key = (source, code)
         if key not in rows:
-            rule = match(name) if name else None
+            rule = rule or (match(name) if name else None)
             if rule is None:
                 rule = _fallback(hab_code)
                 unmatched.append({"source": source, "code": code, "name": name, "habitat": CLASSES.get(hab_code)})
@@ -206,6 +215,14 @@ def species_mix(tile: Tile) -> dict:
             else:   # BpS human/unknown: grassland savanna, as habitat.py backfills
                 idx = row_for("habitat", h_code, None, h_code if h_code != 9 else 5)
         index[(evt == e_code) & (bps == b_code) & (hab == h_code)] = idx
+
+    # Former reservoir and stock-pond beds: their own rows, whatever EVT says (open water, mostly).
+    with rasterio.open(tile.path("vegetation/habitat_present.tif")) as src:
+        cells = rewilded_cells(tile, src.read(1))
+    if cells is not None:
+        for k, (sel, rule) in enumerate(zip(cells, (REWILD_MEADOW, REWILD_RIPARIAN))):
+            if sel.any():
+                index[sel] = row_for("rewild", k + 1, rule["id"].replace("_", " "), 5 if k == 0 else 6, rule)
 
     table = sorted(rows.values(), key=lambda r: r["index"])
     lut = np.zeros((256, 8), "uint8")

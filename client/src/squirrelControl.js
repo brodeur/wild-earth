@@ -40,12 +40,13 @@ const CAM_SIDE = 0.4, CAM_SWING = 1.6;                       // rad (~23 deg) of
 const CAM_CLEAR = 0.3, CAM_SIGHT = 0.15, CAM_WATER = 0.45;   // m over the terrain round the lens, along the sight line, over a pond
 // Water (water.js): deeper than SWIM_IN it swims (out again under SWIM_OUT), floating with the feet FLOAT under the
 // surface, at SWIM m/s (a gray squirrel can swim but avoids it; a reservoir crossing should feel slow); shallower it
-// wades at WADE of the run. No jump from the water. Creek depth is notional (the ribbons are draped on the terrain):
-// STREAM_D0 + STREAM_DK x the drawn half width at the centre of a pool, falling off as 1 - (across / half)^2 to the
-// edges, and along the reach from pool to riffle (riffle(), ~20 m apart, down to a fifth of the pool), so most
-// creeks have shallow stretches to wade across between pools a squirrel would have to swim.
+// wades at WADE of the run. No jump from the water. Creek depth is water.js depthAt(): the thalweg depth from the
+// pipeline's channel profile (pools where the DEM's long profile flattens, riffles on its steps, scaled by drainage
+// area; docs/tile-spec.md "Hydrology rewilding") across a parabolic section of the drawn ribbon, so a creek has
+// riffles to wade and pools a squirrel has to swim where the real profile puts them. The ribbon (draped on the
+// terrain) gives the surface; the bed is that surface minus the depth.
 const SWIM = 1.0, SWIM_BACK = 0.5, WADE = 0.5, SWIM_IN = 0.15, SWIM_OUT = 0.11, FLOAT = 0.07;
-const STREAM_D0 = 0.04, STREAM_DK = 0.11, STREAM_DMAX = 1.2, RIPPLE_EVERY = 0.4, RIPPLE_LIFE = 1.5;
+const RIPPLE_EVERY = 0.4, RIPPLE_LIFE = 1.5;
 const TAU = Math.PI * 2;
 const damp = (a, b, k, dt) => b + (a - b) * Math.exp(-k * dt);
 const wrap = a => Math.atan2(Math.sin(a), Math.cos(a));
@@ -282,7 +283,7 @@ export class SquirrelControl {
     return F;
   }
   // The water at (x, z): a pond holding water (its flat level), else a running creek (the drawn ribbon's height and
-  // the notional depth across it), or null.
+  // water.js depthAt there), or null.
   waterAt(x, z) {
     const q = this._wq, lvl = this.pondLevel(x, z);
     if (lvl !== null) { q.surf = lvl; q.depth = 0; q.stream = false; return q; }
@@ -290,11 +291,12 @@ export class SquirrelControl {
   }
   waterObj() { return this.water ??= this.scene.children.find(o => o.userData?.water)?.userData.water ?? false; }
   // The stream ribbons that run this season (water.js streams[class], one merged mesh each), on a 10 m grid of their
-  // triangles; the point's barycentric weights give the ribbon height and aFlow's across offset and half width.
+  // triangles; the point's barycentric weights give the ribbon height (from the ribbon nearest its own centreline
+  // where two overlap, by aFlow's across offset and half width), and the depth is W.depthAt(x, north).
   streamAt(x, z) {
     const W = this.waterObj(); if (!W?.streams) return null;
     const n = -z, key = Math.floor(n / 10) * 4096 + Math.floor(x / 10), q = this._wq;
-    let found = null;
+    let found = null, bestR = Infinity;
     for (const cls in W.streams) {
       const mesh = W.streams[cls]; if (!mesh.visible) continue;
       const list = this.streamGrid(cls, mesh).get(key); if (!list) continue;
@@ -306,13 +308,12 @@ export class SquirrelControl {
         const v2x = x - ax, v2z = z - az, u = (v2x * v1z - v1x * v2z) / den, v = (v0x * v2z - v2x * v0z) / den;
         if (u < -1e-6 || v < -1e-6 || u + v > 1 + 1e-6) continue;
         const w0 = 1 - u - v;
-        const along = w0 * Fl[a * 4] + u * Fl[b * 4] + v * Fl[c * 4];
         const across = w0 * Fl[a * 4 + 1] + u * Fl[b * 4 + 1] + v * Fl[c * 4 + 1], half = w0 * Fl[a * 4 + 2] + u * Fl[b * 4 + 2] + v * Fl[c * 4 + 2];
         const r = half > 0.05 ? Math.min(1, Math.abs(across) / half) : 1;
-        const d = Math.min(STREAM_DMAX, STREAM_D0 + STREAM_DK * half) * (1 - r * r) * riffle(along);
-        if (!found || d > q.depth) { q.surf = w0 * P[a * 3 + 1] + u * P[b * 3 + 1] + v * P[c * 3 + 1]; q.depth = d; q.stream = true; found = q; }
+        if (r < bestR) { bestR = r; q.surf = w0 * P[a * 3 + 1] + u * P[b * 3 + 1] + v * P[c * 3 + 1]; q.stream = true; found = q; }
       }
     }
+    if (found) found.depth = W.depthAt ? W.depthAt(x, n) : 0;
     return found;
   }
   streamGrid(cls, mesh) {
@@ -699,9 +700,6 @@ export class SquirrelControl {
     return null;
   }
 }
-
-// Pool (1) to riffle (0.2) along a creek, from the ribbon's arc length (m): ~21 m from pool to pool, a little irregular.
-const riffle = s => 0.6 + 0.4 * Math.sin(s / 3.3 + 0.7 * Math.sin(s / 11.1));
 
 // Point in polygon (x, north rings), even-odd.
 function inRing(x, y, ring) {

@@ -1016,8 +1016,8 @@ export class Rocks {
           s += len;
         }
       }
-      for (const w of F?.waterbodies || []) {
-        const R = w.ring; if (!R || R.length < 3) continue;
+      for (const w of F?.waterbodies || []) {   // not the reservoirs and stock ponds taken out (tilepackage markRewilded)
+        const R = w.ring; if (!R || R.length < 3 || w.rewilded) continue;
         let A = 0; for (let n = 0; n < R.length; n++) { const p = R[n], q = R[(n + 1) % R.length]; A += p[0] * q[1] - q[0] * p[1]; }
         const outSide = A > 0 ? 1 : -1;   // counter-clockwise ring (north up): outside is to the right
         for (let n = 0; n < R.length; n++) {

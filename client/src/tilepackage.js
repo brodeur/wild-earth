@@ -117,9 +117,51 @@ export class SpeciesMix {
   }
 }
 
+// Hydrology rewilding (docs/tile-spec.md): the reservoirs and stock ponds the pipeline took out are
+// listed in the manifest layer `hydro.human_water` (`rewilded`, each with a tile-local bbox). A ring of
+// client/features.json is one of them when its bounding box overlaps that bbox with IoU over 0.6 (the
+// match water.js makes). loadTile marks those rings `rewilded: true` so the water mask and the pond-shore
+// stones leave them out: the present-day waterbodies minus the removed ones. The mini-map still draws
+// them (it is the present day).
+export function markRewilded(features, manifest) {
+  const list = manifest?.layers?.['hydro.human_water']?.rewilded || [];
+  let n = 0;
+  for (const w of features?.waterbodies || []) {
+    const ring = w.ring; if (!ring || ring.length < 3) continue;
+    let x0 = Infinity, x1 = -Infinity, y0 = Infinity, y1 = -Infinity;
+    for (const [x, y] of ring) { x0 = Math.min(x0, x); x1 = Math.max(x1, x); y0 = Math.min(y0, y); y1 = Math.max(y1, y); }
+    w.rewilded = list.some(r => r.bbox && bboxIoU(r.bbox, [x0, y0, x1, y1]) > 0.6);
+    if (w.rewilded) n++;
+  }
+  return n;
+}
+function bboxIoU(a, b) {
+  const ix = Math.min(a[2], b[2]) - Math.max(a[0], b[0]), iy = Math.min(a[3], b[3]) - Math.max(a[1], b[1]);
+  if (ix <= 0 || iy <= 0) return 0;
+  const i = ix * iy, u = (a[2] - a[0]) * (a[3] - a[1]) + (b[2] - b[0]) * (b[3] - b[1]) - i;
+  return u > 0 ? i / u : 0;
+}
+
+// The rewilded beds (client/channel_profile.png B, 5 m grid): 255 a former reservoir or stock-pond
+// bed, now meadow; 160 the riparian corridor along the restored channel through it; 0 elsewhere.
+// Loaded with the tile (water.js loads the same image later for its own use), B kept only.
+export class RewildGrid {
+  constructor(img, sizeM) {
+    this.width = img.width; this.size = sizeM; this.res = sizeM / img.width;
+    const n = img.width * img.height, d = img.data, b = this.b = new Uint8Array(n);
+    let any = 0;
+    for (let i = 0; i < n; i++) { b[i] = d[i * 4 + 2]; any |= b[i]; }
+    this.any = any > 0;
+  }
+  at(x, north) {
+    if (x < 0 || north < 0 || x >= this.size || north >= this.size) return 0;
+    return this.b[Math.floor((this.size - north) / this.res) * this.width + Math.floor(x / this.res)];
+  }
+}
+
 // Where the water is, from tile.features (rings and paths in tile-local metres, y = north). Ponds:
-// inside any waterbody ring. Channels: perennial and intermittent reaches (NHD fcode, as water.js
-// classes them), within the reach's water width / 2 + 1 m of the centreline: `width` from drainage
+// inside any waterbody ring not marked `rewilded` (markRewilded). Channels: perennial and
+// intermittent reaches (NHD fcode, as water.js classes them), within the reach's water width / 2 + 1 m of the centreline: `width` from drainage
 // area (pipeline/channels.py: 1.6 A^0.45 m, 1-30), else by order (1: 1.5 m, 2: 2.5, 3: 4, 4+: 7). Riparian band: within RIPARIAN_M of any stream centreline (ephemeral swales included;
 // canals, 33600, are human footprint and ignored).
 //   inWater(x, north) -> bool, exact (vegetation placement)
@@ -144,7 +186,7 @@ export class WaterMask {
       }
     };
     for (const w of features?.waterbodies || []) {
-      const ring = w.ring; if (!ring || ring.length < 3) continue;
+      const ring = w.ring; if (!ring || ring.length < 3 || w.rewilded) continue;
       let x0 = Infinity, x1 = -Infinity, y0 = Infinity, y1 = -Infinity;
       for (const [x, y] of ring) { x0 = Math.min(x0, x); x1 = Math.max(x1, x); y0 = Math.min(y0, y); y1 = Math.max(y1, y); }
       const r = { ring, bbox: [x0, y0, x1, y1], fcode: w.fcode, area: Math.abs(ringArea(ring)) };
@@ -234,7 +276,7 @@ export async function loadTile(tileId, base = '../tiles/') {
   const L = m.layers;
   for (const k of ['client.heights', 'client.texture', 'client.habitat', 'client.canopy', 'client.masks'])
     if (!L[k]) throw new Error(`tile ${id} lacks ${k}; run the derive step`);
-  const [heights, texture, habitat, canopy, masks, species, perception, calendar, imagery, features, roads, imageryTexture, mast, mixIndex, mixJson, outcrop, geology, soils, groundClasses] = await Promise.all([
+  const [heights, texture, habitat, canopy, masks, species, perception, calendar, imagery, features, roads, imageryTexture, mast, mixIndex, mixJson, outcrop, geology, soils, groundClasses, profile] = await Promise.all([
     loadImageData(dir + L['client.heights'].path), loadImageData(dir + L['client.texture'].path),
     loadImageData(dir + L['client.habitat'].path), loadImageData(dir + L['client.canopy'].path),
     loadImageData(dir + L['client.masks'].path),
@@ -261,7 +303,11 @@ export async function loadTile(tileId, base = '../tiles/') {
     L['client.geology'] ? loadImageData(dir + L['client.geology'].path).catch(() => null) : null,
     L['client.soils'] ? loadImageData(dir + L['client.soils'].path).catch(() => null) : null,
     L['client.ground_classes'] ? fetch(dir + L['client.ground_classes'].path).then(r => r.ok ? r.json() : null).catch(() => null) : null,
+    // rewilded water beds and corridor (channel_profile B); optional
+    L['client.channel_profile'] ? loadImageData(dir + L['client.channel_profile'].path).catch(() => null) : null,
   ]);
+  if (features) markRewilded(features, m);
+  const rewild = profile ? new RewildGrid(profile, m.size_m || 10000) : null;
   const ti = L['client.texture_imagery'];
   const size = m.size_m || 10000;
   return {
@@ -274,7 +320,9 @@ export async function loadTile(tileId, base = '../tiles/') {
     soils: soils ? new Grid8(soils, size) : null, groundClasses,
     // per-cell species weights and density multipliers (null: vegetation falls back to the class mix)
     speciesMix: mixIndex && mixJson?.mixes && mixIndex.width === habitat.width ? new SpeciesMix(mixIndex, mixJson, size) : null,
-    // ponds, stream channels and the riparian band (exact tests; .at(x, north) like tile.roads)
+    // former reservoir and stock-pond beds (255) and their riparian corridor (160), or null
+    rewild: rewild?.any ? rewild : null,
+    // ponds (minus the rewilded ones), stream channels and the riparian band (exact tests; .at(x, north) like tile.roads)
     waterMask: features ? new WaterMask(features, size, roads?.width || 2000) : null,
     // the imagery's own summer grass and oak means (sRGB 0..1), the baseline for season recolouring
     imageryTextureImage: imageryTexture, imageryRef: imageryTexture ? { grass_mean: ti.grass_mean, oak_mean: ti.oak_mean } : null,

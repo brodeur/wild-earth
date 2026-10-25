@@ -228,8 +228,26 @@ on the riparian corridor within 12 m of the restored channel through it, 0 elsew
 hook for vegetation and ground: a bed (255) should take the backfilled habitat's grassland or wet
 meadow (sedges, rushes, scattered valley oak at the edge) and the corridor (160) riparian (willow,
 alder, cottonwood), and the imagery erase should synthesize meadow over the photo's water there.
-Until they read it, the client's `WaterMask` still treats the old rings as water (no trees or grass
-on the bed) and the texture is the photo's water.
+
+Who reads it. On the 30 m vegetation grid (`habitat.rewilded_cells`) a cell is corridor where the
+160 band covers 20% of it, and meadow where the bed covers half of it and LANDFIRE has it as water,
+barren or human, or where it is LANDFIRE water with 15% of bed (the old shoreline cells); cells
+LANDFIRE already sees as vegetation (the willow and oak fringe on the old shore) keep their class.
+`veg` writes meadow cells as grassland (5; there is no wet-meadow class) and corridor cells as
+riparian (6) into `habitat.tif` (`layers["vegetation.habitat"].rewilded_beds` has the counts);
+`derive` gives those whose EVC is not vegetation a cover of 0/0/75% (meadow) and 40/20/55%
+(corridor; tree/shrub/herb) in `client/canopy.png`; `species_mix` gives them their own rows,
+`rewilded_meadow` (blue oak 0.85 standing in for valley oak, live oak 0.15, no shrubs; the client's
+savanna rule sets about one oak per two cells) and `rewilded_riparian` (the tile's `riparian` rule:
+live oak 0.7, blue oak 0.15, ponderosa 0.15; the library has no willow, alder or cottonwood). `erase`
+leaves the beds (grown 5 m over the mudline) out of the human pass and synthesizes them after it:
+the bed from grassland windows lit like the clean grassland within 250 m (900 m fallback), then the
+corridor from riparian windows over that meadow (`layers["client.texture_imagery"].rewilded_beds`).
+The client marks the matched rings `rewilded` (`tilepackage.markRewilded`, the same bbox match as
+water.js), so `WaterMask` and the pond-shore stones leave them out and trees, grass and rocks grow on
+the bed; it loads B as `tile.rewild`, keeps a corridor cell's trees to the 160 band (85% of those on
+the open bed beside it are skipped), and gives `rewilded_meadow` cells a lower annual-grass share
+(0.4: perennial bunchgrass, a wet meadow).
 
 Client. `water.js` skips the rewilded rings (matched to `client/features.json` by bounding-box
 overlap with the manifest list), draws the restored channel as an ordinary reach, loads

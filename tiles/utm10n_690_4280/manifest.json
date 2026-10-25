@@ -15,7 +15,7 @@
   38.73825606650576
  ],
  "size_m": 10000,
- "generated_at": "2026-10-25T10:34:39Z",
+ "generated_at": "2026-10-25T10:45:27Z",
  "generator": {
   "name": "wild-earth-pipeline",
   "version": "0.2.0"
@@ -280,17 +280,25 @@
    ],
    "backfilled_fraction": 0.2558,
    "fractions": {
-    "oak_woodland": 0.3089,
-    "conifer_forest": 0.4217,
+    "oak_woodland": 0.3088,
+    "conifer_forest": 0.4216,
     "mixed_forest": 0.1117,
     "chaparral": 0.055,
-    "grassland": 0.0584,
-    "riparian": 0.0361,
-    "water": 0.0023,
-    "barren": 0.0058
+    "grassland": 0.0591,
+    "riparian": 0.0364,
+    "water": 0.0016,
+    "barren": 0.0057
    },
-   "sha256": "a45bc274d3eac0bc77bd9b2e8c53de956fae990bbc3c1382db239f4857038154",
-   "bytes": 29400
+   "rewilded_beds": {
+    "source": "client.channel_profile (B)",
+    "meadow_cells": 78,
+    "corridor_cells": 53,
+    "meadow_class": "grassland",
+    "corridor_class": "riparian",
+    "rule": "corridor share >= 0.2: riparian; bed share >= 0.5 on present water, barren or human, or present water with bed share >= 0.15: grassland"
+   },
+   "sha256": "0e104ce219da96930d2046e960d9810601068132b674ef1e57d2d507a8281ed9",
+   "bytes": 29412
   },
   "vegetation.classes": {
    "path": "vegetation/classes.json",
@@ -310,8 +318,8 @@
    ],
    "pixels": 668,
    "derived_from": "vegetation.habitat",
-   "sha256": "5121d1b7391e2758b3b5aa0266f6a24559c7e44419c8effafe83c18b7eeccf6a",
-   "bytes": 94354
+   "sha256": "afdf85ada794439b1ffa4eb32d28f5c2a488b7745c6ea4b6ee5b5514e8109a9b",
+   "bytes": 94278
   },
   "vegetation.habitat_present_png": {
    "path": "vegetation/habitat_present.png",
@@ -343,8 +351,8 @@
     "terrain.hillshade",
     "vegetation.habitat"
    ],
-   "sha256": "214dc12f36c7785bdc9d44afedf6ceb20609fc7919efd8c207b36cbc8aeba707",
-   "bytes": 4365890
+   "sha256": "c5636d15904fed8b3858943f58de76d38ce535739f084c9ad13abd1d77ebd8e1",
+   "bytes": 4365808
   },
   "resources": {
    "path": "resources/resources.json",
@@ -375,7 +383,7 @@
     },
     "grass_forbs": {
      "winter": 18.2,
-     "spring": 30.3,
+     "spring": 30.4,
      "summer": 6.1,
      "fall": 9.1
     },
@@ -395,7 +403,7 @@
      "winter": 5.1,
      "spring": 51.1,
      "summer": 40.9,
-     "fall": 20.4
+     "fall": 20.5
     },
     "cavity": {
      "winter": 44.0,
@@ -410,10 +418,10 @@
      "fall": 50.8
     },
     "burrow": {
-     "winter": 31.4,
-     "spring": 39.3,
-     "summer": 39.3,
-     "fall": 39.3
+     "winter": 31.5,
+     "spring": 39.4,
+     "summer": 39.4,
+     "fall": 39.4
     },
     "water": {
      "winter": 58.4,
@@ -422,7 +430,7 @@
      "fall": 19.3
     }
    },
-   "sha256": "8b39e5b4b334c293a30db073dff61725a49b832f07941cee4b0654278b27ac17",
+   "sha256": "ccf0e69f2837951ed5ff3c86a8b38d295dd8cfaa03c1b3a9b594c1ccbdef2a03",
    "bytes": 5140
   },
   "client.heights": {
@@ -458,8 +466,8 @@
    "pixels": 333,
    "resolution_m": 30.03003003003003,
    "encoding": "R = habitat class code",
-   "sha256": "47353d9e5b99a414d7a3e4c5da9c31219c67c302489a2373b83e7a32e2d05b9d",
-   "bytes": 32197
+   "sha256": "f3a44ddbe2ac0051734140b7c8db428440ca70c3352c1003d800d49317535584",
+   "bytes": 32196
   },
   "client.canopy": {
    "path": "client/canopy.png",
@@ -474,8 +482,8 @@
    "pixels": 333,
    "resolution_m": 30.03003003003003,
    "encoding": "R tree %, G shrub %, B herb %",
-   "sha256": "8261fabdadf70cb1a06ade45bbac2d1e7df625af49be7417ac1a223fe35923eb",
-   "bytes": 116533
+   "sha256": "dccca35b92edf4fb9aa112efa5d3a58351f9094f1422482052bcc0e625b6a872",
+   "bytes": 116674
   },
   "client.texture": {
    "path": "client/texture.png",
@@ -495,8 +503,8 @@
     "vegetation.evc",
     "footprint.mask"
    ],
-   "sha256": "7da299fc2923d5d9f425629fec541668d268243dd58c89712e3e2acb2b87161c",
-   "bytes": 5787178
+   "sha256": "25126c8428a3bc1656fb3d8173a846fbdb05b0524c51ffa676f1e288137a14a8",
+   "bytes": 5787442
   },
   "unreal": {
    "path": "unreal/unreal.json",
@@ -538,8 +546,8 @@
    "pixels": 2000,
    "resolution_m": 5.0,
    "encoding": "R grassland, G oak woodland, B chaparral weights",
-   "sha256": "5376a4a8b5ae2ee099815b2aa4fe0b54d47dcdd4b652f72ce20a51786a33a823",
-   "bytes": 1868580
+   "sha256": "333e9eb3f637ec738789aa50a7a0a0a1ff3f0db760f6fe695c53e3b8920bde79",
+   "bytes": 1871627
   },
   "client.imagery": {
    "path": "client/imagery.png",
@@ -619,34 +627,35 @@
     "vegetation.habitat_present",
     "vegetation.habitat",
     "vegetation.evt",
-    "client.roads"
+    "client.roads",
+    "client.channel_profile"
    ],
-   "mask_fraction": 0.0792,
+   "mask_fraction": 0.0787,
    "human_cells": {
     "whole_fraction": 0.0291,
     "partial_fraction": 0.2267,
     "partial_erased_fraction": 0.0312
    },
    "inpainted_fraction": 0.0068,
-   "synthesized_fraction": 0.0724,
+   "synthesized_fraction": 0.0719,
    "components": {
-    "inpainted": 6550,
-    "synthesized": 2870,
-    "patches": 13550
+    "inpainted": 6553,
+    "synthesized": 2867,
+    "patches": 13549
    },
    "source_windows": {
-    "1": 11213,
-    "2": 61291,
-    "3": 6605,
-    "4": 2014,
-    "5": 4380,
-    "6": 1494,
-    "7": 200,
+    "1": 11201,
+    "2": 61169,
+    "3": 6588,
+    "4": 2013,
+    "5": 4286,
+    "6": 1377,
+    "7": 154,
     "8": 15
    },
    "grass_mean": [
-    0.4074,
-    0.4121,
+    0.4075,
+    0.4122,
     0.3313
    ],
    "oak_mean": [
@@ -654,9 +663,27 @@
     0.3319,
     0.2686
    ],
+   "rewilded_beds": {
+    "source": "client.channel_profile (B)",
+    "bed_fraction": 0.00201,
+    "corridor_fraction": 0.00029,
+    "patches": {
+     "meadow": 307,
+     "riparian": 74
+    },
+    "classes": {
+     "bed": "grassland",
+     "corridor": "riparian"
+    },
+    "grow_m": 5.0,
+    "brightness_radii_m": [
+     250.0,
+     900.0
+    ]
+   },
    "encoding": "NAIP 2022 RGB with human footprint inpainted or synthesized, pavement bleached; JPEG q88",
-   "sha256": "a78499ae604fb7e770a5ee7dc631487b3abf1b0c949cc98162e807822ab05ef8",
-   "bytes": 4940229
+   "sha256": "1d5b9136fa4a57d2612dd2d453541971aeff208ec72343b77083d97717194fbc",
+   "bytes": 4938902
   },
   "client.mast": {
    "path": "client/mast.png",
@@ -709,16 +736,16 @@
    "resolution_m": 30.03003003003003,
    "files": {
     "client/species_mix_a.png": {
-     "sha256": "50a4774fe6a0055543f5be85448ead5605d82a216fd0244be5eb6eabe43ca3f7",
-     "bytes": 84422
+     "sha256": "564de078b575655b07b3c7bcad4f605e63a1632b95863059a7ebd84d3c335e23",
+     "bytes": 84481
     },
     "client/species_mix_b.png": {
-     "sha256": "854fc71b5f4ff8aef2657297a50a434567a6c893e647c24abe147c2740204b2d",
-     "bytes": 97294
+     "sha256": "e7e55ad28d15507d16f464c9eb43570d0f9ae2eb7cbf00c4331123c7455e5f4c",
+     "bytes": 97208
     },
     "client/species_mix_index.png": {
-     "sha256": "b2c39bf3d57471d0f22c53e9550b601786dc71079c47beb9f80d1c637b7cb897",
-     "bytes": 55337
+     "sha256": "5298bc1caffebe5a33b027d4541a7d72f068582e732199c8c41d0effcdc6a5c1",
+     "bytes": 55365
     }
    },
    "derived_from": [
@@ -729,59 +756,61 @@
     "vegetation.evc"
    ],
    "encoding": "species_mix_a RGBA = blue oak, live oak, gray pine, ponderosa weights; species_mix_b RGBA = manzanita, chamise weights, tree_density, shrub_density (byte/100); species_mix_index L = row in mixes",
-   "mixes": 41,
+   "mixes": 43,
    "unmatched": 0,
    "fractions": {
-    "from_evt": 0.7442,
-    "from_bps_backfill": 0.2558,
+    "from_evt": 0.7432,
+    "from_bps_backfill": 0.2568,
     "tree_share": {
-     "blue_oak": 0.234,
-     "live_oak": 0.2196,
-     "gray_pine": 0.1438,
-     "ponderosa": 0.4027
+     "blue_oak": 0.2341,
+     "live_oak": 0.2197,
+     "gray_pine": 0.1437,
+     "ponderosa": 0.4024
     },
     "tree_share_by_canopy": {
      "blue_oak": 0.0901,
-     "live_oak": 0.2497,
+     "live_oak": 0.2498,
      "gray_pine": 0.1113,
-     "ponderosa": 0.5489
+     "ponderosa": 0.5488
     },
     "shrub_share": {
-     "manzanita": 0.6895,
-     "chamise": 0.3105
+     "manzanita": 0.6897,
+     "chamise": 0.3103
     },
-    "mean_tree_density": 0.9688,
-    "mean_shrub_density": 0.5807,
+    "mean_tree_density": 0.9693,
+    "mean_shrub_density": 0.5808,
     "rules": {
      "lower_montane_conifer": 0.3658,
-     "blue_oak_foothill_pine": 0.1957,
+     "blue_oak_foothill_pine": 0.1956,
      "mixed_oak": 0.0841,
      "black_oak_conifer": 0.0786,
      "grassland_savanna": 0.0584,
      "foothill_pine": 0.032,
      "dry_mesic_chaparral": 0.0299,
-     "dry_mesic_mixed_conifer": 0.0299,
+     "dry_mesic_mixed_conifer": 0.0298,
      "black_oak": 0.0272,
      "mesic_mixed_conifer": 0.0224,
-     "riparian": 0.018,
+     "riparian": 0.0179,
      "ruderal_forest": 0.0164,
-     "montane_riparian": 0.0133,
-     "sparse_rock": 0.0058,
-     "wet_meadow_marsh": 0.0041,
+     "montane_riparian": 0.0132,
+     "sparse_rock": 0.0057,
+     "wet_meadow_marsh": 0.004,
      "mesic_chaparral": 0.0036,
      "blue_oak": 0.0031,
      "mixed_evergreen": 0.0027,
      "montane_woodland_chaparral": 0.0025,
      "ruderal_scrub": 0.0024,
-     "open_water": 0.0023,
+     "open_water": 0.0016,
      "ponderosa_jeffrey": 0.0008,
+     "rewilded_meadow": 0.0007,
      "riparian_shrubland": 0.0007,
+     "rewilded_riparian": 0.0005,
      "great_basin_shrub": 0.0002,
      "serpentine_woodland": 0.0001
     }
    },
-   "sha256": "7913fd22c1840383eed26b415cebd50c0a3e4f74f706c28e85ad14b25058e205",
-   "bytes": 25013
+   "sha256": "786f4852690e04f5f3409ad3cbffaa00139c0a088271b958578f91540e40e11b",
+   "bytes": 26241
   },
   "hydro.channels": {
    "path": "hydro/channels.geojson",
@@ -3287,7 +3316,7 @@
    "name": "LANDFIRE LF 2025 (EVT, EVC, EVH) and LF 2016 Biophysical Settings",
    "url": "https://landfire.gov",
    "license": "public domain",
-   "retrieved": "2026-10-23"
+   "retrieved": "2026-10-25"
   },
   "macrostrat": {
    "name": "Macrostrat API geologic_units/map (Burwell map compilation)",
@@ -3533,6 +3562,24 @@
    "step": "rewild_hydro",
    "at": "2026-10-25T10:34:39Z",
    "seconds": 22.3,
+   "ok": true
+  },
+  {
+   "step": "veg",
+   "at": "2026-10-25T10:44:12Z",
+   "seconds": 0.5,
+   "ok": true
+  },
+  {
+   "step": "derive",
+   "at": "2026-10-25T10:44:42Z",
+   "seconds": 29.4,
+   "ok": true
+  },
+  {
+   "step": "erase",
+   "at": "2026-10-25T10:45:27Z",
+   "seconds": 44.9,
    "ok": true
   }
  ]

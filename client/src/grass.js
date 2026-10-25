@@ -88,6 +88,7 @@ const POOLS = {
 };
 // Habitat class -> relative density and the annual share (the rest is needlegrass).
 const HABITAT = { 5: { dens: 1.0, annual: 0.75 }, 1: { dens: 0.5, annual: 0.55 }, 6: { dens: 0.12, annual: 0.5 } };
+const WET_MEADOW_ANNUAL = 0.4;   // annual share on a rewilded lakebed or stock-pond floor (annualAt)
 // per instance: x, y, z, yaw | scale xz, scale y, seed, type + 2 * tier + 8 * role
 // (type 0 annual, 1 bunch; tier 0 main, 1 close, 2 ground; role ROLE)
 const STRIDE = 8;
@@ -720,7 +721,12 @@ export class Grass {
     P.seed = U[7]; P.type = type; P.role = role;
     return true;
   }
-  annualAt(i, j) { const hb = HABITAT[this.tile.habitat.channel(i, j, 0)]; return hb ? hb.annual : 0.6; }
+  // A former reservoir or stock-pond bed (species mix row rewilded_meadow) is a wet meadow: perennial
+  // bunchgrass more than annuals.
+  annualAt(i, j) {
+    if (this.tile.rewild && this.tile.speciesMix?.at(i, j)?.rule === 'rewilded_meadow') return WET_MEADOW_ANNUAL;
+    const hb = HABITAT[this.tile.habitat.channel(i, j, 0)]; return hb ? hb.annual : 0.6;
+  }
 
   // Instances of one cell for one blade layer (its rank range), generated once and cached, sorted into
   // groups by mesh (annual, bunch) and by L.sub-metre block, each with a bounding sphere.

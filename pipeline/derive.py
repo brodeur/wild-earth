@@ -252,6 +252,10 @@ def client_rasters(tile: Tile) -> dict:
     tree = np.where((evc >= 101) & (evc <= 199), evc - 100, 0)
     shrub = np.where((evc >= 201) & (evc <= 299), evc - 200, 0)
     herb = np.where((evc >= 301) & (evc <= 399), evc - 300, 0)
+    if tile.path("vegetation/habitat_present.tif").exists():   # rewilded water beds: meadow and riparian cover
+        from .habitat import rewilded_cover
+        with rasterio.open(tile.path("vegetation/habitat_present.tif")) as src:
+            tree, shrub, herb = rewilded_cover(tile, src.read(1), evc, tree, shrub, herb)
     Image.fromarray(hab.astype("uint8"), "L").save(tile.path("client/habitat.png"), optimize=True)
     Image.fromarray(np.dstack([tree, shrub, herb]).astype("uint8"), "RGB").save(tile.path("client/canopy.png"), optimize=True)
     m = hab.shape[0]

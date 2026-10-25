@@ -12,7 +12,7 @@ import rasterio
 from rasterio.transform import from_bounds
 
 from .config import REPO_ROOT, SOURCES, Tile, write_json
-from .habitat import CLASSES, COLORS, classify_bps, classify_evt
+from .habitat import CLASSES, COLORS, apply_rewilded_beds, classify_bps, classify_evt
 from .http import download, get
 
 LF = "https://lfps.usgs.gov/arcgis/rest/services"
@@ -104,6 +104,8 @@ def fetch_vegetation(tile: Tile, force=False) -> dict:
     rewilded[human] = fill[human]
     # LANDFIRE marks roads/buildings as developed, but water bodies stay water.
     rewilded[rasters["evt"] == NODATA] = 0
+    # Former reservoir and stock-pond beds (rewild_hydro): meadow and riparian corridor, not water.
+    beds = apply_rewilded_beds(tile, present_cls, rewilded)
 
     for k in PRODUCTS:
         _write(tile, f"vegetation/{k}.tif", rasters[k], n, "int16", NODATA)
@@ -122,5 +124,7 @@ def fetch_vegetation(tile: Tile, force=False) -> dict:
     out["vegetation.habitat"] = {"path": "vegetation/habitat.tif", "kind": "raster", "resolution_m": RES_M,
                                  "derived_from": ["vegetation.evt", "vegetation.bps"],
                                  "backfilled_fraction": round(float(human.sum() / total), 4), "fractions": hist(rewilded)}
+    if beds:
+        out["vegetation.habitat"]["rewilded_beds"] = beds
     out["vegetation.classes"] = {"path": "vegetation/classes.json", "kind": "table"}
     return out

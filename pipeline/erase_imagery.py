@@ -60,6 +60,9 @@ FULL_ERASE_PHYS = ("Developed-Medium Intensity", "Developed-High Intensity", "Ag
 BUILT_SAT = 0.13              # saturation under which a not-dark pixel is roof, concrete, asphalt or gravel
 BUILT_MIN_LUM = 70            # ... darker neutral pixels are shade under canopy
 DECAYED_GREY = np.float32([170, 164, 154])
+# Rewilded water beds (client/channel_profile.png B: 255 bed, 160 riparian corridor; rewild_hydro).
+BED_GROW_M = 5.0              # the bed mask grown past the NHD ring over the photo's mudline
+BED_RADII_M = (250.0, 900.0)  # brightness reference radii for bed patches (clean pixels of the same class only)
 # Fallback when a class has no clean source windows: nearest along this order, then by hand.
 FALLBACK_ORDER = ["oak_woodland", "mixed_forest", "grassland", "chaparral"]
 FALLBACK_EXTRA = {"conifer_forest": ["mixed_forest"], "riparian": ["oak_woodland"],
@@ -133,6 +136,21 @@ def _built_pixels(img: np.ndarray) -> np.ndarray:
     built = ((sat < BUILT_SAT) & (lum > BUILT_MIN_LUM)) | ((b > g) & (b > r + 8) & (lum > 60)) | _irrigated(img)
     built = cv2.morphologyEx(built.astype("uint8"), cv2.MORPH_OPEN, np.ones((2, 2), "uint8"))
     return cv2.dilate(built, np.ones((3, 3), "uint8")).astype(bool)
+
+
+def _rewilded_beds(tile: Tile, n: int) -> tuple[np.ndarray, np.ndarray] | None:
+    """(bed, corridor) masks on the NAIP grid from client/channel_profile.png B, or None. The bed is
+    grown by BED_GROW_M so the old shoreline's bare mud goes too; the corridor is the 160 band."""
+    p = tile.path("client/channel_profile.png")
+    if not p.exists():
+        return None
+    B = np.asarray(Image.open(p).convert("RGB"))[..., 2]
+    if not (B > 0).any():
+        return None
+    up = np.asarray(Image.fromarray(B, "L").resize((n, n), Image.NEAREST))
+    g = max(1, int(round(BED_GROW_M / (TILE_SIZE_M / n))))
+    bed = cv2.dilate((up > 0).astype("uint8"), cv2.getStructuringElement(cv2.MORPH_ELLIPSE, (2 * g + 1, 2 * g + 1))).astype(bool)
+    return bed, up == 160
 
 
 def _upsample_nearest(arr: np.ndarray, n: int) -> np.ndarray:
@@ -219,7 +237,8 @@ def _seam(cost: np.ndarray) -> np.ndarray:
 
 
 def _synthesize(img: np.ndarray, region: np.ndarray, target: np.ndarray, windows: dict, clean: np.ndarray,
-                rng: np.random.Generator) -> tuple[np.ndarray, np.ndarray, int]:
+                rng: np.random.Generator, ref_class: int | None = None,
+                radii: tuple = (LOCAL_M, WIDE_M)) -> tuple[np.ndarray, np.ndarray, int]:
     """Texture for every `region` pixel by image quilting from same-class source windows.
 
     Patches are laid in raster order on a PATCH grid with OVERLAP. For each, CANDIDATES random
@@ -228,13 +247,17 @@ def _synthesize(img: np.ndarray, region: np.ndarray, target: np.ndarray, windows
     mean of clean pixels within 100 m (400 m for big holes); each is first nudged toward that
     mean, clamped to +/-25%. One of the two best is pasted, joined to its left and top
     neighbours along minimum-error seams, so there is no cross-fade to ghost or blur.
+    ref_class: take the local mean from clean pixels of that class only (and over `radii`), so a
+    rewilded lakebed is lit like the nearby meadows rather than the woodland on its shore.
     Returns (synth float32 image, placed mask, patch count)."""
     n = img.shape[0]
     res = TILE_SIZE_M / n
     step = PATCH - OVERLAP
     ref = clean & ~_irrigated(img)          # a lawn left outside the mask must not tint the woodland green
-    near, near_f = _local_mean(img, ref, int(LOCAL_M / res))
-    wide, wide_f = _local_mean(img, ref, int(WIDE_M / res))
+    if ref_class is not None:
+        ref = ref & (target == ref_class)
+    near, near_f = _local_mean(img, ref, int(radii[0] / res))
+    wide, wide_f = _local_mean(img, ref, int(radii[1] / res))
     means = {c: _window_means(img, w) for c, w in windows.items()}
     # Windows per class sorted by brightness, so candidates come from ground that already looks like
     # the local ground (savanna for savanna, closed canopy for closed canopy) and the gain stays
@@ -415,8 +438,12 @@ def erase_imagery(tile: Tile) -> dict:
     roads = np.asarray(Image.open(tile.path("client/roads.png")).convert("L").resize((n, n), Image.BILINEAR))
     pave = roads > PAVEMENT
 
-    # a. Erase mask
+    # a. Erase mask. Rewilded beds are left out of the human pass and synthesized on their own after
+    # it (meadow, then the riparian corridor), but no bed pixel may serve as a source.
     mask = (_footprint_mask(tile, (n, n), tr) | human) & ~pave
+    beds = _rewilded_beds(tile, n)
+    if beds is not None:
+        mask &= ~beds[0]
     mask_fraction = float(mask.mean())
 
     # b. Components: small or thin ones are inpainted, large ones synthesized.
@@ -433,6 +460,11 @@ def erase_imagery(tile: Tile) -> dict:
 
     # Source windows: clean (no mask, no road or verge) and wholly one backfilled class.
     clean = ~mask & (roads == 0)
+    if beds is not None:
+        clean &= ~beds[0]
+        target = target.copy()
+        target[beds[0]] = CODES["grassland"]
+        target[beds[1]] = CODES["riparian"]
     windows = _source_windows(clean, target, naip)
     seed = int.from_bytes(tile.tile_id.encode(), "little") % (2**32)
     rng = np.random.default_rng(seed)
@@ -443,6 +475,33 @@ def erase_imagery(tile: Tile) -> dict:
     covered = placed[..., None]
     a = np.where(covered, big_alpha[..., None], 0)
     out = (naip.astype("float32") * (1 - a) + synth * a).clip(0, 255).astype("uint8")
+
+    # b2. Rewilded beds: the old reservoir and stock-pond floors as meadow from grassland windows lit
+    # like the clean grassland within BED_RADII_M, then the corridor along the restored channel from
+    # riparian windows over that meadow. The channel's own bed is left to the water layer.
+    bed_info = None
+    if beds is not None:
+        bed, corr = beds
+        bed &= ~pave
+        brng = np.random.default_rng(seed + 1)
+        meadow_t = np.where(bed, CODES["grassland"], target).astype("uint8")
+        region, alpha = _edge_alpha(bed, grow)
+        synth_b, placed_b, pb = _synthesize(out, region, meadow_t, windows, clean, brng,
+                                            ref_class=CODES["grassland"], radii=BED_RADII_M)
+        a = np.where(placed_b[..., None], alpha[..., None], 0)
+        out = (out.astype("float32") * (1 - a) + synth_b * a).clip(0, 255).astype("uint8")
+        pc = 0
+        if corr.any():
+            corr_t = np.full_like(target, CODES["riparian"])
+            region, alpha = _edge_alpha(corr & bed, 2)
+            synth_c, placed_c, pc = _synthesize(out, region, corr_t, windows, clean, brng,
+                                                ref_class=CODES["riparian"], radii=BED_RADII_M)
+            a = np.where(placed_c[..., None], alpha[..., None], 0)
+            out = (out.astype("float32") * (1 - a) + synth_c * a).clip(0, 255).astype("uint8")
+        bed_info = {"source": "client.channel_profile (B)", "bed_fraction": round(float(bed.mean()), 5),
+                    "corridor_fraction": round(float((corr & bed).mean()), 5), "patches": {"meadow": pb, "riparian": pc},
+                    "classes": {"bed": "grassland", "corridor": "riparian"}, "grow_m": BED_GROW_M,
+                    "brightness_radii_m": list(BED_RADII_M)}
 
     # Inpaint small components last, so they draw on synthesized surroundings too. Telea alone
     # leaves a smooth smear, so the synthesized texture's fine detail (tree crowns, grass grain)
@@ -481,7 +540,7 @@ def erase_imagery(tile: Tile) -> dict:
         "path": "client/texture_imagery.jpg", "kind": "raster", "crs": tile.crs, "bounds": list(tile.bounds),
         "pixels": n, "resolution_m": res, "source": "pc_naip",
         "derived_from": ["imagery.naip", "footprint.mask", "vegetation.habitat_present", "vegetation.habitat",
-                         "vegetation.evt", "client.roads"],
+                         "vegetation.evt", "client.roads", "client.channel_profile"],
         "mask_fraction": round(mask_fraction, 4),
         "human_cells": {"whole_fraction": round(float(whole_cells.mean()), 4),
                         "partial_fraction": round(float(partial_cells.mean()), 4),
@@ -490,7 +549,7 @@ def erase_imagery(tile: Tile) -> dict:
         "synthesized_fraction": round(float(big.mean()), 4),
         "components": {"inpainted": int((~is_big[1:]).sum()), "synthesized": int(is_big[1:].sum()), "patches": patches},
         "source_windows": {str(k): int(len(v)) for k, v in windows.items()},
-        "grass_mean": grass_mean, "oak_mean": oak_mean,
+        "grass_mean": grass_mean, "oak_mean": oak_mean, "rewilded_beds": bed_info,
         "encoding": "NAIP 2022 RGB with human footprint inpainted or synthesized, pavement bleached; JPEG q88",
     }
     print(f"  mask {mask_fraction:.3f}  inpainted {info['inpainted_fraction']:.3f}  "

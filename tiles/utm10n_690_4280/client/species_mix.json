@@ -129,7 +129,7 @@
    "tree_density": 1.0,
    "shrub_density": 0.6,
    "note": null,
-   "cells": 8743,
+   "cells": 8742,
    "bytes": [
     102,
     115,
@@ -159,7 +159,7 @@
    "tree_density": 1.0,
    "shrub_density": 0.6,
    "note": "sugar pine, incense cedar, white fir and Douglas-fir are not in the library: pinus_ponderosa stands in; black oak as quercus_wislizeni",
-   "cells": 40565,
+   "cells": 40559,
    "bytes": [
     0,
     38,
@@ -420,7 +420,7 @@
    "tree_density": 1.0,
    "shrub_density": 0.5,
    "note": "black oak (Quercus kelloggii) is not in the library: quercus_wislizeni stands in",
-   "cells": 3014,
+   "cells": 3013,
    "bytes": [
     0,
     179,
@@ -533,7 +533,7 @@
    "tree_density": 0.0,
    "shrub_density": 0.0,
    "note": null,
-   "cells": 259,
+   "cells": 182,
    "bytes": [
     0,
     0,
@@ -562,7 +562,7 @@
    "tree_density": 0.25,
    "shrub_density": 0.3,
    "note": null,
-   "cells": 156,
+   "cells": 155,
    "bytes": [
     0,
     128,
@@ -590,7 +590,7 @@
    "tree_density": 1.0,
    "shrub_density": 0.6,
    "note": "sugar pine, incense cedar, white fir and Douglas-fir are not in the library: pinus_ponderosa stands in",
-   "cells": 1143,
+   "cells": 1142,
    "bytes": [
     0,
     51,
@@ -648,7 +648,7 @@
    "tree_density": 1.0,
    "shrub_density": 0.6,
    "note": null,
-   "cells": 586,
+   "cells": 585,
    "bytes": [
     102,
     115,
@@ -823,7 +823,7 @@
    "tree_density": 0.3,
    "shrub_density": 1.0,
    "note": null,
-   "cells": 1074,
+   "cells": 1072,
    "bytes": [
     0,
     102,
@@ -853,7 +853,7 @@
    "tree_density": 1.0,
    "shrub_density": 0.5,
    "note": null,
-   "cells": 21568,
+   "cells": 21561,
    "bytes": [
     166,
     25,
@@ -881,7 +881,7 @@
    "tree_density": 1.0,
    "shrub_density": 0.6,
    "note": "willow, cottonwood, alder and valley oak are not in the library: quercus_wislizeni stands in",
-   "cells": 1454,
+   "cells": 1449,
    "bytes": [
     0,
     128,
@@ -1048,7 +1048,7 @@
    "tree_density": 1.0,
    "shrub_density": 0.6,
    "note": "willow, cottonwood, alder and valley oak are not in the library: quercus_wislizeni stands in",
-   "cells": 1998,
+   "cells": 1990,
    "bytes": [
     38,
     179,
@@ -1077,7 +1077,7 @@
    "tree_density": 0.25,
    "shrub_density": 0.3,
    "note": null,
-   "cells": 486,
+   "cells": 477,
    "bytes": [
     0,
     128,
@@ -1104,7 +1104,7 @@
    "tree_density": 0.05,
    "shrub_density": 0.05,
    "note": "herbaceous wetland: almost no woody plants",
-   "cells": 449,
+   "cells": 440,
    "bytes": [
     0,
     255,
@@ -1132,7 +1132,7 @@
    "tree_density": 1.0,
    "shrub_density": 0.3,
    "note": "sparse blue oak savanna over annual grass",
-   "cells": 6476,
+   "cells": 6473,
    "bytes": [
     217,
     0,
@@ -1232,54 +1232,111 @@
     30,
     80
    ]
+  },
+  {
+   "index": 42,
+   "source": "rewild",
+   "code": 1,
+   "name": "rewilded meadow",
+   "rule": "rewilded_meadow",
+   "trees": {
+    "quercus_douglasii": 0.85,
+    "quercus_wislizeni": 0.15
+   },
+   "shrubs": {},
+   "tree_density": 0.5,
+   "shrub_density": 0.0,
+   "note": "former reservoir or stock-pond bed: wet meadow (sedge, rush, perennial grass) with scattered oaks; valley oak (Quercus lobata) is not in the library: quercus_douglasii stands in",
+   "cells": 78,
+   "bytes": [
+    217,
+    38,
+    0,
+    0,
+    0,
+    0,
+    50,
+    0
+   ]
+  },
+  {
+   "index": 43,
+   "source": "rewild",
+   "code": 2,
+   "name": "rewilded riparian",
+   "rule": "rewilded_riparian",
+   "trees": {
+    "quercus_wislizeni": 0.7,
+    "quercus_douglasii": 0.15,
+    "pinus_ponderosa": 0.15
+   },
+   "shrubs": {
+    "arctostaphylos_viscida": 1
+   },
+   "tree_density": 1.0,
+   "shrub_density": 0.6,
+   "note": "riparian corridor along the restored channel through a former bed; willow, cottonwood, alder and valley oak are not in the library: quercus_wislizeni stands in",
+   "cells": 53,
+   "bytes": [
+    38,
+    179,
+    0,
+    38,
+    255,
+    0,
+    100,
+    60
+   ]
   }
  ],
  "unmatched": [],
  "fractions": {
-  "from_evt": 0.7442,
-  "from_bps_backfill": 0.2558,
+  "from_evt": 0.7432,
+  "from_bps_backfill": 0.2568,
   "tree_share": {
-   "blue_oak": 0.234,
-   "live_oak": 0.2196,
-   "gray_pine": 0.1438,
-   "ponderosa": 0.4027
+   "blue_oak": 0.2341,
+   "live_oak": 0.2197,
+   "gray_pine": 0.1437,
+   "ponderosa": 0.4024
   },
   "tree_share_by_canopy": {
    "blue_oak": 0.0901,
-   "live_oak": 0.2497,
+   "live_oak": 0.2498,
    "gray_pine": 0.1113,
-   "ponderosa": 0.5489
+   "ponderosa": 0.5488
   },
   "shrub_share": {
-   "manzanita": 0.6895,
-   "chamise": 0.3105
+   "manzanita": 0.6897,
+   "chamise": 0.3103
   },
-  "mean_tree_density": 0.9688,
-  "mean_shrub_density": 0.5807,
+  "mean_tree_density": 0.9693,
+  "mean_shrub_density": 0.5808,
   "rules": {
    "lower_montane_conifer": 0.3658,
-   "blue_oak_foothill_pine": 0.1957,
+   "blue_oak_foothill_pine": 0.1956,
    "mixed_oak": 0.0841,
    "black_oak_conifer": 0.0786,
    "grassland_savanna": 0.0584,
    "foothill_pine": 0.032,
    "dry_mesic_chaparral": 0.0299,
-   "dry_mesic_mixed_conifer": 0.0299,
+   "dry_mesic_mixed_conifer": 0.0298,
    "black_oak": 0.0272,
    "mesic_mixed_conifer": 0.0224,
-   "riparian": 0.018,
+   "riparian": 0.0179,
    "ruderal_forest": 0.0164,
-   "montane_riparian": 0.0133,
-   "sparse_rock": 0.0058,
-   "wet_meadow_marsh": 0.0041,
+   "montane_riparian": 0.0132,
+   "sparse_rock": 0.0057,
+   "wet_meadow_marsh": 0.004,
    "mesic_chaparral": 0.0036,
    "blue_oak": 0.0031,
    "mixed_evergreen": 0.0027,
    "montane_woodland_chaparral": 0.0025,
    "ruderal_scrub": 0.0024,
-   "open_water": 0.0023,
+   "open_water": 0.0016,
    "ponderosa_jeffrey": 0.0008,
+   "rewilded_meadow": 0.0007,
    "riparian_shrubland": 0.0007,
+   "rewilded_riparian": 0.0005,
    "great_basin_shrub": 0.0002,
    "serpentine_woodland": 0.0001
   }

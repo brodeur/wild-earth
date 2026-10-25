@@ -534,3 +534,23 @@ tighter distance model for soft sounds, and at most 6 of the 14 voice slots. C g
 species' call (squirrel bark, woodpecker waka; a neighbour may answer). Rejected for now: hoofbeats (deer
 do not flee yet), vole sounds, and copying any recording (CC0 references only for study). Needed from
 animals.js for a closer fit: a deer flee state or event, and exported state constants.
+
+## 2026-10-25: rewilded beds are meadow with a riparian corridor, read by habitat, cover, mix, erase and client
+
+The rewild step left the old reservoir and stock-pond floors as the photo's water with nothing growing
+on them. Now every layer reads channel_profile B: on the 30 m grid the bed becomes grassland (there is
+no wet-meadow class, and adding one would touch every habitat table for a few hundred cells) and the
+12 m corridor along the restored channel riparian; open-water cells get a meadow or young-gallery cover
+so the client's counts are not zero; the species mix has two rows of its own (a meadow with scattered
+oaks, blue oak standing in for valley oak; the corridor takes the tile's `riparian` rule because the
+library has no willow, alder or cottonwood); the imagery erase synthesizes the bed from grassland
+windows lit like the clean grassland nearby (not like the woodland on its shore, which the general
+local mean would have used) and then the corridor from riparian windows, as separate passes after the
+human erase so its output is unchanged. Cells LANDFIRE already sees as vegetation on the old shore
+keep their class. The client takes the water mask from the present-day waterbodies minus the removed
+ones, keeps a corridor cell's trees to the corridor, and gives the meadow a perennial grass share; the
+squirrel's creek depth is water.js depthAt (the DEM's pools and riffles), replacing its sine pattern.
+Rejected: a wet-meadow habitat class now (later, with sedge and rush in the grass library), and
+erasing only the photo's water pixels inside the ring (NAIP here is RGB only: no NIR to tell murky water
+from canopy). Known: the corridor's ground is summer-green photo canopy (riparian has no season
+recolour), ponderosa is 15% of the corridor mix, and the dams are still in the terrain.
