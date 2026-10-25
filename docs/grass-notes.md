@@ -352,3 +352,43 @@ the far olive in fall, manzanita a little bluer, the manzanita stems are saturat
 3D shrubs' crimson, and the near program costs more than the old near shading (see the numbers).
 Captures (HEAD and new, 2/5/15/40 m, fall and spring, 10:00 and 17:00, both stands): the session
 scratchpad's shrubcards/fin_*.png.
+
+## Sixth pass (2026-10-25): chaparral impostors at the species' sizes
+
+Report: the impostors stood far over the 3D shrubs among them (chamise to ~5 m against 1.2-2.4 m); the
+squirrel player (0.3 m) saw shrubs ~15x its height. Causes: crown size grew with the cover % and stand
+age (up to 1.6x), chamise and manzanita were drawn taller than wide (W/H ~0.8 against the species' 1.2
+and 1.4), far survivors grew to 2.9x wide and 1.7x tall, and the card's pull toward the camera
+(0.6 R, so the ground does not clip it) drew a crown 3 m off up to 1.5x its size.
+
+**Now (shrubfield.js only).**
+- Height from the species files by age class (young / mature / decadent: chamise 0.6-1.3 / 1.2-2.4 /
+  1.5-2.6 m, manzanita 0.7-1.5 / 1.5-3.5 / 2.0-3.5 m), the class from the old stand-age noise (~30 m
+  stands), width over height 1.12-1.3 for chamise and 1.15-1.8 for manzanita by silhouette variant
+  (means 1.2, 1.4); the dead-stem variant follows the class (6 / 15 / 55%). Visible size of a card
+  measured by rendering it alone: about H tall, 1.85 R wide near, 1.6 R at 40 m (R = width / 1.75).
+- The pulled card is shrunk by (d - pull) / d, so it covers the screen of a card at the plant.
+- Cover: each place keeps the crown area per m^2 the old rule drew there (the count follows the old over
+  the new mean crown area at that cover, age and class: young stands of small plants get ~3x the plants),
+  x1.3 because lower, wider crowns hide less ground at the chase camera's oblique angles. Young stands
+  take ~10% of the ground so plants come out 25/50/25 by class, as the species files weight them.
+- Far growth capped at 1.5x width (1.22x height) by KMIN = 1/1.5^2 (shadows.js reads the same kParams).
+
+**Measured** (x 3830, n 1210, 2,000 instances within 200 m). Chamise height p5/p25/p50/p95/max: before
+1.12/1.49/1.86/2.74/3.44 m (5 m in the densest stands elsewhere), after 0.84/1.42/1.77/2.33/2.54;
+manzanita before 1.25/1.86/2.41/4.01/4.96, after 0.85/1.30/2.14/3.06/3.43 (3D shrubs here: chamise
+median 1.53, manzanita 2.87). Plants per cell within 200 m: mean 106 -> 72, median 103 -> 64, max per
+cell on the tile 237 -> 398 (young stands); cell generation 0.095 -> 0.29 ms. Worst frame on the tile
+(80 degree wedge, densest stand) 14.1k -> 13.8k instances: the 140k cap holds. Shrub pixels among
+chaparral-stand pixels (render with and without the field, 4x MSAA, mean of 7 stands, 2 rounds):
+straight down from 60 m +6-12%; from 200 m up, at 150-250 / 250-350 / 350-430 m out 0.24 -> 0.30,
+0.23 -> 0.29, 0.18 -> 0.24; from 15-40 m up, 80-250 m out 7-11% less (the old far crowns grew 1.7x
+tall). Squirrel 2 m beside a 1.88 m chamise: 6.3x its height (HEAD: crowns past the top of the frame).
+GPU (timer queries, alternating with HEAD's plant rule and shader in the same page, median of five
+rounds, contended machine): shrub draws at 3 m 9.44 -> 8.02 ms, at the start view 5.81 -> 6.03 ms
+(780 -> 1100 instances); whole frame 32.4 -> 29.4 and 30.7 -> 26.5 ms (noise-dominated).
+
+**Still wrong.** Crowns wider than tall read as flat discs from 15-40 m and as umbrellas from the
+ground (the dome is an oblate ellipsoid, the crown base is lifted); low oblique views are 7-11% more
+open than before; backlit manzanita sprays glow white at 17:00 (HEAD too). Captures: the session
+scratchpad's shrubsize/ (head_*, new_*: 2/3/15/40/200/400 m, fall 10:00 and 17:00, squirrel).

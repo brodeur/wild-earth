@@ -13,10 +13,11 @@ import { rockKeep } from './tilepackage.js';
 // shrubs in vegetation.js are a few dozen per cell). Chamise: rounded, twiggy, grey-green; manzanita:
 // taller, upswept, darker, red-brown stems under the crown. Each species has silhouette variants
 // (chamise: rounded, ragged vase, vase with grey dead stems; manzanita: upswept, sprawling, open with
-// its red branching showing), crowns sized by the canopy shrub %, and stands broken by occasional
-// openings. Up close (nearBand) a second program from the same source (NEAR) draws the plant's own
-// parts: baked leaf and needle pictures on the dome, an outline of single leaves, tufts and wands,
-// stems at the base, and the species' season colours (see docs/grass-notes.md, fifth pass).
+// its red branching showing), crowns sized by species and stand age (the species files' heights and
+// width ratios, as the 3D shrubs), and stands broken by occasional openings. Up close (nearBand) a
+// second program from the same source (NEAR) draws the plant's own parts: baked leaf and needle
+// pictures on the dome, an outline of single leaves, tufts and wands, stems at the base, and the
+// species' season colours (see docs/grass-notes.md, fifth and sixth passes).
 // grass.js runs three more fields on the same machinery with its own shader and its own placement
 // (cfg.shader, cfg.cellList): the grass tuft cards, needlegrass tussocks and wild oat stands, each a
 // baked picture of a blade clump that the near blade tiers draw in full at the same spot.
@@ -86,7 +87,10 @@ const VERT = /* glsl */`
     float ce = up.y, se = sqrt(max(1.0 - ce * ce, 0.0));
     float ev = sqrt(H * H * 0.25 * ce * ce + R * R * se * se);
     vec2 q = position.xy * 1.2;   // a margin for the lobes and twigs
-    vec3 p = C + right * q.x * R + up * q.y * ev + V * (0.6 * R);   // pulled toward the camera so the ground does not clip it
+    // Pulled toward the camera so the ground does not clip it, and shrunk by as much, so it covers the
+    // screen of a card standing at the plant (unshrunk, a crown 3 m off drew up to 1.5x its size).
+    float dc = distance(cameraPosition, C), pull = min(0.6 * R, max(dc - 0.3, 0.0));
+    vec3 p = C + V * pull + (right * q.x * R + up * q.y * ev) * ((dc - pull) / max(dc, 1e-3));
     vQ = q; vRight = right; vView = V; vSeed = seed; vKind = kind; vVar = floor(fract(seed) * 4.0); vDry = dry;
     vUp = up; vYS = R / max(H * 0.5, 0.01);   // sphere normal -> ellipsoid normal: scale its y by R / (H/2)
     vDim = vec4(R, ev, H * 0.5, nearK);
@@ -444,7 +448,7 @@ const smooth = (a, b, x) => { const t = Math.min(Math.max((x - a) / (b - a), 0),
 //   coverAt(x, n)    target cover 0..coverMax at a point
 //   coverMax         the most cover anywhere (sets the candidates per cell)
 //   meanArea         mean crown area, m^2
-//   plant(x, n, rnd, cover) -> [kind, R, H, variant 0..3]
+//   plant(x, n, rnd, cover) -> [kind, R, H, variant 0..3], or null to drop the candidate
 //   D0, KMIN         LOD: full density to D0, then keep (D0/d)^2, never below KMIN
 //   band             [in0, in1, out0, out1] distance fades (per-plant cut-offs spread over each pair,
 //                    dithered, no size change); range is out1
@@ -510,7 +514,9 @@ export class ClumpField {
         // Nothing in ponds or stream channels; tussocks and oats thin out toward a creek.
         const wv = waterAt(wm, px, pn);
         if (wv === 255 || (wv && cfg.riparian && keep * this.lamMax >= lam(cov) * (1 - cfg.riparian * wv / 200))) { rnd(); rnd(); rnd(); rnd(); continue; }
-        const [kind, R, Hh, variant = 0] = cfg.plant(px, pn, rnd, cov);
+        const pl = cfg.plant(px, pn, rnd, cov);
+        if (!pl) continue;   // plant() may thin its own candidates (ShrubField: by expected crown size)
+        const [kind, R, Hh, variant = 0] = pl;
         out.push(px, this.ground(px, pn), -pn, R, Hh, Math.floor(rnd() * 100) + (variant + 0.5) / 4, kind, 0);
       }
       const m = out.length / STRIDE;
@@ -655,6 +661,35 @@ function bakeLeaves(manz) {
 // Chaparral shrubs. Cover per cell: chaparral cells only, the canopy's shrub % (floored: a low value
 // in a chaparral cell is more often a burn scar or a data gap than open ground), bilinear between
 // cell centres so a stand thins out over a cell instead of stopping at a 30 m square.
+// Heights (m) by age class, young / mature / decadent: library/species adenostoma_fasciculatum.json and
+// arctostaphylos_viscida.json (height_m and their variants), as the 3D shrubs of vegetation.js. The card's
+// visible crown (the cluster of stems' crowns with its outline) is about H tall (0.9 H past the near band)
+// and VIS_W x R across (measured side on: 1.85 R near, 1.6 R at 40 m), so R = width / VIS_W.
+const SHRUB_H = { chamise: [[0.6, 1.3], [1.2, 2.4], [1.5, 2.6]], manzanita: [[0.7, 1.5], [1.5, 3.5], [2.0, 3.5]] };
+const VIS_W = 1.75;
+// Ground cover as before the sizes followed the species: the old rule grew crowns with the cover and the
+// stand age (size 1.15 (0.62 + 0.62 cover) (0.8 + 0.4 age), with the meanArea below), so a dense or old
+// stand was more closed than its cover %, a thin one more open. Each place keeps the crown area per m^2 it
+// had: the plant count follows the old mean crown area over the new one there (eOld / eNew, mean pi R^2
+// of the species mix at that cover, age and age class), 0.34-2.9x (young stands of small plants need the
+// most), times COVER_GAIN: at the same crown area per m^2 the lower, wider crowns hid 10-17% less of the
+// ground in the chase camera's oblique views (15-100 m up, 30-250 m out, mean of 7 stands); 1.3 gives
+// those views their old cover back (straight down it is ~15% more, still under the canopy %). Candidates
+// are drawn for QMAX (99% of places) and plant() drops the rest.
+const OLD_AREA = 1.3 * (0.6 * Math.PI * 0.8 ** 2 + 0.4 * Math.PI * 1.1 ** 2), COVER_GAIN = 1.3, QMAX = 3.25;
+const AGE_Y = 0.21, AGE_D = 0.62;   // stand age noise below: young, above: decadent
+const clamp01 = x => Math.min(Math.max(x, 0), 1);
+const eH2 = ([a, b]) => ((a + b) / 2) ** 2 + (b - a) ** 2 / 24;   // mean H^2 of h0 + (h1 - h0) (u1 + u2) / 2
+function eOld(cov, age, pm) {
+  const s2 = (1.15 * (0.62 + 0.62 * cov) * (0.8 + 0.4 * age)) ** 2, p1 = clamp01(0.2 + 0.3 * (0.85 - cov));
+  return Math.PI * s2 * (pm * 1.2633 * (1 + 0.5625 * p1) + (1 - pm) * 0.67 * (0.38 + 0.62 * 0.81));
+}
+function eNew(cov, cls, pm) {
+  const k = 1.0048 / VIS_W ** 2, p1 = clamp01(0.2 + 0.3 * (0.85 - cov)), p2 = Math.max((cls === 2 ? 0.75 : 0.55) - p1, 0);
+  const m = eH2(SHRUB_H.manzanita[cls]) * k * (p1 * 1.44 ** 2 + p2 * 1.45 ** 2 + Math.max(1 - p1 - p2, 0) * 1.15 ** 2);
+  const c0 = 1 - [0.45, 0.65, 0.85][cls], c = eH2(SHRUB_H.chamise[cls]) * k * (c0 * 1.3 ** 2 + (1 - c0) * 1.12 ** 2);
+  return Math.PI * (pm * m + (1 - pm) * c);
+}
 export function ShrubField(tile, ground, uniforms) {
   const hab = tile.habitat, can = tile.canopy, W = hab.img.width, H = hab.img.height, res = hab.res;
   const cover = new Float32Array(W * H);
@@ -672,30 +707,40 @@ export function ShrubField(tile, ground, uniforms) {
   const field = new ClumpField(tile, ground, uniforms, {
     name: 'shrubfield', salt: 0x5eed, cap: 140000, roadsMax: 60, near: true,
     cellAny: anyAround(cover, W, H), coverAt, coverMax: 0.85,
-    meanArea: 1.3 * (0.6 * Math.PI * 0.8 ** 2 + 0.4 * Math.PI * 1.1 ** 2),   // (x1.3: the crowns grew 1.15x)
+    meanArea: OLD_AREA / QMAX,   // candidates for the densest places; plant() thins them (see eOld)
     // Gone only right at the camera, at every height (the 3D shrubs are too few to carry the cover). The
     // chase camera trails the raven by 3-5 m, so a 3-8 m cut emptied the ring around the bird itself.
-    D0: 115, KMIN: 0.12, band: [1.2, 3.5, 370, 430], now: 140,
+    // KMIN 1 / 1.5^2: a far survivor grows by 1 / sqrt(keep), so it is never more than 1.5x its own width
+    // (1.22x its height); past ~170 m the field keeps 44% of its plants instead of thinning further.
+    D0: 115, KMIN: 1 / 1.5 ** 2, band: [1.2, 3.5, 370, 430], now: 140,
     plant(px, pn, rnd, cov) {
       // Stands: manzanita and chamise clump into patches tens of metres across (~40% manzanita).
-      const manz = rnd() < 0.1 + 0.75 * smooth(0.35, 0.75, vnoise(px / 45, pn / 45, 9));
-      // Stand age: older stands grow bigger crowns and, in chamise, carry more dead wood.
-      const age = vnoise(px / 28, pn / 28, 13), u = rnd();
-      // Size follows the canopy shrub %: open, thin cover is small scattered plants; closed cover big crowns.
-      // (x1.15: a crown drawn as a cluster of stems' crowns covers less than the disc it replaced)
-      const size = 1.15 * (0.62 + 0.62 * cov) * (0.8 + 0.4 * age);
+      const pm = 0.1 + 0.75 * smooth(0.35, 0.75, vnoise(px / 45, pn / 45, 9));
+      // Stand age (the fire history): patches ~30 m across of one age class, a little younger where the
+      // cover is thin; each plant a little off its stand's age. Young stands hold ~3x the plants per m^2 of
+      // old ones (small crowns, same cover), so they take ~10% of the ground, mature ~58%, decadent ~32%,
+      // for the species files' 25/50/25 young/mature/decadent plants.
+      const age0 = vnoise(px / 28, pn / 28, 13), stand = age0 - 0.15 * Math.max(0.6 - cov, 0);
+      const cls0 = stand < AGE_Y ? 0 : stand > AGE_D ? 2 : 1;
+      if (rnd() * QMAX >= COVER_GAIN * eOld(cov, age0, pm) / eNew(cov, cls0, pm)) return null;   // the cover as before
+      const manz = rnd() < pm, age = stand + 0.12 * (rnd() - 0.5);
+      const cls = age < AGE_Y ? 0 : age > AGE_D ? 2 : 1, u = rnd();
+      const [h0, h1] = SHRUB_H[manz ? 'manzanita' : 'chamise'][cls];
+      let H = h0 + (h1 - h0) * 0.5 * (rnd() + rnd());   // most plants mid-range
+      const wv = 0.88 + 0.24 * rnd();
       if (manz) {
-        // 1 sprawling (more where cover is thin: rocky ground), 2 open with red branching, 0 upswept.
-        const variant = u < 0.2 + 0.3 * (0.85 - cov) ? 1 : u < 0.6 ? 2 : 0;
-        const R = (0.7 + 0.8 * rnd()) * size * (variant === 1 ? 1.25 : 1);
-        const hd = variant === 1 ? 0.5 + 0.2 * rnd() : 1.05 + 0.4 * rnd();   // height over diameter
-        return [KIND.manzanita, R, 2 * R * hd, variant];
+        // 1 sprawling (more where cover is thin: rocky ground; low and wide), 2 open with red branching
+        // (more in old stands), 0 upswept. Width over height 1.15-1.8, 1.4 on average (crown_width_ratio).
+        const variant = u < 0.2 + 0.3 * (0.85 - cov) ? 1 : u < (cls === 2 ? 0.75 : 0.55) ? 2 : 0;
+        if (variant === 1) H *= 0.8;
+        const wh = variant === 1 ? 1.8 : variant === 2 ? 1.45 : 1.15;
+        return [KIND.manzanita, wh * wv * H / VIS_W, H, variant];
       }
-      // 0 rounded, 1 ragged vase, 2 vase with grey dead stems (more in old stands).
-      const variant = u < 0.12 + 0.3 * age ? 2 : u < 0.62 ? 1 : 0;
-      const R = (0.5 + 0.6 * rnd()) * size * (variant ? 0.9 : 1);
-      const hd = variant ? 1.15 + 0.35 * rnd() : 0.9 + 0.3 * rnd();
-      return [KIND.chamise, R, 2 * R * hd, variant];
+      // 0 rounded, 1 ragged vase, 2 vase with grey dead stems (deadwood: young 6%, mature 15%, decadent 55%).
+      // Width over height 1.12-1.3, 1.2 on average (crown_width_ratio).
+      const variant = u < [0.06, 0.15, 0.55][cls] ? 2 : u < [0.45, 0.65, 0.85][cls] ? 1 : 0;
+      const wh = variant === 0 ? 1.3 : 1.12;
+      return [KIND.chamise, wh * wv * H / VIS_W, H, variant];
     },
   });
   // Near detail (leaves, wands, stems): full to 14 m, handed to the far program by 26 m.
