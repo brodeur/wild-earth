@@ -15,7 +15,7 @@
   38.74035063713964
  ],
  "size_m": 10000,
- "generated_at": "2026-10-24T22:31:15Z",
+ "generated_at": "2026-10-25T04:57:06Z",
  "generator": {
   "name": "wild-earth-pipeline",
   "version": "0.2.0"
@@ -611,39 +611,45 @@
     "footprint.mask",
     "vegetation.habitat_present",
     "vegetation.habitat",
+    "vegetation.evt",
     "client.roads"
    ],
-   "mask_fraction": 0.3179,
-   "inpainted_fraction": 0.0448,
-   "synthesized_fraction": 0.2731,
+   "mask_fraction": 0.1261,
+   "human_cells": {
+    "whole_fraction": 0.047,
+    "partial_fraction": 0.3125,
+    "partial_erased_fraction": 0.0925
+   },
+   "inpainted_fraction": 0.0136,
+   "synthesized_fraction": 0.1124,
    "components": {
-    "inpainted": 3838,
-    "synthesized": 1236,
-    "patches": 21540
+    "inpainted": 14052,
+    "synthesized": 4983,
+    "patches": 19676
    },
    "source_windows": {
-    "1": 5579,
-    "2": 9995,
-    "3": 5995,
-    "4": 9255,
-    "5": 10871,
-    "6": 2292,
-    "7": 195,
-    "8": 23
+    "1": 7095,
+    "2": 11266,
+    "3": 6841,
+    "4": 10410,
+    "5": 11860,
+    "6": 2889,
+    "7": 246,
+    "8": 29
    },
    "grass_mean": [
-    0.49,
-    0.4717,
-    0.3785
+    0.4914,
+    0.4724,
+    0.3791
    ],
    "oak_mean": [
-    0.2735,
-    0.34,
-    0.2717
+    0.323,
+    0.3723,
+    0.3007
    ],
    "encoding": "NAIP 2022 RGB with human footprint inpainted or synthesized, pavement bleached; JPEG q88",
-   "sha256": "b507621a8ce40d9615852d8aa3a1a822c8847910d1b0639a255773475d0664c8",
-   "bytes": 5221018
+   "sha256": "de86bc5234a6af0e56f8ced7073f6a6d61e28254761e4505db9c31302208175d",
+   "bytes": 5294927
   },
   "client.mast": {
    "path": "client/mast.png",
@@ -1306,6 +1312,24 @@
    "step": "ground",
    "at": "2026-10-24T22:31:15Z",
    "seconds": 1.8,
+   "ok": true
+  },
+  {
+   "step": "erase",
+   "at": "2026-10-25T04:53:28Z",
+   "seconds": 56.9,
+   "ok": true
+  },
+  {
+   "step": "erase",
+   "at": "2026-10-25T04:55:13Z",
+   "seconds": 52.7,
+   "ok": true
+  },
+  {
+   "step": "erase",
+   "at": "2026-10-25T04:57:06Z",
+   "seconds": 64.5,
    "ok": true
   }
  ]

@@ -5,7 +5,11 @@ quarry. The premise is the world with no humans, with roads kept as decayed pave
 
 1. Erase mask = OSM footprint features of every class but `road` (buffered by buffer_m, plus
    12 m around buildings for yards, driveways and lots) united with LANDFIRE human cells
-   (lawns and lots OSM lacks), minus road pavement.
+   (lawns and lots OSM lacks), minus road pavement. Only the densely built and farmed
+   cells (medium and high intensity, agriculture, quarries) are erased whole. The rest of
+   LANDFIRE's "human" cells (low intensity, Developed-Roads, and developed or urban forest,
+   shrubland and herbaceous) are mostly real oaks and dry grass at 2.5 m, so there only the
+   pixels that look built (grey roofs, concrete, gravel, pools, watered lawn) are erased.
 2. Small or thin mask components are inpainted from their surroundings (cv2 Telea). Large
    ones are synthesized by image quilting: 32 px patches copied out of clean imagery of the same
    backfilled habitat class elsewhere in the tile, each patch's mean colour matched to the
@@ -33,8 +37,8 @@ from .habitat import CLASSES, CODES
 Image.MAX_IMAGE_PIXELS = None
 
 BUILDING_EXTRA_M = 12.0       # yards, driveways and lots around a building footprint
-SMALL_AREA_M2 = 4000.0        # components under this are inpainted
-THIN_DIST_M = 12.0            # ... and so are components whose interior is never deeper than this
+SMALL_AREA_M2 = 400.0         # components under this are inpainted (Telea smears anything much bigger)
+THIN_DIST_M = 5.0             # ... and so are components whose interior is never deeper than this
 INPAINT_RADIUS_PX = 5
 PATCH = 32                    # synthesis patch (px)
 OVERLAP = 8                   # overlap the min-error seam runs through (px)
@@ -44,8 +48,17 @@ CORRECTION = 0.25             # clamp of the per-channel mean-colour correction
 HUE_SLACK = 0.08              # per-channel freedom around the brightness gain
 CLASS_SHARE = 0.5             # a source window counts for a class when at least this share is that class
 CANDIDATES = 32               # random source windows considered per patch
+BAND = 0.05                   # ... drawn from this share of the class's windows nearest the local brightness
 GRAIN_SIGMA_PX = 3.0          # inpainted fills get the synthesized texture's detail finer than this
 PAVEMENT = 140                # roads.png weight above which a pixel is pavement
+# LANDFIRE EVT physiognomies whose 30 m cells are erased whole. Every other "human" EVT
+# (Developed-Low Intensity, Developed-Roads, and phys "Developed": developed and urban forest,
+# shrubland, herbaceous) is erased only where the photo looks built. Those cells are 31% of
+# utm10n_680_4280 and mostly natural woodland; erasing them whole sent 27% of the tile through
+# patch synthesis and replaced real blue oak savanna with dense-stand patches.
+FULL_ERASE_PHYS = ("Developed-Medium Intensity", "Developed-High Intensity", "Agricultural", "Quarries")
+BUILT_SAT = 0.13              # saturation under which a not-dark pixel is roof, concrete, asphalt or gravel
+BUILT_MIN_LUM = 70            # ... darker neutral pixels are shade under canopy
 DECAYED_GREY = np.float32([170, 164, 154])
 # Fallback when a class has no clean source windows: nearest along this order, then by hand.
 FALLBACK_ORDER = ["oak_woodland", "mixed_forest", "grassland", "chaparral"]
@@ -86,6 +99,40 @@ def _footprint_mask(tile: Tile, shape_, tr) -> np.ndarray:
     if not shapes:
         return np.zeros(shape_, bool)
     return rasterize(shapes, out_shape=shape_, transform=tr, fill=0, dtype="uint8").astype(bool)
+
+
+def _human_cells(tile: Tile, present: np.ndarray) -> tuple[np.ndarray, np.ndarray]:
+    """LANDFIRE human cells (30 m) split into (whole, partial) by EVT physiognomy: whole cells
+    are erased outright, partial ones only where the photo looks built. Without evt.tif and its
+    class table every human cell is whole (the old behaviour)."""
+    human = present == CODES["human"]
+    try:
+        with rasterio.open(tile.path("vegetation/evt.tif")) as src:
+            evt = src.read(1)
+        with open(tile.path("vegetation/classes.json")) as f:
+            meta = json.load(f)["evt"]
+    except (OSError, KeyError, ValueError, rasterio.errors.RasterioIOError):
+        return human, np.zeros_like(human)
+    if evt.shape != present.shape:
+        return human, np.zeros_like(human)
+    full_codes = [int(k) for k, v in meta.items() if str(v.get("phys", "")).startswith(FULL_ERASE_PHYS)]
+    whole = human & np.isin(evt, full_codes)
+    return whole, human & ~whole
+
+
+def _built_pixels(img: np.ndarray) -> np.ndarray:
+    """Pixels that look built rather than grown: neutral grey or white and not in shade (roofs,
+    concrete, asphalt, gravel lots), blue (pools, tarps), or irrigated green. Natural summer ground
+    here is green-dominant canopy or tan dry grass, both well above BUILT_SAT. Specks are dropped
+    and the rest grown by one pixel so roof edges and their halo go too."""
+    f = img.astype("float32")
+    r, g, b = f[..., 0], f[..., 1], f[..., 2]
+    lum = 0.299 * r + 0.587 * g + 0.114 * b
+    mx = f.max(-1)
+    sat = (mx - f.min(-1)) / np.maximum(mx, 1.0)
+    built = ((sat < BUILT_SAT) & (lum > BUILT_MIN_LUM)) | ((b > g) & (b > r + 8) & (lum > 60)) | _irrigated(img)
+    built = cv2.morphologyEx(built.astype("uint8"), cv2.MORPH_OPEN, np.ones((2, 2), "uint8"))
+    return cv2.dilate(built, np.ones((3, 3), "uint8")).astype(bool)
 
 
 def _upsample_nearest(arr: np.ndarray, n: int) -> np.ndarray:
@@ -189,6 +236,13 @@ def _synthesize(img: np.ndarray, region: np.ndarray, target: np.ndarray, windows
     near, near_f = _local_mean(img, ref, int(LOCAL_M / res))
     wide, wide_f = _local_mean(img, ref, int(WIDE_M / res))
     means = {c: _window_means(img, w) for c, w in windows.items()}
+    # Windows per class sorted by brightness, so candidates come from ground that already looks like
+    # the local ground (savanna for savanna, closed canopy for closed canopy) and the gain stays
+    # small. Uniform draws mostly found dense stands, which the gain then lit up to +35% next to
+    # dry grass: a flat, washed-out green.
+    lumw = np.float32([0.299, 0.587, 0.114])
+    by_lum = {c: np.argsort(m @ lumw) for c, m in means.items()}
+    sorted_lum = {c: (means[c] @ lumw)[o] for c, o in by_lum.items()}
     src = img.astype("float32")
 
     canvas = src.copy()
@@ -212,7 +266,14 @@ def _synthesize(img: np.ndarray, region: np.ndarray, target: np.ndarray, windows
             cy, cx = min(y0 + PATCH // 2, n - 1), min(x0 + PATCH // 2, n - 1)
             goal = near[cy, cx] if near_f[cy, cx] > 0.05 else wide[cy, cx] if wide_f[cy, cx] > 0.02 else None
 
-            pick = rng.integers(len(cand), size=CANDIDATES)
+            if goal is None:
+                pick = rng.integers(len(cand), size=CANDIDATES)
+            else:
+                k = chains[c]
+                half = max(CANDIDATES * 2, int(BAND * len(cand) / 2))
+                i = int(np.searchsorted(sorted_lum[k], float(goal @ lumw)))
+                lo = int(np.clip(i - half, 0, max(len(cand) - 2 * half, 0)))
+                pick = by_lum[k][lo + rng.integers(min(2 * half, len(cand) - lo), size=CANDIDATES)]
             gain = _gain(cmean[pick], goal) if goal is not None else np.ones((len(pick), 3), "float32")
             dy, dx = np.arange(ya - y0, yb - y0), np.arange(xa - x0, xb - x0)
             ys = cand[pick, 0][:, None] + dy[None, :]
@@ -347,7 +408,10 @@ def erase_imagery(tile: Tile) -> dict:
     with rasterio.open(tile.path("vegetation/habitat.tif")) as src:
         backfilled = src.read(1)
     target = _upsample_nearest(backfilled, n)
-    human = _upsample_nearest(present == 9, n).astype(bool)
+    whole_cells, partial_cells = _human_cells(tile, present)
+    human_whole = _upsample_nearest(whole_cells, n).astype(bool)
+    human_built = _upsample_nearest(partial_cells, n).astype(bool) & _built_pixels(naip)
+    human = human_whole | human_built
     roads = np.asarray(Image.open(tile.path("client/roads.png")).convert("L").resize((n, n), Image.BILINEAR))
     pave = roads > PAVEMENT
 
@@ -416,8 +480,12 @@ def erase_imagery(tile: Tile) -> dict:
     info = {
         "path": "client/texture_imagery.jpg", "kind": "raster", "crs": tile.crs, "bounds": list(tile.bounds),
         "pixels": n, "resolution_m": res, "source": "pc_naip",
-        "derived_from": ["imagery.naip", "footprint.mask", "vegetation.habitat_present", "vegetation.habitat", "client.roads"],
+        "derived_from": ["imagery.naip", "footprint.mask", "vegetation.habitat_present", "vegetation.habitat",
+                         "vegetation.evt", "client.roads"],
         "mask_fraction": round(mask_fraction, 4),
+        "human_cells": {"whole_fraction": round(float(whole_cells.mean()), 4),
+                        "partial_fraction": round(float(partial_cells.mean()), 4),
+                        "partial_erased_fraction": round(float(human_built.mean()), 4)},
         "inpainted_fraction": round(float(small.mean()), 4),
         "synthesized_fraction": round(float(big.mean()), 4),
         "components": {"inpainted": int((~is_big[1:]).sum()), "synthesized": int(is_big[1:].sum()), "patches": patches},

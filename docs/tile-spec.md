@@ -203,14 +203,23 @@ the Biophysical Settings class (BpS `human` or unknown falls back to grassland).
 The erase mask is every footprint feature except roads, buffered by its `buffer_m` (plus
 12 m around buildings for yards, driveways and lots), united with the `human` cells of
 `habitat_present.tif` (lawns and lots OSM lacks), minus road pavement (`roads.png` > 140).
+Human cells whose EVT physiognomy is Developed-Medium or High Intensity, Agricultural or
+Quarries are erased whole. The others (Developed-Low Intensity, Developed-Roads, and
+developed or urban forest, shrubland and herbaceous: a quarter to a third of a foothill tile, and
+mostly real oaks and dry grass) are erased only where the photo looks built: neutral grey or
+white pixels not in shade (roofs, concrete, asphalt, gravel), blue (pools) and irrigated
+green, opened to drop specks and grown by one pixel.
 Each connected component of the mask is either inpainted from its surroundings (OpenCV
 Telea, with grain from the synthesized texture laid over it) when it is small or thin
-(under 4,000 m², or never more than 12 m from its edge), or synthesized: image quilting
-from 32 px windows of clean imagery elsewhere in the tile whose majority class is the
-backfilled habitat class there, chosen to agree with neighbouring pixels and with the
-brightness of clean ground within 100 m, and joined along minimum-error seams. Pavement
+(under 400 m², or never more than 5 m from its edge; Telea smears anything larger), or
+synthesized: image quilting from 32 px windows of clean imagery elsewhere in the tile whose
+majority class is the backfilled habitat class there, drawn from the 5% of that class's
+windows closest in brightness to clean ground within 100 m (so savanna is filled from savanna,
+not from dense stands lit up to match), chosen to agree with neighbouring pixels and that
+local colour, and joined along minimum-error seams. Pavement
 is desaturated and blended halfway to sun-bleached grey; the verge is left alone. The
-layer records `mask_fraction`, `inpainted_fraction` and `synthesized_fraction`, plus
+layer records `mask_fraction`, `inpainted_fraction` and `synthesized_fraction`,
+`human_cells` (`whole_fraction`, `partial_fraction`, `partial_erased_fraction`), plus
 `grass_mean` and `oak_mean` (sRGB 0..1), the imagery's own summer colours, which the
 client recolours by season relative to. `status.imagery_erased` is true once this has run.
 

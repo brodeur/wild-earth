@@ -15,7 +15,7 @@
   38.73825606650576
  ],
  "size_m": 10000,
- "generated_at": "2026-10-24T22:31:17Z",
+ "generated_at": "2026-10-25T04:59:09Z",
  "generator": {
   "name": "wild-earth-pipeline",
   "version": "0.2.0"
@@ -618,39 +618,45 @@
     "footprint.mask",
     "vegetation.habitat_present",
     "vegetation.habitat",
+    "vegetation.evt",
     "client.roads"
    ],
-   "mask_fraction": 0.2306,
-   "inpainted_fraction": 0.0455,
-   "synthesized_fraction": 0.1851,
+   "mask_fraction": 0.0792,
+   "human_cells": {
+    "whole_fraction": 0.0291,
+    "partial_fraction": 0.2267,
+    "partial_erased_fraction": 0.0312
+   },
+   "inpainted_fraction": 0.0068,
+   "synthesized_fraction": 0.0724,
    "components": {
-    "inpainted": 3548,
-    "synthesized": 1087,
-    "patches": 17598
+    "inpainted": 6550,
+    "synthesized": 2870,
+    "patches": 13550
    },
    "source_windows": {
-    "1": 9448,
-    "2": 54552,
-    "3": 6051,
-    "4": 1894,
-    "5": 3841,
-    "6": 1279,
-    "7": 170,
+    "1": 11213,
+    "2": 61291,
+    "3": 6605,
+    "4": 2014,
+    "5": 4380,
+    "6": 1494,
+    "7": 200,
     "8": 15
    },
    "grass_mean": [
-    0.4064,
-    0.4118,
-    0.331
+    0.4074,
+    0.4121,
+    0.3313
    ],
    "oak_mean": [
-    0.2417,
-    0.3211,
-    0.2599
+    0.2595,
+    0.3319,
+    0.2686
    ],
    "encoding": "NAIP 2022 RGB with human footprint inpainted or synthesized, pavement bleached; JPEG q88",
-   "sha256": "3a444c5ba63b3bbbe91fbbe666ba07da53e4456dd0742cfb9439bfa5d3da2784",
-   "bytes": 4871986
+   "sha256": "a78499ae604fb7e770a5ee7dc631487b3abf1b0c949cc98162e807822ab05ef8",
+   "bytes": 4940229
   },
   "client.mast": {
    "path": "client/mast.png",
@@ -1310,6 +1316,12 @@
    "step": "ground",
    "at": "2026-10-24T22:31:17Z",
    "seconds": 1.2,
+   "ok": true
+  },
+  {
+   "step": "erase",
+   "at": "2026-10-25T04:59:09Z",
+   "seconds": 48.5,
    "ok": true
   }
  ]
