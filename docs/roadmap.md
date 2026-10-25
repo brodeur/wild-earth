@@ -50,6 +50,16 @@ sequenced; Parked is in the brief but deliberately not started.
   still partly lobed (needs light through needles); needles under 3 m soft; the north
   edge of the home tile's photo is smeared.
 
+- Night 2026-10-25/26 (standing authorization, see docs/report-2026-10-26-morning.md):
+  imagery erase fixed (only built pixels in low-intensity cells); pines with per-needle
+  shading and transmission; twig tier in the close trees; rocks reshaped and clustered with
+  talus and stream cobbles; grass continuity (one placement per cell, cards are the blade
+  plants); the animal library and Meshy maintainer tool, 14 species briefs, bird and rodent
+  rig templates, meshes adopted for deer, scrub-jay, quail, squirrel, hawk, vulture,
+  Steller's jay, fox, coyote, rabbit, buck, mountain lion and vole, an animal lineup page.
+  Weak: woodpecker stays procedural; hawk and vulture underwings weak at range; bedded
+  deer sunk; raven player model and mammal wiring were in flight at the time of writing.
+
 ## Next: the visual pass, in order of effect per hour
 
 1. ~~Horizon~~ done 2026-10-23: two crossed-quad impostors with a canopy cap per
