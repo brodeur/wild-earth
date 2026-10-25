@@ -171,6 +171,16 @@ client change. Each drawn species falls back to its procedural model while loadi
   holds only oaks), conifer and mixed forest, groups of 2-4, cap 60; perched birds hop up their tree branch by
   branch and the group moves on to the next pine. Perches sit in the crown envelope, not on modelled branches.
   `?stjay=proc`.
+- **Light through the feathers** (`animalModels.js` `UNDERWING`, 2026-10-25): flying birds get a transmission term in
+  the shared animal material, so a wing or tail seen with the sun beyond it is lit through by its own vertex colour:
+  the red-tail's pale lining glows with the wrist commas and dark edges standing out, the vulture's silver flight
+  feathers read against the black lining. Thinness comes from the rig's parts (hand most, arm ramping to the trailing
+  edge, tail 0.7, body 0.08) and the colour's brightness (dark feathers pass almost nothing: the raven stays black).
+  Cloud shadow applies, the cascaded map does not (the wing would shadow its own underside); fades out at 300-420 m.
+  Not on the ground raven or the mammals (they compile without it); gated off by pose for perched and ground birds;
+  `underwingLight.value` scales it live. From below at 30-250 m the hawk's mean went from ~(63, 54, 43) to
+  ~(140, 131, 116) and the vulture's from ~(42, 40, 36) to ~(81, 78, 73); views from above, the raven, a deer and a
+  perched jay are unchanged. The lineup page's three.js shadow map does shadow the term (the game's does not).
 
 ### Mammals in the client (2026-10-25)
 

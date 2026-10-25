@@ -711,6 +711,52 @@ const animDecl = model => (model.weighted ? '#define ANIM_WEIGHTED\nattribute fl
 const programKey = model => `${model.amp.join(',')}|${model.pose.join(',')}|${model.weighted ? 'w' : ''}|${model.rig ? model.rig.name : ''}|${model.gait ? 'g' : ''}|${model.antler ? 'a' : ''}`;
 export { hasAnim2 };
 
+// Light through the feathers (UNDERWING): a bird's wing and tail seen with the sun beyond them glow with the light
+// coming through, tinted by the feathers (a red-tail's pale lining and translucent primaries, a turkey vulture's
+// silver flight feathers against the black lining), which is what identifies them from below. A transmission term
+// for the face the viewer sees when it looks away from the sun: the sun's irradiance through the face (the cosine
+// on its far side), stronger toward the sun (a forward-scattering lobe), times the face's own colour, times a
+// per-vertex thinness from the parts the rig already tags: the hand (fingers and primaries) most, the arm ramping up
+// from the leading edge to the thin trailing edge, the tail less, the body and head hardly at all. The vertex colour's
+// brightness stands in for how much light the feathers pass, so dark feathers pass almost none (the raven stays
+// black, the hawk's patagial bars and the vulture's lining stay dark). Cloud shadow applies; the cascaded shadow does
+// not (the wing would shadow its own underside). Fades out from 300 to 420 m. Flying birds only: not the ground
+// raven, and gated by pose for the birds that perch (wings folded, pose 1); the soarers (collapse 0) never perch.
+// Cost: a few vertex instructions and two dot products a fragment; ground animals compile without it.
+export const underwingLight = { value: 1.0 };   // strength (live tuning)
+function underwingSpec(model) {
+  const r = model.rig;
+  const bird = r ? r.kind === 'bird' && !r.k.ground : (model.amp[3] > 0 || model.pose[3] > 0);
+  if (!bird) return null;
+  const g = model.geometry || model.tiers?.[0], pa = g?.getAttribute('aPart'), pos = g?.getAttribute('position');
+  let lead = -Infinity, trail = Infinity;
+  if (pa) for (let i = 0; i < pa.count; i++) { const p = Math.round(pa.getX(i)); if (p === PART.WING_L || p === PART.WING_R) { const z = pos.getZ(i); if (z > lead) lead = z; if (z < trail) trail = z; } }
+  if (!(lead > trail)) { lead = 0.1; trail = -0.1; }
+  return { lead, inv: 1 / (lead - trail), perch: !(r && r.k.collapse === 0) };
+}
+const UNDERWING_VERT = `
+#ifdef ANIM_UNDERWING
+{
+  int uwPart = int(aPart + 0.5);
+  float uwChord = clamp((uw_lead - position.z) * uw_invChord, 0.0, 1.0);   // 0 the leading edge, 1 the trailing edge
+  float uwThin = (uwPart == 9 || uwPart == 10) ? mix(0.8, 1.0, uwChord)
+    : (uwPart == 4 || uwPart == 5) ? mix(0.35, 1.0, uwChord * uwChord)
+    : uwPart == 3 ? 0.7 : 0.08;
+  vUnderwing = uwThin * smoothstep(0.02, 0.45, dot(vColor.rgb, vec3(0.2126, 0.7152, 0.0722)));
+  #ifdef UNDERWING_PERCH
+  vUnderwing *= 1.0 - clamp(aAnim.z, 0.0, 1.0);
+  #endif
+}
+#endif`;
+const UNDERWING_RE = `
+void RE_Direct_Underwing( const in IncidentLight directLight, const in vec3 geometryPosition, const in vec3 geometryNormal, const in vec3 geometryViewDir, const in vec3 geometryClearcoatNormal, const in LambertMaterial material, inout ReflectedLight reflectedLight ) {
+  RE_Direct_Lambert( directLight, geometryPosition, geometryNormal, geometryViewDir, geometryClearcoatNormal, material, reflectedLight );
+  float through = saturate( -dot( geometryNormal, directLight.direction ) ), fwd = saturate( -dot( geometryViewDir, directLight.direction ) );
+  uwLight += directLight.color * BRDF_Lambert( material.diffuseColor ) * ( vUnderwing * through * ( 0.8 + 1.2 * fwd * fwd ) );
+}
+#undef RE_Direct
+#define RE_Direct RE_Direct_Underwing`;
+
 // map: a textured tier (the ground raven's lod0): the texture instead of the vertex colours, smooth shaded.
 export function animalMaterial(atmosphere, model, { map = null } = {}) {
   const m = map ? new THREE.MeshLambertMaterial({ map, vertexColors: false }) : new THREE.MeshLambertMaterial({ vertexColors: true, flatShading: true });
@@ -720,10 +766,12 @@ export function animalMaterial(atmosphere, model, { map = null } = {}) {
   // materials would otherwise share one program, and with it the first material's uniform values.
   const v4 = a => `vec4(${a.map(x => x.toFixed(4)).join(', ')})`;
   const consts = `\nconst vec4 uAmp = ${v4(model.amp)};\nconst vec4 uPose = ${v4(model.pose)};`;
-  const key = `atmosphere-lambert|animal|${programKey(model)}${map ? "|map" : ""}`;
+  const uw = map ? null : underwingSpec(model);
+  const key = `atmosphere-lambert|animal|${programKey(model)}${map ? "|map" : ""}${uw ? `|uw${uw.lead.toFixed(4)},${uw.inv.toFixed(3)},${uw.perch ? 1 : 0}` : ''}`;
   m.onBeforeCompile = (shader, renderer) => {
     prev.call(m, shader, renderer);
-    shader.vertexShader = shader.vertexShader.replace('#include <common>', '#include <common>\n' + animDecl(model) + consts);
+    const uwDecl = uw ? `\n#define ANIM_UNDERWING\n${uw.perch ? '#define UNDERWING_PERCH\n' : ''}const float uw_lead = ${uw.lead.toFixed(4)};\nconst float uw_invChord = ${uw.inv.toFixed(4)};\nvarying float vUnderwing;` : '';
+    shader.vertexShader = shader.vertexShader.replace('#include <common>', '#include <common>\n' + animDecl(model) + consts + uwDecl);
     // Smooth shaded (a textured tier): pose first, where the normal begins, so the normals turn with the parts.
     if (map) shader.vertexShader = shader.vertexShader
       .replace('#include <beginnormal_vertex>', ANIM_BODY + '\nvec3 objectNormal = normal;\n#ifdef ANIM_WEIGHTED\n  objectNormal = normalize(mix(normal, animR * normal, aPartW));\n#else\n  objectNormal = animR * normal;\n#endif')
@@ -733,7 +781,16 @@ export function animalMaterial(atmosphere, model, { map = null } = {}) {
       // a second colour set (the female quail), picked per instance by aAnim2.w
       .replace('#include <color_vertex>', '#include <color_vertex>\n#ifdef ANIM_VARIANT\n  vColor.rgb = mix(vColor.rgb, aColorB, aAnim2.w);\n#endif'
         // velvet: grey-brown skin over the growing antler (the burr ring keeps its colour)
-        + '\n#ifdef ANIM_ANTLER\n  if (aAntler > 0.0 && int(aTine + 0.5) != 3) vColor.rgb = mix(vColor.rgb, vec3(0.13, 0.095, 0.07), aAnim2.y);\n#endif');
+        + '\n#ifdef ANIM_ANTLER\n  if (aAntler > 0.0 && int(aTine + 0.5) != 3) vColor.rgb = mix(vColor.rgb, vec3(0.13, 0.095, 0.07), aAnim2.y);\n#endif'
+        + UNDERWING_VERT);
+    if (uw) {
+      shader.uniforms.underwingK = underwingLight;
+      shader.vertexShader = shader.vertexShader.replace('#include <fog_vertex>', 'vUnderwing *= 1.0 - smoothstep(300.0, 420.0, length(mvPosition.xyz));\n#include <fog_vertex>');
+      shader.fragmentShader = shader.fragmentShader
+        .replace('#include <common>', '#include <common>\nvarying float vUnderwing;\nuniform float underwingK;\nvec3 uwLight = vec3(0.0);')
+        .replace('#include <lights_lambert_pars_fragment>', '#include <lights_lambert_pars_fragment>' + UNDERWING_RE)
+        .replace('vec3 outgoingLight = reflectedLight.directDiffuse', 'reflectedLight.indirectDiffuse += uwLight * underwingK * cloudOnly(vAtmoPos);\nvec3 outgoingLight = reflectedLight.directDiffuse');
+    }
   };
   m.customProgramCacheKey = () => key;
   m.needsUpdate = true;
