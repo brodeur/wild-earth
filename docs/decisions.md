@@ -335,3 +335,21 @@ striated joint faces; all classes darken slightly with distance so far granite i
 grey, not white. Cost in the densest slate cell at 3 m about 1.8 ms against 1.4 ms
 before. Open: stream cobbles line both banks more than they form bars; long reefs
 still a little rail-like at 20 m; schist reads pale.
+
+## 2026-10-25: a plant seen from the air is the same plant at your feet
+
+Aaron: "When I get close to the ground, grass and herbs and small shrubs disappear,
+replaced with a different grass layer - is it possible for them to stay?" The blade
+tiers, tufts, tussock and oat impostors were four placements with their own seeds, so
+every hand-over was one population vanishing while another appeared, and the tussocks
+were held 45 to 60 m from a low camera. Now one placement per cell gives every plant a
+rank and each tier draws a slice of the same list: the cards are some of the blade
+plants, not extra ones, each card is a baked picture of its own clump (rebaked when
+the season changes) lit and coloured by the blade rules, and each plant hands over in
+place, blades thinning exactly where its card dithers in (tufts at 26 to 38 m, 9 to 15
+m from the air; tussocks and oats at 6 to 12 m at every height). Tussocks are now
+80-leaf clumps so they survive past 15 m. Within 0.5 ms at 3 m and about 1 ms cheaper
+from the air; start view pixel-identical. Rejected: more cards near the camera (cotton
+balls) and crossed planes for the shrub cards (breaks their dome shading). Still
+changing on descent: the sward densifies as the ground and close blade tiers fill in,
+and the shells fade between 10 and 6 m; nothing visible vanishes.

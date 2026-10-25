@@ -1,10 +1,11 @@
 import * as THREE from 'three';
 import { mulberry32 } from './trees.js';
 
-// Procedural grass geometry: one merged clump per grass type for the near LOD (curved,
-// tapered blades as thin triangle strips, culms with seed heads and awns), and the
-// leaning "fountain" tuft cards for the mid LOD. Sizes are metres at full spring height;
-// the shader scales them by season and per instance.
+// Procedural grass geometry: one merged clump per grass type (curved, tapered blades as thin
+// triangle strips, culms with seed heads and awns). The near LOD draws it instanced; the cards
+// (tufts, tussocks, oat stands) are pictures of the same clumps baked at load (grass.js bake), so a
+// card is its own blade clump seen from afar. Sizes are metres at full spring height; the shader
+// scales them by season and per instance.
 //
 // Vertex attributes (clumps):
 //   position  rest position in clump space (root at y = 0)
@@ -168,27 +169,42 @@ export function buildBunchClump(seed = 19) {
   return B.geometry();
 }
 
-// Mid-LOD tuft: four cards leaning outward like a fountain, unit height; the fragment shader
-// cuts blades (and seed heads) out of each card. Attributes: position, normal, uv, aPetal.
-export function buildTuft() {
-  const p = [], n = [], uv = [], petal = [], idx = [];
-  for (let i = 0; i < 4; i++) {
-    const a = i * Math.PI / 2 + Math.PI / 4, T = v3(Math.cos(a), 0, Math.sin(a)), N = v3(-Math.sin(a), 0, Math.cos(a));
-    const b0 = N.clone().multiplyScalar(0.04), t0 = N.clone().multiplyScalar(0.3).add(v3(0, 1, 0));
-    const corners = [[b0, -0.3, 0, 0], [b0, 0.3, 1, 0], [t0, 0.42, 1, 1], [t0, -0.42, 0, 1]];
-    const nrm = v3().crossVectors(T, t0.clone().sub(b0)).normalize();
-    const base = p.length / 3;
-    for (const [c, s, u, v] of corners) {
-      const q = c.clone().addScaledVector(T, s);
-      p.push(q.x, q.y, q.z); n.push(nrm.x, nrm.y, nrm.z); uv.push(u, v); petal.push(i);
+// A needlegrass plant that carries a tussock card (grass.js): a full, mature tussock rather than the
+// thin bunch above, dozens of fine leaves arching out of a narrow crown in a fountain, the old ones
+// lying out flat at the rim, with four flowering culms and their twice-bent awns. Seen from the air
+// it is the dense grey-green dot the tussock card draws (the card is a bake of this clump).
+export function buildTussockClump(seed = 23) {
+  const rnd = mulberry32(seed), B = new ClumpBuilder();
+  for (let i = 0; i < 50; i++) leaf(B, rnd, { spread: 0.06, theta: [0.08, 0.45], droop: [0.7, 1.6], len: [0.34, 0.58], width: [0.009, 0.014] });
+  for (let i = 0; i < 30; i++) leaf(B, rnd, { spread: 0.08, theta: [0.5, 0.9], droop: [1.2, 2.0], len: [0.28, 0.48], width: [0.009, 0.014] });
+  for (let i = 0; i < 5; i++) {
+    const c = culm(B, rnd, { spread: 0.05, theta: [0.06, 0.32], droop: [0.1, 0.4], len: [0.55, 0.8], width: 0.0035 });
+    for (let s = 0; s < 4; s++) {
+      const az = c.phi + s * 1.7 + rnd() * 0.5, o = v3(Math.cos(az), 0, Math.sin(az));
+      const base = c.top.clone().addScaledVector(c.tan, -0.035 * s);
+      const dir = c.tan.clone().multiplyScalar(0.35).addScaledVector(o, 0.45).add(v3(0, -0.5, 0)).normalize();
+      const tip = B.diamond(base, dir, 0.014, 0.0045, c.r, PART.HEAD);
+      const bend = o.clone().multiplyScalar(0.9).add(v3(0, -0.25 + 0.3 * rnd(), 0)).normalize();
+      B.awn(tip, dir, bend, 0.075 + 0.025 * rnd(), 0.0028, c.r);
     }
-    idx.push(base, base + 1, base + 2, base, base + 2, base + 3);
   }
-  const g = new THREE.BufferGeometry();
-  g.setAttribute('position', new THREE.Float32BufferAttribute(p, 3));
-  g.setAttribute('normal', new THREE.Float32BufferAttribute(n, 3));
-  g.setAttribute('uv', new THREE.Float32BufferAttribute(uv, 2));
-  g.setAttribute('aPetal', new THREE.Float32BufferAttribute(petal, 1));
-  g.setIndex(idx);
-  return g;
+  return B.geometry();
+}
+
+// An annual that carries a wild oat card (grass.js): wild oat itself, taller than the bromes and
+// medusahead around it, its culms topped by open, nodding panicles of large dangling spikelets.
+export function buildOatClump(seed = 31) {
+  const rnd = mulberry32(seed), B = new ClumpBuilder();
+  for (let i = 0; i < 8; i++) leaf(B, rnd, { spread: 0.2, theta: [0.08, 0.45], droop: [0.3, 1.1], len: [0.3, 0.55], width: [0.011, 0.017] });
+  for (let i = 0; i < 9; i++) {
+    const c = culm(B, rnd, { spread: 0.18, theta: [0.03, 0.22], droop: [0.05, 0.3], len: [0.85, 1.25], width: 0.005 });
+    for (let s = 0; s < 7; s++) {   // spikelets hanging on fine branches from the top 25 cm
+      const az = c.phi + s * 2.4 + rnd() * 0.6, o = v3(Math.cos(az), 0, Math.sin(az));
+      const base = c.top.clone().addScaledVector(c.tan, -0.035 * s - 0.01).addScaledVector(o, 0.025 + 0.02 * rnd());
+      const dir = o.clone().multiplyScalar(0.45).add(v3(0, -0.85, 0)).addScaledVector(c.D, 0.2).normalize();
+      const tip = B.diamond(base, dir, 0.045 + 0.012 * rnd(), 0.013, c.r, PART.HEAD);
+      if (s % 2 === 0) B.awn(tip, dir, dir.clone().add(v3(0, -0.3, 0)).normalize(), 0.035, 0.002, c.r);
+    }
+  }
+  return B.geometry();
 }

@@ -6,23 +6,20 @@ import { windUniforms, WIND_GLSL } from './wind.js';
 import { rockKeep } from './tilepackage.js';
 
 // Clump fields: vegetation seen from the air as many cheap impostors, one camera-facing quad per
-// clump, shaded per pixel as an ellipsoid whose normal is rebuilt from the quad position and broken
-// into lobes by 3D noise on that normal (stable as the camera turns). Two fields use it:
+// clump. ShrubField (chaparral) shades each quad per pixel as an ellipsoid whose normal is rebuilt
+// from the quad position and broken into lobes by 3D noise on that normal (stable as the camera
+// turns): chamise and manzanita fill each chaparral cell to its canopy shrub cover, so the habitat
+// reads as a closed, mottled grey-green carpet instead of scattered bushes on bare photo (the 3D
+// shrubs in vegetation.js are a few dozen per cell). Chamise: rounded, twiggy, grey-green; manzanita:
+// taller, upswept, darker, red-brown stems under the crown. Each species has silhouette variants
+// (chamise: rounded, ragged vase, vase with grey dead stems; manzanita: upswept, sprawling, open with
+// its red branching showing), crowns sized by the canopy shrub %, and stands broken by occasional
+// openings.
+// grass.js runs three more fields on the same machinery with its own shader and its own placement
+// (cfg.shader, cfg.cellList): the grass tuft cards, needlegrass tussocks and wild oat stands, each a
+// baked picture of a blade clump that the near blade tiers draw in full at the same spot.
 //
-//   ShrubField (chaparral): chamise and manzanita fill each chaparral cell to its canopy shrub
-//     cover, so the habitat reads as a closed, mottled grey-green carpet instead of scattered
-//     bushes on bare photo (the 3D shrubs in vegetation.js are a few dozen per cell). Chamise:
-//     rounded, twiggy, grey-green; manzanita: taller, upswept, darker, red-brown stems under the crown.
-//     Each species has silhouette variants (chamise: rounded, ragged vase, vase with grey dead
-//     stems; manzanita: upswept, sprawling, open with its red branching showing), crowns sized by
-//     the canopy shrub %, and stands broken by occasional openings.
-//   GrassClumps (grassland, 12-225 m): purple needlegrass tussocks (dense, bright arching tips),
-//     coloured from the ground texture under them with its patches exaggerated, so the sward has
-//     relief and silhouettes from the air and hands over to the photo.
-//   StalkClumps (grassland, summer and fall, 10-240 m): sparse stands of dry wild oat, pale airy
-//     sprays of culms and panicles standing above the cured sward.
-//
-// Both use the same density LOD ("clump models that change with distance"): past D0 a field thins
+// Every field uses the same density LOD ("clump models that change with distance"): past D0 a field thins
 // as (D0/d)^2 (each clump dithers out at its own rank, never shrinking) and the survivors grow by 1/sqrt(keep), so cover is kept while the clumps per screen
 // area (and the cost) stay about constant; a grown impostor is drawn with more, smaller lobes, so
 // far away it stands for a patch of several plants rather than one swollen plant. Each cell's
@@ -30,7 +27,7 @@ import { rockKeep } from './tilepackage.js';
 // Placement is deterministic per 30 m habitat cell, cached, generated a few cells per frame.
 
 const STRIDE = 8, REFILL_MOVE = 15;
-export const KIND = { chamise: 0, manzanita: 1, annual: 2, bunch: 3, stalk: 4 };
+export const KIND = { chamise: 0, manzanita: 1, annual: 2, bunch: 3, stalk: 4 };   // 2-4: grass.js's impostors (tuft, tussock, oat)
 // Seed layout: integer part random, fractional part the silhouette variant (variant + 0.5) / 4.
 const lam = c => -Math.log(1 - Math.min(c, 0.9));   // disc density giving cover c with random placement
 
@@ -55,7 +52,6 @@ const VERT = /* glsl */`
   }
   void main() {
     float R = iPos.w, H = iVar.x, seed = iVar.y, kind = iVar.z, rank = iVar.w;
-    bool grass = kind > 1.5, stalk = kind > 3.5;
     float d = distance(cameraPosition, iPos.xyz);
     float keep = clamp(kParams.x * kParams.x / max(d * d, 1.0), kParams.y, 1.0);
     // Fades never change a plant's size (a scaled fade reads as plants growing out of the ground and
@@ -68,12 +64,11 @@ const VERT = /* glsl */`
     if (s < 0.01) { gl_Position = vec4(0.0, 0.0, 2.0, 1.0); return; }
     vFade = s;
     float grow = inversesqrt(keep);
-    if (grass) H *= heightScale;
     R *= grow; H *= sqrt(grow);
     vec3 C = iPos.xyz + vec3(0.0, H * 0.5, 0.0);
-    // Wind: woody shrubs lean a few cm in gusts, grass clumps sway.
+    // Wind: woody shrubs lean a few cm in gusts.
     float g = gust(iPos.xz);
-    C.xz += windDir * windStrength * g * (stalk ? 0.45 : grass ? 0.35 : 0.06) * H;
+    C.xz += windDir * windStrength * g * 0.06 * H;
     vec3 V = normalize(cameraPosition - C);
     vec3 right = normalize(cross(vec3(0.0, 1.0, 0.0), V) + vec3(1e-4, 0.0, 0.0));
     vec3 up = cross(V, right);
@@ -87,37 +82,20 @@ const VERT = /* glsl */`
     vLobes = mix(1.0, 2.6, clamp((grow - 1.0) / 1.5, 0.0, 1.0));   // a far, grown impostor is a patch of plants
     vec3 gw; vec3 gc = groundAlbedo(iPos.xyz, 1.5, gw);
     float gl = dot(gc, G_LUMA);
-    vec3 a;
     // Sky light under the canopy, as the terrain takes it: woodland shade from the cover raster and
     // the contact AO blob under near trees. A shrub crown is itself the shrub layer, so it takes only
     // the tree cover's share.
     vec2 guv = groundUv(iPos.xyz);
-    float occ = (grass ? groundSkyOcclusion(guv) : 1.0 - 0.35 * clamp(texture(canopyMap, guv).r * 2.55, 0.0, 1.0)) * groundContactAO(iPos.xyz);
-    if (grass) {
-      // Grass: the ground's own colour (it is a photo of this grass), with the photo's patches
-      // pushed further (the texel against the ~80 m mean), so swales, cured and greener patches
-      // read across a field from the air; tussocks a little darker at heart; brighter where a gust
-      // lays the blades over.
-      vec3 gr = groundRecolour(textureLod(map, guv, 6.5).rgb, gw);
-      float patchK = clamp(pow(gl / max(dot(gr, G_LUMA), 1e-3), 0.7), 0.78, 1.3);
-      vec3 hue = clamp(gc / max(gr, vec3(1e-3)) * dot(gr, G_LUMA) / max(gl, 1e-3), vec3(0.85), vec3(1.18));   // the patch's hue shift, unit luminance
-      a = gc * patchK * mix(vec3(1.0), hue, 0.6) * (0.9 + 0.2 * hh(seed * 3.3)) * (1.0 + 0.08 * clamp((g - 0.7) / 0.55, -1.0, 1.0));
-      if (stalk) {
-        // Wild oat: cured straw, a little paler and yellower than the sward it stands in (which
-        // carries soil and shade), relative to the ground so it never turns to snow on a pale slope.
-        a *= vec3(1.17, 1.13, 1.0) * (0.92 + 0.16 * hh(seed * 5.7));
-      } else a *= mix(vec3(0.9, 0.93, 0.95), vec3(0.77, 0.82, 0.82), dry);   // needlegrass stays grey-green while the annuals cure gold
-    } else {
-      // Shrubs: species colour, varied per shrub and by stand (a warm, olive palette: chamise dark
-      // olive-green, whiteleaf manzanita paler, grey-green to glaucous), pulled toward the photo.
-      bool manz = kind > 0.5;
-      a = manz ? vec3(0.09, 0.11, 0.07) : vec3(0.108, 0.113, 0.06);
-      float v1 = hh(seed * 7.1), v2 = hh(seed * 3.3), stand = wNoise(iPos.xz * 0.025 + (manz ? 7.0 : 0.0));
-      a *= manz ? mix(vec3(0.94, 1.0, 1.1), vec3(1.06, 1.03, 0.9), v1) : mix(vec3(0.9, 1.0, 1.04), vec3(1.1, 1.03, 0.86), v1);
-      a *= mix(vec3(1.05, 1.0, 0.9), vec3(0.94, 1.0, 1.06), stand) * (0.78 + 0.44 * v2);
-      float al = dot(a, G_LUMA);
-      a = mix(a, gc * al / max(gl, 1e-3), 0.2) * mix(1.0, clamp(gl / 0.075, 0.8, 1.25), 0.5);
-    }
+    float occ = (1.0 - 0.35 * clamp(texture(canopyMap, guv).r * 2.55, 0.0, 1.0)) * groundContactAO(iPos.xyz);
+    // Species colour, varied per shrub and by stand (a warm, olive palette: chamise dark olive-green,
+    // whiteleaf manzanita paler, grey-green to glaucous), pulled toward the photo.
+    bool manz = kind > 0.5;
+    vec3 a = manz ? vec3(0.09, 0.11, 0.07) : vec3(0.108, 0.113, 0.06);
+    float v1 = hh(seed * 7.1), v2 = hh(seed * 3.3), stand = wNoise(iPos.xz * 0.025 + (manz ? 7.0 : 0.0));
+    a *= manz ? mix(vec3(0.94, 1.0, 1.1), vec3(1.06, 1.03, 0.9), v1) : mix(vec3(0.9, 1.0, 1.04), vec3(1.1, 1.03, 0.86), v1);
+    a *= mix(vec3(1.05, 1.0, 0.9), vec3(0.94, 1.0, 1.06), stand) * (0.78 + 0.44 * v2);
+    float al = dot(a, G_LUMA);
+    a = mix(a, gc * al / max(gl, 1e-3), 0.2) * mix(1.0, clamp(gl / 0.075, 0.8, 1.25), 0.5);
     vAlbedo = a;
     vSun = sunLight * cloudShadow(C); vAmb = ambientGround * occ; vAmbUp = ambientSky * occ;
     vIn = atmosphereApply(vec3(0.0), C, cameraPosition);
@@ -147,9 +125,9 @@ const FRAG = /* glsl */`
     // with), never a size change.
     if (vFade < 0.995 && fract(52.9829189 * fract(dot(gl_FragCoord.xy, vec2(0.06711056, 0.00583715)))) >= vFade) discard;
     float kind = vKind, vv = vVar;
-    bool manz = kind > 0.5 && kind < 1.5, grass = kind > 1.5, bunch = kind > 2.5 && kind < 3.5, stalk = kind > 3.5;
+    bool manz = kind > 0.5;
     vec2 q = vQ;
-    if (!grass) {
+    {
       // A shrub is several stems' crowns, not a ball: a main crown and two smaller ones set off to
       // the sides. Each pixel takes the crown it is deepest inside and is shaded on that crown's own
       // dome, so the outline is a cluster and the shading has a hollow between the masses.
@@ -170,7 +148,7 @@ const FRAG = /* glsl */`
     float rr = sqrt(r2), aa = fwidth(rr) + 1e-3;
     float rb, alpha, lc;
     vec3 col, N;
-    if (!grass) {
+    {
       // Shrub crown. Variants (vv): chamise 0 rounded, 1 ragged vase, 2 vase with grey dead stems;
       // manzanita 0 upswept, 1 sprawling (set by its proportions), 2 open, red branching showing.
       rb = 0.72 + 0.34 * lobe + 0.14 * (twig - 0.5);
@@ -228,46 +206,9 @@ const FRAG = /* glsl */`
         float rust = vDry * step(0.45, fract(vSeed * 0.731)) * smoothstep(0.55, 0.8, lc) * smoothstep(0.0, 0.6, nW.y);
         col = mix(col, vAlbedo * vec3(1.9, 1.15, 0.7), rust * 0.6);
       }
-    } else if (stalk) {
-      // Wild oat stand: an airy spray of dry culms with nodding panicles. Fine pale specks of seed
-      // heads over darker culms, thinning out from the middle with no outline at all (a disc of
-      // any kind reads as a cotton ball from the air), and the sward showing through everywhere.
-      float body = n3(nW * 2.6 * vLobes + vSeed * 9.0);
-      rb = 0.75 + 0.3 * lobe + 0.2 * (body - 0.5);
-      float dens = 1.0 - smoothstep(0.05, rb, rr);
-      // Far off, a stand fills in (it stands for many plants) and its features coarsen with the
-      // pixel footprint, so it reads as a paler patch and does not sparkle.
-      float farK = smoothstep(0.03, 0.12, aa), f = mix(15.0, 5.0, farK);
-      float headN = n3(nW * f + vSeed * 3.0);
-      float culmN = n3(vec3(nW.x * 16.0, nW.y * 2.2, nW.z * 16.0) + vSeed * 7.0);
-      float t = 0.74 - 0.22 * dens - 0.1 * farK;
-      float a1 = smoothstep(t, t + 0.06, headN + 0.08 * nW.y) * step(0.02, dens);
-      float a2 = smoothstep(0.66, 0.74, culmN) * 0.7 * dens * (1.0 - smoothstep(0.2, 0.9, nW.y)) * (1.0 - farK);
-      alpha = max(a1, a2) * 0.85 * smoothstep(0.05, 0.4, vDry);
-      if (alpha < 0.05) discard;
-      lc = headN;
-      N = normalize(nW * 0.6 + vec3(0.0, 1.0, 0.0));
-      col = vAlbedo * (a1 >= a2 ? 0.88 + 0.22 * headN : 0.62);   // culms deeper in the stand, in their own shade
-    } else {
-      // Grass clump: a soft-edged dome of blades. Seen from above, a tussock is a fountain: dark
-      // at the crown, bright where the arching tips catch the light at the rim; an annual patch is
-      // airy (ground shows through) and speckled with pale seed heads.
-      float ang = atan(q.y, q.x);
-      float star = abs(sin(ang * (bunch ? 5.5 : 3.5) + vSeed));
-      rb = (bunch ? 0.74 : 0.7) + 0.2 * lobe + 0.08 * star;
-      alpha = smoothstep(rb, rb - max(0.18, aa), rr);   // soft: a tussock has no hard outline
-      float fine = n3(nW * 9.0 * vLobes + vSeed * 3.0);
-      alpha *= bunch ? 1.0 - smoothstep(0.55, 0.75, rr / rb) * step(fine, 0.42)
-                     : smoothstep(0.3, 0.45, fine + 0.25 * (1.0 - rr / rb));
-      if (alpha < 0.05) discard;
-      lc = fine;
-      N = normalize(nW * 0.5 + vec3(0.0, 1.0, 0.0));   // lit nearly like the ground it grows from, so it adds texture, not dark dots
-      // (the bright rim fades on a far, grown impostor: a patch of tussocks has no single fountain rim)
-      col = vAlbedo * (bunch ? mix(0.84, mix(1.1, 0.92, smoothstep(1.3, 2.4, vLobes)), smoothstep(0.2, 0.9, rr / rb)) * (0.9 + 0.2 * fine) : 0.85 + 0.3 * lobe);
-      if (!bunch) col = mix(col, vAlbedo * 1.45, heads * smoothstep(0.72, 0.85, twig) * 0.8);   // seed heads
     }
     float diff = max(dot(N, sunDir), 0.0);
-    float ao = mix(grass ? 0.75 : 0.6, 1.0, smoothstep(-0.7, 0.6, nW.y)) * mix(grass ? 0.85 : 0.75, 1.0, lc);
+    float ao = mix(0.6, 1.0, smoothstep(-0.7, 0.6, nW.y)) * mix(0.75, 1.0, lc);
     vec3 light = vSun * diff * mix(0.75, 1.0, lc) + mix(vAmb, vAmbUp, 0.5 + 0.5 * N.y) * ao;
     gl_FragColor = vec4((col * light * 0.3183099) * vT + vIn, alpha);
     #include <tonemapping_fragment>
@@ -310,14 +251,20 @@ const smooth = (a, b, x) => { const t = Math.min(Math.max((x - a) / (b - a), 0),
 //   cap, salt, roadsMax
 //   riparian         0..1: share of clumps thinned out at a stream centreline, less across the
 //                    riparian band (none in water whatever this is)
+//   cellList(i, j)   optional: the cell's instances (STRIDE floats each, rank slot free) from an
+//                    outside placement, in random order; replaces cellAny's candidates and plant()
+//   shader           optional: { vertexShader, fragmentShader, uniforms } in place of the shrub shader
 export class ClumpField {
   constructor(tile, ground, uniforms, cfg) {
     this.tile = tile; this.ground = ground; this.cfg = cfg;
     this.cache = new Map(); this.cells = []; this.last = null; this.sig = NaN; this.n = 0;
     this.W = tile.habitat.img.width; this.H = tile.habitat.img.height;
     this.lamMax = lam(cfg.coverMax);
+    // cfg.shader: { vertexShader, fragmentShader, uniforms } replaces the shrub shader (the instance
+    // layout and the kParams / band uniforms stay, so shadows.js can cast from any field).
+    const sh = cfg.shader || {};
     this.uniforms = { ...groundUniforms, ...windUniforms, ...atmo, heightScale: uniforms.heightScale, heads: uniforms.heads, dry: uniforms.dry || { value: 1 },
-      kParams: { value: new THREE.Vector2(cfg.D0, cfg.KMIN) }, band: { value: new THREE.Vector4(...cfg.band) } };
+      ...(sh.uniforms || {}), kParams: { value: new THREE.Vector2(cfg.D0, cfg.KMIN) }, band: { value: new THREE.Vector4(...cfg.band) } };
     const g = new THREE.InstancedBufferGeometry();
     g.setAttribute('position', new THREE.Float32BufferAttribute([-1, -1, 0, 1, -1, 0, 1, 1, 0, -1, 1, 0], 3));
     g.setIndex([0, 1, 2, 0, 2, 3]);
@@ -325,7 +272,7 @@ export class ClumpField {
     g.setAttribute('iPos', new THREE.InterleavedBufferAttribute(this.buf, 4, 0));
     g.setAttribute('iVar', new THREE.InterleavedBufferAttribute(this.buf, 4, 4));
     g.instanceCount = 0;
-    const mat = new THREE.ShaderMaterial({ vertexShader: VERT, fragmentShader: FRAG, uniforms: this.uniforms, alphaToCoverage: true });
+    const mat = new THREE.ShaderMaterial({ vertexShader: sh.vertexShader || VERT, fragmentShader: sh.fragmentShader || FRAG, uniforms: this.uniforms, alphaToCoverage: true });
     this.mesh = new THREE.Mesh(g, mat); this.mesh.frustumCulled = false; this.mesh.visible = false; this.mesh.name = cfg.name;
     this._frustum = new THREE.Frustum(); this._m = new THREE.Matrix4(); this._sph = new THREE.Sphere();
   }
@@ -336,8 +283,14 @@ export class ClumpField {
     const key = j * this.W + i, cfg = this.cfg;
     let c = this.cache.get(key);
     if (c) return c;
-    const { habitat: hab, size, roads, waterMask: wm } = this.tile, res = hab.res, out = [];
-    if (cfg.cellAny(i, j)) {
+    const { habitat: hab, size, roads, waterMask: wm } = this.tile, res = hab.res;
+    let out = [];
+    if (cfg.cellList) {
+      // An outside placement (grass.js), already in rank order: any prefix is an even subsample.
+      out = cfg.cellList(i, j);
+      const m = out.length / STRIDE;
+      for (let k = 0; k < m; k++) out[k * STRIDE + 7] = (k + 0.5) / m;
+    } else if (cfg.cellAny(i, j)) {
       const n = Math.round(this.lamMax * res * res / cfg.meanArea), rnd = mulberry32((i * 73856093) ^ (j * 19349663) ^ cfg.salt);
       for (let k = 0; k < n; k++) {
         const px = (i + rnd()) * res, pn = size - (j + rnd()) * res, keep = rnd();
@@ -461,55 +414,6 @@ export function ShrubField(tile, ground, uniforms) {
       const R = (0.5 + 0.6 * rnd()) * size * (variant ? 0.9 : 1);
       const hd = variant ? 1.15 + 0.35 * rnd() : 0.9 + 0.3 * rnd();
       return [KIND.chamise, R, 2 * R * hd, variant];
-    },
-  });
-}
-
-// Grass tussocks for the 12-225 m band. density(x, n): the sward density the blades are placed
-// with; annualShare(x, n): the annual share of the grass there. Past ~40 m the density LOD thins
-// them and grows the survivors, so out to 225 m a far impostor stands for a patch of tussocks and
-// the grassland keeps a grain from 60-200 m up for about the same number of clumps on screen.
-export const CLUMP_BAND = [12, 20, 185, 225];
-export function GrassClumps(tile, ground, uniforms, densGrid, density, annualShare) {
-  const W = tile.habitat.img.width, H = tile.habitat.img.height;
-  return new ClumpField(tile, ground, uniforms, {
-    name: 'grassclumps', salt: 0x6a55, cap: 60000, roadsMax: 140, riparian: 0.75,
-    // Tussocks only: annual grass is a continuous sward (the shells and the terrain grain carry it);
-    // drawn as discrete clumps it reads as cotton balls from the air.
-    // In patches (needlegrass holds the thin-soiled knolls and old ground, the annuals the rest), so
-    // from the air the tussocks show as grey-green drifts rather than an even sprinkle.
-    cellAny: anyAround(densGrid, W, H), coverMax: 0.45,
-    coverAt: (x, n) => 0.6 * density(x, n) * (1 - annualShare(x, n)) * (0.25 + 1.5 * smooth(0.3, 0.75, 0.7 * vnoise(x / 18, n / 18, 51) + 0.3 * vnoise(x / 6, n / 6, 52))),
-    meanArea: Math.PI * 0.27 ** 2,
-    D0: 34, KMIN: 0.14, band: CLUMP_BAND, now: 60,
-    plant(px, pn, rnd, cov) {
-      const R = 0.2 + 0.14 * rnd();
-      return [KIND.bunch, R * (0.85 + 0.4 * cov), 2 * R * (1.0 + 0.4 * rnd())];
-    },
-  });
-}
-
-// Dry wild oat stands (summer and fall): sparse, pale, taller than the sward and airy, in patches
-// 10-30 m across where the annuals are thickest, plus a thin scatter. From the air these are the
-// pale flecks that stand above a cured hillside; the field is off while the grass is green.
-export const STALK_BAND = [10, 18, 200, 240];
-export function StalkClumps(tile, ground, uniforms, densGrid, density, annualShare) {
-  const W = tile.habitat.img.width, H = tile.habitat.img.height;
-  return new ClumpField(tile, ground, uniforms, {
-    name: 'grassstalks', salt: 0x57a1, cap: 30000, roadsMax: 120, riparian: 0.85,
-    cellAny: anyAround(densGrid, W, H),
-    coverAt: (x, n) => {
-      const d = density(x, n);
-      if (d <= 0) return 0;
-      const stand = smooth(0.52, 0.72, 0.7 * vnoise(x / 22, n / 22, 41) + 0.3 * vnoise(x / 7, n / 7, 42));
-      return Math.min(d * annualShare(x, n) * (0.01 + 0.36 * stand), 0.4);
-    },
-    coverMax: 0.4,
-    meanArea: Math.PI * 0.32 ** 2,
-    D0: 30, KMIN: 0.14, band: STALK_BAND, now: 60,
-    plant(px, pn, rnd, cov) {
-      const R = (0.22 + 0.16 * rnd()) * (0.9 + 0.8 * cov);
-      return [KIND.stalk, R, 0.85 + 0.45 * rnd()];
     },
   });
 }

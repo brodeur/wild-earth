@@ -212,3 +212,83 @@ In chaparral the shrub impostors were cut 3-8 m from the camera, but the chase c
 trails the raven by 3-5 m, so the ring around the bird itself emptied; the cut is now
 1.2-3.5 m. Verified at 2, 4, 7, 10 and 20 m over grassland and 2 and 6 m in chaparral.
 The tree work landed the same day was checked and is not involved.
+
+## Fourth pass (2026-10-25): one population of plants, cards that are their own blade clumps
+
+Report: "When I get close to the ground, grass and herbs and small shrubs disappear, replaced with a
+different grass layer - is it possible for them to stay?" Goal: a plant you can see from 40 m is
+still there, in the same place, size and kind, when you land next to it.
+
+**Cause.** The blade tiers, the tuft cards, the tussock impostors and the oat impostors were four
+independent placements (own seeds and densities), so every hand-over was one set of plants vanishing
+while another appeared elsewhere. Per 30 m cell of open grassland (mean of 25 cells around x=4309,
+north=3440): main tier 454 clumps, close 2943, ground 4892, tufts 138 (both types), tussock impostors
+393, oat impostors 163; none of the 694 cards stood where a blade clump stood. On top of that the
+tussock and oat impostors were held to 45-60 m (30-45 m) low down, moving in to 12-20 m (10-18 m)
+only from 6-10 m up, so coming down through 10-6 m swapped every tussock and oat stand within ~50 m
+for unrelated blades: the dark tussock dots visible from 7 m up were gone at 4 m.
+
+**Design (grass.js).**
+- One placement per cell. Candidate k of N = 900 m^2 x 13.6 per cell is a pure function of (cell, k)
+  (its own mulberry seed), with rank (k + 0.5) / N; every tier reads a rank range of the same list:
+  ground all ranks, close the lowest 41%, main the lowest 5.5%. Counts per cell are unchanged (main
+  452, close 2946, ground 4875).
+- Cards are roles of those plants, never extra plants: tufts are annuals ranked below 2.5% (139 per
+  cell), tussocks needlegrass below 22% (391), wild oats annuals in [2.5%, 2.5% + 9.8% x stand)
+  (149). All are main- or close-tier plants. A card instance carries the plant's own position, yaw,
+  scale and seed; checked: all 786 cards in the test cell match their blade plant exactly.
+- The needlegrass/annual mix follows the old tussock drifts (18 m and 6 m noise, mean share kept),
+  so the drifts seen from the air are where the bunchgrass is on the ground.
+- Per-plant hand-over: the blade shader gives a plant with a card the card's own hand-over distance
+  (same hash of the seed), and the card dithers in over the same window as the blades thin out, in
+  place: tufts at 26-38 m low down (9-15 m from the air, the old blend), tussocks and oats at 6-12 m
+  at every height and in every season. Plants without a card fade at their tier's band as before.
+- The card is a bake of the plant's own blade clump. At load (and when the season changes the
+  flowering culms, thatch or leaf length) the clumps are drawn with NEAR_VERT's own per-blade
+  heights, leans and flowering into an atlas: 3 kinds x 2 geometry variants x 8 azimuths x
+  5 elevations, 128 px tiles, 4x MSAA strips, mipmapped (0.5 ms, with the main renderer, captured by
+  a never-drawn hook mesh). Channels: coverage, t along the blade, part, thatch, premultiplied, so
+  the card is coloured and lit by the blades' rules (palette root to tip, heads and awns, per-clump
+  and field variation, ground match at the same distance, sky occlusion, light through the blades).
+  It samples the four nearest views (azimuth in the plant's frame, elevation less the lean the
+  blades take away from the camera). A plant with a card comes in one of the two baked variants (its
+  per-blade jitter is seeded by the variant), so blades and card are the same clump.
+- The tussock and oat plants have their own blade clumps and meshes: a full tussock (80 fine
+  arching leaves, five culms with awns; the old 9-leaf bunch was invisible from 15 m) and wild oat
+  (nine tall culms with nodding panicles). They are drawn only to 15 m (where they have handed over),
+  so the fuller geometry costs little; a tussock plant is 1.2x a young bunch.
+- Far off a card's leaves are sub-pixel and the mips average them to haze, so coverage is built up
+  with the minification (`1 - (1 - a)^(1 + 2 x (mip - 0.7))`), as if the clump had the hundreds of
+  leaves of a real tussock; nothing at the hand-over distances, where the card is one texel per pixel.
+- Cards are pulled R + 0.3 m toward the camera (screen size kept), so the 0.3 m sward shells do not
+  bury their lower half.
+- Needlegrass far off: groundMatch holds bunchgrass at the old tussock impostors' factor against the
+  photo (0.9-0.95 green season, 0.77-0.82 dry), in blades and cards alike, so tussocks still show from
+  the air. Thatch (winter, spring) takes only the ground's brightness far off: through the green
+  mean's ratios it turned rust-red.
+- Shadows: shadows.js casts each tussock card as an ellipse from the instance's R and H and the
+  field's `band` uniform. The instance now carries the dense leaf mass (0.5 R, 0.65 H of the bake
+  box), and `band` keeps the old near edge (45-60 m low, 12-20 m from 10 m up) while the card fade
+  uses its own `cardBand`: solid ellipses under near clumps of blades read as dark blots.
+- shrubfield.js: ClumpField takes `cfg.cellList` (an outside placement) and `cfg.shader`; the old
+  GrassClumps/StalkClumps and their shader branches are gone. grassBlades.js: the 4-card tuft
+  builder is gone (tufts are cards of the annual clump), tussock and oat clumps added.
+
+**Results.** Grassland at 2/4/7/10/20/40 m and a 40 -> 2 m descent: the tussocks and oat stands seen
+from the air are the same plants, in the same places, down to the ground (before: gone below ~5 m).
+Start view unchanged (it is 400 m up; mean pixel difference 0.04/255). GPU, alternating A/B against
+HEAD's files, median of five rounds of 120-frame medians (p10 in brackets), contended machine:
+3 m grassland 9.30 -> 9.76 ms (7.75 -> 7.86), 3 m chaparral 11.37 -> 11.15 (9.42 -> 9.41), 10 m
+9.45 -> 8.43 (8.38 -> 7.40), 40 m 7.98 -> 7.54 (6.96 -> 6.72): cheaper from the air (the tufts are
+one quad instead of four cards with a 7-blade loop, the tussock/oat cards four texture taps instead
+of 3D noise), +0.1-0.5 ms at 3 m. Card cell generation 0.5 ms, ground-tier cell 1.9 ms.
+
+**What still changes as you come down.** Density LOD: plants without a card (most of the sward)
+still appear as you descend (ground tier below ~14 m, close tier from ~25 m) and the shells fade out
+below 10-6 m; nothing that was visible vanishes, but the sward fills in. The tussock contact-shadow
+ellipses still stop 12-60 m out as before. Cards differ from their blades in detail: no per-blade
+flutter (the top shears with the gust), lit with one mean normal, and the far coverage build-up makes
+a far tussock a little denser than its 80 leaves. Far survivors past 34 m (tussocks) and 30 m (oats)
+still grow by 1/sqrt(keep) (1.18x at 40 m), as before. Small shrubs: the chaparral impostors already
+persist to 1.2-3.5 m and read as volumes at 2-5 m (per-pixel dome shading with 3D lobes); a crossed
+plane would break the dome shading, so they are unchanged.
