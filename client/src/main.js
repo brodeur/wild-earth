@@ -148,7 +148,8 @@ async function main() {
     els: { nearest: $('nearestTree'), around: $('aroundYou'), card: $('speciesCard') } });
 
   // Ambient animals (animals.js): squirrels, acorn woodpeckers, other ravens, deer, filtered by perception.
-  const animals = new Animals({ tile, scene, flight, veg, atmosphere, camera, identify });
+  // During an acorn game the woodpeckers, squirrels and ravens gather from the game's acorns (game: acorns).
+  const animals = new Animals({ tile, scene, flight, veg, atmosphere, camera, identify, game: acorns });
 
   // Present-day peek (hold P, or the panel button): the ground shows today's NAIP with the human
   // footprint still in it, the forest and grass step aside and the ghost roads come on, so a player

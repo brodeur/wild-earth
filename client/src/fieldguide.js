@@ -3,6 +3,8 @@
 //   - acorn card: the first acorn picked up this session, and again for each new oak species, with a
 //     drawing of that species' acorn, its names, three facts and an invitation to find a real one.
 //   - stash card: the first acorn put in a stash hole this session, about caching.
+//   - witness cards (acorn game v2): the first time this session the player is close by when an acorn woodpecker
+//     hammers an acorn into its granary, a gray squirrel buries one, or a raven caches one.
 // One DOM element (#fieldGuide), created here; it never takes pointer input except its close button,
 // Esc closes it, and it closes itself after a few seconds. Nothing runs per frame.
 
@@ -35,6 +37,36 @@ export const STASH_FACTS = [
   'Some forgotten caches become new trees.',
 ];
 export const STASH_INVITE = 'Try it: hide three acorns outside and come back tomorrow.';
+// What the other gatherers are doing, for the witness cards. draw: the card's picture.
+export const WITNESS = {
+  granary: {
+    kicker: 'acorn woodpecker', title: 'A granary tree', lead: 'You just watched an acorn woodpecker tap an acorn into its granary.',
+    facts: [
+      'A family of three to a dozen acorn woodpeckers shares one granary: a tree, often a dead one, full of holes they drilled.',
+      'Each hole holds one acorn, wedged in tight. A big granary can hold tens of thousands.',
+      'As the acorns dry and shrink the birds move them to snugger holes, and the family chases off jays and squirrels.',
+    ],
+    invite: 'Find a real one: in oak country, look for a dead branch, snag or old pole covered in neat round holes.',
+  },
+  bury: {
+    kicker: 'western gray squirrel', title: 'One acorn, one hole', lead: 'You just watched a gray squirrel bury an acorn.',
+    facts: [
+      'Gray squirrels scatter their acorns: each one goes in its own small hole, a few centimetres down, then gets covered over.',
+      'They find them again in winter mostly by smell, even under snow.',
+      'The acorns they never come back for can sprout. Squirrels plant a lot of oaks.',
+    ],
+    invite: 'Find a real one: under an oak in fall, look for small fresh holes and scuffed leaves.',
+  },
+  cache: {
+    kicker: 'common raven', title: 'Hiding it from the others', lead: 'You just watched a raven hide an acorn.',
+    facts: [
+      'Ravens push food into the ground, under leaves or beside a shrub, and come back for it later.',
+      'They watch each other hide food and steal from each other, so a raven waits until no one is looking.',
+      'They remember where their caches are for days.',
+    ],
+    invite: 'Watch a raven or crow on the ground: if it pokes at the leaves and walks off, it may have hidden something.',
+  },
+};
 // One line for the species card (identify.js), from the same text.
 export const acornLine = id => ACORNS[id] ? `${ACORN_FACTS[0][1].split('. ')[0]}. ${ACORNS[id].looks} ${ACORN_FACTS[2][1]}` : null;
 export const acornSpecies = name => { const id = resolveSpecies(name); return ACORNS[id] ? id : null; };
@@ -66,7 +98,7 @@ const CSS = `
 `;
 
 class FieldGuide {
-  constructor() { this.el = null; this.timer = 0; this.fadeTimer = 0; this.seen = new Set(); this.stashSeen = false; this.queue = []; }
+  constructor() { this.el = null; this.timer = 0; this.fadeTimer = 0; this.seen = new Set(); this.stashSeen = false; this.witnessed = new Set(); this.queue = []; }
 
   mount() {
     if (this.el) return this.el;
@@ -89,6 +121,17 @@ class FieldGuide {
   stashFilled(anchor) {
     if (this.stashSeen) return;
     this.stashSeen = true; this.showStash(anchor);
+  }
+
+  witness(kind, anchor) {
+    const c = WITNESS[kind]; if (!c || this.witnessed.has(kind)) return;
+    this.witnessed.add(kind);
+    this.show(`<button class="close" data-close title="close (Esc)">×</button>
+      <div class="kicker">field guide · ${esc(c.kicker)}</div>
+      <div class="head"><canvas width="128" height="168"></canvas>
+        <div><h1>${esc(c.title)}</h1><div class="looks">${esc(c.lead)}</div></div></div>
+      <ul>${c.facts.map(t => `<li>${esc(t)}</li>`).join('')}</ul>
+      <p class="invite">${esc(c.invite)}</p>`, anchor, false, kind === 'granary' ? drawGranary : g => drawDig(g, kind === 'cache'));
   }
 
   // asked: opened from the species card, so it shows at once and stays longer.
@@ -269,4 +312,25 @@ function drawGranary(g) {
     }
   }
   g.restore(); g.restore();
+}
+
+// A small hole in the ground with an acorn going in (bury), or an acorn half under leaves (a raven's cache).
+function drawDig(g, leaves) {
+  g.save(); g.scale(2, 2);
+  const soil = g.createLinearGradient(0, 30, 0, 84);
+  soil.addColorStop(0, '#5a4630'); soil.addColorStop(1, '#3a2c1c');
+  g.fillStyle = soil; g.beginPath(); g.roundRect(4, 34, 56, 46, 8); g.fill();
+  g.fillStyle = '#1e150c'; g.beginPath(); g.ellipse(32, 58, 13, 7, 0, 0, Math.PI * 2); g.fill();   // the hole
+  g.fillStyle = '#6e5638'; for (const [x, y, r] of [[14, 50, 3], [50, 52, 3.4], [44, 66, 2.6], [19, 67, 2.2]]) { g.beginPath(); g.arc(x, y, r, 0, Math.PI * 2); g.fill(); }   // thrown-up soil
+  // the acorn, end-on into the hole
+  const ng = g.createLinearGradient(25, 0, 39, 0); ng.addColorStop(0, '#6a4524'); ng.addColorStop(0.4, '#c79a5c'); ng.addColorStop(1, '#5e3d1f');
+  g.fillStyle = ng; g.beginPath(); g.ellipse(32, 50, 6, 10, 0.25, 0, Math.PI * 2); g.fill();
+  g.fillStyle = '#9a8a62'; g.beginPath(); g.ellipse(30, 41, 6.5, 4, 0.25, Math.PI, 0); g.fill();
+  if (leaves) {
+    for (const [x, y, a, c] of [[20, 54, 0.6, '#8a6a2a'], [42, 56, -0.5, '#a07a34'], [32, 62, 0.1, '#7a5a26'], [26, 46, -1.1, '#94743a']]) {
+      g.save(); g.translate(x, y); g.rotate(a); g.fillStyle = c; g.beginPath(); g.ellipse(0, 0, 11, 4.5, 0, 0, Math.PI * 2); g.fill();
+      g.strokeStyle = 'rgba(40,28,10,0.6)'; g.lineWidth = 0.6; g.beginPath(); g.moveTo(-10, 0); g.lineTo(10, 0); g.stroke(); g.restore();
+    }
+  }
+  g.restore();
 }

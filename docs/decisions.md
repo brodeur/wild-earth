@@ -376,3 +376,22 @@ five alternating rounds: frame 8.43 ms before (8.24 to 8.54), 8.55 ms after (8.3
 (six showed far clouds as stacked plates or, dithered, as grain) and a real ray march
 (several times the cost). Open: far clouds near the horizon still read as thin flakes,
 cloud interiors look a little smooth and plastic, and the cirrus is brush-stroked.
+
+## 2026-10-25: acorn game v2, three species gather from one supply, scored by species
+
+Aaron's design for the second version: woodpeckers, squirrels and ravens all collecting
+acorns, many of each always in the game (AI or people), a species-level leaderboard.
+Decided: while a game runs, the ambient acorn woodpeckers (families of 3-6 on a stash-tree
+granary, both sexes drawn), western gray squirrels and ravens are collectors that take
+the same acorns as the player, each in its own way (granary deposit, single burial with a
+fading dug mark and the odd dig-up, a raven's cache by a shrub), through one plain state
+object and four events (pickup, deposit, bury, dig) that a server can own later. The
+board counts per species for a 10-minute round and for the world (tile plus season,
+localStorage); the player's line sits under their species, which is a field on the
+player's collector record (raven today). In fall taken acorns regrow after 5-7.5 game
+minutes; winter, spring and summer keep v1's counts with no regrowth. Near the eye the
+v1 acorns shrink toward life size so an animal at one is not dwarfed. AI collects only
+during a game; claims keep two animals off one acorn but never block the player. Cost
+with about 110 collectors live: 0.05 ms more in animals.js and 0.02-0.05 ms in the game
+per frame. Rejected for now: networking, playable squirrel and woodpecker, pilfering by
+the player, granary defence. Design and state shape in `docs/game-acorn-stash.md` (v2).

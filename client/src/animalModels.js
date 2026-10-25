@@ -89,21 +89,47 @@ export function buildSquirrel() {
   return finish(p, { amp: [0.9, 0.5, 0.35, 0], pose: [0.6, 1.15, -0.2, 0] });
 }
 
-// Acorn woodpecker, ~0.22 m: glossy black back, white belly, cream face, red cap, white wing patches
-// that show only with the wings open. Origin at the feet, so a bird pitched nose-up clings by them.
-export function buildWoodpecker() {
-  const black = 0x131317, white = 0xebe7da, cream = 0xf0e3b2, red = 0xc41f2a;
+// Acorn woodpecker, ~0.22 m, painted by region from the mesh brief (library/animals/drafts/melanerpes_formicivorus.md):
+// glossy blue-black back, wings, tail and breast band; white belly, rump and wing patches; the clown face: a black
+// mask round the bill base, lores and chin, ringed by the white forehead band that runs down in front of each eye
+// into the pale yellow-cream throat; black sides of the head with the pale cream iris staring out of them; the red
+// cap. The male's red reaches the white forehead; the female (female = true) has a black band between the forehead
+// and a smaller red patch at the back of the crown. Seen at 3-10 m at the granaries, so the head is a third of the
+// triangles. Origin at the feet, so a bird pitched nose-up clings by them.
+export function buildWoodpecker(female = false) {
+  const black = 0x15161c, sheen = 0x1d2230, white = 0xf2f0e8, cream = 0xefe2a6, red = 0xc8102e, iris = 0xf3efd8, bill = 0x111114;
   const head = { part: PART.HEAD, pivot: [0, 0.062, 0.05] };
   const p = [
-    ball({ color: black, pos: [0, 0.045, 0], scale: [0.034, 0.036, 0.075] }),
-    ball({ color: white, pos: [0, 0.03, 0.012], scale: [0.028, 0.029, 0.058] }),
-    ball({ color: black, ...head, pos: [0, 0.075, 0.07], scale: [0.028, 0.03, 0.032] }),
-    ball({ color: cream, ...head, pos: [0, 0.071, 0.093], scale: [0.021, 0.016, 0.014] }, 5, 3),
-    ball({ color: red, ...head, pos: [0, 0.099, 0.064], scale: [0.02, 0.012, 0.026] }, 5, 3),
-    cone({ color: 0x2c2c2c, ...head, pos: [0, 0.072, 0.115], rot: FWD, scale: [0.006, 0.03, 0.006] }),
+    // body: black back and breast band, white belly, white rump above the tail
+    ball({ color: black, pos: [0, 0.045, 0], scale: [0.034, 0.036, 0.075] }, 7, 5),
+    ball({ color: white, pos: [0, 0.03, 0.006], scale: [0.029, 0.029, 0.06] }, 7, 4),
+    ball({ color: black, pos: [0, 0.047, 0.05], scale: [0.027, 0.024, 0.022] }, 6, 4),   // breast band, under the throat
+    ball({ color: white, pos: [0, 0.073, -0.052], scale: [0.019, 0.008, 0.021] }, 6, 3),  // rump
+    // head: black sides and nape
+    ball({ color: black, ...head, pos: [0, 0.075, 0.068], scale: [0.028, 0.03, 0.033] }, 9, 7),
+    // red cap on the crown (the female's sits back, behind a black band)
+    female
+      ? ball({ color: red, ...head, pos: [0, 0.094, 0.05], scale: [0.019, 0.014, 0.02] }, 7, 4)
+      : ball({ color: red, ...head, pos: [0, 0.093, 0.062], scale: [0.022, 0.016, 0.03] }, 8, 5),
+    ...(female ? [ball({ color: black, ...head, pos: [0, 0.0975, 0.074], scale: [0.0205, 0.0128, 0.0115] }, 7, 4)] : []),
+    // white forehead band above the bill, running down in front of each eye
+    ball({ color: white, ...head, pos: [0, 0.0885, 0.088], scale: [0.019, 0.0098, 0.0115] }, 7, 4),
+    ...mirror(s => ball({ color: white, ...head, pos: [s * 0.0165, 0.077, 0.09], rot: [0, 0, s * 0.15], scale: [0.0065, 0.016, 0.0085] }, 5, 4)),
+    // pale yellow-cream throat and foreneck, joining the bands below the eyes
+    ball({ color: cream, ...head, pos: [0, 0.06, 0.082], scale: [0.021, 0.015, 0.018] }, 7, 4),
+    ...mirror(s => ball({ color: cream, ...head, pos: [s * 0.014, 0.066, 0.09], scale: [0.0075, 0.009, 0.008] }, 5, 3)),
+    // black mask round the bill base, lores and chin
+    ball({ color: bill, ...head, pos: [0, 0.071, 0.097], scale: [0.0125, 0.012, 0.01] }, 6, 4),
+    ball({ color: bill, ...head, pos: [0, 0.062, 0.095], scale: [0.009, 0.0065, 0.008] }, 5, 3),
+    // eyes: the cream iris round a black pupil, in the black of the face
+    ...mirror(s => ball({ color: iris, ...head, pos: [s * 0.0252, 0.08, 0.077], scale: [0.0048, 0.0048, 0.0048] }, 6, 4)),
+    ...mirror(s => ball({ color: bill, ...head, pos: [s * 0.0293, 0.08, 0.0775], scale: [0.0022, 0.0022, 0.0022] }, 5, 3)),
+    // the straight chisel bill, about as long as the head
+    cone({ color: bill, ...head, pos: [0, 0.071, 0.114], rot: FWD, scale: [0.0062, 0.032, 0.0058] }),
     box({ color: black, part: PART.TAIL, pivot: [0, 0.04, -0.06], pos: [0, 0.033, -0.1], rot: [0.25, 0, 0], scale: [0.03, 0.006, 0.075] }),
-    ...mirror(s => box({ color: black, part: s > 0 ? PART.WING_L : PART.WING_R, pivot: [s * 0.03, 0.06, 0], pos: [s * 0.115, 0.06, 0], scale: [0.17, 0.006, 0.06] })),
-    ...mirror(s => box({ color: white, part: s > 0 ? PART.WING_L : PART.WING_R, pivot: [s * 0.03, 0.06, 0], pos: [s * 0.15, 0.0605, 0.002], scale: [0.04, 0.008, 0.045] })),
+    // wings: blue-black with the white patch at the base of the primaries, on the upper and the under side
+    ...mirror(s => box({ color: sheen, part: s > 0 ? PART.WING_L : PART.WING_R, pivot: [s * 0.03, 0.06, 0], pos: [s * 0.115, 0.06, 0], scale: [0.17, 0.006, 0.06] })),
+    ...mirror(s => box({ color: white, part: s > 0 ? PART.WING_L : PART.WING_R, pivot: [s * 0.03, 0.06, 0], pos: [s * 0.15, 0.06, 0.002], scale: [0.04, 0.0085, 0.045] })),
   ];
   return finish(p, { amp: [0, 0.25, 0.45, 1.1], pose: [1, 0, 0, 1.5] });
 }
