@@ -42,6 +42,14 @@ sequenced; Parked is in the brief but deliberately not started.
   (shells, shrub field, ground wind); horizon silhouettes as one baked impostor per
   real tree. Each verified in the browser and pushed separately.
 
+- Daytime 2026-10-24/25: streams routed by gravity on the lidar DEM with NHD names
+  and permanence; geology and soils step with an outcrop likelihood; near-ground
+  detail layer (CC0 thatch, litter, gravel, rock, pavement chosen per pixel from
+  data); pines with needle bundles, blue oak dense again, foliage set per square metre
+  of crown so big trees are as full as small ones. Weak: sunlit ponderosa at 20-60 m
+  still partly lobed (needs light through needles); needles under 3 m soft; the north
+  edge of the home tile's photo is smeared.
+
 ## Next: the visual pass, in order of effect per hour
 
 1. ~~Horizon~~ done 2026-10-23: two crossed-quad impostors with a canopy cap per
