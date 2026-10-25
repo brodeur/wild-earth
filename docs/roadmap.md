@@ -93,8 +93,12 @@ browser stays the renderer.
 
 ## Browser push (before any native engine)
 
-1. WebGPU renderer evaluation (three.js WebGPURenderer): compute-driven grass at
-   Tsushima scale, far more foliage instances, and a path to real-time GI.
+1. ~~WebGPU renderer evaluation~~ done 2026-10-25: [webgpu-evaluation.md](webgpu-evaluation.md).
+   Stay on WebGLRenderer for the demo: at client scale WebGPU draws no faster (r186 at parity,
+   r170 slower), none of the ~1,900 lines of GLSL run on it, and its WebGL2 fallback is slower than
+   today. Next: upgrade three to the current release on WebGL, then a standalone compute-driven
+   ground-cover prototype (GPU placement measured at about 1 ms against 25-80 ms on the CPU per 100 k).
+   The port, if that prototype earns it, is one cutover in the order the evaluation gives.
 2. ~~Cast shadows from trees and terrain~~ done overnight (three cascades, contact AO).
    Canopy wind: still to do.
 3. ~~Chaparral density and a shrub-field layer; impostors for far trees~~ done overnight.

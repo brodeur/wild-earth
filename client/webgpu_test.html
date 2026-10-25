@@ -1,0 +1,41 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Wild Earth — WebGL vs WebGPU benchmark</title>
+<!--
+  Standalone renderer benchmark for docs/webgpu-evaluation.md. Not part of the client.
+  One renderer per page load, chosen by the URL:
+    ?r=webgl       THREE.WebGLRenderer, GLSL ShaderMaterials (how the client draws today)
+    ?r=webgpu      THREE.WebGPURenderer on WebGPU, the same scene as TSL node materials
+    ?r=webgpu-gl   THREE.WebGPURenderer with forceWebGL (its WebGL2 fallback backend), same TSL
+  Other parameters: cards (100000), draws (196, spatial chunks), view (high | low), w, h (1920x1080
+  drawing buffer), seg (708: ~1.0 M terrain triangles), msaa (1), frames (240), compute (1: time
+  GPU placement against CPU placement; WebGPURenderer only), tm (1; 0: no tone mapping, linear
+  output), v (three.js version from unpkg, default 0.170.0).
+  Results land in <pre id="out"> and window.RESULT.
+-->
+<style>
+  html,body { margin:0; background:#0b0f0d; color:#e6ede7; font:12px/1.4 ui-monospace,Menlo,monospace; }
+  canvas { display:block; width:100%; height:auto; }
+  #out { position:fixed; left:8px; top:8px; margin:0; background:#0f1512dd; padding:8px 10px; border-radius:6px; max-width:calc(100vw - 32px); white-space:pre-wrap; }
+</style>
+<script>
+  // Import map built from ?v= (three.js version, default 0.170.0, the client's): from r171 on, three/tsl is
+  // its own build file; at r170 it is the WebGPU build itself.
+  (function () {
+    var v = new URLSearchParams(location.search).get('v') || '0.170.0', b = 'https://unpkg.com/three@' + v + '/';
+    var minor = +v.split('.')[1], m = document.createElement('script');
+    m.type = 'importmap';
+    m.textContent = JSON.stringify({ imports: { three: b + 'build/three.module.js', 'three/webgpu': b + 'build/three.webgpu.js',
+      'three/tsl': b + (minor >= 171 ? 'build/three.tsl.js' : 'build/three.webgpu.js'), 'three/addons/': b + 'examples/jsm/' } });
+    document.currentScript.after(m);
+  })();
+</script>
+</head>
+<body>
+<pre id="out">loading…</pre>
+<script type="module" src="./src/webgpuTest.js"></script>
+</body>
+</html>
