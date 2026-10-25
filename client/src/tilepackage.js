@@ -63,9 +63,26 @@ export function outcropAt(tile, x, north) {
   const v = (i, j) => g.channel(Math.min(Math.max(i, 0), W - 1), Math.min(Math.max(j, 0), H - 1), 0);
   return ((v(x0, y0) * (1 - tx) + v(x0 + 1, y0) * tx) * (1 - ty) + (v(x0, y0 + 1) * (1 - tx) + v(x0 + 1, y0 + 1) * tx) * ty) / 255;
 }
+// Regional strike of the Mother Lode belt, degrees east of north (N35W): the bedded rocks' fins
+// (rocks.js) and the open strips between brush here both run along it.
+export const STRIKE_DEG = -35;
+const SA = Math.sin(STRIKE_DEG * Math.PI / 180), CA = Math.cos(STRIKE_DEG * Math.PI / 180);
+// Value noise on a lattice, 0..1, integer hash (no sin: a sin hash shows its lattice).
+const vhash = (i, j) => { let h = (i * 73856093) ^ (j * 19349663) ^ 0x9e3779b9; h = Math.imul(h ^ (h >>> 15), 2246822519); h = Math.imul(h ^ (h >>> 13), 3266489917); return ((h ^ (h >>> 16)) >>> 0) / 4294967296; };
+function vnoise(u, v) {
+  const i = Math.floor(u), j = Math.floor(v), fu = u - i, fv = v - j, su = fu * fu * (3 - 2 * fu), sv = fv * fv * (3 - 2 * fv);
+  return (vhash(i, j) * (1 - su) + vhash(i + 1, j) * su) * (1 - sv) + (vhash(i, j + 1) * (1 - su) + vhash(i + 1, j + 1) * su) * sv;
+}
+// Patchy: an outcrop in chaparral is a run of fins with brush between them, not a clearing. Along the
+// strike the opening comes in strips (about 8 m across, 30 m along, a finer octave on top): on a strip
+// 15% of the plants are kept, between strips 65%, both scaled by how strong the likelihood is.
 export function rockKeep(tile, x, north) {
   const L = outcropAt(tile, x, north); if (L <= 0.4) return 1;
-  const t = Math.min((L - 0.4) / 0.25, 1); return 1 - 0.85 * t * t * (3 - 2 * t);
+  const t = Math.min((L - 0.4) / 0.25, 1), s = t * t * (3 - 2 * t);
+  const along = x * SA + north * CA, across = x * CA - north * SA;
+  const p = 0.72 * vnoise(across / 8 + 3.1, along / 30 + 7.7) + 0.28 * vnoise(across / 3.5 + 11.3, along / 12 + 5.9);
+  const o = Math.min(Math.max((p - 0.38) / 0.24, 0), 1), open = o * o * (3 - 2 * o);
+  return 1 - s * (0.35 + 0.5 * open);
 }
 
 // Per-cell species mix from LANDFIRE (pipeline: client/species_mix*.png, species_mix.json). Read

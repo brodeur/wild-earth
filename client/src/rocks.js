@@ -2,6 +2,7 @@ import * as THREE from 'three';
 import { mergeVertices } from 'three/addons/utils/BufferGeometryUtils.js';
 import { mulberry32 } from './trees.js';
 import { hash, placementSkip } from './vegetation.js';
+import { STRIKE_DEG } from './tilepackage.js';
 import { chainShader } from './treegen.js';
 import { addCaster } from './shadows.js';
 
@@ -59,7 +60,7 @@ import { addCaster } from './shadows.js';
 export const NEAR_R = 250, NEAR_W = 25, FAR_R0 = 1300, FAR_R1 = 1500;
 export const CLOSE_R = 60, CLOSE_W = 10, BCLOSE_R = 40, BCLOSE_W = 8;   // full-detail tiers (masses, boulders)
 const NEAR_SET = 310, NEAR_MOVE = 30, FAR_SET = 1700, FAR_MOVE = 150;
-export const STRIKE_DEG = -35;   // regional strike of the Mother Lode belt, degrees east of north (N35W)
+export { STRIKE_DEG };   // regional strike of the Mother Lode belt (tilepackage.js: N35W), shared with the vegetation openings
 const VARIANTS = 6;
 // Roles: the geometry detail of each band (icosphere subdivisions: 8 = 1620 triangles, 3 = 320,
 // 2 = 180, 1 = 80) and which list of the cell plan it draws.

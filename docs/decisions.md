@@ -271,7 +271,12 @@ rock meshes (not reproducible per class), tilting rocks with the slope (fins mus
 their dip). Same day: grass blades, shells, tussocks and oats, the shrub impostors and the placed
 trees and shrubs all thin on outcrop cells by one curve (tilepackage rockKeep: nothing
 below likelihood 0.4, 15% kept from 0.65 up, bilinear between cells), so an outcrop is
-open rocky ground and a greenstone ridge reads as a rocky clearing from 120 m up. Open:
-the strongest cells open fully, where real outcrops in chaparral are patchier; the
-rock detail texture's 3 m repeat shows as a grid on a big open slope from about 25 m;
-jagged fin edges and jointed granite; strike from the geology polygons.
+open rocky ground and a greenstone ridge reads as a rocky clearing from 120 m up. Then
+made patchy: the opening comes in strips along the strike (about 8 m across, 30 m
+along), 15% of plants kept on a strip and 65% between, and the ground detail's bare
+term follows the same strips (rock on a strip, gravel between), so an outcrop reads as
+fins with brush between them. The detail shader draws a second copy of the top material
+turned 63 degrees, swapped in over 5 m noise patches, which removes the lattice a 3 m
+rock tile showed over 30 m of open slope (two extra texture samples on top-down ground
+inside 250 m; not measurable on a noisy machine, bounded by the layer's own ~1 ms).
+Open: jagged fin edges and jointed granite; strike from the geology polygons.

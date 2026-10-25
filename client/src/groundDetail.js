@@ -1,4 +1,5 @@
 import * as THREE from 'three';
+import { rockKeep } from './tilepackage.js';
 
 // Near-ground detail for the terrain shader (terrain.js): five tileable CC0 surfaces (albedo +
 // tangent-space normal, client/assets/ground/, see ATTRIBUTION.md) and one per-tile mask texture
@@ -112,9 +113,10 @@ export function buildDetailMask(tile, W = MASK_PX) {
       }
       if (tile.habitat && tile.habitat.at(x, north) === BARREN) bare = Math.max(bare, 0.85);
       // Outcrop clusters (rocks.js places them where the likelihood passes ~0.45): bare ground
-      // around the fins, so the shader's rock rule (bare > 0.7) wins there. Bilinear on the 30 m
-      // likelihood grid; the blur below softens the edge further.
-      if (tile.outcrop) bare = Math.max(bare, 0.92 * smooth(0.35, 0.6, bilinear8(tile.outcrop, x, north)));
+      // around the fins, so the shader's rock rule (bare > 0.7) wins there, in the same strips along
+      // the strike that open the vegetation (tilepackage rockKeep: 0.92 on a strip, ~0.38 between,
+      // which the gravel rule takes). The blur below softens the edge further.
+      if (tile.outcrop) bare = Math.max(bare, 0.92 * (1 - rockKeep(tile, x, north)) / 0.85);
       // road weight: max over the 2x2 5 m cells in this texel
       let road = 0;
       if (tile.roads) for (let q = 0; q < 4; q++) road = Math.max(road, tile.roads.at(x + ((q & 1) ? 2.5 : -2.5), north + ((q & 2) ? 2.5 : -2.5)));

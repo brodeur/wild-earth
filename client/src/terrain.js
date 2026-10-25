@@ -176,6 +176,19 @@ const FRAG = /* glsl */`
       vec3 a1c, t1, a2c, t2;
       dSample(i1, axA, vPosW, warp, dpx, dpy, a1c, t1);
       dSample(mSec, axB, vPosW, warp, dpx, dpy, a2c, t2);
+      // Stochastic second copy of the top material on the top-down projection: the same scan turned
+      // 63 degrees and shifted, swapped in over patches of a ~5 m noise with soft edges. A +-1 m warp of
+      // a 3 m rock tile still lined up as a lattice over 30 m of open slope; two copies in patches do
+      // not. (Steep faces use the biplanar projection, which already turns with the slope.)
+      if (axA == 1) {
+        const mat2 Q = mat2(0.454, 0.891, -0.891, 0.454);
+        vec2 q = Q * vPosW.xz + vec2(4.37, 2.91);
+        vec3 a1d, t1d;
+        dSample(i1, 1, vec3(q.x, vPosW.y, q.y), warp.yx, vec3((Q * dpx.xz).x, dpx.y, (Q * dpx.xz).y), vec3((Q * dpy.xz).x, dpy.y, (Q * dpy.xz).y), a1d, t1d);
+        t1d.xy = t1d.xy * Q;   // tangent xy back from the turned frame (row-vector times Q = transpose(Q) times column)
+        float sw = smoothstep(0.42, 0.58, rnoise(vPosW.xz + 13.7, 0.9, 5.3));
+        a1c = mix(a1c, a1d, sw); t1 = mix(t1, t1d, sw);
+      }
       float con = mix(detailContrast[i1], detailContrast[mSec], mB);
       float m1 = rnoise(vPosW.xz + 5.0, 0.2, 29.0), m2 = rnoise(vPosW.xz + 41.0, 1.3, 47.0);
       c *= mix(vec3(1.0), mix(a1c, a2c, mB), fade * con * (0.7 + 0.6 * m1)) * mix(1.0, 0.9 + 0.2 * m2, fade);
