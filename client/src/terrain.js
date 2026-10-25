@@ -16,6 +16,15 @@ export const groundUniforms = {
   contactAO: { value: null },   // shadows.js: top-down sky occlusion under each near tree (r = 0 open .. 1 at the trunk)
   contactAOMatrix: { value: new THREE.Matrix4().set(0, 0, 0, 10, 0, 0, 0, 10, 0, 0, 0, 10, 0, 0, 0, 1) },   // world -> its uv
 };
+// Riparian floor (habitat 6), terrain shader only: the class has no channel in masks.png, so the
+// client builds its weight from the habitat grid (ripMask, bilinear across the 30 m cells exactly as
+// masks.png is). ripRef is the current texture's own linear mean over interior riparian cells, so one
+// palette fits the summer photo and the habitat texture alike; ripOn is 0 for any other texture (the
+// present-day peek shows the photo as it is).
+const ripUniforms = {
+  ripMask: { value: null }, ripRef: { value: new THREE.Vector3(0.1, 0.12, 0.08) }, ripOn: { value: 0 },
+  ripTint: { value: new THREE.Color(0.25, 0.18, 0.05) }, ripDark: { value: 1 }, ripMix: { value: 0 },
+};
 export const GROUND_GLSL = /* glsl */`
   uniform sampler2D map; uniform sampler2D masks; uniform sampler2D roads; uniform float tileSize;
   uniform vec3 grassTint; uniform vec3 oakTint; uniform float oakMix;
@@ -91,11 +100,19 @@ const FRAG = /* glsl */`
   // the square grid a single lattice shows from the air.
   float rnoise(vec2 p, float a, float scale) { float c = cos(a), s = sin(a); return vnoise(mat2(c, s, -s, c) * p / scale); }
   ${DETAIL_GLSL}
+  uniform sampler2D ripMask; uniform vec3 ripRef; uniform float ripOn; uniform vec3 ripTint; uniform float ripDark; uniform float ripMix;
   void main(){
     vec3 w = texture2D(masks, vUv).rgb;                 // soft weights: grassland, oak woodland, chaparral
     float road = texture2D(roads, vUv).r;
     w *= 1.0 - smoothstep(0.55, 0.75, road);            // decayed pavement keeps its grey
     vec3 c = groundRecolour(texture2D(map, vUv).rgb, w);
+    // Riparian floor by season: the texture's riparian mean is pulled to the season's hue (the ratio
+    // normalised to unit luminance, so the photo's own light and dark survive) and brightness.
+    float wRip = texture2D(ripMask, vUv).r * (1.0 - smoothstep(0.55, 0.75, road));
+    if (wRip * ripOn * ripMix > 0.0) {
+      vec3 rr = ripTint / max(ripRef, vec3(0.01)); rr /= max(dot(rr, G_LUMA), 0.05);
+      c = mix(c, c * rr * ripDark, wRip * ripMix);
+    }
     vec2 cov = texture2D(canopyMap, vUv).rg * 2.55;     // tree, shrub cover 0..1 (sky occlusion and litter)
     float dist = distance(vPosW, cameraPosition);
     vec3 dpx = dFdx(vPosW), dpy = dFdy(vPosW);          // outside every branch: the detail fetches use them
@@ -214,6 +231,17 @@ const FRAG = /* glsl */`
     #include <colorspace_fragment>
   }`;
 
+// Riparian weight (habitat class 6) on the habitat grid, one byte per 30 m cell, rows south to north
+// (a DataTexture is not flipped on upload), sampled bilinearly like masks.png.
+function riparianMask(tile) {
+  const g = tile.habitat.img, W = g.width, H = g.height, a = new Uint8Array(W * H);
+  for (let j = 0; j < H; j++) for (let i = 0; i < W; i++) a[(H - 1 - j) * W + i] = g.data[(j * W + i) * 4] === 6 ? 255 : 0;
+  const t = new THREE.DataTexture(a, W, H, THREE.RedFormat, THREE.UnsignedByteType);
+  t.unpackAlignment = 1; t.magFilter = THREE.LinearFilter; t.minFilter = THREE.LinearMipmapLinearFilter; t.generateMipmaps = true;
+  t.needsUpdate = true;
+  return t;
+}
+
 export class Terrain {
   constructor(tile, { chunks = 10, spacing = 10 } = {}) {
     this.tile = tile; this.group = new THREE.Group(); this.textures = new Map();
@@ -231,7 +259,8 @@ export class Terrain {
     } else { G.canopyMap.value = new THREE.DataTexture(new Uint8Array(4), 1, 1); G.canopyMap.value.needsUpdate = true; }
     // Near-ground detail materials and their per-tile masks (groundDetail.js); textures stream in after.
     this.detail = new GroundDetail(tile);
-    this.uniforms = { ...G, ...windUniforms, ...atmo, ...detailUniforms };   // shared objects, so one update reaches every material
+    ripUniforms.ripMask.value = riparianMask(tile);
+    this.uniforms = { ...G, ...windUniforms, ...atmo, ...detailUniforms, ...ripUniforms };   // shared objects, so one update reaches every material
     this.material = new THREE.ShaderMaterial({ vertexShader: VERT, fragmentShader: FRAG, uniforms: this.uniforms });
     const size = tile.size, cs = size / chunks, nv = Math.round(cs / spacing) + 1;
     for (let cj = 0; cj < chunks; cj++) for (let ci = 0; ci < chunks; ci++) {
@@ -260,7 +289,35 @@ export class Terrain {
     }
     return t;
   }
-  setTexture(image) { this.uniforms.map.value = this.textureFor(image); }
+  setTexture(image) {
+    this.uniforms.map.value = this.textureFor(image);
+    const own = image === this.tile.textureImage || image === this.tile.imageryTextureImage;
+    this.uniforms.ripOn.value = own ? 1 : 0;
+    if (own) this.uniforms.ripRef.value.copy(this.riparianRef(image));
+  }
+  // Linear mean of an image over the tile's interior riparian cells (all eight neighbours riparian
+  // too, so the mean is the corridor's own colour, not its edges'), cached per image.
+  riparianRef(image) {
+    this.ripRefs ??= new Map();
+    let r = this.ripRefs.get(image);
+    if (r) return r;
+    const g = this.tile.habitat.img, W = g.width, H = g.height;
+    const cv = document.createElement('canvas'); cv.width = W; cv.height = H;
+    const ctx = cv.getContext('2d', { willReadFrequently: true });
+    ctx.imageSmoothingQuality = 'high'; ctx.drawImage(image, 0, 0, W, H);
+    const px = ctx.getImageData(0, 0, W, H).data, lin = v => { v /= 255; return v <= 0.04045 ? v / 12.92 : ((v + 0.055) / 1.055) ** 2.4; };
+    const rip = (i, j) => g.data[(Math.min(Math.max(j, 0), H - 1) * W + Math.min(Math.max(i, 0), W - 1)) * 4] === 6;
+    const s = [0, 0, 0]; let n = 0;
+    for (let j = 0; j < H; j++) for (let i = 0; i < W; i++) {
+      let all = true;
+      for (let dj = -1; dj <= 1 && all; dj++) for (let di = -1; di <= 1 && all; di++) all = rip(i + di, j + dj);
+      if (!all) continue;
+      const k = (j * W + i) * 4; s[0] += lin(px[k]); s[1] += lin(px[k + 1]); s[2] += lin(px[k + 2]); n++;
+    }
+    r = n ? new THREE.Vector3(s[0] / n, s[1] / n, s[2] / n) : new THREE.Vector3(0.1, 0.12, 0.08);
+    this.ripRefs.set(image, r);
+    return r;
+  }
   // imagery: 1 for the erased NAIP texture; ref = {grass_mean, oak_mean} from the manifest (sRGB 0..1)
   setImagery(on, ref) {
     this.uniforms.imagery.value = on ? 1 : 0;
@@ -271,5 +328,8 @@ export class Terrain {
     this.uniforms.grassTint.value.setRGB(...look.grass);
     this.uniforms.oakTint.value.setRGB(...look.oakLeaf);
     this.uniforms.oakMix.value = 1 - look.oakLeafOn;
+    const rp = look.riparian;
+    this.uniforms.ripMix.value = rp ? rp.mix : 0;
+    if (rp) { this.uniforms.ripTint.value.setRGB(...rp.tint, THREE.SRGBColorSpace); this.uniforms.ripDark.value = rp.dark; }
   }
 }

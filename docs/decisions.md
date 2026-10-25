@@ -643,3 +643,21 @@ to the neutral prior, as a species with no records always did. The HUD has a "Da
 to a credits panel built from the manifest's sources, required lines first, with the
 GBIF datasets behind the prior and the model, texture and icon credits; the viewer's
 sources table shows each line and its link.
+
+## 2026-10-26: the riparian floor has its own season, a hue shift from the texture's own corridor mean
+
+The creek and rewilded corridors (habitat 6) read teal in fall at 20 m: the photo there is
+summer-green canopy and only grassland and oak were recoloured. masks.png has no riparian
+channel, so terrain.js builds the weight from the 30 m habitat grid (bilinear, the same soft
+edge masks.png gives the oaks) and pulls the texture's own linear riparian mean (interior cells
+only, computed per texture at load) to a season hue in `SEASON_LOOK.riparian`, the ratio
+normalised to unit luminance so the photo's light and dark survive, times a brightness:
+fall yellow-ochre litter over damp soil (sRGB 0.48, 0.43, 0.28; x0.85; mix 0.75), winter
+grey-brown over wet ground (0.40, 0.38, 0.32; x0.75; 0.8), spring yellow-green (0.54, 0.60,
+0.28; x1.1; 0.65), summer the photo (mix 0). The present-day peek turns it off. Terrain shader
+only: grass, shrubs and blades keep groundAlbedo as it was (there is little grass on the
+corridor floor). Outside the corridors the start view is unchanged (0.13/255 mean difference,
+terrain only). Rejected: a fourth masks.png channel (a pipeline rebuild for one weight) and the
+grass-style ratio to a manifest mean (no riparian mean in the manifest). Known: the rewilded
+habitat texture's riparian colour is itself teal, so that texture still shows teal corridors in
+summer; the litter detail already wins under corridor cover, so its rule is unchanged.

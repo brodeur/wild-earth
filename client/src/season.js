@@ -9,11 +9,19 @@ export function seasonOfDate(d = new Date()) {
 
 // Foothill (Mediterranean) palette per season: grass, deciduous oak canopy, deciduous leaf-on fraction,
 // and haze (aerial perspective and sky turbidity): rain-washed winter clearest, summer dust and smoke thickest.
+// riparian: the creek-corridor floor under willow, alder and cottonwood (habitat 6). `tint` is the hue
+// (sRGB) the texture's own riparian mean is pulled to, `dark` its brightness (damp soil reads darker),
+// `mix` the strength; summer is the photo's own deep green, so 0. Fall: yellow leaf litter over dark
+// damp soil; winter: bare grey-brown twigs over dark wet ground; spring: bright yellow-green flush.
 export const SEASON_LOOK = {
-  winter: { grass: [0.55, 0.68, 0.40], oakLeaf: [0.45, 0.40, 0.25], oakLeafOn: 0.0, haze: 0.55 },
-  spring: { grass: [0.52, 0.72, 0.32], oakLeaf: [0.40, 0.55, 0.25], oakLeafOn: 1.0, haze: 0.7 },
-  summer: { grass: [0.80, 0.68, 0.36], oakLeaf: [0.33, 0.45, 0.22], oakLeafOn: 1.0, haze: 1.2 },
-  fall:   { grass: [0.76, 0.64, 0.38], oakLeaf: [0.55, 0.45, 0.22], oakLeafOn: 0.8, haze: 1.0 },
+  winter: { grass: [0.55, 0.68, 0.40], oakLeaf: [0.45, 0.40, 0.25], oakLeafOn: 0.0, haze: 0.55,
+            riparian: { tint: [0.40, 0.38, 0.32], dark: 0.75, mix: 0.8 } },
+  spring: { grass: [0.52, 0.72, 0.32], oakLeaf: [0.40, 0.55, 0.25], oakLeafOn: 1.0, haze: 0.7,
+            riparian: { tint: [0.54, 0.60, 0.28], dark: 1.1, mix: 0.65 } },
+  summer: { grass: [0.80, 0.68, 0.36], oakLeaf: [0.33, 0.45, 0.22], oakLeafOn: 1.0, haze: 1.2,
+            riparian: { tint: [0.34, 0.38, 0.30], dark: 1.0, mix: 0.0 } },
+  fall:   { grass: [0.76, 0.64, 0.38], oakLeaf: [0.55, 0.45, 0.22], oakLeafOn: 0.8, haze: 1.0,
+            riparian: { tint: [0.48, 0.43, 0.28], dark: 0.85, mix: 0.75 } },
 };
 
 // Sun direction (unit vector, y up, -z north) for a latitude, season and local solar hour.
