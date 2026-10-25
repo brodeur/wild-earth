@@ -88,9 +88,13 @@ Lanes still running when this report was written are listed in `docs/roadmap.md`
 | a744aff | three.js 0.170 to 0.186.1 on WebGL, pixel-identical (r170's sky dome kept verbatim because the haze is tuned to it). |
 | 9926a0c | A third tile, utm10n_680_4270 (the Cosumnes forks), built from scratch in 58 minutes; Overpass now waits and retries; rivers entering at a tile edge are seeded onto the valley floor (the home tile's Hangtown Creek inflows need a channels rebuild for this). |
 
+| 1ea743c | Every manifest source carries the credit line a client must show (OSM, Macrostrat, GBIF required); the audit fails without it. |
+| 7a54460 | GPU placement prototype: places exactly what grass.js places, 100x faster per frame, but only pays for 4-8x denser ground cover. |
+
 Lanes still running at the time of this update: the player raven walking on the ground with a
-softer landing swap, and a standalone GPU placement prototype. Their commits, if they verified,
-follow 9926a0c in `git log`.
+softer landing swap; a pipeline-built species prior from CC0 and CC BY records only (the client
+had been downloading CC BY-NC records, against the project's rule) with a data-credits panel;
+and a black-tailed jackrabbit brief and mesh. Their commits, if they verified, follow 7a54460.
 
 **Disk:** the machine dipped to a few hundred MB free several times tonight while lanes wrote
 captures; the session scratchpad was trimmed twice and the disk ended the night at about 9 GB
