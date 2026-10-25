@@ -280,3 +280,21 @@ turned 63 degrees, swapped in over 5 m noise patches, which removes the lattice 
 rock tile showed over 30 m of open slope (two extra texture samples on top-down ground
 inside 250 m; not measurable on a noisy machine, bounded by the layer's own ~1 ms).
 Open: jagged fin edges and jointed granite; strike from the geology polygons.
+
+## 2026-10-25: pine needles get their own shading and let light through
+
+Sunlit ponderosa at 20 to 60 m still read as rounded lobes after the needle pass, and
+backlit crowns went black. Two changes in the generator, for the two pines only: each
+needle card texture now carries a second copy with each needle's own lighting
+direction and local sparseness (mips drawn from the same strokes, so the variety
+survives to the 16 to 32 texel levels a tuft uses at 30 to 60 m), which the shader
+mixes into the crown normal so needles on the sun side light and those behind shade;
+and a transmission term (softer shading toward the sun, a yellow-green glow at thin
+edges when the sun is behind the tuft, a weak glow over the whole backlit crown),
+fading out where the impostors take over. Empty texels no longer bleed black into
+needle edges, and ponderosa tufts fork into separate starbursts. Lineup metrics hold
+(ponderosa gaps 0.34 vs 0.35 target). Cost about one millisecond in a full-screen pine
+stand, start view within noise. Rejected: a translucency texture per species (one
+channel of the existing card texture does it). Still open: gray pine tufts are round
+clumps rather than hanging tassels; shadow maps treat cards as opaque so sparse crowns
+get dark clumps; a twig tier for the close set is the next tree pass.

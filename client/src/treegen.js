@@ -34,8 +34,8 @@ const srgbToLin = v => Math.pow(v / 255, 2.2);   // colours are authored as sRGB
 export const BUILTIN = {
   "quercus_douglasii": {"id":"quercus_douglasii","aliases":["blue_oak"],"scientific":"Quercus douglasii","common":"blue oak","form":"tree","architectural_model":"Rauh","deciduous":true,"height_m":[6,12],"variants":[{"name":"sapling","weight":0.08,"height_m":[2,4],"trunk_radius":0.4,"branches":0.6,"leaf_density":0.8,"set":{"trunk":{"length_ratio":0.6,"split_prob":0.1,"lean_deg":4},"crown":{"envelope":{"profile":[[0.15,0.2],[0.35,0.32],[0.55,0.35],[0.75,0.3],[0.9,0.2],[1.0,0.06]]}},"levels":[{"down_angle_deg":48,"down_angle_tip_deg":30,"droop_deg":0}],"foliage":{"clumps":{"radius_m":0.55}},"epiphytes":{"mistletoe":{"prob":0}}},"note":"a slender stem keeping its leader, narrow upright crown"},{"name":"young","weight":0.22,"height_m":[5,8],"trunk_radius":0.6,"crown_scale":0.85,"branches":0.85,"set":{"trunk":{"length_ratio":0.45,"split_prob":0.3},"foliage":{"clumps":{"radius_m":0.8}},"epiphytes":{"mistletoe":{"prob":0.1}}},"note":"a rounded crown still taller than wide"},{"name":"mature","weight":0.55,"seeds":2,"note":"the file as written"},{"name":"veteran","weight":0.15,"height_m":[10,14],"trunk_radius":1.3,"crown_scale":1.1,"gnarl":1.35,"deadwood":{"fraction":0.2,"levels":[1,2],"where":"inner"},"set":{"trunk":{"split_prob":0.7,"lean_deg":9},"epiphytes":{"mistletoe":{"prob":0.7,"count":[2,5]}}},"note":"gnarled and broad, a few dead limbs in a thinning crown, more mistletoe"}],"snag":{"fraction":0.03,"from":"veteran","height_m":[8,13],"limbs":0.6,"twigs":0.3,"levels":1,"shorten":[0.45,0.95],"rgb":[168,164,156]},"description":"A small, round-crowned oak with blue-green, shallowly lobed leaves and pale gray bark broken into small checks, usually 6-12 m tall here. It covers the dry, rocky slopes of the foothill woodland below about 1,200 m, often as open savanna with grass between the trees, and its acorns feed deer, western gray squirrels, scrub-jays and acorn woodpeckers.","season_notes":{"winter":"Bare: blue oak drops its leaves in late fall, and the checkered gray bark and clumps of oak mistletoe show until leaf-out in March.","spring":"Leafing out in pale green with hanging catkins (March-April); this year's acorns start on the new twigs.","summer":"In full blue-gray leaf, the colour that names it; in a dry year it drops leaves early to save water.","fall":"Acorns ripen and drop (September-October), then the leaves brown and fall."},"status":"agent draft, needs local sign-off","trunk":{"length_ratio":0.34,"radius_ratio":0.075,"taper":0.6,"flare":1.3,"bole_ratio":0.5,"base_size":0.42,"curve_deg":12,"curve_var_deg":18,"segments":5,"lean_deg":6,"stems":[1,1],"stem_spread_deg":0,"split_prob":0.45,"split_count":2,"split_angle_deg":32,"bark_rgb":[152,150,146],"bark_pattern":"checkered","twig_rgb":[150,142,132],"bark":{"tile_m":[0.35,0.7],"plate_m":[0.05,0.08],"fissure":0.5,"contrast":1.0,"lichen":0.8,"relief":1.2}},"crown":{"shape":"cylindrical","envelope":{"profile":[[0.06,0.48],[0.2,0.7],[0.35,0.76],[0.5,0.74],[0.65,0.67],[0.78,0.55],[0.9,0.37],[1.0,0.12]],"lobes":4,"lobe_depth":0.12,"asymmetry":0.1,"fill":0.6,"edge":1.08}},"levels":[{"count":7,"down_angle_deg":66,"down_angle_tip_deg":38,"down_angle_var_deg":14,"rotation_deg":140,"rotation_var_deg":30,"length_ratio":2.6,"length_var":0.25,"curve_deg":6,"curve_var_deg":24,"zigzag_deg":10,"tropism":0.02,"droop_deg":14,"taper":0.9,"radius_ratio":0.6,"segments":5},{"count":6,"start":0.15,"down_angle_deg":46,"down_angle_var_deg":16,"rotation_deg":140,"rotation_var_deg":30,"length_ratio":0.55,"length_var":0.3,"curve_deg":0,"curve_var_deg":26,"zigzag_deg":16,"tropism":0.05,"taper":1.0,"radius_ratio":0.45,"segments":2}],"foliage":{"type":"broadleaf","leaf_size_m":0.06,"leaf_shape":"oblong_wavy","cluster_m":0.95,"density":9,"cards_per_m2":1.6,"leaf_fill":3.2,"roll_deg":90,"start":0.3,"orientation":"outward","colors":{"winter":[149,119,105],"spring":[144,157,100],"summer":[127,137,122],"fall":[168,135,98]},"leaf_on":{"winter":0.0,"spring":1.0,"summer":1.0,"fall":0.85},"parent_start":0.6,"clumps":{"radius_m":0.85,"cards_per_clump":7,"shell":0.2,"flatten":0.75,"tip_bias":1.4},"palette":[[0.8,[1,1,1]],[0.2,[1.05,1.08,0.95]]],"winter_twigs":0.45,"ao_min":0.7,"color_var":[0.1,0.06],"leaf_on_var":0.6},"deadwood":{"fraction":0.06,"where":"inner","levels":[2],"shorten":0.6,"rgb":[150,146,138]},"epiphytes":{"mistletoe":{"prob":0.4,"count":[1,3],"radius_m":0.35}},"lod":{"near_tris_budget":1900,"near_sides":[7,4,3],"mid_blobs":5,"mid_branches":4,"mid_segments":[3,2],"mid_blob_scale":0.85,"close_factor":2},"targets":{"crown_width_ratio":1.4,"crown_base_ratio":0.15,"porosity":0.2,"foliage_rg":0.9,"foliage_bg":0.78,"from":"reference photographs, docs/tree-likeness-review.md: 01 Mount Diablo (W/H 1.59, porosity 0.21), 02 Shingle Springs, 04 savanna; woodland trees nearer 1.0"},"license":"CC BY-SA 4.0"},
   "quercus_wislizeni": {"id":"quercus_wislizeni","aliases":["live_oak"],"scientific":"Quercus wislizeni","common":"interior live oak","form":"tree","architectural_model":"Rauh","deciduous":false,"height_m":[8,15],"variants":[{"name":"young","weight":0.25,"height_m":[4,8],"trunk_radius":0.7,"crown_scale":0.9,"branches":0.85,"set":{"trunk":{"stems":[1,2]}},"note":"dense, rounded and low, from one or two stems"},{"name":"mature","weight":0.55,"seeds":2,"note":"the file as written"},{"name":"veteran","weight":0.2,"height_m":[11,16],"trunk_radius":1.25,"crown_scale":1.08,"gnarl":1.15,"deadwood":{"fraction":0.12,"levels":[1,2],"where":"inner","rgb":[118,112,104]},"set":{"trunk":{"stems":[2,4]},"lod":{"near_tris_budget":2800}},"note":"several heavy stems, a few dead limbs"}],"description":"An evergreen oak with a dense, dark green, rounded crown, often several trunks, and small shiny leaves that are smooth-edged or spiny like holly; 8-15 m tall here. It grows on steeper, moister slopes and along ravines through the blue oak woodland and up into the lower conifer forest, and California scrub-jays bury its acorns, planting new oaks with the ones they never come back for.","season_notes":{"winter":"Evergreen: still in full dark leaf, the green that picks it out among the bare blue oaks.","spring":"New pale leaves and catkins (March-May); the flowers become acorns that take two years to ripen.","summer":"A dense crown casting the deepest shade in the woodland; last year's flowers are now small green acorns.","fall":"Acorns that began in the spring of last year ripen and drop (September-November)."},"status":"agent draft, needs local sign-off","trunk":{"length_ratio":0.42,"radius_ratio":0.05,"taper":0.6,"flare":1.35,"bole_ratio":0.3,"base_size":0.2,"curve_deg":18,"curve_var_deg":15,"segments":5,"lean_deg":8,"stems":[1,3],"stem_spread_deg":22,"split_prob":0.5,"split_count":2,"split_angle_deg":30,"bark_rgb":[100,96,88],"bark_pattern":"furrowed","twig_rgb":[85,80,72],"bark":{"tile_m":[0.3,0.6],"ridge_m":0.03,"block_m":0.06,"fissure":0.3,"contrast":0.7,"lichen":0.4,"relief":0.8}},"crown":{"shape":"cylindrical","envelope":{"profile":[[0.04,0.493],[0.15,0.638],[0.35,0.683],[0.55,0.65],[0.72,0.538],[0.86,0.358],[1.0,0.09]],"lobes":5,"lobe_depth":0.1,"asymmetry":0.12,"fill":0.5,"edge":1.06}},"levels":[{"count":11,"down_angle_deg":64,"down_angle_var_deg":15,"rotation_deg":140,"rotation_var_deg":30,"length_ratio":1.9,"length_var":0.2,"curve_deg":15,"curve_var_deg":15,"tropism":0.04,"taper":0.9,"radius_ratio":0.45,"segments":4,"down_angle_tip_deg":36,"droop_deg":10,"zigzag_deg":6},{"count":7,"start":0.15,"down_angle_deg":50,"down_angle_var_deg":15,"rotation_deg":140,"rotation_var_deg":30,"length_ratio":0.5,"length_var":0.25,"curve_deg":20,"curve_var_deg":15,"tropism":0.04,"taper":1.0,"radius_ratio":0.45,"segments":2,"zigzag_deg":10}],"foliage":{"type":"broadleaf","leaf_size_m":0.04,"leaf_shape":"elliptic_glossy","cluster_m":1.4,"density":20,"start":0.0,"parent_start":0.4,"orientation":"outward","colors":{"winter":[80,88,66],"spring":[118,125,80],"summer":[86,95,69],"fall":[89,95,69]},"leaf_on":{"winter":1.0,"spring":1.0,"summer":1.0,"fall":1.0},"clumps":{"radius_m":1.1,"cards_per_clump":12,"shell":0.2,"flatten":0.8,"tip_bias":1.3},"palette":[[0.85,[1,1,1]],[0.1,[1.35,1.25,0.7]],[0.05,[1.3,1.0,0.6]]],"ao_min":0.72,"color_var":[0.08,0.03]},"lod":{"near_tris_budget":2000,"near_sides":[6,4,0],"mid_blobs":5,"mid_branches":2,"mid_sides":[3,3],"mid_segments":[2,1],"mid_blob_scale":0.95,"close_factor":2},"targets":{"crown_width_ratio":1.2,"crown_base_ratio":0.08,"porosity":0.12,"foliage_rg":0.85,"foliage_bg":0.5,"from":"reference photographs, docs/tree-likeness-review.md: 01 Pilot Hill (W/H 1.13), 02 park tree (about 1.5), 04 crown on slope"},"license":"CC BY-SA 4.0"},
-  "pinus_sabiniana": {"id":"pinus_sabiniana","aliases":["gray_pine"],"scientific":"Pinus sabiniana","common":"gray pine","form":"tree","architectural_model":"Rauh","deciduous":false,"height_m":[12,22],"variants":[{"name":"young","weight":0.3,"height_m":[6,12],"trunk_radius":0.8,"crown_scale":0.8,"branches":0.8,"deadwood":0.12,"set":{"trunk":{"split_prob":0.15,"lean_deg":8}},"note":"a single leaning leader, crown open and narrow"},{"name":"mature","weight":0.5,"seeds":2,"note":"the file as written"},{"name":"veteran","weight":0.2,"height_m":[15,24],"trunk_radius":1.25,"crown_scale":1.15,"deadwood":0.32,"set":{"trunk":{"split_prob":1.0,"split_count":3,"split_height":0.42,"split_angle_deg":24,"lean_deg":18}},"note":"forked into three leaders, many dead lower limbs"}],"snag":{"fraction":0.05,"from":"veteran","limbs":0.45,"twigs":0,"levels":1,"broken_top":[0.7,0.95],"shorten":[0.4,0.9],"rgb":[150,146,138],"height_m":[12,20]},"description":"A thin, often forked or leaning pine whose sparse gray-green needles, 20-30 cm long in bundles of three, make a crown you can see the sky through; 12-22 m tall here. It grows only in California, scattered among blue oaks on the hottest, driest foothill slopes, and its heavy cones hold large, hard-shelled seeds eaten by squirrels and jays and long gathered as food by Native Californians.","season_notes":{"winter":"Evergreen: the gray-green needles look hazy against the hills, and heavy cones from past years still hang in the crown.","spring":"Pollen cones shed yellow pollen (March-April) and new needles grow at the branch tips.","summer":"Second-year cones swell to full size; the open crown gives little shade.","fall":"Ripe cones open and drop big, hard-shelled seeds that squirrels, jays and woodpeckers gather."},"status":"agent draft, needs local sign-off","trunk":{"length_ratio":0.95,"radius_ratio":0.03,"taper":0.9,"flare":1.2,"bole_ratio":0.25,"base_size":0.28,"curve_deg":25,"curve_var_deg":25,"segments":6,"lean_deg":14,"stems":[1,1],"stem_spread_deg":0,"split_prob":0.6,"split_count":2,"split_angle_deg":18,"bark_rgb":[112,104,92],"bark_pattern":"furrowed","twig_rgb":[106,100,90],"split_height":0.55,"bark":{"tile_m":[0.5,1.0],"ridge_m":0.09,"block_m":0.12,"fissure":0.7,"contrast":1.2,"relief":1.5}},"crown":{"shape":"spherical","envelope":{"profile":[[0.22,0.16],[0.38,0.29],[0.55,0.33],[0.7,0.31],[0.84,0.23],[0.94,0.13],[1.0,0.04]],"lobes":3,"lobe_depth":0.16,"asymmetry":0.15,"fill":0.35,"edge":1.1}},"levels":[{"count":30,"whorl":2,"down_angle_deg":72,"down_angle_tip_deg":40,"down_angle_var_deg":18,"rotation_deg":70,"rotation_var_deg":40,"length_ratio":0.3,"length_var":0.35,"curve_deg":10,"curve_var_deg":28,"tropism":0.05,"taper":0.95,"radius_ratio":0.4,"segments":2},{"count":4,"start":0.35,"down_angle_deg":45,"down_angle_var_deg":15,"rotation_deg":140,"rotation_var_deg":40,"length_ratio":0.45,"length_var":0.3,"curve_deg":15,"curve_var_deg":20,"tropism":0.03,"taper":1.0,"radius_ratio":0.5,"segments":1}],"foliage":{"type":"needle","leaf_size_m":0.27,"leaf_shape":"needle_drooping","cluster_m":1.3,"density":12,"start":0.45,"parent_start":0.55,"orientation":"along","droop":0.8,"needle_planes":2,"tuft_spread_deg":28,"cards_per_m2":0.83,"colors":{"winter":[116,129,116],"spring":[121,135,116],"summer":[125,133,121],"fall":[123,131,119]},"leaf_on":{"winter":1.0,"spring":1.0,"summer":1.0,"fall":1.0},"twist_deg":70,"clumps":{"radius_m":0.5,"cards_per_clump":2,"shell":0,"flatten":0.85,"tip_bias":2.0},"palette":[[0.9,[1,1,1]],[0.1,[1.3,1.1,0.8]]],"ao_min":0.75,"color_var":[0.08,0.03]},"deadwood":{"fraction":0.22,"where":"lower","levels":[1],"shorten":0.7,"rgb":[138,132,122]},"lod":{"near_tris_budget":1800,"near_sides":[7,3,0],"mid_blobs":5,"mid_branches":3,"mid_blob_scale":0.7,"close_factor":2,"mid_planes":1,"mid_cards":32},"targets":{"crown_width_ratio":0.65,"crown_base_ratio":0.3,"porosity":0.4,"foliage_rg":0.88,"foliage_bg":0.82,"from":"reference photographs, docs/tree-likeness-review.md: 01 with blue oaks, 02 leaning (crown porosity 0.53), 03 single (0.32), 05 Mt Diablo"},"license":"CC BY-SA 4.0"},
-  "pinus_ponderosa": {"id":"pinus_ponderosa","aliases":["ponderosa"],"scientific":"Pinus ponderosa","common":"ponderosa pine","form":"tree","architectural_model":"Rauh","deciduous":false,"height_m":[22,38],"variants":[{"name":"pole","weight":0.25,"height_m":[8,15],"trunk_radius":0.8,"branches":0.7,"set":{"trunk":{"base_size":0.22,"bole_ratio":0.15,"bark_rgb":[98,80,68],"stubs":{"count":[0,3]}},"crown":{"envelope":{"profile":[[0.18,0.2],[0.4,0.19],[0.6,0.15],[0.8,0.09],[1.0,0.02]]}},"levels":[{"droop_deg":20,"upturn_deg":30}]},"note":"blackjack: dark bark, a conical crown reaching down to a quarter of the height"},{"name":"mature","weight":0.5,"seeds":2,"note":"the file as written"},{"name":"old-growth","weight":0.2,"height_m":[30,40],"trunk_radius":1.35,"branches":0.8,"deadwood":{"fraction":0.12,"levels":[1],"where":"lower","shorten":0.5,"rgb":[130,118,104]},"set":{"trunk":{"base_size":0.62,"bole_ratio":0.6,"bark_rgb":[188,132,92],"stubs":{"count":[10,20]},"length_ratio":0.92},"crown":{"envelope":{"profile":[[0.58,0.2],[0.72,0.25],[0.86,0.26],[0.95,0.21],[1.0,0.12]]},"shape":"cylindrical"},"levels":[{"droop_deg":40,"upturn_deg":30}]},"note":"flat-topped, a long clear bole of pale yellow plates, heavy limbs"}],"snag":{"fraction":0.04,"from":"mature","limbs":0.3,"twigs":0,"levels":1,"broken_top":[0.55,0.85],"shorten":[0.3,0.8],"rgb":[140,124,108]},"description":"A tall, straight pine with a clear trunk, thick bark broken into cinnamon-orange plates between black fissures, and long needles (12-25 cm, in threes) in tufts at the branch tips; 22-38 m tall here. It grows above the oak woodland in the lower conifer forest, from about 600 m up, and its thick bark lets old trees survive the frequent low fires that once kept these forests open.","season_notes":{"winter":"Evergreen: needles stay on for about three years, so the crown is full in every season.","spring":"Pollen cones release clouds of yellow pollen (May-June) and new shoots extend at the branch tips.","summer":"Second-year seed cones grow to full size and turn from green to red-brown.","fall":"Cones open and drop winged seeds (September-October) for squirrels, chipmunks and birds; the oldest needles yellow and fall."},"status":"agent draft, needs local sign-off","trunk":{"length_ratio":1.0,"radius_ratio":0.03,"taper":1.0,"flare":1.25,"bole_ratio":0.45,"base_size":0.48,"curve_deg":4,"curve_var_deg":4,"segments":7,"lean_deg":3,"stems":[1,1],"stem_spread_deg":0,"split_prob":0.03,"split_count":2,"split_angle_deg":12,"bark_rgb":[168,116,82],"bark_pattern":"plates","twig_rgb":[92,74,60],"stubs":{"count":[6,14],"length_m":0.5,"radius_ratio":0.12},"bark":{"tile_m":[0.7,1.4],"plate_m":[0.2,0.6],"fissure":0.95,"contrast":1.15,"relief":1.4}},"crown":{"shape":"tapered_cylindrical","envelope":{"profile":[[0.4,0.2],[0.6,0.22],[0.8,0.2],[0.92,0.13],[1.0,0.04]],"lobes":3,"lobe_depth":0.1,"asymmetry":0.1,"fill":0.15,"edge":1.1}},"levels":[{"count":30,"whorl":3,"down_angle_deg":92,"down_angle_tip_deg":58,"down_angle_var_deg":10,"rotation_deg":37,"rotation_var_deg":25,"length_ratio":0.26,"length_var":0.2,"curve_deg":0,"curve_var_deg":16,"tropism":0.02,"droop_deg":34,"upturn_deg":40,"taper":0.95,"radius_ratio":0.32,"segments":3},{"count":6,"start":0.5,"down_angle_deg":50,"down_angle_var_deg":15,"rotation_deg":-90,"rotation_var_deg":30,"length_ratio":0.3,"length_var":0.3,"curve_deg":10,"curve_var_deg":10,"tropism":0.12,"taper":1.0,"radius_ratio":0.5,"segments":1}],"foliage":{"type":"needle","leaf_size_m":0.2,"leaf_shape":"needle_brush","cluster_m":1.8,"density":7,"start":0.4,"parent_start":0.6,"orientation":"along","needle_planes":2,"tuft_spread_deg":22,"tuft_up":0.45,"colors":{"winter":[76,77,59],"spring":[95,95,65],"summer":[82,86,62],"fall":[91,86,59]},"leaf_on":{"winter":1.0,"spring":1.0,"summer":1.0,"fall":1.0},"twist_deg":50,"clumps":{"radius_m":0.6,"cards_per_clump":2,"shell":0,"flatten":0.75,"tip_bias":1.6},"ao_min":0.7,"color_var":[0.07,0.03]},"lod":{"near_tris_budget":2200,"near_sides":[8,3,0],"mid_blobs":5,"mid_branches":2,"mid_blob_scale":0.7,"close_factor":2,"mid_planes":1,"mid_cards":28},"targets":{"crown_width_ratio":0.4,"crown_base_ratio":0.45,"porosity":0.35,"foliage_rg":0.95,"foliage_bg":0.47,"from":"reference photographs, docs/tree-likeness-review.md: 02, 03 mature (clear bole 40-60%), 04 old flat top (crown porosity 0.14); young trees are conical to the ground"},"license":"CC BY-SA 4.0"},
+  "pinus_sabiniana": {"id":"pinus_sabiniana","aliases":["gray_pine"],"scientific":"Pinus sabiniana","common":"gray pine","form":"tree","architectural_model":"Rauh","deciduous":false,"height_m":[12,22],"variants":[{"name":"young","weight":0.3,"height_m":[6,12],"trunk_radius":0.8,"crown_scale":0.8,"branches":0.8,"deadwood":0.12,"set":{"trunk":{"split_prob":0.15,"lean_deg":8}},"note":"a single leaning leader, crown open and narrow"},{"name":"mature","weight":0.5,"seeds":2,"note":"the file as written"},{"name":"veteran","weight":0.2,"height_m":[15,24],"trunk_radius":1.25,"crown_scale":1.15,"deadwood":0.32,"set":{"trunk":{"split_prob":1.0,"split_count":3,"split_height":0.42,"split_angle_deg":24,"lean_deg":18}},"note":"forked into three leaders, many dead lower limbs"}],"snag":{"fraction":0.05,"from":"veteran","limbs":0.45,"twigs":0,"levels":1,"broken_top":[0.7,0.95],"shorten":[0.4,0.9],"rgb":[150,146,138],"height_m":[12,20]},"description":"A thin, often forked or leaning pine whose sparse gray-green needles, 20-30 cm long in bundles of three, make a crown you can see the sky through; 12-22 m tall here. It grows only in California, scattered among blue oaks on the hottest, driest foothill slopes, and its heavy cones hold large, hard-shelled seeds eaten by squirrels and jays and long gathered as food by Native Californians.","season_notes":{"winter":"Evergreen: the gray-green needles look hazy against the hills, and heavy cones from past years still hang in the crown.","spring":"Pollen cones shed yellow pollen (March-April) and new needles grow at the branch tips.","summer":"Second-year cones swell to full size; the open crown gives little shade.","fall":"Ripe cones open and drop big, hard-shelled seeds that squirrels, jays and woodpeckers gather."},"status":"agent draft, needs local sign-off","trunk":{"length_ratio":0.95,"radius_ratio":0.03,"taper":0.9,"flare":1.2,"bole_ratio":0.25,"base_size":0.28,"curve_deg":25,"curve_var_deg":25,"segments":6,"lean_deg":14,"stems":[1,1],"stem_spread_deg":0,"split_prob":0.6,"split_count":2,"split_angle_deg":18,"bark_rgb":[112,104,92],"bark_pattern":"furrowed","twig_rgb":[106,100,90],"split_height":0.55,"bark":{"tile_m":[0.5,1.0],"ridge_m":0.09,"block_m":0.12,"fissure":0.7,"contrast":1.2,"relief":1.5}},"crown":{"shape":"spherical","envelope":{"profile":[[0.22,0.16],[0.38,0.29],[0.55,0.33],[0.7,0.31],[0.84,0.23],[0.94,0.13],[1.0,0.04]],"lobes":3,"lobe_depth":0.16,"asymmetry":0.15,"fill":0.35,"edge":1.1}},"levels":[{"count":30,"whorl":2,"down_angle_deg":72,"down_angle_tip_deg":40,"down_angle_var_deg":18,"rotation_deg":70,"rotation_var_deg":40,"length_ratio":0.3,"length_var":0.35,"curve_deg":10,"curve_var_deg":28,"tropism":0.05,"taper":0.95,"radius_ratio":0.4,"segments":2},{"count":4,"start":0.35,"down_angle_deg":45,"down_angle_var_deg":15,"rotation_deg":140,"rotation_var_deg":40,"length_ratio":0.45,"length_var":0.3,"curve_deg":15,"curve_var_deg":20,"tropism":0.03,"taper":1.0,"radius_ratio":0.5,"segments":1}],"foliage":{"type":"needle","leaf_size_m":0.27,"leaf_shape":"needle_drooping","cluster_m":1.3,"density":12,"start":0.45,"parent_start":0.55,"orientation":"along","droop":0.8,"needle_planes":2,"tuft_spread_deg":28,"cards_per_m2":0.83,"needle_normal":0.65,"needle_wrap":0.6,"translucency":3.5,"needle_scatter":0.3,"translucency_rgb":[1.0,1.06,0.95],"colors":{"winter":[116,129,116],"spring":[121,135,116],"summer":[125,133,121],"fall":[123,131,119]},"leaf_on":{"winter":1.0,"spring":1.0,"summer":1.0,"fall":1.0},"twist_deg":70,"clumps":{"radius_m":0.5,"cards_per_clump":2,"shell":0,"flatten":0.85,"tip_bias":2.0},"palette":[[0.9,[1,1,1]],[0.1,[1.3,1.1,0.8]]],"ao_min":0.75,"color_var":[0.08,0.03]},"deadwood":{"fraction":0.22,"where":"lower","levels":[1],"shorten":0.7,"rgb":[138,132,122]},"lod":{"near_tris_budget":1800,"near_sides":[7,3,0],"mid_blobs":5,"mid_branches":3,"mid_blob_scale":0.7,"close_factor":2,"mid_planes":1,"mid_cards":32},"targets":{"crown_width_ratio":0.65,"crown_base_ratio":0.3,"porosity":0.4,"foliage_rg":0.88,"foliage_bg":0.82,"from":"reference photographs, docs/tree-likeness-review.md: 01 with blue oaks, 02 leaning (crown porosity 0.53), 03 single (0.32), 05 Mt Diablo"},"license":"CC BY-SA 4.0"},
+  "pinus_ponderosa": {"id":"pinus_ponderosa","aliases":["ponderosa"],"scientific":"Pinus ponderosa","common":"ponderosa pine","form":"tree","architectural_model":"Rauh","deciduous":false,"height_m":[22,38],"variants":[{"name":"pole","weight":0.25,"height_m":[8,15],"trunk_radius":0.8,"branches":0.7,"set":{"trunk":{"base_size":0.22,"bole_ratio":0.15,"bark_rgb":[98,80,68],"stubs":{"count":[0,3]}},"crown":{"envelope":{"profile":[[0.18,0.2],[0.4,0.19],[0.6,0.15],[0.8,0.09],[1.0,0.02]]}},"levels":[{"droop_deg":20,"upturn_deg":30}]},"note":"blackjack: dark bark, a conical crown reaching down to a quarter of the height"},{"name":"mature","weight":0.5,"seeds":2,"note":"the file as written"},{"name":"old-growth","weight":0.2,"height_m":[30,40],"trunk_radius":1.35,"branches":0.8,"deadwood":{"fraction":0.12,"levels":[1],"where":"lower","shorten":0.5,"rgb":[130,118,104]},"set":{"trunk":{"base_size":0.62,"bole_ratio":0.6,"bark_rgb":[188,132,92],"stubs":{"count":[10,20]},"length_ratio":0.92},"crown":{"envelope":{"profile":[[0.58,0.2],[0.72,0.25],[0.86,0.26],[0.95,0.21],[1.0,0.12]]},"shape":"cylindrical"},"levels":[{"droop_deg":40,"upturn_deg":30}]},"note":"flat-topped, a long clear bole of pale yellow plates, heavy limbs"}],"snag":{"fraction":0.04,"from":"mature","limbs":0.3,"twigs":0,"levels":1,"broken_top":[0.55,0.85],"shorten":[0.3,0.8],"rgb":[140,124,108]},"description":"A tall, straight pine with a clear trunk, thick bark broken into cinnamon-orange plates between black fissures, and long needles (12-25 cm, in threes) in tufts at the branch tips; 22-38 m tall here. It grows above the oak woodland in the lower conifer forest, from about 600 m up, and its thick bark lets old trees survive the frequent low fires that once kept these forests open.","season_notes":{"winter":"Evergreen: needles stay on for about three years, so the crown is full in every season.","spring":"Pollen cones release clouds of yellow pollen (May-June) and new shoots extend at the branch tips.","summer":"Second-year seed cones grow to full size and turn from green to red-brown.","fall":"Cones open and drop winged seeds (September-October) for squirrels, chipmunks and birds; the oldest needles yellow and fall."},"status":"agent draft, needs local sign-off","trunk":{"length_ratio":1.0,"radius_ratio":0.03,"taper":1.0,"flare":1.25,"bole_ratio":0.45,"base_size":0.48,"curve_deg":4,"curve_var_deg":4,"segments":7,"lean_deg":3,"stems":[1,1],"stem_spread_deg":0,"split_prob":0.03,"split_count":2,"split_angle_deg":12,"bark_rgb":[168,116,82],"bark_pattern":"plates","twig_rgb":[92,74,60],"stubs":{"count":[6,14],"length_m":0.5,"radius_ratio":0.12},"bark":{"tile_m":[0.7,1.4],"plate_m":[0.2,0.6],"fissure":0.95,"contrast":1.15,"relief":1.4}},"crown":{"shape":"tapered_cylindrical","envelope":{"profile":[[0.4,0.2],[0.6,0.22],[0.8,0.2],[0.92,0.13],[1.0,0.04]],"lobes":3,"lobe_depth":0.1,"asymmetry":0.1,"fill":0.15,"edge":1.1}},"levels":[{"count":30,"whorl":3,"down_angle_deg":92,"down_angle_tip_deg":58,"down_angle_var_deg":10,"rotation_deg":37,"rotation_var_deg":25,"length_ratio":0.26,"length_var":0.2,"curve_deg":0,"curve_var_deg":16,"tropism":0.02,"droop_deg":34,"upturn_deg":40,"taper":0.95,"radius_ratio":0.32,"segments":3},{"count":6,"start":0.5,"down_angle_deg":50,"down_angle_var_deg":15,"rotation_deg":-90,"rotation_var_deg":30,"length_ratio":0.3,"length_var":0.3,"curve_deg":10,"curve_var_deg":10,"tropism":0.12,"taper":1.0,"radius_ratio":0.5,"segments":1}],"foliage":{"type":"needle","leaf_size_m":0.2,"leaf_shape":"needle_brush","cluster_m":1.8,"density":7,"start":0.4,"parent_start":0.6,"orientation":"along","needle_planes":2,"tuft_spread_deg":22,"tuft_up":0.45,"needle_normal":0.55,"needle_wrap":0.35,"translucency":2.5,"needle_scatter":0.15,"colors":{"winter":[76,77,59],"spring":[95,95,65],"summer":[82,86,62],"fall":[91,86,59]},"leaf_on":{"winter":1.0,"spring":1.0,"summer":1.0,"fall":1.0},"twist_deg":50,"clumps":{"radius_m":0.6,"cards_per_clump":2,"shell":0,"flatten":0.75,"tip_bias":1.6},"ao_min":0.7,"color_var":[0.07,0.03]},"lod":{"near_tris_budget":2200,"near_sides":[8,3,0],"mid_blobs":5,"mid_branches":2,"mid_blob_scale":0.7,"close_factor":2,"mid_planes":1,"mid_cards":28},"targets":{"crown_width_ratio":0.4,"crown_base_ratio":0.45,"porosity":0.35,"foliage_rg":0.95,"foliage_bg":0.47,"from":"reference photographs, docs/tree-likeness-review.md: 02, 03 mature (clear bole 40-60%), 04 old flat top (crown porosity 0.14); young trees are conical to the ground"},"license":"CC BY-SA 4.0"},
   "arctostaphylos_viscida": {"id":"arctostaphylos_viscida","aliases":["manzanita"],"scientific":"Arctostaphylos viscida","common":"whiteleaf manzanita","form":"shrub","architectural_model":"Leeuwenberg","deciduous":false,"height_m":[1.5,3.5],"variants":[{"name":"young","weight":0.25,"height_m":[0.7,1.5],"deadwood":0.05,"set":{"trunk":{"stems":[3,5]}},"note":"a low rounded young shrub"},{"name":"mature","weight":0.5,"seeds":2,"note":"the file as written"},{"name":"decadent","weight":0.25,"height_m":[2,3.5],"gnarl":1.15,"leaf_density":0.75,"deadwood":{"fraction":0.35,"levels":[0,1,2]},"note":"an old shrub: grey dead stems among the red"}],"description":"A crooked, many-stemmed shrub with smooth, polished red-brown bark and stiff, round, pale gray-green (almost white) leaves held edge-on to the sun; 1.5-3.5 m tall here. It grows in chaparral and in openings of the woodland and pine forest on dry, rocky ridges, and its late-winter flowers are among the first nectar of the year for hummingbirds and native bees, while its berries feed birds, foxes, coyotes and bears.","season_notes":{"winter":"Flowering in late winter (February-March): small white-to-pink urn-shaped flowers, early nectar for hummingbirds and native bees.","spring":"Flowers give way to sticky green berries.","summer":"The berries ('little apples', which is what manzanita means) ripen red-brown, and the red bark peels in thin curls.","fall":"Evergreen and dormant through the dry season; next winter's flower buds are already set at the branch tips."},"status":"agent draft, needs local sign-off","trunk":{"length_ratio":0.75,"radius_ratio":0.035,"taper":0.7,"flare":1.6,"bole_ratio":0.1,"base_size":0.2,"curve_deg":20,"curve_var_deg":18,"segments":4,"lean_deg":0,"stems":[4,7],"stem_spread_deg":45,"split_prob":0.0,"split_count":2,"split_angle_deg":20,"bark_rgb":[128,58,50],"bark_pattern":"smooth","twig_rgb":[132,66,54],"sinuous_deg":16,"bark":{"tile_m":[0.2,0.4],"contrast":1.0,"relief":0.6}},"crown":{"shape":"cylindrical","envelope":{"profile":[[0.0,0.54],[0.15,0.744],[0.35,0.84],[0.55,0.792],[0.75,0.624],[0.9,0.384],[1.0,0.12]],"lobes":3,"lobe_depth":0.1,"asymmetry":0.12,"fill":0.6,"edge":1.06}},"levels":[{"count":4,"down_angle_deg":35,"down_angle_var_deg":15,"rotation_deg":140,"rotation_var_deg":30,"length_ratio":0.75,"length_var":0.25,"curve_deg":30,"curve_var_deg":14,"tropism":0.08,"taper":0.9,"radius_ratio":0.6,"segments":2,"sinuous_deg":18},{"count":4,"start":0.3,"down_angle_deg":35,"down_angle_var_deg":15,"rotation_deg":140,"rotation_var_deg":30,"length_ratio":0.45,"length_var":0.25,"curve_deg":20,"curve_var_deg":20,"tropism":0.08,"taper":1.0,"radius_ratio":0.5,"segments":1}],"foliage":{"type":"broadleaf","leaf_size_m":0.035,"leaf_shape":"round_vertical","cluster_m":0.5,"density":24,"start":0.25,"orientation":"vertical","colors":{"winter":[131,139,118],"spring":[160,149,134],"summer":[144,149,126],"fall":[136,142,121]},"leaf_on":{"winter":1.0,"spring":1.0,"summer":1.0,"fall":1.0},"clumps":{"radius_m":0.4,"cards_per_clump":6,"shell":0.5,"flatten":0.8,"tip_bias":1.3},"ao_min":0.8,"color_var":[0.07,0.03]},"deadwood":{"fraction":0.15,"where":"inner","levels":[1,2],"shorten":0.6,"rgb":[140,136,128]},"lod":{"near_tris_budget":1100,"near_sides":[4,3,0],"mid_blobs":3,"mid_branches":0,"mid_sides":[0,0],"mid_cards":24},"targets":{"crown_width_ratio":1.4,"crown_base_ratio":0.15,"porosity":0.1,"foliage_rg":0.95,"foliage_bg":0.68,"from":"reference photographs, docs/tree-likeness-review.md: 01, 02 habit (crown r/g 0.91-0.96, b/g 0.59-0.74), 06 crown texture"},"license":"CC BY-SA 4.0"},
   "adenostoma_fasciculatum": {"id":"adenostoma_fasciculatum","aliases":["chamise"],"scientific":"Adenostoma fasciculatum","common":"chamise","form":"shrub","architectural_model":"Leeuwenberg (provisional)","deciduous":false,"height_m":[1.2,2.4],"variants":[{"name":"young","weight":0.25,"height_m":[0.6,1.3],"deadwood":0.08,"set":{"trunk":{"stems":[8,14]}},"note":"a few years after fire: a low, dense green clump"},{"name":"mature","weight":0.5,"seeds":2,"note":"the file as written"},{"name":"decadent","weight":0.25,"height_m":[1.5,2.6],"deadwood":0.55,"leaf_density":0.75,"set":{"trunk":{"stems":[22,34]}},"note":"decades without fire: half the stems grey and dead"}],"description":"A dense, many-stemmed shrub with tiny needle-like leaves in bundles along stiff, upright branches, and clusters of small white flowers at the tips in early summer; 1.2-2.4 m tall here. It is the most common chaparral shrub in California, forming thick stands on hot, dry slopes with thin soil, where it resprouts from a woody burl after fire and gives cover to quail, brush rabbits and wrentits.","season_notes":{"winter":"Evergreen: winter rain brings new shoots, and stands burned in recent years sprout from their burls.","spring":"Fresh green growth, then clusters of small white flowers at the branch tips (May-June).","summer":"The flowers fade to rust-brown; the resinous leaves dry out, and chamise is one of the most flammable plants in the chaparral.","fall":"Rust-brown seed heads still cap the stems while the shrubs wait out the dry season for the first rain."},"status":"agent draft, needs local sign-off","trunk":{"length_ratio":1.0,"radius_ratio":0.012,"taper":0.9,"flare":1.5,"bole_ratio":0.05,"base_size":0.3,"curve_deg":8,"curve_var_deg":16,"segments":3,"lean_deg":0,"stems":[16,28],"stem_spread_deg":33,"split_prob":0.0,"split_count":2,"split_angle_deg":20,"bark_rgb":[96,76,62],"bark_pattern":"shreddy","twig_rgb":[106,90,74],"bark":{"tile_m":[0.1,0.4]}},"crown":{"shape":"cylindrical","envelope":{"profile":[[0.0,0.12],[0.25,0.3],[0.5,0.47],[0.75,0.6],[0.92,0.6],[1.0,0.42]],"lobes":5,"lobe_depth":0.15,"asymmetry":0.12,"fill":0.4,"edge":1.1}},"levels":[{"count":3,"start":0.4,"down_angle_deg":22,"down_angle_var_deg":10,"rotation_deg":140,"rotation_var_deg":30,"length_ratio":0.22,"length_var":0.4,"curve_deg":5,"curve_var_deg":15,"tropism":0.08,"taper":1.0,"radius_ratio":0.6,"segments":1}],"foliage":{"type":"needle","leaf_size_m":0.008,"leaf_shape":"fascicle_wand","cluster_m":0.42,"density":22,"start":0.1,"orientation":"along","colors":{"winter":[82,94,67],"spring":[150,149,125],"summer":[116,118,98],"fall":[124,102,83]},"leaf_on":{"winter":1.0,"spring":1.0,"summer":1.0,"fall":1.0},"parent_start":0.2,"twist_deg":60,"tips":{"spring":[236,232,214],"summer":[170,120,80],"fall":[150,90,60],"winter":[120,84,62]},"ao_min":0.72,"color_var":[0.1,0.06]},"deadwood":{"fraction":0.3,"levels":[0],"shorten":0.85,"rgb":[132,128,122]},"lod":{"near_tris_budget":1000,"near_sides":[3,0],"mid_blobs":3,"mid_branches":0,"mid_sides":[0,0],"mid_cards":32},"targets":{"crown_width_ratio":1.2,"crown_base_ratio":0.1,"porosity":0.15,"foliage_rg":1.0,"foliage_bg":0.7,"from":"reference photographs, docs/tree-likeness-review.md: 01 El Dorado Hills, 02 Darrington Trail, 03 (porosity 0.17), 04"},"license":"CC BY-SA 4.0"},
 };
@@ -1131,30 +1131,42 @@ function drawTwigs(g, S, rnd, rgb) {
 // fixed random subset of the needles left out (`keep`, its own stream) so that the level's alpha-test
 // coverage matches level 0: fewer, relatively thicker lines, the same cover, so a far crown neither
 // washes out nor fills in. The smallest levels (8x8 and below) are box-filtered as before.
+// Each level is drawn twice with the same strokes: the colour texture and an aux texture
+// (texture.userData.aux) holding each needle's shading normal in the card's frame (rgb) and the
+// foliage's thinness around it (alpha), with its own mips from the same draws, for canopyMaterial.
+const NEEDLE_BEND = 0.6;   // needle normal: outward from the shoot plus this much of the needle's own direction
 function needleTexture(F, S, px, seed, rgb, pal, wsum, far) {
   const drawLevel = (size, keep, minW) => {
     const c = document.createElement('canvas'); c.width = c.height = size;
-    const g = c.getContext('2d'), r = mulberry32(seed); g.lineCap = 'round';
+    const ca = document.createElement('canvas'); ca.width = ca.height = size;
+    const g = c.getContext('2d'), ga = ca.getContext('2d'), r = mulberry32(seed);
+    g.lineCap = 'round'; ga.lineCap = 'round';
     const subs = Array.from({ length: 5 }, () => { const a = r() * Math.PI * 2, rr = 0.22 * r(); return [size / 2 + Math.cos(a) * rr * size, size / 2 + Math.sin(a) * rr * size * 1.05, size * (0.17 + 0.09 * r())]; });
     const inside = () => { for (;;) { const [cx, cy, R] = subs[Math.floor(r() * subs.length)], a = r() * Math.PI * 2, rr = R * Math.sqrt(r()), x = cx + Math.cos(a) * rr, y = cy + Math.sin(a) * rr;
       const ex = (x - size / 2) / (size * 0.42), ey = (y - size / 2) / (size * 0.45); if (ex * ex + ey * ey < 1) return [x, y]; } };
     const tintOf = () => { let x = r() * wsum; for (const q of pal) { if ((x -= q[0]) <= 0) return q[1]; } return pal[0][1]; };
-    drawNeedleCard(g, size, F, px * size / S, r, rgb, tintOf, far, inside, keep, mulberry32(seed ^ 0x5eed1e), minW);
-    return g.getImageData(0, 0, size, size);
+    drawNeedleCard(g, size, F, px * size / S, r, rgb, tintOf, far, inside, keep, mulberry32(seed ^ 0x5eed1e), minW, ga);
+    return [g.getImageData(0, 0, size, size), ga.getImageData(0, 0, size, size)];
   };
   const cover = img => { const d = img.data; let n = 0; for (let i = 3; i < d.length; i += 4) if (d[i] >= 128) n++; return n / (d.length / 4); };
-  const levels = [drawLevel(S, 1, 0)], c0 = cover(levels[0]), m0 = meanGrey(levels[0]);
+  const [img0, aux0] = drawLevel(S, 1, 0);
+  const levels = [img0], auxes = [aux0], c0 = cover(img0), m0 = meanGrey(img0), keeps = [1];
   for (let size = S >> 1; size >= 16; size >>= 1) {
-    let keep = 1, img = drawLevel(size, keep, 1), c = cover(img);
+    let keep = 1, [img, aux] = drawLevel(size, keep, 1), c = cover(img);
     for (let it = 0; it < 4 && c0 > 0 && Math.abs(c - c0) > 0.06 * c0; it++) {
       keep = Math.min(1, keep * Math.pow(c0 / Math.max(1e-4, c), 1.6));   // coverage falls slower than keep (overlap): overshoot
-      img = drawLevel(size, keep, 1); c = cover(img);
+      [img, aux] = drawLevel(size, keep, 1); c = cover(img);
     }
     // the same mean brightness as level 0 (twigs, held at a texel wide, take a larger share of a small level)
     const m = meanGrey(img), k = m > 0 ? m0 / m : 1, d = img.data;
     for (let i = 0; i < d.length; i += 4) { d[i] = Math.min(255, d[i] * k); d[i + 1] = Math.min(255, d[i + 1] * k); d[i + 2] = Math.min(255, d[i + 2] * k); }
-    levels.push(img);
+    levels.push(img); auxes.push(aux); keeps.push(+keep.toFixed(3));
   }
+  // Aux alpha: how thin the foliage is around each texel (1 - its local cover, over about 2 cm of a
+  // near card at every level), the weight of light passing through (canopyMaterial). Then colour and
+  // normal are bled into the empty texels, so filtering at a needle's edge does not pull in black
+  // (a one-texel needle on a small level is mostly edge: unbled, it rendered at about 0.6 of its colour).
+  levels.forEach((img, i) => { thinness(img, auxes[i], Math.max(1, Math.round(img.width / 48))); bleed(auxes[i], img); bleed(img); });
   const rest = coverageMips(levels[levels.length - 1], 0.5, c0);
   const t = new THREE.Texture();
   t.mipmaps = levels.concat(rest.slice(1));
@@ -1162,7 +1174,67 @@ function needleTexture(F, S, px, seed, rgb, pal, wsum, far) {
   t.generateMipmaps = false; t.minFilter = THREE.LinearMipmapLinearFilter; t.magFilter = THREE.LinearFilter;
   t.colorSpace = THREE.NoColorSpace; t.anisotropy = 4; t.needsUpdate = true;
   t.userData.mean = meanGrey(levels[0]);
+  const a = new THREE.Texture();
+  a.mipmaps = auxes.concat(boxMips(auxes[auxes.length - 1], levels[levels.length - 1]).slice(1));
+  a.image = a.mipmaps[0];
+  a.generateMipmaps = false; a.minFilter = THREE.LinearMipmapLinearFilter; a.magFilter = THREE.LinearFilter;
+  a.colorSpace = THREE.NoColorSpace; a.anisotropy = 4; a.needsUpdate = true;
+  t.userData.aux = a; t.userData.keep = keeps;   // the fraction of needles drawn on each level (inspection)
   return t;
+}
+
+// Aux alpha from the colour level's coverage: 1 where a needle stands alone, 0 inside a dense tuft.
+function thinness(img, aux, r) {
+  const w = img.width, h = img.height, d = img.data, o = aux.data, sat = new Float32Array((w + 1) * (h + 1));
+  for (let y = 0; y < h; y++) { let row = 0; for (let x = 0; x < w; x++) { row += d[(y * w + x) * 4 + 3] / 255; sat[(y + 1) * (w + 1) + x + 1] = sat[y * (w + 1) + x + 1] + row; } }
+  for (let y = 0; y < h; y++) for (let x = 0; x < w; x++) {
+    const x0 = Math.max(0, x - r), x1 = Math.min(w, x + r + 1), y0 = Math.max(0, y - r), y1 = Math.min(h, y + r + 1);
+    const cov = (sat[y1 * (w + 1) + x1] - sat[y0 * (w + 1) + x1] - sat[y1 * (w + 1) + x0] + sat[y0 * (w + 1) + x0]) / ((x1 - x0) * (y1 - y0));
+    o[(y * w + x) * 4 + 3] = Math.round(255 * (1 - cov));
+  }
+}
+
+// Colour of the empty texels (alpha 0) from their covered neighbours, a few rings deep, the rest the
+// mean colour: canvas leaves them black, which bilinear filtering pulls into every needle edge.
+// `cover` (optional): the image whose alpha says which texels are empty (the aux texture's own alpha
+// is thinness, not cover).
+function bleed(img, cover = img, rings = 3) {
+  const w = img.width, h = img.height, d = img.data, cv = cover.data;
+  const filled = new Uint8Array(w * h); let mr = 0, mg = 0, mb = 0, n = 0;
+  for (let i = 0; i < w * h; i++) if (cv[i * 4 + 3] > 0) { filled[i] = 1; mr += d[i * 4]; mg += d[i * 4 + 1]; mb += d[i * 4 + 2]; n++; }
+  if (!n) return;
+  const add = [];
+  for (let it = 0; it < rings; it++) {
+    add.length = 0;
+    for (let y = 0; y < h; y++) for (let x = 0; x < w; x++) {
+      const i = y * w + x; if (filled[i]) continue;
+      let r = 0, g = 0, b = 0, k = 0;
+      for (const j of [x > 0 ? i - 1 : -1, x < w - 1 ? i + 1 : -1, y > 0 ? i - w : -1, y < h - 1 ? i + w : -1]) if (j >= 0 && filled[j]) { r += d[j * 4]; g += d[j * 4 + 1]; b += d[j * 4 + 2]; k++; }
+      if (k) add.push(i, r / k, g / k, b / k);
+    }
+    for (let k = 0; k < add.length; k += 4) { const i = add[k]; d[i * 4] = add[k + 1]; d[i * 4 + 1] = add[k + 2]; d[i * 4 + 2] = add[k + 3]; filled[i] = 1; }
+  }
+  for (let i = 0; i < w * h; i++) if (!filled[i]) { d[i * 4] = mr / n; d[i * 4 + 1] = mg / n; d[i * 4 + 2] = mb / n; }
+}
+
+// Plain mips for the aux texture's smallest levels, weighted by the colour level's coverage.
+function boxMips(aux, col) {
+  const out = [aux]; let a = aux, c = col;
+  while (a.width > 1) {
+    const w = a.width >> 1, h = a.height >> 1, na = new ImageData(w, h), nc = new ImageData(w, h);
+    for (let y = 0; y < h; y++) for (let x = 0; x < w; x++) {
+      const o = (y * w + x) * 4; let s = [0, 0, 0, 0], cw = 0, ca = 0;
+      for (const [dx, dy] of [[0, 0], [1, 0], [0, 1], [1, 1]]) {
+        const i = ((2 * y + dy) * a.width + 2 * x + dx) * 4, wt = c.data[i + 3] + 1;
+        for (let k = 0; k < 4; k++) s[k] += a.data[i + k] * wt;
+        cw += wt; ca += c.data[i + 3];
+      }
+      for (let k = 0; k < 4; k++) na.data[o + k] = s[k] / cw;
+      nc.data[o + 3] = ca / 4;
+    }
+    out.push(na); a = na; c = nc;
+  }
+  return out;
 }
 
 // Pine needle cards (leaf_shape needle_brush: ponderosa; needle_drooping: gray pine). Each card is a
@@ -1171,20 +1243,23 @@ function needleTexture(F, S, px, seed, rgb, pal, wsum, far) {
 // thin curved stroke shaded from a darker base to a lighter tip (foliage.needle_tip: tip tint). Needles
 // are projected from 3D: each leaves the shoot at an angle theta from its axis and an azimuth phi around
 // it, so needles pointing at or away from the viewer are short, and a tuft reads the same from any side.
-//   needle_brush: dense bottle-brushes along the last ~1 needle length of each shoot, needles stiff and
-//     curving forward (up the shoot), the apex a rounded tuft: the crown edge is a fringe of lines.
+//   needle_brush: a dense brush on the last ~1.4 needle lengths of each of 4-5 widely forked shoots,
+//     needles stiff, curving forward (up the shoot) and spreading out behind the apex: separate round
+//     starbursts, so the crown edge is a fringe of lines and a card is not one palmate lobe.
 //   needle_drooping: sparse tufts only at the shoot tips, very long thin needles fanning out and arcing
 //     down (foliage.droop), so the tuft is see-through and hangs below the shoot.
 // `far` (the mid tier's merged clump cards): no twigs; a few large bursts of thick needles whose outer
 // ones point out of the clump, so a distant crown keeps a spiky outline rather than a blob.
-function drawNeedleCard(g, S, F, px, rnd, rgb, tintOf, far, inside, keep = 1, skip = null, minW = 0) {
+function drawNeedleCard(g, S, F, px, rnd, rgb, tintOf, far, inside, keep = 1, skip = null, minW = 0, ga = null) {
   const brush = F.leaf_shape === 'needle_brush', lw = S / 256;
   const tipT = F.needle_tip || (brush ? [1.08, 1.05, 0.9] : [1.03, 1.05, 1.1]);
   const droop = F.droop ?? (brush ? 0 : 0.8);
   // A needle: an arc of five straight pieces whose turn grows toward the tip (stiff at the base, the
   // tip bending most), so a hanging needle arches over rather than kinking. a: angle from canvas up
   // (the shoot tip), clockwise; bend: total turn in radians.
-  const needle = (x, y, a, L, bend, w, tint) => {
+  // `nrm` (aux texture, needleTexture): the needle's shading normal in the card's frame (x right, y up
+  // the card, z out of its front face), drawn with the same stroke into `ga`.
+  const needle = (x, y, a, L, bend, w, tint, nrm) => {
     const pts = [[x, y]]; let px0 = x, py0 = y;
     for (let i = 1; i <= 5; i++) { const ai = a + bend * Math.pow((i - 0.5) / 5, 1.6); px0 += Math.sin(ai) * L / 5; py0 -= Math.cos(ai) * L / 5; pts.push([px0, py0]); }
     const c0 = rgb(120 + 30 * rnd(), tint), c1 = rgb(185 + 30 * rnd(), tint), c2 = rgb(225 + 30 * rnd(), tint.map((v, i) => v * tipT[i]));
@@ -1193,11 +1268,16 @@ function drawNeedleCard(g, S, F, px, rnd, rgb, tintOf, far, inside, keep = 1, sk
     // shaded needles on the full-size level only (the mips are too small to show it, and it is slow)
     if (!minW) { st = g.createLinearGradient(x, y, px0, py0); st.addColorStop(0, c0); st.addColorStop(0.55, c1); st.addColorStop(1, c2); }
     g.strokeStyle = st; g.lineWidth = Math.max(minW, w); g.beginPath(); g.moveTo(x, y); for (let i = 1; i < pts.length; i++) g.lineTo(pts[i][0], pts[i][1]); g.stroke();
+    if (ga) { ga.strokeStyle = encN(nrm); ga.lineWidth = g.lineWidth; ga.beginPath(); ga.moveTo(x, y); for (let i = 1; i < pts.length; i++) ga.lineTo(pts[i][0], pts[i][1]); ga.stroke(); }
   };
+  const encN = n => `rgb(${n.map(v => Math.round(127.5 + 127.5 * v)).join(',')})`;
   // One fascicle (three needles from one point) leaving a shoot of 2D angle ta at polar angle th and
   // azimuth ph (3D), length L; `curl` bends it toward the shoot (brush) and `fall` toward canvas down.
+  // Its shading normal: the needle's outward direction from the shoot axis (R, by azimuth p) bent toward
+  // the needle's own direction (D), so the needles on the sunward side of a tuft catch the light and
+  // the ones behind and under it do not, and the tip of a brush faces out along the shoot.
   const fascicle = (x, y, ta, th, ph, L, w, curl, fall) => {
-    const tint = tintOf();
+    const tint = tintOf(), Ax = Math.sin(ta), Ay = Math.cos(ta), Px = Math.cos(ta), Py = -Math.sin(ta);
     for (let k = 0; k < 3; k++) {
       const t = th + (k - 1) * 0.05 + (rnd() - 0.5) * 0.06, p = ph + (rnd() - 0.5) * 0.5;
       const rx = Math.sin(t) * Math.cos(p), uy = Math.cos(t), proj = Math.hypot(rx, uy);
@@ -1205,7 +1285,15 @@ function drawNeedleCard(g, S, F, px, rnd, rgb, tintOf, far, inside, keep = 1, sk
       let bend = -Math.sign(rx) * curl * Math.sin(t);
       // hanging: turn toward canvas down by a fraction `fall` (0-0.9) of the angle still to go
       if (fall) { const an = Math.atan2(Math.sin(a), Math.cos(a)); bend += Math.sign(an || (rnd() - 0.5)) * (Math.PI - Math.abs(an)) * Math.min(0.9, fall); }
-      needle(x, y, a, len, bend, w * (0.85 + 0.3 * rnd()), tint);
+      let nrm = null;
+      if (ga) {
+        const cp = Math.cos(p), sp = Math.sin(p), st = Math.sin(t), ct = Math.cos(t);
+        const nx = cp * (1 + NEEDLE_BEND * st), na = NEEDLE_BEND * ct, nz = sp * (1 + NEEDLE_BEND * st);   // R + bend * D, in (perpendicular, along, out)
+        let v = [nx * Px + na * Ax, nx * Py + na * Ay, nz];
+        if (fall) v[1] -= fall * 0.6;   // hanging needles face more down
+        const l = Math.hypot(...v) || 1; nrm = v.map(c => c / l);
+      }
+      needle(x, y, a, len, bend, w * (0.85 + 0.3 * rnd()), tint, nrm);
     }
   };
   if (far) {
@@ -1227,29 +1315,32 @@ function drawNeedleCard(g, S, F, px, rnd, rgb, tintOf, far, inside, keep = 1, sk
   const clampTip = (x, y) => [Math.max(m, Math.min(S - m, x)), Math.max(m, Math.min(S - m, y))];
   const [mx1, my1] = clampTip(x0 + Math.sin(a0) * S, S - 2 - Math.cos(a0) * S);
   shoots.push([x0, S - 2, mx1, my1]);
-  // ponderosa: shoots fork at small angles and turn up alongside the main one (a candelabra of upturned
-  // brushes, not a flat fan, which reads as a palmate leaf); gray pine: wider, shorter side shoots
-  const nSide = brush ? 3 + Math.floor(rnd() * 3) : 3 + Math.floor(rnd() * 3);
+  // ponderosa: 3-4 side shoots forking at a wide angle and turning up beside the main one, each ending in
+  // its own round tuft, so the card is a few separate starbursts (a fan of overlapping brushes read as a
+  // palmate leaf from 20 m); gray pine: wider, shorter side shoots
+  const nSide = brush ? 3 + Math.floor(rnd() * 2) : 3 + Math.floor(rnd() * 3);
   for (let k = 0; k < nSide; k++) {
     const t = (brush ? 0.25 : 0.2) + (brush ? 0.45 : 0.6) * (k + rnd()) / nSide, [sx, sy, ex, ey] = shoots[0];
     const x = sx + (ex - sx) * t, y = sy + (ey - sy) * t, side = k % 2 ? 1 : -1;
-    const a = a0 + side * (brush ? 0.28 + 0.35 * rnd() : 0.45 + 0.6 * rnd()), l = brush ? (1 - t) * S * (0.7 + 0.25 * rnd()) : S * (0.22 + 0.25 * rnd());
+    const a = a0 + side * (brush ? 0.55 + 0.35 * rnd() : 0.45 + 0.6 * rnd()), l = brush ? (1 - t) * S * (0.7 + 0.25 * rnd()) : S * (0.22 + 0.25 * rnd());
     const [tx, ty] = clampTip(x + Math.sin(a) * l, y - Math.cos(a) * l);
     shoots.push([x, y, tx, ty]);
   }
   for (const [i, [xa, ya, xb, yb]] of shoots.entries()) {
     g.strokeStyle = rgb(95 + 20 * rnd()); g.lineWidth = Math.max(minW, lw * (i ? 1.6 : 2.4));
     g.beginPath(); g.moveTo(xa, ya); g.lineTo(xb, yb); g.stroke();
+    if (ga) { ga.strokeStyle = encN([0, 0.6, 0.8]); ga.lineWidth = g.lineWidth; ga.beginPath(); ga.moveTo(xa, ya); ga.lineTo(xb, yb); ga.stroke(); }
   }
   for (const [xa, ya, xb, yb] of shoots) {
     const len = Math.hypot(xb - xa, yb - ya), ta = Math.atan2(xb - xa, -(yb - ya));
     if (brush) {
-      // bottle-brush: fascicles all round the last ~1.6 needle lengths of the shoot, more perpendicular
-      // further back, forward-pointing at the apex; needles stiff, curving up the shoot
-      const span = Math.min(len * 0.85, px * 2.2), nf = Math.round(12 + 40 * span / px);
+      // bottle-brush: fascicles all round the last ~1.4 needle lengths of the shoot, forward-pointing at
+      // the apex and spreading to square with the shoot (and a little back) within a needle length of
+      // it, so the tuft is a round starburst; needles stiff, curving up the shoot
+      const span = Math.min(len * 0.85, px * 1.4), nf = Math.round(12 + 40 * span / px);
       for (let i = 0; i < nf; i++) {
         const u = Math.pow(rnd(), 0.9), d = span * (1 - u), x = xb - Math.sin(ta) * d, y = yb + Math.cos(ta) * d;
-        const th = 0.12 + 0.75 * Math.min(1, d / (px * 1.2)) + 0.25 * rnd();   // a forward-pointing cylinder, not a fan
+        const th = 0.15 + 1.2 * Math.min(1, d / (px * 0.9)) + 0.3 * rnd();
         fascicle(x, y, ta, th, rnd() * Math.PI * 2, px * (0.7 + 0.5 * rnd()), lw * 1.4, 0.35, 0);
       }
     } else {
@@ -1393,8 +1484,27 @@ export function canopyMaterial(spec, lod = 'near', patch = null) {
   // this keeps the cards near a constant size on screen. Inner cards leave in an even random sequence
   // (cardOff.w, cardGeometry) and shrink to nothing as f falls 0.08 below their order, so none pops.
   const thin = lod === 'mid' && near;
-  chainShader(m, (close ? 'leaf-close' : lod === 'mid' ? 'leaf-mid' : 'leaf-near') + `-v${cv[0]}-${cv[1]}-${lv}${thin ? '-thin' : ''}`, shader => {
+  // Pine needle cards (needleTexture: an aux texture of per-needle normals and thinness) are lit as
+  // needles rather than as a leaf. (1) Each needle's normal (in the card's frame, which the fragment
+  // shader takes from the screen-space derivatives of position and uv: no extra attributes) is mixed
+  // into the crown normal by foliage.needle_normal, for the sun and the sky light, so the needles on
+  // the sunward side of a tuft catch the light and those under and behind it fall into shade. (2) Wrap
+  // lighting (foliage.needle_wrap) for the sun: needles are scattered, so a tuft facing away from the
+  // sun is not black. (3) Light through the needles (foliage.translucency): with the sun behind the
+  // tuft, a forward-scattering lobe tinted yellow-green (foliage.translucency_rgb), weighted by the aux texture's thinness, so
+  // single needles at a tuft's edge glow and a dense core does not. It is shadowed like the sun term.
+  // (4) A weak glow of the whole backlit crown (foliage.needle_scatter: light scattered on through the
+  // foliage, so not shadowed by the crown itself; cloud shadow still applies), also more at thin edges.
+  // All of it fades out from 900 to 1500 m, where the impostors (lit by the crown normal alone) take
+  // over. The parameters are uniforms (userData.needleLight: normal, wrap, translucency, thinness ramp;
+  // userData.needleScatterK), so they can be tuned live.
+  const aux = near && m.map.userData.aux, F0 = spec.foliage;
+  const NL = aux ? [F0.needle_normal ?? 0.55, F0.needle_wrap ?? 0.35, F0.translucency ?? 2.5, 0.6] : null;
+  if (aux) m.userData.needleAux = { get value() { return (m.map && m.map.userData.aux) || aux; } };
+  if (aux) { m.userData.needleLight = { value: new THREE.Vector4(...NL) }; m.userData.needleScatterK = { value: F0.needle_scatter ?? 0.15 }; m.userData.needleTint = { value: new THREE.Vector3(...(F0.translucency_rgb || [1, 1.12, 0.55])) }; }
+  chainShader(m, (close ? 'leaf-close' : lod === 'mid' ? 'leaf-mid' : 'leaf-near') + `-v${cv[0]}-${cv[1]}-${lv}${thin ? '-thin' : ''}${aux ? '-needle' : ''}`, shader => {
     shader.uniforms.leafOn = m.userData.leafOn; shader.uniforms.leafVar = m.userData.leafVar;
+    if (aux) { shader.uniforms.needleAux = m.userData.needleAux; shader.uniforms.needleLight = m.userData.needleLight; shader.uniforms.needleScatterK = m.userData.needleScatterK; shader.uniforms.needleTint = m.userData.needleTint; }
     shader.vertexShader = shader.vertexShader
       .replace('#include <common>', '#include <common>\nattribute float leafRank;\nvarying float vLeafRank;' + (vary ? '\nvarying vec3 vPlantTint;\nuniform float leafVar;' : ''))
       .replace('#include <common>', '#include <common>\n' + (thin ? 'attribute vec4 cardOff;' : ''))
@@ -1420,6 +1530,40 @@ export function canopyMaterial(spec, lod = 'near', patch = null) {
       .replace('#include <color_fragment>', vary ? '#include <color_fragment>\ndiffuseColor.rgb *= vPlantTint;' : '#include <color_fragment>');
     if (near) shader.fragmentShader = shader.fragmentShader.replace('#include <normal_fragment_begin>',
       THREE.ShaderChunk.normal_fragment_begin.replace('normal *= faceDirection;', ''));
+    if (aux) shader.fragmentShader = shader.fragmentShader
+      .replace('#include <common>', '#include <common>\nuniform sampler2D needleAux;\nuniform vec4 needleLight;\nuniform float needleScatterK;\nuniform vec3 needleTint;\nfloat needleThin = 0.0, needleFade = 0.0;\nvec3 needleScatter = vec3( 0.0 );')
+      .replace('#include <lights_lambert_pars_fragment>', `#include <lights_lambert_pars_fragment>
+        void RE_Direct_Needle( const in IncidentLight directLight, const in vec3 geometryPosition, const in vec3 geometryNormal, const in vec3 geometryViewDir, const in vec3 geometryClearcoatNormal, const in LambertMaterial material, inout ReflectedLight reflectedLight ) {
+          float w = needleLight.y * needleFade;
+          float dotNL = saturate( ( dot( geometryNormal, directLight.direction ) + w ) / ( 1.0 + w ) );
+          float back = saturate( -dot( geometryViewDir, directLight.direction ) ), b2 = back * back;
+          float tr = needleLight.z * needleFade * needleThin * ( 0.25 * back + 0.75 * b2 * b2 );
+          reflectedLight.directDiffuse += directLight.color * BRDF_Lambert( material.diffuseColor ) * ( dotNL + tr * needleTint );
+          needleScatter += directLight.color * BRDF_Lambert( material.diffuseColor ) * ( needleScatterK * needleFade * b2 * ( 0.35 + 0.65 * needleThin ) ) * mix( vec3( 1.0 ), needleTint, 0.6 );
+        }
+        #undef RE_Direct
+        #define RE_Direct RE_Direct_Needle`)
+      .replace('#include <normal_fragment_maps>', `#include <normal_fragment_maps>
+        #ifdef USE_INSTANCING
+          needleFade = 1.0 - smoothstep( 900.0, 1500.0, length( vViewPosition ) );
+        #else
+          needleFade = 1.0;
+        #endif
+        if ( needleFade > 0.0 ) {
+          vec4 nAux = texture2D( needleAux, vMapUv );
+          // the card's frame from the derivatives of view position and uv (u: card right, v: card up)
+          vec3 q0 = dFdx( -vViewPosition ), q1 = dFdy( -vViewPosition );
+          vec2 s0 = dFdx( vMapUv ), s1 = dFdy( vMapUv );
+          float det = s0.x * s1.y - s1.x * s0.y, sg = det < 0.0 ? -1.0 : 1.0;
+          vec3 cT = ( q0 * s1.y - q1 * s0.y ) * sg, cB = ( q1 * s0.x - q0 * s1.x ) * sg;
+          vec3 cN = cross( cT, cB );
+          vec3 nN = nAux.xyz * 2.0 - 1.0;
+          nN = nN.x * normalize( cT + 1e-9 ) + nN.y * normalize( cB + 1e-9 ) + nN.z * normalize( cN + 1e-9 );
+          normal = normalize( mix( normal, nN, needleLight.x * needleFade ) );
+          needleThin = smoothstep( 0.1, 0.1 + needleLight.w, nAux.a );
+        }`)
+      .replace('vec3 outgoingLight = reflectedLight.directDiffuse', `reflectedLight.indirectDiffuse += needleScatter${shader.fragmentShader.includes('cloudOnly(vAtmoPos)') ? ' * cloudOnly( vAtmoPos )' : ''};
+        vec3 outgoingLight = reflectedLight.directDiffuse`);
   });
   return m;
 }

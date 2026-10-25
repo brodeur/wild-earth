@@ -457,3 +457,70 @@ this change; they come from the skeleton, not the foliage.
   needles (`translucency` in the review) is the missing piece.
 - Ponderosa colour is a compromise: the photo ratio (r/g 0.95) renders khaki under the warm morning
   sun, so it sits at 0.91.
+
+## Needle light (2026-10-24)
+
+Review after the pine needle pass: sunlit ponderosa between 20 and 60 m "still partly reads as rounded
+lobes", backlit crowns are very dark, and gray pine against the sun is darker than the photos. Each card
+was lit as one flat leaf with the crown-shaped normal, so a tuft was either fully lit or black; a card's
+five or six overlapping brushes made one palmate outline; and every needle edge was darkened by
+filtering.
+
+- **Aux texture** (`needleTexture`, `texture.userData.aux`). Every level of a pine card is drawn a
+  second time with the same strokes: rgb is each needle's shading normal in the card's frame (its
+  outward direction from the shoot, bent 0.6 toward the needle's own direction, so the needles on the
+  sunward side of a tuft face the light and those under and behind it do not; hanging gray pine
+  needles face more down), alpha is how thin the foliage is around the texel (1 - local cover over
+  about 2 cm of a near card). Its mips come from the same draws as the colour mips, so per-needle
+  variety survives to the 32 and 16 texel levels that a tuft uses at 30-60 m.
+- **Colour bleed.** Canvas leaves empty texels black, and bilinear filtering pulled that black into
+  every needle edge: on the small levels, where a needle is one texel wide, most of a needle's
+  fragments sample its edge and came out as dark as half its colour. Empty texels now take their covered neighbours' colour (three rings, then the
+  mean). Alpha and the alpha-test cover are unchanged. The impostor bake reads the same texture, so it
+  gets the same colour; no bake change was needed.
+- **Lighting** (`canopyMaterial`, only for cards with an aux texture: the two pines; chamise's
+  `fascicle_wand` cards and all broadleaf species are unchanged). The card's frame comes from the
+  screen-space derivatives of position and uv (no new attributes, no extra draw calls). Per species:
+  - `foliage.needle_normal` (0.55): how much of the needle normal is mixed into the crown normal, for
+    the sun and the sky light.
+  - `foliage.needle_wrap` (0.35): wrap lighting for the sun, so a tuft facing away is not black.
+  - `foliage.translucency` (2.5): with the sun behind the tuft, a forward lobe
+    `0.25 b + 0.75 b^4` (b = -view·sun) times the thinness, tinted `foliage.translucency_rgb`
+    (default [1, 1.12, 0.55], yellow-green). Shadowed like the sun term, so it lights the needles
+    at the edge of a crown, not inside it.
+  - `foliage.needle_scatter` (0.15): a weak glow of the whole backlit crown (`b^2`, more at thin
+    edges), light scattered on through the foliage, so not shadowed by the crown; cloud shadow
+    applies.
+  - All of it fades out from 900 to 1500 m, where the impostors (crown normal only) take over. The
+    values are uniforms (`material.userData.needleLight`, `.needleScatterK`, `.needleTint`).
+  - Ponderosa 0.55 / 0.35 / 2.5 / 0.15. Gray pine 0.65 / 0.6 / 3.5 / 0.3 with a less yellow tint
+    [1, 1.06, 0.95] so its b/g stays near the photo.
+- **Ponderosa tufts as starbursts** (`drawNeedleCard`, `needle_brush`). Four or five shoots forking
+  at 0.55-0.9 rad (was four to six at 0.28-0.63), each with a brush on its last 1.4 needle lengths
+  (was 2.2) whose needles spread to square with the shoot within a needle length of the apex. A card
+  is a few separate round tufts instead of one fan; the alpha cover of the close texture went from
+  0.315 to 0.303.
+
+Lineup, near tier (mean of three seeds; photo target in brackets):
+
+| species | gaps | r/g | b/g |
+|---|---|---|---|
+| ponderosa | 0.35 → 0.34 (0.35) | 0.91 → 0.90 (0.95) | 0.48 → 0.46 (0.47) |
+| gray pine | 0.37 → 0.37 (0.40) | 0.89 → 0.88 (0.88) | 0.78 → 0.77 (0.82) |
+
+W/H and crown base are unchanged; blue oak, live oak, manzanita and chamise are identical. Ponderosa by
+class: pole gaps 0.27 → 0.31, mature 0.35, old-growth 0.34. A canopy-only render under the lineup's
+light (no shadows) is brighter, not darker: ponderosa front-lit mean +23 %, backlit +85 %; gray pine
++26 % and +186 % (in the world the crown's own shadow keeps the backlit gain to the edges).
+
+Cost: one more texture fetch and the derivative frame per pine fragment. Measured A/B against HEAD on a
+heavily loaded machine (load average 10-13): start view 48-57 fps against 48-55; the ponderosa stand
+at 40 m 34-50 fps against 46-54, and a synchronous render of that view 23.1 / 23.6 ms against
+21.6 / 23.0 ms (best of five), so about 1 ms in a full-screen pine stand.
+
+**Known limits.**
+- Gray pine tufts still read as round clumps at 20 m; the photos show long hanging tassels and a hazy
+  edge. Its tuft shape (`needle_drooping`) was not changed in this pass.
+- A crown's shaded side is still lit only by the sky: shadow maps treat a card as opaque, so a sparse
+  gray pine has dark clumps where the real crown is lit through.
+- Close up (under about 8 m) a face-on lit tuft is still fairly uniform: a card is flat.
