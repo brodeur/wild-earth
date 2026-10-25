@@ -7,12 +7,27 @@ import * as THREE from 'three';
 // which whitens the valleys. Their far colour is the sky dome's own horizon radiance (computed here
 // with the dome's Preetham model, its low-sun lobe tinted gold), so distant ridges dissolve into
 // the sky rather than into a fog colour; a mild contrast weight keeps dark crowns darker than the
-// grass beside them while they do. Clouds are one tileable noise texture on a plane above the
-// tile; the ground samples it along the sun direction for shadows and the dome samples it for the
-// clouds you see.
+// grass beside them while they do. Clouds are a procedural field in world metres (a slow coverage
+// field, a domain warp and two shape octaves from one tileable noise texture, each layer at an
+// unrelated scale and rotation and drifting at its own speed, so nothing repeats or tiles); the dome
+// draws it as a slab of heightfield cumulus with flat bases and domed tops, plus a thin cirrus sheet
+// above. Around the camera the opacity of those same clouds up the sun ray is baked into cloudMap,
+// which the ground samples for shadows, so a shadow sits under the cloud you see.
 
-export const CLOUD_PERIOD = 2500;      // metres per repeat of the cloud texture
-const WIND = new THREE.Vector2(6, 0);  // m/s, along +x
+export const CLOUD_PERIOD = 30000;     // metres covered by the baked shadow map (cloudMap) around the camera
+const CLOUD_SLICES = 3;               // cuts through the cloud slab per ray (dome and shadow bake alike)
+const CLOUD_BAKE_RES = 768;            // texels across it: 39 m each
+const CLOUD_BAKE_STRIPS = 4;           // baked a quarter per frame
+// Cloud layers: [period m, rotation rad, wind speed m/s]. Periods share no simple ratio and every
+// layer is turned and drifts differently, so the combined field never lines up with itself.
+const CLOUD_LAYERS = {
+  cover: [41000, 0.31, 3.0],    // large-scale coverage: clear and cloudy districts tens of km wide
+  warp: [11300, 1.93, 4.5],     // bends the shapes so cells are not round blobs on a lattice
+  base: [5300, -0.71, 6.0],     // cumulus bodies
+  detail: [1370, 2.67, 7.2],    // cauliflower edges; drifting faster than the bodies, it slowly reshapes them
+  cirrus: [26000, 0.42, 18.0],  // high streaks (stretched 3x along their length)
+};
+const WIND_DIR = new THREE.Vector2(1, 0.12).normalize();   // prevailing westerly, toward +x (east), a little south
 const DEG = Math.PI / 180;
 
 export const uniforms = {
@@ -33,12 +48,19 @@ export const uniforms = {
   sunGlowTint: { value: new THREE.Color(1, 1, 1) },        // gold on the dome's sun lobe when the sun is low (also in skySun)
   hazeBase: { value: 0 },                                  // y of the densest air (tile floor)
   landHeight: { value: 0 },                                // the dome draws a hazy plain at this y below the horizon, past the tile
-  cloudMap: { value: null },
-  cloudOffset: { value: new THREE.Vector2() },
+  cloudMap: { value: null },                               // baked cloud opacity up the sun ray around the camera (shadows)
+  cloudOffset: { value: new THREE.Vector2() },             // world xz * cloudBakeInv + cloudOffset = cloudMap uv
+  cloudBakeInv: { value: 1 / CLOUD_PERIOD },
   cloudStrength: { value: 0.4 },                           // shadow darkness (fades out with the sun)
-  cloudOpacity: { value: 0.8 },                            // visible clouds in the dome
-  cloudCover: { value: 0 },                                // added to the noise before the coverage ramp
-  cloudHeight: { value: 2000 },
+  cloudOpacity: { value: 1 },                              // visible clouds in the dome
+  cloudCover: { value: 0 },                                // added to the field before the threshold (season, hour)
+  cloudHeight: { value: 2000 },                            // y of the cumulus bases
+  cloudNoise: { value: null },                             // tileable noise: r shape, gb warp, a billows
+  cloudOfsA: { value: new THREE.Vector4() },               // uv drift of the cover (xy) and warp (zw) layers
+  cloudOfsB: { value: new THREE.Vector4() },               // uv drift of the base (xy) and detail (zw) layers
+  cloudShape: { value: new THREE.Vector4(0.62, 11, 0.2, 900) },   // x threshold, y opacity per unit of field at the edges (softness), z field excess of a full-height cloud, w slab thickness (m)
+  cloudCirrus: { value: new THREE.Vector4(0, 0, 0.5, 7000) },         // xy uv drift, z amount, w height above the cumulus bases (m)
+  cloudSun: { value: new THREE.Color(3, 3, 3) },           // sunlight at cloud height (it outlasts sunset there)
   // Cascaded sun shadows (shadows.js renders the maps and sets these). Until it runs, every
   // matrix maps the world outside its cascade, so the lookup returns 1 (lit).
   csmMap0: { value: null }, csmMap1: { value: null }, csmMap2: { value: null },
@@ -48,12 +70,43 @@ export const uniforms = {
   csmStrength: { value: 0 },                           // 0 below ~3 degrees of sun, 1 by 6
 };
 
+const rotGLSL = a => `mat2(${Math.cos(a).toFixed(6)}, ${Math.sin(a).toFixed(6)}, ${(-Math.sin(a)).toFixed(6)}, ${Math.cos(a).toFixed(6)})`;
+const inv = k => (1 / CLOUD_LAYERS[k][0]).toExponential(6);
+// The cloud field, shared by the dome and the shadow bake. Values are relative to the threshold:
+// > 0 is cloud, and the cloud reaches sqrt(x / cloudShape.z) of the way up the slab.
+const CLOUD_FIELD_GLSL = /* glsl */`
+  uniform sampler2D cloudNoise; uniform vec4 cloudOfsA; uniform vec4 cloudOfsB; uniform vec4 cloudShape; uniform vec4 cloudCirrus; uniform vec3 cloudSun;
+  // Slow, large layers: xy the warp displacement (m), z the coverage offset (with season and hour).
+  vec3 cloudLarge(vec2 p) {
+    float cov = texture2D(cloudNoise, ${rotGLSL(CLOUD_LAYERS.cover[1])} * p * ${inv('cover')} + cloudOfsA.xy).r;
+    vec2 w = texture2D(cloudNoise, ${rotGLSL(CLOUD_LAYERS.warp[1])} * p * ${inv('warp')} + cloudOfsA.zw).gb - 0.5;
+    return vec3(w * 900.0, (cov - 0.5) * 0.7 + cloudCover);
+  }
+  // Shape: bodies eroded by billows, deepest where the body is thin (erosion only, so no stray specks).
+  // cloudBillow keeps the last billow value (0..1) for shading the lumps.
+  float cloudBillow = 0.5;
+  float cloudShapeAt(vec2 p, vec3 L) {
+    vec2 q = p + L.xy;
+    float b = texture2D(cloudNoise, ${rotGLSL(CLOUD_LAYERS.base[1])} * q * ${inv('base')} + cloudOfsB.xy).r;
+    float d = texture2D(cloudNoise, ${rotGLSL(CLOUD_LAYERS.detail[1])} * q * ${inv('detail')} + cloudOfsB.zw).a;
+    float x = b + L.z - cloudShape.x;
+    cloudBillow = d;
+    return x - (1.0 - d) * mix(0.22, 0.1, smoothstep(0.0, 0.2, x));
+  }
+  // Bodies only (one lookup), for the light march toward the sun.
+  float cloudBodyAt(vec2 p, vec3 L) {
+    return texture2D(cloudNoise, ${rotGLSL(CLOUD_LAYERS.base[1])} * (p + L.xy) * ${inv('base')} + cloudOfsB.xy).r + L.z - cloudShape.x;
+  }
+  float cloudCover0(float x) { x = max(x, 0.0); return 1.0 - exp(-x * cloudShape.y - x * x * 400.0); }   // opacity: thin edges translucent, bodies opaque
+`;
+
 export const ATMOSPHERE_GLSL = /* glsl */`
   uniform vec3 sunDir; uniform vec3 sunColor; uniform vec3 sunLight; uniform vec3 ambientSky; uniform vec3 ambientGround;
   uniform vec3 skyZenith; uniform vec3 skyHorizon; uniform vec3 skySun; uniform vec4 hazePhase;
   uniform float hazeDensity; uniform float hazeHeightFalloff; uniform float hazeBase; uniform float landHeight;
   uniform vec3 hazeRayleigh; uniform float hazeRayleighFalloff; uniform float hazeContrast; uniform vec3 sunGlowTint;
-  uniform sampler2D cloudMap; uniform vec2 cloudOffset; uniform float cloudStrength; uniform float cloudOpacity; uniform float cloudCover; uniform float cloudHeight;
+  uniform sampler2D cloudMap; uniform vec2 cloudOffset; uniform float cloudBakeInv; uniform float cloudStrength; uniform float cloudOpacity; uniform float cloudCover; uniform float cloudHeight;
+  ${CLOUD_FIELD_GLSL}
 
   // ---- Cascaded sun shadow. Three depth maps with hardware compare (each tap is a bilinear 2x2
   // PCF); a point uses the sharpest cascade whose box holds it and blends into the next over the
@@ -92,10 +145,13 @@ export const ATMOSPHERE_GLSL = /* glsl */`
     return mix(1.0, s, csmStrength);
   }
 
+  // Shadow density over the point where the sun ray crosses the cloud base, from the bake: the
+  // opacity of the same slices the dome draws along that ray, fading out at the edge of the bake.
   float atmoCloudDensity(vec2 xz) {
-    return smoothstep(0.45, 0.75, texture2D(cloudMap, xz / ${CLOUD_PERIOD.toFixed(1)} + cloudOffset).r + cloudCover);
+    vec2 uv = xz * cloudBakeInv + cloudOffset, e = abs(uv - 0.5) * 2.0;
+    return texture2D(cloudMap, uv).r * (1.0 - smoothstep(0.85, 1.0, max(e.x, e.y)));
   }
-  // 1 in sun, darker under a cloud: follows the sun ray up to the cloud plane, so shadows sit
+  // 1 in sun, darker under a cloud: follows the sun ray up to the cloud base, so shadows sit
   // where the visible clouds are and stretch away from a low sun.
   float cloudOnly(vec3 worldPos) {
     vec2 xz = worldPos.xz + sunDir.xz * (cloudHeight - worldPos.y) / max(sunDir.y, 0.12);
@@ -190,47 +246,93 @@ function sunRamp(elDeg, out) {
   return out.setRGB(...SUN_RAMP[SUN_RAMP.length - 1][1]);
 }
 
-// Tileable fbm value noise on a canvas, generated once: the cloud field for shadows and sky.
-function cloudTexture(size = 512) {
+// Tileable noise for the cloud field, generated once (about 0.35 s at startup): r cumulus bodies (value fbm with
+// Worley cells), g and b smooth fbm for the warp and the cirrus, a billows (inverted Worley fbm).
+// r and a are rank-equalised to an even spread, so the threshold sets the cloud fraction directly.
+function cloudNoiseTexture(size = 512) {
   const hash = (i, j, s) => { let h = (i * 374761393 + j * 668265263 + s * 2147483647) | 0; h = Math.imul(h ^ (h >>> 13), 1274126177); return ((h ^ (h >>> 16)) >>> 0) / 4294967296; };
-  const octave = (u, v, period, seed) => {   // u, v in [0, 1); lattice wraps at `period`
+  const wrap = (i, p) => ((i % p) + p) % p;
+  const value = (u, v, period, seed) => {   // u, v in [0, 1); lattice wraps at `period`
     const x = u * period, y = v * period, i = Math.floor(x), j = Math.floor(y);
     let fx = x - i, fy = y - j; fx = fx * fx * (3 - 2 * fx); fy = fy * fy * (3 - 2 * fy);
     const i1 = (i + 1) % period, j1 = (j + 1) % period;
     const a = hash(i, j, seed), b = hash(i1, j, seed), c = hash(i, j1, seed), d = hash(i1, j1, seed);
     return a + (b - a) * fx + (c - a) * fy + (a - b - c + d) * fx * fy;
   };
-  const f = new Float32Array(size * size); let mn = Infinity, mx = -Infinity;
+  const worley = (u, v, period, seed) => {   // distance to the nearest feature point, in cells
+    const x = u * period, y = v * period, i = Math.floor(x), j = Math.floor(y);
+    let m = 9;
+    for (let dj = -1; dj <= 1; dj++) for (let di = -1; di <= 1; di++) {
+      const ci = wrap(i + di, period), cj = wrap(j + dj, period);
+      const px = i + di + hash(ci, cj, seed), py = j + dj + hash(ci, cj, seed + 7);
+      const dd = (px - x) * (px - x) + (py - y) * (py - y); if (dd < m) m = dd;
+    }
+    return Math.min(Math.sqrt(m), 1);
+  };
+  const fbm = (fn, u, v, p0, oct, seed) => { let n = 0, amp = 0.5, sum = 0; for (let o = 0, p = p0; o < oct; o++, p *= 2) { n += amp * fn(u, v, p, seed + o * 13); sum += amp; amp *= 0.5; } return n / sum; };
+  const N = size * size, ch = [new Float32Array(N), new Float32Array(N), new Float32Array(N), new Float32Array(N)];
   for (let y = 0; y < size; y++) for (let x = 0; x < size; x++) {
-    let u = x / size, v = y / size;
-    // a gentle periodic domain warp so the clouds are not lattice-aligned blobs
-    const wu = octave(u, v, 4, 91) - 0.5, wv = octave(u, v, 4, 92) - 0.5;
-    u = (u + wu * 0.08 + 1) % 1; v = (v + wv * 0.08 + 1) % 1;
-    let n = 0, amp = 0.5, sum = 0;
-    for (let o = 0, p = 3; o < 6; o++, p *= 2) { n += amp * octave(u, v, p, o + 1); sum += amp; amp *= 0.5; }
-    n /= sum; f[y * size + x] = n; mn = Math.min(mn, n); mx = Math.max(mx, n);
+    const u = x / size, v = y / size, k = y * size + x;
+    ch[0][k] = 0.45 * fbm(value, u, v, 4, 5, 1) + 0.55 * (1 - fbm(worley, u, v, 4, 3, 41));
+    ch[1][k] = fbm(value, u, v, 3, 4, 101);
+    ch[2][k] = fbm(value, u, v, 3, 4, 201);
+    ch[3][k] = 1 - fbm(worley, u, v, 6, 3, 301) * 0.75 - 0.25 * value(u, v, 24, 333);
   }
-  const canvas = document.createElement('canvas'); canvas.width = canvas.height = size;
-  const g = canvas.getContext('2d'), img = g.createImageData(size, size);
-  // Contrast curve: fbm piles up mid-grey, which would make every shadow edge hundreds of metres
-  // soft; steepening it gives cumulus-like edges while the fine octaves keep them ragged.
-  for (let k = 0; k < f.length; k++) {
-    const n = Math.round(255 * THREE.MathUtils.smoothstep((f[k] - mn) / (mx - mn), 0.3, 0.8));
-    img.data[k * 4] = img.data[k * 4 + 1] = img.data[k * 4 + 2] = n; img.data[k * 4 + 3] = 255;
-  }
-  g.putImageData(img, 0, 0);
-  const t = new THREE.CanvasTexture(canvas);
+  const equalise = f => { const idx = new Uint32Array(N).map((_, i) => i); idx.sort((a, b) => f[a] - f[b]); const out = new Float32Array(N); for (let r = 0; r < N; r++) out[idx[r]] = r / (N - 1); return out; };
+  const stretch = f => { let mn = Infinity, mx = -Infinity; for (const q of f) { mn = Math.min(mn, q); mx = Math.max(mx, q); } return f.map(q => (q - mn) / (mx - mn)); };
+  const R = equalise(ch[0]), G = stretch(ch[1]), B = stretch(ch[2]), A = equalise(ch[3]);
+  const data = new Uint8Array(N * 4);
+  for (let k = 0; k < N; k++) { data[k * 4] = R[k] * 255 + 0.5; data[k * 4 + 1] = G[k] * 255 + 0.5; data[k * 4 + 2] = B[k] * 255 + 0.5; data[k * 4 + 3] = A[k] * 255 + 0.5; }
+  const t = new THREE.DataTexture(data, size, size, THREE.RGBAFormat, THREE.UnsignedByteType);
   t.wrapS = t.wrapT = THREE.RepeatWrapping; t.magFilter = THREE.LinearFilter; t.minFilter = THREE.LinearMipmapLinearFilter;
-  t.colorSpace = THREE.NoColorSpace; t.generateMipmaps = true;
+  t.colorSpace = THREE.NoColorSpace; t.generateMipmaps = true; t.anisotropy = 4; t.needsUpdate = true;
   return t;
 }
 
+// The baked shadow: a full-screen pass that, for each point of the cloud base around the camera,
+// takes the opacity of the cloud slices the dome would draw up the sun ray from there (so looking
+// at the sun from inside a shadow, a cloud covers it), darker where the cloud is thick.
+function cloudBakePass() {
+  const targets = [0, 1].map(() => {
+    const t = new THREE.WebGLRenderTarget(CLOUD_BAKE_RES, CLOUD_BAKE_RES, { depthBuffer: false, magFilter: THREE.LinearFilter, minFilter: THREE.LinearFilter, generateMipmaps: false });
+    t.texture.colorSpace = THREE.NoColorSpace; t.texture.wrapS = t.texture.wrapT = THREE.ClampToEdgeWrapping; t.scissorTest = true;
+    return t;
+  });
+  const material = new THREE.ShaderMaterial({
+    uniforms: { ...uniforms, bakeOrigin: { value: new THREE.Vector2() } },
+    vertexShader: 'varying vec2 vUv; void main() { vUv = uv; gl_Position = vec4(position.xy, 0.0, 1.0); }',
+    fragmentShader: /* glsl */`
+      uniform float cloudCover; uniform vec3 sunDir; uniform vec2 bakeOrigin; varying vec2 vUv;
+      ${CLOUD_FIELD_GLSL}
+      void main() {
+        vec2 p = bakeOrigin + vUv * ${CLOUD_PERIOD.toFixed(1)}, dxz = sunDir.xz / max(sunDir.y, 0.12) * cloudShape.w;
+        vec3 L = cloudLarge(p);
+        float T = 1.0, xm = 0.0;
+        for (int k = 0; k < ${CLOUD_SLICES}; k++) {
+          float f = float(k) / ${CLOUD_SLICES}.0, x = cloudShapeAt(p + dxz * f, L) - f * f * cloudShape.z;
+          T *= 1.0 - cloudCover0(x); xm = max(xm, x);
+        }
+        gl_FragColor = vec4((1.0 - T) * mix(0.55, 1.0, smoothstep(0.0, 0.6 * cloudShape.z, xm)), 0.0, 0.0, 1.0);
+      }`,
+    depthTest: false, depthWrite: false, toneMapped: false,
+  });
+  const quad = new THREE.Mesh(new THREE.PlaneGeometry(2, 2), material); quad.frustumCulled = false;
+  const scene = new THREE.Scene(); scene.add(quad);
+  return { targets, back: 1, step: 0, origin: new THREE.Vector2(), material, scene, camera: new THREE.OrthographicCamera(-1, 1, 1, -1, 0, 1) };
+}
+
 // Per-season cloud strength (shadow darkness) and cover (shifts how much sky is cloud).
-const CLOUDS = { winter: [0.5, -0.02], spring: [0.45, -0.04], summer: [0.3, -0.35], fall: [0.4, -0.06] };   // [strength, cover]
+// Per season: [shadow strength, cover, cirrus, afternoon build-up]. Cover shifts the field before
+// the threshold (0 is about a quarter of the sky); the build-up is added around 15:00 and taken
+// off in the early morning, as fair-weather cumulus grow with the day's heating.
+const CLOUDS = { winter: [0.6, 0.06, 0.55, 0.03], spring: [0.6, 0.0, 0.5, 0.08], summer: [0.55, -0.2, 0.3, 0.12], fall: [0.6, -0.02, 0.6, 0.05] };
 
 export class Atmosphere {
   constructor(tile) {
-    uniforms.cloudMap.value = cloudTexture();
+    uniforms.cloudNoise.value = cloudNoiseTexture();
+    this.cloudBake = cloudBakePass();
+    uniforms.cloudMap.value = this.cloudBake.targets[0].texture;   // empty (no shadows) until the first bake completes
+    this.cloudOfs = Object.fromEntries(Object.keys(CLOUD_LAYERS).map(k => [k, new THREE.Vector2()]));
     let mn = Infinity; const N = 64;
     for (let i = 0; i <= N; i++) for (let j = 0; j <= N; j++) mn = Math.min(mn, tile.heights.at(i / N * tile.size, j / N * tile.size));
     uniforms.hazeBase.value = mn;
@@ -247,6 +349,27 @@ export class Atmosphere {
     this.time = 0; this._v = new THREE.Vector3(); this._c = new THREE.Color(); this._c2 = new THREE.Color();
   }
   // Sky dome material hooks: drive its parameters from the same haze state and draw the clouds.
+  // Bake the cloud shadows around the camera, a quarter of the square a frame into a back buffer
+  // that is swapped in when complete (so the shadows lag the clouds by a few frames, under a metre).
+  // The square sits where the sun rays from the ground near the camera cross the cloud base, and
+  // snaps to its texels so the shadow edges do not crawl.
+  bakeClouds(renderer, camera) {
+    const b = this.cloudBake, k = b.step++ % CLOUD_BAKE_STRIPS, texel = CLOUD_PERIOD / CLOUD_BAKE_RES;
+    if (k === 0) {
+      const s = uniforms.sunDir.value, d = (uniforms.cloudHeight.value - uniforms.hazeBase.value) / Math.max(s.y, 0.12) * 0.6;
+      b.origin.set(Math.round((camera.position.x + s.x * d - CLOUD_PERIOD / 2) / texel) * texel, Math.round((camera.position.z + s.z * d - CLOUD_PERIOD / 2) / texel) * texel);
+      b.material.uniforms.bakeOrigin.value.copy(b.origin);
+    }
+    const t = b.targets[b.back], h = CLOUD_BAKE_RES / CLOUD_BAKE_STRIPS;
+    t.scissor.set(0, k * h, CLOUD_BAKE_RES, h);
+    const prev = renderer.getRenderTarget();
+    renderer.setRenderTarget(t); renderer.render(b.scene, b.camera); renderer.setRenderTarget(prev);
+    if (k === CLOUD_BAKE_STRIPS - 1) {
+      uniforms.cloudMap.value = t.texture;
+      uniforms.cloudOffset.value.set(-b.origin.x / CLOUD_PERIOD, -b.origin.y / CLOUD_PERIOD);
+      b.back = 1 - b.back;
+    }
+  }
   attachSky(sky) {
     this.skyMaterial = sky.material;
     sky.material.onBeforeCompile = shader => {
@@ -264,13 +387,57 @@ export class Atmosphere {
           retColor = atmosphereApply(land, cameraPosition + r, cameraPosition);
         }
         if (direction.y > 0.0) {
-          float t = (cloudHeight - cameraPosition.y) / direction.y;
-          float n = texture2D(cloudMap, (cameraPosition.xz + direction.xz * t) / ${CLOUD_PERIOD.toFixed(1)} + cloudOffset).r + cloudCover;
-          float a = smoothstep(0.45, 0.75, n) * smoothstep(0.05, 0.3, direction.y) * cloudOpacity;   // fade before the 2.5 km repeat shows in rows
-          float thick = smoothstep(0.7, 1.05, n);   // seen from below, thick cores are darker and thin edges glow
-          vec3 lit = sunLight * (0.22 + 0.25 * max(dot(direction, sunDir), 0.0)) * (1.25 - 0.75 * thick) + ambientSky * (0.6 - 0.2 * thick);
-          lit = mix(lit, atmoSky(direction), 1.0 - exp(-t * (hazeDensity + hazeRayleigh.g) * 0.5));   // far clouds sink into the haze
-          retColor = mix(retColor, lit, a * 0.9);
+          float mu = dot(direction, sunDir), horizon = smoothstep(0.0, 0.1, direction.y);
+          // Forward scattering (silver linings when backlit), normalised so the mean is about 1.
+          float silver = 0.5 + 0.5 * 0.6975 / pow(1.3025 - 1.1 * mu, 1.5);
+          // Cirrus: a thin sheet of streaks far above, stretched along the wind; no shadow.
+          float tc = (cloudHeight + cloudCirrus.w - cameraPosition.y) / direction.y;
+          vec2 cp = ${rotGLSL(CLOUD_LAYERS.cirrus[1])} * (cameraPosition.xz + direction.xz * tc) * vec2(${inv('cirrus')}, ${(3 / CLOUD_LAYERS.cirrus[0]).toExponential(6)}) + cloudCirrus.xy;
+          vec2 cn = texture2D(cloudNoise, cp).ga;
+          float ci = smoothstep(0.5, 1.15, cn.x * 0.85 + cn.y * 0.25) * cloudCirrus.z * horizon;
+          vec3 cirrus = cloudSun * (0.10 + 0.16 * silver) + ambientSky * 0.75;
+          cirrus = mix(cirrus, atmoSky(direction), 1.0 - exp(-tc * (hazeDensity * 0.3 + hazeRayleigh.g) * 0.5));
+          retColor = mix(retColor, cirrus, ci * 0.4);
+
+          // Cumulus: a slab of heightfield clouds with flat bases at cloudHeight. The ray is sampled at the
+          // base plane and at heights up the slab, front to back, so the bases, the flanks and the tops of
+          // far clouds all show; then two looks up the sun ray from the point seen, for the light.
+          float EH = cloudShape.z, TK = cloudShape.w;
+          float tb = (cloudHeight - cameraPosition.y) / direction.y;
+          vec2 pb = cameraPosition.xz + direction.xz * tb, dxz = direction.xz * (TK / direction.y);
+          vec3 L = cloudLarge(pb);
+          // Three slices: the base, and the cloud's cross-sections a third and two thirds of the way up the
+          // slab. A cloud's top is dome-shaped (height sqrt(x / EH)), so the upper sections are smaller lobes
+          // set back along the ray: low down they stand behind the base as the heap's flanks and top.
+          const int n = ${CLOUD_SLICES};
+          float T = 1.0, wf = 0.0, wh = 0.0, wd = 0.0, w0 = 0.0; vec2 wp = vec2(0.0);
+          for (int k = 0; k < n; k++) {
+            if (T < 0.03) break;
+            float f = float(k) / float(n);
+            vec2 p = pb + dxz * f;
+            float x = cloudShapeAt(p, L) - f * f * EH, w = cloudCover0(x) * T;
+            wf += w * f; wh += w * clamp(x / EH, 0.0, 1.0); wd += w * cloudBillow; wp += w * p;
+            if (k == 0) w0 = w;
+            T -= w;
+          }
+          float a = 1.0 - T;
+          if (a > 0.003) {
+            float hf = wf / a, hh = wh / a, hd = wd / a; vec2 ph = wp / a;
+            vec2 st = sunDir.xz / max(sunDir.y, 0.15) * (0.3 * TK);
+            float occ = max(cloudBodyAt(ph + st, L) - (hf + 0.3) * EH, 0.0) + max(cloudBodyAt(ph + 2.2 * st, L) - (hf + 0.66) * EH, 0.0);
+            vec3 sunC = cloudSun * exp(-occ / EH * 2.5);   // dimmed by cloud between this point and the sun
+            float lump = mix(0.8, 1.12, hd);
+            // Base, seen from below: sky and ground light, and sun through the cloud above it, which only
+            // thin parts let through (glowing when backlit); thick cores stay grey.
+            vec3 base = ambientSky * (0.62 - 0.25 * hh) + ambientGround * 0.25 + sunC * (0.05 * exp(-3.0 * hh) + 0.12 * silver * exp(-7.0 * hh));
+            // Walls and tops face the viewer: sunlit with the sun behind us or high, brighter with height
+            // (tops), rimmed where thin when backlit.
+            float facing = mix(0.5 - 0.5 * dot(normalize(direction.xz + 1e-5), normalize(sunDir.xz + 1e-5)), 1.0, clamp(sunDir.y * 1.4, 0.0, 1.0));
+            vec3 side = ambientSky * (0.5 + 0.2 * hf) + ambientGround * 0.12 + sunC * ((0.05 + 0.32 * facing) * (0.6 + 0.4 * hf) + 0.06 * silver * exp(-4.0 * hh));
+            vec3 cc = mix(side, base, w0 / a) * lump;
+            cc = mix(cc, atmoSky(direction), 1.0 - exp(-tb * (hazeDensity + hazeRayleigh.g) * 0.5));   // far clouds sink into the haze
+            retColor = mix(retColor, cc, a * horizon * cloudOpacity);
+          }
         }
         gl_FragColor = vec4( retColor, 1.0 );`);
     };
@@ -359,13 +526,30 @@ export class Atmosphere {
     uniforms.hazeRayleigh.value.set(5.8e-6, 13.5e-6, 33.1e-6).multiplyScalar(tune.rayleigh);
     uniforms.hazeContrast.value = tune.contrast;
 
-    // Clouds drift with the wind; the offset wraps so it never loses precision.
-    const [strength, cover] = CLOUDS[season] || CLOUDS.fall;
+    // Clouds: coverage from the season plus an afternoon build-up; sunlight at cloud height, where the
+    // sun sets about 1.4 degrees later than on the ground (horizon dip from ~1.8 km), so the cumulus
+    // stay lit, pink and gold, a little after the land has gone into shade.
+    const [strength, cover, cirrus, build] = CLOUDS[season] || CLOUDS.fall;
+    const day = Math.exp(-Math.pow(((hour ?? 12) - 15) / 3.2, 2));
     uniforms.cloudStrength.value = strength * THREE.MathUtils.smoothstep(elDeg, -2, 6);   // no shadows without a sun
-    uniforms.cloudCover.value = cover;
-    uniforms.cloudOpacity.value = THREE.MathUtils.clamp(strength * 2, 0, 1);
-    const o = uniforms.cloudOffset.value;
-    o.x = (o.x - WIND.x * dt / CLOUD_PERIOD) % 1; o.y = (o.y - WIND.y * dt / CLOUD_PERIOD) % 1;
+    uniforms.cloudCover.value = cover + build * (day - 0.35);
+    uniforms.cloudOpacity.value = 1;
+    uniforms.cloudCirrus.value.z = cirrus;
+    const elC = elDeg + 1.4;
+    sunRamp(elC, uniforms.cloudSun.value).multiplyScalar(tune.sun * (1 - Math.exp(-Math.max(elC + 1, 0) / 5)));
+    // Each layer drifts at its own speed (the shear reshapes the clouds slowly); offsets are in the
+    // layer's rotated uv and wrap, so they never lose precision.
+    for (const [key, [period, angle, speed]] of Object.entries(CLOUD_LAYERS)) {
+      const dir = key === 'cirrus' ? this._v.set(WIND_DIR.x * 0.95 - WIND_DIR.y * 0.3, 0, WIND_DIR.y * 0.95 + WIND_DIR.x * 0.3) : this._v.set(WIND_DIR.x, 0, WIND_DIR.y);
+      const dx = dir.x * speed * dt, dz = dir.z * speed * dt, c = Math.cos(angle), sn = Math.sin(angle);
+      const o = this.cloudOfs[key];
+      const py = key === 'cirrus' ? period / 3 : period;   // cirrus is squeezed 3x across its streaks
+      o.x = (o.x - (c * dx - sn * dz) / period) % 1; o.y = (o.y - (sn * dx + c * dz) / py) % 1;
+    }
+    const O = this.cloudOfs;
+    uniforms.cloudOfsA.value.set(O.cover.x, O.cover.y, O.warp.x, O.warp.y);
+    uniforms.cloudOfsB.value.set(O.base.x, O.base.y, O.detail.x, O.detail.y);
+    uniforms.cloudCirrus.value.x = O.cirrus.x; uniforms.cloudCirrus.value.y = O.cirrus.y;
 
     // Exposure follows the brightness of the sky, partly: dusk is dimmer than noon but readable.
     // Facing a low sun the eye stops down, so the glare stays golden and the land goes to silhouette.

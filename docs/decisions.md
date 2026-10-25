@@ -353,3 +353,26 @@ from the air; start view pixel-identical. Rejected: more cards near the camera (
 balls) and crossed planes for the shrub cards (breaks their dome shading). Still
 changing on descent: the sward densifies as the ground and close blade tiers fill in,
 and the shells fade between 10 and 6 m; nothing visible vanishes.
+
+## 2026-10-25: clouds are a world-space field with no repeat, drawn as domed cumulus
+
+The roadmap's open atmosphere item was "clouds repeat": one 2.5 km noise tile on a
+plane, faded out before its rows showed. atmosphere.js now builds the cloud field in
+world metres from one tileable noise texture read at unrelated scales, rotations and
+drift speeds (a 41 km coverage field, an 11 km domain warp, 5.3 km bodies and 1.4 km
+billows that only erode), so no lattice or recurring shape appears across the dome,
+and the shear between layers slowly reshapes the clouds. The dome draws it as a 900 m
+slab of heightfield cumulus with flat bases about 1.6 km over the ground and domed
+tops: three cuts along each view ray (base, a third and two thirds up), lit by sky,
+ground bounce and a sun that is dimmed by cloud up the sun ray, with grey bases, warm
+tops at low sun, silver rims when backlit, and sun at cloud height lasting about 1.4
+degrees past ground sunset. A thin, streaky cirrus sheet sits 7 km above. Coverage is
+season plus an afternoon build-up. Shadows: the opacity of the same three cuts up the
+sun ray is baked around the camera (30 km, 39 m texels, a quarter per frame into a
+double buffer), so cloudOnly() still costs one lookup and a cloud covers the sun from
+inside its shadow; uniform and function names are unchanged. Cost at the start view,
+five alternating rounds: frame 8.43 ms before (8.24 to 8.54), 8.55 ms after (8.37 to
+8.62); the full-screen sky pass 1.16 ms before, 1.25 ms after. Rejected: more cuts
+(six showed far clouds as stacked plates or, dithered, as grain) and a real ray march
+(several times the cost). Open: far clouds near the horizon still read as thin flakes,
+cloud interiors look a little smooth and plastic, and the cirrus is brush-stroked.

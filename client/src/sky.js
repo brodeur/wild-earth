@@ -20,5 +20,6 @@ export class SkyDome {
     this.sun.color.copy(atmo.sunColor.value); this.sun.intensity = a.sunIntensity;
     this.hemi.color.copy(atmo.ambientSky.value); this.hemi.groundColor.copy(atmo.ambientGround.value); this.hemi.intensity = 1;
     this.renderer.toneMappingExposure = a.exposure;
+    a.bakeClouds(this.renderer, camera);   // cloud shadows around the camera (a quarter of the map a frame)
   }
 }

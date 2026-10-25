@@ -75,7 +75,7 @@ sequenced; Parked is in the brief but deliberately not started.
 3. ~~Atmosphere~~ done 2026-10-24: aerial perspective fitted to the sky dome each
    frame (warm toward the sun, blue-grey away), haze by season and sun elevation,
    exposure by sky brightness, procedural cumulus with shadows cast along the sun
-   ray, one tone-mapped lighting pipeline for all materials. Open: clouds repeat
+   ray, one tone-mapped lighting pipeline for all materials. Clouds reworked 2026-10-25: no repeat, cumulus with flat grey bases and lit tops in a 900 m layer, cirrus above, shadows matching. Open: horizon clouds flaky
    every 2.5 km, no cast shadows from terrain or trees, summer noon ground is bright.
    Grass done 2026-10-24: procedural blade clumps up close (wild oat, bromes,
    medusahead over purple needlegrass), seed heads and awns, wind with gusts, backlight,
