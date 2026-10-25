@@ -82,7 +82,8 @@ tiles/<tile_id>/
   client/masks.png              derived   soft season-recolour weights: R grassland, G oak woodland, B chaparral
   client/species_mix_a.png      derived   tree weights per 30 m cell, RGBA = blue oak, live oak, gray pine, ponderosa (sum 255; A is data)
   client/species_mix_b.png      derived   RGBA = manzanita, chamise weights (sum 255), tree_density, shrub_density (byte / 100)
-  client/species_mix_index.png  derived   8-bit row index into species_mix.json mixes (0 = none), canvas-safe form of the two above
+  client/species_mix_c.png      derived   RGBA = willow, alder, cottonwood weights (sum with _a to 255), spare; present when the mix has riparian trees
+  client/species_mix_index.png  derived   8-bit row index into species_mix.json mixes (0 = none), canvas-safe form of the three above
   client/species_mix.json       derived   channel order, EVT/BpS name -> species mix table used, per-tile fractions
   unreal/heightmap.png          derived   16-bit Landscape heightmap at a valid size (2017 px)
   unreal/weights/<class>.png    derived   8-bit weight-blended layer per habitat class

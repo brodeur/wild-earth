@@ -1,0 +1,78 @@
+{
+  "id": "salix_lasiolepis",
+  "aliases": ["willow", "arroyo_willow"],
+  "scientific": "Salix lasiolepis",
+  "common": "arroyo willow",
+  "form": "tree",
+  "architectural_model": "Rauh (provisional: sympodial, the shoot tip dies back each year)",
+  "deciduous": true,
+  "height_m": [4, 8],
+  "variants": [
+    {"name": "young", "weight": 0.25, "height_m": [2, 4], "trunk_radius": 0.7, "crown_scale": 0.9, "branches": 0.8, "set": {"trunk": {"stems": [3, 6]}}, "note": "a young clump of a few upright wands"},
+    {"name": "mature", "weight": 0.5, "seeds": 2, "note": "the file as written"},
+    {"name": "old", "weight": 0.25, "height_m": [6, 10], "trunk_radius": 1.25, "crown_scale": 1.1, "gnarl": 1.3, "deadwood": {"fraction": 0.25, "levels": [1, 2], "where": "inner", "rgb": [132, 126, 116]}, "set": {"trunk": {"stems": [6, 11], "stem_spread_deg": 34}}, "note": "a broad old clump with leaning stems and grey dead wands inside"}
+  ],
+  "description": "A many-stemmed willow 3-10 m tall that grows as dense thickets right at the water's edge, with narrow leaves dark green above and whitish beneath. It lines the foothill creeks and seeps, holds the banks with its roots, and its catkins in late winter are the first pollen of the year for native bees.",
+  "season_notes": {
+    "winter": "Bare grey-brown wands; in late winter the silvery catkins open before the leaves (February-March).",
+    "spring": "Leafing out yellow-green as the catkins shed their seed in cottony fluff.",
+    "summer": "Dull green thicket, grey when the wind turns the pale leaf undersides.",
+    "fall": "Leaves yellow and drop through November."
+  },
+  "status": "agent draft, needs local sign-off",
+  "trunk": {
+    "length_ratio": 0.88, "radius_ratio": 0.022, "taper": 0.8, "flare": 1.3, "bole_ratio": 0.04, "base_size": 0.0,
+    "curve_deg": 10, "curve_var_deg": 12, "segments": 3, "lean_deg": 8, "stems": [5, 9], "stem_spread_deg": 40,
+    "split_prob": 0.0, "split_count": 2, "split_angle_deg": 20, "sinuous_deg": 6, "bark_rgb": [116, 108, 96],
+    "bark_pattern": "furrowed", "twig_rgb": [138, 112, 76],
+    "bark": {"tile_m": [0.2, 0.5], "ridge_m": 0.015, "block_m": 0.04, "fissure": 0.25, "contrast": 0.6, "lichen": 0.3, "relief": 0.6}
+  },
+  "crown": {
+    "shape": "conical",
+    "envelope": {"profile": [[0.0, 0.55], [0.12, 0.68], [0.28, 0.78], [0.45, 0.8], [0.6, 0.76], [0.74, 0.64], [0.86, 0.46], [0.95, 0.25], [1.0, 0.06]], "lobes": 6, "lobe_depth": 0.14, "asymmetry": 0.15, "fill": 0.9, "edge": 1.1}
+  },
+  "levels": [
+    {
+      "count": 44, "down_angle_deg": 72, "down_angle_tip_deg": 24, "down_angle_var_deg": 12, "rotation_deg": 140, "rotation_var_deg": 30,
+      "length_ratio": 0.85, "length_var": 0.3, "curve_deg": 8, "curve_var_deg": 14, "tropism": 0.05, "taper": 0.9,
+      "radius_ratio": 0.5, "segments": 2, "droop_deg": 6
+    },
+    {
+      "count": 6, "start": 0.2, "down_angle_deg": 32, "down_angle_var_deg": 12, "rotation_deg": 140,
+      "rotation_var_deg": 30, "length_ratio": 0.55, "length_var": 0.3, "curve_deg": 6, "curve_var_deg": 14,
+      "tropism": 0.06, "taper": 1.0, "radius_ratio": 0.5, "segments": 1
+    }
+  ],
+  "foliage": {
+    "type": "broadleaf", "leaf_size_m": 0.08, "leaf_shape": "lanceolate", "cluster_m": 1.15, "density": 16, "leaf_fill": 2.4,
+    "start": 0.1, "parent_start": 0.3, "orientation": "outward", "roll_deg": 60,
+    "colors": {"winter": [122, 106, 80], "spring": [136, 150, 74], "summer": [105, 112, 80], "fall": [170, 148, 106]},
+    "leaf_on": {"winter": 0.0, "spring": 1.0, "summer": 1.0, "fall": 0.7},
+    "clumps": {"radius_m": 0.6, "cards_per_clump": 7, "shell": 0.25, "flatten": 0.85, "tip_bias": 1.2},
+    "palette": [[0.7, [1, 1, 1]], [0.3, [1.22, 1.24, 1.26]]], "winter_twigs": 0.45, "ao_min": 0.7,
+    "catkins": {"rgb": [206, 202, 180], "len_m": 0.04, "width": 0.3, "hang": false, "prob": 0.3},
+    "color_var": [0.08, 0.05], "leaf_on_var": 0.5
+  },
+  "twigs": {"count": [2, 3], "length": 0.6, "down_deg": 30, "down_var_deg": 12, "curve_var_deg": 15, "segments": 1, "radius_m": 0.006, "tropism": 0.1, "fan_deg": 40, "jitter": 0.2},
+  "lod": {
+    "near_tris_budget": 1800, "near_sides": [4, 3, 0], "mid_blobs": 5, "mid_branches": 4, "mid_segments": [2, 1], "mid_blob_scale": 0.9,
+    "close_factor": 2.5
+  },
+  "targets": {
+    "crown_width_ratio": 1.3, "crown_base_ratio": 0.05, "porosity": 0.3, "foliage_rg": 0.86, "foliage_bg": 0.47,
+    "fall_rg": 1.34, "fall_bg": 0.49,
+    "from": "reference photographs (2026-10-25, measured as in docs/tree-likeness-review.md): elsinore single clump W/H 1.28 base 0.06 (iNaturalist 448506936, CC0); low clumps 2.1-2.2 (iNaturalist 1332351, 131520164, 170438513, CC BY); young plant 0.78 (iNaturalist 478216102, CC BY); colour mean of iNaturalist 131520164, 369138022 (CC0), 478216102; porosity is the ragged top edge only (rough); fall colour iNaturalist 170438513 (Caleb Catto, CC BY); winter catkins Wikimedia Commons File:Salix_lasiolepis_McLaughlin_Eastshore_State_Park_4.png (Awinch1001, CC0) and File:Salix_lasiolepis_1.jpg (Stan Shebs, CC BY-SA 3.0)",
+    "photos": [
+      {"url": "https://www.inaturalist.org/photos/448506936", "license": "CC0", "shows": "single clump at a creek, November"},
+      {"url": "https://www.inaturalist.org/photos/131520164", "license": "CC BY 4.0", "author": "Peter Brastow", "shows": "dense mound, May"},
+      {"url": "https://www.inaturalist.org/photos/369138022", "license": "CC0", "shows": "thicket, April"},
+      {"url": "https://www.inaturalist.org/photos/478216102", "license": "CC BY 4.0", "author": "mel letterman", "shows": "young plant, March"},
+      {"url": "https://www.inaturalist.org/photos/170438513", "license": "CC BY 4.0", "author": "Caleb Catto", "shows": "fall yellow, November"},
+      {"url": "https://commons.wikimedia.org/wiki/File:Salix_lasiolepis_McLaughlin_Eastshore_State_Park_4.png", "license": "CC0", "author": "Awinch1001", "shows": "bare thicket with catkins, January"}
+    ]
+  },
+  "notes": "Arroyo willow is a shrub or small tree, 2-10 m, of streambanks, seeps and wet swales from the coast to the Sierra foothills, usually in clonal thickets right at the water's edge (it roots from fallen stems). No main trunk: 5-20 stems from the base rise at 20-45 degrees, so the file grows a tree form with stems [5, 9] spread 26 degrees (the clump), each stem a leader running nearly the full height (trunk.length_ratio 0.88), thin (dbh 10-20 cm on a 6 m clump: radius_ratio 0.022). Many short upswept side branches (level 1 count 30 over all stems, tropism up) carry the leafy wands down to the ground: base_size 0.1, crown base about 0.05 in the photos. The clump is a broad irregular mound, flat-topped, with fine feathery shoot tips along the top: envelope from the best single-clump photo (radius 0.43-0.64 of height), slightly broadened toward the low wide clumps (W/H 1.3-2.2; target 1.4 for one plant, thickets of overlapping plants read wider). Bark smooth grey-brown on young stems, shallowly furrowed on old ones; twigs yellowish to red-brown. Leaves 5-12 cm, narrow oblanceolate (leaf_shape lanceolate), dark dull green above and glaucous white beneath: the palette carries 30% pale undersides, so the crown reads grey-green in wind and shade. Deciduous: yellow-green new leaves in March-April, dull green all summer (the photos give linear r/g 0.86, b/g 0.47), yellow in fall (r/g 1.34) and dropping through November (leaf_on.fall 0.7), bare December-February. Catkins (2-5 cm, silvery-grey turning yellow with pollen) open before the leaves in late winter, held along the twigs, not hanging: foliage.catkins on the winter twig texture. Old clumps carry grey dead wands inside (deadwood in the old class); no snag: a willow clump does not stand dead as a tree, it collapses and resprouts.",
+  "sources": ["https://ucjeps.berkeley.edu/eflora/ (Salix lasiolepis)", "https://www.calflora.org/ (Salix lasiolepis)", "https://en.wikipedia.org/wiki/Salix_lasiolepis", "https://plants.usda.gov/ (SALA6)", "Reference photographs listed in targets.photos (iNaturalist and Wikimedia Commons, CC licences)"],
+  "authors": ["Wild Earth (agent draft, 2026-10-25); needs local sign-off"],
+  "license": "CC BY-SA 4.0"
+}

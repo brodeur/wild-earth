@@ -1,0 +1,78 @@
+{
+  "id": "alnus_rhombifolia",
+  "aliases": ["alder", "white_alder"],
+  "scientific": "Alnus rhombifolia",
+  "common": "white alder",
+  "form": "tree",
+  "architectural_model": "Rauh",
+  "deciduous": true,
+  "height_m": [13, 22],
+  "variants": [
+    {"name": "young", "weight": 0.25, "height_m": [5, 10], "trunk_radius": 0.75, "crown_scale": 0.95, "branches": 0.8, "set": {"crown": {"envelope": {"profile": [[0.16, 0.16], [0.3, 0.26], [0.45, 0.29], [0.6, 0.27], [0.75, 0.21], [0.88, 0.13], [1.0, 0.03]]}}}, "note": "a slim, conical young tree with its leader still running to the top"},
+    {"name": "mature", "weight": 0.5, "seeds": 2, "note": "the file as written"},
+    {"name": "veteran", "weight": 0.17, "height_m": [18, 25], "trunk_radius": 1.25, "crown_scale": 1.12, "gnarl": 1.25, "deadwood": {"fraction": 0.15, "levels": [1, 2], "where": "lower"}, "set": {"trunk": {"stems": [1, 3], "lean_deg": 9}}, "note": "a tall old tree, sometimes two or three trunks, dead lower limbs"}
+  ],
+  "snag": {"fraction": 0.08, "from": "mature", "height_m": [10, 18], "limbs": 0.4, "twigs": 0.1, "levels": 1, "broken_top": [0.6, 0.9], "shorten": [0.35, 0.8], "rgb": [176, 172, 164]},
+  "description": "A tall, straight streambank tree 15-25 m high with a narrow, open crown, smooth pale grey bark and dark green, finely toothed oval leaves. It grows only with its roots in running water along the foothill creeks and rivers, fixes nitrogen in its roots, and shades the water cool enough for trout.",
+  "season_notes": {
+    "winter": "Bare pale trunks along the creek, with hanging catkins opening from January and last year's small woody cones.",
+    "spring": "Catkins shed their pollen and the new leaves come out bright green.",
+    "summer": "Dark green, flat-held leaves; the shade over the water keeps the pools cool.",
+    "fall": "No real fall colour: the leaves turn dull green-brown and drop."
+  },
+  "status": "agent draft, needs local sign-off",
+  "trunk": {
+    "length_ratio": 0.92, "radius_ratio": 0.022, "taper": 0.85, "flare": 1.25, "bole_ratio": 0.25, "base_size": 0.18,
+    "curve_deg": 4, "curve_var_deg": 6, "segments": 6, "lean_deg": 5, "stems": [1, 2], "stem_spread_deg": 10,
+    "split_prob": 0.1, "split_count": 2, "split_angle_deg": 16, "split_height": 0.55, "bark_rgb": [158, 156, 150],
+    "bark_pattern": "smooth", "twig_rgb": [118, 104, 96],
+    "bark": {"tile_m": [0.3, 0.6], "contrast": 0.5, "lichen": 0.7, "relief": 0.35}
+  },
+  "crown": {
+    "shape": "tapered_cylindrical",
+    "envelope": {"profile": [[0.16, 0.22], [0.28, 0.35], [0.44, 0.42], [0.6, 0.41], [0.75, 0.33], [0.88, 0.21], [1.0, 0.05]], "lobes": 5, "lobe_depth": 0.16, "asymmetry": 0.14, "fill": 0.5, "edge": 1.08}
+  },
+  "levels": [
+    {
+      "count": 18, "down_angle_deg": 58, "down_angle_tip_deg": 34, "down_angle_var_deg": 12, "rotation_deg": 140, "rotation_var_deg": 30,
+      "length_ratio": 0.36, "length_var": 0.3, "curve_deg": -6, "curve_var_deg": 12, "tropism": 0.02, "taper": 0.9,
+      "radius_ratio": 0.4, "segments": 2, "droop_deg": 10, "upturn_deg": 0
+    },
+    {
+      "count": 11, "start": 0.1, "down_angle_deg": 48, "down_angle_var_deg": 14, "rotation_deg": -70,
+      "rotation_var_deg": 20, "length_ratio": 0.5, "length_var": 0.3, "curve_deg": 0, "curve_var_deg": 14,
+      "tropism": -0.02, "taper": 1.0, "radius_ratio": 0.45, "segments": 2
+    }
+  ],
+  "foliage": {
+    "type": "broadleaf", "leaf_size_m": 0.07, "leaf_shape": "oval", "cluster_m": 1.25, "density": 14, "leaf_fill": 3.0,
+    "start": 0.05, "parent_start": 0.3, "orientation": "outward", "roll_deg": 30,
+    "colors": {"winter": [118, 104, 96], "spring": [118, 140, 74], "summer": [93, 100, 76], "fall": [116, 110, 74]},
+    "leaf_on": {"winter": 0.0, "spring": 1.0, "summer": 1.0, "fall": 0.8},
+    "clumps": {"radius_m": 0.9, "cards_per_clump": 7, "shell": 0.15, "flatten": 0.65, "tip_bias": 1.3},
+    "palette": [[0.85, [1, 1, 1]], [0.15, [0.82, 0.88, 0.85]]], "winter_twigs": 0.5, "ao_min": 0.68,
+    "catkins": {"rgb": [150, 118, 84], "len_m": 0.07, "width": 0.16, "hang": true, "prob": 0.3},
+    "color_var": [0.06, 0.03], "leaf_on_var": 0.4
+  },
+  "deadwood": {"fraction": 0.05, "where": "lower", "levels": [1], "shorten": 0.55, "rgb": [150, 146, 140]},
+  "twigs": {"count": [1, 2], "length": 0.6, "down_deg": 50, "down_var_deg": 15, "curve_var_deg": 18, "segments": 1, "radius_m": 0.007, "droop_deg": 8, "fan_deg": 50, "jitter": 0.2},
+  "lod": {
+    "near_tris_budget": 2000, "near_sides": [6, 3, 0], "mid_blobs": 5, "mid_branches": 4, "mid_segments": [3, 1], "mid_blob_scale": 0.85,
+    "close_factor": 2.5
+  },
+  "targets": {
+    "crown_width_ratio": 0.7, "crown_base_ratio": 0.25, "porosity": 0.12, "foliage_rg": 0.84, "foliage_bg": 0.53,
+    "from": "reference photographs (2026-10-25, measured as in docs/tree-likeness-review.md): forest-grown streambank trees W/H 0.59 (Wikimedia Commons File:East-Fort-San-Gabriel-River.jpg, Eeekster, CC BY 3.0) and 0.68 (iNaturalist 149760420, Ed Alverson, CC BY); open-grown young tree 0.95, base 0.19 (iNaturalist 26574532, Millie Basden, CC BY); colour and porosity mean of those and iNaturalist 203870250 (Michael Warner, CC BY). W/H is rough (+-0.15): no clean sky silhouette of a mature streambank alder was found",
+    "photos": [
+      {"url": "https://commons.wikimedia.org/wiki/File:East-Fort-San-Gabriel-River.jpg", "license": "CC BY 3.0", "author": "Eeekster", "shows": "forest-grown streambank tree, pale trunk"},
+      {"url": "https://www.inaturalist.org/photos/149760420", "license": "CC BY 4.0", "author": "Ed Alverson", "shows": "tall tree at a forest edge, August"},
+      {"url": "https://www.inaturalist.org/photos/26574532", "license": "CC BY 4.0", "author": "Millie Basden", "shows": "young open-grown tree, October"},
+      {"url": "https://www.inaturalist.org/photos/203870250", "license": "CC BY 4.0", "author": "Michael Warner", "shows": "upper crown, June"},
+      {"url": "https://www.inaturalist.org/photos/344584219", "license": "CC0", "shows": "grove of white trunks, January"}
+    ]
+  },
+  "notes": "White alder is the streambank tree of California's foothill and lower montane creeks: it grows only where its roots reach permanent running water, so it lines channels as a single row. 15-25 m (to 35 m), here 13-22 m in the file, with one straight trunk (sometimes two or three from the base), excurrent while young: the leader runs to the top (trunk.length_ratio 0.92), and the crown is narrow and open, an egg or a rounded cone (photo W/H 0.6-0.7 for forest-grown trees, 0.9-0.95 for open-grown young ones). Rauh's model, like the other alders. Many level-1 limbs (24) rise at 50-60 degrees then spread, with slightly drooping tips (droop_deg). Bark smooth, pale grey to almost white, with lichen; scaly and darker only at the base of old trees. dbh 0.3-0.6 m on a 20 m tree: radius_ratio 0.022. Leaves 5-10 cm, oval to rhombic, finely toothed, dark green and held flat (leaf_shape oval, a slightly darker palette tint for the leaf mass). No fall colour to speak of: the leaves go dull green-brown and drop through November (fall colour and leaf_on 0.8). Bare in winter with hanging catkins from January (foliage.catkins, hang true) and last year's small woody cones; the cones are not drawn. Snags are common along creeks (alders are short-lived for a tree, 50-100 years): 8% of slots, the top often broken.",
+  "sources": ["https://www.fs.usda.gov/database/feis/plants/tree/alnrho/all.html", "https://ucjeps.berkeley.edu/eflora/ (Alnus rhombifolia)", "https://en.wikipedia.org/wiki/Alnus_rhombifolia", "https://www.calflora.org/ (Alnus rhombifolia)", "Reference photographs listed in targets.photos (iNaturalist and Wikimedia Commons, CC licences)"],
+  "authors": ["Wild Earth (agent draft, 2026-10-25); needs local sign-off"],
+  "license": "CC BY-SA 4.0"
+}

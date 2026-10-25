@@ -24,12 +24,17 @@
    "B": "tree_density",
    "A": "shrub_density"
   },
+  "species_mix_c.png": {
+   "R": "salix_lasiolepis",
+   "G": "alnus_rhombifolia",
+   "B": "populus_fremontii"
+  },
   "species_mix_index.png": {
    "R": "row index into mixes (0 = none)"
   }
  },
  "encoding": {
-  "tree_weights": "species_mix_a RGBA: weights over the four tree species, summing to 255 (0 everywhere = no trees)",
+  "tree_weights": "species_mix_a RGBA + species_mix_c RGB: weights over the seven tree species, summing to 255 (0 everywhere = no trees)",
   "shrub_weights": "species_mix_b RG: weights over the two shrub species, summing to 255",
   "density": "species_mix_b BA: multiplier = byte / 100 on the client's per-habitat-class plant count (1.0 = the fixed-mix count); the count still scales with client/canopy.png cover",
   "alpha": "A carries data, not opacity: decode without premultiplication (a 2D canvas getImageData zeroes RGB where A is 0). species_mix_index.png plus mixes[].bytes is the canvas-safe equivalent."
@@ -39,7 +44,10 @@
    "quercus_douglasii",
    "quercus_wislizeni",
    "pinus_sabiniana",
-   "pinus_ponderosa"
+   "pinus_ponderosa",
+   "salix_lasiolepis",
+   "alnus_rhombifolia",
+   "populus_fremontii"
   ],
   "shrubs": [
    "arctostaphylos_viscida",
@@ -51,8 +59,28 @@
    "pinus_sabiniana": "gray_pine",
    "pinus_ponderosa": "ponderosa",
    "arctostaphylos_viscida": "manzanita",
-   "adenostoma_fasciculatum": "chamise"
+   "adenostoma_fasciculatum": "chamise",
+   "salix_lasiolepis": "willow",
+   "alnus_rhombifolia": "alder",
+   "populus_fremontii": "cottonwood"
   }
+ },
+ "bytes_layout": {
+  "trees": {
+   "blue_oak": 0,
+   "live_oak": 1,
+   "gray_pine": 2,
+   "ponderosa": 3,
+   "willow": 8,
+   "alder": 9,
+   "cottonwood": 10
+  },
+  "shrubs": {
+   "manzanita": 4,
+   "chamise": 5
+  },
+  "tree_density": 6,
+  "shrub_density": 7
  },
  "mixes": [
   {
@@ -80,7 +108,10 @@
     255,
     0,
     100,
-    60
+    60,
+    0,
+    0,
+    0
    ]
   },
   {
@@ -110,7 +141,10 @@
     153,
     102,
     100,
-    60
+    60,
+    0,
+    0,
+    0
    ]
   },
   {
@@ -140,7 +174,10 @@
     217,
     38,
     100,
-    60
+    60,
+    0,
+    0,
+    0
    ]
   },
   {
@@ -169,7 +206,10 @@
     153,
     102,
     60,
-    100
+    100,
+    0,
+    0,
+    0
    ]
   },
   {
@@ -198,7 +238,10 @@
     153,
     102,
     35,
-    100
+    100,
+    0,
+    0,
+    0
    ]
   },
   {
@@ -227,7 +270,10 @@
     51,
     204,
     15,
-    100
+    100,
+    0,
+    0,
+    0
    ]
   },
   {
@@ -256,7 +302,10 @@
     89,
     166,
     30,
-    100
+    100,
+    0,
+    0,
+    0
    ]
   },
   {
@@ -286,7 +335,10 @@
     102,
     153,
     90,
-    100
+    100,
+    0,
+    0,
+    0
    ]
   },
   {
@@ -314,7 +366,10 @@
     0,
     255,
     100,
-    30
+    30,
+    0,
+    0,
+    0
    ]
   },
   {
@@ -324,26 +379,31 @@
    "name": "California Central Valley Riparian Woodland",
    "rule": "riparian",
    "trees": {
-    "quercus_wislizeni": 0.7,
-    "quercus_douglasii": 0.15,
-    "pinus_ponderosa": 0.15
+    "salix_lasiolepis": 0.38,
+    "alnus_rhombifolia": 0.24,
+    "populus_fremontii": 0.1,
+    "quercus_wislizeni": 0.2,
+    "quercus_douglasii": 0.08
    },
    "shrubs": {
     "arctostaphylos_viscida": 1
    },
-   "tree_density": 1.0,
-   "shrub_density": 0.6,
-   "note": "willow, cottonwood, alder and valley oak are not in the library: quercus_wislizeni stands in",
+   "tree_density": 1.6,
+   "shrub_density": 0.3,
+   "note": "valley oak, Oregon ash, bigleaf maple and box elder are not in the library: quercus_douglasii stands in for valley oak on the banks; the riparian understory (blackberry, wild rose, spicebush) is not in the library either, so the shrub layer is thin",
    "cells": 1,
    "bytes": [
-    38,
-    179,
+    20,
+    51,
     0,
-    38,
+    0,
     255,
     0,
-    100,
-    60
+    160,
+    30,
+    97,
+    61,
+    26
    ]
   },
   {
@@ -372,7 +432,10 @@
     153,
     102,
     35,
-    100
+    100,
+    0,
+    0,
+    0
    ]
   },
   {
@@ -401,7 +464,10 @@
     230,
     25,
     100,
-    50
+    50,
+    0,
+    0,
+    0
    ]
   },
   {
@@ -431,7 +497,10 @@
     204,
     51,
     110,
-    60
+    60,
+    0,
+    0,
+    0
    ]
   },
   {
@@ -461,7 +530,10 @@
     102,
     153,
     100,
-    40
+    40,
+    0,
+    0,
+    0
    ]
   },
   {
@@ -491,7 +563,10 @@
     128,
     127,
     100,
-    50
+    50,
+    0,
+    0,
+    0
    ]
   },
   {
@@ -507,6 +582,9 @@
    "note": null,
    "cells": 82,
    "bytes": [
+    0,
+    0,
+    0,
     0,
     0,
     0,
@@ -543,7 +621,10 @@
     89,
     166,
     30,
-    100
+    100,
+    0,
+    0,
+    0
    ]
   },
   {
@@ -573,7 +654,10 @@
     128,
     127,
     100,
-    50
+    50,
+    0,
+    0,
+    0
    ]
   },
   {
@@ -602,7 +686,10 @@
     102,
     153,
     25,
-    30
+    30,
+    0,
+    0,
+    0
    ]
   },
   {
@@ -632,7 +719,10 @@
     153,
     102,
     100,
-    60
+    60,
+    0,
+    0,
+    0
    ]
   },
   {
@@ -661,7 +751,10 @@
     153,
     102,
     35,
-    100
+    100,
+    0,
+    0,
+    0
    ]
   },
   {
@@ -691,7 +784,10 @@
     204,
     51,
     60,
-    100
+    100,
+    0,
+    0,
+    0
    ]
   },
   {
@@ -701,25 +797,31 @@
    "name": "California Montane Riparian Systems",
    "rule": "montane_riparian",
    "trees": {
-    "quercus_wislizeni": 0.5,
-    "pinus_ponderosa": 0.5
+    "alnus_rhombifolia": 0.4,
+    "salix_lasiolepis": 0.25,
+    "quercus_wislizeni": 0.15,
+    "pinus_ponderosa": 0.12,
+    "populus_fremontii": 0.08
    },
    "shrubs": {
     "arctostaphylos_viscida": 1
    },
-   "tree_density": 1.0,
-   "shrub_density": 0.6,
-   "note": "willow, cottonwood, alder and valley oak are not in the library: quercus_wislizeni stands in",
+   "tree_density": 1.3,
+   "shrub_density": 0.3,
+   "note": "alder-willow streamside forest with some pine; valley oak, Oregon ash, bigleaf maple and box elder are not in the library: quercus_douglasii stands in for valley oak on the banks; the riparian understory (blackberry, wild rose, spicebush) is not in the library either, so the shrub layer is thin",
    "cells": 1751,
    "bytes": [
     0,
-    128,
+    38,
     0,
-    127,
+    31,
     255,
     0,
-    100,
-    60
+    130,
+    30,
+    64,
+    102,
+    20
    ]
   },
   {
@@ -746,7 +848,10 @@
     0,
     255,
     0,
-    60
+    60,
+    0,
+    0,
+    0
    ]
   },
   {
@@ -756,25 +861,31 @@
    "name": "Inter-Mountain Basins Montane Riparian Systems",
    "rule": "montane_riparian",
    "trees": {
-    "quercus_wislizeni": 0.5,
-    "pinus_ponderosa": 0.5
+    "alnus_rhombifolia": 0.4,
+    "salix_lasiolepis": 0.25,
+    "quercus_wislizeni": 0.15,
+    "pinus_ponderosa": 0.12,
+    "populus_fremontii": 0.08
    },
    "shrubs": {
     "arctostaphylos_viscida": 1
    },
-   "tree_density": 1.0,
-   "shrub_density": 0.6,
-   "note": "willow, cottonwood, alder and valley oak are not in the library: quercus_wislizeni stands in",
+   "tree_density": 1.3,
+   "shrub_density": 0.3,
+   "note": "alder-willow streamside forest with some pine; valley oak, Oregon ash, bigleaf maple and box elder are not in the library: quercus_douglasii stands in for valley oak on the banks; the riparian understory (blackberry, wild rose, spicebush) is not in the library either, so the shrub layer is thin",
    "cells": 54,
    "bytes": [
     0,
-    128,
+    38,
     0,
-    127,
+    31,
     255,
     0,
-    100,
-    60
+    130,
+    30,
+    64,
+    102,
+    20
    ]
   },
   {
@@ -784,24 +895,28 @@
    "name": "Temperate Pacific Freshwater Emergent Marsh",
    "rule": "wet_meadow_marsh",
    "trees": {
-    "quercus_wislizeni": 1
+    "salix_lasiolepis": 0.8,
+    "quercus_wislizeni": 0.2
    },
    "shrubs": {
     "arctostaphylos_viscida": 1
    },
    "tree_density": 0.05,
    "shrub_density": 0.05,
-   "note": "herbaceous wetland: almost no woody plants",
+   "note": "herbaceous wetland: almost no woody plants, a few willows at the edge",
    "cells": 984,
    "bytes": [
     0,
-    255,
+    51,
     0,
     0,
     255,
     0,
     5,
-    5
+    5,
+    204,
+    0,
+    0
    ]
   },
   {
@@ -830,7 +945,10 @@
     153,
     102,
     60,
-    100
+    100,
+    0,
+    0,
+    0
    ]
   },
   {
@@ -840,26 +958,31 @@
    "name": "Mediterranean California Foothill and Lower Montane Riparian Woodland",
    "rule": "riparian",
    "trees": {
-    "quercus_wislizeni": 0.7,
-    "quercus_douglasii": 0.15,
-    "pinus_ponderosa": 0.15
+    "salix_lasiolepis": 0.38,
+    "alnus_rhombifolia": 0.24,
+    "populus_fremontii": 0.1,
+    "quercus_wislizeni": 0.2,
+    "quercus_douglasii": 0.08
    },
    "shrubs": {
     "arctostaphylos_viscida": 1
    },
-   "tree_density": 1.0,
-   "shrub_density": 0.6,
-   "note": "willow, cottonwood, alder and valley oak are not in the library: quercus_wislizeni stands in",
+   "tree_density": 1.6,
+   "shrub_density": 0.3,
+   "note": "valley oak, Oregon ash, bigleaf maple and box elder are not in the library: quercus_douglasii stands in for valley oak on the banks; the riparian understory (blackberry, wild rose, spicebush) is not in the library either, so the shrub layer is thin",
    "cells": 3071,
    "bytes": [
-    38,
-    179,
+    20,
+    51,
     0,
-    38,
+    0,
     255,
     0,
-    100,
-    60
+    160,
+    30,
+    97,
+    61,
+    26
    ]
   },
   {
@@ -869,26 +992,31 @@
    "name": "Mediterranean California Serpentine Foothill and Lower Montane Riparian Woodland and Seep",
    "rule": "riparian",
    "trees": {
-    "quercus_wislizeni": 0.7,
-    "quercus_douglasii": 0.15,
-    "pinus_ponderosa": 0.15
+    "salix_lasiolepis": 0.38,
+    "alnus_rhombifolia": 0.24,
+    "populus_fremontii": 0.1,
+    "quercus_wislizeni": 0.2,
+    "quercus_douglasii": 0.08
    },
    "shrubs": {
     "arctostaphylos_viscida": 1
    },
-   "tree_density": 1.0,
-   "shrub_density": 0.6,
-   "note": "willow, cottonwood, alder and valley oak are not in the library: quercus_wislizeni stands in",
+   "tree_density": 1.6,
+   "shrub_density": 0.3,
+   "note": "valley oak, Oregon ash, bigleaf maple and box elder are not in the library: quercus_douglasii stands in for valley oak on the banks; the riparian understory (blackberry, wild rose, spicebush) is not in the library either, so the shrub layer is thin",
    "cells": 9,
    "bytes": [
-    38,
-    179,
+    20,
+    51,
     0,
-    38,
+    0,
     255,
     0,
-    100,
-    60
+    160,
+    30,
+    97,
+    61,
+    26
    ]
   },
   {
@@ -917,7 +1045,10 @@
     102,
     153,
     25,
-    30
+    30,
+    0,
+    0,
+    0
    ]
   },
   {
@@ -927,24 +1058,28 @@
    "name": "Temperate Pacific Subalpine-Montane Wet Meadow",
    "rule": "wet_meadow_marsh",
    "trees": {
-    "quercus_wislizeni": 1
+    "salix_lasiolepis": 0.8,
+    "quercus_wislizeni": 0.2
    },
    "shrubs": {
     "arctostaphylos_viscida": 1
    },
    "tree_density": 0.05,
    "shrub_density": 0.05,
-   "note": "herbaceous wetland: almost no woody plants",
+   "note": "herbaceous wetland: almost no woody plants, a few willows at the edge",
    "cells": 298,
    "bytes": [
     0,
-    255,
+    51,
     0,
     0,
     255,
     0,
     5,
-    5
+    5,
+    204,
+    0,
+    0
    ]
   },
   {
@@ -972,7 +1107,10 @@
     0,
     255,
     100,
-    30
+    30,
+    0,
+    0,
+    0
    ]
   },
   {
@@ -1003,7 +1141,10 @@
     128,
     127,
     80,
-    80
+    80,
+    0,
+    0,
+    0
    ]
   },
   {
@@ -1032,7 +1173,10 @@
     128,
     127,
     20,
-    80
+    80,
+    0,
+    0,
+    0
    ]
   },
   {
@@ -1042,26 +1186,30 @@
    "name": "Mediterranean California Foothill and Lower Montane Riparian Shrubland",
    "rule": "riparian_shrubland",
    "trees": {
-    "quercus_wislizeni": 0.8,
-    "quercus_douglasii": 0.2
+    "salix_lasiolepis": 0.75,
+    "alnus_rhombifolia": 0.1,
+    "quercus_wislizeni": 0.15
    },
    "shrubs": {
     "arctostaphylos_viscida": 0.5,
     "adenostoma_fasciculatum": 0.5
    },
-   "tree_density": 0.3,
-   "shrub_density": 0.8,
-   "note": "willow, cottonwood, alder and valley oak are not in the library: quercus_wislizeni stands in; shrubs are stand-ins for willow scrub",
+   "tree_density": 1.2,
+   "shrub_density": 0.2,
+   "note": "willow scrub: arroyo willow is the shrubland; valley oak, Oregon ash, bigleaf maple and box elder are not in the library: quercus_douglasii stands in for valley oak on the banks; the riparian understory (blackberry, wild rose, spicebush) is not in the library either, so the shrub layer is thin",
    "cells": 232,
    "bytes": [
-    51,
-    204,
+    0,
+    38,
     0,
     0,
     128,
     127,
-    30,
-    80
+    120,
+    20,
+    191,
+    26,
+    0
    ]
   },
   {
@@ -1071,26 +1219,30 @@
    "name": "Mediterranean California Serpentine Foothill and Lower Montane Riparian Shrubland and Seep",
    "rule": "riparian_shrubland",
    "trees": {
-    "quercus_wislizeni": 0.8,
-    "quercus_douglasii": 0.2
+    "salix_lasiolepis": 0.75,
+    "alnus_rhombifolia": 0.1,
+    "quercus_wislizeni": 0.15
    },
    "shrubs": {
     "arctostaphylos_viscida": 0.5,
     "adenostoma_fasciculatum": 0.5
    },
-   "tree_density": 0.3,
-   "shrub_density": 0.8,
-   "note": "willow, cottonwood, alder and valley oak are not in the library: quercus_wislizeni stands in; shrubs are stand-ins for willow scrub",
+   "tree_density": 1.2,
+   "shrub_density": 0.2,
+   "note": "willow scrub: arroyo willow is the shrubland; valley oak, Oregon ash, bigleaf maple and box elder are not in the library: quercus_douglasii stands in for valley oak on the banks; the riparian understory (blackberry, wild rose, spicebush) is not in the library either, so the shrub layer is thin",
    "cells": 7,
    "bytes": [
-    51,
-    204,
+    0,
+    38,
     0,
     0,
     128,
     127,
-    30,
-    80
+    120,
+    20,
+    191,
+    26,
+    0
    ]
   },
   {
@@ -1116,6 +1268,9 @@
     0,
     0,
     50,
+    0,
+    0,
+    0,
     0
    ]
   },
@@ -1126,26 +1281,28 @@
    "name": "rewilded riparian",
    "rule": "rewilded_riparian",
    "trees": {
-    "quercus_wislizeni": 0.7,
-    "quercus_douglasii": 0.15,
-    "pinus_ponderosa": 0.15
+    "salix_lasiolepis": 0.45,
+    "alnus_rhombifolia": 0.25,
+    "populus_fremontii": 0.12,
+    "quercus_wislizeni": 0.18
    },
-   "shrubs": {
-    "arctostaphylos_viscida": 1
-   },
-   "tree_density": 1.0,
-   "shrub_density": 0.6,
-   "note": "riparian corridor along the restored channel through a former bed; willow, cottonwood, alder and valley oak are not in the library: quercus_wislizeni stands in",
+   "shrubs": {},
+   "tree_density": 2.0,
+   "shrub_density": 0.0,
+   "note": "riparian corridor along the restored channel through a former bed; valley oak, Oregon ash, bigleaf maple and box elder are not in the library: quercus_douglasii stands in for valley oak on the banks; the riparian understory (blackberry, wild rose, spicebush) is not in the library either, so the shrub layer is thin",
    "cells": 190,
    "bytes": [
-    38,
-    179,
     0,
-    38,
-    255,
+    46,
     0,
-    100,
-    60
+    0,
+    0,
+    0,
+    200,
+    0,
+    115,
+    64,
+    30
    ]
   }
  ],
@@ -1154,23 +1311,29 @@
   "from_evt": 0.6366,
   "from_bps_backfill": 0.3634,
   "tree_share": {
-   "blue_oak": 0.4476,
-   "live_oak": 0.1951,
-   "gray_pine": 0.2436,
-   "ponderosa": 0.1137
+   "blue_oak": 0.4338,
+   "live_oak": 0.1708,
+   "gray_pine": 0.2367,
+   "ponderosa": 0.0994,
+   "willow": 0.0293,
+   "alder": 0.0226,
+   "cottonwood": 0.0074
   },
   "tree_share_by_canopy": {
-   "blue_oak": 0.2607,
-   "live_oak": 0.2761,
-   "gray_pine": 0.2399,
-   "ponderosa": 0.2233
+   "blue_oak": 0.2494,
+   "live_oak": 0.2409,
+   "gray_pine": 0.2308,
+   "ponderosa": 0.2039,
+   "willow": 0.0385,
+   "alder": 0.0261,
+   "cottonwood": 0.0104
   },
   "shrub_share": {
-   "manzanita": 0.4983,
-   "chamise": 0.5017
+   "manzanita": 0.4866,
+   "chamise": 0.5134
   },
-  "mean_tree_density": 0.8678,
-  "mean_shrub_density": 0.6252,
+  "mean_tree_density": 0.893,
+  "mean_shrub_density": 0.6097,
   "rules": {
    "blue_oak_foothill_pine": 0.294,
    "grassland_savanna": 0.1271,

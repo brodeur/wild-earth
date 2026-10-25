@@ -89,24 +89,28 @@ export function rockKeep(tile, x, north) {
 // through the 8-bit index PNG (canvas-safe; the RGBA forms carry data in alpha, which a 2D canvas
 // premultiplies away) and the JSON rows' `bytes`. at(i, j) on the habitat grid (same 333 px grid)
 // returns the row record, or null where the index is 0 (no mix: callers fall back to the class mix).
-// Row record: { index, rule, name, weights: {blue_oak, live_oak, gray_pine, ponderosa, manzanita,
-// chamise} (0..1, trees and shrubs each summing to 1 or 0), trees, shrubs (non-zero weights only),
-// treeSum, shrubSum (bytes), treeDensity, shrubDensity (multipliers, byte / 100), savanna }.
-const MIX_SLOTS = ['blue_oak', 'live_oak', 'gray_pine', 'ponderosa', 'manzanita', 'chamise'];
+// Row record: { index, rule, name, weights: {blue_oak, live_oak, gray_pine, ponderosa, willow, alder,
+// cottonwood, manzanita, chamise} (0..1, trees and shrubs each summing to 1 or 0), trees, shrubs (non-zero
+// weights only, keyed by the species aliases trees.js resolves), treeSum, shrubSum (bytes), treeDensity,
+// shrubDensity (multipliers, byte / 100), savanna }. Which byte is which comes from the JSON's
+// `bytes_layout` (2026-10-25: willow, alder and cottonwood appended); older tiles use the original eight.
+const MIX_LAYOUT = { trees: { blue_oak: 0, live_oak: 1, gray_pine: 2, ponderosa: 3 }, shrubs: { manzanita: 4, chamise: 5 },
+  tree_density: 6, shrub_density: 7 };
 export class SpeciesMix {
   constructor(img, json, sizeM) {
     this.img = img; this.size = sizeM; this.res = sizeM / img.width; this.json = json;
     this.rows = [null];
+    const lay = json.bytes_layout || MIX_LAYOUT, T = Object.entries(lay.trees), S = Object.entries(lay.shrubs);
     for (const m of json.mixes || []) {
-      const b = m.bytes || [], treeSum = b[0] + b[1] + b[2] + b[3], shrubSum = b[4] + b[5];
-      const weights = {}, trees = {}, shrubs = {};
-      MIX_SLOTS.forEach((k, n) => {
-        const sum = n < 4 ? treeSum : shrubSum, wgt = sum ? b[n] / sum : 0;
-        weights[k] = wgt; if (wgt > 0) (n < 4 ? trees : shrubs)[k] = wgt;
-      });
+      const b = m.bytes || [], sum = cols => cols.reduce((s, [, c]) => s + (b[c] || 0), 0);
+      const treeSum = sum(T), shrubSum = sum(S), weights = {}, trees = {}, shrubs = {};
+      for (const [cols, tot, out] of [[T, treeSum, trees], [S, shrubSum, shrubs]]) for (const [k, c] of cols) {
+        const wgt = tot ? (b[c] || 0) / tot : 0;
+        weights[k] = wgt; if (wgt > 0) out[k] = wgt;
+      }
       // blue oak savanna: a mix led by blue oak (grassland_savanna, blue_oak, blue_oak_foothill_pine)
       this.rows[m.index] = { index: m.index, rule: m.rule, name: m.name, weights, trees, shrubs, treeSum, shrubSum,
-        treeDensity: b[6] / 100, shrubDensity: b[7] / 100, savanna: b[0] >= 128 };
+        treeDensity: b[lay.tree_density] / 100, shrubDensity: b[lay.shrub_density] / 100, savanna: b[lay.trees.blue_oak] >= 128 };
     }
   }
   at(i, j) { return this.rows[this.img.data[(j * this.img.width + i) * 4]] || null; }

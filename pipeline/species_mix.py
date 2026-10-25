@@ -3,15 +3,17 @@
 The client's first pass used one fixed species mix per habitat class. LANDFIRE EVT already
 names the actual community ("California Lower Montane Blue Oak-Foothill Pine Woodland and
 Savanna", "Mediterranean California Dry-Mesic Mixed Conifer Forest and Woodland", ...), so each
-EVT code in the tile is mapped by keyword rules on its name to weights over the six library
-species plus tree and shrub density multipliers. Human cells (Developed, Agricultural, Quarries)
+EVT code in the tile is mapped by keyword rules on its name to weights over the library's tree
+and shrub species plus tree and shrub density multipliers. Human cells (Developed, Agricultural, Quarries)
 take the rule of their Biophysical Settings name instead, so rewilded cells get the community
 that would grow there.
 
 Products (client/, on the 30 m vegetation grid, row 0 = north):
-  species_mix_a.png      RGBA  R blue oak, G live oak, B gray pine, A ponderosa   (tree weights, sum 255)
+  species_mix_a.png      RGBA  R blue oak, G live oak, B gray pine, A ponderosa   (tree weights; with _c, sum 255)
   species_mix_b.png      RGBA  R manzanita, G chamise                             (shrub weights, sum 255)
                                B tree_density, A shrub_density                    (multiplier = byte / 100)
+  species_mix_c.png      RGB   R arroyo willow, G white alder, B Fremont cottonwood (more tree weights:
+                               species_mix_a RGBA + species_mix_c RGB sum to 255)
   species_mix_index.png  L     row index into species_mix.json "mixes" (0 = none); canvas-safe
   species_mix.json       channel order, the code -> mix table actually used, per-tile fractions
 
@@ -28,15 +30,25 @@ from PIL import Image
 from .config import Tile, sha256
 from .habitat import CLASSES, HUMAN_PHYS_PREFIXES, rewilded_cells
 
-TREES = ["quercus_douglasii", "quercus_wislizeni", "pinus_sabiniana", "pinus_ponderosa"]
+TREES = ["quercus_douglasii", "quercus_wislizeni", "pinus_sabiniana", "pinus_ponderosa",
+         "salix_lasiolepis", "alnus_rhombifolia", "populus_fremontii"]
 SHRUBS = ["arctostaphylos_viscida", "adenostoma_fasciculatum"]
 SHORT = {"quercus_douglasii": "blue_oak", "quercus_wislizeni": "live_oak", "pinus_sabiniana": "gray_pine",
-         "pinus_ponderosa": "ponderosa", "arctostaphylos_viscida": "manzanita", "adenostoma_fasciculatum": "chamise"}
+         "pinus_ponderosa": "ponderosa", "arctostaphylos_viscida": "manzanita", "adenostoma_fasciculatum": "chamise",
+         "salix_lasiolepis": "willow", "alnus_rhombifolia": "alder", "populus_fremontii": "cottonwood"}
+# Byte columns of a mix row (mixes[].bytes and the LUT behind the PNGs). The first eight are the original
+# layout (four trees, two shrubs, two densities) so older readers keep working; the riparian trees added on
+# 2026-10-25 are appended. species_mix.json "bytes_layout" says the same for the client (tilepackage.js).
+TREE_COLS = [0, 1, 2, 3, 8, 9, 10]
+SHRUB_COLS = [4, 5]
+TD_COL, SD_COL, NCOLS = 6, 7, 11
 DENSITY_SCALE = 100   # density byte = round(multiplier * 100); 1.0 = the client's per-habitat-class count
 
 BLACK_OAK = "black oak (Quercus kelloggii) is not in the library: quercus_wislizeni stands in"
 LIVE_OAK_STANDIN = "canyon live oak, madrone and Douglas-fir are not in the library: quercus_wislizeni and pinus_ponderosa stand in"
-RIPARIAN = "willow, cottonwood, alder and valley oak are not in the library: quercus_wislizeni stands in"
+RIPARIAN = ("valley oak, Oregon ash, bigleaf maple and box elder are not in the library: quercus_douglasii stands in "
+            "for valley oak on the banks; the riparian understory (blackberry, wild rose, spicebush) is not in the "
+            "library either, so the shrub layer is thin")
 CONIFER = "sugar pine, incense cedar, white fir and Douglas-fir are not in the library: pinus_ponderosa stands in"
 
 
@@ -49,14 +61,22 @@ def _r(rid, kws, trees, shrubs, td, sd, note=None, any_of=False):
 # (any_of=True: any one keyword). Specific before general.
 RULES = [
     _r("open_water", ["open water"], {}, {}, 0.0, 0.0),
-    _r("wet_meadow_marsh", ["marsh", "wet meadow"], {"quercus_wislizeni": 1}, {"arctostaphylos_viscida": 1},
-       0.05, 0.05, "herbaceous wetland: almost no woody plants", any_of=True),
-    _r("riparian_shrubland", ["riparian", "shrubland"], {"quercus_wislizeni": 0.8, "quercus_douglasii": 0.2},
-       {"arctostaphylos_viscida": 0.5, "adenostoma_fasciculatum": 0.5}, 0.3, 0.8, RIPARIAN + "; shrubs are stand-ins for willow scrub"),
-    _r("montane_riparian", ["montane riparian systems"], {"quercus_wislizeni": 0.5, "pinus_ponderosa": 0.5},
-       {"arctostaphylos_viscida": 1}, 1.0, 0.6, RIPARIAN),
-    _r("riparian", ["riparian"], {"quercus_wislizeni": 0.7, "quercus_douglasii": 0.15, "pinus_ponderosa": 0.15},
-       {"arctostaphylos_viscida": 1}, 1.0, 0.6, RIPARIAN),
+    _r("wet_meadow_marsh", ["marsh", "wet meadow"], {"salix_lasiolepis": 0.8, "quercus_wislizeni": 0.2}, {"arctostaphylos_viscida": 1},
+       0.05, 0.05, "herbaceous wetland: almost no woody plants, a few willows at the edge", any_of=True),
+    # Riparian (2026-10-25): arroyo willow thickets at the water, white alder rooted in the bank, Fremont
+    # cottonwood scattered on the floodplain, interior live oak (and blue oak for valley oak) up the banks.
+    _r("riparian_shrubland", ["riparian", "shrubland"],
+       {"salix_lasiolepis": 0.75, "alnus_rhombifolia": 0.1, "quercus_wislizeni": 0.15},
+       {"arctostaphylos_viscida": 0.5, "adenostoma_fasciculatum": 0.5}, 1.2, 0.2,
+       "willow scrub: arroyo willow is the shrubland; " + RIPARIAN),
+    _r("montane_riparian", ["montane riparian systems"],
+       {"alnus_rhombifolia": 0.4, "salix_lasiolepis": 0.25, "quercus_wislizeni": 0.15, "pinus_ponderosa": 0.12,
+        "populus_fremontii": 0.08},
+       {"arctostaphylos_viscida": 1}, 1.3, 0.3, "alder-willow streamside forest with some pine; " + RIPARIAN),
+    _r("riparian", ["riparian"],
+       {"salix_lasiolepis": 0.38, "alnus_rhombifolia": 0.24, "populus_fremontii": 0.1, "quercus_wislizeni": 0.2,
+        "quercus_douglasii": 0.08},
+       {"arctostaphylos_viscida": 1}, 1.6, 0.3, RIPARIAN),
     _r("blue_oak_foothill_pine", ["blue oak", "foothill pine"],
        {"quercus_douglasii": 0.65, "quercus_wislizeni": 0.1, "pinus_sabiniana": 0.25},
        {"arctostaphylos_viscida": 0.5, "adenostoma_fasciculatum": 0.5}, 1.0, 0.5),
@@ -115,13 +135,15 @@ RULES = [
 ]
 
 # Rewilded water beds (habitat.rewilded_cells): not LANDFIRE communities, so not matched by name.
-# The library has no willow, alder, cottonwood or valley oak; the corridor takes the tile's own
-# riparian rule (the same weights LANDFIRE riparian cells get) and the meadow a few scattered oaks.
+# The corridor along the restored channel is a young riparian strip: willow dominant at the water, alder next,
+# a few cottonwoods, live oak where it climbs the old bed's banks; no pine and no chaparral shrubs.
+# The meadow keeps a few scattered oaks.
 REWILD_MEADOW = _r("rewilded_meadow", [], {"quercus_douglasii": 0.85, "quercus_wislizeni": 0.15}, {}, 0.5, 0.0,
                    "former reservoir or stock-pond bed: wet meadow (sedge, rush, perennial grass) with scattered oaks; "
                    "valley oak (Quercus lobata) is not in the library: quercus_douglasii stands in")
-REWILD_RIPARIAN = {**next(r for r in RULES if r["id"] == "riparian"), "id": "rewilded_riparian",
-                   "note": "riparian corridor along the restored channel through a former bed; " + RIPARIAN}
+REWILD_RIPARIAN = _r("rewilded_riparian", [],
+                     {"salix_lasiolepis": 0.45, "alnus_rhombifolia": 0.25, "populus_fremontii": 0.12, "quercus_wislizeni": 0.18},
+                     {}, 2.0, 0.0, "riparian corridor along the restored channel through a former bed; " + RIPARIAN)
 
 # Fallback when no keyword matches: the client's original fixed mix per habitat class (vegetation.js MIX).
 HABITAT_DEFAULT = {
@@ -225,28 +247,29 @@ def species_mix(tile: Tile) -> dict:
                 index[sel] = row_for("rewild", k + 1, rule["id"].replace("_", " "), 5 if k == 0 else 6, rule)
 
     table = sorted(rows.values(), key=lambda r: r["index"])
-    lut = np.zeros((256, 8), "uint8")
+    lut = np.zeros((256, NCOLS), "uint8")
     for r in table:
-        lut[r["index"], 0:4] = _bytes(r["trees"], TREES)
-        lut[r["index"], 4:6] = _bytes(r["shrubs"], SHRUBS)
-        lut[r["index"], 6] = min(round(r["tree_density"] * DENSITY_SCALE), 255)
-        lut[r["index"], 7] = min(round(r["shrub_density"] * DENSITY_SCALE), 255)
+        lut[r["index"], TREE_COLS] = _bytes(r["trees"], TREES)
+        lut[r["index"], SHRUB_COLS] = _bytes(r["shrubs"], SHRUBS)
+        lut[r["index"], TD_COL] = min(round(r["tree_density"] * DENSITY_SCALE), 255)
+        lut[r["index"], SD_COL] = min(round(r["shrub_density"] * DENSITY_SCALE), 255)
         r["cells"] = int((index == r["index"]).sum())
         r["bytes"] = [int(v) for v in lut[r["index"]]]
     px = lut[index]
     Image.fromarray(px[..., 0:4], "RGBA").save(tile.path("client/species_mix_a.png"), optimize=True)
     Image.fromarray(px[..., 4:8], "RGBA").save(tile.path("client/species_mix_b.png"), optimize=True)
+    Image.fromarray(np.ascontiguousarray(px[..., 8:11]), "RGB").save(tile.path("client/species_mix_c.png"), optimize=True)
     Image.fromarray(index, "L").save(tile.path("client/species_mix_index.png"), optimize=True)
 
     # Per-tile fractions
     n = index.size
-    td = px[..., 6].astype("float64") / DENSITY_SCALE
-    sd = px[..., 7].astype("float64") / DENSITY_SCALE
+    td = px[..., TD_COL].astype("float64") / DENSITY_SCALE
+    sd = px[..., SD_COL].astype("float64") / DENSITY_SCALE
 
-    def share(cols, weight):
+    def share(cols, names, weight):
         w = px[..., cols].astype("float64") / 255 * weight[..., None]
         tot = w.sum()
-        return {SHORT[s]: round(float(w[..., i].sum() / tot), 4) if tot else 0.0 for i, s in enumerate(TREES if cols.start == 0 else SHRUBS)}
+        return {SHORT[s]: round(float(w[..., i].sum() / tot), 4) if tot else 0.0 for i, s in enumerate(names)}
 
     by_rule: dict[str, int] = {}
     for r in table:
@@ -254,9 +277,9 @@ def species_mix(tile: Tile) -> dict:
     fractions = {
         "from_evt": round(sum(r["cells"] for r in table if r["source"] == "evt") / n, 4),
         "from_bps_backfill": round(sum(r["cells"] for r in table if r["source"] != "evt") / n, 4),
-        "tree_share": share(slice(0, 4), td),
-        "tree_share_by_canopy": share(slice(0, 4), td * tree_cover),
-        "shrub_share": share(slice(4, 6), sd),
+        "tree_share": share(TREE_COLS, TREES, td),
+        "tree_share_by_canopy": share(TREE_COLS, TREES, td * tree_cover),
+        "shrub_share": share(SHRUB_COLS, SHRUBS, sd),
         "mean_tree_density": round(float(td.mean()), 4),
         "mean_shrub_density": round(float(sd.mean()), 4),
         "rules": {k: round(v / n, 4) for k, v in sorted(by_rule.items(), key=lambda kv: -kv[1])},
@@ -267,10 +290,12 @@ def species_mix(tile: Tile) -> dict:
         "channels": {
             "species_mix_a.png": {"R": "quercus_douglasii", "G": "quercus_wislizeni", "B": "pinus_sabiniana", "A": "pinus_ponderosa"},
             "species_mix_b.png": {"R": "arctostaphylos_viscida", "G": "adenostoma_fasciculatum", "B": "tree_density", "A": "shrub_density"},
+            "species_mix_c.png": {"R": "salix_lasiolepis", "G": "alnus_rhombifolia", "B": "populus_fremontii"},
             "species_mix_index.png": {"R": "row index into mixes (0 = none)"},
         },
         "encoding": {
-            "tree_weights": "species_mix_a RGBA: weights over the four tree species, summing to 255 (0 everywhere = no trees)",
+            "tree_weights": "species_mix_a RGBA + species_mix_c RGB: weights over the seven tree species, summing to 255 "
+                            "(0 everywhere = no trees)",
             "shrub_weights": "species_mix_b RG: weights over the two shrub species, summing to 255",
             "density": f"species_mix_b BA: multiplier = byte / {DENSITY_SCALE} on the client's per-habitat-class plant count "
                        "(1.0 = the fixed-mix count); the count still scales with client/canopy.png cover",
@@ -278,16 +303,21 @@ def species_mix(tile: Tile) -> dict:
                      "where A is 0). species_mix_index.png plus mixes[].bytes is the canvas-safe equivalent.",
         },
         "slots": {"trees": TREES, "shrubs": SHRUBS, "short": SHORT},
+        # Column of each species and density in mixes[].bytes (the first eight are the original layout).
+        "bytes_layout": {"trees": {SHORT[s]: c for s, c in zip(TREES, TREE_COLS)},
+                         "shrubs": {SHORT[s]: c for s, c in zip(SHRUBS, SHRUB_COLS)},
+                         "tree_density": TD_COL, "shrub_density": SD_COL},
         "mixes": table,
         "unmatched": unmatched,
         "fractions": fractions,
     }
     tile.path("client/species_mix.json").write_text(json.dumps(doc, indent=1))
-    files = ["client/species_mix_a.png", "client/species_mix_b.png", "client/species_mix_index.png"]
+    files = ["client/species_mix_a.png", "client/species_mix_b.png", "client/species_mix_c.png", "client/species_mix_index.png"]
     return {"path": "client/species_mix.json", "kind": "raster", "crs": tile.crs, "bounds": list(tile.bounds),
             "pixels": int(index.shape[0]), "resolution_m": res,
             "files": {f: {"sha256": sha256(tile.path(f)), "bytes": tile.path(f).stat().st_size} for f in files},
             "derived_from": ["vegetation.evt", "vegetation.bps", "vegetation.classes", "vegetation.habitat", "vegetation.evc"],
-            "encoding": "species_mix_a RGBA = blue oak, live oak, gray pine, ponderosa weights; species_mix_b RGBA = "
+            "encoding": "species_mix_a RGBA = blue oak, live oak, gray pine, ponderosa weights; species_mix_c RGB = "
+                        "willow, alder, cottonwood weights (a + c trees sum to 255); species_mix_b RGBA = "
                         "manzanita, chamise weights, tree_density, shrub_density (byte/100); species_mix_index L = row in mixes",
             "mixes": len(table), "unmatched": len(unmatched), "fractions": fractions}

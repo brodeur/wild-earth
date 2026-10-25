@@ -631,3 +631,76 @@ meshes switched on and off in one session: ponderosa stand 13.3 against 12.9 ms 
   shows no pop in captures at 74, 89 and 109 m.
 - The winter twig texture on the close cards minifies to speckle; with the 3D twigs under it the
   speckle now sits on wood, but the texture itself was not changed.
+
+## Riparian trees (2026-10-25)
+
+Three streamside species, all native to the El Dorado County foothill creeks, so the riparian rows of the
+species mix no longer borrow live oak and ponderosa. Agent drafts, `status` "agent draft, needs local
+sign-off", CC BY-SA 4.0.
+
+| id (alias) | form | height (file / classes) | crown | foliage | seasons |
+|---|---|---|---|---|---|
+| `salix_lasiolepis` (`willow`, `arroyo_willow`) | 5-9 stems spread 40°, each a leader to the top; 44 short upswept limbs, longest low (`crown.shape` conical) | 4-8 m; young 2-4, old 6-10 (grey dead wands) | broad mound, foliage to the ground | `lanceolate`, 8 cm, 30% pale undersides | yellow-green spring, dull green summer, yellow fall (leaf-on 0.7), bare winter with silvery upright catkins |
+| `alnus_rhombifolia` (`alder`, `white_alder`) | one straight excurrent trunk (sometimes 2), 18 limbs at 58° to 34° with drooping tips, flat level-2 sprays | 13-22 m; young 5-10 (conical), veteran 18-25; snag 8% (top broken) | narrow egg, `tapered_cylindrical` | `oval`, 7 cm, dark green held flat | no fall colour (green-brown, leaf-on 0.8), bare winter with hanging catkins |
+| `populus_fremontii` (`cottonwood`, `fremont_cottonwood`) | stout furrowed trunk forking low (split 0.6) into heavy sinuous limbs, leaning up to 12° | 15-24 m; young 6-12, veteran 22-30 (three-way fork, dead limbs); snag 8% | broad lobed dome, asymmetric | `deltoid` (new), 7 cm, glossy | fresh green spring, glossy green summer, yellow fall (leaf-on 0.8), bare winter |
+
+**Generator additions** (`treegen.js`, minimal; every other species draws exactly as before):
+
+| field | meaning |
+|---|---|
+| `foliage.leaf_shape: "deltoid"` | triangular leaf with a pointed tip and broad flat base, with the glossy glint of `elliptic_glossy` (cottonwood) |
+| `foliage.catkins` | `{ rgb, len_m, width, hang, prob }`: catkins drawn at the twig ends of the bare-crown (`winter_twigs`) texture, tinted from `rgb` relative to `trunk.twig_rgb`; `hang` true hangs them (alder), false holds them along the twig (willow); `prob` per twig end |
+| `targets.fall_rg`, `targets.fall_bg`, `targets.photos` | the fall colour measured from a photograph (not shown by the lineup yet), and the reference photographs with URL, author and licence |
+
+**Reference photographs** (iNaturalist and Wikimedia Commons, CC0 / CC BY / CC BY-SA; listed in each file's
+`targets.photos`, not copied into the repository), measured as in
+[tree-likeness-review.md](tree-likeness-review.md): willow from single clumps and thickets at creeks
+(W/H 1.28 for the best single clump, 2.1-2.2 for low wide clumps), alder from forest-grown streambank trees (W/H
+0.59-0.68, rough: no clean sky silhouette of a mature streambank alder was found), cottonwood from lone mature
+trees (W/H 1.0-1.5) and younger California trees (0.8-0.9).
+
+**Lineup** (near tier, mean of the three measured seeds; photo target in brackets; mid and close within 0.08):
+
+| species | W/H | crown base | gaps | r/g | b/g | near triangles (budget) |
+|---|---|---|---|---|---|---|
+| arroyo willow | 1.16 (1.3) | 0.15 (0.05) | 0.26 (0.30) | 0.88 (0.86) | 0.47 (0.47) | 1,642-1,800 (1,800) |
+| white alder | 0.67 (0.70) | 0.28 (0.25) | 0.16 (0.12) | 0.86 (0.84) | 0.53 (0.53) | 2,000-2,616 (2,000) |
+| Fremont cottonwood | 1.12 (1.05) | 0.23 (0.20) | 0.21 (0.15) | 0.83 (0.83) | 0.49 (0.51) | 2,200-2,898 (2,200) |
+
+Fall colour from the files (summer measured times the fall tint): willow r/g about 1.37 (photo 1.34), b/g
+about 0.47 (0.49); cottonwood about 1.37 (1.41) and 0.42 (0.43). Mid triangles 80-288 per tree.
+To afford the leaf cards the three draw no level-2 tubes at near (`near_sides` [.., .., 0], as live oak) and
+willow's stems have four sides.
+
+**Species mix** (`pipeline/species_mix.py`, both tiles re-run for this step only): the tree slots grew from
+four to seven. `species_mix_c.png` (RGB) holds the willow, alder and cottonwood weights (with
+`species_mix_a.png` they sum to 255); `mixes[].bytes` keeps the original eight columns and appends the three,
+and `species_mix.json` `bytes_layout` names every column, which `tilepackage.js` reads (older tiles fall
+back to the original layout). Rows:
+
+| rule | trees | tree / shrub density |
+|---|---|---|
+| `riparian` (foothill riparian woodland) | willow 0.38, alder 0.24, live oak 0.20, cottonwood 0.10, blue oak 0.08 (for valley oak) | 1.6 / 0.3 |
+| `rewilded_riparian` (restored channels through old reservoir beds) | willow 0.45, alder 0.25, live oak 0.18, cottonwood 0.12; no pine, no chaparral shrubs | 2.0 / 0 |
+| `riparian_shrubland` | willow 0.75, live oak 0.15, alder 0.10 | 1.2 / 0.2 |
+| `montane_riparian` (BpS backfill) | alder 0.40, willow 0.25, live oak 0.15, ponderosa 0.12, cottonwood 0.08 | 1.3 / 0.3 |
+| `wet_meadow_marsh` | willow 0.8, live oak 0.2 | 0.05 / 0.05 |
+
+Tree shares in the home tile: willow 2.9%, alder 2.3%, cottonwood 0.7%.
+
+**Cost** (start view of the home tile, headless Chromium on Metal, A/B against HEAD's library and mix, two
+rounds): 64.0 / 65.7 fps against 65.2 / 66.0 (noise), draw calls 234 against 206, triangles unchanged
+(5.9-6.1 M both), 393 geometries against 324. The far impostor atlas holds 108 slots instead of 72: 35 MB
+instead of 23 MB, bake about 650 ms instead of 530 ms.
+
+**Known limits.**
+- Willow reads as a shrubby tree with leafy sprays rather than a thicket of upright wands, and its lowest
+  foliage sits at 0.15 of its height (photos 0.05): level-1 limbs are shared among the stems.
+- At under 10 m the close-tier cards show their spray outline (broad lobes), most visibly on willow, whose
+  real foliage is fine and narrow.
+- Placement is per 30 m cell: willow is not placed nearer the water than alder or oak within a cell, and
+  `vegetation.js` still thins every tree within 8 m of a stream centreline, so the willow thicket at the
+  water's edge is thinner than it should be.
+- Cottonwood leaves do not flutter (no wind) and its red catkins are not drawn; alder cones are not drawn.
+- The riparian understory (blackberry, wild rose, spicebush) and valley oak, Oregon ash, bigleaf maple and box
+  elder are not in the library.

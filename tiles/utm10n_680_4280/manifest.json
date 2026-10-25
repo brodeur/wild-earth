@@ -15,7 +15,7 @@
   38.74035063713964
  ],
  "size_m": 10000,
- "generated_at": "2026-10-25T10:44:12Z",
+ "generated_at": "2026-10-25T12:06:13Z",
  "generator": {
   "name": "wild-earth-pipeline",
   "version": "0.2.0"
@@ -729,12 +729,16 @@
    "resolution_m": 30.03003003003003,
    "files": {
     "client/species_mix_a.png": {
-     "sha256": "491c52eafe369c66c72b02e487a971098d630b480a8d4b8ec21f6d8821e83c2a",
-     "bytes": 91246
+     "sha256": "1d64608a83fd9922e772a37b923f7c51ccfbb0adce65480bcd0cd5f0fd1b0529",
+     "bytes": 91705
     },
     "client/species_mix_b.png": {
-     "sha256": "841d23bee4d7390c6ddcc9505e65ea99343fda491dfd7cf84ddc70ff3a3f6767",
-     "bytes": 120017
+     "sha256": "856fd00e595f121d5ed48ad7682ed8103c3a32fa13571a5b1c13c9b42c22bf75",
+     "bytes": 123471
+    },
+    "client/species_mix_c.png": {
+     "sha256": "100a349df74f0756b368495ae0759af1efdb03440ed497abdedb7e26db675075",
+     "bytes": 10670
     },
     "client/species_mix_index.png": {
      "sha256": "29a3ba56183611967fd179809ac15b1ce28a77274294754e2faac5de71c2ea37",
@@ -748,30 +752,36 @@
     "vegetation.habitat",
     "vegetation.evc"
    ],
-   "encoding": "species_mix_a RGBA = blue oak, live oak, gray pine, ponderosa weights; species_mix_b RGBA = manzanita, chamise weights, tree_density, shrub_density (byte/100); species_mix_index L = row in mixes",
+   "encoding": "species_mix_a RGBA = blue oak, live oak, gray pine, ponderosa weights; species_mix_c RGB = willow, alder, cottonwood weights (a + c trees sum to 255); species_mix_b RGBA = manzanita, chamise weights, tree_density, shrub_density (byte/100); species_mix_index L = row in mixes",
    "mixes": 38,
    "unmatched": 0,
    "fractions": {
     "from_evt": 0.6366,
     "from_bps_backfill": 0.3634,
     "tree_share": {
-     "blue_oak": 0.4476,
-     "live_oak": 0.1951,
-     "gray_pine": 0.2436,
-     "ponderosa": 0.1137
+     "blue_oak": 0.4338,
+     "live_oak": 0.1708,
+     "gray_pine": 0.2367,
+     "ponderosa": 0.0994,
+     "willow": 0.0293,
+     "alder": 0.0226,
+     "cottonwood": 0.0074
     },
     "tree_share_by_canopy": {
-     "blue_oak": 0.2607,
-     "live_oak": 0.2761,
-     "gray_pine": 0.2399,
-     "ponderosa": 0.2233
+     "blue_oak": 0.2494,
+     "live_oak": 0.2409,
+     "gray_pine": 0.2308,
+     "ponderosa": 0.2039,
+     "willow": 0.0385,
+     "alder": 0.0261,
+     "cottonwood": 0.0104
     },
     "shrub_share": {
-     "manzanita": 0.4983,
-     "chamise": 0.5017
+     "manzanita": 0.4866,
+     "chamise": 0.5134
     },
-    "mean_tree_density": 0.8678,
-    "mean_shrub_density": 0.6252,
+    "mean_tree_density": 0.893,
+    "mean_shrub_density": 0.6097,
     "rules": {
      "blue_oak_foothill_pine": 0.294,
      "grassland_savanna": 0.1271,
@@ -800,8 +810,8 @@
      "great_basin_shrub": 0.0002
     }
    },
-   "sha256": "c86bdd31435f29e503bb8d98cf1c5fcbb250064de2b9081e6a0743e59a842c12",
-   "bytes": 23387
+   "sha256": "05fe86bc995bfd5e973a0de6a0b61b63b0a9cbdb2ed9ec457c1fcf42f9ff0790",
+   "bytes": 26803
   },
   "hydro.channels": {
    "path": "hydro/channels.geojson",
@@ -3173,6 +3183,13 @@
    "at": "2026-10-25T10:44:12Z",
    "seconds": 54.7,
    "ok": true
+  },
+  {
+   "step": "species_mix",
+   "at": "2026-10-25T12:06:13Z",
+   "seconds": 0.4,
+   "ok": true,
+   "note": "species mix only (riparian rows: willow, alder, cottonwood)"
   }
  ]
 }
