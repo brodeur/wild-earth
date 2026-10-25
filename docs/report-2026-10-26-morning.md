@@ -81,9 +81,11 @@ Lanes still running when this report was written are listed in `docs/roadmap.md`
 | 6151294, 216e2fd | Far forest: horizon keeps its cover, backlit pines match, bake halved; per-tree dithered hand-over so the ring no longer swaps every 200 m; far trees cast shadows. |
 | 07526b7 | WebGPU evaluation: stay on WebGL for the demo; GPU compute for placement is the one clear win; upgrade three.js first. |
 
-Lanes still running at the time of this update: the raven player and ground models, and the
-riparian tree species (arroyo willow, white alder, Fremont cottonwood) for the corridors.
-Their commits, if they verified, follow 216e2fd in `git log`.
+| 3638fda, 9cb054d, 37d6c20 | Raven: the player flies the generated glide model (CC0 raven as fallback, `?raven=old`); a standing raven with every raven mark and a corrected texture; ambient ravens walk, hop, flick and cache on the ground, and the player can land (hover, then Z) and take off. |
+| 9311921 | Arroyo willow, white alder and Fremont cottonwood in the tree library; riparian corridors use them. |
+
+Lane still running at the time of this update: willows pulled to the water's edge. Its commit,
+if it verified, follows 37d6c20 in `git log`.
 
 **Disk:** the machine dipped to a few hundred MB free several times tonight while lanes wrote
 captures; the session scratchpad was trimmed twice and the disk ended the night at about 9 GB
