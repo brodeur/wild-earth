@@ -201,7 +201,7 @@ export async function loadTile(tileId, base = '../tiles/') {
   const L = m.layers;
   for (const k of ['client.heights', 'client.texture', 'client.habitat', 'client.canopy', 'client.masks'])
     if (!L[k]) throw new Error(`tile ${id} lacks ${k}; run the derive step`);
-  const [heights, texture, habitat, canopy, masks, species, perception, calendar, imagery, features, roads, imageryTexture, mast, mixIndex, mixJson] = await Promise.all([
+  const [heights, texture, habitat, canopy, masks, species, perception, calendar, imagery, features, roads, imageryTexture, mast, mixIndex, mixJson, outcrop, geology, soils, groundClasses] = await Promise.all([
     loadImageData(dir + L['client.heights'].path), loadImageData(dir + L['client.texture'].path),
     loadImageData(dir + L['client.habitat'].path), loadImageData(dir + L['client.canopy'].path),
     loadImageData(dir + L['client.masks'].path),
@@ -220,6 +220,14 @@ export async function loadTile(tileId, base = '../tiles/') {
     // LANDFIRE species mix per 30 m cell: the canvas-safe index PNG plus the row table; optional
     L['client.species_mix'] ? loadImageData(dir + 'client/species_mix_index.png').catch(() => null) : null,
     L['client.species_mix'] ? fetch(dir + L['client.species_mix'].path).then(r => r.ok ? r.json() : null).catch(() => null) : null,
+    // geology and soils step (tile-spec "Geology and soils"), all on the 30 m grid; optional (older
+    // tiles have none: rocks.js then places nothing). outcrop R = likelihood 0..255; geology R = unit,
+    // G = rock class (1-based into ground_classes.rock_classes); soils R = map unit, G = surface rock
+    // fragments %, B = depth to bedrock dm (255 unknown).
+    L['client.outcrop'] ? loadImageData(dir + L['client.outcrop'].path).catch(() => null) : null,
+    L['client.geology'] ? loadImageData(dir + L['client.geology'].path).catch(() => null) : null,
+    L['client.soils'] ? loadImageData(dir + L['client.soils'].path).catch(() => null) : null,
+    L['client.ground_classes'] ? fetch(dir + L['client.ground_classes'].path).then(r => r.ok ? r.json() : null).catch(() => null) : null,
   ]);
   const ti = L['client.texture_imagery'];
   const size = m.size_m || 10000;
@@ -229,6 +237,8 @@ export async function loadTile(tileId, base = '../tiles/') {
     habitat: new Grid8(habitat, size), canopy: new Grid8(canopy, size),
     roads: roads ? new Grid8(roads, size) : null, roadsImage: roads?.image || null,
     mast: mast ? new Grid8(mast, size) : null,
+    outcrop: outcrop ? new Grid8(outcrop, size) : null, geology: geology ? new Grid8(geology, size) : null,
+    soils: soils ? new Grid8(soils, size) : null, groundClasses,
     // per-cell species weights and density multipliers (null: vegetation falls back to the class mix)
     speciesMix: mixIndex && mixJson?.mixes && mixIndex.width === habitat.width ? new SpeciesMix(mixIndex, mixJson, size) : null,
     // ponds, stream channels and the riparian band (exact tests; .at(x, north) like tile.roads)

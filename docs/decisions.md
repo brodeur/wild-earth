@@ -252,3 +252,21 @@ of blurring into a leaf lobe. Rejected: a global density multiplier (it would ha
 over-filled saplings). Still open: light through needles (sunlit ponderosa at 20 to
 60 m still partly reads as rounded lobes), and a higher-resolution close texture for
 needles under 3 m.
+
+## 2026-10-25: outcrops and boulders are placed in the client from the outcrop raster
+
+First pass of the rocks lane (client/src/rocks.js). Placement is a hash of each 30 m
+cell, so every client sees the same rocks: outcrop clusters where the likelihood passes
+0.45 (2 to 6 main masses shaped by rock class: slate and schist as fins along a fixed
+N35W Mother Lode strike, greenstone as dark knobs, granite as a dome with split
+boulders, serpentinite as blocky blue-green masses with rubble), and boulders of 0.4 to
+2 m scaled by likelihood and the soils' rock fragment percentage, skipping water and
+pavement. Procedural shapes in five detail tiers with dithered hand-overs out to
+1.5 km; each rock seated on the drawn terrain mesh. Zero cost at the start view, about
+one GPU millisecond at 3 m in the densest outcrop. The ground detail layer raises its
+bare term on outcrop cells so the rock material wins there. Honest look: slate fins are
+plank-straight, granite domes read as smooth eggs, and most strong outcrop cells are
+chaparral, so the shrub carpet hides the rocks from about 80 m up. Rejected: downloaded
+rock meshes (not reproducible per class), tilting rocks with the slope (fins must keep
+their dip). Next: thin grass, shrubs and the shrub impostors on outcrop cells so the
+rocks show, jagged fin edges and jointed granite, strike from the geology polygons.

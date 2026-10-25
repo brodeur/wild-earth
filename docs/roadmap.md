@@ -113,8 +113,10 @@ browser stays the renderer.
 
 - Geology and soils step done 2026-10-24 (Macrostrat/SGMC lithology at 1:750k, SSURGO
   texture, fragments and depth to bedrock; client rasters and an outcrop likelihood).
-  Next: procedural boulders and outcrops in the client placed from client/outcrop.png
-  and the rock class, and gravel/dirt detail blended from the soils raster.
+  Outcrops and boulders placed from it in the client 2026-10-25 (rocks.js). Next: thin
+  the grass, shrubs and shrub impostors on outcrop cells so the rocks show from the
+  air; jagged fin edges and jointed granite; strike from the geology polygons; gravel
+  and dirt detail blended from the soils raster.
 
 - Choose licences (code, assets and species parameters, spec), add LICENSE and a short
   CONTRIBUTING with the contribution paths; set up the public repository.

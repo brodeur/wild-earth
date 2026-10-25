@@ -20,6 +20,7 @@ import { Soundscape } from './sound.js';
 import { Shadows } from './shadows.js';
 import { Animals } from './animals.js';
 import { Water } from './water.js';
+import { Rocks } from './rocks.js';
 
 const $ = id => document.getElementById(id);
 const html = document.documentElement;
@@ -74,6 +75,7 @@ async function main() {
   const far = new Impostors(tile, scene);
   const grass = new Grass(tile, scene);
   const water = new Water(tile, scene);   // streams, dry beds and ponds by season (water.js)
+  const rocks = new Rocks(tile, scene, atmosphere);   // outcrops and boulders from the geology and soils rasters (rocks.js)
   const roads = new RoadsOverlay(tile, scene);   // ghost roads, G to toggle
   const flight = new RavenFlight(camera, tile.heights, renderer.domElement);
   scene.add(flight.body);
@@ -212,7 +214,7 @@ async function main() {
     return sound;
   };
 
-  window.__we = { tile, flight, raven, camera, veg, terrain, far, grass, roads, scene, renderer, minimap, atmosphere, sky, acorns, identify, places, peek, setPeek, sound, animals, arrival };   // debugging handle
+  window.__we = { tile, flight, raven, camera, veg, terrain, far, grass, roads, scene, renderer, minimap, atmosphere, sky, acorns, identify, places, peek, setPeek, sound, animals, arrival, rocks };   // debugging handle
   if (!screen) makeSound();
 
   // Into the world: season, observer, sound, then the arrival flight over the chosen point.
@@ -262,6 +264,7 @@ async function main() {
     far.update(camera, veg.radius);
     grass.update(flight.pos.x, flight.pos.z, dt, camera, look);
     water.update(dt, look);
+    rocks.update(camera);
     acorns.update(dt, camera, s);
     animals.update(dt, s, state.hour);
     if (!peek.shown) terrain.setLook(look);

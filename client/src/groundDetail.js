@@ -11,7 +11,8 @@ import * as THREE from 'three';
 //   G  curvature, 0.5 + 0.5 * clamp(-laplacian / 0.05): > 0.5 convex (ridge, spur), < 0.5 concave
 //      (swale, channel). Laplacian over 10 m on the DEM, then a 3x3 blur.
 //   B  bare: the photo's own "bright and desaturated" look (dirt, rock, scree), raised to >= 0.8
-//      on the barren habitat class, blurred so the 30 m habitat cells do not show as squares.
+//      on the barren habitat class and toward 0.92 where the outcrop likelihood (tile.outcrop)
+//      passes ~0.5, blurred so the 30 m habitat cells do not show as squares.
 //   A  road weight (tile.roads, 5 m, max over each 10 m texel). The shader uses the sharper 5 m
 //      roads texture it already reads; A is kept for anything that wants it without that fetch.
 // Habitat weights (grassland / oak / chaparral) and tree cover come from tile.masks and tile.canopy,
@@ -67,6 +68,14 @@ function photoPixels(image, W) {
   return ctx.getImageData(0, 0, W, W).data;
 }
 
+// Bilinear read of channel 0 of a Grid8 (tilepackage.js) at a point, 0..1, cell centres at (i + 0.5) * res.
+function bilinear8(g, x, north) {
+  const W = g.img.width, H = g.img.height, fx = x / g.res - 0.5, fy = (g.size - north) / g.res - 0.5;
+  const x0 = Math.floor(fx), y0 = Math.floor(fy), tx = fx - x0, ty = fy - y0;
+  const v = (i, j) => g.channel(Math.min(Math.max(i, 0), W - 1), Math.min(Math.max(j, 0), H - 1), 0);
+  return ((v(x0, y0) * (1 - tx) + v(x0 + 1, y0) * tx) * (1 - ty) + (v(x0, y0 + 1) * (1 - tx) + v(x0 + 1, y0 + 1) * tx) * ty) / 255;
+}
+
 export function buildDetailMask(tile, W = MASK_PX) {
   const t0 = performance.now(), size = tile.size, res = size / W, h = tile.heights;
   const out = new Uint8Array(W * W * 4);
@@ -102,6 +111,10 @@ export function buildDetailMask(tile, W = MASK_PX) {
         bare = Math.max(smooth(0.30, 0.42, lum) * (1 - smooth(0.08, 0.17, sat)), smooth(0.56, 0.66, lum) * (1 - smooth(0.18, 0.3, sat)));
       }
       if (tile.habitat && tile.habitat.at(x, north) === BARREN) bare = Math.max(bare, 0.85);
+      // Outcrop clusters (rocks.js places them where the likelihood passes ~0.45): bare ground
+      // around the fins, so the shader's rock rule (bare > 0.7) wins there. Bilinear on the 30 m
+      // likelihood grid; the blur below softens the edge further.
+      if (tile.outcrop) bare = Math.max(bare, 0.92 * smooth(0.35, 0.6, bilinear8(tile.outcrop, x, north)));
       // road weight: max over the 2x2 5 m cells in this texel
       let road = 0;
       if (tile.roads) for (let q = 0; q < 4; q++) road = Math.max(road, tile.roads.at(x + ((q & 1) ? 2.5 : -2.5), north + ((q & 2) ? 2.5 : -2.5)));
