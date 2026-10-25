@@ -15,15 +15,24 @@ import { seasonOfDate } from './season.js';
 //   - Far band: one camera-facing (cylindrical) billboard blending the two nearest of eight views.
 //   - Both: a horizontal cap with the top view, visible when looking down.
 //   - Lit live from the baked crown normals with the same sun, sky light, cloud shadow and aerial
-//     perspective as the Lambert trees; alpha-to-coverage with a sharpened alpha edge.
+//     perspective as the Lambert trees; alpha-to-coverage with a sharpened alpha edge. The normals are
+//     prefiltered (impostorBake.js: averaged, not renormalised), so a texel over lobes facing several
+//     ways is lit by the mean of their sun terms (a smooth max of the mean normal's term and its
+//     spread) rather than by one arbitrary lobe: a far crown shades as a crown, not as salt and pepper.
+//   - Pines get the real needles' light (treegen canopyMaterial: wrap, light through the needles when
+//     backlit, the weak glow of a backlit crown) with the same fade, out by 900..1500 m from the eye,
+//     so with the near forest radius (900 m) a backlit stand no longer darkens where it hands over
+//     (compiled only where it can reach half strength, see update()).
 //   - Hand-over: vegetation.js publishes the extent of its mid set (midSet: every cell whose centre is
 //     within its radius of its last rebuild centre); the impostors draw exactly the other cells, so
 //     each tree is drawn once, as itself or as its own impostor: no band of double cover, no gap, and
 //     when the mid set moves (every 200 m) the trees on its edge swap for their own impostors.
 //   - Thinning: beyond that edge (at most nearRadius + 200 from the eye) plus a margin, only a fraction
 //     (thin/d)^P of trees is kept (by a per-tree rank) and the survivors widen to keep the canopy
-//     cover; trees there also pick up height variance (about their own slot's height), width and a slight lean, so
-//     repeated variants do not read as copies. Far shrubs stand for patches of chaparral.
+//     cover (each survivor's silhouette grows by 1/keep, width keep^-0.72 and height keep^-0.28, so the
+//     cover of a stand, about 1 - exp(-density x area), holds out to the horizon instead of opening into
+//     single trees); trees there also pick up height variance (about their own slot's height), width and
+//     a slight lean, so repeated variants do not read as copies. Far shrubs stand for patches of chaparral.
 // Trees are precomputed per 250 m chunk sorted by rank; every MOVE m the kept prefix of each chunk is
 // copied either into the ring mesh (chunks that can reach the crossed band: two side quads and the cap)
 // or into one of six angular sectors of billboard-only meshes (one quad, a third of the vertices),
@@ -31,6 +40,9 @@ import { seasonOfDate } from './season.js';
 
 const CHUNK = 250, MOVE = 80, SECTORS = 6, STRIDE = 8;   // record: x y z rot | scale tree rank cell
 const THIN_P = 0.7;                // keep (thinStart / d)^P beyond thinStart
+const GROW_W = 0.72, GROW_H = 0.28; // a kept tree's width and height grow by keep^-GROW (GROW_W + GROW_H = 1: area / keep)
+const NEEDLE_FADE = [900, 1500];    // treegen canopyMaterial fades the needle light out over this view distance
+const NEEDLE_ON = 1200;             // compile the needle light where trees can be nearer than this (half of it left)
 const RING = 250;                  // the mid set's edge is within nearRadius +/- 200 of the eye: no thinning or variety inside +250
 const FADE = [350, 200];           // without a mid set (never in the app): dither in over nearRadius - 350..-200
 const CROSS = [150, 450];          // crossed -> billboard switch, per tree, at nearRadius + 150..450
@@ -40,10 +52,14 @@ const VERT = /* glsl */`
   #define VIEWS ${VIEWS.toFixed(1)}
   attribute vec4 iPos; attribute vec4 iA;
   uniform vec4 frame[NT]; uniform vec4 hrange[NT]; uniform vec4 vext[NT * ${VIEWS}]; uniform vec3 tint[NS];
+  uniform vec4 needle[NS]; uniform vec3 needleTint[NS];   // pines: wrap, translucency, scatter, mean thinness | glow tint
   uniform vec3 eye; uniform float nearRadius; uniform vec4 thin; uniform vec2 grid;
   uniform vec4 mid; uniform vec3 cells;   // mid set: centre x, z, radius, on | habitat cell size, tile size, cells per row
   varying vec4 vUv; varying vec2 vMirror; varying float vBlend; varying vec3 vR; varying vec3 vU; varying vec3 vF;
   varying float vFade; varying vec3 vTint; varying vec3 vSun; varying vec3 vHazeT; varying vec3 vHazeS; varying float vSky;
+  #ifdef NEEDLE
+  varying vec4 vNeedle;
+  #endif
   ${ATMOSPHERE_GLSL}
   float hsh(float n) { return fract(sin(n) * 43758.5453123); }
   vec2 cellUv(float tree, float view, vec2 uv) {
@@ -69,8 +85,8 @@ const VERT = /* glsl */`
     float v = smoothstep(nearRadius + ${RING.toFixed(1)}, nearRadius + 1450.0, d);   // per-tree variety, none at the hand-over
     float r1 = hsh(seed * 12.9898 + 1.0), r2 = hsh(seed * 78.233 + 2.0), r3 = hsh(seed * 37.719 + 3.0),
           r4 = hsh(seed * 93.989 + 4.0), r5 = hsh(seed * 51.137 + 5.0), r6 = hsh(seed * 23.417 + 6.0), r7 = hsh(seed * 67.351 + 7.0);
-    float hMul = mix(1.0, mix(hr.x, hr.y, r1) / s, v) * pow(keep, -0.15) * (1.0 + 0.5 * shrubFar) * alive;
-    float wMul = mix(1.0, 0.85 + 0.3 * r2, v) * pow(keep, -0.38) * (1.0 + 2.0 * shrubFar) * alive;
+    float hMul = mix(1.0, mix(hr.x, hr.y, r1) / s, v) * pow(keep, -${GROW_H.toFixed(2)}) * (1.0 + 0.5 * shrubFar) * alive;
+    float wMul = mix(1.0, 0.85 + 0.3 * r2, v) * pow(keep, -${GROW_W.toFixed(2)}) * (1.0 + 2.0 * shrubFar) * alive;
     float W = fr.x * s * wMul, H = fr.y * s * hMul, y0 = fr.z * s * hMul;
     float lean = v * (r3 - 0.5) * 0.16, ld = r4 * 6.2831853;
     vec2 leanV = vec2(cos(ld), sin(ld)) * lean;   // horizontal shift per metre of height
@@ -122,7 +138,17 @@ const VERT = /* glsl */`
     vSun = sunLight * cloudShadow(eye + r) * (1.0 - 0.4 * v);
     vSky = 1.0 - 0.15 * v;   // and some of the sky light, to the crowns around it
     vHazeT = atmoTransmittance(r, eye.y); vHazeS = atmoInscatter(r / max(length(r), 1e-3)) * (1.0 - vHazeT);
-    vTint = tint[int(hr.w + 0.5)] * (0.93 + 0.14 * r6) * vec3(1.0 + 0.06 * (r7 - 0.5), 1.0, 1.0 - 0.06 * (r7 - 0.5));
+    int si = int(hr.w + 0.5);
+    vTint = tint[si] * (0.93 + 0.14 * r6) * vec3(1.0 + 0.06 * (r7 - 0.5), 1.0, 1.0 - 0.06 * (r7 - 0.5));
+    #ifdef NEEDLE   // only in materials that can draw trees nearer than the fade's end (Impostors.update)
+    // Needle light (pines), faded with the view distance exactly as on the real pines (treegen
+    // canopyMaterial), per tree: rgb the light through the needles and the backlit crown's glow, by the
+    // view-sun angle of the crown (back: 1 with the sun straight behind it); a the wrap.
+    vec4 nd = needle[si] * (1.0 - smoothstep(${NEEDLE_FADE[0].toFixed(1)}, ${NEEDLE_FADE[1].toFixed(1)}, length(r)));
+    float back = clamp(dot(normalize(r), sunDir), 0.0, 1.0), b2 = back * back;
+    vec3 glow = needleTint[si];
+    vNeedle = vec4(vSun * (nd.y * nd.w * (0.25 * back + 0.75 * b2 * b2) * glow + nd.z * b2 * (0.35 + 0.65 * nd.w) * mix(vec3(1.0), glow, 0.6)), nd.x);
+    #endif
     vec4 wp = modelMatrix * vec4(p, 1.0);
     gl_Position = projectionMatrix * viewMatrix * wp;
   }`;
@@ -130,6 +156,9 @@ const FRAG = /* glsl */`
   uniform sampler2D albedoMap; uniform sampler2D normalMap;
   varying vec4 vUv; varying vec2 vMirror; varying float vBlend; varying vec3 vR; varying vec3 vU; varying vec3 vF;
   varying float vFade; varying vec3 vTint; varying vec3 vSun; varying vec3 vHazeT; varying vec3 vHazeS; varying float vSky;
+  #ifdef NEEDLE
+  varying vec4 vNeedle;
+  #endif
   uniform vec3 sunDir; uniform vec3 ambientSky; uniform vec3 ambientGround;
   void main() {
     // Gradients first: the normal fetches below run after the discards.
@@ -142,9 +171,25 @@ const FRAG = /* glsl */`
     vec3 n0 = textureGrad(normalMap, vUv.xy, dx0, dy0).xyz * 2.0 - 1.0, n1 = textureGrad(normalMap, vUv.zw, dx1, dy1).xyz * 2.0 - 1.0;
     n0.x *= vMirror.x; n1.x *= vMirror.y;
     vec3 n = mix(n0, n1, vBlend);
-    vec3 N = normalize(vR * n.x + vU * n.y + vF * n.z * (gl_FrontFacing ? 1.0 : -1.0));
+    vec3 N = vR * n.x + vU * n.y + vF * n.z * (gl_FrontFacing ? 1.0 : -1.0);   // the mean normal: shorter where it spreads
     // Same light as the Lambert trees: sun under cloud shadow plus the hemisphere sky light, over pi.
-    vec3 irr = vSun * max(dot(N, sunDir), 0.0) + mix(ambientGround, ambientSky, 0.5 + 0.5 * N.y) * vSky;
+    // Sun: the mean over the texel's normals of max(n.L, 0), approximated as a smooth max of the mean
+    // normal's term m and its spread (exact at length 1; 1/4 for normals spread over the sphere), with
+    // the pines' wrap (n.L + w) / (1 + w). The sky term is linear in the normal, so the mean is exact.
+    #ifdef NEEDLE
+    float w = vNeedle.a;
+    #else
+    float w = 0.0;
+    #endif
+    float l2 = dot(N, N), m = (dot(N, sunDir) + w) / (1.0 + w);
+    float sun = 0.5 * (m + sqrt(m * m + 0.25 * max(0.0, 1.0 - l2)));
+    // Light through the needles (pines within the fade): on the real crown the crown's own shadow
+    // (shadows.js) takes it away except at the rim and in the gaps, so here it is weighted by how far the
+    // texel is from the solid inside of the crown (its coverage below 1).
+    vec3 irr = vSun * sun + mix(ambientGround, ambientSky, 0.5 + 0.5 * N.y) * vSky;
+    #ifdef NEEDLE
+    irr += vNeedle.rgb * (1.0 - smoothstep(${ALPHA_REF.toFixed(2)}, 1.0, c.a));
+    #endif
     vec3 col = c.rgb * vTint * irr * 0.3183099;
     gl_FragColor = vec4(col * vHazeT + vHazeS, clamp(a, 0.0, 1.0));
     #include <tonemapping_fragment>
@@ -164,7 +209,7 @@ export class Impostors {
     this.buildRecords();
     const t2 = performance.now();
 
-    const NT = bakeList.length, NS = SPECIES_IDS.length;
+    const NT = bake.frames.length, NS = SPECIES_IDS.length;
     this.uniforms = {
       albedoMap: { value: bake.albedo }, normalMap: { value: bake.normal },
       frame: { value: bake.frames.map(f => new THREE.Vector4(f.W, f.H, f.y0, f.capY)) },
@@ -174,11 +219,21 @@ export class Impostors {
       hrange: { value: bake.frames.map(f => { const v = (f.hmax - f.hmin) / (f.hmax + f.hmin);
         return new THREE.Vector4(1 - v, 1 + v, f.shrub ? 1 : 0, SPECIES_IDS.indexOf(f.species)); }) },
       tint: { value: SPECIES_IDS.map(() => new THREE.Vector3(1, 1, 1)) },
+      // Needle light per species, as treegen canopyMaterial sets it for a card texture with needle aux data
+      // (foliage.needle_wrap, translucency, needle_scatter, translucency_rgb), with the texture's mean thinness.
+      needle: { value: SPECIES_IDS.map(id => { const F = SPECIES[id].foliage, f = bake.frames.find(q => q.species === resolveSpecies(id));
+        return f && f.thin > 0 ? new THREE.Vector4(F.needle_wrap ?? 0.35, F.translucency ?? 2.5, F.needle_scatter ?? 0.15, f.thin) : new THREE.Vector4(); }) },
+      needleTint: { value: SPECIES_IDS.map(id => new THREE.Vector3(...(SPECIES[id].foliage.translucency_rgb || [1, 1.12, 0.55]))) },
       eye: { value: new THREE.Vector3() }, nearRadius: { value: 1500 }, thin: { value: new THREE.Vector4() },
       mid: { value: new THREE.Vector4() }, cells: { value: new THREE.Vector3(tile.habitat.res, tile.size, tile.habitat.img.width) },
       grid: { value: new THREE.Vector2(...bake.grid) },
       ...atmo,
     };
+    // Alpha to coverage also writes the fragment's alpha into the canvas (premultiplied, with an alpha
+    // channel), so partly covered pixels leave it below 1. On screen that is invisible (the page behind
+    // is near black), but a capture through toDataURL or drawImage un-premultiplies those pixels into a
+    // pale salt over the far forest: read captures from the drawing buffer's RGB. Keeping the canvas alpha
+    // with a blend state cost about 0.45 ms at the start view, so it is not done here.
     const material = billboard => new THREE.ShaderMaterial({ vertexShader: VERT, fragmentShader: FRAG, uniforms: this.uniforms,
       defines: billboard ? { NT, NS, BILLBOARD: 1 } : { NT, NS }, side: THREE.DoubleSide, alphaToCoverage: true });
     // `position` carries the quad corner and the quad id: the ring mesh has three quads (two side, one
@@ -200,7 +255,7 @@ export class Impostors {
     this.setSeason(seasonOfDate());
     this.stats = { bakeMs: Math.round(t1 - t0), bakeRenderMs: Math.round(bake.renderMs), recordsMs: Math.round(t2 - t1), atlas: bake.size,
       atlasMB: +(bake.bytes / 1048576).toFixed(1), trees: this.nRecords };
-    console.info(`impostors: atlas ${bake.size.join('x')} x2 (${this.stats.atlasMB} MB with mips), ${NT} trees x ${VIEWS} views, baked in ${this.stats.bakeMs} ms; ${this.nRecords.toLocaleString()} plants indexed in ${this.stats.recordsMs} ms`);
+    console.info(`impostors: atlas ${bake.size.join('x')} x2 (${this.stats.atlasMB} MB with mips), ${NT} trees (${bakeList.length} slots) x ${VIEWS} views, baked in ${this.stats.bakeMs} ms; ${this.nRecords.toLocaleString()} plants indexed in ${this.stats.recordsMs} ms`);
   }
 
   sectorGeometry(cap, kind) {
@@ -237,7 +292,8 @@ export class Impostors {
         const own = mulberry32(hash(i, j, k + 7001) ^ 0x5bd1e995);   // the impostor's own draws, outside the shared stream
         const o = n * STRIDE;
         rec[o] = px; rec[o + 1] = heights.at(px, pn) - 0.3; rec[o + 2] = -pn; rec[o + 3] = rot;
-        rec[o + 4] = s; rec[o + 5] = treeIdx[resolveSpecies(name)] + variant; rec[o + 6] = own(); rec[o + 7] = i + j * hab.img.width;
+        rec[o + 4] = s; rec[o + 5] = this.bake.index[treeIdx[resolveSpecies(name)] + variant];   // the slot's baked tree
+        rec[o + 6] = own(); rec[o + 7] = i + j * hab.img.width;
         chunkOf[n] = Math.min(NC - 1, Math.floor(px / CHUNK)) + NC * Math.min(NC - 1, Math.floor(pn / CHUNK));
         n++;
       }
@@ -317,6 +373,15 @@ export class Impostors {
     if (nearRadius !== this.R) {
       this.R = nearRadius; force = true;
       u.nearRadius.value = nearRadius; u.thin.value.set(nearRadius + RING, THIN_P, nearRadius + CROSS[0], nearRadius + CROSS[1]);
+      // The needle light costs about 0.1 ms in the ring and 0.3 ms over the far sectors' many small
+      // quads at the start view, so a material compiles it only when it can hold trees where the real
+      // pines still have at least half of it (NEEDLE_ON m): the ring's nearest trees are about
+      // nearRadius - 200 m away (the mid set moves every 200 m), the sectors' about nearRadius + 450 m.
+      // With the default 1.5 km forest neither does (the real pines keep at most a quarter there).
+      for (const [m, nearest] of [[this.materials.ring, nearRadius - 200], [this.materials.far, nearRadius + CROSS[1]]]) {
+        const want = nearest < NEEDLE_ON;
+        if (want !== ('NEEDLE' in m.defines)) { if (want) m.defines.NEEDLE = 1; else delete m.defines.NEEDLE; m.needsUpdate = true; }
+      }
     }
     if (midSet.center && midSet.version !== this.midVersion) {   // the real forest moved: draw its complement
       this.midVersion = midSet.version; this.mid = [midSet.center[0], midSet.center[1], midSet.radius]; force = true;

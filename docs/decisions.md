@@ -474,17 +474,21 @@ review should read the drawing buffer's RGB. Changes: (1) normals are averaged w
 renormalising at every level and lit as the mean of max(n.L, 0) (a smooth max of the mean
 normal's term and its spread), so a far crown shades as a crown rather than one arbitrary lobe
 per pixel; (2) pines get treegen's wrap, light through the needles and backlit glow with the same
-900-1500 m fade, weighted toward the crown rim (inside it the real crown's own shadow takes it);
-(3) thinned far trees grow by 1/keep in silhouette area (width keep^-0.72, height keep^-0.28,
-was keep^-0.53 in total), so a stand's cover holds to the horizon instead of opening into single
-trees on the skyline; (4) coverage-preserving mips shift the alpha instead of scaling it (no
+900-1500 m fade, weighted toward the crown rim (inside it the real crown's own shadow takes it),
+compiled only into a material that can hold trees nearer than 1.2 km (the ring with the 900 m
+forest; with the default 1.5 km the real pines keep at most a quarter of it at the hand-over, and
+it cost 0.1 ms in the ring and 0.3 ms over the far billboards); (3) thinned far trees grow by
+1/keep in silhouette area (width keep^-0.72, height keep^-0.28, was keep^-0.53 in total), so a
+stand's cover holds to the horizon instead of opening into single trees on the skyline; (4) coverage-preserving mips shift the alpha instead of scaling it (no
 saturated, square crowns at the coarse levels), trees sit inside a 6-texel cell margin and quads
 are trimmed to what any level down to 8x8 texels covers; (5) slots that share a seed are baked
 once (28 trees for 72 slots): atlas 60 to 23 MB, bake about 1.1 s to 0.45 s. Seam match after,
-impostor minus real over the hand-over band (green, six views): -1.8% to +1.3% at 1.5 km (was
--3.5% to +1.2%), -1.3% to +3.3% at 900 m (was -4.6% to +1.5%). Rejected: sharper alpha-to-coverage edges
-(they cured the capture salt by making crowns blocky), a blend state that keeps the canvas alpha
-(0.45 ms at the start view for an off-screen artefact). Still open: the per-cell swap when the
+impostor minus real over the hand-over band (green, six views): -2.4% to +1.5% at 1.5 km (was
+-3.5% to +1.2%), -0.8% to +3.2% at 900 m (was -4.6% to +1.5%). Start view GPU, five fresh loads
+alternated with HEAD's two files, medians: 6.79 ms after, 6.80 ms before (rounds within 0.06 ms of
+each other). Rejected: sharper alpha-to-coverage edges (they cured the capture salt by making
+crowns blocky), a blend state that keeps the canvas alpha (0.45 ms at the start view for an
+off-screen artefact). Still open: the per-cell swap when the
 mid set moves is a representation change on a ring of trees at about 1.5 km (subtle, not a seam);
 impostors cast no shadows (beyond the mid set the ground between far trees is unshaded); far
 crowns of 2-4 px are still single blobs whose shape is set by 4x4-texel mips.

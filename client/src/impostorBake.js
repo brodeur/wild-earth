@@ -2,20 +2,29 @@ import * as THREE from 'three';
 import { buildTree, leafTexture, LIBRARY, resolveSpecies } from './treegen.js';
 
 // Impostor atlas, baked once at load from the real near-LOD trees (treegen), so a far tree has the
-// silhouette of the tree that replaces it when you fly closer.
+// silhouette of the tree that replaces it when you fly closer. Slots that share a tree (vegetation.js
+// gives each age class several slots with one seed) are baked once: `index` maps each input to its cell row.
 //
 // Each tree gets VIEWS cells: four orthographic side views at azimuths 0, 45, 90 and 135 degrees
 // (an orthographic view from the opposite side is the mirror image, so these give eight directions),
 // and one view from straight above for the canopy cap. Two atlases share the layout:
 //   albedo: sRGB colour with coverage in alpha (no lighting; the live shader lights it)
-//   normal: the crown normal in the view's frame (x right, y up, z toward the viewer), 0..1 encoded
+//   normal: the crown normal in the view's frame (x right, y up, z toward the viewer), 0..1 encoded.
+//           Averaged, never renormalised: a texel that covers lobes facing different ways stores a
+//           short normal, and the live shader lights it as that spread (Toksvig-style prefiltering),
+//           so a far crown of a few pixels shades as a crown instead of as per-pixel noise.
 // Everything is drawn in one render: each tree is rotated and scaled into its cell under one
 // orthographic camera, rendered at SS x supersampling into a small offscreen renderer, read back,
 // box-filtered (soft alpha edges), padded so mips do not bleed dark fringes, and mip-mapped with
-// alpha rescaled per level so the alpha-tested coverage holds (distant crowns do not thin out).
+// alpha shifted per level so the alpha-tested coverage holds (distant crowns do not thin out). The
+// shift (not a scale, which saturates the outer texels and squares a small crown off into its cell)
+// keeps each level's alpha linear, so the cutoff contour of the filtered texture is a smooth isoline.
+// Each tree is drawn inside a margin of its cell (PAD), so the softer coarse levels round off inside
+// the cell instead of being cut flat by its edge.
 // The textures are plain DataTextures, so they upload to the main renderer like any other.
 
 export const CELL = 128;          // texels per cell side
+const PAD = 6;                    // empty texels on each side of the tree in its cell
 export const SIDE_VIEWS = 4;      // 0, 45, 90, 135 degrees; 180..315 are mirrored in the shader
 export const VIEWS = SIDE_VIEWS + 1;
 export const COLS = 10;           // two trees per atlas row
@@ -39,13 +48,18 @@ const FRAG = /* glsl */`
     gl_FragColor = mode < 0.5 ? vec4(srgb(clamp(c, 0.0, 1.0)), 1.0) : vec4(normalize(vN) * 0.5 + 0.5, 1.0);
   }`;
 
-// trees: [{ id, seed }] (canonical or alias ids). Returns { albedo, normal, frames, grid, ms, bytes }.
-// frames[k] = { W, H, y0, capY, height, hmin, hmax, shrub, species } for tree k, in metres of the unscaled tree:
-// height is this slot's own tree (a sapling or snag is its own size), hmin/hmax the species' mature range.
-// extents: per cell (tree * VIEWS + view) [u0, u1, v0, v1], the covered part of the cell (0..1), so the
-// live quads can be trimmed to it.
-export function bakeImpostors(trees) {
+// trees: [{ id, seed }] (canonical or alias ids). Returns { albedo, normal, frames, extents, index, grid, ms, bytes }.
+// index[k]: the baked tree (cell row) for input k; inputs with the same species and seed share one.
+// frames[t] = { W, H, y0, capY, height, hmin, hmax, shrub, species, thin } for baked tree t, in metres of the
+// unscaled tree: W x H from y0 is the whole cell (the tree and its margin), height is this slot's own tree (a
+// sapling or snag is its own size), hmin/hmax the species' mature range, thin the mean needle thinness of the
+// species' card texture (0 for broadleaves; the live shader's light through needles).
+// extents: per cell (tree * VIEWS + view) [u0, u1, v0, v1], the part of the cell any mip level covers
+// (0..1), so the live quads can be trimmed to it.
+export function bakeImpostors(input) {
   const t0 = performance.now();
+  const keyOf = ({ id, seed }) => `${resolveSpecies(id)}:${seed}`, at = new Map(), trees = [];
+  const index = input.map(t => { const k = keyOf(t); if (!at.has(k)) { at.set(k, trees.length); trees.push(t); } return at.get(k); });
   const rows = Math.ceil(trees.length * VIEWS / COLS), AW = COLS * CELL, AH = rows * CELL;
   const canvas = document.createElement('canvas');
   const renderer = new THREE.WebGLRenderer({ canvas, antialias: false, alpha: true, powerPreference: 'high-performance' });
@@ -75,21 +89,22 @@ export function bakeImpostors(trees) {
         if (isCanopy) { cy0 = Math.min(cy0, y); cy1 = Math.max(cy1, y); }
       }
     }
-    const W = 2 * r * 1.02, H = (y1 - y0) * 1.01;
-    frames.push({ W, H, y0, capY: (cy0 + cy1) / 2, height: t.height, hmin: spec.height_m[0], hmax: spec.height_m[1], shrub: !!spec.shrub, species: sid });
+    const W = 2 * r * 1.02, H = (y1 - y0) * 1.01, f = (CELL - 2 * PAD) / CELL;   // the tree spans f of its cell
     const tex = leafTexture(spec), gain = 1 / tex.userData.mean;
+    frames.push({ W: W / f, H: H / f, y0: y0 - PAD / CELL * H / f, capY: (cy0 + cy1) / 2, height: t.height, hmin: spec.height_m[0], hmax: spec.height_m[1],
+      shrub: !!spec.shrub, species: sid, thin: needleThinness(tex) });
     for (let v = 0; v < VIEWS; v++) {
       const idx = k * VIEWS + v, col = idx % COLS, row = Math.floor(idx / COLS);
       const o = new THREE.Group();
       if (v < SIDE_VIEWS) {
         // Rotate the tree so the view direction (azimuth v*45 from the tree) faces the camera (+z),
         // then map x in [-W/2, W/2] and y in [y0, y0 + H] onto the cell.
-        o.scale.set(CELL / W, CELL / H, CELL / W);
-        o.position.set((col + 0.5) * CELL, row * CELL - y0 * CELL / H, 0);
+        o.scale.set(f * CELL / W, f * CELL / H, f * CELL / W);
+        o.position.set((col + 0.5) * CELL, row * CELL + PAD - y0 * f * CELL / H, 0);
         o.rotation.set(0, -v * Math.PI / 4, 0);
       } else {
         // Top view: tree +y toward the camera, -z up the cell (u along +x, v along -z).
-        o.scale.set(CELL / W, CELL / W, CELL / W);
+        o.scale.set(f * CELL / W, f * CELL / W, f * CELL / W);
         o.position.set((col + 0.5) * CELL, (row + 0.5) * CELL, -2000);
         o.rotation.set(Math.PI / 2, 0, 0);
       }
@@ -113,11 +128,11 @@ export function bakeImpostors(trees) {
 
   const albedo = downsample(albedoSS, AW, AH, false), normal = downsample(normalSS, AW, AH, true);
   for (let i = 3; i < normal.length; i += 4) normal[i] = albedo[i];   // pad by the albedo's coverage
-  const extents = cellExtents(albedo, AW, trees.length * VIEWS);
   const tDown = performance.now();
   pad(albedo, AW, AH); pad(normal, AW, AH);
   const tPad = performance.now();
   const albedoMips = mips(albedo, AW, AH, false), normalMips = mips(normal, AW, AH, true);
+  const extents = cellExtents(albedoMips, trees.length * VIEWS);
   const tMips = performance.now();
   const tex = (levels, srgb) => {
     const t = new THREE.DataTexture(levels[0].data, AW, AH, THREE.RGBAFormat, THREE.UnsignedByteType);
@@ -127,24 +142,41 @@ export function bakeImpostors(trees) {
     t.needsUpdate = true; return t;
   };
   const bytes = [albedoMips, normalMips].reduce((s, L) => s + L.reduce((a, l) => a + l.data.length, 0), 0);
-  return { albedo: tex(albedoMips, true), normal: tex(normalMips, false), frames, extents, grid: [COLS, rows], size: [AW, AH],
+  return { albedo: tex(albedoMips, true), normal: tex(normalMips, false), frames, extents, index, grid: [COLS, rows], size: [AW, AH],
     ms: performance.now() - t0, renderMs: tRender, ctxMs: tCtx - t0, geomMs: tGeom - tCtx, readMs: tRead - tGeom, downMs: tDown - t0 - tRender, padMs: tPad - tDown, mipMs: tMips - tPad, bytes };
 }
 
-// Covered box of each cell in cell units, with a 2-texel margin for the softer alpha of the mips.
-function cellExtents(d, w, n) {
-  const out = [];
+// Covered box of each cell in cell units: the union, over the levels down to 8 x 8 texels a cell, of
+// the texels whose alpha reaches the live shader's soft edge (about a pixel wide around the cutoff),
+// plus a one-texel margin. A far tree drawn from a coarse level is thus not cut flat by a quad trimmed
+// to its sharp level-0 outline, and the quads stay as small as that outline allows (fragment cost).
+function cellExtents(levels, n) {
+  const out = [], lo = Math.round(ALPHA_REF * 255 * 0.6);
   for (let c = 0; c < n; c++) {
-    const cx = (c % COLS) * CELL, cy = Math.floor(c / COLS) * CELL;
     let x0 = CELL, x1 = -1, y0 = CELL, y1 = -1;
-    for (let y = 0; y < CELL; y++) for (let x = 0; x < CELL; x++) if (d[((cy + y) * w + cx + x) * 4 + 3] > 0) {
-      if (x < x0) x0 = x; if (x > x1) x1 = x; if (y < y0) y0 = y; if (y > y1) y1 = y;
+    for (let L = 0, cs = CELL; cs >= 8; L++, cs >>= 1) {
+      const { data: d, width: w } = levels[L], k = CELL / cs, cx = (c % COLS) * cs, cy = Math.floor(c / COLS) * cs;
+      for (let y = 0; y < cs; y++) for (let x = 0; x < cs; x++) if (d[((cy + y) * w + cx + x) * 4 + 3] > (L ? lo : 0)) {
+        x0 = Math.min(x0, x * k); x1 = Math.max(x1, (x + 1) * k - 1); y0 = Math.min(y0, y * k); y1 = Math.max(y1, (y + 1) * k - 1);
+      }
     }
     if (x1 < 0) { out.push([0.5, 0.5, 0, 0]); continue; }
-    const m = 2;
+    const m = 1;
     out.push([Math.max(0, x0 - m) / CELL, Math.min(CELL, x1 + 1 + m) / CELL, Math.max(0, y0 - m) / CELL, Math.min(CELL, y1 + 1 + m) / CELL]);
   }
   return out;
+}
+
+// Mean thinness of a needle texture's opaque texels (treegen needleTexture: the aux texture's alpha,
+// through the shader's ramp smoothstep(0.1, 0.7, a)); 0 for textures without one.
+function needleThinness(tex) {
+  const aux = tex.userData.aux, img = tex.mipmaps?.[0], a = aux?.mipmaps?.[0];
+  if (!aux || !img?.data || !a?.data || a.width !== img.width) return 0;
+  let s = 0, n = 0;
+  for (let i = 3; i < img.data.length; i += 4) if (img.data[i] >= 128) {
+    const t = Math.min(1, Math.max(0, (a.data[i] / 255 - 0.1) / 0.6)); s += t * t * (3 - 2 * t); n++;
+  }
+  return n ? s / n : 0;
 }
 
 // SS x SS box filter. Colour is averaged over covered samples only (straight alpha); alpha is coverage.
@@ -158,10 +190,7 @@ function downsample(src, w, h, isNormal) {
     }
     const o = (y * w + x) * 4;
     if (n) {
-      if (isNormal) {   // average of unit normals, renormalised
-        let nx = r / n / 127.5 - 1, ny = g / n / 127.5 - 1, nz = b / n / 127.5 - 1; const l = Math.hypot(nx, ny, nz) || 1;
-        out[o] = (nx / l * 0.5 + 0.5) * 255; out[o + 1] = (ny / l * 0.5 + 0.5) * 255; out[o + 2] = (nz / l * 0.5 + 0.5) * 255;
-      } else { out[o] = r / n; out[o + 1] = g / n; out[o + 2] = b / n; }
+      out[o] = r / n; out[o + 1] = g / n; out[o + 2] = b / n;   // normals too: the mean, not renormalised
       out[o + 3] = Math.round(255 * n / (SS * SS));
     }
   }
@@ -199,17 +228,20 @@ function pad(d, w, h, rings = 2) {
   }
 }
 
-// Mip chain down to one texel per cell (cells never mix). Colour is alpha-weighted; alpha is scaled
-// per level so the fraction of texels above ALPHA_REF matches level 0, cell by cell (Castano 2010).
+// Mip chain down to one texel per cell (cells never mix). Colour (and normal) is alpha-weighted and
+// normals are not renormalised. Each level is filtered from the previous level's raw alpha; what is
+// stored is that alpha shifted per cell, a' = a - t + ALPHA_REF for covered texels, with t chosen so
+// the fraction of texels at or above ALPHA_REF matches level 0 (coverage-preserving mips, Castano
+// 2010, with a shift rather than a scale so the alpha stays linear and the cutoff contour round).
 function mips(d0, w0, h0, isNormal) {
   const levels = [{ data: d0, width: w0, height: h0 }];
-  const cellsX = w0 / CELL, cellsY = h0 / CELL;
-  const coverage = (d, w, h, cx, cy, cs, scale = 1) => {
-    let n = 0; for (let y = cy * cs; y < (cy + 1) * cs; y++) for (let x = cx * cs; x < (cx + 1) * cs; x++) if (d[(y * w + x) * 4 + 3] * scale >= ALPHA_REF * 255) n++;
+  const cellsX = w0 / CELL, cellsY = h0 / CELL, ref = ALPHA_REF * 255;
+  const coverage = (d, w, cx, cy, cs, t) => {
+    let n = 0; for (let y = cy * cs; y < (cy + 1) * cs; y++) for (let x = cx * cs; x < (cx + 1) * cs; x++) if (d[(y * w + x) * 4 + 3] >= t) n++;
     return n / (cs * cs);
   };
   const target = [];
-  for (let cy = 0; cy < cellsY; cy++) for (let cx = 0; cx < cellsX; cx++) target.push(coverage(d0, w0, h0, cx, cy, CELL));
+  for (let cy = 0; cy < cellsY; cy++) for (let cx = 0; cx < cellsX; cx++) target.push(coverage(d0, w0, cx, cy, CELL, ref));
   let src = d0, w = w0, h = h0, cs = CELL;
   while (cs > 1) {
     const nw = w >> 1, nh = h >> 1, d = new Uint8Array(nw * nh * 4);
@@ -221,20 +253,20 @@ function mips(d0, w0, h0, isNormal) {
       }
       const o = (y * nw + x) * 4;
       if (a > 0) { d[o] = r / a; d[o + 1] = g / a; d[o + 2] = b / a; } else { d[o] = rr / 4; d[o + 1] = gg / 4; d[o + 2] = bb / 4; }
-      if (isNormal) {
-        const nx = d[o] / 127.5 - 1, ny = d[o + 1] / 127.5 - 1, nz = d[o + 2] / 127.5 - 1, l = Math.hypot(nx, ny, nz) || 1;
-        d[o] = (nx / l * 0.5 + 0.5) * 255; d[o + 1] = (ny / l * 0.5 + 0.5) * 255; d[o + 2] = (nz / l * 0.5 + 0.5) * 255;
-      }
       d[o + 3] = a / 4;
     }
     cs >>= 1;
+    const out = new Uint8Array(d);   // the stored level: alpha shifted; `d` (raw) feeds the next level
     if (!isNormal) for (let cy = 0; cy < cellsY; cy++) for (let cx = 0; cx < cellsX; cx++) {
       const want = target[cy * cellsX + cx]; if (want <= 0) continue;
-      let lo = 0.5, hi = 8;
-      for (let it = 0; it < 10; it++) { const m = (lo + hi) / 2; if (coverage(d, nw, nh, cx, cy, cs, m) < want) lo = m; else hi = m; }
-      for (let y = cy * cs; y < (cy + 1) * cs; y++) for (let x = cx * cs; x < (cx + 1) * cs; x++) { const i = (y * nw + x) * 4 + 3; d[i] = Math.min(255, d[i] * hi); }
+      let lo = 1, hi = 255;   // the raw alpha t whose coverage matches (coverage falls as t rises)
+      for (let it = 0; it < 9; it++) { const m = (lo + hi) / 2; if (coverage(d, nw, cx, cy, cs, m) >= want) lo = m; else hi = m; }
+      const shift = ref - lo;
+      for (let y = cy * cs; y < (cy + 1) * cs; y++) for (let x = cx * cs; x < (cx + 1) * cs; x++) {
+        const i = (y * nw + x) * 4 + 3; if (d[i]) out[i] = Math.max(1, Math.min(255, Math.round(d[i] + shift)));
+      }
     }
-    levels.push({ data: d, width: nw, height: nh });
+    levels.push({ data: isNormal ? d : out, width: nw, height: nh });
     src = d; w = nw; h = nh;
   }
   return levels;
