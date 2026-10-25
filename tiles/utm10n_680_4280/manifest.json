@@ -15,7 +15,7 @@
   38.74035063713964
  ],
  "size_m": 10000,
- "generated_at": "2026-10-25T13:59:59Z",
+ "generated_at": "2026-10-25T14:04:29Z",
  "generator": {
   "name": "wild-earth-pipeline",
   "version": "0.2.0"
@@ -574,7 +574,7 @@
    "encoding": "tile-local metres [x east, north from south edge]",
    "counts": {
     "roads": 1031,
-    "streams": 391,
+    "streams": 392,
     "waterbodies": 49
    },
    "streams_from": "hydro.channels",
@@ -583,8 +583,8 @@
     "hydro.channels",
     "hydro.waterbodies"
    ],
-   "sha256": "9a8e7316d69e3e5b109978dc639c48e0de63a125b10b4047fd198f6edf5fa92b",
-   "bytes": 626791
+   "sha256": "7ad83b3b5f37ef28fbb0d1cfb83403ee1e90e2539355213a90359073fee246d9",
+   "bytes": 627714
   },
   "client.roads": {
    "path": "client/roads.png",
@@ -695,8 +695,8 @@
    "resolution_m": 30.03003003003003,
    "derived_from": "resources.acorn_mast",
    "encoding": "R = fall acorn_mast score 0..100",
-   "sha256": "82338eb143fdab6c74a0b46a052c91c727c0f1cc7b422b61a82ab5a95030cb4d",
-   "bytes": 44290
+   "sha256": "93c365ac6573a1ef1903fb190120d07b3dc9704edffcbfbd4887b74cd212b40a",
+   "bytes": 44442
   },
   "client.texture_present": {
    "path": "client/texture_present.jpg",
@@ -827,7 +827,7 @@
     "hydro.human_water",
     "terrain.dem_rewilded"
    ],
-   "feature_count": 391,
+   "feature_count": 392,
    "method": "least-cost breach (<= 300 m) of depressions >= 1 m outside waterbodies (human water rewilded: not held as ponds, routed on terrain/dem_rewilded.tif), then pysheds fill + resolve_flats, D8, NHD-seeded inflow",
    "params": {
     "threshold_km2": 0.15,
@@ -839,38 +839,92 @@
    "stats": {
     "threshold_km2": 0.15,
     "seeds": 28,
+    "seeds_moved": [
+     {
+      "name": null,
+      "area_km2": 0.8,
+      "from": [
+       3,
+       1662
+      ],
+      "to": [
+       29,
+       1679
+      ],
+      "moved_m": 155.3
+     },
+     {
+      "name": "Hangtown Creek",
+      "area_km2": 23.7,
+      "from": [
+       3,
+       1145
+      ],
+      "to": [
+       27,
+       1131
+      ],
+      "moved_m": 138.9
+     },
+     {
+      "name": null,
+      "area_km2": 1.8,
+      "from": [
+       1050,
+       3
+      ],
+      "to": [
+       1042,
+       9
+      ],
+      "moved_m": 50.0
+     },
+     {
+      "name": null,
+      "area_km2": 0.2,
+      "from": [
+       1048,
+       3
+      ],
+      "to": [
+       1041,
+       7
+      ],
+      "moved_m": 40.3
+     }
+    ],
     "breaches": 571,
     "breach_cells": 3482,
     "unresolved_flat_cells": 24,
     "pruned_stubs": 7,
     "interior_outlets": 0,
-    "channel_cells": 32054,
-    "dem_reaches": 350,
+    "channel_cells": 32152,
+    "dem_reaches": 351,
     "dem_matched": 256,
-    "dem_unmatched": 94,
+    "dem_unmatched": 95,
     "nhd_flowlines": 433,
-    "nhd_covered": 258,
-    "nhd_partial": 61,
+    "nhd_covered": 260,
+    "nhd_partial": 59,
     "nhd_uncovered": 68,
     "nhd_kept_reaches": 13,
     "nhd_tips_dropped": 184,
-    "nhd_tips_length_km": 57.13,
-    "dem_length_km": 175.05,
+    "nhd_tips_length_km": 56.54,
+    "dem_length_km": 175.59,
     "nhd_kept_length_km": 0.6,
     "nhd_length_km": 190.12,
-    "nhd_covered_length_km": 130.61,
+    "nhd_covered_length_km": 131.18,
     "median_offset_m": 11.2,
-    "median_reach_offset_m": 10.9,
-    "p90_offset_m": 30.7,
+    "median_reach_offset_m": 11.1,
+    "p90_offset_m": 30.6,
     "in_waterbody_pieces": 16,
-    "features": 391,
+    "features": 392,
     "downhill_check": {
      "points": 200,
      "step_m": 10.0,
      "tolerance_m": 0.5,
-     "violations": 4,
-     "violation_rate": 0.02,
-     "max_rise_m": 3.81
+     "violations": 2,
+     "violation_rate": 0.01,
+     "max_rise_m": 1.39
     },
     "max_area_km2": 130.56,
     "breach_max_m": 300.0,
@@ -1209,8 +1263,8 @@
     },
     "routed_on": "terrain/dem_rewilded.tif"
    },
-   "sha256": "c07edd704e6f70603a6a7094259d21a82a678fda5c23e47ac4f05b0b76b8974c",
-   "bytes": 887262
+   "sha256": "91f99f88f9679a3d5db8dd51d40e928686c82273dadc5ed982363aaca8490acf",
+   "bytes": 890037
   },
   "client.channel_depth": {
    "path": "client/channel_depth.png",
@@ -1229,8 +1283,8 @@
     "hydro.channels"
    ],
    "encoding": "uint8 decimetres: mean DEM on a 20 m ring minus the channel cell, clamped 0-25 m, x10; 0 off channel",
-   "sha256": "023a6e745ad741c5e20b7befed5fda969cc2ce819c542451283de9e32be0fe61",
-   "bytes": 75874
+   "sha256": "0ce67cd2fd05781a8237a90a2895a456fb13e9a330c3c69a1158e9b61ec48944",
+   "bytes": 76044
   },
   "geology.units": {
    "path": "geology/units.geojson",
@@ -2814,19 +2868,19 @@
    "encoding": "RGB, row 0 north. R thalweg water depth, 2 cm units (0-5.1 m), 0 off channel; G riffle-pool index (0 deepest pool, 128 run, 255 riffle; local width = reach width x (1 + 0.15 (G/127.5 - 1))); B rewilded water: 255 former open water (meadow or wet flat), 160 riparian corridor within 12 m of the restored channel, 0 elsewhere. R and G are spread 4 px from each centreline.",
    "depth_model": "mean depth 0.10 A^0.32 m (A km2) x exp(-0.85 t), t = tanh(1.1 ln((S_local + 0.002) / (S_reach + 0.002))); S_local over max(7.5 m, 2.5 widths), S_reach over max(75 m, 10 widths), on the non-increasing DEM long profile every 2.5 m",
    "stats": {
-    "reaches": 391,
-    "samples": 70459,
-    "riffle_share": 0.261,
-    "pool_share": 0.261,
+    "reaches": 392,
+    "samples": 70674,
+    "riffle_share": 0.262,
+    "pool_share": 0.26,
     "run_share": 0.478,
     "depth_m_p50": 0.108,
-    "depth_m_p95": 0.378,
+    "depth_m_p95": 0.377,
     "depth_m_max": 0.898,
     "bed_cells": 17278,
     "corridor_cells": 4285
    },
-   "sha256": "d78ba496daff86af0d76c85b88a1be4656dd419e688abd3a7d22c4a835400971",
-   "bytes": 373895
+   "sha256": "54f0c1fc128cf945cc5bb941c4b901c94693d154a73861d5b9b19fed460681f9",
+   "bytes": 374881
   },
   "client.species_prior": {
    "path": "client/species_prior.json",
@@ -2897,7 +2951,7 @@
    "attribution": "Imagery: USDA National Agriculture Imagery Program (NAIP), via Microsoft Planetary Computer",
    "attribution_url": "https://www.fpacbc.usda.gov/geo/imagery-programs/naip-imagery",
    "attribution_required": false,
-   "retrieved": "2026-10-23"
+   "retrieved": "2026-10-25"
   },
   "osm": {
    "name": "OpenStreetMap via Overpass API",
@@ -2947,7 +3001,7 @@
    "attribution": "Geology: Macrostrat (macrostrat.org), CC BY 4.0, from the USGS State Geologic Map Compilation; clipped to the tile and reclassified",
    "attribution_url": "https://macrostrat.org",
    "attribution_required": true,
-   "retrieved": "2026-10-24"
+   "retrieved": "2026-10-25"
   },
   "usgs_sgmc": {
    "name": "USGS State Geologic Map Compilation (Horton et al. 2017, DS 1052, doi:10.3133/ds1052)",
@@ -2957,7 +3011,7 @@
    "attribution": "Geology: Horton, J.D., San Juan, C.A., and Stoeser, D.B., 2017, The State Geologic Map Compilation (SGMC) geodatabase of the conterminous United States, U.S. Geological Survey Data Series 1052",
    "attribution_url": "https://doi.org/10.3133/ds1052",
    "attribution_required": false,
-   "retrieved": "2026-10-24"
+   "retrieved": "2026-10-25"
   },
   "usda_ssurgo": {
    "name": "USDA NRCS SSURGO via Soil Data Access",
@@ -2967,7 +3021,7 @@
    "attribution": "Soils: Soil Survey Staff, Natural Resources Conservation Service, U.S. Department of Agriculture, Soil Survey Geographic (SSURGO) Database",
    "attribution_url": "https://www.nrcs.usda.gov/resources/data-and-reports/soil-survey-geographic-database-ssurgo",
    "attribution_required": false,
-   "retrieved": "2026-10-24"
+   "retrieved": "2026-10-25"
   }
  },
  "edits": [],
@@ -3289,6 +3343,42 @@
    "step": "species_prior",
    "at": "2026-10-25T13:59:59Z",
    "seconds": 0.4,
+   "ok": true
+  },
+  {
+   "step": "channels",
+   "at": "2026-10-25T14:02:31Z",
+   "seconds": 22.4,
+   "ok": true
+  },
+  {
+   "step": "rewild_hydro",
+   "at": "2026-10-25T14:02:54Z",
+   "seconds": 22.9,
+   "ok": true
+  },
+  {
+   "step": "veg",
+   "at": "2026-10-25T14:02:54Z",
+   "seconds": 0.3,
+   "ok": true
+  },
+  {
+   "step": "ground",
+   "at": "2026-10-25T14:02:55Z",
+   "seconds": 0.7,
+   "ok": true
+  },
+  {
+   "step": "derive",
+   "at": "2026-10-25T14:03:29Z",
+   "seconds": 34.6,
+   "ok": true
+  },
+  {
+   "step": "erase",
+   "at": "2026-10-25T14:04:29Z",
+   "seconds": 59.7,
    "ok": true
   }
  ]
