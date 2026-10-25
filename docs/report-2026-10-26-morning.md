@@ -84,8 +84,13 @@ Lanes still running when this report was written are listed in `docs/roadmap.md`
 | 3638fda, 9cb054d, 37d6c20 | Raven: the player flies the generated glide model (CC0 raven as fallback, `?raven=old`); a standing raven with every raven mark and a corrected texture; ambient ravens walk, hop, flick and cache on the ground, and the player can land (hover, then Z) and take off. |
 | 9311921 | Arroyo willow, white alder and Fremont cottonwood in the tree library; riparian corridors use them. |
 
-Lane still running at the time of this update: willows pulled to the water's edge. Its commit,
-if it verified, follows 37d6c20 in `git log`.
+| 3aa8172 | Willows line the creek banks with alders behind; near and far placement agree. |
+| a744aff | three.js 0.170 to 0.186.1 on WebGL, pixel-identical (r170's sky dome kept verbatim because the haze is tuned to it). |
+| 9926a0c | A third tile, utm10n_680_4270 (the Cosumnes forks), built from scratch in 58 minutes; Overpass now waits and retries; rivers entering at a tile edge are seeded onto the valley floor (the home tile's Hangtown Creek inflows need a channels rebuild for this). |
+
+Lanes still running at the time of this update: the player raven walking on the ground with a
+softer landing swap, and a standalone GPU placement prototype. Their commits, if they verified,
+follow 9926a0c in `git log`.
 
 **Disk:** the machine dipped to a few hundred MB free several times tonight while lanes wrote
 captures; the session scratchpad was trimmed twice and the disk ended the night at about 9 GB
