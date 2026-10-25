@@ -356,3 +356,104 @@ trees instead of 18. The impostor atlas holds 72 slots instead of 18: 60 MB with
   living tree's height. At that range a tree is a few pixels.
 - Acorn-stash holes sit on whichever class the oak is: on a sapling they are low (under 0.5 m)
   on a 3 cm stem, and a snag can hold a stash (acorn woodpeckers do use dead oaks).
+
+
+## Foliage by crown size (2026-10-24)
+
+Review found that the bigger a tree, the sparser it looked. The old rule (cards per metre of bearing
+stem, capped by `lod.near_tris_budget`) gave every tree of a species about the same number of cards,
+because nearly every tree hit the budget cap. A veteran spread a sapling's cards over a crown four times
+larger, and the mid tier's fixed card cap made it worse. Foliage is now set per square metre of crown.
+
+- **Crown area.** Each tree's crown envelope (`crown.envelope`, after its class's `crown_scale` and the
+  height fit) is integrated into a surface area: the lobed surface of revolution plus the disc under
+  the crown base.
+- **Density.** `foliage.cards_per_m2` sets cards per m² of envelope. Without it, the species' reference
+  tree (base class, first seed: the lineup's first measured tree) keeps the card count the old rule
+  gave it, and that count over its area is the density. Either way the reference tree stays within
+  `lod.near_tris_budget`. A class's `leaf_density` (or its own `foliage.density`) scales the density.
+- **Count.** Cards = density × area / s², where s is the card size factor (area ratio)^0.25, clamped
+  0.9 to 1.4, so big crowns get somewhat larger cards and the count grows more slowly than the area.
+  The card cap is the reference tree's count times 1.5 × the area ratio, clamped 0.15 to 2.5.
+  `lod.near_tris_budget` is therefore the reference tree's budget, and a class's own
+  `lod.near_tris_budget` is no longer read (live oak's veteran still sets one; it has no effect).
+- **Mid tier.** The mid card cap is `lod.mid_cards` times the crown diameter ratio (square root of the
+  area ratio), clamped 0.4 to 2.2 (0.7 to 2.2 for shrubs). The far thinning is unchanged.
+- `buildTree(...)` also returns `crown: { area_m2, cards_per_m2, card_scale, mid_cap }` for
+  inspection. The lineup's `__lineupMetrics('near', 0, 'classes')` measures one tree per class, and
+  `__lineupSeeds(id)` gives the metrics of each measured seed.
+
+Gaps (lineup porosity, near tier), smallest to largest class, before and after:
+
+| species | before | after |
+|---|---|---|
+| ponderosa (pole, mature, old-growth) | 0.39, 0.45, 0.52 | 0.27, 0.35, 0.34 |
+| gray pine (young, mature, veteran) | 0.21, 0.28, 0.51 | 0.39, 0.32, 0.40 |
+| interior live oak (young, mature, veteran) | 0.06, 0.25, 0.42 | 0.24, 0.25, 0.37 |
+| blue oak (sapling, young, mature, veteran) | 0.10, 0.21, 0.27, 0.50 | 0.21, 0.19, 0.24, 0.28 |
+| whiteleaf manzanita (young, mature, decadent) | 0.02, 0.37, 0.56 | 0.30, 0.37, 0.42 |
+| chamise (young, mature, decadent) | 0.11, 0.34, 0.62 | 0.30, 0.34, 0.51 |
+
+Decadent shrubs and veterans stay a little more open on purpose: they carry dead stems and limbs.
+Cost, measured at the start view (same pose, back to back against HEAD): near-set foliage 671,630
+triangles against 627,162 (+7%, 637 plants), mid canopies 1.73 M against 1.78 M, all triangles
+5.25 M against 5.27 M, and the frame rate the same within noise (two A/B pairs: 82.8/79.0 against
+78.8/74.4 fps, then 62.8/64.7 against 66.6/65.1).
+
+## Pine needles (2026-10-24)
+
+Review comment: "Pines seem to have leaves rather than needles." The two pines' cards were large sprays
+with many tufts drawn on them. From 20 m they read as flat dark sheets (ponderosa) or leafy clumps
+(gray pine), because box-filtered mips turn a one-texel needle into dots and a tuft into a solid lobe.
+
+- **Textures** (`leaf_shape` `needle_brush`, `needle_drooping`; `drawNeedleCard` in `treegen.js`).
+  Each card is a branch end seen side-on: a twig from the card's lower edge and a few shoots, each
+  carrying needle bundles (fascicles of three). Every needle is projected from 3D (an angle from the
+  shoot and an azimuth around it), drawn as a thin five-piece arc, and shaded from a darker base to a
+  lighter tip (`foliage.needle_tip`, an RGB multiplier).
+  - `needle_brush` (ponderosa): 3-6 upturned shoots side by side, each a bottle-brush of stiff needles
+    along its last 1-2 needle lengths, curving forward.
+  - `needle_drooping` (gray pine): longer, sparser shoots, each ending in a loose tuft of very long
+    needles that arch over and hang (`foliage.droop`).
+  - The mid tier's texture (whole-clump cards) is a few large bursts of thick needles whose outer
+    needles point out of the clump: round pom-poms for ponderosa, weeping bursts for gray pine.
+- **Mips that keep the needles.** Every level down to 16×16 is drawn again from the same needles, at
+  least one texel wide. A fixed random subset of needles is left out so that the level's alpha-test
+  coverage matches level 0 (up to four passes), and the level's colour is rescaled to level 0's mean
+  brightness. A far crown keeps lines rather than lobes, and neither washes out, fills in nor darkens.
+  The smallest levels are box-filtered as before. The impostor bake uses the same textures and cards.
+- **Cards.** `foliage.needle_planes` (2) crossed planes through the tuft's axis, so the needles read as
+  radiating lines from any side. The card's base sits on the branch (`foliage.tuft_base`, default 0.42
+  of the card along the axis). The axis fans out by up to `foliage.tuft_spread_deg` and turns up toward
+  vertical by `foliage.tuft_up` (0-1). Mid cards use `lod.mid_planes` planes (1 for both pines: a
+  second plane doubled the alpha-tested fill of the far forest), centred on their clump.
+- **Placement.** Ponderosa foliage is on the outer part of each limb (level-2 `start` 0.5,
+  `parent_start` 0.6) in clumps of two cards, so the crown is open inside. Gray pine is sparse
+  (`cards_per_m2` 0.83). Ponderosa limbs went from 4 to 3 segments to give the foliage the triangles.
+
+Lineup (mean of the three measured seeds, near tier; target in brackets):
+
+| species | W/H | crown base | gaps | r/g | b/g |
+|---|---|---|---|---|---|
+| ponderosa | 0.42 → 0.45 (0.40) | 0.46 → 0.45 (0.45) | 0.56 → 0.35 (0.35) | 0.86 → 0.91 (0.95) | 0.45 → 0.48 (0.47) |
+| gray pine | 0.55 → 0.57 (0.65) | 0.42 → 0.42 (0.30) | 0.43 → 0.37 (0.40) | 0.89 → 0.89 (0.88) | 0.79 → 0.78 (0.82) |
+| blue oak | 1.43 → 1.47 (1.40) | 0.20 → 0.19 (0.15) | 0.27 → 0.21 (0.20) | 0.86 → 0.85 (0.90) | 0.74 → 0.74 (0.78) |
+
+The mid tier now follows the near tier: mid gaps went from 0.56 to 0.41 (ponderosa), 0.49 to 0.36 (gray
+pine) and 0.39 to 0.23 (blue oak). Gray pine's narrow W/H and high crown base were already off before
+this change; they come from the skeleton, not the foliage.
+
+**Blue oak** (same review: "the canopy is very sparse, seems like eucalyptus"): smaller cards
+(`cluster_m` 1.1 → 0.95) with denser sprays (`foliage.leaf_fill`, a multiplier on the scattered leaves,
+3.2), a thinner empty shell (0.45 → 0.2), sprays rolled at random in their own plane
+(`foliage.roll_deg` 90, default 40) so they do not all hang along drooping twigs, `cards_per_m2` 1.6
+(capped by the near budget), and leaf-on 1.0 in summer and 0.85 in fall.
+
+**Known limits.**
+- Under about 3 m a pine card is magnified: 256 texels over a 1.1 m close-tier card make needles look
+  like broad soft streaks. A 512 close-tier texture with thinner lines would fix it.
+- Ponderosa at 20-60 m in low sun still shows some rounded lobes at the crown edge (a dense brush
+  minifies to a disc with a fringe), and a backlit crown is very dark. Light passing through the
+  needles (`translucency` in the review) is the missing piece.
+- Ponderosa colour is a compromise: the photo ratio (r/g 0.95) renders khaki under the warm morning
+  sun, so it sits at 0.91.

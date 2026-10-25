@@ -238,3 +238,17 @@ Rejected: triplanar everywhere (budget), and detail that replaces the photo colo
 would fight the recoloured seasons and the grass). Next: the soils raster from the
 geology step drives the gravel and dirt choice, and outcrops are placed from the
 outcrop likelihood.
+
+## 2026-10-25: foliage is set per square metre of crown, not per tree
+
+Aaron: "the bigger the tree the sparser it seems." The generator had a card budget per
+species, so a veteran spread the same foliage over four times the crown surface of a
+young tree. Now each species states cards per square metre of crown envelope, scaled
+from its reference tree, with card size growing by at most 1.4x and the near and mid
+caps scaling with crown size; gaps now stay within a narrow band across age classes
+(blue oak 0.19 to 0.28 where it was 0.10 to 0.50). Pines draw needle bundles on crossed
+cards, with mip levels redrawn from the needles so a tuft at 20 m stays spiky instead
+of blurring into a leaf lobe. Rejected: a global density multiplier (it would have
+over-filled saplings). Still open: light through needles (sunlit ponderosa at 20 to
+60 m still partly reads as rounded lobes), and a higher-resolution close texture for
+needles under 3 m.

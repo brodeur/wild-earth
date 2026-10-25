@@ -157,8 +157,23 @@ function measureTree(b, mat) {
 // lod: 'near' (the photo comparison), 'mid' (past 180 m) or 'close' (under about 90 m: the near trunk
 // with the close canopy), so a change to one tier can be checked against the same targets. `dist`
 // (mid only): measure the mid crown as the mid material thins it at that camera distance in metres.
-function measureAll(lod = 'near', dist = 0) {
+// kind 'classes': one tree per age class (the "all variants" layout), reported per class as
+// { id: [{ name, h, wh, base, por, rg, bg }, ...] } (snags, which have no foliage, are left out).
+function measureAll(lod = 'near', dist = 0, kind = 'seeds') {
   const res = {};
+  if (kind === 'classes') {
+    if (!layouts.classes) { layouts.classes = buildLayout('classes'); apply(); }
+    for (const g of layouts.classes.groups) {
+      const plain = { ...g.spec, foliage: { ...g.spec.foliage, color_var: [0, 0], leaf_on_var: 0 } }, mat = canopyMaterial(plain, lod);
+      applySeason(mat, plain, 'summer');
+      res[g.id] = g.built.filter(b => !b.row.snag).map(b => {
+        const m = measureTree(lod === 'close' ? { trunk: b.near.trunk, canopy: b.close.canopy } : b[lod], mat);
+        return { name: b.row.name, h: +b.near.height.toFixed(1), cards: b.near.tris.cards, tris: b.near.tris.trunk + b.near.tris.canopy, mid: b.mid.tris.trunk + b.mid.tris.canopy,
+          ...Object.fromEntries(Object.entries(m).map(([k, v]) => [k, +v.toFixed(2)])) };
+      });
+    }
+    return res;
+  }
   for (const g of groups) {
     // measured without the per-plant tint (color_var), which would otherwise depend on where the seed stands
     const plain = { ...g.spec, foliage: { ...g.spec.foliage, color_var: [0, 0], leaf_on_var: 0 } }, mat = canopyMaterial(plain, lod);
@@ -185,8 +200,10 @@ function showMetrics() {
 }
 const round = res => Object.fromEntries(Object.entries(res).map(([k, m]) => [k, { wh: +m.wh.toFixed(2), base: +m.base.toFixed(2), por: +m.por.toFixed(2), rg: +m.rg.toFixed(2), bg: +m.bg.toFixed(2), target: m.target && { wh: m.target.crown_width_ratio, base: m.target.crown_base_ratio, por: m.target.porosity, rg: m.target.foliage_rg, bg: m.target.foliage_bg } }]));
 // __lineupMetrics() is the near-LOD table shown on the labels; __lineupMetrics('mid' | 'close') measures that
-// tier, and __lineupMetrics('mid', 800) the mid tier as thinned for a camera 800 m away.
-window.__lineupMetrics = (lod = 'near', dist = 0) => lod === 'near' && !dist ? METRICS && round(METRICS) : round(measureAll(lod, dist));
+// tier, __lineupMetrics('mid', 800) the mid tier as thinned for a camera 800 m away, and
+// __lineupMetrics('near', 0, 'classes') one tree per age class.
+window.__lineupMetrics = (lod = 'near', dist = 0, kind = 'seeds') => kind === 'classes' ? measureAll(lod, dist, 'classes')
+  : lod === 'near' && !dist ? METRICS && round(METRICS) : round(measureAll(lod, dist));
 
 // Warn when the fetched files and the built-in fallback differ (run library/embed_builtin.py).
 const strip = r => { const c = { ...r }; delete c.notes; delete c.sources; delete c.authors; return JSON.stringify(c); };
@@ -253,5 +270,9 @@ function loop() {
   requestAnimationFrame(loop);
 }
 loop();
-window.__lineup = { groups, layouts, scene, camera, renderer, state, apply, frame };
+// __lineupSeeds(id): the near metrics of each measured seed of one species (height, cards, triangles, W/H, base, gaps).
+window.__lineupSeeds = id => { const g = groups.find(g => g.id === id), plain = { ...g.spec, foliage: { ...g.spec.foliage, color_var: [0, 0], leaf_on_var: 0 } }, mat = canopyMaterial(plain, 'near');
+  applySeason(mat, plain, 'summer');
+  return g.built.map(b => { const m = measureTree(b.near, mat); return { h: +b.near.height.toFixed(1), cards: b.near.tris.cards, tris: b.near.tris.trunk + b.near.tris.canopy, wh: +m.wh.toFixed(2), base: +m.base.toFixed(2), por: +m.por.toFixed(2) }; }); };
+window.__lineup = { groups, layouts, scene, camera, controls, renderer, state, apply, frame };
 document.body.dataset.ready = '1';
