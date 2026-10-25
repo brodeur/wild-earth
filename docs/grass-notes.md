@@ -292,3 +292,63 @@ a far tussock a little denser than its 80 leaves. Far survivors past 34 m (tusso
 still grow by 1/sqrt(keep) (1.18x at 40 m), as before. Small shrubs: the chaparral impostors already
 persist to 1.2-3.5 m and read as volumes at 2-5 m (per-pixel dome shading with 3D lobes); a crossed
 plane would break the dome shading, so they are unchanged.
+
+## Fifth pass (2026-10-25): chaparral impostors up close (2-15 m)
+
+Report: the chaparral cards read as volumes at 2-5 m but have a soft, sponge-like outline. Goal: at
+2-15 m, judged among the 3D shrubs, a ragged outline of leaves, tufts and wands, stems at the base,
+leaf texture that reads as the species and its season, the dome shading kept, the far look unchanged.
+
+**Two programs from one source (shrubfield.js).** The shrub shader is compiled twice: the far one
+(no define) is the old shader plus a dither line, the near one (`NEAR`) carries the new detail. A second
+mesh on the same instances (a child of the field's mesh, drawn first so far plants behind near crowns
+fail the depth test) draws only plants nearer than `nearBand` (14-26 m); across the band each plant's
+pixels are split between the two programs by an R2 dither (apart from the fade's), so no pixel runs both
+and nothing changes size or crossfades. From 26 m out the far program draws everything as before: at
+40 m (both stands, frozen camera) the difference to HEAD is the same as between two frames of HEAD 1.6 s
+apart (mean 1.7-1.8/255, wind and clouds).
+
+**What the near program draws.**
+- Leaf pictures, baked once at load with canvas 2D (`bakeLeaves`, 512 px tiles, mipmapped; r shade,
+  g coverage with 0.5 at a leaf's edge and 1 at its middle, b a random per leaf, a wood). Manzanita
+  (1 m tile): stiff round leaves 2.5-5 cm in sprays 20-30 cm across, each upright at its own azimuth
+  (round face-on, a sliver edge-on), each spray lit from above, red twigs in the gaps. Chamise (0.8 m):
+  upright wands, some dead, with tufts of needles in bunches along them. Wrapped on the dome by azimuth
+  and height (a whole number of tiles round, rows sheared per plant) with a flat cap on top, so they stay
+  on the plant as the view turns; the azimuth's gradient is worked out analytically (no seam at its cut).
+- Outline: past the crown's edge the picture runs on and only the leaves' cores are kept, so the edge is
+  single leaves and tufts thinning out; the crown's own octaves push the edge into sprays (manzanita:
+  rounded masses; chamise: the upright streak noise). The sub-crowns meet along a wavering line.
+- Chamise: 15-35 wands fanning from the burl (all round from above), bowing outward, tufted along their
+  upper part, ending inside or up to 0.36 crown radii past the outline, rust-tipped in summer and fall,
+  bare low down; decadent plants have 45% grey dead wands that reach further.
+- Manzanita: 3-4 crooked maroon stems from the base, each forking once, with S-bends, some grey and dead,
+  seen under the crown (the lowest ~15% of the height is bare stems from the side) and through gaps in
+  the lower crown.
+- Shading: the dome and lobe normal as before; each leaf's shade from the picture; manzanita leaves
+  catch the sun or stand edge-on to it by their azimuth; crevices between sub-crowns shaded.
+- Season (species files, as a change of hue on the photo-matched colour; luminance within ~10%):
+  chamise darkest and greenest in winter, cream flower tips in spring, rust seed heads summer and fall
+  (on 70% of plants, near the top), old brown heads in winter; manzanita a little warmer in spring and
+  white-pink flower specks in winter and early spring. The season is read from grass.js's `dry` uniform.
+- Gains matched to the far look on screen (shrub pixels, near forced on vs off, same view): sun 2.5
+  (manzanita), 4.0 (chamise; its flower and seed tips taken down by 0.6 against it), shade 1.25, 1.4.
+  Measured after: manzanita 0.101 vs 0.101 linear luma at 5 m in sun, chamise 0.90-0.95 of the far
+  look; in shade (17:00) within 5%.
+
+**Cost.** 3D cellular leaves (two 2x2x2 Worley lookups) cost ~8 ms at 3 m and were dropped for the baked
+pictures (~0.4 ms for the taps); a further noise octave for the sprays (0.75 ms) and a second leaf-layer
+tap were dropped; the wand and stem loops run only where wood can show (they were 1.5 ms before that).
+Shrub draw time at 3 m in the manzanita stand (x 3830, n 1210), timer queries around the shrub draws
+alternating with HEAD's shader, medians of five rounds of 40-60 frames, contended machine (other lanes'
+tabs rendering): 8.64 -> 9.30 ms and 6.53 -> 8.14 ms in two runs (+0.7 to +1.6). Whole-frame GPU in the
+same runs: 16.9 -> 15.5 and 15.4 -> 18.4 ms, within the noise (rounds spread 13-28 ms). Over the 0.5 ms
+target; `nearBand` (14-26 m) is the knob: the near pixels cost about twice the old near shading.
+
+**Still wrong.** The near crowns are as large as before (the field's sizes, up to 5 m tall for chamise,
+well over the 3D shrubs and the species' 1.2-2.4 m); the dome is still a dome under the leaves from
+5-15 m, the leaf pictures repeat visibly in rows on the biggest crowns, chamise reads yellower than
+the far olive in fall, manzanita a little bluer, the manzanita stems are saturated maroon against the
+3D shrubs' crimson, and the near program costs more than the old near shading (see the numbers).
+Captures (HEAD and new, 2/5/15/40 m, fall and spring, 10:00 and 17:00, both stands): the session
+scratchpad's shrubcards/fin_*.png.

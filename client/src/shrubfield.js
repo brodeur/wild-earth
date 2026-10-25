@@ -14,7 +14,9 @@ import { rockKeep } from './tilepackage.js';
 // taller, upswept, darker, red-brown stems under the crown. Each species has silhouette variants
 // (chamise: rounded, ragged vase, vase with grey dead stems; manzanita: upswept, sprawling, open with
 // its red branching showing), crowns sized by the canopy shrub %, and stands broken by occasional
-// openings.
+// openings. Up close (nearBand) a second program from the same source (NEAR) draws the plant's own
+// parts: baked leaf and needle pictures on the dome, an outline of single leaves, tufts and wands,
+// stems at the base, and the species' season colours (see docs/grass-notes.md, fifth pass).
 // grass.js runs three more fields on the same machinery with its own shader and its own placement
 // (cfg.shader, cfg.cellList): the grass tuft cards, needlegrass tussocks and wild oat stands, each a
 // baked picture of a blade clump that the near blade tiers draw in full at the same spot.
@@ -38,10 +40,12 @@ const VERT = /* glsl */`
   uniform vec2 kParams;   // D0, KMIN
   uniform vec4 band;      // fade in from x to y, out from z to w (distance to camera)
   uniform float heightScale; uniform float dry;   // dry: 0 green season .. 1 cured summer sward
+  uniform vec2 nearBand;  // the near detail (leaves, wands, stems) is full to x, gone by y (distance to camera)
   attribute vec4 iPos; attribute vec4 iVar;   // root x y z, crown radius | height, seed, kind, rank
   varying vec2 vQ; varying vec3 vRight; varying vec3 vUp; varying vec3 vView;
   varying vec3 vAlbedo; varying vec3 vSun; varying vec3 vAmb; varying vec3 vAmbUp; varying vec3 vT; varying vec3 vIn;
   varying float vSeed; varying float vKind; varying float vLobes; varying float vYS; varying float vVar; varying float vDry; varying float vFade;
+  varying vec4 vDim;   // crown radius, half extent on the card's up axis, half height (m), near detail 0..1
   float hh(float n) { return fract(sin(n) * 43758.5453123); }
   // A stable random per plant from its root position (cm grid), independent of the 400 seed values.
   float ph(vec2 p, uint salt) {
@@ -63,6 +67,12 @@ const VERT = /* glsl */`
     float s = clamp((keep - rank) / 0.05, 0.0, 1.0) * smoothstep(din - wi, din + wi, d) * (1.0 - smoothstep(dout - wo, dout + wo, d));
     if (s < 0.01) { gl_Position = vec4(0.0, 0.0, 2.0, 1.0); return; }
     vFade = s;
+    float nearK = 1.0 - smoothstep(nearBand.x, nearBand.y, d);
+    #ifdef NEAR
+    if (nearK <= 0.0) { gl_Position = vec4(0.0, 0.0, 2.0, 1.0); return; }
+    #else
+    if (nearK >= 1.0) { gl_Position = vec4(0.0, 0.0, 2.0, 1.0); return; }
+    #endif
     float grow = inversesqrt(keep);
     R *= grow; H *= sqrt(grow);
     vec3 C = iPos.xyz + vec3(0.0, H * 0.5, 0.0);
@@ -79,6 +89,7 @@ const VERT = /* glsl */`
     vec3 p = C + right * q.x * R + up * q.y * ev + V * (0.6 * R);   // pulled toward the camera so the ground does not clip it
     vQ = q; vRight = right; vView = V; vSeed = seed; vKind = kind; vVar = floor(fract(seed) * 4.0); vDry = dry;
     vUp = up; vYS = R / max(H * 0.5, 0.01);   // sphere normal -> ellipsoid normal: scale its y by R / (H/2)
+    vDim = vec4(R, ev, H * 0.5, nearK);
     vLobes = mix(1.0, 2.6, clamp((grow - 1.0) / 1.5, 0.0, 1.0));   // a far, grown impostor is a patch of plants
     vec3 gw; vec3 gc = groundAlbedo(iPos.xyz, 1.5, gw);
     float gl = dot(gc, G_LUMA);
@@ -104,10 +115,12 @@ const VERT = /* glsl */`
   }`;
 
 const FRAG = /* glsl */`
-  uniform vec3 sunDir; uniform float heads;
+  uniform vec3 sunDir; uniform float heads; uniform float dry;   // dry: the season (grass.js's palette value)
+  uniform sampler2D leafM; uniform sampler2D leafC; uniform vec4 leafGain;   // leaf pictures (bakeLeaves); their gain in sun (manzanita, chamise) and in shade (same)
   varying vec2 vQ; varying vec3 vRight; varying vec3 vUp; varying vec3 vView;
   varying vec3 vAlbedo; varying vec3 vSun; varying vec3 vAmb; varying vec3 vAmbUp; varying vec3 vT; varying vec3 vIn;
   varying float vSeed; varying float vKind; varying float vLobes; varying float vYS; varying float vVar; varying float vDry; varying float vFade;
+  varying vec4 vDim;
   float h3(vec3 p) {
     uvec3 q = uvec3(ivec3(floor(p)) + 4096);
     uint h = (q.x * 1597334677u) ^ (q.y * 3812015801u) ^ (q.z * 2798796415u);
@@ -120,13 +133,32 @@ const FRAG = /* glsl */`
                mix(mix(h3(i + vec3(0, 0, 1)), h3(i + vec3(1, 0, 1)), f.x), mix(h3(i + vec3(0, 1, 1)), h3(i + vec3(1, 1, 1)), f.x), f.y), f.z);
   }
   float h2(vec2 p) { return fract(sin(dot(p, vec2(127.1, 311.7))) * 43758.5453); }
+  // Three randoms for an integer cell.
+  vec3 h33(vec3 p) {
+    uvec3 q = uvec3(ivec3(floor(p)) + 65536);
+    q = q * uvec3(1597334673u, 3812015801u, 2798796415u);
+    q = (q.x ^ q.y ^ q.z) * uvec3(1597334673u, 3812015801u, 2798796415u);
+    return vec3(q) * (1.0 / 4294967296.0);
+  }
   void main() {
     // Distance fades: screen-space dither (the interleaved gradient noise the tree tiers hand over
     // with), never a size change.
     if (vFade < 0.995 && fract(52.9829189 * fract(dot(gl_FragCoord.xy, vec2(0.06711056, 0.00583715)))) >= vFade) discard;
+    // Near and far are two programs from this one source (NEAR defined for the near one), each drawing
+    // only its own plants; across nearBand a plant is handed from one to the other by a dither of its
+    // pixels (an R2 pattern, apart from the fade's), so no pixel runs both.
+    float split = fract(dot(floor(gl_FragCoord.xy), vec2(0.7548777, 0.5698403)));
+    #ifdef NEAR
+    if (split >= vDim.w) discard;
+    const float near = 1.0;
+    #else
+    if (split < vDim.w) discard;
+    const float near = 0.0;
+    #endif
     float kind = vKind, vv = vVar;
     bool manz = kind > 0.5;
-    vec2 q = vQ;
+    vec2 q0 = vQ, q = q0;
+    float sc = 0.8, kSub = 0.0, seam = 1.0;
     {
       // A shrub is several stems' crowns, not a ball: a main crown and two smaller ones set off to
       // the sides. Each pixel takes the crown it is deepest inside and is shaded on that crown's own
@@ -135,10 +167,17 @@ const FRAG = /* glsl */`
       vec2 o1 = vec2(cos(k1), sin(k1)) * (0.3 + 0.18 * k2), o2 = vec2(cos(k1 + 2.2 + k3), sin(k1 + 2.2 + k3)) * (0.28 + 0.2 * k3);
       float s0 = 0.8, s1 = 0.5 + 0.14 * k2, s2 = 0.44 + 0.14 * k3;
       float e0 = s0 - length(q), e1 = s1 - length(q - o1), e2 = s2 - length(q - o2);
-      if (e1 > e0 && e1 >= e2) q = (q - o1) / s1; else if (e2 > e0) q = (q - o2) / s2; else q /= s0;
-      // Outside every crown's widest possible outline (lobes, spikes, dead stems): nothing to shade.
-      // Most of the quad around a cluster ends here, before any noise is evaluated.
-      if (dot(q, q) > 1.9) discard;
+      if (near > 0.0) {   // up close the masses meet along a wavering line, not a straight seam
+        float wb = 0.035 * sin(q0.x * 17.0 + vSeed) * sin(q0.y * 13.0 + vSeed * 2.3);
+        e1 += wb; e2 -= wb;
+      }
+      if (e1 > e0 && e1 >= e2) { q = (q - o1) / s1; sc = s1; kSub = 1.0; } else if (e2 > e0) { q = (q - o2) / s2; sc = s2; kSub = 2.0; } else q /= s0;
+      float eb = max(e0, max(e1, e2));
+      seam = 2.0 * eb - (e0 + e1 + e2 - min(e0, min(e1, e2)));   // how much deeper in this crown than in the next one
+      // Outside every crown's widest possible outline (lobes, spikes, dead stems; up close the wands and
+      // stems reach a little further): nothing to shade. Most of the quad around a cluster ends here,
+      // before any noise is evaluated.
+      if (dot(q, q) > (near > 0.0 && !manz ? 2.2 : 1.9)) discard;
     }
     float r2 = dot(q, q);
     float z = sqrt(max(1.0 - min(r2, 1.0), 0.0));
@@ -146,71 +185,233 @@ const FRAG = /* glsl */`
     vec3 nW = vRight * q.x + vUp * q.y + vView * z; nW = normalize(vec3(nW.x, nW.y * vYS, nW.z));
     float lobe = n3(nW * 1.6 * vLobes + vSeed * 37.0), twig = n3(nW * 6.0 * vLobes + vSeed * 11.0);
     float rr = sqrt(r2), aa = fwidth(rr) + 1e-3;
-    float rb, alpha, lc;
-    vec3 col, N;
-    {
-      // Shrub crown. Variants (vv): chamise 0 rounded, 1 ragged vase, 2 vase with grey dead stems;
-      // manzanita 0 upswept, 1 sprawling (set by its proportions), 2 open, red branching showing.
-      rb = 0.72 + 0.34 * lobe + 0.14 * (twig - 0.5);
-      // Chamise's upright stems: noise stretched along the vertical, so the edge breaks into
-      // spikes, not bumps (manzanita's smooth-barked crowns do without).
-      float streak = manz ? 0.5 : n3(vec3(nW.x * 9.0, nW.y * 1.6, nW.z * 9.0) * vLobes + vSeed * 17.0);
-      bool vase = !manz && vv > 0.5;
-      if (manz) rb += 0.12 * smoothstep(0.0, 0.8, q.y) * (lobe - 0.4) - 0.08 * smoothstep(-0.2, -0.9, q.y);
-      if (vase) rb += -0.24 * smoothstep(0.15, -0.75, nW.y) + 0.26 * (streak - 0.45) * smoothstep(-0.1, 0.6, nW.y);   // narrow base, ragged spiky top
-      else if (!manz) rb += 0.1 * (streak - 0.5) * smoothstep(0.0, 0.7, nW.y);
-      if (manz && vv > 1.5) rb += 0.1 * (lobe - 0.5);   // open crown: deeper bays between branch masses
-      alpha = clamp((rb - rr) / aa + 0.5, 0.0, 1.0);
-      // Twiggy fringe: the outer band broken into stems and gaps (more on chamise, most on a vase).
-      float fringe = smoothstep(rb - (vase ? 0.32 : 0.25), rb, rr);
+    float rb, alpha, fringe, dead = 0.0;
+    // Shrub crown. Variants (vv): chamise 0 rounded, 1 ragged vase, 2 vase with grey dead stems;
+    // manzanita 0 upswept, 1 sprawling (set by its proportions), 2 open, red branching showing.
+    rb = 0.72 + 0.34 * lobe + 0.14 * (twig - 0.5);
+    // Chamise's upright stems: noise stretched along the vertical, so the edge breaks into
+    // spikes, not bumps (manzanita's smooth-barked crowns do without).
+    float streak = manz ? 0.5 : n3(vec3(nW.x * 9.0, nW.y * 1.6, nW.z * 9.0) * vLobes + vSeed * 17.0);
+    bool vase = !manz && vv > 0.5;
+    if (manz) rb += 0.12 * smoothstep(0.0, 0.8, q.y) * (lobe - 0.4) - 0.08 * smoothstep(-0.2, -0.9, q.y);
+    if (vase) rb += -0.24 * smoothstep(0.15, -0.75, nW.y) + 0.26 * (streak - 0.45) * smoothstep(-0.1, 0.6, nW.y);   // narrow base, ragged spiky top
+    else if (!manz) rb += 0.1 * (streak - 0.5) * smoothstep(0.0, 0.7, nW.y);
+    if (manz && vv > 1.5) rb += 0.1 * (lobe - 0.5);   // open crown: deeper bays between branch masses
+    alpha = clamp((rb - rr) / aa + 0.5, 0.0, 1.0);
+    // Twiggy fringe: the outer band broken into stems and gaps (more on chamise, most on a vase).
+    fringe = smoothstep(rb - (vase ? 0.32 : 0.25), rb, rr);
+    if (near < 1.0) {
       if (fringe > 0.0) alpha *= 1.0 - fringe * smoothstep(manz ? 0.55 : vase ? 0.4 : 0.45, manz ? 0.7 : vase ? 0.55 : 0.6, n3(nW * 14.0 * vLobes + vSeed * 3.0));
       // Dead chamise: bare grey stems poking up out of the crown, past its leafy outline.
-      float dead = 0.0;
       if (!manz && vv > 1.5) {
         float ridge = 1.0 - smoothstep(0.0, 0.15, abs(n3(vec3(nW.x * 5.0, nW.y * 1.2, nW.z * 5.0) + vSeed * 5.0) - 0.5));
         dead = ridge * smoothstep(-0.3, 0.4, nW.y) * step(rr, rb + 0.3);
         alpha = max(alpha, dead * smoothstep(rb + 0.3, rb, rr) * clamp(0.06 / aa, 0.0, 1.0));
       }
-      if (alpha < 0.05) discard;
-      // Leaf clusters: brighter sunlit clumps over dark holes into the crown.
-      lc = n3(nW * 4.0 * vLobes + vSeed * 5.0) * 0.6 + twig * 0.4;
+    }
+
+    // ---- Near (to nearBand.x, gone by nearBand.y): the plant's own parts. The outline is single leaves
+    // and tufts, chamise's wands stand out of it, and the bare stems show under the crown. ----
+    float alphaN = 0.0, lres = 0.0, rim = 0.0, wandCov = 0.0, wandLeaf = 0.0, wandTip = 0.0, wandDead = 0.0;
+    float stemCov = 0.0, stemDead = 0.0, hgt = 0.0, side = 0.0, body = 1.0, Hh = vDim.z;
+    vec4 tex = vec4(0.5, 1.0, 0.5, 0.0);
+    vec2 uv = vec2(0.0), ddx = vec2(0.0), ddy = vec2(0.0);   // the leaf picture's coordinates and their gradients
+    float spray = 0.5;   // up close: the crown's sprays (outline bumps, and the recesses between them)
+    if (near > 0.0) {
+      float Rm = vDim.x, ce = vUp.y;
+      float rootY = -Hh * ce / vDim.y;   // the root on the card
+      vec2 wm = vec2(q0.x * Rm, (q0.y - rootY) * vDim.y);   // metres on the card from the root (y along its up axis)
+      float pxm = length(fwidth(wm)) + 1e-5;   // metres per pixel
+      hgt = wm.y; side = smoothstep(0.25, 0.65, ce);
+      // The lowest ~15% of the height is bare stems (seen from the side), its edge following the lobes.
+      float baseH = 2.0 * Hh * (manz ? 0.17 : 0.13) * (0.55 + 0.9 * lobe) * side;
+      // Up close the outline breaks into sprays (manzanita: rounded leaf masses; chamise: upright tufts).
+      spray = manz ? twig : streak;   // (the crown's own octaves: a further noise here cost 0.75 ms at 3 m)
+      float rbN = rb + (manz ? 0.34 * (twig - 0.5) : 0.45 * (streak - 0.5) + 0.12 * (twig - 0.5)) * smoothstep(-0.5, 0.2, nW.y);
+      float dEdge = min((manz ? rbN : rbN * 0.93) - rr, (hgt - baseH) / max(vDim.y * sc, 0.1));   // > 0 inside the foliage
+      // Leaves (manzanita: round, 2.5-5 cm, in sprays, a red twig in the gaps) and needle tufts on wands
+      // (chamise), from a baked picture of each (bakeLeaves) wrapped round the crown by azimuth and height
+      // (a whole number of tiles round, so no seam) with a flat cap on top: it stays on the plant as the
+      // view turns, and its mipmaps fade it to its mean far off. Past the outline the picture runs on
+      // outward and only the leaves' cores are kept, so the edge is single leaves and tufts, thinning out.
+      vec3 s3 = vRight * q.x + vUp * q.y + vView * z;
+      vec3 P = s3 * vec3(Rm, Hh, Rm) * sc;
+      float T = manz ? 1.0 : 0.8, Nu = max(1.0, floor(6.2832 * Rm * sc / T + 0.5)) / 6.2832;
+      float az = atan(s3.z, s3.x);
+      vec2 hx = dFdx(s3.xz), hy = dFdy(s3.xz);   // the azimuth's gradient, worked out (no jump at its cut)
+      vec2 gA = vec2(s3.x * hx.y - s3.z * hx.x, s3.x * hy.y - s3.z * hy.x) / max(dot(s3.xz, s3.xz), 1e-4) * Nu;
+      vec2 off = vec2(fract(vSeed * 0.37) + kSub * 0.31, fract(vSeed * 0.61));
+      // Rows sheared per plant (a shear keeps the whole number of tiles round); past the outline the
+      // picture moves on sideways, so it does not smear outward along the rim.
+      float shear = (fract(vSeed * 0.83) - 0.5) * 0.8, ro = max(rr - 1.0, 0.0) * Rm * sc / T;
+      uv = vec2(az * Nu + P.y / T * shear + ro, P.y / T) + off;
+      ddx = vec2(gA.x + dFdx(P.y) / T * shear, dFdx(P.y) / T), ddy = vec2(gA.y + dFdy(P.y) / T * shear, dFdy(P.y) / T);
+      vec2 uvT = P.xz / T + off.yx, dxT = dFdx(P.xz) / T, dyT = dFdy(P.xz) / T;
+      float wc = smoothstep(0.45, 0.7, s3.y / max(length(s3), 1e-3));   // the cap
+      tex = manz ? textureGrad(leafM, uv, ddx, ddy) : textureGrad(leafC, uv, ddx, ddy);
+      if (wc > 0.0) tex = mix(tex, manz ? textureGrad(leafM, uvT, dxT, dyT) : textureGrad(leafC, uvT, dxT, dyT), wc);
+      lres = 1.0 - smoothstep(3.0, 9.0, 512.0 * max(max(length(ddx), length(ddy)), wc * max(length(dxT), length(dyT))));
+      rim = smoothstep(0.22, 0.0, dEdge);
+      float outer = clamp(-dEdge / 0.2, 0.0, 1.0), thr = mix(0.5, 0.93, outer), gw = 0.5 * fwidth(tex.g) + 0.02;
+      body = mix(alpha, mix(1.0, smoothstep(thr - gw, thr + gw, tex.g), rim) * step(-0.2, dEdge), lres);   // foliage coverage
+      // Wood is drawn only where it can show: where the foliage does not cover the pixel, or through a
+      // gap in the picture in the lower crown (most of a crown's face skips it).
+      bool need = body < 0.99 || (tex.g < 0.5 && hgt < Hh * 0.75);
+      if (!need) alphaN = body;
+      else if (!manz) {
+        // Chamise: 15-35 stiff wands fanning up from the burl (from above, all round), bowing outward;
+        // each ends a little inside or past the leafy outline, tufted along its upper part, rust-tipped
+        // in summer and fall. Decadent plants: many bare grey wands, poking out further.
+        float rho = length(wm), th = atan(wm.x, wm.y);
+        float spread = mix(3.1416, 0.8, side);
+        float nw = floor(mix(16.0, 34.0, h2(vec2(vSeed, 8.3))) * spread / 0.8);
+        float slot = 2.0 * spread / nw, i0 = floor((th + spread) / slot);
+        float deadShare = vv > 1.5 ? 0.45 : 0.08, bow = 0.18 / max(Hh, 0.3);
+        for (int j = -1; j <= 1; j++) {
+          if (rr - rbN > 0.45 && hgt > Hh * 0.9) break;   // past every wand's reach
+          float id = i0 + float(j);
+          if (id < 0.0 || id >= nw) continue;
+          vec3 r = h33(vec3(id, floor(vSeed * 7.0), 11.0));
+          float tc = (id + 0.5 + 0.7 * (r.x - 0.5)) * slot - spread;
+          bool dw = r.y < deadShare;
+          float ext = dw ? mix(0.0, 0.45, r.z) : mix(-0.3, 0.36, r.z);   // reach past the leafy outline
+          float ex = step(rr - rbN, ext) + step(hgt, Hh * 0.9);
+          if (ex <= 0.0 || rho < 0.02) continue;
+          float leafy = dw ? 0.0 : smoothstep(baseH, baseH + 0.2, hgt);
+          float bead = smoothstep(0.34, 0.06, abs(fract(rho / 0.045 + r.z * 5.0) - 0.5)) * leafy;
+          float hw = 0.003 + 0.009 * bead;
+          float dd = rho * abs(th - tc * (1.0 + bow * rho));
+          float cov = clamp((hw - dd) / pxm + 0.5, 0.0, 1.0);
+          if (cov > wandCov) { wandCov = cov; wandLeaf = bead; wandDead = dw ? 1.0 : 0.0; wandTip = smoothstep(ext - 0.22, ext, rr - rbN) * leafy; }
+        }
+        alphaN = max(body, wandCov);
+      } else {
+        // Manzanita: 3-4 crooked stems from one base, spreading 20-45 degrees, each forking once,
+        // with smooth S-bends; maroon, some grey and dead. Seen under the crown and through its holes.
+        float ns = 3.0 + floor(h2(vec2(vSeed, 5.5)) * 2.0);
+        // (Only within the crown or under it, and inside the fan the stems can reach: the loop is the
+        // costliest part of the near crown.)
+        float inside = side * max(step(-0.08, dEdge), step(hgt, baseH * 1.4));
+        if (inside > 0.0 && hgt > 0.0 && hgt < max(baseH * 1.4, 1.2 * Hh) && abs(wm.x) < 0.12 * Rm + hgt * 1.6 + 0.08) {
+          for (int j = 0; j < 4; j++) {
+            if (float(j) >= ns) break;
+            vec3 r = h33(vec3(float(j), floor(vSeed * 7.0), 23.0));
+            float a = ((float(j) + 0.3 + 0.4 * r.x) / ns * 2.0 - 1.0) * 0.8;
+            float x0 = (r.y - 0.5) * 0.15 * Rm, hf = (0.25 + 0.3 * r.z) * Hh;
+            float wig = 0.04 * Rm * sin(hgt * 9.0 / max(Hh, 0.4) + r.z * 6.28) * min(hgt * 4.0, 1.0);
+            float xs = x0 + hgt * tan(a) + wig;
+            float hw = mix(0.035, 0.012, clamp(hgt / (1.3 * Hh), 0.0, 1.0)) * (0.7 + 0.5 * r.y) * clamp(Rm, 0.6, 1.4);
+            float cov = clamp((hw - abs(wm.x - xs) * cos(a)) / pxm + 0.5, 0.0, 1.0);
+            if (hgt > hf) {   // the fork: a second limb leaves at hf, bending away
+              float a2 = a + (r.x > 0.5 ? 0.45 : -0.45);
+              float xf = x0 + hf * tan(a) + wig + (hgt - hf) * (tan(a2) - tan(a));
+              cov = max(cov, clamp((hw * 0.75 - abs(wm.x - xf) * cos(a2)) / pxm + 0.5, 0.0, 1.0));
+            }
+            cov *= smoothstep(1.4 * Hh, 0.9 * Hh, hgt);
+            if (cov > stemCov) { stemCov = cov; stemDead = step(r.z, vv > 1.5 ? 0.3 : 0.12); }
+          }
+          stemCov *= inside;
+        }
+        alphaN = max(body, stemCov);
+      }
+      alpha = alphaN;
+    }
+    if (alpha < 0.05) discard;
+    // Leaf clusters: brighter sunlit clumps over dark holes into the crown (up close, from the octaves
+    // already at hand: the leaf picture carries the finer structure).
+    #ifdef NEAR
+    float lc = lobe * 0.35 + twig * 0.65;
+    #else
+    float lc = n3(nW * 4.0 * vLobes + vSeed * 5.0) * 0.6 + twig * 0.4;
+    #endif
+    vec3 N = normalize(nW + (vec3(lobe, 0.5, twig) - 0.5) * 0.9);
+    float diff = max(dot(N, sunDir), 0.0);
+    float ao = mix(0.6, 1.0, smoothstep(-0.7, 0.6, nW.y)) * mix(0.75, 1.0, lc);
+    vec3 amb = mix(vAmb, vAmbUp, 0.5 + 0.5 * N.y);
+    vec3 outH = vec3(0.0), outN = vec3(0.0);
+    if (near < 1.0) {
       // Close up, a crown is many small leaf sprays: a fine octave, only where it is resolved.
       // Two fine octaves, the finer one cutting small dark gaps between sprays, so a near crown
       // is a mass of foliage and not a soft pebble.
+      float lch = lc;
       float close = 1.0 - smoothstep(0.01, 0.03, aa), gap = 1.0;
       if (close > 0.0) {
         float f1 = n3(nW * 22.0 + vSeed * 7.0), f2 = n3(nW * 55.0 + vSeed * 2.0);
-        lc = mix(lc, lc * 0.5 + 0.32 * f1 + 0.3 * f2, close);
+        lch = mix(lc, lc * 0.5 + 0.32 * f1 + 0.3 * f2, close);
         gap = mix(1.0, 0.45 + 0.55 * smoothstep(0.18, 0.42, f2), close);
       }
-      N = normalize(nW + (vec3(lobe, 0.5, twig) - 0.5) * 0.9);
-      col = vAlbedo * (0.6 + 0.8 * lc) * gap;
+      vec3 col = vAlbedo * (0.6 + 0.8 * lch) * gap;
       if (manz) {
         // Whiteleaf manzanita's smooth red-mahogany branches: under the crown where the view looks
         // in, and through the holes in the foliage (wide open on the open variant, few on the sprawl).
         float stem = step(0.8, h2(floor(vec2(q.x * 7.0 + vSeed * 3.0, 1.0)))) * smoothstep(0.0, -0.6, q.y) * smoothstep(0.3, -0.2, nW.y);
         float holeT = vv > 1.5 ? 0.42 : vv > 0.5 ? 0.26 : 0.34;
-        float hole = smoothstep(holeT, holeT - 0.14, lc) * (1.0 - fringe * 0.7);
+        float hole = smoothstep(holeT, holeT - 0.14, lch) * (1.0 - fringe * 0.7);
         // Branches: long, crooked lines (ridges of a low, vertically stretched noise), not specks.
         float branch = 1.0 - smoothstep(0.0, 0.1, abs(n3(vec3(nW.x * 2.2, nW.y * 4.5, nW.z * 2.2) + vSeed * 9.0) - 0.5));
         vec3 bark = vec3(0.2, 0.055, 0.03);
         // The red trunks show under the umbrella of foliage (lower half of the crown) and in the
         // deepest holes; the sprawling form keeps its branches hidden.
         float under = smoothstep(0.15, -0.5, nW.y) * (vv > 0.5 && vv < 1.5 ? 0.3 : 1.0);
-        float showB = clamp(hole * smoothstep(0.1, -0.3, nW.y - 0.3) + under * smoothstep(0.6, 0.35, lc), 0.0, 1.0);
+        float showB = clamp(hole * smoothstep(0.1, -0.3, nW.y - 0.3) + under * smoothstep(0.6, 0.35, lch), 0.0, 1.0);
         col = mix(col, vAlbedo * 0.35, hole * 0.8);   // the shaded inside of the crown
-        col = mix(col, bark, max(stem * 0.6, branch * showB * 0.85) * (1.0 - lc * 0.5));
+        col = mix(col, bark, max(stem * 0.6, branch * showB * 0.85) * (1.0 - lch * 0.5));
       } else {
-        if (dead > 0.0) col = mix(col, vec3(0.27, 0.255, 0.23), dead * (1.0 - smoothstep(0.55, 0.85, lc)));
+        if (dead > 0.0) col = mix(col, vec3(0.27, 0.255, 0.23), dead * (1.0 - smoothstep(0.55, 0.85, lch)));
         // Chamise in summer and fall: rusty flower clusters dried on the branch tips, on some plants.
-        float rust = vDry * step(0.45, fract(vSeed * 0.731)) * smoothstep(0.55, 0.8, lc) * smoothstep(0.0, 0.6, nW.y);
+        float rust = vDry * step(0.45, fract(vSeed * 0.731)) * smoothstep(0.55, 0.8, lch) * smoothstep(0.0, 0.6, nW.y);
         col = mix(col, vAlbedo * vec3(1.9, 1.15, 0.7), rust * 0.6);
       }
+      float aoH = mix(0.6, 1.0, smoothstep(-0.7, 0.6, nW.y)) * mix(0.75, 1.0, lch);
+      outH = col * (vSun * diff * mix(0.75, 1.0, lch) + amb * aoH);
     }
-    float diff = max(dot(N, sunDir), 0.0);
-    float ao = mix(0.6, 1.0, smoothstep(-0.7, 0.6, nW.y)) * mix(0.75, 1.0, lc);
-    vec3 light = vSun * diff * mix(0.75, 1.0, lc) + mix(vAmb, vAmbUp, 0.5 + 0.5 * N.y) * ao;
-    gl_FragColor = vec4((col * light * 0.3183099) * vT + vIn, alpha);
+    if (near > 0.0) {
+      // Season (species files, as a change of hue on the photo-matched colour, luminance kept within
+      // about 10%): chamise darkest and greenest after the rains, rust in fall; manzanita a little
+      // warmer in spring. Flower and seed tips: chamise cream (spring), rust (summer, fall), old brown
+      // heads (winter); manzanita's white-pink flowers in winter and early spring.
+      float wW = 1.0 - step(0.05, dry), wF = step(0.5, dry) * (1.0 - step(0.93, dry)), wS = step(0.05, dry) * (1.0 - step(0.5, dry)), wU = step(0.93, dry);
+      vec3 tint = manz ? wW * vec3(0.93, 0.98, 0.99) + wS * vec3(1.08, 0.98, 1.03) + wU + wF * vec3(0.96, 0.98, 1.0)
+                       : wW * vec3(0.8, 0.96, 0.78) + wS * vec3(1.08, 1.06, 1.04) + wU + wF * vec3(1.08, 0.96, 0.94);
+      vec3 tipRel = manz ? vec3(2.6, 2.3, 2.4) : wW * vec3(1.4, 0.8, 0.55) + wS * vec3(3.2, 3.0, 2.9) + wU * vec3(2.1, 1.15, 0.65) + wF * vec3(1.8, 0.82, 0.5);
+      float pl = fract(vSeed * 0.731);   // per plant: does it carry flowers or seed heads this year
+      float tipShare = manz ? (wW * 0.06 + wS * 0.025) : step(0.3, pl) * (wW * 0.08 + wS * 0.2 + (wU + wF) * 0.22);
+      vec3 fol = vAlbedo * tint;
+      float cl = (0.6 + 0.8 * lc) * mix(0.8, 1.05, smoothstep(0.25, 0.65, spray));
+      vec3 sunL = vSun * diff * mix(0.75, 1.0, lc) * mix(0.7, 1.0, smoothstep(0.2, 0.6, spray)), ambL = amb * ao;
+      // The picture: shade (front leaves light, the next ones in half shaded, the gaps dark), coverage,
+      // a random per leaf, wood. A manzanita leaf is held upright at its own azimuth, so it catches the
+      // sun or stands edge-on to it; pale and glaucous. Chamise tufts an olive grain; tufts (or leaves)
+      // near the top carry the season's flowers or seed heads. Wood: manzanita maroon, chamise grey-brown,
+      // grey when dead (the random of a wood stroke).
+      // Each leaf a little darker at its edge, so overlapping leaves part.
+      float shade = tex.r * mix(1.0, mix(0.78, 1.04, clamp(tex.g * 2.0 - 1.0, 0.0, 1.0)), step(0.5, tex.g) * lres);
+      float rnd = tex.b, woodF = tex.a, lv = fract(rnd * 7.31);
+      float leafSun = 1.0; vec3 colF;
+      if (manz) {
+        float laz = rnd * 6.2832;
+        leafSun = mix(1.0, 0.45 + 1.1 * abs(dot(vec3(cos(laz), 0.0, sin(laz)), sunDir)), lres * (1.0 - woodF));
+        colF = fol * mix(vec3(0.85, 0.9, 0.86), vec3(1.2, 1.2, 1.28), lv);
+      } else colF = fol * mix(0.8, 1.2, lv) * vec3(0.92, 1.0, 1.04);   // (the brown wands in the picture warm the mean)
+      // (Tips carry the leaves' sun gain too, so chamise's are taken down by its larger gain.)
+      colF = mix(colF, fol * tipRel * (manz ? 1.0 : 0.6), step(rnd, tipShare * smoothstep(manz ? 0.0 : 0.1, 0.6, nW.y)) * lres);
+      vec3 barkC = manz ? vec3(0.12, 0.042, 0.038) : vec3(0.15, 0.11, 0.08), deadC = manz ? vec3(0.24, 0.23, 0.2) : vec3(0.24, 0.225, 0.2);
+      float woodCov = manz ? stemCov : wandCov;
+      vec3 woodLit = mix(barkC, deadC, manz ? stemDead : wandDead) * (sunL * 0.4 + amb * 1.1);
+      vec3 texWood = mix(barkC, deadC, step(0.5, rnd)) * 0.8;
+      if (!manz) woodLit = mix(woodLit, mix(fol, fol * tipRel * 0.6, wandTip * step(0.001, tipShare)) * cl * (sunL * 0.8 + ambL), wandLeaf);
+      vec3 base = mix(colF, texWood, woodF);
+      vec2 gn = manz ? leafGain.xz : leafGain.yw;
+      vec3 folLit = base * cl * (sunL * leafSun * shade * gn.x + ambL * (0.5 + 0.5 * shade) * gn.y);
+      // The geometric stems and wands show through the picture's gaps in the lower crown and the holes.
+      float show = max(rim, smoothstep(Hh * 0.75, Hh * 0.45, hgt));
+      folLit = mix(folLit, woodLit, woodCov * show * (1.0 - smoothstep(0.3, 0.5, tex.g)) * lres);
+      // In the crown's notches between its masses, shade.
+      float crev = mix(0.6, 1.0, smoothstep(0.0, 0.12, seam));
+      // Where only a wand or a stem covers the pixel, it is drawn.
+      outN = mix(woodLit, folLit, clamp(body / max(alpha, 1e-3), 0.0, 1.0)) * crev;
+    }
+    gl_FragColor = vec4(((near > 0.0 ? outN : outH) * 0.3183099) * vT + vIn, alpha);
     #include <tonemapping_fragment>
     #include <colorspace_fragment>
   }`;
@@ -274,6 +475,15 @@ export class ClumpField {
     g.instanceCount = 0;
     const mat = new THREE.ShaderMaterial({ vertexShader: sh.vertexShader || VERT, fragmentShader: sh.fragmentShader || FRAG, uniforms: this.uniforms, alphaToCoverage: true });
     this.mesh = new THREE.Mesh(g, mat); this.mesh.frustumCulled = false; this.mesh.visible = false; this.mesh.name = cfg.name;
+    // cfg.near (the shrub shader only): the near plants are drawn by a second program from the same
+    // source (NEAR defined), a child of the mesh on the same instances, so the far one stays as cheap
+    // as before and only near pixels pay for the near detail.
+    if (cfg.near && !cfg.shader) {
+      const nm = new THREE.ShaderMaterial({ vertexShader: VERT, fragmentShader: FRAG, uniforms: this.uniforms, alphaToCoverage: true, defines: { NEAR: '' } });
+      this.nearMesh = new THREE.Mesh(g, nm); this.nearMesh.frustumCulled = false; this.nearMesh.name = cfg.name + '-near';
+      this.nearMesh.renderOrder = -1;   // first, so far plants behind near crowns fail the depth test before shading
+      this.mesh.add(this.nearMesh);
+    }
     this._frustum = new THREE.Frustum(); this._m = new THREE.Matrix4(); this._sph = new THREE.Sphere();
   }
   get count() { return this.n; }
@@ -370,6 +580,78 @@ export class ClumpField {
   }
 }
 
+// Leaf pictures for the near crowns, drawn once at load (canvas 2D), 512 px tiles that repeat, mipmapped:
+// r shade (front leaves light, the leaves behind them half shaded, the gaps dark), g coverage (0.5 at a
+// leaf's edge to 1 at its middle, 0 in a gap: the shader keeps only the cores past the crown's outline),
+// b a random per leaf or stroke (a manzanita leaf's azimuth, flowers and seed heads; for wood, dead or
+// alive), a wood. Manzanita (1 m tile): stiff round leaves 2.5-5 cm in sprays, each upright at its own
+// azimuth (round face-on, a sliver edge-on), red twigs in the gaps. Chamise (0.8 m): upright wands, a few
+// dead, with tufts of needles along them.
+function bakeLeaves(manz) {
+  const S = 512, rnd = mulberry32(manz ? 0x1eaf5 : 0xc4a35);
+  const ch = [0, 1, 2, 3].map(k => { const c = document.createElement('canvas'); c.width = c.height = S; const g = c.getContext('2d'); g.fillStyle = k ? '#000' : '#333'; g.fillRect(0, 0, S, S); return g; });
+  const grey = v => { const k = Math.round(Math.min(Math.max(v, 0), 1) * 255); return `rgb(${k},${k},${k})`; };
+  const wrap = (x, y, r, f) => { for (let dx = -S; dx <= S; dx += S) for (let dy = -S; dy <= S; dy += S) if (x + dx > -r && x + dx < S + r && y + dy > -r && y + dy < S + r) f(x + dx, y + dy); };
+  const leaf = (x, y, rx, ry, rot, v) => wrap(x, y, Math.max(rx, ry) + 2, (X, Y) => {
+    for (let c = 0; c < 4; c++) {
+      const g = ch[c]; g.save(); g.translate(X, Y); g.rotate(rot); g.scale(rx, ry); g.beginPath(); g.arc(0, 0, 1, 0, 2 * Math.PI);
+      if (c === 1) { const gr = g.createRadialGradient(0, 0, 0, 0, 0, 1); gr.addColorStop(0, grey(v[1])); gr.addColorStop(1, grey(0.5)); g.fillStyle = gr; } else g.fillStyle = grey(v[c]);
+      g.fill(); g.restore();
+    }
+  });
+  const stroke = (pts, w, v) => {
+    const xs = pts.map(p => p[0]), ys = pts.map(p => p[1]), cx = (Math.min(...xs) + Math.max(...xs)) / 2, cy = (Math.min(...ys) + Math.max(...ys)) / 2;
+    const r = Math.max(Math.max(...xs) - Math.min(...xs), Math.max(...ys) - Math.min(...ys)) / 2 + w;
+    wrap(cx, cy, r, (X, Y) => {
+      for (let c = 0; c < 4; c++) {
+        const g = ch[c]; g.save(); g.translate(X - cx, Y - cy); g.lineWidth = w; g.lineCap = 'round'; g.lineJoin = 'round'; g.strokeStyle = grey(v[c]);
+        g.beginPath(); g.moveTo(pts[0][0], pts[0][1]); for (let k = 1; k < pts.length; k++) g.lineTo(pts[k][0], pts[k][1]); g.stroke(); g.restore();
+      }
+    });
+  };
+  if (manz) {
+    for (let k = 0; k < 32; k++) {   // crooked red twigs, seen in the gaps
+      let x = rnd() * S, y = rnd() * S, a = -Math.PI / 2 + (rnd() - 0.5) * 1.6; const pts = [[x, y]];
+      for (let j = 0; j < 5; j++) { a += (j % 2 ? 1 : -1) * (0.25 + 0.3 * rnd()); x += Math.cos(a) * (14 + 10 * rnd()); y += Math.sin(a) * (14 + 10 * rnd()); pts.push([x, y]); }
+      stroke(pts, 2.5 + 2 * rnd(), [0.32, 0.75, rnd() < 0.2 ? 1 : 0, 1]);
+    }
+    // Leaves gather in sprays 20-30 cm across, each spray lit from above: its lower leaves in its own shade.
+    const cl = Array.from({ length: 30 }, () => [rnd() * S, rnd() * S, 45 + 30 * rnd()]);
+    const gauss = () => (rnd() + rnd() + rnd() - 1.5) * 1.4;
+    for (const front of [0, 1]) for (let k = 0; k < (front ? 920 : 1080); k++) {
+      const c = cl[Math.floor(rnd() * cl.length)], r = 6 + 6 * rnd(), wf = 0.3 + 0.7 * rnd();
+      const dx = gauss() * c[2], dy = gauss() * c[2], lit = Math.min(Math.max(0.8 + 0.3 * dy / c[2], 0.5), 1.05);
+      leaf(c[0] + dx, c[1] + dy, r * wf, r * 1.15, (rnd() - 0.5) * 0.7,
+        front ? [(0.75 + 0.25 * rnd()) * lit, 1.0, rnd(), 0] : [(0.45 + 0.2 * rnd()) * lit, 0.8, rnd(), 0]);
+    }
+  } else {
+    const wands = (n, front) => {
+      for (let k = 0; k < n; k++) {
+        const x0 = rnd() * S, amp = 3 + 5 * rnd(), ph = rnd() * 6.28, f = 1 + Math.floor(rnd() * 2), dead = rnd() < (front ? 0.1 : 0.2);
+        const xAt = y => x0 + amp * Math.sin(ph + 2 * Math.PI * f * y / S);
+        const pts = []; for (let y = -8; y <= S + 8; y += 8) pts.push([xAt(y), y]);
+        stroke(pts, front ? 2.4 : 1.8, [front ? 0.42 : 0.28, 0.75, dead ? 1 : 0, 1]);
+        if (dead) continue;
+        for (let y = rnd() * 10; y < S; y += 7 + 8 * rnd()) {   // a tuft of needles, fanning up and out
+          const bunch = 0.75 + 0.3 * Math.sin(ph * 3 + 2 * Math.PI * y / (70 + 30 * (k % 3)));   // bunches along the wand, lit from above
+          const x = xAt(y), t = rnd(), sh = (front ? 0.65 + 0.35 * rnd() : 0.4 + 0.18 * rnd()) * bunch;
+          for (let j = 0, m = 6 + Math.floor(rnd() * 5); j < m; j++) {
+            const a = (rnd() - 0.5) * 2.0, L = 6 + 6 * rnd(), y0 = y + (rnd() - 0.5) * 8;
+            stroke([[x, y0], [x + Math.sin(a) * L, y0 - Math.cos(a) * L]], 1.3, [sh, front ? 0.9 : 0.72, t, 0]);
+          }
+        }
+      }
+    };
+    wands(40, 0); wands(28, 1);
+  }
+  const img = ch.map(g => g.getImageData(0, 0, S, S).data), data = new Uint8Array(S * S * 4);
+  for (let i = 0; i < S * S; i++) for (let c = 0; c < 4; c++) data[i * 4 + c] = img[c][i * 4];
+  const t = new THREE.DataTexture(data, S, S, THREE.RGBAFormat);
+  t.wrapS = t.wrapT = THREE.RepeatWrapping; t.magFilter = THREE.LinearFilter; t.minFilter = THREE.LinearMipmapLinearFilter;
+  t.generateMipmaps = true; t.anisotropy = 4; t.needsUpdate = true;
+  return t;
+}
+
 // Chaparral shrubs. Cover per cell: chaparral cells only, the canopy's shrub % (floored: a low value
 // in a chaparral cell is more often a burn scar or a data gap than open ground), bilinear between
 // cell centres so a stand thins out over a cell instead of stopping at a 30 m square.
@@ -387,8 +669,8 @@ export function ShrubField(tile, ground, uniforms) {
     const g = 0.65 * vnoise(x / 17, n / 17, 31) + 0.35 * vnoise(x / 6, n / 6, 32), t = 0.25 + 0.1 * (0.85 - c);
     return c * smooth(t - 0.06, t + 0.06, g) * rockKeep(tile, x, n);   // and the outcrops of rocks.js open the stand
   };
-  return new ClumpField(tile, ground, uniforms, {
-    name: 'shrubfield', salt: 0x5eed, cap: 140000, roadsMax: 60,
+  const field = new ClumpField(tile, ground, uniforms, {
+    name: 'shrubfield', salt: 0x5eed, cap: 140000, roadsMax: 60, near: true,
     cellAny: anyAround(cover, W, H), coverAt, coverMax: 0.85,
     meanArea: 1.3 * (0.6 * Math.PI * 0.8 ** 2 + 0.4 * Math.PI * 1.1 ** 2),   // (x1.3: the crowns grew 1.15x)
     // Gone only right at the camera, at every height (the 3D shrubs are too few to carry the cover). The
@@ -416,6 +698,11 @@ export function ShrubField(tile, ground, uniforms) {
       return [KIND.chamise, R, 2 * R * hd, variant];
     },
   });
+  // Near detail (leaves, wands, stems): full to 14 m, handed to the far program by 26 m.
+  field.uniforms.nearBand = { value: new THREE.Vector2(14, 26) };
+  field.uniforms.leafM = { value: bakeLeaves(true) }; field.uniforms.leafC = { value: bakeLeaves(false) };
+  field.uniforms.leafGain = { value: new THREE.Vector4(2.5, 4.0, 1.25, 1.4) };   // the near look matched to the far one in mean (measured on screen)
+  return field;
 }
 
 function anyAround(grid, W, H) {
