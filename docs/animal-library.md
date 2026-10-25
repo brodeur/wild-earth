@@ -147,6 +147,36 @@ flex, hand lag, collapse and so on) are in `RIG` in `animalModels.js`; a rebuild
 client change. Each drawn species falls back to its procedural model while loading or on error, and
 `?<name>=proc` (`deer`, `squirrel`, `quail`, `jay`; `animals` for all) draws the procedural one for A/B.
 
+## Lineup page
+
+`client/lineup_animals.html` (`client/src/lineupAnimals.js`) is the sign-off page, the animals' counterpart of
+`client/lineup.html`. One row per species in `index.json` plus every species with a drawn mesh (the buck has its
+own row): the drawn GLB on the left and the procedural model on the right, at true size beside a 1 m pole and
+ground bar in 10 cm bands, under the game's atmosphere (sun, sky light, exposure; cloud shadow off) for any
+season and hour. The camera stands a fixed 5.5 m off so sizes compare between rows; "zoom to fit" frames each row
+instead, "three-quarter" and "from above" turn it, and dragging a view turns that row. Switches: tier (lod0-2),
+pose or motion (idle, walk / bound / hop, graze / tail flick / peck, bedded / sit up / perched, flap, glide,
+climb), written to the same `aAnim` / `aAnim2` attributes `animals.js` writes; a motion the body plan lacks
+shows idle and says so. GLBs load as their rows scroll into view (`?all=1` loads every one); a missing or broken
+file leaves the procedural model and a note. A GLB without a loader in `animalModels.js` is read the same way
+with generic rig constants (marked on the row); a new `load<Name>Mesh` export or a GLB whose `extras.species`
+names a species joins its row.
+
+Metrics, from the rest geometry: triangles per tier, GLB size, length (with the tail), head and body (nose to
+the TAIL pivot), shoulder (top of the body over the fore legs' pivot) or wingspan, top, and the area-weighted
+mean colour of the up-facing body faces (buried faces of the procedural primitives skipped) against the brief's
+back or coat colour for the season (ΔE76). The brief's numbers are the entry's `size` (head and body or total
+length, by its note), then the draft's "draw" values. Red marks a difference over 10% (ΔE over 10). Two
+reference photos per species from the draft's section 3 (image-to-3D picks first), thumbnailed only when CC0 or
+CC BY and served cross-origin (Wikimedia Commons and iNaturalist APIs), else a link. A local picks a verdict and
+writes notes; both stay in that browser's localStorage, and "copy JSON" gives `{species, verdict, notes}` for an
+issue. Scripting: `__animalLineup.metrics()`, `.table()`, `.loadAll()`, `.set({tier, motion, season, hour,
+view, fit})`. URL: `?only=<id,...>&tier=&motion=&season=&hour=&view=&fit=1&slow=1&all=1`.
+
+Known measurement limits: the vole's tail is part of BODY, so its head and body reads as the whole length; the
+rabbit crouches, so its straight-line length is shorter than the spine the build script scaled; the squirrel's
+curled tail shortens its total length the same way.
+
 ## Next (adoption lane)
 
 1. `tools/build_raven_ground.py` on the deer model: scale to 0.62 m bill to tail, weld, decimate to

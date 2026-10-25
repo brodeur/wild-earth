@@ -1,0 +1,79 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Animal lineup</title>
+<link rel="icon" href="data:,">
+<style>
+  html { background:#d7dde0; }
+  body { margin:0; color:#1d2420; font:13px/1.4 -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif; }
+  #gl { position:fixed; left:0; top:0; width:100%; height:100%; z-index:0; pointer-events:none; display:block; }
+  #top { position:sticky; top:0; z-index:3; background:#f4f6f5f2; border-bottom:1px solid #c3ccc7; padding:8px 14px; display:flex; flex-wrap:wrap; gap:6px 16px; align-items:flex-end; box-shadow:0 1px 4px #0001; }
+  #top h1 { font-size:15px; margin:0 8px 0 0; align-self:center; }
+  #top label { display:flex; flex-direction:column; font-size:10px; color:#56625a; text-transform:uppercase; letter-spacing:.06em; gap:2px; }
+  #top label.check { flex-direction:row; align-items:center; gap:5px; text-transform:none; letter-spacing:0; font-size:12px; color:#1d2420; }
+  #top select, #top input[type=range] { font:inherit; font-size:12px; }
+  #top button, .sign button { font:inherit; font-size:12px; padding:3px 8px; border:1px solid #9aa6a0; background:#fff; border-radius:5px; cursor:pointer; }
+  #top button:hover, .sign button:hover { background:#eef2f0; }
+  #summary { font-size:12px; color:#56625a; align-self:center; margin-left:auto; text-align:right; }
+  #rows { position:relative; z-index:1; padding:10px 14px 40px; }
+  .intro { background:#ffffffd9; border-radius:8px; padding:8px 12px; margin-bottom:10px; max-width:1100px; color:#3d4842; }
+  .row { margin:0 0 14px; }
+  .row > header { display:flex; flex-wrap:wrap; gap:4px 10px; align-items:baseline; background:#ffffffe6; border-radius:8px 8px 0 0; padding:6px 10px 4px; }
+  .row h2 { font-size:15px; margin:0; }
+  .row header i { color:#2f3b33; }
+  .row header .tag { font-size:11px; color:#56625a; background:#e7ecea; border-radius:4px; padding:0 5px; }
+  .row header .status { font-size:12px; color:#56625a; }
+  .row header .status.warn { color:#9a3b12; }
+  .grid { display:grid; grid-template-columns:minmax(420px,1fr) 330px 190px 210px; gap:0; }
+  .grid > div { background:#ffffffe6; padding:8px 10px; border-top:1px solid #e1e6e3; }
+  .grid > .view { background:transparent; position:relative; height:270px; padding:0; border-top:none; cursor:grab; outline:1px solid #c9d1cd; }
+  .view .lab { position:absolute; transform:translate(-50%, 0); font-size:11px; background:#ffffffcc; padding:1px 6px; border-radius:4px; white-space:nowrap; pointer-events:none; }
+  .view .msg { position:absolute; left:8px; top:6px; font-size:12px; background:#fff3e6e6; color:#7a3410; padding:2px 7px; border-radius:4px; max-width:70%; }
+  .view .msg:empty { display:none; }
+  .view .bar { position:absolute; right:8px; top:6px; font-size:11px; color:#2f3b33; background:#ffffffb3; padding:0 5px; border-radius:4px; pointer-events:none; }
+  table.m { border-collapse:collapse; width:100%; font-size:12px; }
+  table.m th { text-align:left; font-weight:600; color:#56625a; padding:1px 6px 1px 0; vertical-align:top; white-space:nowrap; }
+  table.m td { padding:1px 6px 1px 0; vertical-align:top; }
+  table.m thead th { font-size:10px; text-transform:uppercase; letter-spacing:.05em; border-bottom:1px solid #d5dbd8; }
+  .ok { color:#1d6b35; } .bad { color:#9a3b12; font-weight:600; } .muted { color:#66726b; }
+  .sw { display:inline-block; width:11px; height:11px; border-radius:2px; vertical-align:-1px; margin-right:3px; border:1px solid #0003; }
+  .lic { margin-top:5px; font-size:11px; color:#3d4842; }
+  .flags { margin-top:5px; font-size:11px; color:#9a3b12; }
+  .refs a { color:#1f5b8a; }
+  .refs .ref { margin-bottom:8px; font-size:11px; }
+  .refs img { display:block; width:100%; max-height:110px; object-fit:cover; border-radius:4px; margin-bottom:2px; background:#e5e9e7; }
+  .sign select, .sign textarea { width:100%; box-sizing:border-box; font:inherit; font-size:12px; }
+  .sign textarea { height:96px; resize:vertical; margin-top:4px; }
+  .sign .saved { font-size:11px; color:#56625a; margin-left:4px; }
+  @media (max-width: 1200px) { .grid { grid-template-columns:1fr 1fr; } .grid > .view { grid-column:1 / -1; } }
+  @media (max-width: 640px) { .grid { grid-template-columns:1fr; } #top { position:static; } }
+</style>
+<script type="importmap">
+{ "imports": { "three": "https://unpkg.com/three@0.170.0/build/three.module.js",
+               "three/addons/": "https://unpkg.com/three@0.170.0/examples/jsm/" } }
+</script>
+</head>
+<body>
+<canvas id="gl"></canvas>
+<div id="top">
+  <h1>Animal lineup</h1>
+  <label>Tier <select id="tier"><option value="0">lod0</option><option value="1">lod1</option><option value="2">lod2</option></select></label>
+  <label>Pose / motion <select id="motion"></select></label>
+  <label>Season <select id="season"><option>winter</option><option>spring</option><option>summer</option><option>fall</option></select></label>
+  <label>Hour <span style="display:flex;gap:4px;align-items:center"><input type="range" id="hour" min="5" max="19.5" step="0.25"><span id="hourv" style="font-size:12px;color:#1d2420;text-transform:none;letter-spacing:0"></span></span></label>
+  <label>View <select id="view"><option value="side">side</option><option value="three">three-quarter</option><option value="top">from above</option></select></label>
+  <label>Jump to <select id="jump"><option value="">species…</option></select></label>
+  <label class="check"><input type="checkbox" id="fit"> zoom each row to fit (default: fixed 5.5 m camera)</label>
+  <label class="check"><input type="checkbox" id="slow"> slow motion (¼)</label>
+  <label class="check"><input type="checkbox" id="variant"> second colour set (female quail)</label>
+  <button id="copyall" title="Copy every saved sign-off as a JSON array">copy all sign-offs</button>
+  <div id="summary"></div>
+</div>
+<div id="rows">
+  <div class="intro">Local sign-off of the animal meshes (<code>docs/animal-library.md</code>). Each row: the drawn mesh (left) and the procedural model (right) at true size on neutral ground, a 1 m pole and ground bar in 10 cm bands, under the game's sun, sky light and exposure for the season and hour. Drag a view to turn it. Measurements are taken from the geometry at rest; the brief's numbers come from <code>library/animals/&lt;id&gt;.json</code> and <code>library/animals/drafts/</code>. Red marks a difference of more than 10%. A sign-off stays in this browser; <b>copy JSON</b> and paste it into an issue.</div>
+</div>
+<script type="module" src="src/lineupAnimals.js"></script>
+</body>
+</html>

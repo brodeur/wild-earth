@@ -55,6 +55,7 @@ The California scrub-jay, California quail and western gray squirrel (`client/as
 `quail.glb`, `squirrel.glb`) were generated with Meshy (meshy.ai) on the account holder's paid plan,
 owned by the account holder and released under CC BY-SA 4.0, and rebuilt by `tools/build_scrubjay.py`,
 `build_quail.py` and `build_squirrel.py` (job ids and prompts in each script's header).
+Review pages: `client/lineup.html` (trees) and `client/lineup_animals.html` (animal meshes at true size against a 1 m pole, with tiers, poses, metrics against the briefs and a local sign-off; see [docs/animal-library.md](docs/animal-library.md#lineup-page)).
 The client reads a tile package's `client/`
 rasters and builds a 10 m terrain mesh, a vegetation-shaded texture that recolors grass
 and oaks by season, a physically placed sun for the tile's latitude, and a forest of
