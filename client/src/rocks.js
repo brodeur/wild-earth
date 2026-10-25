@@ -611,7 +611,7 @@ function rockMaterial(look, role, atmosphere) {
           { vec3 sx = normalize(dFdx(-vViewPosition)), sy = normalize(dFdy(-vViewPosition));
             vec3 r1 = cross(sy, normal), r2 = cross(normal, sx); float det = dot(sx, r1);
             normal = normalize(abs(det) * normal - sign(det) * (rSl.x * r1 + rSl.y * r2)); }
-          vec3 rN = inverseTransformDirection(normal, viewMatrix);
+          vec3 rN = transformNormalByInverseViewMatrix(normal, viewMatrix);
           float rFresh = vRockFace;
           // Joints (granite): crisp cracks where the joint planes meet the surface, finer than the
           // mesh (the signed plane distance interpolates exactly across a triangle), a damp darker

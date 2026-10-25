@@ -1,5 +1,5 @@
 import * as THREE from 'three';
-import { Sky } from 'three/addons/objects/Sky.js';
+import { Sky } from './preethamSky.js';   // three r170's dome (see the file's header)
 import { uniforms as atmo } from './atmosphere.js';
 
 // Sky dome, sun and sky light. Every colour and the exposure come from the Atmosphere, so the

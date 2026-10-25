@@ -461,7 +461,7 @@ export class Atmosphere {
         // Sun term only: the hemisphere light is indirect. The normal offset uses the shading normal
         // (crown-shaped on the leaf cards), which keeps the lit side of a crown free of acne.
         .replace('#include <aomap_fragment>', `#include <aomap_fragment>
-          reflectedLight.directDiffuse *= cloudOnly(vAtmoPos) * csmShadow(vAtmoPos, inverseTransformDirection(normal, viewMatrix), 1.5, 1.5, 1.0);`)
+          reflectedLight.directDiffuse *= cloudOnly(vAtmoPos) * csmShadow(vAtmoPos, transformNormalByInverseViewMatrix(normal, viewMatrix), 1.5, 1.5, 1.0);`)
         .replace('#include <opaque_fragment>', 'outgoingLight = atmosphereApply(outgoingLight, vAtmoPos, cameraPosition);\n#include <opaque_fragment>');
     };
     material.customProgramCacheKey = () => 'atmosphere-lambert';

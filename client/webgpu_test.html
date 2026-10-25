@@ -13,7 +13,7 @@
   Other parameters: cards (100000), draws (196, spatial chunks), view (high | low), w, h (1920x1080
   drawing buffer), seg (708: ~1.0 M terrain triangles), msaa (1), frames (240), compute (1: time
   GPU placement against CPU placement; WebGPURenderer only), tm (1; 0: no tone mapping, linear
-  output), v (three.js version from unpkg, default 0.170.0).
+  output), v (three.js version from unpkg, default 0.186.1).
   Results land in <pre id="out"> and window.RESULT.
 -->
 <style>
@@ -22,10 +22,10 @@
   #out { position:fixed; left:8px; top:8px; margin:0; background:#0f1512dd; padding:8px 10px; border-radius:6px; max-width:calc(100vw - 32px); white-space:pre-wrap; }
 </style>
 <script>
-  // Import map built from ?v= (three.js version, default 0.170.0, the client's): from r171 on, three/tsl is
+  // Import map built from ?v= (three.js version, default 0.186.1, the client's): from r171 on, three/tsl is
   // its own build file; at r170 it is the WebGPU build itself.
   (function () {
-    var v = new URLSearchParams(location.search).get('v') || '0.170.0', b = 'https://unpkg.com/three@' + v + '/';
+    var v = new URLSearchParams(location.search).get('v') || '0.186.1', b = 'https://unpkg.com/three@' + v + '/';
     var minor = +v.split('.')[1], m = document.createElement('script');
     m.type = 'importmap';
     m.textContent = JSON.stringify({ imports: { three: b + 'build/three.module.js', 'three/webgpu': b + 'build/three.webgpu.js',

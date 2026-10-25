@@ -573,3 +573,43 @@ to +0.1%. GPU at the start view, five alternated loads: 8.44 ms against 8.25 ms 
 and a canopy-cover darkening in the ground shader (it would not follow the drawn trees). Still open:
 backlit summer blue oaks are paler as real trees than as impostors, now visible 250 m nearer, and the
 mid set's 15 ms rebuild still lands every 200 m.
+
+## 2026-10-25: the client runs three.js r186.1 on WebGLRenderer; the sky dome stays r170's
+
+All four import maps (`client/index.html`, `lineup.html`, `lineup_animals.html`, and the
+`?v=` default in `webgpu_test.html`) moved from 0.170.0 to 0.186.1 (released 2026-09-24),
+same unpkg pattern. This is the first step docs/webgpu-evaluation.md recommends; the
+renderer stays WebGLRenderer. Changes, from the migration guide r170 to r186:
+
+- **Sky dome.** r183 removed the Preetham dome's legacy gamma curve ("not possible to
+  restore the previous look with a different parameterization"), and by r186 the addon has
+  a new sun disc, built-in clouds and no `up` uniform. Its fragment no longer contains the
+  line `atmosphere.js` `attachSky` patches, so the haze, cirrus and cumulus would silently
+  drop out. `client/src/preethamSky.js` is r170's `examples/jsm/objects/Sky.js` verbatim
+  (MIT) and `sky.js` imports it. Rejected: re-tuning the new dome, because the haze in
+  `ATMOSPHERE_GLSL` reuses the old dome's exact colours.
+- **GLSL.** `inverseTransformDirection` is deprecated in r185 (now a `#define` alias); the
+  two chunk patches that use it on a normal (`atmosphere.js` patchLambert, `rocks.js`) call
+  `transformNormalByInverseViewMatrix`, the same maths.
+- **Shadow type.** `PCFSoftShadowMap` is deprecated for WebGLRenderer in r182 and logs a
+  warning; the two lineups use `PCFShadowMap`, which is now soft. The game's shadows are the
+  hand-rolled cascades in shadows.js and do not use three's shadow map.
+
+Checked and unaffected: every other chunk the onBeforeCompile patches replace exists
+unchanged or with the same anchors (`color_vertex` now writes a vec4 `vColor`; the animal
+patch in animalModels.js only touches `.rgb`), the update-range, render-target, DataArrayTexture, colour-space,
+tone-mapping and GLTFLoader paths, and `Object3D.updateWorldMatrix` (r185) because nothing
+sets `matrix` by hand.
+
+**Measured** in the built-in browser (Chrome 152, M1 Pro, 1920x1080 canvas), with a
+temporary harness that fixes the frame clock and seeds `Math.random`, HEAD's code on r170
+against this code on r186, tile 690_4280: mean absolute RGB difference 0.002/255 at the start
+view and 0.000 at 3 m, the same as two r170 loads against each other (0.003 and 0.000); the
+oak, pine, water, rocks and animal views were also at or under 0.004. Five alternating
+rounds, medians: GPU 12.20 ms (r170) vs 11.97 ms (r186) at the start view, 15.79 vs 15.92
+ms at 3 m; CPU per frame 2.0 vs 2.1 ms and 2.6 vs 2.7 ms (0.1 ms timer resolution). That is
+parity. The tree lineup differs by 0.017/255, at shadow edges (the PCF change). r186 draws
+eight more numbers from `Math.random` while loading (object UUIDs), so a seeded run's
+animals diverge once time runs; this is not a rendering change. Console: no new warnings
+or errors; the existing `toNonIndexed(): BufferGeometry is already non-indexed` warning
+remains.
