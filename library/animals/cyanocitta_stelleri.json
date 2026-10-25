@@ -34,10 +34,25 @@
       "license": "owned by the paid account holder (Meshy Terms of Use 3.2); to be released as CC BY-SA 4.0 with the project's assets on adoption; Terms 2.6(xi): not for training models that compete with Meshy",
       "status": "raw preview, rejected: wrong pose (wings spread), unusable crest and tail.",
       "review": "Failed the brief. Despite \"wings folded tight\", the wings came out spread and drooped forward in a mantling or landing pose (1.9 units across, wider than the bird is long), each a fan of soft rounded feathers that matches neither a folded nor a usable flight wing. The crest is a tall blunt block with flaps on its sides, not a spiky swept crest; the tail is a straight flat plank held level; the underside is cluttered with shards (15 pieces after welding, 26 boundary and 19 non-manifold edges). Bill short and conical, legs and feet fine. Not adoptable; a build script cannot fold these wings."
+    },
+    {
+      "kind": "meshy",
+      "purpose": "perched or ground Steller's jay, second try: standing on the ground, body horizontal, wings closed along the back (the first came out with wings spread)",
+      "job": "library/animals/jobs/cyanocitta_stelleri/01a171a4-aca9-7784-b9ab-b6b6f71b0cc4/job.json",
+      "job_id": "01a171a4-aca9-7784-b9ab-b6b6f71b0cc4",
+      "mode": "text-to-3d preview, ai_model meshy-6-lite, remeshed to triangles, target 20,000 faces",
+      "prompt": "A Steller's jay (Cyanocitta stelleri), Sierra Nevada form, one adult bird standing on the ground, side-on pose, body horizontal, wings closed tight along the back with the wingtips resting on the base of the tail. A tall pointed crest swept back from the crown, sooty black head with a few pale blue streaks on the forehead, sooty grey-brown upper back and breast, deep cobalt-blue belly, rump, wings and tail with fine black bars. Long straight tail, stout black bill, black legs, three toes forward and one back. No white on the face, wings or tail. Realistic proportions, game-ready, no base.",
+      "author": "generated with Meshy (meshy.ai) by agent (Claude) for Aaron Brodeur",
+      "date": "2026-10-25 (UTC)",
+      "credits": 5,
+      "raw_triangles": 20865,
+      "license": "owned by the paid account holder (Meshy Terms of Use 3.2); to be released as CC BY-SA 4.0 with the project's assets on adoption; Terms 2.6(xi): not for training models that compete with Meshy",
+      "status": "raw preview, not adopted; geometry only (no texture). Usable base if a build script removes a doubled tail and replaces the crest.",
+      "review": "The pose is fixed: the wings are folded tight along the back with no spread or drooped feathers, the bill is stout and conical, legs and feet are clean (three toes forward, one back), and the long straight tail is about 42% of the length, close to the brief's 45%. Three faults. (1) The tail is doubled: two full-width plates (each about 0.25 units wide) leave the rump in an X seen side-on, one rising gently to y +0.18, the other drooping to y -0.40; the top view shows one forked tail because the plates overlap. (2) The crest is a tall upright block with a ragged top, leaning slightly forward like a cardinal's, not a pointed crest swept back. (3) The body is pitched up about 35 degrees rather than horizontal, on long legs. Topology: one piece of 20,864 faces plus one stray triangle (2 open edges), 1.9% slivers; 1.9 units bill to tail along +z (bill toward +z), 1.30 units tall, +y up, feet at y -0.65, symmetric about x. A build script would delete the drooping plate below the rump and keep the upper as TAIL, cut the crest block and add three to five thin blades swept back from the crown (HEAD), drop the stray triangle, optionally pitch the body down 15-20 degrees about the hips, scale to 0.31 m and paint the sooty-front, blue-back split from the palette. Much better than the first candidate; the first generated jay with usable wings."
     }
   ],
   "status": "agent draft, needs local sign-off",
-  "accuracy_notes": "Not adopted. Options: one more preview with a reworded pose (below), or the scrub-jay mesh scaled 1.08 with a procedural crest and the Steller's palette. A local birder should check the crest and the sooty-front, blue-back split on whatever is adopted.",
+  "accuracy_notes": "Not adopted. Candidate 2 (Meshy 01a171a4) is a usable base after the build-script fixes in its review (doubled tail, crest block); the other route is the scrub-jay mesh scaled 1.08 with a procedural crest and the Steller's palette. Compare the two side by side on the lineup once the scrub-jay is adopted. A local birder should check the crest and the sooty-front, blue-back split on whatever is adopted.",
   "authors": [
     "agent (Claude) for Aaron Brodeur (entry, Meshy candidate)"
   ],

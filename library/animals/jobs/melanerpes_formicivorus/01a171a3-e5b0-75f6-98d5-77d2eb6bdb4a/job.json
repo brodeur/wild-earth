@@ -1,0 +1,66 @@
+{
+  "species": "melanerpes_formicivorus",
+  "mode": "preview",
+  "kind": "text-to-3d",
+  "task_id": "01a171a3-e5b0-75f6-98d5-77d2eb6bdb4a",
+  "endpoint": "https://api.meshy.ai/openapi/v2/text-to-3d",
+  "request": {
+    "mode": "preview",
+    "prompt": "An acorn woodpecker (Melanerpes formicivorus), single adult male, side-on neutral pose, standing on flat ground with nothing under the feet. Smooth rounded crown, no crest, stout short chisel-shaped bill, compact chunky body, short neck, short stiff pointed tail. Clown face: black mask around bill and eye, white forehead band continuing down in front of the eye into a pale yellow throat, bright red crown, pale cream iris. Glossy blue-black back, wings and tail; black breast band streaking into a white belly; white rump. Wings folded tight along the back. Zygodactyl feet, two toes forward two back. Realistic proportions, game-ready, no base.",
+    "ai_model": "meshy-6-lite",
+    "target_formats": [
+      "glb"
+    ],
+    "should_remesh": true,
+    "topology": "triangle",
+    "target_polycount": 20000,
+    "moderation": false
+  },
+  "prompt": "An acorn woodpecker (Melanerpes formicivorus), single adult male, side-on neutral pose, standing on flat ground with nothing under the feet. Smooth rounded crown, no crest, stout short chisel-shaped bill, compact chunky body, short neck, short stiff pointed tail. Clown face: black mask around bill and eye, white forehead band continuing down in front of the eye into a pale yellow throat, bright red crown, pale cream iris. Glossy blue-black back, wings and tail; black breast band streaking into a white belly; white rump. Wings folded tight along the back. Zygodactyl feet, two toes forward two back. Realistic proportions, game-ready, no base.",
+  "image": null,
+  "preview_job": null,
+  "estimated_credits": 5,
+  "balance_before": 3007,
+  "status": "SUCCEEDED",
+  "timestamps": {
+    "submitted": "2026-10-25T05:58:48+00:00",
+    "created_at": "2026-10-25T05:58:51+00:00",
+    "started_at": "2026-10-25T05:58:51+00:00",
+    "finished_at": "2026-10-25T05:59:21+00:00",
+    "downloaded": "2026-10-25T05:59:34+00:00"
+  },
+  "tool": "tools/meshy_generate.py",
+  "pricing_source": {
+    "url": "https://docs.meshy.ai/en/api/pricing",
+    "read": "2026-10-24"
+  },
+  "licence_note": "Generated through the Meshy API, which requires a paid plan (402 on a free plan). Meshy Terms of Use (https://www.meshy.ai/terms-of-use, last updated 2026-09-19), section 3.2: customers on a paid plan own their Customer Output to the extent permitted by law (free-plan output is owned by Meshy and offered under CC BY 4.0 with credit to Meshy). As owner, the account holder may license this model under the project's CC BY-SA 4.0 asset licence, to the extent copyright subsists in AI-generated output. Section 2.4: do not remove or alter AI-identifying metadata or watermarks Meshy embeds; carry them into adopted tiers. Section 2.5: API output is deleted by Meshy 3 days after generation, so keep this folder until the model is adopted. Credit: \"generated with Meshy (meshy.ai)\".",
+  "maintainer": null,
+  "progress": 100,
+  "task": {
+    "id": "01a171a3-e5b0-75f6-98d5-77d2eb6bdb4a",
+    "type": "text-to-3d-preview",
+    "status": "SUCCEEDED",
+    "created_at": 1792907931567,
+    "started_at": 1792907931572,
+    "finished_at": 1792907961032,
+    "consumed_credits": 5,
+    "task_error": null
+  },
+  "credits_charged": 5,
+  "files": [
+    {
+      "file": "model.glb",
+      "bytes": 761904,
+      "sha256": "eede039df5a6d2f1dcaf8d55b193877f6bec2627249c8143dc04d56a4dbf51e7",
+      "source": "https://assets.meshy.ai/<account>/tasks/01a171a3-e5b0-75f6-98d5-77d2eb6bdb4a/output/model.glb"
+    },
+    {
+      "file": "thumbnail.png",
+      "bytes": 46112,
+      "sha256": "7b53ce1493c3490c27b5db055a652b7ccc70f95141fbd40b19bbca335231223d",
+      "source": "https://assets.meshy.ai/<account>/tasks/01a171a3-e5b0-75f6-98d5-77d2eb6bdb4a/output/preview.png"
+    }
+  ],
+  "balance_after": 2982
+}
