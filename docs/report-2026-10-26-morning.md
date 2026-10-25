@@ -98,9 +98,17 @@ Lanes still running when this report was written are listed in `docs/roadmap.md`
 
 | cae9b66 | The jackrabbit lives in the world (freeze at 30 m, zigzag bolt at 14 m/s); the brush rabbit's ears are symmetric; all three tiles' species lists carry it. |
 
-Credits: 230 of the 1,000 spent across the night (balance 2,822); the last four animal lanes
-cost nothing. Lanes started after this update (riparian corridor colour, soarer underwing light,
-granary defence) have their commits after cae9b66 in `git log`, if they verified.
+| c5e5c60 | The riparian corridors' ground gets its own seasonal colour: olive-brown in fall, grey-brown in winter, green in spring. |
+| d0ff616 | Light through the wings of flying birds seen from below: the hawk's pale lining and the vulture's silver flight feathers read. |
+| 7282445 | Acorn game v4: squirrels, ravens and jays pilfer caches and raid granaries; woodpecker families mob raiders; two new shared-world events. |
+
+Credits: 230 of the 1,000 spent across the night (balance 2,822). The dev server was restarted
+again at the end so it accepts the v4 events. The run is complete: every lane has reported and
+every verified result is on `main`.
+
+**Next, pending your call:** real seasonal ground colour from Sentinel-2 composites and a
+ground-only base texture with tree crowns inpainted, so the foothills go golden in fall and the
+green-up comes in December.
 
 **Disk:** the machine dipped to a few hundred MB free several times tonight while lanes wrote
 captures; the session scratchpad was trimmed twice and the disk ended the night at about 9 GB
