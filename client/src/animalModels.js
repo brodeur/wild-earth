@@ -21,6 +21,10 @@ import { uniforms as atmo } from './atmosphere.js';
 //           at the shoulder) and HAND_L/R (pivot at the wrist; child of the wing). Folded wings stay body geometry;
 //           the flight wings are cards that collapse into the shoulder as pose goes to 1 (perched or on the ground).
 //           The hand lags the arm through the stroke. aAnim2 = (wing bow, tail spread, -, colour variant).
+//           The ground raven (RIG_GROUND; loadRavenGroundMesh) is the template on a standing mesh: its folded wings
+//           are WING/HAND parts that never collapse, and aAnim2 = (wing flick, head yaw, hop, -): the flick lifts and
+//           opens the folded wing at the shoulder with the hand following at the wrist, the head turns about the
+//           base of the neck, and hop swings both legs together (0 alternates them: a walk).
 //           The soarers (red-tailed hawk, turkey vulture) use the same template on a flight mesh: the wings are mesh,
 //           spread for good (collapse 0), the arm turning at the shoulder and the hand at the wrist.
 //   rodent  BODY (hindquarters), CHEST (pivot at the lumbar; flexes with the bound, rises to sit up), HEAD and
@@ -322,17 +326,20 @@ export const loadCoyoteMesh = () => loadTiers(new URL('../assets/coyote.glb', im
 
 // A built GLB (tools/build_*.py): meshes lod0-lod2 with COLOR_0 and the custom attributes _PART, _PARTW, _PIVOT
 // (and _COLORB, a second colour set for a variant), the rig's parent pivots in the file's extras.rig.
-async function loadTiers(url, model) {
+// keepNormals: keep the file's normals (a textured tier drawn smooth); maps: each tier's base-colour texture or null.
+async function loadTiers(url, model, { keepNormals = false } = {}) {
   const gltf = await new GLTFLoader().loadAsync(url.href);
   const rename = { _part: 'aPart', _partw: 'aPartW', _pivot: 'aPivot', _colorb: 'aColorB', _antler: 'aAntler', _tine: 'aTine' };
+  const maps = [];
   const tiers = ['lod0', 'lod1', 'lod2'].map(n => {
-    const g = gltf.scene.getObjectByName(n).geometry;
+    const o = gltf.scene.getObjectByName(n), g = o.geometry;
     for (const [a, b] of Object.entries(rename)) { const at = g.getAttribute(a); if (at) { g.setAttribute(b, at); g.deleteAttribute(a); } }
-    g.computeVertexNormals();
+    if (!keepNormals || !g.getAttribute('normal')) g.computeVertexNormals();
+    maps.push(o.material?.map || null);
     return g;
   });
   const extras = gltf.parser.json.extras || {};
-  return { tiers, tris: tiers.map(g => g.index.count / 3), weighted: true, extras, ...model };
+  return { tiers, maps, tris: tiers.map(g => g.index.count / 3), weighted: true, extras, ...model };
 }
 
 // Rig constants per drawn species (radians unless noted). Pivots come from the GLB (extras.rig) so a rebuild
@@ -345,6 +352,9 @@ async function loadTiers(url, model) {
 //   handLag, handAmp   hand phase lag behind the arm and its stroke relative to the arm's;  bow  hands and arms
 //                      droop by aAnim2.x (a set-wing glide);  spread  tail fans out by aAnim2.y (x scale)
 //   collapse           1: the wing cards shrink into the shoulder as pose goes to 1
+//   ground             1: RIG_GROUND (the ground raven): aAnim2 = (wing flick, head yaw, hop, -);  flickLift,
+//                      flickOpen  the folded wing's lift (about the body axis) and swing out (about the vertical)
+//                      at the shoulder for a flick of 1 (the hand follows by bow, negative: further than the arm)
 const RIG = {
   // California scrub-jay (tools/build_scrubjay.py): hops on the ground, perches, short rowing flights
   jay: { amp: [0.35, 0.35, 0.4, 1.0], pose: [1, 0.15, 0, 0.2],
@@ -385,13 +395,19 @@ const RIG = {
   // Scurries in quick small steps; pose lifts the chest to sit up and eat; flick dips the head to clip grass.
   vole: { amp: [0.9, 0, 0.35, 0], pose: [1, 0, 0.45, 0],
     k: { spine: 0.15, spinePhase: 1.2, sit: 0.6, foreFold: 0.8, tipLag: 0, tipWave: 0, tipCurl: 0, abduct: 0 } },
+  // Common raven on the ground (tools/build_raven_ground.py): walks (legs alternate) and hops (together, aAnim2.z),
+  // pecks and caches (flick dips the head, the tail lifts a little), turns its head (aAnim2.y) and flicks its folded
+  // wings (aAnim2.x). The folded wings never collapse (collapse 0) and gait never flaps them (amp.w 0); pose does
+  // nothing (the ambient ravens keep pose 1 on the ground for the flying model's folded wings).
+  ravenGround: { amp: [0.55, 0.3, 0.6, 0], pose: [1, 0, 0, 0],
+    k: { handLag: 0, handAmp: 0, bow: -0.6, spread: 0, collapse: 0, bob: 0.1, ground: 1, flickLift: 0.42, flickOpen: 0.38 } },
 };
 const urls = { jay: '../assets/scrubjay.glb', quail: '../assets/quail.glb', squirrel: '../assets/squirrel.glb',
   stjay: '../assets/stellersjay.glb', hawk: '../assets/redtail.glb', vulture: '../assets/vulture.glb',
-  lion: '../assets/cougar.glb', rabbit: '../assets/rabbit.glb', vole: '../assets/vole.glb' };
-function rigModel(name) {
+  lion: '../assets/cougar.glb', rabbit: '../assets/rabbit.glb', vole: '../assets/vole.glb', ravenGround: '../assets/raven_ground.glb' };
+function rigModel(name, opts) {
   const r = RIG[name];
-  return loadTiers(new URL(urls[name], import.meta.url), { amp: r.amp, pose: r.pose, drop: r.drop || 0, poseMax: r.poseMax || 1, gait: !!r.gait, rig: { name, k: r.k } })
+  return loadTiers(new URL(urls[name], import.meta.url), { amp: r.amp, pose: r.pose, drop: r.drop || 0, poseMax: r.poseMax || 1, gait: !!r.gait, rig: { name, k: r.k } }, opts)
     .then(m => { m.rig.piv = m.extras.rig || {}; m.rig.kind = m.rig.piv.kind; m.variant = m.tiers[0].hasAttribute('aColorB'); return m; });
 }
 export const loadJayMesh = () => rigModel('jay');
@@ -403,6 +419,16 @@ export const loadVultureMesh = () => rigModel('vulture');
 export const loadCougarMesh = () => rigModel('lion');
 export const loadRabbitMesh = () => rigModel('rabbit');
 export const loadVoleMesh = () => rigModel('vole');
+// The common raven on the ground (client/assets/raven_ground.glb, tools/build_raven_ground.py; generated with Meshy,
+// meshy.ai, CC BY-SA 4.0): 0.62 m, origin on the ground between the feet, bill toward +z; lod0 1,496 triangles drawn
+// with its 1K texture (vertex colours off, the file's smooth normals), lod1 496 and lod2 150 with vertex colours. One
+// load for the page: the ambient ravens (animals.js) and the player's (raven.js) share the tiers, so a caller that
+// sets per-instance attributes on a tier clones it first (animals.js owns the originals). GROUND_BODY_Y: the body's
+// centre above the feet (the flying models hang from their body: the procedural raven's is 0.09 m above its origin,
+// raven_player.glb's at its origin), so a swap keeps the body where it was.
+let ravenGround = null;
+export const loadRavenGroundMesh = () => ravenGround ||= rigModel('ravenGround', { keepNormals: true });
+export const RAVEN_GROUND = { bodyY: 0.21, head: [0, 0.238, 0.16], bill: [0, 0.227, 0.327] };
 
 // A wing slab hinged at `pivot` on side s (+1 left, -1 right), raised by `dihedral` (rad) about the
 // body axis: its centre sits `dx` out along the raised span and `dz` fore (+) or aft (-) of the pivot.
@@ -552,13 +578,21 @@ float animPose = aAnim.z;
   // the parents' rotations, shared by their own vertices and their children's
   mat3 rigChestR = animRX(-(sin(aAnim.x + rig_spinePhase) * aAnim.y * rig_spine + animPose * rig_sit));
   mat3 rigTailR = animRX(aAnim.w * uAmp.y + animPose * uPose.y);
+  #ifdef RIG_GROUND
+  // the folded wing flicks: lifted off the body and swung out at the shoulder (the hand follows, below)
+  #define RIG_ARM(s) (animRZ(s * aAnim2.x * rig_flickLift) * animRY(-s * aAnim2.x * rig_flickOpen))
+  #else
   #define RIG_ARM(s) (animRY(s * animPose * uPose.w) * animRZ(s * (sin(aAnim.x) * aAnim.y * uAmp.w - aAnim2.x * rig_bow * 0.4)))
+  #endif
 #endif
 if (animPart == 1 || animPart == 2) {
   animP.y *= mix(1.0, uPose.x, animPose);
   float legOff = animPart == 2 ? 3.14159 : 0.0;
 #ifdef ANIM_GAIT
   legOff = mix(legOff, aPivot.z > 0.0 ? 0.0 : 3.14159, aAnim2.w);   // diagonal pairs -> fore pair against hind pair
+#endif
+#ifdef RIG_GROUND
+  legOff *= 1.0 - aAnim2.z;   // a hop: both legs together
 #endif
   animR = animRX(sin(aAnim.x + legOff) * aAnim.y * uAmp.x);
 #ifdef ANIM_RIG
@@ -576,6 +610,9 @@ if (animPart == 1 || animPart == 2) {
   animR = animRX(aAnim.w * uAmp.z + animPose * uPose.z);
 #ifdef ANIM_RIG
   animR = animRX(sin(2.0 * aAnim.x + 0.6) * aAnim.y * rig_bob) * animR;
+#endif
+#ifdef RIG_GROUND
+  animR = animRY(aAnim2.y) * animR;   // the head turns about the base of the neck
 #endif
 } else if (animPart == 4 || animPart == 5) {
   float side = animPart == 4 ? 1.0 : -1.0;
@@ -618,7 +655,7 @@ vec3 transformed = animR * animP + aPivot;
 #ifdef USE_ALPHAHASH
   vPosition = vec3( position );
 #endif`;
-const RIG_KEYS = ['spine', 'spinePhase', 'sit', 'foreFold', 'tipLag', 'tipWave', 'tipCurl', 'abduct', 'bob', 'handLag', 'handAmp', 'bow', 'spread', 'collapse'];
+const RIG_KEYS = ['spine', 'spinePhase', 'sit', 'foreFold', 'tipLag', 'tipWave', 'tipCurl', 'abduct', 'bob', 'handLag', 'handAmp', 'bow', 'spread', 'collapse', 'flickLift', 'flickOpen'];
 // aAnim2 is declared for the rig templates, the quadrupeds' gait selector and the antlers (the geometry must then
 // carry it: a missing instanced attribute reads (0, 0, 0, 1), a bound gait and no antler growth).
 const hasAnim2 = model => !!(model.rig || model.gait || model.antler);
@@ -634,6 +671,7 @@ function rigDecl(model) {
   const f = x => (+x || 0).toFixed(4), v3 = a => `vec3(${a.map(f).join(', ')})`;
   const piv = r.piv || {};
   let d = '#define ANIM_RIG\nattribute vec4 aAnim2;\n';
+  if (r.k.ground) d += '#define RIG_GROUND\n';
   for (const k of RIG_KEYS) d += `const float rig_${k} = ${f(r.k[k])};\n`;
   if (piv.chest) d += `#define RIG_CHEST\nconst vec3 rig_pivChest = ${v3(piv.chest)};\n`;
   if (piv.tail_tip) d += `#define RIG_TAILTIP\nconst vec3 rig_pivTail = ${v3(piv.tail)};\n`;
@@ -645,19 +683,24 @@ const animDecl = model => (model.weighted ? '#define ANIM_WEIGHTED\nattribute fl
 const programKey = model => `${model.amp.join(',')}|${model.pose.join(',')}|${model.weighted ? 'w' : ''}|${model.rig ? model.rig.name : ''}|${model.gait ? 'g' : ''}|${model.antler ? 'a' : ''}`;
 export { hasAnim2 };
 
-export function animalMaterial(atmosphere, model) {
-  const m = new THREE.MeshLambertMaterial({ vertexColors: true, flatShading: true });
+// map: a textured tier (the ground raven's lod0): the texture instead of the vertex colours, smooth shaded.
+export function animalMaterial(atmosphere, model, { map = null } = {}) {
+  const m = map ? new THREE.MeshLambertMaterial({ map, vertexColors: false }) : new THREE.MeshLambertMaterial({ vertexColors: true, flatShading: true });
   atmosphere.patchLambert(m);
   const prev = m.onBeforeCompile;
   // The species' amplitudes and poses are baked in as constants, with a cache key per species: the
   // materials would otherwise share one program, and with it the first material's uniform values.
   const v4 = a => `vec4(${a.map(x => x.toFixed(4)).join(', ')})`;
   const consts = `\nconst vec4 uAmp = ${v4(model.amp)};\nconst vec4 uPose = ${v4(model.pose)};`;
-  const key = `atmosphere-lambert|animal|${programKey(model)}`;
+  const key = `atmosphere-lambert|animal|${programKey(model)}${map ? "|map" : ""}`;
   m.onBeforeCompile = (shader, renderer) => {
     prev.call(m, shader, renderer);
+    shader.vertexShader = shader.vertexShader.replace('#include <common>', '#include <common>\n' + animDecl(model) + consts);
+    // Smooth shaded (a textured tier): pose first, where the normal begins, so the normals turn with the parts.
+    if (map) shader.vertexShader = shader.vertexShader
+      .replace('#include <beginnormal_vertex>', ANIM_BODY + '\nvec3 objectNormal = normal;\n#ifdef ANIM_WEIGHTED\n  objectNormal = normalize(mix(normal, animR * normal, aPartW));\n#else\n  objectNormal = animR * normal;\n#endif')
+      .replace('#include <begin_vertex>', '');
     shader.vertexShader = shader.vertexShader
-      .replace('#include <common>', '#include <common>\n' + animDecl(model) + consts)
       .replace('#include <begin_vertex>', ANIM_BODY)
       // a second colour set (the female quail), picked per instance by aAnim2.w
       .replace('#include <color_vertex>', '#include <color_vertex>\n#ifdef ANIM_VARIANT\n  vColor.rgb = mix(vColor.rgb, aColorB, aAnim2.w);\n#endif'

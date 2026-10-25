@@ -8,7 +8,7 @@ import { buildSquirrel, buildWoodpecker, buildRaven, buildDeer, buildQuail, buil
   buildDeerBuck, buildFox, buildCoyote, buildCougar, buildRabbit, buildVole,
   animalMaterial, animalDepthMaterial, planarShadowMaterial, loadDeerMesh, loadSquirrelMesh, loadQuailMesh, loadJayMesh,
   loadStellersJayMesh, loadRedtailMesh, loadVultureMesh, loadDeerBuckMesh, loadFoxMesh, loadCoyoteMesh, loadCougarMesh,
-  loadRabbitMesh, loadVoleMesh, hasAnim2, antlerState, SEASON_MONTH } from './animalModels.js';
+  loadRabbitMesh, loadVoleMesh, loadRavenGroundMesh, RAVEN_GROUND, hasAnim2, antlerState, SEASON_MONTH } from './animalModels.js';
 
 // Ambient animals: the first step toward "many of each species always present" (docs/brief.md,
 // Direction; roadmap visual pass step 6 "Life"). Western gray squirrels, acorn woodpeckers, other
@@ -85,6 +85,17 @@ const LIVE_R = 400, REBUILD_MOVE = 100, NEAR_R = 150, TAG_R = 40, TAG_MAX = 6, B
 // (deerLodForce still works). The drawn birds and squirrel take a second per-instance vec4 (aAnim2, see
 // animalModels.js rig templates), filled here per animal: wing bow and tail spread for birds, leg splay and
 // a lagged tail-tip flick for the squirrel, and the colour variant (female quail).
+// Ravens are drawn by two models (DRAWN[RV].hybrid): in the air the procedural flying raven (buildRaven), on the ground
+// or perched (standing, walking, hopping, pecking, caching) the ground raven (raven_ground.glb, loadRavenGroundMesh; its
+// three tiers within 15 / 50 m / beyond). The swap is at touchdown (the end of a glide) and at take-off (leaving
+// R_PERCH): same position and heading, and the flying model is drawn RAVEN_LIFT higher along its own up axis so its body
+// is where the ground model's body is (the two origins differ: the ground raven stands on its feet, its body 0.21 m up;
+// the procedural raven's body is 0.09 m above its origin). On touchdown the ground raven's folded wings settle (a flick
+// dying away); before take-off they lift and open, and the flying model starts half unfolded. On the ground ravens
+// walk (legs alternate) and hop (legs together, aAnim2.z), glance about (head yaw, aAnim2.y), flick their wings
+// (aAnim2.x), peck, and now and then walk or hop to a shrub to cache. ?ravenground=proc draws the procedural raven
+// throughout (A/B); live: __we.animals.setMesh('raven', false); __we.animals.lodForce.raven = 0/1/2 pins the tier;
+// __we.animals.ravenCache() sends the nearest raven on the ground to cache beside a shrub.
 const LOD_R2 = 250 * 250;   // ground animals farther than this from the eye think on alternate frames (with the summed dt)
 const FLY_NEAR = 30, FLY_FAR = 100, FLY_GROW = 0.6;   // birds in flight: true size within FLY_NEAR m of the eye, 1.6x beyond FLY_FAR
 const VISUAL_ONLY = new Set(['cathartes_aura']);     // not in the species list or perception matrix yet: seen by everyone
@@ -174,7 +185,10 @@ const DRAWN = {
   [VO]: { name: 'vole', param: 'vole', load: loadVoleMesh, lod: [3, 10] },
   [ML]: { name: 'lion', param: 'lion', alias: 'cougar', load: loadCougarMesh, lod: [40, 124], planar: true },
   [BK]: { name: 'buck', param: 'buck', alias: 'deer', load: loadDeerBuckMesh, lod: [30, 90], planar: true },
+  // the raven on the ground or perched; in the air the procedural flying raven (hybrid: see the header)
+  [RV]: { name: 'raven', param: 'ravenground', load: loadRavenGroundMesh, lod: [15, 50], hybrid: true },
 };
+const PROC_RAVEN_BODY_Y = 0.09, RAVEN_LIFT = RAVEN_GROUND.bodyY - PROC_RAVEN_BODY_Y;   // m, at size 1
 const CULL = { [RB]: 120, [VO]: 40 }, VOLE_CAM = 10;   // m from the eye; voles also only under a camera this low (m above ground)
 // Steller's jays perch in conifers (veg.nearPlants, the plants within ~240 m of the eye; veg.oaks holds only oaks)
 // Crown radius as a fraction of the tree's height, by height fraction (the crown envelopes in library/species/).
@@ -195,6 +209,7 @@ const S_PAUSE = 0, S_RUN = 1, S_CLIMB = 2, S_OUT = 3, S_SIT = 4, S_IN = 5, S_DOW
 const S_WORK = 7, S_EAT = 8;                                                            // squirrel, acorn game: pick, bury or dig; eat
 const W_CLING = 10, W_TOP = 11, W_FLY = 12, W_PICK = 13;                                // woodpecker (W_PICK: taking an acorn)
 const R_SOAR = 20, R_GLIDE = 21, R_PERCH = 22, R_CLIMB = 23, R_GROUND = 24;            // raven (R_GROUND: picking or caching)
+const R_WALK = 25;                                                                      // raven: walking or hopping on the ground (or on its perch)
 const D_WALK = 30, D_GRAZE = 31, D_BED = 32;                                           // deer
 const Q_FORAGE = 40, Q_WAIT = 41, Q_FLY = 42;                                           // quail (bird)
 const G_FORAGE = 0, G_RUN = 1, G_SETTLE = 2;                                            // quail (covey)
@@ -232,6 +247,8 @@ const CARRY = {
   [RV]: { py: 0.11, pz: 0.14, ty: 0.118, tz: 0.335, flick: 0.4, pose: 0 },
   [SQ]: { py: 0.12, pz: 0.09, ty: 0.125, tz: 0.192, flick: 0.35, pose: -0.2 },          // the procedural squirrel
   sqRig: { py: 0.116, pz: 0.106, ty: 0.1, tz: 0.172, flick: 0.35, pose: 0.75, cy: 0.099, cz: 0.017 },   // the drawn one (rodent rig)
+  // the ground raven (raven_ground.glb): head pivot at the base of the neck, the acorn a little behind the bill tip
+  rvGround: { py: RAVEN_GROUND.head[1], pz: RAVEN_GROUND.head[2], ty: RAVEN_GROUND.bill[1] - 0.004, tz: RAVEN_GROUND.bill[2] - 0.02, flick: 0.6, pose: 0 },
 };
 CARRY[WF] = CARRY[WP];
 
@@ -381,7 +398,7 @@ export class Animals {
       const anim = new THREE.InstancedBufferAttribute(new Float32Array(cap * 4), 4); anim.setUsage(THREE.DynamicDrawUsage);
       geo.setAttribute('aAnim', anim);
       if (hasAnim2(model)) { const a2 = new THREE.InstancedBufferAttribute(new Float32Array(cap * 4), 4); a2.setUsage(THREE.DynamicDrawUsage); geo.setAttribute('aAnim2', a2); }
-      const m = new THREE.InstancedMesh(geo, animalMaterial(this.atmosphere, model), cap);
+      const m = new THREE.InstancedMesh(geo, animalMaterial(this.atmosphere, model, { map: model.maps?.[t] || null }), cap);
       m.instanceMatrix.setUsage(THREE.DynamicDrawUsage);
       m.count = 0; m.frustumCulled = false; m.name = `${D.name} mesh lod${t}`; m.visible = false;
       m.castShadow = m.receiveShadow = true;
@@ -395,11 +412,58 @@ export class Animals {
       this.group.add(ps);
       return ps;
     }) : null;
+    if (D.hybrid) {   // the flying model in the air: the procedural geometry with its own instance buffers (tier 3)
+      const pm = sp.model, geo = pm.geometry.clone();
+      const anim = new THREE.InstancedBufferAttribute(new Float32Array(cap * 4), 4); anim.setUsage(THREE.DynamicDrawUsage);
+      geo.setAttribute('aAnim', anim);
+      const m = new THREE.InstancedMesh(geo, animalMaterial(this.atmosphere, pm), cap);
+      m.instanceMatrix.setUsage(THREE.DynamicDrawUsage);
+      m.count = 0; m.frustumCulled = false; m.name = `${D.name} mesh air`; m.visible = false;
+      m.castShadow = m.receiveShadow = true;
+      m.customDepthMaterial = animalDepthMaterial(pm);
+      this.group.add(m);
+      st.tiers.push(m);
+      this.rvGM ||= new Uint8Array(cap);
+    }
     sp.meshTris = model.tris;
+  }
+  // The ravens (DRAWN[RV].hybrid): those on the ground (rvGM, set per animal in update) into the ground model's tiers
+  // by distance, those in the air into tier 3, the flying model, lifted RAVEN_LIFT along their own up axis.
+  distributeHybrid(k) {
+    const st = this.drawn[k], D = DRAWN[k], G = this.rvGM;
+    const src = this.meshes[k], n = src.count, M = src.instanceMatrix.array, A = src.geometry.attributes.aAnim.array, A2 = this.anim2[k];
+    const C = this.camPos, cnt = this._dc4 ||= [0, 0, 0, 0], T = st.tiers, f = this.lodForce[D.name] ?? null;
+    const r0 = D.lod[0] * D.lod[0], r1 = D.lod[1] * D.lod[1];
+    cnt[0] = cnt[1] = cnt[2] = cnt[3] = 0;
+    for (let i = 0; i < n; i++) {
+      const o = i * 16;
+      if (M[o] === 0 && M[o + 1] === 0 && M[o + 2] === 0) continue;   // culled or hidden (scale 0)
+      if (!G[i]) {
+        const m = T[3], j = cnt[3]++, D16 = m.instanceMatrix.array;
+        D16.set(M.subarray(o, o + 16), j * 16);
+        D16[j * 16 + 12] += M[o + 4] * RAVEN_LIFT; D16[j * 16 + 13] += M[o + 5] * RAVEN_LIFT; D16[j * 16 + 14] += M[o + 6] * RAVEN_LIFT;
+        m.geometry.attributes.aAnim.array.set(A.subarray(i * 4, i * 4 + 4), j * 4);
+        continue;
+      }
+      const x = M[o + 12] - C.x, y = M[o + 13] - C.y, z = M[o + 14] - C.z, d2 = x * x + y * y + z * z;
+      const t = f ?? (d2 < r0 ? 0 : d2 < r1 ? 1 : 2), m = T[t], j = cnt[t]++;
+      m.instanceMatrix.array.set(M.subarray(o, o + 16), j * 16);
+      m.geometry.attributes.aAnim.array.set(A.subarray(i * 4, i * 4 + 4), j * 4);
+      m.geometry.attributes.aAnim2.array.set(A2.subarray(i * 4, i * 4 + 4), j * 4);
+    }
+    for (let t = 0; t < 4; t++) {
+      const m = T[t], c = cnt[t], an = m.geometry.attributes.aAnim;
+      m.count = c; m.visible = src.visible && c > 0;
+      if (!c) continue;
+      m.instanceMatrix.clearUpdateRanges(); m.instanceMatrix.addUpdateRange(0, c * 16); m.instanceMatrix.needsUpdate = true;
+      an.clearUpdateRanges(); an.addUpdateRange(0, c * 4); an.needsUpdate = true;
+      if (t < 3) { const a2 = m.geometry.attributes.aAnim2; a2.clearUpdateRanges(); a2.addUpdateRange(0, c * 4); a2.needsUpdate = true; }
+    }
   }
   // Copy each animal's matrix and pose from the procedural mesh's buffers (written by update) into its tier.
   distribute(k) {
     const st = this.drawn[k], D = DRAWN[k];
+    if (D.hybrid) return this.distributeHybrid(k);
     const src = this.meshes[k], n = src.count, M = src.instanceMatrix.array, A = src.geometry.attributes.aAnim.array, A2 = this.anim2[k];
     const C = this.camPos, cnt = this._dc, T = st.tiers, f = this.lodForce[D.name] ?? null, rig = hasAnim2(st.model);
     const r0 = D.lod[0] * D.lod[0], r1 = D.lod[1] * D.lod[1];
@@ -824,6 +888,7 @@ export class Animals {
       e2: 0, e3: 0, vis: 1, culled: false, next2: 0, cool: 0, zig: 0, zigT: 0,   // mammals (aAnim2.z, .w; hidden; pounce lift)
       u1: 0.5, u2: 0.5, u3: 0.5, young: 0,                             // buck: antler calendar jitter, forked-horn
       task: 0, acorn: null, carry: 0, ep: -1, bx: 0, bz: 0, cid: null, work: 0,   // acorn game collector
+      gm: 0, wfV: 0, wing: 0, look: 0, hopping: 0, after: 0, afterT: 0, perchY: null, perchTop: false, hop0: 0, tRest: 0,   // raven on the ground (ground model)
     };
     init(a);
     this.byId.set(id, a);
@@ -1127,9 +1192,9 @@ export class Animals {
     a.x = cx + R * Math.cos(th); a.z = cz + R * Math.sin(th); a.y = this.heights.atXZ(cx, cz) + alt;
   }
   rvUpdate(a, dt) {
-    const r = a.rng, H = this.heights, V = 10; a.t -= dt;
+    const r = a.rng, H = this.heights, V = 10, gm = this.meshOn(RV); a.t -= dt;
     a.flapT -= dt;
-    a.air = a.state === R_PERCH || a.state === R_GROUND ? 0 : 1;
+    a.air = a.state === R_PERCH || a.state === R_GROUND || a.state === R_WALK ? 0 : 1;
     if (a.state === R_SOAR) {
       // the centre drifts on the breeze and is pulled back toward home
       const hx = a.hx - a.cx, hz = a.hz - a.cz, hd = Math.hypot(hx, hz);
@@ -1159,7 +1224,7 @@ export class Animals {
       if (a.t <= 0) {
         const o = r() < 0.35 ? this.randomOak(a.cx, a.cz, 140, r, null, 7) : null;
         if (o) {   // glide down to a treetop
-          a.tree = o; a.sx = a.x; a.sy = a.y; a.sz = a.z; a.arc = 0;
+          a.tree = o; a.sx = a.x; a.sy = a.y; a.sz = a.z; a.arc = 0; a.perchTop = true;
           a.tx = o.x + (r() - 0.5) * o.scale; a.tz = o.z + (r() - 0.5) * o.scale; a.ty = o.y + treeHeight(o) * 0.97;
           const d = Math.hypot(a.tx - a.sx, a.ty - a.sy, a.tz - a.sz); a.dur = d / V; a.u = 0; a.state = R_GLIDE;
         } else a.t = 20 + r() * 40;
@@ -1170,26 +1235,49 @@ export class Animals {
       const ox = a.x, oy = a.y, oz = a.z;
       a.x = a.sx + (a.tx - a.sx) * u; a.z = a.sz + (a.tz - a.sz) * u; a.y = a.sy + (a.ty - a.sy) * e + a.arc * Math.sin(Math.PI * u);
       const vx = a.x - ox, vy = a.y - oy, vz = a.z - oz, vh = Math.hypot(vx, vz);
-      if (vh > 1e-5) a.yaw = Math.atan2(vx, vz);
+      if (vh > 1e-5) a.yaw += wrapAngle(Math.atan2(vx, vz) - a.yaw) * (1 - Math.exp(-dt * 7));   // turns into the line (no snap off the ground)
       a.pitch = damp(a.pitch, -Math.atan2(vy, vh + 1e-5) * 0.6, 4, dt); a.roll = damp(a.roll, 0, 2, dt);
       const flap = a.state === R_CLIMB || u > 0.85 || a.arc > 0;   // (arc: a short low hop, flapped)
       a.amp = damp(a.amp, flap ? 1 : 0, 6, dt); a.pose = damp(a.pose, 0, 6, dt);
       if (flap) a.phase += dt * TAU * 3;
       if (u >= 1) {
-        if (a.state === R_GLIDE && a.task) { a.state = R_GROUND; a.t = a.task === T_GET ? 1 + r() * 0.6 : 2.4 + r() * 1.2; a.pitch = 0; }
-        else if (a.state === R_GLIDE) { a.state = R_PERCH; a.t = 15 + r() * 35; a.pitch = 0; }
+        if (a.state === R_GLIDE && a.task) { a.state = R_GROUND; a.t = a.task === T_GET ? 1 + r() * 0.6 : 2.4 + r() * 1.2; a.pitch = 0; this.rvLand(a); }
+        else if (a.state === R_GLIDE) { a.state = R_PERCH; a.t = 15 + r() * 35; a.pitch = 0; this.rvLand(a); }
         else { a.state = R_SOAR; a.th = Math.atan2(a.z - a.cz, a.x - a.cx); a.t = this.game?.active ? 8 + r() * 20 : 30 + r() * 60; }
       }
-    } else if (a.state === R_GROUND) {   // acorn game: on the ground at an acorn, or pushing one under a shrub
-      a.amp = damp(a.amp, 0, 6, dt); a.pose = damp(a.pose, 1, 4, dt); a.roll = damp(a.roll, 0, 4, dt); a.pitch = damp(a.pitch, 0.3, 4, dt);
-      a.y = H.atXZ(a.x, a.z);
+    } else if (a.state === R_GROUND) {   // on the ground at an acorn, or pushing one under a shrub (caching)
+      // (the ground model leans in a little and pecks with its head; the procedural raven tips its whole body)
+      a.amp = damp(a.amp, 0, 6, dt); a.pose = damp(a.pose, 1, 4, dt); a.roll = damp(a.roll, 0, 4, dt); a.pitch = damp(a.pitch, gm ? 0.12 : 0.3, 4, dt);
+      a.y = H.atXZ(a.x, a.z); a.look = 0;
       if (r() < dt * 2.5) a.flickV = 1;   // pecks: working it loose, then poking it in and covering it
       if (a.t <= 0) this.rvGroundDone(a);
-    } else {   // R_PERCH on a treetop
+    } else if (a.state === R_WALK) {
+      this.rvWalk(a, dt);
+    } else {   // R_PERCH on a treetop, or standing on the ground (a beat before taking off, or a while when summoned)
       a.amp = damp(a.amp, 0, 6, dt); a.pose = damp(a.pose, 1, 3, dt); a.roll = damp(a.roll, 0, 4, dt); a.pitch = damp(a.pitch, -0.1, 3, dt);
       if (r() < dt * 0.3) a.flickV = 1;
-      if (r() < dt * 0.1) a.yaw += (r() - 0.5) * 2;
+      if (gm) {   // the ground model: glances about, flicks its wings, turns with a hop, walks or hops about and caches
+        const ground = a.perchY === null;
+        if (ground) a.y = H.atXZ(a.x, a.z);
+        if (r() < dt * 0.6) a.look = r() < 0.3 ? 0 : (r() - 0.5) * 2;
+        if (r() < dt * 0.07) a.wfV = 1;
+        a.wing = a.t < 0.3 ? 0.75 : 0;   // the wings lift and open just before take-off
+        if (a.t > 1.5) {
+          if (r() < dt * 0.1) {   // turn round with a hop on the spot
+            const yaw = a.yaw + (r() < 0.5 ? -1 : 1) * (0.6 + r() * 1.2);
+            this.rvStep(a, a.x + Math.sin(yaw) * 0.08, a.z + Math.cos(yaw) * 0.08, 1, R_PERCH, 0);
+          } else if (ground && a.t > 4 && r() < dt * 0.04) {   // cache something beside a shrub, if one is close
+            const spot = this.shrubSpot(a.x, a.z, 6), d = spot ? Math.hypot(spot.x - a.x, spot.z - a.z) : 0;
+            if (d > 0.3) this.rvStep(a, spot.x, spot.z, d > 2 ? 1 : 0, R_GROUND, 2.4 + r() * 1.2);
+          } else if (ground && r() < dt * 0.12) {   // a few steps, or a few hops
+            const ang = a.yaw + (r() - 0.5) * 2.4, d = 0.4 + r() * 1.8, x = a.x + Math.sin(ang) * d, z = a.z + Math.cos(ang) * d;
+            if (this.landOK(x, z)) this.rvStep(a, x, z, d > 1.2 && r() < 0.6 ? 1 : 0, R_PERCH, 0);
+          }
+        }
+      } else if (r() < dt * 0.1) a.yaw += (r() - 0.5) * 2;
       if (a.t <= 0) {   // back up to a new circle near home
+        if (gm) { a.pose = Math.min(a.pose, 0.55); a.wing = 0; a.look = 0; }   // the flying model starts half unfolded
+        a.perchY = null;
         a.cx = a.hx + (r() - 0.5) * 120; a.cz = a.hz + (r() - 0.5) * 120; a.R = 35 + r() * 40;
         a.th = Math.atan2(a.z - a.cz, a.x - a.cx); a.alt = 50 + r() * 100;
         a.sx = a.x; a.sy = a.y; a.sz = a.z;
@@ -1201,19 +1289,89 @@ export class Animals {
 
   // A glide (from a soar, arc 0) or a low flapped hop (arc > 0) to a point on the ground, as R_GLIDE.
   rvGlide(a, x, z, arc) {
-    a.sx = a.x; a.sy = a.y; a.sz = a.z; a.tx = x; a.tz = z; a.ty = this.heights.atXZ(x, z); a.arc = arc;
+    a.sx = a.x; a.sy = a.y; a.sz = a.z; a.tx = x; a.tz = z; a.ty = this.heights.atXZ(x, z); a.arc = arc; a.perchTop = false;
     const d = Math.hypot(a.tx - a.sx, a.ty - a.sy, a.tz - a.sz); a.dur = Math.max(1.2, d / (arc ? 7 : 10)); a.u = 0; a.state = R_GLIDE;
   }
   rvGroundDone(a) {
     const r = a.rng, G = this.game, task = a.task;
     a.task = 0;
     if (this.gameOn(a) && task === T_GET && this.takeAcorn(a)) {   // got it: hop to a shrub to hide it
-      const spot = this.cacheSpot(a.x, a.z, r);
-      a.task = T_STORE; this.rvGlide(a, spot.x, spot.z, Math.min(4, 1 + Math.hypot(spot.x - a.x, spot.z - a.z) * 0.1));
+      const near = this.meshOn(RV) ? this.shrubSpot(a.x, a.z, 6) : null;
+      const spot = near || this.cacheSpot(a.x, a.z, r), d = Math.hypot(spot.x - a.x, spot.z - a.z);
+      a.task = T_STORE;
+      // a shrub close by: on foot (the ground model: walks, or hops past 2 m); farther, a low flapped hop
+      if (near || (this.meshOn(RV) && d < 6)) this.rvStep(a, spot.x, spot.z, d > 2 ? 1 : 0, R_GROUND, 2.4 + r() * 1.2);
+      else this.rvGlide(a, spot.x, spot.z, Math.min(4, 1 + d * 0.1));
       return;
     }
     if (task === T_STORE && a.carry && this.gameOn(a) && G.bury(a.id, a.x, a.y, a.z, 'cache')) a.carry = 0;
     a.state = R_PERCH; a.t = 0.6 + r() * 1.2;   // a beat, then back up to the circle
+    if (!task && a.tRest > 0) { a.t = a.tRest; a.tRest = 0; }   // cached on its own while standing about: stands on
+  }
+  // Touchdown at the end of a glide (on the ground, or a treetop: perchY holds its height). The ground model takes over
+  // here: its folded wings settle (a flick dying away) and the landing shuffle is short.
+  rvLand(a) {
+    a.perchY = a.perchTop ? a.y : null; a.perchTop = false;
+    a.e0 = 0.9; a.wfV = 0; a.wing = 0; a.look = 0; a.e1 = 0; a.hopping = 0; a.e2 = 0;
+    a.amp = Math.min(a.amp, 0.3);
+  }
+  // Walk (hop 0: legs alternate, ~0.55 m/s) or hop (hop 1: legs together, 0.42 m hops) to (x, z) on the ground or along
+  // the perch, then go on as `after` (R_PERCH, or R_GROUND for afterT s: caching).
+  rvStep(a, x, z, hop, after, afterT) {
+    if (after === R_GROUND && !a.task) a.tRest = a.t;   // the standing time left, after caching
+    a.tx = x; a.tz = z; a.hopping = hop; a.after = after; a.afterT = afterT; a.state = R_WALK; a.hopU = 1.3;
+  }
+  rvWalk(a, dt) {
+    const H = this.heights, dx = a.tx - a.x, dz = a.tz - a.z, d = Math.hypot(dx, dz);
+    const base = () => a.perchY ?? H.atXZ(a.x, a.z);
+    a.pose = damp(a.pose, 1, 6, dt); a.roll = damp(a.roll, 0, 6, dt); a.pitch = damp(a.pitch, 0.04, 6, dt); a.look = damp(a.look, 0, 4, dt);
+    if (d > 0.02) a.yaw += wrapAngle(Math.atan2(dx, dz) - a.yaw) * (1 - Math.exp(-dt * (a.hopping ? 14 : 8)));
+    let done = false;
+    if (!a.hopping) {
+      const step = Math.min(d, 0.55 * dt);
+      if (d > 1e-4) { a.x += dx / d * step; a.z += dz / d * step; }
+      a.amp = damp(a.amp, d > 0.02 ? 1 : 0, 10, dt); a.phase += dt * TAU * 2.4;
+      a.y = base();
+      done = d <= 0.02;
+    } else {
+      if (a.hopU >= 1.3) {   // the next hop
+        if (d <= 0.02) done = true;
+        else { const L = Math.min(d, 0.42); a.hopX = a.x; a.hopZ = a.z; a.hopDX = dx / d * L; a.hopDZ = dz / d * L; a.hopU = 0; a.hop0 = Math.round(a.phase / TAU) * TAU; }
+      }
+      if (!done) {
+        a.hopU += dt / 0.28;
+        const h = Math.min(1, a.hopU), e = h * h * (3 - 2 * h);
+        a.x = a.hopX + a.hopDX * e; a.z = a.hopZ + a.hopDZ * e;
+        a.y = base() + 0.07 * Math.sin(Math.PI * h) * Math.min(1, Math.hypot(a.hopDX, a.hopDZ) / 0.15 + 0.4);
+        a.phase = a.hop0 + h * TAU; a.amp = damp(a.amp, h < 1 ? 1 : 0, 12, dt);
+      }
+    }
+    if (done) {
+      a.state = a.after; a.hopping = 0; a.y = base();
+      if (a.after === R_GROUND) a.t = a.afterT;
+    }
+  }
+  // debugging: a raven on the ground (a, else the nearest to the eye) walks or hops to a shrub within 6 m and caches
+  // there. Returns the distance, or null.
+  ravenCache(a = null) {
+    const C = this.camPos; a ||= this.nearestOf('corvus_corax', C.x, C.y, C.z, 200);
+    if (!a || !(a.state === R_PERCH || a.state === R_GROUND) || a.perchY !== null) return null;
+    const spot = this.shrubSpot(a.x, a.z, 6), d = spot ? Math.hypot(spot.x - a.x, spot.z - a.z) : 0;
+    if (!spot) return null;
+    a.t = Math.max(a.t, 8);
+    this.rvStep(a, spot.x, spot.z, d > 2 ? 1 : 0, R_GROUND, 2.4 + a.rng() * 1.2);
+    return +d.toFixed(2);
+  }
+  // Beside the nearest shrub of the near set within r m (the side facing x, z), or null.
+  shrubSpot(x, z, r) {
+    let pick = null, bd = r * r;
+    for (const p of this.veg.nearPlants || []) {
+      const dx = p.x - x, dz = p.z - z, d2 = dx * dx + dz * dz; if (d2 > bd || !PLANTS[p.species]?.shrub) continue;
+      bd = d2; pick = p;
+    }
+    if (!pick) return null;
+    const ang = Math.atan2(x - pick.x, z - pick.z), d = 0.4 + 0.25 * (pick.scale || 1);
+    return { x: pick.x + Math.sin(ang) * d, z: pick.z + Math.cos(ang) * d };
   }
   // A caching place: beside a shrub of the near set within 40 m (reservoir pick), else open ground 8-25 m off.
   cacheSpot(x, z, rng) {
@@ -1274,7 +1432,8 @@ export class Animals {
   // Where the carried acorn is: the bill or mouth point (CARRY) turned with the head part (and, for the drawn
   // squirrel, the chest it hangs from) as the vertex shader does, then through the instance matrix m.
   carryPoint(a, m) {
-    let C = CARRY[a.sp], chest = false;
+    let C = CARRY[a.sp], chest = false, lift = 0, yaw = 0;
+    if (a.sp === RV && this.meshOn(RV)) { if (a.gm) { C = CARRY.rvGround; yaw = a.e1; } else lift = RAVEN_LIFT; }
     if (a.sp === SQ && this.meshOn(SQ)) {
       C = CARRY.sqRig; chest = true;
       const piv = this.drawn[SQ].model?.rig?.piv;
@@ -1287,7 +1446,9 @@ export class Animals {
       g = -(Math.sin(a.phase + 1.2) * a.amp * 0.28 + a.pose * 0.7); c = Math.cos(g); s = Math.sin(g);
       y = y2 - C.cy; z = z2 - C.cz; y2 = c * y - s * z + C.cy; z2 = s * y + c * z + C.cz;
     }
-    return (this._cp ||= new THREE.Vector3()).set(0, y2, z2).applyMatrix4(m);
+    let x2 = 0;
+    if (yaw) { z = z2 - C.pz; x2 = Math.sin(yaw) * z; z2 = C.pz + Math.cos(yaw) * z; }   // the ground raven's head turn
+    return (this._cp ||= new THREE.Vector3()).set(x2, y2 + lift, z2).applyMatrix4(m);
   }
 
   // ---- deer ---------------------------------------------------------------------------------------
@@ -1943,7 +2104,12 @@ export class Animals {
     else { this._forceBuck = k === BK; this._near = true; this.spawnCell(k === BK ? DR : k === WF ? WP : k, 'dbg', n, x, -z, rnd, keep, 0); this._forceBuck = this._near = false; }
     for (const id of keep) this.debugIds.add(id);
     this.dirty = true;
-    return [...this.byId.values()].filter(a => !before.has(a.id));
+    const fresh = [...this.byId.values()].filter(a => !before.has(a.id));
+    if (k === RV) fresh.forEach((a, i) => {   // ravens come down: standing on the ground a while at the spot
+      a.x = x + (i ? 0.9 : 0); a.z = z + (i ? 0.5 : 0); a.y = this.heights.atXZ(a.x, a.z); a.yaw = rnd() * TAU;
+      a.state = R_PERCH; a.t = 30 + rnd() * 30; a.pose = 1; a.amp = 0; a.pitch = 0; a.roll = 0; a.fly = 0; a.perchY = null; a.air = 0;
+    });
+    return fresh;
   }
   clearSummoned() { this.debugIds.clear(); this.dirty = true; }
 
@@ -2018,7 +2184,11 @@ export class Animals {
       a.flick = sp === WP || sp === WF ? a.flick : damp(a.flick, 0, 1, dt);
       if (sp === SQ) this.sqUpdate(a, dt, px, py, pz);
       else if (sp === WP || sp === WF) this.wpUpdate(a, dt, px, py, pz);
-      else if (sp === RV) this.rvUpdate(a, dt);
+      else if (sp === RV) {
+        this.rvUpdate(a, dt);
+        a.gm = this.meshOn(RV) && (a.state === R_GROUND || a.state === R_PERCH || a.state === R_WALK) ? 1 : 0;
+        if (this.rvGM) this.rvGM[a.slot] = a.gm;
+      }
       else if (sp === DR || sp === BK) this.drUpdate(a, dt);
       else if (sp === FX || sp === CY || sp === ML) this.mmUpdate(a, dt, px, py, pz);
       else if (sp === RB) this.rbUpdate(a, dt, px, py, pz);
@@ -2091,6 +2261,11 @@ export class Animals {
       const stoop = a.state === H_STOOP;
       a.e0 = damp(a.e0, stoop ? a.pose : 0, 4, dt);                                  // hands droop as the wings tuck
       a.e1 = damp(a.e1, stoop ? -a.pose : a.state === H_PULL ? 0.3 : 0, 4, dt);       // tail closed in the dive, fanned pulling out
+    } else if (a.sp === RV) {   // the ground raven: wing flick, head yaw, hop (legs together)
+      if (a.wfV > 0) { a.e0 = Math.max(a.e0 * Math.exp(-6 * dt), Math.sin(Math.PI * (1 - a.wfV)) * 0.9); a.wfV -= dt / 0.4; }
+      else a.e0 = damp(a.e0, a.wing, a.wing > a.e0 ? 10 : 5, dt);
+      a.e1 = damp(a.e1, a.look, 7, dt);
+      a.e2 = damp(a.e2, a.hopping, 14, dt); a.e3 = 0;
     } else if (a.sp === BK) this.antlers(a);
     // fox, coyote, lion: e3 (gait selector) and the lion's e1 (tail-tip twitch) are set in mmUpdate
   }

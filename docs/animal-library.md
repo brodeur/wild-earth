@@ -251,12 +251,26 @@ Known measurement limits: the vole's tail is part of BODY, so its head and body 
 rabbit crouches, so its straight-line length is shorter than the spine the build script scaled; the squirrel's
 curled tail shortens its total length the same way.
 
+## Ground raven wired (2026-10-25)
+
+`raven_ground.glb` is drawn by `animalModels.js` `loadRavenGroundMesh` on the bird template with a ground variant
+(RIG_GROUND): aAnim2 = (wing flick, head yaw, hop). The folded wings never collapse; a flick lifts and opens WING at
+the shoulder with HAND following at the wrist; hop swings both legs together (0 alternates them: a walk). lod0 is
+drawn with its texture and smooth file normals (turned with the parts), vertex colours off; lod1 and lod2 with
+vertex colours. Ambient ravens (`animals.js`, DRAWN[RV] hybrid) use it on the ground and perched (standing,
+walking, hopping, pecking, caching beside a shrub within 6 m on foot), tiers at 15 / 50 m, and the procedural
+flying raven in the air; the swap is at touchdown and take-off with position and heading kept and the flying model
+lifted 0.12 m so the bodies line up. The player (`raven.js`) lands with hover then Z (`flight.js` `landed`) and
+stands on the ground model, head following the look and the body catching up in hops; Space, X or W take off.
+`?ravenground=proc` for A/B. Still a shape change at the swap itself (spread or folded procedural wings against the
+mesh's folded ones), softened by the wings settling after touchdown and lifting before take-off.
+
 ## Next (adoption lane)
 
 1. `tools/build_raven_ground.py` on the deer model: scale to 0.62 m bill to tail, weld, decimate to
    three tiers, colour (black, a slightly browner worn wing, black bill and legs), assign the bird
    template's parts (head and neck, legs A/B, tail; folded wings as body or as a small "tuck" part)
    and pivots, and carry over any Meshy identifiers.
-2. Decide the raven's runtime: the flying player keeps the skinned CC0 model; the ground and
-   perched raven (acorn game, ambient) uses the new mesh, with a swap on landing and take-off.
+2. Done (see "Ground raven wired"): the ground and perched raven (acorn game, ambient, the landed player) uses
+   the new mesh, with a swap on landing and take-off.
 3. The animal lineup page and the GBIF gap report in the tile build.

@@ -1,6 +1,7 @@
 import * as THREE from 'three';
 import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
 import { addCaster } from './shadows.js';
+import { loadRavenGroundMesh, animalMaterial, animalDepthMaterial, RAVEN_GROUND } from './animalModels.js';
 
 // The player's raven: a rigged, skinned mesh with two clips, fly (a 1.4 s wingbeat) and glide
 // (wings held out, a slow small flex), crossfaded on the flight model's `flapping` flag.
@@ -16,12 +17,22 @@ import { addCaster } from './shadows.js';
 //    added. It is 4.2 m across in Blender units, so it is scaled here, and its body sits about a
 //    metre above the file's origin.
 // window.__we.raven.setModel('cc0' | 'meshy') swaps them live (side-by-side checks).
+// On the ground (flight.js `landed`: hover, then Z down to the ground) the flying model gives way to the ground raven
+// (client/assets/raven_ground.glb, the ambient ravens' standing model, lod0 with its texture; animalModels.js
+// loadRavenGroundMesh), placed at the touchdown point with the same heading and its body where the flying model's was
+// (the flying model's origin is its body, the ground model's its feet: RAVEN_GROUND.bodyY between them). Its folded
+// wings settle on touchdown; its head follows the look (yaw up to ~65 degrees either side, pitch with the look) and
+// the body follows in hops (legs together) when the look turns past that; C (the call) flicks the wings. Taking
+// off swaps back. ?ravenground=proc keeps the flying model on the ground (A/B).
 const MODELS = {
   meshy: { url: new URL('../assets/raven_player.glb', import.meta.url), scale: 1, y: 0, rotY: Math.PI, tier: 'lod0', vertexColors: true },
   cc0: { url: new URL('../assets/raven.glb', import.meta.url), scale: 0.32, y: -0.32, rotY: 0, tier: null, vertexColors: false },
 };
-const PARAM = new URLSearchParams(location.search).get('raven');
+const Q = new URLSearchParams(location.search), PARAM = Q.get('raven');
 const DEFAULT = PARAM === 'old' || PARAM === 'cc0' ? 'cc0' : 'meshy';
+const GROUND = Q.get('ravenground') !== 'proc' && Q.get('animals') !== 'proc';
+const HEAD_MAX = 1.1, TURN_AT = 1.0, HOP_T = 0.26, TAU = Math.PI * 2;
+const wrap = a => Math.atan2(Math.sin(a), Math.cos(a));
 
 export class Raven {
   constructor(parent, atmosphere) {
@@ -30,6 +41,65 @@ export class Raven {
     this.mixer = null; this.fly = null; this.glide = null; this.flapping = true;
     this.model = null; this.kind = null; this.loaded = {};
     this.setModel(DEFAULT);
+    // the ground raven (see the header)
+    this.flight = parent.userData.flight || null; this.parent = parent;
+    this.ground = null; this.onGround = false;
+    this.g = { yaw: 0, hopU: 1, hopFrom: 0, hopTo: 0, e0: 0, wfV: 0, look: 0, flick: 0, gait: 0 };
+    this._m = new THREE.Matrix4(); this._q = new THREE.Quaternion(); this._p = new THREE.Vector3(); this._s = new THREE.Vector3(1, 1, 1); this._up = new THREE.Vector3(0, 1, 0);
+    if (GROUND && this.flight) loadRavenGroundMesh().then(m => this.buildGround(m), e => console.warn('ground raven failed to load; the flying model stays on the ground', e));
+    addEventListener('keydown', e => { if (e.code === 'KeyC' && this.onGround && !(e.target && (e.target.tagName === 'INPUT' || e.target.tagName === 'SELECT'))) this.g.wfV = 1; });
+  }
+  // One instance of the ground model's lod0 (textured), on its own copy of the geometry (the tiers are the ambient
+  // ravens'), with its own shadow caster. It hangs in the scene, not from the flight body (no pitch or bank).
+  buildGround(model) {
+    const geo = model.tiers[0].clone();
+    for (const n of ['aAnim', 'aAnim2']) { const a = new THREE.InstancedBufferAttribute(new Float32Array(4), 4); a.setUsage(THREE.DynamicDrawUsage); geo.setAttribute(n, a); }
+    const mesh = new THREE.InstancedMesh(geo, animalMaterial(this.atmosphere, model, { map: model.maps?.[0] || null }), 1);
+    mesh.instanceMatrix.setUsage(THREE.DynamicDrawUsage);
+    mesh.count = 1; mesh.frustumCulled = false; mesh.visible = false; mesh.name = 'raven ground (player)';
+    mesh.castShadow = mesh.receiveShadow = true;
+    mesh.customDepthMaterial = animalDepthMaterial(model);
+    (this.parent.parent || this.parent).add(mesh);
+    addCaster(mesh, { cascades: [0] });
+    this.ground = mesh; this.groundModel = model;
+  }
+  // Touchdown and take-off, then the ground model's pose: placed at the feet under the body, heading the body's
+  // (lagging the look and catching up in hops), head turned and pitched toward the look.
+  updateGround(dt) {
+    const f = this.flight, mesh = this.ground;
+    const on = !!(f && mesh && f.landed);
+    if (on !== this.onGround) {
+      this.onGround = on;
+      this.group.visible = !on;
+      if (on) { const g = this.g; g.yaw = f.yaw; g.hopU = 1; g.e0 = 0.9; g.wfV = 0; g.look = 0; g.flick = 0; g.gait = 0; }   // wings settle
+    }
+    if (!mesh) return;
+    mesh.visible = on && this.parent.visible;
+    if (!mesh.visible) return;
+    const g = this.g, amp = this.groundModel.amp;
+    // body heading: a hop round when the look has turned past TURN_AT
+    let lift = 0, hop = 0;
+    if (g.hopU < 1) {
+      g.hopU = Math.min(1, g.hopU + dt / HOP_T);
+      const h = g.hopU, e = h * h * (3 - 2 * h);
+      g.yaw = g.hopFrom + wrap(g.hopTo - g.hopFrom) * e;
+      lift = 0.05 * Math.sin(Math.PI * h); hop = 1; g.gait = 1;
+    } else {
+      g.gait = Math.max(0, g.gait - dt * 8);
+      if (Math.abs(wrap(f.yaw - g.yaw)) > TURN_AT) { g.hopU = 0; g.hopFrom = g.yaw; g.hopTo = f.yaw; }
+    }
+    const head = THREE.MathUtils.clamp(wrap(f.yaw - g.yaw), -HEAD_MAX, HEAD_MAX);
+    g.look += (head - g.look) * (1 - Math.exp(-dt * 10));
+    g.flick += (THREE.MathUtils.clamp(-f.pitch / amp[2], -1.2, 1.0) - g.flick) * (1 - Math.exp(-dt * 8));   // head pitch: the look's
+    if (g.wfV > 0) { g.e0 = Math.max(g.e0 * Math.exp(-6 * dt), Math.sin(Math.PI * (1 - g.wfV)) * 0.9); g.wfV -= dt / 0.4; }
+    else g.e0 *= Math.exp(-5 * dt);
+    const an = mesh.geometry.attributes.aAnim, a2 = mesh.geometry.attributes.aAnim2;
+    an.array[0] = (g.hopU < 1 ? g.hopU : 0) * TAU; an.array[1] = g.gait; an.array[2] = 1; an.array[3] = g.flick; an.needsUpdate = true;
+    a2.array[0] = g.e0; a2.array[1] = g.look; a2.array[2] = hop || g.gait > 0 ? 1 : 0; a2.array[3] = 0; a2.needsUpdate = true;
+    // feet under the body: the flying model's origin (its body) less the ground model's body height
+    this._p.set(f.pos.x, f.pos.y - RAVEN_GROUND.bodyY + lift, f.pos.z);
+    this._q.setFromAxisAngle(this._up, g.yaw + Math.PI);   // flight's forward is -z at yaw 0, the model's bill +z
+    mesh.instanceMatrix.array.set(this._m.compose(this._p, this._q, this._s).elements); mesh.instanceMatrix.needsUpdate = true;
   }
   // Load (once) and show one of MODELS; a failed 'meshy' load falls back to 'cc0'.
   setModel(kind) {
@@ -84,6 +154,7 @@ export class Raven {
   }
   // flapping: whether the bird is working (climbing, boosting, a flap); speed: m/s, sets the wingbeat rate.
   update(dt, flapping, speed) {
+    this.updateGround(dt);
     if (!this.mixer) return;
     if (flapping !== this.flapping) {
       this.flapping = flapping;

@@ -1,8 +1,15 @@
 import * as THREE from 'three';
+import { RAVEN_GROUND } from './animalModels.js';
 
 // The raven: constant forward flight with pitch and yaw, a slow sink while gliding, flapping to climb,
 // a hover (H, or S held to a stop) that holds position. The bird is `body` (a Group the model hangs
 // from); the camera chases it from behind and a little above, or sits on it in first person (V toggles).
+// Landing: hovering (or slowed to a stop), Z descends past the 2 m flight floor to the ground, and the bird stands
+// there (`landed`; body at LAND_H above the rendered terrain, `groundY`, so raven.js puts the ground model's feet
+// on it); A / D turn, the arrows and a drag look about. Space, X or W take off: the bird climbs back to the
+// flight floor rather than jumping to it. body.userData.flight is this, for the model hanging from body.
+const LAND_H = RAVEN_GROUND.bodyY;   // the body above the feet, standing (raven_ground.glb)
+const TERRAIN_SPACING = 10;          // terrain.js default vertex spacing (main.js builds it with the defaults)
 export class RavenFlight {
   constructor(camera, heights, dom) {
     this.camera = camera; this.heights = heights;
@@ -12,6 +19,8 @@ export class RavenFlight {
     this.view = 'chase';                                  // 'chase' | 'first'
     this.camOff = new THREE.Vector3(); this.camUp = new THREE.Vector3(0, 1, 0); this.camSettled = false;
     this.flapping = false;
+    this.landed = false; this.groundY = 0; this.lifting = false; this.wasHolding = false;
+    this.body.userData.flight = this;
     this._q = new THREE.Quaternion(); this._e = new THREE.Euler(0, 0, 0, 'YXZ'); this._v = new THREE.Vector3(); this._look = new THREE.Vector3();
     window.addEventListener('keydown', e => {
       if (e.target && (e.target.tagName === 'INPUT' || e.target.tagName === 'SELECT')) return;
@@ -28,7 +37,16 @@ export class RavenFlight {
   }
   setHover(on) { this.hover = on; if (!on && this.speed < 6) this.speed = 8; }
   setView(v) { this.view = v; this.camSettled = false; this.body.visible = v === 'chase'; }
-  reset(x, z, agl = 120) { this.pos.set(x, this.heights.atXZ(x, z) + agl, z); this.yaw = 0; this.pitch = -0.08; this.speed = 12; this.camSettled = false; }  // yaw 0 faces north (-z)
+  // Height of the rendered terrain mesh (terrain.js: vertices every TERRAIN_SPACING m, each square split along its
+  // SW-NE diagonal; in a hollow it runs up to ~0.6 m above the bilinear field), as animals.js and rocks.js stand on.
+  meshAt(x, z) {
+    const h = this.heights, S = TERRAIN_SPACING, n = Math.round(h.size / S) - 1, north = -z;
+    const fx = x / S, fn = north / S, i0 = Math.min(Math.max(Math.floor(fx), 0), n), n0 = Math.min(Math.max(Math.floor(fn), 0), n);
+    const u = Math.min(Math.max(fx - i0, 0), 1), w = Math.min(Math.max(fn - n0, 0), 1);
+    const SW = h.at(i0 * S, n0 * S), SE = h.at((i0 + 1) * S, n0 * S), NW = h.at(i0 * S, (n0 + 1) * S), NE = h.at((i0 + 1) * S, (n0 + 1) * S);
+    return w > u ? SW + u * (NE - NW) + w * (NW - SW) : SW + u * (SE - SW) + w * (NE - SE);
+  }
+  reset(x, z, agl = 120) { this.pos.set(x, this.heights.atXZ(x, z) + agl, z); this.landed = this.lifting = false; this.yaw = 0; this.pitch = -0.08; this.speed = 12; this.camSettled = false; }  // yaw 0 faces north (-z)
   update(dt) {
     const k = this.keys, turn = 1.4, pitchRate = 1.0;
     let yawIn = (k.has('ArrowLeft') || k.has('KeyA') ? 1 : 0) - (k.has('ArrowRight') || k.has('KeyD') ? 1 : 0);
@@ -36,7 +54,7 @@ export class RavenFlight {
     this.yaw += yawIn * turn * dt;
     this.pitch = THREE.MathUtils.clamp(this.pitch + pitchIn * pitchRate * dt, -1.2, 0.9);
     if (!pitchIn) this.pitch = THREE.MathUtils.lerp(this.pitch, -0.05, 1 - Math.exp(-dt * 0.15));  // settle toward a shallow glide, slowly (~7 s)
-    this.roll = THREE.MathUtils.lerp(this.roll, yawIn * 0.6, 1 - Math.exp(-dt * 1.0));   // bank into the turn: left turn dips the left wing
+    this.roll = THREE.MathUtils.lerp(this.roll, this.landed ? 0 : yawIn * 0.6, 1 - Math.exp(-dt * (this.landed ? 4 : 1.0)));   // bank into the turn: left turn dips the left wing
     // W speeds up; S slows to a stop and, if held on past zero for half a second, backs up.
     const boost = k.has('ShiftLeft') || k.has('ShiftRight');
     if (k.has('KeyW')) { this.hover = false; this.speed += 8 * dt; }
@@ -47,6 +65,7 @@ export class RavenFlight {
       else this.speed = Math.max(-6, this.speed - 5 * dt);                           // then reverse
     } else this.sDwell = 0;
     if (this.hover) this.speed = THREE.MathUtils.lerp(this.speed, 0, 1 - Math.exp(-dt * 2.5));
+    if (this.landed && !k.has('KeyW') && !boost) this.speed = 0;   // standing: no creep along the ground
     const gliding = this.speed > 4 && !this.hover;
     if (gliding) {
       // Diving speeds up, climbing slows down; a glide settles toward cruise.
@@ -65,7 +84,20 @@ export class RavenFlight {
     // Wings work when the bird is climbing, driving, hovering or too slow to glide; otherwise it glides.
     this.flapping = this.flap > 0 || vert > 0 || boost || k.has('KeyW') || this.pitch > 0.12 || !gliding;
     const ground = this.heights.atXZ(this.pos.x, this.pos.z);
-    if (this.pos.y < ground + 2) { this.pos.y = ground + 2; this.pitch = Math.max(this.pitch, 0.05); }
+    // The flight floor is 2 m; holding (hovering or stopped) the floor is the ground itself, where the bird lands.
+    // Leaving the hold below 2 m (a take-off) climbs to the floor instead of jumping to it.
+    const landY = this.meshAt(this.pos.x, this.pos.z) + LAND_H;
+    if (!holding && this.wasHolding && this.pos.y < ground + 2) this.lifting = true;
+    if (holding) this.lifting = false;
+    if (holding) { if (this.pos.y < landY) this.pos.y = landY; }
+    else if (this.lifting) {
+      this.pos.y = Math.min(ground + 2, Math.max(this.pos.y, landY) + 6 * dt);
+      if (this.pos.y >= ground + 2 - 1e-3) this.lifting = false;
+    } else if (this.pos.y < ground + 2) { this.pos.y = ground + 2; this.pitch = Math.max(this.pitch, 0.05); }
+    this.wasHolding = holding;
+    this.landed = holding && this.pos.y <= landY + 0.02;
+    this.groundY = landY - LAND_H;
+    if (this.landed) this.flapping = false;
     this.pos.x = THREE.MathUtils.clamp(this.pos.x, 50, this.heights.size - 50);
     this.pos.z = THREE.MathUtils.clamp(this.pos.z, -this.heights.size + 50, -50);
     this.body.quaternion.copy(this._q); this.body.rotateZ(this.roll);
