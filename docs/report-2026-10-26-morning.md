@@ -74,11 +74,20 @@ Lanes still running when this report was written are listed in `docs/roadmap.md`
 | 01d44dd | Playable acorn woodpecker: cling and hitch, undulating flight, pick from a crown, hammer acorns into the family granary. |
 | 0f7c4d2 | Chaparral shrub cards show leaves, wands and stems within 26 m. |
 
-Lanes still running at the time of this update: the raven player and ground models, the far
-forest silhouette review, shrub impostor sizes to the species' heights, synthesized calls for
-the new animals, a first multiplayer node for the acorn game, and hydrology rewilding
-(reservoirs and stock ponds returned to channels, real creek depth). Their commits, if they
-verified, follow 2e491c4 in `git log`.
+| 22673a3 | Acorn game v3: a shared world per tile and season served by the dev server (WebSocket, first pickup wins, AI host election, snapshots and an append-only log); the node stores only a per-round hashed id and counts, never an id beside a position. The endpoint goes live when the dev server is restarted. |
+| 02d228d | Chaparral shrub impostors sized to the species (chamise under 2.5 m, manzanita under 3.5 m), cover kept. |
+| a6ddbaa, 84101bc, 3712f7f | Hydrology rewilding: 30 reservoirs and stock ponds on the home tile (54 ha) and 41 on Placerville returned to channels with a carved thalweg; creeks get a real depth with pools and riffles; the beds become meadow with a riparian corridor and the erase paints them; the HUD says "over the old bed of Patterson Lake". |
+| 18ef9bc | Calls for the drawn animals: woodpecker rally and hammering, squirrel bark and chatter, Steller's jay scold and whistle, quail clucks and assembly, deer snort, fox bark, rabbit thump. |
+| 6151294, 216e2fd | Far forest: horizon keeps its cover, backlit pines match, bake halved; per-tree dithered hand-over so the ring no longer swaps every 200 m; far trees cast shadows. |
+| 07526b7 | WebGPU evaluation: stay on WebGL for the demo; GPU compute for placement is the one clear win; upgrade three.js first. |
 
-**Disk:** the machine had about 1.4 GB free at one point tonight; the session scratchpad was
-trimmed from 3.7 GB to 1.4 GB. The disk as a whole is close to full and is worth a look.
+Lanes still running at the time of this update: the raven player and ground models, and the
+riparian tree species (arroyo willow, white alder, Fremont cottonwood) for the corridors.
+Their commits, if they verified, follow 216e2fd in `git log`.
+
+**Disk:** the machine dipped to a few hundred MB free several times tonight while lanes wrote
+captures; the session scratchpad was trimmed twice and the disk ended the night at about 9 GB
+free. The volume as a whole is close to full and is worth a look.
+
+**To do once you are up:** restart the dev server (the shared-world endpoint is in server.py but
+the running process predates it), and decide the attribution form for generated assets.
