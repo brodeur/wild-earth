@@ -12,9 +12,12 @@ import { PlaceNames } from './placenames.js';
 // sessionStorage), so Begin always finds its world ready and its press can start the sound.
 // Arrival drives RavenFlight's pose and chase camera until it hands control to the player.
 
-// Playable today: the raven (RavenFlight) and the western gray squirrel (squirrelControl.js). The squirrel's
-// arrival is not this flight but a short run down and out of the nearest oak (SquirrelControl.arrive).
-const PLAYABLE = new Set(['corvus_corax', 'sciurus_griseus']);
+// Playable today: the raven (RavenFlight), the western gray squirrel (squirrelControl.js) and the acorn woodpecker
+// (woodpeckerControl.js), the woodpecker as a male or a female (two cards; the sex is remembered beside the species).
+// The squirrel's arrival is not this flight but a short run down and out of the nearest oak (SquirrelControl.arrive);
+// the woodpecker arrives clinging to its family's granary (WoodpeckerControl.arrive).
+const PLAYABLE = new Set(['corvus_corax', 'sciurus_griseus', 'melanerpes_formicivorus']);
+const SEXED = { melanerpes_formicivorus: { male: 'red crown from the white forehead back', female: 'a black band between the white and the red' } };
 const SEASON_LINE = {   // what the foothills are doing, hand-written; the raven half comes from calendar.json
   winter: 'Rain greens the hills; the blue oaks stand bare.',
   spring: 'Wildflowers, new oak leaves, creeks running full.',
@@ -23,13 +26,15 @@ const SEASON_LINE = {   // what the foothills are doing, hand-written; the raven
 };
 const MONTH = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
 const ROAD_WEIGHT = { motorway: 6, trunk: 5, primary: 4, secondary: 3, tertiary: 1.5 };
-const LAST_TILE = 'we.lastTile', LAST_SPECIES = 'we.lastSpecies';
+const LAST_TILE = 'we.lastTile', LAST_SPECIES = 'we.lastSpecies', LAST_SEX = 'we.lastSex';
 
 export const lastTile = () => { try { return localStorage.getItem(LAST_TILE); } catch { return null; } };
 export const rememberTile = id => { try { localStorage.setItem(LAST_TILE, id); } catch { /* storage off */ } };
 // The species chosen last time (the "who" card preselected on the next visit), remembered like the tile.
 export const lastSpecies = () => { try { const c = localStorage.getItem(LAST_SPECIES); return PLAYABLE.has(c) ? c : null; } catch { return null; } };
 export const rememberSpecies = code => { try { if (PLAYABLE.has(code)) localStorage.setItem(LAST_SPECIES, code); } catch { /* storage off */ } };
+export const lastSex = () => { try { return localStorage.getItem(LAST_SEX) === 'female' ? 'female' : 'male'; } catch { return 'male'; } };
+export const rememberSex = sex => { try { localStorage.setItem(LAST_SEX, sex === 'female' ? 'female' : 'male'); } catch { /* storage off */ } };
 
 const esc = s => String(s).replace(/[&<>"]/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' })[c]);
 const getJSON = url => fetch(url).then(r => r.ok ? r.json() : null).catch(() => null);
@@ -65,6 +70,7 @@ export class OpeningScreen {
     this.live = seasonOfDate();
     this.season = SEASONS.includes(carried?.season) ? carried.season : this.live;
     this.species = PLAYABLE.has(carried?.species) ? carried.species : lastSpecies() || 'corvus_corax';
+    this.sex = carried?.sex === 'female' || carried?.sex === 'male' ? carried.sex : lastSex();
     this.point = null;          // { x, north } in this tile, or null for the tile centre
     this.ready = false; this.begun = false; this.places = null; this.data = {};
     this.render();
@@ -146,18 +152,19 @@ export class OpeningScreen {
     const box = this.$('.op-species'); box.classList.remove('muted');
     if (!playable.length) { box.textContent = 'no species list in this tile'; return; }
     if (!playable.some(s => s.code === this.species && PLAYABLE.has(s.code))) this.species = 'corvus_corax';   // not playable in this tile
-    box.innerHTML = playable.map(s => {
+    box.innerHTML = playable.flatMap(s => {
       const list = per[s.code], flyable = PLAYABLE.has(s.code), n = list ? list.length : all.length;
       const sees = new Set(list || all.map(a => a.code));
       const dots = all.map(a => `<i class="${sees.has(a.code) ? 'on' : ''}" title="${esc(a.common)}"></i>`).join('');
       const title = list ? `perceives: ${list.map(c => names[c] || c).join(', ')}` : 'no perception matrix: everything';
-      return `<button class="op-card op-sp" data-code="${esc(s.code)}" aria-pressed="${s.code === this.species}" ${flyable ? '' : 'disabled'} title="${esc(title)}">
-        <span class="op-head"><b>${esc(s.common)}</b>${flyable ? '' : '<span class="op-soon">coming soon</span>'}</span>
-        <i class="op-sci muted">${esc(s.scientific || '')}</i>
+      const card = sex => `<button class="op-card op-sp" data-code="${esc(s.code)}"${sex ? ` data-sex="${sex}"` : ''} aria-pressed="false" ${flyable ? '' : 'disabled'} title="${esc(title)}">
+        <span class="op-head"><b>${esc(s.common)}</b>${sex ? `<span class="op-soon">${sex}</span>` : ''}${flyable ? '' : '<span class="op-soon">coming soon</span>'}</span>
+        <i class="op-sci muted">${sex && flyable ? esc(SEXED[s.code][sex]) : esc(s.scientific || '')}</i>
         <span class="op-sees">perceives ${n} of ${all.length} species</span><span class="op-dots">${dots}</span>
       </button>`;
+      return SEXED[s.code] && flyable ? ['male', 'female'].map(card) : [card(null)];
     }).join('');
-    for (const b of box.querySelectorAll('.op-sp:not([disabled])')) b.onclick = () => { this.species = b.dataset.code; this.update(); };
+    for (const b of box.querySelectorAll('.op-sp:not([disabled])')) b.onclick = () => { this.species = b.dataset.code; if (b.dataset.sex) this.sex = b.dataset.sex; this.update(); };
   }
 
   pickSeason(s) { this.season = s; this.update(); }
@@ -165,7 +172,7 @@ export class OpeningScreen {
   pickTile(id) {
     if (id === this.tileId) { this.point = null; this.$('.op-input').value = ''; this.say(''); this.update(); return; }
     this.say(`loading ${id}…`);
-    switchTile(id, null, { screen: { season: this.season, species: this.species } });
+    switchTile(id, null, { screen: { season: this.season, species: this.species, sex: this.sex } });
   }
 
   // A typed place: this tile -> arrive over it; another built tile -> switch to it; unbuilt -> offer a build.
@@ -176,7 +183,7 @@ export class OpeningScreen {
     const loc = pointInTileId(this.tileId, p);
     if (loc) { this.point = loc; this.say(`in ${this.tileId}; you will arrive over this point`); this.update(); return; }
     const other = this.index.tiles.map(t => t.tile_id).find(id => pointInTileId(id, p));
-    const carry = { screen: { season: this.season, species: this.species } };
+    const carry = { screen: { season: this.season, species: this.species, sex: this.sex } };
     if (other) { this.say(`in ${other}; loading…`); return switchTile(other, p, carry); }
     this.say('looking up tile…');
     try {
@@ -185,7 +192,7 @@ export class OpeningScreen {
       if (t.built) { this.say(`loading ${t.tile_id}…`); return switchTile(t.tile_id, p, carry); }
       this.say(`${t.tile_id} is not built yet. `);
       const b = document.createElement('button'); b.className = 'op-build'; b.textContent = `Build ${t.tile_id}`;
-      b.onclick = () => { b.remove(); this.say(`asking the dev server to build ${t.tile_id}…`); buildTile(p, t.tile_id, this.say, { screen: { season: this.season, species: this.species } }).catch(e => this.say('error: ' + e.message, true)); };
+      b.onclick = () => { b.remove(); this.say(`asking the dev server to build ${t.tile_id}…`); buildTile(p, t.tile_id, this.say, { screen: { season: this.season, species: this.species, sex: this.sex } }).catch(e => this.say('error: ' + e.message, true)); };
       this.$('.op-say').append(b);
       if (!fromLoad) b.focus();
     } catch (e) { this.say(e.message, true); }
@@ -202,7 +209,7 @@ export class OpeningScreen {
 
   update() {
     for (const b of this.root.querySelectorAll('.op-season')) b.setAttribute('aria-pressed', b.dataset.season === this.season);
-    for (const b of this.root.querySelectorAll('.op-sp')) b.setAttribute('aria-pressed', b.dataset.code === this.species);
+    for (const b of this.root.querySelectorAll('.op-sp')) b.setAttribute('aria-pressed', b.dataset.code === this.species && (!b.dataset.sex || b.dataset.sex === this.sex));
     const card = this.root.querySelector(`.op-tile[data-tile="${CSS.escape(this.tileId)}"]`);
     if (card) {
       const size = this.data.features?.size_m || 10000, dot = card.querySelector('.op-dot');
@@ -220,9 +227,9 @@ export class OpeningScreen {
     if (this.begun) return;
     this.begun = true;
     const b = this.$('.begin'); b.disabled = true;
-    rememberSpecies(this.species);
+    rememberSpecies(this.species); if (SEXED[this.species]) rememberSex(this.sex);
     if (!this.ready) { b.textContent = 'Preparing…'; this.setPrep('almost ready; the world is still loading'); }
-    this.onBegin({ tileId: this.tileId, season: this.season, species: this.species, point: this.point, caption: this.caption() });
+    this.onBegin({ tileId: this.tileId, season: this.season, species: this.species, sex: this.sex, point: this.point, caption: this.caption() });
   }
 
   // Fade out and remove; keys go back to the world.

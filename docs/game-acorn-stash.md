@@ -234,3 +234,79 @@ squirrel's climb but with the woodpecker's CLING_PITCH), E to take an acorn from
 or the ground in the bill (cap 1, already in `PLAYER_CAP`), and E at its family's
 granary (the nearest stash tree) for a `deposit` into `granaries`, with the hammering
 beat; the board line follows `setPlayerSpecies`.
+
+## Playable woodpecker (2026-10-25)
+
+The acorn woodpecker is the third playable animal: two cards at the opening screen's "who"
+(male: the red crown reaching the white forehead; female: a black band between the white
+and the red), species and sex remembered (`we.lastSpecies`, `we.lastSex`). It arrives
+clinging to its **family's granary**: the AI families' rule (`animals.familyGranary`), the
+nearest stash tree within 150 m of the chosen point, else the nearest oak. If no AI family
+lives on that tree, one of 3-6 is spawned on it and kept through rebuilds
+(`animals.familyOn`), so the player hammers beside its own family; a player woodpecker
+flushes no woodpecker. The HUD gains "your family's granary: N acorns · 46 m west" (or "you
+are on it"), and the granary's tag reads "your granary N" in amber, shown from 0. The camera
+drifts in over about 3.5 s; any key skips. `client/src/woodpeckerControl.js` replaces the
+raven's controller for the frame, as the squirrel's does. Tests:
+`?skip=1&as=woodpecker[&sex=female]`.
+
+Controls. **Clinging** (on a trunk, braced on the tail at the AI's `CLING_PITCH`): **W / S**
+hitch up and down in short hops (13 cm in 0.11 s, a 0.08 s grip between; down is tail
+first, as woodpeckers back down), **A / D** hitch round the trunk (at most 0.3 rad a hitch),
+**Space** launches outward. Up to just under the fork of the drawn bole (the AI's
+`forkHeight * 0.95`), and down off the bottom onto the ground. **Flying**: **W / S** speed
+(2.5-12 m/s; left alone it eases back to 7), **A / D** turn, **↑ / ↓** or a mouse drag
+climb and dive (level again when let go), **Space** a hard burst upward. **Perched** on the
+ground or a branch (rare for this species): **W** a short hop (0.45 m), **A / D** turn,
+**Space** launches. **E** acts.
+
+The flight. Bursts of quick beats (12 Hz, 0.42 s) rising, then the wings shut against the
+body (0.36 s) and the bird drops on a parabola: about 30 cm at cruise, scaled down below
+8 m/s; slow (under 4.5 m/s), braking or climbing hard it beats on without the dip. The
+dip is an offset on a base line that the pitch drives, so the undulation never changes
+where the flight goes. The body pitches with the climb and the dip and banks in turns.
+Chase camera 1.2 m up and 3 m back, following the pitch partly.
+
+Landing. **Into a trunk**: each frame in flight, the near set's trees (not shrubs) within
+1 m of the bark at the bird's height, below the fork and ahead of it (heading within about
+65 degrees of the trunk) are a grip; the bird settles onto the bark in 0.22 s, turning to
+face it and pitching to the cling, and is clinging. **S inside a crown** (over 1.5 m up,
+within the crown's reach of the trunk, above 60 % of the fork) lands on a branch there; **S
+under 4 m** elsewhere lands on the ground a little ahead.
+
+Acorns, all on **E**, through the v2 events:
+- Clinging, not carrying: a crown acorn within 1.2 m is pecked loose (0.8 s, a `pickup`);
+  else one within 5 m in this tree's crown is reached by a short flight, pecked loose, and
+  the bird flies back to the same spot on the bark.
+- Flying or perched: the nearest acorn within 5 m (crown or ground), by a short flight,
+  then perched where it was (on the branch or the ground); on the ground, one at the bill
+  (0.8 m) directly.
+- Carrying (cap 1, in the bill at the AI's carry point), clinging on the family's granary:
+  2-3 s of hammering (the AI's beat, the head striking at about 6 Hz, the body rocking with
+  it), then a `deposit` into `granary` for the family's oak, scored for acorn woodpeckers,
+  the round and "you, a woodpecker"; the tag counts up and the field guide's granary card
+  shows the first time this session (if the family has not already shown it). On another
+  tree E says where the granary is. No burying, no stash holes.
+
+Acorns near the eye of a small player (squirrel or woodpecker) shrink further than v2's:
+0.06 of the far size inside 2 m (a nut about 5 cm long), full beyond 40 m, and their halo
+is a quarter of the raven's close up (`setPlayerSpecies`).
+
+Measured (2026-10-25, home tile, fall, 9:00, the built-in browser at 1021 x 924): arrived on
+granary 168,166,0 (a blue oak, fork at 1.7 m); a family of four spawned on it; hitching
+0.65 m/s up and 0.7 m/s down; a 46 m flight to an interior live oak in 4.2 s (bursts and
+dips, up to 12 m/s) gripping its trunk at 1.1 m; a crown acorn taken; back in 6 s; hammered
+in: granary 14 to 15, round "you" 0 to 1. Frame rate clinging 54-62 fps and flying 56,
+against 63 for the raven hovering 30 m over the same granary: within noise (the close
+camera inside low crowns adds overdraw). animals.js 0.26 ms, the game 0.01 ms.
+
+What reads: the cling seen from behind (black back, white rump and wing patches, the red
+cap), the family clinging and hammering on the same trunk, the wings up in a burst from the
+chase camera, the hammering, the "your granary" tag and the board's line. What does not
+yet: in flight at 3 m the bird is small (15-80 px depending on the wing phase), so the
+dip reads better from the motion than from the bird; blue oaks fork low (1.4-1.7 m), so a
+woodpecker can only hitch about half a metre on many granaries, and above the fork the
+crown has no trunk to hold; branch perches are at a point in the crown, not on a drawn
+limb; the clinging camera sits 0.85 m off the bark and sometimes inside a live oak's
+foliage; the field guide's granary card says "you just watched" for the player's own
+deposit; Space and E pressed during a short flight wait for it (up to half a second).

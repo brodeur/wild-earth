@@ -509,6 +509,28 @@ export class Animals {
     }
     return best;
   }
+  // The family granary for a woodpecker at (x, z), the families' rule (spawnCell): the nearest stash tree within
+  // 150 m, else the nearest oak (within 400 m). For the player woodpecker (woodpeckerControl.js); indexes the oaks
+  // first when the forest was just rebuilt there.
+  familyGranary(x, z) {
+    if (this.veg.version !== this.vegVersion && this.veg.oaks.length) this.indexOaks();
+    return this.nearestOak(x, z, 150, true) || this.nearestOak(x, z, 400);
+  }
+  // The player woodpecker's family on its granary: the woodpeckers anchored there, or (none living there) a family of
+  // 3-6 spawned on it as a cell would (spawnCell), kept through rebuilds while it is the player's granary.
+  // Returns the family's members.
+  familyOn(oak) {
+    if (!oak) { this.familyIds = null; this.dirty = true; return []; }
+    const on = a => (a.sp === WP || a.sp === WF) && a.anchor && Math.abs(a.anchor.x - oak.x) < 0.5 && Math.abs(a.anchor.z - oak.z) < 0.5;
+    let fam = this.list.filter(on);
+    if (!fam.length) {
+      const keep = new Set(), rnd = mulberry32(seedOf(oak.id, 0xfa31));
+      this._near = true; this.spawnCell(WP, 'family', oak.id, oak.x, -oak.z, rnd, keep, 0); this._near = false;
+      this.familyIds = keep; this.dirty = true;
+      fam = [...keep].map(id => this.byId.get(id)).filter(Boolean);
+    }
+    return fam;
+  }
   // A random oak within r of (x, z), other than `not` (reservoir sampling, no allocation).
   randomOak(x, z, r, rng, not = null, minH = 0) {
     const n = -z, b = Math.ceil(r / BUCKET), bi = Math.floor(x / BUCKET), bj = Math.floor(n / BUCKET);
@@ -637,6 +659,7 @@ export class Animals {
     for (const s of [HK, TV]) if (live[s]) this.spawnSoarers(s, px, pz, keep);
     if (live[ML]) this.spawnLion(px, pz, keep);
     for (const id of this.debugIds) if (this.byId.has(id)) keep.add(id);   // summoned (debugging) animals stay
+    if (this.familyIds) for (const id of this.familyIds) if (this.byId.has(id)) keep.add(id);   // the player woodpecker's family
     // drop animals whose home cell left the live set; rebuild the per-species slot lists
     for (const [id, a] of this.byId) if (!keep.has(id)) this.byId.delete(id);
     this.list = [...this.byId.values()];
@@ -1034,7 +1057,9 @@ export class Animals {
       return;
     }
     a.amp = damp(a.amp, 0, 10, dt); a.pose = damp(a.pose, 1, 8, dt); a.air = 0;
-    const game = this.gameOn(a), fr = game ? 5 : 8;   // in a game they let the player watch from closer
+    // in a game they let the player watch from closer; a player woodpecker (woodpeckerControl.js) is one of them: it
+    // flushes none of them, at its granary or anywhere
+    const game = this.gameOn(a), fr = this.observer === SPECIES[WP].code ? 0 : game ? 5 : 8;
     const dx = a.x - px, dy = a.y - py, dz = a.z - pz, flush = dx * dx + dy * dy + dz * dz < fr * fr;
     if (a.state === W_CLING) {
       a.pitch = damp(a.pitch, CLING_PITCH, 8, dt); a.yaw = a.face + Math.PI;

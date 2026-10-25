@@ -417,3 +417,23 @@ applyEvent), so a cache cannot be farmed. The arrival is a short run down and ou
 the oak nearest the chosen point. Rejected for now: a skeleton with clips (the brief's
 "needs a real skeleton" stays open), a squirrel call (C is silent for a squirrel), and
 other perception changes than the existing perception matrix.
+
+## 2026-10-25: the acorn woodpecker is playable, a perch-and-fly controller beside the squirrel's
+
+Chosen at the opening screen's "who" as a male or a female (two cards; sex remembered as
+`we.lastSex`). Decided: a third controller (`client/src/woodpeckerControl.js`) on the same
+`flight.pos` and `flight.yaw` contract as the squirrel's; flight.js and raven.js untouched.
+Two modes as the bird lives: clinging on a trunk (the AI's `CLING_PITCH`, hitching in 13 cm
+hops, up to the drawn fork) and short undulating flights (beats then a closed-wing dip of
+about 30 cm as an offset on a pitch-driven line, 2.5-12 m/s), plus a rare perch on the
+ground or a branch. Landing on a trunk is flying into it (within 1 m of the bark, facing it,
+below the fork); S lands in a crown or near the ground. The model is the AI's procedural
+woodpecker as one extra instance per sex. The player arrives on its family's granary (the
+AI families' rule, exposed as `animals.familyGranary`); a family is spawned on it when none
+lives there (`animals.familyOn`), and a player woodpecker flushes no woodpecker. E takes an
+acorn (crown in reach or by a short flight, ground) and, carrying, at the family granary
+hammers 2-3 s and deposits through the v2 `deposit` event, scored for woodpeckers. Acorns
+near a small player's eye shrink to about life size. Rejected for now: depositing in any
+granary (only the family's scores, as a family defends its own), a drawn bird with a real
+wing fold (the brief's mesh lane), hovering (acorn woodpeckers do not), and a woodpecker
+call.

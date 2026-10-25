@@ -308,13 +308,27 @@ export class AcornGame {
   // The player as another species (squirrelControl.js). A squirrel carries one acorn in its mouth and acts on a key
   // (E: pick up, bury, dig up; the controller calls the player* methods below) instead of the raven's proximity pickup,
   // and stash holes are the raven's, so it never deposits. The HUD rows and the board's "you" line follow the species.
+  // A woodpecker (woodpeckerControl.js) likewise holds one, in the bill, and deposits only into its family's granary
+  // (playerGranary, on E while clinging there). Both are small: the acorns near the eye shrink further (SMALL_NEAR).
   setPlayerSpecies(code) {
     this.playerSpecies = code; this.manual = code !== 'corvus_corax';
     const p = this.player; p.species = code; p.cap = PLAYER_CAP[code] || CARRY_MAX; p.carrying = Math.min(p.carrying, p.cap);
     const u = this.ui, sq = code === 'sciurus_griseus';
     if (u.stashed?.previousElementSibling) u.stashed.previousElementSibling.textContent = sq ? 'acorns buried' : 'acorns stashed';
-    if (u.found?.parentElement) u.found.parentElement.style.display = sq ? 'none' : '';
+    if (u.found?.parentElement) u.found.parentElement.style.display = this.manual ? 'none' : '';
+    // the size of an acorn near the eye: v1's (0.3 of the far size) for the raven, about life size for a small animal
+    const small = this.manual;
+    NUT_NEAR.k.value = small ? SMALL_NEAR.k : 0.3; NUT_NEAR.r.value = small ? SMALL_NEAR.r : 6;
+    this.acornGlow.material.uniforms.uSizeNear.value = small ? 0.12 : 0.5;
+    this.acornGlow.material.uniforms.uNear.value = small ? 3 : 8;
     this.hud();
+  }
+  playerGranary(oakId, x, y, z) { return this.depositGranary('player', oakId, x, y, z); }
+  // The player woodpecker's family granary (an oak id, or null): its tag reads "your granary N" and shows from 0.
+  setFamilyGranary(id) {
+    const was = this.family; this.family = id || null;
+    if (was && was !== this.family) this.granaryLabel(was, true);
+    if (this.family) this.granaryLabel(this.family, true);
   }
   // The nearest live acorn within r of (x, y, z) (3D), or null; branch: true only those in the crown, false only
   // those on the ground, null either. { key, x, y, z, species, branch }
@@ -480,6 +494,7 @@ export class AcornGame {
     for (const sp of this.granaryLabels.values()) { this.group.remove(sp); sp.material.map.dispose(); sp.material.dispose(); }
     this.granaryLabels.clear();
     this.dirty = true; this.layMarks();
+    if (this.family) this.granaryLabel(this.family);
   }
   save() {
     this.saveT = -1;
@@ -552,6 +567,7 @@ export class AcornGame {
     for (const [id, sp] of this.labels) sp.visible = live.has(id);
     for (const [id, sp] of this.markers) sp.visible = fullLive.has(id);
     for (const id of Object.keys(this.world.granaries)) this.granaryLabel(id);
+    if (this.family) this.granaryLabel(this.family);
     this.applyReveal();
   }
 
@@ -584,10 +600,10 @@ export class AcornGame {
 
   // A granary's count: a small screen-constant tag above the woodpeckers' working height on the trunk, shown
   // for granaries within GRANARY_TAG_R of the camera that hold something.
-  granaryLabel(id) {
-    const count = this.world.granaries[id] || 0, o = this.oakById(id);
+  granaryLabel(id, redraw = false) {
+    const count = this.world.granaries[id] || 0, o = this.oakById(id), mine = id === this.family;
     let sp = this.granaryLabels.get(id);
-    if (!o || !count) { if (sp) sp.visible = false; return; }
+    if (!o || (!count && !mine)) { if (sp) sp.visible = false; return; }
     if (!sp) {
       const canvas = document.createElement('canvas'); canvas.width = 256; canvas.height = 56;
       const map = new THREE.CanvasTexture(canvas); map.colorSpace = THREE.SRGBColorSpace;
@@ -598,14 +614,15 @@ export class AcornGame {
     const at = this.granaryAt.get(id);
     if (at) sp.position.set(at[0], at[1] + 0.5, at[2]);
     else sp.position.set(o.x, o.y + Math.min(4, (o.height || 8) * o.scale * 0.4) + 0.8, o.z);
-    const text = `granary ${count}`;
+    const text = mine ? `your granary ${count}` : `granary ${count}`;
+    if (redraw) sp.userData.text = null;
     if (sp.userData.text !== text) {
       const { canvas } = sp.userData, g = canvas.getContext('2d');
       g.clearRect(0, 0, 256, 56);
       g.fillStyle = 'rgba(10,15,12,0.72)'; g.beginPath(); g.roundRect(8, 4, 240, 48, 12); g.fill();
       g.fillStyle = '#c8102e'; g.beginPath(); g.arc(34, 28, 8, 0, Math.PI * 2); g.fill();   // the woodpecker's red cap
-      g.font = '600 28px -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif';
-      g.textAlign = 'left'; g.textBaseline = 'middle'; g.fillStyle = '#f0e3b2'; g.fillText(text, 54, 30);
+      g.font = `600 ${mine ? 24 : 28}px -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif`;
+      g.textAlign = 'left'; g.textBaseline = 'middle'; g.fillStyle = mine ? '#ffd08a' : '#f0e3b2'; g.fillText(text, 54, 30);
       sp.material.map.needsUpdate = true; sp.userData.text = text;
     }
     this.placeGranaryLabel(sp);
@@ -815,7 +832,10 @@ export class AcornGame {
     }
     const left = r ? Math.max(0, Math.ceil(r.length - r.t)) : 0;
     u.time.textContent = r?.over ? 'over' : `${String(Math.floor(left / 60)).padStart(2, '0')}:${String(left % 60).padStart(2, '0')} left`;
-    u.hint.textContent = me.species === 'sciurus_griseus' ? (me.carrying > 0
+    u.hint.textContent = me.species === 'melanerpes_formicivorus' ? (me.carrying > 0
+        ? 'an acorn in your bill: fly to your family\'s granary, cling to it and press E to hammer it in'
+        : 'find an oak: E takes an acorn in the crown (clinging near it) or on the ground; acorns glow. Your family, the squirrels and the ravens are gathering too.')
+      : me.species === 'sciurus_griseus' ? (me.carrying > 0
         ? 'an acorn in your mouth: E on open ground buries it, one acorn to a hole'
         : 'find an oak: E picks up an acorn under it, or climbing, in the crown; E on a dug mark digs one up. Woodpeckers, ravens and the other squirrels are gathering too.')
       : me.carrying > 0 && this.nearFull && !this.depositing ? 'stash full, find another'
@@ -852,13 +872,18 @@ const BOARD_CSS = `
 // Acorns on the ground and in the branches: v1's big glowing nuts read from the air; near the eye they shrink
 // toward life size (0.3 of the far size inside 6 m, full beyond 40 m), the ground ones settling onto the ground
 // (aGround), so a squirrel or a woodpecker at one is not dwarfed by it.
+// For a small player (squirrel, woodpecker) they shrink further, to about life size at the bill (SMALL_NEAR: 0.06 of the
+// far size, a ~5 cm nut, inside 2 m), so the acorn is not as big as the animal reaching for it.
+const NUT_NEAR = { k: { value: 0.3 }, r: { value: 6 } };
+const SMALL_NEAR = { k: 0.06, r: 2 };
 function nutMaterial() {
   const m = new THREE.MeshLambertMaterial({ vertexColors: true });
   m.onBeforeCompile = sh => {
-    sh.vertexShader = sh.vertexShader.replace('#include <common>', '#include <common>\nattribute float aGround;')
+    sh.uniforms.uNutK = NUT_NEAR.k; sh.uniforms.uNutR = NUT_NEAR.r;
+    sh.vertexShader = sh.vertexShader.replace('#include <common>', '#include <common>\nattribute float aGround;\nuniform float uNutK, uNutR;')
       .replace('#include <begin_vertex>', `#include <begin_vertex>
         vec4 nutC = modelMatrix * instanceMatrix * vec4(0.0, 0.0, 0.0, 1.0);
-        float nutK = mix(0.3, 1.0, smoothstep(6.0, 40.0, distance(nutC.xyz, cameraPosition)));
+        float nutK = mix(uNutK, 1.0, smoothstep(uNutR, 40.0, distance(nutC.xyz, cameraPosition)));
         transformed *= nutK;
         transformed.y -= aGround * 0.2 * (1.0 - nutK);`);
   };
