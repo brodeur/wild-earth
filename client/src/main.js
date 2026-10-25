@@ -27,6 +27,27 @@ import { WoodpeckerControl } from './woodpeckerControl.js';
 const $ = id => document.getElementById(id);
 const html = document.documentElement;
 let screen = null, screenOpen = false;   // the opening screen (arrival.js) while it is up
+// HUD layout for the window's size (index.html, html.narrow): under 1200 x 760 px the HUD, game box and panel shrink.
+// The game box stays centred when it clears the HUD and the panel, else it moves into the gap between them, else under
+// the HUD; the panel stops above the mini-map (and scrolls), the help line wraps before the mini-map and the species
+// card sits above the help line. Run on resize and with the HUD's text updates (the HUD's width follows its text).
+function layoutHud() {
+  const W = innerWidth, H = innerHeight;
+  html.classList.toggle('narrow', W < 1200 || H < 760);
+  const box = id => $(id).getBoundingClientRect(), mm = box('minimap'), pan = $('panel'), cs = getComputedStyle(pan);
+  pan.style.maxHeight = `${Math.max(120, Math.floor(mm.top - 10 - pan.getBoundingClientRect().top - parseFloat(cs.paddingTop) - parseFloat(cs.paddingBottom)))}px`;
+  const help = $('help'), hs = getComputedStyle(help);
+  help.style.maxWidth = `${Math.max(200, Math.floor(mm.left - 10 - help.getBoundingClientRect().left - parseFloat(hs.paddingLeft) - parseFloat(hs.paddingRight)))}px`;
+  $('speciesCard').style.bottom = `${Math.max(12, Math.round(H - help.getBoundingClientRect().top + 8))}px`;
+  const g = $('game'); if (g.classList.contains('hidden')) return;
+  g.style.left = g.style.top = g.style.transform = '';   // centred, as styled
+  const hud = box('hud'), pr = pan.getBoundingClientRect(), gr = g.getBoundingClientRect(), lo = hud.right + 10, hi = pr.left - 10;
+  if (gr.left >= lo && gr.right <= hi) return;
+  g.style.transform = 'none';
+  if (hi - lo >= gr.width) g.style.left = `${Math.round(Math.min(Math.max(W / 2 - gr.width / 2, lo), hi - gr.width))}px`;
+  else { g.style.left = `${Math.round(hud.left)}px`; g.style.top = `${Math.round(hud.bottom + 8)}px`; }
+}
+
 const status = t => {
   if (screenOpen) { screen.setPrep(t ? `preparing ${screen.tileId}: ${t}` : ''); $('status').classList.add('hidden'); return; }
   $('status').textContent = t; $('status').classList.toggle('hidden', !t);
@@ -67,7 +88,8 @@ async function main() {
   document.body.prepend(renderer.domElement);
   const scene = new THREE.Scene();
   const camera = new THREE.PerspectiveCamera(70, innerWidth / innerHeight, 0.5, 60000);
-  addEventListener('resize', () => { camera.aspect = innerWidth / innerHeight; camera.updateProjectionMatrix(); renderer.setSize(innerWidth, innerHeight); });
+  addEventListener('resize', () => { camera.aspect = innerWidth / innerHeight; camera.updateProjectionMatrix(); renderer.setSize(innerWidth, innerHeight); layoutHud(); });
+  layoutHud();
 
   const atmosphere = new Atmosphere(tile);   // shared haze, sun, sky light and clouds
   const terrain = new Terrain(tile); scene.add(terrain.group);
@@ -307,6 +329,7 @@ async function main() {
       $('soundNow').textContent = sound ? sound.describe() : '–';
       $('animalsNear').textContent = animals.describe(now);
       $('over').textContent = where.text; minimap.place = where.place;
+      layoutHud();
       const h = Math.floor(state.hour), mnt = Math.round((state.hour - h) * 60); $('timeLabel').textContent = `${h}:${String(mnt).padStart(2, '0')} · sun ${(sun.elevation * 180 / Math.PI).toFixed(0)}°`;
     }
     requestAnimationFrame(frame);

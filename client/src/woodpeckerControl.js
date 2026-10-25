@@ -46,8 +46,10 @@ const HOP_D = 0.45, HOP_T = 0.28, HOP_UP = 0.1;
 // acorns
 const CROWN_R = 1.2, REACH_R = 5, GROUND_R = 0.8, FLY_PICK_R = 5, PICK_T = 0.8, HAMMER = [2.0, 3.0];
 const CARRY = { py: 0.062, pz: 0.05, ty: 0.066, tz: 0.137, flick: 0.45 };   // animals.js CARRY[WP]: the bill tip, the head pivot
-// camera
-const CAM_BACK = 3, CAM_UP = 1.2, NEAR = 0.12, CLING_OUT = 0.85;
+// camera: the flight chase CAM_UP over and CAM_BACK behind with a longer lens (FLY_FOV degrees, vertical; the raven's
+// 70 elsewhere), so the bird is 60-90 px on screen; on the bark the camera keeps out of the crowns (crownClear)
+const CAM_BACK = 2, CAM_UP = 0.8, NEAR = 0.12, CLING_OUT = 0.85, FLY_FOV = 52;
+const CROWN_PAD = [0.4, 0.12, 1.0], CROWN_LOWER = 1.1, CROWN_MIN = 0.6;   // the leaves drooping under the sphere: m + x its radius, at most m; m: lowest drop; shortest boom
 const TAU = Math.PI * 2;
 const damp = (a, b, k, dt) => b + (a - b) * Math.exp(-k * dt);
 const wrap = a => Math.atan2(Math.sin(a), Math.cos(a));
@@ -117,8 +119,10 @@ export class WoodpeckerControl {
     this.nut.visible = false;
     if (on) { f.roll = 0; f.hover = false; this.camSettled = false; this.lastYaw = f.yaw; this.relocate(); }
     else { this.camera.up.set(0, 1, 0); this.acorns?.setFamilyGranary?.(null); this.animals.familyOn?.(null); f.reset(f.pos.x, f.pos.z, 30); }   // back to the raven
-    if (on) this.nearWas = this.camera.near;
-    this.camera.near = on ? NEAR : this.nearWas || 0.5; this.camera.updateProjectionMatrix();
+    if (on) { this.nearWas = this.camera.near; this.fovWas = this.camera.fov; }
+    this.camera.near = on ? NEAR : this.nearWas || 0.5;
+    if (!on && this.fovWas) this.camera.fov = this.fovWas;   // the lens back for the raven (or the squirrel)
+    this.camera.updateProjectionMatrix();
     this.hud(on);
   }
 
@@ -608,10 +612,11 @@ export class WoodpeckerControl {
   }
 
   // Camera: on the bark over the bird's shoulder, standing off the trunk and orbiting with it (a drag orbits it
-  // further); in flight a chase CAM_UP over and CAM_BACK behind, following the climb partly; perched, low behind.
+  // further) and kept out of the crowns (crownClear); in flight a chase CAM_UP over and CAM_BACK behind, following the
+  // climb partly, through a longer lens (FLY_FOV); perched, low behind.
   updateCamera(dt) {
     const f = this.flight, P = f.pos, cam = this.camera, off = this._v, aim = this._w;
-    let k = 6;
+    let k = 6, fov = this.fovWas || 70;
     const onBark = (this.mode === 'cling' || this.work?.back === 'cling') && this.tree;
     if (onBark) {
       const tr = this.tree, ang = this.face + this.camOrbit, t = trunkAt(tr, Math.max(0, this.h), this._t);
@@ -620,6 +625,7 @@ export class WoodpeckerControl {
       const out = t.r + CLING_OUT + 4 * A, side = 0.3 + 1.5 * A, ox = Math.sin(ang), oz = Math.cos(ang);
       off.set(t.x + ox * out + oz * side - P.x, t.y + 0.12 + 1.2 * A - P.y, t.z + oz * out - ox * side - P.z);
       aim.set(0, 0.22, 0);
+      if (!this.auto) this.crownClear(P, off);   // the arrival keeps its wide drift in; the camera settles out of the leaves after
       k = 5;
     } else if (this.mode === 'perch' || (this.mode === 'work' && this.work.back !== 'cling') || (this.mode === 'path' && this.path.hop)) {
       const back = 1.6, up = 0.6;
@@ -630,8 +636,9 @@ export class WoodpeckerControl {
       off.set(Math.sin(f.yaw) * cp * CAM_BACK, CAM_UP - sp * CAM_BACK, Math.cos(f.yaw) * cp * CAM_BACK);
       const fx = -Math.sin(f.yaw), fz = -Math.cos(f.yaw), look = 4;
       aim.set(fx * look, 0.2 + Math.sin(f.pitch) * look, fz * look);
-      k = 5;
+      k = 5; fov = FLY_FOV;
     }
+    if (Math.abs(cam.fov - fov) > 0.01) { cam.fov = this.camSettled ? damp(cam.fov, fov, 3, dt) : fov; cam.updateProjectionMatrix(); }
     if (!this.camSettled) { this.camOff.copy(off); this.aimOff.copy(aim); this.camSettled = true; }
     else { this.camOff.lerp(off, 1 - Math.exp(-dt * k)); this.aimOff.lerp(aim, 1 - Math.exp(-dt * k)); }
     cam.position.copy(P).add(this.camOff);
@@ -639,6 +646,49 @@ export class WoodpeckerControl {
     if (cam.position.y < g) cam.position.y = g;
     cam.up.set(0, 1, 0);
     cam.lookAt(this._c.copy(P).add(this.aimOff));
+  }
+  // Keep the bark camera's line to the bird out of the leaves: each tree's crown within 12 m is a sphere above its
+  // fork (from the fork, or the species' crown base when higher, to the top; as wide as that, at most the species'
+  // crown width). A crown the bird itself is in is skipped. The camera must be outside the sphere grown by CROWN_PAD
+  // (the leaves that droop below it, and the cards' size), and the line from it to 0.4 of the way in (the last of it,
+  // by the bird, is the bird's own business) outside the sphere itself. If not, the camera drops (up to CROWN_LOWER,
+  // looking up the bark past the bird, under the leaves) until it clears, else it comes in along the line to the first
+  // clear point (no closer than CROWN_MIN). off: camera - P, changed in place.
+  crownClear(P, off) {
+    this.indexTrees();
+    const S = this._crowns || (this._crowns = []); S.length = 0;
+    const ci = Math.floor(P.x / 10), cj = Math.floor(P.z / 10), t = this._t;
+    for (let j = cj - 2; j <= cj + 2; j++) for (let i = ci - 2; i <= ci + 2; i++) {
+      for (const tr of this.trees.get(`${i},${j}`) || []) {
+        if (tr.snag || Math.hypot(tr.x - P.x, tr.z - P.z) > 12) continue;
+        const sp = PLANTS[tr.species]?.targets || {}, H = tr.H, fork = this.top(tr) / 0.95;
+        const base = Math.max(fork, (sp.crown_base_ratio ?? 0.15) * H);
+        const R = Math.min((H - base) / 2, (sp.crown_width_ratio ?? 1) * H / 2); if (R < 0.5) continue;
+        trunkAt(tr, Math.min(base, this.top(tr)), t);
+        const cx = t.x, cy = tr.y + base + R, cz = t.z;
+        if ((P.x - cx) ** 2 + (P.y - cy) ** 2 + (P.z - cz) ** 2 < R * R) continue;   // the bird is in it: no line clears it
+        S.push(cx, cy, cz, R * R, (R + Math.min(CROWN_PAD[2], CROWN_PAD[0] + CROWN_PAD[1] * R)) ** 2);
+      }
+    }
+    if (!S.length) return;
+    const inside = (x, y, z, k) => {   // k 3: the sphere, 4: grown
+      for (let n = 0; n < S.length; n += 5) if ((x - S[n]) ** 2 + (y - S[n + 1]) ** 2 + (z - S[n + 2]) ** 2 < S[n + k]) return true;
+      return false;
+    };
+    const blocked = (ox, oy, oz) => {
+      if (inside(P.x + ox, P.y + oy, P.z + oz, 4)) return true;
+      for (const f of [0.85, 0.7, 0.55, 0.4]) if (inside(P.x + ox * f, P.y + oy * f, P.z + oz * f, 3)) return true;
+      return false;
+    };
+    if (!blocked(off.x, off.y, off.z)) return;
+    const g = this.heights.atXZ(P.x + off.x, P.z + off.z) + 0.25 - P.y;   // no lower than the ground clamp
+    for (let d = 0.15; d <= CROWN_LOWER + 1e-6 && off.y - d >= g; d += 0.15) {
+      if (!blocked(off.x, off.y - d, off.z)) { off.y -= d; return; }
+    }
+    const L = Math.hypot(off.x, off.y, off.z), lo = Math.min(1, CROWN_MIN / L);
+    let f = 1;
+    while (f > lo && inside(P.x + off.x * f, P.y + off.y * f, P.z + off.z * f, 4)) f -= 0.05;
+    off.multiplyScalar(Math.max(lo, f));
   }
 }
 

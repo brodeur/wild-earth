@@ -79,6 +79,23 @@
   #soundBtn.on { background:#1d3340; border-color:#2f5a73; }
   #panel #soundRow input[type=range] { flex:1; min-width:0; width:auto; }
   #peekFade { position:fixed; inset:0; width:100%; height:100%; pointer-events:none; opacity:0; }
+  /* Narrow or short windows (main.js layoutHud sets html.narrow under 1200 x 760 px): the HUD, game box and panel
+     shrink so the HUD and the game box sit side by side between the left edge and the panel, the mini-map shrinks,
+     and the panel scrolls above it. layoutHud also moves the game box out of the HUD's way and caps the panel. */
+  #panel { overflow-y:auto; overscroll-behavior:contain; }
+  html.narrow #hud { font-size:12px; line-height:1.3; min-width:0; max-width:290px; padding:8px 10px; }
+  html.narrow #hud h1 { font-size:13px; }
+  html.narrow #hud .row { gap:8px; }
+  html.narrow #hud .row.wide b { max-width:170px; }
+  html.narrow #game { font-size:12px; line-height:1.3; min-width:0; padding:7px 11px; }
+  html.narrow #game .row { gap:8px; }
+  html.narrow #gameHint { max-width:250px; }
+  html.narrow #panel { width:196px; padding:8px 10px; font-size:12px; }
+  html.narrow #panel label { margin:5px 0 1px; font-size:10.5px; }
+  html.narrow #gameBtn, html.narrow #hoverBtn, html.narrow #peekBtn, html.narrow #soundBtn { padding:4px 8px; margin-top:5px; }
+  html.narrow #soundRow { margin-top:5px; }
+  html.narrow #minimap canvas { width:170px !important; height:170px !important; }
+  html.narrow #help { font-size:11.5px; padding:6px 10px; }
   /* Opening screen (arrival.js): where, when, who before the world appears. */
   html.opening #hud, html.opening #panel, html.opening #help, html.opening #minimap, html.opening #status,
   html.arriving #hud, html.arriving #panel, html.arriving #help, html.arriving #minimap, html.arriving #game, html.arriving #speciesCard { opacity:0; pointer-events:none; }

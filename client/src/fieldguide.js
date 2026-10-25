@@ -5,7 +5,10 @@
 //   - stash card: the first acorn put in a stash hole this session, about caching.
 //   - witness cards (acorn game v2): the first time this session the player is close by when an acorn woodpecker
 //     hammers an acorn into its granary, a gray squirrel buries one, or a raven caches one; its first line follows
-//     the player's species (watching another species, another of its own kind, or doing it itself).
+//     the player's species (watching another species, or another of its own kind).
+//   - own cards: the same card the first time the player does the thing itself (the player woodpecker's first acorn
+//     into its family's granary, the player squirrel's first burial), in the player's voice. Counted apart from the
+//     watched showing, so a family deposit seen first does not use up the player's own card, nor the other way round.
 // One DOM element (#fieldGuide), created here; it never takes pointer input except its close button,
 // Esc closes it, and it closes itself after a few seconds. Nothing runs per frame.
 
@@ -113,6 +116,13 @@ const CSS = `
 #fieldGuide li { margin:3px 0; }
 #fieldGuide li b { color:#e6ede7; font-weight:600; }
 #fieldGuide .invite { margin:8px 0 0; padding-top:7px; border-top:1px solid #263128; color:#ffe2b0; }
+html.narrow #fieldGuide { width:300px; padding:8px 10px; font-size:12px; line-height:1.33; }   /* a narrow or short window (main.js layoutHud) */
+html.narrow #fieldGuide canvas { width:48px; height:63px; }
+html.narrow #fieldGuide h1 { font-size:14px; }
+html.narrow #fieldGuide .kicker { margin-bottom:4px; }
+html.narrow #fieldGuide ul { margin-top:5px; }
+html.narrow #fieldGuide li { margin:2px 0; }
+html.narrow #fieldGuide .invite { margin-top:6px; padding-top:5px; }
 #game .row.fg-notes b { font-weight:500; text-align:right; max-width:190px; }
 #speciesCard p.acorns b { color:#ffd08a; }
 #speciesCard .fg-open { background:none; border:1px solid #6b4a2b; color:#ffd08a; border-radius:5px; font:inherit; font-size:11.5px; padding:1px 7px; margin-left:4px; cursor:pointer; }
@@ -120,7 +130,7 @@ const CSS = `
 `;
 
 class FieldGuide {
-  constructor() { this.el = null; this.timer = 0; this.fadeTimer = 0; this.seen = new Set(); this.stashSeen = false; this.witnessed = new Set(); this.queue = []; }
+  constructor() { this.el = null; this.timer = 0; this.fadeTimer = 0; this.seen = new Set(); this.stashSeen = false; this.witnessed = new Set(); this.ownSeen = new Set(); this.queue = []; }
 
   mount() {
     if (this.el) return this.el;
@@ -131,6 +141,7 @@ class FieldGuide {
     el.addEventListener('click', e => { if (e.target.closest('[data-close]')) this.next(); });
     // Capture phase, so identify.js can tell this Esc already closed a field-guide card.
     addEventListener('keydown', e => { if (e.code === 'Escape' && this.isOpen()) { this.queue.length = 0; this.hide(); e.fieldGuideClosed = true; } }, true);
+    addEventListener('resize', () => { if (this.isOpen()) requestAnimationFrame(() => this.place(this.anchor)); });   // after main.js lays out the HUD
     return el;
   }
   isOpen() { return !!this.el && !this.el.classList.contains('hidden'); }
@@ -148,10 +159,16 @@ class FieldGuide {
   // The acorn game (identify.js attaches it): its player record says which species the player is, and its deposit
   // and burial events say who did the thing a witness card is about. acorns.js calls witness() from inside the
   // event's dispatch, before its listeners run, so the card waits a microtask for this event's listener entry.
+  // The player's own granary deposit or burial shows its own card from the listener, wherever the camera is.
   attach(game) {
     if (!game || this.game === game) return;
     this.game = game; this.log = []; this.logN = 0;
-    for (const t of ['deposit', 'bury']) game.on?.(t, e => { this.log[this.logN++ % 8] = e; });
+    for (const t of ['deposit', 'bury']) game.on?.(t, e => {
+      this.log[this.logN++ % 8] = e;
+      if (e.by !== 'player') return;
+      if (t === 'deposit' && e.into === 'granary') this.own('granary', game.ui?.box);
+      else if (t === 'bury') this.own(e.kind === 'cache' || this.playerSpecies === 'corvus_corax' ? 'cache' : 'bury', game.ui?.box);
+    });
   }
   get playerSpecies() { return playerSpeciesOf(this.game); }
 
@@ -161,9 +178,18 @@ class FieldGuide {
     queueMicrotask(() => this.witnessShow(kind, anchor, this.logN > n ? this.log[n % 8] : null));
   }
   witnessShow(kind, anchor, e) {
-    const c = WITNESS[kind]; if (this.witnessed.has(kind)) return;
+    if (e?.by === 'player' || this.witnessed.has(kind)) return;   // the player's own: own(), from the listener
     this.witnessed.add(kind);
-    const lead = witnessLead(kind, this.playerSpecies, e?.by === 'player');
+    this.witnessCard(kind, anchor, witnessLead(kind, this.playerSpecies));
+  }
+  // The player's first own granary deposit or burial this session (per kind), in the player's voice.
+  own(kind, anchor) {
+    if (!WITNESS[kind] || this.ownSeen.has(kind)) return;
+    this.ownSeen.add(kind);
+    this.witnessCard(kind, anchor, witnessLead(kind, this.playerSpecies, true));
+  }
+  witnessCard(kind, anchor, lead) {
+    const c = WITNESS[kind];
     this.show(`<button class="close" data-close title="close (Esc)">×</button>
       <div class="kicker">field guide · ${esc(c.kicker)}</div>
       <div class="head"><canvas width="128" height="168"></canvas>
@@ -205,7 +231,7 @@ class FieldGuide {
     clearTimeout(this.timer); clearTimeout(this.fadeTimer);
     el.innerHTML = html; el.classList.remove('hidden', 'fading');
     const c = el.querySelector('canvas'); if (c && draw) draw(c.getContext('2d'));
-    this.place(anchor);
+    this.anchor = anchor; this.place(anchor);
     this.timer = setTimeout(() => { el.classList.add('fading'); this.fadeTimer = setTimeout(() => this.next(), 400); }, ms);
   }
   // Close the open card and bring on the next waiting one, if any.
@@ -225,7 +251,10 @@ class FieldGuide {
     if (r && r.width) {
       if (r.right + 10 + w <= maxX) { x = r.right + 10; y = r.top; }                 // right of the game HUD
       else if (r.left - 10 - w >= minX) { x = r.left - 10 - w; y = r.top; }          // left of it
-      else { x = r.left + r.width / 2 - w / 2; y = r.bottom + 8; }                   // below it
+      else {                                                                          // below it, between the HUD and the panel when it fits there
+        x = r.left + r.width / 2 - w / 2; y = r.bottom + 8;
+        if (maxX - minX >= w) x = Math.min(Math.max(x, minX), maxX - w);
+      }
     } else { x = W / 2 - w / 2; y = 12; }
     el.style.left = `${Math.round(Math.max(10, Math.min(x, W - w - 10)))}px`;
     el.style.top = `${Math.round(Math.max(10, Math.min(y, H - h - 10)))}px`;
