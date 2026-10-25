@@ -13,13 +13,44 @@
     "shoulder_or_wingspan_m": 0.39,
     "note": "Length 27-31 cm with the tail, wingspan about 39 cm, about 80 g. Meshy normalises to about 1.9 units long; adoption scales to 0.29 m bill to tail."
   },
-  "source": null,
-  "license": null,
-  "license_detail": null,
-  "tiers": {
-    "note": "No mesh adopted yet. The client draws buildJay in client/src/animalModels.js (procedural, about 150 triangles)."
+  "source": {
+    "kind": "meshy",
+    "title": "California scrub-jay",
+    "author": "generated with Meshy (meshy.ai) by agent (Claude) for Aaron Brodeur",
+    "url": null,
+    "file": "library/animals/jobs/aphelocoma_californica/01a1719c-58de-73ad-9406-f115724514ac/model.glb (local; jobs/ meshes are not tracked)",
+    "original": "Meshy text-to-3D preview, meshy-6-lite, triangle remesh, 20,862 triangles, untextured",
+    "prompt": "A California scrub-jay (Aphelocoma californica), one adult bird perched with its wings folded tight against the body, side-on pose. Realistic proportions, about 29 cm long with a long tail half the body length. Crestless flat crown. Bright blue head, wings and tail; grey-brown patch on the back; dark grey cheek with a thin white eyebrow; white streaked throat bordered by a partial blue breast band; pale grey-white belly. Stout straight black bill, long black legs, three toes forward and one back. No base, no perch. Game-ready, clean closed mesh.",
+    "reference_image": null,
+    "job_id": "01a1719c-58de-73ad-9406-f115724514ac",
+    "date": "2026-10-25 (UTC)",
+    "adopted_by": "tools/build_scrubjay.py"
   },
-  "rig": "bird template (brief: BODY 0, LEG_A/B pivot (+-0.016, 0.03, 0), TAIL 3 pivot (0, 0.06, -0.07), HEAD 6, folded wings as BODY, procedural wing cards for flight)",
+  "license": "CC BY-SA 4.0",
+  "license_detail": {
+    "source_terms": "Meshy Terms of Use 3.2 (https://www.meshy.ai/terms-of-use, last updated 2026-09-19): API output on a paid plan is owned by the account holder, who releases it with the project's assets under CC BY-SA 4.0. Terms 2.4: AI-identifying metadata Meshy embeds is carried over (the source GLB carried none; the adopted GLB records the source in extras.source). Terms 2.6(xi): not for training models that compete with Meshy (binds the account holder).",
+    "redistribute_under_cc_by_sa": true,
+    "note": "Credit \"generated with Meshy (meshy.ai)\" in README, the build script header and the GLB asset.copyright. AI-generated output may carry little or no copyright in some jurisdictions; the licence covers what rights exist."
+  },
+  "tiers": {
+    "lod0": 1000,
+    "lod1": 400,
+    "lod2": 120,
+    "file": "client/assets/scrubjay.glb",
+    "attributes": [
+      "POSITION",
+      "COLOR_0 (linear)",
+      "_PART",
+      "_PARTW",
+      "_PIVOT"
+    ],
+    "lod_m": [
+      12,
+      40
+    ],
+    "note": "Scaled to 0.29 m bill to tail; bill base thickened (1.45x at the gape tapering to 1.1x); nape nub sanded; tail widened 1.25x toward its tip and weighted free of the folded wingtips; generated legs and flat feet replaced by black procedural legs with curled toes; small dark eye added; recoloured by region from the brief; flight wing cards added. Triangles: lod0 1,000 = 876 body + 84 legs + 24 wing cards + 16 eyes; lod1 400 = 340 + 36 legs + 24 wing cards; lod2 120 = 106 + 6 legs + 8 wing cards (one card per wing). Tiers switch at 12 and 40 m. GLB 89,928 bytes."
+  },
+  "rig": "bird rig template (client/src/animalModels.js RIG.jay; PART BODY, LEG_A/B procedural legs, TAIL, HEAD with the neck, WING_L/R arm cards and HAND_L/R hand cards that collapse into the shoulder on pose); aAnim2 = (wing bow, tail spread, -, -)",
   "candidates": [
     {
       "kind": "meshy",
@@ -33,18 +64,20 @@
       "credits": 5,
       "raw_triangles": 20862,
       "license": "owned by the paid account holder (Meshy Terms of Use 3.2); to be released as CC BY-SA 4.0 with the project's assets on adoption; Terms 2.6(xi): not for training models that compete with Meshy",
-      "status": "raw preview, not adopted; geometry only (no texture). Best of the five; adoptable with small fixes.",
+      "status": "adopted 2026-10-25 by tools/build_scrubjay.py",
       "review": "Reads as a slim, crestless jay: flat crown with only a tiny nape nub, wings folded tight along the back (body 0.41 units wide against 1.9 long, about 6 cm at true scale), long graduated tail about half the total length with a notched tip, long black-jay legs with three forward toes and a hind toe, eye socket with a brow. One closed, manifold piece (no boundary or non-manifold edges after welding), 1.3% slivers. Faults: the bill is slender and a little long (about 0.75-0.8 of the head, near the brief's limit) and lacks the stout base, so it edges toward thrasher or grackle; the tail is narrow in plan; feet are flat rather than curled for a twig. No blue-jay bias in the geometry (no crest). A build script would sand the nape nub, thicken the bill base slightly, cut the tail free at its base and tag it TAIL, and replace the feet below mid-tarsus with curled procedural toes."
     }
   ],
   "status": "agent draft, needs local sign-off",
-  "accuracy_notes": "Colour (blue head, wings and tail, grey-brown mantle, necklace) is not in a preview and comes from vertex colour in the build script. A local birder should check bill depth and tail length.",
+  "accuracy_notes": "Adopted 2026-10-25 from the Meshy preview. Reads as a slim, crestless, long-tailed jay at 3-10 m, blue head with a white throat and the blue necklace, grey-brown mantle between blue wings; far better than buildJay. Still open: the ear patch and white brow are only a few faces at lod0 and vanish at lod1; the throat streaking is a sparse face mottle; the bill is still a little long; the wing cards are flat planes (no slotted primaries); no juvenile (grey-headed) variant; no acorn in the bill when caching. A local birder should check bill depth and tail length.",
   "authors": [
-    "agent (Claude) for Aaron Brodeur (entry, Meshy candidate)"
+    "agent (Claude) for Aaron Brodeur (entry, Meshy candidate)",
+    "agent (Claude) for Aaron Brodeur (adoption: build script, rig, tiers)"
   ],
   "sources": [
     "library/animals/drafts/aphelocoma_californica.md (mesh brief)",
     "docs/animal-library.md",
-    "library/animals/README.md"
+    "library/animals/README.md",
+    "tools/build_scrubjay.py (adoption)"
   ]
 }

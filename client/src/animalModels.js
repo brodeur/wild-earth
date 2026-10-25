@@ -13,8 +13,19 @@ import { uniforms as atmo } from './atmosphere.js';
 //   wings    flap with sin(phase) * gait and fold back along the body with pose (perched)
 // Space: metres, +z forward, +y up, +x the animal's left; the origin is where it stands or perches.
 // No skeleton and no animation clips: one draw call per species, all motion from four floats.
+//
+// Rig templates (the drawn meshes, built by tools/build_<species>.py; see RIG below). They extend PART and add a
+// one-level parent chain and a second per-instance vec4, aAnim2, without changing what parts 0-6 do for the deer
+// and the procedural models:
+//   bird    BODY, LEG_A/B, TAIL, HEAD (head and neck, pivot at the base of the neck), WING_L/R (the arm, pivot
+//           at the shoulder) and HAND_L/R (pivot at the wrist; child of the wing). Folded wings stay body geometry;
+//           the flight wings are cards that collapse into the shoulder as pose goes to 1 (perched or on the ground).
+//           The hand lags the arm through the stroke. aAnim2 = (wing bow, tail spread, -, colour variant).
+//   rodent  BODY (hindquarters), CHEST (pivot at the lumbar; flexes with the bound, rises to sit up), HEAD and
+//           LEG_A (fore pair), both children of the chest, LEG_B (hind pair), TAIL and TAIL_TIP (child of the
+//           tail; lags it for a wave, curls further on pose). aAnim2 = (leg splay for climbing, tail-tip lag, -, -).
 
-export const PART = { BODY: 0, LEG_A: 1, LEG_B: 2, TAIL: 3, WING_L: 4, WING_R: 5, HEAD: 6 };
+export const PART = { BODY: 0, LEG_A: 1, LEG_B: 2, TAIL: 3, WING_L: 4, WING_R: 5, HEAD: 6, CHEST: 7, TAIL_TIP: 8, HAND_L: 9, HAND_R: 10 };
 
 const _m = new THREE.Matrix4(), _q = new THREE.Quaternion(), _e = new THREE.Euler(), _v = new THREE.Vector3(), _s = new THREE.Vector3();
 
@@ -136,17 +147,54 @@ export function buildDeer() {
 // poses it like buildDeer with the same amp and pose.
 const DEER_URL = new URL('../assets/deer.glb', import.meta.url);
 export async function loadDeerMesh() {
-  const gltf = await new GLTFLoader().loadAsync(DEER_URL.href);
+  return loadTiers(DEER_URL, { amp: [0.3, 0.6, 1.5, 0], pose: [0.12, 0, -0.15, 0] });
+}
+
+// A built GLB (tools/build_*.py): meshes lod0-lod2 with COLOR_0 and the custom attributes _PART, _PARTW, _PIVOT
+// (and _COLORB, a second colour set for a variant), the rig's parent pivots in the file's extras.rig.
+async function loadTiers(url, model) {
+  const gltf = await new GLTFLoader().loadAsync(url.href);
+  const rename = { _part: 'aPart', _partw: 'aPartW', _pivot: 'aPivot', _colorb: 'aColorB' };
   const tiers = ['lod0', 'lod1', 'lod2'].map(n => {
     const g = gltf.scene.getObjectByName(n).geometry;
-    g.setAttribute('aPart', g.getAttribute('_part')); g.deleteAttribute('_part');
-    g.setAttribute('aPartW', g.getAttribute('_partw')); g.deleteAttribute('_partw');
-    g.setAttribute('aPivot', g.getAttribute('_pivot')); g.deleteAttribute('_pivot');
+    for (const [a, b] of Object.entries(rename)) { const at = g.getAttribute(a); if (at) { g.setAttribute(b, at); g.deleteAttribute(a); } }
     g.computeVertexNormals();
     return g;
   });
-  return { tiers, tris: tiers.map(g => g.index.count / 3), amp: [0.3, 0.6, 1.5, 0], pose: [0.12, 0, -0.15, 0], weighted: true };
+  const extras = gltf.parser.json.extras || {};
+  return { tiers, tris: tiers.map(g => g.index.count / 3), weighted: true, extras, ...model };
 }
+
+// Rig constants per drawn species (radians unless noted). Pivots come from the GLB (extras.rig) so a rebuild
+// that moves a joint needs no change here. Keys (GLSL const float rig_<key>):
+//   spine, spinePhase  chest flex with the bound (amplitude, phase against the fore legs)
+//   sit                chest pitch up as pose goes to 1;  foreFold  fore legs folding to the chest on pose
+//   tipLag, tipWave, tipCurl   tail tip: lagged flick (aAnim2.y), wave with the gait, extra curl on pose
+//   abduct             legs splayed sideways by aAnim2.x (climbing)
+//   bob                head nod with each step (twice per stride)
+//   handLag, handAmp   hand phase lag behind the arm and its stroke relative to the arm's;  bow  hands and arms
+//                      droop by aAnim2.x (a set-wing glide);  spread  tail fans out by aAnim2.y (x scale)
+//   collapse           1: the wing cards shrink into the shoulder as pose goes to 1
+const RIG = {
+  // California scrub-jay (tools/build_scrubjay.py): hops on the ground, perches, short rowing flights
+  jay: { amp: [0.35, 0.35, 0.4, 1.0], pose: [1, 0.15, 0, 0.2],
+    k: { handLag: 0.7, handAmp: 0.8, bow: 0.25, spread: 0.6, collapse: 1, bob: 0 } },
+  // California quail (tools/build_quail.py): walks with a nod, whirrs up and glides on bowed wings
+  quail: { amp: [0.9, 0.25, 0.5, 1.0], pose: [1, 0, 0, 0.2],
+    k: { handLag: 0.6, handAmp: 0.7, bow: 0.35, spread: 0.5, collapse: 1, bob: 0.12 } },
+  // Western gray squirrel (tools/build_squirrel.py): bounds, sits up, flicks and curls the plume, climbs
+  squirrel: { amp: [0.9, 0.5, 0.35, 0], pose: [1, 0.95, 0.75, 0],
+    k: { spine: 0.28, spinePhase: 1.2, sit: 0.7, foreFold: 1.1, tipLag: 0.7, tipWave: 0.25, tipCurl: 1.1, abduct: 0.9 } },
+};
+const urls = { jay: '../assets/scrubjay.glb', quail: '../assets/quail.glb', squirrel: '../assets/squirrel.glb' };
+function rigModel(name) {
+  const r = RIG[name];
+  return loadTiers(new URL(urls[name], import.meta.url), { amp: r.amp, pose: r.pose, rig: { name, k: r.k } })
+    .then(m => { m.rig.piv = m.extras.rig || {}; m.rig.kind = m.rig.piv.kind; m.variant = m.tiers[0].hasAttribute('aColorB'); return m; });
+}
+export const loadJayMesh = () => rigModel('jay');
+export const loadQuailMesh = () => rigModel('quail');
+export const loadSquirrelMesh = () => rigModel('squirrel');
 
 // A wing slab hinged at `pivot` on side s (+1 left, -1 right), raised by `dihedral` (rad) about the
 // body axis: its centre sits `dx` out along the raised span and `dz` fore (+) or aft (-) of the pivot.
@@ -256,26 +304,88 @@ vec3 animP = position - aPivot;
 mat3 animR = mat3(1.0);
 int animPart = int(aPart + 0.5);
 float animPose = aAnim.z;
+#ifdef ANIM_RIG
+  float rigSide = aPivot.x >= 0.0 ? 1.0 : -1.0;
+  // the parents' rotations, shared by their own vertices and their children's
+  mat3 rigChestR = animRX(-(sin(aAnim.x + rig_spinePhase) * aAnim.y * rig_spine + animPose * rig_sit));
+  mat3 rigTailR = animRX(aAnim.w * uAmp.y + animPose * uPose.y);
+  #define RIG_ARM(s) (animRY(s * animPose * uPose.w) * animRZ(s * (sin(aAnim.x) * aAnim.y * uAmp.w - aAnim2.x * rig_bow * 0.4)))
+#endif
 if (animPart == 1 || animPart == 2) {
   animP.y *= mix(1.0, uPose.x, animPose);
   animR = animRX(sin(aAnim.x + (animPart == 2 ? 3.14159 : 0.0)) * aAnim.y * uAmp.x);
+#ifdef ANIM_RIG
+  if (animPart == 1) animR = animRX(animPose * rig_foreFold) * animR;
+  animR = animRZ(rigSide * aAnim2.x * rig_abduct) * animR;   // splay outward
+#endif
 } else if (animPart == 3) {
+#ifdef ANIM_RIG
+  animP.x *= 1.0 + aAnim2.y * rig_spread;
+  animR = rigTailR;
+#else
   animR = animRX(aAnim.w * uAmp.y + animPose * uPose.y);
+#endif
 } else if (animPart == 6) {
   animR = animRX(aAnim.w * uAmp.z + animPose * uPose.z);
+#ifdef ANIM_RIG
+  animR = animRX(sin(2.0 * aAnim.x + 0.6) * aAnim.y * rig_bob) * animR;
+#endif
 } else if (animPart == 4 || animPart == 5) {
   float side = animPart == 4 ? 1.0 : -1.0;
+#ifdef ANIM_RIG
+  animR = RIG_ARM(side);
+#else
   animP.x *= mix(1.0, 0.55, animPose);
   animR = animRY(side * animPose * uPose.w) * animRZ(side * sin(aAnim.x) * aAnim.y * uAmp.w);
+#endif
 }
+#ifdef ANIM_RIG
+else if (animPart == 7) animR = rigChestR;
+else if (animPart == 8) animR = animRX(aAnim2.y * rig_tipLag + animPose * rig_tipCurl + sin(aAnim.x - 1.0) * aAnim.y * rig_tipWave);
+else if (animPart == 9 || animPart == 10) {
+  float side = animPart == 9 ? 1.0 : -1.0;
+  animR = animRZ(side * (sin(aAnim.x - rig_handLag) * aAnim.y * uAmp.w * rig_handAmp - sin(aAnim.x) * aAnim.y * uAmp.w - aAnim2.x * rig_bow));
+}
+#endif
 vec3 transformed = animR * animP + aPivot;
 #ifdef ANIM_WEIGHTED
   transformed = mix(position, transformed, aPartW);
 #endif
+#ifdef ANIM_RIG
+  // one-level parent chain: the child's own pose first (above), then its parent's rotation about the parent's pivot
+  #ifdef RIG_CHEST
+  if (animPart == 1 || animPart == 6) transformed = rigChestR * (transformed - rig_pivChest) + rig_pivChest;
+  #endif
+  #ifdef RIG_TAILTIP
+  if (animPart == 8) transformed = rigTailR * (transformed - rig_pivTail) + rig_pivTail;
+  #endif
+  #ifdef RIG_WING
+  if (animPart == 4 || animPart == 5 || animPart == 9 || animPart == 10) {
+    float side = (animPart == 4 || animPart == 9) ? 1.0 : -1.0;
+    vec3 wp = vec3(side * rig_pivWing.x, rig_pivWing.yz);
+    if (animPart >= 9) transformed = RIG_ARM(side) * (transformed - wp) + wp;
+    transformed = mix(transformed, wp, animPose * rig_collapse);   // folded: the cards vanish into the shoulder
+  }
+  #endif
+#endif
 #ifdef USE_ALPHAHASH
   vPosition = vec3( position );
 #endif`;
-const animDecl = model => (model.weighted ? '#define ANIM_WEIGHTED\nattribute float aPartW;' : '') + ANIM_DECL_BASE;
+const RIG_KEYS = ['spine', 'spinePhase', 'sit', 'foreFold', 'tipLag', 'tipWave', 'tipCurl', 'abduct', 'bob', 'handLag', 'handAmp', 'bow', 'spread', 'collapse'];
+function rigDecl(model) {
+  const r = model.rig; if (!r) return '';
+  const f = x => (+x || 0).toFixed(4), v3 = a => `vec3(${a.map(f).join(', ')})`;
+  const piv = r.piv || {};
+  let d = '#define ANIM_RIG\nattribute vec4 aAnim2;\n';
+  for (const k of RIG_KEYS) d += `const float rig_${k} = ${f(r.k[k])};\n`;
+  if (piv.chest) d += `#define RIG_CHEST\nconst vec3 rig_pivChest = ${v3(piv.chest)};\n`;
+  if (piv.tail_tip) d += `#define RIG_TAILTIP\nconst vec3 rig_pivTail = ${v3(piv.tail)};\n`;
+  if (piv.wing) d += `#define RIG_WING\nconst vec3 rig_pivWing = ${v3(piv.wing)};\n`;
+  if (model.variant) d += '#define ANIM_VARIANT\nattribute vec3 aColorB;\n';
+  return d;
+}
+const animDecl = model => (model.weighted ? '#define ANIM_WEIGHTED\nattribute float aPartW;' : '') + ANIM_DECL_BASE + '\n' + rigDecl(model);
+const programKey = model => `${model.amp.join(',')}|${model.pose.join(',')}|${model.weighted ? 'w' : ''}|${model.rig ? model.rig.name : ''}`;
 
 export function animalMaterial(atmosphere, model) {
   const m = new THREE.MeshLambertMaterial({ vertexColors: true, flatShading: true });
@@ -285,12 +395,14 @@ export function animalMaterial(atmosphere, model) {
   // materials would otherwise share one program, and with it the first material's uniform values.
   const v4 = a => `vec4(${a.map(x => x.toFixed(4)).join(', ')})`;
   const consts = `\nconst vec4 uAmp = ${v4(model.amp)};\nconst vec4 uPose = ${v4(model.pose)};`;
-  const key = `atmosphere-lambert|animal|${model.amp.join(',')}|${model.pose.join(',')}|${model.weighted ? 'w' : ''}`;
+  const key = `atmosphere-lambert|animal|${programKey(model)}`;
   m.onBeforeCompile = (shader, renderer) => {
     prev.call(m, shader, renderer);
     shader.vertexShader = shader.vertexShader
       .replace('#include <common>', '#include <common>\n' + animDecl(model) + consts)
-      .replace('#include <begin_vertex>', ANIM_BODY);
+      .replace('#include <begin_vertex>', ANIM_BODY)
+      // a second colour set (the female quail), picked per instance by aAnim2.w
+      .replace('#include <color_vertex>', '#include <color_vertex>\n#ifdef ANIM_VARIANT\n  vColor.rgb = mix(vColor.rgb, aColorB, aAnim2.w);\n#endif');
   };
   m.customProgramCacheKey = () => key;
   m.needsUpdate = true;

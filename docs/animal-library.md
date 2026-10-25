@@ -121,6 +121,32 @@ more is spent, it should be one more `meshy-6-lite` preview (5 credits) with the
 to the flanks, or one `latest` preview (20 credits) to compare the full model, and a separate
 spread-wing glide preview if a mesh flying raven is wanted.
 
+## Rig templates
+
+The drawn animals are posed by the procedural part rig in `client/src/animalModels.js`: no skeleton, each vertex
+carries a part (`_PART`), that part's weight (`_PARTW`) and its pivot (`_PIVOT`), and the vertex shader turns
+parts about their pivots from one per-instance vec4 (phase, gait, pose, flick). Parts 0-6 (body, legs A/B, tail,
+wings L/R, head) are the original scheme the deer and every procedural model use, unchanged. Two templates extend
+it (adopted 2026-10-25 for the scrub-jay, quail and squirrel):
+
+- **Bird:** body, legs A/B (procedural legs added by the build script), tail, head (with the neck; pivot at the
+  neck's base, nodding with each step on the quail), wing L/R (the arm, pivot at the shoulder) and HAND_L/R (9,
+  10; pivot at the wrist). The generated mesh's folded wings stay body geometry. Flight uses wing cards (arm and
+  hand per side, top and underside colours) that collapse into the shoulder as pose goes to 1, so they cost
+  nothing visible on the ground and open for the flush or the jay's short flight. The hand lags the arm through
+  the stroke.
+- **Rodent:** body (hindquarters), CHEST (7; pivot at the lumbar: flexes with the bound, rises to sit up),
+  head and fore legs (children of the chest), hind legs, tail and TAIL_TIP (8; child of the tail: a lagged wave
+  and an extra curl on pose).
+
+The parent chain is one level: a child's own rotation first, then its parent's about the parent's pivot (read
+from the GLB's `extras.rig`). A second per-instance vec4, `aAnim2`, carries what the four floats cannot: wing bow
+in a glide and tail spread for birds, leg splay (climbing) and the lagged tail-tip flick for the rodent, and a
+colour variant (the female quail's second colour set, `_COLORB`). Per-species constants (sit-up angle, spine
+flex, hand lag, collapse and so on) are in `RIG` in `animalModels.js`; a rebuild that moves a joint needs no
+client change. Each drawn species falls back to its procedural model while loading or on error, and
+`?<name>=proc` (`deer`, `squirrel`, `quail`, `jay`; `animals` for all) draws the procedural one for A/B.
+
 ## Next (adoption lane)
 
 1. `tools/build_raven_ground.py` on the deer model: scale to 0.62 m bill to tail, weld, decimate to

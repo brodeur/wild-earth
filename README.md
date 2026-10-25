@@ -51,6 +51,10 @@ and never logged or stored.
 is "Raven" by Teh_Bucket on OpenGameArt, CC0, re-exported from Blender with a glide clip.
 The deer model (`client/assets/deer.glb`) is Deer by Quaternius, Ultimate Animated Animal Pack,
 CC0, via Poly Pizza (<https://poly.pizza/m/T6Cs7tmMHJ>), rebuilt by `tools/build_deer.py`.
+The California scrub-jay, California quail and western gray squirrel (`client/assets/scrubjay.glb`,
+`quail.glb`, `squirrel.glb`) were generated with Meshy (meshy.ai) on the account holder's paid plan,
+owned by the account holder and released under CC BY-SA 4.0, and rebuilt by `tools/build_scrubjay.py`,
+`build_quail.py` and `build_squirrel.py` (job ids and prompts in each script's header).
 The client reads a tile package's `client/`
 rasters and builds a 10 m terrain mesh, a vegetation-shaded texture that recolors grass
 and oaks by season, a physically placed sun for the tile's latitude, and a forest of

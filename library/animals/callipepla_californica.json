@@ -12,13 +12,45 @@
     "shoulder_or_wingspan_m": 0.35,
     "note": "Length 24-27 cm, wingspan 32-37 cm, 140-230 g. Meshy normalises to about 1.9 units on the longest axis; adoption scales the standing model to 0.25 m bill to tail."
   },
-  "source": null,
-  "license": null,
-  "license_detail": null,
-  "tiers": {
-    "note": "No mesh adopted yet. The client draws buildQuail in client/src/animalModels.js (procedural, about 230 triangles)."
+  "source": {
+    "kind": "meshy",
+    "title": "California quail",
+    "author": "generated with Meshy (meshy.ai) by agent (Claude) for Aaron Brodeur",
+    "url": null,
+    "file": "library/animals/jobs/callipepla_californica/01a1719b-a621-7275-a36c-5deb473f01f5/model.glb (local; jobs/ meshes are not tracked)",
+    "original": "Meshy text-to-3D preview, meshy-6-lite, triangle remesh, 20,737 triangles, untextured",
+    "prompt": "A male California quail (Callipepla californica), one bird standing upright with its wings folded against a plump round body. Realistic proportions, about 25 cm long. A black teardrop-shaped topknot plume rising from the forehead and curling forward over the short black bill. Black face and throat outlined in white, white forehead line, chestnut-brown crown, slate blue-grey breast, buff belly with black-edged scaled feathers and a chestnut centre patch, olive-brown back, brown flanks with white streaks, short grey legs. No base, no rock. Game-ready, clean closed mesh.",
+    "reference_image": null,
+    "job_id": "01a1719b-a621-7275-a36c-5deb473f01f5",
+    "date": "2026-10-25 (UTC)",
+    "adopted_by": "tools/build_quail.py"
   },
-  "rig": "bird template (brief: BODY 0, LEG_A/B pivot (+-0.022, 0.05, 0.005), TAIL 3, HEAD 6 with the topknot, folded wings as BODY, procedural wing cards for the flush)",
+  "license": "CC BY-SA 4.0",
+  "license_detail": {
+    "source_terms": "Meshy Terms of Use 3.2 (https://www.meshy.ai/terms-of-use, last updated 2026-09-19): API output on a paid plan is owned by the account holder, who releases it with the project's assets under CC BY-SA 4.0. Terms 2.4: AI-identifying metadata Meshy embeds is carried over (the source GLB carried none; the adopted GLB records the source in extras.source). Terms 2.6(xi): not for training models that compete with Meshy (binds the account holder).",
+    "redistribute_under_cc_by_sa": true,
+    "note": "Credit \"generated with Meshy (meshy.ai)\" in README, the build script header and the GLB asset.copyright. AI-generated output may carry little or no copyright in some jurisdictions; the licence covers what rights exist."
+  },
+  "tiers": {
+    "lod0": 1000,
+    "lod1": 400,
+    "lod2": 120,
+    "file": "client/assets/quail.glb",
+    "attributes": [
+      "POSITION",
+      "COLOR_0 (linear)",
+      "_PART",
+      "_PARTW",
+      "_PIVOT",
+      "_COLORB (female, linear)"
+    ],
+    "lod_m": [
+      12,
+      40
+    ],
+    "note": "Wire plume and crown spikes deleted, procedural forward-curling teardrop topknot added (tip asserted ahead of its base); crown widened and lowered; bill shortened 0.8x and widened 1.7x at the base; long legs cut at the belly and short grey procedural legs added; the two long tail blades deleted and a short rounded fan added; body tipped 12 degrees nose-down (forage posture); scaled to 0.25 m; recoloured as a male with a female colour set in _COLORB; flight wing cards added. Triangles: lod0 1,000 = 842 body + 84 legs + 24 wing cards + 20 topknot + 14 tail fan + 16 eyes; lod1 400 = 324 + 36 + 24 + 8 + 8; lod2 120 = 96 + 6 + 12 + 2 + 4. Tiers switch at 12 and 40 m. GLB 131,064 bytes."
+  },
+  "rig": "bird rig template (client/src/animalModels.js RIG.quail; PART BODY, LEG_A/B procedural legs, TAIL procedural fan, HEAD with the neck and the procedural topknot, WING_L/R and HAND_L/R cards that collapse into the shoulder on pose); aAnim2 = (wing bow in the glide, tail spread, -, female colour set)",
   "candidates": [
     {
       "kind": "meshy",
@@ -32,18 +64,20 @@
       "credits": 5,
       "raw_triangles": 20737,
       "license": "owned by the paid account holder (Meshy Terms of Use 3.2); to be released as CC BY-SA 4.0 with the project's assets on adoption; Terms 2.6(xi): not for training models that compete with Meshy",
-      "status": "raw preview, not adopted; geometry only (no texture). Adoptable with build-script fixes.",
+      "status": "adopted 2026-10-25 by tools/build_quail.py",
       "review": "Reads as a quail from the side: plump teardrop body, small head, a forward-curling plume over the bill, smooth sculpt (no feather shards), one main piece with three stray single triangles. Faults: the plume is a thin curled wire plus a few crown spikes, not a teardrop; the crown is pinched into a ridge from the front; the stance is upright and tall (height about equal to length) on legs too long and thin for a quail (about a fifth of the height is bare tarsus); the tail is two long thin blades instead of a short rounded tail; the bill is slim and pointed rather than short and stout; eyes are shallow sockets. Feet: three forward toes and a hind toe, flat. A build script would delete the generated plume and add the procedural teardrop (brief section 6), cut the legs at mid-tarsus and add short grey procedural legs, trim the tail blades to a short fan, and give the body the forage pitch. No species drift to a crestless partridge; scaling and face pattern are colour only."
     }
   ],
   "status": "agent draft, needs local sign-off",
-  "accuracy_notes": "The Meshy preview has the plume curling forward (checked in side view) but as a filament. Poly Pizza \"Quail\" (Poly by Google, CC BY 3.0, 950 triangles) is the alternative base named in the brief; not reviewed here. A local birder should check the plume shape, leg length and the upright versus forage posture.",
+  "accuracy_notes": "Adopted 2026-10-25 from the Meshy preview. Reads as a California quail at 3-10 m: black face bordered white, chestnut crown, forward topknot, blue-grey breast, brown back, scaled buff belly; female variant (grey-brown head and breast, no face pattern) drawn for half the birds. Still open: the body is the generator's deep teardrop, so even pitched 12 degrees it sits upright and heavy; the short legs (3 cm) are mostly hidden by the grass layer; the belly scaling and flank streaks are a face-sized mottle, not a pattern; the face border is blocky at lod0 and gone at lod1; the female plume keeps the male's size. A local birder should check the plume shape, leg length and posture.",
   "authors": [
-    "agent (Claude) for Aaron Brodeur (entry, Meshy candidate)"
+    "agent (Claude) for Aaron Brodeur (entry, Meshy candidate)",
+    "agent (Claude) for Aaron Brodeur (adoption: build script, rig, tiers)"
   ],
   "sources": [
     "library/animals/drafts/callipepla_californica.md (mesh brief)",
     "docs/animal-library.md",
-    "library/animals/README.md"
+    "library/animals/README.md",
+    "tools/build_quail.py (adoption)"
   ]
 }
