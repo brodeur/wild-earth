@@ -55,6 +55,8 @@ AREA_RATIO = 6.0            # DEM vs NHD drainage area must agree within this fa
 INTERMITTENT_KM2 = 2.0      # unmatched DEM channels this big are intermittent, smaller ones ephemeral
 DEPTH_RING_M = 20.0         # radius of the ring around a channel cell for channel_depth
 BREACH_MAX_M = 300.0        # longest breach (box half-size); hydro/human_water.geojson may raise it
+SEED_RUN_M = 500.0          # an inflow seed must route at least min(this, half the NHD line's run inside) before leaving
+SEED_SNAP_M = 60.0          # ... else it moves to the lowest cell within this of the line's first 100 m (then 300 m) inside
 PERENNIAL, INTERMITTENT, EPHEMERAL = 46006, 46003, 46007
 CANAL = 33600
 # D8 encoding (pysheds default order N, NE, E, SE, S, SW, W, NW)
@@ -252,6 +254,11 @@ def _inflow_seeds(tile: Tile, flowlines: list, res: float, n: int, inset=15.0):
     goes `inset` metres inside the edge, along the line."""
     seeds = []
     inner = shapely.box(inset, inset, TILE_SIZE_M - inset, TILE_SIZE_M - inset)
+    tile_box = shapely.box(0, 0, TILE_SIZE_M, TILE_SIZE_M)
+    key = lambda xy: (round(float(xy[0]), 1), round(float(xy[1]), 1))  # noqa: E731
+    starts = {}   # NHD segments chain end -> start, downstream
+    for ft in flowlines:
+        starts.setdefault(key(ft["line"].coords[0]), ft["line"])
     for ft in flowlines:
         pr, line = ft["props"], ft["line"]
         area = pr.get("totdasqkm") or 0
@@ -272,9 +279,78 @@ def _inflow_seeds(tile: Tile, flowlines: list, res: float, n: int, inset=15.0):
                 continue
             col = int(min(n - 1, max(0, p.x // res)))
             row = int(min(n - 1, max(0, (TILE_SIZE_M - p.y) // res)))
+            # the river's run inside the tile from the seed until it next leaves (for _snap_seeds),
+            # following the NHD segments downstream for up to 2 x SEED_RUN_M
+            xy = list(substring(rest, rest.project(p), rest.length).coords)
+            seen, total = {id(line)}, rest.length
+            while total < 2 * SEED_RUN_M:
+                nxt = starts.get(key(xy[-1]))
+                if nxt is None or id(nxt) in seen:
+                    break
+                seen.add(id(nxt))
+                xy.extend(list(nxt.coords)[1:])
+                total += nxt.length
+            follow = (LineString(xy) if len(xy) > 1 else rest).intersection(tile_box)
+            parts = [g for g in getattr(follow, "geoms", [follow]) if g.geom_type == "LineString" and not g.is_empty]
+            run = min(parts, key=lambda g: g.distance(p)) if parts else None
             seeds.append({"row": row, "col": col, "area_km2": float(area), "order": pr.get("streamorde") or 1,
-                          "name": pr.get("gnis_name")})
+                          "name": pr.get("gnis_name"), "run": run, "run_m": run.length if run is not None else 0.0})
     return seeds
+
+
+def _snap_seeds(seeds: list, down: np.ndarray, zf: np.ndarray, res: float) -> list:
+    """Move inflow seeds that drain straight back out of the tile onto the valley floor they feed.
+
+    A seed sits `inset` metres inside the edge on the NHD line. Where the line is offset from the
+    lidar's channel and a river runs along the edge, that cell can drain back out within a few
+    cells, and the whole upstream basin leaves with it (a 500 km2 river becomes a 10 km2 creek).
+    A seed must route at least min(SEED_RUN_M, half the line's run inside the tile) before it
+    reaches the border; one that does not moves to the lowest filled cell within SEED_SNAP_M of
+    the line's first 100 m inside (then 300 m) that does. Seeds that pass are left where they are.
+    Returns what moved."""
+    nr, nc = zf.shape
+    zflat = zf.ravel()
+
+    def run_cells(i, need):
+        k = 0
+        while i >= 0 and k < need:
+            r, c = divmod(int(i), nc)
+            if r in (0, nr - 1) or c in (0, nc - 1):
+                break
+            i, k = down[i], k + 1
+        return k
+
+    moved = []
+    for s in seeds:
+        need = int(min(SEED_RUN_M, 0.5 * s.get("run_m", 0.0)) / res)
+        i0 = s["row"] * nc + s["col"]
+        if need < 2 or s.get("run") is None or run_cells(i0, need) >= need:
+            continue
+        best = None
+        for window in (100.0, 300.0):
+            seg = substring(s["run"], 0.0, min(window, s["run"].length))
+            x0, y0, x1, y1 = seg.buffer(SEED_SNAP_M).bounds
+            c0, c1 = max(1, int(x0 // res)), min(nc - 2, int(x1 // res))
+            r0, r1 = max(1, int((TILE_SIZE_M - y1) // res)), min(nr - 2, int((TILE_SIZE_M - y0) // res))
+            if c1 < c0 or r1 < r0:
+                continue
+            rr, cc = np.mgrid[r0:r1 + 1, c0:c1 + 1]
+            pts = shapely.points((cc.ravel() + 0.5) * res, TILE_SIZE_M - (rr.ravel() + 0.5) * res)
+            near = shapely.distance(pts, seg) <= SEED_SNAP_M
+            cand = (rr.ravel() * nc + cc.ravel())[near]
+            for i in cand[np.argsort(zflat[cand], kind="stable")]:
+                if run_cells(i, need) >= need:
+                    best = int(i)
+                    break
+            if best is not None:
+                break
+        if best is None:
+            continue
+        r, c = divmod(best, nc)
+        moved.append({"name": s["name"], "area_km2": round(s["area_km2"], 1), "from": [s["row"], s["col"]], "to": [r, c],
+                      "moved_m": round(float(np.hypot(r - s["row"], c - s["col"]) * res), 1)})
+        s["row"], s["col"] = r, c
+    return moved
 
 
 # ---------------------------------------------------------------------------
@@ -494,6 +570,12 @@ def build_channels(tile: Tile, threshold_km2: float = THRESHOLD_KM2) -> dict:
     for s in seeds:
         weights[s["row"], s["col"]] += s["area_km2"] / cell_km2
     zf, down, acc, unresolved = _route(dem_path, weights, zb)
+    seeds_moved = _snap_seeds(seeds, down, zf, res)
+    if seeds_moved:   # flow directions do not depend on the weights; only the accumulation is redone
+        weights = np.ones((nr, nc))
+        for s in seeds:
+            weights[s["row"], s["col"]] += s["area_km2"] / cell_km2
+        acc = _accumulate(down, weights.ravel()).reshape(nr, nc)
     # rewilded waterbodies: did the breach cut their outlet, and is any water still held in the bed?
     rewild_check = {}
     if rewilded and rw["dem"]:
@@ -689,7 +771,7 @@ def build_channels(tile: Tile, threshold_km2: float = THRESHOLD_KM2) -> dict:
     dem_len = sum(rc["line"].length for rc in dem_reaches)
     matched_n = sum(rc["matched"] for rc in dem_reaches)
     stats = {
-        "threshold_km2": threshold_km2, "seeds": len(seeds), "breaches": n_breach, "breach_cells": carved, "unresolved_flat_cells": int(unresolved),
+        "threshold_km2": threshold_km2, "seeds": len(seeds), "seeds_moved": seeds_moved, "breaches": n_breach, "breach_cells": carved, "unresolved_flat_cells": int(unresolved),
         "pruned_stubs": pruned, "interior_outlets": interior_outlets, "channel_cells": int(ch.sum()),
         "dem_reaches": len(dem_reaches), "dem_matched": matched_n, "dem_unmatched": len(dem_reaches) - matched_n,
         "nhd_flowlines": len(nhd), "nhd_covered": nhd_stats["covered"], "nhd_partial": nhd_stats["partial"],

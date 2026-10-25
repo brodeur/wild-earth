@@ -1,0 +1,1865 @@
+{
+ "spec_version": "0.2.0",
+ "tile_id": "utm10n_680_4270",
+ "crs": "EPSG:32610",
+ "bounds": [
+  680000,
+  4270000,
+  690000,
+  4280000
+ ],
+ "bounds_wgs84": [
+  -120.93410872708134,
+  38.55814920996113,
+  -120.81668392006142,
+  38.65029129231017
+ ],
+ "size_m": 10000,
+ "generated_at": "2026-10-25T13:36:03Z",
+ "generator": {
+  "name": "wild-earth-pipeline",
+  "version": "0.2.0"
+ },
+ "status": {
+  "human_landforms_removed": false,
+  "hydrology_rewilded": true,
+  "projection_years": 0,
+  "vegetation_backfilled": true,
+  "imagery_erased": true
+ },
+ "layers": {
+  "terrain.dem": {
+   "path": "terrain/dem.tif",
+   "kind": "raster",
+   "resolution_m": 5.0,
+   "units": "m",
+   "nodata": -9999.0,
+   "source": "usgs_3dep",
+   "source_resolution_m": 1.0,
+   "stats": {
+    "min": 146.59645080566406,
+    "max": 616.5853271484375,
+    "valid_fraction": 1.0
+   },
+   "sha256": "a30e77a7d7ba04060049bc0e3410d391f8651903f172bae11770232fea39e1ef",
+   "bytes": 12456811
+  },
+  "imagery.naip": {
+   "path": "imagery/naip.tif",
+   "kind": "raster",
+   "resolution_m": 2.5,
+   "bands": [
+    "red",
+    "green",
+    "blue"
+   ],
+   "source": "pc_naip",
+   "naip_year": 2022,
+   "cached": true,
+   "sha256": "5a3f2692cb1768155ac4a4308b3afe7fbe0d959a5916bbfca4b90399b33ad1b6",
+   "bytes": 50610603
+  },
+  "hydro.flowlines": {
+   "path": "hydro/flowlines.geojson",
+   "kind": "vector",
+   "source": "nhdplus_hr",
+   "feature_count": 733,
+   "sha256": "ec9bf95488c73c963ac94d84bab79879c649bf0836110589c7801b4d25052878",
+   "bytes": 581864
+  },
+  "hydro.waterbodies": {
+   "path": "hydro/waterbodies.geojson",
+   "kind": "vector",
+   "source": "nhdplus_hr",
+   "feature_count": 16,
+   "reservoirs": [
+    null,
+    null,
+    null
+   ],
+   "sha256": "7169e1aad170b22c4b701fa0297ea86205239c1d8a1707310619029201f0a266",
+   "bytes": 16498
+  },
+  "hydro.channels": {
+   "path": "hydro/channels.geojson",
+   "kind": "vector",
+   "source": "usgs_3dep",
+   "derived_from": [
+    "terrain.dem",
+    "hydro.flowlines",
+    "hydro.waterbodies",
+    "hydro.human_water",
+    "terrain.dem_rewilded"
+   ],
+   "feature_count": 417,
+   "method": "least-cost breach (<= 300 m) of depressions >= 1 m outside waterbodies (human water rewilded: not held as ponds, routed on terrain/dem_rewilded.tif), then pysheds fill + resolve_flats, D8, NHD-seeded inflow",
+   "params": {
+    "threshold_km2": 0.15,
+    "min_reach_m": 40.0,
+    "match_radius_m": 60.0,
+    "width": "1.6*A^0.45 clamp 1-30",
+    "bed_width": "1.5*width+1"
+   },
+   "stats": {
+    "threshold_km2": 0.15,
+    "seeds": 31,
+    "seeds_moved": [
+     {
+      "name": null,
+      "area_km2": 0.6,
+      "from": [
+       756,
+       1996
+      ],
+      "to": [
+       733,
+       1975
+      ],
+      "moved_m": 155.7
+     },
+     {
+      "name": "Middle Fork Cosumnes River",
+      "area_km2": 345.6,
+      "from": [
+       1965,
+       1996
+      ],
+      "to": [
+       1969,
+       1966
+      ],
+      "moved_m": 151.3
+     },
+     {
+      "name": null,
+      "area_km2": 0.3,
+      "from": [
+       3,
+       1057
+      ],
+      "to": [
+       34,
+       1051
+      ],
+      "moved_m": 157.9
+     },
+     {
+      "name": "North Fork Cosumnes River",
+      "area_km2": 509.2,
+      "from": [
+       702,
+       1996
+      ],
+      "to": [
+       694,
+       1966
+      ],
+      "moved_m": 155.2
+     },
+     {
+      "name": null,
+      "area_km2": 1.2,
+      "from": [
+       1996,
+       242
+      ],
+      "to": [
+       1980,
+       218
+      ],
+      "moved_m": 144.2
+     },
+     {
+      "name": "Big Canyon Creek",
+      "area_km2": 7.9,
+      "from": [
+       3,
+       797
+      ],
+      "to": [
+       34,
+       794
+      ],
+      "moved_m": 155.7
+     }
+    ],
+    "breaches": 151,
+    "breach_cells": 527,
+    "unresolved_flat_cells": 15,
+    "pruned_stubs": 11,
+    "interior_outlets": 0,
+    "channel_cells": 31870,
+    "dem_reaches": 379,
+    "dem_matched": 311,
+    "dem_unmatched": 68,
+    "nhd_flowlines": 733,
+    "nhd_covered": 396,
+    "nhd_partial": 135,
+    "nhd_uncovered": 163,
+    "nhd_kept_reaches": 19,
+    "nhd_tips_dropped": 348,
+    "nhd_tips_length_km": 99.79,
+    "dem_length_km": 173.39,
+    "nhd_kept_length_km": 1.02,
+    "nhd_length_km": 255.76,
+    "nhd_covered_length_km": 153.17,
+    "median_offset_m": 10.1,
+    "median_reach_offset_m": 9.8,
+    "p90_offset_m": 27.6,
+    "in_waterbody_pieces": 14,
+    "features": 417,
+    "downhill_check": {
+     "points": 200,
+     "step_m": 10.0,
+     "tolerance_m": 0.5,
+     "violations": 1,
+     "violation_rate": 0.005,
+     "max_rise_m": 0.8
+    },
+    "max_area_km2": 544.84,
+    "breach_max_m": 300.0,
+    "rewilded_waterbodies": 5,
+    "rewild_check": {
+     "{ADF46B33-3DC1-4F12-9340-CE9AF701A13F}": {
+      "breaches": 0,
+      "unbreached": 0,
+      "breach_length_m": 0.0,
+      "breach_max_cut_m": 0.0,
+      "held_on_thalweg_m": null,
+      "thalweg_held_fraction": null,
+      "bed_held_fraction": 0.0,
+      "bed_held_max_m": 0.2,
+      "cells": 83
+     },
+     "121531137": {
+      "breaches": 0,
+      "unbreached": 0,
+      "breach_length_m": 0.0,
+      "breach_max_cut_m": 0.0,
+      "held_on_thalweg_m": 0.0,
+      "thalweg_held_fraction": 0.0,
+      "bed_held_fraction": 0.0,
+      "bed_held_max_m": 0.0,
+      "cells": 361
+     },
+     "{996D156E-47F7-45D9-AA28-BBE6D826CFAA}": {
+      "breaches": 0,
+      "unbreached": 0,
+      "breach_length_m": 0.0,
+      "breach_max_cut_m": 0.0,
+      "held_on_thalweg_m": null,
+      "thalweg_held_fraction": null,
+      "bed_held_fraction": 0.0,
+      "bed_held_max_m": 0.03,
+      "cells": 45
+     },
+     "121531106": {
+      "breaches": 1,
+      "unbreached": 0,
+      "breach_length_m": 59.5,
+      "breach_max_cut_m": 1.29,
+      "held_on_thalweg_m": 0.0,
+      "thalweg_held_fraction": 0.0,
+      "bed_held_fraction": 0.0,
+      "bed_held_max_m": 0.0,
+      "cells": 1843
+     },
+     "{16B0FE56-33B1-4AFA-93B7-3722D011ACA6}": {
+      "breaches": 1,
+      "unbreached": 0,
+      "breach_length_m": 57.4,
+      "breach_max_cut_m": 4.06,
+      "held_on_thalweg_m": null,
+      "thalweg_held_fraction": null,
+      "bed_held_fraction": 0.0,
+      "bed_held_max_m": 0.08,
+      "cells": 147
+     }
+    },
+    "routed_on": "terrain/dem_rewilded.tif"
+   },
+   "sha256": "4e6a26e5b0aadc1000264f7cdb93f237372532d8af4434d27b92619d910c38fd",
+   "bytes": 867765
+  },
+  "client.channel_depth": {
+   "path": "client/channel_depth.png",
+   "kind": "raster",
+   "crs": "EPSG:32610",
+   "bounds": [
+    680000,
+    4270000,
+    690000,
+    4280000
+   ],
+   "pixels": 2000,
+   "resolution_m": 5.0,
+   "derived_from": [
+    "terrain.dem",
+    "hydro.channels"
+   ],
+   "encoding": "uint8 decimetres: mean DEM on a 20 m ring minus the channel cell, clamped 0-25 m, x10; 0 off channel",
+   "sha256": "b6ff557fb41d2c95796f6dd4369287d5c204e3e1c5721b76eb42fff872423912",
+   "bytes": 82669
+  },
+  "hydro.human_water": {
+   "path": "hydro/human_water.geojson",
+   "kind": "vector",
+   "source": "nhdplus_hr",
+   "derived_from": [
+    "hydro.waterbodies",
+    "hydro.channels",
+    "footprint.mask",
+    "terrain.dem",
+    "osm"
+   ],
+   "osm_water": "hydro/osm_water.geojson",
+   "rule": "human: NHD FType 436; OSM water=reservoir/basin/wastewater or landuse=reservoir/basin; an OSM dam within 25 m (line) or 80 m (NID point); or a pond under 1.5 ha whose ring is straight (>= 12 m, RMS <= 0.12 of its length) at its outlet with ground >= 1.5 m below the water 15-45 m beyond it (on a creek >= 5 km2: RMS <= 0.08, >= 2 m). Everything else kept.",
+   "rewilded": [
+    {
+     "id": "nhd:{ADF46B33-3DC1-4F12-9340-CE9AF701A13F}",
+     "name": null,
+     "kind": "reservoir",
+     "source": "nhd",
+     "area_m2": 2080.5,
+     "centroid": [
+      9076.9,
+      9751.4
+     ],
+     "bbox": [
+      9042.7,
+      9723.2,
+      9109.1,
+      9782.3
+     ],
+     "reasons": [
+      "NHD FType 436 reservoir (FCode 43617)",
+      "stock pond: 0.21 ha off the routed network (a hillside tank fed by a swale under 0.15 km2), straight 25 m downstream edge, ground 5.8 m below the water within 45 m of it, crest -0.2 m"
+     ],
+     "nhd_id": "{ADF46B33-3DC1-4F12-9340-CE9AF701A13F}",
+     "breach": {
+      "breaches": 0,
+      "unbreached": 0,
+      "breach_length_m": 0.0,
+      "breach_max_cut_m": 0.0,
+      "held_on_thalweg_m": null,
+      "thalweg_held_fraction": null,
+      "bed_held_fraction": 0.0,
+      "bed_held_max_m": 0.2,
+      "cells": 83
+     }
+    },
+    {
+     "id": "nhd:121531137",
+     "name": null,
+     "kind": "stock_pond",
+     "source": "nhd",
+     "area_m2": 8932.5,
+     "centroid": [
+      2533.6,
+      5738.1
+     ],
+     "bbox": [
+      2495.0,
+      5631.0,
+      2569.1,
+      5820.7
+     ],
+     "reasons": [
+      "OSM waterway=dam node/358812383 (Big Canyon Creek 469 Dam) on its edge"
+     ],
+     "nhd_id": "121531137",
+     "carve": {
+      "inflows": 5,
+      "length_m": 195.7,
+      "cells": 69,
+      "outlet_tail_m": 62.5,
+      "outlet_tail_max_cut_m": 1.32,
+      "max_cut_m": 4.6,
+      "outlet": [
+       2557.3,
+       5631.8
+      ],
+      "level_m": 230.64
+     },
+     "breach": {
+      "breaches": 0,
+      "unbreached": 0,
+      "breach_length_m": 0.0,
+      "breach_max_cut_m": 0.0,
+      "held_on_thalweg_m": 0.0,
+      "thalweg_held_fraction": 0.0,
+      "bed_held_fraction": 0.0,
+      "bed_held_max_m": 0.0,
+      "cells": 361
+     }
+    },
+    {
+     "id": "nhd:{996D156E-47F7-45D9-AA28-BBE6D826CFAA}",
+     "name": null,
+     "kind": "reservoir",
+     "source": "nhd",
+     "area_m2": 1171.6,
+     "centroid": [
+      9123.0,
+      9953.1
+     ],
+     "bbox": [
+      9096.0,
+      9927.9,
+      9149.4,
+      9978.7
+     ],
+     "reasons": [
+      "NHD FType 436 reservoir (FCode 43600)"
+     ],
+     "nhd_id": "{996D156E-47F7-45D9-AA28-BBE6D826CFAA}",
+     "breach": {
+      "breaches": 0,
+      "unbreached": 0,
+      "breach_length_m": 0.0,
+      "breach_max_cut_m": 0.0,
+      "held_on_thalweg_m": null,
+      "thalweg_held_fraction": null,
+      "bed_held_fraction": 0.0,
+      "bed_held_max_m": 0.03,
+      "cells": 45
+     }
+    },
+    {
+     "id": "nhd:121531106",
+     "name": "Big Canyon Reservoir",
+     "kind": "reservoir",
+     "source": "nhd",
+     "area_m2": 45937.3,
+     "centroid": [
+      2793.8,
+      7547.6
+     ],
+     "bbox": [
+      2635.5,
+      7248.0,
+      2955.4,
+      7893.7
+     ],
+     "reasons": [
+      "OSM water=reservoir (way/125607388, Big Canyon Reservoir)"
+     ],
+     "nhd_id": "121531106",
+     "carve": {
+      "inflows": 7,
+      "length_m": 581.1,
+      "cells": 139,
+      "outlet_tail_m": 0.0,
+      "outlet_tail_max_cut_m": 0.0,
+      "max_cut_m": 1.2,
+      "outlet": [
+       2732.0,
+       7393.0
+      ],
+      "level_m": 277.11
+     },
+     "breach": {
+      "breaches": 1,
+      "unbreached": 0,
+      "breach_length_m": 59.5,
+      "breach_max_cut_m": 1.29,
+      "held_on_thalweg_m": 0.0,
+      "thalweg_held_fraction": 0.0,
+      "bed_held_fraction": 0.0,
+      "bed_held_max_m": 0.0,
+      "cells": 1843
+     }
+    },
+    {
+     "id": "nhd:{16B0FE56-33B1-4AFA-93B7-3722D011ACA6}",
+     "name": null,
+     "kind": "reservoir",
+     "source": "nhd",
+     "area_m2": 3549.2,
+     "centroid": [
+      9149.3,
+      9905.9
+     ],
+     "bbox": [
+      9100.9,
+      9854.4,
+      9199.1,
+      9955.8
+     ],
+     "reasons": [
+      "NHD FType 436 reservoir (FCode 43600)"
+     ],
+     "nhd_id": "{16B0FE56-33B1-4AFA-93B7-3722D011ACA6}",
+     "breach": {
+      "breaches": 1,
+      "unbreached": 0,
+      "breach_length_m": 57.4,
+      "breach_max_cut_m": 4.06,
+      "held_on_thalweg_m": null,
+      "thalweg_held_fraction": null,
+      "bed_held_fraction": 0.0,
+      "bed_held_max_m": 0.08,
+      "cells": 147
+     }
+    }
+   ],
+   "kept": [
+    {
+     "id": "nhd:121531126",
+     "area_m2": 16233.7,
+     "centroid": [
+      5691.6,
+      7301.9
+     ],
+     "reason": "on a routed channel but no dam (no straight downstream edge with a drop or rim)"
+    },
+    {
+     "id": "nhd:121531155",
+     "area_m2": 491.9,
+     "centroid": [
+      3894.7,
+      3286.9
+     ],
+     "reason": "no routed channel through it and no human tag: a natural pond or swale"
+    },
+    {
+     "id": "nhd:121531080",
+     "area_m2": 11993.7,
+     "centroid": [
+      4857.0,
+      9749.1
+     ],
+     "reason": "on a routed channel but no dam (no straight downstream edge with a drop or rim)"
+    },
+    {
+     "id": "nhd:{60CDD2E1-CA3D-4409-865F-D6ACB0A6A52B}",
+     "area_m2": 1870.5,
+     "centroid": [
+      1884.7,
+      8142.5
+     ],
+     "reason": "wide spot of a creek: on a channel draining 10.5 km2 with no dam"
+    },
+    {
+     "id": "nhd:{87EEC461-2517-4E7A-BF30-39829DB50F1C}",
+     "area_m2": 1122.7,
+     "centroid": [
+      2048.3,
+      6443.7
+     ],
+     "reason": "no routed channel through it and no human tag: a natural pond or swale"
+    },
+    {
+     "id": "nhd:{732084D2-5A6A-4EA1-A2FE-2CE3F6762084}",
+     "area_m2": 3324.1,
+     "centroid": [
+      5916.4,
+      7065.0
+     ],
+     "reason": "on a routed channel but no dam (no straight downstream edge with a drop or rim)"
+    },
+    {
+     "id": "nhd:121531096",
+     "area_m2": 1810.5,
+     "centroid": [
+      1867.0,
+      8014.2
+     ],
+     "reason": "wide spot of a creek: on a channel draining 10.5 km2 with no dam"
+    },
+    {
+     "id": "nhd:{52098DF0-1ADE-449B-8CD8-614C8A09D4DF}",
+     "area_m2": 17436.1,
+     "centroid": [
+      9474.9,
+      3150.3
+     ],
+     "reason": "on a routed channel but no dam (no straight downstream edge with a drop or rim)"
+    },
+    {
+     "id": "nhd:{5E237EA3-2AFF-43AA-A872-9B4A1E404E3D}",
+     "area_m2": 3806.4,
+     "centroid": [
+      1526.9,
+      7695.4
+     ],
+     "reason": "wide spot of a creek: on a channel draining 10.5 km2 with no dam"
+    },
+    {
+     "id": "nhd:{9930198C-6FBF-4BB1-8CB0-B3056230EB0B}",
+     "area_m2": 3526.5,
+     "centroid": [
+      1927.1,
+      8435.0
+     ],
+     "reason": "wide spot of a creek: on a channel draining 10.5 km2 with no dam"
+    }
+   ],
+   "counts": {
+    "rewilded": 5,
+    "kept": 10,
+    "by_kind": {
+     "reservoir": 4,
+     "stock_pond": 1
+    }
+   },
+   "rewilded_area_m2": 61671.0,
+   "breach_max_m": 300.0,
+   "breach_widened": [],
+   "sha256": "beca332f0623eb89c4c54ecdd9573d1da6b49d6ce23aea9edc345ab9252dfe69",
+   "bytes": 26136
+  },
+  "terrain.dem_rewilded": {
+   "path": "terrain/dem_rewilded.tif",
+   "kind": "raster",
+   "units": "m",
+   "derived_from": [
+    "terrain.dem",
+    "hydro.human_water"
+   ],
+   "modification": "terrain/dem.tif with a thalweg carved through each rewilded bed that has a channel: least-cost path down the middle of the old flat from each inflow to the outlet, lowered 0.2 m below the old water level at the inflow to 1.2 m at the outlet, parabolic 8 m wide; never raised. Routing (hydro.channels) runs on this copy; the client terrain does not show it.",
+   "cells_lowered": 196,
+   "max_cut_m": 4.6,
+   "sha256": "494ec4bcfa34712a1b80d2b3e0dc31015deebc4bd1bdb24e829f2851bf9f3404",
+   "bytes": 9208167
+  },
+  "client.channel_profile": {
+   "path": "client/channel_profile.png",
+   "kind": "raster",
+   "crs": "EPSG:32610",
+   "bounds": [
+    680000,
+    4270000,
+    690000,
+    4280000
+   ],
+   "pixels": 2000,
+   "resolution_m": 5.0,
+   "derived_from": [
+    "hydro.channels",
+    "terrain.dem_rewilded",
+    "hydro.human_water"
+   ],
+   "encoding": "RGB, row 0 north. R thalweg water depth, 2 cm units (0-5.1 m), 0 off channel; G riffle-pool index (0 deepest pool, 128 run, 255 riffle; local width = reach width x (1 + 0.15 (G/127.5 - 1))); B rewilded water: 255 former open water (meadow or wet flat), 160 riparian corridor within 12 m of the restored channel, 0 elsewhere. R and G are spread 4 px from each centreline.",
+   "depth_model": "mean depth 0.10 A^0.32 m (A km2) x exp(-0.85 t), t = tanh(1.1 ln((S_local + 0.002) / (S_reach + 0.002))); S_local over max(7.5 m, 2.5 widths), S_reach over max(75 m, 10 widths), on the non-increasing DEM long profile every 2.5 m",
+   "stats": {
+    "reaches": 417,
+    "samples": 69970,
+    "riffle_share": 0.256,
+    "pool_share": 0.171,
+    "run_share": 0.573,
+    "depth_m_p50": 0.106,
+    "depth_m_p95": 0.532,
+    "depth_m_max": 1.222,
+    "bed_cells": 1523,
+    "corridor_cells": 956
+   },
+   "sha256": "c5deff63144bed22c6cf1d1e939b3dbfa616d69a547fb7eb580bd8fb37a78559",
+   "bytes": 354714
+  },
+  "client.features": {
+   "path": "client/features.json",
+   "kind": "vector",
+   "crs": "EPSG:32610",
+   "bounds": [
+    680000,
+    4270000,
+    690000,
+    4280000
+   ],
+   "encoding": "tile-local metres [x east, north from south edge]",
+   "counts": {
+    "roads": 139,
+    "streams": 417,
+    "waterbodies": 16
+   },
+   "streams_from": "hydro.channels",
+   "derived_from": [
+    "footprint.mask",
+    "hydro.channels",
+    "hydro.waterbodies"
+   ],
+   "sha256": "5abf902123bb79e762263377a341ae02811c8c0c323a0856d132bc764de0c1b9",
+   "bytes": 365976
+  },
+  "vegetation.evt": {
+   "path": "vegetation/evt.tif",
+   "kind": "raster",
+   "resolution_m": 30.0,
+   "source": "landfire",
+   "classes": 44,
+   "sha256": "1d63ec714da79916b1e7a3a2f587bceb10ba9a802a12b60d42aa907d598db03b",
+   "bytes": 56205
+  },
+  "vegetation.evc": {
+   "path": "vegetation/evc.tif",
+   "kind": "raster",
+   "resolution_m": 30.0,
+   "source": "landfire",
+   "classes": 188,
+   "sha256": "6515980d6f8bfa6685148b920f29e44ae846623d9ccb5ee4445e5ddf05fd740c",
+   "bytes": 117915
+  },
+  "vegetation.evh": {
+   "path": "vegetation/evh.tif",
+   "kind": "raster",
+   "resolution_m": 30.0,
+   "source": "landfire",
+   "classes": 88,
+   "sha256": "0d14cf6e3e326ce8fe42ffc5c7429b7be5165bba20d5c1c4def77e413313b7ff",
+   "bytes": 95263
+  },
+  "vegetation.bps": {
+   "path": "vegetation/bps.tif",
+   "kind": "raster",
+   "resolution_m": 30.0,
+   "source": "landfire",
+   "classes": 10,
+   "sha256": "621986914bae8386bd8793323c604c8d851012242923f6bda3b885e66b258322",
+   "bytes": 22240
+  },
+  "vegetation.habitat_present": {
+   "path": "vegetation/habitat_present.tif",
+   "kind": "raster",
+   "resolution_m": 30.0,
+   "derived_from": "vegetation.evt",
+   "fractions": {
+    "oak_woodland": 0.0772,
+    "conifer_forest": 0.1802,
+    "mixed_forest": 0.1754,
+    "chaparral": 0.2152,
+    "grassland": 0.2473,
+    "riparian": 0.0217,
+    "water": 0.0042,
+    "barren": 0.0014,
+    "human": 0.0774
+   },
+   "sha256": "7c99cf305aacdc114b72047f78cdfa6a54a06e42b5c44ba3844db41c54715fc8",
+   "bytes": 33214
+  },
+  "vegetation.habitat": {
+   "path": "vegetation/habitat.tif",
+   "kind": "raster",
+   "resolution_m": 30.0,
+   "derived_from": [
+    "vegetation.evt",
+    "vegetation.bps"
+   ],
+   "backfilled_fraction": 0.0774,
+   "fractions": {
+    "oak_woodland": 0.1392,
+    "conifer_forest": 0.1802,
+    "mixed_forest": 0.1754,
+    "chaparral": 0.2263,
+    "grassland": 0.2476,
+    "riparian": 0.0261,
+    "water": 0.0037,
+    "barren": 0.0014
+   },
+   "rewilded_beds": {
+    "source": "client.channel_profile (B)",
+    "meadow_cells": 31,
+    "corridor_cells": 40,
+    "meadow_class": "grassland",
+    "corridor_class": "riparian",
+    "rule": "corridor share >= 0.2: riparian; bed share >= 0.5 on present water, barren or human, or present water with bed share >= 0.15: grassland"
+   },
+   "sha256": "859744ccaf71e8669acfdb8d864e4a32c1a3a75d85245f9cb31ccdd5424cbeb7",
+   "bytes": 31811
+  },
+  "vegetation.classes": {
+   "path": "vegetation/classes.json",
+   "kind": "table",
+   "sha256": "a465b67e30eb767e12a130edd956138aa672821aaa5e031ae31f9a3fbe8fa0de",
+   "bytes": 32170
+  },
+  "geology.units": {
+   "path": "geology/units.geojson",
+   "kind": "vector",
+   "source": "macrostrat",
+   "sources_used": [
+    "macrostrat",
+    "usgs_sgmc"
+   ],
+   "feature_count": 12,
+   "units": 6,
+   "fetch": {
+    "source": "macrostrat",
+    "endpoint": "https://macrostrat.org/api/v2/geologic_units/map",
+    "scale": "medium",
+    "macrostrat_source_id": 133,
+    "scale_coverage_of_sample_points": {
+     "large": 0,
+     "medium": 25,
+     "small": 25,
+     "tiny": 25
+    },
+    "sample_points": 25,
+    "requests": 29,
+    "uncovered_pieces": 0,
+    "fallback_errors": []
+   },
+   "licence": "public domain (USGS SGMC) via Macrostrat, CC-BY 4.0",
+   "sha256": "1475309c99747c891bd51dcf1870c9626a42abc0ab8f05cd3a798af9424ebf33",
+   "bytes": 44925
+  },
+  "geology.classes": {
+   "path": "geology/classes.json",
+   "kind": "table",
+   "source": "macrostrat",
+   "sha256": "0a14863e98f3cca4a9d8aaeeb5d4582e9fe8eade3cbadb44af267830789e4948",
+   "bytes": 9373
+  },
+  "client.geology": {
+   "path": "client/geology.png",
+   "kind": "raster",
+   "crs": "EPSG:32610",
+   "bounds": [
+    680000,
+    4270000,
+    690000,
+    4280000
+   ],
+   "pixels": 333,
+   "resolution_m": 30.03003003003003,
+   "derived_from": "geology.units",
+   "encoding": "R = geology unit index (geology/classes.json units; 0 none), G = rock class index (1-based into rock_classes)",
+   "rock_class_fractions": {
+    "greenstone_metavolcanic": 0.3157,
+    "serpentinite": 0.0293,
+    "slate_phyllite": 0.4984,
+    "schist": 0.1543,
+    "granitic": 0.0023
+   },
+   "sha256": "cf392e77baff051b05ab12f682f6d6af5d3ccbd358be31da4d07863500bd5721",
+   "bytes": 2008
+  },
+  "soils.mapunits": {
+   "path": "soils/mapunits.geojson",
+   "kind": "vector",
+   "source": "usda_ssurgo",
+   "feature_count": 174,
+   "mapunits": 39,
+   "licence": "public domain",
+   "fetch": {
+    "endpoint": "https://sdmdataaccess.sc.egov.usda.gov/Tabular/post.rest",
+    "requests": 8
+   },
+   "sha256": "adef065f816d0c8b8f2b7a50619958d1dffb87057c86274d6670dca3fab80c97",
+   "bytes": 2127260
+  },
+  "soils.classes": {
+   "path": "soils/classes.json",
+   "kind": "table",
+   "source": "usda_ssurgo",
+   "sha256": "8b716b7e183b83a39ef8a267b80db1b0f34a4f3bef727f5aceae1948758c2a3a",
+   "bytes": 33754
+  },
+  "client.soils": {
+   "path": "client/soils.png",
+   "kind": "raster",
+   "crs": "EPSG:32610",
+   "bounds": [
+    680000,
+    4270000,
+    690000,
+    4280000
+   ],
+   "pixels": 333,
+   "resolution_m": 30.03003003003003,
+   "derived_from": "soils.mapunits",
+   "encoding": "R = soil map unit index (soils/classes.json; 0 none), G = surface rock fragments % 0-100, B = depth to bedrock dm (255 = none or unknown)",
+   "nodata_fraction": 0.0,
+   "sha256": "32b49dc6aa3419537ae9d14a242a807b09825c35dc8e354a6f461dd02e918e1b",
+   "bytes": 12377
+  },
+  "client.outcrop": {
+   "path": "client/outcrop.png",
+   "kind": "raster",
+   "crs": "EPSG:32610",
+   "bounds": [
+    680000,
+    4270000,
+    690000,
+    4280000
+   ],
+   "pixels": 333,
+   "resolution_m": 30.03003003003003,
+   "encoding": "R = outcrop likelihood 0..255 (0..1)",
+   "derived_from": [
+    "client.geology",
+    "client.soils",
+    "terrain.dem",
+    "vegetation.evc"
+   ],
+   "formula": "outcrop = clip(resistance[rock_class] * shallowness * terrain * (1 - tree_cover_pct/100 * 0.5), 0, 1); shallowness = clip((150 - depth_to_bedrock_cm) / (150 - 25), 0, 1) (0 where depth unknown); terrain = min(slope_deg / 35, 1) + 0.5 * clip(TPI_m / 1.5, 0, 1), TPI = z - mean(z, 150 m window) on the DEM averaged to 30 m; tree cover from LANDFIRE EVC; water = 0",
+   "resistance": {
+    "greenstone_metavolcanic": 0.9,
+    "granitic": 0.8,
+    "serpentinite": 0.8,
+    "schist": 0.6,
+    "slate_phyllite": 0.6,
+    "volcanic": 0.7,
+    "sandstone_conglomerate": 0.4,
+    "limestone_marble": 0.7,
+    "alluvium": 0.0,
+    "other": 0.4
+   },
+   "params": {
+    "shallow_cm": 25.0,
+    "deep_cm": 150.0,
+    "slope_full_deg": 35.0,
+    "tpi_window_m": 150.15015015015015,
+    "tpi_full_m": 1.5,
+    "convex_bonus": 0.5,
+    "canopy_damp": 0.5
+   },
+   "mean": 0.2933,
+   "fraction_above_0.5": 0.1396,
+   "fraction_above_0.25": 0.5338,
+   "slope_deg_mean": 13.2,
+   "convex_fraction": 0.5062,
+   "sha256": "1a86298526fe1dc0c1173ccb1efda5a83697e07703e2c16bdd6c8c873debb0e0",
+   "bytes": 91978
+  },
+  "client.ground_classes": {
+   "path": "client/ground_classes.json",
+   "kind": "table",
+   "derived_from": [
+    "client.geology",
+    "client.soils",
+    "client.outcrop"
+   ],
+   "fractions": {
+    "rock_class": {
+     "greenstone_metavolcanic": 0.3157,
+     "serpentinite": 0.0293,
+     "slate_phyllite": 0.4984,
+     "schist": 0.1543,
+     "granitic": 0.0023
+    },
+    "texture_class": {
+     "silt loam": 0.7849,
+     "loam": 0.092,
+     "bedrock": 0.092,
+     "fine sandy loam": 0.0125,
+     "water": 0.0046,
+     "sandy loam": 0.0044,
+     "coarse sandy loam": 0.0041,
+     "fragmental material": 0.004,
+     "very fine sandy loam": 0.0011,
+     "clay loam": 0.0003
+    },
+    "texture_modifier": {
+     "none": 0.7979,
+     "gravelly": 0.1694,
+     "very stony": 0.0201,
+     "cobbly": 0.0125,
+     "stony": 0.0
+    },
+    "depth_to_bedrock": {
+     "0-25": 0.1695,
+     "25-50": 0.6551,
+     "50-100": 0.1171,
+     "100-150": 0.0349,
+     ">=150": 0.0188,
+     "none_or_unknown": 0.0046
+    }
+   },
+   "sha256": "6b0504db0b591c9334022f89a56aba508569d97ab6ff3494f939b3fc9cde4f46",
+   "bytes": 25722
+  },
+  "species.list": {
+   "path": "species/species.json",
+   "kind": "table",
+   "source": "gbif",
+   "count": 14,
+   "sha256": "301560c35ca70dbcfd40ebea964d49a6fe646ac028d68b332bef84e15607f740",
+   "bytes": 6178
+  },
+  "species.occurrences": {
+   "path": "species/occurrences.geojson",
+   "kind": "vector",
+   "source": "gbif",
+   "feature_count": 585,
+   "sha256": "bec66b04181612b57b2f72718280c03bce5f0d82c15de0e2599fe4ad68b508ee",
+   "bytes": 261581
+  },
+  "species.seasonal": {
+   "path": "species/seasonal.json",
+   "kind": "table",
+   "source": "gbif",
+   "sha256": "a97920cc92cac2b2ceede7ba718a45e88c11dd1a7b745089449f9f964243b440",
+   "bytes": 1544
+  },
+  "species.inventory": {
+   "path": "species/inventory.json",
+   "kind": "table",
+   "source": "gbif",
+   "sha256": "5bcf1c69d484f0221630b935c3c298defd273d4b4851fb9e82ed5af3e61680d8",
+   "bytes": 7930
+  },
+  "perception": {
+   "path": "perception.json",
+   "kind": "table",
+   "sha256": "3624729878515b5614e5176f6a5d3da2ee4e0e862fbc451efee3bf5432761386",
+   "bytes": 3918
+  },
+  "calendar": {
+   "path": "calendar.json",
+   "kind": "table",
+   "sha256": "0e29872641cda472cf3ca2e4ccfb32606f3a2d1ffcf13971602a72885438ec7c",
+   "bytes": 11940
+  },
+  "terrain.hillshade": {
+   "path": "terrain/hillshade.png",
+   "kind": "raster",
+   "crs": "EPSG:4326",
+   "bounds": [
+    -120.93410872708134,
+    38.55814920996113,
+    -120.81668392006142,
+    38.65029129231017
+   ],
+   "pixels": 2000,
+   "derived_from": "terrain.dem",
+   "params": {
+    "azimuth": 315.0,
+    "altitude": 45.0
+   },
+   "sha256": "5c9dc4a7361a3b1592080ff3b2fd7f4a40f051685daa9f683e05ca26af65f61f",
+   "bytes": 3190998
+  },
+  "terrain.terrain_rgb": {
+   "path": "terrain/terrain_rgb.png",
+   "kind": "raster",
+   "crs": "EPSG:4326",
+   "bounds": [
+    -120.93410872708134,
+    38.55814920996113,
+    -120.81668392006142,
+    38.65029129231017
+   ],
+   "pixels": 2000,
+   "derived_from": "terrain.dem",
+   "encoding": "mapbox-terrain-rgb",
+   "elevation_range_m": [
+    146.617431640625,
+    616.4759521484375
+   ],
+   "sha256": "67077c95299df66b39ec1aea7ad9c28386b07f62f64e0aef2446bcaedf261d94",
+   "bytes": 2693472
+  },
+  "imagery.naip_png": {
+   "path": "imagery/naip.png",
+   "kind": "raster",
+   "crs": "EPSG:4326",
+   "bounds": [
+    -120.93410872708134,
+    38.55814920996113,
+    -120.81668392006142,
+    38.65029129231017
+   ],
+   "pixels": 2500,
+   "derived_from": "imagery.naip",
+   "sha256": "b98ff1e24776d72a6e5f0512210d548fd96360fe4023956efcee84bde835928d",
+   "bytes": 13056222
+  },
+  "vegetation.habitat_png": {
+   "path": "vegetation/habitat.png",
+   "kind": "raster",
+   "crs": "EPSG:4326",
+   "bounds": [
+    -120.93410872708134,
+    38.55814920996113,
+    -120.81668392006142,
+    38.65029129231017
+   ],
+   "pixels": 668,
+   "derived_from": "vegetation.habitat",
+   "sha256": "cab34dfbd2c6ceb9053da25e4c9a94682b4f5445467b404086f9bbd49ee3076e",
+   "bytes": 104392
+  },
+  "vegetation.habitat_present_png": {
+   "path": "vegetation/habitat_present.png",
+   "kind": "raster",
+   "crs": "EPSG:4326",
+   "bounds": [
+    -120.93410872708134,
+    38.55814920996113,
+    -120.81668392006142,
+    38.65029129231017
+   ],
+   "pixels": 668,
+   "derived_from": "vegetation.habitat_present",
+   "sha256": "c81ee7bdf1bd5a4feb80f3dad39ea53500172464ed2c3e724b081259f6d45902",
+   "bytes": 109582
+  },
+  "terrain.rewilded": {
+   "path": "terrain/rewilded.png",
+   "kind": "raster",
+   "crs": "EPSG:4326",
+   "bounds": [
+    -120.93410872708134,
+    38.55814920996113,
+    -120.81668392006142,
+    38.65029129231017
+   ],
+   "pixels": 2000,
+   "derived_from": [
+    "terrain.hillshade",
+    "vegetation.habitat"
+   ],
+   "sha256": "1db6e4215b6ef3d90e1e0b502b74ca9ec9c557a8611624465bb97810a981f89e",
+   "bytes": 4318023
+  },
+  "client.heights": {
+   "path": "client/heights.png",
+   "kind": "raster",
+   "crs": "EPSG:32610",
+   "bounds": [
+    680000,
+    4270000,
+    690000,
+    4280000
+   ],
+   "pixels": 2000,
+   "resolution_m": 5.0,
+   "encoding": "mapbox-terrain-rgb",
+   "elevation_range_m": [
+    146.59645080566406,
+    616.5853271484375
+   ],
+   "sha256": "e11449f9a459f3397fd9cc6e2d3a682f9723294eeebcf152ab49197c767f2474",
+   "bytes": 2974497
+  },
+  "client.habitat": {
+   "path": "client/habitat.png",
+   "kind": "raster",
+   "crs": "EPSG:32610",
+   "bounds": [
+    680000,
+    4270000,
+    690000,
+    4280000
+   ],
+   "pixels": 333,
+   "resolution_m": 30.03003003003003,
+   "encoding": "R = habitat class code",
+   "sha256": "e18244b88f716c6c6fb72a0ec845fbd0270384ec272311adb38c6f90b4fd4688",
+   "bytes": 33437
+  },
+  "client.canopy": {
+   "path": "client/canopy.png",
+   "kind": "raster",
+   "crs": "EPSG:32610",
+   "bounds": [
+    680000,
+    4270000,
+    690000,
+    4280000
+   ],
+   "pixels": 333,
+   "resolution_m": 30.03003003003003,
+   "encoding": "R tree %, G shrub %, B herb %",
+   "sha256": "8bef9d5ddc88fc47fe717838097cd9b5f085cf84d941cdff7dd3330c6067072f",
+   "bytes": 130475
+  },
+  "client.texture": {
+   "path": "client/texture.png",
+   "kind": "raster",
+   "crs": "EPSG:32610",
+   "bounds": [
+    680000,
+    4270000,
+    690000,
+    4280000
+   ],
+   "pixels": 2000,
+   "resolution_m": 5.0,
+   "derived_from": [
+    "terrain.dem",
+    "vegetation.habitat",
+    "vegetation.evc",
+    "footprint.mask"
+   ],
+   "sha256": "2bd63f0b1b83a33cfde1719a0e92eb50bbd06141348cf03e11599c81874e422d",
+   "bytes": 5400114
+  },
+  "client.masks": {
+   "path": "client/masks.png",
+   "kind": "raster",
+   "crs": "EPSG:32610",
+   "bounds": [
+    680000,
+    4270000,
+    690000,
+    4280000
+   ],
+   "pixels": 2000,
+   "resolution_m": 5.0,
+   "encoding": "R grassland, G oak woodland, B chaparral weights",
+   "sha256": "c65d1be215a150f652b26f38fdc13e0d84143be4d793bd5c0ff8045773a5283c",
+   "bytes": 2379194
+  },
+  "client.imagery": {
+   "path": "client/imagery.png",
+   "kind": "raster",
+   "crs": "EPSG:32610",
+   "bounds": [
+    680000,
+    4270000,
+    690000,
+    4280000
+   ],
+   "pixels": 1024,
+   "resolution_m": 9.765625,
+   "derived_from": "imagery.naip",
+   "sha256": "43c40cbfd5dadccb2483a5163bc904d90e257620bba4f59973b38d0a8efb22ef",
+   "bytes": 2286140
+  },
+  "client.texture_present": {
+   "path": "client/texture_present.jpg",
+   "kind": "raster",
+   "crs": "EPSG:32610",
+   "bounds": [
+    680000,
+    4270000,
+    690000,
+    4280000
+   ],
+   "pixels": 4000,
+   "resolution_m": 2.5,
+   "source": "pc_naip",
+   "derived_from": [
+    "imagery.naip"
+   ],
+   "encoding": "NAIP 2022 RGB as captured (present day, human footprint kept); JPEG q88",
+   "sha256": "b886c5d337cf6ea882b88ea60c532e7a57e26db7afe57fffda2c965bee07f8d0",
+   "bytes": 5168960
+  },
+  "client.species_mix": {
+   "path": "client/species_mix.json",
+   "kind": "raster",
+   "crs": "EPSG:32610",
+   "bounds": [
+    680000,
+    4270000,
+    690000,
+    4280000
+   ],
+   "pixels": 333,
+   "resolution_m": 30.03003003003003,
+   "files": {
+    "client/species_mix_a.png": {
+     "sha256": "041988ec47beee3c7f1f4d18c86f2e68fd991a9f6a160e30e333656148031d10",
+     "bytes": 80893
+    },
+    "client/species_mix_b.png": {
+     "sha256": "5ed67c5ba461c9d6d7224d3a4b3c8034a718b250a0d91683c16ff0a5a747dfe8",
+     "bytes": 107124
+    },
+    "client/species_mix_c.png": {
+     "sha256": "2bd3cdc9b324098e71e16503029123508819540d001e821459ff99b25427fff2",
+     "bytes": 5705
+    },
+    "client/species_mix_index.png": {
+     "sha256": "b1366d63d6e695a0360c8617dc98f1cfbb337f06d5c2ea84dbd7b4fc80bf4601",
+     "bytes": 50908
+    }
+   },
+   "derived_from": [
+    "vegetation.evt",
+    "vegetation.bps",
+    "vegetation.classes",
+    "vegetation.habitat",
+    "vegetation.evc"
+   ],
+   "encoding": "species_mix_a RGBA = blue oak, live oak, gray pine, ponderosa weights; species_mix_c RGB = willow, alder, cottonwood weights (a + c trees sum to 255); species_mix_b RGBA = manzanita, chamise weights, tree_density, shrub_density (byte/100); species_mix_index L = row in mixes",
+   "mixes": 35,
+   "unmatched": 0,
+   "fractions": {
+    "from_evt": 0.922,
+    "from_bps_backfill": 0.078,
+    "tree_share": {
+     "blue_oak": 0.4034,
+     "live_oak": 0.1619,
+     "gray_pine": 0.2356,
+     "ponderosa": 0.1695,
+     "willow": 0.0153,
+     "alder": 0.0105,
+     "cottonwood": 0.0039
+    },
+    "tree_share_by_canopy": {
+     "blue_oak": 0.1915,
+     "live_oak": 0.2271,
+     "gray_pine": 0.2436,
+     "ponderosa": 0.2996,
+     "willow": 0.02,
+     "alder": 0.0127,
+     "cottonwood": 0.0054
+    },
+    "shrub_share": {
+     "manzanita": 0.4683,
+     "chamise": 0.5317
+    },
+    "mean_tree_density": 0.891,
+    "mean_shrub_density": 0.6326,
+    "rules": {
+     "grassland_savanna": 0.2473,
+     "lower_montane_conifer": 0.1753,
+     "foothill_pine": 0.1742,
+     "ruderal_forest": 0.1304,
+     "dry_mesic_chaparral": 0.0668,
+     "blue_oak_foothill_pine": 0.0626,
+     "mixed_oak": 0.047,
+     "ruderal_scrub": 0.0257,
+     "blue_oak": 0.0252,
+     "riparian": 0.0181,
+     "black_oak": 0.005,
+     "montane_riparian": 0.0041,
+     "open_water": 0.0037,
+     "mesic_chaparral": 0.0029,
+     "serpentine_woodland": 0.0028,
+     "wet_meadow_marsh": 0.0027,
+     "dry_mesic_mixed_conifer": 0.0021,
+     "sparse_rock": 0.0014,
+     "riparian_shrubland": 0.0009,
+     "black_oak_conifer": 0.0005,
+     "xeric_chaparral": 0.0004,
+     "rewilded_riparian": 0.0004,
+     "rewilded_meadow": 0.0003
+    }
+   },
+   "sha256": "26f644cda1a8a251a7f7dd0d480cf1b8e2bb360b5ad3d465bd059a361a7ab8df",
+   "bytes": 24728
+  },
+  "resources": {
+   "path": "resources/resources.json",
+   "kind": "table",
+   "derived_from": [
+    "vegetation.habitat",
+    "vegetation.evc",
+    "terrain.dem",
+    "hydro.flowlines"
+   ],
+   "resources": [
+    "acorn_mast",
+    "grass_forbs",
+    "browse",
+    "cover",
+    "insects",
+    "cavity",
+    "cliff_or_snag",
+    "burrow",
+    "water"
+   ],
+   "mean_score": {
+    "acorn_mast": {
+     "winter": 11.9,
+     "spring": 2.4,
+     "summer": 1.2,
+     "fall": 23.9
+    },
+    "grass_forbs": {
+     "winter": 23.4,
+     "spring": 39.0,
+     "summer": 7.8,
+     "fall": 11.7
+    },
+    "browse": {
+     "winter": 26.1,
+     "spring": 43.5,
+     "summer": 30.5,
+     "fall": 21.8
+    },
+    "cover": {
+     "winter": 53.4,
+     "spring": 62.8,
+     "summer": 62.8,
+     "fall": 62.8
+    },
+    "insects": {
+     "winter": 5.5,
+     "spring": 55.3,
+     "summer": 44.3,
+     "fall": 22.1
+    },
+    "cavity": {
+     "winter": 27.6,
+     "spring": 27.6,
+     "summer": 27.6,
+     "fall": 27.6
+    },
+    "cliff_or_snag": {
+     "winter": 34.6,
+     "spring": 34.6,
+     "summer": 34.6,
+     "fall": 34.6
+    },
+    "burrow": {
+     "winter": 39.5,
+     "spring": 49.4,
+     "summer": 49.4,
+     "fall": 49.4
+    },
+    "water": {
+     "winter": 58.2,
+     "spring": 58.2,
+     "summer": 14.7,
+     "fall": 14.7
+    }
+   },
+   "sha256": "bf6e4427e2ebc1e68c85f47047557fb740dcc023ca23b165200a0a33d77b878f",
+   "bytes": 5141
+  },
+  "unreal": {
+   "path": "unreal/unreal.json",
+   "kind": "table",
+   "derived_from": [
+    "terrain.dem",
+    "vegetation.habitat",
+    "vegetation.evc"
+   ],
+   "size_px": 2017,
+   "scale_cm": {
+    "x": 496.0317,
+    "y": 496.0317,
+    "z": 96.3062
+   },
+   "layers": [
+    "barren",
+    "chaparral",
+    "conifer_forest",
+    "grassland",
+    "mixed_forest",
+    "oak_woodland",
+    "riparian",
+    "water"
+   ],
+   "sha256": "c62a1f3270b9771f1c4597d20d7709ef4ef747630822d1a4050bce0c21120896",
+   "bytes": 1792
+  },
+  "footprint.mask": {
+   "path": "footprint/mask.geojson",
+   "kind": "vector",
+   "source": "osm",
+   "feature_count": 787,
+   "class_counts": {
+    "road": 743,
+    "agriculture": 5,
+    "reservoir": 1,
+    "power": 1,
+    "building": 37
+   },
+   "osm_base": "2026-07-15T15:22:01Z",
+   "sha256": "654305d793f1c1a005031d17032985b05411fc740a12eb38e7137d5e9cc77fa5",
+   "bytes": 908048
+  },
+  "footprint.mask_raster": {
+   "path": "footprint/mask.png",
+   "kind": "raster",
+   "crs": "EPSG:4326",
+   "bounds": [
+    -120.93410872708134,
+    38.55814920996113,
+    -120.81668392006142,
+    38.65029129231017
+   ],
+   "pixels": 2000,
+   "derived_from": "footprint.mask",
+   "masked_fraction": 0.02498875,
+   "sha256": "b4b7ccb055328e3d6e865f399941d885d88324a4dc711d8a453606ec94599bdf",
+   "bytes": 54337
+  },
+  "client.mast": {
+   "path": "client/mast.png",
+   "kind": "raster",
+   "crs": "EPSG:32610",
+   "bounds": [
+    680000,
+    4270000,
+    690000,
+    4280000
+   ],
+   "pixels": 333,
+   "resolution_m": 30.03003003003003,
+   "derived_from": "resources.acorn_mast",
+   "encoding": "R = fall acorn_mast score 0..100",
+   "sha256": "474fe0adeb826a97f290c8380aec34613139d2d448cb777103f1d810e3620eac",
+   "bytes": 40540
+  },
+  "client.roads": {
+   "path": "client/roads.png",
+   "kind": "raster",
+   "crs": "EPSG:32610",
+   "bounds": [
+    680000,
+    4270000,
+    690000,
+    4280000
+   ],
+   "pixels": 2000,
+   "resolution_m": 5.0,
+   "derived_from": "footprint.mask",
+   "encoding": "road weight 0..255 (255 pavement, verge 136 falling to 0; tracks half weight)",
+   "road_fraction": 0.0135125,
+   "sha256": "a0af6eb95b455290e8e56a6bb23862405bd566ad574df5dbb4eaaec8de45e43c",
+   "bytes": 132186
+  },
+  "client.texture_imagery": {
+   "path": "client/texture_imagery.jpg",
+   "kind": "raster",
+   "crs": "EPSG:32610",
+   "bounds": [
+    680000,
+    4270000,
+    690000,
+    4280000
+   ],
+   "pixels": 4000,
+   "resolution_m": 2.5,
+   "source": "pc_naip",
+   "derived_from": [
+    "imagery.naip",
+    "footprint.mask",
+    "vegetation.habitat_present",
+    "vegetation.habitat",
+    "vegetation.evt",
+    "client.roads",
+    "client.channel_profile"
+   ],
+   "mask_fraction": 0.0195,
+   "human_cells": {
+    "whole_fraction": 0.0023,
+    "partial_fraction": 0.0751,
+    "partial_erased_fraction": 0.0162
+   },
+   "inpainted_fraction": 0.004,
+   "synthesized_fraction": 0.0155,
+   "components": {
+    "inpainted": 3783,
+    "synthesized": 955,
+    "patches": 5765
+   },
+   "source_windows": {
+    "1": 6733,
+    "2": 32913,
+    "3": 22648,
+    "4": 30355,
+    "5": 46970,
+    "6": 1410,
+    "7": 284,
+    "8": 4
+   },
+   "grass_mean": [
+    0.5354,
+    0.497,
+    0.4016
+   ],
+   "oak_mean": [
+    0.3389,
+    0.3783,
+    0.3037
+   ],
+   "rewilded_beds": {
+    "source": "client.channel_profile (B)",
+    "bed_fraction": 0.00076,
+    "corridor_fraction": 0.00024,
+    "patches": {
+     "meadow": 75,
+     "riparian": 39
+    },
+    "classes": {
+     "bed": "grassland",
+     "corridor": "riparian"
+    },
+    "grow_m": 5.0,
+    "brightness_radii_m": [
+     250.0,
+     900.0
+    ]
+   },
+   "encoding": "NAIP 2022 RGB with human footprint inpainted or synthesized, pavement bleached; JPEG q88",
+   "sha256": "b9d47b7b656c254b207bc523db6f13e259d33bed30981acf054b577dd010e426",
+   "bytes": 5139782
+  }
+ },
+ "sources": {
+  "usgs_3dep": {
+   "name": "USGS 3D Elevation Program (3DEP) bare-earth DEM",
+   "url": "https://elevation.nationalmap.gov/arcgis/rest/services/3DEPElevation/ImageServer",
+   "license": "public domain",
+   "retrieved": "2026-10-25"
+  },
+  "pc_naip": {
+   "name": "USDA NAIP via Microsoft Planetary Computer",
+   "url": "https://planetarycomputer.microsoft.com/dataset/naip",
+   "license": "public domain",
+   "retrieved": "2026-10-25"
+  },
+  "nhdplus_hr": {
+   "name": "USGS NHDPlus High Resolution",
+   "url": "https://hydro.nationalmap.gov/arcgis/rest/services/NHDPlus_HR/MapServer",
+   "license": "public domain",
+   "retrieved": "2026-10-25"
+  },
+  "landfire": {
+   "name": "LANDFIRE LF 2025 (EVT, EVC, EVH) and LF 2016 Biophysical Settings",
+   "url": "https://landfire.gov",
+   "license": "public domain",
+   "retrieved": "2026-10-25"
+  },
+  "macrostrat": {
+   "name": "Macrostrat API geologic_units/map (Burwell map compilation)",
+   "url": "https://macrostrat.org/api/v2/geologic_units/map",
+   "license": "CC-BY 4.0 (Macrostrat); SGMC polygons public domain",
+   "retrieved": "2026-10-25"
+  },
+  "usgs_sgmc": {
+   "name": "USGS State Geologic Map Compilation (Horton et al. 2017, DS 1052, doi:10.3133/ds1052)",
+   "url": "https://services.arcgis.com/v01gqwM5QqNysAAi/ArcGIS/rest/services/SB_5888bf4fe4b05ccb964bab9d_USGS_SGMC_feature/FeatureServer/3",
+   "license": "public domain",
+   "retrieved": "2026-10-25"
+  },
+  "usda_ssurgo": {
+   "name": "USDA NRCS SSURGO via Soil Data Access",
+   "url": "https://sdmdataaccess.sc.egov.usda.gov/Tabular/post.rest",
+   "license": "public domain",
+   "retrieved": "2026-10-25"
+  },
+  "gbif": {
+   "name": "GBIF occurrence API (includes iNaturalist research-grade and eBird)",
+   "url": "https://api.gbif.org/v1/occurrence/search",
+   "license": "per dataset (CC0 / CC BY / CC BY-NC); see occurrence properties",
+   "retrieved": "2026-10-25"
+  },
+  "osm": {
+   "name": "OpenStreetMap via Overpass API",
+   "url": "https://overpass-api.de/api/interpreter",
+   "license": "ODbL 1.0",
+   "retrieved": "2026-10-25"
+  }
+ },
+ "edits": [],
+ "log": [
+  {
+   "step": "dem",
+   "at": "2026-10-25T12:38:36Z",
+   "seconds": 18.2,
+   "ok": true
+  },
+  {
+   "step": "naip",
+   "at": "2026-10-25T12:39:09Z",
+   "seconds": 33.0,
+   "ok": true
+  },
+  {
+   "step": "osm",
+   "at": "2026-10-25T13:01:39Z",
+   "seconds": 1349.2,
+   "ok": false,
+   "error": "all Overpass mirrors failed: 504 from https://overpass.private.coffee/api/interpreter: <?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<!DOCTYPE html PUBLIC \"-//W3C//DTD XHTML 1.0 Strict//EN\"\n    \"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd\">\n<html xmlns=\"http://www.w3.org/1999/xhtml\" xml:"
+  },
+  {
+   "step": "hydro",
+   "at": "2026-10-25T13:02:01Z",
+   "seconds": 22.1,
+   "ok": true
+  },
+  {
+   "step": "channels",
+   "at": "2026-10-25T13:02:26Z",
+   "seconds": 25.4,
+   "ok": true
+  },
+  {
+   "step": "rewild_hydro",
+   "at": "2026-10-25T13:16:15Z",
+   "seconds": 829.1,
+   "ok": true
+  },
+  {
+   "step": "veg",
+   "at": "2026-10-25T13:16:32Z",
+   "seconds": 16.5,
+   "ok": true
+  },
+  {
+   "step": "ground",
+   "at": "2026-10-25T13:17:08Z",
+   "seconds": 36.4,
+   "ok": true
+  },
+  {
+   "step": "species",
+   "at": "2026-10-25T13:18:44Z",
+   "seconds": 95.4,
+   "ok": true
+  },
+  {
+   "step": "derive",
+   "at": "2026-10-25T13:19:11Z",
+   "seconds": 27.5,
+   "ok": true
+  },
+  {
+   "step": "erase",
+   "at": "2026-10-25T13:19:14Z",
+   "seconds": 2.8,
+   "ok": false,
+   "error": "[Errno 2] No such file or directory: '/Users/aaronbrodeur/Sites/wild-earth/tiles/utm10n_680_4270/client/roads.png'"
+  },
+  {
+   "step": "unreal",
+   "at": "2026-10-25T13:19:16Z",
+   "seconds": 1.8,
+   "ok": true
+  },
+  {
+   "step": "dem",
+   "at": "2026-10-25T13:19:27Z",
+   "seconds": 1.3,
+   "ok": true
+  },
+  {
+   "step": "naip",
+   "at": "2026-10-25T13:19:27Z",
+   "seconds": 0.0,
+   "ok": true
+  },
+  {
+   "step": "osm",
+   "at": "2026-10-25T13:19:27Z",
+   "seconds": 0.1,
+   "ok": true
+  },
+  {
+   "step": "hydro",
+   "at": "2026-10-25T13:19:48Z",
+   "seconds": 21.5,
+   "ok": true
+  },
+  {
+   "step": "channels",
+   "at": "2026-10-25T13:20:23Z",
+   "seconds": 34.4,
+   "ok": true
+  },
+  {
+   "step": "rewild_hydro",
+   "at": "2026-10-25T13:20:54Z",
+   "seconds": 31.1,
+   "ok": true
+  },
+  {
+   "step": "veg",
+   "at": "2026-10-25T13:20:54Z",
+   "seconds": 0.2,
+   "ok": true
+  },
+  {
+   "step": "ground",
+   "at": "2026-10-25T13:20:54Z",
+   "seconds": 0.5,
+   "ok": true
+  },
+  {
+   "step": "species",
+   "at": "2026-10-25T13:22:22Z",
+   "seconds": 87.6,
+   "ok": true
+  },
+  {
+   "step": "derive",
+   "at": "2026-10-25T13:22:51Z",
+   "seconds": 28.5,
+   "ok": true
+  },
+  {
+   "step": "erase",
+   "at": "2026-10-25T13:23:18Z",
+   "seconds": 27.5,
+   "ok": true
+  },
+  {
+   "step": "unreal",
+   "at": "2026-10-25T13:23:20Z",
+   "seconds": 2.0,
+   "ok": true
+  },
+  {
+   "step": "dem",
+   "at": "2026-10-25T13:31:52Z",
+   "seconds": 2.2,
+   "ok": true
+  },
+  {
+   "step": "naip",
+   "at": "2026-10-25T13:31:52Z",
+   "seconds": 0.1,
+   "ok": true
+  },
+  {
+   "step": "osm",
+   "at": "2026-10-25T13:31:52Z",
+   "seconds": 0.2,
+   "ok": true
+  },
+  {
+   "step": "hydro",
+   "at": "2026-10-25T13:32:18Z",
+   "seconds": 26.0,
+   "ok": true
+  },
+  {
+   "step": "channels",
+   "at": "2026-10-25T13:32:54Z",
+   "seconds": 35.9,
+   "ok": true
+  },
+  {
+   "step": "rewild_hydro",
+   "at": "2026-10-25T13:33:30Z",
+   "seconds": 35.8,
+   "ok": true
+  },
+  {
+   "step": "veg",
+   "at": "2026-10-25T13:33:30Z",
+   "seconds": 0.2,
+   "ok": true
+  },
+  {
+   "step": "ground",
+   "at": "2026-10-25T13:33:31Z",
+   "seconds": 0.6,
+   "ok": true
+  },
+  {
+   "step": "species",
+   "at": "2026-10-25T13:35:05Z",
+   "seconds": 94.2,
+   "ok": true
+  },
+  {
+   "step": "derive",
+   "at": "2026-10-25T13:35:33Z",
+   "seconds": 28.5,
+   "ok": true
+  },
+  {
+   "step": "erase",
+   "at": "2026-10-25T13:36:01Z",
+   "seconds": 28.2,
+   "ok": true
+  },
+  {
+   "step": "unreal",
+   "at": "2026-10-25T13:36:03Z",
+   "seconds": 1.8,
+   "ok": true
+  }
+ ]
+}

@@ -1,0 +1,1457 @@
+{
+ "type": "FeatureCollection",
+ "breach_max_m": 300.0,
+ "features": [
+  {
+   "type": "Feature",
+   "geometry": {
+    "type": "Polygon",
+    "coordinates": [
+     [
+      [
+       -120.827554,
+       38.646247
+      ],
+      [
+       -120.827364,
+       38.646223
+      ],
+      [
+       -120.82734,
+       38.646342
+      ],
+      [
+       -120.827173,
+       38.646437
+      ],
+      [
+       -120.826983,
+       38.64634200000001
+      ],
+      [
+       -120.826983,
+       38.646128000000004
+      ],
+      [
+       -120.827173,
+       38.646080000000005
+      ],
+      [
+       -120.82734,
+       38.64608
+      ],
+      [
+       -120.827435,
+       38.645914
+      ],
+      [
+       -120.827673,
+       38.64591399999999
+      ],
+      [
+       -120.82774500000001,
+       38.646176
+      ],
+      [
+       -120.827554,
+       38.646247
+      ]
+     ]
+    ]
+   },
+   "properties": {
+    "id": "nhd:{ADF46B33-3DC1-4F12-9340-CE9AF701A13F}",
+    "nhd_id": "{ADF46B33-3DC1-4F12-9340-CE9AF701A13F}",
+    "name": null,
+    "source": "nhd",
+    "fcode": 43617,
+    "ftype": 436,
+    "evidence": {
+     "area_m2": 2080.5,
+     "level_m": 354.3,
+     "outlet": [
+      9109.1,
+      9748.4
+     ],
+     "drop_below_m": 5.82,
+     "crest_above_m": -0.19,
+     "edge_len_m": 24.9,
+     "edge_rms": 0.109,
+     "dam_evidence": true
+    },
+    "reasons": [
+     "NHD FType 436 reservoir (FCode 43617)",
+     "stock pond: 0.21 ha off the routed network (a hillside tank fed by a swale under 0.15 km2), straight 25 m downstream edge, ground 5.8 m below the water within 45 m of it, crest -0.2 m"
+    ],
+    "kind": "reservoir",
+    "carve": null,
+    "breach": {
+     "breaches": 0,
+     "unbreached": 0,
+     "breach_length_m": 0.0,
+     "breach_max_cut_m": 0.0,
+     "held_on_thalweg_m": null,
+     "thalweg_held_fraction": null,
+     "bed_held_fraction": 0.0,
+     "bed_held_max_m": 0.2,
+     "cells": 83
+    },
+    "rewilded": true,
+    "area_m2": 2080.5
+   }
+  },
+  {
+   "type": "Feature",
+   "geometry": {
+    "type": "Polygon",
+    "coordinates": [
+     [
+      [
+       -120.903665,
+       38.61201599999999
+      ],
+      [
+       -120.903357,
+       38.612132
+      ],
+      [
+       -120.90321,
+       38.612004999999996
+      ],
+      [
+       -120.90313399999998,
+       38.611516
+      ],
+      [
+       -120.90321799999998,
+       38.611313
+      ],
+      [
+       -120.903372,
+       38.61113199999999
+      ],
+      [
+       -120.903393,
+       38.61105
+      ],
+      [
+       -120.90321100000001,
+       38.610539
+      ],
+      [
+       -120.903281,
+       38.610429
+      ],
+      [
+       -120.903428,
+       38.610424
+      ],
+      [
+       -120.90347,
+       38.61045099999999
+      ],
+      [
+       -120.903645,
+       38.610862999999995
+      ],
+      [
+       -120.903743,
+       38.610957
+      ],
+      [
+       -120.903974,
+       38.611083
+      ],
+      [
+       -120.90399500000001,
+       38.61115999999999
+      ],
+      [
+       -120.903897,
+       38.61153900000001
+      ],
+      [
+       -120.90395899999999,
+       38.61195
+      ],
+      [
+       -120.903924,
+       38.611983
+      ],
+      [
+       -120.903716,
+       38.61201
+      ],
+      [
+       -120.903665,
+       38.61201599999999
+      ]
+     ]
+    ]
+   },
+   "properties": {
+    "id": "nhd:121531137",
+    "nhd_id": "121531137",
+    "name": null,
+    "source": "nhd",
+    "fcode": 39004,
+    "ftype": 390,
+    "evidence": {
+     "area_m2": 8932.5,
+     "level_m": 230.64,
+     "channel_area_km2": 18.348,
+     "channel_fcode": 46003,
+     "channel_name": "Big Canyon Creek",
+     "outlet": [
+      2557.3,
+      5631.8
+     ],
+     "drop_below_m": 1.63,
+     "crest_above_m": 2.75,
+     "edge_len_m": 29.6,
+     "edge_rms": 0.323,
+     "dam_evidence": false
+    },
+    "reasons": [
+     "OSM waterway=dam node/358812383 (Big Canyon Creek 469 Dam) on its edge"
+    ],
+    "kind": "stock_pond",
+    "carve": {
+     "inflows": 5,
+     "length_m": 195.7,
+     "cells": 69,
+     "outlet_tail_m": 62.5,
+     "outlet_tail_max_cut_m": 1.32,
+     "max_cut_m": 4.6,
+     "outlet": [
+      2557.3,
+      5631.8
+     ],
+     "level_m": 230.64
+    },
+    "breach": {
+     "breaches": 0,
+     "unbreached": 0,
+     "breach_length_m": 0.0,
+     "breach_max_cut_m": 0.0,
+     "held_on_thalweg_m": 0.0,
+     "thalweg_held_fraction": 0.0,
+     "bed_held_fraction": 0.0,
+     "bed_held_max_m": 0.0,
+     "cells": 361
+    },
+    "rewilded": true,
+    "area_m2": 8932.5
+   }
+  },
+  {
+   "type": "Feature",
+   "geometry": {
+    "type": "Polygon",
+    "coordinates": [
+     [
+      [
+       -120.82646200000002,
+       38.648028999999994
+      ],
+      [
+       -120.826914,
+       38.647744
+      ],
+      [
+       -120.82708,
+       38.64791000000001
+      ],
+      [
+       -120.826604,
+       38.648195999999984
+      ],
+      [
+       -120.82646200000002,
+       38.648028999999994
+      ]
+     ]
+    ]
+   },
+   "properties": {
+    "id": "nhd:{996D156E-47F7-45D9-AA28-BBE6D826CFAA}",
+    "nhd_id": "{996D156E-47F7-45D9-AA28-BBE6D826CFAA}",
+    "name": null,
+    "source": "nhd",
+    "fcode": 43600,
+    "ftype": 436,
+    "evidence": {
+     "area_m2": 1171.6,
+     "level_m": 344.94,
+     "outlet": [
+      9136.6,
+      9978.7
+     ],
+     "drop_below_m": 3.57,
+     "crest_above_m": 4.07,
+     "edge_len_m": 19.3,
+     "edge_rms": 0.16,
+     "dam_evidence": false
+    },
+    "reasons": [
+     "NHD FType 436 reservoir (FCode 43600)"
+    ],
+    "kind": "reservoir",
+    "carve": null,
+    "breach": {
+     "breaches": 0,
+     "unbreached": 0,
+     "breach_length_m": 0.0,
+     "breach_max_cut_m": 0.0,
+     "held_on_thalweg_m": null,
+     "thalweg_held_fraction": null,
+     "bed_held_fraction": 0.0,
+     "bed_held_max_m": 0.03,
+     "cells": 45
+    },
+    "rewilded": true,
+    "area_m2": 1171.6
+   }
+  },
+  {
+   "type": "Feature",
+   "geometry": {
+    "type": "Polygon",
+    "coordinates": [
+     [
+      [
+       -120.89819900000002,
+       38.63034900000001
+      ],
+      [
+       -120.89830500000001,
+       38.629730999999985
+      ],
+      [
+       -120.89830500000001,
+       38.62944599999999
+      ],
+      [
+       -120.898594,
+       38.62894500000001
+      ],
+      [
+       -120.89903400000001,
+       38.62818300000001
+      ],
+      [
+       -120.89922300000002,
+       38.627947
+      ],
+      [
+       -120.89975500000001,
+       38.627508000000006
+      ],
+      [
+       -120.90036700000002,
+       38.626999999999995
+      ],
+      [
+       -120.900546,
+       38.626672
+      ],
+      [
+       -120.900576,
+       38.626344999999986
+      ],
+      [
+       -120.900834,
+       38.626262
+      ],
+      [
+       -120.90079900000002,
+       38.625795
+      ],
+      [
+       -120.90076400000001,
+       38.62569599999999
+      ],
+      [
+       -120.900639,
+       38.625613999999985
+      ],
+      [
+       -120.901556,
+       38.624959999999994
+      ],
+      [
+       -120.901927,
+       38.624998999999995
+      ],
+      [
+       -120.90197600000002,
+       38.625081
+      ],
+      [
+       -120.90162600000001,
+       38.625646999999994
+      ],
+      [
+       -120.901548,
+       38.626306
+      ],
+      [
+       -120.901093,
+       38.62703
+      ],
+      [
+       -120.900883,
+       38.627525000000006
+      ],
+      [
+       -120.89994400000002,
+       38.628693999999996
+      ],
+      [
+       -120.89908800000002,
+       38.629409
+      ],
+      [
+       -120.898137,
+       38.63071699999999
+      ],
+      [
+       -120.89819900000002,
+       38.63034900000001
+      ]
+     ]
+    ]
+   },
+   "properties": {
+    "id": "nhd:121531106",
+    "nhd_id": "121531106",
+    "name": "Big Canyon Reservoir",
+    "source": "nhd",
+    "fcode": 39009,
+    "ftype": 390,
+    "evidence": {
+     "area_m2": 45937.3,
+     "osm": [
+      {
+       "natural": "water",
+       "water": "reservoir",
+       "name": "Big Canyon Reservoir",
+       "osm_id": "way/125607388"
+      },
+      {
+       "osm_id": "way/125607388",
+       "water": "reservoir",
+       "name": "Big Canyon Reservoir"
+      }
+     ],
+     "level_m": 277.11,
+     "channel_area_km2": 13.956,
+     "channel_fcode": 46006,
+     "channel_name": "Big Canyon Creek",
+     "outlet": [
+      2732.0,
+      7393.0
+     ],
+     "drop_below_m": 1.44,
+     "crest_above_m": 3.63,
+     "edge_len_m": 145.0,
+     "edge_rms": 0.237,
+     "dam_evidence": false
+    },
+    "reasons": [
+     "OSM water=reservoir (way/125607388, Big Canyon Reservoir)"
+    ],
+    "kind": "reservoir",
+    "carve": {
+     "inflows": 7,
+     "length_m": 581.1,
+     "cells": 139,
+     "outlet_tail_m": 0.0,
+     "outlet_tail_max_cut_m": 0.0,
+     "max_cut_m": 1.2,
+     "outlet": [
+      2732.0,
+      7393.0
+     ],
+     "level_m": 277.11
+    },
+    "breach": {
+     "breaches": 1,
+     "unbreached": 0,
+     "breach_length_m": 59.5,
+     "breach_max_cut_m": 1.29,
+     "held_on_thalweg_m": 0.0,
+     "thalweg_held_fraction": 0.0,
+     "bed_held_fraction": 0.0,
+     "bed_held_max_m": 0.0,
+     "cells": 1843
+    },
+    "rewilded": true,
+    "area_m2": 45937.3
+   }
+  },
+  {
+   "type": "Feature",
+   "geometry": {
+    "type": "Polygon",
+    "coordinates": [
+     [
+      [
+       -120.826176,
+       38.647982
+      ],
+      [
+       -120.825899,
+       38.64777600000001
+      ],
+      [
+       -120.826809,
+       38.64708
+      ],
+      [
+       -120.827041,
+       38.647309
+      ],
+      [
+       -120.826176,
+       38.647982
+      ]
+     ]
+    ]
+   },
+   "properties": {
+    "id": "nhd:{16B0FE56-33B1-4AFA-93B7-3722D011ACA6}",
+    "nhd_id": "{16B0FE56-33B1-4AFA-93B7-3722D011ACA6}",
+    "name": null,
+    "source": "nhd",
+    "fcode": 43600,
+    "ftype": 436,
+    "evidence": {
+     "area_m2": 3549.2,
+     "level_m": 345.03,
+     "outlet": [
+      9199.1,
+      9933.5
+     ],
+     "drop_below_m": 6.26,
+     "crest_above_m": 3.37,
+     "edge_len_m": 27.9,
+     "edge_rms": 0.154,
+     "dam_evidence": false
+    },
+    "reasons": [
+     "NHD FType 436 reservoir (FCode 43600)"
+    ],
+    "kind": "reservoir",
+    "carve": null,
+    "breach": {
+     "breaches": 1,
+     "unbreached": 0,
+     "breach_length_m": 57.4,
+     "breach_max_cut_m": 4.06,
+     "held_on_thalweg_m": null,
+     "thalweg_held_fraction": null,
+     "bed_held_fraction": 0.0,
+     "bed_held_max_m": 0.08,
+     "cells": 147
+    },
+    "rewilded": true,
+    "area_m2": 3549.2
+   }
+  },
+  {
+   "type": "Feature",
+   "geometry": {
+    "type": "Polygon",
+    "coordinates": [
+     [
+      [
+       -120.866785,
+       38.625374999999984
+      ],
+      [
+       -120.866463,
+       38.624905999999996
+      ],
+      [
+       -120.86635299999999,
+       38.62466499999999
+      ],
+      [
+       -120.866163,
+       38.62456999999999
+      ],
+      [
+       -120.86597199999999,
+       38.62459299999999
+      ],
+      [
+       -120.86597199999999,
+       38.624379
+      ],
+      [
+       -120.865782,
+       38.62404599999999
+      ],
+      [
+       -120.865782,
+       38.623927
+      ],
+      [
+       -120.865782,
+       38.623642
+      ],
+      [
+       -120.86597199999999,
+       38.623998
+      ],
+      [
+       -120.866186,
+       38.624165
+      ],
+      [
+       -120.86644800000002,
+       38.624189
+      ],
+      [
+       -120.86671000000001,
+       38.624141
+      ],
+      [
+       -120.866853,
+       38.62414100000001
+      ],
+      [
+       -120.86709100000002,
+       38.62435499999999
+      ],
+      [
+       -120.867376,
+       38.624569999999984
+      ],
+      [
+       -120.86763800000001,
+       38.62478399999999
+      ],
+      [
+       -120.86770900000002,
+       38.62504499999999
+      ],
+      [
+       -120.86770900000002,
+       38.625236
+      ],
+      [
+       -120.86763800000001,
+       38.625474
+      ],
+      [
+       -120.867447,
+       38.62559300000001
+      ],
+      [
+       -120.867186,
+       38.62573499999999
+      ],
+      [
+       -120.867114,
+       38.625758999999995
+      ],
+      [
+       -120.86701900000001,
+       38.625759
+      ],
+      [
+       -120.866785,
+       38.625374999999984
+      ]
+     ]
+    ]
+   },
+   "properties": {
+    "id": "nhd:121531126",
+    "nhd_id": "121531126",
+    "name": null,
+    "source": "nhd",
+    "fcode": 39004,
+    "ftype": 390,
+    "evidence": {
+     "area_m2": 16233.7,
+     "level_m": 394.32,
+     "channel_area_km2": 1.114,
+     "channel_fcode": 46003,
+     "channel_name": null,
+     "outlet": [
+      5671.7,
+      7405.9
+     ],
+     "drop_below_m": 13.13,
+     "crest_above_m": 3.23,
+     "edge_len_m": 62.3,
+     "edge_rms": 0.157,
+     "dam_evidence": false
+    },
+    "kind": "natural",
+    "reasons": [
+     "on a routed channel but no dam (no straight downstream edge with a drop or rim)"
+    ],
+    "rewilded": false,
+    "area_m2": 16233.7
+   }
+  },
+  {
+   "type": "Feature",
+   "geometry": {
+    "type": "Polygon",
+    "coordinates": [
+     [
+      [
+       -120.888691,
+       38.588946
+      ],
+      [
+       -120.88875399999999,
+       38.58901800000001
+      ],
+      [
+       -120.888684,
+       38.5891
+      ],
+      [
+       -120.88849500000002,
+       38.589138
+      ],
+      [
+       -120.888383,
+       38.589078000000015
+      ],
+      [
+       -120.888446,
+       38.58897400000001
+      ],
+      [
+       -120.88862800000001,
+       38.58893
+      ],
+      [
+       -120.888691,
+       38.588946
+      ]
+     ]
+    ]
+   },
+   "properties": {
+    "id": "nhd:121531155",
+    "nhd_id": "121531155",
+    "name": null,
+    "source": "nhd",
+    "fcode": 39001,
+    "ftype": 390,
+    "evidence": {
+     "area_m2": 491.9,
+     "level_m": 278.15,
+     "outlet": [
+      3881.3,
+      3281.1
+     ],
+     "drop_below_m": 10.51,
+     "crest_above_m": 1.55,
+     "edge_len_m": 19.9,
+     "edge_rms": 0.181,
+     "dam_evidence": false
+    },
+    "kind": "natural",
+    "reasons": [
+     "no routed channel through it and no human tag: a natural pond or swale"
+    ],
+    "rewilded": false,
+    "area_m2": 491.9
+   }
+  },
+  {
+   "type": "Feature",
+   "geometry": {
+    "type": "Polygon",
+    "coordinates": [
+     [
+      [
+       -120.87577800000001,
+       38.647605000000006
+      ],
+      [
+       -120.87554699999998,
+       38.647588
+      ],
+      [
+       -120.875421,
+       38.647468
+      ],
+      [
+       -120.875337,
+       38.647028000000006
+      ],
+      [
+       -120.875266,
+       38.646682000000006
+      ],
+      [
+       -120.875056,
+       38.646446000000005
+      ],
+      [
+       -120.87491600000001,
+       38.646308999999995
+      ],
+      [
+       -120.87493000000002,
+       38.646198999999996
+      ],
+      [
+       -120.87514,
+       38.646199
+      ],
+      [
+       -120.875476,
+       38.646463
+      ],
+      [
+       -120.87588299999999,
+       38.646544999999996
+      ],
+      [
+       -120.876049,
+       38.64655599999999
+      ],
+      [
+       -120.876608,
+       38.647409
+      ],
+      [
+       -120.876608,
+       38.647602
+      ],
+      [
+       -120.87648899999999,
+       38.647695
+      ],
+      [
+       -120.87625799999999,
+       38.64761200000001
+      ],
+      [
+       -120.87605099999999,
+       38.647588000000006
+      ],
+      [
+       -120.87577800000001,
+       38.647605000000006
+      ]
+     ]
+    ]
+   },
+   "properties": {
+    "id": "nhd:121531080",
+    "nhd_id": "121531080",
+    "name": null,
+    "source": "nhd",
+    "fcode": 39004,
+    "ftype": 390,
+    "evidence": {
+     "area_m2": 11993.7,
+     "level_m": 496.98,
+     "channel_area_km2": 0.215,
+     "channel_fcode": 46007,
+     "channel_name": null,
+     "outlet": [
+      4812.4,
+      9814.4
+     ],
+     "drop_below_m": 4.46,
+     "crest_above_m": 1.32,
+     "edge_len_m": 66.6,
+     "edge_rms": 0.128,
+     "dam_evidence": false
+    },
+    "kind": "natural",
+    "reasons": [
+     "on a routed channel but no dam (no straight downstream edge with a drop or rim)"
+    ],
+    "rewilded": false,
+    "area_m2": 11993.7
+   }
+  },
+  {
+   "type": "Feature",
+   "geometry": {
+    "type": "Polygon",
+    "coordinates": [
+     [
+      [
+       -120.910525,
+       38.632999999999996
+      ],
+      [
+       -120.910562,
+       38.633207000000006
+      ],
+      [
+       -120.910506,
+       38.63328499999999
+      ],
+      [
+       -120.91048300000001,
+       38.633317
+      ],
+      [
+       -120.91032399999999,
+       38.63354
+      ],
+      [
+       -120.910175,
+       38.633646999999996
+      ],
+      [
+       -120.910093,
+       38.633584
+      ],
+      [
+       -120.91033599999999,
+       38.63319500000001
+      ],
+      [
+       -120.910223,
+       38.632951
+      ],
+      [
+       -120.91034700000002,
+       38.63277499999999
+      ],
+      [
+       -120.910538,
+       38.632803
+      ],
+      [
+       -120.910525,
+       38.632999999999996
+      ]
+     ]
+    ]
+   },
+   "properties": {
+    "id": "nhd:{60CDD2E1-CA3D-4409-865F-D6ACB0A6A52B}",
+    "nhd_id": "{60CDD2E1-CA3D-4409-865F-D6ACB0A6A52B}",
+    "name": null,
+    "source": "nhd",
+    "fcode": 39004,
+    "ftype": 390,
+    "evidence": {
+     "area_m2": 1870.5,
+     "level_m": 316.62,
+     "channel_area_km2": 10.47,
+     "channel_fcode": 46003,
+     "channel_name": "French Creek",
+     "outlet": [
+      1870.8,
+      8105.9
+     ],
+     "drop_below_m": 6.83,
+     "crest_above_m": 2.05,
+     "edge_len_m": 24.7,
+     "edge_rms": 0.115,
+     "dam_evidence": false
+    },
+    "kind": "natural",
+    "reasons": [
+     "wide spot of a creek: on a channel draining 10.5 km2 with no dam"
+    ],
+    "rewilded": false,
+    "area_m2": 1870.5
+   }
+  },
+  {
+   "type": "Feature",
+   "geometry": {
+    "type": "Polygon",
+    "coordinates": [
+     [
+      [
+       -120.90914400000001,
+       38.617937
+      ],
+      [
+       -120.908995,
+       38.618026
+      ],
+      [
+       -120.90881699999998,
+       38.618056
+      ],
+      [
+       -120.908758,
+       38.617817999999986
+      ],
+      [
+       -120.90881699999998,
+       38.61760999999999
+      ],
+      [
+       -120.909055,
+       38.617699
+      ],
+      [
+       -120.90914400000001,
+       38.617937
+      ]
+     ]
+    ]
+   },
+   "properties": {
+    "id": "nhd:{87EEC461-2517-4E7A-BF30-39829DB50F1C}",
+    "nhd_id": "{87EEC461-2517-4E7A-BF30-39829DB50F1C}",
+    "name": null,
+    "source": "nhd",
+    "fcode": 39004,
+    "ftype": 390,
+    "evidence": {
+     "area_m2": 1122.7,
+     "level_m": 319.85,
+     "outlet": [
+      2058.9,
+      6418.2
+     ],
+     "drop_below_m": 10.27,
+     "crest_above_m": 0.28,
+     "edge_len_m": 18.1,
+     "edge_rms": 0.188,
+     "dam_evidence": false
+    },
+    "kind": "natural",
+    "reasons": [
+     "no routed channel through it and no human tag: a natural pond or swale"
+    ],
+    "rewilded": false,
+    "area_m2": 1122.7
+   }
+  },
+  {
+   "type": "Feature",
+   "geometry": {
+    "type": "Polygon",
+    "coordinates": [
+     [
+      [
+       -120.864658,
+       38.622867
+      ],
+      [
+       -120.864474,
+       38.623005
+      ],
+      [
+       -120.86396900000001,
+       38.622617999999996
+      ],
+      [
+       -120.863909,
+       38.622351
+      ],
+      [
+       -120.86423599999999,
+       38.62235100000001
+      ],
+      [
+       -120.864564,
+       38.62249899999999
+      ],
+      [
+       -120.864742,
+       38.62255900000001
+      ],
+      [
+       -120.86483100000001,
+       38.622737
+      ],
+      [
+       -120.864658,
+       38.622867
+      ]
+     ]
+    ]
+   },
+   "properties": {
+    "id": "nhd:{732084D2-5A6A-4EA1-A2FE-2CE3F6762084}",
+    "nhd_id": "{732084D2-5A6A-4EA1-A2FE-2CE3F6762084}",
+    "name": null,
+    "source": "nhd",
+    "fcode": 39005,
+    "ftype": 390,
+    "evidence": {
+     "area_m2": 3324.1,
+     "level_m": 407.16,
+     "channel_area_km2": 0.758,
+     "channel_fcode": 46007,
+     "channel_name": null,
+     "outlet": [
+      5900.3,
+      7100.0
+     ],
+     "drop_below_m": 7.35,
+     "crest_above_m": 3.97,
+     "edge_len_m": 33.0,
+     "edge_rms": 0.127,
+     "dam_evidence": false
+    },
+    "kind": "natural",
+    "reasons": [
+     "on a routed channel but no dam (no straight downstream edge with a drop or rim)"
+    ],
+    "rewilded": false,
+    "area_m2": 3324.1
+   }
+  },
+  {
+   "type": "Feature",
+   "geometry": {
+    "type": "Polygon",
+    "coordinates": [
+     [
+      [
+       -120.91046499999999,
+       38.632423
+      ],
+      [
+       -120.91046299999998,
+       38.63238
+      ],
+      [
+       -120.91044400000001,
+       38.631775
+      ],
+      [
+       -120.910493,
+       38.631719999999994
+      ],
+      [
+       -120.91054899999999,
+       38.631719999999994
+      ],
+      [
+       -120.910584,
+       38.63172
+      ],
+      [
+       -120.91078000000002,
+       38.631775
+      ],
+      [
+       -120.910794,
+       38.63207699999999
+      ],
+      [
+       -120.91065400000001,
+       38.632312999999996
+      ],
+      [
+       -120.91054800000002,
+       38.632372999999994
+      ],
+      [
+       -120.91052800000001,
+       38.632383999999995
+      ],
+      [
+       -120.91046499999999,
+       38.632423
+      ]
+     ]
+    ]
+   },
+   "properties": {
+    "id": "nhd:121531096",
+    "nhd_id": "121531096",
+    "name": null,
+    "source": "nhd",
+    "fcode": 39004,
+    "ftype": 390,
+    "evidence": {
+     "area_m2": 1810.5,
+     "level_m": 309.73,
+     "channel_area_km2": 10.47,
+     "channel_fcode": 46003,
+     "channel_name": "French Creek",
+     "outlet": [
+      1880.7,
+      7985.6
+     ],
+     "drop_below_m": 3.69,
+     "crest_above_m": 1.9,
+     "edge_len_m": 23.3,
+     "edge_rms": 0.126,
+     "dam_evidence": false
+    },
+    "kind": "natural",
+    "reasons": [
+     "wide spot of a creek: on a channel draining 10.5 km2 with no dam"
+    ],
+    "rewilded": false,
+    "area_m2": 1810.5
+   }
+  },
+  {
+   "type": "Feature",
+   "geometry": {
+    "type": "Polygon",
+    "coordinates": [
+     [
+      [
+       -120.824867,
+       38.585568
+      ],
+      [
+       -120.825296,
+       38.58621
+      ],
+      [
+       -120.82483200000001,
+       38.586995
+      ],
+      [
+       -120.82458200000002,
+       38.58781599999999
+      ],
+      [
+       -120.82426100000002,
+       38.588136999999996
+      ],
+      [
+       -120.823939,
+       38.587995
+      ],
+      [
+       -120.82426100000002,
+       38.587566
+      ],
+      [
+       -120.824186,
+       38.587213999999996
+      ],
+      [
+       -120.82411799999998,
+       38.586888
+      ],
+      [
+       -120.824296,
+       38.58649599999999
+      ],
+      [
+       -120.824153,
+       38.586067
+      ],
+      [
+       -120.824254,
+       38.58584299999999
+      ],
+      [
+       -120.824475,
+       38.585353000000005
+      ],
+      [
+       -120.824867,
+       38.585568
+      ]
+     ]
+    ]
+   },
+   "properties": {
+    "id": "nhd:{52098DF0-1ADE-449B-8CD8-614C8A09D4DF}",
+    "nhd_id": "{52098DF0-1ADE-449B-8CD8-614C8A09D4DF}",
+    "name": null,
+    "source": "nhd",
+    "fcode": 39004,
+    "ftype": 390,
+    "evidence": {
+     "area_m2": 17436.1,
+     "level_m": 421.72,
+     "channel_area_km2": 3.454,
+     "channel_fcode": 46003,
+     "channel_name": "East Big Canyon Creek",
+     "outlet": [
+      9487.3,
+      3008.7
+     ],
+     "drop_below_m": 6.31,
+     "crest_above_m": 2.09,
+     "edge_len_m": 53.7,
+     "edge_rms": 0.2,
+     "dam_evidence": false
+    },
+    "kind": "natural",
+    "reasons": [
+     "on a routed channel but no dam (no straight downstream edge with a drop or rim)"
+    ],
+    "rewilded": false,
+    "area_m2": 17436.1
+   }
+  },
+  {
+   "type": "Feature",
+   "geometry": {
+    "type": "Polygon",
+    "coordinates": [
+     [
+      [
+       -120.914823,
+       38.629022
+      ],
+      [
+       -120.91509,
+       38.62914099999998
+      ],
+      [
+       -120.915358,
+       38.62926
+      ],
+      [
+       -120.91461400000001,
+       38.629438
+      ],
+      [
+       -120.914121,
+       38.62939600000001
+      ],
+      [
+       -120.91393000000001,
+       38.62937900000001
+      ],
+      [
+       -120.91428700000002,
+       38.628992
+      ],
+      [
+       -120.914823,
+       38.629022
+      ]
+     ]
+    ]
+   },
+   "properties": {
+    "id": "nhd:{5E237EA3-2AFF-43AA-A872-9B4A1E404E3D}",
+    "nhd_id": "{5E237EA3-2AFF-43AA-A872-9B4A1E404E3D}",
+    "name": null,
+    "source": "nhd",
+    "fcode": 39001,
+    "ftype": 390,
+    "evidence": {
+     "area_m2": 3806.4,
+     "level_m": 299.26,
+     "channel_area_km2": 10.47,
+     "channel_fcode": 46003,
+     "channel_name": "French Creek",
+     "outlet": [
+      1483.6,
+      7685.1
+     ],
+     "drop_below_m": 7.58,
+     "crest_above_m": 1.01,
+     "edge_len_m": 41.8,
+     "edge_rms": 0.135,
+     "dam_evidence": false
+    },
+    "kind": "natural",
+    "reasons": [
+     "wide spot of a creek: on a channel draining 10.5 km2 with no dam"
+    ],
+    "rewilded": false,
+    "area_m2": 3806.4
+   }
+  },
+  {
+   "type": "Feature",
+   "geometry": {
+    "type": "Polygon",
+    "coordinates": [
+     [
+      [
+       -120.91021200000002,
+       38.635833
+      ],
+      [
+       -120.909945,
+       38.635744
+      ],
+      [
+       -120.90973599999998,
+       38.635981999999984
+      ],
+      [
+       -120.90979599999999,
+       38.63636900000001
+      ],
+      [
+       -120.909677,
+       38.63654700000001
+      ],
+      [
+       -120.909569,
+       38.636385999999995
+      ],
+      [
+       -120.90955800000002,
+       38.636369
+      ],
+      [
+       -120.90955800000002,
+       38.635952
+      ],
+      [
+       -120.909677,
+       38.635387
+      ],
+      [
+       -120.90974,
+       38.635371000000006
+      ],
+      [
+       -120.910034,
+       38.635298
+      ],
+      [
+       -120.91021200000002,
+       38.635833
+      ]
+     ]
+    ]
+   },
+   "properties": {
+    "id": "nhd:{9930198C-6FBF-4BB1-8CB0-B3056230EB0B}",
+    "nhd_id": "{9930198C-6FBF-4BB1-8CB0-B3056230EB0B}",
+    "name": null,
+    "source": "nhd",
+    "fcode": 39001,
+    "ftype": 390,
+    "evidence": {
+     "area_m2": 3526.5,
+     "level_m": 332.76,
+     "channel_area_km2": 10.47,
+     "channel_fcode": 46003,
+     "channel_name": "French Creek",
+     "outlet": [
+      1939.3,
+      8390.7
+     ],
+     "drop_below_m": 4.99,
+     "crest_above_m": 2.35,
+     "edge_len_m": 35.3,
+     "edge_rms": 0.089,
+     "dam_evidence": false
+    },
+    "kind": "natural",
+    "reasons": [
+     "wide spot of a creek: on a channel draining 10.5 km2 with no dam"
+    ],
+    "rewilded": false,
+    "area_m2": 3526.5
+   }
+  }
+ ]
+}

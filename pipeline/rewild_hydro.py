@@ -127,27 +127,14 @@ def fetch_osm_water(tile: Tile, force=False) -> list[dict]:
     p = tile.dir / "hydro/osm_water.geojson"
     if p.exists() and not force:
         return json.load(open(p))["features"]
-    from .fetch_osm import MIRRORS
-    from .http import post
+    from .fetch_osm import overpass
     w, s, e, n = tile.bounds_wgs84
     q = OSM_WATER_QUERY.format(s=s, w=w, n=n, e=e)
-    data = None
-    for url in MIRRORS:
-        try:
-            data = post(url, {"data": q}, timeout=240, retries=1).json()
-            break
-        except Exception as ex:  # noqa: BLE001
-            print(f"rewild_hydro: Overpass {url} failed: {ex}")
-        # the venv's LibreSSL cannot handshake with some mirrors; the system curl can
-        try:
-            import subprocess
-            from .config import USER_AGENT
-            out = subprocess.run(["curl", "-s", "-m", "200", "-A", USER_AGENT, url, "--data-urlencode", f"data={q}"],
-                                 capture_output=True, timeout=230, check=True).stdout
-            data = json.loads(out)
-            break
-        except Exception as ex:  # noqa: BLE001
-            print(f"rewild_hydro: curl {url} failed: {ex}")
+    try:   # mirrors with backoff (fetch_osm.overpass); the raw answer is cached under _cache/
+        data = overpass(q, tile.path("_cache/overpass_water.json"), force=force, label="rewild_hydro")
+    except Exception as ex:  # noqa: BLE001
+        print(f"rewild_hydro: Overpass unavailable: {ex}")
+        data = None
     if data is None:
         return None
     feats = osm_water_features(data)

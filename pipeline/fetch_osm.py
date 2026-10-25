@@ -5,7 +5,13 @@ Marks what to erase and backfill. Each feature carries `class` and `buffer_m`
 """
 from __future__ import annotations
 
-from .config import Tile, write_json
+import json
+import os
+import subprocess
+import time
+from pathlib import Path
+
+from .config import USER_AGENT, Tile, write_json
 from .http import post
 
 MIRRORS = [
@@ -105,25 +111,67 @@ def to_features(elements: list[dict]) -> list[dict]:
     return feats
 
 
+# Overpass mirrors are often at capacity (502/504) for many minutes; a tile build waits for them
+# rather than failing. Each round tries every mirror once (requests, then the system curl, whose
+# TLS some mirrors need), then backs off 60 s, 120 s, ... (capped at 10 min) until the budget ends.
+OVERPASS_BUDGET_S = float(os.environ.get("WE_OVERPASS_BUDGET_S", 3600))
+
+
+def _answer(data) -> dict:
+    """An Overpass JSON answer, or raise if it is an error or a truncated (timed-out) result."""
+    if not isinstance(data, dict) or "elements" not in data:
+        raise RuntimeError("not an Overpass JSON answer")
+    remark = data.get("remark") or ""
+    if "runtime error" in remark or "Query timed out" in remark or "out of memory" in remark:
+        raise RuntimeError(f"Overpass remark: {remark[:200]}")
+    return data
+
+
+def overpass(query: str, cache: Path | None = None, *, force=False, budget_s: float | None = None,
+             label="overpass") -> dict:
+    """Run an Overpass query over the mirrors with backoff; cache the raw answer if `cache` is given."""
+    if cache is not None and cache.exists() and not force:
+        return json.loads(cache.read_text())
+    budget = OVERPASS_BUDGET_S if budget_s is None else budget_s
+    t0, wait, rnd, last = time.time(), 60.0, 0, None
+    while True:
+        rnd += 1
+        for url in MIRRORS:
+            try:
+                data = _answer(post(url, {"data": query}, timeout=240, retries=1).json())
+            except Exception as ex:  # noqa: BLE001
+                last = ex
+                try:
+                    out = subprocess.run(["curl", "-s", "-f", "-m", "230", "-A", USER_AGENT, url,
+                                          "--data-urlencode", f"data={query}"],
+                                         capture_output=True, timeout=240, check=True).stdout
+                    data = _answer(json.loads(out))
+                except Exception as ex2:  # noqa: BLE001
+                    last = f"{str(ex)[:160]} / curl: {str(ex2)[:120]}"
+                    print(f"{label}: round {rnd} {url} failed: {last}", flush=True)
+                    continue
+            if cache is not None:
+                cache.parent.mkdir(parents=True, exist_ok=True)
+                cache.write_text(json.dumps(data))
+            print(f"{label}: {url} answered in round {rnd} after {time.time() - t0:.0f}s", flush=True)
+            return data
+        if time.time() - t0 + wait > budget:
+            raise RuntimeError(f"all Overpass mirrors failed for {time.time() - t0:.0f}s ({rnd} rounds): {last}")
+        print(f"{label}: all mirrors failed in round {rnd}; retrying in {wait:.0f}s", flush=True)
+        time.sleep(wait)
+        wait = min(wait * 2, 600.0)
+
+
 def fetch_osm(tile: Tile, force=False) -> dict:
     out = tile.path("footprint/mask.geojson")
     w, s, e, n = tile.bounds_wgs84
     q = QUERY.format(s=s, w=w, n=n, e=e)
-    last = None
-    for url in MIRRORS:
-        try:
-            r = post(url, {"data": q}, timeout=300)
-            data = r.json()
-            break
-        except Exception as ex:  # noqa: BLE001
-            last = ex
-            data = None
-    if data is None:
-        raise RuntimeError(f"all Overpass mirrors failed: {last}")
+    data = overpass(q, tile.path("_cache/overpass_footprint.json"), force=force, label="osm")
     feats = to_features(data.get("elements", []))
     counts: dict[str, int] = {}
     for f in feats:
         counts[f["properties"]["class"]] = counts.get(f["properties"]["class"], 0) + 1
     write_json(out, {"type": "FeatureCollection", "features": feats})
     return {"path": "footprint/mask.geojson", "kind": "vector", "source": "osm",
-            "feature_count": len(feats), "class_counts": counts}
+            "feature_count": len(feats), "class_counts": counts,
+            "osm_base": (data.get("osm3s") or {}).get("timestamp_osm_base")}
