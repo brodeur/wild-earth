@@ -9,7 +9,8 @@
 #   /Applications/Blender.app/Contents/MacOS/Blender -b --factory-startup -P tools/build_deer.py -- \
 #       /path/to/Deer.glb client/assets/deer.glb [--ear 1.3] [--preview /tmp/deer_preview]
 #
-# What it does: bakes the rest pose; scales to 0.95 m at the withers (Neck1 joint); enlarges the ears
+# What it does: bakes the rest pose; scales to 0.95 m at the withers (the top of the back over the fore legs, measured as
+# client/src/lineupAnimals.js measureGeo does; the Neck1 joint sits ~0.2 m lower, at ~0.77 m); enlarges the ears
 # 1.3x (black-tailed and mule deer ears are big); recolours with animalModels.js buildDeer's palette
 # as a black-tailed deer (grey-brown coat, darker forehead and nose bridge, small dark almond eye, tail
 # black on top and at the tip and white beneath, a clean white rump patch); decimates (Blender
@@ -21,7 +22,7 @@
 # --preview <prefix>: also renders lod0 side, head and rear views (workbench) to <prefix>_*.png.
 #
 # --buck: the antlered buck instead (brief: library/animals/drafts/odocoileus_hemionus_buck.md), written to OUT
-# (client/assets/deer_buck.glb): 5% larger (Neck1 at 0.9975 m), neck 1.15x thicker about the neck line, darker
+# (client/assets/deer_buck.glb): 5% larger (0.9975 m at the withers), neck 1.15x thicker about the neck line, darker
 # forehead (#3b2c22), the hooves and pasterns kept with their leg (the doe leaves them on the body part, a
 # known doe fault left alone so the doe's output does not change), and procedural mule-deer antlers built per
 # tier and never decimated with the body: burr on the frontal bone in front of and inside the ear base, the beam
@@ -41,7 +42,7 @@ opt = lambda k, d: argv[argv.index(k) + 1] if k in argv else d
 EAR = float(opt('--ear', 1.3))
 PREVIEW = opt('--preview', None)
 TIERS = [('lod0', None), ('lod1', 1000), ('lod2', 300)]
-WITHERS = 0.95          # Neck1 joint height after scaling (m): black-tailed doe, ~0.9-1.0 m at the shoulder
+WITHERS = 0.95          # withers height after scaling (m), top of the back over the fore legs: black-tailed doe, ~0.9-1.0 m
 BUCK = '--buck' in argv
 if BUCK:
     WITHERS = round(0.95 * 1.05, 4)   # the buck ~5% larger: 1.0 m at the shoulder
@@ -126,6 +127,35 @@ if BUCK:   # hooves and pasterns are skinned to the IK foot bones: keep them wit
         CATS[c] = (CATS[c][0], CATS[c][1], CATS[c][2] + extra)
 BONE2CAT = {b: c for c, (_, _, bs) in CATS.items() for b in bs}
 
+# withers: the mesh was scaled above with Neck1 at WITHERS, and the ears, neck and eyes edited about scaled joints
+# (all scale-equivariant). Measure the withers as client/src/lineupAnimals.js measureGeo does, the top of the body
+# (not strongly head or tail) from 20% of the head-body length behind the fore legs' pivot to 5% ahead of it, then
+# rescale everything about the feet by U so the withers sit at WITHERS. U also scales every absolute length below
+# (colour regions, antler offsets), so the output is the Neck1-referenced build times U.
+def measure_withers():
+    info = []
+    for v in me.vertices:
+        w = {}; tot = 0
+        for g in v.groups:
+            tot += g.weight; c = BONE2CAT.get(groups[g.group])
+            if c: w[c] = w.get(c, 0) + g.weight
+        if w and tot > 0:
+            c = max(w, key=w.get); info.append((v.co, CATS[c][0], min(1.0, w[c] / tot)))
+        else: info.append((v.co, 0, 0.0))
+    strong = lambda pid, pw, k: pid in k and pw > 0.5
+    fore = max(-JS[j].y for c, (pid, j, _) in CATS.items() if pid in (1, 2))
+    zs = [-co.y for co, pid, pw in info if not strong(pid, pw, (3,))]
+    z0, z1 = min(zs), max(zs)
+    Lhb = z1 - (max(z0, -JS['Tail1'].y) if any(pid == 3 for _, pid, _ in info) else z0)
+    top = max(co.z for co, pid, pw in info if not strong(pid, pw, (3, 6)) and -0.2 * Lhb < -co.y - fore < 0.05 * Lhb)
+    return top - min(v.co.z for v in me.vertices)
+W0 = measure_withers()
+U = WITHERS / W0
+for v in me.vertices: v.co = v.co * U
+JS = {k: p * U for k, p in JS.items()}
+EYE_Z *= U
+print('INFO withers before %.4f m (Neck1 %.4f m), rescale U %.4f -> withers %.4f m, Neck1 %.4f m' % (W0, WITHERS, U, measure_withers(), JS['Neck1'].z))
+
 def srgb2lin(h):
     def f(c):
         c /= 255
@@ -162,23 +192,23 @@ def face_color(m, p, vw):
     tail_w = sum(vw[i][0].get('tail', 0) for i in p.vertices) / len(p.vertices)
     head = sum(1 for i in p.vertices if vw[i][1] in ('Head',)) * 2 > len(p.vertices)
     if mat in ('Eye_Black', 'Eye_White'): return srgb2lin(EYE)
-    if mat == 'Hooves' and c.z > 1.0: return srgb2lin(NOSE)        # the nose pad shares the hoof material
+    if mat == 'Hooves' and c.z > 1.0 * U: return srgb2lin(NOSE)        # the nose pad shares the hoof material
     # the tail itself (near its joint axis; the rump skin round the root is also weighted to Tail1):
     # black along the top and at the tip, white beneath
-    if tail_w > 0.55 and seg_dist(c, T1, T3 + (T3 - T1) * 0.4) < 0.065:
-        tip = c.y > T3.y - 0.02
+    if tail_w > 0.55 and seg_dist(c, T1, T3 + (T3 - T1) * 0.4) < 0.065 * U:
+        tip = c.y > T3.y - 0.02 * U
         return srgb2lin(DARK if tip or n.z > -0.1 else RUMP)
     if head and mat != 'Main_Light':
         # darker forehead and nose bridge: the upward-facing strip between the ears and down the face
-        if n.z > 0.35 and abs(c.x) < EARB.x + 0.03 and c.z > EYE_Z - 0.02 and c.y < EARB.y + 0.03: return srgb2lin(BROW)
+        if n.z > 0.35 and abs(c.x) < EARB.x + 0.03 * U and c.z > EYE_Z - 0.02 * U and c.y < EARB.y + 0.03 * U: return srgb2lin(BROW)
         if mat in ('Main', 'Main_Dark', 'Eye_Lighter'): return srgb2lin(FACE)
     if mat in ('Main', 'Main_Light'):
         # white rump patch: an ellipse on the back of the haunches around and below the tail root
-        ex, ez = c.x / 0.115, (c.z - (T1.z - 0.1)) / 0.16
-        if n.y > 0.25 and c.y > T1.y - 0.12 and ex * ex + ez * ez < 1: return srgb2lin(RUMP)
+        ex, ez = c.x / (0.115 * U), (c.z - (T1.z - 0.1 * U)) / (0.16 * U)
+        if n.y > 0.25 and c.y > T1.y - 0.12 * U and ex * ex + ez * ez < 1: return srgb2lin(RUMP)
     if mat == 'Main':
         legs = [k for k in ('fl', 'fr', 'hl', 'hr') if sum(vw[i][0].get(k, 0) for i in p.vertices) / len(p.vertices) > 0.5]
-        if legs and c.z < 0.42: return srgb2lin(LEG)
+        if legs and c.z < 0.42 * U: return srgb2lin(LEG)
     return srgb2lin(col)
 
 def build(target):
@@ -226,14 +256,15 @@ def antler_geometry(level):
     level 0: 6-sided tubes with burr ring, brow tine, curved beam; 1: 3-sided, 1 cm minimum radius, no brow;
     2: one flat V per side."""
     head_v = [v.co for v in me.vertices if sum(g.weight for g in v.groups if groups[g.group] in ('Head', 'Neck3')) > 0.5]
-    bx, by = EARB.x * 0.55, EARB.y - 0.035
+    bx, by = EARB.x * 0.55, EARB.y - 0.035 * U
     near = sorted(head_v, key=lambda c: (c.x - bx) ** 2 + (c.y - by) ** 2)[:6]
-    B = Vector((bx, by, max(c.z for c in near) - 0.008))
+    B = Vector((bx, by, max(c.z for c in near) - 0.008 * U))
     # points relative to the left burr (x out, +y back, z up) and radii (m), for a mature 3x3 black-tailed buck
     P = {'Bb': ((0, 0, -0.012), 0.031), 'B': ((0, 0, 0), 0.025), 'P1': ((0.06, 0.04, 0.06), 0.021),
          'P2': ((0.12, 0.06, 0.12), 0.018), 'F1': ((0.15, 0.03, 0.19), 0.012), 'Ft': ((0.155, -0.02, 0.26), 0.005),
          'R1': ((0.16, 0.1, 0.17), 0.015), 'R2': ((0.172, 0.112, 0.19), 0.013), 'Ra': ((0.168, 0.08, 0.27), 0.005),
          'Rb': ((0.195, 0.172, 0.24), 0.005), 'W0': ((0.012, -0.008, 0.026), 0.008), 'Wt': ((0.026, -0.045, 0.056), 0.004)}
+    P = {k: (tuple(x * U for x in o), r * U) for k, (o, r) in P.items()}   # sized with the body (inside the ear spread)
     if level == 0:
         paths = [(['Bb', 'B'], 3, False), (['B', 'P1', 'P2', 'F1', 'Ft'], 0, True), (['P2', 'R1', 'R2', 'Ra'], 0, True),
                  (['R2', 'Rb'], 1, True), (['W0', 'Wt'], 2, True)]
@@ -256,7 +287,7 @@ def antler_geometry(level):
     for side in (1, -1):
         def at(k): o = Vector(P[k][0]); return Vector((side * (B.x + o.x), B.y + o.y, B.z + o.z))
         if level == 2:   # flat V: stem to the front tip and to the rear tip, a notch between, both faces
-            b, ft, ra, nt = at('B'), at('Ft'), at('Ra'), at('P2') + Vector((0, 0, 0.05))
+            b, ft, ra, nt = at('B'), at('Ft'), at('Ra'), at('P2') + Vector((0, 0, 0.05 * U))
             nrm = (ft - b).cross(ra - b).normalized() * 0.004
             for off, flip in ((nrm, False), (-nrm, True)):
                 for tri, tt in (((b, ft, nt), (0, 1, 0.6)), ((b, nt, ra), (0, 0.6, 1))):
@@ -359,7 +390,7 @@ gltf = {'asset': {'version': '2.0', 'generator': 'wild-earth tools/build_deer.py
                   'copyright': 'Deer by Quaternius (quaternius.com, Ultimate Animated Animal Pack), CC0 1.0; recoloured, rest pose baked, decimated'},
         'scene': 0, 'scenes': [{'nodes': list(range(len(nodes)))}], 'nodes': nodes, 'meshes': meshes,
         'accessors': accs, 'bufferViews': views, 'buffers': [{'byteLength': len(buf)}],
-        'extras': {'ear_scale': EAR, 'withers_m': WITHERS}}
+        'extras': {'ear_scale': EAR, 'withers_m': WITHERS, 'neck1_m': round(JS['Neck1'].z, 4)}}
 if BUCK:
     gltf['asset']['copyright'] = 'Deer by Quaternius (quaternius.com, Ultimate Animated Animal Pack), CC0 1.0; recoloured, rest pose baked, decimated; buck: larger, thicker neck, procedural antlers (wild-earth)'
     gltf['extras'].update({'rig': {'kind': 'quadruped', **{k: [round(x, 4) for x in to3(JS[j])] for k, j in (('head', 'Neck1'), ('tail', 'Tail1'), ('fore', 'FrontUpperLeg.L'), ('hind', 'BackUpperLeg.L'))}},
@@ -390,7 +421,7 @@ if PREVIEW:
     cam.data.type = 'ORTHO'
     for name, ctr, d, scale in [('side', (0, -0.2, 0.85), (1, 0, 0.05), 2.0), ('head', (0, -0.75, 1.45), (0.8, -0.6, 0.15), 0.6),
                                 ('rear', (0, 0.4, 0.9), (0.2, 1, 0.25), 1.2), ('front', (0, -0.8, 1.45), (0.0, -1, 0.1), 0.6)]:
-        cv = Vector(ctr); cam.data.ortho_scale = scale
+        cv = Vector(ctr) * U; cam.data.ortho_scale = scale * U   # framed for the Neck1-referenced size
         cam.location = cv + Vector(d).normalized() * 5
         cam.rotation_euler = (cv - cam.location).to_track_quat('-Z', 'Y').to_euler()
         sc.render.filepath = f'{PREVIEW}_{name}.png'

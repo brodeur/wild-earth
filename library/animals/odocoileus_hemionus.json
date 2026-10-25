@@ -7,7 +7,7 @@
   "size": {
     "length_m": 1.5,
     "shoulder_or_wingspan_m": 0.95,
-    "note": "Adult doe. Head and body about 1.3-1.6 m; 0.9-1.0 m at the shoulder. The build script scales the mesh to 0.95 m at the withers (Neck1 joint)."
+    "note": "Adult doe. Head and body about 1.3-1.6 m; 0.9-1.0 m at the shoulder. The build script scales the mesh to 0.95 m at the withers, the top of the back over the fore legs as client/src/lineupAnimals.js measures it (until 2026-10-25 it scaled the Neck1 joint to 0.95 m, which sits ~0.2 m lower, so the drawn doe stood 1.17 m). Measured on the lineup (2026-10-25): withers 0.95 m, top of the ears 1.35 m, nose to tail tip 1.34 m, head and body 1.19 m (rest pose, head up, measured along the ground: shorter than the brief's 1.5 m because the source model is leggy and short in the body)."
   },
   "source": {
     "kind": "cc0_download",
@@ -31,7 +31,7 @@
   },
   "tiers": {
     "lod0": 2096,
-    "lod1": 1000,
+    "lod1": 998,
     "lod2": 298,
     "file": "client/assets/deer.glb",
     "attributes": ["POSITION", "COLOR_0 (linear)", "_PART", "_PARTW", "_PIVOT"]
@@ -44,11 +44,11 @@
       "brief": "library/animals/drafts/odocoileus_hemionus_buck.md",
       "size": {
         "shoulder_m": 0.9975,
-        "note": "5% larger than the doe (Neck1 joint at 0.9975 m, the doe's 0.95)"
+        "note": "5% larger than the doe at the withers (0.9975 m, the doe's 0.95; measured on the lineup 2026-10-25: withers 1.00 m, top of the antlers 1.55 m, nose to tail tip 1.40 m, head and body 1.24 m). Until 2026-10-25 the Neck1 joint was scaled to 0.9975 m and the drawn buck stood 1.24 m at the withers."
       },
       "tiers": {
         "lod0": 2350,
-        "lod1": 1098,
+        "lod1": 1100,
         "lod2": 318,
         "antler_triangles": {
           "lod0": 288,
@@ -68,7 +68,7 @@
       "changes": "neck 1.15x thicker about the neck line; darker forehead (#3b2c22); hooves and pasterns go with their leg part (the doe leaves them on the body, a doe fault left alone so the doe's output does not change); procedural mule-deer antlers built per tier and never decimated with the body: burr on the frontal bone in front of and inside the ear base, the beam up, out and back, an even fork at about 45% of its length, the rear branch forking again (mature 3x3), a small brow tine; tubes 2.5 to 0.5 cm, 6-sided on lod0, 3-sided with 1 cm minimum radius on lod1, one flat V per side on lod2; hard-antler colour burr #6b5843 to tip #d9ceb5",
       "antler_flags": "_ANTLER: 0 off the antler, else 0.05 + 0.95 x the fraction of the way from burr to tip (growth, shedding, velvet thickening, colour); _TINE: 0 beam and main fork, 1 the rear branch's second fork (hide it for a forked-horn 2x2), 2 brow tine, 3 burr ring. extras.antler_burr holds the left burr centre (glTF axes; the right mirrors in x). Antler vertices are HEAD (6), weight 1, pivot Neck1.",
       "season": "spring antlerless (collapse every antler vertex to its burr, keep tine 3 as the pedicel knob), April-August velvet (grey-brown, about 1.3x thicker about the burr, rounded tips), September-January hard, cast January-March (brief)",
-      "accuracy_notes": "Reads as an antlered black-tailed buck from the side, front and above: a forked rack sweeping out and back inside the ear spread, darker forehead, thicker neck. The rack is a construction from straight segments, so it reads geometric close up; the rut neck swell and stained hocks are not modelled; the body is the doe's scaled 5%. At a full graze dip (head flick 1.5 rad) the lowest antler point stays 0.78 m above the ground."
+      "accuracy_notes": "Reads as an antlered black-tailed buck from the side, front and above: a forked rack sweeping out and back inside the ear spread, darker forehead, thicker neck. The rack is a construction from straight segments, so it reads geometric close up; the rut neck swell and stained hocks are not modelled; the body is the doe's scaled 5%. At a full graze dip (head flick 1.5 rad) the lowest antler point stays 0.63 m above the ground (0.92 m at 1.0 rad)."
     }
   },
   "status": "agent draft, needs local sign-off",
