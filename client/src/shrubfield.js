@@ -437,7 +437,9 @@ export function ShrubField(tile, ground, uniforms) {
     name: 'shrubfield', salt: 0x5eed, cap: 140000, roadsMax: 60,
     cellAny: anyAround(cover, W, H), coverAt, coverMax: 0.85,
     meanArea: 1.3 * (0.6 * Math.PI * 0.8 ** 2 + 0.4 * Math.PI * 1.1 ** 2),   // (x1.3: the crowns grew 1.15x)
-    D0: 115, KMIN: 0.12, band: [3, 8, 370, 430], now: 140,   // gone only right at the camera, at every height (the 3D shrubs are too few to carry the cover)
+    // Gone only right at the camera, at every height (the 3D shrubs are too few to carry the cover). The
+    // chase camera trails the raven by 3-5 m, so a 3-8 m cut emptied the ring around the bird itself.
+    D0: 115, KMIN: 0.12, band: [1.2, 3.5, 370, 430], now: 140,
     plant(px, pn, rnd, cov) {
       // Stands: manzanita and chamise clump into patches tens of metres across (~40% manzanita).
       const manz = rnd() < 0.1 + 0.75 * smooth(0.35, 0.75, vnoise(px / 45, pn / 45, 9));

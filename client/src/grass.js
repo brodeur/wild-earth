@@ -42,7 +42,7 @@ const CLOSE_FADE = [16, 30], CLOSE_PLACE = CLOSE_FADE[1] + NEAR_REBUILD + 2, CLO
 const GROUND_FADE = [10, 16], GROUND_REBUILD = 8, GROUND_PLACE = GROUND_FADE[1] + 2 * GROUND_REBUILD + 2, GROUND_PER_M2 = 8;
 // Tufts dither in over 26-38 m, just past the close tier's hand-over, whatever the blades do: the main
 // tier alone (one clump per 1.35 m^2) is too thin to carry 30-55 m from a camera a few metres up.
-const MID_IN = [26, 38];
+const MID_IN = [26, 38], MID_IN_HIGH = [9, 15];   // seen from the air (6-10 m up and more) they come in from 9-15 m
 // Placement layers, each cached per cell. `now`: a cell nearer than this is visible already and is
 // generated at once; farther ones (the new ring at the edge of the placement radius) are queued
 // and built a few per frame, so flying into new ground does not stall a frame. `place`: placement
@@ -364,7 +364,7 @@ export class Grass {
       bunch: this.makeSet(bunchGeo, nearMat, this.nearCap, nearBands),
       groundA: this.makeSet(annualGeo, nearMat, this.groundCap, groundBands),
       groundB: this.makeSet(bunchGeo, nearMat, this.groundCap, groundBands),
-      mid: this.makeSet(buildTuft(), midMat, this.midCap, [[MID_IN[0] - 3, MID_END]]),
+      mid: this.makeSet(buildTuft(), midMat, this.midCap, [[MID_IN_HIGH[0] - 3, MID_END]]),   // block cull: the nearest the tufts ever come in
     };
     this.group = new THREE.Group(); this.group.name = 'grass';
     for (const s of Object.values(this.sets)) this.group.add(s.mesh);
@@ -620,6 +620,10 @@ export class Grass {
     // to 225 m, so the sward keeps a grain from 60-200 m up. Wild oat stands likewise, while the grass
     // is cured.
     const cb = CLUMP_BAND, sb = STALK_BAND;
+    // Tufts likewise: low down they dither in over 26-38 m behind the blade tiers, but from 8 m up the
+    // blade clumps are sub-pixel and the shells too faint on a cured sward to carry the near field, so
+    // the tufts come in from 9-15 m instead (a bare disc opened around a camera 10-30 m up otherwise).
+    this.uniforms.midIn.value.set(MID_IN[0] + (MID_IN_HIGH[0] - MID_IN[0]) * up, MID_IN[1] + (MID_IN_HIGH[1] - MID_IN[1]) * up);
     this.clumps.update(camera, agl < cb[3], mixB([45, 60], cb));
     this.stalks.update(camera, agl < sb[3] && this.uniforms.dry.value > 0.3, mixB([30, 45], sb));
     this.shells.update(camera, agl, this.uniforms.heightScale.value);

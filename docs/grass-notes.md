@@ -201,3 +201,14 @@ pays for the ground tier), and bare patches keep 40% of their clumps so they rea
 thin ground rather than holes. Shells stay off below 6-10 m (they bury the blades up
 close); tussocks stay at 45-60 m. No extra GPU cost; low flight is smoother (worst
 frame 109 -> 30 ms).
+
+Report (2026-10-25): "grass and small shrubs/herbs disappearing when I get close".
+Two causes. From the air between about 8 and 30 m up the blade clumps are sub-pixel,
+the shells are too faint on a cured tan sward, and the tufts only dithered in at 26-38 m,
+so a bare disc opened around the camera as you came down; the tufts now come in from
+9-15 m once the camera is 6-10 m up and more (the same height blend the tussock
+impostors use), sliding back to 26-38 m at eye level where the blade tiers carry.
+In chaparral the shrub impostors were cut 3-8 m from the camera, but the chase camera
+trails the raven by 3-5 m, so the ring around the bird itself emptied; the cut is now
+1.2-3.5 m. Verified at 2, 4, 7, 10 and 20 m over grassland and 2 and 6 m in chaparral.
+The tree work landed the same day was checked and is not involved.
