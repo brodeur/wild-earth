@@ -59,6 +59,12 @@ The soaring red-tailed hawk and turkey vulture and the Steller's jay (`client/as
 `vulture.glb`, `stellersjay.glb`) were generated with Meshy (meshy.ai) on the same terms, owned by the
 account holder and released under CC BY-SA 4.0, and rebuilt by `tools/build_redtail.py`, `build_vulture.py`
 and `build_stellersjay.py` (job ids and prompts in each script's header).
+Gray fox (client/assets/fox.glb): "Fox" by Quaternius, Ultimate Animated Animal Pack, CC0 1.0, https://poly.pizza/m/Bc97C66HKi, reshaped and recoloured by tools/build_fox.py.
+Coyote (coyote.glb): "Wolf" by Quaternius, Ultimate Animated Animal Pack, CC0 1.0, https://poly.pizza/m/P1gU3Qkr9r, tools/build_coyote.py.
+Brush rabbit (rabbit.glb): "Rabbit" by Čestmír Dammer (CDmir), CC0, https://opengameart.org/content/rabbit-0, tools/build_rabbit.py.
+Black-tailed buck (deer_buck.glb): "Deer" by Quaternius, CC0 1.0, https://poly.pizza/m/T6Cs7tmMHJ, procedural antlers, tools/build_deer.py --buck.
+Mountain lion (cougar.glb): generated with Meshy (meshy.ai), task 01a171bb-8cae-7690-a80d-04545b70957e, CC BY-SA 4.0, tools/build_cougar.py.
+California vole (vole.glb): generated with Meshy, task 01a171bc-b285-71cb-9e16-dc06982a34e4, CC BY-SA 4.0, tools/build_vole.py.
 Review pages: `client/lineup.html` (trees) and `client/lineup_animals.html` (animal meshes at true size against a 1 m pole, with tiers, poses, metrics against the briefs and a local sign-off; see [docs/animal-library.md](docs/animal-library.md#lineup-page)).
 The client reads a tile package's `client/`
 rasters and builds a 10 m terrain mesh, a vegetation-shaded texture that recolors grass

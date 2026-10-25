@@ -26,6 +26,13 @@ import { uniforms as atmo } from './atmosphere.js';
 //   rodent  BODY (hindquarters), CHEST (pivot at the lumbar; flexes with the bound, rises to sit up), HEAD and
 //           LEG_A (fore pair), both children of the chest, LEG_B (hind pair), TAIL and TAIL_TIP (child of the
 //           tail; lags it for a wave, curls further on pose). aAnim2 = (leg splay for climbing, tail-tip lag, -, -).
+//   quadruped  the deer's parts (BODY, LEG_A left fore + right hind, LEG_B, TAIL, HEAD), drawn by the plain path
+//           (doe, buck, gray fox, coyote) or the rig path when it has a TAIL_TIP (mountain lion: the outer tail, child
+//           of the tail). aAnim2.w is the gait selector (0 diagonal pairs: walk, trot; 1 fore pair against the hind
+//           pair: bound, gallop), from the sign of each leg's pivot z. The buck adds its antlers (ANIM_ANTLER below):
+//           aAnim2 = (antler growth, velvet, young forked-horn, gait).
+// Every model also carries `drop`: how far animals.js lowers the body at pose 1 (bedded) so the folded legs meet the
+// ground, and `poseMax` where the squash stops reading (the lion).
 
 export const PART = { BODY: 0, LEG_A: 1, LEG_B: 2, TAIL: 3, WING_L: 4, WING_R: 5, HEAD: 6, CHEST: 7, TAIL_TIP: 8, HAND_L: 9, HAND_R: 10 };
 
@@ -137,7 +144,107 @@ export function buildDeer() {
     ...mirror(s => box({ color: leg, part: s > 0 ? PART.LEG_A : PART.LEG_B, pivot: [s * 0.11, 0.85, 0.38], pos: [s * 0.11, 0.425, 0.38], scale: [0.06, 0.85, 0.07] })),
     ...mirror(s => box({ color: leg, part: s > 0 ? PART.LEG_B : PART.LEG_A, pivot: [s * 0.12, 0.85, -0.38], pos: [s * 0.12, 0.425, -0.38], scale: [0.065, 0.85, 0.08] })),
   ];
-  return finish(p, { amp: [0.3, 0.6, 1.5, 0], pose: [0.12, 0, -0.15, 0] });
+  return finish(p, { amp: [0.3, 0.6, 1.5, 0], pose: [0.12, 0, -0.15, 0], drop: 0.6 });
+}
+
+// Black-tailed buck, the fallback for deer_buck.glb: buildDeer 5% larger with a darker forehead and a forked rack
+// of cones on the head (the season does not change it; the drawn buck's antlers follow it).
+export function buildDeerBuck() {
+  const m = buildDeer(), g = m.geometry, k = 1.05;
+  g.scale(k, k, k);
+  const pv = g.attributes.aPivot; for (let i = 0; i < pv.count; i++) pv.setXYZ(i, pv.getX(i) * k, pv.getY(i) * k, pv.getZ(i) * k);
+  const head = { part: PART.HEAD, pivot: [0, 1.08 * k, 0.42 * k] }, ant = 0x8a7a63;
+  const rack = [
+    box({ color: 0x3b2c22, ...head, pos: [0, 1.6, 0.74], rot: [0.5, 0, 0], scale: [0.1, 0.04, 0.12] }),
+    ...mirror(s => cone({ color: ant, ...head, pos: [s * 0.1, 1.79, 0.66], rot: [-0.35, 0, -s * 0.45], scale: [0.018, 0.34, 0.018] })),
+    ...mirror(s => cone({ color: ant, ...head, pos: [s * 0.19, 1.95, 0.6], rot: [0.2, 0, -s * 0.25], scale: [0.014, 0.2, 0.014] })),
+    ...mirror(s => cone({ color: ant, ...head, pos: [s * 0.2, 1.93, 0.5], rot: [-0.7, 0, -s * 0.3], scale: [0.014, 0.2, 0.014] })),
+  ];
+  const geometry = mergeGeometries([g, ...rack]);
+  g.dispose(); for (const r of rack) r.dispose();
+  return { ...m, geometry, tris: geometry.attributes.position.count / 3, drop: 0.6 * k };
+}
+
+// A generic low-poly quadruped for the fallbacks of the drawn canids and the lion (no hole when a GLB fails to load,
+// and ?fox=proc etc. for A/B): body, chest and rump, belly, neck and head with ears and muzzle (HEAD, pivot at the
+// withers), a tail (TAIL, pivot at the rump), four legs in the diagonal pairs. W withers, L head and body (nose to
+// tail root), leg the leg pivots' height (the leg length), bw and bh the body's half width and depth, tail length,
+// tailR its radius, tailDown its droop (rad), head length, ear height, c colours (back, flank, belly, leg, dark, tip).
+function quadruped({ W, L, leg, bw, bh, tail, tailR, tailDown, head, ear, earW = 0.6, muzzle = 0.5, c, anim }) {
+  const yb = W - bh, zf = L * 0.27, zh = -L * 0.26;
+  const hp = { part: PART.HEAD, pivot: [0, yb + bh * 0.3, zf + L * 0.06] };
+  const hy = W + head * 0.35, hz = zf + L * 0.2;
+  const tp = { part: PART.TAIL, pivot: [0, yb + bh * 0.45, -L * 0.42] };
+  const tdz = -Math.cos(tailDown) * tail, tdy = -Math.sin(tailDown) * tail;
+  const p = [
+    ball({ color: c.flank, pos: [0, yb, 0], scale: [bw, bh, L * 0.33] }),
+    ball({ color: c.back, pos: [0, yb + bh * 0.25, -0.01 * L], scale: [bw * 0.85, bh * 0.8, L * 0.31] }),
+    ball({ color: c.flank, pos: [0, yb + bh * 0.05, zf * 0.85], scale: [bw * 1.05, bh * 1.05, L * 0.17] }),
+    ball({ color: c.back, pos: [0, yb + bh * 0.05, zh * 0.95], scale: [bw, bh, L * 0.16] }),
+    ball({ color: c.belly, pos: [0, yb - bh * 0.45, 0.02 * L], scale: [bw * 0.75, bh * 0.55, L * 0.26] }, 5, 3),
+    // neck and head
+    box({ color: c.flank, ...hp, pos: [0, (yb + hy) / 2, (zf + hz) / 2], rot: [0.75, 0, 0], scale: [bw * 1.1, Math.hypot(hy - yb, hz - zf) * 1.1, bw * 1.2] }),
+    ball({ color: c.back, ...hp, pos: [0, hy, hz], scale: [bw * 0.75, head * 0.32, head * 0.42] }),
+    box({ color: c.belly, ...hp, pos: [0, hy - head * 0.1, hz + head * (0.3 + muzzle * 0.3)], scale: [bw * 0.45, head * 0.24, head * muzzle] }),
+    box({ color: c.dark, ...hp, pos: [0, hy - head * 0.02, hz + head * (0.3 + muzzle * 0.8)], scale: [bw * 0.25, head * 0.12, head * 0.08] }),
+    ...mirror(s => cone({ color: c.dark, ...hp, pos: [s * bw * 0.45, hy + head * 0.25 + ear * 0.5, hz - head * 0.1], rot: [-0.15, 0, -s * 0.25], scale: [ear * 0.3 * earW, ear, ear * 0.18] })),
+    // tail: two pieces, the tip darker
+    box({ color: c.back, ...tp, pos: [0, tp.pivot[1] + tdy * 0.35, tp.pivot[2] + tdz * 0.35], rot: [-(Math.PI / 2 + tailDown), 0, 0], scale: [tailR * 2, tail * 0.7, tailR * 2] }),
+    box({ color: c.tip, ...tp, pos: [0, tp.pivot[1] + tdy * 0.85, tp.pivot[2] + tdz * 0.85], rot: [-(Math.PI / 2 + tailDown), 0, 0], scale: [tailR * 1.6, tail * 0.32, tailR * 1.6] }),
+    // legs: left fore + right hind (A), right fore + left hind (B)
+    // (each reaches up into the body to the leg pivot plus half the body's depth, so no gap shows under the belly)
+    ...mirror(s => box({ color: c.leg, part: s > 0 ? PART.LEG_A : PART.LEG_B, pivot: [s * bw * 0.6, leg, zf], pos: [s * bw * 0.6, (leg + bh) / 2, zf], scale: [bw * 0.32, leg + bh, bw * 0.36] })),
+    ...mirror(s => box({ color: c.leg, part: s > 0 ? PART.LEG_B : PART.LEG_A, pivot: [s * bw * 0.6, leg, zh], pos: [s * bw * 0.6, (leg + bh) / 2, zh], scale: [bw * 0.36, leg + bh, bw * 0.42] })),
+  ];
+  return finish(p, { ...anim, drop: anim.drop ?? leg * 0.9 });   // bedded: the belly on the ground (the squashed legs sink)
+}
+// Gray fox, 0.37 m at the shoulder, 0.6 m head and body, 0.36 m tail: grizzled grey back, rust flanks and legs,
+// white throat and belly, the black-tipped tail (brief palette).
+export const buildFox = () => quadruped({ W: 0.37, L: 0.6, leg: 0.22, bw: 0.065, bh: 0.075, tail: 0.36, tailR: 0.04, tailDown: 0.55, head: 0.15, ear: 0.07,
+  c: { back: 0x7c7d7f, flank: 0x8e7a66, belly: 0xe8e2d6, leg: 0xa2683e, dark: 0x1a1817, tip: 0x1d1b1a },
+  anim: { amp: [0.5, 0.35, 1.0, 0], pose: [0.3, -0.25, 0.2, 0] } });
+// Coyote, 0.58 m at the shoulder, 0.85 m head and body, 0.4 m tail hung low: grizzled tan back, buff flanks, rufous
+// legs, pale belly, black tail tip.
+export const buildCoyote = () => quadruped({ W: 0.58, L: 0.85, leg: 0.36, bw: 0.085, bh: 0.11, tail: 0.4, tailR: 0.045, tailDown: 1.0, head: 0.21, ear: 0.1,
+  c: { back: 0x7e6650, flank: 0xa48563, belly: 0xe2d9c9, leg: 0xb27c4e, dark: 0x4b3b2e, tip: 0x1f1a17 },
+  anim: { amp: [0.45, 0.3, 1.1, 0], pose: [0.3, -0.35, 0.2, 0] } });
+// Mountain lion, 0.72 m at the shoulder, 1.07 m head and body, a long tail hanging in a J with a dark tip: plain
+// tawny coat, darker back, cream belly; small round head.
+export const buildCougar = () => quadruped({ W: 0.72, L: 1.07, leg: 0.3, bw: 0.13, bh: 0.19, tail: 0.75, tailR: 0.04, tailDown: 1.2, head: 0.2, ear: 0.05, earW: 1.2, muzzle: 0.3,
+  c: { back: 0x8b6a4b, flank: 0xa37e58, belly: 0xe4dccd, leg: 0xa37e58, dark: 0x2a221d, tip: 0x2a221d },
+  anim: { amp: [0.35, 0.3, 0.6, 0], pose: [0.35, 0.6, 0.3, 0], poseMax: 0.6 } });
+
+// Brush rabbit, 0.33 m head and body, crouched 0.17 m at the back: grey-brown, short dark-rimmed ears, a small tail
+// pale beneath. Bounds fore pair (A) against the hind pair (B); pose raises the head and ears (sitting up).
+export function buildRabbit() {
+  const back = 0x7a6553, flank = 0x8a7663, nape = 0x7b5a40, belly = 0xc6bfb2, feet = 0x9a856c, rim = 0x3a2e25;
+  const head = { part: PART.HEAD, pivot: [0, 0.12, 0.06] };
+  const p = [
+    ball({ color: back, pos: [0, 0.1, -0.02], scale: [0.065, 0.07, 0.12] }),
+    ball({ color: flank, pos: [0, 0.085, -0.05], scale: [0.07, 0.065, 0.08] }),
+    ball({ color: belly, pos: [0, 0.06, 0.01], scale: [0.045, 0.035, 0.08] }, 5, 3),
+    ball({ color: nape, ...head, pos: [0, 0.15, 0.1], scale: [0.04, 0.042, 0.055] }),
+    ...mirror(s => box({ color: nape, ...head, pos: [s * 0.018, 0.21, 0.08], rot: [-0.3, 0, -s * 0.15], scale: [0.016, 0.06, 0.008] })),
+    ...mirror(s => box({ color: rim, ...head, pos: [s * 0.018, 0.24, 0.07], rot: [-0.3, 0, -s * 0.15], scale: [0.014, 0.012, 0.009] })),
+    ball({ color: belly, part: PART.TAIL, pivot: [0, 0.09, -0.12], pos: [0, 0.095, -0.14], scale: [0.018, 0.018, 0.015] }, 5, 3),
+    ...mirror(s => box({ color: feet, part: PART.LEG_A, pivot: [s * 0.025, 0.06, 0.06], pos: [s * 0.025, 0.03, 0.065], scale: [0.014, 0.06, 0.016] })),
+    ...mirror(s => box({ color: feet, part: PART.LEG_B, pivot: [s * 0.045, 0.07, -0.06], pos: [s * 0.045, 0.012, -0.03], scale: [0.02, 0.024, 0.08] })),
+  ];
+  return finish(p, { amp: [0.8, 0.6, 0.35, 0], pose: [1, 0.3, -0.35, 0] });
+}
+// California vole, 0.17 m with the tail: a stocky cylinder of grizzled brown, blue-grey belly, a short dark tail.
+export function buildVole() {
+  const back = 0x6b5a48, belly = 0x8f8b86, feet = 0xa39b91, tail = 0x3d342d;
+  const head = { part: PART.HEAD, pivot: [0, 0.03, 0.03] };
+  const p = [
+    ball({ color: back, pos: [0, 0.027, -0.01], scale: [0.026, 0.026, 0.055] }),
+    ball({ color: belly, pos: [0, 0.018, -0.005], scale: [0.02, 0.014, 0.045] }, 5, 3),
+    ball({ color: back, ...head, pos: [0, 0.03, 0.05], scale: [0.021, 0.02, 0.028] }),
+    box({ color: tail, pos: [0, 0.02, -0.085], rot: [0.15, 0, 0], scale: [0.006, 0.006, 0.045] }),
+    ...mirror(s => box({ color: feet, part: PART.LEG_A, pivot: [s * 0.012, 0.012, 0.025], pos: [s * 0.012, 0.006, 0.027], scale: [0.006, 0.012, 0.008] })),
+    ...mirror(s => box({ color: feet, part: PART.LEG_B, pivot: [s * 0.015, 0.012, -0.035], pos: [s * 0.015, 0.006, -0.03], scale: [0.007, 0.012, 0.014] })),
+  ];
+  return finish(p, { amp: [0.9, 0, 0.35, 0], pose: [1, 0, -0.3, 0] });
 }
 
 // The drawn black-tailed deer (animals.js; buildDeer above is the fallback): "Deer" by Quaternius
@@ -147,16 +254,51 @@ export function buildDeer() {
 // white rump patch), three tiers (lod0 2096, lod1 1000, lod2 ~300 triangles). Each vertex carries the
 // procedural rig's part, its pivot (the joint) and the skin weight of that part (aPartW), so the shader
 // poses it like buildDeer with the same amp and pose.
-const DEER_URL = new URL('../assets/deer.glb', import.meta.url);
+// drop 0.49: the doe stands 0.95 m at the withers (belly 0.525 m, leg pivots 0.56-0.60 m), so the procedural deer's
+// 0.6 m sank the belly 5-8 cm; 0.49 sets the squashed legs on the ground with the belly just above it.
+const DEER = { amp: [0.3, 0.6, 1.5, 0], pose: [0.12, 0, -0.15, 0] };
 export async function loadDeerMesh() {
-  return loadTiers(DEER_URL, { amp: [0.3, 0.6, 1.5, 0], pose: [0.12, 0, -0.15, 0] });
+  return loadTiers(new URL('../assets/deer.glb', import.meta.url), { ...DEER, drop: 0.49, gait: true });
 }
+// The buck (tools/build_deer.py --buck): the doe 5% larger with a thicker neck and procedural antlers (per-vertex
+// _ANTLER 0 off the antler, else 0.05 + 0.95 x the way from burr to tip; _TINE 0 beam, 1 the rear second fork,
+// 2 brow tine, 3 burr ring; extras.antler_burr the left burr, the right mirrors in x). The shader (ANIM_ANTLER)
+// grows, thickens (velvet) and hides them per instance from aAnim2 (growth, velvet, young); animals.js antlers()
+// sets those from the date. The base of the rear second fork (hidden on a young forked-horn) is found here.
+export async function loadDeerBuckMesh() {
+  const m = await loadTiers(new URL('../assets/deer_buck.glb', import.meta.url), { ...DEER, drop: 0.515, gait: true });
+  const g = m.tiers[0], P = g.attributes.position, A = g.getAttribute('aAntler'), T = g.getAttribute('aTine');
+  if (A && T && m.extras.antler_burr) {
+    let best = Infinity, fork = null;
+    for (let i = 0; i < P.count; i++) if (Math.round(T.getX(i)) === 1 && P.getX(i) > 0 && A.getX(i) < best) { best = A.getX(i); fork = [P.getX(i), P.getY(i), P.getZ(i)]; }
+    m.antler = { burr: m.extras.antler_burr, fork: fork || m.extras.antler_burr };
+  }
+  return m;
+}
+// Antler calendar (month as a float, 1 = 1 January; brief odocoileus_hemionus_buck.md): each buck casts between
+// 1 January and 1 March (u1), regrows in velvet from late April (u2; full length by July) and sheds the velvet late
+// August to early September (u3); hard from then to the next cast. So hard in fall and early winter, antlerless in
+// late winter and spring, velvet in summer. Returns aAnim2.x and .y for the buck: { growth, velvet }.
+export const SEASON_MONTH = { winter: 1.5, spring: 4.5, summer: 7.5, fall: 10.5 };
+export function antlerState(month, u1 = 0.5, u2 = 0.5, u3 = 0.5) {
+  const cast = 1 + 2 * u1, grow = 4.6 + 0.4 * u2, full = grow + 2.6, strip = 8.6 + 0.4 * u3;
+  if (month >= strip || month < cast) return { growth: 1, velvet: 0 };
+  if (month < grow) return { growth: 0, velvet: 0 };
+  return { growth: 0.15 + 0.85 * Math.min(1, Math.max(0, (month - grow) / (full - grow))), velvet: 1 };
+}
+
+// Gray fox and coyote (tools/build_fox.py, build_coyote.py; Quaternius CC0): the quadruped template on the plain
+// path like the doe. drop: leg pivots x (1 - pose.x), the squashed legs on the ground (fox belly 0.21 m, coyote 0.31 m).
+export const loadFoxMesh = () => loadTiers(new URL('../assets/fox.glb', import.meta.url),
+  { amp: [0.5, 0.35, 1.0, 0], pose: [0.3, -0.25, 0.2, 0], drop: 0.17, gait: true });
+export const loadCoyoteMesh = () => loadTiers(new URL('../assets/coyote.glb', import.meta.url),
+  { amp: [0.45, 0.3, 1.1, 0], pose: [0.3, -0.35, 0.2, 0], drop: 0.26, gait: true });
 
 // A built GLB (tools/build_*.py): meshes lod0-lod2 with COLOR_0 and the custom attributes _PART, _PARTW, _PIVOT
 // (and _COLORB, a second colour set for a variant), the rig's parent pivots in the file's extras.rig.
 async function loadTiers(url, model) {
   const gltf = await new GLTFLoader().loadAsync(url.href);
-  const rename = { _part: 'aPart', _partw: 'aPartW', _pivot: 'aPivot', _colorb: 'aColorB' };
+  const rename = { _part: 'aPart', _partw: 'aPartW', _pivot: 'aPivot', _colorb: 'aColorB', _antler: 'aAntler', _tine: 'aTine' };
   const tiers = ['lod0', 'lod1', 'lod2'].map(n => {
     const g = gltf.scene.getObjectByName(n).geometry;
     for (const [a, b] of Object.entries(rename)) { const at = g.getAttribute(a); if (at) { g.setAttribute(b, at); g.deleteAttribute(a); } }
@@ -200,12 +342,30 @@ const RIG = {
   // Turkey vulture (tools/build_vulture.py): circles and glides on its raised V, teeters, hardly ever flaps
   vulture: { amp: [0, 0.15, 0.25, 0.45], pose: [1, 0, 0, 1.3],
     k: { handLag: 0.5, handAmp: 1.15, bow: 0.4, spread: 0.5, collapse: 0, bob: 0 } },
+  // Mountain lion (tools/build_cougar.py): the quadruped template with the outer tail as TAIL_TIP (child of the tail),
+  // so it takes the rig path. aAnim2.y twitches the tip (stalking, crouched), the tip waves a little with the stride
+  // and curls up on pose. pose squashes the legs for the stalk and the crouch; past ~0.6 the elbows sink, so
+  // animals.js keeps it there (poseMax). drop: leg pivots 0.29 m x (1 - 0.35). The brief's tail pose (-0.2) is +0.6
+  // here: the J of the tail reaches the ground standing, so as the body drops the tail swings back and the tip curls
+  // up (tipCurl) to keep it out of the ground.
+  lion: { amp: [0.35, 0.3, 0.6, 0], pose: [0.35, 0.6, 0.3, 0], drop: 0.19, poseMax: 0.6, gait: true,
+    k: { tipLag: 0.55, tipWave: 0.25, tipCurl: 0.6, bob: 0.04, foreFold: 0, abduct: 0, spine: 0, sit: 0 } },
+  // Brush rabbit (tools/build_rabbit.py): template R with a chest and a stub tail (no tip). Bounds fore pair against
+  // hind pair, the chest flexing; pose sits it up on its haunches (alert), the head kept about level; flick nibbles
+  // and flashes the white tail.
+  rabbit: { amp: [0.8, 0.6, 0.35, 0], pose: [1, 0.3, 0.4, 0],
+    k: { spine: 0.16, spinePhase: 1.2, sit: 0.55, foreFold: 0.5, tipLag: 0, tipWave: 0, tipCurl: 0, abduct: 0 } },
+  // California vole (tools/build_vole.py): template R without a tail part (too short; it stays with the body).
+  // Scurries in quick small steps; pose lifts the chest to sit up and eat; flick dips the head to clip grass.
+  vole: { amp: [0.9, 0, 0.35, 0], pose: [1, 0, 0.45, 0],
+    k: { spine: 0.15, spinePhase: 1.2, sit: 0.6, foreFold: 0.8, tipLag: 0, tipWave: 0, tipCurl: 0, abduct: 0 } },
 };
 const urls = { jay: '../assets/scrubjay.glb', quail: '../assets/quail.glb', squirrel: '../assets/squirrel.glb',
-  stjay: '../assets/stellersjay.glb', hawk: '../assets/redtail.glb', vulture: '../assets/vulture.glb' };
+  stjay: '../assets/stellersjay.glb', hawk: '../assets/redtail.glb', vulture: '../assets/vulture.glb',
+  lion: '../assets/cougar.glb', rabbit: '../assets/rabbit.glb', vole: '../assets/vole.glb' };
 function rigModel(name) {
   const r = RIG[name];
-  return loadTiers(new URL(urls[name], import.meta.url), { amp: r.amp, pose: r.pose, rig: { name, k: r.k } })
+  return loadTiers(new URL(urls[name], import.meta.url), { amp: r.amp, pose: r.pose, drop: r.drop || 0, poseMax: r.poseMax || 1, gait: !!r.gait, rig: { name, k: r.k } })
     .then(m => { m.rig.piv = m.extras.rig || {}; m.rig.kind = m.rig.piv.kind; m.variant = m.tiers[0].hasAttribute('aColorB'); return m; });
 }
 export const loadJayMesh = () => rigModel('jay');
@@ -214,6 +374,9 @@ export const loadSquirrelMesh = () => rigModel('squirrel');
 export const loadStellersJayMesh = () => rigModel('stjay');
 export const loadRedtailMesh = () => rigModel('hawk');
 export const loadVultureMesh = () => rigModel('vulture');
+export const loadCougarMesh = () => rigModel('lion');
+export const loadRabbitMesh = () => rigModel('rabbit');
+export const loadVoleMesh = () => rigModel('vole');
 
 // A wing slab hinged at `pivot` on side s (+1 left, -1 right), raised by `dihedral` (rad) about the
 // body axis: its centre sits `dx` out along the raised span and `dz` fore (+) or aft (-) of the pivot.
@@ -339,7 +502,22 @@ mat3 animRX(float a) { float c = cos(a), s = sin(a); return mat3(1.0, 0.0, 0.0, 
 mat3 animRY(float a) { float c = cos(a), s = sin(a); return mat3(c, 0.0, -s, 0.0, 1.0, 0.0, s, 0.0, c); }
 mat3 animRZ(float a) { float c = cos(a), s = sin(a); return mat3(c, s, 0.0, -s, c, 0.0, 0.0, 0.0, 1.0); }`;
 const ANIM_BODY = `
-vec3 animP = position - aPivot;
+vec3 animPos = position;
+#ifdef ANIM_ANTLER
+  // The buck's antlers, before any part rotation (they ride with the head): aAnim2 = (growth, velvet, young).
+  // growth 0 draws them cast (all but the burr ring folded into the burr, a pedicel knob), 1 full; velvet
+  // thickens them out along the normal (most at the base) and greys them (color_vertex); young folds the rear
+  // branch's second fork into its base (a forked-horn). The right antler mirrors the left in x.
+  if (aAntler > 0.0) {
+    float antSide = position.x >= 0.0 ? 1.0 : -1.0;
+    int antTine = int(aTine + 0.5);
+    vec3 antBurr = vec3(antSide * antler_burr.x, antler_burr.yz);
+    animPos += normal * (0.0045 * (1.0 - 0.55 * aAntler) * aAnim2.y);
+    if (antTine == 1) animPos = mix(animPos, vec3(antSide * antler_fork.x, antler_fork.yz), aAnim2.z);
+    if (antTine != 3) animPos = antBurr + (animPos - antBurr) * aAnim2.x;
+  }
+#endif
+vec3 animP = animPos - aPivot;
 mat3 animR = mat3(1.0);
 int animPart = int(aPart + 0.5);
 float animPose = aAnim.z;
@@ -352,7 +530,11 @@ float animPose = aAnim.z;
 #endif
 if (animPart == 1 || animPart == 2) {
   animP.y *= mix(1.0, uPose.x, animPose);
-  animR = animRX(sin(aAnim.x + (animPart == 2 ? 3.14159 : 0.0)) * aAnim.y * uAmp.x);
+  float legOff = animPart == 2 ? 3.14159 : 0.0;
+#ifdef ANIM_GAIT
+  legOff = mix(legOff, aPivot.z > 0.0 ? 0.0 : 3.14159, aAnim2.w);   // diagonal pairs -> fore pair against hind pair
+#endif
+  animR = animRX(sin(aAnim.x + legOff) * aAnim.y * uAmp.x);
 #ifdef ANIM_RIG
   if (animPart == 1) animR = animRX(animPose * rig_foreFold) * animR;
   animR = animRZ(rigSide * aAnim2.x * rig_abduct) * animR;   // splay outward
@@ -388,7 +570,7 @@ else if (animPart == 9 || animPart == 10) {
 #endif
 vec3 transformed = animR * animP + aPivot;
 #ifdef ANIM_WEIGHTED
-  transformed = mix(position, transformed, aPartW);
+  transformed = mix(animPos, transformed, aPartW);
 #endif
 #ifdef ANIM_RIG
   // one-level parent chain: the child's own pose first (above), then its parent's rotation about the parent's pivot
@@ -411,6 +593,16 @@ vec3 transformed = animR * animP + aPivot;
   vPosition = vec3( position );
 #endif`;
 const RIG_KEYS = ['spine', 'spinePhase', 'sit', 'foreFold', 'tipLag', 'tipWave', 'tipCurl', 'abduct', 'bob', 'handLag', 'handAmp', 'bow', 'spread', 'collapse'];
+// aAnim2 is declared for the rig templates, the quadrupeds' gait selector and the antlers (the geometry must then
+// carry it: a missing instanced attribute reads (0, 0, 0, 1), a bound gait and no antler growth).
+const hasAnim2 = model => !!(model.rig || model.gait || model.antler);
+function extraDecl(model) {
+  const f = x => (+x || 0).toFixed(4), v3 = a => `vec3(${a.map(f).join(', ')})`;
+  let d = hasAnim2(model) && !model.rig ? 'attribute vec4 aAnim2;\n' : '';
+  if (model.gait) d += '#define ANIM_GAIT\n';
+  if (model.antler) d += `#define ANIM_ANTLER\nattribute float aAntler; attribute float aTine;\nconst vec3 antler_burr = ${v3(model.antler.burr)};\nconst vec3 antler_fork = ${v3(model.antler.fork)};\n`;
+  return d + rigDecl(model);
+}
 function rigDecl(model) {
   const r = model.rig; if (!r) return '';
   const f = x => (+x || 0).toFixed(4), v3 = a => `vec3(${a.map(f).join(', ')})`;
@@ -423,8 +615,9 @@ function rigDecl(model) {
   if (model.variant) d += '#define ANIM_VARIANT\nattribute vec3 aColorB;\n';
   return d;
 }
-const animDecl = model => (model.weighted ? '#define ANIM_WEIGHTED\nattribute float aPartW;' : '') + ANIM_DECL_BASE + '\n' + rigDecl(model);
-const programKey = model => `${model.amp.join(',')}|${model.pose.join(',')}|${model.weighted ? 'w' : ''}|${model.rig ? model.rig.name : ''}`;
+const animDecl = model => (model.weighted ? '#define ANIM_WEIGHTED\nattribute float aPartW;' : '') + ANIM_DECL_BASE + '\n' + extraDecl(model);
+const programKey = model => `${model.amp.join(',')}|${model.pose.join(',')}|${model.weighted ? 'w' : ''}|${model.rig ? model.rig.name : ''}|${model.gait ? 'g' : ''}|${model.antler ? 'a' : ''}`;
+export { hasAnim2 };
 
 export function animalMaterial(atmosphere, model) {
   const m = new THREE.MeshLambertMaterial({ vertexColors: true, flatShading: true });
@@ -441,7 +634,9 @@ export function animalMaterial(atmosphere, model) {
       .replace('#include <common>', '#include <common>\n' + animDecl(model) + consts)
       .replace('#include <begin_vertex>', ANIM_BODY)
       // a second colour set (the female quail), picked per instance by aAnim2.w
-      .replace('#include <color_vertex>', '#include <color_vertex>\n#ifdef ANIM_VARIANT\n  vColor.rgb = mix(vColor.rgb, aColorB, aAnim2.w);\n#endif');
+      .replace('#include <color_vertex>', '#include <color_vertex>\n#ifdef ANIM_VARIANT\n  vColor.rgb = mix(vColor.rgb, aColorB, aAnim2.w);\n#endif'
+        // velvet: grey-brown skin over the growing antler (the burr ring keeps its colour)
+        + '\n#ifdef ANIM_ANTLER\n  if (aAntler > 0.0 && int(aTine + 0.5) != 3) vColor.rgb = mix(vColor.rgb, vec3(0.13, 0.095, 0.07), aAnim2.y);\n#endif');
   };
   m.customProgramCacheKey = () => key;
   m.needsUpdate = true;
@@ -475,7 +670,7 @@ ${ANIM_BODY}
 // nearFade: the caster is also in shadows.js cascade 0 (addCaster), so fade the planar shadow out
 // where the animal's feet are inside that map (csmMatrix[0] maps them into [0, 1]; it maps everything
 // far outside while the cascade is off), handing over across the outer 2-8 % of the box.
-export function planarShadowMaterial(model, { drop = 0, opacity = 0.42, nearFade = false } = {}) {
+export function planarShadowMaterial(model, { drop = model.drop || 0, opacity = 0.42, nearFade = false } = {}) {
   const v4 = a => `vec4(${a.map(x => x.toFixed(4)).join(', ')})`;
   return new THREE.ShaderMaterial({
     uniforms: { sunDir: atmo.sunDir, csmStrength: atmo.csmStrength, opacity: { value: opacity }, csm0: { value: atmo.csmMatrix.value[0] } },
@@ -488,7 +683,7 @@ void main() {
 ${ANIM_BODY}
   mat4 m = modelMatrix * instanceMatrix;
   vec4 w = m * vec4(transformed, 1.0);
-  float ground = m[3].y + ${drop.toFixed(3)} * aAnim.z + 0.08;
+  float ground = m[3].y + ${drop.toFixed(3)} * aAnim.z * length(m[0].xyz) + 0.08;   // the drop scales with the instance
   vec3 L = sunDir; L.y = max(L.y, 0.12);
   w.xyz -= L * (max(w.y - ground, 0.0) / L.y);
   w.y = ground;

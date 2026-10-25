@@ -14,8 +14,9 @@
 //            random spot 50-300 m around the raven, the rate from sun height (dawn and dusk chorus, quiet
 //            at noon and night) and season (spring loudest). When animals.js has a bird of that species
 //            within 300 m the call comes from it (a random one of those in range) and the panner follows
-//            it while it calls; otherwise from the random spot (the fallback, and always for the Steller's
-//            jay, which animals.js does not model). Two calls are events of animals.js instead of chance:
+//            it while it calls; otherwise from the random spot (the fallback). The coyote's yips and howl
+//            ride the same layer at dawn, dusk and night over open ground, on a real coyote when one is in
+//            range. Two calls are events of animals.js instead of chance:
 //            a quail covey's flush (a whirring burst of wingbeats, one per bird, staggered as they go up,
 //            and a few alarm "pit"s) and a red-tailed hawk's stoop (its scream, on the hawk).
 //   water    a stream wash plus gurgle, on a panner kept at the nearest point of the nearest flowline, so it
@@ -53,10 +54,13 @@ const CALLERS = [
     tod: (c, d) => c * 0.9 + d * 0.35, height: [2, 8], synth: 'scrubjay' },
   { key: 'hawk', code: 'buteo_jamaicensis', label: 'red-tailed hawk', hab: { 5: 1, 4: 0.7, 1: 0.5, 8: 0.6 }, rate: 0.025, gain: 0.55,
     tod: (c, d, noon) => d * (0.25 + 0.75 * noon), height: [40, 140], synth: 'hawk' },
-  // Not in this tile's species.json; kept because the soundscape asks for a conifer voice. `extra` lets it
-  // play in any tile that has conifer or mixed forest.
+  // `extra` lets it play in any tile that has conifer or mixed forest, listed in its species.json or not
+  // (animals.js draws Steller's jays in the pines; a call goes on one of them when one is within range).
   { key: 'steller', code: 'cyanocitta_stelleri', label: "Steller's jay", hab: { 2: 1, 3: 0.7, 6: 0.2 }, rate: 0.2, gain: 0.75,
     tod: (c, d) => c * 0.9 + d * 0.35, height: [5, 20], synth: 'steller', extra: true },
+  // Coyote: a few yips running into a wavering howl, at dawn and dusk (and on into the night) over grass and savanna.
+  { key: 'coyote', code: 'canis_latrans', label: 'coyote', hab: { 5: 1, 9: 0.7, 1: 0.45, 4: 0.5, 6: 0.3 }, rate: 0.035, gain: 0.5,
+    tod: c => c, height: [0.4, 0.6], synth: 'coyote' },
 ];
 
 function loadPrefs() { try { return JSON.parse(localStorage.getItem(STORE)) || {}; } catch { return {}; } }
@@ -477,6 +481,24 @@ export class Soundscape {
     const code = key === 'raven' ? 'corvus_corax' : CALLERS.find(c => c.key === key)?.code;
     const a = code && this._pick(code, r);
     return a ? this._play(key, this._onAnimal(a), a, 'animal') : null;
+  }
+
+  // Coyote: three to six short rising yips, then a howl gliding up and wavering down (sine with vibrato, a little noise).
+  _coyote(v, t) {
+    const n = 3 + Math.floor(Math.random() * 4), pm = rand(0.9, 1.12);
+    for (let i = 0; i < n; i++) {
+      const s = t + i * rand(0.13, 0.2), e = s + 0.09, o = v.osc('triangle', 700 * pm, s, e), g = v.gain(0);
+      o.frequency.setValueAtTime(650 * pm, s); o.frequency.exponentialRampToValueAtTime(1150 * pm, e);
+      o.connect(g).connect(v.input); env(g.gain, s, [[0, 0], [0.015, 0.8], [0.09, 0]]);
+    }
+    const h = t + n * 0.18 + 0.1, dur = rand(1.4, 2.2), end = h + dur;
+    const o = v.osc('sine', 500 * pm, h, end), vib = v.osc('sine', rand(5, 7), h, end), vd = v.gain(18 * pm), g = v.gain(0);
+    vib.connect(vd).connect(o.frequency);
+    o.frequency.setValueAtTime(480 * pm, h); o.frequency.exponentialRampToValueAtTime(900 * pm, h + dur * 0.3);
+    o.frequency.exponentialRampToValueAtTime(620 * pm, end);
+    const ns = v.noise(h, end), nb = v.filter('bandpass', 800 * pm, 3), ng = v.gain(0.08);
+    ns.connect(nb).connect(ng).connect(g); o.connect(g).connect(v.input);
+    env(g.gain, h, [[0, 0], [0.25, 0.9], [dur * 0.7, 0.7], [dur, 0]]);
   }
 
   _heard(label, d) { this.heard[label] = (this.heard[label] || 0) + Math.min(1, 40 / Math.max(1, d)); }

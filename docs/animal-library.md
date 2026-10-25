@@ -145,7 +145,14 @@ in a glide and tail spread for birds, leg splay (climbing) and the lagged tail-t
 colour variant (the female quail's second colour set, `_COLORB`). Per-species constants (sit-up angle, spine
 flex, hand lag, collapse and so on) are in `RIG` in `animalModels.js`; a rebuild that moves a joint needs no
 client change. Each drawn species falls back to its procedural model while loading or on error, and
-`?<name>=proc` (`deer`, `squirrel`, `quail`, `jay`; `animals` for all) draws the procedural one for A/B.
+`?<name>=proc` (`deer`, `squirrel`, `quail`, `jay`, `stjay`, `hawk`, `vulture`, `fox`, `coyote`, `rabbit`, `vole`,
+`lion` or `cougar`, `buck`; `animals` for all) draws the procedural one for A/B.
+
+- **Quadruped:** the deer's parts (body, legs A/B as diagonal pairs, tail, head), on the plain path (doe, buck,
+  gray fox, coyote) or the rig path when the tail has a TAIL_TIP (mountain lion). `aAnim2.w` is a gait selector:
+  0 diagonal pairs (walk, trot), 1 fore pair against hind pair (gallop), read from the sign of each leg pivot's z.
+  Every model carries `drop` (how far the body lowers at pose 1 so the folded legs meet the ground) and the lion
+  `poseMax` 0.6 (past it the elbows sink).
 
 ### Soarers and the Steller's jay (2026-10-25)
 
@@ -165,6 +172,54 @@ client change. Each drawn species falls back to its procedural model while loadi
   branch and the group moves on to the next pine. Perches sit in the crown envelope, not on modelled branches.
   `?stjay=proc`.
 
+### Mammals in the client (2026-10-25)
+
+Wired in `animals.js` / `animalModels.js` from the mammal build lane's GLBs. Per species: cap, tier switches,
+habitat, hours, groups, motions.
+
+- **Gray fox** (`loadFoxMesh`, plain path, amp `[0.5, 0.35, 1.0, 0]`, pose `[0.3, -0.25, 0.2, 0]`, drop 0.17 m):
+  cap 16, tiers at 18 / 56 m; woodland and chaparral edges; about before 9:00 and after 16:30, bedded at an oak's
+  foot by day; alone. Walks, trots, stands alert, sniffs and mouse-pounces; trots off from a low player inside
+  32 m, or (one time in three) runs up a leaning oak to the fork and lies on a limb.
+- **Coyote** (`loadCoyoteMesh`, amp `[0.45, 0.3, 1.1, 0]`, pose `[0.3, -0.35, 0.2, 0]`, drop 0.26 m): cap 8,
+  22 / 68 m; grassland and open savanna; dawn and dusk (and night), bedded by day; alone or a pair (the mate keeps
+  a slot behind). Long trots, pounces; flees at 40 m (a gallop when close), stops 60-110 m off and looks back.
+- **Brush rabbit** (`loadRabbitMesh`, template R with a chest, no tail tip; `RIG.rabbit`): cap 80, 6 / 20 m, drawn
+  and thought only within 120 m of the eye, spawned within 220 m; brush edges (brush beside grass); 1-3 around a
+  patch of cover. Dawn and dusk: hops out to feed within 7 m of cover, nibbles, sits up; by day still in its form.
+  A low player inside 22 m: it freezes, then hops quietly back to cover; inside 9 m (or 15 m when the freeze
+  ends) it bolts for cover in a zig-zag bound, tail up.
+- **California vole** (`loadVoleMesh`, template R, no tail part; `RIG.vole`): cap 150, 3 / 10 m, drawn and thought
+  only within 40 m of a camera under 10 m above the ground, spawned within 140 m; grass; any hour; one or two per
+  2-5 m runway. Scurries, clips grass, sits up to eat; a player within 4 m sends it down the runway into a burrow.
+- **Mountain lion** (`loadCougarMesh`, rig path for TAIL_TIP 8; `RIG.lion`, amp `[0.35, 0.3, 0.6, 0]`, pose
+  `[0.35, 0.6, 0.3, 0]`, poseMax 0.6, drop 0.19 m): cap 3, 40 / 124 m. One territory per 1.5 km cell (p 0.4) whose
+  home is oak, mixed, chaparral or riparian; only the nearest within 550 m lives, so at most one group: a lone adult
+  or a mother with one or two young at 0.6 scale. About before 8:30 and after 17:00, crouched under an oak by day.
+  Stalks (slow, low, head down, tail tip twitching) with crouched waits; slinks off low from a player inside 50 m.
+  The brief's tail pose (-0.2) became +0.6: the tail's J reaches the ground, and a lowered tail sank into it.
+- **Buck** (`loadDeerBuckMesh`, the doe's constants, drop 0.515 m): its own slot (BK, cap 40, 30 / 90 m, planar
+  shadow), about one in three of a herd's followers. Antlers per instance (`ANIM_ANTLER`, `aAnim2` = growth,
+  velvet, young): each buck casts between 1 January and 1 March, regrows in velvet from late April (full by July),
+  sheds the velvet in late August or early September; so hard in fall and early winter, cast in late winter and
+  spring, velvet in summer. The date is today's when the season is the real one, else the season's midpoint.
+  Cast: every antler vertex but the burr ring folds into the burr (mirrored in x); velvet: pushed out along the
+  normal (most at the base) and greyed; a young forked-horn (35%) folds the rear second fork (`_TINE` 1) into its
+  base. Procedural fallback: `buildDeerBuck` (buildDeer 5% larger with cone antlers).
+- **Deer bedded drop:** the drawn deer drop 0.49 m (doe) and 0.515 m (buck), scaled with the instance, in
+  `drUpdate`, the planar shadow (which now scales the drop by the instance) and the lineup; the procedural deer
+  keeps 0.6 m.
+- **Ground:** animals now stand on the rendered terrain (the 10 m triangle mesh, rocks.js `meshH`), not on the
+  finer bilinear height field, which in a hollow lies up to ~0.6 m under the mesh and buried bedded deer.
+- Procedural fallbacks for all five (`buildFox`, `buildCoyote`, `buildCougar`: one box-and-ball quadruped
+  builder; `buildRabbit`, `buildVole`). Planar sun shadows for fox, coyote, lion and buck as for the doe.
+- Sound: a coyote yip-and-howl caller in `sound.js` (dawn, dusk and night over grass; on a real coyote within
+  300 m when there is one).
+- Cost (2026-10-25, the start view, 281 animals): `animals.update` 0.11-0.16 ms a frame, the mammals' updates
+  0.016 ms of it; frame time with the six new species shown or hidden within noise at the start view and beside a
+  herd. Debugging: `__we.animals.summon('fox' | 'coyote' | 'rabbit' | 'vole' | 'lion' | 'buck', d)` puts a group
+  d m ahead of the camera until `clearSummoned()`; `antlerMonth` pins the antler date.
+
 ## Lineup page
 
 `client/lineup_animals.html` (`client/src/lineupAnimals.js`) is the sign-off page, the animals' counterpart of
@@ -173,8 +228,9 @@ own row): the drawn GLB on the left and the procedural model on the right, at tr
 ground bar in 10 cm bands, under the game's atmosphere (sun, sky light, exposure; cloud shadow off) for any
 season and hour. The camera stands a fixed 5.5 m off so sizes compare between rows; "zoom to fit" frames each row
 instead, "three-quarter" and "from above" turn it, and dragging a view turns that row. Switches: tier (lod0-2),
-pose or motion (idle, walk / bound / hop, graze / tail flick / peck, bedded / sit up / perched, flap, glide,
-climb), written to the same `aAnim` / `aAnim2` attributes `animals.js` writes; a motion the body plan lacks
+pose or motion (idle, walk / bound / hop, run (gallop, bolt, dash), graze / tail flick / peck, bedded / sit up /
+perched, flap, glide, climb), each model with its own bedded drop and pose limit, the buck's antlers for the
+season (the second-colour box draws a young forked-horn), written to the same `aAnim` / `aAnim2` attributes `animals.js` writes; a motion the body plan lacks
 shows idle and says so. GLBs load as their rows scroll into view (`?all=1` loads every one); a missing or broken
 file leaves the procedural model and a note. A GLB without a loader in `animalModels.js` is read the same way
 with generic rig constants (marked on the row); a new `load<Name>Mesh` export or a GLB whose `extras.species`

@@ -37,6 +37,7 @@ const DRAWN = {
   sciurus_griseus: { file: 'squirrel.glb', loader: 'loadSquirrelMesh' },
   callipepla_californica: { file: 'quail.glb', loader: 'loadQuailMesh' },
   aphelocoma_californica: { file: 'scrubjay.glb', loader: 'loadJayMesh' },
+  cyanocitta_stelleri: { file: 'stellersjay.glb', loader: 'loadStellersJayMesh' },
   corvus_corax: { file: 'raven_player.glb', skinned: true, note: 'the player raven (raven.js default, skinned, clips fly and glide); the ambient raven is procedural' },
   canis_latrans: { file: 'coyote.glb', loader: 'loadCoyoteMesh' },
   urocyon_cinereoargenteus: { file: 'fox.glb', loader: 'loadFoxMesh' },
@@ -49,8 +50,10 @@ const DRAWN = {
 // Procedural models (animals.js SPECIES, which is not exported): species -> animalModels.js builder.
 const PROC = {
   sciurus_griseus: 'buildSquirrel', melanerpes_formicivorus: 'buildWoodpecker', corvus_corax: 'buildRaven',
-  odocoileus_hemionus: 'buildDeer', 'odocoileus_hemionus:buck': 'buildDeer', callipepla_californica: 'buildQuail',
+  odocoileus_hemionus: 'buildDeer', 'odocoileus_hemionus:buck': 'buildDeerBuck', callipepla_californica: 'buildQuail',
   aphelocoma_californica: 'buildJay', buteo_jamaicensis: 'buildHawk', cathartes_aura: 'buildVulture',
+  urocyon_cinereoargenteus: 'buildFox', canis_latrans: 'buildCoyote', puma_concolor: 'buildCougar',
+  sylvilagus_bachmani: 'buildRabbit', microtus_californicus: 'buildVole', cyanocitta_stelleri: 'buildStellersJay',
 };
 // Body plan for the motion switch: quadruped, rodent (bounding pair, sits up), bird (ground bird: hops, flushes),
 // soarer (glides, flaps in bursts, perches).
@@ -61,11 +64,13 @@ const PLAN = {
   corvus_corax: 'soarer', buteo_jamaicensis: 'soarer', cathartes_aura: 'soarer',
 };
 // Cycle rates (Hz) from animals.js: deer walk speed / 1.5 m at 1.1 m/s, squirrel bound 3.5, quail whirr 19 and
-// walk speed / 0.14, jay rowing 11, woodpecker 13, raven 2.6, hawk 2.4; the rest are estimates for new species.
+// walk speed / 0.14, jay rowing 11, woodpecker 13, raven 2.6, hawk 2.4; fox, coyote and lion walk (MAMMAL walk speed
+// over the stride) and gallop (run), rabbit forage hop and bolt (1.1 m/s / 0.32 m, 5.5 / 0.9), vole scurry
+// (0.55 m/s / 0.09 m, dash 1.6).
 const RATE = {
-  odocoileus_hemionus: { walk: 0.73 }, canis_latrans: { walk: 1.1 }, urocyon_cinereoargenteus: { walk: 1.4 }, puma_concolor: { walk: 0.8 },
-  sciurus_griseus: { walk: 3.5 }, sylvilagus_bachmani: { walk: 3 }, microtus_californicus: { walk: 5 },
-  callipepla_californica: { walk: 2.1, flap: 19 }, aphelocoma_californica: { walk: 2.5, flap: 11 }, melanerpes_formicivorus: { flap: 13 },
+  odocoileus_hemionus: { walk: 0.73 }, canis_latrans: { walk: 1.28, run: 3.4 }, urocyon_cinereoargenteus: { walk: 1.45, run: 4 }, puma_concolor: { walk: 0.85, run: 2.6 },
+  sciurus_griseus: { walk: 3.5 }, sylvilagus_bachmani: { walk: 3.4, run: 6.1 }, microtus_californicus: { walk: 6, run: 17 },
+  callipepla_californica: { walk: 2.1, flap: 19 }, aphelocoma_californica: { walk: 2.5, flap: 11 }, cyanocitta_stelleri: { walk: 2.5, flap: 11 }, melanerpes_formicivorus: { flap: 13 },
   corvus_corax: { flap: 2.6 }, buteo_jamaicensis: { flap: 2.4 }, cathartes_aura: { flap: 3 },
 };
 // Generic constants for a GLB read here (no loader in animalModels.js): the deer's amplitudes for quadrupeds,
@@ -77,7 +82,7 @@ const GENERIC = {
   soarer: { amp: [0, 0.2, 0.4, 0.75], pose: [1, -0.25, 0, 1.45], k: { handLag: 0.6, handAmp: 0.8, bow: 0.25, spread: 0.6, collapse: 1 } },
 };
 const MOTIONS = [
-  ['idle', 'idle'], ['walk', 'walk / bound / hop'], ['graze', 'graze / tail flick / peck'], ['rest', 'bedded / sit up / perched'],
+  ['idle', 'idle'], ['walk', 'walk / bound / hop'], ['run', 'run: gallop / bolt / dash'], ['graze', 'graze / tail flick / peck'], ['rest', 'bedded / sit up / perched'],
   ['flap', 'flap'], ['glide', 'glide / soar'], ['climb', 'climb (legs splayed)'],
 ];
 const DRAFT_FALLBACK = { odocoileus_hemionus: 'odocoileus_hemionus_buck' };   // the doe has no brief of its own
@@ -148,7 +153,7 @@ function depthFor(model) {
 // the rig templates).
 function instance(geo, model) {
   geo.setAttribute('aAnim', new THREE.InstancedBufferAttribute(new Float32Array(4), 4));
-  if (model.rig) geo.setAttribute('aAnim2', new THREE.InstancedBufferAttribute(new Float32Array(4), 4));
+  if (AM.hasAnim2(model)) geo.setAttribute('aAnim2', new THREE.InstancedBufferAttribute(new Float32Array(4), 4));
   const m = new THREE.InstancedMesh(geo, AM.animalMaterial(atmosphere, model), 1);
   m.setMatrixAt(0, new THREE.Matrix4()); m.frustumCulled = false;
   m.castShadow = m.receiveShadow = true;
@@ -582,17 +587,19 @@ function layout(row) {
 // What animals.js would write for the chosen motion on this body plan; ok false when the plan has no such motion.
 function animFor(row, motion, t) {
   const r = RATE[row.species] || {}, plan = row.plan;
-  const a = { phase: 0, gait: 0, pose: 0, flick: 0, e0: 0, e1: 0, drop: 0, ok: true, as: motion };
+  const a = { phase: 0, gait: 0, pose: 0, flick: 0, e0: 0, e1: 0, e3: 0, ok: true, as: motion };
   const pulse = (k, s = 0) => Math.pow(Math.max(0, Math.sin((t - s) * TAU * k)), 2);
   const na = () => { a.ok = false; a.as = 'idle'; return idle(); };
   const idle = () => { if (plan === 'bird') a.pose = 1; return a; };
   if (plan === 'quadruped') {
-    if (motion === 'walk') { a.phase = t * TAU * (r.walk || 0.8); a.gait = 1; }
+    if (motion === 'walk') { a.phase = t * TAU * (r.walk || 0.8); a.gait = 0.75; }
+    else if (motion === 'run') { a.phase = t * TAU * (r.run || 2.5); a.gait = 1.25; a.e3 = 1; }   // the gallop: fore pair against hind pair
     else if (motion === 'graze') a.flick = 1;
-    else if (motion === 'rest') { a.pose = 1; a.drop = 0.6 * (row.species === 'odocoileus_hemionus' ? 1 : (row.brief?.shoulder || 0.95) / 0.95); }
+    else if (motion === 'rest') { a.pose = 1; a.e1 = 0.7 * Math.sin(t * 3.3); }   // bedded (the model's drop below); the lion's tail tip twitches
     else if (motion !== 'idle') return na();
   } else if (plan === 'rodent') {
     if (motion === 'walk') { a.phase = t * TAU * (r.walk || 3.5); a.gait = 1; }
+    else if (motion === 'run') { a.phase = t * TAU * (r.run || r.walk * 1.8 || 6); a.gait = 1; a.flick = row.species === 'sylvilagus_bachmani' ? 0.8 : 0; }
     else if (motion === 'graze') { a.flick = pulse(1.2); a.e1 = pulse(1.2, 0.12); }
     else if (motion === 'rest') a.pose = 1;
     else if (motion === 'climb') { a.e0 = 1; a.phase = t * TAU * (r.walk || 3.5) * 0.6; a.gait = 0.7; }
@@ -613,15 +620,26 @@ function animFor(row, motion, t) {
   }
   return a;
 }
+// The buck's antlers for the page's season (a buck with the calendar's middle dates; the second-colour box draws a
+// young forked-horn): aAnim2 = (growth, velvet, young), as animals.js antlers() writes them.
+const antlersFor = season => AM.antlerState(AM.SEASON_MONTH[season] ?? 10.5);
 function pose(row, t) {
-  const want = state.motion, list = [];
-  if (row.drawn.state === 'ok' && !row.drawn.model.skinned) list.push(...row.drawn.meshes);
-  if (row.proc.mesh) list.push(row.proc.mesh);
+  const want = state.motion, sets = [];
+  if (row.drawn.state === 'ok' && !row.drawn.model.skinned) sets.push([row.drawn.model, row.drawn.meshes]);
+  if (row.proc.mesh) sets.push([row.proc.model, [row.proc.mesh]]);
   const a = animFor(row, want, t);
-  for (const m of list) {
-    const A = m.geometry.attributes.aAnim; A.array[0] = a.phase % TAU; A.array[1] = a.gait; A.array[2] = a.pose; A.array[3] = a.flick; A.needsUpdate = true;
-    const A2 = m.geometry.attributes.aAnim2; if (A2) { A2.array[0] = a.e0; A2.array[1] = a.e1; A2.array[2] = 0; A2.array[3] = state.variant ? 1 : 0; A2.needsUpdate = true; }
-    m.position.y = -a.drop;
+  for (const [model, meshes] of sets) {
+    // each model's own bedded drop and pose limit (animalModels.js: doe 0.49 m drawn, 0.6 m procedural; lion pose <= 0.6)
+    const p = Math.min(a.pose, model.poseMax || 1), ant = model.antler ? antlersFor(state.season) : null;
+    for (const m of meshes) {
+      const A = m.geometry.attributes.aAnim; A.array[0] = a.phase % TAU; A.array[1] = a.gait; A.array[2] = p; A.array[3] = a.flick; A.needsUpdate = true;
+      const A2 = m.geometry.attributes.aAnim2;
+      if (A2) {
+        const w = model.gait ? a.e3 : state.variant ? 1 : 0;
+        A2.array.set(ant ? [ant.growth, ant.velvet, state.variant ? 1 : 0, w] : [a.e0, a.e1, 0, w]); A2.needsUpdate = true;
+      }
+      m.position.y = -p * (model.drop || 0);
+    }
   }
   if (row.drawn.state === 'ok') {
     const D = row.drawn;
@@ -674,6 +692,7 @@ function refresh(row) {
   if (!animFor(row, state.motion, 0).ok) msgs.push(`${state.motion}: not a motion of this body plan, idle shown`);
   if (D.model?.skinned && !['flap', 'glide', 'idle'].includes(state.motion)) msgs.push(`drawn raven: skinned player model has only fly and glide clips, glide shown`);
   if (D.model?.generic && state.motion !== 'idle') msgs.push('drawn: generic rig constants (no loader in animalModels.js yet)');
+  if (D.model?.antler) { const s = antlersFor(state.season); msgs.push(`antlers (${state.season}): ${s.growth === 0 ? 'cast' : s.velvet ? `velvet, ${Math.round(s.growth * 100)}% grown` : 'hard'}${state.variant ? ', young forked-horn' : ''}`); }
   row.el.msg.textContent = msgs.join(' · ');
   row.el.labD.style.display = D.state === 'ok' ? '' : 'none'; row.el.labP.style.display = P.mesh ? '' : 'none';
   row.el.labD.textContent = D.state === 'ok' ? `drawn · lod${Math.min(state.tier, D.model.tiers.length - 1)}` : '';
@@ -742,6 +761,7 @@ $('view').onchange = e => set({ view: e.target.value });
 $('fit').onchange = e => set({ fit: e.target.checked });
 $('slow').onchange = e => set({ slow: e.target.checked });
 $('variant').onchange = e => set({ variant: e.target.checked });
+{ const l = $('variant').parentElement; if (l && l.lastChild?.nodeType === 3) l.lastChild.textContent = ' second colour set (female quail) · young forked-horn buck'; }
 $('jump').onchange = e => { const r = rows.find(r => r.key === e.target.value); if (r) r.el.sec.scrollIntoView({ behavior: 'smooth', block: 'start' }); e.target.value = ''; };
 $('copyall').onclick = e => copyText(JSON.stringify(rows.map(signJSON).filter(s => s.verdict || s.notes), null, 2), $('summary'));
 
