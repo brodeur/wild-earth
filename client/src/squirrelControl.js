@@ -38,6 +38,14 @@ const WORK = { pick: 0.5, bury: 2.4, dig: 1.8 };             // s
 const CAM_BACK = 2.5, CAM_UP = 0.6, NEAR = 0.3;
 const CAM_SIDE = 0.4, CAM_SWING = 1.6;                       // rad (~23 deg) off the heading: a three-quarter view; 1/s
 const CAM_CLEAR = 0.3, CAM_SIGHT = 0.15, CAM_WATER = 0.45;   // m over the terrain round the lens, along the sight line, over a pond
+// Water (water.js): deeper than SWIM_IN it swims (out again under SWIM_OUT), floating with the feet FLOAT under the
+// surface, at SWIM m/s (a gray squirrel can swim but avoids it; a reservoir crossing should feel slow); shallower it
+// wades at WADE of the run. No jump from the water. Creek depth is notional (the ribbons are draped on the terrain):
+// STREAM_D0 + STREAM_DK x the drawn half width at the centre of a pool, falling off as 1 - (across / half)^2 to the
+// edges, and along the reach from pool to riffle (riffle(), ~20 m apart, down to a fifth of the pool), so most
+// creeks have shallow stretches to wade across between pools a squirrel would have to swim.
+const SWIM = 1.0, SWIM_BACK = 0.5, WADE = 0.5, SWIM_IN = 0.15, SWIM_OUT = 0.11, FLOAT = 0.07;
+const STREAM_D0 = 0.04, STREAM_DK = 0.11, STREAM_DMAX = 1.2, RIPPLE_EVERY = 0.4, RIPPLE_LIFE = 1.5;
 const TAU = Math.PI * 2;
 const damp = (a, b, k, dt) => b + (a - b) * Math.exp(-k * dt);
 const wrap = a => Math.atan2(Math.sin(a), Math.cos(a));
@@ -58,6 +66,9 @@ export class SquirrelControl {
     this._v = new THREE.Vector3(); this._w = new THREE.Vector3();
     this.ray = new THREE.Raycaster(); this.ray.ray.direction.set(0, -1, 0); this._hits = []; this._rockMesh = new THREE.Mesh();
     this.mesh = null; this.sp = 0;
+    this.swimming = false; this.wet = null; this.toldSwim = 0;   // this.wet: the water at the squirrel's feet, or null
+    this._ft = { y: 0, bed: 0, surf: null, depth: 0 }; this._wq = { surf: 0, depth: 0 };
+    this.ripples = []; this.rippleT = 0;
     this.ready = animals.playerModel('squirrel').then(r => this.build(r)).catch(e => console.warn('squirrel: no player model', e));
     // the acorn in its mouth
     this.nut = new THREE.Mesh(acornGeometry(), new THREE.MeshLambertMaterial({ vertexColors: true }));
@@ -101,6 +112,7 @@ export class SquirrelControl {
     f.body.visible = !on && f.view === 'chase';
     if (this.mesh) this.mesh.visible = on;
     this.nut.visible = false;
+    for (const r of this.ripples) r.m.visible = false;
     if (on) { f.pitch = 0; f.roll = 0; f.hover = false; this.camSettled = false; this.lastYaw = f.yaw; this.place(f.pos.x, f.pos.z); }
     else { this.camera.up.set(0, 1, 0); f.reset(f.pos.x, f.pos.z, 30); }   // back to the raven: aloft over the same spot
     // a camera 0.6 m over a slope: the raven's 0.5 m near plane cut the hillside beside it open
@@ -136,7 +148,8 @@ export class SquirrelControl {
   // On the ground at (x, z), facing the way it faced (after a reset, Go to, or a switch from the raven).
   place(x, z) {
     const P = this.flight.pos;
-    P.set(x, this.heights.atXZ(x, z), z);
+    const F = this.footing(x, z, this.heights.atXZ(x, z) + 50);
+    P.set(x, F.y, z); this.setWet(F);
     this.mode = 'ground'; this.v = 0; this.vel.set(0, 0, 0); this.tree = null; this.work = null; this.limb = null;
     this.last.copy(P); this.camSettled = false;
   }
@@ -215,6 +228,7 @@ export class SquirrelControl {
   }
   attach(tree, face, h = 0.15) {
     this.tree = tree; this.face = face; this.h = h; this.mode = 'trunk'; this.v = 0; this.headUp = true; this.camOrbit = 0;
+    this.wet = null; this.swimming = false;
     this.work = null; this.limb = null;
   }
   // Off the bottom of the trunk onto the ground, facing out.
@@ -253,6 +267,68 @@ export class SquirrelControl {
     return top;
   }
 
+  // ---- water under the squirrel ----------------------------------------------------------------------
+  // The footing at (x, z) below `from`: the ground (surface(): terrain or a rock top) and, in water, the bed, the water
+  // surface and its depth. y is where the feet go: on the bed, or floating FLOAT under the surface once deeper than that.
+  footing(x, z, from) {
+    const F = this._ft, g = this.surface(x, z, from);
+    F.y = F.bed = g; F.surf = null; F.depth = 0;
+    const w = this.waterAt(x, z); if (!w) return F;
+    // a pond lies on the drawn terrain (its bed); a creek's ribbon is draped on it, so its bed is notional, except
+    // where a rock stands in the channel
+    const bed = w.stream && g <= this.heights.atXZ(x, z) + 0.02 ? w.surf - w.depth : g;
+    const depth = w.surf - bed; if (depth <= 0.005) return F;
+    F.bed = bed; F.surf = w.surf; F.depth = depth; F.stream = w.stream; F.y = Math.max(bed, w.surf - FLOAT);
+    return F;
+  }
+  // The water at (x, z): a pond holding water (its flat level), else a running creek (the drawn ribbon's height and
+  // the notional depth across it), or null.
+  waterAt(x, z) {
+    const q = this._wq, lvl = this.pondLevel(x, z);
+    if (lvl !== null) { q.surf = lvl; q.depth = 0; q.stream = false; return q; }
+    return this.streamAt(x, z);
+  }
+  waterObj() { return this.water ??= this.scene.children.find(o => o.userData?.water)?.userData.water ?? false; }
+  // The stream ribbons that run this season (water.js streams[class], one merged mesh each), on a 10 m grid of their
+  // triangles; the point's barycentric weights give the ribbon height and aFlow's across offset and half width.
+  streamAt(x, z) {
+    const W = this.waterObj(); if (!W?.streams) return null;
+    const n = -z, key = Math.floor(n / 10) * 4096 + Math.floor(x / 10), q = this._wq;
+    let found = null;
+    for (const cls in W.streams) {
+      const mesh = W.streams[cls]; if (!mesh.visible) continue;
+      const list = this.streamGrid(cls, mesh).get(key); if (!list) continue;
+      const geo = mesh.geometry, P = geo.attributes.position.array, Fl = geo.attributes.aFlow.array, I = geo.index.array;
+      for (const t of list) {
+        const a = I[t], b = I[t + 1], c = I[t + 2];
+        const ax = P[a * 3], az = P[a * 3 + 2], v0x = P[b * 3] - ax, v0z = P[b * 3 + 2] - az, v1x = P[c * 3] - ax, v1z = P[c * 3 + 2] - az;
+        const den = v0x * v1z - v1x * v0z; if (Math.abs(den) < 1e-9) continue;
+        const v2x = x - ax, v2z = z - az, u = (v2x * v1z - v1x * v2z) / den, v = (v0x * v2z - v2x * v0z) / den;
+        if (u < -1e-6 || v < -1e-6 || u + v > 1 + 1e-6) continue;
+        const w0 = 1 - u - v;
+        const along = w0 * Fl[a * 4] + u * Fl[b * 4] + v * Fl[c * 4];
+        const across = w0 * Fl[a * 4 + 1] + u * Fl[b * 4 + 1] + v * Fl[c * 4 + 1], half = w0 * Fl[a * 4 + 2] + u * Fl[b * 4 + 2] + v * Fl[c * 4 + 2];
+        const r = half > 0.05 ? Math.min(1, Math.abs(across) / half) : 1;
+        const d = Math.min(STREAM_DMAX, STREAM_D0 + STREAM_DK * half) * (1 - r * r) * riffle(along);
+        if (!found || d > q.depth) { q.surf = w0 * P[a * 3 + 1] + u * P[b * 3 + 1] + v * P[c * 3 + 1]; q.depth = d; q.stream = true; found = q; }
+      }
+    }
+    return found;
+  }
+  streamGrid(cls, mesh) {
+    const all = this._sg ??= new Map(); let G = all.get(cls); if (G) return G;
+    all.set(cls, G = new Map());
+    const P = mesh.geometry.attributes.position.array, I = mesh.geometry.index?.array; if (!I) return G;
+    for (let t = 0; t < I.length; t += 3) {
+      let x0 = Infinity, x1 = -Infinity, n0 = Infinity, n1 = -Infinity;
+      for (let k = 0; k < 3; k++) { const o = I[t + k] * 3, x = P[o], n = -P[o + 2]; x0 = Math.min(x0, x); x1 = Math.max(x1, x); n0 = Math.min(n0, n); n1 = Math.max(n1, n); }
+      for (let j = Math.floor(n0 / 10); j <= Math.floor(n1 / 10); j++) for (let i = Math.floor(x0 / 10); i <= Math.floor(x1 / 10); i++) {
+        const key = j * 4096 + i; let l = G.get(key); if (!l) G.set(key, l = []); l.push(t);
+      }
+    }
+    return G;
+  }
+
   // ---- the frame -----------------------------------------------------------------------------------
   input() {
     const k = this.flight.keys, A = this.auto;
@@ -289,57 +365,89 @@ export class SquirrelControl {
     if (this.mode !== 'trunk' && this.mode !== 'limb') this.camOrbit = damp(this.camOrbit, 0, 3, dt);
     this.lastYaw = f.yaw;
     // tail flicks now and then when still; the tip lags (the AI's channels)
-    if (Math.random() < dt * (this.v < 0.5 ? 0.8 : 0.15)) ps.flickV = 1;
+    if (!this.swimming && Math.random() < dt * (this.v < 0.5 ? 0.8 : 0.15)) ps.flickV = 1;
     if (ps.flickV > 0) { ps.flick = Math.max(ps.flick, Math.sin(Math.min(1, 1 - ps.flickV) * Math.PI)); ps.flickV -= dt * 3; }
-    else if (!this.work) ps.flick = damp(ps.flick, 0, 1, dt);
+    else if (!this.work && !this.swimming) ps.flick = damp(ps.flick, 0, 1, dt);
     ps.e0 = damp(ps.e0, this.mode === 'trunk' || this.work?.back === 'trunk' ? 1 : 0, 8, dt);
     ps.e1 = damp(ps.e1, ps.flick, 5, dt);
     if (ps.phase > 1e4) ps.phase -= TAU * 1000;
     this.draw();
+    this.ripple(dt);
     this.updateCamera(dt);
     this.last.copy(P);
-    const ground = this.heights.atXZ(P.x, P.z), speed = this.mode === 'trunk' ? Math.abs(this.climbV || 0) : this.mode === 'air' ? Math.hypot(this.vel.x, this.vel.z) : Math.abs(this.v);
+    const ground = Math.max(this.heights.atXZ(P.x, P.z), this.wet && this.mode !== 'trunk' ? this.wet.surf : -Infinity), speed = this.mode === 'trunk' ? Math.abs(this.climbV || 0) : this.mode === 'air' ? Math.hypot(this.vel.x, this.vel.z) : Math.abs(this.v);
     f.speed = speed;
     const heading = ((this.mode === 'trunk' ? (this.face + Math.PI) : f.yaw) * -180 / Math.PI % 360 + 360) % 360;
     return { hover: false, agl: P.y - ground, elev: P.y, speed, heading };
   }
 
   ground(dt, k, jump, act) {
-    const f = this.flight, P = f.pos, ps = this.pose;
-    const sitting = k.sit && Math.abs(this.v) < 1.2;
+    const f = this.flight, P = f.pos, ps = this.pose, swim = this.swimming, wade = !swim && !!this.wet;
+    const sitting = k.sit && !swim && Math.abs(this.v) < 1.2;
     this.sit = damp(this.sit, sitting ? 1 : 0, sitting ? 4 : 8, dt);
-    const target = sitting ? 0 : k.fwd > 0 ? RUN : k.fwd < 0 ? -BACK : 0;
-    this.v = damp(this.v, target, target === 0 ? 7 : ACCEL, dt);
+    const target = sitting ? 0 : swim ? (k.fwd > 0 ? SWIM : k.fwd < 0 ? -SWIM_BACK : 0) : (k.fwd > 0 ? RUN : k.fwd < 0 ? -BACK : 0) * (wade ? WADE : 1);
+    // in deep water the run is lost at once (water drags) and the paddling builds speed slowly
+    this.v = damp(this.v, target, swim ? (Math.abs(this.v) > Math.abs(target) ? 3 : 1.5) : target === 0 ? 7 : ACCEL, dt);
     if (Math.abs(this.v) < 0.02 && !target) this.v = 0;
-    f.yaw += k.turn * TURN * (sitting ? 0.6 : 1) * dt;
+    f.yaw += k.turn * TURN * (sitting || swim ? 0.6 : 1) * dt;
     const fx = -Math.sin(f.yaw), fz = -Math.cos(f.yaw);
-    if (jump && !sitting) {   // a hop: forward at least JUMP_FWD, with the run's speed if faster
+    if (jump && swim) this.say('too deep to jump: swim for the bank');
+    else if (jump && !sitting) {   // a hop: forward at least JUMP_FWD, with the run's speed if faster
       const fw = Math.max(Math.abs(this.v) < 0.3 ? 0 : JUMP_FWD, this.v);
       this.vel.set(fx * fw, JUMP_UP, fz * fw); this.mode = 'air'; this.sit = 0; return;
     }
-    if (act) { this.action(); if (this.mode !== 'ground') return; }
+    if (act) {
+      if (swim) this.say('swimming: get out onto the bank first');
+      else { this.action(); if (this.mode !== 'ground') return; }
+    }
     // run into a trunk: take hold
-    if (k.fwd > 0 && this.v > 0.3) {
+    if (!swim && k.fwd > 0 && this.v > 0.3) {
       const tr = this.trunkAhead(P, fx, fz);
       if (tr) { const t = trunkAt(tr, 0.25, this._t); this.attach(tr, Math.atan2(P.x - t.x, P.z - t.z)); this.v = 0; return; }
     }
+    this.ashore = Math.max(0, (this.ashore || 0) - dt);   // s since it left the water
     const nx = P.x + fx * this.v * dt, nz = P.z + fz * this.v * dt;
-    const s = this.surface(nx, nz, P.y + STEP + 0.1);
-    if (s - P.y > STEP) this.v = 0;   // a rock face: jump it
+    const F = this.footing(nx, nz, P.y + STEP + 0.1), s = F.y;
+    // a rock face (the solid ground: in water, the bed) is a wall: jump it, or from the water swim round it
+    if (F.bed - P.y > STEP + (swim ? 0.1 : 0)) this.v = 0;
     else {
       P.x = Math.max(5, Math.min(this.tile.size - 5, nx)); P.z = Math.min(-5, Math.max(-this.tile.size + 5, nz));
-      if (s < P.y - 0.35) { this.vel.set(fx * this.v, 0, fz * this.v); this.mode = 'air'; }   // off the edge of a rock
-      else P.y = s;
+      // Where the drawn shore lies below a reservoir's level (the lidar's hydro-flattened bank), the water's edge is a
+      // step: into the water it floats up onto the surface, out of it it slides down the bank, neither a wall nor a fall.
+      if (F.surf !== null && s > P.y) { P.y = Math.min(s, P.y + 2.5 * dt); this.setWet(F); }
+      else if ((this.wet || this.ashore > 0) && F.surf === null && s < P.y - 0.05) { P.y = Math.max(s, P.y - 2.5 * dt); this.setWet(F); }
+      else if (s < P.y - 0.35) { this.vel.set(fx * this.v, 0, fz * this.v); this.mode = 'air'; }   // off the edge of a rock
+      else { P.y = s; this.setWet(F); }
+    }
+    const sp = Math.abs(this.v);
+    const hf = this.heights.atXZ(P.x + fx * 0.15, P.z + fz * 0.15), hb = this.heights.atXZ(P.x - fx * 0.15, P.z - fz * 0.15);
+    const slope = -Math.atan2(hf - hb, 0.3);   // along the ground, and along a creek's ribbon (draped on it)
+    if (this.swimming) {   // paddling: head up, body low, legs cycling (never quite still: treading water), tail flat behind
+      ps.amp = damp(ps.amp, 0.35 + 0.25 * Math.min(1, sp / SWIM), 6, dt);
+      ps.phase += dt * TAU * (1.8 + 1.4 * sp);
+      ps.bob = Math.sin(ps.phase * 2) * 0.006;
+      ps.pose = damp(ps.pose, 0, 6, dt); ps.flick = damp(ps.flick, -0.35, 6, dt); ps.flickV = 0;
+      ps.pitch = damp(ps.pitch, (this.wet.stream ? slope : 0) - 0.1, 4, dt);
+      ps.yaw = f.yaw + Math.PI; ps.roll = damp(ps.roll, Math.sin(ps.phase) * 0.06, 8, dt);
+      return;
     }
     // pose: the bound (stride lengthens with speed), sit-up, the body along the slope
-    const sp = Math.abs(this.v), stride = 0.42 + 0.12 * sp;
+    const stride = 0.42 + 0.12 * sp;
     ps.amp = damp(ps.amp, sp > 0.15 ? Math.min(1, 0.35 + sp / 3) : 0, 10, dt);
     ps.phase += dt * TAU * sp / stride;
     ps.bob = Math.abs(Math.sin(ps.phase)) * (0.04 + 0.018 * sp) * ps.amp;
     ps.pose = damp(ps.pose, Math.max(this.sit, sp < 0.2 ? 0.12 : 0), 6, dt);
-    const hf = this.heights.atXZ(P.x + fx * 0.15, P.z + fz * 0.15), hb = this.heights.atXZ(P.x - fx * 0.15, P.z - fz * 0.15);
-    ps.pitch = damp(ps.pitch, -Math.atan2(hf - hb, 0.3) * (1 - this.sit), 10, dt);
+    ps.pitch = damp(ps.pitch, slope * (1 - this.sit), 10, dt);
     ps.yaw = f.yaw + Math.PI; ps.roll = damp(ps.roll, 0, 8, dt);
+  }
+  // The water at the feet from a footing: wading, or swimming once deeper than SWIM_IN (until shallower than SWIM_OUT).
+  setWet(F) {
+    if (F.surf === null) { if (this.wet) this.ashore = 0.5; this.wet = null; this.swimming = false; return; }
+    const w = this.wet ??= { surf: 0, depth: 0, stream: false }; w.surf = F.surf; w.depth = F.depth; w.stream = F.stream;
+    if (!this.swimming && F.depth > SWIM_IN) {
+      this.swimming = true; this.sit = 0;
+      const now = performance.now(); if (now > this.toldSwim) { this.toldSwim = now + 20000; this.say('swimming: gray squirrels can, but would rather not'); }
+    } else if (this.swimming && F.depth < SWIM_OUT) this.swimming = false;
   }
 
   air(dt) {
@@ -350,8 +458,11 @@ export class SquirrelControl {
     if (s - ny > STEP + 0.15 && s > P.y) { V.x *= -0.2; V.z *= -0.2; }   // hit the side of a rock: drop back
     else { P.x = nx; P.z = nz; }
     P.y = ny;
-    const g = this.surface(P.x, P.z, P.y + 0.05);
-    if (P.y <= g && V.y <= 0) { P.y = g; this.mode = 'ground'; this.v = Math.hypot(V.x, V.z) * 0.8; ps.flickV = 1; }
+    const F = this.footing(P.x, P.z, P.y + 0.05);   // lands on the ground, the bed of a shallow creek, or in the water
+    if (P.y <= F.y && V.y <= 0) {
+      P.y = F.y; this.mode = 'ground'; this.v = Math.hypot(V.x, V.z) * 0.8; this.setWet(F);
+      if (this.wet) { this.rippleT = 0; if (this.swimming) this.v = Math.min(this.v, SWIM); } else ps.flickV = 1;
+    }
     // stretched out in the leap, the tail streaming
     ps.amp = damp(ps.amp, 0.3, 6, dt); ps.phase += dt * TAU * 2;
     ps.pose = damp(ps.pose, 0, 10, dt); ps.bob = 0;
@@ -442,7 +553,7 @@ export class SquirrelControl {
     const fx = -Math.sin(f.yaw), fz = -Math.cos(f.yaw), nx = P.x + fx * 0.2, nz = P.z + fz * 0.2;
     if (me.carrying > 0) {
       const g = this.heights.atXZ(nx, nz), hab = this.tile.habitat.at(nx, -nz);
-      if (hab === 7) return this.say('too wet to bury here');
+      if (hab === 7 || this.wet) return this.say('too wet to bury here');
       if (P.y > this.heights.atXZ(P.x, P.z) + 0.1 || this.surface(nx, nz, P.y + 0.5) > g + 0.05) return this.say('rock: find open ground');
       this.indexTrees();
       for (const l of [this.trees.get(`${Math.floor(nx / 10)},${Math.floor(nz / 10)}`)]) for (const tr of l || []) {
@@ -478,6 +589,32 @@ export class SquirrelControl {
     to.addScaledVector(this._v.copy(to).sub(from).setY(0).normalize(), -0.2);
     this.limb = { from, to, d: Math.max(0.3, from.distanceTo(to)), u: 0, back: false, acorn: best }; this.mode = 'limb';
     return true;
+  }
+
+  // Rings spreading on the water from a swimming or wading squirrel (a few reused meshes, after the water draws).
+  ripple(dt) {
+    const R = this.ripples, P = this.flight.pos, w = this.wet;
+    if (!R.length) {
+      const geo = new THREE.RingGeometry(0.9, 1, 40).rotateX(-Math.PI / 2);
+      for (let i = 0; i < 5; i++) {
+        const m = new THREE.Mesh(geo, new THREE.MeshBasicMaterial({ color: 0xe6eef0, transparent: true, opacity: 0, depthWrite: false }));
+        m.visible = false; m.renderOrder = 5; m.frustumCulled = false; m.name = 'squirrel ripple'; this.scene.add(m); R.push({ m, age: 0 });
+      }
+    }
+    if (w && (this.mode === 'ground' || this.mode === 'work') && (this.swimming || Math.abs(this.v) > 0.25)) {
+      this.rippleT -= dt;
+      if (this.rippleT <= 0) {
+        this.rippleT = this.swimming ? RIPPLE_EVERY : RIPPLE_EVERY * 0.6;
+        const r = R.find(q => !q.m.visible) || R.reduce((a, b) => (b.age > a.age ? b : a));
+        r.age = 0; r.m.position.set(P.x, w.surf + 0.02, P.z); r.m.visible = true;
+      }
+    }
+    for (const r of R) {
+      if (!r.m.visible) continue;
+      r.age += dt; const u = r.age / RIPPLE_LIFE;
+      if (u >= 1) { r.m.visible = false; continue; }
+      r.m.scale.setScalar(0.1 + 0.5 * Math.sqrt(u)); r.m.material.opacity = 0.28 * (1 - u) * (1 - u);
+    }
   }
 
   // ---- drawing -------------------------------------------------------------------------------------
@@ -550,7 +687,7 @@ export class SquirrelControl {
   // The water level of a pond holding water over (x, z) (water.js: ponds are flat at their level; streams are draped on
   // the terrain, so the terrain clearance covers them), or null.
   pondLevel(x, z) {
-    const W = this.water ??= this.scene.children.find(o => o.userData?.water)?.userData.water ?? false;
+    const W = this.waterObj();
     if (!W?.pondRings) return null;
     const n = -z;
     for (const p of W.pondRings) {
@@ -562,6 +699,9 @@ export class SquirrelControl {
     return null;
   }
 }
+
+// Pool (1) to riffle (0.2) along a creek, from the ribbon's arc length (m): ~21 m from pool to pool, a little irregular.
+const riffle = s => 0.6 + 0.4 * Math.sin(s / 3.3 + 0.7 * Math.sin(s / 11.1));
 
 // Point in polygon (x, north rings), even-odd.
 function inRing(x, y, ring) {
