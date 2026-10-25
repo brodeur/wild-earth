@@ -86,8 +86,48 @@
       "credits": 20,
       "raw_triangles": 20310,
       "license": "owned by the paid account holder (Meshy Terms of Use 3.2); to be released as CC BY-SA 4.0 with the project's assets on adoption",
-      "status": "raw preview, not adopted. Recommended base for the ground / perched raven (lod0-2 and the near ground view).",
-      "review": "Best standing raven so far: it has every mark the first two candidates split between them. Heavy deep bill as long as the head with a curved culmen, a raised tuft of bristle feathers over the nostril, shaggy pointed throat hackles, flat crown sloping into the bill, thick neck; wings folded tight (0.20 m wide at 0.62 m long, the target), folded primaries reaching past mid-tail; long graduated tail with a pointed wedge tip and no notch; scaled legs with three forward toes and a hind toe, all clawed. Pose is a mid-stride walk with a slight forward lean, one foot ahead (fine for a walking raven; a build script that wants a square stance must move one leg). Legs are long (tarsus visibly longer than a raven's) and the feet sit about 0.17 m apart at scale. Topology: 20,310 triangles, one 20,224-face piece plus 44 tiny shards, 76 open edges, 5.9% slivers, symmetric (centroid x offset 0.002); 1.9 units long, +y up, bill toward +z, feet at y -0.52. Renders: scratchpad meshy/corvus_corax/r2/c3_latest_standing.*"
+      "status": "adopted 2026-10-25 by tools/build_raven_ground.py as client/assets/raven_ground.glb (geometry; texture from the refine 01a171a8). Not wired into the client yet.",
+      "review": "Best standing raven so far: it has every mark the first two candidates split between them. Heavy deep bill as long as the head with a curved culmen, a raised tuft of bristle feathers over the nostril, shaggy pointed throat hackles, flat crown sloping into the bill, thick neck; wings folded tight (0.20 m wide at 0.62 m long, the target), folded primaries reaching past mid-tail; long graduated tail with a pointed wedge tip and no notch; scaled legs with three forward toes and a hind toe, all clawed. Pose is a mid-stride walk with a slight forward lean, one foot ahead (fine for a walking raven; a build script that wants a square stance must move one leg). Legs are long (tarsus visibly longer than a raven's) and the feet sit about 0.17 m apart at scale. Topology: 20,310 triangles, one 20,224-face piece plus 44 tiny shards, 76 open edges, 5.9% slivers, symmetric (centroid x offset 0.002); 1.9 units long, +y up, bill toward +z, feet at y -0.52. Renders: scratchpad meshy/corvus_corax/r2/c3_latest_standing.*",
+      "adoption": {
+        "file": "client/assets/raven_ground.glb",
+        "built_by": "tools/build_raven_ground.py (Blender 4.1)",
+        "source": {
+          "kind": "meshy",
+          "title": "Common raven, standing (ground)",
+          "author": "generated with Meshy (meshy.ai) by agent (Claude) for Aaron Brodeur",
+          "mesh_job_id": "01a171a4-7814-7301-b140-133459562f9f",
+          "texture_job_id": "01a171a8-2db4-7256-9b99-ae6f617dea98",
+          "file": "library/animals/jobs/corvus_corax/01a171a8-2db4-7256-9b99-ae6f617dea98/model.glb and texture_base_color.png (the refine: the preview's geometry and UVs plus a 2048 px base colour; local, jobs/ meshes are not tracked)",
+          "original": "Meshy text-to-3D preview, ai_model latest (meshy-7.1), triangle remesh, 20,310 triangles; refine 2K base colour, no PBR",
+          "date": "2026-10-25 (UTC)",
+          "credits": 30
+        },
+        "license": "CC BY-SA 4.0",
+        "license_detail": {
+          "source_terms": "Meshy Terms of Use 3.2 (https://www.meshy.ai/terms-of-use, last updated 2026-09-19): API output on a paid plan is owned by the account holder, who releases it with the project's assets under CC BY-SA 4.0. Terms 2.4: AI-identifying metadata Meshy embeds is carried over (the source GLBs carried only asset.generator, kept in the GLB's extras.source as meshy_asset and meshy_asset_mesh_job). Terms 2.6(xi): not for training models that compete with Meshy (binds the account holder).",
+          "redistribute_under_cc_by_sa": true,
+          "note": "Credit \"generated with Meshy (meshy.ai)\" in the build script header and the GLB asset.copyright; README credit to add when the client loads it. AI-generated output may carry little or no copyright in some jurisdictions; the licence covers what rights exist."
+        },
+        "tiers": {
+          "lod0": 1496,
+          "lod1": 496,
+          "lod2": 150,
+          "file": "client/assets/raven_ground.glb",
+          "bytes": 388496,
+          "attributes": [
+            "POSITION",
+            "NORMAL",
+            "COLOR_0 (linear)",
+            "_PART",
+            "_PARTW",
+            "_PIVOT",
+            "TEXCOORD_0 (lod0 only)"
+          ],
+          "texture": "lod0 only: material 0 (raven_ground), 1024 px base-colour JPEG (134 KB) on its own UV layout. lod1 and lod2 use material 1 (raven_ground_vc), vertex colour only. lod0 also carries the texture as COLOR_0, so it can drop the texture too; a material that uses the map must not also multiply COLOR_0.",
+          "rig": "bird template: BODY 0, LEG_A 1 (left), LEG_B 2 (right), TAIL 3, WING_L/R 4/5 (folded arm: coverts, secondaries, tertials; pivot at the shoulder), HEAD 6 (head and neck; pivot at the base of the neck), HAND_L/R 9/10 (folded primaries; pivot at the wrist). Pivots in extras.rig (wing, wrist, head, tail, hip_l, hip_r); extras.rig.folded_wings true: the wings are body geometry, not flight cards, so collapse 0.",
+          "note": "Metres, +y up, bill toward +z, origin on the ground between the feet. Scaled to 0.62 m bill tip to tail tip; loose shards and non-manifold fins dropped; legs shortened 15% (toe tops to belly), body lowered onto them; stance squared (the leading right foot moved back 10.5 cm about the intertarsal joint; the right hip still sits 4.5 cm ahead of the left). Texture graded: plumage mean sRGB 33, 40, 50 to 13, 14, 18 outside the gloss band (#0e0f13) and 15, 16, 24 in it (mantle, scapulars, folded coverts toward #3a3f66); legs, toes and bill repainted matte #141416 (mean 19-20) keeping the scale detail; the pale orange iris dark brown #2a1c14, its pale ring plumage-dark. Decimated by Blender collapse with X symmetry. Renders: scratchpad raven_ground/raven_ground_montage.jpg and raven_ground_head.jpg."
+        }
+      }
     },
     {
       "kind": "meshy",
@@ -116,7 +156,7 @@
       "credits": 10,
       "raw_triangles": 20310,
       "license": "owned by the paid account holder (Meshy Terms of Use 3.2); to be released as CC BY-SA 4.0 with the project's assets on adoption",
-      "status": "raw refine, not adopted. Same geometry and UVs as 01a171a4 plus a 2048 px base-colour PNG.",
+      "status": "adopted 2026-10-25 by tools/build_raven_ground.py: the graded 2K base colour, baked to 1K on raven_ground.glb lod0 and into every tier's vertex colour.",
       "review": "No directional lighting is baked in: up- and down-facing faces average the same (sRGB luminance 42 and 43), so do left and right (45 and 45); there is per-feather micro-shading and edge highlights, which is what makes it read. Faults: about three times too light and blue (plumage mean sRGB 38,44,53 against #0e0f13), legs and bill grey (luminance about 70, should be matte black), iris pale orange-brown with a light ring (should be dark brown #2a1c14), breast darker than the back. UVs are many small charts (Meshy atlas), so mips bleed at distance. Lit like a Lambert at about 260 px tall it clearly beats flat #0e0f13 vertex colour, which reads as a black hole with no feathers, bill or eye; at ambient distances (under about 60 px) the difference is gone. Worth keeping for the near ground raven after a grade in the build script (multiply to the palette, desaturate the blue, repaint legs, bill and iris by region), downsampled to 1K; ambient tiers stay vertex colour."
     },
     {
