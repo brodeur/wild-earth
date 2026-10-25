@@ -91,10 +91,14 @@ Lanes still running when this report was written are listed in `docs/roadmap.md`
 | 1ea743c | Every manifest source carries the credit line a client must show (OSM, Macrostrat, GBIF required); the audit fails without it. |
 | 7a54460 | GPU placement prototype: places exactly what grass.js places, 100x faster per frame, but only pays for 4-8x denser ground cover. |
 
-Lanes still running at the time of this update: the player raven walking on the ground with a
-softer landing swap; a pipeline-built species prior from CC0 and CC BY records only (the client
-had been downloading CC BY-NC records, against the project's rule) with a data-credits panel;
-and a black-tailed jackrabbit brief and mesh. Their commits, if they verified, follow 7a54460.
+| 280a976 | The animal density prior is built by the pipeline from CC0 and CC BY records only (the client had been downloading CC BY-NC records); a "Data" pill in the HUD opens a credits panel with the required attribution lines. |
+| 306fcef | Black-tailed jackrabbit brief and mesh (from the CC0 rabbit, reshaped into a hare). |
+| a32f8c7 | The player raven walks, hops and takes off from the ground; the model swaps at landing and take-off are hidden. |
+| 7bc2d9a | Channels rebuilt on the home and Placerville tiles with the edge-seed fix: Hangtown Creek's inflow now runs through the tile. |
+
+Lane still running at the time of this update: wiring the jackrabbit into the world and fixing
+the brush rabbit's asymmetric ear. Its commit, if it verified, follows 7bc2d9a; after it the
+species step must be re-run on all three tiles so the jackrabbit appears in their species lists.
 
 **Disk:** the machine dipped to a few hundred MB free several times tonight while lanes wrote
 captures; the session scratchpad was trimmed twice and the disk ended the night at about 9 GB
