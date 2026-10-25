@@ -1235,9 +1235,11 @@ export class Animals {
 
   // ---- acorn game: collectors (see the header) -------------------------------------------------------
   // Is the game on for this animal? A task from a game that has stopped, or from another world, is dropped.
+  // Shared world (net.js): the AI collectors run in one browser per world, the server's AI host (G.aiLocal); elsewhere
+  // the animals go about as they do outside a game and show the acorns the host's animals carry (the carry loop).
   gameOn(a) {
     const G = this.game;
-    if (!G || !G.active) { if (a.task || a.carry) { a.task = 0; a.acorn = null; a.carry = 0; } return false; }
+    if (!G || !G.active || G.aiLocal === false) { if (a.task || a.carry) { a.task = 0; a.acorn = null; a.carry = 0; } return false; }
     if (a.ep !== G.epoch) { a.ep = G.epoch; a.task = 0; a.acorn = null; a.carry = 0; }
     return true;
   }
@@ -2046,7 +2048,8 @@ export class Animals {
     if (G && G.active) {
       G.carryBegin();
       for (let k = 0; k < list.length; k++) {
-        const a = list[k]; if (!a.carry || a.culled || !this.meshes[a.sp].visible) continue;
+        const a = list[k], carry = G.aiLocal === false ? G.world.collectors[a.id]?.carrying : a.carry;   // not the AI host: as the events say
+        if (!carry || a.culled || !this.meshes[a.sp].visible) continue;
         const ex = a.x - cx, ey = a.y - cy, ez = a.z - cz;
         const grow = a.fly > 0.01 ? 1 + FLY_GROW * a.fly * clamp01((Math.sqrt(ex * ex + ey * ey + ez * ez) - FLY_NEAR) / (FLY_FAR - FLY_NEAR)) : 1;
         e.set(a.pitch, a.yaw, a.roll, 'YXZ'); q.setFromEuler(e); p.set(a.x, a.y, a.z); s.setScalar(a.size * SPECIES[a.sp].scale * grow * a.vis);

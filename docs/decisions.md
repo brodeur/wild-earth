@@ -437,3 +437,54 @@ near a small player's eye shrink to about life size. Rejected for now: depositin
 granary (only the family's scores, as a family defends its own), a drawn bird with a real
 wing fold (the brief's mesh lane), hovering (acorn woodpeckers do not), and a woodpecker
 call.
+
+## 2026-10-25: the dev server owns the acorn game's world; one browser per world runs the AI
+
+The first multiplayer node, as the 2026-10-24 entry put it ("the dev server grows into
+it; Rust is the candidate for the real node"). Decided: `server.py` holds one world per
+tile and season in memory, persisted under `tiles/<tile>/game/` as a snapshot plus an
+append-only event log, and is the authority: it checks every event with `applyEvent`'s
+rules ported to Python (stash capacities from the same hash of the oak id), numbers it,
+sends it to everyone in the world, and rejects the loser of a conflict; it runs the world
+clock, the round and fall regrowth. Clients predict with the JS reducer and roll back on a
+reject (`client/src/net.js`). Transport: a minimal RFC 6455 WebSocket in the standard
+library (nothing in .venv provides one, and long-polling would need its own ordering and
+acks). The AI collectors run in the first browser to join (the AI host), handed on when it
+leaves, so each animal acts once per world; the others see the outcome and their own
+animals' motion. A player is a hash of a random id kept in localStorage combined with the tile, season and round, so ids cannot be linked across rounds or tiles, and the node never stores an id beside a position: no names, no
+addresses, no positions for pickups. Without the game endpoint the client is v2, offline.
+Rejected for now: running the AI on the server (it would need the vegetation and the
+animals' rules in Python, which is the Rust node's job), syncing animal positions,
+accounts, and federating worlds between nodes. Details and limits: `docs/game-acorn-stash.md`
+(v3).
+
+## 2026-10-25: far impostors are lit from prefiltered normals, keep their cover to the horizon, and pines carry their needle light
+
+Review of the far forest (impostors.js, impostorBake.js) after the needle, crown-density and sky
+passes, judged from the start view, 150 m and 400 m up in four directions, and from 2 m across
+valleys, at 10:00, 14:00 and 17:30 in fall and summer, with the real forest pushed out to 2.4 km
+as the reference for the same trees. Findings: the bake is not stale (it runs at load from the
+current treegen trees), and at the default 1.5 km hand-over the impostors matched the real trees
+to within about 2% in front and side light; backlit they were 3.5% darker (4.6% with the near
+900 m forest setting), because the pines' light through the needles stops at the hand-over. The
+"pale salt" over the far forest seen in review captures is a capture artefact, not on screen:
+alpha to coverage leaves the premultiplied canvas alpha below 1 on partly covered pixels, which
+the near-black page hides but toDataURL and drawImage un-premultiply into white. Captures for
+review should read the drawing buffer's RGB. Changes: (1) normals are averaged without
+renormalising at every level and lit as the mean of max(n.L, 0) (a smooth max of the mean
+normal's term and its spread), so a far crown shades as a crown rather than one arbitrary lobe
+per pixel; (2) pines get treegen's wrap, light through the needles and backlit glow with the same
+900-1500 m fade, weighted toward the crown rim (inside it the real crown's own shadow takes it);
+(3) thinned far trees grow by 1/keep in silhouette area (width keep^-0.72, height keep^-0.28,
+was keep^-0.53 in total), so a stand's cover holds to the horizon instead of opening into single
+trees on the skyline; (4) coverage-preserving mips shift the alpha instead of scaling it (no
+saturated, square crowns at the coarse levels), trees sit inside a 6-texel cell margin and quads
+are trimmed to what any level down to 8x8 texels covers; (5) slots that share a seed are baked
+once (28 trees for 72 slots): atlas 60 to 23 MB, bake about 1.1 s to 0.45 s. Seam match after,
+impostor minus real over the hand-over band (green, six views): -1.8% to +1.3% at 1.5 km (was
+-3.5% to +1.2%), -1.3% to +3.3% at 900 m (was -4.6% to +1.5%). Rejected: sharper alpha-to-coverage edges
+(they cured the capture salt by making crowns blocky), a blend state that keeps the canvas alpha
+(0.45 ms at the start view for an off-screen artefact). Still open: the per-cell swap when the
+mid set moves is a representation change on a ring of trees at about 1.5 km (subtle, not a seam);
+impostors cast no shadows (beyond the mid set the ground between far trees is unshaded); far
+crowns of 2-4 px are still single blobs whose shape is set by 4x4-texel mips.

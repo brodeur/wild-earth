@@ -1,6 +1,7 @@
 import * as THREE from 'three';
 import { mulberry32 } from './trees.js';
 import { fieldGuide, acornSpecies, ACORNS } from './fieldguide.js';
+import { GameNet } from './net.js';
 
 // Acorn stash, the raven's fall forage-and-cache loop (docs/game-acorn-stash.md).
 // Living oaks past the sapling stage near the raven carry acorns and, about one in eight, a stash hole on the trunk. Everything
@@ -15,6 +16,12 @@ import { fieldGuide, acornSpecies, ACORNS } from './fieldguide.js';
 // them one by one (a fading dug mark), ravens cache them under a shrub. A species leaderboard in the game HUD
 // counts each species' acorns for the round (Start game: ROUND_S of game time) and for this world (tile +
 // season, in localStorage beside the v1 state); L hides it. AI collectors work only while a game is running.
+//
+// v3 (docs/game-acorn-stash.md, "v3: shared world"): when the page's server has the game (net.js feature-detects
+// GET /api/game), Start game joins the server's world for this tile and season. `world` is then the server's plus
+// this client's events not yet answered (a prediction); dispatch sends each event, remote ones arrive through
+// remote(), a rejected one rolls back (adoptWorld). The server runs the round; the AI collectors run in one
+// browser per world (aiLocal, read by animals.js). Without the endpoint everything below is v2, offline.
 
 const LIVE_R = 300;            // m: oaks within this get acorn and stash objects
 const REFRESH_S = 0.5;         // s between live-set checks
@@ -291,6 +298,9 @@ export class AcornGame {
       });
       addEventListener('pagehide', () => { if (this.season) this.save(); });
     }
+    // v3: the shared world. aiLocal: this browser runs the AI collectors (always, offline; the AI host, online).
+    this.aiLocal = true; this.worldMode = 'local';   // worldMode: 'local' (v2, localStorage) or 'net' (the server's)
+    this.net = new GameNet(this, { applyEvent, newWorld });
   }
 
   get key() { return `wild-earth:stash:${this.tile.id}/${this.season}`; }
@@ -312,6 +322,7 @@ export class AcornGame {
   // (playerGranary, on E while clinging there). Both are small: the acorns near the eye shrink further (SMALL_NEAR).
   setPlayerSpecies(code) {
     this.playerSpecies = code; this.manual = code !== 'corvus_corax';
+    this.net?.species(code);
     const p = this.player; p.species = code; p.cap = PLAYER_CAP[code] || CARRY_MAX; p.carrying = Math.min(p.carrying, p.cap);
     const u = this.ui, sq = code === 'sciurus_griseus';
     if (u.stashed?.previousElementSibling) u.stashed.previousElementSibling.textContent = sq ? 'acorns buried' : 'acorns stashed';
@@ -353,12 +364,37 @@ export class AcornGame {
   // ---- events ------------------------------------------------------------------------------------
   on(type, fn) { (this.listeners[type] ||= []).push(fn); return () => { const a = this.listeners[type], i = a.indexOf(fn); if (i >= 0) a.splice(i, 1); }; }
   dispatch(e) {
-    if (!this.active || !applyEvent(this.world, e)) return false;
+    if (!this.active || (e.by !== 'player' && !this.aiLocal)) return false;   // AI events only from the AI host
+    const pre = this.world.collectors[e.by]?.carrying;
+    if (!applyEvent(this.world, e)) return false;
+    if (this.net.live) this.net.event(e, pre);
+    this.applied(e);
+    return true;
+  }
+  applied(e) {
     this.effects(e);
     for (const fn of this.listeners[e.type] || []) { try { fn(e); } catch (err) { console.error(`acorns: '${e.type}' listener`, err); } }
     if (this.saveT < 0) this.saveT = SAVE_S;
-    return true;
   }
+  // v3: another player's (or the AI host's) event, already applied to world by net.js: draw it.
+  remote(e) { if (this.running) this.applied(e); }
+  // v3: the prediction rebuilt from the server's world (a welcome, a reject, a remote event that did not apply).
+  adoptWorld(w) {
+    this.world = w; this.worldMode = 'net';
+    this.player = w.collectors.player || this.addPlayer();
+    if (this.playerSpecies) this.player.species = this.playerSpecies;
+    this.revealed = this.revealed || Object.values(w.stashes).some(c => c > 0);
+    this.dirty = true; this.layMarks();
+    this.board.el.classList.toggle('done', !!w.round?.over);
+    this.hud();
+  }
+  // v3: the server started or ended a round.
+  roundChanged() {
+    if (this.world.round?.over) this.showRoundEnd();
+    else { this.board.el.classList.remove('done'); this.hud(true); }
+  }
+  // v3: the server's game went away before a join: back to this browser's own (v2) world.
+  netLost() { if (this.season && this.worldMode === 'net') this.setWorld(this.season); }
   // What an applied event changes on screen.
   effects(e) {
     const mine = e.by === 'player';
@@ -385,7 +421,8 @@ export class AcornGame {
         }
         if (mine) { this.hud(true); fieldGuide.stashFilled(this.ui.box); }
       } else {
-        this.granaryAt.set(e.oak, [e.x, e.y, e.z]); this.granaryLabel(e.oak);
+        if (e.x !== undefined) this.granaryAt.set(e.oak, [e.x, e.y, e.z]);   // (a remote player's deposit has no spot)
+        this.granaryLabel(e.oak);
         if (this.near(e)) fieldGuide.witness('granary', this.ui.box);
       }
     } else if (e.type === 'bury') {
@@ -418,7 +455,9 @@ export class AcornGame {
   take(by, a) { return this.dispatch({ type: 'pickup', by, key: a.key, x: a.x, y: a.y, z: a.z, species: a.species }); }
   depositGranary(by, oakId, x, y, z) { return this.dispatch({ type: 'deposit', by, oak: oakId, into: 'granary', x, y, z }); }
   bury(by, x, y, z, kind) {
-    return this.dispatch({ type: 'bury', by, id: `${by}@${this.world.clock.toFixed(2)}`, x, y, z, kind });
+    // shared world: a player's burial gets a random id (unique among players, and not tied to who buried it)
+    const id = by === 'player' && this.net.live ? `b${Math.random().toString(36).slice(2, 12)}` : `${by}@${this.world.clock.toFixed(2)}`;
+    return this.dispatch({ type: 'bury', by, id, x, y, z, kind });
   }
   dig(by, id, keep = false) { return this.dispatch({ type: 'dig', by, id, keep }); }
   // A buried acorn within r of (x, z) (kind 'scatter' or 'cache'; any when null), nearest first, or null.
@@ -455,8 +494,10 @@ export class AcornGame {
     this.board.el.classList.remove('done');
     if (this.ui.box) this.ui.box.classList.remove('hidden');
     this.hud();
+    this.net.join(this.tile.id, this.season);   // v3: the server's world when there is one (its round replaces this one)
   }
   stop() {
+    this.net.leave();
     this.running = false; this.group.visible = false; this.epoch++;
     this.reserved.clear();
     for (const c of Object.values(this.world.collectors)) if (c.kind === 'ai') c.carrying = 0;   // AI tasks end with the game
@@ -470,8 +511,16 @@ export class AcornGame {
     this.season = season; this.cache.clear(); this.nearFull = false; this.epoch++; this.reserved.clear();
     const round = this.world.round;
     this.world = newWorld(this.tile.id, season); this.world.round = round;
+    this.worldMode = this.net.enabled ? 'net' : 'local';
     try {
-      const raw = localStorage.getItem(this.key);
+      // shared world: only the totals last seen here, shown until the server's snapshot arrives
+      const seen = this.worldMode === 'net' ? JSON.parse(localStorage.getItem(this.net.lastSeenKey(this.tile.id, season)) || 'null') : null;
+      if (seen) {
+        for (const s of BOARD_SPECIES) this.world.board[s] = +(seen.board?.[s]) || 0;
+        this.world.you = +seen.you || 0;
+        this.world.species = Array.isArray(seen.species) ? seen.species.filter(id => ACORNS[id]) : [];
+      }
+      const raw = this.worldMode === 'local' && localStorage.getItem(this.key);
       if (raw) {
         const d = JSON.parse(raw), w = this.world;
         for (const p of d.picked || []) { if (typeof p === 'string') w.picked.set(p, 0); else if (Array.isArray(p)) w.picked.set(p[0], +p[1] || 0); }
@@ -495,10 +544,15 @@ export class AcornGame {
     this.granaryLabels.clear();
     this.dirty = true; this.layMarks();
     if (this.family) this.granaryLabel(this.family);
+    if (this.running && this.worldMode === 'net') this.net.join(this.tile.id, season);   // the season changed mid-game
   }
   save() {
     this.saveT = -1;
     const w = this.world;
+    if (this.worldMode === 'net') {   // the server keeps the world; this browser only what it last saw
+      try { localStorage.setItem(this.net.lastSeenKey(this.tile.id, this.season), JSON.stringify({ board: w.board, you: w.you, species: w.species })); } catch (e) { /* private mode */ }
+      return;
+    }
     try {
       localStorage.setItem(this.key, JSON.stringify({ v: 2, clock: +w.clock.toFixed(1), picked: [...w.picked].map(([k, t]) => [k, +t.toFixed(1)]),
         stashes: w.stashes, granaries: w.granaries, caches: w.caches, board: w.board, you: w.you, totals: { stashed: w.you }, species: w.species }));
@@ -707,6 +761,7 @@ export class AcornGame {
     if (camera) this.camera = camera;
     if (!this.running) return;
     const t0 = performance.now();
+    this.net.tick();
     this.elapsed += dt; this.world.clock += dt;
     const p = this.flight.pos, w = this.world;
     this.refreshT += dt;
@@ -719,7 +774,7 @@ export class AcornGame {
     // fall: acorns keep dropping, so taken ones come back after a while
     if ((this.sweepT += dt) > SWEEP_S) {
       this.sweepT = 0;
-      if (this.season === 'fall') for (const [k, tk] of w.picked) {
+      if (this.season === 'fall' && !this.net.live) for (const [k, tk] of w.picked) {   // shared: the server's regrowth
         if (w.clock - tk > REGROW_S * (1 + (seedOf(k, 0x6e9) % 1000) / 2000)) { w.picked.delete(k); rebuild = true; }
       }
     }
@@ -757,7 +812,7 @@ export class AcornGame {
     }
     // the round
     const r = w.round;
-    if (r && !r.over && (r.t += dt) >= r.length) this.endRound();
+    if (r && !r.over && (r.t += dt) >= r.length && !this.net.live) this.endRound();   // shared: the server ends it
     if (this.saveT >= 0 && (this.saveT -= dt) <= 0) this.save();
     this.hudT += dt;
     if (this.hudT > 0.25) { this.hudT = 0; this.hud(); }
@@ -769,6 +824,9 @@ export class AcornGame {
     let best = null, bn = -1, tie = false;
     for (const s of BOARD_SPECIES) { const n = r.counts[s] || 0; if (n > bn) { bn = n; best = s; tie = false; } else if (n === bn) tie = true; }
     r.winner = bn > 0 && !tie ? best : null;
+    this.showRoundEnd();
+  }
+  showRoundEnd() {
     this.board.el.classList.remove('off'); this.board.el.classList.add('done');
     this.save(); this.hud(true);
   }

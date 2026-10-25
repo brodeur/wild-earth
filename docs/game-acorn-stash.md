@@ -167,7 +167,7 @@ acorn the player has taken still flies there before giving up; the identify card
 
 ### What v3 needs
 
-- **Networking**: a node that owns `world` per tile and season, accepts events, echoes
+- **Networking** (done in v3, below): a node that owns `world` per tile and season, accepts events, echoes
   applied ones; remote players as collectors with kind 'player'; AI run by the server (or
   by one client per area) so everyone sees the same birds take the same acorns.
 - **Playable squirrel and woodpecker**: the player record already has `species`; the
@@ -310,3 +310,187 @@ crown has no trunk to hold; branch perches are at a point in the crown, not on a
 limb; the clinging camera sits 0.85 m off the bark and sometimes inside a live oak's
 foliage; the field guide's granary card says "you just watched" for the player's own
 deposit; Space and E pressed during a short flight wait for it (up to half a second).
+
+## v3: shared world (2026-10-25)
+
+The first multiplayer node. The dev server (`server.py`, `GameWorld`) owns one acorn-game
+world per tile and season; every browser in it sees the same acorns go, the same counts
+and the same round. With no game endpoint (an older server, a static host, `?net=0`) the
+game is v2 exactly: offline, its world in localStorage.
+
+### What is authoritative where
+
+- **Server**: the world (who took which acorn, stash and granary counts, buried acorns,
+  every collector's carry and total, the board), the world clock, the round (start, end,
+  winner) and fall regrowth. It checks every event with the rules of `applyEvent`, ported
+  to Python (`game_reduce`), and computes a stash hole's existence and capacity itself from
+  the oak id (the same FNV-1a and mulberry32 hashes; checked bit for bit against the JS).
+  It does not hold the vegetation, so it trusts that an acorn key or a granary oak exists.
+- **Client** (`client/src/net.js`): a prediction. `world` is the server's world plus this
+  browser's unanswered events, drawn at once; the JS reducer is the prediction's rule. A
+  reject, or a remote event that does not apply to the prediction, rebuilds it from the
+  confirmed copy plus what is still pending (at most once a frame). Positions of the
+  animals, the camera and all drawing stay local.
+- **AI host**: the AI collectors run in one browser per world. The server names the first
+  client to join; when it leaves, the next oldest is told. Only the host's AI events are
+  accepted. The others' animals go about as they do outside a game (`animals.js`
+  `gameOn` reads `game.aiLocal`) and carry an acorn in the bill or mouth when the world
+  says that animal holds one, so who took which acorn and the counts agree everywhere.
+
+### Protocol (WebSocket, JSON text frames, `GET /api/game/ws`)
+
+`GET /api/game` answers `{protocol: 1}` (the feature test). Client to server:
+
+```
+{t:'hello', v:1, tile, season, species, r, sid}   join; sid is this browser's id for round r
+                        (below); without it, or for another round, the server answers 'epoch'
+{t:'id', r, sid}        the id for a new round (after a 'round' message with a new id)
+{t:'ev', c, e}          an event; c: the client's own counter. A player's e has no `by`
+                        (the server knows the connection); an AI's has by, sp, cap, held
+{t:'start', length}     start a round if none is running (Start game sends it on joining)
+{t:'species', species}  the player switched animal
+```
+
+Server to client:
+
+```
+{t:'epoch', r}          the round player ids belong to now: derive the id and ask again
+{t:'welcome', you: 'p:<hash>', r, host, n, world}   the whole world (persisted shape below)
+{t:'you', you, r}       the player's id for the new round (its events in between were held)
+{t:'ev', seq, clock, e, pre: [carrying, dug], col: {sp, k, cap}[, c]}   an accepted event
+                        (a player's burial comes back with the server's cache id, k<n>)
+{t:'rej', c, why}       taken, full, empty, stash full, no stash hole, not the AI host ...
+{t:'round', seq, clock, round}    started or over (winner)
+{t:'regrow', seq, clock, keys}    fall acorns back on the ground
+{t:'players', n, host}  on every join and leave
+{t:'sum', seq, clock, board, rc, n}   every 5 s: a check on the client's reducer
+```
+
+`seq` numbers every change; a client that sees a gap reconnects for a fresh welcome. `pre`
+is the collector's carry before the event, so a client applying someone else's event does
+not depend on having seen that collector from the start. `held` is the AI animal's own
+carry: a re-made animal starts empty (v2 already reset the record from the animal), and a
+new host's animals start empty too. Conflicts: the first event to reach the server wins;
+the other player's pickup is rejected ("taken") and rolled back on their screen.
+
+Player ids: the browser keeps one random id (localStorage `wild-earth:sid`) and never sends
+it. For each world and round it sends `sid = sha256(id|tile|season|r)` (32 hex digits; `r`
+is the running or last round's number, 0 before the first), and the server calls the player
+`p:` + 12 hex digits of `sha256(sid)`. A round starting ends every player id: the server
+drops the old ids' records, holds a player's events until its next id arrives (`id`), and
+moves the carry across in memory only. The leaderboard's "you" line for the round reads the
+round's count for the current id; the SEASON column ("you" season total) and the field
+notes are counted in the browser and kept only in its localStorage.
+
+Round: Start game joins the world and asks for a round if none is running (`?round=<s>`
+sets the asked length, 20-3600 s). The round runs on the world clock, which advances only
+while someone is in the world; Stop game leaves the world (the round goes on for the
+others). Everyone sees the same end and winner.
+
+### Persisted shape
+
+`tiles/<tile>/game/<season>.json`, written at most every 2 s while it changes and when
+the last player leaves:
+
+```
+{ v: 3, tile, season, seq, clock, saved_at,
+  picked: { acornKey: clock },  stashes: { oakId: n },  granaries: { oakId: n },
+  caches: [{ id, x, y, z, species, kind, t }],       (no collector: k<n> for a player's)
+  board: { species: n },
+  collectors: { id: { id, species, kind: 'player' | 'ai', carrying, cap, total, dug } },
+  round: { id, start, length, counts: { species: n }, by: { playerId: n }, over, winner } | null,
+  rounds, cache_n }
+```
+
+`collectors` holds the AI animals and only the current round's player ids. Plus
+`<season>.events.jsonl`, one line per change: `ev` (as broadcast, except a player's burial
+and dig), `round`, `regrow`, and for a player's burial two lines with the same `seq`: the
+count (`{type:'bury', by, kind}`, no place) and `{t:'cache', c:{id:'k<n>', x, y, z,
+species, kind, t}}` (no player); a player's dig likewise as `{type:'dig', by, keep}` and
+`{t:'uncache', id}`. On load the snapshot is read and the log's lines with a higher `seq`
+replayed (a crash loses nothing that was acknowledged). Every time a snapshot is written,
+the log's lines up to it are rewritten without player ids (`by` dropped from player events,
+`by` dropped from round lines), so the log keeps the world's history and not a player's.
+From the log alone (snapshot lost) the world rebuilds whole except the players' counts.
+
+### What the node stores about a person
+
+A hashed per-round id and counts, nothing else. Exactly:
+
+- in the snapshot, for each player id of the current round: the animal species it plays,
+  its carry capacity, how many acorns it carries, how many it has stored this round (total),
+  how many it carries that it dug up (dug: re-burying those scores nothing), and its count
+  in the round's `by`;
+- in the log, until the next snapshot (at most 2 s while the world changes; at once on
+  the next start after a crash): that id beside the acorn keys it picked up, the oaks it
+  deposited into (a stash or granary oak id) and its burial and dig counts.
+
+Not stored: the browser's random id, names, addresses or any network detail (the request
+log prints method, path and status; messages are never printed), the acorn species found,
+the season total, any position next to a player id. Burials and dug caches are positions
+under an anonymous `k<n>` id. Limits that remain: an acorn key and an oak id name a tree,
+so the unscrubbed tail of the log places a player near that tree for up to 2 s; a burial's
+two lines share a `seq` for the same 2 s; and every connected browser receives each event
+with its player id and position (needed to draw it; held in memory, not stored). The
+server links a connection's old and new ids in memory at a round change (to carry its
+acorns across) and writes no record of that.
+
+### Limits of this node
+
+- The AI runs around the host's player only (animals live within 400 m of the camera).
+  Elsewhere in the tile, other players see no AI gathering; two players far apart see the
+  AI near the host. AI positions are not synced: another player sees the host's squirrel
+  bury an acorn as a dug mark appearing, not as their own squirrel doing it.
+- A host change drops what the old host's animals were carrying (they never deposit it).
+- Animal ids are deterministic per cell, so the same animal id exists in both browsers,
+  but its local motion differs.
+- While the server is unreachable mid-game the client keeps playing on its prediction and
+  retries (1-30 s backoff); events are resent on reconnect and the server decides. Nothing
+  is saved locally meanwhile. If the server is gone when Start game is pressed, the game
+  goes back to the v2 world in localStorage.
+- AI collector records accumulate (about 440 after five minutes); a snapshot was 90 KB.
+- One Python process, one lock per world, events at most 40 per second per connection.
+
+### Verified (2026-10-25, home tile, fall)
+
+A test server on port 8805 (the 8782 dev server untouched). A standard-library WebSocket
+client checked the protocol: host election, a round seen by both, the same acorn picked by
+two players (first accepted, the second rejected "taken"), a stash deposit checked against
+the hashed capacity, a deposit into an oak with no hole rejected, AI events refused from a
+non-host, the host moving on leave, and the world persisting across reconnects and a
+server restart (also from the log alone, with the snapshot removed). Then two browser pages
+(a headless Chrome for Testing over CDP; the built-in browser was at its tab limit), a
+raven and a squirrel (`?seat=2`) in one world: a 180 s round started by the first and seen
+by both; both predicted the same acorn at the same instant, the squirrel's reached the
+server first and the raven's rolled back; the raven hovered over the same blue oak and
+took three, then filled a stash to 6/6; the squirrel buried one; the board (24 / 48 / 7),
+the stash count and each player's own line agreed in both pages and the server. Closing
+the raven's page moved the AI host to the squirrel's, which went on sending the AI's
+events (22 accepted, none rejected). Reopening and reloading: same player ids, the
+raven's total 6 and carry 3, the same round with the time left. The round ended on the
+server with the same winner and message in both. Stop and Start in one page started round
+2 for both. The server was killed and restarted mid-round: both reconnected, the host's
+events were all accepted (no rejects) and the counts matched the server again. No reducer
+mismatches in any `sum`. With the server stopped, Start game fell back to the v2 world
+(localStorage, AI local); on a static server (`/api/game` 404) the squirrel played offline
+as before. Console: no exceptions; only an existing three.js warning and the browser's
+own lines for the refused or 404 probe.
+
+Re-verified after the privacy rules (same day, test server on 8805). The protocol script
+passed 21 checks, the earlier ones plus: the id derived per round (a new round, a new id;
+the same round after a reconnect, the same id), events held across the id change, no acorn
+species and no field notes on the server, a player's burial named `k1` by the server and
+dug up by another player, no log line with both a player id and a position, and after a
+snapshot no player id anywhere in the log. A crash test (SIGKILL before a snapshot):
+the unsnapshotted lines still carried the id, the restart replayed them (carry, total,
+round count, cache `k1`, granary) and scrubbed the whole log, and with the snapshot deleted
+the scrubbed log alone rebuilt the board, round counts, picked acorns, cache and granary,
+with no player's counts. Two browser pages (raven, squirrel): each page's id matched
+`sha256(sha256(id|tile|fall|1))`, the same-instant race went to the squirrel and the
+raven rolled back, the raven filled a stash (round "you" 6), the squirrel buried, dug its
+own `k1` and buried it again (you 1: the re-burial scored nothing). Round 2 gave both new
+ids, dropped the round-1 ids from the snapshot, reset the round "you" to 0 while the
+SEASON column kept 6 and 1 (counted in the browser), and ended with the same winner and
+"You gathered 1." in both. After 986 log lines, none carried a player id once the
+snapshot covered it. Fixed on the way: a rebuilt prediction took the round's time left
+from the last confirmed message (minutes stale on a quiet client).

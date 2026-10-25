@@ -22,6 +22,12 @@ same for all four; the season selects resource bands, calendar entries and the l
 Player state (nests, caches, dens, edits made in play) is keyed by world, not tile.
 Whether state flows from one season's world to the next is an open decision.
 
+Game state lives beside the package, not in it: a node that serves a world keeps the acorn
+game's state in `tiles/<tile_id>/game/<season>.json` (a snapshot: taken acorns, stash and
+granary counts, buried acorns, collectors, board, round) and `<season>.events.jsonl` (the
+accepted events in order). It is runtime data of that node, not a pipeline product; its
+shape is in [game-acorn-stash.md](game-acorn-stash.md) (v3).
+
 ## Layout
 
 ```

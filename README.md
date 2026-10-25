@@ -44,6 +44,9 @@ The API answers which tile holds a point (`POST /api/tile {lon, lat}`) and build
 one in the background (`POST /api/build`, progress at `GET /api/build/<tile_id>`); the
 client's Location box uses it to fly, switch tiles, or build. Points are snapped to a tile
 and never logged or stored.
+The same server hosts the acorn game's shared world: press Start game in two browsers on
+the same tile and season (add `&seat=2` to the second URL to be a second player in one
+browser) and both play in one world (`docs/game-acorn-stash.md`, v3).
 
 ## The client
 

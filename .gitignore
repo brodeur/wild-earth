@@ -14,3 +14,6 @@ pipeline/_cache/
 .env
 .env.*
 !.env.example
+
+# Played game worlds (per tile and season, written by the game server)
+tiles/**/game/
