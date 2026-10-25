@@ -1,0 +1,74 @@
+{
+  "id": "corvus_corax",
+  "aliases": [
+    "raven",
+    "common_raven"
+  ],
+  "scientific": "Corvus corax",
+  "common": "common raven",
+  "body_plan": "bird",
+  "size": {
+    "length_m": 0.62,
+    "shoulder_or_wingspan_m": 1.25,
+    "note": "Bill tip to tail tip 0.56-0.69 m, wingspan 1.0-1.5 m, mass 0.7-1.6 kg. Meshy normalises its output to about 1.9 units long; adoption scales the standing model to 0.62 m."
+  },
+  "source": {
+    "kind": "cc0_download",
+    "title": "Raven",
+    "author": "Teh_Bucket (OpenGameArt)",
+    "url": "https://opengameart.org/ (\"Raven\" by Teh_Bucket, 2015; record the exact page URL at the next rebuild)",
+    "file": "client/assets/raven.glb",
+    "original": "rigged, skinned mesh, 2,380 triangles, one 'raven' texture, re-exported from Blender 4.1 with a fly clip (1.4 s wingbeat) and an added glide clip",
+    "prompt": null,
+    "reference_image": null,
+    "job_id": null,
+    "date": "2026-10-23",
+    "adopted_by": "re-exported by hand in Blender; scaled 0.32 in client/src/raven.js"
+  },
+  "license": "CC0 1.0",
+  "license_detail": {
+    "source_terms": "CC0 1.0 per README.md (OpenGameArt).",
+    "redistribute_under_cc_by_sa": true,
+    "note": "CC0 places no conditions."
+  },
+  "tiers": {
+    "player": 2380,
+    "file": "client/assets/raven.glb",
+    "attributes": [
+      "POSITION",
+      "NORMAL",
+      "TEXCOORD_0",
+      "JOINTS_0",
+      "WEIGHTS_0"
+    ],
+    "note": "One tier, skinned, wings spread: the player's raven in flight. No standing or perched tier yet."
+  },
+  "candidates": [
+    {
+      "kind": "meshy",
+      "purpose": "standing / walking raven on the ground (acorn game, perched ambient ravens); not the flying player model",
+      "job": "library/animals/jobs/corvus_corax/01a1718c-6181-76da-923a-ce2ae3f4293e/job.json",
+      "job_id": "01a1718c-6181-76da-923a-ce2ae3f4293e",
+      "mode": "text-to-3d preview, ai_model meshy-6-lite, remeshed to triangles, target 20,000 faces",
+      "prompt": "A common raven (Corvus corax), one adult bird standing on the ground with its wings folded against the body. Realistic anatomy and proportions: a large all-black corvid about 60 cm long, thick neck with shaggy throat hackles, a heavy, deep, slightly arched black bill about as long as the head, nasal bristles covering the base of the upper bill, dark eyes. Glossy black plumage with layered feathers; folded wing tips reach near the end of the tail; long wedge-shaped tail. Strong black legs with scaled tarsi and four clawed toes, three forward and one back, flat on the ground. Neutral standing pose, no base, no perch, no rock. Game-ready asset, clean closed mesh.",
+      "author": "generated with Meshy (meshy.ai) by agent (Claude) for Aaron Brodeur",
+      "date": "2026-10-25 (UTC)",
+      "credits": 5,
+      "raw_triangles": 20627,
+      "license": "owned by the paid account holder (Meshy Terms of Use 3.2); to be released as CC BY-SA 4.0 with the project's assets on adoption",
+      "status": "raw preview, not adopted; geometry only (no texture)",
+      "review": "Side silhouette reads as a raven: heavy arched bill with a culmen ridge, shaggy throat hackles, crown and eye, layered wing coverts and primaries, long tapered tail, scaled legs with clawed toes (three forward, a hind toe). Faults: the wings stand off the flanks at the shoulders (body 0.32 m wide at raven scale against about 0.2 m), so it looks puffed or mantling rather than sleek; posture is a forward hunch; the tail is long and tapered in plan but the wedge is weak; nasal bristles are only hinted by feather shards; the underside between the legs is messy. Topology is remesher triangle soup with many feather shards and 3% slivers; 14 pieces once UV seams are welded. Fine for decimation to about 2,000 / 1,000 / 300 triangles."
+    }
+  ],
+  "status": "agent draft, needs local sign-off",
+  "accuracy_notes": "Ravens here are told from crows by size, the heavy bill, the shaggy throat, the wedge-shaped tail in flight and soaring. The current player model (wings spread) has no feet detail and a generic bill; the Meshy candidate has the right bill and throat but the wings are too loose. A local birder should check bill depth, throat hackles, tail shape and the standing posture (ravens walk, and hop when hurried).",
+  "authors": [
+    "Teh_Bucket (player model)",
+    "agent (Claude) for Aaron Brodeur (entry, Meshy candidate)"
+  ],
+  "sources": [
+    "README.md credits",
+    "client/src/raven.js header",
+    "Cornell Lab, All About Birds: Common Raven (size and identification; read, not copied)"
+  ]
+}

@@ -1,0 +1,92 @@
+{
+  "species": "corvus_corax",
+  "mode": "preview",
+  "kind": "text-to-3d",
+  "task_id": "01a1718c-6181-76da-923a-ce2ae3f4293e",
+  "endpoint": "https://api.meshy.ai/openapi/v2/text-to-3d",
+  "request": {
+    "mode": "preview",
+    "prompt": "A common raven (Corvus corax), one adult bird standing on the ground with its wings folded against the body. Realistic anatomy and proportions: a large all-black corvid about 60 cm long, thick neck with shaggy throat hackles, a heavy, deep, slightly arched black bill about as long as the head, nasal bristles covering the base of the upper bill, dark eyes. Glossy black plumage with layered feathers; folded wing tips reach near the end of the tail; long wedge-shaped tail. Strong black legs with scaled tarsi and four clawed toes, three forward and one back, flat on the ground. Neutral standing pose, no base, no perch, no rock. Game-ready asset, clean closed mesh.",
+    "ai_model": "meshy-6-lite",
+    "target_formats": [
+      "glb"
+    ],
+    "should_remesh": true,
+    "topology": "triangle",
+    "target_polycount": 20000,
+    "pose_mode": "",
+    "moderation": false
+  },
+  "prompt": "A common raven (Corvus corax), one adult bird standing on the ground with its wings folded against the body. Realistic anatomy and proportions: a large all-black corvid about 60 cm long, thick neck with shaggy throat hackles, a heavy, deep, slightly arched black bill about as long as the head, nasal bristles covering the base of the upper bill, dark eyes. Glossy black plumage with layered feathers; folded wing tips reach near the end of the tail; long wedge-shaped tail. Strong black legs with scaled tarsi and four clawed toes, three forward and one back, flat on the ground. Neutral standing pose, no base, no perch, no rock. Game-ready asset, clean closed mesh.",
+  "image": null,
+  "preview_job": null,
+  "estimated_credits": 5,
+  "balance_before": 3052,
+  "status": "SUCCEEDED",
+  "timestamps": {
+    "submitted": "2026-10-25T05:33:07+00:00",
+    "created_at": "2026-10-25T05:33:09+00:00",
+    "started_at": "2026-10-25T05:33:09+00:00",
+    "finished_at": "2026-10-25T05:33:43+00:00",
+    "downloaded": "2026-10-25T05:33:52+00:00"
+  },
+  "tool": "tools/meshy_generate.py",
+  "pricing_source": {
+    "url": "https://docs.meshy.ai/en/api/pricing",
+    "read": "2026-10-24"
+  },
+  "licence_note": "Generated through the Meshy API, which requires a paid plan (402 on a free plan). Meshy Terms of Use (https://www.meshy.ai/terms-of-use, last updated 2026-09-19), section 3.2: customers on a paid plan own their Customer Output to the extent permitted by law (free-plan output is owned by Meshy and offered under CC BY 4.0 with credit to Meshy). As owner, the account holder may license this model under the project's CC BY-SA 4.0 asset licence, to the extent copyright subsists in AI-generated output. Section 2.4: do not remove or alter AI-identifying metadata or watermarks Meshy embeds; carry them into adopted tiers. Section 2.5: API output is deleted by Meshy 3 days after generation, so keep this folder until the model is adopted. Credit: \"generated with Meshy (meshy.ai)\".",
+  "maintainer": "agent (Claude) for Aaron Brodeur",
+  "progress": 100,
+  "task": {
+    "id": "01a1718c-6181-76da-923a-ce2ae3f4293e",
+    "type": "text-to-3d-preview",
+    "status": "SUCCEEDED",
+    "created_at": 1792906389720,
+    "started_at": 1792906389728,
+    "finished_at": 1792906423701,
+    "consumed_credits": 5,
+    "task_error": null
+  },
+  "credits_charged": 5,
+  "files": [
+    {
+      "file": "model.glb",
+      "bytes": 1140180,
+      "sha256": "48da3035b9ca1523b9317b70c543ee985a1b276e5c99a101955c10653556dbb8",
+      "source": "https://assets.meshy.ai/<account>/tasks/01a1718c-6181-76da-923a-ce2ae3f4293e/output/model.glb"
+    },
+    {
+      "file": "thumbnail.png",
+      "bytes": 82262,
+      "sha256": "ae1145ea4f31f65697aebc3bee8f1a3bc9613af718501adcb9ab3eee8494d851",
+      "source": "https://assets.meshy.ai/<account>/tasks/01a1718c-6181-76da-923a-ce2ae3f4293e/output/preview.png"
+    }
+  ],
+  "balance_after": 3047,
+  "inspection": {
+    "by": "agent (Claude), 2026-10-24",
+    "triangles": 20627,
+    "vertices": 31730,
+    "welded_vertices": 10304,
+    "components_after_weld": 14,
+    "boundary_edges_after_weld": 20,
+    "non_manifold_edges_after_weld": 17,
+    "textures": "none (preview is mesh only; TEXCOORD_0 present, no material)",
+    "bounds_gltf": [
+      [
+        -0.504,
+        -0.681,
+        -0.95
+      ],
+      [
+        0.497,
+        0.674,
+        0.95
+      ]
+    ],
+    "axes": "+y up, +z forward (bill at +z), normalised to about 1.9 units long",
+    "gltf_metadata": "generator \"Khronos glTF Blender I/O v4.3.47\"; no copyright, extras or AI-identifier fields found",
+    "renders": "/private/tmp/claude-501/-Users-aaronbrodeur-Sites-wild-earth/4bce79f6-b155-4cfa-8a06-3ddba225632f/scratchpad/meshy/ (not kept)"
+  }
+}

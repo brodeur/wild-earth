@@ -1,0 +1,44 @@
+{
+  "id": "odocoileus_hemionus",
+  "aliases": ["black_tailed_deer", "deer"],
+  "scientific": "Odocoileus hemionus columbianus",
+  "common": "black-tailed deer",
+  "body_plan": "quadruped",
+  "size": {
+    "length_m": 1.5,
+    "shoulder_or_wingspan_m": 0.95,
+    "note": "Adult doe. Head and body about 1.3-1.6 m; 0.9-1.0 m at the shoulder. The build script scales the mesh to 0.95 m at the withers (Neck1 joint)."
+  },
+  "source": {
+    "kind": "cc0_download",
+    "title": "Deer",
+    "author": "Quaternius (quaternius.com)",
+    "collection": "Ultimate Animated Animal Pack",
+    "url": "https://poly.pizza/m/T6Cs7tmMHJ",
+    "file": "https://static.poly.pizza/4b6c2a41-43c7-404c-ae37-e8c4645ff93b.glb",
+    "original": "FBX2glTF export, 2,096 triangles, 46-joint skin, 13 clips, flat material colours, no textures",
+    "prompt": null,
+    "reference_image": null,
+    "job_id": null,
+    "date": "2026-10-24",
+    "adopted_by": "tools/build_deer.py"
+  },
+  "license": "CC0 1.0",
+  "license_detail": {
+    "source_terms": "CC0 1.0 Universal (https://creativecommons.org/publicdomain/zero/1.0/); the Poly Pizza page marks it \"Public Domain (CC0)\".",
+    "redistribute_under_cc_by_sa": true,
+    "note": "CC0 places no conditions, so the adopted tiers may be shipped in client/assets and relicensed with the project's assets. Credit is kept anyway (README, build script header, GLB asset.copyright)."
+  },
+  "tiers": {
+    "lod0": 2096,
+    "lod1": 1000,
+    "lod2": 298,
+    "file": "client/assets/deer.glb",
+    "attributes": ["POSITION", "COLOR_0 (linear)", "_PART", "_PARTW", "_PIVOT"]
+  },
+  "rig": "procedural part rig (client/src/animalModels.js PART): legs A/B in a diagonal walk (left fore and right hind are A), tail, head; the source skeleton and clips are dropped",
+  "status": "agent draft, needs local sign-off",
+  "accuracy_notes": "Source is a generic stylised deer. The build script fixes what reads wrong for a Sierra foothill black-tailed doe: ears enlarged 1.3x (mule and black-tailed deer have big ears), grey-brown coat with a darker forehead and nose bridge, small dark almond eye, tail black on top and at the tip and white beneath, a clean white rump patch. Open: no buck (black-tailed bucks carry mule-deer forked antlers); the bedded pose still looks sunk into the ground; the low-poly faceting is stylised rather than realistic. A local naturalist should check tail, rump and ear proportions against does seen in the foothills.",
+  "authors": ["Quaternius (model)", "agent (Claude) for Aaron Brodeur (adoption, recolour, tiers)"],
+  "sources": ["https://poly.pizza/m/T6Cs7tmMHJ", "docs/decisions.md, 2026-10-25: animals may be curated CC0 meshes"]
+}

@@ -1,0 +1,7 @@
+# Raw generation output (Meshy jobs, downloads) stays local by default: GLBs and textures are large and
+# are not the adopted asset. Keep job.json (the record of how a model was made and what it cost).
+# Adopted, decimated tiers go to client/assets/ through a build script in tools/.
+*
+!*/
+!.gitignore
+!job.json
