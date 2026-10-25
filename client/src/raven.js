@@ -2,6 +2,7 @@ import * as THREE from 'three';
 import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
 import { addCaster } from './shadows.js';
 import { loadRavenGroundMesh, animalMaterial, animalDepthMaterial, RAVEN_GROUND } from './animalModels.js';
+import { FOLD_T, XFADE_T } from './flight.js';
 
 // The player's raven: a rigged, skinned mesh with two clips, fly (a 1.4 s wingbeat) and glide
 // (wings held out, a slow small flex), crossfaded on the flight model's `flapping` flag.
@@ -23,7 +24,16 @@ import { loadRavenGroundMesh, animalMaterial, animalDepthMaterial, RAVEN_GROUND 
 // (the flying model's origin is its body, the ground model's its feet: RAVEN_GROUND.bodyY between them). Its folded
 // wings settle on touchdown; its head follows the look (yaw up to ~65 degrees either side, pitch with the look) and
 // the body follows in hops (legs together) when the look turns past that; C (the call) flicks the wings. Taking
-// off swaps back. ?ravenground=proc keeps the flying model on the ground (A/B).
+// off swaps back. ?ravenground=proc keeps the flying model on the ground (A/B), its wings folded.
+// Walking, hopping and turning are flight.js's (flight.gnd: body heading, gait phase and amplitude, hops, the take-off's
+// wing lift); this draws them: legs alternate walking and swing together in a hop, the head bobs with the gait, follows
+// the look and dips for a peck (E), the folded wings half lift in a forward hop.
+// The swaps are hidden: at touchdown the flying model's wings fold over FOLD_T (the arm swept back and lowered, the
+// hand swept in, the wing scaled down from the shoulder toward the folded wing's length and chord), then the ground
+// model dissolves in over it (both drawn with alpha hash: the incoming one comes in fully over the first half of XFADE_T,
+// the outgoing one dissolves away over the second, so the bird is never see-through) with its wings still settling.
+// Taking off, the ground model's folded wings lift and open for LIFT_T (aAnim2.x up to FOLD.lift), then the flying model
+// dissolves in from half folded at the top of a wingbeat (the fly clip from its start) and unfolds over UNFOLD_T.
 const MODELS = {
   meshy: { url: new URL('../assets/raven_player.glb', import.meta.url), scale: 1, y: 0, rotY: Math.PI, tier: 'lod0', vertexColors: true },
   cc0: { url: new URL('../assets/raven.glb', import.meta.url), scale: 0.32, y: -0.32, rotY: 0, tier: null, vertexColors: false },
@@ -31,7 +41,12 @@ const MODELS = {
 const Q = new URLSearchParams(location.search), PARAM = Q.get('raven');
 const DEFAULT = PARAM === 'old' || PARAM === 'cc0' ? 'cc0' : 'meshy';
 const GROUND = Q.get('ravenground') !== 'proc' && Q.get('animals') !== 'proc';
-const HEAD_MAX = 1.1, TURN_AT = 1.0, HOP_T = 0.26, TAU = Math.PI * 2;
+const HEAD_MAX = 1.1, UNFOLD_T = 0.3;
+// The flying model's fold (the 'meshy' rig; bone-local: Z sweeps the wing back, X raises it; mirrored on the right)
+// tilt: the body pitched nose up as the wings fold (rad at fold 1), toward the standing raven's carriage; lift: the
+// ground model's wing flick (aAnim2.x) its folded wings reach before take-off
+const FOLD = { armBack: 1.45, armDown: -0.12, foreBack: 0.25, handBack: 0.5, scale: 0.5, tilt: 0.3, lift: 1.6 };
+const smooth = u => u * u * (3 - 2 * u), clamp01 = u => Math.min(1, Math.max(0, u));
 const wrap = a => Math.atan2(Math.sin(a), Math.cos(a));
 
 export class Raven {
@@ -44,7 +59,8 @@ export class Raven {
     // the ground raven (see the header)
     this.flight = parent.userData.flight || null; this.parent = parent;
     this.ground = null; this.onGround = false;
-    this.g = { yaw: 0, hopU: 1, hopFrom: 0, hopTo: 0, e0: 0, wfV: 0, look: 0, flick: 0, gait: 0 };
+    this.g = { e0: 0, wfV: 0, look: 0, flick: 0, hop: 0 };
+    this.swapT = 0; this.fold = 0; this.fade = 0; this.foldFrom = 0; this.opFly = 1; this.FOLD = FOLD;
     this._m = new THREE.Matrix4(); this._q = new THREE.Quaternion(); this._p = new THREE.Vector3(); this._s = new THREE.Vector3(1, 1, 1); this._up = new THREE.Vector3(0, 1, 0);
     if (GROUND && this.flight) loadRavenGroundMesh().then(m => this.buildGround(m), e => console.warn('ground raven failed to load; the flying model stays on the ground', e));
     addEventListener('keydown', e => { if (e.code === 'KeyC' && this.onGround && !(e.target && (e.target.tagName === 'INPUT' || e.target.tagName === 'SELECT'))) this.g.wfV = 1; });
@@ -58,48 +74,83 @@ export class Raven {
     mesh.instanceMatrix.setUsage(THREE.DynamicDrawUsage);
     mesh.count = 1; mesh.frustumCulled = false; mesh.visible = false; mesh.name = 'raven ground (player)';
     mesh.castShadow = mesh.receiveShadow = true;
+    mesh.material.alphaHash = true;   // the dissolve at the swaps (opacity 1 otherwise: nothing discarded)
     mesh.customDepthMaterial = animalDepthMaterial(model);
     (this.parent.parent || this.parent).add(mesh);
     addCaster(mesh, { cascades: [0] });
     this.ground = mesh; this.groundModel = model;
   }
-  // Touchdown and take-off, then the ground model's pose: placed at the feet under the body, heading the body's
-  // (lagging the look and catching up in hops), head turned and pitched toward the look.
+  // Touchdown and take-off (the fold and the dissolve, see the header), then the ground model's pose from flight.gnd:
+  // placed at the feet under the body on the body's heading, head turned and pitched toward the look.
   updateGround(dt) {
     const f = this.flight, mesh = this.ground;
-    const on = !!(f && mesh && f.landed);
+    if (!f) return;
+    if (f.cut) { f.cut = false; this.onGround = f.landed; this.swapT = 1e3; this.foldFrom = 0; }
+    const on = !!f.landed, G = f.gnd;
     if (on !== this.onGround) {
-      this.onGround = on;
-      this.group.visible = !on;
-      if (on) { const g = this.g; g.yaw = f.yaw; g.hopU = 1; g.e0 = 0.9; g.wfV = 0; g.look = 0; g.flick = 0; g.gait = 0; }   // wings settle
+      this.onGround = on; this.swapT = 0;
+      if (on) { const g = this.g; g.e0 = 0.35; g.wfV = 0; g.look = 0; g.flick = 0; g.hop = 0; }   // wings still settling
+      else {   // take-off: the flying model from half folded (fully, if it stayed on the ground), at the top of a wingbeat
+        this.foldFrom = mesh ? 0.5 : this.fold;
+        if (this.mixer) { this.fly.stopFading(); this.glide.stopFading(); this.flapping = true; this.fly.enabled = true; this.fly.time = 0; this.fly.setEffectiveWeight(1); this.fly.setEffectiveTimeScale(1); this.glide.setEffectiveWeight(0); }
+      }
     }
+    this.swapT += dt;
+    // the flying model's fold and the ground model's share (fade)
+    if (on) {
+      const t = f.landT;
+      this.fold = smooth(clamp01(t / FOLD_T));
+      if (!mesh && G.lift >= 0) this.fold *= 1 - 0.5 * smooth(clamp01(G.lift));   // no ground model: the flying one opens a little
+      this.fade = mesh ? clamp01((t - FOLD_T) / XFADE_T) : 0;
+    } else {
+      this.fold = this.foldFrom * (1 - smooth(clamp01(this.swapT / UNFOLD_T)));
+      this.fade = mesh ? 1 - clamp01(this.swapT / XFADE_T) : 0;
+    }
+    // the dissolve: the incoming model fully in over the first half, the outgoing one away over the second
+    const inc = on ? this.fade : 1 - this.fade, opIn = Math.min(1, 2 * inc), opOut = Math.min(1, 2 * (1 - inc));
+    const opGround = on ? opIn : opOut;
+    this.setFlyOpacity(on ? opOut : opIn);
+    this.group.visible = this.opFly > 0;
     if (!mesh) return;
-    mesh.visible = on && this.parent.visible;
+    mesh.material.opacity = opGround;
+    mesh.visible = opGround > 0 && this.parent.visible;
     if (!mesh.visible) return;
     const g = this.g, amp = this.groundModel.amp;
-    // body heading: a hop round when the look has turned past TURN_AT
-    let lift = 0, hop = 0;
-    if (g.hopU < 1) {
-      g.hopU = Math.min(1, g.hopU + dt / HOP_T);
-      const h = g.hopU, e = h * h * (3 - 2 * h);
-      g.yaw = g.hopFrom + wrap(g.hopTo - g.hopFrom) * e;
-      lift = 0.05 * Math.sin(Math.PI * h); hop = 1; g.gait = 1;
-    } else {
-      g.gait = Math.max(0, g.gait - dt * 8);
-      if (Math.abs(wrap(f.yaw - g.yaw)) > TURN_AT) { g.hopU = 0; g.hopFrom = g.yaw; g.hopTo = f.yaw; }
-    }
-    const head = THREE.MathUtils.clamp(wrap(f.yaw - g.yaw), -HEAD_MAX, HEAD_MAX);
-    g.look += (head - g.look) * (1 - Math.exp(-dt * 10));
-    g.flick += (THREE.MathUtils.clamp(-f.pitch / amp[2], -1.2, 1.0) - g.flick) * (1 - Math.exp(-dt * 8));   // head pitch: the look's
-    if (g.wfV > 0) { g.e0 = Math.max(g.e0 * Math.exp(-6 * dt), Math.sin(Math.PI * (1 - g.wfV)) * 0.9); g.wfV -= dt / 0.4; }
+    const head = THREE.MathUtils.clamp(wrap(f.yaw - G.yaw), -HEAD_MAX, HEAD_MAX);
+    g.look += ((on ? head : 0) - g.look) * (1 - Math.exp(-dt * 10));
+    const peck = G.peck > 0 ? Math.sin(Math.PI * (1 - G.peck)) * 1.7 : 0;   // E: the head dips to the ground and back
+    g.flick += (THREE.MathUtils.clamp(-f.pitch / amp[2], -1.2, 1.0) + peck - g.flick) * (1 - Math.exp(-dt * (peck ? 18 : 8)));
+    g.hop += ((G.hop ? 1 : 0) - g.hop) * (1 - Math.exp(-dt * 14));
+    // the folded wings: lifted and opened before take-off, half lifted in a forward hop, a flick (C), settling
+    if (G.lift >= 0 || !on) g.e0 = Math.max(g.e0, FOLD.lift * smooth(clamp01(on ? G.lift : 1)));
+    else if (g.wfV > 0) { g.e0 = Math.max(g.e0 * Math.exp(-6 * dt), Math.sin(Math.PI * (1 - g.wfV)) * 0.9); g.wfV -= dt / 0.4; }
+    else if (G.hop === 2) g.e0 = Math.max(g.e0 * Math.exp(-5 * dt), 0.55 * Math.sin(Math.PI * G.hopU));
     else g.e0 *= Math.exp(-5 * dt);
     const an = mesh.geometry.attributes.aAnim, a2 = mesh.geometry.attributes.aAnim2;
-    an.array[0] = (g.hopU < 1 ? g.hopU : 0) * TAU; an.array[1] = g.gait; an.array[2] = 1; an.array[3] = g.flick; an.needsUpdate = true;
-    a2.array[0] = g.e0; a2.array[1] = g.look; a2.array[2] = hop || g.gait > 0 ? 1 : 0; a2.array[3] = 0; a2.needsUpdate = true;
+    an.array[0] = G.phase; an.array[1] = G.amp; an.array[2] = 1; an.array[3] = g.flick; an.needsUpdate = true;
+    a2.array[0] = g.e0; a2.array[1] = g.look; a2.array[2] = g.hop; a2.array[3] = 0; a2.needsUpdate = true;
     // feet under the body: the flying model's origin (its body) less the ground model's body height
-    this._p.set(f.pos.x, f.pos.y - RAVEN_GROUND.bodyY + lift, f.pos.z);
-    this._q.setFromAxisAngle(this._up, g.yaw + Math.PI);   // flight's forward is -z at yaw 0, the model's bill +z
+    this._p.set(f.pos.x, f.pos.y - RAVEN_GROUND.bodyY, f.pos.z);
+    this._q.setFromAxisAngle(this._up, G.yaw + Math.PI);   // flight's forward is -z at yaw 0, the model's bill +z
     mesh.instanceMatrix.array.set(this._m.compose(this._p, this._q, this._s).elements); mesh.instanceMatrix.needsUpdate = true;
+  }
+  setFlyOpacity(o) {
+    if (o === this.opFly) return;
+    this.opFly = o;
+    this.model?.traverse(m => { if (m.isMesh) m.material.opacity = o; });
+  }
+  // The flying model's wings folded by `this.fold` (0 open, 1 folded), on top of the clip's pose (after mixer.update).
+  applyFold() {
+    const u = this.fold, F = FOLD;
+    this.group.rotation.x = F.tilt * u;
+    const B = this.bones; if (!B) return;
+    if (u > 0) this.neck.rotateX(F.tilt * u);   // the head stays level as the body tilts up
+    for (const [s, ua, fa, h] of B) {
+      ua.scale.setScalar(1 - (1 - F.scale) * u);
+      if (u <= 0) continue;
+      ua.rotateZ(s * F.armBack * u); ua.rotateX(F.armDown * u);
+      fa.rotateZ(s * F.foreBack * u); h.rotateZ(s * F.handBack * u);
+    }
   }
   // Load (once) and show one of MODELS; a failed 'meshy' load falls back to 'cc0'.
   setModel(kind) {
@@ -124,7 +175,7 @@ export class Raven {
       model.traverse(o => {
         if (!o.isMesh) return;
         // The file's PBR material becomes a lambert one, patched to take the scene's sun, sky, cloud shadow and haze like the trees.
-        const mat = new THREE.MeshLambertMaterial({ map: o.material.map, color: 0xffffff, vertexColors: cfg.vertexColors && !!o.geometry.attributes.color });
+        const mat = new THREE.MeshLambertMaterial({ map: o.material.map, color: 0xffffff, vertexColors: cfg.vertexColors && !!o.geometry.attributes.color, alphaHash: true });
         this.atmosphere.patchLambert(mat);
         o.material = mat;
         o.frustumCulled = false;   // the skinned bounds are the rest pose; wings leave them
@@ -148,6 +199,10 @@ export class Raven {
     this.fly = this.mixer.clipAction(gltf.fly); this.glide = this.mixer.clipAction(gltf.glide);
     this.fly.play(); this.glide.play();
     this.fly.setEffectiveWeight(this.flapping ? 1 : 0); this.glide.setEffectiveWeight(this.flapping ? 0 : 1);
+    const bone = n => model.getObjectByName(n);
+    this.neck = bone('neck');
+    this.bones = bone('upperarmL') && this.neck ? [[1, 'L'], [-1, 'R']].map(([s, d]) => [s, bone('upperarm' + d), bone('forearm' + d), bone('hand' + d)]) : null;
+    const o = this.opFly; this.opFly = -1; this.setFlyOpacity(o);
     // The shadow caster mirrors the meshes under group, so it is rebuilt with them (addCaster replaces an
     // earlier registration; Shadows.sync makes the same call once the first model is in).
     addCaster(this.group, { cascades: [0], simple: true });
@@ -164,6 +219,8 @@ export class Raven {
       from.crossFadeTo(to, flapping ? 0.25 : 0.45, false);
     }
     this.fly.setEffectiveTimeScale(0.9 + 0.3 * THREE.MathUtils.clamp((speed - 12) / 12, -1, 1));
+    if (!this.group.visible) return;   // on the ground: the flying model is away
     this.mixer.update(dt);
+    this.applyFold();
   }
 }

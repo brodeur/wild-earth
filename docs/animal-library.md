@@ -261,9 +261,29 @@ vertex colours. Ambient ravens (`animals.js`, DRAWN[RV] hybrid) use it on the gr
 walking, hopping, pecking, caching beside a shrub within 6 m on foot), tiers at 15 / 50 m, and the procedural
 flying raven in the air; the swap is at touchdown and take-off with position and heading kept and the flying model
 lifted 0.12 m so the bodies line up. The player (`raven.js`) lands with hover then Z (`flight.js` `landed`) and
-stands on the ground model, head following the look and the body catching up in hops; Space, X or W take off.
+stands on the ground model, head following the look and the body catching up in hops (since: walking, below).
 `?ravenground=proc` for A/B. Still a shape change at the swap itself (spread or folded procedural wings against the
 mesh's folded ones), softened by the wings settling after touchdown and lifting before take-off.
+
+## The player raven on foot, and the swaps hidden (2026-10-25)
+
+`flight.js` `updateGround` (state in `flight.gnd`; `raven.js` draws it): **W / S** walk at 1 / 0.5 m/s with the
+alternating-leg gait and the head bob; **A / D** turn on the spot (the body steps round, then hops when the turn
+runs ahead of it) or curve a walk; the arrows and a drag look (the head follows, the body hops round past ~57 degrees);
+**Space** hops 1 m forward with both feet (the folded wings half lift); a second **Space** during the hop, or Space
+held 0.3 s, takes off forward and up to the 2 m floor; **X** takes off straight up into a hover; **E** pecks and picks
+up an acorn within 0.8 m of the bill (`acorns.js` `acornNear` / `playerPick`, as the squirrel's E; in practice the
+raven's 6 m proximity pickup gets there first). Footing is the squirrel controller's (drawn terrain, close rock
+tops, creek beds, pond levels): slopes up to 1.5 rise over run are walked, steeper rock faces are walls, a hop clears
+up to 0.45 m with its arc raised over what it crosses, water deeper than 4 cm and pond water more than 0.5 m from dry
+ground are refused (the lidar flattens pond beds to centimetres under the level). The chase camera comes down to
+0.8 m up and 2.5 m back, about 23 degrees off the tail. Swaps: on touchdown the flying model's wings fold over 0.25 s
+(bones swept back, lowered and scaled toward the folded wing's length, the body tilted 0.3 rad nose up with the head
+kept level), then a 0.12 s alpha-hash dissolve to the ground model (incoming fully in over the first half, outgoing
+out over the second); on take-off the ground model's wings lift and open over 0.2 s, then the flying model dissolves
+in from half folded at the top of a wingbeat and unfolds over 0.3 s. Checked frame by frame from behind and the side:
+no single-frame shape change. Known: the dissolve's dither shows for 6-7 frames; the lifted folded wings read as a
+dark cape from behind; no trunk or shrub collision on foot, and the low camera can sink into a shrub's foliage.
 
 ## Next (adoption lane)
 
