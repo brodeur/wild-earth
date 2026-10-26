@@ -12,7 +12,7 @@ import { MiniMap } from './minimap.js';
 import { RoadsOverlay } from './roadsOverlay.js';
 import { setupGoTo, takePendingPoint, builtTileFor, takeCarry, localXY } from './goto.js';
 import { OpeningScreen, Arrival, lastTile, rememberTile, lastSex } from './arrival.js';
-import { SEASON_LOOK, seasonOfDate, sunDirection } from './season.js';
+import { SEASON_LOOK, seasonOfDate, sunDirection, dateForSeason, parseDate } from './season.js';
 import { AcornGame } from './acorns.js';
 import { Identify } from './identify.js';
 import { PlaceNames } from './placenames.js';
@@ -125,25 +125,32 @@ async function main() {
   else if (carried) arrival.plan(carriedPoint);
   if (!direct) { arrival.hold(); veg.update(flight.pos.x, flight.pos.z, true); }
 
-  // Base texture: the erased imagery when the tile has it, else the rewilded habitat texture.
+  // Base texture: the erased imagery when the tile has it (without its tree crowns when the tile has
+  // client.texture_ground; ?base=imagery shows the photo with them, for comparison), else the rewilded habitat texture.
+  const baseImagery = params.get('base') === 'imagery';
+  const photo = (!baseImagery && tile.groundTextureImage) || tile.imageryTextureImage;
+  terrain.useLitter = photo === tile.groundTextureImage;   // forest-floor litter only on the crown-free ground
   const peek = { want: false, shown: false, pending: null, present: null, roadsWere: false };   // present-day peek, below
   let texKind = 'rewilded';
   function setTexture(kind) {
     texKind = kind;
     if (peek.shown) return;   // applied when the peek ends
-    const imagery = kind === 'imagery' && tile.imageryTextureImage;
-    terrain.setTexture(imagery ? tile.imageryTextureImage : tile.textureImage);
+    const imagery = kind === 'imagery' && photo;
+    terrain.setTexture(imagery ? photo : tile.textureImage);
     terrain.setImagery(!!imagery, tile.imageryRef);
     $('texImagery').classList.toggle('on', !!imagery); $('texRewild').classList.toggle('on', !imagery);
   }
-  $('texImagery').disabled = !tile.imageryTextureImage;
-  if (!tile.imageryTextureImage) $('texImagery').title = 'this tile has no erased imagery; run the erase step';
+  $('texImagery').disabled = !photo;
+  if (!photo) $('texImagery').title = 'this tile has no erased imagery; run the erase step';
   $('texImagery').onclick = () => setTexture('imagery');
   $('texRewild').onclick = () => setTexture('rewilded');
-  setTexture(tile.imageryTextureImage ? 'imagery' : 'rewilded');
+  setTexture(photo ? 'imagery' : 'rewilded');
 
-  const state = { season: 'auto', hour: +$('time').value };   // 'auto' tracks today's date
-  const seasonNow = () => state.season === 'auto' ? seasonOfDate() : state.season;
+  const state = { season: 'auto', hour: +$('time').value };   // 'auto' tracks today's date (or ?date=MM-DD)
+  let fixedDate = parseDate(params.get('date'));
+  // The date the ground's measured colour shows: today (or ?date), or the chosen season's mid-month.
+  const dateNow = () => state.season === 'auto' ? (fixedDate || new Date()) : dateForSeason(state.season);
+  const seasonNow = () => state.season === 'auto' ? seasonOfDate(dateNow()) : state.season;
   $('season').onchange = e => { state.season = e.target.value; applySeason(); };
   $('time').oninput = e => { state.hour = +e.target.value; };
   $('detail').onchange = e => { veg.radius = +e.target.value; veg.update(flight.pos.x, flight.pos.z, true); };
@@ -154,7 +161,8 @@ async function main() {
   showPerceives('corvus_corax');
 
   function applySeason() {
-    const s = seasonNow(); $('seasonNote').textContent = state.season === 'auto' ? `(${s})` : '';
+    const s = seasonNow(), d = dateNow(), measured = terrain.setDate(d);   // the ground's measured colour for the date
+    $('seasonNote').textContent = state.season === 'auto' ? `(${s}${measured ? `, ${d.toLocaleDateString('en', { day: 'numeric', month: 'short' })}` : ''})` : '';
     veg.setLook(SEASON_LOOK[s]);
     if (far.setSeason) far.setSeason(s);   // far impostors follow the season too
   }
@@ -248,7 +256,9 @@ async function main() {
     return sound;
   };
 
-  window.__we = { tile, flight, raven, camera, veg, terrain, far, grass, roads, scene, renderer, minimap, atmosphere, sky, acorns, identify, places, peek, setPeek, sound, animals, arrival, rocks, squirrel, woodpecker, credits };   // debugging handle
+  // tests and comparisons: __we.setDate('01-15') shows that day's measured colour ('' for today)
+  const setDate = str => { fixedDate = parseDate(str); state.season = 'auto'; $('season').value = 'auto'; applySeason(); return terrain.seasonStats; };
+  window.__we = { setDate, tile, flight, raven, camera, veg, terrain, far, grass, roads, scene, renderer, minimap, atmosphere, sky, acorns, identify, places, peek, setPeek, sound, animals, arrival, rocks, squirrel, woodpecker, credits };   // debugging handle
   if (!screen) makeSound();
 
   // Into the world: season, observer, sound, then the arrival flight over the chosen point.

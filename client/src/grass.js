@@ -3,7 +3,7 @@ import { uniforms as atmo, ATMOSPHERE_GLSL } from './atmosphere.js';
 import { SEASON_LOOK } from './season.js';
 import { buildAnnualClump, buildBunchClump, buildTussockClump, buildOatClump } from './grassBlades.js';
 import { windUniforms, WIND_GLSL } from './wind.js';
-import { groundUniforms, GROUND_GLSL } from './terrain.js';
+import { groundUniforms, GROUND_GLSL, seasonState } from './terrain.js';
 import { ShrubField, ClumpField, KIND, waterAt } from './shrubfield.js';
 import { GrassShells } from './grassShells.js';
 import { rockKeep } from './tilepackage.js';
@@ -168,7 +168,8 @@ const COMMON_VERT = /* glsl */`
     vec3 gw; vec3 g = groundAlbedo(root, 1.0, gw);
     float on = smoothstep(0.05, 0.4, gw.r + 0.5 * gw.g);
     if (on < 0.01) return c;
-    vec3 gr = groundRecolour(textureLod(map, groundUv(root), 8.0).rgb, gw);
+    vec2 guv = groundUv(root);
+    vec3 gr = groundRecolour(textureLod(map, guv, 8.0).rgb, gw, guv, groundPave(guv, 8.0));
     vec3 local = c * clamp(g / max(gr, vec3(1e-3)), vec3(0.75), vec3(1.3));
     vec3 mean = type > 0.5 ? mix(bRoot, bTip, 0.6) : mix(aRoot, aTip, 0.6);
     float ml = dot(mean, G_LUMA), gl = dot(g, G_LUMA);
@@ -857,7 +858,21 @@ export class Grass {
   applyLook(look) {
     const season = seasonOf(look), P = PALETTE[season], ref = SEASON_LOOK[season].grass, u = this.uniforms;
     const k = look.grass.map((v, i) => Math.min(Math.max(v / ref[i], 0.6), 1.6));   // the tint sets the overall tone
-    const set = (uni, rgb) => uni.value.setRGB(rgb[0] * k[0], rgb[1] * k[1], rgb[2] * k[2], THREE.SRGBColorSpace);
+    // Measured season (terrain.js seasonState): the season's palette keeps its shape (root to tip, heads,
+    // awns), and its mean leaf colour is set, in linear light, to the summer palette's (made for the July
+    // photo) times the open grass's measured ratio for the date over July, so the blades are the colour of
+    // the ground they stand on.
+    let kl = null;
+    const g = seasonState.grass;
+    if (g) {
+      const lin = v => v <= 0.04045 ? v / 12.92 : ((v + 0.055) / 1.055) ** 2.4;
+      const mean = p => p.root.map((r, i) => lin(r + 0.6 * (p.tip[i] - r)));
+      const ms = mean(PALETTE.summer.annual), mp = mean(P.annual);
+      kl = ms.map((v, i) => Math.min(Math.max(v * g[i] / mp[i], 0.4), 2.5));
+    }
+    const set = kl
+      ? (uni, rgb) => { uni.value.setRGB(rgb[0], rgb[1], rgb[2], THREE.SRGBColorSpace); uni.value.r *= kl[0]; uni.value.g *= kl[1]; uni.value.b *= kl[2]; }
+      : (uni, rgb) => uni.value.setRGB(rgb[0] * k[0], rgb[1] * k[1], rgb[2] * k[2], THREE.SRGBColorSpace);
     set(u.aRoot, P.annual.root); set(u.aTip, P.annual.tip); set(u.aHead, P.annual.head); set(u.aAwn, P.annual.awn);
     set(u.bRoot, P.bunch.root); set(u.bTip, P.bunch.tip); set(u.bHead, P.bunch.head); set(u.bAwn, P.bunch.awn);
     u.heightScale.value = P.height; u.heads.value = P.heads; u.thatch.value = P.thatch; u.leafScale.value = P.leaf; u.dry.value = P.dry;
@@ -867,7 +882,7 @@ export class Grass {
   // x, z (the flight position) are kept for the caller's signature; the camera position is used.
   update(x, z, dt, camera, look) {
     this.uniforms.time.value += dt;
-    const key = look.grass.join(',') + (look === SEASON_LOOK[this.season] ? '' : '?');
+    const key = look.grass.join(',') + (look === SEASON_LOOK[this.season] ? '' : '?') + seasonState.version;
     if (key !== this.lookKey) { this.lookKey = key; this.applyLook(look); }
     const cp = camera.position, north = -cp.z, agl = cp.y - this.ground(cp.x, north);
     // From the air the blade clumps are sub-pixel and the shells and tussocks carry the sward, so the

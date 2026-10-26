@@ -408,7 +408,7 @@ export async function loadTile(tileId, base = '../tiles/') {
   for (const k of ['client.heights', 'client.texture', 'client.habitat', 'client.canopy', 'client.masks'])
     if (!L[k]) throw new Error(`tile ${id} lacks ${k}; run the derive step`);
   const MX = L['client.species_mix'], mixFiles = MX?.files || {};
-  const [heights, texture, habitat, canopy, masks, species, perception, calendar, imagery, features, roads, imageryTexture, mast, mixIndex, mixJson, mixDensity, outcrop, geology, soils, groundClasses, profile, speciesPrior, detail, canopyHeight] = await Promise.all([
+  const [heights, texture, habitat, canopy, masks, species, perception, calendar, imagery, features, roads, imageryTexture, mast, mixIndex, mixJson, mixDensity, outcrop, geology, soils, groundClasses, profile, speciesPrior, detail, canopyHeight, groundTexture, seasonImage] = await Promise.all([
     loadImageData(dir + L['client.heights'].path), loadImageData(dir + L['client.texture'].path),
     loadImageData(dir + L['client.habitat'].path), loadImageData(dir + L['client.canopy'].path),
     loadImageData(dir + L['client.masks'].path),
@@ -420,7 +420,8 @@ export async function loadTile(tileId, base = '../tiles/') {
     L['client.features'] ? fetch(dir + L['client.features'].path).then(r => r.ok ? r.json() : null).catch(() => null) : null,
     // decayed-road weight on the 5 m grid (255 pavement, falling to 0 over the verge); optional
     L['client.roads'] ? loadImageData(dir + L['client.roads'].path).catch(() => null) : null,
-    // NAIP with humans erased (JPEG, 4000 px); only the image is needed, not its pixels. Optional.
+    // NAIP with humans erased (JPEG, 4000 px); only the image is needed, not its pixels. Optional. Still fetched
+    // beside client.texture_ground: groundDetail.js reads its bare-ground mask from it, and ?base=imagery shows it.
     L['client.texture_imagery'] ? loadOptionalImage(dir + L['client.texture_imagery'].path) : null,
     // fall acorn_mast score 0..100 in R on the 30 m grid (acorn game); optional
     L['client.mast'] ? loadImageData(dir + L['client.mast'].path).catch(() => null) : null,
@@ -444,6 +445,10 @@ export async function loadTile(tileId, base = '../tiles/') {
     // lidar step (tile-spec "Lidar"): the 2 m micro-relief residual and the 10 m canopy height; optional
     L['client.terrain_detail'] ? loadDetail(dir + L['client.terrain_detail'].path).catch(e => { console.warn('terrain detail:', e.message); return null; }) : null,
     L['client.canopy_height'] ? loadImageData(dir + L['client.canopy_height'].path).catch(() => null) : null,
+    // seasonal colour (tile-spec "Seasonal colour"): the erased NAIP with the tree crowns and their shadows
+    // replaced by ground (the base the 3D trees stand on), and the Sentinel-2 monthly sheet; optional
+    L['client.texture_ground'] ? loadOptionalImage(dir + L['client.texture_ground'].path) : null,
+    L['client.season_rgb'] ? loadOptionalImage(dir + L['client.season_rgb'].path) : null,
   ]);
   if (features) markRewilded(features, m);
   const rewild = profile ? new RewildGrid(profile, m.size_m || 10000) : null;
@@ -467,6 +472,8 @@ export async function loadTile(tileId, base = '../tiles/') {
     waterMask: features ? new WaterMask(features, size, roads?.width || 2000) : null,
     // the imagery's own summer grass and oak means (sRGB 0..1), the baseline for season recolouring
     imageryTextureImage: imageryTexture, imageryRef: imageryTexture ? { grass_mean: ti.grass_mean, oak_mean: ti.oak_mean } : null,
+    // the imagery without trees (client.texture_ground), and the season_rgb sheet (an Image; season.js reads its frames)
+    groundTextureImage: groundTexture, seasonImage,
     species, perception, calendar, imagery, features, speciesPrior,
     latitude: (m.bounds_wgs84[1] + m.bounds_wgs84[3]) / 2,
   };

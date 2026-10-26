@@ -2,6 +2,7 @@ import * as THREE from 'three';
 import { uniforms as atmo, ATMOSPHERE_GLSL } from './atmosphere.js';
 import { windUniforms, WIND_GLSL } from './wind.js';
 import { GroundDetail, detailUniforms, DETAIL_GLSL } from './groundDetail.js';
+import { SeasonColour, LITTER } from './season.js';
 
 // Ground colour, shared: the terrain shader and every grass and shrub material that wants to
 // match the ground (blades, tufts, sward shells, clumps) bind these same uniform objects and call
@@ -15,7 +16,14 @@ export const groundUniforms = {
   canopyMap: { value: null },   // tile canopy raster: r = tree cover %, g = shrub cover % (8-bit percent)
   contactAO: { value: null },   // shadows.js: top-down sky occlusion under each near tree (r = 0 open .. 1 at the trunk)
   contactAOMatrix: { value: new THREE.Matrix4().set(0, 0, 0, 10, 0, 0, 0, 10, 0, 0, 0, 10, 0, 0, 0, 1) },   // world -> its uv
+  // Measured season (season.js SeasonColour): the ground texture times seasonMap's multiplier (stored as
+  // multiplier / 2 in an sRGB texture, 20 m, smooth), in place of the palette; 1 while the map is the
+  // ground or imagery texture of a tile with the seasons layers.
+  seasonMap: { value: null }, seasonOn: { value: 0 },
 };
+// The measured season for the CPU side: grass.js takes its blades' tint from `grass` (the open grass's
+// flat-ground ratio for the date over July, linear) when it is set; `version` bumps on each change.
+export const seasonState = { grass: null, date: null, version: 0 };
 // Riparian floor (habitat 6), terrain shader only: the class has no channel in masks.png, so the
 // client builds its weight from the habitat grid (ripMask, bilinear across the 30 m cells exactly as
 // masks.png is). ripRef is the current texture's own linear mean over interior riparian cells, so one
@@ -30,10 +38,17 @@ export const GROUND_GLSL = /* glsl */`
   uniform vec3 grassTint; uniform vec3 oakTint; uniform float oakMix;
   uniform float imagery; uniform vec3 grassRef; uniform vec3 oakRef;   // imagery: 1 when map is the erased NAIP
   uniform float groundFx; uniform sampler2D canopyMap; uniform sampler2D contactAO; uniform mat4 contactAOMatrix;
+  uniform sampler2D seasonMap; uniform float seasonOn;
   const vec3 G_LUMA = vec3(0.299, 0.587, 0.114);
   vec2 groundUv(vec3 posW) { return vec2(posW.x, -posW.z) / tileSize; }
-  // Season recolour of a texel (linear) given its soft habitat weights (grassland, oak, chaparral).
-  vec3 groundRecolour(vec3 c, vec3 w) {
+  float groundPave(vec2 uv, float lod) { return smoothstep(0.55, 0.75, textureLod(roads, uv, lod).r); }
+  // Season recolour of a texel (linear) given its soft habitat weights (grassland, oak, chaparral), its
+  // uv and its pavement weight (decayed pavement keeps its grey).
+  vec3 groundRecolour(vec3 c, vec3 w, vec2 uv, float pave) {
+    if (seasonOn > 0.5) {
+      // Measured: the Sentinel-2 ratio for the date over July, the litter under closed canopy (season.js).
+      return c * mix(textureLod(seasonMap, uv, 0.0).rgb * 2.0, vec3(1.0), pave);
+    }
     if (imagery > 0.5) {
       // Summer NAIP: re-colour relative to the imagery's own grass and oak means. The ratio is
       // normalised to unit luminance so the photo keeps its brightness and only shifts in hue
@@ -72,7 +87,7 @@ export const GROUND_GLSL = /* glsl */`
   vec3 groundAlbedo(vec3 posW, float lod, out vec3 w) {
     vec2 uv = groundUv(posW);
     w = groundWeights(uv, lod);
-    return groundRecolour(textureLod(map, uv, lod).rgb, w);
+    return groundRecolour(textureLod(map, uv, lod).rgb, w, uv, groundPave(uv, lod));
   }
 `;
 
@@ -106,7 +121,7 @@ const FRAG = /* glsl */`
     vec3 w = texture2D(masks, vUv).rgb;                 // soft weights: grassland, oak woodland, chaparral
     float road = texture2D(roads, vUv).r;
     w *= 1.0 - smoothstep(0.55, 0.75, road);            // decayed pavement keeps its grey
-    vec3 c = groundRecolour(texture2D(map, vUv).rgb, w);
+    vec3 c = groundRecolour(texture2D(map, vUv).rgb, w, vUv, smoothstep(0.55, 0.75, road));
     // Riparian floor by season: the texture's riparian mean is pulled to the season's hue (the ratio
     // normalised to unit luminance, so the photo's own light and dark survive) and brightness.
     float wRip = texture2D(ripMask, vUv).r * (1.0 - smoothstep(0.55, 0.75, road));
@@ -260,6 +275,13 @@ export class Terrain {
       canopy.colorSpace = THREE.NoColorSpace; canopy.generateMipmaps = true; canopy.minFilter = THREE.LinearMipmapLinearFilter;
       G.canopyMap.value = canopy;
     } else { G.canopyMap.value = new THREE.DataTexture(new Uint8Array(4), 1, 1); G.canopyMap.value.needsUpdate = true; }
+    // Measured season colour (tile-spec "Seasonal colour", season.js): a 20 m multiplier texture, rebuilt on
+    // the CPU when the date changes (setDate). Until then, and on a tile without the layers, it is 1.
+    this.season = tile.seasonImage && tile.manifest.layers['client.season_rgb'] ? new SeasonColour(tile) : null;
+    const SN = this.season ? this.season.N : 1, sm = new THREE.DataTexture(new Uint8Array(SN * SN * 4).fill(188), SN, SN);   // sRGB 188 = 0.5: x 2 = 1
+    sm.colorSpace = THREE.SRGBColorSpace; sm.magFilter = THREE.LinearFilter; sm.minFilter = THREE.LinearFilter; sm.generateMipmaps = false;
+    sm.needsUpdate = true; G.seasonMap.value = sm;
+    this.useLitter = !!tile.groundTextureImage;   // main.js turns it off for ?base=imagery (crowns still in the photo)
     // Near-ground detail materials and their per-tile masks (groundDetail.js); textures stream in after.
     this.detail = new GroundDetail(tile);
     ripUniforms.ripMask.value = riparianMask(tile);
@@ -304,7 +326,9 @@ export class Terrain {
   }
   setTexture(image) {
     this.uniforms.map.value = this.textureFor(image);
-    const own = image === this.tile.textureImage || image === this.tile.imageryTextureImage;
+    const photo = image === this.tile.groundTextureImage || image === this.tile.imageryTextureImage;
+    this.uniforms.seasonOn.value = photo && this.season ? 1 : 0;   // the measured multiplier is for the July photo
+    const own = image === this.tile.textureImage || photo;
     this.uniforms.ripOn.value = own ? 1 : 0;
     if (own) this.uniforms.ripRef.value.copy(this.riparianRef(image));
   }
@@ -337,13 +361,58 @@ export class Terrain {
     if (ref?.grass_mean) this.uniforms.grassRef.value.set(...ref.grass_mean);
     if (ref?.oak_mean) this.uniforms.oakRef.value.set(...ref.oak_mean);
   }
+  // Season palette. On a tile with the seasons layers (after setDate) the habitat texture's grass, oak and
+  // riparian take the measured class means (open_grass, oak_woodland, riparian: month over July, linear)
+  // and the photo's riparian corridor is in the multiplier with every other class; else the hand palette.
   setLook(look) {
-    this.uniforms.grassTint.value.setRGB(...look.grass);
-    this.uniforms.oakTint.value.setRGB(...look.oakLeaf);
-    this.uniforms.oakMix.value = 1 - look.oakLeafOn;
+    const u = this.uniforms, m = this.measured;
+    if (m?.grass) u.grassTint.value.setRGB(0.84 * m.grass[0], 0.77 * m.grass[1], 0.47 * m.grass[2]);   // the habitat texture's own grass x the ratio
+    else u.grassTint.value.setRGB(...look.grass);
+    if (m?.oak) { u.oakTint.value.setRGB(0.67 * m.oak[0], 0.59 * m.oak[1], 0.28 * m.oak[2]); u.oakMix.value = 1; }
+    else { u.oakTint.value.setRGB(...look.oakLeaf); u.oakMix.value = 1 - look.oakLeafOn; }
     const rp = look.riparian;
-    this.uniforms.ripMix.value = rp ? rp.mix : 0;
-    if (rp) { this.uniforms.ripTint.value.setRGB(...rp.tint, THREE.SRGBColorSpace); this.uniforms.ripDark.value = rp.dark; }
+    if (u.seasonOn.value > 0.5) u.ripMix.value = 0;
+    else if (m?.rip) {
+      const r = u.ripRef.value, q = m.rip;
+      u.ripTint.value.setRGB(r.x * q[0], r.y * q[1], r.z * q[2]); u.ripDark.value = 0.299 * q[0] + 0.587 * q[1] + 0.114 * q[2]; u.ripMix.value = 1;
+    } else {
+      u.ripMix.value = rp ? rp.mix : 0;
+      if (rp) { u.ripTint.value.setRGB(...rp.tint, THREE.SRGBColorSpace); u.ripDark.value = rp.dark; }
+    }
+  }
+  // The measured season for a date (a Date; only month and day count): the multiplier texture from the two
+  // months around it, and the class ratios for the habitat texture's palette and the grass blades. Returns
+  // false on a tile without the seasons layers (the palette stays). CPU work only when the day changes.
+  setDate(date) {
+    if (!this.season) return false;
+    const key = `${date.getMonth()}-${date.getDate()}-${this.useLitter}`;
+    if (key === this.dateKey) return true;
+    this.dateKey = key;
+    const t0 = performance.now(), S = this.season;
+    const r = S.build(date, this.useLitter ? this.litterTints() : null), N = r.size, tex = this.uniforms.seasonMap.value, d = tex.image.data;
+    for (let j = 0; j < N; j++) d.set(r.pixels.subarray(j * N * 4, (j + 1) * N * 4), (N - 1 - j) * N * 4);   // rows north first -> a DataTexture's south first
+    tex.needsUpdate = true;
+    const mr = k => S.manifestRatio(date, k);
+    this.measured = { grass: mr('open_grass') || mr('grassland'), oak: mr('oak_woodland'), rip: mr('riparian') };
+    seasonState.grass = r.classes[5] || this.measured.grass; seasonState.date = date; seasonState.version++;
+    this.seasonStats = { ms: Math.round(performance.now() - t0), months: r.months, slope: r.slope.map(v => +v.toFixed(3)), classes: r.classes };
+    return true;
+  }
+  // Litter multipliers [needle, oak] (linear): litter albedo over the ground texture's own mean under
+  // closed canopy (tree cover 60% and more), where the crown fill is a flat dry-grass beige. Once.
+  litterTints() {
+    if (this._litter) return this._litter;
+    const S = this.season; S.prepare();
+    const N = S.N, cv = document.createElement('canvas'); cv.width = cv.height = N;
+    const ctx = cv.getContext('2d', { willReadFrequently: true }); ctx.imageSmoothingQuality = 'high';
+    ctx.drawImage(this.tile.groundTextureImage, 0, 0, N, N);
+    const px = ctx.getImageData(0, 0, N, N).data, lin = v => { v /= 255; return v <= 0.04045 ? v / 12.92 : ((v + 0.055) / 1.055) ** 2.4; };
+    const s = [0, 0, 0]; let n = 0;
+    for (let k = 0; k < N * N; k++) if (S.cov[k] >= 0.6 && S.cls[k] !== 7) { for (let q = 0; q < 3; q++) s[q] += lin(px[k * 4 + q]); n++; }
+    const fill = n > 50 ? s.map(v => v / n) : [0.25, 0.23, 0.15];
+    const tint = srgb => srgb.map((v, q) => lin(v * 255) / Math.max(fill[q], 1e-3));
+    this.fillMean = fill.map(v => +v.toFixed(4));
+    return (this._litter = [tint(LITTER.needle), tint(LITTER.oak)]);
   }
 }
 

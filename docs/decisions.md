@@ -942,3 +942,54 @@ Rejected: one composite per season (green-up and browning each take a few weeks)
 January is 1-4 clear looks; 10-40 exist only pooled); reading at 10 m (over twice the bytes for a colour used at 20 m
 and coarser); a Planetary Computer key (anonymous signing works). Copernicus's notice makes the credit line
 ("Contains modified Copernicus Sentinel data 2019-2026 ...") required wherever the colour is shown.
+
+## 2026-10-26: the client shows the ground's measured colour for the date, on the photo without its trees
+
+The client recoloured the summer NAIP photo by a hand palette per season (season.js SEASON_LOOK, terrain.js
+groundRecolour), and the photo still held every tree crown, so in fall the ground under the 3D trees stayed canopy
+green. Decided: on a tile with `client.texture_ground` and `client.season_rgb`, imagery mode draws `texture_ground.jpg`
+(`?base=imagery` shows `texture_imagery.jpg` for comparison; the peek keeps `texture_present.jpg`), and each texel is
+the base times a multiplier for the date, built on the CPU (season.js SeasonColour) into one 500 px texture (20 m,
+RGBA8 holding sRGB(multiplier / 2), so 1 MB on the GPU and one bilinear fetch, no mipmaps; the ratio is smooth).
+Per calendar month, per 20 m pixel: the linear colour of the month over July of the open ground (tree plus shrub
+cover from the lidar 10 m grid: weight 1 under 10%, 0 at 35%; shrubs under 4 m stay green in July and damp the
+ratio, oak open ground Apr 0.66 -> 0.60 red ratio with them excluded) of the pixel's own habitat class around it
+(two 100 m box passes, sigma ~40 m, normalised by the open weight, shrunk toward the class's tile-wide open mean
+with a prior of 0.15), so a canopy pixel takes its class's nearby open ground and never the canopy's colour. The
+date blends the two months around it linearly from the 15th to the 15th; a season choice is its month's 15th.
+Luminance rule: the hue of that local ratio is kept; its brightness is the class's on flat ground. Per month the
+log luminance ratio of every open pixel is regressed on the slope's northness (n_north from the 5 m DEM over 20 m)
+and the slope term removed (home tile: -0.39 in January, -0.28 in February, about 0 in summer), and the local
+brightness left after that passes within +-12%. Measured on the home tile's open grassland, north- against
+south-facing (northness > 0.2 / < -0.2): the frames' own ratio January 0.51 / 0.59 (N/S 0.86), December 0.59 /
+0.72 (0.83); the multiplier 0.54 / 0.53 (1.03) and 0.66 / 0.63 (1.04); flat ground keeps 0.53 and 0.65, so winter
+ground is about half as bright as July and greener, but a north slope is not darkened a second time under the
+client's own low sun. Rejected: a blur alone (100 m leaves hillside-scale shading in); a cosine model of the
+Sentinel overpass sun (10:45 solar time) with 0-40% diffuse over-corrected (north/flat 1.00-1.23 after, from
+0.79-0.88); per-pixel luminance kept whole. Under closed canopy (lidar tree cover 50% -> 90%, smoothstep, 0.9 at
+most) the multiplier turns toward litter: sRGB needle duff (0.40, 0.31, 0.22) under conifer, oak leaf litter
+(0.43, 0.37, 0.28) under oak and riparian, half each under mixed forest, over the ground texture's own mean under
+cover of 60% and more (the crown fill's flat beige: linear 0.28, 0.25, 0.16 on the home tile), on top of the sky
+occlusion; not seasonal. The ponderosa stand (2958, 9835, cover 0.99) reads as brown needle duff from 20 m and
+from 1.5 m in every month, where it was pale grey-beige. Riparian is a class in the multiplier, so in imagery mode
+ripMix is 0; the rewilded habitat texture's grass, oak and riparian take the manifest's whole-class means
+(open_grass, oak_woodland, riparian; month over July, linear) in place of the palette, oakMix 1. Grass blades and
+tuft cards: the season's palette keeps its shape (root to tip, heads, awns) and its mean leaf colour is set, in
+linear light, to the summer palette's (tuned against the July photo) times class grassland's flat-ground ratio
+from the same build, so up close and at the hand-over they are the colour of the ground. A tile without the
+seasons layers keeps the palette path unchanged (seasonOn 0, `measured` unset). Results, home tile at 4309, 3440
+from 60 m and 1.5 m, and the same four dates on Placerville (2868, 5500) and Cosumnes (5751, 7400) and from 400 m:
+15 January green and dark, 15 April the greenest (open grass ratio 0.35, 0.60, 0.51 against January's 0.39, 0.57,
+0.48), 15 July the photo, 26 October gold-beige and a little darker (ratio about 0.88), no 20 m blocks or class
+seams visible from 60 or 400 m, blades and ground the same colour at the hand-over. Cost: fps at the home 60 m view
+38.3 before, 38.4-38.9 after (37.9 with the multiplier off, same session), at 1.5 m 37.5 / 36.5-36.7 (35.3 off):
+within noise. GPU: +1 MB (texture_ground replaces texture_imagery, both 4000 px). JS heap about +25 MB (the 20 m
+class, cover, open weight, northness, the July half of the blur, up to four cached months at 3 MB). Load: +6.7 MB
+season_rgb.png; texture_imagery.jpg is still fetched (groundDetail.js reads its bare-ground mask from it). CPU on
+a date change only: the first build at load 0.56-0.63 s (prepare, July, two months, litter), a date needing two new
+months 0.29-0.34 s, a date in cached months 26-60 ms; nothing per frame. `__we.setDate('MM-DD')` and `?date=MM-DD`
+set the day. Known: open ground in the oak woodland and chaparral classes greens much less than grassland
+(April red ratio 0.60 against 0.34, with shrubs excluded; it is measured, not contamination: the strictest
+openness gives the same), so oak savanna floor reads grey-olive in April beside emerald grassland; barren cells
+(class 8, about 0.8 grey in April) stay pale all year; the litter is one colour per class with no seasonal leaf
+fall; the October gold is the July photo's grey-beige slightly darkened, not more saturated.
