@@ -4,6 +4,8 @@
     python -m pipeline.build_tile --tile utm10n_690_4280 --steps species,derive
     python -m pipeline.build_tile --tile utm10n_690_4280 --steps species_prior   # client prior only, no fetch
     python -m pipeline.build_tile --tile utm10n_680_4280 --steps lidar,ground    # 1 m DEM, point cloud, crowns (pipeline/lidar.py)
+    python -m pipeline.build_tile --tile utm10n_680_4280 --steps seasons         # Sentinel-2 monthly colour (pipeline/fetch_sentinel.py)
+    python -m pipeline.build_tile --tile utm10n_680_4280 --steps inpaint         # ground-only base texture (pipeline/inpaint_crowns.py)
 """
 from __future__ import annotations
 
@@ -16,7 +18,7 @@ from .config import (ATTRIBUTION_FIELDS, GENERATOR, SPEC_VERSION, TILES_DIR, Til
                      read_json, sha256, today, write_json)
 from .species_data import CALENDAR, PERCEPTION, SEASONS
 
-ALL_STEPS = ["dem", "lidar", "naip", "osm", "hydro", "channels", "rewild_hydro", "veg", "ground", "species", "derive", "erase", "unreal"]
+ALL_STEPS = ["dem", "lidar", "naip", "osm", "hydro", "channels", "rewild_hydro", "veg", "ground", "species", "derive", "erase", "inpaint", "seasons", "unreal"]
 
 
 def load_manifest(tile: Tile) -> dict:
@@ -159,6 +161,22 @@ def run(tile: Tile, steps: list[str], force=False) -> dict:
                 from .erase_imagery import erase_imagery
                 add_layer(m, tile, "client.texture_imagery", erase_imagery(tile))
                 m["status"]["imagery_erased"] = True
+            elif step == "inpaint":
+                # The ground-only base texture: tree crowns (lidar CHM 3 m and taller) and their shadows synthesized
+                # from clean ground of the same class (pipeline/inpaint_crowns.py); needs erase and lidar.
+                from .inpaint_crowns import inpaint_crowns
+                info = inpaint_crowns(tile)
+                for k in ("client.texture_ground", "client.texture_ground_mask"):
+                    add_layer(m, tile, k, info[k])
+                m["status"]["crowns_inpainted"] = True
+            elif step == "seasons":
+                # Sentinel-2 L2A per calendar month (requirements-sentinel.txt); dates already read
+                # are cached under pipeline/_cache/sentinel/<tile>/looks/.
+                from .fetch_sentinel import build_seasons
+                for k, v in build_seasons(tile, force).items():
+                    add_layer(m, tile, k, v)
+                src = m["layers"]["seasons.s2_monthly"]["source"]
+                m["sources"][src]["years_used"] = m["layers"]["seasons.s2_monthly"]["years"]
             elif step == "unreal":
                 from .export_unreal import export_unreal
                 add_layer(m, tile, "unreal", export_unreal(tile))

@@ -82,6 +82,8 @@ tiles/<tile_id>/
   client/ground_classes.json    derived   rock classes, unit and map unit tables for the two PNGs, per-tile fractions, outcrop summary
   client/texture_imagery.jpg    derived   NAIP with the human footprint erased and pavement bleached, 4000 px (2.5 m) JPEG
   client/texture_present.jpg    derived   present-day NAIP as captured, same 4000 px metric grid as texture_imagery, JPEG q88
+  client/texture_ground.jpg     derived   texture_imagery with tree crowns (lidar CHM 3 m+) and their shadows replaced by synthesized ground of the same class, same grid (see Ground-only texture)
+  client/texture_ground_mask.png derived  1000 px: share of each 10 m pixel replaced in texture_ground (255 all filled)
   client/imagery.png            derived   present-day NAIP for the mini-map, 1024 px on the metric tile grid
   client/features.json          derived   present-day roads, streams (from hydro/channels.geojson when built) and waterbodies in tile-local metres
   client/channel_depth.png      derived   channel incision, uint8 decimetres on the DEM grid: mean DEM on a 20 m ring minus the channel cell, 0-25 m; 0 off channel
@@ -90,6 +92,10 @@ tiles/<tile_id>/
   client/trees_lidar.bin        derived   lidar tree crowns: position, height, crown radius, confidence; 100 m cell index (see Lidar)
   client/canopy_height.png      derived   10 m RGB: R p95 canopy height (0.25 m), G tree cover %, B shrub cover % (see Lidar)
   client/masks.png              derived   soft season-recolour weights: R grassland, G oak woodland, B chaparral
+  client/season_rgb.png         derived   Sentinel-2 median colour per calendar month, 12 frames of 500 px (20 m) in a 4 x 3 sheet (see Seasonal colour)
+  client/season_ndvi.png        derived   the same months' median NDVI, grey, same sheet layout
+  seasons/s2_<mm>.tif           optional  seasons step: float32 per month, bands red green blue (surface reflectance) and NDVI, 20 m; pipeline only
+  seasons/months.json           optional  seasons step: per month clear looks per pixel, fill, per-class colour and NDVI means, the NAIP flight dates
   client/species_mix_index.png  derived   row index per 30 m cell into species_mix.json mixes (0 = none), 8-bit grey (see Species mix)
   client/species_mix_density.png derived  RGB per 30 m cell: R tree_density, G shrub_density (multiplier = byte / 100), B 0
   client/species_mix.json       derived   format 2: species columns, EVT/BpS name -> species mix rows with their weights, per-tile fractions
@@ -211,6 +217,11 @@ Per source:
   and the records left out. The prior lists the GBIF datasets it used, which the credits
   panel links. A commercial derived work must leave the NC records out. Before a public release, register the records used as a GBIF derived
   dataset to get a citable DOI, and add it to the line.
+- **Copernicus Sentinel-2** (`copernicus_sentinel2_l2a`, or `copernicus_sentinel2_l2a_aws` when
+  read from the AWS fallback): free, full and open under the Legal Notice on the use of Copernicus
+  Sentinel Data, which asks every product made from the data to say "Contains modified Copernicus
+  Sentinel data [years]"; the line names the years searched and the source entry the
+  `years_used`. Anything drawn with `client/season_*.png` shows it.
 - **Public domain** (USGS 3DEP, NHDPlus HR, SGMC; USDA NAIP, SSURGO; LANDFIRE): no credit
   is required. The lines follow each publisher's requested citation (USGS credit
   guidance, LANDFIRE's citation model, the NRCS SSURGO citation) and are shown anyway.
@@ -478,6 +489,72 @@ layer records `mask_fraction`, `inpainted_fraction` and `synthesized_fraction`,
 client recolours by season relative to. `encoding` and the docs comparison crops name the NAIP
 year from `imagery/naip.tif` (the `imagery.naip` layer's `naip_year`), and the layer's `source` is
 the imagery's own. `status.imagery_erased` is true once this has run.
+
+## Ground-only texture
+
+Trees are drawn in 3D over the ground, so a crown left in the base photo is a dark blob under every
+tree and a canopy-green tint once the season turns. The `inpaint` step (`pipeline/inpaint_crowns.py`,
+needs `erase` and `lidar`) writes `client/texture_ground.jpg`: `texture_imagery.jpg` with every pixel
+where the 1 m CHM is 3 m or taller (plus the shadow lobe fitted to the flight's sun, dark neighbours
+and a 1 px feather) replaced by ground synthesized from clean, lit pixels of the same habitat class
+(riparian its own class): colour from a multi-scale mean of clean ground (15 to 1000 m), texture
+quilted from the nearest clean windows, low frequencies set to the ground colour. Highway and
+county-road pavement and open water are never touched; the erased built areas have only their dark
+pixels filled; minor pavement follows 70% of its surroundings' change. On the three foothill tiles
+73-88% of the texture is filled; under closed canopy nothing of the ground shows in the photo, so
+the fill there is the class's open-ground colour and the client tints it toward litter by canopy
+cover. The layer records `mask_fraction`, `naip_date`, the fitted `sun` and the class means
+(docs/texture-notes.md).
+
+## Seasonal colour
+
+The base texture (`client/texture_imagery.jpg`) is one summer NAIP photo: in a foothill fall or
+winter its grass is the wrong colour, and the season palette in `client/src/season.js` only guesses
+how wrong. The `seasons` step (`pipeline/fetch_sentinel.py`, `requirements-sentinel.txt`) measures
+it: every Copernicus Sentinel-2 Level-2A scene over the tile from 2019 on with scene cloud cover
+under 40%, from Microsoft Planetary Computer's `sentinel-2-l2a` (anonymous SAS signing, no key;
+the AWS open bucket `sentinel-cogs` through Element 84's Earth Search is the fallback, recorded as
+its own source). Only the tile's window is read from each COG, at 20 m (the 10 m bands' first
+overview; SCL is native 20 m). The tile grid is Sentinel's own UTM 10N grid with pixel edges on
+multiples of 20 m, so a window read needs no resampling; a scene in another CRS is warped.
+
+Per look: reflectance = (DN + offset) / 10000, offset -1000 for processing baseline 04.00 and
+later (2022-01-25 on), 0 before. Clear = SCL 4 vegetation, 5 bare, 6 water or 7 unclassified,
+minus SCL 3 cloud shadow, 8-9 cloud, 10 cirrus and 11 snow dilated by 3 pixels (60 m), minus
+pixels with no data in any band. A date's scenes (the tile can straddle two MGRS tiles) are
+mosaicked first-clear-wins, so a date counts once. Per calendar month, over all years: the median
+of the clear looks' red, green and blue reflectance, and the median of their per-look NDVI
+(B08 - B04) / (B08 + B04). A pixel with under 3 clear looks takes the mean of the nearest months
+either side that have 3 there; a month whose median looks is under 3 is refused and filled whole
+the same way, and flagged `refused`. Each month records `looks_median`, `looks_min`, `looks_p05`,
+`filled_fraction` and `filled_pixels`.
+
+The client products, on the tile grid (pixel centres as every client raster):
+
+```
+  client/season_rgb.png   RGB, 2000 x 1500: 12 frames of 500 x 500 px (20 m), month m (1-12) at
+                          column (m - 1) % 4, row (m - 1) // 4 (rows top to bottom), each north-up.
+                          byte = 255 * sRGB_encode(clamp(reflectance / 0.35, 0, 1)) of B04 B03 B02:
+                          sampled as an sRGB texture, the linear value times 0.35 is reflectance.
+  client/season_ndvi.png  grey (L), the same layout: byte = 255 * (NDVI + 0.2) / 1.1, clamped
+                          (0 = NDVI -0.2, 255 = 0.9).
+```
+
+The layers (`client.season_rgb`, `client.season_ndvi`) carry the layout, the stretch, the years
+used, the per-month look counts and, per month and present-day habitat class (oak woodland,
+conifer, mixed, chaparral, grassland, riparian, and `open_grass`: grassland where lidar tree cover
+is under 10%), the class's mean colour (`srgb`, the PNG's encoding as 0..1; `reflectance`) and mean
+NDVI. `naip_reference` gives the base texture's NAIP flight dates and month, so a client can
+recolour the photo by the ratio of the month it shows to the NAIP month, per pixel or per class.
+At 20 m a pixel is a mix of what grows in it: under a closed canopy the colour is the canopy's, so
+the frames are the colour of the land from above, trees included; the tree-free ground colour is
+`open_grass` and the clear grass between crowns. Each frame also carries its month's sun: from
+November to January the north slopes are dark, so a client that lights the terrain itself should
+take the colour's ratio (month over the NAIP month) at a scale that leaves the relief out, or use the
+per-class means. `seasons.s2_monthly` (`seasons/months.json` and
+`seasons/s2_<mm>.tif`) is the float version for pipeline work; it is not shipped. The licence is
+Copernicus's free, full and open notice: the credit line ("Contains modified Copernicus Sentinel
+data ...") is required, and the source entry records `years_used`.
 
 ## Resources
 

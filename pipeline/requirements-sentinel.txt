@@ -1,0 +1,5 @@
+# Extra dependencies for the "seasons" build step (pipeline/fetch_sentinel.py): Sentinel-2 L2A scenes
+# from Microsoft Planetary Computer's STAC (anonymous SAS signing, no key), windowed COG reads by rasterio.
+# scipy (requirements-hydro.txt / requirements-ground.txt) dilates the cloud mask; shapely is in the base.
+pystac-client==0.8.3
+planetary-computer==1.0.0

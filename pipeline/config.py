@@ -130,7 +130,7 @@ NAIP_PAGE = "https://www.fpacbc.usda.gov/geo/imagery-programs/naip-imagery"
 #   attribution, attribution_url       the exact credit line to show, and the link it carries
 #   attribution_required               true when the licence makes showing the line a condition of use
 # Sources registered in other modules (fetch_dem, fetch_naip, fetch_vegetation, fetch_geology,
-# fetch_soils) carry the same fields; all_sources() returns the complete registry.
+# fetch_soils, fetch_lidar, fetch_sentinel) carry the same fields; all_sources() returns the complete registry.
 ATTRIBUTION_FIELDS = ("license", "license_url", "attribution", "attribution_url", "attribution_required")
 
 SOURCES = {
@@ -174,7 +174,8 @@ def all_sources() -> dict:
     A module whose optional dependencies are missing (requirements-ground.txt) is skipped: its
     sources cannot be in a tile built without it."""
     import importlib
-    for mod in ("fetch_dem", "fetch_naip", "fetch_vegetation", "fetch_geology", "fetch_soils", "fetch_lidar"):
+    for mod in ("fetch_dem", "fetch_naip", "fetch_vegetation", "fetch_geology", "fetch_soils", "fetch_lidar",
+                "fetch_sentinel"):
         try:
             importlib.import_module(f".{mod}", __package__)
         except ImportError:

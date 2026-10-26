@@ -912,3 +912,33 @@ the old skeleton to the shared one (the canopies cross-fade), and the far impost
 from the instance matrices, so a tree beyond the square casts from the 1 m ground (off by the drape, under the far
 cascades' texel); an animal resting on a crown beyond the square stands on the undraped tree (as before); if near matrices
 are ever moved on the CPU, perch.js must key its records on the matrix too.
+
+## 2026-10-26: the ground's colour by month is measured from Sentinel-2, not guessed from a palette
+
+The base texture is one NAIP photo (flown 20-21 July 2022 over the home tile), and the client recolours it by
+season with a palette ratio relative to the photo's own grass and oak means (season.js): a guess at what a foothill
+January or October looks like. Decided: a `seasons` build step (`pipeline/fetch_sentinel.py`) composites every
+Sentinel-2 L2A scene since 2019 with scene cloud under 40% into a median per calendar month over all years, cloud,
+shadow and snow masked by the scene classification (dilated 3 px), at 20 m, and ships two 4 x 3 sheets of 500 px
+frames (`client/season_rgb.png`, sRGB-encoded reflectance / 0.35; `client/season_ndvi.png`) with per-month,
+per-class mean colours and NDVI in the layers (tile-spec.md, Seasonal colour). The client lane replaces the palette
+with the measured ratio, month over July (the NAIP month), per pixel or per class. Home tile: 401 scenes (all MGRS
+10SFH; the 10SFJ row only touches the corner), 397 dates with clear pixels, 2.72 GB of COG blocks read in 18.7 min
+(bandwidth-bound at about 2.5 MB/s; 12 worker processes: 12 threads managed only a date per 15 s, apparently
+serialised on the remote COG opens); a re-run reads nothing (533 MB of per-date looks cached under pipeline/_cache) and composites in 40 s. Clear
+looks per pixel, median: 18 23 23 28 35 46 44 44 35 31 23 12 (January to December); no month refused; pixels under
+3 looks filled from the neighbouring months are at most 1,614 of 250,000 (December). Mean NDVI over open grass
+(grassland under 10% lidar tree cover): 0.51 0.59 0.65 0.66 0.52 0.31 0.24 0.23 0.22 0.23 0.28 0.37: green January
+to April (peak April), turning in May, gold June to October (under 0.31), green-up starting in December with the
+rains. Oak woodland and conifer stay at 0.65-0.76 all year; riparian stays green longest of the open classes (0.70
+in May, 0.58 in July against grass 0.24). The July frame is the NAIP month, so the base texture is the gold season. Placerville (690_4280): 770 scenes (it lies where relative orbits 70 and 113
+overlap), 3.48 GB in 27.5 min, looks 13-62, open grass 0.24-0.66; Cosumnes forks (680_4270): 400 scenes, 2.72 GB in
+18.7 min, looks 14-45, open grass 0.21-0.72 with the deepest gold (August-September 0.21). Same calendar on all three.
+Known: a month's frame carries that month's sun: November to January (noon sun 28-33 degrees) the north slopes are
+dark, so a per-pixel ratio against July would darken them twice in a client that also lights the terrain; divide
+the frames' brightness out, or use the per-class means. A 20 m pixel is a mix: under closed canopy the colour is the
+canopy's, so the frames are the land from above, trees included; the tree-free ground colour is `open_grass`.
+Rejected: one composite per season (green-up and browning each take a few weeks); per-year months (a single year's
+January is 1-4 clear looks; 10-40 exist only pooled); reading at 10 m (over twice the bytes for a colour used at 20 m
+and coarser); a Planetary Computer key (anonymous signing works). Copernicus's notice makes the credit line
+("Contains modified Copernicus Sentinel data 2019-2026 ...") required wherever the colour is shown.
