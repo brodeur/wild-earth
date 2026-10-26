@@ -460,7 +460,7 @@ and chance alone. Until a tile's species step has run they are seen by everyone 
   limb 3.5 cm or more thick, 3 m or more up, across it) of the oak 12-70 m off that lies most nearly away from the
   threat; down again after 25-60 s to the ground 12-27 m from the tree; wary for 60-120 s after. At dusk (sun under
   about 2 degrees) the flock flies up to a tall oak within 60 m, down at dawn; where the wood is not known (beyond the
-  near set) a bird flies into the crown and is not drawn once there. Event `turkeyFlush` (no sound yet).
+  near set) a bird flies into the crown and is not drawn once there. Event `turkeyFlush` (sound.js plays the heavy flush on it).
 - **California ground squirrel** (`loadGroundSquirrelMesh`, rodent template, `RIG.groundSquirrel` with the build
   lane's sit-up constants: sit 1.25, foreFold 2.2, spine 0.2, spinePhase 1.2, tipLag 0.6, tipWave 0.25, tipCurl 0.2,
   drop 0.016 m): cap 160, tiers 12 / 40 m, culled beyond 150 m of the eye, spawned within 220 m. Grassland and open
@@ -514,4 +514,21 @@ and chance alone. Until a tile's species step has run they are seen by everyone 
   from directly above in strong sun; a lizard on a rock sprinting moves on the rock's tangent plane, so on a curved top
   it can lift off it for the 0.3 s before it vanishes; the turkey's wing cards read edge-on from the side; a flushed
   flock's perches are often hidden by the crown's leaves (as real ones are); roosting birds beyond the near set are
-  simply not drawn; no sounds yet (a gobble, the putt alarm, the ground squirrel's whistle).
+  simply not drawn.
+- Sounds (2026-10-26, `sound.js`, all synthesised; this replaces the "no sounds yet" above). Turkey: a flock foraging
+  or walking within 40 m gives a contact call every 12-28 s from a random bird, a soft "putt" (1-3 notes, a sawtooth
+  falling a fifth in 50-70 ms through 1.3 and 2.6 kHz formants with a noise click) or, one time in three, a purr (a
+  420 Hz voiced tone chopped at 20-26 pulses a second for 0.6-1.3 s); March to May, from first light to two hours after
+  sunrise (computed from the latitude and season as `sunDirection` does), a tom of a flock within 300 m gobbles every
+  1-3 minutes (a ~1 s rattle: an 11-14 Hz pulse train on a voiced tone rising 330 -> 560 Hz and falling to 300, with
+  warble, two formants and breath), and two times in five a tom of another flock within 600 m answers. `turkeyFlush`
+  with an oak gives heavy wingbeats (one 5-6 Hz run of broadband thumps and feather hiss per bird, staggered as
+  `tkToTree` sends them) and alarm putts from several birds; the near layer adds a few settling flaps (and the crown's
+  leaves) as birds go from flight to perch, at most two per flush; with no oak the flock runs off putting. Ground
+  squirrel: `gsAlarm` gives a 2-4 note whistle-chirp (a near-pure tone rising 4.3 -> 5.4 kHz and falling to 4.5 kHz,
+  90-140 ms each) from the sentinel (the member that dived with no wait), then a soft scuffle when the first of the
+  others reaches its burrow (no sooner than 0.6 s after); a colony feeding within 50 m chirps softly now and then.
+  Fence lizard: a dash (`L_SPRINT`, or a hide that came between ticks) within 6 m of the listener gives a 0.1-0.2 s dry
+  scuttle of claw clicks (noise high-passed at 24 dB/octave, sharper on rock, duller on bark), refDistance 2.5 m;
+  nothing else. All of these use the near layer's slots, cooldowns and log (HUD labels "wild turkey", "ground
+  squirrel", "fence lizard"); the player cannot be these species, so C gives none of them.

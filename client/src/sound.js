@@ -27,10 +27,17 @@
 //            player within 20 m (Steller's "shaaar", the scrub-jay's "shreep"); a quail covey's "pit-pit" clucks
 //            while it forages or runs near the player and its "chi-ca-go" assembly after a flush; a deer's
 //            snort-wheeze when the player comes within 30 m of an active herd; a gray fox's bark at night,
-//            rare; a brush rabbit's or a jackrabbit's foot thump, rare, when it freezes or bolts. Each kind has its own cooldowns
+//            rare; a brush rabbit's or a jackrabbit's foot thump, rare, when it freezes or bolts; a wild turkey flock's
+//            contact "putt"s and purrs while it forages within 40 m, and at dawn in spring (March-May, from first light to
+//            two hours after sunrise) a tom's gobble from a flock within 300 m every 1-3 minutes, now and then answered by a
+//            second flock; a ground squirrel colony's soft chirps while it feeds near the player; a fence lizard's dry
+//            scuttle on rock or bark when it dashes within 6 m of the listener (it is otherwise silent). Each kind has its own cooldowns
 //            (per animal or group, and overall) so near animals give a few calls a minute, and none are near,
 //            none. These voices take a tighter distance model (refDistance 4-25 m) and at most NEAR_MAX slots.
 //            Played by the player: C barks as a squirrel, gives the waka as a woodpecker; a neighbour may answer.
+//            Events of animals.js on this layer too: 'turkeyFlush' (heavy wingbeats, one run per bird, staggered, with alarm
+//            putts; a few settling flaps as birds land in the oak; with no oak in reach only the putts as they run) and
+//            'gsAlarm' (the sentinel's whistle-chirp alarm, then a scuffle as the first of the others goes down a burrow).
 //   water    a stream wash plus gurgle, on a panner kept at the nearest point of the nearest flowline, so it
 //            fades in within ~80 m and comes from the right side; quieter in summer and fall.
 //   insects  a pre-rendered loop of field-cricket chirps at dusk in summer and fall over grassland.
@@ -39,6 +46,8 @@
 // N mutes (the context is suspended while muted or while the tab is hidden), C calls (the player's species' call); the volume and mute
 // state persist in localStorage. Short-lived voices are disconnected by the frame loop once they end, and
 // created/disconnected node counts are kept so a leak shows up in stats().
+
+import { sunDirection } from './season.js';
 
 const clamp = (x, a = 0, b = 1) => Math.min(b, Math.max(a, x));
 const smooth = (a, b, x) => { const t = clamp((x - a) / (b - a)); return t * t * (3 - 2 * t); };
@@ -91,13 +100,33 @@ const NEAR = {
   foxbark:  { label: 'gray fox', gain: 0.7, ref: 20, range: 320, synth: 'foxBark' },
   thump:    { label: 'brush rabbit', gain: 1.0, ref: 4, range: 35, synth: 'thump' },
   jthump:   { label: 'jackrabbit', gain: 1.3, ref: 5, range: 45, synth: 'thump' },
+  tcluck:   { label: 'wild turkey', gain: 0.6, ref: 6, range: 70, synth: 'putts' },
+  purr:     { label: 'wild turkey', gain: 0.6, ref: 4, range: 45, synth: 'purr' },
+  gobble:   { label: 'wild turkey', gain: 0.85, ref: 40, range: 700, synth: 'gobble' },
+  tflush:   { label: 'wild turkey', gain: 1.0, ref: 15, range: 400, synth: 'turkeyFlush' },
+  tputt:    { label: 'wild turkey', gain: 0.8, ref: 15, range: 250, synth: 'alarmPutts' },
+  tsettle:  { label: 'wild turkey', gain: 0.7, ref: 8, range: 120, synth: 'settle' },
+  gswhistle: { label: 'ground squirrel', gain: 0.7, ref: 15, range: 250, synth: 'gsWhistle' },
+  gschirp:  { label: 'ground squirrel', gain: 0.5, ref: 5, range: 50, synth: 'gsChirp' },
+  gsscuffle: { label: 'ground squirrel', gain: 0.55, ref: 3, range: 40, synth: 'scuffle' },
+  scuttle:  { label: 'fence lizard', gain: 0.3, ref: 2.5, range: 6, synth: 'scuttle' },
 };
 // animals.js state values the near layer reads (not exported there; keep in step with its constants)
 const S_PAUSE = 0, S_OUT = 3, S_SIT = 4, S_WORK = 7, S_EAT = 8;            // squirrel
 const W_CLING = 10, W_TOP = 11, W_FLY = 12, T_STORE = 2;                   // woodpecker; the acorn game's store task
 const D_BED = 32, J_FLY = 52, M_BED = 80, M_FLEE = 85, B_FREEZE = 104, B_BOLT = 105, JK_FREEZE = 124, JK_BOLT = 125;
 const G_FORAGE = 0, G_RUN = 1;                                             // quail covey
+const T_FLY = 133, T_PERCH = 134, TF_FORAGE = 0, TF_WALK = 1;              // wild turkey: bird, flock
+const GS_FEED = 140, GS_SIT = 142, GS_SENTRY = 143, GS_DIVE = 144, GS_DOWN = 145, C_OK = 0;   // ground squirrel: member, colony
+const L_SPRINT = 154, L_HIDE = 155;                                        // fence lizard
 const PECK_W = 38;   // a clinging woodpecker's peck: flick = max(0, sin(time * 38)), one strike per 2pi/38 s
+
+// The sunrise hour (solar time, as season.js's sunDirection) for a latitude and season: the declination from the noon
+// elevation, then the hour angle where the sun crosses the horizon.
+function sunriseHour(latDeg, season) {
+  const lat = latDeg * Math.PI / 180, dec = sunDirection(latDeg, season, 12).elevation - Math.PI / 2 + lat;
+  return 12 - Math.acos(clamp(-Math.tan(lat) * Math.tan(dec), -1, 1)) * 12 / Math.PI;
+}
 
 function loadPrefs() { try { return JSON.parse(localStorage.getItem(STORE)) || {}; } catch { return {}; } }
 function savePrefs(p) { try { localStorage.setItem(STORE, JSON.stringify(p)); } catch { /* private window */ } }
@@ -602,6 +631,190 @@ export class Soundscape {
     }
   }
 
+  // ---- wild turkey, ground squirrel, fence lizard -----------------------------------------------------------
+  // Turkey "putt"s: n short, sharp notes, each a sawtooth falling about a fifth in 50-90 ms through two formants
+  // (1.3 and 2.6 kHz) with a 2 ms noise click on the onset. Contact clucks (the default): 1-3 soft ones 0.25-0.6 s
+  // apart; alarm: louder, higher and sharper, 0.1-0.3 s apart, each from a different bird (its own pitch).
+  _putts(v, t, n = 1 + Math.floor(Math.random() * 3), alarm = false, span = 0) {
+    const at = []; let s = t;
+    for (let i = 0; i < n; i++) { at.push(s); s += alarm ? rand(0.1, 0.3) : rand(0.25, 0.6); }
+    if (span > 0) for (let i = 1; i < n; i++) at[i] = Math.max(at[i - 1] + 0.09, t + rand(0, span));   // several birds over the flush
+    const end = at[n - 1] + 0.12, pm0 = rand(0.92, 1.08);
+    const o = v.osc('sawtooth', 800, t, end), ns = v.noise(t, end);
+    const f1 = v.filter('bandpass', 1300, 2.5), f2 = v.filter('bandpass', 2600, 3), g2 = v.gain(0.7), g = v.gain(0), lp = v.filter('lowpass', 4500, 0.7);
+    const cb = v.filter('bandpass', 2800, 1), cg = v.gain(0);
+    o.connect(f1).connect(g); o.connect(f2).connect(g2).connect(g); g.connect(lp).connect(v.input);
+    ns.connect(cb).connect(cg).connect(v.input);
+    g.gain.setValueAtTime(0, t); cg.gain.setValueAtTime(0, t);
+    for (const s0 of at) {
+      const pm = alarm ? rand(0.9, 1.12) : pm0 * rand(0.97, 1.03), f0 = (alarm ? 950 : 780) * pm, d = alarm ? rand(0.07, 0.09) : rand(0.05, 0.07);
+      const a = alarm ? rand(0.8, 1) : rand(0.5, 0.8);
+      o.frequency.setValueAtTime(f0, s0); o.frequency.exponentialRampToValueAtTime(f0 * 0.68, s0 + d);
+      env(g.gain, s0, [[0, 0], [0.003, a], [0.015, a * 0.7], [d, 0]]);
+      env(cg.gain, s0, [[0, 0], [0.0015, a * (alarm ? 0.9 : 0.5)], [0.012, 0]]);
+    }
+  }
+  _alarmPutts(v, t) { this._putts(v, t, 3 + Math.floor(Math.random() * 4), true); }
+  // A turkey's purr: a soft rolling flutter 0.6-1.3 s long, a voiced tone near 420 Hz through a 900 Hz formant and a
+  // 2.2 kHz low-pass, chopped at 20-26 pulses a second (jittered), swelling and fading, with a little breath.
+  _purr(v, t) {
+    const len = rand(0.6, 1.3), rate = rand(20, 26), RATE = 1000, N = Math.ceil((len + 0.03) * RATE), curve = new Float32Array(N);
+    let ph = 0, amp = 1;
+    for (let i = 0; i < N; i++) {
+      const tt = i / RATE, prev = ph; ph = (ph + rate * rand(0.85, 1.15) / RATE) % 1;
+      if (ph < prev) amp = rand(0.55, 1);
+      const e = Math.sin(Math.PI * Math.min(1, tt / len)) ** 0.6;
+      curve[i] = tt < len ? e * amp * (ph < 0.15 ? ph / 0.15 : Math.exp(-(ph - 0.15) * 4.5)) : 0;
+    }
+    curve[N - 1] = 0;
+    const pm = rand(0.9, 1.1), end = t + len + 0.05;
+    const o = v.osc('sawtooth', 420 * pm, t, end), ns = v.noise(t, end), ng = v.gain(0.25), nb = v.filter('bandpass', 1200, 1);
+    const f1 = v.filter('bandpass', 900 * pm, 1.5), lp = v.filter('lowpass', 2200, 0.7), g = v.gain(0);
+    o.frequency.setValueAtTime(400 * pm, t); o.frequency.linearRampToValueAtTime(450 * pm, t + len * 0.4); o.frequency.linearRampToValueAtTime(380 * pm, t + len);
+    o.connect(f1); ns.connect(nb).connect(ng).connect(f1); f1.connect(lp).connect(g).connect(v.input);
+    g.gain.setValueCurveAtTime(curve, t, len + 0.03);
+  }
+  // A tom's gobble: a rapid warbling rattle of about a second. A pulse train (10.5 -> 13.5 a second, jittered) on the
+  // amplitude, each pulse a quick rise and decay; the voiced tone (sawtooth) rises 330 -> 560 Hz over the first quarter
+  // then falls to 300 Hz, warbling up and down within each pulse, through two formants that rise and fall with it
+  // (F1 700 -> 1000 -> 650 Hz, F2 2.0 -> 2.4 -> 1.8 kHz) and a 3 kHz low-pass; band-passed breath noise under it; all
+  // low-passed at 4.2 kHz.
+  // Loudest in its first fifth, the tail trailing off.
+  _gobble(v, t) {
+    const dur = rand(0.9, 1.15), RATE = 1000, N = Math.ceil(dur * RATE), amp = new Float32Array(N), fq = new Float32Array(N);
+    const pm = rand(0.9, 1.1), r0 = rand(10, 11.5), r1 = rand(12.5, 14);
+    let ph = 0;
+    for (let i = 0; i < N; i++) {
+      const u = i / N, rate = r0 + (r1 - r0) * u;
+      ph = (ph + rate * rand(0.9, 1.1) / RATE) % 1;
+      const pulse = ph < 0.12 ? ph / 0.12 : Math.max(0, 1 - (ph - 0.12) / 0.7) ** 1.6;
+      const e = Math.min(1, u / 0.04) * (u < 0.2 ? 1 : 1 - 0.6 * (u - 0.2) / 0.8) * (u > 0.9 ? (1 - u) / 0.1 : 1);
+      amp[i] = e * (0.06 + 0.94 * pulse);
+      const contour = u < 0.25 ? 330 + 230 * (u / 0.25) : 560 * Math.pow(300 / 560, (u - 0.25) / 0.75);
+      fq[i] = contour * pm * (1 + 0.09 * Math.sin(2 * Math.PI * ph));
+    }
+    amp[N - 1] = 0;
+    const end = t + dur + 0.02, o = v.osc('sawtooth', 330 * pm, t, end), ns = v.noise(t, end);
+    const f1 = v.filter('bandpass', 700, 2.5), f2 = v.filter('bandpass', 2000, 3), lp = v.filter('lowpass', 3000, 0.5), nb = v.filter('bandpass', 1600, 0.8);
+    const g1 = v.gain(1.4), g2 = v.gain(0.8), g3 = v.gain(0.2), ng = v.gain(0.35), g = v.gain(0), out = v.filter('lowpass', 4200, 0.7);
+    o.connect(f1).connect(g1).connect(g); o.connect(f2).connect(g2).connect(g); o.connect(lp).connect(g3).connect(g);
+    ns.connect(nb).connect(ng).connect(g); g.connect(out).connect(v.input);
+    o.frequency.setValueCurveAtTime(fq, t, dur);
+    f1.frequency.setValueAtTime(700 * pm, t); f1.frequency.linearRampToValueAtTime(1000 * pm, t + dur * 0.25); f1.frequency.exponentialRampToValueAtTime(650 * pm, t + dur);
+    f2.frequency.setValueAtTime(2000 * pm, t); f2.frequency.linearRampToValueAtTime(2400 * pm, t + dur * 0.25); f2.frequency.exponentialRampToValueAtTime(1800 * pm, t + dur);
+    g.gain.setValueCurveAtTime(amp, t, dur);
+  }
+  // A turkey flock flushing: each bird a run of heavy wingbeats (5-6 a second, as animals.js's TURKEY.beat) for 0.9-1.5 s,
+  // the first two strongest (the leap), staggered as tkToTree sends them off (rank * 0.05 + 0-0.8 s), then a short
+  // rush of air as it glides. Each beat a broadband thump (noise low-passed at 380 Hz and band-passed at 900 Hz, and a
+  // 75 Hz sine for the chest) decaying in ~80 ms, under one gain curve summed over the birds; a feather hiss (noise
+  // band-passed at 2.6 kHz, low-passed at 7 kHz) on its own curve, mostly on the downstroke. And alarm putts from
+  // several birds.
+  _turkeyFlush(v, t, n) {
+    const birds = Math.max(1, Math.min(n, 15)), RATE = 1000, runs = [];
+    let total = 0;
+    for (let b = 0; b < birds; b++) {
+      const r = { t0: b * 0.05 + Math.random() * 0.8, len: rand(0.9, 1.5), f: rand(5, 6), amp: rand(0.6, 1) };
+      runs.push(r); total = Math.max(total, r.t0 + r.len + 0.45);
+    }
+    const N = Math.ceil(total * RATE), thump = new Float32Array(N), hiss = new Float32Array(N);
+    for (const r of runs) {
+      for (let i = Math.floor(r.t0 * RATE); i < N; i++) {
+        const tt = i / RATE - r.t0;
+        if (tt > r.len + 0.4) break;
+        if (tt > r.len) { hiss[i] += r.amp * 0.18 * Math.exp(-(tt - r.len) / 0.15); continue; }   // the glide
+        const ph = (tt * r.f) % 1, beat = Math.floor(tt * r.f), lift = beat < 2 ? 1.3 : 1, e = r.amp * lift * (1 - 0.4 * tt / r.len);
+        thump[i] += e * Math.min(1, ph / 0.004) * Math.exp(-ph * 12);
+        hiss[i] += e * (0.25 * Math.sin(Math.PI * ph) ** 2 + 0.75 * Math.exp(-ph * 8));
+      }
+    }
+    let pk = 0, ph2 = 0; for (let i = 0; i < N; i++) { pk = Math.max(pk, thump[i]); ph2 = Math.max(ph2, hiss[i]); }
+    const k = Math.min(1, 0.5 + 0.05 * birds);
+    for (let i = 0; i < N; i++) { thump[i] *= k / Math.max(pk, 1e-3); hiss[i] *= 0.3 * k / Math.max(ph2, 1e-3); }
+    thump[N - 1] = 0; hiss[N - 1] = 0;
+    const end = t + total, ns = v.noise(t, end), lp = v.filter('lowpass', 380, 0.9), bp = v.filter('bandpass', 900, 0.7), hp = v.filter('bandpass', 2600, 0.9);
+    const hl = v.filter('lowpass', 7000, 0.7), gl = v.gain(3), gb = v.gain(0.6), o = v.osc('sine', 75, t, end), go = v.gain(0.5), gt = v.gain(0), gh = v.gain(0);
+    ns.connect(lp).connect(gl).connect(gt); ns.connect(bp).connect(gb).connect(gt); o.connect(go).connect(gt); ns.connect(hp).connect(hl).connect(gh);
+    gt.connect(v.input); gh.connect(v.input);
+    gt.gain.setValueCurveAtTime(thump, t, total); gh.gain.setValueCurveAtTime(hiss, t, total);
+    this._putts(v, t + 0.05, 3 + Math.floor(Math.random() * 4), true, 1.4);
+  }
+  // A turkey settling on its limb: 2-4 slower beats (3.5-4.5 a second), each weaker, thump and feather hiss as in the
+  // flush, and the leaves of the crown rustling with them and after (crackles of noise band-passed at 4.2 kHz, about
+  // 60 a second, each decaying in 10 ms, fading over ~0.3 s once the wings stop).
+  _settle(v, t) {
+    const n = 2 + Math.floor(Math.random() * 3), f = rand(3.5, 4.5), len = n / f, total = len + 0.5, RATE = 1000, N = Math.ceil(total * RATE);
+    const thump = new Float32Array(N), hiss = new Float32Array(N), leaf = new Float32Array(N);
+    let gv = 0;
+    for (let i = 0; i < N; i++) {
+      const tt = i / RATE, ph = (tt * f) % 1, b = Math.floor(tt * f), e = tt < len ? 0.75 ** b : 0;
+      thump[i] = e * Math.min(1, ph / 0.004) * Math.exp(-ph * 10);
+      hiss[i] = e * 0.3 * (0.25 * Math.sin(Math.PI * ph) ** 2 + 0.75 * Math.exp(-ph * 8));
+      gv = Math.random() < 60 / RATE ? rand(0.3, 1) : gv * Math.exp(-1 / (RATE * 0.01));
+      leaf[i] = 0.3 * Math.min(1, tt / 0.1) * Math.exp(-Math.max(0, tt - len * 0.7) / 0.3) * gv;
+    }
+    thump[N - 1] = hiss[N - 1] = leaf[N - 1] = 0;
+    const end = t + total, ns = v.noise(t, end), lp = v.filter('lowpass', 420, 0.9), hp = v.filter('bandpass', 2600, 0.9), lb = v.filter('bandpass', 4200, 1.2);
+    const gl = v.gain(2.2), gt = v.gain(0), gh = v.gain(0), glf = v.gain(0);
+    ns.connect(lp).connect(gl).connect(gt); ns.connect(hp).connect(gh); ns.connect(lb).connect(glf);
+    gt.connect(v.input); gh.connect(v.input); glf.connect(v.input);
+    gt.gain.setValueCurveAtTime(thump, t, total); gh.gain.setValueCurveAtTime(hiss, t, total); glf.gain.setValueCurveAtTime(leaf, t, total);
+  }
+  // California ground squirrel's alarm: 2-4 clear whistle-chirps 0.13-0.26 s apart, each 90-140 ms, a near-pure tone
+  // (a 6 % second harmonic) rising 4.3 -> 5.4 kHz in its first third and falling back to 4.5 kHz.
+  _gsWhistle(v, t, n = 2 + Math.floor(Math.random() * 3)) {
+    const pm = rand(0.93, 1.07), at = []; let s = t;
+    for (let i = 0; i < n; i++) { const d = rand(0.09, 0.14); at.push([s, d]); s += d + rand(0.13, 0.26); }
+    this._whistleNotes(v, t, at, pm, 4300, 5400, 4500, 1);
+  }
+  // A soft contact chirp while the colony feeds: one (now and then two) short, lower notes, 50-70 ms.
+  _gsChirp(v, t) {
+    const pm = rand(0.92, 1.08), n = 1 + (Math.random() < 0.3), at = [];
+    for (let i = 0; i < n; i++) at.push([t + i * rand(0.12, 0.2), rand(0.05, 0.07)]);
+    this._whistleNotes(v, t, at, pm, 3700, 4500, 3900, 0.6);
+  }
+  _whistleNotes(v, t, at, pm, f0, f1, f2, a0) {
+    const [ls, ld] = at[at.length - 1], o = v.osc('sine', f0 * pm, t, ls + ld + 0.02), g = v.gain(0);
+    o.setPeriodicWave(o.context.createPeriodicWave(new Float32Array([0, 0, 0]), new Float32Array([0, 1, 0.06])));
+    o.connect(g).connect(v.input); g.gain.setValueAtTime(0, t);
+    for (const [s0, d] of at) {
+      const k = pm * rand(0.98, 1.02), a = a0 * rand(0.8, 1);
+      o.frequency.setValueAtTime(f0 * k, s0); o.frequency.linearRampToValueAtTime(f1 * k, s0 + d * 0.35); o.frequency.exponentialRampToValueAtTime(f2 * k, s0 + d);
+      env(g.gain, s0, [[0, 0], [0.008, a], [d * 0.6, a * 0.85], [d, 0]]);
+    }
+  }
+  // Ground squirrels going down their burrows: a soft 0.25-0.45 s scuffle, grains of noise (about 40 a second, each
+  // decaying in ~8 ms) band-passed at 1.8 kHz over low-passed dirt thuds.
+  _scuffle(v, t) {
+    const len = rand(0.25, 0.45), RATE = 2000, N = Math.ceil((len + 0.03) * RATE), curve = new Float32Array(N);
+    for (let gt = rand(0, 0.02); gt < len; gt += -Math.log(1 - Math.random()) / 40) {
+      const a = rand(0.3, 1) * Math.sin(Math.PI * gt / len) ** 0.5, i0 = Math.floor(gt * RATE);
+      for (let i = i0; i < N && i < i0 + 0.04 * RATE; i++) curve[i] += a * Math.exp(-(i - i0) / RATE / 0.008);
+    }
+    let pk = 0; for (let i = 0; i < N; i++) pk = Math.max(pk, curve[i]);
+    for (let i = 0; i < N; i++) curve[i] /= Math.max(pk, 1e-3);
+    curve[N - 1] = 0;
+    const ns = v.noise(t, t + len + 0.05), bp = v.filter('bandpass', 1800, 0.8), lp = v.filter('lowpass', 300, 0.7), gl = v.gain(1.2), g = v.gain(0);
+    ns.connect(bp).connect(g); ns.connect(lp).connect(gl).connect(g); g.connect(v.input);
+    g.gain.setValueCurveAtTime(curve, t, len + 0.03);
+  }
+  // A fence lizard's dash: a dry scuttle of claws, 0.1-0.2 s of tiny clicks (45-70 a second, each 1.5 ms) of noise
+  // high-passed at 24 dB/octave; on rock sharper (high-pass 4 kHz, a 6.5 kHz edge), on bark duller (high-pass 2.5 kHz, low-pass 7 kHz).
+  _scuttle(v, t, surface = 'rock') {
+    const len = rand(0.1, 0.2), RATE = 8000, N = Math.ceil((len + 0.01) * RATE), curve = new Float32Array(N), rate = rand(45, 70);
+    for (let ct = rand(0, 0.005); ct < len; ct += rand(0.5, 1.5) / rate) {
+      const a = rand(0.35, 1) * (ct < 0.02 ? 0.6 : 1), i0 = Math.floor(ct * RATE);
+      for (let i = i0; i < N && i < i0 + 0.012 * RATE; i++) curve[i] = Math.max(curve[i], a * Math.exp(-(i - i0) / RATE / 0.0015));
+    }
+    curve[N - 1] = 0;
+    const bark = surface === 'trunk', ns = v.noise(t, t + len + 0.02), fc = bark ? 2500 : 4000;
+    const hp = v.filter('highpass', fc, 0.7), hp2 = v.filter('highpass', fc, 0.7);
+    const sh = bark ? v.filter('lowpass', 7000, 0.7) : v.filter('peaking', 6500, 1.2), g = v.gain(0);
+    if (!bark) sh.gain.value = 6;
+    ns.connect(hp).connect(hp2).connect(sh).connect(g).connect(v.input);
+    g.gain.setValueCurveAtTime(curve, t, len + 0.01);
+  }
+
   // ---- calls on animals ----------------------------------------------------------------------------------
   // animals.js, passed in or found on the debugging handle at call time (main.js builds it after us)
   _animals() { return this.animals || (typeof window !== 'undefined' ? window.__we?.animals : null) || null; }
@@ -609,7 +822,8 @@ export class Soundscape {
   _hook() {
     const A = this._animals(); if (!A?.on || A === this._hooked) return;
     if (this._unhook) for (const off of this._unhook) off();
-    this._unhook = [A.on('flush', e => this._onFlush(e)), A.on('stoop', e => this._onStoop(e)), A.on('rally', e => this._onRally(e))];
+    this._unhook = [A.on('flush', e => this._onFlush(e)), A.on('stoop', e => this._onStoop(e)), A.on('rally', e => this._onRally(e)),
+      A.on('turkeyFlush', e => this._onTurkeyFlush(e)), A.on('gsAlarm', e => this._onGsAlarm(e))];
     this._hooked = A;
   }
   // A random animal of this species within r of the raven, or null.
@@ -663,6 +877,33 @@ export class Soundscape {
     this._play('waka', this._onAnimal(e.animal), e.animal, 'event');
     const A = this._animals(), mates = A?.bySpecies?.[e.animal.sp]?.filter(b => b !== e.animal && b.anchor === e.animal.anchor) || [];
     if (mates.length) this.pending.push({ at: this.t + rand(0.35, 0.8), key: 'waka', animal: mates[Math.floor(Math.random() * mates.length)] });
+  }
+  // A turkey flock flushing (animals.js tkFlush): up into an oak, heavy wingbeats from the flock, panned on the leader as
+  // it flies; the settling flaps follow from the near layer as birds land. With no oak in reach they run, putting.
+  _onTurkeyFlush(e) {
+    const g = e.group; if (!this._live() || !g) return;
+    const d = this._listenerDist(e.x, e.y, e.z), A = this._animals(), I = A?.bySpecies ? this._idx(A) : null;
+    const n = I && I.tk >= 0 ? A.bySpecies[I.tk].reduce((k, b) => k + (b.group === g ? 1 : 0), 0) : g.n || 8;
+    const at = { x: e.x, y: e.y + 0.6, z: e.z };
+    if (e.tree) {
+      if (d > NEAR.tflush.range) return;
+      this._play('tflush', at, g.leader || null, 'event', (v, t) => this._turkeyFlush(v, t, n));
+      const m = this._m(g); m.flushT = this.t; m.settles = 0;
+    } else if (d <= NEAR.tputt.range) this._play('tputt', at, g.leader || null, 'event');
+  }
+  // A ground squirrel colony's alarm (animals.js colonyUpdate): the whistle from the sentinel (the one that dives at once,
+  // wait 0; the event comes after gsDive and the sentinel is cleared), then the scuffle as the first of the others goes
+  // down (the near layer watches for it).
+  _onGsAlarm(e) {
+    const g = e.group; if (!this._live() || !g || this._listenerDist(e.x, e.y, e.z) > NEAR.gswhistle.range) return;
+    const A = this._animals(), I = A?.bySpecies ? this._idx(A) : null, P = this.flight.pos;
+    let caller = null;
+    if (I && I.gs >= 0) for (const a of A.bySpecies[I.gs]) {
+      if (a.group !== g || Math.hypot(a.x - P.x, a.y - P.y, a.z - P.z) < 0.5) continue;
+      if (!caller || (a.wait ?? 9) < (caller.wait ?? 9)) caller = a;
+    }
+    this._play('gswhistle', caller ? this._onAnimal(caller) : { x: e.x, y: e.y + 0.3, z: e.z }, caller, 'event');
+    const m = this._m(g); m.scuff = this.t + 5; m.caller = caller; m.alarmT = this.t;
   }
   _onStoop(e) {
     if (!this._live() || this._listenerDist(e.x, e.y, e.z) > EVENT_R + 200) return;
@@ -780,7 +1021,8 @@ export class Soundscape {
     if (this._idxOf === A) return this._idxV;
     const by = n => A.meshes ? A.meshes.findIndex(m => m.name === n) : -1;
     this._idxV = { sq: by('squirrel'), wp: by('woodpecker'), wf: by('female woodpecker'), dr: by('deer'), bk: by('buck'), qu: by('quail'),
-      sj: by('scrub-jay'), st: by("Steller's jay"), fx: by('gray fox'), rb: by('brush rabbit'), jr: by('jackrabbit') };
+      sj: by('scrub-jay'), st: by("Steller's jay"), fx: by('gray fox'), rb: by('brush rabbit'), jr: by('jackrabbit'),
+      tk: by('wild turkey'), gs: by('ground squirrel'), lz: by('fence lizard') };
     this._idxOf = A; return this._idxV;
   }
   _m(o) { let m = this.mem.get(o); if (!m) this.mem.set(o, m = { s: -1, cd: 0, in: false, bark: 0, k: 0 }); return m; }
@@ -902,6 +1144,88 @@ export class Soundscape {
         if (this._play('jthump', { x: a.x, y: a.y + 0.05, z: a.z }, null, 'near')) this.gap.jthump = t + 20;
       }
     });
+
+    // wild turkeys: settling flaps as flushed birds land; contact putts and purrs; the gobble at dawn in spring
+    if (I.tk >= 0 && A.meshes[I.tk].visible && A.flocks) {
+      const birds = A.bySpecies[I.tk];
+      for (const a of birds) {
+        const m = this._m(a), prev = m.s; m.s = a.state;
+        if (prev !== T_FLY || a.state !== T_PERCH) continue;
+        const g = this._m(a.group);
+        if (g.flushT && t - g.flushT < 20 && g.settles < 2 && ear(a, 'tsettle') && Math.random() < 0.6 && this._play('tsettle', this._onAnimal(a), a, 'near')) g.settles++;
+      }
+      if (day) for (const g of A.flocks) {
+        if (g.state !== TF_FORAGE && g.state !== TF_WALK) continue;
+        const m = this._m(g);
+        if (t < m.cd || Math.hypot(g.x - P.x, g.z - P.z) > 55) continue;
+        const near = birds.filter(b => b.group === g && b.state !== T_FLY && dp(b) < 40 && ear(b, 'tcluck'));
+        if (!near.length) continue;
+        m.cd = t + rand(12, 28);
+        const b = near[Math.floor(Math.random() * near.length)];
+        this._play(Math.random() < 0.35 ? 'purr' : 'tcluck', this._onAnimal(b), b, 'near');
+      }
+      const mo = A.month ?? 0, sr = this._sunriseH();
+      if (mo >= 3 && mo < 6 && this.hour >= sr - 0.3 && this.hour <= sr + 2) {
+        if (this.gobbleOff !== false) { this.gap.gobble = t + rand(5, 40); this.gobbleOff = false; }   // the window opens
+        if (this._due('gobble', t)) {
+          const tom = (g, r) => {   // a tom of the flock (not in the air) within r of the player
+            const c = birds.filter(b => b.group === g && b.variant === 0 && b.state !== T_FLY && dp(b) < r && ear(b, 'gobble'));
+            return c.length ? c[Math.floor(Math.random() * c.length)] : null;
+          };
+          const cands = [];
+          for (const g of A.flocks) { if (Math.hypot(g.x - P.x, g.z - P.z) > 320) continue; const a = tom(g, 300); if (a) cands.push(a); }
+          if (cands.length) {
+            const a = cands[Math.floor(Math.random() * cands.length)];
+            this._play('gobble', this._onAnimal(a), a, 'near');
+            this.gap.gobble = t + rand(60, 180);
+            if (Math.random() < 0.4) {   // another flock answers
+              const others = [];
+              for (const g of A.flocks) { if (g === a.group || Math.hypot(g.x - P.x, g.z - P.z) > 620) continue; const b = tom(g, 600); if (b) others.push(b); }
+              if (others.length) this.pending.push({ at: t + rand(1.5, 4), key: 'gobble', animal: others[Math.floor(Math.random() * others.length)], source: 'answer' });
+            }
+          } else this.gap.gobble = t + 10;
+        }
+      } else this.gobbleOff = true;
+    }
+
+    // ground squirrels: the scuffle as the first of a colony (not the sentinel) goes down after its alarm; soft chirps
+    if (I.gs >= 0 && A.meshes[I.gs].visible && A.colonies) {
+      const sq = A.bySpecies[I.gs];
+      for (const a of sq) {
+        const m = this._m(a), prev = m.s; m.s = a.state;
+        if (a.state !== GS_DOWN || prev === GS_DOWN || prev === -1) continue;
+        const g = this._m(a.group);
+        if (!g.scuff || t > g.scuff || a === g.caller) continue;
+        g.scuff = 0;
+        // not before 0.6 s after the alarm, so the whistle's first notes stand clear of it
+        if (ear(a, 'gsscuffle')) this._play('gsscuffle', { x: a.x, y: a.y + 0.05, z: a.z }, null, 'near', null, Math.max(0, g.alarmT + 0.6 - t));
+      }
+      if (day) for (const g of A.colonies) {
+        if (g.state !== C_OK) continue;
+        const m = this._m(g);
+        if (t < m.cd || Math.hypot(g.x - P.x, g.z - P.z) > 50 || Math.random() > dt / 25 || !this._due('gschirp', t)) continue;
+        const near = sq.filter(b => b.group === g && (b.state === GS_FEED || b.state === GS_SIT || b.state === GS_SENTRY) && dp(b) > 0.5 && ear(b, 'gschirp'));
+        if (!near.length) continue;
+        const b = near[Math.floor(Math.random() * near.length)];
+        if (this._play('gschirp', this._onAnimal(b), b, 'near')) { m.cd = t + rand(20, 50); this.gap.gschirp = t + rand(6, 12); }
+      }
+    }
+
+    // fence lizards: a scuttle on the dash (a sprint seen, or one that came and went between ticks), within 6 m of the
+    // listener; the source is the lizard, never the player's or the camera's own spot
+    each(I.lz, a => {
+      const m = this._m(a), prev = m.s; m.s = a.state;
+      const dash = (a.state === L_SPRINT && prev !== L_SPRINT) || (a.state === L_HIDE && prev !== L_HIDE && prev !== L_SPRINT);
+      if (!dash || prev === -1 || !ear(a, 'scuttle') || dp(a) < 0.3 || dl(a) < 0.3 || !this._due('scuttle', t)) return;
+      const kind = a.site?.kind === 'ground' ? a.site.near?.kind || 'rock' : a.site?.kind;
+      if (this._play('scuttle', { x: a.x, y: a.y + 0.02, z: a.z }, null, 'near', (v, t0) => this._scuttle(v, t0, kind))) this.gap.scuttle = t + 0.4;
+    });
+  }
+  // The sunrise hour for the season (cached per season).
+  _sunriseH() {
+    const s = this.season || 'spring';
+    if (this._srSeason !== s) { this._srSeason = s; this._sr = sunriseHour(this.tile.latitude ?? 38.7, s); }
+    return this._sr;
   }
   // A squirrel's barking alarm from where it is, its tail flicking on each chuff (animals.js flickV, the same
   // flick it gives a squirrel at rest).
@@ -965,6 +1289,7 @@ export class Soundscape {
 
     const ground = this.tile.heights.atXZ(f.pos.x, f.pos.z), agl = Math.max(0, f.pos.y - ground), spd = Math.abs(f.speed);
     const elevDeg = this.elevDeg = sunElevation * 180 / Math.PI;
+    this.hour = hour; this.season = season;
 
     // habitat around the bird, twice a second: centre + 8 at 60 m + 8 at 160 m
     if ((this.habT += dt) > 0.5) {

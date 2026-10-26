@@ -1012,3 +1012,20 @@ on the rock plan's matrix alone (the top of a deformed icosphere is not where it
 the 400 m live set (120 small animals would fill the cap far from anyone who could see them). Wild turkeys and ground
 squirrels needed no new template (bird and rodent, with the build lanes' constants); turkeys roost on the drawn wood
 through the squirrel's limb queries where the wood is known and are simply not drawn where it is not.
+
+## 2026-10-26: the turkey, ground squirrel and fence lizard are heard from what animals.js says they are doing
+
+The three new animals' sounds are synthesised like the rest of the soundscape, and each is tied to the AI rather than
+to chance: the turkey's flush and the ground squirrel's alarm are animals.js events (`turkeyFlush`, `gsAlarm`), the
+settling flaps, the squirrels' scuffle and the lizard's scuttle are state changes the near layer already watches for
+(flight to perch, a dive ending in a burrow, the sprint), and the gobble comes from a real tom within 300 m in its real
+season and hour (March to May, first light to two hours after sunrise, the sunrise solved from the latitude and the
+season's noon elevation so it matches the drawn sun). Voices go on the near layer, sharing its NEAR_MAX slots,
+cooldowns and log, so a crowded scene drops a call rather than piling them up. The gobble is shaped to what is
+measured of the real one (about a second, a 10-14 Hz pulse train, a voiced tone rising then falling); the ground
+squirrel's alarm is the whistle near 5 kHz; the lizard, otherwise silent, only makes a sound with its feet and only
+within 6 m. The ground squirrel's sentinel is found as the member that dived without a wait, because the event
+fires after animals.js has cleared `g.sentinel`. Rejected: samples (the soundscape has none); a timer for the settling
+flaps and the scuffle (they would be heard where nothing is landing); every bird of a flush as its own voice (fifteen
+voices for one event would starve the slots); a gobble from the habitat fallback when no flock is near (a gobble
+without a turkey is the kind of mismatch the near layer exists to avoid).
