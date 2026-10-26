@@ -118,3 +118,23 @@ free. The volume as a whole is close to full and is worth a look.
 restarted at the end of the night (now on port 8781) and the shared-world endpoint is live: the
 game panel shows "shared world · 1 player here". A three.js upgrade lane (0.170 to the current
 release, WebGL) was still running; its commit, if it verified, is the last in `git log`.
+
+## The evening of 2026-10-26 (your asks of the day)
+
+| Commit | What |
+|---|---|
+| cadef80 | The tree library holds any number of species; seventeen foothill drafts (valley, canyon live and black oak, buckeye, madrone, bay, walnut, maple, ash, incense cedar, Douglas-fir, toyon, redbud, poison oak, coyote brush, elderberry, coffeeberry); new leaf and bark forms. |
+| bd79cc6 | The raven lands by contact on the ground or any limb that holds it (under 7 m/s, else it bounces with a flare) and hops on foot; the 2 m flight floor is gone. |
+| c16f4a6 | Pipeline `lidar` step: the 1 m DEM and the 2.1-billion-point cloud for the home tile (USGS 3DEP, public domain), a canopy height model and 395k real tree crowns; 26 min to run. |
+| a4cb0f4 | The seventeen species placed on all three tiles, following the ground within each community; the shrub flicker you saw is fixed (their shadows swayed like grass). |
+| d26eb1b | Squirrels climb whole trees, run the limbs and leap between them; AI squirrels flee into the canopy and freeze on the far side of the trunk. |
+| e3904db | The lidar's 1 m ground under the player as a 2 m mesh within 110 m, the 10 m grid beyond; the Hwy 50 cut is real geometry; a 2.5 m registration error in the height sampler fixed. |
+
+Still running when this was written: trees placed on the real lidar crowns (one tree per
+crown, sized to it, the biggest crowns of each species as the old-growth trees), with
+mesh sharing to bring the draw calls back down.
+
+Open from the day: Sentinel-2 seasonal ground colour and crown inpainting (your go);
+the attribution form for generated assets; the next animal batch (turkey, ground squirrel,
+fence lizard); far placement on the lidar ground beyond the fine square; the squirrel's
+crown camera in leafy oaks.
