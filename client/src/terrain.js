@@ -101,6 +101,7 @@ const FRAG = /* glsl */`
   float rnoise(vec2 p, float a, float scale) { float c = cos(a), s = sin(a); return vnoise(mat2(c, s, -s, c) * p / scale); }
   ${DETAIL_GLSL}
   uniform sampler2D ripMask; uniform vec3 ripRef; uniform float ripOn; uniform vec3 ripTint; uniform float ripDark; uniform float ripMix;
+  uniform float geoSlope;   // 1 on a tile with the lidar residual: the rock rule takes the mesh's own slope too
   void main(){
     vec3 w = texture2D(masks, vUv).rgb;                 // soft weights: grassland, oak woodland, chaparral
     float road = texture2D(roads, vUv).r;
@@ -155,7 +156,9 @@ const FRAG = /* glsl */`
     if (fade > 0.0) {
       // Material weights (groundDetail.js mask: r slope/90, g curvature 0.5 +- convex/concave, b bare).
       vec4 mk = textureLod(detailMask, vUv, 0.0);
-      float slopeDeg = mk.r * 90.0, curv = mk.g * 2.0 - 1.0, bare = mk.b, tree = clamp(cov.r, 0.0, 1.0);
+      // slope: the 10 m mask's (from the 5 m heights), or on a lidar tile the steeper of that and the drawn mesh's
+      // own (the fine mesh's 2 m triangles near the player), so a road cut's bank takes the rock material
+      float slopeDeg = max(mk.r * 90.0, geoSlope * degrees(acos(clamp(nGeo.y, 0.0, 1.0)))), curv = mk.g * 2.0 - 1.0, bare = mk.b, tree = clamp(cov.r, 0.0, 1.0);
       float bn = rnoise(vPosW.xz + 11.0, 0.8, 3.1) - 0.5;   // +-0.5 over ~3 m: ragged borders between materials
       float rock = max(smoothstep(24.0, 32.0, slopeDeg), max(smoothstep(0.35, 0.7, -curv), smoothstep(0.7, 0.9, bare)));
       // pavement where the road weight passes ~0.55, with a ragged, crumbling 1-2 m edge (the 5 m raster's own edge is straight)
@@ -260,7 +263,7 @@ export class Terrain {
     // Near-ground detail materials and their per-tile masks (groundDetail.js); textures stream in after.
     this.detail = new GroundDetail(tile);
     ripUniforms.ripMask.value = riparianMask(tile);
-    this.uniforms = { ...G, ...windUniforms, ...atmo, ...detailUniforms, ...ripUniforms };   // shared objects, so one update reaches every material
+    this.uniforms = { ...G, ...windUniforms, ...atmo, ...detailUniforms, ...ripUniforms, geoSlope: { value: tile.heights.detail ? 1 : 0 } };   // shared objects, so one update reaches every material
     this.material = new THREE.ShaderMaterial({ vertexShader: VERT, fragmentShader: FRAG, uniforms: this.uniforms });
     const size = tile.size, cs = size / chunks, nv = Math.round(cs / spacing) + 1, H = tile.heights;
     H.coarseSpacing = spacing;
@@ -273,7 +276,7 @@ export class Terrain {
       for (let k = 0; k < pos.count; k++) {
         const lx = pos.getX(k) + cs / 2, lz = pos.getZ(k) + cs / 2;   // 0..cs
         const x = x0 + lx, north = north1 - lz;
-        pos.setXYZ(k, x, H.base(x, north), -north);   // the 5 m heights: the lidar residual is the fine mesh's
+        pos.setXYZ(k, x, H.vert(x, north), -north);   // on a lidar tile the 1 m ground at the vertex (Heightfield.vert)
         uv.setXY(k, x / size, north / size);
       }
       g.computeVertexNormals(); g.computeBoundingSphere();

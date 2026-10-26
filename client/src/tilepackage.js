@@ -81,15 +81,22 @@ export class Heightfield {
   }
   at(x, north) { return this.detail ? this.base(x, north) + this.residual(x, north) : this.base(x, north); }
   atXZ(x, zc) { return this.at(x, -zc); }
+  // Height of a 10 m mesh vertex: the 1 m ground itself (at; the 5 m heights on a tile without the lidar
+  // residual), so the far surface passes through the true ground at every vertex and differs from it only inside
+  // a cell (median 7 cm, 95th percentile 0.5 m, against 17 cm and 0.74 m from the 5 m heights alone): a road cut's
+  // banks stand where they are, and what stands on them moves that little when the fine square arrives.
+  vert(x, north) { return this.at(x, north); }
   coarse(x, north) {
     const S = this.coarseSpacing, n = Math.round(this.size / S) - 1;
     const fx = x / S, fn = north / S, i0 = Math.min(Math.max(Math.floor(fx), 0), n), n0 = Math.min(Math.max(Math.floor(fn), 0), n);
     const u = Math.min(Math.max(fx - i0, 0), 1), w = Math.min(Math.max(fn - n0, 0), 1);
-    const SW = this.base(i0 * S, n0 * S), SE = this.base((i0 + 1) * S, n0 * S), NW = this.base(i0 * S, (n0 + 1) * S), NE = this.base((i0 + 1) * S, (n0 + 1) * S);
+    const SW = this.vert(i0 * S, n0 * S), SE = this.vert((i0 + 1) * S, n0 * S), NW = this.vert(i0 * S, (n0 + 1) * S), NE = this.vert((i0 + 1) * S, (n0 + 1) * S);
     return w > u ? SW + u * (NE - NW) + w * (NW - SW) : SW + u * (SE - SW) + w * (NE - SE);
   }
-  ground(x, north) {
-    const F = this.fine;
+  ground(x, north) { return this.groundIn(this.fine, x, north); }
+  // The surface a given fine square (a Heightfield.fine record, or null) draws: animals.js re-seats its still
+  // animals from the square it placed them on to the one drawn now.
+  groundIn(F, x, north) {
     if (F && x >= F.x0 && x <= F.x1 && north >= F.n0 && north <= F.n1) {
       // the fine grid: coordinates F.xs (west to east), F.ns (south to north), heights F.y[j * nx + i], squares split SW-NE
       const xs = F.xs, ns = F.ns, nx = xs.length;
@@ -101,6 +108,16 @@ export class Heightfield {
       return w > u ? SW + u * (NE - NW) + w * (NW - SW) : SW + u * (SE - SW) + w * (NE - SE);
     }
     return this.coarse(x, north);
+  }
+  // Share of the 1 m ground in the drawn surface at a point: 1 inside the fine square, 0 outside it, easing
+  // across its outer band as terrain.js does. Cached placement (grass cards, shrubs, rocks) stands on `at`
+  // and is drawn at at + (1 - fineShare) x (coarse - at), so it sits on whichever surface is drawn there.
+  fineShare(x, north, F = this.fine) {
+    if (!F) return 0;
+    const e = Math.min(x - F.x0, F.x1 - x, north - F.n0, F.n1 - north);
+    if (e <= 0) return 0;
+    const s = Math.min(e / F.band, 1);
+    return s * s * (3 - 2 * s);
   }
   groundXZ(x, zc) { return this.ground(x, -zc); }
 }

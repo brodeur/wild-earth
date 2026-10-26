@@ -565,6 +565,15 @@ export class ClumpField {
     }
     if (cfg.extra && cfg.extraAny(i, j)) out = mergeByRank(out, cfg.extra(i, j));
     c = { data: new Float32Array(out), n: out.length / STRIDE, x: (i + 0.5) * res, y: 0, z: -(size - (j + 0.5) * res), r: res };
+    // On a tile with the lidar residual the plants stand on the 1 m ground (Heightfield.at), which only the fine
+    // square near the player draws; beyond it the 10 m mesh is drawn. dc: the 10 m mesh minus the 1 m ground at
+    // each root, and dataC the cell as drawn on the 10 m mesh, so update() stands every plant on the surface drawn
+    // under it (Heightfield.fineShare) and re-seats them when the square moves.
+    const hf = this.tile.heights;
+    if (hf.detail && c.n) {
+      const d = c.data, dc = c.dc = new Float32Array(c.n), dataC = c.dataC = d.slice();
+      for (let k = 0, o = 0; k < c.n; k++, o += STRIDE) { const x = d[o], pn = -d[o + 2]; dc[k] = hf.coarse(x, pn) - hf.at(x, pn); dataC[o + 1] += dc[k]; }
+    }
     if (out.length) {
       let y0 = Infinity, y1 = -Infinity, hm = 0;
       for (let o = 0; o < out.length; o += STRIDE) { y0 = Math.min(y0, out[o + 1]); y1 = Math.max(y1, out[o + 1]); hm = Math.max(hm, out[o + 4]); }
@@ -618,9 +627,21 @@ export class ClumpField {
       if (total + m > cfg.cap) break;
       pick.push(c, m); total += m; sig = (Math.imul(sig, 31) + j * this.W + i + m * 7919) | 0;
     }
+    const hf = this.tile.heights, F = hf.fine;
+    if (F !== this.fine) { this.fine = F; this.sig = NaN; }   // the fine square moved: re-seat
     if (sig !== this.sig) {
       this.sig = sig; let n = 0;
-      for (let k = 0; k < pick.length; k += 2) { const c = pick[k], m = pick[k + 1]; arr.set(c.data.subarray(0, m * STRIDE), n * STRIDE); n += m; }
+      const half = this.tile.habitat.res / 2, band = F ? F.band : 0;
+      for (let k = 0; k < pick.length; k += 2) {
+        const c = pick[k], m = pick[k + 1];
+        if (!c.dc) { arr.set(c.data.subarray(0, m * STRIDE), n * STRIDE); n += m; continue; }
+        // the cell's square against the fine square: wholly on the 10 m mesh, wholly on the fine mesh, or across its band
+        const cx = c.x, cn = -c.z, out = !F || cx + half <= F.x0 || cx - half >= F.x1 || cn + half <= F.n0 || cn - half >= F.n1;
+        const inner = F && cx - half >= F.x0 + band && cx + half <= F.x1 - band && cn - half >= F.n0 + band && cn + half <= F.n1 - band;
+        arr.set((out ? c.dataC : c.data).subarray(0, m * STRIDE), n * STRIDE);
+        if (!out && !inner) for (let q = 0, o = n * STRIDE; q < m; q++, o += STRIDE) arr[o + 1] += (1 - hf.fineShare(arr[o], -arr[o + 2], F)) * c.dc[q];
+        n += m;
+      }
       this.n = n; this.mesh.geometry.instanceCount = n;
       this.buf.clearUpdateRanges(); this.buf.addUpdateRange(0, Math.max(n, 1) * STRIDE); this.buf.needsUpdate = true;
     }

@@ -48,9 +48,11 @@ sequenced; Parked is in the brief but deliberately not started.
   the 10 m grid beyond (no cracks, 26k triangles, fps within 3%); the raven, the animals,
   rocks and grass stand on the drawn ground; the Hwy 50 cut reads as geometry. A half-pixel
   registration error in the height sampler is fixed (the terrain moved 2.5 m to line up
-  with the textures). Weak: shrubs and rocks beyond the fine square can float or sink by the
-  residual (up to ~1 m), an animal placed before the square reached it keeps its old height,
-  rock material on cut banks still comes from the 5 m slope mask.
+  with the textures). The 10 m mesh beyond the square passes through the 1 m ground at its
+  vertices, and grass, shrubs, rocks and still animals follow the drawn surface (re-seated
+  when the square moves). Weak: trees beyond the square stand on the 1 m ground, about
+  0.1 m off on crests; crests rise by what the 10 m mesh cuts under them (typically 0.4 m)
+  when the square arrives.
 - Trees on the lidar crowns, 2026-10-26: one tree per real crown on the home tile, species by the cell's mix and the crown's height, the biggest real trees old-growth with landmark ids; start view 295 draw calls (412 before). Weak: shrub-only for the first moments after load, rare species' old crowns are scaled mature trees.
 
 - Overnight 2026-10-24/25 (Aaron asleep, standing authorization): present-day peek (P)

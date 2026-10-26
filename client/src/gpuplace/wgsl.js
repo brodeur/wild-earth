@@ -188,10 +188,11 @@ fn waterAt(dx: f32, dy: f32, px: vec2i) -> u32 {
   if (g == 255u) { return 200u; }
   return g;
 }
-// Heightfield.at and grass.js terrainHeight (the terrain mesh's triangles).
+// Heightfield.base (heights.png, bilinear between pixel centres: sample i at (i + 0.5) res) and the terrain
+// mesh's 10 m triangles over it (cpuRef.js terrainHeight).
 fn hAt(x: f32, n: f32) -> f32 {
   let w = f32(P.hW);
-  let px = clamp(x / P.hRes, 0.0, w - 1.001); let py = clamp((P.size - n) / P.hRes, 0.0, w - 1.001);
+  let px = clamp(x / P.hRes - 0.5, 0.0, w - 1.001); let py = clamp((P.size - n) / P.hRes - 0.5, 0.0, w - 1.001);
   let x0 = floor(px); let y0 = floor(py); let fx = px - x0; let fy = py - y0;
   let i = u32(y0) * P.hW + u32(x0);
   return (hts[i] * (1.0 - fx) + hts[i + 1u] * fx) * (1.0 - fy) + (hts[i + P.hW] * (1.0 - fx) + hts[i + P.hW + 1u] * fx) * fy;

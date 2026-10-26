@@ -36,15 +36,18 @@ const smooth = (a, b, x) => { const t = Math.min(Math.max((x - a) / (b - a), 0),
 const driftRaw = (x, n) => 0.25 + 1.5 * smooth(0.3, 0.75, 0.7 * vnoise(x / 18, n / 18, 51) + 0.3 * vnoise(x / 6, n / 6, 52));
 export const DRIFT_MEAN = (() => { let s = 0; for (let j = 0; j < 120; j++) for (let i = 0; i < 120; i++) s += driftRaw(i * 13.7, j * 13.7); return s / 14400; })();
 
-// grass.js terrainHeight (not exported): ground height on the rendered terrain mesh's triangles.
+// grass.js terrainHeight (not exported) on a tile without the lidar residual: ground height on the rendered
+// terrain mesh's triangles over heights.png (Heightfield.base, pixel centres). The GPU side has heights.png
+// only, so the reference uses it on every tile; on a lidar tile the client itself places on Heightfield.at
+// (the residual added), which this prototype does not carry.
 export function terrainHeight(tile) {
   const size = tile.size, cs = size / 10, sp = cs / Math.round(cs / 10), H = tile.heights;
   const f = (x, north) => {
     const u = x / sp, v = (size - north) / sp, i = Math.floor(u), j = Math.floor(v), fx = u - i, fy = v - j;
     const x0 = i * sp, x1 = x0 + sp, n0 = size - j * sp, n1 = n0 - sp;
-    const b = H.at(x0, n1), d = H.at(x1, n0);
-    if (fx + fy <= 1) { const a = H.at(x0, n0); return a + (d - a) * fx + (b - a) * fy; }
-    const c = H.at(x1, n1); return c + (b - c) * (1 - fx) + (d - c) * (1 - fy);
+    const b = H.base(x0, n1), d = H.base(x1, n0);
+    if (fx + fy <= 1) { const a = H.base(x0, n0); return a + (d - a) * fx + (b - a) * fy; }
+    const c = H.base(x1, n1); return c + (b - c) * (1 - fx) + (d - c) * (1 - fy);
   };
   f.sp = sp;
   return f;

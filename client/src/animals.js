@@ -2717,6 +2717,19 @@ export class Animals {
     if (this.veg.version !== this.vegVersion && this.veg.oaks.length) { this.indexOaks(); this.dirty = true; }
     if (this.veg.nearVersion !== this.nearVersion && this.perceived.has('cyanocitta_stelleri')) this.indexConifers();
     if (!this.priorReady && performance.now() < this.priorDeadline) return;   // wait (briefly) for the occurrence prior
+    // The fine square of the 1 m ground moved (terrain.js): an animal standing or bedded on the ground keeps its
+    // height between moves in several states (a quail crouched to flush, a raven on the ground, ...), so one placed
+    // on the 10 m mesh would float or sink once the fine mesh arrives under it. Each one on or near the old surface
+    // (within 1 m: a bedded body's drop, a pounce) moves by the new surface minus the old under it.
+    const hf = this.tile.heights;
+    if (hf.fine !== this.fineSeen) {
+      const F0 = this.fineSeen, F1 = hf.fine; this.fineSeen = F1;
+      if (F0 !== undefined) for (const a of this.list) {
+        if (a.air) continue;
+        const n = -a.z, g0 = hf.groundIn(F0, a.x, n);
+        if (Math.abs(a.y - g0) < 1) a.y += hf.groundIn(F1, a.x, n) - g0;
+      }
+    }
     let fresh = false;   // slots were reassigned: every animal writes its matrix this frame
     if (this.dirty || !this.lastCenter || Math.hypot(P.x - this.lastCenter[0], P.z - this.lastCenter[1]) > REBUILD_MOVE) { this.rebuild(P.x, P.z); fresh = true; }
     const odd = (++this.frame) & 1;

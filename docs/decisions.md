@@ -829,3 +829,37 @@ ends up ahead of the squirrel running out a limb). Cost: one branch on a uniform
 same within the noise. The hook reaches into another module's materials from the squirrel's file (chosen to keep
 this change in one file); if vegetation.js ever rebuilds its canopy materials, `leafCut` must be called again.
 
+
+## 2026-10-26: beyond the fine square, the 10 m mesh passes through the 1 m ground and what is placed on it follows the drawn surface
+
+Grass cards, shrubs and rocks place on the 1 m ground (`Heightfield.at`), but beyond the fine square the 10 m mesh
+was built from the 5 m heights alone, so they floated or sank by the residual (on the Hwy 50 cut's banks grass cards
+5 m, shrubs and rocks to 2-5 m). Decided, measured: the 10 m mesh's vertices are now `Heightfield.vert` = `at` on a
+lidar tile (the far surface goes through the true ground at every vertex; `coarse`, the fine square's band and edge
+pinning, the water ribbons' `aCoarseY` and the footing all follow), and cached placement is draped on whatever is
+drawn: each instance is raised or lowered by (1 - `fineShare`) x (coarse - at) at its root, `fineShare` being the fine
+square's own 0..1 band ease. `ClumpField` (shrubs and the three grass card fields) keeps a per-cell copy on the 10 m
+mesh and blends only cells across the band, refilling when `Heightfield.fine` changes; `rocks.js` `seat()` moves each
+instance origin on fill and on each square move; `animals.js` moves every animal within 1 m of the old surface by new
+minus old (`groundIn`) when the square moves, since several still states keep their height. Grass shells move 1 m onto
+the fine mesh's odd-metre vertices (normals over +-2 m as the fine mesh); on a lidar tile the terrain's rock rule
+also takes the drawn mesh's own slope (`geoSlope`), so cut banks near the player take rock; the GPU placement page
+samples heights.png at pixel centres and its CPU reference uses `base` (the GPU side has no residual).
+Measured, |1 m ground - 10 m mesh| over 5000 random points of the home tile, 5 m vertices then 1 m-ground vertices:
+p50 0.17 / 0.07 m, p95 0.74 / 0.51, max 3.36 / 1.77; slopes over 30 degrees 0.57 / 0.23, 1.52 / 1.18, 4.64 / 3.74;
+convex crests 0.37 / 0.36, 1.09 / 0.96, 5.09 / 2.46 (mean +0.40 either way: the mesh cuts under a crest between
+vertices). Vertex second differences on steep ground grew (p95 4.4 to 5.4 m); no spike shows on the cut from 400 m
+or 2 km, and its banks now stand as benches instead of a 5 m bulge over the bed. Placed things outside the square
+against the drawn surface, seven views (ground, 60 m, 400 m, 2 km): p50 0.23-0.44 m, p95 1.1-3.3, max 2.1-5.3 before;
+0 after; inside the square (band included) p95 0.57 to 0.13, max 4.85 to 0.22. Shells against the fine mesh: p95
+6.6 cm, max 27.5 to 0. Approaching animals placed 160-400 m off with the re-seat off: a buck floated 0.78 m, a doe
+0.12, a jackrabbit sank 0.09; with it all within 4 cm. 192 low views along the seams of three squares (the cut
+among them), terrain alone on magenta: no hole. Flying 25 m/s at 40 m, alternating: 36.5 / 36.9 fps against 36.5 /
+36.1 with the re-seats off (the clump fields refill most frames in flight anyway); the GPU page's sweep matches (629
+cells, 2.47 M plants, no difference); Placerville and Cosumnes load unchanged without errors. Rejected: placing far
+things on the 10 m mesh and re-seating on the CPU per plant (the drape is exact and costs only the refill); a 10 m
+tent-filtered residual at the vertices (same accuracy, smoother, but a filtering pass at load for no visible gain).
+Known: trees (vegetation.js) still stand on `at` - 0.3 everywhere, so on crests beyond the square they float about
+0.1 m on average; crests pop up by the cut-under (0.4 m typical, 2.5 m at most) when the square arrives, things on
+them with them; a rock is re-seated at its origin only, its tilt still fitted to the 1 m ground; blades fade out
+before the band and are not re-seated.

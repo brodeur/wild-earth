@@ -106,8 +106,8 @@ export class GrassShells {
     geo.setAttribute('position', new THREE.BufferAttribute(new Float32Array(N * N * 3), 3).setUsage(THREE.DynamicDrawUsage));
     geo.setAttribute('normal', new THREE.BufferAttribute(new Float32Array(N * N * 3), 3).setUsage(THREE.DynamicDrawUsage));
     geo.setAttribute('aDens', new THREE.BufferAttribute(new Float32Array(N * N), 1).setUsage(THREE.DynamicDrawUsage));
-    // Split each quad NW-SE, as the terrain's PlaneGeometry does, so the 2 m triangles lie exactly
-    // in the 10 m terrain triangles (the grid is aligned to the terrain's 10 m lattice).
+    // Split each quad SW-NE, as the terrain's PlaneGeometry and fine mesh do, so the 2 m triangles lie exactly
+    // in the terrain's triangles (the grid is aligned to the 10 m lattice, or to the fine mesh's odd metres).
     const idx = [];
     for (let j = 0; j < N - 1; j++) for (let i = 0; i < N - 1; i++) {
       const a = j * N + i, b = a + 1, c = a + N, d = c + 1;   // row j is the northern edge
@@ -126,13 +126,17 @@ export class GrassShells {
   build(cx, cn) {
     const N = this.N, size = this.tile.size, g = this.mesh.geometry;
     const pos = g.attributes.position.array, nrm = g.attributes.normal.array, den = g.attributes.aDens.array;
-    const x0 = Math.round(cx / 10) * 10 - HALF, n0 = Math.round(cn / 10) * 10 + HALF;
+    // On a tile with the lidar residual the terrain under the shells is the fine mesh (terrain.js FineTerrain): 2 m
+    // apart on odd metres, split SW-NE, normals from +-2 m. The grid moves 1 m onto those vertices and takes its
+    // normals the same way, so each shell triangle lies in a fine-mesh triangle.
+    const odd = this.tile.heights.detail ? 1 : 0, e = odd ? 2 : 1;
+    const x0 = Math.round(cx / 10) * 10 - HALF + odd, n0 = Math.round(cn / 10) * 10 + HALF + odd;
     let any = 0;
     for (let j = 0; j < N; j++) for (let i = 0; i < N; i++) {
       const x = Math.min(Math.max(x0 + i * SPACING, 0), size), n = Math.min(Math.max(n0 - j * SPACING, 0), size), k = j * N + i;
       const y = this.ground(x, n);
       pos[k * 3] = x; pos[k * 3 + 1] = y; pos[k * 3 + 2] = -n;
-      const e = 1.0, gx = this.ground(x + e, n) - this.ground(x - e, n), gn = this.ground(x, n + e) - this.ground(x, n - e);
+      const gx = this.ground(x + e, n) - this.ground(x - e, n), gn = this.ground(x, n + e) - this.ground(x, n - e);
       const l = Math.hypot(gx, 2 * e, gn); nrm[k * 3] = -gx / l; nrm[k * 3 + 1] = 2 * e / l; nrm[k * 3 + 2] = gn / l;
       den[k] = this.density(x, n); any += den[k];
     }

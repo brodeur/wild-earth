@@ -747,8 +747,8 @@ export class Rocks {
   // Height of the rendered terrain mesh (terrain.js: vertices every `spacing` m from the tile's
   // south-west corner, heights.at at the vertices, each square split along its SW-NE diagonal).
   // On a tile with the lidar residual: the 1 m ground (Heightfield.at), which the 2 m fine mesh near the
-  // player draws (terrain.js FineTerrain); rock plans are cached, so they stand on the ground, not on
-  // whichever mesh happened to be under them when planned.
+  // player draws (terrain.js FineTerrain); rock plans are cached, so they are planned on the ground, not on
+  // whichever mesh happened to be under them, and seat() moves each instance onto the surface drawn under it.
   meshH(x, north) {
     if (this.tile.heights.detail) return this.tile.heights.at(x, north);
     const S = this.spacing, h = this.tile.heights, n = Math.round(this.tile.size / S) - 1;
@@ -1169,13 +1169,33 @@ export class Rocks {
       const ar = m.geometry.attributes.aRound;
       if (ar) { for (let q = 0; q < n; q++) ar.array[q] = l.items[q].r; ar.needsUpdate = true; }
       m.count = n; m.visible = n > 0; m.instanceMatrix.needsUpdate = true; m.instanceColor.needsUpdate = true;
+      m.userData.items = l.items; this.seat(m);
       total += n;
     }
     return { cells, total };
   }
+  // On a tile with the lidar residual a rock is planned on the 1 m ground (meshH), which only the fine square near
+  // the player draws; beyond it the 10 m mesh is drawn. Each instance is raised or lowered at its origin by the
+  // 10 m mesh minus the 1 m ground there (r.dc, once per rock), scaled by the share of the 10 m mesh in the
+  // surface drawn now (Heightfield.fineShare), so it stands on whichever surface is under it.
+  seat(m) {
+    const hf = this.tile.heights, items = m.userData.items;
+    if (!hf.detail || !items || !m.count) return;
+    const a = m.instanceMatrix.array, F = hf.fine;
+    for (let q = 0; q < m.count; q++) {
+      const r = items[q], x = r.m[12], n = -r.m[14];
+      r.dc ??= hf.coarse(x, n) - hf.at(x, n);
+      a[q * 16 + 13] = r.m[13] + (1 - hf.fineShare(x, n, F)) * r.dc;
+    }
+    m.instanceMatrix.needsUpdate = true;
+  }
   update(camera) {
     if (!this.enabled) return;
     const p = camera.position;
+    if (this.tile.heights.fine !== this.fine) {   // the fine square moved: re-seat what is drawn
+      this.fine = this.tile.heights.fine;
+      for (const m of this.meshes.values()) if (m.visible) this.seat(m);
+    }
     casterU.rockEye.value.copy(p);
     const moved = (c, d) => !c || Math.hypot(p.x - c.x, p.y - c.y, p.z - c.z) > d;
     if (moved(this.nearCentre, NEAR_MOVE) || moved(this.farCentre, FAR_MOVE)) {
