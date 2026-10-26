@@ -4,6 +4,7 @@ import { animalMaterial, animalDepthMaterial, hasAnim2 } from './animalModels.js
 import { addCaster } from './shadows.js';
 import { trunkAt } from './animals.js';
 import { acornGeometry } from './acorns.js';
+import { chainShader } from './treegen.js';
 
 // The playable western gray squirrel (docs/game-acorn-stash.md, "Playable squirrel"). A ground and trunk
 // controller beside RavenFlight: when the player is a squirrel, main.js calls this instead of flight.update, and it
@@ -57,6 +58,17 @@ const CAM_BACK = 2.5, CAM_UP = 0.6, NEAR = 0.3;
 const CAM_SIDE = 0.4, CAM_SWING = 1.6;                       // rad (~23 deg) off the heading: a three-quarter view; 1/s
 const CROWN_PAD = [0.4, 0.12, 1.0], CROWN_LOWER = 1.1, CROWN_MIN = 0.6, CROWN_BOOM = 0.55;   // woodpeckerControl.js crownClear: the leaves under the sphere; lowest drop; shortest boom
 const CAM_CLEAR = 0.3, CAM_SIGHT = 0.15, CAM_WATER = 0.45;   // m over the terrain round the lens, along the sight line, over a pond
+// The leaf cut (leafCut below): leaf and twig cards nearer the lens than the squirrel are dissolved within CUT_LENS of
+// the squirrel's distance round the lens, and in a screen-space capsule (CUT_R at the squirrel, CUT_R2 at the limb ahead,
+// in tan-of-angle units, eased out over CUT_EDGE) from the squirrel to CUT_AHEAD m along the way it faces; in the wood
+// (and leaping, and dropping from it), eased in and out at CUT_K 1/s.
+const CUT_LENS = 0.85, CUT_R = 0.2, CUT_R2 = 0.11, CUT_EDGE = 0.08, CUT_AHEAD = 1.4, CUT_K = 4;
+// The leap camera: behind the leap and above it, looking a little ahead along it (m); a drop from the wood keeps a
+// tree camera (back, up) over the fall and eases to the ground chase camera over its last DROP_EASE m.
+// Round the stem to a clear line (sightRound): the swings tried (rad, nearest first), how often (s), and how near the
+// squirrel wood is not counted (m: the stems it stands at a junction of).
+const SIGHT_ROT = [0.45, -0.45, 0.9, -0.9, 1.35, -1.35], SIGHT_DT = 0.1, SIGHT_SKIP = 0.25;
+const LEAP_BACK = 1.5, LEAP_UP = 0.7, LEAP_LOOK = 0.6, DROP_BACK = 1.7, DROP_UP = 1.1, DROP_EASE = 2.5;
 // Water (water.js): deeper than SWIM_IN it swims (out again under SWIM_OUT), floating with the feet FLOAT under the
 // surface, at SWIM m/s (a gray squirrel can swim but avoids it; a reservoir crossing should feel slow); shallower it
 // wades at WADE of the run. No jump from the water. Creek depth is water.js depthAt(): the thalweg depth from the
@@ -95,11 +107,15 @@ export class SquirrelControl {
     this.pOff = new THREE.Vector3(); this.cands = []; this.candA = null; this.candD = null; this.turnWas = 0; this.turnLock = false;
     this.leap = null; this.spread = false; this.fallTop = null; this.leftSt = null; this.leftT = 0; this.stunT = 0;
     this._kids = []; this._ta = {}; this._tb = {}; this._nutQ = new THREE.Quaternion().setFromAxisAngle(new THREE.Vector3(1, 0, 0), Math.PI / 2);
-    // the rings that show the junctions A and D would take
+    // the rings that show the junctions A and D would take: a thin band round the wood with a chevron pointing the way
+    // it leaves, breathing a little (showJunctions)
+    const ringGeo = new THREE.TorusGeometry(1, 0.07, 6, 32), arrowGeo = new THREE.ConeGeometry(0.7, 1.4, 4).rotateX(Math.PI / 2).translate(0, 0, 2.2);
     this.rings = [0xffd27a, 0x8fd3ff].map(c => {
-      const m = new THREE.Mesh(new THREE.TorusGeometry(1, 0.12, 6, 24), new THREE.MeshBasicMaterial({ color: c, transparent: true, opacity: 0.85, depthWrite: false }));
-      m.visible = false; m.renderOrder = 6; m.frustumCulled = false; m.name = 'squirrel junction'; scene.add(m); return m;
+      const mat = new THREE.MeshBasicMaterial({ color: c, transparent: true, opacity: 0.85, depthWrite: false });
+      const m = new THREE.Mesh(ringGeo, mat); m.add(new THREE.Mesh(arrowGeo, mat));
+      m.visible = false; m.renderOrder = 6; m.frustumCulled = false; m.children[0].renderOrder = 6; m.children[0].frustumCulled = false; m.name = 'squirrel junction'; scene.add(m); return m;
     });
+    leafCut(veg); this.cutS = 0; this._c = new THREE.Vector3();
     this.ready = animals.playerModel('squirrel').then(r => this.build(r)).catch(e => console.warn('squirrel: no player model', e));
     // the acorn in its mouth
     this.nut = new THREE.Mesh(acornGeometry(), new THREE.MeshLambertMaterial({ vertexColors: true }));
@@ -152,7 +168,7 @@ export class SquirrelControl {
     for (const m of this.rings) m.visible = false;
     this.hint.style.display = 'none'; if (this.hudRow) this.hudRow.style.display = 'none';
     if (on) { f.pitch = 0; f.roll = 0; f.hover = false; this.camSettled = false; this.lastYaw = f.yaw; this.place(f.pos.x, f.pos.z); }
-    else { this.camera.up.set(0, 1, 0); f.reset(f.pos.x, f.pos.z, 30); }   // back to the raven: aloft over the same spot
+    else { this.camera.up.set(0, 1, 0); f.reset(f.pos.x, f.pos.z, 30); this.cutS = 0; LEAF_CUT.a.value.w = 0; }   // back to the raven: aloft over the same spot
     // a camera 0.6 m over a slope: the raven's 0.5 m near plane cut the hillside beside it open
     if (on) this.nearWas = this.camera.near;
     this.camera.near = on ? NEAR : this.nearWas || 0.5; this.camera.updateProjectionMatrix();
@@ -741,7 +757,8 @@ export class SquirrelControl {
       const m = this.rings[i], c = C[i], same = i === 1 && c && c === C[0];
       m.visible = !!c && !same;
       if (!m.visible) continue;
-      m.position.set(c.x, c.y, c.z); m.scale.setScalar(c.r + 0.03);
+      const t = performance.now() / 1000, b = Math.sin(t * 5 + i * 1.6);
+      m.position.set(c.x, c.y, c.z); m.scale.setScalar((c.r + 0.03) * (1 + 0.07 * b)); m.material.opacity = 0.72 + 0.18 * b;
       m.quaternion.setFromUnitVectors(this._x.set(0, 0, 1), this._j.set(c.dx, c.dy, c.dz));
     }
     if (C[0] && C[0] === C[1]) text = `<kbd>A</kbd> / <kbd>D</kbd> ${C[0].name}`;
@@ -1049,7 +1066,9 @@ export class SquirrelControl {
   // (turning left, the left rear), the side the chase lag already swings it to, so the two add instead of cancelling
   // to a view of the tail, and it eases across behind when the turn changes side. On a trunk it
   // stands off the bark over the squirrel's shoulder and orbits with it round the trunk (a drag orbits it further).
-  // Then it is kept out of the ground: above the drawn terrain round the lens (the near plane is NEAR), the sight
+  // A leap keeps a tree camera (behind and above the arc, into the landing limb's camera); a drop from the wood keeps
+  // one over the fall and eases into the chase camera over the last DROP_EASE m. In the tree the leaf cards nearer the
+  // lens than the squirrel are dissolved (cutLeaves). Then it is kept out of the ground: above the drawn terrain round the lens (the near plane is NEAR), the sight
   // line to the squirrel clear of a slope between them (running downhill the ground behind rises), and over a pond.
   updateCamera(dt) {
     const f = this.flight, P = f.pos, cam = this.camera, off = this._v, aim = this._w;
@@ -1057,17 +1076,31 @@ export class SquirrelControl {
     const rate = wrap(f.yaw - (this.camYaw ?? f.yaw)) / Math.max(dt, 1e-3); this.camYaw = f.yaw;   // keys or a drag
     if (Math.abs(rate) > 0.3 && (this.mode === 'ground' || this.mode === 'air')) this.camSide = damp(this.camSide, -Math.sign(rate) * CAM_SIDE, CAM_SWING, dt);
     const wood = this.mode === 'wood' || (this.mode === 'work' && this.work?.back === 'wood');
+    const leap = this.mode === 'leap' && this.leap, drop = this.mode === 'air' && this.spread;
+    if (!wood) { this.sightGoal = 0; this.sightRot = damp(this.sightRot || 0, 0, 4, dt); }   // off the wood: no swing round a stem
     if (wood) {
       // over the shoulder: behind the way it faces and out from the bark (so under a limb when it is underneath), a
       // little to the side; on a steep stem close below (head up) or above (head down) and further out, as on the trunk
-      // in its own crown, or out a limb (among the leaves), the boom shortens: fewer leaf cards between; eased
+      // in its own crown, or out a limb (among the leaves), the boom shortens: fewer leaf cards between; eased. The
+      // leaves still nearer than the squirrel are dissolved (cutLeaves), and wood across the line swings the boom round
+      // the stem (sightRound)
       const w = this.w, fw = w.f, n = w.n, l = w.l, st = Math.min(1, Math.abs(fw.y) / 0.9);
       this.boomK = damp(this.boomK ?? 1, this.inCrown || !w.main ? CROWN_BOOM : 1, 2, dt);   // out a limb: in the leaves
       const K = this.boomK, back = (1.9 + (0.6 - 1.9) * st) * K, out = (0.75 + (1.9 - 0.75) * st) * K, side = 0.45 * K;
       off.set(-fw.x * back + n.x * out - l.x * side, -fw.y * back + n.y * out - l.y * side, -fw.z * back + n.z * out - l.z * side);
-      if (this.camOrbit) off.applyAxisAngle(this._d.set(w.a.dx, w.a.dy, w.a.dz), this.camOrbit);
+      const axis = this._d.set(w.a.dx, w.a.dy, w.a.dz);
+      if (this.camOrbit) off.applyAxisAngle(axis, this.camOrbit);
+      if (!this.auto) this.sightRound(dt, P, off, axis);
       aim.set(fw.x * 0.5 + n.x * 0.08, fw.y * 0.5 + n.y * 0.08, fw.z * 0.5 + n.z * 0.08);
       if (!this.auto) this.crownClear(P, off);
+      k = 5;
+    } else if (leap) {
+      // a leap stays in the tree camera: behind the leap and above it, looking ahead along the arc to the landing; the
+      // boom eases in from the limb's camera and out again into the landing limb's (no crown rule: the leaf cut keeps
+      // the line clear, and the crown it leaps in would push the camera down under the limbs)
+      const L = this.leap, T = L.T, tx = T.px - P.x, ty = T.py - P.y, tz = T.pz - P.z, tl = Math.hypot(tx, ty, tz), lk = Math.min(LEAP_LOOK, tl);
+      off.set(-L.dx * LEAP_BACK, LEAP_UP, -L.dz * LEAP_BACK);
+      if (tl > 1e-3) aim.set(tx / tl * lk, ty / tl * lk + 0.05, tz / tl * lk); else aim.set(L.dx * lk, 0.05, L.dz * lk);
       k = 5;
     } else if ((this.mode === 'trunk' || this.mode === 'limb' || (this.mode === 'work' && this.work?.back === 'trunk')) && this.tree) {
       const tr = this.tree, ang = this.face + this.camOrbit, t = trunkAt(tr, Math.max(0, this.h), this._t);
@@ -1080,6 +1113,12 @@ export class SquirrelControl {
       off.set(Math.sin(a) * back, up, Math.cos(a) * back);
       const fx = -Math.sin(f.yaw), fz = -Math.cos(f.yaw), look = 1.2;
       aim.set(fx * look, 0.22 + 0.25 * this.sit + Math.tan(f.pitch) * (back + look), fz * look);
+      if (drop) {   // dropped from the wood: a tree camera over the fall, easing to this one near the ground
+        const g = Math.min(1, Math.max(0, (P.y - this.heights.atXZ(P.x, P.z) - 0.3) / DROP_EASE));
+        off.lerp(this._c.set(Math.sin(a) * DROP_BACK, DROP_UP, Math.cos(a) * DROP_BACK), g);
+        aim.lerp(this._c.set(fx * 0.3, 0.05, fz * 0.3), g);
+        k = 7 - 2 * g;
+      }
     }
     if (!this.camSettled) { this.camOff.copy(off); this.aimOff.copy(aim); this.camSettled = true; this.camLift = 0; }
     else {   // the boom's direction and length eased apart, so a swing round a stem never passes through the squirrel
@@ -1094,9 +1133,59 @@ export class SquirrelControl {
     const need = this.camClear(P, cam.position) - cam.position.y;
     this.camLift = need > this.camLift ? need : damp(this.camLift, need, 3, dt);
     if (this.camLift > 0) cam.position.y += this.camLift;
-    if (wood && this.Q) for (let i = 0; i < 4 && cam.position.distanceTo(P) > 0.9 && this.Q.near(cam.position.x, cam.position.y, cam.position.z, 0.3, 0.03); i++) cam.position.lerp(P, 0.2);   // short of a limb in the way
+    // short of a limb in the way: drawn in toward the squirrel (never nearer than 0.9 m), quickly but eased (a leap's
+    // camera sweeps past limbs; a cut would pop), and back out gently
+    let pull = 0;
+    if ((wood || leap) && this.Q) for (let i = 0; i < 4 && this._x.copy(cam.position).lerp(P, pull).distanceTo(P) > 0.9 && this.Q.near(this._x.x, this._x.y, this._x.z, 0.3, 0.03); i++) pull = 1 - (1 - pull) * 0.8;
+    this.pull = pull > (this.pull || 0) ? damp(this.pull || 0, pull, 15, dt) : damp(this.pull || 0, pull, 3, dt);
+    if (this.pull > 1e-3) cam.position.lerp(P, this.pull);
     cam.up.set(0, 1, 0);
     cam.lookAt(aim.copy(P).add(this.aimOff));
+    this.cutLeaves(dt, wood, leap, drop);
+  }
+  // Round the stem to a clear line: another limb or branch across the line from the lens to the squirrel (the leaf cut
+  // clears leaves, not wood) swings the boom round the stem's axis to the nearest clear side (SIGHT_ROT, tried nearest
+  // first; checked every SIGHT_DT s, eased), and back to straight behind when that clears. off: rotated in place.
+  sightRound(dt, P, off, axis) {
+    this.sightT = (this.sightT || 0) - dt;
+    if (this.sightT <= 0) {
+      this.sightT = SIGHT_DT;
+      const v = this._sv || (this._sv = new THREE.Vector3()), clear = r => this.sightClear(P, v.copy(off).applyAxisAngle(axis, r));
+      const g = this.sightGoal || 0;
+      if (g && clear(0)) this.sightGoal = 0;
+      else if (!clear(g)) for (const r of SIGHT_ROT) if (r !== g && clear(r)) { this.sightGoal = r; break; }
+    }
+    this.sightRot = damp(this.sightRot || 0, this.sightGoal || 0, 4, dt);
+    if (Math.abs(this.sightRot) > 1e-3) off.applyAxisAngle(axis, this.sightRot);
+  }
+  // Whether the line from the squirrel's back out to P + off is clear of wood (any but its own stem, thicker than a
+  // twig) beyond SIGHT_SKIP of the squirrel.
+  sightClear(P, off) {
+    const Q = this.Q, w = this.w, n = w.n, L = off.length();
+    if (!Q || L < 0.3) return true;
+    const x0 = P.x + n.x * 0.08, y0 = P.y + n.y * 0.08, z0 = P.z + n.z * 0.08;
+    for (let u = SIGHT_SKIP / L; u < 0.95; u += 0.15) if (Q.nearBut(x0 + off.x * u, y0 + off.y * u, z0 + off.z * u, 0.05, 0.012, w.st)) return false;
+    return true;
+  }
+  // The leaf cut's uniforms (leafCut): on in the tree (the wood, the old trunk climb, a leap, a drop from the wood),
+  // eased; the squirrel's middle and the point CUT_AHEAD along the way it faces (the landing, in a leap), in view space.
+  cutLeaves(dt, wood, leap, drop) {
+    const cam = this.camera, P = this.flight.pos, U = LEAF_CUT, w = this.w;
+    const inTree = wood || leap || drop || this.mode === 'trunk' || this.mode === 'limb' || (this.mode === 'work' && this.work?.back === 'trunk');
+    this.cutS = damp(this.cutS, inTree ? 1 : 0, CUT_K, dt);
+    if (this.cutS < 0.01) { this.cutS = 0; U.a.value.w = 0; return; }
+    cam.updateMatrixWorld();
+    const V = cam.matrixWorldInverse, c = this._c;
+    if (wood) c.copy(P).addScaledVector(w.n, 0.08); else c.set(P.x, P.y + 0.1, P.z);
+    const dist = c.distanceTo(cam.position);
+    c.applyMatrix4(V); U.a.value.set(c.x, c.y, c.z, this.cutS);
+    if (wood) c.copy(P).addScaledVector(w.f, CUT_AHEAD).addScaledVector(w.n, 0.05);
+    else if (leap) c.set(this.leap.T.px, this.leap.T.py + 0.05, this.leap.T.pz);
+    else c.set(P.x - Math.sin(this.flight.yaw) * CUT_AHEAD, P.y + 0.05, P.z - Math.cos(this.flight.yaw) * CUT_AHEAD);
+    c.applyMatrix4(V); if (c.z > -0.05) c.copy(U.a.value);   // the point ahead behind the lens: the squirrel alone
+    U.b.value.set(c.x, c.y, c.z, 0);
+    U.r.value.set(CUT_R, CUT_R2, CUT_EDGE, 0);
+    U.lens.value.set(CUT_LENS * dist, 0.5 * CUT_LENS * dist);
   }
   // The lowest camera height at C (looking at the squirrel at P) that keeps the near plane out of the drawn terrain
   // and of a pond's surface, and the line from the squirrel's back to the lens above the ground between them.
@@ -1136,4 +1225,38 @@ function inRing(x, y, ring) {
     if ((yi > y) !== (yj > y) && x < (xj - xi) * (y - yi) / (yj - yi) + xi) inside = !inside;
   }
   return inside;
+}
+
+// The leaf cut: a dissolve, chained onto the vegetation's near and close leaf cards and close twigs (vegetation.js
+// canopyMat, twigMat; once, from here, so the vegetation's own code is unchanged), that keeps the player squirrel and
+// the limb ahead of it in view inside a crown. In view space (vViewPosition, which the Lambert shader already has): a
+// card fragment is dropped when it is nearer the lens than the squirrel and (1) within lens.x m of the lens (eased
+// over lens.y), or (2) inside the screen-space capsule from the squirrel (a.xyz, radius r.x) to the point ahead (b.xyz,
+// radius r.y), eased over r.z. Dropped by an interleaved-gradient dither against the strength a.w, as the LOD
+// cross-fades do (alpha hash), so the edge is a soft dissolve rather than a cut line. a.w = 0 skips it all (the raven,
+// the woodpecker, the squirrel on the ground). Shadows are drawn with the depth materials, so a cut leaf still shades.
+const LEAF_CUT = { a: { value: new THREE.Vector4() }, b: { value: new THREE.Vector4() }, r: { value: new THREE.Vector4() }, lens: { value: new THREE.Vector2() } };
+const cutDone = new WeakSet();
+function leafCut(veg) {
+  const mats = [veg?.twigMat];
+  for (const m of Object.values(veg?.canopyMat || {})) mats.push(m.near, m.close);
+  for (const m of mats) {
+    if (!m || cutDone.has(m)) continue;
+    cutDone.add(m);
+    chainShader(m, 'sq-cut', shader => {
+      shader.uniforms.sqCutA = LEAF_CUT.a; shader.uniforms.sqCutB = LEAF_CUT.b; shader.uniforms.sqCutR = LEAF_CUT.r; shader.uniforms.sqCutL = LEAF_CUT.lens;
+      shader.fragmentShader = shader.fragmentShader
+        .replace('#include <common>', '#include <common>\nuniform vec4 sqCutA;\nuniform vec4 sqCutB;\nuniform vec4 sqCutR;\nuniform vec2 sqCutL;')
+        .replace('#include <clipping_planes_fragment>', `if (sqCutA.w > 0.0) {
+          vec3 cp = -vViewPosition; float cz = max(1e-3, -cp.z);
+          vec2 cs = cp.xy / cz, ca = sqCutA.xy / max(1e-3, -sqCutA.z), cb = sqCutB.xy / max(1e-3, -sqCutB.z), ab = cb - ca;
+          float ct = clamp(dot(cs - ca, ab) / max(dot(ab, ab), 1e-6), 0.0, 1.0);
+          float cd = length(cs - ca - ab * ct), cr = mix(sqCutR.x, sqCutR.y, ct), depth = mix(-sqCutA.z, -sqCutB.z, ct);
+          float ck = (1.0 - smoothstep(cr, cr + sqCutR.z, cd)) * (1.0 - smoothstep(depth - 0.25, depth - 0.05, cz));
+          ck = max(ck, (1.0 - smoothstep(sqCutL.x - sqCutL.y, sqCutL.x, length(cp))) * (1.0 - smoothstep(-sqCutA.z - 0.25, -sqCutA.z - 0.05, cz)));
+          float cn = fract(52.9829189 * fract(dot(gl_FragCoord.xy + vec2(23.0, 7.0), vec2(0.06711056, 0.00583715))));
+          if (cn < ck * sqCutA.w) discard; }
+        #include <clipping_planes_fragment>`);
+    });
+  }
 }

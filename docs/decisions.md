@@ -814,3 +814,18 @@ draws its oaks where the present-day photo has crowns (28 crowns within 120 m, b
 the ponderosa stand has 30-34 m old-growth pines over a 12-18 m canopy; the HUD's nearest tree, the acorn game's
 oaks (10.9 k, 2.1 k acorns and 57 stashes near the stand) and a raven perched 3 m up a crown's blue oak work; the
 far impostor of a crown is its own tree in 95% of mid trees (the rest an atlas sibling), same height and width.
+
+## 2026-10-26: the squirrel's camera dissolves the leaves in front of it rather than leaving the crown
+
+In a blue oak's crown the leaf cards filled most of the squirrel's view: the limbs are where the leaves are, so no
+camera position near the squirrel is outside them. Decided: dissolve the leaf and twig cards nearer the lens than
+the squirrel (round the lens, and in a screen-space capsule to the limb ahead), with a dithered edge, by a fragment
+test `squirrelControl.js` chains once onto the vegetation's near and close canopy materials and close twigs; its
+uniforms are zero unless the player squirrel is in a tree, so every other view draws as before. Wood across the line
+is handled by swinging the boom round the stem to a clear side instead. Rejected: a 0.6 m over-the-shoulder camera
+(the tail blocks the limb ahead and the leaves remain); orbiting to the side with fewer leaves (no cheap leaf-density
+query: the perch index knows wood, not cards); placing the camera outside the crown with a longer lens (the camera
+ends up ahead of the squirrel running out a limb). Cost: one branch on a uniform per leaf fragment; frame time the
+same within the noise. The hook reaches into another module's materials from the squirrel's file (chosen to keep
+this change in one file); if vegetation.js ever rebuilds its canopy materials, `leafCut` must be called again.
+

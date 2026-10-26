@@ -296,6 +296,36 @@ in the leap the ground chase camera sits low under the limbs; the junction rings
 plain tori; the leg splay is a single blend, not a grip; trees far from the player
 (outside the near set) still have AI squirrels on the old fork-and-float climb.
 
+**Camera in the crown and in the leap (2026-10-26).** Three things, all in `squirrelControl.js`:
+
+- *Leaf cut.* In the tree (on the wood, the old trunk climb, a leap, a drop from the wood) the leaf and twig cards
+  nearer the lens than the squirrel dissolve: within 0.85 of the squirrel's distance round the lens, and in a
+  screen-space capsule from the squirrel to 1.4 m along the way it faces (the landing, in a leap), with a dithered
+  edge (the LOD cross-fade's alpha hash). It is a fragment test chained once onto the vegetation's near and close
+  canopy materials and the close twigs (`leafCut`), driven by uniforms the squirrel sets each frame (zero otherwise,
+  so the raven and the woodpecker draw as before; shadows are unchanged). Leaves beyond the squirrel stay: the crown
+  still surrounds the view, with a clear hole round the squirrel and the limb ahead.
+- *Round the stem to a clear line.* The cut clears leaves, not wood: a branch across the line from the lens to the
+  squirrel (perch.js `nearBut` sampled along it, every 0.1 s) swings the boom round the stem's axis to the nearest
+  clear side (+/-0.45, 0.9, 1.35 rad), eased, and back when straight behind is clear again. The pull in short of a
+  limb near the lens is now eased (15/s in, 3/s out) rather than a cut.
+- *Leap and drop.* A leap keeps a tree camera, 1.5 m behind the leap and 0.7 m above, looking ahead toward the
+  landing, easing into the landing limb's camera; it no longer falls back to the ground chase camera. A drop from the
+  wood keeps a camera 1.7 m back and 1.1 m up over the fall and blends into the chase camera over the last 2.5 m.
+- The junction rings are a thinner band with a chevron pointing the way the junction leaves, breathing a little.
+
+Tried and not kept: a 0.6 m over-the-shoulder camera looking along the limb (the tail fills the lower third and the
+leaves are still there); the leaf cut with a longer boom (0.8 x instead of 0.55 x: more context but the squirrel
+small and more wood across the line). Verified (built-in browser, home tile, fall, before and after from the same
+spots): a blue oak climbed with W to 5 m, a branch taken with D and run out to 7 m, looked round with the orbit
+(-1.4 to 2.4 rad); limb-to-limb leaps (camera 0.4-0.7 m above, 1.2-1.6 m back throughout, no drop to the ground
+camera); a 7 m drop (stunned) easing to the chase camera; the woodpecker and the raven draw as before; no console
+errors; frame time with the cut on and off the same within the noise (28-34 ms median in this session's quiet
+spells). Still does not read well: looking across the crown (orbited side-on) the leaves beyond the squirrel are a
+wall behind it, and the cut's dithered edge shows as torn leaves against the sky; on a steep stem in the crown the
+squirrel sits low in the frame (the head-up composition is unchanged); the leap camera does not test wood across
+its line (only the eased pull near the lens).
+
 ## Playable woodpecker (2026-10-25)
 
 The acorn woodpecker is the third playable animal: two cards at the opening screen's "who"
