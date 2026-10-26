@@ -141,7 +141,8 @@ release, WebGL) was still running; its commit, if it verified, is the last in `g
 | 5456b86 | Pipeline: Sentinel-2 monthly ground colour (about 400 scenes per tile from 2019 on; open grass gold June to October, green from December) and a ground-only base texture with every lidar crown and its shadow inpainted (73-88% of each tile). |
 | ad48513 | Client: the ground shows its measured colour for the date on the photo without its trees; January green, April greenest, late October gold-beige; forest floor as litter under dense canopy; grass blades match. |
 | 0816e6d | Wild turkey, California ground squirrel and western fence lizard meshes (130 credits; 360 of the 1,000 spent). |
-| (next) | The three wired into the world on all tiles: turkey flocks of 6-15 that flush onto real limbs, ground squirrel colonies with a sentinel that dive into their burrows, fence lizards basking and doing push-ups on rocks and bark from March to October, on a new reptile rig; GBIF records all three on every tile. |
+| a95fb59 | The three wired into the world on all tiles: turkey flocks of 6-15 that flush onto real limbs, ground squirrel colonies with a sentinel that dive into their burrows, fence lizards basking and doing push-ups on rocks and bark from March to October, on a new reptile rig; GBIF records all three on every tile. |
+| (next) | Sounds for the three, all synthesised: turkey putts, purr, spring dawn gobble and heavy flush; the ground squirrel's whistle alarm and scuffle; the lizard's scuttle. |
 
 Open from the day: the attribution form for generated assets; far placement on the lidar ground beyond the fine square; the squirrel's
 crown camera in leafy oaks.
