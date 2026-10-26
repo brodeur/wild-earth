@@ -5,7 +5,7 @@ import { SkyDome } from './sky.js';
 import { Atmosphere } from './atmosphere.js';
 import { RavenFlight } from './flight.js';
 import { Raven } from './raven.js';
-import { Vegetation } from './vegetation.js';
+import { Vegetation, crownPlan } from './vegetation.js';
 import { Impostors } from './impostors.js';
 import { Grass } from './grass.js';
 import { MiniMap } from './minimap.js';
@@ -108,6 +108,9 @@ async function main() {
   const raven = new Raven(flight.body, atmosphere);   // the bird you see from the chase camera
   const shadows = new Shadows({ renderer, scene, tile, terrain, veg, raven, grass, far });   // cascaded sun shadows (shadows.js)
   flight.reset(tile.size / 2, -tile.size / 2, 150);
+  // On a tile with a lidar crown list (crowns.js) the trees stand on the crowns: wait for the plan (the list has been
+  // downloading since the Vegetation was built) so the first frame has its trees rather than shrubs alone.
+  if (crownPlan(tile)) { status('placing the trees on their lidar crowns…'); await crownPlan(tile); }
   veg.radius = +$('detail').value; veg.update(flight.pos.x, flight.pos.z, true);
   const minimap = new MiniMap({ container: $('minimap'), sizeM: tile.size, imagery: tile.imagery, features: tile.features, flight, rewildImage: tile.textureImage });
   const places = new PlaceNames(tile.features, tile.size);   // nearest named road, stream or water, for the HUD

@@ -782,3 +782,35 @@ Verified on the home tile: the Hwy 50 cut near x 9100, north 8790 reads as a fla
 magenta clear); 51.5-51.9 fps against 52.9-53.7 with the fine mesh off, 38.6-40.4 against 40.7-41.3
 flying at 25 m/s; the raven landed in the cut on the 1 m ground, 4.4 m below the 10 m surface there;
 the two tiles without lidar load unchanged.
+
+## 2026-10-26: trees stand on the lidar crowns; the oldest trees are the biggest real ones
+
+Where a tile has `client/trees_lidar.bin` (the home tile), every tree is one crown: `crowns.js` loads the list
+after the meshes are built (cellPlan keeps the shrubs; its tree draws are still taken, so the shrubs stand where
+they did) and plans each crown once for the near forest and the far impostors alike. Species: the crown's 30 m
+cell's tree mix by weight times a height fit (1 up to the top of the species' tallest class range, to 0.1 at
+1.4 x that), else the row's tallest-capable species, so a 22 m crown in blue oak woodland becomes a gray pine or
+live oak and a 34 m one in the ponderosa stand an old-growth pine. Variant: the age class whose height range holds
+the crown, the tree scaled to the crown height (0.4-1.7) and widened toward the crown radius (aspect 0.8-1.25, so
+readers that take the x scale as the size stay close). Old (veteran, old-growth): the top 5% by height plus radius
+of the species within a 500 m block, or over an absolute height (blue oak 15 m, valley oak 25, ponderosa 40, gray
+pine 25, else the old class's range top): 61.8 k of 395 k crowns (blue oak 24%, live oak 26%, ponderosa 5%, gray
+pine 7%); snags at the file fractions (7.7 k). The 20 largest crowns per species carry a stable landmark id
+(`blue_oak:308,258:1`, a 19.5 m blue oak). No crown is thinned for rocks, roads or the built footprint; 2.3 k on
+water move to dry ground under their own crown. Result, home tile: blue oak 96 k, gray pine 111 k, live oak 69 k,
+ponderosa 49 k, valley oak 16 k, canyon live oak 13 k. To pay for 40% more trees: rare species share meshes between
+age classes (under 2% of the tile's trees one tree, 2-3% mature plus old, shrubs under 10% one; all tiles), and
+beyond the far thinning start a crown tile's impostors keep 0.7 of what they would. Start view, before / after:
+412 / 295 draw calls, 19.4 / 20.6 ms, 5.7 / 7.8 M triangles, 26.0 k / 33.9 k mid plants, 569 / 895 near, 203 k /
+202 k far drawn (330 k / 431 k records), JS heap 568 / 566 MB, vegetation instance buffers 107 / 61 MB, 64 / 49
+baked far trees. Over the ponderosa stand at 60 m: 660 / 458 draw calls, 25-27 / 23 ms. Placerville 383 / 278 and
+Cosumnes 372 / 256 draw calls with identical placements. Rejected: a synchronous load before the constructors
+(main.js is another lane's, and a blocking request on the main thread) and placeholder cell trees until the list
+arrives (a visible swap); the cost is a shrub-only forest until the main thread first goes idle (about the first
+frame). Known: rare species' old crowns draw their mature tree scaled; crowns over 1.7 x a tree's height are drawn
+shorter than measured (the 40-54 m maxima, some of them lidar noise); the blue oak and live oak old shares follow
+the lidar's tall crowns and are a tuning knob (`OLD_ABS`). Verified: the savanna at (4309, 3440) from 150 m
+draws its oaks where the present-day photo has crowns (28 crowns within 120 m, blue oak, the five over 15 m old);
+the ponderosa stand has 30-34 m old-growth pines over a 12-18 m canopy; the HUD's nearest tree, the acorn game's
+oaks (10.9 k, 2.1 k acorns and 57 stashes near the stand) and a raven perched 3 m up a crown's blue oak work; the
+far impostor of a crown is its own tree in 95% of mid trees (the rest an atlas sibling), same height and width.

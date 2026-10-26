@@ -51,6 +51,7 @@ sequenced; Parked is in the brief but deliberately not started.
   with the textures). Weak: shrubs and rocks beyond the fine square can float or sink by the
   residual (up to ~1 m), an animal placed before the square reached it keeps its old height,
   rock material on cut banks still comes from the 5 m slope mask.
+- Trees on the lidar crowns, 2026-10-26: one tree per real crown on the home tile, species by the cell's mix and the crown's height, the biggest real trees old-growth with landmark ids; start view 295 draw calls (412 before). Weak: shrub-only for the first moments after load, rare species' old crowns are scaled mature trees.
 
 - Overnight 2026-10-24/25 (Aaron asleep, standing authorization): present-day peek (P)
   with place names; pipeline present-day texture, LANDFIRE species mix per cell, acorn

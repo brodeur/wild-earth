@@ -3,6 +3,7 @@ import { SPECIES, SPECIES_IDS, mulberry32, resolveSpecies } from './trees.js';
 import { buildTree, canopyMaterial, trunkMaterial, applySeason, chainShader, SLOTS, variantSlots, seasonMonth } from './treegen.js';
 import { SEASON_LOOK } from './season.js';
 import { rockKeep } from './tilepackage.js';
+import { hasCrowns, loadCrowns, planCrowns, oldClassOf, crownId, crownOf, SCALE } from './crowns.js';
 
 // Species mix per habitat class (codes from pipeline/habitat.py). Weights sum to 1. Ids may be the
 // short aliases; trees.js maps them to the species library (library/species/<id>.json).
@@ -98,7 +99,52 @@ export function cellPlan(tile, i, j) {
   // Blue oak savanna the canopy layer calls treeless (EVC tree cover 0): about one oak per two cells.
   let savannaOak = false;
   if (!nTrees && tree === 0 && row?.savanna && (cls === 5 || cls === 1) && (hash(i, j, 23) & 1)) { nTrees = 1; savannaOak = true; }
-  return { cls, rnd, nTrees, nShrubs, treeMix: savannaOak ? oakMix(row) : treeMix, shrubMix };
+  return { cls, rnd, nTrees, nShrubs: shrubScale(tile, i, j, nShrubs), treeMix: savannaOak ? oakMix(row) : treeMix, shrubMix };
+}
+// Shrub counts follow the lidar's shrub cover where the tile exposes it (tile.canopyHeight, client/canopy_height.png:
+// B shrub cover % of the 0.5-4 m layer on a 10 m grid): a cell's count is scaled by the lidar cover over the 30 m
+// cell against the canopy layer's (clamped 0.25..2.5). Without it (every tile without the lidar step) counts are
+// as before.
+function shrubScale(tile, i, j, nShrubs) {
+  const ch = tile.canopyHeight; if (!nShrubs || !ch?.img || typeof ch.channel !== 'function') return nShrubs;
+  const hab = tile.habitat, f = ch.img.width / hab.img.width, x0 = Math.floor(i * f), y0 = Math.floor(j * f), x1 = Math.max(x0 + 1, Math.floor((i + 1) * f)), y1 = Math.max(y0 + 1, Math.floor((j + 1) * f));
+  let s = 0, k = 0;
+  for (let y = y0; y < y1 && y < ch.img.height; y++) for (let x = x0; x < x1 && x < ch.img.width; x++) { s += ch.channel(x, y, 2); k++; }
+  const lidar = k ? s / k : 0, layer = tile.canopy.channel(i, j, 1);
+  return Math.round(nShrubs * Math.min(2.5, Math.max(0.25, (lidar + 5) / (layer + 5))));
+}
+// The tree mix of cell (i, j) as cellPlan draws its trees (the LANDFIRE row's, else the habitat class's), or null
+// where the class grows no trees. The crown plan (crowns.js) draws a crown's species from it.
+export function cellTreeMix(tile, i, j) {
+  const cls = tile.habitat.channel(i, j, 0), row = tile.speciesMix ? tile.speciesMix.at(i, j) : null;
+  return (row && row.treeSum && knownMix(row.trees)) || MIX[cls] || null;
+}
+cellTreeMix.fallback = MIX[5];
+
+// Rare species share their meshes between age classes (2026-10-26, the draw-call budget: each distinct tree is a
+// mesh set, two draw calls per tier). By the tile's shares (species_mix.json fractions.tree_share, shrub_share):
+// a tree species under RARE_TREE[1] (2%) of the trees draws one tree, its base (mature) class's first seed, for
+// every slot; under RARE_TREE[0] (3%), two: that one, and the old class's first seed for the old class and the
+// snag. A shrub under RARE_SHRUB (10%) of the shrubs draws its base tree only. Slots keep their classes (the
+// crown plan reads them) and a crown's tree is still scaled to the crown; only the mesh set is shared (an oak's
+// record carries the drawn tree's class). Tiles without a species mix share nothing. Returns Map id -> 1 (one
+// tree) | 2 (mature and old).
+const RARE_TREE = [0.03, 0.02], RARE_SHRUB = 0.1;
+const rareSets = new WeakMap();
+export function rareSpecies(tile) {
+  let out = rareSets.get(tile); if (out) return out;
+  out = new Map(); const f = tile.speciesMix?.json?.fractions;
+  for (const [k, s] of Object.entries(f?.tree_share || {})) { const id = resolveSpecies(k); if (id && s < RARE_TREE[0]) out.set(id, s < RARE_TREE[1] ? 1 : 2); }
+  for (const [k, s] of Object.entries(f?.shrub_share || {})) { const id = resolveSpecies(k); if (id && s < RARE_SHRUB) out.set(id, 1); }
+  rareSets.set(tile, out); return out;
+}
+// The seed slot v of species id is drawn with (Vegetation's meshes; the far atlas bakes the same tree); level from rareSpecies.
+export function drawnSeed(id, v, level) {
+  const slots = variantSlots(id, VARIANTS), own = slots[v];
+  if (!level || !SPECIES[id].classes) return own.seed;
+  const cl = SPECIES[id].classes, base = cl.find(c => c.base)?.name, old = level === 2 && !SPECIES[id].shrub ? oldClassOf(id) : null;
+  const want = old && (own.snag || own.cls === old) ? old : base;
+  return (slots.find(s => !s.snag && s.cls === want && s.copy === 0) || own).seed;
 }
 // Whether plant k of cell (i, j) at (px, pn) is skipped: road pavement and verge (as before), ponds
 // and stream channels (tile.waterMask), and riparian thinning: a tree within RIPARIAN_M of a stream
@@ -194,6 +240,30 @@ export function tileSpecies(tile) {
 // else the season's middle month (treegen seasonMonth), for leaf_on_by_month, flowers and berries.
 export const monthFor = season => seasonMonth(season);
 
+// The tile's crown plan (crowns.js planCrowns), a promise per tile (null without a crown list, or when it fails to
+// load: the trees then come from cellPlan as on every other tile). The tree slot v of a species draws is described
+// to the plan by slotDims, which Vegetation fills with its meshes' heights and crown radii (so a crown's drawn tree
+// is scaled from the tree actually drawn); the far impostors read the same plan.
+const slotDims = new Map();   // `${id}:${v}` -> { H, R }
+const crownPlans = new WeakMap();
+export function crownPlan(tile) {
+  if (!hasCrowns(tile)) return null;
+  let p = crownPlans.get(tile);
+  if (!p) {
+    const t0 = performance.now();
+    p = loadCrowns(tile).then(raw => {
+      const t1 = performance.now();
+      const plan = planCrowns(tile, raw, { treeMix: Object.assign((i, j) => cellTreeMix(tile, i, j), { fallback: cellTreeMix.fallback }),
+        dims: (id, v) => slotDims.get(`${id}:${v}`), speciesIds: SPECIES_IDS });
+      const old = Object.values(plan.stats).reduce((a, s) => a + s.old, 0), snag = Object.values(plan.stats).reduce((a, s) => a + s.snag, 0);
+      console.info(`crowns: ${plan.count.toLocaleString()} lidar crowns loaded in ${Math.round(t1 - t0)} ms (page at ${(t1 / 1000).toFixed(1)} s), planned in ${plan.ms} ms: ${Object.keys(plan.stats).length} species, ${old.toLocaleString()} old, ${snag.toLocaleString()} snags, ${plan.landmarks.length} landmarks; ${plan.moved} moved off water (${plan.wet} wet), ${plan.borrowed.toLocaleString()} drew a neighbour's mix`);
+      return plan;
+    }).catch(err => { console.warn(`crowns: ${err.message}; trees from the cell plan`); return null; });
+    crownPlans.set(tile, p);
+  }
+  return p;
+}
+
 export function pick(mix, r) { let acc = 0; for (const [k, w] of Object.entries(mix)) { acc += w; if (r <= acc) return k; } return Object.keys(mix)[0]; }
 export function hash(i, j, salt) { let h = (i * 73856093) ^ (j * 19349663) ^ (salt * 83492791); return h >>> 0; }
 
@@ -258,7 +328,9 @@ export class Vegetation {
     this.meshes = {};      // species id -> [{ near: {trunk, canopy, cap, n, ids}, mid: {...}, close: {canopy, cap, n}, stem, height, tris, cls }], one per distinct tree
     this.slots = {};       // species id -> VARIANTS entries of this.meshes (a class with several slots repeats its entries)
     this.stats = {};
+    if (hasCrowns(tile)) loadCrowns(tile);   // the crown list downloads while the meshes build (planned below, once they have)
     this.ids = tileSpecies(tile);   // the species this tile places (library order)
+    const rare = this.rare = rareSpecies(tile);
     for (const id of this.ids) {
       const spec = SPECIES[id];
       this.canopyMat[id] = { near: lodPatch(canopyMaterial(spec, 'near', patch), this.lodU, 'near', true, true), mid: lodPatch(canopyMaterial(spec, 'mid', patch), this.lodU, 'mid', true),
@@ -267,9 +339,9 @@ export class Vegetation {
       this.meshes[id] = []; this.slots[id] = [];
       const bySeed = new Map();
       for (let v = 0; v < VARIANTS; v++) {
-        const seed = variantSeed(id, v);
+        const seed = drawnSeed(id, v, rare.get(id));   // the slot's own seed, or a rare species' shared one
         if (bySeed.has(seed)) { this.slots[id].push(bySeed.get(seed)); continue; }
-        const slot = variantSlots(id, VARIANTS)[v], entry = { seed, cls: slot.cls, snag: slot.snag };
+        const slot = variantSlots(id, VARIANTS).find(s => s.seed === seed) || variantSlots(id, VARIANTS)[v], entry = { seed, cls: slot.cls, snag: slot.snag };
         bySeed.set(seed, entry); this.slots[id].push(entry);
         for (const lod of ['near', 'mid']) {
           const t = buildTree(id, seed, lod);
@@ -280,7 +352,11 @@ export class Vegetation {
           trunk.count = canopy.count = 0; trunk.frustumCulled = canopy.frustumCulled = false;
           this.group.add(trunk, canopy);
           entry[lod] = { trunk, canopy, cap, n: 0, tris: t.tris.trunk + t.tris.canopy, ids: new Uint32Array(cap) };
-          if (lod === 'near') { entry.stem = t.stem; entry.height = t.height; }
+          if (lod === 'near') {
+            entry.stem = t.stem; entry.height = t.height;
+            const g = t.canopy; if (!g.boundingBox) g.computeBoundingBox();
+            const b = g.boundingBox; entry.radius = Math.max(0.5, (b.max.x - b.min.x + b.max.z - b.min.z) / 4);   // mean crown half-width
+          }
         }
         const c = buildTree(id, seed, 'close'), ccap = CLOSE_CAP[spec.shrub ? 'shrub' : 'tree'];
         const closeCanopy = new THREE.InstancedMesh(c.canopy, this.canopyMat[id].close, ccap);
@@ -296,10 +372,19 @@ export class Vegetation {
         entry.close = { canopy: closeCanopy, twigs: closeTwigs, cap: ccap, n: 0, tris: c.tris.canopy, twigTris: c.tris.twigs || 0 };
         this.meshes[id].push(entry);
       }
+      this.slots[id].forEach((e, v) => slotDims.set(`${id}:${v}`, { H: e.height, R: e.radius }));
       const avg = lod => Math.round(this.meshes[id].reduce((s, e) => s + e[lod].tris, 0) / this.meshes[id].length);
       this.stats[id] = { near: avg('near'), mid: avg('mid'), closeCanopy: avg('close'), closeTwigs: Math.round(this.meshes[id].reduce((s, e) => s + e.close.twigTris, 0) / this.meshes[id].length) };
     }
     this.tmp = new THREE.Object3D();
+    // Lidar crowns (crowns.js): on a tile with a crown list every tree stands on a crown; cellPlan keeps the shrubs.
+    // The list loads after construction, so until it is planned the tile shows its shrubs only; then the mid and
+    // near sets are rebuilt. If it fails to load, the trees come from cellPlan as before.
+    this.crownMode = hasCrowns(tile); this.plan = null; this.landmarks = [];
+    if (this.crownMode) crownPlan(tile).then(plan => {
+      if (plan) { this.plan = plan; this.landmarks = plan.landmarks; } else this.crownMode = false;
+      if (this.lastCenter) { const e = this.lodU.lodEye.value; this.update(e.x, e.z, true); }   // lodEye: the bird, as of the last update
+    });
   }
   setLook(look) {
     const season = Object.keys(SEASON_LOOK).find(k => SEASON_LOOK[k] === look) || 'summer', month = monthFor(season);
@@ -324,6 +409,7 @@ export class Vegetation {
     const oaks = [];
     const north = -z, r = this.radius, cells = Math.ceil(r / res);
     const [ci, cj] = hab.cellOf(x, north);
+    const crowns = this.crownMode;   // trees from the crown list (placeCrowns below), not from the cells' draws
     let total = 0;
     for (let j = cj - cells; j <= cj + cells; j++) for (let i = ci - cells; i <= ci + cells; i++) {
       if (i < 0 || j < 0 || i >= hab.img.width || j >= hab.img.height) continue;
@@ -337,6 +423,7 @@ export class Vegetation {
         const sid = resolveSpecies(name), variants = this.slots[sid], e = variants[Math.floor(rnd() * variants.length)], m = e.mid;   // slot draw as before: VARIANTS slots, weighted by class
         const px = (i + rnd()) * res, pn = size - (j + rnd()) * res;
         const s = 0.75 + rnd() * 0.5, rot = rnd() * Math.PI * 2;   // all draws before any skip, so neighbours keep their place
+        if (isTree && crowns) continue;   // after the draws, so the shrubs stand where they always did
         if (m.n >= m.cap) continue;   // after the draws: a full model slot must not shift the rest of the cell (impostors use the same sequence)
         // Decayed roads: nothing on the pavement; trees thin out across the verge (shrubs creep in).
         // Nothing in ponds or stream channels; trees thin out toward a stream (placementSkip) but for
@@ -350,12 +437,42 @@ export class Vegetation {
         if (oak) oaks.push({ id: `${i},${j},${k}`, x: ax, z: -an, y: this.tmp.position.y + 0.3, scale: s, species: oak, rot, stem: e.stem, height: e.height, cls: e.cls, snag: e.snag });
       }
     }
+    if (crowns && this.plan) total += this.placeCrowns(x, north, r, oaks);
     for (const arr of Object.values(this.meshes)) for (const e of arr) {
       e.mid.trunk.count = e.mid.canopy.count = e.mid.n;
       e.mid.trunk.instanceMatrix.addUpdateRange(0, e.mid.n * 16); e.mid.trunk.instanceMatrix.needsUpdate = true;
     }
     this.count = total; this.oaks = oaks; this.version++;
     this.refreshNear(x, z);
+  }
+  // The crowns within r of (x, north) into the mid set (crowns.js plan): one tree per crown, the slot's tree
+  // scaled to the crown's height and (within crowns.js ASPECT) its radius. Index cells nearest first, so if a
+  // model's set were ever full it would be the farthest trees that wait for the far tier.
+  placeCrowns(x, north, r, oaks) {
+    const P = this.plan, cm = P.cellM, nc = P.cells, off = P.offsets, heights = this.tile.heights, r2 = r * r, tmp = this.tmp;
+    const cells = [];
+    for (let j = Math.max(0, Math.floor((north - r) / cm)); j <= Math.min(nc - 1, Math.floor((north + r) / cm)); j++)
+      for (let i = Math.max(0, Math.floor((x - r) / cm)); i <= Math.min(nc - 1, Math.floor((x + r) / cm)); i++) {
+        const dx = Math.max(i * cm - x, 0, x - (i + 1) * cm), dn = Math.max(j * cm - north, 0, north - (j + 1) * cm), d2 = dx * dx + dn * dn;
+        if (d2 <= r2 && off[j * nc + i + 1] > off[j * nc + i]) cells.push([d2, j * nc + i]);
+      }
+    cells.sort((a, b) => a[0] - b[0]);
+    let total = 0, full = 0;
+    for (const [, c] of cells) for (let q = off[c]; q < off[c + 1]; q++) {
+      const px = P.x[q], pn = P.n[q], dx = px - x, dn = pn - north;
+      if (dx * dx + dn * dn > r2) continue;
+      const sid = P.speciesIds[P.sp[q]], e = this.slots[sid]?.[P.slot[q]]; if (!e) continue;
+      const m = e.mid; if (m.n >= m.cap) { full++; continue; }
+      const sh = Math.min(SCALE[1], Math.max(SCALE[0], P.h[q] / e.height)), sw = sh * P.aspect[q], rot = P.rot[q];
+      tmp.position.set(px, heights.at(px, pn) - 0.3, -pn);
+      tmp.rotation.set(0, rot, 0); tmp.scale.set(sw, sh, sw); tmp.updateMatrix();
+      m.trunk.setMatrixAt(m.n, tmp.matrix); m.ids[m.n] = crownId(q); m.n++; total++;
+      const oak = OAK_SHORT[sid];
+      if (oak) oaks.push({ id: `L${q}`, x: px, z: -pn, y: tmp.position.y + 0.3, scale: sh, species: oak, rot, stem: e.stem, height: e.height, cls: e.cls, snag: e.snag,
+        old: !!(P.flags[q] & 1), landmark: P.landmarkOf.get(q) || null });
+    }
+    if (full && !this.warnedFull) { this.warnedFull = true; console.warn(`vegetation: ${full} crowns beyond a full model set (mid cap ${CAP / 2}); the farthest wait for the far tier`); }
+    return total;
   }
   // Copy the mid instances near (x, z) into the near set: no cell scan, no height lookups.
   refreshNear(x, z) {
@@ -372,8 +489,11 @@ export class Vegetation {
         if (n >= cap) { dropped++; continue; }
         for (let k = 0; k < 16; k++) dst[n * 16 + k] = src[o + k];
         e.near.ids[n] = e.mid.ids[i];
-        const scale = Math.hypot(src[o], src[o + 1], src[o + 2]);
-        plants.push({ id: e.mid.ids[i], species, x: src[o + 12], y: src[o + 13] + 0.3, z: src[o + 14], scale, height: e.height * scale });
+        // scale: the horizontal scale (a crown tree's height scale differs, crowns.js ASPECT); height: the drawn height
+        const scale = Math.hypot(src[o], src[o + 1], src[o + 2]), sy = Math.hypot(src[o + 4], src[o + 5], src[o + 6]), id = e.mid.ids[i];
+        let q = this.plan ? crownOf(id) : -1;   // a crown's tree (a cell shrub's hashed id can have the high bit too: check the position)
+        if (q >= this.plan?.count || (q >= 0 && Math.abs(this.plan.x[q] - src[o + 12]) > 0.01)) q = -1;
+        plants.push({ id, species, x: src[o + 12], y: src[o + 13] + 0.3, z: src[o + 14], scale, height: e.height * sy, ...(q >= 0 ? { crown: q, landmark: this.plan.landmarkOf.get(q) || null, old: !!(this.plan.flags[q] & 1) } : {}) });
         n++;
       }
       e.near.n = e.near.trunk.count = e.near.canopy.count = n; total += n;

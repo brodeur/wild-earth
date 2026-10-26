@@ -1,8 +1,9 @@
 import * as THREE from 'three';
 import { uniforms as atmo, ATMOSPHERE_GLSL } from './atmosphere.js';
 import { SPECIES, SPECIES_IDS, mulberry32, resolveSpecies } from './trees.js';
-import { VARIANTS, pick, hash, variantSeed, handover, cellPlan, placementSkip, placePlant, monthFor } from './vegetation.js';
-import { variantSlots, leafOnAt } from './treegen.js';
+import { VARIANTS, pick, hash, variantSeed, handover, cellPlan, placementSkip, placePlant, monthFor, crownPlan, rareSpecies, drawnSeed, tileSpecies } from './vegetation.js';
+import { variantSlots, leafOnAt, treeWood } from './treegen.js';
+import { hasCrowns, SCALE } from './crowns.js';
 import { bakeImpostors, VIEWS, SIDE_VIEWS, ALPHA_REF } from './impostorBake.js';
 import { seasonOfDate } from './season.js';
 
@@ -45,7 +46,7 @@ import { seasonOfDate } from './season.js';
 // or into one of six angular sectors of billboard-only meshes (one quad, a third of the vertices),
 // each one draw call and frustum-culled, so a view draws the ring and two to four sectors.
 
-const CHUNK = 250, MOVE = 80, SECTORS = 6, STRIDE = 8;   // record: x y z rot | scale tree rank cell
+const CHUNK = 250, MOVE = 80, SECTORS = 6, STRIDE = 8;   // record: x y z rot | scale tree rank width (crown aspect, crowns.js; 1 for cell trees)
 const THIN_P = 0.7;                // keep (thinStart / d)^P beyond thinStart
 const GROW_W = 0.72, GROW_H = 0.28; // a kept tree's width and height grow by keep^-GROW (GROW_W + GROW_H = 1: area / keep)
 const NEEDLE_FADE = [900, 1500];    // treegen canopyMaterial fades the needle light out over this view distance
@@ -54,6 +55,10 @@ const RING = 250;                  // the mid set reaches at most nearRadius + 2
 const CAST_KEEP = 0.5, CAST_R = 4500;   // far shadow casters: share kept, reach from the camera (see CASTER_VERT)
 const HAND_MARGIN = 15;            // rebuild() measures from the camera, the hand-over from the bird (a chase camera's offset)
 const CROSS = [150, 450];          // crossed -> billboard switch, per tree, at nearRadius + 150..450
+// Lidar crowns (crowns.js) put 40% more trees on the home tile than the cell plan did (395 k against 281 k), and
+// taller ones: beyond the thinning start the far tier keeps CROWN_KEEP of what it would (eased in over CROWN_EASE m,
+// the survivors widening as for any thinning), so its instance count and cost stay near the cell plan's.
+const CROWN_KEEP = 0.7, CROWN_EASE = 600;
 const srgbToLin = v => Math.pow(v / 255, 2.2);
 
 // Atlas slots per species (2026-10-25). Every plant draws one of VARIANTS (12) slots as always, but the
@@ -109,10 +114,10 @@ export function planSlots(counts, maxTrees = MAX_TREES, library = SPECIES_IDS) {
 // x width and y height multipliers on the tree's own size, z alive (0: dropped by thinning), w variety.
 // k2 thins further on top of the distance rule (the shadow casters: CAST_KEEP), with the same growth.
 const GROWTH_GLSL = /* glsl */`
-  uniform vec4 hrange[NT]; uniform float nearRadius; uniform vec4 thin;
+  uniform vec4 hrange[NT]; uniform float nearRadius; uniform vec4 thin; uniform float crownKeep;
   float hsh(float n) { return fract(sin(n) * 43758.5453123); }
   vec4 farGrowth(float d, float s, float rank, vec4 hr, float k2) {
-    float keep = (d < thin.x ? 1.0 : pow(thin.x / d, thin.y)) * k2;
+    float keep = (d < thin.x ? 1.0 : pow(thin.x / d, thin.y) * mix(1.0, crownKeep, smoothstep(thin.x, thin.x + ${CROWN_EASE.toFixed(1)}, d))) * k2;
     float shrubFar = hr.z * smoothstep(nearRadius + ${RING.toFixed(1)}, nearRadius + 1000.0, d);
     keep *= 1.0 - 0.5 * shrubFar;   // far shrubs: fewer, wider and a little taller (a patch of chaparral, not a bush)
     float alive = smoothstep(keep, keep * 0.88, rank);   // shrink out just before the rank is dropped
@@ -158,7 +163,7 @@ const VERT = /* glsl */`
     if (g.z <= 0.0) { gl_Position = vec4(2.0, 2.0, 2.0, 1.0); return; }
     float fade = 1.0, v = g.w, hMul = g.y, wMul = g.x;
     float r3 = hsh(seed * 37.719 + 3.0), r4 = hsh(seed * 93.989 + 4.0), r5 = hsh(seed * 51.137 + 5.0), r6 = hsh(seed * 23.417 + 6.0), r7 = hsh(seed * 67.351 + 7.0);
-    float W = fr.x * s * wMul, H = fr.y * s * hMul, y0 = fr.z * s * hMul;
+    float W = fr.x * s * wMul * iA.w, H = fr.y * s * hMul, y0 = fr.z * s * hMul;
     float lean = v * (r3 - 0.5) * 0.16, ld = r4 * 6.2831853;
     vec2 leanV = vec2(cos(ld), sin(ld)) * lean;   // horizontal shift per metre of height
     vec2 toCam = normalize(eye.xz - base.xz + vec2(1e-4, 0.0));
@@ -289,7 +294,7 @@ const CASTER_VERT = /* glsl */`
     vec4 g = distance(base.xz, handEye.xz) <= hand.x ? vec4(0.0) : farGrowth(distance(base.xz, eye.xz), s, rank, hrange[ti], ${CAST_KEEP.toFixed(2)});
     if (g.z <= 0.0) { gl_Position = vec4(2.0, 2.0, 2.0, 1.0); return; }
     vec4 cb = crown[ti];
-    float R = cb.z * s * g.x, Hh = cb.y * s * g.y;
+    float R = cb.z * s * g.x * iA.w, Hh = cb.y * s * g.y;
     vec3 C = base + vec3(0.0, cb.x * s * g.y, 0.0);
     vec3 right = normalize(cross(vec3(0.0, 1.0, 0.0), sunDir) + vec3(1e-4, 0.0, 0.0)), up = cross(sunDir, right);
     float ce = up.y, ev = sqrt(Hh * Hh * ce * ce + R * R * max(1.0 - ce * ce, 0.0));   // the ellipsoid's outline along up
@@ -306,18 +311,31 @@ export class Impostors {
     this.tile = tile; this.group = new THREE.Group(); scene.add(this.group);
     // Records first (each holds its species and slot), then the atlas: the species the tile places, with
     // slots by how common each is (planSlots), every slot's tree from its exact seed where it is baked.
-    this.buildRecords();
+    // A tile with lidar crowns (crowns.js) places its trees from the crown plan, which loads after this: until
+    // then the records hold the shrubs, and the atlas is planned from the cell plan's tree draws (counted, not
+    // placed) as the estimate of each species' share; when the plan arrives the records are rebuilt on it.
+    this.crownMode = hasCrowns(tile);
+    this.buildRecords(null);
     const t1 = performance.now();
     const plan = this.plan = planSlots(this.counts);
     const ids = this.ids = plan.ids.length ? plan.ids : [SPECIES_IDS[0]];
-    const bakeList = [];
-    for (const id of ids) for (let v = 0; v < VARIANTS; v++) bakeList.push({ id, seed: impostorSeed(id, v, plan.slots[id] ?? VARIANTS) });
-    const bake = bakeImpostors(bakeList);
-    this.bake = bake;
-    {   // library species x slot -> baked tree (bakeList is ids x VARIANTS)
-      const pos = SPECIES_IDS.map(id => ids.indexOf(id)), rec = this.records;
-      for (let q = 0; q < this.nRecords; q++) { const o = q * STRIDE + 5, key = rec[o], v = key % VARIANTS; rec[o] = bake.index[pos[(key - v) / VARIANTS] * VARIANTS + v]; }
+    const bakeList = [], rare = rareSpecies(tile);
+    // A rare species' trees share meshes in vegetation.js (drawnSeed); the atlas bakes those same trees when it
+    // has room for them, else the usual reduction (impostorSeed).
+    for (const id of ids) for (let v = 0; v < VARIANTS; v++) {
+      const n = plan.slots[id] ?? VARIANTS;
+      bakeList.push({ id, seed: rare.has(id) && n >= rare.get(id) ? drawnSeed(id, v, rare.get(id)) : impostorSeed(id, v, n) });
     }
+    const bake = bakeImpostors(bakeList);
+    this.bake = bake; this.bakeList = bakeList;
+    this.mapRecords();
+    if (this.crownMode) crownPlan(tile).then(cp => {
+      const t = performance.now();
+      if (!cp) this.crownMode = false;
+      this.buildRecords(cp); this.mapRecords(); this.center = null;   // rebuilt on the next update
+      this.uniforms.crownKeep.value = cp ? CROWN_KEEP : 1;
+      console.info(`impostors: ${this.nRecords.toLocaleString()} plants indexed on the ${cp ? 'crown plan' : 'cell plan'} in ${Math.round(performance.now() - t)} ms`);
+    });
     const t2 = performance.now();
 
     const NT = bake.frames.length, NS = ids.length;
@@ -335,7 +353,7 @@ export class Impostors {
       needle: { value: ids.map(id => { const F = SPECIES[id].foliage, f = bake.frames.find(q => q.species === resolveSpecies(id));
         return f && f.thin > 0 ? new THREE.Vector4(F.needle_wrap ?? 0.35, F.translucency ?? 2.5, F.needle_scatter ?? 0.15, f.thin) : new THREE.Vector4(); }) },
       needleTint: { value: ids.map(id => new THREE.Vector3(...(SPECIES[id].foliage.translucency_rgb || [1, 1.12, 0.55]))) },
-      eye: { value: new THREE.Vector3() }, nearRadius: { value: 1500 }, thin: { value: new THREE.Vector4() },
+      eye: { value: new THREE.Vector3() }, nearRadius: { value: 1500 }, thin: { value: new THREE.Vector4() }, crownKeep: { value: 1 },
       handEye: handover.eye, hand: handover.r,
       grid: { value: new THREE.Vector2(...bake.grid) },
       ...atmo,
@@ -364,7 +382,7 @@ export class Impostors {
     }
     // Far shadow casters (shadows.js draws them with casterMaterial()): not in the scene.
     this.casterMesh = new THREE.Mesh(this.sectorGeometry(1024, 'far')); this.casterMesh.cap = 1024; this.casterMesh.kind = 'far';
-    this.R = null; this.center = null; this.count = 0; this.bakeList = bakeList;
+    this.R = null; this.center = null; this.count = 0;
     this.setSeason(seasonOfDate());
     this.stats = { bakeMs: Math.round(t2 - t1), bakeRenderMs: Math.round(bake.renderMs), recordsMs: Math.round(t1 - t0), atlas: bake.size,
       atlasMB: +(bake.bytes / 1048576).toFixed(1), trees: this.nRecords, baked: NT, species: ids.length, slots: plan.slots };
@@ -376,7 +394,7 @@ export class Impostors {
     const u = this.uniforms;
     return new THREE.ShaderMaterial({ vertexShader: CASTER_VERT, fragmentShader: CASTER_FRAG, colorWrite: false, side: THREE.DoubleSide,
       defines: { NT: this.bake.frames.length },
-      uniforms: { crown: { value: crowns }, eye: u.eye, sunDir: u.sunDir, hrange: u.hrange, nearRadius: u.nearRadius, thin: u.thin, handEye: u.handEye, hand: u.hand } });
+      uniforms: { crown: { value: crowns }, eye: u.eye, sunDir: u.sunDir, hrange: u.hrange, nearRadius: u.nearRadius, thin: u.thin, crownKeep: u.crownKeep, handEye: u.handEye, hand: u.hand } });
   }
 
   sectorGeometry(cap, kind) {
@@ -390,12 +408,30 @@ export class Impostors {
     return g;
   }
 
+  // Library species x slot -> baked tree for every record (bakeList is ids x VARIANTS). A crown record carries
+  // its target height (negative) in the scale field until here, where it becomes the scale of its baked tree.
+  mapRecords() {
+    const bake = this.bake, ids = this.ids, pos = SPECIES_IDS.map(id => ids.indexOf(id)), rec = this.records, H = new Map();
+    let missing = 0;
+    for (let q = 0; q < this.nRecords; q++) {
+      const o = q * STRIDE + 5, key = rec[o], v = key % VARIANTS;
+      let p = pos[(key - v) / VARIANTS]; if (p < 0) { p = 0; missing++; }
+      const k = p * VARIANTS + v; rec[o] = bake.index[k];
+      if (rec[o - 1] < 0) {
+        let h = H.get(k); if (h === undefined) { const b = this.bakeList[k]; h = treeWood(b.id, b.seed)?.H || 10; H.set(k, h); }
+        rec[o - 1] = Math.min(SCALE[1], Math.max(SCALE[0], -rec[o - 1] / h));
+      }
+    }
+    if (missing) console.warn(`impostors: ${missing} plants of species the atlas did not bake drawn as ${ids[0]}`);
+  }
+
   // Every plant vegetation.js would place on the tile, grouped by chunk and sorted by a thinning rank.
   // The per-cell plan (counts, LANDFIRE species mix, savanna oak) and the skips (roads, ponds, stream
   // channels, riparian thinning) are vegetation.js's own cellPlan and placementSkip, and the six draws
   // per plant are taken in Vegetation.update's order, so each record is the tree that replaces it.
-  buildRecords() {
-    const tile = this.tile, hab = tile.habitat, res = hab.res, size = tile.size, heights = tile.heights;
+  // With crowns (crownPlan: the plan, or null while it loads) the trees are the crowns', one record per crown.
+  buildRecords(crownPlan) {
+    const tile = this.tile, hab = tile.habitat, res = hab.res, size = tile.size, heights = tile.heights, crowns = this.crownMode;
     // rec[5] holds the species' library index x VARIANTS + slot until the constructor has baked the atlas
     // and replaces it with the baked tree; counts (per species, as tree and as shrub) size the atlas.
     const spCount = this.counts = {}, libIdx = Object.fromEntries(SPECIES_IDS.map((id, k) => [id, k]));
@@ -410,6 +446,10 @@ export class Impostors {
         const variant = Math.floor(rnd() * VARIANTS);
         const px = (i + rnd()) * res, pn = size - (j + rnd()) * res;
         const s = 0.75 + rnd() * 0.5, rot = rnd() * Math.PI * 2;
+        if (isTree && crowns) {   // trees are the crowns'; while the plan loads, count the cell draws as the atlas estimate
+          if (!crownPlan) { const sid = resolveSpecies(name), c = spCount[sid] || (spCount[sid] = { tree: 0, shrub: 0 }); c.tree++; }
+          continue;
+        }
         // Same placement as the near forest (vegetation.js placePlant): skips, and willow and alder pulled
         // to the bank, so a tree stands in one place on both sides of the hand-over. No draws from rnd.
         const at = placePlant(tile, i, j, k, name, px, pn, isTree); if (!at) continue;
@@ -420,7 +460,23 @@ export class Impostors {
         rec[o] = ax; rec[o + 1] = heights.at(ax, an) - 0.3; rec[o + 2] = -an; rec[o + 3] = rot;
         const sid = resolveSpecies(name), c = spCount[sid] || (spCount[sid] = { tree: 0, shrub: 0 }); if (isTree) c.tree++; else c.shrub++;
         rec[o + 4] = s; rec[o + 5] = libIdx[sid] * VARIANTS + variant;   // species and slot; the constructor swaps in the baked tree
-        rec[o + 6] = own(); rec[o + 7] = i + j * hab.img.width;
+        rec[o + 6] = own(); rec[o + 7] = 1;
+        chunkOf[n] = Math.min(NC - 1, Math.floor(ax / CHUNK)) + NC * Math.min(NC - 1, Math.floor(an / CHUNK));
+        n++;
+      }
+    }
+    if (crowns && !crownPlan) {   // every tree species a mix row names gets at least one into the estimate, so the atlas holds it
+      for (const id of tileSpecies(tile)) if (!SPECIES[id].shrub) { const c = spCount[id] || (spCount[id] = { tree: 0, shrub: 0 }); c.tree = Math.max(c.tree, 1); }
+    }
+    if (crownPlan) {
+      const P = crownPlan;
+      if (n + P.count > chunkOf.length) { const L = n + P.count; const r2 = new Float32Array(L * STRIDE); r2.set(rec); rec = r2; const c2 = new Int32Array(L); c2.set(chunkOf); chunkOf = c2; }
+      for (let q = 0; q < P.count; q++) {
+        const ax = P.x[q], an = P.n[q], sid = P.speciesIds[P.sp[q]], o = n * STRIDE;
+        rec[o] = ax; rec[o + 1] = heights.at(ax, an) - 0.3; rec[o + 2] = -an; rec[o + 3] = P.rot[q];
+        rec[o + 4] = -P.h[q]; rec[o + 5] = libIdx[sid] * VARIANTS + P.slot[q];   // target height (mapRecords makes it the scale) and slot
+        rec[o + 6] = mulberry32(hash(q, 0x6c1d, 7001) ^ 0x5bd1e995)(); rec[o + 7] = P.aspect[q];
+        const c = spCount[sid] || (spCount[sid] = { tree: 0, shrub: 0 }); c.tree++;
         chunkOf[n] = Math.min(NC - 1, Math.floor(ax / CHUNK)) + NC * Math.min(NC - 1, Math.floor(an / CHUNK));
         n++;
       }
@@ -443,7 +499,11 @@ export class Impostors {
     this.records = packed; this.nRecords = n;
   }
 
-  keep(d) { const t = this.R + RING; return d < t ? 1 : Math.pow(t / d, THIN_P); }
+  keep(d) {
+    const t = this.R + RING; if (d < t) return 1;
+    const e = Math.min(1, (d - t) / CROWN_EASE), k = this.uniforms.crownKeep.value;
+    return Math.pow(t / d, THIN_P) * (1 + (k - 1) * e * e * (3 - 2 * e));
+  }
 
   // Copy the kept prefix of every chunk that can be visible before the next rebuild into the ring mesh
   // (if any of it can come within the crossed band) or its far sector.
