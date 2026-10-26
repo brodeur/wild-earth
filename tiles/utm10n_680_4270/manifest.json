@@ -15,7 +15,7 @@
   38.65029129231017
  ],
  "size_m": 10000,
- "generated_at": "2026-10-26T15:29:22Z",
+ "generated_at": "2026-10-26T20:29:06Z",
  "generator": {
   "name": "wild-earth-pipeline",
   "version": "0.2.0"
@@ -988,17 +988,17 @@
    "path": "species/species.json",
    "kind": "table",
    "source": "gbif",
-   "count": 15,
-   "sha256": "f9a96842f8c358da6d068d8a5be2d3c9fb3e4dbad1e030d2b994511d8bf0d77e",
-   "bytes": 6791
+   "count": 18,
+   "sha256": "227add932620671057a4200ba6c316f3a67e21752773c75065b0c7c41cf3f529",
+   "bytes": 8627
   },
   "species.occurrences": {
    "path": "species/occurrences.geojson",
    "kind": "vector",
    "source": "gbif",
-   "feature_count": 587,
-   "sha256": "703c7da69aa28d0379cf720e612b36d8ae1935386732ac58935a09f6068f9f0e",
-   "bytes": 262480,
+   "feature_count": 633,
+   "sha256": "0a84b576d545d506ba393085d344cb14f614654aebfe19f57114564a00a0a2a0",
+   "bytes": 283114,
    "for_clients": false,
    "for_clients_note": "per-record licences include CC BY-NC; clients read client.species_prior, built from CC0 and CC BY records only"
   },
@@ -1006,8 +1006,8 @@
    "path": "species/seasonal.json",
    "kind": "table",
    "source": "gbif",
-   "sha256": "a39f82d18671289a6325bcd3e1ffd3a6a1214aa1a6775d74ce48655a2f366905",
-   "bytes": 1646,
+   "sha256": "44c6e30aff3e02e6b3582e66f9fcf2d5272e3fcc53c934603e3300cb67c02c99",
+   "bytes": 1964,
    "for_clients": false
   },
   "species.inventory": {
@@ -1020,14 +1020,14 @@
   "perception": {
    "path": "perception.json",
    "kind": "table",
-   "sha256": "71a480fb016a458102ed53357b2b0063fb7825485ddcf5de82a24c4b7ac54c6e",
-   "bytes": 4368
+   "sha256": "6373175f3454aaa21dab00ef47975ee59067076822279ac8e7451ec1a84a2597",
+   "bytes": 5954
   },
   "calendar": {
    "path": "calendar.json",
    "kind": "table",
-   "sha256": "4f4ec1fd773d57ec25b0e3b7a1b73dab998b5f5291cf800241634e7f563d20ff",
-   "bytes": 12847
+   "sha256": "db2348c8c078b73ce45b76a609bf5c9c57de5e58d119816fd162c2340197a118",
+   "bytes": 15878
   },
   "terrain.hillshade": {
    "path": "terrain/hillshade.png",
@@ -1676,15 +1676,15 @@
     "CC BY 4.0",
     "CC0 1.0"
    ],
-   "records_used": 522,
+   "records_used": 555,
    "records_used_by_license": {
-    "CC0 1.0": 106,
-    "CC BY 4.0": 416
+    "CC0 1.0": 113,
+    "CC BY 4.0": 442
    },
    "records_excluded": {
-    "CC BY-NC 4.0": 27
+    "CC BY-NC 4.0": 35
    },
-   "records_outside": 38,
+   "records_outside": 43,
    "species": {
     "aphelocoma_californica": 130,
     "buteo_jamaicensis": 36,
@@ -1695,14 +1695,17 @@
     "cyanocitta_stelleri": 26,
     "lepus_californicus": 0,
     "melanerpes_formicivorus": 142,
+    "meleagris_gallopavo": 29,
     "odocoileus_hemionus": 0,
+    "otospermophilus_beecheyi": 0,
     "puma_concolor": 0,
+    "sceloporus_occidentalis": 4,
     "sciurus_griseus": 0,
     "urocyon_cinereoargenteus": 0
    },
-   "datasets": 3,
-   "sha256": "ef79b5af58a6925f9733caec02e93157c32e1b2bf7f5751b4f2d15f36e1a7cf6",
-   "bytes": 174972
+   "datasets": 4,
+   "sha256": "71bd2c0770da4cd3bd9c7bf6174adca46283bd89b4b143704202390a78e100a2",
+   "bytes": 215233
   },
   "terrain.dem_1m": {
    "path": "terrain/dem_1m.tif",
@@ -5119,7 +5122,7 @@
    "attribution": "Species occurrences: GBIF.org and its contributing datasets, including iNaturalist and eBird (CC0, CC BY 4.0 or CC BY-NC 4.0 per record)",
    "attribution_url": "https://www.gbif.org/",
    "attribution_required": true,
-   "retrieved": "2026-10-25"
+   "retrieved": "2026-10-26"
   },
   "osm": {
    "name": "OpenStreetMap via Overpass API",
@@ -5444,6 +5447,12 @@
    "step": "inpaint",
    "at": "2026-10-26T15:29:22Z",
    "seconds": 198.9,
+   "ok": true
+  },
+  {
+   "step": "species",
+   "at": "2026-10-26T20:29:06Z",
+   "seconds": 134.9,
    "ok": true
   }
  ]

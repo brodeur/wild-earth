@@ -120,8 +120,10 @@
      "activity": "rear",
      "resources": [
       "sciurus_griseus",
+      "otospermophilus_beecheyi",
       "sylvilagus_bachmani",
-      "microtus_californicus"
+      "microtus_californicus",
+      "sceloporus_occidentalis"
      ],
      "goal": "feed chicks"
     }
@@ -795,6 +797,186 @@
       "acorn_mast",
       "carrion"
      ]
+    }
+   ]
+  },
+  "meleagris_gallopavo": {
+   "winter": [
+    {
+     "activity": "forage",
+     "resources": [
+      "acorn_mast",
+      "grass_forbs"
+     ],
+     "goal": "large flocks scratch in the oak litter"
+    },
+    {
+     "activity": "shelter",
+     "resources": [
+      "cliff_or_snag"
+     ],
+     "goal": "roost high in oaks and pines at night"
+    }
+   ],
+   "spring": [
+    {
+     "activity": "court",
+     "resources": [],
+     "goal": "toms gobble and strut"
+    },
+    {
+     "activity": "nest",
+     "resources": [
+      "cover"
+     ],
+     "goal": "ground nest under brush"
+    }
+   ],
+   "summer": [
+    {
+     "activity": "rear",
+     "resources": [
+      "insects",
+      "grass_forbs"
+     ],
+     "goal": "hens with poults"
+    },
+    {
+     "activity": "forage",
+     "resources": [
+      "insects"
+     ]
+    }
+   ],
+   "fall": [
+    {
+     "activity": "forage",
+     "resources": [
+      "acorn_mast"
+     ],
+     "goal": "flocks gather under the oaks"
+    }
+   ]
+  },
+  "otospermophilus_beecheyi": {
+   "winter": [
+    {
+     "activity": "shelter",
+     "resources": [
+      "burrow"
+     ],
+     "goal": "hibernate or stay below through the cold weeks"
+    }
+   ],
+   "spring": [
+    {
+     "activity": "court",
+     "resources": [
+      "burrow"
+     ]
+    },
+    {
+     "activity": "rear",
+     "resources": [
+      "burrow",
+      "grass_forbs"
+     ],
+     "goal": "young above ground by May"
+    }
+   ],
+   "summer": [
+    {
+     "activity": "forage",
+     "resources": [
+      "grass_forbs",
+      "acorn_mast"
+     ],
+     "goal": "seeds of the dry grass"
+    },
+    {
+     "activity": "shelter",
+     "resources": [
+      "burrow"
+     ],
+     "goal": "adults aestivate in the hottest weeks"
+    }
+   ],
+   "fall": [
+    {
+     "activity": "forage",
+     "resources": [
+      "acorn_mast"
+     ],
+     "goal": "cache seeds and acorns"
+    },
+    {
+     "activity": "shelter",
+     "resources": [
+      "burrow"
+     ]
+    }
+   ]
+  },
+  "sceloporus_occidentalis": {
+   "winter": [
+    {
+     "activity": "shelter",
+     "resources": [
+      "cover"
+     ],
+     "goal": "under bark, logs and rocks; out on warm days"
+    }
+   ],
+   "spring": [
+    {
+     "activity": "court",
+     "resources": [
+      "cliff_or_snag"
+     ],
+     "goal": "males push up and flash their blue bellies"
+    },
+    {
+     "activity": "forage",
+     "resources": [
+      "insects"
+     ]
+    }
+   ],
+   "summer": [
+    {
+     "activity": "rear",
+     "resources": [
+      "cover"
+     ],
+     "goal": "eggs under loose soil"
+    },
+    {
+     "activity": "forage",
+     "resources": [
+      "insects"
+     ]
+    },
+    {
+     "activity": "shelter",
+     "resources": [
+      "cover"
+     ],
+     "goal": "shade at midday"
+    }
+   ],
+   "fall": [
+    {
+     "activity": "forage",
+     "resources": [
+      "insects"
+     ]
+    },
+    {
+     "activity": "shelter",
+     "resources": [
+      "cover"
+     ],
+     "goal": "retreat as the nights cool"
     }
    ]
   },

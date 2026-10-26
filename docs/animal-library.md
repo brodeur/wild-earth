@@ -436,3 +436,82 @@ with a procedural neck and head); bird template: BODY, LEG_A/B (hip), TAIL, HEAD
 HAND_L/R, pivots in `extras.rig`. Collapse decimation stalled at ~800 triangles on the generated body's non-manifold
 seams (edges with three faces); deleting those faces and filling the holes fixed it, which may help other `latest`
 meshes. Not wired; not in any tile's `species.json` or in `index.json` yet.
+
+## Turkey, ground squirrel and fence lizard wired (2026-10-26)
+
+In `animals.js` (slots 17-19: `TK`, `GS`, `LZ`), `animalModels.js`, `lineupAnimals.js`, `identify.js` and `fieldguide.js`.
+`pipeline/species_data.py` lists all three (GBIF taxon keys 9606290, 8080937, 2451234; habitat, senses, perception,
+calendar; the lizard is the first `reptile`), and the species step was re-run on the three tiles. GBIF records
+(home 680_4280 / Placerville 690_4280 / Cosumnes 680_4270): wild turkey 271 / 332 / 37, ground squirrel 8 / 5 / 1,
+fence lizard 37 / 21 / 8; each tile's `species.json`, prior and perception matrix carry them (raven, gray squirrel and
+acorn woodpecker players perceive all three). Placement does not need a record: like every cell species it is habitat
+suitability times the weak occurrence prior (0.6 where no one recorded it), as the hawk's territory cells are habitat
+and chance alone. Until a tile's species step has run they are seen by everyone (`PENDING`).
+
+- **Wild turkey** (`loadTurkeyMesh`, bird template, `RIG.turkey`: the quail's constants with amp `[0.55, 0.25, 0.9,
+  1.0]` (a far peck on the long neck), collapse 1, bob 0.12, spread 0.5; aAnim2.w the hen colour set, hens drawn at
+  0.8 scale): cap 90, tiers at 25 / 80 m. Oak woodland and savanna (`SUIT` times some tree cover, fewer under closed
+  canopy), k 0.0014 per 30 m cell for a flock: about 38 flocks on the home tile (computed over its 110,889 cells with
+  the prior), 6-15 birds, 60% hens. A flock forages in a loose 6 m spread (walks, pecks, scratches: a few kicks back,
+  then a look down), and every 20-60 s walks on 15-40 m (strung out behind the lead) to the best of a few spots of open
+  woodland within 150 m of home. Flush: a bird on the ground within 15 m of a raven or hawk player, 8 m of a squirrel,
+  10 m of a woodpecker (12 m otherwise) sends the flock, staggered over 0.8 s, on a heavy flight (5 Hz beats on the
+  climb, a glide on bowed wings, beats to land) to perches on the drawn wood (perch.js through `sqWood`: on top of a
+  limb 3.5 cm or more thick, 3 m or more up, across it) of the oak 12-70 m off that lies most nearly away from the
+  threat; down again after 25-60 s to the ground 12-27 m from the tree; wary for 60-120 s after. At dusk (sun under
+  about 2 degrees) the flock flies up to a tall oak within 60 m, down at dawn; where the wood is not known (beyond the
+  near set) a bird flies into the crown and is not drawn once there. Event `turkeyFlush` (no sound yet).
+- **California ground squirrel** (`loadGroundSquirrelMesh`, rodent template, `RIG.groundSquirrel` with the build
+  lane's sit-up constants: sit 1.25, foreFold 2.2, spine 0.2, spinePhase 1.2, tipLag 0.6, tipWave 0.25, tipCurl 0.2,
+  drop 0.016 m): cap 160, tiers 12 / 40 m, culled beyond 150 m of the eye, spawned within 220 m. Grassland and open
+  savanna (`SUIT` times openness), k 0.012 per cell for a colony (about 270 colonies on the home tile in summer; none
+  December to February: `SEASON` winter 0, now read with `??` so a 0 holds), 4-12 squirrels round 3-6 burrow mouths
+  (one instanced draw: a dark hole in a 0.27 m ring of bare dirt, tilted to the slope). One sentinel at a time sits
+  bolt upright (pose 1) at a burrow mouth for 15-60 s; the rest feed low, sit up now and then and move in short runs.
+  A raven or hawk player within 25 m (3D, of the colony's 5 m spread), any other player within 10 m, an ambient hawk
+  within 25 m, or night: all run for the nearest burrow (3.6 m/s) and vanish; 20-40 s after the threat has gone they
+  come up one by one, sit at the mouth, and feed again. Event `gsAlarm`.
+- **Western fence lizard** (`loadLizardMesh`, the new reptile template, `RIG.lizard`: amp.x 0.8, wave 0.024 m at the tail
+  tip, waveK 5.03, envS 0.2, pushPitch 0.35, baskAbduct 0.5, squash 0.25, legLift 0.4, hindK 1.3, bend 0.05, flickYaw
+  0.5, tipLag 0.6): cap 120, tiers 2 / 8 m, drawn and thought only within 25 m of the eye, spawned within 70 m.
+  `REPTILE_BODY` in `animalModels.js` replaces the part code for `extras.rig.kind === 'reptile'` (material, shadow depth
+  and planar shaders alike): the diagonal legs swing about the vertical and lift on the forward half, a lateral wave
+  travels down the spine from each vertex's z (legs and head rigid at their pivot's offset and tangent), basking
+  settles the body by the file's drop onto the belly, wider and flatter with the legs splayed, and the push-up pitches
+  the fore body about the hip axis with the fore legs stretched to the ground, the trunk compressed sideways and the
+  `_BLUE` patches pushed down, out and brightened (`REPTILE_COLOR`; aAnim2.w 0 mixes them to the female's
+  `blue_off` / `throat_off`). Sites per cell (`lzSites`): the cell's biggest rocks from rocks.js's own cached plan
+  (read only), an oak and a pine trunk, and the open ground beside one; one male at each with 0-2 females. Placed the
+  first time it comes within 25 m of the eye (two per frame): on a rock, the highest of six downward rays on the
+  rock's drawn close tier (its instance matrix and geometry) with the face normal for up; on a trunk, perch.js's bark
+  (`nearOn`) at 0.2-1.5 m, belly to it, head up the stem (one in three down), so the instance takes a full orientation
+  (pitch, yaw, roll from the surface basis); on the ground, the terrain's normal. Active March to October while the
+  sun is up and the air is 15-34 C (`airTemp`: Placerville monthly normals, low at 6:00, high at 15:00; nothing else
+  reads it); otherwise not drawn and not counted. Basks (longer in air under 24 C), sits alert with head flicks, turns
+  on the spot curved into the turn, steps on a trunk or the ground; males push up every 10-30 s (3-8 bobs at 2 Hz). A
+  player within 2 m: a 0.25-0.55 s dash at 2 m/s (up the trunk, away over the rock, or to its rock or tree) and it is
+  gone for 30 s, back at its spot once the player is 3.5 m off.
+- HUD "animals near" counts only those present (not down a burrow, in a crack, cold or hidden in a crown); tags skip
+  hidden animals. Species cards: clicking one of the three (identify.js `pickAnimal`: a sphere per animal at least
+  ~1.2 degrees across) shows its names, distance, what it is doing (`animals.activity`), the season's line and a field
+  guide button; the field guide's card for each (what it is, who eats it here, when, and an invitation) also shows the
+  first time the player is within 25 m of a turkey, 15 m of a ground squirrel or 3 m of a lizard. The month follows
+  `?date=MM-DD` (it also sets the antler date). Procedural fallbacks `buildTurkey`, `buildGroundSquirrel`,
+  `buildLizard` (the plain path: no spine wave or push-up); `?turkey=proc`, `?gsquirrel=proc`, `?lizard=proc`;
+  `summon('turkey' | 'gsquirrel' | 'lizard', d)`. Lineup: rows for the three with their loaders; motions walk and
+  flap / glide (turkey), walk, run and rest = sit-up (ground squirrel), walk, run = sprint, rest = bask, graze = head
+  flicks and a new display = push-up (lizard); the second-colour box draws the hen and the female lizard.
+- Verified on the home tile (2026-10-26, `?date=06-15`, 9:00): a summoned flock of 13 (6 hens) foraging in the
+  savanna flushed from a squirrel player at 6 m and from the raven 12 m off, all 13 onto limbs of an oak 51 m off at
+  3.2-8 m, and came down after the timer; the colony 65 m from the squirrel start (7 squirrels, 4 burrows, in open
+  oak woodland) kept one sentinel upright, all dived within 1 s of the player coming to 12 m, and came up 22.6 s
+  after it left; lizards resolved on an oak trunk (head up, belly to the bark), on a slate fin, push-ups on the
+  trunk, a dash up 0.57 m and gone 30 s; with `?date=01-15` no lizards (4 C) and no ground squirrels. Cost at the raven's
+  start view: `animals.update` 0.37 ms a frame in all (234 animals, 7 ground squirrels and 14 lizards live, all lizards
+  culled from the air), the three species' own updates about 0.015 ms of it; the other tiles load with them, the
+  woodpecker and squirrel players unaffected. Captures in the session scratchpad.
+- Known: the lizard's wave is gentle at 0.024 m (the build's tail is a stretched copy and thin); its back reads pale
+  from directly above in strong sun; a lizard on a rock sprinting moves on the rock's tangent plane, so on a curved top
+  it can lift off it for the 0.3 s before it vanishes; the turkey's wing cards read edge-on from the side; a flushed
+  flock's perches are often hidden by the crown's leaves (as real ones are); roosting birds beyond the near set are
+  simply not drawn; no sounds yet (a gobble, the putt alarm, the ground squirrel's whistle).

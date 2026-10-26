@@ -1,7 +1,7 @@
 import * as THREE from 'three';
 import { SPECIES } from './trees.js';
 import { CLOSE_R } from './vegetation.js';
-import { fieldGuide, acornLine, acornSpecies } from './fieldguide.js';
+import { fieldGuide, acornLine, acornSpecies, ANIMALS } from './fieldguide.js';
 
 // Species identification: the project's mission is to connect people to their bioregion, so the
 // player should be able to learn what they are looking at.
@@ -12,6 +12,10 @@ import { fieldGuide, acornLine, acornSpecies } from './fieldguide.js';
 //     short description and what it is doing this season (from the species file).
 //   - Tags: a small name tag above about one plant in ten within 160 m (deterministic per plant),
 //     a pooled set of constant-size sprites. T toggles them.
+//   - Click an animal with a field-guide entry (the wild turkey, California ground squirrel and western fence lizard;
+//     fieldguide.js ANIMALS): a ray against a sphere round each one in view (animals.js registers itself as
+//     this.animals), at least ~1.2 degrees across so a lizard at 10 m can be hit; its card names it, says what it is
+//     doing and opens its field-guide card.
 
 const SCAN_MS = 250, AROUND_R = 100, PICK_R = 150, CLICK_PX = 4;
 const TAG_R = 160, TAG_MAX = 200, TAG_EVERY = 10;
@@ -19,6 +23,13 @@ const SEASON_WORD = { winter: 'winter', spring: 'spring', summer: 'summer', fall
 // The species file's `form` token in plain words (any other token: its underscores as spaces).
 const FORM_WORD = { tree: 'tree', shrub: 'shrub', multi_stem_shrub_tree: 'multi-stemmed shrub or small tree' };
 const formWord = f => FORM_WORD[f] || String(f || 'plant').replace(/_/g, ' ');
+// Animal cards: the pick sphere's radius (m at size 1) and how far up the body its centre is, per species code.
+const ANIMAL_PICK = { meleagris_gallopavo: [0.45, 0.5], otospermophilus_beecheyi: [0.16, 0.08], sceloporus_occidentalis: [0.09, 0.02] };
+const ANIMAL_SEASON = {
+  meleagris_gallopavo: { winter: 'Winter flocks are the biggest of the year, and roost together in the tallest oaks.', spring: 'Spring: toms gobble and strut; hens slip away to nest on the ground under brush.', summer: 'Summer: hens lead their poults through the grass, snapping up grasshoppers.', fall: 'Fall: flocks gather under the oaks for the acorn crop.' },
+  otospermophilus_beecheyi: { winter: 'Winter: most stay down in their burrows through the coldest weeks.', spring: 'Spring: the young come up out of the burrows in April and May.', summer: 'Summer: busy gathering the dry grasses\' seeds; in the hottest weeks the adults stay below.', fall: 'Fall: storing seeds and acorns in the burrows before winter.' },
+  sceloporus_occidentalis: { winter: 'Winter: hidden under bark, logs and rocks; out only on the warmest days.', spring: 'Spring: the males push up from every rock and post to hold their patch.', summer: 'Summer: out in the morning and late afternoon, in the shade at midday.', fall: 'Fall: out on warm afternoons until the nights turn cold.' },
+};
 
 const esc = s => String(s ?? '').replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' })[c]);
 const tagged = id => ((Math.imul(id, 0x9E3779B1) >>> 0) >>> 8) % TAG_EVERY === 0;
@@ -68,6 +79,8 @@ export class Identify {
       if (e.target.closest('[data-close]')) this.hideCard();
       const g = e.target.closest('[data-guide]');
       if (g) fieldGuide.showAcorn(g.dataset.guide, this.acorns?.running ? this.acorns.ui.box : null, true);
+      const an = e.target.closest('[data-animal]');
+      if (an) fieldGuide.showAnimal(an.dataset.animal, null, true);
     });
   }
 
@@ -135,8 +148,25 @@ export class Identify {
 
   // ---- click to identify -----------------------------------------------------------------------
   click(cx, cy) {
-    const hit = this.pick(cx, cy);
-    if (hit) this.showCard(hit);
+    const hit = this.pick(cx, cy), ah = this.pickAnimal(cx, cy, hit ? hit.distance : this.raycaster.far);
+    if (ah) this.showAnimalCard(ah);
+    else if (hit) this.showCard(hit);
+  }
+  // The nearest animal with a card whose pick sphere the ray passes through, nearer than maxT (the tree hit or the
+  // ground), or null.
+  pickAnimal(cx, cy, maxT = PICK_R) {
+    const A = this.animals; if (!A) return null;
+    const ray = this.raycaster.ray, o = ray.origin, d = ray.direction;
+    let best = null, bt = maxT;
+    for (const a of A.list) {
+      const code = A.codeOf(a), P = ANIMAL_PICK[code]; if (!P || !A.shown(a)) continue;
+      const s = a.size || 1, vx = a.x - o.x, vy = a.y + P[1] * s - o.y, vz = a.z - o.z, t = vx * d.x + vy * d.y + vz * d.z;
+      if (t < 0 || t > bt + 1) continue;
+      const R = Math.max(P[0] * s, t * 0.01), m2 = vx * vx + vy * vy + vz * vz - t * t;
+      if (m2 > R * R) continue;
+      bt = t; best = { animal: a, code, distance: t };
+    }
+    return best;
   }
   pick(cx, cy) {
     const r = this.dom.getBoundingClientRect();
@@ -224,6 +254,21 @@ export class Identify {
       <div class="status">status: ${esc(s.status || 'agent draft, needs local sign-off')}</div>`;
     card.classList.remove('hidden');
     this.lastScan = -1e9;   // drop its tag on the next tick
+  }
+  // An animal's card: its names, distance, what it is doing, the season's line, and its field-guide card.
+  showAnimalCard(hit) {
+    const a = hit.animal, f = ANIMALS[hit.code], card = this.els.card, season = this.seasonNow();
+    this.selected = { id: null, species: hit.code };
+    const doing = this.animals.activity(a), note = ANIMAL_SEASON[hit.code]?.[season];
+    card.innerHTML = `<button class="close" data-close title="close (Esc)">×</button>
+      <h1>${esc(f.common)}</h1>
+      <div class="sci"><i>${esc(f.scientific)}</i> · ${hit.distance.toFixed(0)} m away</div>
+      ${doing ? `<div class="row"><span>now</span><b>${esc(doing)}</b></div>` : ''}
+      <p>${esc(f.looks)}</p>
+      ${note ? `<p class="season">${esc(note)}</p>` : ''}
+      <p class="acorns"><button class="fg-open" data-animal="${esc(hit.code)}" title="open the field guide card">field guide</button></p>
+      <div class="status">status: agent draft, needs local sign-off</div>`;
+    card.classList.remove('hidden');
   }
   // Oaks: one acorns line from the field guide, and how many acorns this tree holds if the game is on. Since acorn
   // game v2 the woodpeckers, squirrels and ravens gather too, so the taken ones are worded by who took them.

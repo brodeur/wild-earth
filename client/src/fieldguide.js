@@ -9,6 +9,9 @@
 //   - own cards: the same card the first time the player does the thing itself (the player woodpecker's first acorn
 //     into its family's granary, the player squirrel's first burial), in the player's voice. Counted apart from the
 //     watched showing, so a family deposit seen first does not use up the player's own card, nor the other way round.
+//   - animal cards (2026-10-26): the wild turkey, California ground squirrel and western fence lizard, the first time
+//     the player is close to one this session (animals.js), or opened from its species card (identify.js): a drawing,
+//     its names, what it is, who eats it here, when, and an invitation to find a real one.
 //   - v4 cards: the first raid the player sees or makes this session (an acorn pulled from a granary, or someone else's
 //     buried acorn dug up), and the first time the player is mobbed (the woodpecker family, or a squirrel guarding).
 // One DOM element (#fieldGuide), created here; it never takes pointer input except its close button,
@@ -107,6 +110,39 @@ export const MOBBED_CARD = {
   ],
   invite: 'Listen near a granary tree: a sudden burst of waka calls may be the family chasing someone off.',
 };
+// Animal cards: what it is, who eats it here, when (the acorn card's three questions), and where to find a real one.
+export const ANIMALS = {
+  meleagris_gallopavo: {
+    common: 'wild turkey', scientific: 'Meleagris gallopavo',
+    looks: 'A big dark bronze bird, waist-high to an adult, with a bare blue and red head, a black beard on the breast and a long tail. It walks much more than it flies.',
+    facts: [
+      ['What it is', 'The biggest bird in these hills. Flocks of six to fifteen walk the oak woods together, scratching the leaves aside for acorns, seeds and insects. Turkeys were brought to the Sierra foothills in the last century, and are common here now.'],
+      ['Who eats it here', 'Coyotes, gray foxes, bobcats and mountain lions catch turkeys; ravens and jays take their eggs, and red-tailed hawks the young.'],
+      ['When', 'All year. In spring the toms gobble and fan their tails. At dusk the whole flock flies up to sleep high in an oak or pine.'],
+    ],
+    invite: 'Find a real one: at dawn or dusk in oak country, listen for a gobble, or look for patches of leaves scratched aside under the oaks.',
+  },
+  otospermophilus_beecheyi: {
+    common: 'California ground squirrel', scientific: 'Otospermophilus beecheyi',
+    looks: 'A stocky squirrel, grey-brown flecked with buff, with a silvery cape over its shoulders and a bushy tail. It lives in burrows, not trees.',
+    facts: [
+      ['What it is', 'A squirrel that lives underground in colonies. Families dig tunnels together; the burrow mouths are holes in the grass with bare dirt round them.'],
+      ['Who eats it here', 'Red-tailed hawks, golden eagles, coyotes, foxes, badgers and rattlesnakes. So one squirrel often sits up straight as a lookout and calls when danger comes, and they all dive for the holes.'],
+      ['When', 'By day from March to November. In the coldest weeks of winter, and the hottest of summer, many stay down in their burrows.'],
+    ],
+    invite: 'Find a real one: walk past a grassy field or a road bank in spring and look for a squirrel sitting up by a hole. Watch what it does when a hawk flies over.',
+  },
+  sceloporus_occidentalis: {
+    common: 'western fence lizard', scientific: 'Sceloporus occidentalis',
+    looks: 'A small spiny lizard, grey-brown with dark wavy marks, that does push-ups on rocks, logs and fence posts. The males have bright blue patches on the belly and throat.',
+    facts: [
+      ['What it is', 'The commonest lizard here, about as long as a pencil. It warms up by lying flat in the sun on a rock or the foot of a tree, and the males bob up and down to show off their blue sides.'],
+      ['Who eats it here', 'Scrub-jays, hawks, kestrels, snakes, foxes and coyotes. When something comes close it dashes into a crack or round the back of the tree.'],
+      ['When', 'On warm sunny days from March to October. When the air is cooler than about 15 degrees it stays hidden.'],
+    ],
+    invite: 'Find a real one: on a sunny spring morning walk slowly past a rock pile, a woodpile or a fence, and look for a lizard doing push-ups. Do not grab it: it can drop its tail.',
+  },
+};
 const THIEF = { corvus_corax: 'raven', sciurus_griseus: 'gray squirrel', aphelocoma_californica: 'scrub-jay', cyanocitta_stelleri: "Steller's jay" };
 // Who does each witnessed thing, and the card's first line for the player's species: the player watching another
 // species, another of its own kind, or doing it itself (the player as a woodpecker, squirrel or raven).
@@ -167,7 +203,7 @@ html.narrow #fieldGuide .invite { margin-top:6px; padding-top:5px; }
 `;
 
 class FieldGuide {
-  constructor() { this.el = null; this.timer = 0; this.fadeTimer = 0; this.seen = new Set(); this.stashSeen = false; this.witnessed = new Set(); this.ownSeen = new Set(); this.queue = []; }
+  constructor() { this.el = null; this.timer = 0; this.fadeTimer = 0; this.seen = new Set(); this.stashSeen = false; this.witnessed = new Set(); this.ownSeen = new Set(); this.queue = []; this.animalsSeen = new Set(); }
 
   mount() {
     if (this.el) return this.el;
@@ -271,6 +307,23 @@ class FieldGuide {
       <p class="invite">${esc(c.invite)}</p>`, anchor, false, draw);
   }
 
+  // An animal card (ANIMALS): the first time this session the player is close to one (animals.js), or asked for from
+  // its species card (identify.js).
+  animalSeen(code, anchor = null) {
+    if (!ANIMALS[code] || this.animalsSeen.has(code)) return;
+    this.animalsSeen.add(code); this.showAnimal(code, anchor);
+  }
+  showAnimal(code, anchor = null, asked = false) {
+    const a = ANIMALS[code]; if (!a) return;
+    this.animalsSeen.add(code);
+    this.show(`<button class="close" data-close title="close (Esc)">×</button>
+      <div class="kicker">field guide · ${esc(a.common)}</div>
+      <div class="head"><canvas width="128" height="168"></canvas>
+        <div><h1>${esc(a.common)}</h1><div class="sci">${esc(a.scientific)}</div><div class="looks">${esc(a.looks)}</div></div></div>
+      <ul>${a.facts.map(([k, v]) => `<li><b>${esc(k)}:</b> ${esc(v)}</li>`).join('')}</ul>
+      <p class="invite">${esc(a.invite)}</p>`, anchor, asked, g => drawAnimal(g, code));
+  }
+
   // asked: opened from the species card, so it shows at once and stays longer.
   showAcorn(name, anchor, asked = false) {
     const id = acornSpecies(name); if (!id) return;
@@ -341,6 +394,38 @@ class FieldGuide {
 export const fieldGuide = new FieldGuide();
 
 // ---- drawings (2D canvas, 128 x 168 px drawn in a 64 x 84 unit space) -----------------------------
+
+// The three animal cards' pictures: a turkey walking, a ground squirrel sitting up at its burrow, a fence lizard from
+// above with its blue belly patches showing at the sides.
+function drawAnimal(g, code) {
+  g.save(); g.scale(2, 2); g.lineJoin = 'round'; g.lineCap = 'round';
+  const ell = (x, y, rx, ry, rot, fill) => { g.beginPath(); g.ellipse(x, y, rx, ry, rot, 0, Math.PI * 2); g.fillStyle = fill; g.fill(); };
+  const line = (pts, w, stroke) => { g.beginPath(); g.moveTo(...pts[0]); for (const p of pts.slice(1)) g.lineTo(...p); g.lineWidth = w; g.strokeStyle = stroke; g.stroke(); };
+  if (code === 'meleagris_gallopavo') {
+    line([[30, 56], [28, 72], [24, 74]], 2, '#a88f88'); line([[38, 56], [41, 72], [45, 74]], 2, '#a88f88');   // legs
+    g.beginPath(); g.moveTo(16, 44); g.lineTo(2, 54); g.lineTo(6, 58); g.lineTo(20, 50); g.fillStyle = '#4a3726'; g.fill();   // tail
+    ell(32, 46, 17, 12, -0.15, '#3d2b1d'); ell(30, 49, 11, 4, -0.1, '#cfc6b4');   // body, barred wing patch
+    line([[44, 42], [47, 30], [48, 22]], 4, '#3d2b1d');                            // neck
+    ell(50, 20, 4, 3.5, 0, '#8fa7c4'); ell(50, 25, 2, 3.5, 0, '#b02a22');           // head, wattle
+    g.beginPath(); g.moveTo(53, 19); g.lineTo(58, 21); g.lineTo(53, 22); g.fillStyle = '#c9b99a'; g.fill();
+    line([[45, 46], [45, 54]], 1.5, '#15110d');                                    // beard
+  } else if (code === 'otospermophilus_beecheyi') {
+    ell(32, 76, 20, 4, 0, '#8b7860'); ell(24, 76, 6, 2.2, 0, '#16110c');              // burrow mouth and its dirt
+    g.beginPath(); g.moveTo(34, 70); g.quadraticCurveTo(52, 72, 54, 60); g.lineTo(50, 58); g.quadraticCurveTo(48, 68, 34, 66); g.fillStyle = '#7a6b5a'; g.fill();   // tail
+    ell(34, 56, 9, 15, 0.08, '#6e5e4c'); ell(33, 46, 7, 6, 0, '#9a948a');            // body, mantle
+    ell(35, 60, 5, 9, 0.08, '#b9a582');                                            // belly
+    ell(33, 33, 6.5, 6, 0, '#6e5e4c'); ell(36, 32, 2.6, 2, 0, '#e2dccf'); ell(36.5, 32, 1.2, 1.2, 0, '#141010');   // head, eye ring
+    ell(29, 27.5, 1.8, 2.2, 0, '#5a4c3d'); line([[36, 46], [39, 50]], 2, '#6e5e4c');  // ear, fore leg held up
+  } else {
+    g.translate(32, 40); g.rotate(-0.25); g.scale(1.45, 1.45);
+    g.beginPath(); g.moveTo(-2, 14); g.quadraticCurveTo(4, 30, -3, 40); g.lineWidth = 3; g.strokeStyle = '#5e5245'; g.stroke();   // tail
+    for (const [x, y, dx, dy] of [[-5, -8, -9, -4], [5, -8, 9, -4], [-5, 9, -10, 5], [5, 9, 10, 5]]) line([[x, y], [x + dx, y + dy], [x + dx * 1.2, y + dy - 3]], 2, '#6a5c4c');   // legs
+    ell(-5, 2, 2, 7, 0, '#2a4fa0'); ell(5, 2, 2, 7, 0, '#2a4fa0');                   // the blue sides
+    ell(0, 2, 5, 14, 0, '#5e5245'); ell(0, -16, 4, 6, 0, '#5e5245');                 // body, head
+    for (let k = 0; k < 4; k++) { g.beginPath(); g.moveTo(-3, -6 + k * 5); g.lineTo(0, -4 + k * 5); g.lineTo(3, -6 + k * 5); g.lineWidth = 1.2; g.strokeStyle = '#2c2620'; g.stroke(); }   // chevrons
+  }
+  g.restore();
+}
 
 // Nut outline: an oval that swells just below the cap rim, then narrows to a point at the tip
 // (`tip` is the half-width near the point: larger is blunter).

@@ -297,6 +297,70 @@ export function buildVole() {
   return finish(p, { amp: [0.9, 0, 0.35, 0], pose: [1, 0, -0.3, 0] });
 }
 
+// Wild turkey, the fallback for turkey.glb (?turkey=proc): a tom 1.1 m bill to tail, 0.95 m to the top of the head,
+// dark bronze body on long pink-grey legs, the folded wedge tail, a thin upright neck to a small bare blue head with
+// a red wattle, and broad wing slabs (barred) that fold away on the ground (pose) and open for the heavy flush.
+export function buildTurkey() {
+  const bronze = 0x3b2a1c, sheen = 0x4a3524, rump = 0x2a1e15, tail = 0x4f3a27, leg = 0x9c8580, skin = 0x8fa7c4, red = 0xb02a22, bar = 0xcfc6b4;
+  const head = { part: PART.HEAD, pivot: [0, 0.66, 0.16] };
+  const wp = s => [s * 0.08, 0.63, 0.13];
+  const p = [
+    ball({ color: bronze, pos: [0, 0.53, 0], scale: [0.17, 0.17, 0.3] }, 8, 5),
+    ball({ color: sheen, pos: [0, 0.6, -0.04], scale: [0.15, 0.1, 0.26] }, 7, 4),
+    ball({ color: rump, pos: [0, 0.5, -0.24], scale: [0.11, 0.1, 0.1] }, 6, 4),
+    ball({ color: bar, pos: [0, 0.56, -0.02], scale: [0.172, 0.05, 0.12] }, 6, 3),   // the barred secondaries on the folded wing
+    box({ color: tail, part: PART.TAIL, pivot: [0, 0.48, -0.25], pos: [0, 0.44, -0.4], rot: [0.35, 0, 0], scale: [0.16, 0.025, 0.3] }),
+    // neck and head
+    box({ color: bronze, ...head, pos: [0, 0.74, 0.21], rot: [-0.25, 0, 0], scale: [0.06, 0.2, 0.06] }),
+    ball({ color: skin, ...head, pos: [0, 0.86, 0.25], scale: [0.04, 0.045, 0.055] }, 6, 4),
+    ball({ color: red, ...head, pos: [0, 0.81, 0.27], scale: [0.025, 0.04, 0.025] }, 5, 3),
+    cone({ color: 0xc9b99a, ...head, pos: [0, 0.855, 0.31], rot: FWD, scale: [0.014, 0.04, 0.012] }),
+    box({ color: 0x15110d, pos: [0, 0.48, 0.2], rot: [0.3, 0, 0], scale: [0.015, 0.14, 0.015] }),   // beard
+    ...mirror(s => box({ color: leg, part: s > 0 ? PART.LEG_A : PART.LEG_B, pivot: [s * 0.07, 0.37, 0], pos: [s * 0.07, 0.185, 0.01], scale: [0.025, 0.37, 0.03] })),
+    ...mirror(s => wingSlab(s, wp(s), { dx: 0.32, len: 0.55, chord: 0.3, thick: 0.02, dihedral: 0.05, color: sheen, under: bar })).flat(),
+  ];
+  // wings fold hard on the ground (pose 1.5); the head dips far to peck (amp.z) on the long neck
+  return finish(p, { amp: [0.55, 0.25, 0.9, 1.0], pose: [1, 0, 0, 1.5] });
+}
+// California ground squirrel, the fallback for ground_squirrel.glb (?gsquirrel=proc): 0.26 m head and body on short
+// legs, mottled grey-brown with a pale mantle and a buff belly, a flattened tail two thirds of the body held out
+// behind. pose sits it bolt upright (the sentinel): legs squashed, tail laid back, head kept level.
+export function buildGroundSquirrel() {
+  const back = 0x6e5e4c, mantle = 0x9a948a, belly = 0xb9a582, tail = 0x7a6b5a, fringe = 0xa9a092, dark = 0x2d241c;
+  const head = { part: PART.HEAD, pivot: [0, 0.075, 0.08] }, tp = { part: PART.TAIL, pivot: [0, 0.066, -0.095] };
+  const p = [
+    ball({ color: back, pos: [0, 0.075, -0.01], scale: [0.052, 0.05, 0.12] }),
+    ball({ color: mantle, pos: [0, 0.085, 0.05], scale: [0.048, 0.042, 0.05] }),
+    ball({ color: belly, pos: [0, 0.052, 0.0], scale: [0.04, 0.03, 0.09] }, 5, 3),
+    ball({ color: back, ...head, pos: [0, 0.09, 0.115], scale: [0.032, 0.032, 0.042] }),
+    ball({ color: 0xd8d0c0, ...head, pos: [0, 0.098, 0.13], scale: [0.03, 0.012, 0.022] }, 5, 3),   // the pale eye ring
+    ...mirror(s => box({ color: dark, ...head, pos: [s * 0.016, 0.122, 0.1], scale: [0.012, 0.014, 0.006] })),
+    ball({ color: tail, ...tp, pos: [0, 0.085, -0.17], rot: [-0.3, 0, 0], scale: [0.03, 0.02, 0.085] }),
+    ball({ color: fringe, ...tp, pos: [0, 0.083, -0.18], rot: [-0.3, 0, 0], scale: [0.036, 0.012, 0.08] }, 5, 3),
+    ...mirror(s => box({ color: back, part: PART.LEG_A, pivot: [s * 0.023, 0.035, 0.05], pos: [s * 0.023, 0.018, 0.052], scale: [0.014, 0.036, 0.016] })),
+    ...mirror(s => box({ color: back, part: PART.LEG_B, pivot: [s * 0.03, 0.03, -0.07], pos: [s * 0.03, 0.012, -0.055], scale: [0.018, 0.024, 0.05] })),
+  ];
+  return finish(p, { amp: [0.9, 0.5, 0.35, 0], pose: [0.4, -0.3, -0.3, 0] });
+}
+// Western fence lizard, the fallback for fence_lizard.glb (?lizard=proc): 0.18 m snout to tail tip, grey-brown with
+// dark blotches, the blue belly patches, legs splayed. The plain path: legs swing, pose lifts the head (a push-up)
+// or lowers it (basking); the reptile template's wave and push-up need the drawn mesh.
+export function buildLizard() {
+  const back = 0x5e5245, blotch = 0x2c2620, belly = 0x8a8a84, blue = 0x2a4fa0, leg = 0x6a5c4c;
+  const head = { part: PART.HEAD, pivot: [0, 0.022, 0.024] }, tp = { part: PART.TAIL, pivot: [0, 0.015, -0.024] };
+  const p = [
+    ball({ color: back, pos: [0, 0.017, 0.0], scale: [0.011, 0.008, 0.03] }),
+    ball({ color: blotch, pos: [0, 0.022, -0.004], scale: [0.006, 0.004, 0.022] }, 5, 3),
+    ...mirror(s => ball({ color: blue, pos: [s * 0.008, 0.012, 0.0], scale: [0.004, 0.004, 0.016] }, 5, 3)),
+    ball({ color: belly, pos: [0, 0.011, 0.0], scale: [0.009, 0.004, 0.024] }, 5, 3),
+    ball({ color: back, ...head, pos: [0, 0.02, 0.038], scale: [0.0085, 0.006, 0.013] }),
+    cone({ color: back, ...tp, pos: [0, 0.008, -0.08], rot: [-Math.PI / 2 - 0.08, 0, 0], scale: [0.006, 0.11, 0.006] }),
+    ...mirror(s => box({ color: leg, part: s > 0 ? PART.LEG_A : PART.LEG_B, pivot: [s * 0.009, 0.014, 0.017], pos: [s * 0.017, 0.007, 0.019], rot: [0, 0, s * 0.9], scale: [0.004, 0.02, 0.004] })),
+    ...mirror(s => box({ color: leg, part: s > 0 ? PART.LEG_B : PART.LEG_A, pivot: [s * 0.01, 0.012, -0.017], pos: [s * 0.019, 0.006, -0.02], rot: [0, 0, s * 0.9], scale: [0.0045, 0.022, 0.0045] })),
+  ];
+  return finish(p, { amp: [0.6, 0.35, 0.4, 0], pose: [1, 0, -0.3, 0] });
+}
+
 // The drawn black-tailed deer (animals.js; buildDeer above is the fallback): "Deer" by Quaternius
 // (Ultimate Animated Animal Pack, poly.pizza/m/T6Cs7tmMHJ), CC0, rebuilt by tools/build_deer.py (source,
 // licence and the Blender command are in its header): rest pose baked, 0.95 m at the withers, ears 1.3x,
@@ -349,7 +413,7 @@ export const loadCoyoteMesh = () => loadTiers(new URL('../assets/coyote.glb', im
 // keepNormals: keep the file's normals (a textured tier drawn smooth); maps: each tier's base-colour texture or null.
 async function loadTiers(url, model, { keepNormals = false } = {}) {
   const gltf = await new GLTFLoader().loadAsync(url.href);
-  const rename = { _part: 'aPart', _partw: 'aPartW', _pivot: 'aPivot', _colorb: 'aColorB', _antler: 'aAntler', _tine: 'aTine' };
+  const rename = { _part: 'aPart', _partw: 'aPartW', _pivot: 'aPivot', _colorb: 'aColorB', _antler: 'aAntler', _tine: 'aTine', _blue: 'aBlue' };
   const maps = [];
   const tiers = ['lod0', 'lod1', 'lod2'].map(n => {
     const o = gltf.scene.getObjectByName(n), g = o.geometry;
@@ -428,10 +492,32 @@ const RIG = {
   // nothing (the ambient ravens keep pose 1 on the ground for the flying model's folded wings).
   ravenGround: { amp: [0.55, 0.3, 0.6, 0], pose: [1, 0, 0, 0],
     k: { handLag: 0, handAmp: 0, bow: -0.6, spread: 0, collapse: 0, bob: 0.1, ground: 1, flickLift: 0.42, flickOpen: 0.38 } },
+  // Wild turkey (tools/build_turkey.py): the quail's template and constants on a bird ten times its weight. Walks with
+  // the head nodding (bob) on the long neck, pecks far down (amp.z), scratches (a leg kicked back); the flush is a
+  // short heavy flight on the wing cards, which collapse into the shoulder on the ground (collapse 1). aAnim2 = (wing
+  // bow, tail spread, -, hen): the hen's colour set (_COLORB) at 0.8 scale (animals.js).
+  turkey: { amp: [0.55, 0.25, 0.9, 1.0], pose: [1, 0, 0, 0.2],
+    k: { handLag: 0.6, handAmp: 0.7, bow: 0.35, spread: 0.5, collapse: 1, bob: 0.12 } },
+  // California ground squirrel (tools/build_ground_squirrel.py): the rodent template with the build lane's sit-up
+  // constants (the entry's rig_notes): pose 1 is the sentinel bolt upright (sit 1.25 rad, the fore legs folded to the
+  // chest, the tail laid out behind on the ground, the head pitched back to level), the rump down by drop.
+  groundSquirrel: { amp: [0.9, 0.5, 0.35, 0], pose: [0.4, -0.3, 1.05, 0], drop: 0.016,
+    k: { spine: 0.2, spinePhase: 1.2, sit: 1.25, foreFold: 2.2, tipLag: 0.6, tipWave: 0.25, tipCurl: 0.2, abduct: 0 } },
+  // Western fence lizard (tools/build_fence_lizard.py): the reptile template (RIG_REPTILE below). amp.x the legs'
+  // swing; k: wave (m of lateral offset at the tail tip at a sprint), waveK (rad of phase along the body), envS (the
+  // wave's envelope at the snout), pushPitch (rad, the fore body about the hips at the top of a push-up), baskAbduct
+  // (rad, legs splayed further when flat), squash (the back toward the belly when flat), legLift (rad, the foot
+  // raised on the forward swing), hindK (hind legs' swing against the fore's), bend (m at the tail tip for a C-bend
+  // of 1), flickYaw (rad of head turn for a flick of 1), tipLag (rad of tail-tip whip for aAnim2.y 1). The basking drop
+  // is the file's (extras.rig.drop) and is done in the shader, so animals.js lowers nothing (drop 0).
+  lizard: { amp: [0.8, 0.35, 0.4, 0], pose: [1, 0, 0, 0],
+    k: { wave: 0.024, waveK: 5.03, envS: 0.2, pushPitch: 0.35, baskAbduct: 0.5, squash: 0.25, legLift: 0.4, hindK: 1.3, bend: 0.05,
+      flickYaw: 0.5, tipLag: 0.6 } },
 };
 const urls = { jay: '../assets/scrubjay.glb', quail: '../assets/quail.glb', squirrel: '../assets/squirrel.glb',
   stjay: '../assets/stellersjay.glb', hawk: '../assets/redtail.glb', vulture: '../assets/vulture.glb',
-  lion: '../assets/cougar.glb', rabbit: '../assets/rabbit.glb', jackrabbit: '../assets/jackrabbit.glb', vole: '../assets/vole.glb', ravenGround: '../assets/raven_ground.glb' };
+  lion: '../assets/cougar.glb', rabbit: '../assets/rabbit.glb', jackrabbit: '../assets/jackrabbit.glb', vole: '../assets/vole.glb', ravenGround: '../assets/raven_ground.glb',
+  turkey: '../assets/turkey.glb', groundSquirrel: '../assets/ground_squirrel.glb', lizard: '../assets/fence_lizard.glb' };
 function rigModel(name, opts) {
   const r = RIG[name];
   return loadTiers(new URL(urls[name], import.meta.url), { amp: r.amp, pose: r.pose, drop: r.drop || 0, poseMax: r.poseMax || 1, gait: !!r.gait, rig: { name, k: r.k } }, opts)
@@ -447,6 +533,9 @@ export const loadCougarMesh = () => rigModel('lion');
 export const loadRabbitMesh = () => rigModel('rabbit');
 export const loadJackrabbitMesh = () => rigModel('jackrabbit');
 export const loadVoleMesh = () => rigModel('vole');
+export const loadTurkeyMesh = () => rigModel('turkey');
+export const loadGroundSquirrelMesh = () => rigModel('groundSquirrel');
+export const loadLizardMesh = () => rigModel('lizard');
 // The common raven on the ground (client/assets/raven_ground.glb, tools/build_raven_ground.py; generated with Meshy,
 // meshy.ai, CC BY-SA 4.0): 0.62 m, origin on the ground between the feet, bill toward +z; lod0 1,496 triangles drawn
 // with its 1K texture (vertex colours off, the file's smooth normals), lod1 496 and lod2 150 with vertex colours. One
@@ -683,7 +772,99 @@ vec3 transformed = animR * animP + aPivot;
 #ifdef USE_ALPHAHASH
   vPosition = vec3( position );
 #endif`;
-const RIG_KEYS = ['spine', 'spinePhase', 'sit', 'foreFold', 'tipLag', 'tipWave', 'tipCurl', 'abduct', 'bob', 'handLag', 'handAmp', 'bow', 'spread', 'collapse', 'flickLift', 'flickOpen'];
+// The reptile template (the western fence lizard; docs/animal-library.md "Western fence lizard and the reptile template"):
+// BODY 0, LEG_A 1 (left fore, right hind) and LEG_B 2 (right fore, left hind) splayed out, pivots at the shoulder and
+// hip; HEAD 6 (pivot at the neck); TAIL 3 (inner half, pivot at the vent) and TAIL_TIP 8 (outer half, pivot mid-tail).
+// aAnim = (phase, gait, pose, flick):
+//   phase  the stride: the diagonal pairs swing about the vertical through their pivots (protraction and retraction;
+//          hind legs hindK x the fore) and lift about the long axis on the forward half so the foot clears; and the
+//          lateral undulation, a wave travelling down the spine (s = 0 snout to 1 tail tip, from each vertex's z: the
+//          rest pose is straight), its envelope envS at the snout growing to 1 at the tail tip. Legs and head are rigid:
+//          they take the wave's offset and its tangent at their pivot (the head half of it: it stays on line).
+//   gait   0 still to 1 sprint: scales the swing and the wave.
+//   pose   below 0 basking: the body settles by the file's drop onto the belly (the tail, already down, stays), wider
+//          and flatter, the legs splayed further (the feet stay on the rock), the head down on the rock. Above 0 the
+//          push-up: the fore body pitches up about the hip axis (the fore legs stretch to keep the fore feet planted),
+//          the head lifts, the trunk is compressed sideways and the blue patches (_BLUE) are pushed down and out so the
+//          blue faces the side, and brighten (color_vertex).
+//   flick  a head turn about the neck (signed).
+// aAnim2 = (C-bend: signed, steering or round a trunk; tail-tip lag and whip; blue flash without the push-up; male 1 /
+// female 0: _BLUE mixed to the file's blue_off and throat_off).
+const REPTILE_BODY = `
+vec3 animPos = position;
+vec3 animP = animPos - aPivot;
+mat3 animR = mat3(1.0);
+int animPart = int(aPart + 0.5);
+float animPose = aAnim.z;
+vec3 transformed;
+{
+  float rpBask = max(-animPose, 0.0), rpPush = max(animPose, 0.0), rpGait = aAnim.y, rpPh = aAnim.x;
+  float rpSide = aPivot.x >= 0.0 ? 1.0 : -1.0;
+  #ifdef ANIM_WEIGHTED
+  float rpW = aPartW;
+  #else
+  float rpW = 1.0;
+  #endif
+  bool rpRigid = animPart == 1 || animPart == 2 || animPart == 6;
+  float rpZ = rpRigid ? mix(position.z, aPivot.z, rpW) : position.z;
+  float rpSpan = rep_snoutZ - rep_tailEndZ;
+  float rpS = clamp((rep_snoutZ - rpZ) / rpSpan, 0.0, 1.0);
+  // the travelling wave and the C-bend: lateral offset at s and its slope (d offset / d s)
+  float rpEnv = rig_envS + (1.0 - rig_envS) * rpS * rpS, rpDEnv = 2.0 * (1.0 - rig_envS) * rpS;
+  float rpArg = rpPh - rig_waveK * rpS, rpA = rig_wave * rpGait, rpB = aAnim2.x * rig_bend;
+  float rpOff = rpA * rpEnv * sin(rpArg) + rpB * (rpS - 0.2) * (rpS - 0.2);
+  float rpDOff = rpA * (rpDEnv * sin(rpArg) - rpEnv * rig_waveK * cos(rpArg)) + rpB * 2.0 * (rpS - 0.2);
+  float rpYaw = atan(-rpDOff / rpSpan);   // dx/dz along the spine
+  float rpPitch = rig_pushPitch * rpPush;
+  vec3 rpQ = animP;
+  if (animPart == 1 || animPart == 2) {
+    bool rpFore = aPivot.z > rep_hipZ;
+    float rpLeg = animPart == 2 ? 3.14159 : 0.0;
+    float rpSwing = sin(rpPh + rpLeg) * rpGait * uAmp.x * (rpFore ? 1.0 : rig_hindK);
+    float rpLift = max(0.0, cos(rpPh + rpLeg)) * rpGait * rig_legLift;
+    if (rpFore && rpQ.y < 0.0) {   // the push-up: stretch to keep the fore feet planted as the shoulders rise
+      float rpRise = (aPivot.z - rep_hipZ) * sin(rpPitch) + (aPivot.y - rep_hipY) * (cos(rpPitch) - 1.0);
+      rpQ.y *= 1.0 + rpRise / max(aPivot.y, 0.004);
+    }
+    animR = animRY(rpYaw - rpSide * rpSwing) * animRZ(rpSide * (rpLift + rpBask * rig_baskAbduct));
+    if (rpFore) animR = animRX(rpPitch) * animR;   // upright again once the fore body has pitched (below)
+  } else if (animPart == 6) {
+    animR = animRY(0.5 * rpYaw + aAnim.w * rig_flickYaw) * animRX(rpBask * 0.25 - rpPush * 0.2);
+  } else if (animPart == 8) {
+    animR = animRY(aAnim2.y * rig_tipLag);
+  }
+  rpQ = mix(rpQ, animR * rpQ, rpW);
+  vec3 rpP = rpQ + aPivot;
+  if (animPart == 0) {   // the trunk: wider and flatter basking; compressed sideways, the blue pushed down and out, in a push-up
+    rpP.x *= 1.0 + 0.15 * rpBask - 0.25 * rpPush * (1.0 - 0.7 * aBlue);
+    if (rpP.y > rep_bellyY) rpP.y = rep_bellyY + (rpP.y - rep_bellyY) * (1.0 - rig_squash * rpBask);
+    rpP.y -= 0.002 * rpPush * aBlue;
+  }
+  rpP.y -= rep_drop * rpBask * (rpRigid ? 1.0 : clamp(position.y / rep_bellyY, 0.0, 1.0));   // onto the belly; the tail stays down
+  float rpF = smoothstep(rep_hipZ - 0.004, rep_hipZ + 0.008, rpZ);
+  if (rpF > 0.0) {   // the push-up: the fore body about the hip axis
+    vec3 rpH = vec3(rpP.x, rep_hipY, rep_hipZ);
+    rpP = animRX(-rpPitch * rpF) * (rpP - rpH) + rpH;
+  }
+  rpP.x += rpOff;
+  transformed = rpP;
+}
+#ifdef USE_ALPHAHASH
+  vPosition = vec3( position );
+#endif`;
+// The female's colours and the push-up's flash (color_vertex): the patches mixed to the file's off colours (the throat's
+// forward of the fore legs), brightened by the push-up or aAnim2.z (the patch itself, not its black edge).
+const REPTILE_COLOR = `
+#ifdef RIG_REPTILE
+{
+  float rpBlue = clamp(aBlue, 0.0, 1.0);
+  vColor.rgb = mix(vColor.rgb, position.z > rep_throatZ ? rep_throatOff : rep_blueOff, rpBlue * (1.0 - aAnim2.w));
+  vColor.rgb *= 1.0 + 0.9 * max(max(aAnim.z, 0.0), aAnim2.z) * aAnim2.w * smoothstep(0.6, 0.9, rpBlue);
+}
+#endif`;
+const animBody = model => model.rig?.kind === 'reptile' ? REPTILE_BODY : ANIM_BODY;
+const RIG_KEYS = ['spine', 'spinePhase', 'sit', 'foreFold', 'tipLag', 'tipWave', 'tipCurl', 'abduct', 'bob', 'handLag', 'handAmp', 'bow', 'spread', 'collapse', 'flickLift', 'flickOpen',
+  'wave', 'waveK', 'envS', 'pushPitch', 'baskAbduct', 'squash', 'legLift', 'hindK', 'bend', 'flickYaw'];
 // aAnim2 is declared for the rig templates, the quadrupeds' gait selector and the antlers (the geometry must then
 // carry it: a missing instanced attribute reads (0, 0, 0, 1), a bound gait and no antler growth).
 const hasAnim2 = model => !!(model.rig || model.gait || model.antler);
@@ -705,6 +886,13 @@ function rigDecl(model) {
   if (piv.tail_tip) d += `#define RIG_TAILTIP\nconst vec3 rig_pivTail = ${v3(piv.tail)};\n`;
   if (piv.wing) d += `#define RIG_WING\nconst vec3 rig_pivWing = ${v3(piv.wing)};\n`;
   if (model.variant) d += '#define ANIM_VARIANT\nattribute vec3 aColorB;\n';
+  if (r.kind === 'reptile') {   // the reptile template's spine and patches (extras.rig; see REPTILE_BODY)
+    const L = piv.legs || {}, hip = [L.HL, L.HR].filter(Boolean), hy = hip.length ? hip.reduce((a, h) => a + h[1], 0) / hip.length : (piv.hind?.[1] ?? 0.012);
+    const hz = hip.length ? hip.reduce((a, h) => a + h[2], 0) / hip.length : (piv.hind?.[2] ?? -0.017);
+    d += `#define RIG_REPTILE\nattribute float aBlue;\nconst float rep_snoutZ = ${f(piv.snout_z ?? 0.048)};\nconst float rep_tailEndZ = ${f(piv.tail_end_z ?? -0.13)};\n`
+      + `const float rep_bellyY = ${f(piv.belly_y ?? 0.008)};\nconst float rep_drop = ${f(piv.drop ?? 0.007)};\nconst float rep_hipY = ${f(hy)};\nconst float rep_hipZ = ${f(hz)};\n`
+      + `const float rep_throatZ = ${f((piv.fore?.[2] ?? 0.017) + 0.004)};\nconst vec3 rep_blueOff = ${v3(piv.blue_off || [0.45, 0.42, 0.35])};\nconst vec3 rep_throatOff = ${v3(piv.throat_off || [0.48, 0.445, 0.38])};\n`;
+  }
   return d;
 }
 const animDecl = model => (model.weighted ? '#define ANIM_WEIGHTED\nattribute float aPartW;' : '') + ANIM_DECL_BASE + '\n' + extraDecl(model);
@@ -774,15 +962,15 @@ export function animalMaterial(atmosphere, model, { map = null } = {}) {
     shader.vertexShader = shader.vertexShader.replace('#include <common>', '#include <common>\n' + animDecl(model) + consts + uwDecl);
     // Smooth shaded (a textured tier): pose first, where the normal begins, so the normals turn with the parts.
     if (map) shader.vertexShader = shader.vertexShader
-      .replace('#include <beginnormal_vertex>', ANIM_BODY + '\nvec3 objectNormal = normal;\n#ifdef ANIM_WEIGHTED\n  objectNormal = normalize(mix(normal, animR * normal, aPartW));\n#else\n  objectNormal = animR * normal;\n#endif')
+      .replace('#include <beginnormal_vertex>', animBody(model) + '\nvec3 objectNormal = normal;\n#ifdef ANIM_WEIGHTED\n  objectNormal = normalize(mix(normal, animR * normal, aPartW));\n#else\n  objectNormal = animR * normal;\n#endif')
       .replace('#include <begin_vertex>', '');
     shader.vertexShader = shader.vertexShader
-      .replace('#include <begin_vertex>', ANIM_BODY)
+      .replace('#include <begin_vertex>', animBody(model))
       // a second colour set (the female quail), picked per instance by aAnim2.w
       .replace('#include <color_vertex>', '#include <color_vertex>\n#ifdef ANIM_VARIANT\n  vColor.rgb = mix(vColor.rgb, aColorB, aAnim2.w);\n#endif'
         // velvet: grey-brown skin over the growing antler (the burr ring keeps its colour)
         + '\n#ifdef ANIM_ANTLER\n  if (aAntler > 0.0 && int(aTine + 0.5) != 3) vColor.rgb = mix(vColor.rgb, vec3(0.13, 0.095, 0.07), aAnim2.y);\n#endif'
-        + UNDERWING_VERT);
+        + REPTILE_COLOR + UNDERWING_VERT);
     if (uw) {
       shader.uniforms.underwingK = underwingLight;
       shader.vertexShader = shader.vertexShader.replace('#include <fog_vertex>', 'vUnderwing *= 1.0 - smoothstep(300.0, 420.0, length(mvPosition.xyz));\n#include <fog_vertex>');
@@ -807,7 +995,7 @@ export function animalDepthMaterial(model) {
 const vec4 uAmp = ${v4(model.amp)};
 const vec4 uPose = ${v4(model.pose)};
 void main() {
-${ANIM_BODY}
+${animBody(model)}
   gl_Position = projectionMatrix * viewMatrix * modelMatrix * instanceMatrix * vec4(transformed, 1.0);
 }`,
     fragmentShader: 'void main() { gl_FragColor = vec4(1.0); }',
@@ -834,7 +1022,7 @@ const vec4 uPose = ${v4(model.pose)};
 uniform vec3 sunDir; uniform float csmStrength; uniform mat4 csm0;
 varying float vFade;
 void main() {
-${ANIM_BODY}
+${animBody(model)}
   mat4 m = modelMatrix * instanceMatrix;
   vec4 w = m * vec4(transformed, 1.0);
   float ground = m[3].y + ${drop.toFixed(3)} * aAnim.z * length(m[0].xyz) + 0.08;   // the drop scales with the instance

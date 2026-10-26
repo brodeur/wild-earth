@@ -397,5 +397,110 @@
   ],
   "confidence": "unverified",
   "occurrence_count": 1
+ },
+ {
+  "code": "meleagris_gallopavo",
+  "common": "wild turkey",
+  "scientific": "Meleagris gallopavo",
+  "group": "bird",
+  "role": "ambient",
+  "scale": "deer",
+  "gbif_key": 9606290,
+  "habitat": {
+   "oak_woodland": 1.0,
+   "conifer": 0.2,
+   "mixed": 0.6,
+   "chaparral": 0.2,
+   "grassland": 0.55,
+   "riparian": 0.7,
+   "human": 0.5
+  },
+  "senses": {
+   "vision": {
+    "range_m": 400,
+    "color": "tetrachromat"
+   },
+   "hearing": {
+    "range_m": 300
+   },
+   "smell": {
+    "range_m": 20
+   }
+  },
+  "sources": [
+   "gbif"
+  ],
+  "confidence": "unverified",
+  "occurrence_count": 271
+ },
+ {
+  "code": "otospermophilus_beecheyi",
+  "common": "California ground squirrel",
+  "scientific": "Otospermophilus beecheyi",
+  "group": "mammal",
+  "role": "ambient",
+  "scale": "squirrel",
+  "gbif_key": 8080937,
+  "habitat": {
+   "oak_woodland": 0.6,
+   "chaparral": 0.25,
+   "grassland": 1.0,
+   "riparian": 0.3,
+   "barren": 0.3,
+   "human": 0.9
+  },
+  "senses": {
+   "vision": {
+    "range_m": 300,
+    "color": "dichromat"
+   },
+   "hearing": {
+    "range_m": 150
+   },
+   "smell": {
+    "range_m": 50
+   }
+  },
+  "sources": [
+   "gbif"
+  ],
+  "confidence": "unverified",
+  "occurrence_count": 8
+ },
+ {
+  "code": "sceloporus_occidentalis",
+  "common": "western fence lizard",
+  "scientific": "Sceloporus occidentalis",
+  "group": "reptile",
+  "role": "ambient",
+  "scale": "vole",
+  "gbif_key": 2451234,
+  "habitat": {
+   "oak_woodland": 1.0,
+   "conifer": 0.5,
+   "mixed": 0.8,
+   "chaparral": 0.9,
+   "grassland": 0.5,
+   "riparian": 0.4,
+   "barren": 0.8,
+   "human": 0.8
+  },
+  "senses": {
+   "vision": {
+    "range_m": 30,
+    "color": "tetrachromat"
+   },
+   "hearing": {
+    "range_m": 10
+   },
+   "smell": {
+    "range_m": 2
+   }
+  },
+  "sources": [
+   "gbif"
+  ],
+  "confidence": "unverified",
+  "occurrence_count": 37
  }
 ]

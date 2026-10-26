@@ -993,3 +993,22 @@ set the day. Known: open ground in the oak woodland and chaparral classes greens
 openness gives the same), so oak savanna floor reads grey-olive in April beside emerald grassland; barren cells
 (class 8, about 0.8 grey in April) stay pale all year; the litter is one colour per class with no seasonal leaf
 fall; the October gold is the July photo's grey-beige slightly darkened, not more saturated.
+
+## 2026-10-26: a reptile rig template with a spine wave; lizards sit on the drawn rocks and bark, and live only near the eye
+
+The western fence lizard is the first reptile, and the part rig's templates could not pose it: it walks with its legs
+splayed out to the side, swinging about the vertical rather than fore and aft, and its body and tail bend side to side
+in a wave. A new `reptile` template (`REPTILE_BODY`, picked by the GLB's `extras.rig.kind`) keeps the one-draw, four-
+float scheme: phase drives the diagonal legs and a wave travelling down the spine computed from each vertex's z (the
+rest pose is straight), so no extra attribute is needed; pose below 0 basks and above 0 does the push-up about the hip
+axis; aAnim2 carries the C-bend, the tail-tip whip, a blue flash and the sex. A lizard is 0.18 m long, so it is placed
+on what is drawn rather than on data: the top of a rock is found by rays on that rock's drawn close tier (rocks.js's own
+instance and geometry, read only), a trunk's bark by perch.js, which means an instance needs a full orientation (pitch,
+yaw and roll from the surface), which the matrix already allows. Lizards are spawned within 70 m and drawn and thought
+only within 25 m of the eye, and placed lazily (two a frame) when first in reach, so from the air they cost nothing. Their
+activity reads an air temperature from the month and hour (Placerville normals), the first in the client; it is a
+stand-in until the atmosphere has weather. Rejected: a skinned clip set (a second draw path for one species); placing
+on the rock plan's matrix alone (the top of a deformed icosphere is not where its matrix says); spawning lizards with
+the 400 m live set (120 small animals would fill the cap far from anyone who could see them). Wild turkeys and ground
+squirrels needed no new template (bird and rodent, with the build lanes' constants); turkeys roost on the drawn wood
+through the squirrel's limb queries where the wood is known and are simply not drawn where it is not.

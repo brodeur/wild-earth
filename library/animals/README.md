@@ -62,9 +62,10 @@ A build script assigns `_PART` and `_PIVOT` from the template for the body plan:
 | body plan | parts | notes |
 |---|---|---|
 | quadruped | body, legs A (left fore, right hind) and B, tail, head | the deer: thigh stays with the body, legs pivot at stifle and elbow |
-| bird | body, legs A/B, tail, head, wings L/R | a standing bird's folded wings can tuck (pose) but cannot open into flight: a flying bird needs its own spread-wing mesh or a skinned clip set (the player raven) |
-| rodent | body, legs A (fore pair) and B (hind pair), tail, head | bounding gait, tail curl on pose (squirrel) |
-| snake | body only for now | needs a spine-wave template |
+| bird | body, legs A/B, tail, head (with the neck), wings L/R (arm), hands L/R | folded wings stay body geometry; flight wing cards collapse into the shoulder on the ground (quail, scrub-jay, turkey); soarers keep spread mesh wings (hawk, vulture) |
+| rodent | body (hindquarters), chest, legs A (fore pair) and B (hind pair), tail, tail tip, head | bounding gait, chest flex, sit-up on pose, tail-tip lag (gray and ground squirrels, rabbits, vole) |
+| reptile | body, legs A (left fore, right hind) and B (diagonal, splayed), tail, tail tip, head; `_BLUE` patches | sprawling diagonal gait with a lateral spine wave from each vertex's z; pose below 0 basks flat, above 0 pushes up (fence lizard) |
+| snake | body only for now | needs a spine-wave template (the reptile template's wave with no legs is a start) |
 | other | per species | |
 
 ## Adding a species

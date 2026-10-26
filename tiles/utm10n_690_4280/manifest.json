@@ -15,7 +15,7 @@
   38.73825606650576
  ],
  "size_m": 10000,
- "generated_at": "2026-10-26T15:26:03Z",
+ "generated_at": "2026-10-26T20:26:50Z",
  "generator": {
   "name": "wild-earth-pipeline",
   "version": "0.2.0"
@@ -51,17 +51,17 @@
    "path": "species/species.json",
    "kind": "table",
    "source": "gbif",
-   "count": 15,
-   "sha256": "3b1d3f646093e67dcf345a4aeb9ee44e8d4cdb090a90b180960509a7766d47a2",
-   "bytes": 6802
+   "count": 18,
+   "sha256": "7bf2320b58fe718445f88769a908957101cb175640b673b08e4c19b7bfc0b783",
+   "bytes": 8640
   },
   "species.occurrences": {
    "path": "species/occurrences.geojson",
    "kind": "vector",
    "source": "gbif",
-   "feature_count": 4545,
-   "sha256": "9a1e3acd7f9a27afd8718b3ae930b292a7c0ca2b68757852219467cf93e10a83",
-   "bytes": 2031466,
+   "feature_count": 4903,
+   "sha256": "b663aa765c21f4912bea6af3c99c476e01bae87364a0f3585568a603d71eac58",
+   "bytes": 2191778,
    "for_clients": false,
    "for_clients_note": "per-record licences include CC BY-NC; clients read client.species_prior, built from CC0 and CC BY records only"
   },
@@ -69,8 +69,8 @@
    "path": "species/seasonal.json",
    "kind": "table",
    "source": "gbif",
-   "sha256": "66971b18e19ebcbce6346d0af0c52974bee65b7c740e05b47cb65da12425bcff",
-   "bytes": 1717,
+   "sha256": "1cda1523b316d6335449b54d1721e4b834f4b7588c982d92b195d8528244a700",
+   "bytes": 2047,
    "for_clients": false
   },
   "species.inventory": {
@@ -83,14 +83,14 @@
   "perception": {
    "path": "perception.json",
    "kind": "table",
-   "sha256": "71a480fb016a458102ed53357b2b0063fb7825485ddcf5de82a24c4b7ac54c6e",
-   "bytes": 4368
+   "sha256": "6373175f3454aaa21dab00ef47975ee59067076822279ac8e7451ec1a84a2597",
+   "bytes": 5954
   },
   "calendar": {
    "path": "calendar.json",
    "kind": "table",
-   "sha256": "4f4ec1fd773d57ec25b0e3b7a1b73dab998b5f5291cf800241634e7f563d20ff",
-   "bytes": 12847
+   "sha256": "db2348c8c078b73ce45b76a609bf5c9c57de5e58d119816fd162c2340197a118",
+   "bytes": 15878
   },
   "hydro.flowlines": {
    "path": "hydro/flowlines.geojson",
@@ -3410,15 +3410,15 @@
     "CC BY 4.0",
     "CC0 1.0"
    ],
-   "records_used": 4437,
+   "records_used": 4762,
    "records_used_by_license": {
-    "CC0 1.0": 346,
-    "CC BY 4.0": 4091
+    "CC0 1.0": 374,
+    "CC BY 4.0": 4388
    },
    "records_excluded": {
-    "CC BY-NC 4.0": 52
+    "CC BY-NC 4.0": 83
    },
-   "records_outside": 56,
+   "records_outside": 58,
    "species": {
     "aphelocoma_californica": 1097,
     "buteo_jamaicensis": 476,
@@ -3429,15 +3429,18 @@
     "cyanocitta_stelleri": 264,
     "lepus_californicus": 13,
     "melanerpes_formicivorus": 784,
+    "meleagris_gallopavo": 313,
     "odocoileus_hemionus": 65,
+    "otospermophilus_beecheyi": 4,
     "puma_concolor": 0,
+    "sceloporus_occidentalis": 8,
     "sciurus_griseus": 8,
     "sylvilagus_bachmani": 1,
     "urocyon_cinereoargenteus": 17
    },
-   "datasets": 11,
-   "sha256": "09b3395f55a1b8d1abdc294e0a189d4d5ecff16886f9589abc010c4033fd4232",
-   "bytes": 189035
+   "datasets": 13,
+   "sha256": "989a774a5f210f38b78459a5ec4b74601550ca3eacb11244995a99fe6cf690be",
+   "bytes": 229382
   },
   "terrain.dem_1m": {
    "path": "terrain/dem_1m.tif",
@@ -6792,7 +6795,7 @@
    "attribution": "Species occurrences: GBIF.org and its contributing datasets, including iNaturalist and eBird (CC0, CC BY 4.0 or CC BY-NC 4.0 per record)",
    "attribution_url": "https://www.gbif.org/",
    "attribution_required": true,
-   "retrieved": "2026-10-25"
+   "retrieved": "2026-10-26"
   },
   "nhdplus_hr": {
    "name": "USGS NHDPlus High Resolution",
@@ -7245,6 +7248,12 @@
    "step": "inpaint",
    "at": "2026-10-26T15:26:03Z",
    "seconds": 183.8,
+   "ok": true
+  },
+  {
+   "step": "species",
+   "at": "2026-10-26T20:26:50Z",
+   "seconds": 181.5,
    "ok": true
   }
  ]

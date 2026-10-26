@@ -47,6 +47,9 @@ const DRAWN = {
   microtus_californicus: { file: 'vole.glb', loader: 'loadVoleMesh' },
   buteo_jamaicensis: { file: 'redtail.glb', loader: 'loadRedtailMesh' },
   cathartes_aura: { file: 'vulture.glb', loader: 'loadVultureMesh' },
+  meleagris_gallopavo: { file: 'turkey.glb', loader: 'loadTurkeyMesh' },
+  otospermophilus_beecheyi: { file: 'ground_squirrel.glb', loader: 'loadGroundSquirrelMesh' },
+  sceloporus_occidentalis: { file: 'fence_lizard.glb', loader: 'loadLizardMesh' },
 };
 // Procedural models (animals.js SPECIES, which is not exported): species -> animalModels.js builder.
 const PROC = {
@@ -55,25 +58,29 @@ const PROC = {
   aphelocoma_californica: 'buildJay', buteo_jamaicensis: 'buildHawk', cathartes_aura: 'buildVulture',
   urocyon_cinereoargenteus: 'buildFox', canis_latrans: 'buildCoyote', puma_concolor: 'buildCougar',
   sylvilagus_bachmani: 'buildRabbit', lepus_californicus: 'buildJackrabbit', microtus_californicus: 'buildVole', cyanocitta_stelleri: 'buildStellersJay',
+  meleagris_gallopavo: 'buildTurkey', otospermophilus_beecheyi: 'buildGroundSquirrel', sceloporus_occidentalis: 'buildLizard',
 };
 // Body plan for the motion switch: quadruped, rodent (bounding pair, sits up), bird (ground bird: hops, flushes),
-// soarer (glides, flaps in bursts, perches).
+// soarer (glides, flaps in bursts, perches), reptile (sprawling walk and sprint with the spine wave, basks, pushes up).
 const PLAN = {
   odocoileus_hemionus: 'quadruped', canis_latrans: 'quadruped', urocyon_cinereoargenteus: 'quadruped', puma_concolor: 'quadruped',
   sciurus_griseus: 'rodent', sylvilagus_bachmani: 'rodent', lepus_californicus: 'rodent', microtus_californicus: 'rodent',
   callipepla_californica: 'bird', aphelocoma_californica: 'bird', melanerpes_formicivorus: 'bird', cyanocitta_stelleri: 'bird',
   corvus_corax: 'soarer', buteo_jamaicensis: 'soarer', cathartes_aura: 'soarer',
+  meleagris_gallopavo: 'bird', otospermophilus_beecheyi: 'rodent', sceloporus_occidentalis: 'reptile',
 };
 // Cycle rates (Hz) from animals.js: deer walk speed / 1.5 m at 1.1 m/s, squirrel bound 3.5, quail whirr 19 and
 // walk speed / 0.14, jay rowing 11, woodpecker 13, raven 2.6, hawk 2.4; fox, coyote and lion walk (MAMMAL walk speed
 // over the stride) and gallop (run), rabbit forage hop and bolt (1.1 m/s / 0.32 m, 5.5 / 0.9), jackrabbit lope and
 // bolt (4.5 m/s / 1.61 m, 14 / 4.27: animals.js JACK.bound), vole scurry
-// (0.55 m/s / 0.09 m, dash 1.6).
+// (0.55 m/s / 0.09 m, dash 1.6); turkey walk 0.35 m/s / 0.55 m and the flush's beat 5; ground squirrel feeding run
+// (0.5 / 0.16) and dash (3.6 / 0.32); fence lizard walk (0.6 / 0.1) and sprint (12, the cap).
 const RATE = {
   odocoileus_hemionus: { walk: 0.73 }, canis_latrans: { walk: 1.28, run: 3.4 }, urocyon_cinereoargenteus: { walk: 1.45, run: 4 }, puma_concolor: { walk: 0.85, run: 2.6 },
   sciurus_griseus: { walk: 3.5 }, sylvilagus_bachmani: { walk: 3.4, run: 6.1 }, lepus_californicus: { walk: 2.8, run: 3.3 }, microtus_californicus: { walk: 6, run: 17 },
   callipepla_californica: { walk: 2.1, flap: 19 }, aphelocoma_californica: { walk: 2.5, flap: 11 }, cyanocitta_stelleri: { walk: 2.5, flap: 11 }, melanerpes_formicivorus: { flap: 13 },
   corvus_corax: { flap: 2.6 }, buteo_jamaicensis: { flap: 2.4 }, cathartes_aura: { flap: 3 },
+  meleagris_gallopavo: { walk: 0.64, flap: 5 }, otospermophilus_beecheyi: { walk: 3.1, run: 11 }, sceloporus_occidentalis: { walk: 6, run: 12 },
 };
 // Generic constants for a GLB read here (no loader in animalModels.js): the deer's amplitudes for quadrupeds,
 // the squirrel's for rodents, the jay's for birds; rig constants (RIG keys) kept small.
@@ -84,8 +91,8 @@ const GENERIC = {
   soarer: { amp: [0, 0.2, 0.4, 0.75], pose: [1, -0.25, 0, 1.45], k: { handLag: 0.6, handAmp: 0.8, bow: 0.25, spread: 0.6, collapse: 1 } },
 };
 const MOTIONS = [
-  ['idle', 'idle'], ['walk', 'walk / bound / hop'], ['run', 'run: gallop / bolt / dash'], ['graze', 'graze / tail flick / peck'], ['rest', 'bedded / sit up / perched'],
-  ['flap', 'flap'], ['glide', 'glide / soar'], ['climb', 'climb (legs splayed)'],
+  ['idle', 'idle'], ['walk', 'walk / bound / hop'], ['run', 'run: gallop / bolt / dash / sprint'], ['graze', 'graze / tail flick / peck / head flick'], ['rest', 'bedded / sit up / perched / bask'],
+  ['flap', 'flap'], ['glide', 'glide / soar'], ['climb', 'climb (legs splayed)'], ['display', 'display: push-up'],
 ];
 const DRAFT_FALLBACK = { odocoileus_hemionus: 'odocoileus_hemionus_buck' };   // the doe has no brief of its own
 
@@ -613,6 +620,12 @@ function animFor(row, motion, t) {
     else if (motion === 'flap') { a.gait = 1; a.phase = t * TAU * (r.flap || 10); }
     else if (motion === 'glide') { a.e0 = 1; a.e1 = 0.4; }
     else return na();
+  } else if (plan === 'reptile') {   // the fence lizard: animals.js lzUpdate
+    if (motion === 'walk' || motion === 'run') { const run = motion === 'run'; a.phase = t * TAU * (run ? r.run || 12 : r.walk || 6); a.gait = run ? 1 : 0.6; a.e1 = run ? Math.sin(a.phase * 0.5) : 0; }
+    else if (motion === 'rest') a.pose = -0.95;                                    // basking flat
+    else if (motion === 'display') a.pose = 0.5 - 0.5 * Math.cos(t * TAU * 2);    // push-ups at 2 Hz
+    else if (motion === 'graze') a.flick = Math.sin(t * TAU * 0.7) > 0 ? 0.6 : -0.6;   // head flicks
+    else if (motion !== 'idle') return na();
   } else {   // soarer
     if (motion === 'flap') { a.gait = 1; a.phase = t * TAU * (r.flap || 2.6); }
     else if (motion === 'rest') a.pose = 1;
@@ -637,7 +650,7 @@ function pose(row, t) {
       const A = m.geometry.attributes.aAnim; A.array[0] = a.phase % TAU; A.array[1] = a.gait; A.array[2] = p; A.array[3] = a.flick; A.needsUpdate = true;
       const A2 = m.geometry.attributes.aAnim2;
       if (A2) {
-        const w = model.gait ? a.e3 : state.variant ? 1 : 0;
+        const w = model.gait ? a.e3 : model.rig?.kind === 'reptile' ? (state.variant ? 0 : 1) : state.variant ? 1 : 0;   // the lizard: 1 male
         A2.array.set(ant ? [ant.growth, ant.velvet, state.variant ? 1 : 0, w] : [a.e0, a.e1, 0, w]); A2.needsUpdate = true;
       }
       m.position.y = -p * (model.drop || 0);
@@ -763,7 +776,7 @@ $('view').onchange = e => set({ view: e.target.value });
 $('fit').onchange = e => set({ fit: e.target.checked });
 $('slow').onchange = e => set({ slow: e.target.checked });
 $('variant').onchange = e => set({ variant: e.target.checked });
-{ const l = $('variant').parentElement; if (l && l.lastChild?.nodeType === 3) l.lastChild.textContent = ' second colour set (female quail) · young forked-horn buck'; }
+{ const l = $('variant').parentElement; if (l && l.lastChild?.nodeType === 3) l.lastChild.textContent = ' second colour set (female quail, hen turkey) · young forked-horn buck · female fence lizard'; }
 $('jump').onchange = e => { const r = rows.find(r => r.key === e.target.value); if (r) r.el.sec.scrollIntoView({ behavior: 'smooth', block: 'start' }); e.target.value = ''; };
 $('copyall').onclick = e => copyText(JSON.stringify(rows.map(signJSON).filter(s => s.verdict || s.notes), null, 2), $('summary'));
 

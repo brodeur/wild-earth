@@ -2,12 +2,15 @@ import * as THREE from 'three';
 import { mulberry32, SPECIES as PLANTS } from './trees.js';
 import { hash } from './vegetation.js';
 import { addCaster, removeCaster } from './shadows.js';
-import { seasonOfDate } from './season.js';
+import { seasonOfDate, parseDate } from './season.js';
+import { uniforms as atmo } from './atmosphere.js';
+import { fieldGuide } from './fieldguide.js';
 import { buildSquirrel, buildWoodpecker, buildRaven, buildDeer, buildQuail, buildJay, buildHawk, buildVulture, buildStellersJay,
-  buildDeerBuck, buildFox, buildCoyote, buildCougar, buildRabbit, buildVole, buildJackrabbit,
+  buildDeerBuck, buildFox, buildCoyote, buildCougar, buildRabbit, buildVole, buildJackrabbit, buildTurkey, buildGroundSquirrel, buildLizard,
   animalMaterial, animalDepthMaterial, planarShadowMaterial, loadDeerMesh, loadSquirrelMesh, loadQuailMesh, loadJayMesh,
   loadStellersJayMesh, loadRedtailMesh, loadVultureMesh, loadDeerBuckMesh, loadFoxMesh, loadCoyoteMesh, loadCougarMesh,
-  loadRabbitMesh, loadJackrabbitMesh, loadVoleMesh, loadRavenGroundMesh, RAVEN_GROUND, hasAnim2, antlerState, SEASON_MONTH } from './animalModels.js';
+  loadRabbitMesh, loadJackrabbitMesh, loadVoleMesh, loadRavenGroundMesh, loadTurkeyMesh, loadGroundSquirrelMesh, loadLizardMesh,
+  RAVEN_GROUND, hasAnim2, antlerState, SEASON_MONTH } from './animalModels.js';
 
 // Ambient animals: the first step toward "many of each species always present" (docs/brief.md,
 // Direction; roadmap visual pass step 6 "Life"). Western gray squirrels, acorn woodpeckers, other
@@ -63,6 +66,18 @@ import { buildSquirrel, buildWoodpecker, buildRaven, buildDeer, buildQuail, buil
 // 30-60 degrees off its line every 2-4 bounds. Drawn within 250 m of the eye (lod 12 / 40 m). Until the tile's
 // species step has run with the jackrabbit in pipeline/species_data.py, it is seen by everyone (PENDING).
 //
+// Wild turkeys, California ground squirrels and western fence lizards (2026-10-26; tkUpdate, gsUpdate, lzUpdate):
+// turkeys in flocks of 6-15 in oak woodland and savanna, walking and foraging together (pecking, scratching), flushing
+// into a short heavy flight up into an oak from a raven within 15 m or a squirrel within 8 m, and roosting in the oaks
+// after dusk (on a limb of the drawn wood, else out of sight in the crown). Ground squirrels in colonies of 4-12 round
+// a cluster of burrow mouths (dark discs in a ring of bare dirt) in grassland and open savanna, March to November by
+// day: one sentinel bolt upright at a time, the rest feeding low; a raven or hawk within 25 m, or a player within
+// 10 m, sends them all running down the burrows, to come up again 20-40 s after it has gone. Fence lizards on rock
+// tops (rocks.js, read only: the drawn close tiers), the bottom 1.5 m of oak and pine trunks (perch.js: the drawn
+// bark, the instance oriented onto it) and the open ground beside them, March to October by day when the air is 15 C
+// or more: basking flat, alert with head flicks, the males doing push-up bouts every 10-30 s; a player within 2 m
+// sends one in a dash into a crack or round the trunk, gone for 30 s. Drawn and thought within 25 m of the eye.
+//
 // Events (for sound.js): on(type, fn) / off(type, fn). 'flush' { group, x, y, z, n, cause } when a
 // quail covey bursts up (x, y, z: where it takes off; cause 'raven', 'hawk', 'self' or 'debug');
 // 'stoop' { animal, x, y, z, target } when a red-tailed hawk tips into a stoop.
@@ -98,7 +113,8 @@ const LIVE_R = 400, REBUILD_MOVE = 100, NEAR_R = 150, TAG_R = 40, TAG_MAX = 6, B
 // procedural model (animalModels.js build*) still holds every animal's matrix and pose and is drawn instead
 // until the GLB has loaded, if it fails to load, or with ?<param>=proc (?deer=proc, ?squirrel=proc,
 // ?quail=proc, ?jay=proc, ?stjay=proc, ?hawk=proc, ?vulture=proc, ?fox=proc, ?coyote=proc, ?rabbit=proc, ?jackrabbit=proc, ?vole=proc,
-// ?lion=proc or ?cougar=proc, ?buck=proc (?deer=proc covers the buck too); ?animals=proc for all) for A/B; live:
+// ?lion=proc or ?cougar=proc, ?buck=proc (?deer=proc covers the buck too), ?turkey=proc, ?gsquirrel=proc, ?lizard=proc;
+// ?animals=proc for all) for A/B; live:
 // __we.animals.setMesh('quail', false) (and
 // __we.animals.deerMesh = false as before). __we.animals.lodForce.quail = 0/1/2 pins every quail to one tier
 // (deerLodForce still works). The drawn birds and squirrel take a second per-instance vec4 (aAnim2, see
@@ -120,7 +136,7 @@ const FLY_NEAR = 30, FLY_FAR = 100, FLY_GROW = 0.6;   // birds in flight: true s
 const VISUAL_ONLY = new Set(['cathartes_aura']);     // not in the species list or perception matrix yet: seen by everyone
 // in pipeline/species_data.py but maybe not yet in this tile's package (run its species step): seen by everyone until
 // the tile's perception matrix names it, then as the matrix says
-const PENDING = new Set(['lepus_californicus']);
+const PENDING = new Set(['lepus_californicus', 'meleagris_gallopavo', 'otospermophilus_beecheyi', 'sceloporus_occidentalis']);
 const TAU = Math.PI * 2;
 const CLING_PITCH = -1.72;   // a clinging woodpecker: nose up, tipped just past vertical so the tail braces on the bark
 
@@ -149,6 +165,9 @@ const SUIT = {
   lepus_californicus:       { 1: 0.45, 3: 0.05, 4: 0.25, 5: 1, 6: 0.15, 8: 0.3, 9: 0.9 },   // open ground; times openness (canopy)
   microtus_californicus:    { 1: 0.35, 4: 0.1, 5: 1, 6: 0.5, 9: 0.6 },   // grass
   puma_concolor:            { 1: 1, 2: 0.4, 3: 0.7, 4: 0.9, 6: 0.6 },   // a territory's home: oak and chaparral
+  meleagris_gallopavo:      { 1: 1, 2: 0.15, 3: 0.6, 4: 0.15, 5: 0.45, 6: 0.7, 9: 0.5 },   // oak woodland and savanna; times some trees
+  otospermophilus_beecheyi: { 1: 0.6, 4: 0.2, 5: 1, 6: 0.3, 8: 0.3, 9: 0.9 },   // grass and open savanna; times openness
+  sceloporus_occidentalis:  { 1: 1, 2: 0.5, 3: 0.8, 4: 0.9, 5: 0.5, 6: 0.4, 8: 0.8, 9: 0.8 },   // times rock and trunks (spawnCell)
 };
 // Expected individuals (or groups) per 30 m cell at suitability 1, and season multipliers.
 const SEASON = {
@@ -165,6 +184,9 @@ const SEASON = {
   lepus_californicus:       { fall: 0.95, winter: 0.85, spring: 1.1, summer: 1.05 },   // leverets from late winter to summer
   microtus_californicus:    { fall: 0.8, winter: 1, spring: 1.3, summer: 0.8 },
   puma_concolor:            { fall: 1, winter: 1, spring: 1, summer: 1 },
+  meleagris_gallopavo:      { fall: 1, winter: 1, spring: 1, summer: 1 },
+  otospermophilus_beecheyi: { fall: 0.9, winter: 0, spring: 1, summer: 1 },   // below ground December to February
+  sceloporus_occidentalis:  { fall: 1, winter: 0, spring: 1, summer: 1 },     // March to October (lzActive narrows fall)
 };
 const SPECIES = [
   { code: 'sciurus_griseus', one: 'squirrel', many: 'squirrels', k: 0.45, salt: 9101, cap: 160, scale: 1, build: buildSquirrel },
@@ -190,10 +212,15 @@ const SPECIES = [
   { code: 'melanerpes_formicivorus', one: 'female woodpecker', many: 'female woodpeckers', salt: 9737, cap: 200, scale: 1, build: () => buildWoodpecker(true), variantOf: 1 },
   // the black-tailed jackrabbit: open ground, one or two per cell, 40 at most (culled beyond 250 m of the eye)
   { code: 'lepus_californicus', one: 'jackrabbit', many: 'jackrabbits', k: 0.12, salt: 9838, cap: 40, scale: 1, build: buildJackrabbit, liveR: 300, common: 'Black-tailed jackrabbit' },
+  // 2026-10-26: wild turkey flocks (k per 30 m cell for a flock: a few dozen flocks on a 10 km tile), ground squirrel
+  // colonies, fence lizards (k per cell for a group at its rocks and trunks; spawned within 70 m, culled at 25 m)
+  { code: 'meleagris_gallopavo', one: 'wild turkey', many: 'wild turkeys', k: 0.0014, salt: 9939, cap: 90, scale: 1, build: buildTurkey, bird: true, common: 'Wild turkey' },
+  { code: 'otospermophilus_beecheyi', one: 'ground squirrel', many: 'ground squirrels', k: 0.012, salt: 9940, cap: 160, scale: 1, build: buildGroundSquirrel, liveR: 220, common: 'California ground squirrel' },
+  { code: 'sceloporus_occidentalis', one: 'fence lizard', many: 'fence lizards', k: 0.55, salt: 9941, cap: 120, scale: 1, build: buildLizard, liveR: 70, common: 'Western fence lizard' },
 ];
-const SQ = 0, WP = 1, RV = 2, DR = 3, QU = 4, SJ = 5, HK = 6, TV = 7, ST = 8, FX = 9, CY = 10, RB = 11, VO = 12, ML = 13, BK = 14, WF = 15, JR = 16;
+const SQ = 0, WP = 1, RV = 2, DR = 3, QU = 4, SJ = 5, HK = 6, TV = 7, ST = 8, FX = 9, CY = 10, RB = 11, VO = 12, ML = 13, BK = 14, WF = 15, JR = 16, TK = 17, GS = 18, LZ = 19;
 SPECIES[DR].planar = true;
-const TAG_DY = [0.5, 0.5, 0.7, 2.1, 0.4, 0.4, 0.7, 0.7, 0.45, 0.65, 0.95, 0.4, 0.2, 1.1, 2.2, 0.5, 0.6];
+const TAG_DY = [0.5, 0.5, 0.7, 2.1, 0.4, 0.4, 0.7, 0.7, 0.45, 0.65, 0.95, 0.4, 0.2, 1.1, 2.2, 0.5, 0.6, 1.2, 0.32, 0.12];
 const INDEX = Object.fromEntries(SPECIES.map((sp, k) => [sp.code, k]).filter(([, k]) => SPECIES[k].variantOf === undefined));
 const DRAWN = {
   [DR]: { name: 'deer', param: 'deer', load: loadDeerMesh, lod: [30, 90], planar: true },
@@ -212,11 +239,14 @@ const DRAWN = {
   [VO]: { name: 'vole', param: 'vole', load: loadVoleMesh, lod: [3, 10] },
   [ML]: { name: 'lion', param: 'lion', alias: 'cougar', load: loadCougarMesh, lod: [40, 124], planar: true },
   [BK]: { name: 'buck', param: 'buck', alias: 'deer', load: loadDeerBuckMesh, lod: [30, 90], planar: true },
+  [TK]: { name: 'turkey', param: 'turkey', load: loadTurkeyMesh, lod: [25, 80] },
+  [GS]: { name: 'ground-squirrel', param: 'gsquirrel', load: loadGroundSquirrelMesh, lod: [12, 40] },
+  [LZ]: { name: 'lizard', param: 'lizard', load: loadLizardMesh, lod: [2, 8] },
   // the raven on the ground or perched; in the air the procedural flying raven (hybrid: see the header)
   [RV]: { name: 'raven', param: 'ravenground', load: loadRavenGroundMesh, lod: [15, 50], hybrid: true },
 };
 const PROC_RAVEN_BODY_Y = 0.09, RAVEN_LIFT = RAVEN_GROUND.bodyY - PROC_RAVEN_BODY_Y;   // m, at size 1
-const CULL = { [RB]: 120, [VO]: 40, [JR]: 250 }, VOLE_CAM = 10;   // m from the eye; voles also only under a camera this low (m above ground)
+const CULL = { [RB]: 120, [VO]: 40, [JR]: 250, [GS]: 150, [LZ]: 25 }, VOLE_CAM = 10;   // m from the eye; voles also only under a camera this low (m above ground)
 // Steller's jays perch in conifers (veg.nearPlants, the plants within ~240 m of the eye; veg.oaks holds only oaks)
 // Crown radius as a fraction of the tree's height, by height fraction (the crown envelopes in library/species/).
 const CONIFERS = new Set(['pinus_ponderosa', 'pinus_sabiniana']);
@@ -256,6 +286,33 @@ const JK_FORM = 120, JK_FEED = 121, JK_HOP = 122, JK_SIT = 123, JK_FREEZE = 124,
 const JACK = { hop: 1.2, lope: [3, 5.5], bolt: 14, out: [10, 40], range: 45, freeze: 30, flush: 10, formFlush: 7, low: 25,
   run: [60, 150], hunch: -0.6, alert: 0.35,
   bound: (v, k) => Math.min(6, (0.35 + 0.28 * v) * k), lift: v => 0.035 + 0.02 * v };
+// Wild turkey (tkUpdate; the flock is the unit, flockUpdate): states per bird and per flock; flush distances by the
+// player's species (m, 3D); walking speeds (m/s) and the stride (m per leg cycle); the flush flight's speed (m/s) and
+// the wingbeat (Hz); how long a flushed flock stays up in its tree (s); the flock's spread (m) and wander (m from home).
+const T_FORAGE = 130, T_SCRATCH = 131, T_WAIT = 132, T_FLY = 133, T_PERCH = 134, T_DOWN = 135;
+const TF_FORAGE = 0, TF_WALK = 1, TF_TREE = 2, TF_ROOST = 3;
+const TURKEY = { flush: { corvus_corax: 15, buteo_jamaicensis: 15, sciurus_griseus: 8, melanerpes_formicivorus: 10 }, flushOther: 12,
+  walk: 0.35, move: [0.5, 0.8], stride: 0.55, fly: 8, beat: 5, tree: [25, 60], spread: 6, range: 150, hen: 0.6, roostMinH: 3 };
+// California ground squirrel (gsUpdate; the colony is the unit, colonyUpdate): states; the alarm distances (m, 3D: the
+// raven or hawk, the player otherwise); run and feed speeds (m/s); how long they stay down (s); the colony's burrows
+// and members; the sentinel's watch (s).
+const G_FEED = 140, G_HOP = 141, G_SIT = 142, G_SENTRY = 143, G_DIVE = 144, G_DOWN = 145, G_PEEK = 146;
+const C_OK = 0, C_ALARM = 1, C_DOWN = 2;
+const GSQ = { raptor: 25, player: 10, run: 3.6, feed: [0.3, 0.7], down: [20, 40], burrows: [3, 6], members: [4, 12], watch: [15, 60], spread: 5 };
+// Western fence lizard (lzUpdate): states; the flight distance (m), dash speed (m/s), how long it stays hidden (s), the
+// push-up bouts (males: one every 10-30 s, 3-8 bobs at 2 Hz), the stride (m), and the air temperature it needs (C).
+const L_BASK = 150, L_ALERT = 151, L_PUSH = 152, L_TURN = 153, L_SPRINT = 154, L_HIDE = 155, L_MOVE = 156;
+const LIZ = { flee: 2, dash: 2, hide: 30, push: [10, 30], bobs: [3, 8], bobHz: 2, stride: 0.1, warm: 15, hot: 34, resolves: 2 };
+// Air temperature (C) for the foothills at ~600 m (Placerville normals, rounded): the mean daily low and high by month,
+// a low at 6:00 and a high at 15:00. For the lizards; nothing else reads it yet.
+const T_LOW = [1, 2, 4, 6, 9, 13, 16, 15, 13, 9, 4, 1], T_HIGH = [13, 15, 17, 20, 25, 30, 34, 33, 30, 24, 17, 12];
+export function airTemp(month, hour) {
+  const m = month - 1.5, i = ((Math.floor(m) % 12) + 12) % 12, j = (i + 1) % 12, f = m - Math.floor(m);
+  const lo = T_LOW[i] + (T_LOW[j] - T_LOW[i]) * f, hi = T_HIGH[i] + (T_HIGH[j] - T_HIGH[i]) * f;
+  const h = hour < 6 ? hour + 24 : hour;
+  const u = h <= 15 ? (h - 6) / 9 : 1 - (h - 15) / 15;   // up from 6:00 to 15:00, down to the next 6:00
+  return lo + (hi - lo) * (0.5 - 0.5 * Math.cos(Math.PI * Math.min(1, Math.max(0, u))));
+}
 // Fox, coyote and lion: speeds (m/s), stride (m per cycle at a walk; it lengthens with speed), half the body length
 // (for the slope pitch), flee and flee-to distances (m), home range (m), when they are about (hour), climbing and
 // pouncing chances.
@@ -296,6 +353,23 @@ CARRY[SJ] = { py: 0.07, pz: 0.06, ty: 0.083, tz: 0.13, flick: 0.4, pose: 0 };   
 CARRY[ST] = { py: 0.11, pz: 0.06, ty: 0.128, tz: 0.125, flick: 0.4, pose: 0 };    // the Steller's jay's
 
 const damp = (a, b, k, dt) => b + (a - b) * Math.exp(-k * dt);
+const monthOf = d => d.getMonth() + 1 + (d.getDate() - 1) / 31;   // 1 = 1 January
+const FG_SEEN = { [TK]: 25, [GS]: 15, [LZ]: 3 };   // m from the player: the field guide's first-sighting card
+// A ground squirrel's burrow mouth: a dark hole in a low ring of bare dirt, 0.27 m across, coloured per vertex.
+function burrowGeometry() {
+  const R = [0, 0.045, 0.07, 0.15, 0.27], Y = [-0.03, 0, 0.022, 0.012, 0], C = [0x060504, 0x16110c, 0x6c5a46, 0x786650, 0x7d6b55], N = 14;
+  const pos = [], col = [], c = new THREE.Color();
+  const pt = (k, i) => { const a = i / N * TAU; return [Math.cos(a) * R[k], Y[k], Math.sin(a) * R[k]]; };
+  const put = (k, i) => { pos.push(...pt(k, i)); c.setHex(C[k]); col.push(c.r, c.g, c.b); };
+  for (let k = 0; k < R.length - 1; k++) for (let i = 0; i < N; i++) {
+    put(k, i); put(k + 1, i + 1); put(k + 1, i);   // facing up
+    put(k, i); put(k, i + 1); put(k + 1, i + 1);
+  }
+  const g = new THREE.BufferGeometry();
+  g.setAttribute('position', new THREE.Float32BufferAttribute(pos, 3)); g.setAttribute('color', new THREE.Float32BufferAttribute(col, 3));
+  g.computeVertexNormals();
+  return g;
+}
 const clamp01 = x => x < 0 ? 0 : x > 1 ? 1 : x;
 const wrapAngle = a => Math.atan2(Math.sin(a), Math.cos(a));
 
@@ -364,6 +438,18 @@ export class Animals {
       }
     });
     this.planar = this.planars[DR];
+    // ground squirrel burrow mouths (colonyUpdate): a dark hole in a ring of bare dirt, one draw for all of them
+    this.colonies = []; this.flocks = []; this.burrowN = 0;
+    {
+      const bm = new THREE.MeshLambertMaterial({ vertexColors: true });
+      atmosphere.patchLambert(bm);
+      this.burrows = new THREE.InstancedMesh(burrowGeometry(), bm, 120);
+      this.burrows.instanceMatrix.setUsage(THREE.DynamicDrawUsage);
+      this.burrows.count = 0; this.burrows.frustumCulled = false; this.burrows.name = 'ground squirrel burrows'; this.burrows.receiveShadow = true;
+      this.group.add(this.burrows);
+    }
+    this.fgSeen = new Set(); this.lzBudget = LIZ.resolves;
+    if (identify) identify.animals = this;   // animal species cards (identify.js)
     // how far each species' body drops when bedded (pose 1): the drawn mesh's when it is on, else the procedural's
     this.drops = SPECIES.map(sp => sp.model.drop || 0); this.poseMax = SPECIES.map(sp => sp.model.poseMax || 1);
     this.month = 10.5;
@@ -385,6 +471,7 @@ export class Animals {
     this.anim2 = SPECIES.map((sp, k) => DRAWN[k] ? new Float32Array(sp.cap * 4) : null);
     this.debugIds = new Set(); this.debugN = 0;
     const q = typeof location === 'undefined' ? new URLSearchParams() : new URLSearchParams(location.search);
+    this.fixedDate = parseDate(q.get('date'));   // ?date=MM-DD: the month (lizards, ground squirrels, antlers) follows it
     for (const k of Object.keys(DRAWN)) {
       const D = DRAWN[k], proc = q.get(D.param) === 'proc' || (D.alias && q.get(D.alias) === 'proc') || q.get('animals') === 'proc';
       if (!proc) this.setMesh(+k, true);
@@ -698,6 +785,7 @@ export class Animals {
     const [ci, cj] = hab.cellOf(px, north), cells = Math.ceil(LIVE_R / res);
     const keep = new Set();
     const live = SPECIES.map(sp => this.perceived.has(sp.code));
+    const lzOn = this.lzMonth();   // March to October (a cool day keeps them hidden, lzUpdate)
     for (let j = cj - cells; j <= cj + cells; j++) for (let i = ci - cells; i <= ci + cells; i++) {
       if (i < 0 || j < 0 || i >= hab.img.width || j >= hab.img.height) continue;
       const cx = (i + 0.5) * res, cn = size - (j + 0.5) * res;
@@ -739,8 +827,11 @@ export class Animals {
         else if (s === RB) f *= brushEdge;
         else if (s === VO) f *= 1 - 0.8 * Math.min(1, tree * 1.5);                    // runways in open grass
         else if (s === JR) f *= 1 - 0.9 * Math.min(1, tree * 1.6);                    // open: grass, savanna, pasture
+        else if (s === TK) f *= (0.3 + 0.7 * Math.min(1, tree * 2.5)) * (1 - 0.5 * Math.max(0, tree - 0.6));   // oaks with openings
+        else if (s === GS) f *= 1 - 0.9 * Math.min(1, tree * 1.8);                    // open grass, low shrubs
+        else if (s === LZ) { if (!lzOn) continue; f *= 0.25 + 0.75 * Math.min(1, (t.outcrop ? t.outcrop.at(cx, cn) / 255 : 0) * 2.5 + tree * 1.2); }
         else f *= 0.6 + 0.5 * edge;
-        const lambda = sp.k * f * this.priorAt(sp.code, cx, cn) * (SEASON[sp.code][this.season] || 1);
+        const lambda = sp.k * f * this.priorAt(sp.code, cx, cn) * (SEASON[sp.code][this.season] ?? 1);
         const rnd = mulberry32(hash(i, j, sp.salt));
         if (rnd() >= lambda) continue;
         this.spawnCell(s, i, j, cx, cn, rnd, keep);
@@ -761,6 +852,10 @@ export class Animals {
     for (const a of this.list) a.culled = false;
     const cov = new Set(); for (const a of this.bySpecies[QU]) cov.add(a.group);
     this.coveys = [...cov];
+    const fl = new Set(); for (const a of this.bySpecies[TK]) fl.add(a.group);
+    this.flocks = [...fl];
+    const col = new Set(); for (const a of this.bySpecies[GS]) col.add(a.group);
+    this.colonies = [...col]; this.placeBurrows();
     this.fams = new Map();   // v4: each granary's family
     for (const a of this.list) if ((a.sp === WP || a.sp === WF) && a.anchor) { let f = this.fams.get(a.anchor.id); if (!f) this.fams.set(a.anchor.id, f = []); f.push(a); }
     this.tagged.length = 0;
@@ -888,6 +983,43 @@ export class Animals {
         }
         a.y = this.heights.atXZ(a.x, a.z);
       }, keep);
+    } else if (s === TK) {   // a flock of 6-15 wild turkeys: hens (0.8 scale, the hen colours) and toms
+      const n = 6 + Math.floor(rnd() * 10);
+      const g = { x, z, hx: x, hz: z, tx: x, tz: z, state: TF_FORAGE, t: 5 + rnd() * 30, cool: 0, n, leader: null, tree: null, roost: false, ft: 0 };
+      for (let m = 0; m < n; m++) this.add(`${base}:${m}`, s, rnd, a => {
+        a.group = g; a.rank = m; if (!m) g.leader = a;
+        const ang = rnd() * TAU, d = Math.sqrt(rnd()) * TURKEY.spread;
+        a.ox = Math.cos(ang) * d; a.oz = Math.sin(ang) * d;
+        a.x = x + a.ox; a.z = z + a.oz; a.y = this.heights.atXZ(a.x, a.z); a.yaw = rnd() * TAU;
+        a.variant = (seedOf(a.id, 0x7e4) % 100) < TURKEY.hen * 100 ? 1 : 0;   // hen
+        a.size = (a.variant ? 0.8 : 1) * (0.95 + 0.1 * rnd());
+        a.state = T_FORAGE; a.pose = 1; a.t = rnd() * 3;
+      }, keep);
+    } else if (s === GS) {   // a colony of 4-12 round 3-6 burrow mouths
+      const nb = GSQ.burrows[0] + Math.floor(rnd() * (GSQ.burrows[1] - GSQ.burrows[0] + 1)), burrows = [];
+      for (let b = 0; b < nb * 3 && burrows.length < nb; b++) {
+        const ang = rnd() * TAU, d = 1 + rnd() * 4, bx = x + Math.cos(ang) * d, bz = z + Math.sin(ang) * d;
+        if (this.landOK(bx, bz)) burrows.push({ x: bx, z: bz, y: 0, yaw: rnd() * TAU });
+      }
+      if (!burrows.length) return;
+      const n = GSQ.members[0] + Math.floor(rnd() * (GSQ.members[1] - GSQ.members[0] + 1));
+      const g = { x, z, burrows, state: C_OK, t: 0, sentinel: null, watch: 5 + rnd() * 20, leader: null, threat: 0 };
+      for (let m = 0; m < n; m++) this.add(`${base}:${m}`, s, rnd, a => {
+        a.group = g; a.rank = m; if (!m) g.leader = a;
+        const b = burrows[m % burrows.length], ang = rnd() * TAU, d = rnd() * 4;
+        a.hb = b; a.x = b.x + Math.cos(ang) * d; a.z = b.z + Math.sin(ang) * d; a.y = this.heights.atXZ(a.x, a.z);
+        a.yaw = rnd() * TAU; a.size = 0.85 + rnd() * 0.25; a.state = G_FEED; a.t = rnd() * 3;
+      }, keep);
+    } else if (s === LZ) {   // fence lizards at the cell's rocks and trunks (a male at each, a female or two near)
+      const sites = this.lzSites(x, z, cx, cn, rnd);
+      for (let k = 0, m = 0; k < sites.length; k++) {
+        const site = sites[k], nf = rnd() < 0.5 ? 0 : 1 + (rnd() < 0.3 ? 1 : 0);
+        for (let f = 0; f <= nf; f++, m++) this.add(`${base}:${m}`, s, rnd, a => {
+          a.site = site; a.male = f === 0 ? 1 : 0; a.home = null; a.tries = 0; a.vis = 0;
+          a.size = (a.male ? 1 : 0.85) * (0.9 + 0.2 * rnd()); a.x = site.x; a.z = site.z; a.y = this.heights.atXZ(site.x, site.z);
+          a.state = L_BASK; a.t = rnd() * 2; a.next = LIZ.push[0] + rnd() * (LIZ.push[1] - LIZ.push[0]);
+        }, keep);
+      }
     } else if (s === VO) {   // a vole on its runway (two now and then): a 2-5 m track through the grass
       const n = rnd() < 0.3 ? 2 : 1;
       for (let m = 0; m < n; m++) this.add(`${base}:${m}`, s, rnd, a => {
@@ -2652,6 +2784,481 @@ export class Animals {
     a.y = H.atXZ(a.x, a.z) + 0.004 * Math.abs(Math.sin(a.phase)) * a.amp;
   }
 
+  // ---- wild turkey --------------------------------------------------------------------------------
+  // The flock is the unit (g): it forages in a loose spread round its centre, now and then walks on 15-40 m to another
+  // patch of open oak woodland (the birds strung out behind), flushes up into an oak from the player (TURKEY.flush, by
+  // the player's species) and comes down after 25-60 s, and flies up to roost in a tall oak at dusk, down at dawn.
+  tkFlushR() { return TURKEY.flush[this.observer] ?? TURKEY.flushOther; }
+  flockUpdate(g, dt, px, pz) {
+    const r = this.groupRng(g, this.bySpecies[TK]); if (!r) return;
+    g.t -= dt; g.cool -= dt;
+    const sun = atmo.sunDir.value.y;
+    if (sun < 0.04 && g.state !== TF_ROOST) {   // dusk: up to roost (a flushed flock already up stays in its tree)
+      if (g.state === TF_TREE) g.state = TF_ROOST; else this.tkToTree(g, null, true);
+      return;
+    }
+    if (g.state === TF_ROOST) { if (sun > 0.08) this.tkDown(g); return; }
+    if (g.state === TF_TREE) { if (g.t <= 0) this.tkDown(g); return; }
+    const near = g.near; g.near = false;
+    if (near && g.cool <= 0) { this.tkFlush(g, px, pz); return; }
+    if (g.state === TF_FORAGE) {
+      if (g.t <= 0) {   // walk on 15-40 m to the best of a few spots among the oaks (open woodland), back toward home when strayed
+        let best = -Infinity;
+        for (let k = 0; k < 5; k++) {
+          const ang = r() * TAU, d = 15 + r() * 25;
+          let x = g.x + Math.cos(ang) * d, z = g.z + Math.sin(ang) * d;
+          const hx = x - g.hx, hz = z - g.hz, hd = Math.hypot(hx, hz);
+          if (hd > TURKEY.range) { x = g.hx + hx / hd * TURKEY.range; z = g.hz + hz / hd * TURKEY.range; }
+          if (!this.landOK(x, z) || this.openness(x, z) < 0) continue;
+          const can = this.tile.canopy.at(x, -z) / 100, sc = Math.min(1, can * 3) - Math.max(0, can - 0.7) * 2 + r() * 0.5;
+          if (sc > best) { best = sc; g.tx = x; g.tz = z; }
+        }
+        if (best > -Infinity) { g.state = TF_WALK; g.speed = TURKEY.move[0] + r() * (TURKEY.move[1] - TURKEY.move[0]); }
+        else g.t = 10 + r() * 20;
+      }
+    } else if (g.state === TF_WALK) {
+      const ex = g.tx - g.x, ez = g.tz - g.z, d = Math.hypot(ex, ez), step = g.speed * dt;
+      if (d <= step) { g.state = TF_FORAGE; g.t = 20 + r() * 40; g.speed = TURKEY.move[0]; }
+      else { g.x += ex / d * step; g.z += ez / d * step; g.dx = ex / d; g.dz = ez / d; }
+    }
+  }
+  // Flushed: up into the oak 12-70 m off that lies most nearly away from the threat; with none, the flock runs off.
+  tkFlush(g, px, pz) {
+    const r = this.groupRng(g, this.bySpecies[TK]);
+    const ax = g.x - px, az = g.z - pz, al = Math.hypot(ax, az) || 1;
+    let best = null, bs = -Infinity;
+    for (let k = 0; k < 6; k++) {
+      const o = this.ringOak(g.x, g.z, 12, 70, r); if (!o || treeHeight(o) < 6) continue;
+      const dx = o.x - g.x, dz = o.z - g.z, dl = Math.hypot(dx, dz) || 1, sc = (dx * ax + dz * az) / (dl * al) + 0.3 * r();
+      if (sc > bs) { bs = sc; best = o; }
+    }
+    g.cool = 60 + r() * 60;
+    this.emit('turkeyFlush', { group: g, x: g.x, y: this.heights.atXZ(g.x, g.z), z: g.z, tree: best });
+    if (best) { this.tkToTree(g, best, false); return; }
+    g.tx = g.x + ax / al * 40; g.tz = g.z + az / al * 40; g.dx = ax / al; g.dz = az / al; g.state = TF_WALK; g.speed = 2.2;
+  }
+  // The flock up into an oak (a flush; or at dusk the roost, a tall oak within 60 m, else the nearest): each bird to a
+  // perch on top of a limb of the drawn wood 3 m or more up, else (the wood not known: beyond the near set) a place in
+  // the crown, where it is out of sight once it gets there. At dusk with no oak in reach they are simply not drawn.
+  tkToTree(g, oak, roost) {
+    const r = this.groupRng(g, this.bySpecies[TK]); if (!r) return;
+    if (!oak && roost) oak = this.randomOak(g.x, g.z, 60, r, null, 9) || this.nearestOak(g.x, g.z, 150);
+    g.state = roost ? TF_ROOST : TF_TREE; g.t = TURKEY.tree[0] + r() * (TURKEY.tree[1] - TURKEY.tree[0]); g.tree = oak;
+    let k = 0;
+    for (const a of this.bySpecies[TK]) if (a.group === g) {
+      a.down = 0;
+      if (!oak) { a.state = T_PERCH; a.hidden = 1; continue; }
+      const P = this.tkPerch(oak, k++, r);
+      a.tx = P.x; a.ty = P.y; a.tz = P.z; a.perchYaw = P.yaw; a.hidden = P.hidden ? 1 : 0;
+      a.state = T_WAIT; a.wait = roost ? r() * 8 : a.rank * 0.05 + r() * 0.8;
+    }
+  }
+  tkPerch(oak, k, r) {
+    const out = this._tkP ||= { x: 0, y: 0, z: 0, yaw: 0, hidden: false }, rec = this.sqWood(oak);
+    if (rec) {
+      const Q = this.flight.perchQuery(), L = rec.sqLimbs, q = this._tkQ ||= {};
+      for (let n = 0; n < L.length; n++) {
+        const l = L[(k + n) % L.length], b = Q.baseS(l.st), s = b + (l.s - b) * (0.2 + 0.45 * r());
+        Q.at(l.st, s, q); if (q.r < 0.035) continue;
+        const yaw = Math.atan2(q.dx, q.dz) + (r() < 0.5 ? 1 : -1) * Math.PI / 2;   // across the limb
+        Q.top(l.st, s, q);
+        if (q.y - this.heights.atXZ(q.x, q.z) < TURKEY.roostMinH) continue;
+        out.x = q.x; out.y = q.y; out.z = q.z; out.yaw = yaw; out.hidden = false;
+        return out;
+      }
+    }
+    const H = treeHeight(oak), t = trunkAt(oak, forkHeight(oak), this._t), ang = r() * TAU, d = (0.15 + 0.15 * r()) * H;
+    out.x = t.x + Math.sin(ang) * d; out.y = Math.max(t.y + 1, oak.y + H * (0.45 + 0.15 * r())); out.z = t.z + Math.cos(ang) * d;
+    out.yaw = r() * TAU; out.hidden = true;
+    return out;
+  }
+  // Down from the tree (after a flush, or at dawn) to the ground 12-27 m out, staggered.
+  tkDown(g) {
+    const r = this.groupRng(g, this.bySpecies[TK]); if (!r) return;
+    const o = g.tree, dawn = g.state === TF_ROOST, ang = r() * TAU, d = 12 + r() * 15;
+    let x = (o ? o.x : g.x) + Math.cos(ang) * d, z = (o ? o.z : g.z) + Math.sin(ang) * d;
+    if (!this.landOK(x, z)) { x = o ? o.x + 3 : g.x; z = o ? o.z + 3 : g.z; }
+    g.x = x; g.z = z; g.state = TF_FORAGE; g.t = 10 + r() * 20; g.tree = null;
+    for (const a of this.bySpecies[TK]) if (a.group === g) {
+      if (!o) { a.hidden = 0; a.state = T_FORAGE; a.down = 0; continue; }   // a roost with no oak: they were just not drawn
+      a.tx = x + a.ox; a.tz = z + a.oz; a.ty = this.heights.atXZ(a.tx, a.tz);
+      a.state = T_WAIT; a.wait = dawn ? r() * 10 : r() * 4; a.down = 1;
+    }
+  }
+  tkUpdate(a, dt, px, py, pz) {
+    const r = a.rng, g = a.group, H = this.heights;
+    a.t -= dt;
+    if (a.state === T_FORAGE || a.state === T_SCRATCH) {   // the player close to a bird on the ground: the flock flushes
+      const dx = a.x - px, dy = a.y - py, dz = a.z - pz, R = this.tkFlushR();
+      if (dx * dx + dy * dy + dz * dz < R * R) g.near = true;
+    }
+    if (a.state === T_WAIT) {   // a crouch (or a few seconds on the limb at dawn), then off
+      a.wait -= dt; a.amp = damp(a.amp, 0, 8, dt); a.pose = damp(a.pose, 1, 8, dt);
+      if (a.wait <= 0) {
+        a.sx = a.x; a.sy = a.y; a.sz = a.z;
+        const d = Math.hypot(a.tx - a.sx, a.tz - a.sz);
+        a.dur = Math.max(1.4, (d + Math.max(0, a.ty - a.sy) * 1.5) / TURKEY.fly); a.u = 0; a.state = T_FLY; a.air = 1;
+        a.peak = 0.6 + 0.03 * d;
+      }
+      return this.tkVis(a, dt);
+    }
+    if (a.state === T_FLY) {   // a heavy climb on beating wings, a glide on set wings, a few beats to land
+      a.u = Math.min(1, a.u + dt / a.dur);
+      const u = a.u, ox = a.x, oy = a.y, oz = a.z, up = a.ty > a.sy + 1;
+      a.x = a.sx + (a.tx - a.sx) * u; a.z = a.sz + (a.tz - a.sz) * u;
+      const k = up ? Math.sin(u * Math.PI / 2) : u * u * (3 - 2 * u);
+      a.y = Math.max(H.atXZ(a.x, a.z) + 0.05, a.sy + (a.ty - a.sy) * k + a.peak * Math.sin(Math.PI * u));
+      const beat = up ? u < 0.6 || u > 0.9 : u < 0.2 || u > 0.88;
+      a.amp = damp(a.amp, beat ? 1 : 0, 14, dt); a.pose = damp(a.pose, 0, 12, dt);
+      if (beat) a.phase += dt * TAU * TURKEY.beat; else a.phase = damp(a.phase, Math.round(a.phase / TAU) * TAU + 0.6, 6, dt);
+      const vx = a.x - ox, vy = a.y - oy, vz = a.z - oz, vh = Math.hypot(vx, vz);
+      if (vh > 1e-5) a.yaw = Math.atan2(vx, vz);
+      a.pitch = -Math.atan2(vy, vh + 1e-5) * 0.5;
+      if (u >= 1) {
+        a.air = 0; a.pitch = 0;
+        if (a.down) { a.down = 0; a.state = T_FORAGE; a.t = 1 + r() * 3; a.ox = a.x - g.x; a.oz = a.z - g.z; a.hidden = 0; }
+        else { a.state = T_PERCH; a.yaw = a.perchYaw; }
+      }
+      return this.tkVis(a, dt);
+    }
+    if (a.state === T_PERCH) {   // in the tree: still, a look round now and then
+      a.amp = damp(a.amp, 0, 8, dt); a.pose = damp(a.pose, 1, 6, dt);
+      if (r() < dt * 0.15) a.flickV = 0.4;
+      return this.tkVis(a, dt);
+    }
+    // on the ground: a slot round the flock's centre (strung out behind it on a walk); pecks and scratches
+    let tx, tz;
+    if (g.state === TF_WALK) {
+      const back = (a.rank % 5) * 1.6 + Math.floor(a.rank / 5) * 1.1, side = a.oz * 0.4;
+      tx = g.x - g.dx * back - g.dz * side; tz = g.z - g.dz * back + g.dx * side;
+    } else {
+      if (a.t <= 0) {
+        a.t = 2 + r() * 5; a.ox += (r() - 0.5) * 2; a.oz += (r() - 0.5) * 2;
+        const od = Math.hypot(a.ox, a.oz); if (od > TURKEY.spread) { a.ox *= TURKEY.spread / od; a.oz *= TURKEY.spread / od; }
+      }
+      tx = g.x + a.ox; tz = g.z + a.oz;
+    }
+    const ex = tx - a.x, ez = tz - a.z, d = Math.hypot(ex, ez);
+    let speed = 0;
+    if (a.state === T_SCRATCH) {   // two or three kicks back through the litter, then a look at what turned up
+      a.scr -= dt; a.phase += dt * TAU * 2.4; a.amp = damp(a.amp, 0.8, 10, dt);
+      if (a.scr <= 0 || d > 2) { a.state = T_FORAGE; a.flickV = 1; }
+    } else if (d > 0.3) {
+      speed = Math.min(g.state === TF_WALK ? g.speed * 1.4 : TURKEY.walk, d * 0.8);
+      a.x += ex / d * speed * dt; a.z += ez / d * speed * dt;
+      a.yaw += wrapAngle(Math.atan2(ex, ez) - a.yaw) * Math.min(1, dt * 3);
+    } else if (r() < dt * 0.9) a.flickV = 1;   // peck
+    else if (r() < dt * 0.25) { a.state = T_SCRATCH; a.scr = 0.7 + r() * 0.8; }
+    if (a.state !== T_SCRATCH) { a.amp = damp(a.amp, speed > 0.05 ? Math.min(1, 0.45 + speed * 0.6) : 0, 6, dt); a.phase += dt * TAU * speed / TURKEY.stride; }
+    a.pose = damp(a.pose, 1, 6, dt); a.pitch = damp(a.pitch, 0, 6, dt);
+    a.y = H.atXZ(a.x, a.z);
+    this.tkVis(a, dt);
+  }
+  tkVis(a, dt) {   // hidden in the crown (the wood not known): out of sight once it is up there
+    const off = a.hidden && (a.state === T_PERCH || (a.state === T_FLY && a.u > 0.85 && !a.down));
+    a.vis = off ? (a.vis < 0.03 ? 0 : damp(a.vis, 0, 8, dt)) : damp(a.vis, 1, 6, dt);
+  }
+
+  // ---- California ground squirrel -----------------------------------------------------------------
+  // The colony (g) is the unit: its burrow mouths (g.burrows, drawn by placeBurrows), one sentinel at a time sitting bolt
+  // upright at a burrow for 15-60 s (g.watch) while the others feed low within a few metres of their own burrow, sit up
+  // now and then and move on in short runs. A threat (a raven or hawk within GSQ.raptor m, the player of any other
+  // species within GSQ.player m; or night) sends them all running for the nearest burrow, where they vanish; 20-40 s
+  // after it has gone they come up again one by one, sit at the mouth a moment and go back to feeding.
+  colonyUpdate(g, dt, px, py, pz) {
+    const r = this.groupRng(g, this.bySpecies[GS]); if (!r) return;
+    g.t -= dt; g.watch -= dt;
+    const H = this.heights, gy = H.atXZ(g.x, g.z);
+    const R = (this.observer === 'corvus_corax' || this.observer === 'buteo_jamaicensis' ? GSQ.raptor : GSQ.player) + GSQ.spread;
+    let threat = (px - g.x) ** 2 + (py - gy) ** 2 + (pz - g.z) ** 2 < R * R;
+    if (!threat) for (const h of this.bySpecies[HK]) if ((h.x - g.x) ** 2 + (h.y - gy) ** 2 + (h.z - g.z) ** 2 < (GSQ.raptor + GSQ.spread) ** 2) { threat = true; break; }
+    const night = atmo.sunDir.value.y < 0.06;
+    g.threat = threat;
+    if ((threat || night) && g.state === C_OK) {
+      g.state = C_ALARM; g.sentinel = null;
+      for (const a of this.bySpecies[GS]) if (a.group === g && a.state !== G_DOWN) this.gsDive(a, a.state === G_SENTRY ? 0 : 0.15 + r() * 0.5);
+      if (threat) this.emit('gsAlarm', { group: g, x: g.x, y: gy, z: g.z });
+    }
+    if (g.state !== C_OK) {
+      if (threat || night) g.t = GSQ.down[0] + r() * (GSQ.down[1] - GSQ.down[0]);   // down while it lasts, then 20-40 s more
+      else if (g.t <= 0) {
+        g.state = C_OK; g.watch = 4 + r() * 6;
+        for (const a of this.bySpecies[GS]) if (a.group === g) { a.state = G_DOWN; a.t = r() * 8; a.up = 1; }
+      }
+      return;
+    }
+    if (g.watch <= 0 || !g.sentinel || g.sentinel.group !== g || !this.alive(g.sentinel)) {   // a new sentinel
+      const old = g.sentinel; let pick = null, seen = 0;
+      for (const a of this.bySpecies[GS]) if (a.group === g && a !== old && (a.state === G_FEED || a.state === G_SIT)) { seen++; if (r() * seen < 1) pick = a; }
+      if (old && old.state === G_SENTRY) { old.state = G_FEED; old.t = 1 + r() * 3; }
+      g.sentinel = pick; g.watch = GSQ.watch[0] + r() * (GSQ.watch[1] - GSQ.watch[0]);
+      if (pick) {
+        let b = pick.hb, bd = Infinity;
+        for (const c of g.burrows) { const d = Math.hypot(c.x - pick.x, c.z - pick.z); if (d < bd) { bd = d; b = c; } }
+        const ang = r() * TAU; pick.tx = b.x + Math.cos(ang) * 0.2; pick.tz = b.z + Math.sin(ang) * 0.2;
+        pick.speed = 1.2; pick.state = G_HOP; pick.next = G_SENTRY;
+      }
+    }
+  }
+  gsDive(a, wait) {
+    const g = a.group; let b = a.hb, bd = Infinity;
+    for (const c of g.burrows) { const d = Math.hypot(c.x - a.x, c.z - a.z); if (d < bd) { bd = d; b = c; } }
+    a.tx = b.x; a.tz = b.z; a.state = G_DIVE; a.wait = wait; a.up = 0;
+  }
+  gsUpdate(a, dt) {
+    const r = a.rng, g = a.group, H = this.heights;
+    a.t -= dt;
+    let speed = 0, pose = 0;
+    switch (a.state) {
+      case G_FEED:   // low in the grass, head down picking seeds; now and then a few steps on, or a sit-up to look
+        if (r() < dt * 1.2) a.flickV = 1;
+        if (a.t <= 0) {
+          if (r() < 0.2) { a.state = G_SIT; a.t = 1 + r() * 3; }
+          else {
+            const b = a.hb, ang = r() * TAU, d = r() * 6;
+            a.tx = b.x + Math.cos(ang) * d; a.tz = b.z + Math.sin(ang) * d; a.speed = GSQ.feed[0] + r() * (GSQ.feed[1] - GSQ.feed[0]);
+            a.state = G_HOP; a.next = G_FEED;
+          }
+        }
+        break;
+      case G_HOP: case G_DIVE: {
+        if (a.state === G_DIVE && a.wait > 0) { a.wait -= dt; pose = 0.4; break; }   // a startled look first
+        const ex = a.tx - a.x, ez = a.tz - a.z, d = Math.hypot(ex, ez);
+        speed = a.state === G_DIVE ? GSQ.run : a.speed;
+        if (d <= speed * dt + 0.02) {
+          a.x = a.tx; a.z = a.tz; speed = 0;
+          if (a.state === G_DIVE) a.state = G_DOWN;
+          else { a.state = a.next; a.t = 2 + r() * 4; }
+        } else { a.x += ex / d * speed * dt; a.z += ez / d * speed * dt; a.yaw += wrapAngle(Math.atan2(ex, ez) - a.yaw) * Math.min(1, dt * 12); }
+        break;
+      }
+      case G_SIT: pose = 0.75; if (a.t <= 0) { a.state = G_FEED; a.t = 2 + r() * 4; } break;
+      case G_SENTRY: pose = 1; if (r() < dt * 0.35) a.yaw += (r() - 0.5) * 1.4; break;   // bolt upright, turning to look
+      case G_DOWN:
+        if (a.up && a.t <= 0) { a.up = 0; a.state = G_PEEK; a.t = 2 + r() * 3; a.x = a.hb.x; a.z = a.hb.z; a.yaw = r() * TAU; }
+        break;
+      case G_PEEK: pose = 0.6; if (a.t <= 0) { a.state = G_FEED; a.t = 1 + r() * 3; } break;
+    }
+    a.vis = a.state === G_DOWN ? (a.vis < 0.03 ? 0 : damp(a.vis, 0, 18, dt)) : damp(a.vis, 1, a.state === G_PEEK ? 3 : 6, dt);
+    a.amp = damp(a.amp, speed > 0.05 ? 1 : 0, 12, dt);
+    a.phase += dt * TAU * speed / (speed > 2 ? 0.32 : 0.16);
+    a.pose = damp(a.pose, pose, 5, dt);
+    a.y = H.atXZ(a.x, a.z) - this.drops[GS] * Math.max(0, a.pose) * a.size;
+  }
+  // The burrow mouths of the live colonies (a dark hole in a ring of bare dirt, tilted to the slope).
+  placeBurrows() {
+    const B = this.burrows, H = this.heights, M = this._m, q = this._q, p = this._p, s = this._s.setScalar(1);
+    const up = this._up ||= new THREE.Vector3(0, 1, 0), n = this._bn ||= new THREE.Vector3(), cap = B.instanceMatrix.count;
+    let k = 0;
+    for (const g of this.colonies) for (const b of g.burrows) {
+      if (k >= cap) break;
+      n.set(H.atXZ(b.x - 0.3, b.z) - H.atXZ(b.x + 0.3, b.z), 0.6, H.atXZ(b.x, b.z - 0.3) - H.atXZ(b.x, b.z + 0.3)).normalize();
+      this._e.set(0, b.yaw, 0, 'YXZ'); q.setFromUnitVectors(up, n).multiply((this._q2 ||= new THREE.Quaternion()).setFromEuler(this._e));
+      p.set(b.x, H.atXZ(b.x, b.z) + 0.006, b.z); M.compose(p, q, s); M.toArray(B.instanceMatrix.array, k * 16); k++;
+    }
+    B.count = k; B.instanceMatrix.needsUpdate = true; this.burrowN = k;
+  }
+
+  // ---- western fence lizard -----------------------------------------------------------------------
+  // Each lizard has a site (spawnCell: a rock of the cell's plan, an oak or pine trunk, or the open ground beside one)
+  // and is placed on it (lzResolve) the first time it comes within the cull distance of the eye: on a rock, the highest
+  // of a few downward rays on the rock's drawn close tier (its own instance matrix and geometry, read only), the
+  // surface's normal for its up; on a trunk, the bark perch.js gives at 0.2-1.5 m (the drawn wood), belly to it, head
+  // up the stem (or down it, one in three); on the ground, the terrain's normal. Active (lzOn) March to October while
+  // the sun is up and the air is 15-34 C; else not drawn. Basks flat (longer in cool air), sits alert with head flicks,
+  // turns, moves a little on a trunk or the ground; males push up every 10-30 s (3-8 bobs at 2 Hz). A player within
+  // 2 m: a dash of a few tenths of a second (away over the rock, up the trunk, or to its rock or tree) and it is gone
+  // into a crack for 30 s, back at its spot once the player is 3.5 m off.
+  lzMonth() { return this.month >= 3 && this.month < 11; }
+  lzSites(x, z, cx, cn, rnd) {
+    const sites = [], R = typeof window !== 'undefined' ? window.__we?.rocks : null;
+    if (R?.enabled && R.on) {
+      const res = R.res, i = Math.floor(cx / res), j = Math.floor((this.tile.size - cn) / res);
+      if (i >= 0 && j >= 0 && i < R.W && j < R.W) {
+        const id = j * R.W + i, p = R.plans.has(id) ? R.plans.get(id) : R.plan(i, j);   // the rocks' own cached plan
+        if (p) {
+          const cand = [];
+          for (const it of p.out) cand.push({ it, role: 'close' });
+          for (const it of p.bould) if (it.s >= 0.45) cand.push({ it, role: 'bclose' });
+          cand.sort((a, b) => b.it.s - a.it.s);
+          const n = Math.min(cand.length, 1 + Math.floor(rnd() * 3));
+          for (let k = 0; k < n; k++) sites.push({ kind: 'rock', role: cand[k].role, item: cand[k].it, x: cand[k].it.x, z: cand[k].it.z });
+        }
+      }
+    }
+    const o = this.nearestOak(x, z, 18);
+    if (o && o.cls !== 'sapling' && rnd() < 0.7) sites.push({ kind: 'trunk', tree: o, x: o.x, z: o.z });
+    const pine = this.conifers.length ? this.nearestConifer(x, z, 18) : null;
+    if (pine && rnd() < 0.6) sites.push({ kind: 'trunk', tree: pine, x: pine.x, z: pine.z });
+    if (sites.length && rnd() < 0.5) {   // the sunny open ground beside one of them
+      const b = sites[Math.floor(rnd() * sites.length)], ang = rnd() * TAU, d = 1 + rnd() * 2;
+      sites.push({ kind: 'ground', x: b.x + Math.cos(ang) * d, z: b.z + Math.sin(ang) * d, near: b });
+    }
+    if (!sites.length && this._near) sites.push({ kind: 'ground', x, z });   // summoned
+    return sites;
+  }
+  lzResolve(a) {
+    const S = a.site, r = a.rng, H = this.heights;
+    const h = a.home ||= { x: 0, y: 0, z: 0, nx: 0, ny: 1, nz: 0, fx: 0, fy: 0, fz: 1 };
+    let fx = Math.sin(r() * TAU), fy = 0, fz = 0; fz = Math.sqrt(1 - fx * fx) * (r() < 0.5 ? -1 : 1);
+    if (S.kind === 'rock') {
+      const R = window.__we?.rocks, m = R?.meshes.get(`${S.role}|${S.item.key}`);
+      const items = m?.visible ? m.userData.items : null, q = items ? items.indexOf(S.item) : -1;
+      if (q < 0 || q >= m.count) { a.home = null; return false; }
+      const M = this._lzM ||= new THREE.Matrix4(), tmp = this._lzMesh ||= new THREE.Mesh(), ray = this._lzRay ||= new THREE.Raycaster(), hits = this._lzHits ||= [];
+      const nm = this._lzN ||= new THREE.Matrix3(), n = this._lzV ||= new THREE.Vector3();
+      M.fromArray(m.instanceMatrix.array, q * 16); tmp.geometry = m.geometry; tmp.material = m.material; tmp.matrixWorld.copy(M); nm.getNormalMatrix(M);
+      const s = S.item.s; let best = null;
+      for (let k = 0; k < 6; k++) {
+        const ang = r() * TAU, d = Math.sqrt(r()) * 0.35 * s, x = S.item.x + Math.cos(ang) * d, z = S.item.z + Math.sin(ang) * d;
+        ray.ray.origin.set(x, M.elements[13] + 3 * s + 2, z); ray.ray.direction.set(0, -1, 0); ray.near = 0; ray.far = 3 * s + 6;
+        hits.length = 0; tmp.raycast(ray, hits);
+        if (!hits.length) continue;
+        n.copy(hits[0].face.normal).applyMatrix3(nm).normalize();
+        if (n.y < 0.45) continue;
+        if (!best || hits[0].point.y > best.y) best = { x: hits[0].point.x, y: hits[0].point.y, z: hits[0].point.z, nx: n.x, ny: n.y, nz: n.z };
+      }
+      tmp.geometry = null;
+      if (!best) { a.home = null; return false; }
+      Object.assign(h, best);
+    } else if (S.kind === 'trunk') {
+      const Q = this.flight.perchQuery?.(), rec = Q?.recAt(S.tree.x, S.tree.z);
+      if (!rec) { a.home = null; return false; }
+      const g = H.atXZ(S.tree.x, S.tree.z), ang = r() * TAU, y = g + 0.2 + r() * 1.3;
+      const hit = Q.nearOn(rec, S.tree.x + Math.sin(ang) * 1.2, y, S.tree.z + Math.cos(ang) * 1.2, 1.5, 0.05);
+      if (!hit || hit.ay - g > 1.8 || hit.ay - g < 0.1) { a.home = null; return false; }
+      const off = hit.r + 0.002;
+      h.x = hit.ax + hit.nx * off; h.y = hit.ay + hit.ny * off; h.z = hit.az + hit.nz * off; h.nx = hit.nx; h.ny = hit.ny; h.nz = hit.nz;
+      const sg = (hit.dy < 0 ? -1 : 1) * (r() < 0.33 ? -1 : 1);   // head up the stem, one in three down it
+      fx = hit.dx * sg; fy = hit.dy * sg; fz = hit.dz * sg;
+    } else {
+      h.x = S.x; h.z = S.z; this.groundNormal(h.x, h.z, h); h.y = H.atXZ(h.x, h.z);
+    }
+    const d = fx * h.nx + fy * h.ny + fz * h.nz; fx -= h.nx * d; fy -= h.ny * d; fz -= h.nz * d;
+    const L = Math.hypot(fx, fy, fz) || 1; h.fx = fx / L; h.fy = fy / L; h.fz = fz / L;
+    this.lzHome(a);
+    return true;
+  }
+  groundNormal(x, z, out) {
+    const H = this.heights, nx = H.atXZ(x - 0.25, z) - H.atXZ(x + 0.25, z), nz = H.atXZ(x, z - 0.25) - H.atXZ(x, z + 0.25), L = Math.hypot(nx, 0.5, nz);
+    out.nx = nx / L; out.ny = 0.5 / L; out.nz = nz / L; return out;
+  }
+  lzHome(a) {
+    const h = a.home; a.x = h.x; a.y = h.y; a.z = h.z;
+    a.N ||= new THREE.Vector3(); a.F ||= new THREE.Vector3(); a.N.set(h.nx, h.ny, h.nz); a.F.set(h.fx, h.fy, h.fz);
+    this.lzOrient(a);
+  }
+  // pitch, yaw and roll (YXZ) of the body: up the surface normal N, forward F (in the surface)
+  lzOrient(a) {
+    const N = a.N, F = a.F; F.addScaledVector(N, -F.dot(N)).normalize();
+    this._sqM.makeBasis(this._sqX.crossVectors(N, F), N, F); this._sqE.setFromRotationMatrix(this._sqM, 'YXZ');
+    a.pitch = this._sqE.x; a.yaw = this._sqE.y; a.roll = this._sqE.z;
+  }
+  lzNext(a) {
+    const r = a.rng, q = r(), cool = this.airT < 24;
+    if (q < (cool ? 0.45 : 0.2)) { a.state = L_BASK; a.t = 5 + r() * (cool ? 20 : 8); }
+    else if (q < 0.7) { a.state = L_ALERT; a.t = 2 + r() * 6; }
+    else if (q < 0.85 || a.site.kind === 'rock') { a.state = L_TURN; a.u = 0; a.dur = 0.3 + r() * 0.3; a.turn = (r() < 0.5 ? -1 : 1) * (0.5 + r() * 1.5); }
+    else { a.state = L_MOVE; a.u = 0; a.dur = 0.2 + r() * 0.4; a.mdir = r() < 0.5 ? 1 : -1; }
+  }
+  lzSprint(a, px, py, pz) {
+    const r = a.rng, S = a.site, N = a.N, F = this._lzF ||= new THREE.Vector3();
+    if (S.kind === 'trunk') F.copy(a.F).multiplyScalar(a.F.y < 0 ? -1 : 1);   // up the trunk and round it
+    else if (S.kind === 'ground' && S.near) F.set(S.near.x - a.x, 0, S.near.z - a.z);   // to its rock or tree
+    else F.set(a.x - px, 0, a.z - pz);   // away over the rock
+    F.addScaledVector(N, -F.dot(N)); if (F.lengthSq() < 1e-6) F.copy(a.F);
+    a.F.copy(F.normalize()); this.lzOrient(a);
+    a.state = L_SPRINT; a.u = 0; a.dur = 0.25 + r() * 0.3; a.flick = 0; a.fl = 0;
+  }
+  lzUpdate(a, dt, px, py, pz) {
+    const r = a.rng, H = this.heights;
+    a.t -= dt;
+    if (!this.lzOn) { a.vis = a.vis < 0.03 ? 0 : damp(a.vis, 0, 10, dt); a.amp = 0; return; }   // cold, dark or out of season
+    if (!a.home) {   // placed the first time it is near the eye (a budget per frame; retried while the rock or wood is not drawn)
+      if (a.tries > 0) { a.tries -= dt; return; }
+      if (this.lzBudget <= 0) return;
+      this.lzBudget--;
+      if (!this.lzResolve(a)) {
+        a.fails = (a.fails || 0) + 1; a.tries = 0.5;
+        if (a.fails > 6 && a.site.kind !== 'ground') a.site = { kind: 'ground', x: a.site.x + 1.5, z: a.site.z + 0.5, near: a.site };
+        return;
+      }
+      a.state = this.airT < 24 ? L_BASK : L_ALERT; a.t = r() * 8; a.vis = 0.001;
+    }
+    const dx = a.x - px, dy = a.y - py, dz = a.z - pz, near = Math.sqrt(dx * dx + dy * dy + dz * dz);
+    if (near < LIZ.flee && a.state !== L_SPRINT && a.state !== L_HIDE) this.lzSprint(a, px, py, pz);
+    let speed = 0, pose = 0, bend = 0;
+    switch (a.state) {
+      case L_HIDE:
+        if (a.t <= 0 && near > LIZ.flee + 1.5) { this.lzHome(a); a.state = L_ALERT; a.t = 3 + r() * 5; }
+        break;
+      case L_BASK: pose = this.airT < 27 ? -0.95 : -0.6; if (r() < dt * 0.15) a.fl = (r() - 0.5) * 1.2; if (a.t <= 0) this.lzNext(a); break;
+      case L_ALERT: if (r() < dt * 0.9) a.fl = (r() - 0.5) * 2; if (a.t <= 0) this.lzNext(a); break;
+      case L_PUSH: {   // a bout of push-ups, the head bobbing with them
+        a.u += dt; const k = a.u * LIZ.bobHz; pose = 0.5 - 0.5 * Math.cos(TAU * k); a.fl = 0;
+        if (k >= a.bobs) { a.state = L_ALERT; a.t = 2 + r() * 4; }
+        break;
+      }
+      case L_TURN: {   // a quick turn on the spot, the body curved into it
+        a.u += dt; const w = a.turn / a.dur;
+        a.F.applyAxisAngle(a.N, w * dt); this.lzOrient(a); bend = Math.sign(a.turn) * 0.8; speed = 0.4;
+        if (a.u >= a.dur) { a.state = L_ALERT; a.t = 1 + r() * 4; }
+        break;
+      }
+      case L_MOVE: {   // a few steps on the trunk (along it) or the ground, staying near its spot
+        a.u += dt; speed = 0.6;
+        const h = a.home, nx = a.x + a.F.x * a.mdir * speed * dt, nz = a.z + a.F.z * a.mdir * speed * dt, ny = a.y + a.F.y * a.mdir * speed * dt;
+        if (Math.hypot(nx - h.x, ny - h.y, nz - h.z) < (a.site.kind === 'trunk' ? 0.4 : 1.2)) {
+          a.x = nx; a.z = nz;
+          if (a.site.kind === 'trunk') a.y = ny; else { a.y = H.atXZ(a.x, a.z); this.groundNormal(a.x, a.z, this._gn ||= {}); a.N.set(this._gn.nx, this._gn.ny, this._gn.nz); this.lzOrient(a); }
+        } else a.u = a.dur;
+        if (a.u >= a.dur) { a.state = L_ALERT; a.t = 1 + r() * 3; }
+        break;
+      }
+      case L_SPRINT: {   // the dash: legs a blur, the body and tail whipping, then into the crack
+        a.u += dt; speed = LIZ.dash;
+        a.x += a.F.x * speed * dt; a.y += a.F.y * speed * dt; a.z += a.F.z * speed * dt;
+        if (a.site.kind === 'ground') a.y = H.atXZ(a.x, a.z);
+        if (a.u >= a.dur) { a.state = L_HIDE; a.t = LIZ.hide; }
+        break;
+      }
+    }
+    if (a.male && (a.state === L_ALERT || a.state === L_BASK)) {   // males: a push-up bout every 10-30 s
+      a.next -= dt;
+      if (a.next <= 0) { a.state = L_PUSH; a.u = 0; a.bobs = LIZ.bobs[0] + Math.floor(r() * (LIZ.bobs[1] - LIZ.bobs[0] + 1)); a.next = LIZ.push[0] + r() * (LIZ.push[1] - LIZ.push[0]); }
+    }
+    a.fl = (a.fl || 0) * Math.exp(-1.5 * dt);
+    a.flick = damp(a.flick, a.fl, 12, dt);
+    a.bend = damp(a.bend || 0, bend, 10, dt);
+    a.vis = a.state === L_HIDE ? (a.vis < 0.05 ? 0 : damp(a.vis, 0, 25, dt)) : damp(a.vis, 1, 4, dt);
+    a.amp = damp(a.amp, speed > 0.05 ? Math.min(1, speed / LIZ.dash + 0.3) : 0, 20, dt);
+    a.phase += dt * TAU * Math.min(12, speed / LIZ.stride);
+    a.pose = a.state === L_PUSH ? pose : damp(a.pose, pose, 4, dt);
+  }
+  // What an animal is doing, in a few words (identify.js species cards).
+  activity(a) {
+    const s = a.state;
+    if (a.sp === TK) {
+      if (s === T_FLY) return a.down ? 'flying down from the tree' : 'flying up into a tree';
+      if (s === T_PERCH || s === T_WAIT && !a.down && a.group.state !== TF_FORAGE) return a.group.state === TF_ROOST ? 'roosting for the night' : 'up in a tree, watching';
+      if (s === T_SCRATCH) return 'scratching the leaves for food';
+      return a.group.state === TF_WALK ? 'walking with its flock' : 'pecking for seeds and insects with its flock';
+    }
+    if (a.sp === GS) return s === G_SENTRY ? 'on guard at the burrow' : s === G_DIVE ? 'running for its burrow' : s === G_SIT || s === G_PEEK ? 'sitting up, looking round' : 'feeding near its burrow';
+    if (a.sp === LZ) return s === L_BASK ? 'basking in the sun' : s === L_PUSH ? 'doing push-ups (a male showing off)' : s === L_SPRINT ? 'dashing for cover' : 'watching';
+    return '';
+  }
+  codeOf(a) { return SPECIES[a.sp].code; }
+  // Drawn and in view now (identify.js picks only these).
+  shown(a) { return this.meshes[a.sp].visible && !a.culled && a.vis > 0.3 && this.present(a); }
+  // Is this one present (the HUD and the cards): not down a burrow, not hidden in a crack or a crown, not too cold.
+  present(a) {
+    if (a.sp === LZ) return this.lzOn && a.state !== L_HIDE;
+    if (a.sp === GS) return a.state !== G_DOWN;
+    if (a.sp === TK) return a.vis > 0.3;
+    return true;
+  }
+
   // debugging: a group of a species (code, SPECIES index, or its one/DRAWN name: 'gray fox', 'fox', 'buck', 'lion')
   // d m ahead of the camera, kept through rebuilds until clearSummoned(). Returns the new animals.
   summon(which, d = 12) {
@@ -2709,13 +3316,14 @@ export class Animals {
   // ---- frame --------------------------------------------------------------------------------------
   update(dt, season, hour) {
     const t0 = performance.now();
+    dt = Math.max(0, dt);   // the page's first frame can arrive with a timestamp before the loop's start
     this.time += dt; this.hour = hour; this.searches = SEARCHES;
     if (season !== this.season) { this.season = season; this.dirty = true; }
     const want = typeof window !== 'undefined' && window.__we?.playerSpecies;   // a species switch elsewhere, when one exists
     if (want && want !== this.observer) this.setObserver(want);
     const P = this.flight.pos;
     if (this.veg.version !== this.vegVersion && this.veg.oaks.length) { this.indexOaks(); this.dirty = true; }
-    if (this.veg.nearVersion !== this.nearVersion && this.perceived.has('cyanocitta_stelleri')) this.indexConifers();
+    if (this.veg.nearVersion !== this.nearVersion && (this.perceived.has('cyanocitta_stelleri') || this.perceived.has('sceloporus_occidentalis'))) this.indexConifers();
     if (!this.priorReady && performance.now() < this.priorDeadline) return;   // wait (briefly) for the occurrence prior
     // The fine square of the 1 m ground moved (terrain.js): an animal standing or bedded on the ground keeps its
     // height between moves in several states (a quail crouched to flush, a raven on the ground, ...), so one placed
@@ -2727,19 +3335,27 @@ export class Animals {
       if (F0 !== undefined) for (const a of this.list) {
         if (a.air) continue;
         const n = -a.z, g0 = hf.groundIn(F0, a.x, n);
-        if (Math.abs(a.y - g0) < 1) a.y += hf.groundIn(F1, a.x, n) - g0;
+        if (Math.abs(a.y - g0) < 1) { const dg = hf.groundIn(F1, a.x, n) - g0; a.y += dg; if (a.home) a.home.y += dg; }
       }
+      this.placeBurrows();
     }
+    this.month = this.antlerMonth ?? (this.fixedDate && seasonOfDate(this.fixedDate) === season ? monthOf(this.fixedDate)
+      : season === seasonOfDate() ? monthOf(new Date()) : SEASON_MONTH[season] ?? 10.5);
+    if (this.lzMonth() !== this.lzMonthWas) { this.lzMonthWas = this.lzMonth(); this.dirty = true; }
+    this.airT = airTemp(this.month, hour);
+    this.lzOn = this.lzMonth() && atmo.sunDir.value.y > 0.1 && this.airT >= LIZ.warm && this.airT <= LIZ.hot; this.lzBudget = LIZ.resolves;
     let fresh = false;   // slots were reassigned: every animal writes its matrix this frame
     if (this.dirty || !this.lastCenter || Math.hypot(P.x - this.lastCenter[0], P.z - this.lastCenter[1]) > REBUILD_MOVE) { this.rebuild(P.x, P.z); fresh = true; }
     const odd = (++this.frame) & 1;
     const px = P.x, py = P.y, pz = P.z;
     const list = this.list, e = this._e, q = this._q, p = this._p, s = this._s, m = this._m;
     if (this.meshes[QU].visible) for (let k = 0; k < this.coveys.length; k++) this.coveyUpdate(this.coveys[k], dt, px, py, pz);
+    if (this.meshes[TK].visible) for (let k = 0; k < this.flocks.length; k++) this.flockUpdate(this.flocks[k], dt, px, pz);
+    if (this.meshes[GS].visible) for (let k = 0; k < this.colonies.length; k++) this.colonyUpdate(this.colonies[k], dt, px, py, pz);
+    this.burrows.visible = this.meshes[GS].visible && this.burrowN > 0;
     const C = this.camPos, cx = C.x, cy = C.y, cz = C.z;
     const dt0 = dt;
     const camAGL = cy - this.heights.atXZ(cx, cz), cull = this.cullOn || [];
-    this.month = this.antlerMonth ?? (season === seasonOfDate() ? (() => { const d = new Date(); return d.getMonth() + 1 + (d.getDate() - 1) / 31; })() : SEASON_MONTH[season] ?? 10.5);
     for (let k = 0; k < list.length; k++) {
       const a = list[k], sp = a.sp;
       const ex = a.x - cx, ey = a.y - cy, ez = a.z - cz, d2 = ex * ex + ey * ey + ez * ez;
@@ -2754,7 +3370,7 @@ export class Animals {
       }
       if (!fresh && !a.air && d2 > LOD_R2 && ((k & 1) === odd)) continue;   // far and on the ground: every other frame
       const dt = a.acc; a.acc = 0;
-      a.flick = sp === WP || sp === WF ? a.flick : damp(a.flick, 0, 1, dt);
+      a.flick = sp === WP || sp === WF || sp === LZ ? a.flick : damp(a.flick, 0, 1, dt);
       if (sp === SQ) this.sqUpdate(a, dt, px, py, pz);
       else if (sp === WP || sp === WF) this.wpUpdate(a, dt, px, py, pz);
       else if (sp === RV) {
@@ -2767,11 +3383,14 @@ export class Animals {
       else if (sp === RB) this.rbUpdate(a, dt, px, py, pz);
       else if (sp === JR) this.jkUpdate(a, dt, px, py, pz);
       else if (sp === VO) this.voUpdate(a, dt, px, py, pz);
+      else if (sp === TK) this.tkUpdate(a, dt, px, py, pz);
+      else if (sp === GS) this.gsUpdate(a, dt);
+      else if (sp === LZ) this.lzUpdate(a, dt, px, py, pz);
       else if (sp === QU) this.quUpdate(a, dt);
       else if (sp === SJ || sp === ST) this.sjUpdate(a, dt, px, py, pz);
       else if (sp === HK) this.hkUpdate(a, dt);
       else this.tvUpdate(a, dt);
-      if (a.flickV > 0 && a.sp !== WP && a.sp !== WF) { a.flick = Math.max(a.flick, Math.sin(Math.min(1, 1 - a.flickV) * Math.PI)); a.flickV -= dt * 3; }
+      if (a.flickV > 0 && a.sp !== WP && a.sp !== WF && a.sp !== LZ) { a.flick = Math.max(a.flick, Math.sin(Math.min(1, 1 - a.flickV) * Math.PI)); a.flickV -= dt * 3; }
       if (a.phase > 1e4) a.phase -= TAU * 1000;
       const mesh = this.meshes[a.sp], o = a.slot;
       // birds in flight grow with distance from the eye so they stay a few pixels wide
@@ -2785,7 +3404,7 @@ export class Animals {
       const an = mesh.geometry.attributes.aAnim.array;
       an[o * 4] = a.phase % TAU; an[o * 4 + 1] = a.amp; an[o * 4 + 2] = a.pose; an[o * 4 + 3] = a.flick;
       const a2 = this.anim2[sp];
-      if (a2) { this.extra(a, dt); a2[o * 4] = a.e0; a2[o * 4 + 1] = a.e1; a2[o * 4 + 2] = a.e2; a2[o * 4 + 3] = sp === QU ? a.variant : a.e3; }
+      if (a2) { this.extra(a, dt); a2[o * 4] = a.e0; a2[o * 4 + 1] = a.e1; a2[o * 4 + 2] = a.e2; a2[o * 4 + 3] = sp === QU || sp === TK ? a.variant : a.e3; }
     }
     // acorn game v4: the families' defence of their granaries
     if (this.game?.active) this.defend(); else if (this.threats.size) this.threats.clear();
@@ -2844,6 +3463,16 @@ export class Animals {
       a.e1 = damp(a.e1, a.look, 7, dt);
       a.e2 = damp(a.e2, a.hopping, 14, dt); a.e3 = 0;
     } else if (a.sp === BK) this.antlers(a);
+    else if (a.sp === TK) {
+      const fly = a.state === T_FLY;
+      a.e0 = damp(a.e0, fly && a.amp < 0.5 ? 1 : 0, 5, dt);                          // wings set and bowed in the glide
+      a.e1 = damp(a.e1, fly ? (a.u > 0.85 ? 1 : 0.3) : 0, 6, dt);                    // tail fanned to land
+    } else if (a.sp === GS) { a.e0 = 0; a.e1 = damp(a.e1, a.flick, 5, dt); }       // the tail tip lags the flick
+    else if (a.sp === LZ) {   // C-bend, tail-tip whip, blue flash, male
+      a.e0 = a.bend || 0;
+      a.e1 = damp(a.e1, a.state === L_SPRINT ? Math.sin(a.phase * 0.5) : a.state === L_PUSH ? 0.3 * Math.sin(a.u * 9) : 0, 10, dt);
+      a.e2 = 0; a.e3 = a.male;
+    }
     // fox, coyote, lion: e3 (gait selector) and the lion's e1 (tail-tip twitch) are set in mmUpdate
   }
   // A buck's antlers for the date (this.month): aAnim2 = (growth, velvet, young forked-horn). Each buck casts on
@@ -2859,7 +3488,15 @@ export class Animals {
     if (now - this.lastDescribe < 250) return this.text;
     this.lastDescribe = now;
     const P = this.flight.pos, c = this.counts; c.fill(0);
-    for (const a of this.list) { const dx = a.x - P.x, dy = a.y - P.y, dz = a.z - P.z; if (dx * dx + dy * dy + dz * dz < NEAR_R * NEAR_R) c[a.sp]++; }
+    for (const a of this.list) {
+      const dx = a.x - P.x, dy = a.y - P.y, dz = a.z - P.z, d2 = dx * dx + dy * dy + dz * dz;
+      if (d2 < NEAR_R * NEAR_R && this.present(a)) c[a.sp]++;
+      // the field guide's card for a turkey, ground squirrel or fence lizard the first time one is close and in view
+      const fg = FG_SEEN[a.sp];
+      if (fg && d2 < fg * fg && !this.fgSeen.has(a.sp) && a.vis > 0.5 && this.present(a) && this.meshes[a.sp].visible) {
+        this.fgSeen.add(a.sp); fieldGuide.animalSeen(SPECIES[a.sp].code);
+      }
+    }
     c[DR] += c[BK]; c[BK] = 0;   // bucks count as deer
     c[WP] += c[WF]; c[WF] = 0;   // and female woodpeckers as woodpeckers
     const parts = [];
@@ -2874,6 +3511,7 @@ export class Animals {
     if (!this.tagsOn) return;
     const cam = this.camera.position, cand = [];
     for (const a of this.list) {
+      if (a.vis < 0.3 || a.culled || !this.present(a)) continue;   // down a burrow, in a crack, out of sight
       const dx = a.x - cam.x, dy = a.y - cam.y, dz = a.z - cam.z, d2 = dx * dx + dy * dy + dz * dz;
       if (d2 < TAG_R * TAG_R) cand.push([d2, a]);
     }
