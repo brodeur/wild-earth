@@ -18,16 +18,16 @@ import { FOLD_T, XFADE_T } from './flight.js';
 //    added. It is 4.2 m across in Blender units, so it is scaled here, and its body sits about a
 //    metre above the file's origin.
 // window.__we.raven.setModel('cc0' | 'meshy') swaps them live (side-by-side checks).
-// On the ground (flight.js `landed`: hover, then Z down to the ground) the flying model gives way to the ground raven
+// On the ground or a branch (flight.js `landed`: flown into slowly, or hover and Z down) the flying model gives way to the ground raven
 // (client/assets/raven_ground.glb, the ambient ravens' standing model, lod0 with its texture; animalModels.js
 // loadRavenGroundMesh), placed at the touchdown point with the same heading and its body where the flying model's was
 // (the flying model's origin is its body, the ground model's its feet: RAVEN_GROUND.bodyY between them). Its folded
 // wings settle on touchdown; its head follows the look (yaw up to ~65 degrees either side, pitch with the look) and
 // the body follows in hops (legs together) when the look turns past that; C (the call) flicks the wings. Taking
 // off swaps back. ?ravenground=proc keeps the flying model on the ground (A/B), its wings folded.
-// Walking, hopping and turning are flight.js's (flight.gnd: body heading, gait phase and amplitude, hops, the take-off's
-// wing lift); this draws them: legs alternate walking and swing together in a hop, the head bobs with the gait, follows
-// the look and dips for a peck (E), the folded wings half lift in a forward hop.
+// Hopping and turning are flight.js's (flight.gnd: body heading, gait phase and amplitude, hops, the take-off's wing
+// lift); this draws them: the legs swing together in a hop and alternate in a step round, the head follows the look and
+// dips for a peck (E), the folded wings half lift in a forward hop.
 // The swaps are hidden: at touchdown the flying model's wings fold over FOLD_T (the arm swept back and lowered, the
 // hand swept in, the wing scaled down from the shoulder toward the folded wing's length and chord), then the ground
 // model dissolves in over it (both drawn with alpha hash: the incoming one comes in fully over the first half of XFADE_T,

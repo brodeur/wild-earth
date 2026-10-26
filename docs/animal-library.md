@@ -291,25 +291,53 @@ stands on the ground model, head following the look and the body catching up in 
 `?ravenground=proc` for A/B. Still a shape change at the swap itself (spread or folded procedural wings against the
 mesh's folded ones), softened by the wings settling after touchdown and lifting before take-off.
 
-## The player raven on foot, and the swaps hidden (2026-10-25)
+## The player raven on foot: landing by contact, hopping, the swaps hidden (2026-10-25)
 
-`flight.js` `updateGround` (state in `flight.gnd`; `raven.js` draws it): **W / S** walk at 1 / 0.5 m/s with the
-alternating-leg gait and the head bob; **A / D** turn on the spot (the body steps round, then hops when the turn
-runs ahead of it) or curve a walk; the arrows and a drag look (the head follows, the body hops round past ~57 degrees);
-**Space** hops 1 m forward with both feet (the folded wings half lift); a second **Space** during the hop, or Space
-held 0.3 s, takes off forward and up to the 2 m floor; **X** takes off straight up into a hover; **E** pecks and picks
-up an acorn within 0.8 m of the bill (`acorns.js` `acornNear` / `playerPick`, as the squirrel's E; in practice the
-raven's 6 m proximity pickup gets there first). Footing is the squirrel controller's (drawn terrain, close rock
-tops, creek beds, pond levels): slopes up to 1.5 rise over run are walked, steeper rock faces are walls, a hop clears
-up to 0.45 m with its arc raised over what it crosses, water deeper than 4 cm and pond water more than 0.5 m from dry
-ground are refused (the lidar flattens pond beds to centimetres under the level). The chase camera comes down to
-0.8 m up and 2.5 m back, about 23 degrees off the tail. Swaps: on touchdown the flying model's wings fold over 0.25 s
-(bones swept back, lowered and scaled toward the folded wing's length, the body tilted 0.3 rad nose up with the head
-kept level), then a 0.12 s alpha-hash dissolve to the ground model (incoming fully in over the first half, outgoing
-out over the second); on take-off the ground model's wings lift and open over 0.2 s, then the flying model dissolves
-in from half folded at the top of a wingbeat and unfolds over 0.3 s. Checked frame by frame from behind and the side:
-no single-frame shape change. Known: the dissolve's dither shows for 6-7 frames; the lifted folded wings read as a
-dark cape from behind; no trunk or shrub collision on foot, and the low camera can sink into a shrub's foliage.
+**Landing is by contact** (`flight.js` `contacts`, swept every 0.15 m of each frame's move so a long frame or a dive
+cannot pass through): the body within 0.35 m of the ground (drawn terrain or a close rock top, the squirrel
+controller's footing) or the bark of a limb within 0.3 m, at under 7 m/s airspeed, and the raven takes hold. On the
+ground it keeps its heading; on a branch it turns along the limb (toward the tip or the trunk, whichever is nearer
+its heading) with its feet on the bark's top. Over 0.25 s it slides from where it touched to the perch while the
+wings fold, then the models swap (below); the camera dips slightly. Faster than 7 m/s, or into wood it cannot stand
+on (a trunk, a limb steeper than ~44 degrees), it bounces: heading mirrored about the contact normal, 85% of the
+speed kept, a flap (the flare); grazing the ground it skims (the old 2 m flight floor is gone). Deep water is
+skimmed, not landed on. Hover then Z down still works and is the gentle way in. After a take-off contacts are
+ignored for 0.6 s, and the plant just left for 1 s. A HUD row ("landed") says "perched on a blue oak, 4 m up" or
+"on the ground".
+
+**Branches** (`perch.js` `Perches`): the plants of the vegetation's near set, read from the near instances themselves
+(species, the variant's seed, the instance matrix), so the wood is exactly the drawn wood: `treegen.treeWood`
+exports the stems the near tier tubes for that (species, seed) from the cached skeleton (nothing regrown). A plant's
+world-space stems (points, radii, arc lengths, a box each) are built the first time a query comes near it (about
+0.2 ms for an oak) and kept while it stays in the near set. Plants sit on a 10 m grid by their crown reach; a query
+reads one cell and tests only stems whose box holds the point: about 4 segments and 0.012 ms per query, 0.02 ms per
+flight frame. Perchable: wood at least 1.5 cm thick, sloping less than ~44 degrees, its top 0.8 m or more above the
+ground, and clear (0.1 m) of the parent limb at its base. Thinner wood (the close tier's twigs, the near tier's
+outer twigs) is passed through.
+
+**On foot** (`updateGround`, state in `flight.gnd`, drawn by `raven.js`): no walking gait; ravens on the ground
+mostly hop. **W / S** hop forward 0.6 m and back 0.4 m on both feet (held: hop after hop); on the ground each hop
+goes as far as the footing lets it (rises up to 0.45 m, the arc raised over what it crosses, no deep water); on a
+branch it moves along the limb the way the body faces along it and stops where the limb stops being perchable (the
+thin end, a steep bend, the parent limb), the body keeping to the limb as it bends; facing across the limb, a hop on
+the spot. **A / D** held hop round 45 degrees at a time; tapped (under 0.14 s), a step round of about 17 degrees.
+**Arrows, a drag, or Shift with W A S D** look about (the head follows; on the ground the body hops round when the look
+runs more than ~57 degrees ahead). **Space** takes off: from the ground forward and up to 2 m, from a branch a drop
+(nose down, falling at first) into a glide; **X** straight up into a hover; either way the folded wings lift and
+open for 0.2 s first. **E** pecks up an acorn within 0.8 m of the bill on the ground, or from a branch a crown
+acorn within 1.2 m (`acorns.js` `acornNear` / `playerPick`; the raven's automatic 6 m pickup often gets there
+first). Chase camera on the ground 0.8 m up and 2.5 m back, about 23 degrees off the tail; perched 0.55 m up and
+1.7 m back, pulled in short of any limb between it and the bird.
+
+**Swaps**: on touchdown the flying model's wings fold over 0.25 s (bones swept back, lowered and scaled toward the
+folded wing's length, the body tilted 0.3 rad nose up with the head kept level), then a 0.12 s alpha-hash dissolve
+to the ground model (incoming fully in over the first half, outgoing out over the second); on take-off the ground
+model's wings lift and open over 0.2 s, then the flying model dissolves in from half folded at the top of a
+wingbeat and unfolds over 0.3 s. The touchdown slide and the turn onto the limb are continuous (largest per-frame
+step 4 cm). Known: the dissolve's dither shows for 6-7 frames; a turn onto a limb at right angles to the approach
+is a quick swivel (0.25 s); perched, the camera often sits in the crown's foliage; bouncing off a low limb just
+after a take-off under a crown is common; the ambient ravens still perch on treetops their own way (`animals.js`
+does not use `perch.js` yet).
 
 ## Next (adoption lane)
 

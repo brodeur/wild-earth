@@ -678,3 +678,19 @@ are. A player's cache owner is kept in server memory only, never beside the cach
 Rejected: positions on the wire for a server-side distance check (a player id beside a
 position, against the privacy rules) and a random away schedule per browser (the browsers
 would disagree about when a raid is fair).
+
+## 2026-10-25: the raven lands by contact, on the ground or on any limb that will hold it
+
+Aaron: "if I fly into the ground or a branch I should attach to it and wasd should be hopping".
+`flight.js` tests contact every 0.15 m of each frame's move: the body within 0.35 m of the
+footing or 0.3 m of a limb's bark at under 7 m/s takes hold; faster, or against wood it cannot
+stand on (a trunk, a limb steeper than ~44 degrees, wood under 1.5 cm), it bounces off with 85%
+of its speed and a flare. The 2 m flight floor is gone. The limbs come from `perch.js`: each
+near plant's wood in world space, read from the drawn instances and the cached skeleton
+(`treegen.treeWood`, nothing regrown), on a 10 m grid, so a query costs ~0.01 ms. On foot the
+raven hops (W/S 0.6/0.4 m, A/D 45-degree hop-turns, Space takes off, X hovers, E picks); the
+walking gait is dropped because ravens on the ground mostly hop. Rejected: landing only on
+tagged perch points (the player would hunt for them) and collision with the drawn leaf
+geometry (too costly and leaves do not hold a raven). The squirrel's full-tree climb will use
+the same perch queries. Verified: ground landing, perching on a live oak limb at 3 m with the
+HUD "perched on an interior live oak, 3 m up", 0.6 m hops, take-off; no console errors.
