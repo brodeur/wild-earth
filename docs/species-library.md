@@ -1051,3 +1051,169 @@ of the fifth and sixth passes):
   `berries.rgb_unripe` (red) documents the red stage and is not read by the generator.
 - Architectural models are provisional for all six (Troll for redbud and Champagnat for elderberry are guesses).
 - Fall targets (`fall_rg`) for poison oak and elderberry are rough: no clean full-shrub fall photograph was measured.
+
+## Integration of the foothill set (2026-10-26)
+
+The seventeen drafts are registered (`index.json`, 26 species, embedded by `embed_builtin.py`), placed by the
+species mix on all three tiles, and the six shrubs are in the shrub impostor field. Aliases (from the files):
+buckeye, madrone, walnut, bay, maple, ash, valley_oak, canyon_live_oak, black_oak, incense_cedar, douglas_fir,
+toyon, redbud, poison_oak, coyote_brush, elderberry, coffeeberry (`walnut` and `maple` added to the files).
+Valley, canyon live and black oak bear acorns: `OAK_SHORT` in `vegetation.js` names them, so the acorn game
+finds them (home tile, start view: 547 valley, 795 canyon live and 569 black oaks among the game's oaks). The
+field guide (`fieldguide.js` `ACORNS`) has no card for them yet, so their species card shows no acorn line.
+
+**Fixes to the files** (targets and photos unchanged):
+
+| species | change | why |
+|---|---|---|
+| valley oak | `leaf_shape` `lobed_large`, 9 pinnate lobes, `lobe_tip` round (was `oblong_wavy` with `lobe_depth`, which that shape ignores); `cluster_m` 1.9 to 2.15 | the generator lane's note; the larger lobed leaf opened the crown (gaps 0.32), larger cards close it again |
+| canyon live oak | `cluster_m` 1.6 to 1.9 | gaps 0.20 against 0.12 (raising `leaf_fill` to 3.6 changed nothing: the gaps are between cards, not within them) |
+| black oak | `cards_per_m2` 0.75 to 0.55 | gaps 0.21 against 0.30 |
+| incense cedar | `cluster_m` 1.6 to 1.95 | gaps 0.23 against 0.15 (`leaf_fill` 7.5 changed nothing) |
+| Douglas-fir | `density` 14 to 18, `near_tris_budget` 2,600 to 3,000; `lod.mid_canopy` `blobs` (12 blobs, scale 0.55) | near gaps 0.38 against 0.30; the mid tier drew nearly empty cards (gaps 0.77): the `needle_flat` far card is 14 short combs at the 5 px minimum needle length, whatever the file says, so the mid tier uses lumpy blobs instead (gaps 0.22); a fuller far card belongs in `treegen.js` |
+| redbud | `levels[0].start` 0.22 to 0.12, `foliage.start` 0.3 to 0.15, `parent_start` 0.5 to 0.35 | crown base 0.30 against 0.20 |
+| coffeeberry | `foliage.start` 0 and `parent_start` 0.05; `berries.rgb` a dark red between the ripe black and the red (`rgb_unripe`, which the generator does not read, removed); `near_sides` [3, 3, 0] and `near_tris_budget` 1,200 | W/H 1.29 to 1.37 (base unchanged); the old class's wood took over 70% of the budget and warned in the console |
+| toyon | `berries.density` 0.8 to 0.45 | at close range the whole crown read red |
+| all seventeen | the mature class grows one seed instead of two | draw calls: each distinct tree is four meshes (near and mid trunk and canopy) for every species a tile places |
+
+**Final lineup** (near tier, the three measured seeds, real leaf shapes and bark, summer; photo target in
+brackets; ! outside the lineup's tolerance; mid and close gaps for the other tiers):
+
+| species | W/H | crown base | gaps | r/g | b/g | near triangles | mid gaps | close gaps |
+|---|---|---|---|---|---|---|---|---|
+| valley oak | 1.35 (1.35) | 0.11 (0.10) | 0.29 (0.23) | 0.97 (1.00) | 0.62 (0.64) | 2,188-3,126 | 0.20 | 0.32 |
+| canyon live oak | 1.26 (1.35) | 0.16 (0.12) | 0.17 (0.12) | 0.96 (0.94) | 0.44 (0.45) | 2,000-3,844 | 0.15 | 0.14 |
+| California black oak | 0.84 (0.92) | 0.24 (0.21) | 0.24 (0.30) | 0.88 (0.87) | 0.61 (0.62) | 1,164-1,290 | 0.34 | 0.29 |
+| California buckeye (mid-July) | 1.46 (1.45) | 0.13 (0.05) ! | 0.14 (0.18) | 0.82 (0.80) | 0.36 (0.36) | 1,048-1,514 | 0.25 | 0.16 |
+| Pacific madrone | 0.89 (0.90) | 0.30 (0.30) | 0.29 (0.28) | 0.87 (0.88) | 0.70 (0.69) | 1,602-2,612 | 0.39 | 0.29 |
+| California bay | 1.09 (1.00) | 0.15 (0.10) | 0.25 (0.25) | 0.94 (0.94) | 0.52 (0.50) | 2,134-2,428 | 0.46 | 0.30 |
+| black walnut | 1.11 (1.15) | 0.19 (0.13) | 0.29 (0.34) | 0.78 (0.78) | 0.49 (0.49) | 1,168-1,276 | 0.44 | 0.36 |
+| big-leaf maple | 1.00 (0.90) | 0.21 (0.15) | 0.21 (0.25) | 0.88 (0.88) | 0.51 (0.50) | 1,658-1,908 | 0.46 | 0.29 |
+| Oregon ash | 0.66 (0.70) | 0.31 (0.25) | 0.29 (0.33) | 0.80 (0.80) | 0.42 (0.42) | 1,754-1,900 | 0.40 | 0.40 |
+| incense cedar | 0.42 (0.42) | 0.13 (0.14) | 0.18 (0.15) | 0.92 (0.92) | 0.39 (0.42) | 2,200-2,690 | 0.02 | 0.29 |
+| Douglas-fir | 0.48 (0.50) | 0.26 (0.30) | 0.34 (0.30) | 0.91 (0.91) | 0.60 (0.61) | 1,860-3,000 | 0.22 | 0.62 |
+| toyon | 0.96 (1.10) | 0.15 (0.10) | 0.12 (0.15) | 0.92 (0.86) ! | 0.58 (0.58) | 774-858 | 0.28 | 0.07 |
+| western redbud | 0.99 (1.00) | 0.24 (0.20) | 0.24 (0.25) | 0.82 (0.83) | 0.58 (0.61) | 658-962 | 0.45 | 0.30 |
+| poison oak | 0.74 (0.80) | 0.15 (0.15) | 0.29 (0.35) | 0.76 (0.75) | 0.43 (0.47) | 364-442 | 0.36 | 0.37 |
+| coyote brush | 1.24 (1.20) | 0.16 (0.05) ! | 0.20 (0.20) | 0.95 (0.95) | 0.46 (0.48) | 654-1,006 | 0.30 | 0.19 |
+| blue elderberry | 1.48 (1.40) | 0.20 (0.08) ! | 0.26 (0.22) | 0.87 (0.86) | 0.63 (0.56) ! | 922-1,164 | 0.65 | 0.22 |
+| coffeeberry | 1.37 (1.40) | 0.18 (0.08) ! | 0.12 (0.18) | 0.98 (0.98) | 0.65 (0.70) | 664-1,070 | 0.24 | 0.15 |
+
+Twelve of seventeen sit within every tolerance. The misses: crown base on buckeye, coyote brush, elderberry
+and coffeeberry (the lowest cards hang from limbs a little way up the stems; lowering `foliage.start` and the
+first limbs moved coffeeberry's W/H but not its base, and raised elderberry's to 0.27, so it was put back;
+manzanita and chamise read 0.19 for the same reason); toyon's r/g (0.88 without its cream flowers, which the
+lineup's summer, mid-July, shows) and elderberry's b/g (0.50 without the powder-blue berries of July). The set B
+numbers against the real leaf shapes and bark came out within 0.02 of the stand-in measurements: the measures
+are set by the card layout, not the leaf texture. Every class and snag of all seventeen builds at near, mid and
+close without errors. Mid gaps of the set A broadleaves and elderberry run 0.40-0.65 (more `mid_cards` did
+not help: the far cards for large compound and lobed leaves are sparse; a generator matter).
+
+**Species mix.** Each community row now also follows the ground (`pipeline/species_mix.py` `TERRAIN`): every
+30 m cell gets a terrain class from the DEM, an effective elevation band (mean elevation, plus 100 m on
+north-facing and minus 50 m on south-facing ground: <450, 450-525, 525-600, >=600 m), a position (floor: under
+6 degrees and 2 m or more below its 330 m neighbourhood; steep: 16 degrees or more; else mid-slope) and
+north-facing or not, and a species' weight is multiplied by its factors for that class: valley oak x2.5 on
+floors, x0.15 on steep ground, fading above 525 m; canyon live oak x3 on steep ground, x1.6 north; black oak
+x0.1 below 450 m effective up to x1 above 600 m (not in the black-oak communities, which LANDFIRE names for
+it); incense cedar and Douglas-fir likewise from about 525 m, Douglas-fir x2 north and x0.12 elsewhere; madrone
+and bay x2.2 north and x0.3 elsewhere; buckeye and redbud up on steep ground; coyote brush, elderberry and
+poison oak up on floors. A community has one row per distinct response (`mixes[].terrain` lists its classes,
+`mixes[].community` points into the new `communities[]`, which holds the weights as written): 424, 429 and 326
+rows on the three tiles, so `species_mix_index.png` is now two bytes (RGB); `species_mix.json` 262 KB (one row
+per line). The nine original species keep their weights; the new ones are added beside them (black oak leads
+the black-oak communities, valley oak takes blue oak's stand-in share in the riparian rows and the mixed-oak
+savanna, canyon live oak, madrone, bay and Douglas-fir take live oak's and ponderosa's in the mixed evergreen
+row). Rules (trees | shrubs | tree / shrub density):
+
+| rule | trees | shrubs | densities |
+|---|---|---|---|
+| `wet_meadow_marsh` | willow 0.8, live oak 0.2, valley oak 0.1 | manzanita 0.5, elderberry 0.25, coyote brush 0.25 | 0.05 / 0.05 |
+| `riparian_shrubland` | willow 0.75, alder 0.1, live oak 0.15, ash 0.05 | manzanita 0.5, chamise 0.5, elderberry 0.45, poison oak 0.45, coffeeberry 0.1 | 1.2 / 0.2 |
+| `montane_riparian` | alder 0.4, willow 0.25, live oak 0.15, ponderosa 0.12, cottonwood 0.08, maple 0.12, ash 0.06, walnut 0.02, bay 0.04, incense cedar 0.05, douglas fir 0.04 | manzanita 1, elderberry 0.5, poison oak 0.6 | 1.3 / 0.3 |
+| `riparian` | willow 0.38, alder 0.24, cottonwood 0.1, live oak 0.17, blue oak 0.03, valley oak 0.12, walnut 0.06, maple 0.05, ash 0.07, bay 0.03, buckeye 0.02 | manzanita 0.3, elderberry 0.5, poison oak 0.7, coffeeberry 0.1, coyote brush 0.1 | 1.6 / 0.3 |
+| `blue_oak_foothill_pine` | blue oak 0.65, live oak 0.1, gray pine 0.25, valley oak 0.07, buckeye 0.04, canyon live oak 0.02, black oak 0.01 | manzanita 0.5, chamise 0.5, poison oak 0.3, toyon 0.12, coffeeberry 0.1, redbud 0.05, coyote brush 0.08 | 1 / 0.5 |
+| `blue_oak` | blue oak 0.85, live oak 0.1, gray pine 0.05, valley oak 0.06, buckeye 0.05, canyon live oak 0.02 | manzanita 0.4, chamise 0.6, poison oak 0.3, toyon 0.1, coffeeberry 0.08, redbud 0.04, coyote brush 0.06 | 1 / 0.4 |
+| `foothill_pine` | gray pine 0.6, blue oak 0.25, live oak 0.15, buckeye 0.04, canyon live oak 0.03 | manzanita 0.4, chamise 0.6, toyon 0.12, coffeeberry 0.1, redbud 0.06, poison oak 0.15 | 0.9 / 1 |
+| `black_oak_conifer` | black oak 0.45, ponderosa 0.4, live oak 0.12, gray pine 0.02, incense cedar 0.12, douglas fir 0.08, madrone 0.04, canyon live oak 0.03 | manzanita 0.8, chamise 0.2, toyon 0.1, poison oak 0.25, coffeeberry 0.15, redbud 0.03 | 1.1 / 0.6 |
+| `black_oak` | black oak 0.6, live oak 0.15, ponderosa 0.15, madrone 0.04, bay 0.02, canyon live oak 0.03, incense cedar 0.03 | manzanita 0.9, chamise 0.1, poison oak 0.3, toyon 0.1, coffeeberry 0.15 | 1 / 0.5 |
+| `mixed_oak_savanna` | blue oak 0.45, live oak 0.3, gray pine 0.05, valley oak 0.25, buckeye 0.03 | manzanita 0.3, chamise 0.7, coyote brush 0.2, poison oak 0.2, toyon 0.05 | 0.6 / 0.3 |
+| `mixed_oak` | blue oak 0.4, live oak 0.45, gray pine 0.15, valley oak 0.05, canyon live oak 0.06, buckeye 0.05, black oak 0.08, madrone 0.03, bay 0.02 | manzanita 0.6, chamise 0.4, toyon 0.15, poison oak 0.35, coffeeberry 0.15, redbud 0.06 | 1 / 0.6 |
+| `mixed_evergreen` | canyon live oak 0.25, live oak 0.25, madrone 0.15, bay 0.1, douglas fir 0.1, ponderosa 0.2, black oak 0.1, incense cedar 0.05 | manzanita 1, toyon 0.3, poison oak 0.3, coffeeberry 0.3 | 1.2 / 0.5 |
+| `ponderosa_jeffrey` | ponderosa 0.9, live oak 0.1, black oak 0.1, incense cedar 0.06 | manzanita 0.9, chamise 0.1, coffeeberry 0.05 | 0.8 / 0.8 |
+| `dry_mesic_mixed_conifer` | ponderosa 0.5, live oak 0.1, black oak 0.2, incense cedar 0.15, douglas fir 0.08, canyon live oak 0.03, madrone 0.02 | manzanita 1, toyon 0.05, poison oak 0.1, coffeeberry 0.1 | 1 / 0.6 |
+| `mesic_mixed_conifer` | ponderosa 0.4, incense cedar 0.2, douglas fir 0.2, black oak 0.12, live oak 0.06, madrone 0.03, bay 0.02 | manzanita 1, poison oak 0.1, coffeeberry 0.1 | 1.2 / 0.4 |
+| `lower_montane_conifer` | ponderosa 0.58, live oak 0.1, gray pine 0.1, black oak 0.14, incense cedar 0.08, douglas fir 0.05, canyon live oak 0.03, madrone 0.02, bay 0.02 | manzanita 0.85, chamise 0.15, toyon 0.08, coffeeberry 0.1, poison oak 0.12, redbud 0.03 | 1 / 0.6 |
+| `montane_woodland_chaparral` | live oak 0.3, ponderosa 0.25, gray pine 0.15, canyon live oak 0.15, black oak 0.1 | manzanita 0.8, chamise 0.2, toyon 0.1, coffeeberry 0.1, redbud 0.05 | 0.6 / 1 |
+| `serpentine_woodland` | gray pine 0.6, live oak 0.4, buckeye 0.03 | manzanita 0.6, chamise 0.4, coffeeberry 0.1, redbud 0.05, toyon 0.05 | 0.6 / 1 |
+| `xeric_chaparral` | gray pine 0.7, live oak 0.3 | chamise 0.8, manzanita 0.2, toyon 0.03, redbud 0.03 | 0.15 / 1 |
+| `dry_mesic_chaparral` | gray pine 0.6, live oak 0.4, canyon live oak 0.05, buckeye 0.03 | chamise 0.65, manzanita 0.35, toyon 0.1, coffeeberry 0.08, redbud 0.05, poison oak 0.04 | 0.3 / 1 |
+| `mesic_chaparral` | live oak 0.6, gray pine 0.4, canyon live oak 0.1, bay 0.03, madrone 0.03 | manzanita 0.6, chamise 0.4, toyon 0.2, coffeeberry 0.15, redbud 0.05, poison oak 0.05 | 0.35 / 1 |
+| `chaparral` | gray pine 0.6, live oak 0.4 | chamise 0.6, manzanita 0.4, toyon 0.08, coffeeberry 0.06, redbud 0.04 | 0.3 / 1 |
+| `ruderal_forest` | live oak 0.4, blue oak 0.25, gray pine 0.2, ponderosa 0.15, valley oak 0.05, black oak 0.05, buckeye 0.03, walnut 0.03 | manzanita 0.5, chamise 0.5, coyote brush 0.3, poison oak 0.3, toyon 0.08, elderberry 0.05 | 0.8 / 0.8 |
+| `ruderal_scrub` | gray pine 0.5, live oak 0.5 | chamise 0.5, manzanita 0.5, coyote brush 0.6, poison oak 0.2, toyon 0.05 | 0.2 / 0.8 |
+| `great_basin_shrub` | gray pine 1 | chamise 1, coyote brush 0.3 | 0 / 0.6 |
+| `grassland_savanna` | blue oak 0.85, gray pine 0.15, valley oak 0.1, buckeye 0.02 | chamise 1, coyote brush 0.6, poison oak 0.1 | 1 / 0.3 |
+| `sparse_rock` | gray pine 0.5, live oak 0.5, canyon live oak 0.4 | chamise 0.6, manzanita 0.4, redbud 0.2, toyon 0.1 | 0.25 / 0.3 |
+| `rewilded_meadow` | blue oak 0.55, valley oak 0.35, live oak 0.1 | - | 0.5 / 0 |
+| `rewilded_riparian` | willow 0.45, alder 0.25, cottonwood 0.12, live oak 0.18, valley oak 0.06, ash 0.05, maple 0.03, walnut 0.02 | - | 2 / 0 |
+
+Tree shares (each layer of the whole tile; shrubs below):
+
+| tile | trees | shrubs |
+|---|---|---|
+| home 680_4280 | blue oak 38.3%, gray pine 21.6, live oak 14.4, ponderosa 8.2, valley oak 4.0, buckeye 2.6, willow 2.4, canyon live oak 2.2, alder 1.8, black oak 1.3, cottonwood 0.6, bay 0.5, walnut 0.5, maple 0.4, madrone 0.4, ash 0.4, incense cedar 0.3, Douglas-fir 0.1 | chamise 33.4, manzanita 31.1, poison oak 12.7, toyon 6.9, coyote brush 6.8, coffeeberry 5.1, redbud 3.1, elderberry 1.0 |
+| Placerville 690_4280 | ponderosa 26.9, blue oak 20.8, gray pine 12.7, live oak 12.3, black oak 9.9, canyon live oak 3.9, incense cedar 3.6, Douglas-fir 1.9, madrone 1.4, willow 1.4, alder 1.2, buckeye 1.1, bay 1.0, valley oak 0.7, cottonwood 0.4, maple 0.3, ash 0.3, walnut 0.2 | manzanita 47.2, chamise 21.0, poison oak 11.8, toyon 7.1, coffeeberry 6.9, redbud 3.4, coyote brush 2.1, elderberry 0.5 |
+| Cosumnes 680_4270 | blue oak 36.0, gray pine 21.7, ponderosa 14.5, live oak 13.5, valley oak 3.1, canyon live oak 2.9, buckeye 2.8, willow 1.2, black oak 1.1, alder 0.8, bay 0.6, walnut 0.5, madrone 0.4, cottonwood 0.3, ash 0.2, maple 0.2, incense cedar 0.2, Douglas-fir 0.1 | chamise 35.1, manzanita 31.3, poison oak 10.3, coyote brush 7.7, toyon 6.8, coffeeberry 4.6, redbud 3.6, elderberry 0.7 |
+
+Where they stand on the home tile (share of the species' trees, against the share of the ground): valley oak
+35% on floors (11% of the ground), 52% below 450 m; canyon live oak 63% on steep ground (15%), 60% north-facing
+(23%); black oak 49% at 525 m or more effective elevation (24%), 56% north-facing; Douglas-fir 98% north-facing,
+78% at 525 m or more; madrone 83% north-facing. On the Placerville tile black oak is 87% at 600 m or more.
+
+**Client.** Each tile places all 26 species (`tileSpecies`). The far atlas sits at its cap on every tile: 64
+baked trees, 1280 x 4096, 53.3 MB with mips (bake 0.9-1.1 s); blue oak, live oak, gray pine and ponderosa keep
+12 slots each (and black oak on the Placerville tile), every other species 2. Start view of the home tile
+(1920 x 1080, headless Chromium on Metal, A/B against HEAD's code, library and mix, three rounds each): draw
+calls 239 to 417 (each extra species adds up to four meshes per distinct tree; 461 before the mature classes
+went to one seed), triangles 5.72 M to 5.87 M, CPU per frame 2.5-2.9 ms to 4.0-4.9 ms (all of it in
+`renderer.render`: about 8 microseconds a draw call), GPU 17.7-19.0 ms against 15.7-18.6 ms (within the noise
+of the timer queries; the frame is GPU-bound), shrub impostors 1,180 to 2,243.
+
+**The shrub impostor field** (`shrubfield.js`) draws the six shrubs as kinds -1 to -6 of the same impostor, in
+the manner of the shrub lane's card notes: toyon a big lumpy dome, redbud a vase, poison oak small, ragged and
+open, coyote brush a smooth fine mound, elderberry broad and gappy, coffeeberry a smooth dense dome; each
+season's leaf colour, bark and twig colour, leaf-on (`leafOnAt`) and flowers or berries (`decoActive`) come
+from the species files through uniforms set when the season (or the real date's month) changes. A bare crown
+is a haze of twigs (far) or the bare stems (near); flowers and berries are clusters over the outer, upper
+crown that stay on a bare crown, so redbud is magenta on bare wood in March and toyon carries red berries
+from November to January. The canopy layer gives woodland, grassland and riparian cells almost no shrub
+cover, so the six are placed from each cell's row (their share of its shrub weights) at an understory cover
+per habitat class (oak woodland 14%, mixed 12%, conifer 8%, riparian 18%, grassland 3%, times the row's shrub
+density, in patches), and in chaparral at 0.8 of the field's own cover times their share, from their own random
+stream merged into the cell's list by rank: chamise and manzanita stand and draw exactly as before. Their kinds
+are negative because `shadows.js` casts every kind over 1.5 as grass, with a grass blade's sway (0.35 H): with
+kinds 5-10 (the first try) a toyon's shadow swung a metre or more across its neighbours in the wind, and since a
+shrub impostor takes the cast shadow at its centre, a manzanita beside a toyon switched between lit and shaded
+from one second to the next with the camera still (measured at x=3830 north=1180, 12 m, fall, 9:00: the plant's
+mean went 88 to 45 and back; with negative kinds it holds at 26 over 8 s, and the frame-to-frame difference is
+grain at the leaf edges, as on HEAD).
+
+**Seen in the world** (home tile, headless, the real date set with the browser clock): buckeye bare in August
+and in full leaf in May (the white candles do not show at 7-15 m); madrone's red-orange trunks at 5 m; a black
+oak yellow-orange in October at 631 m (x=9962 north=8797, the tile's east edge; the spot at x=2958 north=9835
+is 407 m in the conifer stand, where black oak is rare on south slopes); valley oaks yellow-brown over a grassy
+floor; toyon with red berries in January (3D and impostor); poison oak scarlet in October (3D in the chaparral,
+impostors in the woodland); redbud magenta on bare stems in March (3D and impostor); big-leaf maple gold and
+walnut yellowing in a riparian corridor in October. Species cards read correctly for all seventeen (the form
+line shows toyon's and elderberry's form as `multi_stem_shrub_tree`). No console errors but the favicon 404
+HEAD also has.
+
+**Known limits.**
+- Douglas-fir's mid tier is blobs until the `needle_flat` far card is fuller; the set A broadleaves are open at mid.
+- Buckeye's flower candles and elderberry's flower plates barely show on the 3D trees; the impostors show them.
+- The six shrubs in woodland and grassland exist only as impostors (no 3D plants there, since the canopy layer's
+  shrub cover is about zero), so they cannot be clicked for a card; in chaparral they are 3D as well.
+- 26 species cost about 1.4 ms of CPU at the start view in draw calls; vegetation could share meshes between a
+  rare species' classes (as the far atlas does) to bring it back.
+- `docs/tile-spec.md` "Species mix" does not yet describe `mixes[].terrain`, `community` and `communities[]`.

@@ -9,7 +9,7 @@
   "height_m": [1.5, 3.5],
   "variants": [
     {"name": "young", "weight": 0.25, "height_m": [0.7, 1.5], "deadwood": 0.03, "set": {"trunk": {"stems": [3, 6]}}, "note": "a small, rounded young shrub"},
-    {"name": "mature", "weight": 0.5, "seeds": 2, "note": "the file as written: a dense rounded shrub, wider than tall"},
+    {"name": "mature", "weight": 0.5, "seeds": 1, "note": "the file as written: a dense rounded shrub, wider than tall"},
     {"name": "old", "weight": 0.25, "height_m": [2.5, 4], "crown_scale": 1.08, "gnarl": 1.15, "deadwood": {"fraction": 0.18, "levels": [0, 1], "shorten": 0.8}, "set": {"trunk": {"stems": [6, 11]}}, "note": "a big old shrub, open underneath, a few grey dead stems"}
   ],
   "description": "A rounded evergreen shrub with smooth grey stems and narrow oval leaves, in the foothills often dusty grey-green with fuzzy undersides; its round berries turn from green to red to shiny black in late summer and fall; 1.5-4 m tall here. It grows on rocky slopes, in chaparral and under open oaks and pines, and its berries, each with two seeds that look like coffee beans, feed band-tailed pigeons, thrushes, jays, foxes and bears.",
@@ -45,18 +45,18 @@
   ],
   "foliage": {
     "type": "broadleaf", "leaf_size_m": 0.06, "leaf_shape": "elliptic_glossy", "cluster_m": 0.5, "density": 22, "cards_per_m2": 5.5,
-    "start": 0.1, "parent_start": 0.2, "orientation": "outward", "roll_deg": 50,
+    "start": 0.0, "parent_start": 0.05, "orientation": "outward", "roll_deg": 50,
     "colors": {"winter": [114, 118, 102], "spring": [124, 132, 98], "summer": [120, 122, 102], "fall": [120, 121, 101]},
     "leaf_on": {"winter": 1.0, "spring": 1.0, "summer": 1.0, "fall": 1.0},
     "clumps": {"radius_m": 0.38, "cards_per_clump": 6, "shell": 0.45, "flatten": 0.8, "tip_bias": 1.3},
     "palette": [[0.7, [1, 1, 1]], [0.25, [1.18, 1.18, 1.24]], [0.05, [1.35, 1.2, 0.7]]],
     "ao_min": 0.76, "color_var": [0.08, 0.05],
-    "berries": {"season": "fall", "months": [8, 11], "form": "cluster", "rgb": [70, 28, 30], "rgb_unripe": [168, 46, 40], "size_m": 0.05, "density": 0.45}
+    "berries": {"season": "fall", "months": [8, 11], "form": "cluster", "rgb": [116, 34, 32], "size_m": 0.05, "density": 0.45}
   },
   "deadwood": {"fraction": 0.08, "where": "inner", "levels": [0, 1], "shorten": 0.7, "rgb": [140, 136, 128]},
   "twigs": {"count": [1, 2], "length": 0.75, "down_deg": 40, "down_var_deg": 18, "curve_var_deg": 25, "segments": 1, "radius_m": 0.006, "taper": 0.6, "fan_deg": 55, "jitter": 0.22},
   "lod": {
-    "near_tris_budget": 1100, "near_sides": [4, 3, 0], "mid_blobs": 3, "mid_branches": 0, "mid_sides": [0, 0],
+    "near_tris_budget": 1200, "near_sides": [3, 3, 0], "mid_blobs": 3, "mid_branches": 0, "mid_sides": [0, 0],
     "mid_cards": 32
   },
   "targets": {
@@ -70,7 +70,7 @@
       {"url": "https://www.inaturalist.org/photos/273552335", "license": "CC BY", "author": "Ian (chaparral_pal)", "shows": "greener-leaved shrub against the sky, Folsom Lake, El Dorado Hills, April"}
     ]
   },
-  "notes": "California coffeeberry is an evergreen shrub, 1-4 m (rarely a small tree to 6 m), of rocky slopes, chaparral, and the understory and edges of oak woodland and pine forest. In the El Dorado and Placer foothills many plants are the hoary form (ssp. tomentella, sometimes treated as its own species, Frangula tomentella): leaves felted grey-white beneath and dull grey-green above, and the local photos read grey; greener, shinier plants (ssp. californica) also occur. The colour targets sit between the two and the palette carries 25% pale leaves for the felted undersides; a reviewer should say which form dominates near Placerville. Form: plain 'shrub'. Five to nine stems from the base spread 30-40 degrees into a dense, rounded dome wider than tall (W/H about 1.4-1.7), leafy nearly to the ground; old plants open up underneath. Bark smooth grey, young twigs reddish. Leaves alternate, 3-8 cm, narrowly elliptic with fine teeth or none, pinnately veined: leaf_shape elliptic_glossy (the hoary form is not glossy; a matte variant would suit it better). Flowers tiny, greenish, in small clusters in the leaf axils, April-June: not drawn. Fruit a drupe 8-15 mm with two seeds like coffee beans, green, then red, then black, from August into November; red and black hang together (berries rgb black, rgb_unripe red). Resprouts from the base after fire. Architectural model provisional.",
+  "notes": "California coffeeberry is an evergreen shrub, 1-4 m (rarely a small tree to 6 m), of rocky slopes, chaparral, and the understory and edges of oak woodland and pine forest. In the El Dorado and Placer foothills many plants are the hoary form (ssp. tomentella, sometimes treated as its own species, Frangula tomentella): leaves felted grey-white beneath and dull grey-green above, and the local photos read grey; greener, shinier plants (ssp. californica) also occur. The colour targets sit between the two and the palette carries 25% pale leaves for the felted undersides; a reviewer should say which form dominates near Placerville. Form: plain 'shrub'. Five to nine stems from the base spread 30-40 degrees into a dense, rounded dome wider than tall (W/H about 1.4-1.7), leafy nearly to the ground; old plants open up underneath. Bark smooth grey, young twigs reddish. Leaves alternate, 3-8 cm, narrowly elliptic with fine teeth or none, pinnately veined: leaf_shape elliptic_glossy (the hoary form is not glossy; a matte variant would suit it better). Flowers tiny, greenish, in small clusters in the leaf axils, April-June: not drawn. Fruit a drupe 8-15 mm with two seeds like coffee beans, green, then red, then black, from August into November; red and black hang together (the generator draws one berry colour, so berries.rgb is a dark red between the two). Resprouts from the base after fire. Architectural model provisional.",
   "sources": ["https://www.fs.usda.gov/database/feis/plants/shrub/fracal/all.html", "https://ucjeps.berkeley.edu/eflora/ (Frangula californica)", "https://www.calflora.org/ (Frangula californica)", "https://calscape.org/ (Frangula californica)", "Reference photographs listed in targets.photos (iNaturalist, El Dorado and Placer counties, CC0 and CC BY)"],
   "authors": ["Wild Earth (agent draft, 2026-10-25); needs local sign-off"],
   "license": "CC BY-SA 4.0"

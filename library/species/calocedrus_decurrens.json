@@ -9,7 +9,7 @@
   "height_m": [20, 36],
   "variants": [
     {"name": "young", "weight": 0.3, "height_m": [4, 12], "trunk_radius": 0.85, "branches": 0.8, "set": {"trunk": {"base_size": 0.04, "bole_ratio": 0.04, "flare": 1.25, "bark_rgb": [132, 92, 74]}, "crown": {"envelope": {"profile": [[0.04, 0.24], [0.2, 0.24], [0.4, 0.21], [0.6, 0.16], [0.8, 0.09], [1.0, 0.02]], "lobe_depth": 0.06, "asymmetry": 0.05}}, "levels": [{"droop_deg": 18, "upturn_deg": 30}]}, "note": "a dense, neat cone of bright green sprays with branches to the ground"},
-    {"name": "mature", "weight": 0.5, "seeds": 2, "note": "the file as written"},
+    {"name": "mature", "weight": 0.5, "seeds": 1, "note": "the file as written"},
     {"name": "old-growth", "weight": 0.15, "height_m": [32, 45], "trunk_radius": 1.4, "branches": 0.75, "gnarl": 1.3, "deadwood": {"fraction": 0.25, "levels": [1], "where": "lower", "shorten": 0.5, "rgb": [128, 112, 100]}, "set": {"trunk": {"base_size": 0.36, "bole_ratio": 0.34, "flare": 1.7, "stubs": {"count": [8, 16]}}, "crown": {"envelope": {"profile": [[0.36, 0.17], [0.5, 0.2], [0.64, 0.19], [0.78, 0.15], [0.9, 0.1], [1.0, 0.04]], "lobes": 4, "lobe_depth": 0.22, "asymmetry": 0.22}}}, "note": "a huge swollen base, a long fluted cinnamon trunk and an open, ragged crown of big drooping limbs, often with a dead top"}
   ],
   "snag": {"fraction": 0.05, "from": "mature", "height_m": [16, 30], "limbs": 0.35, "twigs": 0, "levels": 1, "broken_top": [0.6, 0.9], "shorten": [0.3, 0.8], "rgb": [150, 128, 112]},
@@ -47,7 +47,7 @@
     }
   ],
   "foliage": {
-    "type": "scale", "leaf_size_m": 0.012, "leaf_shape": "needle_scale", "cluster_m": 1.6, "density": 12, "leaf_fill": 5.0, "start": 0.2,
+    "type": "scale", "leaf_size_m": 0.012, "leaf_shape": "needle_scale", "cluster_m": 1.95, "density": 12, "leaf_fill": 5.0, "start": 0.2,
     "parent_start": 0.45, "orientation": "along", "needle_planes": 1, "tuft_spread_deg": 30, "tuft_up": 0.25, "droop": 0.2,
     "needle_normal": 0.45, "needle_wrap": 0.4, "translucency": 2.0, "needle_scatter": 0.12,
     "colors": {"winter": [106, 106, 70], "spring": [112, 120, 76], "summer": [105, 110, 74], "fall": [104, 108, 73]},

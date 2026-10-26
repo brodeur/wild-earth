@@ -9,7 +9,7 @@
   "height_m": [2.5, 5],
   "variants": [
     {"name": "young", "weight": 0.25, "height_m": [1, 2.5], "trunk_radius": 0.7, "crown_scale": 0.92, "branches": 0.8, "set": {"trunk": {"stems": [2, 4]}}, "note": "a dense, rounded young shrub, leafy to the ground"},
-    {"name": "mature", "weight": 0.5, "seeds": 2, "note": "the file as written: a big rounded shrub of three to six grey stems"},
+    {"name": "mature", "weight": 0.5, "seeds": 1, "note": "the file as written: a big rounded shrub of three to six grey stems"},
     {"name": "old", "weight": 0.25, "height_m": [4, 6], "trunk_radius": 1.25, "crown_scale": 1.06, "gnarl": 1.15, "deadwood": {"fraction": 0.15, "levels": [1, 2], "where": "inner", "rgb": [138, 134, 126]}, "set": {"trunk": {"stems": [3, 5], "stem_spread_deg": 18}}, "note": "a small tree of a few leaning grey trunks at an oak woodland edge, some dead limbs inside"}
   ],
   "description": "A big evergreen shrub or small tree with stiff, shiny dark green leaves that have saw-toothed edges, and bunches of bright red berries in winter; 2-6 m tall here. It grows on chaparral slopes and along the edges of the oak woodland, and its berries feed robins, cedar waxwings, mockingbirds and bluebirds through the coldest months, which is why it is also called Christmas berry.",
@@ -52,7 +52,7 @@
     "palette": [[0.86, [1, 1, 1]], [0.09, [1.3, 1.2, 0.72]], [0.05, [1.4, 0.92, 0.7]]],
     "ao_min": 0.76, "color_var": [0.07, 0.03],
     "flowers": {"season": "summer", "months": [6, 7], "form": "cluster", "rgb": [232, 228, 206], "size_m": 0.12, "density": 0.35, "before_leaves": false},
-    "berries": {"season": ["fall", "winter"], "months": [11, 1], "form": "cluster", "rgb": [214, 40, 32], "size_m": 0.1, "density": 0.8}
+    "berries": {"season": ["fall", "winter"], "months": [11, 1], "form": "cluster", "rgb": [214, 40, 32], "size_m": 0.1, "density": 0.45}
   },
   "twigs": {"count": [2, 3], "length": 0.6, "down_deg": 45, "down_var_deg": 15, "curve_var_deg": 20, "zigzag_deg": 12, "segments": 1, "radius_m": 0.006, "fan_deg": 55, "jitter": 0.22},
   "lod": {

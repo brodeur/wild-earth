@@ -9,7 +9,7 @@
   "height_m": [8, 18],
   "variants": [
     {"name": "young", "weight": 0.25, "height_m": [3, 8], "trunk_radius": 0.7, "crown_scale": 0.9, "branches": 0.85, "set": {"trunk": {"stems": [1, 3], "stem_spread_deg": 28}, "crown": {"envelope": {"profile": [[0.03, 0.45], [0.15, 0.58], [0.35, 0.62], [0.55, 0.58], [0.72, 0.48], [0.86, 0.32], [1.0, 0.08]]}}}, "note": "a dense, rounded shrub-like tree from one to three stems, leafy to the ground"},
-    {"name": "mature", "weight": 0.55, "seeds": 2, "note": "the file as written"},
+    {"name": "mature", "weight": 0.55, "seeds": 1, "note": "the file as written"},
     {"name": "veteran", "weight": 0.2, "height_m": [15, 22], "trunk_radius": 1.3, "crown_scale": 1.1, "gnarl": 1.25, "deadwood": {"fraction": 0.14, "levels": [1, 2], "where": "inner", "rgb": [132, 126, 118]}, "set": {"trunk": {"stems": [1, 3], "lean_deg": 18}}, "note": "a huge, leaning canyon tree with a thick short trunk or two or three heavy stems, limbs reaching out over the slope, some dead limbs"}
   ],
   "snag": {"fraction": 0.04, "from": "veteran", "height_m": [10, 18], "limbs": 0.5, "twigs": 0.2, "levels": 1, "shorten": [0.4, 0.9], "rgb": [156, 150, 140]},
@@ -45,7 +45,7 @@
     }
   ],
   "foliage": {
-    "type": "broadleaf", "leaf_size_m": 0.05, "leaf_shape": "elliptic_glossy", "cluster_m": 1.6, "density": 21, "leaf_fill": 2.5,
+    "type": "broadleaf", "leaf_size_m": 0.05, "leaf_shape": "elliptic_glossy", "cluster_m": 1.9, "density": 21, "leaf_fill": 2.5,
     "start": 0.0, "parent_start": 0.4, "orientation": "outward", "roll_deg": 60,
     "colors": {"winter": [90, 95, 67], "spring": [124, 128, 82], "summer": [94, 98, 71], "fall": [96, 98, 68]},
     "leaf_on": {"winter": 1.0, "spring": 1.0, "summer": 1.0, "fall": 1.0},

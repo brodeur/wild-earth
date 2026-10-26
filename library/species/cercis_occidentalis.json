@@ -9,7 +9,7 @@
   "height_m": [2.5, 5],
   "variants": [
     {"name": "young", "weight": 0.25, "height_m": [1.2, 2.5], "crown_scale": 0.85, "branches": 0.8, "set": {"trunk": {"stems": [3, 6], "stem_spread_deg": 22}}, "note": "a narrow vase of a few straight wands"},
-    {"name": "mature", "weight": 0.5, "seeds": 2, "note": "the file as written: a many-stemmed vase spreading into a broad top"},
+    {"name": "mature", "weight": 0.5, "seeds": 1, "note": "the file as written: a many-stemmed vase spreading into a broad top"},
     {"name": "old", "weight": 0.25, "height_m": [4, 6], "trunk_radius": 1.2, "crown_scale": 1.12, "gnarl": 1.15, "deadwood": {"fraction": 0.15, "levels": [0, 1], "shorten": 0.8}, "set": {"trunk": {"stems": [6, 11]}}, "note": "a big spreading clump, a few grey dead stems among the live ones"}
   ],
   "description": "A many-stemmed shrub or small tree with round, heart-shaped leaves; in March, before its leaves come out, its bare branches are covered in bright magenta-pink flowers; 2-6 m tall here. It grows on dry canyon slopes, rocky banks and road cuts in the foothills, and the flowers are an early meal for bees, while the hanging seed pods stay on the branches through the winter.",
@@ -33,7 +33,7 @@
   },
   "levels": [
     {
-      "count": 4, "start": 0.22, "down_angle_deg": 38, "down_angle_var_deg": 12, "rotation_deg": 140, "rotation_var_deg": 30,
+      "count": 4, "start": 0.12, "down_angle_deg": 38, "down_angle_var_deg": 12, "rotation_deg": 140, "rotation_var_deg": 30,
       "length_ratio": 0.5, "length_var": 0.3, "curve_deg": 10, "curve_var_deg": 14, "tropism": 0.04, "taper": 0.9,
       "radius_ratio": 0.55, "segments": 2, "zigzag_deg": 8
     },
@@ -45,7 +45,7 @@
   ],
   "foliage": {
     "type": "broadleaf", "leaf_size_m": 0.075, "leaf_shape": "cordate", "cluster_m": 0.55, "density": 18, "cards_per_m2": 3.2,
-    "start": 0.3, "parent_start": 0.5, "orientation": "outward", "roll_deg": 60,
+    "start": 0.15, "parent_start": 0.35, "orientation": "outward", "roll_deg": 60,
     "colors": {"winter": [120, 98, 90], "spring": [124, 140, 84], "summer": [107, 118, 93], "fall": [156, 116, 80]},
     "leaf_on": {"winter": 0.0, "spring": 0.3, "summer": 1.0, "fall": 0.7},
     "leaf_on_by_month": [0.0, 0.0, 0.0, 0.3, 0.9, 1.0, 1.0, 1.0, 0.95, 0.8, 0.4, 0.05],

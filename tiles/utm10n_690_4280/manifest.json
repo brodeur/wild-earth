@@ -15,7 +15,7 @@
   38.73825606650576
  ],
  "size_m": 10000,
- "generated_at": "2026-10-26T02:55:32Z",
+ "generated_at": "2026-10-26T03:47:26Z",
  "generator": {
   "name": "wild-earth-pipeline",
   "version": "0.2.0"
@@ -740,8 +740,8 @@
    "format": 2,
    "files": {
     "client/species_mix_index.png": {
-     "sha256": "5298bc1caffebe5a33b027d4541a7d72f068582e732199c8c41d0effcdc6a5c1",
-     "bytes": 55365
+     "sha256": "34e7ec9fa4c446c6ecd48a6888416978e5272218420025c55a81d501f5a3dea0",
+     "bytes": 112236
     },
     "client/species_mix_density.png": {
      "sha256": "0c3dfd106449e80bef0c35df99c281809032be5b8de8e65766b03d6505c17215",
@@ -753,7 +753,8 @@
     "vegetation.bps",
     "vegetation.classes",
     "vegetation.habitat",
-    "vegetation.evc"
+    "vegetation.evc",
+    "terrain.dem"
    ],
    "encoding": "format 2: species_mix_index L = row in mixes; species_mix_density RGB = tree_density, shrub_density (byte/100); per-row weights as mixes[].tree_bytes / shrub_bytes over species.trees / species.shrubs",
    "species": {
@@ -764,39 +765,84 @@
      "pinus_ponderosa",
      "salix_lasiolepis",
      "alnus_rhombifolia",
-     "populus_fremontii"
+     "populus_fremontii",
+     "quercus_lobata",
+     "quercus_chrysolepis",
+     "quercus_kelloggii",
+     "aesculus_californica",
+     "arbutus_menziesii",
+     "umbellularia_californica",
+     "juglans_hindsii",
+     "acer_macrophyllum",
+     "fraxinus_latifolia",
+     "calocedrus_decurrens",
+     "pseudotsuga_menziesii"
     ],
     "shrubs": [
      "arctostaphylos_viscida",
-     "adenostoma_fasciculatum"
+     "adenostoma_fasciculatum",
+     "heteromeles_arbutifolia",
+     "cercis_occidentalis",
+     "toxicodendron_diversilobum",
+     "baccharis_pilularis",
+     "sambucus_nigra_caerulea",
+     "frangula_californica"
     ]
    },
-   "mixes": 43,
+   "mixes": 429,
    "unmatched": 0,
    "fractions": {
     "from_evt": 0.7432,
     "from_bps_backfill": 0.2568,
     "tree_share": {
-     "blue_oak": 0.2298,
-     "live_oak": 0.2048,
-     "gray_pine": 0.1414,
-     "ponderosa": 0.3886,
-     "willow": 0.0167,
-     "alder": 0.0143,
-     "cottonwood": 0.0045
+     "blue_oak": 0.2082,
+     "live_oak": 0.1232,
+     "gray_pine": 0.1271,
+     "ponderosa": 0.2687,
+     "willow": 0.0139,
+     "alder": 0.0117,
+     "cottonwood": 0.0036,
+     "valley_oak": 0.0073,
+     "canyon_live_oak": 0.0394,
+     "black_oak": 0.0985,
+     "buckeye": 0.0113,
+     "madrone": 0.0141,
+     "bay": 0.0099,
+     "walnut": 0.0021,
+     "maple": 0.0029,
+     "ash": 0.0026,
+     "incense_cedar": 0.0361,
+     "douglas_fir": 0.0194
     },
     "tree_share_by_canopy": {
-     "blue_oak": 0.0881,
-     "live_oak": 0.2359,
-     "gray_pine": 0.1095,
-     "ponderosa": 0.5361,
-     "willow": 0.0157,
-     "alder": 0.0104,
-     "cottonwood": 0.0042
+     "blue_oak": 0.073,
+     "live_oak": 0.1319,
+     "gray_pine": 0.0958,
+     "ponderosa": 0.3696,
+     "willow": 0.0132,
+     "alder": 0.0087,
+     "cottonwood": 0.0035,
+     "valley_oak": 0.0033,
+     "canyon_live_oak": 0.0495,
+     "black_oak": 0.127,
+     "buckeye": 0.008,
+     "madrone": 0.0198,
+     "bay": 0.0137,
+     "walnut": 0.0024,
+     "maple": 0.0019,
+     "ash": 0.0025,
+     "incense_cedar": 0.0489,
+     "douglas_fir": 0.0273
     },
     "shrub_share": {
-     "manzanita": 0.6846,
-     "chamise": 0.3154
+     "manzanita": 0.472,
+     "chamise": 0.2098,
+     "toyon": 0.0708,
+     "redbud": 0.0341,
+     "poison_oak": 0.1179,
+     "coyote_brush": 0.0213,
+     "elderberry": 0.0051,
+     "coffeeberry": 0.0688
     },
     "mean_tree_density": 0.9851,
     "mean_shrub_density": 0.5707,
@@ -830,8 +876,8 @@
      "serpentine_woodland": 0.0001
     }
    },
-   "sha256": "d702cf6e29bf1ce3c27e17e7ccd06b22e3a535455ec7319043ca0f473775e01c",
-   "bytes": 36206
+   "sha256": "7f2c5dd1a5a7a8d32b22c06bff0e6367043819d87ab4c3d8f18875e0c32436b2",
+   "bytes": 269879
   },
   "hydro.channels": {
    "path": "hydro/channels.geojson",
@@ -3787,6 +3833,12 @@
    "step": "species_mix (format 2)",
    "at": "2026-10-26T02:55:32Z",
    "seconds": 0,
+   "ok": true
+  },
+  {
+   "step": "species_mix (foothill set, terrain)",
+   "at": "2026-10-26T03:47:26Z",
+   "seconds": 1.4,
    "ok": true
   }
  ]

@@ -9,7 +9,7 @@
   "height_m": [10, 22],
   "variants": [
     {"name": "young", "weight": 0.25, "height_m": [4, 9], "trunk_radius": 0.7, "crown_scale": 0.85, "branches": 0.8, "set": {"trunk": {"stems": [1, 3], "lean_deg": 10}}, "note": "slender leaning stems, a sprout clump after fire or a single sapling reaching for light"},
-    {"name": "mature", "weight": 0.55, "seeds": 2, "note": "the file as written"},
+    {"name": "mature", "weight": 0.55, "seeds": 1, "note": "the file as written"},
     {"name": "veteran", "weight": 0.15, "height_m": [18, 28], "trunk_radius": 1.3, "crown_scale": 1.12, "gnarl": 1.25, "deadwood": {"fraction": 0.2, "levels": [1, 2], "where": "inner"}, "set": {"trunk": {"stems": [1, 3], "lean_deg": 20}}, "note": "a thick, twisting red trunk leaning out over the slope, dead limbs where cankers have killed them"}
   ],
   "snag": {"fraction": 0.05, "from": "veteran", "height_m": [12, 22], "limbs": 0.5, "twigs": 0.15, "levels": 1, "shorten": [0.45, 0.9], "rgb": [146, 120, 104]},

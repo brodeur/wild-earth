@@ -715,3 +715,19 @@ ground for the CHM (gaps under dense canopy; the DEM is the same ground points i
 two agree to 4 cm). Found on the way: the client's `Heightfield.at` puts heights.png samples at
 pixel corners rather than centres, a 2.5 m shift of the terrain against everything on the metric grid;
 the residual is defined against pixel centres, so the client pass fixes that when it adds the detail.
+
+## 2026-10-26: species follow the ground within a community, and the foothill shrubs are impostors too
+
+The seventeen foothill species are placed by the species mix, and within each LANDFIRE community a species'
+weight now follows the terrain of the cell (effective elevation band, valley floor or steep slope, north-facing:
+`species_mix.py` `TERRAIN`), so valley oak stands on the floors, canyon live oak on the steep ground, black oak,
+incense cedar and Douglas-fir come in above about 525-600 m (lower on north slopes, Douglas-fir almost only
+there), madrone and bay on north slopes. Rows stay plain weights (one per community and distinct terrain
+response; the client is unchanged), at the price of two-byte row indices and a 262 KB `species_mix.json`.
+Rejected: per-cell weight rasters (format 1's way, retired the day before) and separate LANDFIRE-style rules
+per elevation band (they would duplicate every community). The six shrubs join the shrub impostor field as
+negative kinds with their own random stream, placed from the mix at an understory cover per habitat class,
+because the canopy layer gives woodland and grassland cells no shrub cover; negative because `shadows.js`
+treats kinds over 1.5 as grass, whose swaying shadows made neighbouring shrubs flicker. Cost: 26 species take
+the start view from 239 to 417 draw calls and about 1.4 ms more CPU; the far atlas is at its 64-tree cap on
+every tile. Details in species-library.md, "Integration of the foothill set".

@@ -1,6 +1,6 @@
 {
   "id": "acer_macrophyllum",
-  "aliases": ["bigleaf_maple", "big_leaf_maple"],
+  "aliases": ["maple", "bigleaf_maple", "big_leaf_maple"],
   "scientific": "Acer macrophyllum",
   "common": "big-leaf maple",
   "form": "tree",
@@ -9,7 +9,7 @@
   "height_m": [15, 24],
   "variants": [
     {"name": "young", "weight": 0.25, "height_m": [6, 12], "trunk_radius": 0.65, "crown_scale": 0.8, "branches": 0.8, "set": {"trunk": {"length_ratio": 0.55, "split_prob": 0.25}, "foliage": {"clumps": {"radius_m": 0.9}}}, "note": "a slender young tree or a clump of sprouts from a cut stump, crown narrow and upright"},
-    {"name": "mature", "weight": 0.5, "seeds": 2, "note": "the file as written"},
+    {"name": "mature", "weight": 0.5, "seeds": 1, "note": "the file as written"},
     {"name": "veteran", "weight": 0.2, "height_m": [22, 30], "trunk_radius": 1.3, "crown_scale": 1.12, "gnarl": 1.25, "deadwood": {"fraction": 0.2, "levels": [1, 2], "where": "inner"}, "set": {"trunk": {"stems": [2, 4], "stem_spread_deg": 20, "lean_deg": 12}}, "note": "several massive mossy stems from one base, heavy limbs, some dead"}
   ],
   "snag": {"fraction": 0.05, "from": "veteran", "height_m": [14, 24], "limbs": 0.5, "twigs": 0.2, "levels": 1, "shorten": [0.4, 0.9], "rgb": [140, 134, 124]},

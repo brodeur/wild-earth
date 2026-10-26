@@ -9,7 +9,7 @@
   "height_m": [30, 48],
   "variants": [
     {"name": "young", "weight": 0.25, "height_m": [6, 18], "trunk_radius": 0.8, "branches": 0.8, "leaf_density": 1.3, "set": {"trunk": {"base_size": 0.06, "bole_ratio": 0.05, "bark_rgb": [128, 120, 112], "bark_pattern": "smooth", "stubs": {"count": [0, 2]}}, "crown": {"envelope": {"profile": [[0.06, 0.27], [0.25, 0.26], [0.45, 0.22], [0.65, 0.16], [0.82, 0.1], [1.0, 0.02]], "lobe_depth": 0.06}}, "levels": [{"droop_deg": 20, "upturn_deg": 30}]}, "note": "a dense, symmetrical spire with branches to the ground and smooth grey bark with resin blisters"},
-    {"name": "mature", "weight": 0.5, "seeds": 2, "note": "the file as written"},
+    {"name": "mature", "weight": 0.5, "seeds": 1, "note": "the file as written"},
     {"name": "old-growth", "weight": 0.17, "height_m": [45, 60], "trunk_radius": 1.4, "branches": 0.75, "gnarl": 1.2, "deadwood": {"fraction": 0.2, "levels": [1], "where": "lower", "shorten": 0.5, "rgb": [130, 120, 108]}, "set": {"trunk": {"base_size": 0.55, "bole_ratio": 0.5, "length_ratio": 0.95, "bark_rgb": [116, 96, 80], "stubs": {"count": [12, 24]}}, "crown": {"shape": "cylindrical", "envelope": {"profile": [[0.52, 0.16], [0.64, 0.2], [0.76, 0.2], [0.88, 0.16], [0.96, 0.1], [1.0, 0.05]], "lobes": 4, "lobe_depth": 0.18, "asymmetry": 0.16}}, "levels": [{"droop_deg": 40, "upturn_deg": 20}]}, "note": "a giant with a long clear trunk of thick, deeply furrowed bark and a narrow, ragged, flat-topped crown of heavy drooping limbs"}
   ],
   "snag": {"fraction": 0.06, "from": "mature", "height_m": [22, 40], "limbs": 0.25, "twigs": 0, "levels": 1, "broken_top": [0.5, 0.85], "shorten": [0.3, 0.8], "rgb": [146, 134, 120]},
@@ -47,7 +47,7 @@
     }
   ],
   "foliage": {
-    "type": "needle", "leaf_size_m": 0.025, "leaf_shape": "needle_flat", "cluster_m": 2.6, "density": 14, "leaf_fill": 5.0, "start": 0.15,
+    "type": "needle", "leaf_size_m": 0.025, "leaf_shape": "needle_flat", "cluster_m": 2.6, "density": 18, "leaf_fill": 5.0, "start": 0.15,
     "parent_start": 0.35, "orientation": "along", "needle_planes": 1, "tuft_spread_deg": 25, "tuft_up": 0.0, "droop": 0.4,
     "needle_normal": 0.5, "needle_wrap": 0.4, "translucency": 2.2, "needle_scatter": 0.15,
     "colors": {"winter": [86, 90, 73], "spring": [104, 114, 76], "summer": [90, 94, 78], "fall": [88, 92, 73]},
@@ -59,8 +59,8 @@
   "deadwood": {"fraction": 0.18, "where": "lower", "levels": [1], "shorten": 0.6, "rgb": [128, 118, 106]},
   "twigs": {"count": [1, 2], "length": 0.6, "down_deg": 50, "down_var_deg": 12, "tropism": -0.2, "segments": 1, "radius_m": 0.008, "taper": 0.5, "fan_deg": 30, "jitter": 0.08},
   "lod": {
-    "near_tris_budget": 2600, "near_sides": [6, 3, 0], "mid_blobs": 5, "mid_branches": 2, "mid_blob_scale": 0.8,
-    "close_factor": 2, "mid_planes": 1, "mid_cards": 48
+    "near_tris_budget": 3000, "near_sides": [6, 3, 0], "mid_blobs": 12, "mid_branches": 2, "mid_blob_scale": 0.55,
+    "close_factor": 2, "mid_planes": 1, "mid_cards": 48, "mid_canopy": "blobs"
   },
   "targets": {
     "crown_width_ratio": 0.5, "crown_base_ratio": 0.3, "porosity": 0.3, "foliage_rg": 0.91, "foliage_bg": 0.61,

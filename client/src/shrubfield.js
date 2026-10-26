@@ -1,5 +1,6 @@
 import * as THREE from 'three';
-import { mulberry32 } from './trees.js';
+import { mulberry32, SPECIES } from './trees.js';
+import { leafOnAt, decoActive, seasonMonth } from './treegen.js';
 import { uniforms as atmo, ATMOSPHERE_GLSL } from './atmosphere.js';
 import { groundUniforms, GROUND_GLSL } from './terrain.js';
 import { windUniforms, WIND_GLSL } from './wind.js';
@@ -30,7 +31,10 @@ import { rockKeep } from './tilepackage.js';
 // Placement is deterministic per 30 m habitat cell, cached, generated a few cells per frame.
 
 const STRIDE = 8, REFILL_MOVE = 15;
-export const KIND = { chamise: 0, manzanita: 1, annual: 2, bunch: 3, stalk: 4 };   // 2-4: grass.js's impostors (tuft, tussock, oat)
+export const KIND = { chamise: 0, manzanita: 1, annual: 2, bunch: 3, stalk: 4,   // 2-4: grass.js's impostors (tuft, tussock, oat)
+  toyon: -1, redbud: -2, poison_oak: -3, coyote_brush: -4, elderberry: -5, coffeeberry: -6 };   // negative: the foothill shrubs (FH below)
+// The foothill shrubs take negative kinds: shadows.js casts every kind over 1.5 as grass (its season height and a
+// grass blade's sway, 0.35 H), which swung a toyon's shadow metres across its neighbours in the wind.
 // Seed layout: integer part random, fractional part the silhouette variant (variant + 0.5) / 4.
 const lam = c => -Math.log(1 - Math.min(c, 0.9));   // disc density giving cover c with random placement
 
@@ -42,6 +46,7 @@ const VERT = /* glsl */`
   uniform vec4 band;      // fade in from x to y, out from z to w (distance to camera)
   uniform float heightScale; uniform float dry;   // dry: 0 green season .. 1 cured summer sward
   uniform vec2 nearBand;  // the near detail (leaves, wands, stems) is full to x, gone by y (distance to camera)
+  uniform vec3 fhCol[6];  // the foothill shrubs (FH, kind -1 - index): this season's leaf albedo, from the species files (fhSeason)
   attribute vec4 iPos; attribute vec4 iVar;   // root x y z, crown radius | height, seed, kind, rank
   varying vec2 vQ; varying vec3 vRight; varying vec3 vUp; varying vec3 vView;
   varying vec3 vAlbedo; varying vec3 vSun; varying vec3 vAmb; varying vec3 vAmbUp; varying vec3 vT; varying vec3 vIn;
@@ -104,10 +109,11 @@ const VERT = /* glsl */`
     float occ = (1.0 - 0.35 * clamp(texture(canopyMap, guv).r * 2.55, 0.0, 1.0)) * groundContactAO(iPos.xyz);
     // Species colour, varied per shrub and by stand (a warm, olive palette: chamise dark olive-green,
     // whiteleaf manzanita paler, grey-green to glaucous), pulled toward the photo.
+    bool fh = kind < -0.5;   // a foothill shrub (FH, kinds -1 to -6): its colour from its species file, this season
     bool manz = kind > 0.5;
-    vec3 a = manz ? vec3(0.09, 0.11, 0.07) : vec3(0.108, 0.113, 0.06);
-    float v1 = hh(seed * 7.1), v2 = hh(seed * 3.3), stand = wNoise(iPos.xz * 0.025 + (manz ? 7.0 : 0.0));
-    a *= manz ? mix(vec3(0.94, 1.0, 1.1), vec3(1.06, 1.03, 0.9), v1) : mix(vec3(0.9, 1.0, 1.04), vec3(1.1, 1.03, 0.86), v1);
+    vec3 a = fh ? fhCol[int(-kind - 0.5)] : manz ? vec3(0.09, 0.11, 0.07) : vec3(0.108, 0.113, 0.06);
+    float v1 = hh(seed * 7.1), v2 = hh(seed * 3.3), stand = wNoise(iPos.xz * 0.025 + (manz ? 7.0 : fh ? kind : 0.0));
+    a *= (manz || fh) ? mix(vec3(0.94, 1.0, 1.1), vec3(1.06, 1.03, 0.9), v1) : mix(vec3(0.9, 1.0, 1.04), vec3(1.1, 1.03, 0.86), v1);
     a *= mix(vec3(1.05, 1.0, 0.9), vec3(0.94, 1.0, 1.06), stand) * (0.78 + 0.44 * v2);
     float al = dot(a, G_LUMA);
     a = mix(a, gc * al / max(gl, 1e-3), 0.2) * mix(1.0, clamp(gl / 0.075, 0.8, 1.25), 0.5);
@@ -121,6 +127,15 @@ const VERT = /* glsl */`
 const FRAG = /* glsl */`
   uniform vec3 sunDir; uniform float heads; uniform float dry;   // dry: the season (grass.js's palette value)
   uniform sampler2D leafM; uniform sampler2D leafC; uniform vec4 leafGain;   // leaf pictures (bakeLeaves); their gain in sun (manzanita, chamise) and in shade (same)
+  // The foothill shrubs (FH: kinds -1 to -6, index -1 - kind), this season (fhSeason): leaf-on (0 bare .. 1), the bark
+  // and bare-twig albedo, and the flowers or berries showing (albedo, share of the outer crown they cover).
+  uniform float fhLeaf[6]; uniform vec3 fhBark[6]; uniform vec4 fhDeco[6];
+  // Their outlines (docs/species-library.md, "Foothill shrubs", impostor cards): lobe depth (toyon lumpy in
+  // sub-crowns, coffeeberry and coyote brush smooth), how far the fringe breaks up (poison oak and elderberry
+  // open and ragged), and a narrow base (redbud's vase, poison oak's leaning stems).
+  const float FH_LOBE[6] = float[6](0.34, 0.24, 0.36, 0.1, 0.3, 0.14);
+  const float FH_OPEN[6] = float[6](0.62, 0.48, 0.38, 0.7, 0.42, 0.68);
+  const float FH_VASE[6] = float[6](0.0, 0.26, 0.16, 0.0, 0.06, 0.0);
   varying vec2 vQ; varying vec3 vRight; varying vec3 vUp; varying vec3 vView;
   varying vec3 vAlbedo; varying vec3 vSun; varying vec3 vAmb; varying vec3 vAmbUp; varying vec3 vT; varying vec3 vIn;
   varying float vSeed; varying float vKind; varying float vLobes; varying float vYS; varying float vVar; varying float vDry; varying float vFade;
@@ -160,7 +175,10 @@ const FRAG = /* glsl */`
     const float near = 0.0;
     #endif
     float kind = vKind, vv = vVar;
-    bool manz = kind > 0.5;
+    bool fh = kind < -0.5;           // a foothill shrub: drawn as manzanita is (leaf masses, stems), with its own look
+    int fk = fh ? int(-kind - 0.5) : 0;
+    bool manz = kind > 0.5, broad = manz || fh, fine = fh && fk == 3;   // fine: coyote brush takes chamise's picture
+    bool picM = broad && !fine;   // up close: the round-leaf picture (manzanita's) or the fine one (chamise's)
     vec2 q0 = vQ, q = q0;
     float sc = 0.8, kSub = 0.0, seam = 1.0;
     {
@@ -181,13 +199,17 @@ const FRAG = /* glsl */`
       // Outside every crown's widest possible outline (lobes, spikes, dead stems; up close the wands and
       // stems reach a little further): nothing to shade. Most of the quad around a cluster ends here,
       // before any noise is evaluated.
-      if (dot(q, q) > (near > 0.0 && !manz ? 2.2 : 1.9)) discard;
+      if (dot(q, q) > (near > 0.0 && !broad ? 2.2 : 1.9)) discard;
     }
     float r2 = dot(q, q);
     float z = sqrt(max(1.0 - min(r2, 1.0), 0.0));
     // World normal of the ellipsoid point under this pixel; lobes keyed on it stay put on the plant.
     vec3 nW = vRight * q.x + vUp * q.y + vView * z; nW = normalize(vec3(nW.x, nW.y * vYS, nW.z));
     float lobe = n3(nW * 1.6 * vLobes + vSeed * 37.0), twig = n3(nW * 6.0 * vLobes + vSeed * 11.0);
+    // A foothill shrub's flowers or berries this season: clusters over the outer, upper crown, a hash of the crown
+    // normal (stable on the plant as the view turns), the share fhDeco.a of them; they stay on a bare crown
+    // (redbud's magenta on bare twigs in March).
+    float fdk = fh ? step(1.0 - fhDeco[fk].a, h3(floor(nW * 13.0 * vLobes + vSeed * 13.0))) * smoothstep(-0.45, 0.25, nW.y) : 0.0;
     float rr = sqrt(r2), aa = fwidth(rr) + 1e-3;
     float rb, alpha, fringe, dead = 0.0;
     // Shrub crown. Variants (vv): chamise 0 rounded, 1 ragged vase, 2 vase with grey dead stems;
@@ -195,19 +217,23 @@ const FRAG = /* glsl */`
     rb = 0.72 + 0.34 * lobe + 0.14 * (twig - 0.5);
     // Chamise's upright stems: noise stretched along the vertical, so the edge breaks into
     // spikes, not bumps (manzanita's smooth-barked crowns do without).
-    float streak = manz ? 0.5 : n3(vec3(nW.x * 9.0, nW.y * 1.6, nW.z * 9.0) * vLobes + vSeed * 17.0);
-    bool vase = !manz && vv > 0.5;
+    float streak = broad ? 0.5 : n3(vec3(nW.x * 9.0, nW.y * 1.6, nW.z * 9.0) * vLobes + vSeed * 17.0);
+    bool vase = !broad && vv > 0.5;
     if (manz) rb += 0.12 * smoothstep(0.0, 0.8, q.y) * (lobe - 0.4) - 0.08 * smoothstep(-0.2, -0.9, q.y);
+    if (fh) rb += FH_LOBE[fk] * (lobe - 0.5) - FH_VASE[fk] * smoothstep(0.1, -0.8, nW.y) + (fine ? 0.08 * (twig - 0.5) : 0.0);
     if (vase) rb += -0.24 * smoothstep(0.15, -0.75, nW.y) + 0.26 * (streak - 0.45) * smoothstep(-0.1, 0.6, nW.y);   // narrow base, ragged spiky top
-    else if (!manz) rb += 0.1 * (streak - 0.5) * smoothstep(0.0, 0.7, nW.y);
+    else if (!broad) rb += 0.1 * (streak - 0.5) * smoothstep(0.0, 0.7, nW.y);
     if (manz && vv > 1.5) rb += 0.1 * (lobe - 0.5);   // open crown: deeper bays between branch masses
     alpha = clamp((rb - rr) / aa + 0.5, 0.0, 1.0);
     // Twiggy fringe: the outer band broken into stems and gaps (more on chamise, most on a vase).
     fringe = smoothstep(rb - (vase ? 0.32 : 0.25), rb, rr);
     if (near < 1.0) {
-      if (fringe > 0.0) alpha *= 1.0 - fringe * smoothstep(manz ? 0.55 : vase ? 0.4 : 0.45, manz ? 0.7 : vase ? 0.55 : 0.6, n3(nW * 14.0 * vLobes + vSeed * 3.0));
+      if (fringe > 0.0) alpha *= 1.0 - fringe * smoothstep(fh ? FH_OPEN[fk] : manz ? 0.55 : vase ? 0.4 : 0.45, fh ? FH_OPEN[fk] + 0.15 : manz ? 0.7 : vase ? 0.55 : 0.6, n3(nW * 14.0 * vLobes + vSeed * 3.0));
+      // A bare deciduous crown (redbud, poison oak, elderberry in winter) is a haze of twigs: a third of its
+      // disc, broken by the fine octave, until its leaves come back.
+      if (fh && fhLeaf[fk] < 0.999) alpha *= mix(max(0.42 * smoothstep(0.42, 0.6, twig), fdk), 1.0, clamp(fhLeaf[fk] * 1.4, 0.0, 1.0));
       // Dead chamise: bare grey stems poking up out of the crown, past its leafy outline.
-      if (!manz && vv > 1.5) {
+      if (!broad && vv > 1.5) {
         float ridge = 1.0 - smoothstep(0.0, 0.15, abs(n3(vec3(nW.x * 5.0, nW.y * 1.2, nW.z * 5.0) + vSeed * 5.0) - 0.5));
         dead = ridge * smoothstep(-0.3, 0.4, nW.y) * step(rr, rb + 0.3);
         alpha = max(alpha, dead * smoothstep(rb + 0.3, rb, rr) * clamp(0.06 / aa, 0.0, 1.0));
@@ -228,11 +254,11 @@ const FRAG = /* glsl */`
       float pxm = length(fwidth(wm)) + 1e-5;   // metres per pixel
       hgt = wm.y; side = smoothstep(0.25, 0.65, ce);
       // The lowest ~15% of the height is bare stems (seen from the side), its edge following the lobes.
-      float baseH = 2.0 * Hh * (manz ? 0.17 : 0.13) * (0.55 + 0.9 * lobe) * side;
+      float baseH = 2.0 * Hh * (broad ? 0.17 : 0.13) * (0.55 + 0.9 * lobe) * side;
       // Up close the outline breaks into sprays (manzanita: rounded leaf masses; chamise: upright tufts).
-      spray = manz ? twig : streak;   // (the crown's own octaves: a further noise here cost 0.75 ms at 3 m)
-      float rbN = rb + (manz ? 0.34 * (twig - 0.5) : 0.45 * (streak - 0.5) + 0.12 * (twig - 0.5)) * smoothstep(-0.5, 0.2, nW.y);
-      float dEdge = min((manz ? rbN : rbN * 0.93) - rr, (hgt - baseH) / max(vDim.y * sc, 0.1));   // > 0 inside the foliage
+      spray = broad ? twig : streak;   // (the crown's own octaves: a further noise here cost 0.75 ms at 3 m)
+      float rbN = rb + (broad ? 0.34 * (twig - 0.5) : 0.45 * (streak - 0.5) + 0.12 * (twig - 0.5)) * smoothstep(-0.5, 0.2, nW.y);
+      float dEdge = min((broad ? rbN : rbN * 0.93) - rr, (hgt - baseH) / max(vDim.y * sc, 0.1));   // > 0 inside the foliage
       // Leaves (manzanita: round, 2.5-5 cm, in sprays, a red twig in the gaps) and needle tufts on wands
       // (chamise), from a baked picture of each (bakeLeaves) wrapped round the crown by azimuth and height
       // (a whole number of tiles round, so no seam) with a flat cap on top: it stays on the plant as the
@@ -240,7 +266,7 @@ const FRAG = /* glsl */`
       // outward and only the leaves' cores are kept, so the edge is single leaves and tufts, thinning out.
       vec3 s3 = vRight * q.x + vUp * q.y + vView * z;
       vec3 P = s3 * vec3(Rm, Hh, Rm) * sc;
-      float T = manz ? 1.0 : 0.8, Nu = max(1.0, floor(6.2832 * Rm * sc / T + 0.5)) / 6.2832;
+      float T = picM ? 1.0 : 0.8, Nu = max(1.0, floor(6.2832 * Rm * sc / T + 0.5)) / 6.2832;
       float az = atan(s3.z, s3.x);
       vec2 hx = dFdx(s3.xz), hy = dFdy(s3.xz);   // the azimuth's gradient, worked out (no jump at its cut)
       vec2 gA = vec2(s3.x * hx.y - s3.z * hx.x, s3.x * hy.y - s3.z * hy.x) / max(dot(s3.xz, s3.xz), 1e-4) * Nu;
@@ -252,17 +278,18 @@ const FRAG = /* glsl */`
       ddx = vec2(gA.x + dFdx(P.y) / T * shear, dFdx(P.y) / T), ddy = vec2(gA.y + dFdy(P.y) / T * shear, dFdy(P.y) / T);
       vec2 uvT = P.xz / T + off.yx, dxT = dFdx(P.xz) / T, dyT = dFdy(P.xz) / T;
       float wc = smoothstep(0.45, 0.7, s3.y / max(length(s3), 1e-3));   // the cap
-      tex = manz ? textureGrad(leafM, uv, ddx, ddy) : textureGrad(leafC, uv, ddx, ddy);
-      if (wc > 0.0) tex = mix(tex, manz ? textureGrad(leafM, uvT, dxT, dyT) : textureGrad(leafC, uvT, dxT, dyT), wc);
+      tex = picM ? textureGrad(leafM, uv, ddx, ddy) : textureGrad(leafC, uv, ddx, ddy);
+      if (wc > 0.0) tex = mix(tex, picM ? textureGrad(leafM, uvT, dxT, dyT) : textureGrad(leafC, uvT, dxT, dyT), wc);
       lres = 1.0 - smoothstep(3.0, 9.0, 512.0 * max(max(length(ddx), length(ddy)), wc * max(length(dxT), length(dyT))));
       rim = smoothstep(0.22, 0.0, dEdge);
       float outer = clamp(-dEdge / 0.2, 0.0, 1.0), thr = mix(0.5, 0.93, outer), gw = 0.5 * fwidth(tex.g) + 0.02;
       body = mix(alpha, mix(1.0, smoothstep(thr - gw, thr + gw, tex.g), rim) * step(-0.2, dEdge), lres);   // foliage coverage
+      if (fh && fhLeaf[fk] < 0.999) body *= max(step(fract(tex.b * 5.31), fhLeaf[fk]), fdk);   // a leafing-out or dropping crown: that share of its leaves (and its flowers)
       // Wood is drawn only where it can show: where the foliage does not cover the pixel, or through a
       // gap in the picture in the lower crown (most of a crown's face skips it).
       bool need = body < 0.99 || (tex.g < 0.5 && hgt < Hh * 0.75);
       if (!need) alphaN = body;
-      else if (!manz) {
+      else if (!broad) {
         // Chamise: 15-35 stiff wands fanning up from the burl (from above, all round), bowing outward;
         // each ends a little inside or past the leafy outline, tufted along its upper part, rust-tipped
         // in summer and fall. Decadent plants: many bare grey wands, poking out further.
@@ -345,7 +372,15 @@ const FRAG = /* glsl */`
         gap = mix(1.0, 0.45 + 0.55 * smoothstep(0.18, 0.42, f2), close);
       }
       vec3 col = vAlbedo * (0.6 + 0.8 * lch) * gap;
-      if (manz) {
+      if (fh) {
+        // The foothill shrubs: the shaded inside of the crown in its holes, the bare twigs where the leaves are
+        // gone (a deciduous crown in winter), and this season's flowers or berries as specks on the outer,
+        // upper crown (toyon's red berries in winter, redbud's magenta in March, elderberry's cream plates).
+        float hole = smoothstep(0.3, 0.16, lch) * (1.0 - fringe * 0.7);
+        col = mix(col, vAlbedo * 0.4, hole * 0.7);
+        col = mix(fhBark[fk] * (0.7 + 0.6 * lch), col, clamp(fhLeaf[fk] * 1.25, 0.0, 1.0));
+        col = mix(col, fhDeco[fk].rgb * (0.85 + 0.3 * lch), fdk * 0.95);
+      } else if (manz) {
         // Whiteleaf manzanita's smooth red-mahogany branches: under the crown where the view looks
         // in, and through the holes in the foliage (wide open on the open variant, few on the sprawl).
         float stem = step(0.8, h2(floor(vec2(q.x * 7.0 + vSeed * 3.0, 1.0)))) * smoothstep(0.0, -0.6, q.y) * smoothstep(0.3, -0.2, nW.y);
@@ -375,11 +410,11 @@ const FRAG = /* glsl */`
       // warmer in spring. Flower and seed tips: chamise cream (spring), rust (summer, fall), old brown
       // heads (winter); manzanita's white-pink flowers in winter and early spring.
       float wW = 1.0 - step(0.05, dry), wF = step(0.5, dry) * (1.0 - step(0.93, dry)), wS = step(0.05, dry) * (1.0 - step(0.5, dry)), wU = step(0.93, dry);
-      vec3 tint = manz ? wW * vec3(0.93, 0.98, 0.99) + wS * vec3(1.08, 0.98, 1.03) + wU + wF * vec3(0.96, 0.98, 1.0)
+      vec3 tint = fh ? vec3(1.0) : manz ? wW * vec3(0.93, 0.98, 0.99) + wS * vec3(1.08, 0.98, 1.03) + wU + wF * vec3(0.96, 0.98, 1.0)
                        : wW * vec3(0.8, 0.96, 0.78) + wS * vec3(1.08, 1.06, 1.04) + wU + wF * vec3(1.08, 0.96, 0.94);
-      vec3 tipRel = manz ? vec3(2.6, 2.3, 2.4) : wW * vec3(1.4, 0.8, 0.55) + wS * vec3(3.2, 3.0, 2.9) + wU * vec3(2.1, 1.15, 0.65) + wF * vec3(1.8, 0.82, 0.5);
+      vec3 tipRel = fh ? fhDeco[fk].rgb / max(vAlbedo, vec3(1e-3)) : manz ? vec3(2.6, 2.3, 2.4) : wW * vec3(1.4, 0.8, 0.55) + wS * vec3(3.2, 3.0, 2.9) + wU * vec3(2.1, 1.15, 0.65) + wF * vec3(1.8, 0.82, 0.5);
       float pl = fract(vSeed * 0.731);   // per plant: does it carry flowers or seed heads this year
-      float tipShare = manz ? (wW * 0.06 + wS * 0.025) : step(0.3, pl) * (wW * 0.08 + wS * 0.2 + (wU + wF) * 0.22);
+      float tipShare = fh ? 0.0 : manz ? (wW * 0.06 + wS * 0.025) : step(0.3, pl) * (wW * 0.08 + wS * 0.2 + (wU + wF) * 0.22);
       vec3 fol = vAlbedo * tint;
       float cl = (0.6 + 0.8 * lc) * mix(0.8, 1.05, smoothstep(0.25, 0.65, spray));
       vec3 sunL = vSun * diff * mix(0.75, 1.0, lc) * mix(0.7, 1.0, smoothstep(0.2, 0.6, spray)), ambL = amb * ao;
@@ -392,20 +427,21 @@ const FRAG = /* glsl */`
       float shade = tex.r * mix(1.0, mix(0.78, 1.04, clamp(tex.g * 2.0 - 1.0, 0.0, 1.0)), step(0.5, tex.g) * lres);
       float rnd = tex.b, woodF = tex.a, lv = fract(rnd * 7.31);
       float leafSun = 1.0; vec3 colF;
-      if (manz) {
+      if (broad && !fine) {
         float laz = rnd * 6.2832;
         leafSun = mix(1.0, 0.45 + 1.1 * abs(dot(vec3(cos(laz), 0.0, sin(laz)), sunDir)), lres * (1.0 - woodF));
         colF = fol * mix(vec3(0.85, 0.9, 0.86), vec3(1.2, 1.2, 1.28), lv);
       } else colF = fol * mix(0.8, 1.2, lv) * vec3(0.92, 1.0, 1.04);   // (the brown wands in the picture warm the mean)
+      if (fh) colF = mix(colF, fhDeco[fk].rgb * mix(0.9, 1.15, lv), fdk);
       // (Tips carry the leaves' sun gain too, so chamise's are taken down by its larger gain.)
-      colF = mix(colF, fol * tipRel * (manz ? 1.0 : 0.6), step(rnd, tipShare * smoothstep(manz ? 0.0 : 0.1, 0.6, nW.y)) * lres);
-      vec3 barkC = manz ? vec3(0.12, 0.042, 0.038) : vec3(0.15, 0.11, 0.08), deadC = manz ? vec3(0.24, 0.23, 0.2) : vec3(0.24, 0.225, 0.2);
-      float woodCov = manz ? stemCov : wandCov;
-      vec3 woodLit = mix(barkC, deadC, manz ? stemDead : wandDead) * (sunL * 0.4 + amb * 1.1);
+      colF = mix(colF, fol * tipRel * (broad ? 1.0 : 0.6), step(rnd, tipShare * smoothstep(broad ? 0.0 : 0.1, 0.6, nW.y)) * lres);
+      vec3 barkC = fh ? fhBark[fk] : manz ? vec3(0.12, 0.042, 0.038) : vec3(0.15, 0.11, 0.08), deadC = broad ? vec3(0.24, 0.23, 0.2) : vec3(0.24, 0.225, 0.2);
+      float woodCov = broad ? stemCov : wandCov;
+      vec3 woodLit = mix(barkC, deadC, broad ? stemDead : wandDead) * (sunL * 0.4 + amb * 1.1);
       vec3 texWood = mix(barkC, deadC, step(0.5, rnd)) * 0.8;
-      if (!manz) woodLit = mix(woodLit, mix(fol, fol * tipRel * 0.6, wandTip * step(0.001, tipShare)) * cl * (sunL * 0.8 + ambL), wandLeaf);
+      if (!broad) woodLit = mix(woodLit, mix(fol, fol * tipRel * 0.6, wandTip * step(0.001, tipShare)) * cl * (sunL * 0.8 + ambL), wandLeaf);
       vec3 base = mix(colF, texWood, woodF);
-      vec2 gn = manz ? leafGain.xz : leafGain.yw;
+      vec2 gn = picM ? leafGain.xz : leafGain.yw;
       vec3 folLit = base * cl * (sunL * leafSun * shade * gn.x + ambL * (0.5 + 0.5 * shade) * gn.y);
       // The geometric stems and wands show through the picture's gaps in the lower crown and the holes.
       float show = max(rim, smoothstep(Hh * 0.75, Hh * 0.45, hgt));
@@ -458,6 +494,10 @@ const smooth = (a, b, x) => { const t = Math.min(Math.max((x - a) / (b - a), 0),
 //                    riparian band (none in water whatever this is)
 //   cellList(i, j)   optional: the cell's instances (STRIDE floats each, rank slot free) from an
 //                    outside placement, in random order; replaces cellAny's candidates and plant()
+//   extraAny(i, j), extra(i, j)   optional: more plants of the cell from a placement of their own (ShrubField:
+//                    the foothill shrubs), instances in rank order with their ranks set; they are merged into
+//                    the cell's list by rank, so the cell's own plants keep their ranks and any prefix is still
+//                    an even subsample of both
 //   shader           optional: { vertexShader, fragmentShader, uniforms } in place of the shrub shader
 export class ClumpField {
   constructor(tile, ground, uniforms, cfg) {
@@ -465,6 +505,7 @@ export class ClumpField {
     this.cache = new Map(); this.cells = []; this.last = null; this.sig = NaN; this.n = 0;
     this.W = tile.habitat.img.width; this.H = tile.habitat.img.height;
     this.lamMax = lam(cfg.coverMax);
+    this.any = cfg.extraAny ? (i, j) => cfg.cellAny(i, j) || cfg.extraAny(i, j) : cfg.cellAny;
     // cfg.shader: { vertexShader, fragmentShader, uniforms } replaces the shrub shader (the instance
     // layout and the kParams / band uniforms stay, so shadows.js can cast from any field).
     const sh = cfg.shader || {};
@@ -522,6 +563,7 @@ export class ClumpField {
       const m = out.length / STRIDE;
       for (let k = 0; k < m; k++) out[k * STRIDE + 7] = (k + 0.5) / m;   // rank: the order is already random
     }
+    if (cfg.extra && cfg.extraAny(i, j)) out = mergeByRank(out, cfg.extra(i, j));
     c = { data: new Float32Array(out), n: out.length / STRIDE, x: (i + 0.5) * res, y: 0, z: -(size - (j + 0.5) * res), r: res };
     if (out.length) {
       let y0 = Infinity, y1 = -Infinity, hm = 0;
@@ -539,7 +581,7 @@ export class ClumpField {
     const i0 = Math.max(0, Math.floor((x - r) / res)), i1 = Math.min(this.W - 1, Math.floor((x + r) / res));
     const j0 = Math.max(0, Math.floor((size - north - r) / res)), j1 = Math.min(this.H - 1, Math.floor((size - north + r) / res));
     for (let j = j0; j <= j1; j++) for (let i = i0; i <= i1; i++) {
-      if (!this.cfg.cellAny(i, j)) continue;
+      if (!this.any(i, j)) continue;
       const d = Math.hypot((i + 0.5) * res - x, size - (j + 0.5) * res - north);
       if (d <= r + res * 0.71) cells.push([d, i, j]);
     }
@@ -584,6 +626,20 @@ export class ClumpField {
     }
     this.mesh.visible = this.n > 0;
   }
+}
+
+// Two instance lists in rank order (slot 7) merged into one, still in rank order.
+function mergeByRank(a, b) {
+  if (!b.length) return a;
+  if (!a.length) return b;
+  const out = new Array(a.length + b.length);
+  let i = 0, j = 0, o = 0;
+  while (i < a.length || j < b.length) {
+    const src = j >= b.length || (i < a.length && a[i + 7] <= b[j + 7]) ? a : b, k = src === a ? i : j;
+    for (let c = 0; c < STRIDE; c++) out[o++] = src[k + c];
+    if (src === a) i += STRIDE; else j += STRIDE;
+  }
+  return out;
 }
 
 // Leaf pictures for the near crowns, drawn once at load (canvas 2D), 512 px tiles that repeat, mipmapped:
@@ -704,8 +760,10 @@ export function ShrubField(tile, ground, uniforms) {
     const g = 0.65 * vnoise(x / 17, n / 17, 31) + 0.35 * vnoise(x / 6, n / 6, 32), t = 0.25 + 0.1 * (0.85 - c);
     return c * smooth(t - 0.06, t + 0.06, g) * rockKeep(tile, x, n);   // and the outcrops of rocks.js open the stand
   };
+  const fh = foothillShrubs(tile, ground, cover);
   const field = new ClumpField(tile, ground, uniforms, {
-    name: 'shrubfield', salt: 0x5eed, cap: 140000, roadsMax: 60, near: true,
+    name: 'shrubfield', salt: 0x5eed, cap: 200000, roadsMax: 60, near: true,
+    extraAny: fh.any, extra: fh.cell,   // the foothill shrubs, merged into the chaparral's cells and the woodland's
     cellAny: anyAround(cover, W, H), coverAt, coverMax: 0.85,
     meanArea: OLD_AREA / QMAX,   // candidates for the densest places; plant() thins them (see eOld)
     // Gone only right at the camera, at every height (the 3D shrubs are too few to carry the cover). The
@@ -747,7 +805,99 @@ export function ShrubField(tile, ground, uniforms) {
   field.uniforms.nearBand = { value: new THREE.Vector2(14, 26) };
   field.uniforms.leafM = { value: bakeLeaves(true) }; field.uniforms.leafC = { value: bakeLeaves(false) };
   field.uniforms.leafGain = { value: new THREE.Vector4(2.5, 4.0, 1.25, 1.4) };   // the near look matched to the far one in mean (measured on screen)
+  // The foothill shrubs' season (fhSeason), set from the field's season (grass.js's `dry`) when it changes.
+  Object.assign(field.uniforms, {
+    fhCol: { value: FH.map(() => new THREE.Vector3()) }, fhBark: { value: FH.map(() => new THREE.Vector3()) },
+    fhLeaf: { value: FH.map(() => 1) }, fhDeco: { value: FH.map(() => new THREE.Vector4()) } });
+  const update = field.update.bind(field);
+  let fhKey = null;
+  field.update = (camera, on = true, band = null) => {
+    const season = seasonOfDry(field.uniforms.dry.value), key = `${season}:${seasonMonth(season).toFixed(1)}`;
+    if (key !== fhKey) { fhKey = key; fhSeason(field.uniforms, season); }
+    update(camera, on, band);
+  };
+  field.foothill = fh;
   return field;
+}
+
+// ---- The foothill shrubs (2026-10-26): toyon, western redbud, poison oak, coyote brush, blue elderberry and
+// California coffeeberry (library/species, docs/species-library.md "Foothill shrubs"), kinds -1 to -6 of the
+// shrub field (negative kinds), drawn by the same impostor with their own look (FH_* in FRAG and the season uniforms below).
+// They come from the tile's species mix (each cell's row's shrub weights for these six, pipeline
+// species_mix.py), not from the shrub cover alone: the canopy layer gives woodland, grassland and riparian
+// cells almost no shrub cover (EVC classes the cell by its trees), but they have an understory. Cover of the
+// six in a cell: chaparral, FH_CHAP of the chaparral field's own cover (on top of it) times their share of
+// the row's shrub weights; elsewhere FH_UNDER of the habitat class times that share times the row's shrub
+// density, in patches (an understory is clumped: poison oak colonies, toyon under the oaks' edges, coyote
+// brush along a grassland's edge). Their own random stream per cell (salt 0xf007), so the chamise and
+// manzanita of a chaparral cell are exactly as before. Sizes from the species files' classes (height_m and
+// weights) and crown_width_ratio, as the 3D shrubs.
+const FH = ['heteromeles_arbutifolia', 'cercis_occidentalis', 'toxicodendron_diversilobum', 'baccharis_pilularis',
+  'sambucus_nigra_caerulea', 'frangula_californica'];   // kinds -1..-6
+const FH_UNDER = { 1: 0.14, 2: 0.08, 3: 0.12, 5: 0.03, 6: 0.18 }, FH_CHAP = 0.8, FH_AREA = 3, FH_MAX = 0.4;
+// Albedo from a species file's sRGB colour (linear, scaled to the chaparral shrubs' level: chamise's summer
+// colour comes out within a few per cent of its own albedo here).
+const FH_K = [0.6, 0.6, 0.48];
+const linK = c => c.map((v, i) => Math.pow(v / 255, 2.2) * FH_K[i]);
+const seasonOfDry = d => d < 0.05 ? 'winter' : d < 0.5 ? 'spring' : d < 0.93 ? 'fall' : 'summer';   // as FRAG reads it
+function fhSeason(u, season) {
+  const month = seasonMonth(season);
+  FH.forEach((id, k) => {
+    const spec = SPECIES[id]; if (!spec) return;
+    const F = spec.foliage;
+    u.fhCol.value[k].set(...linK(F.colors[season] || F.colors.summer));
+    u.fhBark.value[k].set(...linK(spec.trunk.twig_rgb || spec.trunk.bark_rgb || [110, 100, 90]));
+    u.fhLeaf.value[k] = Math.min(1, Math.max(0, leafOnAt(spec, season, month)));
+    // flowers or berries showing this month (berries first when both do): their colour and a share of the crown
+    const D = [F.berries, F.flowers].find(d => d?.rgb && decoActive(d, season, month));
+    if (D) u.fhDeco.value[k].set(...linK(D.rgb), Math.min(0.6, (D.density ?? 0.4) * 0.5)); else u.fhDeco.value[k].set(0, 0, 0, 0);
+  });
+}
+function foothillShrubs(tile, ground, chap) {
+  const hab = tile.habitat, W = hab.img.width, H = hab.img.height, res = hab.res, mix = tile.speciesMix;
+  const sizes = FH.map(id => {
+    const spec = SPECIES[id]; if (!spec) return null;
+    const cls = (spec.variants || []).map(v => ({ w: v.weight ?? 0, h: v.height_m || spec.height_m }));
+    return { cls: cls.length ? cls : [{ w: 1, h: spec.height_m }], wh: spec.targets?.crown_width_ratio ?? 1.2 };
+  });
+  const cover = new Float32Array(W * H), weights = new Array(W * H);
+  if (mix) for (let j = 0; j < H; j++) for (let i = 0; i < W; i++) {
+    const row = mix.at(i, j); if (!row || !row.shrubSum) continue;
+    const w = FH.map((id, k) => sizes[k] ? row.shrubs[id] || 0 : 0), share = w.reduce((a, b) => a + b, 0);
+    if (share <= 0) continue;
+    const cls = hab.channel(i, j, 0), o = j * W + i, sd = Math.min(Math.max(mix.density(i, j, row)[1], 0.3), 1.5);
+    cover[o] = Math.min(FH_MAX, cls === 4 ? FH_CHAP * chap[o] * share : (FH_UNDER[cls] || 0) * share * sd / 0.6);
+    weights[o] = w.map(v => v / share);
+  }
+  const coverAt = bilinear(cover, W, H, res, tile.size), any = anyAround(cover, W, H);
+  const lamMax = lam(FH_MAX * 1.6);
+  const cell = (i, j) => {
+    const out = [], { size, roads, waterMask: wm } = tile, rnd = mulberry32((i * 73856093) ^ (j * 19349663) ^ 0xf007);
+    const n = Math.round(lamMax * res * res / FH_AREA);
+    for (let k = 0; k < n; k++) {
+      const px = (i + rnd()) * res, pn = size - (j + rnd()) * res, keep = rnd(), u = rnd(), v = rnd(), w = rnd(), z = rnd();
+      // patches tens of metres across: the understory clumps (mean 1 over the ground)
+      const c = coverAt(px, pn) * 1.6 * smooth(0.28, 0.62, vnoise(px / 23, pn / 23, 47));
+      if (c <= 0 || keep * lamMax >= lam(c)) continue;
+      if (roads && roads.at(px, pn) > 60) continue;
+      if (waterAt(wm, px, pn) === 255 || rockKeep(tile, px, pn) < u * 0.999) continue;
+      const ci = Math.min(Math.max(Math.floor(px / res), 0), W - 1), cj = Math.min(Math.max(Math.floor((size - pn) / res), 0), H - 1);
+      const wt = weights[cj * W + ci] || weights[j * W + i]; if (!wt) continue;
+      let sp = 0, acc = wt[0]; while (sp < FH.length - 1 && v > acc) acc += wt[++sp];
+      const sz = sizes[sp]; if (!sz) continue;
+      let ci2 = 0, a2 = sz.cls[0].w, tot = sz.cls.reduce((s2, q) => s2 + q.w, 0) || 1;
+      while (ci2 < sz.cls.length - 1 && w * tot > a2) a2 += sz.cls[++ci2].w;
+      const [h0, h1] = sz.cls[ci2].h, Hh = h0 + (h1 - h0) * 0.5 * (z + rnd());
+      const R = sz.wh * (0.88 + 0.24 * rnd()) * Hh / VIS_W;
+      if (rnd() * Math.PI * R * R > FH_AREA * 1.5) continue;   // the larger crowns fewer, so the cover holds
+      const variant = ci2 === sz.cls.length - 1 && sz.cls.length > 2 ? 2 : rnd() < 0.5 ? 0 : 1;   // 2: the old class (dead stems)
+      out.push(px, ground(px, pn), -pn, R, Hh, Math.floor(rnd() * 100) + (variant + 0.5) / 4, KIND.toyon - sp, 0);
+    }
+    const m = out.length / STRIDE;
+    for (let k = 0; k < m; k++) out[k * STRIDE + 7] = (k + 0.5) / m;
+    return out;
+  };
+  return { any, cell, cover, coverAt };
 }
 
 function anyAround(grid, W, H) {

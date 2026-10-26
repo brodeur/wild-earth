@@ -16,6 +16,9 @@ species. A cell carries only its row and its two density multipliers; the rows c
   species_mix.json         "format": 2, the species columns, the code -> mix table actually used (each
                            row's weights as bytes summing to 255 per layer), per-tile fractions
 The weights were never varied per cell (every cell of a row had the row's bytes), so nothing is lost.
+Terrain (2026-10-26): within a community a species' weight follows the ground (TERRAIN: elevation band,
+valley floor or steep slope, north-facing), so a community has one row per distinct terrain response and
+every row still carries plain weights; the client is unchanged.
 Format 1 (four RGBA/RGB weight PNGs and mixes[].bytes with a bytes_layout) is read by the client
 for tiles built before; this module no longer writes it.
 
@@ -35,131 +38,218 @@ from .config import Tile, sha256
 from .habitat import CLASSES, HUMAN_PHYS_PREFIXES, rewilded_cells
 
 # Column order of the species (format 2: `species` in species_mix.json, and the order of each row's
-# tree_bytes / shrub_bytes, which is the order the client draws species in). These are the species of
-# format 1 in its column order, so every existing row keeps its draws bit-identical; a species a rule
-# names that is not listed here is appended after them, in the order the rules first name it (columns()).
-# Ids are the library's canonical ids (library/species/<id>.json).
+# tree_bytes / shrub_bytes, which is the order the client draws species in). The first nine are the
+# species of format 1 in its column order; the foothill set (2026-10-26) is appended after them. A species
+# a rule names that is not listed here is appended after these, in the order the rules first name it
+# (columns()). Ids are the library's canonical ids (library/species/<id>.json).
 TREES = ["quercus_douglasii", "quercus_wislizeni", "pinus_sabiniana", "pinus_ponderosa",
-         "salix_lasiolepis", "alnus_rhombifolia", "populus_fremontii"]
-SHRUBS = ["arctostaphylos_viscida", "adenostoma_fasciculatum"]
-# Short names for the per-tile fraction tables (older docs and reports use them); other species use their id.
+         "salix_lasiolepis", "alnus_rhombifolia", "populus_fremontii",
+         "quercus_lobata", "quercus_chrysolepis", "quercus_kelloggii", "aesculus_californica", "arbutus_menziesii",
+         "umbellularia_californica", "juglans_hindsii", "acer_macrophyllum", "fraxinus_latifolia",
+         "calocedrus_decurrens", "pseudotsuga_menziesii"]
+SHRUBS = ["arctostaphylos_viscida", "adenostoma_fasciculatum",
+          "heteromeles_arbutifolia", "cercis_occidentalis", "toxicodendron_diversilobum", "baccharis_pilularis",
+          "sambucus_nigra_caerulea", "frangula_californica"]
+# Short names for the per-tile fraction tables (older docs and reports use them, and the client's aliases).
 SHORT = {"quercus_douglasii": "blue_oak", "quercus_wislizeni": "live_oak", "pinus_sabiniana": "gray_pine",
          "pinus_ponderosa": "ponderosa", "arctostaphylos_viscida": "manzanita", "adenostoma_fasciculatum": "chamise",
-         "salix_lasiolepis": "willow", "alnus_rhombifolia": "alder", "populus_fremontii": "cottonwood"}
+         "salix_lasiolepis": "willow", "alnus_rhombifolia": "alder", "populus_fremontii": "cottonwood",
+         "quercus_lobata": "valley_oak", "quercus_chrysolepis": "canyon_live_oak", "quercus_kelloggii": "black_oak",
+         "aesculus_californica": "buckeye", "arbutus_menziesii": "madrone", "umbellularia_californica": "bay",
+         "juglans_hindsii": "walnut", "acer_macrophyllum": "maple", "fraxinus_latifolia": "ash",
+         "calocedrus_decurrens": "incense_cedar", "pseudotsuga_menziesii": "douglas_fir",
+         "heteromeles_arbutifolia": "toyon", "cercis_occidentalis": "redbud", "toxicodendron_diversilobum": "poison_oak",
+         "baccharis_pilularis": "coyote_brush", "sambucus_nigra_caerulea": "elderberry", "frangula_californica": "coffeeberry"}
 FORMAT = 2
 DENSITY_SCALE = 100   # density byte = round(multiplier * 100); 1.0 = the client's per-habitat-class count
 LIBRARY = pathlib.Path(__file__).resolve().parent.parent / "library" / "species"
 
-BLACK_OAK = "black oak (Quercus kelloggii) is not in the library: quercus_wislizeni stands in"
-LIVE_OAK_STANDIN = "canyon live oak, madrone and Douglas-fir are not in the library: quercus_wislizeni and pinus_ponderosa stand in"
-RIPARIAN = ("valley oak, Oregon ash, bigleaf maple and box elder are not in the library: quercus_douglasii stands in "
-            "for valley oak on the banks; the riparian understory (blackberry, wild rose, spicebush) is not in the "
-            "library either, so the shrub layer is thin")
-CONIFER = "sugar pine, incense cedar, white fir and Douglas-fir are not in the library: pinus_ponderosa stands in"
+# Short ids for the rules below (canonical ids in the output).
+BO, LO, GP, PP = "quercus_douglasii", "quercus_wislizeni", "pinus_sabiniana", "pinus_ponderosa"
+WI, AL, CW = "salix_lasiolepis", "alnus_rhombifolia", "populus_fremontii"
+VO, CO, KO, BU, MA, BA = ("quercus_lobata", "quercus_chrysolepis", "quercus_kelloggii", "aesculus_californica",
+                          "arbutus_menziesii", "umbellularia_californica")
+WA, MP, AS, IC, DF = ("juglans_hindsii", "acer_macrophyllum", "fraxinus_latifolia", "calocedrus_decurrens",
+                      "pseudotsuga_menziesii")
+MZ, CH = "arctostaphylos_viscida", "adenostoma_fasciculatum"
+TY, RB, PO, CB, EL, CF = ("heteromeles_arbutifolia", "cercis_occidentalis", "toxicodendron_diversilobum",
+                          "baccharis_pilularis", "sambucus_nigra_caerulea", "frangula_californica")
+
+CONIFER = "sugar pine and white fir are not in the library: pinus_ponderosa stands in"
+UNDERSTORY = ("the riparian understory (blackberry, wild rose, spicebush, California grape) is not in the library: "
+              "elderberry and poison oak are the shrub layer, with a little manzanita")
 
 
-def _r(rid, kws, trees, shrubs, td, sd, note=None, any_of=False):
+def _r(rid, kws, trees, shrubs, td, sd, note=None, any_of=False, fixed=()):
+    """fixed: species whose weight the terrain (TERRAIN) does not change in this rule (the community is
+    named for them, so LANDFIRE has already put them there)."""
     return {"id": rid, "keywords": kws, "any": any_of, "trees": trees, "shrubs": shrubs,
-            "tree_density": td, "shrub_density": sd, "note": note}
+            "tree_density": td, "shrub_density": sd, "note": note, "fixed": list(fixed)}
 
 
 # Ordered: the first rule whose keywords all appear in the lower-cased name wins
-# (any_of=True: any one keyword). Specific before general.
+# (any_of=True: any one keyword). Specific before general. Weights are relative within a layer (they are
+# normalised per cell after the terrain factors). The nine original species keep their weights from
+# before the foothill set; the new species are added beside them (a minority, but for black oak in the
+# black-oak communities), so the original species' shares shrink in proportion. Where a species stood
+# in for one now in the library (blue oak for valley oak, live oak for black oak, live oak and ponderosa
+# for canyon live oak, madrone and Douglas-fir) the stand-in gives up that share.
 RULES = [
     _r("open_water", ["open water"], {}, {}, 0.0, 0.0),
-    _r("wet_meadow_marsh", ["marsh", "wet meadow"], {"salix_lasiolepis": 0.8, "quercus_wislizeni": 0.2}, {"arctostaphylos_viscida": 1},
-       0.05, 0.05, "herbaceous wetland: almost no woody plants, a few willows at the edge", any_of=True),
-    # Riparian (2026-10-25): arroyo willow thickets at the water, white alder rooted in the bank, Fremont
-    # cottonwood scattered on the floodplain, interior live oak (and blue oak for valley oak) up the banks.
-    _r("riparian_shrubland", ["riparian", "shrubland"],
-       {"salix_lasiolepis": 0.75, "alnus_rhombifolia": 0.1, "quercus_wislizeni": 0.15},
-       {"arctostaphylos_viscida": 0.5, "adenostoma_fasciculatum": 0.5}, 1.2, 0.2,
-       "willow scrub: arroyo willow is the shrubland; " + RIPARIAN),
+    _r("wet_meadow_marsh", ["marsh", "wet meadow"], {WI: 0.8, LO: 0.2, VO: 0.1}, {MZ: 0.5, EL: 0.25, CB: 0.25},
+       0.05, 0.05, "herbaceous wetland: almost no woody plants, a few willows and a valley oak at the edge", any_of=True),
+    # Riparian: arroyo willow thickets at the water, white alder rooted in the bank, Fremont cottonwood on the
+    # floodplain, Oregon ash, black walnut and big-leaf maple beside them; valley oak and interior live oak up
+    # the banks; elderberry and poison oak in the understory.
+    _r("riparian_shrubland", ["riparian", "shrubland"], {WI: 0.75, AL: 0.1, LO: 0.15, AS: 0.05},
+       {MZ: 0.5, CH: 0.5, EL: 0.45, PO: 0.45, CF: 0.1}, 1.2, 0.2, "willow scrub: arroyo willow is the shrubland; " + UNDERSTORY),
     _r("montane_riparian", ["montane riparian systems"],
-       {"alnus_rhombifolia": 0.4, "salix_lasiolepis": 0.25, "quercus_wislizeni": 0.15, "pinus_ponderosa": 0.12,
-        "populus_fremontii": 0.08},
-       {"arctostaphylos_viscida": 1}, 1.3, 0.3, "alder-willow streamside forest with some pine; " + RIPARIAN),
+       {AL: 0.4, WI: 0.25, LO: 0.15, PP: 0.12, CW: 0.08, MP: 0.12, AS: 0.06, WA: 0.02, BA: 0.04, IC: 0.05, DF: 0.04},
+       {MZ: 1, EL: 0.5, PO: 0.6}, 1.3, 0.3, "alder-willow streamside forest with maple, ash, bay and some conifers; " + UNDERSTORY),
     _r("riparian", ["riparian"],
-       {"salix_lasiolepis": 0.38, "alnus_rhombifolia": 0.24, "populus_fremontii": 0.1, "quercus_wislizeni": 0.2,
-        "quercus_douglasii": 0.08},
-       {"arctostaphylos_viscida": 1}, 1.6, 0.3, RIPARIAN),
+       {WI: 0.38, AL: 0.24, CW: 0.1, LO: 0.17, BO: 0.03, VO: 0.12, WA: 0.06, MP: 0.05, AS: 0.07, BA: 0.03, BU: 0.02},
+       {MZ: 0.3, EL: 0.5, PO: 0.7, CF: 0.1, CB: 0.1}, 1.6, 0.3, UNDERSTORY),
     _r("blue_oak_foothill_pine", ["blue oak", "foothill pine"],
-       {"quercus_douglasii": 0.65, "quercus_wislizeni": 0.1, "pinus_sabiniana": 0.25},
-       {"arctostaphylos_viscida": 0.5, "adenostoma_fasciculatum": 0.5}, 1.0, 0.5),
-    _r("blue_oak", ["blue oak"], {"quercus_douglasii": 0.85, "quercus_wislizeni": 0.1, "pinus_sabiniana": 0.05},
-       {"arctostaphylos_viscida": 0.4, "adenostoma_fasciculatum": 0.6}, 1.0, 0.4),
-    _r("foothill_pine", ["foothill pine"], {"pinus_sabiniana": 0.6, "quercus_douglasii": 0.25, "quercus_wislizeni": 0.15},
-       {"arctostaphylos_viscida": 0.4, "adenostoma_fasciculatum": 0.6}, 0.9, 1.0),
-    _r("black_oak_conifer", ["black oak", "conifer"], {"pinus_ponderosa": 0.55, "quercus_wislizeni": 0.4, "pinus_sabiniana": 0.05},
-       {"arctostaphylos_viscida": 0.8, "adenostoma_fasciculatum": 0.2}, 1.1, 0.6, BLACK_OAK),
-    _r("black_oak", ["black oak"], {"quercus_wislizeni": 0.7, "pinus_ponderosa": 0.3},
-       {"arctostaphylos_viscida": 0.9, "adenostoma_fasciculatum": 0.1}, 1.0, 0.5, BLACK_OAK),
-    _r("mixed_oak_savanna", ["mixed oak savanna"], {"quercus_douglasii": 0.6, "quercus_wislizeni": 0.35, "pinus_sabiniana": 0.05},
-       {"arctostaphylos_viscida": 0.3, "adenostoma_fasciculatum": 0.7}, 0.6, 0.3,
-       "valley oak (Quercus lobata) is not in the library: quercus_douglasii stands in"),
-    _r("mixed_oak", ["mixed oak"], {"quercus_douglasii": 0.4, "quercus_wislizeni": 0.45, "pinus_sabiniana": 0.15},
-       {"arctostaphylos_viscida": 0.6, "adenostoma_fasciculatum": 0.4}, 1.0, 0.6),
-    _r("mixed_evergreen", ["mixed evergreen"], {"quercus_wislizeni": 0.55, "pinus_ponderosa": 0.45},
-       {"arctostaphylos_viscida": 1}, 1.2, 0.5, LIVE_OAK_STANDIN),
-    _r("ponderosa_jeffrey", ["ponderosa", "jeffrey pine"], {"pinus_ponderosa": 0.9, "quercus_wislizeni": 0.1},
-       {"arctostaphylos_viscida": 0.9, "adenostoma_fasciculatum": 0.1}, 0.8, 0.8,
-       "Jeffrey pine is not in the library: pinus_ponderosa stands in", any_of=True),
-    _r("dry_mesic_mixed_conifer", ["dry-mesic mixed conifer"], {"pinus_ponderosa": 0.8, "quercus_wislizeni": 0.2},
-       {"arctostaphylos_viscida": 1}, 1.0, 0.6, CONIFER),
-    _r("mesic_mixed_conifer", ["mixed conifer"], {"pinus_ponderosa": 0.85, "quercus_wislizeni": 0.15},
-       {"arctostaphylos_viscida": 1}, 1.2, 0.4, CONIFER),
-    _r("lower_montane_conifer", ["lower montane conifer"], {"pinus_ponderosa": 0.75, "quercus_wislizeni": 0.15, "pinus_sabiniana": 0.1},
-       {"arctostaphylos_viscida": 0.85, "adenostoma_fasciculatum": 0.15}, 1.0, 0.6, CONIFER + "; black oak as quercus_wislizeni"),
+       {BO: 0.65, LO: 0.1, GP: 0.25, VO: 0.07, BU: 0.04, CO: 0.02, KO: 0.01},
+       {MZ: 0.5, CH: 0.5, PO: 0.3, TY: 0.12, CF: 0.1, RB: 0.05, CB: 0.08}, 1.0, 0.5),
+    _r("blue_oak", ["blue oak"], {BO: 0.85, LO: 0.1, GP: 0.05, VO: 0.06, BU: 0.05, CO: 0.02},
+       {MZ: 0.4, CH: 0.6, PO: 0.3, TY: 0.1, CF: 0.08, RB: 0.04, CB: 0.06}, 1.0, 0.4),
+    _r("foothill_pine", ["foothill pine"], {GP: 0.6, BO: 0.25, LO: 0.15, BU: 0.04, CO: 0.03},
+       {MZ: 0.4, CH: 0.6, TY: 0.12, CF: 0.1, RB: 0.06, PO: 0.15}, 0.9, 1.0),
+    _r("black_oak_conifer", ["black oak", "conifer"],
+       {KO: 0.45, PP: 0.4, LO: 0.12, GP: 0.02, IC: 0.12, DF: 0.08, MA: 0.04, CO: 0.03},
+       {MZ: 0.8, CH: 0.2, TY: 0.1, PO: 0.25, CF: 0.15, RB: 0.03}, 1.1, 0.6,
+       "black oak with ponderosa, incense cedar and Douglas-fir (on north slopes); " + CONIFER, fixed=[KO]),
+    _r("black_oak", ["black oak"], {KO: 0.6, LO: 0.15, PP: 0.15, MA: 0.04, BA: 0.02, CO: 0.03, IC: 0.03},
+       {MZ: 0.9, CH: 0.1, PO: 0.3, TY: 0.1, CF: 0.15}, 1.0, 0.5, fixed=[KO]),
+    _r("mixed_oak_savanna", ["mixed oak savanna"], {BO: 0.45, LO: 0.3, GP: 0.05, VO: 0.25, BU: 0.03},
+       {MZ: 0.3, CH: 0.7, CB: 0.2, PO: 0.2, TY: 0.05}, 0.6, 0.3),
+    _r("mixed_oak", ["mixed oak"], {BO: 0.4, LO: 0.45, GP: 0.15, VO: 0.05, CO: 0.06, BU: 0.05, KO: 0.08, MA: 0.03, BA: 0.02},
+       {MZ: 0.6, CH: 0.4, TY: 0.15, PO: 0.35, CF: 0.15, RB: 0.06}, 1.0, 0.6),
+    _r("mixed_evergreen", ["mixed evergreen"], {CO: 0.25, LO: 0.25, MA: 0.15, BA: 0.1, DF: 0.1, PP: 0.2, KO: 0.1, IC: 0.05},
+       {MZ: 1, TY: 0.3, PO: 0.3, CF: 0.3}, 1.2, 0.5, "interior mixed evergreen forest: canyon live oak, madrone, bay and Douglas-fir"),
+    _r("ponderosa_jeffrey", ["ponderosa", "jeffrey pine"], {PP: 0.9, LO: 0.1, KO: 0.1, IC: 0.06},
+       {MZ: 0.9, CH: 0.1, CF: 0.05}, 0.8, 0.8, "Jeffrey pine is not in the library: pinus_ponderosa stands in", any_of=True),
+    _r("dry_mesic_mixed_conifer", ["dry-mesic mixed conifer"], {PP: 0.5, LO: 0.1, KO: 0.2, IC: 0.15, DF: 0.08, CO: 0.03, MA: 0.02},
+       {MZ: 1, TY: 0.05, PO: 0.1, CF: 0.1}, 1.0, 0.6, CONIFER),
+    _r("mesic_mixed_conifer", ["mixed conifer"], {PP: 0.4, IC: 0.2, DF: 0.2, KO: 0.12, LO: 0.06, MA: 0.03, BA: 0.02},
+       {MZ: 1, PO: 0.1, CF: 0.1}, 1.2, 0.4, CONIFER),
+    _r("lower_montane_conifer", ["lower montane conifer"],
+       {PP: 0.58, LO: 0.1, GP: 0.1, KO: 0.14, IC: 0.08, DF: 0.05, CO: 0.03, MA: 0.02, BA: 0.02},
+       {MZ: 0.85, CH: 0.15, TY: 0.08, CF: 0.1, PO: 0.12, RB: 0.03}, 1.0, 0.6, CONIFER),
     _r("montane_woodland_chaparral", ["montane woodland and chaparral"],
-       {"quercus_wislizeni": 0.5, "pinus_ponderosa": 0.3, "pinus_sabiniana": 0.2},
-       {"arctostaphylos_viscida": 0.8, "adenostoma_fasciculatum": 0.2}, 0.6, 1.0, LIVE_OAK_STANDIN),
-    _r("serpentine_woodland", ["serpentine", "woodland"], {"pinus_sabiniana": 0.6, "quercus_wislizeni": 0.4},
-       {"arctostaphylos_viscida": 0.6, "adenostoma_fasciculatum": 0.4}, 0.6, 1.0,
-       "leather oak and McNab cypress are not in the library"),
-    _r("xeric_chaparral", ["xeric", "chaparral"], {"pinus_sabiniana": 0.7, "quercus_wislizeni": 0.3},
-       {"adenostoma_fasciculatum": 0.8, "arctostaphylos_viscida": 0.2}, 0.15, 1.0),
-    _r("dry_mesic_chaparral", ["dry-mesic chaparral"], {"pinus_sabiniana": 0.6, "quercus_wislizeni": 0.4},
-       {"adenostoma_fasciculatum": 0.65, "arctostaphylos_viscida": 0.35}, 0.3, 1.0),
-    _r("mesic_chaparral", ["mesic", "chaparral"], {"quercus_wislizeni": 0.6, "pinus_sabiniana": 0.4},
-       {"arctostaphylos_viscida": 0.6, "adenostoma_fasciculatum": 0.4}, 0.35, 1.0,
-       "scrub oak and ceanothus are not in the library"),
-    _r("chaparral", ["chaparral"], {"pinus_sabiniana": 0.6, "quercus_wislizeni": 0.4},
-       {"adenostoma_fasciculatum": 0.6, "arctostaphylos_viscida": 0.4}, 0.3, 1.0),
-    _r("ruderal_forest", ["ruderal forest"],
-       {"quercus_wislizeni": 0.4, "quercus_douglasii": 0.25, "pinus_sabiniana": 0.2, "pinus_ponderosa": 0.15},
-       {"arctostaphylos_viscida": 0.5, "adenostoma_fasciculatum": 0.5}, 0.8, 0.8,
-       "disturbed regrowth of mixed composition: a generic foothill blend"),
-    _r("ruderal_scrub", ["ruderal scrub"], {"pinus_sabiniana": 0.5, "quercus_wislizeni": 0.5},
-       {"adenostoma_fasciculatum": 0.5, "arctostaphylos_viscida": 0.5}, 0.2, 0.8,
-       "disturbed scrub (broom, blackberry): native chaparral shrubs stand in"),
-    _r("great_basin_shrub", ["greasewood", "sagebrush"], {"pinus_sabiniana": 1}, {"adenostoma_fasciculatum": 1}, 0.0, 0.6,
-       "Great Basin shrub type in the foothills (LANDFIRE edge case): chamise stands in", any_of=True),
-    _r("grassland_savanna", ["grassland", "savanna", "prairie", "meadow"], {"quercus_douglasii": 0.85, "pinus_sabiniana": 0.15},
-       {"adenostoma_fasciculatum": 1}, 1.0, 0.3, "sparse blue oak savanna over annual grass", any_of=True),
-    _r("sparse_rock", ["cliff", "canyon", "sparsely vegetated", "barren"], {"pinus_sabiniana": 0.5, "quercus_wislizeni": 0.5},
-       {"adenostoma_fasciculatum": 0.6, "arctostaphylos_viscida": 0.4}, 0.25, 0.3, any_of=True),
+       {LO: 0.3, PP: 0.25, GP: 0.15, CO: 0.15, KO: 0.1},
+       {MZ: 0.8, CH: 0.2, TY: 0.1, CF: 0.1, RB: 0.05}, 0.6, 1.0),
+    _r("serpentine_woodland", ["serpentine", "woodland"], {GP: 0.6, LO: 0.4, BU: 0.03},
+       {MZ: 0.6, CH: 0.4, CF: 0.1, RB: 0.05, TY: 0.05}, 0.6, 1.0, "leather oak and McNab cypress are not in the library"),
+    _r("xeric_chaparral", ["xeric", "chaparral"], {GP: 0.7, LO: 0.3},
+       {CH: 0.8, MZ: 0.2, TY: 0.03, RB: 0.03}, 0.15, 1.0),
+    _r("dry_mesic_chaparral", ["dry-mesic chaparral"], {GP: 0.6, LO: 0.4, CO: 0.05, BU: 0.03},
+       {CH: 0.65, MZ: 0.35, TY: 0.1, CF: 0.08, RB: 0.05, PO: 0.04}, 0.3, 1.0),
+    _r("mesic_chaparral", ["mesic", "chaparral"], {LO: 0.6, GP: 0.4, CO: 0.1, BA: 0.03, MA: 0.03},
+       {MZ: 0.6, CH: 0.4, TY: 0.2, CF: 0.15, RB: 0.05, PO: 0.05}, 0.35, 1.0, "scrub oak and ceanothus are not in the library"),
+    _r("chaparral", ["chaparral"], {GP: 0.6, LO: 0.4}, {CH: 0.6, MZ: 0.4, TY: 0.08, CF: 0.06, RB: 0.04}, 0.3, 1.0),
+    _r("ruderal_forest", ["ruderal forest"], {LO: 0.4, BO: 0.25, GP: 0.2, PP: 0.15, VO: 0.05, KO: 0.05, BU: 0.03, WA: 0.03},
+       {MZ: 0.5, CH: 0.5, CB: 0.3, PO: 0.3, TY: 0.08, EL: 0.05}, 0.8, 0.8,
+       "disturbed regrowth of mixed composition: a generic foothill blend, with coyote brush and poison oak at the edges"),
+    _r("ruderal_scrub", ["ruderal scrub"], {GP: 0.5, LO: 0.5}, {CH: 0.5, MZ: 0.5, CB: 0.6, PO: 0.2, TY: 0.05}, 0.2, 0.8,
+       "disturbed scrub: coyote brush leads; broom and blackberry are not in the library"),
+    _r("great_basin_shrub", ["greasewood", "sagebrush"], {GP: 1}, {CH: 1, CB: 0.3}, 0.0, 0.6,
+       "Great Basin shrub type in the foothills (LANDFIRE edge case): chamise and coyote brush stand in", any_of=True),
+    _r("grassland_savanna", ["grassland", "savanna", "prairie", "meadow"], {BO: 0.85, GP: 0.15, VO: 0.1, BU: 0.02},
+       {CH: 1, CB: 0.6, PO: 0.1}, 1.0, 0.3, "sparse blue oak savanna over annual grass, valley oak in the swales", any_of=True),
+    _r("sparse_rock", ["cliff", "canyon", "sparsely vegetated", "barren"], {GP: 0.5, LO: 0.5, CO: 0.4},
+       {CH: 0.6, MZ: 0.4, RB: 0.2, TY: 0.1}, 0.25, 0.3, any_of=True),
 ]
 
 # Rewilded water beds (habitat.rewilded_cells): not LANDFIRE communities, so not matched by name.
 # The corridor along the restored channel is a young riparian strip: willow dominant at the water, alder next,
-# a few cottonwoods, live oak where it climbs the old bed's banks; no pine and no chaparral shrubs.
-# The meadow keeps a few scattered oaks.
-REWILD_MEADOW = _r("rewilded_meadow", [], {"quercus_douglasii": 0.85, "quercus_wislizeni": 0.15}, {}, 0.5, 0.0,
-                   "former reservoir or stock-pond bed: wet meadow (sedge, rush, perennial grass) with scattered oaks; "
-                   "valley oak (Quercus lobata) is not in the library: quercus_douglasii stands in")
-REWILD_RIPARIAN = _r("rewilded_riparian", [],
-                     {"salix_lasiolepis": 0.45, "alnus_rhombifolia": 0.25, "populus_fremontii": 0.12, "quercus_wislizeni": 0.18},
-                     {}, 2.0, 0.0, "riparian corridor along the restored channel through a former bed; " + RIPARIAN)
+# a few cottonwoods, ash, maple and walnut, live oak and valley oak where they climb the old bed's banks; no
+# pine and no chaparral shrubs. The meadow keeps a few scattered oaks, valley oak among them (blue oak still
+# leads, so the client's savanna rule, one oak per two treeless cells, holds).
+REWILD_MEADOW = _r("rewilded_meadow", [], {BO: 0.55, VO: 0.35, LO: 0.1}, {}, 0.5, 0.0,
+                   "former reservoir or stock-pond bed: wet meadow (sedge, rush, perennial grass) with scattered oaks",
+                   fixed=[VO])
+REWILD_RIPARIAN = _r("rewilded_riparian", [], {WI: 0.45, AL: 0.25, CW: 0.12, LO: 0.18, VO: 0.06, AS: 0.05, MP: 0.03, WA: 0.02},
+                     {}, 2.0, 0.0, "riparian corridor along the restored channel through a former bed")
 
 # Fallback when no keyword matches: the client's original fixed mix per habitat class (vegetation.js MIX).
 HABITAT_DEFAULT = {
-    1: ({"quercus_douglasii": 0.55, "quercus_wislizeni": 0.25, "pinus_sabiniana": 0.2}, {"arctostaphylos_viscida": 1}),
-    2: ({"pinus_ponderosa": 0.7, "pinus_sabiniana": 0.12, "quercus_wislizeni": 0.18}, {"arctostaphylos_viscida": 1}),
-    3: ({"pinus_ponderosa": 0.3, "quercus_wislizeni": 0.3, "quercus_douglasii": 0.2, "pinus_sabiniana": 0.2}, {"arctostaphylos_viscida": 1}),
-    4: ({"pinus_sabiniana": 1.0}, {"adenostoma_fasciculatum": 0.6, "arctostaphylos_viscida": 0.4}),
-    5: ({"quercus_douglasii": 0.85, "pinus_sabiniana": 0.15}, {"adenostoma_fasciculatum": 1}),
-    6: ({"quercus_wislizeni": 0.6, "quercus_douglasii": 0.2, "pinus_ponderosa": 0.2}, {"arctostaphylos_viscida": 1}),
+    1: ({BO: 0.55, LO: 0.25, GP: 0.2}, {MZ: 1}),
+    2: ({PP: 0.7, GP: 0.12, LO: 0.18}, {MZ: 1}),
+    3: ({PP: 0.3, LO: 0.3, BO: 0.2, GP: 0.2}, {MZ: 1}),
+    4: ({GP: 1.0}, {CH: 0.6, MZ: 0.4}),
+    5: ({BO: 0.85, GP: 0.15}, {CH: 1}),
+    6: ({LO: 0.6, BO: 0.2, PP: 0.2}, {MZ: 1}),
 }
+
+# Terrain (2026-10-26). A rule's weights are the community; within it, where a species stands depends on
+# the ground: each 30 m cell gets a terrain class from the DEM (terrain/dem.tif, 5 m, averaged to the cell),
+# and a species' weight is multiplied by its factors for that class before the row is normalised:
+#   band    effective elevation: the cell's mean elevation plus 100 m on north-facing ground and minus 50 m
+#           on south-facing (cool slopes carry the vegetation of higher ground), in bands with edges
+#           ELEV_BANDS: <450, 450-525, 525-600, >=600 m
+#   pos     floor (mean slope under 6 degrees and the cell lower than its 330 m neighbourhood by 2 m or
+#           more: valley floors, swales, benches by the creeks), steep (mean slope 16 degrees or more:
+#           canyon walls and rocky slopes), else mid-slope
+#   north   facing north (northness, cos(aspect) weighted by slope up to 10 degrees, 0.35 or more)
+# TERRAIN[id] = (band factors x4, pos factors [floor, mid, steep], north factors [other, north]); a species
+# not listed (and every species listed in a rule's `fixed`) is not changed. Cells of one source and code
+# whose factors give the same bytes share a row, so a tile has a few rows per community, not one per class.
+ELEV_BANDS = (450.0, 525.0, 600.0)
+NORTH_LIFT, SOUTH_DROP, NORTH_MIN = 100.0, 50.0, 0.35
+FLOOR_SLOPE, FLOOR_TPI, STEEP_SLOPE = 6.0, -2.0, 16.0
+TERRAIN = {
+    VO: ([1.0, 0.8, 0.45, 0.2], [2.5, 1.0, 0.15], [1.0, 0.8]),    # valley floors and lower slopes, below ~600 m
+    CO: ([0.8, 1.0, 1.0, 1.0], [0.3, 0.8, 3.0], [0.7, 1.6]),      # canyon walls and rocky slopes, north-facing
+    KO: ([0.1, 0.45, 0.85, 1.0], [0.8, 1.0, 0.8], [0.8, 1.3]),    # above ~500-600 m (lower on north slopes)
+    BU: ([1.0, 1.0, 0.8, 0.5], [0.8, 1.0, 1.8], [1.0, 1.0]),      # oak woodland and canyon edges
+    MA: ([0.4, 0.8, 1.0, 1.0], [0.6, 1.0, 1.3], [0.3, 2.2]),      # north slopes, canyons
+    BA: ([0.8, 1.0, 1.0, 1.0], [1.5, 1.0, 1.4], [0.3, 2.2]),      # north slopes, canyon bottoms
+    IC: ([0.04, 0.3, 0.75, 1.0], [1.3, 1.0, 0.8], [0.6, 1.6]),    # above ~550 m, canyons and north slopes
+    DF: ([0.0, 0.15, 0.55, 1.0], [1.2, 1.0, 0.8], [0.12, 2.0]),   # north slopes above ~550 m
+    TY: ([1.0, 1.0, 1.0, 1.0], [0.7, 1.0, 1.2], [1.0, 1.2]),
+    RB: ([1.0, 1.0, 1.0, 1.0], [0.5, 1.0, 2.0], [1.1, 0.9]),      # rocky slopes and canyon sides
+    PO: ([1.0, 1.0, 1.0, 1.0], [1.3, 1.0, 0.8], [0.9, 1.3]),
+    CB: ([1.0, 1.0, 1.0, 0.8], [1.4, 1.0, 0.6], [1.0, 1.0]),      # flats and disturbed edges
+    EL: ([1.0, 1.0, 1.0, 1.0], [1.5, 1.0, 0.5], [1.0, 1.0]),
+    CF: ([1.0, 1.0, 1.0, 1.0], [1.0, 1.0, 1.0], [0.9, 1.2]),
+}
+POS_NAMES, BAND_NAMES = ("floor", "mid-slope", "steep"), ("<450 m", "450-525 m", "525-600 m", ">=600 m")
+
+
+def terrain_classes(tile: Tile, shape: tuple[int, int]) -> np.ndarray:
+    """Terrain class per vegetation cell: band * 6 + pos * 2 + north (0..23), see TERRAIN."""
+    from scipy import ndimage
+    with rasterio.open(tile.path("terrain/dem.tif")) as src:
+        z = src.read(1).astype("float64")
+        res = src.res[0]
+    gy, gx = np.gradient(z, res)                  # gy: d/d(row), rows run south
+    slope = np.degrees(np.arctan(np.hypot(gx, gy)))
+    north = gy / np.maximum(np.hypot(gx, gy), 1e-9) * np.minimum(1.0, slope / 10.0)   # downhill toward north: +1
+    f = z.shape[0] / shape[0]
+    rows_, cols_ = ((np.arange(shape[0]) + 0.5) * f).astype(int), ((np.arange(shape[1]) + 0.5) * f).astype(int)
+    k = max(1, int(round(f)))
+    cells = lambda a: ndimage.uniform_filter(a, k, mode="nearest")[np.ix_(rows_, cols_)]   # cell means (same bounds)
+    E, S, N = cells(z), cells(slope), cells(north)
+    tpi = E - ndimage.uniform_filter(E, 11, mode="nearest")
+    eff = E + NORTH_LIFT * np.clip(N, 0, 1) - SOUTH_DROP * np.clip(-N, 0, 1)
+    band = np.digitize(eff, ELEV_BANDS)
+    pos = np.where((S < FLOOR_SLOPE) & (tpi <= FLOOR_TPI), 0, np.where(S >= STEEP_SLOPE, 2, 1))
+    return (band * 6 + pos * 2 + (N >= NORTH_MIN)).astype("int64")
+
+
+def terrain_label(t: int) -> str:
+    return f"{BAND_NAMES[t // 6]} {POS_NAMES[(t // 2) % 3]}{' north' if t % 2 else ''}"
+
+
+def terrain_weights(weights: dict, t: int, fixed=()) -> dict:
+    band, pos, nf = t // 6, (t // 2) % 3, t % 2
+    out = {}
+    for k, w in weights.items():
+        f = TERRAIN.get(k)
+        out[k] = w if (f is None or k in fixed) else w * f[0][band] * f[1][pos] * f[2][nf]
+    return out
 
 
 def match(name: str) -> dict | None:
@@ -243,7 +333,7 @@ def species_mix(tile: Tile) -> dict:
                          "trees": {k: v for k, v in rule["trees"].items() if v},
                          "shrubs": {k: v for k, v in rule["shrubs"].items() if v},
                          "tree_density": rule["tree_density"], "shrub_density": rule["shrub_density"],
-                         "note": rule.get("note"), "cells": 0}
+                         "note": rule.get("note"), "fixed": list(rule.get("fixed") or []), "cells": 0}
             if rows[key]["index"] > 65535:
                 raise ValueError("more than 65535 distinct mixes; species_mix_index.png holds 16 bits")
         return rows[key]["index"]
@@ -269,14 +359,39 @@ def species_mix(tile: Tile) -> dict:
             if sel.any():
                 index[sel] = row_for("rewild", k + 1, rule["id"].replace("_", " "), 5 if k == 0 else 6, rule)
 
-    table = sorted(rows.values(), key=lambda r: r["index"])
-    trees_cols, shrub_cols = columns(table)
+    # Terrain (TERRAIN): each community row splits by the cells' terrain classes into the rows whose
+    # weights differ; cells of one community and terrain response share a row.
+    base_rows = sorted(rows.values(), key=lambda r: r["index"])
+    trees_cols, shrub_cols = columns(base_rows)
     nt, ns = len(trees_cols), len(shrub_cols)
+    tcls = terrain_classes(tile, index.shape)
+    pair = index * 24 + tcls
+    final: dict[tuple, dict] = {}
+    out_index = np.zeros(index.shape, "int64")
+    for code in np.unique(pair).tolist():
+        b = base_rows[code // 24 - 1] if code >= 24 else None
+        if b is None:
+            continue
+        t = code % 24
+        tb = _bytes(terrain_weights(b["trees"], t, b["fixed"]), trees_cols)
+        sb = _bytes(terrain_weights(b["shrubs"], t, b["fixed"]), shrub_cols)
+        key = (b["source"], b["code"], tuple(tb), tuple(sb))
+        r = final.get(key)
+        if r is None:
+            r = final[key] = {"index": len(final) + 1, "source": b["source"], "code": b["code"], "name": b["name"],
+                              "rule": b["rule"], "community": b["index"], "terrain": [], "cells": 0, "_tb": tb, "_sb": sb,
+                              "tree_density": b["tree_density"], "shrub_density": b["shrub_density"]}
+            if r["index"] > 65535:
+                raise ValueError("more than 65535 distinct mixes; species_mix_index.png holds 16 bits")
+        r["terrain"].append(terrain_label(t))
+        out_index[pair == code] = r["index"]
+    index = out_index
+    table = sorted(final.values(), key=lambda r: r["index"])
     # Per-row bytes: tree weights over the tree columns, shrub weights over the shrub columns (each
     # summing to 255 or all zero), then the two density bytes. lut[0] (no mix) is all zero.
     lut = np.zeros((len(table) + 1, nt + ns + 2), "int64")
     for r in table:
-        tb, sb = _bytes(r["trees"], trees_cols), _bytes(r["shrubs"], shrub_cols)
+        tb, sb = r.pop("_tb"), r.pop("_sb")
         td = min(round(r["tree_density"] * DENSITY_SCALE), 255)
         sd = min(round(r["shrub_density"] * DENSITY_SCALE), 255)
         lut[r["index"]] = tb + sb + [td, sd]
@@ -284,6 +399,12 @@ def species_mix(tile: Tile) -> dict:
         r["tree_bytes"] = [[k, b] for k, b in zip(trees_cols, tb) if b]
         r["shrub_bytes"] = [[k, b] for k, b in zip(shrub_cols, sb) if b]
         r["density_bytes"] = [td, sd]
+        del r["tree_density"], r["shrub_density"]
+    # The communities as written (one per source and code, before the terrain factors), for people.
+    communities = [{"community": b["index"], "source": b["source"], "code": b["code"], "name": b["name"], "rule": b["rule"],
+                    "trees": b["trees"], "shrubs": b["shrubs"], "tree_density": b["tree_density"],
+                    "shrub_density": b["shrub_density"], "note": b["note"], "fixed": b["fixed"],
+                    "cells": int(sum(r["cells"] for r in table if r["community"] == b["index"]))} for b in base_rows]
     px = lut[index]
     TD, SD = nt + ns, nt + ns + 1
     for old in ("species_mix_a.png", "species_mix_b.png", "species_mix_c.png"):   # format 1 products
@@ -340,17 +461,28 @@ def species_mix(tile: Tile) -> dict:
             "weights": "mixes[].tree_bytes and shrub_bytes: [[species id, byte], ...], the species with a non-zero weight "
                        "in the column order of `species`, each layer summing to 255 (absent: no trees or no shrubs). "
                        "The client draws a species by walking this list in order, so the order is part of the format",
+            "terrain": "mixes[].terrain: the terrain classes (effective elevation band, floor / mid-slope / steep, north) "
+                       "whose cells use the row; a community (communities[], one per source and code: its name, the "
+                       "weights and densities as written, and a note) has one row per distinct terrain response "
+                       "(pipeline species_mix.py TERRAIN), and mixes[].community names it. The bytes are after the "
+                       "terrain factors",
         },
         "mixes": table,
+        "communities": communities,
         "unmatched": unmatched,
         "fractions": fractions,
     }
-    tile.path("client/species_mix.json").write_text(json.dumps(doc, indent=1))
+    # One row (and one community) per line: several hundred rows indented one value per line ran to 600 KB.
+    text = json.dumps({**doc, "mixes": "@MIXES@", "communities": "@COMMUNITIES@"}, indent=1)
+    for k, rows_ in (("@MIXES@", table), ("@COMMUNITIES@", communities)):
+        text = text.replace(f'"{k}"', "[\n" + ",\n".join("  " + json.dumps(r, separators=(",", ":")) for r in rows_) + "\n ]")
+    tile.path("client/species_mix.json").write_text(text)
     files = ["client/species_mix_index.png", "client/species_mix_density.png"]
     return {"path": "client/species_mix.json", "kind": "raster", "crs": tile.crs, "bounds": list(tile.bounds),
             "pixels": int(index.shape[0]), "resolution_m": res, "format": FORMAT,
             "files": {f: {"sha256": sha256(tile.path(f)), "bytes": tile.path(f).stat().st_size} for f in files},
-            "derived_from": ["vegetation.evt", "vegetation.bps", "vegetation.classes", "vegetation.habitat", "vegetation.evc"],
+            "derived_from": ["vegetation.evt", "vegetation.bps", "vegetation.classes", "vegetation.habitat", "vegetation.evc",
+                             "terrain.dem"],
             "encoding": "format 2: species_mix_index L = row in mixes; species_mix_density RGB = tree_density, shrub_density "
                         "(byte/100); per-row weights as mixes[].tree_bytes / shrub_bytes over species.trees / species.shrubs",
             "species": {"trees": trees_cols, "shrubs": shrub_cols},

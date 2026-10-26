@@ -4,7 +4,9 @@
 // mulberry32. The old short ids (blue_oak, live_oak, gray_pine, ponderosa, manzanita, chamise) stay as
 // aliases of the canonical scientific-name ids, and so are the riparian trees added on 2026-10-25: willow
 // (salix_lasiolepis), alder (alnus_rhombifolia) and cottonwood (populus_fremontii), the names the
-// species-mix rows use. Aliases come from each species file's `aliases`.
+// species-mix rows use. Aliases come from each species file's `aliases`; the foothill set registered on
+// 2026-10-26 answers to buckeye, madrone, walnut, bay, maple, ash, valley_oak, canyon_live_oak, black_oak,
+// incense_cedar, douglas_fir, toyon, redbud, poison_oak, coyote_brush, elderberry and coffeeberry.
 
 import { LIBRARY, ALIASES, buildTree, mulberry32, resolveSpecies } from './treegen.js';
 

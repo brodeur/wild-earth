@@ -20,7 +20,10 @@ export const SHRUB_MIX = { 4: { chamise: 0.6, manzanita: 0.4 }, 1: { manzanita: 
 // maps the slots to the species' age classes and snag in proportion to their weights (12 slots: shares in
 // twelfths). Slots of the same tree share one set of meshes; the far impostors bake every slot.
 export const VARIANTS = SLOTS;
-const OAK_SHORT = { quercus_douglasii: 'blue_oak', quercus_wislizeni: 'live_oak' };
+// The acorn game's oaks (acorns.js finds them through Vegetation.oaks), by their short names: blue oak and
+// interior live oak, and since 2026-10-26 valley oak, canyon live oak and black oak.
+const OAK_SHORT = { quercus_douglasii: 'blue_oak', quercus_wislizeni: 'live_oak', quercus_lobata: 'valley_oak',
+  quercus_chrysolepis: 'canyon_live_oak', quercus_kelloggii: 'black_oak' };
 const CAP = 24000;
 export const variantSeed = (id, v) => variantSlots(id, VARIANTS)[v].seed;   // canonical species id, slot 0..VARIANTS-1
 // Hand-over to the far impostors (impostors.js), per tree and by its distance to the eye (the bird,

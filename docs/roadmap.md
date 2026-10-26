@@ -32,6 +32,16 @@ sequenced; Parked is in the brief but deliberately not started.
   Start view went from ~38 to ~50-60 fps. Weak: chaparral reads far too sparse (shrub
   counts were tuned for blobs), ponderosa limbs too straight, leaf cards alias under
   5 m, no wind in canopies yet.
+- Species library, 2026-10-26: twenty-six species. The seventeen foothill species Aaron
+  sees around him (valley, canyon live and black oak, buckeye, madrone, bay, walnut,
+  maple, ash, incense cedar, Douglas-fir, toyon, redbud, poison oak, coyote brush,
+  elderberry, coffeeberry) are placed on all three tiles from species-mix rows that
+  follow the ground within each community (floor, mid-slope, steep; north-facing;
+  elevation band), and the six new shrubs are impostors like chamise and manzanita.
+  Weak: the start view costs 1.4 ms more CPU in draw calls (rare species' age classes
+  do not share meshes), buckeye's May candles and elderberry's flower plates are faint,
+  crown bases sit high on four shrubs, and woodland shrubs are impostors only (not
+  clickable).
 
 - Overnight 2026-10-24/25 (Aaron asleep, standing authorization): present-day peek (P)
   with place names; pipeline present-day texture, LANDFIRE species mix per cell, acorn
