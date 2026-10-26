@@ -1,0 +1,71 @@
+{
+  "species": "meleagris_gallopavo",
+  "mode": "refine",
+  "kind": "text-to-3d",
+  "task_id": "01a179c6-3c31-7276-8720-4254f8651097",
+  "endpoint": "https://api.meshy.ai/openapi/v2/text-to-3d",
+  "request": {
+    "mode": "refine",
+    "preview_task_id": "01a179c3-b065-7483-b2b3-012571102311",
+    "texture_resolution": "2k",
+    "enable_pbr": false,
+    "target_formats": [
+      "glb"
+    ],
+    "texture_prompt": "Wild turkey tom plumage, natural matte colours with no lighting or shadows baked in: dark bronze body feathers with a coppery green sheen and black feather tips that give a scaled look; folded wings with black primary feathers crossed by narrow white bars, white-barred secondaries and bronze wing coverts; tail feathers dark brown finely barred black with buff-tan tips; rump feathers dark brown with buff tips; bare blue-grey head, red wattles and snood, black hair-like beard, pinkish-grey legs and toes, pale horn-coloured bill, dark eye.",
+    "moderation": false
+  },
+  "prompt": "Wild turkey tom plumage, natural matte colours with no lighting or shadows baked in: dark bronze body feathers with a coppery green sheen and black feather tips that give a scaled look; folded wings with black primary feathers crossed by narrow white bars, white-barred secondaries and bronze wing coverts; tail feathers dark brown finely barred black with buff-tan tips; rump feathers dark brown with buff tips; bare blue-grey head, red wattles and snood, black hair-like beard, pinkish-grey legs and toes, pale horn-coloured bill, dark eye.",
+  "image": null,
+  "preview_job": "library/animals/jobs/meleagris_gallopavo/01a179c3-b065-7483-b2b3-012571102311",
+  "estimated_credits": 10,
+  "balance_before": 2712,
+  "status": "SUCCEEDED",
+  "timestamps": {
+    "submitted": "2026-10-26T19:53:16+00:00",
+    "created_at": "2026-10-26T19:53:18+00:00",
+    "started_at": "2026-10-26T19:53:18+00:00",
+    "finished_at": "2026-10-26T19:53:51+00:00",
+    "downloaded": "2026-10-26T19:54:04+00:00"
+  },
+  "tool": "tools/meshy_generate.py",
+  "pricing_source": {
+    "url": "https://docs.meshy.ai/en/api/pricing",
+    "read": "2026-10-24"
+  },
+  "licence_note": "Generated through the Meshy API, which requires a paid plan (402 on a free plan). Meshy Terms of Use (https://www.meshy.ai/terms-of-use, last updated 2026-09-19), section 3.2: customers on a paid plan own their Customer Output to the extent permitted by law (free-plan output is owned by Meshy and offered under CC BY 4.0 with credit to Meshy). As owner, the account holder may license this model under the project's CC BY-SA 4.0 asset licence, to the extent copyright subsists in AI-generated output. Section 2.4: do not remove or alter AI-identifying metadata or watermarks Meshy embeds; carry them into adopted tiers. Section 2.5: API output is deleted by Meshy 3 days after generation, so keep this folder until the model is adopted. Credit: \"generated with Meshy (meshy.ai)\".",
+  "maintainer": "agent (Claude) for Aaron Brodeur",
+  "progress": 100,
+  "task": {
+    "id": "01a179c6-3c31-7276-8720-4254f8651097",
+    "type": "text-to-3d-refine",
+    "status": "SUCCEEDED",
+    "created_at": 1793044398709,
+    "started_at": 1793044398714,
+    "finished_at": 1793044431803,
+    "consumed_credits": 10,
+    "task_error": null
+  },
+  "credits_charged": 10,
+  "files": [
+    {
+      "file": "model.glb",
+      "bytes": 5605092,
+      "sha256": "03d590222b1619cafda6d3915049c96b1672f8a0ca0fe5eea0600f8751b3893c",
+      "source": "https://assets.meshy.ai/<account>/tasks/01a179c6-3c31-7276-8720-4254f8651097/output/model.glb"
+    },
+    {
+      "file": "texture_base_color.png",
+      "bytes": 6851175,
+      "sha256": "e5589030108172823d9ccdd21bbfd5ac73273796e4c3d55090c9e13b87b2c26f",
+      "source": "https://assets.meshy.ai/<account>/tasks/01a179c6-3c31-7276-8720-4254f8651097/output/texture_0.png"
+    },
+    {
+      "file": "thumbnail.png",
+      "bytes": 97428,
+      "sha256": "2b61af9af358c8d0c6016d0a6042eccc1026effdbbc8b37542b32b5928fe40c2",
+      "source": "https://assets.meshy.ai/<account>/tasks/01a179c6-3c31-7276-8720-4254f8651097/output/preview.png"
+    }
+  ],
+  "balance_after": 2692
+}

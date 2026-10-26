@@ -1,0 +1,71 @@
+{
+  "species": "otospermophilus_beecheyi",
+  "mode": "refine",
+  "kind": "text-to-3d",
+  "task_id": "01a179c6-b994-7447-aeaf-b33ec8a35e76",
+  "endpoint": "https://api.meshy.ai/openapi/v2/text-to-3d",
+  "request": {
+    "mode": "refine",
+    "preview_task_id": "01a179c2-9f55-776f-980c-940a3bd13203",
+    "texture_resolution": "2k",
+    "enable_pbr": false,
+    "target_formats": [
+      "glb"
+    ],
+    "texture_prompt": "California ground squirrel fur: mottled grey-brown back finely flecked with buff and dusky spots; a pale silver-grey mantle over the shoulders and down the sides of the neck, forming a V behind the head, with a darker brown band down the middle of the back between the pale stripes; flanks grey-brown; buff belly, chest and inner legs; whitish ring around a dark open eye; tail grey-brown with pale buff-tipped hairs along the edges; grey-brown feet with dark claws; no stripes, no orange. Even flat lighting, no baked shadows.",
+    "moderation": false
+  },
+  "prompt": "California ground squirrel fur: mottled grey-brown back finely flecked with buff and dusky spots; a pale silver-grey mantle over the shoulders and down the sides of the neck, forming a V behind the head, with a darker brown band down the middle of the back between the pale stripes; flanks grey-brown; buff belly, chest and inner legs; whitish ring around a dark open eye; tail grey-brown with pale buff-tipped hairs along the edges; grey-brown feet with dark claws; no stripes, no orange. Even flat lighting, no baked shadows.",
+  "image": null,
+  "preview_job": "library/animals/jobs/otospermophilus_beecheyi/01a179c2-9f55-776f-980c-940a3bd13203",
+  "estimated_credits": 10,
+  "balance_before": 2702,
+  "status": "SUCCEEDED",
+  "timestamps": {
+    "submitted": "2026-10-26T19:53:48+00:00",
+    "created_at": "2026-10-26T19:53:51+00:00",
+    "started_at": "2026-10-26T19:53:51+00:00",
+    "finished_at": "2026-10-26T19:54:18+00:00",
+    "downloaded": "2026-10-26T19:54:35+00:00"
+  },
+  "tool": "tools/meshy_generate.py",
+  "pricing_source": {
+    "url": "https://docs.meshy.ai/en/api/pricing",
+    "read": "2026-10-24"
+  },
+  "licence_note": "Generated through the Meshy API, which requires a paid plan (402 on a free plan). Meshy Terms of Use (https://www.meshy.ai/terms-of-use, last updated 2026-09-19), section 3.2: customers on a paid plan own their Customer Output to the extent permitted by law (free-plan output is owned by Meshy and offered under CC BY 4.0 with credit to Meshy). As owner, the account holder may license this model under the project's CC BY-SA 4.0 asset licence, to the extent copyright subsists in AI-generated output. Section 2.4: do not remove or alter AI-identifying metadata or watermarks Meshy embeds; carry them into adopted tiers. Section 2.5: API output is deleted by Meshy 3 days after generation, so keep this folder until the model is adopted. Credit: \"generated with Meshy (meshy.ai)\".",
+  "maintainer": "agent (Claude) for Aaron Brodeur",
+  "progress": 100,
+  "task": {
+    "id": "01a179c6-b994-7447-aeaf-b33ec8a35e76",
+    "type": "text-to-3d-refine",
+    "status": "SUCCEEDED",
+    "created_at": 1793044431093,
+    "started_at": 1793044431098,
+    "finished_at": 1793044458326,
+    "consumed_credits": 10,
+    "task_error": null
+  },
+  "credits_charged": 10,
+  "files": [
+    {
+      "file": "model.glb",
+      "bytes": 5649056,
+      "sha256": "9e81fb6de0245bcc27ac61996aafb1fb0d126e3ec5191e341dfddb84fde07835",
+      "source": "https://assets.meshy.ai/<account>/tasks/01a179c6-b994-7447-aeaf-b33ec8a35e76/output/model.glb"
+    },
+    {
+      "file": "texture_base_color.png",
+      "bytes": 6232235,
+      "sha256": "08a4365139a91ec7e464c4c1cd4e91878ea7b4a0cddfc28e62f93663fe131369",
+      "source": "https://assets.meshy.ai/<account>/tasks/01a179c6-b994-7447-aeaf-b33ec8a35e76/output/texture_0.png"
+    },
+    {
+      "file": "thumbnail.png",
+      "bytes": 50811,
+      "sha256": "b8fa9cb76a6f3b71eb291d74167b4d5af512620123456e61b833bf3d84948359",
+      "source": "https://assets.meshy.ai/<account>/tasks/01a179c6-b994-7447-aeaf-b33ec8a35e76/output/preview.png"
+    }
+  ],
+  "balance_after": 2692
+}

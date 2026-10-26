@@ -1,0 +1,81 @@
+{
+  "id": "sceloporus_occidentalis",
+  "aliases": [
+    "western_fence_lizard",
+    "fence_lizard",
+    "blue_belly"
+  ],
+  "scientific": "Sceloporus occidentalis",
+  "common": "western fence lizard",
+  "body_plan": "reptile",
+  "size": {
+    "length_m": 0.18,
+    "shoulder_or_wingspan_m": 0.025,
+    "note": "Snout to vent 5.7-8.9 cm, total to ~21 cm (brief). The build scales snout to vent to 0.07 m and stretches the tail to 0.11 m along its axis (0.18 m in all; tail 1.57x the body). Standing alert the back is 0.026 m at mid-body (0.031 m at the raised shoulders, 0.021 m at the hips), the belly 8 mm off the ground; trunk 2.1 cm wide, toe span 5.3 cm. length_m here is total length (snout to tail tip), not head and body."
+  },
+  "source": {
+    "kind": "meshy",
+    "title": "Western fence lizard (generated)",
+    "author": "generated with Meshy (meshy.ai) by agent (Claude) for Aaron Brodeur",
+    "url": "https://www.meshy.ai",
+    "file": "library/animals/jobs/sceloporus_occidentalis/01a179be-fa71-7497-a767-d62f23b4af9f/model.glb (local, git-ignored)",
+    "original": "text-to-3D preview, ai_model latest (meshy-7.1), no remesh: 317,880 triangles, one piece, untextured; a raised alert iguanid stance with splayed legs and clawed five-toed feet, a tail only 0.6x the body, a small dorsal crest",
+    "prompt": "A western fence lizard (Sceloporus occidentalis), a spiny lizard of California, NOT a gecko, NOT a salamander, NOT a cartoon. One adult standing alert on all four legs, side-on neutral pose: front of the body slightly raised on straight fore legs, head up, tail straight back and resting on the ground. Realistic proportions: 18 cm total length, body 7 cm snout to vent, tail 1.3 times the body, thick at the base and tapering to a point. Stout, slightly flattened body; broad triangular head with a short blunt snout and small eyes. Legs splayed out to the sides with elbows and knees out, long thin toes spread flat on the ground. Coarse keeled pointed spiny scales over the back and tail. No base, no ground, no rock. Game-ready, one closed mesh.",
+    "reference_image": null,
+    "job_id": "01a179be-fa71-7497-a767-d62f23b4af9f",
+    "job": "library/animals/jobs/sceloporus_occidentalis/01a179be-fa71-7497-a767-d62f23b4af9f/job.json",
+    "credits": 20,
+    "date": "2026-10-26 (UTC)",
+    "adopted_by": "tools/build_fence_lizard.py"
+  },
+  "license": "CC BY-SA 4.0",
+  "license_detail": {
+    "source_terms": "Meshy Terms of Use (https://www.meshy.ai/terms-of-use, last updated 2026-09-19) 3.2: paid-plan API output is owned by the account holder, who releases it with the project's assets under CC BY-SA 4.0.",
+    "redistribute_under_cc_by_sa": true,
+    "note": "Credit \"generated with Meshy (meshy.ai)\" is kept in the build script header and the GLB asset.copyright. The file carried no Meshy metadata or watermark to carry over (Terms 2.4; asset.generator only). Terms 2.6(xi) binds the account holder, not CC BY-SA licensees. AI output may carry little copyright in some jurisdictions; the licence covers what rights exist."
+  },
+  "tiers": {
+    "lod0": 1200,
+    "lod1": 400,
+    "lod2": 120,
+    "file": "client/assets/fence_lizard.glb",
+    "attributes": [
+      "POSITION",
+      "COLOR_0 (linear)",
+      "_PART",
+      "_PARTW",
+      "_PIVOT",
+      "_BLUE (0-1: male blue patch 1, its black edge 0.5)"
+    ]
+  },
+  "rig": "reptile template (proposed, docs/animal-library.md 'Reptile template'; not wired in the client yet): BODY 0, LEG_A 1 (left fore, right hind) and LEG_B 2 (right fore, left hind) splayed, pivots at the shoulder and hip; HEAD 6 (pivot at the neck); TAIL 3 (inner half, pivot at the vent) and TAIL_TIP 8 (outer half, pivot mid-tail, child of TAIL); _BLUE for the push-up flash and the female variant. extras.rig (kind 'reptile'): the pivots, snout/vent/tail-end z for the lateral wave, belly and back heights, drop (basking), blue_off and throat_off (the colours the blue fades to for a female).",
+  "candidates": [
+    {
+      "kind": "meshy refine",
+      "job_id": "01a179c0-41e6-764a-88fb-3291a60da9b5",
+      "job": "library/animals/jobs/sceloporus_occidentalis/01a179c0-41e6-764a-88fb-3291a60da9b5/job.json",
+      "credits": 10,
+      "date": "2026-10-26 (UTC)",
+      "texture_prompt": "Western fence lizard (Sceloporus occidentalis), a male. Back grey-brown to dark brown with a row of wavy black chevron blotches down each side of the spine and a pale buff stripe along each side of the back; flanks brown with fine dark speckles; tail grey-brown with dark bands fading toward the tip. Belly pale grey with a large vivid cobalt-blue patch edged in black on each side of the belly; throat pale with two bright blue patches; underside of the legs yellow-orange; toes grey-brown. Keeled spiny scales, matte, no shine. Even diffuse light, no baked shadows or highlights.",
+      "review": "Same geometry with a 2K base-colour map: grey-brown back with brown blotches, a blue-grey throat, jaw and chest, yellow claws. Used only as a colour reference; the tiers carry the brief's palette as vertex colour. Not adopted."
+    },
+    {
+      "kind": "cc_by_download",
+      "title": "Lizard / Spotted Gecko / Gecko (Poly Pizza; madtrollstudio, Jeff Larson, jeremy)",
+      "license": "CC BY 3.0",
+      "job": "library/animals/jobs/sceloporus_occidentalis/download-polypizza/job.json",
+      "credits": 0,
+      "review": "Rejected: a salamander, a cartoon gecko and a blocky toy gecko; none a spiny lizard."
+    }
+  ],
+  "jobs_credits_total": 30,
+  "status": "agent draft, needs local sign-off",
+  "accuracy_notes": "Generated (one meshy-7.1 preview, one refine as colour reference). Reads as an iguanid/spiny lizard: raised alert fore body, broad triangular head with an eye and ear opening, legs splayed out with long clawed toes (spiky fans on lod0 and lod1), long whip tail laid on the ground, a flat-backed trunk wider than deep; grey-brown back with two rows of dark chevron blotches (pale trailing edges) and a buff dorsolateral stripe, cobalt belly patches with a pale midline and black inner edge, a blue throat patch, yellow-orange under the limbs and on the back of the thighs. Still wrong or unchecked: the generator's head is a little iguana-like (long, high crown) and its spiny dorsal crest survives as a serration on lod0; the blotch pattern is face-sized (2-3 mm triangles) so it reads as a ragged mottle rather than neat chevrons; the tail is a stretched 2x copy of a short tail, plain and thin; the feet are flat spiky fans, not individual toes on lod2; toes on the ground but the tail's outer half lies flat at ground level (on a rock the instance must sit on its surface); the subspecies and the male/female blue are a local check; scales and keels are not modelled beyond the generator's surface relief.",
+  "authors": [
+    "agent (Claude) for Aaron Brodeur (search, generation, adoption, recolour, tiers)"
+  ],
+  "sources": [
+    "library/animals/drafts/sceloporus_occidentalis.md (field marks, sizes, palette, prompts; its sources are listed there)",
+    "docs/animal-library.md (Meshy terms and costs; the reptile template proposal)"
+  ]
+}

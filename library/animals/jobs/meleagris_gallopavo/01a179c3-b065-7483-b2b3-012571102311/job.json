@@ -1,0 +1,66 @@
+{
+  "species": "meleagris_gallopavo",
+  "mode": "preview",
+  "kind": "text-to-3d",
+  "task_id": "01a179c3-b065-7483-b2b3-012571102311",
+  "endpoint": "https://api.meshy.ai/openapi/v2/text-to-3d",
+  "request": {
+    "mode": "preview",
+    "prompt": "Field-guide side view of a wild turkey tom (Meleagris gallopavo) walking calmly while foraging, the ordinary resting posture, NOT strutting, NOT displaying. Tail feathers closed together into one narrow bundle that points backward and slightly down, not fanned, not spread, not raised. Wings folded neatly up on the back, the wing tips resting on the rump above the tail, not drooping. Body feathers smooth and flat, slim oval body held level, long neck upright, head up. 1.1 m from bill to tail tip, 0.95 m tall. Small bare blue-grey head, red wattles, short snood, short pale bill, black beard on the breast, bronze body, black and white barred flight feathers, long pinkish-grey legs, three forward toes and a hind toe, both feet on the ground. One bird, no base. Clean closed mesh.",
+    "ai_model": "latest",
+    "target_formats": [
+      "glb"
+    ],
+    "should_remesh": true,
+    "topology": "triangle",
+    "target_polycount": 30000,
+    "moderation": false
+  },
+  "prompt": "Field-guide side view of a wild turkey tom (Meleagris gallopavo) walking calmly while foraging, the ordinary resting posture, NOT strutting, NOT displaying. Tail feathers closed together into one narrow bundle that points backward and slightly down, not fanned, not spread, not raised. Wings folded neatly up on the back, the wing tips resting on the rump above the tail, not drooping. Body feathers smooth and flat, slim oval body held level, long neck upright, head up. 1.1 m from bill to tail tip, 0.95 m tall. Small bare blue-grey head, red wattles, short snood, short pale bill, black beard on the breast, bronze body, black and white barred flight feathers, long pinkish-grey legs, three forward toes and a hind toe, both feet on the ground. One bird, no base. Clean closed mesh.",
+  "image": null,
+  "preview_job": null,
+  "estimated_credits": 20,
+  "balance_before": 2732,
+  "status": "SUCCEEDED",
+  "timestamps": {
+    "submitted": "2026-10-26T19:50:29+00:00",
+    "created_at": "2026-10-26T19:50:31+00:00",
+    "started_at": "2026-10-26T19:50:31+00:00",
+    "finished_at": "2026-10-26T19:52:14+00:00",
+    "downloaded": "2026-10-26T19:52:40+00:00"
+  },
+  "tool": "tools/meshy_generate.py",
+  "pricing_source": {
+    "url": "https://docs.meshy.ai/en/api/pricing",
+    "read": "2026-10-24"
+  },
+  "licence_note": "Generated through the Meshy API, which requires a paid plan (402 on a free plan). Meshy Terms of Use (https://www.meshy.ai/terms-of-use, last updated 2026-09-19), section 3.2: customers on a paid plan own their Customer Output to the extent permitted by law (free-plan output is owned by Meshy and offered under CC BY 4.0 with credit to Meshy). As owner, the account holder may license this model under the project's CC BY-SA 4.0 asset licence, to the extent copyright subsists in AI-generated output. Section 2.4: do not remove or alter AI-identifying metadata or watermarks Meshy embeds; carry them into adopted tiers. Section 2.5: API output is deleted by Meshy 3 days after generation, so keep this folder until the model is adopted. Credit: \"generated with Meshy (meshy.ai)\".",
+  "maintainer": "agent (Claude) for Aaron Brodeur",
+  "progress": 100,
+  "task": {
+    "id": "01a179c3-b065-7483-b2b3-012571102311",
+    "type": "text-to-3d-preview",
+    "status": "SUCCEEDED",
+    "created_at": 1793044231977,
+    "started_at": 1793044231982,
+    "finished_at": 1793044334669,
+    "consumed_credits": 20,
+    "task_error": null
+  },
+  "credits_charged": 20,
+  "files": [
+    {
+      "file": "model.glb",
+      "bytes": 1367280,
+      "sha256": "7491349e75d7d200781e55682b8ae684565c18d6ab561da25ecdeb83df70c330",
+      "source": "https://assets.meshy.ai/<account>/tasks/01a179c3-b065-7483-b2b3-012571102311/output/model.glb"
+    },
+    {
+      "file": "thumbnail.png",
+      "bytes": 69820,
+      "sha256": "22ada36fb7099ac9baf6d5f9b561acc74d7cc711a80b038e13a7e201645bcbd7",
+      "source": "https://assets.meshy.ai/<account>/tasks/01a179c3-b065-7483-b2b3-012571102311/output/preview.png"
+    }
+  ],
+  "balance_after": 2712
+}

@@ -348,3 +348,91 @@ does not use `perch.js` yet).
 2. Done (see "Ground raven wired"): the ground and perched raven (acorn game, ambient, the landed player) uses
    the new mesh, with a swap on landing and take-off.
 3. The animal lineup page and the GBIF gap report in the tile build.
+
+## Western fence lizard and the reptile template (proposal, 2026-10-26)
+
+`client/assets/fence_lizard.glb` (`tools/build_fence_lizard.py`; brief `library/animals/drafts/sceloporus_occidentalis.md`;
+entry `library/animals/sceloporus_occidentalis.json`): one Meshy `latest` preview (20 credits) and a refine kept as a
+colour reference (10); no CC0 or CC BY lizard was usable. 0.18 m (snout to vent 0.07 m, tail 0.11 m), back 2.6 cm,
+belly 8 mm up; lod0 1,200, lod1 400, lod2 120 triangles. Not wired: no `load…Mesh`, no `RIG` entry, not in `index.json`
+or any tile's `species.json` (the GBIF step has no reptiles). The wiring lane adds the template below.
+
+**Parts** (`_PART`, `_PARTW`, `_PIVOT`, as the other templates): BODY 0 (the root), LEG_A 1 (left fore, right hind) and
+LEG_B 2 (right fore, left hind), splayed out, pivots at the shoulder and hip rings where the limb leaves the trunk;
+HEAD 6, pivot at the neck; TAIL 3 (inner half, pivot at the vent) and TAIL_TIP 8 (outer half, pivot mid-tail, a child
+of TAIL: one-level chain as the lion's). No CHEST. A per-vertex `_BLUE` (1 the male's belly and throat patches, 0.5 the
+patch's black edge, 0 elsewhere). `extras.rig` (`kind: 'reptile'`): `head`, `tail`, `tail_tip`, `fore` and `hind` (the
+left pivots, as the rodent's), `legs` {FL, FR, HL, HR}, `snout_z`, `vent_z`, `tail_end_z` (the spine's ends, for the
+wave), `belly_y`, `back_y`, `drop` (0.007 m), `blue_off` and `throat_off` (linear colours the patches fade to).
+
+**aAnim** (phase, gait, pose, flick):
+- **phase**: the stride. Legs in diagonal pairs (A against B, half a cycle apart), a sprawling swing: each leg turns
+  about the vertical through its pivot (protraction and retraction, hind legs ~1.3x the fore) and lifts about the
+  body's long axis on the forward half (max(0, cos)) so the foot clears. And the **lateral undulation**: every vertex is
+  bent sideways by a travelling wave along the spine, s = (snout_z - z) / (snout_z - tail_end_z), x += A · gait ·
+  env(s) · sin(phase - k·s) with env ~0.25 at the shoulders rising to 1 at the tail tip, and the tangent's yaw applied
+  to the parts so legs and head ride the curve (the head counter-turns a little to stay on line). Bend after the part
+  rotations; no extra attribute (z is the spine coordinate, the rest pose is straight).
+- **gait**: 0 still to 1 sprint: scales the swing and the wave. A burst is 0.5-3 m to cover at ~2 m/s; the phase rate
+  from distance over a ~0.1 m stride, capped near 12 Hz on screen (the wave carries the read past that).
+- **pose**: -1 basking flat, 0 alert (the mesh), +1 the top of a push-up.
+  - pose < 0 (bask): BODY down by `drop`·|pose| (belly onto the rock), BODY spread in x (1 + 0.15|pose|) and squashed in
+    y toward the belly, legs abducted further (~0.5 rad about the long axis) with the feet kept in place, head down onto
+    the rock (~0.25 rad), tail flat.
+  - pose > 0 (push-up): the fore body pitches up about the hip axis (the line through HL and HR, ~0.35 rad at 1), the
+    fore legs extend to keep the fore feet planted, the head lifts a further ~0.2 rad, and the trunk is compressed in x
+    (1 - 0.25·pose) with `_BLUE` vertices pushed down and out, so the blue sides face the viewer; the patches brighten by
+    pose · `_BLUE`. The client bobs pose (a bout of 3-8 push-ups, ~2 per second, with head bobs).
+- **flick**: a head turn or jerk about the neck (signed yaw, ±0.5 rad).
+
+**aAnim2**: x a static lateral C-bend (signed: steering in a turn, curling round a trunk), y the tail tip's lag and
+whip (TAIL_TIP behind the tail's wave plus a flick, as the rodent's `tipLag`), z blue flash (0-1, the patches' colour
+alone, for a lateral display without the push-up), w the colour variant (1 male vivid; 0 female: `_BLUE` mixed to
+`blue_off` / `throat_off`). Starting constants for a `RIG.lizard`: amp `[0.6, 0.35, 0.4, 0]`, pose `[1, 0, 0, 0]`,
+k { wave 0.006 m at the tail tip, waveK 1.6π, pushPitch 0.35, baskAbduct 0.5, squash 0.25, tipLag 0.6 }, drop from the
+file; all estimates to tune on the lineup.
+
+**Placement and behaviour** (for `animals.js`): rock outcrops and boulder tops (rocks.js), oak and pine trunks (the
+instance on the bark, belly to the trunk, head up or down: the instance needs a full orientation, not yaw only), fence
+lines, posts, woodpiles, walls and road edges of the human footprint, and sunny open slopes in grassland, oak savanna and
+chaparral; not in deep shade. One male per rock or post with 1-3 females near; cap ~120, LOD switches at 2 and 8 m,
+cull past ~25 m from a low camera. Active March-October, by day: out once the sun has warmed the rock, all day in spring
+and fall, morning and late afternoon in summer heat (shade at midday); hiding under ~15 C air (cool mornings, cloud,
+winter; a few on warm winter days). States: bask (pose -0.6 to -1), alert (pose 0, head flicks), push-up bouts (males,
+spring most), sprint to cover from a low player, raven or hawk inside ~2-4 m (a crack, under the rock, or round the
+trunk to its far side), hide (culled in the crack), re-emerge after 10-60 s.
+
+## California ground squirrel (2026-10-26)
+
+`client/assets/ground_squirrel.glb` (`tools/build_ground_squirrel.py`; entry `library/animals/otospermophilus_beecheyi.json`,
+brief `drafts/otospermophilus_beecheyi.md`). No CC0 or CC BY ground squirrel mesh was usable (Poly Pizza's CC BY 3.0
+squirrels are faceted tree squirrels; Sketchfab's CC BY *Spermophilus* models are a toy and a skull and need an account),
+so it was generated: two `latest` previews (20 credits each; the first came out half sitting up with a rat tail) and a
+refine of the second (10 credits, kept as a colour reference only: its legs and eye ring drifted orange). 50 credits.
+The build drops whiskers and fur shards, lofts a new tail (0.18 m, held out behind, 1.7:1, mottled core, darker band,
+pale fringe) in place of the strand fan, raises the head 8 degrees, opens the eyes in a wide whitish ring, scales head
+and body to 0.26 m, and colours by region with hashed buff and dusky flecks: the pale mantle on the shoulders and neck
+in a V either side of a darker band down the back, buff belly. Tiers 2,000 / 600 / 200 triangles; rodent template
+(BODY, CHEST 7, HEAD and LEG_A children of the chest, LEG_B, TAIL, TAIL_TIP 8), pivots in `extras.rig`. Not wired yet:
+the entry's `rig_notes` give the proposed `RIG` constants for the sentinel sit-up (sit 1.25, foreFold 2.2, pose
+`[0.4, -0.3, 1.05, 0]`, drop 0.016 m), checked only by posing the GLB with the shader's math in Blender. The species is
+in GBIF for all three tiles (8, 5 and 1 records) but not yet in `species_data.py` `SPECIES`, so no tile's
+`species.json` lists it.
+
+## Wild turkey (2026-10-26)
+
+`client/assets/turkey.glb` (`tools/build_turkey.py`; entry `library/animals/meleagris_gallopavo.json`, brief
+`drafts/meleagris_gallopavo.md`). No usable CC0 or CC BY mesh (Poly Pizza's CC BY 3.0 turkeys are a faceted strutting
+tom and cartoons; Sketchfab's CC BY wild turkey is a flat museum skin), so it was generated with `latest`: the first
+preview came back half strutting (fan up, wings drooped) despite "NOT strutting", but with the best head and neck; a
+second preview framed as a field-guide foraging bird got the folded tail and wings but hunched the head into the breast;
+a refine of the second (10 credits) gave the plumage pattern, too dark. 50 credits (balance 2,822 before this lane's
+first job, 2,692 after the three lanes). The build grafts the first preview's head and neck (stretched to the alert
+walk) onto the second's body, tilts the body 10 degrees nose-up, lengthens the tail to 0.31 m, adds procedural legs
+(drumstick, pink-grey tarsus with a spur, toes), a beard and flush wing cards (bronze coverts, flight feathers barred
+white, 1.27 m span), and samples the refine's texture per face, graded to bronze (hen in `_COLORB`). Scaled to 1.10 m
+along the spine and 0.95 m to the top of the head (belly 0.35 m, back 0.71 m). Tiers 3,000 / 899 / 300 triangles (lod2
+with a procedural neck and head); bird template: BODY, LEG_A/B (hip), TAIL, HEAD with the neck (neck base), WING_L/R and
+HAND_L/R, pivots in `extras.rig`. Collapse decimation stalled at ~800 triangles on the generated body's non-manifold
+seams (edges with three faces); deleting those faces and filling the holes fixed it, which may help other `latest`
+meshes. Not wired; not in any tile's `species.json` or in `index.json` yet.

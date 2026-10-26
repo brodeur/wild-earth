@@ -1,0 +1,112 @@
+{
+  "id": "otospermophilus_beecheyi",
+  "aliases": [
+    "california_ground_squirrel",
+    "ground_squirrel",
+    "spermophilus_beecheyi"
+  ],
+  "scientific": "Otospermophilus beecheyi",
+  "common": "California ground squirrel",
+  "body_plan": "rodent",
+  "size": {
+    "length_m": 0.26,
+    "tail_m": 0.18,
+    "shoulder_or_wingspan_m": 0.106,
+    "note": "Head and body 23-28 cm, tail 13-23 cm (about two thirds of head and body), 450-900 g (library/animals/drafts/otospermophilus_beecheyi.md). The build scales head and body (nose to rump) to 0.26 m and lofts the tail at 0.18 m along its axis (0.44 m in all; 0.43 m straight-line, since the tail rises 14-26 degrees). Measured on the rest pose: shoulder 0.106 m, top of the back 0.13 m, width 0.10 m; sitting up (pose 1 with the constants in rig_notes) the head is about 0.25 m above the ground."
+  },
+  "source": {
+    "kind": "meshy",
+    "title": "California ground squirrel",
+    "author": "generated with Meshy (meshy.ai) by agent (Claude) for Aaron Brodeur",
+    "url": null,
+    "file": "library/animals/jobs/otospermophilus_beecheyi/01a179c2-9f55-776f-980c-940a3bd13203/model.glb (local; jobs/ meshes are not tracked)",
+    "original": "Meshy text-to-3D preview, ai_model latest (meshy-7.1), triangle remesh, 19,627 triangles, untextured: on all fours, long low body, short legs, small rounded ears, closed eyes, whiskers and fur shards as strands, a fan of hair strands for a tail",
+    "prompt": "A California ground squirrel (Otospermophilus beecheyi) walking on all four legs like a squirrel crossing a lawn: NOT sitting, NOT standing up, NOT a prairie dog, NOT a marmot, NOT a chipmunk. Single adult, side-on, body horizontal and long, back level, all four paws flat on the ground, front legs straight down under the shoulders, head held up and forward. Realistic proportions: head and body 26 cm, body a little heavier than a tree squirrel's but not fat, short legs, rounded head, small erect rounded ears, blunt muzzle, open dark eyes. Bushy flattened tail 18 cm long (two thirds of the body), wider than the hind leg, held straight out behind and level, not curled. Mottled grey-brown fur, pale grey shoulders, buff belly. No base, no ground. Game-ready, symmetric.",
+    "reference_image": null,
+    "job_id": "01a179c2-9f55-776f-980c-940a3bd13203",
+    "date": "2026-10-26 (UTC)",
+    "adopted_by": "tools/build_ground_squirrel.py"
+  },
+  "license": "CC BY-SA 4.0",
+  "license_detail": {
+    "source_terms": "Meshy Terms of Use 3.2 (https://www.meshy.ai/terms-of-use, last updated 2026-09-19): API output on a paid plan is owned by the account holder, who releases it with the project's assets under CC BY-SA 4.0. Terms 2.4: AI-identifying metadata Meshy embeds is carried over (the source GLB carried none; the adopted GLB records the source in extras.source). Terms 2.6(xi): not for training models that compete with Meshy (binds the account holder).",
+    "redistribute_under_cc_by_sa": true,
+    "note": "Credit \"generated with Meshy (meshy.ai)\" in the entry, the build script header and the GLB asset.copyright. AI-generated output may carry little or no copyright in some jurisdictions; the licence covers what rights exist. No CC0 or CC BY ground squirrel mesh was usable (brief section 4: Poly Pizza's CC BY 3.0 squirrels are faceted tree squirrels; Sketchfab's CC BY Spermophilus models are a toy and a skull and need an account to download)."
+  },
+  "tiers": {
+    "lod0": 2000,
+    "lod1": 600,
+    "lod2": 200,
+    "file": "client/assets/ground_squirrel.glb",
+    "attributes": [
+      "POSITION",
+      "COLOR_0 (linear)",
+      "_PART",
+      "_PARTW",
+      "_PIVOT"
+    ],
+    "lod_m": [
+      12,
+      40
+    ],
+    "note": "Whiskers and fur shards removed (inward ray thickness); the generated strand tail removed at the rump and a new one lofted from the same root: 0.18 m, held out behind rising 14-26 degrees, 1.7 times wider than deep past the base, lumpy outline, mottled core, darker band, pale buff-grey fringe faces; head raised 8 degrees about the neck (alert); closed eyes replaced by a dark eye in a wide whitish ring (lod0 a small octahedron in painted ring faces, lod1 one dark face in the ring, lod2 none); recoloured by region with per-face buff and dusky flecks hashed from position. Triangles: lod0 2,000 = 1,744 body + 240 tail (10 sides x 12 rings) + 16 eyes; lod1 600 = 516 + 84 tail (6 x 7); lod2 200 = 168 + 32 tail (4 x 4). Suggested switches 12 and 40 m (the gray squirrel's). GLB 198,960 bytes. Area-weighted mean of the up-facing body faces sRGB #7e7163 (lighter than the brief's back #6e5e4c because the pale mantle and buff flecks count)."
+  },
+  "rig": "rodent rig template (as RIG.squirrel in client/src/animalModels.js; not wired yet): PART BODY 0 hindquarters, CHEST 7 (lumbar pivot; bound flex, sit-up), HEAD 6 (base of the neck) and LEG_A 1 (fore pair, elbows) as children of the chest, LEG_B 2 (hind pair, stifles), TAIL 3 and TAIL_TIP 8 (child of the tail). Pivots in extras.rig (three.js metres): chest [0, 0.1001, -0.0487], head [0, 0.0744, 0.0869], fore [±0.0229, 0.0349, 0.0514], hind [±0.0279, 0.0268, -0.093], tail [0, 0.0663, -0.0923], tail_tip [0, 0.0888, -0.1716].",
+  "rig_notes": "Proposed RIG constants for the wiring lane (checked by posing the GLB with the shader's math in Blender, not yet in the client): amp [0.9, 0.5, 0.35, 0] as the gray squirrel; pose [0.4, -0.3, 1.05, 0] (legs squashed to 0.4 on pose, the tail lowered 0.3 rad to lie out behind on the ground, the head pitched 1.05 rad back down so it looks level); drop 0.016 m (hind pivot 0.027 m x (1 - 0.4), so the rump sits on the ground); k { spine 0.2, spinePhase 1.2, sit 1.25 (72 degrees: bolt upright, leaning a little forward like the photos), foreFold 2.2 (the fore legs reach forward at rest, so they need more than the sit to hang against the chest), tipLag 0.6, tipWave 0.25, tipCurl 0.2, abduct 0 }. The sentinel is the commonest sight, so pose 1 should be held for long spells at the burrow mouth.",
+  "candidates": [
+    {
+      "kind": "meshy",
+      "purpose": "rig pose on all fours (brief prompt A)",
+      "job": "library/animals/jobs/otospermophilus_beecheyi/01a179bf-e8a4-7721-8e7f-8ea45fd86666/job.json",
+      "job_id": "01a179bf-e8a4-7721-8e7f-8ea45fd86666",
+      "mode": "text-to-3d preview, ai_model latest (meshy-7.1), remeshed to triangles, target 20,000 faces",
+      "prompt": "A California ground squirrel (Otospermophilus beecheyi), NOT a tree squirrel, NOT a chipmunk, NOT a prairie dog. Single adult standing on all fours, alert, head raised, side-on neutral pose, four legs straight under the body with clear gaps, feet flat. Realistic proportions: 26 cm head and body, stocky thick-set body, short sturdy legs, rounded head, small erect rounded ears, blunt muzzle. Tail 18 cm, two thirds of the body length, moderately bushy and flattened, held straight out behind and slightly raised, not curled over the back. Mottled grey-brown coat flecked with buff, pale silver-grey mantle over the shoulders and sides of the neck with a darker brown band down the middle of the back, whitish eye ring, buff belly. No base, no ground. Game-ready, symmetric.",
+      "author": "generated with Meshy (meshy.ai) by agent (Claude) for Aaron Brodeur",
+      "date": "2026-10-26 (UTC)",
+      "credits": 20,
+      "raw_triangles": 20823,
+      "license": "owned by the paid account holder (Meshy Terms of Use 3.2); released as CC BY-SA 4.0 with the project's assets on adoption",
+      "status": "rejected",
+      "review": "Came out half sitting up (chest raised about 45 degrees, fore legs off the ground and dangling), a fat pear-shaped prairie-dog body, and a short thin rat-like tail with a strand fringe. Cannot be the all-fours rest pose; the prompt's 'alert, head raised' and 'stocky thick-set' probably pulled it toward a sentinel prairie dog."
+    },
+    {
+      "kind": "meshy",
+      "purpose": "rig pose on all fours (prompt A reworded: walking on all four legs, not sitting, not a prairie dog or marmot)",
+      "job": "library/animals/jobs/otospermophilus_beecheyi/01a179c2-9f55-776f-980c-940a3bd13203/job.json",
+      "job_id": "01a179c2-9f55-776f-980c-940a3bd13203",
+      "mode": "text-to-3d preview, ai_model latest (meshy-7.1), remeshed to triangles, target 20,000 faces",
+      "prompt": "A California ground squirrel (Otospermophilus beecheyi) walking on all four legs like a squirrel crossing a lawn: NOT sitting, NOT standing up, NOT a prairie dog, NOT a marmot, NOT a chipmunk. Single adult, side-on, body horizontal and long, back level, all four paws flat on the ground, front legs straight down under the shoulders, head held up and forward. Realistic proportions: head and body 26 cm, body a little heavier than a tree squirrel's but not fat, short legs, rounded head, small erect rounded ears, blunt muzzle, open dark eyes. Bushy flattened tail 18 cm long (two thirds of the body), wider than the hind leg, held straight out behind and level, not curled. Mottled grey-brown fur, pale grey shoulders, buff belly. No base, no ground. Game-ready, symmetric.",
+      "author": "generated with Meshy (meshy.ai) by agent (Claude) for Aaron Brodeur",
+      "date": "2026-10-26 (UTC)",
+      "credits": 20,
+      "raw_triangles": 19627,
+      "license": "owned by the paid account holder (Meshy Terms of Use 3.2); released as CC BY-SA 4.0 with the project's assets on adoption",
+      "status": "adopted 2026-10-26 by tools/build_ground_squirrel.py",
+      "review": "Reads as a ground squirrel at once: long low body on short legs, broad rounded head with a blunt muzzle, small rounded erect ears, all four feet flat (fore legs angled forward, hind feet under the rump). Faults: the tail is a fan of hair strands rising at 40 degrees (replaced); whiskers and flat fur shards on the neck and chest as strands (removed); eyes modelled as closed slits (replaced); the body is a little long and low for a standing squirrel (fine for one walking). Topology: 19,627 triangles, most of them in the tail strands and whiskers (about 4,500 left for the body), 6 islands; 1.89 units long, +z up, nose toward -y."
+    },
+    {
+      "kind": "meshy",
+      "purpose": "colour reference: refine of the adopted preview with a texture prompt",
+      "job": "library/animals/jobs/otospermophilus_beecheyi/01a179c6-b994-7447-aeaf-b33ec8a35e76/job.json",
+      "job_id": "01a179c6-b994-7447-aeaf-b33ec8a35e76",
+      "mode": "text-to-3d refine, 2K base colour texture, no PBR",
+      "texture_prompt": "California ground squirrel fur: mottled grey-brown back finely flecked with buff and dusky spots; a pale silver-grey mantle over the shoulders and down the sides of the neck, forming a V behind the head, with a darker brown band down the middle of the back between the pale stripes; flanks grey-brown; buff belly, chest and inner legs; whitish ring around a dark open eye; tail grey-brown with pale buff-tipped hairs along the edges; grey-brown feet with dark claws; no stripes, no orange. Even flat lighting, no baked shadows.",
+      "author": "generated with Meshy (meshy.ai) by agent (Claude) for Aaron Brodeur",
+      "date": "2026-10-26 (UTC)",
+      "credits": 10,
+      "license": "owned by the paid account holder (Meshy Terms of Use 3.2); released as CC BY-SA 4.0 with the project's assets on adoption",
+      "status": "reference only",
+      "review": "Same mesh with a 2K texture: a convincingly mottled grey back and a paler grey shoulder area, but the legs, feet and eye ring drifted to orange (an eastern fox-squirrel prior) and the mantle has no V or dark band. The build ignores it and colours by region from the brief, as the other species do."
+    }
+  ],
+  "status": "agent draft, needs local sign-off",
+  "accuracy_notes": "Adopted 2026-10-26 from the second Meshy preview. What reads as a ground squirrel rather than the western gray: a longer, lower, heavier body on short legs; a broad blunt head with small ears; a tail about two thirds of head and body, moderately bushy and flattened (1.7:1, against the gray's 2.2:1 plume as long as the body), held out behind rather than up; a mottled grey-brown coat with buff and dusky flecks instead of clean silver; the pale silver-grey mantle on the shoulders and sides of the neck with a darker band down the back; a wide whitish eye ring; a buff belly, not white; and the sentinel sit-up, which the rig poses bolt upright. Not yet in any tile's species.json (GBIF has it on all three tiles: 8, 5 and 1 occurrences), not in index.json and not wired in animals.js / animalModels.js (the wiring lane adds it). Still open: the dark band and mantle V read only from above and close; the tail is procedural (the generated one was hair strands); the fore legs hang as thin sticks when sitting (no paws held to the chest); the sit is two rigid parts (hindquarters and chest), so the belly line bends at the lumbar; colours are by region, not a texture. A local naturalist should check the tail length and bushiness, the mantle, and how upright the sentinel is.",
+  "authors": [
+    "agent (Claude) for Aaron Brodeur (brief, Meshy jobs, entry)",
+    "agent (Claude) for Aaron Brodeur (adoption: build script, rig, tiers)"
+  ],
+  "sources": [
+    "library/animals/drafts/otospermophilus_beecheyi.md (field marks, sizes, palette, tiers; its sources are listed there)",
+    "tools/build_ground_squirrel.py (adoption)"
+  ]
+}

@@ -1,0 +1,131 @@
+{
+  "id": "meleagris_gallopavo",
+  "aliases": [
+    "turkey",
+    "wild_turkey"
+  ],
+  "scientific": "Meleagris gallopavo (intermedia x merriami, the Sierra foothill birds)",
+  "common": "wild turkey",
+  "body_plan": "bird",
+  "size": {
+    "length_m": 1.1,
+    "shoulder_or_wingspan_m": 1.3,
+    "note": "Tom 1.0-1.25 m bill to tail, 7-11 kg, wingspan 1.25-1.45 m, about 0.9-1.0 m to the top of the head in the alert walk; hen about 0.75-0.95 m, 3.5-5 kg. The build scales the tom to 1.10 m bill tip to tail tip measured along the spine (bill, head, neck base, the back's vertebral line, tail root, tail tip) and stands it 0.95 m to the top of the head (standing_height_m). Straight-line bill to tail in the walking pose 0.76 m; back 0.71 m; belly 0.35 m; tail 0.31 m behind its root; wing cards span 1.27 m. The hen is drawn from the same mesh at about 0.8 scale with _COLORB.",
+    "standing_height_m": 0.95
+  },
+  "source": {
+    "kind": "meshy",
+    "title": "Wild turkey (tom), walking",
+    "author": "generated with Meshy (meshy.ai) by agent (Claude) for Aaron Brodeur",
+    "url": null,
+    "file": "library/animals/jobs/meleagris_gallopavo/01a179c6-3c31-7276-8720-4254f8651097/model.glb (body, refine of preview 01a179c3-b065-7483-b2b3-012571102311) and library/animals/jobs/meleagris_gallopavo/01a179be-b056-7695-a6dd-a7aa6d1cda04/model.glb (head and neck); local, jobs/ meshes are not tracked",
+    "original": "Body: Meshy text-to-3D preview (latest = meshy-7.1, triangle remesh to 30,000) refined with a 2K base-colour texture, 30,664 triangles. Head and neck: Meshy text-to-3D preview (latest), not remeshed, 2,662,902 triangles, untextured.",
+    "prompt": "Field-guide side view of a wild turkey tom (Meleagris gallopavo) walking calmly while foraging, the ordinary resting posture, NOT strutting, NOT displaying. Tail feathers closed together into one narrow bundle that points backward and slightly down, not fanned, not spread, not raised. Wings folded neatly up on the back, the wing tips resting on the rump above the tail, not drooping. Body feathers smooth and flat, slim oval body held level, long neck upright, head up. 1.1 m from bill to tail tip, 0.95 m tall. Small bare blue-grey head, red wattles, short snood, short pale bill, black beard on the breast, bronze body, black and white barred flight feathers, long pinkish-grey legs, three forward toes and a hind toe, both feet on the ground. One bird, no base. Clean closed mesh.",
+    "texture_prompt": "Wild turkey tom plumage, natural matte colours with no lighting or shadows baked in: dark bronze body feathers with a coppery green sheen and black feather tips that give a scaled look; folded wings with black primary feathers crossed by narrow white bars, white-barred secondaries and bronze wing coverts; tail feathers dark brown finely barred black with buff-tan tips; rump feathers dark brown with buff tips; bare blue-grey head, red wattles and snood, black hair-like beard, pinkish-grey legs and toes, pale horn-coloured bill, dark eye.",
+    "head_prompt": "A wild turkey (Meleagris gallopavo) of California, one adult male walking on the ground in a relaxed neutral pose, NOT strutting, NOT displaying: body sleek and level with feathers flat, tail folded shut and held level behind as a long narrow wedge, long neck upright, head up. Realistic proportions: 1.1 m from bill to tail tip, 0.95 m tall to the top of the head, long legs. Small bare blue-grey head with red wattles at the throat and a short snood over the bill, short pale bill, a black hair-like beard hanging from the breast, dark bronze body feathers, wings folded tight against the flanks with black and white barred flight feathers, long pinkish-grey legs with spurs, three long forward toes and a hind toe. One bird, no base, no ground. Clean closed mesh.",
+    "reference_image": null,
+    "job_id": "01a179c6-3c31-7276-8720-4254f8651097",
+    "job_ids": [
+      "01a179be-b056-7695-a6dd-a7aa6d1cda04",
+      "01a179c3-b065-7483-b2b3-012571102311",
+      "01a179c6-3c31-7276-8720-4254f8651097"
+    ],
+    "date": "2026-10-26 (UTC)",
+    "adopted_by": "tools/build_turkey.py"
+  },
+  "license": "CC BY-SA 4.0",
+  "license_detail": {
+    "source_terms": "Meshy Terms of Use 3.2 (https://www.meshy.ai/terms-of-use, last updated 2026-09-19): API output on a paid plan is owned by the account holder, who releases it with the project's assets under CC BY-SA 4.0. Terms 2.4: AI-identifying metadata Meshy embeds is carried over (the source GLBs carried none: asset.generator only, kept in extras.source). Terms 2.6(xi): not for training models that compete with Meshy (binds the account holder).",
+    "redistribute_under_cc_by_sa": true,
+    "note": "Credit \"generated with Meshy (meshy.ai)\" in README, the build script header and the GLB asset.copyright. AI-generated output may carry little or no copyright in some jurisdictions; the licence covers what rights exist."
+  },
+  "tiers": {
+    "lod0": 3000,
+    "lod1": 899,
+    "lod2": 300,
+    "file": "client/assets/turkey.glb",
+    "attributes": [
+      "POSITION",
+      "COLOR_0 (linear)",
+      "_PART",
+      "_PARTW",
+      "_PIVOT",
+      "_COLORB (hen, linear)"
+    ],
+    "lod_m": [
+      25,
+      80
+    ],
+    "note": "Body (with the folded wings and tail) from the refine, head and neck grafted from the first preview, procedural legs, beard, eyes and flush wing cards. Triangles: lod0 3,000 = 2,076 body + 518 head and neck + 406 legs, wing cards, beard and eyes; lod1 899 = 550 + 136 + 213; lod2 300 = 218 body + 82 legs, wing cards, beard and a procedural neck and head. Vertex colour per face (body sampled from the refine's texture and graded to bronze). Tier switches suggested at 25 and 80 m (not wired). GLB 639,280 bytes."
+  },
+  "rig": "bird rig template (to wire: client/src/animalModels.js RIG.turkey; PART BODY with the folded wings, LEG_A/B procedural legs pivoting at the hip, TAIL the generated folded tail, HEAD with the neck pivoting at the neck's base, WING_L/R and HAND_L/R flush cards that collapse into the shoulder on pose); aAnim2 = (wing bow in the glide, tail spread, -, hen colour set). Pivots in extras.rig.",
+  "candidates": [
+    {
+      "kind": "meshy",
+      "purpose": "head and neck donor (the body is unusable as a base pose: half strut)",
+      "job": "library/animals/jobs/meleagris_gallopavo/01a179be-b056-7695-a6dd-a7aa6d1cda04/job.json",
+      "job_id": "01a179be-b056-7695-a6dd-a7aa6d1cda04",
+      "mode": "text-to-3d preview, ai_model latest (meshy-7.1), no remesh",
+      "prompt": "A wild turkey (Meleagris gallopavo) of California, one adult male walking on the ground in a relaxed neutral pose, NOT strutting, NOT displaying: body sleek and level with feathers flat, tail folded shut and held level behind as a long narrow wedge, long neck upright, head up. Realistic proportions: 1.1 m from bill to tail tip, 0.95 m tall to the top of the head, long legs. Small bare blue-grey head with red wattles at the throat and a short snood over the bill, short pale bill, a black hair-like beard hanging from the breast, dark bronze body feathers, wings folded tight against the flanks with black and white barred flight feathers, long pinkish-grey legs with spurs, three long forward toes and a hind toe. One bird, no base, no ground. Clean closed mesh.",
+      "author": "generated with Meshy (meshy.ai) by agent (Claude) for Aaron Brodeur",
+      "date": "2026-10-26 (UTC)",
+      "credits": 20,
+      "raw_triangles": 2662902,
+      "license": "owned by the paid account holder (Meshy Terms of Use 3.2); released as CC BY-SA 4.0 with the project's assets on adoption; Terms 2.6(xi): not for training models that compete with Meshy",
+      "status": "partly adopted 2026-10-26 by tools/build_turkey.py (head and neck)",
+      "review": "Asked for a relaxed walking tom, NOT strutting; came back half strutting: the tail fanned and raised upright, the back feathers raised in a ridge of spikes, the wings drooped with the primaries hanging to the ankles, one leg lifted. Excellent head: upright S-curved neck, a snood over the bill, a large wattle, caruncles down the throat, a long beard, an eye; long scaled legs and feet. Not usable as the base pose (the drooped wings cannot be cut away); the head and neck are grafted, and the whole mesh could seed the later strut pose."
+    },
+    {
+      "kind": "meshy",
+      "purpose": "body, folded wings and folded tail",
+      "job": "library/animals/jobs/meleagris_gallopavo/01a179c3-b065-7483-b2b3-012571102311/job.json",
+      "job_id": "01a179c3-b065-7483-b2b3-012571102311",
+      "mode": "text-to-3d preview, ai_model latest (meshy-7.1), triangle remesh to 30,000",
+      "prompt": "Field-guide side view of a wild turkey tom (Meleagris gallopavo) walking calmly while foraging, the ordinary resting posture, NOT strutting, NOT displaying. Tail feathers closed together into one narrow bundle that points backward and slightly down, not fanned, not spread, not raised. Wings folded neatly up on the back, the wing tips resting on the rump above the tail, not drooping. Body feathers smooth and flat, slim oval body held level, long neck upright, head up. 1.1 m from bill to tail tip, 0.95 m tall. Small bare blue-grey head, red wattles, short snood, short pale bill, black beard on the breast, bronze body, black and white barred flight feathers, long pinkish-grey legs, three forward toes and a hind toe, both feet on the ground. One bird, no base. Clean closed mesh.",
+      "author": "generated with Meshy (meshy.ai) by agent (Claude) for Aaron Brodeur",
+      "date": "2026-10-26 (UTC)",
+      "credits": 20,
+      "raw_triangles": 30664,
+      "license": "owned by the paid account holder (Meshy Terms of Use 3.2); released as CC BY-SA 4.0 with the project's assets on adoption; Terms 2.6(xi): not for training models that compete with Meshy",
+      "status": "adopted 2026-10-26 by tools/build_turkey.py (body), through its refine",
+      "review": "The pose asked for: tail closed into a narrow wedge pointing back and a little down, wings folded on the back with the barred secondaries along the flank, smooth body feathers, deep round body. But the head is hunched into the breast with no neck (the bill at the breast's height), and the legs are in a mid-run stride. Body kept; head, beard and legs replaced."
+    },
+    {
+      "kind": "meshy",
+      "purpose": "texture for the body",
+      "job": "library/animals/jobs/meleagris_gallopavo/01a179c6-3c31-7276-8720-4254f8651097/job.json",
+      "job_id": "01a179c6-3c31-7276-8720-4254f8651097",
+      "mode": "text-to-3d refine of 01a179c3-b065-7483-b2b3-012571102311, 2K base colour, no PBR",
+      "prompt": "Wild turkey tom plumage, natural matte colours with no lighting or shadows baked in: dark bronze body feathers with a coppery green sheen and black feather tips that give a scaled look; folded wings with black primary feathers crossed by narrow white bars, white-barred secondaries and bronze wing coverts; tail feathers dark brown finely barred black with buff-tan tips; rump feathers dark brown with buff tips; bare blue-grey head, red wattles and snood, black hair-like beard, pinkish-grey legs and toes, pale horn-coloured bill, dark eye.",
+      "author": "generated with Meshy (meshy.ai) by agent (Claude) for Aaron Brodeur",
+      "date": "2026-10-26 (UTC)",
+      "credits": 10,
+      "raw_triangles": 30664,
+      "license": "owned by the paid account holder (Meshy Terms of Use 3.2); released as CC BY-SA 4.0 with the project's assets on adoption; Terms 2.6(xi): not for training models that compete with Meshy",
+      "status": "adopted 2026-10-26 by tools/build_turkey.py (sampled into vertex colour)",
+      "review": "Plumage pattern right, values too dark: the body nearly black (median #3a3230) rather than bronze, the wing coverts a glossy blue-black block, a white-and-brown barred secondary patch on the flank (good), buff-edged tail feathers; head blue and red; legs too red. The build samples it per face and grades it to bronze."
+    },
+    {
+      "kind": "cc_download",
+      "purpose": "searched, not adopted",
+      "title": "Turkey",
+      "author": "Poly by Google",
+      "url": "https://poly.pizza/m/4f31_AG9Iap",
+      "license": "CC BY 3.0",
+      "status": "not downloaded",
+      "review": "The only live wild-turkey-shaped CC mesh found (2026-10-26, Poly Pizza, Sketchfab CC0/CC BY, OpenGameArt, Quaternius, Kenney): a faceted low-poly tom in full strut (fan up, puffed). Wrong base pose and cartoon proportions; a possible seed for the strut pose. Others: Poly Pizza https://poly.pizza/m/bMbD7yiAnML (Poly by Google, crude black), https://poly.pizza/m/b3E2cqagRPn (jeremy, stylised), Kenney's roast turkey; Sketchfab MooreLab 'Wild Turkey - Meleagris gallopavo' (CC BY 4.0) is a flat museum study skin."
+    }
+  ],
+  "status": "agent draft, needs local sign-off",
+  "accuracy_notes": "Adopted 2026-10-26 from three Meshy jobs. Reads as a wild turkey tom at 5-30 m: deep bronze body, white-barred secondaries as a pale patch on the flank, wedge tail with paler edges, a thin upright neck with red caruncles and wattle, pale blue head with a snood and horn bill, black beard, long pink-grey legs with spurs; hen colour set (grey head, brown neck, lighter duller body). Still open: the generated covert block on the folded wing stays a dark blue-black patch (real coverts are bronze); the neck is the grafted one stretched 2.7x, so it is thin and its caruncles long; the snood and wattle are coarse at lod1 and procedural at lod2; the tail is narrow (folded) and its buff tip band is not drawn; legs and drumsticks are procedural tubes; the hen is the tom's shape (no smaller head, no shorter legs) and needs the client's 0.8 scale; wing cards are flat, barred spanwise, unslotted. The beard sits low on the breast. A local birder should check the neck length in the walk, the leg length and the body colour against foothill birds.",
+  "authors": [
+    "agent (Claude) for Aaron Brodeur (brief, Meshy jobs, entry)",
+    "agent (Claude) for Aaron Brodeur (adoption: build script, rig, tiers)"
+  ],
+  "sources": [
+    "library/animals/drafts/meleagris_gallopavo.md (mesh brief)",
+    "docs/animal-library.md",
+    "library/animals/README.md",
+    "tools/build_turkey.py (adoption)"
+  ]
+}

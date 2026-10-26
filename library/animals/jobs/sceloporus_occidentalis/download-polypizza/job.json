@@ -1,0 +1,76 @@
+{
+  "kind": "download",
+  "species": "sceloporus_occidentalis",
+  "date": "2026-10-26",
+  "credits": 0,
+  "candidates": [
+    {
+      "title": "Lizard",
+      "author": "madtrollstudio",
+      "page": "https://poly.pizza/m/0z3NJc5zAE",
+      "source_url": "https://static.poly.pizza/89755743-58e0-4d4f-80f9-c24c267f0bf4.glb",
+      "file": "lizard_madtroll.glb",
+      "licence": "CC BY 3.0 (Poly Pizza page: Creative Commons Attribution; https://creativecommons.org/licenses/by/3.0/)",
+      "tris": 1351,
+      "verdict": "rejected: a fire salamander in all but name (smooth black tube body with yellow blotches, slender legs tucked under, no head shape of an iguanid); FBX2glTF, unrigged"
+    },
+    {
+      "title": "Spotted Gecko",
+      "author": "Jeff Larson",
+      "page": "https://poly.pizza/m/65Yj7059c2K",
+      "source_url": "https://static.poly.pizza/8c096eae-8ee0-42f1-80a2-7f726d4e0dad.glb",
+      "file": "spotted_gecko_larson.glb",
+      "licence": "CC BY 3.0 (Poly Pizza page)",
+      "tris": 4849,
+      "verdict": "rejected: cartoon gecko (huge round eyes, toe pads, 95 separate meshes), not a spiny lizard"
+    },
+    {
+      "title": "Gecko",
+      "author": "jeremy",
+      "page": "https://poly.pizza/m/3FxwLOrGiNL",
+      "source_url": "https://static.poly.pizza/5da30a9a-0858-4c2e-9695-51d211e1898a.glb",
+      "file": "gecko_jeremy.glb",
+      "licence": "CC BY 3.0 (Poly Pizza page)",
+      "tris": 846,
+      "verdict": "rejected: blocky box-section toy gecko, legs straight down"
+    }
+  ],
+  "searched": [
+    "Poly Pizza search \"lizard\" (Poly by Google, Quaternius, community; 72 results: salamanders, geckos, a newt, crocodilians and dinosaurs; no iguanid or spiny lizard, and Quaternius has only frogs, snakes and dinosaurs there)",
+    "OpenGameArt (web search): no CC0 or CC BY lizard; a CC BY 3.0 high-poly lizardman only",
+    "Poly Haven, Kenney: not searched in depth (neither publishes realistic small reptiles as far as known); Sketchfab not tried: downloads need an account"
+  ],
+  "files": [
+    {
+      "file": "gecko_jeremy.glb",
+      "bytes": 45208,
+      "sha256": "f2049ea00e356c8f672d56e8cbfc70225cf696d5c1d8946fa3e0f6f4261c068c"
+    },
+    {
+      "file": "gecko_jeremy.jpg",
+      "bytes": 399649,
+      "sha256": "b2bbef3ff0da0ad0d43bed262c3cd01e0c1172baab6c17dd4d5e088c4380d378"
+    },
+    {
+      "file": "lizard_madtroll.glb",
+      "bytes": 134512,
+      "sha256": "e9eab49ee18a382a020ee6e290707bfd069cc4b5be098f5a9ca6282b3c0a35d8"
+    },
+    {
+      "file": "lizard_madtroll.jpg",
+      "bytes": 378076,
+      "sha256": "df890f433a1356038f08baae0de339c888b69035ef8362842d41c9f303704be1"
+    },
+    {
+      "file": "spotted_gecko_larson.glb",
+      "bytes": 456776,
+      "sha256": "3d11f3c4ce31001ee19f6eb2ef54be632dc8627a349066eb3de7b2d60af5c320"
+    },
+    {
+      "file": "spotted_gecko_larson.jpg",
+      "bytes": 419767,
+      "sha256": "f1072651755b5ec6804ed71e6a3c512e22aee88ba464b41fd5cb054fe5a878b3"
+    }
+  ],
+  "note": "Downloaded by the fence lizard lane (agent Claude for Aaron Brodeur) to review shape and licence. Raw downloads stay local (git-ignored); only this job.json is tracked. Nothing in this folder is executed; GLB headers were read with python -I. None adopted: the mesh was generated with Meshy instead (see the entry)."
+}
