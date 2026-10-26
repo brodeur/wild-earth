@@ -16,7 +16,7 @@ Three workstreams share one contract, the [tile package spec](docs/tile-spec.md)
 ## Run it
 
 ```bash
-python3 -m venv .venv && .venv/bin/pip install rasterio numpy pyproj shapely requests pillow opencv-python-headless && .venv/bin/pip install -r pipeline/requirements-hydro.txt -r pipeline/requirements-ground.txt
+python3 -m venv .venv && .venv/bin/pip install rasterio numpy pyproj shapely requests pillow opencv-python-headless && .venv/bin/pip install -r pipeline/requirements-hydro.txt -r pipeline/requirements-ground.txt -r pipeline/requirements-lidar.txt
 ```
 
 Build the tile that contains an anchor point. The anchor is snapped to a 10 km UTM

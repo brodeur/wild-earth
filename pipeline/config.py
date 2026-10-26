@@ -174,7 +174,7 @@ def all_sources() -> dict:
     A module whose optional dependencies are missing (requirements-ground.txt) is skipped: its
     sources cannot be in a tile built without it."""
     import importlib
-    for mod in ("fetch_dem", "fetch_naip", "fetch_vegetation", "fetch_geology", "fetch_soils"):
+    for mod in ("fetch_dem", "fetch_naip", "fetch_vegetation", "fetch_geology", "fetch_soils", "fetch_lidar"):
         try:
             importlib.import_module(f".{mod}", __package__)
         except ImportError:

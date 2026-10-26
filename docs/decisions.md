@@ -694,3 +694,24 @@ tagged perch points (the player would hunt for them) and collision with the draw
 geometry (too costly and leaves do not hold a raven). The squirrel's full-tree climb will use
 the same perch queries. Verified: ground landing, perching on a live oak limb at 3 m with the
 HUD "perched on an interior live oak, 3 m up", 0.6 m hops, take-off; no console errors.
+
+## 2026-10-26: lidar gives the tile a 1 m ground and a crown list; the client keeps its 5 m grid
+
+A `lidar` build step after `dem` reads the USGS 3DEP 1 m DEM and the 3DEP point cloud (Entwine Point
+Tiles) from the AWS public buckets. The home tile is covered by CA_SierraNevada_B22 (flown 2021-11 to
+2022-09, ending the year of the 2022 NAIP photo; the 2019-20 Upper South American collection also covers it
+and is listed as the alternative): 2.08 G points, 21 per m2, streamed in 26 min by 16 processes,
+decoded in memory with laspy/lazrs and reduced to 1 m grids, nothing raw kept. From them: a 1 m DSM and
+canopy height model (pipeline only), 395 k tree crowns by local maxima and watershed in a 3.2 MB binary
+the client reads by 100 m cell (`client/trees_lidar.bin`), a 10 m canopy height and cover raster, a 2 m
+micro-relief residual against the client's 5 m heights (`client/terrain_detail.png`, 9 MB, 8-bit
+linear so the GPU filters it), and a 10 m roughness that now multiplies the outcrop likelihood
+(0.5 + min(sigma / 0.12 m, 1.5); cells above 0.5 went from 4.0% to 5.8% of the tile, the mean from
+0.172 to 0.178). The client stays on the 5 m grid for distance and adds the residual near the player.
+Rejected: PDAL (absent here, and it needs its C++ library, not a pip install), a full 1 m height grid for the client (400 MB, and only the
+ground near the player needs it), a normal map for the detail (shading without geometry, so placed
+things would float or sink), a 16-bit residual (unfilterable and twice the size), and the point-cloud
+ground for the CHM (gaps under dense canopy; the DEM is the same ground points interpolated, and the
+two agree to 4 cm). Found on the way: the client's `Heightfield.at` puts heights.png samples at
+pixel corners rather than centres, a 2.5 m shift of the terrain against everything on the metric grid;
+the residual is defined against pixel centres, so the client pass fixes that when it adds the detail.

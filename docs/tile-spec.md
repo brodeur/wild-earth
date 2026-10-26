@@ -47,6 +47,13 @@ tiles/<tile_id>/
   hydro/human_water.geojson     derived   every waterbody judged: human (rewilded: true) or kept, with the reasons and evidence
   hydro/osm_water.geojson       derived   OSM water polygons, dams and NID dam points (Overpass cache for the rewild step)
   terrain/dem_rewilded.tif      derived   dem.tif with the restored thalwegs carved through rewilded beds (routing only; dem.tif untouched)
+  terrain/dem_1m.tif            optional  lidar step: 3DEP 1 m bare-earth DEM cut to the tile, float32 m NAVD88; pipeline only (see Lidar)
+  terrain/dsm_1m.tif            optional  lidar step: highest point-cloud return per 1 m cell (first-return surface), float32; pipeline only
+  terrain/lidar_dtm_check.tif   optional  lidar step: point-cloud ground minus dem_1m, 10 m mean, float32
+  terrain/roughness_10m.tif     optional  lidar step: std of dem_1m about a quadratic per 10 m cell, float32 m (feeds the outcrop likelihood)
+  terrain/lidar_stats.json      optional  lidar step: the run's point counts, timings and checks
+  vegetation/chm_1m.tif         optional  lidar step: canopy height model, uint16 cm; pipeline only
+  vegetation/canopy_height_10m.tif optional lidar step: p95 canopy height m, tree cover % (>= 4 m), shrub cover % (0.5-4 m), 10 m
   vegetation/evt.tif            required  LANDFIRE Existing Vegetation Type (what grows now), 30 m
   vegetation/evc.tif            required  LANDFIRE Existing Vegetation Cover (percent, coded)
   vegetation/evh.tif            optional  LANDFIRE Existing Vegetation Height (coded)
@@ -79,6 +86,9 @@ tiles/<tile_id>/
   client/features.json          derived   present-day roads, streams (from hydro/channels.geojson when built) and waterbodies in tile-local metres
   client/channel_depth.png      derived   channel incision, uint8 decimetres on the DEM grid: mean DEM on a 20 m ring minus the channel cell, 0-25 m; 0 off channel
   client/channel_profile.png    derived   RGB on the DEM grid: R thalweg water depth (2 cm), G riffle-pool index, B rewilded water beds (see Hydrology rewilding)
+  client/terrain_detail.png     derived   2 m micro-relief: 8-bit grey residual of the 1 m DEM against client/heights.png, (v - 128) x 4 cm (see Lidar)
+  client/trees_lidar.bin        derived   lidar tree crowns: position, height, crown radius, confidence; 100 m cell index (see Lidar)
+  client/canopy_height.png      derived   10 m RGB: R p95 canopy height (0.25 m), G tree cover %, B shrub cover % (see Lidar)
   client/masks.png              derived   soft season-recolour weights: R grassland, G oak woodland, B chaparral
   client/species_mix_index.png  derived   row index per 30 m cell into species_mix.json mixes (0 = none), 8-bit grey (see Species mix)
   client/species_mix_density.png derived  RGB per 30 m cell: R tree_density, G shrub_density (multiplier = byte / 100), B 0
@@ -365,10 +375,71 @@ map unit's Rock outcrop components) is recorded too but is not yet used.
 volcanic and limestone 0.7, schist and slate 0.6, sandstone and other 0.4, alluvium 0) times
 shallowness (1 at <= 25 cm to bedrock, 0 at >= 150 cm) times terrain (slope / 35 degrees capped
 at 1, plus 0.5 times convexity, the 30 m cell's height above its 150 m neighbourhood over 1.5 m)
-times (1 - tree cover / 100 x 0.5), clipped to 0..1, and 0 on water. The manifest layer
+times (1 - tree cover / 100 x 0.5), times 0.5 + min(lidar roughness / 0.12 m, 1.5) on a tile with
+the lidar step (see Lidar), clipped to 0..1, and 0 on water. The manifest layer
 `client.outcrop` records the formula and parameters. The client places boulders and outcrop
 clusters from it, and takes gravel and dirt colour from the soil texture and fragments.
 Geology polygons from SGMC are public domain (through Macrostrat, CC-BY 4.0); SSURGO is public domain.
+
+## Lidar
+
+Build step `lidar`, after `dem` (`pipeline/fetch_lidar.py`, `pipeline/lidar.py`; laspy with the lazrs
+backend, `pipeline/requirements-lidar.txt`). It is long (the point cloud streams for about half an hour
+per tile), so `python -m pipeline.lidar --tile <id>` runs it without holding the manifest and
+`build_tile --steps lidar` then records the layers. A tile with it has `status.lidar: true`.
+
+**Sources.** Both from AWS public buckets over HTTPS, public domain (USGS), credited as `usgs_3dep_1m`
+and `usgs_3dep_lpc`:
+
+- The 3DEP standard 1 m DEM (`prd-tnm/StagedProducts/Elevation/1m/Projects/<project>/TIFF/`), one file
+  per 10 km UTM cell, named `USGS_1M_<zone>_x<west / 10 km>y<north / 10 km>_<project>.tif`, so a tile
+  is exactly one file (plus a 6 m apron). Projects covering the tile come from the TNM Access API, or,
+  when it fails, a listing of the bucket and one HEAD per project; the newest collection (metadata end
+  date) wins. `terrain.dem_1m` records the project, collection dates and the others that cover it.
+- The 3DEP point cloud as Entwine Point Tiles (`usgs-lidar-public/<project>/ept.json`, EPSG:3857
+  octree of LAZ chunks), the project matched to the DEM's by name stem and overlap. Every node
+  overlapping the tile is read at full depth, decoded in memory (never written), noise (classes 7, 18)
+  and withheld points dropped, and reduced to 1 m grids. Nothing raw is kept.
+
+NAD83 UTM is taken as the tile's WGS 84 UTM (PROJ's default is a null shift); the point-cloud ground
+check finds no horizontal offset at 1 m.
+
+**Products.** CHM = DSM - (dem_1m + the median point-cloud ground offset), the DEM standing in for the
+point-cloud ground because it has no gaps under dense canopy. Crowns: local maxima of the CHM (3x3
+median, then gaussian sigma 1 m) in a square window of radius round(1 + 0.1 h) m (1-5 m), h >= 4 m;
+height is the median CHM's 3x3 maximum; the crown is the watershed region down to half the peak and
+its radius sqrt(area / pi), clipped to 0.5 .. min(2 + 0.35 h, 15) m. The source classifies only
+ground, unclassified, water and noise, so houses are in the DSM: a maximum is dropped on an OSM
+building, where under 8% of the returns around it are multi-return (a roof, a wire), where the crown
+is narrower than max(1 m, 0.06 h) (a tower), and where it is under 8 m and under 2 m above its
+surroundings (a taller shrub in chaparral). The manifest layer `client.trees_lidar` records the
+method and confidence formula.
+
+`client/trees_lidar.bin` (little-endian): a 32-byte header (`WECR`, u16 version 1, u16 record bytes 8,
+u16 cells per side 100, u16 cell metres 100, u32 count, f32 xy unit 0.2, f32 height unit 0.25, f32
+radius unit 0.1, u32 0), then u32 `offsets[100 * 100 + 1]` (the crowns of index cell ci = floor(x / 100),
+cj = floor(north / 100) are records `offsets[cj * 100 + ci]` to `offsets[cj * 100 + ci + 1]`, tallest
+first), then 8-byte records: u16 x, u16 north (tile metres = value x 0.2 + 0.1), u8 height (x 0.25 m),
+u8 crown radius (x 0.1 m), u8 confidence (/ 255), u8 multi-return share (/ 255). A client loads the
+cells near the player from the index; `pipeline.lidar.read_trees` decodes it.
+
+`client/terrain_detail.png` is the micro-relief the 5 m grid cannot hold: the 1 m DEM averaged to 2 m
+minus `client/heights.png` as the client decodes it, interpolated bilinearly between **its pixel
+centres** (x = 5i + 2.5, north = 10000 - 5j - 2.5). 8-bit grey, residual m = (v - 128) x 0.04, clamped
+to +-5.08 m (0.01% of pixels: quarry walls, road cuts); its own pixel centres are at x = 2i + 1, so a
+texture lookup at uv = (x, north) / 10000 with linear filtering returns the residual directly. A
+residual rather than a normal map, because it gives the fine mesh near the player its geometry (and
+ground contact for placed things) and normals follow from four taps; linear 8-bit rather than a 16-bit
+R/G split because it filters in hardware and is half the size (9 MB against 22 MB).
+
+`terrain/roughness_10m.tif` is the std of the 1 m DEM about a least-squares quadratic within each 10 m
+cell (slope and curvature removed): boulders, outcrop steps, cut banks. The ground step multiplies the
+outcrop likelihood by 0.5 + min(roughness / 0.12 m, 1.5), averaged to 30 m (Geology and soils).
+
+**Checks** (home tile, `terrain.lidar_dtm_check` and `terrain/lidar_stats.json`): point-cloud ground
+against the 1 m DEM, median offset 0.00 m, std 0.04 m, best shift 0 m; the 1 m DEM against the 3DEP
+1/3 arc-second (10 m) seamless DEM, mean difference 0.00 m, std 0.19 m after a 4 m registration shift
+of the 10 m product, cells more than 1 m apart on ridge crests, canyon floors and road cuts.
 
 ## Habitat classes
 
@@ -551,7 +622,7 @@ Resources are named layers or entity classes a verb needs:
 Game clients work in tile-local meters (x east, north from the south edge, elevation
 up), so `client/` carries the same products on the unwarped tile grid. A client needs
 nothing else from the package to render terrain and vegetation: heights, texture,
-habitat class and canopy cover. Trees are not stored; the client grows them from
+habitat class and canopy cover. Trees are not stored (on a tile without lidar); the client grows them from
 habitat and canopy with a deterministic seed per 30 m cell, so every player sees the
 same tree in the same place without the package carrying a tree list.
 

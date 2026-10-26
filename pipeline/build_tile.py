@@ -3,6 +3,7 @@
     python -m pipeline.build_tile --anchor -120.7985 38.7296
     python -m pipeline.build_tile --tile utm10n_690_4280 --steps species,derive
     python -m pipeline.build_tile --tile utm10n_690_4280 --steps species_prior   # client prior only, no fetch
+    python -m pipeline.build_tile --tile utm10n_680_4280 --steps lidar,ground    # 1 m DEM, point cloud, crowns (pipeline/lidar.py)
 """
 from __future__ import annotations
 
@@ -15,7 +16,7 @@ from .config import (ATTRIBUTION_FIELDS, GENERATOR, SPEC_VERSION, TILES_DIR, Til
                      read_json, sha256, today, write_json)
 from .species_data import CALENDAR, PERCEPTION, SEASONS
 
-ALL_STEPS = ["dem", "naip", "osm", "hydro", "channels", "rewild_hydro", "veg", "ground", "species", "derive", "erase", "unreal"]
+ALL_STEPS = ["dem", "lidar", "naip", "osm", "hydro", "channels", "rewild_hydro", "veg", "ground", "species", "derive", "erase", "unreal"]
 
 
 def load_manifest(tile: Tile) -> dict:
@@ -82,6 +83,13 @@ def run(tile: Tile, steps: list[str], force=False) -> dict:
             if step == "dem":
                 from .fetch_dem import fetch_dem
                 add_layer(m, tile, "terrain.dem", fetch_dem(tile, force))
+            elif step == "lidar":
+                # Long (the point cloud streams for the better part of an hour); `python -m pipeline.lidar`
+                # runs the same stages without holding the manifest, and this step then only records them.
+                from .lidar import build_lidar
+                for k, v in build_lidar(tile, force).items():
+                    add_layer(m, tile, k, v)
+                m["status"]["lidar"] = True
             elif step == "naip":
                 from .fetch_naip import fetch_naip
                 add_layer(m, tile, "imagery.naip", fetch_naip(tile, force))

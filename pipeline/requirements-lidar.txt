@@ -1,0 +1,5 @@
+# Extra dependencies for the "lidar" build step (pipeline/fetch_lidar.py, lidar.py): the 3DEP point
+# cloud as Entwine Point Tiles, LAZ chunks decoded in memory by laspy with the lazrs (Rust) backend.
+# scipy and scikit-image (requirements-hydro.txt) are used for the crown maxima and watershed.
+laspy[lazrs]==2.6.1
+lazrs==0.7.0

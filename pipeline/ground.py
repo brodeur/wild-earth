@@ -1,12 +1,15 @@
 """Build step `ground`: geology + soils + outcrop likelihood for the client.
 
     outcrop = clip(resistance(rock class) * shallowness(depth to bedrock)
-                   * terrain(slope, convexity) * (1 - tree_cover/100 * 0.5), 0, 1)
+                   * terrain(slope, convexity) * (1 - tree_cover/100 * 0.5) * lidar(roughness), 0, 1)
 
 on the 30 m vegetation grid, where shallowness is 1 at <= 25 cm, 0 at >= 150 cm (linear),
 terrain = min(slope / 35 deg, 1) + 0.5 * clip(TPI / 1.5 m, 0, 1) with TPI the 30 m cell's
 height above the mean of the surrounding 150 m window (convex ground), and tree cover
-from LANDFIRE EVC. Water (geology unit or soil map unit) is 0.
+from LANDFIRE EVC. Water (geology unit or soil map unit) is 0. lidar = 0.5 + min(sigma / 0.12 m, 1.5)
+with sigma the 30 m mean of terrain/roughness_10m.tif (the lidar step: std of the 1 m DEM about a
+quadratic per 10 m cell), so ground the lidar sees as smooth is damped to half and blocky ground is
+raised up to double; on a tile without the lidar step it is 1.
 """
 from __future__ import annotations
 
@@ -27,10 +30,16 @@ TPI_WINDOW_CELLS = 5          # 5 x 30 m = 150 m
 TPI_FULL_M = 1.5
 CONVEX_BONUS = 0.5
 CANOPY_DAMP = 0.5
+ROUGH_BASE = 0.5              # lidar term on perfectly smooth ground
+ROUGH_FULL_M = 0.12           # each 0.12 m of 10 m roughness adds 1 to the term ...
+ROUGH_CAP = 1.5               # ... up to 0.5 + 1.5 = 2
 FORMULA = ("outcrop = clip(resistance[rock_class] * shallowness * terrain * (1 - tree_cover_pct/100 * 0.5), 0, 1); "
            "shallowness = clip((150 - depth_to_bedrock_cm) / (150 - 25), 0, 1) (0 where depth unknown); "
            "terrain = min(slope_deg / 35, 1) + 0.5 * clip(TPI_m / 1.5, 0, 1), TPI = z - mean(z, 150 m window) "
            "on the DEM averaged to 30 m; tree cover from LANDFIRE EVC; water = 0")
+FORMULA_LIDAR = FORMULA.replace("* (1 - tree_cover_pct/100 * 0.5), 0, 1)", "* (1 - tree_cover_pct/100 * 0.5) * lidar, 0, 1)") + (
+    "; lidar = 0.5 + min(roughness_m / 0.12, 1.5), roughness = 30 m mean of terrain/roughness_10m.tif "
+    "(std of the 1 m lidar DEM about a quadratic fitted per 10 m cell)")
 
 
 def _dem30(tile: Tile) -> np.ndarray:
@@ -42,6 +51,20 @@ def _dem30(tile: Tile) -> np.ndarray:
         out = np.zeros((GRID_PX, GRID_PX), "float32")
         reproject(z, out, src_transform=src.transform, src_crs=src.crs, dst_transform=grid_transform(tile),
                   dst_crs=tile.crs, resampling=Resampling.average)
+    return out
+
+
+def _roughness30(tile: Tile) -> np.ndarray | None:
+    """The lidar step's 10 m roughness averaged onto the 30 m grid, or None without it."""
+    p = tile.dir / "terrain" / "roughness_10m.tif"
+    if not p.exists():
+        return None
+    with rasterio.open(p) as src:
+        r = src.read(1).astype("float32")
+        out = np.zeros((GRID_PX, GRID_PX), "float32")
+        reproject(r, out, src_transform=src.transform, src_crs=src.crs, src_nodata=src.nodata,
+                  dst_transform=grid_transform(tile), dst_crs=tile.crs, dst_nodata=np.nan,
+                  resampling=Resampling.average)
     return out
 
 
@@ -79,7 +102,13 @@ def outcrop(tile: Tile) -> tuple[dict, dict]:
     tree = _tree_cover(tile)
     canopy = 1 - tree / 100 * CANOPY_DAMP
 
-    o = np.clip(resistance * shallow * terrain * canopy, 0, 1)
+    rough = _roughness30(tile)
+    if rough is not None:   # a cell without roughness (none expected) is neutral: term 1
+        lidar = ROUGH_BASE + np.minimum(np.nan_to_num(rough, nan=ROUGH_FULL_M * (1 - ROUGH_BASE)) / ROUGH_FULL_M, ROUGH_CAP)
+    else:
+        lidar = 1.0
+
+    o = np.clip(resistance * shallow * terrain * canopy * lidar, 0, 1)
     water = np.zeros(o.shape, bool)
     for i, u in gcls["units"].items():
         if u.get("water"):
@@ -94,13 +123,19 @@ def outcrop(tile: Tile) -> tuple[dict, dict]:
     stats = {"mean": round(float(o.mean()), 4), "fraction_above_0.5": round(float((o > 0.5).mean()), 4),
              "fraction_above_0.25": round(float((o > 0.25).mean()), 4),
              "slope_deg_mean": round(float(slope.mean()), 2), "convex_fraction": round(float((tpi > 0).mean()), 4)}
+    if rough is not None:
+        stats["lidar_roughness_m"] = {"median": round(float(np.nanmedian(rough)), 3), "p90": round(float(np.nanpercentile(rough, 90)), 3)}
+        stats["lidar_term"] = {"mean": round(float(np.mean(lidar)), 3), "min": round(float(np.min(lidar)), 3),
+                               "max": round(float(np.max(lidar)), 3)}
     info = {"path": "client/outcrop.png", "kind": "raster", "crs": tile.crs, "bounds": list(tile.bounds),
             "pixels": GRID_PX, "resolution_m": res, "encoding": "R = outcrop likelihood 0..255 (0..1)",
-            "derived_from": ["client.geology", "client.soils", "terrain.dem", "vegetation.evc"],
-            "formula": FORMULA, "resistance": RESISTANCE,
+            "derived_from": ["client.geology", "client.soils", "terrain.dem", "vegetation.evc"]
+                            + (["terrain.roughness"] if rough is not None else []),
+            "formula": FORMULA_LIDAR if rough is not None else FORMULA, "resistance": RESISTANCE,
             "params": {"shallow_cm": SHALLOW_CM, "deep_cm": DEEP_CM, "slope_full_deg": SLOPE_FULL_DEG,
                        "tpi_window_m": TPI_WINDOW_CELLS * res, "tpi_full_m": TPI_FULL_M, "convex_bonus": CONVEX_BONUS,
-                       "canopy_damp": CANOPY_DAMP},
+                       "canopy_damp": CANOPY_DAMP,
+                       **({"rough_base": ROUGH_BASE, "rough_full_m": ROUGH_FULL_M, "rough_cap": ROUGH_CAP} if rough is not None else {})},
             **stats}
     return info, {"outcrop": o, "depth_cm": np.where(depth_dm >= 255, np.nan, depth_cm), "geo": geo, "soil": soil}
 
