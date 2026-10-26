@@ -1,0 +1,83 @@
+{
+  "id": "quercus_lobata",
+  "aliases": ["valley_oak"],
+  "scientific": "Quercus lobata",
+  "common": "valley oak",
+  "form": "tree",
+  "architectural_model": "Rauh",
+  "deciduous": true,
+  "height_m": [15, 25],
+  "variants": [
+    {"name": "sapling", "weight": 0.08, "height_m": [3, 6], "trunk_radius": 0.45, "branches": 0.6, "leaf_density": 0.85, "set": {"trunk": {"length_ratio": 0.6, "split_prob": 0.1, "lean_deg": 4}, "crown": {"envelope": {"profile": [[0.15, 0.2], [0.35, 0.3], [0.55, 0.33], [0.75, 0.28], [0.9, 0.18], [1.0, 0.05]]}}, "levels": [{"down_angle_deg": 50, "down_angle_tip_deg": 30, "droop_deg": 4}], "foliage": {"clumps": {"radius_m": 0.8}}, "epiphytes": {"mistletoe": {"prob": 0}}}, "note": "a slender stem that still keeps its leader, narrow upright crown"},
+    {"name": "young", "weight": 0.22, "height_m": [8, 15], "trunk_radius": 0.65, "crown_scale": 0.8, "branches": 0.85, "set": {"trunk": {"length_ratio": 0.45, "split_prob": 0.3}, "levels": [{"droop_deg": 16}], "foliage": {"clumps": {"radius_m": 1.1}}, "epiphytes": {"mistletoe": {"prob": 0.15}}}, "note": "an upright oval crown, taller than wide, limbs not yet drooping"},
+    {"name": "mature", "weight": 0.55, "seeds": 2, "note": "the file as written"},
+    {"name": "veteran", "weight": 0.15, "height_m": [22, 30], "trunk_radius": 1.35, "crown_scale": 1.3, "gnarl": 1.3, "deadwood": {"fraction": 0.18, "levels": [1, 2], "where": "inner"}, "set": {"trunk": {"split_prob": 0.7, "lean_deg": 8}, "levels": [{"droop_deg": 40}], "epiphytes": {"mistletoe": {"prob": 0.8, "count": [3, 7]}}}, "note": "the giant of the valley floor: a massive trunk, a broad dome of long limbs that sweep down toward the grass, dead limbs, many mistletoe balls"}
+  ],
+  "snag": {"fraction": 0.05, "from": "veteran", "height_m": [14, 24], "limbs": 0.6, "twigs": 0.25, "levels": 1, "shorten": [0.45, 0.95], "rgb": [160, 156, 148]},
+  "description": "The biggest oak in California: 15-30 m tall, with a massive grey trunk, a broad dome of long limbs whose outer branches droop toward the ground, and deeply lobed leaves with rounded lobes. It grows on deep soils of the valley floors and lower slopes, where its roots reach the water table, and its long acorns feed deer, squirrels, jays, woodpeckers and wild turkeys.",
+  "season_notes": {
+    "winter": "Bare: the great grey limbs and the hanging tips of the outer branches show, with green balls of mistletoe high in the crown.",
+    "spring": "Leaves come out pale green in March with hanging catkins; this year's acorns start on the new shoots.",
+    "summer": "In full dark green leaf, the deepest shade in the valley; the long acorns grow through the summer.",
+    "fall": "The long acorns ripen and drop (September-November) and the leaves turn yellow-brown before falling."
+  },
+  "status": "agent draft, needs local sign-off",
+  "trunk": {
+    "length_ratio": 0.32, "radius_ratio": 0.06, "taper": 0.6, "flare": 1.4, "bole_ratio": 0.45, "base_size": 0.3,
+    "curve_deg": 10, "curve_var_deg": 16, "segments": 5, "lean_deg": 6, "stems": [1, 1], "stem_spread_deg": 0,
+    "split_prob": 0.5, "split_count": 2, "split_angle_deg": 30, "bark_rgb": [128, 124, 118],
+    "bark_pattern": "platy", "twig_rgb": [128, 120, 110],
+    "bark": {"tile_m": [0.5, 1.0], "plate_m": [0.08, 0.14], "fissure": 0.75, "contrast": 1.1, "lichen": 0.5, "relief": 1.5}
+  },
+  "crown": {
+    "shape": "cylindrical",
+    "envelope": {"profile": [[0.06, 0.48], [0.15, 0.6], [0.3, 0.67], [0.45, 0.68], [0.6, 0.63], [0.75, 0.51], [0.88, 0.33], [1.0, 0.1]], "lobes": 5, "lobe_depth": 0.14, "asymmetry": 0.12, "fill": 0.6, "edge": 1.08}
+  },
+  "levels": [
+    {
+      "count": 8, "down_angle_deg": 64, "down_angle_tip_deg": 34, "down_angle_var_deg": 14, "rotation_deg": 140,
+      "rotation_var_deg": 30, "length_ratio": 2.7, "length_var": 0.25, "curve_deg": 4, "curve_var_deg": 22,
+      "zigzag_deg": 10, "tropism": 0.0, "droop_deg": 28, "upturn_deg": 0, "taper": 0.9, "radius_ratio": 0.6, "segments": 5
+    },
+    {
+      "count": 7, "start": 0.15, "down_angle_deg": 50, "down_angle_var_deg": 16, "rotation_deg": 140,
+      "rotation_var_deg": 30, "length_ratio": 0.55, "length_var": 0.3, "curve_deg": 0, "curve_var_deg": 24,
+      "zigzag_deg": 14, "tropism": -0.06, "droop_deg": 16, "taper": 1.0, "radius_ratio": 0.45, "segments": 2
+    }
+  ],
+  "foliage": {
+    "type": "broadleaf", "leaf_size_m": 0.08, "leaf_shape": "oblong_wavy", "lobe_depth": 0.55, "cluster_m": 1.9, "density": 12, "leaf_fill": 5.0, "roll_deg": 80,
+    "start": 0.25, "parent_start": 0.55, "orientation": "outward",
+    "colors": {"winter": [128, 120, 110], "spring": [134, 148, 96], "summer": [114, 116, 95], "fall": [164, 138, 92]},
+    "leaf_on": {"winter": 0.0, "spring": 1.0, "summer": 1.0, "fall": 0.75},
+    "clumps": {"radius_m": 1.5, "cards_per_clump": 10, "shell": 0.15, "flatten": 0.7, "tip_bias": 1.5},
+    "palette": [[0.75, [1, 1, 1]], [0.25, [1.08, 1.1, 1.06]]], "winter_twigs": 0.5, "ao_min": 0.68,
+    "color_var": [0.08, 0.05], "leaf_on_var": 0.5
+  },
+  "deadwood": {
+    "fraction": 0.06, "where": "inner", "levels": [2], "shorten": 0.6, "rgb": [154, 150, 142]
+  },
+  "epiphytes": {
+    "mistletoe": {"prob": 0.5, "count": [1, 4], "radius_m": 0.45}
+  },
+  "twigs": {"count": [1, 2], "length": 0.7, "down_deg": 45, "down_var_deg": 18, "curve_var_deg": 22, "droop_deg": 20, "segments": 2, "radius_m": 0.012, "taper": 0.55, "fan_deg": 50, "jitter": 0.2, "zigzag_deg": 24, "tris": 1100},
+  "lod": {
+    "near_tris_budget": 2200, "near_sides": [7, 3, 0], "mid_blobs": 5, "mid_branches": 4, "mid_segments": [3, 2], "mid_blob_scale": 0.85,
+    "close_factor": 2
+  },
+  "targets": {
+    "crown_width_ratio": 1.35, "crown_base_ratio": 0.1, "porosity": 0.23, "foliage_rg": 1.0, "foliage_bg": 0.64,
+    "from": "reference photographs (2026-10-25, measured as in docs/tree-likeness-review.md, colour from the eroded crown mask): open-grown trees on Mount Diablo W/H 1.40, 1.30, 1.40, base 0.10, 0.07, 0.12, porosity 0.24, 0.27, 0.19, r/g 1.07, 0.95, 0.98, b/g 0.62, 0.79, 0.41 (Commons, Awinch1001, CC BY 4.0); a lone summer tree W/H 1.84 base 0.06 porosity 0.23 r/g 1.04 b/g 0.66 (Commons, WeirdNAnnoyed, CC BY-SA 4.0); an old tree in Mariposa W/H 1.44 base 0.12 porosity 0.18 (Commons, Hasmodius, CC BY-SA 4.0; colour left out, late-season yellow). W/H 1.35 sits below the open-grown median (1.40) because trees on the lower slopes here stand closer; base and porosity are medians; colour is the median of the four summer trees (dry-season leaves read olive, r/g about 1)",
+    "photos": [
+      {"url": "https://commons.wikimedia.org/wiki/File:Quercus_lobata_Mount_Diablo_near_North_Gate_Road_1.jpg", "license": "CC BY 4.0", "author": "Awinch1001", "shows": "broad open-grown dome on a grassy slope, summer"},
+      {"url": "https://commons.wikimedia.org/wiki/File:Quercus_lobata_Mount_Diablo_near_North_Gate_Road_2.jpg", "license": "CC BY 4.0", "author": "Awinch1001", "shows": "dome with limbs sweeping down to the grass"},
+      {"url": "https://commons.wikimedia.org/wiki/File:Quercus_lobata_Mount_Diablo_near_North_Gate_Road_4.jpg", "license": "CC BY 4.0", "author": "Awinch1001", "shows": "lone tree against the sky, low crown base"},
+      {"url": "https://commons.wikimedia.org/wiki/File:Valley_oak_August_2020.jpg", "license": "CC BY-SA 4.0", "author": "WeirdNAnnoyed", "shows": "very wide lone tree in August"},
+      {"url": "https://commons.wikimedia.org/wiki/File:Old_Valley_Oak_in_Mariposa,_Calfironia.jpg", "license": "CC BY-SA 4.0", "author": "Hasmodius", "shows": "old tree in the Sierra foothills, Mariposa"}
+    ]
+  },
+  "notes": "Valley oak is the largest North American oak: usually 10-25 m (FEIS), here 15-25 m in the file with a veteran class to 30 m, dbh 0.5-0.7 m commonly and well over 1.5 m on old trees (radius_ratio 0.06; veterans 1.35x). Long-lived (300-500+ years). It needs deep alluvial soil with groundwater in reach, so around Placerville and Shingle Springs it stands on valley floors, swales and the lower slopes, mostly below about 600 m, with blue oak on the drier slopes above. Decurrent Rauh's model like the other oaks: a short, massive trunk (trunk.length_ratio 0.32) forking into a few heavy scaffold limbs (split_prob 0.5) that spread wide and arch down (level-1 droop_deg 28), with long pendulous outer branchlets (level-2 tropism -0.06, droop_deg 16): the drooping skirt that sets valley oak apart from blue oak at a glance, strongest in veterans (droop_deg 40). Open-grown crowns in the photographs are 1.3-1.8 times as wide as tall with the crown base at 0.06-0.12 of the height. Bark grey, thick, deeply furrowed into small rectangular blocks ('platy' with small plates, 8-14 cm; it is checkered more coarsely and darker than blue oak's). Leaves 5-10 cm, deeply cut into 7-11 rounded lobes, dark green above and paler, finely hairy below: leaf_shape oblong_wavy at a larger leaf_size_m (0.08) with foliage.lobe_depth 0.55 (deeper lobes, read only if the shape supports it), and a paler palette tint for the undersides. Deciduous: leafs out in March, holds its leaves into November or December, yellow-brown in fall (leaf_on.fall 0.75), bare in winter with fine pendulous twigs (winter_twigs). Oak mistletoe (Phoradendron) is common in valley oak crowns (mistletoe prob 0.5, veterans 0.8). Acorns: yes, for the acorn game. Long and slender (3-5 cm), ripening in one season and dropping September-November; scrub-jays and ground squirrels cache them.",
+  "sources": ["https://www.fs.usda.gov/database/feis/plants/tree/quelob/all.html", "https://ucjeps.berkeley.edu/eflora/ (Quercus lobata)", "https://en.wikipedia.org/wiki/Quercus_lobata", "https://www.calflora.org/ (Quercus lobata)", "Halle, Oldeman and Tomlinson 1978 (Rauh's model; Quercus as example)", "Reference photographs listed in targets.photos (Wikimedia Commons, CC licences)"],
+  "authors": ["Wild Earth (agent draft, 2026-10-25); needs local sign-off"],
+  "license": "CC BY-SA 4.0"
+}

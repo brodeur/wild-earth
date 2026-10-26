@@ -1,0 +1,82 @@
+{
+  "id": "cercis_occidentalis",
+  "aliases": ["redbud", "western_redbud"],
+  "scientific": "Cercis occidentalis",
+  "common": "western redbud",
+  "form": "shrub",
+  "architectural_model": "Troll (provisional: plagiotropic shoots that turn up at their base; redbud flowers on old wood)",
+  "deciduous": true,
+  "height_m": [2.5, 5],
+  "variants": [
+    {"name": "young", "weight": 0.25, "height_m": [1.2, 2.5], "crown_scale": 0.85, "branches": 0.8, "set": {"trunk": {"stems": [3, 6], "stem_spread_deg": 22}}, "note": "a narrow vase of a few straight wands"},
+    {"name": "mature", "weight": 0.5, "seeds": 2, "note": "the file as written: a many-stemmed vase spreading into a broad top"},
+    {"name": "old", "weight": 0.25, "height_m": [4, 6], "trunk_radius": 1.2, "crown_scale": 1.12, "gnarl": 1.15, "deadwood": {"fraction": 0.15, "levels": [0, 1], "shorten": 0.8}, "set": {"trunk": {"stems": [6, 11]}}, "note": "a big spreading clump, a few grey dead stems among the live ones"}
+  ],
+  "description": "A many-stemmed shrub or small tree with round, heart-shaped leaves; in March, before its leaves come out, its bare branches are covered in bright magenta-pink flowers; 2-6 m tall here. It grows on dry canyon slopes, rocky banks and road cuts in the foothills, and the flowers are an early meal for bees, while the hanging seed pods stay on the branches through the winter.",
+  "season_notes": {
+    "winter": "Bare grey-brown branches hung with flat, brown seed pods; by late February the flower buds swell along the twigs.",
+    "spring": "In March the bare branches turn magenta with flowers, then round, heart-shaped leaves unfold, shiny and bronze-green.",
+    "summer": "Thick blue-green leaves and bunches of flat purple-red seed pods.",
+    "fall": "Leaves turn yellow, orange and red-brown and drop by December; the pods turn brown and stay."
+  },
+  "status": "agent draft, needs local sign-off",
+  "trunk": {
+    "length_ratio": 0.88, "radius_ratio": 0.018, "taper": 0.8, "flare": 1.35, "bole_ratio": 0.08, "base_size": 0.15,
+    "curve_deg": 8, "curve_var_deg": 10, "segments": 3, "lean_deg": 0, "stems": [5, 9], "stem_spread_deg": 34,
+    "split_prob": 0.0, "split_count": 2, "split_angle_deg": 20, "sinuous_deg": 4, "bark_rgb": [126, 112, 104],
+    "bark_pattern": "smooth", "twig_rgb": [122, 82, 70],
+    "bark": {"tile_m": [0.15, 0.4], "contrast": 0.55, "lichen": 0.2, "relief": 0.4}
+  },
+  "crown": {
+    "shape": "inverse_conical",
+    "envelope": {"profile": [[0.0, 0.15], [0.2, 0.33], [0.4, 0.51], [0.6, 0.64], [0.78, 0.68], [0.9, 0.57], [1.0, 0.3]], "lobes": 5, "lobe_depth": 0.14, "asymmetry": 0.15, "fill": 0.45, "edge": 1.08}
+  },
+  "levels": [
+    {
+      "count": 4, "start": 0.22, "down_angle_deg": 38, "down_angle_var_deg": 12, "rotation_deg": 140, "rotation_var_deg": 30,
+      "length_ratio": 0.5, "length_var": 0.3, "curve_deg": 10, "curve_var_deg": 14, "tropism": 0.04, "taper": 0.9,
+      "radius_ratio": 0.55, "segments": 2, "zigzag_deg": 8
+    },
+    {
+      "count": 4, "start": 0.3, "down_angle_deg": 45, "down_angle_var_deg": 15, "rotation_deg": -70,
+      "rotation_var_deg": 25, "length_ratio": 0.45, "length_var": 0.25, "curve_deg": 8, "curve_var_deg": 16,
+      "tropism": 0.0, "taper": 1.0, "radius_ratio": 0.5, "segments": 1, "zigzag_deg": 12
+    }
+  ],
+  "foliage": {
+    "type": "broadleaf", "leaf_size_m": 0.075, "leaf_shape": "cordate", "cluster_m": 0.55, "density": 18, "cards_per_m2": 3.2,
+    "start": 0.3, "parent_start": 0.5, "orientation": "outward", "roll_deg": 60,
+    "colors": {"winter": [120, 98, 90], "spring": [124, 140, 84], "summer": [107, 118, 93], "fall": [156, 116, 80]},
+    "leaf_on": {"winter": 0.0, "spring": 0.3, "summer": 1.0, "fall": 0.7},
+    "leaf_on_by_month": [0.0, 0.0, 0.0, 0.3, 0.9, 1.0, 1.0, 1.0, 0.95, 0.8, 0.4, 0.05],
+    "clumps": {"radius_m": 0.4, "cards_per_clump": 6, "shell": 0.35, "flatten": 0.75, "tip_bias": 1.2},
+    "palette": [[0.85, [1, 1, 1]], [0.15, [1.08, 1.05, 1.12]]],
+    "winter_twigs": 0.4, "ao_min": 0.72, "color_var": [0.08, 0.04], "leaf_on_var": 0.4,
+    "flowers": {"season": "spring", "months": [2, 4], "form": "cluster", "rgb": [212, 96, 176], "size_m": 0.03, "density": 0.85, "before_leaves": true},
+    "catkins": {"rgb": [128, 92, 72], "len_m": 0.07, "width": 0.35, "hang": true, "prob": 0.3}
+  },
+  "deadwood": {"fraction": 0.08, "levels": [0], "shorten": 0.8, "rgb": [136, 130, 122]},
+  "twigs": {"count": [1, 2], "length": 0.7, "down_deg": 40, "down_var_deg": 15, "zigzag_deg": 22, "curve_var_deg": 20, "segments": 2, "radius_m": 0.006, "taper": 0.6, "fan_deg": 50, "jitter": 0.2},
+  "lod": {
+    "near_tris_budget": 1100, "near_sides": [4, 3, 0], "mid_blobs": 3, "mid_branches": 0, "mid_sides": [3, 0],
+    "mid_cards": 36
+  },
+  "targets": {
+    "crown_width_ratio": 1.0, "crown_base_ratio": 0.2, "porosity": 0.25, "foliage_rg": 0.83, "foliage_bg": 0.61,
+    "fall_rg": 1.5, "fall_bg": 0.56,
+    "from": "reference photographs (2026-10-25), measured by eye on a 10% grid and colour as linear means of foliage pixels, as in docs/tree-likeness-review.md: W/H 0.8 (bare vase, Shingle Springs, iNaturalist 248660991), 1.1 (flowering, Hidden Falls, 268275595), 1.1 (flowering small tree, Salmon Falls Road, El Dorado Hills, 477127567); crown base 0.2-0.25; summer colour r/g 0.83, b/g 0.61 (233824613, one photo: rough); fall r/g 1.30 and 1.75, b/g 0.50 and 0.62 (731687737, 321263517); flower pixels mean sRGB (169, 119, 153) and (155, 113, 137) (621650374, 268275595), blended with twigs: the flowers themselves are a deeper magenta",
+    "photos": [
+      {"url": "https://www.inaturalist.org/photos/248660991", "license": "CC BY", "author": "Alexander Wentworth (alex_wentworth)", "shows": "bare many-stemmed vase, Shingle Springs, December"},
+      {"url": "https://www.inaturalist.org/photos/477127567", "license": "CC0", "author": "Kristy Moon (kristy218)", "shows": "flowering small tree on bare wood, Salmon Falls Road, El Dorado Hills, March"},
+      {"url": "https://www.inaturalist.org/photos/268275595", "license": "CC0", "author": "Joshua Zupan (jzupan)", "shows": "flowering clump under oaks, Hidden Falls Regional Park, April"},
+      {"url": "https://www.inaturalist.org/photos/621650374", "license": "CC BY", "author": "Adam J. Searcy (serpophaga)", "shows": "flowering among chaparral, Cameron Park, March"},
+      {"url": "https://www.inaturalist.org/photos/233824613", "license": "CC0", "author": "Joshua Zupan (jzupan)", "shows": "blue-green summer leaves, Hidden Falls Regional Park, September"},
+      {"url": "https://www.inaturalist.org/photos/731687737", "license": "CC0", "author": "Leah Gardner (grnleaf)", "shows": "fall leaves and pods, Marshall Gold Discovery State Historic Park, Coloma, September"},
+      {"url": "https://www.inaturalist.org/photos/321263517", "license": "CC0", "author": "Juli Ann Lingenberg (radagast_97)", "shows": "red-brown fall leaves, Pilot Hill, September"}
+    ]
+  },
+  "notes": "Western redbud is a deciduous shrub or small tree, 2-6 m, of dry canyon slopes, rocky banks and road cuts in the foothills (here often under or between oaks and with chaparral). Form: plain 'shrub'. Many (5-9) straight, slender stems from the base rise steeply and spread like a vase (stem_spread 28, low curve), branching above a third of their height into a broad, uneven top: inverse-conical envelope, crown base about 0.2, W/H 0.8 young to 1.1 mature. Bark smooth grey-brown, twigs red-brown and zig-zag. Leaves 5-9 cm, round to kidney-shaped with a heart-shaped base, thick, held flat on long stalks and somewhat hanging: leaf_shape cordate. Colour: bronze-green as they open, blue-green and slightly glaucous in summer (the palette lightens 15% of leaves for the bloom), yellow, orange and red-brown in fall, some plants dropping leaves early in a dry year (leaf_on_var). Flowers: clusters of 2-8 small pea flowers, magenta-pink, along the bare twigs and older branches in March (February-April), before the leaves: flowers.before_leaves true, so they belong on the bare-crown texture. Pods: flat, 4-8 cm, purple-red in summer and brown later, hanging in bunches and staying through the winter; drawn with the existing catkins field (hanging, brown) on the winter twig texture. leaf_on_by_month: bare December to March, leaves unfolding through April (photos of 14 April at Hidden Falls still show full bloom with few leaves), full in May; so the spring view (mid-April) shows the flowers on mostly bare wood. The architectural model is provisional and needs a botanist's check.",
+  "sources": ["https://ucjeps.berkeley.edu/eflora/ (Cercis occidentalis)", "https://www.calflora.org/ (Cercis occidentalis)", "https://calscape.org/ (Cercis occidentalis)", "https://en.wikipedia.org/wiki/Cercis_occidentalis", "Reference photographs listed in targets.photos (iNaturalist, El Dorado and Placer counties, CC0 and CC BY)"],
+  "authors": ["Wild Earth (agent draft, 2026-10-25); needs local sign-off"],
+  "license": "CC BY-SA 4.0"
+}

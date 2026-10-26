@@ -1,7 +1,8 @@
 import * as THREE from 'three';
 import { uniforms as atmo, ATMOSPHERE_GLSL } from './atmosphere.js';
 import { SPECIES, SPECIES_IDS, mulberry32, resolveSpecies } from './trees.js';
-import { VARIANTS, pick, hash, variantSeed, handover, cellPlan, placementSkip, placePlant } from './vegetation.js';
+import { VARIANTS, pick, hash, variantSeed, handover, cellPlan, placementSkip, placePlant, monthFor } from './vegetation.js';
+import { variantSlots, leafOnAt } from './treegen.js';
 import { bakeImpostors, VIEWS, SIDE_VIEWS, ALPHA_REF } from './impostorBake.js';
 import { seasonOfDate } from './season.js';
 
@@ -54,6 +55,55 @@ const CAST_KEEP = 0.5, CAST_R = 4500;   // far shadow casters: share kept, reach
 const HAND_MARGIN = 15;            // rebuild() measures from the camera, the hand-over from the bird (a chase camera's offset)
 const CROSS = [150, 450];          // crossed -> billboard switch, per tree, at nearRadius + 150..450
 const srgbToLin = v => Math.pow(v / 255, 2.2);
+
+// Atlas slots per species (2026-10-25). Every plant draws one of VARIANTS (12) slots as always, but the
+// atlas bakes only as many distinct trees per species as its share of the tile's plants is worth: a
+// species with at least SLOT_TIERS[0][0] of its layer (trees or shrubs) gets 12 slots (in practice its
+// 4-6 distinct class trees), any other placed species 4, and a species the tile never places none. Over
+// MAX_TREES distinct baked trees (about 0.83 MB each, both atlases with mips: 64 trees, 53 MB), the species with the
+// smallest share per baked tree gives up a tree (slots 12 -> 4 -> 3 -> 2 -> 1), repeatedly, so common
+// species keep their variety and rare ones share what is left. A plant whose own tree is not baked takes
+// the baked tree of its age class (else the nearest slot), so at the hand-over (about 1.2 km) a rare
+// species' tree may swap for a sibling of its class.
+const SLOT_TIERS = [[0.02, 12], [0, 4]];
+const SLOT_STEPS = [12, 8, 4, 3, 2, 1];
+export const MAX_TREES = 64;   // 64 trees x 5 views in rows of 10 cells of 128 texels: a 1280 x 4096 atlas, inside every WebGL2 device's texture size limit
+const distinctTrees = (id, n) => new Set(variantSlots(id, n).map(s => s.seed)).size;
+// The seed the impostor of slot v (0..VARIANTS-1) bakes when its species has n atlas slots.
+export function impostorSeed(id, v, n) {
+  const all = variantSlots(id, VARIANTS), own = all[v];
+  if (n >= VARIANTS) return own.seed;
+  const few = variantSlots(id, n);
+  if (few.some(s => s.seed === own.seed)) return own.seed;
+  const same = few.filter(s => s.cls === own.cls);
+  if (same.length) return same[own.copy % same.length].seed;
+  return few[Math.min(n - 1, Math.floor(v * n / VARIANTS))].seed;
+}
+// counts: species id -> { tree, shrub } plants placed. Returns { ids, slots: { id: n }, share: { id: s }, trees }.
+export function planSlots(counts, maxTrees = MAX_TREES, library = SPECIES_IDS) {
+  const ids = library.filter(id => counts[id] && counts[id].tree + counts[id].shrub > 0);
+  let T = 0, Sh = 0; for (const id of ids) { T += counts[id].tree; Sh += counts[id].shrub; }
+  const share = {}, slots = {};
+  for (const id of ids) {
+    const c = counts[id], asTree = c.tree >= c.shrub;
+    share[id] = asTree ? c.tree / Math.max(1, T) : c.shrub / Math.max(1, Sh);
+    slots[id] = SLOT_TIERS.find(([s]) => share[id] >= s)[1];
+  }
+  const total = () => ids.reduce((a, id) => a + distinctTrees(id, slots[id]), 0);
+  let trees = total();
+  // Over the cap, a tree goes from the species with the smallest share of all plants (shrubs are many but
+  // small far away) per baked tree, in two rounds: no species goes under 2 trees before every one is at 2.
+  const all = T + Sh, weight = Object.fromEntries(ids.map(id => [id, (counts[id].tree + counts[id].shrub) / Math.max(1, all)]));
+  for (const floor of [2, 1]) while (trees > maxTrees) {
+    let best = null, bc = Infinity;
+    for (const id of ids) { const t = distinctTrees(id, slots[id]); if (slots[id] <= 1 || t <= floor) continue; const c = weight[id] / t; if (c < bc) { bc = c; best = id; } }
+    if (!best) break;
+    const t0 = distinctTrees(best, slots[best]);   // step down until it bakes one tree fewer
+    while (slots[best] > 1 && distinctTrees(best, slots[best]) >= t0) slots[best] = SLOT_STEPS[SLOT_STEPS.indexOf(slots[best]) + 1] ?? 1;
+    trees = total();
+  }
+  return { ids, slots, share, trees };
+}
 
 // A far tree's growth with distance d from the eye, shared by the impostor and its shadow caster:
 // x width and y height multipliers on the tree's own size, z alive (0: dropped by thinning), w variety.
@@ -254,16 +304,23 @@ export class Impostors {
   constructor(tile, scene) {
     const t0 = performance.now();
     this.tile = tile; this.group = new THREE.Group(); scene.add(this.group);
-    // Atlas: every species x variant the vegetation uses, from its exact seed.
+    // Records first (each holds its species and slot), then the atlas: the species the tile places, with
+    // slots by how common each is (planSlots), every slot's tree from its exact seed where it is baked.
+    this.buildRecords();
+    const t1 = performance.now();
+    const plan = this.plan = planSlots(this.counts);
+    const ids = this.ids = plan.ids.length ? plan.ids : [SPECIES_IDS[0]];
     const bakeList = [];
-    for (const id of SPECIES_IDS) for (let v = 0; v < VARIANTS; v++) bakeList.push({ id, seed: variantSeed(id, v) });
+    for (const id of ids) for (let v = 0; v < VARIANTS; v++) bakeList.push({ id, seed: impostorSeed(id, v, plan.slots[id] ?? VARIANTS) });
     const bake = bakeImpostors(bakeList);
     this.bake = bake;
-    const t1 = performance.now();
-    this.buildRecords();
+    {   // library species x slot -> baked tree (bakeList is ids x VARIANTS)
+      const pos = SPECIES_IDS.map(id => ids.indexOf(id)), rec = this.records;
+      for (let q = 0; q < this.nRecords; q++) { const o = q * STRIDE + 5, key = rec[o], v = key % VARIANTS; rec[o] = bake.index[pos[(key - v) / VARIANTS] * VARIANTS + v]; }
+    }
     const t2 = performance.now();
 
-    const NT = bake.frames.length, NS = SPECIES_IDS.length;
+    const NT = bake.frames.length, NS = ids.length;
     this.uniforms = {
       albedoMap: { value: bake.albedo }, normalMap: { value: bake.normal },
       frame: { value: bake.frames.map(f => new THREE.Vector4(f.W, f.H, f.y0, f.capY)) },
@@ -271,13 +328,13 @@ export class Impostors {
       // Far height: the slot's own baked tree (a sapling or snag stays its size), varied per tree by the
       // species range's relative spread about it ([6, 12] m: +-1/3), not stretched to the mature range.
       hrange: { value: bake.frames.map(f => { const v = (f.hmax - f.hmin) / (f.hmax + f.hmin);
-        return new THREE.Vector4(1 - v, 1 + v, f.shrub ? 1 : 0, SPECIES_IDS.indexOf(f.species)); }) },
-      tint: { value: SPECIES_IDS.map(() => new THREE.Vector3(1, 1, 1)) },
+        return new THREE.Vector4(1 - v, 1 + v, f.shrub ? 1 : 0, ids.indexOf(f.species)); }) },
+      tint: { value: ids.map(() => new THREE.Vector3(1, 1, 1)) },
       // Needle light per species, as treegen canopyMaterial sets it for a card texture with needle aux data
       // (foliage.needle_wrap, translucency, needle_scatter, translucency_rgb), with the texture's mean thinness.
-      needle: { value: SPECIES_IDS.map(id => { const F = SPECIES[id].foliage, f = bake.frames.find(q => q.species === resolveSpecies(id));
+      needle: { value: ids.map(id => { const F = SPECIES[id].foliage, f = bake.frames.find(q => q.species === resolveSpecies(id));
         return f && f.thin > 0 ? new THREE.Vector4(F.needle_wrap ?? 0.35, F.translucency ?? 2.5, F.needle_scatter ?? 0.15, f.thin) : new THREE.Vector4(); }) },
-      needleTint: { value: SPECIES_IDS.map(id => new THREE.Vector3(...(SPECIES[id].foliage.translucency_rgb || [1, 1.12, 0.55]))) },
+      needleTint: { value: ids.map(id => new THREE.Vector3(...(SPECIES[id].foliage.translucency_rgb || [1, 1.12, 0.55]))) },
       eye: { value: new THREE.Vector3() }, nearRadius: { value: 1500 }, thin: { value: new THREE.Vector4() },
       handEye: handover.eye, hand: handover.r,
       grid: { value: new THREE.Vector2(...bake.grid) },
@@ -309,9 +366,9 @@ export class Impostors {
     this.casterMesh = new THREE.Mesh(this.sectorGeometry(1024, 'far')); this.casterMesh.cap = 1024; this.casterMesh.kind = 'far';
     this.R = null; this.center = null; this.count = 0; this.bakeList = bakeList;
     this.setSeason(seasonOfDate());
-    this.stats = { bakeMs: Math.round(t1 - t0), bakeRenderMs: Math.round(bake.renderMs), recordsMs: Math.round(t2 - t1), atlas: bake.size,
-      atlasMB: +(bake.bytes / 1048576).toFixed(1), trees: this.nRecords };
-    console.info(`impostors: atlas ${bake.size.join('x')} x2 (${this.stats.atlasMB} MB with mips), ${NT} trees (${bakeList.length} slots) x ${VIEWS} views, baked in ${this.stats.bakeMs} ms; ${this.nRecords.toLocaleString()} plants indexed in ${this.stats.recordsMs} ms`);
+    this.stats = { bakeMs: Math.round(t2 - t1), bakeRenderMs: Math.round(bake.renderMs), recordsMs: Math.round(t1 - t0), atlas: bake.size,
+      atlasMB: +(bake.bytes / 1048576).toFixed(1), trees: this.nRecords, baked: NT, species: ids.length, slots: plan.slots };
+    console.info(`impostors: atlas ${bake.size.join('x')} x2 (${this.stats.atlasMB} MB with mips), ${NT} trees for ${ids.length} species (${Object.entries(plan.slots).map(([k, n]) => `${k} ${n}`).join(', ')}) x ${VIEWS} views, baked in ${this.stats.bakeMs} ms; ${this.nRecords.toLocaleString()} plants indexed in ${this.stats.recordsMs} ms`);
   }
 
   // Depth material for the far shadow casters (see CASTER_VERT). crowns: one THREE.Vector4 per baked tree.
@@ -339,7 +396,9 @@ export class Impostors {
   // per plant are taken in Vegetation.update's order, so each record is the tree that replaces it.
   buildRecords() {
     const tile = this.tile, hab = tile.habitat, res = hab.res, size = tile.size, heights = tile.heights;
-    const treeIdx = {}; SPECIES_IDS.forEach((id, k) => treeIdx[id] = k * VARIANTS);
+    // rec[5] holds the species' library index x VARIANTS + slot until the constructor has baked the atlas
+    // and replaces it with the baked tree; counts (per species, as tree and as shrub) size the atlas.
+    const spCount = this.counts = {}, libIdx = Object.fromEntries(SPECIES_IDS.map((id, k) => [id, k]));
     let rec = new Float32Array(400000 * STRIDE), chunkOf = new Int32Array(400000), n = 0;
     const NC = Math.ceil(size / CHUNK); this.NC = NC;
     for (let j = 0; j < hab.img.height; j++) for (let i = 0; i < hab.img.width; i++) {
@@ -359,7 +418,8 @@ export class Impostors {
         const own = mulberry32(hash(i, j, k + 7001) ^ 0x5bd1e995);   // the impostor's own draws, outside the shared stream
         const o = n * STRIDE;
         rec[o] = ax; rec[o + 1] = heights.at(ax, an) - 0.3; rec[o + 2] = -an; rec[o + 3] = rot;
-        rec[o + 4] = s; rec[o + 5] = this.bake.index[treeIdx[resolveSpecies(name)] + variant];   // the slot's baked tree
+        const sid = resolveSpecies(name), c = spCount[sid] || (spCount[sid] = { tree: 0, shrub: 0 }); if (isTree) c.tree++; else c.shrub++;
+        rec[o + 4] = s; rec[o + 5] = libIdx[sid] * VARIANTS + variant;   // species and slot; the constructor swaps in the baked tree
         rec[o + 6] = own(); rec[o + 7] = i + j * hab.img.width;
         chunkOf[n] = Math.min(NC - 1, Math.floor(ax / CHUNK)) + NC * Math.min(NC - 1, Math.floor(an / CHUNK));
         n++;
@@ -427,10 +487,11 @@ export class Impostors {
   // Season colour per species, relative to the baked summer colour (as applySeason does for the real trees).
   setSeason(season) {
     this.season = season;
-    SPECIES_IDS.forEach((id, k) => {
+    const month = monthFor(season);
+    this.ids.forEach((id, k) => {
       const c = SPECIES[id].foliage.colors, s = c[season] || c.summer;
       // A crown is mostly leaves; a bare deciduous crown keeps its baked shape but goes to bark-grey.
-      const on = SPECIES[id].foliage.leaf_on[season] ?? 1;
+      const on = leafOnAt(SPECIES[id], season, month);
       const t = s.map((x, i) => srgbToLin(x) / Math.max(1e-4, srgbToLin(c.summer[i])));
       const bark = SPECIES[id].trunk.bark_rgb.map((x, i) => srgbToLin(x) / Math.max(1e-4, srgbToLin(c.summer[i])) * 0.6);
       const wBark = (1 - on) * (1 - on);   // a thinned crown mostly shows its remaining leaves; a bare one, its twigs

@@ -1,4 +1,5 @@
 import * as THREE from 'three';
+import { seasonOfDate } from './season.js';
 
 // Parametric trees in the spirit of Weber & Penn 1995, "Creation and Rendering of Realistic Trees".
 // Each species is a parameter file in library/species/<id>.json (schema: docs/species-library.md).
@@ -82,6 +83,15 @@ function normalizeOne(raw) {
   s.lod = { ...DEFAULTS.lod, ...raw.lod };
   s.twigs = raw.twigs ? { ...DEFAULTS.twigs, ...raw.twigs } : null;
   s.shrub = s.form === 'shrub';
+  // multi_stem_shrub_tree (toyon, elderberry): grown like a shrub (every stem spreads from the base, each
+  // stem carries its own level-1 branches, stems fit the crown envelope) but drawn as a tree (tree LOD
+  // defaults, near and mid caps, far impostors as trees rather than chaparral patches).
+  s.multiStem = s.form === 'multi_stem_shrub_tree';
+  s.shrubLike = s.shrub || s.multiStem;
+  // Flowers and berries (docs/species-library.md, "Generator features for the foothill set"): drawn into
+  // the card textures at the spray's twig ends in the seasons (or months) they show.
+  if (f.flowers) s.foliage.flowers = { form: 'cluster', size_m: 0.1, density: 0.5, before_leaves: false, season: 'spring', ...f.flowers };
+  if (f.berries) s.foliage.berries = { form: 'cluster', size_m: 0.06, density: 0.4, season: 'fall', ...f.berries };
   // Mid (180 m to 1.5 km, most of the triangles in a frame): a trunk there is 1-5 px wide and a limb
   // under a pixel, so trunks are square (4 sides) and limbs single straight 3-sided segments.
   if (!s.lod.mid_sides) s.lod.mid_sides = s.shrub ? [4, 3] : [4, 3];
@@ -260,6 +270,45 @@ export const LIBRARY_RAW = loaded.raw;          // canonical id -> the file as f
 export const ALIASES = {};                      // old ids (blue_oak, ...) -> canonical id
 for (const s of Object.values(LIBRARY)) for (const a of s.aliases || []) ALIASES[a] = s.id;
 export const resolveSpecies = name => (LIBRARY[name] ? name : ALIASES[name]);
+
+// Add (or replace) a species at run time, e.g. a file not yet listed in index.json (the lineup's ?add=
+// parameter). Returns its canonical id.
+export function addSpecies(raw, source = 'added') {
+  const s = normalizeSpecies(raw);
+  LIBRARY[raw.id] = s; LIBRARY_SOURCE[raw.id] = source; LIBRARY_RAW[raw.id] = raw;
+  for (const a of s.aliases || []) ALIASES[a] = raw.id;
+  for (const k of [...slotCache.keys()]) if (k.startsWith(raw.id + ':')) slotCache.delete(k);
+  return raw.id;
+}
+
+// ---------------------------------------------------------------------------------------------
+// Months. The client works in seasons; species that change within a season (drought-deciduous buckeye:
+// full in April, dropping in July, bare by August) read a month, 1 to 12.99 (1.5 = mid-January). A
+// season stands for its middle month (season.js MIDPOINT_DOY), and for today's date when it is today's
+// season (the season selector's "tracks today's date").
+export const SEASON_MONTH = { winter: 1.5, spring: 4.5, summer: 7.5, fall: 10.5 };
+export const monthOfDate = (d = new Date()) => d.getMonth() + 1 + (d.getDate() - 0.5) / new Date(d.getFullYear(), d.getMonth() + 1, 0).getDate();
+export const seasonMonth = (season, d = new Date()) => (season === seasonOfDate(d) ? monthOfDate(d) : SEASON_MONTH[season] ?? 7.5);
+// Leaf-on of a species in a season (and month): foliage.leaf_on_by_month [12 values, January first, each
+// the middle of its month, linear in between and round the year] when the file has it, else leaf_on[season].
+export function leafOnAt(spec, season, month = null) {
+  const F = spec.foliage, by = F.leaf_on_by_month;
+  if (Array.isArray(by) && by.length === 12) {
+    const t = (month ?? SEASON_MONTH[season] ?? 7.5) - 1.5, i = Math.floor(t), f = t - i, a = ((i % 12) + 12) % 12;
+    return by[a] * (1 - f) + by[(a + 1) % 12] * f;
+  }
+  return F.leaf_on[season] ?? 1;
+}
+// Whether flowers or berries (foliage.flowers / foliage.berries) show: `months` [from, to] (1-12,
+// inclusive, may wrap the year: [11, 2]) when given, else `season` (a season name or a list of them).
+export function decoActive(D, season, month = null) {
+  if (!D) return false;
+  if (Array.isArray(D.months) && D.months.length === 2) {
+    const m = Math.floor(month ?? SEASON_MONTH[season] ?? 7.5), [a, b] = D.months;
+    return a <= b ? m >= a && m <= b : m >= a || m <= b;
+  }
+  return Array.isArray(D.season) ? D.season.includes(season) : D.season === season;
+}
 
 // ---------------------------------------------------------------------------------------------
 // Skeleton
@@ -576,16 +625,16 @@ function skeleton(spec, seed) {
   for (let k = 0; k < nStems; k++) {
     let dir = UP.clone(), origin = new THREE.Vector3(), len = trunkLen, rr = r0;
     // Trees keep stem 0 upright (the acorn game puts stash holes on it); shrubs spread every stem.
-    if (k > 0 || (spec.shrub && nStems > 1)) {
+    if (k > 0 || (spec.shrubLike && nStems > 1)) {
       const az = az0 + (k / nStems) * Math.PI * 2 + sym() * 0.5, tilt = T.stem_spread_deg * (0.5 + 0.7 * rnd()) * DEG;
       dir = new THREE.Vector3(Math.sin(tilt) * Math.cos(az), Math.cos(tilt), Math.sin(tilt) * Math.sin(az));
-      origin.set(Math.cos(az), 0, Math.sin(az)).multiplyScalar(r0 * (spec.shrub ? 1.2 : 0.8));
-      if (k > 0) { len *= 0.7 + 0.3 * rnd(); rr *= spec.shrub ? 0.8 + 0.3 * rnd() : 0.6 + 0.2 * rnd(); }
+      origin.set(Math.cos(az), 0, Math.sin(az)).multiplyScalar(r0 * (spec.shrubLike ? 1.2 : 0.8));
+      if (k > 0) { len *= 0.7 + 0.3 * rnd(); rr *= spec.shrubLike ? 0.8 + 0.3 * rnd() : 0.6 + 0.2 * rnd(); }
     }
     const boleLen = len * T.bole_ratio, split = rnd() < T.split_prob;
     // split_height: where the trunk forks (fraction of its length); default the bole top, as before.
     const sh = Math.max(T.bole_ratio, T.split_height ?? T.bole_ratio), high = sh > T.bole_ratio + 0.02;
-    const common = { level: 0, origin, dir, r0: rr, taper: T.taper, taperLen: len, flare: k === 0 || spec.shrub ? T.flare : 1, rnd };
+    const common = { level: 0, origin, dir, r0: rr, taper: T.taper, taperLen: len, flare: k === 0 || spec.shrubLike ? T.flare : 1, rnd };
     if (split && boleLen > 0.05) {
       const low = high
         ? grow({ ...common, length: len * sh, segs: Math.max(1, Math.round(T.segments * sh)), straight: boleLen, curve: T.curve_deg * sh, curveVar: T.curve_var_deg, tropism: T.tropism })
@@ -601,8 +650,8 @@ function skeleton(spec, seed) {
       }
     } else {
       const st = grow({ ...common, length: len, segs: T.segments, straight: boleLen, curve: T.curve_deg, curveVar: T.curve_var_deg, tropism: T.tropism, sinuous: T.sinuous_deg || 0 });
-      if (spec.shrub && DW && (DW.levels || [1]).includes(0) && drnd() < DW.fraction) { st.dead = true; scaleStem(st, DW.shorten ?? 0.8); }   // grey dead stems inside a shrub
-      if (env && spec.shrub) fitStem(st, env, st.dead ? 1 : 1 + env.fill, 0.85 + 0.15 * erng());   // shrub stems reach the envelope (the chamise vase)
+      if (spec.shrubLike && DW && (DW.levels || [1]).includes(0) && drnd() < DW.fraction) { st.dead = true; scaleStem(st, DW.shorten ?? 0.8); }   // grey dead stems inside a shrub
+      if (env && spec.shrubLike) fitStem(st, env, st.dead ? 1 : 1 + env.fill, 0.85 + 0.15 * erng());   // shrub stems reach the envelope (the chamise vase)
       stems.push(st); trunks.push({ stem: st, h0: 0, h1: 1, len }); if (k === 0) main = st;
     }
   }
@@ -623,7 +672,7 @@ function skeleton(spec, seed) {
     let az = rnd() * Math.PI * 2;
     for (const tr of trunks) {
       const lo = Math.max(tr.h0, base), span = tr.h1 - lo; if (span <= 0) continue;
-      const share = spec.shrub ? 1 : span / (1 - base) / Math.max(1, trunks.filter(t => t.h1 === tr.h1 && t.h0 === tr.h0).length);
+      const share = spec.shrubLike ? 1 : span / (1 - base) / Math.max(1, trunks.filter(t => t.h1 === tr.h1 && t.h0 === tr.h0).length);
       const n = Math.max(0, Math.round(P.count * share * (0.85 + 0.3 * rnd())));
       const whorl = P.whorl > 0 ? P.whorl : 1, nw = Math.ceil(n / whorl);
       for (let w = 0; w < nw; w++) {
@@ -841,6 +890,9 @@ function barkShade(pattern, rnd, k, ring) {
     case 'plates': return rnd() < 0.3 ? 0.32 : 0.95 + 0.25 * rnd();          // orange plates, black fissures
     case 'furrowed': return (k % 2 ? 0.72 : 1.05) * (0.9 + 0.2 * rnd());
     case 'checkered': return ((k + ring) % 2 ? 0.82 : 1.06) * (0.92 + 0.16 * rnd());
+    case 'platy': return ((k + ring) % 2 ? 0.78 : 1.08) * (0.9 + 0.2 * rnd());       // thick plates (black oak, valley oak)
+    case 'fibrous': return (k % 2 ? 0.76 : 1.06) * (0.9 + 0.2 * rnd());            // shreddy strips (incense cedar)
+    case 'peeling_red': return rnd() < 0.2 ? 1.25 : 0.94 + 0.12 * rnd();          // pale patches of new bark (madrone)
     default: return 0.94 + 0.12 * rnd();                                       // smooth
   }
 }
@@ -1129,10 +1181,15 @@ const textures = new Map();
 // `scale` != 1 draws the same foliage for a card that much smaller (close tier) or larger (mid cards),
 // so each leaf keeps its real size. `variant`: a season (picks the tips colour) or 'twig' (the bare
 // winter crown of a deciduous species: zig-zag twigs, no leaves). leafTexture(spec) is the summer leaf.
-export function leafTexture(spec, scale = 1, variant = 'summer') {
+// `deco` ('', 'f', 'b' or 'fb'): flowers and/or berries (foliage.flowers, foliage.berries) drawn last, in
+// their own random stream, at the spray's twig ends (on the bare-crown texture at its twig ends and
+// along its twigs), tinted relative to the season's leaf colour (`variant`; the twig colour on 'twig').
+// The material's gain comes from the leaves alone, so flowers show as bright as they are.
+export function leafTexture(spec, scale = 1, variant = 'summer', deco = '', season = 'summer') {
   const F = spec.foliage;
   const kind = variant === 'twig' ? 'twig' : F.tips && F.tips[variant] ? variant : F.tips ? 'summer' : 'leaf';
-  const key = `${spec.id}:${scale}:${kind}`;
+  if (deco && (F.leaf_shape === 'needle_brush' || F.leaf_shape === 'needle_drooping' || F.leaf_shape === 'needle_flat')) deco = '';   // needle cards: not drawn
+  const key = `${spec.id}:${scale}:${kind}${deco ? `:${deco}:${season}` : ''}`;
   if (textures.has(key)) return textures.get(key);
   const S = 256, c = document.createElement('canvas'); c.width = c.height = S;
   const seed = hashStr(spec.id) ^ (scale === 1 ? 0 : 0x9e3779b9 ^ Math.round(scale * 977)) ^ (kind === 'twig' ? 0x7a11 : 0);
@@ -1147,7 +1204,15 @@ export function leafTexture(spec, scale = 1, variant = 'summer') {
   // (willow, alder), tinted relative to the twig colour the material applies in winter.
   const twigBase = spec.trunk.twig_rgb || spec.trunk.bark_rgb, CK = kind === 'twig' ? F.catkins : null;
   const cat = CK ? { ...CK, px: (CK.len_m || 0.05) / (F.cluster_m * scale) * S, tint: CK.rgb.map((v, i) => Math.pow(lin(v) / Math.max(1e-4, lin(twigBase[i])), 1 / 2.2)) } : null;
-  const head = Math.min(3, Math.max(1, ...pal.flatMap(p => p[1]), ...(tip || [1]), ...(cat ? cat.tint : [1])));
+  // flowers / berries: their colour relative to what the material multiplies the card by this season
+  const decoBase = kind === 'twig' ? twigBase : F.colors[season] || F.colors.summer;
+  const decoTint = D => D.rgb.map((v, i) => lin(v) / Math.max(1e-4, lin(decoBase[i])));   // linear: the texture multiplies linear colour
+  const decos = [];
+  if (deco.includes('f') && F.flowers?.rgb) decos.push({ ...F.flowers, tint: decoTint(F.flowers), berry: false });
+  if (deco.includes('b') && F.berries?.rgb) decos.push({ ...F.berries, tint: decoTint(F.berries), berry: true });
+  const head0 = Math.min(3, Math.max(1, ...pal.flatMap(p => p[1]), ...(tip || [1]), ...(cat ? cat.tint : [1])));
+  const head = decos.length ? Math.min(8, Math.max(head0, ...decos.flatMap(d => d.tint))) : head0;
+  g.weGlint = Math.round(255 * head0 / head);   // the leaves' glossy glint keeps its brightness relative to the leaf
   const rgb = (v, t = [1, 1, 1]) => `rgb(${t.map(k => Math.round(Math.min(255, v * k / head))).join(',')})`;
   const tintOf = () => { let x = rnd() * wsum; for (const p of pal) { if ((x -= p[0]) <= 0) return p[1]; } return pal[0][1]; };
   const grey = (lo = 170) => rgb(lo + (255 - lo) * rnd(), tintOf());
@@ -1157,13 +1222,14 @@ export function leafTexture(spec, scale = 1, variant = 'summer') {
     const ex = (x - S / 2) / (S * 0.42), ey = (y - S / 2) / (S * 0.45); if (ex * ex + ey * ey < 1) return [x, y]; } };
   g.lineCap = 'round';
   const area = Math.PI * (S * 0.4) * (S * 0.43);
-  if (kind !== 'twig' && (F.leaf_shape === 'needle_brush' || F.leaf_shape === 'needle_drooping')) {   // pine needle cards: own mips
+  if (kind !== 'twig' && (F.leaf_shape === 'needle_brush' || F.leaf_shape === 'needle_drooping' || F.leaf_shape === 'needle_flat')) {   // needle cards: own mips
     const t = needleTexture(F, S, px, seed, rgb, pal, wsum, scale > 1.2);
     textures.set(key, t);
     return t;
   }
+  const ends = [];   // twig ends [x, y, angle] (and nodes along the bare twigs) for flowers and berries
   if (kind === 'twig') {
-    drawTwigs(g, S, rnd, rgb, cat);
+    drawTwigs(g, S, rnd, rgb, cat, ends);
   } else if (F.leaf_shape === 'fascicle_wand') {
     drawWands(g, S, px, rnd, grey, rgb, tip);
   } else {
@@ -1177,6 +1243,7 @@ export function leafTexture(spec, scale = 1, variant = 'summer') {
     }
     const needles = F.type === 'needle', far = scale > 1.2;   // far (mid) cards: a dense rounded clump, no twig skeleton
     if (far) twigs.length = 0;
+    for (const [x0, y0, x1, y1] of twigs) ends.push([x1, y1, Math.atan2(x1 - x0, -(y1 - y0))]);
     g.strokeStyle = rgb(needles ? 105 : 135);
     for (const [x0, y0, x1, y1] of twigs) { g.lineWidth = needles ? (F.leaf_shape === 'needle_drooping' ? 1.4 : 2) : 2.5; g.beginPath(); g.moveTo(x0, y0); g.lineTo(x1, y1); g.stroke(); }
     if (needles && F.leaf_shape !== 'needle_fascicle') {
@@ -1201,6 +1268,8 @@ export function leafTexture(spec, scale = 1, variant = 'summer') {
           g.stroke();
         }
       }
+    } else if (F.leaf_shape === 'needle_scale') {
+      drawScaleSprays(g, S, px, rnd, grey, twigs, inside, area, F, far);
     } else if (F.leaf_shape === 'needle_fascicle') {
       // Tiny needle-like leaves in bundles, everywhere along the twigs and filling the spray.
       const n = Math.round(area / (px * px * 1.6));
@@ -1211,19 +1280,25 @@ export function leafTexture(spec, scale = 1, variant = 'summer') {
       }
     } else {
       // Leaves alternating along the twigs (in rosettes at the tips for oaks), then scattered through the spray.
-      const shape = F.leaf_shape, w = leafWidth(shape);
+      // Compound and large leaves (a whole leaf is a big unit) sit further apart along the twigs.
+      const shape = F.leaf_shape, w = leafWidth(shape), stepK = LEAF_STEP[shape] ?? 0.45;
       for (const [x0, y0, x1, y1] of twigs) {
-        const L = Math.hypot(x1 - x0, y1 - y0), ta = Math.atan2(x1 - x0, -(y1 - y0)), step = px * 0.45;
+        const L = Math.hypot(x1 - x0, y1 - y0), ta = Math.atan2(x1 - x0, -(y1 - y0)), step = px * stepK;
         for (let s = step * 0.6; s <= L; s += step) for (const side of [-1, 1]) {
           const x = x0 + (x1 - x0) * s / L, y = y0 + (y1 - y0) * s / L, a = ta + side * (0.5 + 0.5 * rnd()), l = px * (0.8 + 0.4 * rnd());
-          drawLeaf(g, x + Math.sin(a) * l * 0.5, y - Math.cos(a) * l * 0.5, a, l, shape, grey(), rnd);
+          drawLeaf(g, x + Math.sin(a) * l * 0.5, y - Math.cos(a) * l * 0.5, a, l, shape, grey(), rnd, F);
         }
         if (shape === 'oblong_wavy' || shape === 'elliptic_glossy') for (let r = 0; r < 5; r++) { const a = ta + (r - 2) * 0.55 + (rnd() - 0.5) * 0.3, l = px * (0.85 + 0.35 * rnd()); drawLeaf(g, x1 + Math.sin(a) * l * 0.45, y1 - Math.cos(a) * l * 0.45, a, l, shape, grey(), rnd); }
-        else drawLeaf(g, x1, y1, ta, px, shape, grey(), rnd);
+        else drawLeaf(g, x1, y1, ta, px, shape, grey(), rnd, F);
       }
       const n = Math.round(area * (far ? 1.1 : 0.35) * (F.leaf_fill ?? 1) / (Math.PI * px * w * px * 0.5));   // foliage.leaf_fill: denser sprays
-      for (let i = 0; i < n; i++) { const [x, y] = inside(); drawLeaf(g, x, y, rnd() * Math.PI * 2, px * (0.8 + 0.4 * rnd()), shape, grey(), rnd); }
+      for (let i = 0; i < n; i++) { const [x, y] = inside(); drawLeaf(g, x, y, rnd() * Math.PI * 2, px * (0.8 + 0.4 * rnd()), shape, grey(), rnd, F); }
     }
+  }
+  let leafMean = null;
+  if (decos.length) {
+    leafMean = meanGrey(g.getImageData(0, 0, S, S));   // the leaves' own mean, before the flowers
+    drawDecos(g, S, F, scale, decos, ends, inside, rgb, mulberry32(seed ^ 0xf10e7), kind === 'twig');
   }
   const t = new THREE.Texture();
   t.mipmaps = coverageMips(c, 0.5);
@@ -1231,13 +1306,13 @@ export function leafTexture(spec, scale = 1, variant = 'summer') {
   t.generateMipmaps = false; t.minFilter = THREE.LinearMipmapLinearFilter; t.magFilter = THREE.LinearFilter;
   t.colorSpace = THREE.NoColorSpace;   // multipliers on the linear vertex colour
   t.anisotropy = 4; t.needsUpdate = true;
-  t.userData.mean = meanGrey(t.mipmaps[0]);   // the material divides by this so cards match the baked colour
+  t.userData.mean = leafMean ?? meanGrey(t.mipmaps[0]);   // the material divides by this so cards match the baked colour
   textures.set(key, t);
   return t;
 }
 
 // Bare winter crown: a few stems from the card base splitting into zig-zag twigs (blue oak in winter).
-function drawTwigs(g, S, rnd, rgb, cat = null) {
+function drawTwigs(g, S, rnd, rgb, cat = null, ends = null) {
   const catkin = (x, y, a) => {   // hanging (alder) or held along the twig (willow)
     const l = cat.px * (0.7 + 0.6 * rnd()), d = cat.hang ? Math.PI + (rnd() - 0.5) * 0.7 : a + (rnd() - 0.5) * 0.5;
     g.save(); g.translate(x + Math.sin(d) * l * 0.5, y - Math.cos(d) * l * 0.5); g.rotate(d); g.fillStyle = rgb(195 + 50 * rnd(), cat.tint);
@@ -1249,10 +1324,11 @@ function drawTwigs(g, S, rnd, rgb, cat = null) {
       const x2 = x + Math.sin(a) * len / 3, y2 = y - Math.cos(a) * len / 3;
       g.strokeStyle = rgb(170 + 70 * rnd()); g.lineWidth = Math.max(0.7, w); g.beginPath(); g.moveTo(x, y); g.lineTo(x2, y2); g.stroke();
       x = x2; y = y2;
+      if (ends && depth <= 1) ends.push([x, y, a, 1]);   // a node along an outer twig (redbud flowers on bare wood)
       if (depth > 0 && k < 2 && rnd() < 0.55) branch(x, y, a + (rnd() < 0.5 ? -1 : 1) * (0.45 + 0.4 * rnd()), len * (0.5 + 0.15 * rnd()), w * 0.7, depth - 1);
     }
     if (depth > 0) { const n = 2 + (rnd() < 0.4 ? 1 : 0); for (let i = 0; i < n; i++) branch(x, y, a + (i - (n - 1) / 2) * (0.5 + 0.3 * rnd()), len * (0.6 + 0.15 * rnd()), w * 0.7, depth - 1); }
-    else if (cat && rnd() < (cat.prob ?? 0.5)) catkin(x, y, a);
+    else { if (ends) ends.push([x, y, a]); if (cat && rnd() < (cat.prob ?? 0.5)) catkin(x, y, a); }
   };
   for (let i = 0; i < 3; i++) branch(S / 2 + (rnd() - 0.5) * 50, S - 4, (i - 1) * 0.45 + (rnd() - 0.5) * 0.3, S * (0.36 + 0.08 * rnd()), 2.2, 4);
 }
@@ -1404,6 +1480,53 @@ function drawNeedleCard(g, S, F, px, rnd, rgb, tintOf, far, inside, keep = 1, sk
     if (ga) { ga.strokeStyle = encN(nrm); ga.lineWidth = g.lineWidth; ga.beginPath(); ga.moveTo(x, y); for (let i = 1; i < pts.length; i++) ga.lineTo(pts[i][0], pts[i][1]); ga.stroke(); }
   };
   const encN = n => `rgb(${n.map(v => Math.round(127.5 + 127.5 * v)).join(',')})`;
+  if (F.leaf_shape === 'needle_flat') {
+    // Douglas-fir (needle_flat): flat, soft needles (foliage.leaf_size_m long) in two ranks along flat,
+    // pinnately branched shoots: a comb either side of every shoot, leaning forward, a few twisted toward
+    // or away from the viewer (shorter in projection). Their shading normal is mostly the spray's face
+    // (flat needles held in its plane), tilted out to their side. The far card: short combs radiating
+    // from the clump.
+    const comb = (x0, y0, a, L, w, nw) => {
+      const x1 = x0 + Math.sin(a) * L, y1 = y0 - Math.cos(a) * L, Ax = Math.sin(a), Ay = Math.cos(a), Px = Math.cos(a), Py = -Math.sin(a);
+      g.strokeStyle = rgb(100 + 20 * rnd()); g.lineWidth = Math.max(minW, w); g.beginPath(); g.moveTo(x0, y0); g.lineTo(x1, y1); g.stroke();
+      if (ga) { ga.strokeStyle = encN([0, 0.6, 0.8]); ga.lineWidth = g.lineWidth; ga.beginPath(); ga.moveTo(x0, y0); ga.lineTo(x1, y1); ga.stroke(); }
+      const step = Math.max(0.8, px * 0.12);
+      for (let s = step * 0.5; s < L; s += step * (0.8 + 0.4 * rnd())) {
+        const t = s / L, x = x0 + (x1 - x0) * t, y = y0 + (y1 - y0) * t;
+        for (const sd of [-1, 1]) {
+          const tint = tintOf(), th = 1.0 + 0.4 * (rnd() - 0.5), ph = (sd > 0 ? 0 : Math.PI) + (rnd() - 0.5) * 1.0;
+          const rx = Math.sin(th) * Math.cos(ph), uy = Math.cos(th), proj = Math.hypot(rx, uy);
+          const na = a + Math.atan2(rx, uy), len = px * (0.85 + 0.3 * rnd()) * (0.35 + 0.65 * proj) * (t > 0.85 ? 0.7 : 1);
+          let nrm = null;
+          if (ga) { const c = Math.cos(ph), v = [0.45 * c * Px + 0.15 * Ax, 0.45 * c * Py + 0.15 * Ay, 0.85 + 0.2 * Math.sin(ph)], l = Math.hypot(...v) || 1; nrm = v.map(q => q / l); }
+          needle(x, y, na, len, -Math.sign(rx) * 0.15, nw * (0.85 + 0.3 * rnd()), tint, nrm);
+        }
+      }
+      return [x1, y1];
+    };
+    const nw = Math.max(lw * 1.1, px * 0.09);
+    if (far) {
+      for (let b = 0; b < 14; b++) { const [x, y] = inside(), out = Math.atan2(x - S / 2, -(y - S / 2)); comb(x, y, out + (rnd() - 0.5) * 1.4, px * (2.2 + 1.2 * rnd()), lw * 2, nw * 1.8); }
+      return;
+    }
+    const m = px * 1.05, x0 = S / 2 + (rnd() - 0.5) * S * 0.08, a0 = (rnd() - 0.5) * 0.3;
+    const Lm = Math.max(px, Math.min(S - 2 - m, S * 0.86));
+    comb(x0, S - 2, a0, Lm, lw * 2.2, nw);
+    const nSide = 4 + Math.floor(rnd() * 3);
+    for (let k = 0; k < nSide; k++) {
+      const t = 0.14 + 0.72 * (k + rnd() * 0.6) / nSide, x = x0 + Math.sin(a0) * Lm * t, y = S - 2 - Math.cos(a0) * Lm * t, side = k % 2 ? 1 : -1;
+      const a = a0 + side * (0.8 + 0.3 * rnd());
+      let L = (1 - t) * S * 0.55 + px;
+      const dx = Math.sin(a), dy = -Math.cos(a);   // keep the comb a needle length inside the card
+      for (const [v, lo, hi] of [[dx, x, 0], [dy, y, 1]]) if (Math.abs(v) > 1e-3) L = Math.min(L, ((v > 0 ? S - m : m) - lo) / v);
+      if (L < px) continue;
+      const [xe, ye] = comb(x, y, a, L, lw * 1.5, nw);
+      if (rnd() < 0.6) { const u = 0.35 + 0.3 * rnd(), q = a - side * (0.7 + 0.3 * rnd()), xs = x + (xe - x) * u, ys = y + (ye - y) * u;
+        let L2 = L * (0.35 + 0.2 * rnd()); for (const [v, lo] of [[Math.sin(q), xs], [-Math.cos(q), ys]]) if (Math.abs(v) > 1e-3) L2 = Math.min(L2, ((v > 0 ? S - m : m) - lo) / v);
+        if (L2 > px * 0.6) comb(xs, ys, q, L2, lw * 1.1, nw); }
+    }
+    return;
+  }
   // One fascicle (three needles from one point) leaving a shoot of 2D angle ta at polar angle th and
   // azimuth ph (3D), length L; `curl` bends it toward the shoot (brush) and `fall` toward canvas down.
   // Its shading normal: the needle's outward direction from the shoot axis (R, by azimuth p) bent toward
@@ -1545,12 +1668,196 @@ function meanGrey(img) {   // mean luminance of the opaque texels
   return n ? s / n : 1;
 }
 
-// Half-width / length of a leaf outline.
-function leafWidth(shape) {
-  return { lanceolate: 0.15, lobed: 0.26, oblong_wavy: 0.2, elliptic_glossy: 0.22, round_vertical: 0.34, deltoid: 0.42 }[shape] ?? 0.32;
+// Flat sprays of scale leaves (leaf_shape needle_scale: incense cedar). Each twig of the card is the
+// rachis of a frond branched twice in its plane, alternate branchlets leaning forward and shortening
+// toward the tip, every ultimate shoot a flat green ribbon (scale leaves pressed to it). A shoot is
+// about px long (foliage.leaf_size_m: one branchlet). More small fronds fill the spray; the far card
+// (mid tier) is fronds only.
+function drawScaleSprays(g, S, px, rnd, grey, twigs, inside, area, F, far) {
+  const w0 = Math.max(1.4, px * 0.085);
+  const frond = (x0, y0, a, L, w) => {
+    const x1 = x0 + Math.sin(a) * L, y1 = y0 - Math.cos(a) * L;
+    g.strokeStyle = grey(140); g.lineWidth = w; g.beginPath(); g.moveTo(x0, y0); g.lineTo(x1, y1); g.stroke();
+    const step = px * 0.32;
+    let side = rnd() < 0.5 ? 1 : -1;
+    for (let s = step * 0.7; s < L; s += step * (0.85 + 0.3 * rnd())) {
+      const t = s / L, x = x0 + (x1 - x0) * t, y = y0 + (y1 - y0) * t, b = a + side * (0.8 + 0.25 * rnd()), l = px * (0.55 + 0.4 * rnd()) * (1 - 0.55 * t);
+      const bx = x + Math.sin(b) * l, by = y - Math.cos(b) * l;
+      g.strokeStyle = grey(150); g.lineWidth = w * 0.85; g.beginPath(); g.moveTo(x, y); g.lineTo(bx, by); g.stroke();
+      let s2 = rnd() < 0.5 ? 1 : -1;
+      for (let q = l * 0.3; q < l; q += px * 0.17) {
+        const u = q / l, cx = x + (bx - x) * u, cy = y + (by - y) * u, c = b + s2 * (0.75 + 0.3 * rnd()), cl = px * 0.26 * (1 - 0.5 * u) * (0.8 + 0.4 * rnd());
+        g.strokeStyle = grey(160); g.lineWidth = w * 0.7; g.beginPath(); g.moveTo(cx, cy); g.lineTo(cx + Math.sin(c) * cl, cy - Math.cos(c) * cl); g.stroke();
+        s2 = -s2;
+      }
+      side = -side;
+    }
+  };
+  for (const [x0, y0, x1, y1] of twigs) frond(x0, y0, Math.atan2(x1 - x0, -(y1 - y0)), Math.hypot(x1 - x0, y1 - y0), w0 * 1.15);
+  const n = Math.round(area * (far ? 1.2 : 0.7) * (F.leaf_fill ?? 1) / (px * px * 2.2));
+  for (let i = 0; i < n; i++) { const [x, y] = inside(); frond(x, y, (rnd() - 0.5) * 2.2, px * (1.1 + 0.8 * rnd()), w0 * (far ? 1.6 : 1)); }
 }
 
-function drawLeaf(g, x, y, a, len, shape, fill, rnd) {
+// Flowers and berries (foliage.flowers, foliage.berries) on a card texture, after everything else, in their
+// own random stream: at the twig ends `ends` [x, y, angle(, node)] (a bare-crown texture also offers
+// nodes along its outer twigs to flowers, so redbud's clusters crowd the bare wood), and at random points of the
+// spray for the far (mid) cards, which have no twigs. `density` (0-1) is the fraction of ends that carry
+// one; `size_m` the size of one inflorescence (or berry cluster). Forms: candle (an upright panicle,
+// buckeye), cluster (a round head of florets or berries, toyon, elderberry, redbud) and bud (a single
+// small round bud or berry).
+function drawDecos(g, S, F, scale, decos, ends, inside, rgb, rnd, bare) {
+  const far = scale > 1.2;
+  for (const D of decos) {
+    const px = Math.max(2.5, Math.min(S * 0.4, D.size_m / (F.cluster_m * scale) * S));
+    let spots = ends.filter(e => !e[3] || (bare && !D.berry));   // nodes along bare twigs: flowers only
+    if (far || !spots.length) {
+      const area = Math.PI * (S * 0.4) * (S * 0.43), n = Math.round(area / (px * px * 6));
+      spots = Array.from({ length: n }, () => [...inside(), (rnd() - 0.5) * 1.2]);
+    }
+    // berries on a bare crown hang from the shoots, not from every twiglet: about as many as on a leafy spray
+    // and flowers on the many twiglets of a bare crown cover at most 0.6 x density of the spray
+    const thin = bare && D.berry ? Math.min(1, 12 / Math.max(1, spots.length)) : 1;
+    const one = D.form === 'candle' && !D.berry ? px * px * 0.3 : Math.PI * px * px * 0.25, sprayArea = Math.PI * (S * 0.4) * (S * 0.43);
+    const cap = Math.min(1, (D.density ?? 0.5) * 0.6 * sprayArea / one / Math.max(1, spots.length));
+    for (const [x, y, a, node] of spots) {
+      if (rnd() >= Math.min((D.density ?? 0.5) * (node ? 0.6 : 1) * thin, cap)) continue;
+      const fill = () => rgb(205 + 50 * rnd(), D.tint), form = D.berry ? (D.form === 'bud' ? 'bud' : 'cluster') : D.form;
+      if (form === 'candle') {   // upright cone of florets, leaning a little with the twig
+        const L = px * (0.8 + 0.4 * rnd()), lean = Math.max(-0.5, Math.min(0.5, a * 0.3)), W = L * 0.2, nf = Math.max(10, Math.round(L * 1.8));
+        for (let k = 0; k < nf; k++) {
+          const t = Math.pow(rnd(), 0.8), r = W * (1 - t) * Math.sqrt(rnd()) * (rnd() < 0.5 ? -1 : 1);
+          const cx = x + Math.sin(lean) * L * t + Math.cos(lean) * r, cy = y - Math.cos(lean) * L * t + Math.sin(lean) * r;
+          g.fillStyle = fill(); g.beginPath(); g.arc(cx, cy, Math.max(0.9, W * 0.45 * (1 - 0.45 * t)), 0, Math.PI * 2); g.fill();
+        }
+      } else if (form === 'bud') {
+        g.fillStyle = fill(); g.beginPath(); g.arc(x, y, Math.max(1, px * 0.25), 0, Math.PI * 2); g.fill();
+      } else {   // cluster: a rounded, slightly flat-topped head of florets or berries
+        const R = px * 0.5, nf = D.berry ? Math.max(4, Math.round(R * 0.9)) : Math.max(6, Math.round(R * 1.6)), r0 = Math.max(0.8, R * (D.berry ? 0.2 : 0.16));
+        for (let k = 0; k < nf; k++) {
+          const ang = rnd() * Math.PI * 2, rr = R * Math.sqrt(rnd());
+          g.fillStyle = fill(); g.beginPath(); g.arc(x + Math.cos(ang) * rr, y - R * 0.3 + Math.sin(ang) * rr * 0.6, r0 * (0.8 + 0.4 * rnd()), 0, Math.PI * 2); g.fill();
+        }
+      }
+    }
+  }
+}
+
+// Half-width / length of a leaf outline (compound leaves: of the whole leaf's footprint).
+function leafWidth(shape) {
+  return { lanceolate: 0.15, lobed: 0.26, oblong_wavy: 0.2, elliptic_glossy: 0.22, round_vertical: 0.34, deltoid: 0.42,
+    palmate_compound: 0.5, pinnate_compound: 0.3, trifoliate: 0.42, cordate: 0.46, lobed_large: 0.38 }[shape] ?? 0.32;
+}
+// Spacing of the leaves along a spray's twigs, in leaf lengths (default 0.45): a compound or large leaf
+// is one big unit, so they sit further apart.
+const LEAF_STEP = { palmate_compound: 0.8, pinnate_compound: 0.7, trifoliate: 0.65, lobed_large: 0.62, cordate: 0.55 };
+const COMPOUND = { palmate_compound: [5, 7], pinnate_compound: [5, 9], trifoliate: [3, 3] };
+const countOf = (v, def, rnd) => { const [a, b] = Array.isArray(v) ? v : v != null ? [v, v] : def; return Math.round(a + rnd() * (b - a)); };
+
+// One leaflet (or a simple leaf) in the current frame: base at (0, 0), tip at (0, -L) (canvas up), half-
+// width W at its widest (60% of the way up); `wavy` a shallow wavy or lobed margin (poison oak), and the
+// half-leaf shading the simple leaves have.
+function leaflet(g, x, y, a, L, W, fill, wavy = 0, ph = 0) {
+  g.save(); g.translate(x, y); g.rotate(a); g.fillStyle = fill;
+  const half = s => { const out = []; for (let k = 0; k <= 18; k++) { const t = k / 18, w = W * Math.pow(Math.sin(Math.PI * Math.pow(t, 0.75)), 0.85) * (1 + wavy * Math.sin(t * Math.PI * 5 + ph + (s > 0 ? 0 : 1.3))); out.push([s * w, -L * t]); } return out; };
+  const R = half(1), Lf = half(-1);
+  g.beginPath(); g.moveTo(0, 0); for (const [X, Y] of R) g.lineTo(X, Y); for (let k = Lf.length - 1; k >= 0; k--) g.lineTo(Lf[k][0], Lf[k][1]); g.fill();
+  g.fillStyle = 'rgba(0,0,0,0.13)'; g.beginPath(); g.moveTo(0, 0); for (const [X, Y] of Lf) g.lineTo(X, Y); g.fill();
+  g.restore();
+}
+// A leaf stalk (petiole or rachis) from (x0, y0) to (x1, y1).
+function stalk(g, x0, y0, x1, y1, w, fill) { g.strokeStyle = fill; g.lineWidth = Math.max(0.8, w); g.beginPath(); g.moveTo(x0, y0); g.lineTo(x1, y1); g.stroke(); }
+
+// The leaf shapes added for the foothill set (2026-10-25), in the leaf's frame (base at +len/2, tip toward
+// -len/2, as the simple shapes): compound leaves and large lobed and heart-shaped leaves.
+//   palmate_compound (buckeye): a long petiole and foliage.leaflets (5-7) leaflets radiating from its tip,
+//     the middle one longest (foliage.leaflet_ratio of the leaf, default 0.58).
+//   pinnate_compound (walnut, ash, elderberry): a rachis the leaf's length with opposite leaflets and a
+//     terminal one, foliage.leaflets in all (5-9; odd), each foliage.leaflet_ratio (0.28) of the leaf.
+//   trifoliate (poison oak): three leaflets, the terminal one on a short stalk, lobed-wavy margins, glossy.
+//   lobed_large (black oak, big-leaf maple): foliage.lobes (7) lobes cut foliage.lobe_depth (0.55) of the
+//     way in; foliage.lobe_style 'pinnate' (lobes along the midrib, oaks) or 'palmate' (from the petiole, maple);
+//     foliage.lobe_tip 'pointed' (default: black oak's bristle-tipped lobes, maple) or 'round'.
+//   cordate (redbud): broad heart shape, notched base, short point.
+function drawShapedLeaf(g, len, shape, fill, rnd, F) {
+  const lw = Math.max(0.8, len * 0.022);
+  if (shape === 'palmate_compound' || shape === 'pinnate_compound' || shape === 'trifoliate') {
+    const n = Math.max(1, countOf(F?.leaflets, COMPOUND[shape], rnd)), ph = rnd() * 6.28;
+    if (shape === 'palmate_compound') {
+      const hub = 0.12 * len, Lm = len * (F?.leaflet_ratio ?? 0.62), spread = n > 1 ? Math.min(1.45, 0.3 * (n - 1)) : 0;
+      stalk(g, 0, len * 0.5, 0, hub, lw, fill);
+      for (let k = 0; k < n; k++) {
+        const t = n > 1 ? k / (n - 1) * 2 - 1 : 0, a = t * spread + (rnd() - 0.5) * 0.12, L = Lm * (1 - 0.38 * Math.abs(t)) * (0.92 + 0.16 * rnd());
+        leaflet(g, 0, hub, a, L, L * 0.17, fill);
+      }
+    } else if (shape === 'pinnate_compound') {
+      const P = Math.floor((n - 1) / 2), Ll = len * (F?.leaflet_ratio ?? 0.28), top = -len * 0.5 + Ll * 0.85;
+      stalk(g, 0, len * 0.5, 0, top, lw, fill);
+      for (let k = 0; k < P; k++) {
+        const u = 0.22 + 0.74 * (k + 0.5) / P, y = len * 0.5 + (top - len * 0.5) * u, L = Ll * (0.8 + 0.25 * u) * (0.9 + 0.2 * rnd());
+        for (const sd of [-1, 1]) leaflet(g, 0, y, sd * (1.05 + 0.25 * rnd()), L, L * 0.24, fill);
+      }
+      if (n % 2 || !P) leaflet(g, 0, top, (rnd() - 0.5) * 0.15, Ll * 0.95, Ll * 0.24, fill);
+    } else {   // trifoliate
+      const node = len * 0.06;
+      stalk(g, 0, len * 0.5, 0, node, lw, fill);
+      stalk(g, 0, node, 0, node - len * 0.06, lw, fill);
+      leaflet(g, 0, node - len * 0.06, (rnd() - 0.5) * 0.2, len * 0.5, len * 0.17, fill, 0.1, ph);
+      for (const sd of [-1, 1]) leaflet(g, 0, node, sd * (1.15 + 0.2 * rnd()), len * 0.4, len * 0.15, fill, 0.1, ph + sd);
+      if (rnd() < 0.5) { g.fillStyle = glintOf(g, 0.35); g.beginPath(); g.ellipse(len * 0.04, -len * 0.25, len * 0.05, len * 0.1, 0, 0, Math.PI * 2); g.fill(); }   // glossy glint
+    }
+    return;
+  }
+  g.fillStyle = fill; g.beginPath();
+  if (shape === 'cordate') {
+    const W = len * 0.46;
+    g.moveTo(0, len * 0.34);
+    g.bezierCurveTo(W * 0.45, len * 0.56, W * 1.08, len * 0.42, W, len * 0.1);
+    g.bezierCurveTo(W * 0.92, -len * 0.2, W * 0.42, -len * 0.4, 0, -len * 0.5);
+    g.bezierCurveTo(-W * 0.42, -len * 0.4, -W * 0.92, -len * 0.2, -W, len * 0.1);
+    g.bezierCurveTo(-W * 1.08, len * 0.42, -W * 0.45, len * 0.56, 0, len * 0.34);
+    g.fill();
+    g.fillStyle = 'rgba(0,0,0,0.13)'; g.beginPath(); g.moveTo(0, len * 0.34); g.bezierCurveTo(-W * 0.45, len * 0.56, -W * 1.08, len * 0.42, -W, len * 0.1);
+    g.bezierCurveTo(-W * 0.92, -len * 0.2, -W * 0.42, -len * 0.4, 0, -len * 0.5); g.fill();
+    return;
+  }
+  // lobed_large
+  const lobes = Math.max(3, Math.round(F?.lobes ?? 7)), d = Math.min(0.9, Math.max(0, F?.lobe_depth ?? 0.55)), pts = [];
+  const pointed = (F?.lobe_tip ?? 'pointed') !== 'round';
+  const lobeOf = ph => { const f = ph - Math.floor(ph); return pointed ? Math.pow(1 - 2 * Math.abs(f - 0.5), 0.75) : Math.pow(0.5 - 0.5 * Math.cos(2 * Math.PI * ph), 0.7); };
+  if ((F?.lobe_style ?? 'pinnate') === 'palmate') {
+    const hub = len * 0.18, R = len * 0.62;
+    for (let k = 0; k <= 96; k++) {
+      const th = (-150 + 300 * k / 96) * DEG, phase = (th / DEG + 150) / (300 / lobes), sv = lobeOf(phase);
+      const r = R * (0.5 + 0.5 * Math.cos(th * 0.7)) * ((1 - d) + d * sv) + len * 0.02;
+      pts.push([Math.sin(th) * r, hub - Math.cos(th) * r]);
+    }
+    stalk(g, 0, len * 0.5, 0, hub, Math.max(0.8, len * 0.02), fill);
+    g.fillStyle = fill; g.beginPath(); g.moveTo(0, hub); for (const [X, Y] of pts) g.lineTo(X, Y); g.closePath(); g.fill();
+    g.fillStyle = 'rgba(0,0,0,0.12)'; g.beginPath(); g.moveTo(0, hub); for (const [X, Y] of pts.slice(0, 49)) g.lineTo(X, Y); g.closePath(); g.fill();
+    return;
+  }
+  const m = Math.max(1, (lobes - 1) / 2), W = len * 0.36, right = [];
+  for (let k = 0; k <= 120; k++) {
+    const t = k / 120, env = W * Math.pow(Math.sin(Math.PI * Math.min(1, t * 1.02)), 0.6);
+    const u = Math.max(0, t - 0.08) / 0.92 * (m + 0.5), sv = pointed ? lobeOf(u) : Math.pow(0.5 - 0.5 * Math.cos(2 * Math.PI * u), 0.55);
+    right.push([env * ((1 - d) + d * sv), len * 0.5 - len * t]);
+  }
+  g.moveTo(0, len * 0.5); for (const [X, Y] of right) g.lineTo(X, Y); for (let k = right.length - 1; k >= 0; k--) g.lineTo(-right[k][0], right[k][1]); g.fill();
+  g.fillStyle = 'rgba(0,0,0,0.13)'; g.beginPath(); g.moveTo(0, len * 0.5); for (const [X, Y] of right) g.lineTo(-X, Y); g.closePath(); g.fill();
+}
+
+// One leaf of a shape on its own canvas (size px, grey on transparent), for checking a leaf_shape
+// (the lineup's leaf specimens); F: the foliage block with leaflets, lobes, lobe_depth, lobe_style.
+export function leafSpecimen(shape, F = {}, px = 200, seed = 1) {
+  const c = document.createElement('canvas'); c.width = c.height = px;
+  const g = c.getContext('2d'); g.lineCap = 'round';
+  drawLeaf(g, px / 2, px / 2, 0, px * 0.9, shape, 'rgb(205,214,190)', mulberry32(seed), F);
+  return c;
+}
+
+const glintOf = (g, a = 0.45) => { const v = g.weGlint ?? 255; return v >= 255 ? `rgba(255,255,255,${a})` : `rgba(${v},${v},${v},${a})`; };
+function drawLeaf(g, x, y, a, len, shape, fill, rnd, F = null) {
+  if (shape in LEAF_STEP) { g.save(); g.translate(x, y); g.rotate(a); drawShapedLeaf(g, len, shape, fill, rnd, F); g.restore(); return; }
   g.save(); g.translate(x, y); g.rotate(a); g.fillStyle = fill; g.beginPath();
   let w = leafWidth(shape);
   if (shape === 'round_vertical' && rnd() < 0.4) w = 0.07;   // held edge-on: a sliver
@@ -1567,7 +1874,7 @@ function drawLeaf(g, x, y, a, len, shape, fill, rnd) {
     g.beginPath(); g.arc(s * len * 0.22, -len * 0.28 + i * len * 0.24, len * (0.12 + 0.03 * rnd()), 0, Math.PI * 2); g.fill();
   }
   g.fillStyle = 'rgba(0,0,0,0.13)'; g.beginPath(); g.ellipse(-len * w * 0.4, 0, len * w * 0.55, len * 0.45, 0, 0, Math.PI * 2); g.fill();   // half-leaf shading
-  if ((shape === 'elliptic_glossy' || shape === 'deltoid') && rnd() < 0.5) { g.fillStyle = 'rgba(255,255,255,0.45)'; g.beginPath(); g.ellipse(len * w * 0.25, -len * 0.12, len * w * 0.3, len * 0.16, 0, 0, Math.PI * 2); g.fill(); }   // glossy glint
+  if ((shape === 'elliptic_glossy' || shape === 'deltoid') && rnd() < 0.5) { g.fillStyle = glintOf(g); g.beginPath(); g.ellipse(len * w * 0.25, -len * 0.12, len * w * 0.3, len * 0.16, 0, 0, Math.PI * 2); g.fill(); }   // glossy glint
   g.restore();
 }
 
@@ -1746,13 +2053,19 @@ export function trunkMaterial(patch = null, spec = null) {
 // deciduous crown is bare, the winter twig texture on the same cards (foliage.winter_twigs: the
 // fraction of cards that show twigs; twig colour from trunk.twig_rgb). Returns the fraction of cards
 // drawn, so callers can hide a crown that draws nothing.
-export function applySeason(material, spec, season) {
+// `month` (1-12.99, default the season's middle month): foliage.leaf_on_by_month and the months of
+// flowers and berries (leafOnAt, decoActive). Flowers marked before_leaves show on the bare-crown texture
+// while the crown is under half leafed (redbud in March), on max(winter_twigs, 0.5) of the cards.
+export function applySeason(material, spec, season, month = null) {
   const F = spec.foliage, c = F.colors, ud = material.userData;
-  let col = c[season] || c.summer, on = F.leaf_on[season] ?? 1;
+  let col = c[season] || c.summer, on = leafOnAt(spec, season, month);
   if (ud.texScale != null) {
-    let tex = leafTexture(spec, ud.texScale, season);
-    const twigs = on <= 0.02 && !!F.winter_twigs;
-    if (twigs) { tex = leafTexture(spec, ud.texScale, 'twig'); on = F.winter_twigs; col = spec.trunk.twig_rgb || spec.trunk.bark_rgb; }
+    const fl = decoActive(F.flowers, season, month), be = decoActive(F.berries, season, month);
+    const bareFlowers = fl && F.flowers.before_leaves && on < 0.5;
+    const deco = (fl && (!F.flowers.before_leaves || bareFlowers || on >= 0.5) ? 'f' : '') + (be ? 'b' : '');
+    let tex = leafTexture(spec, ud.texScale, season, deco, season);
+    const twigs = (on <= 0.02 && !!F.winter_twigs) || bareFlowers;
+    if (twigs) { tex = leafTexture(spec, ud.texScale, 'twig', deco, season); on = bareFlowers ? Math.max(F.winter_twigs || 0, 0.5) : F.winter_twigs; col = spec.trunk.twig_rgb || spec.trunk.bark_rgb; }
     if (ud.leafVar) ud.leafVar.value = twigs ? 0 : F.leaf_on_var || 0;
     if (material.map !== tex) material.map = tex;
     ud.gain = 1 / tex.userData.mean;
@@ -1784,18 +2097,18 @@ export function barkTexture(spec) {
   const fbm = (u, v, fu, fv, oct = 4) => { let s = 0, a = 0.5, n = 0; for (let o = 0; o < oct; o++) { s += a * noise(u * fu, v * fv, fu, fv); n += a; a *= 0.5; fu *= 2; fv *= 2; } return s / n; };
   const height = new Float32Array(W * Hh), col = new Float32Array(W * Hh * 3);
   // Voronoi cells on a jittered grid that wraps: plates (ponderosa) and checks (blue oak).
-  const [pw, ph] = B.plate_m || (pattern === 'plates' ? [0.22, 0.45] : [0.05, 0.08]);
+  const [pw, ph] = B.plate_m || ({ plates: [0.22, 0.45], platy: [0.1, 0.2], peeling_red: [0.1, 0.18] }[pattern] || [0.05, 0.08]);
   const gx = Math.max(2, Math.round(tw / pw)), gy = Math.max(2, Math.round(th / ph));
   const pts = []; for (let j = 0; j < gy; j++) for (let i = 0; i < gx; i++) pts.push([(i + 0.15 + 0.7 * rnd()) / gx, (j + 0.15 + 0.7 * rnd()) / gy, rnd()]);
   const vor = (u, v) => {   // [F1, F2, id] in metres
-    const ci = Math.floor(u * gx), cj = Math.floor(v * gy); let f1 = 1e9, f2 = 1e9, id = 0;
+    const ci = Math.floor(u * gx), cj = Math.floor(v * gy); let f1 = 1e9, f2 = 1e9, id = 0, id2 = 0;
     for (let dj = -1; dj <= 1; dj++) for (let di = -1; di <= 1; di++) {
       const ii = ((ci + di) % gx + gx) % gx, jj = ((cj + dj) % gy + gy) % gy, p = pts[jj * gx + ii];
       const px = p[0] + (ci + di - ii) / gx, py = p[1] + (cj + dj - jj) / gy;
       const d = Math.hypot((u - px) * tw, (v - py) * th);
-      if (d < f1) { f2 = f1; f1 = d; id = jj * gx + ii; } else if (d < f2) f2 = d;
+      if (d < f1) { f2 = f1; f1 = d; id2 = id; id = jj * gx + ii; } else if (d < f2) { f2 = d; id2 = jj * gx + ii; }
     }
-    return [f1, f2, id];
+    return [f1, f2, id, id2];
   };
   const fiss = B.fissure ?? 0.5, con = B.contrast ?? 1, lich = B.lichen ?? 0;
   for (let y = 0; y < Hh; y++) for (let x = 0; x < W; x++) {
@@ -1825,6 +2138,44 @@ export function barkTexture(spec) {
       const top = Math.pow(ridge, 0.5) * (breaks > 0.62 - 0.15 * fiss ? 0.55 : 1);
       h = top * (0.8 + 0.2 * fine);
       r = g = b = 0.42 + 0.75 * top * (0.85 + 0.3 * fine);
+    } else if (pattern === 'platy') {
+      // Thick, blocky plates (black oak, valley oak): elongated cells split by deep dark fissures, the plate
+      // faces rough and cut by a few cross-checks, plates of slightly different tone.
+      const [f1, f2, id] = vor(u + (warp - 0.5) * 0.06, v + (fbm(v, u, 6, 4, 2) - 0.5) * 0.08);
+      const edge = (f2 - f1) / Math.min(pw, ph), crack = Math.min(1, edge / (0.08 + 0.2 * fiss)), cr = pts[id][2];
+      const ny = Math.max(2, Math.round(th / ph * 1.5)), hv = v * ny + (fbm(u, v, 4, 2, 2) - 0.5) * 0.9, hx = Math.abs(hv - Math.floor(hv) - 0.5);
+      const xc = hx < 0.035 && fbm(u, v, 8, ny, 2) > 0.45 ? 0.55 : 1;   // a few horizontal cross-checks on the plates
+      h = crack * xc * (0.65 + 0.35 * fine);
+      const plate = (0.88 + 0.28 * cr + 0.3 * (fine - 0.5)) * (0.85 + 0.15 * xc);
+      r = g = b = 0.28 + (plate - 0.28) * Math.pow(crack * xc, 0.9);
+    } else if (pattern === 'fibrous') {
+      // Incense cedar: long, interlacing fibrous ridges of shreddy red-brown bark, dark furrows between,
+      // fine lengthwise fibres, some strips standing pale where they peel.
+      const nR = Math.max(3, Math.round(tw / (B.ridge_m ?? 0.04)));
+      const xx = u * nR + (warp - 0.5) * 1.6 + (fbm(u, v, 3, 5, 2) - 0.5) * 2.4;
+      const ridge = Math.pow(Math.abs(Math.sin(xx * Math.PI)), 0.45), fib = fbm(u, v, 96, 6, 2), strip = fbm(u, v * 0.3, 18, 3, 2);
+      h = ridge * (0.75 + 0.25 * fib);
+      const pale = strip > 0.68 ? Math.min(1, (strip - 0.68) / 0.08) : 0;
+      r = g = b = 0.42 + 0.7 * ridge * (0.8 + 0.4 * fib);
+      r += 0.25 * pale; g += 0.2 * pale; b += 0.15 * pale;
+    } else if (pattern === 'peeling_red') {
+      // Madrone: smooth, polished red-orange bark peeling in thin sheets; the freshly bared patches are
+      // pale olive-cream, the old sheets curl at their edges (a bright lip over a dark shadow).
+      // Cells are sheets: a third are freshly bared (pale), the rest old bark in two tones. Only a border
+      // between bared and old bark shows, as the old sheet's curled lip; sheets of one kind merge smoothly.
+      const [f1, f2, id, id2] = vor(u + (warp - 0.5) * 0.16, v + (fbm(v, u, 5, 3, 2) - 0.5) * 0.14);
+      const edge = (f2 - f1) / Math.min(pw, ph), cr = pts[id][2], bared = cr < 0.32, other = pts[id2][2] < 0.32, streak = fbm(u, v, 24, 3, 3);
+      h = 0.5 + 0.06 * streak; r = (cr > 0.66 ? 1.0 : 0.88) + 0.12 * streak; g = r; b = r;
+      if (bared) { const k = Math.min(1, edge / 0.25); r = r * (1 - k) + 1.25 * k; g = g * (1 - k) + 2.3 * k; b = b * (1 - k) + 1.8 * k; h -= 0.08 * k; }
+      if (bared !== other && edge < 0.12) {   // the curled lip of the old sheet, its shadow on the bared side
+        const k = 1 - edge / 0.12;
+        if (bared) { r *= 1 - 0.4 * k; g *= 1 - 0.45 * k; b *= 1 - 0.45 * k; } else { r += 0.3 * k; g += 0.22 * k; b += 0.18 * k; h += 0.35 * k; }
+      }
+    } else if (pattern === 'smooth_grey') {
+      // Smooth grey bark (buckeye, California bay): faint mottling, short horizontal lenticels, no plates.
+      const streak = fbm(u, v, 18, 3, 3), patch = fbm(u, v, 4, 5, 3), len = fbm(u, v, 10, 90, 2);
+      h = 0.5 + 0.06 * streak; r = g = b = 0.93 + 0.1 * streak + 0.14 * (patch - 0.5);
+      if (len > 0.72) { const k = Math.min(1, (len - 0.72) / 0.06); r *= 1 - 0.18 * k; g *= 1 - 0.18 * k; b *= 1 - 0.16 * k; h -= 0.05 * k; }
     } else if (pattern === 'shreddy') {
       const strip = fbm(u, v * 0.15, 24, 4, 3);
       h = strip; r = g = b = 0.6 + 0.6 * strip;

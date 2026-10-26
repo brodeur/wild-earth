@@ -1,0 +1,81 @@
+{
+  "id": "umbellularia_californica",
+  "aliases": ["bay", "california_bay", "bay_laurel"],
+  "scientific": "Umbellularia californica",
+  "common": "California bay laurel",
+  "form": "tree",
+  "architectural_model": "Rauh (provisional)",
+  "deciduous": false,
+  "height_m": [10, 20],
+  "variants": [
+    {"name": "young", "weight": 0.25, "height_m": [3, 8], "trunk_radius": 0.65, "crown_scale": 0.9, "branches": 0.8, "set": {"trunk": {"stems": [2, 6], "stem_spread_deg": 26}}, "note": "a dense shrubby clump of upright stems, leafy to the ground"},
+    {"name": "mature", "weight": 0.55, "seeds": 2, "note": "the file as written"},
+    {"name": "veteran", "weight": 0.2, "height_m": [18, 25], "trunk_radius": 1.25, "crown_scale": 1.1, "gnarl": 1.2, "deadwood": {"fraction": 0.12, "levels": [1, 2], "where": "inner"}, "set": {"trunk": {"stems": [3, 7], "stem_spread_deg": 30}}, "note": "a ring of heavy, leaning, mossy stems from one old base, a dark dense dome over them"}
+  ],
+  "description": "An evergreen tree 10-25 m tall, often with many trunks growing from one base, with a dense, dark, rounded crown of narrow, leathery leaves that smell sharp and spicy when you crush them. It grows in shady canyons, on north slopes and along creeks, where its deep shade keeps the ground cool, and its olive-like nuts are eaten by squirrels and were roasted as food by Native Californians.",
+  "season_notes": {
+    "winter": "Evergreen, and in flower: small clusters of pale yellow flowers open from December to March.",
+    "spring": "New light green leaves at the branch tips; the flowers finish.",
+    "summer": "A dense dark crown with the deepest shade in the canyon.",
+    "fall": "Round green fruits like small olives ripen purple-brown and drop (October-November); squirrels and jays carry the nuts away."
+  },
+  "status": "agent draft, needs local sign-off",
+  "trunk": {
+    "length_ratio": 0.55, "radius_ratio": 0.03, "taper": 0.7, "flare": 1.4, "bole_ratio": 0.2, "base_size": 0.04,
+    "curve_deg": 12, "curve_var_deg": 16, "segments": 5, "lean_deg": 10, "stems": [2, 5], "stem_spread_deg": 20,
+    "split_prob": 0.35, "split_count": 2, "split_angle_deg": 22, "bark_rgb": [118, 112, 98],
+    "bark_pattern": "smooth_grey", "twig_rgb": [112, 120, 80],
+    "bark": {"tile_m": [0.3, 0.6], "plate_m": [0.04, 0.06], "fissure": 0.15, "contrast": 0.6, "lichen": 0.45, "relief": 0.5}
+  },
+  "crown": {
+    "shape": "hemispherical",
+    "envelope": {"profile": [[0.02, 0.4], [0.15, 0.48], [0.35, 0.51], [0.5, 0.5], [0.65, 0.45], [0.8, 0.35], [0.92, 0.2], [1.0, 0.06]], "lobes": 5, "lobe_depth": 0.1, "asymmetry": 0.15, "fill": 0.5, "edge": 1.06}
+  },
+  "levels": [
+    {
+      "count": 12, "down_angle_deg": 65, "down_angle_tip_deg": 30, "down_angle_var_deg": 14, "rotation_deg": 140, "rotation_var_deg": 30,
+      "length_ratio": 1.3, "length_var": 0.25, "curve_deg": 10, "curve_var_deg": 15, "tropism": 0.06, "taper": 0.9,
+      "radius_ratio": 0.5, "segments": 3, "droop_deg": 14
+    },
+    {
+      "count": 8, "start": 0.15, "down_angle_deg": 45, "down_angle_var_deg": 15, "rotation_deg": 140,
+      "rotation_var_deg": 30, "length_ratio": 0.5, "length_var": 0.25, "curve_deg": 10, "curve_var_deg": 15,
+      "tropism": 0.05, "taper": 1.0, "radius_ratio": 0.45, "segments": 2
+    }
+  ],
+  "foliage": {
+    "type": "broadleaf", "leaf_size_m": 0.08, "leaf_shape": "elliptic_glossy", "cluster_m": 1.4, "density": 30, "cards_per_m2": 1.5, "leaf_fill": 3.0, "roll_deg": 50,
+    "start": 0.0, "parent_start": 0.35, "orientation": "outward",
+    "colors": {"winter": [82, 86, 61], "spring": [90, 95, 57], "summer": [85, 88, 67], "fall": [86, 88, 62]},
+    "leaf_on": {"winter": 1.0, "spring": 1.0, "summer": 1.0, "fall": 1.0},
+    "leaf_on_by_month": [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
+    "clumps": {"radius_m": 1.0, "cards_per_clump": 14, "shell": 0.12, "flatten": 0.8, "tip_bias": 1.2},
+    "palette": [[0.85, [1, 1, 1]], [0.1, [1.3, 1.25, 0.7]], [0.05, [0.82, 0.86, 0.82]]], "ao_min": 0.66,
+    "color_var": [0.08, 0.04],
+    "flowers": {"season": "winter", "form": "cluster", "rgb": [222, 214, 140], "size_m": 0.03, "density": 0.3, "before_leaves": false},
+    "berries": {"season": "fall", "rgb": [96, 104, 60], "size_m": 0.025, "density": 0.12}
+  },
+  "deadwood": {"fraction": 0.05, "where": "inner", "levels": [2], "shorten": 0.6, "rgb": [120, 114, 104]},
+  "twigs": {"count": [3, 4], "length": 0.5, "down_deg": 50, "down_var_deg": 20, "curve_var_deg": 20, "segments": 1, "radius_m": 0.005, "fan_deg": 55, "jitter": 0.25, "rgb": [112, 120, 80]},
+  "lod": {
+    "near_tris_budget": 2300, "near_sides": [5, 3, 0], "mid_blobs": 5, "mid_branches": 3, "mid_sides": [4, 3], "mid_segments": [2, 1], "mid_blob_scale": 0.95,
+    "close_factor": 2
+  },
+  "targets": {
+    "crown_width_ratio": 1.0, "crown_base_ratio": 0.1, "porosity": 0.25, "foliage_rg": 0.94, "foliage_bg": 0.5,
+    "from": "reference photographs (2026-10-25, measured as in docs/tree-likeness-review.md; bark masked out of the colour): wind-shaped dome on a ridge at Las Trampas W/H 1.34 base 0.11 porosity 0.05 (Commons, Dcrjsr, CC BY 4.0); dense multi-stemmed tree in Wildcat Canyon W/H 1.04 base 0.10 porosity 0.37 (sparse dead top) (Commons, Awinch1001, CC BY 4.0); open form at Grizzly Peak W/H 1.63 base 0.16 porosity 0.28; upright form W/H 0.64 base 0.08 porosity 0.28; upright multi-stemmed W/H 0.84 base 0.32 porosity 0.33 (all Commons, Awinch1001, CC BY 4.0); crown against the sky in Ventura County porosity 0.25 (iNaturalist 270372457, Adam J. Searcy, CC BY); W/H and base medians; porosity 0.25 is the median 0.28 nudged toward the dense canyon trees of which no clean silhouette was found; colour mean of six (r/g 0.86-1.05, b/g 0.36-0.69)",
+    "photos": [
+      {"url": "https://commons.wikimedia.org/wiki/File:Calif_bay_vw_up_W_ridge_Las_Trampas.jpg", "license": "CC BY 4.0", "author": "Dcrjsr", "shows": "lone wind-shaped dome on a grassy ridge"},
+      {"url": "https://commons.wikimedia.org/wiki/File:Umbellularia_californica_whole_tree_Wildcat_Canyon_preserve_1.jpg", "license": "CC BY 4.0", "author": "Awinch1001", "shows": "dense dark multi-stemmed tree"},
+      {"url": "https://commons.wikimedia.org/wiki/File:Umbellularia_californica_Grizzly_peak_open_form_6.jpg", "license": "CC BY 4.0", "author": "Awinch1001", "shows": "open spreading form with many stems"},
+      {"url": "https://commons.wikimedia.org/wiki/File:Umbellularia_californica_Grizzly_peak_upright_habit_9.jpg", "license": "CC BY 4.0", "author": "Awinch1001", "shows": "upright young tree"},
+      {"url": "https://commons.wikimedia.org/wiki/File:Umbellularia_californica_Grizzly_peak_upright_habit_10.jpg", "license": "CC BY 4.0", "author": "Awinch1001", "shows": "upright multi-stemmed tree"},
+      {"url": "https://www.inaturalist.org/photos/270372457", "license": "CC BY 4.0", "author": "Adam J. Searcy", "shows": "dense crown against the sky, Ventura County, July"},
+      {"url": "https://commons.wikimedia.org/wiki/File:Umbellularia_californica_Grizzly_peak_multi-trunked_habit_1.jpg", "license": "CC BY 4.0", "author": "Awinch1001", "shows": "many leaning trunks from one base (not measured)"}
+    ]
+  },
+  "notes": "California bay is an evergreen of canyons, north slopes, streamsides and oak woodland from southern Oregon to Baja California; in the Sierra foothills it is a tree of shaded ravines and canyon bottoms (the American River canyons above Placerville) and a shrub on dry rocky slopes. A tree 10-25 m (file 10-20 m, veteran to 25 m); characteristically many stems from a burl at the base (stems [2, 5], veteran [3, 7]) that lean outward and grow up, each with a persistent leader (trunk.length_ratio 0.55, thin radius_ratio 0.03). The crown is a dense, dark, rounded dome that keeps its foliage low (photo base about 0.1) and hides most of the wood, so the mid tier draws three limbs; W/H about 1 (0.64 for upright young trees, 1.6 for open spreading ones, 1.34 for a wind-shaped ridge tree). Bark thin, smooth and greenish-grey on young stems, becoming grey-brown and finely scaly on old ones (bark_pattern smooth_grey, new); twigs green. Leaves lanceolate-elliptic, 3-10 cm, leathery, glossy dark yellow-green above and paler beneath, strongly pungent: leaf_shape elliptic_glossy with a few yellowing old leaves in the palette. Photo foliage colour linear r/g 0.94, b/g 0.50, warmer and yellower than live oak. Flowers small, pale yellow, in umbels, December-March (foliage.flowers in winter, an evergreen flowering in the leafy crown). Fruit an olive-like drupe 2-2.5 cm, green ripening purple-brown in October-November (foliage.berries, low density). No snag: bay resprouts vigorously from its base after fire or a fall, and old stems lie down and send up new trunks. Bay is the main foliar host of sudden oak death (Phytophthora ramorum) in coastal California (not modelled). Architectural model given as Rauh, provisional.",
+  "sources": ["https://www.fs.usda.gov/database/feis/plants/tree/umbcal/all.html", "https://www.srs.fs.usda.gov/pubs/misc/ag_654/volume_2/umbellularia/californica.htm (Silvics of North America)", "https://ucjeps.berkeley.edu/eflora/ (Umbellularia californica)", "https://en.wikipedia.org/wiki/Umbellularia", "Reference photographs listed in targets.photos (Wikimedia Commons, CC BY 4.0)"],
+  "authors": ["Wild Earth (agent draft, 2026-10-25); needs local sign-off"],
+  "license": "CC BY-SA 4.0"
+}

@@ -85,35 +85,63 @@ export function rockKeep(tile, x, north) {
   return 1 - s * (0.35 + 0.5 * open);
 }
 
-// Per-cell species mix from LANDFIRE (pipeline: client/species_mix*.png, species_mix.json). Read
-// through the 8-bit index PNG (canvas-safe; the RGBA forms carry data in alpha, which a 2D canvas
-// premultiplies away) and the JSON rows' `bytes`. at(i, j) on the habitat grid (same 333 px grid)
-// returns the row record, or null where the index is 0 (no mix: callers fall back to the class mix).
-// Row record: { index, rule, name, weights: {blue_oak, live_oak, gray_pine, ponderosa, willow, alder,
-// cottonwood, manzanita, chamise} (0..1, trees and shrubs each summing to 1 or 0), trees, shrubs (non-zero
-// weights only, keyed by the species aliases trees.js resolves), treeSum, shrubSum (bytes), treeDensity,
-// shrubDensity (multipliers, byte / 100), savanna }. Which byte is which comes from the JSON's
-// `bytes_layout` (2026-10-25: willow, alder and cottonwood appended); older tiles use the original eight.
+// Per-cell species mix from LANDFIRE (pipeline/species_mix.py, species_mix.json; docs/tile-spec.md,
+// "Species mix"). A cell carries its row (the 8-bit index PNG, canvas-safe) and, in format 2, its two
+// density multipliers (species_mix_density.png RGB: R tree, G shrub, byte / 100); the rows carry the
+// weights for any number of species. at(i, j) on the habitat grid (same 333 px grid) returns the row
+// record, or null where the index is 0 (no mix: callers fall back to the class mix); density(i, j) the
+// cell's [tree, shrub] multipliers (the row's where there is no density PNG).
+// Row record: { index, rule, name, trees, shrubs (non-zero weights 0..1, each summing to 1, keyed by
+// species id or alias, in the row's draw order), weights (every column, zeros included), treeSum, shrubSum
+// (bytes), treeDensity, shrubDensity (multipliers, byte / 100), savanna (blue oak leads the trees),
+// oaks: { blue, live } weights }.
+// Formats: 2 (2026-10-25) mixes[].tree_bytes / shrub_bytes [[id, byte], ...] and density_bytes, keyed by
+// canonical ids; 1, mixes[].bytes with species_mix.json `bytes_layout` naming each column by short alias
+// (riparian trees appended); and the original eight-column layout without bytes_layout (MIX_LAYOUT).
+// The draw order is the column order in every format, so a format-1 tile regenerated as format 2 places
+// every plant exactly where it did.
 const MIX_LAYOUT = { trees: { blue_oak: 0, live_oak: 1, gray_pine: 2, ponderosa: 3 }, shrubs: { manzanita: 4, chamise: 5 },
   tree_density: 6, shrub_density: 7 };
+const BLUE_OAK = ['quercus_douglasii', 'blue_oak'], LIVE_OAK = ['quercus_wislizeni', 'live_oak'];
 export class SpeciesMix {
-  constructor(img, json, sizeM) {
+  constructor(img, json, sizeM, density = null) {
     this.img = img; this.size = sizeM; this.res = sizeM / img.width; this.json = json;
+    this.format = json.format || 1;
+    this.wide = (json.cells?.index_bytes || 1) > 1;   // rows over 255: R + 256 G
+    this.dens = density && density.width === img.width ? density : null;
     this.rows = [null];
-    const lay = json.bytes_layout || MIX_LAYOUT, T = Object.entries(lay.trees), S = Object.entries(lay.shrubs);
+    const species = new Set();
     for (const m of json.mixes || []) {
-      const b = m.bytes || [], sum = cols => cols.reduce((s, [, c]) => s + (b[c] || 0), 0);
-      const treeSum = sum(T), shrubSum = sum(S), weights = {}, trees = {}, shrubs = {};
-      for (const [cols, tot, out] of [[T, treeSum, trees], [S, shrubSum, shrubs]]) for (const [k, c] of cols) {
-        const wgt = tot ? (b[c] || 0) / tot : 0;
-        weights[k] = wgt; if (wgt > 0) out[k] = wgt;
+      let T, S, td, sd;   // T, S: [[key, byte], ...] in column order
+      if (this.format >= 2) {
+        T = m.tree_bytes || []; S = m.shrub_bytes || []; [td, sd] = m.density_bytes || [0, 0];
+      } else {
+        const lay = json.bytes_layout || MIX_LAYOUT, b = m.bytes || [];
+        T = Object.entries(lay.trees).map(([k, c]) => [k, b[c] || 0]); S = Object.entries(lay.shrubs).map(([k, c]) => [k, b[c] || 0]);
+        td = b[lay.tree_density]; sd = b[lay.shrub_density];
       }
+      const sum = L => L.reduce((s, [, v]) => s + v, 0), treeSum = sum(T), shrubSum = sum(S), weights = {}, trees = {}, shrubs = {};
+      for (const [L, tot, out] of [[T, treeSum, trees], [S, shrubSum, shrubs]]) for (const [k, v] of L) {
+        const wgt = tot ? v / tot : 0;
+        weights[k] = wgt; if (wgt > 0) { out[k] = wgt; species.add(k); }
+      }
+      const byteOf = names => { for (const [k, v] of T) if (names.includes(k)) return v; return 0; };
+      const wOf = names => { for (const k of names) if (weights[k]) return weights[k]; return 0; };
       // blue oak savanna: a mix led by blue oak (grassland_savanna, blue_oak, blue_oak_foothill_pine)
       this.rows[m.index] = { index: m.index, rule: m.rule, name: m.name, weights, trees, shrubs, treeSum, shrubSum,
-        treeDensity: b[lay.tree_density] / 100, shrubDensity: b[lay.shrub_density] / 100, savanna: b[lay.trees.blue_oak] >= 128 };
+        treeDensity: td / 100, shrubDensity: sd / 100, savanna: byteOf(BLUE_OAK) >= 128, oaks: { blue: wOf(BLUE_OAK), live: wOf(LIVE_OAK) } };
     }
+    this.species = [...species];   // every species (id or alias) some row draws
   }
-  at(i, j) { return this.rows[this.img.data[(j * this.img.width + i) * 4]] || null; }
+  rowIndex(i, j) { const o = (j * this.img.width + i) * 4, d = this.img.data; return this.wide ? d[o] + 256 * d[o + 1] : d[o]; }
+  at(i, j) { return this.rows[this.rowIndex(i, j)] || null; }
+  // [tree, shrub] density multipliers of cell (i, j): the density PNG (format 2), else the row's; null without a row
+  density(i, j, row = this.at(i, j)) {
+    if (!row) return null;
+    if (!this.dens) return [row.treeDensity, row.shrubDensity];
+    const o = (j * this.img.width + i) * 4, d = this.dens.data;
+    return [d[o] / 100, d[o + 1] / 100];
+  }
   atXY(x, north) {
     const i = Math.min(Math.max(Math.floor(x / this.res), 0), this.img.width - 1);
     const j = Math.min(Math.max(Math.floor((this.size - north) / this.res), 0), this.img.height - 1);
@@ -297,7 +325,8 @@ export async function loadTile(tileId, base = '../tiles/') {
   const L = m.layers;
   for (const k of ['client.heights', 'client.texture', 'client.habitat', 'client.canopy', 'client.masks'])
     if (!L[k]) throw new Error(`tile ${id} lacks ${k}; run the derive step`);
-  const [heights, texture, habitat, canopy, masks, species, perception, calendar, imagery, features, roads, imageryTexture, mast, mixIndex, mixJson, outcrop, geology, soils, groundClasses, profile, speciesPrior] = await Promise.all([
+  const MX = L['client.species_mix'], mixFiles = MX?.files || {};
+  const [heights, texture, habitat, canopy, masks, species, perception, calendar, imagery, features, roads, imageryTexture, mast, mixIndex, mixJson, mixDensity, outcrop, geology, soils, groundClasses, profile, speciesPrior] = await Promise.all([
     loadImageData(dir + L['client.heights'].path), loadImageData(dir + L['client.texture'].path),
     loadImageData(dir + L['client.habitat'].path), loadImageData(dir + L['client.canopy'].path),
     loadImageData(dir + L['client.masks'].path),
@@ -313,9 +342,11 @@ export async function loadTile(tileId, base = '../tiles/') {
     L['client.texture_imagery'] ? loadOptionalImage(dir + L['client.texture_imagery'].path) : null,
     // fall acorn_mast score 0..100 in R on the 30 m grid (acorn game); optional
     L['client.mast'] ? loadImageData(dir + L['client.mast'].path).catch(() => null) : null,
-    // LANDFIRE species mix per 30 m cell: the canvas-safe index PNG plus the row table; optional
-    L['client.species_mix'] ? loadImageData(dir + 'client/species_mix_index.png').catch(() => null) : null,
-    L['client.species_mix'] ? fetch(dir + L['client.species_mix'].path).then(r => r.ok ? r.json() : null).catch(() => null) : null,
+    // LANDFIRE species mix per 30 m cell: the canvas-safe index PNG, the row table and (format 2) the
+    // per-cell density PNG; optional
+    MX ? loadImageData(dir + 'client/species_mix_index.png').catch(() => null) : null,
+    MX ? fetch(dir + MX.path).then(r => r.ok ? r.json() : null).catch(() => null) : null,
+    mixFiles['client/species_mix_density.png'] ? loadImageData(dir + 'client/species_mix_density.png').catch(() => null) : null,
     // geology and soils step (tile-spec "Geology and soils"), all on the 30 m grid; optional (older
     // tiles have none: rocks.js then places nothing). outcrop R = likelihood 0..255; geology R = unit,
     // G = rock class (1-based into ground_classes.rock_classes); soils R = map unit, G = surface rock
@@ -342,7 +373,7 @@ export async function loadTile(tileId, base = '../tiles/') {
     outcrop: outcrop ? new Grid8(outcrop, size) : null, geology: geology ? new Grid8(geology, size) : null,
     soils: soils ? new Grid8(soils, size) : null, groundClasses,
     // per-cell species weights and density multipliers (null: vegetation falls back to the class mix)
-    speciesMix: mixIndex && mixJson?.mixes && mixIndex.width === habitat.width ? new SpeciesMix(mixIndex, mixJson, size) : null,
+    speciesMix: mixIndex && mixJson?.mixes && mixIndex.width === habitat.width ? new SpeciesMix(mixIndex, mixJson, size, mixDensity) : null,
     // former reservoir and stock-pond beds (255) and their riparian corridor (160), or null
     rewild: rewild?.any ? rewild : null,
     // ponds (minus the rewilded ones), stream channels and the riparian band (exact tests; .at(x, north) like tile.roads)

@@ -1,0 +1,80 @@
+{
+  "id": "arbutus_menziesii",
+  "aliases": ["madrone", "pacific_madrone"],
+  "scientific": "Arbutus menziesii",
+  "common": "Pacific madrone",
+  "form": "tree",
+  "architectural_model": "Scarrone (provisional: shoots end in flower panicles and fork sympodially below them)",
+  "deciduous": false,
+  "height_m": [10, 22],
+  "variants": [
+    {"name": "young", "weight": 0.25, "height_m": [4, 9], "trunk_radius": 0.7, "crown_scale": 0.85, "branches": 0.8, "set": {"trunk": {"stems": [1, 3], "lean_deg": 10}}, "note": "slender leaning stems, a sprout clump after fire or a single sapling reaching for light"},
+    {"name": "mature", "weight": 0.55, "seeds": 2, "note": "the file as written"},
+    {"name": "veteran", "weight": 0.15, "height_m": [18, 28], "trunk_radius": 1.3, "crown_scale": 1.12, "gnarl": 1.25, "deadwood": {"fraction": 0.2, "levels": [1, 2], "where": "inner"}, "set": {"trunk": {"stems": [1, 3], "lean_deg": 20}}, "note": "a thick, twisting red trunk leaning out over the slope, dead limbs where cankers have killed them"}
+  ],
+  "snag": {"fraction": 0.05, "from": "veteran", "height_m": [12, 22], "limbs": 0.5, "twigs": 0.15, "levels": 1, "shorten": [0.45, 0.9], "rgb": [146, 120, 104]},
+  "description": "An evergreen tree 10-25 m tall with smooth, red-orange bark that peels in thin curls each summer to show fresh green-cream bark beneath, and thick, shiny, dark green leaves. It grows on north slopes and in canyons with the oaks and pines, often leaning far out toward the light, and its clusters of white bell flowers in spring and red-orange berries in fall feed bees, robins, thrushes and band-tailed pigeons.",
+  "season_notes": {
+    "winter": "Evergreen: glossy dark leaves, and the clusters of red berries that birds have not yet eaten.",
+    "spring": "Hanging clusters of small white urn-shaped flowers (March-May), busy with bees.",
+    "summer": "The bark peels in papery red curls, showing smooth green-cream bark that slowly turns red; some old leaves turn red and drop.",
+    "fall": "Berries ripen orange to red (October-December) and bring flocks of robins and varied thrushes."
+  },
+  "status": "agent draft, needs local sign-off",
+  "trunk": {
+    "length_ratio": 0.55, "radius_ratio": 0.035, "taper": 0.6, "flare": 1.25, "bole_ratio": 0.3, "base_size": 0.3,
+    "curve_deg": 18, "curve_var_deg": 20, "segments": 6, "lean_deg": 16, "stems": [1, 3], "stem_spread_deg": 18,
+    "split_prob": 0.55, "split_count": 2, "split_angle_deg": 26, "sinuous_deg": 8, "bark_rgb": [166, 90, 56],
+    "bark_pattern": "peeling_red", "twig_rgb": [172, 98, 62],
+    "bark": {"tile_m": [0.3, 0.6], "plate_m": [0.1, 0.2], "fissure": 0.05, "contrast": 1.1, "lichen": 0.05, "relief": 0.4}
+  },
+  "crown": {
+    "shape": "spherical",
+    "envelope": {"profile": [[0.3, 0.22], [0.4, 0.37], [0.52, 0.45], [0.65, 0.45], [0.78, 0.38], [0.9, 0.25], [1.0, 0.07]], "lobes": 4, "lobe_depth": 0.18, "asymmetry": 0.3, "fill": 0.5, "edge": 1.08}
+  },
+  "levels": [
+    {
+      "count": 10, "down_angle_deg": 60, "down_angle_tip_deg": 35, "down_angle_var_deg": 16, "rotation_deg": 140, "rotation_var_deg": 35,
+      "length_ratio": 1.6, "length_var": 0.3, "curve_deg": 10, "curve_var_deg": 26, "sinuous_deg": 8, "tropism": 0.04,
+      "droop_deg": 6, "taper": 0.9, "radius_ratio": 0.55, "segments": 4
+    },
+    {
+      "count": 7, "start": 0.2, "down_angle_deg": 45, "down_angle_var_deg": 16, "rotation_deg": 140,
+      "rotation_var_deg": 30, "length_ratio": 0.5, "length_var": 0.3, "curve_deg": 10, "curve_var_deg": 22, "sinuous_deg": 6,
+      "tropism": 0.05, "taper": 1.0, "radius_ratio": 0.45, "segments": 2
+    }
+  ],
+  "foliage": {
+    "type": "broadleaf", "leaf_size_m": 0.11, "leaf_shape": "elliptic_glossy", "cluster_m": 1.2, "density": 16, "leaf_fill": 2.8, "roll_deg": 60,
+    "start": 0.25, "parent_start": 0.5, "orientation": "outward",
+    "colors": {"winter": [86, 92, 77], "spring": [94, 103, 73], "summer": [86, 95, 84], "fall": [90, 95, 78]},
+    "leaf_on": {"winter": 1.0, "spring": 1.0, "summer": 1.0, "fall": 1.0},
+    "leaf_on_by_month": [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
+    "clumps": {"radius_m": 0.9, "cards_per_clump": 9, "shell": 0.25, "flatten": 0.7, "tip_bias": 1.6},
+    "palette": [[0.8, [1, 1, 1]], [0.12, [1.22, 1.2, 0.9]], [0.08, [1.6, 0.9, 0.55]]], "ao_min": 0.68,
+    "color_var": [0.07, 0.04],
+    "flowers": {"season": "spring", "form": "cluster", "rgb": [236, 230, 212], "size_m": 0.12, "density": 0.4, "before_leaves": false},
+    "berries": {"season": "fall", "rgb": [204, 70, 42], "size_m": 0.1, "density": 0.45}
+  },
+  "deadwood": {"fraction": 0.08, "where": "inner", "levels": [1, 2], "shorten": 0.6, "rgb": [146, 120, 104]},
+  "twigs": {"count": [2, 3], "length": 0.5, "down_deg": 40, "down_var_deg": 16, "curve_var_deg": 25, "segments": 1, "radius_m": 0.008, "fan_deg": 50, "jitter": 0.2, "rgb": [172, 98, 62]},
+  "lod": {
+    "near_tris_budget": 2000, "near_sides": [7, 4, 0], "mid_blobs": 5, "mid_branches": 3, "mid_segments": [3, 2], "mid_blob_scale": 0.9,
+    "close_factor": 2
+  },
+  "targets": {
+    "crown_width_ratio": 0.9, "crown_base_ratio": 0.3, "porosity": 0.28, "foliage_rg": 0.88, "foliage_bg": 0.69,
+    "from": "reference photographs (2026-10-25, measured as in docs/tree-likeness-review.md; colour from crown pixels with the red bark masked out): open-grown multi-stemmed tree on Mount Tamalpais W/H 1.49 base 0.28 porosity 0.27 r/g 0.93 b/g 0.64 (Commons, Awinch1001, CC BY 4.0); tall leaning tree hemmed in by conifers W/H 0.46 base 0.41 porosity 0.35 (Commons, brewbooks, CC BY-SA 2.0); Big Sur pair, top 60% of the crown, W/H 0.62 porosity 0.29 (Commons, josh jackson, CC BY 2.0); crown against the sky, porosity 0.14 r/g 0.85 b/g 0.73 (iNaturalist 661183715, Skyler K, CC BY). W/H target 0.9 sits between the open-grown and the hemmed-in forms, which is how madrones in the foothill oak-pine woodland grow; base and porosity are medians",
+    "photos": [
+      {"url": "https://commons.wikimedia.org/wiki/File:Arbutus_menziesii_Mount_Tam_Blithedale_Ridge_Road_6.jpg", "license": "CC BY 4.0", "author": "Awinch1001", "shows": "open-grown tree with several red stems at the edge of grassland"},
+      {"url": "https://commons.wikimedia.org/wiki/File:A_healthy_Pacific_madrone_-_Flickr_-_brewbooks.jpg", "license": "CC BY-SA 2.0", "author": "brewbooks", "shows": "tall tree leaning out from among conifers, crown high on sinuous red limbs"},
+      {"url": "https://commons.wikimedia.org/wiki/File:Arbutus_menziesii_Big_Sur.jpg", "license": "CC BY 2.0", "author": "josh jackson", "shows": "two tall trees against a clear sky"},
+      {"url": "https://www.inaturalist.org/photos/661183715", "license": "CC BY 4.0", "author": "Skyler K", "shows": "round crown of glossy leaves against the sky, May"},
+      {"url": "https://www.inaturalist.org/photos/251783792", "license": "CC0", "shows": "big spreading tree at Hidden Falls Regional Park, Placer County (local; not measured: trees behind it)"}
+    ]
+  },
+  "notes": "Pacific madrone ranges from British Columbia to southern California; in the Sierra foothills it grows from about 300 to 1,500 m in mixed oak-pine woodland and canyons, mostly on north and east slopes and in draws, with interior live oak, black oak, gray and ponderosa pine and bay. A tree 10-25 m (file 10-22 m; veteran to 28 m) with a trunk 0.3-1 m thick (radius_ratio 0.035), often two or three stems from an old burl after fire (stems [1, 3]). The trunk leans strongly out of the slope toward the light (lean_deg 16, veteran 20) and divides into a few sinuous, twisting limbs (sinuous_deg on trunk and limbs, split_prob 0.55); crown irregular and one-sided (asymmetry 0.3), billowy clumps of foliage at the branch ends with bare red limbs visible between them (clumps with tip_bias 1.6, a 0.25 empty shell, foliage start 0.25). Crown shape depends on the stand: open-grown trees are wider than tall (W/H 1.5 in the photos), trees among conifers carry a narrow crown high on the stem (0.46, base 0.41); the target 0.9 and base 0.3 is the woodland tree. Bark: thin, smooth, red-orange to red-brown, peeling in summer in papery curls to show green-cream new bark that reddens over the year; old trunk bases turn dark and scaly: bark_pattern peeling_red (new), which draws the freshly bared olive-cream patches and curling edges itself. Twigs red too. Leaves evergreen, thick, oval, 7-15 cm, glossy dark green above and pale beneath: leaf_shape elliptic_glossy with pale and old-leaf (red-orange) tints in the palette, since leaves live about two years and the oldest turn red and drop in early summer. Photo foliage colour (bark masked out) linear r/g 0.88, b/g 0.69: a cool, slightly grey green. Flowers small white urns in drooping panicles 10-15 cm, March-May (foliage.flowers, form cluster). Berries round, 8-12 mm, orange to red in clusters, October-December (foliage.berries, size_m is the cluster). Madrones suffer cankers and dieback; dead limbs inside the crown and standing dead stems with grey-red wood are common, hence deadwood and a snag (5%, from the veteran). Architectural model given as Scarrone, provisional.",
+  "sources": ["https://www.fs.usda.gov/database/feis/plants/tree/arbmen/all.html", "https://www.srs.fs.usda.gov/pubs/misc/ag_654/volume_2/arbutus/menziesii.htm (Silvics of North America)", "https://ucjeps.berkeley.edu/eflora/ (Arbutus menziesii)", "https://en.wikipedia.org/wiki/Arbutus_menziesii", "Reference photographs listed in targets.photos (Wikimedia Commons and iNaturalist, CC licences)"],
+  "authors": ["Wild Earth (agent draft, 2026-10-25); needs local sign-off"],
+  "license": "CC BY-SA 4.0"
+}

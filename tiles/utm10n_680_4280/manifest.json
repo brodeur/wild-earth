@@ -15,7 +15,7 @@
   38.74035063713964
  ],
  "size_m": 10000,
- "generated_at": "2026-10-25T14:28:17Z",
+ "generated_at": "2026-10-26T02:55:31Z",
  "generator": {
   "name": "wild-earth-pipeline",
   "version": "0.2.0"
@@ -730,22 +730,15 @@
    ],
    "pixels": 333,
    "resolution_m": 30.03003003003003,
+   "format": 2,
    "files": {
-    "client/species_mix_a.png": {
-     "sha256": "1d64608a83fd9922e772a37b923f7c51ccfbb0adce65480bcd0cd5f0fd1b0529",
-     "bytes": 91705
-    },
-    "client/species_mix_b.png": {
-     "sha256": "856fd00e595f121d5ed48ad7682ed8103c3a32fa13571a5b1c13c9b42c22bf75",
-     "bytes": 123471
-    },
-    "client/species_mix_c.png": {
-     "sha256": "100a349df74f0756b368495ae0759af1efdb03440ed497abdedb7e26db675075",
-     "bytes": 10670
-    },
     "client/species_mix_index.png": {
      "sha256": "29a3ba56183611967fd179809ac15b1ce28a77274294754e2faac5de71c2ea37",
      "bytes": 58242
+    },
+    "client/species_mix_density.png": {
+     "sha256": "769949e51c1013c9875ea5bb64ed77d9a58ebf9315a9048221f8ed934630d63a",
+     "bytes": 92297
     }
    },
    "derived_from": [
@@ -755,7 +748,22 @@
     "vegetation.habitat",
     "vegetation.evc"
    ],
-   "encoding": "species_mix_a RGBA = blue oak, live oak, gray pine, ponderosa weights; species_mix_c RGB = willow, alder, cottonwood weights (a + c trees sum to 255); species_mix_b RGBA = manzanita, chamise weights, tree_density, shrub_density (byte/100); species_mix_index L = row in mixes",
+   "encoding": "format 2: species_mix_index L = row in mixes; species_mix_density RGB = tree_density, shrub_density (byte/100); per-row weights as mixes[].tree_bytes / shrub_bytes over species.trees / species.shrubs",
+   "species": {
+    "trees": [
+     "quercus_douglasii",
+     "quercus_wislizeni",
+     "pinus_sabiniana",
+     "pinus_ponderosa",
+     "salix_lasiolepis",
+     "alnus_rhombifolia",
+     "populus_fremontii"
+    ],
+    "shrubs": [
+     "arctostaphylos_viscida",
+     "adenostoma_fasciculatum"
+    ]
+   },
    "mixes": 38,
    "unmatched": 0,
    "fractions": {
@@ -813,8 +821,8 @@
      "great_basin_shrub": 0.0002
     }
    },
-   "sha256": "05fe86bc995bfd5e973a0de6a0b61b63b0a9cbdb2ed9ec457c1fcf42f9ff0790",
-   "bytes": 26803
+   "sha256": "8ef6b48138c03ef2deb379d89f80f3d3ff0d451bfdb6fcc411fc77e26a29fb55",
+   "bytes": 33434
   },
   "hydro.channels": {
    "path": "hydro/channels.geojson",
@@ -3392,6 +3400,12 @@
    "step": "unreal",
    "at": "2026-10-25T14:28:17Z",
    "seconds": 2.0,
+   "ok": true
+  },
+  {
+   "step": "species_mix (format 2)",
+   "at": "2026-10-26T02:55:31Z",
+   "seconds": 0,
    "ok": true
   }
  ]

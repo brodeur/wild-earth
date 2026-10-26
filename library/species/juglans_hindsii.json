@@ -1,0 +1,81 @@
+{
+  "id": "juglans_hindsii",
+  "aliases": ["black_walnut", "california_black_walnut", "northern_california_black_walnut"],
+  "scientific": "Juglans hindsii",
+  "common": "northern California black walnut",
+  "form": "tree",
+  "architectural_model": "Rauh",
+  "deciduous": true,
+  "height_m": [12, 18],
+  "variants": [
+    {"name": "young", "weight": 0.25, "height_m": [5, 10], "trunk_radius": 0.65, "crown_scale": 0.8, "branches": 0.8, "set": {"trunk": {"length_ratio": 0.55, "split_prob": 0.2}, "foliage": {"clumps": {"radius_m": 0.8}}}, "note": "a straight young tree with a leader, crown taller than wide"},
+    {"name": "mature", "weight": 0.55, "seeds": 2, "note": "the file as written"},
+    {"name": "veteran", "weight": 0.15, "height_m": [16, 22], "trunk_radius": 1.3, "crown_scale": 1.12, "gnarl": 1.2, "deadwood": {"fraction": 0.18, "levels": [1, 2], "where": "inner"}, "set": {"trunk": {"split_prob": 0.7, "lean_deg": 10}}, "note": "a massive dark trunk forking into heavy limbs, a broad open dome with some dead branches"}
+  ],
+  "snag": {"fraction": 0.05, "from": "veteran", "height_m": [12, 20], "limbs": 0.55, "twigs": 0.2, "levels": 1, "shorten": [0.45, 0.9], "rgb": [128, 122, 114]},
+  "description": "A tall walnut tree 10-20 m high with a stout, dark, deeply furrowed trunk and long feathery leaves made of many narrow leaflets that turn yellow in fall. It grows along creeks, rivers and valley edges below the foothills and up the canyons, and its round green nuts, hard as stone inside, are cracked open by squirrels and woodpeckers.",
+  "season_notes": {
+    "winter": "Bare: a dark trunk and a few thick, stiff branches with stout grey twigs.",
+    "spring": "Leaves come out late (April) with long green catkins hanging from the twigs.",
+    "summer": "A light, feathery crown; round green nuts the size of a golf ball hang among the leaves.",
+    "fall": "Leaves turn yellow and drop early (October); the nuts fall, and their husks blacken on the ground."
+  },
+  "status": "agent draft, needs local sign-off",
+  "trunk": {
+    "length_ratio": 0.4, "radius_ratio": 0.048, "taper": 0.6, "flare": 1.35, "bole_ratio": 0.4, "base_size": 0.12,
+    "curve_deg": 8, "curve_var_deg": 12, "segments": 5, "lean_deg": 8, "stems": [1, 1], "stem_spread_deg": 0,
+    "split_prob": 0.45, "split_count": 2, "split_angle_deg": 28, "bark_rgb": [80, 74, 68],
+    "bark_pattern": "furrowed", "twig_rgb": [122, 114, 100],
+    "bark": {"tile_m": [0.4, 0.8], "ridge_m": 0.04, "block_m": 0.12, "fissure": 0.6, "contrast": 1.2, "lichen": 0.15, "relief": 1.4}
+  },
+  "crown": {
+    "shape": "hemispherical",
+    "envelope": {"profile": [[0.05, 0.26], [0.18, 0.47], [0.35, 0.57], [0.5, 0.58], [0.65, 0.52], [0.8, 0.4], [0.92, 0.24], [1.0, 0.07]], "lobes": 5, "lobe_depth": 0.14, "asymmetry": 0.15, "fill": 0.55, "edge": 1.08}
+  },
+  "levels": [
+    {
+      "count": 9, "down_angle_deg": 62, "down_angle_tip_deg": 35, "down_angle_var_deg": 14, "rotation_deg": 140, "rotation_var_deg": 30,
+      "length_ratio": 2.2, "length_var": 0.25, "curve_deg": 6, "curve_var_deg": 18, "zigzag_deg": 4, "tropism": 0.03,
+      "droop_deg": 10, "taper": 0.9, "radius_ratio": 0.6, "segments": 4
+    },
+    {
+      "count": 7, "start": 0.15, "down_angle_deg": 45, "down_angle_var_deg": 15, "rotation_deg": 140,
+      "rotation_var_deg": 30, "length_ratio": 0.5, "length_var": 0.3, "curve_deg": 0, "curve_var_deg": 18,
+      "zigzag_deg": 6, "tropism": 0.04, "taper": 1.0, "radius_ratio": 0.45, "segments": 2
+    }
+  ],
+  "foliage": {
+    "type": "broadleaf", "leaf_size_m": 0.3, "leaf_shape": "pinnate_compound", "leaflets": [15, 19], "cluster_m": 1.4, "density": 8, "cards_per_m2": 0.35, "leaf_fill": 2.0, "roll_deg": 60,
+    "start": 0.15, "parent_start": 0.45, "orientation": "outward",
+    "colors": {"winter": [122, 114, 100], "spring": [97, 112, 68], "summer": [92, 104, 77], "fall": [135, 120, 62]},
+    "leaf_on": {"winter": 0.0, "spring": 0.85, "summer": 1.0, "fall": 0.6},
+    "leaf_on_by_month": [0.0, 0.0, 0.1, 0.7, 1.0, 1.0, 1.0, 1.0, 0.95, 0.6, 0.15, 0.0],
+    "clumps": {"radius_m": 1.0, "cards_per_clump": 7, "shell": 0.3, "flatten": 0.75, "tip_bias": 1.4},
+    "palette": [[0.8, [1, 1, 1]], [0.2, [1.12, 1.12, 0.95]]], "winter_twigs": 0.4, "ao_min": 0.7,
+    "color_var": [0.08, 0.05], "leaf_on_var": 0.5,
+    "berries": {"season": "fall", "rgb": [150, 166, 92], "size_m": 0.045, "density": 0.3}
+  },
+  "deadwood": {"fraction": 0.06, "where": "inner", "levels": [2], "shorten": 0.6, "rgb": [124, 118, 110]},
+  "twigs": {"count": [1, 2], "length": 0.6, "down_deg": 45, "down_var_deg": 18, "curve_var_deg": 20, "segments": 2, "radius_m": 0.012, "taper": 0.6, "zigzag_deg": 10, "fan_deg": 50, "jitter": 0.2},
+  "lod": {
+    "near_tris_budget": 2000, "near_sides": [7, 3, 0], "mid_blobs": 5, "mid_branches": 4, "mid_segments": [3, 2], "mid_blob_scale": 0.85,
+    "close_factor": 2
+  },
+  "targets": {
+    "crown_width_ratio": 1.15, "crown_base_ratio": 0.13, "porosity": 0.34, "foliage_rg": 0.78, "foliage_bg": 0.49,
+    "fall_rg": 1.3, "fall_bg": 0.26,
+    "from": "reference photographs (2026-10-25, measured as in docs/tree-likeness-review.md; bark masked out of the colour): lone tree in Yolo County W/H 1.32 base 0.11 porosity 0.36 (iNaturalist 66771086, Tim Messick, CC BY); lone tree at Petaluma W/H 1.04 base 0.09 porosity 0.34 (iNaturalist 9187468, Sam Kieschnick, CC BY); younger tree at San Jose W/H 0.57 base 0.20 porosity 0.46 (iNaturalist 289147494, Nicholas Wei, CC BY-SA); big tree on the American River Parkway W/H 1.47 base 0.14 porosity 0.26 (iNaturalist 224682899, Matt Lavin, CC BY); W/H and base medians, porosity median of five (with iNaturalist 206961349, 0.22); summer colour mean of the June-August trees (r/g 0.76, 0.89, 0.68; b/g 0.39, 0.58, 0.51); fall colour iNaturalist 457238999 (CC0, Arden-Arcade, November)",
+    "photos": [
+      {"url": "https://www.inaturalist.org/photos/66771086", "license": "CC BY 4.0", "author": "Tim Messick", "shows": "lone broad tree in fresh leaf, Yolo County, April"},
+      {"url": "https://www.inaturalist.org/photos/9187468", "license": "CC BY 4.0", "author": "Sam Kieschnick", "shows": "lone tree by a slough, Petaluma, April"},
+      {"url": "https://www.inaturalist.org/photos/289147494", "license": "CC BY-SA 4.0", "author": "Nicholas Wei", "shows": "younger tree in a grassland, San Jose, June"},
+      {"url": "https://www.inaturalist.org/photos/224682899", "license": "CC BY 4.0", "author": "Matt Lavin", "shows": "big spreading tree on the American River Parkway, August"},
+      {"url": "https://www.inaturalist.org/photos/206961349", "license": "CC BY 4.0", "author": "Alan Rockefeller", "shows": "crown of feathery leaves against the sky, Wildcat Canyon, June"},
+      {"url": "https://www.inaturalist.org/photos/457238999", "license": "CC0", "shows": "yellow fall leaves, Arden-Arcade, November"}
+    ]
+  },
+  "notes": "Northern California black walnut is native to a few riparian stands in the Sacramento Valley and the Bay Area, but it has been planted for a century as orchard rootstock and has spread along rivers, creeks and valley edges into the lower foothills; many local 'black walnuts' are hybrids with English walnut (Paradox) or with other black walnuts, which look much the same from a distance. A tree 10-20 m (file 12-18 m, veteran to 22 m) with a single stout trunk (dbh 0.6-0.9 m, radius_ratio 0.048), a clear bole to about 0.15 of the height in the photos and a broad rounded crown, wider than tall when open-grown (photo W/H 1.0-1.5; 0.57 for a younger tree). Juglans follows Rauh's model (rhythmic monopodial growth), decurrent in the mature crown: trunk.length_ratio 0.4, a fork at the bole top in about half of the trees, long level-1 limbs. Branching is sparse and coarse, with stout twigs, so the bare crown is open and stiff. Bark dark grey-brown to blackish, deeply furrowed into narrow interlacing ridges (bark_pattern furrowed, dark bark_rgb). Leaves pinnately compound, 23-30 cm, 15-19 narrow, finely toothed leaflets: leaf_shape pinnate_compound (new), leaflets [15, 19]; the crown is light and feathery with sky through it (photo porosity 0.22-0.46, median 0.34). Deciduous: leafs out late (April) with the male catkins, green all summer (photo linear r/g 0.78, b/g 0.49), yellow in October (r/g 1.3) and bare by November, earlier than the oaks: leaf_on_by_month (new). Nuts round, 3.5-5 cm, in a thin green husk that blackens, ripening August-October and dropping in fall (foliage.berries, new). Old trees drop limbs and stand dead for years, hence deadwood and a 5% snag from the veteran.",
+  "sources": ["https://ucjeps.berkeley.edu/eflora/ (Juglans hindsii)", "https://www.calflora.org/ (Juglans hindsii)", "https://en.wikipedia.org/wiki/Juglans_hindsii", "https://plants.usda.gov/ (JUHI)", "Reference photographs listed in targets.photos (iNaturalist, CC0 / CC BY / CC BY-SA)"],
+  "authors": ["Wild Earth (agent draft, 2026-10-25); needs local sign-off"],
+  "license": "CC BY-SA 4.0"
+}

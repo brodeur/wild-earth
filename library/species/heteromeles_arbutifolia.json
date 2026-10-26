@@ -1,0 +1,78 @@
+{
+  "id": "heteromeles_arbutifolia",
+  "aliases": ["toyon", "christmas_berry"],
+  "scientific": "Heteromeles arbutifolia",
+  "common": "toyon",
+  "form": "multi_stem_shrub_tree",
+  "architectural_model": "Leeuwenberg (provisional: sympodial, each shoot ends in a flower cluster)",
+  "deciduous": false,
+  "height_m": [2.5, 5],
+  "variants": [
+    {"name": "young", "weight": 0.25, "height_m": [1, 2.5], "trunk_radius": 0.7, "crown_scale": 0.92, "branches": 0.8, "set": {"trunk": {"stems": [2, 4]}}, "note": "a dense, rounded young shrub, leafy to the ground"},
+    {"name": "mature", "weight": 0.5, "seeds": 2, "note": "the file as written: a big rounded shrub of three to six grey stems"},
+    {"name": "old", "weight": 0.25, "height_m": [4, 6], "trunk_radius": 1.25, "crown_scale": 1.06, "gnarl": 1.15, "deadwood": {"fraction": 0.15, "levels": [1, 2], "where": "inner", "rgb": [138, 134, 126]}, "set": {"trunk": {"stems": [3, 5], "stem_spread_deg": 18}}, "note": "a small tree of a few leaning grey trunks at an oak woodland edge, some dead limbs inside"}
+  ],
+  "description": "A big evergreen shrub or small tree with stiff, shiny dark green leaves that have saw-toothed edges, and bunches of bright red berries in winter; 2-6 m tall here. It grows on chaparral slopes and along the edges of the oak woodland, and its berries feed robins, cedar waxwings, mockingbirds and bluebirds through the coldest months, which is why it is also called Christmas berry.",
+  "season_notes": {
+    "winter": "Covered in bright red berries (November to January), the 'Christmas berry'; flocks of robins and cedar waxwings come to eat them.",
+    "spring": "New shoots come in pale and reddish; the old leaves stay on, so it is green all year.",
+    "summer": "Flat bunches of small white flowers open in June, buzzing with bees; then green berries start to swell.",
+    "fall": "The berries turn from green to orange to red as the first rains come."
+  },
+  "status": "agent draft, needs local sign-off",
+  "trunk": {
+    "length_ratio": 0.72, "radius_ratio": 0.024, "taper": 0.75, "flare": 1.35, "bole_ratio": 0.06, "base_size": 0.02,
+    "curve_deg": 14, "curve_var_deg": 14, "segments": 3, "lean_deg": 8, "stems": [3, 6], "stem_spread_deg": 22,
+    "split_prob": 0.15, "split_count": 2, "split_angle_deg": 22, "sinuous_deg": 6, "bark_rgb": [122, 116, 108],
+    "bark_pattern": "smooth_grey", "twig_rgb": [124, 92, 78],
+    "bark": {"tile_m": [0.2, 0.4], "contrast": 0.5, "lichen": 0.35, "relief": 0.4}
+  },
+  "crown": {
+    "shape": "hemispherical",
+    "envelope": {"profile": [[0.0, 0.42], [0.1, 0.56], [0.3, 0.64], [0.5, 0.67], [0.68, 0.6], [0.84, 0.44], [0.95, 0.24], [1.0, 0.07]], "lobes": 5, "lobe_depth": 0.12, "asymmetry": 0.15, "fill": 0.6, "edge": 1.07}
+  },
+  "levels": [
+    {
+      "count": 6, "down_angle_deg": 68, "down_angle_tip_deg": 28, "down_angle_var_deg": 14, "rotation_deg": 140, "rotation_var_deg": 30,
+      "length_ratio": 0.75, "length_var": 0.3, "curve_deg": 14, "curve_var_deg": 16, "tropism": 0.06, "taper": 0.9,
+      "radius_ratio": 0.5, "segments": 2, "zigzag_deg": 6
+    },
+    {
+      "count": 5, "start": 0.25, "down_angle_deg": 40, "down_angle_var_deg": 14, "rotation_deg": 140,
+      "rotation_var_deg": 30, "length_ratio": 0.5, "length_var": 0.3, "curve_deg": 12, "curve_var_deg": 16,
+      "tropism": 0.06, "taper": 1.0, "radius_ratio": 0.5, "segments": 1
+    }
+  ],
+  "foliage": {
+    "type": "broadleaf", "leaf_size_m": 0.08, "leaf_shape": "elliptic_glossy", "cluster_m": 0.75, "density": 18, "cards_per_m2": 3.0,
+    "start": 0.05, "parent_start": 0.25, "orientation": "outward", "roll_deg": 50,
+    "colors": {"winter": [94, 104, 80], "spring": [112, 120, 86], "summer": [100, 108, 83], "fall": [98, 105, 80]},
+    "leaf_on": {"winter": 1.0, "spring": 1.0, "summer": 1.0, "fall": 1.0},
+    "clumps": {"radius_m": 0.45, "cards_per_clump": 7, "shell": 0.3, "flatten": 0.8, "tip_bias": 1.3},
+    "palette": [[0.86, [1, 1, 1]], [0.09, [1.3, 1.2, 0.72]], [0.05, [1.4, 0.92, 0.7]]],
+    "ao_min": 0.76, "color_var": [0.07, 0.03],
+    "flowers": {"season": "summer", "months": [6, 7], "form": "cluster", "rgb": [232, 228, 206], "size_m": 0.12, "density": 0.35, "before_leaves": false},
+    "berries": {"season": ["fall", "winter"], "months": [11, 1], "form": "cluster", "rgb": [214, 40, 32], "size_m": 0.1, "density": 0.8}
+  },
+  "twigs": {"count": [2, 3], "length": 0.6, "down_deg": 45, "down_var_deg": 15, "curve_var_deg": 20, "zigzag_deg": 12, "segments": 1, "radius_m": 0.006, "fan_deg": 55, "jitter": 0.22},
+  "lod": {
+    "near_tris_budget": 1200, "near_sides": [3, 3, 0], "mid_blobs": 4, "mid_branches": 2, "mid_sides": [3, 3], "mid_segments": [2, 1],
+    "mid_cards": 40
+  },
+  "targets": {
+    "crown_width_ratio": 1.1, "crown_base_ratio": 0.1, "porosity": 0.15, "foliage_rg": 0.86, "foliage_bg": 0.58,
+    "from": "reference photographs (2026-10-25), measured by eye on a 10% grid and colour as linear means of foliage pixels, as in docs/tree-likeness-review.md: W/H 1.1 (Foresthill shrub, iNaturalist 668181503), 0.88 (shrub-tree, Hidden Falls, 249604228), 1.5 (rounded shrub with berries, Auburn SRA, 203053), 0.9 (dense shrub, 428160041, cropped at the sides); crown base 0.05-0.2; colour r/g 0.83 / 0.72 / 1.03, b/g 0.59 / 0.66 / 0.54 (668181503, 428160041, 249604228); berries mean sRGB (162, 80, 59) on 243990667, blended with leaves (the berries are brighter scarlet); flowers (212, 212, 180) on 675618534",
+    "photos": [
+      {"url": "https://www.inaturalist.org/photos/249604228", "license": "CC0", "author": "Joshua Zupan (jzupan)", "shows": "shrub-tree form in a clearing, Hidden Falls Regional Park, Placer County, December"},
+      {"url": "https://www.inaturalist.org/photos/203053", "license": "CC BY", "author": "Justin (justin2)", "shows": "rounded shrub with ripe berries, Auburn State Recreation Area, November"},
+      {"url": "https://www.inaturalist.org/photos/668181503", "license": "CC0", "author": "Joshua Zupan (jzupan)", "shows": "shrub on a river bench, Tahoe National Forest near Foresthill, May"},
+      {"url": "https://www.inaturalist.org/photos/428160041", "license": "CC0", "author": "Joshua Zupan (jzupan)", "shows": "dense shrub, Hidden Falls Regional Park, September"},
+      {"url": "https://www.inaturalist.org/photos/243990667", "license": "CC0", "author": "Joshua Zupan (jzupan)", "shows": "shrub heavy with red berries, Hidden Falls Regional Park, November"},
+      {"url": "https://www.inaturalist.org/photos/675618534", "license": "CC0", "author": "Steve Woodward (cnpsstevew)", "shows": "flowering crowns against the sky, Mosquito Ridge Road, June"}
+    ]
+  },
+  "notes": "Toyon is an evergreen shrub or small tree, 2-6 m here (to 10 m on good sites), of chaparral, the edges of oak woodland and canyon slopes from the coast to the Sierra foothills. Form: chosen as 'multi_stem_shrub_tree' (the plain shrub form tops out too low and spreads every stem like a fountain): three to six grey stems from a burl lean out a little (stem_spread 22) and divide into a dense, rounded, slightly lobed dome, foliage nearly to the ground on open-grown plants (crown base about 0.1), a short visible trunk on older ones. levels[0].count is per stem, as for the shrubs: the generator grows this form like a shrub (every stem spreads from the base and carries its own limbs) with tree LOD defaults. Old plants in the woodland become small trees with a few leaning trunks (the 'old' class). Bark smooth and grey, often lichen-spotted; young twigs red-brown. Leaves 5-10 cm, oblong-elliptic, thick and leathery, sharply toothed, dark glossy green above and paler beneath: leaf_shape elliptic_glossy; the palette holds a few yellowing and reddish old leaves (toyon sheds old leaves in summer). Flowers: flat-topped clusters 8-15 cm across of small white five-petalled flowers at the branch ends in June-July. Berries (pomes) 5-10 mm in large clusters, green through the summer, red from November, often on the plant into January; birds strip them through the winter. Resprouts from the burl after fire. Architectural model provisional: shoots end in inflorescences and growth continues from buds below them, which fits Leeuwenberg.",
+  "sources": ["https://ucjeps.berkeley.edu/eflora/ (Heteromeles arbutifolia)", "https://www.calflora.org/ (Heteromeles arbutifolia)", "https://calscape.org/ (Heteromeles arbutifolia)", "https://en.wikipedia.org/wiki/Heteromeles", "Reference photographs listed in targets.photos (iNaturalist, Placer County, CC0 and CC BY; iNaturalist gives the CC BY version on each photo page)"],
+  "authors": ["Wild Earth (agent draft, 2026-10-25); needs local sign-off"],
+  "license": "CC BY-SA 4.0"
+}

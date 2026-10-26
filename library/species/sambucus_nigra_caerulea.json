@@ -1,0 +1,80 @@
+{
+  "id": "sambucus_nigra_caerulea",
+  "aliases": ["elderberry", "blue_elderberry", "sambucus_mexicana", "sambucus_cerulea"],
+  "scientific": "Sambucus nigra ssp. caerulea",
+  "common": "blue elderberry",
+  "form": "multi_stem_shrub_tree",
+  "architectural_model": "Champagnat (provisional: erect shoots that arch over under their own weight, new erect shoots from the arch and the base)",
+  "deciduous": true,
+  "height_m": [3, 6],
+  "variants": [
+    {"name": "young", "weight": 0.25, "height_m": [1.5, 3], "trunk_radius": 0.7, "crown_scale": 0.75, "branches": 0.75, "set": {"trunk": {"stems": [3, 5], "stem_spread_deg": 16}}, "note": "a few fast, upright green stems"},
+    {"name": "mature", "weight": 0.5, "seeds": 2, "note": "the file as written: a broad clump of arching stems"},
+    {"name": "old", "weight": 0.25, "height_m": [5, 7], "trunk_radius": 1.3, "crown_scale": 1.1, "gnarl": 1.2, "deadwood": {"fraction": 0.25, "levels": [1, 2], "where": "inner", "rgb": [140, 134, 124]}, "set": {"trunk": {"stems": [5, 9]}}, "note": "a big old clump with thick corky trunks and many grey dead canes"}
+  ],
+  "description": "A big, many-stemmed shrub or small tree with arching branches, leaves made of five to nine long, toothed leaflets, flat plates of cream flowers in late spring and heavy bunches of powder-blue berries in late summer; 3-6 m tall here. It grows along creeks, in oak woodland openings and on canyon slopes, its berries feed many birds, and in the foothills and the valley below it is the only home of the valley elderberry longhorn beetle, a threatened insect whose larvae live inside the stems.",
+  "season_notes": {
+    "winter": "Bare, pale grey-brown stems; at low elevations a few leaves can stay on, and new shoots start in February.",
+    "spring": "Fast new growth and, from late April, flat cream flower plates as wide as a dinner plate.",
+    "summer": "Heavy bunches of small berries ripen dusty powder-blue (July to September); birds and bears eat them. In a dry summer some leaves yellow early.",
+    "fall": "Leaves turn yellow and drop; the stems that fruited may die back."
+  },
+  "status": "agent draft, needs local sign-off",
+  "trunk": {
+    "length_ratio": 0.8, "radius_ratio": 0.025, "taper": 0.75, "flare": 1.3, "bole_ratio": 0.06, "base_size": 0.14,
+    "curve_deg": 16, "curve_var_deg": 14, "segments": 3, "lean_deg": 10, "stems": [5, 10], "stem_spread_deg": 32,
+    "split_prob": 0.0, "split_count": 2, "split_angle_deg": 20, "sinuous_deg": 5, "bark_rgb": [124, 114, 100],
+    "bark_pattern": "furrowed", "twig_rgb": [124, 124, 96],
+    "bark": {"tile_m": [0.2, 0.45], "ridge_m": 0.012, "block_m": 0.035, "fissure": 0.35, "contrast": 0.55, "lichen": 0.2, "relief": 0.6}
+  },
+  "crown": {
+    "shape": "hemispherical",
+    "envelope": {"profile": [[0.0, 0.5], [0.12, 0.74], [0.3, 0.92], [0.5, 0.97], [0.68, 0.9], [0.84, 0.67], [0.95, 0.36], [1.0, 0.11]], "lobes": 6, "lobe_depth": 0.15, "asymmetry": 0.18, "fill": 1.0, "edge": 1.1}
+  },
+  "levels": [
+    {
+      "count": 6, "down_angle_deg": 62, "down_angle_tip_deg": 32, "down_angle_var_deg": 14, "rotation_deg": 140, "rotation_var_deg": 30,
+      "length_ratio": 0.9, "length_var": 0.3, "curve_deg": 10, "curve_var_deg": 14, "tropism": 0.02, "taper": 0.9,
+      "radius_ratio": 0.5, "segments": 2, "droop_deg": 8
+    },
+    {
+      "count": 5, "start": 0.3, "down_angle_deg": 45, "down_angle_var_deg": 12, "rotation_deg": -90,
+      "rotation_var_deg": 20, "length_ratio": 0.45, "length_var": 0.3, "curve_deg": 8, "curve_var_deg": 14,
+      "tropism": 0.0, "taper": 1.0, "radius_ratio": 0.5, "segments": 1
+    }
+  ],
+  "foliage": {
+    "type": "broadleaf", "leaf_size_m": 0.22, "leaflet_m": 0.09, "leaf_shape": "pinnate_compound", "cluster_m": 0.95, "density": 14, "cards_per_m2": 1.2,
+    "start": 0.15, "parent_start": 0.35, "orientation": "outward", "roll_deg": 60,
+    "colors": {"winter": [126, 114, 100], "spring": [124, 145, 84], "summer": [113, 122, 92], "fall": [150, 140, 90]},
+    "leaf_on": {"winter": 0.05, "spring": 1.0, "summer": 0.9, "fall": 0.5},
+    "leaf_on_by_month": [0.05, 0.15, 0.6, 0.95, 1.0, 1.0, 0.95, 0.9, 0.8, 0.6, 0.3, 0.1],
+    "clumps": {"radius_m": 0.55, "cards_per_clump": 7, "shell": 0.25, "flatten": 0.85, "tip_bias": 1.2},
+    "palette": [[0.85, [1, 1, 1]], [0.1, [1.08, 1.06, 1.14]], [0.05, [1.3, 1.22, 0.75]]],
+    "winter_twigs": 0.45, "ao_min": 0.7, "color_var": [0.08, 0.05], "leaf_on_var": 0.5,
+    "flowers": {"season": "spring", "months": [4, 6], "form": "cluster", "rgb": [232, 228, 192], "size_m": 0.2, "density": 0.3, "before_leaves": false},
+    "berries": {"season": "summer", "months": [7, 9], "form": "cluster", "rgb": [142, 154, 178], "size_m": 0.15, "density": 0.4}
+  },
+  "twigs": {"count": [2, 3], "length": 0.6, "down_deg": 40, "down_var_deg": 14, "curve_var_deg": 16, "segments": 1, "radius_m": 0.008, "droop_deg": 8, "fan_deg": 45, "jitter": 0.2},
+  "lod": {
+    "near_tris_budget": 1300, "near_sides": [4, 3, 0], "mid_blobs": 4, "mid_branches": 3, "mid_sides": [3, 3], "mid_segments": [2, 1],
+    "mid_cards": 48
+  },
+  "targets": {
+    "crown_width_ratio": 1.4, "crown_base_ratio": 0.08, "porosity": 0.22, "foliage_rg": 0.86, "foliage_bg": 0.56,
+    "fall_rg": 1.15, "fall_bg": 0.5,
+    "from": "reference photographs (2026-10-25), measured by eye on a 10% grid and colour as linear means of foliage pixels, as in docs/tree-likeness-review.md: W/H 1.55 (lone mature shrub, Wikimedia Commons 'Sambucus cerulea 8154'), at least 1.7 (mature shrub in bloom, Commons 'Blue Elderberry in Bloom', cropped), about 1.5 (Kings Canyon, Commons kz14), 0.75 (young upright clump in bloom, Newcastle, iNaturalist 282650159); crown base 0.05-0.1; colour r/g 0.84 / 0.89 / 0.86 / 0.79 / 0.94, b/g 0.48 / 0.81 / 0.43 / 0.60 / 0.63 (the same Commons photos and iNaturalist 282650159, 4326657); berries sRGB (153, 157, 175) on iNaturalist 226286989 (Ice House Road, El Dorado County); flowers (203, 212, 185) blended with leaves; fall colour is rough (no fall photograph measured)",
+    "photos": [
+      {"url": "https://commons.wikimedia.org/wiki/File:Sambucus_cerulea_8154.jpg", "license": "CC BY-SA 4.0", "author": "Walter Siegmund", "shows": "lone mature shrub in flower, clean outline"},
+      {"url": "https://commons.wikimedia.org/wiki/File:Blue_Elderberry_in_Bloom.jpg", "license": "CC0", "author": "Z3lvs", "shows": "broad mature shrub in bloom, Iodine Springs Reserve, Wildomar"},
+      {"url": "https://commons.wikimedia.org/wiki/File:Sambucus_cerulea_kz14.jpg", "license": "CC BY-SA 4.0", "author": "Krzysztof Ziarnek, Kenraiz", "shows": "big clump on a burned Sierra slope, Kings Canyon"},
+      {"url": "https://www.inaturalist.org/photos/282650159", "license": "CC BY", "author": "Patrick Wagner (patrickjwagner)", "shows": "young upright clump in flower, Newcastle, Placer County, May"},
+      {"url": "https://www.inaturalist.org/photos/4326657", "license": "CC0", "author": "Erica Krimmel (ekrimmel)", "shows": "arching shoots in flower, North Fork American River, June"},
+      {"url": "https://www.inaturalist.org/photos/226286989", "license": "CC BY", "author": "Mary K. Hanson (simpylmare55)", "shows": "powder-blue berries, Ice House Road, El Dorado County, August"}
+    ]
+  },
+  "notes": "Blue elderberry (Sambucus nigra ssp. caerulea; in older floras Sambucus mexicana or S. cerulea) is a deciduous shrub or small tree, 2-8 m, of creek banks, oak woodland openings, fence rows and canyon slopes from the valley into the conifer belt. Form: chosen as 'multi_stem_shrub_tree' (3-6 m, too tall for the plain shrub form): five to ten stems from the base, the young ones fast, straight and pithy, the older ones leaning and arching outward under their own weight (stem_spread 32, level-1 droop), into a broad, irregular dome wider than tall (W/H about 1.4 for a mature open-grown clump, 0.75 for young upright ones), leafy nearly to the ground. levels[0].count is per stem, as for the shrubs: the generator grows this form like a shrub (every stem spreads from the base and carries its own limbs) with tree LOD defaults. Bark grey-brown, corky and furrowed on old trunks; young stems smooth, green-brown. Leaves opposite, pinnately compound, 15-30 cm, five to nine lanceolate, saw-toothed leaflets 5-15 cm: leaf_shape pinnate_compound, leaf_size_m 0.22 for the whole leaf, leaflet_m 0.09. Leaves yellow-green to slightly blue-green (the palette lightens 10% for the bloom on the leaflets). Flowers in flat-topped clusters 10-30 cm across, cream, April-June. Berries 5-6 mm, blue-black under a dense white bloom so they look powder-blue, in heavy clusters July-September. Deciduous: often drops leaves early in summer drought, bare December-February (leaf_on_by_month), with a few leaves staying on at low elevation in mild winters. Stems often die back after fruiting and old clumps carry many dead canes (the 'old' class). Host of the valley elderberry longhorn beetle (federally threatened), which lives only in elderberry stems in the Central Valley and the foothills below about 900 m. Architectural model provisional.",
+  "sources": ["https://www.fs.usda.gov/database/feis/plants/shrub/samnigc/all.html", "https://ucjeps.berkeley.edu/eflora/ (Sambucus nigra subsp. caerulea)", "https://www.calflora.org/ (Sambucus nigra ssp. caerulea)", "https://en.wikipedia.org/wiki/Sambucus_cerulea", "Reference photographs listed in targets.photos (iNaturalist, El Dorado and Placer counties, and Wikimedia Commons; CC0, CC BY, CC BY-SA)"],
+  "authors": ["Wild Earth (agent draft, 2026-10-25); needs local sign-off"],
+  "license": "CC BY-SA 4.0"
+}

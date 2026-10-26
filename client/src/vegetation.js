@@ -1,6 +1,6 @@
 import * as THREE from 'three';
 import { SPECIES, SPECIES_IDS, mulberry32, resolveSpecies } from './trees.js';
-import { buildTree, canopyMaterial, trunkMaterial, applySeason, chainShader, SLOTS, variantSlots } from './treegen.js';
+import { buildTree, canopyMaterial, trunkMaterial, applySeason, chainShader, SLOTS, variantSlots, seasonMonth } from './treegen.js';
 import { SEASON_LOOK } from './season.js';
 import { rockKeep } from './tilepackage.js';
 
@@ -20,6 +20,7 @@ export const SHRUB_MIX = { 4: { chamise: 0.6, manzanita: 0.4 }, 1: { manzanita: 
 // maps the slots to the species' age classes and snag in proportion to their weights (12 slots: shares in
 // twelfths). Slots of the same tree share one set of meshes; the far impostors bake every slot.
 export const VARIANTS = SLOTS;
+const OAK_SHORT = { quercus_douglasii: 'blue_oak', quercus_wislizeni: 'live_oak' };
 const CAP = 24000;
 export const variantSeed = (id, v) => variantSlots(id, VARIANTS)[v].seed;   // canonical species id, slot 0..VARIANTS-1
 // Hand-over to the far impostors (impostors.js), per tree and by its distance to the eye (the bird,
@@ -62,16 +63,32 @@ const OAKS_ONLY = { blue_oak: 1 };
 const oakMixes = new Map();   // savanna rows -> their oak weights, renormalised
 const oakMix = row => {
   let m = oakMixes.get(row); if (m) return m;
-  const b = row.weights.blue_oak, l = row.weights.live_oak;
+  const b = row.oaks.blue, l = row.oaks.live;
   m = l ? { blue_oak: b / (b + l), live_oak: l / (b + l) } : OAKS_ONLY; oakMixes.set(row, m); return m;
+};
+// A row may name a species the library does not have (a tile built against a newer library): it is left
+// out and the others renormalised, with a warning. A row whose species are all known is used as it is, so
+// its draws are unchanged.
+const knownMixes = new WeakMap();
+const knownMix = mix => {
+  let m = knownMixes.get(mix); if (m) return m;
+  const miss = Object.keys(mix).filter(k => !resolveSpecies(k));
+  if (!miss.length) m = mix;
+  else {
+    console.warn(`species mix: ${miss.join(', ')} not in the species library; left out of the mix`);
+    const keep = Object.entries(mix).filter(([k]) => resolveSpecies(k)), tot = keep.reduce((s, [, w]) => s + w, 0);
+    m = tot > 0 ? Object.fromEntries(keep.map(([k, w]) => [k, w / tot])) : null;
+  }
+  knownMixes.set(mix, m); return m;
 };
 export function cellPlan(tile, i, j) {
   const cls = tile.habitat.channel(i, j, 0); if (!MIX[cls] && !SHRUB_MIX[cls]) return null;
   const can = tile.canopy, tree = can.channel(i, j, 0) / 100, shrub = can.channel(i, j, 1) / 100;
   const row = tile.speciesMix ? tile.speciesMix.at(i, j) : null;
   const clampD = v => Math.min(DENSITY[1], Math.max(DENSITY[0], v));
-  const td = row ? clampD(row.treeDensity) : 1, sd = row ? clampD(row.shrubDensity) : 1;
-  const treeMix = row && row.treeSum ? row.trees : MIX[cls], shrubMix = row && row.shrubSum ? row.shrubs : SHRUB_MIX[cls];
+  const dens = row ? tile.speciesMix.density(i, j, row) : null;   // per cell (format 2) or the row's
+  const td = dens ? clampD(dens[0]) : 1, sd = dens ? clampD(dens[1]) : 1;
+  const treeMix = (row && row.treeSum && knownMix(row.trees)) || MIX[cls], shrubMix = (row && row.shrubSum && knownMix(row.shrubs)) || SHRUB_MIX[cls];
   const rnd = mulberry32(hash(i, j, 7)), t = tree * td;
   let nTrees = MIX[cls] ? Math.round(t * (cls === 5 ? 3 : 11) + (rnd() < (t * 11) % 1 ? 1 : 0)) : 0;
   const nShrubs = SHRUB_MIX[cls] ? Math.round(shrub * sd * (cls === 4 ? 18 : 6)) : 0;
@@ -161,6 +178,19 @@ export function placePlant(tile, i, j, k, name, px, pn, isTree) {
   placed.x = px; placed.n = pn; return placed;
 }
 
+// The species (canonical ids) a tile can place: every species its mix rows draw, plus the class
+// mixes' (cells without a row). Vegetation builds meshes and the far impostors bake trees only for these,
+// so a library of any size costs a tile only what it grows.
+export function tileSpecies(tile) {
+  const out = new Set();
+  for (const m of [...Object.values(MIX), ...Object.values(SHRUB_MIX)]) for (const k of Object.keys(m)) out.add(resolveSpecies(k));
+  for (const k of tile.speciesMix?.species || []) { const id = resolveSpecies(k); if (id) out.add(id); }
+  return SPECIES_IDS.filter(id => out.has(id));   // library order
+}
+// The month (1 to 12.99) a season stands for in the client: today's date when the season is today's,
+// else the season's middle month (treegen seasonMonth), for leaf_on_by_month, flowers and berries.
+export const monthFor = season => seasonMonth(season);
+
 export function pick(mix, r) { let acc = 0; for (const [k, w] of Object.entries(mix)) { acc += w; if (r <= acc) return k; } return Object.keys(mix)[0]; }
 export function hash(i, j, salt) { let h = (i * 73856093) ^ (j * 19349663) ^ (salt * 83492791); return h >>> 0; }
 
@@ -225,7 +255,8 @@ export class Vegetation {
     this.meshes = {};      // species id -> [{ near: {trunk, canopy, cap, n, ids}, mid: {...}, close: {canopy, cap, n}, stem, height, tris, cls }], one per distinct tree
     this.slots = {};       // species id -> VARIANTS entries of this.meshes (a class with several slots repeats its entries)
     this.stats = {};
-    for (const id of SPECIES_IDS) {
+    this.ids = tileSpecies(tile);   // the species this tile places (library order)
+    for (const id of this.ids) {
       const spec = SPECIES[id];
       this.canopyMat[id] = { near: lodPatch(canopyMaterial(spec, 'near', patch), this.lodU, 'near', true, true), mid: lodPatch(canopyMaterial(spec, 'mid', patch), this.lodU, 'mid', true),
         close: lodPatch(canopyMaterial(spec, 'close', patch), this.lodU, 'close', true) };
@@ -268,10 +299,10 @@ export class Vegetation {
     this.tmp = new THREE.Object3D();
   }
   setLook(look) {
-    const season = Object.keys(SEASON_LOOK).find(k => SEASON_LOOK[k] === look) || 'summer';
+    const season = Object.keys(SEASON_LOOK).find(k => SEASON_LOOK[k] === look) || 'summer', month = monthFor(season);
     this.leafOn = {};
-    for (const id of SPECIES_IDS) for (const lod of ['near', 'mid', 'close']) {
-      const on = applySeason(this.canopyMat[id][lod], SPECIES[id], season);
+    for (const id of this.ids) for (const lod of ['near', 'mid', 'close']) {
+      const on = applySeason(this.canopyMat[id][lod], SPECIES[id], season, month);
       this.leafOn[id] = on;
       for (const e of this.meshes[id]) e[lod].canopy.visible = on > 0 && (lod !== 'close' || e.close.n > 0);   // a bare crown draws nothing
     }
@@ -300,7 +331,7 @@ export class Vegetation {
       for (let k = 0; k < nTrees + nShrubs; k++) {
         const isTree = k < nTrees;
         const name = pick(isTree ? treeMix : shrubMix, rnd());
-        const variants = this.slots[resolveSpecies(name)], e = variants[Math.floor(rnd() * variants.length)], m = e.mid;   // slot draw as before: VARIANTS slots, weighted by class
+        const sid = resolveSpecies(name), variants = this.slots[sid], e = variants[Math.floor(rnd() * variants.length)], m = e.mid;   // slot draw as before: VARIANTS slots, weighted by class
         const px = (i + rnd()) * res, pn = size - (j + rnd()) * res;
         const s = 0.75 + rnd() * 0.5, rot = rnd() * Math.PI * 2;   // all draws before any skip, so neighbours keep their place
         if (m.n >= m.cap) continue;   // after the draws: a full model slot must not shift the rest of the cell (impostors use the same sequence)
@@ -312,7 +343,8 @@ export class Vegetation {
         this.tmp.position.set(ax, heights.at(ax, an) - 0.3, -an);
         this.tmp.rotation.set(0, rot, 0); this.tmp.scale.setScalar(s); this.tmp.updateMatrix();
         m.trunk.setMatrixAt(m.n, this.tmp.matrix); m.ids[m.n] = hash(i, j, k + 101); m.n++; total++;
-        if (name === 'blue_oak' || name === 'live_oak') oaks.push({ id: `${i},${j},${k}`, x: ax, z: -an, y: this.tmp.position.y + 0.3, scale: s, species: name, rot, stem: e.stem, height: e.height, cls: e.cls, snag: e.snag });
+        const oak = OAK_SHORT[sid];   // the acorn game's oaks, by their short names as before
+        if (oak) oaks.push({ id: `${i},${j},${k}`, x: ax, z: -an, y: this.tmp.position.y + 0.3, scale: s, species: oak, rot, stem: e.stem, height: e.height, cls: e.cls, snag: e.snag });
       }
     }
     for (const arr of Object.values(this.meshes)) for (const e of arr) {

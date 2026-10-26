@@ -1,0 +1,81 @@
+{
+  "id": "calocedrus_decurrens",
+  "aliases": ["incense_cedar"],
+  "scientific": "Calocedrus decurrens",
+  "common": "incense cedar",
+  "form": "tree",
+  "architectural_model": "Rauh (provisional)",
+  "deciduous": false,
+  "height_m": [20, 36],
+  "variants": [
+    {"name": "young", "weight": 0.3, "height_m": [4, 12], "trunk_radius": 0.85, "branches": 0.8, "set": {"trunk": {"base_size": 0.04, "bole_ratio": 0.04, "flare": 1.25, "bark_rgb": [132, 92, 74]}, "crown": {"envelope": {"profile": [[0.04, 0.24], [0.2, 0.24], [0.4, 0.21], [0.6, 0.16], [0.8, 0.09], [1.0, 0.02]], "lobe_depth": 0.06, "asymmetry": 0.05}}, "levels": [{"droop_deg": 18, "upturn_deg": 30}]}, "note": "a dense, neat cone of bright green sprays with branches to the ground"},
+    {"name": "mature", "weight": 0.5, "seeds": 2, "note": "the file as written"},
+    {"name": "old-growth", "weight": 0.15, "height_m": [32, 45], "trunk_radius": 1.4, "branches": 0.75, "gnarl": 1.3, "deadwood": {"fraction": 0.25, "levels": [1], "where": "lower", "shorten": 0.5, "rgb": [128, 112, 100]}, "set": {"trunk": {"base_size": 0.36, "bole_ratio": 0.34, "flare": 1.7, "stubs": {"count": [8, 16]}}, "crown": {"envelope": {"profile": [[0.36, 0.17], [0.5, 0.2], [0.64, 0.19], [0.78, 0.15], [0.9, 0.1], [1.0, 0.04]], "lobes": 4, "lobe_depth": 0.22, "asymmetry": 0.22}}}, "note": "a huge swollen base, a long fluted cinnamon trunk and an open, ragged crown of big drooping limbs, often with a dead top"}
+  ],
+  "snag": {"fraction": 0.05, "from": "mature", "height_m": [16, 30], "limbs": 0.35, "twigs": 0, "levels": 1, "broken_top": [0.6, 0.9], "shorten": [0.3, 0.8], "rgb": [150, 128, 112]},
+  "description": "A tall evergreen 20-40 m high with a cinnamon-red, deeply grooved trunk whose bark peels in long soft strips, and flat, fan-shaped sprays of tiny scale leaves that smell like a pencil when crushed. It grows with ponderosa pine and black oak from the upper foothills into the mountains, comes down shady canyons into the oak woodland, and is young and cone-shaped for a century before turning ragged and open in old age.",
+  "season_notes": {
+    "winter": "Evergreen; the branch tips turn golden with tiny pollen cones that shed yellow pollen from December to February.",
+    "spring": "New growth makes the flat sprays bright yellow-green; this year's seed cones start as small green buds.",
+    "summer": "Dense green sprays in the crown and the small cones grow to full size, about the size of a fingertip.",
+    "fall": "The small seed cones turn brown and split into three parts like a duck's open beak, dropping winged seeds (September-October)."
+  },
+  "status": "agent draft, needs local sign-off",
+  "trunk": {
+    "length_ratio": 1.0, "radius_ratio": 0.035, "taper": 1.0, "flare": 1.5, "bole_ratio": 0.08, "base_size": 0.09,
+    "curve_deg": 4, "curve_var_deg": 5, "segments": 7, "lean_deg": 3, "stems": [1, 1], "stem_spread_deg": 0,
+    "split_prob": 0.06, "split_count": 2, "split_angle_deg": 10, "split_height": 0.7, "bark_rgb": [146, 98, 76],
+    "bark_pattern": "fibrous", "twig_rgb": [112, 84, 66],
+    "stubs": {"count": [2, 6], "length_m": 0.4, "radius_ratio": 0.1},
+    "bark": {"tile_m": [0.5, 1.2], "ridge_m": 0.07, "block_m": 0.6, "fissure": 0.7, "contrast": 1.0, "relief": 1.4}
+  },
+  "crown": {
+    "shape": "conical",
+    "envelope": {"profile": [[0.13, 0.2], [0.25, 0.22], [0.4, 0.21], [0.55, 0.19], [0.7, 0.15], [0.85, 0.09], [1.0, 0.02]], "lobes": 4, "lobe_depth": 0.12, "asymmetry": 0.12, "fill": 0.3, "edge": 1.1}
+  },
+  "levels": [
+    {
+      "count": 36, "whorl": 0, "down_angle_deg": 84, "down_angle_tip_deg": 50, "down_angle_var_deg": 12,
+      "rotation_deg": 140, "rotation_var_deg": 25, "length_ratio": 0.27, "length_var": 0.25, "curve_deg": 0,
+      "curve_var_deg": 14, "tropism": 0.02, "droop_deg": 26, "upturn_deg": 34, "taper": 0.95, "radius_ratio": 0.3,
+      "segments": 3
+    },
+    {
+      "count": 9, "start": 0.2, "down_angle_deg": 50, "down_angle_var_deg": 14, "rotation_deg": -70,
+      "rotation_var_deg": 20, "length_ratio": 0.35, "length_var": 0.3, "curve_deg": 6, "curve_var_deg": 10,
+      "tropism": 0.05, "taper": 1.0, "radius_ratio": 0.5, "segments": 1
+    }
+  ],
+  "foliage": {
+    "type": "scale", "leaf_size_m": 0.012, "leaf_shape": "needle_scale", "cluster_m": 1.6, "density": 12, "leaf_fill": 5.0, "start": 0.2,
+    "parent_start": 0.45, "orientation": "along", "needle_planes": 1, "tuft_spread_deg": 30, "tuft_up": 0.25, "droop": 0.2,
+    "needle_normal": 0.45, "needle_wrap": 0.4, "translucency": 2.0, "needle_scatter": 0.12,
+    "colors": {"winter": [106, 106, 70], "spring": [112, 120, 76], "summer": [105, 110, 74], "fall": [104, 108, 73]},
+    "leaf_on": {"winter": 1.0, "spring": 1.0, "summer": 1.0, "fall": 1.0}, "twist_deg": 20,
+    "clumps": {"radius_m": 0.8, "cards_per_clump": 4, "shell": 0.1, "flatten": 0.6, "tip_bias": 1.4},
+    "palette": [[0.85, [1, 1, 1]], [0.15, [1.15, 1.12, 0.8]]], "ao_min": 0.7,
+    "color_var": [0.07, 0.03]
+  },
+  "deadwood": {"fraction": 0.12, "where": "lower", "levels": [1], "shorten": 0.6, "rgb": [128, 112, 100]},
+  "twigs": {"count": [1, 2], "length": 0.5, "down_deg": 40, "down_var_deg": 12, "tropism": 0.05, "segments": 1, "radius_m": 0.008, "taper": 0.5, "fan_deg": 30, "jitter": 0.08},
+  "lod": {
+    "near_tris_budget": 2200, "near_sides": [7, 3, 0], "mid_blobs": 5, "mid_branches": 2, "mid_blob_scale": 0.8,
+    "close_factor": 2, "mid_planes": 1, "mid_cards": 32
+  },
+  "targets": {
+    "crown_width_ratio": 0.42, "crown_base_ratio": 0.14, "porosity": 0.15, "foliage_rg": 0.92, "foliage_bg": 0.42,
+    "from": "reference photographs (2026-10-25, measured as in docs/tree-likeness-review.md, colour from the eroded crown mask): Placer County tree W/H 0.69 base 0.04 porosity 0.16 (iNaturalist 590095975, Siddarth Machado, CC BY; colour left out, low golden sun); Long Barn W/H 0.44 base 0.14 porosity 0.05 r/g 0.96 b/g 0.35 (iNaturalist 614047240, Christopher Foott, CC0); Yosemite W/H 0.40 base 0.13 porosity 0.26 r/g 0.77 b/g 0.66 (Commons, Victor R. Ruiz, CC BY-SA 2.0); W/H 0.49 base 0.12 porosity 0.09 r/g 0.92 b/g 0.42 (Commons kz05, Krzysztof Ziarnek, CC BY-SA 4.0); Timbered Crater W/H 0.34 base 0.15 porosity 0.28 r/g 0.78 b/g 0.42 (Commons, JOE BLOWE, CC BY-SA 2.0); Big Bear Lake old tree W/H 0.40 base 0.36 porosity 0.14 r/g 1.08 b/g 0.53 (Commons, Ewen Roberts, CC BY 2.0). All values are medians",
+    "photos": [
+      {"url": "https://www.inaturalist.org/photos/590095975", "license": "CC BY 4.0", "author": "Siddarth Machado", "shows": "young-mature open tree in Placer County, October"},
+      {"url": "https://www.inaturalist.org/photos/614047240", "license": "CC0", "author": "Christopher Foott", "shows": "dense mature cone against the sky, Long Barn (Tuolumne County)"},
+      {"url": "https://commons.wikimedia.org/wiki/File:Calocedrus_decurrens_Yosemite_NP.jpg", "license": "CC BY-SA 2.0", "author": "Victor R. Ruiz", "shows": "tall mature tree in Yosemite Valley, double leader"},
+      {"url": "https://commons.wikimedia.org/wiki/File:Calocedrus_decurrens_kz05.jpg", "license": "CC BY-SA 4.0", "author": "Krzysztof Ziarnek, Kenraiz", "shows": "mature conical crown, drooping lower limbs"},
+      {"url": "https://commons.wikimedia.org/wiki/File:Calocedrus_decurrens_on_Timbered_Crater_-_Flickr_-_theforestprimeval.jpg", "license": "CC BY-SA 2.0", "author": "JOE BLOWE (Flickr theforestprimeval)", "shows": "old open tree with cinnamon trunk and ragged crown"},
+      {"url": "https://commons.wikimedia.org/wiki/File:Calocedrus_decurrens_Big_Bear_Lake_1.jpg", "license": "CC BY 2.0", "author": "Ewen Roberts", "shows": "old tree with a long clear trunk and irregular crown"}
+    ]
+  },
+  "notes": "Incense cedar grows 20-57 m (FEIS), here 20-36 m in the file with an old-growth class to 45 m, dbh to 1.2 m (radius_ratio 0.035). In the central Sierra it is a member of the mixed conifer forest from about 600 m up, and at 300-900 m around Placerville it comes down north slopes and canyons into the oak woodland with black oak, canyon live oak, ponderosa and Douglas-fir. Excurrent: the leader runs to the top (length_ratio 1, taper 1), branches spiral rather than whorl (whorl 0, 44 limbs). Provisionally Rauh's model like the other conifers here: rhythmic orthotropic trunk with branches that bend and carry flat, plagiotropic sprays. Young trees are dense, symmetrical cones with branches to the ground (young class, 30%); mature trees keep a narrow, slightly irregular cone (photo W/H 0.34-0.49 for most, 0.69 for a broad open-grown tree in Placer County; base 0.12-0.15); old trees have a swollen base, a fast-tapering trunk and an open, ragged crown, often with a dead top (old-growth class, and the snag's broken top). Limbs angle down and turn up at the tips (droop_deg 26, upturn_deg 34), most strongly low in the crown. Bark the signature: cinnamon to red-brown, thick (5-20 cm), fibrous, in long ridges that shred into soft strips: bark_pattern fibrous, bark_rgb about (146, 98, 76); young stems smoother and greyer-brown. Foliage: scale leaves 3-14 mm pressed flat in four ranks along the twig, the twigs branching in one plane into flat fan-shaped sprays held vertically, yellow-green and glossy: type scale, leaf_shape needle_scale, leaf_size_m 0.012 is one scale leaf and a spray (frond) is about 10-20 cm long; cards are held along the bearing shoot with a single plane (needle_planes 1) and little twist, so the sprays stay flat and roughly vertical. Level-2 rotation -70 alternates the spray-bearing branchlets left and right in one plane. Cones 2-4 cm, hang at the tips, open in fall into three parts like a duck's bill; tiny pollen cones gild the branch tips in winter (not drawn; winter colour slightly golden instead). Needle light (needle_normal, needle_wrap, translucency, needle_scatter) set a little below ponderosa: the sprays are thicker and more opaque than pine needles. Not an oak: no acorns.",
+  "sources": ["https://www.fs.usda.gov/database/feis/plants/tree/caldec/all.html", "https://ucjeps.berkeley.edu/eflora/ (Calocedrus decurrens)", "https://en.wikipedia.org/wiki/Calocedrus_decurrens", "Powers and Oliver 1990, Silvics of North America vol. 1, Libocedrus decurrens", "Reference photographs listed in targets.photos (iNaturalist and Wikimedia Commons, CC licences)"],
+  "authors": ["Wild Earth (agent draft, 2026-10-25); needs local sign-off"],
+  "license": "CC BY-SA 4.0"
+}

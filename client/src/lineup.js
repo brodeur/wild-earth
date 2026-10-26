@@ -1,16 +1,26 @@
 import * as THREE from 'three';
 import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
-import { LIBRARY, LIBRARY_SOURCE, LIBRARY_RAW, BUILTIN, buildTree, canopyMaterial, trunkMaterial, applySeason, thinMidCanopy, ageClasses, SLOTS } from './treegen.js';
+import { LIBRARY, LIBRARY_SOURCE, LIBRARY_RAW, BUILTIN, buildTree, canopyMaterial, trunkMaterial, applySeason, thinMidCanopy, ageClasses, SLOTS, addSpecies, SEASON_MONTH } from './treegen.js';
 
 // Review page for the species library (docs/species-library.md): every species, three seeds,
 // near or mid LOD, any season, against 5 m scale poles. URL: ?season=winter&mid=1&focus=<id>&shadows=0&ui=0
 // ?classes=1 ("all variants"): one tree per age class plus the snag, labelled with class, height and share.
 // ?close=1 (or the "close LOD" box): the close tier, the near trunk with the close twigs and canopy.
+// Every species in library/species/index.json is on the page. ?add=<id>,<id> also loads files not (yet)
+// in the index (library/species/<id>.json: a draft, or the generator's _test_ files); ?only=<id>,<id> shows
+// just those. ?month=1..12 (or the Month menu) picks the month within the season, for species with
+// foliage.leaf_on_by_month or month-bound flowers and berries; default the season's middle month.
 
 const $ = id => document.getElementById(id);
 const params = new URLSearchParams(location.search);
 const ORDER = ['pinus_ponderosa', 'pinus_sabiniana', 'quercus_wislizeni', 'quercus_douglasii', 'arctostaphylos_viscida', 'adenostoma_fasciculatum'];
-const ids = ORDER.filter(id => LIBRARY[id]).concat(Object.keys(LIBRARY).filter(id => !ORDER.includes(id)));
+const list = k => (params.get(k) || '').split(',').map(v => v.trim()).filter(Boolean);
+for (const id of list('add')) {
+  try { const r = await fetch(new URL(`../../library/species/${id}.json`, import.meta.url), { cache: 'no-cache' }); if (!r.ok) throw new Error(r.status); addSpecies(await r.json(), 'added'); }
+  catch (e) { console.warn(`lineup: could not add species ${id}: ${e.message}`); }
+}
+const only = list('only');
+const ids = ORDER.filter(id => LIBRARY[id]).concat(Object.keys(LIBRARY).filter(id => !ORDER.includes(id))).filter(id => !only.length || only.includes(id));
 const SEEDS = [1000, 1017, 1034];   // the first three variant seeds vegetation.js uses (1000 + v * 17 + id length)
 
 const renderer = new THREE.WebGLRenderer({ antialias: true, preserveDrawingBuffer: true });
@@ -218,8 +228,8 @@ window.__lineupMetrics = (lod = 'near', dist = 0, kind = 'seeds', twigs = true) 
 
 // Warn when the fetched files and the built-in fallback differ (run library/embed_builtin.py).
 const strip = r => { const c = { ...r }; delete c.notes; delete c.sources; delete c.authors; return JSON.stringify(c); };
-const stale = Object.keys(LIBRARY_RAW).filter(id => !BUILTIN[id] || strip(LIBRARY_RAW[id]) !== JSON.stringify(BUILTIN[id]));
-const fromBuiltin = ids.filter(id => LIBRARY_SOURCE[id] !== 'library');
+const stale = Object.keys(LIBRARY_RAW).filter(id => LIBRARY_SOURCE[id] === 'library' && (!BUILTIN[id] || strip(LIBRARY_RAW[id]) !== JSON.stringify(BUILTIN[id])));
+const fromBuiltin = ids.filter(id => LIBRARY_SOURCE[id] === 'built-in');
 $('warn').textContent = (fromBuiltin.length ? `library not reachable for ${fromBuiltin.join(', ')}: showing built-in parameters. ` : '')
   + (stale.length ? `built-in copy out of date for ${stale.join(', ')}: run python3 library/embed_builtin.py` : '');
 
@@ -235,7 +245,13 @@ function frame(focus) {
 }
 
 $('mid').parentElement.insertAdjacentHTML('afterend', '<label class="check"><input type="checkbox" id="close"> close LOD (under 90 m: twigs, more cards)</label>');
-const state = { season: params.get('season') || 'summer', mid: params.get('mid') === '1', close: params.get('close') === '1', focus: params.get('focus') || 'all', shadows: params.get('shadows') !== '0', classes: params.get('classes') === '1' };
+const MONTHS = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
+$('season').insertAdjacentHTML('afterend', `<label for="month">Month</label><select id="month"><option value="">middle of the season</option>${MONTHS.map((m, k) => `<option value="${k + 1}">${m}</option>`).join('')}</select>`);
+const state = { season: params.get('season') || 'summer', month: +params.get('month') || null, mid: params.get('mid') === '1', close: params.get('close') === '1', focus: params.get('focus') || 'all', shadows: params.get('shadows') !== '0', classes: params.get('classes') === '1' };
+// a month belongs to its season: picking one sets the season too
+const seasonOfMonth = m => (m === 12 || m <= 2 ? 'winter' : m <= 5 ? 'spring' : m <= 8 ? 'summer' : 'fall');
+if (state.month) state.season = seasonOfMonth(state.month);
+$('month').value = state.month || '';
 $('season').value = state.season; $('mid').checked = state.mid; $('close').checked = state.close; $('focus').value = state.focus; $('shadows').checked = state.shadows; $('classes').checked = state.classes;
 function apply() {
   if (state.classes && !layouts.classes) layouts.classes = buildLayout('classes');
@@ -244,7 +260,7 @@ function apply() {
   const tier = state.mid ? 'mid' : state.close ? 'close' : 'near';
   for (const g of L.groups) {
     for (const lod of ['near', 'mid', 'close']) {
-      const on = applySeason(g.mats[lod], g.spec, state.season);
+      const on = applySeason(g.mats[lod], g.spec, state.season, state.month ? state.month + 0.5 : SEASON_MONTH[state.season]);
       g[lod].visible = lod === tier;
       g[lod].children.forEach(m => { if (m.material === g.mats[lod]) m.visible = on > 0; });
     }
@@ -253,7 +269,8 @@ function apply() {
   const tot = L.groups.reduce((s, g) => s + g.tris[tier].reduce((a, b) => a + b, 0), 0);
   $('stats').textContent = `${tier} LOD · ${tot.toLocaleString()} triangles for ${L.groups.reduce((s, g) => s + g.built.length, 0)} plants`;
 }
-$('season').onchange = e => { state.season = e.target.value; apply(); };
+$('season').onchange = e => { state.season = e.target.value; state.month = null; $('month').value = ''; apply(); };
+$('month').onchange = e => { state.month = +e.target.value || null; if (state.month) { state.season = seasonOfMonth(state.month); $('season').value = state.season; } apply(); };
 $('mid').onchange = e => { state.mid = e.target.checked; apply(); };
 $('close').onchange = e => { state.close = e.target.checked; apply(); };
 $('shadows').onchange = e => { state.shadows = e.target.checked; apply(); };

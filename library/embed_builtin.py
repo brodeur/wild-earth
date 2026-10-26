@@ -6,6 +6,8 @@ library is not reachable (offline, or a static host without library/). Run after
     python3 library/embed_builtin.py
 
 `notes` and `sources` are left out of the embedded copy (they are for people, not the generator).
+Every species in index.json is embedded, however many; ids starting with `_` (the generator's _test_
+files) and ids without a file are skipped with a note.
 """
 import json
 import pathlib
@@ -18,7 +20,11 @@ TARGET = ROOT / "client" / "src" / "treegen.js"
 index = json.loads((SPECIES / "index.json").read_text())
 lines = []
 for sid in index["species"]:
-    d = json.loads((SPECIES / f"{sid}.json").read_text())
+    f = SPECIES / f"{sid}.json"
+    if sid.startswith("_") or not f.exists():
+        print(f"skipped {sid}: {'test file' if sid.startswith('_') else 'no file'}")
+        continue
+    d = json.loads(f.read_text())
     for k in ("notes", "sources", "authors"):
         d.pop(k, None)
     lines.append(f"  {json.dumps(sid)}: {json.dumps(d, separators=(',', ':'))},")

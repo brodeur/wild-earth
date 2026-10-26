@@ -1,0 +1,80 @@
+{
+  "id": "aesculus_californica",
+  "aliases": ["buckeye", "california_buckeye"],
+  "scientific": "Aesculus californica",
+  "common": "California buckeye",
+  "form": "tree",
+  "architectural_model": "Scarrone (provisional: each shoot ends in a flower candle, so the branches fork sympodially below it)",
+  "deciduous": true,
+  "height_m": [4, 9],
+  "variants": [
+    {"name": "young", "weight": 0.25, "height_m": [2, 4], "trunk_radius": 0.6, "crown_scale": 0.9, "branches": 0.75, "set": {"trunk": {"stems": [2, 5], "stem_spread_deg": 34}, "foliage": {"clumps": {"radius_m": 0.6}}}, "note": "a shrubby clump of several pale stems, leafy to the ground"},
+    {"name": "mature", "weight": 0.55, "seeds": 2, "note": "the file as written"},
+    {"name": "veteran", "weight": 0.2, "height_m": [8, 12], "trunk_radius": 1.35, "crown_scale": 1.12, "gnarl": 1.3, "deadwood": {"fraction": 0.15, "levels": [1, 2], "where": "inner"}, "set": {"trunk": {"stems": [1, 3], "lean_deg": 12}}, "note": "a short, massive, silvery trunk and a wide dome whose lowest limbs sweep down to the grass, some dead wood inside"}
+  ],
+  "description": "A low, wide tree 4-12 m tall, often with several smooth, pale silver-grey trunks, big hand-shaped leaves of five to seven leaflets and, in May, upright white flower spikes like candles all over the crown. It grows on dry slopes and canyon sides all through the foothills, and it is the first tree to go bare in summer, saving water by dropping its leaves in July while the oaks stay green.",
+  "season_notes": {
+    "winter": "Bare silver-grey branches with a few big brown nuts still hanging; the first new leaves unfold in February.",
+    "spring": "Fresh bright green leaves, then white flower candles in May that hum with bees (the nectar is poisonous to honey bees, not to native bees).",
+    "summer": "Leaves turn brown and fall in July, so by August the tree is bare on the golden hills.",
+    "fall": "Pear-shaped husks split to show shiny brown nuts as big as a small egg, which drop and sprout in the first rains."
+  },
+  "status": "agent draft, needs local sign-off",
+  "trunk": {
+    "length_ratio": 0.3, "radius_ratio": 0.065, "taper": 0.6, "flare": 1.35, "bole_ratio": 0.3, "base_size": 0.05,
+    "curve_deg": 10, "curve_var_deg": 18, "segments": 5, "lean_deg": 9, "stems": [1, 4], "stem_spread_deg": 28,
+    "split_prob": 0.55, "split_count": 2, "split_angle_deg": 32, "sinuous_deg": 4, "bark_rgb": [168, 166, 160],
+    "bark_pattern": "smooth_grey", "twig_rgb": [156, 146, 130],
+    "bark": {"tile_m": [0.3, 0.6], "plate_m": [0.04, 0.06], "fissure": 0.08, "contrast": 0.5, "lichen": 0.55, "relief": 0.35}
+  },
+  "crown": {
+    "shape": "hemispherical",
+    "envelope": {"profile": [[0.02, 0.44], [0.12, 0.6], [0.28, 0.69], [0.45, 0.69], [0.62, 0.61], [0.77, 0.47], [0.9, 0.29], [1.0, 0.08]], "lobes": 5, "lobe_depth": 0.12, "asymmetry": 0.15, "fill": 0.6, "edge": 1.08}
+  },
+  "levels": [
+    {
+      "count": 9, "down_angle_deg": 70, "down_angle_tip_deg": 40, "down_angle_var_deg": 14, "rotation_deg": 140, "rotation_var_deg": 30,
+      "length_ratio": 2.4, "length_var": 0.25, "curve_deg": 6, "curve_var_deg": 20, "zigzag_deg": 8, "tropism": 0.02,
+      "droop_deg": 15, "taper": 0.9, "radius_ratio": 0.6, "segments": 4, "sinuous_deg": 4
+    },
+    {
+      "count": 7, "start": 0.15, "down_angle_deg": 45, "down_angle_var_deg": 16, "rotation_deg": 140,
+      "rotation_var_deg": 30, "length_ratio": 0.55, "length_var": 0.3, "curve_deg": 0, "curve_var_deg": 20,
+      "zigzag_deg": 14, "tropism": 0.05, "taper": 1.0, "radius_ratio": 0.45, "segments": 2
+    }
+  ],
+  "foliage": {
+    "type": "broadleaf", "leaf_size_m": 0.18, "leaf_shape": "palmate_compound", "leaflets": [5, 7], "cluster_m": 1.1, "density": 9, "cards_per_m2": 1.15, "leaf_fill": 2.8, "roll_deg": 60,
+    "start": 0.0, "parent_start": 0.25, "orientation": "outward",
+    "colors": {"winter": [156, 146, 130], "spring": [104, 119, 62], "summer": [99, 110, 71], "fall": [142, 116, 95]},
+    "leaf_on": {"winter": 0.0, "spring": 1.0, "summer": 0.6, "fall": 0.0},
+    "leaf_on_by_month": [0.0, 0.05, 0.7, 1.0, 1.0, 1.0, 0.55, 0.1, 0.03, 0.0, 0.0, 0.0],
+    "clumps": {"radius_m": 0.8, "cards_per_clump": 7, "shell": 0.2, "flatten": 0.75, "tip_bias": 1.4},
+    "palette": [[0.8, [1, 1, 1]], [0.2, [1.1, 1.1, 0.9]]], "winter_twigs": 0.45, "ao_min": 0.7,
+    "color_var": [0.08, 0.05], "leaf_on_var": 0.7,
+    "flowers": {"season": "spring", "form": "candle", "rgb": [238, 232, 214], "size_m": 0.15, "density": 0.6, "before_leaves": false},
+    "berries": {"season": "fall", "rgb": [140, 116, 82], "size_m": 0.06, "density": 0.3}
+  },
+  "deadwood": {"fraction": 0.06, "where": "inner", "levels": [2], "shorten": 0.6, "rgb": [172, 168, 160]},
+  "twigs": {"count": [1, 2], "length": 0.6, "down_deg": 45, "down_var_deg": 18, "curve_var_deg": 20, "segments": 2, "radius_m": 0.014, "taper": 0.55, "zigzag_deg": 20, "fan_deg": 55, "jitter": 0.2},
+  "lod": {
+    "near_tris_budget": 1900, "near_sides": [5, 3, 0], "mid_blobs": 5, "mid_branches": 4, "mid_segments": [3, 2], "mid_blob_scale": 0.9,
+    "close_factor": 2
+  },
+  "targets": {
+    "crown_width_ratio": 1.45, "crown_base_ratio": 0.05, "porosity": 0.18, "foliage_rg": 0.8, "foliage_bg": 0.36,
+    "fall_rg": 1.54, "fall_bg": 0.65,
+    "from": "reference photographs (2026-10-25, measured as in docs/tree-likeness-review.md): lone flowering tree W/H 1.41 base 0.15 porosity 0.26 (Commons, USFS Region 5, public domain; an oak behind it fills part of the crown, so porosity is rough); flowering mound W/H 1.27 base 0.02 porosity 0.16 (Commons, Consultaplantas, CC BY-SA 4.0); upper crown in flower porosity 0.17 (iNaturalist 389683682, CC0); summer-bare trees on Mount Diablo in August W/H 1.67 and 2.50 on a steep slope, foliage to the ground (Commons, Awinch1001, CC BY 4.0); colour mean of the three leafy trees (r/g 0.95, 0.81, 0.64; b/g 0.63, 0.20, 0.26: fresh yellow-green); fall_rg/fall_bg are the brown August crown, not autumn colour",
+    "photos": [
+      {"url": "https://commons.wikimedia.org/wiki/File:California_Buckeye_(3659531817).jpg", "license": "Public domain", "author": "Pacific Southwest Region 5 (USFS)", "shows": "lone tree in flower in an oak savanna"},
+      {"url": "https://commons.wikimedia.org/wiki/File:Aesculus_californica_1w.jpg", "license": "CC BY-SA 4.0", "author": "Consultaplantas", "shows": "broad leafy mound in flower, May"},
+      {"url": "https://www.inaturalist.org/photos/389683682", "license": "CC0", "shows": "crown top with flower candles against the sky, May"},
+      {"url": "https://commons.wikimedia.org/wiki/File:Aesculus_californica_drought_deciduous_Mount_Diablo_10.jpg", "license": "CC BY 4.0", "author": "Awinch1001", "shows": "wide low tree with brown leaves in August (summer-deciduous)"},
+      {"url": "https://commons.wikimedia.org/wiki/File:Aesculus_californica_drought_deciduous_Mount_Diablo_6.jpg", "license": "CC BY 4.0", "author": "Awinch1001", "shows": "sprawling tree on a grassy slope, August"}
+    ]
+  },
+  "notes": "California buckeye is endemic to California: foothill woodland, chaparral edges and canyon slopes from about 100 to 1,700 m, common around Placerville on dry slopes and along ravines. A shrub or low tree 4-12 m (file 4-9 m, veteran class to 12 m), as wide as or wider than tall: open trees in the photos measure W/H 1.3-1.7 and sprawl to 2.5 on steep slopes, with the lowest limbs sweeping down to the grass (crown base about 0.05). Often several stems from the base or a short, very thick trunk (radius_ratio 0.065) that forks low (split_prob 0.55); decurrent crown, so trunk.length_ratio 0.3 and long spreading level-1 limbs with droop. Each shoot ends in a flower candle, after which growth continues from side buds, so the branching is sympodial and forked (zigzag on both levels); architectural model given as Scarrone, provisional. Bark smooth, pale silver-grey to nearly white, often with lichen: bark_pattern smooth_grey (new). Twigs stout, grey-brown. Leaves palmately compound, five to seven leaflets each 6-17 cm, the whole leaf about 18 cm across: leaf_shape palmate_compound (new), leaflets [5, 7]. Summer-deciduous: the earliest tree to leaf out (February-March) and the first to go bare (leaves brown in July, bare by August in most years and earlier in dry years, held into September on moist sites): leaf_on_by_month (new; January to December), leaf_on.summer 0.6 and leaf_on_var 0.7 because trees on wet and dry sites drop weeks apart. The colour targets are the spring crown in full leaf, a fresh yellow-green (photo linear r/g 0.80, b/g 0.36); the lineup measures in summer with 60% of the cards, so its porosity will read higher than the in-leaf target. fall colour is the brown of the dying leaves in August (r/g 1.54). Flowers in upright candles 10-20 cm, white to pale pink, in May (foliage.flowers, new). Fruit a pear-shaped leathery capsule 5-8 cm holding one or two glossy brown seeds, ripening and splitting in September-October and hanging on the bare tree into winter: drawn with foliage.berries (new) as large brown fruit. No snag: buckeyes resprout from the base; old trees carry dead limbs instead (veteran deadwood). Not in the photos measured, but well known locally: buckeye groves on north-facing ravines in the American River canyons are denser and more upright.",
+  "sources": ["https://www.fs.usda.gov/database/feis/plants/tree/aescal/all.html", "https://ucjeps.berkeley.edu/eflora/ (Aesculus californica)", "https://www.calflora.org/ (Aesculus californica)", "https://en.wikipedia.org/wiki/Aesculus_californica", "Reference photographs listed in targets.photos (Wikimedia Commons and iNaturalist, public domain and CC licences)"],
+  "authors": ["Wild Earth (agent draft, 2026-10-25); needs local sign-off"],
+  "license": "CC BY-SA 4.0"
+}

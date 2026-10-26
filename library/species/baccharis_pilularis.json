@@ -1,0 +1,76 @@
+{
+  "id": "baccharis_pilularis",
+  "aliases": ["coyote_brush", "coyote_bush"],
+  "scientific": "Baccharis pilularis",
+  "common": "coyote brush",
+  "form": "shrub",
+  "architectural_model": "Leeuwenberg (provisional: much-branched, flowers at the shoot ends)",
+  "deciduous": false,
+  "height_m": [1, 2.5],
+  "variants": [
+    {"name": "young", "weight": 0.25, "height_m": [0.5, 1.2], "deadwood": 0.03, "set": {"trunk": {"stems": [5, 9]}}, "note": "a low, bright green mound on a road edge or in grassland"},
+    {"name": "mature", "weight": 0.5, "seeds": 2, "note": "the file as written: a dense, rounded, many-stemmed mound"},
+    {"name": "decadent", "weight": 0.25, "height_m": [1.8, 3], "crown_scale": 1.1, "gnarl": 1.15, "leaf_density": 0.8, "deadwood": {"fraction": 0.35, "levels": [0, 1], "shorten": 0.8}, "set": {"trunk": {"stems": [10, 18]}}, "note": "an old, sprawling shrub with a grey, dead middle"}
+  ],
+  "description": "A rounded, bushy evergreen shrub covered in small, bright green, slightly sticky leaves with a few teeth; 1-3 m tall here. It is one of the first shrubs to move into grassland, old fields, road edges and burned ground, giving shelter to quail and rabbits, and in fall it is busy with butterflies and bees when little else is in flower.",
+  "season_notes": {
+    "winter": "Female plants are white and fluffy with seeds that blow away on the wind; after the rains the leaves are dark and shiny.",
+    "spring": "Fresh, bright green new shoots; one of the greenest shrubs on the hills.",
+    "summer": "Still green through the dry season, a little dusty, while the grass around it turns gold.",
+    "fall": "Covered in tiny cream flowers (August to December), full of bees, flies and butterflies."
+  },
+  "status": "agent draft, needs local sign-off",
+  "trunk": {
+    "length_ratio": 0.9, "radius_ratio": 0.015, "taper": 0.85, "flare": 1.4, "bole_ratio": 0.05, "base_size": 0.05,
+    "curve_deg": 10, "curve_var_deg": 16, "segments": 3, "lean_deg": 0, "stems": [8, 14], "stem_spread_deg": 38,
+    "split_prob": 0.0, "split_count": 2, "split_angle_deg": 20, "sinuous_deg": 8, "bark_rgb": [112, 100, 86],
+    "bark_pattern": "shreddy", "twig_rgb": [116, 114, 84],
+    "bark": {"tile_m": [0.1, 0.35]}
+  },
+  "crown": {
+    "shape": "hemispherical",
+    "envelope": {"profile": [[0.0, 0.4], [0.15, 0.6], [0.35, 0.73], [0.55, 0.74], [0.75, 0.62], [0.9, 0.42], [1.0, 0.16]], "lobes": 6, "lobe_depth": 0.12, "asymmetry": 0.12, "fill": 0.6, "edge": 1.08}
+  },
+  "levels": [
+    {
+      "count": 4, "start": 0.05, "down_angle_deg": 48, "down_angle_var_deg": 14, "rotation_deg": 140, "rotation_var_deg": 30,
+      "length_ratio": 0.55, "length_var": 0.3, "curve_deg": 14, "curve_var_deg": 16, "tropism": 0.08, "taper": 0.9,
+      "radius_ratio": 0.6, "segments": 1
+    },
+    {
+      "count": 5, "start": 0.25, "down_angle_deg": 32, "down_angle_var_deg": 12, "rotation_deg": 140,
+      "rotation_var_deg": 30, "length_ratio": 0.4, "length_var": 0.3, "curve_deg": 10, "curve_var_deg": 18,
+      "tropism": 0.1, "taper": 1.0, "radius_ratio": 0.5, "segments": 1
+    }
+  ],
+  "foliage": {
+    "type": "broadleaf", "leaf_size_m": 0.022, "leaf_shape": "oval", "cluster_m": 0.36, "density": 24, "cards_per_m2": 12,
+    "start": 0.05, "parent_start": 0.0, "orientation": "outward",
+    "colors": {"winter": [106, 118, 80], "spring": [118, 140, 80], "summer": [120, 124, 88], "fall": [120, 122, 90]},
+    "leaf_on": {"winter": 1.0, "spring": 1.0, "summer": 1.0, "fall": 1.0},
+    "clumps": {"radius_m": 0.3, "cards_per_clump": 6, "shell": 0.45, "flatten": 0.85, "tip_bias": 1.3},
+    "ao_min": 0.74, "color_var": [0.08, 0.05],
+    "flowers": {"season": "fall", "months": [9, 12], "form": "cluster", "rgb": [236, 232, 212], "size_m": 0.04, "density": 0.5, "before_leaves": false}
+  },
+  "deadwood": {"fraction": 0.12, "levels": [0, 1], "shorten": 0.75, "rgb": [138, 132, 124]},
+  "twigs": {"count": [2, 3], "length": 0.7, "down_deg": 30, "down_var_deg": 14, "curve_var_deg": 22, "segments": 1, "radius_m": 0.004, "tropism": 0.1, "taper": 0.6, "fan_deg": 50, "jitter": 0.25},
+  "lod": {
+    "near_tris_budget": 1000, "near_sides": [3, 3, 0], "mid_blobs": 3, "mid_branches": 0, "mid_sides": [0, 0],
+    "mid_cards": 24
+  },
+  "targets": {
+    "crown_width_ratio": 1.2, "crown_base_ratio": 0.05, "porosity": 0.2, "foliage_rg": 0.95, "foliage_bg": 0.48,
+    "from": "reference photographs (2026-10-25), measured by eye on a 10% grid and colour as linear means of foliage pixels, as in docs/tree-likeness-review.md: W/H at least 1.2 (mound on a road cut, Hidden Falls, iNaturalist 251772470, cropped at the right), about 1.2 (sprawling shrub, 432534918); foliage nearly to the ground (crown base 0.05); colour r/g 1.01 / 0.98 / 1.17, b/g 0.48 / 0.55 / 0.44 in January and September (251772470, 432534918, 429231064; the last includes dry grass) and 0.70 / 0.33 for fresh April growth (486802583); fluffy female seed heads sRGB (222, 217, 171) in December (603728962)",
+    "photos": [
+      {"url": "https://www.inaturalist.org/photos/251772470", "license": "CC0", "author": "Joshua Zupan (jzupan)", "shows": "rounded mound on a road cut below a grassy slope, Hidden Falls Regional Park, January"},
+      {"url": "https://www.inaturalist.org/photos/432534918", "license": "CC0", "author": "Joshua Zupan (jzupan)", "shows": "sprawling shrub with dead lower stems, Hidden Falls Regional Park, September"},
+      {"url": "https://www.inaturalist.org/photos/429231064", "license": "CC0", "author": "Joshua Zupan (jzupan)", "shows": "shrubs in an oak woodland opening, Hidden Falls Regional Park, September"},
+      {"url": "https://www.inaturalist.org/photos/486802583", "license": "CC BY", "author": "Amelia Tauber (antrozousamelia)", "shows": "bright green spring growth on a river bank, Foresthill, April"},
+      {"url": "https://www.inaturalist.org/photos/603728962", "license": "CC BY", "author": "Nathan Odgers (crellow)", "shows": "female shrub white with seed fluff, Auburn, December"}
+    ]
+  },
+  "notes": "Coyote brush is an evergreen shrub of grassland, old fields, road edges, stream terraces and burns from the coast into the Sierra foothills (inland plants are the upright form, 1-3 m, sometimes called var. consanguinea). A pioneer: it invades grassland where grazing and fire stop, and later gives way to oaks and chaparral. Form: plain 'shrub'. Many (8-14) stems from the base spreading 30-45 degrees, densely branched with short, upward twigs, into a rounded mound a little wider than tall (W/H about 1.2), leafy almost to the ground; old plants sprawl and their centres die (the 'decadent' class, 35% grey stems). Bark grey-brown and a little shreddy on old stems; young stems green, ribbed and sticky. Leaves 1-4 cm, obovate with a few coarse teeth, resinous and glossy, bright green: leaf_shape oval at 2.2 cm in small clumps. Male and female plants: flowers tiny, cream, in heads at the shoot ends from late August to December; female heads go to white, fluffy seed (pappus) in November-December that whitens the whole shrub (flowers form 'bud', fall). Stays green in summer. The shrub field could use it widely on grassland edges.",
+  "sources": ["https://www.fs.usda.gov/database/feis/plants/shrub/bacpil/all.html", "https://ucjeps.berkeley.edu/eflora/ (Baccharis pilularis)", "https://www.calflora.org/ (Baccharis pilularis)", "https://en.wikipedia.org/wiki/Baccharis_pilularis", "Reference photographs listed in targets.photos (iNaturalist, Placer County, CC0 and CC BY)"],
+  "authors": ["Wild Earth (agent draft, 2026-10-25); needs local sign-off"],
+  "license": "CC BY-SA 4.0"
+}

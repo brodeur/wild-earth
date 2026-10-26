@@ -80,11 +80,9 @@ tiles/<tile_id>/
   client/channel_depth.png      derived   channel incision, uint8 decimetres on the DEM grid: mean DEM on a 20 m ring minus the channel cell, 0-25 m; 0 off channel
   client/channel_profile.png    derived   RGB on the DEM grid: R thalweg water depth (2 cm), G riffle-pool index, B rewilded water beds (see Hydrology rewilding)
   client/masks.png              derived   soft season-recolour weights: R grassland, G oak woodland, B chaparral
-  client/species_mix_a.png      derived   tree weights per 30 m cell, RGBA = blue oak, live oak, gray pine, ponderosa (sum 255; A is data)
-  client/species_mix_b.png      derived   RGBA = manzanita, chamise weights (sum 255), tree_density, shrub_density (byte / 100)
-  client/species_mix_c.png      derived   RGBA = willow, alder, cottonwood weights (sum with _a to 255), spare; present when the mix has riparian trees
-  client/species_mix_index.png  derived   8-bit row index into species_mix.json mixes (0 = none), canvas-safe form of the three above
-  client/species_mix.json       derived   channel order, EVT/BpS name -> species mix table used, per-tile fractions
+  client/species_mix_index.png  derived   row index per 30 m cell into species_mix.json mixes (0 = none), 8-bit grey (see Species mix)
+  client/species_mix_density.png derived  RGB per 30 m cell: R tree_density, G shrub_density (multiplier = byte / 100), B 0
+  client/species_mix.json       derived   format 2: species columns, EVT/BpS name -> species mix rows with their weights, per-tile fractions
   client/species_prior.json     derived   animal density prior per species, a byte per 100 m cell, from CC0 and CC BY occurrence records only (see Species)
   unreal/heightmap.png          derived   16-bit Landscape heightmap at a valid size (2017 px)
   unreal/weights/<class>.png    derived   8-bit weight-blended layer per habitat class
@@ -457,6 +455,48 @@ with no usable record is not in the file and gets 1 (neutral). The file also car
 `licenses_used`, `records_used`, `records_excluded` (by licence), `records_outside` and
 `datasets` (GBIF dataset key, licence, records); the manifest layer repeats the counts
 per licence and per species.
+
+## Species mix
+
+`client/species_mix*` (pipeline `species_mix.py`, client `tilepackage.js` `SpeciesMix`) say which species grow
+in each 30 m cell and how densely, for any number of species. Format 2 (2026-10-25):
+
+- `species_mix_index.png`: the cell's row in `mixes` (1-based; 0 = no row: the client uses its fixed mix for
+  the habitat class). 8-bit grey; a tile with more than 255 rows writes RGB with the row = R + 256 G and says
+  `"cells": {"index_bytes": 2}`.
+- `species_mix_density.png`: RGB, R tree density and G shrub density, each a multiplier = byte / 100 on the
+  client's per-habitat-class plant count (1.0 = the fixed-mix count; the count still scales with
+  `client/canopy.png` cover). B is 0. No alpha, so a 2D canvas reads it unchanged.
+- `species_mix.json`:
+
+```json
+{
+  "format": 2,
+  "species": { "trees": ["quercus_douglasii", "quercus_wislizeni", "..."], "shrubs": ["arctostaphylos_viscida", "..."] },
+  "cells": { "index": "client/species_mix_index.png", "index_bytes": 1, "density": "client/species_mix_density.png" },
+  "mixes": [
+    { "index": 1, "source": "evt", "code": 7027, "name": "Mediterranean California Dry-Mesic Mixed Conifer ...",
+      "rule": "dry_mesic_mixed_conifer", "trees": { "pinus_ponderosa": 0.8, "quercus_wislizeni": 0.2 },
+      "shrubs": { "arctostaphylos_viscida": 1 }, "tree_density": 1.0, "shrub_density": 0.6, "note": "...", "cells": 124,
+      "tree_bytes": [["quercus_wislizeni", 51], ["pinus_ponderosa", 204]], "shrub_bytes": [["arctostaphylos_viscida", 255]],
+      "density_bytes": [100, 60] }
+  ],
+  "unmatched": [], "fractions": { "tree_share": { "blue_oak": 0.43, "...": 0 } }
+}
+```
+
+`species` lists the columns: canonical library ids, the original species first in their original order, then
+any species a rule adds, appended. A row's `tree_bytes` and `shrub_bytes` hold the species with a non-zero
+weight, in column order, each summing to 255 (largest remainder, ties to the earlier column; absent: no
+trees or no shrubs in the row). The client draws a plant's species by walking that list in order with one
+random number, so the order is part of the format: appending a column never moves an existing plant.
+`density_bytes` repeats the row's densities (the density PNG holds them per cell). `trees`, `shrubs` and the
+two densities as decimals are the rule as written, for people.
+
+Format 1 (tiles built before 2026-10-25) had RGBA weight PNGs `species_mix_a/_b/_c.png` and `mixes[].bytes`
+with a `bytes_layout` naming each column by short alias; the client still reads it (and the original eight
+columns without `bytes_layout`), but the pipeline writes only format 2 and removes the old PNGs. The three
+tiles were regenerated in format 2: every row's bytes and every plant's placement are identical.
 
 ## Species library
 

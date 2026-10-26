@@ -8,20 +8,24 @@ and shrub species plus tree and shrub density multipliers. Human cells (Develope
 take the rule of their Biophysical Settings name instead, so rewilded cells get the community
 that would grow there.
 
-Products (client/, on the 30 m vegetation grid, row 0 = north):
-  species_mix_a.png      RGBA  R blue oak, G live oak, B gray pine, A ponderosa   (tree weights; with _c, sum 255)
-  species_mix_b.png      RGBA  R manzanita, G chamise                             (shrub weights, sum 255)
-                               B tree_density, A shrub_density                    (multiplier = byte / 100)
-  species_mix_c.png      RGB   R arroyo willow, G white alder, B Fremont cottonwood (more tree weights:
-                               species_mix_a RGBA + species_mix_c RGB sum to 255)
-  species_mix_index.png  L     row index into species_mix.json "mixes" (0 = none); canvas-safe
-  species_mix.json       channel order, the code -> mix table actually used, per-tile fractions
+Products (client/, on the 30 m vegetation grid, row 0 = north). Format 2 (2026-10-25): any number of
+species. A cell carries only its row and its two density multipliers; the rows carry the weights.
+  species_mix_index.png    L     row index into species_mix.json "mixes" (0 = none); RGB (R low byte,
+                                 G high byte) if a tile ever has more than 255 rows ("cells.index_bytes": 2)
+  species_mix_density.png  RGB   R tree_density, G shrub_density (multiplier = byte / 100), B 0
+  species_mix.json         "format": 2, the species columns, the code -> mix table actually used (each
+                           row's weights as bytes summing to 255 per layer), per-tile fractions
+The weights were never varied per cell (every cell of a row had the row's bytes), so nothing is lost.
+Format 1 (four RGBA/RGB weight PNGs and mixes[].bytes with a bytes_layout) is read by the client
+for tiles built before; this module no longer writes it.
 
 Every rule is a first guess meant to be tuned in the viewer, like the habitat tables.
 """
 from __future__ import annotations
 
 import json
+import pathlib
+import warnings
 
 import numpy as np
 import rasterio
@@ -30,19 +34,21 @@ from PIL import Image
 from .config import Tile, sha256
 from .habitat import CLASSES, HUMAN_PHYS_PREFIXES, rewilded_cells
 
+# Column order of the species (format 2: `species` in species_mix.json, and the order of each row's
+# tree_bytes / shrub_bytes, which is the order the client draws species in). These are the species of
+# format 1 in its column order, so every existing row keeps its draws bit-identical; a species a rule
+# names that is not listed here is appended after them, in the order the rules first name it (columns()).
+# Ids are the library's canonical ids (library/species/<id>.json).
 TREES = ["quercus_douglasii", "quercus_wislizeni", "pinus_sabiniana", "pinus_ponderosa",
          "salix_lasiolepis", "alnus_rhombifolia", "populus_fremontii"]
 SHRUBS = ["arctostaphylos_viscida", "adenostoma_fasciculatum"]
+# Short names for the per-tile fraction tables (older docs and reports use them); other species use their id.
 SHORT = {"quercus_douglasii": "blue_oak", "quercus_wislizeni": "live_oak", "pinus_sabiniana": "gray_pine",
          "pinus_ponderosa": "ponderosa", "arctostaphylos_viscida": "manzanita", "adenostoma_fasciculatum": "chamise",
          "salix_lasiolepis": "willow", "alnus_rhombifolia": "alder", "populus_fremontii": "cottonwood"}
-# Byte columns of a mix row (mixes[].bytes and the LUT behind the PNGs). The first eight are the original
-# layout (four trees, two shrubs, two densities) so older readers keep working; the riparian trees added on
-# 2026-10-25 are appended. species_mix.json "bytes_layout" says the same for the client (tilepackage.js).
-TREE_COLS = [0, 1, 2, 3, 8, 9, 10]
-SHRUB_COLS = [4, 5]
-TD_COL, SD_COL, NCOLS = 6, 7, 11
+FORMAT = 2
 DENSITY_SCALE = 100   # density byte = round(multiplier * 100); 1.0 = the client's per-habitat-class count
+LIBRARY = pathlib.Path(__file__).resolve().parent.parent / "library" / "species"
 
 BLACK_OAK = "black oak (Quercus kelloggii) is not in the library: quercus_wislizeni stands in"
 LIVE_OAK_STANDIN = "canyon live oak, madrone and Douglas-fir are not in the library: quercus_wislizeni and pinus_ponderosa stand in"
@@ -173,15 +179,32 @@ def _fallback(hab_code: int) -> dict:
 
 
 def _bytes(weights: dict, slots: list[str]) -> list[int]:
-    """Weights over slots as bytes summing to exactly 255 (largest remainder), or all zero."""
+    """Weights over slots as bytes summing to exactly 255 (largest remainder, ties to the earlier
+    column), or all zero."""
     w = np.array([max(float(weights.get(s, 0)), 0.0) for s in slots])
     if w.sum() <= 0:
         return [0] * len(slots)
     x = w / w.sum() * 255
     b = np.floor(x).astype(int)
-    for i in np.argsort(-(x - b))[: 255 - b.sum()]:
+    for i in np.argsort(-(x - b), kind="stable")[: 255 - b.sum()]:
         b[i] += 1
     return [int(v) for v in b]
+
+
+def columns(rules: list[dict]) -> tuple[list[str], list[str]]:
+    """Tree and shrub columns: TREES / SHRUBS, then any other species the rules name, in order."""
+    trees, shrubs = list(TREES), list(SHRUBS)
+    for r in rules:
+        for k in r["trees"]:
+            if k not in trees:
+                trees.append(k)
+        for k in r["shrubs"]:
+            if k not in shrubs:
+                shrubs.append(k)
+    for sid in trees + shrubs:
+        if not (LIBRARY / f"{sid}.json").exists():
+            warnings.warn(f"species mix names {sid}, which has no library/species/{sid}.json; the client skips it")
+    return trees, shrubs
 
 
 def _is_human(e: dict) -> bool:
@@ -206,7 +229,7 @@ def species_mix(tile: Tile) -> dict:
     # Resolve each cell to a (source, code) row: EVT for natural cells, BpS for human ones,
     # habitat class when a code is missing from the tables.
     rows: dict[tuple, dict] = {}
-    index = np.zeros(evt.shape, "uint8")
+    index = np.zeros(evt.shape, "int64")
     unmatched = []
 
     def row_for(source: str, code: int, name: str | None, hab_code: int, rule: dict | None = None) -> int:
@@ -221,8 +244,8 @@ def species_mix(tile: Tile) -> dict:
                          "shrubs": {k: v for k, v in rule["shrubs"].items() if v},
                          "tree_density": rule["tree_density"], "shrub_density": rule["shrub_density"],
                          "note": rule.get("note"), "cells": 0}
-            if rows[key]["index"] > 255:
-                raise ValueError("more than 255 distinct mixes; species_mix_index.png is 8-bit")
+            if rows[key]["index"] > 65535:
+                raise ValueError("more than 65535 distinct mixes; species_mix_index.png holds 16 bits")
         return rows[key]["index"]
 
     combos = np.unique(np.stack([evt.ravel(), bps.ravel(), hab.ravel()], 1), axis=0)
@@ -247,77 +270,88 @@ def species_mix(tile: Tile) -> dict:
                 index[sel] = row_for("rewild", k + 1, rule["id"].replace("_", " "), 5 if k == 0 else 6, rule)
 
     table = sorted(rows.values(), key=lambda r: r["index"])
-    lut = np.zeros((256, NCOLS), "uint8")
+    trees_cols, shrub_cols = columns(table)
+    nt, ns = len(trees_cols), len(shrub_cols)
+    # Per-row bytes: tree weights over the tree columns, shrub weights over the shrub columns (each
+    # summing to 255 or all zero), then the two density bytes. lut[0] (no mix) is all zero.
+    lut = np.zeros((len(table) + 1, nt + ns + 2), "int64")
     for r in table:
-        lut[r["index"], TREE_COLS] = _bytes(r["trees"], TREES)
-        lut[r["index"], SHRUB_COLS] = _bytes(r["shrubs"], SHRUBS)
-        lut[r["index"], TD_COL] = min(round(r["tree_density"] * DENSITY_SCALE), 255)
-        lut[r["index"], SD_COL] = min(round(r["shrub_density"] * DENSITY_SCALE), 255)
+        tb, sb = _bytes(r["trees"], trees_cols), _bytes(r["shrubs"], shrub_cols)
+        td = min(round(r["tree_density"] * DENSITY_SCALE), 255)
+        sd = min(round(r["shrub_density"] * DENSITY_SCALE), 255)
+        lut[r["index"]] = tb + sb + [td, sd]
         r["cells"] = int((index == r["index"]).sum())
-        r["bytes"] = [int(v) for v in lut[r["index"]]]
+        r["tree_bytes"] = [[k, b] for k, b in zip(trees_cols, tb) if b]
+        r["shrub_bytes"] = [[k, b] for k, b in zip(shrub_cols, sb) if b]
+        r["density_bytes"] = [td, sd]
     px = lut[index]
-    Image.fromarray(px[..., 0:4], "RGBA").save(tile.path("client/species_mix_a.png"), optimize=True)
-    Image.fromarray(px[..., 4:8], "RGBA").save(tile.path("client/species_mix_b.png"), optimize=True)
-    Image.fromarray(np.ascontiguousarray(px[..., 8:11]), "RGB").save(tile.path("client/species_mix_c.png"), optimize=True)
-    Image.fromarray(index, "L").save(tile.path("client/species_mix_index.png"), optimize=True)
+    TD, SD = nt + ns, nt + ns + 1
+    for old in ("species_mix_a.png", "species_mix_b.png", "species_mix_c.png"):   # format 1 products
+        if tile.path(f"client/{old}").exists():
+            tile.path(f"client/{old}").unlink()
+    index_bytes = 1 if len(table) <= 255 else 2
+    if index_bytes == 1:
+        Image.fromarray(index.astype("uint8"), "L").save(tile.path("client/species_mix_index.png"), optimize=True)
+    else:
+        rgb = np.stack([index & 255, index >> 8, np.zeros_like(index)], -1).astype("uint8")
+        Image.fromarray(rgb, "RGB").save(tile.path("client/species_mix_index.png"), optimize=True)
+    dens = np.stack([px[..., TD], px[..., SD], np.zeros_like(px[..., TD])], -1).astype("uint8")
+    Image.fromarray(dens, "RGB").save(tile.path("client/species_mix_density.png"), optimize=True)
 
     # Per-tile fractions
     n = index.size
-    td = px[..., TD_COL].astype("float64") / DENSITY_SCALE
-    sd = px[..., SD_COL].astype("float64") / DENSITY_SCALE
+    td = px[..., TD].astype("float64") / DENSITY_SCALE
+    sd = px[..., SD].astype("float64") / DENSITY_SCALE
 
     def share(cols, names, weight):
         w = px[..., cols].astype("float64") / 255 * weight[..., None]
         tot = w.sum()
-        return {SHORT[s]: round(float(w[..., i].sum() / tot), 4) if tot else 0.0 for i, s in enumerate(names)}
+        return {SHORT.get(s, s): round(float(w[..., i].sum() / tot), 4) if tot else 0.0 for i, s in enumerate(names)}
 
     by_rule: dict[str, int] = {}
     for r in table:
         by_rule[r["rule"]] = by_rule.get(r["rule"], 0) + r["cells"]
+    tcols, scols = list(range(nt)), list(range(nt, nt + ns))
     fractions = {
         "from_evt": round(sum(r["cells"] for r in table if r["source"] == "evt") / n, 4),
         "from_bps_backfill": round(sum(r["cells"] for r in table if r["source"] != "evt") / n, 4),
-        "tree_share": share(TREE_COLS, TREES, td),
-        "tree_share_by_canopy": share(TREE_COLS, TREES, td * tree_cover),
-        "shrub_share": share(SHRUB_COLS, SHRUBS, sd),
+        "tree_share": share(tcols, trees_cols, td),
+        "tree_share_by_canopy": share(tcols, trees_cols, td * tree_cover),
+        "shrub_share": share(scols, shrub_cols, sd),
         "mean_tree_density": round(float(td.mean()), 4),
         "mean_shrub_density": round(float(sd.mean()), 4),
         "rules": {k: round(v / n, 4) for k, v in sorted(by_rule.items(), key=lambda kv: -kv[1])},
     }
     doc = {
+        "format": FORMAT,
         "grid": {"crs": tile.crs, "bounds": list(tile.bounds), "pixels": int(index.shape[0]), "resolution_m": res,
                  "origin": "row 0 = north edge, same grid as client/habitat.png"},
-        "channels": {
-            "species_mix_a.png": {"R": "quercus_douglasii", "G": "quercus_wislizeni", "B": "pinus_sabiniana", "A": "pinus_ponderosa"},
-            "species_mix_b.png": {"R": "arctostaphylos_viscida", "G": "adenostoma_fasciculatum", "B": "tree_density", "A": "shrub_density"},
-            "species_mix_c.png": {"R": "salix_lasiolepis", "G": "alnus_rhombifolia", "B": "populus_fremontii"},
-            "species_mix_index.png": {"R": "row index into mixes (0 = none)"},
+        "species": {"trees": trees_cols, "shrubs": shrub_cols},
+        "cells": {
+            "index": "client/species_mix_index.png", "index_bytes": index_bytes,
+            "density": "client/species_mix_density.png",
         },
         "encoding": {
-            "tree_weights": "species_mix_a RGBA + species_mix_c RGB: weights over the seven tree species, summing to 255 "
-                            "(0 everywhere = no trees)",
-            "shrub_weights": "species_mix_b RG: weights over the two shrub species, summing to 255",
-            "density": f"species_mix_b BA: multiplier = byte / {DENSITY_SCALE} on the client's per-habitat-class plant count "
-                       "(1.0 = the fixed-mix count); the count still scales with client/canopy.png cover",
-            "alpha": "A carries data, not opacity: decode without premultiplication (a 2D canvas getImageData zeroes RGB "
-                     "where A is 0). species_mix_index.png plus mixes[].bytes is the canvas-safe equivalent.",
+            "index": "species_mix_index.png: the cell's row in mixes (0 = no mix: the client's habitat-class mix). "
+                     "8-bit grey; with index_bytes 2, RGB with the row = R + 256 G",
+            "density": f"species_mix_density.png RGB: R tree_density, G shrub_density, multiplier = byte / {DENSITY_SCALE} "
+                       "on the client's per-habitat-class plant count (1.0 = the fixed-mix count; the count still scales "
+                       "with client/canopy.png cover); B unused. The same bytes as the row's density_bytes",
+            "weights": "mixes[].tree_bytes and shrub_bytes: [[species id, byte], ...], the species with a non-zero weight "
+                       "in the column order of `species`, each layer summing to 255 (absent: no trees or no shrubs). "
+                       "The client draws a species by walking this list in order, so the order is part of the format",
         },
-        "slots": {"trees": TREES, "shrubs": SHRUBS, "short": SHORT},
-        # Column of each species and density in mixes[].bytes (the first eight are the original layout).
-        "bytes_layout": {"trees": {SHORT[s]: c for s, c in zip(TREES, TREE_COLS)},
-                         "shrubs": {SHORT[s]: c for s, c in zip(SHRUBS, SHRUB_COLS)},
-                         "tree_density": TD_COL, "shrub_density": SD_COL},
         "mixes": table,
         "unmatched": unmatched,
         "fractions": fractions,
     }
     tile.path("client/species_mix.json").write_text(json.dumps(doc, indent=1))
-    files = ["client/species_mix_a.png", "client/species_mix_b.png", "client/species_mix_c.png", "client/species_mix_index.png"]
+    files = ["client/species_mix_index.png", "client/species_mix_density.png"]
     return {"path": "client/species_mix.json", "kind": "raster", "crs": tile.crs, "bounds": list(tile.bounds),
-            "pixels": int(index.shape[0]), "resolution_m": res,
+            "pixels": int(index.shape[0]), "resolution_m": res, "format": FORMAT,
             "files": {f: {"sha256": sha256(tile.path(f)), "bytes": tile.path(f).stat().st_size} for f in files},
             "derived_from": ["vegetation.evt", "vegetation.bps", "vegetation.classes", "vegetation.habitat", "vegetation.evc"],
-            "encoding": "species_mix_a RGBA = blue oak, live oak, gray pine, ponderosa weights; species_mix_c RGB = "
-                        "willow, alder, cottonwood weights (a + c trees sum to 255); species_mix_b RGBA = "
-                        "manzanita, chamise weights, tree_density, shrub_density (byte/100); species_mix_index L = row in mixes",
+            "encoding": "format 2: species_mix_index L = row in mixes; species_mix_density RGB = tree_density, shrub_density "
+                        "(byte/100); per-row weights as mixes[].tree_bytes / shrub_bytes over species.trees / species.shrubs",
+            "species": {"trees": trees_cols, "shrubs": shrub_cols},
             "mixes": len(table), "unmatched": len(unmatched), "fractions": fractions}

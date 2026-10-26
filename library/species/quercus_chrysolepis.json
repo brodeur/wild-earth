@@ -1,0 +1,76 @@
+{
+  "id": "quercus_chrysolepis",
+  "aliases": ["canyon_live_oak", "canyon_oak", "goldcup_oak"],
+  "scientific": "Quercus chrysolepis",
+  "common": "canyon live oak",
+  "form": "tree",
+  "architectural_model": "Rauh",
+  "deciduous": false,
+  "height_m": [8, 18],
+  "variants": [
+    {"name": "young", "weight": 0.25, "height_m": [3, 8], "trunk_radius": 0.7, "crown_scale": 0.9, "branches": 0.85, "set": {"trunk": {"stems": [1, 3], "stem_spread_deg": 28}, "crown": {"envelope": {"profile": [[0.03, 0.45], [0.15, 0.58], [0.35, 0.62], [0.55, 0.58], [0.72, 0.48], [0.86, 0.32], [1.0, 0.08]]}}}, "note": "a dense, rounded shrub-like tree from one to three stems, leafy to the ground"},
+    {"name": "mature", "weight": 0.55, "seeds": 2, "note": "the file as written"},
+    {"name": "veteran", "weight": 0.2, "height_m": [15, 22], "trunk_radius": 1.3, "crown_scale": 1.1, "gnarl": 1.25, "deadwood": {"fraction": 0.14, "levels": [1, 2], "where": "inner", "rgb": [132, 126, 118]}, "set": {"trunk": {"stems": [1, 3], "lean_deg": 18}}, "note": "a huge, leaning canyon tree with a thick short trunk or two or three heavy stems, limbs reaching out over the slope, some dead limbs"}
+  ],
+  "snag": {"fraction": 0.04, "from": "veteran", "height_m": [10, 18], "limbs": 0.5, "twigs": 0.2, "levels": 1, "shorten": [0.4, 0.9], "rgb": [156, 150, 140]},
+  "description": "An evergreen oak 8-20 m tall with a wide, dense crown, often several trunks, and thick, leathery leaves that are spiny like holly on young shoots and smooth on old ones, dark green on top with a golden fuzz underneath. It grows on steep canyon walls and rocky north-facing slopes, often leaning out over the canyon, and its big acorns sit in thick cups covered in golden hairs, which gives it the name goldcup oak.",
+  "season_notes": {
+    "winter": "Evergreen: still in full leaf, the dark crowns marking the shady canyon walls among the bare black and blue oaks.",
+    "spring": "New leaves come out pale and golden-woolly underneath with hanging catkins (April-June).",
+    "summer": "A dense dark crown; last year's flowers have become green acorns in their golden cups.",
+    "fall": "Acorns that began last year ripen and drop (September-November); old leaves turn yellow and fall a few at a time."
+  },
+  "status": "agent draft, needs local sign-off",
+  "trunk": {
+    "length_ratio": 0.4, "radius_ratio": 0.055, "taper": 0.6, "flare": 1.35, "bole_ratio": 0.25, "base_size": 0.1,
+    "curve_deg": 16, "curve_var_deg": 18, "segments": 5, "lean_deg": 12, "stems": [1, 3], "stem_spread_deg": 24,
+    "split_prob": 0.5, "split_count": 2, "split_angle_deg": 30, "bark_rgb": [138, 132, 124],
+    "bark_pattern": "checkered", "twig_rgb": [112, 104, 94],
+    "bark": {"tile_m": [0.3, 0.6], "plate_m": [0.03, 0.05], "fissure": 0.3, "contrast": 0.6, "lichen": 0.6, "relief": 0.8}
+  },
+  "crown": {
+    "shape": "cylindrical",
+    "envelope": {"profile": [[0.02, 0.58], [0.15, 0.74], [0.32, 0.8], [0.5, 0.77], [0.68, 0.66], [0.84, 0.46], [0.94, 0.25], [1.0, 0.08]], "lobes": 5, "lobe_depth": 0.12, "asymmetry": 0.22, "fill": 0.6, "edge": 1.06}
+  },
+  "levels": [
+    {
+      "count": 11, "down_angle_deg": 66, "down_angle_tip_deg": 36, "down_angle_var_deg": 16, "rotation_deg": 140, "rotation_var_deg": 30,
+      "length_ratio": 2.3, "length_var": 0.22, "curve_deg": 12, "curve_var_deg": 18, "tropism": 0.02, "taper": 0.9,
+      "radius_ratio": 0.45, "segments": 4, "droop_deg": 14, "zigzag_deg": 8, "sinuous_deg": 4
+    },
+    {
+      "count": 7, "start": 0.15, "down_angle_deg": 50, "down_angle_var_deg": 15, "rotation_deg": 140,
+      "rotation_var_deg": 30, "length_ratio": 0.5, "length_var": 0.25, "curve_deg": 18, "curve_var_deg": 16,
+      "tropism": 0.02, "taper": 1.0, "radius_ratio": 0.45, "segments": 2, "zigzag_deg": 10
+    }
+  ],
+  "foliage": {
+    "type": "broadleaf", "leaf_size_m": 0.05, "leaf_shape": "elliptic_glossy", "cluster_m": 1.6, "density": 21, "leaf_fill": 2.5,
+    "start": 0.0, "parent_start": 0.4, "orientation": "outward", "roll_deg": 60,
+    "colors": {"winter": [90, 95, 67], "spring": [124, 128, 82], "summer": [94, 98, 71], "fall": [96, 98, 68]},
+    "leaf_on": {"winter": 1.0, "spring": 1.0, "summer": 1.0, "fall": 1.0},
+    "clumps": {"radius_m": 1.0, "cards_per_clump": 11, "shell": 0.2, "flatten": 0.78, "tip_bias": 1.3},
+    "palette": [[0.72, [1, 1, 1]], [0.16, [1.35, 1.18, 0.7]], [0.07, [1.18, 1.18, 1.08]], [0.05, [1.3, 1.05, 0.6]]], "ao_min": 0.72,
+    "color_var": [0.08, 0.04]
+  },
+  "deadwood": {"fraction": 0.05, "where": "inner", "levels": [2], "shorten": 0.6, "rgb": [132, 126, 118]},
+  "twigs": {"count": [3, 4], "length": 0.5, "down_deg": 55, "down_var_deg": 20, "curve_var_deg": 20, "segments": 1, "radius_m": 0.006, "fan_deg": 60, "jitter": 0.26},
+  "lod": {
+    "near_tris_budget": 2000, "near_sides": [6, 4, 0], "mid_blobs": 5, "mid_branches": 2, "mid_sides": [3, 3], "mid_segments": [2, 1], "mid_blob_scale": 0.95,
+    "close_factor": 2
+  },
+  "targets": {
+    "crown_width_ratio": 1.35, "crown_base_ratio": 0.12, "porosity": 0.12, "foliage_rg": 0.94, "foliage_bg": 0.45,
+    "from": "reference photographs (2026-10-25, measured as in docs/tree-likeness-review.md, colour from the eroded crown mask): open-grown trees W/H 1.51, 1.05, 1.54, 1.41, base 0.27, 0.19, 0.03, 0.06, porosity 0.14, 0.10, 0.20, 0.04, r/g 0.91, 0.98, 1.16, 0.82, b/g 0.58, 0.34, 0.53, 0.20 (iNaturalist 350884919 Joshua Zupan CC0; iNaturalist 149921771 and 286777636 Garth Harwood CC BY; Commons Quercus_chrysolepis_1.jpg Stan Shebs CC BY-SA 3.0). W/H 1.35 is set below the open-grown median (1.46) because canyon-wall trees, the usual form here, are crowded and narrower (FEIS: in closed stands the crown sits in the top half of the tree); no clean silhouette of a canyon-wall tree was found. Base, porosity and colour are medians",
+    "photos": [
+      {"url": "https://www.inaturalist.org/photos/350884919", "license": "CC0", "author": "Joshua Zupan", "shows": "broad dome against the sky, Sugarloaf Ridge, January"},
+      {"url": "https://www.inaturalist.org/photos/149921771", "license": "CC BY 4.0", "author": "Garth Harwood", "shows": "rounded tree on a slope, Glenn County, July"},
+      {"url": "https://www.inaturalist.org/photos/286777636", "license": "CC BY 4.0", "author": "Garth Harwood", "shows": "dense open-grown dome to the ground, San Mateo County, June"},
+      {"url": "https://commons.wikimedia.org/wiki/File:Quercus_chrysolepis_1.jpg", "license": "CC BY-SA 3.0", "author": "Stan Shebs", "shows": "wide low dome skirted to the ground"}
+    ]
+  },
+  "notes": "Canyon live oak is one of the most variable oaks in North America (FEIS): a shrub on ridgetops, a tree of 5-30 m in sheltered canyons, here 8-18 m in the file with a veteran class to 22 m. Around Placerville it is the oak of steep, shady canyon walls and rocky north slopes (the American and Cosumnes river canyons, Weber Creek), above interior live oak's range of sites and mixing with black oak, bay and Douglas-fir higher up. Decurrent Rauh's model like interior live oak: a short trunk or several stems (stems 1-3, split_prob 0.5), a dense, spreading, rounded crown that reaches nearly to the ground in the open (crown base 0.03-0.27 in the photographs), with limbs reaching out over the slope (lean 12, asymmetry 0.22; veterans lean to 18). Open-grown crowns in the photographs are 1.05-1.54 times as wide as tall. Bark thin for an oak, pale grey-brown, smooth to finely scaly, more furrowed on big stems ('checkered' with small, shallow plates and lichen). Leaves 2-8 cm, thick and leathery, flat, spiny-toothed like holly on young trees and shoots and smooth-edged on older ones (both on one tree), dark glossy green above; the underside is covered in golden hairs that turn grey by the second year, so the palette mixes golden (16%) and pale grey (7%) leaves with a few yellow old ones: leaf_shape elliptic_glossy. Evergreen (leaves live 3-4 years), so leaf_on is 1 all year; spring growth is paler and golden. Acorns: yes, for the acorn game. Large (2.5-7.6 cm), in a thick, shallow cup covered in golden wool (the 'goldcup oak'); they take two seasons to ripen and drop in September-November. Bark texture, leaf shape and mid LOD settings follow interior live oak, which is the closest file.",
+  "sources": ["https://www.fs.usda.gov/database/feis/plants/tree/quechr/all.html", "https://ucjeps.berkeley.edu/eflora/ (Quercus chrysolepis)", "https://en.wikipedia.org/wiki/Quercus_chrysolepis", "https://www.calflora.org/ (Quercus chrysolepis)", "Reference photographs listed in targets.photos (iNaturalist and Wikimedia Commons, CC licences)"],
+  "authors": ["Wild Earth (agent draft, 2026-10-25); needs local sign-off"],
+  "license": "CC BY-SA 4.0"
+}

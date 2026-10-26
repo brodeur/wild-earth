@@ -61,7 +61,7 @@ defaults in `treegen.js` (`DEFAULTS`).
 | `id` | lowercase scientific name with underscores, e.g. `quercus_douglasii`; the same code tiles use in `species.json` |
 | `aliases` | older or short ids that resolve to this species (`blue_oak`) |
 | `scientific`, `common` | names as shown on the lineup page |
-| `form` | `tree` or `shrub`. For shrubs, `levels[0].count` is per stem and all stems spread |
+| `form` | `tree`, `shrub` or `multi_stem_shrub_tree` (grown like a shrub, drawn as a tree; see "Generator features for the foothill set"). For shrubs, `levels[0].count` is per stem and all stems spread |
 | `architectural_model` | the Hallé-Oldeman-Tomlinson model, e.g. `Rauh` (oaks, pines), `Leeuwenberg` (manzanita), with "(provisional)" if unsure. Documentation for reviewers; the generator does not read it |
 | `deciduous` | true if the crown empties in some season (default: `leaf_on.winter < 0.5`) |
 | `height_m` | `[min, max]` mature height in this region |
@@ -85,7 +85,7 @@ defaults in `treegen.js` (`DEFAULTS`).
 | `stem_spread_deg` | tilt of the extra stems (all stems for shrubs) |
 | `split_prob`, `split_count`, `split_angle_deg` | chance the trunk forks at the bole top, into how many leaders, at what angle |
 | `bark_rgb`, `twig_rgb` | trunk colour; colour the branches blend to by level |
-| `bark_pattern` | `smooth`, `checkered`, `furrowed` or `plates` (vertex-colour pattern on the trunk) |
+| `bark_pattern` | `smooth`, `checkered`, `furrowed`, `plates`, `shreddy`, and (2026-10-25) `peeling_red`, `smooth_grey`, `fibrous`, `platy` (vertex-colour pattern on the trunk and the bark texture) |
 
 `crown.shape`: Weber and Penn's shapes for level-1 length along the trunk:
 `conical`, `spherical`, `hemispherical`, `cylindrical`, `tapered_cylindrical`,
@@ -121,7 +121,7 @@ defaults in `treegen.js` (`DEFAULTS`).
 | `droop` | 0-1, needles hang (gray pine) |
 | `crossed` | true adds a second card at right angles (more volume, twice the triangles) |
 | `colors` | `{winter, spring, summer, fall}` sRGB; summer is baked, the rest are tints |
-| `leaf_on` | `{winter, spring, summer, fall}` 0-1, fraction of cards present |
+| `leaf_on` | `{winter, spring, summer, fall}` 0-1, fraction of cards present; `leaf_on_by_month` (12 values) replaces it when present |
 
 `lod`:
 
@@ -720,3 +720,334 @@ in the record and chunk below it.
 - Cottonwood leaves do not flutter (no wind) and its red catkins are not drawn; alder cones are not drawn.
 - The riparian understory (blackberry, wild rose, spicebush) and valley oak, Oregon ash, bigleaf maple and box
   elder are not in the library.
+
+## Generator features for the foothill set (2026-10-25)
+
+What the next seventeen foothill species need from the generator, the species mix and the far forest, so
+that the library can hold any number of species. Every field is optional and a file without it grows
+exactly as before: the nine existing species are pixel-identical on the lineup (same metrics, same canvas
+hash) and every one of their plants stands where it stood on all three tiles.
+
+**Leaf shapes** (`foliage.leaf_shape`; drawn by `drawShapedLeaf` in `treegen.js`, one leaf at a time,
+spaced along the spray's twigs by `LEAF_STEP` because a compound or large leaf is one big unit).
+`leafSpecimen(shape, foliage, px)` draws a single leaf for checking.
+
+| `leaf_shape` | for | fields |
+|---|---|---|
+| `palmate_compound` | buckeye | `leaflets` (default `[5, 7]`) radiating from the tip of a long petiole, the middle one longest; `leaflet_ratio` (0.62): middle leaflet / `leaf_size_m` |
+| `pinnate_compound` | walnut, ash, elderberry | `leaflets` (`[5, 9]`, odd: opposite pairs plus a terminal one) along a rachis `leaf_size_m` long; `leaflet_ratio` (0.28) |
+| `trifoliate` | poison oak | three lobed-wavy, glossy leaflets, the terminal one on a short stalk |
+| `lobed_large` | black oak, big-leaf maple | `lobes` (7), `lobe_depth` (0.55, fraction of the half-width cut away), `lobe_style` `pinnate` (lobes along the midrib, oaks) or `palmate` (from the petiole, maple), `lobe_tip` `pointed` (default; black oak's bristle-tipped lobes, maple) or `round` |
+| `cordate` | redbud | broad heart shape, notched base, short point |
+| `needle_scale` | incense cedar | `type: "scale"`. Flat sprays of scale leaves: each twig of the card is a frond branched twice in its plane; `leaf_size_m` is one branchlet (about 0.05-0.08 m). `orientation: "vertical"` holds the sprays edge-up |
+| `needle_flat` | Douglas-fir | `type: "needle"`. Flat soft needles (`leaf_size_m` one needle, 0.02-0.03 m) in two ranks along flat, pinnately branched shoots. Drawn on the pine needle path, so it gets the needle-keeping mips and the needle light (`needle_normal`, `needle_wrap`, `translucency`, as the pines) |
+
+`leaf_size_m` is the whole leaf for the compound and large shapes. A card holds fewer large leaves than
+small ones, so these crowns need a higher `leaf_fill` (about 1.5-2.5) or `cards_per_m2` to stay as dense
+as an oak. The existing shapes are unchanged.
+
+**Bark** (`trunk.bark_pattern`, texture `barkTexture`, plus the vertex-colour pattern of the mid trunks):
+
+| pattern | for | look, and the `trunk.bark` fields it reads |
+|---|---|---|
+| `peeling_red` | madrone | smooth satin red-orange (`bark_rgb` is the mean) in sheets; a third of them freshly bared, pale olive-cream, and only a border between bared and old bark shows, as the old sheet's curled lip and its shadow. `plate_m` (default `[0.1, 0.18]`) is a sheet |
+| `smooth_grey` | buckeye, bay | smooth, faintly mottled, with short horizontal lenticels; `lichen` adds pale patches |
+| `fibrous` | incense cedar | long interlacing fibrous ridges and dark furrows, fine lengthwise fibres, a few pale peeling strips; `ridge_m` (0.04) |
+| `platy` | black oak, valley oak | thick blocky plates (`plate_m`, default `[0.1, 0.2]`), deep dark fissures (`fissure`), a few horizontal cross-checks |
+
+`checkered`, `furrowed`, `shreddy`, `smooth` and `plates` are as before.
+
+**Flowers and berries** (`foliage.flowers`, `foliage.berries`): drawn into the card textures in the season
+they show, at the spray's twig ends (on a bare-crown texture at its twig ends and, for flowers, along its
+outer twigs), in their own random stream after the leaves, so the leaves are unchanged. They show in every
+tier that uses card textures (close, near and mid) but not in the far impostors, and not on pine needle
+cards (`needle_brush`, `needle_drooping`, `needle_flat`).
+
+| field | meaning |
+|---|---|
+| `season` | `"spring"` etc., or a list (`["fall", "winter"]`) |
+| `months` | optional `[from, to]` (1-12, inclusive, may wrap: `[11, 1]`); when given it decides instead of `season`. Use it when flowers and berries share a season (elderberry flowers in June, berries in August) |
+| `form` | flowers: `candle` (an upright panicle, buckeye), `cluster` (a round head of florets: toyon, elderberry, redbud), `bud` (one small dot); berries: `cluster` (default) or `bud` |
+| `rgb` | sRGB colour |
+| `size_m` | size of one inflorescence or berry cluster |
+| `density` | 0-1, the fraction of twig ends that carry one. On a bare crown, flowers cover at most 0.6 x density of the spray and berries hang from about a dozen shoots per card |
+| `before_leaves` | flowers only: shown on the bare-crown texture while the crown is under half in leaf (redbud in March, on max(`winter_twigs`, 0.5) of the cards); once it is half leafed they show on the leaf texture |
+
+Defaults: flowers `{ form: "cluster", size_m: 0.1, density: 0.5, before_leaves: false, season: "spring" }`,
+berries `{ form: "cluster", size_m: 0.06, density: 0.4, season: "fall" }`. Other fields (`rgb_unripe`) are
+not read. The colour is applied as a linear ratio to the season's leaf colour (or the twig colour on a bare
+crown) with up to 8x headroom, so white candles on dark leaves read white; the material's gain comes from
+the leaves alone.
+
+**Months** (`foliage.leaf_on_by_month`: twelve values, January first, each the middle of its month, linear
+in between and round the year). When present it replaces `leaf_on[season]`, so buckeye can be full in April,
+dropping in July and bare by August. The client works in months: the season selector's "tracks today's date"
+uses today's date, a chosen season its middle month (winter 1.5 = mid-January, spring 4.5, summer 7.5, fall
+10.5; `SEASON_MONTH`, `seasonMonth`, `leafOnAt` and `decoActive` in `treegen.js`). Vegetation, the far
+impostors and the lineup (a Month menu, `?month=1..12`) all pass it. Season colours stay per season.
+
+**Form `multi_stem_shrub_tree`** (toyon, elderberry at 3-6 m). The shrub form spreads every stem from the
+base and gives each its own branches, which suits them, but it also draws the plant as a shrub: shrub LOD
+defaults and caps and, past the hand-over, a chaparral patch (the far impostor widens far shrubs three
+times). A willow-style `tree` with several stems shares one tree's level-1 limbs among its stems. This form
+grows like a shrub (all stems spread, `levels[0].count` per stem, stems fitted to the crown envelope, dead
+stems with `deadwood.levels: [0]`) and is drawn as a tree. Use `trunk.stems` (`[3, 6]`) and
+`trunk.stem_spread_deg` (15-30). It may sit in either list of a species-mix row.
+
+**Library size.** Vegetation builds meshes only for the species the tile can place (its mix rows plus the
+class mixes, `tileSpecies` in `vegetation.js`), and a mix row that names a species missing from the library
+leaves it out with a warning instead of failing. The lineup shows every species in `index.json`;
+`?add=<id>,<id>` also loads files not yet listed (drafts, the `_test_` files) and `?only=<id>,...` shows just
+those. `addSpecies(raw)` registers a species at run time. `embed_builtin.py` embeds every listed species and
+skips ids starting with `_`.
+
+**Species mix: format 2.** Cells carry only their row (`species_mix_index.png`) and their two density
+multipliers (`species_mix_density.png`); the rows carry the weights of however many species they name, as
+`tree_bytes` / `shrub_bytes` in the column order of `species`. The weights were never varied per cell (every
+cell of a row held the row's bytes), so nothing was lost. The species-mix step was re-run on the three tiles;
+every row's bytes match format 1 and every plant's position, slot, scale and rotation hash the same for all
+nine species on all three tiles. Format 1 tiles still load. Details in
+[tile-spec.md](tile-spec.md), "Species mix". A new species in a rule is appended to the columns
+automatically (`columns()` in `species_mix.py`); the existing columns keep their order.
+
+**Far impostor atlas.** Every plant still draws one of 12 slots, but the atlas bakes trees per species by how
+common the species is on the tile (`planSlots` in `impostors.js`): at least 2% of its layer (trees or
+shrubs) 12 slots, which bake its 4-6 distinct class trees; rarer 4 slots (4 trees); not placed on the tile,
+none. Over 64 distinct trees (`MAX_TREES`: 64 trees x 5 views in rows of ten 128-texel cells is a
+1280 x 4096 atlas, inside every WebGL2 device's texture limit; 53 MB with mips for both atlases), the species
+with the smallest share of all plants per baked tree gives up a tree, repeatedly, none under 2 trees before
+all are at 2. A plant whose own tree is not baked draws its class's baked tree (`impostorSeed`). Measured and
+modelled:
+
+| tile | species | distinct trees | atlas | MB |
+|---|---|---|---|---|
+| any tile before (9 species x 12 slots) | 9 | 42 | 1280 x 2688 | 35 |
+| home tile now (cottonwood 0.9% of trees: 4 slots) | 9 | 41 | 1280 x 2688 | 35 |
+| 15 species (the nine plus black oak, valley oak, incense cedar, buckeye, toyon, poison oak) | 15 | 70, capped to 63 | 1280 x 4096 | 53 |
+| all 26, home-tile proportions (uncapped: 114 trees, 95 MB, 1280 x 7296, too tall for many GPUs) | 26 | 64 | 1280 x 4096 | 53 |
+
+With all 26, blue oak, live oak, gray pine and ponderosa keep all their class trees (6, 4, 5, 5) and every
+other species has 2. The bake costs about 70 ms per tree at load.
+
+**Known limits.**
+- Flowers and berries are texture detail: they do not stand out of the crown's silhouette, and the far
+  impostors (beyond about 1.2 km) do not show them (they are baked from the summer texture and tinted).
+- A flowering texture stores the leaves at up to 1/8 brightness to leave room for white flowers, so its
+  leaves have fewer grey levels (about 10) than the plain texture; it is used only in its season.
+- `needle_scale` sprays have no needle light (they are drawn on the leaf path); `needle_flat` has no flowers
+  or cones.
+- Rare species beyond the hand-over have as few as 2 tree shapes when a tile holds all 26 species.
+
+
+## Foothill trees, set A (2026-10-25)
+
+Six broadleaf trees of the foothills around Placerville and Shingle Springs (300-700 m), so the oak woodland,
+canyons and creeks no longer borrow oaks for them. Agent drafts, `status` "agent draft, needs local sign-off",
+CC BY-SA 4.0. Registration in `index.json`, the generator fields they use and placement in the species mix
+belong to other lanes; until those land the files are on disk but not loaded by the client.
+
+| id (alias) | form | height (file / classes) | crown | foliage | seasons |
+|---|---|---|---|---|---|
+| `aesculus_californica` (`buckeye`) | 1-4 pale smooth stems (`smooth_grey`), short thick trunk forking low, long limbs drooping to the grass | 4-9 m; young 2-4 (shrubby), veteran 8-12 | low broad dome, wider than tall | `palmate_compound` (5-7 leaflets), 18 cm; white flower candles in spring; big brown fruit in fall | leaf-out February-March, full April-June, brown and dropping July, bare August-January (`leaf_on_by_month`) |
+| `arbutus_menziesii` (`madrone`) | leaning, sinuous red stems (`peeling_red`, green-cream under-bark), often 2-3 from a burl | 10-22 m; young 4-9, veteran 18-28; snag 5% | irregular, one-sided, billowy clumps at the branch ends | `elliptic_glossy`, 11 cm, old leaves red in the palette; white flower clusters in spring, red berries in fall | evergreen |
+| `juglans_hindsii` (`black_walnut`) | one stout, dark, deeply furrowed trunk, coarse sparse branching | 12-18 m; young 5-10, veteran 16-22; snag 5% | broad rounded dome, feathery and see-through | `pinnate_compound` (15-19 leaflets), 30 cm; green nuts in fall | leaf-out April, yellow October, bare November |
+| `umbellularia_californica` (`bay`) | 2-5 stems from a burl, each keeping a leader (`smooth_grey`, green twigs) | 10-20 m; young 3-8 (shrubby clump), veteran 18-25 (3-7 stems) | dense dark dome, foliage low | `elliptic_glossy`, 8 cm; pale yellow flowers in winter; olive-like fruit | evergreen |
+| `acer_macrophyllum` (`bigleaf_maple`) | one to three trunks, opposite branching (rotation 90), mossy bark | 15-24 m; young 6-12, veteran 22-30 (2-4 stems); snag 5% | rounded, big lobes | `lobed_large` (5 lobes), 25 cm; yellow-green flower tassels before the leaves | leaf-out March-April, gold October-November |
+| `fraxinus_latifolia` (`oregon_ash`) | straight trunk keeping its leader, stiff ascending opposite branches | 12-20 m; young 5-10, veteran 18-25; snag 5% | narrow oval, open | `pinnate_compound` (5-7 leaflets), 22 cm, pale hairy undersides | late leaf-out (April), clear yellow early October, bare early |
+
+**Fields used** (added by the generator lane working in parallel, uncommitted in the working tree when these
+files were checked): `foliage.leaf_shape` `palmate_compound` and `pinnate_compound` with `foliage.leaflets`
+[min, max], `lobed_large` with `foliage.lobes`, `lobe_depth` and `lobe_style: "palmate"` (maple);
+`trunk.bark_pattern` `smooth_grey` and `peeling_red`; `foliage.flowers`, `foliage.berries` (buckeye's large fruit
+and walnut's nuts are drawn as berries; `size_m` is one fruit or one cluster) and `foliage.leaf_on_by_month`
+(twelve values, January first). Maple and ash seeds (samaras) and walnut catkins are not drawn. The season
+`leaf_on` values stay for older code; with `leaf_on_by_month` the lineup's summer is mid-July, so buckeye is
+measured with about 55% of its cards, between its full June crown and its bare August one.
+
+**Reference photographs** (Wikimedia Commons and iNaturalist, public domain, CC0, CC BY, CC BY-SA; listed with
+author and licence in each file's `targets.photos`, not copied into the repository), measured as in
+[tree-likeness-review.md](tree-likeness-review.md): W/H and crown base from the tree's extremes, porosity as
+the sky fraction inside the crown rows that have sky behind them, colour as the linear mean of crown pixels
+with sky, flowers and (new for these) orange-red bark masked out. Few photos have a clean sky silhouette of
+a whole tree; where the lower crown is hidden (Oregon ash in thickets) the crown base is a judgement, and the
+madrone W/H (0.9) is set between the open-grown (1.49) and forest-grown (0.46) trees measured.
+
+**Lineup metrics** (near tier, the three measured seeds, `client/lineup.html?add=<ids>&only=<ids>` with the
+generator lane's working-tree `treegen.js` and `lineup.js` of 2026-10-25 evening; photo target in brackets):
+
+| species | W/H | crown base | gaps | r/g | b/g | near triangles (budget) |
+|---|---|---|---|---|---|---|
+| California buckeye (mid-July, about 55% of cards) | 1.46 (1.45) | 0.13 (0.05) | 0.15 (0.18) | 0.82 (0.80) | 0.36 (0.36) | 1,048-1,514 (1,900) |
+| Pacific madrone | 0.89 (0.9) | 0.30 (0.30) | 0.29 (0.28) | 0.87 (0.88) | 0.70 (0.69) | 1,602-2,612 (2,000) |
+| black walnut | 1.11 (1.15) | 0.19 (0.13) | 0.29 (0.34) | 0.78 (0.78) | 0.49 (0.49) | 1,168-1,276 (2,000) |
+| California bay | 1.09 (1.0) | 0.15 (0.10) | 0.25 (0.25) | 0.94 (0.94) | 0.52 (0.50) | 2,134-2,428 (2,300) |
+| big-leaf maple | 1.00 (0.9) | 0.21 (0.15) | 0.21 (0.25) | 0.88 (0.88) | 0.51 (0.50) | 1,658-1,908 (2,200) |
+| Oregon ash | 0.66 (0.7) | 0.31 (0.25) | 0.29 (0.33) | 0.80 (0.80) | 0.42 (0.42) | 1,754-1,900 (1,900) |
+
+All within the lineup's tolerances except buckeye's crown base (0.13 against 0.05: the photos show foliage to
+the grass; lowering the limbs further put cards below ground and raised the base instead). Summer colours were set from the photo ratios
+and then the blue raised by about 0.05 so the rendered ratio lands on the target, since the lineup's render
+reads b/g lower than the file's linear colour. Every class and snag builds without errors in the near, mid and
+close tiers; veterans run over the reference budget as the other species' do. An earlier pass against HEAD's
+generator (leaf shapes falling back to the plain spray) gave the same numbers within 0.02, so the gaps come
+from the card layout, not the new leaf textures.
+
+**Known limits.**
+- Not seen in the world: the files are not in `index.json` or the species mix yet. On the lineup the crowns read
+  as clumps of rounded sprays; walnut in particular is less feathery than the photos, and buckeye's flower
+  candles (density 0.6) are drawn into the cards but barely show at lineup distance.
+- Local sign-off is the main open question, especially buckeye's summer-dry timing on local sites, how far
+  black walnut (and its hybrids) reaches up the foothill creeks, and whether madrone and bay here grow as in the
+  coastal photos used.
+
+## Foothill trees, set B (2026-10-25)
+
+Three oaks and two conifers of the foothills around Placerville and Shingle Springs (300-900 m): the big
+valley-floor oak, the canyon-wall oak, the oak of the lower conifer forest, and the two conifers that come
+down north slopes and canyons into the oak woodland. Agent drafts, `status` "agent draft, needs local
+sign-off", CC BY-SA 4.0. Registration in `index.json`, the generator fields they use and placement in the
+habitats and species mix belong to other lanes; until those land the files are on disk but not loaded by the
+client.
+
+| id (alias) | form | height (file / classes) | crown | foliage | seasons |
+|---|---|---|---|---|---|
+| `quercus_lobata` (`valley_oak`) | massive short trunk (`platy`, grey blocks), forking into a few heavy limbs that arch down, pendulous outer branchlets; mistletoe common | 15-25 m; sapling 3-6, young 8-15, veteran 22-30 (broad, drooping skirt, dead limbs); snag 5% | broad dome, wider than tall, foliage low | `oblong_wavy`, 8 cm, `lobe_depth` 0.55 (deeply lobed) | leaf-out March, dark green summer, yellow-brown fall (leaf-on 0.75), bare winter |
+| `quercus_chrysolepis` (`canyon_live_oak`, `canyon_oak`, `goldcup_oak`) | 1-3 stems, short trunk, leaning out over the slope (lean 12, asymmetry 0.22); pale scaly bark (`checkered`, fine) | 8-18 m; young 3-8 (shrubby, 1-3 stems), veteran 15-22; snag 4% | dense wide dome to the ground | `elliptic_glossy`, 5 cm, golden and grey undersides in the palette | evergreen; pale golden new growth in spring |
+| `quercus_kelloggii` (`black_oak`, `california_black_oak`) | upright, clean bole, forking with age; dark, nearly black `platy` bark | 10-22 m; sprout clump 2.5-6 (2-4 stems after fire), young 6-12 (narrow), veteran 18-26 (forked, hollow); snag 5% | rounded, about as wide as tall | `lobed_large` (`lobes` 7), 15 cm | pink leaf-out April-May (leaf-on 0.85), yellow-green summer, yellow to orange fall (leaf-on 0.75), bare winter |
+| `calocedrus_decurrens` (`incense_cedar`) | excurrent, 36 spiral limbs drooping then turning up; swollen base; cinnamon `fibrous` bark | 20-36 m; young 4-12 (dense cone to the ground), old-growth 32-45 (ragged, clear bole, dead lower limbs); snag 5% (top broken) | narrow cone, irregular when old | `scale` / `needle_scale`: flat fan sprays, one plane per card along the shoot | evergreen; slightly golden in winter (pollen cones) |
+| `pseudotsuga_menziesii` (`douglas_fir`) | excurrent, 30 limbs in whorls of four, drooping with upturned tips, pendent side shoots; deep `furrowed` bark (young: `smooth`) | 30-48 m; young 6-18 (dense spire), old-growth 45-60 (long clear bole, ragged top); snag 6% (top broken) | narrow cone over a clear bole | `needle_flat`, 2.5 cm, one plane per card, hanging (`droop` 0.4) | evergreen; bright yellow-green spring flush |
+
+**Acorns.** All three oaks bear acorns for the acorn game: valley oak (long, slender, 3-5 cm, ripen in one
+season, drop September-November), canyon live oak (large, in a thick golden-woolly cup, two seasons) and black
+oak (2.5-3 cm, deep scaly cup, two seasons). The game finds oaks through `OAK_SHORT` in `vegetation.js`; the
+aliases `valley_oak`, `canyon_live_oak` and `black_oak` are there for that lane. Incense cedar and Douglas-fir
+have cones only, and no cone field is set (Douglas-fir's hanging cones with three-pointed bracts belong to
+`needle_flat` if the generator draws them).
+
+**Fields used** (from the generator lane working in parallel; names as agreed, not yet in `treegen.js` at the
+time of writing): `foliage.leaf_shape` `lobed_large` with `foliage.lobes` (black oak), `needle_scale` (incense
+cedar, `foliage.type` `scale`, `leaf_size_m` 0.012 is one scale leaf; a spray is 10-20 cm), `needle_flat`
+(Douglas-fir); `foliage.lobe_depth` on `oblong_wavy` (valley oak, ignored if the shape does not support it);
+`trunk.bark_pattern` `platy` (valley and black oak) and `fibrous` (incense cedar). The conifers also use the
+pines' needle fields (`needle_planes`, `tuft_spread_deg`, `tuft_up`, `droop`, `twist_deg` and the needle-light
+strengths, set a little below ponderosa's).
+
+**Reference photographs** (Wikimedia Commons and iNaturalist, public domain, CC0, CC BY, CC BY-SA; 4-6 per
+species with author and licence in each file's `targets.photos`, not copied into the repository), measured as
+in [tree-likeness-review.md](tree-likeness-review.md): W/H from the 1st-99th percentile of non-sky columns per
+row, crown base from the lowest crown row, porosity as the sky fraction inside the crown span over rows with
+sky behind them, colour as the linear mean of the crown mask eroded by 3 px with near-black shadow left out.
+Almost every clean silhouette is an open-grown tree. Where the trees here grow crowded, the target is set
+below the open-grown median and the file says so: canyon live oak W/H 1.35 (photos 1.05-1.54), valley oak
+1.35 (1.30-1.84), and Douglas-fir W/H 0.5 and crown base 0.3 against open-grown 0.58-0.77 and 0.03-0.10,
+because here it stands in mixed conifer on north slopes. Black oak's summer b/g is lowered from 0.70 to 0.62
+for the blue cast of the one open-grown summer photo (an old film scan).
+
+**Lineup metrics** (near tier, the three measured seeds, measured with the lineup's own method in a scratch
+copy of the page with the files loaded by hand, run in headless Chromium, against `treegen.js` as in the
+working tree on 2026-10-25 before the new fields landed: `lobed_large`, `needle_scale` and `needle_flat` fall
+back to the plain leaf spray and `platy` and `fibrous` to the default bark; photo target in brackets):
+
+| species | W/H | crown base | gaps | r/g | b/g | near triangles (budget) | mid W/H, base, gaps |
+|---|---|---|---|---|---|---|---|
+| valley oak | 1.35 (1.35) | 0.11 (0.10) | 0.30 (0.23) | 0.97 (1.00) | 0.62 (0.64) | 2,188-3,126 (2,200) | 1.35, 0.11, 0.20 |
+| canyon live oak | 1.26 (1.35) | 0.16 (0.12) | 0.20 (0.12) | 0.96 (0.94) | 0.44 (0.45) | 2,000-3,844 (2,000) | 1.23, 0.14, 0.17 |
+| California black oak | 0.90 (0.92) | 0.25 (0.21) | 0.21 (0.30) | 0.88 (0.87) | 0.61 (0.62) | 1,356-1,604 (2,000) | 0.83, 0.25, 0.28 |
+| incense cedar | 0.40 (0.42) | 0.13 (0.14) | 0.28 (0.15) | 0.92 (0.92) | 0.39 (0.42) | 2,200-2,690 (2,200) | 0.41, 0.13, 0.06 |
+| Douglas-fir | 0.49 (0.50) | 0.27 (0.30) | 0.38 (0.30) | 0.91 (0.91) | 0.60 (0.61) | 1,658-2,600 (2,600) | 0.41, 0.31, 0.77 |
+
+Off tolerance: canyon live oak's and incense cedar's gaps (both too open on the plain spray), valley oak's
+gaps by 0.07, and Douglas-fir in the mid tier (0.77 gaps: the plain spray minified at mid is nearly empty; with
+`needle_brush` standing in for `needle_flat` the same skeleton measured 0.18-0.36 mid and 0.53 near). Black
+oak's wood took 1,980 of its 2,000 triangles at first (12 cards); its level-2 tubes are now off at near
+(`near_sides` [7, 3, 0]), as are valley oak's. Douglas-fir has the largest crowns in the library (a 47 m
+reference tree, 2,250 m² of envelope), so it has a 2,600 budget and large cards (2.6 m). Every class and snag
+builds without errors; veterans and the largest mature seeds run over the reference budget as the other
+species' do (canyon live oak's veteran 4,758). One tree per class (`classes`): valley oak sapling, young,
+mature, veteran W/H 1.08, 1.02, 1.57, 1.31; black oak young 0.49 (the narrow stand form); Douglas-fir young
+gaps 0.58 (too open for a dense young spire, card cap). Re-measure all five once the new leaf shapes and bark
+patterns are drawn: the textures will move the gaps and colour.
+
+**Known limits.**
+- Unverified on the real lineup and in the world: the files are not in `index.json` and the new fields were not
+  drawn when they were written.
+- Douglas-fir's targets for W/H and crown base are a judgement for stand-grown trees, not a photo median; no
+  clean sky silhouette of a Sierra stand-grown tree was found. The only measured Sierra photographs are an
+  incense cedar in Placer County, one at Long Barn and an old valley oak at Mariposa; the rest are from the Coast
+  Ranges, the Cascades, southern California mountains and Washington.
+- Local sign-off is the main open question: how low Douglas-fir and incense cedar actually come on the north
+  slopes and canyons near Placerville, how far black oak reaches below 500 m, and whether the canyon live oaks
+  here are mostly the canyon-wall tree or the shrubby ridge form.
+
+## Foothill shrubs (2026-10-25)
+
+Six shrubs of the Placerville and Shingle Springs foothills, so the oak woodland understory, the grassland edges
+and the chaparral are not only manzanita and chamise. Agent drafts, `status` "agent draft, needs local sign-off",
+CC BY-SA 4.0. They use the generator fields of the foothill set (`leaf_shape` `cordate`, `trifoliate`,
+`pinnate_compound`, `bark_pattern` `smooth_grey`, `foliage.flowers`, `foliage.berries` with `months` [from, to],
+`leaf_on_by_month`, `form: "multi_stem_shrub_tree"`). Registration in `index.json`, the species mix, the habitats
+and the shrub impostor field are other lanes' work.
+
+| id (alias) | form | height (file / classes) | crown | foliage | seasons |
+|---|---|---|---|---|---|
+| `heteromeles_arbutifolia` (`toyon`) | `multi_stem_shrub_tree`: 3-6 grey stems spreading 22°, 6 limbs each | 2.5-5 m; young 1-2.5, old 4-6 (a small tree of a few leaning trunks, dead limbs) | dense rounded dome, W/H about 1.1, leafy nearly to the ground | `elliptic_glossy`, 8 cm, dark glossy green, a few yellow and red old leaves | evergreen; cream flower clusters June-July; red berries November-January (`season` fall and winter) |
+| `cercis_occidentalis` (`redbud`) | `shrub`: 5-9 straight stems in a vase (34°), zig-zag red-brown twigs | 2.5-5 m; young 1.2-2.5 (narrow vase), old 4-6 | inverse-conical vase to a broad uneven top, crown base 0.2 | `cordate`, 7.5 cm, blue-green (palette: 15% bloom) | magenta clusters on bare wood February-April (`before_leaves`), leaves from mid-April, orange to red-brown in fall, bare December-March with hanging brown pods (the `catkins` field) |
+| `toxicodendron_diversilobum` (`poison_oak`) | `shrub`: 3-7 slender leaning stems with one level of short leafy shoots, foliage on the stems from 20% up | 1-2.5 m; low 0.3-0.9 (a few shoots in the grass), thicket 1.8-3 | open, taller than wide (W/H 0.8), porous | `trifoliate`, 10 cm (the leaf of three) | red-tinged leaves in March, glossy green, scarlet in October, bare November-February; greenish flowers April-May, whitish berries August-November |
+| `baccharis_pilularis` (`coyote_brush`) | `shrub`: 8-14 stems spreading 38°, short upright twigs | 1-2.5 m; young 0.5-1.2, decadent 1.8-3 (grey dead centre) | rounded mound, W/H 1.2, leafy to the ground | `oval`, 2.2 cm, bright to olive green | evergreen; cream flower heads September-December (female plants go white and fluffy) |
+| `sambucus_nigra_caerulea` (`elderberry`) | `multi_stem_shrub_tree`: 5-10 stems spreading 32°, arching limbs (droop 8°) | 3-6 m; young 1.5-3 (upright wands), old 5-7 (corky trunks, dead canes) | broad irregular dome, W/H about 1.4 | `pinnate_compound`, 22 cm leaves | flat cream flower plates April-June, powder-blue berries July-September, yellow and dropping in fall, bare December-February |
+| `frangula_californica` (`coffeeberry`) | `shrub`: 5-9 stems spreading 42° | 1.5-3.5 m; young 0.7-1.5, old 2.5-4 | dense rounded dome wider than tall, W/H 1.4 | `elliptic_glossy`, 6 cm, grey-green (the hoary ssp. *tomentella* is common here; 25% pale leaves) | evergreen; red and black berries August-November |
+
+`levels[0].count` is per stem for all six (the generator grows `multi_stem_shrub_tree` like a shrub, with tree
+LOD defaults). Berry and flower `size_m` is the size of one cluster.
+
+**Reference photographs** (in each file's `targets.photos`; 37 in all, not copied into the repository): iNaturalist
+research-grade observations from El Dorado and Placer counties (CC0 and CC BY: Hidden Falls, Auburn, Foresthill,
+Pilot Hill, Cameron Park, Shingle Springs, El Dorado Hills, Placerville, Pollock Pines, Ice House Road), plus
+Wikimedia Commons for the elderberry and poison oak habit, of which there were no clean local photographs. Most
+local photographs are close-ups or shrubs in thickets, so W/H was read off a 10% grid from the few open-grown plants
+(often cropped at a side: a lower bound) and the porosity targets are judgement, not measurement. Colour is the
+linear mean of the foliage pixels in a hand-placed box.
+
+**Lineup** (near tier, mean of the three measured seeds; photo target in brackets; measured 2026-10-25 against the
+working-tree generator with the foothill-set leaf shapes, by adding the files to `LIBRARY` in the page, since they are
+not in `index.json` yet):
+
+| species | W/H | crown base | gaps | r/g | b/g | near triangles per seed (budget) | mid gaps |
+|---|---|---|---|---|---|---|---|
+| toyon | 0.96 (1.1) | 0.15 (0.1) | 0.12 (0.15) | 0.89 (0.86) | 0.53 (0.58) | 774-858 (1,200) | 0.28 |
+| western redbud | 0.96 (1.0) | 0.30 (0.2) | 0.24 (0.25) | 0.82 (0.83) | 0.59 (0.61) | 658-962 (1,100) | 0.47 |
+| poison oak | 0.74 (0.8) | 0.15 (0.15) | 0.29 (0.35) | 0.76 (0.75) | 0.43 (0.47) | 364-442 (1,000) | 0.36 |
+| coyote brush | 1.24 (1.2) | 0.16 (0.05) | 0.20 (0.2) | 0.95 (0.95) | 0.46 (0.48) | 654-1,006 (1,000) | 0.30 |
+| blue elderberry | 1.48 (1.4) | 0.20 (0.08) | 0.26 (0.22) | 0.87 (0.86) | 0.54 (0.56) | 922-1,164 (1,300) | 0.65 |
+| coffeeberry | 1.29 (1.4) | 0.18 (0.08) | 0.13 (0.18) | 0.99 (0.98) | 0.65 (0.70) | 704-1,142 (1,100) | 0.29 |
+
+Card density is set per species with `foliage.cards_per_m2` (tuned to the gaps). Mid triangles 39-151 per plant.
+Every class builds at near, mid and close.
+
+**Impostor cards wanted** (for the lane that adds these to the shrub impostor field, `shrubfield.js`, in the manner
+of the fifth and sixth passes):
+
+| species | outline | wood seen at the base | leaf picture | seasons on the card |
+|---|---|---|---|---|
+| toyon | a big rounded dome (W/H 1.0-1.5), lumpy in 4-6 sub-crowns, nearly to the ground; old plants a small tree with a short trunk | 3-6 smooth grey stems, lichen-spotted, under the dome only on old plants | dark glossy elliptic leaves 5-10 cm in rosettes at the shoot ends, a bright glint, a few yellow-red old leaves | cream flat flower clusters on the top in June; red berry clusters in bunches on the outer crown November-January (the one red shrub in a green winter woodland) |
+| western redbud | a vase: narrow at the base, broad, uneven flat-ish top; open | many straight grey-brown stems fanning from one point, red-brown zig-zag twigs | round heart-shaped leaves, flat, blue-green, overlapping like scales | magenta-pink covering the bare twigs (March to mid-April); bronze-green new leaves; orange, yellow and red-brown in fall; bare grey twigs with hanging brown pods in winter |
+| poison oak | tall and loose (W/H 0.6-1.0), ragged top, sky through it; colonies merge into a low tangle | 3-7 thin grey-brown leaning stems, bare in the lowest fifth | leaves of three, lobed like small oak leaves, glossy | red-tinged in March, bright glossy green, scarlet and orange from September (the brightest red in the woodland), bare grey stems November-February. Its vine form up oak trunks belongs on the oaks, not in the field |
+| coyote brush | a dense round mound (W/H 1.2-1.6), fine-textured, edge of many small twig tips | rarely seen; on old plants grey dead stems in an open centre | tiny (1-4 cm) toothed bright green leaves crowded on upright twigs: a fine, slightly glossy texture like a coarse moss | brightest green in spring; dusty olive in late summer; cream flecks September-December, and on half the plants (the females) a white fluffy haze in November-December |
+| blue elderberry | a broad, irregular dome wider than tall, arching branches drooping at the edge, gappy | several pale grey-brown corky stems leaning out, grey dead canes inside | long feather-compound leaves (5-9 narrow leaflets), yellow-green to grey-green, a soft, drooping texture | flat cream plates 10-30 cm across on the top April-June; powder-blue berry clusters July-September; yellowing and thinning in fall; bare pale stems December-February |
+| coffeeberry | a dense rounded dome, wider than tall, smooth outline | smooth grey stems, reddish twigs, seldom seen | narrow oval leaves 3-8 cm, dull grey-green with pale undersides (hoary form), finer than toyon's | evergreen; red and black berries mixed on the outer crown August-November |
+
+**Known limits and uncertain points.**
+- Crown bases come out 0.15-0.30 against photo targets of 0.05-0.2 (manzanita and chamise also read 0.19): limbs
+  start a little way up the stems. Toyon and coffeeberry read a little narrow, elderberry a little wide.
+- The mid tier is much more open than the near tier for elderberry (0.65 against 0.26) and redbud (0.47 against
+  0.24); raising `lod.mid_cards` did not change it, so it is the far card's texture for large compound and
+  heart-shaped leaves. Worth a look in the generator.
+- Poison oak's vine form, the commonest way people meet it under the oaks, is not drawn (an epiphyte on oak trunks,
+  like the mistletoe, would do it).
+- Redbud's bare winter crown (`winter_twigs` 0.4 with pods) still reads as reddish-brown clumps at the lineup's
+  distance rather than a fine grey twig haze; its flowers render a dusty magenta, darker than in the photographs.
+- Coffeeberry: which subspecies dominates near Placerville (the grey hoary ssp. *tomentella* or the greener
+  ssp. *californica*) needs a local answer; the leaf shape `elliptic_glossy` is too shiny for the hoary form.
+  `berries.rgb_unripe` (red) documents the red stage and is not read by the generator.
+- Architectural models are provisional for all six (Troll for redbud and Champagnat for elderberry are guesses).
+- Fall targets (`fall_rg`) for poison oak and elderberry are rough: no clean full-shrub fall photograph was measured.
