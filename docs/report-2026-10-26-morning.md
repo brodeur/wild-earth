@@ -132,9 +132,12 @@ release, WebGL) was still running; its commit, if it verified, is the last in `g
 
 | f6388e3 | Every tree on the home tile stands on a real lidar crown, sized to it; the biggest 5% of each species by crown (or over an absolute height: blue oak 15 m, ponderosa 40 m) are the old-growth trees, with the 20 largest per species carrying landmark ids; the savanna oaks line up with the photo; rare species share mesh sets between age classes, so the start view's draw calls fall from 412 to 295. |
 
-| 0f235d5 | The squirrel's camera dissolves the leaves in front of it in a crown and follows a leap. |
 | 4e2ef5d | Beyond the fine square the 10 m mesh passes through the 1 m ground, and grass, shrubs, rocks and still animals follow the drawn surface. |
-| (next) | The Placerville tile has its lidar too: 1 m ground, canopy height, 477k crowns (median 17.8 m; a taller forest than the home tile's), an hour to run. |
+| 775510b | The Placerville tile has its lidar too: 1 m ground, canopy height, 477k crowns (median 17.8 m; a taller forest than the home tile's), an hour to run. |
+| 0f235d5 | The squirrel's camera dissolves the leaves in front of it in a crown and follows a leap. |
+| e010634 | Trees are drawn on the surface drawn under them (draped in the vertex shader; perches and climbs unaffected); rare species get their old tree up close. |
+| a97cb40 | Species polish: acorn cards for the three new oaks, buckeye candles and elderberry plates visible, lower crown bases, spec fields. |
+| (next) | The Cosumnes tile has its lidar too: 398k crowns; all three tiles now carry the 1 m ground, canopy height and real crowns. |
 
 Open from the day: Sentinel-2 seasonal ground colour and crown inpainting (your go);
 the attribution form for generated assets; the next animal batch (turkey, ground squirrel,

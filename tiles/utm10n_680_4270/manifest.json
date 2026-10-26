@@ -15,7 +15,7 @@
   38.65029129231017
  ],
  "size_m": 10000,
- "generated_at": "2026-10-26T03:47:27Z",
+ "generated_at": "2026-10-26T07:31:13Z",
  "generator": {
   "name": "wild-earth-pipeline",
   "version": "0.2.0"
@@ -25,7 +25,8 @@
   "hydrology_rewilded": true,
   "projection_years": 0,
   "vegetation_backfilled": true,
-  "imagery_erased": true
+  "imagery_erased": true,
+  "lidar": true
  },
  "layers": {
   "terrain.dem": {
@@ -890,9 +891,10 @@
     "client.geology",
     "client.soils",
     "terrain.dem",
-    "vegetation.evc"
+    "vegetation.evc",
+    "terrain.roughness"
    ],
-   "formula": "outcrop = clip(resistance[rock_class] * shallowness * terrain * (1 - tree_cover_pct/100 * 0.5), 0, 1); shallowness = clip((150 - depth_to_bedrock_cm) / (150 - 25), 0, 1) (0 where depth unknown); terrain = min(slope_deg / 35, 1) + 0.5 * clip(TPI_m / 1.5, 0, 1), TPI = z - mean(z, 150 m window) on the DEM averaged to 30 m; tree cover from LANDFIRE EVC; water = 0",
+   "formula": "outcrop = clip(resistance[rock_class] * shallowness * terrain * (1 - tree_cover_pct/100 * 0.5) * lidar, 0, 1); shallowness = clip((150 - depth_to_bedrock_cm) / (150 - 25), 0, 1) (0 where depth unknown); terrain = min(slope_deg / 35, 1) + 0.5 * clip(TPI_m / 1.5, 0, 1), TPI = z - mean(z, 150 m window) on the DEM averaged to 30 m; tree cover from LANDFIRE EVC; water = 0; lidar = 0.5 + min(roughness_m / 0.12, 1.5), roughness = 30 m mean of terrain/roughness_10m.tif (std of the 1 m lidar DEM about a quadratic fitted per 10 m cell)",
    "resistance": {
     "greenstone_metavolcanic": 0.9,
     "granitic": 0.8,
@@ -912,15 +914,27 @@
     "tpi_window_m": 150.15015015015015,
     "tpi_full_m": 1.5,
     "convex_bonus": 0.5,
-    "canopy_damp": 0.5
+    "canopy_damp": 0.5,
+    "rough_base": 0.5,
+    "rough_full_m": 0.12,
+    "rough_cap": 1.5
    },
-   "mean": 0.2933,
-   "fraction_above_0.5": 0.1396,
-   "fraction_above_0.25": 0.5338,
+   "mean": 0.2902,
+   "fraction_above_0.5": 0.1391,
+   "fraction_above_0.25": 0.504,
    "slope_deg_mean": 13.2,
    "convex_fraction": 0.5062,
-   "sha256": "1a86298526fe1dc0c1173ccb1efda5a83697e07703e2c16bdd6c8c873debb0e0",
-   "bytes": 91978
+   "lidar_roughness_m": {
+    "median": 0.05,
+    "p90": 0.114
+   },
+   "lidar_term": {
+    "mean": 1.011,
+    "min": 0.5,
+    "max": 2.0
+   },
+   "sha256": "ba042b6a43f397c52d0a55a6e342dac7529ea3fd263209ccb701e4d20f5dc314",
+   "bytes": 94039
   },
   "client.ground_classes": {
    "path": "client/ground_classes.json",
@@ -966,8 +980,8 @@
      "none_or_unknown": 0.0046
     }
    },
-   "sha256": "6b0504db0b591c9334022f89a56aba508569d97ab6ff3494f939b3fc9cde4f46",
-   "bytes": 25722
+   "sha256": "1a8990a3820621e403954165e6d4d3eca0494cbb49668769952073ba4293cb10",
+   "bytes": 25891
   },
   "species.list": {
    "path": "species/species.json",
@@ -1688,6 +1702,313 @@
    "datasets": 3,
    "sha256": "ef79b5af58a6925f9733caec02e93157c32e1b2bf7f5751b4f2d15f36e1a7cf6",
    "bytes": 174972
+  },
+  "terrain.dem_1m": {
+   "path": "terrain/dem_1m.tif",
+   "kind": "raster",
+   "crs": "EPSG:32610",
+   "bounds": [
+    680000,
+    4270000,
+    690000,
+    4280000
+   ],
+   "pixels": 10000,
+   "resolution_m": 1.0,
+   "units": "m (NAVD88)",
+   "nodata": -9999.0,
+   "source": "usgs_3dep_1m",
+   "project": "CA_SierraNevada_B22",
+   "collection": [
+    "20211103",
+    "20220923"
+   ],
+   "found_via": "tnm_access_api",
+   "other_collections": [
+    "CA_UpperSouthAmerican_Eldorado_2019_B19"
+   ],
+   "for_clients": false,
+   "for_clients_note": "pipeline only; clients read client.heights (5 m) and client.terrain_detail",
+   "stats": {
+    "min": 146.4550018310547,
+    "max": 616.674072265625,
+    "valid_fraction": 1.0
+   },
+   "tile_key": "x68y428",
+   "sha256": "6ddf55605120ce4cc965eddde0434059ca358c1425bd91a6a8e8c9b2e6b48fa5",
+   "bytes": 264347998
+  },
+  "terrain.dsm_1m": {
+   "path": "terrain/dsm_1m.tif",
+   "kind": "raster",
+   "crs": "EPSG:32610",
+   "bounds": [
+    680000,
+    4270000,
+    690000,
+    4280000
+   ],
+   "pixels": 10000,
+   "resolution_m": 1.0,
+   "units": "m (NAVD88)",
+   "nodata": -9999.0,
+   "source": "usgs_3dep_lpc",
+   "ept_project": "CA_SierraNevada_2_2022",
+   "sources_used": [
+    "usgs_3dep_1m"
+   ],
+   "encoding": "float32 highest non-noise return per 1 m cell (first-return surface); cells without a return take the ground",
+   "derived_from": [
+    "terrain.dem_1m"
+   ],
+   "for_clients": false,
+   "for_clients_note": "pipeline only (1 m, hundreds of MB)",
+   "sha256": "1f745a49349d9412a2410be5e3a1205321ba82ad692d980d692417247d9e92ba",
+   "bytes": 217461895
+  },
+  "vegetation.chm_1m": {
+   "path": "vegetation/chm_1m.tif",
+   "kind": "raster",
+   "crs": "EPSG:32610",
+   "bounds": [
+    680000,
+    4270000,
+    690000,
+    4280000
+   ],
+   "pixels": 10000,
+   "resolution_m": 1.0,
+   "encoding": "uint16 centimetres: terrain.dsm_1m - (terrain.dem_1m + median point-cloud ground offset), >= 0",
+   "source": "usgs_3dep_lpc",
+   "ept_project": "CA_SierraNevada_2_2022",
+   "sources_used": [
+    "usgs_3dep_1m"
+   ],
+   "derived_from": [
+    "terrain.dsm_1m",
+    "terrain.dem_1m"
+   ],
+   "for_clients": false,
+   "for_clients_note": "pipeline only (1 m, hundreds of MB)",
+   "sha256": "6a189b85fe5dec811876e6dc974817dada9360f103446a2a679cf6114eb9bf55",
+   "bytes": 129168077
+  },
+  "terrain.lidar_dtm_check": {
+   "path": "terrain/lidar_dtm_check.tif",
+   "kind": "raster",
+   "crs": "EPSG:32610",
+   "bounds": [
+    680000,
+    4270000,
+    690000,
+    4280000
+   ],
+   "pixels": 1000,
+   "resolution_m": 10.0,
+   "nodata": -9999.0,
+   "encoding": "float32 m: mean over the 10 m cell of point-cloud ground (class 2) minus the 1 m DEM, less the median offset",
+   "source": "usgs_3dep_lpc",
+   "ept_project": "CA_SierraNevada_2_2022",
+   "sources_used": [
+    "usgs_3dep_1m"
+   ],
+   "derived_from": [
+    "terrain.dem_1m"
+   ],
+   "stats": {
+    "ground_cell_fraction": 0.957,
+    "median_offset_m": -0.0,
+    "mean_offset_m": -0.0,
+    "std_m": 0.052,
+    "p05_m": -0.072,
+    "p95_m": 0.071,
+    "fraction_within_0.15_m": 0.9768,
+    "fraction_beyond_0.5_m": 0.0004,
+    "best_shift_m": {
+     "east": 0,
+     "north": 0,
+     "rms_m": 0.049
+    }
+   },
+   "sha256": "c849f83c7f87ae12260230ddacedd62e16257667a73211172f6c4adcf4417017",
+   "bytes": 3641842
+  },
+  "vegetation.canopy_height_10m": {
+   "path": "vegetation/canopy_height_10m.tif",
+   "kind": "raster",
+   "crs": "EPSG:32610",
+   "bounds": [
+    680000,
+    4270000,
+    690000,
+    4280000
+   ],
+   "pixels": 1000,
+   "resolution_m": 10.0,
+   "nodata": -9999.0,
+   "encoding": "float32 bands: 1 p95 canopy height m, 2 tree cover % (CHM >= 4 m), 3 shrub cover % (0.5 m <= CHM < 4 m); of the CHM after a 3x3 median (wires removed)",
+   "source": "usgs_3dep_lpc",
+   "ept_project": "CA_SierraNevada_2_2022",
+   "derived_from": [
+    "vegetation.chm_1m"
+   ],
+   "stats": {
+    "p95_mean_m": 9.95,
+    "tree_cover_pct": 50.48,
+    "shrub_cover_pct": 11.6
+   },
+   "sha256": "27c10a134ede81e92dab6daf34b016f177ab476bca7f62ad0d9e917eeb9fdf20",
+   "bytes": 6467544
+  },
+  "client.canopy_height": {
+   "path": "client/canopy_height.png",
+   "kind": "raster",
+   "crs": "EPSG:32610",
+   "bounds": [
+    680000,
+    4270000,
+    690000,
+    4280000
+   ],
+   "pixels": 1000,
+   "resolution_m": 10.0,
+   "encoding": "RGB, row 0 north: R p95 canopy height in 0.25 m (0-63.75 m), G tree cover % (CHM >= 4 m), B shrub cover % (0.5-4 m)",
+   "source": "usgs_3dep_lpc",
+   "ept_project": "CA_SierraNevada_2_2022",
+   "derived_from": [
+    "vegetation.canopy_height_10m"
+   ],
+   "sha256": "737029cd46f2f5659d3124d918605276c9c49cbd5c2d568e8e858a1ac66fc0c1",
+   "bytes": 2007861
+  },
+  "client.trees_lidar": {
+   "path": "client/trees_lidar.bin",
+   "kind": "binary",
+   "crs": "EPSG:32610",
+   "bounds": [
+    680000,
+    4270000,
+    690000,
+    4280000
+   ],
+   "encoding": "little-endian. Header 32 bytes: magic 'WECR', u16 version 1, u16 record bytes 8, u16 cells per side (100), u16 cell metres (100), u32 crown count, f32 xy unit (0.2 m), f32 height unit (0.25 m), f32 radius unit (0.1 m), u32 0. Then u32 offsets[cells*cells + 1]: the crowns of index cell (ci = floor(x / 100), cj = floor(north / 100)) are records offsets[cj*cells + ci] .. offsets[cj*cells + ci + 1], tallest first. Then 8-byte records: u16 x, u16 north (tile metres = value * 0.2 + 0.1, north from the south edge), u8 height (* 0.25 m), u8 crown radius (* 0.1 m), u8 confidence (0-255), u8 multi-return share (0-255)",
+   "method": "local maxima of the CHM (3x3 median, gaussian sigma 1.0 m) in a square window of radius round(1 + 0.1 h) m (1-5), h >= 4.0 m; height = the median CHM's 3x3 max; crown = watershed region down to 0.5 of the peak, radius sqrt(area / pi) clipped to 0.5 .. min(2 + 0.35 h, 15) m; dropped on OSM buildings and where the multi-return share in the 5x5 around the peak is < 0.08, where the crown is narrower than max(1 m, 0.06 h) (towers, poles), and where h < 8.0 m with prominence < 2.0 m (a taller shrub in a shrub canopy). confidence = 0.35 prominence (peak minus the minimum in a square of half-width 2 w + 1 around it, w the maxima window radius, over h) + 0.25 watershed radius over h / 4 + 0.2 multi-return share over 0.6 + 0.2 height above 4 m over 6 m, each clipped to 0..1",
+   "source": "usgs_3dep_lpc",
+   "ept_project": "CA_SierraNevada_2_2022",
+   "sources_used": [
+    "usgs_3dep_1m",
+    "osm"
+   ],
+   "derived_from": [
+    "vegetation.chm_1m",
+    "footprint.mask"
+   ],
+   "stats": {
+    "maxima": 403965,
+    "dropped_on_osm_buildings": 33,
+    "dropped_low_multi_return": 1589,
+    "dropped_pole_like": 532,
+    "dropped_shrub_in_shrub_canopy": 3793,
+    "crowns": 398018,
+    "confidence_terms_median": {
+     "prominence": 0.836,
+     "width": 1.0,
+     "multi_return": 1.0,
+     "height": 1.0
+    },
+    "confidence_quantiles_p10_p50_p90": [
+     0.771,
+     0.918,
+     0.994
+    ],
+    "bytes": 3224180,
+    "crowns_per_ha": 39.8,
+    "max_per_index_cell": 102,
+    "height_histogram_m": {
+     "4-6": 12537,
+     "6-8": 18794,
+     "8-12": 102391,
+     "12-16": 162081,
+     "16-20": 59013,
+     "20-25": 25417,
+     "25-30": 12097,
+     "30-35": 4323,
+     "35-40": 1126,
+     "40-80": 239
+    },
+    "height_m": {
+     "median": 13.5,
+     "p95": 24.4,
+     "max": 53.6
+    },
+    "radius_m": {
+     "median": 5.2,
+     "p95": 8.0
+    },
+    "confidence_median": 0.918,
+    "seconds": 114.3
+   },
+   "sha256": "bdf5232ffcf8fa33d96bdb3fa73eeb786516ee57f483b6d5a021bffcc9fbb986",
+   "bytes": 3224180
+  },
+  "client.terrain_detail": {
+   "path": "client/terrain_detail.png",
+   "kind": "raster",
+   "crs": "EPSG:32610",
+   "bounds": [
+    680000,
+    4270000,
+    690000,
+    4280000
+   ],
+   "pixels": 5000,
+   "resolution_m": 2.0,
+   "encoding": "8-bit grey, row 0 north, pixel centres at x = 2i + 1, north = 10000 - (2j + 1): residual m = (v - 128) * 0.04 (clamped +-5.08 m) = the 1 m DEM averaged to 2 m minus client.heights decoded and interpolated bilinearly between ITS pixel centres (x = 5i + 2.5, north = 10000 - 5j - 2.5). Linear, so texture filtering interpolates it",
+   "source": "usgs_3dep_1m",
+   "derived_from": [
+    "terrain.dem_1m",
+    "client.heights"
+   ],
+   "stats": {
+    "residual_m": {
+     "mean": -0.006,
+     "std": 0.331,
+     "p50_abs": 0.228,
+     "p99_abs": 0.865,
+     "max_abs": 7.49
+    },
+    "fraction_over_0.5_m": 0.1222,
+    "clipped_fraction": 0.0
+   },
+   "sha256": "a8b2e41c9e9d2743007084cbc3f15eafc94b01cfebcdb7b0e70af3c7ac84cd4d",
+   "bytes": 9115295
+  },
+  "terrain.roughness": {
+   "path": "terrain/roughness_10m.tif",
+   "kind": "raster",
+   "crs": "EPSG:32610",
+   "bounds": [
+    680000,
+    4270000,
+    690000,
+    4280000
+   ],
+   "pixels": 1000,
+   "resolution_m": 10.0,
+   "units": "m",
+   "nodata": -9999.0,
+   "encoding": "float32: std of the 1 m DEM about its least-squares quadratic within the 10 m cell",
+   "source": "usgs_3dep_1m",
+   "derived_from": [
+    "terrain.dem_1m"
+   ],
+   "stats": {
+    "median_m": 0.043,
+    "p90_m": 0.127,
+    "p99_m": 0.295
+   },
+   "sha256": "f9930e8223b942504eb24410f5675bcef8af72631a032d72fd061ea474799f34",
+   "bytes": 3324208
   }
  },
  "sources": {
@@ -1739,7 +2060,7 @@
    "attribution": "Geology: Macrostrat (macrostrat.org), CC BY 4.0, from the USGS State Geologic Map Compilation; clipped to the tile and reclassified",
    "attribution_url": "https://macrostrat.org",
    "attribution_required": true,
-   "retrieved": "2026-10-25"
+   "retrieved": "2026-10-26"
   },
   "usgs_sgmc": {
    "name": "USGS State Geologic Map Compilation (Horton et al. 2017, DS 1052, doi:10.3133/ds1052)",
@@ -1749,7 +2070,7 @@
    "attribution": "Geology: Horton, J.D., San Juan, C.A., and Stoeser, D.B., 2017, The State Geologic Map Compilation (SGMC) geodatabase of the conterminous United States, U.S. Geological Survey Data Series 1052",
    "attribution_url": "https://doi.org/10.3133/ds1052",
    "attribution_required": false,
-   "retrieved": "2026-10-25"
+   "retrieved": "2026-10-26"
   },
   "usda_ssurgo": {
    "name": "USDA NRCS SSURGO via Soil Data Access",
@@ -1759,7 +2080,7 @@
    "attribution": "Soils: Soil Survey Staff, Natural Resources Conservation Service, U.S. Department of Agriculture, Soil Survey Geographic (SSURGO) Database",
    "attribution_url": "https://www.nrcs.usda.gov/resources/data-and-reports/soil-survey-geographic-database-ssurgo",
    "attribution_required": false,
-   "retrieved": "2026-10-25"
+   "retrieved": "2026-10-26"
   },
   "gbif": {
    "name": "GBIF occurrence API (includes iNaturalist research-grade and eBird)",
@@ -1779,7 +2100,27 @@
    "attribution": "\u00a9 OpenStreetMap contributors",
    "attribution_url": "https://www.openstreetmap.org/copyright",
    "attribution_required": true,
-   "retrieved": "2026-10-25"
+   "retrieved": "2026-10-26"
+  },
+  "usgs_3dep_1m": {
+   "name": "USGS 3DEP 1 m bare-earth DEM (standard 1-meter DEM tiles) via the AWS public bucket prd-tnm",
+   "url": "https://prd-tnm.s3.amazonaws.com/StagedProducts/Elevation/1m/Projects/",
+   "license": "public domain",
+   "license_url": "https://www.usgs.gov/information-policies-and-instructions/copyrights-and-credits",
+   "attribution": "Elevation: U.S. Geological Survey, 3D Elevation Program (3DEP) 1 m DEM",
+   "attribution_url": "https://www.usgs.gov/3d-elevation-program",
+   "attribution_required": false,
+   "retrieved": "2026-10-26"
+  },
+  "usgs_3dep_lpc": {
+   "name": "USGS 3DEP lidar point cloud as Entwine Point Tiles via the AWS public bucket usgs-lidar-public",
+   "url": "https://usgs-lidar-public.s3.amazonaws.com/",
+   "license": "public domain",
+   "license_url": "https://www.usgs.gov/information-policies-and-instructions/copyrights-and-credits",
+   "attribution": "Lidar: U.S. Geological Survey, 3D Elevation Program (3DEP) point cloud, Entwine Point Tiles by Hobu, Inc. on AWS Open Data",
+   "attribution_url": "https://registry.opendata.aws/usgs-lidar/",
+   "attribution_required": false,
+   "retrieved": "2026-10-26"
   }
  },
  "edits": [],
@@ -2036,6 +2377,18 @@
    "step": "species_mix (foothill set, terrain)",
    "at": "2026-10-26T03:47:27Z",
    "seconds": 0.7,
+   "ok": true
+  },
+  {
+   "step": "lidar",
+   "at": "2026-10-26T07:31:13Z",
+   "seconds": 2757.5,
+   "ok": true
+  },
+  {
+   "step": "ground",
+   "at": "2026-10-26T07:31:13Z",
+   "seconds": 0.6,
    "ok": true
   }
  ]

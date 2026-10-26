@@ -1,0 +1,98 @@
+{
+ "grid": {
+  "points": 2404522957,
+  "points_in_tile": 2403972988,
+  "nodes": 61763,
+  "max_depth": null,
+  "ept": {
+   "project": "CA_SierraNevada_2_2022",
+   "points": 113402525862,
+   "url": "https://usgs-lidar-public.s3.amazonaws.com/CA_SierraNevada_2_2022/ept.json"
+  },
+  "density_pts_m2": 24.0,
+  "empty_cell_fraction": 0.0019
+ },
+ "grid_seconds": 2496.1,
+ "dtm_check": {
+  "ground_cell_fraction": 0.957,
+  "median_offset_m": -0.0,
+  "mean_offset_m": -0.0,
+  "std_m": 0.052,
+  "p05_m": -0.072,
+  "p95_m": 0.071,
+  "fraction_within_0.15_m": 0.9768,
+  "fraction_beyond_0.5_m": 0.0004,
+  "best_shift_m": {
+   "east": 0,
+   "north": 0,
+   "rms_m": 0.049
+  }
+ },
+ "canopy_10m": {
+  "p95_mean_m": 9.95,
+  "tree_cover_pct": 50.48,
+  "shrub_cover_pct": 11.6
+ },
+ "crowns": {
+  "maxima": 403965,
+  "dropped_on_osm_buildings": 33,
+  "dropped_low_multi_return": 1589,
+  "dropped_pole_like": 532,
+  "dropped_shrub_in_shrub_canopy": 3793,
+  "crowns": 398018,
+  "confidence_terms_median": {
+   "prominence": 0.836,
+   "width": 1.0,
+   "multi_return": 1.0,
+   "height": 1.0
+  },
+  "confidence_quantiles_p10_p50_p90": [
+   0.771,
+   0.918,
+   0.994
+  ],
+  "bytes": 3224180,
+  "crowns_per_ha": 39.8,
+  "max_per_index_cell": 102,
+  "height_histogram_m": {
+   "4-6": 12537,
+   "6-8": 18794,
+   "8-12": 102391,
+   "12-16": 162081,
+   "16-20": 59013,
+   "20-25": 25417,
+   "25-30": 12097,
+   "30-35": 4323,
+   "35-40": 1126,
+   "40-80": 239
+  },
+  "height_m": {
+   "median": 13.5,
+   "p95": 24.4,
+   "max": 53.6
+  },
+  "radius_m": {
+   "median": 5.2,
+   "p95": 8.0
+  },
+  "confidence_median": 0.918,
+  "seconds": 114.3
+ },
+ "terrain_detail": {
+  "residual_m": {
+   "mean": -0.006,
+   "std": 0.331,
+   "p50_abs": 0.228,
+   "p99_abs": 0.865,
+   "max_abs": 7.49
+  },
+  "fraction_over_0.5_m": 0.1222,
+  "clipped_fraction": 0.0
+ },
+ "roughness": {
+  "median_m": 0.043,
+  "p90_m": 0.127,
+  "p99_m": 0.295
+ },
+ "products_seconds": 190.0
+}
