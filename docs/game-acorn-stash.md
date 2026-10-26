@@ -235,6 +235,67 @@ or the ground in the bill (cap 1, already in `PLAYER_CAP`), and E at its family'
 granary (the nearest stash tree) for a `deposit` into `granaries`, with the hammering
 beat; the board line follows `setPlayerSpecies`.
 
+### Whole trees: the main stem, limbs and leaps (2026-10-25)
+
+The squirrel now climbs the drawn wood itself (`perch.js`, the raven's branch index:
+`treegen.treeWood` per near-set instance), not the bole's straight axis. On the bark it
+is on one stem at an arc length, on the side its out-of-bark normal points to.
+`perch.js` gained (additions only; the raven's calls are unchanged): `joins` (each
+stem's parent, where it leaves it, its children; once per plant, about 0.04 ms),
+`baseS`, `thinEnd`, `kidsNear` (children at a point), `leader` (the child that carries
+a stem on), `fork` (the trunk's root stem and fork), `route` (a path along the wood
+between two points of a plant), `recAt`, `nearOn` and `nearBut` (closest wood leaving
+one stem out).
+
+- **W / S**: up and down a steep stem head first; past the fork W carries on up the
+  main stem (at a stem's end onto its leader: the child most in line and thickest) to
+  the top wood 2 cm in radius (a blue oak about 8 m, a gray pine 17 m). Along a level
+  limb W runs the way it faces, S goes in toward the trunk; a limb ends where it is
+  1.5 cm thick.
+- **A / D** at a junction (a child leaving within 0.4 m plus the stem's radius, on this
+  side of a thick stem; near a limb's base, its parent up or down): A takes the one
+  leaving most to the left, D most to the right, one leaving straight out either. A
+  ring round each and a line at the foot of the screen ("A a limb · D up the main
+  stem") show which. Without one, A / D go round a steep stem (to underneath it: "under
+  a limb", the camera swings below), and a tap on a level limb turns round.
+- **Space**: a leap (0.3-0.6 s arc) to wood within 2.5 m the way it faces (out from the
+  bark on a steep stem), not its own stem, branches or parent and at least 0.8 m off:
+  limb to limb, limb to trunk, trunk to trunk between close trees, into a manzanita.
+  With none, a drop, legs spread, that takes hold of a limb it falls across, or lands;
+  a fall over 6 m stuns for a second.
+- **E** takes a crown acorn within 1.2 m; otherwise says which way the nearest within
+  5 m is. The old run out along a limb is gone (the squirrel runs the limb itself).
+- Camera: over the shoulder, behind and out from the bark; shorter (x0.55) out a limb
+  or in its own crown; kept out of other crowns by the woodpecker's crown-sphere rule;
+  drawn in short of a limb in the way (never nearer than 0.9 m); the boom's direction
+  and length ease separately, so a swing round a stem never passes through the body.
+- HUD row "where": "on a blue oak, 7 m up, on a limb" (trunk, main stem, a stem, a
+  limb, a branch, under a limb; in the air, stunned, on the ground).
+
+AI squirrels (`animals.js`) climb the same wood. Each oak's limbs (off the bole or main
+stem, 3 cm thick at the base, a metre of 2 cm wood, ending 2 m up, not steeper than
+~44 degrees there) and paths (ground to a limb's end, limb to limb, sampled every
+0.25 m on the bark, on the limb's side of the trunk and the top of the limb) are built
+once per tree (0.07 ms a path) and followed along a stored polyline (0.3 µs a frame).
+They climb out a limb and sit, forage along the wood to another limb, and come back
+down the way they went. A fleeing one runs round the foot of the trunk, climbs on the
+far side, runs out the limb furthest from the player and freezes flat on it (15-40 s,
+longer while the player is within 20 m). A player squirrel running at one (within 4 m,
+over 2.5 m/s) is now a chase that sends it up; merely being near still does not.
+Raids, and trees outside the near set, keep the old trunk-to-the-fork climb.
+
+Verified (built-in browser, home tile, fall): a veteran blue oak to the top (8 m),
+three limbs taken with A / D and run to their ends, a leap limb to limb, gray pine to
+gray pine and onto a manzanita, a drop that caught a limb 4 m down, a 17 m drop
+(stunned), a gray pine climbed to 17 m, a crown acorn from a limb, a chase (the AI
+squirrel up the far side of an interior live oak and frozen 5 m up on the limb opposite the player), the raven still perching
+on a blue oak; no console errors; 45 fps on the ground and 46 in the crown (animals
+0.28-0.31 ms). Does not read well yet: inside a blue oak's crown the leaf cards fill
+most of the view (the boom is shorter there, but the leaves are where the limbs are);
+in the leap the ground chase camera sits low under the limbs; the junction rings are
+plain tori; the leg splay is a single blend, not a grip; trees far from the player
+(outside the near set) still have AI squirrels on the old fork-and-float climb.
+
 ## Playable woodpecker (2026-10-25)
 
 The acorn woodpecker is the third playable animal: two cards at the opening screen's "who"

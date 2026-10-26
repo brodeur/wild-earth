@@ -67,7 +67,7 @@ sequenced; Parked is in the brief but deliberately not started.
   plants); the animal library and Meshy maintainer tool, 14 species briefs, bird and rodent
   rig templates, meshes adopted for deer, scrub-jay, quail, squirrel, hawk, vulture,
   Steller's jay, fox, coyote, rabbit, jackrabbit, buck, mountain lion and vole, an animal
-  lineup page; the raven lands by contact on the ground or a limb and hops; the squirrel and woodpecker are playable; acorn
+  lineup page; the raven lands by contact on the ground or a limb and hops; the squirrel climbs whole trees, runs the limbs and leaps between them; the woodpecker is playable; acorn
   game v2-v4 (AI collectors, leaderboard, a shared world per tile, granary defence and
   pilfering); hydrology rewilded with willow, alder and cottonwood corridors; a third tile
   built from scratch; attribution on every source and a credits panel; three.js 0.186.

@@ -23,6 +23,20 @@ import { acornGeometry } from './acorns.js';
 // (animals.heights); rocks near the eye (rocks.js close tiers) are stood on by a downward ray, stepped onto up to
 // STEP m and otherwise a wall to jump.
 //
+// The whole tree (perch.js, the drawn wood of the near set: treegen.treeWood per instance): once on the bark the
+// squirrel is on a stem of the tree at an arc length, on the side of it its `n` (out of the bark) points to, facing
+// toward the stem's tip or its base. W climbs (head first up a steep stem; along a level limb it runs the way it
+// faces), S comes down head first (a steep stem) or goes in toward the base (a limb: backing, unless it faces in).
+// Past the fork it climbs on up the main stem (at a stem's end W carries on onto its leader, perch.js leader) to the
+// top wood that holds a squirrel (HOLD_R);
+// out a limb it stops at the thin end (END_R). Junctions: a child stem leaving within REACH of the feet on this side
+// of the stem (perch.js kidsNear), or near a limb's base its parent up or down: A takes the one leaving most to the
+// left, D the one most to the right (one nearly straight out is taken by either), shown by a ring round it and a
+// line at the foot of the screen. With no junction on that side, A / D go round a steep stem (to underneath, too);
+// a tap on a level limb turns round. Space: a leap to wood within LEAP_R in the facing direction (out from the bark
+// on a steep stem), or a drop, legs spread, that catches a limb it crosses or lands on the ground (over STUN_H m:
+// stunned for STUN_T s). E takes a crown acorn within CROWN_R of the squirrel.
+//
 // The model is the AI squirrel's: one extra instance (a clone of the drawn mesh's lod0 geometry with its own aAnim and
 // aAnim2) posed by the rodent rig template from the controller's state: bound phase and gait, sit-up (pose), tail
 // flick, leg splay on the trunk, the lagged tail tip. The acorn it carries rides at the mouth (animals.carryPoint).
@@ -33,10 +47,15 @@ const JUMP_UP = 3.3, JUMP_FWD = 2.5, GRAVITY = 9.8;          // a ~0.55 m, ~0.7 
 const STEP = 0.3;                                            // m: stepped onto without a jump (a rock edge, a bank)
 const CLIMB_UP = 2.4, CLIMB_DOWN = 2.0, ROUND = 1.3;         // m/s up, down and round the trunk
 const LATCH_R = 0.8, TOP = 0.85;                             // m from the bark to take hold; how high up the tree
+// The wood (perch.js): thinnest wood climbed up a stem and run out along a limb (m radius); limb speeds (m/s); how far
+// along the stem a junction is in reach (m, plus the stem's radius); a stem steeper than STEEP (sine) can be gone round,
+// a shallower one is run along on top; leap reach (m); a fall that stuns (m) and for how long (s).
+const HOLD_R = 0.02, END_R = 0.015, LIMB_RUN = 3.0, LIMB_BACK = 1.4, REACH = 0.4, STEEP = 0.45, LEAP_R = 2.5, STUN_H = 6, STUN_T = 1.0;
 const PICK_R = 0.9, CROWN_R = 1.2, LIMB_R = 3.2, DIG_R = 1.0, LIMB_V = 2.2;
 const WORK = { pick: 0.5, bury: 2.4, dig: 1.8 };             // s
 const CAM_BACK = 2.5, CAM_UP = 0.6, NEAR = 0.3;
 const CAM_SIDE = 0.4, CAM_SWING = 1.6;                       // rad (~23 deg) off the heading: a three-quarter view; 1/s
+const CROWN_PAD = [0.4, 0.12, 1.0], CROWN_LOWER = 1.1, CROWN_MIN = 0.6, CROWN_BOOM = 0.55;   // woodpeckerControl.js crownClear: the leaves under the sphere; lowest drop; shortest boom
 const CAM_CLEAR = 0.3, CAM_SIGHT = 0.15, CAM_WATER = 0.45;   // m over the terrain round the lens, along the sight line, over a pond
 // Water (water.js): deeper than SWIM_IN it swims (out again under SWIM_OUT), floating with the feet FLOAT under the
 // surface, at SWIM m/s (a gray squirrel can swim but avoids it; a reservoir crossing should feel slow); shallower it
@@ -70,6 +89,17 @@ export class SquirrelControl {
     this.swimming = false; this.wet = null; this.toldSwim = 0;   // this.wet: the water at the squirrel's feet, or null
     this._ft = { y: 0, bed: 0, surf: null, depth: 0 }; this._wq = { surf: 0, depth: 0 };
     this.ripples = []; this.rippleT = 0;
+    // on the wood (perch.js): the plant, stem, arc length, facing toward the tip (+1) or base (-1), and the frame
+    this.w = { rec: null, st: null, s: 0, sign: 1, n: new THREE.Vector3(1, 0, 0), f: new THREE.Vector3(0, 1, 0), l: new THREE.Vector3(), a: {} };
+    this._d = new THREE.Vector3(); this._x = new THREE.Vector3(); this._mb = new THREE.Matrix4(); this._qt = new THREE.Quaternion(); this._j = new THREE.Vector3();
+    this.pOff = new THREE.Vector3(); this.cands = []; this.candA = null; this.candD = null; this.turnWas = 0; this.turnLock = false;
+    this.leap = null; this.spread = false; this.fallTop = null; this.leftSt = null; this.leftT = 0; this.stunT = 0;
+    this._kids = []; this._ta = {}; this._tb = {}; this._nutQ = new THREE.Quaternion().setFromAxisAngle(new THREE.Vector3(1, 0, 0), Math.PI / 2);
+    // the rings that show the junctions A and D would take
+    this.rings = [0xffd27a, 0x8fd3ff].map(c => {
+      const m = new THREE.Mesh(new THREE.TorusGeometry(1, 0.12, 6, 24), new THREE.MeshBasicMaterial({ color: c, transparent: true, opacity: 0.85, depthWrite: false }));
+      m.visible = false; m.renderOrder = 6; m.frustumCulled = false; m.name = 'squirrel junction'; scene.add(m); return m;
+    });
     this.ready = animals.playerModel('squirrel').then(r => this.build(r)).catch(e => console.warn('squirrel: no player model', e));
     // the acorn in its mouth
     this.nut = new THREE.Mesh(acornGeometry(), new THREE.MeshLambertMaterial({ vertexColors: true }));
@@ -80,6 +110,11 @@ export class SquirrelControl {
       + 'background:#0f1512d8;border:1px solid #263128;color:#e6ede7;font:13px -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif;'
       + 'pointer-events:none;opacity:0;transition:opacity .3s;white-space:nowrap';
     document.body.appendChild(this.toast);
+    // which junction A and D take (on the wood)
+    this.hint = document.createElement('div'); this.hint.id = 'sqHint';
+    this.hint.style.cssText = 'position:fixed;left:50%;bottom:104px;transform:translateX(-50%);z-index:6;padding:4px 10px;border-radius:7px;'
+      + 'background:#0f1512b0;color:#e6ede7;font:12px -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif;pointer-events:none;display:none;white-space:nowrap';
+    document.body.appendChild(this.hint);
     const typing = e => e.target instanceof HTMLInputElement || e.target instanceof HTMLSelectElement || e.target instanceof HTMLTextAreaElement;
     addEventListener('keydown', e => {
       if (!this.on || typing(e) || e.metaKey || e.ctrlKey) return;
@@ -114,6 +149,8 @@ export class SquirrelControl {
     if (this.mesh) this.mesh.visible = on;
     this.nut.visible = false;
     for (const r of this.ripples) r.m.visible = false;
+    for (const m of this.rings) m.visible = false;
+    this.hint.style.display = 'none'; if (this.hudRow) this.hudRow.style.display = 'none';
     if (on) { f.pitch = 0; f.roll = 0; f.hover = false; this.camSettled = false; this.lastYaw = f.yaw; this.place(f.pos.x, f.pos.z); }
     else { this.camera.up.set(0, 1, 0); f.reset(f.pos.x, f.pos.z, 30); }   // back to the raven: aloft over the same spot
     // a camera 0.6 m over a slope: the raven's 0.5 m near plane cut the hillside beside it open
@@ -132,7 +169,7 @@ export class SquirrelControl {
     const W = this.hudWas;
     if (h1?.firstChild) h1.firstChild.nodeValue = on ? 'western gray squirrel ' : W.h1;
     if (help) help.innerHTML = on ? '<kbd>W</kbd><kbd>S</kbd> run · <kbd>A</kbd><kbd>D</kbd> turn · <kbd>space</kbd> jump · <kbd>shift</kbd> sit up · '
-      + '<kbd>E</kbd> pick up, bury, dig · run into a trunk to climb (<kbd>W</kbd><kbd>S</kbd> up, down; <kbd>A</kbd><kbd>D</kbd> round; <kbd>space</kbd> jump off) · '
+      + '<kbd>E</kbd> pick up, bury, dig · run into a trunk to climb (<kbd>W</kbd><kbd>S</kbd> up, down, out and in a limb; <kbd>A</kbd><kbd>D</kbd> onto the ringed limb, or round; <kbd>space</kbd> leap or drop) · '
       + '<kbd>M</kbd> map · <kbd>G</kbd> roads · <kbd>P</kbd> present day · <kbd>T</kbd> tags · <kbd>N</kbd> mute · click a tree to identify · drag mouse to turn and look' : W.help;
     const agl = $('agl')?.previousElementSibling, sp = $('speed')?.previousElementSibling;
     if (agl) agl.textContent = on ? 'height above ground' : W.agl;
@@ -152,6 +189,7 @@ export class SquirrelControl {
     const F = this.footing(x, z, this.heights.atXZ(x, z) + 50);
     P.set(x, F.y, z); this.setWet(F);
     this.mode = 'ground'; this.v = 0; this.vel.set(0, 0, 0); this.tree = null; this.work = null; this.limb = null;
+    this.w.rec = null; this.leap = null; this.spread = false; this.fallTop = null;
     this.last.copy(P); this.camSettled = false;
   }
 
@@ -170,7 +208,10 @@ export class SquirrelControl {
     if (!best || bd > 400 * 400) { this.place(x, z); this.finishArrival(false); return; }
     const tree = this.record(best);
     this.flight.yaw = this.lastYaw = Math.atan2(x - best.x, z - best.z) + Math.PI;   // facing away from the trunk, toward the point
-    this.attach(tree, wrap(this.flight.yaw - Math.PI), Math.min(1.4, this.topOf(tree)));   // below the fork, so the camera is under the crown
+    const face = wrap(this.flight.yaw - Math.PI), Q = this.Q, rec = Q?.recAt(best.x, best.z), h = Math.min(1.4, this.topOf(tree));
+    const hit = rec && Q.nearOn(rec, best.x + Math.sin(face) * 2, best.y + h, best.z + Math.cos(face) * 2, 3, HOLD_R);
+    if (hit && hit.stem.level === 0) this.attachWood(rec, hit.stem, hit.s, hit.nx, 0, hit.nz, -1);   // head down on the bole
+    else this.attach(tree, face, h);   // below the fork, so the camera is under the crown
     this.headUp = false; this.camSettled = false;
     this.auto = { t: 0, out: 0 };
     if (caption && this.captionEl) {
@@ -183,6 +224,7 @@ export class SquirrelControl {
   finishArrival(skipped) {
     const was = this.auto; this.auto = null;
     if (skipped && was && this.mode === 'trunk') this.dismount();
+    if (skipped && was && this.mode === 'wood') this.dismountWood();
     this.flight.keys.clear(); this.jumpQ = this.actQ = false;
     const cb = this.onArrived; this.onArrived = null; cb?.(skipped);
   }
@@ -333,7 +375,7 @@ export class SquirrelControl {
   // ---- the frame -----------------------------------------------------------------------------------
   input() {
     const k = this.flight.keys, A = this.auto;
-    if (A) return { fwd: this.mode === 'trunk' ? -1 : 1, turn: 0, sit: false };
+    if (A) return { fwd: this.mode === 'trunk' || this.mode === 'wood' ? -1 : 1, turn: 0, sit: false };
     return {
       fwd: (k.has('KeyW') || k.has('ArrowUp') ? 1 : 0) - (k.has('KeyS') || k.has('ArrowDown') ? 1 : 0),
       turn: (k.has('KeyA') || k.has('ArrowLeft') ? 1 : 0) - (k.has('KeyD') || k.has('ArrowRight') ? 1 : 0),
@@ -349,7 +391,9 @@ export class SquirrelControl {
     // a mouse drag turns (flight.yaw) and tilts the look (flight.pitch); on a trunk it orbits the camera instead
     const dragYaw = wrap(f.yaw - this.lastYaw);
     f.pitch = Math.max(-0.6, Math.min(0.7, f.pitch));
-    if (this.mode === 'trunk' || this.mode === 'limb') { this.camOrbit += dragYaw; f.yaw = this.lastYaw; }
+    const onWood = this.mode === 'wood' || (this.mode === 'work' && this.work?.back === 'wood');
+    if (this.mode === 'trunk' || this.mode === 'limb' || onWood) { this.camOrbit += dragYaw; f.yaw = this.lastYaw; }
+    this.leftT = Math.max(0, this.leftT - dt);
     if (this.auto) {
       this.auto.t += dt;
       if (this.mode === 'ground') this.auto.out += dt;
@@ -362,23 +406,34 @@ export class SquirrelControl {
       case 'trunk': this.climb(dt, k, jump, act); break;
       case 'limb': this.onLimb(dt); break;
       case 'work': this.working(dt); break;
+      case 'wood': this.wood(dt, k, jump, act); break;
+      case 'leap': this.leaping(dt); break;
+      case 'stun': this.stunned(dt); break;
     }
-    if (this.mode !== 'trunk' && this.mode !== 'limb') this.camOrbit = damp(this.camOrbit, 0, 3, dt);
+    if (this.mode !== 'wood') { this.cands.length = 0; this.candA = this.candD = null; }
+    this.showJunctions();
+    if (this.mode !== 'trunk' && this.mode !== 'limb' && this.mode !== 'wood' && this.mode !== 'work') this.camOrbit = damp(this.camOrbit, 0, 3, dt);
     this.lastYaw = f.yaw;
     // tail flicks now and then when still; the tip lags (the AI's channels)
     if (!this.swimming && Math.random() < dt * (this.v < 0.5 ? 0.8 : 0.15)) ps.flickV = 1;
     if (ps.flickV > 0) { ps.flick = Math.max(ps.flick, Math.sin(Math.min(1, 1 - ps.flickV) * Math.PI)); ps.flickV -= dt * 3; }
     else if (!this.work && !this.swimming) ps.flick = damp(ps.flick, 0, 1, dt);
-    ps.e0 = damp(ps.e0, this.mode === 'trunk' || this.work?.back === 'trunk' ? 1 : 0, 8, dt);
+    const splay = this.mode === 'trunk' || this.work?.back === 'trunk' || this.mode === 'stun' || (this.mode === 'air' && this.spread)
+      || ((this.mode === 'wood' || this.work?.back === 'wood') && (Math.abs(this.w.f.y) > STEEP || this.w.n.y < 0.5));
+    ps.e0 = damp(ps.e0, splay ? 1 : 0, 8, dt);
     ps.e1 = damp(ps.e1, ps.flick, 5, dt);
     if (ps.phase > 1e4) ps.phase -= TAU * 1000;
-    this.draw();
+    this.pOff.multiplyScalar(Math.exp(-14 * dt));
+    this.draw(dt);
     this.ripple(dt);
     this.updateCamera(dt);
     this.last.copy(P);
-    const ground = Math.max(this.heights.atXZ(P.x, P.z), this.wet && this.mode !== 'trunk' ? this.wet.surf : -Infinity), speed = this.mode === 'trunk' ? Math.abs(this.climbV || 0) : this.mode === 'air' ? Math.hypot(this.vel.x, this.vel.z) : Math.abs(this.v);
+    const ground = Math.max(this.heights.atXZ(P.x, P.z), this.wet && this.mode !== 'trunk' ? this.wet.surf : -Infinity), speed = this.mode === 'trunk' || this.mode === 'wood' ? Math.abs(this.climbV || 0) : this.mode === 'air' ? Math.hypot(this.vel.x, this.vel.z) : Math.abs(this.v);
     f.speed = speed;
-    const heading = ((this.mode === 'trunk' ? (this.face + Math.PI) : f.yaw) * -180 / Math.PI % 360 + 360) % 360;
+    const wf = this.w.f, wn = this.w.n, flat = Math.hypot(wf.x, wf.z) > 0.3;
+    const hd = this.mode === 'trunk' ? this.face + Math.PI : onWood ? Math.atan2(-(flat ? wf.x : -wn.x), -(flat ? wf.z : -wn.z)) : f.yaw;
+    const heading = (hd * -180 / Math.PI % 360 + 360) % 360;
+    this.hudLine(ground);
     return { hover: false, agl: P.y - ground, elev: P.y, speed, heading };
   }
 
@@ -395,7 +450,7 @@ export class SquirrelControl {
     if (jump && swim) this.say('too deep to jump: swim for the bank');
     else if (jump && !sitting) {   // a hop: forward at least JUMP_FWD, with the run's speed if faster
       const fw = Math.max(Math.abs(this.v) < 0.3 ? 0 : JUMP_FWD, this.v);
-      this.vel.set(fx * fw, JUMP_UP, fz * fw); this.mode = 'air'; this.sit = 0; return;
+      this.vel.set(fx * fw, JUMP_UP, fz * fw); this.mode = 'air'; this.sit = 0; this.fallTop = null; this.spread = false; return;
     }
     if (act) {
       if (swim) this.say('swimming: get out onto the bank first');
@@ -404,7 +459,12 @@ export class SquirrelControl {
     // run into a trunk: take hold
     if (!swim && k.fwd > 0 && this.v > 0.3) {
       const tr = this.trunkAhead(P, fx, fz);
-      if (tr) { const t = trunkAt(tr, 0.25, this._t); this.attach(tr, Math.atan2(P.x - t.x, P.z - t.z)); this.v = 0; return; }
+      if (tr) {
+        const t = trunkAt(tr, 0.25, this._t), Q = this.Q, rec = Q?.recAt(tr.x, tr.z), hit = rec && Q.nearOn(rec, P.x, P.y + 0.25, P.z, 1.5, HOLD_R);
+        if (hit) { const h = Math.hypot(hit.nx, hit.nz) || 1; this.attachWood(rec, hit.stem, hit.s, hit.nx / h, 0, hit.nz / h, 1); }
+        else this.attach(tr, Math.atan2(P.x - t.x, P.z - t.z));
+        this.v = 0; return;
+      }
     }
     this.ashore = Math.max(0, (this.ashore || 0) - dt);   // s since it left the water
     const nx = P.x + fx * this.v * dt, nz = P.z + fz * this.v * dt;
@@ -454,7 +514,9 @@ export class SquirrelControl {
   air(dt) {
     const f = this.flight, P = f.pos, ps = this.pose, V = this.vel;
     V.y -= GRAVITY * dt;
+    if (this.fallTop === null || P.y > this.fallTop) this.fallTop = P.y;
     const nx = P.x + V.x * dt, nz = P.z + V.z * dt, ny = P.y + V.y * dt;
+    if (this.spread && V.y < 0 && this.catchLimb(P.x, P.y, P.z, nx, ny, nz)) return;   // dropped from the wood: a limb it crosses
     const s = this.surface(nx, nz, Math.max(P.y, ny) + 0.05);
     if (s - ny > STEP + 0.15 && s > P.y) { V.x *= -0.2; V.z *= -0.2; }   // hit the side of a rock: drop back
     else { P.x = nx; P.z = nz; }
@@ -463,6 +525,8 @@ export class SquirrelControl {
     if (P.y <= F.y && V.y <= 0) {
       P.y = F.y; this.mode = 'ground'; this.v = Math.hypot(V.x, V.z) * 0.8; this.setWet(F);
       if (this.wet) { this.rippleT = 0; if (this.swimming) this.v = Math.min(this.v, SWIM); } else ps.flickV = 1;
+      const fell = (this.fallTop ?? P.y) - P.y; this.fallTop = null; this.spread = false;
+      if (fell > STUN_H && !this.swimming) { this.mode = 'stun'; this.stunT = STUN_T; this.v = 0; this.say(`a ${Math.round(fell)} m fall: stunned`); }
     }
     // stretched out in the leap, the tail streaming
     ps.amp = damp(ps.amp, 0.3, 6, dt); ps.phase += dt * TAU * 2;
@@ -507,6 +571,344 @@ export class SquirrelControl {
     if (this.h < top - 0.5) this.toldTop = false;
   }
 
+  // ---- the wood: trunk, main stem, limbs and branches (perch.js) ------------------------------------
+  get Q() { return this.flight.perchQuery?.() || null; }
+  // Take hold of a stem of plant rec at arc length s, on the side (nx, ny, nz) points to, facing toward its tip (sign +1)
+  // or its base (-1).
+  attachWood(rec, st, s, nx, ny, nz, sign) {
+    const Q = this.Q, w = this.w; Q.joins(rec);
+    w.rec = rec; w.st = st; w.s = Math.max(Q.baseS(st), s); w.sign = sign; w.n.set(nx, ny, nz); w.main = this.isMain(rec, st);
+    this.mode = 'wood'; this.v = 0; this.climbV = 0; this.wet = null; this.swimming = false; this.work = null; this.limb = null; this.tree = null;
+    this.camOrbit = 0; this.toldEnd = false; this.spread = false; this.fallTop = null; this.leap = null;
+    const a = Q.at(st, w.s, w.a);
+    if (Math.abs(a.dy) <= STEEP) this.topSide(a, w.n);
+    this.woodFrame();
+  }
+  // Whether a stem is the main stem: the root bole and the leaders carrying it on (perch.js leader), to the top.
+  isMain(rec, st) {
+    const Q = this.Q;
+    for (let c = st; c; c = c.par) {
+      if (!c.par) return c === Q.fork(rec)?.st;
+      const L = Q.leader(rec, c.par, HOLD_R);
+      if (!L || L.st !== c) return false;
+    }
+    return false;
+  }
+  // n: the way out of the bark straight up from a stem's axis (square to it), for a level limb.
+  topSide(a, n) {
+    n.set(-a.dy * a.dx, 1 - a.dy * a.dy, -a.dy * a.dz);
+    if (n.lengthSq() < 1e-6) n.set(1, 0, 0);
+    return n.normalize();
+  }
+  // The frame at the feet (n square to the stem, f the facing, l the squirrel's left) and the position on the bark.
+  woodFrame() {
+    const w = this.w, a = this.Q.at(w.st, w.s, w.a), n = w.n, d = this._d.set(a.dx, a.dy, a.dz);
+    n.addScaledVector(d, -n.dot(d));
+    if (n.lengthSq() < 1e-6) { n.set(-d.z, 0, d.x); if (n.lengthSq() < 1e-6) n.set(1, 0, 0); }
+    n.normalize();
+    w.f.copy(d).multiplyScalar(w.sign); w.l.crossVectors(n, w.f);
+    const R = a.r + 0.01;
+    this.flight.pos.set(a.x + n.x * R, a.y + n.y * R, a.z + n.z * R);
+    return a;
+  }
+  // Onto another stem (a junction, a leader, the parent) at s, facing sign; n the side to be on (null: keep this side,
+  // or the top of a level limb). The drawn body eases across the step (pOff).
+  onto(st, s, sign, n = null) {
+    const w = this.w, P = this.flight.pos, ox = P.x, oy = P.y, oz = P.z;
+    w.st = st; w.s = Math.max(this.Q.baseS(st), s); w.sign = sign; this.toldEnd = false;
+    const a = this.Q.at(st, w.s, w.a);
+    if (Math.abs(a.dy) <= STEEP) this.topSide(a, w.n); else if (n) w.n.copy(n);
+    this.woodFrame();
+    this.pOff.x += ox - P.x; this.pOff.y += oy - P.y; this.pOff.z += oz - P.z;
+  }
+  wood(dt, k, jump, act) {
+    const Q = this.Q, w = this.w, ps = this.pose;
+    if (!Q || !w.rec) { this.mode = 'air'; this.vel.set(0, 0, 0); this.spread = true; return; }
+    let a = Q.at(w.st, w.s, w.a);
+    const steep = Math.abs(a.dy) > STEEP;
+    if (jump) { this.woodJump(steep); return; }
+    if (act && this.woodAction()) return;
+    this.junctions(a);
+    // A / D: pressed, onto the junction on that side; held with none, round a steep stem; tapped on a level limb, about
+    if (!k.turn) this.turnLock = false;
+    const press = k.turn !== 0 && k.turn !== this.turnWas; this.turnWas = k.turn;
+    if (press) {
+      const c = k.turn > 0 ? this.candA : this.candD;
+      if (c) { this.takeJunction(c); this.turnLock = true; return; }
+      if (!steep) { w.sign = -w.sign; this.turnLock = true; }
+    }
+    const round = k.turn && steep && !this.turnLock;
+    if (round) {
+      const th = k.turn * Math.min(3, ROUND / (a.r + 0.06)) * dt, c = Math.cos(th), sn = Math.sin(th);   // round a thin limb: at most 3 rad/s
+      w.n.multiplyScalar(c).addScaledVector(w.l, sn);   // toward the left for A
+    } else if (!steep) {   // a level limb: back up onto its top
+      const u = this.topSide(a, this._x); w.n.lerp(u, 1 - Math.exp(-6 * dt));
+    }
+    // W / S: up and down a steep stem head first; along a level limb W the way it faces, S in toward the base
+    let want;
+    if (steep) {
+      const up = a.dy >= 0 ? 1 : -1;
+      if (k.fwd > 0) w.sign = up; else if (k.fwd < 0) w.sign = -up;
+      want = k.fwd > 0 ? CLIMB_UP * up : k.fwd < 0 ? -CLIMB_DOWN * up : 0;
+    } else want = k.fwd > 0 ? LIMB_RUN * w.sign : k.fwd < 0 ? -(w.sign > 0 ? LIMB_BACK : LIMB_RUN) : 0;   // S: in toward the base (backing, or forward if it faces in)
+    this.climbV = damp(this.climbV || 0, want, 10, dt);
+    const ds = this.climbV * dt, minR = w.main ? HOLD_R : END_R, s0 = Q.baseS(w.st), end = Q.thinEnd(w.st, minR);
+    let s = w.s + ds;
+    if (s > end && ds > 0) {
+      const L = Q.leader(w.rec, w.st, minR);   // the stem carries on in its leader: up the main stem to the top
+      if (L) { const m = w.main; this.onto(L.st, Q.baseS(L.st) + 0.02, 1, w.n); w.main = m; return; }
+      s = end; this.climbV = 0;
+      if (!this.toldEnd) {
+        this.toldEnd = true;
+        this.say(w.main ? 'the top: the wood above is too thin to hold a squirrel' : 'the thin end: Space leaps to a limb ahead, or drops');
+      }
+    } else if (s < s0 && ds < 0) {
+      if (w.st.par) { this.ontoParent(); return; }
+      s = s0;
+    }
+    if (s < end - 0.3) this.toldEnd = false;
+    w.s = Math.min(end, Math.max(s0, s));
+    a = this.woodFrame();
+    const P = this.flight.pos, g = this.heights.atXZ(P.x, P.z);
+    if (!w.st.par && ds < 0 && P.y - g < 0.06) { this.dismountWood(); return; }   // down the bole onto the ground
+    if (!w.st.par && P.y < g) { w.s += g - P.y; this.woodFrame(); }
+    // pose: the climbing bound; ps.pitch / ps.yaw follow the facing so the air and the ground pick up from here
+    const moving = Math.abs(this.climbV) > 0.1 || round;
+    ps.amp = damp(ps.amp, moving ? 1 : 0, 10, dt);
+    ps.phase += dt * TAU * (moving ? 3.5 * Math.max(0.6, Math.abs(this.climbV) / 1.8) : 0);
+    ps.pose = 0; ps.bob = 0; ps.roll = 0;
+    ps.pitch = -Math.asin(Math.max(-1, Math.min(1, w.f.y))); ps.yaw = Math.atan2(w.f.x, w.f.z);
+  }
+  // Back down a limb's base onto its parent, on the side the limb leaves from, facing the way most like this one
+  // (a steep parent: the keys pick up or down there).
+  ontoParent() {
+    const Q = this.Q, w = this.w, c = w.st, p = c.par, b = Q.at(c, Q.baseS(c), this._ta), q = Q.at(p, c.parS, this._tb);
+    const n = this._j.set(b.x - q.x, b.y - q.y, b.z - q.z);
+    const sign = Math.sign(w.f.x * q.dx + w.f.y * q.dy + w.f.z * q.dz) || 1;
+    this.onto(p, c.parS, sign, n.lengthSq() > 1e-8 ? n : null);
+    w.main = this.isMain(w.rec, p);
+  }
+  takeJunction(c) {
+    const Q = this.Q, w = this.w;
+    if (c.parent) { const b = Q.at(w.st, Q.baseS(w.st), this._ta), q = Q.at(c.st, c.s, this._tb); this.onto(c.st, c.s, c.sign, this._j.set(b.x - q.x, b.y - q.y, b.z - q.z)); }
+    else {   // onto a branch: its upper side (a steep one too, unless it stands nearly upright: then this side)
+      const a = Q.at(c.st, c.s, this._ta);
+      this.onto(c.st, c.s, 1, Math.abs(a.dy) < 0.9 ? this.topSide(a, this._j) : this._j.copy(w.n));
+    }
+    w.main = this.isMain(w.rec, w.st);
+    this.climbV = 0;
+  }
+  // The junctions in reach: children leaving within REACH (plus the stem's radius) of the feet, on this side of a
+  // thick stem; near a limb's base, its parent either way. A takes the one leaving most to the left, D most to the
+  // right; one leaving nearly straight out (|side| < 0.35) either.
+  junctions(a) {
+    const Q = this.Q, w = this.w, l = w.l, n = w.n, C = this.cands; C.length = 0;
+    const pool = this._cpool || (this._cpool = []), get = () => { const o = pool[C.length] || (pool[C.length] = {}); C.push(o); return o; };
+    const lead = w.main ? Q.leader(w.rec, w.st, HOLD_R) : null;
+    for (const k of Q.kidsNear(w.rec, w.st, w.s, REACH + a.r, END_R, this._kids)) {
+      const b0 = Q.baseS(k.st), b = Q.at(k.st, b0 + 0.05, this._ta), q = Q.at(w.st, k.s, this._tb);
+      let ox = b.x - q.x, oy = b.y - q.y, oz = b.z - q.z; const along = ox * q.dx + oy * q.dy + oz * q.dz;
+      ox -= along * q.dx; oy -= along * q.dy; oz -= along * q.dz;
+      const ol = Math.hypot(ox, oy, oz);
+      if (a.r > 0.05 && ol > 1e-4 && (ox * n.x + oy * n.y + oz * n.z) / ol < -0.3) continue;   // round the far side of a thick stem
+      const o = get(); o.parent = false; o.st = k.st; o.s = b0 + 0.02; o.sign = 1;
+      o.side = b.dx * l.x + b.dy * l.y + b.dz * l.z; o.x = b.x + b.dx * 0.25; o.y = b.y + b.dy * 0.25; o.z = b.z + b.dz * 0.25;
+      o.dx = b.dx; o.dy = b.dy; o.dz = b.dz; o.r = b.r; o.name = lead && lead.st === k.st ? 'up the main stem' : k.st.level === 0 ? 'the other stem' : k.st.level === 1 ? 'a limb' : 'a branch';
+    }
+    const p = w.st.par;
+    if (p && w.s - Q.baseS(w.st) < REACH) {
+      const q = Q.at(p, w.st.parS, this._tb), steepP = Math.abs(q.dy) > STEEP;
+      for (const sg of [1, -1]) {
+        const s1 = w.st.parS + sg * 0.5; if (s1 < Q.baseS(p) || s1 > Q.thinEnd(p, END_R)) continue;
+        const o = get(); o.parent = true; o.st = p; o.s = w.st.parS; o.sign = sg;
+        o.side = sg * (q.dx * l.x + q.dy * l.y + q.dz * l.z); o.dx = sg * q.dx; o.dy = sg * q.dy; o.dz = sg * q.dz;
+        o.x = q.x + o.dx * 0.45; o.y = q.y + o.dy * 0.45; o.z = q.z + o.dz * 0.45; o.r = q.r;
+        o.name = steepP ? `${o.dy > 0 ? 'up' : 'down'} the ${p.par ? 'stem' : 'trunk'}` : (sg > 0 ? 'on out along the limb' : 'back in along the limb');
+      }
+    }
+    let A = null, D = null;
+    for (const o of C) {
+      if (o.side > -0.35 && (!A || o.side > A.side)) A = o;
+      if (o.side < 0.35 && (!D || o.side < D.side)) D = o;
+    }
+    this.candA = A; this.candD = D;
+  }
+  // The rings round the junctions A and D would take, and the line naming them.
+  showJunctions() {
+    const C = [this.candA, this.candD];
+    let text = '';
+    for (let i = 0; i < 2; i++) {
+      const m = this.rings[i], c = C[i], same = i === 1 && c && c === C[0];
+      m.visible = !!c && !same;
+      if (!m.visible) continue;
+      m.position.set(c.x, c.y, c.z); m.scale.setScalar(c.r + 0.03);
+      m.quaternion.setFromUnitVectors(this._x.set(0, 0, 1), this._j.set(c.dx, c.dy, c.dz));
+    }
+    if (C[0] && C[0] === C[1]) text = `<kbd>A</kbd> / <kbd>D</kbd> ${C[0].name}`;
+    else if (C[0] || C[1]) text = [C[0] && `<kbd>A</kbd> ${C[0].name}`, C[1] && `<kbd>D</kbd> ${C[1].name}`].filter(Boolean).join(' &nbsp;·&nbsp; ');
+    if (text !== this.hintWas) { this.hintWas = text; this.hint.innerHTML = text; this.hint.style.display = text ? '' : 'none'; }
+  }
+  // Space on the wood: a leap to wood within LEAP_R the way it faces (out from the bark, on a steep stem), else a drop.
+  woodJump(steep) {
+    const w = this.w, P = this.flight.pos, dir = this._j;
+    if (steep || Math.hypot(w.f.x, w.f.z) < 0.35) dir.set(w.n.x, 0, w.n.z); else dir.set(w.f.x, 0, w.f.z);
+    if (dir.lengthSq() < 1e-4) dir.set(1, 0, 0);
+    dir.normalize();
+    this.flight.yaw = this.lastYaw = Math.atan2(-dir.x, -dir.z); this.camOrbit = 0;
+    this.leftSt = w.st; this.leftT = 0.5; this.cands.length = 0; this.candA = this.candD = null;
+    const T = this.leapTarget(P, dir);
+    if (T) {
+      const d = Math.hypot(T.px - P.x, T.py - P.y, T.pz - P.z);
+      this.leap = { x0: P.x, y0: P.y, z0: P.z, T, u: 0, dur: 0.28 + 0.13 * d, arc: 0.2 + 0.12 * d + Math.max(0, T.py - P.y) * 0.5, dx: dir.x, dz: dir.z };
+      this.mode = 'leap'; this.w.rec = null; return;
+    }
+    this.vel.set(dir.x * 1.6, 1.4, dir.z * 1.6); P.addScaledVector(dir, 0.05);
+    this.mode = 'air'; this.spread = true; this.fallTop = P.y; this.w.rec = null;
+  }
+  // The wood to leap to: sample along the way (0.6 to LEAP_R m out, 0.4 m up to 1.2 m down) for wood that holds a
+  // squirrel (END_R), not the stem it leaves nor its own branches or parent (the junctions reach those), at least 0.8 m
+  // off; the nearest, a drop counting more than a rise.
+  leapTarget(P, dir) {
+    const Q = this.Q, w = this.w; let best = null, bv = Infinity;
+    for (let d = 0.6; d <= LEAP_R + 1e-6; d += 0.2) for (const dh of [0.4, 0, -0.4, -0.8, -1.2]) {
+      const h = Q.nearBut(P.x + dir.x * d, P.y + 0.1 + dh, P.z + dir.z * d, 0.3, END_R, w.st); if (!h) continue;   // (along its own stem it runs)
+      if (h.ay + h.r - h.ground < 0.4) continue;   // the ground's (a drop is the way there)
+      if (h.stem.par === w.st || h.stem === w.st.par) continue;   // its own branches and parent: by the junctions
+      const dist = Math.hypot(h.ax - P.x, h.ay - P.y, h.az - P.z); if (dist < 0.8 || dist > LEAP_R + 0.3) continue;
+      const v = d + 1.5 * Math.max(0, -dh) + 0.5 * Math.max(0, dh) + h.gap;
+      if (v >= bv) continue;
+      bv = v;
+      const steep = Math.abs(h.dy) > STEEP, n = this._x;
+      if (steep) { n.set(P.x - h.ax, 0, P.z - h.az); n.addScaledVector(this._d.set(h.dx, h.dy, h.dz), -n.dot(this._d)); if (n.lengthSq() < 1e-6) n.set(-dir.x, 0, -dir.z); n.normalize(); }
+      else this.topSide(h, n);
+      const R = h.r + 0.01;
+      best = { rec: h.rec, st: h.stem, s: h.s, nx: n.x, ny: n.y, nz: n.z, px: h.ax + n.x * R, py: h.ay + n.y * R, pz: h.az + n.z * R,
+        sign: steep ? (h.dy >= 0 ? 1 : -1) : (Math.sign(dir.x * h.dx + dir.z * h.dz) || 1) };
+    }
+    return best;
+  }
+  leaping(dt) {
+    const L = this.leap, T = L.T, P = this.flight.pos, ps = this.pose;
+    L.u = Math.min(1, L.u + dt / L.dur);
+    const u = L.u, y = L.y0 + (T.py - L.y0) * u + L.arc * Math.sin(Math.PI * u);
+    const vy = (T.py - L.y0) + L.arc * Math.PI * Math.cos(Math.PI * u);
+    P.set(L.x0 + (T.px - L.x0) * u, y, L.z0 + (T.pz - L.z0) * u);
+    ps.amp = damp(ps.amp, 0.3, 6, dt); ps.phase += dt * TAU * 2; ps.pose = damp(ps.pose, 0, 10, dt); ps.bob = 0;
+    ps.pitch = damp(ps.pitch, -Math.atan2(vy, Math.max(0.5, Math.hypot(T.px - L.x0, T.pz - L.z0))) * 0.6, 10, dt);
+    ps.yaw = Math.atan2(L.dx, L.dz); ps.roll = 0;
+    if (u >= 1) { this.attachWood(T.rec, T.st, T.s, T.nx, T.ny, T.nz, T.sign); this.pose.flickV = 1; }
+  }
+  // Dropping from the wood: a limb crossed between (x0, y0, z0) and (x1, y1, z1), not too steep, met from above: take hold.
+  catchLimb(x0, y0, z0, x1, y1, z1) {
+    const Q = this.Q; if (!Q) return false;
+    const n = Math.max(1, Math.ceil(Math.hypot(x1 - x0, y1 - y0, z1 - z0) / 0.1));
+    for (let i = 1; i <= n; i++) {
+      const t = i / n, h = Q.near(x0 + (x1 - x0) * t, y0 + (y1 - y0) * t + 0.03, z0 + (z1 - z0) * t, 0.1, END_R);
+      if (!h || Math.abs(h.dy) > 0.8 || h.ny < 0.2 || (h.stem === this.leftSt && this.leftT > 0)) continue;
+      if (h.ay - h.ground < 0.5) continue;
+      const sign = Math.sign(this.vel.x * h.dx + this.vel.z * h.dz) || 1, fell = (this.fallTop ?? y0) - h.ay;
+      this.attachWood(h.rec, h.stem, h.s, 0, 1, 0, sign);
+      if (fell > 1.5) this.say(`caught a limb ${Math.round(fell)} m down`);
+      return true;
+    }
+    return false;
+  }
+  stunned(dt) {
+    const ps = this.pose;
+    this.stunT -= dt; this.v = 0;
+    ps.amp = damp(ps.amp, 0, 10, dt); ps.pose = damp(ps.pose, 0, 8, dt); ps.pitch = damp(ps.pitch, 0.1, 6, dt); ps.flick = damp(ps.flick, -0.3, 6, dt);
+    if (this.stunT <= 0) this.mode = 'ground';
+  }
+  // Off the bottom of the bole onto the ground, facing out.
+  dismountWood() {
+    const f = this.flight, P = f.pos, n = this.w.n, h = Math.hypot(n.x, n.z) || 1;
+    f.yaw = this.lastYaw = Math.atan2(-n.x / h, -n.z / h);
+    P.x += n.x / h * 0.2; P.z += n.z / h * 0.2; P.y = this.heights.atXZ(P.x, P.z);
+    this.mode = 'ground'; this.w.rec = null; this.v = 1.5; this.camOrbit = 0;
+  }
+  // E on the wood: a crown acorn within CROWN_R; else which way the nearest within 5 m is.
+  woodAction() {
+    const G = this.acorns, P = this.flight.pos, w = this.w;
+    if (!G || !G.running) { this.say('start a game (panel: Start game) to gather acorns'); return true; }
+    if (G.player.carrying > 0) { this.say('your mouth is full: bury this one first'); return true; }
+    const near = G.acornNear(P.x, P.y, P.z, CROWN_R, true);
+    if (near) { this.work = { kind: 'pick', t: WORK.pick, acorn: near, back: 'wood' }; this.mode = 'work'; return true; }
+    let best = null, bd = 5;
+    for (const a of G.liveAcorns) {
+      if (!a.branch) continue;
+      const d = Math.hypot(a.x - P.x, a.y - P.y, a.z - P.z); if (d < bd) { bd = d; best = a; }
+    }
+    if (!best) { this.say('no acorn within reach here'); return true; }
+    const dx = best.x - P.x, dz = best.z - P.z, side = dx * w.l.x + dz * w.l.z, ahead = dx * w.f.x + dz * w.f.z;
+    const way = Math.abs(side) > Math.abs(ahead) ? (side > 0 ? 'to the left' : 'to the right') : ahead > 0 ? 'ahead' : 'behind';
+    this.say(`an acorn ${bd.toFixed(1)} m off, ${way}${best.y > P.y + 0.5 ? ', above' : best.y < P.y - 0.5 ? ', below' : ''}: run out along a limb to it`);
+    return true;
+  }
+  // The HUD row: where the squirrel is ("on a blue oak, 7 m up, on a limb").
+  hudLine(ground) {
+    if (!this.hudRow) {
+      const hud = document.getElementById('hud'); if (!hud) return;
+      this.hudRow = Object.assign(document.createElement('div'), { className: 'row wide', innerHTML: '<span>where</span><b></b>' });
+      const h1 = hud.querySelector('h1'); if (h1) h1.after(this.hudRow); else hud.prepend(this.hudRow);
+    }
+    const P = this.flight.pos, w = this.w, wood = this.mode === 'wood' || (this.mode === 'work' && this.work?.back === 'wood');
+    let text;
+    if (wood && w.rec) {
+      const name = this.Q.nameOf(w.rec), up = Math.max(0, Math.round(P.y - this.heights.atXZ(P.x, P.z))), fk = this.Q.fork(w.rec);
+      const under = w.n.y < -0.3 && Math.abs(w.f.y) < 0.8;
+      const part = w.st === fk?.st && w.s < fk.s + 0.1 ? 'on the trunk' : w.main ? 'on the main stem' : w.st.level === 0 ? 'on a stem' : `${under ? 'under' : 'on'} ${w.st.level === 1 ? 'a limb' : 'a branch'}`;
+      text = `on ${/^[aeiou]/i.test(name) ? 'an' : 'a'} ${name}, ${up} m up, ${part}`;
+    } else if (this.mode === 'trunk' && this.tree) text = `on the trunk, ${Math.max(0, Math.round(P.y - ground))} m up`;
+    else if (this.mode === 'air' || this.mode === 'leap') text = this.mode === 'leap' ? 'leaping' : P.y - ground > 1 ? `in the air, ${Math.round(P.y - ground)} m up` : 'in the air';
+    else if (this.mode === 'stun') text = 'stunned';
+    else text = this.swimming ? 'swimming' : this.wet ? 'wading' : 'on the ground';
+    this.hudRow.style.display = '';
+    const b = this.hudRow.lastChild; if (b.textContent !== text) b.textContent = text;
+  }
+  // Keep the camera's line to the squirrel out of the leaves (woodpeckerControl.js crownClear, the same rule): each
+  // tree's crown within 12 m is a sphere above its fork (from the fork, or the species' crown base when higher, to the
+  // top; as wide as that, at most the species' crown width); a crown the squirrel is in is skipped. The camera must be
+  // outside the sphere grown by CROWN_PAD and the line from it to 0.4 of the way in outside the sphere; if not it drops
+  // (up to CROWN_LOWER), else comes in along the line (no closer than CROWN_MIN). off: camera - P, changed in place.
+  crownClear(P, off) {
+    this.indexTrees();
+    const S = this._crowns || (this._crowns = []); S.length = 0; this.inCrown = false;
+    const ci = Math.floor(P.x / 10), cj = Math.floor(P.z / 10), t = this._t, own = this.w.rec;
+    for (let j = cj - 2; j <= cj + 2; j++) for (let i = ci - 2; i <= ci + 2; i++) {
+      for (const tr of this.trees.get(`${i},${j}`) || []) {
+        if (tr.snag || Math.hypot(tr.x - P.x, tr.z - P.z) > 12) continue;
+        const sp = PLANTS[tr.species]?.targets || {}, H = tr.H, fork = this.topOf(tr);
+        const base = Math.max(fork, (sp.crown_base_ratio ?? 0.15) * H);
+        const R = Math.min((H - base) / 2, (sp.crown_width_ratio ?? 1) * H / 2); if (R < 0.5) continue;
+        trunkAt(tr, Math.min(base, fork), t);
+        const cx = t.x, cy = tr.y + base + R, cz = t.z;
+        const G2 = (R + Math.min(CROWN_PAD[2], CROWN_PAD[0] + CROWN_PAD[1] * R)) ** 2;
+        // the crown it is climbing in (or at the edge of) is skipped: no line clears it
+        const mine = own && Math.abs(tr.x - own.x) < 0.05 && Math.abs(tr.z - own.z) < 0.05, d2 = (P.x - cx) ** 2 + (P.y - cy) ** 2 + (P.z - cz) ** 2;
+        if (mine && d2 < G2) this.inCrown = true;
+        if (mine || d2 < G2) continue;
+        S.push(cx, cy, cz, R * R, G2);
+      }
+    }
+    if (!S.length) return;
+    const inside = (x, y, z, k) => {
+      for (let n = 0; n < S.length; n += 5) if ((x - S[n]) ** 2 + (y - S[n + 1]) ** 2 + (z - S[n + 2]) ** 2 < S[n + k]) return true;
+      return false;
+    };
+    const blocked = (ox, oy, oz) => {
+      if (inside(P.x + ox, P.y + oy, P.z + oz, 4)) return true;
+      for (const f of [0.85, 0.7, 0.55, 0.4]) if (inside(P.x + ox * f, P.y + oy * f, P.z + oz * f, 3)) return true;
+      return false;
+    };
+    if (!blocked(off.x, off.y, off.z)) return;
+    const g = this.heights.atXZ(P.x + off.x, P.z + off.z) + 0.25 - P.y;
+    for (let d = 0.15; d <= CROWN_LOWER + 1e-6 && off.y - d >= g; d += 0.15) if (!blocked(off.x, off.y - d, off.z)) { off.y -= d; return; }
+    const L = Math.hypot(off.x, off.y, off.z), lo = Math.min(1, CROWN_MIN / L);
+    let f = 1;
+    while (f > lo && inside(P.x + off.x * f, P.y + off.y * f, P.z + off.z * f, 4)) f -= 0.05;
+    off.multiplyScalar(Math.max(lo, f));
+  }
+
   // Out along a limb to a crown acorn, take it, and back to the trunk.
   onLimb(dt) {
     const L = this.limb, P = this.flight.pos, ps = this.pose;
@@ -538,7 +940,7 @@ export class SquirrelControl {
     const G = this.acorns;
     if (W.kind === 'pick') {
       const ok = G.isFree(W.acorn.key) && G.playerPick(W.acorn);
-      this.say(ok ? `${W.back === 'trunk' ? 'took an acorn from the crown' : 'picked up an acorn'}${this.nameOf(W.acorn)}` : 'someone took it first');
+      this.say(ok ? `${W.back === 'trunk' || W.back === 'wood' ? 'took an acorn from the crown' : 'picked up an acorn'}${this.nameOf(W.acorn)}` : 'someone took it first');
     } else if (W.kind === 'bury') {
       this.say(G.playerBury(W.x, W.y, W.z) ? 'buried it: one acorn, one hole' : 'could not bury it here');
     } else if (W.kind === 'dig') {
@@ -619,11 +1021,16 @@ export class SquirrelControl {
   }
 
   // ---- drawing -------------------------------------------------------------------------------------
-  draw() {
+  draw(dt = 0.016) {
     const m = this.mesh, ps = this.pose, P = this.flight.pos; if (!m) return;
     m.visible = true;
-    this._e.set(ps.pitch, ps.yaw, ps.roll, 'YXZ'); this._q.setFromEuler(this._e);
-    this._p.set(P.x, P.y + ps.bob, P.z);
+    // on the wood the body is set by the bark (up: out of it, forward: along the stem); elsewhere by the Euler pose;
+    // eased across, so a turn onto a limb or head-down on the trunk is a quick swivel, not a cut
+    const wood = this.mode === 'wood' || (this.mode === 'work' && this.work?.back === 'wood');
+    if (wood) { const w = this.w; this._mb.makeBasis(this._x.crossVectors(w.n, w.f), w.n, w.f); this._qt.setFromRotationMatrix(this._mb); }
+    else { this._e.set(ps.pitch, ps.yaw, ps.roll, 'YXZ'); this._qt.setFromEuler(this._e); }
+    if (this.qFresh) this._q.slerp(this._qt, 1 - Math.exp(-dt * (wood || this.mode === 'leap' ? 14 : 40))); else { this._q.copy(this._qt); this.qFresh = true; }
+    this._p.set(P.x + this.pOff.x, P.y + ps.bob + this.pOff.y, P.z + this.pOff.z);
     this._m.compose(this._p, this._q, this._s);
     this._m.toArray(m.instanceMatrix.array, 0); m.instanceMatrix.needsUpdate = true;
     const an = m.geometry.attributes.aAnim; an.array[0] = ps.phase % TAU; an.array[1] = ps.amp; an.array[2] = ps.pose; an.array[3] = ps.flick; an.needsUpdate = true;
@@ -633,7 +1040,7 @@ export class SquirrelControl {
     this.nut.visible = !!carrying;
     if (carrying) {
       const c = this.animals.carryPoint({ sp: this.sp, flick: ps.flick, pose: ps.pose, phase: ps.phase, amp: ps.amp }, this._m);
-      this.nut.position.copy(c); this.nut.rotation.set(Math.PI / 2 + ps.pitch, ps.yaw, 0, 'YXZ');
+      this.nut.position.copy(c); this.nut.quaternion.copy(this._q).multiply(this._nutQ);
     }
   }
 
@@ -649,7 +1056,20 @@ export class SquirrelControl {
     let k = 7;
     const rate = wrap(f.yaw - (this.camYaw ?? f.yaw)) / Math.max(dt, 1e-3); this.camYaw = f.yaw;   // keys or a drag
     if (Math.abs(rate) > 0.3 && (this.mode === 'ground' || this.mode === 'air')) this.camSide = damp(this.camSide, -Math.sign(rate) * CAM_SIDE, CAM_SWING, dt);
-    if ((this.mode === 'trunk' || this.mode === 'limb' || (this.mode === 'work' && this.work?.back === 'trunk')) && this.tree) {
+    const wood = this.mode === 'wood' || (this.mode === 'work' && this.work?.back === 'wood');
+    if (wood) {
+      // over the shoulder: behind the way it faces and out from the bark (so under a limb when it is underneath), a
+      // little to the side; on a steep stem close below (head up) or above (head down) and further out, as on the trunk
+      // in its own crown, or out a limb (among the leaves), the boom shortens: fewer leaf cards between; eased
+      const w = this.w, fw = w.f, n = w.n, l = w.l, st = Math.min(1, Math.abs(fw.y) / 0.9);
+      this.boomK = damp(this.boomK ?? 1, this.inCrown || !w.main ? CROWN_BOOM : 1, 2, dt);   // out a limb: in the leaves
+      const K = this.boomK, back = (1.9 + (0.6 - 1.9) * st) * K, out = (0.75 + (1.9 - 0.75) * st) * K, side = 0.45 * K;
+      off.set(-fw.x * back + n.x * out - l.x * side, -fw.y * back + n.y * out - l.y * side, -fw.z * back + n.z * out - l.z * side);
+      if (this.camOrbit) off.applyAxisAngle(this._d.set(w.a.dx, w.a.dy, w.a.dz), this.camOrbit);
+      aim.set(fw.x * 0.5 + n.x * 0.08, fw.y * 0.5 + n.y * 0.08, fw.z * 0.5 + n.z * 0.08);
+      if (!this.auto) this.crownClear(P, off);
+      k = 5;
+    } else if ((this.mode === 'trunk' || this.mode === 'limb' || (this.mode === 'work' && this.work?.back === 'trunk')) && this.tree) {
       const tr = this.tree, ang = this.face + this.camOrbit, t = trunkAt(tr, Math.max(0, this.h), this._t);
       const out = t.r + 2.1, side = 0.55, ox = Math.sin(ang), oz = Math.cos(ang);
       off.set(t.x + ox * out + oz * side - P.x, t.y + (this.headUp ? -0.55 : 0.75) - P.y, t.z + oz * out - ox * side - P.z);
@@ -662,12 +1082,19 @@ export class SquirrelControl {
       aim.set(fx * look, 0.22 + 0.25 * this.sit + Math.tan(f.pitch) * (back + look), fz * look);
     }
     if (!this.camSettled) { this.camOff.copy(off); this.aimOff.copy(aim); this.camSettled = true; this.camLift = 0; }
-    else { this.camOff.lerp(off, 1 - Math.exp(-dt * k)); this.aimOff.lerp(aim, 1 - Math.exp(-dt * k)); }
+    else {   // the boom's direction and length eased apart, so a swing round a stem never passes through the squirrel
+      const u = 1 - Math.exp(-dt * k), L0 = this.camOff.length(), L1 = off.length();
+      this.camOff.multiplyScalar(1 / Math.max(L0, 1e-6)).lerp(this._x.copy(off).multiplyScalar(1 / Math.max(L1, 1e-6)), u);
+      if (this.camOff.lengthSq() < 1e-4) this.camOff.set(0, 1, 0);
+      this.camOff.setLength(L0 + (L1 - L0) * u);
+      this.aimOff.lerp(aim, u);
+    }
     cam.position.copy(P).add(this.camOff);
     // the lift that keeps it out of the ground: up at once, back down gently (no bob over every bump)
     const need = this.camClear(P, cam.position) - cam.position.y;
     this.camLift = need > this.camLift ? need : damp(this.camLift, need, 3, dt);
     if (this.camLift > 0) cam.position.y += this.camLift;
+    if (wood && this.Q) for (let i = 0; i < 4 && cam.position.distanceTo(P) > 0.9 && this.Q.near(cam.position.x, cam.position.y, cam.position.z, 0.3, 0.03); i++) cam.position.lerp(P, 0.2);   // short of a limb in the way
     cam.up.set(0, 1, 0);
     cam.lookAt(aim.copy(P).add(this.aimOff));
   }

@@ -731,3 +731,26 @@ because the canopy layer gives woodland and grassland cells no shrub cover; nega
 treats kinds over 1.5 as grass, whose swaying shadows made neighbouring shrubs flicker. Cost: 26 species take
 the start view from 239 to 417 draw calls and about 1.4 ms more CPU; the far atlas is at its 64-tree cap on
 every tile. Details in species-library.md, "Integration of the foothill set".
+
+## 2026-10-26: squirrels climb whole trees on the same wood the raven perches on
+
+Aaron: "make it so squirrels can climb all the way up trees, and climb on branches as well". The
+player squirrel's climb no longer stops at the fork: W carries on up the main stem into the
+child most in line and thickest until the wood is 2 cm in radius; at a junction (a child stem
+leaving within 0.4 m of the feet, ringed on screen and named in a caption) A or D take the
+limb on that side, W runs it out to where it is 1.5 cm thick, S heads back, and with no
+junction A/D go round the stem, to the underside with the camera swinging below. Space leaps
+to wood within 2.5 m in the facing direction (never its own stem or a limb a junction would
+reach), else drops with the legs spread and grabs the first limb it falls across; falls over
+6 m stun for a second. E takes a crown acorn within 1.2 m of a limb (the old automatic run
+out along a limb is gone). AI squirrels climb into the canopy on routes worked out once per
+tree (about 0.3 µs a frame to follow), forage along the wood and come down the way they went;
+a fleeing one takes the limb furthest from the player and freezes flat on it, so it vanishes
+round the far side of the trunk. All of it reads `perch.js` (the raven lane's wood queries,
+extended with joins, the fork, routes and children at a point) so the squirrel and the raven
+agree on what wood is there. Rejected: a separate climb graph per species (two copies of the
+same wood). Known: a blue oak's leaves fill the view in its crown, the leap camera drops to the
+ground view, the leg spread is one blend, and on limbs sloped past ~27 degrees the squirrel
+can go round instead of staying on top. Verified: a blue oak climbed to 7 m past the fork,
+a branch taken and run out, a drop that caught a limb 3 m down, a gray pine to 17 m, a crown
+acorn from a limb, a chase up the far side of a live oak; 45-46 fps, no console errors.

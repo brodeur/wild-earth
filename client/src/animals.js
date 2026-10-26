@@ -382,6 +382,7 @@ export class Animals {
     // temporaries
     this._t = { x: 0, y: 0, z: 0, r: 0 }; this._p = new THREE.Vector3(); this._q = new THREE.Quaternion();
     this._e = new THREE.Euler(0, 0, 0, 'YXZ'); this._s = new THREE.Vector3(); this._m = new THREE.Matrix4();
+    this._sqF = new THREE.Vector3(); this._sqN = new THREE.Vector3(); this._sqX = new THREE.Vector3(); this._sqM = new THREE.Matrix4(); this._sqE = new THREE.Euler(0, 0, 0, 'YXZ');
     // name tags
     this.tagGroup = new THREE.Group(); this.tagGroup.renderOrder = 19; this.group.add(this.tagGroup);
     this.coveys = []; this.frame = 0; this.camPos = camera.position;
@@ -948,7 +949,12 @@ export class Animals {
   sqStart(a) {
     const o = a.tree, r = a.rng;
     if (r() < (this.season === 'fall' ? 0.25 : 0.45)) {   // start up in the crown
-      a.face = r() * TAU; this.sqBranch(a); a.state = S_SIT; a.t = 3 + r() * 20; a.pose = 1;
+      const rec = this.sqWood(o), k = rec ? Math.floor(r() * rec.sqLimbs.length) : -1, p = rec && this.sqPath(rec, -1, k);
+      if (p) {   // out on a limb of the drawn wood
+        a.path = p; a.prec = rec; a.limb = k; a.pdir = 1; a.pu = p.len; a.pi = 0; this.sqFollow(a, 0, 0);
+        a.state = S_SIT; a.t = 3 + r() * 20; a.pose = 0.6; return;
+      }
+      a.path = null; a.face = r() * TAU; this.sqBranch(a); a.state = S_SIT; a.t = 3 + r() * 20; a.pose = 1;
       a.x = a.tx; a.y = a.ty; a.z = a.tz; a.pitch = -0.5;
     } else {
       const ang = r() * TAU, d = Math.sqrt(r()) * (3 + 3 * o.scale);
@@ -962,21 +968,131 @@ export class Animals {
     a.tx = t.x + Math.sin(a.face) * d; a.ty = t.y + hh; a.tz = t.z + Math.cos(a.face) * d;
   }
   sqRunTo(a, x, z, speed, next) {
-    a.tx = x; a.tz = z; a.speed = speed; a.next = next; a.state = S_RUN;
+    a.tx = x; a.tz = z; a.speed = speed; a.next = next; a.state = S_RUN; a.via = false;
     a.yaw = Math.atan2(x - a.x, z - a.z);
   }
-  sqToTrunk(a, speed) {   // run to the trunk base on the side facing us, then climb
-    const o = a.tree; a.face = Math.atan2(a.x - o.x, a.z - o.z);
+  // Run to the trunk base and climb. With the drawn wood known (sqWood): up the trunk and out along a limb (sqPath),
+  // a scared one out the limb on the far side of the trunk from the player; running round the trunk's foot to the
+  // limb's side first. Otherwise (a raid; wood not known) up the trunk on the side facing us to the fork, as before.
+  sqToTrunk(a, speed) {
+    const o = a.tree, r = a.rng; a.face = Math.atan2(a.x - o.x, a.z - o.z);
+    const rec = a.task === T_RAID ? null : this.sqWood(o);
+    if (rec) {
+      const L = rec.sqLimbs, P = this.flight.pos;
+      let k = Math.floor(r() * L.length);
+      if (a.scared) {
+        const px = P.x - o.x, pz = P.z - o.z, pl = Math.hypot(px, pz) || 1;
+        let bv = Infinity;
+        L.forEach((l, i) => { const v = (l.hx * px + l.hz * pz) / pl + 0.3 * r(); if (v < bv) { bv = v; k = i; } });
+      }
+      const p = this.sqPath(rec, -1, k);
+      if (p) {
+        a.path = p; a.prec = rec; a.limb = k; a.pdir = 1; a.pu = 0; a.pi = 0;
+        const t = trunkAt(o, 0, this._t), x = p.pts[0], z = p.pts[2];
+        this.sqRunTo(a, x, z, speed, S_CLIMB);
+        // the straight way passes the trunk: first round its foot on our side
+        const ex = x - a.x, ez = z - a.z, e2 = ex * ex + ez * ez, u = e2 > 1e-6 ? Math.max(0, Math.min(1, ((t.x - a.x) * ex + (t.z - a.z) * ez) / e2)) : 0;
+        const R = t.r + 0.35;
+        if (Math.hypot(a.x + ex * u - t.x, a.z + ez * u - t.z) < R) {
+          const side = Math.sign(Math.sin(Math.atan2(x - t.x, z - t.z) - a.face)) || 1, ang = a.face + side * Math.PI / 2;
+          a.vx = x; a.vz = z; a.via = true; a.tx = t.x + Math.sin(ang) * R; a.tz = t.z + Math.cos(ang) * R; a.yaw = Math.atan2(a.tx - a.x, a.tz - a.z);
+        }
+        return;
+      }
+    }
+    a.path = null;
     const t = trunkAt(o, 0, this._t), rr = t.r + 0.06;
     this.sqRunTo(a, t.x + Math.sin(a.face) * rr, t.z + Math.cos(a.face) * rr, speed, S_CLIMB);
+  }
+
+  // ---- squirrel in the canopy: the drawn wood (perch.js) ------------------------------------------
+  // The tree's wood as perch.js knows it (the near set's instance of this oak), with the limbs a squirrel goes out on
+  // (sqLimbs) and its paths (sqPaths), both cached on the record; null when the wood is not known (the trunk-and-fork
+  // climb then). Limbs: off the bole or the main stem's wood, at least 3 cm thick at the base, with a metre or more of
+  // wood 2 cm thick, ending 2 m or more above the ground, not steeper than ~44 degrees there, reaching 0.5 m out.
+  sqWood(o) {
+    const Q = this.flight.perchQuery?.(); if (!Q) return null;
+    let rec = o.prec;
+    if (!rec || Q.byKey.get(rec.key) !== rec) rec = o.prec = Q.recAt(o.x, o.z);
+    if (!rec) return null;
+    if (!rec.sqLimbs) {
+      const stems = Q.joins(rec), fk = Q.fork(rec), L = [], q = {};
+      rec.sqRoot = fk ? fk.st : null; rec.sqPaths = new Map();
+      if (fk) for (const st of stems) {
+        if (!st.par) continue;
+        const b = Q.baseS(st), e = Q.thinEnd(st, 0.02) - 0.1;
+        if (st.rad[0] < 0.03 || e - b < 1) continue;
+        Q.at(st, e, q);
+        if (q.y - this.heights.atXZ(q.x, q.z) < 2 || Math.abs(q.dy) > 0.7) continue;
+        const hx = q.x - rec.x, hz = q.z - rec.z, h = Math.hypot(hx, hz); if (h < 0.5) continue;
+        L.push({ st, s: e, hx: hx / h, hz: hz / h });
+      }
+      rec.sqLimbs = L;
+    }
+    return rec.sqLimbs.length ? rec : null;
+  }
+  // The path along the wood (perch.js route) from the ground (-1) or limb `from` to limb `to`, cached per tree: the feet
+  // on the bark every 0.25 m at most, on the side away from the trunk (on top of a limb; on the trunk, the limb's side)
+  // and the way out of the bark there: { pts, ups, cum, len }.
+  sqPath(rec, from, to) {
+    const key = from * 1000 + to; let p = rec.sqPaths.get(key); if (p !== undefined) return p;
+    const Q = this.flight.perchQuery(), L = rec.sqLimbs, end = k => k < 0 ? { st: rec.sqRoot, s: 0.35 } : L[k];
+    const R = Q.route(rec, end(from), end(to));
+    if (!R || R.rad.length < 2) { rec.sqPaths.set(key, null); return null; }
+    const side = L[to], n = R.rad.length, A = R.pts, pts = new Float32Array(n * 3), ups = new Float32Array(n * 3), cum = new Float32Array(n);
+    for (let i = 0; i < n; i++) {
+      const j = Math.min(i, n - 2), dx = A[j * 3 + 3] - A[j * 3], dy = A[j * 3 + 4] - A[j * 3 + 1], dz = A[j * 3 + 5] - A[j * 3 + 2], d2 = dx * dx + dy * dy + dz * dz || 1;
+      const x = A[i * 3], y = A[i * 3 + 1], z = A[i * 3 + 2];
+      let hx = x - rec.x, hz = z - rec.z; const h = Math.hypot(hx, hz);
+      if (h < 0.8) { hx = side.hx; hz = side.hz; } else { hx /= h; hz /= h; }
+      let px = hx, py = 0.8, pz = hz; const k = (px * dx + py * dy + pz * dz) / d2;
+      px -= dx * k; py -= dy * k; pz -= dz * k; const pl = Math.hypot(px, py, pz) || 1; px /= pl; py /= pl; pz /= pl;
+      const rr = R.rad[i] + 0.015;
+      pts[i * 3] = x + px * rr; pts[i * 3 + 1] = y + py * rr; pts[i * 3 + 2] = z + pz * rr; ups[i * 3] = px; ups[i * 3 + 1] = py; ups[i * 3 + 2] = pz;
+      if (i) cum[i] = cum[i - 1] + Math.hypot(pts[i * 3] - pts[i * 3 - 3], pts[i * 3 + 1] - pts[i * 3 - 2], pts[i * 3 + 2] - pts[i * 3 - 1]);
+    }
+    p = { pts, ups, cum, len: cum[n - 1] }; rec.sqPaths.set(key, p);
+    return p;
+  }
+  // Along a.path at `speed` m/s in a.pdir (+1 out, -1 back): position, the body set by the bark (forward along the path,
+  // up out of it: Euler from the basis), the bound. True at the path's end.
+  sqFollow(a, dt, speed) {
+    const p = a.path, C = p.cum, n = C.length;
+    a.pu = Math.max(0, Math.min(p.len, a.pu + a.pdir * speed * dt));
+    let i = Math.min(a.pi, n - 2); while (i < n - 2 && C[i + 1] < a.pu) i++; while (i > 0 && C[i] > a.pu) i--; a.pi = i;
+    const L = C[i + 1] - C[i], t = L > 1e-6 ? (a.pu - C[i]) / L : 0, P = p.pts, U = p.ups, o = i * 3;
+    a.x = P[o] + (P[o + 3] - P[o]) * t; a.y = P[o + 1] + (P[o + 4] - P[o + 1]) * t; a.z = P[o + 2] + (P[o + 5] - P[o + 2]) * t;
+    if (L > 1e-4) {
+      const F = this._sqF.set((P[o + 3] - P[o]) * a.pdir, (P[o + 4] - P[o + 1]) * a.pdir, (P[o + 5] - P[o + 2]) * a.pdir).normalize();
+      const N = this._sqN.set(U[o] + (U[o + 3] - U[o]) * t, U[o + 1] + (U[o + 4] - U[o + 1]) * t, U[o + 2] + (U[o + 5] - U[o + 2]) * t);
+      N.addScaledVector(F, -N.dot(F)).normalize();
+      this._sqM.makeBasis(this._sqX.crossVectors(N, F), N, F); this._sqE.setFromRotationMatrix(this._sqM, 'YXZ');
+      a.pitch = this._sqE.x; a.yaw = this._sqE.y; a.roll = this._sqE.z;
+      a.splay = Math.abs(F.y) > 0.5 || N.y < 0.5 ? 1 : 0;
+    }
+    if (speed > 0) { a.amp = 1; a.phase += dt * TAU * (2.5 + 1.2 * speed); a.pose = 0; }
+    return a.pdir > 0 ? a.pu >= p.len - 1e-4 : a.pu <= 1e-4;
+  }
+  // Back down from where it is on a path (the way it came), to the ground.
+  sqDownPath(a) {
+    if (a.limb >= 0 && a.path !== a.prec.sqPaths.get(-1000 + a.limb)) {   // out on a limb it went to from another: home path
+      const p = this.sqPath(a.prec, -1, a.limb); if (p) { a.path = p; a.pu = p.len; a.pi = p.cum.length - 2; }
+    }
+    a.pdir = -1; a.state = S_IN; a.pose = 0;
+  }
+  sqOffPath(a) {   // at the foot of the trunk: onto the ground
+    a.path = null; a.state = S_PAUSE; a.t = 1 + a.rng() * 2; a.pitch = 0; a.roll = 0; a.yaw = a.face + (a.rng() - 0.5) * 2; a.scared = 0; a.splay = 0;
+    a.y = this.heights.atXZ(a.x, a.z);
   }
   sqUpdate(a, dt, px, py, pz) {
     const r = a.rng, H = this.heights;
     if (a.guard) { this.sqGuard(a, dt); return; }   // v4: off to its dug-up cache, or after the thief
     if (a.fleeOak) this.fleeing(a);
     const dx = a.x - px, dy = a.y - py, dz = a.z - pz, near2 = dx * dx + dy * dy + dz * dz;
-    // (a player squirrel, squirrelControl.js, is one of them: it does not send them up the trees)
-    if ((a.state === S_PAUSE || a.state === S_WORK || a.state === S_EAT || (a.state === S_RUN && a.next !== S_CLIMB)) && near2 < 15 * 15 && this.observer !== SPECIES[SQ].code) {
+    // (a player squirrel, squirrelControl.js, is one of them: it does not send them up the trees by being near)
+    // (a player squirrel only when it runs at one: within 4 m at over 2.5 m/s, on the ground: a chase)
+    const pSq = this.observer === SPECIES[SQ].code, chase = pSq && near2 < 4 * 4 && (this.flight.speed || 0) > 2.5 && Math.abs(dy) < 1.5;
+    if ((a.state === S_PAUSE || a.state === S_WORK || a.state === S_EAT || (a.state === S_RUN && a.next !== S_CLIMB)) && near2 < 15 * 15 && (!pSq || chase)) {
       if (a.task !== T_STORE) this.dropTask(a);   // an acorn it holds goes up the tree with it
       if (a.state === S_EAT) a.carry = 0;          // (dropped while eating)
       a.tree = this.nearestOak(a.x, a.z, 30) || a.anchor; a.scared = 1;
@@ -1010,7 +1126,8 @@ export class Animals {
         a.yaw = Math.atan2(ex, ez);
         if (d <= step) {
           a.x = a.tx; a.z = a.tz;
-          if (a.next === S_CLIMB) { a.state = S_CLIMB; a.h = 0; }
+          if (a.via) { a.via = false; a.tx = a.vx; a.tz = a.vz; a.y = H.atXZ(a.x, a.z); break; }   // round the trunk's foot, then on
+          if (a.next === S_CLIMB) { a.state = S_CLIMB; a.h = 0; if (a.path) { a.pu = 0; a.pi = 0; a.pdir = 1; } }
           else if (a.task) {   // at the acorn, the burying spot or the cache: to work
             a.state = S_WORK; a.work = a.task;
             a.t = a.task === T_GET ? 0.5 + r() * 0.4 : a.task === T_STORE ? 2.2 + r() * 1.2 : 1.6 + r();
@@ -1020,6 +1137,10 @@ export class Animals {
         break;
       }
       case S_CLIMB: case S_DOWN: {
+        if (a.path) {   // up the trunk and out along the limb, then sits (a scared one freezes)
+          if (this.sqFollow(a, dt, a.scared ? 2.4 : 1.4)) { a.state = S_SIT; a.t = a.scared ? 15 + r() * 25 : 5 + r() * 20; }
+          break;
+        }
         const up = a.state === S_CLIMB, fh = forkHeight(a.tree), v = a.scared ? 2.2 : 1.3;
         a.h += (up ? v : -1.1) * dt;
         a.amp = 1; a.phase += dt * TAU * 3.5; a.pose = 0;
@@ -1032,6 +1153,12 @@ export class Animals {
         break;
       }
       case S_OUT: case S_IN: {
+        if (a.path) {   // out to another limb (S_OUT), or back along the way it came and down (S_IN)
+          if (this.sqFollow(a, dt, a.state === S_IN ? (a.scared ? 2.2 : 1.4) : 1.6)) {
+            if (a.state === S_OUT) { a.state = S_SIT; a.t = 4 + r() * 16; } else this.sqOffPath(a);
+          }
+          break;
+        }
         a.u = Math.min(1, a.u + dt / 1.1);
         const k = a.u; a.amp = 1; a.phase += dt * TAU * 4;
         a.x = a.sx + (a.tx - a.sx) * k; a.y = a.sy + (a.ty - a.sy) * k; a.z = a.sz + (a.tz - a.sz) * k;
@@ -1065,6 +1192,20 @@ export class Animals {
         break;
       }
       case S_SIT: {
+        if (a.path) {   // on a limb: sitting up and looking about, or (scared) frozen flat along it
+          a.amp = damp(a.amp, 0, 8, dt); a.pose = damp(a.pose, a.scared ? 0 : 0.6, 3, dt);
+          if (!a.scared && r() < dt * 0.5) a.flickV = 1;
+          if (near2 < 20 * 20) a.t = Math.max(a.t, 4);
+          if (a.t > 0) break;
+          const L = a.prec.sqLimbs;
+          if (!a.scared && L.length > 1 && r() < 0.45) {   // foraging: along the wood to another limb
+            let k = Math.floor(r() * (L.length - 1)); if (k >= a.limb) k++;
+            const p = this.sqPath(a.prec, a.limb, k);
+            if (p) { a.path = p; a.limb = k; a.pdir = 1; a.pu = 0; a.pi = 0; a.state = S_OUT; break; }
+          }
+          this.sqDownPath(a);
+          break;
+        }
         a.amp = damp(a.amp, 0, 8, dt); a.pose = damp(a.pose, 1, 3, dt); a.pitch = damp(a.pitch, -0.55, 3, dt);
         if (r() < dt * 0.5) a.flickV = 1;
         if (r() < dt * 0.15) a.yaw += (r() - 0.5) * 1.5;   // looks around
@@ -1672,7 +1813,8 @@ export class Animals {
     a.raidOak = null; a.fleeOak = null; a.offT = this.time + DRIVEN_T; a.acorn = null;
     if (a.task !== T_STORE || !a.carry) a.task = 0;
     if (a.sp === SQ) {
-      if (a.state === S_RAIDP || a.state === S_CLIMB) { a.scared = 1; a.state = S_DOWN; }
+      if (a.state === S_CLIMB && a.path) { a.scared = 1; a.pdir = -1; a.state = S_IN; }
+      else if (a.state === S_RAIDP || a.state === S_CLIMB) { a.scared = 1; a.state = S_DOWN; }
       else if (a.state !== S_DOWN && a.state !== S_OUT && a.state !== S_SIT && a.state !== S_IN) {
         const ang = r() * TAU, d = 10 + r() * 10; this.sqRunTo(a, a.x + Math.cos(ang) * d, a.z + Math.sin(ang) * d, 5, S_PAUSE);
       }
@@ -2676,7 +2818,8 @@ export class Animals {
   // The drawn meshes' second channel (aAnim2.x, .y; see animalModels.js rig templates), eased per animal.
   extra(a, dt) {
     if (a.sp === SQ) {
-      a.e0 = damp(a.e0, a.state === S_CLIMB || a.state === S_DOWN || a.state === S_RAIDP ? 1 : 0, 8, dt);   // legs splayed round the trunk
+      const wood = a.path && (a.state === S_CLIMB || a.state === S_OUT || a.state === S_IN || a.state === S_SIT);
+      a.e0 = damp(a.e0, wood ? a.splay || 0 : a.state === S_CLIMB || a.state === S_DOWN || a.state === S_RAIDP ? 1 : 0, 8, dt);   // legs splayed round the trunk
       a.e1 = damp(a.e1, a.flick, 5, dt);                                             // the tail tip lags the flick
     } else if (a.sp === QU) {
       const fly = a.state === Q_FLY;
