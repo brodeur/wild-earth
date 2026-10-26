@@ -494,9 +494,24 @@ export class Impostors {
       const ids = Array.from(order.subarray(a, b)).sort((p, q) => rec[p * STRIDE + 6] - rec[q * STRIDE + 6]);
       let y0 = Infinity, y1 = -Infinity;
       ids.forEach((q, m) => { packed.set(rec.subarray(q * STRIDE, q * STRIDE + STRIDE), (a + m) * STRIDE); y0 = Math.min(y0, rec[q * STRIDE + 1]); y1 = Math.max(y1, rec[q * STRIDE + 1]); });
-      if (b > a) this.chunks.push({ start: a, n: b - a, x: ((c % NC) + 0.5) * CHUNK, z: -(Math.floor(c / NC) + 0.5) * CHUNK, y0, y1 });
+      if (b > a) this.chunks.push({ start: a, n: b - a, x: ((c % NC) + 0.5) * CHUNK, z: -(Math.floor(c / NC) + 0.5) * CHUNK, y0, y1, seated: 0 });
     }
     this.records = packed; this.nRecords = n;
+  }
+
+  // A far tree stands where the 10 m mesh is drawn (2026-10-26). On a tile with the lidar residual the records are
+  // placed on the 1 m ground (Heightfield.at, as the near forest's instance matrices are), but an impostor is always
+  // beyond the hand-over (about 1.2 km from the bird) and so far outside the fine square of 1 m ground near the player
+  // (within 120 m of it, terrain.js FineTerrain): it is moved onto the 10 m mesh (Heightfield.coarse), as the mid tree
+  // it replaces is drawn there (vegetation.js SEAT_GLSL). Lazily, the kept prefix of a chunk the first time a rebuild
+  // copies it: a chunk's records are ranked, so the far thinning reads only a prefix of most of them.
+  seat(c, lo) {
+    const H = this.tile.heights, rec = this.records;
+    if (H.detail) for (let q = c.start + c.seated; q < c.start + lo; q++) {
+      const o = q * STRIDE, x = rec[o], n = -rec[o + 2];
+      rec[o + 1] = H.coarse(x, n) - 0.3;
+    }
+    c.seated = lo;
   }
 
   keep(d) {
@@ -524,6 +539,7 @@ export class Impostors {
         return lo; };
       const lo = prefix(kmax);
       if (!lo) continue;
+      if (c.seated < lo) this.seat(c, lo);
       if (dmin - MOVE < CAST_R && dist > handOut) { const lc = prefix(kmax * CAST_KEEP); if (lc) { cast.parts.push(c.start, lc); cast.n += lc; } }
       const k = dmin - MOVE <= R + CROSS[1] ? 0 : 1 + ((Math.floor((Math.atan2(c.z - cz, c.x - cx) / (2 * Math.PI) + 1) * SECTORS) % SECTORS) + SECTORS) % SECTORS;
       const L = lists[k]; L.parts.push(c.start, lo); L.n += lo;

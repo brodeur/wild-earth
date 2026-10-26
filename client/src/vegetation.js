@@ -3,7 +3,7 @@ import { SPECIES, SPECIES_IDS, mulberry32, resolveSpecies } from './trees.js';
 import { buildTree, canopyMaterial, trunkMaterial, applySeason, chainShader, SLOTS, variantSlots, seasonMonth } from './treegen.js';
 import { SEASON_LOOK } from './season.js';
 import { rockKeep } from './tilepackage.js';
-import { hasCrowns, loadCrowns, planCrowns, oldClassOf, crownId, crownOf, SCALE } from './crowns.js';
+import { hasCrowns, loadCrowns, planCrowns, oldClassOf, crownId, crownOf, SCALE, ASPECT } from './crowns.js';
 
 // Species mix per habitat class (codes from pipeline/habitat.py). Weights sum to 1. Ids may be the
 // short aliases; trees.js maps them to the species library (library/species/<id>.json).
@@ -128,7 +128,9 @@ cellTreeMix.fallback = MIX[5];
 // snag. A shrub under RARE_SHRUB (10%) of the shrubs draws its base tree only. Slots keep their classes (the
 // crown plan reads them) and a crown's tree is still scaled to the crown; only the mesh set is shared (an oak's
 // record carries the drawn tree's class). Tiles without a species mix share nothing. Returns Map id -> 1 (one
-// tree) | 2 (mature and old).
+// tree) | 2 (mature and old). On a crown tile a level-1 tree species also gets its old class's tree in the near and
+// close tiers only (Vegetation.oldNear, 2026-10-26): its old crowns and snags draw it within about 240 m, where the
+// gnarl and deadwood show, for two draw calls per species with such a crown in the near set.
 const RARE_TREE = [0.03, 0.02], RARE_SHRUB = 0.1;
 const rareSets = new WeakMap();
 export function rareSpecies(tile) {
@@ -264,6 +266,17 @@ export function crownPlan(tile) {
   return p;
 }
 
+// A crown's tree scales as crowns.js fits it (planCrowns step 4): [height scale, width scale] of entry e on crown q.
+// The plan's aspect is fitted to the tree the slot draws in the mid tier; a rare species' old tree in the near tier
+// (Vegetation.oldNear) is fitted here to its own height and crown radius.
+const fitCrown = (P, q, e) => {
+  const sh = Math.min(SCALE[1], Math.max(SCALE[0], P.h[q] / e.height));
+  return [sh, sh * Math.min(ASPECT[1], Math.max(ASPECT[0], P.r[q] / Math.max(0.3, e.radius * sh)))];
+};
+// The per-instance drape offset (SEAT_GLSL): one float per instance, uploaded with the matrices.
+const seatAttr = cap => new THREE.InstancedBufferAttribute(new Float32Array(cap), 1).setUsage(THREE.DynamicDrawUsage);
+const seatUpload = (a, n) => { a.clearUpdateRanges(); a.addUpdateRange(0, Math.max(n, 1)); a.needsUpdate = true; };
+
 export function pick(mix, r) { let acc = 0; for (const [k, w] of Object.entries(mix)) { acc += w; if (r <= acc) return k; } return Object.keys(mix)[0]; }
 export function hash(i, j, salt) { let h = (i * 73856093) ^ (j * 19349663) ^ (salt * 83492791); return h >>> 0; }
 
@@ -278,6 +291,21 @@ export function hash(i, j, salt) { let h = (i * 73856093) ^ (j * 19349663) ^ (sa
 // share; it is not declared flat: flat varyings cost about 0.85 ms at the start view here (ANGLE on
 // Metal). Mid trunks (a fraction of a pixel there) stop at farR.x without a dither.
 const LOD_BAND = 15;
+// The drape onto the drawn surface (2026-10-26). On a tile with the lidar residual a plant is placed on the 1 m ground
+// (Heightfield.at), which only the fine square near the player draws (terrain.js FineTerrain); beyond it the 10 m mesh
+// is drawn. Each instance carries seatDc, the 10 m mesh minus the 1 m ground at its root (0 elsewhere), and is drawn
+// raised or lowered by (1 - fineShare) x seatDc, fineShare being the square's own 0..1 ease across its outer band
+// (Heightfield.fineShare, from seatF = (x0, x1, n0, n1) and seatB = band; band 0: no square, the 10 m mesh everywhere).
+// The instance matrices stay on the 1 m ground, so what reads them (perch.js's wood, the squirrel, nearPlants, the
+// close copies) is unchanged, and so is the tree drawn wherever a bird can reach it: within 90 m of the square's centre
+// the share is 1. Moving the square moves only two uniforms.
+const SEAT_GLSL = `#ifdef USE_INSTANCING
+  { vec3 seatP = (modelMatrix * instanceMatrix * vec4(0.0, 0.0, 0.0, 1.0)).xyz;
+    float seatE = min(min(seatP.x - seatF.x, seatF.y - seatP.x), min(-seatP.z - seatF.z, seatF.w + seatP.z));
+    float seatS = seatB > 0.0 ? smoothstep(0.0, 1.0, seatE / seatB) : 0.0;
+    transformed.y += seatOn * (1.0 - seatS) * seatDc / instanceMatrix[1][1]; }
+  #endif
+  `;
 function lodPatch(material, u, role, fade = false, inner = false) {
   const W = fade ? LOD_BAND.toFixed(1) : '0.0', CW = CLOSE_BAND.toFixed(1), near = role === 'near', mid = role === 'mid';
   const keep = role === 'close'   // vLodT: the fraction of pixels this layer gives up (near) or keeps (mid, close)
@@ -296,9 +324,10 @@ function lodPatch(material, u, role, fade = false, inner = false) {
   return chainShader(material, `lod-${role}${fade ? '-fade' : ''}${inner ? '-inner' : ''}`, shader => {
     shader.uniforms.lodEye = u.lodEye; shader.uniforms.lodR = u.lodR; shader.uniforms.closeEye = u.closeEye; shader.uniforms.closeR = u.closeR;
     shader.uniforms.farR = handover.r;
+    shader.uniforms.seatF = u.seatF; shader.uniforms.seatB = u.seatB; shader.uniforms.seatOn = u.seatOn;
     shader.vertexShader = shader.vertexShader
-      .replace('#include <common>', '#include <common>\nuniform vec3 lodEye;\nuniform float lodR;\nuniform vec3 closeEye;\nuniform float closeR;\nuniform vec2 farR;\nvarying float vLodT;')
-      .replace('#include <project_vertex>', `#include <project_vertex>
+      .replace('#include <common>', '#include <common>\nuniform vec3 lodEye;\nuniform float lodR;\nuniform vec3 closeEye;\nuniform float closeR;\nuniform vec2 farR;\nvarying float vLodT;\nuniform vec4 seatF;\nuniform float seatB;\nuniform float seatOn;\n#ifdef USE_INSTANCING\nattribute float seatDc;\n#endif')
+      .replace('#include <project_vertex>', `${SEAT_GLSL}#include <project_vertex>
         vLodT = 0.0;
         #ifdef USE_INSTANCING
         { vec3 lodP = (modelMatrix * instanceMatrix * vec4(0.0, 0.0, 0.0, 1.0)).xyz;
@@ -319,7 +348,9 @@ export class Vegetation {
     this.oaks = []; this.version = 0;   // oaks placed by the last update (acorn game) and a counter bumped per rebuild
     this.nearPlants = []; this.nearVersion = 0;   // every plant in the near set: { id, species, x, y, z, scale, height }
     this.closeCount = 0; this.lastClose = null; this.closeVersion = -1;
-    this.lodU = { lodEye: handover.eye, lodR: { value: NEAR_R }, closeEye: { value: new THREE.Vector3(0, 1e9, 0) }, closeR: { value: CLOSE_R } };
+    this.lodU = { lodEye: handover.eye, lodR: { value: NEAR_R }, closeEye: { value: new THREE.Vector3(0, 1e9, 0) }, closeR: { value: CLOSE_R },
+      seatF: { value: new THREE.Vector4() }, seatB: { value: 0 }, seatOn: { value: 1 } };   // the drape (SEAT_GLSL)
+    this.drape = !!tile.heights.detail; this.crownDc = null;
     const patch = m => atmosphere.patchLambert(m);   // cloud shadow + aerial perspective
     this.trunkMat = { near: lodPatch(trunkMaterial(patch), this.lodU, 'near'), mid: lodPatch(trunkMaterial(patch), this.lodU, 'mid') };   // shared (shadow casters use it)
     this.twigMat = lodPatch(trunkMaterial(patch), this.lodU, 'close', true);   // close twigs: plain vertex colour, dithered in like the close canopy
@@ -328,9 +359,11 @@ export class Vegetation {
     this.meshes = {};      // species id -> [{ near: {trunk, canopy, cap, n, ids}, mid: {...}, close: {canopy, cap, n}, stem, height, tris, cls }], one per distinct tree
     this.slots = {};       // species id -> VARIANTS entries of this.meshes (a class with several slots repeats its entries)
     this.stats = {};
+    this.oldNear = {};     // species id -> { entry, slots, host }: a rare species' old tree in the near and close tiers (see the constructor)
     if (hasCrowns(tile)) loadCrowns(tile);   // the crown list downloads while the meshes build (planned below, once they have)
     this.ids = tileSpecies(tile);   // the species this tile places (library order)
     const rare = this.rare = rareSpecies(tile);
+    const treeShare = new Set(Object.keys(tile.speciesMix?.json?.fractions?.tree_share || {}).map(resolveSpecies));   // the species crowns can draw
     for (const id of this.ids) {
       const spec = SPECIES[id];
       this.canopyMat[id] = { near: lodPatch(canopyMaterial(spec, 'near', patch), this.lodU, 'near', true, true), mid: lodPatch(canopyMaterial(spec, 'mid', patch), this.lodU, 'mid', true),
@@ -341,38 +374,25 @@ export class Vegetation {
       for (let v = 0; v < VARIANTS; v++) {
         const seed = drawnSeed(id, v, rare.get(id));   // the slot's own seed, or a rare species' shared one
         if (bySeed.has(seed)) { this.slots[id].push(bySeed.get(seed)); continue; }
-        const slot = variantSlots(id, VARIANTS).find(s => s.seed === seed) || variantSlots(id, VARIANTS)[v], entry = { seed, cls: slot.cls, snag: slot.snag };
+        const slot = variantSlots(id, VARIANTS).find(s => s.seed === seed) || variantSlots(id, VARIANTS)[v];
+        const entry = this.buildEntry(id, seed, slot);
         bySeed.set(seed, entry); this.slots[id].push(entry);
-        for (const lod of ['near', 'mid']) {
-          const t = buildTree(id, seed, lod);
-          const cap = lod === 'mid' ? (spec.shrub ? CAP : CAP / 2) : NEAR_CAP[spec.shrub ? 'shrub' : 'tree'];
-          const trunk = new THREE.InstancedMesh(t.trunk, this.barkMat[id][lod], cap);
-          const canopy = new THREE.InstancedMesh(t.canopy, this.canopyMat[id][lod], cap);
-          canopy.instanceMatrix = trunk.instanceMatrix;   // one matrix buffer for both parts
-          trunk.count = canopy.count = 0; trunk.frustumCulled = canopy.frustumCulled = false;
-          this.group.add(trunk, canopy);
-          entry[lod] = { trunk, canopy, cap, n: 0, tris: t.tris.trunk + t.tris.canopy, ids: new Uint32Array(cap) };
-          if (lod === 'near') {
-            entry.stem = t.stem; entry.height = t.height;
-            const g = t.canopy; if (!g.boundingBox) g.computeBoundingBox();
-            const b = g.boundingBox; entry.radius = Math.max(0.5, (b.max.x - b.min.x + b.max.z - b.min.z) / 4);   // mean crown half-width
-          }
-        }
-        const c = buildTree(id, seed, 'close'), ccap = CLOSE_CAP[spec.shrub ? 'shrub' : 'tree'];
-        const closeCanopy = new THREE.InstancedMesh(c.canopy, this.canopyMat[id].close, ccap);
-        closeCanopy.count = 0; closeCanopy.frustumCulled = false; closeCanopy.visible = false;
-        this.group.add(closeCanopy);
-        let closeTwigs = null;
-        if (c.twigs) {
-          closeTwigs = new THREE.InstancedMesh(c.twigs, this.twigMat, ccap);
-          closeTwigs.instanceMatrix = closeCanopy.instanceMatrix;   // one matrix buffer for both parts
-          closeTwigs.count = 0; closeTwigs.frustumCulled = false; closeTwigs.visible = false;
-          this.group.add(closeTwigs);
-        }
-        entry.close = { canopy: closeCanopy, twigs: closeTwigs, cap: ccap, n: 0, tris: c.tris.canopy, twigTris: c.tris.twigs || 0 };
-        this.meshes[id].push(entry);
       }
       this.slots[id].forEach((e, v) => slotDims.set(`${id}:${v}`, { H: e.height, R: e.radius }));
+      // A rare species drawn as one tree (rareSpecies level 1) on a crown tile: its old crowns and snags get the old
+      // class's tree in the near and close tiers (this.oldNear; placeCrowns tags them in the shared mid set, refreshNear
+      // moves them into the old tree's near set); the mid tier and the far atlas keep drawing them as the shared tree.
+      const old = rare.get(id) === 1 && !spec.shrub && hasCrowns(tile) && treeShare.has(id) ? oldClassOf(id) : null;
+      if (old) {
+        const slots = variantSlots(id, VARIANTS), os = slots.find(s => !s.snag && s.cls === old && s.copy === 0);
+        if (os && !bySeed.has(os.seed)) {
+          const entry = this.buildEntry(id, os.seed, os, 1), vs = new Set();
+          slots.forEach((s, v) => { if (s.snag || s.cls === old) vs.add(v); });
+          const host = this.slots[id][[...vs][0]];
+          host.mid.to = new Array(host.mid.cap).fill(null);   // per mid instance: the entry whose near set draws it (null: its own)
+          this.oldNear[id] = { entry, slots: vs, host };
+        }
+      }
       const avg = lod => Math.round(this.meshes[id].reduce((s, e) => s + e[lod].tris, 0) / this.meshes[id].length);
       this.stats[id] = { near: avg('near'), mid: avg('mid'), closeCanopy: avg('close'), closeTwigs: Math.round(this.meshes[id].reduce((s, e) => s + e.close.twigTris, 0) / this.meshes[id].length) };
     }
@@ -386,6 +406,42 @@ export class Vegetation {
       if (this.lastCenter) { const e = this.lodU.lodEye.value; this.update(e.x, e.z, true); }   // lodEye: the bird, as of the last update
     });
   }
+  // One distinct tree's mesh sets (near, mid, close) for species id grown from seed (slot: its variantSlots entry),
+  // added to this.meshes. midCap: the mid set's capacity (default the species' usual).
+  buildEntry(id, seed, slot, midCap = 0) {
+    const spec = SPECIES[id], entry = { seed, cls: slot.cls, snag: slot.snag };
+    for (const lod of ['near', 'mid']) {
+      const t = buildTree(id, seed, lod);
+      const cap = lod === 'mid' ? (midCap || (spec.shrub ? CAP : CAP / 2)) : NEAR_CAP[spec.shrub ? 'shrub' : 'tree'];
+      const trunk = new THREE.InstancedMesh(t.trunk, this.barkMat[id][lod], cap);
+      const canopy = new THREE.InstancedMesh(t.canopy, this.canopyMat[id][lod], cap);
+      canopy.instanceMatrix = trunk.instanceMatrix;   // one matrix buffer for both parts
+      trunk.count = canopy.count = 0; trunk.frustumCulled = canopy.frustumCulled = false;
+      this.group.add(trunk, canopy);
+      const seat = seatAttr(cap); t.trunk.setAttribute('seatDc', seat); t.canopy.setAttribute('seatDc', seat);   // one per tier, both parts
+      entry[lod] = { trunk, canopy, cap, n: 0, tris: t.tris.trunk + t.tris.canopy, ids: new Uint32Array(cap), seat };
+      if (lod === 'near') {
+        entry.stem = t.stem; entry.height = t.height;
+        const g = t.canopy; if (!g.boundingBox) g.computeBoundingBox();
+        const b = g.boundingBox; entry.radius = Math.max(0.5, (b.max.x - b.min.x + b.max.z - b.min.z) / 4);   // mean crown half-width
+      }
+    }
+    const c = buildTree(id, seed, 'close'), ccap = CLOSE_CAP[spec.shrub ? 'shrub' : 'tree'];
+    const closeSeat = seatAttr(ccap); c.canopy.setAttribute('seatDc', closeSeat); if (c.twigs) c.twigs.setAttribute('seatDc', closeSeat);
+    const closeCanopy = new THREE.InstancedMesh(c.canopy, this.canopyMat[id].close, ccap);
+    closeCanopy.count = 0; closeCanopy.frustumCulled = false; closeCanopy.visible = false;
+    this.group.add(closeCanopy);
+    let closeTwigs = null;
+    if (c.twigs) {
+      closeTwigs = new THREE.InstancedMesh(c.twigs, this.twigMat, ccap);
+      closeTwigs.instanceMatrix = closeCanopy.instanceMatrix;   // one matrix buffer for both parts
+      closeTwigs.count = 0; closeTwigs.frustumCulled = false; closeTwigs.visible = false;
+      this.group.add(closeTwigs);
+    }
+    entry.close = { canopy: closeCanopy, twigs: closeTwigs, cap: ccap, n: 0, tris: c.tris.canopy, twigTris: c.tris.twigs || 0, seat: closeSeat };
+    this.meshes[id].push(entry);
+    return entry;
+  }
   setLook(look) {
     const season = Object.keys(SEASON_LOOK).find(k => SEASON_LOOK[k] === look) || 'summer', month = monthFor(season);
     this.leafOn = {};
@@ -398,6 +454,9 @@ export class Vegetation {
   // Rebuild instances for cells within radius of (x, z). Deterministic per cell, so a tree is always in the same place.
   update(x, z, force = false) {
     this.lodU.lodEye.value.set(x, 0, z);
+    const F = this.tile.heights.fine;   // the fine square as drawn now (terrain.js updates it before this, each frame)
+    if (F) this.lodU.seatF.value.set(F.x0, F.x1, F.n0, F.n1);
+    this.lodU.seatB.value = F ? F.band : 0;
     if (!force && this.lastCenter && Math.hypot(x - this.lastCenter[0], z - this.lastCenter[1]) < MID_MOVE) {
       if (Math.hypot(x - this.lastNear[0], z - this.lastNear[1]) > NEAR_MOVE) this.refreshNear(x, z);
       return;
@@ -432,7 +491,10 @@ export class Vegetation {
         const ax = at.x, an = at.n;
         this.tmp.position.set(ax, heights.at(ax, an) - 0.3, -an);
         this.tmp.rotation.set(0, rot, 0); this.tmp.scale.setScalar(s); this.tmp.updateMatrix();
-        m.trunk.setMatrixAt(m.n, this.tmp.matrix); m.ids[m.n] = hash(i, j, k + 101); m.n++; total++;
+        m.trunk.setMatrixAt(m.n, this.tmp.matrix); m.ids[m.n] = hash(i, j, k + 101);
+        m.seat.array[m.n] = this.drape ? heights.coarse(ax, an) - this.tmp.position.y - 0.3 : 0;
+        if (m.to) m.to[m.n] = null;
+        m.n++; total++;
         const oak = OAK_SHORT[sid];   // the acorn game's oaks, by their short names as before
         if (oak) oaks.push({ id: `${i},${j},${k}`, x: ax, z: -an, y: this.tmp.position.y + 0.3, scale: s, species: oak, rot, stem: e.stem, height: e.height, cls: e.cls, snag: e.snag });
       }
@@ -441,6 +503,7 @@ export class Vegetation {
     for (const arr of Object.values(this.meshes)) for (const e of arr) {
       e.mid.trunk.count = e.mid.canopy.count = e.mid.n;
       e.mid.trunk.instanceMatrix.addUpdateRange(0, e.mid.n * 16); e.mid.trunk.instanceMatrix.needsUpdate = true;
+      seatUpload(e.mid.seat, e.mid.n);
     }
     this.count = total; this.oaks = oaks; this.version++;
     this.refreshNear(x, z);
@@ -450,6 +513,7 @@ export class Vegetation {
   // model's set were ever full it would be the farthest trees that wait for the far tier.
   placeCrowns(x, north, r, oaks) {
     const P = this.plan, cm = P.cellM, nc = P.cells, off = P.offsets, heights = this.tile.heights, r2 = r * r, tmp = this.tmp;
+    const dcs = this.drape ? (this.crownDc ??= new Float32Array(P.count).fill(NaN)) : null;   // per crown, once: the 10 m mesh minus the 1 m ground
     const cells = [];
     for (let j = Math.max(0, Math.floor((north - r) / cm)); j <= Math.min(nc - 1, Math.floor((north + r) / cm)); j++)
       for (let i = Math.max(0, Math.floor((x - r) / cm)); i <= Math.min(nc - 1, Math.floor((x + r) / cm)); i++) {
@@ -464,40 +528,57 @@ export class Vegetation {
       const sid = P.speciesIds[P.sp[q]], e = this.slots[sid]?.[P.slot[q]]; if (!e) continue;
       const m = e.mid; if (m.n >= m.cap) { full++; continue; }
       const sh = Math.min(SCALE[1], Math.max(SCALE[0], P.h[q] / e.height)), sw = sh * P.aspect[q], rot = P.rot[q];
-      tmp.position.set(px, heights.at(px, pn) - 0.3, -pn);
+      const g = heights.at(px, pn);
+      tmp.position.set(px, g - 0.3, -pn);
       tmp.rotation.set(0, rot, 0); tmp.scale.set(sw, sh, sw); tmp.updateMatrix();
-      m.trunk.setMatrixAt(m.n, tmp.matrix); m.ids[m.n] = crownId(q); m.n++; total++;
-      const oak = OAK_SHORT[sid];
-      if (oak) oaks.push({ id: `L${q}`, x: px, z: -pn, y: tmp.position.y + 0.3, scale: sh, species: oak, rot, stem: e.stem, height: e.height, cls: e.cls, snag: e.snag,
+      m.trunk.setMatrixAt(m.n, tmp.matrix); m.ids[m.n] = crownId(q);
+      m.seat.array[m.n] = dcs ? (Number.isNaN(dcs[q]) ? (dcs[q] = heights.coarse(px, pn) - g) : dcs[q]) : 0;
+      const on = this.oldNear[sid], to = on && on.slots.has(P.slot[q]) ? on.entry : null;   // a rare species' old crown: the old tree when near
+      if (m.to) m.to[m.n] = to;
+      m.n++; total++;
+      const oak = OAK_SHORT[sid], d = to || e;
+      if (oak) oaks.push({ id: `L${q}`, x: px, z: -pn, y: tmp.position.y + 0.3, scale: to ? fitCrown(P, q, to)[0] : sh, species: oak, rot, stem: d.stem, height: d.height, cls: d.cls, snag: d.snag,
         old: !!(P.flags[q] & 1), landmark: P.landmarkOf.get(q) || null });
     }
     if (full && !this.warnedFull) { this.warnedFull = true; console.warn(`vegetation: ${full} crowns beyond a full model set (mid cap ${CAP / 2}); the farthest wait for the far tier`); }
     return total;
   }
   // Copy the mid instances near (x, z) into the near set: no cell scan, no height lookups.
+  // A mid instance hosted for another entry (mid.to, a rare species' old crown) is copied into that entry's near
+  // set, its matrix rescaled from the shared tree's fit to the crown to the old tree's (fitCrown).
   refreshNear(x, z) {
     this.lastNear = [x, z];
-    const R2 = (NEAR_R + NEAR_MARGIN) ** 2;
+    const R2 = (NEAR_R + NEAR_MARGIN) ** 2, P = this.plan;
     let total = 0, dropped = 0;
     const plants = [];
+    for (const arr of Object.values(this.meshes)) for (const e of arr) e.near.n = 0;
     for (const [species, arr] of Object.entries(this.meshes)) for (const e of arr) {
-      const src = e.mid.trunk.instanceMatrix.array, dst = e.near.trunk.instanceMatrix.array, cap = e.near.cap;
-      let n = 0;
+      const src = e.mid.trunk.instanceMatrix.array, sS = e.mid.seat.array, to = e.mid.to;
       for (let i = 0; i < e.mid.n; i++) {
         const o = i * 16, dx = src[o + 12] - x, dz = src[o + 14] - z;
         if (dx * dx + dz * dz > R2) continue;
-        if (n >= cap) { dropped++; continue; }
+        const t = (to && to[i]) || e, N = t.near, n = N.n, dst = N.trunk.instanceMatrix.array;
+        if (n >= N.cap) { dropped++; continue; }
         for (let k = 0; k < 16; k++) dst[n * 16 + k] = src[o + k];
-        e.near.ids[n] = e.mid.ids[i];
+        const id = e.mid.ids[i];
+        N.ids[n] = id; N.seat.array[n] = sS[i];
+        let q = P ? crownOf(id) : -1;   // a crown's tree (a cell shrub's hashed id can have the high bit too: check the position)
+        if (q >= P?.count || (q >= 0 && Math.abs(P.x[q] - src[o + 12]) > 0.01)) q = -1;
+        if (t !== e && q >= 0) {   // the old tree's own fit: columns 0 and 2 by the width ratio, 1 by the height ratio
+          const [sh, sw] = fitCrown(P, q, t), kw = sw / Math.hypot(src[o], src[o + 1], src[o + 2]), kh = sh / Math.hypot(src[o + 4], src[o + 5], src[o + 6]);
+          for (const k of [0, 1, 2, 8, 9, 10]) dst[n * 16 + k] *= kw;
+          for (const k of [4, 5, 6]) dst[n * 16 + k] *= kh;
+        }
         // scale: the horizontal scale (a crown tree's height scale differs, crowns.js ASPECT); height: the drawn height
-        const scale = Math.hypot(src[o], src[o + 1], src[o + 2]), sy = Math.hypot(src[o + 4], src[o + 5], src[o + 6]), id = e.mid.ids[i];
-        let q = this.plan ? crownOf(id) : -1;   // a crown's tree (a cell shrub's hashed id can have the high bit too: check the position)
-        if (q >= this.plan?.count || (q >= 0 && Math.abs(this.plan.x[q] - src[o + 12]) > 0.01)) q = -1;
-        plants.push({ id, species, x: src[o + 12], y: src[o + 13] + 0.3, z: src[o + 14], scale, height: e.height * sy, ...(q >= 0 ? { crown: q, landmark: this.plan.landmarkOf.get(q) || null, old: !!(this.plan.flags[q] & 1) } : {}) });
-        n++;
+        const b = n * 16, scale = Math.hypot(dst[b], dst[b + 1], dst[b + 2]), sy = Math.hypot(dst[b + 4], dst[b + 5], dst[b + 6]);
+        plants.push({ id, species, x: dst[b + 12], y: dst[b + 13] + 0.3, z: dst[b + 14], scale, height: t.height * sy, ...(q >= 0 ? { crown: q, landmark: P.landmarkOf.get(q) || null, old: !!(P.flags[q] & 1) } : {}) });
+        N.n++;
       }
-      e.near.n = e.near.trunk.count = e.near.canopy.count = n; total += n;
-      e.near.trunk.instanceMatrix.addUpdateRange(0, n * 16); e.near.trunk.instanceMatrix.needsUpdate = true;
+    }
+    for (const arr of Object.values(this.meshes)) for (const e of arr) {
+      const n = e.near.n;
+      e.near.trunk.count = e.near.canopy.count = n; total += n;
+      e.near.trunk.instanceMatrix.addUpdateRange(0, n * 16); e.near.trunk.instanceMatrix.needsUpdate = true; seatUpload(e.near.seat, n);
     }
     if (dropped && !this.warned) { this.warned = true; console.warn(`vegetation: near set full, ${dropped} plants within ${NEAR_R} m are not drawn; raise NEAR_CAP`); }
     this.nearCount = total; this.nearPlants = plants; this.nearVersion++;
@@ -511,15 +592,15 @@ export class Vegetation {
     const R2 = (CLOSE_R + CLOSE_BAND + CLOSE_MOVE + 2) ** 2;
     let total = 0;
     for (const [id, arr] of Object.entries(this.meshes)) for (const e of arr) {
-      const src = e.near.trunk.instanceMatrix.array, c = e.close, dst = c.canopy.instanceMatrix.array;
+      const src = e.near.trunk.instanceMatrix.array, c = e.close, dst = c.canopy.instanceMatrix.array, sS = e.near.seat.array, sD = c.seat.array;
       let n = 0;
       for (let i = 0; i < e.near.n && n < c.cap; i++) {
         const o = i * 16, dx = src[o + 12] - eye.x, dy = src[o + 13] - eye.y, dz = src[o + 14] - eye.z;
         if (dx * dx + dy * dy + dz * dz > R2) continue;
         for (let k = 0; k < 16; k++) dst[n * 16 + k] = src[o + k];
-        n++;
+        sD[n] = sS[i]; n++;
       }
-      if (n || c.n) { c.canopy.instanceMatrix.addUpdateRange(0, n * 16); c.canopy.instanceMatrix.needsUpdate = true; }
+      if (n || c.n) { c.canopy.instanceMatrix.addUpdateRange(0, n * 16); c.canopy.instanceMatrix.needsUpdate = true; seatUpload(c.seat, n); }
       c.n = c.canopy.count = n; total += n;
       c.canopy.visible = n > 0 && (this.leafOn?.[id] ?? 1) > 0;
       if (c.twigs) { c.twigs.count = n; c.twigs.visible = n > 0; }   // bare crowns keep their twigs

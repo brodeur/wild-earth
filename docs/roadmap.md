@@ -50,9 +50,12 @@ sequenced; Parked is in the brief but deliberately not started.
   registration error in the height sampler is fixed (the terrain moved 2.5 m to line up
   with the textures). The 10 m mesh beyond the square passes through the 1 m ground at its
   vertices, and grass, shrubs, rocks and still animals follow the drawn surface (re-seated
-  when the square moves). Weak: trees beyond the square stand on the 1 m ground, about
-  0.1 m off on crests; crests rise by what the 10 m mesh cuts under them (typically 0.4 m)
-  when the square arrives.
+  when the square moves); trees are draped onto the drawn surface in the vertex shader
+  (their matrices, which the raven perches on and the squirrel climbs, stay put), and a rare
+  species' old crowns get its old tree up close. Weak: crests rise by what the 10 m mesh
+  cuts under them (typically 0.4 m) when the square arrives; an old rare tree's trunk
+  switches branching at the 180 m hand-over; crowns taller than 1.7x their tree are drawn
+  shorter than measured.
 - Trees on the lidar crowns, 2026-10-26: one tree per real crown on the home tile, species by the cell's mix and the crown's height, the biggest real trees old-growth with landmark ids; start view 295 draw calls (412 before). Weak: shrub-only for the first moments after load, rare species' old crowns are scaled mature trees.
 
 - Overnight 2026-10-24/25 (Aaron asleep, standing authorization): present-day peek (P)

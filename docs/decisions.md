@@ -863,3 +863,52 @@ Known: trees (vegetation.js) still stand on `at` - 0.3 everywhere, so on crests 
 0.1 m on average; crests pop up by the cut-under (0.4 m typical, 2.5 m at most) when the square arrives, things on
 them with them; a rock is re-seated at its origin only, its tilt still fitted to the 1 m ground; blades fade out
 before the band and are not re-seated.
+
+## 2026-10-26: trees are drawn on the surface drawn under them; a rare species' old crowns get its old tree up close
+
+Trees (vegetation.js, the near, close and mid tiers) still stood on the 1 m ground less 0.3 m everywhere, so beyond
+the fine square they floated or sank by the 10 m mesh's cut-under (on crests up to 3.5 m), and the far impostors
+the same. Decided: the drape is done in the vertex shader. Each instance carries `seatDc`, the 10 m mesh minus the 1 m
+ground at its root (computed at placement, once per crown), and is drawn raised or lowered by (1 - fineShare) x seatDc,
+fineShare being the square's own band ease from two uniforms set each frame from `Heightfield.fine` (SEAT_GLSL in
+lodPatch, so every tree and shrub material vegetation.js draws has it). The instance matrices stay on the 1 m ground,
+so perch.js's wood, the squirrel's trees, `nearPlants`, the close copies and the acorn game's oaks are unchanged, and
+inside 90 m of the square's centre (where a bird or squirrel can touch a tree: the square is never more than 10 m from
+the player) the drawn tree is its matrix. Moving the square moves two uniforms; nothing is re-uploaded or re-indexed.
+The 0.3 m sink is kept. The far impostors are always beyond the hand-over, so far outside the square: their records
+are moved onto the 10 m mesh (`Heightfield.coarse`) lazily, the kept prefix of a chunk the first time a rebuild copies
+it. Rejected: re-seating the near and mid matrices on the CPU and bumping `nearVersion`, as shrubs and rocks do. perch.js
+keeps a plant's record, matrix and built stems by `species:seed:x:z` across near refreshes, so a tree first indexed
+outside the square (every tree a bird flies to) would keep its draped matrix when the square arrived, and a bird would
+perch on wood up to the drape (p95 0.5 m) off the drawn limb; it would also re-upload 34 k mid matrices every 10 m of
+flight. Measured, trunk base (instance origin + 0.3 + the drape) against the drawn surface (`Heightfield.ground`), trees
+in the camera's frustum over seven views (60 m, 155 m and 400 m above ground, looking north from 5134, 5934 toward a
+crest at 5134, 6154, from 7124, 8004 toward 7124, 8254, east from 3000, 3000, and the start view), before / after: outside the square p50 0.07-0.12 / 0, p95
+0.34-0.84 / 0, max 1.96-3.48 / 0 m (about 5 k trees a view); across the band p95 0.16-0.45 / 0.03-0.07, max 0.16-0.52 /
+0.04-0.15; inside unchanged (p95 0.06-0.09, the fine mesh's 2 m triangles); far impostors in view p50 0.08-0.11 / 0, p95
+0.47-0.68 / 0, max 1.6-3.0 / 0. The shader itself, read back from the GPU: a gray pine on the crest at 7124, 8254 (the 10 m
+mesh 2.24 m under the 1 m ground), 145 m off from 60 m up: its lowest pixel on the 10 m mesh's row with the drape (37 against
+37.6), 10 px higher without it. A raven perched on a blue oak limb at 5020, 5002 (feet 474.37 m = the limb's top), goto 2 km
+east (the square with it) and back: the same perch record, the instance matrix bit-identical, re-perched at 474.37;
+866 perch records against the near instances: none stale, the drape 0 within 80 m of the bird.
+Rare species' old trees: on the home tile ten tree species are under 2% (alder, cottonwood, black oak, madrone, bay, walnut,
+maple, ash, incense cedar, Douglas fir) and drew their old crowns as the shared mature tree, scaled up and capped at 1.7 x
+(a 35.8 m landmark black oak was drawn as a dense 21.6 m mature oak). Decided: on a crown tile each such species gets its
+old class's tree (the first seed) in the near and close tiers only. Its old crowns and snags stay in the shared tree's mid
+set, tagged; refreshNear moves them into the old tree's near set with the matrix refitted to the old tree's own height and
+crown radius (the plan's fit, crowns.js step 4), so the mid tree and the near tree have the same height and width at the
+180 m hand-over; the oak records take the old tree's stem, height and class. The mid tier and far atlas keep the shared
+tree. Draw calls (main pass, same session, old code / new): home start view 294 / 300 (three species with an old crown in
+the near set), the 60 m view above the crest 410 / 418, 400 m over the ridge 221 / 223; fps within noise (start 61.5-64.0 /
+63.9-64.0, 60 m view 44.3-45.0 / 42.3-44.8, 400 m 72.8-73.4 / 73.9-75.3); triangles at the start view 7.760 / 7.762 M.
+Cosumnes unchanged (262 / 262 calls, identical placement sums); Placerville gained its lidar crowns from the pipeline during
+the session and loads with the drape and eleven old near trees: 273 / 285 calls, identical placements, no errors. Rejected:
+drawing the old tree for every crown of a rare species (its old crowns are 3-13% of them: most black oaks would be veterans);
+a full mature + old set (all ten species have old crowns within the 1.24 km mid range from every view checked: about +20
+calls, past the 310 budget); one merged geometry with both trees and a per-instance switch (perch.js reads a set's one seed:
+a bird would perch on the other tree's wood). Cost: ten more tree builds at load (near, mid for the near trunks' shadow
+caster, close: about 0.37 s with the pipeline running). Known: at the 180 m hand-over an old rare tree's trunk switches from
+the old skeleton to the shared one (the canopies cross-fade), and the far impostor is the shared tree; shadows.js casts
+from the instance matrices, so a tree beyond the square casts from the 1 m ground (off by the drape, under the far
+cascades' texel); an animal resting on a crown beyond the square stands on the undraped tree (as before); if near matrices
+are ever moved on the CPU, perch.js must key its records on the matrix too.
