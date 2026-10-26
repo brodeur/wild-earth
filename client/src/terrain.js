@@ -262,7 +262,9 @@ export class Terrain {
     ripUniforms.ripMask.value = riparianMask(tile);
     this.uniforms = { ...G, ...windUniforms, ...atmo, ...detailUniforms, ...ripUniforms };   // shared objects, so one update reaches every material
     this.material = new THREE.ShaderMaterial({ vertexShader: VERT, fragmentShader: FRAG, uniforms: this.uniforms });
-    const size = tile.size, cs = size / chunks, nv = Math.round(cs / spacing) + 1;
+    const size = tile.size, cs = size / chunks, nv = Math.round(cs / spacing) + 1, H = tile.heights;
+    H.coarseSpacing = spacing;
+    this.chunks = []; this.chunkInfo = { chunks, cs, nv, spacing };
     for (let cj = 0; cj < chunks; cj++) for (let ci = 0; ci < chunks; ci++) {
       const g = new THREE.PlaneGeometry(cs, cs, nv - 1, nv - 1);
       g.rotateX(-Math.PI / 2);                       // plane in xz, +y up; local z increases southward
@@ -271,14 +273,22 @@ export class Terrain {
       for (let k = 0; k < pos.count; k++) {
         const lx = pos.getX(k) + cs / 2, lz = pos.getZ(k) + cs / 2;   // 0..cs
         const x = x0 + lx, north = north1 - lz;
-        pos.setXYZ(k, x, tile.heights.at(x, north), -north);
+        pos.setXYZ(k, x, H.base(x, north), -north);   // the 5 m heights: the lidar residual is the fine mesh's
         uv.setXY(k, x / size, north / size);
       }
       g.computeVertexNormals(); g.computeBoundingSphere();
       const mesh = new THREE.Mesh(g, this.material); mesh.frustumCulled = true;
       this.group.add(mesh);
+      this.chunks.push({ mesh, g, x0, north1, full: g.index.array.slice(), holed: false });
     }
+    // Near the player, on a tile with the lidar residual: a 2 m mesh of the 1 m ground (see FineTerrain).
+    this.fine = H.detail ? new FineTerrain(this) : null;
   }
+  // Each frame, with the player's position: keeps the fine mesh centred on them (a step at a time,
+  // built over a few frames and swapped in whole).
+  update(x, z) { if (this.fine) this.fine.update(x, -z); }
+  // A/B switch (timing, comparisons): off drops the fine mesh and closes the coarse hole; footing follows.
+  setFine(on) { if (this.fine) this.fine.setEnabled(on); }
   // One GPU texture per image, made on first use and kept, so switching back and forth is free.
   textureFor(image) {
     let t = this.textures.get(image);
@@ -331,5 +341,178 @@ export class Terrain {
     const rp = look.riparian;
     this.uniforms.ripMix.value = rp ? rp.mix : 0;
     if (rp) { this.uniforms.ripTint.value.setRGB(...rp.tint, THREE.SRGBColorSpace); this.uniforms.ripDark.value = rp.dark; }
+  }
+}
+
+// ---- the near fine mesh -------------------------------------------------------------------------
+// A square of the ground FINE_HALF m either side of a centre on the 10 m lattice, its vertices on the
+// lidar residual's own pixel centres (odd metres, 2 m apart) plus one row on each edge on the 10 m line,
+// heights from Heightfield.at, so it shows the 1 m ground (road cuts, gullies, terraces) and matches
+// footing. The coarse chunks drop their quads under the square (a hole in their index), and the square's
+// edge rows are pinned to the coarse surface: across the outer FINE_BAND m the heights (and normals) ease
+// from the coarse mesh's to the fine ones, so the seam is watertight and nothing steps. A skirt hangs
+// under the edge against any sub-pixel crack at the T-junctions. When the player strays FINE_RECENTRE m
+// (either axis) from the centre a new square is computed in slices (a time budget per frame) into
+// staging arrays and swapped in in one frame, coarse hole and Heightfield.ground's grid with it.
+const FINE_HALF = 110, FINE_BAND = 20, FINE_RECENTRE = 10, FINE_SKIRT = 0.6, FINE_BUDGET_MS = 1.5;
+class FineTerrain {
+  constructor(terrain) {
+    this.terrain = terrain; this.H = terrain.tile.heights; this.size = terrain.tile.size;
+    const n = this.n = 2 * FINE_HALF / 2 + 2;           // vertices per side: edge, 109 odd metres... , edge
+    const nv = n * n, ns = 4 * (n - 1);                 // grid + skirt (one ring of edge vertices)
+    this.nGrid = nv;
+    const g = this.geo = new THREE.BufferGeometry();
+    g.setAttribute('position', new THREE.BufferAttribute(new Float32Array((nv + ns) * 3), 3).setUsage(THREE.DynamicDrawUsage));
+    g.setAttribute('normal', new THREE.BufferAttribute(new Float32Array((nv + ns) * 3), 3).setUsage(THREE.DynamicDrawUsage));
+    g.setAttribute('uv', new THREE.BufferAttribute(new Float32Array((nv + ns) * 2), 2).setUsage(THREE.DynamicDrawUsage));
+    const idx = [];
+    for (let j = 0; j < n - 1; j++) for (let i = 0; i < n - 1; i++) {   // j south to north, i west to east; split SW-NE
+      const sw = j * n + i, se = sw + 1, nw = sw + n, ne = nw + 1;
+      idx.push(sw, se, ne, sw, ne, nw);
+    }
+    // the skirt: the edge ring (counter-clockwise from the SW corner seen from above), each vertex copied FINE_SKIRT m lower
+    this.ring = [];
+    for (let i = 0; i < n - 1; i++) this.ring.push(i);                       // south edge, west to east
+    for (let j = 0; j < n - 1; j++) this.ring.push(j * n + n - 1);           // east edge, south to north
+    for (let i = n - 1; i > 0; i--) this.ring.push((n - 1) * n + i);         // north edge, east to west
+    for (let j = n - 1; j > 0; j--) this.ring.push(j * n);                   // west edge, north to south
+    const R = this.ring.length;
+    for (let r = 0; r < R; r++) {
+      const a = this.ring[r], b = this.ring[(r + 1) % R], a2 = nv + r, b2 = nv + (r + 1) % R;
+      idx.push(a, a2, b, b, a2, b2, a, b, a2, b, b2, a2);   // both windings: a crack is seen from either side
+    }
+    g.setIndex(idx);
+    this.tris = idx.length / 3;
+    this.mesh = new THREE.Mesh(g, terrain.material); this.mesh.name = 'terrainFine'; this.mesh.frustumCulled = true;
+    this.mesh.visible = false;
+    terrain.group.add(this.mesh);
+    this.cur = null; this.job = null;
+    this.stats = { tris: this.tris, builds: 0, lastMs: 0, lastFrames: 0, maxSliceMs: 0, commitMs: 0 };
+  }
+  setEnabled(on) {
+    if (on === !this.off) return;
+    this.off = !on; this.job = null;
+    if (!on) { this.hole(this.cur, { x0: 0, x1: 0, n0: 0, n1: 0 }); this.cur = null; this.mesh.visible = false; this.H.fine = null; }
+  }
+  update(x, north) {
+    if (this.off) return;
+    const c = this.cur;
+    if (!this.job && (!c || Math.max(Math.abs(x - c.cx), Math.abs(north - c.cn)) > FINE_RECENTRE)) {
+      const snap = v => Math.min(Math.max(Math.round(v / 10) * 10, FINE_HALF), this.size - FINE_HALF);
+      this.job = this.start(snap(x), snap(north));
+      if (!c) { this.run(this.job, Infinity); this.commit(this.job); this.job = null; return; }   // the first one at once
+    }
+    if (this.job) {
+      const t0 = performance.now();
+      if (this.run(this.job, FINE_BUDGET_MS)) { this.commit(this.job); this.job = null; }
+      this.stats.maxSliceMs = Math.max(this.stats.maxSliceMs, performance.now() - t0);
+    }
+  }
+  start(cx, cn) {
+    const n = this.n, x0 = cx - FINE_HALF, n0 = cn - FINE_HALF, xs = new Float64Array(n), ns = new Float64Array(n);
+    for (let k = 0; k < n; k++) { const o = k === 0 ? 0 : k === n - 1 ? 2 * FINE_HALF : 2 * k - 1; xs[k] = x0 + o; ns[k] = n0 + o; }
+    return { cx, cn, x0, x1: cx + FINE_HALF, n0, n1: cn + FINE_HALF, xs, ns, step: 2, y: new Float32Array(n * n),
+      t: new Float32Array(n * n), nc: new Float32Array(n * n * 3), row: 0, nrow: 0, ms: 0, frames: 0 };
+  }
+  // Heights (rows south to north) then normals, until the time budget is spent; true when done.
+  run(J, budget) {
+    const t0 = performance.now(), n = this.n, H = this.H, xs = J.xs, ns = J.ns, nc = new THREE.Vector3();
+    J.frames++;
+    while (J.row < n) {
+      const j = J.row++;
+      for (let i = 0; i < n; i++) {
+        const k = j * n + i, x = this.vx(J, i, j), north = this.vn(J, i, j), e = Math.min(x - J.x0, J.x1 - x, north - J.n0, J.n1 - north);
+        const s = Math.min(Math.max(e / FINE_BAND, 0), 1), t = s * s * (3 - 2 * s);
+        J.t[k] = t;
+        if (t >= 1) { J.y[k] = H.at(x, north); continue; }
+        const c = H.coarse(x, north);
+        J.y[k] = t > 0 ? c + t * (H.at(x, north) - c) : c;
+        this.coarseNormal(x, north, nc); J.nc[k * 3] = nc.x; J.nc[k * 3 + 1] = nc.y; J.nc[k * 3 + 2] = nc.z;
+      }
+      if (performance.now() - t0 > budget) { J.ms += performance.now() - t0; return false; }
+    }
+    if (!J.nrm) J.nrm = new Float32Array(n * n * 3);
+    while (J.nrow < n) {
+      const j = J.nrow++, y = J.y, jm = Math.max(j - 1, 0), jp = Math.min(j + 1, n - 1);
+      for (let i = 0; i < n; i++) {
+        const k = j * n + i, im = Math.max(i - 1, 0), ip = Math.min(i + 1, n - 1);
+        const gx = (y[j * n + ip] - y[j * n + im]) / (xs[ip] - xs[im]), gn = (y[jp * n + i] - y[jm * n + i]) / (ns[jp] - ns[jm]);
+        let ax = -gx, ay = 1, az = gn;   // world normal of the height field (z = -north)
+        const t = J.t[k];
+        if (t < 1) {
+          const l = Math.hypot(ax, ay, az);
+          ax = J.nc[k * 3] + t * (ax / l - J.nc[k * 3]); ay = J.nc[k * 3 + 1] + t * (ay / l - J.nc[k * 3 + 1]); az = J.nc[k * 3 + 2] + t * (az / l - J.nc[k * 3 + 2]);
+        }
+        const l = Math.hypot(ax, ay, az);
+        J.nrm[k * 3] = ax / l; J.nrm[k * 3 + 1] = ay / l; J.nrm[k * 3 + 2] = az / l;
+      }
+      if (performance.now() - t0 > budget) { J.ms += performance.now() - t0; return false; }
+    }
+    J.ms += performance.now() - t0;
+    return true;
+  }
+  // Vertex position: the grid's, except along the square's edge, where the vertex just past each 10 m
+  // coarse vertex moves back onto it, so the edge holds every coarse vertex and runs exactly along the
+  // coarse triangles' edges (an odd-metre edge would cut the corner at each coarse vertex: a crack).
+  vx(J, i, j) { const x = J.xs[i]; return (j === 0 || j === this.n - 1) && (x - 1) % 10 === 0 ? x - 1 : x; }
+  vn(J, i, j) { const v = J.ns[j]; return (i === 0 || i === this.n - 1) && (v - 1) % 10 === 0 ? v - 1 : v; }
+  // The coarse chunks' own vertex normal at a point, interpolated over the coarse triangle as its height is
+  // (so the fine edge shades exactly as the coarse mesh beside it).
+  coarseNormal(x, north, out) {
+    const T = this.terrain, { chunks, cs, nv, spacing: S } = T.chunkInfo, size = this.size, nMax = Math.round(size / S) - 1;
+    const fx = x / S, fn = north / S, i0 = Math.min(Math.max(Math.floor(fx), 0), nMax), n0 = Math.min(Math.max(Math.floor(fn), 0), nMax);
+    const u = Math.min(Math.max(fx - i0, 0), 1), w = Math.min(Math.max(fn - n0, 0), 1);
+    const cx = Math.min(Math.floor((i0 + 0.5) * S / cs), chunks - 1), cy = Math.min(Math.floor((size - (n0 + 0.5) * S) / cs), chunks - 1);
+    const ch = T.chunks[cy * chunks + cx], a = ch.g.attributes.normal.array;
+    const v = (X, N) => (Math.round((ch.north1 - N) / S) * nv + Math.round((X - ch.x0) / S)) * 3;
+    const SW = v(i0 * S, n0 * S), SE = v((i0 + 1) * S, n0 * S), NW = v(i0 * S, (n0 + 1) * S), NE = v((i0 + 1) * S, (n0 + 1) * S);
+    for (let c = 0; c < 3; c++) {
+      const sw = a[SW + c], se = a[SE + c], nw = a[NW + c], ne = a[NE + c];
+      out.setComponent(c, w > u ? sw + u * (ne - nw) + w * (nw - sw) : sw + u * (se - sw) + w * (ne - se));
+    }
+    return out.normalize();
+  }
+  commit(J) {
+    const t0 = performance.now(), n = this.n, g = this.geo, size = this.size;
+    const P = g.attributes.position.array, N = g.attributes.normal.array, U = g.attributes.uv.array;
+    for (let j = 0; j < n; j++) for (let i = 0; i < n; i++) {
+      const k = j * n + i, x = this.vx(J, i, j), north = this.vn(J, i, j);
+      P[k * 3] = x; P[k * 3 + 1] = J.y[k]; P[k * 3 + 2] = -north;
+      U[k * 2] = x / size; U[k * 2 + 1] = north / size;
+    }
+    N.set(J.nrm, 0);
+    for (let r = 0; r < this.ring.length; r++) {
+      const a = this.ring[r], s = this.nGrid + r;
+      P[s * 3] = P[a * 3]; P[s * 3 + 1] = P[a * 3 + 1] - FINE_SKIRT; P[s * 3 + 2] = P[a * 3 + 2];
+      N[s * 3] = N[a * 3]; N[s * 3 + 1] = N[a * 3 + 1]; N[s * 3 + 2] = N[a * 3 + 2];
+      U[s * 2] = U[a * 2]; U[s * 2 + 1] = U[a * 2 + 1];
+    }
+    for (const a of Object.values(g.attributes)) a.needsUpdate = true;
+    g.computeBoundingSphere();
+    this.hole(this.cur, J);
+    this.cur = J; this.mesh.visible = true;
+    this.H.fine = { x0: J.x0, x1: J.x1, n0: J.n0, n1: J.n1, xs: J.xs, ns: J.ns, step: J.step, y: J.y, band: FINE_BAND };
+    const st = this.stats; st.builds++; st.lastMs = Math.round(J.ms * 100) / 100; st.lastFrames = J.frames;
+    st.commitMs = Math.round((performance.now() - t0) * 100) / 100;
+  }
+  // Re-index the coarse chunks the old or new square touches: every quad wholly inside the new square is dropped.
+  hole(old, J) {
+    const T = this.terrain, { cs, nv, spacing: S } = T.chunkInfo, q = nv - 1;
+    for (const ch of T.chunks) {
+      const hit = R => R && R.x0 < ch.x0 + cs && R.x1 > ch.x0 && R.n0 < ch.north1 && R.n1 > ch.north1 - cs;
+      if (!hit(J) && !(ch.holed && hit(old))) continue;
+      const idx = ch.g.index, out = idx.array, full = ch.full;
+      let m = 0;
+      for (let iy = 0; iy < q; iy++) {
+        const nTop = ch.north1 - iy * S, nBot = nTop - S, rowIn = nBot >= J.n0 && nTop <= J.n1;
+        for (let ix = 0; ix < q; ix++) {
+          const xl = ch.x0 + ix * S;
+          if (rowIn && xl >= J.x0 && xl + S <= J.x1) continue;
+          const o = (iy * q + ix) * 6;
+          for (let c = 0; c < 6; c++) out[m++] = full[o + c];
+        }
+      }
+      ch.g.setDrawRange(0, m); idx.needsUpdate = true; ch.holed = m < full.length;
+    }
   }
 }

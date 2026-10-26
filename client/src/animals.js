@@ -320,19 +320,11 @@ export class Animals {
     // v4: families by granary (rebuilt with the live set), raiders the families may chase
     this.fams = new Map(); this.threats = new Map();
     if (game) { game.animals = this; game.on?.('dig', e => this.onDig(e)); }
-    // Animals stand on the rendered terrain: terrain.js draws a mesh with vertices every TERRAIN_SPACING m (heights.at
-    // at the vertices, each square split along its SW-NE diagonal), which in a hollow runs up to ~0.6 m above the
-    // bilinear height field and buried bedded deer (and would hide a vole). Same sampler as rocks.js meshH.
-    const hts = tile.heights, S = TERRAIN_SPACING, nMax = Math.round(tile.size / S) - 1;
-    this.heights = {
-      at: (x, north) => {
-        const fx = x / S, fn = north / S, i0 = Math.min(Math.max(Math.floor(fx), 0), nMax), n0 = Math.min(Math.max(Math.floor(fn), 0), nMax);
-        const u = Math.min(Math.max(fx - i0, 0), 1), w = Math.min(Math.max(fn - n0, 0), 1);
-        const SW = hts.at(i0 * S, n0 * S), SE = hts.at((i0 + 1) * S, n0 * S), NW = hts.at(i0 * S, (n0 + 1) * S), NE = hts.at((i0 + 1) * S, (n0 + 1) * S);
-        return w > u ? SW + u * (NE - NW) + w * (NW - SW) : SW + u * (SE - SW) + w * (NE - SE);
-      },
-      atXZ(x, z) { return this.at(x, -z); },
-    };
+    // Animals stand on the terrain as drawn this frame (tilepackage.js Heightfield.ground: the near fine mesh of the
+    // lidar ground where the tile has one, else the 10 m mesh with each square split SW-NE), which in a hollow runs
+    // above the bilinear height field and would bury a bedded deer or hide a vole. Same sampler as flight.meshAt.
+    const hts = tile.heights;
+    this.heights = { at: (x, north) => hts.ground(x, north), atXZ: (x, z) => hts.ground(x, -z) };
     this.group = new THREE.Group(); this.group.name = 'animals'; scene.add(this.group);
     this.names = Object.fromEntries((tile.species || []).map(s => [s.code, s.common]));
     this.time = 0; this.season = null; this.hour = 9;

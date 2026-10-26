@@ -466,8 +466,11 @@ function draw(i, j, k) {
 
 // Ground height on the rendered terrain mesh (Terrain's default 10 chunks of ~10 m quads, split
 // NW-SE as PlaneGeometry does), so roots sit exactly on the triangles rather than the heightfield.
+// On a tile with the lidar residual the terrain near the player is the 2 m fine mesh of
+// Heightfield.at (terrain.js FineTerrain), out past where any blade is drawn, so roots stand on that.
 function terrainHeight(tile) {
   const size = tile.size, cs = size / 10, sp = cs / Math.round(cs / 10), H = tile.heights;
+  if (H.detail) return (x, north) => H.at(x, north);
   return (x, north) => {
     const u = x / sp, v = (size - north) / sp, i = Math.floor(u), j = Math.floor(v), fx = u - i, fy = v - j;
     const x0 = i * sp, x1 = x0 + sp, n0 = size - j * sp, n1 = n0 - sp;

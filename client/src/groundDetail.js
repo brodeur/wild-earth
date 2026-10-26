@@ -82,25 +82,27 @@ export function buildDetailMask(tile, W = MASK_PX) {
   const out = new Uint8Array(W * W * 4);
   const photo = photoPixels(tile.imageryTextureImage || tile.textureImage, W);
   const BARREN = 8;
-  // Height at DEM sample (column c, row r from the north edge), clamped: the mask's 10 m texel
-  // centres fall exactly on DEM samples when the DEM is twice the mask's resolution, so the
-  // central differences below read the grid directly instead of interpolating.
+  // Height at DEM sample (column c, row r from the north edge), clamped. Samples are pixel centres
+  // (x = (c + 0.5) res), so when the DEM is twice the mask's resolution each 10 m texel centre sits at
+  // the middle of a 2 x 2 block of samples: Zm(c, r) is the mean of the block whose north-west sample
+  // is (c, r), and the central differences below step whole samples from there instead of interpolating.
   const exact = h.w === 2 * W && h.h === 2 * W;
   const Z = (c, r) => h.z[Math.min(Math.max(r, 0), h.h - 1) * h.w + Math.min(Math.max(c, 0), h.w - 1)];
+  const Zm = (c, r) => 0.25 * (Z(c, r) + Z(c + 1, r) + Z(c, r + 1) + Z(c + 1, r + 1));
   for (let j = 0; j < W; j++) {
     const north = (j + 0.5) * res, prow = (W - 1 - j) * W;   // photo rows run north to south
-    const r0 = h.h - 1 - 2 * j;                              // DEM row of this texel's centre (exact case)
+    const r0 = h.h - 2 - 2 * j;                              // DEM row just north of this texel's centre (exact case)
     for (let i = 0; i < W; i++) {
-      const x = (i + 0.5) * res, k = (j * W + i) * 4, c0 = 2 * i + 1;
+      const x = (i + 0.5) * res, k = (j * W + i) * 4, c0 = 2 * i;
       // slope from the 5 m DEM (central differences over +-5 m) and the laplacian over 10 m
       let gx, gn, lap;
       if (exact) {
-        gx = (Z(c0 + 1, r0) - Z(c0 - 1, r0)) / (2 * h.res); gn = (Z(c0, r0 - 1) - Z(c0, r0 + 1)) / (2 * h.res);
-        lap = (Z(c0 + 2, r0) + Z(c0 - 2, r0) + Z(c0, r0 - 2) + Z(c0, r0 + 2) - 4 * Z(c0, r0)) / (4 * h.res * h.res);
+        gx = (Zm(c0 + 1, r0) - Zm(c0 - 1, r0)) / (2 * h.res); gn = (Zm(c0, r0 - 1) - Zm(c0, r0 + 1)) / (2 * h.res);
+        lap = (Zm(c0 + 2, r0) + Zm(c0 - 2, r0) + Zm(c0, r0 - 2) + Zm(c0, r0 + 2) - 4 * Zm(c0, r0)) / (4 * h.res * h.res);
       } else {
-        const e = 5, d = 10, z = h.at(x, north);
-        gx = (h.at(x + e, north) - h.at(x - e, north)) / (2 * e); gn = (h.at(x, north + e) - h.at(x, north - e)) / (2 * e);
-        lap = (h.at(x + d, north) + h.at(x - d, north) + h.at(x, north + d) + h.at(x, north - d) - 4 * z) / (d * d);
+        const e = 5, d = 10, z = h.base(x, north);
+        gx = (h.base(x + e, north) - h.base(x - e, north)) / (2 * e); gn = (h.base(x, north + e) - h.base(x, north - e)) / (2 * e);
+        lap = (h.base(x + d, north) + h.base(x - d, north) + h.base(x, north + d) + h.base(x, north - d) - 4 * z) / (d * d);
       }
       const slope = Math.atan(Math.hypot(gx, gn)) * 180 / Math.PI;
       const curv = Math.min(Math.max(-lap / 0.05, -1), 1);   // negative laplacian = convex

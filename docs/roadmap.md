@@ -42,6 +42,15 @@ sequenced; Parked is in the brief but deliberately not started.
   do not share meshes), buckeye's May candles and elderberry's flower plates are faint,
   crown bases sit high on four shrubs, and woodland shrubs are impostors only (not
   clickable).
+- Lidar, 2026-10-26: the home tile has a 1 m ground, a canopy height model and a list of
+  395k real tree crowns from USGS 3DEP (pipeline `lidar` step, 26 min for 2.1 billion
+  points). The client draws a 2 m mesh of the lidar ground within 110 m of the player and
+  the 10 m grid beyond (no cracks, 26k triangles, fps within 3%); the raven, the animals,
+  rocks and grass stand on the drawn ground; the Hwy 50 cut reads as geometry. A half-pixel
+  registration error in the height sampler is fixed (the terrain moved 2.5 m to line up
+  with the textures). Weak: shrubs and rocks beyond the fine square can float or sink by the
+  residual (up to ~1 m), an animal placed before the square reached it keeps its old height,
+  rock material on cut banks still comes from the 5 m slope mask.
 
 - Overnight 2026-10-24/25 (Aaron asleep, standing authorization): present-day peek (P)
   with place names; pipeline present-day texture, LANDFIRE species mix per cell, acorn

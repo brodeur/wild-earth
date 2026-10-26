@@ -746,7 +746,11 @@ export class Rocks {
   // ---- terrain samplers ----
   // Height of the rendered terrain mesh (terrain.js: vertices every `spacing` m from the tile's
   // south-west corner, heights.at at the vertices, each square split along its SW-NE diagonal).
+  // On a tile with the lidar residual: the 1 m ground (Heightfield.at), which the 2 m fine mesh near the
+  // player draws (terrain.js FineTerrain); rock plans are cached, so they stand on the ground, not on
+  // whichever mesh happened to be under them when planned.
   meshH(x, north) {
+    if (this.tile.heights.detail) return this.tile.heights.at(x, north);
     const S = this.spacing, h = this.tile.heights, n = Math.round(this.tile.size / S) - 1;
     const fx = x / S, fn = north / S, i0 = Math.min(Math.max(Math.floor(fx), 0), n), n0 = Math.min(Math.max(Math.floor(fn), 0), n);
     const u = Math.min(Math.max(fx - i0, 0), 1), w = Math.min(Math.max(fn - n0, 0), 1);

@@ -302,6 +302,7 @@ async function main() {
     const s = seasonNow(), look = SEASON_LOOK[s], sun = sunDirection(tile.latitude, s, state.hour);
     const f = screenOpen ? arrival.hold() : squirrel.on ? squirrel.update(dt) : woodpecker.on ? woodpecker.update(dt) : arrival.active ? arrival.update(dt) : flight.update(dt);
     raven.update(dt, flight.flapping, flight.speed);
+    terrain.update(flight.pos.x, flight.pos.z);   // the near fine mesh follows the player
     veg.update(flight.pos.x, flight.pos.z);
     veg.updateClose(camera.position);
     atmosphere.update(dt, sun, look, s, state.hour, camera);

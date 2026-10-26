@@ -59,8 +59,14 @@ const DEM_PREFERRED_M = 15;   // an NHD-sourced stretch within this of a DEM cha
 
 // Rendered terrain height: Terrain's 10 chunks of ~10 m quads split as PlaneGeometry does
 // (same function as grass.js), so draped vertices sit exactly on the visible triangles.
+// On a tile with the lidar residual the ribbons carry two heights: the 1 m ground (Heightfield.at) in
+// position.y and the 10 m mesh (Heightfield.coarse) in aCoarseY, and the vertex shader (DRAPE) takes the
+// one the terrain draws there, easing across the fine mesh's band as terrain.js does (Heightfield.fine,
+// mirrored each frame into the fineRect uniform). One height for both would vanish under the 10 m mesh
+// where the lidar finds the channel deeper, or float over the fine one.
 function terrainHeight(tile) {
   const size = tile.size, cs = size / 10, sp = cs / Math.round(cs / 10), H = tile.heights;
+  if (H.detail) return (x, north) => H.at(x, north);
   return (x, north) => {
     const u = x / sp, v = (size - north) / sp, i = Math.floor(u), j = Math.floor(v), fx = u - i, fy = v - j;
     const x0 = i * sp, x1 = x0 + sp, n0 = size - j * sp, n1 = n0 - sp;
@@ -107,8 +113,9 @@ function selfIntersects(ring) {
 
 // Growable typed buffers for one merged ribbon geometry.
 class RibbonBuffers {
-  constructor() { this.pos = []; this.nrm = []; this.flow = []; this.dir = []; this.extra = []; this.idx = []; this.n = 0; }
-  vertex(x, y, z, nx, ny, nz, s, across, half, speed, dx, dz, strength, cls) {
+  constructor() { this.pos = []; this.nrm = []; this.flow = []; this.dir = []; this.extra = []; this.idx = []; this.n = 0; this.cy = null; }
+  vertex(x, y, z, nx, ny, nz, s, across, half, speed, dx, dz, strength, cls, coarseY) {
+    if (coarseY !== undefined) (this.cy ??= []).push(coarseY);
     this.pos.push(x, y, z); this.nrm.push(nx, ny, nz); this.flow.push(s, across, half, speed);
     this.dir.push(dx, dz); this.extra.push(strength, cls); return this.n++;
   }
@@ -119,6 +126,7 @@ class RibbonBuffers {
     g.setAttribute('aFlow', new THREE.Float32BufferAttribute(this.flow, 4));
     g.setAttribute('aDir', new THREE.Float32BufferAttribute(this.dir, 2));
     g.setAttribute('aExtra', new THREE.Float32BufferAttribute(this.extra, 2));
+    if (this.cy) g.setAttribute('aCoarseY', new THREE.Float32BufferAttribute(this.cy, 1));
     g.setIndex(this.n > 65535 ? new THREE.Uint32BufferAttribute(this.idx, 1) : new THREE.Uint16BufferAttribute(this.idx, 1));
     g.computeBoundingSphere(); g.computeBoundingBox();
     return g;
@@ -128,12 +136,21 @@ class RibbonBuffers {
 const COMMON = /* glsl */`
   varying vec3 vPosW; varying vec3 vNormalW; varying vec4 vFlow; varying vec2 vDir; varying vec2 vExtra;
   uniform float uTime; uniform float depthPull; uniform float depthPullK;
+  uniform vec4 fineRect; uniform float fineBand;   // terrain.js fine mesh: x0, x1, n0, n1 (x1 < x0: none) and its blend band
 `;
 const VERT = /* glsl */`
   ${COMMON}
   attribute vec4 aFlow; attribute vec2 aDir; attribute vec2 aExtra;
+  #ifdef DRAPE
+  attribute float aCoarseY;
+  #endif
   void main() {
-    vec4 wp = modelMatrix * vec4(position, 1.0);
+    vec3 p = position;
+    #ifdef DRAPE
+    float e = min(min(p.x - fineRect.x, fineRect.y - p.x), min(-p.z - fineRect.z, fineRect.w + p.z));
+    p.y = mix(aCoarseY, p.y, smoothstep(0.0, fineBand, e));   // smoothstep is 0 for e <= 0: outside, the 10 m mesh
+    #endif
+    vec4 wp = modelMatrix * vec4(p, 1.0);
     vPosW = wp.xyz; vNormalW = normal; vFlow = aFlow; vDir = aDir; vExtra = aExtra;
     // Pull toward the camera along the view ray: the screen position is unchanged, but the draped
     // ribbon now beats the 10 m terrain triangles under it in the depth test. Grazing views need
@@ -261,7 +278,8 @@ export class Water {
     this.tile = tile; this.group = new THREE.Group(); this.group.name = 'water'; this.group.userData.water = this;
     this.season = null; this.look = null; this.stats = { skippedRings: 0, reaches: 0 };
     const time = { value: 0 };
-    const base = { uTime: time, depthPull: { value: 0.25 }, depthPullK: { value: 0.003 } };
+    const base = { uTime: time, depthPull: { value: 0.25 }, depthPullK: { value: 0.003 },
+      fineRect: { value: new THREE.Vector4(1, 0, 1, 0) }, fineBand: { value: 20 } };
     this.uniforms = base;
     const mk = (frag, extra) => {
       const m = new THREE.ShaderMaterial({
@@ -276,6 +294,7 @@ export class Water {
     const prof = { profileTex: { value: blank }, hasProfile: { value: 0 }, tileSize: { value: tile.size } };
     this.profileUniforms = prof;
     this.waterMaterial = mk(WATER_FRAG, { rippleAmp: { value: 0.22 }, opacity: { value: 0.88 }, pond: { value: 0 }, ...prof });
+    if (tile.heights.detail) for (const m of [this.bedMaterial, this.waterMaterial]) m.defines = { DRAPE: '' };   // ribbons only; ponds are flat at their level
     this.pondMaterial = mk(WATER_FRAG, { rippleAmp: { value: 0.07 }, opacity: { value: 0.93 }, pond: { value: 1 }, ...prof });
     this.pondBedMaterial = mk(BED_FRAG, { classWet: { value: new THREE.Vector3(0, 0, 0) }, opacity: { value: 0.8 } });
 
@@ -417,7 +436,7 @@ export class Water {
     const bed = new RibbonBuffers(), water = Object.fromEntries(CLASSES.map(c => [c, new RibbonBuffers()]));
     const sec = [];   // per section: x, north, half, s, tx, tz, class, has-next (SEC_W floats... see sectionIndex)
     const inPond = (x, y) => ponds.some(p => x >= p.bbox[0] && x <= p.bbox[2] && y >= p.bbox[1] && y <= p.bbox[3] && inRing(x, y, p.ring));
-    const nrm = new THREE.Vector3();
+    const nrm = new THREE.Vector3(), hf = this.tile.heights, drape = !!hf.detail;
     const normalAt = (x, n) => nrm.set(H(x - 2, n) - H(x + 2, n), 4, -(H(x, n - 2) - H(x, n + 2))).normalize();
     // Prefer the DEM's geometry: NHD-sourced stretches (kept where the DEM found no channel) are cut
     // wherever a DEM channel runs within DEM_PREFERRED_M of them, so a stream is never drawn twice.
@@ -476,7 +495,7 @@ export class Water {
             for (const o0 of offs) {
               const o = o0 * m, x = c.x + px * o, z = -c.n + pz * o, n = -z;
               const nn = normalAt(x, n);
-              const k = buf.vertex(x, H(x, n), z, nn.x, nn.y, nn.z, c.s, o, half, sp, c.tx, c.tz, strength, ci);
+              const k = buf.vertex(x, H(x, n), z, nn.x, nn.y, nn.z, c.s, o, half, sp, c.tx, c.tz, strength, ci, drape ? hf.coarse(x, n) : undefined);
               if (first < 0) first = k;
             }
           }
@@ -538,6 +557,8 @@ export class Water {
   // Per frame: animate the ripples and follow the season of the look (a SEASON_LOOK entry).
   update(dt, look) {
     this.uniforms.uTime.value = (this.uniforms.uTime.value + dt) % 3600;
+    const F = this.tile.heights.fine;   // the terrain's fine mesh this frame (DRAPE)
+    if (F) { this.uniforms.fineRect.value.set(F.x0, F.x1, F.n0, F.n1); this.uniforms.fineBand.value = F.band; } else this.uniforms.fineRect.value.set(1, 0, 1, 0);
     if (look && look !== this.look) { this.look = look; const s = seasonOf(look); if (s !== this.season) this.setSeason(s); }
   }
 }

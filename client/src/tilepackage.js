@@ -16,8 +16,37 @@ function loadOptionalImage(url) {
   return new Promise(res => { const img = new Image(); img.onload = () => res(img); img.onerror = () => res(null); img.src = url; });
 }
 
+// Lidar micro-relief (client/terrain_detail.png, docs/tile-spec.md "Lidar"): the 1 m DEM averaged to
+// 2 m minus heights.png, one byte per pixel, residual m = (v - 128) * 0.04, pixel centres at x = 2i + 1,
+// rows north to south. Only the red channel is kept (25 MB for the home tile's 5000 px); the image is
+// read through a canvas in strips so the RGBA copy never holds the whole 100 MB at once.
+async function loadDetail(url) {
+  const img = new Image(); img.decoding = 'async';
+  await new Promise((res, rej) => { img.onload = res; img.onerror = () => rej(new Error('image failed: ' + url)); img.src = url; });
+  const W = img.width, H = img.height, out = new Uint8Array(W * H), S = 500;
+  const c = document.createElement('canvas'); c.width = W; c.height = S;
+  const ctx = c.getContext('2d', { willReadFrequently: true });
+  for (let y = 0; y < H; y += S) {
+    const h = Math.min(S, H - y);
+    ctx.clearRect(0, 0, W, S); ctx.drawImage(img, 0, y, W, h, 0, 0, W, h);
+    const d = ctx.getImageData(0, 0, W, h).data;
+    for (let k = 0, o = y * W, n = W * h; k < n; k++) out[o + k] = d[k * 4];
+  }
+  return { width: W, height: H, data: out };
+}
+
+// Ground heights. Every raster sample is a pixel centre (the pipeline writes heights.png on a
+// rasterio from_bounds grid: sample (i, j) stands for x = (i + 0.5) res, north = size - (j + 0.5) res),
+// so the bilinear lookup is at x / res - 0.5, as the GPU's texture lookups at uv = x / size are.
+//   base(x, north)    heights.png alone (5 m on the lidar tile, 10 m elsewhere): the far terrain mesh's vertices
+//   at(x, north)      the ground: base plus the lidar residual where the tile has terrain_detail.png
+//                     (the 1 m ground averaged to 2 m), else base. Every footing query reads this.
+//   coarse(x, north)  the far terrain mesh as drawn: base at the 10 m vertices, each square split SW-NE
+//   ground(x, north)  the terrain exactly as drawn this frame: the near fine mesh (terrain.js) where it
+//                     is, else coarse. For things placed every frame (the raven, animals); cached
+//                     placement (grass, rocks) reads at(), which the fine mesh matches near the player.
 export class Heightfield {
-  constructor(img, sizeM) {
+  constructor(img, sizeM, detail = null) {
     this.w = img.width; this.h = img.height; this.size = sizeM; this.res = sizeM / img.width;
     const n = this.w * this.h, d = img.data;
     this.z = new Float32Array(n);
@@ -27,17 +56,53 @@ export class Heightfield {
       this.z[i] = v; if (v < min) min = v; if (v > max) max = v;
     }
     this.min = min; this.max = max;
+    this.detail = detail && detail.width === detail.height ? detail : null;
+    if (this.detail) { this.dW = detail.width; this.dRes = sizeM / detail.width; }
+    this.coarseSpacing = 10;   // terrain.js default vertex spacing
+    this.fine = null;          // terrain.js: the near fine mesh's grid while it is drawn
   }
   // x east (m), north (m from south edge)
-  at(x, north) {
-    const px = Math.min(Math.max(x / this.res, 0), this.w - 1.001);
-    const py = Math.min(Math.max((this.size - north) / this.res, 0), this.h - 1.001);
+  base(x, north) {
+    const px = Math.min(Math.max(x / this.res - 0.5, 0), this.w - 1.001);
+    const py = Math.min(Math.max((this.size - north) / this.res - 0.5, 0), this.h - 1.001);
     const x0 = Math.floor(px), y0 = Math.floor(py), fx = px - x0, fy = py - y0;
     const i = y0 * this.w + x0, z = this.z;
     const a = z[i], b = z[i + 1], c = z[i + this.w], d = z[i + this.w + 1];
     return (a * (1 - fx) + b * fx) * (1 - fy) + (c * (1 - fx) + d * fx) * fy;
   }
+  // lidar residual (m), bilinear between the 2 m pixel centres; 0 without terrain_detail
+  residual(x, north) {
+    if (!this.detail) return 0;
+    const W = this.dW, px = Math.min(Math.max(x / this.dRes - 0.5, 0), W - 1.001);
+    const py = Math.min(Math.max((this.size - north) / this.dRes - 0.5, 0), W - 1.001);
+    const x0 = px | 0, y0 = py | 0, fx = px - x0, fy = py - y0, i = y0 * W + x0, d = this.detail.data;
+    const v = (d[i] * (1 - fx) + d[i + 1] * fx) * (1 - fy) + (d[i + W] * (1 - fx) + d[i + W + 1] * fx) * fy;
+    return (v - 128) * 0.04;
+  }
+  at(x, north) { return this.detail ? this.base(x, north) + this.residual(x, north) : this.base(x, north); }
   atXZ(x, zc) { return this.at(x, -zc); }
+  coarse(x, north) {
+    const S = this.coarseSpacing, n = Math.round(this.size / S) - 1;
+    const fx = x / S, fn = north / S, i0 = Math.min(Math.max(Math.floor(fx), 0), n), n0 = Math.min(Math.max(Math.floor(fn), 0), n);
+    const u = Math.min(Math.max(fx - i0, 0), 1), w = Math.min(Math.max(fn - n0, 0), 1);
+    const SW = this.base(i0 * S, n0 * S), SE = this.base((i0 + 1) * S, n0 * S), NW = this.base(i0 * S, (n0 + 1) * S), NE = this.base((i0 + 1) * S, (n0 + 1) * S);
+    return w > u ? SW + u * (NE - NW) + w * (NW - SW) : SW + u * (SE - SW) + w * (NE - SE);
+  }
+  ground(x, north) {
+    const F = this.fine;
+    if (F && x >= F.x0 && x <= F.x1 && north >= F.n0 && north <= F.n1) {
+      // the fine grid: coordinates F.xs (west to east), F.ns (south to north), heights F.y[j * nx + i], squares split SW-NE
+      const xs = F.xs, ns = F.ns, nx = xs.length;
+      const i = Math.min(x < xs[1] ? 0 : Math.floor((x - xs[1]) / F.step) + 1, nx - 2);
+      const j = Math.min(north < ns[1] ? 0 : Math.floor((north - ns[1]) / F.step) + 1, ns.length - 2);
+      if (i === 0 || j === 0 || i === nx - 2 || j === ns.length - 2) return this.coarse(x, north);   // edge cells: the coarse surface (their vertices are pinned to it)
+      const u = Math.min(Math.max((x - xs[i]) / (xs[i + 1] - xs[i]), 0), 1), w = Math.min(Math.max((north - ns[j]) / (ns[j + 1] - ns[j]), 0), 1);
+      const y = F.y, k = j * nx + i, SW = y[k], SE = y[k + 1], NW = y[k + nx], NE = y[k + nx + 1];
+      return w > u ? SW + u * (NE - NW) + w * (NW - SW) : SW + u * (SE - SW) + w * (NE - SE);
+    }
+    return this.coarse(x, north);
+  }
+  groundXZ(x, zc) { return this.ground(x, -zc); }
 }
 
 export class Grid8 {
@@ -326,7 +391,7 @@ export async function loadTile(tileId, base = '../tiles/') {
   for (const k of ['client.heights', 'client.texture', 'client.habitat', 'client.canopy', 'client.masks'])
     if (!L[k]) throw new Error(`tile ${id} lacks ${k}; run the derive step`);
   const MX = L['client.species_mix'], mixFiles = MX?.files || {};
-  const [heights, texture, habitat, canopy, masks, species, perception, calendar, imagery, features, roads, imageryTexture, mast, mixIndex, mixJson, mixDensity, outcrop, geology, soils, groundClasses, profile, speciesPrior] = await Promise.all([
+  const [heights, texture, habitat, canopy, masks, species, perception, calendar, imagery, features, roads, imageryTexture, mast, mixIndex, mixJson, mixDensity, outcrop, geology, soils, groundClasses, profile, speciesPrior, detail, canopyHeight] = await Promise.all([
     loadImageData(dir + L['client.heights'].path), loadImageData(dir + L['client.texture'].path),
     loadImageData(dir + L['client.habitat'].path), loadImageData(dir + L['client.canopy'].path),
     loadImageData(dir + L['client.masks'].path),
@@ -359,6 +424,9 @@ export async function loadTile(tileId, base = '../tiles/') {
     L['client.channel_profile'] ? loadImageData(dir + L['client.channel_profile'].path).catch(() => null) : null,
     // animal density prior from CC0 / CC BY records (animals.js); optional, null on older tiles
     L['client.species_prior'] ? loadSpeciesPrior(dir + L['client.species_prior'].path) : null,
+    // lidar step (tile-spec "Lidar"): the 2 m micro-relief residual and the 10 m canopy height; optional
+    L['client.terrain_detail'] ? loadDetail(dir + L['client.terrain_detail'].path).catch(e => { console.warn('terrain detail:', e.message); return null; }) : null,
+    L['client.canopy_height'] ? loadImageData(dir + L['client.canopy_height'].path).catch(() => null) : null,
   ]);
   if (features) markRewilded(features, m);
   const rewild = profile ? new RewildGrid(profile, m.size_m || 10000) : null;
@@ -366,12 +434,14 @@ export async function loadTile(tileId, base = '../tiles/') {
   const size = m.size_m || 10000;
   return {
     id, manifest: m, size, dir,
-    heights: new Heightfield(heights, size), textureImage: texture.image, masksImage: masks.image,
+    heights: new Heightfield(heights, size, detail), textureImage: texture.image, masksImage: masks.image,
     habitat: new Grid8(habitat, size), canopy: new Grid8(canopy, size),
     roads: roads ? new Grid8(roads, size) : null, roadsImage: roads?.image || null,
     mast: mast ? new Grid8(mast, size) : null,
     outcrop: outcrop ? new Grid8(outcrop, size) : null, geology: geology ? new Grid8(geology, size) : null,
     soils: soils ? new Grid8(soils, size) : null, groundClasses,
+    // lidar canopy (client/canopy_height.png, 10 m): R p95 canopy height x 0.25 m, G tree cover %, B shrub cover %; null without the lidar step
+    canopyHeight: canopyHeight ? new Grid8(canopyHeight, size) : null,
     // per-cell species weights and density multipliers (null: vegetation falls back to the class mix)
     speciesMix: mixIndex && mixJson?.mixes && mixIndex.width === habitat.width ? new SpeciesMix(mixIndex, mixJson, size, mixDensity) : null,
     // former reservoir and stock-pond beds (255) and their riparian corridor (160), or null

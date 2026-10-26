@@ -80,15 +80,10 @@ export class RavenFlight {
   }
   setHover(on) { this.hover = on; if (!on && this.speed < 6) this.speed = 8; }
   setView(v) { this.view = v; this.camSettled = false; this.body.visible = v === 'chase'; }
-  // Height of the rendered terrain mesh (terrain.js: vertices every TERRAIN_SPACING m, each square split along its
-  // SW-NE diagonal; in a hollow it runs up to ~0.6 m above the bilinear field), as animals.js and rocks.js stand on.
-  meshAt(x, z) {
-    const h = this.heights, S = TERRAIN_SPACING, n = Math.round(h.size / S) - 1, north = -z;
-    const fx = x / S, fn = north / S, i0 = Math.min(Math.max(Math.floor(fx), 0), n), n0 = Math.min(Math.max(Math.floor(fn), 0), n);
-    const u = Math.min(Math.max(fx - i0, 0), 1), w = Math.min(Math.max(fn - n0, 0), 1);
-    const SW = h.at(i0 * S, n0 * S), SE = h.at((i0 + 1) * S, n0 * S), NW = h.at(i0 * S, (n0 + 1) * S), NE = h.at((i0 + 1) * S, (n0 + 1) * S);
-    return w > u ? SW + u * (NE - NW) + w * (NW - SW) : SW + u * (SE - SW) + w * (NE - SE);
-  }
+  // Height of the terrain as drawn this frame (tilepackage.js Heightfield.ground: the near fine mesh of the lidar
+  // ground where the tile has one, else the 10 m mesh with each square split along its SW-NE diagonal), as
+  // animals.js and rocks.js stand on.
+  meshAt(x, z) { return this.heights.ground(x, -z); }
   // The branches of the near set (perch.js), once the vegetation is up.
   perchQuery() {
     if (!this.perches && window.__we?.veg) this.perches = new Perches(window.__we.veg, (x, z) => this.meshAt(x, z));

@@ -754,3 +754,31 @@ ground view, the leg spread is one blend, and on limbs sloped past ~27 degrees t
 can go round instead of staying on top. Verified: a blue oak climbed to 7 m past the fork,
 a branch taken and run out, a drop that caught a limb 3 m down, a gray pine to 17 m, a crown
 acorn from a limb, a chase up the far side of a live oak; 45-46 fps, no console errors.
+
+## 2026-10-26: the lidar's 1 m ground under the player, the 5 m heights beyond
+
+Aaron asked for higher-resolution lidar terrain "and use lower res data for further away". The client
+now reads `client/terrain_detail.png` (the 2 m residual) on a tile that has it, and draws it in a 2 m
+mesh around the player: a square 110 m either side of a centre on the 10 m lattice, its vertices on the
+residual's own pixel centres (odd metres), heights from `Heightfield.at` (5 m heights plus the residual,
+both bilinear between pixel centres), normals from the mesh itself, so road cuts, gullies and terraces
+shade and stand as geometry. The 10 m chunks drop their quads under the square (a hole in their index
+buffer, so no overdraw, no z-fighting and no `discard` in the terrain shader); the square's outer 20 m
+ease from the 10 m surface to the 1 m one, its edge vertices sit on the 10 m mesh's (an odd-metre edge
+cut the corner at every coarse vertex and showed a crack), and a 0.6 m skirt hangs under the edge. When
+the player strays 10 m from the centre a new square is computed into staging arrays against a 1.5 ms
+budget per frame (a whole one takes about 1.4 ms) and swapped in in one frame with the hole; 26,418
+triangles with the skirt. `Heightfield.ground` is the surface drawn this frame (the fine grid inside
+the square, the 10 m triangles outside): the raven's and the animals' footing read it (main.js points
+`flight.meshAt` and `animals.heights` at it until those lanes take it in), cached placement (grass,
+shrubs, rocks) reads `at`, and the water ribbons carry both heights and pick the drawn one in the vertex
+shader. Fixed on the way: the client read `heights.png` samples as pixel corners, 2.5 m off the metric
+grid the pipeline writes (rasterio `from_bounds`, sample i at 5 i + 2.5) and the textures use; every
+height is now 2.5 m east and south of where it was, in step with the texture. Rejected: a clipmap with
+a 4 m ring (the residual is what matters within 100 m, and beyond it 2 m features are under a pixel);
+`discard` over a coarse mesh left whole (costs early-z on the heaviest shader); hiding whole 1 km chunks.
+Verified on the home tile: the Hwy 50 cut near x 9100, north 8790 reads as a flat bed between banks
+(a smooth bowl with a ridge before); no crack in 120 low views along the seams (terrain alone against a
+magenta clear); 51.5-51.9 fps against 52.9-53.7 with the fine mesh off, 38.6-40.4 against 40.7-41.3
+flying at 25 m/s; the raven landed in the cut on the 1 m ground, 4.4 m below the 10 m surface there;
+the two tiles without lidar load unchanged.

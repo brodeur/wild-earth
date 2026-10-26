@@ -626,6 +626,16 @@ habitat class and canopy cover. Trees are not stored (on a tile without lidar); 
 habitat and canopy with a deterministic seed per 30 m cell, so every player sees the
 same tree in the same place without the package carrying a tree list.
 
+Every raster sample is a pixel centre: sample (i, j) of an n-pixel raster stands for x = (i + 0.5)
+size / n, north = size - (j + 0.5) size / n, so a bilinear lookup is at x / res - 0.5 (a GPU texture
+lookup at uv = (x, north) / size does the same). The web client (`client/src/tilepackage.js`
+Heightfield) reads `heights.png` that way and, on a lidar tile, adds `terrain_detail.png` the same
+way: `at(x, north)` is the 1 m ground every footing query uses, `base` the 5 m heights alone. Its far
+terrain is a 10 m mesh of `base`; within 110 m of the player (a square on the 10 m lattice, rebuilt
+when the player strays 10 m) a 2 m mesh of `at` on the residual's own pixel centres, its outer 20 m
+eased to the 10 m surface and its edge on the 10 m mesh's vertices, so the seam is closed;
+`ground(x, north)` is the surface drawn this frame. `canopy_height.png` is loaded as `tile.canopyHeight`.
+
 ## Unreal export
 
 `unreal/` is the same tile as an Unreal Engine 5 Landscape. The heightmap uses
