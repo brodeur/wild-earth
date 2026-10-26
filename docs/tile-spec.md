@@ -538,21 +538,33 @@ in each 30 m cell and how densely, for any number of species. Format 2 (2026-10-
 - `species_mix_density.png`: RGB, R tree density and G shrub density, each a multiplier = byte / 100 on the
   client's per-habitat-class plant count (1.0 = the fixed-mix count; the count still scales with
   `client/canopy.png` cover). B is 0. No alpha, so a 2D canvas reads it unchanged.
-- `species_mix.json`:
+- `species_mix.json` (one row and one community per line):
 
 ```json
 {
   "format": 2,
+  "grid": { "crs": "EPSG:32610", "bounds": [680000, 4280000, 690000, 4290000], "pixels": 333, "resolution_m": 30.03,
+            "origin": "row 0 = north edge, same grid as client/habitat.png" },
   "species": { "trees": ["quercus_douglasii", "quercus_wislizeni", "..."], "shrubs": ["arctostaphylos_viscida", "..."] },
-  "cells": { "index": "client/species_mix_index.png", "index_bytes": 1, "density": "client/species_mix_density.png" },
+  "cells": { "index": "client/species_mix_index.png", "index_bytes": 2, "density": "client/species_mix_density.png" },
+  "encoding": { "index": "...", "density": "...", "weights": "...", "terrain": "..." },
   "mixes": [
-    { "index": 1, "source": "evt", "code": 7027, "name": "Mediterranean California Dry-Mesic Mixed Conifer ...",
-      "rule": "dry_mesic_mixed_conifer", "trees": { "pinus_ponderosa": 0.8, "quercus_wislizeni": 0.2 },
-      "shrubs": { "arctostaphylos_viscida": 1 }, "tree_density": 1.0, "shrub_density": 0.6, "note": "...", "cells": 124,
-      "tree_bytes": [["quercus_wislizeni", 51], ["pinus_ponderosa", 204]], "shrub_bytes": [["arctostaphylos_viscida", 255]],
+    { "index": 1, "source": "evt", "code": 7027, "name": "Mediterranean California Dry-Mesic Mixed Conifer Forest and Woodland",
+      "rule": "dry_mesic_mixed_conifer", "community": 1, "terrain": ["<450 m floor"], "cells": 2,
+      "tree_bytes": [["quercus_wislizeni", 41], ["pinus_ponderosa", 204], ["quercus_chrysolepis", 2], "..."],
+      "shrub_bytes": [["arctostaphylos_viscida", 205], ["heteromeles_arbutifolia", 7], "..."],
       "density_bytes": [100, 60] }
   ],
-  "unmatched": [], "fractions": { "tree_share": { "blue_oak": 0.43, "...": 0 } }
+  "communities": [
+    { "community": 1, "source": "evt", "code": 7027, "name": "Mediterranean California Dry-Mesic Mixed Conifer Forest and Woodland",
+      "rule": "dry_mesic_mixed_conifer", "trees": { "pinus_ponderosa": 0.5, "quercus_wislizeni": 0.1, "...": 0 },
+      "shrubs": { "arctostaphylos_viscida": 1, "...": 0 }, "tree_density": 1.0, "shrub_density": 0.6,
+      "note": "sugar pine and white fir are not in the library: pinus_ponderosa stands in", "fixed": [], "cells": 124 }
+  ],
+  "unmatched": [],
+  "fractions": { "from_evt": 0.64, "from_bps_backfill": 0.36, "tree_share": { "blue_oak": 0.38, "...": 0 },
+                 "tree_share_by_canopy": { "...": 0 }, "shrub_share": { "...": 0 }, "mean_tree_density": 0.89,
+                 "mean_shrub_density": 0.61, "rules": { "blue_oak_foothill_pine": 0.29, "...": 0 } }
 }
 ```
 
@@ -561,8 +573,48 @@ any species a rule adds, appended. A row's `tree_bytes` and `shrub_bytes` hold t
 weight, in column order, each summing to 255 (largest remainder, ties to the earlier column; absent: no
 trees or no shrubs in the row). The client draws a plant's species by walking that list in order with one
 random number, so the order is part of the format: appending a column never moves an existing plant.
-`density_bytes` repeats the row's densities (the density PNG holds them per cell). `trees`, `shrubs` and the
-two densities as decimals are the rule as written, for people.
+`density_bytes` repeats the row's densities (the density PNG holds them per cell).
+
+Since 2026-10-26 a row is a community on one kind of ground, and the weights a community has as written live
+in `communities`:
+
+- `mixes[]` (a row; the client reads `index`, `tree_bytes`, `shrub_bytes` and `density_bytes`):
+  - `index`: the row number the index PNG holds (1-based, in order).
+  - `source`, `code`, `name`: where the community came from: `evt` (LANDFIRE Existing Vegetation Type code
+    and name), `bps` (Biophysical Settings, for cells EVT calls developed or agricultural), `habitat` (no
+    usable code: the habitat class, `name` null) or `rewild` (a former reservoir or stock-pond bed, code 1
+    meadow, 2 riparian, `name` the rule's id with spaces).
+  - `rule`: the id of the keyword rule the name matched (`species_mix.py` `RULES`), or
+    `habitat_default_<class>` when none did.
+  - `community`: the `communities[].community` this row belongs to.
+  - `terrain`: the terrain classes whose cells use this row, each `"<band> <position>[ north]"`: band the
+    effective elevation (the cell's mean elevation, plus 100 m on north-facing and minus 50 m on
+    south-facing ground) `<450 m`, `450-525 m`, `525-600 m` or `>=600 m`; position `floor` (mean slope under
+    6 degrees and the cell 2 m or more below its 330 m neighbourhood), `steep` (16 degrees or more) or
+    `mid-slope`; ` north` when the cell faces north (northness 0.35 or more). Classes whose terrain factors
+    (`species_mix.py` `TERRAIN`) give a community the same bytes share one row, so most rows list one class
+    and a few list many.
+  - `cells`: how many 30 m cells of the tile use the row.
+  - `tree_bytes`, `shrub_bytes`, `density_bytes`: as above; the weights are after the terrain factors.
+- `communities[]` (for people; the client does not read it), one per `source` and `code`:
+  - `community`: its number (`mixes[].community` points here), `source`, `code`, `name`, `rule` as in the rows.
+  - `trees`, `shrubs`: the rule's weights as written (decimals, before the terrain factors and the bytes).
+  - `tree_density`, `shrub_density`: the rule's densities as decimals (`density_bytes` = round(x 100), at most
+    255).
+  - `note`: the rule's note (stand-ins, assumptions), or null.
+  - `fixed`: species whose weight the terrain does not change in this community (black oak in the black-oak
+    communities, which LANDFIRE names for it).
+  - `cells`: the cells of all its rows.
+- `grid`: CRS, bounds, size in pixels, cell size and orientation of the 30 m grid (the same grid as
+  `client/habitat.png`).
+- `encoding`: one sentence per product for people (`index`, `density`, `weights`, `terrain`).
+- `unmatched`: `{source, code, name, habitat}` for each code no rule matched (it got its habitat class's
+  default mix).
+- `fractions`: tile shares for people: `from_evt` and `from_bps_backfill` (share of cells by source; rewilded
+  and habitat-class cells count with the backfill), `tree_share` and `shrub_share` (each species' share of its
+  layer, weighted by the cells' density; keys are the pipeline's short names, `SHORT`, such as `blue_oak`), `tree_share_by_canopy` (the tree shares weighted
+  by the cells' EVC tree cover as well), `mean_tree_density`, `mean_shrub_density`, and `rules` (share of cells
+  per rule).
 
 Format 1 (tiles built before 2026-10-25) had RGBA weight PNGs `species_mix_a/_b/_c.png` and `mixes[].bytes`
 with a `bytes_layout` naming each column by short alias; the client still reads it (and the original eight

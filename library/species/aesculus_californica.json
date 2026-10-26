@@ -21,8 +21,8 @@
   },
   "status": "agent draft, needs local sign-off",
   "trunk": {
-    "length_ratio": 0.3, "radius_ratio": 0.065, "taper": 0.6, "flare": 1.35, "bole_ratio": 0.3, "base_size": 0.05,
-    "curve_deg": 10, "curve_var_deg": 18, "segments": 5, "lean_deg": 9, "stems": [1, 4], "stem_spread_deg": 28,
+    "length_ratio": 0.3, "radius_ratio": 0.065, "taper": 0.6, "flare": 1.35, "bole_ratio": 0.3, "base_size": 0.03,
+    "curve_deg": 10, "curve_var_deg": 18, "segments": 5, "lean_deg": 9, "stems": [1, 4], "stem_spread_deg": 29,
     "split_prob": 0.55, "split_count": 2, "split_angle_deg": 32, "sinuous_deg": 4, "bark_rgb": [168, 166, 160],
     "bark_pattern": "smooth_grey", "twig_rgb": [156, 146, 130],
     "bark": {"tile_m": [0.3, 0.6], "plate_m": [0.04, 0.06], "fissure": 0.08, "contrast": 0.5, "lichen": 0.55, "relief": 0.35}
@@ -33,12 +33,12 @@
   },
   "levels": [
     {
-      "count": 9, "down_angle_deg": 70, "down_angle_tip_deg": 40, "down_angle_var_deg": 14, "rotation_deg": 140, "rotation_var_deg": 30,
+      "count": 12, "down_angle_deg": 70, "down_angle_tip_deg": 40, "down_angle_var_deg": 14, "rotation_deg": 140, "rotation_var_deg": 30,
       "length_ratio": 2.4, "length_var": 0.25, "curve_deg": 6, "curve_var_deg": 20, "zigzag_deg": 8, "tropism": 0.02,
       "droop_deg": 15, "taper": 0.9, "radius_ratio": 0.6, "segments": 4, "sinuous_deg": 4
     },
     {
-      "count": 7, "start": 0.15, "down_angle_deg": 45, "down_angle_var_deg": 16, "rotation_deg": 140,
+      "count": 7, "start": 0.12, "down_angle_deg": 45, "down_angle_var_deg": 16, "rotation_deg": 140,
       "rotation_var_deg": 30, "length_ratio": 0.55, "length_var": 0.3, "curve_deg": 0, "curve_var_deg": 20,
       "zigzag_deg": 14, "tropism": 0.05, "taper": 1.0, "radius_ratio": 0.45, "segments": 2
     }
@@ -49,10 +49,10 @@
     "colors": {"winter": [156, 146, 130], "spring": [104, 119, 62], "summer": [99, 110, 71], "fall": [142, 116, 95]},
     "leaf_on": {"winter": 0.0, "spring": 1.0, "summer": 0.6, "fall": 0.0},
     "leaf_on_by_month": [0.0, 0.05, 0.7, 1.0, 1.0, 1.0, 0.55, 0.1, 0.03, 0.0, 0.0, 0.0],
-    "clumps": {"radius_m": 0.8, "cards_per_clump": 7, "shell": 0.2, "flatten": 0.75, "tip_bias": 1.4},
+    "clumps": {"radius_m": 0.66, "cards_per_clump": 7, "shell": 0.2, "flatten": 0.75, "tip_bias": 0.89},
     "palette": [[0.8, [1, 1, 1]], [0.2, [1.1, 1.1, 0.9]]], "winter_twigs": 0.45, "ao_min": 0.7,
     "color_var": [0.08, 0.05], "leaf_on_var": 0.7,
-    "flowers": {"season": "spring", "form": "candle", "rgb": [238, 232, 214], "size_m": 0.15, "density": 0.6, "before_leaves": false},
+    "flowers": {"season": "spring", "form": "candle", "rgb": [238, 232, 214], "size_m": 0.17, "before_leaves": false, "per_card": 8, "width": 0.17},
     "berries": {"season": "fall", "rgb": [140, 116, 82], "size_m": 0.06, "density": 0.3}
   },
   "deadwood": {"fraction": 0.06, "where": "inner", "levels": [2], "shorten": 0.6, "rgb": [172, 168, 160]},

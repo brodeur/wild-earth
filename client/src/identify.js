@@ -16,6 +16,9 @@ import { fieldGuide, acornLine, acornSpecies } from './fieldguide.js';
 const SCAN_MS = 250, AROUND_R = 100, PICK_R = 150, CLICK_PX = 4;
 const TAG_R = 160, TAG_MAX = 200, TAG_EVERY = 10;
 const SEASON_WORD = { winter: 'winter', spring: 'spring', summer: 'summer', fall: 'fall' };
+// The species file's `form` token in plain words (any other token: its underscores as spaces).
+const FORM_WORD = { tree: 'tree', shrub: 'shrub', multi_stem_shrub_tree: 'multi-stemmed shrub or small tree' };
+const formWord = f => FORM_WORD[f] || String(f || 'plant').replace(/_/g, ' ');
 
 const esc = s => String(s ?? '').replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' })[c]);
 const tagged = id => ((Math.imul(id, 0x9E3779B1) >>> 0) >>> 8) % TAG_EVERY === 0;
@@ -212,7 +215,7 @@ export class Identify {
     card.innerHTML = `<button class="close" data-close title="close (Esc)">×</button>
       <h1>${esc(s.common)}</h1>
       <div class="sci"><i>${esc(s.scientific)}</i> · ${hit.distance.toFixed(0)} m away</div>
-      <div class="row"><span>form</span><b>${esc(s.form)} · ${kind}</b></div>
+      <div class="row"><span>form</span><b>${esc(formWord(s.form))} · ${kind}</b></div>
       <div class="row"><span>architecture</span><b>${esc(s.architectural_model || '–')} model</b></div>
       <div class="row"><span>height here</span><b>${esc(h)}</b></div>
       ${s.description ? `<p>${esc(s.description)}</p>` : ''}

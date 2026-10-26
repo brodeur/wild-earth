@@ -767,10 +767,12 @@ cards (`needle_brush`, `needle_drooping`, `needle_flat`).
 |---|---|
 | `season` | `"spring"` etc., or a list (`["fall", "winter"]`) |
 | `months` | optional `[from, to]` (1-12, inclusive, may wrap: `[11, 1]`); when given it decides instead of `season`. Use it when flowers and berries share a season (elderberry flowers in June, berries in August) |
-| `form` | flowers: `candle` (an upright panicle, buckeye), `cluster` (a round head of florets: toyon, elderberry, redbud), `bud` (one small dot); berries: `cluster` (default) or `bud` |
+| `form` | flowers: `candle` (an upright spike, full most of its length and tapering to the tip: buckeye), `cluster` (a round head of florets: toyon, elderberry, redbud), `bud` (one small dot); berries: `cluster` (default) or `bud` |
 | `rgb` | sRGB colour |
 | `size_m` | size of one inflorescence or berry cluster |
 | `density` | 0-1, the fraction of twig ends that carry one. On a bare crown, flowers cover at most 0.6 x density of the spray and berries hang from about a dozen shoots per card |
+| `per_card` | opt-in, instead of `density`: this many heads on a near card, times the card's area relative to it (a close card at `lod.close_scale` 0.6 gets 0.36 of them, a mid card at scale 2 four times as many; the fraction by chance), at the twig ends first and then at points of the spray, each whole on the card and at least 0.75 `size_m` from the next. Buckeye 8, elderberry 5 (2026-10-26) |
+| `width` | `candle` only: half-width over length (default 0.2) |
 | `before_leaves` | flowers only: shown on the bare-crown texture while the crown is under half in leaf (redbud in March, on max(`winter_twigs`, 0.5) of the cards); once it is half leafed they show on the leaf texture |
 
 Defaults: flowers `{ form: "cluster", size_m: 0.1, density: 0.5, before_leaves: false, season: "spring" }`,
@@ -1060,7 +1062,7 @@ buckeye, madrone, walnut, bay, maple, ash, valley_oak, canyon_live_oak, black_oa
 toyon, redbud, poison_oak, coyote_brush, elderberry, coffeeberry (`walnut` and `maple` added to the files).
 Valley, canyon live and black oak bear acorns: `OAK_SHORT` in `vegetation.js` names them, so the acorn game
 finds them (home tile, start view: 547 valley, 795 canyon live and 569 black oaks among the game's oaks). The
-field guide (`fieldguide.js` `ACORNS`) has no card for them yet, so their species card shows no acorn line.
+field guide (`fieldguide.js` `ACORNS`) had no card for them at first; it has since 2026-10-26 (below).
 
 **Fixes to the files** (targets and photos unchanged):
 
@@ -1212,8 +1214,67 @@ HEAD also has.
 **Known limits.**
 - Douglas-fir's mid tier is blobs until the `needle_flat` far card is fuller; the set A broadleaves are open at mid.
 - Buckeye's flower candles and elderberry's flower plates barely show on the 3D trees; the impostors show them.
+  (Fixed 2026-10-26, below.)
 - The six shrubs in woodland and grassland exist only as impostors (no 3D plants there, since the canopy layer's
   shrub cover is about zero), so they cannot be clicked for a card; in chaparral they are 3D as well.
 - 26 species cost about 1.4 ms of CPU at the start view in draw calls; vegetation could share meshes between a
   rare species' classes (as the far atlas does) to bring it back.
 - `docs/tile-spec.md` "Species mix" does not yet describe `mixes[].terrain`, `community` and `communities[]`.
+  (Done 2026-10-26.)
+
+## Polish of the foothill set (2026-10-26)
+
+**Crown base.** Buckeye, coyote brush, elderberry and coffeeberry measured 0.13, 0.16, 0.20 and 0.18 against
+0.05, 0.05, 0.08 and 0.08. Two causes. Elderberry, coffeeberry and coyote brush had a bare skirt: the first limbs
+left the stems a fifth of the way up and the clumps sat at the limb tips. Buckeye's foliage already reached
+the ground: its 0.13 came from cards and drooping limbs that reach up to a fifth of the tree's height below
+y = 0. The lineup measures from the lowest pixel, so a card under the ground lowers the plant's bottom and
+raises its crown base; in the world the terrain hides those cards. The same measure from the ground line (the
+lineup's silhouettes, counting only what is above y = 0, which is what the world shows) read buckeye 0.06,
+coyote brush 0.13, coffeeberry 0.16 and elderberry 0.19 before.
+
+The files now spread the stems wider and branch them lower, with the clumps along the limbs rather than at
+their tips. The values come from a search of 40-60 random variants per species (stems, limb angles and
+counts, foliage `start`, clumps, the envelope's base width), measured on the lineup's three seeds, then
+checked on the lineup itself:
+
+| species | changes | lineup W/H, base, gaps (target) | base above the ground |
+|---|---|---|---|
+| buckeye | level-1 `count` 9 to 12, level-2 `start` 0.15 to 0.12, `base_size` 0.05 to 0.03, `stem_spread_deg` 28 to 29; clumps `radius_m` 0.8 to 0.66, `tip_bias` 1.4 to 0.89 | 1.46 to 1.50 (1.45), 0.13 to 0.11 (0.05), 0.14 to 0.11 (0.18) | 0.06 to 0.05 |
+| coyote brush | `stem_spread_deg` 38 to 54, `base_size` 0.05 to 0.04, first limbs 48±14 to 51±8 degrees, `droop_deg` 3, `tropism` 0.08 to 0.05; foliage `start` 0.05 to 0.01, `parent_start` 0.01, `cluster_m` 0.36 to 0.34, `cards_per_m2` 12 to 13.5; clumps `radius_m` 0.3 to 0.25, `shell` 0.45 to 0.02, `tip_bias` 1.3 to 0.7; envelope base 0.4 to 0.42 | 1.24 to 1.22 (1.2), 0.16 to 0.11 (0.05), 0.20 to 0.20 (0.2) | 0.13 to 0.07 |
+| elderberry | `stem_spread_deg` 32 to 62, first limbs 62 to 55 degrees, level-2 `start` 0.3 to 0.22; foliage `start` 0.15 to 0.02, `parent_start` 0.35 to 0.18; clumps `radius_m` 0.55 to 0.49, `tip_bias` 1.2 to 0.6; envelope base 0.5 to 0.66 | 1.48 to 1.48 (1.4), 0.20 to 0.13 (0.08), 0.26 to 0.25 (0.22) | 0.19 to 0.07 |
+| coffeeberry | `stem_spread_deg` 42 to 58, `base_size` 0.05 to 0.02, first limbs 38±14 to 39±8 degrees, `droop_deg` 3, `tropism` 0.05 to 0.08; foliage `parent_start` 0.05 to 0.03, `cluster_m` 0.5 to 0.47, `cards_per_m2` 5.5 to 6.2; clumps `radius_m` 0.38 to 0.32, `shell` 0.45 to 0.02, `flatten` 0.8 to 0.74, `tip_bias` 1.3 to 0.6; envelope base 0.54 to 0.56 | 1.37 to 1.42 (1.4), 0.18 to 0.12 (0.08), 0.12 to 0.18 (0.18) | 0.16 to 0.08 |
+
+All four are within the lineup's tolerance now (base within 0.07 of the target), and r/g and b/g did not move
+(elderberry's b/g stays 0.63 against 0.56: the July berries). Mid and close tiers, base before and after:
+buckeye 0.15 to 0.12 and 0.14 to 0.15, coyote brush 0.13 to 0.13 and 0.19 to 0.11, elderberry 0.27 to 0.12 and
+0.20 to 0.14, coffeeberry 0.13 to 0.11 and 0.19 to 0.12. Near triangles: buckeye 822-1,642 (was 1,048-1,514),
+coyote brush 708-1,068 (654-1,006), elderberry 984-1,180 (922-1,164), coffeeberry 718-1,154 (664-1,070).
+No variant tried brought the lineup's base much below 0.11: a card hangs half its size below its clump
+centre, so clumps near the ground put some cards under it. The variants also scatter by plus or minus 0.02
+between seeds (a change of `cards_per_m2` alone moved buckeye between 0.11 and 0.15), so these are good draws
+in a noisy measure. Closing the rest of the gap belongs in the generator (keep cards above the ground at the
+base of a crown) or in the lineup (measure from the ground line), not in the files.
+
+**Flowers.** With `density` a card got its flowers at its twig ends. The close tier, which the world draws
+within about 90 m, has smaller cards with few twig ends, mostly at the card's edge. So buckeye's close card
+had three candles, two cut off by the card's edge, and elderberry's close card often had none. Elderberry
+showed no flowers at 10 m in June, and buckeye's candles were small specks. New opt-in `per_card` (table
+above) sets a number of heads per card, whole and apart; candles are now spikes (full to two thirds of their
+length) and `width` sets their girth. Buckeye: `per_card` 8, `size_m` 0.15 to 0.17, `width` 0.17. Elderberry:
+`per_card` 5. That is about 3 candles on a buckeye close card, 8 near and 32 mid, and 2, 5 and 20 elderberry
+plates. Every other species' flower and berry textures are bit-identical to before (all seasons, months,
+scales and the bare-crown texture compared against HEAD's generator). The colour is unchanged: a buckeye
+candle reads cream rather than white, because its blue needs 15x the spring leaf's and the texture holds 8x
+(raising that would coarsen every leaf of the card). Seen in the world (home tile, headless, the browser clock
+set to 12 May and 14 June): buckeye at 10 m and 40 m covered in cream spikes; elderberry's plates plain at
+10 m and 40 m, where before there were none. The cards' roll turns some candles sideways.
+
+**Field guide.** Acorn cards for valley oak (big and long, 3-5 cm, deep knobbly cap, ripens in one summer),
+canyon live oak (plump, 2-4 cm, thick turban cap with golden fuzz, two years) and black oak (long and blunt,
+about 3 cm, deep thin-scaled cap hiding up to half the nut, two years), each with its own drawing
+(`fieldguide.js` `ACORN_LOOK`; blue oak and interior live oak draw exactly as before). Their species cards now
+show the acorn line and the field-guide button.
+
+**Species card.** The form line shows plain words (`identify.js` `FORM_WORD`): toyon and elderberry read
+"multi-stemmed shrub or small tree".

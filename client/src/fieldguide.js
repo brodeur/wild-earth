@@ -35,6 +35,21 @@ export const ACORNS = {
     looks: 'Slender and pointed, with a deep cap that hugs the nut.',
     invite: 'Find a real one: look under an interior live oak in October. Its acorns take two years to grow on the branch.',
   },
+  quercus_lobata: {
+    common: 'valley oak', scientific: 'Quercus lobata',
+    looks: 'Big and long, 3 to 5 cm, tapering to a point, in a deep cap of knobbly scales. It grows in a single summer.',
+    invite: 'Find a real one: look under a valley oak on a valley floor in October. These are the biggest acorns here.',
+  },
+  quercus_chrysolepis: {
+    common: 'canyon live oak', scientific: 'Quercus chrysolepis',
+    looks: 'Plump and smooth, 2 to 4 cm, under a thick cap like a turban, covered in golden fuzz. It takes two years to ripen on the branch.',
+    invite: 'Find a real one: look under a canyon live oak on a steep, shady slope in October. Rub the cap: the gold fuzz comes off on your finger.',
+  },
+  quercus_kelloggii: {
+    common: 'California black oak', scientific: 'Quercus kelloggii',
+    looks: 'Long and blunt, about 3 cm, sunk in a deep, thin-scaled cap that hides up to half the nut. It takes two years to ripen on the branch.',
+    invite: 'Find a real one: look under a black oak among the pines in October. California Indian families have gathered these acorns for acorn soup for thousands of years.',
+  },
 };
 export const STASH_FACTS = [
   'Ravens hide food and remember hundreds of spots.',
@@ -350,21 +365,29 @@ function capPath(cx, rimY, cw, depth) {
   return p;
 }
 
+// Each species' acorn: nut width, cap rim and tip heights (64 x 84 units), how pointed the tip is, the cap's
+// width and depth, the nut's colours (left, lit, right) and lengthwise stripes, and the cap's colours and surface:
+// warty (rows of round knobs), scales (thin flat scales with fine hairs) or fuzz (golden hairs over faint scales).
+const ACORN_LOOK = {
+  quercus_douglasii: { nw: 24, rim: 20, tip: 80, taper: 0.3, cw: 27, depth: 8, body: ['#8a6538', '#c79a5c', '#6a4a26'], stripe: 'rgba(90,60,30,0.35)', cap: 'warty', rows: 4 },   // long and tapered, shallow warty cap
+  quercus_wislizeni: { nw: 17, rim: 32, tip: 81, taper: 0.16, cw: 21, depth: 15, body: ['#5e3d1f', '#9a6a38', '#4a2f17'], stripe: 'rgba(40,24,10,0.4)', cap: 'scales' },   // slender and pointed, deep cap
+  quercus_lobata: { nw: 21, rim: 24, tip: 83, taper: 0.12, cw: 26, depth: 14, body: ['#7a5228', '#b8864a', '#5a3a1a'], stripe: 'rgba(60,36,14,0.38)', cap: 'warty', rows: 5, knob: 1.7 },   // big, long and pointed, deep knobbly cap
+  quercus_chrysolepis: { nw: 27, rim: 30, tip: 77, taper: 0.42, cw: 33, depth: 10, body: ['#8a6a3a', '#cfa868', '#6a4c26'], stripe: 'rgba(80,56,26,0.25)', cap: 'fuzz',
+    capRgb: ['#9a7a30', '#e2c266', '#7a5c20'] },   // plump, blunt, thick turban cap with golden fuzz
+  quercus_kelloggii: { nw: 22, rim: 36, tip: 79, taper: 0.46, cw: 25, depth: 19, body: ['#5a3a1c', '#946236', '#432a14'], stripe: 'rgba(36,22,8,0.42)', cap: 'scales', loose: true },   // oblong and blunt, deep thin-scaled cup
+};
 function drawAcorn(g, id) {
   g.save(); g.scale(2, 2); g.lineJoin = 'round'; g.lineCap = 'round';
-  const blue = id === 'quercus_douglasii';
-  // shapes: blue oak long and tapered, shallow warty cap; interior live oak slender and pointed, deep cap
-  const cx = 32, nw = blue ? 24 : 17, rim = blue ? 20 : 32, tip = blue ? 80 : 81, taper = blue ? 0.3 : 0.16;
-  const cw = blue ? 27 : 21, depth = blue ? 8 : 15;
+  const A = ACORN_LOOK[id] || ACORN_LOOK.quercus_douglasii;
+  const cx = 32, { nw, rim, tip, taper, cw, depth } = A;
   const nut = nutPath(cx, rim, tip, nw, taper);
   // soft shadow, then the nut body: a warm brown with a lit left side and faint lengthwise stripes
   g.save(); g.shadowColor = 'rgba(0,0,0,0.45)'; g.shadowBlur = 5; g.shadowOffsetY = 2;
   const body = g.createLinearGradient(cx - nw / 2, 0, cx + nw / 2, 0);
-  if (blue) { body.addColorStop(0, '#8a6538'); body.addColorStop(0.35, '#c79a5c'); body.addColorStop(1, '#6a4a26'); }
-  else { body.addColorStop(0, '#5e3d1f'); body.addColorStop(0.35, '#9a6a38'); body.addColorStop(1, '#4a2f17'); }
+  body.addColorStop(0, A.body[0]); body.addColorStop(0.35, A.body[1]); body.addColorStop(1, A.body[2]);
   g.fillStyle = body; g.fill(nut); g.restore();
   g.save(); g.clip(nut);
-  g.strokeStyle = blue ? 'rgba(90,60,30,0.35)' : 'rgba(40,24,10,0.4)'; g.lineWidth = 0.7;
+  g.strokeStyle = A.stripe; g.lineWidth = 0.7;
   for (const f of [-0.28, 0, 0.28]) {
     g.beginPath(); g.moveTo(cx + f * nw, rim); g.quadraticCurveTo(cx + f * nw * 1.1, (rim + tip) / 2, cx + f * nw * 0.2, tip - 2); g.stroke();
   }
@@ -375,33 +398,51 @@ function drawAcorn(g, id) {
   g.fillStyle = '#3a2412'; g.beginPath(); g.arc(cx, tip - 0.6, 1.1, 0, Math.PI * 2); g.fill();   // the point at the tip
   // cap
   const cap = capPath(cx, rim, cw, depth);
-  const cg = g.createLinearGradient(cx - cw / 2, 0, cx + cw / 2, 0);
-  cg.addColorStop(0, '#7d6c4c'); cg.addColorStop(0.4, '#b5a27a'); cg.addColorStop(1, '#5f5138');
+  const cg = g.createLinearGradient(cx - cw / 2, 0, cx + cw / 2, 0), cc = A.capRgb || ['#7d6c4c', '#b5a27a', '#5f5138'];
+  cg.addColorStop(0, cc[0]); cg.addColorStop(0.4, cc[1]); cg.addColorStop(1, cc[2]);
   g.fillStyle = cg; g.fill(cap);
   g.save(); g.clip(cap);
-  if (blue) {
+  if (A.cap === 'warty') {
     // warty: rows of round knobs, each with a lit top and a dark underside
-    for (let r = 0; r < 4; r++) {
-      const y = rim - 1.5 - r * 2.6, n = 8 - r, span = cw * (1 - r * 0.16);
-      for (let k = 0; k < n; k++) {
-        const x = cx - span / 2 + (k + 0.5 + (r % 2) * 0.35) * span / n;
-        g.fillStyle = 'rgba(60,48,30,0.7)'; g.beginPath(); g.arc(x, y + 0.5, 1.45, 0, Math.PI * 2); g.fill();
-        g.fillStyle = 'rgba(214,198,160,0.9)'; g.beginPath(); g.arc(x - 0.2, y - 0.2, 1.05, 0, Math.PI * 2); g.fill();
+    const k = A.knob || 1;
+    for (let r = 0; r < A.rows; r++) {
+      const y = rim - 1.5 - r * 2.6 * k, n = Math.round((8 - r) / k + (k > 1 ? 1 : 0)), span = cw * (1 - r * 0.16 / k);
+      for (let j = 0; j < n; j++) {
+        const x = cx - span / 2 + (j + 0.5 + (r % 2) * 0.35) * span / n;
+        g.fillStyle = 'rgba(60,48,30,0.7)'; g.beginPath(); g.arc(x, y + 0.5, 1.45 * k, 0, Math.PI * 2); g.fill();
+        g.fillStyle = 'rgba(214,198,160,0.9)'; g.beginPath(); g.arc(x - 0.2, y - 0.2, 1.05 * k, 0, Math.PI * 2); g.fill();
       }
     }
+  } else if (A.cap === 'fuzz') {
+    // golden fuzz: faint scale rows under a dense coat of short bright hairs
+    for (let r = 0; r < 4; r++) {
+      const y = rim - 1.5 - r * 2.4, n = 9, span = cw * (1.02 - r * 0.12);
+      for (let j = 0; j < n; j++) {
+        const x = cx - span / 2 + (j + 0.5 + (r % 2) * 0.5) * span / n;
+        g.strokeStyle = 'rgba(110,80,20,0.35)'; g.lineWidth = 0.6;
+        g.beginPath(); g.moveTo(x - 1.4, y + 0.4); g.quadraticCurveTo(x, y - 0.9, x + 1.4, y + 0.4); g.stroke();
+      }
+    }
+    g.lineWidth = 0.45;
+    for (let j = 0; j < 140; j++) {
+      const x = cx - cw / 2 + ((j * 37) % 97) / 97 * cw, y = rim + 1 - ((j * 53) % 89) / 89 * (depth + 1), a = -1.2 + ((j * 29) % 23) / 23 * 2.4;
+      g.strokeStyle = j % 3 ? 'rgba(250,222,120,0.55)' : 'rgba(255,240,170,0.7)';
+      g.beginPath(); g.moveTo(x, y); g.lineTo(x + Math.sin(a) * 1.1, y - Math.cos(a) * 1.1); g.stroke();
+    }
   } else {
-    // thin, flat, overlapping scales in rows up the deep cup, with a fine fuzz of hairs
-    for (let r = 0; r < 6; r++) {
-      const y = rim - 1.2 - r * 2.4, n = 8, span = cw * (1.04 - Math.pow(r / 6, 2) * 0.5);
-      for (let k = 0; k < n; k++) {
-        const x = cx - span / 2 + (k + 0.5 + (r % 2) * 0.5) * span / n;
-        g.strokeStyle = 'rgba(70,58,40,0.38)'; g.lineWidth = 0.55;
-        g.beginPath(); g.moveTo(x - 1.2, y + 0.4); g.quadraticCurveTo(x, y - 0.8, x + 1.2, y + 0.4); g.stroke();
+    // thin, flat, overlapping scales in rows up the deep cup, with a fine fuzz of hairs (loose: larger scales, tips free)
+    const rows = Math.max(6, Math.round(depth / 2.5)), big = A.loose ? 1.35 : 1;
+    for (let r = 0; r < rows; r++) {
+      const y = rim - 1.2 - r * 2.4 * (A.loose ? depth / (rows * 2.4) : 1), n = A.loose ? 7 : 8, span = cw * (1.04 - Math.pow(r / rows, 2) * 0.5);
+      for (let j = 0; j < n; j++) {
+        const x = cx - span / 2 + (j + 0.5 + (r % 2) * 0.5) * span / n;
+        g.strokeStyle = A.loose ? 'rgba(60,46,28,0.5)' : 'rgba(70,58,40,0.38)'; g.lineWidth = 0.55;
+        g.beginPath(); g.moveTo(x - 1.2 * big, y + 0.4); g.quadraticCurveTo(x, y - 0.8 * big, x + 1.2 * big, y + 0.4); g.stroke();
       }
     }
     g.strokeStyle = 'rgba(225,210,175,0.25)'; g.lineWidth = 0.4;
-    for (let k = 0; k < 40; k++) {
-      const x = cx - cw / 2 + ((k * 37) % 41) / 41 * cw, y = rim - ((k * 23) % 29) / 29 * depth;
+    for (let j = 0; j < 40; j++) {
+      const x = cx - cw / 2 + ((j * 37) % 41) / 41 * cw, y = rim - ((j * 23) % 29) / 29 * depth;
       g.beginPath(); g.moveTo(x, y); g.lineTo(x + 0.8, y - 0.9); g.stroke();
     }
   }
