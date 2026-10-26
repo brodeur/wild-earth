@@ -137,9 +137,10 @@ release, WebGL) was still running; its commit, if it verified, is the last in `g
 | 0f235d5 | The squirrel's camera dissolves the leaves in front of it in a crown and follows a leap. |
 | e010634 | Trees are drawn on the surface drawn under them (draped in the vertex shader; perches and climbs unaffected); rare species get their old tree up close. |
 | a97cb40 | Species polish: acorn cards for the three new oaks, buckeye candles and elderberry plates visible, lower crown bases, spec fields. |
-| (next) | The Cosumnes tile has its lidar too: 398k crowns; all three tiles now carry the 1 m ground, canopy height and real crowns. |
+| 8a828ae | The Cosumnes tile has its lidar too: 398k crowns; all three tiles now carry the 1 m ground, canopy height and real crowns. |
+| 5456b86 | Pipeline: Sentinel-2 monthly ground colour (about 400 scenes per tile from 2019 on; open grass gold June to October, green from December) and a ground-only base texture with every lidar crown and its shadow inpainted (73-88% of each tile). |
+| (next) | Client: the ground shows its measured colour for the date on the photo without its trees; January green, April greenest, late October gold-beige; forest floor as litter under dense canopy; grass blades match. |
 
-Open from the day: Sentinel-2 seasonal ground colour and crown inpainting (your go);
-the attribution form for generated assets; the next animal batch (turkey, ground squirrel,
+Open from the day: the attribution form for generated assets; the next animal batch (turkey, ground squirrel,
 fence lizard); far placement on the lidar ground beyond the fine square; the squirrel's
 crown camera in leafy oaks.
