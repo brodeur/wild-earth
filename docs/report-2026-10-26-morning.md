@@ -130,7 +130,11 @@ release, WebGL) was still running; its commit, if it verified, is the last in `g
 | d26eb1b | Squirrels climb whole trees, run the limbs and leap between them; AI squirrels flee into the canopy and freeze on the far side of the trunk. |
 | e3904db | The lidar's 1 m ground under the player as a 2 m mesh within 110 m, the 10 m grid beyond; the Hwy 50 cut is real geometry; a 2.5 m registration error in the height sampler fixed. |
 
-| (next) | Every tree on the home tile stands on a real lidar crown, sized to it; the biggest 5% of each species by crown (or over an absolute height: blue oak 15 m, ponderosa 40 m) are the old-growth trees, with the 20 largest per species carrying landmark ids; the savanna oaks line up with the photo; rare species share mesh sets between age classes, so the start view's draw calls fall from 412 to 295. |
+| f6388e3 | Every tree on the home tile stands on a real lidar crown, sized to it; the biggest 5% of each species by crown (or over an absolute height: blue oak 15 m, ponderosa 40 m) are the old-growth trees, with the 20 largest per species carrying landmark ids; the savanna oaks line up with the photo; rare species share mesh sets between age classes, so the start view's draw calls fall from 412 to 295. |
+
+| 0f235d5 | The squirrel's camera dissolves the leaves in front of it in a crown and follows a leap. |
+| 4e2ef5d | Beyond the fine square the 10 m mesh passes through the 1 m ground, and grass, shrubs, rocks and still animals follow the drawn surface. |
+| (next) | The Placerville tile has its lidar too: 1 m ground, canopy height, 477k crowns (median 17.8 m; a taller forest than the home tile's), an hour to run. |
 
 Open from the day: Sentinel-2 seasonal ground colour and crown inpainting (your go);
 the attribution form for generated assets; the next animal batch (turkey, ground squirrel,
