@@ -176,9 +176,14 @@ const AO_FRAG = /* glsl */`
 const AO_RANGE = 128, AO_SIZE = 512, AO_MOVE = 48;
 
 let current = null;            // the live Shadows, for the module-level addCaster / removeCaster
-const queued = new Map();      // object3d -> options, registered before a Shadows existed
-export function addCaster(object3d, opts) { if (current) current.addCaster(object3d, opts); else queued.set(object3d, opts); return object3d; }
-export function removeCaster(object3d) { queued.delete(object3d); current?.removeCaster(object3d); }
+// object3d (held weakly: a torn-down world's late registrations must not keep it alive) -> options, registered before a
+// Shadows existed
+const queued = new Map();      // WeakRef(object3d) -> options
+export function addCaster(object3d, opts) { if (current) current.addCaster(object3d, opts); else { unqueue(object3d); queued.set(new WeakRef(object3d), opts); } return object3d; }
+export function removeCaster(object3d) { unqueue(object3d); current?.removeCaster(object3d); }
+function unqueue(object3d) { for (const r of queued.keys()) { const o = r.deref(); if (!o || o === object3d) queued.delete(r); } }
+// A world torn down before its Shadows was made (main.js): the casters it queued go with it.
+export function forgetQueuedCasters() { queued.clear(); }
 
 const BIAS = new THREE.Matrix4().set(0.5, 0, 0, 0.5, 0, 0.5, 0, 0.5, 0, 0, 0.5, 0.5, 0, 0, 0, 1);
 const OUTSIDE = new THREE.Matrix4().set(0, 0, 0, 10, 0, 0, 0, 10, 0, 0, 0, 10, 0, 0, 0, 1);
@@ -295,7 +300,10 @@ export class Shadows {
     this.casters = new Map(); this.casterVersion = 0;
     this.simpleDepth = new THREE.MeshBasicMaterial({ colorWrite: false, side: THREE.DoubleSide });
     current = this;
-    for (const [o, opts] of queued) this.addCaster(o, opts);
+    // casters queued before this Shadows existed: this world's (in its scene) only; a torn-down world's late loads
+    // (its raven or an animal model arriving after main.js disposed it) are dropped, not adopted
+    const inScene = o => { for (let p = o; p; p = p.parent) if (p === scene) return true; return false; };
+    for (const [r, opts] of queued) { const o = r.deref(); if (o && inScene(o)) this.addCaster(o, opts); }
     queued.clear();
     window.__shadows = this;    // alias for debugging only: register casters with addCaster
   }
@@ -317,6 +325,16 @@ export class Shadows {
     await pass(this.scene, this.cascades[0].cam, this.cascades[0].rts[0]);
     await pass(this.ao.scene, this.ao.cam, this.ao.rt);
     return out;
+  }
+  // The world is being torn down (main.js disposes the proxies' materials and geometries with its scenes): the maps'
+  // render targets go, the shared atmosphere uniforms let go of them, and the module stops routing casters here.
+  dispose() {
+    for (const c of this.cascades) for (const rt of c.rts) { rt.depthTexture?.dispose(); rt.dispose(); }
+    this.ao.rt.dispose();
+    this.cascades.forEach((c, i) => { atmo[`csmMap${i}`].value = null; });
+    if (current === this) current = null;
+    queued.clear();
+    if (window.__shadows === this) delete window.__shadows;
   }
   // The same for proxies not in `known` yet, at once: the compile promises (empty when there are none).
   compileNew(known) {

@@ -3,7 +3,7 @@ import { drain } from './slice.js';
 import { uploadImageSteps, canBand } from './gpuUpload.js';
 import { uniforms as atmo, ATMOSPHERE_GLSL } from './atmosphere.js';
 import { windUniforms, WIND_GLSL } from './wind.js';
-import { GroundDetail, detailUniforms, DETAIL_GLSL, buildDetailMaskSteps } from './groundDetail.js';
+import { GroundDetail, detailUniforms, DETAIL_GLSL, buildDetailMaskSteps, resetDetailUniforms } from './groundDetail.js';
 import { SeasonColour, LITTER } from './season.js';
 
 // Ground colour, shared: the terrain shader and every grass and shrub material that wants to
@@ -349,6 +349,16 @@ export class Terrain {
       G[k].value = ext;
       for (const [im, tt] of this.textures) if (tt === t) this.textures.set(im, ext);
     }
+  }
+  // The world is being torn down (main.js disposes its scene, and with it these textures): the module's shared uniforms
+  // let go of this tile's textures (the 4000 px photo and the rest), so nothing holds the abandoned world's images
+  // until the next world sets its own.
+  dispose() {
+    for (const k of ['map', 'masks', 'roads', 'canopyMap', 'seasonMap', 'contactAO']) groundUniforms[k].value = null;
+    ripUniforms.ripMask.value = null;
+    resetDetailUniforms();
+    seasonState.grass = null; seasonState.date = null; seasonState.version++;
+    this.textures.clear(); this.season = null;
   }
   // Each frame, with the player's position: keeps the fine mesh centred on them (a step at a time,
   // built over a few frames and swapped in whole).

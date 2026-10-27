@@ -44,6 +44,10 @@ export const detailUniforms = {
   detailContrast: { value: DETAIL_SLOTS.map(s => s.albedo) },
 };
 
+// Back to the blanks the page started with (terrain.js dispose: a world torn down lets go of its detail textures).
+const blanks = { detailAlbedo: detailUniforms.detailAlbedo.value, detailNormal: detailUniforms.detailNormal.value, detailMask: detailUniforms.detailMask.value };
+export function resetDetailUniforms() { detailUniforms.detailAlbedo.value = blanks.detailAlbedo; detailUniforms.detailNormal.value = blanks.detailNormal; detailUniforms.detailMask.value = blanks.detailMask; detailUniforms.detailReady.value = 0; }
+
 function smooth(e0, e1, x) { const t = Math.min(Math.max((x - e0) / (e1 - e0), 0), 1); return t * t * (3 - 2 * t); }
 
 // 3x3 box blur of one channel of an RGBA8 buffer, in place (two passes are close to a small gaussian).
@@ -145,8 +149,8 @@ export function* buildDetailMaskSteps(tile, W = MASK_PX) {
 
 // Decoded off the main thread into an ImageBitmap (createImageBitmap on the bytes), so pixelsOf's drawImage copies
 // instead of decoding inside its task; the same pixels as the image element it replaced.
-async function loadImage(url) {
-  const r = await fetch(url).catch(() => null);
+async function loadImage(url, signal = null) {
+  const r = await fetch(url, { signal }).catch(e => { if (signal?.aborted) throw e; return null; });
   if (!r?.ok) throw new Error('ground detail image failed: ' + url);
   return createImageBitmap(await r.blob()).catch(() => { throw new Error('ground detail image failed: ' + url); });
 }
@@ -263,22 +267,27 @@ export class GroundDetail {
     detailUniforms.detailMask.value = m.texture;
     this.ready = this.load();
   }
-  async load() {
-    const t0 = performance.now(), L = DETAIL_SLOTS.length, S = DETAIL_PX * DETAIL_PX * 4;
+  // The textures stream in after the world is made; an abandoned world's (tile.signal, main.js) stop at their next fetch
+  // or slice and leave the shared uniforms as they are.
+  load() { return this.loadSteps().catch(e => { if (this.tile.signal?.aborted) return null; throw e; }); }
+  async loadSteps() {
+    const t0 = performance.now(), L = DETAIL_SLOTS.length, S = DETAIL_PX * DETAIL_PX * 4, signal = this.tile.signal;
     const alb = new Uint8Array(S * L), nrm = new Uint8Array(S * L);
     await Promise.all(DETAIL_SLOTS.map(async (slot, s) => {
       let a, n;
       try {
-        const [ia, ina] = await Promise.all([loadImage(`${this.base}${slot.name}_albedo.jpg?v=${ASSET_VERSION}`), loadImage(`${this.base}${slot.name}_normal.jpg?v=${ASSET_VERSION}`)]);
+        const [ia, ina] = await Promise.all([loadImage(`${this.base}${slot.name}_albedo.jpg?v=${ASSET_VERSION}`, signal), loadImage(`${this.base}${slot.name}_normal.jpg?v=${ASSET_VERSION}`, signal)]);
         a = pixelsOf(ia); n = pixelsOf(ina);
       } catch (e) {
+        if (signal?.aborted) throw e;
         console.warn(e.message, '- using a procedural stand-in'); this.substituted.push(slot.name);
         ({ albedo: a, normal: n } = proceduralPixels(s + 1, slot.name));
       }
       // in slices (slice.js): this runs while the world builds behind the opening screen; the same pixels
-      await runSliced(normaliseAlbedo(a, alb, s * S), `ground detail ${slot.name} albedo`);
-      await runSliced(highPassNormal(n, nrm, s * S), `ground detail ${slot.name} normal`);
+      await runSliced(normaliseAlbedo(a, alb, s * S), `ground detail ${slot.name} albedo`, { signal });
+      await runSliced(highPassNormal(n, nrm, s * S), `ground detail ${slot.name} normal`, { signal });
     }));
+    if (signal?.aborted) return null;
     detailUniforms.detailAlbedo.value = arrayTexture(alb);
     detailUniforms.detailNormal.value = arrayTexture(nrm);
     detailUniforms.detailReady.value = 1;

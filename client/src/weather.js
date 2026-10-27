@@ -135,8 +135,10 @@ export class Weather {
 
   async load() {
     const L = this.tile.manifest?.layers?.['client.weather'];
-    const file = L ? fetch(this.tile.dir + L.path).then(r => r.ok ? r.json() : null).catch(() => null) : Promise.resolve(null);
+    const file = L ? fetch(this.tile.dir + L.path, { signal: this.tile.signal }).then(r => r.ok ? r.json() : null).catch(() => null) : Promise.resolve(null);
+    // the forecast waits at most 6 s, and not at all once the world is abandoned (main.js: tile.signal)
     const ctl = new AbortController(), timer = setTimeout(() => ctl.abort(), 6000);
+    this.tile.signal?.addEventListener('abort', () => ctl.abort(), { once: true });
     const today = fetch(`/api/weather/${encodeURIComponent(this.tile.id)}`, { signal: ctl.signal, cache: 'no-cache' })
       .then(r => r.ok ? r.json() : null).catch(() => null).finally(() => clearTimeout(timer));
     [this.file, this.today] = await Promise.all([file, today]);

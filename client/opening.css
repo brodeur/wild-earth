@@ -18,8 +18,8 @@ html:not(.opening) #opening:not(.out) { display:none; }
 /* the season bar across the top */
 .op-bar { flex:none; height:var(--bar); box-sizing:border-box; padding:14px 32px 0; }
 
-/* The dark start (arrival.js: .boot until the world is ready): only the wisp turning in the middle of the screen and the
-   build's status under it; the slider and the cards are laid out but hidden (and so not focusable). On ready (.booted)
+/* The dark start (arrival.js: .boot until the screen's own assets are in): only the wisp turning in the middle of the
+   screen and the loading's status under it; the slider and the cards are laid out but hidden (and so not focusable). Then (.booted)
    the wisp implodes and they fade and rise in together. */
 .op-bar, .op-tiles { transition:opacity .7s ease .15s, transform .8s cubic-bezier(.2, .8, .25, 1) .15s, visibility 0s linear 0s; }
 .op-wrap.boot .op-bar, .op-wrap.boot .op-tiles { opacity:0; transform:translateY(28px); visibility:hidden; }
@@ -40,6 +40,7 @@ html:not(.opening) #opening:not(.out) { display:none; }
    peeking in. The bottom margin is the band the animals stand in, below the chosen card (.op-lineup). */
 .op-tiles { flex:1 1 0; min-height:0; display:flex; align-items:flex-start; gap:14px; padding:0 24px; overflow-x:auto; overflow-y:hidden; scroll-snap-type:x proximity; scrollbar-width:none; container-type:size; }
 .op-tiles::-webkit-scrollbar { display:none; }
+@media (hover:hover) and (pointer:fine) { .op-tiles { scroll-snap-type:none; } }   /* a mouse's row: no snapping (a hovered card scrolls just into view: arrival.js bringIntoView) */
 .op-tiles > :first-child { margin-left:auto; }   /* centred when they fit, scrollable from the first card when they do not */
 .op-tiles > :last-child { margin-right:auto; }
 .op-tile { --ch:min(100cqh - var(--bar) - 2 * var(--mt), (100vw - 64px) * 16 / 9);
@@ -115,6 +116,8 @@ html:not(.opening) #opening:not(.out) { display:none; }
   background:radial-gradient(closest-side, #fffaf0 0%, #fff1d8cc 18%, #ffe6be40 50%, #ffe6be00 100%); mix-blend-mode:plus-lighter; opacity:0; scale:.25; }
 .op-an.in::after { animation:op-glimmer .42s ease-out both; animation-delay:inherit; }
 .op-an.bird.in > i { animation:op-float var(--fd, 6s) ease-in-out infinite alternate; }
+.op-an.gone { animation:op-gone .4s ease forwards; }   /* a species the newly chosen tile does not have */
+@keyframes op-gone { from { opacity:1; transform:scale(1); } to { opacity:0; transform:scale(.6); } }
 @keyframes op-pop { 0% { opacity:0; transform:scale(.3); } 60% { opacity:1; } 100% { opacity:1; transform:scale(1); } }
 @keyframes op-glimmer { 0% { opacity:0; scale:.25; } 18% { opacity:1; } 100% { opacity:0; scale:1.4; } }
 @keyframes op-float { 0% { transform:translate(0, 0) rotate(-2deg); } 50% { transform:translate(calc(var(--fx, 8px) * .5), -6px) rotate(1deg); } 100% { transform:translate(var(--fx, 8px), 3px) rotate(2deg); } }

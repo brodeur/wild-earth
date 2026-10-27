@@ -1319,3 +1319,34 @@ the Atmosphere's cloud noise (~300 ms, atmosphere.js was off-limits to the lane)
 (splitting a canvas's drawing changed 1-2% of texels, so they stay whole; an IndexedDB cache of baked textures
 would fix repeat loads), the downscaled draws of the 4000 px photos (Chrome decodes in drawImage), and the
 `?skip=1` first frame. Rejected: moving the work to a Worker first (slicing got nearly all of it, with no copies).
+
+## 2026-10-27: a tile is built when its card is clicked, aborted when another is, with no reload and no URL
+
+Aaron's words: "It should be initial load - which just loads the animals, then displaces all of the cards when
+the animals have loaded. Then when hovering over a card, it gets a little bigger. Then when clicking on a card it
+gets even bigger and the spirit spinner starts. The animals also start popping in at this point. If I click on
+another tile while this is happening, all loading should abort and there shouldn't be a page reload/route change.
+Handle the tile loading behind the scenes not through URL params." So the page builds no world at load: the
+dark phase gathers only the screen's own assets (every card's title data and map, the species lists, the 18
+stills, the weather label; 12 s at most), then the slider and cards rise in with nothing selected. Hover grows a
+card to 1.04 (and scrolls a card cut off at an edge just far enough into frame, snapping off for a mouse, no
+chained scrolls); a click grows it to 1.08, scrolls it to the middle, starts its cover, wisp and status, pops the
+lineup in and calls `onSelect(tileId)`; main.js builds that tile behind the screen, driving `setPrep(tileId,
+text)` and `setReady(tileId)` (a status or ready for a tile not selected is kept for later); a click on another
+card clears the first, retargets the lineup (shared animals slide over) and calls `onSelect` again, and main.js
+cancels the first build within a slice and tears it down. `?tile=` is only a centring hint; the reload-based
+switching and its carry are gone (the in-game Location box still reloads, for now). Teardown is one general
+mechanism plus a few hooks rather than a dispose in every module: `addEventListener` is patched to record every
+listener added while the world's code runs (never the screen's) and remove them all; a MutationObserver records
+the elements a world adds outside the screen and removes them, the HUD's original header, help and credits put
+back; the HUD controls' handlers are cleared; the field guide is mounted once per page and the world's acorn
+game detached from it (that attachment kept whole worlds alive); the game socket is closed; one AbortController
+per world cancels the tile load, crown list and planning, ground detail, water, weather; water, shadows and
+terrain release what they hold of the shared uniforms and render targets; every geometry, material, texture and
+target is disposed in slices. Measured: after three worlds exactly one mini-map, field-guide card, acorn board
+and notes row; window listeners 25 back to 6; heap 580-890 MB ready to 101-105 MB dropped, flat over cycles,
+about 80 MB of it the tree generator's per-species caches kept on purpose (faster rebuilds); the abort's click
+handler 0.6-20 ms and the teardown 5-111 ms in slices. Known: 15 shader programs and a few geometries and
+textures outlive a world (small, not growing); a dead world's late model download finishes in the background
+and is never adopted. Rejected: a dispose() in every module (the record-and-remove mechanism covers them all
+and cannot miss a new one); keeping the reload (it restarted the dark phase and lost the choice).

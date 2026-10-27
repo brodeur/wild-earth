@@ -258,11 +258,11 @@ export function crownPlan(tile) {
     p = loadCrowns(tile).then(async raw => {
       const t1 = performance.now();
       const plan = await runSliced(planCrownsSteps(tile, raw, { treeMix: Object.assign((i, j) => cellTreeMix(tile, i, j), { fallback: cellTreeMix.fallback }),
-        dims: (id, v) => slotDims.get(`${id}:${v}`), speciesIds: SPECIES_IDS }), 'planCrowns');
+        dims: (id, v) => slotDims.get(`${id}:${v}`), speciesIds: SPECIES_IDS }), 'planCrowns', { signal: tile.signal });
       const old = Object.values(plan.stats).reduce((a, s) => a + s.old, 0), snag = Object.values(plan.stats).reduce((a, s) => a + s.snag, 0);
       console.info(`crowns: ${plan.count.toLocaleString()} lidar crowns loaded in ${Math.round(t1 - t0)} ms (page at ${(t1 / 1000).toFixed(1)} s), planned in ${plan.ms} ms: ${Object.keys(plan.stats).length} species, ${old.toLocaleString()} old, ${snag.toLocaleString()} snags, ${plan.landmarks.length} landmarks; ${plan.moved} moved off water (${plan.wet} wet), ${plan.borrowed.toLocaleString()} drew a neighbour's mix`);
       return plan;
-    }).catch(err => { console.warn(`crowns: ${err.message}; trees from the cell plan`); return null; });
+    }).catch(err => { if (!tile.signal?.aborted) console.warn(`crowns: ${err.message}; trees from the cell plan`); return null; });   // an abandoned world's plan stops quietly
     crownPlans.set(tile, p);
   }
   return p;

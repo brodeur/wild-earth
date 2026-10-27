@@ -8,8 +8,11 @@
 //   await yieldToMain()           one turn of the event loop: scheduler.yield() where the browser has it (the rest of
 //                                 the build keeps its place in the queue), else a MessageChannel message (setTimeout(0)
 //                                 is clamped to 4 ms once nested, which a build of thousands of slices would feel)
-//   await runSliced(gen, label)   step gen to its end in slices of about SLICE_MS; resolves with gen's return value
-//                                 (a step that yields a promise waits for it: `yield p` in place of `await p`)
+//   await runSliced(gen, label, { signal })   step gen to its end in slices of about SLICE_MS; resolves with gen's
+//                                 return value (a step that yields a promise waits for it: `yield p` in place of
+//                                 `await p`). With an AbortSignal (main.js: a world whose build was abandoned) it stops
+//                                 at the next step after the abort: gen.return() runs and the call rejects with the
+//                                 signal's reason, so no more than one slice of an abandoned build ever runs.
 //   drain(gen)                    the same, synchronously
 //   slicer()                      for an async loop: `const tick = slicer(); ... if (tick.due()) await tick.yield();`
 //
@@ -35,9 +38,11 @@ export function slicer(budget = SLICE_MS) {
   };
 }
 
-export async function runSliced(gen, label = '', budget = SLICE_MS) {
+export const aborted = signal => signal?.reason ?? new DOMException('the build was abandoned', 'AbortError');
+export async function runSliced(gen, label = '', { budget = SLICE_MS, signal = null } = {}) {
   let t = performance.now(), step = t, r, from, input;   // from: what the generator yielded before this step (a label, if any)
   for (;;) {
+    if (signal?.aborted) { gen.return(); throw aborted(signal); }
     r = gen.next(input); input = undefined;
     const now = performance.now();
     if (now - step > LONG_MS) sliceStats.long.push({ label: from ? `${label}: ${from}` : label, ms: Math.round(now - step), at: Math.round(step) });

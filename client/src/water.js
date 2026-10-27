@@ -324,15 +324,18 @@ export class Water {
     const L = tile.manifest?.layers?.['client.channel_profile'];
     if (!L) return null;
     try {
-      const img = await loadImageData(tile.dir + L.path);
+      const img = await loadImageData(tile.dir + L.path, tile.signal);
       this.profile = { width: img.width, data: img.data, res: tile.size / img.width, size: tile.size };
       const tex = new THREE.Texture(img.image);
       tex.colorSpace = THREE.NoColorSpace; tex.generateMipmaps = false;
       tex.minFilter = THREE.LinearFilter; tex.magFilter = THREE.LinearFilter; tex.needsUpdate = true;
       this.profileUniforms.profileTex.value = tex; this.profileUniforms.hasProfile.value = 1;
       return this.profile;
-    } catch (e) { console.info('water: no channel profile', e.message); return null; }
+    } catch (e) { if (!tile.signal?.aborted) console.info('water: no channel profile', e.message); return null; }
   }
+  // The world is being torn down (main.js): the module's depthAt / rewildAt stop answering for it. Its meshes,
+  // materials and textures are disposed with the scene.
+  dispose() { if (current === this) current = null; }
 
   // Channel profile pixel (R, G, B) at a point, or null before it loads / off the tile.
   profileAt(x, north) {

@@ -17,7 +17,7 @@ import { AcornGame } from './acorns.js';
 import { Identify } from './identify.js';
 import { PlaceNames } from './placenames.js';
 import { Soundscape } from './sound.js';
-import { Shadows } from './shadows.js';
+import { Shadows, forgetQueuedCasters } from './shadows.js';
 import { Animals } from './animals.js';
 import { Water } from './water.js';
 import { Rocks } from './rocks.js';
@@ -29,7 +29,11 @@ import { FlierControl } from './flierControl.js';
 import { SHORT, playAs } from './playable.js';
 import { setupCredits } from './credits.js';
 import { Weather } from './weather.js';
+import { fieldGuide } from './fieldguide.js';
 import { runSliced, yieldToMain, slicer, sliceStats } from './slice.js';
+import { uniforms as atmo } from './atmosphere.js';
+import { groundUniforms } from './terrain.js';
+import { detailUniforms } from './groundDetail.js';
 
 const $ = id => document.getElementById(id);
 const html = document.documentElement;
@@ -58,15 +62,143 @@ function layoutHud() {
 // Build phases, bracketed with performance marks ('we:<phase>') so a long task can be attributed to the phase it fell
 // in (performance.getEntriesByType('mark'), and a PerformanceObserver on 'longtask').
 const phase = name => performance.mark(`we:${name}`);
-// Between phases the build gives the main thread back (slice.js), and the big phases are stepped in slices inside, so
-// no task of the build holds the opening screen's hover and clicks for long. `next` marks the phase and yields.
-const next = async name => { phase(name); await yieldToMain(); };
 window.__slice = sliceStats;   // debugging: steps of the sliced build that ran long (slice.js)
-const status = t => {
-  if (screenOpen) { screen.setPrep(t ? `preparing ${screen.tileId}: ${t}` : ''); $('status').classList.add('hidden'); return; }
-  $('status').textContent = t; $('status').classList.toggle('hidden', !t);
-};
 
+// ---- worlds ------------------------------------------------------------------------------------------------------
+// The page makes the renderer, the camera and the opening screen once; a world (a tile's terrain, forest, animals,
+// controls, HUD wiring) is built only when the screen's card is chosen (onSelect), or at once on the direct paths
+// (?skip=1, ?game=1, ?as=, a carried arrival). Choosing another card while a world builds, or after it is ready but
+// before Begin, abandons it: its build stops at its next slice (w.wait / w.sliced check w.dead after every await, and
+// its fetches and the modules' own loads stop with its AbortSignal, tile.signal), then it is torn down (disposeWorld):
+//   - every listener its code added to the window, the document or a page element while it was being built: captured
+//     here (the patched addEventListener records them while `scope` is the world, i.e. only during the world's own
+//     synchronous build code, never the screen's) and removed, so a later world never answers this one's keys;
+//   - every element it put into the page (HUD rows, the mini-map canvas, the acorn board, the credits list, the peek
+//     fade, ...): recorded by a MutationObserver (outside the screen's root) and removed;
+//   - the HUD controls' handler properties it set and the HUD's words (h1, help line, credits) as the page had them;
+//     window.__we; the screen's onPoint; the page's field guide (fieldguide.js, mounted once by the page) lets go of
+//     its acorn game;
+//   - the modules' page-level state: water.js and shadows.js stop pointing at it (shadows.js holds casters queued
+//     before a Shadows exists weakly, so a late model load of a dead world is never adopted), terrain.js lets go of its
+//     textures in the shared ground and detail uniforms, the acorn game's socket is closed, its sound (direct paths)
+//     closed; the weather forecast, the crown list and the ground detail stop loading (tile.signal);
+//   - its GPU objects: every geometry, material, texture and render target of its scenes (the world, the shadow and
+//     contact-AO passes, the grass card bake, the spirit's post pass, the cloud bake), in slices.
+// A world entered (Begin) is the page's from then on (w.commit()); a tile switch from the game still reloads (goto.js).
+let scope = null;
+const addListener = EventTarget.prototype.addEventListener;
+EventTarget.prototype.addEventListener = function (type, fn, opts) {
+  const target = this ?? globalThis;   // a module's bare addEventListener(...) call is the window's
+  if (scope && fn) scope.listeners.push([target, type, fn, opts]);
+  return addListener.call(target, type, fn, opts);
+};
+const ABANDONED = Symbol('abandoned');
+function createWorld(tileId) {
+  const w = { tileId, dead: false, ready: false, committed: false, abort: new AbortController(), listeners: [], nodes: new Set(), m: {},
+    scene: null, tile: null, enter: null, handle: null, onPoint: null };
+  const root = $('opening');
+  w.observer = new MutationObserver(recs => {
+    for (const r of recs) {
+      if (root && (r.target === root || root.contains(r.target))) continue;
+      for (const n of r.addedNodes) if (n.nodeType === 1 && n !== root) w.nodes.add(n);
+      for (const n of r.removedNodes) w.nodes.delete(n);
+    }
+  });
+  w.observer.observe(html, { childList: true, subtree: true });
+  // every await of the build goes through wait: the listener scope is off while others run, and an abandoned world
+  // stops here (ABANDONED is thrown; its caller sees w.dead and lets it go)
+  w.wait = async p => {
+    if (scope === w) scope = null;
+    let v;
+    try { v = await p; } catch (e) { if (w.dead) throw ABANDONED; throw e; }
+    if (w.dead) throw ABANDONED;
+    scope = w;
+    return v;
+  };
+  w.next = async name => { phase(name); await w.wait(yieldToMain()); };
+  w.sliced = (gen, label) => w.wait(runSliced(gen, label, { signal: w.abort.signal }));
+  w.commit = () => { if (w.committed) return; w.committed = true; w.observer.takeRecords(); w.observer.disconnect(); w.listeners = []; w.nodes.clear(); };
+  return w;
+}
+// The HUD's words as index.html has them (the spirit and the controls swap their own in and read these back): taken
+// before any world, put back when one is torn down.
+let hudWords = null;
+function snapHud() {
+  const h1 = $('hud')?.querySelector('h1'), near = $('animalsNear')?.parentElement;
+  hudWords = { h1: h1?.firstChild?.nodeValue, help: $('help')?.innerHTML, near: near?.title, credits: $('credits')?.innerHTML };
+}
+function restoreHud() {
+  if (!hudWords) return;
+  const h1 = $('hud')?.querySelector('h1'), near = $('animalsNear')?.parentElement;
+  if (h1?.firstChild && hudWords.h1 != null) h1.firstChild.nodeValue = hudWords.h1;
+  if ($('help') && hudWords.help != null) $('help').innerHTML = hudWords.help;
+  if (near) near.title = hudWords.near ?? '';
+  if ($('credits') && hudWords.credits != null) $('credits').innerHTML = hudWords.credits;
+}
+function closeBitmaps(tile) {
+  for (const im of [tile?.textureImage, tile?.imageryTextureImage, tile?.groundTextureImage, tile?.seasonImage, tile?.imagery]) if (im?.bitmap) { im.bitmap.close(); delete im.bitmap; }
+}
+// Tear an abandoned world down (see above): the page-level parts at once, the GPU objects in slices.
+async function disposeWorld(w, renderer) {
+  if (w.committed) return;
+  const t0 = performance.now();
+  w.dead = true; w.ready = false; w.abort.abort();
+  if (scope === w) scope = null;
+  const m = w.m;
+  // the modules' own page-level state first (closing the game's socket redraws its HUD row, so before the sweep)
+  try { m.acorns?.net?.leave?.(); } catch (e) { /* closing */ }
+  try { m.sound?.ctx?.close?.(); } catch (e) { /* closing */ }
+  if (m.weather) m.weather.onThunder = null;
+  if (fieldGuide.game === m.acorns) { fieldGuide.game = null; fieldGuide.log = []; fieldGuide.anchor = null; }   // the page's field guide (identify.js attached the game)
+  m.water?.dispose?.(); m.shadows?.dispose?.(); m.terrain?.dispose?.(); forgetQueuedCasters();
+  // then its listeners and the elements it put into the page; the HUD's own words back as the page had them
+  for (const r of w.observer.takeRecords()) { for (const n of r.addedNodes) if (n.nodeType === 1) w.nodes.add(n); for (const n of r.removedNodes) w.nodes.delete(n); }
+  w.observer.disconnect();
+  for (const [t, type, fn, opts] of w.listeners) t.removeEventListener(type, fn, opts);
+  for (const n of w.nodes) if (n.isConnected) n.remove();
+  w.listeners = []; w.nodes.clear();
+  restoreHud();
+  for (const id of ['texImagery', 'texRewild', 'gameBtn', 'hoverBtn', 'spiritBtn', 'gotoBtn']) if ($(id)) $(id).onclick = null;
+  if ($('season')) $('season').onchange = null;
+  if ($('detail')) $('detail').onchange = null;
+  if ($('time')) $('time').oninput = null;
+  if (screen && w.onPoint && screen.onPoint === w.onPoint) screen.onPoint = null;
+  if (window.__we && window.__we === w.handle) delete window.__we;
+  closeBitmaps(w.tile);
+  w.disposeSyncMs = performance.now() - t0;   // the part inside the click that abandoned it
+  // GPU objects
+  await runSliced(disposeGpu(w, renderer), 'dispose');
+  w.m = {}; w.scene = null; w.tile = null; w.handle = null; w.enter = null;
+  w.disposeMs = Math.round(performance.now() - t0);
+}
+function* disposeGpu(w, renderer) {
+  const m = w.m, roots = [w.scene, m.shadows?.scene, m.shadows?.ao?.scene, m.grass?.bakeScene, m.grass?.copyScene, m.spirit?.view?.post?.scene, m.atmosphere?.cloudBake?.scene];
+  const geos = new Set(), mats = new Set(), texs = new Set(), rts = new Set();
+  for (const r of roots) r?.traverse?.(o => { if (o.geometry) geos.add(o.geometry); for (const x of [o.material].flat()) if (x) mats.add(x); });
+  if (m.atmosphere?.cloudBake?.material) mats.add(m.atmosphere.cloudBake.material);
+  yield;
+  const tex = v => { for (const t of [v].flat()) if (t?.isTexture) texs.add(t); };
+  for (const x of mats) { for (const v of Object.values(x)) tex(v); if (x.uniforms) for (const u of Object.values(x.uniforms)) tex(u?.value); }
+  for (const U of [atmo, groundUniforms, detailUniforms]) for (const u of Object.values(U)) tex(u?.value);
+  for (const t of texs) if (t.renderTarget) rts.add(t.renderTarget);
+  for (const t of [...(m.atmosphere?.cloudBake?.targets || []), m.grass?.atlas, m.grass?.strip]) if (t) rts.add(t);
+  if (m.spirit?.view?.post?.tex) texs.add(m.spirit.view.post.tex);
+  yield;
+  const gl = renderer.getContext();
+  let n = 0;
+  for (const g of geos) { g.dispose(); if ((++n & 127) === 0) yield; }
+  for (const x of mats) { x.dispose(); if ((++n & 127) === 0) yield; }
+  for (const t of texs) {
+    if (t.isExternalTexture && t.userData?.banded && t.sourceTexture) { gl.deleteTexture(t.sourceTexture); t.sourceTexture = null; }
+    t.dispose(); if ((++n & 63) === 0) yield;
+  }
+  for (const rt of rts) { rt.dispose(); yield; }
+  renderer.renderLists.dispose();
+}
+
+// The page: one renderer, one camera, the opening screen.
+let renderer = null, camera = null;
+const LENS_DEFAULT = 70, LENS_RANGE = [30, 110];
 async function main() {
   const params = new URLSearchParams(location.search);
   const pending = takePendingPoint(params);   // a lat/lon to land at, read once
@@ -74,111 +206,154 @@ async function main() {
   // ?game=1 and ?skip=1 go straight in, as before the opening screen (agents and tests rely on it): as a spirit at the
   // tile centre, flying (&as=spirit says so), or for tests &as=raven (the old start), &as=squirrel, &as=woodpecker, or any
   // other species by its short name (playable.js SHORT: &as=deer, &as=hawk, &as=vole, ...): into the AI one nearest the centre.
-  // An in-game Go to another tile carries { arrive } and goes straight into an arrival. Otherwise
-  // the opening screen asks where and when while the preselected tile builds behind it. The player always arrives as
-  // the spirit (spirit.js) and becomes an animal by touching one.
+  // An in-game Go to another tile carries { arrive } and goes straight into an arrival (goto.js still reloads the page
+  // for it). Otherwise the opening screen asks where and when, and the chosen card's world builds behind it; the URL's
+  // ?tile= only says which card to bring into the middle.
   const direct = params.get('game') === '1' || params.get('skip') === '1';
   const carried = !direct && carry?.arrive ? carry.arrive : null;
   html.classList.toggle('opening', !direct && !carried); html.classList.toggle('arriving', !!carried);
   let tileId = params.get('tile');
   if (pending && !tileId) tileId = await builtTileFor(pending);   // null -> loader picks the first tile
-  let chosen = null, enter = null;   // the screen's choice; enter() once the world exists
+
+  renderer = new THREE.WebGLRenderer({ antialias: true, powerPreference: 'high-performance' });
+  renderer.setPixelRatio(Math.min(devicePixelRatio, 1.5)); renderer.setSize(innerWidth, innerHeight);
+  renderer.toneMapping = THREE.ACESFilmicToneMapping; renderer.outputColorSpace = THREE.SRGBColorSpace;
+  document.body.prepend(renderer.domElement);
+  window.__weRenderer = renderer;   // debugging: GPU memory (renderer.info) with or without a world
+  fieldGuide.mount();   // the field guide's card and listeners are the page's (fieldguide.js), mounted before any world
+  snapHud();
+  // The lens: ?fov=<degrees, vertical> (30..110, default LENS_DEFAULT). 70 shows about 103 degrees across a widescreen,
+  // a wide-angle lens; the view is undistorted only when it matches the angle the screen fills in the eye, about
+  // 45-50 degrees across at a desk (under 30 vertical), so a narrower lens makes the hills loom as they do in life
+  // at the cost of peripheral view and the feeling of speed. __we.setFov(deg) changes it live for comparisons.
+  const lensParam = parseFloat(params.get('fov'));
+  const lens = Number.isFinite(lensParam) ? Math.min(LENS_RANGE[1], Math.max(LENS_RANGE[0], lensParam)) : LENS_DEFAULT;
+  camera = new THREE.PerspectiveCamera(lens, innerWidth / innerHeight, 0.5, 60000);
+  addEventListener('resize', () => { camera.aspect = innerWidth / innerHeight; camera.updateProjectionMatrix(); renderer.setSize(innerWidth, innerHeight); layoutHud(); });
+  layoutHud();
+
   if (!direct && !carried) {
     const index = await (await fetch('../tiles/index.json', { cache: 'no-cache' })).json();
     const ids = index.tiles.map(t => t.tile_id);
     if (!ids.includes(tileId)) tileId = ids.includes(lastTile()) ? lastTile() : ids[0];
     if (!tileId) throw new Error('no tiles built');
+    if (pending) history.replaceState(null, '', `?tile=${tileId}`);   // never keep the point in the URL
+    // One world at a time: a choice abandons the world before it (built, building, or ready behind the screen).
+    let world = null, choice = null, gen = 0;
+    const select = async id => {
+      const g = ++gen, old = world; world = null; choice = null;
+      if (old && !old.committed) {
+        const wasReady = old.ready;
+        // the screen remembers a ready tile; this one's world is going, so choosing it again builds it again
+        if (wasReady) screen.readyIds?.delete?.(old.tileId);
+        const t = performance.now(); await disposeWorld(old, renderer);
+        window.__weDisposed = { tileId: old.tileId, ready: wasReady, ms: Math.round(performance.now() - t), syncMs: +old.disposeSyncMs.toFixed(1), at: Math.round(t) };   // debugging
+      }
+      if (g !== gen) return;
+      const w = world = createWorld(id);
+      try { await buildWorld(w, { params, pending, carry, direct, carried }); } catch (e) {
+        if (w.dead || e === ABANDONED) return;
+        console.error(e); screen.setPrep(id, `error: ${e.message}`); return;
+      }
+      if (w.dead) return;
+      screen.setReady(id);
+      if (choice?.tileId === id) w.enter(choice, true);   // Begin was pressed while it built
+    };
     screen = new OpeningScreen({ root: $('opening'), index, tileId, pending, carried: carry?.screen,
-      onBegin: c => { chosen = c; if (enter) enter(c, true); } });
+      onSelect: id => { select(id); },
+      onBegin: c => { choice = c; if (world?.ready && world.tileId === c.tileId) world.enter(c, true); } });
     screenOpen = true;
+    window.__weWorld = () => world;   // debugging: the world the screen's choice is building or holding
+    window.__weDrop = async () => { gen++; const old = world; world = null; if (old) { if (old.ready) screen.readyIds?.delete?.(old.tileId); await disposeWorld(old, renderer); } };   // debugging: tear it down, build nothing
+    return;
   }
+  const w = createWorld(tileId);
+  await buildWorld(w, { params, pending, carry, direct, carried });
+  w.commit();
+}
+
+async function buildWorld(w, { params, pending, carry, direct, carried }) {
+  scope = w;
+  try { await buildSteps(w, { params, pending, carry, direct, carried }); } finally { if (scope === w) scope = null; }
+}
+async function buildSteps(w, { params, pending, carry, direct, carried }) {
+  const status = t => {
+    if (w.dead) return;
+    if (screenOpen) { screen.setPrep(w.tileId, t ? `preparing ${w.tileId}: ${t}` : ''); $('status').classList.add('hidden'); return; }
+    $('status').textContent = t; $('status').classList.toggle('hidden', !t);
+  };
   phase('loadTile');
-  const tile = await loadTile(tileId);
+  const tile = w.tile = await w.wait(loadTile(w.tileId, undefined, { signal: w.abort.signal }));
   phase('afterTile');
   const flags = ['game', 'skip'].filter(k => params.get(k) === '1').map(k => `&${k}=1`).join('')
     + (params.has('fov') ? `&fov=${params.get('fov')}` : '');
-  if (pending) history.replaceState(null, '', `?tile=${tile.id}${flags}`);   // never keep the point in the URL
+  if (pending && !screen) history.replaceState(null, '', `?tile=${tile.id}${flags}`);   // never keep the point in the URL
   $('tileName').textContent = tile.id;
   const credits = setupCredits({ tile, link: $('creditsLink'), panel: $('credits') });   // HUD Data link: sources, licences, asset credits
   status('building terrain…');
-  await new Promise(r => setTimeout(r, 20));
+  await w.wait(new Promise(r => setTimeout(r, 20)));
 
-  phase('renderer');
-  const renderer = new THREE.WebGLRenderer({ antialias: true, powerPreference: 'high-performance' });
-  renderer.setPixelRatio(Math.min(devicePixelRatio, 1.5)); renderer.setSize(innerWidth, innerHeight);
-  renderer.toneMapping = THREE.ACESFilmicToneMapping; renderer.outputColorSpace = THREE.SRGBColorSpace;
-  document.body.prepend(renderer.domElement);
-  const scene = new THREE.Scene();
-  // The lens: ?fov=<degrees, vertical> (30..110, default LENS_DEFAULT). 70 shows about 103 degrees across a widescreen,
-  // a wide-angle lens; the view is undistorted only when it matches the angle the screen fills in the eye, about
-  // 45-50 degrees across at a desk (under 30 vertical), so a narrower lens makes the hills loom as they do in life
-  // at the cost of peripheral view and the feeling of speed. __we.setFov(deg) changes it live for comparisons.
-  const LENS_DEFAULT = 70, LENS_RANGE = [30, 110];
-  const lensParam = parseFloat(params.get('fov'));
-  const lens = Number.isFinite(lensParam) ? Math.min(LENS_RANGE[1], Math.max(LENS_RANGE[0], lensParam)) : LENS_DEFAULT;
-  const camera = new THREE.PerspectiveCamera(lens, innerWidth / innerHeight, 0.5, 60000);
-  addEventListener('resize', () => { camera.aspect = innerWidth / innerHeight; camera.updateProjectionMatrix(); renderer.setSize(innerWidth, innerHeight); layoutHud(); });
-  layoutHud();
+  const scene = w.scene = new THREE.Scene();
 
-  await next('atmosphere');
-  const atmosphere = new Atmosphere(tile);   // shared haze, sun, sky light and clouds
-  await next('weather');
-  const weather = new Weather({ tile, scene, renderer, camera });   // the day's measured weather (weather.js), loading
-  await next('terrain');
-  const terrain = new Terrain(tile); await runSliced(terrain.build(), 'terrain'); scene.add(terrain.group);
-  await next('sky');
+  await w.next('atmosphere');
+  const atmosphere = w.m.atmosphere = new Atmosphere(tile);   // shared haze, sun, sky light and clouds
+  await w.next('weather');
+  const weather = w.m.weather = new Weather({ tile, scene, renderer, camera });   // the day's measured weather (weather.js), loading
+  await w.next('terrain');
+  const terrain = w.m.terrain = new Terrain(tile); await w.sliced(terrain.build(), 'terrain'); scene.add(terrain.group);
+  await w.next('sky');
   const sky = new SkyDome(scene, renderer, atmosphere);
   status('growing forest…');
-  await next('vegetation');
-  const veg = new Vegetation(tile, scene, atmosphere); await runSliced(veg.build(), 'vegetation');
-  await next('impostors');
-  const far = new Impostors(tile, scene); await runSliced(far.build(), 'impostors');
-  await next('grass');
-  const grass = new Grass(tile, scene); await runSliced(grass.build(), 'grass');
-  await next('water');
-  const water = new Water(tile, scene); await runSliced(water.build(), 'water');   // streams, dry beds and ponds by season (water.js)
-  await next('rocks');
+  await w.next('vegetation');
+  const veg = new Vegetation(tile, scene, atmosphere); await w.sliced(veg.build(), 'vegetation');
+  await w.next('impostors');
+  const far = new Impostors(tile, scene); await w.sliced(far.build(), 'impostors');
+  await w.next('grass');
+  const grass = w.m.grass = new Grass(tile, scene); await w.sliced(grass.build(), 'grass');
+  await w.next('water');
+  const water = w.m.water = new Water(tile, scene); await w.sliced(water.build(), 'water');   // streams, dry beds and ponds by season (water.js)
+  await w.next('rocks');
   const rocks = new Rocks(tile, scene, atmosphere);   // outcrops and boulders from the geology and soils rasters (rocks.js)
-  await next('roads+flight');
+  await w.next('roads+flight');
   const roads = new RoadsOverlay(tile, scene);   // ghost roads, G to toggle
   const flight = new RavenFlight(camera, tile.heights, renderer.domElement);
   scene.add(flight.body);
   const raven = new Raven(flight.body, atmosphere);   // the bird you see from the chase camera
-  await next('shadows');
-  const shadows = new Shadows({ renderer, scene, tile, terrain, veg, raven, grass, far });   // cascaded sun shadows (shadows.js)
+  await w.next('shadows');
+  const shadows = w.m.shadows = new Shadows({ renderer, scene, tile, terrain, veg, raven, grass, far });   // cascaded sun shadows (shadows.js)
   flight.reset(tile.size / 2, -tile.size / 2, 150);
   // On a tile with a lidar crown list (crowns.js) the trees stand on the crowns: wait for the plan (the list has been
   // downloading since the Vegetation was built, and is planned in slices) so the first frame has its trees rather than
   // shrubs alone; then the near forest and the far impostors take it.
-  await next('crownPlan');
+  await w.next('crownPlan');
   if (crownPlan(tile)) {
     status('placing the trees on their lidar crowns…');
-    const plan = await crownPlan(tile);
-    veg.useCrownPlan(plan); await next('impostors.crowns');
-    await runSliced(far.useCrownPlan(plan), 'impostors.crowns');
+    const plan = await w.wait(crownPlan(tile));
+    veg.useCrownPlan(plan); await w.next('impostors.crowns');
+    await w.sliced(far.useCrownPlan(plan), 'impostors.crowns');
   }
-  await next('veg.update');
+  await w.next('veg.update');
   veg.radius = +$('detail').value; veg.update(flight.pos.x, flight.pos.z, true);
-  await next('hud');
+  await w.next('hud');
   const minimap = new MiniMap({ container: $('minimap'), sizeM: tile.size, imagery: tile.imagery, features: tile.features, flight, rewildImage: tile.textureImage });
-  await next('places');
+  await w.next('places');
   const places = new PlaceNames(tile.features, tile.size);   // nearest named road, stream or water, for the HUD
-  await next('goto');
+  await w.next('goto');
   const goto = setupGoTo({ tile, flight, input: $('gotoInput'), button: $('gotoBtn'), line: $('gotoStatus'),
     carry: () => ({ arrive: { season: seasonNow(), date: dateCarry() } }) });
   if (pending && direct) goto.go(pending, { fromLoad: true });
   if (pending && !direct) $('gotoInput').value = `${pending.lat}, ${pending.lon}`;
   // The scripted arrival (arrival.js); behind the screen the bird waits at its start so the forest streams in there.
-  await next('arrival');
+  await w.next('arrival');
   const arrival = new Arrival({ flight, camera, heights: tile.heights, size: tile.size, caption: $('caption') });
   const carriedPoint = carried && pending ? localXY(tile, pending.lat, pending.lon) : null;
-  if (screen) { screen.onPoint = p => { arrival.plan(p); arrival.hold(); }; arrival.plan(screen.point); }
+  if (screen) { screen.onPoint = w.onPoint = p => { arrival.plan(p); arrival.hold(); }; arrival.plan(screen.point); }
   else if (carried) arrival.plan(carriedPoint);
   if (!direct) { arrival.hold(); veg.update(flight.pos.x, flight.pos.z, true); }
 
   // Base texture: the erased imagery when the tile has it (without its tree crowns when the tile has
   // client.texture_ground; ?base=imagery shows the photo with them, for comparison), else the rewilded habitat texture.
-  await next('texture');
+  await w.next('texture');
   const baseImagery = params.get('base') === 'imagery';
   const photo = (!baseImagery && tile.groundTextureImage) || tile.imageryTextureImage;
   terrain.useLitter = photo === tile.groundTextureImage;   // forest-floor litter only on the crown-free ground
@@ -197,9 +372,9 @@ async function main() {
   $('texImagery').onclick = () => setTexture('imagery');
   $('texRewild').onclick = () => setTexture('rewilded');
   setTexture(photo ? 'imagery' : 'rewilded');
-  await runSliced(terrain.uploadSteps(renderer), 'ground upload');   // the large ground images to the GPU in bands (terrain.js)
+  await w.sliced(terrain.uploadSteps(renderer), 'ground upload');   // the large ground images to the GPU in bands (terrain.js)
 
-  await next('season');
+  await w.next('season');
   const state = { season: 'auto', hour: +$('time').value };   // 'auto' tracks today's date (or ?date=MM-DD)
   let fixedDate = parseDate(params.get('date')), fixedDateStr = fixedDate ? params.get('date') : null;
   // The date the ground's measured colour shows: today (or ?date), or the chosen season's mid-month.
@@ -227,7 +402,7 @@ async function main() {
     t.min = lo.toFixed(1); t.max = hi.toFixed(1);
     state.hour = Math.min(hi, Math.max(lo, Math.round(p.start * 10) / 10)); t.value = state.hour;
   }
-  weather.ready.then(weatherDay);
+  weather.ready.then(() => { if (!w.dead) weatherDay(); });
   $('detail').onchange = e => { veg.radius = +e.target.value; veg.update(flight.pos.x, flight.pos.z, true); };
   addEventListener('keydown', e => { if (e.code === 'KeyR') flight.reset(tile.size / 2, -tile.size / 2, 150); });
 
@@ -245,14 +420,14 @@ async function main() {
     weatherDay();
   }
   // The season's leaf textures and the ground's measured colour for the date, made in slices; applySeason then finds them.
-  await runSliced(terrain.setDateSteps(dateNow()), 'season colour');
-  await runSliced(veg.setLookSteps(SEASON_LOOK[seasonNow()]), 'season');
-  await next('applySeason');
+  await w.sliced(terrain.setDateSteps(dateNow()), 'season colour');
+  await w.sliced(veg.setLookSteps(SEASON_LOOK[seasonNow()]), 'season');
+  await w.next('applySeason');
   applySeason();
 
   // Acorn stash game (docs/game-acorn-stash.md): opt-in, so flying stays the default.
-  await next('acorns');
-  const acorns = new AcornGame(tile, scene, flight, veg, {
+  await w.next('acorns');
+  const acorns = w.m.acorns = new AcornGame(tile, scene, flight, veg, {
     box: $('game'), carried: $('gameCarried'), stashed: $('gameStashed'), found: $('gameFound'), time: $('gameTime'), hint: $('gameHint'),
   });
   const setGame = on => {
@@ -264,16 +439,16 @@ async function main() {
   if (params.get('game') === '1') setGame(true);
 
   // Species identification: HUD rows, click a tree for its card, T toggles name tags (identify.js).
-  await next('identify');
+  await w.next('identify');
   const identify = new Identify({ veg, camera, dom: renderer.domElement, scene, flight, acorns, seasonNow,
     els: { nearest: $('nearestTree'), around: $('aroundYou'), card: $('speciesCard') } });
 
   // Ambient animals (animals.js): squirrels, acorn woodpeckers, other ravens, deer, filtered by perception.
   // During an acorn game the woodpeckers, squirrels and ravens gather from the game's acorns (game: acorns).
-  await next('animals');
+  await w.next('animals');
   const animals = new Animals({ tile, scene, flight, veg, atmosphere, camera, identify, game: acorns });
   // The playable squirrel (squirrelControl.js): drives flight.pos and the camera in place of the raven when chosen.
-  await next('controls');
+  await w.next('controls');
   const squirrel = new SquirrelControl({ tile, scene, camera, flight, veg, animals, acorns, atmosphere, rocks, caption: $('caption') });
   // The playable acorn woodpecker (woodpeckerControl.js): clinging, hitching and short undulating flights, the same way.
   const woodpecker = new WoodpeckerControl({ tile, scene, camera, flight, veg, animals, acorns, atmosphere, caption: $('caption') });
@@ -288,7 +463,7 @@ async function main() {
     animals.setObserver(code); showPerceives(code);
     $('spiritBtn').hidden = code === 'spirit';
   };
-  const spirit = new SpiritControl({ scene, renderer, camera, flight, raven, animals, squirrel, woodpecker, ground, flier, atmosphere, onBody });
+  const spirit = w.m.spirit = new SpiritControl({ scene, renderer, camera, flight, raven, animals, squirrel, woodpecker, ground, flier, atmosphere, onBody });
   $('spiritBtn').onclick = () => { spirit.leave(); renderer.domElement.focus?.(); };
   const toSpirit = () => { squirrel.setOn(false); woodpecker.setOn(false); ground.setOn(false); flier.setOn(false); spirit.setOn(true); onBody('spirit'); };
 
@@ -352,7 +527,7 @@ async function main() {
   // screen it is made at Begin and started by that press, so choosing cards stays quiet.
   let sound = null;
   const makeSound = () => {
-    if (!sound) { sound = new Soundscape({ tile, flight, raven, camera, els: { button: $('soundBtn'), volume: $('soundVol') } }); window.__we.sound = sound; weather.onThunder = (d, k) => sound.thunder(d, k); }
+    if (!sound) { sound = w.m.sound = new Soundscape({ tile, flight, raven, camera, els: { button: $('soundBtn'), volume: $('soundVol') } }); window.__we.sound = sound; weather.onThunder = (d, k) => sound.thunder(d, k); }
     return sound;
   };
 
@@ -362,7 +537,7 @@ async function main() {
   const setFov = deg => { const v = Math.min(LENS_RANGE[1], Math.max(LENS_RANGE[0], +deg || LENS_DEFAULT)); camera.fov = v; camera.updateProjectionMatrix(); return v; };
   const setHour = h => { state.hour = +h; $('time').value = state.hour; return state.hour; };
   animals.weatherTemp = () => (weather.day ? weather.fx.temp : null);   // the lizards' air (animals.js airT)
-  window.__we = { setDate, setFov, setHour, weather, tile, flight, raven, camera, veg, terrain, far, grass, roads, scene, renderer, minimap, atmosphere, sky, acorns, identify, places, peek, setPeek, sound, animals, arrival, rocks, squirrel, woodpecker, ground, flier, spirit, credits };   // debugging handle
+  w.handle = window.__we = { setDate, setFov, setHour, weather, tile, flight, raven, camera, veg, terrain, far, grass, roads, scene, renderer, minimap, atmosphere, sky, acorns, identify, places, peek, setPeek, sound, animals, arrival, rocks, squirrel, woodpecker, ground, flier, spirit, credits };   // debugging handle
   const as = direct ? params.get('as') : null;
   if (!['raven', 'squirrel', 'woodpecker'].includes(as)) toSpirit();   // a spirit from the start (behind the opening screen too)
   if (!screen) makeSound();
@@ -374,7 +549,8 @@ async function main() {
   };
   // c: the opening screen's { tileId, season, date ('MM-DD', or null for today), point, caption }, or a carried arrival
   // { season, date, point }. Older fields (species, sex) are ignored: everyone arrives as the spirit.
-  const enterWorld = (c, gesture) => {   // armed as enter() once the world is ready (below), not while it compiles
+  const enterWorld = (c, gesture) => {   // armed as w.enter once the world is ready (below), not while it compiles
+    w.commit();   // from here this world is the page's: its listeners and HUD nodes stay
     rememberTile(tile.id);
     if (c.date && parseDate(c.date)) setDate(c.date);   // that day's look, the season tracking it
     else if (c.season) { state.season = c.season === seasonOfDate() ? 'auto' : c.season; $('season').value = state.season; applySeason(); }
@@ -395,24 +571,24 @@ async function main() {
   };
   const known = new WeakSet(), used = new WeakSet(), drawable = o => o.isMesh || o.isPoints || o.isLine || o.isSprite;   // meshes compiled ahead (below)
   // The rock plans around the bird (rocks.js warm), made in slices so the first frame's rock fill only places them.
-  await next('rocks.warm');
-  await runSliced(rocks.warm(flight.pos.x, flight.pos.z), 'rocks');
+  await w.next('rocks.warm');
+  await w.sliced(rocks.warm(flight.pos.x, flight.pos.z), 'rocks');
   // Behind the opening screen the bird holds still, so the first frame's streaming (the fine terrain square, the far
   // impostor rebuild, the rock sets, the grass pools) is done here, a step per task, in the frame's own order; the
   // first frames then find it done (the same calls, at the same place) and only draw.
   if (screen) {
-    await next('warm');
+    await w.next('warm');
     arrival.hold(); camera.updateMatrixWorld();
-    terrain.update(flight.pos.x, flight.pos.z); veg.update(flight.pos.x, flight.pos.z); veg.updateClose(camera.position); await yieldToMain();
-    far.update(camera, veg.radius); await yieldToMain();
-    grass.update(flight.pos.x, flight.pos.z, 0, camera, SEASON_LOOK[seasonNow()]); await yieldToMain();
-    rocks.update(camera); await yieldToMain();
+    terrain.update(flight.pos.x, flight.pos.z); veg.update(flight.pos.x, flight.pos.z); veg.updateClose(camera.position); await w.wait(yieldToMain());
+    far.update(camera, veg.radius); await w.wait(yieldToMain());
+    grass.update(flight.pos.x, flight.pos.z, 0, camera, SEASON_LOOK[seasonNow()]); await w.wait(yieldToMain());
+    rocks.update(camera); await w.wait(yieldToMain());
   }
   // Shader programs, compiled before the first frame instead of inside it (the first render compiled every program of
   // the world in one task of seconds): each mesh through renderer.compileAsync, a slice at a time, so the driver
   // compiles them in parallel while the opening screen keeps responding; then the textures are uploaded, one per
   // task. The first frame then only draws.
-  await next('compile');
+  await w.next('compile');
   status('compiling shaders…');
   {
     // pending: the programs the first frames draw with (meshes shown now), waited for; the rest (hidden tiers, the
@@ -421,35 +597,45 @@ async function main() {
     const shown = o => { for (; o; o = o.parent) if (!o.visible) return false; return true; };
     scene.updateMatrixWorld();
     scene.traverse(o => { if (drawable(o)) { known.add(o); objs.push(o); } });
-    for (const o of objs) { const p = renderer.compileAsync(o, camera, scene); if (shown(o)) pending.push(p); if (tick.due()) await tick.yield(); }
-    pending.push(...await shadows.precompile(tick, known));
+    for (const o of objs) { const p = renderer.compileAsync(o, camera, scene); if (shown(o)) pending.push(p); if (tick.due()) await w.wait(tick.yield()); }
+    pending.push(...await w.wait(shadows.precompile(tick, known)));
     pending.push(...grass.precompileBake(renderer));
     const post = spirit.view?.post;   // the spirit's look: its full-screen pass (spirit.js), drawn to the screen
     if (post?.scene) pending.push(renderer.compileAsync(post.scene, post.cam));
     const cb = atmosphere.cloudBake;
     if (cb?.scene && cb.camera && cb.targets) { const prev = renderer.getRenderTarget(); renderer.setRenderTarget(cb.targets[0]); pending.push(renderer.compileAsync(cb.scene, cb.camera)); renderer.setRenderTarget(prev); }
-    await next('textures');
-    await runSliced(far.uploadSteps(renderer), 'impostor atlases');   // in bands (gpuUpload.js); the rest one per task
+    await w.next('textures');
+    await w.sliced(far.uploadSteps(renderer), 'impostor atlases');   // in bands (gpuUpload.js); the rest one per task
     const textures = new Set();
     scene.traverse(o => { for (const m of [o.material].flat()) if (m) for (const v of Object.values(m)) if (v?.isTexture) textures.add(v);
       for (const m of [o.material].flat()) if (m?.uniforms) for (const u of Object.values(m.uniforms)) for (const v of [u?.value].flat()) if (v?.isTexture && !v.isRenderTargetTexture) textures.add(v); });
-    for (const t of textures) { if (t.image || t.mipmaps?.length) renderer.initTexture(t); await yieldToMain(); }
-    await next('compile.wait');
-    await Promise.all(pending);
+    for (const t of textures) { if (t.image || t.mipmaps?.length) renderer.initTexture(t); await w.wait(yieldToMain()); }
+    await w.next('compile.wait');
+    await w.wait(Promise.all(pending));
     // A program's first use reads its link status, logs and uniform and attribute locations (three's onFirstUse,
     // a millisecond or so each): done here for the programs that are ready, a slice at a time, not in the first render.
-    for (const p of renderer.info.programs) { if (p.isReady()) { p.getUniforms(); p.getAttributes(); used.add(p); } if (tick.due()) await tick.yield(); }
+    for (const p of renderer.info.programs) { if (p.isReady()) { p.getUniforms(); p.getAttributes(); used.add(p); } if (tick.due()) await w.wait(tick.yield()); }
     // The first draw of a mesh uploads its buffers and textures (the forest's instance buffers are tens of MB): each
     // part of the scene goes through one render here with nothing drawn (every instance and draw count of it 0, the
     // rest of the scene hidden; all put back at once, in the same task), a part per task, so three uploads what it
     // would draw without the first frame uploading it all in one task, and without any GPU work but the uploads.
-    await next('upload');
+    await w.next('upload');
     const units = [], split = g => g.children.length > 8 && !g.isMesh;
     const add = o => { if (split(o)) for (const c of o.children) add(c); else units.push(o); };
     for (const c of scene.children) add(c);
     const vp = renderer.getViewport(new THREE.Vector4()), sc = renderer.getScissor(new THREE.Vector4()), st = renderer.getScissorTest();
+    const ready = async u => {   // the unit's programs compiled (as the state now asks) and first-used before its render
+      await w.wait(renderer.compileAsync(u, camera, scene));
+      const progs = new Set();
+      u.traverse(o => { for (const x of [o.material].flat()) { const p = x && renderer.properties.get(x).currentProgram; if (p) progs.add(p); } });
+      for (const p of progs) {
+        while (!p.isReady()) await w.wait(new Promise(r => setTimeout(r, 16)));
+        if (!used.has(p)) { p.getUniforms(); p.getAttributes(); used.add(p); if (tick.due()) await w.wait(tick.yield()); }
+      }
+    };
     for (const u of units) {
       if (!u.visible) continue;
+      await ready(u);
       const hidden = []; for (const o of units) if (o !== u && o.visible) { o.visible = false; hidden.push(o); }
       const counts = [], geos = new Map();
       u.traverse(o => {
@@ -465,14 +651,13 @@ async function main() {
         for (const [g, [ic, dc]] of geos) { if (g.isInstancedBufferGeometry) g.instanceCount = ic; g.drawRange.count = dc; }
         for (const o of hidden) o.visible = true;
       }
-      await yieldToMain();
+      await w.wait(yieldToMain());
     }
   }
   // The tile images' off-thread decodes (tilepackage.js) have been read: freed. Later readers draw the image itself.
-  for (const im of [tile.textureImage, tile.imageryTextureImage, tile.groundTextureImage, tile.seasonImage, tile.imagery]) if (im?.bitmap) { im.bitmap.close(); delete im.bitmap; }
+  closeBitmaps(tile);
   phase('compiled');
-  enter = enterWorld;
-  if (screen) screen.setReady();
+  w.enter = enterWorld; w.ready = true;
   status('');
   phase('ready');
   if (as === 'squirrel') {   // tests: ?skip=1&as=squirrel puts a squirrel by the oak nearest the centre
@@ -488,8 +673,7 @@ async function main() {
     playAs(as, { animals, spirit, x: p?.x ?? tile.size / 2, z: -(p?.north ?? tile.size / 2) });
   }
   else if (direct) { /* a spirit at the tile centre, flying */ }
-  else if (carried) enter({ season: carried.season, date: carried.date, point: carriedPoint }, false);
-  else if (chosen) enter(chosen, true);   // Begin was pressed while the world was loading
+  else if (carried) enterWorld({ season: carried.season, date: carried.date, point: carriedPoint }, false);
 
   let last = performance.now(), hudT = 0, heldAt = 0;
   // Behind the opening screen, meshes that appear after the build (the rock sets of the first fill, animal models as
@@ -517,7 +701,9 @@ async function main() {
     return Promise.race([Promise.all(ps), new Promise(r => setTimeout(r, 3000))]).then(() => { compiling = null; });   // never hold the frames for long
   };
   let frameN = 0;
+  const readyAt = performance.now();
   function frame(now) {
+    if (w.dead) return;   // torn down (an abandoned build behind the screen): its loop ends here
     if (screenOpen) {   // behind the opening screen: a few frames a second, enough to stream the world in and compile shaders
       if (now - heldAt < 150) { requestAnimationFrame(frame); return; }
       heldAt = now;
@@ -544,7 +730,9 @@ async function main() {
     acorns.update(dt, camera, s);
     animals.update(dt, s, state.hour);
     if (!peek.shown) terrain.setLook(look);
-    const draw = !screenOpen || (!(compiling ||= compileNew()) && firstUse());
+    // behind the screen, and for the first 2 s of a direct start (no screen: a few dark frames instead of a long one)
+    const gated = screenOpen || now - readyAt < 2000;
+    const draw = !gated || (!(compiling ||= compileNew()) && firstUse());
     if (draw) shadows.update(camera);
     if (draw) spirit.render(renderer, scene, camera);   // renderer.render, plus the spirit's view's passes while it is on
     spirit.unblendCamera();   // the control's own camera back for its next frame
@@ -574,4 +762,4 @@ async function main() {
   requestAnimationFrame(frame);
 }
 
-main().catch(e => { console.error(e); status('error: ' + e.message); });
+main().catch(e => { console.error(e); $('status').textContent = 'error: ' + e.message; $('status').classList.remove('hidden'); });

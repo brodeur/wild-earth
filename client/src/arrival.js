@@ -1,5 +1,5 @@
 import * as THREE from 'three';
-import { pointInTileId, switchTile } from './goto.js';
+import { pointInTileId } from './goto.js';
 import { SEASONS, seasonOfDate, parseDate } from './season.js';
 import { PlaceNames } from './placenames.js';
 
@@ -12,16 +12,15 @@ import('./weather.js').then(m => { summarizeDay = m.summarizeDay; weatherWords =
 // two choices, where and when, made before the world appears (the player arrives as a spirit); then a
 // scripted 12 s flight brings the player in over the chosen point, so the first thing they see is their own hills.
 //
-// OpeningScreen fills #opening: across the top a season slider from spring to the following winter, and
-// under it a row of tall portrait cards, one per built tile (its map full bleed, its best-known roads as the
-// title), all a step back until one is clicked. The tile named in `tileId` is the one main.js is already building
-// behind the screen: clicking its card brings it forward under a cover with the spirit's wisp as the spinner and the
-// tile's animals gathering round it until the world is ready, then Begin. Both are pre-rendered (client/assets/opening/,
-// client/tools/opening_sprites.html) and played by CSS alone, so nothing on the screen animates from JavaScript while
-// the world builds on the same thread (the wisp a sprite-sheet loop, each animal a still popping in with a glimmer).
-// Clicking another card
-// reloads the page into that tile (choices carried in sessionStorage, that card coming up chosen), so Begin always
-// finds its world ready and its press can start the sound. The selected card, Begin and the slider's marks take the
+// OpeningScreen fills #opening. It starts dark, the spirit's wisp turning alone while the screen's own assets load (no
+// world is built for it); then across the top a season slider from spring to the following winter rises in with, under
+// it, a row of tall portrait cards, one per built tile (its map full bleed, its locality and roads as the title), none
+// chosen. Hovering a card grows it a little; clicking it grows it more under a cover with the wisp as the spinner and
+// the tile's animals gathering below it, and asks main.js (onSelect) to build that world behind the screen; its Begin
+// appears when main.js reports it ready (setReady). Clicking another card meanwhile moves all of that to the new card
+// and main.js drops the old build: no reload, no URL change. The wisp and the animals are pre-rendered
+// (client/assets/opening/, client/tools/opening_sprites.html) and played by CSS alone, so nothing on the screen animates
+// from JavaScript while a world builds on the same thread. The selected card, Begin and the slider's marks take the
 // season colour under the slider's thumb.
 // Other places and new tiles are reached in the world (the panel's Location box, goto.js).
 // Arrival drives RavenFlight's pose and chase camera until it hands control to the player.
@@ -101,6 +100,7 @@ class SeasonYear {
 const label = d => `${MONTH[d.getMonth()]} ${d.getDate()}`;
 const PX_PER_M_CARD = 0.112;              // the lineup's scale: a metre as a fraction of the card's height (the deer ~15%)
 const POP_GAP = [0.18, 0.42];             // s between the animals' arrivals
+const BOOT_MAX = 12;                      // s: the dark start waits at most this long for its assets
 // The track's own season colours at its four titles (opening.css .op-track, the same stops): the selected card's
 // highlight, the Begin button and the slider's marks take the colour under the thumb, continuously.
 const TRACK = [[0x8f, 0xb5, 0x9a], [0xd8, 0xbd, 0x6a], [0xc9, 0x8a, 0x4e], [0x8e, 0xa4, 0xb4]];
@@ -111,27 +111,32 @@ function trackColor(p) {
 const mmdd = d => `${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`;
 
 export class OpeningScreen {
-  // index: tiles/index.json; tileId: the tile being built behind the screen; pending: a { lat, lon } to
-  // preselect; carried: { season, date } kept from a reload; onBegin(choice) is called inside the click.
-  constructor({ root, index, tileId, pending = null, carried = null, onBegin }) {
-    this.root = root; this.index = index; this.tileId = tileId; this.onBegin = onBegin;
+  // index: tiles/index.json; tileId: an optional hint, the card to bring into the middle (nothing is chosen until a
+  // click); pending: a { lat, lon } to arrive over (its tile becomes the hint); carried: { season, date } kept from an
+  // earlier page; onSelect(tileId): a card was chosen, build its world (main.js aborts any other build); onBegin(choice)
+  // is called inside the Begin click. main.js reports the build with setPrep(tileId, text) and setReady(tileId); the
+  // older calls without a tileId mean the hint's tile (the one a page load built).
+  constructor({ root, index, tileId = null, pending = null, carried = null, onBegin, onSelect = null }) {
+    this.root = root; this.index = index; this.onBegin = onBegin; this.onSelect = onSelect;
+    this.ids = index.tiles.map(t => t.tile_id);
+    this.hint = this.ids.includes(tileId) ? tileId : null;
+    this.tileId = this.hint;    // the chosen tile once one is chosen (main.js reads it), else the hint
+    this.sel = null;            // the chosen tile
     this.year = new SeasonYear();
     this.todayDay = this.year.today();
     this.day = this.todayDay;   // the slider's day; on todayDay the game tracks today's date
     const cd = carried?.date && parseDate(carried.date);
     if (cd) { const i = this.year.index(cd); if (i >= 0 && i <= this.year.last) this.day = i; }
     else if (!carried?.date && SEASONS.includes(carried?.season) && carried.season !== seasonOfDate()) this.day = this.year.a[TITLES.indexOf(carried.season)];
-    this.point = null;          // { x, north } in this tile, or null for the tile centre
-    this.ready = false; this.begun = false; this.places = null; this.data = {};
-    this.selected = false;      // nothing is chosen until a card is clicked (or a reload carries the click: carried.selected)
+    this.points = {};           // tile id -> { x, north }: where to arrive (else the centre)
+    this.feat = {}; this.places = {}; this.wx = {}; this.wxToday = {}; this.status = {}; this.readyIds = new Set();
+    this.begun = false;
     onWeatherWords = () => this.update();
     this.render();
-    this.load(pending);
-    // Until the world is ready the screen is only the wisp turning in the dark with the build's status under it (the
-    // .boot phase); the slider and the cards come in on setReady (reveal), usable at once. Meanwhile the cards' maps and
-    // the prepared tile's animal stills load. A reload from a card click (carried.selected) comes up with that card chosen.
-    this.selectOnReveal = !!carried?.selected;
-    this.preload = this.preloadLineup();
+    // The dark start (.boot): the wisp turning alone until the screen's own assets are in (the animal stills, the
+    // cards' maps and titles, the weather label's data; no world is built for it), then the slider and the cards rise in.
+    this.assets = this.loadAssets(pending);
+    window.__weScreen = this;   // debugging handle (the main.js lane tests setPrep/setReady against it)
     // Keys typed on the screen stay on the screen (flight, peek, sound and the rest listen on window).
     this.guard = e => { if (!this.root.contains(e.target)) e.stopImmediatePropagation(); };
     for (const ev of ['keydown', 'keyup']) {
@@ -145,11 +150,10 @@ export class OpeningScreen {
   get onToday() { return this.day === this.todayDay; }
   get date() { return this.onToday ? null : mmdd(this.year.date(this.day)); }
   get season() { return seasonOfDate(this.onToday ? new Date() : this.year.date(this.day)); }
-  // what a tile switch carries: the date, and that the new tile's card was chosen (it comes up selected after the reload)
-  carry() { return { screen: { season: this.season, date: this.date, selected: true } }; }
+  get point() { return this.points[this.tileId] || null; }   // main.js plans the arrival over it
+  get labelTile() { return this.sel || this.hint || this.ids[0]; }   // whose weather the slider's label shows
 
   render() {
-    const tiles = this.index.tiles.map(t => t.tile_id);
     const pct = p => `${(100 * p).toFixed(3)}%`;
     this.root.innerHTML = `
       <div class="op-wrap boot">
@@ -164,11 +168,11 @@ export class OpeningScreen {
             <div class="op-titles">${TITLES.map((t, k) => `<span data-season="${t}" style="left:${pct(k / 3)}">${t[0].toUpperCase() + t.slice(1)}</span>`).join('')}</div>
           </div>
         </div>
-        <div class="op-tiles">${tiles.map(id => `
+        <div class="op-tiles">${this.ids.map(id => `
           <div class="op-tile" data-tile="${esc(id)}">
             <span class="op-map"><img alt="" src="../tiles/${esc(id)}/client/imagery.png" draggable="false"></span>
             <button class="op-pick" aria-pressed="false" aria-label="${esc(id)}"></button>
-            <span class="op-cover" aria-live="polite"><span class="op-mid"><i class="op-wisp" aria-hidden="true"></i><button class="op-begin" tabindex="-1" disabled>Begin</button><span class="op-status">${id === this.tileId ? 'loading…' : ''}</span></span></span>
+            <span class="op-cover" aria-live="polite"><span class="op-mid"><i class="op-wisp" aria-hidden="true"></i><button class="op-begin" tabindex="-1" disabled>Begin</button><span class="op-status"></span></span></span>
             <span class="op-name"><b class="op-title"></b><span class="op-sub"></span></span>
           </div>`).join('')}
         </div>
@@ -177,44 +181,31 @@ export class OpeningScreen {
     for (const b of this.root.querySelectorAll('.op-pick')) b.onclick = () => this.pickTile(b.closest('.op-tile').dataset.tile);
     for (const b of this.root.querySelectorAll('.op-begin')) b.onclick = () => this.begin();
     this.wireSlider();
-    // The row scrolls sideways: a mouse wheel scrolls it too; the chosen card starts in the middle.
+    // The row scrolls sideways: a mouse wheel scrolls it too.
     const row = this.$('.op-tiles');
     row.addEventListener('wheel', e => {
       if (e.ctrlKey || Math.abs(e.deltaX) > Math.abs(e.deltaY) || row.scrollWidth <= row.clientWidth) return;
       row.scrollLeft += e.deltaY * (e.deltaMode === 1 ? 32 : 1); e.preventDefault();
     }, { passive: false });
-    setTimeout(() => this.centreCard(), 0);
     // the lineup follows the chosen card when the row scrolls or the window changes (its positions are CSS from these)
     this.place = () => this.placeLineup();
     this.relayout = () => this.layoutCards();
     row.addEventListener('scroll', this.place, { passive: true }); addEventListener('resize', this.relayout);
-    // a hovering pointer (not touch) brings the card under it forward and steps the rest back (layoutCards)
+    // a hovering pointer (not touch) grows the card under it a little and steps the rest back (layoutCards)
     for (const c of this.root.querySelectorAll('.op-tile')) {
-      c.addEventListener('pointerenter', e => { if (e.pointerType === 'mouse') { this.hovered = c; this.layoutCards(); } });
+      c.addEventListener('pointerenter', e => { if (e.pointerType === 'mouse') { this.hovered = c; this.layoutCards(); this.bringIntoView(c); } });
       c.addEventListener('pointerleave', e => { if (this.hovered === c) { this.hovered = null; this.layoutCards(); } });
     }
-    this.update();   // the slider and its colour at once; the map's pan follows when the features arrive
+    this.update();   // the slider and its colour at once
   }
 
-  cardOf(id) { return this.root.querySelector(`.op-tile[data-tile="${CSS.escape(id)}"]`); }
+  cardOf(id) { return id ? this.root.querySelector(`.op-tile[data-tile="${CSS.escape(id)}"]`) : null; }
 
-  // A tile is loading: its card is the selected one, under a cover with a spinner and `text` beneath it.
-  // Clicking another card shows this at once, before switchTile reloads the page into that tile.
-  showLoading(id, text) {
-    for (const c of this.root.querySelectorAll('.op-tile')) {
-      const on = c.dataset.tile === id;
-      c.classList.toggle('sel', on); c.classList.toggle('loading', on); c.classList.remove('ready');
-      c.querySelector('.op-pick').setAttribute('aria-pressed', on);
-    }
-    const card = this.cardOf(id); if (card) card.querySelector('.op-status').textContent = text;
-    this.layoutCards();
-  }
-
-  centreCard() {
-    const row = this.$('.op-tiles'), card = this.$('.op-tile.sel') || this.cardOf(this.tileId);   // the chosen card, else the prepared one
+  centreCard(smooth = false) {
+    const row = this.$('.op-tiles'), card = this.cardOf(this.sel || this.hint);   // the chosen card, else the hint's
     if (!row || !card) return;
     const r = row.getBoundingClientRect(), c = card.getBoundingClientRect();
-    row.scrollLeft += c.left + c.width / 2 - (r.left + r.width / 2);
+    row.scrollTo({ left: row.scrollLeft + c.left + c.width / 2 - (r.left + r.width / 2), behavior: smooth ? 'smooth' : 'auto' });
   }
 
   // The season slider: drag or click anywhere on it, arrows a day, Page keys a week, Home/End the ends, T today.
@@ -237,81 +228,189 @@ export class OpeningScreen {
     this.$('.op-todaymark').addEventListener('pointerdown', e => { e.stopPropagation(); if (!e.button) this.setDay(this.todayDay); });
   }
 
-  // The lineup's data and stills, loaded while the screen is still dark (so they pop in at once later).
-  preloadLineup() {
-    return Promise.all([getJSON('./assets/opening/index.json'), getJSON(`../tiles/${this.tileId}/species/species.json`)]).then(([index, list]) => {
-      this.preloaded = (list || []).map(s => index?.species?.[s.code]).filter(Boolean).map(sp => Object.assign(new Image(), { src: `./assets/opening/${sp.file}` }));
-      return [index, list];
-    });
+  setDay(i) {
+    i = Math.min(this.year.last, Math.max(0, Math.round(i)));
+    if (i === this.day) return;
+    this.day = i; this.update();
   }
 
-  // The lineup: the tile's animals as pre-rendered stills (client/assets/opening/index.json), true to scale (the deer's
-  // rule: a metre is PX_PER_M_CARD of the card's height), ground animals on the background under the chosen card, birds
-  // round its top on a slow CSS float. Each <img> is laid out once in units of the card's height (--H) from the card's
-  // centre (--cx) and bottom (--by), so a scroll, a resize or a new card only changes those three (a CSS transition
-  // carries the animals over). Each pops in with a glimmer (CSS keyframes), staggered by its animation-delay, set once
-  // as its image loads, in a random order POP_GAP s apart.
-  async startLineup() {
-    if (this.lineupStarted) return;
-    this.lineupStarted = true;
-    const [index, list] = await this.preload;
-    if (this.closed || !index?.species || !list) return;
+  // ---- the dark start: the screen's own assets, then the reveal ---------------------------------------------------
+  // Each card's title (features.json: its locality, its roads under it) and place names, its map image, every tile's
+  // species list, the animal stills (assets/opening/index.json) and the label tile's weather; at most BOOT_MAX s.
+  async loadAssets(pending) {
+    const status = t => { const el = this.$('.op-boot-status'); if (el) el.textContent = t; };
+    const img = src => new Promise(r => { const im = new Image(); im.onload = im.onerror = () => r(im); im.src = src; });
+    const feats = Promise.all(this.ids.map(async id => {
+      const f = await getJSON(`../tiles/${id}/client/features.json`);
+      this.feat[id] = f; this.places[id] = f ? new PlaceNames(f, f.size_m || 10000) : null;
+      const card = this.cardOf(id), roads = majorRoads(f).join(', '), place = locality(f);
+      card.querySelector('.op-title').textContent = place || roads || id;
+      card.querySelector('.op-sub').textContent = place ? roads : '';
+      card.querySelector('.op-pick').setAttribute('aria-label', [place, roads].filter(Boolean).join(': ') + ` (${id})`);
+    }));
+    const maps = Promise.all([...this.root.querySelectorAll('.op-map img')].map(im => im.complete ? null : new Promise(r => { im.onload = im.onerror = r; })));
+    this.lineupData = Promise.all([getJSON('./assets/opening/index.json'), Promise.all(this.ids.map(id => getJSON(`../tiles/${id}/species/species.json`)))])
+      .then(([index, lists]) => ({ index, lists: Object.fromEntries(this.ids.map((id, i) => [id, lists[i] || []])) }));
+    const stills = this.lineupData.then(({ index }) => {
+      const files = Object.values(index?.species || {}).map(s => s.file);
+      let n = 0; status(`gathering the animals… 0 / ${files.length}`);
+      return Promise.all(files.map(f => img(`./assets/opening/${f}`).then(() => status(`gathering the animals… ${++n} / ${files.length}`))));
+    });
+    const weather = this.loadWeather(this.labelTile);
+    await Promise.race([Promise.all([feats, maps, stills, weather]), new Promise(r => setTimeout(r, BOOT_MAX * 1000))]);
+    if (this.closed) return;
+    if (pending) this.preselect(pending);
+    this.reveal();
+  }
+
+  // A point handed over by main.js (?lat=&lon=): in a built tile it is where that tile's arrival goes, and that card
+  // is the hint (brought to the middle); elsewhere nothing changes.
+  preselect(p) {
+    const id = this.ids.find(t => pointInTileId(t, p)); if (!id) return;
+    this.points[id] = pointInTileId(id, p);
+    if (!this.sel) { this.hint = id; this.tileId = id; }
+    this.update();
+  }
+
+  // The assets are in: the wisp implodes and the slider and the cards fade and rise in, nothing chosen.
+  reveal() {
+    if (this.revealed) return;
+    this.revealed = true;
+    const wrap = this.$('.op-wrap'); wrap.classList.remove('boot'); wrap.classList.add('booted');
+    this.centreCard(); this.layoutCards(); this.update();
+  }
+
+  // ---- choosing a card ------------------------------------------------------------------------------------------
+  // A click: the card grows (1.08) under its cover with the wisp and the build's status, the tile's animals pop in
+  // below it, and onSelect asks main.js to build that world (aborting any other). Clicking another card while one
+  // builds clears the first (cover, spinner, Begin) and moves the lineup over; clicking the chosen card does nothing.
+  pickTile(id) {
+    if (!this.revealed || id === this.sel || this.begun) return;
+    const prev = this.cardOf(this.sel);
+    if (prev) {
+      prev.classList.remove('sel', 'loading', 'ready'); prev.querySelector('.op-pick').setAttribute('aria-pressed', 'false');
+      const b = prev.querySelector('.op-begin'); b.disabled = true; b.tabIndex = -1; if (document.activeElement === b) b.blur();
+    }
+    this.sel = id; this.tileId = id;
+    const card = this.cardOf(id);
+    card.classList.add('sel'); card.querySelector('.op-pick').setAttribute('aria-pressed', 'true');
+    card.querySelector('.op-status').textContent = this.status[id] || 'loading…';
+    if (this.readyIds.has(id)) this.showReady(card); else card.classList.add('loading');
+    this.layoutCards(); this.centreCard(true);
+    this.lineup(id);
+    this.loadWeather(id).then(() => this.update());
+    this.update();
+    this.onSelect?.(id);
+  }
+
+  // main.js reports "preparing <tileId>: <status>" while a world builds: setPrep(tileId, text), or setPrep(text) for the
+  // hint's tile. The chosen card shows the status part under its spinner; an empty report keeps the last line.
+  setPrep(a, b) {
+    const [id, text] = b === undefined ? [this.hint, a] : [a, b];
+    if (!text || !id || this.readyIds.has(id)) return;
+    const t = String(text).replace(/^preparing\s+\S+:\s*/, '');
+    this.status[id] = t;
+    if (id === this.sel) this.cardOf(id).querySelector('.op-status').textContent = t;
+  }
+  // A world is built: setReady(tileId), or setReady() for the hint's tile. On the chosen card the spinner implodes into
+  // Begin and the other cards recede; a tile not chosen (now) is remembered, so choosing it shows Begin at once.
+  setReady(id = this.hint) {
+    if (!id) return;
+    this.readyIds.add(id);
+    const card = this.cardOf(id);
+    if (id === this.sel && card?.classList.contains('loading')) this.showReady(card);
+  }
+  get ready() { return !!this.sel && this.readyIds.has(this.sel); }
+  showReady(card) {
+    card.classList.remove('loading'); card.classList.add('ready');
+    this.layoutCards();   // the others recede further
+    card.querySelector('.op-status').textContent = '';
+    const b = card.querySelector('.op-begin'); b.disabled = false; b.tabIndex = 0;
+    b.focus({ preventScroll: true });
+  }
+
+  begin() {
+    if (this.begun || !this.ready) return;
+    this.begun = true;
+    const b = this.cardOf(this.sel)?.querySelector('.op-begin'); if (b) b.disabled = true;
+    this.onBegin({ tileId: this.sel, season: this.season, date: this.date, point: this.points[this.sel] || null, caption: this.caption() });
+  }
+
+  // ---- the lineup ------------------------------------------------------------------------------------------------
+  // The chosen tile's animals as pre-rendered stills (assets/opening/index.json), true to scale (the deer's rule: a
+  // metre is PX_PER_M_CARD of the card's height), ground animals on the background centred under the chosen card, birds
+  // round its top on a slow CSS float. Each still is laid out in units of the card's height (--H) from the card's centre
+  // (--cx) and bottom (--by, birds) or the foot line (--fy, ground animals), so a scroll, a resize or a new card only
+  // changes those (a CSS transition carries the animals over). A new tile's lineup keeps the species both tiles share
+  // (they move to their new places), drops the others (they fade) and pops the new ones in with a glimmer, staggered by
+  // an animation-delay set once as each image is ready, in a random order POP_GAP s apart.
+  async lineup(id) {
+    const { index, lists } = await this.lineupData;
+    if (this.closed || id !== this.sel || !index?.species) return;
     const box = this.$('.op-lineup'), rnd = Math.random;
-    const known = list.map(s => s.code).filter(c => index.species[c]);
+    this.anEls ||= new Map();
+    const known = [...new Set((lists[id] || []).map(s => s.code))].filter(c => index.species[c]);
     const ground = known.filter(c => index.species[c].kind === 'ground'), birds = known.filter(c => index.species[c].kind === 'bird');
     const m = c => index.species[c].width / index.species[c].px_per_m;   // the still's width in metres
     // ground slots: biggest at the two ends, smallest toward the middle; each slot's share of the span by its width
     ground.sort((a, b) => m(b) - m(a));
     const order = []; ground.forEach((c, i) => { order[i % 2 ? ground.length - 1 - (i >> 1) : i >> 1] = c; });
     const wts = order.map(c => m(c) * 0.8 + 0.05), sum = wts.reduce((a, b) => a + b, 0) || 1;
-    const sel = this.$('.op-tile.sel'), Hc = (sel?.offsetHeight || 600) * 1.08;
+    const Hc = (this.cardOf(id)?.offsetHeight || 600) * 1.08;
     const SPAN = Math.min(0.74, (innerWidth - 24) / Hc);   // in card heights: about 1.3 card widths, within the window
     let acc = 0;
     const items = order.map((c, i) => { const f = (acc + wts[i] / 2) / sum; acc += wts[i]; return { c, x: (f - 0.5) * SPAN, back: i % 2 === 1 }; })
       .concat(birds.map((c, k) => ({ c, bird: k })));
-    for (const it of items.sort(() => rnd() - 0.5)) {   // created, so loaded, in a random order
+    // the ones not in this tile go
+    for (const [c, el] of this.anEls) if (!known.includes(c)) { el.classList.add('gone'); this.anEls.delete(c); setTimeout(() => el.remove(), 500); }
+    this.tall = null;
+    for (const it of items.sort(() => rnd() - 0.5)) {   // new ones created, so loaded, in a random order
       const sp = index.species[it.c], k = PX_PER_M_CARD / sp.px_per_m;   // card heights per still pixel
       const s = it.bird == null && it.back ? 0.92 : 1;   // the back row a step further off
-      const w = sp.width * k * s, h = sp.height * k * s, el = document.createElement('span'), img = new Image();
-      el.className = `op-an ${it.bird != null ? 'bird' : 'ground'}`;
+      const w = sp.width * k * s, h = sp.height * k * s;
+      let el = this.anEls.get(it.c), fresh = false;
+      if (!el) {
+        fresh = true; el = document.createElement('span'); this.anEls.set(it.c, el);
+        el.className = `op-an ${it.bird != null ? 'bird' : 'ground'}`;
+        const img = new Image(), inner = document.createElement('i');
+        img.alt = ''; img.decoding = 'async';
+        img.onload = () => {
+          const now = performance.now() / 1000, at = Math.max(now + 0.05, this.popAt || 0);
+          this.popAt = at + POP_GAP[0] + rnd() * (POP_GAP[1] - POP_GAP[0]);
+          el.style.animationDelay = `${(at - now).toFixed(3)}s`;
+          el.classList.add('in');
+        };
+        img.src = `./assets/opening/${sp.file}`;
+        inner.append(img); el.append(inner); box.append(el);
+      }
       let x, y;   // the still's centre x and top y, in card heights: birds from the card's centre x and bottom, ground
                   // animals from the card's centre x and the foot line (--fy, the band's middle: placeLineup)
       if (it.bird != null) {
         const a = [-2.2, -0.9, -1.6, -0.4, -2.7, -1.25][it.bird % 6], r = 0.36 + 0.06 * (it.bird % 3);
         x = Math.cos(a) * r * 1.15; y = -1 + 0.12 + Math.sin(a) * r * 0.32 - h / 2;   // round the card's top
-        el.style.setProperty('--fd', `${(5 + rnd() * 3).toFixed(2)}s`); el.style.setProperty('--fx', `${(rnd() < 0.5 ? -1 : 1) * (6 + rnd() * 8) | 0}px`);
+        if (fresh) { el.style.setProperty('--fd', `${(5 + rnd() * 3).toFixed(2)}s`); el.style.setProperty('--fx', `${(rnd() < 0.5 ? -1 : 1) * (6 + rnd() * 8) | 0}px`); }
       } else {
         x = it.x; y = (it.back ? -0.015 : 0) - (sp.foot_px ?? sp.height) * k * s;
-        if (it.back) el.classList.add('back');
+        el.classList.toggle('back', !!it.back);
         if (!this.tall || h > this.tall.h) this.tall = { t: y, h };   // the tallest: its middle goes to the band's middle
       }
-      if (x > 0.02) el.classList.add('flip');   // face the card's middle (the stills face right)
+      el.classList.toggle('flip', x > 0.02);   // face the card's middle (the stills face right)
       el.style.setProperty('--x', (x - w / 2).toFixed(4)); el.style.setProperty('--y', y.toFixed(4));
       el.style.setProperty('--w', w.toFixed(4)); el.style.setProperty('--h', h.toFixed(4));
-      img.alt = ''; img.decoding = 'async';
-      img.onload = () => {
-        const now = performance.now() / 1000, at = Math.max(now + 0.05, this.popAt || 0);
-        this.popAt = at + POP_GAP[0] + rnd() * (POP_GAP[1] - POP_GAP[0]);
-        el.style.animationDelay = `${(at - now).toFixed(3)}s`;
-        el.classList.add('in');
-      };
-      img.src = `./assets/opening/${sp.file}`;
-      const inner = document.createElement('i'); inner.append(img); el.append(inner); box.append(el);
     }
     this.placeLineup();
   }
 
   // The cards' scales and brightness by state, and the sideways shifts that keep the gutters between them as wide as
-  // at full size whatever the scales (a scale about each card's centre would widen them): the card in focus (hovered
-  // with a pointer, else the chosen one) stays put, the others are laid out edge to edge outward from it. Set as CSS
-  // variables; the transitions are CSS. Nothing chosen and no hover: all at full size.
-  //   chosen 1.08; others 0.94 and 80% bright (0.86 and 60% once its world is ready); hovering another previews it at
-  //   1.08 and steps the chosen back with the rest.
+  // at full size whatever the scales (a scale about each card's centre would widen them): the card in focus (the chosen
+  // one, else the hovered one) stays put, the others are laid out edge to edge outward from it. Set as CSS variables;
+  // the transitions are CSS. Nothing chosen and no hover: all at full size.
+  //   chosen 1.08; hovered 1.04; the others 0.94 and 80% bright, 0.86 and 60% once the chosen one's world is ready.
   layoutCards() {
     const cards = [...this.root.querySelectorAll('.op-tile')]; if (!cards.length) return;
     const sel = cards.findIndex(c => c.classList.contains('sel')), hov = this.hovered ? cards.indexOf(this.hovered) : -1;
-    const ready = sel >= 0 && cards[sel].classList.contains('ready'), f = hov >= 0 ? hov : sel;
-    const S = cards.map((c, i) => i === f ? [sel >= 0 ? 1.08 : 1, 1, 1] : f < 0 ? [1, 1, 1] : ready && i !== sel ? [0.86, 0.6, 0.8] : [0.94, 0.8, 0.88]);
+    const ready = sel >= 0 && cards[sel].classList.contains('ready'), f = sel >= 0 ? sel : hov;
+    const S = cards.map((c, i) => i === sel ? [1.08, 1, 1] : i === hov ? [1.04, 1, 1] : f < 0 ? [1, 1, 1] : ready ? [0.86, 0.6, 0.8] : [0.94, 0.8, 0.88]);
     const w = cards[0].offsetWidth, g = parseFloat(getComputedStyle(this.$('.op-tiles')).columnGap) || 0, tx = cards.map(() => 0);
     if (f >= 0) for (const dir of [1, -1]) {
       let edge = S[f][0] * w / 2;   // the far edge so far, from the focus card's centre
@@ -320,6 +419,7 @@ export class OpeningScreen {
         tx[i] = dir * at - (i - f) * (w + g); edge = at + S[i][0] * w / 2;
       }
     }
+    this.target = new Map(cards.map((c, i) => [c, { tx: tx[i], s: S[i][0] }]));
     cards.forEach((c, i) => {
       c.style.setProperty('--s', S[i][0]); c.style.setProperty('--b', S[i][1]); c.style.setProperty('--sat', S[i][2]);
       c.style.setProperty('--tx', `${tx[i].toFixed(1)}px`); c.classList.toggle('hover', i === hov);
@@ -328,11 +428,24 @@ export class OpeningScreen {
     this.placeLineup();
   }
 
+  // A hovered card cut off at an edge of the row: scroll the least that shows it whole at the size and place it is going
+  // to (layoutCards), with a gutter's margin; a card already in view scrolls nothing (and leaving it scrolls nothing back).
+  bringIntoView(card) {
+    const row = this.$('.op-tiles'), t = this.target?.get(card); if (!row || !t) return;
+    const r = row.getBoundingClientRect(), c = card.getBoundingClientRect(), now = new DOMMatrix(getComputedStyle(card).transform).m41;
+    const g = parseFloat(getComputedStyle(row).columnGap) || 0, cx = c.left + c.width / 2 - now + t.tx, half = card.offsetWidth * t.s / 2;
+    const left = cx - half - g, right = cx + half + g;
+    const dx = left < r.left ? left - r.left : right > r.right ? right - r.right : 0;
+    if (Math.abs(dx) < 0.5 || performance.now() < (this.hoverScrollUntil || 0)) return;   // not again while a card slides under a still pointer
+    this.hoverScrollUntil = performance.now() + 700;
+    row.scrollBy({ left: dx, behavior: 'smooth' });
+  }
+
   // The lineup's anchors for its CSS: the chosen card's centre x (where its shift is going), its bottom at the grown size
   // (birds round its top), and the foot line, set so the tallest ground animal's middle is at the middle of the band
   // between the card's bottom and the window's.
   placeLineup() {
-    const card = this.$('.op-tile.sel'), box = this.$('.op-lineup'); if (!card || !box) return;
+    const card = this.cardOf(this.sel), box = this.$('.op-lineup'); if (!card || !box) return;
     const r = card.getBoundingClientRect(), now = new DOMMatrix(getComputedStyle(card).transform).m41;
     const tx = this.cardShift?.el === card ? this.cardShift.tx : 0;
     const H = card.offsetHeight * 1.08, cy = r.top + r.height / 2, by = cy + H / 2;
@@ -344,85 +457,47 @@ export class OpeningScreen {
     box.classList.add('on');
   }
 
-  setDay(i) {
-    i = Math.min(this.year.last, Math.max(0, Math.round(i)));
-    if (i === this.day) return;
-    this.day = i; this.update();
-  }
-
-  async load(pending) {
-    // every card's title: its locality, its best-known roads under it (or the roads alone); the prepared tile's place
-    // names for the arrival caption; its weather for the slider's label
-    this.loadWeather();
-    await Promise.all(this.index.tiles.map(async t => {
-      const f = await getJSON(`../tiles/${t.tile_id}/client/features.json`);
-      const card = this.cardOf(t.tile_id);
-      if (card) {
-        const roads = majorRoads(f).join(', '), place = locality(f);
-        card.querySelector('.op-title').textContent = place || roads || t.tile_id;
-        card.querySelector('.op-sub').textContent = place ? roads : '';
-        card.querySelector('.op-pick').setAttribute('aria-label', [place, roads].filter(Boolean).join(': ') + ` (${t.tile_id})`);
-      }
-      if (t.tile_id === this.tileId) { this.data.features = f; this.places = f ? new PlaceNames(f, f.size_m || 10000) : null; }
-    }));
-    this.centreCard();
-    if (pending) this.preselect(pending);
-    this.update();
-  }
-
-  // A point handed over by main.js (?lat=&lon=, or a Go from another page): in this tile the arrival point moves there;
-  // in another built tile the page reloads into that one (where it lands in this tile); elsewhere the centre stays.
-  preselect(p) {
-    const loc = pointInTileId(this.tileId, p);
-    if (loc) { this.point = loc; return; }
-    const other = this.index.tiles.map(t => t.tile_id).find(id => pointInTileId(id, p));
-    if (other) { this.showLoading(other, 'loading…'); switchTile(other, p, this.carry()); }
-  }
-
-  // A card clicked: the prepared tile's comes forward (its cover and the lineup, Begin once ready); another reloads into it.
-  // The prepared tile's weather: the year of days (client/weather.json) for a chosen day, that day last year; today's
-  // from the dev server (/api/weather), else the same day last year. The label shows the date alone until they arrive.
-  async loadWeather() {
-    const base = `../tiles/${this.tileId}/client/weather.json`;
-    getJSON(`/api/weather/${encodeURIComponent(this.tileId)}`).then(j => { if (j?.days) { this.wxToday = j; this.update(); } });
-    const w = await getJSON(base);
-    if (w?.days) { this.wx = w; this.update(); }
+  // ---- the slider's label: the date and that day's weather ------------------------------------------------------
+  // A tile's weather (fetched once per tile): the year of days (client/weather.json) for a chosen day, that day last
+  // year; today's from the dev server (/api/weather), else the same day last year. The label is the chosen tile's, else
+  // the hint's (else the first card's); the date alone until its weather arrives.
+  loadWeather(id) {
+    if (!id) return Promise.resolve();
+    return (this.wxLoad ||= {})[id] ||= Promise.all([
+      getJSON(`/api/weather/${encodeURIComponent(id)}`).then(j => { if (j?.days) this.wxToday[id] = j; }),
+      getJSON(`../tiles/${id}/client/weather.json`).then(w => { if (w?.days) this.wx[id] = w; }),
+    ]).then(() => this.update());
   }
   weatherFor(d) {
-    const key = (y, m, dd) => `${y}-${String(m).padStart(2, '0')}-${String(dd).padStart(2, '0')}`;
-    if (this.onToday && this.wxToday) {
-      const t = this.wxToday, k = t.current?.time?.slice(0, 10) || key(d.getFullYear(), d.getMonth() + 1, d.getDate());
+    const id = this.labelTile, key = (y, m, dd) => `${y}-${String(m).padStart(2, '0')}-${String(dd).padStart(2, '0')}`;
+    const t = this.wxToday[id];
+    if (this.onToday && t) {
+      const k = t.current?.time?.slice(0, 10) || key(d.getFullYear(), d.getMonth() + 1, d.getDate());
       const day = t.days[k]; if (day) return dayWords(day, { today: true, fields: t.fields });
     }
-    const w = this.wx; if (!w) return '';
+    const w = this.wx[id]; if (!w) return '';
     const day = w.days[key(d.getFullYear() - 1, d.getMonth() + 1, d.getDate())];
     return day ? dayWords(day, { fields: w.fields }) : '';
   }
 
-  pickTile(id) {
-    if (id === this.tileId) return this.select();
-    this.showLoading(id, 'loading…');
-    switchTile(id, null, this.carry());
-  }
-
   // "near Missouri Flat Road · fall · spirit": not shown on the screen; the arrival flight shows it in the world
   caption() {
-    const size = this.data.features?.size_m || 10000, x = this.point?.x ?? size / 2, n = this.point?.north ?? size / 2;
-    const near = this.places?.nearest(x, n);
-    const where = near ? `${near.over ? 'over' : 'near'} ${near.name}` : this.tileId;
+    const id = this.sel, f = this.feat[id], size = f?.size_m || 10000, p = this.points[id];
+    const near = this.places[id]?.nearest(p?.x ?? size / 2, p?.north ?? size / 2);
+    const where = near ? `${near.over ? 'over' : 'near'} ${near.name}` : id;
     return `${where} · ${this.season} · spirit`;
   }
 
   update() {
-    const card = this.cardOf(this.tileId);
-    if (card) {
-      const size = this.data.features?.size_m || 10000, fx = (this.point?.x ?? size / 2) / size;
-      // The square map shows its middle 9/16 on the portrait card; pan it so a point near an edge stays in view.
-      const half = 9 / 32, c = Math.min(1 - half, Math.max(half, fx));
+    // The square map shows its middle 9/16 on the portrait card; pan it so an arrival point near an edge stays in view.
+    for (const [id, p] of Object.entries(this.points)) {
+      const card = this.cardOf(id), size = this.feat[id]?.size_m || 10000; if (!card) continue;
+      const half = 9 / 32, c = Math.min(1 - half, Math.max(half, p.x / size));
       card.querySelector('.op-map').style.setProperty('--cx', c.toFixed(4));
     }
     const d = this.onToday ? new Date() : this.year.date(this.day), season = this.season;
     const s = this.$('.op-slider'), p = `${(100 * this.year.pos(this.day)).toFixed(3)}%`;
+    if (!s) return;
     s.style.setProperty('--p', p);
     this.$('.op-wrap').style.setProperty('--hl', trackColor(this.year.pos(this.day)));
     s.setAttribute('aria-valuenow', this.day);
@@ -432,58 +507,6 @@ export class OpeningScreen {
     this.$('.op-date').textContent = wx ? `${label(d)} • ${wx}` : label(d);
     for (const t of s.querySelectorAll('.op-titles span')) t.classList.toggle('on', t.dataset.season === season);
     this.onPoint?.(this.point);
-  }
-
-  // main.js reports "preparing <tileId>: <status>" while the world builds; the card shows the status part under
-  // its spinner. An empty report keeps the last line (the spinner turns only on setReady).
-  select() {
-    if (this.selected) return;
-    this.selected = true;
-    const card = this.cardOf(this.tileId); if (!card) return;
-    for (const c of this.root.querySelectorAll('.op-tile')) { const on = c === card; c.classList.toggle('sel', on); c.querySelector('.op-pick').setAttribute('aria-pressed', on); }
-    card.classList.add('loading');
-    this.startLineup();
-    if (this.ready) this.showReady(card);
-    this.layoutCards();
-    setTimeout(() => { this.centreCard(); this.placeLineup(); }, 0);
-  }
-
-  setPrep(text) {
-    if (this.ready || !text) return;
-    const t = text.replace(/^preparing\s+\S+:\s*/, '');
-    const bs = this.$('.op-boot-status'); if (bs) bs.textContent = t;
-    const card = this.cardOf(this.tileId); if (card) card.querySelector('.op-status').textContent = t;
-  }
-  // The world is built: the spinner turns into Begin, which takes the focus so Enter begins.
-  setReady() {
-    this.ready = true;
-    this.reveal();
-    const card = this.cardOf(this.tileId); if (!this.selected || !card || !card.classList.contains('loading')) return;
-    this.showReady(card);
-  }
-  // The world is ready: the wisp implodes and the slider and the cards fade and rise in, nothing chosen (or the card a
-  // reload carried as chosen).
-  reveal() {
-    if (this.revealed) return;
-    this.revealed = true;
-    const wrap = this.$('.op-wrap'); wrap.classList.remove('boot'); wrap.classList.add('booted');
-    this.centreCard(); this.layoutCards();
-    if (this.selectOnReveal) this.select();
-    setTimeout(() => this.placeLineup(), 800);   // after the rise
-  }
-  showReady(card) {
-    card.classList.remove('loading'); card.classList.add('ready');
-    this.layoutCards();   // the others recede further
-    card.querySelector('.op-status').textContent = '';
-    const b = card.querySelector('.op-begin'); b.disabled = false; b.tabIndex = 0;
-    b.focus({ preventScroll: true });
-  }
-
-  begin() {
-    if (this.begun || !this.ready || !this.selected) return;
-    this.begun = true;
-    const b = this.cardOf(this.tileId)?.querySelector('.op-begin'); if (b) b.disabled = true;
-    this.onBegin({ tileId: this.tileId, season: this.season, date: this.date, point: this.point, caption: this.caption() });
   }
 
   // Fade out and remove; keys go back to the world.

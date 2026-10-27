@@ -58,7 +58,7 @@ export function loadCrowns(tile) {
   let p = loads.get(tile);
   if (!p) {
     const path = tile.manifest.layers[CROWN_LAYER].path;
-    p = fetch(tile.dir + path).then(r => { if (!r.ok) throw new Error(`${r.status} fetching ${path}`); return r.arrayBuffer(); }).then(decodeCrowns);
+    p = fetch(tile.dir + path, { signal: tile.signal }).then(r => { if (!r.ok) throw new Error(`${r.status} fetching ${path}`); return r.arrayBuffer(); }).then(decodeCrowns);
     loads.set(tile, p);
   }
   return p;

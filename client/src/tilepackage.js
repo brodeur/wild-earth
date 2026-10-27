@@ -1,6 +1,6 @@
 // Loads a tile package's client rasters and exposes metric-space samplers.
 // Client space: x = meters east of the tile's west edge, z = -(meters north of the south edge), y = elevation.
-import { runSliced, yieldToMain, drain } from './slice.js';
+import { runSliced, yieldToMain, drain, aborted } from './slice.js';
 
 // An image (an HTMLImageElement: textures, the mini-map) and, as img.bitmap, the same bytes decoded into an ImageBitmap
 // off the main thread (createImageBitmap on the blob). A canvas drawImage of the element decodes it inside that task
@@ -8,8 +8,8 @@ import { runSliced, yieldToMain, drain } from './slice.js';
 // pixels are the same for a draw at the image's own size (a scaled draw of the element can differ: Chrome may decode
 // a JPEG at a reduced scale for it, so scaled readers keep drawing the element). 1:1 readers draw
 // `image.bitmap || image`; main.js closes the bitmaps (and deletes them) once the world is built.
-async function loadDecoded(url) {
-  const r = await fetch(url);
+async function loadDecoded(url, signal = null) {
+  const r = await fetch(url, { signal });
   if (!r.ok) throw new Error('image failed: ' + url);
   const blob = await r.blob(), img = new Image();
   img.decoding = 'async';
@@ -19,8 +19,8 @@ async function loadDecoded(url) {
   return img;
 }
 
-export async function loadImageData(url) {
-  const img = await loadDecoded(url);
+export async function loadImageData(url, signal = null) {
+  const img = await loadDecoded(url, signal);
   const c = document.createElement('canvas'); c.width = img.width; c.height = img.height;
   const ctx = c.getContext('2d', { willReadFrequently: true });
   ctx.drawImage(img.bitmap || img, 0, 0);
@@ -29,23 +29,23 @@ export async function loadImageData(url) {
   for (let y = 0; y < H; y += S) {
     const h = Math.min(S, H - y);
     data.set(ctx.getImageData(0, y, W, h).data, y * W * 4);
-    if (y + h < H) await yieldToMain();
+    if (y + h < H) { await yieldToMain(); if (signal?.aborted) throw aborted(signal); }
   }
   img.bitmap?.close(); delete img.bitmap;   // read: the element stays for textures
   return { width: img.width, height: img.height, data, image: img };
 }
 
 // Optional image: resolves to null instead of failing the tile load.
-function loadOptionalImage(url) {
-  return loadDecoded(url).catch(() => null);
+function loadOptionalImage(url, signal = null) {
+  return loadDecoded(url, signal).catch(() => null);
 }
 
 // Lidar micro-relief (client/terrain_detail.png, docs/tile-spec.md "Lidar"): the 1 m DEM averaged to
 // 2 m minus heights.png, one byte per pixel, residual m = (v - 128) * 0.04, pixel centres at x = 2i + 1,
 // rows north to south. Only the red channel is kept (25 MB for the home tile's 5000 px); the image is
 // read through a canvas in strips so the RGBA copy never holds the whole 100 MB at once.
-async function loadDetail(url) {
-  const img = await loadDecoded(url);
+async function loadDetail(url, signal = null) {
+  const img = await loadDecoded(url, signal);
   const W = img.width, H = img.height, out = new Uint8Array(W * H), S = 250;   // a strip per task (slice.js)
   const c = document.createElement('canvas'); c.width = W; c.height = S;
   const ctx = c.getContext('2d', { willReadFrequently: true });
@@ -54,7 +54,7 @@ async function loadDetail(url) {
     ctx.clearRect(0, 0, W, S); ctx.drawImage(img.bitmap || img, 0, y, W, h, 0, 0, W, h);
     const d = ctx.getImageData(0, 0, W, h).data;
     for (let k = 0, o = y * W, n = W * h; k < n; k++) out[o + k] = d[k * 4];
-    await yieldToMain();
+    await yieldToMain(); if (signal?.aborted) throw aborted(signal);
   }
   img.bitmap?.close(); delete img.bitmap;
   return { width: W, height: H, data: out };
@@ -424,8 +424,8 @@ function ringArea(ring) { let a = 0; for (let i = 0, j = ring.length - 1; i < ri
 // (species/occurrences.geojson, CC BY-NC ones among them) are pipeline-only and never fetched here.
 // Resolves to { cells, cellM, species: { code: Uint8Array(cells * cells), row 0 = north edge } } or null;
 // animals.js turns a byte w into the prior 0.6 + 0.8 w / 255.
-async function loadSpeciesPrior(url) {
-  const g = await fetch(url).then(r => r.ok ? r.json() : null).catch(() => null);
+async function loadSpeciesPrior(url, signal = null) {
+  const g = await fetch(url, { signal }).then(r => r.ok ? r.json() : null).catch(() => null);
   if (!g?.species || !(g.cells > 0)) return null;
   const species = {};
   for (const [code, s] of Object.entries(g.species)) {
@@ -436,67 +436,68 @@ async function loadSpeciesPrior(url) {
   return { cells: g.cells, cellM: g.cell_m || 100, species, datasets: g.datasets || [], licenses: g.licenses_used || [] };
 }
 
-export async function loadTile(tileId, base = '../tiles/') {
-  const idx = await (await fetch(base + 'index.json', { cache: 'no-cache' })).json();
+export async function loadTile(tileId, base = '../tiles/', { signal = null } = {}) {   // signal: abandons the load (main.js)
+  const idx = await (await fetch(base + 'index.json', { cache: 'no-cache', signal })).json();
   const id = tileId && idx.tiles.some(t => t.tile_id === tileId) ? tileId : idx.tiles[0]?.tile_id;
   if (!id) throw new Error('no tiles built');
   const dir = `${base}${id}/`;
-  const m = await (await fetch(dir + 'manifest.json', { cache: 'no-cache' })).json();
+  const m = await (await fetch(dir + 'manifest.json', { cache: 'no-cache', signal }, { signal })).json();
   const L = m.layers;
   for (const k of ['client.heights', 'client.texture', 'client.habitat', 'client.canopy', 'client.masks'])
     if (!L[k]) throw new Error(`tile ${id} lacks ${k}; run the derive step`);
   const MX = L['client.species_mix'], mixFiles = MX?.files || {};
   const [heights, texture, habitat, canopy, masks, species, perception, calendar, imagery, features, roads, imageryTexture, mast, mixIndex, mixJson, mixDensity, outcrop, geology, soils, groundClasses, profile, speciesPrior, detail, canopyHeight, groundTexture, seasonImage] = await Promise.all([
-    loadImageData(dir + L['client.heights'].path), loadImageData(dir + L['client.texture'].path),
-    loadImageData(dir + L['client.habitat'].path), loadImageData(dir + L['client.canopy'].path),
-    loadImageData(dir + L['client.masks'].path),
-    fetch(dir + 'species/species.json').then(r => r.json()).catch(() => []),
-    fetch(dir + 'perception.json').then(r => r.json()).catch(() => null),
-    fetch(dir + 'calendar.json').then(r => r.json()).catch(() => null),
+    loadImageData(dir + L['client.heights'].path, signal), loadImageData(dir + L['client.texture'].path, signal),
+    loadImageData(dir + L['client.habitat'].path, signal), loadImageData(dir + L['client.canopy'].path, signal),
+    loadImageData(dir + L['client.masks'].path, signal),
+    fetch(dir + 'species/species.json', { signal }).then(r => r.json()).catch(() => []),
+    fetch(dir + 'perception.json', { signal }).then(r => r.json()).catch(() => null),
+    fetch(dir + 'calendar.json', { signal }).then(r => r.json()).catch(() => null),
     // mini-map products (present-day imagery and features); optional
-    L['client.imagery'] ? loadOptionalImage(dir + L['client.imagery'].path) : null,
-    L['client.features'] ? fetch(dir + L['client.features'].path).then(r => r.ok ? r.json() : null).catch(() => null) : null,
+    L['client.imagery'] ? loadOptionalImage(dir + L['client.imagery'].path, signal) : null,
+    L['client.features'] ? fetch(dir + L['client.features'].path, { signal }).then(r => r.ok ? r.json() : null).catch(() => null) : null,
     // decayed-road weight on the 5 m grid (255 pavement, falling to 0 over the verge); optional
-    L['client.roads'] ? loadImageData(dir + L['client.roads'].path).catch(() => null) : null,
+    L['client.roads'] ? loadImageData(dir + L['client.roads'].path, signal).catch(() => null) : null,
     // NAIP with humans erased (JPEG, 4000 px); only the image is needed, not its pixels. Optional. Still fetched
     // beside client.texture_ground: groundDetail.js reads its bare-ground mask from it, and ?base=imagery shows it.
-    L['client.texture_imagery'] ? loadOptionalImage(dir + L['client.texture_imagery'].path) : null,
+    L['client.texture_imagery'] ? loadOptionalImage(dir + L['client.texture_imagery'].path, signal) : null,
     // fall acorn_mast score 0..100 in R on the 30 m grid (acorn game); optional
-    L['client.mast'] ? loadImageData(dir + L['client.mast'].path).catch(() => null) : null,
+    L['client.mast'] ? loadImageData(dir + L['client.mast'].path, signal).catch(() => null) : null,
     // LANDFIRE species mix per 30 m cell: the canvas-safe index PNG, the row table and (format 2) the
     // per-cell density PNG; optional
-    MX ? loadImageData(dir + 'client/species_mix_index.png').catch(() => null) : null,
-    MX ? fetch(dir + MX.path).then(r => r.ok ? r.json() : null).catch(() => null) : null,
-    mixFiles['client/species_mix_density.png'] ? loadImageData(dir + 'client/species_mix_density.png').catch(() => null) : null,
+    MX ? loadImageData(dir + 'client/species_mix_index.png', signal).catch(() => null) : null,
+    MX ? fetch(dir + MX.path, { signal }).then(r => r.ok ? r.json() : null).catch(() => null) : null,
+    mixFiles['client/species_mix_density.png'] ? loadImageData(dir + 'client/species_mix_density.png', signal).catch(() => null) : null,
     // geology and soils step (tile-spec "Geology and soils"), all on the 30 m grid; optional (older
     // tiles have none: rocks.js then places nothing). outcrop R = likelihood 0..255; geology R = unit,
     // G = rock class (1-based into ground_classes.rock_classes); soils R = map unit, G = surface rock
     // fragments %, B = depth to bedrock dm (255 unknown).
-    L['client.outcrop'] ? loadImageData(dir + L['client.outcrop'].path).catch(() => null) : null,
-    L['client.geology'] ? loadImageData(dir + L['client.geology'].path).catch(() => null) : null,
-    L['client.soils'] ? loadImageData(dir + L['client.soils'].path).catch(() => null) : null,
-    L['client.ground_classes'] ? fetch(dir + L['client.ground_classes'].path).then(r => r.ok ? r.json() : null).catch(() => null) : null,
+    L['client.outcrop'] ? loadImageData(dir + L['client.outcrop'].path, signal).catch(() => null) : null,
+    L['client.geology'] ? loadImageData(dir + L['client.geology'].path, signal).catch(() => null) : null,
+    L['client.soils'] ? loadImageData(dir + L['client.soils'].path, signal).catch(() => null) : null,
+    L['client.ground_classes'] ? fetch(dir + L['client.ground_classes'].path, { signal }).then(r => r.ok ? r.json() : null).catch(() => null) : null,
     // rewilded water beds and corridor (channel_profile B); optional
-    L['client.channel_profile'] ? loadImageData(dir + L['client.channel_profile'].path).catch(() => null) : null,
+    L['client.channel_profile'] ? loadImageData(dir + L['client.channel_profile'].path, signal).catch(() => null) : null,
     // animal density prior from CC0 / CC BY records (animals.js); optional, null on older tiles
-    L['client.species_prior'] ? loadSpeciesPrior(dir + L['client.species_prior'].path) : null,
+    L['client.species_prior'] ? loadSpeciesPrior(dir + L['client.species_prior'].path, signal) : null,
     // lidar step (tile-spec "Lidar"): the 2 m micro-relief residual and the 10 m canopy height; optional
-    L['client.terrain_detail'] ? loadDetail(dir + L['client.terrain_detail'].path).catch(e => { console.warn('terrain detail:', e.message); return null; }) : null,
-    L['client.canopy_height'] ? loadImageData(dir + L['client.canopy_height'].path).catch(() => null) : null,
+    L['client.terrain_detail'] ? loadDetail(dir + L['client.terrain_detail'].path, signal).catch(e => { if (!signal?.aborted) console.warn('terrain detail:', e.message); return null; }) : null,
+    L['client.canopy_height'] ? loadImageData(dir + L['client.canopy_height'].path, signal).catch(() => null) : null,
     // seasonal colour (tile-spec "Seasonal colour"): the erased NAIP with the tree crowns and their shadows
     // replaced by ground (the base the 3D trees stand on), and the Sentinel-2 monthly sheet; optional
-    L['client.texture_ground'] ? loadOptionalImage(dir + L['client.texture_ground'].path) : null,
-    L['client.season_rgb'] ? loadOptionalImage(dir + L['client.season_rgb'].path) : null,
+    L['client.texture_ground'] ? loadOptionalImage(dir + L['client.texture_ground'].path, signal) : null,
+    L['client.season_rgb'] ? loadOptionalImage(dir + L['client.season_rgb'].path, signal) : null,
   ]);
+  if (signal?.aborted) throw aborted(signal);
   if (features) markRewilded(features, m);
-  const decoded = await runSliced(decodeHeights(heights), 'heights');
+  const decoded = await runSliced(decodeHeights(heights), 'heights', { signal });
   const rewild = profile ? new RewildGrid(profile, m.size_m || 10000) : null;
   const ti = L['client.texture_imagery'];
   const size = m.size_m || 10000;
   const waterMask = features ? new WaterMask(features, size, roads?.width || 2000) : null;
-  if (waterMask) await runSliced(waterMask.buildSteps(), 'water mask');
+  if (waterMask) await runSliced(waterMask.buildSteps(), 'water mask', { signal });
   return {
-    id, manifest: m, size, dir,
+    id, manifest: m, size, dir, signal,   // signal: the world's (main.js); the modules' own loads and slices stop with it
     heights: new Heightfield(heights, size, detail, decoded), textureImage: texture.image, masksImage: masks.image,
     habitat: new Grid8(habitat, size), canopy: new Grid8(canopy, size),
     roads: roads ? new Grid8(roads, size) : null, roadsImage: roads?.image || null,
