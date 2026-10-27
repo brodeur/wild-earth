@@ -673,16 +673,19 @@
    "counts": {
     "roads": 139,
     "streams": 417,
-    "waterbodies": 16
+    "waterbodies": 16,
+    "places": 2
    },
    "streams_from": "hydro.channels",
    "derived_from": [
     "footprint.mask",
     "hydro.channels",
-    "hydro.waterbodies"
+    "hydro.waterbodies",
+    "osm"
    ],
-   "sha256": "5abf902123bb79e762263377a341ae02811c8c0c323a0856d132bc764de0c1b9",
-   "bytes": 365976
+   "sha256": "6766434da68c92521ac794e74fd5b39ef4e6cb81f7ed38d03ac72b900a2c0b33",
+   "bytes": 366302,
+   "places_from": "osm"
   },
   "vegetation.evt": {
    "path": "vegetation/evt.tif",

@@ -483,15 +483,19 @@ def client_features(tile: Tile) -> dict | None:
                                         "ring": local(ring)})
     if not found:
         return None
+    # Named places (OSM place nodes: pipeline/fetch_places.py), for the opening screen's card title and the HUD's
+    # place names; an Overpass outage leaves them out rather than failing the build.
+    from .fetch_places import places_or_none
+    places, places_note = places_or_none(tile)
     path = tile.path("client/features.json")
     with open(path, "w") as f:
-        json.dump({"roads": roads, "streams": streams, "waterbodies": waterbodies, "size_m": TILE_SIZE_M},
-                  f, separators=(",", ":"))
+        json.dump({"roads": roads, "streams": streams, "waterbodies": waterbodies, "places": places,
+                   "places_source": places_note, "size_m": TILE_SIZE_M}, f, separators=(",", ":"))
     return {"path": "client/features.json", "kind": "vector", "crs": tile.crs, "bounds": list(tile.bounds),
             "encoding": "tile-local metres [x east, north from south edge]",
-            "counts": {"roads": len(roads), "streams": len(streams), "waterbodies": len(waterbodies)},
-            "streams_from": stream_source,
-            "derived_from": ["footprint.mask", stream_source, "hydro.waterbodies"]}
+            "counts": {"roads": len(roads), "streams": len(streams), "waterbodies": len(waterbodies), "places": len(places)},
+            "streams_from": stream_source, **({"places_from": "osm"} if places_note else {}),
+            "derived_from": ["footprint.mask", stream_source, "hydro.waterbodies"] + (["osm"] if places_note else [])}
 
 
 # ---- species density prior for game clients -----------------------------------------------------

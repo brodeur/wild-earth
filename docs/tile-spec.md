@@ -86,7 +86,7 @@ tiles/<tile_id>/
   client/texture_ground.jpg     derived   texture_imagery with tree crowns (lidar CHM 3 m+) and their shadows replaced by synthesized ground of the same class, same grid (see Ground-only texture)
   client/texture_ground_mask.png derived  1000 px: share of each 10 m pixel replaced in texture_ground (255 all filled)
   client/imagery.png            derived   present-day NAIP for the mini-map, 1024 px on the metric tile grid
-  client/features.json          derived   present-day roads, streams (from hydro/channels.geojson when built) and waterbodies in tile-local metres
+  client/features.json          derived   present-day roads, streams (from hydro/channels.geojson when built), waterbodies and OSM place names (`places`: name, kind, x, north; best rank first) in tile-local metres
   client/channel_depth.png      derived   channel incision, uint8 decimetres on the DEM grid: mean DEM on a 20 m ring minus the channel cell, 0-25 m; 0 off channel
   client/channel_profile.png    derived   RGB on the DEM grid: R thalweg water depth (2 cm), G riffle-pool index, B rewilded water beds (see Hydrology rewilding)
   client/terrain_detail.png     derived   2 m micro-relief: 8-bit grey residual of the 1 m DEM against client/heights.png, (v - 128) x 4 cm (see Lidar)
