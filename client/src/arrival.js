@@ -1,5 +1,5 @@
 import * as THREE from 'three';
-import { parseLatLon, pointInTileId, lookupTile, buildTile, switchTile, noServerText } from './goto.js';
+import { pointInTileId, switchTile } from './goto.js';
 import { SEASONS, seasonOfDate, parseDate } from './season.js';
 import { PlaceNames } from './placenames.js';
 
@@ -7,14 +7,14 @@ import { PlaceNames } from './placenames.js';
 // two choices, where and when, made before the world appears (the player arrives as a spirit); then a
 // scripted 12 s flight brings the player in over the chosen point, so the first thing they see is their own hills.
 //
-// OpeningScreen fills #opening: a row of tall portrait cards, one per built tile (its map full bleed, its
-// best-known roads as the title), and at the bottom a season slider from spring to the following winter
-// beside Begin. The tile named in `tileId` is the one main.js is already building behind the screen;
-// picking another tile reloads the page into that tile (choices carried in sessionStorage), so Begin
-// always finds its world ready and its press can start the sound.
+// OpeningScreen fills #opening: across the top a season slider from spring to the following winter, and
+// under it a row of tall portrait cards, one per built tile (its map full bleed, its best-known roads as the
+// title). The tile named in `tileId` is the one main.js is already building behind the screen: its card
+// wears a spinner until the world is ready, then Begin. Picking another card reloads the page into that tile
+// (choices carried in sessionStorage), so Begin always finds its world ready and its press can start the sound.
+// Other places and new tiles are reached in the world (the panel's Location box, goto.js).
 // Arrival drives RavenFlight's pose and chase camera until it hands control to the player.
 
-// Species once chosen on the screen (the raven, the western gray squirrel, the acorn woodpecker as male or female);
 const MONTH = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
 const ROAD_WEIGHT = { motorway: 6, trunk: 5, primary: 4, secondary: 3, tertiary: 1.5 };
 const LAST_TILE = 'we.lastTile';
@@ -104,9 +104,15 @@ export class OpeningScreen {
     const pct = p => `${(100 * p).toFixed(3)}%`;
     this.root.innerHTML = `
       <div class="op-wrap">
-        <div class="op-top">
-          <div class="op-find"><input class="op-input" placeholder="a place as lat, lon (e.g. 38.70, -120.87)" autocomplete="off" spellcheck="false" aria-label="find a place as lat, lon"><button class="op-findbtn">Find</button></div>
-          <div class="op-say" role="status"></div>
+        <div class="op-bar">
+          <div class="op-slider" role="slider" tabindex="0" aria-label="day of the year" aria-valuemin="0" aria-valuemax="${this.year.last}">
+            <div class="op-track">
+              ${[1, 2].map(k => `<i class="op-tick" style="left:${pct(k / 3)}"></i>`).join('')}
+              <i class="op-todaymark" style="left:${pct(this.year.pos(this.todayDay))}" title="today"></i>
+              <div class="op-thumb"><span class="op-date"></span></div>
+            </div>
+            <div class="op-titles">${TITLES.map((t, k) => `<span data-season="${t}" style="left:${pct(k / 3)}">${t[0].toUpperCase() + t.slice(1)}</span>`).join('')}</div>
+          </div>
         </div>
         <div class="op-tiles">${tiles.map(id => `
           <div class="op-tile${id === this.tileId ? ' sel loading' : ''}" data-tile="${esc(id)}">
@@ -116,23 +122,9 @@ export class OpeningScreen {
             <span class="op-name"><b class="op-title"></b><span class="op-id">${esc(id)}</span></span>
           </div>`).join('')}
         </div>
-        <footer class="op-foot">
-          <div class="op-slider" role="slider" tabindex="0" aria-label="day of the year" aria-valuemin="0" aria-valuemax="${this.year.last}">
-            <div class="op-track">
-              ${[1, 2].map(k => `<i class="op-tick" style="left:${pct(k / 3)}"></i>`).join('')}
-              <i class="op-todaymark" style="left:${pct(this.year.pos(this.todayDay))}" title="today"></i>
-              <div class="op-thumb"><span class="op-date"></span></div>
-            </div>
-            <div class="op-titles">${TITLES.map((t, k) => `<span data-season="${t}" style="left:${pct(k / 3)}">${t[0].toUpperCase() + t.slice(1)}</span>`).join('')}</div>
-          </div>
-          <div class="op-caption"></div>
-        </footer>
       </div>`;
-    this.say = (t, err = false) => { const el = this.$('.op-say'); el.textContent = t; el.classList.toggle('err', err); };
     for (const b of this.root.querySelectorAll('.op-pick')) b.onclick = () => this.pickTile(b.closest('.op-tile').dataset.tile);
     for (const b of this.root.querySelectorAll('.op-begin')) b.onclick = () => this.begin();
-    this.$('.op-findbtn').onclick = () => this.find(this.$('.op-input').value);
-    this.$('.op-input').addEventListener('keydown', e => { if (e.key === 'Enter') this.find(e.target.value); });
     this.wireSlider();
     this.cardOf(this.tileId)?.querySelector('.op-pick').focus({ preventScroll: true });
     // The row scrolls sideways: a mouse wheel scrolls it too; the chosen card starts in the middle.
@@ -142,7 +134,7 @@ export class OpeningScreen {
       row.scrollLeft += e.deltaY * (e.deltaMode === 1 ? 32 : 1); e.preventDefault();
     }, { passive: false });
     requestAnimationFrame(() => this.centreCard());
-    this.update();   // the slider and caption at once; the dot and place names follow when the features arrive
+    this.update();   // the slider at once; the dot follows when the features arrive
   }
 
   cardOf(id) { return this.root.querySelector(`.op-tile[data-tile="${CSS.escape(id)}"]`); }
@@ -192,7 +184,7 @@ export class OpeningScreen {
   }
 
   async load(pending) {
-    // every card's title from its roads; the chosen tile's place names for the caption
+    // every card's title from its roads; the chosen tile's place names for the arrival caption
     await Promise.all(this.index.tiles.map(async t => {
       const f = await getJSON(`../tiles/${t.tile_id}/client/features.json`);
       const card = this.cardOf(t.tile_id);
@@ -205,39 +197,26 @@ export class OpeningScreen {
       if (t.tile_id === this.tileId) { this.data.features = f; this.places = f ? new PlaceNames(f, f.size_m || 10000) : null; }
     }));
     this.centreCard();
-    if (pending) { this.$('.op-input').value = `${pending.lat}, ${pending.lon}`; this.find(this.$('.op-input').value, { fromLoad: true }); }
+    if (pending) this.preselect(pending);
     this.update();
   }
 
+  // A point handed over by main.js (?lat=&lon=, or a Go from another page): in this tile the arrival dot moves there;
+  // in another built tile the page reloads into that one (where it lands in this tile); elsewhere the centre stays.
+  preselect(p) {
+    const loc = pointInTileId(this.tileId, p);
+    if (loc) { this.point = loc; return; }
+    const other = this.index.tiles.map(t => t.tile_id).find(id => pointInTileId(id, p));
+    if (other) { this.showLoading(other, 'loading…'); switchTile(other, p, this.carry()); }
+  }
+
   pickTile(id) {
-    if (id === this.tileId) { this.point = null; this.$('.op-input').value = ''; this.say(''); this.update(); return; }
+    if (id === this.tileId) return;
     this.showLoading(id, 'loading…');
     switchTile(id, null, this.carry());
   }
 
-  // A typed place: this tile -> arrive over it; another built tile -> switch to it; unbuilt -> offer a build.
-  async find(text, { fromLoad = false } = {}) {
-    if (!text.trim()) { this.point = null; this.say(''); this.update(); return; }
-    const p = parseLatLon(text);
-    if (p.error) return this.say(p.error, true);
-    const loc = pointInTileId(this.tileId, p);
-    if (loc) { this.point = loc; this.say(`in ${this.tileId}; you will arrive over this point`); this.update(); return; }
-    const other = this.index.tiles.map(t => t.tile_id).find(id => pointInTileId(id, p));
-    if (other) { this.say(`in ${other}`); this.showLoading(other, 'loading…'); return switchTile(other, p, this.carry()); }
-    this.say('looking up tile…');
-    try {
-      const t = await lookupTile(p);
-      if (t.noApi) return this.say(noServerText(p), true);
-      if (t.built) { this.say(`loading ${t.tile_id}…`); this.showLoading(t.tile_id, 'loading…'); return switchTile(t.tile_id, p, this.carry()); }
-      this.say(`${t.tile_id} is not built yet. `);
-      const b = document.createElement('button'); b.className = 'op-build'; b.textContent = `Build ${t.tile_id}`;
-      b.onclick = () => { b.remove(); this.say(`asking the dev server to build ${t.tile_id}…`); buildTile(p, t.tile_id, this.say, this.carry()).catch(e => this.say('error: ' + e.message, true)); };
-      this.$('.op-say').append(b);
-      if (!fromLoad) b.focus();
-    } catch (e) { this.say(e.message, true); }
-  }
-
-  // "near Missouri Flat Road · fall · spirit"
+  // "near Missouri Flat Road · fall · spirit": not shown on the screen; the arrival flight shows it in the world
   caption() {
     const size = this.data.features?.size_m || 10000, x = this.point?.x ?? size / 2, n = this.point?.north ?? size / 2;
     const near = this.places?.nearest(x, n);
@@ -264,7 +243,6 @@ export class OpeningScreen {
     s.classList.toggle('today', this.onToday);
     this.$('.op-date').textContent = this.onToday ? `${label(d)} · today` : label(d);
     for (const t of s.querySelectorAll('.op-titles span')) t.classList.toggle('on', t.dataset.season === season);
-    this.$('.op-caption').textContent = this.caption();
     this.onPoint?.(this.point);
   }
 
@@ -275,14 +253,14 @@ export class OpeningScreen {
     if (!card || this.ready || !text) return;
     card.querySelector('.op-status').textContent = text.replace(/^preparing\s+\S+:\s*/, '');
   }
-  // The world is built: the spinner turns into Begin, which takes the focus (unless a place is being typed) so Enter begins.
+  // The world is built: the spinner turns into Begin, which takes the focus so Enter begins.
   setReady() {
     this.ready = true;
     const card = this.cardOf(this.tileId); if (!card || !card.classList.contains('loading')) return;
     card.classList.remove('loading'); card.classList.add('ready');
     card.querySelector('.op-status').textContent = '';
     const b = card.querySelector('.op-begin'); b.disabled = false; b.tabIndex = 0;
-    if (document.activeElement !== this.$('.op-input')) b.focus({ preventScroll: true });
+    b.focus({ preventScroll: true });
   }
 
   begin() {

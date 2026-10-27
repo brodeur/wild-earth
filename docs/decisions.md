@@ -1126,11 +1126,15 @@ ringed and the rest dimmed; the row scrolls sideways and centres the chosen card
 on one track: Spring at the left end is March 20, Summer's title at a third is June 21, Fall's at two thirds
 September 22, Winter at the right end December 20, a day per step between them, today marked and the thumb on
 it; the game gets `date` ('MM-DD', or null on today so it keeps tracking the calendar) and the season of that
-date, so the measured monthly ground colour follows the slider. Begin and the caption sit on the footer with
-the track. Kept, small and quiet at the top: the lat/lon find row, because it is the only way to reach or build
-another tile. The screen's styles moved out of index.html into client/opening.css so it can be reworked apart
-from the HUD. Rejected: a four-stop season picker (the slider is a date, and the ground colour is monthly);
-keeping the species cards as a "who" (the spirit chooses by touch instead).
+date, so the measured monthly ground colour follows the slider. Later the same day, on his word: the track is a
+bar across the top and the cards fill everything under it; the caption is off the screen (the arrival flight
+still shows it); the lat/lon find row is gone (a point on the URL still preselects the dot, and the in-game
+Location box reaches and builds other tiles); and while the tile loads the chosen card wears a scrim with a
+spinner and the live status under it, the spinner becoming the Begin button in place when the world is ready
+(so Begin cannot be pressed early any more), a click on another card showing its spinner before the reload. The
+screen's styles moved out of index.html into client/opening.css so it can be reworked apart from the HUD.
+Rejected: a four-stop season picker (the slider is a date, and the ground colour is monthly); keeping the
+species cards as a "who" (the spirit chooses by touch instead).
 
 ## 2026-10-26: the player arrives as a spirit and becomes the animal it touches
 

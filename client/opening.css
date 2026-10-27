@@ -1,31 +1,22 @@
 /* The opening screen (src/arrival.js, OpeningScreen): its own stylesheet so the screen can be reworked apart from the game's HUD (index.html).
-   A quiet find row at the top, a row of tall 9:16 map cards (one per built tile) that scrolls sideways when it overflows,
-   and a footer bar fixed at the bottom: the season slider (spring to the following winter) and Begin. */
+   A bar across the top with the season slider (spring to the following winter), and under it to the bottom of the screen
+   a row of tall 9:16 map cards (one per built tile) that scrolls sideways when it overflows; Begin sits on the chosen card. */
 #opening { position:fixed; inset:0; z-index:20; overflow:hidden; background:radial-gradient(120% 90% at 50% 0%, #17211b 0%, #0b0f0d 60%); color:#d3ddd5; transition:opacity .8s ease; }
 #opening[hidden] { display:none; }
 #opening.out { opacity:0; pointer-events:none; }
 html:not(.opening) #opening:not(.out) { display:none; }
-#opening > .op-wrap > header { display:none; }   /* index.html's static placeholder until the screen renders */
 .op-wrap { height:100%; display:flex; flex-direction:column; box-sizing:border-box; }
 
-/* find a place: small, top right */
-.op-top { flex:none; display:flex; flex-direction:column; align-items:flex-end; padding:12px 24px 0; }
-.op-find { display:flex; gap:6px; width:min(340px, 100%); }
-.op-find input { flex:1; min-width:0; background:#0d131099; color:#e6ede7; border:1px solid #263128; border-radius:6px; padding:5px 9px; font:inherit; font-size:12.5px; }
-.op-find input::placeholder { color:#6f7f74; }
-.op-find input:focus { outline:none; border-color:#6b4a2b; }
-.op-find button, .op-build { background:#161f1a; color:#b7c4ba; border:1px solid #263128; border-radius:6px; padding:4px 11px; font:inherit; font-size:12.5px; cursor:pointer; }
-.op-find button:hover, .op-build:hover { color:#e6ede7; border-color:#3d5244; }
-.op-say { font-size:11.5px; color:#8fa094; margin-top:4px; min-height:1.25em; max-width:min(520px, 100%); text-align:right; word-break:break-word; }
-.op-say.err { color:#e8a98f; }
-.op-build { margin-left:6px; padding:2px 9px; font-size:11.5px; }
+/* the season bar across the top */
+.op-bar { flex:none; padding:14px 32px 0; }
 
 /* the tile cards: 9:16, the map full bleed, the title over its lower part */
-.op-tiles { flex:1 1 0; min-height:0; display:flex; align-items:center; gap:18px; padding:10px 24px 12px; overflow-x:auto; overflow-y:hidden; scroll-snap-type:x proximity; scrollbar-width:none; }
+.op-tiles { flex:1 1 0; min-height:0; display:flex; align-items:center; gap:18px; padding:14px 24px 20px; overflow-x:auto; overflow-y:hidden; scroll-snap-type:x proximity; scrollbar-width:none; }
 .op-tiles::-webkit-scrollbar { display:none; }
 .op-tiles > :first-child { margin-left:auto; }   /* centred when they fit, scrollable from the first card when they do not */
 .op-tiles > :last-child { margin-right:auto; }
-.op-tile { position:relative; flex:none; height:min(100%, 74vh); aspect-ratio:9/16; border-radius:14px; overflow:hidden; background:#0d1310; scroll-snap-align:center; container-type:inline-size;
+.op-tile { position:relative; flex:none; height:min(100%, (100vw - 64px) * 16 / 9);   /* the height under the bar, or on a narrow screen what leaves the neighbours peeking in */
+  aspect-ratio:9/16; border-radius:14px; overflow:hidden; background:#0d1310; scroll-snap-align:center; container-type:inline-size;
   box-shadow:0 0 0 1px #263128, 0 10px 30px #0008; filter:brightness(.72) saturate(.85); transition:filter .25s, box-shadow .25s; }
 .op-tile:hover { filter:brightness(.9) saturate(.95); }
 .op-tile.sel { filter:none; box-shadow:0 0 0 2px #ffd08a, 0 0 32px #ffd08a3a, 0 10px 30px #0008; }
@@ -58,9 +49,8 @@ html:not(.opening) #opening:not(.out) { display:none; }
   display:-webkit-box; -webkit-line-clamp:2; -webkit-box-orient:vertical; overflow:hidden; }
 .op-tile:not(.loading) .op-status { display:none; }
 
-/* the footer bar: the season slider, then the caption and Begin */
-.op-foot { flex:none; display:flex; flex-wrap:wrap; align-items:center; gap:4px 40px; padding:8px 32px 14px; background:linear-gradient(#0b0f0d00, #0b0f0dcc 30%); }
-.op-slider { position:relative; flex:1 1 360px; min-width:0; padding:30px 0 6px; cursor:pointer; touch-action:none; outline:none; --p:50%; }
+/* the season slider: the date over the thumb, the season titles under the track at their thirds */
+.op-slider { position:relative; padding:30px 0 6px; cursor:pointer; touch-action:none; outline:none; --p:50%; }
 .op-track { position:relative; height:4px; border-radius:2px; background:linear-gradient(90deg, #8fb59a 0%, #d8bd6a 33.3%, #c98a4e 66.7%, #8ea4b4 100%); opacity:.85; }
 .op-tick { position:absolute; top:-3px; width:2px; height:10px; margin-left:-1px; background:#0b0f0d; border-radius:1px; }
 .op-todaymark { position:absolute; top:-6px; width:3px; height:16px; margin-left:-1.5px; background:#ffd08a; border-radius:2px; box-shadow:0 0 6px #ffd08a99; cursor:pointer; }
@@ -74,20 +64,14 @@ html:not(.opening) #opening:not(.out) { display:none; }
 .op-titles span:first-child { transform:none; }
 .op-titles span:last-child { transform:translateX(-100%); }
 .op-titles span.on { color:#f3f6f1; font-weight:600; }
-.op-caption { flex:0 1 300px; color:#b7c4ba; font-size:12.5px; line-height:1.3; text-align:right; }
 .op-begin { white-space:nowrap; transform:translate(-50%, -50%) scale(.55); background:#3a2c17ee; color:#ffe9b0; border:1px solid #8a6436; border-radius:999px; padding:12px 34px; font:inherit; font-size:max(15px, 4.4cqw); font-weight:600; letter-spacing:.04em; cursor:pointer; box-shadow:0 0 0 1px #0b0f0d88, 0 6px 24px #000a, 0 0 28px #ffd08a33; }
 .op-tile.ready .op-begin { opacity:1; visibility:visible; pointer-events:auto; transform:translate(-50%, -50%); transition:opacity .45s ease .12s, transform .5s cubic-bezier(.2, 1.4, .4, 1) .12s, background .2s, visibility 0s; }
 .op-begin:hover:not(:disabled) { background:#4a3819; }
 .op-begin:disabled { cursor:default; }
-.op-begin:focus-visible, .op-find button:focus-visible, .op-build:focus-visible { outline:2px solid #ffd08a; outline-offset:2px; }
+.op-begin:focus-visible { outline:2px solid #ffd08a; outline-offset:2px; }
 
 @media (max-width:640px) {
-  .op-top { padding:10px 16px 0; align-items:stretch; }
-  .op-find { width:100%; }
-  .op-say { text-align:left; }
-  .op-tiles { gap:12px; padding:8px 16px 10px; }
-  .op-foot { padding:4px 16px 12px; gap:4px 12px; }
-  .op-slider { flex-basis:100%; }
+  .op-bar { padding:10px 16px 0; }
+  .op-tiles { gap:12px; padding:12px 16px 16px; }
   .op-titles { font-size:13px; }
-  .op-caption { flex:1 1 100%; text-align:left; margin-top:4px; }
 }
