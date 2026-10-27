@@ -91,7 +91,9 @@ sequenced; Parked is in the brief but deliberately not started.
   squirrel and fence lizard with their sounds; two San Francisco cells built from scratch as
   a stress test, then a dense-urban rule that rewilds a city whole (streets gone, blocks
   synthesised from the pre-settlement class, bridges and street trees dropped from the crown
-  finder; a `crowns` step after derive) (2026-10-26). Weak: woodpecker stays procedural; a
+  finder; a `crowns` step after derive); the player arrives as a spirit in a misty blue-green
+  world and becomes the glowing raven, squirrel or woodpecker it touches, the opening screen
+  is map cards and a season slider (2026-10-26). Weak: woodpecker stays procedural; a
   coastal tile has no sea (the seabed is drawn as terrain), the city fill is a flat olive
   scrub, and the species library is the foothills' (see decisions.md, 2026-10-26).
 

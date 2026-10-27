@@ -104,6 +104,15 @@ import { buildSquirrel, buildWoodpecker, buildRaven, buildDeer, buildQuail, buil
 // dig up someone else's cache (less often than they forage) and cache it again; jays on the ground dig one up and eat
 // it, and jays and squirrels raid granaries.
 
+//
+// The spirit (spirit.js, 2026-10-26): the player starts as a wisp that every animal here is blind to (observer 'spirit':
+// it perceives everything, and update() hands the animals' reactions a player position far off, so nothing flushes,
+// freezes or climbs from it). Touching a raven, a western gray squirrel or an acorn woodpecker puts the player in that
+// body: playableNear finds the one in reach, take(id) lifts it out of the population (held: rebuilds do not respawn it,
+// so there is no double) and hands back where and how it was (info), and release(id, where) puts it back where the
+// player leaves it, in a state its own behaviour carries on from (on the ground, the bark or a limb, or in the air),
+// kept through rebuilds while it stays within reach of the player (freed) even if its home cell is out of the set.
+
 const TERRAIN_SPACING = 10;   // terrain.js default vertex spacing (main.js builds it with the defaults)
 const LIVE_R = 400, REBUILD_MOVE = 100, NEAR_R = 150, TAG_R = 40, TAG_MAX = 6, BUCKET = 30;
 // Drawn meshes (DRAWN below): the deer (a CC0 download, tools/build_deer.py) and the scrub-jay, quail,
@@ -220,6 +229,27 @@ const SPECIES = [
 ];
 const SQ = 0, WP = 1, RV = 2, DR = 3, QU = 4, SJ = 5, HK = 6, TV = 7, ST = 8, FX = 9, CY = 10, RB = 11, VO = 12, ML = 13, BK = 14, WF = 15, JR = 16, TK = 17, GS = 18, LZ = 19;
 SPECIES[DR].planar = true;
+// the spirit's bodies (playableNear): the species a player can take over, and their body centre over the origin (m)
+const PLAYABLE = [RV, SQ, WP, WF];
+const BODY_Y = SPECIES.map(() => 0); BODY_Y[SQ] = 0.12; BODY_Y[RV] = 0.2; BODY_Y[WP] = BODY_Y[WF] = 0.05;
+// The spirit's view (spirit.js SpiritLook): while the world's light goes faint and blue-green, the playable species are
+// drawn in their own colour, self-lit and clear of the haze: SELF_LIT.value (0..1) blends their lit and hazed colour
+// toward their albedo times SELF_LIGHT. A wrapper on their materials (selfLit), with its own program cache key.
+export const SELF_LIT = { value: 0 };
+const SELF_LIGHT = 1.15;
+function selfLit(m) {
+  const prev = m.onBeforeCompile, key = m.customProgramCacheKey?.bind(m);
+  m.onBeforeCompile = (shader, renderer) => {
+    prev?.call(m, shader, renderer);
+    shader.uniforms.uSelfLit = SELF_LIT;
+    shader.fragmentShader = shader.fragmentShader
+      .replace('#include <common>', '#include <common>\nuniform float uSelfLit;')
+      .replace('#include <opaque_fragment>', `outgoingLight = mix(outgoingLight, diffuseColor.rgb * ${SELF_LIGHT.toFixed(2)}, uSelfLit);\n#include <opaque_fragment>`);
+  };
+  m.customProgramCacheKey = () => `${key ? key() : ''}|selflit`;
+  m.needsUpdate = true;
+  return m;
+}
 const TAG_DY = [0.5, 0.5, 0.7, 2.1, 0.4, 0.4, 0.7, 0.7, 0.45, 0.65, 0.95, 0.4, 0.2, 1.1, 2.2, 0.5, 0.6, 1.2, 0.32, 0.12];
 const INDEX = Object.fromEntries(SPECIES.map((sp, k) => [sp.code, k]).filter(([, k]) => SPECIES[k].variantOf === undefined));
 const DRAWN = {
@@ -405,11 +435,12 @@ export class Animals {
     this.list = []; this.byId = new Map(); this.bySpecies = SPECIES.map(() => []);
     this.lastCenter = null; this.vegVersion = -1; this.dirty = true;
     this.observer = null; this.perceived = new Set();
+    this.held = new Map(); this.freed = new Set();   // the spirit's: animals the player is in, and ones it has left
     this.ms = 0; this.counts = new Int32Array(SPECIES.length); this.lastDescribe = -1e9; this.text = '–';
     this.prior = null; this.priorReady = false; this.priorDeadline = performance.now() + 4000;
     this.loadPrior();
     // one InstancedMesh per species
-    this.meshes = SPECIES.map(sp => {
+    this.meshes = SPECIES.map((sp, k) => {
       const model = sp.build();
       const geo = model.geometry;
       const anim = new THREE.InstancedBufferAttribute(new Float32Array(sp.cap * 4), 4); anim.setUsage(THREE.DynamicDrawUsage);
@@ -420,6 +451,7 @@ export class Animals {
       mesh.castShadow = mesh.receiveShadow = true;   // receive: patchLambert's csmShadow; cast: the proxies below
       this.group.add(mesh);
       sp.tris = model.tris; sp.model = model;
+      if (PLAYABLE.includes(k)) selfLit(mesh.material);
       return mesh;
     });
     // Shadow casters (see the header): every species on the near cascade through shadows.js
@@ -529,6 +561,7 @@ export class Animals {
       m.count = 0; m.frustumCulled = false; m.name = `${D.name} mesh lod${t}`; m.visible = false;
       m.castShadow = m.receiveShadow = true;
       m.customDepthMaterial = animalDepthMaterial(model);
+      if (PLAYABLE.includes(k)) selfLit(m.material);
       this.group.add(m);
       return m;
     });
@@ -547,6 +580,7 @@ export class Animals {
       m.count = 0; m.frustumCulled = false; m.name = `${D.name} mesh air`; m.visible = false;
       m.castShadow = m.receiveShadow = true;
       m.customDepthMaterial = animalDepthMaterial(pm);
+      if (PLAYABLE.includes(k)) selfLit(m.material);
       this.group.add(m);
       st.tiers.push(m);
       this.rvGM ||= new Uint8Array(cap);
@@ -841,6 +875,10 @@ export class Animals {
     if (live[ML]) this.spawnLion(px, pz, keep);
     for (const id of this.debugIds) if (this.byId.has(id)) keep.add(id);   // summoned (debugging) animals stay
     if (this.familyIds) for (const id of this.familyIds) if (this.byId.has(id)) keep.add(id);   // the player woodpecker's family
+    for (const id of this.freed) {   // left by the player (release): kept while near, wherever its home cell is
+      const a = this.byId.get(id);
+      if (a && Math.hypot(a.x - px, a.z - pz) < LIVE_R + 100 && this.perceived.has(SPECIES[a.sp].code)) keep.add(id); else this.freed.delete(id);
+    }
     // drop animals whose home cell left the live set; rebuild the per-species slot lists
     for (const [id, a] of this.byId) if (!keep.has(id)) this.byId.delete(id);
     this.list = [...this.byId.values()];
@@ -1044,6 +1082,7 @@ export class Animals {
   }
   add(id, s, rnd, init, keep) {
     keep.add(id);
+    if (this.held.has(id)) return;   // the player is in it (take)
     const old = this.byId.get(id);
     if (old) return;   // still live: keeps its state
     const seed = (rnd() * 4294967296) >>> 0;
@@ -3296,6 +3335,104 @@ export class Animals {
     for (let k = 0; k < arr.length; k++) { const a = arr[k], dx = a.x - x, dy = a.y - y, dz = a.z - z; if (dx * dx + dy * dy + dz * dz < r2) out.push(a); }
     return out;
   }
+  // ---- the spirit's bodies (see the header) --------------------------------------------------------------
+  // The playable animal nearest (x, y, z) within r of its body (a raven in the air within rAir: it is catchable at
+  // speed), other than `skip` (an id), or null: info() of it. Ravens, western gray squirrels, acorn woodpeckers of both sexes.
+  playableNear(x, y, z, r = 2.5, rAir = 4, skip = null) {
+    let best = null, bd = Infinity;
+    for (const s of PLAYABLE) {
+      if (!this.meshes[s].visible) continue;
+      const arr = this.bySpecies[s];
+      for (let k = 0; k < arr.length; k++) {
+        const a = arr[k]; if (a.culled || a.id === skip || !this.present(a)) continue;
+        const R = a.air ? rAir : r, dx = a.x - x, dy = a.y + BODY_Y[s] * (a.air ? 0 : 1) - y, dz = a.z - z, d2 = dx * dx + dy * dy + dz * dz;
+        if (d2 < R * R && d2 < bd) { bd = d2; best = a; }
+      }
+    }
+    return best ? this.info(best) : null;
+  }
+  // Where and how a playable animal is, for the player to carry on from: species code and sex, position (its origin:
+  // the feet on the ground or bark, the body in the air), yaw in the flight's frame (forward -z at 0; the animals'
+  // forward is +z), speed, and where: 'air', 'ground', 'trunk' (a squirrel on the bole: tree, face, h), 'tree' (a
+  // squirrel out on the wood), 'cling' (a woodpecker on the bark: tree, face, h) or 'top' (perched up in a tree).
+  info(a) {
+    const s = a.sp, g = this.heights.atXZ(a.x, a.z);
+    const o = { id: a.id, code: SPECIES[s].code, sex: s === WF ? 'female' : s === WP ? 'male' : null, x: a.x, y: a.y, z: a.z,
+      yaw: wrapAngle(a.yaw + Math.PI), pitch: 0, speed: 0, where: 'ground', tree: a.tree || null, face: a.face, h: a.h, anchor: a.anchor || null };
+    if (s === SQ) {
+      if ((a.state === S_CLIMB || a.state === S_DOWN || a.state === S_RAIDP) && !a.path && a.tree) o.where = 'trunk';
+      else if (a.y - g > 0.4) o.where = 'tree';
+    } else if (s === RV) {
+      if (a.state === R_SOAR) { o.where = 'air'; o.speed = 10; }
+      else if (a.state === R_GLIDE || a.state === R_CLIMB) { o.where = 'air'; o.speed = Math.min(25, Math.hypot(a.tx - a.sx, a.ty - a.sy, a.tz - a.sz) / Math.max(0.5, a.dur)); }
+      else o.where = a.perchY !== null && a.y - g > 0.5 ? 'top' : 'ground';
+      if (o.where === 'air') o.pitch = -a.pitch;   // the animals' pitch is nose down positive
+    } else {
+      if (a.state === W_CLING || a.state === S_RAIDP) o.where = 'cling';
+      else if (a.state === W_FLY || a.state === W_MOB) { o.where = 'air'; o.speed = a.state === W_FLY ? Math.min(12, a.speed / Math.max(0.5, a.dur)) : 8; }
+      else o.where = a.y - g < 0.3 ? 'ground' : 'top';
+    }
+    return o;
+  }
+  // Each playable animal drawn now: fn(x, y, z) at its body (the spirit's glow on them, spirit.js).
+  eachPlayable(fn) {
+    for (const s of PLAYABLE) {
+      if (!this.meshes[s].visible || !this.group.visible) continue;
+      for (const a of this.bySpecies[s]) if (!a.culled && this.present(a)) fn(a.x, a.y + BODY_Y[s] * (a.air ? 0 : 1), a.z);
+    }
+  }
+  // A held or living animal's info by id (the spirit's flash closes on it), or null.
+  peek(id) { const a = this.byId.get(id); return a ? this.info(a) : null; }
+  // Lift a playable animal out of the population (the player is in it now); returns its info, or null.
+  take(id) {
+    const a = this.byId.get(id); if (!a || !PLAYABLE.includes(a.sp)) return null;
+    const o = this.info(a);
+    this.dropTask(a);
+    if (a.state === W_MOB) a.mob = null;
+    this.byId.delete(id); this.freed.delete(id); this.held.set(id, a);
+    this.dirty = true;   // rebuilt (and every matrix rewritten) on this frame's update
+    return o;
+  }
+  // Put a held animal back where the player leaves it: o is { x, y, z, yaw (the flight's frame), where (as info), tree
+  // (a trunk record, for 'trunk', 'tree' and 'cling'), face, h, speed }. It carries on from a state of its own.
+  release(id, o) {
+    const a = this.held.get(id); if (!a) return null;
+    this.held.delete(id);
+    const r = a.rng, H = this.heights, g = H.atXZ(o.x, o.z), oak = t => (t && this.nearestOak(t.x, t.z, 1.5)) || t;
+    a.x = o.x; a.y = o.y; a.z = o.z; a.yaw = wrapAngle(o.yaw + Math.PI); a.pitch = 0; a.roll = 0; a.amp = 0;
+    a.task = 0; a.acorn = null; a.guard = null; a.fleeOak = null; a.raidOak = null; a.mob = null; a.scared = 0;
+    a.vis = 1; a.culled = false; a.acc = 0; a.air = 0; a.flickV = 0;
+    if (a.sp === SQ) {
+      a.path = null; a.via = false;
+      const tr = oak(o.tree);
+      if (o.where === 'trunk' && tr) { a.tree = tr; a.face = o.face; a.h = Math.max(0, o.h); a.state = S_DOWN; }   // down the bole
+      else if (o.where === 'tree' && tr) {   // sits a while, then back along to the trunk and down (S_SIT without a path)
+        a.tree = tr; a.face = Math.atan2(o.x - tr.x, o.z - tr.z); a.state = S_SIT; a.t = 3 + r() * 6; a.pose = 1; a.pitch = -0.55;
+      } else { a.y = g; a.tree = this.nearestOak(o.x, o.z, 30) || a.anchor; a.state = S_PAUSE; a.t = 1 + r() * 2; }
+    } else if (a.sp === RV) {
+      a.perchY = null; a.perchTop = false; a.task = 0; a.tRest = 0; a.hopping = 0; a.wing = 0; a.look = 0;
+      if (o.where === 'air') {   // soaring on: a circle that passes through here along its heading
+        const fx = Math.sin(a.yaw), fz = Math.cos(a.yaw), R = 35 + r() * 30, th = Math.atan2(-fx, fz);
+        a.dir = 1; a.R = R; a.th = th; a.cx = o.x - R * Math.cos(th); a.cz = o.z - R * Math.sin(th);
+        a.alt = Math.max(25, o.y - H.atXZ(a.cx, a.cz)); a.state = R_SOAR; a.t = 20 + r() * 30; a.air = 1; a.fly = 1;
+      } else {   // standing a while (on the ground, or the limb: perchY), then back up to a circle
+        if (o.where === 'top') a.perchY = o.y; else a.y = g;
+        a.state = R_PERCH; a.t = 4 + r() * 10; a.pose = 1; a.gm = this.meshOn(RV) ? 1 : 0;
+      }
+    } else {
+      a.path = null;
+      if (o.where === 'cling' && o.tree) {
+        const tr = oak(o.tree);
+        a.tree = tr; a.face = o.face; a.h = Math.max(0.3, o.h); a.state = W_CLING; a.t = 3 + r() * 6; a.yaw = a.face + Math.PI; a.pitch = CLING_PITCH; a.pose = 1;
+      } else if (o.where === 'top') { a.state = W_TOP; a.t = 2 + r() * 6; a.pose = 1; a.tree = this.nearestOak(o.x, o.z, 15) || a.anchor; }
+      else {   // off to an oak near home
+        if (o.where === 'ground') a.y = g;
+        this.wpFly(a, this.randomOak(a.anchor.x, a.anchor.z, 45, r, null) || a.anchor, false);
+      }
+    }
+    this.byId.set(id, a); this.freed.add(id); this.dirty = true;
+    return a;
+  }
   // Is this animal still in the live set (not dropped by a rebuild)?
   alive(a) { return this.byId.get(a.id) === a; }
   // debugging: flush the covey nearest to the player, as if the raven had dropped onto it
@@ -3347,7 +3484,8 @@ export class Animals {
     let fresh = false;   // slots were reassigned: every animal writes its matrix this frame
     if (this.dirty || !this.lastCenter || Math.hypot(P.x - this.lastCenter[0], P.z - this.lastCenter[1]) > REBUILD_MOVE) { this.rebuild(P.x, P.z); fresh = true; }
     const odd = (++this.frame) & 1;
-    const px = P.x, py = P.y, pz = P.z;
+    const ghost = this.observer === 'spirit';   // the spirit: nothing reacts to it (see the header)
+    const px = ghost ? 1e7 : P.x, py = ghost ? 1e7 : P.y, pz = ghost ? 1e7 : P.z;
     const list = this.list, e = this._e, q = this._q, p = this._p, s = this._s, m = this._m;
     if (this.meshes[QU].visible) for (let k = 0; k < this.coveys.length; k++) this.coveyUpdate(this.coveys[k], dt, px, py, pz);
     if (this.meshes[TK].visible) for (let k = 0; k < this.flocks.length; k++) this.flockUpdate(this.flocks[k], dt, px, pz);

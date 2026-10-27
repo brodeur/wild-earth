@@ -10,7 +10,7 @@ Three workstreams share one contract, the [tile package spec](docs/tile-spec.md)
 |---|---|---|
 | Dataset pipeline | `pipeline/` | fetches terrain, imagery, footprint, hydrology, species for a tile |
 | Admin/viewer | `viewer/` | 2D/3D inspection, perception filter, season calendar, verify/flag |
-| Client | `client/` | first playable slice: fly the tile as a raven in three.js |
+| Client | `client/` | the playable slice in three.js: arrive as a spirit, become the raven, squirrel or woodpecker you touch |
 | Renderer | (Unreal, later) | the browser client stands in for now |
 
 ## Run it
@@ -39,7 +39,8 @@ Run the dev server (static files from the repo root plus a small tile API):
 ```
 
 Then open <http://127.0.0.1:8781/viewer/> for the admin viewer, or
-<http://127.0.0.1:8781/client/?tile=utm10n_680_4280> to fly the tile as a raven.
+<http://127.0.0.1:8781/client/?tile=utm10n_680_4280> to fly the tile as a spirit and become the
+animals you touch (`B` leaves a body; `?skip=1&as=raven|squirrel|woodpecker` starts in one for tests).
 Add `&fov=45` (vertical degrees, 30-110; default 70) to try a narrower lens, `&date=04-15` for
 another day's measured ground colour, `&base=imagery` for the base photo under it.
 The API answers which tile holds a point (`POST /api/tile {lon, lat}`) and builds a missing

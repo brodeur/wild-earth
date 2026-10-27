@@ -112,13 +112,18 @@ export class WoodpeckerControl {
     if (on) this.acorns?.setPlayerSpecies(CODE);
     for (const m of this.meshes) m.visible = false;
     if (on === this.on) { if (on) this.mesh.visible = true; return; }
+    if (!on && this.auto) this.finishArrival(true);   // left mid-arrival (spirit.js): its onDone still runs
     this.on = on;
     const f = this.flight;
     f.body.visible = !on && f.view === 'chase';
     if (on) this.mesh.visible = true;
     this.nut.visible = false;
     if (on) { f.roll = 0; f.hover = false; this.camSettled = false; this.lastYaw = f.yaw; this.relocate(); }
-    else { this.camera.up.set(0, 1, 0); this.acorns?.setFamilyGranary?.(null); this.animals.familyOn?.(null); f.reset(f.pos.x, f.pos.z, 30); }   // back to the raven
+    else {   // back to the raven (or the spirit, which places itself); every state let go
+      this.camera.up.set(0, 1, 0); this.acorns?.setFamilyGranary?.(null); this.animals.familyOn?.(null); f.reset(f.pos.x, f.pos.z, 30);
+      this.mode = 'fly'; this.tree = null; this.path = null; this.work = null; this.hitch = null; this.granary = this.granaryRec = null; this.familyDue = 0;
+      this.jumpQ = this.actQ = false;
+    }
     if (on) { this.nearWas = this.camera.near; this.fovWas = this.camera.fov; }
     this.camera.near = on ? NEAR : this.nearWas || 0.5;
     if (!on && this.fovWas) this.camera.fov = this.fovWas;   // the lens back for the raven (or the squirrel)
@@ -137,7 +142,7 @@ export class WoodpeckerControl {
     if (h1?.firstChild) h1.firstChild.nodeValue = on ? 'acorn woodpecker ' : W.h1;
     if (help) help.innerHTML = on ? 'on a trunk: <kbd>W</kbd><kbd>S</kbd> hitch up, down · <kbd>A</kbd><kbd>D</kbd> round · <kbd>space</kbd> fly · '
       + 'flying: <kbd>W</kbd><kbd>S</kbd> speed · <kbd>A</kbd><kbd>D</kbd> turn · <kbd>↑</kbd><kbd>↓</kbd> or drag to climb, dive · <kbd>space</kbd> burst · fly into a trunk to cling · <kbd>S</kbd> low to land · '
-      + '<kbd>E</kbd> take an acorn; at your granary, hammer it in · <kbd>M</kbd> map · <kbd>P</kbd> present day · <kbd>T</kbd> tags · <kbd>N</kbd> mute · click a tree to identify' : W.help;
+      + '<kbd>E</kbd> take an acorn; at your granary, hammer it in · <kbd>M</kbd> map · <kbd>P</kbd> present day · <kbd>T</kbd> tags · <kbd>N</kbd> mute · <kbd>B</kbd> back to spirit form · click a tree to identify' : W.help;
     const agl = $('agl')?.previousElementSibling, sp = $('speed')?.previousElementSibling;
     if (agl) agl.textContent = on ? 'height above ground' : W.agl;
     if (sp) sp.textContent = on ? 'speed' : W.speed;
@@ -182,6 +187,36 @@ export class WoodpeckerControl {
     this.acorns?.setFamilyGranary?.(g ? g.id : null);
     this.familyDue = 1.5;   // the family on it, once the animals have rebuilt around the new place (animals.familyOn)
     return g;
+  }
+  // The family's granary is this oak (spirit.js: the AI bird the player came into lived there).
+  setGranaryOak(o) {
+    this.granary = o; this.granaryRec = o ? this.record(o) : null;
+    this.acorns?.setFamilyGranary?.(o ? o.id : null);
+    this.familyDue = 1.5;
+  }
+  // The spirit (spirit.js) comes into an AI woodpecker: the player carries on as it was (animals.js info): on the
+  // bark of its tree, perched on the ground or in a crown, or in the air at its speed. Its family's granary is its own.
+  enterAt(o) {
+    const f = this.flight, P = f.pos;
+    this.auto = null; this.onArrived = null;
+    P.set(o.x, o.y, o.z); f.yaw = this.lastYaw = o.yaw; f.pitch = 0; f.roll = 0;
+    this.mode = 'fly'; this.tree = null; this.path = null; this.work = null; this.hitch = null;
+    if (o.anchor) this.setGranaryOak(o.anchor);
+    if (o.where === 'cling' && o.tree) {
+      const tr = this.record(o.tree);
+      this.attach(tr, o.face, clamp(o.h, 0.3, this.top(tr))); this.place();
+    } else if (o.where === 'ground') this.land('ground');
+    else if (o.where === 'top') this.land('branch');
+    else { this.v = clamp(o.speed || V_CRUISE, V_MIN, V_MAX); this.baseY = P.y; this.undA = 0; this.burst = true; this.uc = 0; }
+    this.last.copy(P); this.prevY = P.y; this.camSettled = false; this.camOrbit = 0;
+  }
+  // Where the player leaves this woodpecker (spirit.js), for the AI to carry on from (animals.js release): as info.
+  leaveInfo() {
+    const P = this.flight.pos, m = this.mode, back = this.work?.back;
+    const o = { x: P.x, y: P.y, z: P.z, yaw: this.flight.yaw, where: 'air', tree: null, face: 0, h: 0, speed: this.v };
+    if ((m === 'cling' || (m === 'work' && back === 'cling')) && this.tree) Object.assign(o, { where: 'cling', tree: this.tree, face: this.face, h: this.h, yaw: this.face + Math.PI });
+    else if (m === 'perch' || (m === 'work' && back)) o.where = (m === 'perch' ? this.perch : back) === 'ground' ? 'ground' : 'top';
+    return o;
   }
   atGranary() {
     const g = this.granary, t = this.tree;

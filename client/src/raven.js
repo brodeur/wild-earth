@@ -28,6 +28,9 @@ import { FOLD_T, XFADE_T } from './flight.js';
 // Hopping and turning are flight.js's (flight.gnd: body heading, gait phase and amplitude, hops, the take-off's wing
 // lift); this draws them: the legs swing together in a hop and alternate in a step round, the head follows the look and
 // dips for a peck (E), the folded wings half lift in a forward hop.
+// Spirit form (spirit.js) hides the bird: setHidden(true) keeps the flying model and the ground raven away (and their
+// shadows: the casters follow visibility) while the wisp hangs from the same flight body; setHidden(false) brings back
+// whichever the flight's state calls for, with no fold or dissolve (flight.cut).
 // The swaps are hidden: at touchdown the flying model's wings fold over FOLD_T (the arm swept back and lowered, the
 // hand swept in, the wing scaled down from the shoulder toward the folded wing's length and chord), then the ground
 // model dissolves in over it (both drawn with alpha hash: the incoming one comes in fully over the first half of XFADE_T,
@@ -60,7 +63,7 @@ export class Raven {
     this.flight = parent.userData.flight || null; this.parent = parent;
     this.ground = null; this.onGround = false;
     this.g = { e0: 0, wfV: 0, look: 0, flick: 0, hop: 0 };
-    this.swapT = 0; this.fold = 0; this.fade = 0; this.foldFrom = 0; this.opFly = 1; this.FOLD = FOLD;
+    this.swapT = 0; this.fold = 0; this.fade = 0; this.foldFrom = 0; this.opFly = 1; this.FOLD = FOLD; this.hidden = false;
     this._m = new THREE.Matrix4(); this._q = new THREE.Quaternion(); this._p = new THREE.Vector3(); this._s = new THREE.Vector3(1, 1, 1); this._up = new THREE.Vector3(0, 1, 0);
     if (GROUND && this.flight) loadRavenGroundMesh().then(m => this.buildGround(m), e => console.warn('ground raven failed to load; the flying model stays on the ground', e));
     addEventListener('keydown', e => { if (e.code === 'KeyC' && this.onGround && !(e.target && (e.target.tagName === 'INPUT' || e.target.tagName === 'SELECT'))) this.g.wfV = 1; });
@@ -207,8 +210,15 @@ export class Raven {
     // earlier registration; Shadows.sync makes the same call once the first model is in).
     addCaster(this.group, { cascades: [0], simple: true });
   }
+  setHidden(h) {
+    h = !!h; if (h === this.hidden) return;
+    this.hidden = h;
+    if (h) { this.group.visible = false; if (this.ground) this.ground.visible = false; }
+    else if (this.flight) this.flight.cut = true;   // back as the flight stands now: no fold or dissolve
+  }
   // flapping: whether the bird is working (climbing, boosting, a flap); speed: m/s, sets the wingbeat rate.
   update(dt, flapping, speed) {
+    if (this.hidden) return;
     this.updateGround(dt);
     if (!this.mixer) return;
     if (flapping !== this.flapping) {

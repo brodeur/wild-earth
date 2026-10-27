@@ -916,6 +916,7 @@ export class Soundscape {
   call() {
     if (!this.ctx || this.muted) return;
     const sp = typeof window !== 'undefined' ? window.__we?.playerSpecies : null;
+    if (sp === 'spirit') return 0;   // the spirit (spirit.js) has no voice
     if (sp === 'sciurus_griseus') return this.squirrelCall();
     if (sp === 'melanerpes_formicivorus') return this.woodpeckerCall();
     const t = this.ctx.currentTime + 0.02;

@@ -27,6 +27,12 @@ import { Perches } from './perch.js';
 // levels). The chase camera comes down to ~0.8 m up and 2.5 m back, a little to one side (camK blends the two set-ups),
 // with a small dip as the bird lands. A HUD row says where it stands ("perched on a blue oak, 6 m up", "on the ground").
 // body.userData.flight is this, for the model hanging from body.
+// Spirit form (spirit.js; `spirit` true): the same keys drive a wisp instead (updateSpirit): it cruises at SPIRIT_CRUISE
+// m/s, W (Shift faster) pushes it up to SPIRIT_MAX and, let go, it eases back to cruise; S stops it and backs it up as
+// the raven's does; X / Z rise and sink faster than wings can, space lifts it. No glide or stall: speed is not traded
+// for height, nothing sinks it, and nothing lands it: it passes over the ground, water and limbs alike, kept
+// SPIRIT_FLOOR above the drawn terrain or a pond's or creek's surface.
+const SPIRIT_CRUISE = 25, SPIRIT_MAX = 90, SPIRIT_BACK = 10, SPIRIT_FLOOR = 0.8;   // m/s, m/s, m/s, m
 const LAND_H = RAVEN_GROUND.bodyY;   // the body above the feet, standing (raven_ground.glb)
 const TERRAIN_SPACING = 10;          // terrain.js default vertex spacing (main.js builds it with the defaults)
 export const FOLD_T = 0.25, XFADE_T = 0.12, LIFT_T = 0.2;   // s: wings fold before the swap; the dissolve; wings lift before take-off
@@ -47,7 +53,7 @@ export class RavenFlight {
     this.keys = new Set(); this.flap = 0; this.drag = null; this.hover = false; this.sDwell = 0;
     this.view = 'chase';                                  // 'chase' | 'first'
     this.camOff = new THREE.Vector3(); this.camUp = new THREE.Vector3(0, 1, 0); this.camSettled = false;
-    this.flapping = false;
+    this.flapping = false; this.spirit = false; this.lift = 0;
     this.landed = false; this.groundY = 0; this.lifting = false;
     // in the air: contacts ignored for noLand s (and the plant `leftRec` for leftT s); a falling start off a branch (dropV,
     // m/s); a bounce's cool-down
@@ -93,7 +99,16 @@ export class RavenFlight {
     this.pos.set(x, this.heights.atXZ(x, z) + agl, z); this.landed = this.lifting = false; this.gnd.lift = -1; this.gnd.hop = 0; this.gnd.perch = null;
     this.cut = true; this.yaw = 0; this.pitch = -0.08; this.speed = 12; this.camSettled = false; this.noLand = 0; this.dropV = 0; this.leftRec = null;
   }
+  // Spirit form on or off (spirit.js): off the ground or branch at once, no wings, no pending take-off or landing.
+  setSpirit(on) {
+    this.spirit = !!on;
+    if (!on) return;
+    this.landed = this.lifting = false; this.gnd.lift = -1; this.gnd.hop = 0; this.gnd.perch = null;
+    this.flap = 0; this.flapping = false; this.dropV = 0; this.noLand = 0; this.leftRec = null; this.bounceT = 0; this.lift = 0;
+    this.spaceQ = this.actQ = this.launchQ = false;
+  }
   update(dt) {
+    if (this.spirit) return this.updateSpirit(dt);
     if (this.landed) return this.updateGround(dt);
     const k = this.keys, turn = 1.4, pitchRate = 1.0;
     let yawIn = (k.has('ArrowLeft') || k.has('KeyA') ? 1 : 0) - (k.has('ArrowRight') || k.has('KeyD') ? 1 : 0);
@@ -155,6 +170,47 @@ export class RavenFlight {
     this.updateCamera(dt, dir);
     this.hud(dt);
     return { hover: holding, agl: this.pos.y - ground, elev: this.pos.y, speed: this.speed, heading: ((Math.atan2(dir.x, -dir.z) * 180 / Math.PI) + 360) % 360 };
+  }
+  // The wisp's flight (see the header): the raven's attitude keys, its own speeds, no contacts.
+  updateSpirit(dt) {
+    const k = this.keys, turn = 1.6, pitchRate = 1.2;
+    const yawIn = (k.has('ArrowLeft') || k.has('KeyA') ? 1 : 0) - (k.has('ArrowRight') || k.has('KeyD') ? 1 : 0);
+    const pitchIn = (k.has('ArrowUp') ? 1 : 0) - (k.has('ArrowDown') ? 1 : 0);
+    this.yaw += yawIn * turn * dt;
+    this.pitch = THREE.MathUtils.clamp(this.pitch + pitchIn * pitchRate * dt, -1.3, 1.1);
+    if (!pitchIn && !this.drag) this.pitch = THREE.MathUtils.lerp(this.pitch, 0, 1 - Math.exp(-dt * 0.3));   // levels out, slowly
+    this.roll = THREE.MathUtils.lerp(this.roll, yawIn * 0.5, 1 - Math.exp(-dt * 2));
+    const boost = k.has('ShiftLeft') || k.has('ShiftRight'), push = k.has('KeyW') || boost;
+    if (push) { this.hover = false; this.speed = Math.min(SPIRIT_MAX, Math.max(this.speed, 0) + (boost ? 70 : 32) * dt); }
+    if (k.has('KeyS')) {
+      if (this.speed > 0.4) { this.speed = Math.max(0, this.speed - 30 * dt); this.sDwell = 0; }
+      else if (this.speed >= -0.01 && (this.sDwell += dt) < 0.5) this.speed = 0;
+      else this.speed = Math.max(-SPIRIT_BACK, this.speed - 10 * dt);
+    } else this.sDwell = 0;
+    if (this.hover) this.speed = THREE.MathUtils.lerp(this.speed, 0, 1 - Math.exp(-dt * 3));
+    else if (!push && !k.has('KeyS') && this.speed > 4) this.speed += (SPIRIT_CRUISE - this.speed) * (1 - Math.exp(-dt * 0.7));   // back to cruise
+    const holding = this.hover || Math.abs(this.speed) < 1.0;
+    this._q.setFromEuler(this._e.set(this.pitch, this.yaw, 0));
+    const dir = this._v.set(0, 0, -1).applyQuaternion(this._q);
+    const P = this.pos;
+    P.addScaledVector(dir, this.speed * dt);
+    if (this.flap > 0) { this.lift = Math.max(this.lift, 10); this.flap = 0; }   // space: a lift (no wingbeat, nothing for the sound's wings)
+    const vert = (k.has('KeyX') ? 1 : 0) - (k.has('KeyZ') ? 1 : 0);
+    P.y += (vert * 16 + this.lift) * dt;
+    this.lift *= Math.exp(-dt * 3);
+    this.flapping = false;
+    P.x = THREE.MathUtils.clamp(P.x, 50, this.heights.size - 50);
+    P.z = THREE.MathUtils.clamp(P.z, -this.heights.size + 50, -50);
+    // over the ground and water, never into them
+    const ground = this.heights.atXZ(P.x, P.z), mesh = this.meshAt(P.x, P.z);
+    let floor = Math.max(ground, mesh);
+    if (P.y < floor + SPIRIT_FLOOR + 3) { const F = this.footing(P.x, P.z, P.y + 1); if (F.surf != null && F.depth > 0.005) floor = Math.max(floor, F.surf); }
+    if (P.y < floor + SPIRIT_FLOOR) P.y = floor + SPIRIT_FLOOR;
+    this.groundY = mesh;
+    this.body.quaternion.copy(this._q); this.body.rotateZ(this.roll);
+    this.updateCamera(dt, dir);
+    this.hud(dt);
+    return { hover: holding, agl: P.y - ground, elev: P.y, speed: this.speed, heading: ((Math.atan2(dir.x, -dir.z) * 180 / Math.PI) + 360) % 360 };
   }
   // ---- contact: take hold of the ground or a branch, or bounce off ---------------------------------------
   contacts(dir, holding) {
@@ -223,6 +279,23 @@ export class RavenFlight {
     this.landT = 0; this.speed = 0; this.flap = 0; this.flapping = false; this.lifting = false; this.hover = false; this.dropV = 0;
     this.spaceQ = this.actQ = this.launchQ = false;
     this.camDip = perch ? 0.12 : 0.06;
+  }
+  // Standing at once (spirit.js: a raven taken over where it stood, on the ground or a limb): enterGround without the
+  // touchdown's slide, fold and dip, as if it had settled there a while ago.
+  settleOn(perch, feet) {
+    this.enterGround(perch, feet);
+    const G = this.gnd;
+    this.pos.set(G.to.x, G.to.y, G.to.z); G.yaw = this.yaw = G.to.yaw; G.lastX = G.to.x; G.lastZ = G.to.z;
+    this.landT = SETTLE; this.camDip = 0; this.cut = true;
+  }
+  // A limb a raven can stand on within r of (x, y, z) (as a contact finds one), or null.
+  perchNear(x, y, z, r) {
+    const Q = this.perchQuery(); if (!Q) return null;
+    const h = Q.near(x, y, z, Math.min(r, 1.5), undefined, null, true);
+    if (!h || !h.perch) return null;
+    let s = NaN;
+    for (let d = 0; d <= 0.6 + 1e-6 && s !== s; d += 0.05) for (const q of d ? [h.s + d, h.s - d] : [h.s]) if (s !== s && Q.perchable(h.rec, h.stem, q, this._a)) s = q;
+    return s === s ? { rec: h.rec, st: h.stem, s } : null;
   }
   // Where the feet go at (x, z) below `from`: the drawn terrain, a close rock's top, or a creek or pond bed, and the
   // water's depth and surface there (the squirrel controller's footing(); without it, the terrain mesh).

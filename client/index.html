@@ -49,6 +49,9 @@
   #gameBtn.on { background:#3a2c17; border-color:#6b4a2b; }
   #hoverBtn { width:100%; margin-top:6px; background:#1f2a23; color:#e6ede7; border:1px solid #263128; border-radius:6px; padding:5px 10px; font:inherit; cursor:pointer; }
   #hoverBtn.on { background:#1d3340; border-color:#2f5a73; }
+  #spiritBtn { width:100%; margin-top:6px; background:#1b2733; color:#e6f0ff; border:1px solid #3a5670; border-radius:6px; padding:5px 10px; font:inherit; cursor:pointer; }
+  #spiritBtn:hover { background:#22344a; } #spiritBtn[hidden] { display:none; }
+  html.narrow #spiritBtn { padding:4px 8px; margin-top:5px; }
   #game { position:fixed; left:50%; top:12px; transform:translateX(-50%); background:#0f1512bb; padding:8px 14px; border-radius:8px; min-width:240px; backdrop-filter:blur(4px); transition:background .6s; }
   #game.hidden { display:none; }
   #game h1 { font-size:13px; margin:0 0 4px; color:#ffd08a; }
@@ -151,6 +154,7 @@
   <div id="goto"><input id="gotoInput" placeholder="lat, lon" autocomplete="off" spellcheck="false"><button id="gotoBtn">Go</button></div>
   <div class="muted" id="gotoStatus"></div>
   <button id="gameBtn" title="acorn stash: pick up glowing acorns under oaks and cache them in stash holes">Start game</button>
+  <button id="spiritBtn" title="leave this body; it carries on its own life (B)" hidden>Back to spirit form</button>
   <button id="hoverBtn" title="hold position and look around (H)">Hover</button>
   <button id="peekBtn" title="hold to see today's world at this spot (P); tap to toggle on touch">Present day</button>
   <div id="soundRow"><button id="soundBtn">Sound</button><input id="soundVol" type="range" min="0" max="1" step="0.05" value="0.5" title="master volume" aria-label="master volume"></div>
@@ -165,7 +169,7 @@
   <label>Perceives</label>
   <div class="muted" id="perceives">–</div>
 </div>
-<div id="help"><kbd>↑</kbd><kbd>↓</kbd> pitch · <kbd>←</kbd><kbd>→</kbd> turn · <kbd>W</kbd><kbd>S</kbd> speed · <kbd>X</kbd><kbd>Z</kbd> climb / descend · <kbd>space</kbd> flap · <kbd>H</kbd> hover · fly slowly into a branch or the ground to land, then <kbd>W</kbd><kbd>A</kbd><kbd>S</kbd><kbd>D</kbd> hop, <kbd>space</kbd> take off · <kbd>V</kbd> view · <kbd>R</kbd> reset · <kbd>M</kbd> map · <kbd>G</kbd> roads · <kbd>P</kbd> present day · <kbd>T</kbd> tags · <kbd>N</kbd> mute · <kbd>C</kbd> call · click a tree to identify · drag mouse to look</div>
+<div id="help"><kbd>↑</kbd><kbd>↓</kbd> pitch · <kbd>←</kbd><kbd>→</kbd> turn · <kbd>W</kbd><kbd>S</kbd> speed · <kbd>X</kbd><kbd>Z</kbd> climb / descend · <kbd>space</kbd> flap · <kbd>H</kbd> hover · fly slowly into a branch or the ground to land, then <kbd>W</kbd><kbd>A</kbd><kbd>S</kbd><kbd>D</kbd> hop, <kbd>space</kbd> take off · <kbd>V</kbd> view · <kbd>R</kbd> reset · <kbd>M</kbd> map · <kbd>G</kbd> roads · <kbd>P</kbd> present day · <kbd>T</kbd> tags · <kbd>N</kbd> mute · <kbd>C</kbd> call · <kbd>B</kbd> back to spirit form · click a tree to identify · drag mouse to look</div>
 <div id="speciesCard" class="hidden"></div>
 <div id="credits" role="dialog" aria-label="Data and credits" hidden></div>
 <div id="game" class="hidden">

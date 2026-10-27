@@ -11,7 +11,7 @@ import { Grass } from './grass.js';
 import { MiniMap } from './minimap.js';
 import { RoadsOverlay } from './roadsOverlay.js';
 import { setupGoTo, takePendingPoint, builtTileFor, takeCarry, localXY } from './goto.js';
-import { OpeningScreen, Arrival, lastTile, rememberTile, lastSex } from './arrival.js';
+import { OpeningScreen, Arrival, lastTile, rememberTile } from './arrival.js';
 import { SEASON_LOOK, seasonOfDate, sunDirection, dateForSeason, parseDate } from './season.js';
 import { AcornGame } from './acorns.js';
 import { Identify } from './identify.js';
@@ -23,6 +23,7 @@ import { Water } from './water.js';
 import { Rocks } from './rocks.js';
 import { SquirrelControl } from './squirrelControl.js';
 import { WoodpeckerControl } from './woodpeckerControl.js';
+import { SpiritControl } from './spirit.js';
 import { setupCredits } from './credits.js';
 
 const $ = id => document.getElementById(id);
@@ -58,9 +59,11 @@ async function main() {
   const params = new URLSearchParams(location.search);
   const pending = takePendingPoint(params);   // a lat/lon to land at, read once
   const carry = takeCarry();                  // choices carried across a tile switch, read once
-  // ?game=1 and ?skip=1 go straight in, as before the opening screen (agents and tests rely on it).
+  // ?game=1 and ?skip=1 go straight in, as before the opening screen (agents and tests rely on it): as a spirit at the
+  // tile centre, flying (&as=spirit says so), or for tests &as=raven (the old start), &as=squirrel, &as=woodpecker.
   // An in-game Go to another tile carries { arrive } and goes straight into an arrival. Otherwise
-  // the opening screen asks where, when and who while the preselected tile builds behind it.
+  // the opening screen asks where and when while the preselected tile builds behind it. The player always arrives as
+  // the spirit (spirit.js) and becomes an animal by touching one.
   const direct = params.get('game') === '1' || params.get('skip') === '1';
   const carried = !direct && carry?.arrive ? carry.arrive : null;
   html.classList.toggle('opening', !direct && !carried); html.classList.toggle('arriving', !!carried);
@@ -123,7 +126,7 @@ async function main() {
   const minimap = new MiniMap({ container: $('minimap'), sizeM: tile.size, imagery: tile.imagery, features: tile.features, flight, rewildImage: tile.textureImage });
   const places = new PlaceNames(tile.features, tile.size);   // nearest named road, stream or water, for the HUD
   const goto = setupGoTo({ tile, flight, input: $('gotoInput'), button: $('gotoBtn'), line: $('gotoStatus'),
-    carry: () => ({ arrive: { season: seasonNow(), species: window.__we?.playerSpecies || 'corvus_corax', sex: window.__we?.playerSex } }) });
+    carry: () => ({ arrive: { season: seasonNow(), date: dateCarry() } }) });
   if (pending && direct) goto.go(pending, { fromLoad: true });
   if (pending && !direct) $('gotoInput').value = `${pending.lat}, ${pending.lon}`;
   // The scripted arrival (arrival.js); behind the screen the bird waits at its start so the forest streams in there.
@@ -159,13 +162,17 @@ async function main() {
   // The date the ground's measured colour shows: today (or ?date), or the chosen season's mid-month.
   const dateNow = () => state.season === 'auto' ? (fixedDate || new Date()) : dateForSeason(state.season);
   const seasonNow = () => state.season === 'auto' ? seasonOfDate(dateNow()) : state.season;
+  // the date a tile switch carries: a fixed date ('MM-DD') while the season tracks one, else null (today, or the season)
+  const dateCarry = () => state.season === 'auto' && fixedDate ? `${String(fixedDate.getMonth() + 1).padStart(2, '0')}-${String(fixedDate.getDate()).padStart(2, '0')}` : null;
   $('season').onchange = e => { state.season = e.target.value; applySeason(); };
   $('time').oninput = e => { state.hour = +e.target.value; };
   $('detail').onchange = e => { veg.radius = +e.target.value; veg.update(flight.pos.x, flight.pos.z, true); };
   addEventListener('keydown', e => { if (e.code === 'KeyR') flight.reset(tile.size / 2, -tile.size / 2, 150); });
 
   const names = Object.fromEntries((tile.species || []).map(s => [s.code, s.common]));
-  const showPerceives = code => { const p = tile.perception?.perceives?.[code] || []; $('perceives').textContent = p.length ? p.map(c => names[c] || c).join(', ') : 'everything (no perception matrix)'; };
+  const showPerceives = code => {
+    if (code === 'spirit') { $('perceives').textContent = 'everything: a spirit perceives every animal, and none perceives it'; return; }
+    const p = tile.perception?.perceives?.[code] || []; $('perceives').textContent = p.length ? p.map(c => names[c] || c).join(', ') : 'everything (no perception matrix)'; };
   showPerceives('corvus_corax');
 
   function applySeason() {
@@ -199,6 +206,16 @@ async function main() {
   const squirrel = new SquirrelControl({ tile, scene, camera, flight, veg, animals, acorns, atmosphere, rocks, caption: $('caption') });
   // The playable acorn woodpecker (woodpeckerControl.js): clinging, hitching and short undulating flights, the same way.
   const woodpecker = new WoodpeckerControl({ tile, scene, camera, flight, veg, animals, acorns, atmosphere, caption: $('caption') });
+  // The spirit (spirit.js): the form the player arrives in; touching a raven, squirrel or woodpecker puts the player in
+  // that body (onBody: the observer, the perception line, the panel's way back), B or the panel button leaves it.
+  const onBody = (code, sex = null) => {
+    window.__we.playerSpecies = code; window.__we.playerSex = sex;
+    animals.setObserver(code); showPerceives(code);
+    $('spiritBtn').hidden = code === 'spirit';
+  };
+  const spirit = new SpiritControl({ scene, renderer, camera, flight, raven, animals, squirrel, woodpecker, atmosphere, onBody });
+  $('spiritBtn').onclick = () => { spirit.leave(); renderer.domElement.focus?.(); };
+  const toSpirit = () => { squirrel.setOn(false); woodpecker.setOn(false); spirit.setOn(true); onBody('spirit'); };
 
   // Present-day peek (hold P, or the panel button): the ground shows today's NAIP with the human
   // footprint still in it, the forest and grass step aside and the ghost roads come on, so a player
@@ -267,22 +284,23 @@ async function main() {
   // tests and comparisons: __we.setDate('01-15') shows that day's measured colour ('' for today)
   const setDate = str => { fixedDate = parseDate(str); state.season = 'auto'; $('season').value = 'auto'; applySeason(); return terrain.seasonStats; };
   const setFov = deg => { const v = Math.min(LENS_RANGE[1], Math.max(LENS_RANGE[0], +deg || LENS_DEFAULT)); camera.fov = v; camera.updateProjectionMatrix(); return v; };
-  window.__we = { setDate, setFov, tile, flight, raven, camera, veg, terrain, far, grass, roads, scene, renderer, minimap, atmosphere, sky, acorns, identify, places, peek, setPeek, sound, animals, arrival, rocks, squirrel, woodpecker, credits };   // debugging handle
+  window.__we = { setDate, setFov, tile, flight, raven, camera, veg, terrain, far, grass, roads, scene, renderer, minimap, atmosphere, sky, acorns, identify, places, peek, setPeek, sound, animals, arrival, rocks, squirrel, woodpecker, spirit, credits };   // debugging handle
+  const as = direct ? params.get('as') : null;
+  if (!['raven', 'squirrel', 'woodpecker'].includes(as)) toSpirit();   // a spirit from the start (behind the opening screen too)
   if (!screen) makeSound();
 
   // Into the world: season, observer, sound, then the arrival flight over the chosen point.
-  const captionFor = (point, season, species) => {
+  const captionFor = (point, season) => {
     const near = places.nearest(point?.x ?? tile.size / 2, point?.north ?? tile.size / 2);
-    const who = names[species] || species;
-    return `${near ? `${near.over ? 'over' : 'near'} ${near.name}` : tile.id} · ${season} · ${who}`;
+    return `${near ? `${near.over ? 'over' : 'near'} ${near.name}` : tile.id} · ${season} · spirit`;
   };
+  // c: the opening screen's { tileId, season, date ('MM-DD', or null for today), point, caption }, or a carried arrival
+  // { season, date, point }. Older fields (species, sex) are ignored: everyone arrives as the spirit.
   enter = (c, gesture) => {
     rememberTile(tile.id);
-    state.season = c.season === seasonOfDate() ? 'auto' : c.season; $('season').value = state.season; applySeason();
-    window.__we.playerSpecies = c.species; animals.setObserver(c.species); showPerceives(c.species);
-    window.__we.playerSex = c.sex || lastSex();
-    squirrel.setOn(c.species === 'sciurus_griseus');
-    woodpecker.setOn(c.species === 'melanerpes_formicivorus', window.__we.playerSex);
+    if (c.date && parseDate(c.date)) setDate(c.date);   // that day's look, the season tracking it
+    else if (c.season) { state.season = c.season === seasonOfDate() ? 'auto' : c.season; $('season').value = state.season; applySeason(); }
+    toSpirit();
     const snd = makeSound();
     if (gesture) {
       snd.start();   // inside the Begin click when the world was ready; otherwise the press already activated the page
@@ -291,27 +309,24 @@ async function main() {
         addEventListener('pointerdown', kick, true); addEventListener('keydown', kick, true);
       }
     }
-    if (woodpecker.on) woodpecker.arrive(c.point, c.caption || captionFor(c.point, c.season, c.species), () => html.classList.remove('arriving'));   // on the family's granary
-    else if (squirrel.on) squirrel.arrive(c.point, c.caption || captionFor(c.point, c.season, c.species), () => html.classList.remove('arriving'));   // out of an oak
-    else {
-      arrival.plan(c.point);
-      arrival.onDone = () => { html.classList.remove('arriving'); };
-      arrival.start(c.caption || captionFor(c.point, c.season, c.species));
-    }
+    arrival.plan(c.point);   // the wisp flies the arrival as the raven did
+    arrival.onDone = () => { html.classList.remove('arriving'); };
+    arrival.start(c.caption || captionFor(c.point, seasonNow()));
     html.classList.add('arriving'); html.classList.remove('opening');
     if (screen) { screen.close(); screenOpen = false; }
   };
   if (screen) screen.setReady();
   status('');
-  if (direct && params.get('as') === 'squirrel') {   // tests: ?skip=1&as=squirrel puts a squirrel by the oak nearest the centre
-    window.__we.playerSpecies = 'sciurus_griseus'; animals.setObserver('sciurus_griseus'); showPerceives('sciurus_griseus');
+  if (as === 'squirrel') {   // tests: ?skip=1&as=squirrel puts a squirrel by the oak nearest the centre
+    onBody('sciurus_griseus');
     squirrel.setOn(true); squirrel.arrive(pending ? localXY(tile, pending.lat, pending.lon) : null, null);
-  } else if (direct && params.get('as') === 'woodpecker') {   // tests: ?skip=1&as=woodpecker[&sex=female] puts a woodpecker on the granary nearest the centre
-    const sex = params.get('sex') === 'female' || params.get('sex') === 'male' ? params.get('sex') : lastSex();
-    window.__we.playerSpecies = 'melanerpes_formicivorus'; window.__we.playerSex = sex; animals.setObserver('melanerpes_formicivorus'); showPerceives('melanerpes_formicivorus');
+  } else if (as === 'woodpecker') {   // tests: ?skip=1&as=woodpecker[&sex=female] puts a woodpecker on the granary nearest the centre
+    const sex = params.get('sex') === 'female' ? 'female' : 'male';
+    onBody('melanerpes_formicivorus', sex);
     woodpecker.setOn(true, sex); woodpecker.arrive(pending ? localXY(tile, pending.lat, pending.lon) : null, null);
-  } else if (direct) { /* as before: the bird is at the tile centre, flying */ }
-  else if (carried) enter({ season: carried.season, species: carried.species || 'corvus_corax', sex: carried.sex, point: carriedPoint }, false);
+  } else if (as === 'raven') onBody('corvus_corax');   // tests: the old start, the raven at the tile centre, flying
+  else if (direct) { /* a spirit at the tile centre, flying */ }
+  else if (carried) enter({ season: carried.season, date: carried.date, point: carriedPoint }, false);
   else if (chosen) enter(chosen, true);   // Begin was pressed while the world was loading
 
   let last = performance.now(), hudT = 0, heldAt = 0;
@@ -322,12 +337,15 @@ async function main() {
     }
     const dt = Math.min((now - last) / 1000, 0.1); last = now;
     const s = seasonNow(), look = SEASON_LOOK[s], sun = sunDirection(tile.latitude, s, state.hour);
-    const f = screenOpen ? arrival.hold() : squirrel.on ? squirrel.update(dt) : woodpecker.on ? woodpecker.update(dt) : arrival.active ? arrival.update(dt) : flight.update(dt);
+    const f = screenOpen ? arrival.hold() : squirrel.on ? squirrel.update(dt) : woodpecker.on ? woodpecker.update(dt) : arrival.active ? arrival.update(dt) : spirit.on ? spirit.update(dt) : flight.update(dt);
+    spirit.blendCamera(dt);   // across a switch of body: drawn from a blend of the old view and the new control's (spirit.js)
     raven.update(dt, flight.flapping, flight.speed);
+    spirit.draw(dt);   // the wisp, while a spirit
     terrain.update(flight.pos.x, flight.pos.z);   // the near fine mesh follows the player
     veg.update(flight.pos.x, flight.pos.z);
     veg.updateClose(camera.position);
     atmosphere.update(dt, sun, look, s, state.hour, camera);
+    spirit.look(dt);   // the spirit's view: faint blue light, blue-green mist, the bodies it can join warm (spirit.js)
     sky.update(camera);
     far.update(camera, veg.radius);
     grass.update(flight.pos.x, flight.pos.z, dt, camera, look);
@@ -338,6 +356,7 @@ async function main() {
     if (!peek.shown) terrain.setLook(look);
     shadows.update(camera);
     renderer.render(scene, camera);
+    spirit.unblendCamera();   // the control's own camera back for its next frame
     sound?.update(dt, { season: s, hour: state.hour, sunElevation: sun.elevation });
     if (peek.pending !== null) { if (peek.pending !== peek.shown) { crossFade(); applyPeek(peek.pending); } peek.pending = null; }
     minimap.update(flight.pos, f.heading);

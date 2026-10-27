@@ -160,6 +160,7 @@ export class SquirrelControl {
     this.acorns?.setPlayerSpecies(on ? CODE : 'corvus_corax');
     if (on === this.on) return;
     this.on = on;
+    if (!on && this.auto) this.finishArrival(true);   // left mid-arrival (spirit.js): its onDone still runs
     const f = this.flight;
     f.body.visible = !on && f.view === 'chase';
     if (this.mesh) this.mesh.visible = on;
@@ -168,7 +169,11 @@ export class SquirrelControl {
     for (const m of this.rings) m.visible = false;
     this.hint.style.display = 'none'; if (this.hudRow) this.hudRow.style.display = 'none';
     if (on) { f.pitch = 0; f.roll = 0; f.hover = false; this.camSettled = false; this.lastYaw = f.yaw; this.place(f.pos.x, f.pos.z); }
-    else { this.camera.up.set(0, 1, 0); f.reset(f.pos.x, f.pos.z, 30); this.cutS = 0; LEAF_CUT.a.value.w = 0; }   // back to the raven: aloft over the same spot
+    else {   // back to the raven (or the spirit, which places itself): aloft over the same spot; every state let go
+      this.camera.up.set(0, 1, 0); f.reset(f.pos.x, f.pos.z, 30); this.cutS = 0; LEAF_CUT.a.value.w = 0;
+      this.mode = 'ground'; this.work = null; this.limb = null; this.leap = null; this.spread = false; this.fallTop = null; this.stunT = 0;
+      this.w.rec = null; this.tree = null; this.cands.length = 0; this.candA = this.candD = null; this.jumpQ = this.actQ = false;
+    }
     // a camera 0.6 m over a slope: the raven's 0.5 m near plane cut the hillside beside it open
     if (on) this.nearWas = this.camera.near;
     this.camera.near = on ? NEAR : this.nearWas || 0.5; this.camera.updateProjectionMatrix();
@@ -186,7 +191,7 @@ export class SquirrelControl {
     if (h1?.firstChild) h1.firstChild.nodeValue = on ? 'western gray squirrel ' : W.h1;
     if (help) help.innerHTML = on ? '<kbd>W</kbd><kbd>S</kbd> run · <kbd>A</kbd><kbd>D</kbd> turn · <kbd>space</kbd> jump · <kbd>shift</kbd> sit up · '
       + '<kbd>E</kbd> pick up, bury, dig · run into a trunk to climb (<kbd>W</kbd><kbd>S</kbd> up, down, out and in a limb; <kbd>A</kbd><kbd>D</kbd> onto the ringed limb, or round; <kbd>space</kbd> leap or drop) · '
-      + '<kbd>M</kbd> map · <kbd>G</kbd> roads · <kbd>P</kbd> present day · <kbd>T</kbd> tags · <kbd>N</kbd> mute · click a tree to identify · drag mouse to turn and look' : W.help;
+      + '<kbd>M</kbd> map · <kbd>G</kbd> roads · <kbd>P</kbd> present day · <kbd>T</kbd> tags · <kbd>N</kbd> mute · <kbd>B</kbd> back to spirit form · click a tree to identify · drag mouse to turn and look' : W.help;
     const agl = $('agl')?.previousElementSibling, sp = $('speed')?.previousElementSibling;
     if (agl) agl.textContent = on ? 'height above ground' : W.agl;
     if (sp) sp.textContent = on ? 'speed' : W.speed;
@@ -236,6 +241,50 @@ export class SquirrelControl {
       this.capAnim = c.animate([{ opacity: 0 }, { opacity: 1, offset: 0.12 }, { opacity: 1, offset: 0.7 }, { opacity: 0 }], { duration: 6000, fill: 'forwards' });
       this.capAnim.onfinish = () => { c.hidden = true; };
     }
+  }
+  // The spirit (spirit.js) comes into an AI squirrel: the player carries on where it was (animals.js info: on the
+  // ground, on the bole, or out on the wood, onto the drawn limb under it when perch.js finds one), facing its way.
+  enterAt(o) {
+    const f = this.flight, P = f.pos;
+    this.auto = null; this.onArrived = null;
+    f.yaw = this.lastYaw = o.yaw; f.pitch = 0; f.roll = 0;
+    this.place(o.x, o.z);
+    if (o.where === 'trunk' && o.tree) {
+      const tr = this.record(o.tree);
+      this.attach(tr, o.face, Math.max(0.15, Math.min(o.h, this.topOf(tr))));
+    } else if (o.where === 'tree') {
+      const Q = this.Q, h = Q && Q.near(o.x, o.y + 0.05, o.z, 0.8, END_R);
+      if (h && h.rec) {
+        const fx = -Math.sin(o.yaw), fz = -Math.cos(o.yaw), steep = Math.abs(h.dy) > STEEP;
+        this.attachWood(h.rec, h.stem, h.s, h.nx, h.ny, h.nz, steep ? (h.dy >= 0 ? 1 : -1) : (Math.sign(fx * h.dx + fz * h.dz) || 1));
+      } else if (o.tree) {   // no wood known there: on the bole under it
+        const tr = this.record(o.tree);
+        this.attach(tr, Math.atan2(o.x - tr.x, o.z - tr.z), Math.min(Math.max(0.15, o.y - tr.y), this.topOf(tr)));
+      }
+    }
+    this.headUp = true; this.camSettled = false; this.qFresh = false; this.last.copy(P);
+  }
+  // Where the player leaves this squirrel (spirit.js), for the AI to carry on from (animals.js release): as info.
+  leaveInfo() {
+    const P = this.flight.pos, m = this.mode, back = this.work?.back, f = this.flight;
+    const o = { x: P.x, y: P.y, z: P.z, yaw: f.yaw, where: 'ground', tree: null, face: 0, h: 0, speed: 0 };
+    if ((m === 'trunk' || (m === 'work' && back === 'trunk')) && this.tree) Object.assign(o, { where: 'trunk', tree: this.tree, face: this.face, h: this.h });
+    else if (m === 'wood' || m === 'limb' || m === 'leap' || (m === 'work' && back === 'wood')) {
+      const tr = this.treeNear(P.x, P.z, 12);
+      if (tr) Object.assign(o, { where: 'tree', tree: tr });
+    }
+    if (o.where === 'ground') o.y = this.heights.atXZ(P.x, P.z);
+    return o;
+  }
+  // The near set's tree whose trunk is nearest (x, z) within r m (indexTrees), or null.
+  treeNear(x, z, r) {
+    this.indexTrees();
+    const ci = Math.floor(x / 10), cj = Math.floor(z / 10), n = Math.ceil(r / 10);
+    let best = null, bd = r * r;
+    for (let j = cj - n; j <= cj + n; j++) for (let i = ci - n; i <= ci + n; i++) {
+      for (const t of this.trees.get(`${i},${j}`) || []) { const d = (t.x - x) ** 2 + (t.z - z) ** 2; if (d < bd) { bd = d; best = t; } }
+    }
+    return best;
   }
   finishArrival(skipped) {
     const was = this.auto; this.auto = null;

@@ -179,11 +179,13 @@ acorn the player has taken still flies there before giving up; the identify card
 
 ## Playable squirrel (2026-10-25)
 
-The western gray squirrel is the second playable animal: chosen at the opening screen
-beside the raven (remembered), it arrives head down on the trunk of the oak nearest the
-chosen point and runs out onto the ground. `client/src/squirrelControl.js` replaces the
-raven's controller for the frame and moves the same player position, so everything that
-followed the raven follows the squirrel. Tests: `?skip=1&as=squirrel`.
+The western gray squirrel is the second playable animal. Since 2026-10-26 it is entered the
+way every body is: the player arrives as a spirit (client/src/spirit.js) and becomes the AI
+squirrel it touches, where that squirrel is (on the ground or up on the wood); **B** or the
+panel's "Back to spirit form" leaves it there to its own life. The test URL `?skip=1&as=squirrel`
+keeps the older arrival, head down on the trunk of the oak nearest the chosen point and out
+onto the ground. `client/src/squirrelControl.js` replaces the raven's controller for the frame
+and moves the same player position, so everything that followed the raven follows the squirrel.
 
 Controls: **W / S** run (a bound, up to 6 m/s) and back; **A / D** or a mouse drag turn
 (a vertical drag tilts the look); **Space** jumps (about 0.5 m high and 3-4 m long at a
@@ -328,10 +330,11 @@ its line (only the eased pull near the lens).
 
 ## Playable woodpecker (2026-10-25)
 
-The acorn woodpecker is the third playable animal: two cards at the opening screen's "who"
-(male: the red crown reaching the white forehead; female: a black band between the white
-and the red), species and sex remembered (`we.lastSpecies`, `we.lastSex`). It arrives
-clinging to its **family's granary**: the AI families' rule (`animals.familyGranary`), the
+The acorn woodpecker is the third playable animal (male: the red crown reaching the white
+forehead; female: a black band between the white and the red). Since 2026-10-26 the player
+enters it as a spirit touching an AI woodpecker, taking that bird's sex and its own family's
+granary, and leaves it with **B**; the test URL `?skip=1&as=woodpecker[&sex=female]` keeps the
+older arrival, clinging to its **family's granary**: the AI families' rule (`animals.familyGranary`), the
 nearest stash tree within 150 m of the chosen point, else the nearest oak. If no AI family
 lives on that tree, one of 3-6 is spawned on it and kept through rebuilds
 (`animals.familyOn`), so the player hammers beside its own family; a player woodpecker

@@ -1131,3 +1131,34 @@ the track. Kept, small and quiet at the top: the lat/lon find row, because it is
 another tile. The screen's styles moved out of index.html into client/opening.css so it can be reworked apart
 from the HUD. Rejected: a four-stop season picker (the slider is a date, and the ground colour is monthly);
 keeping the species cards as a "who" (the spirit chooses by touch instead).
+
+## 2026-10-26: the player arrives as a spirit and becomes the animal it touches
+
+Aaron's words: "I'd like for the user to start out as a spirit. A glowing, swirling wisp with the same controls as
+the raven, but can fly even faster. Whenever the spirit comes into contact with one of the species that can be
+piloted, they 'jump' into the body and the controls/interface change to that species. There is a 'back to spirit
+form'." client/src/spirit.js holds it. The spirit flies on RavenFlight's keys through a `spirit` flag in
+flight.js: cruise 25 m/s, 90 with W held, no stall physics, never a landing (it skims 0.8 m over ground and limbs);
+the raven's models are hidden. Contact with an AI raven, gray squirrel or acorn woodpecker (2.5 m from its body,
+4 m for a bird in flight, checked every 2 m along the frame's path so 90 m/s cannot skip a squirrel) makes the
+player that animal where it is, through the control's own entry (`enterAt`): the AI animal is held out of the
+population meanwhile (no double) and resumes its life where the player leaves it, `B` or the panel's "Back to
+spirit form", from any state of the squirrel (ground, wood, mid-leap, stunned) or woodpecker (cling, fly, perch,
+work). Animals cannot see the spirit, so nothing flees it. The camera never cuts: `CameraBlend` in spirit.js,
+called by main.js around the render, eases position (held above the ground), orientation, lens and near plane
+from the old view to the new control's own over 0.8 s, up to 1.4 s when the views are far apart, both ways.
+
+The wisp, after his "more like ribbons or mist": three camera-facing ribbons following the recent path and
+weaving round the centre at lengths 1 : 1.4 : 1.9 with weave periods 1 : 1.31 : 1.73 (so they never line up),
+seven noisy mist billboards drifting round a small warm core, a few dim motes streaked along the velocity; three
+draw calls, no light (adding a light recompiles every lit material). At rest it is half size and 60% brightness
+and swells to full from 14 m out to the contact radius, so the pull is felt before the jump. In spirit mode the
+world is faint, misty and blue-green, by his steer "just make the sun faint and blue": the Atmosphere hands a
+faint blue sun, blue-green sky light and thicker blue-green haze to every material, a veil covers the sky, and
+the three playable species are drawn self-lit in full colour with a warm glow that brightens on the wisp's swell
+curve; fades in over 0.9 s as the wisp forms and out with the camera blend. Everyone enters as the spirit, from
+the opening screen and from `?skip=1`; `?skip=1&as=raven|squirrel|woodpecker` keep the old starts for tests.
+Open: fall leaves still read khaki under the blue sun (a post pass would neutralise them), dusk is very dark under
+the veil, the wind roar follows 90 m/s, and the acorn game still counts the player as a raven. Rejected: a
+post-process tint first (the lit route leaves every material untouched); a pull-in before the switch (the body
+takes over on contact, input during the blend).
