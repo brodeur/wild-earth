@@ -40,6 +40,7 @@ tiles/<tile_id>/
   imagery/naip.png              derived   viewer convenience
   footprint/mask.geojson        required  human footprint features to erase and backfill
   footprint/mask.png            derived   rasterised mask, 0/255, same grid as dem
+  footprint/urban.tif           derived   dense-urban mask, uint8 0/1 on the DEM grid: a city's blocks, rewilded whole (see Footprint mask)
   hydro/flowlines.geojson       required  stream network
   hydro/waterbodies.geojson     required  lakes, ponds, reservoirs
   hydro/channels.geojson        derived   stream channels routed by gravity on the DEM, named and classed by NHD (see Channels); rewilded once hydrology_rewilded
@@ -74,7 +75,7 @@ tiles/<tile_id>/
   client/texture.png            derived   rewilded texture on the metric tile grid
   client/habitat.png            derived   habitat class code in R, 30 m grid
   client/canopy.png             derived   tree / shrub / herb cover percent in R / G / B, 30 m grid
-  client/roads.png              derived   decayed-road weight, 8-bit on the DEM grid: 255 pavement, verge falls to 0
+  client/roads.png              derived   decayed-road weight, 8-bit on the DEM grid: 255 pavement, verge falls to 0; 0 inside footprint/urban.tif but freeways
   client/mast.png               derived   fall acorn_mast score 0..100 in R, 30 m grid (from resources/acorn_mast.tif band 4; optional)
   client/geology.png            derived   R geology unit index (geology/classes.json), G rock class index (1-based), 30 m grid
   client/soils.png              derived   R soil map unit index, G surface rock fragments % 0-100, B depth to bedrock dm (255 none/unknown), 30 m grid
@@ -90,6 +91,7 @@ tiles/<tile_id>/
   client/channel_profile.png    derived   RGB on the DEM grid: R thalweg water depth (2 cm), G riffle-pool index, B rewilded water beds (see Hydrology rewilding)
   client/terrain_detail.png     derived   2 m micro-relief: 8-bit grey residual of the 1 m DEM against client/heights.png, (v - 128) x 4 cm (see Lidar)
   client/trees_lidar.bin        derived   lidar tree crowns: position, height, crown radius, confidence; 100 m cell index (see Lidar)
+  vegetation/multi_1m.tif       derived   1 m multi-return share, uint8 x 255 (pipeline only: the crowns step re-runs the finder from it)
   client/canopy_height.png      derived   10 m RGB: R p95 canopy height (0.25 m), G tree cover %, B shrub cover % (see Lidar)
   client/masks.png              derived   soft season-recolour weights: R grassland, G oak woodland, B chaparral
   client/season_rgb.png         derived   Sentinel-2 median colour per calendar month, 12 frames of 500 px (20 m) in a 4 x 3 sheet (see Seasonal colour)
@@ -249,6 +251,19 @@ lidar does not remove.
 In client products roads are decayed, not erased: `client/roads.png` and the baked
 `client/texture.png` keep them as treeless strips of worn pavement (paths, footways,
 cycleways, bridleways and steps excluded; tracks at half weight), so players keep their landmarks.
+
+**Dense-urban mask** (`footprint/urban.tif`, layer `footprint.urban` with `fraction`; pipeline/urban.py,
+built by `derive`): a city's blocks are rewilded whole, which the foothill rules above would not do (they
+leave the street grid as a lattice of clearings, each block's lawns and yards between the erased roofs, and
+the street trees in rows along the vanished grid). Densely built = building cover within 100 m of at least
+15%, or 7.5% on LANDFIRE Developed-Medium/High cells; kept within 25 m of a building, closed by 40 m (the
+streets between blocks), holes under 3 ha filled, patches under 75 ha dropped (a foothill town centre keeps
+the foothill rules: Placerville's densest patch is 47 ha, Sausalito's 93). Inside it: `client/roads.png`
+is 0 for every road but motorways and trunks (no pavement, no verge); the imagery erase takes every pixel
+(see Imagery erasure); and the crown finder drops crowns whose rewilded class is not a forest or woodland
+(see Lidar). The three foothill tiles score 0; the San Francisco cells 16% and 44%. Bridges: `bridge`,
+`bridge:structure` and `man_made` tags are kept on the features and `man_made=bridge` outlines fetched
+with them, for the crown finder; the erase leaves a deck alone (it is its road's).
 
 ## Channels
 
@@ -423,8 +438,16 @@ its radius sqrt(area / pi), clipped to 0.5 .. min(2 + 0.35 h, 15) m. The source 
 ground, unclassified, water and noise, so houses are in the DSM: a maximum is dropped on an OSM
 building, where under 8% of the returns around it are multi-return (a roof, a wire), where the crown
 is narrower than max(1 m, 0.06 h) (a tower), and where it is under 8 m and under 2 m above its
-surroundings (a taller shrub in chaparral). The manifest layer `client.trees_lidar` records the
-method and confidence formula.
+surroundings (a taller shrub in chaparral); then within 35 m of an OSM motorway or trunk bridge, 20 m of
+another road or rail bridge, 8 m of a footbridge and 10 m of a `man_made=bridge` outline (towers and
+cables echo several times, so the Golden Gate Bridge was 180 crowns at the height ceiling), and inside the
+dense-urban mask where the 30 m rewilded class (`vegetation/habitat.tif`) is not oak woodland, conifer or
+mixed forest or riparian (street trees). The manifest layer `client.trees_lidar` records the
+method and confidence formula. The lidar step runs first (its point cloud streams for an hour), before
+osm, veg and derive exist, so its own crown list knows no buildings, bridges, classes or mask: the
+`crowns` build step after `derive` re-runs the finder from `vegetation/chm_1m.tif` and the saved
+multi-return share `vegetation/multi_1m.tif` with all of them in place (`python -m pipeline.lidar --tile
+<id> --stage crowns` does the same by hand; a tile from before that raster needs the kept grids).
 
 `client/trees_lidar.bin` (little-endian): a 32-byte header (`WECR`, u16 version 1, u16 record bytes 8,
 u16 cells per side 100, u16 cell metres 100, u32 count, f32 xy unit 0.2, f32 height unit 0.25, f32
@@ -473,7 +496,11 @@ Quarries are erased whole. The others (Developed-Low Intensity, Developed-Roads,
 developed or urban forest, shrubland and herbaceous: a quarter to a third of a foothill tile, and
 mostly real oaks and dry grass) are erased only where the photo looks built: neutral grey or
 white pixels not in shade (roofs, concrete, asphalt, gravel), blue (pools) and irrigated
-green, opened to drop specks and grown by one pixel.
+green, opened to drop specks and grown by one pixel. Inside the dense-urban mask (see Footprint
+mask) every pixel is erased, streets included (only freeway pavement stays), and synthesised from
+clean imagery of the cell's rewilded class whatever the development intensity; there the local colour
+is a 150 m gaussian of clean ground of the same class easing to the class median deep inside, a class
+with under 200 clean windows borrows its fallback's, and water cells take land fallbacks.
 Each connected component of the mask is either inpainted from its surroundings (OpenCV
 Telea, with grain from the synthesized texture laid over it) when it is small or thin
 (under 400 m², or never more than 5 m from its edge; Telea smears anything larger), or

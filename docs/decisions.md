@@ -1083,3 +1083,32 @@ when the bird takes off. Depth of field is a different thing and was not added: 
 infinity on a hillside and blurs nothing past a metre or two, so a flying raven would see none; it would earn
 its place only in the squirrel's and woodpecker's close cameras. Rejected: changing the default now (his eye
 decides); a post-process blur on the raven's view (a film look, not a human one).
+
+## 2026-10-26: a dense-urban rule rewilds a city whole; the crown finder runs again after the masks exist
+
+Aaron chose the whole-tile rewild as the first lane after seeing the San Francisco cells. The rule is per area, not
+per tile, so the foothill tiles are untouched: pipeline/urban.py marks densely built ground (`footprint/urban.tif`,
+5 m: building cover within 100 m of at least 15%, or 7.5% on LANDFIRE's medium and high intensity cells; kept
+within 25 m of a building, closed by 40 m so the streets between blocks are inside, holes under 3 ha filled,
+patches under 75 ha dropped, because Placerville's densest patch is 47 ha and Sausalito's, the smallest city
+patch, is 93 ha). Inside the mask: every street but motorways and trunks weighs 0 in roads.png (no pavement, no
+verge); every pixel is erased and synthesised from clean ground of the cell's rewilded class, whatever the
+development intensity, with the local colour from a 150 m gaussian of clean ground easing to the class median deep
+inside (the old box filter drew lit squares around parks) and sparse classes borrowing their fallbacks under 200
+windows; and lidar crowns go unless the 30 m rewilded class is oak woodland, conifer or mixed forest or riparian
+(the street trees go with the streets; the Presidio forest and Golden Gate Park sit outside the mask and keep their
+real trees). Bridges: fetch_osm keeps the bridge tags and fetches man_made=bridge outlines, and the crown finder
+drops crowns within 35 m of a motorway or trunk bridge, 20 m of another road or rail bridge, 8 m of a footbridge
+(20 m would have taken 128 boardwalk and park trees) and 10 m of an outline. Checked in the client: the Richmond
+from 260 m is a scrub plain with no grid; the strait has no tree line. The city fill is honest but flat, a near
+uniform olive; the texture still shows the bridge deck as a photo strip (a deck is its road's, not erased).
+
+Numbers on the Richmond cell: road fraction 3.8% to 1.5%, erased 21% to 25%, crowns 82k to 28k (54k of them on
+buildings that the first build never dropped, because the lidar step ran before osm and had no footprints; 626
+on the bridge, 17.8k street trees); on the Sunset cell crowns 32k to 15.6k. That ordering was the real bug: the
+lidar step runs first (its point cloud streams for an hour) and so its crown list knew no buildings, bridges,
+classes or mask on a fresh tile. The products stage now also saves the multi-return share (`vegetation/multi_1m.tif`,
+uint8) and a `crowns` build step after derive re-runs the finder from the CHM and that raster, with everything it
+drops on in place; `build_crowns` falls back to the kept grids on a tile from before the raster. Rejected: moving
+the whole lidar step after derive (the ground step reads its roughness); a tile-level "city" flag (a few blocks of
+Placerville are not a city, and a coastal cell is half sea).

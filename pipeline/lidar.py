@@ -29,7 +29,9 @@ The CHM's ground is the 1 m DEM plus the median point-cloud-ground minus DEM off
 same collection's ground points, gap-free where the point cloud has none under dense canopy). The
 source classifies only ground, unclassified, water, bridge and noise: houses are in the DSM. A crown
 needs a multi-return share (vegetation returns several echoes per pulse, roofs one) and must not sit
-on an OSM building.
+on an OSM building or within BRIDGE_HALF_WIDTH of an OSM bridge (towers, cables and railings return
+several echoes too). Inside the dense-urban mask (pipeline/urban.py) only crowns whose rewilded 30 m
+class is a forest or woodland stay: the street trees go with the streets.
 """
 from __future__ import annotations
 
@@ -65,6 +67,14 @@ DETAIL_RES = 2
 DETAIL_UNIT = 0.04               # m per step of client/terrain_detail.png
 ROUGH_RES = 10
 CELL_M = 100                    # crown index cell
+# Half-widths (m) around OSM bridge ways within which no crown stands: the towers and cables sit beside
+# the deck, and a suspension bridge's are 15-20 m off its centre line. Footbridges have no towers.
+BRIDGE_HALF_WIDTH = {"motorway": 35.0, "trunk": 35.0, "default": 20.0, "foot": 8.0}
+BRIDGE_FOOT = ("footway", "path", "cycleway", "bridleway", "steps", "pedestrian")
+BRIDGE_OUTLINE_M = 10.0         # around a man_made=bridge outline
+# Rewilded classes (habitat.CLASSES) whose crowns stay inside the urban mask: oak woodland, conifer and
+# mixed forest, riparian.
+URBAN_TREE_CLASSES = (1, 2, 3, 6)
 TREES_MAGIC = b"WECR"
 TREES_FORMAT = (
     "little-endian. Header 32 bytes: magic 'WECR', u16 version 1, u16 record bytes 8, u16 cells per side "
@@ -352,6 +362,50 @@ def _osm_buildings(tile: Tile) -> np.ndarray:
                      transform=from_bounds(x0, y0, x1, y1, N1, N1), dtype="uint8").astype(bool)
 
 
+def _osm_bridges(tile: Tile) -> np.ndarray:
+    """OSM bridges (bridge ways buffered by BRIDGE_HALF_WIDTH, man_made=bridge outlines by
+    BRIDGE_OUTLINE_M) rasterised on the 1 m grid (row 0 north)."""
+    from pyproj import Transformer
+    from rasterio.features import rasterize
+    from shapely.geometry import shape
+    from shapely.ops import transform as shp_transform
+    from .fetch_osm import is_bridge
+    p = tile.path("footprint/mask.geojson")
+    if not p.exists():
+        return np.zeros((N1, N1), bool)
+    t = Transformer.from_crs("EPSG:4326", tile.crs, always_xy=True).transform
+    shapes = []
+    for f in read_json(p)["features"]:
+        pr = f.get("properties") or {}
+        if not is_bridge(pr):
+            continue
+        hw = (pr.get("highway") or "").removesuffix("_link")
+        buf = (BRIDGE_OUTLINE_M if pr.get("man_made") == "bridge" else BRIDGE_HALF_WIDTH["foot"] if hw in BRIDGE_FOOT
+               else BRIDGE_HALF_WIDTH.get(hw, BRIDGE_HALF_WIDTH["default"]))
+        g = shp_transform(t, shape(f["geometry"]))
+        if not g.is_empty:
+            shapes.append((g.buffer(buf), 1))
+    if not shapes:
+        return np.zeros((N1, N1), bool)
+    x0, y0, x1, y1 = tile.bounds
+    return rasterize(shapes, out_shape=(N1, N1), transform=from_bounds(x0, y0, x1, y1, N1, N1),
+                     dtype="uint8").astype(bool)
+
+
+def _urban_non_forest(tile: Tile, sr: np.ndarray, sc: np.ndarray) -> np.ndarray:
+    """Per seed (1 m row, column): inside the dense-urban mask, on a 30 m cell whose rewilded class
+    (vegetation/habitat.tif) is not a forest or woodland."""
+    from .urban import load
+    p = tile.path("vegetation/habitat.tif")
+    if not p.exists():
+        return np.zeros(len(sr), bool)
+    urban = load(tile, int(round(TILE_SIZE_M / 5.0)))
+    hab = _read(p)
+    inside = urban[sr * urban.shape[0] // N1, sc * urban.shape[0] // N1]
+    cls = hab[sr * hab.shape[0] // N1, sc * hab.shape[0] // N1]
+    return inside & ~np.isin(cls, URBAN_TREE_CLASSES)
+
+
 def crowns(tile: Tile, chm: np.ndarray, multi: np.ndarray) -> dict:
     """Local maxima of the smoothed CHM with a window growing with height, crowns grown from them by
     watershed down to CROWN_EDGE of each peak; radius = sqrt(area / pi), capped by height."""
@@ -428,11 +482,18 @@ def crowns(tile: Tile, chm: np.ndarray, multi: np.ndarray) -> dict:
     drop_roof = mshare < MULTI_MIN
     drop_pole = r_eq < np.maximum(1.0, POLE_R_FRAC * h)                    # towers, poles, wire remnants
     drop_shrub = (h < SHRUB_TOP_H) & (prom < SHRUB_PROM_M)                  # a taller shrub in a shrub canopy
-    keep = ~bld & ~drop_roof & ~drop_pole & ~drop_shrub
+    kept_before = ~bld & ~drop_roof & ~drop_pole & ~drop_shrub
+    # Bridges and the urban rule last, so the counts above keep their meaning and these count only
+    # what the older rules would have kept.
+    drop_bridge = _osm_bridges(tile).ravel()[seeds]
+    drop_urban = _urban_non_forest(tile, sr, sc)
+    keep = kept_before & ~drop_bridge & ~drop_urban
     stats = {"maxima": int(len(seeds)), "dropped_on_osm_buildings": int(bld.sum()),
              "dropped_low_multi_return": int((drop_roof & ~bld).sum()),
              "dropped_pole_like": int((drop_pole & ~bld & ~drop_roof).sum()),
              "dropped_shrub_in_shrub_canopy": int((drop_shrub & ~bld & ~drop_roof & ~drop_pole).sum()),
+             "dropped_on_bridges": int((drop_bridge & kept_before).sum()),
+             "dropped_urban": int((drop_urban & kept_before & ~drop_bridge).sum()),
              "crowns": int(keep.sum())}
     stats["confidence_terms_median"] = {k: round(float(np.median(v[keep])), 3) for k, v in
                                         (("prominence", c_prom), ("width", c_area), ("multi_return", c_multi), ("height", c_h))}
@@ -554,10 +615,17 @@ def roughness(tile: Tile, dem: np.ndarray) -> dict:
 
 
 def build_crowns(tile: Tile) -> dict:
-    """Re-run crown detection alone from vegetation/chm_1m.tif and the kept grids (--keep-grids)."""
-    d, g = _grids(tile, "r")
-    npts = np.asarray(g["npts"]).reshape(N1, N1)
-    multi = np.where(npts > 0, np.asarray(g["nmulti"]).reshape(N1, N1) / np.maximum(npts, 1), 0).astype(np.float32)
+    """Re-run crown detection alone from vegetation/chm_1m.tif and vegetation/multi_1m.tif (the multi-return share
+    the products stage saves), or the kept grids (--keep-grids) on a tile from before that raster. The `crowns`
+    build step runs this after osm, veg and derive, so the buildings, bridges, rewilded classes and the urban mask
+    the finder drops crowns on all exist (the lidar step itself runs long before them)."""
+    mp = tile.path("vegetation/multi_1m.tif")
+    if mp.exists():
+        multi = _read(mp).astype(np.float32) / 255
+    else:
+        d, g = _grids(tile, "r")
+        npts = np.asarray(g["npts"]).reshape(N1, N1)
+        multi = np.where(npts > 0, np.asarray(g["nmulti"]).reshape(N1, N1) / np.maximum(npts, 1), 0).astype(np.float32)
     chm = _read(tile.path("vegetation/chm_1m.tif")).astype(np.float32) / 100
     st = crowns(tile, chm, multi)
     p = tile.path("terrain/lidar_stats.json")
@@ -595,6 +663,7 @@ def build_products(tile: Tile, force=False, keep_grids=False) -> dict:
     from scipy.ndimage import median_filter
     stats["canopy_10m"] = canopy_10m(tile, median_filter(chm, size=3))   # 3x3 median: wires out
     multi = np.where(npts > 0, np.asarray(g["nmulti"]).reshape(N1, N1) / np.maximum(npts, 1), 0).astype(np.float32)
+    _write(tile.path("vegetation/multi_1m.tif"), np.round(multi * 255).astype(np.uint8), tile, nodata=None, predictor=2)
     stats["crowns"] = crowns(tile, chm, multi)
     log(f"products: crowns {stats['crowns']}")
     del chm, multi
@@ -630,6 +699,10 @@ def layers(tile: Tile, dem_info: dict, stats: dict) -> dict:
                               "encoding": "uint16 centimetres: terrain.dsm_1m - (terrain.dem_1m + median point-cloud ground offset), >= 0",
                               **pc_src, "sources_used": ["usgs_3dep_1m"],
                               "derived_from": ["terrain.dsm_1m", "terrain.dem_1m"], **po},
+        "vegetation.multi_1m": {"path": "vegetation/multi_1m.tif", "kind": "raster", **grid, "pixels": N1, "resolution_m": 1.0,
+                                "encoding": "uint8: share of the cell's returns that are one of several per pulse, * 255 "
+                                            "(vegetation echoes several times, roofs and water once); 0 where no return",
+                                **pc_src, "derived_from": [], **po},
         "terrain.lidar_dtm_check": {"path": "terrain/lidar_dtm_check.tif", "kind": "raster", **grid, "pixels": N1 // 10,
                                     "resolution_m": 10.0, "nodata": NODATA,
                                     "encoding": "float32 m: mean over the 10 m cell of point-cloud ground (class 2) minus the 1 m DEM, "
@@ -653,12 +726,19 @@ def layers(tile: Tile, dem_info: dict, stats: dict) -> dict:
                                           "0.5 .. min(2 + 0.35 h, 15) m; dropped on OSM buildings and where the multi-return share "
                                           f"in the 5x5 around the peak is < {MULTI_MIN}, where the crown is narrower than max(1 m, {POLE_R_FRAC} h) "
                                           f"(towers, poles), and where h < {SHRUB_TOP_H} m with prominence < {SHRUB_PROM_M} m (a taller "
-                                          "shrub in a shrub canopy). confidence = 0.35 prominence (peak minus the "
+                                          "shrub in a shrub canopy); then dropped within "
+                                          f"{BRIDGE_HALF_WIDTH['motorway']:g} m of an OSM motorway or trunk bridge, "
+                                          f"{BRIDGE_HALF_WIDTH['default']:g} m of another road or rail bridge, "
+                                          f"{BRIDGE_HALF_WIDTH['foot']:g} m of a footbridge and {BRIDGE_OUTLINE_M:g} m of a "
+                                          "man_made=bridge outline (towers, cables), and inside the dense-urban mask "
+                                          "(footprint.urban) where the 30 m rewilded class (vegetation.habitat) is not oak "
+                                          "woodland, conifer or mixed forest or riparian (street trees). confidence = 0.35 prominence (peak minus the "
                                           "minimum in a square of half-width 2 w + 1 around it, w the maxima window radius, over h) + 0.25 "
                                           "watershed radius over h / 4 + 0.2 multi-return share over 0.6 + 0.2 height above 4 m over 6 m, "
                                           "each clipped to 0..1"),
-                               **pc_src, "sources_used": ["usgs_3dep_1m", "osm"],
-                               "derived_from": ["vegetation.chm_1m", "footprint.mask"], "stats": stats["crowns"]},
+                               **pc_src, "sources_used": ["usgs_3dep_1m", "osm", "landfire"],
+                               "derived_from": ["vegetation.chm_1m", "footprint.mask", "footprint.urban", "vegetation.habitat"],
+                               "stats": stats["crowns"]},
         "client.terrain_detail": {"path": "client/terrain_detail.png", "kind": "raster", **grid, "pixels": N1 // DETAIL_RES,
                                   "resolution_m": float(DETAIL_RES),
                                   "encoding": "8-bit grey, row 0 north, pixel centres at x = 2i + 1, north = 10000 - (2j + 1): "

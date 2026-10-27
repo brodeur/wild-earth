@@ -15,8 +15,9 @@ and replaces only what the lidar says is canopy:
    darkest. NAIP 2022 here was flown in the early afternoon (about 14:00-14:30 PDT, sun 215-226 deg,
    66-69 deg up), so shadows fall north-east and are short. Then up to GROW_PX of dark pixels next to
    the mask (crowns displaced in the photo, the lidar's lag). Pavement and open water are never
-   touched. Areas erase_imagery erased are quilted woodland with crowns of their own and a CHM of
-   houses, so there only dark pixels are filled (no buildings come back: no source window is erased).
+   touched. Areas erase_imagery erased (a dense-urban mask whole, pipeline/urban.py) are quilted
+   ground with crowns of their own and a CHM of houses, so there only dark pixels are filled (no
+   buildings come back: no source window is erased).
 2. Ground colour. For each habitat class (riparian its own), a normalised convolution of the lit
    clean pixels of that class (2 px clear of the mask, not built, no road, not water, not watered
    lawn, not shade) at 15, 60, 250 and 1000 m, each scale weighted by its support, so the colour is
@@ -56,7 +57,7 @@ from scipy.spatial import cKDTree
 
 from .config import TILE_SIZE_M, Tile
 from .erase_imagery import (PAVEMENT, _built_pixels, _footprint_mask, _gain, _human_cells, _irrigated,
-                            _kept_pavement, _rewilded_beds, _seam, _upsample_nearest)
+                            _kept_pavement, _rewilded_beds, _seam, _upsample_nearest, _urban)
 from .habitat import CLASSES, CODES
 
 Image.MAX_IMAGE_PIXELS = None
@@ -387,7 +388,7 @@ def _protected(tile: Tile, naip: np.ndarray, tr, n: int) -> dict:
     human = _upsample_nearest(whole, n).astype(bool) | (_upsample_nearest(partial, n).astype(bool) & _built_pixels(naip))
     roads = np.asarray(Image.open(tile.path("client/roads.png")).convert("L").resize((n, n), Image.BILINEAR))
     pave = roads > PAVEMENT
-    erased = (_footprint_mask(tile, (n, n), tr) | human) & ~pave
+    erased = (_footprint_mask(tile, (n, n), tr) | human | _urban(tile, n)) & ~pave
     beds = _rewilded_beds(tile, n)
     if beds is not None:
         erased |= beds[0]
@@ -536,8 +537,8 @@ def inpaint_crowns(tile: Tile, sheet_dir: Path | None = None) -> dict:
             "path": "client/texture_ground.jpg", "kind": "raster", "crs": tile.crs, "bounds": list(tile.bounds),
             "pixels": n, "resolution_m": res, "source": tags.get("WE_SOURCE", "pc_naip"),
             "derived_from": ["client.texture_imagery", "imagery.naip", "vegetation.chm_1m", "vegetation.habitat",
-                             "vegetation.habitat_present", "vegetation.evt", "footprint.mask", "client.roads",
-                             "client.channel_profile"],
+                             "vegetation.habitat_present", "vegetation.evt", "footprint.mask", "footprint.urban",
+                             "client.roads", "client.channel_profile"],
             "mask_fraction": round(mask_fraction, 4), "filled_fraction": round(float(region.mean()), 4),
             "erased_dark_fraction": round(float(erased_mask.mean()), 4),
             "sun": sun, "naip_date": date,

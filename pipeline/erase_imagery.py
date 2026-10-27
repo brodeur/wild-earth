@@ -10,11 +10,16 @@ quarry. The premise is the world with no humans, with roads kept as decayed pave
    LANDFIRE's "human" cells (low intensity, Developed-Roads, and developed or urban forest,
    shrubland and herbaceous) are mostly real oaks and dry grass at 2.5 m, so there only the
    pixels that look built (grey roofs, concrete, gravel, pools, watered lawn) are erased.
+   Inside the dense-urban mask (footprint/urban.tif, pipeline/urban.py) every pixel is erased,
+   streets included (derive gives them no pavement there; only freeways stay pavement), so a
+   city's blocks are rewilded whole from the backfilled habitat class instead of leaving each
+   block's lawns and street trees between the erased roofs.
 2. Small or thin mask components are inpainted from their surroundings (cv2 Telea). Large
    ones are synthesized by image quilting: 32 px patches copied out of clean imagery of the same
    backfilled habitat class elsewhere in the tile, each patch's mean colour matched to the
    clean pixels around it so the new woodland takes on the local brightness.
-3. Pavement is bleached toward sun-bleached grey and desaturated (decayed asphalt).
+3. Pavement is bleached toward sun-bleached grey and desaturated (decayed asphalt). Inside the
+   urban mask there is none but the freeways', so the street grid leaves no trace.
 
 Everything runs on the NAIP grid (2.5 m, 4000 px) and is vectorised per patch.
 """
@@ -47,6 +52,10 @@ WIDE_M = 400.0                # fallback radius when a big hole has no clean pix
 CORRECTION = 0.25             # clamp of the per-channel mean-colour correction
 HUE_SLACK = 0.08              # per-channel freedom around the brightness gain
 CLASS_SHARE = 0.5             # a source window counts for a class when at least this share is that class
+URBAN_MIN_WINDOWS = 200       # in the dense-urban mask a class with fewer source windows gives way to its fallbacks
+URBAN_SIGMA_M = 150.0         # ... its local colour: clean ground of the patch's class under a gaussian this wide
+URBAN_EASE = 0.15             # ... giving way to the class's median window below this gaussian-weighted clean share
+URBAN_GRID = 8                # ... computed on a grid this many NAIP pixels to the cell (20 m)
 CANDIDATES = 32               # random source windows considered per patch
 BAND = 0.05                   # ... drawn from this share of the class's windows nearest the local brightness
 GRAIN_SIGMA_PX = 3.0          # inpainted fills get the synthesized texture's detail finer than this
@@ -89,7 +98,9 @@ def _footprint_mask(tile: Tile, shape_, tr) -> np.ndarray:
     for feat in fc["features"]:
         pr = feat.get("properties") or {}
         klass = pr.get("class")
-        if klass == "road":
+        # Roads are decayed, not erased; bridge outlines (man_made=bridge) are there for the lidar crown
+        # finder, and their decks are the roads'.
+        if klass == "road" or pr.get("man_made") == "bridge":
             continue
         g = shp_transform(to_tile, shape(feat["geometry"]))
         if g.is_empty:
@@ -121,6 +132,12 @@ def _human_cells(tile: Tile, present: np.ndarray) -> tuple[np.ndarray, np.ndarra
     full_codes = [int(k) for k, v in meta.items() if str(v.get("phys", "")).startswith(FULL_ERASE_PHYS)]
     whole = human & np.isin(evt, full_codes)
     return whole, human & ~whole
+
+
+def _urban(tile: Tile, n: int) -> np.ndarray:
+    """The dense-urban mask (pipeline/urban.py) on the n x n NAIP grid: erased whole, streets and all."""
+    from .urban import load
+    return load(tile, n)
 
 
 def _built_pixels(img: np.ndarray) -> np.ndarray:
@@ -238,7 +255,7 @@ def _seam(cost: np.ndarray) -> np.ndarray:
 
 def _synthesize(img: np.ndarray, region: np.ndarray, target: np.ndarray, windows: dict, clean: np.ndarray,
                 rng: np.random.Generator, ref_class: int | None = None,
-                radii: tuple = (LOCAL_M, WIDE_M)) -> tuple[np.ndarray, np.ndarray, int]:
+                radii: tuple = (LOCAL_M, WIDE_M), urban: np.ndarray | None = None) -> tuple[np.ndarray, np.ndarray, int]:
     """Texture for every `region` pixel by image quilting from same-class source windows.
 
     Patches are laid in raster order on a PATCH grid with OVERLAP. For each, CANDIDATES random
@@ -249,6 +266,13 @@ def _synthesize(img: np.ndarray, region: np.ndarray, target: np.ndarray, windows
     neighbours along minimum-error seams, so there is no cross-fade to ghost or blur.
     ref_class: take the local mean from clean pixels of that class only (and over `radii`), so a
     rewilded lakebed is lit like the nearby meadows rather than the woodland on its shore.
+    urban: the dense-urban mask. A patch centred in it takes its class from the first in the fallback
+    chain with at least URBAN_MIN_WINDOWS windows (a city tile's few clean stands of a class would be
+    repeated across whole neighbourhoods; water gives way too, houses stand on land), and aims at the
+    colour of clean ground of that class nearby (a gaussian of URBAN_SIGMA_M, so no square halo is
+    drawn around a park and a forest beside the blocks does not darken the scrub), easing into the
+    median of the class's window means where there is little such ground (the middle of a city)
+    instead of drawing blind.
     Returns (synth float32 image, placed mask, patch count)."""
     n = img.shape[0]
     res = TILE_SIZE_M / n
@@ -258,6 +282,19 @@ def _synthesize(img: np.ndarray, region: np.ndarray, target: np.ndarray, windows
         ref = ref & (target == ref_class)
     near, near_f = _local_mean(img, ref, int(radii[0] / res))
     wide, wide_f = _local_mean(img, ref, int(radii[1] / res))
+    soft = {}
+
+    def class_local(k):
+        """(mean colour, gaussian-weighted support) of clean ground of class k on the URBAN_GRID grid."""
+        if k not in soft:
+            m = n // URBAN_GRID
+            w = cv2.resize((ref & (target == k)).astype("float32"), (m, m), interpolation=cv2.INTER_AREA)
+            col = cv2.resize(img.astype("float32") * (ref & (target == k))[..., None], (m, m), interpolation=cv2.INTER_AREA)
+            sig = URBAN_SIGMA_M / (res * URBAN_GRID)
+            den = cv2.GaussianBlur(w, (0, 0), sig, borderType=cv2.BORDER_REFLECT)
+            num = cv2.GaussianBlur(col, (0, 0), sig, borderType=cv2.BORDER_REFLECT)
+            soft[k] = (num / np.maximum(den, 1e-6)[..., None], den)
+        return soft[k]
     means = {c: _window_means(img, w) for c, w in windows.items()}
     # Windows per class sorted by brightness, so candidates come from ground that already looks like
     # the local ground (savanna for savanna, closed canopy for closed canopy) and the gain stays
@@ -281,18 +318,29 @@ def _synthesize(img: np.ndarray, region: np.ndarray, target: np.ndarray, windows
             reg = region[ya:yb, xa:xb]
             # Target class: majority of the backfilled class over this patch's region pixels.
             c = int(np.bincount(target[ya:yb, xa:xb][reg]).argmax())
-            if c not in chains:
-                chains[c] = next((k for k in _fallbacks(c) if k in windows), None)
-            if chains[c] is None:
-                continue
-            cand, cmean = windows[chains[c]], means[chains[c]]
             cy, cx = min(y0 + PATCH // 2, n - 1), min(x0 + PATCH // 2, n - 1)
-            goal = near[cy, cx] if near_f[cy, cx] > 0.05 else wide[cy, cx] if wide_f[cy, cx] > 0.02 else None
+            u = urban is not None and bool(urban[cy, cx])
+            if (c, u) not in chains:
+                # Houses stand on land: in the city a 30 m water cell (a cliff top, a filled shore) takes
+                # its fallback, not the bay's windows.
+                chain = [k for k in _fallbacks(c) if k in windows and not (u and k == CODES["water"])]
+                chains[(c, u)] = next((k for k in chain if len(windows[k]) >= (URBAN_MIN_WINDOWS if u else 1)),
+                                      chain[0] if chain else None)
+            k = chains[(c, u)]
+            if k is None:
+                continue
+            cand, cmean = windows[k], means[k]
+            if u:
+                lm, ls = class_local(k)
+                gy, gx = min(cy // URBAN_GRID, lm.shape[0] - 1), min(cx // URBAN_GRID, lm.shape[1] - 1)
+                a = min(float(ls[gy, gx]) / URBAN_EASE, 1.0)
+                goal = a * lm[gy, gx] + (1 - a) * np.median(cmean, axis=0)
+            else:
+                goal = near[cy, cx] if near_f[cy, cx] > 0.05 else wide[cy, cx] if wide_f[cy, cx] > 0.02 else None
 
             if goal is None:
                 pick = rng.integers(len(cand), size=CANDIDATES)
             else:
-                k = chains[c]
                 half = max(CANDIDATES * 2, int(BAND * len(cand) / 2))
                 i = int(np.searchsorted(sorted_lum[k], float(goal @ lumw)))
                 lo = int(np.clip(i - half, 0, max(len(cand) - 2 * half, 0)))
@@ -440,12 +488,14 @@ def erase_imagery(tile: Tile) -> dict:
     human_whole = _upsample_nearest(whole_cells, n).astype(bool)
     human_built = _upsample_nearest(partial_cells, n).astype(bool) & _built_pixels(naip)
     human = human_whole | human_built
+    urban = _urban(tile, n)
     roads = np.asarray(Image.open(tile.path("client/roads.png")).convert("L").resize((n, n), Image.BILINEAR))
     pave = roads > PAVEMENT
 
     # a. Erase mask. Rewilded beds are left out of the human pass and synthesized on their own after
-    # it (meadow, then the riparian corridor), but no bed pixel may serve as a source.
-    mask = (_footprint_mask(tile, (n, n), tr) | human) & ~pave
+    # it (meadow, then the riparian corridor), but no bed pixel may serve as a source. In the urban
+    # mask the only pavement left is a freeway's, so the streets are erased with their blocks.
+    mask = (_footprint_mask(tile, (n, n), tr) | human | urban) & ~pave
     beds = _rewilded_beds(tile, n)
     if beds is not None:
         mask &= ~beds[0]
@@ -476,7 +526,8 @@ def erase_imagery(tile: Tile) -> dict:
     grow = 3
     big_region, big_alpha = _edge_alpha(big, grow)
     small_region, small_alpha = _edge_alpha(small, 2)
-    synth, placed, patches = _synthesize(naip, big_region | small_region, target, windows, clean, rng)
+    synth, placed, patches = _synthesize(naip, big_region | small_region, target, windows, clean, rng,
+                                         urban=urban if urban.any() else None)
     covered = placed[..., None]
     a = np.where(covered, big_alpha[..., None], 0)
     out = (naip.astype("float32") * (1 - a) + synth * a).clip(0, 255).astype("uint8")
@@ -544,9 +595,11 @@ def erase_imagery(tile: Tile) -> dict:
     info = {
         "path": "client/texture_imagery.jpg", "kind": "raster", "crs": tile.crs, "bounds": list(tile.bounds),
         "pixels": n, "resolution_m": res, "source": naip_source,
-        "derived_from": ["imagery.naip", "footprint.mask", "vegetation.habitat_present", "vegetation.habitat",
-                         "vegetation.evt", "client.roads", "client.channel_profile"],
+        "derived_from": ["imagery.naip", "footprint.mask", "footprint.urban", "vegetation.habitat_present",
+                         "vegetation.habitat", "vegetation.evt", "client.roads", "client.channel_profile"],
         "mask_fraction": round(mask_fraction, 4),
+        "urban": {"fraction": round(float(urban.mean()), 4), "erased_fraction": round(float((urban & mask).mean()), 4),
+                  "kept_pavement_fraction": round(float((urban & pave).mean()), 4)},
         "human_cells": {"whole_fraction": round(float(whole_cells.mean()), 4),
                         "partial_fraction": round(float(partial_cells.mean()), 4),
                         "partial_erased_fraction": round(float(human_built.mean()), 4)},

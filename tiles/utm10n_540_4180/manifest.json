@@ -15,7 +15,7 @@
   37.85658112570665
  ],
  "size_m": 10000,
- "generated_at": "2026-10-27T01:11:52Z",
+ "generated_at": "2026-10-27T03:21:13Z",
  "generator": {
   "name": "wild-earth-pipeline",
   "version": "0.2.0"
@@ -233,64 +233,69 @@
     4190000
    ],
    "encoding": "little-endian. Header 32 bytes: magic 'WECR', u16 version 1, u16 record bytes 8, u16 cells per side (100), u16 cell metres (100), u32 crown count, f32 xy unit (0.2 m), f32 height unit (0.25 m), f32 radius unit (0.1 m), u32 0. Then u32 offsets[cells*cells + 1]: the crowns of index cell (ci = floor(x / 100), cj = floor(north / 100)) are records offsets[cj*cells + ci] .. offsets[cj*cells + ci + 1], tallest first. Then 8-byte records: u16 x, u16 north (tile metres = value * 0.2 + 0.1, north from the south edge), u8 height (* 0.25 m), u8 crown radius (* 0.1 m), u8 confidence (0-255), u8 multi-return share (0-255)",
-   "method": "local maxima of the CHM (3x3 median, gaussian sigma 1.0 m) in a square window of radius round(1 + 0.1 h) m (1-5), h >= 4.0 m; height = the median CHM's 3x3 max; crown = watershed region down to 0.5 of the peak, radius sqrt(area / pi) clipped to 0.5 .. min(2 + 0.35 h, 15) m; dropped on OSM buildings and where the multi-return share in the 5x5 around the peak is < 0.08, where the crown is narrower than max(1 m, 0.06 h) (towers, poles), and where h < 8.0 m with prominence < 2.0 m (a taller shrub in a shrub canopy). confidence = 0.35 prominence (peak minus the minimum in a square of half-width 2 w + 1 around it, w the maxima window radius, over h) + 0.25 watershed radius over h / 4 + 0.2 multi-return share over 0.6 + 0.2 height above 4 m over 6 m, each clipped to 0..1",
+   "method": "local maxima of the CHM (3x3 median, gaussian sigma 1.0 m) in a square window of radius round(1 + 0.1 h) m (1-5), h >= 4.0 m; height = the median CHM's 3x3 max; crown = watershed region down to 0.5 of the peak, radius sqrt(area / pi) clipped to 0.5 .. min(2 + 0.35 h, 15) m; dropped on OSM buildings and where the multi-return share in the 5x5 around the peak is < 0.08, where the crown is narrower than max(1 m, 0.06 h) (towers, poles), and where h < 8.0 m with prominence < 2.0 m (a taller shrub in a shrub canopy); then dropped within 35 m of an OSM motorway or trunk bridge, 20 m of another road or rail bridge, 8 m of a footbridge and 10 m of a man_made=bridge outline (towers, cables), and inside the dense-urban mask (footprint.urban) where the 30 m rewilded class (vegetation.habitat) is not oak woodland, conifer or mixed forest or riparian (street trees). confidence = 0.35 prominence (peak minus the minimum in a square of half-width 2 w + 1 around it, w the maxima window radius, over h) + 0.25 watershed radius over h / 4 + 0.2 multi-return share over 0.6 + 0.2 height above 4 m over 6 m, each clipped to 0..1",
    "source": "usgs_3dep_lpc",
    "ept_project": "CA_SanFrancisco_1_B23",
    "sources_used": [
     "usgs_3dep_1m",
-    "osm"
+    "osm",
+    "landfire"
    ],
    "derived_from": [
     "vegetation.chm_1m",
-    "footprint.mask"
+    "footprint.mask",
+    "footprint.urban",
+    "vegetation.habitat"
    ],
    "stats": {
     "maxima": 103707,
-    "dropped_on_osm_buildings": 0,
-    "dropped_low_multi_return": 19274,
-    "dropped_pole_like": 1285,
-    "dropped_shrub_in_shrub_canopy": 1126,
-    "crowns": 82022,
+    "dropped_on_osm_buildings": 54271,
+    "dropped_low_multi_return": 1336,
+    "dropped_pole_like": 1266,
+    "dropped_shrub_in_shrub_canopy": 279,
+    "dropped_on_bridges": 626,
+    "dropped_urban": 17797,
+    "crowns": 28132,
     "confidence_terms_median": {
-     "prominence": 0.924,
+     "prominence": 0.944,
      "width": 1.0,
-     "multi_return": 0.51,
+     "multi_return": 1.0,
      "height": 1.0
     },
     "confidence_quantiles_p10_p50_p90": [
-     0.633,
-     0.817,
-     0.971
+     0.725,
+     0.897,
+     0.993
     ],
-    "bytes": 696212,
-    "crowns_per_ha": 8.2,
-    "max_per_index_cell": 82,
+    "bytes": 265092,
+    "crowns_per_ha": 2.8,
+    "max_per_index_cell": 77,
     "height_histogram_m": {
-     "4-6": 7378,
-     "6-8": 11085,
-     "8-12": 28015,
-     "12-16": 18834,
-     "16-20": 4398,
-     "20-25": 4257,
-     "25-30": 3261,
-     "30-35": 2147,
-     "35-40": 1113,
-     "40-80": 1395
+     "4-6": 3258,
+     "6-8": 3466,
+     "8-12": 5384,
+     "12-16": 3152,
+     "16-20": 2314,
+     "20-25": 3319,
+     "25-30": 2900,
+     "30-35": 2004,
+     "35-40": 1050,
+     "40-80": 1281
     },
     "height_m": {
-     "median": 11.1,
-     "p95": 31.3,
-     "max": 150.6
+     "median": 14.2,
+     "p95": 39.2,
+     "max": 83.8
     },
     "radius_m": {
-     "median": 4.71,
-     "p95": 9.06
+     "median": 5.11,
+     "p95": 11.35
     },
-    "confidence_median": 0.817,
-    "seconds": 73.3
+    "confidence_median": 0.897,
+    "seconds": 93.8
    },
-   "sha256": "9d9d00469645df8e48b0fd832b54c38886b5a17cc1501aafef5efdedd1602b62",
-   "bytes": 696212
+   "sha256": "d8a897f9de7549653ab37e1cb271b7bb1dce8d22bb09700fa5eb3b99f8397b68",
+   "bytes": 265092
   },
   "client.terrain_detail": {
    "path": "client/terrain_detail.png",
@@ -371,7 +376,7 @@
    "path": "footprint/mask.geojson",
    "kind": "vector",
    "source": "osm",
-   "feature_count": 48763,
+   "feature_count": 48788,
    "class_counts": {
     "cleared": 398,
     "road": 15971,
@@ -379,12 +384,14 @@
     "building": 32362,
     "rail": 17,
     "reservoir": 3,
-    "other": 6,
+    "other": 31,
     "canal": 1
    },
+   "bridge_outlines": 25,
+   "bridge_ways": 144,
    "osm_base": "2026-10-27T00:20:36Z",
-   "sha256": "272482659082beebf3cc7917546a90754dc85037c96acb99f86317d27439b9b9",
-   "bytes": 45920034
+   "sha256": "e59a8658c4b206d1da504c90157598f0e514d82fbf682e5287757cc3e991e9dd",
+   "bytes": 45961609
   },
   "hydro.flowlines": {
    "path": "hydro/flowlines.geojson",
@@ -1376,9 +1383,9 @@
    ],
    "pixels": 2000,
    "derived_from": "footprint.mask",
-   "masked_fraction": 0.17538025,
-   "sha256": "46a458da6b9d40c29ff04298473e1f288cc7b08b6917649e8c36d3b1ae57a08d",
-   "bytes": 153959
+   "masked_fraction": 0.17539,
+   "sha256": "54c0ecf800d407a5d14b09e333420e24aa3602b3be25aaaef823c79873d06de6",
+   "bytes": 153949
   },
   "imagery.naip_png": {
    "path": "imagery/naip.png",
@@ -1507,11 +1514,14 @@
    ],
    "pixels": 2000,
    "resolution_m": 5.0,
-   "derived_from": "footprint.mask",
-   "encoding": "road weight 0..255 (255 pavement, verge 136 falling to 0; tracks half weight)",
-   "road_fraction": 0.0379115,
-   "sha256": "72ba1df9016be4a7629ca0b9f5416501a29f9621d807bbafda42e72e23bed3e4",
-   "bytes": 207617
+   "derived_from": [
+    "footprint.mask",
+    "footprint.urban"
+   ],
+   "encoding": "road weight 0..255 (255 pavement, verge 136 falling to 0; tracks half weight); 0 inside footprint.urban except motorways and trunk roads",
+   "road_fraction": 0.01503075,
+   "sha256": "8c692be23a783b5479986b43d49550e7bc7f5b0547adfce51b30e5e85bb1453f",
+   "bytes": 127820
   },
   "client.texture": {
    "path": "client/texture.png",
@@ -1531,8 +1541,8 @@
     "vegetation.evc",
     "footprint.mask"
    ],
-   "sha256": "6cabcaddf5e46f10854437e94b260f1063bed2b6dd181eac5be9153e382a3d08",
-   "bytes": 4526969
+   "sha256": "b99d52db92050fd240790015ee89508c338661dbd3e6784e3162259cc20a498a",
+   "bytes": 4312048
   },
   "client.masks": {
    "path": "client/masks.png",
@@ -1833,28 +1843,34 @@
    "derived_from": [
     "imagery.naip",
     "footprint.mask",
+    "footprint.urban",
     "vegetation.habitat_present",
     "vegetation.habitat",
     "vegetation.evt",
     "client.roads",
     "client.channel_profile"
    ],
-   "mask_fraction": 0.2148,
+   "mask_fraction": 0.2463,
+   "urban": {
+    "fraction": 0.1635,
+    "erased_fraction": 0.1624,
+    "kept_pavement_fraction": 0.0011
+   },
    "human_cells": {
     "whole_fraction": 0.0812,
     "partial_fraction": 0.1849,
     "partial_erased_fraction": 0.1446
    },
-   "inpainted_fraction": 0.002,
-   "synthesized_fraction": 0.2128,
+   "inpainted_fraction": 0.0016,
+   "synthesized_fraction": 0.2446,
    "components": {
-    "inpainted": 2014,
-    "synthesized": 1926,
-    "patches": 9512
+    "inpainted": 1750,
+    "synthesized": 793,
+    "patches": 9513
    },
    "source_windows": {
     "1": 1773,
-    "2": 1638,
+    "2": 1637,
     "3": 20,
     "4": 18751,
     "5": 3175,
@@ -1863,14 +1879,14 @@
     "8": 778
    },
    "grass_mean": [
-    0.4265,
+    0.4264,
     0.4428,
     0.37
    ],
    "oak_mean": [
-    0.3328,
-    0.3873,
-    0.3152
+    0.3327,
+    0.3871,
+    0.3149
    ],
    "rewilded_beds": {
     "source": "client.channel_profile (B)",
@@ -1891,8 +1907,8 @@
     ]
    },
    "encoding": "NAIP 2022 RGB with human footprint inpainted or synthesized, pavement bleached; JPEG q88",
-   "sha256": "a3179d616b25aeaf17c147a071bfaeed01fb3387323738a34d84af1904203e1b",
-   "bytes": 3466033
+   "sha256": "49a19203bf5a30e96ea124ebca8e2e8db2f6d45c2d9576b284a2ac38281999e2",
+   "bytes": 3342436
   },
   "client.texture_ground": {
    "path": "client/texture_ground.jpg",
@@ -1915,18 +1931,19 @@
     "vegetation.habitat_present",
     "vegetation.evt",
     "footprint.mask",
+    "footprint.urban",
     "client.roads",
     "client.channel_profile"
    ],
-   "mask_fraction": 0.1122,
-   "filled_fraction": 0.1319,
-   "erased_dark_fraction": 0.0914,
+   "mask_fraction": 0.1418,
+   "filled_fraction": 0.168,
+   "erased_dark_fraction": 0.1214,
    "sun": [
     {
      "quadrant": "NW",
-     "local_hour": 12.2,
-     "azimuth": 135.4,
-     "elevation": 68.6,
+     "local_hour": 11.7,
+     "azimuth": 122.3,
+     "elevation": 64.0,
      "lobe_over_ring": 9.0,
      "fallback": true
     },
@@ -1935,21 +1952,21 @@
      "local_hour": 11.7,
      "azimuth": 122.3,
      "elevation": 64.0,
-     "lobe_over_ring": 0.861
+     "lobe_over_ring": 0.86
     },
     {
      "quadrant": "SW",
-     "local_hour": 12.2,
-     "azimuth": 135.4,
-     "elevation": 68.6,
-     "lobe_over_ring": 0.828
+     "local_hour": 10.9,
+     "azimuth": 108.0,
+     "elevation": 55.4,
+     "lobe_over_ring": 0.873
     },
     {
      "quadrant": "SE",
      "local_hour": 13.9,
      "azimuth": 209.2,
      "elevation": 71.7,
-     "lobe_over_ring": 0.848
+     "lobe_over_ring": 0.917
     }
    ],
    "naip_date": "2022-07-15",
@@ -1957,7 +1974,7 @@
    "class_clean_means": {
     "oak_woodland": [
      91.6,
-     105.2,
+     105.1,
      84.0
     ],
     "conifer_forest": [
@@ -1966,9 +1983,9 @@
      85.3
     ],
     "mixed_forest": [
-     99.0,
-     110.3,
-     92.9
+     99.2,
+     110.4,
+     93.0
     ],
     "chaparral": [
      108.7,
@@ -1986,24 +2003,24 @@
      99.2
     ],
     "barren": [
-     167.1,
-     168.3,
-     168.6
+     167.0,
+     168.2,
+     168.5
     ]
    },
    "synthesis": {
-    "patches": 45044,
+    "patches": 51937,
     "patch_px": 12,
     "overlap_px": 3,
     "source_distance_m": {
-     "median": 2311,
-     "p90": 4191,
-     "max": 5693
+     "median": 2490,
+     "p90": 4230,
+     "max": 5696
     }
    },
    "encoding": "NAIP 2022 RGB as client.texture_imagery with tree crowns and their shadows replaced by synthesized ground of the same class and season; JPEG q88",
-   "sha256": "45320d14bc830292807a6f8718ac7123a4c392b7155d1b8070cca1cac889dd83",
-   "bytes": 3375726
+   "sha256": "0286d845574666220d67ebfc5240db9a113df73ab31862ca21b94e4835876c04",
+   "bytes": 3266955
   },
   "client.texture_ground_mask": {
    "path": "client/texture_ground_mask.png",
@@ -2021,8 +2038,8 @@
     "client.texture_ground"
    ],
    "encoding": "8-bit grey, row 0 north: share of the 10 m pixel replaced in client/texture_ground.jpg (255 all filled, 0 all photo; the 1 px feather counts half)",
-   "sha256": "64d90288d6b122e1c118d7a607b577ca0f586167be720c54651f6ee86b11ad6e",
-   "bytes": 111517
+   "sha256": "7e3e2cc9bc2d2115f467222d74a7b7cab2e8e3b7e3756a67df35962cb021fbe7",
+   "bytes": 116285
   },
   "seasons.s2_monthly": {
    "path": "seasons/months.json",
@@ -4947,6 +4964,66 @@
    ],
    "sha256": "e2aa37fe8824b3aeeba78c2e3b66f48cf7a257ac34e7e094f9a5304458eb0775",
    "bytes": 1791
+  },
+  "client.mast": {
+   "path": "client/mast.png",
+   "kind": "raster",
+   "crs": "EPSG:32610",
+   "bounds": [
+    540000,
+    4180000,
+    550000,
+    4190000
+   ],
+   "pixels": 333,
+   "resolution_m": 30.03003003003003,
+   "derived_from": "resources.acorn_mast",
+   "encoding": "R = fall acorn_mast score 0..100",
+   "sha256": "32e0b9ef29cf842666594eb8c42541edf4fee362af252d0daefd4c8773133140",
+   "bytes": 11227
+  },
+  "footprint.urban": {
+   "path": "footprint/urban.tif",
+   "kind": "raster",
+   "crs": "EPSG:32610",
+   "bounds": [
+    540000,
+    4180000,
+    550000,
+    4190000
+   ],
+   "pixels": 2000,
+   "resolution_m": 5.0,
+   "source": "osm",
+   "sources_used": [
+    "landfire"
+   ],
+   "derived_from": [
+    "footprint.mask",
+    "vegetation.evt"
+   ],
+   "encoding": "uint8, row 0 north: 1 densely built (streets, blocks and street trees rewilded whole), 0 not",
+   "method": "OSM building cover (rasterised at 2.5 m) averaged within 100 m; dense where >= 0.15, or >= 0.075 on LANDFIRE EVT Developed-Medium / High Intensity cells; kept within 25 m of a building or on those cells; closed by 40 m, enclosed gaps under 3 ha filled, components under 75 ha dropped",
+   "stats": {
+    "fraction": 0.1635,
+    "area_ha": 1635.4,
+    "components": 2,
+    "component_area_ha": [
+     1542.0,
+     93.4
+    ],
+    "dropped_components": 33,
+    "dropped_area_ha": 52.0,
+    "holes_filled": 5,
+    "buildings": 32362,
+    "building_cover": 0.0613,
+    "building_cover_inside": 0.3501,
+    "seed_fraction": 0.1665,
+    "evt_medhigh_fraction": 0.081,
+    "evt_medhigh_inside": 0.4381
+   },
+   "sha256": "4b9ae6d3eb5e574908ce38e08814b7a85b43a6c55726c1b7e4029b880d7751a7",
+   "bytes": 13209
   }
  },
  "sources": {
@@ -5155,6 +5232,72 @@
    "step": "unreal",
    "at": "2026-10-27T01:11:52Z",
    "seconds": 1.8,
+   "ok": true
+  },
+  {
+   "step": "osm",
+   "at": "2026-10-27T02:20:07Z",
+   "seconds": 37.2,
+   "ok": true
+  },
+  {
+   "step": "derive",
+   "at": "2026-10-27T02:32:57Z",
+   "seconds": 65.7,
+   "ok": true
+  },
+  {
+   "step": "erase",
+   "at": "2026-10-27T02:34:10Z",
+   "seconds": 65.4,
+   "ok": true
+  },
+  {
+   "step": "erase",
+   "at": "2026-10-27T02:36:56Z",
+   "seconds": 60.6,
+   "ok": true
+  },
+  {
+   "step": "erase",
+   "at": "2026-10-27T02:38:19Z",
+   "seconds": 61.8,
+   "ok": true
+  },
+  {
+   "step": "erase",
+   "at": "2026-10-27T02:40:11Z",
+   "seconds": 84.2,
+   "ok": true
+  },
+  {
+   "step": "erase",
+   "at": "2026-10-27T02:47:27Z",
+   "seconds": 56.8,
+   "ok": true
+  },
+  {
+   "step": "erase",
+   "at": "2026-10-27T02:51:03Z",
+   "seconds": 61.1,
+   "ok": true
+  },
+  {
+   "step": "lidar",
+   "at": "2026-10-27T03:07:50Z",
+   "seconds": 4.6,
+   "ok": true
+  },
+  {
+   "step": "inpaint",
+   "at": "2026-10-27T03:11:51Z",
+   "seconds": 241.0,
+   "ok": true
+  },
+  {
+   "step": "derive",
+   "at": "2026-10-27T03:21:13Z",
+   "seconds": 94.5,
    "ok": true
   }
  ]

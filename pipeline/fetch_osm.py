@@ -1,7 +1,10 @@
 """Human footprint mask from OpenStreetMap via Overpass.
 
 Marks what to erase and backfill. Each feature carries `class` and `buffer_m`
-(half-width used when rasterising lines).
+(half-width used when rasterising lines). Roads and railways keep their `bridge` tags (and
+`bridge:structure`, which marks the tower segments of a suspension bridge that lack `bridge`), and
+bridge outlines (`man_made=bridge`) come from a second, small query, so the lidar crown finder can
+drop the towers and cables it would otherwise take for trees (lidar.crowns).
 """
 from __future__ import annotations
 
@@ -48,6 +51,21 @@ QUERY = """
 out geom;
 """
 
+# Bridge outlines, apart from QUERY so a tile's cached footprint answer stays valid. They join the
+# footprint as `other` with man_made=bridge, for lidar.crowns to buffer with the bridge ways;
+# erase_imagery leaves them alone (a deck is its road's).
+BRIDGE_QUERY = """
+[out:json][timeout:120][bbox:{s},{w},{n},{e}];
+(
+  way["man_made"="bridge"];
+  relation["man_made"="bridge"];
+);
+out geom;
+"""
+
+KEEP_TAGS = ("highway", "building", "landuse", "railway", "power", "waterway", "water", "man_made", "bridge",
+             "bridge:structure")
+
 
 def classify(tags: dict) -> tuple[str, float] | None:
     if "building" in tags:
@@ -73,6 +91,13 @@ def classify(tags: dict) -> tuple[str, float] | None:
     return None
 
 
+def is_bridge(props: dict) -> bool:
+    """A feature that is (part of) a bridge: a way tagged bridge (not "no"), a way carrying only
+    bridge:structure (the Golden Gate's tower segments), or a man_made=bridge outline."""
+    return (props.get("bridge") not in (None, "no") or "bridge:structure" in props
+            or props.get("man_made") == "bridge")
+
+
 def _ring(geom) -> list[list[float]]:
     return [[p["lon"], p["lat"]] for p in geom]
 
@@ -87,7 +112,7 @@ def to_features(elements: list[dict]) -> list[dict]:
         klass, buf = cls
         props = {"class": klass, "buffer_m": buf, "source": "osm",
                  "osm_id": f"{el['type']}/{el['id']}", "name": tags.get("name")}
-        for k in ("highway", "building", "landuse", "railway", "power", "waterway", "water"):
+        for k in KEEP_TAGS:
             if k in tags:
                 props[k] = tags[k]
         if el["type"] == "way" and el.get("geometry"):
@@ -168,10 +193,16 @@ def fetch_osm(tile: Tile, force=False) -> dict:
     q = QUERY.format(s=s, w=w, n=n, e=e)
     data = overpass(q, tile.path("_cache/overpass_footprint.json"), force=force, label="osm")
     feats = to_features(data.get("elements", []))
+    bridges = overpass(BRIDGE_QUERY.format(s=s, w=w, n=n, e=e), tile.path("_cache/overpass_bridges.json"),
+                       force=force, label="osm bridges")
+    seen = {f["properties"]["osm_id"] for f in feats}
+    extra = [f for f in to_features(bridges.get("elements", [])) if f["properties"]["osm_id"] not in seen]
+    feats += extra
     counts: dict[str, int] = {}
     for f in feats:
         counts[f["properties"]["class"]] = counts.get(f["properties"]["class"], 0) + 1
     write_json(out, {"type": "FeatureCollection", "features": feats})
     return {"path": "footprint/mask.geojson", "kind": "vector", "source": "osm",
-            "feature_count": len(feats), "class_counts": counts,
+            "feature_count": len(feats), "class_counts": counts, "bridge_outlines": len(extra),
+            "bridge_ways": sum(1 for f in feats if is_bridge(f["properties"]) and f["properties"].get("man_made") != "bridge"),
             "osm_base": (data.get("osm3s") or {}).get("timestamp_osm_base")}

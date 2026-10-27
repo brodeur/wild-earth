@@ -184,14 +184,35 @@ DECAY_HALF_WIDTH = {"motorway": 8, "motorway_link": 4, "trunk": 7, "trunk_link":
                     "secondary": 5, "secondary_link": 3, "tertiary": 4.5, "residential": 3.5, "unclassified": 3.5,
                     "living_street": 3, "service": 2.5, "track": 2}
 ROAD_VERGE = 136   # weight at the verge's inner edge, just below the client's pavement threshold
+# Inside the dense-urban mask (pipeline/urban.py) the street grid is gone: no pavement, no verge. Freeways
+# (and their ramps) are graded and wide enough to stay clearings there too.
+URBAN_KEPT_ROADS = ("motorway", "trunk")
 
 
-def _road_weights(tile: Tile, z_shape, res: float, tr):
+def _rasterize_roads(geoms, bufs, scale, z_shape, tr) -> np.ndarray:
+    import shapely
+    if not len(geoms):
+        return np.zeros(z_shape, "uint8")
+    shapes = []
+    for k in range(ROAD_RINGS, -1, -1):          # outermost ring first; later (higher) values overwrite
+        frac = k / ROAD_RINGS
+        rings = shapely.buffer(geoms, bufs * (1 + 2 * frac))
+        vals = np.round((255 if k == 0 else ROAD_VERGE * (1 - (k - 1) / ROAD_RINGS)) * scale).astype(int)
+        shapes += [(g, int(v)) for g, v in zip(rings, vals) if v > 0]
+    shapes.sort(key=lambda gv: gv[1])            # rasterize draws in order: the highest weight wins
+    return rasterize(shapes, out_shape=z_shape, transform=tr, fill=0, dtype="uint8")
+
+
+def _road_weights(tile: Tile, z_shape, res: float, tr, urban: np.ndarray | None = None):
     """(weight 0..255, major mask) on the DEM grid, or None without a footprint mask.
 
     Pavement (buffer_m) is 255; the verge beyond it (another 2x buffer_m) starts just under the
     client's pavement threshold (140) and falls linearly to 0, so "> 140" means pavement exactly.
-    Tracks count at half weight. Major = motorway..secondary and their links, for the pavement tone."""
+    Tracks count at half weight. Major = motorway..secondary and their links, for the pavement tone.
+    `urban` (bool, the DEM grid): there every road but URBAN_KEPT_ROADS weighs 0, pavement and verge,
+    including the verge of a street outside that reaches in. Freeways and all roads outside are drawn
+    as before: the two sets are rasterised apart and the per-pixel maximum taken, which is what the
+    single sorted pass gives."""
     import shapely
     p = tile.dir / "footprint/mask.geojson"
     if not p.exists():
@@ -199,7 +220,7 @@ def _road_weights(tile: Tile, z_shape, res: float, tr):
     with open(p) as f:
         fc = json.load(f)
     to_tile = Transformer.from_crs("EPSG:4326", tile.crs, always_xy=True).transform
-    geoms, bufs, scale, major = [], [], [], []
+    geoms, bufs, scale, major, kept = [], [], [], [], []
     for feat in fc["features"]:
         pr = feat.get("properties") or {}
         hw = pr.get("highway")
@@ -212,21 +233,21 @@ def _road_weights(tile: Tile, z_shape, res: float, tr):
         bufs.append(max(DECAY_HALF_WIDTH.get(hw, pr.get("buffer_m") or 0), res / 2))
         scale.append(0.5 if hw == "track" else 1.0)
         major.append((hw or "").removesuffix("_link") in MAJOR_ROADS)
+        kept.append((hw or "").removesuffix("_link") in URBAN_KEPT_ROADS)
     if not geoms:
         return np.zeros(z_shape, "uint8"), np.zeros(z_shape, bool)
     geoms, bufs, scale = np.array(geoms, dtype=object), np.array(bufs), np.array(scale)
-    shapes = []
-    for k in range(ROAD_RINGS, -1, -1):          # outermost ring first; later (higher) values overwrite
-        frac = k / ROAD_RINGS
-        rings = shapely.buffer(geoms, bufs * (1 + 2 * frac))
-        vals = np.round((255 if k == 0 else ROAD_VERGE * (1 - (k - 1) / ROAD_RINGS)) * scale).astype(int)
-        shapes += [(g, int(v)) for g, v in zip(rings, vals) if v > 0]
-    shapes.sort(key=lambda gv: gv[1])            # rasterize draws in order: the highest weight wins
-    w = rasterize(shapes, out_shape=z_shape, transform=tr, fill=0, dtype="uint8")
-    mj = np.array(major)
-    maj = (rasterize([(g, 1) for g in shapely.buffer(geoms[mj], bufs[mj] * 3)], out_shape=z_shape,
-                     transform=tr, fill=0, dtype="uint8").astype(bool) if mj.any() else np.zeros(z_shape, bool))
-    return w, maj
+    mj, kp = np.array(major), np.array(kept)
+
+    def majors(sel):
+        return (rasterize([(g, 1) for g in shapely.buffer(geoms[sel], bufs[sel] * 3)], out_shape=z_shape,
+                          transform=tr, fill=0, dtype="uint8").astype(bool) if sel.any() else np.zeros(z_shape, bool))
+
+    if urban is None or not urban.any():
+        return _rasterize_roads(geoms, bufs, scale, z_shape, tr), majors(mj)
+    w = np.maximum(_rasterize_roads(geoms[kp], bufs[kp], scale[kp], z_shape, tr),
+                   np.where(urban, 0, _rasterize_roads(geoms[~kp], bufs[~kp], scale[~kp], z_shape, tr)).astype("uint8"))
+    return w, majors(mj & kp) | (majors(mj & ~kp) & ~urban)
 
 
 def client_rasters(tile: Tile) -> dict:
@@ -295,13 +316,20 @@ def client_rasters(tile: Tile) -> dict:
 
     # roads.png: decayed-road weight (255 pavement, falling to 0 across the verge), and the
     # same roads baked into the texture as worn grey pavement with darker seams and grass in the cracks.
-    roads = _road_weights(tile, z.shape, res, tr)
+    # The dense-urban mask first (pipeline/urban.py): inside it the street grid goes with the blocks.
+    urban = None
+    if tile.path("footprint/mask.geojson").exists():
+        from .urban import build as build_urban, load as load_urban
+        out["footprint.urban"] = build_urban(tile)
+        urban = load_urban(tile, n)
+    roads = _road_weights(tile, z.shape, res, tr, urban)
     if roads is not None:
         rw, major = roads
         Image.fromarray(rw, "L").save(tile.path("client/roads.png"), optimize=True)
         out["client.roads"] = {"path": "client/roads.png", "kind": "raster", "crs": tile.crs, "bounds": list(tile.bounds),
-                               "pixels": n, "resolution_m": res, "derived_from": "footprint.mask",
-                               "encoding": "road weight 0..255 (255 pavement, verge 136 falling to 0; tracks half weight)",
+                               "pixels": n, "resolution_m": res, "derived_from": ["footprint.mask", "footprint.urban"],
+                               "encoding": "road weight 0..255 (255 pavement, verge 136 falling to 0; tracks half weight); "
+                                           "0 inside footprint.urban except motorways and trunk roads",
                                "road_fraction": float((rw > 140).mean())}
         wt = rw.astype("float32") / 255
         lit = (0.35 + 0.75 * shade)[..., None] * (1 + 0.5 * noise)[..., None]

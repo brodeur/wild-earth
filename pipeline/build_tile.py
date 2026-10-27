@@ -18,7 +18,7 @@ from .config import (ATTRIBUTION_FIELDS, GENERATOR, SPEC_VERSION, TILES_DIR, Til
                      read_json, sha256, today, write_json)
 from .species_data import CALENDAR, PERCEPTION, SEASONS
 
-ALL_STEPS = ["dem", "lidar", "naip", "osm", "hydro", "channels", "rewild_hydro", "veg", "ground", "species", "derive", "erase", "inpaint", "seasons", "unreal"]
+ALL_STEPS = ["dem", "lidar", "naip", "osm", "hydro", "channels", "rewild_hydro", "veg", "ground", "species", "derive", "crowns", "erase", "inpaint", "seasons", "unreal"]
 
 
 def load_manifest(tile: Tile) -> dict:
@@ -157,6 +157,17 @@ def run(tile: Tile, steps: list[str], force=False) -> dict:
                     if "hydro.flowlines" in m["layers"] and "terrain.dem" in m["layers"]:
                         from .resources import derive_resources
                         add_layer(m, tile, "resources", derive_resources(tile))
+            elif step == "crowns":
+                # The crown finder again, now that osm (buildings, bridges), veg (the rewilded classes) and derive (the
+                # dense-urban mask) exist: the lidar step runs before them and its first crown list knows none of them.
+                # Needs vegetation/multi_1m.tif (the lidar step writes it) or the kept point-cloud grids.
+                if "vegetation.chm_1m" in m["layers"]:
+                    from .lidar import build_crowns, build_dem_1m, layers as lidar_layers
+                    build_crowns(tile)
+                    stats = read_json(tile.path("terrain/lidar_stats.json"))
+                    add_layer(m, tile, "client.trees_lidar", lidar_layers(tile, build_dem_1m(tile), stats)["client.trees_lidar"])
+                else:
+                    print(f"[{tile.tile_id}] crowns: no lidar on this tile, skipped")
             elif step == "erase":
                 from .erase_imagery import erase_imagery
                 add_layer(m, tile, "client.texture_imagery", erase_imagery(tile))

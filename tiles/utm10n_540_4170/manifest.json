@@ -15,7 +15,7 @@
   37.76645207290539
  ],
  "size_m": 10000,
- "generated_at": "2026-10-26T23:38:28Z",
+ "generated_at": "2026-10-27T03:22:44Z",
  "generator": {
   "name": "wild-earth-pipeline",
   "version": "0.2.0"
@@ -235,64 +235,69 @@
     4180000
    ],
    "encoding": "little-endian. Header 32 bytes: magic 'WECR', u16 version 1, u16 record bytes 8, u16 cells per side (100), u16 cell metres (100), u32 crown count, f32 xy unit (0.2 m), f32 height unit (0.25 m), f32 radius unit (0.1 m), u32 0. Then u32 offsets[cells*cells + 1]: the crowns of index cell (ci = floor(x / 100), cj = floor(north / 100)) are records offsets[cj*cells + ci] .. offsets[cj*cells + ci + 1], tallest first. Then 8-byte records: u16 x, u16 north (tile metres = value * 0.2 + 0.1, north from the south edge), u8 height (* 0.25 m), u8 crown radius (* 0.1 m), u8 confidence (0-255), u8 multi-return share (0-255)",
-   "method": "local maxima of the CHM (3x3 median, gaussian sigma 1.0 m) in a square window of radius round(1 + 0.1 h) m (1-5), h >= 4.0 m; height = the median CHM's 3x3 max; crown = watershed region down to 0.5 of the peak, radius sqrt(area / pi) clipped to 0.5 .. min(2 + 0.35 h, 15) m; dropped on OSM buildings and where the multi-return share in the 5x5 around the peak is < 0.08, where the crown is narrower than max(1 m, 0.06 h) (towers, poles), and where h < 8.0 m with prominence < 2.0 m (a taller shrub in a shrub canopy). confidence = 0.35 prominence (peak minus the minimum in a square of half-width 2 w + 1 around it, w the maxima window radius, over h) + 0.25 watershed radius over h / 4 + 0.2 multi-return share over 0.6 + 0.2 height above 4 m over 6 m, each clipped to 0..1",
+   "method": "local maxima of the CHM (3x3 median, gaussian sigma 1.0 m) in a square window of radius round(1 + 0.1 h) m (1-5), h >= 4.0 m; height = the median CHM's 3x3 max; crown = watershed region down to 0.5 of the peak, radius sqrt(area / pi) clipped to 0.5 .. min(2 + 0.35 h, 15) m; dropped on OSM buildings and where the multi-return share in the 5x5 around the peak is < 0.08, where the crown is narrower than max(1 m, 0.06 h) (towers, poles), and where h < 8.0 m with prominence < 2.0 m (a taller shrub in a shrub canopy); then dropped within 35 m of an OSM motorway or trunk bridge, 20 m of another road or rail bridge, 8 m of a footbridge and 10 m of a man_made=bridge outline (towers, cables), and inside the dense-urban mask (footprint.urban) where the 30 m rewilded class (vegetation.habitat) is not oak woodland, conifer or mixed forest or riparian (street trees). confidence = 0.35 prominence (peak minus the minimum in a square of half-width 2 w + 1 around it, w the maxima window radius, over h) + 0.25 watershed radius over h / 4 + 0.2 multi-return share over 0.6 + 0.2 height above 4 m over 6 m, each clipped to 0..1",
    "source": "usgs_3dep_lpc",
    "ept_project": "CA_CaliforniaGaps_3_B23",
    "sources_used": [
     "usgs_3dep_1m",
-    "osm"
+    "osm",
+    "landfire"
    ],
    "derived_from": [
     "vegetation.chm_1m",
-    "footprint.mask"
+    "footprint.mask",
+    "footprint.urban",
+    "vegetation.habitat"
    ],
    "stats": {
     "maxima": 48607,
-    "dropped_on_osm_buildings": 0,
-    "dropped_low_multi_return": 14356,
-    "dropped_pole_like": 1086,
-    "dropped_shrub_in_shrub_canopy": 1003,
-    "crowns": 32162,
+    "dropped_on_osm_buildings": 26656,
+    "dropped_low_multi_return": 576,
+    "dropped_pole_like": 1072,
+    "dropped_shrub_in_shrub_canopy": 314,
+    "dropped_on_bridges": 337,
+    "dropped_urban": 4071,
+    "crowns": 15581,
     "confidence_terms_median": {
-     "prominence": 0.958,
+     "prominence": 0.957,
      "width": 1.0,
-     "multi_return": 0.557,
-     "height": 0.624
+     "multi_return": 0.908,
+     "height": 1.0
     },
     "confidence_quantiles_p10_p50_p90": [
-     0.65,
-     0.783,
-     0.966
+     0.7,
+     0.858,
+     0.983
     ],
-    "bytes": 297332,
-    "crowns_per_ha": 3.2,
+    "bytes": 164684,
+    "crowns_per_ha": 1.6,
     "max_per_index_cell": 74,
     "height_histogram_m": {
-     "4-6": 6914,
-     "6-8": 9821,
-     "8-12": 6516,
-     "12-16": 2957,
-     "16-20": 1769,
-     "20-25": 1584,
-     "25-30": 954,
-     "30-35": 860,
-     "35-40": 358,
-     "40-80": 429
+     "4-6": 3111,
+     "6-8": 2611,
+     "8-12": 3159,
+     "12-16": 1894,
+     "16-20": 1172,
+     "20-25": 1195,
+     "25-30": 850,
+     "30-35": 816,
+     "35-40": 351,
+     "40-80": 422
     },
     "height_m": {
-     "median": 7.7,
-     "p95": 30.2,
+     "median": 10.3,
+     "p95": 34.9,
      "max": 52.7
     },
     "radius_m": {
-     "median": 4.21,
-     "p95": 8.3
+     "median": 4.33,
+     "p95": 9.69
     },
-    "confidence_median": 0.783,
-    "seconds": 45.4
+    "confidence_median": 0.858,
+    "seconds": 90.0
    },
-   "sha256": "4817159219a2532033c60f7a7dad73f8849bdb505b212b9a0019c904be5810d1",
-   "bytes": 297332
+   "sha256": "0f66fdde57bf9b14936226e0c890f7eeedbd25e7665e36ea6e26accc5b2a7aa9",
+   "bytes": 164684
   },
   "client.terrain_detail": {
    "path": "client/terrain_detail.png",
@@ -373,20 +378,22 @@
    "path": "footprint/mask.geojson",
    "kind": "vector",
    "source": "osm",
-   "feature_count": 113089,
+   "feature_count": 113117,
    "class_counts": {
     "cleared": 890,
     "road": 22662,
-    "other": 23,
+    "other": 51,
     "reservoir": 3,
     "building": 89273,
     "rail": 234,
     "power": 1,
     "agriculture": 3
    },
+   "bridge_outlines": 28,
+   "bridge_ways": 189,
    "osm_base": "2026-10-26T23:17:05Z",
-   "sha256": "29161b1652296e2a8f9faa5313ead94e09d2074c9f56d3e0894b72ed5701268c",
-   "bytes": 96382718
+   "sha256": "b0c76ca3131efc2cb9b3e77ea2bdf86358e66d5889879e83805352719bb31d76",
+   "bytes": 96425232
   },
   "hydro.flowlines": {
    "path": "hydro/flowlines.geojson",
@@ -1707,9 +1714,9 @@
    ],
    "pixels": 2000,
    "derived_from": "footprint.mask",
-   "masked_fraction": 0.34103525,
-   "sha256": "c63944019807a90868aeff2421b15e698c6f62997bf53eac46b0803d50117511",
-   "bytes": 288579
+   "masked_fraction": 0.34106125,
+   "sha256": "96ed1d07cc0a2173166d12fbc2e4b4821e08504d92bfb8e49fcbe4ff5433bdad",
+   "bytes": 288540
   },
   "imagery.naip_png": {
    "path": "imagery/naip.png",
@@ -1838,11 +1845,14 @@
    ],
    "pixels": 2000,
    "resolution_m": 5.0,
-   "derived_from": "footprint.mask",
-   "encoding": "road weight 0..255 (255 pavement, verge 136 falling to 0; tracks half weight)",
-   "road_fraction": 0.079232,
-   "sha256": "e975a5579c98a5b537e12c8bf694fd432c79167cfbe740d6fea4a26e9c87366e",
-   "bytes": 353040
+   "derived_from": [
+    "footprint.mask",
+    "footprint.urban"
+   ],
+   "encoding": "road weight 0..255 (255 pavement, verge 136 falling to 0; tracks half weight); 0 inside footprint.urban except motorways and trunk roads",
+   "road_fraction": 0.01717025,
+   "sha256": "df2893f0650f813ee88e7599ac820476a8615d79c5ab09ccc62246440aac99a0",
+   "bytes": 98619
   },
   "client.texture": {
    "path": "client/texture.png",
@@ -1862,8 +1872,8 @@
     "vegetation.evc",
     "footprint.mask"
    ],
-   "sha256": "62b5de453493cdc91901240aa92ffebf0180c893d46a255868730f9fee34c042",
-   "bytes": 4578168
+   "sha256": "dc595e3319228928a767b9b73fca299a5de588779017b56650713b12602eb85d",
+   "bytes": 3955385
   },
   "client.masks": {
    "path": "client/masks.png",
@@ -2165,23 +2175,29 @@
    "derived_from": [
     "imagery.naip",
     "footprint.mask",
+    "footprint.urban",
     "vegetation.habitat_present",
     "vegetation.habitat",
     "vegetation.evt",
     "client.roads",
     "client.channel_profile"
    ],
-   "mask_fraction": 0.4622,
+   "mask_fraction": 0.5491,
+   "urban": {
+    "fraction": 0.4402,
+    "erased_fraction": 0.4363,
+    "kept_pavement_fraction": 0.0035
+   },
    "human_cells": {
     "whole_fraction": 0.1828,
     "partial_fraction": 0.3815,
     "partial_erased_fraction": 0.3357
    },
-   "inpainted_fraction": 0.0021,
-   "synthesized_fraction": 0.4601,
+   "inpainted_fraction": 0.0009,
+   "synthesized_fraction": 0.5481,
    "components": {
-    "inpainted": 1684,
-    "synthesized": 3202,
+    "inpainted": 925,
+    "synthesized": 491,
     "patches": 17112
    },
    "source_windows": {
@@ -2195,18 +2211,18 @@
     "8": 760
    },
    "grass_mean": [
-    0.4209,
-    0.4594,
-    0.4167
+    0.4262,
+    0.4639,
+    0.4205
    ],
    "oak_mean": [
-    0.3745,
-    0.4222,
-    0.3824
+    0.3741,
+    0.4227,
+    0.3831
    ],
    "rewilded_beds": {
     "source": "client.channel_profile (B)",
-    "bed_fraction": 0.00205,
+    "bed_fraction": 0.00207,
     "corridor_fraction": 0.00011,
     "patches": {
      "meadow": 165,
@@ -2223,8 +2239,8 @@
     ]
    },
    "encoding": "NAIP 2022 RGB with human footprint inpainted or synthesized, pavement bleached; JPEG q88",
-   "sha256": "d03e4e56dd1fb752ff8e0b63a319d77e57619148a1145afee870aeb09fe783b1",
-   "bytes": 3470117
+   "sha256": "ac504229a3508f1d14359135fed65b088375e44f962fb9bbec06cb711d05a896",
+   "bytes": 3105676
   },
   "client.texture_ground": {
    "path": "client/texture_ground.jpg",
@@ -2247,26 +2263,27 @@
     "vegetation.habitat_present",
     "vegetation.evt",
     "footprint.mask",
+    "footprint.urban",
     "client.roads",
     "client.channel_profile"
    ],
-   "mask_fraction": 0.1526,
-   "filled_fraction": 0.1949,
-   "erased_dark_fraction": 0.1374,
+   "mask_fraction": 0.1072,
+   "filled_fraction": 0.1484,
+   "erased_dark_fraction": 0.0927,
    "sun": [
     {
      "quadrant": "NW",
-     "local_hour": 12.35,
-     "azimuth": 140.1,
-     "elevation": 69.8,
+     "local_hour": 11.2,
+     "azimuth": 112.6,
+     "elevation": 58.7,
      "lobe_over_ring": 9.0,
      "fallback": true
     },
     {
      "quadrant": "NE",
-     "local_hour": 12.35,
-     "azimuth": 140.1,
-     "elevation": 69.8,
+     "local_hour": 11.2,
+     "azimuth": 112.6,
+     "elevation": 58.7,
      "lobe_over_ring": 9.0,
      "fallback": true
     },
@@ -2275,68 +2292,69 @@
      "local_hour": 11.2,
      "azimuth": 112.6,
      "elevation": 58.7,
-     "lobe_over_ring": 0.722
+     "lobe_over_ring": 0.77
     },
     {
      "quadrant": "SE",
-     "local_hour": 13.5,
-     "azimuth": 191.5,
-     "elevation": 73.4,
-     "lobe_over_ring": 0.905
+     "local_hour": 11.2,
+     "azimuth": 112.6,
+     "elevation": 58.7,
+     "lobe_over_ring": 0.974,
+     "fallback": true
     }
    ],
    "naip_date": "2022-07-15",
    "method": "crowns (CHM >= 3 m over >= 0.3 of a pixel, +1 px) and their shadow lobes (h cot(sun elevation) toward azimuth + 180, +-5 deg, sun hour fitted per 5 km quadrant, kept where 12% darker than clean ground of the class), +2 px of dark neighbours, +1 px feather; filled by quilting 12 px patches from the nearest clean windows of the habitat class, low frequencies (sigma 20 m) set to a multi-scale normalised convolution of the class's clean ground (15, 60, 250, 1000 m)",
    "class_clean_means": {
     "oak_woodland": [
-     107.8,
-     117.4,
-     104.8
+     106.8,
+     117.0,
+     104.6
     ],
     "conifer_forest": [
-     98.0,
-     108.5,
-     100.2
+     98.5,
+     108.9,
+     100.6
     ],
     "mixed_forest": [
-     110.4,
-     119.2,
-     110.6
+     113.7,
+     121.6,
+     113.4
     ],
     "chaparral": [
      112.0,
-     119.4,
-     109.9
+     119.5,
+     110.1
     ],
     "grassland": [
-     115.6,
-     124.7,
-     112.1
+     115.7,
+     124.8,
+     112.2
     ],
     "riparian": [
-     120.1,
-     131.3,
-     124.9
+     126.0,
+     135.8,
+     130.2
     ],
     "barren": [
-     155.4,
-     159.6,
-     160.4
+     155.5,
+     159.7,
+     160.5
     ]
    },
    "synthesis": {
-    "patches": 82012,
+    "patches": 71208,
     "patch_px": 12,
     "overlap_px": 3,
     "source_distance_m": {
-     "median": 2543,
-     "p90": 5812,
-     "max": 9348
+     "median": 2586,
+     "p90": 5826,
+     "max": 9352
     }
    },
    "encoding": "NAIP 2022 RGB as client.texture_imagery with tree crowns and their shadows replaced by synthesized ground of the same class and season; JPEG q88",
-   "sha256": "5d8e287c146b3121c01a3aebe20e0d929377b3bfd8e081fd0c322808696b8aa2",
-   "bytes": 3448100
+   "sha256": "332c0817483e7f69bfdb4b0c2975854798b33872b62d1f5f8fde75c7ea571b2e",
+   "bytes": 3131663
   },
   "client.texture_ground_mask": {
    "path": "client/texture_ground_mask.png",
@@ -2354,8 +2372,8 @@
     "client.texture_ground"
    ],
    "encoding": "8-bit grey, row 0 north: share of the 10 m pixel replaced in client/texture_ground.jpg (255 all filled, 0 all photo; the 1 px feather counts half)",
-   "sha256": "f15d07bbfa1bbf773dbc94c0f73e6e9aab066a872dce459b2a5bc9253ad31ab6",
-   "bytes": 201573
+   "sha256": "3713d9c80628e55d44eaa886a5b868045d673d14f6cd44f6182653bcdd6a8674",
+   "bytes": 165431
   },
   "seasons.s2_monthly": {
    "path": "seasons/months.json",
@@ -5280,6 +5298,65 @@
    ],
    "sha256": "eb6da67eefdce4fe33fc4d847dca6c8d6b019cb7aa8a30b4adc666316de045cd",
    "bytes": 1791
+  },
+  "client.mast": {
+   "path": "client/mast.png",
+   "kind": "raster",
+   "crs": "EPSG:32610",
+   "bounds": [
+    540000,
+    4170000,
+    550000,
+    4180000
+   ],
+   "pixels": 333,
+   "resolution_m": 30.03003003003003,
+   "derived_from": "resources.acorn_mast",
+   "encoding": "R = fall acorn_mast score 0..100",
+   "sha256": "ea9adc0461a03b67e8c392e3f443fe5c5de60ef82876b63d25ea0c3cc640395e",
+   "bytes": 11509
+  },
+  "footprint.urban": {
+   "path": "footprint/urban.tif",
+   "kind": "raster",
+   "crs": "EPSG:32610",
+   "bounds": [
+    540000,
+    4170000,
+    550000,
+    4180000
+   ],
+   "pixels": 2000,
+   "resolution_m": 5.0,
+   "source": "osm",
+   "sources_used": [
+    "landfire"
+   ],
+   "derived_from": [
+    "footprint.mask",
+    "vegetation.evt"
+   ],
+   "encoding": "uint8, row 0 north: 1 densely built (streets, blocks and street trees rewilded whole), 0 not",
+   "method": "OSM building cover (rasterised at 2.5 m) averaged within 100 m; dense where >= 0.15, or >= 0.075 on LANDFIRE EVT Developed-Medium / High Intensity cells; kept within 25 m of a building or on those cells; closed by 40 m, enclosed gaps under 3 ha filled, components under 75 ha dropped",
+   "stats": {
+    "fraction": 0.4402,
+    "area_ha": 4402.1,
+    "components": 1,
+    "component_area_ha": [
+     4402.1
+    ],
+    "dropped_components": 17,
+    "dropped_area_ha": 33.8,
+    "holes_filled": 37,
+    "buildings": 89273,
+    "building_cover": 0.133,
+    "building_cover_inside": 0.2964,
+    "seed_fraction": 0.4297,
+    "evt_medhigh_fraction": 0.1825,
+    "evt_medhigh_inside": 0.3895
+   },
+   "sha256": "2539d04bd93f67340159b4ce73662c91346dad96aae8203dcfecf522c35ffe8f",
+   "bytes": 24241
   }
  },
  "sources": {
@@ -5301,7 +5378,7 @@
    "attribution": "Elevation: U.S. Geological Survey, 3D Elevation Program (3DEP) 1 m DEM",
    "attribution_url": "https://www.usgs.gov/3d-elevation-program",
    "attribution_required": false,
-   "retrieved": "2026-10-26"
+   "retrieved": "2026-10-27"
   },
   "usgs_3dep_lpc": {
    "name": "USGS 3DEP lidar point cloud as Entwine Point Tiles via the AWS public bucket usgs-lidar-public",
@@ -5311,7 +5388,7 @@
    "attribution": "Lidar: U.S. Geological Survey, 3D Elevation Program (3DEP) point cloud, Entwine Point Tiles by Hobu, Inc. on AWS Open Data",
    "attribution_url": "https://registry.opendata.aws/usgs-lidar/",
    "attribution_required": false,
-   "retrieved": "2026-10-26"
+   "retrieved": "2026-10-27"
   },
   "osm": {
    "name": "OpenStreetMap via Overpass API",
@@ -5321,7 +5398,7 @@
    "attribution": "\u00a9 OpenStreetMap contributors",
    "attribution_url": "https://www.openstreetmap.org/copyright",
    "attribution_required": true,
-   "retrieved": "2026-10-26"
+   "retrieved": "2026-10-27"
   },
   "pc_naip": {
    "name": "USDA NAIP via Microsoft Planetary Computer",
@@ -5331,7 +5408,7 @@
    "attribution": "Imagery: USDA National Agriculture Imagery Program (NAIP), via Microsoft Planetary Computer",
    "attribution_url": "https://www.fpacbc.usda.gov/geo/imagery-programs/naip-imagery",
    "attribution_required": false,
-   "retrieved": "2026-10-26"
+   "retrieved": "2026-10-27"
   },
   "nhdplus_hr": {
    "name": "USGS NHDPlus High Resolution",
@@ -5351,7 +5428,7 @@
    "attribution": "Vegetation: LANDFIRE 2025 (EVT, EVC, EVH) and LANDFIRE 2016 Biophysical Settings, U.S. Department of the Interior, Geological Survey, and U.S. Department of Agriculture",
    "attribution_url": "https://landfire.gov",
    "attribution_required": false,
-   "retrieved": "2026-10-26"
+   "retrieved": "2026-10-27"
   },
   "macrostrat": {
    "name": "Macrostrat API geologic_units/map (Burwell map compilation)",
@@ -5498,6 +5575,54 @@
    "step": "unreal",
    "at": "2026-10-26T23:38:28Z",
    "seconds": 1.7,
+   "ok": true
+  },
+  {
+   "step": "osm",
+   "at": "2026-10-27T02:35:57Z",
+   "seconds": 949.9,
+   "ok": true
+  },
+  {
+   "step": "derive",
+   "at": "2026-10-27T02:41:48Z",
+   "seconds": 85.8,
+   "ok": true
+  },
+  {
+   "step": "erase",
+   "at": "2026-10-27T02:43:32Z",
+   "seconds": 103.4,
+   "ok": true
+  },
+  {
+   "step": "erase",
+   "at": "2026-10-27T02:46:10Z",
+   "seconds": 103.8,
+   "ok": true
+  },
+  {
+   "step": "erase",
+   "at": "2026-10-27T02:53:16Z",
+   "seconds": 132.0,
+   "ok": true
+  },
+  {
+   "step": "lidar",
+   "at": "2026-10-27T03:14:28Z",
+   "seconds": 2.5,
+   "ok": true
+  },
+  {
+   "step": "inpaint",
+   "at": "2026-10-27T03:18:25Z",
+   "seconds": 237.6,
+   "ok": true
+  },
+  {
+   "step": "derive",
+   "at": "2026-10-27T03:22:44Z",
+   "seconds": 89.9,
    "ok": true
   }
  ]

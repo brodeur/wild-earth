@@ -12,7 +12,7 @@
   "density_pts_m2": 31.0,
   "empty_cell_fraction": 0.7166
  },
- "grid_seconds": 2264.6,
+ "grid_seconds": 2074.2,
  "dtm_check": {
   "ground_cell_fraction": 0.2078,
   "median_offset_m": 0.0,
@@ -35,48 +35,50 @@
  },
  "crowns": {
   "maxima": 103707,
-  "dropped_on_osm_buildings": 0,
-  "dropped_low_multi_return": 19274,
-  "dropped_pole_like": 1285,
-  "dropped_shrub_in_shrub_canopy": 1126,
-  "crowns": 82022,
+  "dropped_on_osm_buildings": 54271,
+  "dropped_low_multi_return": 1336,
+  "dropped_pole_like": 1266,
+  "dropped_shrub_in_shrub_canopy": 279,
+  "dropped_on_bridges": 626,
+  "dropped_urban": 17797,
+  "crowns": 28132,
   "confidence_terms_median": {
-   "prominence": 0.924,
+   "prominence": 0.944,
    "width": 1.0,
-   "multi_return": 0.51,
+   "multi_return": 1.0,
    "height": 1.0
   },
   "confidence_quantiles_p10_p50_p90": [
-   0.633,
-   0.817,
-   0.971
+   0.725,
+   0.897,
+   0.993
   ],
-  "bytes": 696212,
-  "crowns_per_ha": 8.2,
-  "max_per_index_cell": 82,
+  "bytes": 265092,
+  "crowns_per_ha": 2.8,
+  "max_per_index_cell": 77,
   "height_histogram_m": {
-   "4-6": 7378,
-   "6-8": 11085,
-   "8-12": 28015,
-   "12-16": 18834,
-   "16-20": 4398,
-   "20-25": 4257,
-   "25-30": 3261,
-   "30-35": 2147,
-   "35-40": 1113,
-   "40-80": 1395
+   "4-6": 3258,
+   "6-8": 3466,
+   "8-12": 5384,
+   "12-16": 3152,
+   "16-20": 2314,
+   "20-25": 3319,
+   "25-30": 2900,
+   "30-35": 2004,
+   "35-40": 1050,
+   "40-80": 1281
   },
   "height_m": {
-   "median": 11.1,
-   "p95": 31.3,
-   "max": 150.6
+   "median": 14.2,
+   "p95": 39.2,
+   "max": 83.8
   },
   "radius_m": {
-   "median": 4.71,
-   "p95": 9.06
+   "median": 5.11,
+   "p95": 11.35
   },
-  "confidence_median": 0.817,
-  "seconds": 73.3
+  "confidence_median": 0.897,
+  "seconds": 93.8
  },
  "terrain_detail": {
   "residual_m": {
@@ -94,5 +96,5 @@
   "p90_m": 0.168,
   "p99_m": 0.438
  },
- "products_seconds": 121.6
+ "products_seconds": 162.5
 }
