@@ -30,6 +30,7 @@
 // a pond or stream channel moves to the nearest dry point under its own crown.
 
 import { LIBRARY, SLOTS, variantSlots, resolveSpecies, treeWood } from './treegen.js';
+import { drain } from './slice.js';
 
 export const CROWN_LAYER = 'client.trees_lidar';
 export const hasCrowns = tile => !!tile?.manifest?.layers?.[CROWN_LAYER];
@@ -136,7 +137,11 @@ function chooseClass(info, h) {
 // (1 old, 2 landmark, 4 snag); landmarks [{ id, species, q, x, n, h, r, rank }]; per-species stats.
 // opts: treeMix(i, j) -> { name: weight } or null; dims(id, v) -> { H, R } of the tree slot v draws (Vegetation
 // registers its meshes'; without them the slot's own seed's height from treegen, radius 0.35 H).
-export function planCrowns(tile, raw, { treeMix, dims: given, speciesIds }) {
+// planCrownsSteps is the same plan as a generator that yields every YIELD_EVERY crowns (slice.js runSliced steps it
+// while the opening screen is up); planCrowns runs it in one go.
+const YIELD_EVERY = 4096;
+export function planCrowns(tile, raw, opts) { return drain(planCrownsSteps(tile, raw, opts)); }
+export function* planCrownsSteps(tile, raw, { treeMix, dims: given, speciesIds }) {
   const t0 = performance.now();
   const dims = (id, v) => given?.(id, v) || fallbackDims(id, v);
   const N = raw.count, hab = tile.habitat, res = hab.res, size = tile.size, W = hab.img.width, Hh = hab.img.height;
@@ -155,6 +160,7 @@ export function planCrowns(tile, raw, { treeMix, dims: given, speciesIds }) {
   let moved = 0, wet = 0, borrowed = 0;
   // 1. Species (and a dry footing).
   for (let q = 0; q < N; q++) {
+    if ((q & (YIELD_EVERY - 1)) === 0) yield;
     const i = Math.min(W - 1, Math.max(0, Math.floor(x[q] / res))), j = Math.min(Hh - 1, Math.max(0, Math.floor((size - n[q]) / res)));
     let mix = treeMix(i, j), c = mix && cands(mix);
     if (!c || !c.length) {   // water, barren, or a row without trees: the nearest cell with a tree mix within 2 cells
@@ -183,7 +189,9 @@ export function planCrowns(tile, raw, { treeMix, dims: given, speciesIds }) {
   // 2. Size per crown; the OLD_Q quantile of size per species and block, and per species over the tile.
   const NB = Math.ceil(size / OLD_BLOCK), NS = speciesIds.length, sz = new Float32Array(N), key = new Int32Array(N);
   const cnt = new Int32Array(NS * NB * NB + 1);
+  yield;
   for (let q = 0; q < N; q++) {
+    if ((q & (YIELD_EVERY - 1)) === 0) yield;
     sz[q] = h[q] + r[q];
     const bi = Math.min(NB - 1, Math.floor(x[q] / OLD_BLOCK)), bj = Math.min(NB - 1, Math.floor(n[q] / OLD_BLOCK));
     key[q] = sp[q] * NB * NB + bj * NB + bi; cnt[key[q] + 1]++;
@@ -193,20 +201,24 @@ export function planCrowns(tile, raw, { treeMix, dims: given, speciesIds }) {
   for (let q = 0; q < N; q++) sorted[fill[key[q]]++] = sz[q];
   const qBlock = new Float32Array(NS * NB * NB).fill(Infinity), qSp = new Float32Array(NS).fill(Infinity);
   const spAll = Array.from({ length: NS }, () => []);
+  yield;
   for (let k = 0; k < NS * NB * NB; k++) {
     const a = cnt[k], b = cnt[k + 1]; if (b <= a) continue;
+    if ((k & 63) === 0) yield;
     const s = sorted.subarray(a, b).sort();
     if (b - a >= OLD_MIN) qBlock[k] = s[Math.min(b - a - 1, Math.floor(OLD_Q * (b - a)))];
     spAll[Math.floor(k / (NB * NB))].push(s);
   }
-  spAll.forEach((list, s) => {
-    const tot = list.reduce((t, a) => t + a.length, 0); if (!tot) return;
+  for (let s = 0; s < NS; s++) {
+    const list = spAll[s], tot = list.reduce((t, a) => t + a.length, 0); if (!tot) continue;
+    yield;
     const all = new Float32Array(tot); let o = 0; for (const a of list) { all.set(a, o); o += a.length; }
     all.sort(); qSp[s] = all[Math.min(tot - 1, Math.floor(OLD_Q * tot))];
-  });
+  }
   // 3. Landmarks: the LANDMARKS largest crowns of each species (by size, then by index for ties).
   const top = Array.from({ length: NS }, () => []);
   for (let q = 0; q < N; q++) {
+    if ((q & (YIELD_EVERY * 4 - 1)) === 0) yield;
     const t = top[sp[q]];
     if (t.length === LANDMARKS && sz[q] <= sz[t[t.length - 1]]) continue;
     let k = t.length; while (k > 0 && sz[t[k - 1]] < sz[q]) k--;
@@ -221,6 +233,7 @@ export function planCrowns(tile, raw, { treeMix, dims: given, speciesIds }) {
   // 4. Age class, slot and aspect.
   const stats = {};
   for (let q = 0; q < N; q++) {
+    if ((q & (YIELD_EVERY - 1)) === 0) yield;
     const id = speciesIds[sp[q]], info = speciesInfo(id, dims), st = stats[id] || (stats[id] = { crowns: 0, old: 0, snag: 0, landmarks: 0, maxH: 0 });
     st.crowns++; st.maxH = Math.max(st.maxH, h[q]);
     const oldCls = info.classes.find(c => c.old);

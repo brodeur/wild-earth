@@ -29,6 +29,7 @@ import { FlierControl } from './flierControl.js';
 import { SHORT, playAs } from './playable.js';
 import { setupCredits } from './credits.js';
 import { Weather } from './weather.js';
+import { runSliced, yieldToMain, slicer, sliceStats } from './slice.js';
 
 const $ = id => document.getElementById(id);
 const html = document.documentElement;
@@ -54,6 +55,13 @@ function layoutHud() {
   else { g.style.left = `${Math.round(hud.left)}px`; g.style.top = `${Math.round(hud.bottom + 8)}px`; }
 }
 
+// Build phases, bracketed with performance marks ('we:<phase>') so a long task can be attributed to the phase it fell
+// in (performance.getEntriesByType('mark'), and a PerformanceObserver on 'longtask').
+const phase = name => performance.mark(`we:${name}`);
+// Between phases the build gives the main thread back (slice.js), and the big phases are stepped in slices inside, so
+// no task of the build holds the opening screen's hover and clicks for long. `next` marks the phase and yields.
+const next = async name => { phase(name); await yieldToMain(); };
+window.__slice = sliceStats;   // debugging: steps of the sliced build that ran long (slice.js)
 const status = t => {
   if (screenOpen) { screen.setPrep(t ? `preparing ${screen.tileId}: ${t}` : ''); $('status').classList.add('hidden'); return; }
   $('status').textContent = t; $('status').classList.toggle('hidden', !t);
@@ -84,7 +92,9 @@ async function main() {
       onBegin: c => { chosen = c; if (enter) enter(c, true); } });
     screenOpen = true;
   }
+  phase('loadTile');
   const tile = await loadTile(tileId);
+  phase('afterTile');
   const flags = ['game', 'skip'].filter(k => params.get(k) === '1').map(k => `&${k}=1`).join('')
     + (params.has('fov') ? `&fov=${params.get('fov')}` : '');
   if (pending) history.replaceState(null, '', `?tile=${tile.id}${flags}`);   // never keep the point in the URL
@@ -93,6 +103,7 @@ async function main() {
   status('building terrain…');
   await new Promise(r => setTimeout(r, 20));
 
+  phase('renderer');
   const renderer = new THREE.WebGLRenderer({ antialias: true, powerPreference: 'high-performance' });
   renderer.setPixelRatio(Math.min(devicePixelRatio, 1.5)); renderer.setSize(innerWidth, innerHeight);
   renderer.toneMapping = THREE.ACESFilmicToneMapping; renderer.outputColorSpace = THREE.SRGBColorSpace;
@@ -109,33 +120,56 @@ async function main() {
   addEventListener('resize', () => { camera.aspect = innerWidth / innerHeight; camera.updateProjectionMatrix(); renderer.setSize(innerWidth, innerHeight); layoutHud(); });
   layoutHud();
 
+  await next('atmosphere');
   const atmosphere = new Atmosphere(tile);   // shared haze, sun, sky light and clouds
+  await next('weather');
   const weather = new Weather({ tile, scene, renderer, camera });   // the day's measured weather (weather.js), loading
-  const terrain = new Terrain(tile); scene.add(terrain.group);
+  await next('terrain');
+  const terrain = new Terrain(tile); await runSliced(terrain.build(), 'terrain'); scene.add(terrain.group);
+  await next('sky');
   const sky = new SkyDome(scene, renderer, atmosphere);
-  status('growing forest…'); await new Promise(r => setTimeout(r, 20));
-  const veg = new Vegetation(tile, scene, atmosphere);
-  const far = new Impostors(tile, scene);
-  const grass = new Grass(tile, scene);
-  const water = new Water(tile, scene);   // streams, dry beds and ponds by season (water.js)
+  status('growing forest…');
+  await next('vegetation');
+  const veg = new Vegetation(tile, scene, atmosphere); await runSliced(veg.build(), 'vegetation');
+  await next('impostors');
+  const far = new Impostors(tile, scene); await runSliced(far.build(), 'impostors');
+  await next('grass');
+  const grass = new Grass(tile, scene); await runSliced(grass.build(), 'grass');
+  await next('water');
+  const water = new Water(tile, scene); await runSliced(water.build(), 'water');   // streams, dry beds and ponds by season (water.js)
+  await next('rocks');
   const rocks = new Rocks(tile, scene, atmosphere);   // outcrops and boulders from the geology and soils rasters (rocks.js)
+  await next('roads+flight');
   const roads = new RoadsOverlay(tile, scene);   // ghost roads, G to toggle
   const flight = new RavenFlight(camera, tile.heights, renderer.domElement);
   scene.add(flight.body);
   const raven = new Raven(flight.body, atmosphere);   // the bird you see from the chase camera
+  await next('shadows');
   const shadows = new Shadows({ renderer, scene, tile, terrain, veg, raven, grass, far });   // cascaded sun shadows (shadows.js)
   flight.reset(tile.size / 2, -tile.size / 2, 150);
   // On a tile with a lidar crown list (crowns.js) the trees stand on the crowns: wait for the plan (the list has been
-  // downloading since the Vegetation was built) so the first frame has its trees rather than shrubs alone.
-  if (crownPlan(tile)) { status('placing the trees on their lidar crowns…'); await crownPlan(tile); }
+  // downloading since the Vegetation was built, and is planned in slices) so the first frame has its trees rather than
+  // shrubs alone; then the near forest and the far impostors take it.
+  await next('crownPlan');
+  if (crownPlan(tile)) {
+    status('placing the trees on their lidar crowns…');
+    const plan = await crownPlan(tile);
+    veg.useCrownPlan(plan); await next('impostors.crowns');
+    await runSliced(far.useCrownPlan(plan), 'impostors.crowns');
+  }
+  await next('veg.update');
   veg.radius = +$('detail').value; veg.update(flight.pos.x, flight.pos.z, true);
+  await next('hud');
   const minimap = new MiniMap({ container: $('minimap'), sizeM: tile.size, imagery: tile.imagery, features: tile.features, flight, rewildImage: tile.textureImage });
+  await next('places');
   const places = new PlaceNames(tile.features, tile.size);   // nearest named road, stream or water, for the HUD
+  await next('goto');
   const goto = setupGoTo({ tile, flight, input: $('gotoInput'), button: $('gotoBtn'), line: $('gotoStatus'),
     carry: () => ({ arrive: { season: seasonNow(), date: dateCarry() } }) });
   if (pending && direct) goto.go(pending, { fromLoad: true });
   if (pending && !direct) $('gotoInput').value = `${pending.lat}, ${pending.lon}`;
   // The scripted arrival (arrival.js); behind the screen the bird waits at its start so the forest streams in there.
+  await next('arrival');
   const arrival = new Arrival({ flight, camera, heights: tile.heights, size: tile.size, caption: $('caption') });
   const carriedPoint = carried && pending ? localXY(tile, pending.lat, pending.lon) : null;
   if (screen) { screen.onPoint = p => { arrival.plan(p); arrival.hold(); }; arrival.plan(screen.point); }
@@ -144,6 +178,7 @@ async function main() {
 
   // Base texture: the erased imagery when the tile has it (without its tree crowns when the tile has
   // client.texture_ground; ?base=imagery shows the photo with them, for comparison), else the rewilded habitat texture.
+  await next('texture');
   const baseImagery = params.get('base') === 'imagery';
   const photo = (!baseImagery && tile.groundTextureImage) || tile.imageryTextureImage;
   terrain.useLitter = photo === tile.groundTextureImage;   // forest-floor litter only on the crown-free ground
@@ -162,7 +197,9 @@ async function main() {
   $('texImagery').onclick = () => setTexture('imagery');
   $('texRewild').onclick = () => setTexture('rewilded');
   setTexture(photo ? 'imagery' : 'rewilded');
+  await runSliced(terrain.uploadSteps(renderer), 'ground upload');   // the large ground images to the GPU in bands (terrain.js)
 
+  await next('season');
   const state = { season: 'auto', hour: +$('time').value };   // 'auto' tracks today's date (or ?date=MM-DD)
   let fixedDate = parseDate(params.get('date')), fixedDateStr = fixedDate ? params.get('date') : null;
   // The date the ground's measured colour shows: today (or ?date), or the chosen season's mid-month.
@@ -207,9 +244,14 @@ async function main() {
     if (far.setSeason) far.setSeason(s);   // far impostors follow the season too
     weatherDay();
   }
+  // The season's leaf textures and the ground's measured colour for the date, made in slices; applySeason then finds them.
+  await runSliced(terrain.setDateSteps(dateNow()), 'season colour');
+  await runSliced(veg.setLookSteps(SEASON_LOOK[seasonNow()]), 'season');
+  await next('applySeason');
   applySeason();
 
   // Acorn stash game (docs/game-acorn-stash.md): opt-in, so flying stays the default.
+  await next('acorns');
   const acorns = new AcornGame(tile, scene, flight, veg, {
     box: $('game'), carried: $('gameCarried'), stashed: $('gameStashed'), found: $('gameFound'), time: $('gameTime'), hint: $('gameHint'),
   });
@@ -222,13 +264,16 @@ async function main() {
   if (params.get('game') === '1') setGame(true);
 
   // Species identification: HUD rows, click a tree for its card, T toggles name tags (identify.js).
+  await next('identify');
   const identify = new Identify({ veg, camera, dom: renderer.domElement, scene, flight, acorns, seasonNow,
     els: { nearest: $('nearestTree'), around: $('aroundYou'), card: $('speciesCard') } });
 
   // Ambient animals (animals.js): squirrels, acorn woodpeckers, other ravens, deer, filtered by perception.
   // During an acorn game the woodpeckers, squirrels and ravens gather from the game's acorns (game: acorns).
+  await next('animals');
   const animals = new Animals({ tile, scene, flight, veg, atmosphere, camera, identify, game: acorns });
   // The playable squirrel (squirrelControl.js): drives flight.pos and the camera in place of the raven when chosen.
+  await next('controls');
   const squirrel = new SquirrelControl({ tile, scene, camera, flight, veg, animals, acorns, atmosphere, rocks, caption: $('caption') });
   // The playable acorn woodpecker (woodpeckerControl.js): clinging, hitching and short undulating flights, the same way.
   const woodpecker = new WoodpeckerControl({ tile, scene, camera, flight, veg, animals, acorns, atmosphere, caption: $('caption') });
@@ -312,7 +357,8 @@ async function main() {
   };
 
   // tests and comparisons: __we.setDate('01-15') shows that day's measured colour ('' for today)
-  const setDate = str => { fixedDate = parseDate(str); fixedDateStr = fixedDate ? str : null; state.season = 'auto'; $('season').value = 'auto'; applySeason(); return terrain.seasonStats; };
+  // a declaration (hoisted): the season select's handler, set above, can run while the build still awaits (?skip=1)
+  function setDate(str) { fixedDate = parseDate(str); fixedDateStr = fixedDate ? str : null; state.season = 'auto'; $('season').value = 'auto'; applySeason(); return terrain.seasonStats; }
   const setFov = deg => { const v = Math.min(LENS_RANGE[1], Math.max(LENS_RANGE[0], +deg || LENS_DEFAULT)); camera.fov = v; camera.updateProjectionMatrix(); return v; };
   const setHour = h => { state.hour = +h; $('time').value = state.hour; return state.hour; };
   animals.weatherTemp = () => (weather.day ? weather.fx.temp : null);   // the lizards' air (animals.js airT)
@@ -328,7 +374,7 @@ async function main() {
   };
   // c: the opening screen's { tileId, season, date ('MM-DD', or null for today), point, caption }, or a carried arrival
   // { season, date, point }. Older fields (species, sex) are ignored: everyone arrives as the spirit.
-  enter = (c, gesture) => {
+  const enterWorld = (c, gesture) => {   // armed as enter() once the world is ready (below), not while it compiles
     rememberTile(tile.id);
     if (c.date && parseDate(c.date)) setDate(c.date);   // that day's look, the season tracking it
     else if (c.season) { state.season = c.season === seasonOfDate() ? 'auto' : c.season; $('season').value = state.season; applySeason(); }
@@ -347,8 +393,88 @@ async function main() {
     html.classList.add('arriving'); html.classList.remove('opening');
     if (screen) { screen.close(); screenOpen = false; }
   };
+  const known = new WeakSet(), used = new WeakSet(), drawable = o => o.isMesh || o.isPoints || o.isLine || o.isSprite;   // meshes compiled ahead (below)
+  // The rock plans around the bird (rocks.js warm), made in slices so the first frame's rock fill only places them.
+  await next('rocks.warm');
+  await runSliced(rocks.warm(flight.pos.x, flight.pos.z), 'rocks');
+  // Behind the opening screen the bird holds still, so the first frame's streaming (the fine terrain square, the far
+  // impostor rebuild, the rock sets, the grass pools) is done here, a step per task, in the frame's own order; the
+  // first frames then find it done (the same calls, at the same place) and only draw.
+  if (screen) {
+    await next('warm');
+    arrival.hold(); camera.updateMatrixWorld();
+    terrain.update(flight.pos.x, flight.pos.z); veg.update(flight.pos.x, flight.pos.z); veg.updateClose(camera.position); await yieldToMain();
+    far.update(camera, veg.radius); await yieldToMain();
+    grass.update(flight.pos.x, flight.pos.z, 0, camera, SEASON_LOOK[seasonNow()]); await yieldToMain();
+    rocks.update(camera); await yieldToMain();
+  }
+  // Shader programs, compiled before the first frame instead of inside it (the first render compiled every program of
+  // the world in one task of seconds): each mesh through renderer.compileAsync, a slice at a time, so the driver
+  // compiles them in parallel while the opening screen keeps responding; then the textures are uploaded, one per
+  // task. The first frame then only draws.
+  await next('compile');
+  status('compiling shaders…');
+  {
+    // pending: the programs the first frames draw with (meshes shown now), waited for; the rest (hidden tiers, the
+    // close canopies, ...) finish compiling in the background, well before they are first drawn.
+    const tick = slicer(), pending = [], objs = [];
+    const shown = o => { for (; o; o = o.parent) if (!o.visible) return false; return true; };
+    scene.updateMatrixWorld();
+    scene.traverse(o => { if (drawable(o)) { known.add(o); objs.push(o); } });
+    for (const o of objs) { const p = renderer.compileAsync(o, camera, scene); if (shown(o)) pending.push(p); if (tick.due()) await tick.yield(); }
+    pending.push(...await shadows.precompile(tick, known));
+    pending.push(...grass.precompileBake(renderer));
+    const post = spirit.view?.post;   // the spirit's look: its full-screen pass (spirit.js), drawn to the screen
+    if (post?.scene) pending.push(renderer.compileAsync(post.scene, post.cam));
+    const cb = atmosphere.cloudBake;
+    if (cb?.scene && cb.camera && cb.targets) { const prev = renderer.getRenderTarget(); renderer.setRenderTarget(cb.targets[0]); pending.push(renderer.compileAsync(cb.scene, cb.camera)); renderer.setRenderTarget(prev); }
+    await next('textures');
+    await runSliced(far.uploadSteps(renderer), 'impostor atlases');   // in bands (gpuUpload.js); the rest one per task
+    const textures = new Set();
+    scene.traverse(o => { for (const m of [o.material].flat()) if (m) for (const v of Object.values(m)) if (v?.isTexture) textures.add(v);
+      for (const m of [o.material].flat()) if (m?.uniforms) for (const u of Object.values(m.uniforms)) for (const v of [u?.value].flat()) if (v?.isTexture && !v.isRenderTargetTexture) textures.add(v); });
+    for (const t of textures) { if (t.image || t.mipmaps?.length) renderer.initTexture(t); await yieldToMain(); }
+    await next('compile.wait');
+    await Promise.all(pending);
+    // A program's first use reads its link status, logs and uniform and attribute locations (three's onFirstUse,
+    // a millisecond or so each): done here for the programs that are ready, a slice at a time, not in the first render.
+    for (const p of renderer.info.programs) { if (p.isReady()) { p.getUniforms(); p.getAttributes(); used.add(p); } if (tick.due()) await tick.yield(); }
+    // The first draw of a mesh uploads its buffers and textures (the forest's instance buffers are tens of MB): each
+    // part of the scene goes through one render here with nothing drawn (every instance and draw count of it 0, the
+    // rest of the scene hidden; all put back at once, in the same task), a part per task, so three uploads what it
+    // would draw without the first frame uploading it all in one task, and without any GPU work but the uploads.
+    await next('upload');
+    const units = [], split = g => g.children.length > 8 && !g.isMesh;
+    const add = o => { if (split(o)) for (const c of o.children) add(c); else units.push(o); };
+    for (const c of scene.children) add(c);
+    const vp = renderer.getViewport(new THREE.Vector4()), sc = renderer.getScissor(new THREE.Vector4()), st = renderer.getScissorTest();
+    for (const u of units) {
+      if (!u.visible) continue;
+      const hidden = []; for (const o of units) if (o !== u && o.visible) { o.visible = false; hidden.push(o); }
+      const counts = [], geos = new Map();
+      u.traverse(o => {
+        if (!drawable(o)) return;
+        if (o.isInstancedMesh) { counts.push([o, o.count]); o.count = 0; }
+        const g = o.geometry; if (!g || geos.has(g)) return;
+        geos.set(g, [g.instanceCount, g.drawRange.count]); if (g.isInstancedBufferGeometry) g.instanceCount = 0; g.drawRange.count = 0;
+      });
+      renderer.setViewport(0, 0, 1, 1); renderer.setScissor(0, 0, 1, 1); renderer.setScissorTest(true);
+      try { renderer.render(scene, camera); } finally {
+        renderer.setViewport(vp); renderer.setScissor(sc); renderer.setScissorTest(st);
+        for (const [o, n] of counts) o.count = n;
+        for (const [g, [ic, dc]] of geos) { if (g.isInstancedBufferGeometry) g.instanceCount = ic; g.drawRange.count = dc; }
+        for (const o of hidden) o.visible = true;
+      }
+      await yieldToMain();
+    }
+  }
+  // The tile images' off-thread decodes (tilepackage.js) have been read: freed. Later readers draw the image itself.
+  for (const im of [tile.textureImage, tile.imageryTextureImage, tile.groundTextureImage, tile.seasonImage, tile.imagery]) if (im?.bitmap) { im.bitmap.close(); delete im.bitmap; }
+  phase('compiled');
+  enter = enterWorld;
   if (screen) screen.setReady();
   status('');
+  phase('ready');
   if (as === 'squirrel') {   // tests: ?skip=1&as=squirrel puts a squirrel by the oak nearest the centre
     onBody('sciurus_griseus');
     squirrel.setOn(true); squirrel.arrive(pending ? localXY(tile, pending.lat, pending.lon) : null, null);
@@ -366,11 +492,37 @@ async function main() {
   else if (chosen) enter(chosen, true);   // Begin was pressed while the world was loading
 
   let last = performance.now(), hudT = 0, heldAt = 0;
+  // Behind the opening screen, meshes that appear after the build (the rock sets of the first fill, animal models as
+  // they load, their shadow casters) are compiled with compileAsync before they are first drawn: while any is still
+  // compiling, the frame updates the world but does not render it (nobody sees it), instead of stalling on the
+  // compile inside the render. Once the screen is gone the frame always renders, as before.
+  // A program's first use (three's onFirstUse: link status, logs, uniform and attribute locations, a millisecond or more
+  // each) is done for every ready program before the frame draws, a few milliseconds of it per frame; while any is
+  // left, or still compiling, the frame behind the screen does not draw.
+  const firstUse = () => {
+    const t0 = performance.now();
+    for (const p of renderer.info.programs) {
+      if (used.has(p)) continue;
+      if (!p.isReady() || performance.now() - t0 > 8) return false;
+      p.getUniforms(); p.getAttributes(); used.add(p);
+    }
+    return true;
+  };
+  let compiling = null;
+  const compileNew = () => {   // a promise while new programs compile, else null
+    const ps = [];
+    scene.traverse(o => { if (drawable(o) && !known.has(o)) { known.add(o); ps.push(renderer.compileAsync(o, camera, scene)); } });
+    ps.push(...shadows.compileNew(known));
+    if (!ps.length) return null;
+    return Promise.race([Promise.all(ps), new Promise(r => setTimeout(r, 3000))]).then(() => { compiling = null; });   // never hold the frames for long
+  };
+  let frameN = 0;
   function frame(now) {
     if (screenOpen) {   // behind the opening screen: a few frames a second, enough to stream the world in and compile shaders
       if (now - heldAt < 150) { requestAnimationFrame(frame); return; }
       heldAt = now;
     }
+    if (frameN < 3) phase(`frame${frameN}`); frameN++;   // the first frames, marked (as the build's phases)
     const dt = Math.min((now - last) / 1000, 0.1); last = now;
     const s = seasonNow(), look = SEASON_LOOK[s], sun = sunDirection(tile.latitude, s, state.hour);
     const f = screenOpen ? arrival.hold() : squirrel.on ? squirrel.update(dt) : woodpecker.on ? woodpecker.update(dt) : ground.on ? ground.update(dt) : flier.on ? flier.update(dt) : arrival.active ? arrival.update(dt) : spirit.on ? spirit.update(dt) : flight.update(dt);
@@ -392,8 +544,9 @@ async function main() {
     acorns.update(dt, camera, s);
     animals.update(dt, s, state.hour);
     if (!peek.shown) terrain.setLook(look);
-    shadows.update(camera);
-    spirit.render(renderer, scene, camera);   // renderer.render, plus the spirit's view's passes while it is on
+    const draw = !screenOpen || (!(compiling ||= compileNew()) && firstUse());
+    if (draw) shadows.update(camera);
+    if (draw) spirit.render(renderer, scene, camera);   // renderer.render, plus the spirit's view's passes while it is on
     spirit.unblendCamera();   // the control's own camera back for its next frame
     sound?.update(dt, { season: s, hour: state.hour, sunElevation: sun.elevation, weather: wx });
     if (peek.pending !== null) { if (peek.pending !== peek.shown) { crossFade(); applyPeek(peek.pending); } peek.pending = null; }

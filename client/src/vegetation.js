@@ -1,9 +1,10 @@
 import * as THREE from 'three';
 import { SPECIES, SPECIES_IDS, mulberry32, resolveSpecies } from './trees.js';
-import { buildTree, canopyMaterial, trunkMaterial, applySeason, chainShader, SLOTS, variantSlots, seasonMonth } from './treegen.js';
+import { buildTree, canopyMaterial, trunkMaterial, applySeasonSteps, chainShader, SLOTS, variantSlots, seasonMonth, leafTextureSteps, barkTextureSteps } from './treegen.js';
 import { SEASON_LOOK } from './season.js';
 import { rockKeep } from './tilepackage.js';
-import { hasCrowns, loadCrowns, planCrowns, oldClassOf, crownId, crownOf, SCALE, ASPECT } from './crowns.js';
+import { hasCrowns, loadCrowns, planCrownsSteps, oldClassOf, crownId, crownOf, SCALE, ASPECT } from './crowns.js';
+import { runSliced, drain } from './slice.js';
 
 // Species mix per habitat class (codes from pipeline/habitat.py). Weights sum to 1. Ids may be the
 // short aliases; trees.js maps them to the species library (library/species/<id>.json).
@@ -253,10 +254,11 @@ export function crownPlan(tile) {
   let p = crownPlans.get(tile);
   if (!p) {
     const t0 = performance.now();
-    p = loadCrowns(tile).then(raw => {
+    // Planned in slices (crowns.js planCrownsSteps, slice.js) so the opening screen stays responsive; the same plan.
+    p = loadCrowns(tile).then(async raw => {
       const t1 = performance.now();
-      const plan = planCrowns(tile, raw, { treeMix: Object.assign((i, j) => cellTreeMix(tile, i, j), { fallback: cellTreeMix.fallback }),
-        dims: (id, v) => slotDims.get(`${id}:${v}`), speciesIds: SPECIES_IDS });
+      const plan = await runSliced(planCrownsSteps(tile, raw, { treeMix: Object.assign((i, j) => cellTreeMix(tile, i, j), { fallback: cellTreeMix.fallback }),
+        dims: (id, v) => slotDims.get(`${id}:${v}`), speciesIds: SPECIES_IDS }), 'planCrowns');
       const old = Object.values(plan.stats).reduce((a, s) => a + s.old, 0), snag = Object.values(plan.stats).reduce((a, s) => a + s.snag, 0);
       console.info(`crowns: ${plan.count.toLocaleString()} lidar crowns loaded in ${Math.round(t1 - t0)} ms (page at ${(t1 / 1000).toFixed(1)} s), planned in ${plan.ms} ms: ${Object.keys(plan.stats).length} species, ${old.toLocaleString()} old, ${snag.toLocaleString()} snags, ${plan.landmarks.length} landmarks; ${plan.moved} moved off water (${plan.wet} wet), ${plan.borrowed.toLocaleString()} drew a neighbour's mix`);
       return plan;
@@ -341,6 +343,9 @@ function lodPatch(material, u, role, fade = false, inner = false) {
   });
 }
 
+// Built in two parts: the constructor sets up, build() (a generator, stepped by main.js through slice.js runSliced so
+// the opening screen keeps responding) grows every species' trees and materials, then useCrownPlan(plan) once the
+// tile's crown plan (crownPlan below) is in. new Vegetation(...) then drain(veg.build()) is the old constructor.
 export class Vegetation {
   constructor(tile, scene, atmosphere) {
     this.tile = tile; this.scene = scene; this.group = new THREE.Group(); scene.add(this.group);
@@ -351,7 +356,7 @@ export class Vegetation {
     this.lodU = { lodEye: handover.eye, lodR: { value: NEAR_R }, closeEye: { value: new THREE.Vector3(0, 1e9, 0) }, closeR: { value: CLOSE_R },
       seatF: { value: new THREE.Vector4() }, seatB: { value: 0 }, seatOn: { value: 1 } };   // the drape (SEAT_GLSL)
     this.drape = !!tile.heights.detail; this.crownDc = null;
-    const patch = m => atmosphere.patchLambert(m);   // cloud shadow + aerial perspective
+    const patch = this.patch = m => atmosphere.patchLambert(m);   // cloud shadow + aerial perspective
     this.trunkMat = { near: lodPatch(trunkMaterial(patch), this.lodU, 'near'), mid: lodPatch(trunkMaterial(patch), this.lodU, 'mid') };   // shared (shadow casters use it)
     this.twigMat = lodPatch(trunkMaterial(patch), this.lodU, 'close', true);   // close twigs: plain vertex colour, dithered in like the close canopy
     this.barkMat = {};     // species id -> { near, mid }: the species' bark texture and normal map (treegen barkTexture)
@@ -360,22 +365,39 @@ export class Vegetation {
     this.slots = {};       // species id -> VARIANTS entries of this.meshes (a class with several slots repeats its entries)
     this.stats = {};
     this.oldNear = {};     // species id -> { entry, slots, host }: a rare species' old tree in the near and close tiers (see the constructor)
-    if (hasCrowns(tile)) loadCrowns(tile);   // the crown list downloads while the meshes build (planned below, once they have)
+    if (hasCrowns(tile)) loadCrowns(tile);   // the crown list downloads while the meshes build (planned once they have)
     this.ids = tileSpecies(tile);   // the species this tile places (library order)
-    const rare = this.rare = rareSpecies(tile);
+    this.rare = rareSpecies(tile);
+    this.tmp = new THREE.Object3D();
+    // Lidar crowns (crowns.js): on a tile with a crown list every tree stands on a crown; cellPlan keeps the shrubs.
+    // The list loads after construction, so until it is planned the tile shows its shrubs only; then useCrownPlan
+    // rebuilds the mid and near sets. If it fails to load, the trees come from cellPlan as before.
+    this.crownMode = hasCrowns(tile); this.plan = null; this.landmarks = [];
+  }
+  // Every species' materials and distinct trees (buildEntry), a step at a time (yield: a checkpoint for runSliced).
+  *build() {
+    const tile = this.tile, patch = this.patch, rare = this.rare;
     const treeShare = new Set(Object.keys(tile.speciesMix?.json?.fractions?.tree_share || {}).map(resolveSpecies));   // the species crowns can draw
     for (const id of this.ids) {
       const spec = SPECIES[id];
-      this.canopyMat[id] = { near: lodPatch(canopyMaterial(spec, 'near', patch), this.lodU, 'near', true, true), mid: lodPatch(canopyMaterial(spec, 'mid', patch), this.lodU, 'mid', true),
-        close: lodPatch(canopyMaterial(spec, 'close', patch), this.lodU, 'close', true) };
+      // The textures canopyMaterial and trunkMaterial draw, drawn here first in slices (treegen caches them).
+      for (const lod of ['near', 'mid', 'close']) {
+        const close = lod === 'close', cards = close || lod === 'near' || spec.lod.mid_canopy === 'cards';
+        if (cards) { yield `${id} ${lod} leaves`; yield* leafTextureSteps(spec, close ? spec.lod.close_scale : lod === 'mid' ? spec.lod.mid_tex_scale ?? 2 : 1); }
+      }
+      if (typeof document !== 'undefined') { yield `${id} bark`; yield* barkTextureSteps(spec); }
+      const near = lodPatch(canopyMaterial(spec, 'near', patch), this.lodU, 'near', true, true); yield;
+      const mid = lodPatch(canopyMaterial(spec, 'mid', patch), this.lodU, 'mid', true); yield;
+      this.canopyMat[id] = { near, mid, close: lodPatch(canopyMaterial(spec, 'close', patch), this.lodU, 'close', true) }; yield;
       this.barkMat[id] = { near: lodPatch(trunkMaterial(patch, spec), this.lodU, 'near'), mid: this.trunkMat.mid };   // bark texture within NEAR_R; beyond, plain vertex colour (same mean)
+      yield;
       this.meshes[id] = []; this.slots[id] = [];
       const bySeed = new Map();
       for (let v = 0; v < VARIANTS; v++) {
         const seed = drawnSeed(id, v, rare.get(id));   // the slot's own seed, or a rare species' shared one
         if (bySeed.has(seed)) { this.slots[id].push(bySeed.get(seed)); continue; }
         const slot = variantSlots(id, VARIANTS).find(s => s.seed === seed) || variantSlots(id, VARIANTS)[v];
-        const entry = this.buildEntry(id, seed, slot);
+        const entry = yield* this.entrySteps(id, seed, slot);
         bySeed.set(seed, entry); this.slots[id].push(entry);
       }
       this.slots[id].forEach((e, v) => slotDims.set(`${id}:${v}`, { H: e.height, R: e.radius }));
@@ -386,7 +408,7 @@ export class Vegetation {
       if (old) {
         const slots = variantSlots(id, VARIANTS), os = slots.find(s => !s.snag && s.cls === old && s.copy === 0);
         if (os && !bySeed.has(os.seed)) {
-          const entry = this.buildEntry(id, os.seed, os, 1), vs = new Set();
+          const entry = yield* this.entrySteps(id, os.seed, os, 1), vs = new Set();
           slots.forEach((s, v) => { if (s.snag || s.cls === old) vs.add(v); });
           const host = this.slots[id][[...vs][0]];
           host.mid.to = new Array(host.mid.cap).fill(null);   // per mid instance: the entry whose near set draws it (null: its own)
@@ -396,22 +418,21 @@ export class Vegetation {
       const avg = lod => Math.round(this.meshes[id].reduce((s, e) => s + e[lod].tris, 0) / this.meshes[id].length);
       this.stats[id] = { near: avg('near'), mid: avg('mid'), closeCanopy: avg('close'), closeTwigs: Math.round(this.meshes[id].reduce((s, e) => s + e.close.twigTris, 0) / this.meshes[id].length) };
     }
-    this.tmp = new THREE.Object3D();
-    // Lidar crowns (crowns.js): on a tile with a crown list every tree stands on a crown; cellPlan keeps the shrubs.
-    // The list loads after construction, so until it is planned the tile shows its shrubs only; then the mid and
-    // near sets are rebuilt. If it fails to load, the trees come from cellPlan as before.
-    this.crownMode = hasCrowns(tile); this.plan = null; this.landmarks = [];
-    if (this.crownMode) crownPlan(tile).then(plan => {
-      if (plan) { this.plan = plan; this.landmarks = plan.landmarks; } else this.crownMode = false;
-      if (this.lastCenter) { const e = this.lodU.lodEye.value; this.update(e.x, e.z, true); }   // lodEye: the bird, as of the last update
-    });
+  }
+  // The tile's crown plan (crownPlan; null when it failed: the trees come from cellPlan). The plan reads slotDims,
+  // which build() fills, so it is made only once the build is done.
+  useCrownPlan(plan) {
+    if (!this.crownMode) return;
+    if (plan) { this.plan = plan; this.landmarks = plan.landmarks; } else this.crownMode = false;
+    if (this.lastCenter) { const e = this.lodU.lodEye.value; this.update(e.x, e.z, true); }   // lodEye: the bird, as of the last update
   }
   // One distinct tree's mesh sets (near, mid, close) for species id grown from seed (slot: its variantSlots entry),
-  // added to this.meshes. midCap: the mid set's capacity (default the species' usual).
-  buildEntry(id, seed, slot, midCap = 0) {
+  // added to this.meshes. midCap: the mid set's capacity (default the species' usual). entrySteps yields after each tree.
+  buildEntry(id, seed, slot, midCap = 0) { return drain(this.entrySteps(id, seed, slot, midCap)); }
+  *entrySteps(id, seed, slot, midCap = 0) {
     const spec = SPECIES[id], entry = { seed, cls: slot.cls, snag: slot.snag };
     for (const lod of ['near', 'mid']) {
-      const t = buildTree(id, seed, lod);
+      const t = buildTree(id, seed, lod); yield;
       const cap = lod === 'mid' ? (midCap || (spec.shrub ? CAP : CAP / 2)) : NEAR_CAP[spec.shrub ? 'shrub' : 'tree'];
       const trunk = new THREE.InstancedMesh(t.trunk, this.barkMat[id][lod], cap);
       const canopy = new THREE.InstancedMesh(t.canopy, this.canopyMat[id][lod], cap);
@@ -426,7 +447,9 @@ export class Vegetation {
         const b = g.boundingBox; entry.radius = Math.max(0.5, (b.max.x - b.min.x + b.max.z - b.min.z) / 4);   // mean crown half-width
       }
     }
+    yield;
     const c = buildTree(id, seed, 'close'), ccap = CLOSE_CAP[spec.shrub ? 'shrub' : 'tree'];
+    yield;
     const closeSeat = seatAttr(ccap); c.canopy.setAttribute('seatDc', closeSeat); if (c.twigs) c.twigs.setAttribute('seatDc', closeSeat);
     const closeCanopy = new THREE.InstancedMesh(c.canopy, this.canopyMat[id].close, ccap);
     closeCanopy.count = 0; closeCanopy.frustumCulled = false; closeCanopy.visible = false;
@@ -442,11 +465,14 @@ export class Vegetation {
     this.meshes[id].push(entry);
     return entry;
   }
-  setLook(look) {
+  // setLookSteps: the same as a generator that yields while it draws season textures (slice.js; main.js steps it
+  // during the build, so the later setLook finds them drawn).
+  setLook(look) { drain(this.setLookSteps(look)); }
+  *setLookSteps(look) {
     const season = Object.keys(SEASON_LOOK).find(k => SEASON_LOOK[k] === look) || 'summer', month = monthFor(season);
     this.leafOn = {};
     for (const id of this.ids) for (const lod of ['near', 'mid', 'close']) {
-      const on = applySeason(this.canopyMat[id][lod], SPECIES[id], season, month);
+      const on = yield* applySeasonSteps(this.canopyMat[id][lod], SPECIES[id], season, month);
       this.leafOn[id] = on;
       for (const e of this.meshes[id]) e[lod].canopy.visible = on > 0 && (lod !== 'close' || e.close.n > 0);   // a bare crown draws nothing
     }

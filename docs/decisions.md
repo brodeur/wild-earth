@@ -1298,3 +1298,24 @@ down), a flushing bird through trunks and no tree landing, the hawk and vulture 
 (flight meshes with no legs or folding wings), the new species outside the acorn game, shrubs hiding the deer
 from its camera; coyote, lion, both rabbits, ground squirrel, turkey, Steller's jay and vulture run on the same
 code but were not opened. Rejected: a control per species (the parameters differ, the verbs do not).
+
+## 2026-10-26: the world build yields: no multi-second tasks on the main thread while the screen is up
+
+Aaron: "after page load I have to wait about 30-40 secs before hover effects work." Measured: 11.7 s of long
+tasks in the first 40 s with no animal image loaded, one of 5.7 s (the first frame compiling every shader; 16 s
+on a cold shader cache), Vegetation's canvas-drawn leaf and bark textures 4.6 s, Impostors 1.0 s, Terrain 0.9 s,
+crown planning 1.6 s. The animals were not the cause. Now client/src/slice.js runs each heavy loop as a
+generator in ~10 ms slices (`runSliced`, `yieldToMain` on `scheduler.yield` or a message channel, a `drain()`
+for the old synchronous calls), at row, cell or tree boundaries so the results are identical; tilepackage decodes
+images off-thread with `createImageBitmap` and reads back in strips; client/src/gpuUpload.js uploads big
+textures a band of rows per task into an `ExternalTexture` with the storage, sampler and mips three would give;
+shaders compile in parallel with `compileAsync` across the scene, shadow passes, grass bake, spirit pass and
+cloud bake; behind the screen the first frame's streaming runs during the build and the frame skips drawing
+while late meshes compile. Result (headless, cold, home tile, first 40 s): long tasks 11.2-11.7 s to 1.15-1.35 s,
+largest 5.6 s to about 300 ms, worst input delay 5,361 ms to 290 ms (median 9), build done 12.5 s to 12.8 s
+with the shader compile now inside it; about 30 hashed quantities (geometry, instance matrices, crown plan,
+impostor atlases, leaf and bark textures, terrain, season colour, rasters) match byte for byte. Still over 50 ms:
+the Atmosphere's cloud noise (~300 ms, atmosphere.js was off-limits to the lane), a few leaf-texture canvases
+(splitting a canvas's drawing changed 1-2% of texels, so they stay whole; an IndexedDB cache of baked textures
+would fix repeat loads), the downscaled draws of the 4000 px photos (Chrome decodes in drawImage), and the
+`?skip=1` first frame. Rejected: moving the work to a Worker first (slicing got nearly all of it, with no copies).

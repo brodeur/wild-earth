@@ -1132,6 +1132,23 @@ export class Rocks {
   // Fill the meshes of the given roles from the plans of cells within radius R of (x, z), keeping
   // only rocks the band can still show from anywhere within `margin` m of the camera (y): from
   // the air most boulders are past their own fade distance, so they are not submitted at all.
+  // The cell plans the first update(camera at x, z) reads (fill's cells for the near and far sets), made ahead in a
+  // generator that yields between cells (main.js steps it with slice.js while the world builds behind the opening
+  // screen). Plans are cached per cell and the same whenever they are made, so this changes nothing but when.
+  *warm(x, z) {
+    if (!this.enabled) return;
+    const res = this.res, size = this.tile.size, W = this.W, north = -z;
+    for (const [R, peb] of [[NEAR_SET, true], [FAR_SET, false]]) {
+      const i0 = Math.max(0, Math.floor((x - R) / res)), i1 = Math.min(W - 1, Math.floor((x + R) / res));
+      const j0 = Math.max(0, Math.floor((size - north - R) / res)), j1 = Math.min(W - 1, Math.floor((size - north + R) / res)), R2 = (R + res) * (R + res);
+      for (let j = j0; j <= j1; j++) for (let i = i0; i <= i1; i++) {
+        const ex = (i + 0.5) * res - x, en = size - (j + 0.5) * res - north;
+        if (ex * ex + en * en > R2) continue;
+        this.plan(i, j); if (peb) this.plan(i, j, 'peb');
+        yield;
+      }
+    }
+  }
   fill(roles, x, y, z, R, margin) {
     const res = this.res, size = this.tile.size, W = this.W;
     const north = -z, i0 = Math.max(0, Math.floor((x - R) / res)), i1 = Math.min(W - 1, Math.floor((x + R) / res));

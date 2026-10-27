@@ -299,6 +299,32 @@ export class Shadows {
     queued.clear();
     window.__shadows = this;    // alias for debugging only: register casters with addCaster
   }
+  // Shader programs for the caster and contact-AO passes, compiled ahead of the first frame (main.js, behind the opening
+  // screen): each proxy through renderer.compileAsync with the pass's own render target bound (its programs differ from
+  // the screen's), so the GPU driver compiles them in parallel (KHR_parallel_shader_compile) instead of the first
+  // shadow render stalling on them. Yields to the caller's slicer between proxies. Returns the compile promises.
+  // known (a WeakSet, optional): proxies already compiled are skipped and the new ones added, so main.js can call this
+  // again for casters registered later (rocks, animals) while the opening screen is up.
+  async precompile(tick = null, known = null) {
+    const r = this.renderer, prev = r.getRenderTarget(), out = [];
+    const pass = async (scene, cam, rt) => {
+      const objs = []; scene.traverse(o => { if (o.isMesh && !known?.has(o)) { known?.add(o); objs.push(o); } });
+      for (const o of objs) {
+        r.setRenderTarget(rt); out.push(r.compileAsync(o, cam, scene)); r.setRenderTarget(prev);
+        if (tick?.due()) await tick.yield();
+      }
+    };
+    await pass(this.scene, this.cascades[0].cam, this.cascades[0].rts[0]);
+    await pass(this.ao.scene, this.ao.cam, this.ao.rt);
+    return out;
+  }
+  // The same for proxies not in `known` yet, at once: the compile promises (empty when there are none).
+  compileNew(known) {
+    const r = this.renderer, prev = r.getRenderTarget(), out = [];
+    for (const [scene, cam, rt] of [[this.scene, this.cascades[0].cam, this.cascades[0].rts[0]], [this.ao.scene, this.ao.cam, this.ao.rt]])
+      scene.traverse(o => { if (o.isMesh && !known.has(o)) { known.add(o); r.setRenderTarget(rt); out.push(r.compileAsync(o, cam, scene)); r.setRenderTarget(prev); } });
+    return out;
+  }
   // See the header. cascades: indices into CASCADES (default [0]). Returns object3d.
   addCaster(object3d, { cascades = [0], simple = false, material = null } = {}) {
     if (this.casters.has(object3d)) this.removeCaster(object3d);

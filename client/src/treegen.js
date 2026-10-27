@@ -1,5 +1,6 @@
 import * as THREE from 'three';
 import { seasonOfDate } from './season.js';
+import { drain } from './slice.js';
 
 // Parametric trees in the spirit of Weber & Penn 1995, "Creation and Rendering of Realistic Trees".
 // Each species is a parameter file in library/species/<id>.json (schema: docs/species-library.md).
@@ -1223,7 +1224,13 @@ const textures = new Map();
 // their own random stream, at the spray's twig ends (on the bare-crown texture at its twig ends and
 // along its twigs), tinted relative to the season's leaf colour (`variant`; the twig colour on 'twig').
 // The material's gain comes from the leaves alone, so flowers show as bright as they are.
-export function leafTexture(spec, scale = 1, variant = 'summer', deco = '', season = 'summer') {
+// leafTextureSteps is the same texture as a generator (slice.js: the world build steps it so the opening screen keeps
+// responding; Vegetation.build warms the cache with it before canopyMaterial and applySeason ask for the texture);
+// leafTexture runs it in one go. It yields only between canvases, or after a read-back has flushed one: a canvas's
+// strokes are drawn and read in one task, because the browser rasterises what a task drew when the task ends, and
+// strokes rasterised in other batches come out different in a few edge texels.
+export function leafTexture(spec, scale = 1, variant = 'summer', deco = '', season = 'summer') { return drain(leafTextureSteps(spec, scale, variant, deco, season)); }
+export function* leafTextureSteps(spec, scale = 1, variant = 'summer', deco = '', season = 'summer') {
   const F = spec.foliage;
   const kind = variant === 'twig' ? 'twig' : F.tips && F.tips[variant] ? variant : F.tips ? 'summer' : 'leaf';
   if (deco && (F.leaf_shape === 'needle_brush' || F.leaf_shape === 'needle_drooping' || F.leaf_shape === 'needle_flat')) deco = '';   // needle cards: not drawn
@@ -1261,7 +1268,7 @@ export function leafTexture(spec, scale = 1, variant = 'summer', deco = '', seas
   g.lineCap = 'round';
   const area = Math.PI * (S * 0.4) * (S * 0.43);
   if (kind !== 'twig' && (F.leaf_shape === 'needle_brush' || F.leaf_shape === 'needle_drooping' || F.leaf_shape === 'needle_flat')) {   // needle cards: own mips
-    const t = needleTexture(F, S, px, seed, rgb, pal, wsum, scale > 1.2);
+    const t = yield* needleTexture(F, S, px, seed, rgb, pal, wsum, scale > 1.2);
     textures.set(key, t);
     return t;
   }
@@ -1336,6 +1343,7 @@ export function leafTexture(spec, scale = 1, variant = 'summer', deco = '', seas
   let leafMean = null;
   if (decos.length) {
     leafMean = meanGrey(g.getImageData(0, 0, S, S));   // the leaves' own mean, before the flowers
+    yield;   // the canvas is flushed: the flowers and berries draw (and are read back) in the next task, in one go
     drawDecos(g, S, F, scale, decos, ends, inside, rgb, mulberry32(seed ^ 0xf10e7), kind === 'twig');
   }
   const t = new THREE.Texture();
@@ -1382,8 +1390,8 @@ function drawTwigs(g, S, rnd, rgb, cat = null, ends = null) {
 // (texture.userData.aux) holding each needle's shading normal in the card's frame (rgb) and the
 // foliage's thinness around it (alpha), with its own mips from the same draws, for canopyMaterial.
 const NEEDLE_BEND = 0.6;   // needle normal: outward from the shoot plus this much of the needle's own direction
-function needleTexture(F, S, px, seed, rgb, pal, wsum, far) {
-  const drawLevel = (size, keep, minW) => {
+function* needleTexture(F, S, px, seed, rgb, pal, wsum, far) {
+  function* drawLevel(size, keep, minW) {
     const c = document.createElement('canvas'); c.width = c.height = size;
     const ca = document.createElement('canvas'); ca.width = ca.height = size;
     const g = c.getContext('2d'), ga = ca.getContext('2d'), r = mulberry32(seed);
@@ -1393,16 +1401,18 @@ function needleTexture(F, S, px, seed, rgb, pal, wsum, far) {
       const ex = (x - size / 2) / (size * 0.42), ey = (y - size / 2) / (size * 0.45); if (ex * ex + ey * ey < 1) return [x, y]; } };
     const tintOf = () => { let x = r() * wsum; for (const q of pal) { if ((x -= q[0]) <= 0) return q[1]; } return pal[0][1]; };
     drawNeedleCard(g, size, F, px * size / S, r, rgb, tintOf, far, inside, keep, mulberry32(seed ^ 0x5eed1e), minW, ga);
-    return [g.getImageData(0, 0, size, size), ga.getImageData(0, 0, size, size)];
-  };
+    const img = [g.getImageData(0, 0, size, size), ga.getImageData(0, 0, size, size)];
+    yield;   // after the read-back: the next level is a new canvas
+    return img;
+  }
   const cover = img => { const d = img.data; let n = 0; for (let i = 3; i < d.length; i += 4) if (d[i] >= 128) n++; return n / (d.length / 4); };
-  const [img0, aux0] = drawLevel(S, 1, 0);
+  const [img0, aux0] = yield* drawLevel(S, 1, 0);
   const levels = [img0], auxes = [aux0], c0 = cover(img0), m0 = meanGrey(img0), keeps = [1];
   for (let size = S >> 1; size >= 16; size >>= 1) {
-    let keep = 1, [img, aux] = drawLevel(size, keep, 1), c = cover(img);
+    let keep = 1, [img, aux] = yield* drawLevel(size, keep, 1), c = cover(img);
     for (let it = 0; it < 4 && c0 > 0 && Math.abs(c - c0) > 0.06 * c0; it++) {
       keep = Math.min(1, keep * Math.pow(c0 / Math.max(1e-4, c), 1.6));   // coverage falls slower than keep (overlap): overshoot
-      [img, aux] = drawLevel(size, keep, 1); c = cover(img);
+      [img, aux] = yield* drawLevel(size, keep, 1); c = cover(img);
     }
     // the same mean brightness as level 0 (twigs, held at a texel wide, take a larger share of a small level)
     const m = meanGrey(img), k = m > 0 ? m0 / m : 1, d = img.data;
@@ -1413,7 +1423,8 @@ function needleTexture(F, S, px, seed, rgb, pal, wsum, far) {
   // near card at every level), the weight of light passing through (canopyMaterial). Then colour and
   // normal are bled into the empty texels, so filtering at a needle's edge does not pull in black
   // (a one-texel needle on a small level is mostly edge: unbled, it rendered at about 0.6 of its colour).
-  levels.forEach((img, i) => { thinness(img, auxes[i], Math.max(1, Math.round(img.width / 48))); bleed(auxes[i], img); bleed(img); });
+  for (let i = 0; i < levels.length; i++) { yield; const img = levels[i]; thinness(img, auxes[i], Math.max(1, Math.round(img.width / 48))); bleed(auxes[i], img); bleed(img); }
+  yield;
   const rest = coverageMips(levels[levels.length - 1], 0.5, c0);
   const t = new THREE.Texture();
   t.mipmaps = levels.concat(rest.slice(1));
@@ -2122,16 +2133,19 @@ export function trunkMaterial(patch = null, spec = null) {
 // `month` (1-12.99, default the season's middle month): foliage.leaf_on_by_month and the months of
 // flowers and berries (leafOnAt, decoActive). Flowers marked before_leaves show on the bare-crown texture
 // while the crown is under half leafed (redbud in March), on max(winter_twigs, 0.5) of the cards.
-export function applySeason(material, spec, season, month = null) {
+// applySeasonSteps: the same, as a generator that yields while it draws a season texture it has not drawn before
+// (slice.js); applySeason runs it in one go.
+export function applySeason(material, spec, season, month = null) { return drain(applySeasonSteps(material, spec, season, month)); }
+export function* applySeasonSteps(material, spec, season, month = null) {
   const F = spec.foliage, c = F.colors, ud = material.userData;
   let col = c[season] || c.summer, on = leafOnAt(spec, season, month);
   if (ud.texScale != null) {
     const fl = decoActive(F.flowers, season, month), be = decoActive(F.berries, season, month);
     const bareFlowers = fl && F.flowers.before_leaves && on < 0.5;
     const deco = (fl && (!F.flowers.before_leaves || bareFlowers || on >= 0.5) ? 'f' : '') + (be ? 'b' : '');
-    let tex = leafTexture(spec, ud.texScale, season, deco, season);
+    let tex = yield* leafTextureSteps(spec, ud.texScale, season, deco, season);
     const twigs = (on <= 0.02 && !!F.winter_twigs) || bareFlowers;
-    if (twigs) { tex = leafTexture(spec, ud.texScale, 'twig', deco, season); on = bareFlowers ? Math.max(F.winter_twigs || 0, 0.5) : F.winter_twigs; col = spec.trunk.twig_rgb || spec.trunk.bark_rgb; }
+    if (twigs) { tex = yield* leafTextureSteps(spec, ud.texScale, 'twig', deco, season); on = bareFlowers ? Math.max(F.winter_twigs || 0, 0.5) : F.winter_twigs; col = spec.trunk.twig_rgb || spec.trunk.bark_rgb; }
     if (ud.leafVar) ud.leafVar.value = twigs ? 0 : F.leaf_on_var || 0;
     if (material.map !== tex) material.map = tex;
     ud.gain = 1 / tex.userData.mean;
@@ -2156,7 +2170,10 @@ function tileNoise(seed) {   // value noise on an integer lattice that wraps wit
     return (h(x0, y0) * (1 - sx) + h(x1, y0) * sx) * (1 - sy) + (h(x0, y1) * (1 - sx) + h(x1, y1) * sx) * sy;
   };
 }
-export function barkTexture(spec) {
+// barkTextureSteps: the same texture as a generator yielding every 16 rows (slice.js; Vegetation.build warms the cache
+// with it before trunkMaterial asks); barkTexture runs it in one go.
+export function barkTexture(spec) { return drain(barkTextureSteps(spec)); }
+export function* barkTextureSteps(spec) {
   if (barkCache.has(spec.id)) return barkCache.get(spec.id);
   const T = spec.trunk, B = T.bark || {}, pattern = T.bark_pattern || 'furrowed', W = 256, Hh = 512;
   const [tw, th] = B.tile_m || [0.5, 1.0], seed = hashStr(spec.id + ':bark'), rnd = mulberry32(seed), noise = tileNoise(seed);
@@ -2178,6 +2195,7 @@ export function barkTexture(spec) {
   };
   const fiss = B.fissure ?? 0.5, con = B.contrast ?? 1, lich = B.lichen ?? 0;
   for (let y = 0; y < Hh; y++) for (let x = 0; x < W; x++) {
+    if (x === 0 && (y & 15) === 0) yield;
     const u = x / W, v = y / Hh, i = y * W + x;
     let h = 0.5, r = 1, g = 1, b = 1;
     const fine = fbm(u, v, 16, 32, 3), warp = fbm(u, v, 4, 6, 3);
@@ -2263,7 +2281,9 @@ export function barkTexture(spec) {
   for (let i = 0; i < W * Hh; i++) { mx = Math.max(mx, col[3 * i], col[3 * i + 1], col[3 * i + 2]); mean += 0.2126 * col[3 * i] + 0.7152 * col[3 * i + 1] + 0.0722 * col[3 * i + 2]; }
   mean /= W * Hh;
   const cImg = new ImageData(W, Hh), nImg = new ImageData(W, Hh), k = 6 * (B.relief ?? 1);
+  yield;
   for (let y = 0; y < Hh; y++) for (let x = 0; x < W; x++) {
+    if (x === 0 && (y & 127) === 0) yield;
     const i = y * W + x, o = 4 * i;
     for (let c = 0; c < 3; c++) cImg.data[o + c] = Math.round(255 * Math.max(0, col[3 * i + c]) / mx);
     cImg.data[o + 3] = 255;

@@ -1,5 +1,6 @@
 import * as THREE from 'three';
 import { buildTree, leafTexture, LIBRARY, resolveSpecies } from './treegen.js';
+import { drain } from './slice.js';
 
 // Impostor atlas, baked once at load from the real near-LOD trees (treegen), so a far tree has the
 // silhouette of the tree that replaces it when you fly closer. Slots that share a tree (vegetation.js
@@ -56,7 +57,11 @@ const FRAG = /* glsl */`
 // species' card texture (0 for broadleaves; the live shader's light through needles).
 // extents: per cell (tree * VIEWS + view) [u0, u1, v0, v1], the part of the cell any mip level covers
 // (0..1), so the live quads can be trimmed to it.
-export function bakeImpostors(input) {
+// bakeSteps is the same bake as a generator that yields between trees, read-back bands and rows of the CPU passes
+// (slice.js runSliced steps it while the opening screen is up); bakeImpostors runs it in one go. The atlas is identical.
+const READ_BAND = 512;   // rows of the supersampled target read back per step
+export function bakeImpostors(input) { return drain(bakeSteps(input)); }
+export function* bakeSteps(input) {
   const t0 = performance.now();
   const keyOf = ({ id, seed }) => `${resolveSpecies(id)}:${seed}`, at = new Map(), trees = [];
   const index = input.map(t => { const k = keyOf(t); if (!at.has(k)) { at.set(k, trees.length); trees.push(t); } return at.get(k); });
@@ -76,7 +81,9 @@ export function bakeImpostors(input) {
       uniforms: { map: { value: map }, useMap: { value: map ? 1 : 0 }, gain: { value: gain }, mode: { value: 0 }, viewRot: { value: viewRot(v) } } });
     mats.push(m); return m;
   };
-  trees.forEach(({ id, seed }, k) => {
+  yield;
+  for (let k = 0; k < trees.length; k++) {
+    const { id, seed } = trees[k];
     const sid = resolveSpecies(id), spec = LIBRARY[sid], t = buildTree(sid, seed, 'near');
     geoms.push(t.trunk, t.canopy);
     // Frame: the cell spans the tree's full radius about its own base axis, and its full height.
@@ -111,28 +118,39 @@ export function bakeImpostors(input) {
       o.add(new THREE.Mesh(t.trunk, material(null, 1, v)), new THREE.Mesh(t.canopy, material(tex, gain, v)));
       scene.add(o);
     }
-  });
+    yield;
+  }
   const tGeom = performance.now();
-  const read = mode => {
+  // The bake's programs, compiled in parallel by the driver before the first render (runSliced waits for the promise;
+  // drain does not, and the render compiles them as it always did).
+  renderer.setRenderTarget(rt); yield renderer.compileAsync(scene, cam); renderer.setRenderTarget(null);
+  // Rendered once per mode, read back in bands of READ_BAND rows (the target keeps its pixels between reads).
+  function* read(mode) {
     for (const m of mats) m.uniforms.mode.value = mode;
     renderer.setRenderTarget(rt); renderer.setClearColor(0x000000, 0); renderer.clear(); renderer.render(scene, cam);
-    const buf = new Uint8Array(AW * SS * AH * SS * 4);
-    renderer.readRenderTargetPixels(rt, 0, 0, AW * SS, AH * SS, buf);
+    yield;
+    const W = AW * SS, H = AH * SS, buf = new Uint8Array(W * H * 4);
+    for (let y = 0; y < H; y += READ_BAND) {
+      const h = Math.min(READ_BAND, H - y);
+      renderer.readRenderTargetPixels(rt, 0, y, W, h, buf.subarray(y * W * 4, (y + h) * W * 4));
+      yield;
+    }
     return buf;
-  };
-  const albedoSS = read(0), normalSS = read(1);
+  }
+  const albedoSS = yield* read(0), normalSS = yield* read(1);
   const tRead = performance.now();
   const tRender = performance.now() - t0;
   renderer.setRenderTarget(null); rt.dispose(); for (const m of mats) m.dispose(); for (const g of geoms) g.dispose();
   renderer.dispose(); renderer.forceContextLoss();   // leaf textures are shared with the main renderer: not disposed
 
-  const albedo = downsample(albedoSS, AW, AH, false), normal = downsample(normalSS, AW, AH, true);
+  yield;
+  const albedo = yield* downsample(albedoSS, AW, AH, false), normal = yield* downsample(normalSS, AW, AH, true);
   for (let i = 3; i < normal.length; i += 4) normal[i] = albedo[i];   // pad by the albedo's coverage
   const tDown = performance.now();
-  pad(albedo, AW, AH); pad(normal, AW, AH);
+  yield* pad(albedo, AW, AH); yield* pad(normal, AW, AH);
   const tPad = performance.now();
-  const albedoMips = mips(albedo, AW, AH, false), normalMips = mips(normal, AW, AH, true);
-  const extents = cellExtents(albedoMips, trees.length * VIEWS);
+  const albedoMips = yield* mips(albedo, AW, AH, false), normalMips = yield* mips(normal, AW, AH, true);
+  const extents = yield* cellExtents(albedoMips, trees.length * VIEWS);
   const tMips = performance.now();
   const tex = (levels, srgb) => {
     const t = new THREE.DataTexture(levels[0].data, AW, AH, THREE.RGBAFormat, THREE.UnsignedByteType);
@@ -150,9 +168,10 @@ export function bakeImpostors(input) {
 // the texels whose alpha reaches the live shader's soft edge (about a pixel wide around the cutoff),
 // plus a one-texel margin. A far tree drawn from a coarse level is thus not cut flat by a quad trimmed
 // to its sharp level-0 outline, and the quads stay as small as that outline allows (fragment cost).
-function cellExtents(levels, n) {
+function* cellExtents(levels, n) {
   const out = [], lo = Math.round(ALPHA_REF * 255 * 0.6);
   for (let c = 0; c < n; c++) {
+    if ((c & 15) === 0) yield;
     let x0 = CELL, x1 = -1, y0 = CELL, y1 = -1;
     for (let L = 0, cs = CELL; cs >= 8; L++, cs >>= 1) {
       const { data: d, width: w } = levels[L], k = CELL / cs, cx = (c % COLS) * cs, cy = Math.floor(c / COLS) * cs;
@@ -180,9 +199,10 @@ function needleThinness(tex) {
 }
 
 // SS x SS box filter. Colour is averaged over covered samples only (straight alpha); alpha is coverage.
-function downsample(src, w, h, isNormal) {
+function* downsample(src, w, h, isNormal) {
   const out = new Uint8Array(w * h * 4), SW = w * SS;
   for (let y = 0; y < h; y++) for (let x = 0; x < w; x++) {
+    if (x === 0 && (y & 63) === 0) yield;
     let r = 0, g = 0, b = 0, n = 0;
     for (let dy = 0; dy < SS; dy++) for (let dx = 0; dx < SS; dx++) {
       const i = ((y * SS + dy) * SW + x * SS + dx) * 4;
@@ -199,12 +219,13 @@ function downsample(src, w, h, isNormal) {
 
 // Push colour into empty texels (alpha stays 0) from covered neighbours in the same cell, two rings
 // deep, then fill the rest of each cell with its mean colour, so filtering and mips never pull in black.
-function pad(d, w, h, rings = 2) {
+function* pad(d, w, h, rings = 2) {
   const filled = new Uint8Array(w * h); for (let i = 0; i < w * h; i++) filled[i] = d[i * 4 + 3] > 0 ? 1 : 0;
   const add = new Int32Array(w * h * 4);
   for (let it = 0; it < rings; it++) {
     let na = 0;
     for (let y = 0; y < h; y++) {
+      if ((y & 127) === 0) yield;
       const cy0 = y - (y % CELL), cy1 = cy0 + CELL - 1;
       for (let x = 0; x < w; x++) {
         const i = y * w + x; if (filled[i]) continue;
@@ -220,6 +241,7 @@ function pad(d, w, h, rings = 2) {
     for (let k = 0; k < na; k += 4) { const i = add[k]; d[i * 4] = add[k + 1]; d[i * 4 + 1] = add[k + 2]; d[i * 4 + 2] = add[k + 3]; filled[i] = 1; }
   }
   for (let cy = 0; cy < h / CELL; cy++) for (let cx = 0; cx < w / CELL; cx++) {
+    if (cx === 0) yield;
     let r = 0, g = 0, b = 0, n = 0;
     for (let y = cy * CELL; y < (cy + 1) * CELL; y++) for (let x = cx * CELL, i = y * w + x; x < (cx + 1) * CELL; x++, i++) if (d[i * 4 + 3]) { r += d[i * 4]; g += d[i * 4 + 1]; b += d[i * 4 + 2]; n++; }
     if (!n) continue;
@@ -233,7 +255,7 @@ function pad(d, w, h, rings = 2) {
 // stored is that alpha shifted per cell, a' = a - t + ALPHA_REF for covered texels, with t chosen so
 // the fraction of texels at or above ALPHA_REF matches level 0 (coverage-preserving mips, Castano
 // 2010, with a shift rather than a scale so the alpha stays linear and the cutoff contour round).
-function mips(d0, w0, h0, isNormal) {
+function* mips(d0, w0, h0, isNormal) {
   const levels = [{ data: d0, width: w0, height: h0 }];
   const cellsX = w0 / CELL, cellsY = h0 / CELL, ref = ALPHA_REF * 255;
   const coverage = (d, w, cx, cy, cs, t) => {
@@ -241,11 +263,12 @@ function mips(d0, w0, h0, isNormal) {
     return n / (cs * cs);
   };
   const target = [];
-  for (let cy = 0; cy < cellsY; cy++) for (let cx = 0; cx < cellsX; cx++) target.push(coverage(d0, w0, cx, cy, CELL, ref));
+  for (let cy = 0; cy < cellsY; cy++) { yield; for (let cx = 0; cx < cellsX; cx++) target.push(coverage(d0, w0, cx, cy, CELL, ref)); }
   let src = d0, w = w0, h = h0, cs = CELL;
   while (cs > 1) {
     const nw = w >> 1, nh = h >> 1, d = new Uint8Array(nw * nh * 4);
     for (let y = 0; y < nh; y++) for (let x = 0; x < nw; x++) {
+      if (x === 0 && (y & 63) === 0) yield;
       let r = 0, g = 0, b = 0, a = 0, rr = 0, gg = 0, bb = 0;
       for (const [dx, dy] of [[0, 0], [1, 0], [0, 1], [1, 1]]) {
         const i = ((2 * y + dy) * w + 2 * x + dx) * 4, al = src[i + 3];
@@ -258,6 +281,7 @@ function mips(d0, w0, h0, isNormal) {
     cs >>= 1;
     const out = new Uint8Array(d);   // the stored level: alpha shifted; `d` (raw) feeds the next level
     if (!isNormal) for (let cy = 0; cy < cellsY; cy++) for (let cx = 0; cx < cellsX; cx++) {
+      if ((cx & 3) === 0) yield;
       const want = target[cy * cellsX + cx]; if (want <= 0) continue;
       let lo = 1, hi = 255;   // the raw alpha t whose coverage matches (coverage falls as t rises)
       for (let it = 0; it < 9; it++) { const m = (lo + hi) / 2; if (coverage(d, nw, cx, cy, cs, m) >= want) lo = m; else hi = m; }

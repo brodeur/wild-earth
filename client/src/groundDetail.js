@@ -1,4 +1,5 @@
 import * as THREE from 'three';
+import { runSliced, drain } from './slice.js';
 import { rockKeep } from './tilepackage.js';
 
 // Near-ground detail for the terrain shader (terrain.js): five tileable CC0 surfaces (albedo +
@@ -46,10 +47,11 @@ export const detailUniforms = {
 function smooth(e0, e1, x) { const t = Math.min(Math.max((x - e0) / (e1 - e0), 0), 1); return t * t * (3 - 2 * t); }
 
 // 3x3 box blur of one channel of an RGBA8 buffer, in place (two passes are close to a small gaussian).
-function blur(data, W, ch, passes = 1) {
+function* blur(data, W, ch, passes = 1) {
   const tmp = new Float32Array(W * W);
   for (let p = 0; p < passes; p++) {
     for (let j = 0; j < W; j++) for (let i = 0; i < W; i++) {
+      if (i === 0 && (j & 127) === 0) yield;
       let s = 0, n = 0;
       for (let dj = -1; dj <= 1; dj++) { const jj = j + dj; if (jj < 0 || jj >= W) continue;
         for (let di = -1; di <= 1; di++) { const ii = i + di; if (ii < 0 || ii >= W) continue; s += data[(jj * W + ii) * 4 + ch]; n++; } }
@@ -65,7 +67,7 @@ function photoPixels(image, W) {
   const c = document.createElement('canvas'); c.width = c.height = W;
   const ctx = c.getContext('2d', { willReadFrequently: true });
   ctx.imageSmoothingEnabled = true; ctx.imageSmoothingQuality = 'high';
-  ctx.drawImage(image, 0, 0, W, W);
+  ctx.drawImage(image, 0, 0, W, W);   // the element, not tilepackage's bitmap: a scaled draw of the element differs (Chrome decodes a JPEG at scale)
   return ctx.getImageData(0, 0, W, W).data;
 }
 
@@ -77,7 +79,10 @@ function bilinear8(g, x, north) {
   return ((v(x0, y0) * (1 - tx) + v(x0 + 1, y0) * tx) * (1 - ty) + (v(x0, y0 + 1) * (1 - tx) + v(x0 + 1, y0 + 1) * tx) * ty) / 255;
 }
 
-export function buildDetailMask(tile, W = MASK_PX) {
+// The world build steps buildDetailMaskSteps (slice.js runSliced, terrain.js) so the opening screen keeps responding;
+// buildDetailMask runs it in one go. The same mask.
+export function buildDetailMask(tile, W = MASK_PX) { return drain(buildDetailMaskSteps(tile, W)); }
+export function* buildDetailMaskSteps(tile, W = MASK_PX) {
   const t0 = performance.now(), size = tile.size, res = size / W, h = tile.heights;
   const out = new Uint8Array(W * W * 4);
   const photo = photoPixels(tile.imageryTextureImage || tile.textureImage, W);
@@ -89,7 +94,9 @@ export function buildDetailMask(tile, W = MASK_PX) {
   const exact = h.w === 2 * W && h.h === 2 * W;
   const Z = (c, r) => h.z[Math.min(Math.max(r, 0), h.h - 1) * h.w + Math.min(Math.max(c, 0), h.w - 1)];
   const Zm = (c, r) => 0.25 * (Z(c, r) + Z(c + 1, r) + Z(c, r + 1) + Z(c + 1, r + 1));
+  yield;
   for (let j = 0; j < W; j++) {
+    if ((j & 31) === 0) yield;
     const north = (j + 0.5) * res, prow = (W - 1 - j) * W;   // photo rows run north to south
     const r0 = h.h - 2 - 2 * j;                              // DEM row just north of this texel's centre (exact case)
     for (let i = 0; i < W; i++) {
@@ -128,16 +135,20 @@ export function buildDetailMask(tile, W = MASK_PX) {
       out[k + 3] = road;
     }
   }
-  blur(out, W, 1, 1);   // curvature: one 3x3 pass (a 30 m footprint)
-  blur(out, W, 2, 2);   // bare: soften the 30 m habitat squares and single-pixel photo noise
+  yield* blur(out, W, 1, 1);   // curvature: one 3x3 pass (a 30 m footprint)
+  yield* blur(out, W, 2, 2);   // bare: soften the 30 m habitat squares and single-pixel photo noise
   const tex = new THREE.DataTexture(out, W, W, THREE.RGBAFormat, THREE.UnsignedByteType);
   tex.colorSpace = THREE.NoColorSpace; tex.magFilter = THREE.LinearFilter; tex.minFilter = THREE.LinearFilter;
   tex.generateMipmaps = false; tex.wrapS = tex.wrapT = THREE.ClampToEdgeWrapping; tex.needsUpdate = true;
   return { texture: tex, data: out, width: W, ms: Math.round(performance.now() - t0) };
 }
 
-function loadImage(url) {
-  return new Promise((res, rej) => { const img = new Image(); img.decoding = 'async'; img.onload = () => res(img); img.onerror = () => rej(new Error('ground detail image failed: ' + url)); img.src = url; });
+// Decoded off the main thread into an ImageBitmap (createImageBitmap on the bytes), so pixelsOf's drawImage copies
+// instead of decoding inside its task; the same pixels as the image element it replaced.
+async function loadImage(url) {
+  const r = await fetch(url).catch(() => null);
+  if (!r?.ok) throw new Error('ground detail image failed: ' + url);
+  return createImageBitmap(await r.blob()).catch(() => { throw new Error('ground detail image failed: ' + url); });
 }
 
 // Pixels of one image at DETAIL_PX, rows flipped so row 0 is the image's bottom (OpenGL v = 0):
@@ -146,6 +157,7 @@ function pixelsOf(img) {
   const c = document.createElement('canvas'); c.width = c.height = DETAIL_PX;
   const ctx = c.getContext('2d', { willReadFrequently: true });
   ctx.translate(0, DETAIL_PX); ctx.scale(1, -1); ctx.drawImage(img, 0, 0, DETAIL_PX, DETAIL_PX);
+  img.close?.();
   return ctx.getImageData(0, 0, DETAIL_PX, DETAIL_PX).data;
 }
 
@@ -176,9 +188,9 @@ function proceduralPixels(seed, kind) {
 // take the scans' own slow gradients out (a patch a little brighter, or tilted, across one repeat),
 // which is what turns a repeat into a visible grid from 50-150 m once the texture is mipped down.
 const LOW_N = 64;
-function lowPass(get, sigma = 6) {
+function* lowPass(get, sigma = 6) {
   const N = DETAIL_PX, B = N / LOW_N, g = new Float32Array(LOW_N * LOW_N);
-  for (let y = 0; y < N; y++) for (let x = 0; x < N; x++) g[((y / B) | 0) * LOW_N + ((x / B) | 0)] += get(y * N + x);
+  for (let y = 0; y < N; y++) { if ((y & 127) === 0) yield; for (let x = 0; x < N; x++) g[((y / B) | 0) * LOW_N + ((x / B) | 0)] += get(y * N + x); }
   for (let k = 0; k < g.length; k++) g[k] /= B * B;
   const R = Math.ceil(sigma * 3), w = []; let ws = 0;
   for (let t = -R; t <= R; t++) { const v = Math.exp(-t * t / (2 * sigma * sigma)); w.push(v); ws += v; }
@@ -193,10 +205,11 @@ function lowPass(get, sigma = 6) {
 }
 
 // Normal map: subtract the tile-scale mean tilt (see lowPass), renormalise. Small bumps stay.
-function highPassNormal(src, dst, off) {
+function* highPassNormal(src, dst, off) {
   const N = DETAIL_PX, n = N * N;
-  const lx = lowPass(i => src[i * 4] / 127.5 - 1), ly = lowPass(i => src[i * 4 + 1] / 127.5 - 1);
+  const lx = yield* lowPass(i => src[i * 4] / 127.5 - 1), ly = yield* lowPass(i => src[i * 4 + 1] / 127.5 - 1);
   for (let y = 0; y < N; y++) for (let x = 0; x < N; x++) {
+    if (x === 0 && (y & 63) === 0) yield;
     const i = y * N + x;
     let tx = src[i * 4] / 127.5 - 1 - lx(x, y), ty = src[i * 4 + 1] / 127.5 - 1 - ly(x, y);
     const l2 = tx * tx + ty * ty; if (l2 > 0.9) { const k = Math.sqrt(0.9 / l2); tx *= k; ty *= k; }
@@ -211,15 +224,17 @@ function highPassNormal(src, dst, off) {
 // Normalised in sRGB (display) space, then converted to a linear multiplier: a ratio whose linear
 // mean is 1 still reads darker once encoded (the curve is concave), so the scan would dim the photo.
 // The scan's hue is kept at 60% so leaves and pebbles keep some colour of their own over the photo.
-function normaliseAlbedo(src, dst, off) {
+function* normaliseAlbedo(src, dst, off) {
   const n = DETAIL_PX * DETAIL_PX;
   let mr = 0, mg = 0, mb = 0;
   for (let i = 0; i < n; i++) { mr += src[i * 4]; mg += src[i * 4 + 1]; mb += src[i * 4 + 2]; }
+  yield;
   mr /= n; mg /= n; mb /= n;
   const mlum = 0.299 * mr + 0.587 * mg + 0.114 * mb;
   // tile-scale brightness gradients out (85%): the slow part of the scan is the photo's job
-  const low = lowPass(i => (0.299 * src[i * 4] + 0.587 * src[i * 4 + 1] + 0.114 * src[i * 4 + 2]) / mlum);
+  const low = yield* lowPass(i => (0.299 * src[i * 4] + 0.587 * src[i * 4 + 1] + 0.114 * src[i * 4 + 2]) / mlum);
   for (let i = 0; i < n; i++) {
+    if ((i & 65535) === 0) yield;
     const r = src[i * 4], g = src[i * 4 + 1], b = src[i * 4 + 2];
     const hp = 1 / (1 + 0.85 * (low(i % DETAIL_PX, (i / DETAIL_PX) | 0) - 1));
     const l = hp * (0.299 * r + 0.587 * g + 0.114 * b) / mlum;  // display-space luminance ratio
@@ -240,9 +255,10 @@ function arrayTexture(data) {
 }
 
 export class GroundDetail {
-  constructor(tile, { base = new URL('../assets/ground/', import.meta.url).href } = {}) {
+  // mask: buildDetailMask(tile)'s result when the caller has made it already (terrain.js, in slices)
+  constructor(tile, { base = new URL('../assets/ground/', import.meta.url).href, mask = null } = {}) {
     this.tile = tile; this.base = base; this.uniforms = detailUniforms; this.substituted = [];
-    const m = buildDetailMask(tile);
+    const m = mask || buildDetailMask(tile);
     this.mask = m; this.maskMs = m.ms;
     detailUniforms.detailMask.value = m.texture;
     this.ready = this.load();
@@ -259,8 +275,9 @@ export class GroundDetail {
         console.warn(e.message, '- using a procedural stand-in'); this.substituted.push(slot.name);
         ({ albedo: a, normal: n } = proceduralPixels(s + 1, slot.name));
       }
-      normaliseAlbedo(a, alb, s * S);
-      highPassNormal(n, nrm, s * S);
+      // in slices (slice.js): this runs while the world builds behind the opening screen; the same pixels
+      await runSliced(normaliseAlbedo(a, alb, s * S), `ground detail ${slot.name} albedo`);
+      await runSliced(highPassNormal(n, nrm, s * S), `ground detail ${slot.name} normal`);
     }));
     detailUniforms.detailAlbedo.value = arrayTexture(alb);
     detailUniforms.detailNormal.value = arrayTexture(nrm);

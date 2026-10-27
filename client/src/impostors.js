@@ -4,7 +4,9 @@ import { SPECIES, SPECIES_IDS, mulberry32, resolveSpecies } from './trees.js';
 import { VARIANTS, pick, hash, variantSeed, handover, cellPlan, placementSkip, placePlant, monthFor, crownPlan, rareSpecies, drawnSeed, tileSpecies } from './vegetation.js';
 import { variantSlots, leafOnAt, treeWood } from './treegen.js';
 import { hasCrowns, SCALE } from './crowns.js';
-import { bakeImpostors, VIEWS, SIDE_VIEWS, ALPHA_REF } from './impostorBake.js';
+import { bakeSteps, VIEWS, SIDE_VIEWS, ALPHA_REF } from './impostorBake.js';
+import { drain } from './slice.js';
+import { uploadDataSteps, canBand } from './gpuUpload.js';
 import { seasonOfDate } from './season.js';
 
 // Distant forest: one impostor per tree, for the whole tile, where the real trees (vegetation.js)
@@ -305,17 +307,22 @@ const CASTER_FRAG = /* glsl */`
   varying vec2 vQ;
   void main() { if (dot(vQ, vQ) > 1.0) discard; gl_FragColor = vec4(1.0); }`;
 
+// Built in parts so the opening screen stays responsive (slice.js): the constructor sets up, build() (a generator main.js
+// steps with runSliced) indexes the plants and bakes the atlas, useCrownPlan(plan) re-indexes on the lidar crowns.
+// new Impostors(...) then drain(far.build()) is the old constructor.
 export class Impostors {
   constructor(tile, scene) {
-    const t0 = performance.now();
     this.tile = tile; this.group = new THREE.Group(); scene.add(this.group);
+    this.crownMode = hasCrowns(tile);
+  }
+  *build() {
+    const t0 = performance.now(), tile = this.tile;
     // Records first (each holds its species and slot), then the atlas: the species the tile places, with
     // slots by how common each is (planSlots), every slot's tree from its exact seed where it is baked.
     // A tile with lidar crowns (crowns.js) places its trees from the crown plan, which loads after this: until
     // then the records hold the shrubs, and the atlas is planned from the cell plan's tree draws (counted, not
     // placed) as the estimate of each species' share; when the plan arrives the records are rebuilt on it.
-    this.crownMode = hasCrowns(tile);
-    this.buildRecords(null);
+    yield* this.recordSteps(null);
     const t1 = performance.now();
     const plan = this.plan = planSlots(this.counts);
     const ids = this.ids = plan.ids.length ? plan.ids : [SPECIES_IDS[0]];
@@ -326,16 +333,9 @@ export class Impostors {
       const n = plan.slots[id] ?? VARIANTS;
       bakeList.push({ id, seed: rare.has(id) && n >= rare.get(id) ? drawnSeed(id, v, rare.get(id)) : impostorSeed(id, v, n) });
     }
-    const bake = bakeImpostors(bakeList);
+    const bake = yield* bakeSteps(bakeList);
     this.bake = bake; this.bakeList = bakeList;
-    this.mapRecords();
-    if (this.crownMode) crownPlan(tile).then(cp => {
-      const t = performance.now();
-      if (!cp) this.crownMode = false;
-      this.buildRecords(cp); this.mapRecords(); this.center = null;   // rebuilt on the next update
-      this.uniforms.crownKeep.value = cp ? CROWN_KEEP : 1;
-      console.info(`impostors: ${this.nRecords.toLocaleString()} plants indexed on the ${cp ? 'crown plan' : 'cell plan'} in ${Math.round(performance.now() - t)} ms`);
-    });
+    yield* this.mapSteps();
     const t2 = performance.now();
 
     const NT = bake.frames.length, NS = ids.length;
@@ -388,7 +388,27 @@ export class Impostors {
       atlasMB: +(bake.bytes / 1048576).toFixed(1), trees: this.nRecords, baked: NT, species: ids.length, slots: plan.slots };
     console.info(`impostors: atlas ${bake.size.join('x')} x2 (${this.stats.atlasMB} MB with mips), ${NT} trees for ${ids.length} species (${Object.entries(plan.slots).map(([k, n]) => `${k} ${n}`).join(', ')}) x ${VIEWS} views, baked in ${this.stats.bakeMs} ms; ${this.nRecords.toLocaleString()} plants indexed in ${this.stats.recordsMs} ms`);
   }
+  // On a crown tile, once the plan is in (vegetation.js crownPlan; null when it failed): the records rebuilt on it.
+  *useCrownPlan(cp) {
+    if (!this.crownMode) return;
+    const t = performance.now();
+    if (!cp) this.crownMode = false;
+    yield* this.recordSteps(cp); yield* this.mapSteps(); this.center = null;   // rebuilt on the next update
+    this.uniforms.crownKeep.value = cp ? CROWN_KEEP : 1;
+    console.info(`impostors: ${this.nRecords.toLocaleString()} plants indexed on the ${cp ? 'crown plan' : 'cell plan'} in ${Math.round(performance.now() - t)} ms`);
+  }
 
+  // The atlases to the GPU a band at a time (gpuUpload.js; main.js steps this before the first frame) instead of in one
+  // upload of each on first draw; the materials then sample ExternalTextures with the same texels and sampler.
+  *uploadSteps(renderer) {
+    if (!canBand(renderer)) return;
+    for (const k of ['albedoMap', 'normalMap']) {
+      const t = this.uniforms[k].value;
+      if (!t?.mipmaps?.length || t.isExternalTexture) continue;
+      yield `upload ${k}`;
+      this.uniforms[k].value = yield* uploadDataSteps(renderer, t);
+    }
+  }
   // Depth material for the far shadow casters (see CASTER_VERT). crowns: one THREE.Vector4 per baked tree.
   casterMaterial(crowns) {
     const u = this.uniforms;
@@ -410,10 +430,12 @@ export class Impostors {
 
   // Library species x slot -> baked tree for every record (bakeList is ids x VARIANTS). A crown record carries
   // its target height (negative) in the scale field until here, where it becomes the scale of its baked tree.
-  mapRecords() {
+  mapRecords() { drain(this.mapSteps()); }
+  *mapSteps() {
     const bake = this.bake, ids = this.ids, pos = SPECIES_IDS.map(id => ids.indexOf(id)), rec = this.records, H = new Map();
     let missing = 0;
     for (let q = 0; q < this.nRecords; q++) {
+      if ((q & 16383) === 0) yield;
       const o = q * STRIDE + 5, key = rec[o], v = key % VARIANTS;
       let p = pos[(key - v) / VARIANTS]; if (p < 0) { p = 0; missing++; }
       const k = p * VARIANTS + v; rec[o] = bake.index[k];
@@ -430,7 +452,8 @@ export class Impostors {
   // channels, riparian thinning) are vegetation.js's own cellPlan and placementSkip, and the six draws
   // per plant are taken in Vegetation.update's order, so each record is the tree that replaces it.
   // With crowns (crownPlan: the plan, or null while it loads) the trees are the crowns', one record per crown.
-  buildRecords(crownPlan) {
+  buildRecords(crownPlan) { drain(this.recordSteps(crownPlan)); }
+  *recordSteps(crownPlan) {
     const tile = this.tile, hab = tile.habitat, res = hab.res, size = tile.size, heights = tile.heights, crowns = this.crownMode;
     // rec[5] holds the species' library index x VARIANTS + slot until the constructor has baked the atlas
     // and replaces it with the baked tree; counts (per species, as tree and as shrub) size the atlas.
@@ -438,6 +461,7 @@ export class Impostors {
     let rec = new Float32Array(400000 * STRIDE), chunkOf = new Int32Array(400000), n = 0;
     const NC = Math.ceil(size / CHUNK); this.NC = NC;
     for (let j = 0; j < hab.img.height; j++) for (let i = 0; i < hab.img.width; i++) {
+      if (i === 0 && (j & 3) === 0) yield;
       const plan = cellPlan(tile, i, j); if (!plan) continue;
       const { rnd, nTrees, nShrubs, treeMix, shrubMix } = plan;
       for (let k = 0; k < nTrees + nShrubs; k++) {
@@ -472,6 +496,7 @@ export class Impostors {
       const P = crownPlan;
       if (n + P.count > chunkOf.length) { const L = n + P.count; const r2 = new Float32Array(L * STRIDE); r2.set(rec); rec = r2; const c2 = new Int32Array(L); c2.set(chunkOf); chunkOf = c2; }
       for (let q = 0; q < P.count; q++) {
+        if ((q & 8191) === 0) yield;
         const ax = P.x[q], an = P.n[q], sid = P.speciesIds[P.sp[q]], o = n * STRIDE;
         rec[o] = ax; rec[o + 1] = heights.at(ax, an) - 0.3; rec[o + 2] = -an; rec[o + 3] = P.rot[q];
         rec[o + 4] = -P.h[q]; rec[o + 5] = libIdx[sid] * VARIANTS + P.slot[q];   // target height (mapRecords makes it the scale) and slot
@@ -482,6 +507,7 @@ export class Impostors {
       }
     }
     // Pack by chunk, rank ascending within each chunk, so a rebuild copies a prefix per chunk.
+    yield;
     const counts = new Int32Array(NC * NC + 1);
     for (let q = 0; q < n; q++) counts[chunkOf[q] + 1]++;
     for (let c = 0; c < NC * NC; c++) counts[c + 1] += counts[c];
@@ -489,7 +515,9 @@ export class Impostors {
     for (let q = 0; q < n; q++) order[fill[chunkOf[q]]++] = q;
     const packed = new Float32Array(n * STRIDE);
     this.chunks = [];
+    yield;
     for (let c = 0; c < NC * NC; c++) {
+      if ((c & 15) === 0) yield;
       const a = counts[c], b = counts[c + 1];
       const ids = Array.from(order.subarray(a, b)).sort((p, q) => rec[p * STRIDE + 6] - rec[q * STRIDE + 6]);
       let y0 = Infinity, y1 = -Infinity;

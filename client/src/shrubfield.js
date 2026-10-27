@@ -670,6 +670,9 @@ function mergeByRank(a, b) {
 // alive), a wood. Manzanita (1 m tile): stiff round leaves 2.5-5 cm in sprays, each upright at its own
 // azimuth (round face-on, a sliver edge-on), red twigs in the gaps. Chamise (0.8 m): upright wands, a few
 // dead, with tufts of needles along them.
+// Baked once per page (shrubLeaves; grass.js asks for both while the world builds, a task each, so ShrubField finds them).
+const leafPictures = new Map();
+export function shrubLeaves(manz) { let t = leafPictures.get(manz); if (!t) leafPictures.set(manz, t = bakeLeaves(manz)); return t; }
 function bakeLeaves(manz) {
   const S = 512, rnd = mulberry32(manz ? 0x1eaf5 : 0xc4a35);
   const ch = [0, 1, 2, 3].map(k => { const c = document.createElement('canvas'); c.width = c.height = S; const g = c.getContext('2d'); g.fillStyle = k ? '#000' : '#333'; g.fillRect(0, 0, S, S); return g; });
@@ -824,7 +827,7 @@ export function ShrubField(tile, ground, uniforms) {
   });
   // Near detail (leaves, wands, stems): full to 14 m, handed to the far program by 26 m.
   field.uniforms.nearBand = { value: new THREE.Vector2(14, 26) };
-  field.uniforms.leafM = { value: bakeLeaves(true) }; field.uniforms.leafC = { value: bakeLeaves(false) };
+  field.uniforms.leafM = { value: shrubLeaves(true) }; field.uniforms.leafC = { value: shrubLeaves(false) };
   field.uniforms.leafGain = { value: new THREE.Vector4(2.5, 4.0, 1.25, 1.4) };   // the near look matched to the far one in mean (measured on screen)
   // The foothill shrubs' season (fhSeason), set from the field's season (grass.js's `dry`) when it changes.
   Object.assign(field.uniforms, {

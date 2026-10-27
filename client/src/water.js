@@ -273,9 +273,13 @@ const BED_FRAG = /* glsl */`
     #include <colorspace_fragment>
   }`;
 
+// The constructor records its arguments; build() (a generator main.js steps with slice.js runSliced, a pond or a
+// stream at a time, so the opening screen keeps responding; drain(water.build()) runs it in one go) makes the water.
 export class Water {
-  constructor(tile, scene) {
-    this.tile = tile; this.group = new THREE.Group(); this.group.name = 'water'; this.group.userData.water = this;
+  constructor(tile, scene) { this.tile = tile; this.scene = scene; }
+  *build() {
+    const tile = this.tile, scene = this.scene;
+    this.group = new THREE.Group(); this.group.name = 'water'; this.group.userData.water = this;
     this.season = null; this.look = null; this.stats = { skippedRings: 0, reaches: 0 };
     const time = { value: 0 };
     const base = { uTime: time, depthPull: { value: 0.25 }, depthPullK: { value: 0.003 },
@@ -302,8 +306,8 @@ export class Water {
     const H = terrainHeight(tile);
     this.H = H;
     this.rewildList = tile.manifest?.layers?.['hydro.human_water']?.rewilded || [];
-    const ponds = this.buildPonds(features.waterbodies || [], H);
-    this.buildStreams(features.streams || [], H, ponds);
+    const ponds = yield* this.buildPonds(features.waterbodies || [], H);
+    yield* this.buildStreams(features.streams || [], H, ponds);
 
     // Draw order: beds, then streams, then ponds, after the opaque world.
     this.beds.renderOrder = 1; for (const c of CLASSES) this.streams[c].renderOrder = 2;
@@ -381,10 +385,11 @@ export class Water {
   // 1.5 m) and the rendered shore triangles above it cut the shoreline. Every pond fades from
   // transparent on its ring to full over POND_FADE metres inside it (an inset skirt), so the
   // shoreline is not a crisp polygon edge.
-  buildPonds(waterbodies, H) {
+  *buildPonds(waterbodies, H) {
     const permanent = [], seasonal = [], dry = [], rings = [], rewilded = [];
     let skipped = 0;
     for (const w of waterbodies) {
+      yield;
       let ring = w.ring.slice();
       if (ring.length > 3 && ring[0][0] === ring.at(-1)[0] && ring[0][1] === ring.at(-1)[1]) ring.pop();
       if (ring.length < 3) continue;
@@ -432,7 +437,7 @@ export class Water {
     return rings;
   }
 
-  buildStreams(streams, H, ponds) {
+  *buildStreams(streams, H, ponds) {
     const bed = new RibbonBuffers(), water = Object.fromEntries(CLASSES.map(c => [c, new RibbonBuffers()]));
     const sec = [];   // per section: x, north, half, s, tx, tz, class, has-next (SEC_W floats... see sectionIndex)
     const inPond = (x, y) => ponds.some(p => x >= p.bbox[0] && x <= p.bbox[2] && y >= p.bbox[1] && y <= p.bbox[3] && inRing(x, y, p.ring));
@@ -443,7 +448,9 @@ export class Water {
     const nearDem = demIndex(streams, DEM_PREFERRED_M);
     let skippedInPond = 0;
     let reaches = 0;
+    let k = 0;
     for (const st of streams) {
+      if ((k++ & 7) === 0) yield;
       const cls = st.fcode in STREAM_CLASS ? STREAM_CLASS[st.fcode] : 'intermittent';
       if (!cls || !st.path || st.path.length < 2) continue;
       // A reach inside a waterbody ring is drawn as the pond, where the pond is drawn (a ring

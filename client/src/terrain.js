@@ -1,7 +1,9 @@
 import * as THREE from 'three';
+import { drain } from './slice.js';
+import { uploadImageSteps, canBand } from './gpuUpload.js';
 import { uniforms as atmo, ATMOSPHERE_GLSL } from './atmosphere.js';
 import { windUniforms, WIND_GLSL } from './wind.js';
-import { GroundDetail, detailUniforms, DETAIL_GLSL } from './groundDetail.js';
+import { GroundDetail, detailUniforms, DETAIL_GLSL, buildDetailMaskSteps } from './groundDetail.js';
 import { SeasonColour, LITTER } from './season.js';
 
 // Ground colour, shared: the terrain shader and every grass and shrub material that wants to
@@ -274,9 +276,14 @@ function riparianMask(tile) {
   return t;
 }
 
+// The constructor only records its arguments; build() (a generator main.js steps with slice.js runSliced, a terrain
+// chunk at a time, so the opening screen keeps responding; drain(terrain.build()) runs it in one go) makes everything.
 export class Terrain {
   constructor(tile, { chunks = 10, spacing = 10 } = {}) {
-    this.tile = tile; this.group = new THREE.Group(); this.textures = new Map();
+    this.tile = tile; this.group = new THREE.Group(); this.textures = new Map(); this.opts = { chunks, spacing };
+  }
+  *build() {
+    const tile = this.tile, { chunks, spacing } = this.opts;
     const G = groundUniforms;
     G.map.value = this.textureFor(tile.textureImage);
     const masks = new THREE.Texture(tile.masksImage); masks.needsUpdate = true;
@@ -291,14 +298,18 @@ export class Terrain {
     } else { G.canopyMap.value = new THREE.DataTexture(new Uint8Array(4), 1, 1); G.canopyMap.value.needsUpdate = true; }
     // Measured season colour (tile-spec "Seasonal colour", season.js): a 20 m multiplier texture, rebuilt on
     // the CPU when the date changes (setDate). Until then, and on a tile without the layers, it is 1.
+    yield 'textures';
     this.season = tile.seasonImage && tile.manifest.layers['client.season_rgb'] ? new SeasonColour(tile) : null;
+    yield 'SeasonColour';
     const SN = this.season ? this.season.N : 1, sm = new THREE.DataTexture(new Uint8Array(SN * SN * 4).fill(188), SN, SN);   // sRGB 188 = 0.5: x 2 = 1
     sm.colorSpace = THREE.SRGBColorSpace; sm.magFilter = THREE.LinearFilter; sm.minFilter = THREE.LinearFilter; sm.generateMipmaps = false;
     sm.needsUpdate = true; G.seasonMap.value = sm;
     this.useLitter = !!tile.groundTextureImage;   // main.js turns it off for ?base=imagery (crowns still in the photo)
     // Near-ground detail materials and their per-tile masks (groundDetail.js); textures stream in after.
-    this.detail = new GroundDetail(tile);
+    this.detail = new GroundDetail(tile, { mask: yield* buildDetailMaskSteps(tile) });
+    yield 'GroundDetail';
     ripUniforms.ripMask.value = riparianMask(tile);
+    yield 'riparianMask';
     this.uniforms = { ...G, ...windUniforms, ...atmo, ...detailUniforms, ...ripUniforms, geoSlope: { value: tile.heights.detail ? 1 : 0 } };   // shared objects, so one update reaches every material
     this.material = new THREE.ShaderMaterial({ vertexShader: VERT, fragmentShader: FRAG, uniforms: this.uniforms });
     const size = tile.size, cs = size / chunks, nv = Math.round(cs / spacing) + 1, H = tile.heights;
@@ -319,9 +330,25 @@ export class Terrain {
       const mesh = new THREE.Mesh(g, this.material); mesh.frustumCulled = true;
       this.group.add(mesh);
       this.chunks.push({ mesh, g, x0, north1, full: g.index.array.slice(), holed: false });
+      yield;
     }
     // Near the player, on a tile with the lidar residual: a 2 m mesh of the 1 m ground (see FineTerrain).
     this.fine = H.detail ? new FineTerrain(this) : null;
+  }
+  // The large ground images (the 4000 px photo, the 2000 px masks and roads) to the GPU a band at a time (gpuUpload.js;
+  // main.js steps this before the first frame): three's own upload of such an image is one call of 50-350 ms. Each
+  // becomes an ExternalTexture with the texels, sampler and mips three would have given the texture it replaces.
+  *uploadSteps(renderer) {
+    const G = groundUniforms;
+    if (!canBand(renderer)) return;
+    for (const k of ['map', 'masks', 'roads']) {
+      const t = G[k].value, img = t?.image;
+      if (!t || t.isExternalTexture || !img?.blob || img.width * img.height < 2000 * 2000) continue;
+      yield `upload ${k}`;
+      const ext = yield* uploadImageSteps(renderer, t);
+      G[k].value = ext;
+      for (const [im, tt] of this.textures) if (tt === t) this.textures.set(im, ext);
+    }
   }
   // Each frame, with the player's position: keeps the fine mesh centred on them (a step at a time,
   // built over a few frames and swapped in whole).
@@ -397,15 +424,18 @@ export class Terrain {
   // The measured season for a date (a Date; only month and day count): the multiplier texture from the two
   // months around it, and the class ratios for the habitat texture's palette and the grass blades. Returns
   // false on a tile without the seasons layers (the palette stays). CPU work only when the day changes.
-  setDate(date) {
+  // setDateSteps: the same, as a generator that yields while the season colour builds (slice.js; main.js steps it
+  // during the world build so the setDate that follows finds the date done).
+  setDate(date) { return drain(this.setDateSteps(date)); }
+  *setDateSteps(date) {
     if (!this.season) return false;
     const key = `${date.getMonth()}-${date.getDate()}-${this.useLitter}`;
     if (key === this.dateKey) return true;
-    this.dateKey = key;
     const t0 = performance.now(), S = this.season;
-    const r = S.build(date, this.useLitter ? this.litterTints() : null), N = r.size, tex = this.uniforms.seasonMap.value, d = tex.image.data;
+    const litter = this.useLitter ? yield* this.litterSteps() : null;
+    const r = yield* S.buildSteps(date, litter), N = r.size, tex = this.uniforms.seasonMap.value, d = tex.image.data;
     for (let j = 0; j < N; j++) d.set(r.pixels.subarray(j * N * 4, (j + 1) * N * 4), (N - 1 - j) * N * 4);   // rows north first -> a DataTexture's south first
-    tex.needsUpdate = true;
+    tex.needsUpdate = true; this.dateKey = key;
     const mr = k => S.manifestRatio(date, k);
     this.measured = { grass: mr('open_grass') || mr('grassland'), oak: mr('oak_woodland'), rip: mr('riparian') };
     seasonState.grass = r.classes[5] || this.measured.grass; seasonState.date = date; seasonState.version++;
@@ -414,9 +444,11 @@ export class Terrain {
   }
   // Litter multipliers [needle, oak] (linear): litter albedo over the ground texture's own mean under
   // closed canopy (tree cover 60% and more), where the crown fill is a flat dry-grass beige. Once.
-  litterTints() {
+  litterTints() { return drain(this.litterSteps()); }
+  *litterSteps() {
     if (this._litter) return this._litter;
-    const S = this.season; S.prepare();
+    const S = this.season; yield* S.prepareSteps();
+    yield;
     const N = S.N, cv = document.createElement('canvas'); cv.width = cv.height = N;
     const ctx = cv.getContext('2d', { willReadFrequently: true }); ctx.imageSmoothingQuality = 'high';
     ctx.drawImage(this.tile.groundTextureImage, 0, 0, N, N);

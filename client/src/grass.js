@@ -4,7 +4,7 @@ import { SEASON_LOOK } from './season.js';
 import { buildAnnualClump, buildBunchClump, buildTussockClump, buildOatClump } from './grassBlades.js';
 import { windUniforms, WIND_GLSL } from './wind.js';
 import { groundUniforms, GROUND_GLSL, seasonState } from './terrain.js';
-import { ShrubField, ClumpField, KIND, waterAt } from './shrubfield.js';
+import { ShrubField, ClumpField, KIND, waterAt, shrubLeaves } from './shrubfield.js';
 import { GrassShells } from './grassShells.js';
 import { rockKeep } from './tilepackage.js';
 
@@ -508,9 +508,13 @@ function clumpBox(geo) {
 }
 
 export class Grass {
-  // The near blade meshes stage up to 90k instances each, the ground tier's 50k.
-  constructor(tile, scene) {
-    this.tile = tile; this.nearCap = 90000; this.groundCap = 50000;
+  // The near blade meshes stage up to 90k instances each, the ground tier's 50k. The constructor only records its
+  // arguments: build() (a generator main.js steps with slice.js runSliced, so the opening screen keeps responding
+  // while it runs; drain(grass.build()) runs it in one go) makes everything, in the order it always has.
+  constructor(tile, scene) { this.tile = tile; this.scene = scene; }
+  *build() {
+    const tile = this.tile, scene = this.scene;
+    this.nearCap = 90000; this.groundCap = 50000;
     this.ground = terrainHeight(tile);
     this.last = { near: null, ground: null }; this.lookKey = '';
     this.cache = LAYERS.map(() => new Map());   // per layer: cell index -> instance groups
@@ -533,7 +537,9 @@ export class Grass {
     // Visible distance per tier (indexed by tier; update moves the main tier's with height).
     const nearBands = [[0, NEAR_FADE[1] + 3], [0, CLOSE_FADE[1] + 3]], groundBands = [null, null, [0, GROUND_FADE[1] + 3]];
     this._frustum = new THREE.Frustum(); this._m = new THREE.Matrix4(); this._inv = new THREE.Matrix4(); this._sphere = new THREE.Sphere(); this._pick = [];
+    yield 'setup';
     const annualGeo = buildAnnualClump(), bunchGeo = buildBunchClump(), tussockGeo = buildTussockClump(), oatGeo = buildOatClump();
+    yield 'clumps';
     this.geos = [tussockGeo, annualGeo, oatGeo];   // by atlas kind
     // The tussock and wild oat plants (the ones with those cards) have their own clumps and meshes,
     // drawn only out to where they hand over (12 m), so their fuller geometry costs little.
@@ -549,8 +555,12 @@ export class Grass {
     this.group = new THREE.Group(); this.group.name = 'grass';
     for (const s of Object.values(this.sets)) this.group.add(s.mesh);
     scene.add(this.group);
+    yield 'sets';
+    shrubLeaves(true); yield 'shrub leaves (manzanita)';
+    shrubLeaves(false); yield 'shrub leaves (chamise)';
     // Chaparral's closed shrub canopy (shrubfield.js).
     this.shrubs = ShrubField(tile, this.ground, this.uniforms);
+    yield 'ShrubField';
     // The cards: annual tufts, needlegrass tussocks and wild oats. Each card kind's bake box (R, H) at
     // unit plant scale, from its clump's geometry: a plant's card is this box times its own scale. LOD
     // as the old fields: tufts thin from ~120 m to 40%, tussocks and oats past 30-34 m (survivors grow).
@@ -565,9 +575,9 @@ export class Grass {
       });
       this.impKinds.push(f); return f;
     };
-    this.tufts = card(ROLE.tuft, 1, 0, { name: 'grasstufts', cap: 40000, D0: 120, KMIN: 0.4, band: [...MID_IN, MID_END - 35, MID_END] });
-    this.clumps = card(ROLE.tussock, 0, 1, { name: 'grassclumps', cap: 60000, D0: 34, KMIN: 0.14, band: [...IMP_IN, 185, 225] });
-    this.stalks = card(ROLE.oat, 2, 0, { name: 'grassstalks', cap: 30000, D0: 30, KMIN: 0.14, band: [...IMP_IN, 200, 240] });
+    this.tufts = card(ROLE.tuft, 1, 0, { name: 'grasstufts', cap: 40000, D0: 120, KMIN: 0.4, band: [...MID_IN, MID_END - 35, MID_END] }); yield 'tufts';
+    this.clumps = card(ROLE.tussock, 0, 1, { name: 'grassclumps', cap: 60000, D0: 34, KMIN: 0.14, band: [...IMP_IN, 185, 225] }); yield 'clumpField';
+    this.stalks = card(ROLE.oat, 2, 0, { name: 'grassstalks', cap: 30000, D0: 30, KMIN: 0.14, band: [...IMP_IN, 200, 240] }); yield 'stalks';
     this.group.add(this.shrubs.mesh, this.tufts.mesh, this.clumps.mesh, this.stalks.mesh);
     // The atlas is baked with the main renderer, which this class is not handed: a never-drawn mesh
     // in the group records it when the scene renders, and update bakes on the next frame.
@@ -577,6 +587,7 @@ export class Grass {
     hook.onBeforeRender = r => { this.renderer = r; };
     this.group.add(hook);
     this.bakeKey = '';
+    yield 'hook';
     // Sward shells for the 8-60 m band (grassShells.js), at the density the clumps are placed with.
     this.shells = new GrassShells(tile, this.ground, (x, n) => this.swardDensity(x, n), {});
     this.group.add(this.shells.mesh);
@@ -596,25 +607,8 @@ export class Grass {
   // its row of the atlas; mipmaps once at the end. Rebaked when the season changes what the blades
   // draw (flowering culms, thatch, leaf length). A few ms.
   bake(renderer) {
-    const T = IMP.T, u = this.uniforms;
-    if (!this.atlas) {
-      this.atlas = new THREE.WebGLRenderTarget(T * IMP.TX, T * IMP.TY, { depthBuffer: false, generateMipmaps: true,
-        minFilter: THREE.LinearMipmapLinearFilter, magFilter: THREE.LinearFilter });
-      this.strip = new THREE.WebGLRenderTarget(T * IMP.TX, T, { samples: 4, depthBuffer: true });
-      this.bakeCam = new THREE.OrthographicCamera(-1, 1, 1, -1, 0, 1);
-      this.bakeScene = new THREE.Scene(); this.bakeMeshes = [];
-      for (let c = 0; c < IMP.TX; c++) {
-        const m = new THREE.Mesh(this.geos[0], new THREE.ShaderMaterial({ vertexShader: BAKE_VERT, fragmentShader: BAKE_FRAG, side: THREE.DoubleSide,
-          uniforms: { bSeed: { value: 0 }, bType: { value: 0 }, bView: { value: new THREE.Vector2() }, bBox: { value: new THREE.Vector3() },
-            heads: u.heads, thatch: u.thatch, leafScale: u.leafScale } }));
-        m.frustumCulled = false; this.bakeScene.add(m); this.bakeMeshes.push(m);
-      }
-      const copy = new THREE.Mesh(new THREE.PlaneGeometry(2, 2), new THREE.ShaderMaterial({ vertexShader: COPY_VERT, fragmentShader: COPY_FRAG,
-        uniforms: { src: { value: this.strip.texture } }, depthTest: false, depthWrite: false, blending: THREE.NoBlending }));
-      copy.frustumCulled = false;
-      this.copyScene = new THREE.Scene(); this.copyScene.add(copy); this.emptyScene = new THREE.Scene();
-      for (const f of this.impKinds) f.uniforms.impAtlas.value = this.atlas.texture;
-    }
+    const T = IMP.T;
+    this.bakeSetup();
     const prevRT = renderer.getRenderTarget(), prevAuto = renderer.autoClear, prevCol = renderer.getClearColor(new THREE.Color()), prevA = renderer.getClearAlpha();
     renderer.setClearColor(0x000000, 0);
     this.atlas.texture.generateMipmaps = false;
@@ -634,6 +628,37 @@ export class Grass {
     this.atlas.texture.generateMipmaps = true;
     renderer.setRenderTarget(this.atlas); renderer.render(this.emptyScene, this.bakeCam);   // builds the mipmaps
     renderer.setRenderTarget(prevRT); renderer.autoClear = prevAuto; renderer.setClearColor(prevCol, prevA);
+  }
+  // The bake's targets, scenes and materials, made once (on the first bake, or by precompileBake).
+  bakeSetup() {
+    if (this.atlas) return;
+    const T = IMP.T, u = this.uniforms;
+    this.atlas = new THREE.WebGLRenderTarget(T * IMP.TX, T * IMP.TY, { depthBuffer: false, generateMipmaps: true,
+      minFilter: THREE.LinearMipmapLinearFilter, magFilter: THREE.LinearFilter });
+    this.strip = new THREE.WebGLRenderTarget(T * IMP.TX, T, { samples: 4, depthBuffer: true });
+    this.bakeCam = new THREE.OrthographicCamera(-1, 1, 1, -1, 0, 1);
+    this.bakeScene = new THREE.Scene(); this.bakeMeshes = [];
+    for (let c = 0; c < IMP.TX; c++) {
+      const m = new THREE.Mesh(this.geos[0], new THREE.ShaderMaterial({ vertexShader: BAKE_VERT, fragmentShader: BAKE_FRAG, side: THREE.DoubleSide,
+        uniforms: { bSeed: { value: 0 }, bType: { value: 0 }, bView: { value: new THREE.Vector2() }, bBox: { value: new THREE.Vector3() },
+          heads: u.heads, thatch: u.thatch, leafScale: u.leafScale } }));
+      m.frustumCulled = false; this.bakeScene.add(m); this.bakeMeshes.push(m);
+    }
+    const copy = new THREE.Mesh(new THREE.PlaneGeometry(2, 2), new THREE.ShaderMaterial({ vertexShader: COPY_VERT, fragmentShader: COPY_FRAG,
+      uniforms: { src: { value: this.strip.texture } }, depthTest: false, depthWrite: false, blending: THREE.NoBlending }));
+    copy.frustumCulled = false;
+    this.copyScene = new THREE.Scene(); this.copyScene.add(copy); this.emptyScene = new THREE.Scene();
+    for (const f of this.impKinds) f.uniforms.impAtlas.value = this.atlas.texture;
+  }
+  // The bake's programs compiled ahead (main.js, while the opening screen is up), each with its render target bound,
+  // so the first bake does not compile them inside a frame. Returns the compileAsync promises.
+  precompileBake(renderer) {
+    this.bakeSetup();
+    const prev = renderer.getRenderTarget(), out = [];
+    renderer.setRenderTarget(this.strip); out.push(renderer.compileAsync(this.bakeScene, this.bakeCam));
+    renderer.setRenderTarget(this.atlas); out.push(renderer.compileAsync(this.copyScene, this.bakeCam));
+    renderer.setRenderTarget(prev);
+    return out;
   }
 
   // An instanced mesh plus a CPU staging copy of every placed instance, grouped in blocks (one

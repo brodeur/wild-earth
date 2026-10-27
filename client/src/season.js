@@ -1,3 +1,4 @@
+import { drain } from './slice.js';
 // Seasons track the real calendar at the tile; the sun follows latitude, day of year and hour.
 export const SEASONS = ['winter', 'spring', 'summer', 'fall'];
 const MIDPOINT_DOY = { winter: 15, spring: 105, summer: 196, fall: 288 };
@@ -92,13 +93,17 @@ export class SeasonColour {
     this.months = new Map(); this.prepared = false;
     this.flat = true;   // false (comparisons only; clear `months`): the frames' own luminance, slope shading and all
   }
-  // Pixel grids at 20 m, once: class, tree cover, open weight, northness.
-  prepare() {
+  // Pixel grids at 20 m, once: class, tree cover, open weight, northness. The *Steps generators are the same work
+  // with yields between rows and passes (slice.js: terrain.js steps them while the world builds behind the opening
+  // screen); prepare, month, build and blur run them in one go.
+  prepare() { drain(this.prepareSteps()); }
+  *prepareSteps() {
     if (this.prepared) return; this.prepared = true;
     const t = this.tile, N = this.N, n = N * N, res = t.size / N;
     this.cls = new Uint8Array(n); this.cov = new Float32Array(n); this.wOpen = new Float32Array(n); this.ns = new Float32Array(n);
     const ch = t.canopyHeight, H = t.heights;
     for (let j = 0; j < N; j++) for (let i = 0; i < N; i++) {
+      if (i === 0 && (j & 31) === 0) yield;
       const k = j * N + i, x = (i + 0.5) * res, north = t.size - (j + 0.5) * res;
       let c = t.habitat.at(x, north);
       if (c === 0 || c === 9) c = 5;        // nodata and erased built ground: grassland
@@ -120,13 +125,14 @@ export class SeasonColour {
     this.ctx = this.cv.getContext('2d', { willReadFrequently: true });
     this.ctx.imageSmoothingEnabled = false;
     this.refFrame = this.frame(this.ref);
+    yield;
     // the month-invariant half of the local blur: each pixel's own class's blurred open weight and July colour
     const f7 = this.refFrame, W = new Float32Array(n), A = [0, 1, 2].map(() => new Float32Array(n));
     this.Wb = new Float32Array(n); this.J7 = new Float32Array(n * 3);
     for (const c of this.classes) {
       W.fill(0); for (const a of A) a.fill(0);
       for (let k = 0; k < n; k++) { if (this.cls[k] !== c) continue; const w = this.wOpen[k]; if (!w) continue; W[k] = w; for (let q = 0; q < 3; q++) A[q][k] = w * f7[k * 3 + q]; }
-      this.blur([W, ...A]);
+      yield* this.blurSteps([W, ...A]);
       for (let k = 0; k < n; k++) if (this.cls[k] === c) { this.Wb[k] = W[k]; for (let q = 0; q < 3; q++) this.J7[k * 3 + q] = A[q][k]; }
     }
     this.scratch = [0, 1, 2, 3].map(() => new Float32Array(n));
@@ -134,17 +140,19 @@ export class SeasonColour {
   // Month m's frame, linear reflectance-proportional RGB (Float32, 3 per pixel).
   frame(m) {
     const N = this.N, c = (m - 1) % this.cols, r = Math.floor((m - 1) / this.cols);
-    this.ctx.clearRect(0, 0, N, N); this.ctx.drawImage(this.img, c * N, r * N, N, N, 0, 0, N, N);
+    this.ctx.clearRect(0, 0, N, N); this.ctx.drawImage(this.img.bitmap || this.img, c * N, r * N, N, N, 0, 0, N, N);   // bitmap: tilepackage.js
     const d = this.ctx.getImageData(0, 0, N, N).data, f = new Float32Array(N * N * 3);
     for (let k = 0, n = N * N; k < n; k++) { f[k * 3] = LIN8[d[k * 4]]; f[k * 3 + 1] = LIN8[d[k * 4 + 1]]; f[k * 3 + 2] = LIN8[d[k * 4 + 2]]; }
     return f;
   }
   // Two passes of a (2R+1)^2 box, separable, edges clamped; in place over each array.
-  blur(arrs, passes = 2, R = BLUR_R) {
+  blur(arrs, passes = 2, R = BLUR_R) { drain(this.blurSteps(arrs, passes, R)); }
+  *blurSteps(arrs, passes = 2, R = BLUR_R) {
     const N = this.N, tmp = new Float32Array(N), w = 2 * R + 1;
     for (const a of arrs) for (let p = 0; p < passes; p++) for (let axis = 0; axis < 2; axis++) {
       const step = axis ? N : 1, lineStep = axis ? 1 : N;
       for (let l = 0; l < N; l++) {
+        if ((l & 127) === 0) yield;
         const o = l * lineStep; let s = 0;
         for (let q = -R; q <= R; q++) s += a[o + Math.min(Math.max(q, 0), N - 1) * step];
         for (let q = 0; q < N; q++) {
@@ -156,10 +164,11 @@ export class SeasonColour {
     }
   }
   // Month m: Float32 multiplier (3 per pixel) and the per-class flat-ground ratios.
-  month(m) {
+  month(m) { return drain(this.monthSteps(m)); }
+  *monthSteps(m) {
     let M = this.months.get(m);
     if (M) { this.months.delete(m); this.months.set(m, M); return M; }   // most recently used last
-    this.prepare();
+    yield* this.prepareSteps();
     const N = this.N, n = N * N, f = this.frame(m), f7 = this.refFrame, cls = this.cls, wO = this.wOpen, ns = this.ns;
     // log luminance ratio, and its northness slope over the open ground
     const lr = new Float32Array(n);
@@ -172,12 +181,13 @@ export class SeasonColour {
     }
     const slope = sw > 100 && this.flat ? (sxy - sx * sy / sw) / Math.max(sxx - sx * sx / sw, 1e-6) : 0;
     for (let k = 0; k < n; k++) lr[k] -= slope * ns[k];
+    yield;
     const out = new Float32Array(n * 3).fill(1), classes = {};
     // tile-wide open means per class (fallback: grassland's, then everything open)
     const stat = c => { const s = [0, 0, 0, 0, 0, 0, 0, 0]; for (let k = 0; k < n; k++) { if (c && cls[k] !== c) continue; const w = wO[k]; if (!w) continue;
       s[0] += w; for (let q = 0; q < 3; q++) { s[1 + q] += w * f[k * 3 + q]; s[4 + q] += w * f7[k * 3 + q]; } s[7] += w * lr[k]; } return s; };
     const all = stat(0), means = {};
-    for (const c of this.classes) { const s = stat(c); means[c] = s[0] >= 100 ? s : null; }
+    for (const c of this.classes) { yield; const s = stat(c); means[c] = s[0] >= 100 ? s : null; }
     for (const c of this.classes) if (!means[c]) means[c] = means[5] || all;
     for (const c of this.classes) {
       const s = means[c], mf = [s[1] / s[0], s[2] / s[0], s[3] / s[0]], m7 = [s[4] / s[0], s[5] / s[0], s[6] / s[0]], a = s[7] / s[0];
@@ -188,7 +198,7 @@ export class SeasonColour {
       for (const x of this.scratch) x.fill(0);
       for (let k = 0; k < n; k++) { if (cls[k] !== c) continue; const w = wO[k]; if (!w) continue;
         for (let q = 0; q < 3; q++) A[q][k] = w * f[k * 3 + q]; LR[k] = w * lr[k]; }
-      this.blur(this.scratch);
+      yield* this.blurSteps(this.scratch);
       const Wb = this.Wb, J7 = this.J7;
       for (let k = 0; k < n; k++) {
         if (cls[k] !== c) continue;
@@ -207,8 +217,9 @@ export class SeasonColour {
   // The multiplier for a date: the two months blended, the litter under closed canopy, softened over
   // ~60 m (class edges), as RGBA8 holding sRGB_encode(multiplier / 2) (an sRGB texture: the GPU decodes
   // it, finer steps where the multiplier is small). litter: linear [needle, oak] multipliers or null.
-  build(date, litter) {
-    const { m1, m2, t } = monthBlend(date), A = this.month(m1), B = this.month(m2), N = this.N, n = N * N;
+  build(date, litter) { return drain(this.buildSteps(date, litter)); }
+  *buildSteps(date, litter) {
+    const { m1, m2, t } = monthBlend(date), A = yield* this.monthSteps(m1), B = yield* this.monthSteps(m2), N = this.N, n = N * N;
     const ch = [0, 1, 2].map(() => new Float32Array(n));
     for (let k = 0; k < n; k++) {
       const c = this.cls[k];
@@ -221,7 +232,8 @@ export class SeasonColour {
         ch[q][k] = v;
       }
     }
-    this.blur(ch, 1, 1);
+    yield;
+    yield* this.blurSteps(ch, 1, 1);
     const px = new Uint8Array(n * 4);
     for (let k = 0; k < n; k++) {
       for (let q = 0; q < 3; q++) px[k * 4 + q] = Math.round(255 * enc(Math.min(Math.max(ch[q][k] / 2, 0), 1)));

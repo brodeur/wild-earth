@@ -1,19 +1,43 @@
 // Loads a tile package's client rasters and exposes metric-space samplers.
 // Client space: x = meters east of the tile's west edge, z = -(meters north of the south edge), y = elevation.
+import { runSliced, yieldToMain, drain } from './slice.js';
+
+// An image (an HTMLImageElement: textures, the mini-map) and, as img.bitmap, the same bytes decoded into an ImageBitmap
+// off the main thread (createImageBitmap on the blob). A canvas drawImage of the element decodes it inside that task
+// (tens to hundreds of ms for the large rasters, while the opening screen waits); of the bitmap it is a copy. The
+// pixels are the same for a draw at the image's own size (a scaled draw of the element can differ: Chrome may decode
+// a JPEG at a reduced scale for it, so scaled readers keep drawing the element). 1:1 readers draw
+// `image.bitmap || image`; main.js closes the bitmaps (and deletes them) once the world is built.
+async function loadDecoded(url) {
+  const r = await fetch(url);
+  if (!r.ok) throw new Error('image failed: ' + url);
+  const blob = await r.blob(), img = new Image();
+  img.decoding = 'async';
+  await new Promise((res, rej) => { img.onload = res; img.onerror = () => rej(new Error('image failed: ' + url)); img.src = URL.createObjectURL(blob); });
+  img.bitmap = await createImageBitmap(blob).catch(() => null);
+  img.blob = blob;   // terrain.js uploads the large ones to the GPU from it, in bands
+  return img;
+}
 
 export async function loadImageData(url) {
-  const img = new Image();
-  img.decoding = 'async';
-  await new Promise((res, rej) => { img.onload = res; img.onerror = () => rej(new Error('image failed: ' + url)); img.src = url; });
+  const img = await loadDecoded(url);
   const c = document.createElement('canvas'); c.width = img.width; c.height = img.height;
   const ctx = c.getContext('2d', { willReadFrequently: true });
-  ctx.drawImage(img, 0, 0);
-  return { width: img.width, height: img.height, data: ctx.getImageData(0, 0, img.width, img.height).data, image: img };
+  ctx.drawImage(img.bitmap || img, 0, 0);
+  // read back in strips of about 4 MB, a strip per task (slice.js): the same pixels as one getImageData
+  const W = img.width, H = img.height, data = new Uint8ClampedArray(W * H * 4), S = Math.max(1, Math.floor((1 << 20) / W));
+  for (let y = 0; y < H; y += S) {
+    const h = Math.min(S, H - y);
+    data.set(ctx.getImageData(0, y, W, h).data, y * W * 4);
+    if (y + h < H) await yieldToMain();
+  }
+  img.bitmap?.close(); delete img.bitmap;   // read: the element stays for textures
+  return { width: img.width, height: img.height, data, image: img };
 }
 
 // Optional image: resolves to null instead of failing the tile load.
 function loadOptionalImage(url) {
-  return new Promise(res => { const img = new Image(); img.onload = () => res(img); img.onerror = () => res(null); img.src = url; });
+  return loadDecoded(url).catch(() => null);
 }
 
 // Lidar micro-relief (client/terrain_detail.png, docs/tile-spec.md "Lidar"): the 1 m DEM averaged to
@@ -21,17 +45,18 @@ function loadOptionalImage(url) {
 // rows north to south. Only the red channel is kept (25 MB for the home tile's 5000 px); the image is
 // read through a canvas in strips so the RGBA copy never holds the whole 100 MB at once.
 async function loadDetail(url) {
-  const img = new Image(); img.decoding = 'async';
-  await new Promise((res, rej) => { img.onload = res; img.onerror = () => rej(new Error('image failed: ' + url)); img.src = url; });
-  const W = img.width, H = img.height, out = new Uint8Array(W * H), S = 500;
+  const img = await loadDecoded(url);
+  const W = img.width, H = img.height, out = new Uint8Array(W * H), S = 250;   // a strip per task (slice.js)
   const c = document.createElement('canvas'); c.width = W; c.height = S;
   const ctx = c.getContext('2d', { willReadFrequently: true });
   for (let y = 0; y < H; y += S) {
     const h = Math.min(S, H - y);
-    ctx.clearRect(0, 0, W, S); ctx.drawImage(img, 0, y, W, h, 0, 0, W, h);
+    ctx.clearRect(0, 0, W, S); ctx.drawImage(img.bitmap || img, 0, y, W, h, 0, 0, W, h);
     const d = ctx.getImageData(0, 0, W, h).data;
     for (let k = 0, o = y * W, n = W * h; k < n; k++) out[o + k] = d[k * 4];
+    await yieldToMain();
   }
+  img.bitmap?.close(); delete img.bitmap;
   return { width: W, height: H, data: out };
 }
 
@@ -45,17 +70,24 @@ async function loadDetail(url) {
 //   ground(x, north)  the terrain exactly as drawn this frame: the near fine mesh (terrain.js) where it
 //                     is, else coarse. For things placed every frame (the raven, animals); cached
 //                     placement (grass, rocks) reads at(), which the fine mesh matches near the player.
+// The heights of heights.png (24-bit, 0.1 m from -10000 m), a generator that yields every 64 rows (loadTile steps it
+// with slice.js runSliced); returns { z, min, max }.
+export function* decodeHeights(img) {
+  const n = img.width * img.height, d = img.data, z = new Float32Array(n), rows = img.width * 64;
+  let min = Infinity, max = -Infinity;
+  for (let i = 0; i < n; i++) {
+    if (i % rows === 0) yield;
+    const v = -10000 + (d[i * 4] * 65536 + d[i * 4 + 1] * 256 + d[i * 4 + 2]) * 0.1;
+    z[i] = v; if (v < min) min = v; if (v > max) max = v;
+  }
+  return { z, min, max };
+}
 export class Heightfield {
-  constructor(img, sizeM, detail = null) {
+  // decoded: decodeHeights(img)'s result when the caller has run it already (loadTile, in slices)
+  constructor(img, sizeM, detail = null, decoded = null) {
     this.w = img.width; this.h = img.height; this.size = sizeM; this.res = sizeM / img.width;
-    const n = this.w * this.h, d = img.data;
-    this.z = new Float32Array(n);
-    let min = Infinity, max = -Infinity;
-    for (let i = 0; i < n; i++) {
-      const v = -10000 + (d[i * 4] * 65536 + d[i * 4 + 1] * 256 + d[i * 4 + 2]) * 0.1;
-      this.z[i] = v; if (v < min) min = v; if (v > max) max = v;
-    }
-    this.min = min; this.max = max;
+    let r = decoded; if (!r) { const g = decodeHeights(img); do r = g.next(); while (!r.done); r = r.value; }
+    this.z = r.z; this.min = r.min; this.max = r.max;
     this.detail = detail && detail.width === detail.height ? detail : null;
     if (this.detail) { this.dW = detail.width; this.dRes = sizeM / detail.width; }
     this.coarseSpacing = 10;   // terrain.js default vertex spacing
@@ -339,10 +371,16 @@ export class WaterMask {
     for (const s of b.segs) d2 = Math.min(d2, segDist2(x, north, s));
     return d2 < RIPARIAN_M * RIPARIAN_M ? Math.sqrt(d2) : Infinity;
   }
-  build() {
+  // The grid, made on first use; loadTile makes it ahead with buildSteps, in slices (slice.js), so the first frame's
+  // grass and shrub placement does not make it inside one long task.
+  build() { return drain(this.buildSteps()); }
+  *buildSteps() {
+    if (this.grid) return this;
     const t0 = performance.now(), W = this.width, res = this.res, g = new Uint8Array(W * W);
     const per = this.B / res;   // pixels per bucket side
+    let nb = 0;
     for (const [k, b] of this.buckets) {
+      if ((nb++ & 63) === 0) yield;
       const bi = k % this.nb, bj = Math.floor(k / this.nb);
       for (let py = Math.floor(bj * per); py < Math.min(W, Math.ceil((bj + 1) * per)); py++) {
         const north = (py + 0.5) * res, row = (W - 1 - py) * W;   // row 0 = north edge, as the roads image
@@ -451,12 +489,15 @@ export async function loadTile(tileId, base = '../tiles/') {
     L['client.season_rgb'] ? loadOptionalImage(dir + L['client.season_rgb'].path) : null,
   ]);
   if (features) markRewilded(features, m);
+  const decoded = await runSliced(decodeHeights(heights), 'heights');
   const rewild = profile ? new RewildGrid(profile, m.size_m || 10000) : null;
   const ti = L['client.texture_imagery'];
   const size = m.size_m || 10000;
+  const waterMask = features ? new WaterMask(features, size, roads?.width || 2000) : null;
+  if (waterMask) await runSliced(waterMask.buildSteps(), 'water mask');
   return {
     id, manifest: m, size, dir,
-    heights: new Heightfield(heights, size, detail), textureImage: texture.image, masksImage: masks.image,
+    heights: new Heightfield(heights, size, detail, decoded), textureImage: texture.image, masksImage: masks.image,
     habitat: new Grid8(habitat, size), canopy: new Grid8(canopy, size),
     roads: roads ? new Grid8(roads, size) : null, roadsImage: roads?.image || null,
     mast: mast ? new Grid8(mast, size) : null,
@@ -469,7 +510,7 @@ export async function loadTile(tileId, base = '../tiles/') {
     // former reservoir and stock-pond beds (255) and their riparian corridor (160), or null
     rewild: rewild?.any ? rewild : null,
     // ponds (minus the rewilded ones), stream channels and the riparian band (exact tests; .at(x, north) like tile.roads)
-    waterMask: features ? new WaterMask(features, size, roads?.width || 2000) : null,
+    waterMask,
     // the imagery's own summer grass and oak means (sRGB 0..1), the baseline for season recolouring
     imageryTextureImage: imageryTexture, imageryRef: imageryTexture ? { grass_mean: ti.grass_mean, oak_mean: ti.oak_mean } : null,
     // the imagery without trees (client.texture_ground), and the season_rgb sheet (an Image; season.js reads its frames)
