@@ -94,7 +94,9 @@ sequenced; Parked is in the brief but deliberately not started.
   finder; a `crowns` step after derive); the player arrives as a spirit in a misty blue-green
   world and becomes the glowing raven, squirrel or woodpecker it touches, the opening screen
   is map cards and a season slider; every day has its real weather (Open-Meteo: last year's
-  hour by hour per tile, today's live), drawn as cloud, mist, wind, rain and snow (2026-10-26). Weak: woodpecker stays procedural; a
+  hour by hour per tile, today's live), drawn as cloud, mist, wind, rain and snow (2026-10-26); a
+  tile is built in place when its card is clicked or the Location box leaves for it, abandoned
+  when another is chosen, no reload, no URL (2026-10-27). Weak: woodpecker stays procedural; a
   coastal tile has no sea (the seabed is drawn as terrain), the city fill is a flat olive
   scrub, and the species library is the foothills' (see decisions.md, 2026-10-26).
 

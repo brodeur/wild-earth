@@ -46,7 +46,7 @@ Add `&fov=45` (vertical degrees, 30-110; default 70) to try a narrower lens, `&d
 another day's measured ground colour, `&base=imagery` for the base photo under it.
 The API answers which tile holds a point (`POST /api/tile {lon, lat}`) and builds a missing
 one in the background (`POST /api/build`, progress at `GET /api/build/<tile_id>`); the
-client's Location box uses it to fly, switch tiles, or build. Points are snapped to a tile
+client's Location box uses it to fly, switch tiles in place (no reload, no URL change), or build. Points are snapped to a tile
 and never logged or stored.
 The same server hosts the acorn game's shared world: press Start game in two browsers on
 the same tile and season (add `&seat=2` to the second URL to be a second player in one

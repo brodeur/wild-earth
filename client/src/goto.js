@@ -1,9 +1,6 @@
-// "Go to lat, lon": fly there inside this tile, load the tile that holds it, or ask the dev
-// server to build that tile. The point is never written to the URL or sent anywhere but
-// the local dev server, which snaps it to a tile and drops it.
-
-const HANDOFF = 'we.goto';   // sessionStorage key: carries a point across one tile switch
-const CARRY = 'we.carry';    // sessionStorage key: the opening screen's choices across one tile switch
+// "Go to lat, lon": fly there inside this tile, switch to the tile that holds it (main.js builds it in place of
+// this one: no reload, no URL change), or ask the dev server to build that tile first. The point is never
+// written to the URL or sent anywhere but the local dev server, which snaps it to a tile and drops it.
 
 // "38.70, -120.88" or "38.70 -120.88" -> { lat, lon } | { error }
 export function parseLatLon(text) {
@@ -95,50 +92,30 @@ export async function builtTileFor(p) {
   catch { return indexTileFor(p); }
 }
 
-// A point handed over from the previous page (sessionStorage), or ?lat=&lon= in the URL. Read once.
-export function takePendingPoint(params) {
-  let p = null;
-  try { p = JSON.parse(sessionStorage.getItem(HANDOFF) || 'null'); sessionStorage.removeItem(HANDOFF); } catch { /* storage off */ }
-  if (params.has('lat') && params.has('lon')) {
-    const q = parseLatLon(`${params.get('lat')} ${params.get('lon')}`);
-    if (!q.error) p = q;
-  }
-  return p && Number.isFinite(p.lat) && Number.isFinite(p.lon) ? p : null;
+// A ?lat=&lon= in the URL (a point to land at; main.js takes it off the URL), or null.
+export function urlPoint(params) {
+  if (!params.has('lat') || !params.has('lon')) return null;
+  const q = parseLatLon(`${params.get('lat')} ${params.get('lon')}`);
+  return q.error ? null : q;
 }
 
-// What the previous page chose, carried across a tile switch. Read once.
-//   { arrive: { season, species } }  go straight into an arrival (an in-game Go to another tile)
-//   { screen: { season } }           show the opening screen again with these choices kept
-export function takeCarry() {
-  try { const c = JSON.parse(sessionStorage.getItem(CARRY) || 'null'); sessionStorage.removeItem(CARRY); return c; } catch { return null; }
-}
-
-// Load another tile: the point (if any) and `carry` ride in sessionStorage, never in the URL.
-export function switchTile(id, p, carry = null) {
-  try {
-    if (p) sessionStorage.setItem(HANDOFF, JSON.stringify({ lat: p.lat, lon: p.lon }));
-    if (carry) sessionStorage.setItem(CARRY, JSON.stringify(carry));
-  } catch { /* lands at tile centre */ }
-  location.href = `?tile=${encodeURIComponent(id)}`;
-}
-
-// Ask the dev server to build the tile holding `p`, reporting progress through say(text, err), and
-// switch to it (with `carry`) when it is playable. Resolves once the build is under way or refused.
-export async function buildTile(p, id, say, carry = null) {
+// Ask the dev server to build the tile holding `p`, reporting progress through say(text, err), and switch to it
+// (go(id, p)) when it is playable. Resolves once the build is under way or refused; another Go cancels the polling.
+export async function buildTile(p, id, say, go) {
   const b = await api('/api/build', { lon: p.lon, lat: p.lat });
   if (b.status === 409) return say(`another tile is building (${b.data.running}); try again when it finishes`, true);
   if (!b.ok) return say(b.data.error || 'build refused', true);
-  if (b.data.status === 'built') return switchTile(id, p, carry);
+  if (b.data.status === 'built') return go(id, p);
   say(`building ${id}…`);
   const poll = async () => {
     try {
       const { data: j } = await api(`/api/build/${id}`);
       const done = (j.steps || []).map(s => `${s.step} ${s.ok ? '✓' : '✗'}`);
       if (j.current) done.push(`${j.current} …`);
-      if (j.status === 'done' || j.status === 'built') { say(`built ${id}; loading…`); return switchTile(id, p, carry); }
+      if (j.status === 'done' || j.status === 'built') { say(`built ${id}; loading…`); return go(id, p); }
       if (j.status === 'failed') {
         say(`build of ${id} failed: ${done.join(' ')}${j.playable ? ' (playable anyway; ' : ' ('}see the server log)`, true);
-        if (j.playable) setTimeout(() => switchTile(id, p, carry), 2500);
+        if (j.playable) buildTile.timer = setTimeout(() => go(id, p), 2500);
         return;
       }
       say(`building ${id}: ${done.join(' ')}`);
@@ -148,11 +125,14 @@ export async function buildTile(p, id, say, carry = null) {
   clearTimeout(buildTile.timer); poll();
 }
 
-// The in-game Location box. carry(): what to carry to another tile ({ arrive: { season, species } }).
-export function setupGoTo({ tile, flight, input, button, line, carry = () => null }) {
+// The in-game Location box, the page's (set up once, main.js): current() is the world the page holds now, as
+// { tile, flight, ready } (ready once it can be flown), or null while none; switchTile(id, p) builds that tile in
+// place of it and arrives at p. A point in the tile flown now is flown to; a point in a tile still building (or in
+// the one building now, so the arrival lands on it) switches; a Go while a tile builds abandons that build.
+export function setupGoTo({ input, button, line, current, switchTile }) {
   const say = (t, err = false) => { line.textContent = t; line.classList.toggle('err', err); };
 
-  function flyTo(p, loc) {
+  function flyTo(p, loc, flight) {
     const yaw = flight.yaw;
     flight.reset(loc.x, -loc.north, 150);
     flight.yaw = yaw;   // keep the heading
@@ -162,21 +142,23 @@ export function setupGoTo({ tile, flight, input, button, line, carry = () => nul
   async function go(p, { fromLoad = false } = {}) {
     clearTimeout(buildTile.timer);
     if (fromLoad) input.value = `${p.lat}, ${p.lon}`;   // so Go can act on it
-    const loc = localXY(tile, p.lat, p.lon);
-    if (loc) return flyTo(p, loc);
+    const cur = current(), tile = cur?.tile || null;
+    const loc = tile && localXY(tile, p.lat, p.lon);
+    if (loc && cur.ready) return flyTo(p, loc, cur.flight);
+    if (loc) { say(`loading ${tile.id}…`); return switchTile(tile.id, p); }
     say('looking up tile…');
     try {
       const { ok, data } = await api('/api/tile', { lon: p.lon, lat: p.lat });
       if (!ok) return say(data.error || 'bad location', true);
-      if (data.tile_id === tile.id) return say(`${fmt(p)} is at the edge of this tile`, true);
-      if (data.built) { say(`loading ${data.tile_id}…`); return switchTile(data.tile_id, p, carry()); }
+      if (tile && data.tile_id === tile.id) return say(`${fmt(p)} is at the edge of this tile`, true);
+      if (data.built) { say(`loading ${data.tile_id}…`); return switchTile(data.tile_id, p); }
       if (fromLoad) return say(`tile ${data.tile_id} is not built; press Go to build it`);
       say(`tile ${data.tile_id} not built; building…`);
-      await buildTile(p, data.tile_id, say, carry());
+      await buildTile(p, data.tile_id, say, switchTile);
     } catch (e) {
       if (!(e.noApi || e instanceof TypeError)) return say('error: ' + e.message, true);
       const id = await indexTileFor(p);   // static server: built tiles still work
-      if (id && id !== tile.id) { say(`loading ${id}…`); return switchTile(id, p, carry()); }
+      if (id && id !== tile?.id) { say(`loading ${id}…`); return switchTile(id, p); }
       return say(noServerText(p), true);
     }
   }
@@ -189,5 +171,5 @@ export function setupGoTo({ tile, flight, input, button, line, carry = () => nul
   button.onclick = submit;
   // keep typing out of the flight controls (they listen on window)
   for (const ev of ['keydown', 'keyup']) input.addEventListener(ev, e => { e.stopPropagation(); if (ev === 'keydown' && e.key === 'Enter') submit(); });
-  return { go };
+  return { go, say };
 }

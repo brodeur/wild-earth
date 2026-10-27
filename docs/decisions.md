@@ -1350,3 +1350,32 @@ handler 0.6-20 ms and the teardown 5-111 ms in slices. Known: 15 shader programs
 textures outlive a world (small, not growing); a dead world's late model download finishes in the background
 and is never adopted. Rejected: a dispose() in every module (the record-and-remove mechanism covers them all
 and cannot miss a new one); keeping the reload (it restarted the dark phase and lost the choice).
+
+## 2026-10-27: the in-game Location box switches tiles in place, through the same abortable build
+
+Aaron's words: "Make the in-game Location box's go-to-another-tile and build flows use the same in-place
+abortable build as the start screen, with no reload and no URL change." The reload-based switch (a point and
+the season carried in sessionStorage, `location.href = ?tile=`) is gone with its carry: goto.js no longer knows
+`switchTile`; the box is the page's, set up once in main.js (not rebuilt by every world), and asks the page for the
+world it holds now (`current()`: its tile, flight and whether it is ready) and calls `switchTile(id, p)`
+(main.js `switchWorld`) to go elsewhere. A point in the tile played is flown to as before; a point in another
+built tile, or in a tile the dev server has just built (goto.js `buildTile` polls as before and calls the same
+switch when it is playable), tears the world down, darkens the page with the build's status in the middle and the
+panel kept (html.switching: the HUD, mini-map, help and game hidden), builds the tile in its place through
+`replaceWorld` (the one path the screen's card click uses: generation counter, abandon within a slice, teardown)
+and enters it at the point with the season and day carried from the world left (`w.carry`, or the arrival a
+still-building world was heading for). A Go while a tile builds abandons that build for the new tile's, a Go to a
+point inside the tile building restarts it with the new point, and the URL never changes (`?lat=&lon=` on the
+direct paths is still taken off it). Two changes made the played world disposable: `w.commit()` (Begin, or a
+switch's arrival) no longer stops the listener and element recording but makes the world the scope for the rest
+of its life, so what the game adds while played goes with it; and the arrival's caption animation (and the
+squirrel's and woodpecker's) is cancelled when it finishes, because a filling (`fill: 'forwards'`) animation stays
+on the element for good and its finish handler held the arrival, whose onDone closure held the whole world: an
+entered world was never freed (found with a FinalizationRegistry: a world played and dropped was collected, an
+entered one never, until this). Teardown now also cancels every animation outside the screen's root. Measured
+(FinalizationRegistry on world, tile, scene, acorns; heap read once the page idles): three in-game switches and a
+drop free all three worlds, heap 89 MB, GPU 8 geometries and 33 textures, one mini-map, field guide and acorn
+board; a mid-build Go abandons the build in 6-23 ms; the lookup of the next tile takes up to 5 s while the dev
+server is busy serving the build (one Python thread). Known: a Go at the very start of a switch build carries
+the arrival's season rather than the world's (the world has no state yet); the panel's other controls are dead
+until the new world wires them, a few seconds into the build.

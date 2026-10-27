@@ -10,7 +10,7 @@ import { Impostors } from './impostors.js';
 import { Grass } from './grass.js';
 import { MiniMap } from './minimap.js';
 import { RoadsOverlay } from './roadsOverlay.js';
-import { setupGoTo, takePendingPoint, builtTileFor, takeCarry, localXY } from './goto.js';
+import { setupGoTo, urlPoint, builtTileFor, localXY } from './goto.js';
 import { OpeningScreen, Arrival, lastTile, rememberTile } from './arrival.js';
 import { SEASON_LOOK, seasonOfDate, sunDirection, dateForSeason, parseDate } from './season.js';
 import { AcornGame } from './acorns.js';
@@ -66,10 +66,12 @@ window.__slice = sliceStats;   // debugging: steps of the sliced build that ran 
 
 // ---- worlds ------------------------------------------------------------------------------------------------------
 // The page makes the renderer, the camera and the opening screen once; a world (a tile's terrain, forest, animals,
-// controls, HUD wiring) is built only when the screen's card is chosen (onSelect), or at once on the direct paths
-// (?skip=1, ?game=1, ?as=, a carried arrival). Choosing another card while a world builds, or after it is ready but
-// before Begin, abandons it: its build stops at its next slice (w.wait / w.sliced check w.dead after every await, and
-// its fetches and the modules' own loads stop with its AbortSignal, tile.signal), then it is torn down (disposeWorld):
+// controls, HUD wiring) is built only when the screen's card is chosen (onSelect), at once on the direct paths
+// (?skip=1, ?game=1, ?as=), or in place of the world played when the game's Location box goes to another tile
+// (switchWorld). Choosing another card while a world builds, or after it is ready but before Begin, abandons it, and
+// so does a Go to another tile while one builds or is played: its build stops at its next slice (w.wait / w.sliced
+// check w.dead after every await, and its fetches and the modules' own loads stop with its AbortSignal,
+// tile.signal), then it is torn down (disposeWorld):
 //   - every listener its code added to the window, the document or a page element while it was being built: captured
 //     here (the patched addEventListener records them while `scope` is the world, i.e. only during the world's own
 //     synchronous build code, never the screen's) and removed, so a later world never answers this one's keys;
@@ -84,7 +86,9 @@ window.__slice = sliceStats;   // debugging: steps of the sliced build that ran 
 //     closed; the weather forecast, the crown list and the ground detail stop loading (tile.signal);
 //   - its GPU objects: every geometry, material, texture and render target of its scenes (the world, the shadow and
 //     contact-AO passes, the grass card bake, the spirit's post pass, the cloud bake), in slices.
-// A world entered (Begin) is the page's from then on (w.commit()); a tile switch from the game still reloads (goto.js).
+// A world entered (Begin, or the arrival of a tile switch) is the page's (w.commit()): its listeners and elements
+// keep being recorded while it is played, so the game's own tile switch tears it down the same way, with no reload
+// and no URL change, and the Location box (goto.js) is the page's, set up once, not a world's.
 let scope = null;
 const addListener = EventTarget.prototype.addEventListener;
 EventTarget.prototype.addEventListener = function (type, fn, opts) {
@@ -117,9 +121,12 @@ function createWorld(tileId) {
   };
   w.next = async name => { phase(name); await w.wait(yieldToMain()); };
   w.sliced = (gen, label) => w.wait(runSliced(gen, label, { signal: w.abort.signal }));
-  w.commit = () => { if (w.committed) return; w.committed = true; w.observer.takeRecords(); w.observer.disconnect(); w.listeners = []; w.nodes.clear(); };
+  // played: the recording goes on (the listeners and elements the game adds while it is played go with it when the
+  // page switches tiles), so the world's code is the scope from here on
+  w.commit = () => { if (w.committed) return; w.committed = true; scope = w; };
   return w;
 }
+function closeScreen() { if (!screen) return; screen.close(); screen = null; screenOpen = false; }
 // The HUD's words as index.html has them (the spirit and the controls swap their own in and read these back): taken
 // before any world, put back when one is torn down.
 let hudWords = null;
@@ -138,9 +145,8 @@ function restoreHud() {
 function closeBitmaps(tile) {
   for (const im of [tile?.textureImage, tile?.imageryTextureImage, tile?.groundTextureImage, tile?.seasonImage, tile?.imagery]) if (im?.bitmap) { im.bitmap.close(); delete im.bitmap; }
 }
-// Tear an abandoned world down (see above): the page-level parts at once, the GPU objects in slices.
+// Tear an abandoned or left world down (see above): the page-level parts at once, the GPU objects in slices.
 async function disposeWorld(w, renderer) {
-  if (w.committed) return;
   const t0 = performance.now();
   w.dead = true; w.ready = false; w.abort.abort();
   if (scope === w) scope = null;
@@ -157,8 +163,11 @@ async function disposeWorld(w, renderer) {
   for (const [t, type, fn, opts] of w.listeners) t.removeEventListener(type, fn, opts);
   for (const n of w.nodes) if (n.isConnected) n.remove();
   w.listeners = []; w.nodes.clear();
+  // the animations its code put on the page's elements (a caption still fading, a filling one kept by its element:
+  // their handlers hold the world), except the screen's own
+  { const root = $('opening'); for (const a of document.getAnimations()) { const el = a.effect?.target; if (el && !root?.contains(el)) a.cancel(); } }
   restoreHud();
-  for (const id of ['texImagery', 'texRewild', 'gameBtn', 'hoverBtn', 'spiritBtn', 'gotoBtn']) if ($(id)) $(id).onclick = null;
+  for (const id of ['texImagery', 'texRewild', 'gameBtn', 'hoverBtn', 'spiritBtn']) if ($(id)) $(id).onclick = null;
   if ($('season')) $('season').onchange = null;
   if ($('detail')) $('detail').onchange = null;
   if ($('time')) $('time').oninput = null;
@@ -196,22 +205,49 @@ function* disposeGpu(w, renderer) {
   renderer.renderLists.dispose();
 }
 
-// The page: one renderer, one camera, the opening screen.
-let renderer = null, camera = null;
+// The page: one renderer, one camera, the opening screen, the Location box; one world at a time.
+let renderer = null, camera = null, goto = null;
+let world = null, gen = 0;   // the world the page builds, holds or plays, and the choice it answers to
 const LENS_DEFAULT = 70, LENS_RANGE = [30, 110];
+// Build the tile's world in place of the one the page has (building, ready behind the screen, or played), which is
+// abandoned and torn down first. Resolves to the world when it is ready, to null when another choice overtook it.
+async function replaceWorld(id, opts) {
+  const g = ++gen, old = world; world = null;
+  if (old) {
+    const wasReady = old.ready;
+    if (wasReady) screen?.readyIds?.delete?.(old.tileId);   // the screen remembers a ready tile; choosing it again builds it again
+    const t = performance.now(); await disposeWorld(old, renderer);
+    window.__weDisposed = { tileId: old.tileId, ready: wasReady, ms: Math.round(performance.now() - t), syncMs: +old.disposeSyncMs.toFixed(1), at: Math.round(t) };   // debugging
+  }
+  if (g !== gen) return null;
+  const w = world = createWorld(id);
+  w.arrive = opts.arrive || null;   // what a switch overtaking this build carries on (switchWorld)
+  try { await buildWorld(w, opts); } catch (e) { if (w.dead || e === ABANDONED) return null; throw e; }
+  return w.dead ? null : w;
+}
+// A tile switch from the game (the Location box): the world played is torn down, the page goes dark with the build's
+// status (html.switching: the HUD hidden, the panel and its Location box kept, so another Go can abandon this build
+// for another tile's), and the tile holding the point is built in its place and entered there, the season and day
+// carried over: no reload, no URL change.
+async function switchWorld(id, point, params) {
+  const carry = world?.carry?.() || world?.arrive || {};   // the world's season and day; a build's, before it has them
+  html.classList.add('switching'); html.classList.remove('arriving');
+  renderer.setClearColor(0x000000, 1); renderer.clear();
+  let w = null;
+  try { w = await replaceWorld(id, { params, pending: point, arrive: { season: carry.season, date: carry.date, point } }); }
+  catch (e) { console.error(e); $('status').textContent = `error: ${e.message}`; $('status').classList.remove('hidden'); goto.say(`could not load ${id}`, true); return; }
+  if (w) goto.say('');   // it entered itself (buildSteps, arrive)
+}
 async function main() {
   const params = new URLSearchParams(location.search);
-  const pending = takePendingPoint(params);   // a lat/lon to land at, read once
-  const carry = takeCarry();                  // choices carried across a tile switch, read once
+  const pending = urlPoint(params);   // ?lat=&lon=: a point to land at (taken off the URL below)
   // ?game=1 and ?skip=1 go straight in, as before the opening screen (agents and tests rely on it): as a spirit at the
   // tile centre, flying (&as=spirit says so), or for tests &as=raven (the old start), &as=squirrel, &as=woodpecker, or any
   // other species by its short name (playable.js SHORT: &as=deer, &as=hawk, &as=vole, ...): into the AI one nearest the centre.
-  // An in-game Go to another tile carries { arrive } and goes straight into an arrival (goto.js still reloads the page
-  // for it). Otherwise the opening screen asks where and when, and the chosen card's world builds behind it; the URL's
-  // ?tile= only says which card to bring into the middle.
+  // Otherwise the opening screen asks where and when, and the chosen card's world builds behind it; the URL's ?tile=
+  // only says which card to bring into the middle.
   const direct = params.get('game') === '1' || params.get('skip') === '1';
-  const carried = !direct && carry?.arrive ? carry.arrive : null;
-  html.classList.toggle('opening', !direct && !carried); html.classList.toggle('arriving', !!carried);
+  html.classList.toggle('opening', !direct);
   let tileId = params.get('tile');
   if (pending && !tileId) tileId = await builtTileFor(pending);   // null -> loader picks the first tile
 
@@ -222,6 +258,12 @@ async function main() {
   window.__weRenderer = renderer;   // debugging: GPU memory (renderer.info) with or without a world
   fieldGuide.mount();   // the field guide's card and listeners are the page's (fieldguide.js), mounted before any world
   snapHud();
+  // The Location box (goto.js) is the page's too: it flies within the world played, or switches the page to the tile
+  // holding the point (switchWorld), at any time, a build under way included.
+  goto = setupGoTo({ input: $('gotoInput'), button: $('gotoBtn'), line: $('gotoStatus'),
+    current: () => (world?.tile && world.m.flight ? { tile: world.tile, flight: world.m.flight, ready: world.ready } : null),
+    switchTile: (id, p) => { switchWorld(id, p, params); } });
+  if (pending) $('gotoInput').value = `${pending.lat}, ${pending.lon}`;
   // The lens: ?fov=<degrees, vertical> (30..110, default LENS_DEFAULT). 70 shows about 103 degrees across a widescreen,
   // a wide-angle lens; the view is undistorted only when it matches the angle the screen fills in the eye, about
   // 45-50 degrees across at a desk (under 30 vertical), so a narrower lens makes the hills loom as they do in life
@@ -232,51 +274,43 @@ async function main() {
   addEventListener('resize', () => { camera.aspect = innerWidth / innerHeight; camera.updateProjectionMatrix(); renderer.setSize(innerWidth, innerHeight); layoutHud(); });
   layoutHud();
 
-  if (!direct && !carried) {
+  window.__weWorld = () => world;   // debugging: the world the page is building, holding or playing
+  window.__weDrop = async () => { gen++; const old = world; world = null; if (old) { if (old.ready) screen?.readyIds?.delete?.(old.tileId); await disposeWorld(old, renderer); } };   // debugging: tear it down, build nothing
+  if (!direct) {
     const index = await (await fetch('../tiles/index.json', { cache: 'no-cache' })).json();
     const ids = index.tiles.map(t => t.tile_id);
     if (!ids.includes(tileId)) tileId = ids.includes(lastTile()) ? lastTile() : ids[0];
     if (!tileId) throw new Error('no tiles built');
     if (pending) history.replaceState(null, '', `?tile=${tileId}`);   // never keep the point in the URL
-    // One world at a time: a choice abandons the world before it (built, building, or ready behind the screen).
-    let world = null, choice = null, gen = 0;
+    // a choice abandons the world before it (building, or ready behind the screen)
+    let choice = null;
     const select = async id => {
-      const g = ++gen, old = world; world = null; choice = null;
-      if (old && !old.committed) {
-        const wasReady = old.ready;
-        // the screen remembers a ready tile; this one's world is going, so choosing it again builds it again
-        if (wasReady) screen.readyIds?.delete?.(old.tileId);
-        const t = performance.now(); await disposeWorld(old, renderer);
-        window.__weDisposed = { tileId: old.tileId, ready: wasReady, ms: Math.round(performance.now() - t), syncMs: +old.disposeSyncMs.toFixed(1), at: Math.round(t) };   // debugging
-      }
-      if (g !== gen) return;
-      const w = world = createWorld(id);
-      try { await buildWorld(w, { params, pending, carry, direct, carried }); } catch (e) {
-        if (w.dead || e === ABANDONED) return;
-        console.error(e); screen.setPrep(id, `error: ${e.message}`); return;
-      }
-      if (w.dead) return;
+      choice = null;
+      let w = null;
+      try { w = await replaceWorld(id, { params, pending, direct }); } catch (e) { console.error(e); screen?.setPrep(id, `error: ${e.message}`); return; }
+      if (!w) return;
       screen.setReady(id);
       if (choice?.tileId === id) w.enter(choice, true);   // Begin was pressed while it built
     };
-    screen = new OpeningScreen({ root: $('opening'), index, tileId, pending, carried: carry?.screen,
+    screen = new OpeningScreen({ root: $('opening'), index, tileId, pending,
       onSelect: id => { select(id); },
       onBegin: c => { choice = c; if (world?.ready && world.tileId === c.tileId) world.enter(c, true); } });
     screenOpen = true;
-    window.__weWorld = () => world;   // debugging: the world the screen's choice is building or holding
-    window.__weDrop = async () => { gen++; const old = world; world = null; if (old) { if (old.ready) screen.readyIds?.delete?.(old.tileId); await disposeWorld(old, renderer); } };   // debugging: tear it down, build nothing
     return;
   }
-  const w = createWorld(tileId);
-  await buildWorld(w, { params, pending, carry, direct, carried });
+  const w = await replaceWorld(tileId, { params, pending, direct });
+  if (!w) return;
   w.commit();
+  if (pending && !localXY(w.tile, pending.lat, pending.lon)) goto.go(pending, { fromLoad: true });   // its tile is not built: say so
 }
 
-async function buildWorld(w, { params, pending, carry, direct, carried }) {
+async function buildWorld(w, opts) {
   scope = w;
-  try { await buildSteps(w, { params, pending, carry, direct, carried }); } finally { if (scope === w) scope = null; }
+  try { await buildSteps(w, opts); } finally { if (scope === w && !w.committed) scope = null; }
 }
-async function buildSteps(w, { params, pending, carry, direct, carried }) {
+// pending: a lat/lon to land at, or null; direct: no opening screen, into the world at once; arrive: { season, date,
+// point } from a tile switch, entered at once when ready (the screen's Begin, or the direct paths' start, otherwise).
+async function buildSteps(w, { params, pending, direct = false, arrive = null }) {
   const status = t => {
     if (w.dead) return;
     if (screenOpen) { screen.setPrep(w.tileId, t ? `preparing ${w.tileId}: ${t}` : ''); $('status').classList.add('hidden'); return; }
@@ -284,10 +318,11 @@ async function buildSteps(w, { params, pending, carry, direct, carried }) {
   };
   phase('loadTile');
   const tile = w.tile = await w.wait(loadTile(w.tileId, undefined, { signal: w.abort.signal }));
+  w.tileId = tile.id;   // the loader's choice when none was named (the direct paths without ?tile=)
   phase('afterTile');
   const flags = ['game', 'skip'].filter(k => params.get(k) === '1').map(k => `&${k}=1`).join('')
     + (params.has('fov') ? `&fov=${params.get('fov')}` : '');
-  if (pending && !screen) history.replaceState(null, '', `?tile=${tile.id}${flags}`);   // never keep the point in the URL
+  if (pending && direct) history.replaceState(null, '', `?tile=${tile.id}${flags}`);   // never keep the point in the URL
   $('tileName').textContent = tile.id;
   const credits = setupCredits({ tile, link: $('creditsLink'), panel: $('credits') });   // HUD Data link: sources, licences, asset credits
   status('building terrain…');
@@ -338,17 +373,12 @@ async function buildSteps(w, { params, pending, carry, direct, carried }) {
   const minimap = new MiniMap({ container: $('minimap'), sizeM: tile.size, imagery: tile.imagery, features: tile.features, flight, rewildImage: tile.textureImage });
   await w.next('places');
   const places = new PlaceNames(tile.features, tile.size);   // nearest named road, stream or water, for the HUD
-  await w.next('goto');
-  const goto = setupGoTo({ tile, flight, input: $('gotoInput'), button: $('gotoBtn'), line: $('gotoStatus'),
-    carry: () => ({ arrive: { season: seasonNow(), date: dateCarry() } }) });
-  if (pending && direct) goto.go(pending, { fromLoad: true });
-  if (pending && !direct) $('gotoInput').value = `${pending.lat}, ${pending.lon}`;
   // The scripted arrival (arrival.js); behind the screen the bird waits at its start so the forest streams in there.
   await w.next('arrival');
   const arrival = new Arrival({ flight, camera, heights: tile.heights, size: tile.size, caption: $('caption') });
-  const carriedPoint = carried && pending ? localXY(tile, pending.lat, pending.lon) : null;
-  if (screen) { screen.onPoint = w.onPoint = p => { arrival.plan(p); arrival.hold(); }; arrival.plan(screen.point); }
-  else if (carried) arrival.plan(carriedPoint);
+  const arrivePoint = arrive?.point ? localXY(tile, arrive.point.lat, arrive.point.lon) : null;   // null: the centre
+  if (screenOpen) { screen.onPoint = w.onPoint = p => { arrival.plan(p); arrival.hold(); }; arrival.plan(screen.point); }
+  else if (arrive) arrival.plan(arrivePoint);
   if (!direct) { arrival.hold(); veg.update(flight.pos.x, flight.pos.z, true); }
 
   // Base texture: the erased imagery when the tile has it (without its tree crowns when the tile has
@@ -382,6 +412,9 @@ async function buildSteps(w, { params, pending, carry, direct, carried }) {
   const seasonNow = () => state.season === 'auto' ? seasonOfDate(dateNow()) : state.season;
   // the date a tile switch carries: a fixed date ('MM-DD') while the season tracks one, else null (today, or the season)
   const dateCarry = () => state.season === 'auto' && fixedDate ? `${String(fixedDate.getMonth() + 1).padStart(2, '0')}-${String(fixedDate.getDate()).padStart(2, '0')}` : null;
+  // what a tile switch from this world carries (switchWorld): its season and day; while it is still building towards
+  // an arrival of its own, that arrival's (its own state takes them at enterWorld)
+  w.carry = () => (arrive && !w.committed ? { season: arrive.season, date: arrive.date } : { season: seasonNow(), date: dateCarry() });
   // Picking a season picks a random day in it (its weather is that day last year, weather.js); the select keeps
   // showing the season while the game tracks the day. "tracks today's date" goes back to today.
   const SEASON_MONTHS = { winter: [12, 1, 2], spring: [3, 4, 5], summer: [6, 7, 8], fall: [9, 10, 11] };
@@ -540,15 +573,15 @@ async function buildSteps(w, { params, pending, carry, direct, carried }) {
   w.handle = window.__we = { setDate, setFov, setHour, weather, tile, flight, raven, camera, veg, terrain, far, grass, roads, scene, renderer, minimap, atmosphere, sky, acorns, identify, places, peek, setPeek, sound, animals, arrival, rocks, squirrel, woodpecker, ground, flier, spirit, credits };   // debugging handle
   const as = direct ? params.get('as') : null;
   if (!['raven', 'squirrel', 'woodpecker'].includes(as)) toSpirit();   // a spirit from the start (behind the opening screen too)
-  if (!screen) makeSound();
+  if (!screenOpen) makeSound();
 
   // Into the world: season, observer, sound, then the arrival flight over the chosen point.
   const captionFor = (point, season) => {
     const near = places.nearest(point?.x ?? tile.size / 2, point?.north ?? tile.size / 2);
     return `${near ? `${near.over ? 'over' : 'near'} ${near.name}` : tile.id} · ${season} · spirit`;
   };
-  // c: the opening screen's { tileId, season, date ('MM-DD', or null for today), point, caption }, or a carried arrival
-  // { season, date, point }. Older fields (species, sex) are ignored: everyone arrives as the spirit.
+  // c: the opening screen's { tileId, season, date ('MM-DD', or null for today), point, caption }, or a tile switch's
+  // arrival { season, date, point }. Older fields (species, sex) are ignored: everyone arrives as the spirit.
   const enterWorld = (c, gesture) => {   // armed as w.enter once the world is ready (below), not while it compiles
     w.commit();   // from here this world is the page's: its listeners and HUD nodes stay
     rememberTile(tile.id);
@@ -566,8 +599,8 @@ async function buildSteps(w, { params, pending, carry, direct, carried }) {
     arrival.plan(c.point);   // the wisp flies the arrival as the raven did
     arrival.onDone = () => { html.classList.remove('arriving'); };
     arrival.start(c.caption || captionFor(c.point, seasonNow()));
-    html.classList.add('arriving'); html.classList.remove('opening');
-    if (screen) { screen.close(); screenOpen = false; }
+    html.classList.add('arriving'); html.classList.remove('opening'); html.classList.remove('switching');
+    closeScreen();
   };
   const known = new WeakSet(), used = new WeakSet(), drawable = o => o.isMesh || o.isPoints || o.isLine || o.isSprite;   // meshes compiled ahead (below)
   // The rock plans around the bird (rocks.js warm), made in slices so the first frame's rock fill only places them.
@@ -576,7 +609,7 @@ async function buildSteps(w, { params, pending, carry, direct, carried }) {
   // Behind the opening screen the bird holds still, so the first frame's streaming (the fine terrain square, the far
   // impostor rebuild, the rock sets, the grass pools) is done here, a step per task, in the frame's own order; the
   // first frames then find it done (the same calls, at the same place) and only draw.
-  if (screen) {
+  if (screenOpen) {
     await w.next('warm');
     arrival.hold(); camera.updateMatrixWorld();
     terrain.update(flight.pos.x, flight.pos.z); veg.update(flight.pos.x, flight.pos.z); veg.updateClose(camera.position); await w.wait(yieldToMain());
@@ -672,8 +705,8 @@ async function buildSteps(w, { params, pending, carry, direct, carried }) {
     const p = pending ? localXY(tile, pending.lat, pending.lon) : null;
     playAs(as, { animals, spirit, x: p?.x ?? tile.size / 2, z: -(p?.north ?? tile.size / 2) });
   }
-  else if (direct) { /* a spirit at the tile centre, flying */ }
-  else if (carried) enterWorld({ season: carried.season, date: carried.date, point: carriedPoint }, false);
+  else if (direct) { const p = pending ? localXY(tile, pending.lat, pending.lon) : null; if (p) flight.reset(p.x, -p.north, 150); }   // a spirit, flying, at ?lat=&lon= or the centre
+  else if (arrive) enterWorld({ season: arrive.season, date: arrive.date, point: arrivePoint }, false);
 
   let last = performance.now(), hudT = 0, heldAt = 0;
   // Behind the opening screen, meshes that appear after the build (the rock sets of the first fill, animal models as

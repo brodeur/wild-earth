@@ -242,8 +242,8 @@ export class WoodpeckerControl {
     if (caption && this.captionEl) {
       const c = this.captionEl; c.querySelector('.cap-text').textContent = caption;
       c.hidden = false; c.getAnimations().forEach(a => a.cancel());
-      this.capAnim = c.animate([{ opacity: 0 }, { opacity: 1, offset: 0.12 }, { opacity: 1, offset: 0.7 }, { opacity: 0 }], { duration: 6000, fill: 'forwards' });
-      this.capAnim.onfinish = () => { c.hidden = true; };
+      const a = this.capAnim = c.animate([{ opacity: 0 }, { opacity: 1, offset: 0.12 }, { opacity: 1, offset: 0.7 }, { opacity: 0 }], { duration: 6000, fill: 'forwards' });
+      a.onfinish = () => { c.hidden = true; a.cancel(); };   // released: a filling animation would hold this control after a tile switch
     }
   }
   finishArrival(skipped) {

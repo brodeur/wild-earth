@@ -5,14 +5,8 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Wild Earth</title>
 <script>
-  // The opening screen shows unless the URL goes straight in (?game=1, ?skip=1) or an in-game Go
-  // to another tile carried an arrival (arrival.js, goto.js); main.js clears these classes.
-  (function () {
-    var q = location.search, c = null;
-    try { c = sessionStorage.getItem('we.carry'); } catch (e) {}
-    if (/[?&](game|skip)=1(&|$)/.test(q)) return;
-    document.documentElement.classList.add(c && c.indexOf('"arrive"') >= 0 ? 'arriving' : 'opening');
-  })();
+  // The opening screen shows unless the URL goes straight in (?game=1, ?skip=1); main.js clears the class.
+  if (!/[?&](game|skip)=1(&|$)/.test(location.search)) document.documentElement.classList.add('opening');
 </script>
 <link rel="stylesheet" href="./opening.css">
 <style>
@@ -120,9 +114,11 @@
   html.narrow #soundRow { margin-top:5px; }
   html.narrow #minimap canvas { width:170px !important; height:170px !important; }
   html.narrow #help { font-size:11.5px; padding:6px 10px; }
-  /* The opening screen hides the HUD (its styles: opening.css); the arrival caption. */
+  /* The opening screen hides the HUD (its styles: opening.css); the arrival caption. A tile switch from the game
+     (main.js switchWorld) hides it too, but keeps the panel, whose Location box can send the page elsewhere. */
   html.opening #hud, html.opening #panel, html.opening #help, html.opening #minimap, html.opening #status,
-  html.arriving #hud, html.arriving #panel, html.arriving #help, html.arriving #minimap, html.arriving #game, html.arriving #speciesCard { opacity:0; pointer-events:none; }
+  html.arriving #hud, html.arriving #panel, html.arriving #help, html.arriving #minimap, html.arriving #game, html.arriving #speciesCard,
+  html.switching #hud, html.switching #help, html.switching #minimap, html.switching #game, html.switching #speciesCard { opacity:0; pointer-events:none; }
   #hud, #panel, #help, #minimap, #game { transition:opacity .9s ease; }
   #caption { position:fixed; left:0; right:0; bottom:18%; z-index:8; text-align:center; pointer-events:none; padding:0 16px; opacity:0; }
   #caption[hidden] { display:none; }

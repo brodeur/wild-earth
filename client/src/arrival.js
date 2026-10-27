@@ -607,9 +607,11 @@ export class Arrival {
     if (c && caption) {
       c.querySelector('.cap-text').textContent = caption;
       c.hidden = false; c.getAnimations().forEach(a => a.cancel());
-      this.capAnim = c.animate([{ opacity: 0 }, { opacity: 0, offset: 0.08 }, { opacity: 1, offset: 0.2 }, { opacity: 1, offset: 0.68 }, { opacity: 0, offset: 0.92 }, { opacity: 0 }],
+      // released when done (cancel): a filling animation stays on the element for good, and its handler would hold
+      // this arrival, and through onDone the whole world, after the page has switched tiles
+      const a = this.capAnim = c.animate([{ opacity: 0 }, { opacity: 0, offset: 0.08 }, { opacity: 1, offset: 0.2 }, { opacity: 1, offset: 0.68 }, { opacity: 0, offset: 0.92 }, { opacity: 0 }],
         { duration: T * 1000, fill: 'forwards' });
-      this.capAnim.onfinish = () => { c.hidden = true; };
+      a.onfinish = () => { c.hidden = true; a.cancel(); };
     }
   }
 
@@ -631,8 +633,9 @@ export class Arrival {
       const c = this.captionEl, o = +getComputedStyle(c).opacity;
       this.capAnim.cancel();
       const a = c.animate([{ opacity: o }, { opacity: 0 }], { duration: 1200, fill: 'forwards' });
-      a.onfinish = () => { c.hidden = true; };
+      a.onfinish = () => { c.hidden = true; a.cancel(); };
     }
+    this.capAnim = null;
     this.onDone?.(skipped);
   }
 }
