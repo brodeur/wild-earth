@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Wild Earth — raven flight</title>
+<title>Wild Earth</title>
 <script>
   // The opening screen shows unless the URL goes straight in (?game=1, ?skip=1) or an in-game Go
   // to another tile carried an arrival (arrival.js, goto.js); main.js clears these classes.
@@ -14,6 +14,7 @@
     document.documentElement.classList.add(c && c.indexOf('"arrive"') >= 0 ? 'arriving' : 'opening');
   })();
 </script>
+<link rel="stylesheet" href="./opening.css">
 <style>
   html,body { margin:0; height:100%; background:#0b0f0d; color:#e6ede7; font:13px/1.4 -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif; overflow:hidden; }
   canvas { display:block; }
@@ -116,67 +117,14 @@
   html.narrow #soundRow { margin-top:5px; }
   html.narrow #minimap canvas { width:170px !important; height:170px !important; }
   html.narrow #help { font-size:11.5px; padding:6px 10px; }
-  /* Opening screen (arrival.js): where, when, who before the world appears. */
+  /* The opening screen hides the HUD (its styles: opening.css); the arrival caption. */
   html.opening #hud, html.opening #panel, html.opening #help, html.opening #minimap, html.opening #status,
   html.arriving #hud, html.arriving #panel, html.arriving #help, html.arriving #minimap, html.arriving #game, html.arriving #speciesCard { opacity:0; pointer-events:none; }
   #hud, #panel, #help, #minimap, #game { transition:opacity .9s ease; }
-  #opening { position:fixed; inset:0; z-index:20; overflow:auto; background:radial-gradient(120% 90% at 50% 0%, #17211b 0%, #0b0f0d 60%); transition:opacity .8s ease; -webkit-overflow-scrolling:touch; }
-  #opening[hidden] { display:none; }
-  #opening.out { opacity:0; pointer-events:none; }
-  html:not(.opening) #opening:not(.out) { display:none; }
-  .op-wrap { max-width:920px; margin:0 auto; padding:28px 16px 24px; box-sizing:border-box; }
-  .op-wrap header h1 { font-size:22px; font-weight:600; letter-spacing:.02em; margin:0; }
-  .op-wrap header p { margin:4px 0 0; color:#b7c4ba; font-size:14px; }
-  .op-wrap section { margin-top:22px; }
-  .op-wrap h2 { font-size:11px; text-transform:uppercase; letter-spacing:.08em; color:#8fa094; font-weight:600; margin:0 0 8px; }
-  .op-find { display:flex; gap:6px; max-width:440px; }
-  .op-find input { flex:1; min-width:0; background:#0d1310; color:#e6ede7; border:1px solid #263128; border-radius:6px; padding:7px 9px; font:inherit; font-size:14px; }
-  .op-find button, .op-build { background:#1f2a23; color:#e6ede7; border:1px solid #263128; border-radius:6px; padding:6px 12px; font:inherit; cursor:pointer; }
-  .op-say { font-size:12px; margin:5px 0 8px; min-height:1.2em; word-break:break-word; }
-  .op-say.err { color:#e8a98f; }
-  .op-build { margin-left:6px; padding:3px 10px; }
-  .op-tiles { display:grid; grid-template-columns:repeat(auto-fill, minmax(200px, 1fr)); gap:10px; }
-  .op-seasons { display:grid; grid-template-columns:repeat(auto-fill, minmax(190px, 1fr)); gap:10px; }
-  .op-species { display:grid; grid-template-columns:repeat(auto-fill, minmax(200px, 1fr)); gap:10px; }
-  .op-card { display:flex; flex-direction:column; gap:3px; text-align:left; background:#0f1512bb; color:#d3ddd5; border:1px solid #263128; border-radius:8px; padding:10px 12px; font:inherit; cursor:pointer; backdrop-filter:blur(4px); transition:border-color .2s, background .2s; }
-  .op-card:hover:not([disabled]) { border-color:#3d5244; }
-  .op-card[aria-pressed="true"] { background:#1f2a23; border-color:#8fb59a; box-shadow:0 0 0 1px #8fb59a55; }
-  .op-card[disabled] { opacity:.55; cursor:default; }
-  .op-card:focus-visible, .op-begin:focus-visible, .op-find button:focus-visible { outline:2px solid #ffd08a; outline-offset:2px; }
-  .op-card b { color:#e6ede7; font-weight:600; font-size:14px; }
-  .op-head { display:flex; align-items:baseline; gap:8px; flex-wrap:wrap; }
-  .op-head .op-months { margin-left:auto; font-size:11px; }
-  .op-today { background:#3a2c17; color:#ffd08a; border:1px solid #6b4a2b; border-radius:10px; padding:0 7px; font-size:10.5px; font-weight:600; letter-spacing:.05em; text-transform:uppercase; }
-  .op-soon { color:#8fa094; border:1px solid #263128; border-radius:10px; padding:0 7px; font-size:10.5px; }
-  .op-line { font-size:12.5px; color:#d3ddd5; }
-  .op-raven, .op-roads, .op-sci { font-size:11.5px; }
-  .op-thumb { position:relative; display:block; height:120px; border-radius:6px; overflow:hidden; margin:-2px -4px 6px; background:#0d1310; }
-  .op-thumb img { width:100%; height:100%; object-fit:cover; display:block; filter:saturate(.85) brightness(.9); }
-  .op-dot { position:absolute; width:10px; height:10px; margin:-5px 0 0 -5px; border-radius:50%; background:#ffd08a; box-shadow:0 0 0 2px #0b0f0dcc; display:none; }
-  .op-dot.on { display:block; }
-  .op-tile[aria-pressed="false"] .op-dot { display:none; }
-  .op-sees { font-size:12px; color:#d3ddd5; margin-top:2px; }
-  .op-dots { display:flex; flex-wrap:wrap; gap:3px; margin-top:3px; }
-  .op-dots i { width:7px; height:7px; border-radius:50%; background:#263128; }
-  .op-dots i.on { background:#8fb59a; }
-  .op-foot { position:sticky; bottom:0; margin-top:24px; padding:22px 0 8px; display:flex; flex-wrap:wrap; align-items:center; gap:8px 14px; background:linear-gradient(#0b0f0d00 0, #0b0f0df5 18px); }
-  .op-caption { flex:1 1 240px; color:#b7c4ba; font-size:13px; }
-  .op-begin { background:#3a2c17; color:#ffe9b0; border:1px solid #6b4a2b; border-radius:8px; padding:9px 28px; font:inherit; font-size:15px; font-weight:600; letter-spacing:.03em; cursor:pointer; }
-  .op-begin:hover:not(:disabled) { background:#4a3819; }
-  .op-begin:disabled { opacity:.7; cursor:default; }
-  .op-prep { flex-basis:100%; font-size:11.5px; min-height:1em; text-align:right; }
   #caption { position:fixed; left:0; right:0; bottom:18%; z-index:8; text-align:center; pointer-events:none; padding:0 16px; opacity:0; }
   #caption[hidden] { display:none; }
   #caption .cap-text { display:inline-block; font-size:clamp(20px, 4.2vw, 38px); font-weight:300; letter-spacing:.03em; color:#f3f6f1; text-shadow:0 1px 3px #000a, 0 0 24px #0008; }
   #caption .cap-skip { display:block; margin-top:8px; font-size:12px; color:#d3ddd5aa; text-shadow:0 1px 2px #000a; }
-  @media (max-width:560px) {
-    .op-wrap { padding-top:18px; }
-    .op-tiles, .op-seasons, .op-species { grid-template-columns:1fr 1fr; gap:8px; }
-    .op-card { padding:8px 9px; }
-    .op-thumb { height:90px; }
-    .op-begin { flex:1 1 100%; }
-    .op-prep { text-align:left; }
-  }
 </style>
 <script type="importmap">
 { "imports": { "three": "https://unpkg.com/three@0.186.1/build/three.module.js",
@@ -232,7 +180,7 @@
 <div id="peekBanner" class="hidden">present day · 2022 imagery</div>
 <div id="status">loading tile…</div>
 <div id="caption" hidden><span class="cap-text"></span><span class="cap-skip">any key to skip</span></div>
-<div id="opening"><div class="op-wrap"><header><h1>Wild Earth</h1><p>Your own hills, rewilded. Choose where, when and who.</p></header></div></div>
+<div id="opening"></div>
 <script type="module" src="./src/main.js"></script>
 </body>
 </html>

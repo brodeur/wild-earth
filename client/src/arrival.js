@@ -1,40 +1,26 @@
 import * as THREE from 'three';
 import { parseLatLon, pointInTileId, lookupTile, buildTile, switchTile, noServerText } from './goto.js';
-import { SEASONS, seasonOfDate } from './season.js';
+import { SEASONS, seasonOfDate, parseDate } from './season.js';
 import { PlaceNames } from './placenames.js';
 
 // The opening screen and the arrival (docs/brief.md, "Worlds: a location plus a season"): joining is
-// three choices, where, when and who, made before the world appears; then a scripted 12 s flight
-// brings the player in over the chosen point, so the first thing they see is their own hills.
+// two choices, where and when, made before the world appears (the player arrives as a spirit); then a
+// scripted 12 s flight brings the player in over the chosen point, so the first thing they see is their own hills.
 //
-// OpeningScreen fills #opening. The tile named in `tileId` is the one main.js is already building
-// behind the screen; picking another tile reloads the page into that tile (choices carried in
-// sessionStorage), so Begin always finds its world ready and its press can start the sound.
+// OpeningScreen fills #opening: a row of tall portrait cards, one per built tile (its map full bleed, its
+// best-known roads as the title), and at the bottom a season slider from spring to the following winter
+// beside Begin. The tile named in `tileId` is the one main.js is already building behind the screen;
+// picking another tile reloads the page into that tile (choices carried in sessionStorage), so Begin
+// always finds its world ready and its press can start the sound.
 // Arrival drives RavenFlight's pose and chase camera until it hands control to the player.
 
-// Playable today: the raven (RavenFlight), the western gray squirrel (squirrelControl.js) and the acorn woodpecker
-// (woodpeckerControl.js), the woodpecker as a male or a female (two cards; the sex is remembered beside the species).
-// The squirrel's arrival is not this flight but a short run down and out of the nearest oak (SquirrelControl.arrive);
-// the woodpecker arrives clinging to its family's granary (WoodpeckerControl.arrive).
-const PLAYABLE = new Set(['corvus_corax', 'sciurus_griseus', 'melanerpes_formicivorus']);
-const SEXED = { melanerpes_formicivorus: { male: 'red crown from the white forehead back', female: 'a black band between the white and the red' } };
-const SEASON_LINE = {   // what the foothills are doing, hand-written; the raven half comes from calendar.json
-  winter: 'Rain greens the hills; the blue oaks stand bare.',
-  spring: 'Wildflowers, new oak leaves, creeks running full.',
-  summer: 'Gold grass, dry creeks, heat shimmer in the canyons.',
-  fall: 'Acorns drop under the oaks; the first rains settle the dust.',
-};
+// Species once chosen on the screen (the raven, the western gray squirrel, the acorn woodpecker as male or female);
 const MONTH = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
 const ROAD_WEIGHT = { motorway: 6, trunk: 5, primary: 4, secondary: 3, tertiary: 1.5 };
-const LAST_TILE = 'we.lastTile', LAST_SPECIES = 'we.lastSpecies', LAST_SEX = 'we.lastSex';
+const LAST_TILE = 'we.lastTile';
 
 export const lastTile = () => { try { return localStorage.getItem(LAST_TILE); } catch { return null; } };
 export const rememberTile = id => { try { localStorage.setItem(LAST_TILE, id); } catch { /* storage off */ } };
-// The species chosen last time (the "who" card preselected on the next visit), remembered like the tile.
-export const lastSpecies = () => { try { const c = localStorage.getItem(LAST_SPECIES); return PLAYABLE.has(c) ? c : null; } catch { return null; } };
-export const rememberSpecies = code => { try { if (PLAYABLE.has(code)) localStorage.setItem(LAST_SPECIES, code); } catch { /* storage off */ } };
-export const lastSex = () => { try { return localStorage.getItem(LAST_SEX) === 'female' ? 'female' : 'male'; } catch { return 'male'; } };
-export const rememberSex = sex => { try { localStorage.setItem(LAST_SEX, sex === 'female' ? 'female' : 'male'); } catch { /* storage off */ } };
 
 const esc = s => String(s).replace(/[&<>"]/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' })[c]);
 const getJSON = url => fetch(url).then(r => r.ok ? r.json() : null).catch(() => null);
@@ -50,27 +36,50 @@ function majorRoads(features, n = 2) {
   return [...score].sort((a, b) => b[1] - a[1]).slice(0, n).map(e => e[0]);
 }
 
-// One line of what a raven does in a season, from the tile's calendar.json.
-function ravenLine(calendar, season, names) {
-  const acts = calendar?.activities?.corvus_corax?.[season] || [];
-  const pretty = c => names[c] || c.replace(/_/g, ' ');
-  const parts = acts.map(a => a.goal && a.goal.includes(' ') ? a.goal : `${a.activity} ${a.goal || (a.resources || []).map(pretty).join(', ')}`.trim());
-  return parts.length ? `ravens ${parts.join('; ')}` : '';
+// ---- the season slider's year ----------------------------------------------------------------------
+// Spring (left end) to the following winter (right end), the season titles at the thirds: Mar 20, Jun 21,
+// Sep 22, Dec 20 sit at 0, 1/3, 2/3 and 1, linear by day between them; it does not wrap. A step is a day:
+// day i is March 20 + i. Today outside that span (Dec 21 to Mar 19) sits on the end of its own season.
+const ANCHORS = [[2, 20], [5, 21], [8, 22], [11, 20]];   // [month 0-based, day]
+const TITLES = ['spring', 'summer', 'fall', 'winter'];
+const DAY_MS = 864e5;
+class SeasonYear {
+  constructor(year = new Date().getFullYear()) {
+    this.year = year;
+    const d0 = new Date(year, 2, 20, 12);
+    this.a = ANCHORS.map(([m, d]) => Math.round((new Date(year, m, d, 12) - d0) / DAY_MS));   // [0, 93, 186, 275]
+    this.last = this.a[3];
+  }
+  date(i) { return new Date(this.year, 2, 20 + i, 12); }
+  index(d) { return Math.round((new Date(this.year, d.getMonth(), d.getDate(), 12) - this.date(0)) / DAY_MS); }
+  pos(i) {   // day -> 0..1 along the track
+    const k = i >= this.a[2] ? 2 : i >= this.a[1] ? 1 : 0;
+    return (k + (i - this.a[k]) / (this.a[k + 1] - this.a[k])) / 3;
+  }
+  at(p) {    // 0..1 along the track -> nearest day
+    const q = Math.min(1, Math.max(0, p)) * 3, k = Math.min(2, Math.floor(q));
+    return Math.round(this.a[k] + (q - k) * (this.a[k + 1] - this.a[k]));
+  }
+  // Today's day on the slider: inside the span its own day; outside, the end of its season (winter right, early March left).
+  today(now = new Date()) {
+    const i = this.index(now);
+    return i >= 0 && i <= this.last ? i : seasonOfDate(now) === 'spring' ? 0 : this.last;
+  }
 }
-function monthsOf(calendar, season) {
-  const m = calendar?.seasons?.[season]; if (!m?.length) return '';
-  return `${MONTH[m[0] - 1]}–${MONTH[m[m.length - 1] - 1]}`;
-}
+const label = d => `${MONTH[d.getMonth()]} ${d.getDate()}`;
+const mmdd = d => `${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`;
 
 export class OpeningScreen {
   // index: tiles/index.json; tileId: the tile being built behind the screen; pending: a { lat, lon } to
-  // preselect; carried: { season } kept from a reload; onBegin(choice) is called inside the click.
+  // preselect; carried: { season, date } kept from a reload; onBegin(choice) is called inside the click.
   constructor({ root, index, tileId, pending = null, carried = null, onBegin }) {
     this.root = root; this.index = index; this.tileId = tileId; this.onBegin = onBegin;
-    this.live = seasonOfDate();
-    this.season = SEASONS.includes(carried?.season) ? carried.season : this.live;
-    this.species = PLAYABLE.has(carried?.species) ? carried.species : lastSpecies() || 'corvus_corax';
-    this.sex = carried?.sex === 'female' || carried?.sex === 'male' ? carried.sex : lastSex();
+    this.year = new SeasonYear();
+    this.todayDay = this.year.today();
+    this.day = this.todayDay;   // the slider's day; on todayDay the game tracks today's date
+    const cd = carried?.date && parseDate(carried.date);
+    if (cd) { const i = this.year.index(cd); if (i >= 0 && i <= this.year.last) this.day = i; }
+    else if (!carried?.date && SEASONS.includes(carried?.season) && carried.season !== seasonOfDate()) this.day = this.year.a[TITLES.indexOf(carried.season)];
     this.point = null;          // { x, north } in this tile, or null for the tile centre
     this.ready = false; this.begun = false; this.places = null; this.data = {};
     this.render();
@@ -85,94 +94,125 @@ export class OpeningScreen {
 
   $(sel) { return this.root.querySelector(sel); }
 
+  get onToday() { return this.day === this.todayDay; }
+  get date() { return this.onToday ? null : mmdd(this.year.date(this.day)); }
+  get season() { return seasonOfDate(this.onToday ? new Date() : this.year.date(this.day)); }
+  carry() { return { screen: { season: this.season, date: this.date } }; }
+
   render() {
     const tiles = this.index.tiles.map(t => t.tile_id);
+    const pct = p => `${(100 * p).toFixed(3)}%`;
     this.root.innerHTML = `
       <div class="op-wrap">
-        <header><h1>Wild Earth</h1><p>Your own hills, rewilded. Choose where, when and who.</p></header>
-        <section class="op-where"><h2>Where</h2>
-          <div class="op-find"><input class="op-input" placeholder="a place as lat, lon (e.g. 38.70, -120.87)" autocomplete="off" spellcheck="false" aria-label="place as lat, lon"><button class="op-findbtn">Find</button></div>
-          <div class="op-say muted" role="status"></div>
-          <div class="op-tiles">${tiles.map(id => `
-            <button class="op-card op-tile" data-tile="${esc(id)}" aria-pressed="${id === this.tileId}">
-              <span class="op-thumb"><img alt="" src="../tiles/${esc(id)}/client/imagery.png" loading="lazy"><i class="op-dot"></i></span>
-              <b>${esc(id)}</b><span class="op-roads muted">…</span>
-            </button>`).join('')}
-          </div>
-        </section>
-        <section class="op-when"><h2>When</h2><div class="op-seasons">${SEASONS.map(s => `
-          <button class="op-card op-season" data-season="${s}" aria-pressed="${s === this.season}">
-            <span class="op-head"><b>${s}</b>${s === this.live ? '<span class="op-today">today</span>' : ''}<span class="op-months muted"></span></span>
-            <span class="op-line">${SEASON_LINE[s]}</span><span class="op-raven muted"></span>
-          </button>`).join('')}</div>
-        </section>
-        <section class="op-who"><h2>Who</h2><div class="op-species muted">…</div></section>
+        <div class="op-top">
+          <div class="op-find"><input class="op-input" placeholder="a place as lat, lon (e.g. 38.70, -120.87)" autocomplete="off" spellcheck="false" aria-label="find a place as lat, lon"><button class="op-findbtn">Find</button></div>
+          <div class="op-say" role="status"></div>
+        </div>
+        <div class="op-tiles">${tiles.map(id => `
+          <div class="op-tile${id === this.tileId ? ' sel loading' : ''}" data-tile="${esc(id)}">
+            <span class="op-map"><img alt="" src="../tiles/${esc(id)}/client/imagery.png" loading="lazy" draggable="false"><i class="op-dot"></i></span>
+            <button class="op-pick" aria-pressed="${id === this.tileId}" aria-label="${esc(id)}"></button>
+            <span class="op-cover" aria-live="polite"><span class="op-mid"><i class="op-spin" aria-hidden="true"></i><button class="op-begin" tabindex="-1" disabled>Begin</button><span class="op-status">${id === this.tileId ? 'loading…' : ''}</span></span></span>
+            <span class="op-name"><b class="op-title"></b><span class="op-id">${esc(id)}</span></span>
+          </div>`).join('')}
+        </div>
         <footer class="op-foot">
+          <div class="op-slider" role="slider" tabindex="0" aria-label="day of the year" aria-valuemin="0" aria-valuemax="${this.year.last}">
+            <div class="op-track">
+              ${[1, 2].map(k => `<i class="op-tick" style="left:${pct(k / 3)}"></i>`).join('')}
+              <i class="op-todaymark" style="left:${pct(this.year.pos(this.todayDay))}" title="today"></i>
+              <div class="op-thumb"><span class="op-date"></span></div>
+            </div>
+            <div class="op-titles">${TITLES.map((t, k) => `<span data-season="${t}" style="left:${pct(k / 3)}">${t[0].toUpperCase() + t.slice(1)}</span>`).join('')}</div>
+          </div>
           <div class="op-caption"></div>
-          <button class="op-begin begin">Begin</button>
-          <div class="op-prep muted"></div>
         </footer>
       </div>`;
     this.say = (t, err = false) => { const el = this.$('.op-say'); el.textContent = t; el.classList.toggle('err', err); };
-    for (const b of this.root.querySelectorAll('.op-tile')) b.onclick = () => this.pickTile(b.dataset.tile);
-    for (const b of this.root.querySelectorAll('.op-season')) b.onclick = () => this.pickSeason(b.dataset.season);
+    for (const b of this.root.querySelectorAll('.op-pick')) b.onclick = () => this.pickTile(b.closest('.op-tile').dataset.tile);
+    for (const b of this.root.querySelectorAll('.op-begin')) b.onclick = () => this.begin();
     this.$('.op-findbtn').onclick = () => this.find(this.$('.op-input').value);
     this.$('.op-input').addEventListener('keydown', e => { if (e.key === 'Enter') this.find(e.target.value); });
-    this.$('.begin').onclick = () => this.begin();
-    this.$('.begin').focus({ preventScroll: true });
+    this.wireSlider();
+    this.cardOf(this.tileId)?.querySelector('.op-pick').focus({ preventScroll: true });
+    // The row scrolls sideways: a mouse wheel scrolls it too; the chosen card starts in the middle.
+    const row = this.$('.op-tiles');
+    row.addEventListener('wheel', e => {
+      if (e.ctrlKey || Math.abs(e.deltaX) > Math.abs(e.deltaY) || row.scrollWidth <= row.clientWidth) return;
+      row.scrollLeft += e.deltaY * (e.deltaMode === 1 ? 32 : 1); e.preventDefault();
+    }, { passive: false });
+    requestAnimationFrame(() => this.centreCard());
+    this.update();   // the slider and caption at once; the dot and place names follow when the features arrive
+  }
+
+  cardOf(id) { return this.root.querySelector(`.op-tile[data-tile="${CSS.escape(id)}"]`); }
+
+  // A tile is loading: its card is the selected one, under a cover with a spinner and `text` beneath it.
+  // Clicking another card shows this at once, before switchTile reloads the page into that tile.
+  showLoading(id, text) {
+    for (const c of this.root.querySelectorAll('.op-tile')) {
+      const on = c.dataset.tile === id;
+      c.classList.toggle('sel', on); c.classList.toggle('loading', on); c.classList.remove('ready');
+      c.querySelector('.op-pick').setAttribute('aria-pressed', on);
+    }
+    const card = this.cardOf(id); if (card) card.querySelector('.op-status').textContent = text;
+  }
+
+  centreCard() {
+    const row = this.$('.op-tiles'), card = this.$('.op-tile.sel');
+    if (!row || !card) return;
+    const r = row.getBoundingClientRect(), c = card.getBoundingClientRect();
+    row.scrollLeft += c.left + c.width / 2 - (r.left + r.width / 2);
+  }
+
+  // The season slider: drag or click anywhere on it, arrows a day, Page keys a week, Home/End the ends, T today.
+  wireSlider() {
+    const el = this.$('.op-slider'), track = this.$('.op-track');
+    const fromX = x => { const r = track.getBoundingClientRect(); this.setDay(this.year.at((x - r.left) / r.width)); };
+    el.addEventListener('pointerdown', e => { if (e.button) return; el.setPointerCapture(e.pointerId); el.classList.add('drag'); fromX(e.clientX); e.preventDefault(); el.focus({ preventScroll: true }); });
+    el.addEventListener('pointermove', e => { if (el.hasPointerCapture(e.pointerId)) fromX(e.clientX); });
+    const end = e => { if (el.hasPointerCapture(e.pointerId)) el.releasePointerCapture(e.pointerId); el.classList.remove('drag'); };
+    el.addEventListener('pointerup', end); el.addEventListener('pointercancel', end);
+    el.addEventListener('keydown', e => {
+      const step = { ArrowLeft: -1, ArrowDown: -1, ArrowRight: 1, ArrowUp: 1, PageDown: -7, PageUp: 7 }[e.key];
+      if (step) this.setDay(this.day + step);
+      else if (e.key === 'Home') this.setDay(0);
+      else if (e.key === 'End') this.setDay(this.year.last);
+      else if (e.key === 't' || e.key === 'T') this.setDay(this.todayDay);
+      else return;
+      e.preventDefault();
+    });
+    this.$('.op-todaymark').addEventListener('pointerdown', e => { e.stopPropagation(); if (!e.button) this.setDay(this.todayDay); });
+  }
+
+  setDay(i) {
+    i = Math.min(this.year.last, Math.max(0, Math.round(i)));
+    if (i === this.day) return;
+    this.day = i; this.update();
   }
 
   async load(pending) {
-    const base = id => `../tiles/${id}/`;
-    // every card's roads; the chosen tile's species, perception and calendar
+    // every card's title from its roads; the chosen tile's place names for the caption
     await Promise.all(this.index.tiles.map(async t => {
-      const f = await getJSON(base(t.tile_id) + 'client/features.json');
-      const el = this.root.querySelector(`.op-tile[data-tile="${CSS.escape(t.tile_id)}"] .op-roads`);
-      if (el) el.textContent = majorRoads(f).join(', ') || 'no named roads';
+      const f = await getJSON(`../tiles/${t.tile_id}/client/features.json`);
+      const card = this.cardOf(t.tile_id);
+      if (card) {
+        const roads = majorRoads(f);
+        card.querySelector('.op-title').textContent = roads.join(', ') || t.tile_id;
+        card.classList.toggle('untitled', !roads.length);
+        card.querySelector('.op-pick').setAttribute('aria-label', roads.length ? `${roads.join(', ')} (${t.tile_id})` : t.tile_id);
+      }
       if (t.tile_id === this.tileId) { this.data.features = f; this.places = f ? new PlaceNames(f, f.size_m || 10000) : null; }
-    }).concat([
-      getJSON(base(this.tileId) + 'species/species.json').then(j => { this.data.species = j || []; }),
-      getJSON(base(this.tileId) + 'perception.json').then(j => { this.data.perception = j; }),
-      getJSON(base(this.tileId) + 'calendar.json').then(j => { this.data.calendar = j; }),
-    ]));
-    const names = Object.fromEntries(this.data.species.map(s => [s.code, s.common]));
-    for (const s of SEASONS) {
-      const card = this.root.querySelector(`.op-season[data-season="${s}"]`);
-      card.querySelector('.op-months').textContent = monthsOf(this.data.calendar, s);
-      card.querySelector('.op-raven').textContent = ravenLine(this.data.calendar, s, names);
-    }
-    this.renderSpecies(names);
+    }));
+    this.centreCard();
     if (pending) { this.$('.op-input').value = `${pending.lat}, ${pending.lon}`; this.find(this.$('.op-input').value, { fromLoad: true }); }
     this.update();
   }
 
-  renderSpecies(names) {
-    const all = this.data.species, playable = all.filter(s => s.role === 'playable');
-    const per = this.data.perception?.perceives || {};
-    const box = this.$('.op-species'); box.classList.remove('muted');
-    if (!playable.length) { box.textContent = 'no species list in this tile'; return; }
-    if (!playable.some(s => s.code === this.species && PLAYABLE.has(s.code))) this.species = 'corvus_corax';   // not playable in this tile
-    box.innerHTML = playable.flatMap(s => {
-      const list = per[s.code], flyable = PLAYABLE.has(s.code), n = list ? list.length : all.length;
-      const sees = new Set(list || all.map(a => a.code));
-      const dots = all.map(a => `<i class="${sees.has(a.code) ? 'on' : ''}" title="${esc(a.common)}"></i>`).join('');
-      const title = list ? `perceives: ${list.map(c => names[c] || c).join(', ')}` : 'no perception matrix: everything';
-      const card = sex => `<button class="op-card op-sp" data-code="${esc(s.code)}"${sex ? ` data-sex="${sex}"` : ''} aria-pressed="false" ${flyable ? '' : 'disabled'} title="${esc(title)}">
-        <span class="op-head"><b>${esc(s.common)}</b>${sex ? `<span class="op-soon">${sex}</span>` : ''}${flyable ? '' : '<span class="op-soon">coming soon</span>'}</span>
-        <i class="op-sci muted">${sex && flyable ? esc(SEXED[s.code][sex]) : esc(s.scientific || '')}</i>
-        <span class="op-sees">perceives ${n} of ${all.length} species</span><span class="op-dots">${dots}</span>
-      </button>`;
-      return SEXED[s.code] && flyable ? ['male', 'female'].map(card) : [card(null)];
-    }).join('');
-    for (const b of box.querySelectorAll('.op-sp:not([disabled])')) b.onclick = () => { this.species = b.dataset.code; if (b.dataset.sex) this.sex = b.dataset.sex; this.update(); };
-  }
-
-  pickSeason(s) { this.season = s; this.update(); }
-
   pickTile(id) {
     if (id === this.tileId) { this.point = null; this.$('.op-input').value = ''; this.say(''); this.update(); return; }
-    this.say(`loading ${id}…`);
-    switchTile(id, null, { screen: { season: this.season, species: this.species, sex: this.sex } });
+    this.showLoading(id, 'loading…');
+    switchTile(id, null, this.carry());
   }
 
   // A typed place: this tile -> arrive over it; another built tile -> switch to it; unbuilt -> offer a build.
@@ -183,53 +223,73 @@ export class OpeningScreen {
     const loc = pointInTileId(this.tileId, p);
     if (loc) { this.point = loc; this.say(`in ${this.tileId}; you will arrive over this point`); this.update(); return; }
     const other = this.index.tiles.map(t => t.tile_id).find(id => pointInTileId(id, p));
-    const carry = { screen: { season: this.season, species: this.species, sex: this.sex } };
-    if (other) { this.say(`in ${other}; loading…`); return switchTile(other, p, carry); }
+    if (other) { this.say(`in ${other}`); this.showLoading(other, 'loading…'); return switchTile(other, p, this.carry()); }
     this.say('looking up tile…');
     try {
       const t = await lookupTile(p);
       if (t.noApi) return this.say(noServerText(p), true);
-      if (t.built) { this.say(`loading ${t.tile_id}…`); return switchTile(t.tile_id, p, carry); }
+      if (t.built) { this.say(`loading ${t.tile_id}…`); this.showLoading(t.tile_id, 'loading…'); return switchTile(t.tile_id, p, this.carry()); }
       this.say(`${t.tile_id} is not built yet. `);
       const b = document.createElement('button'); b.className = 'op-build'; b.textContent = `Build ${t.tile_id}`;
-      b.onclick = () => { b.remove(); this.say(`asking the dev server to build ${t.tile_id}…`); buildTile(p, t.tile_id, this.say, { screen: { season: this.season, species: this.species, sex: this.sex } }).catch(e => this.say('error: ' + e.message, true)); };
+      b.onclick = () => { b.remove(); this.say(`asking the dev server to build ${t.tile_id}…`); buildTile(p, t.tile_id, this.say, this.carry()).catch(e => this.say('error: ' + e.message, true)); };
       this.$('.op-say').append(b);
       if (!fromLoad) b.focus();
     } catch (e) { this.say(e.message, true); }
   }
 
-  // "near Missouri Flat Road · fall · common raven"
+  // "near Missouri Flat Road · fall · spirit"
   caption() {
     const size = this.data.features?.size_m || 10000, x = this.point?.x ?? size / 2, n = this.point?.north ?? size / 2;
     const near = this.places?.nearest(x, n);
     const where = near ? `${near.over ? 'over' : 'near'} ${near.name}` : this.tileId;
-    const who = this.data.species?.find(s => s.code === this.species)?.common || 'common raven';
-    return `${where} · ${this.season} · ${who}`;
+    return `${where} · ${this.season} · spirit`;
   }
 
   update() {
-    for (const b of this.root.querySelectorAll('.op-season')) b.setAttribute('aria-pressed', b.dataset.season === this.season);
-    for (const b of this.root.querySelectorAll('.op-sp')) b.setAttribute('aria-pressed', b.dataset.code === this.species && (!b.dataset.sex || b.dataset.sex === this.sex));
-    const card = this.root.querySelector(`.op-tile[data-tile="${CSS.escape(this.tileId)}"]`);
+    const card = this.cardOf(this.tileId);
     if (card) {
       const size = this.data.features?.size_m || 10000, dot = card.querySelector('.op-dot');
-      dot.style.left = `${100 * (this.point?.x ?? size / 2) / size}%`; dot.style.top = `${100 * (1 - (this.point?.north ?? size / 2) / size)}%`;
+      const fx = (this.point?.x ?? size / 2) / size, fy = 1 - (this.point?.north ?? size / 2) / size;
+      dot.style.left = `${100 * fx}%`; dot.style.top = `${100 * fy}%`;
       dot.classList.add('on');
+      // The square map shows its middle 9/16 on the portrait card; pan it so a point near an edge stays in view.
+      const half = 9 / 32, c = Math.min(1 - half, Math.max(half, fx));
+      card.querySelector('.op-map').style.setProperty('--cx', c.toFixed(4));
     }
+    const d = this.onToday ? new Date() : this.year.date(this.day), season = this.season;
+    const s = this.$('.op-slider'), p = `${(100 * this.year.pos(this.day)).toFixed(3)}%`;
+    s.style.setProperty('--p', p);
+    s.setAttribute('aria-valuenow', this.day);
+    s.setAttribute('aria-valuetext', `${d.toLocaleDateString(undefined, { month: 'long', day: 'numeric' })}, ${season}${this.onToday ? ', today' : ''}`);
+    s.classList.toggle('today', this.onToday);
+    this.$('.op-date').textContent = this.onToday ? `${label(d)} · today` : label(d);
+    for (const t of s.querySelectorAll('.op-titles span')) t.classList.toggle('on', t.dataset.season === season);
     this.$('.op-caption').textContent = this.caption();
     this.onPoint?.(this.point);
   }
 
-  setPrep(text) { this.$('.op-prep').textContent = text; }
-  setReady() { this.ready = true; this.setPrep(''); }
+  // main.js reports "preparing <tileId>: <status>" while the world builds; the card shows the status part under
+  // its spinner. An empty report keeps the last line (the spinner turns only on setReady).
+  setPrep(text) {
+    const card = this.cardOf(this.tileId);
+    if (!card || this.ready || !text) return;
+    card.querySelector('.op-status').textContent = text.replace(/^preparing\s+\S+:\s*/, '');
+  }
+  // The world is built: the spinner turns into Begin, which takes the focus (unless a place is being typed) so Enter begins.
+  setReady() {
+    this.ready = true;
+    const card = this.cardOf(this.tileId); if (!card || !card.classList.contains('loading')) return;
+    card.classList.remove('loading'); card.classList.add('ready');
+    card.querySelector('.op-status').textContent = '';
+    const b = card.querySelector('.op-begin'); b.disabled = false; b.tabIndex = 0;
+    if (document.activeElement !== this.$('.op-input')) b.focus({ preventScroll: true });
+  }
 
   begin() {
-    if (this.begun) return;
+    if (this.begun || !this.ready) return;
     this.begun = true;
-    const b = this.$('.begin'); b.disabled = true;
-    rememberSpecies(this.species); if (SEXED[this.species]) rememberSex(this.sex);
-    if (!this.ready) { b.textContent = 'Preparing…'; this.setPrep('almost ready; the world is still loading'); }
-    this.onBegin({ tileId: this.tileId, season: this.season, species: this.species, sex: this.sex, point: this.point, caption: this.caption() });
+    const b = this.cardOf(this.tileId)?.querySelector('.op-begin'); if (b) b.disabled = true;
+    this.onBegin({ tileId: this.tileId, season: this.season, date: this.date, point: this.point, caption: this.caption() });
   }
 
   // Fade out and remove; keys go back to the world.

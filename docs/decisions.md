@@ -1112,3 +1112,22 @@ uint8) and a `crowns` build step after derive re-runs the finder from the CHM an
 drops on in place; `build_crowns` falls back to the kept grids on a tile from before the raster. Rejected: moving
 the whole lidar step after derive (the ground step reads its roughness); a tile-level "city" flag (a few blocks of
 Placerville are not a city, and a coastal cell is half sea).
+
+## 2026-10-26: the opening screen is the map cards and a season slider, nothing else
+
+Aaron's words: "Remove title & subtitle. Make cards big - 9:16, full bleed map, location title over map. Remove
+metadata tags. At the bottom of the screen is a slider from Spring to Winter with titles for summer and fall in
+the middle." With the player now entering every world as a spirit (the next entry), the "who" cards go too, so
+the screen is where and when and nothing else. Each built tile is one portrait card, 9:16, as tall as the space
+above the footer allows, the tile's photo full bleed (its square middle, panned so a typed arrival point near an
+edge stays in view) and darkened at the foot, titled by its two best-known roads (length times class: "Route 50,
+Mother Lode Drive"; the tile id small under it; a tile without named roads shows its id) with the selected card
+ringed and the rest dimmed; the row scrolls sideways and centres the chosen card. The season is a day of the year
+on one track: Spring at the left end is March 20, Summer's title at a third is June 21, Fall's at two thirds
+September 22, Winter at the right end December 20, a day per step between them, today marked and the thumb on
+it; the game gets `date` ('MM-DD', or null on today so it keeps tracking the calendar) and the season of that
+date, so the measured monthly ground colour follows the slider. Begin and the caption sit on the footer with
+the track. Kept, small and quiet at the top: the lat/lon find row, because it is the only way to reach or build
+another tile. The screen's styles moved out of index.html into client/opening.css so it can be reworked apart
+from the HUD. Rejected: a four-stop season picker (the slider is a date, and the ground colour is monthly);
+keeping the species cards as a "who" (the spirit chooses by touch instead).
