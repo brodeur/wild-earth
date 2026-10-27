@@ -1171,7 +1171,10 @@ camera layer 1 redrawn over it with depth testing: the playable species, their g
 warm and are still hidden by hills; `POST_WARM`, `POST_CONTRAST`; about 1.5 ms a frame at pixel ratio 1.5); and
 the spirit's wind is a lighter, airier hiss that is the raven's loudness by 30 m/s and barely rises to 90
 (`SPIRIT_WIND`, `SPIRIT_WIND_RISE` in sound.js). The wisp is exported as `Wisp` (an Object3D with `animate`,
-`setSwell`, `dispose`, no dependency on the flight or the atmosphere) for the opening screen's spinner. Still
+`setSwell`, `dispose`, no dependency on the flight or the atmosphere) for the opening screen's spinner. On his
+"make the sky the same color as the mist" the veil takes the haze's own horizon colour (the atmosphere's
+three-line formula copied into spirit.js, after the look's tint and floor, through the same tone mapping),
+nearly opaque and uniform from the horizon up, so the far trees fade into the sky with no edge. Still
 open: the acorn game counts the player as a raven. Rejected: a post-process tint first (the lit route first,
 the pass only for what the light could not cool); a pull-in before the switch (the body takes over on contact,
 input during the blend).

@@ -52,13 +52,13 @@ const COOL_T = 2.0, CLEAR_R = 6;                      // s after leaving a body 
 const SPIRIT = 'spirit';
 // the look: fade time (s); the sun's strength and tint; the sky light, haze and sky tints; haze thickening; the glow
 const LOOK_T = 0.9, LOOK_SUN = 0.35, LOOK_SUN_TINT = new THREE.Color(0.4, 0.66, 1.0), LOOK_AMB = new THREE.Color(0.3, 0.82, 0.95);
-const LOOK_HAZE = new THREE.Color(0.5, 0.85, 0.9), LOOK_MIE = 14, LOOK_SKY = new THREE.Color(0.55, 0.86, 0.9);
+const LOOK_HAZE = new THREE.Color(0.5, 0.85, 0.9), LOOK_MIE = 14;
 // the floor: a spirit's dusk is a blue dusk, readable like moonlight: the sky light times the exposure is kept at least
 // LOOK_FLOOR, the haze's colours at least LOOK_HAZE_FLOOR (the real ones fall to near nothing as the sun goes down)
 const LOOK_FLOOR = 0.8, LOOK_HAZE_FLOOR = 0.35;
-// the sky: the veil's strength, and the sunset glow let through it, cooled to blue-violet (LOOK_GLOW), as strong as the
+// the sky: the veil's strength (it is the mist's own far colour, so the land dissolves into it), and the sunset glow let through it, cooled to blue-violet (LOOK_GLOW), as strong as the
 // dome's own glow toward the sun times LOOK_GLOW_K, at most LOOK_GLOW_MAX
-const LOOK_VEIL = 0.6, LOOK_GLOW = new THREE.Color(0.62, 0.5, 1.0), LOOK_GLOW_K = 0.6, LOOK_GLOW_MAX = 0.75;
+const LOOK_VEIL = 0.94, LOOK_GLOW = new THREE.Color(0.62, 0.5, 1.0), LOOK_GLOW_K = 0.6, LOOK_GLOW_MAX = 0.75;
 const LOOK_TWILIGHT = 0.3;   // the glow's least through twilight (sun 2 degrees up to about 17 down), after the dome's has gone
 // the post pass: how far warm hues are pulled to grey-blue-green (by their hue's distance from the blue-green axis), and
 // the contrast it takes off; both fade with the look
@@ -223,23 +223,35 @@ class SpiritLook {
     this.amt = 0; this.k = 0; this._c = new THREE.Color(); this._b = new THREE.Vector2();
     scene.traverse(o => { if (o.isLight) o.layers.enable(1); });   // the layer-1 redraw is lit as the first draw
     // the sky's veil: a shell past the land (the dome sits at the far plane, so only sky pixels are behind the shell), a
-    // blue-green mist over the sky and clouds, thinner toward the sun at the horizon, where a blue-violet glow shows
+    // the colour the mist reaches far off (the haze's horizon radiance, tone mapped and post-passed as the land's is), from
+    // the horizon up with a slight darkening to the zenith, so far trees dissolve into it; a blue-violet glow toward the sun
     this.shell = new THREE.Mesh(new THREE.SphereGeometry(30000, 48, 24), new THREE.ShaderMaterial({
-      uniforms: { uMist: { value: new THREE.Color() }, uVeil: { value: 0 }, uGlow: { value: new THREE.Color() }, uSun: { value: new THREE.Vector3(0, 1, 0) } },
+      // the haze's own uniforms (atmosphere.js), shared: the veil is the colour the mist reaches far off, this frame
+      uniforms: { sunDir: atmo.sunDir, skyHorizon: atmo.skyHorizon, skySun: atmo.skySun, hazePhase: atmo.hazePhase,
+        uVeil: { value: 0 }, uGlow: { value: new THREE.Color() }, uContrast: { value: 0 } },
       vertexShader: /* glsl */`
         varying vec3 vW;
         void main() { vec4 w = modelMatrix * vec4(position, 1.0); vW = w.xyz; gl_Position = projectionMatrix * viewMatrix * w; }`,
       fragmentShader: /* glsl */`
-        uniform vec3 uMist, uGlow, uSun; uniform float uVeil; varying vec3 vW;
+        uniform vec3 sunDir, skyHorizon, skySun; uniform vec4 hazePhase;
+        uniform vec3 uGlow; uniform float uVeil, uContrast; varying vec3 vW;
+        // atmosphere.js atmoMieLobe, atmoLobe, atmoSky: the horizon radiance a long path of air takes in direction v
+        float lobeMie(vec3 v) { float d = 1.64 - 1.6 * dot(v, sunDir); return clamp((1.0 / (d * sqrt(d)) - hazePhase.y) * hazePhase.z, 0.0, 1.0); }
+        float lobe(vec3 v) { return mix(clamp(0.5 + 0.5 * dot(v, sunDir) / hazePhase.w, 0.0, 1.0), lobeMie(v), hazePhase.x); }
         void main() {
-          vec3 d = normalize(vW - cameraPosition);
-          vec2 h = normalize(d.xz + 1e-5), s = normalize(uSun.xz + 1e-5);
+          vec3 d = normalize(vW - cameraPosition), hv = normalize(vec3(d.x, 0.0, d.z) + vec3(1e-5, 0.0, 0.0));
+          vec3 mist = mix(skyHorizon, skySun, lobe(hv)) * (1.0 - 0.07 * smoothstep(0.0, 1.0, d.y));   // the horizon's mist, up the sky
+          gl_FragColor = vec4(mist, 1.0);
+          #include <tonemapping_fragment>
+          #include <colorspace_fragment>
+          vec3 m = (gl_FragColor.rgb - 0.42) * (1.0 - uContrast) + 0.42;   // as the post pass leaves the land's mist
+          vec2 h = normalize(d.xz + 1e-5), s = normalize(sunDir.xz + 1e-5);
           float band = exp(-abs(d.y - 0.03) * 7.0), toward = pow(max(0.0, dot(h, s)), 3.0);
           float g = band * (0.15 + 0.85 * toward);
-          float a = uVeil * (1.0 - 0.75 * g * step(0.001, dot(uGlow, vec3(1.0))));
-          gl_FragColor = vec4(uMist * a + uGlow * g, a);   // premultiplied: the veil over the sky, the glow added
+          float a = uVeil * (1.0 - 0.35 * g * step(0.001, dot(uGlow, vec3(1.0))));
+          gl_FragColor = vec4(m * a + uGlow * g, a);   // premultiplied: the mist over the sky, the dusk glow added softly
         }`,
-      side: THREE.BackSide, transparent: true, depthWrite: false, toneMapped: false,
+      side: THREE.BackSide, transparent: true, depthWrite: false, toneMapped: true,
       blending: THREE.CustomBlending, blendSrc: THREE.OneFactor, blendDst: THREE.OneMinusSrcAlphaFactor }));
     this.shell.frustumCulled = false; this.shell.visible = false; this.shell.renderOrder = -10; this.shell.name = 'spirit sky veil';
     this.shell.layers.set(1);
@@ -348,9 +360,9 @@ class SpiritLook {
     u.hazeDensity.value *= 1 + (LOOK_MIE - 1) * k; u.hazeContrast.value *= 1 - 0.7 * k;
     // the sky
     this.shell.position.copy(this.camera.position);
-    const su = this.shell.material.uniforms, b = Math.min(0.85, Math.max(0.06, lum(u.skyHorizon.value) * 0.45 * ex));   // as bright as the horizon
-    su.uMist.value.copy(LOOK_SKY).multiplyScalar(b); su.uVeil.value = LOOK_VEIL * k;
-    su.uGlow.value.copy(LOOK_GLOW).multiplyScalar(glowL * k); su.uSun.value.copy(u.sunDir.value);
+    const su = this.shell.material.uniforms;
+    su.uVeil.value = LOOK_VEIL * k; su.uContrast.value = POST_CONTRAST * k;
+    su.uGlow.value.copy(LOOK_GLOW).multiplyScalar(glowL * k);
     // the glow
     let n = 0; const gp = this.gp;
     this.animals.eachPlayable((x, y, z) => { if (n < GLOW_CAP) { gp[n * 3] = x; gp[n * 3 + 1] = y; gp[n * 3 + 2] = z; n++; } });
