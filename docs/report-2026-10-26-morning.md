@@ -149,6 +149,10 @@ release, WebGL) was still running; its commit, if it verified, is the last in `g
 | 2844ddb | The opening screen you asked for: no title or headings, one 9:16 map card per tile titled by its roads, a day-of-year season slider on the footer, the tile loading under a spinner on its card that becomes Begin when ready. |
 | 3af7489 | The spirit: arrive as a wisp of three ribbons and mist in a faint blue-green world, touch a glowing raven, squirrel or woodpecker to become it, B to leave; the camera blends across every jump. |
 | 4ce0ac1 | Spirit follow-ups you picked: dusk keeps a floor and a violet horizon, a spirit-only pass cools the khaki leaves while the animals stay warm, and the wind is a lighter hiss that stops rising past 30 m/s. (19b0e11, between: the opening screen's slider across the top, no caption, no find row.) |
+| 19b0e11, 77f3325 | The opening screen as you shaped it through the evening: slider across the top, no caption or find row, localities top-left, nothing selected on load, the wisp as the spinner, animals popping in at the deer's scale, season-coloured Begin in DM Sans. |
+| de9d052 | In spirit form the sky is the mist's colour: no horizon line. |
+| 96bc26d, 2124677 | Pipeline: every tile carries last year's hourly weather in local time (Open-Meteo) and the server answers today's; OSM place names in each tile's features (El Dorado, Placerville, Nashville, Daly City, Richmond District). |
+| 9cee468 | Every day has weather: cloud, mist, wind, rain, snow and thunder from the measured day, today's live, a random hour between pre-dawn and post-dusk on a chosen day; a weather row on the HUD. |
 
 Open from the day: the attribution form for generated assets; far placement on the lidar ground beyond the fine square; the squirrel's
 crown camera in leafy oaks.
