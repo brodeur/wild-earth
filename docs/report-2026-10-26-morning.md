@@ -144,7 +144,7 @@ release, WebGL) was still running; its commit, if it verified, is the last in `g
 | a95fb59 | The three wired into the world on all tiles: turkey flocks of 6-15 that flush onto real limbs, ground squirrel colonies with a sentinel that dive into their burrows, fence lizards basking and doing push-ups on rocks and bark from March to October, on a new reptile rig; GBIF records all three on every tile. |
 | 145d46f | Sounds for the three, all synthesised: turkey putts, purr, spring dawn gobble and heavy flush; the ground squirrel's whistle alarm and scuffle; the lizard's scuttle. |
 | 3ce87d4 | Two San Francisco cells (Twin Peaks to Ocean Beach; the Richmond, Presidio and Golden Gate) built from scratch in 31 and 93 min as a stress test; the JSON writer refuses NaN (a sea-side lidar check had written one and the tile would not load). What they show: no sea (the seabed is drawn as terrain under the photo of the waves, streams routed across it), the street grid baked into the rewilded hills with the street trees in rows along it, the Golden Gate Bridge as a line of 64 m crowns, foothill species in the Presidio; the hills, cliffs, beaches and headlands read from the air. |
-| (lens) | `?fov=45` (and `__we.setFov`) tries a narrower lens than the 70 degree default so you can judge the silhouettes by eye; the woodpecker's flight lens never widens past the raven's. |
+| 5ccda93 | `?fov=45` (and `__we.setFov`) tries a narrower lens than the 70 degree default so you can judge the silhouettes by eye; the woodpecker's flight lens never widens past the raven's. |
 
 Open from the day: the attribution form for generated assets; far placement on the lidar ground beyond the fine square; the squirrel's
 crown camera in leafy oaks.
