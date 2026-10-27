@@ -158,6 +158,7 @@ release, WebGL) was still running; its commit, if it verified, is the last in `g
 | d4db600, 2d98777, 894c542 | The screen's lineup centred and the cards receding with a constant gutter; the dark start with only the circling wisp until the world is ready; Escape leaves a body. |
 | 676f39a | The world build yields: the main thread is blocked about 1.2 s over the build instead of 11.5, the worst input delay 290 ms instead of 5.4 s, the world byte-identical; your 30-40 s hover wait was this, not the animals. |
 | 7562d52 | The start screen as you described it: it loads only its own assets, hover grows a card, a click builds that tile behind the screen with the wisp and the lineup, another click aborts and switches in place, no reload, no URL. |
+| 9bffb32 | The in-game Location box goes to another tile the same way: the world is torn down, the next built in its place and entered at the point with the day carried, another Go mid-build abandons it, no reload, no URL. Found on the way: a played world was never freed (the arrival's caption animation held it); fixed, three switches and a drop leave 89 MB. |
 
 Open from the day: the attribution form for generated assets; far placement on the lidar ground beyond the fine square; the squirrel's
 crown camera in leafy oaks.
