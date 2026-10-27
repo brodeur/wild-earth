@@ -18,6 +18,21 @@ html:not(.opening) #opening:not(.out) { display:none; }
 /* the season bar across the top */
 .op-bar { flex:none; height:var(--bar); box-sizing:border-box; padding:14px 32px 0; }
 
+/* The dark start (arrival.js: .boot until the world is ready): only the wisp turning in the middle of the screen and the
+   build's status under it; the slider and the cards are laid out but hidden (and so not focusable). On ready (.booted)
+   the wisp implodes and they fade and rise in together. */
+.op-bar, .op-tiles { transition:opacity .7s ease .15s, transform .8s cubic-bezier(.2, .8, .25, 1) .15s, visibility 0s linear 0s; }
+.op-wrap.boot .op-bar, .op-wrap.boot .op-tiles { opacity:0; transform:translateY(28px); visibility:hidden; }
+.op-wrap.boot .op-bar { transform:translateY(-12px); }
+.op-boot { position:absolute; left:50%; top:50%; width:0; height:0; z-index:6; pointer-events:none; }
+.op-boot .op-wisp { --ws:min(240px, 56vw); }
+.op-wrap.boot .op-boot .op-wisp { visibility:visible; opacity:1; transition-delay:0s; animation:op-wx .2s steps(8) infinite, op-wy 1.2s steps(6) infinite; }
+.op-wrap.booted .op-boot .op-wisp { visibility:visible; animation:op-wx .2s steps(8) infinite, op-wy 1.2s steps(6) infinite, op-implode .55s cubic-bezier(.5, 0, .9, .6) forwards; }
+.op-boot-status { position:absolute; top:calc(min(240px, 56vw) / 2 + 6px); left:0; width:min(80vw, 320px); transform:translateX(-50%); text-align:center; font-size:12.5px; line-height:1.35;
+  color:#8fa094; transition:opacity .3s ease; }
+.op-wrap.booted .op-boot-status { opacity:0; }
+.op-wrap.booted .op-boot { visibility:hidden; transition:visibility 0s linear .6s; }
+
 /* the tile cards: 9:16, the map full bleed, the locality and its roads top left. All at full brightness until one is
    chosen; then it grows (1.08) and the rest step back a little. The cards sit centred in the viewport: as far from
    its bottom as from its top (the bar plus --mt), so --ch, the card's height, is the viewport's less twice that (cqh:

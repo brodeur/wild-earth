@@ -127,7 +127,11 @@ export class OpeningScreen {
     onWeatherWords = () => this.update();
     this.render();
     this.load(pending);
-    if (carried?.selected) this.select();
+    // Until the world is ready the screen is only the wisp turning in the dark with the build's status under it (the
+    // .boot phase); the slider and the cards come in on setReady (reveal), usable at once. Meanwhile the cards' maps and
+    // the prepared tile's animal stills load. A reload from a card click (carried.selected) comes up with that card chosen.
+    this.selectOnReveal = !!carried?.selected;
+    this.preload = this.preloadLineup();
     // Keys typed on the screen stay on the screen (flight, peek, sound and the rest listen on window).
     this.guard = e => { if (!this.root.contains(e.target)) e.stopImmediatePropagation(); };
     for (const ev of ['keydown', 'keyup']) {
@@ -148,7 +152,8 @@ export class OpeningScreen {
     const tiles = this.index.tiles.map(t => t.tile_id);
     const pct = p => `${(100 * p).toFixed(3)}%`;
     this.root.innerHTML = `
-      <div class="op-wrap">
+      <div class="op-wrap boot">
+        <div class="op-boot" aria-live="polite"><i class="op-wisp" aria-hidden="true"></i><span class="op-boot-status">loading…</span></div>
         <div class="op-bar">
           <div class="op-slider" role="slider" tabindex="0" aria-label="day of the year" aria-valuemin="0" aria-valuemax="${this.year.last}">
             <div class="op-track">
@@ -161,7 +166,7 @@ export class OpeningScreen {
         </div>
         <div class="op-tiles">${tiles.map(id => `
           <div class="op-tile" data-tile="${esc(id)}">
-            <span class="op-map"><img alt="" src="../tiles/${esc(id)}/client/imagery.png" loading="lazy" draggable="false"></span>
+            <span class="op-map"><img alt="" src="../tiles/${esc(id)}/client/imagery.png" draggable="false"></span>
             <button class="op-pick" aria-pressed="false" aria-label="${esc(id)}"></button>
             <span class="op-cover" aria-live="polite"><span class="op-mid"><i class="op-wisp" aria-hidden="true"></i><button class="op-begin" tabindex="-1" disabled>Begin</button><span class="op-status">${id === this.tileId ? 'loading…' : ''}</span></span></span>
             <span class="op-name"><b class="op-title"></b><span class="op-sub"></span></span>
@@ -232,6 +237,14 @@ export class OpeningScreen {
     this.$('.op-todaymark').addEventListener('pointerdown', e => { e.stopPropagation(); if (!e.button) this.setDay(this.todayDay); });
   }
 
+  // The lineup's data and stills, loaded while the screen is still dark (so they pop in at once later).
+  preloadLineup() {
+    return Promise.all([getJSON('./assets/opening/index.json'), getJSON(`../tiles/${this.tileId}/species/species.json`)]).then(([index, list]) => {
+      this.preloaded = (list || []).map(s => index?.species?.[s.code]).filter(Boolean).map(sp => Object.assign(new Image(), { src: `./assets/opening/${sp.file}` }));
+      return [index, list];
+    });
+  }
+
   // The lineup: the tile's animals as pre-rendered stills (client/assets/opening/index.json), true to scale (the deer's
   // rule: a metre is PX_PER_M_CARD of the card's height), ground animals on the background under the chosen card, birds
   // round its top on a slow CSS float. Each <img> is laid out once in units of the card's height (--H) from the card's
@@ -241,7 +254,7 @@ export class OpeningScreen {
   async startLineup() {
     if (this.lineupStarted) return;
     this.lineupStarted = true;
-    const [index, list] = await Promise.all([getJSON('./assets/opening/index.json'), getJSON(`../tiles/${this.tileId}/species/species.json`)]);
+    const [index, list] = await this.preload;
     if (this.closed || !index?.species || !list) return;
     const box = this.$('.op-lineup'), rnd = Math.random;
     const known = list.map(s => s.code).filter(c => index.species[c]);
@@ -436,15 +449,27 @@ export class OpeningScreen {
   }
 
   setPrep(text) {
-    const card = this.cardOf(this.tileId);
-    if (!card || this.ready || !text) return;
-    card.querySelector('.op-status').textContent = text.replace(/^preparing\s+\S+:\s*/, '');
+    if (this.ready || !text) return;
+    const t = text.replace(/^preparing\s+\S+:\s*/, '');
+    const bs = this.$('.op-boot-status'); if (bs) bs.textContent = t;
+    const card = this.cardOf(this.tileId); if (card) card.querySelector('.op-status').textContent = t;
   }
   // The world is built: the spinner turns into Begin, which takes the focus so Enter begins.
   setReady() {
     this.ready = true;
+    this.reveal();
     const card = this.cardOf(this.tileId); if (!this.selected || !card || !card.classList.contains('loading')) return;
     this.showReady(card);
+  }
+  // The world is ready: the wisp implodes and the slider and the cards fade and rise in, nothing chosen (or the card a
+  // reload carried as chosen).
+  reveal() {
+    if (this.revealed) return;
+    this.revealed = true;
+    const wrap = this.$('.op-wrap'); wrap.classList.remove('boot'); wrap.classList.add('booted');
+    this.centreCard(); this.layoutCards();
+    if (this.selectOnReveal) this.select();
+    setTimeout(() => this.placeLineup(), 800);   // after the rise
   }
   showReady(card) {
     card.classList.remove('loading'); card.classList.add('ready');

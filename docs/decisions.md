@@ -1172,8 +1172,12 @@ brightness) and keep the same 14 px gutter as they shrink (a sideways shift per 
 one in focus, a few lines of JavaScript run only on a change, the motion a CSS transition; hover is tracked
 with pointer events so the same layout serves it). His "30-40 s before hover works" was measured to be the
 world build blocking the main thread (11.7 s of long tasks in the first 40 s with no animal image loaded), not
-the animals, so they stay and the build is being made to yield. Rejected: removing them (his call: keep,
-pre-rendered); animating them live only after ready (they are the loading indicator).
+the animals, so they stay and the build is being made to yield. Then his simpler cure for the stall: the screen opens dark with only the circling wisp and the status line
+(the map images and the prepared tile's stills preloading meanwhile), and when the world is ready the wisp
+implodes and the slider and cards rise in together, all at full brightness and nothing selected, so nothing
+interactive is on screen while the build blocks the thread; another tile returns to the dark phase. Rejected:
+removing them (his call: keep, pre-rendered); animating them live only after ready (they are the loading
+indicator).
 
 ## 2026-10-26: the player arrives as a spirit and becomes the animal it touches
 
