@@ -100,6 +100,7 @@ class SeasonYear {
 const label = d => `${MONTH[d.getMonth()]} ${d.getDate()}`;
 const PX_PER_M_CARD = 0.112;              // the lineup's scale: a metre as a fraction of the card's height (the deer ~15%)
 const POP_GAP = [0.18, 0.42];             // s between the animals' arrivals
+const FOOT_BELOW = 0.035, FOOT_MARGIN = 0.03;   // the ground animals' foot line: card heights under the card's bottom edge, and the least above the window's
 const BOOT_MAX = 12;                      // s: the dark start waits at most this long for its assets
 // The track's own season colours at its four titles (opening.css .op-track, the same stops): the selected card's
 // highlight, the Begin button and the slider's marks take the colour under the thumb, continuously.
@@ -338,7 +339,7 @@ export class OpeningScreen {
 
   // ---- the lineup ------------------------------------------------------------------------------------------------
   // The chosen tile's animals as pre-rendered stills (assets/opening/index.json), true to scale (the deer's rule: a
-  // metre is PX_PER_M_CARD of the card's height), ground animals on the background centred under the chosen card, birds
+  // metre is PX_PER_M_CARD of the card's height), ground animals standing just below and in front of the chosen card, birds
   // round its top on a slow CSS float. Each still is laid out in units of the card's height (--H) from the card's centre
   // (--cx) and bottom (--by, birds) or the foot line (--fy, ground animals), so a scroll, a resize or a new card only
   // changes those (a CSS transition carries the animals over). A new tile's lineup keeps the species both tiles share
@@ -363,7 +364,6 @@ export class OpeningScreen {
       .concat(birds.map((c, k) => ({ c, bird: k })));
     // the ones not in this tile go
     for (const [c, el] of this.anEls) if (!known.includes(c)) { el.classList.add('gone'); this.anEls.delete(c); setTimeout(() => el.remove(), 500); }
-    this.tall = null;
     for (const it of items.sort(() => rnd() - 0.5)) {   // new ones created, so loaded, in a random order
       const sp = index.species[it.c], k = PX_PER_M_CARD / sp.px_per_m;   // card heights per still pixel
       const s = it.bird == null && it.back ? 0.92 : 1;   // the back row a step further off
@@ -384,7 +384,7 @@ export class OpeningScreen {
         inner.append(img); el.append(inner); box.append(el);
       }
       let x, y;   // the still's centre x and top y, in card heights: birds from the card's centre x and bottom, ground
-                  // animals from the card's centre x and the foot line (--fy, the band's middle: placeLineup)
+                  // animals from the card's centre x and the foot line (--fy, just under the card: placeLineup)
       if (it.bird != null) {
         const a = [-2.2, -0.9, -1.6, -0.4, -2.7, -1.25][it.bird % 6], r = 0.36 + 0.06 * (it.bird % 3);
         x = Math.cos(a) * r * 1.15; y = -1 + 0.12 + Math.sin(a) * r * 0.32 - h / 2;   // round the card's top
@@ -392,7 +392,6 @@ export class OpeningScreen {
       } else {
         x = it.x; y = (it.back ? -0.015 : 0) - (sp.foot_px ?? sp.height) * k * s;
         el.classList.toggle('back', !!it.back);
-        if (!this.tall || h > this.tall.h) this.tall = { t: y, h };   // the tallest: its middle goes to the band's middle
       }
       el.classList.toggle('flip', x > 0.02);   // face the card's middle (the stills face right)
       el.style.setProperty('--x', (x - w / 2).toFixed(4)); el.style.setProperty('--y', y.toFixed(4));
@@ -442,17 +441,18 @@ export class OpeningScreen {
   }
 
   // The lineup's anchors for its CSS: the chosen card's centre x (where its shift is going), its bottom at the grown size
-  // (birds round its top), and the foot line, set so the tallest ground animal's middle is at the middle of the band
-  // between the card's bottom and the window's.
+  // (birds round its top), and the foot line: FOOT_BELOW card heights under the card's bottom, so the animals stand
+  // below and in front of the card, the taller ones' heads and backs over its lower edge (kept on screen when the
+  // window is short: the line stays FOOT_MARGIN above the window's bottom).
   placeLineup() {
     const card = this.cardOf(this.sel), box = this.$('.op-lineup'); if (!card || !box) return;
     const r = card.getBoundingClientRect(), now = new DOMMatrix(getComputedStyle(card).transform).m41;
     const tx = this.cardShift?.el === card ? this.cardShift.tx : 0;
     const H = card.offsetHeight * 1.08, cy = r.top + r.height / 2, by = cy + H / 2;
-    const mid = (by + this.root.clientHeight) / 2, tall = this.tall || { t: -0.15, h: 0.15 };
+    const fy = Math.min(by + FOOT_BELOW * H, this.root.clientHeight - FOOT_MARGIN * H);
     box.style.setProperty('--cx', `${(r.left + r.width / 2 - now + tx).toFixed(1)}px`);
     box.style.setProperty('--by', `${by.toFixed(1)}px`);
-    box.style.setProperty('--fy', `${(mid - (tall.t + tall.h / 2) * H).toFixed(1)}px`);
+    box.style.setProperty('--fy', `${fy.toFixed(1)}px`);
     box.style.setProperty('--H', `${H.toFixed(1)}px`);
     box.classList.add('on');
   }

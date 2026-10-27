@@ -98,14 +98,14 @@ html:not(.opening) #opening:not(.out) { display:none; }
 
 /* the lineup: the tile's animals as stills (assets/opening/<species>.webp, arrival.js startLineup) at one true scale,
    placed in card heights (--H) from the chosen card's centre (--cx) and bottom (--by, birds) or the foot line (--fy,
-   ground animals: centred in the band under the card); --x, --y the still's left and
+   ground animals: just under the card's bottom edge, so they stand below and in front of it); --x, --y the still's left and
    top, --w, --h its size, all in card heights. Each pops in with a glimmer (::after) after its own animation-delay;
    ground animals have a contact shadow (::before), birds float. */
 .op-lineup { position:absolute; inset:0; z-index:5; pointer-events:none; opacity:0; transition:opacity .4s ease; }
 .op-lineup.on { opacity:1; }
 .op-an { position:absolute; left:calc(var(--cx) + var(--x) * var(--H)); top:calc(var(--by) + var(--y) * var(--H));   /* birds: from the card's bottom */ width:calc(var(--w) * var(--H)); height:calc(var(--h) * var(--H));
   opacity:0; transform-origin:50% 90%; transition:left .6s cubic-bezier(.2, .8, .25, 1), top .6s cubic-bezier(.2, .8, .25, 1), width .6s ease, height .6s ease; }
-.op-an.ground { top:calc(var(--fy) + var(--y) * var(--H)); }   /* ground animals: from the foot line, the band's middle */
+.op-an.ground { top:calc(var(--fy) + var(--y) * var(--H)); }   /* ground animals: from the foot line, just under the card */
 .op-an.back { z-index:0; } .op-an.ground:not(.back) { z-index:1; }
 .op-an > i { display:block; width:100%; height:100%; }
 .op-an img { display:block; width:100%; height:100%; }

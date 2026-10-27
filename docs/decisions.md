@@ -1379,3 +1379,16 @@ board; a mid-build Go abandons the build in 6-23 ms; the lookup of the next tile
 server is busy serving the build (one Python thread). Known: a Go at the very start of a switch build carries
 the arrival's season rather than the world's (the world has no state yet); the panel's other controls are dead
 until the new world wires them, a few seconds into the build.
+
+## 2026-10-27: the start screen's animals stand below and in front of the chosen card
+
+Aaron: "the animals' feet should be below the card, the bigger animals' heads and torsos can be over the card, like they are
+standing below and in front of it." The ground animals' foot line (`--fy`, arrival.js placeLineup) was the middle of the band
+between the card's bottom and the window's, with the tallest animal centred in it, so the whole lineup sat under the card with
+a gap. Now the foot line is 0.035 card heights under the card's bottom edge (FOOT_BELOW), kept at least 0.03 card heights above
+the window's bottom on a short window (FOOT_MARGIN); the lineup layer already draws over the cards (the birds cross the top
+edge the same way), so the deer, lion and coyote now stand over the card's lower edge with their feet and contact shadows just
+below it, and the small animals stand in front of its edge. Verified on the home and Placerville cards at 924 px: card bottom
+at 800, feet at 814-827, the lineup carried across a change of card by the same CSS transition. Known: the band under the
+card (`--mt`) is unchanged, so the space below the feet is now empty dark; shrinking it would let the cards grow. Also seen,
+not new: a chosen card scrolled to the row's edge has its lineup cut off at the window's edge.
