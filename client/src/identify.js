@@ -72,7 +72,10 @@ export class Identify {
     });
     addEventListener('keydown', e => {
       if (e.target instanceof HTMLInputElement || e.target instanceof HTMLSelectElement || e.target instanceof HTMLTextAreaElement) return;
-      if (e.code === 'Escape' && !e.fieldGuideClosed) this.hideCard();   // Esc closes a field-guide card first
+      if (e.code === 'Escape' && !e.fieldGuideClosed) {   // Esc closes a field-guide card first, then the species card
+        if (!els.card.classList.contains('hidden')) e.speciesCardClosed = true;   // ... and only then leaves a body (spirit.js)
+        this.hideCard();
+      }
       if (e.code === 'KeyT') this.setTags(!this.tagsOn);
     });
     els.card.addEventListener('click', e => {

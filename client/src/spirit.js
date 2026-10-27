@@ -88,9 +88,12 @@ export class SpiritControl {
     const $ = id => document.getElementById(id), h1 = $('hud')?.querySelector('h1'), near = $('animalsNear')?.parentElement;
     this.hudWas = { h1: h1?.firstChild?.nodeValue, help: $('help')?.innerHTML, near: near?.title };
     const typing = e => e.target instanceof HTMLInputElement || e.target instanceof HTMLSelectElement || e.target instanceof HTMLTextAreaElement;
+    // B, or Escape when it closed nothing else (the field guide and the species card take it first, and the
+    // credits panel stops it while open), gives the body back and returns to spirit form.
     addEventListener('keydown', e => {
-      if (e.code !== 'KeyB' || e.repeat || typing(e) || e.metaKey || e.ctrlKey || e.altKey) return;
-      this.leave();
+      if (e.repeat || typing(e) || e.metaKey || e.ctrlKey || e.altKey) return;
+      const card = document.getElementById('speciesCard'), cardOpen = !!card && !card.classList.contains('hidden');
+      if (e.code === 'KeyB' || (e.code === 'Escape' && !e.fieldGuideClosed && !e.speciesCardClosed && !cardOpen)) this.leave();
     });
   }
 

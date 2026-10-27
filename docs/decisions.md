@@ -1223,7 +1223,9 @@ the wisp keeps its past positions every 0.15 m (filled in along each frame's mov
 ribbon's strip runs back along them with its weave round the path (a gentler twist along a long trail), the
 longest about 0.8 s of travel capped at 14 m and scaled by the swell, blended from the hover curl below
 1.5 m/s to the full trail above 10 m/s, so a turn leaves a curved trail hanging in the air that the body pulls
-away from (`TRAIL_*` constants beside the ribbon ones). Still
+away from (`TRAIL_*` constants beside the ribbon ones). Escape leaves a body too (his ask), but only when it
+closed nothing else: the field guide and the species card take it first and the credits panel holds it while
+open. Still
 open: the acorn game counts the player as a raven. Rejected: a post-process tint first (the lit route first,
 the pass only for what the light could not cool); a pull-in before the switch (the body takes over on contact,
 input during the blend).
