@@ -636,7 +636,7 @@ export class WoodpeckerControl {
       off.set(Math.sin(f.yaw) * cp * CAM_BACK, CAM_UP - sp * CAM_BACK, Math.cos(f.yaw) * cp * CAM_BACK);
       const fx = -Math.sin(f.yaw), fz = -Math.cos(f.yaw), look = 4;
       aim.set(fx * look, 0.2 + Math.sin(f.pitch) * look, fz * look);
-      k = 5; fov = FLY_FOV;
+      k = 5; fov = Math.min(fov, FLY_FOV);   // longer than the raven's lens, never wider than it (?fov= may already be narrow)
     }
     if (Math.abs(cam.fov - fov) > 0.01) { cam.fov = this.camSettled ? damp(cam.fov, fov, 3, dt) : fov; cam.updateProjectionMatrix(); }
     if (!this.camSettled) { this.camOff.copy(off); this.aimOff.copy(aim); this.camSettled = true; }

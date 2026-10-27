@@ -77,7 +77,8 @@ async function main() {
     screenOpen = true;
   }
   const tile = await loadTile(tileId);
-  const flags = ['game', 'skip'].filter(k => params.get(k) === '1').map(k => `&${k}=1`).join('');
+  const flags = ['game', 'skip'].filter(k => params.get(k) === '1').map(k => `&${k}=1`).join('')
+    + (params.has('fov') ? `&fov=${params.get('fov')}` : '');
   if (pending) history.replaceState(null, '', `?tile=${tile.id}${flags}`);   // never keep the point in the URL
   $('tileName').textContent = tile.id;
   const credits = setupCredits({ tile, link: $('creditsLink'), panel: $('credits') });   // HUD Data link: sources, licences, asset credits
@@ -89,7 +90,14 @@ async function main() {
   renderer.toneMapping = THREE.ACESFilmicToneMapping; renderer.outputColorSpace = THREE.SRGBColorSpace;
   document.body.prepend(renderer.domElement);
   const scene = new THREE.Scene();
-  const camera = new THREE.PerspectiveCamera(70, innerWidth / innerHeight, 0.5, 60000);
+  // The lens: ?fov=<degrees, vertical> (30..110, default LENS_DEFAULT). 70 shows about 103 degrees across a widescreen,
+  // a wide-angle lens; the view is undistorted only when it matches the angle the screen fills in the eye, about
+  // 45-50 degrees across at a desk (under 30 vertical), so a narrower lens makes the hills loom as they do in life
+  // at the cost of peripheral view and the feeling of speed. __we.setFov(deg) changes it live for comparisons.
+  const LENS_DEFAULT = 70, LENS_RANGE = [30, 110];
+  const lensParam = parseFloat(params.get('fov'));
+  const lens = Number.isFinite(lensParam) ? Math.min(LENS_RANGE[1], Math.max(LENS_RANGE[0], lensParam)) : LENS_DEFAULT;
+  const camera = new THREE.PerspectiveCamera(lens, innerWidth / innerHeight, 0.5, 60000);
   addEventListener('resize', () => { camera.aspect = innerWidth / innerHeight; camera.updateProjectionMatrix(); renderer.setSize(innerWidth, innerHeight); layoutHud(); });
   layoutHud();
 
@@ -258,7 +266,8 @@ async function main() {
 
   // tests and comparisons: __we.setDate('01-15') shows that day's measured colour ('' for today)
   const setDate = str => { fixedDate = parseDate(str); state.season = 'auto'; $('season').value = 'auto'; applySeason(); return terrain.seasonStats; };
-  window.__we = { setDate, tile, flight, raven, camera, veg, terrain, far, grass, roads, scene, renderer, minimap, atmosphere, sky, acorns, identify, places, peek, setPeek, sound, animals, arrival, rocks, squirrel, woodpecker, credits };   // debugging handle
+  const setFov = deg => { const v = Math.min(LENS_RANGE[1], Math.max(LENS_RANGE[0], +deg || LENS_DEFAULT)); camera.fov = v; camera.updateProjectionMatrix(); return v; };
+  window.__we = { setDate, setFov, tile, flight, raven, camera, veg, terrain, far, grass, roads, scene, renderer, minimap, atmosphere, sky, acorns, identify, places, peek, setPeek, sound, animals, arrival, rocks, squirrel, woodpecker, credits };   // debugging handle
   if (!screen) makeSound();
 
   // Into the world: season, observer, sound, then the arrival flight over the chosen point.

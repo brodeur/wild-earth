@@ -40,6 +40,8 @@ Run the dev server (static files from the repo root plus a small tile API):
 
 Then open <http://127.0.0.1:8781/viewer/> for the admin viewer, or
 <http://127.0.0.1:8781/client/?tile=utm10n_680_4280> to fly the tile as a raven.
+Add `&fov=45` (vertical degrees, 30-110; default 70) to try a narrower lens, `&date=04-15` for
+another day's measured ground colour, `&base=imagery` for the base photo under it.
 The API answers which tile holds a point (`POST /api/tile {lon, lat}`) and builds a missing
 one in the background (`POST /api/build`, progress at `GET /api/build/<tile_id>`); the
 client's Location box uses it to fly, switch tiles, or build. Points are snapped to a tile
