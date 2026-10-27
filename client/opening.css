@@ -1,77 +1,93 @@
+@import url('https://fonts.googleapis.com/css2?family=DM+Sans:opsz,wght@9..40,300..700&display=swap');
 /* The opening screen (src/arrival.js, OpeningScreen): its own stylesheet so the screen can be reworked apart from the game's HUD (index.html).
    A bar across the top with the season slider (spring to the following winter), and under it to the bottom of the screen
-   a row of tall 9:16 map cards (one per built tile) that scrolls sideways when it overflows; Begin sits on the chosen card. */
-#opening { position:fixed; inset:0; z-index:20; overflow:hidden; background:radial-gradient(120% 90% at 50% 0%, #17211b 0%, #0b0f0d 60%); color:#d3ddd5; transition:opacity .8s ease; }
+   a row of tall 9:16 map cards (one per built tile) that scrolls sideways when it overflows; the chosen card is in front,
+   the others a step back. Over it all a transparent canvas (src/openingScene.js, .op-canvas): the tile's animals round the
+   chosen card and the spirit's wisp as its spinner; Begin sits on the card. --hl: the season colour under the slider's
+   thumb (arrival.js trackColor), for the card's ring, Begin and the slider's marks. */
+@property --hl { syntax:'<color>'; inherits:true; initial-value:#c98a4e; }
+#opening { position:fixed; inset:0; z-index:20; overflow:hidden; background:radial-gradient(120% 90% at 50% 0%, #17211b 0%, #0b0f0d 60%); color:#d3ddd5;
+  font-family:'DM Sans', system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif; transition:opacity .8s ease; }
 #opening[hidden] { display:none; }
 #opening.out { opacity:0; pointer-events:none; }
 html:not(.opening) #opening:not(.out) { display:none; }
-.op-wrap { height:100%; display:flex; flex-direction:column; box-sizing:border-box; }
+.op-wrap { height:100%; display:flex; flex-direction:column; box-sizing:border-box; --hl:#c98a4e; transition:--hl .35s ease;
+  --bar:80px; --mt:max(7.5vh, 36px); }   /* the slider bar's height; the gap between it and the cards (and the cards' grow) */
+.op-canvas { position:absolute; inset:0; z-index:5; pointer-events:none; }
 
 /* the season bar across the top */
-.op-bar { flex:none; padding:14px 32px 0; }
+.op-bar { flex:none; height:var(--bar); box-sizing:border-box; padding:14px 32px 0; }
 
-/* the tile cards: 9:16, the map full bleed, the title over its lower part */
-.op-tiles { flex:1 1 0; min-height:0; display:flex; align-items:center; gap:18px; padding:14px 24px 20px; overflow-x:auto; overflow-y:hidden; scroll-snap-type:x proximity; scrollbar-width:none; }
+/* the tile cards: 9:16, the map full bleed, the locality and its roads top left. All at full brightness until one is
+   chosen; then it grows (1.08) and the rest step back a little. The cards sit centred in the viewport: as far from
+   its bottom as from its top (the bar plus --mt), so --ch, the card's height, is the viewport's less twice that (cqh:
+   .op-tiles is a size container, the viewport under the bar), or on a narrow screen what leaves the neighbours
+   peeking in. The bottom margin is the band the animals stand in, below the chosen card (openingScene.js). */
+.op-tiles { flex:1 1 0; min-height:0; display:flex; align-items:flex-start; gap:14px; padding:0 24px; overflow-x:auto; overflow-y:hidden; scroll-snap-type:x proximity; scrollbar-width:none; container-type:size; }
 .op-tiles::-webkit-scrollbar { display:none; }
 .op-tiles > :first-child { margin-left:auto; }   /* centred when they fit, scrollable from the first card when they do not */
 .op-tiles > :last-child { margin-right:auto; }
-.op-tile { position:relative; flex:none; height:min(100%, (100vw - 64px) * 16 / 9);   /* the height under the bar, or on a narrow screen what leaves the neighbours peeking in */
+.op-tile { --ch:min(100cqh - var(--bar) - 2 * var(--mt), (100vw - 64px) * 16 / 9);
+  position:relative; flex:none; height:var(--ch); margin-top:calc((100cqh - var(--bar) - var(--ch)) / 2);
   aspect-ratio:9/16; border-radius:14px; overflow:hidden; background:#0d1310; scroll-snap-align:center; container-type:inline-size;
-  box-shadow:0 0 0 1px #263128, 0 10px 30px #0008; filter:brightness(.72) saturate(.85); transition:filter .25s, box-shadow .25s; }
-.op-tile:hover { filter:brightness(.9) saturate(.95); }
-.op-tile.sel { filter:none; box-shadow:0 0 0 2px #ffd08a, 0 0 32px #ffd08a3a, 0 10px 30px #0008; }
-.op-tile:has(.op-pick:focus-visible) { outline:2px solid #ffd08a; outline-offset:3px; }
+  box-shadow:0 0 0 1px #263128, 0 10px 30px #0008; transition:transform .5s cubic-bezier(.2, .8, .25, 1), filter .5s ease, box-shadow .35s ease; }
+.op-tiles:has(.op-tile.sel) .op-tile:not(.sel) { transform:scale(.94); filter:brightness(.8) saturate(.88); }
+.op-tiles:has(.op-tile.sel) .op-tile:not(.sel):hover { filter:brightness(.95); }
+.op-tile.sel { transform:scale(1.08); z-index:1;
+  box-shadow:0 0 0 2px color-mix(in srgb, var(--hl) 85%, #fff), 0 0 36px color-mix(in srgb, var(--hl) 30%, transparent), 0 14px 40px #000a; }
+.op-tile:has(.op-pick:focus-visible) { outline:2px solid var(--hl); outline-offset:3px; }
 .op-pick { position:absolute; inset:0; z-index:1; width:100%; height:100%; padding:0; border:0; background:none; cursor:pointer; outline:none; }
 .op-map { position:absolute; top:0; left:50%; height:100%; aspect-ratio:1; transform:translateX(calc(var(--cx, .5) * -100%)); transition:transform .5s ease; }
 .op-map img { display:block; width:100%; height:100%; object-fit:cover; user-select:none; -webkit-user-drag:none; }
-.op-tile::after { content:''; position:absolute; inset:0; z-index:1; pointer-events:none; background:linear-gradient(180deg, #0b0f0d00 45%, #0b0f0d66 68%, #0b0f0de6 100%); }
-.op-name { position:absolute; left:0; right:0; bottom:0; z-index:3; pointer-events:none; display:flex; flex-direction:column; gap:6px; padding:0 7cqw 7cqw; }
-.op-title { display:block; font-size:max(20px, 8.4cqw); font-weight:300; line-height:1.12; letter-spacing:.01em; color:#f3f6f1; text-shadow:0 1px 3px #000a; min-height:1.12em; }
-.op-id { font-size:max(11px, 3.2cqw); color:#b7c4bacc; letter-spacing:.04em; font-variant-numeric:tabular-nums; }
-.op-tile.untitled .op-id { display:none; }
-.op-dot { position:absolute; z-index:1; width:12px; height:12px; margin:-6px 0 0 -6px; border-radius:50%; background:#ffd08a; box-shadow:0 0 0 2px #0b0f0dcc, 0 0 12px #ffd08a; display:none; transition:left .3s, top .3s; }
-.op-dot.on { display:block; }
-.op-tile:not(.sel) .op-dot { display:none; }
+.op-tile::after { content:''; position:absolute; inset:0; z-index:1; pointer-events:none; background:linear-gradient(180deg, #0b0f0dc8 0%, #0b0f0d66 20%, #0b0f0d00 40%); }
+.op-name { position:absolute; left:0; right:0; top:0; z-index:3; pointer-events:none; display:flex; flex-direction:column; gap:1.6cqw; padding:6.5cqw 7cqw 0; }
+.op-title { display:block; font-size:max(22px, 9.6cqw); font-weight:300; line-height:1.08; letter-spacing:-.01em; color:#f3f6f1; text-shadow:0 1px 3px #000a; min-height:1.08em; }
+.op-sub { font-size:max(11.5px, 3.5cqw); line-height:1.3; color:#d3ddd5c0; letter-spacing:.01em; text-shadow:0 1px 2px #000a; }
+.op-sub:empty { display:none; }
 
-/* the selected card's cover while its world builds: a scrim, a spinner and the status under it; when the world is
-   ready the ring fades and grows away and Begin grows into its place. The stack sits above the middle, clear of the
-   centre dot and the title. */
+/* the chosen card's cover while its world builds: a scrim, the spinner (the wisp, drawn on the canvas over it; a CSS
+   ring without it) and the status under it; when the world is ready the spinner gives way and Begin grows into its
+   place, in the card's middle. */
 .op-cover { position:absolute; inset:0; z-index:2; pointer-events:none; background:#0b0f0d00; transition:background .6s ease; }
 .op-tile.loading .op-cover { background:#0b0f0dad; transition-duration:.2s; }
 .op-tile.ready .op-cover { background:#0b0f0d33; }
-.op-mid { position:absolute; left:50%; top:36%; width:0; height:0; }
+.op-mid { position:absolute; left:50%; top:50%; width:0; height:0; }
 .op-spin, .op-begin { position:absolute; left:0; top:0; opacity:0; visibility:hidden; transition:opacity .45s ease, transform .45s ease, visibility 0s linear .45s; }
-.op-spin { width:44px; height:44px; margin:-22px 0 0 -22px; border-radius:50%; border:3px solid #ffd08a33; border-top-color:#ffd08a; box-sizing:border-box; animation:op-spin 0.9s linear infinite; transform:scale(.6); }
+.op-spin { width:44px; height:44px; margin:-22px 0 0 -22px; border-radius:50%; border:3px solid color-mix(in srgb, var(--hl) 25%, transparent); border-top-color:var(--hl); box-sizing:border-box; animation:op-spin 0.9s linear infinite; transform:scale(.6); }
 @keyframes op-spin { to { rotate:360deg; } }
 .op-tile.loading .op-spin { opacity:1; visibility:visible; transform:none; transition:opacity .2s ease, transform .2s ease, visibility 0s; }
 .op-tile.ready .op-spin { transform:scale(2.2); }
-.op-status { position:absolute; top:36px; left:0; width:min(78cqw, 280px); transform:translateX(-50%); text-align:center; font-size:max(12px, 3.4cqw); line-height:1.35; color:#b7c4ba; text-shadow:0 1px 2px #000a;
+.op-wrap.has-wisp .op-spin { display:none; }
+.op-status { position:absolute; top:44px; left:0; width:min(78cqw, 280px); transform:translateX(-50%); text-align:center; font-size:max(12px, 3.4cqw); line-height:1.35; color:#b7c4ba; text-shadow:0 1px 2px #000a;
   display:-webkit-box; -webkit-line-clamp:2; -webkit-box-orient:vertical; overflow:hidden; }
+.op-wrap.has-wisp .op-status { top:min(26cqw, 110px); }   /* under the wisp's core and mist */
 .op-tile:not(.loading) .op-status { display:none; }
+.op-begin { white-space:nowrap; transform:translate(-50%, -50%) scale(.55); background:var(--hl); color:#000; border:0; border-radius:999px; padding:13px 38px; font:inherit; font-size:max(15px, 4.4cqw); font-weight:600; letter-spacing:.02em; cursor:pointer;
+  box-shadow:0 6px 24px #000a, 0 0 30px color-mix(in srgb, var(--hl) 40%, transparent); }
+.op-tile.ready .op-begin { opacity:1; visibility:visible; pointer-events:auto; transform:translate(-50%, -50%); transition:opacity .45s ease .12s, transform .5s cubic-bezier(.2, 1.4, .4, 1) .12s, background .2s, visibility 0s; }
+.op-begin:hover:not(:disabled), .op-begin:focus-visible { background:color-mix(in srgb, var(--hl) 80%, #fff); }
+.op-begin:active:not(:disabled) { background:color-mix(in srgb, var(--hl) 85%, #000); }
+.op-begin:disabled { cursor:default; }
+.op-begin:focus-visible { outline:2px solid color-mix(in srgb, var(--hl) 60%, #fff); outline-offset:3px; }
 
 /* the season slider: the date over the thumb, the season titles under the track at their thirds */
 .op-slider { position:relative; padding:30px 0 6px; cursor:pointer; touch-action:none; outline:none; --p:50%; }
 .op-track { position:relative; height:4px; border-radius:2px; background:linear-gradient(90deg, #8fb59a 0%, #d8bd6a 33.3%, #c98a4e 66.7%, #8ea4b4 100%); opacity:.85; }
 .op-tick { position:absolute; top:-3px; width:2px; height:10px; margin-left:-1px; background:#0b0f0d; border-radius:1px; }
-.op-todaymark { position:absolute; top:-6px; width:3px; height:16px; margin-left:-1.5px; background:#ffd08a; border-radius:2px; box-shadow:0 0 6px #ffd08a99; cursor:pointer; }
-.op-thumb { position:absolute; top:50%; left:var(--p); width:18px; height:18px; margin:-9px 0 0 -9px; border-radius:50%; background:#ffe9b0; box-shadow:0 0 0 3px #0b0f0d, 0 0 0 4px #ffd08a88, 0 2px 8px #000a; transition:box-shadow .2s; }
-.op-slider:focus-visible .op-thumb { box-shadow:0 0 0 3px #0b0f0d, 0 0 0 5px #ffd08a, 0 2px 8px #000a; }
+.op-todaymark { position:absolute; top:-6px; width:3px; height:16px; margin-left:-1.5px; background:var(--hl); border-radius:2px; box-shadow:0 0 6px color-mix(in srgb, var(--hl) 60%, transparent); cursor:pointer; }
+.op-thumb { position:absolute; top:50%; left:var(--p); width:18px; height:18px; margin:-9px 0 0 -9px; border-radius:50%; background:color-mix(in srgb, var(--hl) 45%, #fff); box-shadow:0 0 0 3px #0b0f0d, 0 0 0 4px color-mix(in srgb, var(--hl) 70%, transparent), 0 2px 8px #000a; transition:box-shadow .2s; }
+.op-slider:focus-visible .op-thumb { box-shadow:0 0 0 3px #0b0f0d, 0 0 0 5px var(--hl), 0 2px 8px #000a; }
 .op-slider.drag .op-thumb { transform:scale(1.12); }
-.op-date { position:absolute; bottom:20px; left:50%; transform:translateX(calc(-1 * var(--p))); white-space:nowrap; font-size:13px; font-weight:600; color:#ffe9b0; letter-spacing:.02em; font-variant-numeric:tabular-nums; pointer-events:none; }
-.op-slider.today .op-date { color:#ffd08a; }
+.op-date { position:absolute; bottom:20px; left:50%; transform:translateX(calc(-1 * var(--p))); white-space:nowrap; font-size:13px; font-weight:600; color:color-mix(in srgb, var(--hl) 65%, #fff); letter-spacing:.02em; font-variant-numeric:tabular-nums; pointer-events:none; }
 .op-titles { position:relative; height:1.4em; margin-top:12px; font-size:13.5px; }
-.op-titles span { position:absolute; top:0; transform:translateX(-50%); color:#8fa094; letter-spacing:.04em; white-space:nowrap; transition:color .2s; }
+.op-titles span { position:absolute; top:0; transform:translateX(-50%); color:#8fa094; letter-spacing:.03em; white-space:nowrap; transition:color .2s; }
 .op-titles span:first-child { transform:none; }
 .op-titles span:last-child { transform:translateX(-100%); }
 .op-titles span.on { color:#f3f6f1; font-weight:600; }
-.op-begin { white-space:nowrap; transform:translate(-50%, -50%) scale(.55); background:#3a2c17ee; color:#ffe9b0; border:1px solid #8a6436; border-radius:999px; padding:12px 34px; font:inherit; font-size:max(15px, 4.4cqw); font-weight:600; letter-spacing:.04em; cursor:pointer; box-shadow:0 0 0 1px #0b0f0d88, 0 6px 24px #000a, 0 0 28px #ffd08a33; }
-.op-tile.ready .op-begin { opacity:1; visibility:visible; pointer-events:auto; transform:translate(-50%, -50%); transition:opacity .45s ease .12s, transform .5s cubic-bezier(.2, 1.4, .4, 1) .12s, background .2s, visibility 0s; }
-.op-begin:hover:not(:disabled) { background:#4a3819; }
-.op-begin:disabled { cursor:default; }
-.op-begin:focus-visible { outline:2px solid #ffd08a; outline-offset:2px; }
 
 @media (max-width:640px) {
+  .op-wrap { --bar:76px; }
   .op-bar { padding:10px 16px 0; }
-  .op-tiles { gap:12px; padding:12px 16px 16px; }
+  .op-tiles { gap:9px; padding:0 16px; }
   .op-titles { font-size:13px; }
 }

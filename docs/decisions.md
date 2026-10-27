@@ -1133,8 +1133,26 @@ Location box reaches and builds other tiles); and while the tile loads the chose
 spinner and the live status under it, the spinner becoming the Begin button in place when the world is ready
 (so Begin cannot be pressed early any more), a click on another card showing its spinner before the reload. The
 screen's styles moved out of index.html into client/opening.css so it can be reworked apart from the HUD.
-Rejected: a four-stop season picker (the slider is a date, and the ground colour is monthly); keeping the
-species cards as a "who" (the spirit chooses by touch instead).
+
+Through the evening, each on his word as he watched the working files: nothing is selected when the screen opens
+(all cards at full brightness; a click brings one forward at 1.08 and steps the others back a little, 94% and
+80% brightness, no blur); the cards are centred vertically with the same margin below as above the row (the
+slider bar's band, about 140 px), the height following from that and the width from 9:16, a 14 px gap; the
+title is the tile's locality top-left (OSM place names, a new `places` list in features.json: El Dorado,
+Placerville, Nashville, Daly City, Richmond District) with the roads line small under it, no tile id and no
+arrival dot; DM Sans throughout; the selected card's ring, glow and Begin take the track's own colour under the
+thumb, sliding from spring green through summer gold and fall amber to winter blue, Begin filled with it in
+black text and centred on the card; the loading spinner is the spirit's own wisp (the `Wisp` export, on a
+transparent three.js canvas over the screen) imploding into Begin on ready; and as each species' model loads
+its animal pops in with a spark of light, one at a time in random order, the ground animals grouped on the
+page background in the bottom margin under the selected card and the birds on slow orbits round its top, all
+at one true scale from the deer (so the fence lizard and the vole are specks, as in life; his call whether a
+floor is wanted). The label above the thumb reads "Oct 26 • clear, 20 °C": the date and that day's weather on
+the prepared tile, that day last year from client/weather.json for a chosen day and today's from the dev
+server for today, the words from weather.js's `summarizeDay` (loaded apart, with a small table of WMO codes
+until it arrives, so the screen opens without it). Rejected: a four-stop season picker (the slider is a date,
+and the ground colour is monthly); keeping the species cards as a "who" (the spirit chooses by touch instead);
+cheating the smallest animals' scale (he asked for the deer's scale for all).
 
 ## 2026-10-26: the player arrives as a spirit and becomes the animal it touches
 

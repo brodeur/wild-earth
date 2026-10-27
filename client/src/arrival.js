@@ -3,15 +3,23 @@ import { pointInTileId, switchTile } from './goto.js';
 import { SEASONS, seasonOfDate, parseDate } from './season.js';
 import { PlaceNames } from './placenames.js';
 
+// The weather words come from weather.js when it is there (loaded apart, so the screen still opens without it:
+// dayWords below has its own small table until then, and the label is redrawn once the module arrives).
+let summarizeDay = null, weatherWords = null, onWeatherWords = null;
+import('./weather.js').then(m => { summarizeDay = m.summarizeDay; weatherWords = m.weatherWords; onWeatherWords?.(); }).catch(() => { /* no weather module: the table below */ });
+
 // The opening screen and the arrival (docs/brief.md, "Worlds: a location plus a season"): joining is
 // two choices, where and when, made before the world appears (the player arrives as a spirit); then a
 // scripted 12 s flight brings the player in over the chosen point, so the first thing they see is their own hills.
 //
 // OpeningScreen fills #opening: across the top a season slider from spring to the following winter, and
 // under it a row of tall portrait cards, one per built tile (its map full bleed, its best-known roads as the
-// title). The tile named in `tileId` is the one main.js is already building behind the screen: its card
-// wears a spinner until the world is ready, then Begin. Picking another card reloads the page into that tile
-// (choices carried in sessionStorage), so Begin always finds its world ready and its press can start the sound.
+// title), all a step back until one is clicked. The tile named in `tileId` is the one main.js is already building
+// behind the screen: clicking its card brings it forward under a cover with the spirit's wisp as the spinner and the
+// tile's animals gathering round it (openingScene.js) until the world is ready, then Begin. Clicking another card
+// reloads the page into that tile (choices carried in sessionStorage, that card coming up chosen), so Begin always
+// finds its world ready and its press can start the sound. The selected card, Begin and the slider's marks take the
+// season colour under the slider's thumb.
 // Other places and new tiles are reached in the world (the panel's Location box, goto.js).
 // Arrival drives RavenFlight's pose and chase camera until it hands control to the player.
 
@@ -34,6 +42,27 @@ function majorRoads(features, n = 2) {
     score.set(r.name, (score.get(r.name) || 0) + len * w);
   }
   return [...score].sort((a, b) => b[1] - a[1]).slice(0, n).map(e => e[0]);
+}
+
+// The tile's locality for its card: the best-ranked OSM place in features.json `places` (pipeline/fetch_places.py),
+// ties to the one nearest the tile's centre; null when the tile has none.
+const PLACE_RANK = { city: 0, town: 1, village: 2, suburb: 3, neighbourhood: 4, hamlet: 5, locality: 6 };
+function locality(features) {
+  const size = features?.size_m || 10000, c = size / 2;
+  const ps = (features?.places || []).filter(p => p.name && p.kind in PLACE_RANK);
+  ps.sort((a, b) => PLACE_RANK[a.kind] - PLACE_RANK[b.kind] || Math.hypot(a.x - c, a.north - c) - Math.hypot(b.x - c, b.north - c));
+  return ps[0]?.name || null;
+}
+
+// A day's weather in words for the slider's label ("light rain, 11 °C"): weather.js summarizeDay; should it fail,
+// the commonest daylight code and the high in a small table of WMO codes.
+function dayWords(day, opts) {
+  try { const w = summarizeDay?.(day, opts); if (w) return w; } catch { /* below */ }
+  const WMO = c => c === 0 ? 'clear' : c <= 3 ? 'partly cloudy' : c <= 48 ? 'fog' : c <= 57 ? 'drizzle' : c <= 67 ? 'rain' : c <= 77 ? 'snow' : c <= 82 ? 'showers' : 'thunderstorm';
+  const ci = (opts.fields || []).indexOf('code'), n = {};
+  for (const r of (day?.hourly || []).slice(9, 18)) { const c = Math.round(r?.[ci >= 0 ? ci : r.length - 1]); if (c >= 0) n[c] = (n[c] || 0) + 1; }
+  const code = Object.entries(n).sort((a, b) => b[1] - a[1])[0]?.[0];
+  return [code != null ? (weatherWords?.(+code) || WMO(+code)) : '', day?.tmax != null ? `${Math.round(day.tmax)} °C` : ''].filter(Boolean).join(', ');
 }
 
 // ---- the season slider's year ----------------------------------------------------------------------
@@ -67,6 +96,13 @@ class SeasonYear {
   }
 }
 const label = d => `${MONTH[d.getMonth()]} ${d.getDate()}`;
+// The track's own season colours at its four titles (opening.css .op-track, the same stops): the selected card's
+// highlight, the Begin button and the slider's marks take the colour under the thumb, continuously.
+const TRACK = [[0x8f, 0xb5, 0x9a], [0xd8, 0xbd, 0x6a], [0xc9, 0x8a, 0x4e], [0x8e, 0xa4, 0xb4]];
+function trackColor(p) {
+  const q = Math.min(1, Math.max(0, p)) * 3, k = Math.min(2, Math.floor(q)), f = q - k;
+  return `rgb(${TRACK[k].map((c, i) => Math.round(c + (TRACK[k + 1][i] - c) * f)).join(' ')})`;
+}
 const mmdd = d => `${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`;
 
 export class OpeningScreen {
@@ -82,8 +118,11 @@ export class OpeningScreen {
     else if (!carried?.date && SEASONS.includes(carried?.season) && carried.season !== seasonOfDate()) this.day = this.year.a[TITLES.indexOf(carried.season)];
     this.point = null;          // { x, north } in this tile, or null for the tile centre
     this.ready = false; this.begun = false; this.places = null; this.data = {};
+    this.selected = false;      // nothing is chosen until a card is clicked (or a reload carries the click: carried.selected)
+    onWeatherWords = () => this.update();
     this.render();
     this.load(pending);
+    if (carried?.selected) this.select();
     // Keys typed on the screen stay on the screen (flight, peek, sound and the rest listen on window).
     this.guard = e => { if (!this.root.contains(e.target)) e.stopImmediatePropagation(); };
     for (const ev of ['keydown', 'keyup']) {
@@ -97,7 +136,8 @@ export class OpeningScreen {
   get onToday() { return this.day === this.todayDay; }
   get date() { return this.onToday ? null : mmdd(this.year.date(this.day)); }
   get season() { return seasonOfDate(this.onToday ? new Date() : this.year.date(this.day)); }
-  carry() { return { screen: { season: this.season, date: this.date } }; }
+  // what a tile switch carries: the date, and that the new tile's card was chosen (it comes up selected after the reload)
+  carry() { return { screen: { season: this.season, date: this.date, selected: true } }; }
 
   render() {
     const tiles = this.index.tiles.map(t => t.tile_id);
@@ -115,11 +155,11 @@ export class OpeningScreen {
           </div>
         </div>
         <div class="op-tiles">${tiles.map(id => `
-          <div class="op-tile${id === this.tileId ? ' sel loading' : ''}" data-tile="${esc(id)}">
-            <span class="op-map"><img alt="" src="../tiles/${esc(id)}/client/imagery.png" loading="lazy" draggable="false"><i class="op-dot"></i></span>
-            <button class="op-pick" aria-pressed="${id === this.tileId}" aria-label="${esc(id)}"></button>
+          <div class="op-tile" data-tile="${esc(id)}">
+            <span class="op-map"><img alt="" src="../tiles/${esc(id)}/client/imagery.png" loading="lazy" draggable="false"></span>
+            <button class="op-pick" aria-pressed="false" aria-label="${esc(id)}"></button>
             <span class="op-cover" aria-live="polite"><span class="op-mid"><i class="op-spin" aria-hidden="true"></i><button class="op-begin" tabindex="-1" disabled>Begin</button><span class="op-status">${id === this.tileId ? 'loading…' : ''}</span></span></span>
-            <span class="op-name"><b class="op-title"></b><span class="op-id">${esc(id)}</span></span>
+            <span class="op-name"><b class="op-title"></b><span class="op-sub"></span></span>
           </div>`).join('')}
         </div>
       </div>`;
@@ -134,7 +174,7 @@ export class OpeningScreen {
       row.scrollLeft += e.deltaY * (e.deltaMode === 1 ? 32 : 1); e.preventDefault();
     }, { passive: false });
     requestAnimationFrame(() => this.centreCard());
-    this.update();   // the slider at once; the dot follows when the features arrive
+    this.update();   // the slider and its colour at once; the map's pan follows when the features arrive
   }
 
   cardOf(id) { return this.root.querySelector(`.op-tile[data-tile="${CSS.escape(id)}"]`); }
@@ -148,10 +188,11 @@ export class OpeningScreen {
       c.querySelector('.op-pick').setAttribute('aria-pressed', on);
     }
     const card = this.cardOf(id); if (card) card.querySelector('.op-status').textContent = text;
+    this.scene?.setLoading(true);
   }
 
   centreCard() {
-    const row = this.$('.op-tiles'), card = this.$('.op-tile.sel');
+    const row = this.$('.op-tiles'), card = this.$('.op-tile.sel') || this.cardOf(this.tileId);   // the chosen card, else the prepared one
     if (!row || !card) return;
     const r = row.getBoundingClientRect(), c = card.getBoundingClientRect();
     row.scrollLeft += c.left + c.width / 2 - (r.left + r.width / 2);
@@ -177,6 +218,19 @@ export class OpeningScreen {
     this.$('.op-todaymark').addEventListener('pointerdown', e => { e.stopPropagation(); if (!e.button) this.setDay(this.todayDay); });
   }
 
+  // The animals and the wisp spinner (openingScene.js), loaded apart so the screen works without them: if the module or
+  // WebGL fails, the card keeps its CSS ring and no lineup is drawn.
+  startScene() {
+    if (this.sceneStarted) return;
+    this.sceneStarted = true;
+    import('./openingScene.js').then(({ OpeningScene }) => {
+      if (this.closed) return;
+      this.scene = new OpeningScene({ parent: this.root, card: () => this.$('.op-tile.sel'), tileId: this.tileId });
+      const wrap = this.$('.op-wrap'); wrap.classList.add('lineup'); wrap.classList.toggle('has-wisp', !!this.scene.wisp);
+      if (this.ready && this.cardOf(this.tileId)?.classList.contains('ready')) this.scene.ready();
+    }).catch(e => console.warn('opening: no mini scene', e));
+  }
+
   setDay(i) {
     i = Math.min(this.year.last, Math.max(0, Math.round(i)));
     if (i === this.day) return;
@@ -184,15 +238,17 @@ export class OpeningScreen {
   }
 
   async load(pending) {
-    // every card's title from its roads; the chosen tile's place names for the arrival caption
+    // every card's title: its locality, its best-known roads under it (or the roads alone); the prepared tile's place
+    // names for the arrival caption; its weather for the slider's label
+    this.loadWeather();
     await Promise.all(this.index.tiles.map(async t => {
       const f = await getJSON(`../tiles/${t.tile_id}/client/features.json`);
       const card = this.cardOf(t.tile_id);
       if (card) {
-        const roads = majorRoads(f);
-        card.querySelector('.op-title').textContent = roads.join(', ') || t.tile_id;
-        card.classList.toggle('untitled', !roads.length);
-        card.querySelector('.op-pick').setAttribute('aria-label', roads.length ? `${roads.join(', ')} (${t.tile_id})` : t.tile_id);
+        const roads = majorRoads(f).join(', '), place = locality(f);
+        card.querySelector('.op-title').textContent = place || roads || t.tile_id;
+        card.querySelector('.op-sub').textContent = place ? roads : '';
+        card.querySelector('.op-pick').setAttribute('aria-label', [place, roads].filter(Boolean).join(': ') + ` (${t.tile_id})`);
       }
       if (t.tile_id === this.tileId) { this.data.features = f; this.places = f ? new PlaceNames(f, f.size_m || 10000) : null; }
     }));
@@ -201,7 +257,7 @@ export class OpeningScreen {
     this.update();
   }
 
-  // A point handed over by main.js (?lat=&lon=, or a Go from another page): in this tile the arrival dot moves there;
+  // A point handed over by main.js (?lat=&lon=, or a Go from another page): in this tile the arrival point moves there;
   // in another built tile the page reloads into that one (where it lands in this tile); elsewhere the centre stays.
   preselect(p) {
     const loc = pointInTileId(this.tileId, p);
@@ -210,8 +266,28 @@ export class OpeningScreen {
     if (other) { this.showLoading(other, 'loading…'); switchTile(other, p, this.carry()); }
   }
 
+  // A card clicked: the prepared tile's comes forward (its cover and the lineup, Begin once ready); another reloads into it.
+  // The prepared tile's weather: the year of days (client/weather.json) for a chosen day, that day last year; today's
+  // from the dev server (/api/weather), else the same day last year. The label shows the date alone until they arrive.
+  async loadWeather() {
+    const base = `../tiles/${this.tileId}/client/weather.json`;
+    getJSON(`/api/weather/${encodeURIComponent(this.tileId)}`).then(j => { if (j?.days) { this.wxToday = j; this.update(); } });
+    const w = await getJSON(base);
+    if (w?.days) { this.wx = w; this.update(); }
+  }
+  weatherFor(d) {
+    const key = (y, m, dd) => `${y}-${String(m).padStart(2, '0')}-${String(dd).padStart(2, '0')}`;
+    if (this.onToday && this.wxToday) {
+      const t = this.wxToday, k = t.current?.time?.slice(0, 10) || key(d.getFullYear(), d.getMonth() + 1, d.getDate());
+      const day = t.days[k]; if (day) return dayWords(day, { today: true, fields: t.fields });
+    }
+    const w = this.wx; if (!w) return '';
+    const day = w.days[key(d.getFullYear() - 1, d.getMonth() + 1, d.getDate())];
+    return day ? dayWords(day, { fields: w.fields }) : '';
+  }
+
   pickTile(id) {
-    if (id === this.tileId) return;
+    if (id === this.tileId) return this.select();
     this.showLoading(id, 'loading…');
     switchTile(id, null, this.carry());
   }
@@ -227,10 +303,7 @@ export class OpeningScreen {
   update() {
     const card = this.cardOf(this.tileId);
     if (card) {
-      const size = this.data.features?.size_m || 10000, dot = card.querySelector('.op-dot');
-      const fx = (this.point?.x ?? size / 2) / size, fy = 1 - (this.point?.north ?? size / 2) / size;
-      dot.style.left = `${100 * fx}%`; dot.style.top = `${100 * fy}%`;
-      dot.classList.add('on');
+      const size = this.data.features?.size_m || 10000, fx = (this.point?.x ?? size / 2) / size;
       // The square map shows its middle 9/16 on the portrait card; pan it so a point near an edge stays in view.
       const half = 9 / 32, c = Math.min(1 - half, Math.max(half, fx));
       card.querySelector('.op-map').style.setProperty('--cx', c.toFixed(4));
@@ -238,16 +311,29 @@ export class OpeningScreen {
     const d = this.onToday ? new Date() : this.year.date(this.day), season = this.season;
     const s = this.$('.op-slider'), p = `${(100 * this.year.pos(this.day)).toFixed(3)}%`;
     s.style.setProperty('--p', p);
+    this.$('.op-wrap').style.setProperty('--hl', trackColor(this.year.pos(this.day)));
     s.setAttribute('aria-valuenow', this.day);
     s.setAttribute('aria-valuetext', `${d.toLocaleDateString(undefined, { month: 'long', day: 'numeric' })}, ${season}${this.onToday ? ', today' : ''}`);
     s.classList.toggle('today', this.onToday);
-    this.$('.op-date').textContent = this.onToday ? `${label(d)} · today` : label(d);
+    const wx = this.weatherFor(d);
+    this.$('.op-date').textContent = wx ? `${label(d)} • ${wx}` : label(d);
     for (const t of s.querySelectorAll('.op-titles span')) t.classList.toggle('on', t.dataset.season === season);
     this.onPoint?.(this.point);
   }
 
   // main.js reports "preparing <tileId>: <status>" while the world builds; the card shows the status part under
   // its spinner. An empty report keeps the last line (the spinner turns only on setReady).
+  select() {
+    if (this.selected) return;
+    this.selected = true;
+    const card = this.cardOf(this.tileId); if (!card) return;
+    for (const c of this.root.querySelectorAll('.op-tile')) { const on = c === card; c.classList.toggle('sel', on); c.querySelector('.op-pick').setAttribute('aria-pressed', on); }
+    card.classList.add('loading');
+    this.startScene();
+    if (this.ready) this.showReady(card);
+    requestAnimationFrame(() => this.centreCard());
+  }
+
   setPrep(text) {
     const card = this.cardOf(this.tileId);
     if (!card || this.ready || !text) return;
@@ -256,15 +342,19 @@ export class OpeningScreen {
   // The world is built: the spinner turns into Begin, which takes the focus so Enter begins.
   setReady() {
     this.ready = true;
-    const card = this.cardOf(this.tileId); if (!card || !card.classList.contains('loading')) return;
+    const card = this.cardOf(this.tileId); if (!this.selected || !card || !card.classList.contains('loading')) return;
+    this.showReady(card);
+  }
+  showReady(card) {
     card.classList.remove('loading'); card.classList.add('ready');
+    this.scene?.ready();
     card.querySelector('.op-status').textContent = '';
     const b = card.querySelector('.op-begin'); b.disabled = false; b.tabIndex = 0;
     b.focus({ preventScroll: true });
   }
 
   begin() {
-    if (this.begun || !this.ready) return;
+    if (this.begun || !this.ready || !this.selected) return;
     this.begun = true;
     const b = this.cardOf(this.tileId)?.querySelector('.op-begin'); if (b) b.disabled = true;
     this.onBegin({ tileId: this.tileId, season: this.season, date: this.date, point: this.point, caption: this.caption() });
@@ -275,7 +365,8 @@ export class OpeningScreen {
     for (const ev of ['keydown', 'keyup']) removeEventListener(ev, this.guard, true);
     document.activeElement?.blur?.();
     this.root.classList.add('out');
-    setTimeout(() => { this.root.hidden = true; this.root.innerHTML = ''; }, 900);
+    this.closed = true; this.scene?.stop();
+    setTimeout(() => { this.scene?.dispose(); this.scene = null; this.root.hidden = true; this.root.innerHTML = ''; }, 900);
   }
 }
 
