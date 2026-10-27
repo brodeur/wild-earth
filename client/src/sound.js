@@ -51,6 +51,7 @@ import { sunDirection } from './season.js';
 
 const clamp = (x, a = 0, b = 1) => Math.min(b, Math.max(a, x));
 const smooth = (a, b, x) => { const t = clamp((x - a) / (b - a)); return t * t * (3 - 2 * t); };
+const SPIRIT_WIND = 30, SPIRIT_WIND_RISE = 0.12;   // m/s: the spirit's wind is the raven's up to this, then rises only this much more (wind layer)
 const rand = (a, b) => a + Math.random() * (b - a);
 const typing = e => e.target instanceof HTMLInputElement || e.target instanceof HTMLSelectElement || e.target instanceof HTMLTextAreaElement;
 const STORE = 'wildearth.sound';
@@ -1313,12 +1314,17 @@ export class Soundscape {
     if ((this.paramT += dt) > 0.05) {
       this.paramT = 0;
       const tc = 0.12, g = this.gust, pine = this.pine;
-      const v = clamp(spd / 28, 0, 1.45), low = Math.exp(-agl / 45), high = smooth(80, 400, agl), ambient = 0.35 + 0.65 * high;
-      const rumble = (0.04 * ambient * g + 0.3 * v ** 1.3 * (0.55 + 0.45 * low) * (0.8 + 0.2 * g)) * (1 - 0.35 * pine);
-      const cut = (180 + 900 * v + 900 * v * low + 250 * g) * (1 - 0.4 * pine);
+      // the spirit (spirit.js, flight.spirit) cuts the air rather than fighting it: its rush is the raven's up to
+      // SPIRIT_WIND m/s and rises only gently past it (SPIRIT_WIND_RISE more by 90 m/s), with less rumble, a rumble
+      // filter left more open and the hiss filtered higher, so it is lighter and airier
+      const ghost = !!f.spirit;
+      const v = ghost ? Math.min(spd, SPIRIT_WIND) / 28 + SPIRIT_WIND_RISE * smooth(SPIRIT_WIND, 90, spd) : clamp(spd / 28, 0, 1.45);
+      const low = Math.exp(-agl / 45), high = smooth(80, 400, agl), ambient = 0.35 + 0.65 * high;
+      const rumble = (0.04 * ambient * g + 0.3 * v ** 1.3 * (0.55 + 0.45 * low) * (0.8 + 0.2 * g)) * (1 - 0.35 * pine) * (ghost ? 0.45 : 1);
+      const cut = (180 + 900 * v + 900 * v * low + 250 * g) * (1 - 0.4 * pine) * (ghost ? 1.7 : 1);
       const hiss = 0.006 + 0.035 * high * g + 0.2 * v * v * (0.6 + 0.4 * low) + 0.03 * pine * g;   // airflow roar: broadband when fast
       this.rumbleGain.gain.setTargetAtTime(rumble, now, tc); this.rumbleLP.frequency.setTargetAtTime(cut, now, tc);
-      this.hissGain.gain.setTargetAtTime(hiss, now, tc); this.hissHP.frequency.setTargetAtTime(3800 - 2600 * clamp(v), now, tc);
+      this.hissGain.gain.setTargetAtTime(hiss, now, tc); this.hissHP.frequency.setTargetAtTime(3800 - 2600 * clamp(v) + (ghost ? 1400 : 0), now, tc);
       this.soughGain.gain.setTargetAtTime(pine * 0.22 * g * g, now, 0.3); this.soughBP.frequency.setTargetAtTime(650 + 300 * g, now, 0.3);
       this.windLevel = rumble + hiss;
       // width from the bank, balance toward the lowered wing (roll > 0 dips the left)

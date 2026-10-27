@@ -1162,7 +1162,16 @@ faint blue sun, blue-green sky light and thicker blue-green haze to every materi
 the three playable species are drawn self-lit in full colour with a warm glow that brightens on the wisp's swell
 curve; fades in over 0.9 s as the wisp forms and out with the camera blend. Everyone enters as the spirit, from
 the opening screen and from `?skip=1`; `?skip=1&as=raven|squirrel|woodpecker` keep the old starts for tests.
-Open: fall leaves still read khaki under the blue sun (a post pass would neutralise them), dusk is very dark under
-the veil, the wind roar follows 90 m/s, and the acorn game still counts the player as a raven. Rejected: a
-post-process tint first (the lit route leaves every material untouched); a pull-in before the switch (the body
-takes over on contact, input during the blend).
+Three fixes he picked from the open list the same night: the spirit's dusk keeps a floor of sky light and mist
+(`LOOK_FLOOR`, `LOOK_HAZE_FLOOR`) and the veil thins toward the sun with a blue-violet glow that follows the
+sky's own sunset until the sun is 17° down, so 17:30 is a violet horizon over readable land and 19:30 a moonlit
+blue; fall leaves and gold grass, khaki under the blue sun, go grey-blue-green through a spirit-only post pass
+(the scene copied and a full-screen pass pulling warm hues toward blue-green with a small contrast drop, then
+camera layer 1 redrawn over it with depth testing: the playable species, their glow, the veil and the wisp stay
+warm and are still hidden by hills; `POST_WARM`, `POST_CONTRAST`; about 1.5 ms a frame at pixel ratio 1.5); and
+the spirit's wind is a lighter, airier hiss that is the raven's loudness by 30 m/s and barely rises to 90
+(`SPIRIT_WIND`, `SPIRIT_WIND_RISE` in sound.js). The wisp is exported as `Wisp` (an Object3D with `animate`,
+`setSwell`, `dispose`, no dependency on the flight or the atmosphere) for the opening screen's spinner. Still
+open: the acorn game counts the player as a raven. Rejected: a post-process tint first (the lit route first,
+the pass only for what the light could not cool); a pull-in before the switch (the body takes over on contact,
+input during the blend).

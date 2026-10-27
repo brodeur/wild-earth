@@ -355,7 +355,7 @@ async function main() {
     animals.update(dt, s, state.hour);
     if (!peek.shown) terrain.setLook(look);
     shadows.update(camera);
-    renderer.render(scene, camera);
+    spirit.render(renderer, scene, camera);   // renderer.render, plus the spirit's view's passes while it is on
     spirit.unblendCamera();   // the control's own camera back for its next frame
     sound?.update(dt, { season: s, hour: state.hour, sunElevation: sun.elevation });
     if (peek.pending !== null) { if (peek.pending !== peek.shown) { crossFade(); applyPeek(peek.pending); } peek.pending = null; }

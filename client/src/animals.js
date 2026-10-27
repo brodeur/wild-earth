@@ -234,7 +234,8 @@ const PLAYABLE = [RV, SQ, WP, WF];
 const BODY_Y = SPECIES.map(() => 0); BODY_Y[SQ] = 0.12; BODY_Y[RV] = 0.2; BODY_Y[WP] = BODY_Y[WF] = 0.05;
 // The spirit's view (spirit.js SpiritLook): while the world's light goes faint and blue-green, the playable species are
 // drawn in their own colour, self-lit and clear of the haze: SELF_LIT.value (0..1) blends their lit and hazed colour
-// toward their albedo times SELF_LIGHT. A wrapper on their materials (selfLit), with its own program cache key.
+// toward their albedo times SELF_LIGHT. A wrapper on their materials (selfLit), with its own program cache key. Their meshes are also on camera
+// layer 1, which spirit.js redraws over its post pass so they keep their colour.
 export const SELF_LIT = { value: 0 };
 const SELF_LIGHT = 1.15;
 function selfLit(m) {
@@ -451,7 +452,7 @@ export class Animals {
       mesh.castShadow = mesh.receiveShadow = true;   // receive: patchLambert's csmShadow; cast: the proxies below
       this.group.add(mesh);
       sp.tris = model.tris; sp.model = model;
-      if (PLAYABLE.includes(k)) selfLit(mesh.material);
+      if (PLAYABLE.includes(k)) { selfLit(mesh.material); mesh.layers.enable(1); }   // layer 1: redrawn over the spirit's post pass
       return mesh;
     });
     // Shadow casters (see the header): every species on the near cascade through shadows.js
@@ -561,7 +562,7 @@ export class Animals {
       m.count = 0; m.frustumCulled = false; m.name = `${D.name} mesh lod${t}`; m.visible = false;
       m.castShadow = m.receiveShadow = true;
       m.customDepthMaterial = animalDepthMaterial(model);
-      if (PLAYABLE.includes(k)) selfLit(m.material);
+      if (PLAYABLE.includes(k)) { selfLit(m.material); m.layers.enable(1); }
       this.group.add(m);
       return m;
     });
@@ -580,7 +581,7 @@ export class Animals {
       m.count = 0; m.frustumCulled = false; m.name = `${D.name} mesh air`; m.visible = false;
       m.castShadow = m.receiveShadow = true;
       m.customDepthMaterial = animalDepthMaterial(pm);
-      if (PLAYABLE.includes(k)) selfLit(m.material);
+      if (PLAYABLE.includes(k)) { selfLit(m.material); m.layers.enable(1); }
       this.group.add(m);
       st.tiers.push(m);
       this.rvGM ||= new Uint8Array(cap);

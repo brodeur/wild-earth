@@ -22,7 +22,11 @@ import { SELF_LIT } from './animals.js';
 // thicker (so distance fades into mist), and a veil of mist on a shell past the land covers the sky dome. The playable
 // species are drawn self-lit in their own colour (animals.js SELF_LIT) and carry a warm glow like the acorn game's,
 // faint from far off and brightening on approach with the same easing as the wisp's swell. It fades in over LOOK_T s
-// as the spirit forms and out with the camera's blend on a jump.
+// as the spirit forms and out with the camera's blend on a jump. The sky light and haze have a floor (LOOK_FLOOR), so a
+// spirit's dusk and night are a readable blue. What warm albedo is left (fall leaves, gold grass) a light post pass
+// cools (render(): the frame copied to a texture, a full-screen quad pulling warm hues toward grey-blue-green), then
+// camera layer 1 is drawn over it: the playable species (self-lit, full colour), their glow, the sky's veil with the
+// sunset glow let through it in blue-violet, and the wisp, so they are untouched by the pass and still occluded.
 //
 // The wisp (Wisp below), at the flight body's position so the chase camera and the arrival flight work as they do for
 // the raven: a veil of light rather than a set of spheres. RIBBONS translucent streamers, each a camera-facing strip
@@ -49,6 +53,16 @@ const SPIRIT = 'spirit';
 // the look: fade time (s); the sun's strength and tint; the sky light, haze and sky tints; haze thickening; the glow
 const LOOK_T = 0.9, LOOK_SUN = 0.35, LOOK_SUN_TINT = new THREE.Color(0.4, 0.66, 1.0), LOOK_AMB = new THREE.Color(0.3, 0.82, 0.95);
 const LOOK_HAZE = new THREE.Color(0.5, 0.85, 0.9), LOOK_MIE = 14, LOOK_SKY = new THREE.Color(0.55, 0.86, 0.9);
+// the floor: a spirit's dusk is a blue dusk, readable like moonlight: the sky light times the exposure is kept at least
+// LOOK_FLOOR, the haze's colours at least LOOK_HAZE_FLOOR (the real ones fall to near nothing as the sun goes down)
+const LOOK_FLOOR = 0.8, LOOK_HAZE_FLOOR = 0.35;
+// the sky: the veil's strength, and the sunset glow let through it, cooled to blue-violet (LOOK_GLOW), as strong as the
+// dome's own glow toward the sun times LOOK_GLOW_K, at most LOOK_GLOW_MAX
+const LOOK_VEIL = 0.6, LOOK_GLOW = new THREE.Color(0.62, 0.5, 1.0), LOOK_GLOW_K = 0.6, LOOK_GLOW_MAX = 0.75;
+const LOOK_TWILIGHT = 0.3;   // the glow's least through twilight (sun 2 degrees up to about 17 down), after the dome's has gone
+// the post pass: how far warm hues are pulled to grey-blue-green (by their hue's distance from the blue-green axis), and
+// the contrast it takes off; both fade with the look
+const POST_WARM = 1.0, POST_CONTRAST = 0.1;
 const GLOW_CAP = 256, GLOW_FAR = 0.6, GLOW_COLOR = 0xffb050;   // GLOW_FAR: its strength far off (to 1 at contact)
 const COOL = new THREE.Color(0.6, 0.78, 1.0), WARM = new THREE.Color(1.0, 0.84, 0.58), WHITE = new THREE.Color(0.9, 0.95, 1.0);
 const smooth = u => u * u * (3 - 2 * u);
@@ -56,12 +70,12 @@ const smooth = u => u * u * (3 - 2 * u);
 export class SpiritControl {
   constructor({ scene, renderer, camera, flight, raven, animals, squirrel, woodpecker, atmosphere, onBody = null }) {
     Object.assign(this, { scene, camera, flight, raven, animals, squirrel, woodpecker, onBody });
-    this.view = new SpiritLook(scene, atmosphere, animals, flight, camera);
     this.on = false; this.body = null;   // body: the AI animal the player is in ({ id, code, sex }), or null
     this.fx = null;                      // the flash: { kind: 'in' | 'out', t, dur, from, lift }
     this.coolT = 0; this.ignoreId = null; this.swell = 0; this.prevP = new THREE.Vector3(); this._p = new THREE.Vector3();
-    this.wisp = new Wisp(scene, renderer, camera);
+    this.wisp = new Wisp({ renderer, camera, scene, layer: 1 });   // layer 1: drawn over the spirit's view (SpiritLook.render)
     this.blend = new CameraBlend(camera, flight);
+    this.view = new SpiritLook(scene, renderer, atmosphere, animals, flight, camera, this.wisp);
     this._q = new THREE.Vector3();
     // the HUD's words as index.html has them (the raven's); hud(on) swaps the spirit's in and back
     const $ = id => document.getElementById(id), h1 = $('hud')?.querySelector('h1'), near = $('animalsNear')?.parentElement;
@@ -194,6 +208,8 @@ export class SpiritControl {
   }
   // main.js, right after the Atmosphere's frame update: the spirit's view, fading in while a spirit, out otherwise.
   look(dt) { this.view.update(dt, this.on); }
+  // main.js, in place of renderer.render: the frame with the spirit's view's passes (SpiritLook.render)
+  render(renderer, scene, camera) { this.view.render(renderer, scene, camera); }
   // main.js, around the render: the camera blend over a switch (CameraBlend), and the control's own pose back after.
   blendCamera(dt) { this.blend.apply(dt); }
   unblendCamera() { this.blend.restore(); }
@@ -202,14 +218,59 @@ export class SpiritControl {
 // The spirit's view (see the header). update() runs after Atmosphere.update has set this frame's light and haze and
 // before SkyDome.update copies them to the sun and hemisphere lights, so the lights follow too.
 class SpiritLook {
-  constructor(scene, atmosphere, animals, flight, camera) {
-    Object.assign(this, { atmosphere, animals, flight, camera });
-    this.amt = 0; this._c = new THREE.Color();
-    // the sky's veil: a shell past the land (the dome sits at the far plane), a blue-green mist over the sky and clouds
-    this.shell = new THREE.Mesh(new THREE.SphereGeometry(30000, 32, 16), new THREE.MeshBasicMaterial({ color: 0xffffff, side: THREE.BackSide,
-      transparent: true, opacity: 0, depthWrite: false, toneMapped: false, fog: false }));
-    this.shell.frustumCulled = false; this.shell.visible = false; this.shell.renderOrder = -10; this.shell.name = 'spirit sky tint';
+  constructor(scene, renderer, atmosphere, animals, flight, camera, wisp) {
+    Object.assign(this, { scene, renderer, atmosphere, animals, flight, camera, wisp });
+    this.amt = 0; this.k = 0; this._c = new THREE.Color(); this._b = new THREE.Vector2();
+    scene.traverse(o => { if (o.isLight) o.layers.enable(1); });   // the layer-1 redraw is lit as the first draw
+    // the sky's veil: a shell past the land (the dome sits at the far plane, so only sky pixels are behind the shell), a
+    // blue-green mist over the sky and clouds, thinner toward the sun at the horizon, where a blue-violet glow shows
+    this.shell = new THREE.Mesh(new THREE.SphereGeometry(30000, 48, 24), new THREE.ShaderMaterial({
+      uniforms: { uMist: { value: new THREE.Color() }, uVeil: { value: 0 }, uGlow: { value: new THREE.Color() }, uSun: { value: new THREE.Vector3(0, 1, 0) } },
+      vertexShader: /* glsl */`
+        varying vec3 vW;
+        void main() { vec4 w = modelMatrix * vec4(position, 1.0); vW = w.xyz; gl_Position = projectionMatrix * viewMatrix * w; }`,
+      fragmentShader: /* glsl */`
+        uniform vec3 uMist, uGlow, uSun; uniform float uVeil; varying vec3 vW;
+        void main() {
+          vec3 d = normalize(vW - cameraPosition);
+          vec2 h = normalize(d.xz + 1e-5), s = normalize(uSun.xz + 1e-5);
+          float band = exp(-abs(d.y - 0.03) * 7.0), toward = pow(max(0.0, dot(h, s)), 3.0);
+          float g = band * (0.15 + 0.85 * toward);
+          float a = uVeil * (1.0 - 0.75 * g * step(0.001, dot(uGlow, vec3(1.0))));
+          gl_FragColor = vec4(uMist * a + uGlow * g, a);   // premultiplied: the veil over the sky, the glow added
+        }`,
+      side: THREE.BackSide, transparent: true, depthWrite: false, toneMapped: false,
+      blending: THREE.CustomBlending, blendSrc: THREE.OneFactor, blendDst: THREE.OneMinusSrcAlphaFactor }));
+    this.shell.frustumCulled = false; this.shell.visible = false; this.shell.renderOrder = -10; this.shell.name = 'spirit sky veil';
+    this.shell.layers.set(1);
     scene.add(this.shell);
+    // the post pass: the frame as a texture, and a full-screen quad that cools what is warm in it
+    this.post = { tex: null, scene: new THREE.Scene(), cam: new THREE.OrthographicCamera(-1, 1, 1, -1, 0, 1) };
+    this.postMat = new THREE.ShaderMaterial({
+      uniforms: { tMap: { value: null }, uWarm: { value: 0 }, uContrast: { value: 0 } },
+      vertexShader: 'varying vec2 vUv; void main() { vUv = uv; gl_Position = vec4(position.xy, 0.0, 1.0); }',
+      fragmentShader: /* glsl */`
+        uniform sampler2D tMap; uniform float uWarm, uContrast; varying vec2 vUv;
+        void main() {
+          vec3 c = texture2D(tMap, vUv).rgb;
+          float mx = max(c.r, max(c.g, c.b)), mn = min(c.r, min(c.g, c.b)), ch = mx - mn;
+          float hue = 0.0;   // degrees
+          if (ch > 1e-4) {
+            if (mx == c.r) hue = 60.0 * mod((c.g - c.b) / ch, 6.0);
+            else if (mx == c.g) hue = 60.0 * ((c.b - c.r) / ch + 2.0);
+            else hue = 60.0 * ((c.r - c.g) / ch + 4.0);
+          }
+          float off = abs(mod(hue - 185.0 + 180.0, 360.0) - 180.0) / 180.0;   // 0 on the blue-green axis, 1 opposite it
+          float sat = ch / max(mx, 1e-4);
+          float pull = uWarm * smoothstep(0.22, 0.55, off) * smoothstep(0.02, 0.12, sat);
+          float l = dot(c, vec3(0.2126, 0.7152, 0.0722));
+          vec3 o = mix(c, l * vec3(0.86, 1.02, 1.04), pull);
+          o = (o - 0.42) * (1.0 - uContrast) + 0.42;
+          gl_FragColor = vec4(o, 1.0);
+        }`,
+      depthTest: false, depthWrite: false, toneMapped: false });
+    const quad = new THREE.Mesh(new THREE.PlaneGeometry(2, 2), this.postMat); quad.frustumCulled = false;
+    this.post.scene.add(quad);
     // the glow on the playable animals: camera-facing warm quads, size with the eye's distance, strength with the spirit's
     const g = new THREE.InstancedBufferGeometry().copy(new THREE.PlaneGeometry(2, 2));
     this.gp = new Float32Array(GLOW_CAP * 3); g.setAttribute('aPos', new THREE.InstancedBufferAttribute(this.gp, 3).setUsage(THREE.DynamicDrawUsage));
@@ -241,15 +302,37 @@ class SpiritLook {
         }`,
       transparent: true, depthWrite: false, blending: THREE.AdditiveBlending, toneMapped: false });
     this.glow = new THREE.Mesh(g, this.glowMat); this.glow.frustumCulled = false; this.glow.renderOrder = 9; this.glow.name = 'spirit glow';
+    this.glow.layers.set(1);
     scene.add(this.glow);
+  }
+  // In place of renderer.render(scene, camera) (main.js): the frame, then while the look is on the post pass and the
+  // layer-1 redraw; with the look off but the wisp shown (the arrival, a jump's dive), the layer-1 draw alone.
+  render(renderer, scene, camera) {
+    renderer.render(scene, camera);
+    const k = this.k, wisp = this.wisp.group.visible;
+    if (k <= 0.001 && !wisp) return;
+    const ac = renderer.autoClear; renderer.autoClear = false;
+    if (k > 0.001) {
+      const P = this.post, b = renderer.getDrawingBufferSize(this._b);
+      if (!P.tex || P.tex.image.width !== b.x || P.tex.image.height !== b.y) { P.tex?.dispose(); P.tex = new THREE.FramebufferTexture(b.x, b.y); this.postMat.uniforms.tMap.value = P.tex; }
+      renderer.copyFramebufferToTexture(P.tex);
+      this.postMat.uniforms.uWarm.value = POST_WARM * k; this.postMat.uniforms.uContrast.value = POST_CONTRAST * k;
+      renderer.render(P.scene, P.cam);
+    }
+    const mask = camera.layers.mask; camera.layers.set(1);
+    renderer.render(scene, camera);
+    camera.layers.mask = mask; renderer.autoClear = ac;
   }
   update(dt, on) {
     this.amt = Math.min(1, Math.max(0, this.amt + (on ? dt : -dt) / LOOK_T));
-    const k = smooth(this.amt), u = atmo, a = this.atmosphere, c = this._c;
+    const k = this.k = smooth(this.amt), u = atmo, a = this.atmosphere, c = this._c;
     SELF_LIT.value = 0.88 * k;
     this.shell.visible = this.glow.visible = k > 0.001;
     if (k <= 0.001) return;
-    const lum = col => 0.2126 * col.r + 0.7152 * col.g + 0.0722 * col.b;
+    const lum = col => 0.2126 * col.r + 0.7152 * col.g + 0.0722 * col.b, ex = Math.max(0.05, a.exposure);
+    const sy = u.sunDir.value.y, twilight = THREE.MathUtils.smoothstep(sy, -0.29, -0.1) * (1 - THREE.MathUtils.smoothstep(sy, 0.03, 0.2));
+    const glowL = Math.min(LOOK_GLOW_MAX, Math.max(lum(u.skySun.value) * ex * LOOK_GLOW_K, LOOK_TWILIGHT * twilight));   // the dome's own sunset glow, before the look
+    const floor = (col, f) => { const l = lum(col); if (l * ex < f) col.multiplyScalar(1 + (f / ex / Math.max(l, 1e-4) - 1) * k); };
     const toward = (col, tint, f) => { const l = lum(col) * f; col.lerp(c.copy(tint).multiplyScalar(l), k); };
     // the sun: faint and blue
     a.sunIntensity *= 1 + (LOOK_SUN - 1) * k;
@@ -258,12 +341,16 @@ class SpiritLook {
     // the sky light and the haze's colours: blue-green, at their own brightness
     toward(u.ambientSky.value, LOOK_AMB, 1.9); toward(u.ambientGround.value, LOOK_AMB, 1.0);
     toward(u.skyZenith.value, LOOK_HAZE, 1); toward(u.skyHorizon.value, LOOK_HAZE, 1); toward(u.skySun.value, LOOK_HAZE, 0.9);
+    // the floor: a blue dusk, not a black one
+    floor(u.ambientSky.value, LOOK_FLOOR); floor(u.ambientGround.value, LOOK_FLOOR * 0.5);
+    for (const col of [u.skyZenith.value, u.skyHorizon.value, u.skySun.value]) floor(col, LOOK_HAZE_FLOOR);
     // thicker haze, lifting dark and bright alike
     u.hazeDensity.value *= 1 + (LOOK_MIE - 1) * k; u.hazeContrast.value *= 1 - 0.7 * k;
     // the sky
     this.shell.position.copy(this.camera.position);
-    const b = Math.min(0.85, Math.max(0.06, lum(u.skyHorizon.value) * 0.45 * this.atmosphere.exposure));   // as bright as the horizon
-    this.shell.material.color.copy(LOOK_SKY).multiplyScalar(b); this.shell.material.opacity = 0.6 * k;
+    const su = this.shell.material.uniforms, b = Math.min(0.85, Math.max(0.06, lum(u.skyHorizon.value) * 0.45 * ex));   // as bright as the horizon
+    su.uMist.value.copy(LOOK_SKY).multiplyScalar(b); su.uVeil.value = LOOK_VEIL * k;
+    su.uGlow.value.copy(LOOK_GLOW).multiplyScalar(glowL * k); su.uSun.value.copy(u.sunDir.value);
     // the glow
     let n = 0; const gp = this.gp;
     this.animals.eachPlayable((x, y, z) => { if (n < GLOW_CAP) { gp[n * 3] = x; gp[n * 3 + 1] = y; gp[n * 3 + 2] = z; n++; } });
@@ -373,9 +460,20 @@ function mistTexture(n = 128) {
   const t = new THREE.CanvasTexture(cv); t.colorSpace = THREE.NoColorSpace; return t;
 }
 
-class Wisp {
-  constructor(scene, renderer, camera) {
-    this.renderer = renderer; this.camera = camera; this.t = 0; this.ph = 0;
+// The wisp on its own (exported: the opening screen's spinner uses it too). No flight, atmosphere or game: it needs the
+// renderer (for the drawing buffer's size) and the camera it is seen through (its position and lens), both only in
+// update. API:
+//   new Wisp({ renderer, camera, scene = null, layer = 0 })   builds it; `group` is its Object3D (added to scene if given)
+//   setSwell(s)                    0 the resting form (REST_SCALE, REST_LUM), 1 full size, brightness and swirl
+//   animate(dt, position?, yaw?)   a frame for a standalone wisp: shown, at `position` (a Vector3, default the origin),
+//                                  its ribbons trailing up and back from `yaw` (rad, the flight's frame) when still;
+//                                  moving `position` between frames streams them behind it
+//   update(dt, P, yaw, show, grow, bright, scale, lum, swirl)   the full form the spirit drives (flashes, swell)
+//   dispose()                      off its parent, geometries, materials and textures freed
+// Its parts are world-space and drawn on `layer` (the spirit uses 1); give its camera that layer.
+export class Wisp {
+  constructor({ renderer, camera, scene = null, layer = 0 } = {}) {
+    this.renderer = renderer; this.camera = camera; this.t = 0; this.ph = 0; this.swellK = 0; this._origin = new THREE.Vector3();
     const add = { transparent: true, depthWrite: false, blending: THREE.AdditiveBlending, toneMapped: false };
     // ribbons and motes: one mesh of strips and quads
     const RV = RIBBONS * (SEG + 1) * 2, V = RV + MOTES * 4;
@@ -403,7 +501,9 @@ class Wisp {
     const map = new THREE.CanvasTexture(cv); map.colorSpace = THREE.SRGBColorSpace;
     this.core = new THREE.Sprite(new THREE.SpriteMaterial({ map, color: WARM.clone(), fog: false, ...add }));
     this.core.renderOrder = 9; this.core.name = 'spirit core';
-    this.group = new THREE.Group(); this.group.add(this.mist, this.ribbons, this.core); this.group.visible = false; scene.add(this.group);
+    this.group = new THREE.Group(); this.group.add(this.mist, this.ribbons, this.core); this.group.visible = false; this.group.name = 'wisp';
+    for (const o of [this.mist, this.ribbons, this.core]) o.layers.set(layer);
+    if (scene) scene.add(this.group);
     const rnd = Math.random;
     this.puffs = Array.from({ length: MIST }, (_, i) => ({ a: rnd() * 6.28, w: (0.25 + rnd() * 0.4) * (i % 2 ? 1 : -1), r: 0.08 + rnd() * 0.28, y: (rnd() - 0.5) * 0.25,
       s: 0.7 + (i / (MIST - 1)) * 1.0, rot: rnd() * 6.28, spin: (rnd() - 0.5) * 0.8, ph: rnd() * 6.28, lag: rnd() }));
@@ -415,6 +515,16 @@ class Wisp {
     this.vel = new THREE.Vector3(); this.last = new THREE.Vector3(); this._v = new THREE.Vector3(); this._b = new THREE.Vector2();
     this._n1 = new THREE.Vector3(); this._t = new THREE.Vector3(); this._n2 = new THREE.Vector3(); this._s = new THREE.Vector3(); this._q = new THREE.Vector3(); this._d = new THREE.Vector3();
     this.shown = false;
+  }
+  setSwell(s) { this.swellK = Math.min(1, Math.max(0, +s || 0)); }
+  animate(dt, position = this._origin, yaw = 0) {
+    const s = this.swellK;
+    this.update(dt, position, yaw, true, 1, 1, REST_SCALE + (1 - REST_SCALE) * s, REST_LUM + (1 - REST_LUM) * s, 1 + (SWELL_SWIRL - 1) * s);
+  }
+  dispose() {
+    this.group.removeFromParent();
+    for (const o of [this.mist, this.ribbons, this.core]) { o.geometry.dispose(); o.material.map?.dispose(); o.material.dispose(); }
+    this.mistMat.uniforms.uMap.value?.dispose();
   }
   reset(P) { this.last.copy(P); this.vel.set(0, 0, 0); this.hn = 0; for (const m of this.motes) m.age = m.life = 1; }
   // Motes outward and up from P (rising out of a body).
