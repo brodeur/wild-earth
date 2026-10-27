@@ -107,7 +107,8 @@ import { buildSquirrel, buildWoodpecker, buildRaven, buildDeer, buildQuail, buil
 //
 // The spirit (spirit.js, 2026-10-26): the player starts as a wisp that every animal here is blind to (observer 'spirit':
 // it perceives everything, and update() hands the animals' reactions a player position far off, so nothing flushes,
-// freezes or climbs from it). Touching a raven, a western gray squirrel or an acorn woodpecker puts the player in that
+// freezes or climbs from it). Touching any animal (2026-10-26: every species, PLAYABLE; the raven, squirrel and
+// woodpecker have their own controls, the rest groundControl.js and flierControl.js) puts the player in that
 // body: playableNear finds the one in reach, take(id) lifts it out of the population (held: rebuilds do not respawn it,
 // so there is no double) and hands back where and how it was (info), and release(id, where) puts it back where the
 // player leaves it, in a state its own behaviour carries on from (on the ground, the bark or a limb, or in the air),
@@ -229,9 +230,12 @@ const SPECIES = [
 ];
 const SQ = 0, WP = 1, RV = 2, DR = 3, QU = 4, SJ = 5, HK = 6, TV = 7, ST = 8, FX = 9, CY = 10, RB = 11, VO = 12, ML = 13, BK = 14, WF = 15, JR = 16, TK = 17, GS = 18, LZ = 19;
 SPECIES[DR].planar = true;
-// the spirit's bodies (playableNear): the species a player can take over, and their body centre over the origin (m)
-const PLAYABLE = [RV, SQ, WP, WF];
+// the spirit's bodies (playableNear): the species a player can take over (all of them), and their body centre over the
+// origin standing (m; in the air the origin is the body)
+const PLAYABLE = SPECIES.map((sp, k) => k);
 const BODY_Y = SPECIES.map(() => 0); BODY_Y[SQ] = 0.12; BODY_Y[RV] = 0.2; BODY_Y[WP] = BODY_Y[WF] = 0.05;
+BODY_Y[DR] = 0.75; BODY_Y[BK] = 0.8; BODY_Y[FX] = 0.25; BODY_Y[CY] = 0.4; BODY_Y[ML] = 0.5; BODY_Y[RB] = 0.1; BODY_Y[JR] = 0.15;
+BODY_Y[VO] = 0.02; BODY_Y[TK] = 0.45; BODY_Y[GS] = 0.08; BODY_Y[LZ] = 0.02; BODY_Y[QU] = 0.1; BODY_Y[SJ] = BODY_Y[ST] = 0.1;
 // The spirit's view (spirit.js SpiritLook): while the world's light goes faint and blue-green, the playable species are
 // drawn in their own colour, self-lit and clear of the haze: SELF_LIT.value (0..1) blends their lit and hazed colour
 // toward their albedo times SELF_LIGHT. A wrapper on their materials (selfLit), with its own program cache key. Their meshes are also on camera
@@ -3338,7 +3342,7 @@ export class Animals {
   }
   // ---- the spirit's bodies (see the header) --------------------------------------------------------------
   // The playable animal nearest (x, y, z) within r of its body (a raven in the air within rAir: it is catchable at
-  // speed), other than `skip` (an id), or null: info() of it. Ravens, western gray squirrels, acorn woodpeckers of both sexes.
+  // speed), other than `skip` (an id), or null: info() of it. Any species (PLAYABLE).
   playableNear(x, y, z, r = 2.5, rAir = 4, skip = null) {
     let best = null, bd = Infinity;
     for (const s of PLAYABLE) {
@@ -3359,7 +3363,8 @@ export class Animals {
   info(a) {
     const s = a.sp, g = this.heights.atXZ(a.x, a.z);
     const o = { id: a.id, code: SPECIES[s].code, sex: s === WF ? 'female' : s === WP ? 'male' : null, x: a.x, y: a.y, z: a.z,
-      yaw: wrapAngle(a.yaw + Math.PI), pitch: 0, speed: 0, where: 'ground', tree: a.tree || null, face: a.face, h: a.h, anchor: a.anchor || null };
+      yaw: wrapAngle(a.yaw + Math.PI), pitch: 0, speed: 0, where: 'ground', tree: a.tree || null, face: a.face, h: a.h, anchor: a.anchor || null,
+      size: a.size, soaring: false };
     if (s === SQ) {
       if ((a.state === S_CLIMB || a.state === S_DOWN || a.state === S_RAIDP) && !a.path && a.tree) o.where = 'trunk';
       else if (a.y - g > 0.4) o.where = 'tree';
@@ -3368,10 +3373,18 @@ export class Animals {
       else if (a.state === R_GLIDE || a.state === R_CLIMB) { o.where = 'air'; o.speed = Math.min(25, Math.hypot(a.tx - a.sx, a.ty - a.sy, a.tz - a.sz) / Math.max(0.5, a.dur)); }
       else o.where = a.perchY !== null && a.y - g > 0.5 ? 'top' : 'ground';
       if (o.where === 'air') o.pitch = -a.pitch;   // the animals' pitch is nose down positive
-    } else {
+    } else if (s === WP || s === WF) {
       if (a.state === W_CLING || a.state === S_RAIDP) o.where = 'cling';
       else if (a.state === W_FLY || a.state === W_MOB) { o.where = 'air'; o.speed = a.state === W_FLY ? Math.min(12, a.speed / Math.max(0.5, a.dur)) : 8; }
       else o.where = a.y - g < 0.3 ? 'ground' : 'top';
+    } else {   // the rest (groundControl.js, flierControl.js): in the air, up a tree or a rock, or on the ground
+      o.where = a.air ? 'air' : a.y - g > 0.5 ? 'top' : 'ground';
+      if (o.where === 'air') {
+        o.pitch = -a.pitch;
+        o.soaring = a.state === H_SOAR || a.state === V_SOAR || a.state === V_GLIDE;
+        o.speed = s === HK || s === TV ? (a.state === H_STOOP ? 24 : a.state === H_PULL ? a.speed : a.V || 9)
+          : s === QU ? 13 : s === TK ? TURKEY.fly : Math.min(14, Math.hypot(a.tx - a.sx, a.tz - a.sz) / Math.max(0.5, a.dur));
+      } else o.speed = a.amp > 0.3 ? a.speed || 0 : 0;
     }
     return o;
   }
@@ -3390,6 +3403,8 @@ export class Animals {
     const o = this.info(a);
     this.dropTask(a);
     if (a.state === W_MOB) a.mob = null;
+    const g = a.group;   // a group's leader: another member leads while the player is in it (it comes back a follower)
+    if (g && g.leader === a) { g.leader = null; for (const b of this.list) if (b !== a && b.group === g && this.byId.get(b.id) === b) { g.leader = b; break; } }
     this.byId.delete(id); this.freed.delete(id); this.held.set(id, a);
     this.dirty = true;   // rebuilt (and every matrix rewritten) on this frame's update
     return o;
@@ -3420,7 +3435,8 @@ export class Animals {
         if (o.where === 'top') a.perchY = o.y; else a.y = g;
         a.state = R_PERCH; a.t = 4 + r() * 10; a.pose = 1; a.gm = this.meshOn(RV) ? 1 : 0;
       }
-    } else {
+    } else if (a.sp !== WP && a.sp !== WF) this.releaseOther(a, o, g);
+    else {
       a.path = null;
       if (o.where === 'cling' && o.tree) {
         const tr = oak(o.tree);
@@ -3433,6 +3449,49 @@ export class Animals {
     }
     this.byId.set(id, a); this.freed.add(id); this.dirty = true;
     return a;
+  }
+  // release() for the species of groundControl.js and flierControl.js: back into a state of its own behaviour where the
+  // player left it (o: leaveInfo: where 'air' or 'ground' or 'top', speed, soaring, resting), its group kept.
+  releaseOther(a, o, g) {
+    const r = a.rng, s = a.sp, grp = a.group;
+    a.path = null; a.hidden = 0; a.down = 0; a.lift = 0; a.zig = 0; a.speed = 0; a.e3 = 0; a.wait = 0; a.look = 0;
+    const far = (x, z) => Math.hypot(o.x - x, o.z - z) > 30;
+    if (s === HK || s === TV) {   // soaring on in a circle through here; a hawk off a perch or out of a glide flaps up first
+      a.air = 1; a.fly = 1; a.pose = 0;
+      if (s === HK && !(o.where === 'air' && o.soaring)) { a.state = H_PULL; a.t = 4; a.speed = 9; a.pitch = 0; return; }
+      this.joinCircle(a, s === HK ? 40 + r() * 40 : 50 + r() * 50, r() < 0.5 ? 1 : -1);
+      a.alt = Math.max(s === HK ? 40 : 30, o.y - this.heights.atXZ(a.cx, a.cz)); a.V = 9;
+      a.state = s === HK ? H_SOAR : V_SOAR; a.t = 30 + r() * 40; return;
+    }
+    if (s === SJ || s === ST) {   // perched, on the ground, or flying on to the group's tree
+      a.air = 0; a.moveSeen = grp ? grp.move : 0; a.hopU = 1;
+      if (o.where === 'top') { a.state = J_PERCH; a.t = 3 + r() * 6; a.pose = 1; a.tree = (s === ST ? this.nearestConifer(o.x, o.z, 20) : this.nearestOak(o.x, o.z, 20)) || a.tree || a.anchor; }
+      else if (o.where === 'ground') { a.y = g; a.state = J_GROUND; a.t = 3 + r() * 5; a.pose = 1; }
+      else this.jayFly(a, grp?.tree || a.tree || a.anchor, false);
+      return;
+    }
+    a.air = 0; a.fly = 0; a.y = g; a.vis = 1;
+    if (s === DR || s === BK) { a.state = D_GRAZE; a.t = 2 + r() * 4; a.pose = o.resting ? 1 : Math.min(a.pose, 0.2); }
+    else if (s === FX || s === CY || s === ML) {
+      a.tree = null; a.cool = 4; a.pose = o.resting ? this.poseMax[s] : 0;
+      a.state = o.resting ? M_BED : M_STAND; a.t = o.resting ? 20 + r() * 30 : 2 + r() * 4;
+    } else if (s === RB) { if (far(a.hx, a.hz)) { a.hx = o.x; a.hz = o.z; } a.state = B_FORAGE; a.t = 1 + r() * 3; a.pose = 0; }
+    else if (s === JR) {
+      if (far(a.hx, a.hz)) { a.hx = o.x; a.hz = o.z; }
+      a.state = o.resting ? JK_FORM : JK_FEED; a.t = o.resting ? 20 + r() * 30 : 1 + r() * 3; a.pose = o.resting ? JACK.hunch : 0;
+    } else if (s === VO) {   // a new runway from here along its heading (the old one may be far)
+      const L = 1.5 + r() * 2;
+      a.sx = o.x; a.sz = o.z; a.tx = o.x + Math.sin(a.yaw) * L; a.tz = o.z + Math.cos(a.yaw) * L; a.u = 0; a.h = 0; a.state = VL_PAUSE; a.t = 1 + r() * 2;
+    } else if (s === GS) { a.state = G_FEED; a.t = 2 + r() * 3; a.pose = 0; }
+    else if (s === LZ) {   // a new home on the ground here, facing its way
+      a.site = { kind: 'ground', x: o.x, z: o.z, near: null };
+      const h = a.home ||= { x: 0, y: 0, z: 0, nx: 0, ny: 1, nz: 0, fx: 0, fy: 0, fz: 1 };
+      h.x = o.x; h.z = o.z; this.groundNormal(h.x, h.z, h); h.y = g;
+      let fx = Math.sin(a.yaw), fz = Math.cos(a.yaw); const d = fx * h.nx + fz * h.nz;
+      let fy = -h.ny * d; fx -= h.nx * d; fz -= h.nz * d; const L = Math.hypot(fx, fy, fz) || 1; h.fx = fx / L; h.fy = fy / L; h.fz = fz / L;
+      this.lzHome(a); a.state = L_ALERT; a.t = 2 + r() * 4; a.tries = 0; a.fails = 0; a.pose = 0;
+    } else if (s === QU) { a.state = Q_FORAGE; a.t = 1 + r() * 2; a.pose = 1; a.pitch = 0; if (grp) { a.ox = a.x - grp.x; a.oz = a.z - grp.z; } }
+    else if (s === TK) { a.state = T_FORAGE; a.t = 1 + r() * 3; a.pose = 1; a.pitch = 0; if (grp) { a.ox = a.x - grp.x; a.oz = a.z - grp.z; } }
   }
   // Is this animal still in the live set (not dropped by a rebuild)?
   alive(a) { return this.byId.get(a.id) === a; }

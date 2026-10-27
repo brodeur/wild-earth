@@ -1257,3 +1257,32 @@ gusts are synthetic (the file has no gust column), the drawn sun uses the season
 date (season.js), and the pipeline's lanes and the screen's each copy a small WMO table. Rejected: fetching
 weather in the browser from Open-Meteo directly (the server proxies it, so the client makes no third-party
 calls); a per-season weather instead of a real day (he asked for the day).
+
+## 2026-10-26: every species is playable through two generic controls, parameterised per species
+
+Aaron: "Can you make the other animals playable." Fifteen bespoke controls would be weeks; two generic ones cover
+them, with the species' own behaviours (the hawk's stoop, the lion's stalk, the deer's herd) as a later layer.
+client/src/groundControl.js drives everything that walks (deer, fox, coyote, lion, brush rabbit, jackrabbit,
+vole, ground squirrel, lizard, and the turkey and quail on foot) on the squirrel's footing, terrain and water code
+without the climbing: W builds from a walk to the run (the deer walks, trots, gallops; Shift+W walks, the lion
+stalks), S backs, A/D or a drag turn, Space jumps (from a run the quail and turkey flush instead: a whirring
+climb, a glide, a landing), Shift is alert or sitting up (the lizard's push-ups), E grazes, sniffs, pecks or
+scratches, X lies down, hunches or basks; water stops the small and lets deer, coyote and lion wade; trunks push
+the body aside. One table (`GROUND`) holds each species' walk and run speeds, jump height and length, wading
+depth and chase camera (the vole's 20 cm behind and 7 cm up, in the grass; the lion's 3.5 m back).
+client/src/flierControl.js flies the hawk, vulture, scrub-jay and Steller's jay on RavenFlight with a per-species
+parameter set (flight.js takes one; with none it is the raven as before): cruise and top speed, flap rate, H
+soars the hawk and vulture in a slow circle that holds height (A/D tighten or widen it), the chase camera scaled
+by wingspan, and perch.js takes a per-species perch rule (the hawk only on snags and pines, 5 cm wood 5 m up).
+client/src/playable.js maps species to control and short name (`?skip=1&as=deer|fox|coyote|rabbit|jackrabbit|
+quail|scrubjay|stellers|vulture|hawk|lion|vole|turkey|groundsquirrel|lizard`). animals.js can take and give
+back every species (a group's lead passes to another member; a released animal re-enters one of its own AI
+states: the vole a new runway, the lizard a new home, a rabbit a new form if moved over 30 m), and the AI
+animal's size, sex colouring, antlers, pose and stride carry into the body. The spirit routes a touch to the
+right control. Checked: the deer walking into a gallop, jumping and lying down, then released bedded; the fox
+and hawk entered by touch with their HUD and perceives; the hawk soaring on H; the vole's camera in the grass;
+the quail's flush; the lizard basking; the camera blend across all. Not yet: swimming, climbing (the fox stays
+down), a flushing bird through trunks and no tree landing, the hawk and vulture standing low and hunched
+(flight meshes with no legs or folding wings), the new species outside the acorn game, shrubs hiding the deer
+from its camera; coyote, lion, both rabbits, ground squirrel, turkey, Steller's jay and vulture run on the same
+code but were not opened. Rejected: a control per species (the parameters differ, the verbs do not).

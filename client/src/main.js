@@ -24,6 +24,9 @@ import { Rocks } from './rocks.js';
 import { SquirrelControl } from './squirrelControl.js';
 import { WoodpeckerControl } from './woodpeckerControl.js';
 import { SpiritControl } from './spirit.js';
+import { GroundControl } from './groundControl.js';
+import { FlierControl } from './flierControl.js';
+import { SHORT, playAs } from './playable.js';
 import { setupCredits } from './credits.js';
 import { Weather } from './weather.js';
 
@@ -61,7 +64,8 @@ async function main() {
   const pending = takePendingPoint(params);   // a lat/lon to land at, read once
   const carry = takeCarry();                  // choices carried across a tile switch, read once
   // ?game=1 and ?skip=1 go straight in, as before the opening screen (agents and tests rely on it): as a spirit at the
-  // tile centre, flying (&as=spirit says so), or for tests &as=raven (the old start), &as=squirrel, &as=woodpecker.
+  // tile centre, flying (&as=spirit says so), or for tests &as=raven (the old start), &as=squirrel, &as=woodpecker, or any
+  // other species by its short name (playable.js SHORT: &as=deer, &as=hawk, &as=vole, ...): into the AI one nearest the centre.
   // An in-game Go to another tile carries { arrive } and goes straight into an arrival. Otherwise
   // the opening screen asks where and when while the preselected tile builds behind it. The player always arrives as
   // the spirit (spirit.js) and becomes an animal by touching one.
@@ -228,16 +232,20 @@ async function main() {
   const squirrel = new SquirrelControl({ tile, scene, camera, flight, veg, animals, acorns, atmosphere, rocks, caption: $('caption') });
   // The playable acorn woodpecker (woodpeckerControl.js): clinging, hitching and short undulating flights, the same way.
   const woodpecker = new WoodpeckerControl({ tile, scene, camera, flight, veg, animals, acorns, atmosphere, caption: $('caption') });
-  // The spirit (spirit.js): the form the player arrives in; touching a raven, squirrel or woodpecker puts the player in
-  // that body (onBody: the observer, the perception line, the panel's way back), B or the panel button leaves it.
+  // Every other animal (2026-10-26): the walkers (groundControl.js: deer, fox, coyote, lion, rabbits, vole, ground
+  // squirrel, lizard, turkey, quail) and the fliers (flierControl.js: hawk, vulture, the jays, on RavenFlight).
+  const ground = new GroundControl({ tile, scene, camera, flight, veg, animals, atmosphere, squirrel });
+  const flier = new FlierControl({ scene, camera, flight, raven, animals, atmosphere });
+  // The spirit (spirit.js): the form the player arrives in; touching an animal puts the player in that body (onBody:
+  // the observer, the perception line, the panel's way back), B or the panel button leaves it.
   const onBody = (code, sex = null) => {
     window.__we.playerSpecies = code; window.__we.playerSex = sex;
     animals.setObserver(code); showPerceives(code);
     $('spiritBtn').hidden = code === 'spirit';
   };
-  const spirit = new SpiritControl({ scene, renderer, camera, flight, raven, animals, squirrel, woodpecker, atmosphere, onBody });
+  const spirit = new SpiritControl({ scene, renderer, camera, flight, raven, animals, squirrel, woodpecker, ground, flier, atmosphere, onBody });
   $('spiritBtn').onclick = () => { spirit.leave(); renderer.domElement.focus?.(); };
-  const toSpirit = () => { squirrel.setOn(false); woodpecker.setOn(false); spirit.setOn(true); onBody('spirit'); };
+  const toSpirit = () => { squirrel.setOn(false); woodpecker.setOn(false); ground.setOn(false); flier.setOn(false); spirit.setOn(true); onBody('spirit'); };
 
   // Present-day peek (hold P, or the panel button): the ground shows today's NAIP with the human
   // footprint still in it, the forest and grass step aside and the ghost roads come on, so a player
@@ -308,7 +316,7 @@ async function main() {
   const setFov = deg => { const v = Math.min(LENS_RANGE[1], Math.max(LENS_RANGE[0], +deg || LENS_DEFAULT)); camera.fov = v; camera.updateProjectionMatrix(); return v; };
   const setHour = h => { state.hour = +h; $('time').value = state.hour; return state.hour; };
   animals.weatherTemp = () => (weather.day ? weather.fx.temp : null);   // the lizards' air (animals.js airT)
-  window.__we = { setDate, setFov, setHour, weather, tile, flight, raven, camera, veg, terrain, far, grass, roads, scene, renderer, minimap, atmosphere, sky, acorns, identify, places, peek, setPeek, sound, animals, arrival, rocks, squirrel, woodpecker, spirit, credits };   // debugging handle
+  window.__we = { setDate, setFov, setHour, weather, tile, flight, raven, camera, veg, terrain, far, grass, roads, scene, renderer, minimap, atmosphere, sky, acorns, identify, places, peek, setPeek, sound, animals, arrival, rocks, squirrel, woodpecker, ground, flier, spirit, credits };   // debugging handle
   const as = direct ? params.get('as') : null;
   if (!['raven', 'squirrel', 'woodpecker'].includes(as)) toSpirit();   // a spirit from the start (behind the opening screen too)
   if (!screen) makeSound();
@@ -349,6 +357,10 @@ async function main() {
     onBody('melanerpes_formicivorus', sex);
     woodpecker.setOn(true, sex); woodpecker.arrive(pending ? localXY(tile, pending.lat, pending.lon) : null, null);
   } else if (as === 'raven') onBody('corvus_corax');   // tests: the old start, the raven at the tile centre, flying
+  else if (SHORT[as]) {   // tests: ?skip=1&as=deer (fox, coyote, lion, rabbit, jackrabbit, vole, groundsquirrel, lizard, turkey, quail, scrubjay, stellers, hawk, vulture): into the one nearest the centre
+    const p = pending ? localXY(tile, pending.lat, pending.lon) : null;
+    playAs(as, { animals, spirit, x: p?.x ?? tile.size / 2, z: -(p?.north ?? tile.size / 2) });
+  }
   else if (direct) { /* a spirit at the tile centre, flying */ }
   else if (carried) enter({ season: carried.season, date: carried.date, point: carriedPoint }, false);
   else if (chosen) enter(chosen, true);   // Begin was pressed while the world was loading
@@ -361,7 +373,7 @@ async function main() {
     }
     const dt = Math.min((now - last) / 1000, 0.1); last = now;
     const s = seasonNow(), look = SEASON_LOOK[s], sun = sunDirection(tile.latitude, s, state.hour);
-    const f = screenOpen ? arrival.hold() : squirrel.on ? squirrel.update(dt) : woodpecker.on ? woodpecker.update(dt) : arrival.active ? arrival.update(dt) : spirit.on ? spirit.update(dt) : flight.update(dt);
+    const f = screenOpen ? arrival.hold() : squirrel.on ? squirrel.update(dt) : woodpecker.on ? woodpecker.update(dt) : ground.on ? ground.update(dt) : flier.on ? flier.update(dt) : arrival.active ? arrival.update(dt) : spirit.on ? spirit.update(dt) : flight.update(dt);
     spirit.blendCamera(dt);   // across a switch of body: drawn from a blend of the old view and the new control's (spirit.js)
     raven.update(dt, flight.flapping, flight.speed);
     spirit.draw(dt);   // the wisp, while a spirit

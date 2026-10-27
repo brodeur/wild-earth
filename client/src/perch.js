@@ -13,6 +13,9 @@ import { treeWood, LIBRARY } from './treegen.js';
 // can stand there: the wood at least PERCH_R thick, sloping no more than PERCH_SLOPE (the sine of the climb along it),
 // its top at least PERCH_H above the ground, and p not under it. stepAlong walks a perch along its stem, stopping where
 // it stops being perchable (the thin end, a steep bend, the parent limb at its base).
+// rule (near, perchable, stepAlong; optional): a species' own perch, { r, h, slope, rec } overriding PERCH_R, PERCH_H and
+// PERCH_SLOPE, and rec(rec) whether the plant will do (flierControl.js: a red-tailed hawk on a snag or a pine, a turkey
+// vulture high in a big tree); without one, a raven's.
 // Cost: a query reads one grid cell (a few plants), skips plants and stems by their bounds, and tests the segments of
 // the stems whose box p is inside: typically well under 0.05 ms. Building a plant's stems is a few hundred to a few
 // thousand point transforms (about 0.1-0.4 ms for a big oak), once per plant per visit.
@@ -78,7 +81,7 @@ export class Perches {
   // The closest wood surface to (x, y, z) within r (r <= MAX_Q), thicker than minR, or null; `skip` a plant record to
   // leave out (the one just left); `level`: only wood sloping no more than PERCH_SLOPE. The result (this.hit, reused)
   // is described in the header.
-  near(x, y, z, r, minR = PERCH_R, skip = null, level = false) {
+  near(x, y, z, r, minR = PERCH_R, skip = null, level = false, rule = null) {
     const t0 = performance.now();
     this.index();
     const l = this.grid.get(`${Math.floor(x / CELL)},${Math.floor(z / CELL)}`), H = this.hit;
@@ -108,7 +111,8 @@ export class Perches {
     }
     if (H.rec) {
       H.ground = this.groundAt(H.ax, H.az);
-      H.perch = H.r >= PERCH_R && Math.abs(H.dy) <= PERCH_SLOPE && H.ay + H.r - H.ground >= PERCH_H && H.ny > -0.25;
+      H.perch = H.r >= (rule?.r ?? PERCH_R) && Math.abs(H.dy) <= (rule?.slope ?? PERCH_SLOPE) && H.ay + H.r - H.ground >= (rule?.h ?? PERCH_H) && H.ny > -0.25
+        && (!rule?.rec || rule.rec(H.rec));
     }
     const S = this.stats; S.queries++; S.segs += segs; S.ms += performance.now() - t0;
     return H.rec ? H : null;
@@ -149,17 +153,18 @@ export class Perches {
     return st.parentR = pr;
   }
   // Whether a bird can stand at arc length s of the stem (thick enough, not too steep, high enough, clear of the parent).
-  perchable(rec, st, s, tmp) {
+  perchable(rec, st, s, tmp, rule = null) {
     if (s < 0 || s > st.len) return false;
     if (st.level > 0 && s < this.parentR(rec, st) + 0.1) return false;
+    if (rule?.rec && !rule.rec(rec)) return false;
     const a = this.at(st, s, tmp);
-    return a.r >= PERCH_R && Math.abs(a.dy) <= PERCH_SLOPE && a.y + a.r - this.groundAt(a.x, a.z) >= PERCH_H;
+    return a.r >= (rule?.r ?? PERCH_R) && Math.abs(a.dy) <= (rule?.slope ?? PERCH_SLOPE) && a.y + a.r - this.groundAt(a.x, a.z) >= (rule?.h ?? PERCH_H);
   }
   // From arc length s, how far along the stem (sign: toward the tip +1 or the base -1) the perch goes, up to `max` m,
   // in STEP m steps: the new arc length.
-  stepAlong(rec, st, s, sign, max, tmp) {
+  stepAlong(rec, st, s, sign, max, tmp, rule = null) {
     const STEP = 0.05; let s1 = s;
-    for (let d = STEP; d <= max + 1e-6; d += STEP) { const q = s + sign * d; if (!this.perchable(rec, st, q, tmp)) break; s1 = q; }
+    for (let d = STEP; d <= max + 1e-6; d += STEP) { const q = s + sign * d; if (!this.perchable(rec, st, q, tmp, rule)) break; s1 = q; }
     return s1;
   }
   // ---- climbing: the wood as a tree (squirrels: squirrelControl.js, animals.js) ----------------------------------

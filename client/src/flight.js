@@ -32,6 +32,12 @@ import { Perches } from './perch.js';
 // the raven's does; X / Z rise and sink faster than wings can, space lifts it. No glide or stall: speed is not traded
 // for height, nothing sinks it, and nothing lands it: it passes over the ground, water and limbs alike, kept
 // SPIRIT_FLOOR above the drawn terrain or a pond's or creek's surface.
+// Other birds (flierControl.js; setSpecies): the same flight, landing and hopping with a species' own numbers in `sp`
+// (RAVEN_SP below is the raven's, the defaults): cruise and top speed, the glide's sink, a flap's climb, X / Z rates,
+// turn rate, the contact speed and height that land it, its body above its feet standing, its hop, its perch rule
+// (perch.js: a red-tail on a snag or a pine), the chase camera's scale (by wingspan). A soarer's H (sp.soar) is a soar
+// instead of a hover: it holds its speed in a slow circle (radius sp.soar.r at sp.soar.v m/s, in the way it was
+// banking) climbing a little in the thermal, A / D tightening or opening it, W, S or H again flying on.
 const SPIRIT_CRUISE = 25, SPIRIT_MAX = 90, SPIRIT_BACK = 10, SPIRIT_FLOOR = 0.8;   // m/s, m/s, m/s, m
 const LAND_H = RAVEN_GROUND.bodyY;   // the body above the feet, standing (raven_ground.glb)
 const TERRAIN_SPACING = 10;          // terrain.js default vertex spacing (main.js builds it with the defaults)
@@ -45,6 +51,8 @@ const TAU = Math.PI * 2;
 const wrap = a => Math.atan2(Math.sin(a), Math.cos(a));
 const smooth = u => u * u * (3 - 2 * u);
 const yawOf = (dx, dz) => Math.atan2(-dx, -dz);   // the yaw whose forward (-sin yaw, -cos yaw) points along (dx, dz)
+export const RAVEN_SP = { cruise: 12, vmax: 40, sink: 0.6, flap: 6, climb: 9, turn: 1.4, attachV: ATTACH_V, contactG: CONTACT_G, landH: LAND_H,
+  hopLen: HOP_LEN, hopBack: HOP_BACK, hopT: HOP_T, hopH: HOP_H, cam: 1, perch: null, soar: null };
 export class RavenFlight {
   constructor(camera, heights, dom) {
     this.camera = camera; this.heights = heights;
@@ -53,7 +61,7 @@ export class RavenFlight {
     this.keys = new Set(); this.flap = 0; this.drag = null; this.hover = false; this.sDwell = 0;
     this.view = 'chase';                                  // 'chase' | 'first'
     this.camOff = new THREE.Vector3(); this.camUp = new THREE.Vector3(0, 1, 0); this.camSettled = false;
-    this.flapping = false; this.spirit = false; this.lift = 0;
+    this.flapping = false; this.spirit = false; this.lift = 0; this.sp = RAVEN_SP; this.soarDir = 1;
     this.landed = false; this.groundY = 0; this.lifting = false;
     // in the air: contacts ignored for noLand s (and the plant `leftRec` for leftT s); a falling start off a branch (dropV,
     // m/s); a bounce's cool-down
@@ -84,7 +92,12 @@ export class RavenFlight {
     window.addEventListener('pointerup', () => this.drag = null);
     window.addEventListener('pointermove', e => { if (!this.drag) return; this.yaw -= (e.clientX - this.drag.x) * 0.0035; this.pitch -= (e.clientY - this.drag.y) * 0.0025; this.drag = { x: e.clientX, y: e.clientY }; });
   }
-  setHover(on) { this.hover = on; if (!on && this.speed < 6) this.speed = 8; }
+  setHover(on) {
+    if (on && this.sp.soar) this.soarDir = this.roll < -0.05 ? -1 : 1;   // a soar: on round the way it banks
+    this.hover = on; if (!on && this.speed < 6) this.speed = 8;
+  }
+  // Another bird's numbers (flierControl.js), or null for the raven's.
+  setSpecies(sp) { this.sp = sp ? { ...RAVEN_SP, ...sp } : RAVEN_SP; }
   setView(v) { this.view = v; this.camSettled = false; this.body.visible = v === 'chase'; }
   // Height of the terrain as drawn this frame (tilepackage.js Heightfield.ground: the near fine mesh of the lidar
   // ground where the tile has one, else the 10 m mesh with each square split along its SW-NE diagonal), as
@@ -110,7 +123,7 @@ export class RavenFlight {
   update(dt) {
     if (this.spirit) return this.updateSpirit(dt);
     if (this.landed) return this.updateGround(dt);
-    const k = this.keys, turn = 1.4, pitchRate = 1.0;
+    const k = this.keys, sp = this.sp, turn = sp.turn, pitchRate = 1.0, soar = !!sp.soar && this.hover;
     let yawIn = (k.has('ArrowLeft') || k.has('KeyA') ? 1 : 0) - (k.has('ArrowRight') || k.has('KeyD') ? 1 : 0);
     let pitchIn = (k.has('ArrowUp') ? 1 : 0) - (k.has('ArrowDown') ? 1 : 0);
     this.yaw += yawIn * turn * dt;
@@ -126,26 +139,34 @@ export class RavenFlight {
       else if (this.speed >= -0.01 && (this.sDwell += dt) < 0.5) this.speed = 0;    // pause at zero: hover
       else this.speed = Math.max(-6, this.speed - 5 * dt);                           // then reverse
     } else this.sDwell = 0;
-    if (this.hover) this.speed = THREE.MathUtils.lerp(this.speed, 0, 1 - Math.exp(-dt * 2.5));
+    if (soar) {   // the soar: the circle's turn and bank, its speed, the nose level (a drag or the arrows still pitch it)
+      const S = sp.soar, w = S.v / S.r, bank = this.soarDir * Math.atan(S.v * S.v / (9.8 * S.r)) * 1.3;
+      const teeter = S.teeter ? 0.2 * Math.sin(performance.now() * 0.0017) + 0.09 * Math.sin(performance.now() * 0.0033) : 0;
+      // round the circle; A / D tighten it (the way it turns) or open it, in place of their own turn
+      this.yaw += this.soarDir * w * (1 + 0.6 * yawIn * this.soarDir) * dt - yawIn * turn * dt;
+      this.roll = THREE.MathUtils.lerp(this.roll, bank * (1 + 0.5 * yawIn * this.soarDir) + teeter, 1 - Math.exp(-dt * 1.5));
+      if (!pitchIn && !this.drag) this.pitch = THREE.MathUtils.lerp(this.pitch, 0.02, 1 - Math.exp(-dt * 1.5));
+      this.speed = THREE.MathUtils.lerp(this.speed, S.v, 1 - Math.exp(-dt * 0.8));
+    } else if (this.hover) this.speed = THREE.MathUtils.lerp(this.speed, 0, 1 - Math.exp(-dt * 2.5));
     const gliding = this.speed > 4 && !this.hover;
     if (gliding) {
       // Diving speeds up, climbing slows down; a glide settles toward cruise.
-      this.speed += -Math.sin(this.pitch) * 6 * dt - (this.speed - 12) * 0.15 * dt;
+      this.speed += -Math.sin(this.pitch) * 6 * dt - (this.speed - sp.cruise) * 0.15 * dt;
     }
-    this.speed = THREE.MathUtils.clamp(this.speed, -6, 40);
+    this.speed = THREE.MathUtils.clamp(this.speed, -6, sp.vmax);
     const holding = this.hover || Math.abs(this.speed) < 1.0;   // near zero: hold altitude like hover
     // Attitude first, then fly along the direction the bird actually points, so view and motion never disagree.
     this._q.setFromEuler(this._e.set(this.pitch, this.yaw, 0));
     const dir = this._v.set(0, 0, -1).applyQuaternion(this._q);
     const from = this._from.copy(this.pos);
     this.pos.addScaledVector(dir, this.speed * dt);
-    this.pos.y += (this.flap * 6 - (holding ? 0 : 0.6) + this.dropV) * dt;     // flap climbs, gliding sinks slowly, hovering holds
+    this.pos.y += (this.flap * sp.flap - (holding ? 0 : sp.sink) + (soar ? sp.soar.lift || 0 : 0) + this.dropV) * dt;     // flap climbs, gliding sinks slowly, hovering holds (a soar rises in its thermal)
     this.dropV *= Math.exp(-dt * 2.5);
     const vert = (k.has('KeyX') ? 1 : 0) - (k.has('KeyZ') ? 1 : 0);   // X climbs, Z descends
-    this.pos.y += vert * 9 * dt;
+    this.pos.y += vert * sp.climb * dt;
     this.flap = Math.max(0, this.flap - dt * 2.5);
     // Wings work when the bird is climbing, driving, hovering or too slow to glide; otherwise it glides.
-    this.flapping = this.flap > 0 || vert > 0 || boost || k.has('KeyW') || this.pitch > 0.12 || !gliding;
+    this.flapping = this.flap > 0 || vert > 0 || boost || k.has('KeyW') || (this.pitch > 0.12 && !soar) || (!gliding && !soar);
     this.noLand = Math.max(0, this.noLand - dt); this.bounceT = Math.max(0, this.bounceT - dt);
     if ((this.leftT -= dt) <= 0) this.leftRec = null;
     this.pos.x = THREE.MathUtils.clamp(this.pos.x, 50, this.heights.size - 50);
@@ -214,25 +235,25 @@ export class RavenFlight {
   }
   // ---- contact: take hold of the ground or a branch, or bounce off ---------------------------------------
   contacts(dir, holding) {
-    const P = this.pos, slow = Math.abs(this.speed) < ATTACH_V, free = this.noLand <= 0;
+    const P = this.pos, sp = this.sp, slow = Math.abs(this.speed) < sp.attachV, free = this.noLand <= 0, CG = sp.contactG;
     // the ground: the drawn terrain or a rock's top under the body; water deeper than WADE is skimmed at its surface
     const mesh = this.meshAt(P.x, P.z);
-    if (P.y - mesh < CONTACT_G + 3) {
+    if (P.y - mesh < CG + 3) {
       const F = this.footing(P.x, P.z, P.y), floor = (F.depth > WADE && F.surf != null ? F.surf : F.y);
-      if (P.y < floor + CONTACT_G) {
+      if (P.y < floor + CG) {
         const y = free && slow ? this.standAt(P.x, P.z, F.y, 1e3) : null;
         if (y !== null) return this.enterGround(null, y);
-        P.y = floor + CONTACT_G; this.hitNow = true;
+        P.y = floor + CG; this.hitNow = true;
         this.bounce(dir, 0, 1, 0, 0.1);
       }
     }
     // a branch: the closest wood surface within CONTACT_B of the body
     const Q = this.perchQuery(); if (!Q) return;
-    let h = slow && free ? Q.near(P.x, P.y, P.z, CONTACT_B, undefined, this.leftRec, true) : null;   // a limb to stand on first
+    let h = slow && free ? Q.near(P.x, P.y, P.z, CONTACT_B, undefined, this.leftRec, true, sp.perch) : null;   // a limb to stand on first
     if (h && h.perch) {
       // on the limb at the contact, or the nearest point along it a bird can stand on (clear of the parent limb)
       let s = NaN;
-      for (let d = 0; d <= 0.6 + 1e-6 && s !== s; d += 0.05) for (const q of d ? [h.s + d, h.s - d] : [h.s]) if (s !== s && Q.perchable(h.rec, h.stem, q, this._a)) s = q;
+      for (let d = 0; d <= 0.6 + 1e-6 && s !== s; d += 0.05) for (const q of d ? [h.s + d, h.s - d] : [h.s]) if (s !== s && Q.perchable(h.rec, h.stem, q, this._a, this.sp.perch)) s = q;
       if (s === s) return this.enterGround({ rec: h.rec, st: h.stem, s }, 0);
     }
     h = Q.near(P.x, P.y, P.z, CONTACT_B, undefined, this.leftRec);
@@ -272,7 +293,7 @@ export class RavenFlight {
       G.to.yaw = Math.abs(wrap(along - this.yaw)) <= Math.PI / 2 ? along : wrap(along + Math.PI);
       if (Math.hypot(a.dx, a.dz) < 0.2) G.to.yaw = this.yaw;
     } else { G.to.x = P.x; G.to.z = P.z; G.to.yaw = this.yaw; }
-    G.to.y = feet + LAND_H; G.perch = perch;
+    G.to.y = feet + this.sp.landH; G.perch = perch;
     G.yaw = this.yaw; G.feet = feet; G.hop = 0; G.hopU = 1; G.amp = 0; G.lift = -1; G.peck = 0; G.turnHeld = 0; G.turned = false; G.gap = 0;
     G.visPitch = this.pitch; G.lastX = G.to.x; G.lastZ = G.to.z;
     this.landed = true; this.groundY = feet;
@@ -291,10 +312,10 @@ export class RavenFlight {
   // A limb a raven can stand on within r of (x, y, z) (as a contact finds one), or null.
   perchNear(x, y, z, r) {
     const Q = this.perchQuery(); if (!Q) return null;
-    const h = Q.near(x, y, z, Math.min(r, 1.5), undefined, null, true);
+    const h = Q.near(x, y, z, Math.min(r, 1.5), undefined, null, true, this.sp.perch);
     if (!h || !h.perch) return null;
     let s = NaN;
-    for (let d = 0; d <= 0.6 + 1e-6 && s !== s; d += 0.05) for (const q of d ? [h.s + d, h.s - d] : [h.s]) if (s !== s && Q.perchable(h.rec, h.stem, q, this._a)) s = q;
+    for (let d = 0; d <= 0.6 + 1e-6 && s !== s; d += 0.05) for (const q of d ? [h.s + d, h.s - d] : [h.s]) if (s !== s && Q.perchable(h.rec, h.stem, q, this._a, this.sp.perch)) s = q;
     return s === s ? { rec: h.rec, st: h.stem, s } : null;
   }
   // Where the feet go at (x, z) below `from`: the drawn terrain, a close rock's top, or a creek or pond bed, and the
@@ -325,14 +346,14 @@ export class RavenFlight {
   // over. On a branch: along the limb, the way the body faces along it, as far as it stays perchable; facing across the
   // limb, or at its end, a hop on the spot.
   hop(sign) {
-    const G = this.gnd, x = this.pos.x, z = this.pos.z, len = sign > 0 ? HOP_LEN : HOP_BACK;
+    const G = this.gnd, sp = this.sp, x = this.pos.x, z = this.pos.z, len = sign > 0 ? sp.hopLen : sp.hopBack;
     const fx = -Math.sin(G.yaw) * sign, fz = -Math.cos(G.yaw) * sign;
-    let L = 0, y1 = G.feet, h = HOP_H, tx = x, tz = z, yawTo = G.yaw;
+    let L = 0, y1 = G.feet, h = sp.hopH, tx = x, tz = z, yawTo = G.yaw;
     if (G.perch) {
       const B = G.perch, Q = this.perches, a = Q.at(B.st, B.s, this._a), hl = Math.hypot(a.dx, a.dz);
       const c = hl > 1e-3 ? (a.dx * fx + a.dz * fz) / hl : 0;
       let s1 = B.s;
-      if (Math.abs(c) > 0.4) s1 = Q.stepAlong(B.rec, B.st, B.s, Math.sign(c), len, this._b);
+      if (Math.abs(c) > 0.4) s1 = Q.stepAlong(B.rec, B.st, B.s, Math.sign(c), len, this._b, sp.perch);
       const t = Q.top(B.st, s1, this._b);
       tx = t.x; tz = t.z; y1 = t.y; L = Math.hypot(tx - x, tz - z);
       B.s = s1;
@@ -419,7 +440,7 @@ export class RavenFlight {
       lift = G.stepped ? 0 : 0.05 * Math.sin(Math.PI * h); G.phase = G.hop0 + h * TAU; G.amp = 1;
       if (h >= 1) { G.hop = 0; G.gap = HOP_GAP; }
     } else if (G.hop === 2) {   // a hop forward or back
-      G.hopU = Math.min(1, G.hopU + dt / HOP_T);
+      G.hopU = Math.min(1, G.hopU + dt / this.sp.hopT);
       const h = G.hopU, e = 0.5 * (h + smooth(h));
       P.x = G.hx + G.hdx * e; P.z = G.hz + G.hdz * e; G.feet = G.hy0 + (G.hy1 - G.hy0) * e;
       G.yaw = G.yawFrom + wrap(G.yawTo - G.yawFrom) * smooth(h);
@@ -433,7 +454,7 @@ export class RavenFlight {
       G.amp *= Math.exp(-dt * 10);
     }
     // touchdown: from where it touched to the perch, turning to its heading there, over FOLD_T
-    let y = G.feet + LAND_H + lift;
+    let y = G.feet + this.sp.landH + lift;
     if (this.landT < FOLD_T) {
       const u = smooth(Math.min(1, this.landT / FOLD_T)), F = G.from, T = G.to;
       P.x = F.x + (T.x - F.x) * u; P.z = F.z + (T.z - F.z) * u; y = F.y + (T.y - F.y) * u;
@@ -458,7 +479,7 @@ export class RavenFlight {
     this.updateCamera(dt, dir);
     this.hud(dt);
     const ground = this.heights.atXZ(P.x, P.z);
-    return { hover: true, agl: P.y - ground, elev: P.y, speed: G.hop === 2 ? G.hopL / HOP_T : 0, heading: ((Math.atan2(dir.x, -dir.z) * 180 / Math.PI) + 360) % 360 };
+    return { hover: true, agl: P.y - ground, elev: P.y, speed: G.hop === 2 ? G.hopL / this.sp.hopT : 0, heading: ((Math.atan2(dir.x, -dir.z) * 180 / Math.PI) + 360) % 360 };
   }
   launch(mode) {
     const G = this.gnd; if (G.lift >= 0) return;
@@ -495,7 +516,8 @@ export class RavenFlight {
     // still shows the ground ahead. Smoothed, so banks and turns read as a pursuit, not a stick.
     const perched = this.landed && this.gnd.perch ? 1 : 0;
     this.camP = (this.camP || 0) + (perched - (this.camP || 0)) * (1 - Math.exp(-dt * 3));   // perched: closer in (less of the crown between)
-    const L = THREE.MathUtils.lerp, back = L(L(5.5, 2.5, gk), 1.7, this.camP), up = L(L(1.6, 0.8, gk), 0.55, this.camP), lookAhead = L(6, 0.8, gk), yaw = this.camYaw + 0.4 * gk;
+    const L = THREE.MathUtils.lerp, c = this.spirit ? 1 : this.sp.cam;   // c: the camera's scale for another bird (sp.cam)
+    const back = L(L(5.5, 2.5, gk), 1.7, this.camP) * c, up = L(L(1.6, 0.8, gk), 0.55, this.camP) * c, lookAhead = L(6, 0.8, gk) * c, yaw = this.camYaw + 0.4 * gk;
     const cp = Math.cos(this.pitch * 0.5), sp = Math.sin(this.pitch * 0.5);
     // Smooth the offset from the bird, not the camera position, so forward flight never lags the bird out of frame.
     const off = this._look.set(Math.sin(yaw) * cp, -sp, Math.cos(yaw) * cp).multiplyScalar(back);
@@ -508,7 +530,7 @@ export class RavenFlight {
     }
     let ground = this.heights.atXZ(cam.position.x, cam.position.z);
     if (gk > 1e-3) ground = Math.max(ground, this.meshAt(cam.position.x, cam.position.z));
-    const clear = L(1.5, 0.3, gk);
+    const clear = L(1.5, 0.3, gk) * Math.min(1, c);
     if (this.landed && this.landT < 0.6) cam.position.y -= this.camDip * Math.sin(Math.PI * this.landT / 0.6) * (1 - this.landT / 0.6);   // the landing's dip
     if (cam.position.y < ground + clear) cam.position.y = ground + clear;
     if (gk > 1e-3) {   // on the ground: aim along the eased camera heading

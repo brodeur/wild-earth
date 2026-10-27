@@ -1,14 +1,16 @@
 import * as THREE from 'three';
 import { uniforms as atmo } from './atmosphere.js';
 import { SELF_LIT } from './animals.js';
+import { bodyKind } from './playable.js';
 
 // The spirit: the form the player starts in (main.js enter). A glowing, swirling wisp flown with the raven's keys
 // (RavenFlight with flight.spirit on: flight.js updateSpirit; faster, no glide, no landing, kept over the ground and
 // water), seen by nothing (animals.js: observer 'spirit' perceives every animal and none reacts to it). Touching a
-// playable animal (a common raven, a western gray squirrel or an acorn woodpecker: animals.js playableNear, within
-// TOUCH_R of its body, TOUCH_AIR of a raven in flight so one is catchable at speed) the player is that animal at once,
-// where it was: the raven through RavenFlight (in the air, on the ground or a limb), the squirrel and the woodpecker
-// through their controls (squirrelControl.js, woodpeckerControl.js enterAt), the HUD, help line and perception theirs,
+// playable animal (any species in the world: animals.js playableNear, within TOUCH_R of its body, TOUCH_AIR of a bird in
+// flight so one is catchable at speed) the player is that animal at once, where it was: the raven through RavenFlight
+// (in the air, on the ground or a limb), the squirrel and the woodpecker through their own controls
+// (squirrelControl.js, woodpeckerControl.js enterAt), every walker through groundControl.js and the hawk, vulture and
+// jays through flierControl.js (playable.js bodyKind says which), the HUD, help line and perception theirs,
 // while the wisp dives into the body and implodes (FLASH_IN s). The AI animal entered is held out of the population
 // meanwhile (animals.js take), so there is no double. B (or the panel's "Back to spirit form") leaves the body: the
 // animal is put back where the player leaves it and carries on its own life from there (animals.js release), and the
@@ -37,7 +39,12 @@ import { SELF_LIT } from './animals.js';
 // velocity; and a small warm core sprite. Three draws (the ribbons and motes are one mesh), additive, no tone mapping,
 // no asset files. Everything nearer the lens than ~1.5 m fades out, so a trail passing under the camera does not blot it.
 
-const RIBBONS = 3, SEG = 28, RIB_LEN = 2.2, MIST = 7, MOTES = 22, HIST_T = 0.9;   // HIST_T s: how old a path point still shapes the ribbons
+const RIBBONS = 3, SEG = 40, RIB_LEN = 2.2, MIST = 7, MOTES = 22, HIST_T = 0.9;   // HIST_T s: how old a path point still shapes the ribbons
+// In flight the ribbons hang along the path the spirit has flown (a ring of past positions resampled every TRAIL_RS m,
+// HIST_N of them), so a turn leaves a curved trail in the air that the body pulls away from: the longest one is
+// TRAIL_T s of travel, at most TRAIL_MAX m (x 0.55-1 with the swell); hovering they shorten to the curl up and back
+// (RIB_LEN), blended by speed between TRAIL_SLOW and TRAIL_FAST m/s. Along a long trail the weave turns TRAIL_WAVE rad/m.
+const TRAIL_RS = 0.15, HIST_N = 160, TRAIL_T = 0.8, TRAIL_MAX = 14, TRAIL_SLOW = 1.5, TRAIL_FAST = 10, TRAIL_WAVE = 0.9;
 // The three ribbons differ so they never fall into step: lengths (x RIB_LEN: a short, a middle and a long one), weave
 // periods (x RIB_PERIOD s; ratios with no simple multiples), weave radii (x the base) and starting phases (rad).
 const RIB_LENS = [1, 1.4, 1.9], RIB_PERIOD = 4.2, RIB_PERIODS = [1, 1.31, 1.73], RIB_RADII = [1, 0.8, 1.18], RIB_PHASES = [0, 2.3, 4.1];
@@ -68,8 +75,8 @@ const COOL = new THREE.Color(0.6, 0.78, 1.0), WARM = new THREE.Color(1.0, 0.84, 
 const smooth = u => u * u * (3 - 2 * u);
 
 export class SpiritControl {
-  constructor({ scene, renderer, camera, flight, raven, animals, squirrel, woodpecker, atmosphere, onBody = null }) {
-    Object.assign(this, { scene, camera, flight, raven, animals, squirrel, woodpecker, onBody });
+  constructor({ scene, renderer, camera, flight, raven, animals, squirrel, woodpecker, ground = null, flier = null, atmosphere, onBody = null }) {
+    Object.assign(this, { scene, camera, flight, raven, animals, squirrel, woodpecker, ground, flier, onBody });
     this.on = false; this.body = null;   // body: the AI animal the player is in ({ id, code, sex }), or null
     this.fx = null;                      // the flash: { kind: 'in' | 'out', t, dur, from, lift }
     this.coolT = 0; this.ignoreId = null; this.swell = 0; this.prevP = new THREE.Vector3(); this._p = new THREE.Vector3();
@@ -100,7 +107,7 @@ export class SpiritControl {
     const $ = id => document.getElementById(id), h1 = $('hud')?.querySelector('h1'), help = $('help'), near = $('animalsNear')?.parentElement, W = this.hudWas;
     if (h1?.firstChild) h1.firstChild.nodeValue = on ? 'spirit ' : W.h1;
     if (help) help.innerHTML = on ? '<kbd>↑</kbd><kbd>↓</kbd> pitch · <kbd>←</kbd><kbd>→</kbd> turn · <kbd>W</kbd><kbd>S</kbd> speed (<kbd>shift</kbd> rush) · '
-      + '<kbd>X</kbd><kbd>Z</kbd> rise / sink · <kbd>space</kbd> lift · <kbd>H</kbd> hover · touch an animal to become it: a raven, a gray squirrel, an acorn woodpecker · '
+      + '<kbd>X</kbd><kbd>Z</kbd> rise / sink · <kbd>space</kbd> lift · <kbd>H</kbd> hover · touch an animal to become it (the warm ones: any animal you find) · '
       + '<kbd>V</kbd> view · <kbd>R</kbd> reset · <kbd>M</kbd> map · <kbd>G</kbd> roads · <kbd>P</kbd> present day · <kbd>T</kbd> tags · <kbd>N</kbd> mute · click a tree to identify · drag mouse to look' : W.help;
     if (near) near.title = on ? 'every animal within 150 m: a spirit perceives them all, and none of them perceives it' : W.near;
   }
@@ -133,7 +140,10 @@ export class SpiritControl {
   // Into the animal at once: it leaves the population and the player is it, where it was. The camera blends over from
   // the spirit's (CameraBlend) and the wisp dives into the body and implodes over the blend's first FLASH_IN s.
   enter(id) {
-    const f = this.flight, from = f.pos.clone(), o = this.animals.take(id);
+    const f = this.flight, kind = bodyKind(this.animals.peek(id)?.code);
+    const control = kind === 'ground' ? this.ground : kind === 'flier' ? this.flier : true;
+    if (!control) { this.coolT = 0.3; return false; }   // a body with no control wired (main.js): still a spirit
+    const from = f.pos.clone(), o = this.animals.take(id);
     if (!o) { this.coolT = 0.3; return false; }   // gone meanwhile (out of the live set): still a spirit
     this.blend.capture();
     this.body = { id, code: o.code, sex: o.sex };
@@ -141,6 +151,7 @@ export class SpiritControl {
     this.setOn(false);   // the HUD back to the raven's first: the controls below swap their own words in over it
     if (o.code === 'sciurus_griseus') { this.squirrel.setOn(true); this.squirrel.enterAt(o); }
     else if (o.code === 'melanerpes_formicivorus') { this.woodpecker.setOn(true, o.sex); this.woodpecker.enterAt(o); }
+    else if (kind === 'ground' || kind === 'flier') { control.setOn(true, o.code); control.enterAt(o); }
     else {   // the raven: in the air at its speed, or standing where it stood (on a limb a raven can hold, else hovering there)
       f.yaw = o.yaw; f.roll = 0; f.hover = false;
       if (o.where === 'air') { f.pos.set(o.x, o.y, o.z); f.pitch = THREE.MathUtils.clamp(o.pitch, -0.6, 0.5); f.speed = Math.max(8, o.speed); f.noLand = 0.6; f.cut = true; }
@@ -165,6 +176,8 @@ export class SpiritControl {
     let o;
     if (this.squirrel.on) { o = this.squirrel.leaveInfo(); this.squirrel.setOn(false); }
     else if (this.woodpecker.on) { o = this.woodpecker.leaveInfo(); this.woodpecker.setOn(false); }
+    else if (this.ground?.on) { o = this.ground.leaveInfo(); this.ground.setOn(false); }
+    else if (this.flier?.on) { o = this.flier.leaveInfo(); this.flier.setOn(false); }
     else if (f.landed) o = { x: f.pos.x, y: G.feet, z: f.pos.z, yaw: G.yaw, where: G.perch ? 'top' : 'ground', speed: 0 };
     else o = { x: f.pos.x, y: f.pos.y, z: f.pos.z, yaw: f.yaw, where: 'air', speed: f.speed };
     if (this.body) this.animals.release(this.body.id, o);
@@ -522,7 +535,7 @@ export class Wisp {
     this.motes = Array.from({ length: MOTES }, () => ({ x: 0, y: 0, z: 0, vx: 0, vy: 0, vz: 0, age: 1, life: 0 }));
     this.next = 0; this.emit = 0;
     // the path: recent positions, newest first (hist[0] is the last pushed)
-    this.hist = Array.from({ length: 96 }, () => new THREE.Vector3()); this.ht = new Float64Array(96); this.hn = 0; this.hi = 0;
+    this.hist = Array.from({ length: HIST_N }, () => new THREE.Vector3()); this.ht = new Float64Array(HIST_N); this.hn = 0; this.hi = 0; this._pa = new THREE.Vector3();
     this.spine = Array.from({ length: SEG + 1 }, () => new THREE.Vector3()); this.tan = Array.from({ length: SEG + 1 }, () => new THREE.Vector3());
     this.vel = new THREE.Vector3(); this.last = new THREE.Vector3(); this._v = new THREE.Vector3(); this._b = new THREE.Vector2();
     this._n1 = new THREE.Vector3(); this._t = new THREE.Vector3(); this._n2 = new THREE.Vector3(); this._s = new THREE.Vector3(); this._q = new THREE.Vector3(); this._d = new THREE.Vector3();
@@ -549,6 +562,7 @@ export class Wisp {
   }
   // the newest-first path position k (k < hn)
   h(k) { return this.hist[(this.hi - 1 - k + this.hist.length * 2) % this.hist.length]; }
+  push(v, t) { this.hist[this.hi].copy(v); this.ht[this.hi] = t; this.hi = (this.hi + 1) % this.hist.length; this.hn = Math.min(this.hn + 1, this.hist.length); }
   // grow: the form's scale (0..1, the flashes), bright: its brightness (1 and up)
   // scale, lum: the size and brightness (REST_* at rest, 1 swollen near an animal); swirl: how fast it turns (1 at rest)
   update(dt, P, yaw, show, grow, bright, scale = 1, lum = 1, swirl = 1) {
@@ -557,10 +571,19 @@ export class Wisp {
     this.t += dt; this.ph += dt * swirl; const t = this.t, sw = this.ph, ks = scale, cam = this.camera.position;
     if (dt > 0) { this._v.subVectors(P, this.last).divideScalar(dt); if (this._v.lengthSq() > 200 * 200) { this._v.set(0, 0, 0); this.hn = 0; } this.vel.lerp(this._v, 1 - Math.exp(-dt * 8)); }
     const spd = this.vel.length(), vx = spd > 0.05 ? this.vel.x / spd : 0, vy = spd > 0.05 ? this.vel.y / spd : 0, vz = spd > 0.05 ? this.vel.z / spd : 0;
-    // the path
-    if (!this.hn || this.h(0).distanceToSquared(P) > 0.03 * 0.03) { this.hist[this.hi].copy(P); this.ht[this.hi] = t; this.hi = (this.hi + 1) % this.hist.length; this.hn = Math.min(this.hn + 1, this.hist.length); }
-    // the spine: back along the path from P every L / SEG m; past its end (hovering) on up and back, curling slowly
-    const L = RIB_LEN * ks * (1 + Math.min(spd, 60) / 40) * (0.3 + 0.7 * grow), Lmax = L * Math.max(...RIB_LENS), step = Lmax / SEG;   // the spine runs the longest one's length
+    // the path, resampled every TRAIL_RS m along the move (a fast frame leaves points along its chord, not one at its end)
+    if (!this.hn) this.push(P, t);
+    else {
+      const a = this._pa.copy(this.h(0)); let d = a.distanceTo(P);
+      if (d > TRAIL_RS * HIST_N) { this.hn = 0; this.push(P, t); }
+      else for (; d >= TRAIL_RS; d -= TRAIL_RS) { a.lerp(P, TRAIL_RS / d); this.push(a, t); }
+    }
+    // the lengths: the curl's (RIB_LEN) hovering, TRAIL_T s of travel in flight; L is the shortest ribbon's
+    const fly = smooth(Math.min(1, Math.max(0, (spd - TRAIL_SLOW) / (TRAIL_FAST - TRAIL_SLOW))));
+    const Ltrail = Math.min(spd * TRAIL_T, TRAIL_MAX) * (0.55 + 0.45 * ks) / Math.max(...RIB_LENS);
+    const L = (RIB_LEN * ks * (1 - fly) + Ltrail * fly) * (0.3 + 0.7 * grow), Lmax = L * Math.max(...RIB_LENS), step = Lmax / SEG;   // the spine runs the longest one's length
+    const wave = 2.2 / ks * (1 - fly) + TRAIL_WAVE * fly;   // the weave's turn along the ribbon, rad/m
+    // the spine: back along the path from P every Lmax / SEG m; past its end (hovering) on up and back, curling slowly
     const dx0 = Math.sin(yaw) * 0.55, dz0 = Math.cos(yaw) * 0.55, cw = 0.5 * Math.sin(t * 0.37);
     const drift = this._d.set(dx0 * Math.cos(cw) - dz0 * Math.sin(cw), 0.85, dx0 * Math.sin(cw) + dz0 * Math.cos(cw)).normalize();
     const S = this.spine; S[0].copy(P);
@@ -584,7 +607,7 @@ export class Wisp {
         const u = j / SEG, x = u * Lr / step, i0 = Math.min(SEG - 1, Math.floor(x)), fr = x - i0;   // this ribbon's point along the spine
         const T = this._t.copy(this.tan[i0]).lerp(this.tan[i0 + 1], fr).normalize();
         n1.set(-T.z, 0, T.x); if (n1.lengthSq() < 1e-6) n1.set(1, 0, 0); n1.normalize(); n2.crossVectors(T, n1);
-        const rad = (0.1 + 0.42 * u) * RIB_RADII[r] * ks * grow * breathe, phi = om * sw + ph - 2.2 * u * Lr / ks;
+        const rad = (0.1 + 0.42 * u) * RIB_RADII[r] * ks * grow * breathe, phi = om * sw + ph - wave * u * Lr;
         c.copy(S[i0]).lerp(S[i0 + 1], fr).addScaledVector(n1, rad * Math.cos(phi)).addScaledVector(n2, rad * Math.sin(phi));
         side.subVectors(c, cam).cross(T); if (side.lengthSq() < 1e-8) side.copy(n1); side.normalize();
         const hw = (0.12 - 0.07 * u) * ks * (0.4 + 0.6 * grow), v = (r * (SEG + 1) + j) * 2;
