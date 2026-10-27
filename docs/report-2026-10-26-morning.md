@@ -153,6 +153,8 @@ release, WebGL) was still running; its commit, if it verified, is the last in `g
 | de9d052 | In spirit form the sky is the mist's colour: no horizon line. |
 | 96bc26d, 2124677 | Pipeline: every tile carries last year's hourly weather in local time (Open-Meteo) and the server answers today's; OSM place names in each tile's features (El Dorado, Placerville, Nashville, Daly City, Richmond District). |
 | 9cee468 | Every day has weather: cloud, mist, wind, rain, snow and thunder from the measured day, today's live, a random hour between pre-dawn and post-dusk on a chosen day; a weather row on the HUD. |
+| 2942b18 | The start screen's spinner is the spirit circling and chasing its tail, pre-rendered and played by CSS, and the animals are rendered stills popping in with a glimmer; hover steps the other cards back. |
+| 8d1bcca | Every species is playable: a ground control for everything that walks and a flier control for the hawk, vulture and jays, entered by touching them; the wisp's ribbons trail the path flown. |
 
 Open from the day: the attribution form for generated assets; far placement on the lidar ground beyond the fine square; the squirrel's
 crown camera in leafy oaks.
