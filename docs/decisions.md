@@ -1196,3 +1196,43 @@ nearly opaque and uniform from the horizon up, so the far trees fade into the sk
 open: the acorn game counts the player as a raven. Rejected: a post-process tint first (the lit route first,
 the pass only for what the light could not cool); a pull-in before the switch (the body takes over on contact,
 input during the blend).
+
+## 2026-10-26: every day has weather: last year's hourly weather per tile, today's live, drawn as sky, mist, wind, rain and snow
+
+Aaron's words: "Every day has weather. The weather is today's weather for the square. Picking a season picks a
+random day between pre-dawn and post-dusk in the season to start, and the weather is the weather from that day
+last year." The data: pipeline/fetch_weather.py (a `weather` step) takes the tile centre's hourly weather from
+Open-Meteo's archive (temperature, humidity, precipitation, rain, snow, snow depth, cloud by layer, wind, WMO
+code) for last year and this year to date into client/weather.json, about 630 KB a tile (manifest layer
+client.weather, source open_meteo, CC BY 4.0 with the credit line; the free API is for non-commercial use, which
+the spec notes). The hours are local wall-clock time: Open-Meteo reports on one fixed offset for the whole
+file, which put winter rows an hour ahead, so the fetch is in UTC and converted with the zone's own rules, the
+two changeover days padded or trimmed to 24 rows and sunrise/sunset checked against the daylight flag. The dev
+server answers GET /api/weather/<tile_id> from the forecast API in the same shape plus `current`, cached 30 min;
+only the tile id reaches the server and only the tile centre reaches Open-Meteo.
+
+The client (client/src/weather.js, `__we.weather`): today is today's weather from the server (then today's rows
+in the file, then the same day last year), starting at the current hour held inside pre-dawn..post-dusk; a
+chosen day ('MM-DD') is that day last year at a random hour between sunrise - 30 min and sunset + 30 min, the
+time slider's range set to that span; 'YYYY-MM-DD' names an exact day for tests. Hours between slider steps
+interpolate the rows, looked up by name. What it drives: low and mid cloud set the cumulus layer's cover
+(calibrated so 28% reads as a scatter and 100% a full deck) and high cloud the cirrus, the deck greys and
+flattens the light (the sun to 45%, sky light up 35% and grey) and the cloud base comes from the dew-point
+spread; humidity raises the haze by sqrt(0.5 / (1 - RH)) and fog (a fog code, or saturated air under a
+ground-level deck, less with wind) lies dense in the valleys; wind sets the grass and trees' sway, the clouds'
+drift (the fixed westerly is gone) and a floor under the airspeed wind in the soundscape; rain is one Points
+box of up to 7,000 streaks round the camera, leaning with the wind, thinner for drizzle, with wet ground
+darkening (`wxGround`), lower far contrast and a rain layer of hiss and patter louder under canopy; snow is
+drawn only at 0.3 cm/h and about 2 °C or colder and lies at 2 cm depth or more, whitening the ground, the grass
+blades and cards, fullest on flat and north-facing ground and thinner under trees; thunderstorm codes flash the
+sky with a delayed rumble (none in the data yet); the measured temperature is the lizards' air temperature. The
+HUD gains "weather: light rain · 11 °C · wind 34 km/h SE · last year's 4 Feb", the Data panel the Open-Meteo
+line. The spirit look composes on top of the weather, except that the weather's extra haze is added after it
+(the spirit thickens the haze fourteenfold; rain or fog under that was a white-out). Checked: a February rain
+day on the home tile (grey deck, wet ground, slanted streaks), a March morning on the Placerville tile with
+5 cm of snow white under the conifers, a misty October dawn, a windy March day, and today; 60 fps with rain on
+or off. Open: the reanalysis has no fog codes (fog comes from humidity and low cloud), falling snow is subtle,
+gusts are synthetic (the file has no gust column), the drawn sun uses the season's middle day rather than the
+date (season.js), and the pipeline's lanes and the screen's each copy a small WMO table. Rejected: fetching
+weather in the browser from Open-Meteo directly (the server proxies it, so the client makes no third-party
+calls); a per-season weather instead of a real day (he asked for the day).

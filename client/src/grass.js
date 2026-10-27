@@ -204,6 +204,7 @@ const SHADE_VERT = /* glsl */`
   // (blades share the ground's light), fewer sun flecks low in the sward, ambient occlusion toward
   // the root, and light through the blade when the sun is behind it, strongest looking into the sun.
   vec3 grassShade(vec3 albedo, vec3 N, vec3 posW, float t, float ao, float glow) {
+    albedo = mix(albedo, vec3(0.7, 0.73, 0.78), wxGround.z * mix(1.0, 0.55, t));   // lying snow (weather.js), the tips standing out of it
     vec3 V = normalize(cameraPosition - posW);
     N = normalize(N); if (dot(N, V) < 0.0) N = -N;
     vec3 Nl = normalize(N + vec3(0.0, 1.0, 0.0));
@@ -360,7 +361,7 @@ const IMP_VERT = /* glsl */`
     gl_Position = projectionMatrix * viewMatrix * vec4(p, 1.0);
   }`;
 const IMP_FRAG = /* glsl */`
-  uniform sampler2D impAtlas; uniform vec2 impKind;
+  uniform sampler2D impAtlas; uniform vec2 impKind; uniform vec3 wxGround;
   uniform vec3 aRoot; uniform vec3 aTip; uniform vec3 aHead; uniform vec3 aAwn;
   uniform vec3 bRoot; uniform vec3 bTip; uniform vec3 bHead; uniform vec3 bAwn; uniform vec3 thatchCol;
   varying vec2 vQ; varying vec4 vTile; varying vec2 vSV; varying float vWe; varying vec3 vF; varying vec3 vFth; varying vec3 vSun; varying float vDiff;
@@ -388,6 +389,7 @@ const IMP_FRAG = /* glsl */`
     vec3 leafC = mix(mix(root, tip, smoothstep(0.0, 0.9, t)) * vF, thatchCol * mix(0.75, 1.05, t) * vFth, th);
     vec3 culmC = mix(root, mix(tip, head, 0.6), smoothstep(0.1, 1.0, t)) * vF;
     vec3 c = part < 1.0 ? mix(leafC, culmC, part) : part < 2.0 ? mix(culmC, head * vF, part - 1.0) : mix(head, awn, part - 2.0) * vF;
+    c = mix(c, vec3(0.7, 0.73, 0.78), wxGround.z * mix(1.0, 0.55, t));   // lying snow, as grassShade
     float glow = mix(1.0, 1.6, clamp(part - 1.0, 0.0, 1.0));
     vec3 trans = c * normalize(c + 1e-4) * 1.7;
     vec3 amb = mix(vAmbG, vAmbS, 0.3 + 0.6 * t) * mix(0.35, 1.0, smoothstep(0.0, 0.7, t));

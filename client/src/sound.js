@@ -41,6 +41,10 @@
 //   water    a stream wash plus gurgle, on a panner kept at the nearest point of the nearest flowline, so it
 //            fades in within ~80 m and comes from the right side; quieter in summer and fall.
 //   insects  a pre-rendered loop of field-cricket chirps at dusk in summer and fall over grassland.
+//   rain     the weather's (weather.js): a hiss of band-passed noise and two pre-rendered patter loops (a sparse one of
+//            big drops, a dense one) crossfaded with the rain's rate, louder and more pattering under tree cover;
+//            drizzle a faint hiss, snow nearly silent. Thunder (thunder()) is a low rumble after each flash, later and
+//            softer the farther the strike. The weather's wind is also a floor under the wind layer's airspeed wind.
 //
 // Audio can only start after a user gesture, so the graph is built on the first pointerdown or keydown.
 // N mutes (the context is suspended while muted or while the tab is hidden), C calls (the player's species' call); the volume and mute
@@ -251,7 +255,7 @@ export class Soundscape {
       return b;
     };
     this.windBus = bus('wind'); this.wingBus = bus('wings'); this.voiceBus = bus('voice');
-    this.birdBus = bus('birds'); this.waterBus = bus('water', 0); this.insectBus = bus('insects');
+    this.birdBus = bus('birds'); this.waterBus = bus('water', 0); this.insectBus = bus('insects'); this.rainBus = bus('rain', 0);
 
     // Noise: 6 s stereo loops, ends cross-faded into the start so the loop point does not click, RMS 0.3.
     const sr = ctx.sampleRate, N = Math.floor(sr * 6), F = Math.floor(sr * 0.25);
@@ -313,6 +317,27 @@ export class Soundscape {
     this.cricketGain = gain(0);
     loop(cbuf, 0).connect(filt('lowpass', 7000, 0.5)).connect(this.cricketGain).connect(this.insectBus);
 
+    // Rain: a hiss (white noise band-passed about 4 kHz with a low shelf of wash under it) and two 3 s patter loops of
+    // drop ticks (each a 2-6 ms decaying noise burst, random pan): ~25 big drops a second, and ~250 small ones.
+    this.rainHiss = gain(0); this.rainHissBP = filt('bandpass', 4000, 0.4);
+    loop(this.white, 3.7).connect(this.rainHissBP).connect(this.rainHiss).connect(this.rainBus);
+    this.rainWash = gain(0);
+    loop(this.brown, 1.9).connect(filt('lowpass', 900, 0.5)).connect(this.rainWash).connect(this.rainBus);
+    const patter = (rate, len, amp) => {
+      const n = Math.floor(sr * 3), b = ctx.createBuffer(2, n, sr), Lc = b.getChannelData(0), Rc = b.getChannelData(1);
+      const drops = Math.floor(rate * 3);
+      for (let k = 0; k < drops; k++) {
+        const s0 = Math.floor(Math.random() * n), dl = Math.floor(sr * rand(len[0], len[1])), a = amp * rand(0.3, 1), pan = rand(-0.9, 0.9);
+        const gl = a * Math.sqrt((1 - pan) / 2), gr = a * Math.sqrt((1 + pan) / 2); let prev = 0;
+        for (let i = 0; i < dl; i++) { const w = Math.random() * 2 - 1, v = (w - prev * 0.6) * Math.exp(-5 * i / dl); prev = w; const q = (s0 + i) % n; Lc[q] += v * gl; Rc[q] += v * gr; }
+      }
+      return b;
+    };
+    this.patterBig = gain(0); this.patterFine = gain(0);
+    loop(patter(25, [0.004, 0.009], 0.5), 0).connect(filt('bandpass', 2200, 0.6)).connect(this.patterBig).connect(this.rainBus);
+    loop(patter(250, [0.002, 0.004], 0.25), 0).connect(filt('highpass', 1500, 0.5)).connect(this.patterFine).connect(this.rainBus);
+    this.rainLevel = 0;
+
     this._runState(); this._ui();
   }
 
@@ -338,6 +363,21 @@ export class Soundscape {
     } else v.input.connect(bus);
     this.voices.push(v);
     return v;
+  }
+
+  // Thunder: `delay` s after the flash, a crack (near strikes only) then a rolling rumble of low-passed brown noise,
+  // swelling and fading in a few uneven waves over 3-8 s; k 0..1 its strength (nearer is louder).
+  thunder(delay, k = 1) {
+    const ctx = this.ctx; if (!ctx || ctx.state !== 'running' || this.muted) return;
+    const t = ctx.currentTime + delay, len = 3 + 5 * Math.random(), v = this._voice(null, 0.9 * k, this.rainBus);
+    const s = v.add(new AudioBufferSourceNode(ctx, { buffer: this.brown, loop: true })); s.start(t, Math.random() * 5); s.stop(t + len + 0.2); v.end = Math.max(v.end, t + len + 0.2);
+    const lp = v.filter('lowpass', 120 + 260 * k, 0.7), g = v.gain(0);
+    s.connect(lp).connect(g).connect(v.input);
+    g.gain.setValueAtTime(0, t); g.gain.linearRampToValueAtTime(k > 0.7 ? 1 : 0.6, t + (k > 0.7 ? 0.05 : 0.4));
+    let tt = t + 0.5;
+    while (tt < t + len - 0.6) { const step = rand(0.3, 0.9); g.gain.linearRampToValueAtTime(rand(0.25, 0.9) * (1 - (tt - t) / len), tt + step); tt += step; }
+    g.gain.linearRampToValueAtTime(0, t + len);
+    lp.frequency.setValueAtTime(120 + 260 * k, t); lp.frequency.exponentialRampToValueAtTime(90, t + len);
   }
 
   _whoosh(t, strength, pm) {
@@ -1259,7 +1299,8 @@ export class Soundscape {
 
   // ---- per frame -----------------------------------------------------------------------------------------
   // env: { season, hour, sunElevation (radians) }. Call after the render so camera.matrixWorld is current.
-  update(dt, { season = 'spring', hour = 12, sunElevation = 0.5 } = {}) {
+  // weather (weather.js fx, optional): its wind (windMs, gust) is a floor under the airspeed wind; rain and snow the rain layer.
+  update(dt, { season = 'spring', hour = 12, sunElevation = 0.5, weather = null } = {}) {
     this._hook();
     const ctx = this.ctx; if (!ctx) return;
     this.t += dt;
@@ -1318,7 +1359,10 @@ export class Soundscape {
       // SPIRIT_WIND m/s and rises only gently past it (SPIRIT_WIND_RISE more by 90 m/s), with less rumble, a rumble
       // filter left more open and the hiss filtered higher, so it is lighter and airier
       const ghost = !!f.spirit;
-      const v = ghost ? Math.min(spd, SPIRIT_WIND) / 28 + SPIRIT_WIND_RISE * smooth(SPIRIT_WIND, 90, spd) : clamp(spd / 28, 0, 1.45);
+      const vAir = ghost ? Math.min(spd, SPIRIT_WIND) / 28 + SPIRIT_WIND_RISE * smooth(SPIRIT_WIND, 90, spd) : clamp(spd / 28, 0, 1.45);
+      // the day's wind (at 10 m; stronger aloft, a little weaker in the lee of the ground), as if flying into it
+      const vAmb = weather?.on ? (weather.windMs / 28) * (0.75 + 0.25 * g) * (weather.gust ?? 1) * (0.8 + 0.4 * (1 - Math.exp(-agl / 45))) : 0;
+      const v = Math.max(vAir, vAmb);
       const low = Math.exp(-agl / 45), high = smooth(80, 400, agl), ambient = 0.35 + 0.65 * high;
       const rumble = (0.04 * ambient * g + 0.3 * v ** 1.3 * (0.55 + 0.45 * low) * (0.8 + 0.2 * g)) * (1 - 0.35 * pine) * (ghost ? 0.45 : 1);
       const cut = (180 + 900 * v + 900 * v * low + 250 * g) * (1 - 0.4 * pine) * (ghost ? 1.7 : 1);
@@ -1336,7 +1380,19 @@ export class Soundscape {
       // crickets: summer/fall, dusk into night, over grass, near the ground; very quiet
       const dusk = hour > 12 ? smooth(8, -2, elevDeg) : 0.5 * smooth(-2, -8, elevDeg);
       const crick = (SEASON_CRICKETS[season] ?? 0) * dusk * clamp(this.grassFrac * 1.3) / (1 + agl / 40);
-      this.cricketGain.gain.setTargetAtTime(crick * 0.12, now, 0.5); this.cricketLevel = crick;
+      this.cricketGain.gain.setTargetAtTime(crick * 0.12 * (weather?.rain > 0.3 ? 0.2 : 1), now, 0.5); this.cricketLevel = crick;
+
+      // rain: the hiss and wash with the rate (log), the big drops' patter more under tree cover (drops off the leaves)
+      const rr = weather?.on ? weather.rain : 0, sn = weather?.on ? weather.snow : 0;
+      const k = rr > 0 ? clamp(Math.log2(1 + rr * 1.5) / 4) : 0, drz = weather?.drizzle && rr < 1;
+      const canopy = clamp(this.tile.canopy.at(f.pos.x, -f.pos.z, 0) / 100) * Math.exp(-agl / 25);
+      const lvl = k * (drz ? 0.45 : 1);
+      this.rainBus.gain.setTargetAtTime(lvl > 0.005 || sn > 0 ? 1 : 0, now, 0.5);
+      this.rainHiss.gain.setTargetAtTime(0.16 * lvl + 0.015 * clamp(sn), now, 0.6); this.rainHissBP.frequency.setTargetAtTime(drz ? 6000 : 3800, now, 0.5);
+      this.rainWash.gain.setTargetAtTime(0.05 * k * k, now, 0.6);
+      this.patterBig.gain.setTargetAtTime(drz ? 0 : 0.55 * clamp(k * 2) * (1 - 0.5 * k) * (1 + 1.2 * canopy), now, 0.5);
+      this.patterFine.gain.setTargetAtTime(0.32 * k * (1 + 0.6 * canopy), now, 0.5);
+      this.rainLevel = lvl; this.rainRate = rr;
     }
 
     // stream: nearest flowline point 4x a second; the panner's linear distance model does the fade
@@ -1406,6 +1462,7 @@ export class Soundscape {
     if (this.muted) return 'muted';
     if (this.ctx.state !== 'running') return 'starting…';
     const parts = Object.entries(this.heard).filter(([, s]) => s > 0.15).sort((a, b) => b[1] - a[1]).slice(0, 2).map(([k]) => k);
+    if (this.rainLevel > 0.05) parts.push(this.rainRate >= 4 ? 'heavy rain' : 'rain');
     if (this.waterLevel > 0.08) parts.push('stream');
     if (this.cricketLevel > 0.1) parts.push('crickets');
     if (this.pine > 0.35) parts.push('wind in pines');

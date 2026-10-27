@@ -25,6 +25,7 @@ import { SquirrelControl } from './squirrelControl.js';
 import { WoodpeckerControl } from './woodpeckerControl.js';
 import { SpiritControl } from './spirit.js';
 import { setupCredits } from './credits.js';
+import { Weather } from './weather.js';
 
 const $ = id => document.getElementById(id);
 const html = document.documentElement;
@@ -105,6 +106,7 @@ async function main() {
   layoutHud();
 
   const atmosphere = new Atmosphere(tile);   // shared haze, sun, sky light and clouds
+  const weather = new Weather({ tile, scene, renderer, camera });   // the day's measured weather (weather.js), loading
   const terrain = new Terrain(tile); scene.add(terrain.group);
   const sky = new SkyDome(scene, renderer, atmosphere);
   status('growing forest…'); await new Promise(r => setTimeout(r, 20));
@@ -158,14 +160,33 @@ async function main() {
   setTexture(photo ? 'imagery' : 'rewilded');
 
   const state = { season: 'auto', hour: +$('time').value };   // 'auto' tracks today's date (or ?date=MM-DD)
-  let fixedDate = parseDate(params.get('date'));
+  let fixedDate = parseDate(params.get('date')), fixedDateStr = fixedDate ? params.get('date') : null;
   // The date the ground's measured colour shows: today (or ?date), or the chosen season's mid-month.
   const dateNow = () => state.season === 'auto' ? (fixedDate || new Date()) : dateForSeason(state.season);
   const seasonNow = () => state.season === 'auto' ? seasonOfDate(dateNow()) : state.season;
   // the date a tile switch carries: a fixed date ('MM-DD') while the season tracks one, else null (today, or the season)
   const dateCarry = () => state.season === 'auto' && fixedDate ? `${String(fixedDate.getMonth() + 1).padStart(2, '0')}-${String(fixedDate.getDate()).padStart(2, '0')}` : null;
-  $('season').onchange = e => { state.season = e.target.value; applySeason(); };
+  // Picking a season picks a random day in it (its weather is that day last year, weather.js); the select keeps
+  // showing the season while the game tracks the day. "tracks today's date" goes back to today.
+  const SEASON_MONTHS = { winter: [12, 1, 2], spring: [3, 4, 5], summer: [6, 7, 8], fall: [9, 10, 11] };
+  $('season').onchange = e => {
+    const v = e.target.value, ms = SEASON_MONTHS[v];
+    if (!ms) { setDate(''); return; }
+    const m = ms[Math.floor(Math.random() * 3)], d = 1 + Math.floor(Math.random() * [31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31][m - 1]);
+    setDate(`${String(m).padStart(2, '0')}-${String(d).padStart(2, '0')}`); $('season').value = v;
+  };
   $('time').oninput = e => { state.hour = +e.target.value; };
+  // The day's weather and the time slider: pre-dawn..post-dusk of the day, starting now (today) or at a random hour.
+  const mmdd = d => `${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`;
+  function weatherDay() {
+    if (!weather.loaded) return;
+    const p = weather.pick(state.season === 'auto' ? fixedDateStr : mmdd(dateNow()));
+    if (!p) return;
+    const t = $('time'), lo = Math.floor(p.pre * 10) / 10, hi = Math.ceil(p.post * 10) / 10;
+    t.min = lo.toFixed(1); t.max = hi.toFixed(1);
+    state.hour = Math.min(hi, Math.max(lo, Math.round(p.start * 10) / 10)); t.value = state.hour;
+  }
+  weather.ready.then(weatherDay);
   $('detail').onchange = e => { veg.radius = +e.target.value; veg.update(flight.pos.x, flight.pos.z, true); };
   addEventListener('keydown', e => { if (e.code === 'KeyR') flight.reset(tile.size / 2, -tile.size / 2, 150); });
 
@@ -180,6 +201,7 @@ async function main() {
     $('seasonNote').textContent = state.season === 'auto' ? `(${s}${measured ? `, ${d.toLocaleDateString('en', { day: 'numeric', month: 'short' })}` : ''})` : '';
     veg.setLook(SEASON_LOOK[s]);
     if (far.setSeason) far.setSeason(s);   // far impostors follow the season too
+    weatherDay();
   }
   applySeason();
 
@@ -277,14 +299,16 @@ async function main() {
   // screen it is made at Begin and started by that press, so choosing cards stays quiet.
   let sound = null;
   const makeSound = () => {
-    if (!sound) { sound = new Soundscape({ tile, flight, raven, camera, els: { button: $('soundBtn'), volume: $('soundVol') } }); window.__we.sound = sound; }
+    if (!sound) { sound = new Soundscape({ tile, flight, raven, camera, els: { button: $('soundBtn'), volume: $('soundVol') } }); window.__we.sound = sound; weather.onThunder = (d, k) => sound.thunder(d, k); }
     return sound;
   };
 
   // tests and comparisons: __we.setDate('01-15') shows that day's measured colour ('' for today)
-  const setDate = str => { fixedDate = parseDate(str); state.season = 'auto'; $('season').value = 'auto'; applySeason(); return terrain.seasonStats; };
+  const setDate = str => { fixedDate = parseDate(str); fixedDateStr = fixedDate ? str : null; state.season = 'auto'; $('season').value = 'auto'; applySeason(); return terrain.seasonStats; };
   const setFov = deg => { const v = Math.min(LENS_RANGE[1], Math.max(LENS_RANGE[0], +deg || LENS_DEFAULT)); camera.fov = v; camera.updateProjectionMatrix(); return v; };
-  window.__we = { setDate, setFov, tile, flight, raven, camera, veg, terrain, far, grass, roads, scene, renderer, minimap, atmosphere, sky, acorns, identify, places, peek, setPeek, sound, animals, arrival, rocks, squirrel, woodpecker, spirit, credits };   // debugging handle
+  const setHour = h => { state.hour = +h; $('time').value = state.hour; return state.hour; };
+  animals.weatherTemp = () => (weather.day ? weather.fx.temp : null);   // the lizards' air (animals.js airT)
+  window.__we = { setDate, setFov, setHour, weather, tile, flight, raven, camera, veg, terrain, far, grass, roads, scene, renderer, minimap, atmosphere, sky, acorns, identify, places, peek, setPeek, sound, animals, arrival, rocks, squirrel, woodpecker, spirit, credits };   // debugging handle
   const as = direct ? params.get('as') : null;
   if (!['raven', 'squirrel', 'woodpecker'].includes(as)) toSpirit();   // a spirit from the start (behind the opening screen too)
   if (!screen) makeSound();
@@ -344,8 +368,10 @@ async function main() {
     terrain.update(flight.pos.x, flight.pos.z);   // the near fine mesh follows the player
     veg.update(flight.pos.x, flight.pos.z);
     veg.updateClose(camera.position);
-    atmosphere.update(dt, sun, look, s, state.hour, camera);
+    const wx = weather.update(dt, state.hour);   // the measured weather first: wind, ground, rain or snow; then the air
+    atmosphere.update(dt, sun, look, s, state.hour, camera, wx);
     spirit.look(dt);   // the spirit's view: faint blue light, blue-green mist, the bodies it can join warm (spirit.js)
+    atmosphere.applyWeatherHaze();   // the rain's, snow's and fog's extinction (after the look: see atmosphere.js)
     sky.update(camera);
     far.update(camera, veg.radius);
     grass.update(flight.pos.x, flight.pos.z, dt, camera, look);
@@ -357,7 +383,7 @@ async function main() {
     shadows.update(camera);
     spirit.render(renderer, scene, camera);   // renderer.render, plus the spirit's view's passes while it is on
     spirit.unblendCamera();   // the control's own camera back for its next frame
-    sound?.update(dt, { season: s, hour: state.hour, sunElevation: sun.elevation });
+    sound?.update(dt, { season: s, hour: state.hour, sunElevation: sun.elevation, weather: wx });
     if (peek.pending !== null) { if (peek.pending !== peek.shown) { crossFade(); applyPeek(peek.pending); } peek.pending = null; }
     minimap.update(flight.pos, f.heading);
     hudT += dt;
@@ -371,6 +397,8 @@ async function main() {
       identify.tick(now);
       const where = places.describe(flight.pos.x, -flight.pos.z);
       $('soundNow').textContent = sound ? sound.describe() : '–';
+      const wd = weather.describe(), wb = $('weatherNow');
+      if (wd) { const i = document.createElement('i'); i.textContent = ` · ${wd.note}`; wb.replaceChildren(wd.text, i); } else wb.textContent = '–';
       $('animalsNear').textContent = animals.describe(now);
       $('over').textContent = where.text; minimap.place = where.place;
       layoutHud();

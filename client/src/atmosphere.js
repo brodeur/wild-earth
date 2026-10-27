@@ -13,6 +13,12 @@ import * as THREE from 'three';
 // draws it as a slab of heightfield cumulus with flat bases and domed tops, plus a thin cirrus sheet
 // above. Around the camera the opacity of those same clouds up the sun ray is baked into cloudMap,
 // which the ground samples for shadows, so a shadow sits under the cloud you see.
+//
+// Weather (weather.js fx, passed to update) sets the base values first: the slab's coverage from the measured low
+// and mid cloud (COVER: cloud fraction -> the field's coverage offset, calibrated on the noise), the cirrus from the
+// high cloud, the deck's base from the dew-point spread, the drift from the wind; overcast and fog grey and flatten
+// the light (the sun dimmed, the sky light raised and desaturated, the dome greyed); humidity, rain, drizzle, snow
+// and fog thicken the haze. The spirit's look (spirit.js) is applied on top after this.
 
 export const CLOUD_PERIOD = 30000;     // metres covered by the baked shadow map (cloudMap) around the camera
 const CLOUD_SLICES = 3;               // cuts through the cloud slab per ray (dome and shadow bake alike)
@@ -27,8 +33,16 @@ const CLOUD_LAYERS = {
   detail: [1370, 2.67, 7.2],    // cauliflower edges; drifting faster than the bodies, it slowly reshapes them
   cirrus: [26000, 0.42, 18.0],  // high streaks (stretched 3x along their length)
 };
-const WIND_DIR = new THREE.Vector2(1, 0.12).normalize();   // prevailing westerly, toward +x (east), a little south
+// Cloud fraction of the sky (the slab seen from below) -> cloudCover, from the field's statistics (the equalised noise:
+// a Monte Carlo of cloudLarge + cloudShapeAt with erosion, cloud where x > 0.03).
+const COVER = [[0, -0.75], [0.02, -0.45], [0.08, -0.3], [0.2, -0.1], [0.28, 0], [0.48, 0.2], [0.68, 0.4], [0.84, 0.6], [0.95, 0.8], [1, 1.1]];
+function coverFor(f) {
+  for (let i = 1; i < COVER.length; i++) if (f <= COVER[i][0]) { const [a, ca] = COVER[i - 1], [b, cb] = COVER[i]; return ca + (cb - ca) * (f - a) / (b - a); }
+  return COVER[COVER.length - 1][1];
+}
 const DEG = Math.PI / 180;
+const lum = col => 0.2126 * col.r + 0.7152 * col.g + 0.0722 * col.b;
+const clamp01 = x => Math.min(1, Math.max(0, x));
 
 export const uniforms = {
   sunDir: { value: new THREE.Vector3(0, 1, 0) },
@@ -61,6 +75,8 @@ export const uniforms = {
   cloudShape: { value: new THREE.Vector4(0.62, 11, 0.2, 900) },   // x threshold, y opacity per unit of field at the edges (softness), z field excess of a full-height cloud, w slab thickness (m)
   cloudCirrus: { value: new THREE.Vector4(0, 0, 0.5, 7000) },         // xy uv drift, z amount, w height above the cumulus bases (m)
   cloudSun: { value: new THREE.Color(3, 3, 3) },           // sunlight at cloud height (it outlasts sunset there)
+  windDrift: { value: new THREE.Vector2(1, 0.12).normalize() },   // the clouds' drift direction (x east, y = z south); the weather's wind, else a westerly
+  skyWx: { value: new THREE.Vector4(0, 0, 1, 1) },         // the dome under weather: x greying (overcast), y fog veil, z cirrus sheet cap, w its brightness under a deck
   // Cascaded sun shadows (shadows.js renders the maps and sets these). Until it runs, every
   // matrix maps the world outside its cascade, so the lookup returns 1 (lit).
   csmMap0: { value: null }, csmMap1: { value: null }, csmMap2: { value: null },
@@ -106,6 +122,7 @@ export const ATMOSPHERE_GLSL = /* glsl */`
   uniform float hazeDensity; uniform float hazeHeightFalloff; uniform float hazeBase; uniform float landHeight;
   uniform vec3 hazeRayleigh; uniform float hazeRayleighFalloff; uniform float hazeContrast; uniform vec3 sunGlowTint;
   uniform sampler2D cloudMap; uniform vec2 cloudOffset; uniform float cloudBakeInv; uniform float cloudStrength; uniform float cloudOpacity; uniform float cloudCover; uniform float cloudHeight;
+  uniform vec4 skyWx;
   ${CLOUD_FIELD_GLSL}
 
   // ---- Cascaded sun shadow. Three depth maps with hardware compare (each tap is a bilinear 2x2
@@ -336,7 +353,7 @@ export class Atmosphere {
     let mn = Infinity; const N = 64;
     for (let i = 0; i <= N; i++) for (let j = 0; j <= N; j++) mn = Math.min(mn, tile.heights.at(i / N * tile.size, j / N * tile.size));
     uniforms.hazeBase.value = mn;
-    uniforms.cloudHeight.value = mn + 1800;
+    uniforms.cloudHeight.value = mn + 1800; this.cloudBase0 = mn + 1800;
     uniforms.landHeight.value = mn + 120;
     this.skyParams = { turbidity: 6, rayleigh: 1.6, mieCoefficient: 0.004, mieDirectionalG: 0.8 };
     this.sun = new THREE.Vector3(); this.sunIntensity = 3; this.exposure = 0.6;
@@ -387,6 +404,9 @@ export class Atmosphere {
           retColor = atmosphereApply(land, cameraPosition + r, cameraPosition);
         }
         if (direction.y > 0.0) {
+          // weather: an overcast sky greys (the deck drawn below covers it); fog veils it in the haze's own colour
+          retColor = mix(retColor, vec3(atmoLum(retColor)) * skyWx.w, skyWx.x);
+          retColor = mix(retColor, atmoSky(direction), skyWx.y * (1.0 - 0.6 * smoothstep(0.1, 0.9, direction.y)));
           float mu = dot(direction, sunDir), horizon = smoothstep(0.0, 0.1, direction.y);
           // Forward scattering (silver linings when backlit), normalised so the mean is about 1.
           float silver = 0.5 + 0.5 * 0.6975 / pow(1.3025 - 1.1 * mu, 1.5);
@@ -397,7 +417,7 @@ export class Atmosphere {
           float ci = smoothstep(0.5, 1.15, cn.x * 0.85 + cn.y * 0.25) * cloudCirrus.z * horizon;
           vec3 cirrus = cloudSun * (0.10 + 0.16 * silver) + ambientSky * 0.75;
           cirrus = mix(cirrus, atmoSky(direction), 1.0 - exp(-tc * (hazeDensity * 0.3 + hazeRayleigh.g) * 0.5));
-          retColor = mix(retColor, cirrus, ci * 0.4);
+          retColor = mix(retColor, cirrus, min(ci * 0.4, skyWx.z));
 
           // Cumulus: a slab of heightfield clouds with flat bases at cloudHeight. The ray is sampled at the
           // base plane and at heights up the slab, front to back, so the bases, the flanks and the tops of
@@ -467,8 +487,21 @@ export class Atmosphere {
     material.customProgramCacheKey = () => 'atmosphere-lambert';
     material.needsUpdate = true;
   }
-  // sun: from sunDirection(); look: SEASON_LOOK entry; season name for clouds; hour for haze.
-  update(dt, sun, look, season, hour, camera) {
+  // The weather's haze (main.js calls it after spirit.js's look): the aerosol swells with humidity; rain, drizzle,
+  // snow and fog add their own extinction, rain and snow up to the cloud base, fog lying low (a ~180 m scale height,
+  // so it fills the valleys). It comes after the look, not before it as the rest of the weather does, because the
+  // look multiplies the haze 14-fold for its mist: on top of a rain's or a fog's extinction that is a white-out, so
+  // the look thickens the clear air and the weather's own extinction is added to that as it is.
+  applyWeatherHaze() {
+    const wx = this.wx; if (!wx) return;
+    const base = uniforms.hazeDensity.value * wx.hazeMul, add = wx.hazeAdd, fogX = 3.5e-3 * wx.fog, h0 = 1 / uniforms.hazeHeightFalloff.value;
+    uniforms.hazeDensity.value = base + add;
+    uniforms.hazeHeightFalloff.value = Math.max(base + add, 1e-9) / (base * h0 + (add - fogX) * Math.max(wx.cloudBase, h0) + fogX * 180);
+  }
+  // sun: from sunDirection(); look: SEASON_LOOK entry; season name for clouds; hour for haze; wx: weather.js fx (or
+  // null: the season's own clouds and haze, as before the weather).
+  update(dt, sun, look, season, hour, camera, wx = null) {
+    if (wx && !wx.on) wx = null;
     this.time += dt;
     const elDeg = sun.elevation / DEG, haze = look.haze ?? 1;
     const lowSun = 1 - THREE.MathUtils.smoothstep(elDeg, 4, 25);
@@ -480,6 +513,8 @@ export class Atmosphere {
     p.turbidity = 2 + 3.5 * haze + 1.0 * lowSun;
     p.rayleigh = 1.9 - 0.4 * haze;
     p.mieCoefficient = 0.002 + 0.0015 * haze;
+    const grey = wx ? clamp01(0.85 * wx.overcast + wx.fog) : 0;
+    if (wx) p.turbidity = Math.min(p.turbidity + 3 * wx.fog + 1.5 * wx.overcast + 1.5 * (wx.hazeMul - 1), 10);
     if (this.skyMaterial) {
       const u = this.skyMaterial.uniforms;
       u.sunPosition.value.copy(s); u.turbidity.value = p.turbidity; u.rayleigh.value = p.rayleigh;
@@ -492,9 +527,19 @@ export class Atmosphere {
     skyRadiance(v.set(-hx, 0, -hzz), s, p, uniforms.skyHorizon.value);
     const side = skyRadiance(v.set(-hzz, 0, hx), s, p, this._c2);
     skyRadiance(v.set(0, 1, 0), s, p, uniforms.skyZenith.value);
+    // weather: under a deck or in fog the sky's colours go to grey. The haze's far colours (the horizon, under and away
+    // from the sun) also lose the clear sky's brightness under a deck, about half, and the sun's lobe in it: the air
+    // between the eye and a far ridge is lit by the grey light under the deck, not by a clear sky's (the sky light the
+    // ground gets is kept: zenith and side, below).
+    if (grey > 0) {
+      const H = uniforms.skyHorizon.value, S = uniforms.skySun.value;
+      S.lerp(H, wx.overcast);
+      for (const col of [S, H, side, uniforms.skyZenith.value]) {
+        const l = lum(col) * (col === S || col === H ? 1 - 0.5 * wx.overcast : 1); col.lerp(this._c.setRGB(l, l, l * 1.03), grey);
+      }
+    }
     // Fit the Mie / linear blend so the GLSL lobe matches the dome at 90 degrees from the sun.
     const c = Math.max(Math.cos(sun.elevation), 0.05), hgMin = hg(-c), hgMax = hg(c);
-    const lum = col => 0.2126 * col.r + 0.7152 * col.g + 0.0722 * col.b;
     const span = lum(uniforms.skySun.value) - lum(uniforms.skyHorizon.value);
     const wSide = span > 1e-4 ? (lum(side) - lum(uniforms.skyHorizon.value)) / span : 0.5;
     const wm0 = (hg(0) - hgMin) / (hgMax - hgMin);
@@ -510,21 +555,25 @@ export class Atmosphere {
     // Sun: colour by elevation, intensity fading through the last few degrees above the horizon.
     sunRamp(elDeg, uniforms.sunColor.value);
     const tune = this.tune;
-    this.sunIntensity = tune.sun * (1 - Math.exp(-Math.max(elDeg + 1, 0) / 5));
+    this.sunIntensity = tune.sun * (1 - Math.exp(-Math.max(elDeg + 1, 0) / 5)) * (wx ? wx.sunDim : 1);
     uniforms.sunLight.value.copy(uniforms.sunColor.value).multiplyScalar(this.sunIntensity);
 
     // Sky light: the dome between zenith and the side horizon; ground bounce is warm and follows the sun.
     const amb = uniforms.ambientSky.value.copy(uniforms.skyZenith.value).multiplyScalar(0.4).add(this._c.copy(side).multiplyScalar(0.6)).multiplyScalar(tune.ambient);
-    const ambL = lum(amb);
-    amb.setRGB(ambL + (amb.r - ambL) * tune.ambientSat, ambL + (amb.g - ambL) * tune.ambientSat, ambL + (amb.b - ambL) * tune.ambientSat);
+    // weather: a deck or fog spreads the sun into the sky light (more of it, flatter, greyer); lightning lifts it all
+    if (wx) amb.multiplyScalar(1 + 0.35 * wx.overcast + 0.3 * wx.fog).addScalar(2.5 * wx.flash);
+    const ambL = lum(amb), sat = tune.ambientSat * (1 - 0.8 * grey);
+    amb.setRGB(ambL + (amb.r - ambL) * sat, ambL + (amb.g - ambL) * sat, ambL + (amb.b - ambL) * sat);
+    if (wx?.flash) for (const col of [uniforms.skyHorizon.value, uniforms.skySun.value, uniforms.skyZenith.value]) col.addScalar(1.5 * wx.flash);
     uniforms.ambientGround.value.setRGB(0.30, 0.24, 0.16).multiplyScalar(this.sunIntensity * 0.12 + ambL * 0.4);
 
     // Haze: clear air is the same all year; the aerosol is set by the season (summer dust and smoke
     // thickest, rain-washed winter clearest) and thickens toward a low sun.
     uniforms.hazeDensity.value = tune.mie * 7.5e-5 * haze * haze * (1 + 0.5 * lowSun);
     uniforms.hazeHeightFalloff.value = 1 / tune.mieHeight;
+    this.wx = wx;   // the weather's haze: applyWeatherHaze, after the spirit's look
     uniforms.hazeRayleigh.value.set(5.8e-6, 13.5e-6, 33.1e-6).multiplyScalar(tune.rayleigh);
-    uniforms.hazeContrast.value = tune.contrast;
+    uniforms.hazeContrast.value = tune.contrast * (wx ? (1 - 0.6 * wx.rainVis) * (1 - 0.5 * wx.fog) : 1);
 
     // Clouds: coverage from the season plus an afternoon build-up; sunlight at cloud height, where the
     // sun sets about 1.4 degrees later than on the ground (horizon dip from ~1.8 km), so the cumulus
@@ -535,13 +584,27 @@ export class Atmosphere {
     uniforms.cloudCover.value = cover + build * (day - 0.35);
     uniforms.cloudOpacity.value = 1;
     uniforms.cloudCirrus.value.z = cirrus;
+    uniforms.skyWx.value.set(0, 0, 1, 1);
+    uniforms.cloudHeight.value = this.cloudBase0;
+    if (wx) {
+      // the measured sky: slab cover (a little afternoon swell kept for life), the cirrus, darker shadows under a thick
+      // deck, the base from the dew-point spread (kept over the camera, so a deck is never seen from above)
+      uniforms.cloudCover.value = coverFor(wx.slab) + 0.3 * build * (day - 0.35) * (1 - wx.overcast);
+      uniforms.cloudCirrus.value.z = 1.4 * wx.high;
+      uniforms.cloudStrength.value = (strength + (0.92 - strength) * wx.slab * wx.slab) * THREE.MathUtils.smoothstep(elDeg, -2, 6);
+      uniforms.cloudHeight.value = Math.max(uniforms.hazeBase.value + wx.cloudBase, camera.position.y + 150);
+      uniforms.skyWx.value.set(Math.min(1, 1.2 * grey), wx.fog, 0.4 + 0.45 * wx.high, 1 - 0.5 * wx.overcast);
+      uniforms.windDrift.value.set(wx.windTo[0], wx.windTo[1]);
+    } else uniforms.windDrift.value.set(1, 0.12).normalize();
     const elC = elDeg + 1.4;
-    sunRamp(elC, uniforms.cloudSun.value).multiplyScalar(tune.sun * (1 - Math.exp(-Math.max(elC + 1, 0) / 5)));
+    sunRamp(elC, uniforms.cloudSun.value).multiplyScalar(tune.sun * (1 - Math.exp(-Math.max(elC + 1, 0) / 5)) * (wx ? 1 - 0.5 * wx.overcast : 1));
+    // the drift follows the wind: the layers' speeds scale from a third (calm) to about three times (40 km/h)
+    const drift = wx ? Math.min(0.3 + wx.windKmh / 14, 4) : 1, WIND_DIR = uniforms.windDrift.value;
     // Each layer drifts at its own speed (the shear reshapes the clouds slowly); offsets are in the
     // layer's rotated uv and wrap, so they never lose precision.
     for (const [key, [period, angle, speed]] of Object.entries(CLOUD_LAYERS)) {
       const dir = key === 'cirrus' ? this._v.set(WIND_DIR.x * 0.95 - WIND_DIR.y * 0.3, 0, WIND_DIR.y * 0.95 + WIND_DIR.x * 0.3) : this._v.set(WIND_DIR.x, 0, WIND_DIR.y);
-      const dx = dir.x * speed * dt, dz = dir.z * speed * dt, c = Math.cos(angle), sn = Math.sin(angle);
+      const dx = dir.x * speed * drift * dt, dz = dir.z * speed * drift * dt, c = Math.cos(angle), sn = Math.sin(angle);
       const o = this.cloudOfs[key];
       const py = key === 'cirrus' ? period / 3 : period;   // cirrus is squeezed 3x across its streaks
       o.x = (o.x - (c * dx - sn * dz) / period) % 1; o.y = (o.y - (sn * dx + c * dz) / py) % 1;
@@ -558,7 +621,8 @@ export class Atmosphere {
     // A high sun on bare summer grass is about twice the light of a mid-morning one, so stop down for it too.
     const key = 0.7 * lum(side) + 0.1 * this.sunIntensity + 0.5 * glare;
     const ground = this.sunIntensity * Math.max(s.y, 0) + ambL;
-    const target = THREE.MathUtils.clamp(tune.exposure * Math.pow(Math.max(key, 1e-3) / 1.7, -0.35) * Math.min(1, Math.pow(ground / 5.8, -0.5)), 0.25, 2.2);
+    const target = THREE.MathUtils.clamp(tune.exposure * Math.pow(Math.max(key, 1e-3) / 1.7, -0.35) * Math.min(1, Math.pow(ground / 5.8, -0.5))
+      * (wx ? 1 + 0.3 * wx.overcast + 0.2 * wx.fog : 1), 0.25, 2.2);   // the eye opens a little under a grey sky
     this.exposure += (target - this.exposure) * (1 - Math.exp(-dt * 2.5));
     return this;
   }

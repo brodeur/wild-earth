@@ -20,6 +20,9 @@ export const groundUniforms = {
   // multiplier / 2 in an sRGB texture, 20 m, smooth), in place of the palette; 1 while the map is the
   // ground or imagery texture of a tile with the seasons layers.
   seasonMap: { value: null }, seasonOn: { value: 0 },
+  // Weather (weather.js): x the ground's wetness (darker, a little more saturated), y lying snow's cover of the ground,
+  // z its cover on the grass (grass.js); 0 in dry weather.
+  wxGround: { value: new THREE.Vector3() },
 };
 // The measured season for the CPU side: grass.js takes its blades' tint from `grass` (the open grass's
 // flat-ground ratio for the date over July, linear) when it is set; `version` bumps on each change.
@@ -38,8 +41,18 @@ export const GROUND_GLSL = /* glsl */`
   uniform vec3 grassTint; uniform vec3 oakTint; uniform float oakMix;
   uniform float imagery; uniform vec3 grassRef; uniform vec3 oakRef;   // imagery: 1 when map is the erased NAIP
   uniform float groundFx; uniform sampler2D canopyMap; uniform sampler2D contactAO; uniform mat4 contactAOMatrix;
-  uniform sampler2D seasonMap; uniform float seasonOn;
+  uniform sampler2D seasonMap; uniform float seasonOn; uniform vec3 wxGround;
   const vec3 G_LUMA = vec3(0.299, 0.587, 0.114);
+  // Weather on the ground (wxGround): wet ground about 40% darker and a little more saturated; lying snow over it,
+  // fullest on flat ground and north-facing slopes (ny: the normal's y, north: 0..1 how much the slope faces north),
+  // thinner under tree cover (tree 0..1).
+  vec3 groundWeather(vec3 c, float ny, float north, float tree) {
+    if (wxGround.x + wxGround.y <= 0.0) return c;
+    float l = dot(c, G_LUMA);
+    c = mix(c, max(mix(vec3(l), c, 1.2), 0.0) * 0.6, wxGround.x);
+    float s = wxGround.y * (0.5 + 0.5 * smoothstep(0.7, 0.96, ny)) * (1.0 + 0.4 * north) * (1.0 - 0.45 * tree);
+    return mix(c, vec3(0.72, 0.75, 0.8), clamp(s, 0.0, 1.0));
+  }
   vec2 groundUv(vec3 posW) { return vec2(posW.x, -posW.z) / tileSize; }
   float groundPave(vec2 uv, float lod) { return smoothstep(0.55, 0.75, textureLod(roads, uv, lod).r); }
   // Season recolour of a texel (linear) given its soft habitat weights (grassland, oak, chaparral), its
@@ -87,7 +100,7 @@ export const GROUND_GLSL = /* glsl */`
   vec3 groundAlbedo(vec3 posW, float lod, out vec3 w) {
     vec2 uv = groundUv(posW);
     w = groundWeights(uv, lod);
-    return groundRecolour(textureLod(map, uv, lod).rgb, w, uv, groundPave(uv, lod));
+    return groundWeather(groundRecolour(textureLod(map, uv, lod).rgb, w, uv, groundPave(uv, lod)), 1.0, 0.0, 0.0);
   }
 `;
 
@@ -237,6 +250,7 @@ const FRAG = /* glsl */`
     // The bumped term is divided by the cosine of the bump's tilt, which keeps the mean at the
     // flat-ground value (tilts toward and away from the sun average back to cos(sun)), so the
     // detail adds relief without dimming the photo.
+    c = groundWeather(c, nGeo.y, clamp(-nGeo.z * 3.0, 0.0, 1.0), clamp(cov.r, 0.0, 1.0));
     float geo = max(dot(nGeo, sunDir), 0.0);
     float bump = max(dot(nL, sunDir), 0.0) / max(dot(nL, nGeo), 0.6);
     float diff = geo > 0.0 ? mix(geo, bump, smoothstep(0.0, 0.12, geo)) : 0.0;

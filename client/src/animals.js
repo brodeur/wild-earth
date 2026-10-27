@@ -3480,7 +3480,7 @@ export class Animals {
     this.month = this.antlerMonth ?? (this.fixedDate && seasonOfDate(this.fixedDate) === season ? monthOf(this.fixedDate)
       : season === seasonOfDate() ? monthOf(new Date()) : SEASON_MONTH[season] ?? 10.5);
     if (this.lzMonth() !== this.lzMonthWas) { this.lzMonthWas = this.lzMonth(); this.dirty = true; }
-    this.airT = airTemp(this.month, hour);
+    this.airT = this.weatherTemp?.() ?? airTemp(this.month, hour);   // the day's measured air (main.js: weather.js), else the normals
     this.lzOn = this.lzMonth() && atmo.sunDir.value.y > 0.1 && this.airT >= LIZ.warm && this.airT <= LIZ.hot; this.lzBudget = LIZ.resolves;
     let fresh = false;   // slots were reassigned: every animal writes its matrix this frame
     if (this.dirty || !this.lastCenter || Math.hypot(P.x - this.lastCenter[0], P.z - this.lastCenter[1]) > REBUILD_MOVE) { this.rebuild(P.x, P.z); fresh = true; }

@@ -3,6 +3,8 @@ import * as THREE from 'three';
 // One wind field shared by every material that moves or shimmers with it: grass blades, tufts,
 // sward shells, shrub clumps and the gust sheen painted on the terrain. The same uniforms objects
 // go into every material, so Grass.update advancing `time` reaches them all.
+// The weather (weather.js) sets windDir (the way the measured wind blows) and windStrength (from its speed, with a slow
+// gust swell) each frame; without weather they keep these defaults.
 export const windUniforms = {
   time: { value: 0 }, windDir: { value: new THREE.Vector2(1, 0.25).normalize() }, windStrength: { value: 0.42 },
 };
