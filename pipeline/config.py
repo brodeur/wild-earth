@@ -107,10 +107,22 @@ def sha256(path: Path) -> str:
     return h.hexdigest()
 
 
+def _finite(v):
+    """NaN and infinities are not JSON: a browser's JSON.parse refuses the whole file (the San Francisco tile's
+    manifest carried a NaN from a lidar check over the sea). Replace them with null, recursively."""
+    if isinstance(v, float) and (v != v or v in (float("inf"), float("-inf"))):
+        return None
+    if isinstance(v, dict):
+        return {k: _finite(x) for k, x in v.items()}
+    if isinstance(v, (list, tuple)):
+        return [_finite(x) for x in v]
+    return v
+
+
 def write_json(path: Path, data) -> None:
     path.parent.mkdir(parents=True, exist_ok=True)
     with open(path, "w") as f:
-        json.dump(data, f, indent=1)
+        json.dump(_finite(data), f, indent=1, allow_nan=False)
         f.write("\n")
 
 

@@ -1,0 +1,251 @@
+{
+ "rock_classes": [
+  "greenstone_metavolcanic",
+  "serpentinite",
+  "slate_phyllite",
+  "schist",
+  "granitic",
+  "volcanic",
+  "sandstone_conglomerate",
+  "limestone_marble",
+  "alluvium",
+  "other"
+ ],
+ "resistance": {
+  "greenstone_metavolcanic": 0.9,
+  "granitic": 0.8,
+  "serpentinite": 0.8,
+  "schist": 0.6,
+  "slate_phyllite": 0.6,
+  "volcanic": 0.7,
+  "sandstone_conglomerate": 0.4,
+  "limestone_marble": 0.7,
+  "alluvium": 0.0,
+  "other": 0.4
+ },
+ "units": {
+  "1": {
+   "name": "water",
+   "lithology": "",
+   "age": null,
+   "age_bottom_ma": null,
+   "age_top_ma": null,
+   "rock_class": "other",
+   "rock_class_index": 10,
+   "water": true,
+   "description": null,
+   "reference": null,
+   "color": "",
+   "fraction": 0.5266
+  },
+  "2": {
+   "name": "Dune sand",
+   "lithology": "",
+   "age": "Quaternary",
+   "age_bottom_ma": 2.588,
+   "age_top_ma": 0,
+   "rock_class": "alluvium",
+   "rock_class_index": 9,
+   "water": false,
+   "description": "Well sorted; loose to soft",
+   "reference": null,
+   "color": "#F9F97F",
+   "fraction": 0.1802
+  },
+  "3": {
+   "name": "Slope debris and ravine fill",
+   "lithology": "",
+   "age": "Quaternary",
+   "age_bottom_ma": 2.588,
+   "age_top_ma": 0,
+   "rock_class": "alluvium",
+   "rock_class_index": 9,
+   "water": false,
+   "description": "Angular rock fragments in sand, silt, and clay matrix; generally light yellow to reddish-brown. Only mapped in San Francisco",
+   "reference": null,
+   "color": "#F9F97F",
+   "fraction": 0.0151
+  },
+  "4": {
+   "name": "Franciscan Complex",
+   "lithology": "",
+   "age": "Cretaceous",
+   "age_bottom_ma": 153.4,
+   "age_top_ma": 59.2,
+   "rock_class": "greenstone_metavolcanic",
+   "rock_class_index": 1,
+   "water": false,
+   "description": "Sandstone and interbedded shale, with minor conglomerate; crops out in alternating sequence of largely medium-thick to very thick sandstone beds with generally minor interbedded shale and predominantly shale with interbedded thin to medium-thick sandstone beds; rock is locally severely sheared or brecciated but lacks tectonic inclusions of other rock types such as greenstone and chert which are common in unit fsr; thicker sandstone beds are medium- to coarse-grained arkosic wacke containing 2 to 25 percent detrital potassium feldspar, but commonly 2 to 5 percent, whereas thinner sandstone beds are fine grained, quartz rich wacke, and contain 0 to 2 percent detrital potassium feldspar; sandstone is light gray where fresh, weathering to buff colors, and shale is commonly dark gray; laumontite veins, calcite veins, and microscopic secondary prehnite and (or) pumpellyite are common in sandstone. Rocks of this unit typically form resistant topography. Excellent exposures occur in the quarry at Point San Pedro.",
+   "reference": null,
+   "color": "#9AD9DD",
+   "fraction": 0.0131
+  },
+  "5": {
+   "name": "Alluvium",
+   "lithology": "",
+   "age": "Quaternary",
+   "age_bottom_ma": 2.588,
+   "age_top_ma": 0,
+   "rock_class": "alluvium",
+   "rock_class_index": 9,
+   "water": false,
+   "description": "Sand, gravel, silt, and clay; loose to soft and friable",
+   "reference": null,
+   "color": "#F9F97F",
+   "fraction": 0.0076
+  },
+  "6": {
+   "name": "Franciscan Complex",
+   "lithology": "",
+   "age": "Jurassic to Cretaceous",
+   "age_bottom_ma": 153.4,
+   "age_top_ma": 59.2,
+   "rock_class": "sandstone_conglomerate",
+   "rock_class_index": 7,
+   "water": false,
+   "description": "Chert: Chert with shale interbeds. Chert is thin bedded, closely fractured, and parts along bedding planes; contains tests of radiolaria that range in age from early Jurassic (Tithonian) to Middle Cretaceous (Cenomanian) age (Murchey, 1984); crops out as irregularly shaped bodies as long as 4.5 km. In southern Marin County and parts of San Francisco, chert up to 100 m thick overlies pillow lava and is overlain conformably by a few feet of fine-grained, black shale that grades into overlying graywacke and shale.",
+   "reference": null,
+   "color": "#9AD9DD",
+   "fraction": 0.0229
+  },
+  "7": {
+   "name": "Franciscan Complex",
+   "lithology": "",
+   "age": "Jurassic",
+   "age_bottom_ma": 153.4,
+   "age_top_ma": 59.2,
+   "rock_class": "greenstone_metavolcanic",
+   "rock_class_index": 1,
+   "water": false,
+   "description": "Greenstone: Similar to unit Jfg, except crops out as small, discrete masses as long as 1.5 km. In southern Marin County and parts of San Francisco, crops out as well-bedded pillow lavas and minor intrusive diabase that forms lowest exposed portion of section; overlain by chert and graywacke and repeated several times by faulting (Wahrhaftig, 1984); smaller masses are hard and relatively unfractured, but larger masses typically are closely fractured or sheared, are softened by weathering, and bear distinctive red soil.",
+   "reference": null,
+   "color": "#9AD9DD",
+   "fraction": 0.0224
+  },
+  "8": {
+   "name": "Undifferentiated surficial deposits",
+   "lithology": "",
+   "age": "Quaternary",
+   "age_bottom_ma": 2.588,
+   "age_top_ma": 0,
+   "rock_class": "alluvium",
+   "rock_class_index": 9,
+   "water": false,
+   "description": "Includes beach sand, marine deposits, artificial fill, alluvium, landslides, and, in South San Francisco quadrangle, some Colma Formation",
+   "reference": null,
+   "color": "#F9F97F",
+   "fraction": 0.0169
+  },
+  "9": {
+   "name": "Colma Formation",
+   "lithology": "",
+   "age": "Quaternary",
+   "age_bottom_ma": 2.588,
+   "age_top_ma": 0,
+   "rock_class": "alluvium",
+   "rock_class_index": 9,
+   "water": false,
+   "description": "Fine- to medium-grained sand with minor amounts of sandy silt, clay, and gravel as interbeds. Sand is well sorted, soft, and friable; occurs on Angel and Yerba Buena Islands and in San Francisco",
+   "reference": null,
+   "color": "#F9F97F",
+   "fraction": 0.0052
+  },
+  "10": {
+   "name": "Artificial fill",
+   "lithology": "",
+   "age": "Quaternary",
+   "age_bottom_ma": 2.588,
+   "age_top_ma": 0,
+   "rock_class": "alluvium",
+   "rock_class_index": 9,
+   "water": false,
+   "description": "Of varying character, consisting of clay, silt, sand, rock fragments, organic material, and (or) man made debris. Distinguished on map only in southern Marin and San Francisco Counties; but present elsewhere, especially within unit Qmf.",
+   "reference": null,
+   "color": "#F9F97F",
+   "fraction": 0.0145
+  },
+  "11": {
+   "name": "Beach sand",
+   "lithology": "",
+   "age": "Quaternary",
+   "age_bottom_ma": 2.588,
+   "age_top_ma": 0,
+   "rock_class": "alluvium",
+   "rock_class_index": 9,
+   "water": false,
+   "description": "Well to moderately sorted; loose to soft",
+   "reference": null,
+   "color": "#F9F97F",
+   "fraction": 0.0047
+  },
+  "12": {
+   "name": "Landslide deposits",
+   "lithology": "",
+   "age": "Quaternary",
+   "age_bottom_ma": 2.588,
+   "age_top_ma": 0,
+   "rock_class": "alluvium",
+   "rock_class_index": 9,
+   "water": false,
+   "description": "Largely bedrock debris",
+   "reference": null,
+   "color": "#F9F97F",
+   "fraction": 0.0014
+  }
+ },
+ "rules": [
+  [
+   "serpentinite",
+   "serpentin|ultramafic|peridotit|dunite|harzburgite|pyroxenite"
+  ],
+  [
+   "greenstone_metavolcanic",
+   "greenstone|meta-?volcanic|metabasalt|meta-?andesite|amphibolite|spilite"
+  ],
+  [
+   "slate_phyllite",
+   "slate|phyllite|argillite"
+  ],
+  [
+   "schist",
+   "schist|gneiss|hornfels|quartzite|metasediment"
+  ],
+  [
+   "limestone_marble",
+   "limestone|marble|dolomite|dolostone|carbonate"
+  ],
+  [
+   "granitic",
+   "granit|granodiorit|tonalit|diorit|monzonit|syenit|gabbro|trondhjemit|plutonic|intrusive|pegmatit|aplite"
+  ],
+  [
+   "volcanic",
+   "volcanic|andesit|basalt|rhyolit|dacit|tuff|pyroclastic|lahar|mudflow|latite"
+  ],
+  [
+   "alluvium",
+   "alluvi|terrace|alluvial fan|unconsolidated|colluvi|landslide|surficial|\\bgravels?\\b|\\bsands?\\b"
+  ],
+  [
+   "sandstone_conglomerate",
+   "sandstone|conglomerate|gr[ae]ywacke|siltstone|mudstone|shale|breccia|clastic|sedimentary"
+  ]
+ ],
+ "rule_notes": "first match over major lithologies, then name, then description; volcanic with bottom age >= 145.0 Ma -> greenstone_metavolcanic; clastic sedimentary with bottom age <= 2.58 Ma -> alluvium; 'water' -> other",
+ "source": {
+  "source": "macrostrat",
+  "endpoint": "https://macrostrat.org/api/v2/geologic_units/map",
+  "scale": "large",
+  "macrostrat_source_id": 38,
+  "scale_coverage_of_sample_points": {
+   "large": 25,
+   "medium": 25,
+   "small": 10,
+   "tiny": 8
+  },
+  "sample_points": 25,
+  "requests": 105,
+  "uncovered_pieces": 1,
+  "fallback_errors": []
+ }
+}

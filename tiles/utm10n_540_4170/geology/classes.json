@@ -1,0 +1,167 @@
+{
+ "rock_classes": [
+  "greenstone_metavolcanic",
+  "serpentinite",
+  "slate_phyllite",
+  "schist",
+  "granitic",
+  "volcanic",
+  "sandstone_conglomerate",
+  "limestone_marble",
+  "alluvium",
+  "other"
+ ],
+ "resistance": {
+  "greenstone_metavolcanic": 0.9,
+  "granitic": 0.8,
+  "serpentinite": 0.8,
+  "schist": 0.6,
+  "slate_phyllite": 0.6,
+  "volcanic": 0.7,
+  "sandstone_conglomerate": 0.4,
+  "limestone_marble": 0.7,
+  "alluvium": 0.0,
+  "other": 0.4
+ },
+ "units": {
+  "1": {
+   "name": "Pliocene marine rocks",
+   "lithology": "Major: sandstone, mudstone; Minor: siltstone, claystone, conglomerate",
+   "age": "Miocene to Pleistocene",
+   "age_bottom_ma": 8.3395,
+   "age_top_ma": 2.841,
+   "rock_class": "sandstone_conglomerate",
+   "rock_class_index": 7,
+   "water": false,
+   "description": "Sandstone, siltstone, shale, and conglomerate; in part Pleistocene and Miocene.",
+   "reference": "Saucedo, G.J., Bedford, D.R., Raines, G.L., Miller, R.J., and Wentworth, C.M., 2000, GIS Data for the Geologic Map of California, California Department of Conservation, Division of Mines and Geology, CD-ROM 2000-07, scale 1:750,000. Primary reference: Jennings, C.W., with modifications by Gutierrez, C., Bryant, W., Saucedo, G., and Wills, C., 2010, Geologic map of California, Version 2.0 (California Geological Survey 150th Anniversary Edition), Department of Conservation, California Geological Survey: California Geologic Data Map Series, GDM No. 2, scale 1:750,000.",
+   "color": "#FFFF00",
+   "fraction": 0.0481
+  },
+  "2": {
+   "name": "Quaternary alluvium and marine deposits",
+   "lithology": "Major: coarse alluvium; Minor: fine alluvium",
+   "age": "Pliocene to Holocene",
+   "age_bottom_ma": 0.6558,
+   "age_top_ma": 0.0117,
+   "rock_class": "alluvium",
+   "rock_class_index": 9,
+   "water": false,
+   "description": "Alluvium, lake, playa, and terrace deposits; unconsolidated and semi-consolidated. Mostly nonmarine, but includes marine deposits near the coast.",
+   "reference": "Saucedo, G.J., Bedford, D.R., Raines, G.L., Miller, R.J., and Wentworth, C.M., 2000, GIS Data for the Geologic Map of California, California Department of Conservation, Division of Mines and Geology, CD-ROM 2000-07, scale 1:750,000. Primary reference: Jennings, C.W., with modifications by Gutierrez, C., Bryant, W., Saucedo, G., and Wills, C., 2010, Geologic map of California, Version 2.0 (California Geological Survey 150th Anniversary Edition), Department of Conservation, California Geological Survey: California Geologic Data Map Series, GDM No. 2, scale 1:750,000.",
+   "color": "#FFF2D3",
+   "fraction": 0.2485
+  },
+  "3": {
+   "name": "Upper Cretaceous marine rocks, unit 1 (Upper Great Valley Sequence)",
+   "lithology": "Major: sandstone, siltstone mudstone; Incidental: conglomerate",
+   "age": "Cenomanian to Maastrichtian",
+   "age_bottom_ma": 145,
+   "age_top_ma": 58.4,
+   "rock_class": "sandstone_conglomerate",
+   "rock_class_index": 7,
+   "water": false,
+   "description": "Upper Cretaceous sandstone, shale, and conglomerate",
+   "reference": "Saucedo, G.J., Bedford, D.R., Raines, G.L., Miller, R.J., and Wentworth, C.M., 2000, GIS Data for the Geologic Map of California, California Department of Conservation, Division of Mines and Geology, CD-ROM 2000-07, scale 1:750,000. Primary reference: Jennings, C.W., with modifications by Gutierrez, C., Bryant, W., Saucedo, G., and Wills, C., 2010, Geologic map of California, Version 2.0 (California Geological Survey 150th Anniversary Edition), Department of Conservation, California Geological Survey: California Geologic Data Map Series, GDM No. 2, scale 1:750,000.",
+   "color": "#9AD9DD",
+   "fraction": 0.0645
+  },
+  "4": {
+   "name": "water",
+   "lithology": "",
+   "age": null,
+   "age_bottom_ma": null,
+   "age_top_ma": null,
+   "rock_class": "other",
+   "rock_class_index": 10,
+   "water": true,
+   "description": null,
+   "reference": "Saucedo, G.J., Bedford, D.R., Raines, G.L., Miller, R.J., and Wentworth, C.M., 2000, GIS Data for the Geologic Map of California, California Department of Conservation, Division of Mines and Geology, CD-ROM 2000-07, scale 1:750,000. Primary reference: Jennings, C.W., with modifications by Gutierrez, C., Bryant, W., Saucedo, G., and Wills, C., 2010, Geologic map of California, Version 2.0 (California Geological Survey 150th Anniversary Edition), Department of Conservation, California Geological Survey: California Geologic Data Map Series, GDM No. 2, scale 1:750,000.",
+   "color": "",
+   "fraction": 0.0117
+  },
+  "5": {
+   "name": "Quaternary sand deposits, unit 1 (coastal)",
+   "lithology": "Major: sand",
+   "age": "Quaternary",
+   "age_bottom_ma": 2.588,
+   "age_top_ma": 0,
+   "rock_class": "alluvium",
+   "rock_class_index": 9,
+   "water": false,
+   "description": "Extensive marine and nonmarine sand deposits, generally near the coast or desert playas",
+   "reference": "Saucedo, G.J., Bedford, D.R., Raines, G.L., Miller, R.J., and Wentworth, C.M., 2000, GIS Data for the Geologic Map of California, California Department of Conservation, Division of Mines and Geology, CD-ROM 2000-07, scale 1:750,000. Primary reference: Jennings, C.W., with modifications by Gutierrez, C., Bryant, W., Saucedo, G., and Wills, C., 2010, Geologic map of California, Version 2.0 (California Geological Survey 150th Anniversary Edition), Department of Conservation, California Geological Survey: California Geologic Data Map Series, GDM No. 2, scale 1:750,000.",
+   "color": "#F9F97F",
+   "fraction": 0.1416
+  },
+  "6": {
+   "name": "Franciscan Complex, unit 1 (Coast Ranges)",
+   "lithology": "Major: sandstone, mudstone; Minor: chert; Incidental: limestone, conglomerate, greenstone, serpentinite, gabbro, amphibolite, schist, felsic volcanic",
+   "age": "Jurassic to Cretaceous",
+   "age_bottom_ma": 153.4,
+   "age_top_ma": 59.2,
+   "rock_class": "sandstone_conglomerate",
+   "rock_class_index": 7,
+   "water": false,
+   "description": "Franciscan complex: Cretaceous and Jurassic sandstone with smaller amounts of shale, chert, limestone, and conglomerate. Includes Franciscan melange, except where separated--see KJfm.",
+   "reference": "Saucedo, G.J., Bedford, D.R., Raines, G.L., Miller, R.J., and Wentworth, C.M., 2000, GIS Data for the Geologic Map of California, California Department of Conservation, Division of Mines and Geology, CD-ROM 2000-07, scale 1:750,000. Primary reference: Jennings, C.W., with modifications by Gutierrez, C., Bryant, W., Saucedo, G., and Wills, C., 2010, Geologic map of California, Version 2.0 (California Geological Survey 150th Anniversary Edition), Department of Conservation, California Geological Survey: California Geologic Data Map Series, GDM No. 2, scale 1:750,000.",
+   "color": "#9AD9DD",
+   "fraction": 0.0935
+  }
+ },
+ "rules": [
+  [
+   "serpentinite",
+   "serpentin|ultramafic|peridotit|dunite|harzburgite|pyroxenite"
+  ],
+  [
+   "greenstone_metavolcanic",
+   "greenstone|meta-?volcanic|metabasalt|meta-?andesite|amphibolite|spilite"
+  ],
+  [
+   "slate_phyllite",
+   "slate|phyllite|argillite"
+  ],
+  [
+   "schist",
+   "schist|gneiss|hornfels|quartzite|metasediment"
+  ],
+  [
+   "limestone_marble",
+   "limestone|marble|dolomite|dolostone|carbonate"
+  ],
+  [
+   "granitic",
+   "granit|granodiorit|tonalit|diorit|monzonit|syenit|gabbro|trondhjemit|plutonic|intrusive|pegmatit|aplite"
+  ],
+  [
+   "volcanic",
+   "volcanic|andesit|basalt|rhyolit|dacit|tuff|pyroclastic|lahar|mudflow|latite"
+  ],
+  [
+   "alluvium",
+   "alluvi|terrace|alluvial fan|unconsolidated|colluvi|landslide|surficial|\\bgravels?\\b|\\bsands?\\b"
+  ],
+  [
+   "sandstone_conglomerate",
+   "sandstone|conglomerate|gr[ae]ywacke|siltstone|mudstone|shale|breccia|clastic|sedimentary"
+  ]
+ ],
+ "rule_notes": "first match over major lithologies, then name, then description; volcanic with bottom age >= 145.0 Ma -> greenstone_metavolcanic; clastic sedimentary with bottom age <= 2.58 Ma -> alluvium; 'water' -> other",
+ "source": {
+  "source": "macrostrat",
+  "endpoint": "https://macrostrat.org/api/v2/geologic_units/map",
+  "scale": "medium",
+  "macrostrat_source_id": 133,
+  "scale_coverage_of_sample_points": {
+   "large": 17,
+   "medium": 25,
+   "small": 14,
+   "tiny": 12
+  },
+  "sample_points": 25,
+  "requests": 31,
+  "uncovered_pieces": 1,
+  "fallback_errors": []
+ }
+}

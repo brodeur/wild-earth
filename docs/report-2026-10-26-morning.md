@@ -142,7 +142,8 @@ release, WebGL) was still running; its commit, if it verified, is the last in `g
 | ad48513 | Client: the ground shows its measured colour for the date on the photo without its trees; January green, April greenest, late October gold-beige; forest floor as litter under dense canopy; grass blades match. |
 | 0816e6d | Wild turkey, California ground squirrel and western fence lizard meshes (130 credits; 360 of the 1,000 spent). |
 | a95fb59 | The three wired into the world on all tiles: turkey flocks of 6-15 that flush onto real limbs, ground squirrel colonies with a sentinel that dive into their burrows, fence lizards basking and doing push-ups on rocks and bark from March to October, on a new reptile rig; GBIF records all three on every tile. |
-| (next) | Sounds for the three, all synthesised: turkey putts, purr, spring dawn gobble and heavy flush; the ground squirrel's whistle alarm and scuffle; the lizard's scuttle. |
+| 145d46f | Sounds for the three, all synthesised: turkey putts, purr, spring dawn gobble and heavy flush; the ground squirrel's whistle alarm and scuffle; the lizard's scuttle. |
+| 469e4a5 | Two San Francisco cells (Twin Peaks to Ocean Beach; the Richmond, Presidio and Golden Gate) built from scratch in 31 and 93 min as a stress test; the JSON writer refuses NaN (a sea-side lidar check had written one and the tile would not load). What they show: no sea (the seabed is drawn as terrain under the photo of the waves, streams routed across it), the street grid baked into the rewilded hills with the street trees in rows along it, the Golden Gate Bridge as a line of 64 m crowns, foothill species in the Presidio; the hills, cliffs, beaches and headlands read from the air. |
 
 Open from the day: the attribution form for generated assets; far placement on the lidar ground beyond the fine square; the squirrel's
 crown camera in leafy oaks.

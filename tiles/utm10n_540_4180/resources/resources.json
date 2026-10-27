@@ -1,0 +1,312 @@
+{
+ "grid": {
+  "resolution_m": 30.03003003003003,
+  "pixels": 333,
+  "crs": "EPSG:32610"
+ },
+ "seasons": [
+  "winter",
+  "spring",
+  "summer",
+  "fall"
+ ],
+ "resources": [
+  "acorn_mast",
+  "grass_forbs",
+  "browse",
+  "cover",
+  "insects",
+  "cavity",
+  "cliff_or_snag",
+  "burrow",
+  "water"
+ ],
+ "png": {
+  "acorn_mast": {
+   "winter": "resources/acorn_mast_winter.png",
+   "spring": "resources/acorn_mast_spring.png",
+   "summer": "resources/acorn_mast_summer.png",
+   "fall": "resources/acorn_mast_fall.png"
+  },
+  "grass_forbs": {
+   "winter": "resources/grass_forbs_winter.png",
+   "spring": "resources/grass_forbs_spring.png",
+   "summer": "resources/grass_forbs_summer.png",
+   "fall": "resources/grass_forbs_fall.png"
+  },
+  "browse": {
+   "winter": "resources/browse_winter.png",
+   "spring": "resources/browse_spring.png",
+   "summer": "resources/browse_summer.png",
+   "fall": "resources/browse_fall.png"
+  },
+  "cover": {
+   "winter": "resources/cover_winter.png",
+   "spring": "resources/cover_spring.png",
+   "summer": "resources/cover_summer.png",
+   "fall": "resources/cover_fall.png"
+  },
+  "insects": {
+   "winter": "resources/insects_winter.png",
+   "spring": "resources/insects_spring.png",
+   "summer": "resources/insects_summer.png",
+   "fall": "resources/insects_fall.png"
+  },
+  "cavity": {
+   "winter": "resources/cavity_winter.png",
+   "spring": "resources/cavity_spring.png",
+   "summer": "resources/cavity_summer.png",
+   "fall": "resources/cavity_fall.png"
+  },
+  "cliff_or_snag": {
+   "winter": "resources/cliff_or_snag_winter.png",
+   "spring": "resources/cliff_or_snag_spring.png",
+   "summer": "resources/cliff_or_snag_summer.png",
+   "fall": "resources/cliff_or_snag_fall.png"
+  },
+  "burrow": {
+   "winter": "resources/burrow_winter.png",
+   "spring": "resources/burrow_spring.png",
+   "summer": "resources/burrow_summer.png",
+   "fall": "resources/burrow_fall.png"
+  },
+  "water": {
+   "winter": "resources/water_winter.png",
+   "spring": "resources/water_spring.png",
+   "summer": "resources/water_summer.png",
+   "fall": "resources/water_fall.png"
+  }
+ },
+ "png_bounds": [
+  -122.54584299274455,
+  37.76595983573647,
+  -122.43161785797528,
+  37.85658112570665
+ ],
+ "tables": {
+  "base": {
+   "acorn_mast": {
+    "1": 90,
+    "3": 50,
+    "6": 30,
+    "2": 10
+   },
+   "grass_forbs": {
+    "5": 90,
+    "1": 60,
+    "6": 30,
+    "3": 25,
+    "4": 10,
+    "2": 5
+   },
+   "browse": {
+    "4": 80,
+    "6": 70,
+    "1": 50,
+    "3": 50,
+    "2": 30,
+    "5": 10
+   },
+   "cover": {
+    "4": 90,
+    "2": 85,
+    "6": 85,
+    "3": 80,
+    "1": 60,
+    "5": 10,
+    "8": 15
+   },
+   "insects": {
+    "6": 90,
+    "5": 70,
+    "1": 60,
+    "4": 50,
+    "3": 50,
+    "2": 40
+   },
+   "cavity": {
+    "1": 80,
+    "3": 60,
+    "6": 60,
+    "2": 50
+   },
+   "cliff_or_snag": {
+    "2": 60,
+    "3": 50,
+    "1": 40,
+    "8": 50
+   },
+   "burrow": {
+    "5": 80,
+    "1": 60,
+    "4": 50,
+    "6": 40,
+    "3": 30,
+    "2": 20,
+    "8": 20
+   },
+   "water": {
+    "7": 100
+   }
+  },
+  "season": {
+   "acorn_mast": {
+    "winter": 0.5,
+    "spring": 0.1,
+    "summer": 0.05,
+    "fall": 1.0
+   },
+   "grass_forbs": {
+    "winter": 0.6,
+    "spring": 1.0,
+    "summer": 0.2,
+    "fall": 0.3
+   },
+   "browse": {
+    "winter": 0.6,
+    "spring": 1.0,
+    "summer": 0.7,
+    "fall": 0.5
+   },
+   "cover": {
+    "winter": 0.85,
+    "spring": 1.0,
+    "summer": 1.0,
+    "fall": 1.0
+   },
+   "insects": {
+    "winter": 0.1,
+    "spring": 1.0,
+    "summer": 0.8,
+    "fall": 0.4
+   },
+   "cavity": {
+    "winter": 1,
+    "spring": 1,
+    "summer": 1,
+    "fall": 1
+   },
+   "cliff_or_snag": {
+    "winter": 1,
+    "spring": 1,
+    "summer": 1,
+    "fall": 1
+   },
+   "burrow": {
+    "winter": 0.8,
+    "spring": 1.0,
+    "summer": 1.0,
+    "fall": 1.0
+   },
+   "water": {
+    "winter": 1.0,
+    "spring": 1.0,
+    "summer": 0.6,
+    "fall": 0.5
+   }
+  }
+ },
+ "colors": {
+  "acorn_mast": [
+   200,
+   140,
+   40
+  ],
+  "grass_forbs": [
+   150,
+   210,
+   80
+  ],
+  "browse": [
+   100,
+   170,
+   90
+  ],
+  "cover": [
+   60,
+   90,
+   60
+  ],
+  "insects": [
+   230,
+   200,
+   80
+  ],
+  "cavity": [
+   170,
+   110,
+   160
+  ],
+  "cliff_or_snag": [
+   180,
+   180,
+   190
+  ],
+  "burrow": [
+   190,
+   130,
+   90
+  ],
+  "water": [
+   80,
+   150,
+   240
+  ]
+ },
+ "mean_score": {
+  "acorn_mast": {
+   "winter": 4.6,
+   "spring": 0.9,
+   "summer": 0.5,
+   "fall": 9.3
+  },
+  "grass_forbs": {
+   "winter": 6.8,
+   "spring": 11.3,
+   "summer": 2.3,
+   "fall": 3.4
+  },
+  "browse": {
+   "winter": 18.7,
+   "spring": 31.1,
+   "summer": 21.8,
+   "fall": 15.6
+  },
+  "cover": {
+   "winter": 32.0,
+   "spring": 37.6,
+   "summer": 37.6,
+   "fall": 37.6
+  },
+  "insects": {
+   "winter": 2.5,
+   "spring": 25.4,
+   "summer": 20.3,
+   "fall": 10.1
+  },
+  "cavity": {
+   "winter": 6.0,
+   "spring": 6.0,
+   "summer": 6.0,
+   "fall": 6.0
+  },
+  "cliff_or_snag": {
+   "winter": 17.3,
+   "spring": 17.3,
+   "summer": 17.3,
+   "fall": 17.3
+  },
+  "burrow": {
+   "winter": 19.0,
+   "spring": 23.7,
+   "summer": 23.7,
+   "fall": 23.7
+  },
+  "water": {
+   "winter": 14.9,
+   "spring": 14.9,
+   "summer": 14.9,
+   "fall": 14.9
+  }
+ }
+}

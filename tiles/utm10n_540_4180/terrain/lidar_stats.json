@@ -1,0 +1,98 @@
+{
+ "grid": {
+  "points": 3100632168,
+  "points_in_tile": 3100477864,
+  "nodes": 76371,
+  "max_depth": null,
+  "ept": {
+   "project": "CA_SanFrancisco_1_B23",
+   "points": 13088433078,
+   "url": "https://usgs-lidar-public.s3.amazonaws.com/CA_SanFrancisco_1_B23/ept.json"
+  },
+  "density_pts_m2": 31.0,
+  "empty_cell_fraction": 0.7166
+ },
+ "grid_seconds": 2264.6,
+ "dtm_check": {
+  "ground_cell_fraction": 0.2078,
+  "median_offset_m": 0.0,
+  "mean_offset_m": -0.001,
+  "std_m": 0.067,
+  "p05_m": -0.053,
+  "p95_m": 0.045,
+  "fraction_within_0.15_m": 0.9767,
+  "fraction_beyond_0.5_m": 0.0023,
+  "best_shift_m": {
+   "east": 0,
+   "north": 0,
+   "rms_m": 0.182
+  }
+ },
+ "canopy_10m": {
+  "p95_mean_m": 2.95,
+  "tree_cover_pct": 13.24,
+  "shrub_cover_pct": 5.09
+ },
+ "crowns": {
+  "maxima": 103707,
+  "dropped_on_osm_buildings": 0,
+  "dropped_low_multi_return": 19274,
+  "dropped_pole_like": 1285,
+  "dropped_shrub_in_shrub_canopy": 1126,
+  "crowns": 82022,
+  "confidence_terms_median": {
+   "prominence": 0.924,
+   "width": 1.0,
+   "multi_return": 0.51,
+   "height": 1.0
+  },
+  "confidence_quantiles_p10_p50_p90": [
+   0.633,
+   0.817,
+   0.971
+  ],
+  "bytes": 696212,
+  "crowns_per_ha": 8.2,
+  "max_per_index_cell": 82,
+  "height_histogram_m": {
+   "4-6": 7378,
+   "6-8": 11085,
+   "8-12": 28015,
+   "12-16": 18834,
+   "16-20": 4398,
+   "20-25": 4257,
+   "25-30": 3261,
+   "30-35": 2147,
+   "35-40": 1113,
+   "40-80": 1395
+  },
+  "height_m": {
+   "median": 11.1,
+   "p95": 31.3,
+   "max": 150.6
+  },
+  "radius_m": {
+   "median": 4.71,
+   "p95": 9.06
+  },
+  "confidence_median": 0.817,
+  "seconds": 73.3
+ },
+ "terrain_detail": {
+  "residual_m": {
+   "mean": 0.248,
+   "std": 4.032,
+   "p50_abs": 0.0,
+   "p99_abs": 2.551,
+   "max_abs": 107.32
+  },
+  "fraction_over_0.5_m": 0.0427,
+  "clipped_fraction": 0.006169
+ },
+ "roughness": {
+  "median_m": 0.049,
+  "p90_m": 0.168,
+  "p99_m": 0.438
+ },
+ "products_seconds": 121.6
+}

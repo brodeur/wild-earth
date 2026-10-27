@@ -87,8 +87,11 @@ sequenced; Parked is in the brief but deliberately not started.
   game v2-v4 (AI collectors, leaderboard, a shared world per tile, granary defence and
   pilfering); hydrology rewilded with willow, alder and cottonwood corridors; a third tile
   built from scratch; attribution on every source and a credits panel; three.js 0.186.
-  Weak: woodpecker stays procedural; the base photo is one summer flight (Sentinel-2
-  seasonal colour and crown removal are the next step).
+  Sentinel-2 monthly ground colour on a crown-inpainted base photo; the turkey, ground
+  squirrel and fence lizard with their sounds; two San Francisco cells built from scratch as
+  a stress test (2026-10-26). Weak: woodpecker stays procedural; a coastal tile has no sea
+  (the seabed is drawn as terrain), the city's street grid survives the rewild, bridges
+  become crowns, and the species library is the foothills' (see decisions.md, 2026-10-26).
 
 ## Next: the visual pass, in order of effect per hour
 

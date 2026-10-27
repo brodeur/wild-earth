@@ -1,0 +1,98 @@
+{
+ "grid": {
+  "points": 298406355,
+  "points_in_tile": 298052739,
+  "nodes": 7085,
+  "max_depth": null,
+  "ept": {
+   "project": "CA_CaliforniaGaps_3_B23",
+   "points": 55840054389,
+   "url": "https://usgs-lidar-public.s3.amazonaws.com/CA_CaliforniaGaps_3_B23/ept.json"
+  },
+  "density_pts_m2": 3.0,
+  "empty_cell_fraction": 0.783
+ },
+ "grid_seconds": 366.7,
+ "dtm_check": {
+  "ground_cell_fraction": 0.1667,
+  "median_offset_m": -0.001,
+  "mean_offset_m": -0.001,
+  "std_m": 0.069,
+  "p05_m": -0.075,
+  "p95_m": 0.071,
+  "fraction_within_0.15_m": 0.9638,
+  "fraction_beyond_0.5_m": 0.0021,
+  "best_shift_m": {
+   "east": -2,
+   "north": 2,
+   "rms_m": null
+  }
+ },
+ "canopy_10m": {
+  "p95_mean_m": 1.13,
+  "tree_cover_pct": 5.31,
+  "shrub_cover_pct": 5.36
+ },
+ "crowns": {
+  "maxima": 48607,
+  "dropped_on_osm_buildings": 0,
+  "dropped_low_multi_return": 14356,
+  "dropped_pole_like": 1086,
+  "dropped_shrub_in_shrub_canopy": 1003,
+  "crowns": 32162,
+  "confidence_terms_median": {
+   "prominence": 0.958,
+   "width": 1.0,
+   "multi_return": 0.557,
+   "height": 0.624
+  },
+  "confidence_quantiles_p10_p50_p90": [
+   0.65,
+   0.783,
+   0.966
+  ],
+  "bytes": 297332,
+  "crowns_per_ha": 3.2,
+  "max_per_index_cell": 74,
+  "height_histogram_m": {
+   "4-6": 6914,
+   "6-8": 9821,
+   "8-12": 6516,
+   "12-16": 2957,
+   "16-20": 1769,
+   "20-25": 1584,
+   "25-30": 954,
+   "30-35": 860,
+   "35-40": 358,
+   "40-80": 429
+  },
+  "height_m": {
+   "median": 7.7,
+   "p95": 30.2,
+   "max": 52.7
+  },
+  "radius_m": {
+   "median": 4.21,
+   "p95": 8.3
+  },
+  "confidence_median": 0.783,
+  "seconds": 45.4
+ },
+ "terrain_detail": {
+  "residual_m": {
+   "mean": -0.011,
+   "std": 0.329,
+   "p50_abs": 0.0,
+   "p99_abs": 1.0,
+   "max_abs": 29.79
+  },
+  "fraction_over_0.5_m": 0.0282,
+  "clipped_fraction": 0.000559
+ },
+ "roughness": {
+  "median_m": 0.053,
+  "p90_m": 0.166,
+  "p99_m": 0.431
+ },
+ "products_seconds": 86.2
+}
