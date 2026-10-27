@@ -155,6 +155,8 @@ release, WebGL) was still running; its commit, if it verified, is the last in `g
 | 9cee468 | Every day has weather: cloud, mist, wind, rain, snow and thunder from the measured day, today's live, a random hour between pre-dawn and post-dusk on a chosen day; a weather row on the HUD. |
 | 2942b18 | The start screen's spinner is the spirit circling and chasing its tail, pre-rendered and played by CSS, and the animals are rendered stills popping in with a glimmer; hover steps the other cards back. |
 | 8d1bcca | Every species is playable: a ground control for everything that walks and a flier control for the hawk, vulture and jays, entered by touching them; the wisp's ribbons trail the path flown. |
+| d4db600, 2d98777, 894c542 | The screen's lineup centred and the cards receding with a constant gutter; the dark start with only the circling wisp until the world is ready; Escape leaves a body. |
+| 676f39a | The world build yields: the main thread is blocked about 1.2 s over the build instead of 11.5, the worst input delay 290 ms instead of 5.4 s, the world byte-identical; your 30-40 s hover wait was this, not the animals. |
 
 Open from the day: the attribution form for generated assets; far placement on the lidar ground beyond the fine square; the squirrel's
 crown camera in leafy oaks.
