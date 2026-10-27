@@ -30,16 +30,12 @@ html:not(.opening) #opening:not(.out) { display:none; }
 .op-tile { --ch:min(100cqh - var(--bar) - 2 * var(--mt), (100vw - 64px) * 16 / 9);
   position:relative; flex:none; height:var(--ch); margin-top:calc((100cqh - var(--bar) - var(--ch)) / 2);
   aspect-ratio:9/16; border-radius:14px; overflow:hidden; background:#0d1310; scroll-snap-align:center; container-type:inline-size;
-  box-shadow:0 0 0 1px #263128, 0 10px 30px #0008; transition:transform .5s cubic-bezier(.2, .8, .25, 1), filter .5s ease, box-shadow .35s ease; }
-.op-tiles:has(.op-tile.sel) .op-tile:not(.sel) { transform:scale(.94); filter:brightness(.8) saturate(.88); }
-/* Hover (a pointer that hovers; not touch) starts the same step back: the cards not under the pointer go back, the one
-   under it is at full size, or, when another card is chosen, comes forward as a preview (no ring) while the chosen one
-   steps back with the rest until the pointer leaves. */
-@media (hover:hover) and (pointer:fine) {
-  .op-tiles:has(.op-tile:hover) .op-tile:not(:hover) { transform:scale(.94); filter:brightness(.8) saturate(.88); }
-  .op-tiles:has(.op-tile.sel) .op-tile:not(.sel):hover { transform:scale(1.08); filter:none; z-index:1; }
-}
-.op-tile.sel { transform:scale(1.08); z-index:1;
+  box-shadow:0 0 0 1px #263128, 0 10px 30px #0008; transition:transform .5s cubic-bezier(.2, .8, .25, 1), filter .5s ease, box-shadow .35s ease;
+  /* scale, brightness and the sideways shift that keeps the gutters constant: arrival.js layoutCards, by state (chosen,
+     hovered with a pointer, ready) */
+  transform:translateX(var(--tx, 0px)) scale(var(--s, 1)); filter:brightness(var(--b, 1)) saturate(var(--sat, 1)); }
+.op-tile.hover { z-index:1; }
+.op-tile.sel { z-index:1;
   box-shadow:0 0 0 2px color-mix(in srgb, var(--hl) 85%, #fff), 0 0 36px color-mix(in srgb, var(--hl) 30%, transparent), 0 14px 40px #000a; }
 .op-tile:has(.op-pick:focus-visible) { outline:2px solid var(--hl); outline-offset:3px; }
 .op-pick { position:absolute; inset:0; z-index:1; width:100%; height:100%; padding:0; border:0; background:none; cursor:pointer; outline:none; }
@@ -85,13 +81,15 @@ html:not(.opening) #opening:not(.out) { display:none; }
 .op-begin:focus-visible { outline:2px solid color-mix(in srgb, var(--hl) 60%, #fff); outline-offset:3px; }
 
 /* the lineup: the tile's animals as stills (assets/opening/<species>.webp, arrival.js startLineup) at one true scale,
-   placed in card heights (--H) from the chosen card's centre (--cx) and bottom (--by); --x, --y the still's left and
+   placed in card heights (--H) from the chosen card's centre (--cx) and bottom (--by, birds) or the foot line (--fy,
+   ground animals: centred in the band under the card); --x, --y the still's left and
    top, --w, --h its size, all in card heights. Each pops in with a glimmer (::after) after its own animation-delay;
    ground animals have a contact shadow (::before), birds float. */
 .op-lineup { position:absolute; inset:0; z-index:5; pointer-events:none; opacity:0; transition:opacity .4s ease; }
 .op-lineup.on { opacity:1; }
-.op-an { position:absolute; left:calc(var(--cx) + var(--x) * var(--H)); top:calc(var(--by) + var(--y) * var(--H)); width:calc(var(--w) * var(--H)); height:calc(var(--h) * var(--H));
+.op-an { position:absolute; left:calc(var(--cx) + var(--x) * var(--H)); top:calc(var(--by) + var(--y) * var(--H));   /* birds: from the card's bottom */ width:calc(var(--w) * var(--H)); height:calc(var(--h) * var(--H));
   opacity:0; transform-origin:50% 90%; transition:left .6s cubic-bezier(.2, .8, .25, 1), top .6s cubic-bezier(.2, .8, .25, 1), width .6s ease, height .6s ease; }
+.op-an.ground { top:calc(var(--fy) + var(--y) * var(--H)); }   /* ground animals: from the foot line, the band's middle */
 .op-an.back { z-index:0; } .op-an.ground:not(.back) { z-index:1; }
 .op-an > i { display:block; width:100%; height:100%; }
 .op-an img { display:block; width:100%; height:100%; }

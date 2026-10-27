@@ -181,7 +181,13 @@ export class OpeningScreen {
     setTimeout(() => this.centreCard(), 0);
     // the lineup follows the chosen card when the row scrolls or the window changes (its positions are CSS from these)
     this.place = () => this.placeLineup();
-    row.addEventListener('scroll', this.place, { passive: true }); addEventListener('resize', this.place);
+    this.relayout = () => this.layoutCards();
+    row.addEventListener('scroll', this.place, { passive: true }); addEventListener('resize', this.relayout);
+    // a hovering pointer (not touch) brings the card under it forward and steps the rest back (layoutCards)
+    for (const c of this.root.querySelectorAll('.op-tile')) {
+      c.addEventListener('pointerenter', e => { if (e.pointerType === 'mouse') { this.hovered = c; this.layoutCards(); } });
+      c.addEventListener('pointerleave', e => { if (this.hovered === c) { this.hovered = null; this.layoutCards(); } });
+    }
     this.update();   // the slider and its colour at once; the map's pan follows when the features arrive
   }
 
@@ -196,7 +202,7 @@ export class OpeningScreen {
       c.querySelector('.op-pick').setAttribute('aria-pressed', on);
     }
     const card = this.cardOf(id); if (card) card.querySelector('.op-status').textContent = text;
-    this.placeLineup();
+    this.layoutCards();
   }
 
   centreCard() {
@@ -252,17 +258,19 @@ export class OpeningScreen {
       .concat(birds.map((c, k) => ({ c, bird: k })));
     for (const it of items.sort(() => rnd() - 0.5)) {   // created, so loaded, in a random order
       const sp = index.species[it.c], k = PX_PER_M_CARD / sp.px_per_m;   // card heights per still pixel
-      const w = sp.width * k, h = sp.height * k, el = document.createElement('span'), img = new Image();
+      const s = it.bird == null && it.back ? 0.92 : 1;   // the back row a step further off
+      const w = sp.width * k * s, h = sp.height * k * s, el = document.createElement('span'), img = new Image();
       el.className = `op-an ${it.bird != null ? 'bird' : 'ground'}`;
-      let x, y;   // the still's centre x and top y, in card heights from the card's centre x and bottom
+      let x, y;   // the still's centre x and top y, in card heights: birds from the card's centre x and bottom, ground
+                  // animals from the card's centre x and the foot line (--fy, the band's middle: placeLineup)
       if (it.bird != null) {
         const a = [-2.2, -0.9, -1.6, -0.4, -2.7, -1.25][it.bird % 6], r = 0.36 + 0.06 * (it.bird % 3);
         x = Math.cos(a) * r * 1.15; y = -1 + 0.12 + Math.sin(a) * r * 0.32 - h / 2;   // round the card's top
         el.style.setProperty('--fd', `${(5 + rnd() * 3).toFixed(2)}s`); el.style.setProperty('--fx', `${(rnd() < 0.5 ? -1 : 1) * (6 + rnd() * 8) | 0}px`);
       } else {
-        const s = it.back ? 0.92 : 1;
-        x = it.x; y = (it.back ? 0.135 : 0.15) - (sp.foot_px ?? sp.height) * k * s;
-        el.style.setProperty('--s', s); if (it.back) el.classList.add('back');
+        x = it.x; y = (it.back ? -0.015 : 0) - (sp.foot_px ?? sp.height) * k * s;
+        if (it.back) el.classList.add('back');
+        if (!this.tall || h > this.tall.h) this.tall = { t: y, h };   // the tallest: its middle goes to the band's middle
       }
       if (x > 0.02) el.classList.add('flip');   // face the card's middle (the stills face right)
       el.style.setProperty('--x', (x - w / 2).toFixed(4)); el.style.setProperty('--y', y.toFixed(4));
@@ -280,12 +288,45 @@ export class OpeningScreen {
     this.placeLineup();
   }
 
-  // the chosen card's centre, bottom and height (at its grown size) for the lineup's CSS
+  // The cards' scales and brightness by state, and the sideways shifts that keep the gutters between them as wide as
+  // at full size whatever the scales (a scale about each card's centre would widen them): the card in focus (hovered
+  // with a pointer, else the chosen one) stays put, the others are laid out edge to edge outward from it. Set as CSS
+  // variables; the transitions are CSS. Nothing chosen and no hover: all at full size.
+  //   chosen 1.08; others 0.94 and 80% bright (0.86 and 60% once its world is ready); hovering another previews it at
+  //   1.08 and steps the chosen back with the rest.
+  layoutCards() {
+    const cards = [...this.root.querySelectorAll('.op-tile')]; if (!cards.length) return;
+    const sel = cards.findIndex(c => c.classList.contains('sel')), hov = this.hovered ? cards.indexOf(this.hovered) : -1;
+    const ready = sel >= 0 && cards[sel].classList.contains('ready'), f = hov >= 0 ? hov : sel;
+    const S = cards.map((c, i) => i === f ? [sel >= 0 ? 1.08 : 1, 1, 1] : f < 0 ? [1, 1, 1] : ready && i !== sel ? [0.86, 0.6, 0.8] : [0.94, 0.8, 0.88]);
+    const w = cards[0].offsetWidth, g = parseFloat(getComputedStyle(this.$('.op-tiles')).columnGap) || 0, tx = cards.map(() => 0);
+    if (f >= 0) for (const dir of [1, -1]) {
+      let edge = S[f][0] * w / 2;   // the far edge so far, from the focus card's centre
+      for (let i = f + dir; i >= 0 && i < cards.length; i += dir) {
+        const at = edge + g + S[i][0] * w / 2;
+        tx[i] = dir * at - (i - f) * (w + g); edge = at + S[i][0] * w / 2;
+      }
+    }
+    cards.forEach((c, i) => {
+      c.style.setProperty('--s', S[i][0]); c.style.setProperty('--b', S[i][1]); c.style.setProperty('--sat', S[i][2]);
+      c.style.setProperty('--tx', `${tx[i].toFixed(1)}px`); c.classList.toggle('hover', i === hov);
+    });
+    this.cardShift = { el: sel >= 0 ? cards[sel] : null, tx: sel >= 0 ? tx[sel] : 0 };
+    this.placeLineup();
+  }
+
+  // The lineup's anchors for its CSS: the chosen card's centre x (where its shift is going), its bottom at the grown size
+  // (birds round its top), and the foot line, set so the tallest ground animal's middle is at the middle of the band
+  // between the card's bottom and the window's.
   placeLineup() {
     const card = this.$('.op-tile.sel'), box = this.$('.op-lineup'); if (!card || !box) return;
-    const r = card.getBoundingClientRect(), H = card.offsetHeight * 1.08, cy = r.top + r.height / 2;
-    box.style.setProperty('--cx', `${(r.left + r.width / 2).toFixed(1)}px`);
-    box.style.setProperty('--by', `${(cy + H / 2).toFixed(1)}px`);
+    const r = card.getBoundingClientRect(), now = new DOMMatrix(getComputedStyle(card).transform).m41;
+    const tx = this.cardShift?.el === card ? this.cardShift.tx : 0;
+    const H = card.offsetHeight * 1.08, cy = r.top + r.height / 2, by = cy + H / 2;
+    const mid = (by + this.root.clientHeight) / 2, tall = this.tall || { t: -0.15, h: 0.15 };
+    box.style.setProperty('--cx', `${(r.left + r.width / 2 - now + tx).toFixed(1)}px`);
+    box.style.setProperty('--by', `${by.toFixed(1)}px`);
+    box.style.setProperty('--fy', `${(mid - (tall.t + tall.h / 2) * H).toFixed(1)}px`);
     box.style.setProperty('--H', `${H.toFixed(1)}px`);
     box.classList.add('on');
   }
@@ -390,6 +431,7 @@ export class OpeningScreen {
     card.classList.add('loading');
     this.startLineup();
     if (this.ready) this.showReady(card);
+    this.layoutCards();
     setTimeout(() => { this.centreCard(); this.placeLineup(); }, 0);
   }
 
@@ -406,6 +448,7 @@ export class OpeningScreen {
   }
   showReady(card) {
     card.classList.remove('loading'); card.classList.add('ready');
+    this.layoutCards();   // the others recede further
     card.querySelector('.op-status').textContent = '';
     const b = card.querySelector('.op-begin'); b.disabled = false; b.tabIndex = 0;
     b.focus({ preventScroll: true });
@@ -423,7 +466,7 @@ export class OpeningScreen {
     for (const ev of ['keydown', 'keyup']) removeEventListener(ev, this.guard, true);
     document.activeElement?.blur?.();
     this.root.classList.add('out');
-    this.closed = true; removeEventListener('resize', this.place);
+    this.closed = true; removeEventListener('resize', this.relayout);
     setTimeout(() => { this.root.hidden = true; this.root.innerHTML = ''; }, 900);
   }
 }
