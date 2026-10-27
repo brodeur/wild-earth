@@ -178,6 +178,14 @@ SOURCES = {
                             "and eBird (CC0, CC BY 4.0 or CC BY-NC 4.0 per record)",
              "attribution_url": "https://www.gbif.org/",
              "attribution_required": True},
+    "open_meteo": {"name": "Open-Meteo historical weather API (ERA5 / ERA5-Land reanalysis, best match); "
+                           "today's weather from its forecast API through the dev server",
+                   "url": "https://archive-api.open-meteo.com/v1/archive",
+                   "license": "CC BY 4.0; free API for non-commercial use",
+                   "license_url": "https://open-meteo.com/en/license",
+                   "attribution": "Weather data by Open-Meteo.com (https://open-meteo.com), CC BY 4.0",
+                   "attribution_url": "https://open-meteo.com/",
+                   "attribution_required": True},
 }
 
 

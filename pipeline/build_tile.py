@@ -5,6 +5,7 @@
     python -m pipeline.build_tile --tile utm10n_690_4280 --steps species_prior   # client prior only, no fetch
     python -m pipeline.build_tile --tile utm10n_680_4280 --steps lidar,ground    # 1 m DEM, point cloud, crowns (pipeline/lidar.py)
     python -m pipeline.build_tile --tile utm10n_680_4280 --steps seasons         # Sentinel-2 monthly colour (pipeline/fetch_sentinel.py)
+    python -m pipeline.build_tile --tile utm10n_680_4280 --steps weather         # last year's hourly weather (pipeline/fetch_weather.py)
     python -m pipeline.build_tile --tile utm10n_680_4280 --steps inpaint         # ground-only base texture (pipeline/inpaint_crowns.py)
 """
 from __future__ import annotations
@@ -18,7 +19,7 @@ from .config import (ATTRIBUTION_FIELDS, GENERATOR, SPEC_VERSION, TILES_DIR, Til
                      read_json, sha256, today, write_json)
 from .species_data import CALENDAR, PERCEPTION, SEASONS
 
-ALL_STEPS = ["dem", "lidar", "naip", "osm", "hydro", "channels", "rewild_hydro", "veg", "ground", "species", "derive", "crowns", "erase", "inpaint", "seasons", "unreal"]
+ALL_STEPS = ["dem", "lidar", "naip", "osm", "hydro", "channels", "rewild_hydro", "veg", "ground", "species", "derive", "crowns", "erase", "inpaint", "seasons", "weather", "unreal"]
 
 
 def load_manifest(tile: Tile) -> dict:
@@ -188,6 +189,11 @@ def run(tile: Tile, steps: list[str], force=False) -> dict:
                     add_layer(m, tile, k, v)
                 src = m["layers"]["seasons.s2_monthly"]["source"]
                 m["sources"][src]["years_used"] = m["layers"]["seasons.s2_monthly"]["years"]
+            elif step == "weather":
+                # Last year's hourly weather at the tile centre from Open-Meteo's archive (pipeline/fetch_weather.py);
+                # the raw answer is cached under pipeline/_cache/weather/<tile>/ per period end date.
+                from .fetch_weather import fetch_weather
+                add_layer(m, tile, "client.weather", fetch_weather(tile, force))
             elif step == "unreal":
                 from .export_unreal import export_unreal
                 add_layer(m, tile, "unreal", export_unreal(tile))

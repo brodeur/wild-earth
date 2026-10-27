@@ -15,7 +15,7 @@
   37.85658112570665
  ],
  "size_m": 10000,
- "generated_at": "2026-10-27T03:21:13Z",
+ "generated_at": "2026-10-27T04:51:29Z",
  "generator": {
   "name": "wild-earth-pipeline",
   "version": "0.2.0"
@@ -5024,6 +5024,57 @@
    },
    "sha256": "4b9ae6d3eb5e574908ce38e08814b7a85b43a6c55726c1b7e4029b880d7751a7",
    "bytes": 13209
+  },
+  "client.weather": {
+   "path": "client/weather.json",
+   "kind": "json",
+   "source": "open_meteo",
+   "credit": "Weather data by Open-Meteo.com (https://open-meteo.com), CC BY 4.0",
+   "point": [
+    -122.4888,
+    37.8113
+   ],
+   "period": [
+    "2025-01-01",
+    "2026-10-26"
+   ],
+   "timezone": "America/Los_Angeles",
+   "clock": "local wall-clock time from UTC via zoneinfo; DST days padded/trimmed to 24 rows (the skipped spring-forward hour repeats the row before it, the repeated fall-back hour keeps its first)",
+   "utc_offset_seconds": -28800,
+   "elevation_m": 0.0,
+   "fields": [
+    "temp_c",
+    "humidity",
+    "precip_mm",
+    "rain_mm",
+    "snow_cm",
+    "snow_depth_m",
+    "cloud",
+    "cloud_low",
+    "cloud_mid",
+    "cloud_high",
+    "wind_kmh",
+    "wind_dir",
+    "code"
+   ],
+   "stats": {
+    "days": 664,
+    "hours": 15936,
+    "first_day": "2025-01-01",
+    "last_day": "2026-10-26",
+    "precip_days": 91,
+    "snow_days": 0,
+    "precip_mm_total": 894.1,
+    "tmax_c": 33.6,
+    "tmin_c": 3.9
+   },
+   "encoding": "compact JSON; days keyed by local date YYYY-MM-DD; per day sunrise / sunset 'HH:MM', tmax / tmin deg C, precip_mm (the local day's hours), and hourly: 24 rows (index = local wall-clock hour) of `fields`; null = no value. Clock: see `clock`; utc_offset_seconds is standard time. Units: temp_c deg C, humidity %, precip_mm / rain_mm mm in the hour, snow_cm cm fallen in the hour, snow_depth_m m on the ground, cloud* % cover, wind_kmh / gust_kmh km/h at 10 m, wind_dir deg the wind comes from, code WMO weather code",
+   "stats_rules": {
+    "precip_days": "precip_mm >= 1.0",
+    "snow_days": "snowfall summed over the day >= 0.5 cm"
+   },
+   "sha256": "9b19fc5ac3578c4e50bd3c53c74bde681d8a893f9d2dea5ef8ea2b4093112783",
+   "bytes": 650809
   }
  },
  "sources": {
@@ -5140,6 +5191,16 @@
     2019,
     2026
    ]
+  },
+  "open_meteo": {
+   "name": "Open-Meteo historical weather API (ERA5 / ERA5-Land reanalysis, best match); today's weather from its forecast API through the dev server",
+   "url": "https://archive-api.open-meteo.com/v1/archive",
+   "license": "CC BY 4.0; free API for non-commercial use",
+   "license_url": "https://open-meteo.com/en/license",
+   "attribution": "Weather data by Open-Meteo.com (https://open-meteo.com), CC BY 4.0",
+   "attribution_url": "https://open-meteo.com/",
+   "attribution_required": true,
+   "retrieved": "2026-10-27"
   }
  },
  "edits": [],
@@ -5298,6 +5359,30 @@
    "step": "derive",
    "at": "2026-10-27T03:21:13Z",
    "seconds": 94.5,
+   "ok": true
+  },
+  {
+   "step": "weather",
+   "at": "2026-10-27T04:46:12Z",
+   "seconds": 3.2,
+   "ok": true
+  },
+  {
+   "step": "weather",
+   "at": "2026-10-27T04:46:41Z",
+   "seconds": 0.9,
+   "ok": true
+  },
+  {
+   "step": "weather",
+   "at": "2026-10-27T04:47:36Z",
+   "seconds": 1.4,
+   "ok": true
+  },
+  {
+   "step": "weather",
+   "at": "2026-10-27T04:51:29Z",
+   "seconds": 4.6,
    "ok": true
   }
  ]

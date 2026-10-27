@@ -11,6 +11,9 @@ POST /api/edits/<tile_id>  [edit, ...]   validate, stamp (id, at) and append to 
 GET  /api/game                the acorn game's protocol version (clients feature-detect the shared world)
 GET  /api/game/ws             WebSocket: one shared acorn-game world per (tile, season), see GameWorld
 GET  /api/game/<tile>/<season>   that world's counts (board, round, players), no player ids
+GET  /api/weather/<tile_id>   today's weather at the tile centre: Open-Meteo's forecast for yesterday, today
+                              and tomorrow in client/weather.json's `days` format, plus `current`; cached
+                              30 minutes per tile; 503 when Open-Meteo cannot be reached
 
 Edit types and their fields (note is optional unless marked required):
   species_confidence  species_code, value: verified | flagged, note
@@ -24,6 +27,8 @@ Other fields are dropped.
 Privacy: a lon/lat is snapped to its tile and dropped. It is never logged or stored;
 the request log prints method, path without query, and status only. Request bodies
 (edits carry free-text notes) are never logged, and errors name the field, not the value.
+Weather: only the tile id reaches this server and only the tile's centre reaches Open-Meteo, never a
+player's point; nothing about a weather request is logged beyond the request line above.
 """
 from __future__ import annotations
 
@@ -65,6 +70,11 @@ BOUNDS_SLACK_DEG = 0.02  # vertices may sit ~2 km outside the tile (edge feature
 MASK_CLASSES = {"mine", "canal", "agriculture", "cleared", "other"}
 CONFIDENCE = {"verified", "flagged"}
 EDIT_TYPES = {"species_confidence", "species_note", "mask_polygon", "place_note"}
+
+WEATHER_TTL_S = 30 * 60
+WEATHER: dict[str, tuple[float, dict]] = {}   # tile_id -> (monotonic time fetched, answer)
+WEATHER_LOCKS: dict[str, threading.Lock] = {}
+WEATHER_LOCK = threading.Lock()
 
 
 def manifest(tile_id: str) -> dict | None:
@@ -1184,9 +1194,32 @@ class Handler(SimpleHTTPRequestHandler):
             if len(parts) == 2 and TILE_ID_RE.match(parts[0]) and parts[1] in GAME_SEASONS and manifest(parts[0]):
                 return self.send_json(game_world(parts[0], parts[1]).summary())
             return self.send_json({"error": "unknown world"}, 404)
+        if u.path.startswith("/api/weather/"):
+            return self.api_weather(u.path.rsplit("/", 1)[1])
         if u.path.startswith("/api/"):
             return self.send_json({"error": "not found"}, 404)
         super().do_GET()
+
+    def api_weather(self, tile_id: str):
+        """Today's weather for a built tile. The forecast is asked for the tile centre only (see the
+        module docstring); one fetch per tile at a time, the answer kept WEATHER_TTL_S."""
+        if not TILE_ID_RE.match(tile_id) or manifest(tile_id) is None:
+            return self.send_json({"error": "unknown tile"}, 404)
+        with WEATHER_LOCK:
+            lock = WEATHER_LOCKS.setdefault(tile_id, threading.Lock())
+        with lock:
+            hit = WEATHER.get(tile_id)
+            if hit and time.monotonic() - hit[0] < WEATHER_TTL_S:
+                return self.send_json(hit[1])
+            try:
+                from pipeline.fetch_weather import today_weather
+                wj = TILES_DIR / tile_id / "client" / "weather.json"   # its zone saves a call
+                zone = read_json(wj).get("timezone") if wj.exists() else None
+                answer = {"tile_id": tile_id, **today_weather(Tile.from_id(tile_id), zone)}
+            except Exception:  # noqa: BLE001  (unreachable, refused or malformed: the client keeps last year's day)
+                return self.send_json({"error": "weather unavailable", "tile_id": tile_id}, 503)
+            WEATHER[tile_id] = (time.monotonic(), answer)
+        self.send_json(answer)
 
     def game_ws(self):
         """RFC 6455 handshake, then this request's thread reads the client's messages until it goes."""

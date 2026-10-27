@@ -98,6 +98,7 @@ tiles/<tile_id>/
   client/season_ndvi.png        derived   the same months' median NDVI, grey, same sheet layout
   seasons/s2_<mm>.tif           optional  seasons step: float32 per month, bands red green blue (surface reflectance) and NDVI, 20 m; pipeline only
   seasons/months.json           optional  seasons step: per month clear looks per pixel, fill, per-class colour and NDVI means, the NAIP flight dates
+  client/weather.json           derived   weather step: hourly weather at the tile centre, the previous calendar year and this year to date, per local date (see Weather)
   client/species_mix_index.png  derived   row index per 30 m cell into species_mix.json mixes (0 = none), 8-bit grey (see Species mix)
   client/species_mix_density.png derived  RGB per 30 m cell: R tree_density, G shrub_density (multiplier = byte / 100), B 0
   client/species_mix.json       derived   format 2: species columns, EVT/BpS name -> species mix rows with their weights, per-tile fractions
@@ -224,6 +225,10 @@ Per source:
   Sentinel Data, which asks every product made from the data to say "Contains modified Copernicus
   Sentinel data [years]"; the line names the years searched and the source entry the
   `years_used`. Anything drawn with `client/season_*.png` shows it.
+- **Open-Meteo** (`open_meteo`, CC BY 4.0; the API is free for non-commercial use): "Weather data
+  by Open-Meteo.com (https://open-meteo.com), CC BY 4.0", required wherever the weather is shown,
+  which in the game is everywhere: every day of play has its weather. A commercial release needs
+  Open-Meteo's commercial API terms (the data stay CC BY).
 - **Public domain** (USGS 3DEP, NHDPlus HR, SGMC; USDA NAIP, SSURGO; LANDFIRE): no credit
   is required. The lines follow each publisher's requested citation (USGS credit
   guidance, LANDFIRE's citation model, the NRCS SSURGO citation) and are shown anyway.
@@ -582,6 +587,88 @@ per-class means. `seasons.s2_monthly` (`seasons/months.json` and
 `seasons/s2_<mm>.tif`) is the float version for pipeline work; it is not shipped. The licence is
 Copernicus's free, full and open notice: the credit line ("Contains modified Copernicus Sentinel
 data ...") is required, and the source entry records `years_used`.
+
+## Weather
+
+Every day of play has weather: the weather that day had. Picking a season starts on a random day of
+it between pre-dawn and post-dusk, played with the weather of that date last year; playing today
+plays today's weather. The `weather` step (`pipeline/fetch_weather.py`) reads Open-Meteo's historical
+weather API (`archive-api.open-meteo.com/v1/archive`, no key; ERA5 and ERA5-Land reanalysis, the
+most recent days from the forecast models until the reanalysis catches up) at one point, the tile
+centre, for the whole previous calendar year and the current year to date, so "that day last year"
+exists for every date and today has a fallback. Open-Meteo snaps the point to its own grid cell and
+corrects temperature to its 90 m elevation there: the file carries the point it answered for and
+that `elevation_m` (a centre over water can be answered from a cell some way off: `utm10n_540_4180`'s centre
+in the Golden Gate answers from 7 km east at 0 m). Hours are fetched in UTC (`timezone=UTC`) and put
+on the local wall clock by the pipeline (below), in the IANA zone Open-Meteo names for the point (one
+small `timezone=auto` call). The raw answers are cached under `pipeline/_cache/weather/<tile>/`: the
+zone, and one UTC answer per period end date.
+
+```
+client/weather.json   compact JSON (no indent), ~630-660 KB for 22 months
+{ "source": "open_meteo", "latitude": 38.69947, "longitude": -120.89917, "elevation_m": 468.0,
+  "timezone": "America/Los_Angeles",
+  "clock": "local wall-clock time from UTC via zoneinfo; DST days padded/trimmed to 24 rows (...)",
+  "utc_offset_seconds": -28800, "dst": "utc_offset_seconds is standard time; ... DST applied",
+  "fetched": "2026-10-27",
+  "requested_point": [-120.8728, 38.6943], "credit": "Weather data by Open-Meteo.com ...",
+  "fields": ["temp_c","humidity","precip_mm","rain_mm","snow_cm","snow_depth_m","cloud","cloud_low",
+             "cloud_mid","cloud_high","wind_kmh","wind_dir","code"],
+  "days": { "2025-01-15": { "sunrise": "07:19", "sunset": "17:06", "tmax": 14.9, "tmin": -0.5,
+                            "precip_mm": 0, "hourly": [ [4.1,60,0,0,0,0,5,0,0,5,4,99,0], ... x 24 ] },
+            ... } }
+```
+
+`days` is keyed by local date; `hourly` has 24 rows, row h the hour starting at h:00 local wall-clock
+time, each row the values of `fields` in order. A client reads the columns by name from `fields`: `gust_kmh` (before
+`code`) is dropped when the file would pass 600 KB, which a year and ten months does. Units:
+`temp_c` °C at 2 m; `humidity` % relative; `precip_mm` and `rain_mm` mm in the hour (precipitation
+is rain plus snow's water); `snow_cm` cm of snow fallen in the hour; `snow_depth_m` m on the
+ground (two decimals); `cloud`, `cloud_low` (up to ~2 km), `cloud_mid` (~2-6 km), `cloud_high` %
+cover; `wind_kmh` (and `gust_kmh`) km/h at 10 m, whole numbers; `wind_dir` degrees the wind comes
+from; `code` the WMO weather code (0 clear, 1-3 partly cloudy to overcast, 45/48 fog, 51-57 drizzle,
+61-67 rain, 71-77 snow, 80-82 showers, 85/86 snow showers, 95-99 thunderstorm). Temperatures and
+amounts are rounded to one decimal, percentages, directions and codes to integers, and a whole
+number is written without its `.0`. `null` is a value the API does not have: use the neighbouring
+hour. `sunrise` and `sunset` are "HH:MM" on the same clock; `tmax`, `tmin` (°C) and `precip_mm`
+(mm) are the local day's, taken from its hours.
+
+The clock is the local wall clock, daylight saving included (`clock` says so in the file). Open-Meteo's
+own `timezone=auto` keeps the zone's offset at the moment of the request for the whole answer, DST or
+not, which would put a winter day an hour off the wall clock in a file fetched in summer; so the
+pipeline asks for UTC and converts each hour with `zoneinfo.ZoneInfo(timezone)`, grouping rows by
+local date. On the spring-forward day the skipped hour (02:00) is filled by repeating the row before
+it, and on the fall-back day the first of the repeated 01:00 is kept, so every day has exactly 24
+rows. Sunrise and sunset, UTC instants, go through the same conversion, and the day sums leave the
+repeated row out. `utc_offset_seconds` is the zone's standard-time offset (-28800 for Pacific),
+for reference only: a client reads the hours, the sun and today's `current.time` as wall-clock
+time with no offset to apply. Checked on the home tile: the first and last daylight hours of Open-Meteo's
+own `is_day` fall at the file's sunrise and sunset in January (07:21-17:01 PST) and July
+(05:47-20:29 PDT).
+
+ERA5 reports a trace of snowfall (0.1-0.2 cm in a day) in mild coastal rain at 6 °C; the layer's
+`snow_days` counts days with at least 0.5 cm, and a client should not draw snow from a trace when
+`temp_c` is well above freezing. The layer (`client.weather`, kind `json`, source `open_meteo`)
+records the point, the period, the zone and offset, the fields and `stats` (days, hours, first
+and last day, `precip_days` with at least 1 mm, `snow_days`, total precipitation, the extreme
+temperatures).
+
+**Today.** The dev server answers `GET /api/weather/<tile_id>` with Open-Meteo's forecast API
+(`api.open-meteo.com/v1/forecast`: yesterday, today and tomorrow)
+at the same tile centre, fetched in UTC and put on the wall clock by the same function into the same
+`days` format (the three local dates around today; all fourteen fields, `gust_kmh` included; the
+zone is read from the tile's `client/weather.json`), plus
+
+```
+"current": { "time": "2026-10-26T21:45", "time_utc": "2026-10-27T04:45", "temp_c": 11.8, "code": 0,
+             "wind_kmh": 10.5, "cloud": 0 }
+```
+
+with `time` on the wall clock. The
+answer is kept 30 minutes per tile; when Open-Meteo cannot be reached the server answers 503
+`{"error": "weather unavailable"}` and the client plays today from `client/weather.json`. Only the
+tile id reaches the server and only the tile centre reaches Open-Meteo, never a player's point, and
+nothing about the request is logged beyond the request line.
 
 ## Resources
 
