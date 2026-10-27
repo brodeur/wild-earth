@@ -148,6 +148,7 @@ release, WebGL) was still running; its commit, if it verified, is the last in `g
 | 6497fcf | The whole-tile rewild you chose: a dense-urban rule (pipeline/urban.py) erases a city's blocks whole with the streets, synthesises them from the pre-settlement class and drops street trees and bridge crowns; both SF cells rebuilt (the Richmond is a scrub plain with no grid, the strait has no tree line). A real ordering bug found on the way: the lidar step ran before osm, so a fresh tile's crowns never dropped on buildings; a `crowns` step after derive now re-runs the finder. |
 | 2844ddb | The opening screen you asked for: no title or headings, one 9:16 map card per tile titled by its roads, a day-of-year season slider on the footer, the tile loading under a spinner on its card that becomes Begin when ready. |
 | 3af7489 | The spirit: arrive as a wisp of three ribbons and mist in a faint blue-green world, touch a glowing raven, squirrel or woodpecker to become it, B to leave; the camera blends across every jump. |
+| 4ce0ac1 | Spirit follow-ups you picked: dusk keeps a floor and a violet horizon, a spirit-only pass cools the khaki leaves while the animals stay warm, and the wind is a lighter hiss that stops rising past 30 m/s. (19b0e11, between: the opening screen's slider across the top, no caption, no find row.) |
 
 Open from the day: the attribution form for generated assets; far placement on the lidar ground beyond the fine square; the squirrel's
 crown camera in leafy oaks.
