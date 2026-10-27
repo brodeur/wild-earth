@@ -2,8 +2,9 @@
 /* The opening screen (src/arrival.js, OpeningScreen): its own stylesheet so the screen can be reworked apart from the game's HUD (index.html).
    A bar across the top with the season slider (spring to the following winter), and under it to the bottom of the screen
    a row of tall 9:16 map cards (one per built tile) that scrolls sideways when it overflows; the chosen card is in front,
-   the others a step back. Over it all a transparent canvas (src/openingScene.js, .op-canvas): the tile's animals round the
-   chosen card and the spirit's wisp as its spinner; Begin sits on the card. --hl: the season colour under the slider's
+   the others a step back. The chosen card's spinner is the spirit's wisp and the tile's animals gather round it, both
+   pre-rendered (assets/opening/, tools/opening_sprites.html) and played by CSS alone (no script animates while the world
+   builds); Begin sits on the card. --hl: the season colour under the slider's
    thumb (arrival.js trackColor), for the card's ring, Begin and the slider's marks. */
 @property --hl { syntax:'<color>'; inherits:true; initial-value:#c98a4e; }
 #opening { position:fixed; inset:0; z-index:20; overflow:hidden; background:radial-gradient(120% 90% at 50% 0%, #17211b 0%, #0b0f0d 60%); color:#d3ddd5;
@@ -13,7 +14,6 @@
 html:not(.opening) #opening:not(.out) { display:none; }
 .op-wrap { height:100%; display:flex; flex-direction:column; box-sizing:border-box; --hl:#c98a4e; transition:--hl .35s ease;
   --bar:80px; --mt:max(7.5vh, 36px); }   /* the slider bar's height; the gap between it and the cards (and the cards' grow) */
-.op-canvas { position:absolute; inset:0; z-index:5; pointer-events:none; }
 
 /* the season bar across the top */
 .op-bar { flex:none; height:var(--bar); box-sizing:border-box; padding:14px 32px 0; }
@@ -22,7 +22,7 @@ html:not(.opening) #opening:not(.out) { display:none; }
    chosen; then it grows (1.08) and the rest step back a little. The cards sit centred in the viewport: as far from
    its bottom as from its top (the bar plus --mt), so --ch, the card's height, is the viewport's less twice that (cqh:
    .op-tiles is a size container, the viewport under the bar), or on a narrow screen what leaves the neighbours
-   peeking in. The bottom margin is the band the animals stand in, below the chosen card (openingScene.js). */
+   peeking in. The bottom margin is the band the animals stand in, below the chosen card (.op-lineup). */
 .op-tiles { flex:1 1 0; min-height:0; display:flex; align-items:flex-start; gap:14px; padding:0 24px; overflow-x:auto; overflow-y:hidden; scroll-snap-type:x proximity; scrollbar-width:none; container-type:size; }
 .op-tiles::-webkit-scrollbar { display:none; }
 .op-tiles > :first-child { margin-left:auto; }   /* centred when they fit, scrollable from the first card when they do not */
@@ -32,7 +32,13 @@ html:not(.opening) #opening:not(.out) { display:none; }
   aspect-ratio:9/16; border-radius:14px; overflow:hidden; background:#0d1310; scroll-snap-align:center; container-type:inline-size;
   box-shadow:0 0 0 1px #263128, 0 10px 30px #0008; transition:transform .5s cubic-bezier(.2, .8, .25, 1), filter .5s ease, box-shadow .35s ease; }
 .op-tiles:has(.op-tile.sel) .op-tile:not(.sel) { transform:scale(.94); filter:brightness(.8) saturate(.88); }
-.op-tiles:has(.op-tile.sel) .op-tile:not(.sel):hover { filter:brightness(.95); }
+/* Hover (a pointer that hovers; not touch) starts the same step back: the cards not under the pointer go back, the one
+   under it is at full size, or, when another card is chosen, comes forward as a preview (no ring) while the chosen one
+   steps back with the rest until the pointer leaves. */
+@media (hover:hover) and (pointer:fine) {
+  .op-tiles:has(.op-tile:hover) .op-tile:not(:hover) { transform:scale(.94); filter:brightness(.8) saturate(.88); }
+  .op-tiles:has(.op-tile.sel) .op-tile:not(.sel):hover { transform:scale(1.08); filter:none; z-index:1; }
+}
 .op-tile.sel { transform:scale(1.08); z-index:1;
   box-shadow:0 0 0 2px color-mix(in srgb, var(--hl) 85%, #fff), 0 0 36px color-mix(in srgb, var(--hl) 30%, transparent), 0 14px 40px #000a; }
 .op-tile:has(.op-pick:focus-visible) { outline:2px solid var(--hl); outline-offset:3px; }
@@ -45,22 +51,30 @@ html:not(.opening) #opening:not(.out) { display:none; }
 .op-sub { font-size:max(11.5px, 3.5cqw); line-height:1.3; color:#d3ddd5c0; letter-spacing:.01em; text-shadow:0 1px 2px #000a; }
 .op-sub:empty { display:none; }
 
-/* the chosen card's cover while its world builds: a scrim, the spinner (the wisp, drawn on the canvas over it; a CSS
-   ring without it) and the status under it; when the world is ready the spinner gives way and Begin grows into its
+/* the chosen card's cover while its world builds: a scrim, the spinner (the wisp, below) and the status under it; when the world is ready the spinner gives way and Begin grows into its
    place, in the card's middle. */
 .op-cover { position:absolute; inset:0; z-index:2; pointer-events:none; background:#0b0f0d00; transition:background .6s ease; }
 .op-tile.loading .op-cover { background:#0b0f0dad; transition-duration:.2s; }
 .op-tile.ready .op-cover { background:#0b0f0d33; }
 .op-mid { position:absolute; left:50%; top:50%; width:0; height:0; }
-.op-spin, .op-begin { position:absolute; left:0; top:0; opacity:0; visibility:hidden; transition:opacity .45s ease, transform .45s ease, visibility 0s linear .45s; }
-.op-spin { width:44px; height:44px; margin:-22px 0 0 -22px; border-radius:50%; border:3px solid color-mix(in srgb, var(--hl) 25%, transparent); border-top-color:var(--hl); box-sizing:border-box; animation:op-spin 0.9s linear infinite; transform:scale(.6); }
-@keyframes op-spin { to { rotate:360deg; } }
-.op-tile.loading .op-spin { opacity:1; visibility:visible; transform:none; transition:opacity .2s ease, transform .2s ease, visibility 0s; }
-.op-tile.ready .op-spin { transform:scale(2.2); }
-.op-wrap.has-wisp .op-spin { display:none; }
-.op-status { position:absolute; top:44px; left:0; width:min(78cqw, 280px); transform:translateX(-50%); text-align:center; font-size:max(12px, 3.4cqw); line-height:1.35; color:#b7c4ba; text-shadow:0 1px 2px #000a;
+.op-begin { position:absolute; left:0; top:0; opacity:0; visibility:hidden; transition:opacity .45s ease, transform .45s ease, visibility 0s linear .45s; }
+/* the wisp: the spirit seen from above chasing its tail, a sprite sheet (assets/opening/wisp.webp: 48 frames of 384 px,
+   8 x 6, one lap in 1.2 s) stepped through by two animations (the column 6 times a lap, the row once), with a soft
+   pulse of its glow; on ready it implodes (scale down, a flash, gone) as Begin grows in. --ws: its size on the card. */
+.op-wisp { --ws:min(200px, 52cqw); position:absolute; left:0; top:0; width:var(--ws); height:var(--ws); margin:calc(var(--ws) / -2) 0 0 calc(var(--ws) / -2);
+  background:url(assets/opening/wisp.webp) 0 0 / calc(var(--ws) * 8) calc(var(--ws) * 6) no-repeat; opacity:0; visibility:hidden; pointer-events:none;
+  mix-blend-mode:plus-lighter; transition:opacity .25s ease, visibility 0s linear .25s; }
+.op-wisp::after { content:''; position:absolute; inset:28%; border-radius:50%; background:radial-gradient(closest-side, #ffe8c055, #ffe8c000); animation:op-glow 2.4s ease-in-out infinite; }
+.op-tile.loading .op-wisp, .op-tile.ready .op-wisp { visibility:visible; transition-delay:0s;
+  animation:op-wx .2s steps(8) infinite, op-wy 1.2s steps(6) infinite; }
+.op-tile.loading .op-wisp { opacity:1; }
+.op-tile.ready .op-wisp { animation:op-wx .2s steps(8) infinite, op-wy 1.2s steps(6) infinite, op-implode .55s cubic-bezier(.5, 0, .9, .6) forwards; }
+@keyframes op-wx { from { background-position-x:0; } to { background-position-x:calc(var(--ws) * -8); } }
+@keyframes op-wy { from { background-position-y:0; } to { background-position-y:calc(var(--ws) * -6); } }
+@keyframes op-glow { 0%, 100% { opacity:.55; transform:scale(.9); } 50% { opacity:1; transform:scale(1.12); } }
+@keyframes op-implode { 0% { opacity:1; transform:scale(1); filter:brightness(1); } 45% { opacity:1; transform:scale(.55); filter:brightness(2.2); } 100% { opacity:0; transform:scale(.05); filter:brightness(3); } }
+.op-status { position:absolute; top:calc(min(200px, 52cqw) / 2 + 2px); left:0; width:min(78cqw, 280px); transform:translateX(-50%); text-align:center; font-size:max(12px, 3.4cqw); line-height:1.35; color:#b7c4ba; text-shadow:0 1px 2px #000a;
   display:-webkit-box; -webkit-line-clamp:2; -webkit-box-orient:vertical; overflow:hidden; }
-.op-wrap.has-wisp .op-status { top:min(26cqw, 110px); }   /* under the wisp's core and mist */
 .op-tile:not(.loading) .op-status { display:none; }
 .op-begin { white-space:nowrap; transform:translate(-50%, -50%) scale(.55); background:var(--hl); color:#000; border:0; border-radius:999px; padding:13px 38px; font:inherit; font-size:max(15px, 4.4cqw); font-weight:600; letter-spacing:.02em; cursor:pointer;
   box-shadow:0 6px 24px #000a, 0 0 30px color-mix(in srgb, var(--hl) 40%, transparent); }
@@ -69,6 +83,28 @@ html:not(.opening) #opening:not(.out) { display:none; }
 .op-begin:active:not(:disabled) { background:color-mix(in srgb, var(--hl) 85%, #000); }
 .op-begin:disabled { cursor:default; }
 .op-begin:focus-visible { outline:2px solid color-mix(in srgb, var(--hl) 60%, #fff); outline-offset:3px; }
+
+/* the lineup: the tile's animals as stills (assets/opening/<species>.webp, arrival.js startLineup) at one true scale,
+   placed in card heights (--H) from the chosen card's centre (--cx) and bottom (--by); --x, --y the still's left and
+   top, --w, --h its size, all in card heights. Each pops in with a glimmer (::after) after its own animation-delay;
+   ground animals have a contact shadow (::before), birds float. */
+.op-lineup { position:absolute; inset:0; z-index:5; pointer-events:none; opacity:0; transition:opacity .4s ease; }
+.op-lineup.on { opacity:1; }
+.op-an { position:absolute; left:calc(var(--cx) + var(--x) * var(--H)); top:calc(var(--by) + var(--y) * var(--H)); width:calc(var(--w) * var(--H)); height:calc(var(--h) * var(--H));
+  opacity:0; transform-origin:50% 90%; transition:left .6s cubic-bezier(.2, .8, .25, 1), top .6s cubic-bezier(.2, .8, .25, 1), width .6s ease, height .6s ease; }
+.op-an.back { z-index:0; } .op-an.ground:not(.back) { z-index:1; }
+.op-an > i { display:block; width:100%; height:100%; }
+.op-an img { display:block; width:100%; height:100%; }
+.op-an.flip img { transform:scaleX(-1); }
+.op-an.in { animation:op-pop .55s cubic-bezier(.2, 1.5, .4, 1) both; }   /* its delay: inline, set once as it loads */
+.op-an.ground::before { content:''; position:absolute; left:8%; right:8%; bottom:-3%; height:max(4px, 9%); border-radius:50%; background:radial-gradient(closest-side, #000a, #0000); z-index:-1; }
+.op-an::after { content:''; position:absolute; left:50%; top:50%; width:max(70px, 140%); aspect-ratio:1; margin:0; translate:-50% -50%; border-radius:50%; pointer-events:none;
+  background:radial-gradient(closest-side, #fffaf0 0%, #fff1d8cc 18%, #ffe6be40 50%, #ffe6be00 100%); mix-blend-mode:plus-lighter; opacity:0; scale:.25; }
+.op-an.in::after { animation:op-glimmer .42s ease-out both; animation-delay:inherit; }
+.op-an.bird.in > i { animation:op-float var(--fd, 6s) ease-in-out infinite alternate; }
+@keyframes op-pop { 0% { opacity:0; transform:scale(.3); } 60% { opacity:1; } 100% { opacity:1; transform:scale(1); } }
+@keyframes op-glimmer { 0% { opacity:0; scale:.25; } 18% { opacity:1; } 100% { opacity:0; scale:1.4; } }
+@keyframes op-float { 0% { transform:translate(0, 0) rotate(-2deg); } 50% { transform:translate(calc(var(--fx, 8px) * .5), -6px) rotate(1deg); } 100% { transform:translate(var(--fx, 8px), 3px) rotate(2deg); } }
 
 /* the season slider: the date over the thumb, the season titles under the track at their thirds */
 .op-slider { position:relative; padding:30px 0 6px; cursor:pointer; touch-action:none; outline:none; --p:50%; }

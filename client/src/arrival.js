@@ -16,7 +16,10 @@ import('./weather.js').then(m => { summarizeDay = m.summarizeDay; weatherWords =
 // under it a row of tall portrait cards, one per built tile (its map full bleed, its best-known roads as the
 // title), all a step back until one is clicked. The tile named in `tileId` is the one main.js is already building
 // behind the screen: clicking its card brings it forward under a cover with the spirit's wisp as the spinner and the
-// tile's animals gathering round it (openingScene.js) until the world is ready, then Begin. Clicking another card
+// tile's animals gathering round it until the world is ready, then Begin. Both are pre-rendered (client/assets/opening/,
+// client/tools/opening_sprites.html) and played by CSS alone, so nothing on the screen animates from JavaScript while
+// the world builds on the same thread (the wisp a sprite-sheet loop, each animal a still popping in with a glimmer).
+// Clicking another card
 // reloads the page into that tile (choices carried in sessionStorage, that card coming up chosen), so Begin always
 // finds its world ready and its press can start the sound. The selected card, Begin and the slider's marks take the
 // season colour under the slider's thumb.
@@ -96,6 +99,8 @@ class SeasonYear {
   }
 }
 const label = d => `${MONTH[d.getMonth()]} ${d.getDate()}`;
+const PX_PER_M_CARD = 0.112;              // the lineup's scale: a metre as a fraction of the card's height (the deer ~15%)
+const POP_GAP = [0.18, 0.42];             // s between the animals' arrivals
 // The track's own season colours at its four titles (opening.css .op-track, the same stops): the selected card's
 // highlight, the Begin button and the slider's marks take the colour under the thumb, continuously.
 const TRACK = [[0x8f, 0xb5, 0x9a], [0xd8, 0xbd, 0x6a], [0xc9, 0x8a, 0x4e], [0x8e, 0xa4, 0xb4]];
@@ -158,22 +163,25 @@ export class OpeningScreen {
           <div class="op-tile" data-tile="${esc(id)}">
             <span class="op-map"><img alt="" src="../tiles/${esc(id)}/client/imagery.png" loading="lazy" draggable="false"></span>
             <button class="op-pick" aria-pressed="false" aria-label="${esc(id)}"></button>
-            <span class="op-cover" aria-live="polite"><span class="op-mid"><i class="op-spin" aria-hidden="true"></i><button class="op-begin" tabindex="-1" disabled>Begin</button><span class="op-status">${id === this.tileId ? 'loading…' : ''}</span></span></span>
+            <span class="op-cover" aria-live="polite"><span class="op-mid"><i class="op-wisp" aria-hidden="true"></i><button class="op-begin" tabindex="-1" disabled>Begin</button><span class="op-status">${id === this.tileId ? 'loading…' : ''}</span></span></span>
             <span class="op-name"><b class="op-title"></b><span class="op-sub"></span></span>
           </div>`).join('')}
         </div>
+        <div class="op-lineup" aria-hidden="true"></div>
       </div>`;
     for (const b of this.root.querySelectorAll('.op-pick')) b.onclick = () => this.pickTile(b.closest('.op-tile').dataset.tile);
     for (const b of this.root.querySelectorAll('.op-begin')) b.onclick = () => this.begin();
     this.wireSlider();
-    this.cardOf(this.tileId)?.querySelector('.op-pick').focus({ preventScroll: true });
     // The row scrolls sideways: a mouse wheel scrolls it too; the chosen card starts in the middle.
     const row = this.$('.op-tiles');
     row.addEventListener('wheel', e => {
       if (e.ctrlKey || Math.abs(e.deltaX) > Math.abs(e.deltaY) || row.scrollWidth <= row.clientWidth) return;
       row.scrollLeft += e.deltaY * (e.deltaMode === 1 ? 32 : 1); e.preventDefault();
     }, { passive: false });
-    requestAnimationFrame(() => this.centreCard());
+    setTimeout(() => this.centreCard(), 0);
+    // the lineup follows the chosen card when the row scrolls or the window changes (its positions are CSS from these)
+    this.place = () => this.placeLineup();
+    row.addEventListener('scroll', this.place, { passive: true }); addEventListener('resize', this.place);
     this.update();   // the slider and its colour at once; the map's pan follows when the features arrive
   }
 
@@ -188,7 +196,7 @@ export class OpeningScreen {
       c.querySelector('.op-pick').setAttribute('aria-pressed', on);
     }
     const card = this.cardOf(id); if (card) card.querySelector('.op-status').textContent = text;
-    this.scene?.setLoading(true);
+    this.placeLineup();
   }
 
   centreCard() {
@@ -218,17 +226,68 @@ export class OpeningScreen {
     this.$('.op-todaymark').addEventListener('pointerdown', e => { e.stopPropagation(); if (!e.button) this.setDay(this.todayDay); });
   }
 
-  // The animals and the wisp spinner (openingScene.js), loaded apart so the screen works without them: if the module or
-  // WebGL fails, the card keeps its CSS ring and no lineup is drawn.
-  startScene() {
-    if (this.sceneStarted) return;
-    this.sceneStarted = true;
-    import('./openingScene.js').then(({ OpeningScene }) => {
-      if (this.closed) return;
-      this.scene = new OpeningScene({ parent: this.root, card: () => this.$('.op-tile.sel'), tileId: this.tileId });
-      const wrap = this.$('.op-wrap'); wrap.classList.add('lineup'); wrap.classList.toggle('has-wisp', !!this.scene.wisp);
-      if (this.ready && this.cardOf(this.tileId)?.classList.contains('ready')) this.scene.ready();
-    }).catch(e => console.warn('opening: no mini scene', e));
+  // The lineup: the tile's animals as pre-rendered stills (client/assets/opening/index.json), true to scale (the deer's
+  // rule: a metre is PX_PER_M_CARD of the card's height), ground animals on the background under the chosen card, birds
+  // round its top on a slow CSS float. Each <img> is laid out once in units of the card's height (--H) from the card's
+  // centre (--cx) and bottom (--by), so a scroll, a resize or a new card only changes those three (a CSS transition
+  // carries the animals over). Each pops in with a glimmer (CSS keyframes), staggered by its animation-delay, set once
+  // as its image loads, in a random order POP_GAP s apart.
+  async startLineup() {
+    if (this.lineupStarted) return;
+    this.lineupStarted = true;
+    const [index, list] = await Promise.all([getJSON('./assets/opening/index.json'), getJSON(`../tiles/${this.tileId}/species/species.json`)]);
+    if (this.closed || !index?.species || !list) return;
+    const box = this.$('.op-lineup'), rnd = Math.random;
+    const known = list.map(s => s.code).filter(c => index.species[c]);
+    const ground = known.filter(c => index.species[c].kind === 'ground'), birds = known.filter(c => index.species[c].kind === 'bird');
+    const m = c => index.species[c].width / index.species[c].px_per_m;   // the still's width in metres
+    // ground slots: biggest at the two ends, smallest toward the middle; each slot's share of the span by its width
+    ground.sort((a, b) => m(b) - m(a));
+    const order = []; ground.forEach((c, i) => { order[i % 2 ? ground.length - 1 - (i >> 1) : i >> 1] = c; });
+    const wts = order.map(c => m(c) * 0.8 + 0.05), sum = wts.reduce((a, b) => a + b, 0) || 1;
+    const sel = this.$('.op-tile.sel'), Hc = (sel?.offsetHeight || 600) * 1.08;
+    const SPAN = Math.min(0.74, (innerWidth - 24) / Hc);   // in card heights: about 1.3 card widths, within the window
+    let acc = 0;
+    const items = order.map((c, i) => { const f = (acc + wts[i] / 2) / sum; acc += wts[i]; return { c, x: (f - 0.5) * SPAN, back: i % 2 === 1 }; })
+      .concat(birds.map((c, k) => ({ c, bird: k })));
+    for (const it of items.sort(() => rnd() - 0.5)) {   // created, so loaded, in a random order
+      const sp = index.species[it.c], k = PX_PER_M_CARD / sp.px_per_m;   // card heights per still pixel
+      const w = sp.width * k, h = sp.height * k, el = document.createElement('span'), img = new Image();
+      el.className = `op-an ${it.bird != null ? 'bird' : 'ground'}`;
+      let x, y;   // the still's centre x and top y, in card heights from the card's centre x and bottom
+      if (it.bird != null) {
+        const a = [-2.2, -0.9, -1.6, -0.4, -2.7, -1.25][it.bird % 6], r = 0.36 + 0.06 * (it.bird % 3);
+        x = Math.cos(a) * r * 1.15; y = -1 + 0.12 + Math.sin(a) * r * 0.32 - h / 2;   // round the card's top
+        el.style.setProperty('--fd', `${(5 + rnd() * 3).toFixed(2)}s`); el.style.setProperty('--fx', `${(rnd() < 0.5 ? -1 : 1) * (6 + rnd() * 8) | 0}px`);
+      } else {
+        const s = it.back ? 0.92 : 1;
+        x = it.x; y = (it.back ? 0.135 : 0.15) - (sp.foot_px ?? sp.height) * k * s;
+        el.style.setProperty('--s', s); if (it.back) el.classList.add('back');
+      }
+      if (x > 0.02) el.classList.add('flip');   // face the card's middle (the stills face right)
+      el.style.setProperty('--x', (x - w / 2).toFixed(4)); el.style.setProperty('--y', y.toFixed(4));
+      el.style.setProperty('--w', w.toFixed(4)); el.style.setProperty('--h', h.toFixed(4));
+      img.alt = ''; img.decoding = 'async';
+      img.onload = () => {
+        const now = performance.now() / 1000, at = Math.max(now + 0.05, this.popAt || 0);
+        this.popAt = at + POP_GAP[0] + rnd() * (POP_GAP[1] - POP_GAP[0]);
+        el.style.animationDelay = `${(at - now).toFixed(3)}s`;
+        el.classList.add('in');
+      };
+      img.src = `./assets/opening/${sp.file}`;
+      const inner = document.createElement('i'); inner.append(img); el.append(inner); box.append(el);
+    }
+    this.placeLineup();
+  }
+
+  // the chosen card's centre, bottom and height (at its grown size) for the lineup's CSS
+  placeLineup() {
+    const card = this.$('.op-tile.sel'), box = this.$('.op-lineup'); if (!card || !box) return;
+    const r = card.getBoundingClientRect(), H = card.offsetHeight * 1.08, cy = r.top + r.height / 2;
+    box.style.setProperty('--cx', `${(r.left + r.width / 2).toFixed(1)}px`);
+    box.style.setProperty('--by', `${(cy + H / 2).toFixed(1)}px`);
+    box.style.setProperty('--H', `${H.toFixed(1)}px`);
+    box.classList.add('on');
   }
 
   setDay(i) {
@@ -329,9 +388,9 @@ export class OpeningScreen {
     const card = this.cardOf(this.tileId); if (!card) return;
     for (const c of this.root.querySelectorAll('.op-tile')) { const on = c === card; c.classList.toggle('sel', on); c.querySelector('.op-pick').setAttribute('aria-pressed', on); }
     card.classList.add('loading');
-    this.startScene();
+    this.startLineup();
     if (this.ready) this.showReady(card);
-    requestAnimationFrame(() => this.centreCard());
+    setTimeout(() => { this.centreCard(); this.placeLineup(); }, 0);
   }
 
   setPrep(text) {
@@ -347,7 +406,6 @@ export class OpeningScreen {
   }
   showReady(card) {
     card.classList.remove('loading'); card.classList.add('ready');
-    this.scene?.ready();
     card.querySelector('.op-status').textContent = '';
     const b = card.querySelector('.op-begin'); b.disabled = false; b.tabIndex = 0;
     b.focus({ preventScroll: true });
@@ -365,8 +423,8 @@ export class OpeningScreen {
     for (const ev of ['keydown', 'keyup']) removeEventListener(ev, this.guard, true);
     document.activeElement?.blur?.();
     this.root.classList.add('out');
-    this.closed = true; this.scene?.stop();
-    setTimeout(() => { this.scene?.dispose(); this.scene = null; this.root.hidden = true; this.root.innerHTML = ''; }, 900);
+    this.closed = true; removeEventListener('resize', this.place);
+    setTimeout(() => { this.root.hidden = true; this.root.innerHTML = ''; }, 900);
   }
 }
 

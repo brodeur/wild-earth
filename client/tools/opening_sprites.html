@@ -1,0 +1,28 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Opening sprites</title>
+<!-- Dev-only: renders the opening screen's pre-rendered sprites (the wisp loop, one still per animal) and sends them to
+     tools/sprite_receiver.py (127.0.0.1:8798), which writes client/assets/opening/. Not linked from the game.
+     Run the receiver, open http://localhost:8781/client/tools/opening_sprites.html, press Render (or add ?go=1). -->
+<style>
+  body { background:#0b0f0d; color:#d3ddd5; font:13px/1.4 system-ui, sans-serif; margin:16px; }
+  button { font:inherit; padding:6px 14px; }
+  #log { white-space:pre-wrap; font:12px/1.35 ui-monospace, monospace; margin-top:10px; }
+  #out { display:flex; flex-wrap:wrap; gap:10px; align-items:flex-end; margin-top:10px; }
+  #out canvas { background:repeating-conic-gradient(#1a201c 0 25%, #121614 0 50%) 0 0 / 16px 16px; max-width:100%; }
+</style>
+<script type="importmap">
+{ "imports": { "three": "https://unpkg.com/three@0.186.1/build/three.module.js",
+               "three/addons/": "https://unpkg.com/three@0.186.1/examples/jsm/" } }
+</script>
+</head>
+<body>
+<button id="go">Render</button> <label><input type="checkbox" id="send" checked> send to the receiver</label>
+<div id="log"></div>
+<div id="out"></div>
+<script type="module" src="./opening_sprites.js"></script>
+</body>
+</html>

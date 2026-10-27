@@ -1,0 +1,210 @@
+{
+ "generated": "2026-10-27T05:17:08.059Z",
+ "generator": "client/tools/opening_sprites.html (three.js) + tools/sprite_receiver.py (PIL WebP q90)",
+ "note": "Pre-rendered for the opening screen (client/src/arrival.js), which plays them with CSS only.",
+ "credits": "Derived renders of the client's animal models (client/assets/*.glb, built by tools/build_*.py, and the procedural models in client/src/animalModels.js) and of the spirit's wisp (client/src/spirit.js). The models' sources, authors and licences are in docs/animal-library.md and in each tile manifest's sources; these renders carry the same credits.",
+ "px_per_m": 268,
+ "view": {
+  "tilt_rad": 0.24,
+  "yaw_rad": 1.1207963267948966,
+  "facing": "right",
+  "light": "hemisphere 0xe4ecff/0x40372a 2.2 + directional 0xfff1dc 2.4 from upper left front"
+ },
+ "wisp": {
+  "file": "wisp.webp",
+  "frames": 48,
+  "cols": 8,
+  "rows": 6,
+  "frame_px": 384,
+  "scale": 2,
+  "loop_s": 1.2,
+  "view": "from straight above, one anticlockwise lap per loop (the spirit chasing its tail)",
+  "circle_m": 0.45,
+  "frame_m": 2,
+  "swell": 0.3,
+  "bytes": 882144
+ },
+ "species": {
+  "odocoileus_hemionus": {
+   "file": "odocoileus_hemionus.webp",
+   "width": 342,
+   "height": 374,
+   "px_per_m": 268,
+   "kind": "ground",
+   "foot_px": 354,
+   "pose": "standing",
+   "bytes": 7948
+  },
+  "puma_concolor": {
+   "file": "puma_concolor.webp",
+   "width": 350,
+   "height": 219,
+   "px_per_m": 268,
+   "kind": "ground",
+   "foot_px": 204,
+   "pose": "standing",
+   "bytes": 9472
+  },
+  "canis_latrans": {
+   "file": "canis_latrans.webp",
+   "width": 291,
+   "height": 188,
+   "px_per_m": 268,
+   "kind": "ground",
+   "foot_px": 172,
+   "pose": "standing",
+   "bytes": 7384
+  },
+  "urocyon_cinereoargenteus": {
+   "file": "urocyon_cinereoargenteus.webp",
+   "width": 237,
+   "height": 123,
+   "px_per_m": 268,
+   "kind": "ground",
+   "foot_px": 110,
+   "pose": "standing",
+   "bytes": 4696
+  },
+  "meleagris_gallopavo": {
+   "file": "meleagris_gallopavo.webp",
+   "width": 188,
+   "height": 253,
+   "px_per_m": 268,
+   "kind": "ground",
+   "foot_px": 243,
+   "pose": "standing",
+   "bytes": 5956
+  },
+  "lepus_californicus": {
+   "file": "lepus_californicus.webp",
+   "width": 107,
+   "height": 124,
+   "px_per_m": 268,
+   "kind": "ground",
+   "foot_px": 116,
+   "pose": "standing",
+   "bytes": 2692
+  },
+  "sciurus_griseus": {
+   "file": "sciurus_griseus.webp",
+   "width": 122,
+   "height": 84,
+   "px_per_m": 268,
+   "kind": "ground",
+   "foot_px": 77,
+   "pose": "standing",
+   "bytes": 1742
+  },
+  "otospermophilus_beecheyi": {
+   "file": "otospermophilus_beecheyi.webp",
+   "width": 108,
+   "height": 53,
+   "px_per_m": 268,
+   "kind": "ground",
+   "foot_px": 47,
+   "pose": "standing",
+   "bytes": 1706
+  },
+  "sylvilagus_bachmani": {
+   "file": "sylvilagus_bachmani.webp",
+   "width": 65,
+   "height": 67,
+   "px_per_m": 268,
+   "kind": "ground",
+   "foot_px": 61,
+   "pose": "standing",
+   "bytes": 1362
+  },
+  "callipepla_californica": {
+   "file": "callipepla_californica.webp",
+   "width": 67,
+   "height": 51,
+   "px_per_m": 268,
+   "kind": "ground",
+   "foot_px": 47,
+   "pose": "standing",
+   "bytes": 954
+  },
+  "sceloporus_occidentalis": {
+   "file": "sceloporus_occidentalis.webp",
+   "width": 47,
+   "height": 14,
+   "px_per_m": 268,
+   "kind": "ground",
+   "foot_px": 10,
+   "pose": "standing",
+   "bytes": 398
+  },
+  "microtus_californicus": {
+   "file": "microtus_californicus.webp",
+   "width": 45,
+   "height": 19,
+   "px_per_m": 268,
+   "kind": "ground",
+   "foot_px": 16,
+   "pose": "standing",
+   "bytes": 462
+  },
+  "corvus_corax": {
+   "file": "corvus_corax.webp",
+   "width": 179,
+   "height": 162,
+   "px_per_m": 268,
+   "kind": "bird",
+   "foot_px": 153,
+   "pose": "flying, wings up-stroke",
+   "bytes": 1316
+  },
+  "buteo_jamaicensis": {
+   "file": "buteo_jamaicensis.webp",
+   "width": 196,
+   "height": 134,
+   "px_per_m": 268,
+   "kind": "bird",
+   "foot_px": 93,
+   "pose": "soaring, wings flat",
+   "bytes": 2908
+  },
+  "cathartes_aura": {
+   "file": "cathartes_aura.webp",
+   "width": 263,
+   "height": 190,
+   "px_per_m": 268,
+   "kind": "bird",
+   "foot_px": 161,
+   "pose": "soaring, wings flat",
+   "bytes": 3384
+  },
+  "aphelocoma_californica": {
+   "file": "aphelocoma_californica.webp",
+   "width": 74,
+   "height": 61,
+   "px_per_m": 268,
+   "kind": "bird",
+   "foot_px": 55,
+   "pose": "flying, wings up-stroke",
+   "bytes": 1170
+  },
+  "cyanocitta_stelleri": {
+   "file": "cyanocitta_stelleri.webp",
+   "width": 81,
+   "height": 63,
+   "px_per_m": 268,
+   "kind": "bird",
+   "foot_px": 59,
+   "pose": "flying, wings up-stroke",
+   "bytes": 1258
+  },
+  "melanerpes_formicivorus": {
+   "file": "melanerpes_formicivorus.webp",
+   "width": 69,
+   "height": 64,
+   "px_per_m": 268,
+   "kind": "bird",
+   "foot_px": 61,
+   "pose": "flying, wings up-stroke",
+   "bytes": 1222
+  }
+ },
+ "total_bytes": 938174
+}

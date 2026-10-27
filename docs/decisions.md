@@ -1154,6 +1154,21 @@ until it arrives, so the screen opens without it). Rejected: a four-stop season 
 and the ground colour is monthly); keeping the species cards as a "who" (the spirit chooses by touch instead);
 cheating the smallest animals' scale (he asked for the deer's scale for all).
 
+Then, seeing the wisp and the pop-ins stutter ("very slow and jerky"): the cause was the world building on the
+same thread behind the screen (shader compiles, crown placement), which freezes any WebGL drawn from JavaScript,
+while CSS animates on the compositor. His choice was to keep them pre-rendered: a dev-only render page
+(client/tools/opening_sprites.html, PNGs saved through tools/sprite_receiver.py and converted to WebP) draws
+the wisp from straight above flying one circle per loop, chasing its tail, 48 frames on one sheet (two laps
+cross-faded, since the weave is not periodic over one), and each species once in the lineup's light at one
+scale, 268 px per metre, into client/assets/opening/ (968 KB in all, the sheet 882 KB at quality 70). The screen
+plays the sheet by CSS steps() with a glow pulse and an implode into Begin, and places the stills true to
+scale under and around the card with CSS pop-in and glimmer keyframes, their delays set once as each image
+loads; openingScene.js and the canvas are gone, and the screen has no animation loop. Hovering a card (pointer
+only) starts the same step-back on the others as a click. Known: faint straight lines in the wisp frames
+where ribbon ends point at the camera; a card at the end of the row runs its lineup a little past a phone's
+edge. Rejected: removing them (his call: keep, pre-rendered); animating them live only after ready (they are
+the loading indicator).
+
 ## 2026-10-26: the player arrives as a spirit and becomes the animal it touches
 
 Aaron's words: "I'd like for the user to start out as a spirit. A glowing, swirling wisp with the same controls as
@@ -1192,7 +1207,13 @@ the spirit's wind is a lighter, airier hiss that is the raven's loudness by 30 m
 `setSwell`, `dispose`, no dependency on the flight or the atmosphere) for the opening screen's spinner. On his
 "make the sky the same color as the mist" the veil takes the haze's own horizon colour (the atmosphere's
 three-line formula copied into spirit.js, after the look's tint and floor, through the same tone mapping),
-nearly opaque and uniform from the horizon up, so the far trees fade into the sky with no edge. Still
+nearly opaque and uniform from the horizon up, so the far trees fade into the sky with no edge. On his "when I
+turn, the tail should trail behind me like a ribbon" the ribbons follow the path flown rather than the heading:
+the wisp keeps its past positions every 0.15 m (filled in along each frame's move, up to 160 points), each
+ribbon's strip runs back along them with its weave round the path (a gentler twist along a long trail), the
+longest about 0.8 s of travel capped at 14 m and scaled by the swell, blended from the hover curl below
+1.5 m/s to the full trail above 10 m/s, so a turn leaves a curved trail hanging in the air that the body pulls
+away from (`TRAIL_*` constants beside the ribbon ones). Still
 open: the acorn game counts the player as a raven. Rejected: a post-process tint first (the lit route first,
 the pass only for what the light could not cool); a pull-in before the switch (the body takes over on contact,
 input during the blend).
