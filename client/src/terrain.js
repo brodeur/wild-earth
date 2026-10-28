@@ -1,6 +1,7 @@
 import * as THREE from 'three';
 import { drain } from './slice.js';
 import { uploadImageSteps, canBand } from './gpuUpload.js';
+import { releaseGeometry, releaseTexture } from './gpuRelease.js';
 import { uniforms as atmo, ATMOSPHERE_GLSL } from './atmosphere.js';
 import { windUniforms, WIND_GLSL } from './wind.js';
 import { GroundDetail, detailUniforms, DETAIL_GLSL, buildDetailMaskSteps, resetDetailUniforms } from './groundDetail.js';
@@ -273,7 +274,7 @@ function riparianMask(tile) {
   const t = new THREE.DataTexture(a, W, H, THREE.RedFormat, THREE.UnsignedByteType);
   t.unpackAlignment = 1; t.magFilter = THREE.LinearFilter; t.minFilter = THREE.LinearMipmapLinearFilter; t.generateMipmaps = true;
   t.needsUpdate = true;
-  return t;
+  return releaseTexture(t);   // its bytes go once uploaded (gpuRelease.js)
 }
 
 // The constructor only records its arguments; build() (a generator main.js steps with slice.js runSliced, a terrain
@@ -327,9 +328,12 @@ export class Terrain {
         uv.setXY(k, x / size, north / size);
       }
       g.computeVertexNormals(); g.computeBoundingSphere();
+      // Positions and uvs go once uploaded (gpuRelease.js; 20 MB a tile): the heights are tile.heights, the uv is x / size.
+      // The normals stay (FineTerrain.coarseNormal reads them) and so does the index (FineTerrain.hole rewrites it).
+      releaseGeometry(g, { keep: ['normal'], keepIndex: true });
       const mesh = new THREE.Mesh(g, this.material); mesh.frustumCulled = true;
       this.group.add(mesh);
-      this.chunks.push({ mesh, g, x0, north1, full: g.index.array.slice(), holed: false });
+      this.chunks.push({ mesh, g, x0, north1, holed: false });
       yield;
     }
     // Near the player, on a tile with the lidar residual: a 2 m mesh of the 1 m ground (see FineTerrain).
@@ -623,24 +627,26 @@ class FineTerrain {
     const st = this.stats; st.builds++; st.lastMs = Math.round(J.ms * 100) / 100; st.lastFrames = J.frames;
     st.commitMs = Math.round((performance.now() - t0) * 100) / 100;
   }
-  // Re-index the coarse chunks the old or new square touches: every quad wholly inside the new square is dropped.
+  // Re-index the coarse chunks the old or new square touches: every quad wholly inside the new square is dropped. The
+  // index is written again in the plane's own order (THREE.PlaneGeometry: quad (ix, iy) is the triangles (a, b, d) and
+  // (b, c, d) with a = ix + nv * iy, b below it, c and d one column east), so no copy of the full index is kept.
   hole(old, J) {
-    const T = this.terrain, { cs, nv, spacing: S } = T.chunkInfo, q = nv - 1;
+    const T = this.terrain, { cs, nv, spacing: S } = T.chunkInfo, q = nv - 1, full = q * q * 6;
     for (const ch of T.chunks) {
       const hit = R => R && R.x0 < ch.x0 + cs && R.x1 > ch.x0 && R.n0 < ch.north1 && R.n1 > ch.north1 - cs;
       if (!hit(J) && !(ch.holed && hit(old))) continue;
-      const idx = ch.g.index, out = idx.array, full = ch.full;
+      const idx = ch.g.index, out = idx.array;
       let m = 0;
       for (let iy = 0; iy < q; iy++) {
         const nTop = ch.north1 - iy * S, nBot = nTop - S, rowIn = nBot >= J.n0 && nTop <= J.n1;
         for (let ix = 0; ix < q; ix++) {
           const xl = ch.x0 + ix * S;
           if (rowIn && xl >= J.x0 && xl + S <= J.x1) continue;
-          const o = (iy * q + ix) * 6;
-          for (let c = 0; c < 6; c++) out[m++] = full[o + c];
+          const a = ix + nv * iy, b = a + nv, c = b + 1, d = a + 1;
+          out[m++] = a; out[m++] = b; out[m++] = d; out[m++] = b; out[m++] = c; out[m++] = d;
         }
       }
-      ch.g.setDrawRange(0, m); idx.needsUpdate = true; ch.holed = m < full.length;
+      ch.g.setDrawRange(0, m); idx.needsUpdate = true; ch.holed = m < full;
     }
   }
 }

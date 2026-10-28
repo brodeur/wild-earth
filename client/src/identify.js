@@ -58,6 +58,7 @@ export class Identify {
     this.lastScan = -1e9; this.selected = null;   // selected: { id, species }
     this.raycaster = new THREE.Raycaster(); this.raycaster.far = PICK_R;
     this.probe = new THREE.Mesh(new THREE.BufferGeometry(), new THREE.MeshBasicMaterial({ side: THREE.DoubleSide }));
+    this.pickGeos = new WeakMap();   // drawn geometry -> the probe's (pickGeometry)
     this.m4 = new THREE.Matrix4(); this.v = new THREE.Vector3();
     // tags
     this.tagsOn = true; this.tagGroup = new THREE.Group(); this.tagGroup.renderOrder = 19; scene.add(this.tagGroup);
@@ -197,7 +198,7 @@ export class Identify {
           const parts = [[e.near.trunk.geometry, null]];
           if (leafOn > 0) parts.push([canopy.geometry, canopy.material.map]);
           for (const [geo, map] of parts) {
-            hits.length = 0; this.probe.geometry = geo;
+            hits.length = 0; this.probe.geometry = this.pickGeometry(geo);
             this.raycaster.intersectObject(this.probe, false, hits);
             for (const h of hits) {
               if (best && h.distance >= best.distance) break;
@@ -212,6 +213,21 @@ export class Identify {
     this.probe.geometry = null;
     if (best && this.onPickup(o, d, best.distance)) return null;   // the acorn game's pickups and stashes stay quiet
     return best;
+  }
+  // The probe raycasts a geometry of just what a ray needs, sharing the drawn one's position, uv, leafRank and index:
+  // three's raycast also reads a normal and colour where the geometry has them, and the drawn geometries let those
+  // arrays go once uploaded (vegetation.js, gpuRelease.js). The same triangles, so the same hits.
+  pickGeometry(geo) {
+    let p = this.pickGeos.get(geo);
+    if (!p) {
+      p = new THREE.BufferGeometry();
+      for (const k of ['position', 'uv', 'leafRank']) if (geo.attributes[k]?.array) p.setAttribute(k, geo.attributes[k]);   // a trunk keeps no uv
+      if (geo.index) p.setIndex(geo.index);
+      if (!geo.boundingSphere) geo.computeBoundingSphere();
+      p.boundingSphere = geo.boundingSphere; p.boundingBox = geo.boundingBox;
+      this.pickGeos.set(geo, p);
+    }
+    return p;
   }
   // A card hit counts only where the leaf texture is solid and the card is on this season.
   opaque(geo, map, h, leafOn) {

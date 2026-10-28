@@ -7,6 +7,7 @@ import { hasCrowns, SCALE } from './crowns.js';
 import { bakeSteps, VIEWS, SIDE_VIEWS, ALPHA_REF } from './impostorBake.js';
 import { drain } from './slice.js';
 import { uploadDataSteps, canBand } from './gpuUpload.js';
+import { releaseTexture, dropTextureData } from './gpuRelease.js';
 import { seasonOfDate } from './season.js';
 
 // Distant forest: one impostor per tree, for the whole tile, where the real trees (vegetation.js)
@@ -335,6 +336,9 @@ export class Impostors {
     }
     const bake = yield* bakeSteps(bakeList);
     this.bake = bake; this.bakeList = bakeList;
+    // The atlases' level arrays (42 MB for 64 trees) go once on the GPU (gpuRelease.js): here when three uploads them on
+    // first use, or in uploadSteps when the banded path has; the bake's frames, extents and index are all that is read after.
+    releaseTexture(bake.albedo); releaseTexture(bake.normal);
     yield* this.mapSteps();
     const t2 = performance.now();
 
@@ -407,6 +411,7 @@ export class Impostors {
       if (!t?.mipmaps?.length || t.isExternalTexture) continue;
       yield `upload ${k}`;
       this.uniforms[k].value = yield* uploadDataSteps(renderer, t);
+      dropTextureData(t);
     }
   }
   // Depth material for the far shadow casters (see CASTER_VERT). crowns: one THREE.Vector4 per baked tree.

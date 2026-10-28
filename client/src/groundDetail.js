@@ -1,6 +1,7 @@
 import * as THREE from 'three';
 import { runSliced, drain } from './slice.js';
 import { rockKeep } from './tilepackage.js';
+import { releaseTexture } from './gpuRelease.js';
 
 // Near-ground detail for the terrain shader (terrain.js): five tileable CC0 surfaces (albedo +
 // tangent-space normal, client/assets/ground/, see ATTRIBUTION.md) and one per-tile mask texture
@@ -144,7 +145,8 @@ export function* buildDetailMaskSteps(tile, W = MASK_PX) {
   const tex = new THREE.DataTexture(out, W, W, THREE.RGBAFormat, THREE.UnsignedByteType);
   tex.colorSpace = THREE.NoColorSpace; tex.magFilter = THREE.LinearFilter; tex.minFilter = THREE.LinearFilter;
   tex.generateMipmaps = false; tex.wrapS = tex.wrapT = THREE.ClampToEdgeWrapping; tex.needsUpdate = true;
-  return { texture: tex, data: out, width: W, ms: Math.round(performance.now() - t0) };
+  releaseTexture(tex);   // its 4 MB go once uploaded (gpuRelease.js); nothing samples the mask on the CPU
+  return { texture: tex, width: W, ms: Math.round(performance.now() - t0) };
 }
 
 // Decoded off the main thread into an ImageBitmap (createImageBitmap on the bytes), so pixelsOf's drawImage copies
@@ -255,7 +257,7 @@ function arrayTexture(data) {
   t.format = THREE.RGBAFormat; t.type = THREE.UnsignedByteType; t.colorSpace = THREE.NoColorSpace;
   t.wrapS = t.wrapT = THREE.RepeatWrapping; t.magFilter = THREE.LinearFilter; t.minFilter = THREE.LinearMipmapLinearFilter;
   t.generateMipmaps = true; t.anisotropy = 8; t.needsUpdate = true;
-  return t;
+  return releaseTexture(t);   // the 20 MB of slots go once uploaded (gpuRelease.js); the mips are the GPU's
 }
 
 export class GroundDetail {

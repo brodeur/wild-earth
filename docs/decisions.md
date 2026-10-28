@@ -1392,3 +1392,36 @@ below it, and the small animals stand in front of its edge. Verified on the home
 at 800, feet at 814-827, the lineup carried across a change of card by the same CSS transition. Known: the band under the
 card (`--mt`) is unchanged, so the space below the feet is now empty dark; shrinking it would let the cards grow. Also seen,
 not new: a chosen card scrolled to the row's edge has its lineup cut off at the window's edge.
+
+## 2026-10-27: a built world lets go of the CPU side of what lives on the GPU
+
+Measured first (home tile, `?skip=1`, heap read 1 s after 20 s idle at a fixed pose, old code): 597-618 MB of JS heap, of
+which 84 MB were the arrays of static geometry attributes three keeps after uploading them, 74 MB the bytes of DataTextures
+and the leaf textures' mip levels, 42 MB the far bake's two atlases with their mips, 11 MB a copy of every terrain chunk's
+index. three keeps all of it to upload again after a dispose or a lost context; a world is built once and disposed whole, so
+for the static parts the copy is dead weight. gpuRelease.js: `releaseGeometry(g, { keep, keepIndex })` drops each static
+attribute's array once three has uploaded it (`BufferAttribute.onUpload`, called right after `gl.bufferData`), except
+the named ones; `releaseTexture(t)` drops a DataTexture's bytes and mip levels once uploaded (`Texture.onUpdate`, the end
+of three's uploadTexture), `dropTextureData(t)` at once for the banded path (gpuUpload.js). Dynamic attributes (instance
+seats, per-frame buffers) and interleaved ones are never touched; the bounds are computed first; a released attribute
+can never be uploaded again (no needsUpdate, no clone, no draw after a dispose). Applied where nothing reads the array
+again, checked by grep for every `.array` read: the terrain chunks' positions and uvs (20 MB; the normals stay for
+FineTerrain.coarseNormal, the index for FineTerrain.hole, which now writes the plane's own index order instead of copying
+a kept `full` array, 11 MB); the mid-tier trees and the close twigs; the dry stream beds and the ponds (the streams stay:
+squirrelControl.js streamAt reads them); the roads overlay; the ground detail's two 1024 x 1024 x 5 array textures and
+its mask (44 MB); the atmosphere's and the shrub fields' noise textures and the riparian mask; the far bake's atlases
+(42 MB, dropped after the banded upload, or on first use without it). The near and close canopies and the near trunks are
+raycast by identify.js's pick, which needs position, uv, leafRank and the index and nothing else, but three's raycast
+also reads a normal and colour where the geometry has them: the probe now raycasts a stripped geometry sharing those
+four attributes (`pickGeometry`), and the drawn ones let normal and colour go (12 MB). Not released: the leaf textures'
+256 px mips (25.7 MB, the per-species cache kept across worlds on purpose: a disposed texture re-uploads from them, and
+opaque() reads level 0), the season map (rewritten on a date change), the streams, the rocks (stood on and raycast),
+the animals (the player's model is cloned at Begin), the terrain index. Measured after (same protocol): heap 472-477
+MB, 120-145 MB lower across readings, with 139 MB fewer bytes reachable from the world (static geometry 84 to 45 MB,
+textures 74 to 27 MB, bake 42 to 0, the index copy gone). The start view draws the same 21 calls and 66,772 triangles
+at the frozen pose; a grid of 89 picks from the same camera matrices gives the same species, ids and distances to the
+millimetre (hash-equal lists) on old and new code, close-canopy picks under 90 m included; the Location box switch to
+Placerville builds and the home world finalises (FinalizationRegistry on world, tile, scene and terrain) once the page
+idles; `__weDrop()` frees the Placerville world the same way, heap 84 MB with no world (old code 87). Known: an attribute
+is released on its first draw, so chunks and trees never yet in any view (about 6 MB at the start view) keep their arrays
+until they are; the roads overlay's lines keep theirs until G shows them.

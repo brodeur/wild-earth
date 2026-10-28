@@ -5,6 +5,7 @@ import { uniforms as atmo, ATMOSPHERE_GLSL } from './atmosphere.js';
 import { groundUniforms, GROUND_GLSL } from './terrain.js';
 import { windUniforms, WIND_GLSL } from './wind.js';
 import { rockKeep } from './tilepackage.js';
+import { releaseTexture } from './gpuRelease.js';
 
 // Clump fields: vegetation seen from the air as many cheap impostors, one camera-facing quad per
 // clump. ShrubField (chaparral) shades each quad per pixel as an ellipsoid whose normal is rebuilt
@@ -735,7 +736,7 @@ function bakeLeaves(manz) {
   const t = new THREE.DataTexture(data, S, S, THREE.RGBAFormat);
   t.wrapS = t.wrapT = THREE.RepeatWrapping; t.magFilter = THREE.LinearFilter; t.minFilter = THREE.LinearMipmapLinearFilter;
   t.generateMipmaps = true; t.anisotropy = 4; t.needsUpdate = true;
-  return t;
+  return releaseTexture(t);   // its bytes go once uploaded (gpuRelease.js)
 }
 
 // Chaparral shrubs. Cover per cell: chaparral cells only, the canopy's shrub % (floored: a low value

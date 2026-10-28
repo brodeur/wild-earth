@@ -1,4 +1,5 @@
 import * as THREE from 'three';
+import { releaseGeometry } from './gpuRelease.js';
 
 // Ghost roads: the present-day road network drawn as faint lines just above the terrain, with
 // names on major roads, for orientation in the rewilded world. G toggles it; hidden by default.
@@ -46,6 +47,7 @@ export class RoadsOverlay {
     for (const [kind, color, opacity] of [['minor', 0xf3e6d0, 0.5], ['major', 0xff9a3c, 0.85]]) {
       if (!verts[kind].length) continue;
       const g = new THREE.BufferGeometry(); g.setAttribute('position', new THREE.Float32BufferAttribute(verts[kind], 3));
+      releaseGeometry(g);   // its array goes once uploaded (gpuRelease.js)
       const line = new THREE.LineSegments(g, new THREE.LineBasicMaterial({ color, transparent: true, opacity, depthTest: true, depthWrite: false, fog: false, toneMapped: false }));
       line.frustumCulled = false; this.group.add(line);
     }
