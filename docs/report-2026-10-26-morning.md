@@ -179,6 +179,7 @@ release, WebGL) was still running; its commit, if it verified, is the last in `g
 | 09ad842 | The arrival is an aurora: wiggling vertical lines at differing heights, the animal as a silhouette in their colour, then its colours fading in as the lines shimmer out at odd intervals; a tile change runs it backwards. |
 | 1b1b796 | The wheel zoom is bounded per gesture and eased so a trackpad flick cannot pin it; walkers' cameras sit 0.5 m further back; the lineup moves with the cards and sticks to them while scrolling; the count pill bottom left in the highlight tint; the spirit framed in the lower third. |
 | 6ea68c2 | The aurora arrival in white and grey with no hue, and quicker: 1.3 s in, 0.9 s out. |
+| c20e31a | Each count pill is a white tinted with its species' soul colour, at .8. |
 
 Open from the day: the attribution form for generated assets; far placement on the lidar ground beyond the fine square; the squirrel's
 crown camera in leafy oaks.
