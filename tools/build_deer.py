@@ -20,6 +20,11 @@
 # custom attributes _PART, _PARTW, _PIVOT; animalModels.js poses it in the vertex shader like the
 # procedural deer. Output: one GLB with meshes lod0, lod1, lod2 (POSITION, COLOR_0 linear, indices).
 # --preview <prefix>: also renders lod0 side, head and rear views (workbench) to <prefix>_*.png.
+# Skinning (2026-10-27): every tier also keeps the source's skin as JOINTS_0 / WEIGHTS_0 (the four heaviest vertex
+# groups, normalised; the groups survive the decimation), indexed in the source skin's joint order (read from the
+# GLB's JSON), and the file's extras.skin records that order and the frame the rest pose was baked in (scale = S x U,
+# offset = the ground shift), so tools/bake_clips.py can bake the source's clips into a bone texture the client skins
+# these vertices with (animalModels.js, the skin path). Antler vertices are skinned to the Head joint.
 #
 # --buck: the antlered buck instead (brief: library/animals/drafts/odocoileus_hemionus_buck.md), written to OUT
 # (client/assets/deer_buck.glb): 5% larger (0.9975 m at the withers), neck 1.15x thicker about the neck line, darker
@@ -47,6 +52,13 @@ BUCK = '--buck' in argv
 if BUCK:
     WITHERS = round(0.95 * 1.05, 4)   # the buck ~5% larger: 1.0 m at the shoulder
     NECK = 1.15             # neck thickness about the neck line (the rut swell would be ~1.3)
+
+def glb_json(path):
+    b = open(path, 'rb').read(); ln = struct.unpack_from('<I', b, 12)[0]
+    return json.loads(b[20:20 + ln])
+_src = glb_json(SRC)
+SKIN_JOINTS = [_src['nodes'][j].get('name', f'joint{j}') for j in _src['skins'][0]['joints']]   # the skin's joint order
+JOINT_INDEX = {n: i for i, n in enumerate(SKIN_JOINTS)}
 
 bpy.ops.wm.read_factory_settings(use_empty=True)
 bpy.ops.import_scene.gltf(filepath=SRC)
@@ -232,7 +244,12 @@ def build(target):
         w = vw[i][0]
         if not w: return None, 0.0
         c = max(w, key=w.get); return c, min(1.0, w[c])
-    key2i = {}; pos = []; col = []; part = []; partw = []; piv = []; idx = []
+    def skin_of(v):   # the four heaviest skin joints and their weights, normalised (JOINTS_0 / WEIGHTS_0)
+        gs = sorted(((g.weight, JOINT_INDEX[groups[g.group]]) for g in v.groups if g.weight > 0 and groups[g.group] in JOINT_INDEX), reverse=True)[:4]
+        tot = sum(w for w, _ in gs) or 1.0
+        js_ = [j for _, j in gs] + [0] * (4 - len(gs)); ws = [w / tot for w, _ in gs] + [0.0] * (4 - len(gs))
+        return tuple(js_), tuple(ws)
+    key2i = {}; pos = []; col = []; part = []; partw = []; piv = []; idx = []; joints = []; weights = []
     for p in m.polygons:
         fc = face_color(m, p, vw)
         for vi in p.vertices:
@@ -245,10 +262,11 @@ def build(target):
                 else:
                     pid, joint, _ = CATS[c]
                     part.append(float(pid)); partw.append(w); piv.append(to3(JS[joint]))
+                sj, sw = skin_of(m.vertices[vi]); joints.append(sj); weights.append(sw)
             idx.append(key2i[k])
     bpy.data.objects.remove(ob)
-    print('TIER', target, 'tris', len(idx) // 3, 'verts', len(pos), 'from', n0)
-    return dict(pos=pos, col=col, part=part, partw=partw, piv=piv, idx=idx)
+    print('TIER', target, 'tris', len(idx) // 3, 'verts', len(pos), 'from', n0, 'unskinned verts', sum(1 for w in weights if w[0] == 0.0))
+    return dict(pos=pos, col=col, part=part, partw=partw, piv=piv, idx=idx, joints=joints, weights=weights)
 
 # ---- buck: procedural mule-deer antlers, one set per tier (never decimated with the body) ----
 def antler_geometry(level):
@@ -340,6 +358,7 @@ def add_antlers(t, level):
             t['idx'].append(len(t['pos'])); t['pos'].append(to3(p_)); t['col'].append(fc)
             t['part'].append(6.0); t['partw'].append(1.0); t['piv'].append(to3(JS['Neck1']))
             t['antler'].append(0.05 + 0.95 * tv); t['tine'].append(float(tine))
+            t['joints'].append((JOINT_INDEX['Head'], 0, 0, 0)); t['weights'].append((1.0, 0.0, 0.0, 0.0))
     return len(tris), B
 
 if BUCK:
@@ -371,9 +390,13 @@ def add(data_bytes, target=None):
     views.append(v); return len(views) - 1
 def acc_f(vals, n):
     flat = [x for v in vals for x in (v[:] if n > 1 else [v])]
-    a = {'bufferView': add(struct.pack(f'<{len(flat)}f', *flat), 34962), 'componentType': 5126, 'count': len(vals), 'type': {1: 'SCALAR', 3: 'VEC3'}[n]}
+    a = {'bufferView': add(struct.pack(f'<{len(flat)}f', *flat), 34962), 'componentType': 5126, 'count': len(vals), 'type': {1: 'SCALAR', 3: 'VEC3', 4: 'VEC4'}[n]}
     if n == 3: a['min'] = [min(v[k] for v in vals) for k in range(3)]; a['max'] = [max(v[k] for v in vals) for k in range(3)]
     accs.append(a); return len(accs) - 1
+def acc_u8v4(vals):   # JOINTS_0: unsigned byte VEC4
+    flat = [x for v in vals for x in v]
+    accs.append({'bufferView': add(struct.pack(f'<{len(flat)}B', *flat), 34962), 'componentType': 5121, 'count': len(vals), 'type': 'VEC4'})
+    return len(accs) - 1
 def acc_i(vals):
     big = max(vals) > 65535
     accs.append({'bufferView': add(struct.pack(f'<{len(vals)}{"I" if big else "H"}', *vals), 34963), 'componentType': 5125 if big else 5123, 'count': len(vals), 'type': 'SCALAR'})
@@ -383,6 +406,7 @@ for name, t in tiers:
     attrs = {'POSITION': acc_f([tuple(p) for p in t['pos']], 3), 'COLOR_0': acc_f(t['col'], 3),
              '_PART': acc_f(t['part'], 1), '_PARTW': acc_f(t['partw'], 1), '_PIVOT': acc_f([tuple(p) for p in t['piv']], 3)}
     if 'antler' in t: attrs['_ANTLER'] = acc_f(t['antler'], 1); attrs['_TINE'] = acc_f(t['tine'], 1)
+    attrs['JOINTS_0'] = acc_u8v4(t['joints']); attrs['WEIGHTS_0'] = acc_f(t['weights'], 4)
     meshes.append({'name': name, 'primitives': [{'attributes': attrs, 'indices': acc_i(t['idx']), 'mode': 4}]})
     nodes.append({'name': name, 'mesh': len(meshes) - 1})
 while len(buf) % 4: buf.append(0)
@@ -390,7 +414,9 @@ gltf = {'asset': {'version': '2.0', 'generator': 'wild-earth tools/build_deer.py
                   'copyright': 'Deer by Quaternius (quaternius.com, Ultimate Animated Animal Pack), CC0 1.0; recoloured, rest pose baked, decimated'},
         'scene': 0, 'scenes': [{'nodes': list(range(len(nodes)))}], 'nodes': nodes, 'meshes': meshes,
         'accessors': accs, 'bufferViews': views, 'buffers': [{'byteLength': len(buf)}],
-        'extras': {'ear_scale': EAR, 'withers_m': WITHERS, 'neck1_m': round(JS['Neck1'].z, 4)}}
+        'extras': {'ear_scale': EAR, 'withers_m': WITHERS, 'neck1_m': round(JS['Neck1'].z, 4),
+                   # the skin: JOINTS_0 index this joint order; the rest pose was baked at scale S x U with the feet lifted to y = 0
+                   'skin': {'joints': SKIN_JOINTS, 'scale': round(S * U, 6), 'offset': [0.0, round(-ground * S * U, 5), 0.0], 'clips': 'deer_clips'}}}
 if BUCK:
     gltf['asset']['copyright'] = 'Deer by Quaternius (quaternius.com, Ultimate Animated Animal Pack), CC0 1.0; recoloured, rest pose baked, decimated; buck: larger, thicker neck, procedural antlers (wild-earth)'
     gltf['extras'].update({'rig': {'kind': 'quadruped', **{k: [round(x, 4) for x in to3(JS[j])] for k, j in (('head', 'Neck1'), ('tail', 'Tail1'), ('fore', 'FrontUpperLeg.L'), ('hind', 'BackUpperLeg.L'))}},

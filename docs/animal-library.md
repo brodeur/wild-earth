@@ -532,3 +532,34 @@ and chance alone. Until a tile's species step has run they are seen by everyone 
   scuttle of claw clicks (noise high-passed at 24 dB/octave, sharper on rock, duller on bark), refDistance 2.5 m;
   nothing else. All of these use the near layer's slots, cooldowns and log (HUD labels "wild turkey", "ground
   squirrel", "fence lizard"); the player cannot be these species, so C gives none of them.
+
+## The skin path: the deer from its own clips (2026-10-27)
+
+Decision log, 2026-10-27 ("the deer is skinned and clip-animated on the GPU"). A species whose adopted GLB keeps its
+source's skin (`JOINTS_0` / `WEIGHTS_0`, the skin's joint order and the build's frame in `extras.skin`) and has a baked
+clip set beside it is drawn skinned instead of by the part rig, still one InstancedMesh and one draw call a tier.
+
+- **Bake:** `.venv/bin/python tools/bake_clips.py <source.glb> client/assets/<name>_clips --fit client/assets/<name>.glb
+  --recipe library/animals/clips/<species>.json [--rate 30] [--f32]`. The recipe lists the clips to bake (loop; `gait`
+  with the hoof joint to measure the stride and touchdown; an optional `stride_m` override) and synthetic one-frame poses
+  (a frame of a clip with joints aimed or rotated about their heads and every joint moved by `root`). Output: the texture
+  (`.bin`, RGBA16F, joints x 3 texels wide, one row a frame) and the index (`.json`: rate, size, joints, scale and offset
+  of the frame, per clip first / count / loop / duration / root_motion / stride_m / touchdown / speed_mps). The tool
+  prints each clip's numbers and a synthetic pose's hoof heads and lowest joint so a recipe can be tuned blind, then
+  checked in the game.
+- **Build:** `tools/build_deer.py` (doe and buck) writes the skin attributes; a build script for another skinned source
+  does the same (the four heaviest groups, normalised, in the source skin's joint order, read from the GLB's JSON).
+- **Client:** `animalModels.js` `loadTiers(url, model, { skin: true })` loads the clip set named by `extras.skin.clips`
+  (shared between models of one skeleton; the buck scales the translation column by its size over the texture's) and
+  sets `model.skin` and `drop` 0; a missing clip set leaves the part rig. `animalMaterial`, `animalDepthMaterial` and
+  `planarShadowMaterial` swap in the skin body and declare only its attributes (Metal has 16 vertex attribute slots).
+  The third per-instance vec4 `aClip` = (clip, phase 0..1, blend-to clip + its phase in the fraction, blend weight) is
+  written by `driveClips(skin, DEER_DRIVE, state, speed, pose, flick, dt, out, slot)` from the part rig's values, in
+  `animals.js` update (per deer and buck; `a.spd` is the AI's speed) and `groundControl.js` draw (the player). Gait clips
+  advance by distance over the clip's stride (planted hooves), loops on the clock from a seed; a change blends over
+  0.3-1.0 s. `__weDeerDrive.force = 'bed' | 'walk' | 'run' | 'graze' | 'idle' | 'alert'` holds every deer in one clip for
+  checking; `__weDeerDrive` also holds the thresholds and rates.
+- **Deer clips** (`client/assets/deer_clips.json`, 138 x 531, 586 KB): Idle, Idle_2, Idle_Headlow (100 frames each),
+  Eating (180), Walk (35; stride 0.65 m, left fore touchdown at 0.4, authored at 0.56 m/s), Gallop (15; stride set to
+  3 m), bed (1, synthetic). Open: no trot clip (the Walk hurries, capped at 2.6 Hz), no eared alert pose, the lineup page
+  shows the first frame only.

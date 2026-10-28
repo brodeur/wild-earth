@@ -7,7 +7,7 @@ import { uniforms as atmo } from './atmosphere.js';
 import { fieldGuide } from './fieldguide.js';
 import { buildSquirrel, buildWoodpecker, buildRaven, buildDeer, buildQuail, buildJay, buildHawk, buildVulture, buildStellersJay,
   buildDeerBuck, buildFox, buildCoyote, buildCougar, buildRabbit, buildVole, buildJackrabbit, buildTurkey, buildGroundSquirrel, buildLizard,
-  animalMaterial, animalDepthMaterial, planarShadowMaterial, loadDeerMesh, loadSquirrelMesh, loadQuailMesh, loadJayMesh,
+  animalMaterial, animalDepthMaterial, planarShadowMaterial, loadDeerMesh, loadSquirrelMesh, loadQuailMesh, loadJayMesh, driveClips, makeClipState, DEER_DRIVE,
   loadStellersJayMesh, loadRedtailMesh, loadVultureMesh, loadDeerBuckMesh, loadFoxMesh, loadCoyoteMesh, loadCougarMesh,
   loadRabbitMesh, loadJackrabbitMesh, loadVoleMesh, loadRavenGroundMesh, loadTurkeyMesh, loadGroundSquirrelMesh, loadLizardMesh,
   RAVEN_GROUND, hasAnim2, antlerState, SEASON_MONTH } from './animalModels.js';
@@ -554,6 +554,7 @@ export class Animals {
     // drawn meshes (DRAWN): per species { on, tiers, planar, loading, casting }, filled by setMesh
     this.drawn = {}; this.lodForce = {}; this._dc = [0, 0, 0];
     this.anim2 = SPECIES.map((sp, k) => DRAWN[k] ? new Float32Array(sp.cap * 4) : null);
+    this.clip = SPECIES.map((sp, k) => DRAWN[k] ? new Float32Array(sp.cap * 4) : null);   // aClip for the skinned models (deer, buck)
     this.debugIds = new Set(); this.debugN = 0;
     const q = typeof location === 'undefined' ? new URLSearchParams() : new URLSearchParams(location.search);
     this.fixedDate = parseDate(q.get('date'));   // ?date=MM-DD: the month (lizards, ground squirrels, antlers) follows it
@@ -609,6 +610,7 @@ export class Animals {
       const anim = new THREE.InstancedBufferAttribute(new Float32Array(cap * 4), 4); anim.setUsage(THREE.DynamicDrawUsage);
       geo.setAttribute('aAnim', anim);
       if (hasAnim2(model)) { const a2 = new THREE.InstancedBufferAttribute(new Float32Array(cap * 4), 4); a2.setUsage(THREE.DynamicDrawUsage); geo.setAttribute('aAnim2', a2); }
+      if (model.skin) { const ac = new THREE.InstancedBufferAttribute(new Float32Array(cap * 4), 4); ac.setUsage(THREE.DynamicDrawUsage); geo.setAttribute('aClip', ac); }
       const m = new THREE.InstancedMesh(geo, animalMaterial(this.atmosphere, model, { map: model.maps?.[t] || null }), cap);
       m.instanceMatrix.setUsage(THREE.DynamicDrawUsage);
       m.count = 0; m.frustumCulled = false; m.name = `${D.name} mesh lod${t}`; m.visible = false;
@@ -677,8 +679,8 @@ export class Animals {
   distribute(k) {
     const st = this.drawn[k], D = DRAWN[k];
     if (D.hybrid) return this.distributeHybrid(k);
-    const src = this.meshes[k], n = src.count, M = src.instanceMatrix.array, A = src.geometry.attributes.aAnim.array, A2 = this.anim2[k];
-    const C = this.camPos, cnt = this._dc, T = st.tiers, f = this.lodForce[D.name] ?? null, rig = hasAnim2(st.model);
+    const src = this.meshes[k], n = src.count, M = src.instanceMatrix.array, A = src.geometry.attributes.aAnim.array, A2 = this.anim2[k], AC = this.clip[k];
+    const C = this.camPos, cnt = this._dc, T = st.tiers, f = this.lodForce[D.name] ?? null, rig = hasAnim2(st.model), skin = !!st.model.skin;
     const r0 = D.lod[0] * D.lod[0], r1 = D.lod[1] * D.lod[1];
     cnt[0] = cnt[1] = cnt[2] = 0;
     for (let i = 0; i < n; i++) {
@@ -688,6 +690,7 @@ export class Animals {
       m.instanceMatrix.array.set(M.subarray(i * 16, i * 16 + 16), j * 16);
       m.geometry.attributes.aAnim.array.set(A.subarray(i * 4, i * 4 + 4), j * 4);
       if (rig) m.geometry.attributes.aAnim2.array.set(A2.subarray(i * 4, i * 4 + 4), j * 4);
+      if (skin) m.geometry.attributes.aClip.array.set(AC.subarray(i * 4, i * 4 + 4), j * 4);
     }
     for (let t = 0; t < 3; t++) {
       const m = T[t], c = cnt[t], an = m.geometry.attributes.aAnim;
@@ -697,6 +700,7 @@ export class Animals {
       m.instanceMatrix.clearUpdateRanges(); m.instanceMatrix.addUpdateRange(0, c * 16); m.instanceMatrix.needsUpdate = true;
       an.clearUpdateRanges(); an.addUpdateRange(0, c * 4); an.needsUpdate = true;
       if (rig) { const a2 = m.geometry.attributes.aAnim2; a2.clearUpdateRanges(); a2.addUpdateRange(0, c * 4); a2.needsUpdate = true; }
+      if (skin) { const ac = m.geometry.attributes.aClip; ac.clearUpdateRanges(); ac.addUpdateRange(0, c * 4); ac.needsUpdate = true; }
     }
   }
 
@@ -2335,7 +2339,7 @@ export class Animals {
       }
       a.flick = damp(a.flick, a.state === D_GRAZE && !alertNow ? 1 : 0, 2, dt);   // alert: head up
     }
-    a.amp = damp(a.amp, speed > 0.05 ? 1 : 0, 5, dt);
+    a.amp = damp(a.amp, speed > 0.05 ? 1 : 0, 5, dt); a.spd = speed;   // spd: the skinned deer's clip choice (driveClips)
     a.phase += dt * TAU * speed / 1.5;
     const sy = Math.sin(a.yaw), cy = Math.cos(a.yaw);
     const hf = H.atXZ(a.x + sy * 0.6, a.z + cy * 0.6), hb = H.atXZ(a.x - sy * 0.6, a.z - cy * 0.6);
@@ -3925,6 +3929,9 @@ export class Animals {
       an[o * 4] = a.phase % TAU; an[o * 4 + 1] = a.amp; an[o * 4 + 2] = a.pose; an[o * 4 + 3] = a.flick;
       const a2 = this.anim2[sp];
       if (a2) { this.extra(a, dt); a2[o * 4] = a.e0; a2[o * 4 + 1] = a.e1; a2[o * 4 + 2] = a.e2; a2[o * 4 + 3] = sp === QU || sp === TK ? a.variant : a.e3; }
+      // the skinned models (deer, buck): clip and phase from the speed, pose and flick (animalModels.js driveClips)
+      const sk = this.drawn[sp]?.model?.skin;
+      if (sk) driveClips(sk, DEER_DRIVE, a.cs ||= makeClipState(), a.spd || 0, a.pose, a.flick, dt, this.clip[sp], o);
     }
     // acorn game v4: the families' defence of their granaries
     if (this.game?.active) this.defend(); else if (this.threats.size) this.threats.clear();
