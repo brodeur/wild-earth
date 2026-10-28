@@ -1389,6 +1389,11 @@ a gap. Now the foot line is 0.035 card heights under the card's bottom edge (FOO
 the window's bottom on a short window (FOOT_MARGIN); the lineup layer already draws over the cards (the birds cross the top
 edge the same way), so the deer, lion and coyote now stand over the card's lower edge with their feet and contact shadows just
 below it, and the small animals stand in front of its edge. Verified on the home and Placerville cards at 924 px: card bottom
-at 800, feet at 814-827, the lineup carried across a change of card by the same CSS transition. Known: the band under the
-card (`--mt`) is unchanged, so the space below the feet is now empty dark; shrinking it would let the cards grow. Also seen,
-not new: a chosen card scrolled to the row's edge has its lineup cut off at the window's edge.
+at 800, feet at 814-827, the lineup carried across a change of card by the same CSS transition. Then, Aaron's "yes, shrink
+it": the band under the cards had been the mirror of the top gap (the bar plus `--mt`, the card centred in the viewport),
+so the feet left it mostly empty. The band is now its own `--mb` (max(9vh, 44px), opening.css), sized for the feet, the
+contact shadows and a margin, and the card's height is the row's less `--mt` and `--mb` (centred between them only when
+the window's width caps the card instead). At 924 px the card grew from 676 to 747 px (bottom at 868, feet 885-900, 24 px
+to the window's bottom); at 1700 px tall 1,447 px (feet 1,632-1,660, 40 px left); at 560 px tall 419 px (feet 534-543, 17 px
+left; the FOOT_MARGIN clamp did not engage). Also seen, not new: a chosen card scrolled to the row's edge has its lineup
+cut off at the window's edge.

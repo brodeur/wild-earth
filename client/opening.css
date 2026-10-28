@@ -13,7 +13,7 @@
 #opening.out { opacity:0; pointer-events:none; }
 html:not(.opening) #opening:not(.out) { display:none; }
 .op-wrap { height:100%; display:flex; flex-direction:column; box-sizing:border-box; --hl:#c98a4e; transition:--hl .35s ease;
-  --bar:80px; --mt:max(7.5vh, 36px); }   /* the slider bar's height; the gap between it and the cards (and the cards' grow) */
+  --bar:80px; --mt:max(7.5vh, 36px); --mb:max(9vh, 44px); }   /* the slider bar's height; the gap between it and the cards (and the cards' grow); the band under the cards the animals' feet stand in */
 
 /* the season bar across the top */
 .op-bar { flex:none; height:var(--bar); box-sizing:border-box; padding:14px 32px 0; }
@@ -34,17 +34,18 @@ html:not(.opening) #opening:not(.out) { display:none; }
 .op-wrap.booted .op-boot { visibility:hidden; transition:visibility 0s linear .6s; }
 
 /* the tile cards: 9:16, the map full bleed, the locality and its roads top left. All at full brightness until one is
-   chosen; then it grows (1.08) and the rest step back a little. The cards sit centred in the viewport: as far from
-   its bottom as from its top (the bar plus --mt), so --ch, the card's height, is the viewport's less twice that (cqh:
-   .op-tiles is a size container, the viewport under the bar), or on a narrow screen what leaves the neighbours
-   peeking in. The bottom margin is the band the animals stand in, below the chosen card (.op-lineup). */
+   chosen; then it grows (1.08) and the rest step back a little. The cards sit --mt under the bar and --mb above the
+   window's bottom, so --ch, the card's height, is the row's less both (cqh: .op-tiles is a size container, the
+   viewport under the bar), or on a narrow screen what leaves the neighbours peeking in (then centred between the two).
+   --mb is the band the chosen card's animals stand in: their feet are just under the grown card's bottom edge
+   (arrival.js placeLineup), the band holds the feet, the contact shadows and a margin. */
 .op-tiles { flex:1 1 0; min-height:0; display:flex; align-items:flex-start; gap:14px; padding:0 24px; overflow-x:auto; overflow-y:hidden; scroll-snap-type:x proximity; scrollbar-width:none; container-type:size; }
 .op-tiles::-webkit-scrollbar { display:none; }
 @media (hover:hover) and (pointer:fine) { .op-tiles { scroll-snap-type:none; } }   /* a mouse's row: no snapping (a hovered card scrolls just into view: arrival.js bringIntoView) */
 .op-tiles > :first-child { margin-left:auto; }   /* centred when they fit, scrollable from the first card when they do not */
 .op-tiles > :last-child { margin-right:auto; }
-.op-tile { --ch:min(100cqh - var(--bar) - 2 * var(--mt), (100vw - 64px) * 16 / 9);
-  position:relative; flex:none; height:var(--ch); margin-top:calc((100cqh - var(--bar) - var(--ch)) / 2);
+.op-tile { --ch:min(100cqh - var(--mt) - var(--mb), (100vw - 64px) * 16 / 9);
+  position:relative; flex:none; height:var(--ch); margin-top:calc(var(--mt) + (100cqh - var(--mt) - var(--mb) - var(--ch)) / 2);
   aspect-ratio:9/16; border-radius:14px; overflow:hidden; background:#0d1310; scroll-snap-align:center; container-type:inline-size;
   box-shadow:0 0 0 1px #263128, 0 10px 30px #0008; transition:transform .5s cubic-bezier(.2, .8, .25, 1), filter .5s ease, box-shadow .35s ease;
   /* scale, brightness and the sideways shift that keeps the gutters constant: arrival.js layoutCards, by state (chosen,
