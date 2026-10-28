@@ -15,7 +15,7 @@
   37.830918414113654
  ],
  "size_m": 10000,
- "generated_at": "2026-10-28T06:44:23Z",
+ "generated_at": "2026-10-28T07:13:36Z",
  "generator": {
   "name": "wild-earth-pipeline",
   "version": "0.2.0"
@@ -108,7 +108,7 @@
     "terrain.dem_rewilded"
    ],
    "feature_count": 376,
-   "method": "least-cost breach (<= 300 m) of depressions >= 1 m outside waterbodies (human water rewilded: not held as ponds, routed on terrain/dem_rewilded.tif), then pysheds fill + resolve_flats, D8, NHD-seeded inflow",
+   "method": "least-cost breach (<= 300 m) of depressions >= 1 m outside waterbodies (human water rewilded: not held as ponds, routed on terrain/dem_rewilded.tif), then pysheds fill + resolve_flats, D8, NHD-seeded inflow, edge leaks handed back to their NHD stream",
    "params": {
     "threshold_km2": 0.15,
     "min_reach_m": 40.0,
@@ -186,40 +186,139 @@
       "moved_m": 60.8
      }
     ],
+    "edge_links": 6,
+    "edge_links_detail": [
+     {
+      "name": "Snow Creek",
+      "kind": "stay",
+      "from": [
+       35,
+       1999
+      ],
+      "to": [
+       114,
+       1989
+      ],
+      "jump_m": 398.2,
+      "area_km2": 5.47
+     },
+     {
+      "name": "Snow Creek",
+      "kind": "stay",
+      "from": [
+       103,
+       1999
+      ],
+      "to": [
+       116,
+       1988
+      ],
+      "jump_m": 85.1,
+      "area_km2": 0.2
+     },
+     {
+      "name": "Yosemite Creek",
+      "kind": "stay",
+      "from": [
+       635,
+       0
+      ],
+      "to": [
+       642,
+       14
+      ],
+      "jump_m": 78.3,
+      "area_km2": 80.93
+     },
+     {
+      "name": "Yosemite Creek",
+      "kind": "reentry",
+      "from": [
+       895,
+       0
+      ],
+      "to": [
+       962,
+       1
+      ],
+      "jump_m": 335.0,
+      "area_km2": 83.65
+     },
+     {
+      "name": "Yosemite Creek",
+      "kind": "reentry",
+      "from": [
+       982,
+       0
+      ],
+      "to": [
+       1036,
+       3
+      ],
+      "jump_m": 270.4,
+      "area_km2": 83.92
+     },
+     {
+      "name": "Yosemite Creek",
+      "kind": "stay",
+      "from": [
+       1106,
+       0
+      ],
+      "to": [
+       1118,
+       6
+      ],
+      "jump_m": 67.1,
+      "area_km2": 99.77
+     }
+    ],
+    "seeds_carried": [
+     {
+      "name": "Yosemite Creek",
+      "area_km2": 99.7,
+      "carried_km2": 83.9
+     },
+     {
+      "name": "Yosemite Creek",
+      "area_km2": 83.9,
+      "carried_km2": 83.6
+     }
+    ],
     "breaches": 86,
     "breach_cells": 446,
     "unresolved_flat_cells": 12,
     "pruned_stubs": 7,
     "interior_outlets": 0,
-    "channel_cells": 31769,
+    "channel_cells": 32008,
     "dem_reaches": 347,
-    "dem_matched": 154,
-    "dem_unmatched": 193,
+    "dem_matched": 172,
+    "dem_unmatched": 175,
     "nhd_flowlines": 139,
     "nhd_covered": 117,
     "nhd_partial": 6,
     "nhd_uncovered": 8,
     "nhd_kept_reaches": 15,
-    "nhd_tips_dropped": 48,
-    "nhd_tips_length_km": 10.06,
-    "dem_length_km": 174.84,
-    "nhd_kept_length_km": 0.8,
+    "nhd_tips_dropped": 45,
+    "nhd_tips_length_km": 8.89,
+    "dem_length_km": 176.71,
+    "nhd_kept_length_km": 0.77,
     "nhd_length_km": 105.03,
-    "nhd_covered_length_km": 93.12,
+    "nhd_covered_length_km": 94.32,
     "median_offset_m": 9.9,
-    "median_reach_offset_m": 9.5,
-    "p90_offset_m": 30.8,
+    "median_reach_offset_m": 9.3,
+    "p90_offset_m": 30.2,
     "in_waterbody_pieces": 11,
     "features": 376,
     "downhill_check": {
      "points": 200,
      "step_m": 10.0,
      "tolerance_m": 0.5,
-     "violations": 2,
-     "violation_rate": 0.01,
-     "max_rise_m": 13.73
+     "violations": 0,
+     "violation_rate": 0.0,
+     "max_rise_m": 0.27
     },
-    "max_area_km2": 487.39,
+    "max_area_km2": 587.16,
     "breach_max_m": 300.0,
     "rewilded_waterbodies": 2,
     "rewild_check": {
@@ -248,8 +347,8 @@
     },
     "routed_on": "terrain/dem_rewilded.tif"
    },
-   "sha256": "aeb1d18f41bb367f517cef136c3a1fead745fae73102cd5e37c26a6d281cd4c5",
-   "bytes": 879019
+   "sha256": "062ad66d487cb5b26435a0b46f22bdaab06324f82bec57f44e7956ff02c77e01",
+   "bytes": 885835
   },
   "client.channel_depth": {
    "path": "client/channel_depth.png",
@@ -268,8 +367,8 @@
     "hydro.channels"
    ],
    "encoding": "uint8 decimetres: mean DEM on a 20 m ring minus the channel cell, clamped 0-25 m, x10; 0 off channel",
-   "sha256": "0ec8b76170f3a6078c0539639c1a271cb4e74cdaa0ae1813cd66b7efb1965669",
-   "bytes": 77472
+   "sha256": "61b137b871f3c440e57c5c14c7d433b23bd8666b31e592f56e66c7cdf919e8e2",
+   "bytes": 78042
   },
   "hydro.human_water": {
    "path": "hydro/human_water.geojson",
@@ -508,18 +607,18 @@
    "depth_model": "mean depth 0.10 A^0.32 m (A km2) x exp(-0.85 t), t = tanh(1.1 ln((S_local + 0.002) / (S_reach + 0.002))); S_local over max(7.5 m, 2.5 widths), S_reach over max(75 m, 10 widths), on the non-increasing DEM long profile every 2.5 m",
    "stats": {
     "reaches": 376,
-    "samples": 70444,
+    "samples": 71176,
     "riffle_share": 0.203,
-    "pool_share": 0.175,
-    "run_share": 0.622,
-    "depth_m_p50": 0.105,
-    "depth_m_p95": 0.463,
+    "pool_share": 0.17,
+    "run_share": 0.627,
+    "depth_m_p50": 0.109,
+    "depth_m_p95": 0.51,
     "depth_m_max": 1.056,
     "bed_cells": 71,
     "corridor_cells": 0
    },
-   "sha256": "5c147bc0fcf1c1d493e4749cd4653f2ef25d0d13e6b980ee5ec111ff10b401a7",
-   "bytes": 360293
+   "sha256": "6103b8bebd90e7011288af80dbccfc514110ea4e78bcae9f8803d129753cb326",
+   "bytes": 362194
   },
   "client.features": {
    "path": "client/features.json",
@@ -547,8 +646,8 @@
     "hydro.waterbodies",
     "osm"
    ],
-   "sha256": "366dc69686b18d10ae9a74972d3408a91a4c1a3667e3c8ee9206b5099ad08b16",
-   "bytes": 311160
+   "sha256": "29d16c37f9a2a61c1811b844468ebafd16725b5585e6c0f8774fa4439f4cf43a",
+   "bytes": 313183
   },
   "species.list": {
    "path": "species/species.json",
@@ -2910,6 +3009,18 @@
    "step": "derive",
    "at": "2026-10-28T06:44:23Z",
    "seconds": 31.9,
+   "ok": true
+  },
+  {
+   "step": "channels",
+   "at": "2026-10-28T07:13:12Z",
+   "seconds": 26.6,
+   "ok": true
+  },
+  {
+   "step": "rewild_hydro",
+   "at": "2026-10-28T07:13:36Z",
+   "seconds": 23.5,
    "ok": true
   }
  ]

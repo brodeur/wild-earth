@@ -281,8 +281,17 @@ step `channels`): depressions at least 1 m deep outside mapped waterbodies are b
 least-cost path to lower ground (lidar sees a road embankment over a culvert as a dam), the rest
 filled with the tile border as the outlet, flats resolved, D8 flow directions and accumulation,
 with the upstream area of creeks entering the tile seeded where NHD flowlines cross its edge.
-Cells draining 0.15 km² or more are channels; reaches run between heads and junctions, carry
-Strahler order on that network, and are lightly smoothed. NHD supplies names and permanence: a
+The fill makes every border cell an outlet, so a creek on a flat floor along the edge wanders out
+of the tile and takes its basin with it. A border outlet draining 0.15 km² or more with an NHD
+flowline within 60 m is judged against that stream followed downstream: if it stays inside for
+100 m or more, the outlet is pointed at the lowest cell within 60 m of the stream further down
+(the connector is drawn); if it leaves and comes back within 3 km at an inflow seed, the outlet
+is pointed at that seed, the reach ends at the border (nothing is drawn outside), and the seed
+brings only the NHD area the handed-over flow does not already carry (the tributaries that
+joined outside); otherwise the outlet stands. Stats: `edge_links`, `edge_links_detail`,
+`seeds_carried`. Cells draining 0.15 km² or more are channels; reaches run between heads and
+junctions, carry Strahler order on that network (a reach holding an inflow seed is at least its
+NHD order), and are lightly smoothed. NHD supplies names and permanence: a
 reach takes the `gnis_name` and `fcode` of the NHD flowlines within 60 m running the same way;
 unmatched reaches are ephemeral (46007), or intermittent (46003) from 2 km². NHD stretches with no
 DEM channel nearby but with the DEM draining at least the threshold there are kept with `source:

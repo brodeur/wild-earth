@@ -11,7 +11,11 @@ the NHD reaches each channel runs alongside.
      and gives D8 flow directions; any cell still without a way out is attached to a neighbour that
      has one, and accumulation runs on the result. Flow from outside the tile is seeded where
      NHD flowlines cross into it (their `totdasqkm`), so a creek entering the tile carries its
-     upstream area instead of starting from zero at the edge.
+     upstream area instead of starting from zero at the edge. The fill makes every border cell an
+     outlet, so a creek on a flat floor along the edge wanders out of the tile (and its basin with
+     it); a border outlet with an NHD stream within 60 m that stays inside, or leaves and comes
+     back in at an inflow seed, is pointed back at that stream (the seed then brings only the area
+     the linked flow does not already carry). See _link_edge_leaks.
   2. Channels: cells draining >= `threshold_km2` (0.15 km2). Reaches run between channel heads,
      junctions and outlets, walked downstream cell by cell; short headwater stubs (< 40 m) are
      pruned; Strahler order is computed on what remains (a seeded inflow head starts at its NHD
@@ -57,6 +61,10 @@ DEPTH_RING_M = 20.0         # radius of the ring around a channel cell for chann
 BREACH_MAX_M = 300.0        # longest breach (box half-size); hydro/human_water.geojson may raise it
 SEED_RUN_M = 500.0          # an inflow seed must route at least min(this, half the NHD line's run inside) before leaving
 SEED_SNAP_M = 60.0          # ... else it moves to the lowest cell within this of the line's first 100 m (then 300 m) inside
+LEAK_EXIT_M = 100.0         # a border outlet is its NHD stream really leaving when the stream leaves the tile within this
+LEAK_CHAIN_M = 3000.0       # how far down the NHD stream to look for its way back into the tile
+LEAK_SEARCH_M = 500.0       # how far along the stream, inside, to look for the cell an edge leak is handed to
+LEAK_PASSES = 40
 PERENNIAL, INTERMITTENT, EPHEMERAL = 46006, 46003, 46007
 CANAL = 33600
 # D8 encoding (pysheds default order N, NE, E, SE, S, SW, W, NW)
@@ -293,8 +301,8 @@ def _inflow_seeds(tile: Tile, flowlines: list, res: float, n: int, inset=15.0):
             follow = (LineString(xy) if len(xy) > 1 else rest).intersection(tile_box)
             parts = [g for g in getattr(follow, "geoms", [follow]) if g.geom_type == "LineString" and not g.is_empty]
             run = min(parts, key=lambda g: g.distance(p)) if parts else None
-            seeds.append({"row": row, "col": col, "area_km2": float(area), "order": pr.get("streamorde") or 1,
-                          "name": pr.get("gnis_name"), "run": run, "run_m": run.length if run is not None else 0.0})
+            seeds.append({"row": row, "col": col, "x": float(p.x), "y": float(p.y), "area_km2": float(area),
+                          "order": pr.get("streamorde") or 1, "name": pr.get("gnis_name"), "run": run, "run_m": run.length if run is not None else 0.0})
     return seeds
 
 
@@ -312,13 +320,7 @@ def _snap_seeds(seeds: list, down: np.ndarray, zf: np.ndarray, res: float) -> li
     zflat = zf.ravel()
 
     def run_cells(i, need):
-        k = 0
-        while i >= 0 and k < need:
-            r, c = divmod(int(i), nc)
-            if r in (0, nr - 1) or c in (0, nc - 1):
-                break
-            i, k = down[i], k + 1
-        return k
+        return _run_cells(down, nr, nc, i, need)
 
     moved = []
     for s in seeds:
@@ -353,13 +355,179 @@ def _snap_seeds(seeds: list, down: np.ndarray, zf: np.ndarray, res: float) -> li
     return moved
 
 
+def _run_cells(down: np.ndarray, nr: int, nc: int, i: int, need: int) -> int:
+    """Cells routed from `i` (up to `need`) before reaching the tile border."""
+    k = 0
+    while i >= 0 and k < need:
+        r, c = divmod(int(i), nc)
+        if r in (0, nr - 1) or c in (0, nc - 1):
+            break
+        i, k = down[i], k + 1
+    return k
+
+
+def _terminal(down: np.ndarray) -> np.ndarray:
+    """The cell each cell's flow ends at (pointer jumping, as _drains_out)."""
+    t = np.where(down >= 0, down, np.arange(down.size))
+    for _ in range(int(np.ceil(np.log2(down.size))) + 1):
+        t = t[t]
+    return t
+
+
+def _link_edge_leaks(nhd: list, seeds: list, down: np.ndarray, zf: np.ndarray, res: float, cell_km2: float,
+                     threshold_km2: float) -> tuple[list, np.ndarray]:
+    """Hand the flow the tile border swallowed back to the stream it belongs to.
+
+    The fill makes every border cell an outlet. A creek that runs along the edge of the tile on a
+    flat floor (Yosemite Creek above the falls, within 40 m of the west edge for 3 km) wanders
+    onto a border cell and leaves, its whole basin with it, and below it the same creek starts
+    again from nothing. Each border outlet draining >= the threshold with an NHD flowline within
+    SEED_SNAP_M is judged against that stream, followed downstream from the outlet:
+      - the stream stays inside the tile for LEAK_EXIT_M or more: the exit is the edge's doing.
+        The outlet is pointed at the lowest cell within SEED_SNAP_M of the stream, at the first
+        station 10 m to LEAK_SEARCH_M further down that routes min(SEED_RUN_M, half the stream's
+        run left inside) before reaching the border (else the one that routes furthest).
+      - it leaves the tile and comes back within LEAK_CHAIN_M at an inflow seed: the outlet is
+        pointed at that seed, and the seed brings only the NHD area the outlets pointed at it do
+        not already carry (the tributaries that joined outside).
+      - it leaves and does not come back: a true outlet, left alone.
+    A link never makes a cycle (its target must not drain to the outlet). Passes repeat until no
+    new outlet appears and the seeds' carried areas settle. Mutates `down` and each seed's
+    "carried" (km2); returns (links, cell weights for the accumulation)."""
+    nr, nc = zf.shape
+    n = nr * nc
+    zflat = zf.ravel()
+
+    def weights():
+        w = np.ones(n)
+        for s in seeds:
+            w[s["row"] * nc + s["col"]] += max(0.0, s["area_km2"] - s.get("carried", 0.0)) / cell_km2
+        return w
+
+    lines = [f for f in nhd if f["props"].get("fcode") != CANAL]
+    if not lines:
+        return [], weights()
+    geoms = [f["line"] for f in lines]
+    tree = shapely.STRtree(geoms)
+    key = lambda xy: (round(float(xy[0]), 1), round(float(xy[1]), 1))  # noqa: E731
+    starts = {}
+    for k, g in enumerate(geoms):
+        starts.setdefault(key(g.coords[0]), k)
+
+    def downstream(k, d0):
+        g = geoms[k]
+        xy = list(substring(g, d0, g.length).coords) if d0 < g.length - 0.01 else [g.coords[-1]]
+        seen, total = {k}, g.length - d0
+        while total < LEAK_CHAIN_M:
+            nk = starts.get(key(xy[-1]))
+            if nk is None or nk in seen:
+                break
+            seen.add(nk)
+            xy.extend(list(geoms[nk].coords)[1:])
+            total += geoms[nk].length
+        return LineString(xy) if len(xy) > 1 else None
+
+    border = np.zeros((nr, nc), bool)
+    border[0, :] = border[-1, :] = border[:, 0] = border[:, -1] = True
+    border = border.ravel()
+    seed_xy = np.array([[s.get("x", np.nan), s.get("y", np.nan)] for s in seeds]).reshape(-1, 2)
+    links, tried = [], set()
+    term = _terminal(down)
+    for _ in range(LEAK_PASSES):
+        acc = _accumulate(down, weights()) * cell_km2
+        carried = defaultdict(float)
+        for lk in links:
+            if lk["seed"] is not None:
+                carried[lk["seed"]] += float(acc[lk["from"]])
+        settled = True
+        for k, s in enumerate(seeds):
+            if abs(carried[k] - s.get("carried", 0.0)) > 1e-3:
+                settled = False
+            s["carried"] = carried[k]
+        new = [int(e) for e in np.flatnonzero(border & (down < 0) & (acc >= threshold_km2)) if int(e) not in tried]
+        if not new and settled:
+            break
+        for e in new:
+            tried.add(e)
+            r, c = divmod(e, nc)
+            p = shapely.Point((c + 0.5) * res, TILE_SIZE_M - (r + 0.5) * res)
+            hit = tree.query_nearest(p, max_distance=SEED_SNAP_M)
+            if len(hit) == 0:
+                continue
+            k = int(hit[0])
+            R = downstream(k, geoms[k].project(p))
+            if R is None:
+                continue
+            ds = np.arange(0.0, R.length, 5.0)
+            q = shapely.line_interpolate_point(R, ds)
+            qx, qy = shapely.get_x(q), shapely.get_y(q)
+            inside = (qx >= 0) & (qx <= TILE_SIZE_M) & (qy >= 0) & (qy <= TILE_SIZE_M)
+            deep = (qx >= 15) & (qx <= TILE_SIZE_M - 15) & (qy >= 15) & (qy <= TILE_SIZE_M - 15)
+            out = np.flatnonzero(~inside)
+            start, link = 10.0, None
+            if out.size and ds[out[0]] <= LEAK_EXIT_M:
+                back = np.flatnonzero(deep & (np.arange(ds.size) > out[0]))
+                if back.size == 0:
+                    continue                              # the stream leaves: a true outlet
+                start = float(ds[back[0]])
+                # the inflow seed where the stream comes back in
+                if len(seeds):
+                    dd = np.hypot(seed_xy[:, 0] - qx[back[0]], seed_xy[:, 1] - qy[back[0]])
+                    j = int(np.nanargmin(dd)) if np.isfinite(dd).any() else -1
+                    if j >= 0 and dd[j] <= 40.0:
+                        t = seeds[j]["row"] * nc + seeds[j]["col"]
+                        if term[t] != e:
+                            link = {"from": e, "to": int(t), "kind": "reentry", "seed": j}
+            if link is None:
+                # stations along the stream while it stays inside, from `start`
+                later = np.flatnonzero(~inside & (ds > start))
+                end = float(ds[later[0]]) if later.size else float(R.length)
+                best, best_run = None, 1
+                for d in np.arange(start, min(start + LEAK_SEARCH_M, end), 10.0):
+                    sx, sy = float(qx[int(d // 5.0)]), float(qy[int(d // 5.0)])
+                    c0, c1 = max(1, int((sx - SEED_SNAP_M) // res)), min(nc - 2, int((sx + SEED_SNAP_M) // res))
+                    r0 = max(1, int((TILE_SIZE_M - sy - SEED_SNAP_M) // res))
+                    r1 = min(nr - 2, int((TILE_SIZE_M - sy + SEED_SNAP_M) // res))
+                    if c1 < c0 or r1 < r0:
+                        continue
+                    rr, cc = np.mgrid[r0:r1 + 1, c0:c1 + 1]
+                    rr, cc = rr.ravel(), cc.ravel()
+                    near = np.hypot((cc + 0.5) * res - sx, TILE_SIZE_M - (rr + 0.5) * res - sy) <= SEED_SNAP_M
+                    cand = (rr * nc + cc)[near]
+                    cand = cand[term[cand] != e]
+                    need = int(max(2, min(SEED_RUN_M, 0.5 * (end - d)) / res))
+                    hit_i = None
+                    for i in cand[np.argsort(zflat[cand], kind="stable")]:
+                        run = _run_cells(down, nr, nc, i, need)
+                        if run >= need:
+                            hit_i = int(i)
+                            break
+                        if run > best_run:
+                            best, best_run = int(i), run
+                    if hit_i is not None:
+                        best = hit_i
+                        break
+                if best is None:
+                    continue
+                link = {"from": e, "to": best, "kind": "stay", "seed": None}
+            down[e] = link["to"]
+            term[term == e] = term[link["to"]]
+            link["name"] = lines[k]["props"].get("gnis_name")
+            tr_, tc_ = divmod(link["to"], nc)
+            link["jump_m"] = round(float(np.hypot(tr_ - r, tc_ - c) * res), 1)
+            links.append(link)
+    return links, weights()
+
+
 # ---------------------------------------------------------------------------
 # Network extraction
 # ---------------------------------------------------------------------------
 
-def _walk(ch: np.ndarray, down: np.ndarray):
+def _walk(ch: np.ndarray, down: np.ndarray, breaks=frozenset()):
     """Reaches as lists of flat cell indices: from each head or junction, downstream to the next
-    junction (included) or the network outlet. Returns (reaches, n_in per channel cell)."""
+    junction (included) or the network outlet. A reach also ends at a cell in `breaks` (an edge
+    leak handed to the seed where its stream comes back in) and a new one starts below it.
+    Returns (reaches, n_in per channel cell)."""
     idx = np.flatnonzero(ch)
     d = down[idx]
     nin = np.zeros(ch.size, np.int32)
@@ -367,11 +535,14 @@ def _walk(ch: np.ndarray, down: np.ndarray):
     ok[ok] = ch[d[ok]]
     np.add.at(nin, d[ok], 1)
     starts = idx[(nin[idx] == 0) | (nin[idx] >= 2)]
+    below = [int(down[b]) for b in breaks if ch.flat[b] and down[b] >= 0 and ch.flat[down[b]] and nin[down[b]] < 2]
+    if below:
+        starts = np.concatenate([starts, np.asarray(below, starts.dtype)])
     reaches = []
     for s in starts:
         path = [int(s)]
         c = down[s]
-        while c >= 0 and ch[c]:
+        while c >= 0 and ch[c] and path[-1] not in breaks:
             path.append(int(c))
             if nin[c] >= 2:
                 break
@@ -389,7 +560,7 @@ def _cell_len(path, nc, res):
 
 
 def extract_network(acc_km2: np.ndarray, down: np.ndarray, threshold_km2: float, res: float,
-                    min_reach_m: float = MIN_REACH_M, protect=()):
+                    min_reach_m: float = MIN_REACH_M, protect=(), breaks=frozenset()):
     """Channel mask and reaches after pruning headwater stubs shorter than min_reach_m.
 
     Only true channel heads are pruned (head drainage under twice the threshold): a seeded
@@ -401,7 +572,7 @@ def extract_network(acc_km2: np.ndarray, down: np.ndarray, threshold_km2: float,
     protect = set(int(i) for i in protect)
     pruned = 0
     for _ in range(4):
-        reaches, nin = _walk(ch, down)
+        reaches, nin = _walk(ch, down, breaks)
         drop = []
         for p in reaches:
             head = nin[p[0]] == 0
@@ -414,12 +585,12 @@ def extract_network(acc_km2: np.ndarray, down: np.ndarray, threshold_km2: float,
         if not drop:
             break
         ch[np.asarray(drop)] = False
-    reaches, nin = _walk(ch, down)
+    reaches, nin = _walk(ch, down, breaks)
     return ch.reshape(nr, nc), reaches, nin, pruned
 
 
-def strahler(reaches, nin, acc_flat, seed_order: dict):
-    """Strahler order per reach. Heads start at 1, or at their seeded NHD order."""
+def strahler(reaches, nin, acc_flat, seed_order: dict, joins=None):
+    """Strahler order per reach. Heads start at 1; a reach holding an inflow seed is at least its NHD order."""
     by_end = defaultdict(list)
     for k, p in enumerate(reaches):
         if len(p) > 1:
@@ -427,13 +598,14 @@ def strahler(reaches, nin, acc_flat, seed_order: dict):
     order = [0] * len(reaches)
     for k in sorted(range(len(reaches)), key=lambda k: acc_flat[reaches[k][0]]):
         s = reaches[k][0]
-        ups = [order[u] for u in by_end.get(s, []) if u != k]
+        ups = [order[u] for e in [s] + list((joins or {}).get(s, ())) for u in by_end.get(e, []) if u != k]
         if not ups:
             o = 1
         else:
             top = max(ups)
             o = top + 1 if ups.count(top) >= 2 else top
-        order[k] = max(o, seed_order.get(s, 0))
+        # a seed raises the reach it lies on, head or not (an edge leak handed to a seed flows in above it)
+        order[k] = max(o, max(seed_order.get(c, 0) for c in (reaches[k][:-1] or reaches[k])))
     return order
 
 
@@ -576,6 +748,10 @@ def build_channels(tile: Tile, threshold_km2: float = THRESHOLD_KM2) -> dict:
         for s in seeds:
             weights[s["row"], s["col"]] += s["area_km2"] / cell_km2
         acc = _accumulate(down, weights.ravel()).reshape(nr, nc)
+    # flow the border swallowed where its NHD stream stays inside (or comes back in) is handed on
+    edge_links, weights = _link_edge_leaks(nhd, seeds, down, zf, res, cell_km2, threshold_km2)
+    if edge_links:
+        acc = _accumulate(down, weights).reshape(nr, nc)
     # rewilded waterbodies: did the breach cut their outlet, and is any water still held in the bed?
     rewild_check = {}
     if rewilded and rw["dem"]:
@@ -605,7 +781,14 @@ def build_channels(tile: Tile, threshold_km2: float = THRESHOLD_KM2) -> dict:
 
     # 2. Channel network
     seed_cells = [s["row"] * nc + s["col"] for s in seeds]
-    ch, reaches, nin, pruned = extract_network(acc_km2, down, threshold_km2, res, protect=seed_cells)
+    # an edge leak handed to the seed where its stream comes back in ran outside the tile in between:
+    # the reach ends at the border cell (the hand-over carries the flow; nothing is drawn along the border)
+    hidden = frozenset(lk["from"] for lk in edge_links if lk["kind"] == "reentry")
+    joins = defaultdict(list)
+    for lk in edge_links:
+        if lk["kind"] == "reentry":
+            joins[lk["to"]].append(lk["from"])
+    ch, reaches, nin, pruned = extract_network(acc_km2, down, threshold_km2, res, protect=seed_cells, breaks=hidden)
     # continuity: every reach should end at a junction or at the tile border
     def _edge(i):
         r, c = divmod(int(i), nc)
@@ -622,7 +805,7 @@ def build_channels(tile: Tile, threshold_km2: float = THRESHOLD_KM2) -> dict:
             c = down[c]
         if c >= 0 and c != i:
             seed_order[c] = max(seed_order.get(c, 0), seed_order.pop(i))
-    orders = strahler(reaches, nin, acc_flat, seed_order)
+    orders = strahler(reaches, nin, acc_flat, seed_order, joins)
 
     dem_reaches = []
     for k, p in enumerate(reaches):
@@ -771,7 +954,12 @@ def build_channels(tile: Tile, threshold_km2: float = THRESHOLD_KM2) -> dict:
     dem_len = sum(rc["line"].length for rc in dem_reaches)
     matched_n = sum(rc["matched"] for rc in dem_reaches)
     stats = {
-        "threshold_km2": threshold_km2, "seeds": len(seeds), "seeds_moved": seeds_moved, "breaches": n_breach, "breach_cells": carved, "unresolved_flat_cells": int(unresolved),
+        "threshold_km2": threshold_km2, "seeds": len(seeds), "seeds_moved": seeds_moved,
+        "edge_links": len(edge_links),
+        "edge_links_detail": [{"name": lk["name"], "kind": lk["kind"], "from": list(divmod(lk["from"], nc)), "to": list(divmod(lk["to"], nc)),
+                               "jump_m": lk["jump_m"], "area_km2": round(float(acc_flat[lk["from"]]), 2)} for lk in edge_links][:60],
+        "seeds_carried": [{"name": s["name"], "area_km2": round(s["area_km2"], 1), "carried_km2": round(s["carried"], 1)}
+                          for s in seeds if s.get("carried", 0) > 0], "breaches": n_breach, "breach_cells": carved, "unresolved_flat_cells": int(unresolved),
         "pruned_stubs": pruned, "interior_outlets": interior_outlets, "channel_cells": int(ch.sum()),
         "dem_reaches": len(dem_reaches), "dem_matched": matched_n, "dem_unmatched": len(dem_reaches) - matched_n,
         "nhd_flowlines": len(nhd), "nhd_covered": nhd_stats["covered"], "nhd_partial": nhd_stats["partial"],
@@ -796,7 +984,7 @@ def build_channels(tile: Tile, threshold_km2: float = THRESHOLD_KM2) -> dict:
                            "derived_from": ["terrain.dem", "hydro.flowlines", "hydro.waterbodies"] + (["hydro.human_water", "terrain.dem_rewilded"] if rw else []),
                            "feature_count": len(feats), "method": f"least-cost breach (<= {breach_max:g} m) of depressions >= 1 m outside waterbodies"
                                      + (" (human water rewilded: not held as ponds, routed on terrain/dem_rewilded.tif)" if rw else "")
-                                     + ", then pysheds fill + resolve_flats, D8, NHD-seeded inflow",
+                                     + ", then pysheds fill + resolve_flats, D8, NHD-seeded inflow, edge leaks handed back to their NHD stream",
                            "params": {"threshold_km2": threshold_km2, "min_reach_m": MIN_REACH_M,
                                       "match_radius_m": MATCH_RADIUS_M, "width": "1.6*A^0.45 clamp 1-30",
                                       "bed_width": "1.5*width+1"},

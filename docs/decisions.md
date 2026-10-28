@@ -2035,3 +2035,20 @@ and fading a further 60% past 60 m, so a deer kill at 22 m matches a raven alarm
 most two kills play at once. The player's own catch plays at the player without a panner, at about the level of the
 player's own call. Each kill is logged as "<prey> taken". The soundscape's callers now skip species the pipeline
 marks absent (species.json `present`), the species lane's sound.js follow-up.
+
+Edge leaks are handed back to their stream (2026-10-28, an Opus lane; pipeline/channels.py `_link_edge_leaks`,
+verified here: the stream over the Yosemite Falls lip is Yosemite Creek, perennial, order 4, 110 km2, 13 m wide; all
+29 of its pieces perennial; the fall draws in October as a thread and the minimap names the creek). The fill makes
+every border cell an outlet, so a creek on a flat floor along the tile edge wanders onto a border cell and leaves
+with its whole basin; on the Yosemite Valley tile, Yosemite Creek runs within 40 m of the west edge for 3 km above
+the falls, left there, and reached the lip carrying 10 km2 instead of 110, unnamed and intermittent (the inflow
+seeds at the tile edge were already there; this was the loss after them). Now each border outlet draining 0.15 km2
+or more with an NHD flowline within 60 m is judged against that stream followed downstream: if NHD stays inside, the
+outlet is pointed at the lowest cell near the stream further down; if NHD leaves and comes back at an inflow seed,
+the outlet is pointed at that seed, nothing is drawn along the border, and the seed adds only the NHD area the
+handed-over flow does not already carry (the tributaries that joined outside), so no area is counted twice; the
+network walk takes those cuts and the Strahler order crosses a hand-over. Chosen over routing on a DEM buffered
+beyond the tile because it needs no new downloads, keeps routing on the lidar tile alone and leaves interior routing
+untouched; the home tile changes by under 1 km2 on two creeks (dry run, not rewritten). Not covered: a creek the DEM
+sends off the edge far from any NHD line (Tenaya Creek here, 400 m off, so the Merced below shows 587 km2 against
+NHD's 707); the connectors where NHD stays inside are straight (Snow Creek's longest 398 m along the east edge).
