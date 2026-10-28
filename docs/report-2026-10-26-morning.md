@@ -198,6 +198,7 @@ release, WebGL) was still running; its commit, if it verified, is the last in `g
 | f33df90 | The hunt ends: as a lion, coyote or fox, E within reach catches prey (your hunger fills); an AI rush or pounce that lands sometimes kills; the dead lie where they fell for ten minutes and ravens, vultures and coyotes come to them. Your call to keep: predation now ends in a death. |
 | d6a669d | As a hawk or raven, a pass within reach of a vole, rabbit or jackrabbit takes it: the stoop that connects is the strike. |
 | 973aa75 | A hunter's stalk: creeping, you are noticed at half the distance, frozen at 0.4, running at 1.3; the fliers have a hunger meter the strike fills; the start screen shows only the species present on a tile. |
+| a5873a9 | The falls' plume follows the season's flow: a broad sheet in May, a thread in October. |
 
 Open from the day: the attribution form for generated assets; far placement on the lidar ground beyond the fine square; the squirrel's
 crown camera in leafy oaks.
