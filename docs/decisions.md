@@ -1710,3 +1710,10 @@ set by the row's scroll events and dropped 150 ms after the last), so the animal
 The bar's count pill (index.html .nb-n) sits bottom left of the slot in the highlight orange #c98a4e at .8 with dark
 text. The spirit (flight.js updateCamera): the same framing rule as the walkers', the camera's pitch from the line to the
 wisp looking 0.45 of the half view above it plus half the wisp's own pitch; verified at 29% up from the bottom.
+
+## 2026-10-27: the aurora in white, faster
+
+Aaron: "I like the fade in on the animals, but it is a very saturated teal: completely de-saturate it, and it can all
+happen faster." The lines are white to light grey (#ffffff to #c9ccd0), the silhouette #e4e6e8; the arrival takes 1.3 s
+(2.3 before), a line lives 0.8-1.6 s with a delay under 0.3 s, the beam-out 0.9 s (1.4) and the new tile's animals
+start 0.6 s after it (1.0). Verified on a change from the home card to Placerville.

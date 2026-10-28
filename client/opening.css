@@ -120,16 +120,16 @@ html:not(.opening) #opening:not(.out) { display:none; }
    fade in as the lines shimmer out at their own odd intervals. A tile change runs it backwards (.out) over the whole
    lineup, then the new tile's animals come in. Each still's delay (--d) is set once as it loads. */
 .op-an.in, .op-an.out { opacity:1; }   /* the base rule starts a still at 0 */
-.op-an .op-sil { position:absolute; inset:0; background:var(--aur, #8dffd2); -webkit-mask:var(--still) center / 100% 100% no-repeat; mask:var(--still) center / 100% 100% no-repeat; opacity:0; pointer-events:none; }
+.op-an .op-sil { position:absolute; inset:0; background:var(--aur, #e4e6e8); -webkit-mask:var(--still) center / 100% 100% no-repeat; mask:var(--still) center / 100% 100% no-repeat; opacity:0; pointer-events:none; }
 .op-an.flip .op-sil { transform:scaleX(-1); }
 .op-an .op-aur { position:absolute; left:0; right:0; bottom:0; height:100%; pointer-events:none; }
 .op-an .op-aur i { position:absolute; bottom:-4%; left:var(--lx); width:2px; height:calc(var(--lh) * 1%); margin-left:-1px; border-radius:1px; transform-origin:50% 100%;
   background:linear-gradient(180deg, #0000 0%, var(--lc) 22%, var(--lc) 72%, #0000 100%); filter:blur(.5px); mix-blend-mode:plus-lighter; opacity:0; }
-.op-an.in img { animation:op-colour-in 2.3s ease both; animation-delay:var(--d, 0s); }
-.op-an.in .op-sil { animation:op-sil-in 2.3s ease both; animation-delay:var(--d, 0s); }
+.op-an.in img { animation:op-colour-in 1.3s ease both; animation-delay:var(--d, 0s); }
+.op-an.in .op-sil { animation:op-sil-in 1.3s ease both; animation-delay:var(--d, 0s); }
 .op-an.in .op-aur i { animation:op-aur-in var(--ld) ease-in-out both, op-wiggle var(--lw) ease-in-out infinite alternate; animation-delay:calc(var(--d, 0s) + var(--la)), var(--la); }
-.op-an.out img { animation:op-colour-out 1.4s ease both; }
-.op-an.out .op-sil { animation:op-sil-out 1.4s ease both; }
+.op-an.out img { animation:op-colour-out .9s ease both; }
+.op-an.out .op-sil { animation:op-sil-out .9s ease both; }
 .op-an.out .op-aur i { animation:op-aur-out var(--ld) ease-in-out both, op-wiggle var(--lw) ease-in-out infinite alternate; animation-delay:var(--la), var(--la); }
 .op-an.bird.in > i { animation:op-float var(--fd, 6s) ease-in-out infinite alternate; }
 .op-an.gone { animation:op-gone .4s ease forwards; }   /* a species the newly chosen tile does not have */

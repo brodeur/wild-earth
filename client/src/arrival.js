@@ -101,7 +101,7 @@ class SeasonYear {
 const label = d => `${MONTH[d.getMonth()]} ${d.getDate()}`;
 const PX_PER_M_CARD = 0.112;              // the lineup's scale: a metre as a fraction of the card's height (the deer ~15%)
 const POP_GAP = [0.18, 0.42];             // s between the animals' arrivals
-const AUR_N = [10, 15], AUR_COLOURS = ['#8dffd2', '#9ff5ff', '#b8ffb0', '#c7b3ff', '#7df0c4'];   // the aurora lines over an arriving still (opening.css .op-aur)
+const AUR_N = [10, 15], AUR_COLOURS = ['#ffffff', '#f1f1f1', '#dcdfe2', '#c9ccd0', '#f7f7f7'];   // the aurora lines over an arriving still (opening.css .op-aur): white to light grey, no hue (owner, 2026-10-27)
 // The lines: AUR_N of them, clustered round the still's middle at differing heights (40-170% of the still), each with
 // its own colour, wiggle period (--lw), delay (--la) and life (--ld), so they shimmer out at their own odd intervals.
 function auroraLines(rnd) {
@@ -113,8 +113,8 @@ function auroraLines(rnd) {
     l.style.setProperty('--lh', `${(40 + rnd() * 130).toFixed(0)}`);
     l.style.setProperty('--lc', AUR_COLOURS[Math.floor(rnd() * AUR_COLOURS.length)]);
     l.style.setProperty('--lw', `${(0.45 + rnd() * 0.9).toFixed(2)}s`);
-    l.style.setProperty('--la', `${(rnd() * 0.5).toFixed(2)}s`);
-    l.style.setProperty('--ld', `${(1.3 + rnd() * 1.4).toFixed(2)}s`);
+    l.style.setProperty('--la', `${(rnd() * 0.3).toFixed(2)}s`);
+    l.style.setProperty('--ld', `${(0.8 + rnd() * 0.8).toFixed(2)}s`);
     box.append(l);
   }
   return box;
@@ -390,8 +390,8 @@ export class OpeningScreen {
     // another tile's lineup beams out whole (opening.css .out), and this tile's animals come in as their own sequence
     // after it, shared species included (owner, 2026-10-27: a new tile may be another continent)
     if (this.lineupTile && this.lineupTile !== id && this.anEls.size) {
-      for (const el of this.anEls.values()) { el.classList.remove('in'); el.classList.add('out'); el.style.animationDelay = '0s'; el.style.setProperty('--d', '0s'); setTimeout(() => el.remove(), 2900); }
-      this.anEls = new Map(); this.popAt = performance.now() / 1000 + 1.0;
+      for (const el of this.anEls.values()) { el.classList.remove('in'); el.classList.add('out'); el.style.animationDelay = '0s'; el.style.setProperty('--d', '0s'); setTimeout(() => el.remove(), 1800); }
+      this.anEls = new Map(); this.popAt = performance.now() / 1000 + 0.6;
     }
     this.lineupTile = id;
     for (const it of items.sort(() => rnd() - 0.5)) {   // new ones created, so loaded, in a random order
