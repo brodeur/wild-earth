@@ -41,6 +41,10 @@
 //            And 'alarm' (a watcher calling at a predator that hunts near it, animals.js alarms()): the caller's own alarm
 //            voice (ALARM: the jays' scolds, the waka, a kraa, alarm putts, pits, the whistle, the bark, a deer's snort and
 //            stamp) from where it calls, heard out to the call's carry and faint at a distance; at most ALARM_MAX at once.
+//            And 'kill' (animals.js kill()): at the spot, the prey's last cry (a deer's hoarse bawl, a rabbit's scream, a vole's
+//            squeak) and the struggle, a scuffle of grass with thumps and the hunter over it (a lion's growl, a coyote's or fox's
+//            snarl, a hawk's wing-slaps); heard out to 120 m (a rabbit or vole 50 m), faint past 60 m; the player's own catch at
+//            the player, a touch louder; at most KILL_MAX at once.
 //   water    a stream wash plus gurgle, on a panner kept at the nearest point of the nearest flowline, so it
 //            fades in within ~80 m and comes from the right side; quieter in summer and fall.
 //   insects  a pre-rendered loop of field-cricket chirps at dusk in summer and fall over grassland.
@@ -135,6 +139,21 @@ const ALARM = {
   alarm:                    { label: 'alarm', gain: 0.5, ref: 8, range: 120, synth: 'chip' },
 };
 const ALARM_MAX = 2;       // alarm voices playing at once
+// Kills (animals.js 'kill'), keyed for _play (not by species code, which ALARM uses), `code` the prey's: the log label, gain and
+// refDistance (m) as in ALARM, the range (m) it is heard out to, and the prey's last cry (pm its pitch). 'kill' is the fallback
+// for a prey with no cry here: the struggle alone, its range by the event's `small`. KILLER: what the hunter adds over the
+// struggle, by its species code (a raven nothing).
+const KILL = {
+  kdeer:   { code: 'odocoileus_hemionus', label: 'deer taken', gain: 1.0, ref: 12, range: 120, synth: 'deerBawl' },
+  kjack:   { code: 'lepus_californicus', label: 'jackrabbit taken', gain: 0.75, ref: 10, range: 120, synth: 'rabbitScream', pm: 0.88 },
+  krabbit: { code: 'sylvilagus_bachmani', label: 'rabbit taken', gain: 0.75, ref: 9, range: 50, synth: 'rabbitScream', pm: 1.1 },
+  kvole:   { code: 'microtus_californicus', label: 'vole taken', gain: 0.9, ref: 8, range: 50, synth: 'voleSqueak' },
+  kill:    { label: 'taken', gain: 0.6, ref: 10, range: 120, synth: null },
+};
+const KILLER = { puma_concolor: 'growl', canis_latrans: 'snarl', urocyon_cinereoargenteus: 'snarl', buteo_jamaicensis: 'wingSlap' };
+const KILL_MAX = 2;        // kill voices playing at once
+const KILL_NEAR = 60;      // m: past this a kill fades a further 60 % toward its range (faint), on top of the inverse rolloff
+const KILL_OWN = 0.6;      // the player's own catch, unpanned at the player: 1.3x (a touch louder) of the kill within its refDistance, the HRTF panner's ~6.5 dB loss taken off (about the player's own kraa)
 const GS_CODE = 'otospermophilus_beecheyi';   // its 'gsAlarm' and 'alarm' within a second are one call
 // animals.js state values the near layer reads (not exported there; keep in step with its constants)
 const S_PAUSE = 0, S_OUT = 3, S_SIT = 4, S_WORK = 7, S_EAT = 8;            // squirrel
@@ -212,7 +231,7 @@ export class Soundscape {
     this.nearT = 0; this.mem = new WeakMap(); this.pending = []; this.flicks = []; this.gap = {}; this.trace = null;
     this.alarmT = {};   // species code -> this.t of its last alarm voice (the gsAlarm / alarm de-duplication)
     this.clipPrev = null; this.flapPrev = 0; this.hardUntil = 0; this.phase = 0;
-    const codes = new Set((tile.species || []).map(s => s.code));
+    const codes = new Set((tile.species || []).filter(s => s.present !== false).map(s => s.code));   // present: the pipeline's record-and-range rule (species.json)
     this.callers = CALLERS.filter(c => !codes.size || codes.has(c.code) || c.extra);
     this.nearestStream = streamIndex(tile.features?.streams);
 
@@ -914,6 +933,125 @@ export class Soundscape {
     g.gain.setValueCurveAtTime(curve, t, len + 0.01);
   }
 
+  // ---- kills (_onKill) ------------------------------------------------------------------------------------
+  // One kill: the prey's cry (k.synth, which returns its length) from t, the struggle from 60 % into it (at most 0.35 s), the
+  // hunter's growl or snarl 0.2 s into the struggle, a hawk's wing-slap at once.
+  _kill(v, t, k, by, small) {
+    const cry = k.synth ? this['_' + k.synth](v, t, k.pm) : 0, s = t + Math.min(cry * 0.6, 0.35), h = KILLER[by];
+    this._killScuffle(v, s, small);
+    if (h) this['_' + h](v, s + (h === 'wingSlap' ? 0.04 : 0.2));
+  }
+  // A deer's last bawl: a hoarse, buzzy bleat of 0.4-0.7 s, a sawtooth rising 480 -> 560 Hz and falling to 320 with a fast
+  // vibrato (11-14 Hz, about 4 %), a 60-80 Hz square rasp on its gain and breath noise, through formants at 750 Hz and 1.7 kHz
+  // and a 3 kHz low-pass.
+  _deerBawl(v, t) {
+    const d = rand(0.4, 0.7), pm = rand(0.9, 1.1), end = t + d + 0.03;
+    const o = v.osc('sawtooth', 520 * pm, t, end), vib = v.osc('sine', rand(11, 14), t, end), vd = v.gain(20 * pm);
+    vib.connect(vd).connect(o.frequency);
+    const am = v.osc('square', rand(60, 80), t, end), amd = v.gain(0.35), rasp = v.gain(0.65);
+    am.connect(amd).connect(rasp.gain);
+    const ns = v.noise(t, end), nb = v.filter('bandpass', 1200, 0.8), ng = v.gain(0.6);
+    const f1 = v.filter('bandpass', 750 * pm, 2), f2 = v.filter('bandpass', 1700 * pm, 2.5), g2 = v.gain(0.6), lp = v.filter('lowpass', 3000, 0.6), g = v.gain(0);
+    o.connect(rasp); ns.connect(nb).connect(ng).connect(rasp);
+    rasp.connect(f1).connect(g); rasp.connect(f2).connect(g2).connect(g); g.connect(lp).connect(v.input);
+    o.frequency.setValueAtTime(480 * pm, t); o.frequency.linearRampToValueAtTime(560 * pm, t + 0.06); o.frequency.exponentialRampToValueAtTime(320 * pm, t + d);
+    env(g.gain, t, [[0, 0], [0.03, 1], [d * 0.5, 0.8], [d * 0.85, 0.5], [d, 0]]);
+    return d;
+  }
+  // A rabbit's scream (the distress cry): a piercing, wavering squeal of 0.5-0.9 s, a tone (harmonics 1, 0.3, 0.12) leaping
+  // 1.7 -> 2.6 kHz in 60 ms, wavering about 2.35 kHz (an 8-11 Hz vibrato of 5 % over a slower wander) and sliding to 1.8 kHz in
+  // its last 0.15 s, its loudness trembling with the vibrato; a breathy edge of noise band-passed at 3 kHz. pm: the pitch (a
+  // jackrabbit lower, a brush rabbit higher).
+  _rabbitScream(v, t, pm = 1) {
+    const d = rand(0.5, 0.9), RATE = 1000, N = Math.ceil(d * RATE), fq = new Float32Array(N), amp = new Float32Array(N);
+    const vr = rand(8, 11), p1 = rand(0, 6.3), p2 = rand(0, 6.3), w1 = rand(1.8, 2.8), w2 = rand(3.2, 4.4);
+    pm *= rand(0.94, 1.06);
+    for (let i = 0; i < N; i++) {
+      const tt = i / RATE, tail = Math.max(0, tt - (d - 0.15)) / 0.15, vib = Math.sin(2 * Math.PI * vr * tt);
+      const base = tt < 0.06 ? 1700 + 900 * tt / 0.06 : 2350 + (1800 - 2350) * tail;
+      fq[i] = pm * base * (1 + 0.05 * vib + 0.04 * Math.sin(2 * Math.PI * w1 * tt + p1) + 0.025 * Math.sin(2 * Math.PI * w2 * tt + p2));
+      amp[i] = Math.min(1, tt / 0.02) * (1 - 0.8 * tail) * (0.82 + 0.18 * vib);
+    }
+    amp[N - 1] = 0;
+    const end = t + d + 0.02, o = v.osc('sine', 2000 * pm, t, end), ns = v.noise(t, end), nb = v.filter('bandpass', 3000 * pm, 1.5), ng = v.gain(0.9);
+    o.setPeriodicWave(o.context.createPeriodicWave(new Float32Array([0, 0, 0, 0]), new Float32Array([0, 1, 0.3, 0.12])));
+    const lp = v.filter('lowpass', 8000, 0.6), g = v.gain(0);
+    o.connect(g); ns.connect(nb).connect(ng).connect(g); g.connect(lp).connect(v.input);
+    o.frequency.setValueCurveAtTime(fq, t, d); g.gain.setValueCurveAtTime(amp, t, d);
+    return d;
+  }
+  // A vole's thin squeak: two short chips of 30-50 ms, 0.09-0.14 s apart, each rising 4.4 -> 5.8 kHz and falling to 4.7.
+  _voleSqueak(v, t) {
+    const pm = rand(0.92, 1.08), at = [[t, rand(0.035, 0.05)]];
+    at.push([t + rand(0.09, 0.14), rand(0.03, 0.045)]);
+    this._whistleNotes(v, t, at, pm, 4400, 5800, 4700, 1);
+    return at[1][0] + at[1][1] - t;
+  }
+  // The struggle: a scuffle of grass and earth, 0.3 s of noise grains (about 50 a second, each decaying in ~15 ms) band-passed
+  // about 350 Hz and low-passed at 650 (150-600 Hz), with 2-3 impacts 0.12-0.15 s apart, each a slap in the noise and a sine
+  // thump falling 95 -> 40 Hz in 90 ms; small prey lighter and higher (two thumps, 150 -> 70 Hz).
+  _killScuffle(v, t, small = false) {
+    const len = 0.3, RATE = 2000, N = Math.ceil((len + 0.05) * RATE), curve = new Float32Array(N), hits = [];
+    const n = small ? 2 : 2 + (Math.random() < 0.5);
+    for (let k = 0; k < n; k++) hits.push(k ? hits[k - 1] + rand(0.12, 0.15) : rand(0, 0.03));
+    for (let gt = rand(0, 0.015); gt < len; gt += -Math.log(1 - Math.random()) / 50) {
+      const a = rand(0.25, 0.7), i0 = Math.floor(gt * RATE);
+      for (let i = i0; i < N && i < i0 + 0.06 * RATE; i++) curve[i] += a * Math.exp(-(i - i0) / RATE / 0.015);
+    }
+    for (const h of hits) {
+      const i0 = Math.floor(h * RATE);
+      for (let i = i0; i < N && i < i0 + 0.1 * RATE; i++) curve[i] += 1.2 * Math.exp(-(i - i0) / RATE / 0.025);
+    }
+    let pk = 0; for (let i = 0; i < N; i++) pk = Math.max(pk, curve[i]);
+    for (let i = 0; i < N; i++) curve[i] /= Math.max(pk, 1e-3);
+    curve[N - 1] = 0;
+    const ns = v.noise(t, t + len + 0.06), bp = v.filter('bandpass', 350, 0.7), lp = v.filter('lowpass', 650, 0.7), ng = v.gain(small ? 2 : 4), g = v.gain(0);
+    ns.connect(bp).connect(lp).connect(ng).connect(g).connect(v.input);
+    g.gain.setValueCurveAtTime(curve, t, len + 0.05);
+    const f0 = small ? 150 : 95, f1 = small ? 70 : 40, o = v.osc('sine', f0, t, t + hits[n - 1] + 0.13), og = v.gain(0);
+    o.connect(og).connect(v.input); og.gain.setValueAtTime(0, t);
+    for (const h of hits) {
+      const s0 = t + h;
+      o.frequency.setValueAtTime(f0, s0); o.frequency.exponentialRampToValueAtTime(f1, s0 + 0.09);
+      og.gain.setValueAtTime(0, s0); og.gain.linearRampToValueAtTime(small ? 0.15 : 0.35, s0 + 0.004); og.gain.exponentialRampToValueAtTime(0.001, s0 + 0.11);
+    }
+  }
+  // A mountain lion's growl over its kill: about 0.6 s of a rough low tone, a sawtooth rising 100 -> 150 Hz and sinking to 85
+  // with a 25-35 Hz sawtooth flutter on its gain and low noise, through a 380 Hz formant and a 1.1 kHz low-pass.
+  _growl(v, t) {
+    const d = rand(0.55, 0.7), pm = rand(0.9, 1.1), end = t + d + 0.03;
+    const o = v.osc('sawtooth', 110 * pm, t, end), fl = v.osc('sawtooth', rand(25, 35), t, end), fd = v.gain(0.45), rough = v.gain(0.55);
+    fl.connect(fd).connect(rough.gain);
+    const ns = v.noise(t, end), nl = v.filter('lowpass', 500, 0.7), ng = v.gain(0.8);
+    const f1 = v.filter('bandpass', 380 * pm, 1.2), lp = v.filter('lowpass', 1100, 0.6), gl = v.gain(0.6), g = v.gain(0);
+    o.connect(rough); ns.connect(nl).connect(ng).connect(rough);
+    rough.connect(f1).connect(g); rough.connect(lp).connect(gl).connect(g); g.connect(v.input);
+    o.frequency.setValueAtTime(100 * pm, t); o.frequency.linearRampToValueAtTime(150 * pm, t + d * 0.3); o.frequency.exponentialRampToValueAtTime(85 * pm, t + d);
+    env(g.gain, t, [[0, 0], [0.08, 0.35], [d * 0.6, 0.3], [d, 0]]);
+  }
+  // A coyote's or gray fox's snarl: a 0.3 s rasp, a sawtooth 420 -> 560 -> 380 Hz with a 45-55 Hz square on its gain and as
+  // much noise, through formants at 650 Hz and 1.5 kHz (the 300-900 Hz body) and a 2.5 kHz low-pass.
+  _snarl(v, t) {
+    const d = rand(0.26, 0.34), pm = rand(0.9, 1.1), end = t + d + 0.02;
+    const o = v.osc('sawtooth', 420 * pm, t, end), am = v.osc('square', rand(45, 55), t, end), amd = v.gain(0.4), rasp = v.gain(0.6);
+    am.connect(amd).connect(rasp.gain);
+    const ns = v.noise(t, end), ng = v.gain(1.2);
+    const f1 = v.filter('bandpass', 650 * pm, 1.3), f2 = v.filter('bandpass', 1500 * pm, 2), g2 = v.gain(0.4), lp = v.filter('lowpass', 2500, 0.6), g = v.gain(0);
+    o.connect(rasp); ns.connect(ng).connect(rasp); rasp.connect(f1).connect(g); rasp.connect(f2).connect(g2).connect(g); g.connect(lp).connect(v.input);
+    o.frequency.setValueAtTime(420 * pm, t); o.frequency.linearRampToValueAtTime(560 * pm, t + d * 0.3); o.frequency.exponentialRampToValueAtTime(380 * pm, t + d);
+    env(g.gain, t, [[0, 0], [0.02, 0.65], [d * 0.7, 0.5], [d, 0]]);
+  }
+  // A hawk mantling over its catch: two quick wing-slaps 0.11-0.15 s apart, each 70 ms of noise band-passed 1.4 kHz -> 600 Hz.
+  _wingSlap(v, t) {
+    const gap = rand(0.11, 0.15), ns = v.noise(t, t + gap + 0.1), bp = v.filter('bandpass', 1200, 0.9), ng = v.gain(3), g = v.gain(0);
+    ns.connect(bp).connect(ng).connect(g).connect(v.input); g.gain.setValueAtTime(0, t);
+    for (let i = 0; i < 2; i++) {
+      const s = t + i * gap;
+      bp.frequency.setValueAtTime(1400, s); bp.frequency.exponentialRampToValueAtTime(600, s + 0.07);
+      env(g.gain, s, [[0, 0], [0.008, i ? 0.35 : 0.5], [0.07, 0]]);
+    }
+  }
+
   // ---- calls on animals ----------------------------------------------------------------------------------
   // animals.js, passed in or found on the debugging handle at call time (main.js builds it after us)
   _animals() { return this.animals || (typeof window !== 'undefined' ? window.__we?.animals : null) || null; }
@@ -922,7 +1060,8 @@ export class Soundscape {
     const A = this._animals(); if (!A?.on || A === this._hooked) return;
     if (this._unhook) for (const off of this._unhook) off();
     this._unhook = [A.on('flush', e => this._onFlush(e)), A.on('stoop', e => this._onStoop(e)), A.on('rally', e => this._onRally(e)),
-      A.on('turkeyFlush', e => this._onTurkeyFlush(e)), A.on('gsAlarm', e => this._onGsAlarm(e)), A.on('alarm', e => this._onAlarm(e))];
+      A.on('turkeyFlush', e => this._onTurkeyFlush(e)), A.on('gsAlarm', e => this._onGsAlarm(e)), A.on('alarm', e => this._onAlarm(e)),
+      A.on('kill', e => this._onKill(e))];
     this._hooked = A;
   }
   // A random animal of this species within r of the raven, or null.
@@ -947,14 +1086,15 @@ export class Soundscape {
       v = this._voice(pos, 0.7, this.birdBus, animal); label = 'raven';
       this._kraa(v, t, 1 + Math.floor(Math.random() * 3), rand(0.9, 1.12));
     } else {
-      const c = near || (Object.hasOwn(ALARM, key) ? ALARM[key] : null) || CALLERS.find(c => c.key === key); if (!c) return null;
+      const c = near || (Object.hasOwn(ALARM, key) ? ALARM[key] : null) || (Object.hasOwn(KILL, key) ? KILL[key] : null) || CALLERS.find(c => c.key === key); if (!c) return null;
       v = this._voice(pos, c.gain, this.birdBus, animal, c.ref ?? 25); label = c.label; v.near = !!near;
       if (synth) synth(v, t); else this['_' + c.synth](v, t);
     }
     if (v.label) label = v.label;
-    this._heard(label, v.dist);
+    const P = pos || this.flight.pos, dist = v.dist ?? 0;   // pos null: at the player, unpanned (the player's own catch)
+    this._heard(label, dist);
     this.sources[source] = (this.sources[source] || 0) + 1;
-    const rec = { at: +this.t.toFixed(2), key, label, source, id: animal?.id ?? null, x: pos.x, y: pos.y, z: pos.z, dist: Math.round(v.dist) };
+    const rec = { at: +this.t.toFixed(2), key, label, source, id: animal?.id ?? null, x: P.x, y: P.y, z: P.z, dist: Math.round(dist) };
     this.log.push({ ...rec, voice: v, animal });
     if (this.log.length > LOG_N) this.log.shift();
     if (this.trace) this.trace.push(rec);
@@ -1023,6 +1163,27 @@ export class Soundscape {
     if (!v) return;
     v.alarm = true; this.alarmT[code] = this.t;
     if (code === 'sciurus_griseus' && a) { this.gap.bark = this.t + 6; for (const b of v.beats || []) this.flicks.push({ at: this.t + 0.03 + b, a }); }
+  }
+  // A kill (animals.js kill()): one voice at the spot, the prey's last cry (KILL) and then the struggle, a scuffle with 2-3
+  // thumps and the hunter over it (KILLER). Heard out to the prey's range (120 m; a rabbit or vole 50 m), its refDistance
+  // small (8-12 m) and tapered past KILL_NEAR, so faint out there; at most KILL_MAX at once, through the bird bus and the
+  // 'event' source like the alarms. The player's own catch (`by` is the animals' observer) plays at the player, unpanned and
+  // KILL_OWN louder. Logged (lastCalls, the HUD's heard) as "<prey> taken".
+  _onKill(e) {
+    if (!this._live() || typeof e?.prey !== 'string' || !Number.isFinite(e.x + e.y + e.z)) return;
+    const A = this._animals(), own = e.by === 'player' || (!!A?.observer && e.by === A.observer);
+    const key = Object.keys(KILL).find(k => KILL[k].code === e.prey) || 'kill', c = KILL[key];
+    const range = key === 'kill' ? (e.small ? 50 : 120) : c.range, d = own ? 0 : this._listenerDist(e.x, e.y, e.z);
+    if (d > range) return;
+    let playing = 0; for (const v of this.voices) if (v.kill && this.ctx.currentTime < v.end) playing++;
+    if (playing >= KILL_MAX) return;
+    const label = key === 'kill' ? e.prey.split('_')[0] + ' taken' : null;
+    const v = this._play(key, own ? null : { x: e.x, y: e.y + 0.3, z: e.z }, null, 'event', (w, t) => {
+      if (label) w.label = label;
+      this._kill(w, t, c, e.by, !!e.small);
+    });
+    if (!v) return;
+    v.kill = true; v.input.gain.value = c.gain * (own ? KILL_OWN : 1 - 0.6 * smooth(KILL_NEAR, Math.max(range, KILL_NEAR + 1), d));
   }
   _onStoop(e) {
     if (!this._live() || this._listenerDist(e.x, e.y, e.z) > EVENT_R + 200) return;

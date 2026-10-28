@@ -2024,3 +2024,14 @@ quail) need new species, not this rule (the bear is in progress). Client follow-
 re-adds a species no `perceives` row names (on Yosemite the jackrabbit), the spirit perceives every species the client
 knows rather than the present ones, sound.js builds its callers from every species.json entry; the lineup already
 skips absent species (arrival.js).
+
+The kill sounds (2026-10-28, an Opus lane; sound.js `_onKill`, verified here: "deer taken" and "vole taken" logged at
+their spots with no errors). A kill from animals.js plays as one voice at the spot. The prey's last cry comes first
+(a deer's buzzy falling bawl, a rabbit's wavering squeal near 2.3 kHz pitched lower for the jackrabbit, a vole's two
+thin chips), then the struggle: 0.3 s of 150-600 Hz scuffle with 2-3 thumps. The hunter's sound goes over the
+struggle: a lion's low growl, a coyote's or fox's snarl, a hawk's two wing-slaps, nothing from a raven. It uses the
+bird bus and the 'event' source like the alarms, with refDistance 8-12 m, heard out to 120 m (a rabbit or vole 50 m)
+and fading a further 60% past 60 m, so a deer kill at 22 m matches a raven alarm and at 115 m is near the floor; at
+most two kills play at once. The player's own catch plays at the player without a panner, at about the level of the
+player's own call. Each kill is logged as "<prey> taken". The soundscape's callers now skip species the pipeline
+marks absent (species.json `present`), the species lane's sound.js follow-up.
