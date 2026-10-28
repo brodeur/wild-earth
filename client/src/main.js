@@ -585,7 +585,7 @@ async function buildSteps(w, { params, pending, direct = false, arrive = null })
   const setFov = deg => { const v = Math.min(LENS_RANGE[1], Math.max(LENS_RANGE[0], +deg || LENS_DEFAULT)); camera.fov = v; camera.updateProjectionMatrix(); return v; };
   const setHour = h => { state.hour = +h; $('time').value = state.hour; return state.hour; };
   animals.weatherTemp = () => (weather.day ? weather.fx.temp : null);   // the lizards' air (animals.js airT)
-  w.handle = window.__we = { setDate, setFov, setHour, weather, tile, flight, raven, camera, veg, terrain, far, grass, roads, scene, renderer, minimap, atmosphere, sky, acorns, identify, places, peek, setPeek, sound, animals, arrival, rocks, squirrel, woodpecker, ground, flier, spirit, credits };   // debugging handle
+  w.handle = window.__we = { setDate, setFov, setHour, weather, tile, flight, raven, camera, veg, terrain, far, grass, roads, scene, renderer, minimap, atmosphere, sky, acorns, identify, places, peek, setPeek, sound, animals, arrival, rocks, water, waterfalls: water.waterfalls, squirrel, woodpecker, ground, flier, spirit, credits };   // debugging handle
   const as = direct ? params.get('as') : null;
   if (!['raven', 'squirrel', 'woodpecker'].includes(as)) toSpirit();   // a spirit from the start (behind the opening screen too)
   if (!screenOpen) makeSound();

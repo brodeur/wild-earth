@@ -1887,3 +1887,22 @@ pounce, so prey numbers are unchanged until kills are added (a kill should leave
 Verified: the lane saw a summoned lion stalk a herd leader from 45 m, the herd flee 2.5 s later and the lion rush at
 6 m/s, a fox pounce a vole, a coyote trot at a jackrabbit, the hawk stoop at a vole; here, a dawn with foxes and
 coyotes about raised jay, woodpecker, quail, squirrel, deer and raven alarms at them with no errors.
+
+Waterfalls (2026-10-28, an Opus lane; client/src/waterfall.js, built by water.js inside its own step so the teardown
+disposes them with the water): wherever a drawn channel drops steeply, a fall. The reaches water.js draws (perennial
+and intermittent, outside ponds, without NHD duplicates) are walked every 2.5 m on the 1 m ground, the profile made
+non-increasing, the slope taken over +-5 m; a leap is a stretch steeper than 35 degrees with gentler gaps under 10 m
+bridged, kept from an 8 m drop, and each run is extended 80 m into its downstream run so a leap across a junction
+stays whole. Each leap is a white curtain standing off the face along its normal (1 m at the lip, arcing to 6 m), a
+fading run of foam below and a mist billboard at the plunge, all in one merged mesh and one draw call; the shader
+scrolls the streaks in time of flight, sqrt(2 dv / g), so they accelerate and stretch, dense at the lip and breaking
+into strands and spray, lit with the atmosphere uniforms, and kept at least ~1.3 px wide far off. Falls follow the
+water's season (an intermittent creek's fall is dry in summer and fall), and the water and bed ribbons fade on faces
+steeper than ~55 degrees where the fall replaces them. Yosemite tile: 76 falls; Yosemite Falls as a 415 m upper fall,
+four cascades of 10-42 m, and a 106 m lower fall (real: 436, 206, 98 m). The foothill home tile: one 10 m cascade on
+Hangtown Creek. Verified here on 15 May at 11:00: the upper fall is a white streak on the cliff from the meadow and a
+curtain from 300 m. Known: the channel over the falls is classed intermittent and carries 10 km2 while the named
+perennial Yosemite Creek (84 km2) runs off the tile's west edge (a hydrology ask), so in autumn the cliff is dry (as
+it is in life); the curtain is a few metres wide where the May plume is 10-20 m (width should follow drainage area
+and season); a leap the DEM smooths under 35 degrees is not found; a road embankment over a creek could make a false
+one; `we.setDate('05-15')` shows it today.

@@ -3,6 +3,7 @@ import { uniforms as atmo, ATMOSPHERE_GLSL } from './atmosphere.js';
 import { SEASON_LOOK } from './season.js';
 import { loadImageData } from './tilepackage.js';
 import { releaseGeometry } from './gpuRelease.js';
+import { Waterfalls } from './waterfall.js';
 
 // Water in the streams and ponds, by season (docs/roadmap.md, browser push item 5).
 //
@@ -134,7 +135,9 @@ class RibbonBuffers {
   }
 }
 
+// Ribbons fade out on faces steeper than ~55 degrees (normal y 0.4-0.65): there the fall is drawn instead.
 const COMMON = /* glsl */`
+  #define CLIFF_FADE smoothstep(0.4, 0.65, normalize(vNormalW).y)
   varying vec3 vPosW; varying vec3 vNormalW; varying vec4 vFlow; varying vec2 vDir; varying vec2 vExtra;
   uniform float uTime; uniform float depthPull; uniform float depthPullK;
   uniform vec4 fineRect; uniform float fineBand;   // terrain.js fine mesh: x0, x1, n0, n1 (x1 < x0: none) and its blend band
@@ -238,6 +241,7 @@ const WATER_FRAG = /* glsl */`
     // Ponds carry their shoreline fade in vExtra.x (0 on the ring, 1 a metre or two inside).
     float edge = pond > 0.5 ? smoothstep(0.0, 1.0, vExtra.x) : 1.0 - smoothstep(0.55, 1.0, abs(vFlow.y) / vFlow.z);
     float a = clamp(edge * mix(opacity * mix(0.6, 1.0, column), 1.0, F) + glint * 0.5 * (pond > 0.5 ? edge : 1.0), 0.0, 1.0);
+    a *= CLIFF_FADE;   // a reach down a cliff is a fall (waterfall.js), not a sheet of water on the face
     gl_FragColor = vec4(atmosphereApply(col, vPosW, cameraPosition), a);
     #include <tonemapping_fragment>
     #include <colorspace_fragment>
@@ -268,7 +272,7 @@ const BED_FRAG = /* glsl */`
     vec3 light = sunLight * diff * cloudOnly(vPosW) * sunVis + mix(ambientGround, ambientSky, 0.5 + 0.5 * n.y);
     // Ragged edges: the edge distance is jittered by the coarse noise so gravel bars bulge and pinch.
     float t = abs(vFlow.y) / vFlow.z + (n2 - 0.5) * 0.45;
-    float a = vExtra.x * opacity * (1.0 - smoothstep(0.45, 1.0, t));
+    float a = vExtra.x * opacity * (1.0 - smoothstep(0.45, 1.0, t)) * CLIFF_FADE;
     gl_FragColor = vec4(atmosphereApply(c * light * 0.3183099, vPosW, cameraPosition), a);
     #include <tonemapping_fragment>
     #include <colorspace_fragment>
@@ -309,6 +313,10 @@ export class Water {
     this.rewildList = tile.manifest?.layers?.['hydro.human_water']?.rewilded || [];
     const ponds = yield* this.buildPonds(features.waterbodies || [], H);
     yield* this.buildStreams(features.streams || [], H, ponds);
+    // Falls where a drawn perennial or intermittent run drops steeply (waterfall.js); one more mesh in the group.
+    this.waterfalls = new Waterfalls(tile, base);
+    yield* this.waterfalls.build(this.fallRuns); this.fallRuns = null;
+    this.group.add(this.waterfalls.mesh);
 
     // Draw order: beds, then streams, then ponds, after the opaque world.
     this.beds.renderOrder = 1; for (const c of CLASSES) this.streams[c].renderOrder = 2;
@@ -453,6 +461,7 @@ export class Water {
     const nearDem = demIndex(streams, DEM_PREFERRED_M);
     let skippedInPond = 0;
     let reaches = 0;
+    const fallRuns = this.fallRuns = [];   // the runs a fall can be on, for waterfall.js
     let k = 0;
     for (const st of streams) {
       if ((k++ & 7) === 0) yield;
@@ -486,6 +495,7 @@ export class Water {
       const wMod = s => Math.max(0.45, 1 + 0.28 * Math.sin(s / 23 + ph) + 0.16 * Math.sin(s / 8.7 + 1.7 * ph));
       const bMod = s => 1 + 0.22 * Math.sin(s / 37 + ph2) + 0.12 * Math.sin(s / 14.3 + 2.3 * ph2);
       for (const r of runs) {
+        if (cls !== 'ephemeral') fallRuns.push({ pts: r, ci, width: ww, order, name: st.name });
         let s = 0;
         const sections = r.map((p, i) => {
           if (i) s += Math.hypot(p[0] - r[i - 1][0], p[1] - r[i - 1][1]);
@@ -565,6 +575,7 @@ export class Water {
     for (const c of CLASSES) this.streams[c].visible = w[c];
     this.pondsSeasonal.visible = w.ponds; this.pondBeds.visible = !w.ponds;
     this.bedMaterial.uniforms.classWet.value.set(+w.ephemeral, +w.intermittent, +w.perennial);
+    this.waterfalls?.setSeason(w);
   }
 
   // Per frame: animate the ripples and follow the season of the look (a SEASON_LOOK entry).
