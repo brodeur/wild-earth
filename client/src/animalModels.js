@@ -1003,6 +1003,32 @@ ${animBody(model)}
   });
 }
 
+// The silhouette twin of animalMaterial (herdSilhouette.js: a hidden herd member seen through foliage): the same part
+// animation, a flat glow in `soul` fading from fade.x to fade.y m from the eye, drawn only where the body is behind
+// what is already drawn (depthFunc GreaterDepth), additive, no depth write.
+export function animalSilhouetteMaterial(model, { soul, fade, gain = 0.85 }) {
+  const v4 = a => `vec4(${a.map(x => x.toFixed(4)).join(', ')})`;
+  return new THREE.ShaderMaterial({
+    uniforms: { uSoul: { value: soul }, uSilFade: { value: fade } },
+    vertexShader: `${animDecl(model)}
+const vec4 uAmp = ${v4(model.amp)};
+const vec4 uPose = ${v4(model.pose)};
+varying float vSilD;
+void main() {
+${animBody(model)}
+  vec4 mv = viewMatrix * modelMatrix * instanceMatrix * vec4(transformed, 1.0);
+  vSilD = length(mv.xyz);
+  gl_Position = projectionMatrix * mv;
+}`,
+    fragmentShader: `uniform vec3 uSoul; uniform vec2 uSilFade; varying float vSilD;
+void main() { gl_FragColor = vec4(uSoul * ((1.0 - smoothstep(uSilFade.x, uSilFade.y, vSilD)) * ${gain.toFixed(2)}), 1.0); }`,
+    // front faces only, pushed a little toward the eye (the polygon offset), so a body's own far side and its parts just
+    // behind its nearer parts do not count as hidden; what foliage covers does
+    depthFunc: THREE.GreaterDepth, depthWrite: false, transparent: true, blending: THREE.AdditiveBlending, toneMapped: false, side: THREE.FrontSide,
+    polygonOffset: true, polygonOffsetFactor: -6, polygonOffsetUnits: -16,
+  });
+}
+
 // Planar sun shadow for ground animals: the posed model squashed onto the plane through its feet
 // along the sun direction, drawn as one translucent dark shape. Works at any height (the cascaded
 // maps only re-render the near cascade per frame, and it switches off above ~110 m). The plane is

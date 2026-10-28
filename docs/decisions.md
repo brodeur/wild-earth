@@ -1749,3 +1749,19 @@ toward the end speed (90 up, 0 and then -10 backing down) that grows exponential
 three seconds of holding, so the speed eases into the end; Shift doubles the rate. sound.js: the spirit's wind is at
 0.45 of the raven's loudness and rises half as much past 30 m/s. Verified: cruise 12, a tap to 14.7 and back to
 cruise, a held W 19, 26, 36, 50, 66, 80, 87, 89, a held S 68, 62, 53, 39, 24, 10, 3, 1.
+
+## 2026-10-27: hidden herd members as luminous silhouettes
+
+Aaron: "when members of a flock, herd or group are not visible, behind foliage, they should still be findable: a luminous
+silhouette visible through trees, less luminous the further away until invisible." herdSilhouette.js: in a group, each
+member's body is drawn a second time by one small InstancedMesh per species (up to 32, filled every frame from the
+animals' own instance matrices and pose values, the geometry the drawn tier 0's or the procedural model's, cloned for
+its own pose attributes) with animalModels.js `animalSilhouetteMaterial`: the species' part animation, a flat glow in
+the species' soul colour fading from full at 25 m to nothing at 150 m, additive, no depth write, and drawn only where
+the fragment lies behind what is already drawn (depthFunc GreaterDepth): front faces only, pushed toward the eye by a
+polygon offset so a body's own far side and the parts just behind its nearer parts do not count as hidden. The visible
+parts stay as they are. A first cut as a MeshLambert variant hit the Metal shader translation bug the atmosphere's
+shadow taps have in some programs, so the material is its own small shader. Verified in a deer herd: in the open the
+members show at most slivers; behind a bush two deer come through as bright silhouettes speckled by the leaves. With
+the edge markers for members off the screen, every member is findable. Known: a member just over a rise shows through
+the hill too; the birds and the squirrel have no groups to show.

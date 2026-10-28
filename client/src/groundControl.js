@@ -3,6 +3,7 @@ import { trunkAt } from './animals.js';
 import { animalMaterial, animalDepthMaterial, hasAnim2, antlerState } from './animalModels.js';
 import { addCaster } from './shadows.js';
 import { HerdMarks } from './herdMarks.js';
+import { HerdSilhouette } from './herdSilhouette.js';
 
 // The playable walkers (owner's request 2026-10-26, "make the other animals playable"): one controller for every
 // species that lives on the ground, parameterised per species by GROUND below. Black-tailed deer (doe and buck), gray
@@ -135,6 +136,7 @@ export class GroundControl {
     this.jumpQ = false; this.actQ = false; this.restQ = false; this.wet = null; this.told = 0; this.fl = null;
     this.camOff = new THREE.Vector3(); this.aimOff = new THREE.Vector3(); this.camSettled = false; this.camSide = 0.4; this.camLift = 0;
     this.marks = new HerdMarks({ el: document.getElementById('herdMarks'), camera, animals });   // off-screen herd members (herdMarks.js)
+    this.sil = new HerdSilhouette({ scene, animals, atmosphere });   // hidden herd members as luminous silhouettes (herdSilhouette.js)
     this.last = new THREE.Vector3(); this.N = new THREE.Vector3(0, 1, 0);
     this.meshes = new Map();   // model name -> Promise of { mesh, model, rig }
     this._t = { x: 0, y: 0, z: 0, r: 0 }; this._m = new THREE.Matrix4(); this._q = new THREE.Quaternion(); this._qt = new THREE.Quaternion();
@@ -198,7 +200,7 @@ export class GroundControl {
     if (this.body) this.body.mesh.visible = on;
     if (!on) for (const p of this.meshes.values()) p.then(b => { if (b) b.mesh.visible = false; });
     if (!on && this.herd) { this.animals.pilot(this.herd.g, null); this.herd = null; }   // the group goes on with its own life
-    if (!on) this.marks.clear();
+    if (!on) { this.marks.clear(); this.sil.clear(); }
     if (this.hudRow) this.hudRow.style.display = on ? '' : 'none';
     if (on) { f.pitch = 0; f.roll = 0; f.hover = false; this.camSettled = false; this.place(f.pos.x, f.pos.z); }
     else {
@@ -304,7 +306,7 @@ export class GroundControl {
     if (this.mode === 'ground') this.trunkPush(P);
     this.draw(dt);
     this.updateCamera(dt);
-    if (this.herd) this.marks.update(this.herd.g, this.herd.a, (S.shoulder || 0.3) * 0.5); else if (this.marks.marks.size) this.marks.clear();
+    if (this.herd) { this.marks.update(this.herd.g, this.herd.a, (S.shoulder || 0.3) * 0.5); this.sil.update(this.herd.g, this.herd.a); } else { if (this.marks.marks.size) this.marks.clear(); this.sil.clear(); }
     this.last.copy(P);
     const ground = Math.max(this.heights.atXZ(P.x, P.z), this.wet ? this.wet.surf : -Infinity);
     const speed = this.mode === 'fly' ? this.fl.v : this.mode === 'air' ? Math.hypot(this.vel.x, this.vel.z) : Math.abs(this.v);
