@@ -193,6 +193,7 @@ release, WebGL) was still running; its commit, if it verified, is the last in `g
 | f1904a3 | Bark plates on scaled-up old trees were scaled with the tree (1 m plates on Yosemite's big ponderosas); the bark UVs now divide out the instance scale. |
 | 18e1dd0 | Steep ground reads as rock at any distance: ledges by height with lit tops and shaded undersides, and water streaks; Yosemite's walls are layered granite from the valley. |
 | 55d48ad | Alarm calls are heard: when a watcher calls, its species' own alarm (jay scold, woodpecker waka, raven kraa, turkey putts, quail pits, squirrel bark, ground squirrel whistle, a new deer snort and stamp) plays from where it stands, fading over its carry. |
+| 5f7e7a0 | The world hunts without you: prey now react to the nearest predator they notice, AI or player; jays, woodpeckers, quail, squirrels, deer and ravens call at a fox, coyote, lion or hawk; a lion stalks a herd and rushes it, foxes and coyotes trot at voles and rabbits and pounce, hawks stoop at voles. Nothing is killed yet. |
 
 Open from the day: the attribution form for generated assets; far placement on the lidar ground beyond the fine square; the squirrel's
 crown camera in leafy oaks.
