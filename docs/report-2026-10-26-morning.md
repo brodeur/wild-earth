@@ -208,7 +208,7 @@ What to look at first, in order:
    rabbit, jackrabbit and vole are absent by the records-and-range rule.
 4. The deer herd is skinned and clip-animated now (the morning's side session, merged): walk, graze, alert, bed.
 
-Credits: the black bear cost 20 on Meshy (one preview); 380 of the 1,000 spent in all. Open after the night: the
+Credits: the black bear cost 20 on Meshy (one preview) and the mountain quail 40 (two); 420 of the 1,000 spent in all. Open after the night: the
 fliers' hunger has no drink; the Sierra species beyond the bear and the mountain quail (mule deer by name); a
 cinnamon bear; the other tiles' channels shift slightly on their next build after the two routing fixes.
 
@@ -232,3 +232,4 @@ cinnamon bear; the other tiles' channels shift slightly on their next build afte
 | 34d5b3b | The black bear is in (one Meshy preview, 20 credits; 380 of the 1,000 spent): a sow with cubs or a lone bear per territory on the Yosemite tile, ambling, digging, feeding at carrion, a bluff charge at 8 m, playable (E digs, X lies down). The spirit and the sounds now honour the species present on a tile. |
 | 5f5459b | Scavengers feed: as a raven, vulture, coyote or bear, a carcass within reach fills your hunger (E on foot, landing beside it in the air). |
 | 3a813a4 | Tenaya Creek joins the Merced inside the Yosemite tile and the Merced leaves at its real 707 km2: a routing fallback hooked a channel cell uphill; it now takes a lower neighbour first. |
+| 5d0081a | The mountain quail (two Meshy previews, 40 credits; 420 of the 1,000 spent): coveys on the Sierra's brush and forest edge from 600 m, running, flushing from hawks and coyotes, playable. |
