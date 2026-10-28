@@ -1794,3 +1794,14 @@ every control passes flight.headYaw) and turns the HEAD part about the vertical 
 Verified in a deer: 20 drag steps turned the head 0.84 rad with the body still; 45 steps put the head at its limit and
 turned the body 1.48 rad; W settled the head straight with the camera where it was. Known: the ground raven's own
 head turn (aAnim2.y) and the look both apply; the lizard's reptile body has no head yaw.
+
+Aaron: "the occlusion effect for herds should not be triggered by their own body or by the bodies of other members
+of the flock/herd." The silhouette pass (2d7ba15) drew wherever a member's body was behind what was already drawn,
+which included the member's own far side (slivers along every visible deer) and the members standing in front of it.
+Now the herd marks the stencil: while the player is in a group, that species' AI materials (the instanced mesh and
+the drawn tiers) and the player's own body material write 1 to the stencil as they draw (stencilFunc Always, ZPass
+Replace), and the silhouette material draws only where the stencil is not 1 (NotEqual, no writes); the renderer is
+created with `stencil: true` (three 0.186 defaults it off). herdSilhouette.js `mark(k, me, on)` sets and restores the
+properties when the group's species or the player's body changes and on clear. Verified in a deer herd at 11:00: the
+visible deer show no slivers; two members behind the toyon still glow; the member in front of them does not. Known:
+a member behind another member and also behind a bush shows only where neither body covers it, which is the ask.

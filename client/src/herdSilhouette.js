@@ -12,6 +12,11 @@ import { rarityColor } from './animals.js';
 // meshes[k], anim2[k]); the geometry is the drawn tier 0's or the procedural model's, cloned so it carries its own
 // per-instance pose attributes. Nothing is drawn while the player is not in a group.
 const SIL_CAP = 32, SIL_NEAR = 25, SIL_FAR = 150, SIL_GAIN = 0.85;
+// What hides a member must not be the herd itself (owner, 2026-10-27): while the player is in a group, the bodies of
+// that species (the AI's instanced meshes and drawn tiers) and the player's own body write STENCIL_HERD into the
+// stencil as they are drawn, and the silhouette pass draws only where the stencil is not that, so only foliage,
+// trunks, rocks and ground count as cover; a member's own far side and the members in front of it do not.
+const STENCIL_HERD = 1;
 
 export class HerdSilhouette {
   constructor({ scene, animals, atmosphere }) {
@@ -26,14 +31,34 @@ export class HerdSilhouette {
     const geo = src.geometry.clone();
     for (const name of ['aAnim', 'aAnim2']) if (geo.attributes[name]) { const a = new THREE.InstancedBufferAttribute(new Float32Array(SIL_CAP * 4), 4); a.setUsage(THREE.DynamicDrawUsage); geo.setAttribute(name, a); }
     const mat = animalSilhouetteMaterial(model, { soul: rarityColor(A.rarity[k]), fade: new THREE.Vector2(SIL_NEAR, SIL_FAR), gain: SIL_GAIN });
+    mat.stencilWrite = true; mat.stencilRef = STENCIL_HERD; mat.stencilFunc = THREE.NotEqualStencilFunc;   // not where a herd body is (mark below)
+    mat.stencilFail = THREE.KeepStencilOp; mat.stencilZFail = THREE.KeepStencilOp; mat.stencilZPass = THREE.KeepStencilOp;
     m = new THREE.InstancedMesh(geo, mat, SIL_CAP); m.instanceMatrix.setUsage(THREE.DynamicDrawUsage);
     m.count = 0; m.frustumCulled = false; m.renderOrder = 12; m.name = `${A.speciesList()[k].one} silhouettes`;
     this.group.add(m); this.meshes.set(k, m);
     return m;
   }
-  // every frame: group the player's group (null: none), me the player's own animal
-  update(group, me) {
+  // the herd's bodies mark the stencil while the player is in the group: the species' meshes and the player's body
+  mark(k, me, on) {
+    const A = this.animals, mats = [];
+    if (A.meshes[k]) mats.push(A.meshes[k].material);
+    for (const m of A.drawn?.[k]?.tiers || []) mats.push(m.material);
+    if (me?.material) mats.push(me.material);
+    for (const m of mats) {
+      if (!m || m.stencilWrite === on) continue;
+      m.stencilWrite = on; m.stencilRef = STENCIL_HERD; m.stencilFunc = THREE.AlwaysStencilFunc;
+      m.stencilZPass = on ? THREE.ReplaceStencilOp : THREE.KeepStencilOp;
+    }
+  }
+  // every frame: group the player's group (null: none), me the player's own animal, body the player's own mesh
+  update(group, me, body = null) {
     const A = this.animals, counts = new Map();
+    const k0 = group && me ? me.sp : null;
+    if (this.markedK !== k0 || this.markedBody !== body) {   // the group or the body changed: unmark, mark
+      if (this.markedK != null) this.mark(this.markedK, this.markedBody, false);
+      if (k0 != null) this.mark(k0, body, true);
+      this.markedK = k0; this.markedBody = body;
+    }
     if (group) for (const a of A.list) {
       if (a.group !== group || a === me || a.culled || a.slot < 0) continue;
       const k = a.sp, m = this.mesh(k); if (!m) continue;

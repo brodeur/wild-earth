@@ -259,7 +259,7 @@ async function main() {
   let tileId = params.get('tile');
   if (pending && !tileId) tileId = await builtTileFor(pending);   // null -> loader picks the first tile
 
-  renderer = new THREE.WebGLRenderer({ antialias: true, powerPreference: 'high-performance' });
+  renderer = new THREE.WebGLRenderer({ antialias: true, powerPreference: 'high-performance', stencil: true });   // stencil: the herd silhouettes mask out the herd's own bodies (herdSilhouette.js)
   renderer.setPixelRatio(Math.min(devicePixelRatio, 1.5)); renderer.setSize(innerWidth, innerHeight);
   renderer.toneMapping = THREE.ACESFilmicToneMapping; renderer.outputColorSpace = THREE.SRGBColorSpace;
   document.body.prepend(renderer.domElement);
