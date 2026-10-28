@@ -172,6 +172,7 @@ release, WebGL) was still running; its commit, if it verified, is the last in `g
 | 0a7687c | Herd species are piloted as a herd: deer, quail and turkeys trend toward a point ahead of the player; six seconds without a key and the herd takes back over, the body walking with it until any key. |
 | 36df934 | A games step: every species' games per tile found and classified from the calendar, resources and perception into ten archetypes, placed on hotspots and scored by scarcity; docs/games.md has the design and the data gaps it exposed. |
 | 5251129 | Needs and diet tables per species feed the games step: every species drinks and shelters each season and evades its real predators; the home tile goes from 160 games and 14 predator-prey pairs to 275 and 29. |
+| 419e3ee | Perception gained range and sense: a signature per species by sight, sound and scent against each other's senses gives how far one notices another; the alarm links are now who notices a predator first, 4 to 51 on the home tile. |
 
 Open from the day: the attribution form for generated assets; far placement on the lidar ground beyond the fine square; the squirrel's
 crown camera in leafy oaks.
