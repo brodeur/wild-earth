@@ -1158,7 +1158,7 @@ export class SquirrelControl {
       aim.set(0, this.headUp ? 0.5 : -0.35, 0);
       k = 5;
     } else {
-      const back = CAM_BACK - 0.5 * this.sit, up = CAM_UP + 0.45 * this.sit, a = f.yaw + this.camSide;
+      const z = f.zoom || 1, back = (CAM_BACK - 0.5 * this.sit) * z, up = (CAM_UP + 0.45 * this.sit) * z, a = f.yaw + this.camSide;   // z: the wheel's zoom (flight.js)
       off.set(Math.sin(a) * back, up, Math.cos(a) * back);
       const fx = -Math.sin(f.yaw), fz = -Math.cos(f.yaw), look = 1.2;
       aim.set(fx * look, 0.22 + 0.25 * this.sit + Math.tan(f.pitch) * (back + look), fz * look);

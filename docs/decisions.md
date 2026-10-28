@@ -1635,3 +1635,20 @@ near the first test fled and stood alert. Found on the way: the herd pilot's com
 swallowed the rest of its line and a closing brace, which left the page blank from then until this commit; every
 client module is now syntax-checked as an ES module before a commit (the memory note). Not done: the AI predators are
 not threats to the AI prey (only the player is, as before); the sound layer has no voice for the 'alarm' event yet.
+
+## 2026-10-27: the wheel zooms every view, off-screen herd members get an edge marker, the wisp has six tendrils
+
+Aaron: "for all view modes, scroll up zooms out, scroll down zooms in"; "in flock mode, when a member of the flock is not
+visible on screen, a small avatar inside a circle appears at the edge of the screen closest to the member"; "add a few
+more tendrils just like the ones already there to the spirit, increasingly shorter." Zoom (flight.js): one `zoom` on
+the flight, 0.35 to 4, a notch of 100 about 11%, set by a wheel listener on the window (not over the panel, the credits,
+a card or the opening screen); every chase camera scales its distance by it: the raven's and the spirit's (flight.js),
+the walkers' (groundControl.js, the framing rule unchanged), the squirrel's and the woodpecker's; the first-person view
+is untouched. Verified: the spirit's camera 5.8 m, 10.5 m after five notches up, 2.5 m after twelve down; a deer's 4.6 to
+7.9 m. Markers (herdMarks.js, `#herdMarks`): in a herd, covey or flock, each member not on screen (projected outside the
+view, or behind the camera, which marks the edge toward where it would be if the view turned round) is a 34 px circle
+with the species' still from the start screen at the screen's edge nearest it, 26 px in; members on screen have none;
+placed every frame, removed when the body is left. Verified in a herd of four: none while all were in view, one at the
+bottom edge for the member behind the camera. The wisp (spirit.js): six ribbons, the first three as before and three more
+of the same kind at 0.75, 0.55 and 0.4 of the base length with their own weave periods, radii and phases; the spine still
+runs the longest one's length.

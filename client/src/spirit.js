@@ -39,15 +39,17 @@ import { bodyKind } from './playable.js';
 // velocity; and a small warm core sprite. Three draws (the ribbons and motes are one mesh), additive, no tone mapping,
 // no asset files. Everything nearer the lens than ~1.5 m fades out, so a trail passing under the camera does not blot it.
 
-const RIBBONS = 3, SEG = 40, RIB_LEN = 2.2, MIST = 7, MOTES = 22, HIST_T = 0.9;   // HIST_T s: how old a path point still shapes the ribbons
+const RIBBONS = 6, SEG = 40, RIB_LEN = 2.2, MIST = 7, MOTES = 22, HIST_T = 0.9;   // HIST_T s: how old a path point still shapes the ribbons
 // In flight the ribbons hang along the path the spirit has flown (a ring of past positions resampled every TRAIL_RS m,
 // HIST_N of them), so a turn leaves a curved trail in the air that the body pulls away from: the longest one is
 // TRAIL_T s of travel, at most TRAIL_MAX m (x 0.55-1 with the swell); hovering they shorten to the curl up and back
 // (RIB_LEN), blended by speed between TRAIL_SLOW and TRAIL_FAST m/s. Along a long trail the weave turns TRAIL_WAVE rad/m.
 const TRAIL_RS = 0.15, HIST_N = 160, TRAIL_T = 0.8, TRAIL_MAX = 14, TRAIL_SLOW = 1.5, TRAIL_FAST = 10, TRAIL_WAVE = 0.9;
-// The three ribbons differ so they never fall into step: lengths (x RIB_LEN: a short, a middle and a long one), weave
-// periods (x RIB_PERIOD s; ratios with no simple multiples), weave radii (x the base) and starting phases (rad).
-const RIB_LENS = [1, 1.4, 1.9], RIB_PERIOD = 4.2, RIB_PERIODS = [1, 1.31, 1.73], RIB_RADII = [1, 0.8, 1.18], RIB_PHASES = [0, 2.3, 4.1];
+// The six ribbons differ so they never fall into step: the first three as the wisp was first made (a short, a middle and
+// a long one), then three more of the same kind, each shorter than the last (owner, 2026-10-27): lengths (x RIB_LEN),
+// weave periods (x RIB_PERIOD s; ratios with no simple multiples), weave radii (x the base) and starting phases (rad).
+const RIB_LENS = [1, 1.4, 1.9, 0.75, 0.55, 0.4], RIB_PERIOD = 4.2, RIB_PERIODS = [1, 1.31, 1.73, 0.87, 1.13, 0.79];
+const RIB_RADII = [1, 0.8, 1.18, 0.9, 0.7, 0.6], RIB_PHASES = [0, 2.3, 4.1, 1.1, 3.4, 5.2];
 // The wisp at rest is REST_SCALE of its full size (RIB_LEN etc. are the full size) and REST_LUM of its full brightness;
 // near a body it can inhabit it swells: from SWELL_FAR m off to full at the contact radius (smoothstep with distance,
 // eased at SWELL_K 1/s so animals coming and going do not make it flicker), its ribbons and mist turning up to

@@ -668,7 +668,8 @@ export class WoodpeckerControl {
       aim.set(-Math.sin(f.yaw) * 1.5, 0.1, -Math.cos(f.yaw) * 1.5);
     } else {
       const cp = Math.cos(f.pitch * 0.5), sp = Math.sin(f.pitch * 0.5);
-      off.set(Math.sin(f.yaw) * cp * CAM_BACK, CAM_UP - sp * CAM_BACK, Math.cos(f.yaw) * cp * CAM_BACK);
+      const z = f.zoom || 1;   // the wheel's zoom (flight.js)
+      off.set(Math.sin(f.yaw) * cp * CAM_BACK * z, (CAM_UP - sp * CAM_BACK) * z, Math.cos(f.yaw) * cp * CAM_BACK * z);
       const fx = -Math.sin(f.yaw), fz = -Math.cos(f.yaw), look = 4;
       aim.set(fx * look, 0.2 + Math.sin(f.pitch) * look, fz * look);
       k = 5; fov = Math.min(fov, FLY_FOV);   // longer than the raven's lens, never wider than it (?fov= may already be narrow)

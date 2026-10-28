@@ -39,6 +39,10 @@ import { Perches } from './perch.js';
 // instead of a hover: it holds its speed in a slow circle (radius sp.soar.r at sp.soar.v m/s, in the way it was
 // banking) climbing a little in the thermal, A / D tightening or opening it, W, S or H again flying on.
 const SPIRIT_CRUISE = 25, SPIRIT_MAX = 90, SPIRIT_BACK = 10, SPIRIT_FLOOR = 0.8;   // m/s, m/s, m/s, m
+// Scroll to zoom (owner, 2026-10-27): the wheel up zooms out, down zooms in. `zoom` scales the chase distance of every
+// camera (this one, the spirit's, the ground animals' in groundControl.js, the squirrel's, the woodpecker's), ZOOM_RANGE
+// times the set-up's own; a notch of 100 is about 11%. Not over the panel, the credits, a card or the opening screen.
+const ZOOM_RANGE = [0.35, 4], ZOOM_RATE = 0.0012;
 const LAND_H = RAVEN_GROUND.bodyY;   // the body above the feet, standing (raven_ground.glb)
 const TERRAIN_SPACING = 10;          // terrain.js default vertex spacing (main.js builds it with the defaults)
 export const FOLD_T = 0.25, XFADE_T = 0.12, LIFT_T = 0.2;   // s: wings fold before the swap; the dissolve; wings lift before take-off
@@ -59,6 +63,11 @@ export class RavenFlight {
     this.body = new THREE.Group();
     this.pos = this.body.position; this.yaw = 0; this.pitch = 0; this.roll = 0; this.speed = 12;
     this.keys = new Set(); this.flap = 0; this.drag = null; this.hover = false; this.sDwell = 0;
+    this.zoom = 1;   // the wheel's zoom (ZOOM_RANGE): every chase camera scales its distance by it
+    window.addEventListener('wheel', e => {
+      if (document.documentElement.classList.contains('opening') || e.target?.closest?.('#panel, #credits, #speciesCard, #opening, #fieldGuide')) return;
+      this.zoom = Math.min(ZOOM_RANGE[1], Math.max(ZOOM_RANGE[0], this.zoom * Math.exp(-e.deltaY * ZOOM_RATE)));
+    }, { passive: true });
     this.view = 'chase';                                  // 'chase' | 'first'
     this.camOff = new THREE.Vector3(); this.camUp = new THREE.Vector3(0, 1, 0); this.camSettled = false;
     this.flapping = false; this.spirit = false; this.lift = 0; this.sp = RAVEN_SP; this.soarDir = 1;
@@ -517,7 +526,7 @@ export class RavenFlight {
     const perched = this.landed && this.gnd.perch ? 1 : 0;
     this.camP = (this.camP || 0) + (perched - (this.camP || 0)) * (1 - Math.exp(-dt * 3));   // perched: closer in (less of the crown between)
     const L = THREE.MathUtils.lerp, c = this.spirit ? 1 : this.sp.cam;   // c: the camera's scale for another bird (sp.cam)
-    const back = L(L(5.5, 2.5, gk), 1.7, this.camP) * c, up = L(L(1.6, 0.8, gk), 0.55, this.camP) * c, lookAhead = L(6, 0.8, gk) * c, yaw = this.camYaw + 0.4 * gk;
+    const z = this.zoom, back = L(L(5.5, 2.5, gk), 1.7, this.camP) * c * z, up = L(L(1.6, 0.8, gk), 0.55, this.camP) * c * z, lookAhead = L(6, 0.8, gk) * c, yaw = this.camYaw + 0.4 * gk;
     const cp = Math.cos(this.pitch * 0.5), sp = Math.sin(this.pitch * 0.5);
     // Smooth the offset from the bird, not the camera position, so forward flight never lags the bird out of frame.
     const off = this._look.set(Math.sin(yaw) * cp, -sp, Math.cos(yaw) * cp).multiplyScalar(back);

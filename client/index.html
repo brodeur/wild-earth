@@ -32,6 +32,10 @@
   #hud, #panel, #help { transition:opacity .25s ease; }
   html:not(.menu) #hud, html:not(.menu) #panel, html:not(.menu) #help { opacity:0; visibility:hidden; pointer-events:none; transition:opacity .2s ease, visibility 0s linear .2s; }
   html.opening #menuBtn { display:none; }
+  /* off-screen herd members (herdMarks.js): an avatar in a circle at the screen's edge nearest each member out of view */
+  #herdMarks { position:fixed; inset:0; z-index:4; pointer-events:none; }
+  .hm { position:absolute; left:-17px; top:-17px; width:34px; height:34px; border-radius:50%; background:#0f1512cc; border:2px solid #e6ede7; box-shadow:0 1px 4px #0008; box-sizing:border-box; display:flex; align-items:center; justify-content:center; overflow:hidden; }
+  .hm img { width:26px; height:26px; object-fit:contain; }
   /* the nearby-animals bar (nearBar.js): in spirit form, the species within reach as a small toolbar at the bottom */
   #nearBar { position:fixed; left:50%; bottom:14px; transform:translateX(-50%); z-index:5; display:flex; align-items:flex-end; gap:4px; pointer-events:none; }   /* no box: the stills stand on the world */
   #nearBar[hidden] { display:none; }
@@ -198,6 +202,7 @@
   <div class="muted" id="gameHint"></div>
 </div>
 <div id="nearBar" hidden></div>
+<div id="herdMarks" aria-hidden="true"></div>
 <div id="minimap"></div>
 <div id="peekBanner" class="hidden">present day · 2022 imagery</div>
 <div id="status">loading tile…</div>
