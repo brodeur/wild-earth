@@ -165,7 +165,7 @@ export class GroundControl {
         const geo = geometry.clone(), rig = hasAnim2(model);
         geo.setAttribute('aAnim', new THREE.InstancedBufferAttribute(new Float32Array(4), 4));
         if (rig) geo.setAttribute('aAnim2', new THREE.InstancedBufferAttribute(new Float32Array(4), 4));
-        const mesh = new THREE.InstancedMesh(geo, animalMaterial(this.atmosphere, model, { map: model.maps?.[0] || null }), 1);
+        const mesh = new THREE.InstancedMesh(geo, animalMaterial(this.atmosphere, model, { map: model.maps?.[0] || null, head: this.flight.headYaw }), 1);   // head: the look (flight.js)
         mesh.instanceMatrix.setUsage(THREE.DynamicDrawUsage);
         mesh.frustumCulled = false; mesh.castShadow = mesh.receiveShadow = true; mesh.name = `player ${name}`;
         mesh.customDepthMaterial = animalDepthMaterial(model);
@@ -202,6 +202,7 @@ export class GroundControl {
     if (!on && this.herd) { this.animals.pilot(this.herd.g, null); this.herd = null; }   // the group goes on with its own life
     if (!on) { this.marks.clear(); this.sil.clear(); }
     if (this.hudRow) this.hudRow.style.display = on ? '' : 'none';
+    f.look = 0; f.headYaw.value = 0; f.lookMax = on ? (this.S.rig === 'quad' ? 1.0 : this.S.rig === 'bird' ? 1.3 : 1.2) : 0;   // how far this body's head turns before the body follows a drag
     if (on) { f.pitch = 0; f.roll = 0; f.hover = false; this.camSettled = false; this.place(f.pos.x, f.pos.z); }
     else {
       this.camera.up.set(0, 1, 0); f.reset(f.pos.x, f.pos.z, 30);
@@ -338,6 +339,7 @@ export class GroundControl {
     this.v = damp(this.v, target, Math.abs(target) < Math.abs(this.v) ? S.stop : S.accel, dt);
     if (Math.abs(this.v) < 0.01 && !target) this.v = 0;
     if (!this.resting) f.yaw += k.turn * S.turn * (1 - 0.45 * Math.min(1, Math.abs(this.v) / S.run)) * dt;
+    if (k.fwd || k.turn) f.settleLook(dt);   // moving: the body turns into the look
     const fx = -Math.sin(f.yaw), fz = -Math.cos(f.yaw);
     if (jump) {
       if (S.flush && this.v >= S.flush.from) return this.startFlush();
@@ -506,9 +508,9 @@ export class GroundControl {
     const rate = wrap(f.yaw - (this.camYaw ?? f.yaw)) / Math.max(dt, 1e-3); this.camYaw = f.yaw;
     if (Math.abs(rate) > 0.3) this.camSide = damp(this.camSide, -Math.sign(rate) * C.side, 1.6, dt);
     const low = this.resting ? 0.7 : 1, fly = this.mode === 'fly' ? 1.4 : 1;
-    const z = f.zoom || 1, back = (C.back + CAM_PLUS.back) * (1 - 0.15 * this.sit) * fly * z, up = (C.up * CAM_RAISE + CAM_PLUS.up) * low * (1 + 0.3 * this.sit) * fly * z, a = f.yaw + this.camSide;   // z: the wheel's zoom (flight.js)
+    const z = f.zoom || 1, back = (C.back + CAM_PLUS.back) * (1 - 0.15 * this.sit) * fly * z, up = (C.up * CAM_RAISE + CAM_PLUS.up) * low * (1 + 0.3 * this.sit) * fly * z, ly = f.yaw + f.look, a = ly + this.camSide;   // z: the wheel's zoom; ly: the look's yaw (flight.js)
     off.set(Math.sin(a) * back, up, Math.cos(a) * back);
-    const fx = -Math.sin(f.yaw), fz = -Math.cos(f.yaw);
+    const fx = -Math.sin(ly), fz = -Math.cos(ly);
     aim.set(fx * C.look, C.aimUp * low + Math.tan(f.pitch) * (back + C.look), fz * C.look);
     if (C.up > 0.5) this.sq.crownClear(P, off);
     if (!this.camSettled) { this.camOff.copy(off); this.aimOff.copy(aim); this.camSettled = true; this.camLift = 0; }

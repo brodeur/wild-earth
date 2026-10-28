@@ -1779,3 +1779,18 @@ nation) as a required attribution, so the credits show it first. The card (arriv
 line under the locality and roads, in a warm pale tone, the names joined by dots, hidden when empty. Verified: the
 parser on a sample response, the no-key path on the home tile, the line's display on a card. Aaron has to sign up for
 the key (an account is not mine to make); then `python -m pipeline.fetch_territories utm10n_680_4280` fills the tiles.
+
+## 2026-10-27: a drag turns the head with the camera, then the body
+
+Aaron: "for all animals, clicking and dragging should move the camera in line with the head. If I drag the camera to
+look right the animal's head should turn right, until it can't turn any more, then the body turns, to allow the camera
+to keep moving." flight.js (the drag every control shares): `look`, the head's yaw off the body, takes a drag's turn up
+to `lookMax` rad each way (1.0 for the quadrupeds, 1.2 for the rodents, 1.3 for the birds and the raven, 0 for the
+spirit, which has no head), the rest goes to the body's yaw; the cameras look along yaw + look (the walkers', the
+squirrel's, the woodpecker's, the raven's and the fliers'); moving (W, a turn, the herd's own steering) settles the
+look back into the body at 3 per second, the body turning under a camera that stays, so the animal walks where you
+look. The head itself: animalModels.js animalMaterial takes a `head` uniform (the player's own body material only,
+every control passes flight.headYaw) and turns the HEAD part about the vertical through its pivot after its dip.
+Verified in a deer: 20 drag steps turned the head 0.84 rad with the body still; 45 steps put the head at its limit and
+turned the body 1.48 rad; W settled the head straight with the camera where it was. Known: the ground raven's own
+head turn (aAnim2.y) and the look both apply; the lizard's reptile body has no head yaw.

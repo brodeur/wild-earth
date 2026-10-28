@@ -145,7 +145,7 @@ export class SquirrelControl {
     const geo = geometry.clone();
     geo.setAttribute('aAnim', new THREE.InstancedBufferAttribute(new Float32Array(4), 4));
     if (hasAnim2(model)) geo.setAttribute('aAnim2', new THREE.InstancedBufferAttribute(new Float32Array(4), 4));
-    const mesh = new THREE.InstancedMesh(geo, animalMaterial(this.atmosphere, model), 1);
+    const mesh = new THREE.InstancedMesh(geo, animalMaterial(this.atmosphere, model, { head: this.flight.headYaw }), 1);   // head: the look (flight.js)
     mesh.instanceMatrix.setUsage(THREE.DynamicDrawUsage);
     mesh.frustumCulled = false; mesh.castShadow = mesh.receiveShadow = true; mesh.name = 'player squirrel';
     mesh.customDepthMaterial = animalDepthMaterial(model);
@@ -156,6 +156,7 @@ export class SquirrelControl {
 
   // ---- on and off ---------------------------------------------------------------------------------
   setOn(on) {
+    this.flight.look = 0; this.flight.headYaw.value = 0; this.flight.lookMax = on ? 1.2 : 0;   // the look's head limit (flight.js)
     on = !!on;
     this.acorns?.setPlayerSpecies(on ? CODE : 'corvus_corax');
     if (on === this.on) return;
@@ -449,6 +450,7 @@ export class SquirrelControl {
   }
 
   update(dt) {
+    if (this.flight.moving()) this.flight.settleLook(dt);   // moving: the body turns into the look
     const f = this.flight, P = f.pos, ps = this.pose;
     f.body.visible = false; f.flap = 0; f.flapping = false; f.hover = false;   // the raven's keys still land in flight; ignore them
     if (P.distanceToSquared(this.last) > 20 * 20) this.place(P.x, P.z);       // moved from outside (R, Go to): onto the ground there
@@ -1158,9 +1160,9 @@ export class SquirrelControl {
       aim.set(0, this.headUp ? 0.5 : -0.35, 0);
       k = 5;
     } else {
-      const z = f.zoom || 1, back = (CAM_BACK - 0.5 * this.sit) * z, up = (CAM_UP + 0.45 * this.sit) * z, a = f.yaw + this.camSide;   // z: the wheel's zoom (flight.js)
+      const z = f.zoom || 1, back = (CAM_BACK - 0.5 * this.sit) * z, up = (CAM_UP + 0.45 * this.sit) * z, ly = f.yaw + f.look, a = ly + this.camSide;   // z: the wheel's zoom; ly: the look's yaw (flight.js)
       off.set(Math.sin(a) * back, up, Math.cos(a) * back);
-      const fx = -Math.sin(f.yaw), fz = -Math.cos(f.yaw), look = 1.2;
+      const fx = -Math.sin(ly), fz = -Math.cos(ly), look = 1.2;
       aim.set(fx * look, 0.22 + 0.25 * this.sit + Math.tan(f.pitch) * (back + look), fz * look);
       if (drop) {   // dropped from the wood: a tree camera over the fall, easing to this one near the ground
         const g = Math.min(1, Math.max(0, (P.y - this.heights.atXZ(P.x, P.z) - 0.3) / DROP_EASE));

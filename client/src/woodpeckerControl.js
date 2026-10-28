@@ -95,7 +95,7 @@ export class WoodpeckerControl {
   build(female) {
     const model = buildWoodpecker(female), geo = model.geometry;
     geo.setAttribute('aAnim', new THREE.InstancedBufferAttribute(new Float32Array(4), 4));
-    const mesh = new THREE.InstancedMesh(geo, animalMaterial(this.atmosphere, model), 1);
+    const mesh = new THREE.InstancedMesh(geo, animalMaterial(this.atmosphere, model, { head: this.flight.headYaw }), 1);   // head: the look (flight.js)
     mesh.instanceMatrix.setUsage(THREE.DynamicDrawUsage);
     mesh.frustumCulled = false; mesh.castShadow = mesh.receiveShadow = true; mesh.name = `player woodpecker${female ? ' (female)' : ''}`;
     mesh.customDepthMaterial = animalDepthMaterial(model);
@@ -107,6 +107,7 @@ export class WoodpeckerControl {
 
   // ---- on and off ---------------------------------------------------------------------------------
   setOn(on, sex = null) {
+    this.flight.look = 0; this.flight.headYaw.value = 0; this.flight.lookMax = on ? 1.3 : 0;   // the look's head limit (flight.js)
     on = !!on;
     if (sex) this.female = sex === 'female';
     if (on) this.acorns?.setPlayerSpecies(CODE);
@@ -329,6 +330,7 @@ export class WoodpeckerControl {
   }
 
   update(dt) {
+    if (this.flight.moving()) this.flight.settleLook(dt);   // moving: the body turns into the look
     const f = this.flight, P = f.pos, ps = this.pose;
     this.time += dt;
     f.body.visible = false; f.flap = 0; f.flapping = false; f.hover = false;   // the raven's keys still land in flight; ignore them
@@ -669,8 +671,9 @@ export class WoodpeckerControl {
     } else {
       const cp = Math.cos(f.pitch * 0.5), sp = Math.sin(f.pitch * 0.5);
       const z = f.zoom || 1;   // the wheel's zoom (flight.js)
-      off.set(Math.sin(f.yaw) * cp * CAM_BACK * z, (CAM_UP - sp * CAM_BACK) * z, Math.cos(f.yaw) * cp * CAM_BACK * z);
-      const fx = -Math.sin(f.yaw), fz = -Math.cos(f.yaw), look = 4;
+      const ly = f.yaw + f.look;   // the look's yaw (flight.js)
+      off.set(Math.sin(ly) * cp * CAM_BACK * z, (CAM_UP - sp * CAM_BACK) * z, Math.cos(ly) * cp * CAM_BACK * z);
+      const fx = -Math.sin(ly), fz = -Math.cos(ly), look = 4;
       aim.set(fx * look, 0.2 + Math.sin(f.pitch) * look, fz * look);
       k = 5; fov = Math.min(fov, FLY_FOV);   // longer than the raven's lens, never wider than it (?fov= may already be narrow)
     }

@@ -73,7 +73,7 @@ export class Raven {
   buildGround(model) {
     const geo = model.tiers[0].clone();
     for (const n of ['aAnim', 'aAnim2']) { const a = new THREE.InstancedBufferAttribute(new Float32Array(4), 4); a.setUsage(THREE.DynamicDrawUsage); geo.setAttribute(n, a); }
-    const mesh = new THREE.InstancedMesh(geo, animalMaterial(this.atmosphere, model, { map: model.maps?.[0] || null }), 1);
+    const mesh = new THREE.InstancedMesh(geo, animalMaterial(this.atmosphere, model, { map: model.maps?.[0] || null, head: this.flight?.headYaw || null }), 1);   // head: the look (flight.js)
     mesh.instanceMatrix.setUsage(THREE.DynamicDrawUsage);
     mesh.count = 1; mesh.frustumCulled = false; mesh.visible = false; mesh.name = 'raven ground (player)';
     mesh.castShadow = mesh.receiveShadow = true;

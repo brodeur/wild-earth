@@ -725,6 +725,9 @@ if (animPart == 1 || animPart == 2) {
 #endif
 } else if (animPart == 6) {
   animR = animRX(aAnim.w * uAmp.z + animPose * uPose.z);
+#ifdef PLAYER_HEAD
+  animR = animRY(uHeadYaw) * animR;   // the player's head turned by the look (animalMaterial head; flight.js look)
+#endif
 #ifdef ANIM_RIG
   animR = animRX(sin(2.0 * aAnim.x + 0.6) * aAnim.y * rig_bob) * animR;
 #endif
@@ -946,7 +949,9 @@ void RE_Direct_Underwing( const in IncidentLight directLight, const in vec3 geom
 #define RE_Direct RE_Direct_Underwing`;
 
 // map: a textured tier (the ground raven's lod0): the texture instead of the vertex colours, smooth shaded.
-export function animalMaterial(atmosphere, model, { map = null } = {}) {
+// head: a { value } uniform (radians) that turns the HEAD part about the vertical through its pivot: the player's own
+// body (groundControl.js and the other controls), whose head follows the camera's look (flight.js look).
+export function animalMaterial(atmosphere, model, { map = null, head = null } = {}) {
   const m = map ? new THREE.MeshLambertMaterial({ map, vertexColors: false }) : new THREE.MeshLambertMaterial({ vertexColors: true, flatShading: true });
   atmosphere.patchLambert(m);
   const prev = m.onBeforeCompile;
@@ -955,11 +960,12 @@ export function animalMaterial(atmosphere, model, { map = null } = {}) {
   const v4 = a => `vec4(${a.map(x => x.toFixed(4)).join(', ')})`;
   const consts = `\nconst vec4 uAmp = ${v4(model.amp)};\nconst vec4 uPose = ${v4(model.pose)};`;
   const uw = map ? null : underwingSpec(model);
-  const key = `atmosphere-lambert|animal|${programKey(model)}${map ? "|map" : ""}${uw ? `|uw${uw.lead.toFixed(4)},${uw.inv.toFixed(3)},${uw.perch ? 1 : 0}` : ''}`;
+  const key = `atmosphere-lambert|animal|${programKey(model)}${map ? "|map" : ""}${uw ? `|uw${uw.lead.toFixed(4)},${uw.inv.toFixed(3)},${uw.perch ? 1 : 0}` : ''}${head ? '|head' : ''}`;
   m.onBeforeCompile = (shader, renderer) => {
     prev.call(m, shader, renderer);
     const uwDecl = uw ? `\n#define ANIM_UNDERWING\n${uw.perch ? '#define UNDERWING_PERCH\n' : ''}const float uw_lead = ${uw.lead.toFixed(4)};\nconst float uw_invChord = ${uw.inv.toFixed(4)};\nvarying float vUnderwing;` : '';
-    shader.vertexShader = shader.vertexShader.replace('#include <common>', '#include <common>\n' + animDecl(model) + consts + uwDecl);
+    if (head) shader.uniforms.uHeadYaw = head;
+    shader.vertexShader = shader.vertexShader.replace('#include <common>', '#include <common>\n' + animDecl(model) + consts + uwDecl + (head ? '\n#define PLAYER_HEAD\nuniform float uHeadYaw;' : ''));
     // Smooth shaded (a textured tier): pose first, where the normal begins, so the normals turn with the parts.
     if (map) shader.vertexShader = shader.vertexShader
       .replace('#include <beginnormal_vertex>', animBody(model) + '\nvec3 objectNormal = normal;\n#ifdef ANIM_WEIGHTED\n  objectNormal = normalize(mix(normal, animR * normal, aPartW));\n#else\n  objectNormal = animR * normal;\n#endif')
