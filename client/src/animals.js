@@ -241,6 +241,11 @@ BODY_Y[VO] = 0.02; BODY_Y[TK] = 0.45; BODY_Y[GS] = 0.08; BODY_Y[LZ] = 0.02; BODY
 // toward their albedo times SELF_LIGHT. A wrapper on their materials (selfLit), with its own program cache key. Their meshes are also on camera
 // layer 1, which spirit.js redraws over its post pass so they keep their colour.
 export const SELF_LIT = { value: 0 };
+// A species' rarity on this tile, 0 the most abundant to 1 the rarest (Animals.rarity, by index): the spirit's view
+// colours each soul by it (rarityColor: purple for the abundant through blue, green and yellow to red for the rare) and
+// makes the rare ones brighter (spirit.js). Ranked by the tile's GBIF occurrence_count (species/species.json), unlisted
+// species and ties by the game's own density k, evenly spaced so the spectrum is read whatever the counts.
+export function rarityColor(r, out = new THREE.Color()) { return out.setHSL(((1 - r) * 275) / 360, 0.85, 0.62); }
 const SELF_LIGHT = 1.15;
 function selfLit(m) {
   const prev = m.onBeforeCompile, key = m.customProgramCacheKey?.bind(m);
@@ -436,6 +441,9 @@ export class Animals {
     this.heights = { at: (x, north) => hts.ground(x, north), atXZ: (x, z) => hts.ground(x, -z) };
     this.group = new THREE.Group(); this.group.name = 'animals'; scene.add(this.group);
     this.names = Object.fromEntries((tile.species || []).map(s => [s.code, s.common]));
+    { const occ = Object.fromEntries((tile.species || []).map(s => [s.code, s.occurrence_count || 0])), base = k => SPECIES[k].code.split(':')[0];
+      const order = SPECIES.map((sp, k) => k).sort((a, b) => ((occ[base(b)] || 0) - (occ[base(a)] || 0)) || ((SPECIES[b].k || 0) - (SPECIES[a].k || 0)) || a - b);
+      this.rarity = new Float32Array(SPECIES.length); order.forEach((k, i) => { this.rarity[k] = i / Math.max(1, order.length - 1); }); }
     this.time = 0; this.season = null; this.hour = 9;
     this.list = []; this.byId = new Map(); this.bySpecies = SPECIES.map(() => []);
     this.lastCenter = null; this.vegVersion = -1; this.dirty = true;
@@ -3389,10 +3397,11 @@ export class Animals {
     return o;
   }
   // Each playable animal drawn now: fn(x, y, z) at its body (the spirit's glow on them, spirit.js).
+  speciesList() { return SPECIES; }   // the bar's (nearBar.js): code, one, many, common, by the index counts and rarity use
   eachPlayable(fn) {
     for (const s of PLAYABLE) {
       if (!this.meshes[s].visible || !this.group.visible) continue;
-      for (const a of this.bySpecies[s]) if (!a.culled && this.present(a)) fn(a.x, a.y + BODY_Y[s] * (a.air ? 0 : 1), a.z);
+      for (const a of this.bySpecies[s]) if (!a.culled && this.present(a)) fn(a.x, a.y + BODY_Y[s] * (a.air ? 0 : 1), a.z, s);
     }
   }
   // A held or living animal's info by id (the spirit's flash closes on it), or null.
