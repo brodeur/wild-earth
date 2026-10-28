@@ -38,7 +38,11 @@ import { Perches } from './perch.js';
 // (perch.js: a red-tail on a snag or a pine), the chase camera's scale (by wingspan). A soarer's H (sp.soar) is a soar
 // instead of a hover: it holds its speed in a slow circle (radius sp.soar.r at sp.soar.v m/s, in the way it was
 // banking) climbing a little in the thermal, A / D tightening or opening it, W, S or H again flying on.
-const SPIRIT_CRUISE = 25, SPIRIT_MAX = 90, SPIRIT_BACK = 10, SPIRIT_FLOOR = 0.8;   // m/s, m/s, m/s, m
+const SPIRIT_CRUISE = 12, SPIRIT_MAX = 90, SPIRIT_BACK = 10, SPIRIT_FLOOR = 0.8;   // m/s, m/s, m/s, m (cruise 25 before 2026-10-27: "too fast")
+// W and S (owner, 2026-10-27): a tap nudges the speed by SPIRIT_TAP m/s; a hold ramps on an exponential curve, the
+// rate toward the top (W) or the bottom (S) growing from SPIRIT_RAMP[0] per second to SPIRIT_RAMP[1] over
+// SPIRIT_RAMP_T s of holding, and since it is a rate toward the end speed, the speed eases into it.
+const SPIRIT_TAP = 2.5, SPIRIT_RAMP = [0.08, 2.2], SPIRIT_RAMP_T = 3;
 const SPIRIT_FRAME = -0.45;   // where the wisp sits in the frame: this much of the half view below the middle (the lower third)
 // Scroll to zoom (owner, 2026-10-27): the wheel down zooms out, up zooms in. `zoom` scales the chase distance of every
 // camera (this one, the spirit's, the ground animals' in groundControl.js, the squirrel's, the woodpecker's), ZOOM_RANGE
@@ -224,13 +228,23 @@ export class RavenFlight {
     this.pitch = THREE.MathUtils.clamp(this.pitch + pitchIn * pitchRate * dt, -1.3, 1.1);
     if (!pitchIn && !this.drag) this.pitch = THREE.MathUtils.lerp(this.pitch, 0, 1 - Math.exp(-dt * 0.3));   // levels out, slowly
     this.roll = THREE.MathUtils.lerp(this.roll, yawIn * 0.5, 1 - Math.exp(-dt * 2));
-    const boost = k.has('ShiftLeft') || k.has('ShiftRight'), push = k.has('KeyW') || boost;
-    if (push) { this.hover = false; this.speed = Math.min(SPIRIT_MAX, Math.max(this.speed, 0) + (boost ? 70 : 32) * dt); }
-    if (k.has('KeyS')) {
-      if (this.speed > 0.4) { this.speed = Math.max(0, this.speed - 30 * dt); this.sDwell = 0; }
+    const boost = k.has('ShiftLeft') || k.has('ShiftRight'), push = k.has('KeyW') || boost, slow = k.has('KeyS');
+    const ramp = hold => SPIRIT_RAMP[0] * Math.pow(SPIRIT_RAMP[1] / SPIRIT_RAMP[0], Math.min(1, hold / SPIRIT_RAMP_T));   // the rate per second, exponential in the hold
+    if (push) {
+      this.hover = false;
+      if (!this.wHold) this.speed = Math.min(SPIRIT_MAX, Math.max(this.speed, 0) + SPIRIT_TAP);   // the tap
+      this.wHold = (this.wHold || 0) + dt;
+      this.speed += (SPIRIT_MAX - this.speed) * Math.min(1, (boost ? 2 : 1) * ramp(this.wHold) * dt);   // eases into the top
+    } else this.wHold = 0;
+    if (slow) {
+      if (!this.sHold && this.speed > 0.4) this.speed = Math.max(0, this.speed - SPIRIT_TAP);   // the tap
+      this.sHold = (this.sHold || 0) + dt;
+      const r = Math.min(1, ramp(this.sHold) * dt);
+      if (this.speed > 0.4) { this.speed = Math.max(0, this.speed - this.speed * r); this.sDwell = 0; }
       else if (this.speed >= -0.01 && (this.sDwell += dt) < 0.5) this.speed = 0;
-      else this.speed = Math.max(-SPIRIT_BACK, this.speed - 10 * dt);
-    } else this.sDwell = 0;
+      else this.speed += (-SPIRIT_BACK - this.speed) * r;   // eases into the bottom (backing)
+    } else this.sHold = 0;
+    if (!slow) this.sDwell = 0;
     if (this.hover) this.speed = THREE.MathUtils.lerp(this.speed, 0, 1 - Math.exp(-dt * 3));
     else if (!push && !k.has('KeyS') && this.speed > 4) this.speed += (SPIRIT_CRUISE - this.speed) * (1 - Math.exp(-dt * 0.7));   // back to cruise
     const holding = this.hover || Math.abs(this.speed) < 1.0;

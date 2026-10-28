@@ -1739,3 +1739,13 @@ The lion's beacon glow and beam are at 30% of their first brightness and the bea
 hide it. The wheel: down zooms out, up zooms in. Verified on the home tile in a deer: hunger 0.50 to 0.65 in 3 s of
 grazing at an acorn score of 90, the water target 669 m south, the widget bottom right; the beam faint over the lion at
 360 m; five notches down took the zoom from 1 to 1.43.
+
+## 2026-10-27: the wisp's speed: a slower cruise, quieter wind, taps that nudge and holds that ramp
+
+Aaron: "the wisp's auto speed is too fast, and its wind speed is too loud. Tapping W or S should increment in smaller
+amounts; holding should increase the speed on an exponential curve and ease into the top and bottom speeds."
+flight.js updateSpirit: the cruise is 12 m/s (25); a tap of W or S moves the speed by 2.5 m/s; a hold applies a rate
+toward the end speed (90 up, 0 and then -10 backing down) that grows exponentially from 0.08 to 2.2 per second over
+three seconds of holding, so the speed eases into the end; Shift doubles the rate. sound.js: the spirit's wind is at
+0.45 of the raven's loudness and rises half as much past 30 m/s. Verified: cruise 12, a tap to 14.7 and back to
+cruise, a held W 19, 26, 36, 50, 66, 80, 87, 89, a held S 68, 62, 53, 39, 24, 10, 3, 1.
