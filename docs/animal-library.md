@@ -149,7 +149,7 @@ client change. Each drawn species falls back to its procedural model while loadi
 `lion` or `cougar`, `buck`; `animals` for all) draws the procedural one for A/B.
 
 - **Quadruped:** the deer's parts (body, legs A/B as diagonal pairs, tail, head), on the plain path (doe, buck,
-  gray fox, coyote) or the rig path when the tail has a TAIL_TIP (mountain lion). `aAnim2.w` is a gait selector:
+  gray fox, coyote, black bear: a Meshy mesh adopted by tools/build_bear.py, 2026-10-28) or the rig path when the tail has a TAIL_TIP (mountain lion). `aAnim2.w` is a gait selector:
   0 diagonal pairs (walk, trot), 1 fore pair against hind pair (gallop), read from the sign of each leg pivot's z.
   Every model carries `drop` (how far the body lowers at pose 1 so the folded legs meet the ground) and the lion
   `poseMax` 0.6 (past it the elbows sink).

@@ -208,9 +208,9 @@ What to look at first, in order:
    rabbit, jackrabbit and vole are absent by the records-and-range rule.
 4. The deer herd is skinned and clip-animated now (the morning's side session, merged): walk, graze, alert, bed.
 
-Credits: the black bear lane may spend up to 80 on Meshy (its own report row below says what it spent). Open after
-the night: the bear's and the Yosemite Creek lanes if their rows are missing below; the fliers' hunger has no drink;
-no kill sound yet unless its row is below; the Sierra species beyond the bear (mountain quail, mule deer by name).
+Credits: the black bear cost 20 on Meshy (one preview); 380 of the 1,000 spent in all. Open after the night: the
+fliers' hunger has no drink; Tenaya Creek still leaves the Yosemite tile off the DEM; the Sierra species beyond the
+bear (mountain quail, mule deer by name); a cinnamon bear.
 
 | Commit | What you will see |
 |---|---|
