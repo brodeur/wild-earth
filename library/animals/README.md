@@ -54,6 +54,10 @@ From `client/src/animalModels.js` (`loadDeerMesh`):
   HEAD 6`), `_PARTW` (that part's weight, 0-1) and `_PIVOT` (the joint it turns about). The vertex
   shader poses every instance from four floats (phase, gait, pose, flick); there is no skeleton.
 - Budgets: about 2,000 / 1,000 / 300 triangles for herd animals; small birds and rodents less.
+- Optional (the skin path, 2026-10-27; the deer): `JOINTS_0` / `WEIGHTS_0` from the source's skin, `extras.skin`
+  `{ joints, scale, offset, clips }`, and a clip set `client/assets/<clips>.json` + `.bin` baked by
+  `tools/bake_clips.py` from the source's clips; the client then skins the vertices from a bone texture per
+  instance (clip, phase, blend) instead of the part rig, which stays on the file as the fallback.
 
 ## Body-plan rig templates
 

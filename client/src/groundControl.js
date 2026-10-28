@@ -1,6 +1,6 @@
 import * as THREE from 'three';
 import { trunkAt } from './animals.js';
-import { animalMaterial, animalDepthMaterial, hasAnim2, antlerState } from './animalModels.js';
+import { animalMaterial, animalDepthMaterial, hasAnim2, antlerState, driveClips, makeClipState, DEER_DRIVE } from './animalModels.js';
 import { addCaster } from './shadows.js';
 import { HerdMarks } from './herdMarks.js';
 
@@ -163,6 +163,7 @@ export class GroundControl {
         const geo = geometry.clone(), rig = hasAnim2(model);
         geo.setAttribute('aAnim', new THREE.InstancedBufferAttribute(new Float32Array(4), 4));
         if (rig) geo.setAttribute('aAnim2', new THREE.InstancedBufferAttribute(new Float32Array(4), 4));
+        if (model.skin) geo.setAttribute('aClip', new THREE.InstancedBufferAttribute(new Float32Array(4), 4));   // the skinned deer: clip, phase, blend
         const mesh = new THREE.InstancedMesh(geo, animalMaterial(this.atmosphere, model, { map: model.maps?.[0] || null }), 1);
         mesh.instanceMatrix.setUsage(THREE.DynamicDrawUsage);
         mesh.frustumCulled = false; mesh.castShadow = mesh.receiveShadow = true; mesh.name = `player ${name}`;
@@ -405,6 +406,7 @@ export class GroundControl {
   // The rig's channels from the controller's state (as the AI's update functions drive them for this species).
   animate(dt, sp, alert, inAir = false) {
     const S = this.S, ps = this.pose, f = this.flight, P = f.pos, act = this.actT > 0;
+    this.spd = sp; this.inAir = inAir;   // for the skinned deer's clip choice (draw)
     const fx = -Math.sin(f.yaw), fz = -Math.cos(f.yaw), h = S.half * this.size;
     const hf = this.heights.atXZ(P.x + fx * h, P.z + fz * h), hb = this.heights.atXZ(P.x - fx * h, P.z - fz * h);
     const slope = -Math.atan2(hf - hb, 2 * h);   // nose down positive (the animals' pitch), as the ground runs
@@ -491,6 +493,10 @@ export class GroundControl {
     this._m.toArray(m.instanceMatrix.array, 0); m.instanceMatrix.needsUpdate = true;
     const an = m.geometry.attributes.aAnim; an.array[0] = ps.phase % TAU; an.array[1] = ps.amp; an.array[2] = ps.pose; an.array[3] = ps.flick; an.needsUpdate = true;
     if (b.rig) { const a2 = m.geometry.attributes.aAnim2; a2.array[0] = ps.e0; a2.array[1] = ps.e1; a2.array[2] = ps.e2; a2.array[3] = ps.e3; a2.needsUpdate = true; }
+    if (b.model.skin) {   // the skinned deer: a jump runs the gallop in the air
+      const ac = m.geometry.attributes.aClip, v = this.inAir ? Math.max(this.spd || 0, DEER_DRIVE.runAt + 0.1) : (this.spd || 0);
+      driveClips(b.model.skin, DEER_DRIVE, this.cs ||= makeClipState(), v, Math.max(0, ps.pose) / (this.modelPoseMax() || 1), ps.flick, dt, ac.array, 0); ac.needsUpdate = true;
+    }
     if (ps.phase > 1e4) ps.phase -= TAU * 1000;
   }
 

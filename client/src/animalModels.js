@@ -37,6 +37,19 @@ import { uniforms as atmo } from './atmosphere.js';
 //           aAnim2 = (antler growth, velvet, young forked-horn, gait).
 // Every model also carries `drop`: how far animals.js lowers the body at pose 1 (bedded) so the folded legs meet the
 // ground, and `poseMax` where the squash stops reading (the lion).
+//
+// The skin path (2026-10-27; the black-tailed deer, doe and buck). A model whose GLB keeps the source's skin
+// (JOINTS_0 / WEIGHTS_0 and extras.skin, from tools/build_deer.py) and has a baked clip set beside it
+// (<name>_clips.json + .bin from tools/bake_clips.py: one texture row per frame, three RGBA texels per joint, the 3x4
+// matrix that carries a rest-pose vertex to its posed place) is drawn skinned instead of by the part rig: the vertex
+// shader fetches its four joints' matrices at the instance's clip and frame (texelFetch, two frames blended) and, for a
+// transition, a second clip's, from a third per-instance vec4, aClip = (clip, phase 0..1, blend-to clip + its phase in
+// the fraction, blend weight). Still one InstancedMesh per species and one draw call; the lighting, self-lit and shadow
+// paths are the part rig's (the same material code with the body swapped; the skin path declares only its own
+// attributes, since the part rig's five plus the skin's three plus the instance matrix's four overran the 16 vertex
+// attribute slots on Metal). The part rig's drive values (aAnim: phase,
+// gait, pose, flick; aAnim2.w the gait selector) are turned into clips by driveClips below, on the CPU, so animals.js
+// and groundControl.js change nothing in how they think; the model's drop is 0 (the bedded clip carries its own).
 
 export const PART = { BODY: 0, LEG_A: 1, LEG_B: 2, TAIL: 3, WING_L: 4, WING_R: 5, HEAD: 6, CHEST: 7, TAIL_TIP: 8, HAND_L: 9, HAND_R: 10 };
 
@@ -372,7 +385,7 @@ export function buildLizard() {
 // 0.6 m sank the belly 5-8 cm; 0.49 sets the squashed legs on the ground with the belly just above it.
 const DEER = { amp: [0.3, 0.6, 1.5, 0], pose: [0.12, 0, -0.15, 0] };
 export async function loadDeerMesh() {
-  return loadTiers(new URL('../assets/deer.glb', import.meta.url), { ...DEER, drop: 0.49, gait: true });
+  return loadTiers(new URL('../assets/deer.glb', import.meta.url), { ...DEER, drop: 0.49, gait: true }, { skin: true });
 }
 // The buck (tools/build_deer.py --buck): the doe 5% larger with a thicker neck and procedural antlers (per-vertex
 // _ANTLER 0 off the antler, else 0.05 + 0.95 x the way from burr to tip; _TINE 0 beam, 1 the rear second fork,
@@ -380,7 +393,7 @@ export async function loadDeerMesh() {
 // grows, thickens (velvet) and hides them per instance from aAnim2 (growth, velvet, young); animals.js antlers()
 // sets those from the date. The base of the rear second fork (hidden on a young forked-horn) is found here.
 export async function loadDeerBuckMesh() {
-  const m = await loadTiers(new URL('../assets/deer_buck.glb', import.meta.url), { ...DEER, drop: 0.515, gait: true });
+  const m = await loadTiers(new URL('../assets/deer_buck.glb', import.meta.url), { ...DEER, drop: 0.515, gait: true }, { skin: true });
   const g = m.tiers[0], P = g.attributes.position, A = g.getAttribute('aAntler'), T = g.getAttribute('aTine');
   if (A && T && m.extras.antler_burr) {
     let best = Infinity, fork = null;
@@ -411,7 +424,9 @@ export const loadCoyoteMesh = () => loadTiers(new URL('../assets/coyote.glb', im
 // A built GLB (tools/build_*.py): meshes lod0-lod2 with COLOR_0 and the custom attributes _PART, _PARTW, _PIVOT
 // (and _COLORB, a second colour set for a variant), the rig's parent pivots in the file's extras.rig.
 // keepNormals: keep the file's normals (a textured tier drawn smooth); maps: each tier's base-colour texture or null.
-async function loadTiers(url, model, { keepNormals = false } = {}) {
+// skin: load the clip set named by extras.skin.clips (a sibling <clips>.json and .bin) and draw the model skinned (see the
+// header); a missing or failed clip set leaves the part rig in charge, with a warning.
+async function loadTiers(url, model, { keepNormals = false, skin = false } = {}) {
   const gltf = await new GLTFLoader().loadAsync(url.href);
   const rename = { _part: 'aPart', _partw: 'aPartW', _pivot: 'aPivot', _colorb: 'aColorB', _antler: 'aAntler', _tine: 'aTine', _blue: 'aBlue' };
   const maps = [];
@@ -423,7 +438,33 @@ async function loadTiers(url, model, { keepNormals = false } = {}) {
     return g;
   });
   const extras = gltf.parser.json.extras || {};
-  return { tiers, maps, tris: tiers.map(g => g.index.count / 3), weighted: true, extras, ...model };
+  const out = { tiers, maps, tris: tiers.map(g => g.index.count / 3), weighted: true, extras, ...model };
+  if (skin && extras.skin?.clips && tiers.every(g => g.getAttribute('skinIndex') && g.getAttribute('skinWeight'))) {
+    try { out.skin = await loadClips(new URL(`${extras.skin.clips}`, url), extras.skin); out.drop = 0; }
+    catch (e) { console.warn(`${url.pathname}: clip set ${extras.skin.clips} failed to load; the part rig draws it`, e); }
+  }
+  return out;
+}
+// The clip set (tools/bake_clips.py): the index and the texture, shared by every model of the skeleton (the buck reuses the
+// doe's; its translation column is scaled by its own extras.skin.scale over the texture's). The index's clips become a GLSL
+// constant table (first frame, frame count, loop) in clip order; `clip` maps names to indices for the drive.
+const clipCache = new Map();
+async function loadClips(base, skinExtras) {
+  const key = base.href;
+  if (!clipCache.has(key)) clipCache.set(key, (async () => {
+    const [index, bin] = await Promise.all([fetch(`${base.href}.json`).then(r => { if (!r.ok) throw new Error(`${r.status} ${base.href}.json`); return r.json(); }),
+      fetch(`${base.href}.bin`).then(r => { if (!r.ok) throw new Error(`${r.status} ${base.href}.bin`); return r.arrayBuffer(); })]);
+    const half = index.format !== 'rgba32f';
+    const data = half ? new Uint16Array(bin) : new Float32Array(bin);
+    if (data.length !== index.width * index.height * 4) throw new Error(`clip texture ${base.href}.bin: ${data.length} values for ${index.width}x${index.height}`);
+    const tex = new THREE.DataTexture(data, index.width, index.height, THREE.RGBAFormat, half ? THREE.HalfFloatType : THREE.FloatType);
+    tex.magFilter = tex.minFilter = THREE.NearestFilter; tex.generateMipmaps = false; tex.needsUpdate = true; tex.name = `${base.pathname} bones`;
+    const names = Object.keys(index.clips), clip = Object.fromEntries(names.map((n, i) => [n, i]));
+    const table = names.map(n => index.clips[n]);
+    return { index, tex, names, clip, table, joints: index.joints, texScale: index.scale, key: `${index.width}x${index.height}|${table.map(c => `${c.first},${c.count},${c.loop ? 1 : 0}`).join(';')}` };
+  })());
+  const shared = await clipCache.get(key);
+  return { ...shared, ratio: (skinExtras.scale || shared.texScale) / shared.texScale };
 }
 
 // Rig constants per drawn species (radians unless noted). Pivots come from the GLB (extras.rig) so a rebuild
@@ -862,18 +903,72 @@ const REPTILE_COLOR = `
   vColor.rgb *= 1.0 + 0.9 * max(max(aAnim.z, 0.0), aAnim2.z) * aAnim2.w * smoothstep(0.6, 0.9, rpBlue);
 }
 #endif`;
-const animBody = model => model.rig?.kind === 'reptile' ? REPTILE_BODY : ANIM_BODY;
+// The skin path's body (see the header): the antlers first (they ride with the head in rest space), then the four joints'
+// matrices from the bone texture at the instance's clip and frame, two frames blended, and a second clip blended in for a
+// transition. Matrices are blended linearly (a hair of shrink mid-blend, nothing the eye reads on a 0.3 s transition).
+const SKIN_DECL = `
+attribute vec4 skinIndex; attribute vec4 skinWeight; attribute vec4 aClip;
+uniform highp sampler2D uBones;
+mat4 skinBone(int frame, int j) {
+  vec4 r0 = texelFetch(uBones, ivec2(j * 3, frame), 0), r1 = texelFetch(uBones, ivec2(j * 3 + 1, frame), 0), r2 = texelFetch(uBones, ivec2(j * 3 + 2, frame), 0);
+  return mat4(vec4(r0.x, r1.x, r2.x, 0.0), vec4(r0.y, r1.y, r2.y, 0.0), vec4(r0.z, r1.z, r2.z, 0.0), vec4(r0.w, r1.w, r2.w, 0.0) * skin_ratio + vec4(0.0, 0.0, 0.0, 1.0));
+}
+// the instance's skinning matrix at phase 0..1 of a clip (first frame, frame count, loop): the two frames round the phase
+mat4 skinClip(vec4 c, float phase) {
+  float fp = c.x + clamp(phase, 0.0, 0.99999) * c.y;
+  int f0 = int(floor(fp)), f1 = f0 + 1, last = int(c.x + c.y) - 1;
+  if (f1 > last) f1 = c.z > 0.5 ? int(c.x) : last;
+  float u = fp - floor(fp);
+  ivec4 j = ivec4(skinIndex + 0.5);
+  mat4 M = (skinBone(f0, j.x) * (1.0 - u) + skinBone(f1, j.x) * u) * skinWeight.x;
+  if (skinWeight.y > 0.0) M += (skinBone(f0, j.y) * (1.0 - u) + skinBone(f1, j.y) * u) * skinWeight.y;
+  if (skinWeight.z > 0.0) M += (skinBone(f0, j.z) * (1.0 - u) + skinBone(f1, j.z) * u) * skinWeight.z;
+  if (skinWeight.w > 0.0) M += (skinBone(f0, j.w) * (1.0 - u) + skinBone(f1, j.w) * u) * skinWeight.w;
+  return M;
+}`;
+const SKIN_BODY = `
+vec3 animPos = position;
+#ifdef ANIM_ANTLER
+  if (aAntler > 0.0) {
+    float antSide = position.x >= 0.0 ? 1.0 : -1.0;
+    int antTine = int(aTine + 0.5);
+    vec3 antBurr = vec3(antSide * antler_burr.x, antler_burr.yz);
+    animPos += normal * (0.0045 * (1.0 - 0.55 * aAntler) * aAnim2.y);
+    if (antTine == 1) animPos = mix(animPos, vec3(antSide * antler_fork.x, antler_fork.yz), aAnim2.z);
+    if (antTine != 3) animPos = antBurr + (animPos - antBurr) * aAnim2.x;
+  }
+#endif
+mat4 skinM = skinClip(skin_clips[int(aClip.x + 0.5)], aClip.y);
+if (aClip.w > 0.001) {
+  float clipB = floor(aClip.z);
+  skinM = skinM * (1.0 - aClip.w) + skinClip(skin_clips[int(clipB + 0.5)], aClip.z - clipB) * aClip.w;
+}
+mat3 animR = mat3(skinM);
+vec3 transformed = (skinM * vec4(animPos, 1.0)).xyz;
+#ifdef USE_ALPHAHASH
+  vPosition = vec3( position );
+#endif`;
+function skinDecl(model) {
+  const sk = model.skin; if (!sk) return '';
+  const f = x => (+x || 0).toFixed(4);
+  const rows = sk.table.map(c => `vec4(${c.first.toFixed(1)}, ${c.count.toFixed(1)}, ${c.loop ? '1.0' : '0.0'}, 0.0)`);
+  return `#define ANIM_SKIN\nconst float skin_ratio = ${f(sk.ratio)};\nconst vec4 skin_clips[${rows.length}] = vec4[${rows.length}](${rows.join(', ')});\n${SKIN_DECL}\n`;
+}
+export const skinUniforms = model => model.skin ? { uBones: { value: model.skin.tex } } : {};
+const animBody = model => model.skin ? SKIN_BODY : model.rig?.kind === 'reptile' ? REPTILE_BODY : ANIM_BODY;
 const RIG_KEYS = ['spine', 'spinePhase', 'sit', 'foreFold', 'tipLag', 'tipWave', 'tipCurl', 'abduct', 'bob', 'handLag', 'handAmp', 'bow', 'spread', 'collapse', 'flickLift', 'flickOpen',
   'wave', 'waveK', 'envS', 'pushPitch', 'baskAbduct', 'squash', 'legLift', 'hindK', 'bend', 'flickYaw'];
 // aAnim2 is declared for the rig templates, the quadrupeds' gait selector and the antlers (the geometry must then
 // carry it: a missing instanced attribute reads (0, 0, 0, 1), a bound gait and no antler growth).
 const hasAnim2 = model => !!(model.rig || model.gait || model.antler);
-function extraDecl(model) {
+function antlerDecl(model) {
   const f = x => (+x || 0).toFixed(4), v3 = a => `vec3(${a.map(f).join(', ')})`;
+  return model.antler ? `#define ANIM_ANTLER\nattribute float aAntler; attribute float aTine;\nconst vec3 antler_burr = ${v3(model.antler.burr)};\nconst vec3 antler_fork = ${v3(model.antler.fork)};\n` : '';
+}
+function extraDecl(model) {
   let d = hasAnim2(model) && !model.rig ? 'attribute vec4 aAnim2;\n' : '';
   if (model.gait) d += '#define ANIM_GAIT\n';
-  if (model.antler) d += `#define ANIM_ANTLER\nattribute float aAntler; attribute float aTine;\nconst vec3 antler_burr = ${v3(model.antler.burr)};\nconst vec3 antler_fork = ${v3(model.antler.fork)};\n`;
-  return d + rigDecl(model);
+  return d + antlerDecl(model) + rigDecl(model);
 }
 function rigDecl(model) {
   const r = model.rig; if (!r) return '';
@@ -895,8 +990,9 @@ function rigDecl(model) {
   }
   return d;
 }
-const animDecl = model => (model.weighted ? '#define ANIM_WEIGHTED\nattribute float aPartW;' : '') + ANIM_DECL_BASE + '\n' + extraDecl(model);
-const programKey = model => `${model.amp.join(',')}|${model.pose.join(',')}|${model.weighted ? 'w' : ''}|${model.rig ? model.rig.name : ''}|${model.gait ? 'g' : ''}|${model.antler ? 'a' : ''}`;
+const animDecl = model => model.skin ? (model.antler ? 'attribute vec4 aAnim2;\n' : '') + antlerDecl(model) + skinDecl(model)
+  : (model.weighted ? '#define ANIM_WEIGHTED\nattribute float aPartW;' : '') + ANIM_DECL_BASE + '\n' + extraDecl(model);
+const programKey = model => `${model.amp.join(',')}|${model.pose.join(',')}|${model.weighted ? 'w' : ''}|${model.rig ? model.rig.name : ''}|${model.gait ? 'g' : ''}|${model.antler ? 'a' : ''}|${model.skin ? `s${model.skin.ratio.toFixed(4)}:${model.skin.key}` : ''}`;
 export { hasAnim2 };
 
 // Light through the feathers (UNDERWING): a bird's wing and tail seen with the sun beyond them glow with the light
@@ -958,11 +1054,12 @@ export function animalMaterial(atmosphere, model, { map = null } = {}) {
   const key = `atmosphere-lambert|animal|${programKey(model)}${map ? "|map" : ""}${uw ? `|uw${uw.lead.toFixed(4)},${uw.inv.toFixed(3)},${uw.perch ? 1 : 0}` : ''}`;
   m.onBeforeCompile = (shader, renderer) => {
     prev.call(m, shader, renderer);
+    if (model.skin) shader.uniforms.uBones = { value: model.skin.tex };
     const uwDecl = uw ? `\n#define ANIM_UNDERWING\n${uw.perch ? '#define UNDERWING_PERCH\n' : ''}const float uw_lead = ${uw.lead.toFixed(4)};\nconst float uw_invChord = ${uw.inv.toFixed(4)};\nvarying float vUnderwing;` : '';
     shader.vertexShader = shader.vertexShader.replace('#include <common>', '#include <common>\n' + animDecl(model) + consts + uwDecl);
     // Smooth shaded (a textured tier): pose first, where the normal begins, so the normals turn with the parts.
     if (map) shader.vertexShader = shader.vertexShader
-      .replace('#include <beginnormal_vertex>', animBody(model) + '\nvec3 objectNormal = normal;\n#ifdef ANIM_WEIGHTED\n  objectNormal = normalize(mix(normal, animR * normal, aPartW));\n#else\n  objectNormal = animR * normal;\n#endif')
+      .replace('#include <beginnormal_vertex>', animBody(model) + '\nvec3 objectNormal = normal;\n#if defined(ANIM_SKIN)\n  objectNormal = normalize(animR * normal);\n#elif defined(ANIM_WEIGHTED)\n  objectNormal = normalize(mix(normal, animR * normal, aPartW));\n#else\n  objectNormal = animR * normal;\n#endif')
       .replace('#include <begin_vertex>', '');
     shader.vertexShader = shader.vertexShader
       .replace('#include <begin_vertex>', animBody(model))
@@ -991,6 +1088,7 @@ export function animalMaterial(atmosphere, model, { map = null } = {}) {
 export function animalDepthMaterial(model) {
   const v4 = a => `vec4(${a.map(x => x.toFixed(4)).join(', ')})`;
   return new THREE.ShaderMaterial({
+    uniforms: skinUniforms(model),
     vertexShader: `${animDecl(model)}
 const vec4 uAmp = ${v4(model.amp)};
 const vec4 uPose = ${v4(model.pose)};
@@ -1015,7 +1113,7 @@ ${animBody(model)}
 export function planarShadowMaterial(model, { drop = model.drop || 0, opacity = 0.42, nearFade = false } = {}) {
   const v4 = a => `vec4(${a.map(x => x.toFixed(4)).join(', ')})`;
   return new THREE.ShaderMaterial({
-    uniforms: { sunDir: atmo.sunDir, csmStrength: atmo.csmStrength, opacity: { value: opacity }, csm0: { value: atmo.csmMatrix.value[0] } },
+    uniforms: { sunDir: atmo.sunDir, csmStrength: atmo.csmStrength, opacity: { value: opacity }, csm0: { value: atmo.csmMatrix.value[0] }, ...skinUniforms(model) },
     vertexShader: `${animDecl(model)}
 const vec4 uAmp = ${v4(model.amp)};
 const vec4 uPose = ${v4(model.pose)};
@@ -1025,7 +1123,7 @@ void main() {
 ${animBody(model)}
   mat4 m = modelMatrix * instanceMatrix;
   vec4 w = m * vec4(transformed, 1.0);
-  float ground = m[3].y + ${drop.toFixed(3)} * aAnim.z * length(m[0].xyz) + 0.08;   // the drop scales with the instance
+  float ground = m[3].y + ${drop > 0 ? `${drop.toFixed(3)} * aAnim.z * length(m[0].xyz) + ` : ''}0.08;   // the drop scales with the instance
   vec3 L = sunDir; L.y = max(L.y, 0.12);
   w.xyz -= L * (max(w.y - ground, 0.0) / L.y);
   w.y = ground;
@@ -1040,4 +1138,61 @@ void main() { gl_FragColor = vec4(0.02, 0.025, 0.02, opacity * vFade); }`,
     transparent: true, depthWrite: true, depthFunc: THREE.LessDepth, side: THREE.DoubleSide,
     polygonOffset: true, polygonOffsetFactor: -2, polygonOffsetUnits: -2,
   });
+}
+
+
+// ---- the skin path's drive -----------------------------------------------------------------------------------------
+// From the part rig's drive values to a clip and a phase, on the CPU, per instance and frame (animals.js update for the
+// AI, groundControl.js draw for the player): the state machine below picks a target clip from the speed (m/s), the bedded
+// pose (aAnim.z, 0..1) and the head flick (aAnim.w: 1 grazing, below 0 alert), keeps the current clip's phase running,
+// and on a change blends from the old clip over `blend` seconds (the old one goes on running in the second slot).
+// Gait clips advance by distance: the Walk's stride (tools/bake_clips.py: the planted hoof's ground travel spread over
+// the cycle, 0.65 m on the doe) gives planted hooves at any walking speed; the cycle rate is capped so a hurried walk
+// (the trot regime, 2.2-3.5 m/s) does not blur, and the Gallop's rate runs between 1.3 and 2.8 Hz about its hand-set
+// 3 m stride (an in-place gallop cannot say how far it flies). Idle loops run on the clock from a per-animal seed so a
+// herd is not in unison. Clip names are the deer's (library/animals/clips/odocoileus_hemionus.json); another skinned
+// species would pass its own table.
+export const DEER_DRIVE = {
+  idle: ['Idle', 'Idle_2'], relax: 'Idle_Headlow', graze: 'Eating', walk: 'Walk', run: 'Gallop', bed: 'bed', alert: 'Idle',
+  runAt: 3.5, walkAt: 2.8, walkMaxHz: 2.6, runHz: [1.3, 2.8], blend: { bed: 1.0, graze: 0.5, gait: 0.3, idle: 0.5 },
+};
+if (typeof globalThis !== 'undefined') globalThis.__weDeerDrive = DEER_DRIVE;   // debugging: thresholds, rates, force
+export function makeClipState() { return { cur: -1, prev: 0, pA: 0, pB: 0, blend: 0, seed: Math.random(), kind: '' }; }
+// kind: what the current clip is for (idle, graze, bed, walk, run), for the hysteresis and the blend time
+function pickClip(D, st, speed, pose, flick) {
+  if (D.force) return D.force;   // debugging: __weDeerDrive.force = 'bed' holds every deer in one clip
+  if (pose > 0.5) return 'bed';
+  if (speed > D.runAt || (st.kind === 'run' && speed > D.walkAt)) return 'run';
+  if (speed > 0.08) return 'walk';
+  if (flick > 0.5) return 'graze';
+  if (flick < -0.15) return 'alert';
+  return 'idle';
+}
+export function driveClips(skin, D, st, speed, pose, flick, dt, out, o) {
+  const kind = pickClip(D, st, speed, pose, flick);
+  const C = skin.clip, T = skin.table;
+  if (kind !== st.kind) {
+    const name = kind === 'idle' ? D.idle[Math.floor(st.seed * D.idle.length) % D.idle.length] : D[kind];
+    const next = C[name] ?? 0;
+    if (st.cur >= 0 && next !== st.cur) {
+      st.prev = st.cur; st.pB = st.pA; st.blend = 1; st.kindB = st.kind;
+      // a gait change keeps the left fore hoof where it is in the stride
+      const a = T[st.cur], b = T[next];
+      st.pA = a.stride_m && b.stride_m ? ((st.pA - (a.touchdown || 0) + (b.touchdown || 0)) % 1 + 1) % 1 : st.seed;
+      st.tBlend = D.blend[kind === 'bed' || st.kind === 'bed' ? 'bed' : kind === 'graze' || st.kind === 'graze' ? 'graze' : kind === 'walk' || kind === 'run' ? 'gait' : 'idle'];
+    } else if (st.cur < 0) { st.pA = st.seed; st.blend = 0; }
+    st.cur = next; st.kind = kind;
+  }
+  // phases: the current clip's by distance (a gait) or on the clock (a loop); the old one goes on the same way
+  const rate = (c, k) => {
+    if (c.stride_m) {
+      if (k === 'run') return Math.min(D.runHz[1], Math.max(D.runHz[0], speed / c.stride_m));
+      return Math.min(D.walkMaxHz, speed / c.stride_m);
+    }
+    return c.duration > 0 ? 1 / c.duration : 0;
+  };
+  st.pA = (st.pA + dt * rate(T[st.cur], kind)) % 1;
+  if (st.blend > 0) { st.pB = (st.pB + dt * rate(T[st.prev], st.kindB)) % 1; st.blend = Math.max(0, st.blend - dt / (st.tBlend || 0.3)); }
+  const w = st.blend * st.blend * (3 - 2 * st.blend);   // eased
+  out[o * 4] = st.cur; out[o * 4 + 1] = st.pA; out[o * 4 + 2] = st.prev + Math.min(st.pB, 0.9999); out[o * 4 + 3] = w;
 }

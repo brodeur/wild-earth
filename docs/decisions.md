@@ -1717,3 +1717,61 @@ Aaron: "I like the fade in on the animals, but it is a very saturated teal: comp
 happen faster." The lines are white to light grey (#ffffff to #c9ccd0), the silhouette #e4e6e8; the arrival takes 1.3 s
 (2.3 before), a line lives 0.8-1.6 s with a delay under 0.3 s, the beam-out 0.9 s (1.4) and the new tile's animals
 start 0.6 s after it (1.0). Verified on a change from the home card to Placerville.
+
+## 2026-10-27: the deer is skinned and clip-animated on the GPU, still one draw call a species
+
+Aaron: "we could massively improve the realism of our animals by improving the rigging." The part rig (animalModels.js:
+no skeleton, each vertex turning about its part's pivot from four floats) was the right first step for one draw call a
+species, but a deer whose legs swing as rigid slabs and whose hooves stay with the body cannot read as a deer up close.
+The black-tailed deer's CC0 source (Quaternius) came with a 46-joint skin and 13 clips that the build script dropped. They
+are back, without giving up the instancing.
+
+The path: `tools/bake_clips.py` reads the source GLB (standard library and numpy, nothing from it executed), samples each
+clip's joint matrices at 30 Hz and writes a bone texture (RGBA half floats, three texels a joint for the 3x4 matrix, one row
+a frame; 138 x 531 for the deer, 586 KB) and a JSON index next to the adopted tier (`client/assets/deer_clips.bin/.json`).
+Each matrix is T G_j(t) G_j(rest)^-1 T^-1 with T the build's scale and ground shift (now in the GLB's `extras.skin`): the
+adopted vertices are the rest-skinned source (checked: the doe's body within 1 mm, only the enlarged ears differ), so the
+inverse bind matrices drop out and the matrix carries an adopted vertex straight to its posed place. `tools/build_deer.py`
+keeps the four heaviest vertex groups per vertex as JOINTS_0 / WEIGHTS_0 (they survive the decimation) in the skin's joint
+order; the buck's antlers are skinned to the Head. The rebuilt GLBs differ from the old ones by those two attributes and
+the extras only. The buck reuses the doe's texture: its matrices' translation column is scaled by its own size over the
+texture's (1.045).
+
+In the client (animalModels.js, the skin path of `animalMaterial`, `animalDepthMaterial` and `planarShadowMaterial`): a
+third per-instance vec4, aClip = (clip, phase 0..1, blend-to clip with its phase in the fraction, blend weight). The vertex
+shader fetches the four joints' matrices at the clip's two frames round the phase (texelFetch; 24 fetches, 48 during a
+blend), lerps, and for a transition lerps with the second clip's. The lighting, self-lit, cascaded-shadow and planar-shadow
+paths are the part rig's with the body swapped. Metal's 16 vertex-attribute slots were the one surprise: with the part
+rig's five attributes still declared beside the skin's three and the instance matrix's four, the program failed to
+validate ("Too many attributes"); the skin path now declares only what it reads.
+
+The drive (animalModels.js `driveClips`, `DEER_DRIVE`) turns the part rig's values into clips on the CPU, so animals.js and
+groundControl.js think as before: bed when pose passes 0.5; the Gallop above 3.5 m/s (back to the Walk under 2.8); the Walk
+when moving; Eating when the flick says grazing; Idle (or Idle_2, by a seed) standing. A change blends from the old clip
+over 0.3 s (gaits), 0.5 (grazing, idle) or 1.0 s (bedding). The Walk's hooves are planted: the baker measures the planted
+hoof's ground travel over its stance and spreads it over the cycle (0.65 m a cycle on the doe), and the drive advances the
+phase by distance over that stride, so at any walking speed the stance hoof moves back under the body at the body's speed
+(the source's walk was authored for 0.56 m/s, so a 1.1 m/s AI walk runs it at 1.7 Hz; capped at 2.6 Hz for the hurried
+walk that stands in for a trot, which the source lacks). The Gallop's stride is set by hand at 3 m (an in-place gallop's
+brief contact says nothing about the distance flown), its rate between 1.3 and 2.8 Hz. The source has no bedded clip
+either: the recipe (`library/animals/clips/odocoileus_hemionus.json`) builds one frame from Idle_Headlow by aiming the leg
+bones (fore knees forward on the ground, cannons back under the chest; hind legs tucked forward with the hocks behind) and
+dropping every joint 0.45 m, so the model's `drop` is 0 and the bedded body no longer needs lowering by animals.js. Idle
+loops run on the clock from a per-animal seed so a herd is not in unison.
+
+Verified on the home tile (worktree on port 8782): the herd walks, grazes, stands alert and beds (hour 13 bedded the herd;
+an alarmed herd gallops off); the player's deer walks, gallops, grazes and beds, and a jump runs the gallop in the air;
+the buck walks, grazes and beds with its hard October antlers on its head. No console errors (the earlier attribute-limit
+error is gone), the planar and cascaded shadows compile and draw. Draw calls at the same pose beside the herd: 368 with the
+skinned deer, 366 with the procedural deer swapped in, 370 on main; the deer still draws one call a tier plus its planar
+shadow and shadow caster. CPU submit time of a render back to back in the same tab: 2.4 ms skinned, 2.7 ms procedural (gl.finish
+does not wait for the GPU in Chrome, and the hidden browser pane throttles requestAnimationFrame to ~27 Hz, so a GPU frame
+time and a true fps could not be read here; the skinned work is 11 deer x ~1,400 vertices x 24-48 texel fetches a pass,
+three passes, which is nothing beside the 9 M triangles of the view). Every other species is untouched (the part rig's
+shader text is the same; the deer's procedural fallback stays for a failed load or `?deer=proc`).
+
+Open: a true trot needs a clip the source does not have; the Walk's small authored steps mean the AI's 1.1-1.6 m/s walks run
+at 1.7-2.5 Hz (a real doe walks nearer 1.4 Hz with longer strides); an alert pose with the ears forward is the Idle clip
+for now; the lineup page draws the skinned deer in its first clip's first frame rather than its motion switches. A
+web auto-rigger (autorig.online) could give the Meshy species (lion, rabbits, rodents, turkey) skeletons and retargeted
+clips for the same path; that is a separate step and uploads nothing from here.

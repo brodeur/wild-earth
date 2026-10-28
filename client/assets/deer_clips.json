@@ -1,0 +1,263 @@
+{
+ "rate": 30.0,
+ "width": 138,
+ "height": 531,
+ "format": "rgba16f",
+ "texels": "row f = frame f; texels j*3..j*3+2 = rows 0..2 of joint j's 3x4 matrix (adopted frame)",
+ "joints": [
+  "Body",
+  "Back",
+  "Torso",
+  "Torso2",
+  "Torso3",
+  "Neck1",
+  "Neck2",
+  "Neck3",
+  "Head",
+  "Ear1.L",
+  "Ear2.L",
+  "Ear3.L",
+  "Ear4.L",
+  "Ear1.R",
+  "Ear2.R",
+  "Ear3.R",
+  "Ear4.R",
+  "FrontShoulder.L",
+  "FrontUpperLeg.L",
+  "FrontLowerLeg.L",
+  "FrontShoulder.R",
+  "FrontUpperLeg.R",
+  "FrontLowerLeg.R",
+  "BackShoulder.L",
+  "BackLeg.L",
+  "BackUpperLeg.L",
+  "BackLowerLeg.L",
+  "BackShoulder.R",
+  "BackLeg.R",
+  "BackUpperLeg.R",
+  "BackLowerLeg.R",
+  "Tail1",
+  "Tail2",
+  "Tail3",
+  "PoleTargetBack.L",
+  "PoleTarget.L",
+  "PoleTargetBack.R",
+  "PoleTarget.R",
+  "IKBackLeg.L",
+  "FFB.L",
+  "IKFrontLeg.L",
+  "FF.L",
+  "IKBackLeg.R",
+  "FFB.R",
+  "IKFrontLeg.R",
+  "FF.R"
+ ],
+ "scale": 0.304794,
+ "offset": [
+  0.0,
+  0.004,
+  0.0
+ ],
+ "source": {
+  "file": "Deer.glb",
+  "fit": "client/assets/deer.glb",
+  "recipe": "library/animals/clips/odocoileus_hemionus.json",
+  "clips_in_source": [
+   "Attack_Headbutt",
+   "Attack_Kick",
+   "Death",
+   "Eating",
+   "Gallop",
+   "Gallop_Jump",
+   "Idle",
+   "Idle_2",
+   "Idle_Headlow",
+   "Idle_HitReact_Left",
+   "Idle_HitReact_Right",
+   "Jump_toIdle",
+   "Walk"
+  ]
+ },
+ "clips": {
+  "Idle": {
+   "first": 0,
+   "count": 100,
+   "loop": true,
+   "duration": 3.3333,
+   "root_motion": [
+    0.0,
+    0.0,
+    0.0
+   ]
+  },
+  "Idle_2": {
+   "first": 100,
+   "count": 100,
+   "loop": true,
+   "duration": 3.3333,
+   "root_motion": [
+    0.0,
+    0.0,
+    0.0
+   ]
+  },
+  "Idle_Headlow": {
+   "first": 200,
+   "count": 100,
+   "loop": true,
+   "duration": 3.3333,
+   "root_motion": [
+    0.0,
+    0.0,
+    0.0
+   ]
+  },
+  "Eating": {
+   "first": 300,
+   "count": 180,
+   "loop": true,
+   "duration": 6.0,
+   "root_motion": [
+    0.0,
+    0.0,
+    0.0
+   ]
+  },
+  "Walk": {
+   "first": 480,
+   "count": 35,
+   "loop": true,
+   "duration": 1.1667,
+   "root_motion": [
+    0.0,
+    0.0,
+    0.0
+   ],
+   "stride_m": 0.6499,
+   "touchdown": 0.4,
+   "speed_mps": 0.557,
+   "hoof": "FF.L",
+   "stance_frames": 20,
+   "stance_travel_m": 0.3714
+  },
+  "Gallop": {
+   "first": 515,
+   "count": 15,
+   "loop": true,
+   "duration": 0.5,
+   "root_motion": [
+    0.0,
+    0.0004,
+    0.0097
+   ],
+   "stride_m": 3.0,
+   "touchdown": 0.0,
+   "speed_mps": 6.0,
+   "hoof": "FF.L",
+   "stance_frames": 2,
+   "stance_travel_m": 0.1053
+  },
+  "bed": {
+   "first": 530,
+   "count": 1,
+   "loop": false,
+   "duration": 0.0,
+   "root_motion": [
+    0,
+    0,
+    0
+   ],
+   "synthetic": {
+    "from": "Idle_Headlow",
+    "at": 0.0,
+    "root": [
+     0,
+     -0.45,
+     0
+    ],
+    "aim": [
+     [
+      "FrontUpperLeg.L+IKFrontLeg.L+FF.L",
+      "FrontLowerLeg.L",
+      [
+       -0.42,
+       0.9
+      ]
+     ],
+     [
+      "FrontLowerLeg.L+IKFrontLeg.L+FF.L",
+      "IKFrontLeg.L",
+      [
+       0.12,
+       -1
+      ]
+     ],
+     [
+      "FrontUpperLeg.R+IKFrontLeg.R+FF.R",
+      "FrontLowerLeg.R",
+      [
+       -0.42,
+       0.9
+      ]
+     ],
+     [
+      "FrontLowerLeg.R+IKFrontLeg.R+FF.R",
+      "IKFrontLeg.R",
+      [
+       0.12,
+       -1
+      ]
+     ],
+     [
+      "BackLeg.L+IKBackLeg.L+FFB.L",
+      "BackUpperLeg.L",
+      [
+       -0.6,
+       0.8
+      ]
+     ],
+     [
+      "BackUpperLeg.L+IKBackLeg.L+FFB.L",
+      "BackLowerLeg.L",
+      [
+       -0.55,
+       -0.85
+      ]
+     ],
+     [
+      "BackLowerLeg.L+IKBackLeg.L+FFB.L",
+      "IKBackLeg.L",
+      [
+       0.08,
+       1
+      ]
+     ],
+     [
+      "BackLeg.R+IKBackLeg.R+FFB.R",
+      "BackUpperLeg.R",
+      [
+       -0.6,
+       0.8
+      ]
+     ],
+     [
+      "BackUpperLeg.R+IKBackLeg.R+FFB.R",
+      "BackLowerLeg.R",
+      [
+       -0.55,
+       -0.85
+      ]
+     ],
+     [
+      "BackLowerLeg.R+IKBackLeg.R+FFB.R",
+      "IKBackLeg.R",
+      [
+       0.08,
+       1
+      ]
+     ]
+    ]
+   }
+  }
+ }
+}

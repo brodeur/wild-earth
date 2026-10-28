@@ -1,0 +1,121 @@
+{
+  "_": "Recipe for tools/bake_clips.py: the black-tailed deer's clips from the Quaternius CC0 source (library/animals/jobs/odocoileus_hemionus/download-polypizza/Deer.glb). The clips the game uses, plus a one-frame bedded pose the source lacks (sternal recumbency: fore legs folded with the knees at the chest front and the cannons back under it, hind legs tucked forward under the belly with the hocks behind, the body dropped onto them). The Gallop's stride is set by hand: an in-place gallop's brief hoof contact says nothing about the distance flown per cycle (a real deer's lope covers ~3 m a cycle at ~2 Hz).",
+  "clips": {
+    "Idle": {
+      "loop": true
+    },
+    "Idle_2": {
+      "loop": true
+    },
+    "Idle_Headlow": {
+      "loop": true
+    },
+    "Eating": {
+      "loop": true
+    },
+    "Walk": {
+      "loop": true,
+      "gait": true,
+      "hoof": "FF.L"
+    },
+    "Gallop": {
+      "loop": true,
+      "gait": true,
+      "hoof": "FF.L",
+      "stride_m": 3.0
+    }
+  },
+  "synthetic": {
+    "bed": {
+      "from": "Idle_Headlow",
+      "at": 0.0,
+      "root": [
+        0,
+        -0.45,
+        0
+      ],
+      "aim": [
+        [
+          "FrontUpperLeg.L+IKFrontLeg.L+FF.L",
+          "FrontLowerLeg.L",
+          [
+            -0.42,
+            0.9
+          ]
+        ],
+        [
+          "FrontLowerLeg.L+IKFrontLeg.L+FF.L",
+          "IKFrontLeg.L",
+          [
+            0.12,
+            -1
+          ]
+        ],
+        [
+          "FrontUpperLeg.R+IKFrontLeg.R+FF.R",
+          "FrontLowerLeg.R",
+          [
+            -0.42,
+            0.9
+          ]
+        ],
+        [
+          "FrontLowerLeg.R+IKFrontLeg.R+FF.R",
+          "IKFrontLeg.R",
+          [
+            0.12,
+            -1
+          ]
+        ],
+        [
+          "BackLeg.L+IKBackLeg.L+FFB.L",
+          "BackUpperLeg.L",
+          [
+            -0.6,
+            0.8
+          ]
+        ],
+        [
+          "BackUpperLeg.L+IKBackLeg.L+FFB.L",
+          "BackLowerLeg.L",
+          [
+            -0.55,
+            -0.85
+          ]
+        ],
+        [
+          "BackLowerLeg.L+IKBackLeg.L+FFB.L",
+          "IKBackLeg.L",
+          [
+            0.08,
+            1
+          ]
+        ],
+        [
+          "BackLeg.R+IKBackLeg.R+FFB.R",
+          "BackUpperLeg.R",
+          [
+            -0.6,
+            0.8
+          ]
+        ],
+        [
+          "BackUpperLeg.R+IKBackLeg.R+FFB.R",
+          "BackLowerLeg.R",
+          [
+            -0.55,
+            -0.85
+          ]
+        ],
+        [
+          "BackLowerLeg.R+IKBackLeg.R+FFB.R",
+          "IKBackLeg.R",
+          [
+            0.08,
+            1
+          ]
+        ]
+      ]
+    }
+  }
+}

@@ -141,7 +141,7 @@ function scaleBar() {
 // shadow beds down): animalDepthMaterial's vertex text, split into its declarations and body, on MeshDepthMaterial.
 const depthCache = new Map();
 function depthFor(model) {
-  const key = `${model.amp}|${model.pose}|${model.weighted ? 'w' : ''}|${model.rig ? model.rig.name : ''}`;
+  const key = `${model.amp}|${model.pose}|${model.weighted ? 'w' : ''}|${model.rig ? model.rig.name : ''}|${model.skin ? model.skin.key : ''}`;
   if (depthCache.has(key)) return depthCache.get(key);
   let mat = null;
   try {
@@ -150,7 +150,7 @@ function depthFor(model) {
     if (i > 0 && j > i) {
       const decl = src.slice(0, i), body = src.slice(i + 'void main() {'.length, j);
       mat = new THREE.MeshDepthMaterial({ depthPacking: THREE.RGBADepthPacking });
-      mat.onBeforeCompile = sh => { sh.vertexShader = sh.vertexShader.replace('#include <common>', '#include <common>\n' + decl).replace('#include <begin_vertex>', body); };
+      mat.onBeforeCompile = sh => { if (model.skin) sh.uniforms.uBones = { value: model.skin.tex }; sh.vertexShader = sh.vertexShader.replace('#include <common>', '#include <common>\n' + decl).replace('#include <begin_vertex>', body); };
       mat.customProgramCacheKey = () => 'lineup-depth|' + key;
     }
   } catch (e) { console.warn('lineup: no animated shadow for', key, e); }
@@ -163,6 +163,7 @@ function depthFor(model) {
 function instance(geo, model) {
   geo.setAttribute('aAnim', new THREE.InstancedBufferAttribute(new Float32Array(4), 4));
   if (AM.hasAnim2(model)) geo.setAttribute('aAnim2', new THREE.InstancedBufferAttribute(new Float32Array(4), 4));
+  if (model.skin) geo.setAttribute('aClip', new THREE.InstancedBufferAttribute(new Float32Array(4), 4));   // the skinned deer: its first clip's first frame
   const m = new THREE.InstancedMesh(geo, AM.animalMaterial(atmosphere, model), 1);
   m.setMatrixAt(0, new THREE.Matrix4()); m.frustumCulled = false;
   m.castShadow = m.receiveShadow = true;
