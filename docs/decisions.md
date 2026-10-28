@@ -1765,3 +1765,17 @@ shadow taps have in some programs, so the material is its own small shader. Veri
 members show at most slivers; behind a bush two deer come through as bright silhouettes speckled by the leaves. With
 the edge markers for members off the screen, every member is findable. Known: a member just over a rise shows through
 the hill too; the birds and the squirrel have no groups to show.
+
+## 2026-10-27: the Indigenous territories under a card's place name (Native Land Digital)
+
+Aaron: "under the place name in the start screen put the territory or territories from native-land.ca."
+pipeline/fetch_territories.py: five point queries to Native Land's territories API (the tile's centre and corners),
+cached and merged by slug, written to client/features.json as `territories` [{ name, slug, url }] with a source note;
+derive.client_features calls it at build, `python -m pipeline.fetch_territories <tile>` refreshes a built tile. The
+API needs a free account's key (NATIVE_LAND_KEY in the environment or .env; .env.example documents it; never printed
+or written): without one the tile has no territories and the note says so, nothing fails. config.SOURCES
+`native_land` carries their disclaimer (the map does not represent official or legal boundaries of any Indigenous
+nation) as a required attribution, so the credits show it first. The card (arrival.js, opening.css .op-terr): a third
+line under the locality and roads, in a warm pale tone, the names joined by dots, hidden when empty. Verified: the
+parser on a sample response, the no-key path on the home tile, the line's display on a card. Aaron has to sign up for
+the key (an account is not mine to make); then `python -m pipeline.fetch_territories utm10n_680_4280` fills the tiles.

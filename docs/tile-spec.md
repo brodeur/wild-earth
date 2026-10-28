@@ -112,6 +112,7 @@ tiles/<tile_id>/
   species/seasonal.json         derived   per-species counts by month (phenology proxy); counts every record, so `for_clients: false`
   perception.json               required  who perceives whom, and how far each notices each by sight, sound and scent (detects, m)
   client/res_<resource>.png     derived   each resource's four seasons as RGBA, 0..100, on the 30 m grid (resources.py; needs.js)
+  client/features.json          derived   roads, streams, waterbodies, places (OSM) and the Indigenous territories over the tile (Native Land Digital, with a key) for the client
   games.json                    derived   the species' games by season, classified, placed and scored (pipeline/games.py; docs/games.md)
   calendar.json                 required  species x season activities and resources
 ```

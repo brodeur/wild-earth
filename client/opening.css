@@ -63,6 +63,8 @@ html:not(.opening) #opening:not(.out) { display:none; }
 .op-title { display:block; font-size:max(22px, 9.6cqw); font-weight:300; line-height:1.08; letter-spacing:-.01em; color:#f3f6f1; text-shadow:0 1px 3px #000a; min-height:1.08em; }
 .op-sub { font-size:max(11.5px, 3.5cqw); line-height:1.3; color:#d3ddd5c0; letter-spacing:.01em; text-shadow:0 1px 2px #000a; }
 .op-sub:empty { display:none; }
+.op-terr { font-size:max(11px, 3.2cqw); line-height:1.3; color:#e8dcc0d0; letter-spacing:.01em; text-shadow:0 1px 2px #000a; }   /* the Indigenous territories over the tile (Native Land Digital; features.json territories) */
+.op-terr:empty { display:none; }
 
 /* the chosen card's cover while its world builds: a scrim, the spinner (the wisp, below) and the status under it; when the world is ready the spinner gives way and Begin grows into its
    place, in the card's middle. */
