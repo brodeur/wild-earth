@@ -32,10 +32,13 @@ const GAP = 10;                                   // m of gentler channel bridge
 const MIN_DROP = 8;                               // m: shorter steps are not falls
 const MIN_MEAN = 0.6;                             // mean slope lip to plunge (after bridging)
 const EXTEND = 80;                                // m of the downstream run appended to a run
+// The plume's width by season over the channel's width (a Sierra fall is a broad sheet in May's melt, a thread by
+// October): the curtain and the run-out this many times wider, the mist by its square root.
+const FLOW = { winter: 1.5, spring: 2.2, summer: 0.6, fall: 0.45 };
 
 const VERT = /* glsl */`
   attribute vec3 aSide; attribute vec4 aFall; attribute vec4 aInfo;
-  uniform vec3 classWet; uniform float pull0; uniform float pullK;
+  uniform vec3 classWet; uniform float pull0; uniform float pullK; uniform float flow;   // flow: the season's plume width (FLOW)
   varying vec3 vPosW; varying vec3 vN; varying vec4 vFall; varying vec4 vInfo; varying float vThin;
   void main() {
     int cls = int(aInfo.y + 0.5);
@@ -48,11 +51,11 @@ const VERT = /* glsl */`
     if (aFall.w > 1.5) {
       // mist: a billboard about its centre, corners in aFall.xy, radius aFall.z
       vec3 r = vec3(viewMatrix[0][0], viewMatrix[1][0], viewMatrix[2][0]), u = vec3(viewMatrix[0][1], viewMatrix[1][1], viewMatrix[2][1]);
-      p += (r * aFall.x + u * aFall.y) * aFall.z;
+      p += (r * aFall.x + u * aFall.y) * aFall.z * sqrt(flow);
     } else {
       // curtain and run-out: at least ~1.3 px wide, thinner in alpha instead, so a far fall still reads as a line
       float hw = length(aSide), k = hw > 0.0 ? max(1.0, 1.3 * pxm / hw) : 1.0;
-      p += aSide * aFall.x * k; vThin = 1.0 / k;
+      p += aSide * aFall.x * k * flow; vThin = 1.0 / k;
     }
     vPosW = p; vN = normal; vFall = aFall; vInfo = aInfo;
     vec3 toCam = cameraPosition - p; float d = length(toCam);
@@ -238,7 +241,7 @@ export class Waterfalls {
     geo.setIndex(nv > 65535 ? new THREE.Uint32BufferAttribute(idx, 1) : new THREE.Uint16BufferAttribute(idx, 1));
     this.material = new THREE.ShaderMaterial({
       vertexShader: VERT, fragmentShader: FRAG,
-      uniforms: { ...atmo, uTime: this.shared.uTime, classWet: { value: new THREE.Vector3(0, 1, 1) }, pull0: { value: 0.5 }, pullK: { value: 0.004 } },
+      uniforms: { ...atmo, uTime: this.shared.uTime, classWet: { value: new THREE.Vector3(0, 1, 1) }, flow: { value: 1 }, pull0: { value: 0.5 }, pullK: { value: 0.004 } },
       transparent: true, depthWrite: false, side: THREE.DoubleSide,
     });
     this.mesh = new THREE.Mesh(geo, this.material);
@@ -250,7 +253,11 @@ export class Waterfalls {
   }
 
   // w: a WATER_SEASONS entry (which classes run)
-  setSeason(w) { this.material?.uniforms.classWet.value.set(+w.ephemeral, +w.intermittent, +w.perennial); }
+  setSeason(w, s = null) {
+    if (!this.material) return;
+    this.material.uniforms.classWet.value.set(+w.ephemeral, +w.intermittent, +w.perennial);
+    this.material.uniforms.flow.value = FLOW[s] ?? 1;
+  }
 
   // falls within r metres of (x, north), nearest first
   near(x, north, r = 500) {

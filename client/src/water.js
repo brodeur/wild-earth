@@ -575,7 +575,7 @@ export class Water {
     for (const c of CLASSES) this.streams[c].visible = w[c];
     this.pondsSeasonal.visible = w.ponds; this.pondBeds.visible = !w.ponds;
     this.bedMaterial.uniforms.classWet.value.set(+w.ephemeral, +w.intermittent, +w.perennial);
-    this.waterfalls?.setSeason(w);
+    this.waterfalls?.setSeason(w, s);
   }
 
   // Per frame: animate the ripples and follow the season of the look (a SEASON_LOOK entry).

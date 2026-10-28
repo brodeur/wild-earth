@@ -2000,3 +2000,8 @@ have the needs widget now (needs.js takes a flier body: hunger only, no thirst, 
 yet), a hunter's hunger draining over 14 min and filling on a strike. The start screen's lineup (arrival.js) skips the
 species the pipeline marks `present: false` in species.json (the species lane's record-and-range rule), so Yosemite's
 card shows fifteen animals, without the brush rabbit, the jackrabbit and the vole.
+
+The plume by season (2026-10-28): a fall's curtain, run-out and mist are built once at the channel's width, and a
+`flow` uniform now widens them by season (waterfall.js FLOW: spring 2.2, winter 1.5, summer 0.6, fall 0.45; the mist
+by the square root), since a Sierra fall is a broad sheet in May's melt and a thread by October. Verified at
+Yosemite Falls: the upper fall is a wide white sheet on 15 May and a narrow ribbon on 20 January.
