@@ -59,6 +59,7 @@ sequenced; Parked is in the brief but deliberately not started.
 - Trees on the lidar crowns, 2026-10-26: one tree per real crown on the home tile, species by the cell's mix and the crown's height, the biggest real trees old-growth with landmark ids; start view 295 draw calls (412 before). Weak: shrub-only for the first moments after load, rare species' old crowns are scaled mature trees.
 - Ground colour by date, 2026-10-26: the base is the NAIP photo with the tree crowns replaced by ground, recoloured per 20 m by the Sentinel-2 monthly median for the day over July (class-aware 100 m blur of open ground, slope shading regressed out, per-class flat-ground brightness), forest litter under closed canopy, grass blades and the rewilded palette from the same means; fps unchanged. Weak: oak-woodland and chaparral open ground greens less than grassland (measured, reads grey-olive in April), litter is one fixed colour, the first build costs 0.6 s at load.
 
+- Yosemite, 2026-10-28: `utm11n_270_4180` (Half Dome, Yosemite Falls, the village meadows) built end to end with the DEM-only lidar fallback (no public point cloud); Half Dome recognisable from the meadow. Weak: no fall drawn, flat grey granite, foothill species on a Sierra tile, start point on Tioga Road.
 - Overnight 2026-10-24/25 (Aaron asleep, standing authorization): present-day peek (P)
   with place names; pipeline present-day texture, LANDFIRE species mix per cell, acorn
   woodpecker and scrub-jay; local-knowledge edits saved to the manifest from the viewer

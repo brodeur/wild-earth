@@ -1805,3 +1805,19 @@ created with `stencil: true` (three 0.186 defaults it off). herdSilhouette.js `m
 properties when the group's species or the player's body changes and on clear. Verified in a deer herd at 11:00: the
 visible deer show no slivers; two members behind the toyon still glow; the member in front of them does not. Known:
 a member behind another member and also behind a bush shows only where neither body covers it, which is the ask.
+
+Yosemite tile `utm11n_270_4180` (2026-10-28, Aaron's choice of a new region: "Half Dome, Yosemite Falls, the village
+meadows"): built over the night by a side session and finished here. Every step ran: the 3DEP 1 m DEM (the lidar step
+found no point cloud in the public Entwine bucket for CA_YosemiteNP_2019, so the tile is marked `lidar: dem_only`: a
+1 m terrain detail and roughness from the DEM, no canopy height model, no real crowns, no inpainted ground), NAIP
+2022, OSM (609 roads, 689 buildings), NHD hydrology routed on the DEM, LANDFIRE vegetation after three hours of
+failed exports (their image services answered errors from 03:00 to 05:08 UTC; a retry loop every 15 min caught the
+first good answer), Sentinel-2 monthly colour, Open-Meteo weather, derive (habitat, species mix, resources, games: 18
+species, 19 requests), erase, export. Loaded: Half Dome reads at once from the meadow at (3216, 864) tile metres,
+the Yosemite Falls cliff at (1228, 1986) has no fall drawn (a 739 m drop is a steep channel to the hydrology), the
+granite walls are flat grey (no outcrop texture scale for walls this size; no lidar relief), and the species are the
+foothill set (the species step draws on the same tables; the GBIF prior only weights them), which is wrong for the
+valley: no black bear, no mule deer, no Steller's-jay-dominant corvids, no coyote-only; the Sierra set is a pipeline
+ask. The start point is the tile centre on Tioga Road rather than the valley floor. The buck in a herd showed
+silhouette slivers: the stencil mask marked only the player's species slot, and the buck is its own slot; fixed
+(herdSilhouette.js marks every species slot present in the group, reconciled each frame).
