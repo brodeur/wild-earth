@@ -474,6 +474,44 @@
   "evidence": "76% of the tile in its range (0-2500 m on oak woodland, conifer forest, mixed forest, chaparral, riparian, barren) (>= 5%); 2 records within 10 km in 2011-2026 (< 3)"
  },
  {
+  "code": "ursus_americanus",
+  "common": "American black bear",
+  "scientific": "Ursus americanus",
+  "group": "mammal",
+  "role": "ambient",
+  "scale": "deer",
+  "gbif_key": 2433407,
+  "habitat": {
+   "oak_woodland": 0.6,
+   "conifer": 1.0,
+   "mixed": 1.0,
+   "chaparral": 0.8,
+   "riparian": 0.8
+  },
+  "senses": {
+   "vision": {
+    "range_m": 200,
+    "color": "dichromat"
+   },
+   "hearing": {
+    "range_m": 500
+   },
+   "smell": {
+    "range_m": 2000
+   }
+  },
+  "sources": [
+   "gbif"
+  ],
+  "confidence": "unverified",
+  "occurrence_count": 215,
+  "present": true,
+  "rule": "records",
+  "records_buffer": 515,
+  "range_share": 0.8097,
+  "evidence": "515 records within 10 km in 2011-2026 (>= 3)"
+ },
+ {
   "code": "meleagris_gallopavo",
   "common": "wild turkey",
   "scientific": "Meleagris gallopavo",

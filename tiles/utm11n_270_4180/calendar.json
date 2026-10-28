@@ -1022,6 +1022,69 @@
      "goal": "deer gather at mast"
     }
    ]
+  },
+  "ursus_americanus": {
+   "winter": [
+    {
+     "activity": "den",
+     "resources": [
+      "cover"
+     ],
+     "goal": "den under a fallen tree, in a rock cave or a hollow; out on a warm day"
+    }
+   ],
+   "spring": [
+    {
+     "activity": "forage",
+     "resources": [
+      "grass_forbs",
+      "carrion"
+     ],
+     "goal": "new grass and sedge, winter-killed carcasses"
+    },
+    {
+     "activity": "rear",
+     "resources": [
+      "cover"
+     ],
+     "goal": "sows lead cubs out of the den"
+    }
+   ],
+   "summer": [
+    {
+     "activity": "forage",
+     "resources": [
+      "browse",
+      "insects"
+     ],
+     "goal": "berries, ants and grubs under logs"
+    },
+    {
+     "activity": "court",
+     "resources": [
+      "cover"
+     ],
+     "goal": "mating in June and July"
+    },
+    {
+     "activity": "shelter",
+     "resources": [
+      "cover"
+     ],
+     "goal": "bed in shade at midday"
+    }
+   ],
+   "fall": [
+    {
+     "activity": "forage",
+     "resources": [
+      "acorn_mast",
+      "browse",
+      "carrion"
+     ],
+     "goal": "fatten for the den: acorns and berries up to 20 hours a day"
+    }
+   ]
   }
  }
 }

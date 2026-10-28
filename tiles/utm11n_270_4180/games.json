@@ -1,5 +1,5 @@
 {
- "generated": "2026-10-28T06:44:23Z",
+ "generated": "2026-10-28T07:24:04Z",
  "tile_id": "utm11n_270_4180",
  "archetypes": {
   "gather": "find the resource's hotspots, feed, keep an eye out: the predators listed hunt here; the competitors eat the same cells",
@@ -28,7 +28,8 @@
     "odocoileus_hemionus",
     "otospermophilus_beecheyi",
     "sciurus_griseus",
-    "urocyon_cinereoargenteus"
+    "urocyon_cinereoargenteus",
+    "ursus_americanus"
    ],
    "raster": "client/res_acorn_mast.png",
    "objects": [
@@ -47,7 +48,8 @@
     "callipepla_californica",
     "meleagris_gallopavo",
     "odocoileus_hemionus",
-    "otospermophilus_beecheyi"
+    "otospermophilus_beecheyi",
+    "ursus_americanus"
    ],
    "raster": "client/res_grass_forbs.png",
    "objects": [
@@ -64,7 +66,8 @@
    "resource": "browse",
    "needed_by": [
     "odocoileus_hemionus",
-    "sciurus_griseus"
+    "sciurus_griseus",
+    "ursus_americanus"
    ],
    "raster": "client/res_browse.png",
    "objects": [
@@ -89,7 +92,8 @@
     "odocoileus_hemionus",
     "puma_concolor",
     "sceloporus_occidentalis",
-    "urocyon_cinereoargenteus"
+    "urocyon_cinereoargenteus",
+    "ursus_americanus"
    ],
    "raster": "client/res_cover.png",
    "objects": [
@@ -114,7 +118,8 @@
     "meleagris_gallopavo",
     "sceloporus_occidentalis",
     "sciurus_griseus",
-    "urocyon_cinereoargenteus"
+    "urocyon_cinereoargenteus",
+    "ursus_americanus"
    ],
    "raster": "client/res_insects.png",
    "objects": [
@@ -201,7 +206,8 @@
     "otospermophilus_beecheyi",
     "puma_concolor",
     "sciurus_griseus",
-    "urocyon_cinereoargenteus"
+    "urocyon_cinereoargenteus",
+    "ursus_americanus"
    ],
    "raster": "client/res_water.png",
    "objects": [
@@ -388,6 +394,7 @@
      "aphelocoma_californica",
      "cyanocitta_stelleri",
      "canis_latrans",
+     "ursus_americanus",
      "meleagris_gallopavo",
      "sceloporus_occidentalis"
     ],
@@ -401,11 +408,13 @@
      "odocoileus_hemionus",
      "callipepla_californica",
      "aphelocoma_californica",
+     "ursus_americanus",
      "sceloporus_occidentalis"
     ],
     "winter": [
      "odocoileus_hemionus",
      "aphelocoma_californica",
+     "ursus_americanus",
      "sceloporus_occidentalis"
     ],
     "spring": [
@@ -415,6 +424,7 @@
      "aphelocoma_californica",
      "cyanocitta_stelleri",
      "puma_concolor",
+     "ursus_americanus",
      "meleagris_gallopavo"
     ],
     "fall": [
@@ -432,6 +442,7 @@
      "aphelocoma_californica",
      "cyanocitta_stelleri",
      "canis_latrans",
+     "ursus_americanus",
      "meleagris_gallopavo",
      "otospermophilus_beecheyi"
     ],
@@ -452,12 +463,17 @@
     ],
     "summer": [
      "odocoileus_hemionus",
-     "sciurus_griseus"
+     "sciurus_griseus",
+     "ursus_americanus"
+    ],
+    "fall": [
+     "ursus_americanus"
     ]
    },
    "grass_forbs": {
     "spring": [
      "odocoileus_hemionus",
+     "ursus_americanus",
      "otospermophilus_beecheyi"
     ],
     "winter": [
@@ -530,6 +546,14 @@
    [
     "canis_latrans",
     "puma_concolor"
+   ],
+   [
+    "ursus_americanus",
+    "puma_concolor"
+   ],
+   [
+    "ursus_americanus",
+    "canis_latrans"
    ]
   ],
   "alarm": [
@@ -1407,6 +1431,7 @@
       "aphelocoma_californica",
       "cyanocitta_stelleri",
       "canis_latrans",
+      "ursus_americanus",
       "meleagris_gallopavo",
       "sceloporus_occidentalis"
      ]
@@ -1495,6 +1520,7 @@
       "odocoileus_hemionus",
       "callipepla_californica",
       "aphelocoma_californica",
+      "ursus_americanus",
       "sceloporus_occidentalis"
      ]
     },
@@ -1586,6 +1612,7 @@
       "aphelocoma_californica",
       "cyanocitta_stelleri",
       "canis_latrans",
+      "ursus_americanus",
       "meleagris_gallopavo",
       "otospermophilus_beecheyi"
      ]
@@ -1679,6 +1706,7 @@
       "aphelocoma_californica",
       "cyanocitta_stelleri",
       "canis_latrans",
+      "ursus_americanus",
       "meleagris_gallopavo",
       "otospermophilus_beecheyi"
      ]
@@ -1767,6 +1795,7 @@
       "cathartes_aura",
       "canis_latrans",
       "puma_concolor",
+      "ursus_americanus",
       "meleagris_gallopavo"
      ]
     },
@@ -1931,6 +1960,7 @@
       "cathartes_aura",
       "canis_latrans",
       "puma_concolor",
+      "ursus_americanus",
       "meleagris_gallopavo"
      ]
     },
@@ -2018,6 +2048,7 @@
       "cathartes_aura",
       "canis_latrans",
       "puma_concolor",
+      "ursus_americanus",
       "meleagris_gallopavo"
      ]
     },
@@ -2182,6 +2213,7 @@
       "cathartes_aura",
       "canis_latrans",
       "puma_concolor",
+      "ursus_americanus",
       "meleagris_gallopavo"
      ]
     },
@@ -2579,6 +2611,7 @@
       "cathartes_aura",
       "canis_latrans",
       "puma_concolor",
+      "ursus_americanus",
       "meleagris_gallopavo"
      ]
     },
@@ -2743,6 +2776,7 @@
       "cathartes_aura",
       "canis_latrans",
       "puma_concolor",
+      "ursus_americanus",
       "meleagris_gallopavo"
      ]
     },
@@ -2830,6 +2864,7 @@
       "cathartes_aura",
       "canis_latrans",
       "puma_concolor",
+      "ursus_americanus",
       "meleagris_gallopavo"
      ]
     },
@@ -2994,6 +3029,7 @@
       "cathartes_aura",
       "canis_latrans",
       "puma_concolor",
+      "ursus_americanus",
       "meleagris_gallopavo"
      ]
     },
@@ -3251,6 +3287,7 @@
      "scarcity": 0.19,
      "competitors": [
       "aphelocoma_californica",
+      "ursus_americanus",
       "sceloporus_occidentalis"
      ],
      "predators": [
@@ -3338,6 +3375,7 @@
      ],
      "scarcity": 0.941,
      "competitors": [
+      "ursus_americanus",
       "otospermophilus_beecheyi"
      ],
      "predators": [
@@ -3431,6 +3469,7 @@
       "aphelocoma_californica",
       "cyanocitta_stelleri",
       "puma_concolor",
+      "ursus_americanus",
       "meleagris_gallopavo"
      ],
      "predators": [
@@ -3604,7 +3643,8 @@
      ],
      "scarcity": 0.749,
      "competitors": [
-      "sciurus_griseus"
+      "sciurus_griseus",
+      "ursus_americanus"
      ],
      "predators": [
       "canis_latrans",
@@ -3780,6 +3820,7 @@
       "corvus_corax",
       "callipepla_californica",
       "aphelocoma_californica",
+      "ursus_americanus",
       "sceloporus_occidentalis"
      ],
      "predators": [
@@ -3903,6 +3944,7 @@
       "aphelocoma_californica",
       "cyanocitta_stelleri",
       "canis_latrans",
+      "ursus_americanus",
       "meleagris_gallopavo",
       "otospermophilus_beecheyi"
      ],
@@ -3995,6 +4037,7 @@
       "cathartes_aura",
       "canis_latrans",
       "puma_concolor",
+      "ursus_americanus",
       "meleagris_gallopavo"
      ],
      "predators": [
@@ -4086,6 +4129,7 @@
       "cathartes_aura",
       "canis_latrans",
       "puma_concolor",
+      "ursus_americanus",
       "meleagris_gallopavo"
      ],
      "predators": [
@@ -4168,7 +4212,8 @@
       "callipepla_californica",
       "aphelocoma_californica",
       "cyanocitta_stelleri",
-      "puma_concolor"
+      "puma_concolor",
+      "ursus_americanus"
      ],
      "predators": [
       "canis_latrans",
@@ -4259,6 +4304,7 @@
       "cathartes_aura",
       "canis_latrans",
       "puma_concolor",
+      "ursus_americanus",
       "meleagris_gallopavo"
      ],
      "predators": [
@@ -4350,6 +4396,7 @@
       "cathartes_aura",
       "canis_latrans",
       "puma_concolor",
+      "ursus_americanus",
       "meleagris_gallopavo"
      ],
      "predators": [
@@ -4432,7 +4479,8 @@
       "callipepla_californica",
       "aphelocoma_californica",
       "cyanocitta_stelleri",
-      "puma_concolor"
+      "puma_concolor",
+      "ursus_americanus"
      ],
      "predators": [
       "canis_latrans",
@@ -4567,6 +4615,7 @@
      "competitors": [
       "odocoileus_hemionus",
       "aphelocoma_californica",
+      "ursus_americanus",
       "sceloporus_occidentalis"
      ]
     },
@@ -4749,6 +4798,7 @@
       "aphelocoma_californica",
       "cyanocitta_stelleri",
       "puma_concolor",
+      "ursus_americanus",
       "meleagris_gallopavo"
      ]
     },
@@ -4847,6 +4897,7 @@
       "aphelocoma_californica",
       "cyanocitta_stelleri",
       "canis_latrans",
+      "ursus_americanus",
       "meleagris_gallopavo",
       "sceloporus_occidentalis"
      ]
@@ -4949,6 +5000,7 @@
       "aphelocoma_californica",
       "cyanocitta_stelleri",
       "canis_latrans",
+      "ursus_americanus",
       "meleagris_gallopavo",
       "otospermophilus_beecheyi"
      ]
@@ -5046,6 +5098,7 @@
       "cathartes_aura",
       "canis_latrans",
       "puma_concolor",
+      "ursus_americanus",
       "meleagris_gallopavo"
      ]
     },
@@ -5210,6 +5263,7 @@
       "cathartes_aura",
       "canis_latrans",
       "puma_concolor",
+      "ursus_americanus",
       "meleagris_gallopavo"
      ]
     },
@@ -5297,6 +5351,7 @@
       "cathartes_aura",
       "canis_latrans",
       "puma_concolor",
+      "ursus_americanus",
       "meleagris_gallopavo"
      ]
     },
@@ -5461,6 +5516,7 @@
       "cathartes_aura",
       "canis_latrans",
       "puma_concolor",
+      "ursus_americanus",
       "meleagris_gallopavo"
      ]
     },
@@ -5987,6 +6043,7 @@
       "aphelocoma_californica",
       "cyanocitta_stelleri",
       "canis_latrans",
+      "ursus_americanus",
       "meleagris_gallopavo",
       "sceloporus_occidentalis"
      ],
@@ -6074,7 +6131,8 @@
      ],
      "scarcity": 0.749,
      "competitors": [
-      "odocoileus_hemionus"
+      "odocoileus_hemionus",
+      "ursus_americanus"
      ],
      "predators": [
       "buteo_jamaicensis"
@@ -6180,6 +6238,7 @@
       "aphelocoma_californica",
       "cyanocitta_stelleri",
       "canis_latrans",
+      "ursus_americanus",
       "meleagris_gallopavo",
       "otospermophilus_beecheyi"
      ],
@@ -6271,6 +6330,7 @@
       "cathartes_aura",
       "canis_latrans",
       "puma_concolor",
+      "ursus_americanus",
       "meleagris_gallopavo"
      ],
      "predators": [
@@ -6361,6 +6421,7 @@
       "cathartes_aura",
       "canis_latrans",
       "puma_concolor",
+      "ursus_americanus",
       "meleagris_gallopavo"
      ],
      "predators": [
@@ -6451,6 +6512,7 @@
       "cathartes_aura",
       "canis_latrans",
       "puma_concolor",
+      "ursus_americanus",
       "meleagris_gallopavo"
      ],
      "predators": [
@@ -6619,6 +6681,7 @@
       "cathartes_aura",
       "canis_latrans",
       "puma_concolor",
+      "ursus_americanus",
       "meleagris_gallopavo"
      ],
      "predators": [
@@ -7173,6 +7236,7 @@
       "aphelocoma_californica",
       "cyanocitta_stelleri",
       "canis_latrans",
+      "ursus_americanus",
       "meleagris_gallopavo",
       "sceloporus_occidentalis"
      ]
@@ -7265,6 +7329,7 @@
       "aphelocoma_californica",
       "cyanocitta_stelleri",
       "canis_latrans",
+      "ursus_americanus",
       "meleagris_gallopavo",
       "sceloporus_occidentalis"
      ]
@@ -7357,6 +7422,7 @@
       "aphelocoma_californica",
       "cyanocitta_stelleri",
       "canis_latrans",
+      "ursus_americanus",
       "meleagris_gallopavo",
       "otospermophilus_beecheyi"
      ]
@@ -7450,6 +7516,7 @@
       "aphelocoma_californica",
       "cyanocitta_stelleri",
       "canis_latrans",
+      "ursus_americanus",
       "meleagris_gallopavo",
       "otospermophilus_beecheyi"
      ]
@@ -7620,6 +7687,7 @@
       "cathartes_aura",
       "canis_latrans",
       "puma_concolor",
+      "ursus_americanus",
       "meleagris_gallopavo"
      ]
     },
@@ -7707,6 +7775,7 @@
       "cathartes_aura",
       "canis_latrans",
       "puma_concolor",
+      "ursus_americanus",
       "meleagris_gallopavo"
      ]
     },
@@ -7794,6 +7863,7 @@
       "cathartes_aura",
       "canis_latrans",
       "puma_concolor",
+      "ursus_americanus",
       "meleagris_gallopavo"
      ]
     },
@@ -7956,6 +8026,7 @@
       "cathartes_aura",
       "canis_latrans",
       "puma_concolor",
+      "ursus_americanus",
       "meleagris_gallopavo"
      ]
     },
@@ -8221,6 +8292,7 @@
       "aphelocoma_californica",
       "cyanocitta_stelleri",
       "puma_concolor",
+      "ursus_americanus",
       "meleagris_gallopavo"
      ],
      "predators": [
@@ -8315,6 +8387,7 @@
       "aphelocoma_californica",
       "cyanocitta_stelleri",
       "puma_concolor",
+      "ursus_americanus",
       "meleagris_gallopavo"
      ],
      "predators": [
@@ -8411,6 +8484,7 @@
       "aphelocoma_californica",
       "cyanocitta_stelleri",
       "canis_latrans",
+      "ursus_americanus",
       "meleagris_gallopavo",
       "sceloporus_occidentalis"
      ],
@@ -8504,6 +8578,7 @@
       "corvus_corax",
       "odocoileus_hemionus",
       "aphelocoma_californica",
+      "ursus_americanus",
       "sceloporus_occidentalis"
      ],
      "predators": [
@@ -8601,6 +8676,7 @@
       "aphelocoma_californica",
       "cyanocitta_stelleri",
       "canis_latrans",
+      "ursus_americanus",
       "meleagris_gallopavo",
       "otospermophilus_beecheyi"
      ],
@@ -8721,6 +8797,7 @@
       "cathartes_aura",
       "canis_latrans",
       "puma_concolor",
+      "ursus_americanus",
       "meleagris_gallopavo"
      ],
      "predators": [
@@ -8805,7 +8882,8 @@
       "odocoileus_hemionus",
       "aphelocoma_californica",
       "cyanocitta_stelleri",
-      "puma_concolor"
+      "puma_concolor",
+      "ursus_americanus"
      ],
      "predators": [
       "buteo_jamaicensis",
@@ -8898,6 +8976,7 @@
       "cathartes_aura",
       "canis_latrans",
       "puma_concolor",
+      "ursus_americanus",
       "meleagris_gallopavo"
      ],
      "predators": [
@@ -8991,6 +9070,7 @@
       "cathartes_aura",
       "canis_latrans",
       "puma_concolor",
+      "ursus_americanus",
       "meleagris_gallopavo"
      ],
      "predators": [
@@ -9075,7 +9155,8 @@
       "odocoileus_hemionus",
       "aphelocoma_californica",
       "cyanocitta_stelleri",
-      "puma_concolor"
+      "puma_concolor",
+      "ursus_americanus"
      ],
      "predators": [
       "buteo_jamaicensis",
@@ -9168,6 +9249,7 @@
       "cathartes_aura",
       "canis_latrans",
       "puma_concolor",
+      "ursus_americanus",
       "meleagris_gallopavo"
      ],
      "predators": [
@@ -9252,7 +9334,8 @@
       "odocoileus_hemionus",
       "aphelocoma_californica",
       "cyanocitta_stelleri",
-      "puma_concolor"
+      "puma_concolor",
+      "ursus_americanus"
      ],
      "predators": [
       "buteo_jamaicensis",
@@ -9544,6 +9627,7 @@
      "scarcity": 0.19,
      "competitors": [
       "odocoileus_hemionus",
+      "ursus_americanus",
       "sceloporus_occidentalis"
      ]
     },
@@ -9632,6 +9716,7 @@
       "callipepla_californica",
       "cyanocitta_stelleri",
       "puma_concolor",
+      "ursus_americanus",
       "meleagris_gallopavo"
      ]
     },
@@ -9721,6 +9806,7 @@
       "callipepla_californica",
       "cyanocitta_stelleri",
       "puma_concolor",
+      "ursus_americanus",
       "meleagris_gallopavo"
      ]
     },
@@ -9811,6 +9897,7 @@
       "callipepla_californica",
       "cyanocitta_stelleri",
       "canis_latrans",
+      "ursus_americanus",
       "meleagris_gallopavo",
       "sceloporus_occidentalis"
      ]
@@ -9898,6 +9985,7 @@
       "corvus_corax",
       "odocoileus_hemionus",
       "callipepla_californica",
+      "ursus_americanus",
       "sceloporus_occidentalis"
      ]
     },
@@ -9988,6 +10076,7 @@
       "callipepla_californica",
       "cyanocitta_stelleri",
       "canis_latrans",
+      "ursus_americanus",
       "meleagris_gallopavo",
       "sceloporus_occidentalis"
      ]
@@ -10080,6 +10169,7 @@
       "callipepla_californica",
       "cyanocitta_stelleri",
       "canis_latrans",
+      "ursus_americanus",
       "meleagris_gallopavo",
       "otospermophilus_beecheyi"
      ]
@@ -10173,6 +10263,7 @@
       "callipepla_californica",
       "cyanocitta_stelleri",
       "canis_latrans",
+      "ursus_americanus",
       "meleagris_gallopavo",
       "otospermophilus_beecheyi"
      ]
@@ -10261,6 +10352,7 @@
       "cathartes_aura",
       "canis_latrans",
       "puma_concolor",
+      "ursus_americanus",
       "meleagris_gallopavo"
      ]
     },
@@ -10348,6 +10440,7 @@
       "cathartes_aura",
       "canis_latrans",
       "puma_concolor",
+      "ursus_americanus",
       "meleagris_gallopavo"
      ]
     },
@@ -10435,6 +10528,7 @@
       "cathartes_aura",
       "canis_latrans",
       "puma_concolor",
+      "ursus_americanus",
       "meleagris_gallopavo"
      ]
     },
@@ -10513,7 +10607,8 @@
       "odocoileus_hemionus",
       "callipepla_californica",
       "cyanocitta_stelleri",
-      "puma_concolor"
+      "puma_concolor",
+      "ursus_americanus"
      ]
     },
     {
@@ -10600,6 +10695,7 @@
       "cathartes_aura",
       "canis_latrans",
       "puma_concolor",
+      "ursus_americanus",
       "meleagris_gallopavo"
      ]
     },
@@ -10678,7 +10774,8 @@
       "odocoileus_hemionus",
       "callipepla_californica",
       "cyanocitta_stelleri",
-      "puma_concolor"
+      "puma_concolor",
+      "ursus_americanus"
      ]
     }
    ]
@@ -10861,6 +10958,7 @@
       "callipepla_californica",
       "aphelocoma_californica",
       "puma_concolor",
+      "ursus_americanus",
       "meleagris_gallopavo"
      ]
     },
@@ -10949,6 +11047,7 @@
       "callipepla_californica",
       "aphelocoma_californica",
       "puma_concolor",
+      "ursus_americanus",
       "meleagris_gallopavo"
      ]
     },
@@ -11040,6 +11139,7 @@
       "callipepla_californica",
       "aphelocoma_californica",
       "canis_latrans",
+      "ursus_americanus",
       "meleagris_gallopavo",
       "sceloporus_occidentalis"
      ]
@@ -11132,6 +11232,7 @@
       "callipepla_californica",
       "aphelocoma_californica",
       "canis_latrans",
+      "ursus_americanus",
       "meleagris_gallopavo",
       "otospermophilus_beecheyi"
      ]
@@ -11225,6 +11326,7 @@
       "callipepla_californica",
       "aphelocoma_californica",
       "canis_latrans",
+      "ursus_americanus",
       "meleagris_gallopavo",
       "otospermophilus_beecheyi"
      ]
@@ -11313,6 +11415,7 @@
       "cathartes_aura",
       "canis_latrans",
       "puma_concolor",
+      "ursus_americanus",
       "meleagris_gallopavo"
      ]
     },
@@ -11391,7 +11494,8 @@
       "odocoileus_hemionus",
       "callipepla_californica",
       "aphelocoma_californica",
-      "puma_concolor"
+      "puma_concolor",
+      "ursus_americanus"
      ]
     },
     {
@@ -11478,6 +11582,7 @@
       "cathartes_aura",
       "canis_latrans",
       "puma_concolor",
+      "ursus_americanus",
       "meleagris_gallopavo"
      ]
     },
@@ -11565,6 +11670,7 @@
       "cathartes_aura",
       "canis_latrans",
       "puma_concolor",
+      "ursus_americanus",
       "meleagris_gallopavo"
      ]
     },
@@ -11643,7 +11749,8 @@
       "odocoileus_hemionus",
       "callipepla_californica",
       "aphelocoma_californica",
-      "puma_concolor"
+      "puma_concolor",
+      "ursus_americanus"
      ]
     },
     {
@@ -11730,6 +11837,7 @@
       "cathartes_aura",
       "canis_latrans",
       "puma_concolor",
+      "ursus_americanus",
       "meleagris_gallopavo"
      ]
     },
@@ -11808,7 +11916,8 @@
       "odocoileus_hemionus",
       "callipepla_californica",
       "aphelocoma_californica",
-      "puma_concolor"
+      "puma_concolor",
+      "ursus_americanus"
      ]
     }
    ]
@@ -12186,6 +12295,7 @@
       "cyanocitta_stelleri",
       "canis_latrans",
       "puma_concolor",
+      "ursus_americanus",
       "meleagris_gallopavo"
      ]
     },
@@ -12350,6 +12460,7 @@
       "cyanocitta_stelleri",
       "canis_latrans",
       "puma_concolor",
+      "ursus_americanus",
       "meleagris_gallopavo"
      ]
     },
@@ -12514,6 +12625,7 @@
       "cyanocitta_stelleri",
       "canis_latrans",
       "puma_concolor",
+      "ursus_americanus",
       "meleagris_gallopavo"
      ]
     },
@@ -12678,6 +12790,7 @@
       "cyanocitta_stelleri",
       "canis_latrans",
       "puma_concolor",
+      "ursus_americanus",
       "meleagris_gallopavo"
      ]
     },
@@ -12854,6 +12967,7 @@
      "competitors": [
       "odocoileus_hemionus",
       "aphelocoma_californica",
+      "ursus_americanus",
       "sceloporus_occidentalis"
      ],
      "predators": [
@@ -13059,6 +13173,7 @@
       "callipepla_californica",
       "aphelocoma_californica",
       "cyanocitta_stelleri",
+      "ursus_americanus",
       "meleagris_gallopavo",
       "sceloporus_occidentalis"
      ]
@@ -13170,6 +13285,7 @@
       "callipepla_californica",
       "aphelocoma_californica",
       "cyanocitta_stelleri",
+      "ursus_americanus",
       "meleagris_gallopavo",
       "otospermophilus_beecheyi"
      ],
@@ -13261,6 +13377,7 @@
       "cyanocitta_stelleri",
       "cathartes_aura",
       "puma_concolor",
+      "ursus_americanus",
       "meleagris_gallopavo"
      ],
      "predators": [
@@ -13431,6 +13548,7 @@
       "cyanocitta_stelleri",
       "cathartes_aura",
       "puma_concolor",
+      "ursus_americanus",
       "meleagris_gallopavo"
      ],
      "predators": [
@@ -13521,6 +13639,7 @@
       "cyanocitta_stelleri",
       "cathartes_aura",
       "puma_concolor",
+      "ursus_americanus",
       "meleagris_gallopavo"
      ],
      "predators": [
@@ -13691,6 +13810,7 @@
       "cyanocitta_stelleri",
       "cathartes_aura",
       "puma_concolor",
+      "ursus_americanus",
       "meleagris_gallopavo"
      ],
      "predators": [
@@ -13914,6 +14034,7 @@
       "callipepla_californica",
       "aphelocoma_californica",
       "cyanocitta_stelleri",
+      "ursus_americanus",
       "meleagris_gallopavo"
      ]
     },
@@ -14030,6 +14151,7 @@
       "cyanocitta_stelleri",
       "cathartes_aura",
       "canis_latrans",
+      "ursus_americanus",
       "meleagris_gallopavo"
      ]
     },
@@ -14108,7 +14230,8 @@
       "odocoileus_hemionus",
       "callipepla_californica",
       "aphelocoma_californica",
-      "cyanocitta_stelleri"
+      "cyanocitta_stelleri",
+      "ursus_americanus"
      ]
     },
     {
@@ -14195,6 +14318,7 @@
       "cyanocitta_stelleri",
       "cathartes_aura",
       "canis_latrans",
+      "ursus_americanus",
       "meleagris_gallopavo"
      ]
     },
@@ -14273,7 +14397,8 @@
       "odocoileus_hemionus",
       "callipepla_californica",
       "aphelocoma_californica",
-      "cyanocitta_stelleri"
+      "cyanocitta_stelleri",
+      "ursus_americanus"
      ]
     },
     {
@@ -14360,6 +14485,7 @@
       "cyanocitta_stelleri",
       "cathartes_aura",
       "canis_latrans",
+      "ursus_americanus",
       "meleagris_gallopavo"
      ]
     },
@@ -14438,7 +14564,8 @@
       "odocoileus_hemionus",
       "callipepla_californica",
       "aphelocoma_californica",
-      "cyanocitta_stelleri"
+      "cyanocitta_stelleri",
+      "ursus_americanus"
      ]
     },
     {
@@ -14525,6 +14652,7 @@
       "cyanocitta_stelleri",
       "cathartes_aura",
       "canis_latrans",
+      "ursus_americanus",
       "meleagris_gallopavo"
      ]
     },
@@ -14603,7 +14731,1316 @@
       "odocoileus_hemionus",
       "callipepla_californica",
       "aphelocoma_californica",
-      "cyanocitta_stelleri"
+      "cyanocitta_stelleri",
+      "ursus_americanus"
+     ]
+    }
+   ]
+  },
+  "ursus_americanus": {
+   "unit": "mother_and_young",
+   "predators": [],
+   "prey": [],
+   "games": [
+    {
+     "id": "ursus_americanus:winter:den:cover",
+     "archetype": "shelter",
+     "verb": "den",
+     "season": "winter",
+     "unit": "mother_and_young",
+     "collective": true,
+     "goal": "den under a fallen tree, in a rock cave or a hollow; out on a warm day",
+     "resource": "cover",
+     "requires": [
+      {
+       "object": "shrubs and trees to hide in",
+       "client": "shrubfield.js, vegetation.js",
+       "status": "drawn"
+      }
+     ],
+     "raster": "client/res_cover.png",
+     "hotspots": [
+      [
+       15.0,
+       9985.0,
+       76
+      ],
+      [
+       165.2,
+       9985.0,
+       76
+      ],
+      [
+       315.3,
+       9985.0,
+       76
+      ],
+      [
+       495.5,
+       9985.0,
+       76
+      ],
+      [
+       1006.0,
+       9985.0,
+       76
+      ],
+      [
+       1216.2,
+       9985.0,
+       76
+      ],
+      [
+       1426.4,
+       9985.0,
+       76
+      ],
+      [
+       1576.6,
+       9985.0,
+       76
+      ],
+      [
+       1876.9,
+       9985.0,
+       76
+      ],
+      [
+       2237.2,
+       9985.0,
+       76
+      ],
+      [
+       3168.2,
+       9985.0,
+       76
+      ],
+      [
+       3708.7,
+       9985.0,
+       76
+      ]
+     ],
+     "scarcity": 0.19,
+     "competitors": [
+      "odocoileus_hemionus",
+      "aphelocoma_californica",
+      "sceloporus_occidentalis"
+     ]
+    },
+    {
+     "id": "ursus_americanus:spring:forage:grass_forbs",
+     "archetype": "gather",
+     "verb": "forage",
+     "season": "spring",
+     "unit": "mother_and_young",
+     "collective": true,
+     "goal": "new grass and sedge, winter-killed carcasses",
+     "resource": "grass_forbs",
+     "requires": [
+      {
+       "object": "grass blades and tufts, forbs",
+       "client": "grass.js",
+       "status": "drawn"
+      }
+     ],
+     "raster": "client/res_grass_forbs.png",
+     "hotspots": [
+      [
+       7252.3,
+       9985.0,
+       90
+      ],
+      [
+       7552.6,
+       9985.0,
+       90
+      ],
+      [
+       525.5,
+       9955.0,
+       90
+      ],
+      [
+       6801.8,
+       9955.0,
+       90
+      ],
+      [
+       915.9,
+       9924.9,
+       90
+      ],
+      [
+       6141.1,
+       9924.9,
+       90
+      ],
+      [
+       8843.8,
+       9894.9,
+       90
+      ],
+      [
+       645.6,
+       9864.9,
+       90
+      ],
+      [
+       1096.1,
+       9864.9,
+       90
+      ],
+      [
+       795.8,
+       9834.8,
+       90
+      ],
+      [
+       3558.6,
+       9834.8,
+       90
+      ],
+      [
+       7282.3,
+       9804.8,
+       90
+      ]
+     ],
+     "scarcity": 0.941,
+     "competitors": [
+      "odocoileus_hemionus",
+      "otospermophilus_beecheyi"
+     ]
+    },
+    {
+     "id": "ursus_americanus:spring:rear:cover",
+     "archetype": "rear",
+     "verb": "rear",
+     "season": "spring",
+     "unit": "mother_and_young",
+     "collective": true,
+     "goal": "sows lead cubs out of the den",
+     "resource": "cover",
+     "requires": [
+      {
+       "object": "shrubs and trees to hide in",
+       "client": "shrubfield.js, vegetation.js",
+       "status": "drawn"
+      }
+     ],
+     "raster": "client/res_cover.png",
+     "hotspots": [
+      [
+       15.0,
+       9985.0,
+       90
+      ],
+      [
+       165.2,
+       9985.0,
+       90
+      ],
+      [
+       315.3,
+       9985.0,
+       90
+      ],
+      [
+       495.5,
+       9985.0,
+       90
+      ],
+      [
+       1006.0,
+       9985.0,
+       90
+      ],
+      [
+       1216.2,
+       9985.0,
+       90
+      ],
+      [
+       1426.4,
+       9985.0,
+       90
+      ],
+      [
+       1576.6,
+       9985.0,
+       90
+      ],
+      [
+       1876.9,
+       9985.0,
+       90
+      ],
+      [
+       2237.2,
+       9985.0,
+       90
+      ],
+      [
+       3168.2,
+       9985.0,
+       90
+      ],
+      [
+       3708.7,
+       9985.0,
+       90
+      ]
+     ],
+     "scarcity": 0.19,
+     "competitors": [
+      "odocoileus_hemionus",
+      "urocyon_cinereoargenteus",
+      "callipepla_californica",
+      "aphelocoma_californica",
+      "cyanocitta_stelleri",
+      "puma_concolor",
+      "meleagris_gallopavo"
+     ]
+    },
+    {
+     "id": "ursus_americanus:summer:forage:browse",
+     "archetype": "gather",
+     "verb": "forage",
+     "season": "summer",
+     "unit": "mother_and_young",
+     "collective": true,
+     "goal": "berries, ants and grubs under logs",
+     "resource": "browse",
+     "requires": [
+      {
+       "object": "shrub and low tree foliage within reach",
+       "client": "shrubfield.js, vegetation.js",
+       "status": "drawn"
+      }
+     ],
+     "raster": "client/res_browse.png",
+     "hotspots": [
+      [
+       15.0,
+       9985.0,
+       56
+      ],
+      [
+       165.2,
+       9985.0,
+       56
+      ],
+      [
+       315.3,
+       9985.0,
+       56
+      ],
+      [
+       495.5,
+       9985.0,
+       56
+      ],
+      [
+       1006.0,
+       9985.0,
+       56
+      ],
+      [
+       1216.2,
+       9985.0,
+       56
+      ],
+      [
+       1426.4,
+       9985.0,
+       56
+      ],
+      [
+       1576.6,
+       9985.0,
+       56
+      ],
+      [
+       1876.9,
+       9985.0,
+       56
+      ],
+      [
+       2237.2,
+       9985.0,
+       56
+      ],
+      [
+       3168.2,
+       9985.0,
+       56
+      ],
+      [
+       3708.7,
+       9985.0,
+       56
+      ]
+     ],
+     "scarcity": 0.749,
+     "competitors": [
+      "odocoileus_hemionus",
+      "sciurus_griseus"
+     ]
+    },
+    {
+     "id": "ursus_americanus:summer:forage:insects",
+     "archetype": "gather",
+     "verb": "forage",
+     "season": "summer",
+     "unit": "mother_and_young",
+     "collective": true,
+     "goal": "berries, ants and grubs under logs",
+     "resource": "insects",
+     "requires": [
+      {
+       "object": "insects",
+       "client": null,
+       "status": "missing"
+      }
+     ],
+     "raster": "client/res_insects.png",
+     "hotspots": [
+      [
+       1726.7,
+       9985.0,
+       72
+      ],
+      [
+       4459.5,
+       9985.0,
+       72
+      ],
+      [
+       4819.8,
+       9985.0,
+       72
+      ],
+      [
+       1366.4,
+       9924.9,
+       72
+      ],
+      [
+       8873.9,
+       9924.9,
+       72
+      ],
+      [
+       9924.9,
+       9894.9,
+       72
+      ],
+      [
+       4399.4,
+       9834.8,
+       72
+      ],
+      [
+       4759.8,
+       9834.8,
+       72
+      ],
+      [
+       1456.5,
+       9804.8,
+       72
+      ],
+      [
+       1606.6,
+       9804.8,
+       72
+      ],
+      [
+       6681.7,
+       9804.8,
+       72
+      ],
+      [
+       9774.8,
+       9804.8,
+       72
+      ]
+     ],
+     "scarcity": 0.917,
+     "competitors": [
+      "corvus_corax",
+      "urocyon_cinereoargenteus",
+      "sciurus_griseus",
+      "melanerpes_formicivorus",
+      "callipepla_californica",
+      "aphelocoma_californica",
+      "cyanocitta_stelleri",
+      "canis_latrans",
+      "meleagris_gallopavo",
+      "sceloporus_occidentalis"
+     ]
+    },
+    {
+     "id": "ursus_americanus:summer:court:cover",
+     "archetype": "court",
+     "verb": "court",
+     "season": "summer",
+     "unit": "mother_and_young",
+     "collective": true,
+     "goal": "mating in June and July",
+     "resource": "cover",
+     "requires": [
+      {
+       "object": "shrubs and trees to hide in",
+       "client": "shrubfield.js, vegetation.js",
+       "status": "drawn"
+      }
+     ],
+     "raster": "client/res_cover.png",
+     "hotspots": [
+      [
+       15.0,
+       9985.0,
+       90
+      ],
+      [
+       165.2,
+       9985.0,
+       90
+      ],
+      [
+       315.3,
+       9985.0,
+       90
+      ],
+      [
+       495.5,
+       9985.0,
+       90
+      ],
+      [
+       1006.0,
+       9985.0,
+       90
+      ],
+      [
+       1216.2,
+       9985.0,
+       90
+      ],
+      [
+       1426.4,
+       9985.0,
+       90
+      ],
+      [
+       1576.6,
+       9985.0,
+       90
+      ],
+      [
+       1876.9,
+       9985.0,
+       90
+      ],
+      [
+       2237.2,
+       9985.0,
+       90
+      ],
+      [
+       3168.2,
+       9985.0,
+       90
+      ],
+      [
+       3708.7,
+       9985.0,
+       90
+      ]
+     ],
+     "scarcity": 0.19,
+     "competitors": [
+      "corvus_corax",
+      "odocoileus_hemionus",
+      "callipepla_californica",
+      "aphelocoma_californica",
+      "sceloporus_occidentalis"
+     ]
+    },
+    {
+     "id": "ursus_americanus:summer:shelter:cover",
+     "archetype": "shelter",
+     "verb": "shelter",
+     "season": "summer",
+     "unit": "mother_and_young",
+     "collective": true,
+     "goal": "bed in shade at midday",
+     "resource": "cover",
+     "requires": [
+      {
+       "object": "shrubs and trees to hide in",
+       "client": "shrubfield.js, vegetation.js",
+       "status": "drawn"
+      }
+     ],
+     "raster": "client/res_cover.png",
+     "hotspots": [
+      [
+       15.0,
+       9985.0,
+       90
+      ],
+      [
+       165.2,
+       9985.0,
+       90
+      ],
+      [
+       315.3,
+       9985.0,
+       90
+      ],
+      [
+       495.5,
+       9985.0,
+       90
+      ],
+      [
+       1006.0,
+       9985.0,
+       90
+      ],
+      [
+       1216.2,
+       9985.0,
+       90
+      ],
+      [
+       1426.4,
+       9985.0,
+       90
+      ],
+      [
+       1576.6,
+       9985.0,
+       90
+      ],
+      [
+       1876.9,
+       9985.0,
+       90
+      ],
+      [
+       2237.2,
+       9985.0,
+       90
+      ],
+      [
+       3168.2,
+       9985.0,
+       90
+      ],
+      [
+       3708.7,
+       9985.0,
+       90
+      ]
+     ],
+     "scarcity": 0.19,
+     "competitors": [
+      "corvus_corax",
+      "odocoileus_hemionus",
+      "callipepla_californica",
+      "aphelocoma_californica",
+      "sceloporus_occidentalis"
+     ]
+    },
+    {
+     "id": "ursus_americanus:fall:forage:acorn_mast",
+     "archetype": "gather",
+     "verb": "forage",
+     "season": "fall",
+     "unit": "mother_and_young",
+     "collective": true,
+     "goal": "fatten for the den: acorns and berries up to 20 hours a day",
+     "resource": "acorn_mast",
+     "requires": [
+      {
+       "object": "acorns under and in the oaks",
+       "client": "acorns.js",
+       "status": "drawn"
+      }
+     ],
+     "raster": "client/res_acorn_mast.png",
+     "hotspots": [
+      [
+       585.6,
+       6711.7,
+       90
+      ],
+      [
+       6411.4,
+       6441.4,
+       90
+      ],
+      [
+       915.9,
+       5810.8,
+       90
+      ],
+      [
+       1606.6,
+       5090.1,
+       90
+      ],
+      [
+       9955.0,
+       5090.1,
+       90
+      ],
+      [
+       9684.7,
+       5060.1,
+       90
+      ],
+      [
+       9864.9,
+       4970.0,
+       90
+      ],
+      [
+       9504.5,
+       4849.8,
+       90
+      ],
+      [
+       9774.8,
+       4849.8,
+       90
+      ],
+      [
+       9564.6,
+       4699.7,
+       90
+      ],
+      [
+       9744.7,
+       4699.7,
+       90
+      ],
+      [
+       9564.6,
+       4549.5,
+       90
+      ]
+     ],
+     "scarcity": 0.969,
+     "competitors": [
+      "corvus_corax",
+      "odocoileus_hemionus",
+      "urocyon_cinereoargenteus",
+      "sciurus_griseus",
+      "melanerpes_formicivorus",
+      "callipepla_californica",
+      "aphelocoma_californica",
+      "cyanocitta_stelleri",
+      "canis_latrans",
+      "meleagris_gallopavo",
+      "otospermophilus_beecheyi"
+     ]
+    },
+    {
+     "id": "ursus_americanus:fall:forage:browse",
+     "archetype": "gather",
+     "verb": "forage",
+     "season": "fall",
+     "unit": "mother_and_young",
+     "collective": true,
+     "goal": "fatten for the den: acorns and berries up to 20 hours a day",
+     "resource": "browse",
+     "requires": [
+      {
+       "object": "shrub and low tree foliage within reach",
+       "client": "shrubfield.js, vegetation.js",
+       "status": "drawn"
+      }
+     ],
+     "raster": "client/res_browse.png",
+     "hotspots": [
+      [
+       15.0,
+       9985.0,
+       40
+      ],
+      [
+       165.2,
+       9985.0,
+       40
+      ],
+      [
+       315.3,
+       9985.0,
+       40
+      ],
+      [
+       495.5,
+       9985.0,
+       40
+      ],
+      [
+       1006.0,
+       9985.0,
+       40
+      ],
+      [
+       1216.2,
+       9985.0,
+       40
+      ],
+      [
+       1426.4,
+       9985.0,
+       40
+      ],
+      [
+       1576.6,
+       9985.0,
+       40
+      ],
+      [
+       1876.9,
+       9985.0,
+       40
+      ],
+      [
+       2237.2,
+       9985.0,
+       40
+      ],
+      [
+       3168.2,
+       9985.0,
+       40
+      ],
+      [
+       3708.7,
+       9985.0,
+       40
+      ]
+     ],
+     "scarcity": 1.0,
+     "competitors": []
+    },
+    {
+     "id": "ursus_americanus:winter:drink",
+     "archetype": "drink",
+     "verb": "drink",
+     "season": "winter",
+     "unit": "mother_and_young",
+     "collective": true,
+     "resource": "water",
+     "rhythm": "daily",
+     "hotspots": [
+      [
+       1306.3,
+       9985.0,
+       100
+      ],
+      [
+       1726.7,
+       9985.0,
+       100
+      ],
+      [
+       4459.5,
+       9985.0,
+       100
+      ],
+      [
+       4819.8,
+       9985.0,
+       100
+      ],
+      [
+       7402.4,
+       9985.0,
+       100
+      ],
+      [
+       8903.9,
+       9985.0,
+       100
+      ],
+      [
+       6651.7,
+       9894.9,
+       100
+      ],
+      [
+       1396.4,
+       9864.9,
+       100
+      ],
+      [
+       1636.6,
+       9864.9,
+       100
+      ],
+      [
+       9985.0,
+       9864.9,
+       100
+      ],
+      [
+       4369.4,
+       9834.8,
+       100
+      ],
+      [
+       4759.8,
+       9834.8,
+       100
+      ]
+     ],
+     "scarcity": 0.799,
+     "competitors": [
+      "corvus_corax",
+      "buteo_jamaicensis",
+      "odocoileus_hemionus",
+      "urocyon_cinereoargenteus",
+      "sciurus_griseus",
+      "melanerpes_formicivorus",
+      "callipepla_californica",
+      "aphelocoma_californica",
+      "cyanocitta_stelleri",
+      "cathartes_aura",
+      "canis_latrans",
+      "puma_concolor",
+      "meleagris_gallopavo"
+     ]
+    },
+    {
+     "id": "ursus_americanus:spring:drink",
+     "archetype": "drink",
+     "verb": "drink",
+     "season": "spring",
+     "unit": "mother_and_young",
+     "collective": true,
+     "resource": "water",
+     "rhythm": "daily",
+     "hotspots": [
+      [
+       1306.3,
+       9985.0,
+       100
+      ],
+      [
+       1726.7,
+       9985.0,
+       100
+      ],
+      [
+       4459.5,
+       9985.0,
+       100
+      ],
+      [
+       4819.8,
+       9985.0,
+       100
+      ],
+      [
+       7402.4,
+       9985.0,
+       100
+      ],
+      [
+       8903.9,
+       9985.0,
+       100
+      ],
+      [
+       6651.7,
+       9894.9,
+       100
+      ],
+      [
+       1396.4,
+       9864.9,
+       100
+      ],
+      [
+       1636.6,
+       9864.9,
+       100
+      ],
+      [
+       9985.0,
+       9864.9,
+       100
+      ],
+      [
+       4369.4,
+       9834.8,
+       100
+      ],
+      [
+       4759.8,
+       9834.8,
+       100
+      ]
+     ],
+     "scarcity": 0.799,
+     "competitors": [
+      "corvus_corax",
+      "buteo_jamaicensis",
+      "odocoileus_hemionus",
+      "urocyon_cinereoargenteus",
+      "sciurus_griseus",
+      "melanerpes_formicivorus",
+      "callipepla_californica",
+      "aphelocoma_californica",
+      "cyanocitta_stelleri",
+      "cathartes_aura",
+      "canis_latrans",
+      "puma_concolor",
+      "meleagris_gallopavo"
+     ]
+    },
+    {
+     "id": "ursus_americanus:spring:shelter:cover",
+     "archetype": "shelter",
+     "verb": "shelter",
+     "season": "spring",
+     "unit": "mother_and_young",
+     "collective": true,
+     "resource": "cover",
+     "hotspots": [
+      [
+       15.0,
+       9985.0,
+       90
+      ],
+      [
+       165.2,
+       9985.0,
+       90
+      ],
+      [
+       315.3,
+       9985.0,
+       90
+      ],
+      [
+       495.5,
+       9985.0,
+       90
+      ],
+      [
+       1006.0,
+       9985.0,
+       90
+      ],
+      [
+       1216.2,
+       9985.0,
+       90
+      ],
+      [
+       1426.4,
+       9985.0,
+       90
+      ],
+      [
+       1576.6,
+       9985.0,
+       90
+      ],
+      [
+       1876.9,
+       9985.0,
+       90
+      ],
+      [
+       2237.2,
+       9985.0,
+       90
+      ],
+      [
+       3168.2,
+       9985.0,
+       90
+      ],
+      [
+       3708.7,
+       9985.0,
+       90
+      ]
+     ],
+     "scarcity": 0.19,
+     "competitors": [
+      "odocoileus_hemionus",
+      "callipepla_californica",
+      "aphelocoma_californica",
+      "cyanocitta_stelleri",
+      "puma_concolor"
+     ]
+    },
+    {
+     "id": "ursus_americanus:summer:drink",
+     "archetype": "drink",
+     "verb": "drink",
+     "season": "summer",
+     "unit": "mother_and_young",
+     "collective": true,
+     "resource": "water",
+     "rhythm": "daily",
+     "hotspots": [
+      [
+       1726.7,
+       9985.0,
+       100
+      ],
+      [
+       4459.5,
+       9985.0,
+       100
+      ],
+      [
+       8903.9,
+       9985.0,
+       100
+      ],
+      [
+       1636.6,
+       9864.9,
+       100
+      ],
+      [
+       9985.0,
+       9864.9,
+       100
+      ],
+      [
+       4369.4,
+       9834.8,
+       100
+      ],
+      [
+       8843.8,
+       9834.8,
+       100
+      ],
+      [
+       1606.6,
+       9714.7,
+       100
+      ],
+      [
+       9955.0,
+       9714.7,
+       100
+      ],
+      [
+       4339.3,
+       9684.7,
+       100
+      ],
+      [
+       8753.8,
+       9684.7,
+       100
+      ],
+      [
+       1546.5,
+       9564.6,
+       100
+      ]
+     ],
+     "scarcity": 0.885,
+     "competitors": [
+      "corvus_corax",
+      "buteo_jamaicensis",
+      "odocoileus_hemionus",
+      "urocyon_cinereoargenteus",
+      "sciurus_griseus",
+      "melanerpes_formicivorus",
+      "callipepla_californica",
+      "aphelocoma_californica",
+      "cyanocitta_stelleri",
+      "cathartes_aura",
+      "canis_latrans",
+      "puma_concolor",
+      "meleagris_gallopavo"
+     ]
+    },
+    {
+     "id": "ursus_americanus:fall:drink",
+     "archetype": "drink",
+     "verb": "drink",
+     "season": "fall",
+     "unit": "mother_and_young",
+     "collective": true,
+     "resource": "water",
+     "rhythm": "daily",
+     "hotspots": [
+      [
+       1726.7,
+       9985.0,
+       100
+      ],
+      [
+       4459.5,
+       9985.0,
+       100
+      ],
+      [
+       8903.9,
+       9985.0,
+       100
+      ],
+      [
+       1636.6,
+       9864.9,
+       100
+      ],
+      [
+       9985.0,
+       9864.9,
+       100
+      ],
+      [
+       4369.4,
+       9834.8,
+       100
+      ],
+      [
+       8843.8,
+       9834.8,
+       100
+      ],
+      [
+       1606.6,
+       9714.7,
+       100
+      ],
+      [
+       9955.0,
+       9714.7,
+       100
+      ],
+      [
+       4339.3,
+       9684.7,
+       100
+      ],
+      [
+       8753.8,
+       9684.7,
+       100
+      ],
+      [
+       1546.5,
+       9564.6,
+       100
+      ]
+     ],
+     "scarcity": 0.885,
+     "competitors": [
+      "corvus_corax",
+      "buteo_jamaicensis",
+      "odocoileus_hemionus",
+      "urocyon_cinereoargenteus",
+      "sciurus_griseus",
+      "melanerpes_formicivorus",
+      "callipepla_californica",
+      "aphelocoma_californica",
+      "cyanocitta_stelleri",
+      "cathartes_aura",
+      "canis_latrans",
+      "puma_concolor",
+      "meleagris_gallopavo"
+     ]
+    },
+    {
+     "id": "ursus_americanus:fall:shelter:cover",
+     "archetype": "shelter",
+     "verb": "shelter",
+     "season": "fall",
+     "unit": "mother_and_young",
+     "collective": true,
+     "resource": "cover",
+     "hotspots": [
+      [
+       15.0,
+       9985.0,
+       90
+      ],
+      [
+       165.2,
+       9985.0,
+       90
+      ],
+      [
+       315.3,
+       9985.0,
+       90
+      ],
+      [
+       495.5,
+       9985.0,
+       90
+      ],
+      [
+       1006.0,
+       9985.0,
+       90
+      ],
+      [
+       1216.2,
+       9985.0,
+       90
+      ],
+      [
+       1426.4,
+       9985.0,
+       90
+      ],
+      [
+       1576.6,
+       9985.0,
+       90
+      ],
+      [
+       1876.9,
+       9985.0,
+       90
+      ],
+      [
+       2237.2,
+       9985.0,
+       90
+      ],
+      [
+       3168.2,
+       9985.0,
+       90
+      ],
+      [
+       3708.7,
+       9985.0,
+       90
+      ]
+     ],
+     "scarcity": 0.19,
+     "competitors": [
+      "odocoileus_hemionus",
+      "callipepla_californica",
+      "aphelocoma_californica",
+      "cyanocitta_stelleri",
+      "puma_concolor"
      ]
     }
    ]
@@ -14965,6 +16402,7 @@
      "scarcity": 0.941,
      "competitors": [
       "odocoileus_hemionus",
+      "ursus_americanus",
       "otospermophilus_beecheyi"
      ],
      "predators": [
@@ -15058,7 +16496,8 @@
       "callipepla_californica",
       "aphelocoma_californica",
       "cyanocitta_stelleri",
-      "puma_concolor"
+      "puma_concolor",
+      "ursus_americanus"
      ],
      "predators": [
       "canis_latrans",
@@ -15154,6 +16593,7 @@
       "aphelocoma_californica",
       "cyanocitta_stelleri",
       "canis_latrans",
+      "ursus_americanus",
       "sceloporus_occidentalis"
      ],
      "predators": [
@@ -15276,6 +16716,7 @@
       "aphelocoma_californica",
       "cyanocitta_stelleri",
       "canis_latrans",
+      "ursus_americanus",
       "sceloporus_occidentalis"
      ],
      "predators": [
@@ -15373,6 +16814,7 @@
       "aphelocoma_californica",
       "cyanocitta_stelleri",
       "canis_latrans",
+      "ursus_americanus",
       "otospermophilus_beecheyi"
      ],
      "predators": [
@@ -15464,7 +16906,8 @@
       "cyanocitta_stelleri",
       "cathartes_aura",
       "canis_latrans",
-      "puma_concolor"
+      "puma_concolor",
+      "ursus_americanus"
      ],
      "predators": [
       "canis_latrans",
@@ -15555,7 +16998,8 @@
       "cyanocitta_stelleri",
       "cathartes_aura",
       "canis_latrans",
-      "puma_concolor"
+      "puma_concolor",
+      "ursus_americanus"
      ],
      "predators": [
       "canis_latrans",
@@ -15646,7 +17090,8 @@
       "cyanocitta_stelleri",
       "cathartes_aura",
       "canis_latrans",
-      "puma_concolor"
+      "puma_concolor",
+      "ursus_americanus"
      ],
      "predators": [
       "canis_latrans",
@@ -15818,7 +17263,8 @@
       "cyanocitta_stelleri",
       "cathartes_aura",
       "canis_latrans",
-      "puma_concolor"
+      "puma_concolor",
+      "ursus_americanus"
      ],
      "predators": [
       "canis_latrans",
@@ -16312,7 +17758,8 @@
      ],
      "scarcity": 0.941,
      "competitors": [
-      "odocoileus_hemionus"
+      "odocoileus_hemionus",
+      "ursus_americanus"
      ],
      "predators": [
       "buteo_jamaicensis",
@@ -16555,6 +18002,7 @@
       "aphelocoma_californica",
       "cyanocitta_stelleri",
       "canis_latrans",
+      "ursus_americanus",
       "meleagris_gallopavo"
      ],
      "predators": [
@@ -16736,6 +18184,7 @@
       "cathartes_aura",
       "canis_latrans",
       "puma_concolor",
+      "ursus_americanus",
       "meleagris_gallopavo"
      ],
      "predators": [
@@ -16830,6 +18279,7 @@
       "cathartes_aura",
       "canis_latrans",
       "puma_concolor",
+      "ursus_americanus",
       "meleagris_gallopavo"
      ],
      "predators": [
@@ -17007,6 +18457,7 @@
       "cathartes_aura",
       "canis_latrans",
       "puma_concolor",
+      "ursus_americanus",
       "meleagris_gallopavo"
      ],
      "predators": [
@@ -17101,6 +18552,7 @@
       "cathartes_aura",
       "canis_latrans",
       "puma_concolor",
+      "ursus_americanus",
       "meleagris_gallopavo"
      ],
      "predators": [
@@ -17298,7 +18750,8 @@
      "scarcity": 0.19,
      "competitors": [
       "odocoileus_hemionus",
-      "aphelocoma_californica"
+      "aphelocoma_californica",
+      "ursus_americanus"
      ],
      "predators": [
       "aphelocoma_californica",
@@ -17571,7 +19024,8 @@
       "corvus_corax",
       "odocoileus_hemionus",
       "callipepla_californica",
-      "aphelocoma_californica"
+      "aphelocoma_californica",
+      "ursus_americanus"
      ],
      "predators": [
       "aphelocoma_californica",
@@ -17668,6 +19122,7 @@
       "aphelocoma_californica",
       "cyanocitta_stelleri",
       "canis_latrans",
+      "ursus_americanus",
       "meleagris_gallopavo"
      ],
      "predators": [
@@ -17761,7 +19216,8 @@
       "corvus_corax",
       "odocoileus_hemionus",
       "callipepla_californica",
-      "aphelocoma_californica"
+      "aphelocoma_californica",
+      "ursus_americanus"
      ],
      "predators": [
       "aphelocoma_californica",
