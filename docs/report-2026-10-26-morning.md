@@ -227,3 +227,4 @@ no kill sound yet unless its row is below; the Sierra species beyond the bear (m
 | 973aa75 | A hunter's stalk: creeping, you are noticed at half the distance, frozen at 0.4, running at 1.3; the fliers have a hunger meter the strike fills; the start screen shows only the species present on a tile. |
 | a5873a9 | The falls' plume follows the season's flow: a broad sheet in May, a thread in October. |
 | ba5b4db | The species follow the place: each tile keeps a species on GBIF records within 10 km or on its elevation band and habitats; Yosemite drops the brush rabbit, jackrabbit and vole, the foothill tiles keep all 18. |
+| d82ea44 | A kill is heard: the prey's last cry (a deer's bawl, a rabbit's scream, a vole's squeak), the struggle, and the lion's growl, the canid's snarl or the hawk's wing-slap. |
