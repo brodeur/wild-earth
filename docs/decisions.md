@@ -1717,3 +1717,9 @@ Aaron: "I like the fade in on the animals, but it is a very saturated teal: comp
 happen faster." The lines are white to light grey (#ffffff to #c9ccd0), the silhouette #e4e6e8; the arrival takes 1.3 s
 (2.3 before), a line lives 0.8-1.6 s with a delay under 0.3 s, the beam-out 0.9 s (1.4) and the new tile's animals
 start 0.6 s after it (1.0). Verified on a change from the home card to Placerville.
+
+## 2026-10-27: the bar's count pills in each species' colour
+
+Aaron: "each pill should be a light version of the colour of that animal's rarity; the pill for quail should be a white
+tinted with that same purple." index.html .nb-n: the background is the slot's soul colour (nearBar.js --soul, the
+rarity hue) mixed 42% into white, at .8, dark text; verified from the vole's lilac to the raven's pale green.

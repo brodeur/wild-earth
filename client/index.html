@@ -43,7 +43,7 @@
   .nb-disc { position:absolute; left:4px; right:4px; bottom:1px; height:14px; border-radius:50%; opacity:.85;   /* the soul's glow under the feet: the species' rarity colour (nearBar.js --soul) */
     background:radial-gradient(closest-side, color-mix(in srgb, var(--soul, #fff) 70%, #fff) 0%, var(--soul, #fff) 35%, transparent 100%); }
   .nb-img { position:relative; display:block; width:auto; height:auto; max-height:40px; max-width:54px; object-fit:contain; margin-bottom:6px; filter:drop-shadow(0 1px 1px #0008); }
-  .nb-n { position:absolute; left:3px; bottom:0; min-width:8px; padding:0 5px; border-radius:9px; background:#c98a4ecc; color:#141a16; font-size:11px; font-weight:600; line-height:16px; text-align:center; font-variant-numeric:tabular-nums; }   /* the count: bottom left of the slot, the highlight colour at .8 */
+  .nb-n { position:absolute; left:3px; bottom:0; min-width:8px; padding:0 5px; border-radius:9px; background:color-mix(in srgb, color-mix(in srgb, var(--soul, #c98a4e) 42%, #fff) 80%, transparent); color:#141a16; font-size:11px; font-weight:600; line-height:16px; text-align:center; font-variant-numeric:tabular-nums; }   /* the count: bottom left of the slot, a white tinted with the species' soul colour (nearBar.js --soul), at .8 */
   #help kbd { background:#1f2a23; border:1px solid #263128; border-radius:4px; padding:0 5px; color:#e6ede7; font:inherit; }
   #status { position:fixed; left:50%; top:45%; transform:translate(-50%,-50%); background:#0f1512dd; padding:14px 18px; border-radius:10px; font-size:14px; }
   #status.hidden { display:none; }
