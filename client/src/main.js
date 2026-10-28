@@ -499,7 +499,7 @@ async function buildSteps(w, { params, pending, direct = false, arrive = null })
   // Every other animal (2026-10-26): the walkers (groundControl.js: deer, fox, coyote, lion, rabbits, vole, ground
   // squirrel, lizard, turkey, quail) and the fliers (flierControl.js: hawk, vulture, the jays, on RavenFlight).
   const ground = new GroundControl({ tile, scene, camera, flight, veg, animals, atmosphere, squirrel });
-  const flier = new FlierControl({ scene, camera, flight, raven, animals, atmosphere });
+  const flier = new FlierControl({ scene, camera, flight, raven, animals, atmosphere, say: t => ground.say(t) });   // the toast for a strike
   // The spirit (spirit.js): the form the player arrives in; touching an animal puts the player in that body (onBody:
   // the observer, the perception line, the panel's way back), B or the panel button leaves it.
   const nearBar = w.m.nearBar = new NearBar({ el: $('nearBar'), animals });   // the species within reach, in spirit form (nearBar.js)

@@ -41,9 +41,10 @@ export const FLIERS = {
 };
 
 export class FlierControl {
-  constructor({ scene, camera, flight, raven, animals, atmosphere }) {
+  constructor({ scene, camera, flight, raven, animals, atmosphere, say = null }) {
     Object.assign(this, { scene, camera, flight, raven, animals, atmosphere });
     this.on = false; this.code = null; this.S = null; this.body = null; this.size = 1;
+    this.say = say;   // the ground control's toast (main.js)
     this.pose = { phase: 0, amp: 0, pose: 0, flick: 0, e0: 0, e1: 0 };
     this.meshes = new Map();
     this._m = new THREE.Matrix4(); this._q = new THREE.Quaternion(); this._qy = new THREE.Quaternion().setFromAxisAngle(new THREE.Vector3(0, 1, 0), Math.PI);
@@ -140,6 +141,10 @@ export class FlierControl {
   // The frame (main.js, in place of flight.update): the flight with the species' numbers, then the bird drawn.
   update(dt) {
     const r = this.flight.update(dt);
+    if (this.on && this.animals?.catchNear && (this.catchT = (this.catchT || 0) - dt) <= 0) {   // a hunter's strike: prey within reach in flight (animals.js CARRION)
+      this.catchT = 0.1; const P = this.flight.pos;
+      const c = this.animals.catchNear(P.x, P.y, P.z); if (c) this.say?.(`took a ${this.animals.speciesList()[c.sp]?.one || 'prey'}`);   // in flight or on the ground beside it
+    }
     this.draw(dt);
     return r;
   }

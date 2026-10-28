@@ -1986,3 +1986,8 @@ carcass. Verified: as a lion, E at 1.6 m killed a deer, the caption read, hunger
 grass; within 30 s three vultures circled 31 m over it and ravens came in (one landed and left). Not seen in a test:
 an AI lion's or canid's own kill (the chance paths are the rush's and the pounce's). Open: no 'kill' sound; no blood
 or feeding pose; the lion's own feeding is a stand; a death the player's herd sees has no reaction beyond the flee.
+
+The fliers' strike (2026-10-28): a player hawk or raven passing within reach (1.4 m, 0.9 m) of prey its species hunts
+takes it, in flight or standing beside it (flierControl.js, every 0.1 s through animals.js catchNear; the toast says
+"took a jackrabbit"). No key: the stoop that connects is the strike. Verified: a hawk reset 1.2 m over a jackrabbit
+took it at once. The fliers have no hunger meter yet (needs.js is the walkers'), so the strike is its own reward.
