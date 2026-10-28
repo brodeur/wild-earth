@@ -246,6 +246,26 @@ const FRAG = /* glsl */`
       vec3 nd = normalize(mix(dToWorld(axA, t1, nGeo), dToWorld(axB, t2, nGeo), mB));
       nL = normalize(mix(nGeo, nd, fade));
     }
+    // Cliffs at any distance (2026-10-28, Yosemite's walls): past ~35 degrees the photo is a smooth grey, so the face
+    // gets ledges (bands by height, 7 m and 2.6 m, wandering along the face) and streaks (water stains running down),
+    // as a tone on the colour and a tilt of the lighting normal about the horizontal, so ledge tops catch the sun and
+    // their undersides shade. Backs off where the near detail's rock takes over.
+    {
+      vec4 mkC = textureLod(detailMask, vUv, 0.0);
+      float slopeC = max(mkC.r * 90.0, geoSlope * degrees(acos(clamp(nGeo.y, 0.0, 1.0))));
+      float cliff = smoothstep(33.0, 45.0, slopeC) * (1.0 - 0.7 * fade);
+      if (cliff > 0.0) {
+        vec2 along = normalize(vec2(nGeo.z, -nGeo.x) + vec2(1e-4, 0.0));
+        float fx = dot(vPosW.xz, along);                                          // metres along the face
+        float y0 = vPosW.y + (rnoise(vec2(fx, vPosW.y), 0.3, 38.0) - 0.5) * 9.0;  // the bands wander by +-4.5 m along the face
+        float l1 = rnoise(vec2(y0, 0.0), 0.0, 7.0), l2 = rnoise(vec2(y0 + 3.1, 0.0), 0.0, 2.6);
+        float l1u = rnoise(vec2(y0 + 0.5, 0.0), 0.0, 7.0), l2u = rnoise(vec2(y0 + 3.6, 0.0), 0.0, 2.6);
+        float ledge = 0.65 * l1 + 0.35 * l2, dLedge = (0.65 * l1u + 0.35 * l2u) - ledge;   // the relief's rise per half metre up
+        float streak = rnoise(vec2(fx, vPosW.y * 0.08), 0.0, 1.4);                 // stains: ~1.4 m across, ~17 m long
+        c *= 1.0 + cliff * (0.28 * (ledge - 0.5) - 0.18 * (streak - 0.5));
+        nL = normalize(nL - vec3(0.0, 4.0 * cliff * dLedge, 0.0));                 // relief out along the normal: rising relief faces down
+      }
+    }
     // Same light as the lambert trees: sun (under cloud and cast shadow) plus hemisphere sky, over pi.
     // The terrain casts with its back faces (shadows.js), so a sunlit slope never shadows itself
     // and the normal offset here only has to clear the tree casters' depth. Cast shadows use the
