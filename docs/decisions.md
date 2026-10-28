@@ -1513,3 +1513,17 @@ is the smoothed aim's as before (the three-quarter view on the inside of a turn)
 a vole: both centres at 27% from the bottom (NDC -0.46), the horizon in the upper half. Not tried: a turkey (none within
 reach); the rule is one for every walker. The fliers (flierControl.js), the raven, the squirrel and the woodpecker are
 unchanged.
+
+## 2026-10-27: rarity by the game's own population, not the GBIF record counts
+
+Aaron: "mountain lions I would expect to be rare, one showed up as green." The tile's GBIF occurrence counts rank reports,
+not animals: on the Cosumnes tile the lion had 7 records (green) and the vole none (red, the rarest); on Placerville the
+lion was orange. Aaron chose the game's own expected population. animals.js `expectedPerKm2(s)`: a cell species is its
+k per 30 m cell times the mean size of what a cell spawns (GROUP: woodpecker family 4.5, quail covey 12, turkey flock
+10.5, ground squirrel colony 8, raven 1.55, deer 1.6, jays 3, coyote 1.4, rabbit and vole 1.3) over the cell's area at a
+mean suitability of 0.5; a soarer one per grid cell with probability p; the lion one adult or a mother with young per
+1500 m territory cell at p 0.4 (0.23 per km^2); variants take their base species. Rarity is the rank of that, the same
+order on every tile: vole, fence lizard, brush rabbit, quail, squirrel, woodpecker, scrub-jay, Steller's jay, jackrabbit,
+ground squirrel, gray fox, raven, deer, coyote, wild turkey, vulture, hawk, mountain lion (red). Verified on the home
+tile: the bar's discs run purple to red in that order. The species list still carries the GBIF counts (species.json)
+for the field guide; they no longer colour anything.

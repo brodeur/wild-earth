@@ -241,10 +241,11 @@ BODY_Y[VO] = 0.02; BODY_Y[TK] = 0.45; BODY_Y[GS] = 0.08; BODY_Y[LZ] = 0.02; BODY
 // toward their albedo times SELF_LIGHT. A wrapper on their materials (selfLit), with its own program cache key. Their meshes are also on camera
 // layer 1, which spirit.js redraws over its post pass so they keep their colour.
 export const SELF_LIT = { value: 0 };
-// A species' rarity on this tile, 0 the most abundant to 1 the rarest (Animals.rarity, by index): the spirit's view
-// colours each soul by it (rarityColor: purple for the abundant through blue, green and yellow to red for the rare) and
-// makes the rare ones brighter (spirit.js). Ranked by the tile's GBIF occurrence_count (species/species.json), unlisted
-// species and ties by the game's own density k, evenly spaced so the spectrum is read whatever the counts.
+// A species' rarity, 0 the most abundant to 1 the rarest (Animals.rarity, by index): the spirit's view colours each soul
+// by it (rarityColor: purple for the abundant through blue, green and yellow to red for the rare) and makes the rare ones
+// brighter (spirit.js). Ranked by the game's own expected population (expectedPerKm2 below), the same order on every
+// tile, evenly spaced so the spectrum is read whatever the numbers. (2026-10-27: the tile's GBIF record counts ranked
+// first, but those count reports, not animals: a lion with 7 records outranked a vole with none.)
 export function rarityColor(r, out = new THREE.Color()) { return out.setHSL(((1 - r) * 275) / 360, 0.85, 0.62); }
 const SELF_LIGHT = 1.15;
 function selfLit(m) {
@@ -262,6 +263,20 @@ function selfLit(m) {
 }
 const TAG_DY = [0.5, 0.5, 0.7, 2.1, 0.4, 0.4, 0.7, 0.7, 0.45, 0.65, 0.95, 0.4, 0.2, 1.1, 2.2, 0.5, 0.6, 1.2, 0.32, 0.12];
 const INDEX = Object.fromEntries(SPECIES.map((sp, k) => [sp.code, k]).filter(([, k]) => SPECIES[k].variantOf === undefined));
+// The expected population per km^2 of each species, from the spawn rules above: a cell species (k per BUCKET m cell,
+// spawnCell) is k times the mean size of what a cell spawns (GROUP: a woodpecker family of 3-6, a quail covey of 5-20, a
+// turkey flock of 6-15, a ground squirrel colony of 4-12, a raven pair 55% of the time...) over the cell's area, at a
+// mean suitability of 0.5; a soarer (hawk, vulture) is one per `grid` m cell with probability p (spawnSoarers); the lion
+// one adult, or a mother with young, per `territory` m cell with probability p (spawnLion); a variant (buck, female
+// woodpecker) is its base species. Only the order matters (rarity).
+const GROUP = { [WP]: 4.5, [RV]: 1.55, [DR]: 1.6, [QU]: 12, [SJ]: 3, [ST]: 3, [CY]: 1.4, [RB]: 1.3, [VO]: 1.3, [TK]: 10.5, [GS]: 8, [ML]: 1.3 };
+export function expectedPerKm2(s) {
+  const sp = SPECIES[s];
+  if (sp.variantOf !== undefined) return expectedPerKm2(sp.variantOf);
+  if (sp.territory) return (sp.p || 1) * (GROUP[s] || 1) / (sp.territory / 1000) ** 2;
+  if (sp.grid) return (sp.p || 1) * (GROUP[s] || 1) / (sp.grid / 1000) ** 2;
+  return (sp.k || 0) * (GROUP[s] || 1) * 0.5 / (BUCKET / 1000) ** 2;
+}
 const DRAWN = {
   [DR]: { name: 'deer', param: 'deer', load: loadDeerMesh, lod: [30, 90], planar: true },
   [SQ]: { name: 'squirrel', param: 'squirrel', load: loadSquirrelMesh, lod: [12, 40] },
@@ -441,8 +456,7 @@ export class Animals {
     this.heights = { at: (x, north) => hts.ground(x, north), atXZ: (x, z) => hts.ground(x, -z) };
     this.group = new THREE.Group(); this.group.name = 'animals'; scene.add(this.group);
     this.names = Object.fromEntries((tile.species || []).map(s => [s.code, s.common]));
-    { const occ = Object.fromEntries((tile.species || []).map(s => [s.code, s.occurrence_count || 0])), base = k => SPECIES[k].code.split(':')[0];
-      const order = SPECIES.map((sp, k) => k).sort((a, b) => ((occ[base(b)] || 0) - (occ[base(a)] || 0)) || ((SPECIES[b].k || 0) - (SPECIES[a].k || 0)) || a - b);
+    { const order = SPECIES.map((sp, k) => k).sort((a, b) => (expectedPerKm2(b) - expectedPerKm2(a)) || (a - b));   // the abundant first
       this.rarity = new Float32Array(SPECIES.length); order.forEach((k, i) => { this.rarity[k] = i / Math.max(1, order.length - 1); }); }
     this.time = 0; this.season = null; this.hour = 9;
     this.list = []; this.byId = new Map(); this.bySpecies = SPECIES.map(() => []);
