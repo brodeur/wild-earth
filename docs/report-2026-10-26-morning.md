@@ -228,3 +228,4 @@ no kill sound yet unless its row is below; the Sierra species beyond the bear (m
 | a5873a9 | The falls' plume follows the season's flow: a broad sheet in May, a thread in October. |
 | ba5b4db | The species follow the place: each tile keeps a species on GBIF records within 10 km or on its elevation band and habitats; Yosemite drops the brush rabbit, jackrabbit and vole, the foothill tiles keep all 18. |
 | d82ea44 | A kill is heard: the prey's last cry (a deer's bawl, a rabbit's scream, a vole's squeak), the struggle, and the lion's growl, the canid's snarl or the hawk's wing-slap. |
+| 5492137 | Yosemite Creek reaches the falls with its whole basin (110 km2, perennial, named): a creek that wandered onto the tile's border used to leave with its basin; now it is handed back to its NHD stream. The fall shows in every season, a thread in October. |
