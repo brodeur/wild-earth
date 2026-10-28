@@ -13,6 +13,7 @@ import { RoadsOverlay } from './roadsOverlay.js';
 import { setupGoTo, urlPoint, builtTileFor, localXY } from './goto.js';
 import { NearBar } from './nearBar.js';
 import { Needs } from './needs.js';
+import { Hunt } from './hunt.js';
 import { OpeningScreen, Arrival, lastTile, rememberTile } from './arrival.js';
 import { SEASON_LOOK, seasonOfDate, sunDirection, dateForSeason, parseDate } from './season.js';
 import { AcornGame } from './acorns.js';
@@ -505,11 +506,13 @@ async function buildSteps(w, { params, pending, direct = false, arrive = null })
   const nearBar = w.m.nearBar = new NearBar({ el: $('nearBar'), animals });   // the species within reach, in spirit form (nearBar.js)
   const needs = w.m.needs = new Needs({ tile, el: $('needs'), season: seasonNow });   // hunger and thirst in a walker (needs.js)
   ground.needs = needs; flier.needs = needs;
+  const hunt = w.m.hunt = new Hunt({ tile, animals, flight, ground, needs, el: $('hunt') });   // the hunt loop's goal and arc (hunt.js)
+  needs.onStarve = () => { ground.say('starved: the body lies down and the spirit leaves it'); setTimeout(() => { if (ground.on || flier.on) toSpirit(); }, 2200); };
   const onBody = (code, sex = null) => {
     window.__we.playerSpecies = code; window.__we.playerSex = sex;
     animals.setObserver(code); showPerceives(code);
     $('spiritBtn').hidden = code === 'spirit'; $('nearBar').hidden = code !== 'spirit';
-    needs.setSpecies(code);
+    needs.setSpecies(code); hunt.setSpecies(code);
   };
   const spirit = w.m.spirit = new SpiritControl({ scene, renderer, camera, flight, raven, animals, squirrel, woodpecker, ground, flier, atmosphere, onBody });
   $('spiritBtn').onclick = () => { spirit.leave(); renderer.domElement.focus?.(); };
@@ -760,7 +763,7 @@ async function buildSteps(w, { params, pending, direct = false, arrive = null })
     const dt = Math.min((now - last) / 1000, 0.1); last = now;
     const s = seasonNow(), look = SEASON_LOOK[s], sun = sunDirection(tile.latitude, s, state.hour);
     const f = screenOpen ? arrival.hold() : squirrel.on ? squirrel.update(dt) : woodpecker.on ? woodpecker.update(dt) : ground.on ? ground.update(dt) : flier.on ? flier.update(dt) : arrival.active ? arrival.update(dt) : spirit.on ? spirit.update(dt) : flight.update(dt);
-    if (ground.on || flier.on) needs.update(dt, { x: flight.pos.x, north: -flight.pos.z, acting: ground.on && ground.actT > 0, wet: ground.on && !!ground.wet });   // the games of life (needs.js)
+    if (ground.on || flier.on) { needs.update(dt, { x: flight.pos.x, north: -flight.pos.z, acting: ground.on && ground.actT > 0, wet: ground.on && !!ground.wet }); hunt.update(dt); }   // the games of life (needs.js, hunt.js)
     spirit.blendCamera(dt);   // across a switch of body: drawn from a blend of the old view and the new control's (spirit.js)
     raven.update(dt, flight.flapping, flight.speed);
     spirit.draw(dt);   // the wisp, while a spirit

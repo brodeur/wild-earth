@@ -2122,3 +2122,24 @@ same bird, one bout per species at a time. Its covey's flush (species oreortyx_p
 without the California quail's pits or "chi-ca-go"; the same clucks are its ALARM entry (refDistance 12 m, range
 150 m), and a flush with clucks and an alarm within a second share the de-duplication time. The caller fields `r`,
 `real`, `bout` and `months` are optional and leave the other callers unchanged.
+
+The hunt loop (2026-10-28, Aaron's "make the lion's and coyote's hunt a replayable loop with a stake, a HUD goal and
+a dawn-to-full-belly arc"; client/src/hunt.js and the pieces it leans on). The stake: a hunter's body is taken hungry
+(needs.js 0.45) and drains over 24 min; an empty belly ends the body (needs onStarve: the toast, then the spirit
+leaves it), the exit Aaron pointed to. The goal: a panel above the needs with the nearest prey within 400 m, its
+distance, an arrow from the body's heading, and its state: unaware (beyond its notice), alert (noticed, head up) or
+fleeing; the legs (stamina) and the arc line ("hunting 1:20 · 1 rush · best 2:10"). The stalk now counts the cover
+(groundControl: the tree and shrub cover at the body scales the stalk factor by up to 0.35, so a lion frozen in brush
+is noticed at 42 m instead of 300) and animals.js danger() shrinks a species' flee radius for a threat it can barely
+see (base times n/120, floor 0.35: a hidden lion is fled at 12 m instead of 35), so the ambush gets close only in
+cover. The chase: a deer herd's flight is a startled trot for its first second, then a gallop at 11 m/s while the
+hunter is within 40 m (trotting again 2 s after it falls behind); a hunter's full run lasts S.sprint s (lion 3, fox
+4, coyote 7), then it is tired at half speed until the legs come back (25-30 s); a rush that reaches its prey catches
+it on contact (no key), a rush that fails makes the hunter known (every species notices it 1.6x as far for 45 s); the
+lion's run ramps in 1 s now, a cat's explosive rush. The arc: a catch fills the belly and ends it ("a full belly: 1
+kill in 0:34, 2 rushes"); kills per tile and the best time persist in localStorage. Verified: an open-ground rush
+from 25 m fails (the deer galloped, the lion tired at 35 m and was known); from 12 m the lion caught a deer in its
+first second and the arc closed; hunger 0.45 at the take; starvation returned the spirit. Not verified by play: the
+feel of a real stalk through brush to 12 m, and the coyote's loop on rabbits (its mechanics are the same, its
+sprint 7 s against a rabbit's 5-6 m/s bolt). Open: the fox and the coyote's small prey give no chase to speak of; the
+panel's arrow could become a mark on the ground; the prey's own win (a herd that reaches cover) has no reward yet.

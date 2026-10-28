@@ -69,17 +69,17 @@ export const GROUND = {
     act: { flick: 1, t: 4, word: 'grazing' }, alert: { flick: -0.4 }, rest: 'bed' },
   urocyon_cinereoargenteus: { short: 'fox', common: 'gray fox', model: 'fox', rig: 'quad',
     walk: 1.0, run: 9, back: 0.7, ramp: 2, accel: 3.5, stop: 6, turn: 2.6, jumpH: 0.8, jumpL: 1.6, step: 0.35, wade: 0.2,
-    half: 0.25, rad: 0.12, shoulder: 0.37, stride: 0.6, trot: 2.3,
+    half: 0.25, rad: 0.12, shoulder: 0.37, stride: 0.6, trot: 2.3, sprint: 4, recover: 25,
     cam: { back: 2.2, up: 0.75, look: 1.5, aimUp: 0.35, side: 0.4, clear: 0.25, near: 0.15 },
     act: { flick: 1, t: 3, word: 'sniffing' }, alert: { flick: -0.3 }, rest: 'bed' },
   canis_latrans: { short: 'coyote', common: 'coyote', model: 'coyote', rig: 'quad',
     walk: 1.2, run: 12, back: 0.8, ramp: 2.5, accel: 3, stop: 5, turn: 2.2, jumpH: 1.0, jumpL: 2.2, step: 0.4, wade: 0.4,
-    half: 0.35, rad: 0.18, shoulder: 0.58, stride: 0.8, trot: 2.8,
+    half: 0.35, rad: 0.18, shoulder: 0.58, stride: 0.8, trot: 2.8, sprint: 7, recover: 30,
     cam: { back: 2.8, up: 1.0, look: 2, aimUp: 0.5, side: 0.4, clear: 0.3, near: 0.2 },
     act: { flick: 1, t: 3, word: 'sniffing' }, alert: { flick: -0.3 }, rest: 'bed' },
   puma_concolor: { short: 'lion', common: 'mountain lion', model: 'lion', rig: 'quad',
-    walk: 1.0, run: 14, back: 0.7, ramp: 2.5, accel: 3, stop: 5, turn: 2.0, jumpH: 1.6, jumpL: 4.5, step: 0.5, wade: 0.45,
-    half: 0.45, rad: 0.25, shoulder: 0.72, stride: 1.0, trot: 2.0, stalk: 0.45,
+    walk: 1.0, run: 14, back: 0.7, ramp: 1.0, accel: 4, stop: 5, turn: 2.0, jumpH: 1.6, jumpL: 4.5, step: 0.5, wade: 0.45,   // ramp 1 s: a cat's rush is explosive (the hunt)
+    half: 0.45, rad: 0.25, shoulder: 0.72, stride: 1.0, trot: 2.0, stalk: 0.45, sprint: 3, recover: 25,
     cam: { back: 3.5, up: 1.3, look: 2.5, aimUp: 0.6, side: 0.35, clear: 0.3, near: 0.2 },
     act: { flick: 0.6, t: 3, word: 'sniffing' }, alert: { flick: -0.3 }, rest: 'bed' },
   // the black bear: an amble, a bounding run in bursts (to ~13 m/s), a heavy short jump; E digs and scratches at the
@@ -198,7 +198,8 @@ export class GroundControl {
     const S = GROUND[code]; if (!S) return false;
     this.code = code; this.S = S; this.modelName = modelName || S.model; this.body = null;
     { const A = this.animals; if (A && !A.preySlots) A.buildHunts?.(); const k = A ? A.speciesList().findIndex(sp => sp.code === code) : -1;
-      if (this.needs) this.needs.hunter = !!(k >= 0 && A.preySlots?.[k]); }   // a hunter's hunger drains until a catch (needs.js)
+      if (this.needs) { this.needs.hunter = !!(k >= 0 && A.preySlots?.[k]); } }   // a hunter's hunger drains until a catch (needs.js); needs.setSpecies takes the body hungry
+    this.stamina = 1; this.tired = false; this.rush = null; this.rushes = 0;
     const want = this.modelName;
     for (const [n, p] of this.meshes) if (n !== want) p.then(b => { if (b) b.mesh.visible = false; });
     this.meshFor(want).then(b => { if (this.modelName !== want) return; this.body = b; if (b) b.mesh.visible = this.on; });
@@ -345,8 +346,10 @@ export class GroundControl {
     const still = !k.fwd && Math.abs(this.v) < 0.6;
     const alert = k.shift && still && !this.resting;
     this.sit = damp(this.sit, alert ? 1 : 0, alert ? 4 : 8, dt);
-    if (this.needs?.hunter && this.animals?.setStalk) {   // a hunter's stalk: still 0.4, creeping 0.55, walking 1, running 1.3 (animals.js setStalk)
-      const v = Math.abs(this.v); this.animals.setStalk(this.sit > 0.5 ? 0.4 : v < 0.9 ? 0.55 : v < 2.4 ? 1 : 1.3);
+    if (this.needs?.hunter && this.animals?.setStalk) {   // a hunter's stalk: still 0.4, creeping 0.55, walking 1, running 1.3, times the cover (animals.js setStalk)
+      const v = Math.abs(this.v), can = this.tile?.canopy, cell = can ? can.cellOf(P.x, -P.z) : null;
+      this.cover = cell ? Math.min(1, (can.channel(cell[0], cell[1], 0) + can.channel(cell[0], cell[1], 1)) / 100) : 0;   // tree and shrub cover here
+      this.animals.setStalk((this.sit > 0.5 ? 0.4 : v < 0.9 ? 0.55 : v < 2.4 ? 1 : 1.3) * (1 - 0.65 * this.cover));
     }
     if (act) { this.actT = S.act.t; this.resting = false; if (S.act.headFlick) ps.fl = (Math.random() < 0.5 ? -1 : 1) * (0.6 + Math.random() * 0.6); if (S.act.scratch) this.scratch = Math.random() < 0.4; }
     if (act && this.animals?.catchNear) {   // a hunter's E within reach of its prey: the catch (animals.js kill, CARRION)
@@ -363,6 +366,19 @@ export class GroundControl {
     if (this.resting) target = 0;
     if (this.wet) target *= 1 - 0.6 * Math.min(1, this.wet.depth / S.wade);
     target *= this.needs?.slow ?? 1;   // hungry or thirsty: slower (needs.js)
+    if (S.sprint) {   // the legs (hunt.js): a full run lasts S.sprint s, then tired at half speed until the legs come back over S.recover s
+      const fast = Math.abs(this.v) > S.run * 0.6;
+      this.stamina = Math.max(0, Math.min(1, (this.stamina ?? 1) + (fast ? -dt / S.sprint : dt / S.recover)));
+      if (this.stamina <= 0) this.tired = true; else if (this.stamina > 0.5) this.tired = false;
+      if (this.tired) target *= 0.5;
+      const rushing = fast && !this.tired;
+      if (rushing && !this.rush) { this.rush = { t: 0, kill: false }; this.rushes = (this.rushes || 0) + 1; }
+      if (this.rush) { this.rush.t += dt; if (!rushing) { if (!this.rush.kill && this.rush.t > 1) this.animals?.known?.(45); this.rush = null; } }
+      if (rushing && this.needs?.hunter && (this.catchT = (this.catchT || 0) - dt) <= 0) {   // the rush that reaches its prey catches it
+        this.catchT = 0.1; const c = this.animals.catchNear(P.x, P.y, P.z);
+        if (c) { this.rush.kill = true; this.needs?.fed?.(); this.say(`caught a ${this.animals.speciesList()[c.sp]?.one || 'prey'}`); }
+      }
+    } else this.stamina = 1;
     this.v = damp(this.v, target, Math.abs(target) < Math.abs(this.v) ? S.stop : S.accel, dt);
     if (Math.abs(this.v) < 0.01 && !target) this.v = 0;
     if (!this.resting) f.yaw += k.turn * S.turn * (1 - 0.45 * Math.min(1, Math.abs(this.v) / S.run)) * dt;

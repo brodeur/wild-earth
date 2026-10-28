@@ -11,7 +11,7 @@ import { bodyKind } from './playable.js';
 // good cell of the resource (the rasters, scanned round the body) with its bearing and distance. Everything here comes
 // from games.json and the rasters, so a new species in the pipeline's tables gets its needs the same way. The widget (#needs, index.html) shows the two
 // meters bottom right while the player is a walker; a spirit, and the birds and the squirrel for now, have no needs.
-const NEED_T = { hunt: 14, food: 7, daily: 4, often: 8, rare: 16 };   // minutes from sated to empty
+const NEED_T = { hunt: 24, food: 7, daily: 4, often: 8, rare: 16 };   // minutes from sated to empty
 const EAT_MIN = 25, EAT_RATE = 0.06, DRINK_RATE = 0.1;      // score floor; fill per second at score 100 (empty to full in about 20 s of grazing); fill per second at water (10 s)
 const NEED_LOW = 0.25, NEED_SLOW = 0.7;
 const TARGET_MIN = 70, TARGET_CELLS = 70;   // the target: the nearest cell scoring at least TARGET_MIN within TARGET_CELLS cells (2.1 km), scanned in rings
@@ -29,7 +29,7 @@ export class Needs {
     const base = code ? code.split(':')[0] : null;
     const kind = base ? bodyKind(base) : null, flier = kind === 'flier';
     this.code = base; this.sp = base && (kind === 'ground' || flier) ? this.tile.games?.species?.[base] || null : null;   // walkers and fliers (a flier's only loop is the hunt: no thirst)
-    this.hunger = 1; this.thirst = 1; this.target = null;
+    this.hunger = this.hunter ? 0.45 : 1; this.thirst = 1; this.target = null; this.starved = false;   // a hunter's body is taken hungry (hunt.js; the control sets `hunter` before this)
     const drink = this.sp?.games.find(g => g.archetype === 'drink');
     this.rhythm = flier ? 'none' : drink?.rhythm || (drink ? 'often' : 'none');
     if (this.el) { this.el.hidden = !this.sp; if (this.bars?.water) this.bars.water.hidden = this.rhythm === 'none'; }
@@ -48,7 +48,10 @@ export class Needs {
     const season = this.season(), ch = SEASON_CH[season] ?? 3;
     const foods = this.foods(season);
     if (foods.length) this.hunger = Math.max(0, this.hunger - dt / (NEED_T.food * 60));
-    else if (this.hunter) this.hunger = Math.max(0, this.hunger - dt / (NEED_T.hunt * 60));   // a hunter's food is prey: the catch (fed) fills it
+    else if (this.hunter) {   // a hunter's food is prey: the catch (fed) fills it; an empty belly ends the body (hunt.js: onStarve)
+      this.hunger = Math.max(0, this.hunger - dt / (NEED_T.hunt * 60));
+      if (this.hunger <= 0 && !this.starved) { this.starved = true; this.onStarve?.(); }
+    }
     if (this.rhythm !== 'none') this.thirst = Math.max(0, this.thirst - dt / ((NEED_T[this.rhythm] || NEED_T.often) * 60));
     let here = 0;
     for (const r of foods) { const g = this.raster(r); if (g) here = Math.max(here, g.at(x, north, ch)); }

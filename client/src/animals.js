@@ -782,11 +782,17 @@ export class Animals {
   }
   // The player's stalk (groundControl): k scales how far every species notices the player (1 walking; 0.55 creeping,
   // 0.4 frozen, 1.3 running: the signature of a hunter moving low and slow is smaller, a running one's larger).
-  setStalk(k) { if (k === this.stalkK || !this.noticeBase) return; this.stalkK = k; this.notice = this.noticeBase.map(v => v * k); }
+  setStalk(k) {
+    const kk = k * (this.time < (this.knownUntil || 0) ? 1.6 : 1);   // known: a rush that failed (hunt.js), every species watches for you
+    if (kk === this.stalkK || !this.noticeBase) return; this.stalkK = kk; this.notice = this.noticeBase.map(v => v * kk);
+  }
+  known(t = 45) { this.knownUntil = this.time + t; }
   // Danger to an animal or a group o of species sp at distance d from the player, whose own flee radius is base: within
   // base and noticed, or alarmed by a call and within ALARM_REACT_R. alert: noticed, within ALERT_MAX.
   // n: how far sp notices the threat at hand (threat() T.n; the player's notice[sp] by default).
-  danger(sp, o, d, base, n = this.notice[sp]) { return ((o?.alarmUntil || 0) > this.time && d < ALARM_REACT_R) || d < Math.min(base, n); }
+  // The flee radius shrinks for a threat the species can barely see (n under ALERT_MAX: a hunter frozen in brush is
+  // noticed at 40-60 m and fled at a third of base), so the stalk and the cover decide how close an ambush gets.
+  danger(sp, o, d, base, n = this.notice[sp]) { return ((o?.alarmUntil || 0) > this.time && d < ALARM_REACT_R) || d < Math.min(base * Math.max(0.35, Math.min(1, n / ALERT_MAX)), n); }
   alert(sp, d, n = this.notice[sp]) { return d < Math.min(n, ALERT_MAX); }
   alarmed(o) { return (o?.alarmUntil || 0) > this.time; }
   // The alarm calls (the header): a watcher species that notices the player, while the player hunts someone here.
@@ -2454,6 +2460,10 @@ export class Animals {
       for (const b of this.bySpecies[a.sp]) if (b.group === g) { b.state = D_WALK; b.pose = 0; }
     }
     if (g.leader === a && g.fleeT > 0) g.fleeT -= dt;
+    if (g.leader === a) {   // the gallop: a fleeing herd with the threat within 40 m bounds off at 11 m/s, trotting again 2 s after it falls behind (the hunt's chase is decided in the first seconds)
+      if (g.fleeT > 0 && g.fleeT < 7 && dh < 40) g.gallopT = Math.max(g.gallopT || 0, 2);   // the first second of a flight is a startled trot: the ambush's window
+      if ((g.gallopT || 0) > 0) g.gallopT -= dt;
+    }
     const active = !!g.pilot || g.fleeT > 0 || alertNow || hr < 9.5 || hr > 16.5;   // dawn and dusk; bedded through the middle of the day (a piloted, fleeing or alert herd is up)
     a.t -= dt;
     let speed = 0;
@@ -2482,7 +2492,7 @@ export class Animals {
         if (a.state === D_WALK) {
           const ex = g.wx - a.x, ez = g.wz - a.z, d = Math.hypot(ex, ez);
           if (d < 1) { a.state = D_GRAZE; a.t = 4 + r() * 8; }
-          else { speed = g.fleeT > 0 ? 4 : 1.1; a.x += ex / d * speed * dt; a.z += ez / d * speed * dt; a.yaw += wrapAngle(Math.atan2(ex, ez) - a.yaw) * Math.min(1, dt * 2); }
+          else { speed = (g.gallopT || 0) > 0 ? 11 : g.fleeT > 0 ? 4 : 1.1; a.x += ex / d * speed * dt; a.z += ez / d * speed * dt; a.yaw += wrapAngle(Math.atan2(ex, ez) - a.yaw) * Math.min(1, dt * 2); }
         }
       } else {   // walking: single file behind the leader; grazing: spread around it
         const L = g.leader || a, walking = L.state === D_WALK;   // a herd can lose its leader; follow yourself
@@ -2493,7 +2503,7 @@ export class Animals {
         } else { tx = L.x + a.ox; tz = L.z + a.oz; }
         const ex = tx - a.x, ez = tz - a.z, d = Math.hypot(ex, ez);
         if (d > (a.state === D_WALK ? 0.6 : 2.5)) {
-          a.state = D_WALK; speed = Math.min(g.pilot ? 8 : g.fleeT > 0 ? 4.5 : 1.6, 0.4 + d * 0.3);   // a piloted or fleeing herd keeps up, at a run when strung out
+          a.state = D_WALK; speed = Math.min(g.pilot ? 8 : (g.gallopT || 0) > 0 ? 11.5 : g.fleeT > 0 ? 4.5 : 1.6, 0.4 + d * 0.3);   // a piloted or fleeing herd keeps up, at a run when strung out
           a.x += ex / d * speed * dt; a.z += ez / d * speed * dt;
           const want = Math.atan2(ex, ez); a.yaw += wrapAngle(want - a.yaw) * Math.min(1, dt * 3);
         } else a.state = D_GRAZE;
