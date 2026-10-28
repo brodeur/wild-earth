@@ -199,6 +199,7 @@ release, WebGL) was still running; its commit, if it verified, is the last in `g
 | d6a669d | As a hawk or raven, a pass within reach of a vole, rabbit or jackrabbit takes it: the stoop that connects is the strike. |
 | 973aa75 | A hunter's stalk: creeping, you are noticed at half the distance, frozen at 0.4, running at 1.3; the fliers have a hunger meter the strike fills; the start screen shows only the species present on a tile. |
 | a5873a9 | The falls' plume follows the season's flow: a broad sheet in May, a thread in October. |
+| ba5b4db | The species follow the place: each tile keeps a species on GBIF records within 10 km or on its elevation band and habitats; Yosemite drops the brush rabbit, jackrabbit and vole, the foothill tiles keep all 18. |
 
 Open from the day: the attribution form for generated assets; far placement on the lidar ground beyond the fine square; the squirrel's
 crown camera in leafy oaks.
