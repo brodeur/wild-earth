@@ -1,11 +1,14 @@
 // The nearby-animals bar (owner, 2026-10-27): in spirit form, the species within reach of the spirit (animals.js
 // describe: within NEAR_R m, the counts the HUD's "animals near" line reads) as a small toolbar at the bottom of the
 // screen, about an action bar's height. Each species is a slot: the animal's still (assets/opening/<code>.webp, the start
-// screen's lineup stills, fitted to the slot rather than to scale) standing on a disc shadow, with a count pill. The
+// screen's lineup stills, fitted to the slot rather than to scale) standing on a disc of its soul's glow (the species'
+// rarity colour, animals.js rarityColor, as its soul is lit in the world), with a count pill. The
 // slots are ordered by the species' rarity on the tile (animals.js rarity), the abundant left and the rare right, as the
 // souls' spectrum runs from purple to red. Hidden while the player is in a body. The slots are rebuilt only when the
 // set or a count changes; the bar's own element is the page's (index.html #nearBar), its slots a world's (torn down
 // with it).
+import { rarityColor } from './animals.js';
+
 const STILLS = new URL('../assets/opening/', import.meta.url);
 
 export class NearBar {
@@ -37,6 +40,7 @@ export class NearBar {
   makeSlot(k) {
     const sp = this.species[k], st = this.index[sp.code] || this.index[sp.code.split(':')[0]];
     const slot = document.createElement('div'); slot.className = 'nb-slot'; slot.title = sp.common || sp.many;
+    slot.style.setProperty('--soul', `#${rarityColor(this.animals.rarity[k]).getHexString()}`);   // the disc's glow: the species' soul colour
     const disc = document.createElement('i'); disc.className = 'nb-disc';
     const img = document.createElement('img'); img.className = 'nb-img'; img.alt = sp.one; img.decoding = 'async';
     if (st) img.src = new URL(st.file, STILLS).href;

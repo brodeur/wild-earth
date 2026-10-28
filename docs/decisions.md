@@ -1486,3 +1486,11 @@ cell (2, 0) at about x 3994, z -386; from 362 m away at 45 m up the beam and the
 the view; at 122 m the lion is seen under it. Known: the beacon is a test aid (the set is one line to empty); a lion only
 exists within the live radius, so "far away" means up to about 500 m; the beam reads white at its core where the additive
 blend saturates.
+
+## 2026-10-27: the bar's discs glow in the souls' colours
+
+Aaron: "make the shadow colour underneath the models the same glow as the map glow." Each slot's disc (nearBar.js, `--soul`
+on the slot; index.html .nb-disc) is now a radial glow in the species' rarity colour, the colour its soul is lit in the
+world (animals.js rarityColor), paler at the centre and fading to nothing at the rim, at .85 opacity, instead of the
+black .4 shadow; so the row reads purple to red along with the souls. Verified: nine species near a lion from scrub-jay
+#d694f9 to mountain lion #f99494.
