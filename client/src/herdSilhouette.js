@@ -38,27 +38,28 @@ export class HerdSilhouette {
     this.group.add(m); this.meshes.set(k, m);
     return m;
   }
-  // the herd's bodies mark the stencil while the player is in the group: the species' meshes and the player's body
-  mark(k, me, on) {
-    const A = this.animals, mats = [];
-    if (A.meshes[k]) mats.push(A.meshes[k].material);
-    for (const m of A.drawn?.[k]?.tiers || []) mats.push(m.material);
-    if (me?.material) mats.push(me.material);
-    for (const m of mats) {
-      if (!m || m.stencilWrite === on) continue;
-      m.stencilWrite = on; m.stencilRef = STENCIL_HERD; m.stencilFunc = THREE.AlwaysStencilFunc;
-      m.stencilZPass = on ? THREE.ReplaceStencilOp : THREE.KeepStencilOp;
-    }
+  // the herd's bodies mark the stencil while the player is in the group: every species slot in the group (a deer herd
+  // holds does and bucks, two slots) and the player's own body
+  setStencil(m, on) {
+    if (!m || m.stencilWrite === on) return;
+    m.stencilWrite = on; m.stencilRef = STENCIL_HERD; m.stencilFunc = THREE.AlwaysStencilFunc;
+    m.stencilZPass = on ? THREE.ReplaceStencilOp : THREE.KeepStencilOp;
+  }
+  mark(k, on) {
+    const A = this.animals;
+    if (A.meshes[k]) this.setStencil(A.meshes[k].material, on);
+    for (const m of A.drawn?.[k]?.tiers || []) this.setStencil(m.material, on);
   }
   // every frame: group the player's group (null: none), me the player's own animal, body the player's own mesh
   update(group, me, body = null) {
-    const A = this.animals, counts = new Map();
-    const k0 = group && me ? me.sp : null;
-    if (this.markedK !== k0 || this.markedBody !== body) {   // the group or the body changed: unmark, mark
-      if (this.markedK != null) this.mark(this.markedK, this.markedBody, false);
-      if (k0 != null) this.mark(k0, body, true);
-      this.markedK = k0; this.markedBody = body;
-    }
+    const A = this.animals, counts = new Map(), want = new Set();
+    if (group && me) want.add(me.sp);
+    if (group) for (const a of A.list) if (a.group === group && a !== me && !a.culled) want.add(a.sp);
+    if (!this.marked) this.marked = new Set();
+    for (const k of this.marked) if (!want.has(k)) { this.mark(k, false); this.marked.delete(k); }
+    for (const k of want) if (!this.marked.has(k)) { this.mark(k, true); this.marked.add(k); }
+    const b = group && me ? body : null;
+    if (this.markedBody !== b) { if (this.markedBody) this.setStencil(this.markedBody.material, false); if (b) this.setStencil(b.material, true); this.markedBody = b; }
     if (group) for (const a of A.list) {
       if (a.group !== group || a === me || a.culled || a.slot < 0) continue;
       const k = a.sp, m = this.mesh(k); if (!m) continue;
