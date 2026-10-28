@@ -187,6 +187,33 @@ release, WebGL) was still running; its commit, if it verified, is the last in `g
 | 2d7ba15 | Herd members hidden by foliage show as luminous silhouettes in their soul colour, drawn only where the body is behind what is drawn and fading out by 150 m. |
 | d632823 | The Indigenous territories over a tile, from Native Land Digital, go under the card's place name; the pipeline fetches them with a free key you have to sign up for, and the credits carry their disclaimer. |
 | 5f67e33 | A drag turns the camera with the animal's head up to its limit, then the body turns so the camera keeps moving; walking settles the head straight. |
+
+Open from the day: the attribution form for generated assets; far placement on the lidar ground beyond the fine square; the squirrel's
+crown camera in leafy oaks.
+
+
+## The night of 2026-10-27/28 (your bedtime note: "keep making progress, up to $100 of credits")
+
+What to look at first, in order:
+
+1. Take a mountain lion at dawn on the home tile (the spirit's bar, or `?skip=1&as=lion`): hold still (shift) or creep
+   and a deer herd notices you at half the distance; press E within reach to catch one. The deer lies where it fell;
+   within a minute ravens circle in and land beside it and vultures bring their circle over it. This is the one
+   decision to veto if you want: predation now ends in a death (nothing dies on screen beyond the body lying down).
+2. Stand as a deer in the same hour: foxes and coyotes trot after voles and rabbits, a lion stalks the herd, and the
+   jays, woodpeckers, quail and squirrels scold them; every alarm is a call you can hear, and the deer snort.
+3. Choose the Yosemite Village card. From the village meadow Half Dome reads at once; set the season slider to spring
+   and Yosemite Falls is a white sheet down the cliff (a thread in October, dry on the intermittent channel in
+   autumn as in life); the walls read as layered granite at a kilometre. The lineup shows fifteen species: the brush
+   rabbit, jackrabbit and vole are absent by the records-and-range rule.
+4. The deer herd is skinned and clip-animated now (the morning's side session, merged): walk, graze, alert, bed.
+
+Credits: the black bear lane may spend up to 80 on Meshy (its own report row below says what it spent). Open after
+the night: the bear's and the Yosemite Creek lanes if their rows are missing below; the fliers' hunger has no drink;
+no kill sound yet unless its row is below; the Sierra species beyond the bear (mountain quail, mule deer by name).
+
+| Commit | What you will see |
+|---|---|
 | fbc2c07 | The herd silhouettes are no longer triggered by a member's own body or by other members: the herd's bodies mask the pass through the stencil buffer, so only foliage, trunks, rocks and ground count as cover. |
 | 6df6841 | A herd's bucks are their own species slot: the stencil mask now marks every slot in the group, so the buck shows no slivers either. |
 | 9e8c96c | The Yosemite tile is built and loads: Half Dome reads from the village meadow; no lidar point cloud is public for it, so the ground is DEM-only, the granite flat grey, and the species are still the foothill set. |
@@ -200,6 +227,3 @@ release, WebGL) was still running; its commit, if it verified, is the last in `g
 | 973aa75 | A hunter's stalk: creeping, you are noticed at half the distance, frozen at 0.4, running at 1.3; the fliers have a hunger meter the strike fills; the start screen shows only the species present on a tile. |
 | a5873a9 | The falls' plume follows the season's flow: a broad sheet in May, a thread in October. |
 | ba5b4db | The species follow the place: each tile keeps a species on GBIF records within 10 km or on its elevation band and habitats; Yosemite drops the brush rabbit, jackrabbit and vole, the foothill tiles keep all 18. |
-
-Open from the day: the attribution form for generated assets; far placement on the lidar ground beyond the fine square; the squirrel's
-crown camera in leafy oaks.
