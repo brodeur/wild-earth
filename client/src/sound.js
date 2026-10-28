@@ -38,6 +38,9 @@
 //            Events of animals.js on this layer too: 'turkeyFlush' (heavy wingbeats, one run per bird, staggered, with alarm
 //            putts; a few settling flaps as birds land in the oak; with no oak in reach only the putts as they run) and
 //            'gsAlarm' (the sentinel's whistle-chirp alarm, then a scuffle as the first of the others goes down a burrow).
+//            And 'alarm' (a watcher calling at a predator that hunts near it, animals.js alarms()): the caller's own alarm
+//            voice (ALARM: the jays' scolds, the waka, a kraa, alarm putts, pits, the whistle, the bark, a deer's snort and
+//            stamp) from where it calls, heard out to the call's carry and faint at a distance; at most ALARM_MAX at once.
 //   water    a stream wash plus gurgle, on a panner kept at the nearest point of the nearest flowline, so it
 //            fades in within ~80 m and comes from the right side; quieter in summer and fall.
 //   insects  a pre-rendered loop of field-cricket chirps at dusk in summer and fall over grassland.
@@ -116,6 +119,23 @@ const NEAR = {
   gsscuffle: { label: 'ground squirrel', gain: 0.55, ref: 3, range: 40, synth: 'scuffle' },
   scuttle:  { label: 'fence lizard', gain: 0.3, ref: 2.5, range: 6, synth: 'scuttle' },
 };
+// Alarm calls (animals.js 'alarm'), keyed by the caller's species code: the log label, gain and the panner's refDistance (m)
+// as in NEAR, and the most (m) of the event's carry it is heard out to. The refDistances are small, so under the inverse
+// rolloff an alarm 200 m away plays at ref / 200 of its gain (less the air's highs): faint. 'alarm' is the fallback chip.
+const ALARM = {
+  aphelocoma_californica:   { label: 'scrub-jay alarm', gain: 0.9, ref: 15, range: 300, synth: 'jayAlarm' },
+  cyanocitta_stelleri:      { label: "Steller's jay alarm", gain: 0.8, ref: 15, range: 300, synth: 'shaack' },
+  melanerpes_formicivorus:  { label: 'woodpecker alarm', gain: 0.75, ref: 15, range: 250, synth: 'wakaAlarm' },
+  corvus_corax:             { label: 'raven alarm', gain: 0.6, ref: 20, range: 600, synth: 'kraaAlarm' },
+  meleagris_gallopavo:      { label: 'turkey alarm', gain: 0.8, ref: 12, range: 250, synth: 'alarmPutts' },
+  callipepla_californica:   { label: 'quail alarm', gain: 0.6, ref: 10, range: 200, synth: 'pitAlarm' },
+  otospermophilus_beecheyi: { label: 'ground squirrel alarm', gain: 0.4, ref: 12, range: 250, synth: 'gsWhistle' },
+  sciurus_griseus:          { label: 'gray squirrel alarm', gain: 0.8, ref: 10, range: 160, synth: 'barkAlarm' },
+  odocoileus_hemionus:      { label: 'deer alarm', gain: 0.6, ref: 10, range: 160, synth: 'deerSnort' },
+  alarm:                    { label: 'alarm', gain: 0.5, ref: 8, range: 120, synth: 'chip' },
+};
+const ALARM_MAX = 2;       // alarm voices playing at once
+const GS_CODE = 'otospermophilus_beecheyi';   // its 'gsAlarm' and 'alarm' within a second are one call
 // animals.js state values the near layer reads (not exported there; keep in step with its constants)
 const S_PAUSE = 0, S_OUT = 3, S_SIT = 4, S_WORK = 7, S_EAT = 8;            // squirrel
 const W_CLING = 10, W_TOP = 11, W_FLY = 12, T_STORE = 2;                   // woodpecker; the acorn game's store task
@@ -190,6 +210,7 @@ export class Soundscape {
     // near layer: per-animal and per-group memory (WeakMaps, so dropped animals are let go), pending calls and tail
     // flicks, overall cooldowns; trace: set to [] to record every call (debugging, unbounded while set)
     this.nearT = 0; this.mem = new WeakMap(); this.pending = []; this.flicks = []; this.gap = {}; this.trace = null;
+    this.alarmT = {};   // species code -> this.t of its last alarm voice (the gsAlarm / alarm de-duplication)
     this.clipPrev = null; this.flapPrev = 0; this.hardUntil = 0; this.phase = 0;
     const codes = new Set((tile.species || []).map(s => s.code));
     this.callers = CALLERS.filter(c => !codes.size || codes.has(c.code) || c.extra);
@@ -423,13 +444,14 @@ export class Soundscape {
   // Acorn woodpecker "waka-waka" rally: a nasal, laughing series of 2-5 "waka"s, each a step higher and a
   // touch quicker than the last. A "waka" is a rising "wa" and a shorter, higher, falling "ka": a sawtooth with
   // a 42 Hz square-wave rasp on its gain (each "waka" 9 % above the last), through two formants (1.5 and 2.9 kHz) for the nasal colour.
-  _woodpecker(v, t) {
-    const n = 2 + Math.floor(Math.random() * 4), pm = rand(0.92, 1.08), at = [];
-    let s = t; for (let i = 0; i < n; i++) { at.push(s); s += 0.255 - i * 0.012; }
+  // sharp (the alarm): n wakas a tenth higher, quicker (0.21 s apart) and brighter (more of the upper formant).
+  _woodpecker(v, t, n = 2 + Math.floor(Math.random() * 4), sharp = false) {
+    const pm = rand(0.92, 1.08) * (sharp ? 1.1 : 1), at = [], step = sharp ? 0.21 : 0.255;
+    let s = t; for (let i = 0; i < n; i++) { at.push(s); s += step - i * 0.012; }
     const end = s + 0.05;
     const o = v.osc('sawtooth', 700 * pm, t, end), am = v.osc('square', 42, t, end), amd = v.gain(0.3), rasp = v.gain(0.7);
     am.connect(amd).connect(rasp.gain);
-    const f1 = v.filter('bandpass', 1500 * pm, 2), f2 = v.filter('bandpass', 2900 * pm, 3), g2 = v.gain(0.55), g = v.gain(0);
+    const f1 = v.filter('bandpass', 1500 * pm, 2), f2 = v.filter('bandpass', 2900 * pm, 3), g2 = v.gain(sharp ? 0.85 : 0.55), g = v.gain(0);
     o.connect(rasp); rasp.connect(f1).connect(g); rasp.connect(f2).connect(g2).connect(g); g.connect(v.input);
     g.gain.setValueAtTime(0, t);
     for (let i = 0; i < n; i++) {
@@ -459,19 +481,22 @@ export class Soundscape {
   }
 
   // California scrub-jay: a harsh rising "shreep", two or three times (sawtooth plus noise, band-pass sweeping up).
-  _scrubjay(v, t) {
-    const n = 2 + (Math.random() < 0.5), pm = rand(0.93, 1.07), end = t + n * 0.42;
-    const o = v.osc('sawtooth', 1000, t, end), ns = v.noise(t, end), ng = v.gain(0.5), mix = v.gain(1);
-    const bp = v.filter('bandpass', 2000, 2.2), g = v.gain(0);
+  // alarm: n quicker (0.34 s apart), noisier ones of 0.25 s, the band sweeping 2.2 -> 3.8 kHz.
+  _scrubjay(v, t, n = 2 + (Math.random() < 0.5), alarm = false) {
+    const pm = rand(0.93, 1.07), step = alarm ? 0.34 : 0.42, d = alarm ? 0.25 : 0.26, b0 = alarm ? 2200 : 2000, b1 = alarm ? 3800 : 3400;
+    const end = t + n * step;
+    const o = v.osc('sawtooth', 1000, t, end), ns = v.noise(t, end), ng = v.gain(alarm ? 0.9 : 0.5), mix = v.gain(1);
+    const bp = v.filter('bandpass', b0, 2.2), g = v.gain(0);
     o.connect(mix); ns.connect(ng).connect(mix); mix.connect(bp).connect(g).connect(v.input);
     g.gain.setValueAtTime(0, t);
     for (let i = 0; i < n; i++) {
-      const s = t + i * 0.42;
-      o.frequency.setValueAtTime(1000 * pm, s); o.frequency.exponentialRampToValueAtTime(1900 * pm, s + 0.26);
-      bp.frequency.setValueAtTime(2000 * pm, s); bp.frequency.exponentialRampToValueAtTime(3400 * pm, s + 0.26);
-      env(g.gain, s, [[0, 0], [0.03, 0.8], [0.2, 1], [0.26, 0]]);
+      const s = t + i * step;
+      o.frequency.setValueAtTime(1000 * pm, s); o.frequency.exponentialRampToValueAtTime(1900 * pm, s + d);
+      bp.frequency.setValueAtTime(b0 * pm, s); bp.frequency.exponentialRampToValueAtTime(b1 * pm, s + d);
+      env(g.gain, s, [[0, 0], [0.03, 0.8], [d - 0.06, 1], [d, 0]]);
     }
   }
+  _jayAlarm(v, t) { this._scrubjay(v, t, 2 + Math.floor(Math.random() * 3), true); }
 
   // Red-tailed hawk: a hoarse descending scream, about 1.5 s, with vibrato.
   _hawk(v, t) {
@@ -527,32 +552,38 @@ export class Soundscape {
     const gl = v.gain(1.4), mix = v.gain(1), g = v.gain(0);
     ns.connect(bp).connect(mix); ns.connect(lp).connect(gl).connect(mix); mix.connect(g).connect(v.input);
     g.gain.setValueCurveAtTime(curve, t, total);
-    // alarm "pit"s: short falling chips
-    const pits = 2 + (Math.random() < 0.5), o = v.osc('sine', 2600, t + 0.1, t + 0.1 + pits * 0.17 + 0.1), pg = v.gain(0);
+    this._pits(v, t + 0.1, 2 + (Math.random() < 0.5));
+  }
+  // Quail alarm "pit"s: n short falling chips (a sine 2.9 -> 2.1 kHz in 50 ms, peak a) 0.13-0.19 s apart.
+  _pits(v, t, n, a = 0.35) {
+    const o = v.osc('sine', 2600, t, t + n * 0.17 + 0.1), pg = v.gain(0);
     o.connect(pg).connect(v.input); pg.gain.setValueAtTime(0, t);
-    for (let i = 0; i < pits; i++) {
-      const s = t + 0.1 + i * rand(0.13, 0.19);
+    for (let i = 0; i < n; i++) {
+      const s = t + i * rand(0.13, 0.19);
       o.frequency.setValueAtTime(2900, s); o.frequency.exponentialRampToValueAtTime(2100, s + 0.05);
-      env(pg.gain, s, [[0, 0], [0.006, 0.35], [0.05, 0]]);
+      env(pg.gain, s, [[0, 0], [0.006, a], [0.05, 0]]);
     }
   }
+  _pitAlarm(v, t) { this._pits(v, t, 3 + (Math.random() < 0.5), 0.6); }
 
   // Steller's jay "shaaar": a harsh, drawn-out, falling scold, once or twice: a sawtooth (900 -> 600 Hz) and
-  // as much noise through a wide band-pass sliding 2.4 -> 1.6 kHz, roughened by a 70 Hz amplitude flutter.
-  _shaaar(v, t) {
-    const n = 1 + (Math.random() < 0.45), pm = rand(0.93, 1.07), dur = rand(0.42, 0.58), gapT = rand(0.18, 0.3), end = t + n * (dur + gapT);
+  // as much noise through a wide band-pass sliding 2.4 -> 1.6 kHz, roughened by a 70 Hz amplitude flutter. The alarm "shaack
+  // shaack" (_shaack) is the same voice clipped short: 2-3 of 0.2-0.25 s, the band starting higher (2.9 kHz), a quicker onset.
+  _shaaar(v, t, n = 1 + (Math.random() < 0.45), dur = rand(0.42, 0.58), bf = 2400) {
+    const pm = rand(0.93, 1.07), gapT = rand(0.18, 0.3), end = t + n * (dur + gapT), att = Math.min(0.04, dur * 0.1);
     const o = v.osc('sawtooth', 900 * pm, t, end), ns = v.noise(t, end), ng = v.gain(0.9), mix = v.gain(0.6);
-    const fl = v.osc('sine', 70, t, end), fd = v.gain(0.4), bp = v.filter('bandpass', 2400 * pm, 1.1), g = v.gain(0);
+    const fl = v.osc('sine', 70, t, end), fd = v.gain(0.4), bp = v.filter('bandpass', bf * pm, 1.1), g = v.gain(0);
     fl.connect(fd).connect(mix.gain);
     o.connect(mix); ns.connect(ng).connect(mix); mix.connect(bp).connect(g).connect(v.input);
     g.gain.setValueAtTime(0, t);
     for (let i = 0; i < n; i++) {
       const s0 = t + i * (dur + gapT);
       o.frequency.setValueAtTime(900 * pm, s0); o.frequency.exponentialRampToValueAtTime(600 * pm, s0 + dur);
-      bp.frequency.setValueAtTime(2400 * pm, s0); bp.frequency.exponentialRampToValueAtTime(1600 * pm, s0 + dur);
-      env(g.gain, s0, [[0, 0], [0.04, 1], [dur * 0.55, 0.85], [dur, 0]]);
+      bp.frequency.setValueAtTime(bf * pm, s0); bp.frequency.exponentialRampToValueAtTime(1600 * pm, s0 + dur);
+      env(g.gain, s0, [[0, 0], [att, 1], [dur * 0.55, 0.85], [dur, 0]]);
     }
   }
+  _shaack(v, t) { this._shaaar(v, t, 2 + (Math.random() < 0.5), rand(0.2, 0.25), 2900); }
   // Steller's jay's mellow rising whistle: a sine gliding 1.3 -> 2.1 kHz over a third of a second with a slow
   // vibrato, sometimes a second one a little higher.
   _jayWhistle(v, t) {
@@ -641,6 +672,33 @@ export class Soundscape {
     for (const f of [bp, bp2]) { f.frequency.setValueAtTime(2600 * pm, w0); f.frequency.exponentialRampToValueAtTime(1500 * pm, end); }
     env(wg.gain, w0, [[0, 0], [0.12, 3], [wl * 0.5, 2.2], [wl, 0]]);
   }
+  // A deer's alarm snort: one sharp nasal blow, 0.25-0.35 s of noise through a band-pass sliding 1.9 -> 1.1 kHz (a 6 ms
+  // attack, a fast decay), and right after it the soft stamp of a forefoot (a sine falling 80 -> 40 Hz in 60 ms).
+  _deerSnort(v, t) {
+    const pm = rand(0.9, 1.1), d = rand(0.25, 0.35), st = t + d + 0.02;
+    const ns = v.noise(t, t + d + 0.01), bp = v.filter('bandpass', 1900 * pm, 1.2), g = v.gain(0);
+    const o = v.osc('sine', 80, st, st + 0.08), og = v.gain(0);
+    ns.connect(bp).connect(g).connect(v.input); o.connect(og).connect(v.input);
+    bp.frequency.setValueAtTime(1900 * pm, t); bp.frequency.exponentialRampToValueAtTime(1100 * pm, t + d);
+    g.gain.setValueAtTime(0, t); g.gain.linearRampToValueAtTime(2.2, t + 0.006);
+    g.gain.exponentialRampToValueAtTime(0.7, t + d * 0.35); g.gain.exponentialRampToValueAtTime(0.001, t + d); g.gain.setValueAtTime(0, t + d + 0.005);
+    o.frequency.setValueAtTime(80, st); o.frequency.exponentialRampToValueAtTime(40, st + 0.06);
+    og.gain.setValueAtTime(0, st); og.gain.linearRampToValueAtTime(0.8, st + 0.004); og.gain.exponentialRampToValueAtTime(0.001, st + 0.06);
+  }
+  // A short generic alarm chip, for a caller with no alarm voice of its own: one or two sine flicks 3.4 -> 2.6 kHz in 40 ms.
+  _chip(v, t) {
+    const n = 1 + (Math.random() < 0.5), pm = rand(0.9, 1.1), o = v.osc('sine', 3400 * pm, t, t + n * 0.14 + 0.05), g = v.gain(0);
+    o.connect(g).connect(v.input); g.gain.setValueAtTime(0, t);
+    for (let i = 0; i < n; i++) {
+      const s = t + i * 0.14;
+      o.frequency.setValueAtTime(3400 * pm, s); o.frequency.exponentialRampToValueAtTime(2600 * pm, s + 0.04);
+      env(g.gain, s, [[0, 0], [0.004, 0.7], [0.04, 0]]);
+    }
+  }
+  // The other alarm voices (ALARM), the species' own calls: two kraas; 2-3 sharp wakas; a 4-6 chuff bark.
+  _kraaAlarm(v, t) { this._kraa(v, t, 2, rand(0.95, 1.1)); }
+  _wakaAlarm(v, t) { this._woodpecker(v, t, 2 + (Math.random() < 0.5), true); }
+  _barkAlarm(v, t) { this._squirrelBark(v, t, 4 + Math.floor(Math.random() * 3)); }
 
   // Gray fox: a single hoarse bark (a second now and then): a sawtooth jumping 600 -> 900 Hz and falling to 480
   // in 0.22 s with noise rasp, through formants at 1.0 and 2.3 kHz.
@@ -864,7 +922,7 @@ export class Soundscape {
     const A = this._animals(); if (!A?.on || A === this._hooked) return;
     if (this._unhook) for (const off of this._unhook) off();
     this._unhook = [A.on('flush', e => this._onFlush(e)), A.on('stoop', e => this._onStoop(e)), A.on('rally', e => this._onRally(e)),
-      A.on('turkeyFlush', e => this._onTurkeyFlush(e)), A.on('gsAlarm', e => this._onGsAlarm(e))];
+      A.on('turkeyFlush', e => this._onTurkeyFlush(e)), A.on('gsAlarm', e => this._onGsAlarm(e)), A.on('alarm', e => this._onAlarm(e))];
     this._hooked = A;
   }
   // A random animal of this species within r of the raven, or null.
@@ -889,10 +947,11 @@ export class Soundscape {
       v = this._voice(pos, 0.7, this.birdBus, animal); label = 'raven';
       this._kraa(v, t, 1 + Math.floor(Math.random() * 3), rand(0.9, 1.12));
     } else {
-      const c = near || CALLERS.find(c => c.key === key); if (!c) return null;
+      const c = near || (Object.hasOwn(ALARM, key) ? ALARM[key] : null) || CALLERS.find(c => c.key === key); if (!c) return null;
       v = this._voice(pos, c.gain, this.birdBus, animal, c.ref ?? 25); label = c.label; v.near = !!near;
       if (synth) synth(v, t); else this['_' + c.synth](v, t);
     }
+    if (v.label) label = v.label;
     this._heard(label, v.dist);
     this.sources[source] = (this.sources[source] || 0) + 1;
     const rec = { at: +this.t.toFixed(2), key, label, source, id: animal?.id ?? null, x: pos.x, y: pos.y, z: pos.z, dist: Math.round(v.dist) };
@@ -943,8 +1002,27 @@ export class Soundscape {
       if (a.group !== g || Math.hypot(a.x - P.x, a.y - P.y, a.z - P.z) < 0.5) continue;
       if (!caller || (a.wait ?? 9) < (caller.wait ?? 9)) caller = a;
     }
-    this._play('gswhistle', caller ? this._onAnimal(caller) : { x: e.x, y: e.y + 0.3, z: e.z }, caller, 'event');
+    if (this.t - (this.alarmT[GS_CODE] ?? -9) >= 1 && this._play('gswhistle', caller ? this._onAnimal(caller) : { x: e.x, y: e.y + 0.3, z: e.z }, caller, 'event')) this.alarmT[GS_CODE] = this.t;
     const m = this._m(g); m.scuff = this.t + 5; m.caller = caller; m.alarmT = this.t;
+  }
+  // An alarm call (animals.js alarms(): a watcher that noticed a predator hunting near it): the caller species' alarm voice
+  // (ALARM, or the generic chip) from the caller, the panner following it when it is found within 1.5 m of the event, heard
+  // out to the call's carry clamped to 60 m .. its ALARM range. One voice per event, at most ALARM_MAX at once, through the
+  // bird bus and the 'event' source like the flushes; a species' alarm voiced within the last second (a ground squirrel's
+  // whistle from 'gsAlarm') is not doubled. A gray squirrel's tail flicks with its bark, as in the near layer.
+  _onAlarm(e) {
+    const code = e?.species; if (!this._live() || typeof code !== 'string' || !Number.isFinite(e.x + e.y + e.z)) return;
+    const own = Object.hasOwn(ALARM, code), key = own ? code : 'alarm', c = ALARM[key];
+    if (this._listenerDist(e.x, e.y, e.z) > clamp(e.carry || 0, 60, c.range)) return;
+    if (this.t - (this.alarmT[code] ?? -9) < 1) return;
+    let playing = 0; for (const v of this.voices) if (v.alarm && this.ctx.currentTime < v.end) playing++;
+    if (playing >= ALARM_MAX) return;
+    const A = this._animals(), a = A?.within ? A.within(code, e.x, e.y, e.z, 1.5, this._near)[0] || null : null;
+    const name = own ? null : (CALLERS.find(k => k.code === code)?.label || code.split(':')[0].split('_')[0]) + ' alarm';
+    const v = this._play(key, a ? this._onAnimal(a) : { x: e.x, y: e.y + 0.3, z: e.z }, a, 'event', own ? null : (w, t) => { w.label = name; this._chip(w, t); });
+    if (!v) return;
+    v.alarm = true; this.alarmT[code] = this.t;
+    if (code === 'sciurus_griseus' && a) { this.gap.bark = this.t + 6; for (const b of v.beats || []) this.flicks.push({ at: this.t + 0.03 + b, a }); }
   }
   _onStoop(e) {
     if (!this._live() || this._listenerDist(e.x, e.y, e.z) > EVENT_R + 200) return;

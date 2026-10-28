@@ -1847,3 +1847,26 @@ u in texture widths round the stem, v in texture heights along it), so trunkMate
 the map and normal-map UVs by the instance's (girth, height) scale under USE_INSTANCING; a tree at scale 1 is
 unchanged, the lineup's single meshes too. Verified at the Yosemite meadow: the giant ponderosa's plates are the
 species' size.
+
+Cliffs at any distance (2026-10-28, Yosemite's walls): the terrain's near detail (rock within 250 m) left a wall seen
+from the valley as the photo's smooth grey. terrain.js now gives any ground steeper than about 35 degrees (the
+detail mask's slope, or the drawn mesh's on a lidar tile) ledges and stains at every distance: bands by height (7 m
+and 2.6 m value noise, wandering +-4.5 m along the face) as a +-14% tone and a tilt of the lighting normal about the
+horizontal from the bands' rise (rising relief faces down, so ledge tops catch the sun and undersides shade), and
+water streaks (1.4 m across, 17 m long) as a -9% tone; it backs off to 30% where the near detail's rock takes over.
+Verified from the meadow: the Yosemite Falls cliff reads as layered granite at 1 km; Half Dome's face is mostly haze
+at 15:00 (the atmosphere, not the rule). Known: the bands are the same for granite and for a road cut's metamorphic
+bank; geology.png could choose a pattern per rock later.
+
+Alarm calls are heard (2026-10-28, an Opus lane, verified here with synthetic events: deer, scrub-jay and ground
+squirrel logged "<name> alarm" at 26 m with no errors; not yet heard by ear in play). sound.js voices animals.js's
+'alarm' event: the caller species' own alarm from where it stands (the panner follows the caller when it is found
+within 1.5 m), out to the call's carry clamped to 60 m .. a per-species range (160-600 m). The voices reuse the
+existing synths wherever one fits: the scrub-jay's shreep in an alarm form (2-4 noisier 0.25 s calls rising to
+3.8 kHz), the Steller's "shaaar" clipped into a "shaack" (2-3 of 0.2 s from 2.9 kHz), a sharper waka, two kraas, the
+turkey's alarm putts, the quail's pits (pulled out of the flush), the ground squirrel's whistle and the gray
+squirrel's bark (with its tail flicks). The deer gets a new short snort (band-passed noise 1.9 -> 1.1 kHz, 6 ms
+attack) and a 40-80 Hz forefoot stamp; any other caller a generic chip. The calls go through _play into the bird bus
+as 'event' sources, at most one voice per event and two alarms at once, with small refDistances (10-20 m), so at
+200 m a call is about 20 dB under its 10 m level. A ground squirrel's 'gsAlarm' whistle and its 'alarm' within a
+second are one call.
