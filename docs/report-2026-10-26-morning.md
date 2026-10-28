@@ -233,3 +233,4 @@ cinnamon bear; the other tiles' channels shift slightly on their next build afte
 | 5f5459b | Scavengers feed: as a raven, vulture, coyote or bear, a carcass within reach fills your hunger (E on foot, landing beside it in the air). |
 | 3a813a4 | Tenaya Creek joins the Merced inside the Yosemite tile and the Merced leaves at its real 707 km2: a routing fallback hooked a channel cell uphill; it now takes a lower neighbour first. |
 | 5d0081a | The mountain quail (two Meshy previews, 40 credits; 420 of the 1,000 spent): coveys on the Sierra's brush and forest edge from 600 m, running, flushing from hawks and coyotes, playable. |
+| 0d362f1 | The mountain quail has its voice: the male's quee-ark in spring bouts from a real bird, and the covey's trilled alarm clucks when it flushes or calls. |
