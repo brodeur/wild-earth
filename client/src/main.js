@@ -530,7 +530,7 @@ async function buildSteps(w, { params, pending, direct = false, arrive = null })
   function applyPeek(on) {
     peek.shown = on;
     for (const o of [veg, far, grass, animals]) o.group.visible = !on;
-    identify.tagGroup.visible = !on && identify.tagsOn;
+    identify.hidden = on; identify.tagGroup.visible = identify.shown();
     acorns.group.visible = !on && acorns.running;
     if (on) { peek.roadsWere = roads.group.visible; roads.group.visible = true; } else roads.group.visible = peek.roadsWere;
     if (on) {

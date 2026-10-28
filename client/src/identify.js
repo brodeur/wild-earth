@@ -88,10 +88,14 @@ export class Identify {
     });
   }
 
-  setTags(on) { this.tagsOn = on; this.tagGroup.visible = on; if (on) this.lastScan = -1e9; }
+  setTags(on) { this.tagsOn = on; this.tagGroup.visible = this.shown(); if (on) this.lastScan = -1e9; }
+  // The plant labels show only while the menu is open (owner, 2026-10-27; index.html html.menu), with tags on (T) and
+  // not under the present-day peek (main.js sets hidden). Read every HUD tick, so opening the menu shows them at once.
+  shown() { return this.tagsOn && !this.hidden && document.documentElement.classList.contains('menu'); }
 
   // HUD tick (main.js calls this on its HUD timer; it scans at most every SCAN_MS).
   tick(now) {
+    this.tagGroup.visible = this.shown();
     if (now - this.lastScan < SCAN_MS) return;
     this.lastScan = now;
     const p = this.flight.pos, cam = this.camera.position, plants = this.veg.nearPlants;

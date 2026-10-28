@@ -1494,3 +1494,10 @@ on the slot; index.html .nb-disc) is now a radial glow in the species' rarity co
 world (animals.js rarityColor), paler at the centre and fading to nothing at the rim, at .85 opacity, instead of the
 black .4 shadow; so the row reads purple to red along with the souls. Verified: nine species near a lion from scrub-jay
 #d694f9 to mountain lion #f99494.
+
+## 2026-10-27: the plant labels only while the menu is open
+
+Aaron: "labels for trees and plants should only appear when the menu is open." identify.js `shown()`: the tag group is
+visible when tags are on (T), the present-day peek is not hiding them (main.js sets `identify.hidden`) and `html.menu` is
+set; read every HUD tick, so the labels come and go with the hamburger at once. The animals' tags (animals.js) are
+unchanged. Verified on the home tile: 33 tags hidden with the menu closed, shown when opened, hidden again on close.
