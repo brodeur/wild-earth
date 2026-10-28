@@ -191,6 +191,8 @@ release, WebGL) was still running; its commit, if it verified, is the last in `g
 | 9e8c96c | The Yosemite tile is built and loads: Half Dome reads from the village meadow; no lidar point cloud is public for it, so the ground is DEM-only, the granite flat grey, and the species are still the foothill set. |
 | f1904a3 | Bark plates on scaled-up old trees were scaled with the tree (1 m plates on Yosemite's big ponderosas); the bark UVs now divide out the instance scale. |
 | fbc2c07 | The herd silhouettes are no longer triggered by a member's own body or by other members: the herd's bodies mask the pass through the stencil buffer, so only foliage, trunks, rocks and ground count as cover. |
+| 18e1dd0 | Steep ground reads as rock at any distance: ledges by height with lit tops and shaded undersides, and water streaks; Yosemite's walls are layered granite from the valley. |
+| 55d48ad | Alarm calls are heard: when a watcher calls, its species' own alarm (jay scold, woodpecker waka, raven kraa, turkey putts, quail pits, squirrel bark, ground squirrel whistle, a new deer snort and stamp) plays from where it stands, fading over its carry. |
 
 Open from the day: the attribution form for generated assets; far placement on the lidar ground beyond the fine square; the squirrel's
 crown camera in leafy oaks.
