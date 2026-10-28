@@ -160,6 +160,7 @@ release, WebGL) was still running; its commit, if it verified, is the last in `g
 | 7562d52 | The start screen as you described it: it loads only its own assets, hover grows a card, a click builds that tile behind the screen with the wisp and the lineup, another click aborts and switches in place, no reload, no URL. |
 | 9bffb32 | The in-game Location box goes to another tile the same way: the world is torn down, the next built in its place and entered at the point with the day carried, another Go mid-build abandons it, no reload, no URL. Found on the way: a played world was never freed (the arrival's caption animation held it); fixed, three switches and a drop leave 89 MB. |
 | 5f4fe06 | The start screen's animals stand below and in front of the chosen card: feet just under its bottom edge, the deer, lion and coyote over its lower edge. |
+| bea9aa3 | The band under the cards shrinks to the animals' feet and the cards grow into it: 676 to 747 px tall at a 924 px window, the feet 24 px above the bottom. |
 
 Open from the day: the attribution form for generated assets; far placement on the lidar ground beyond the fine square; the squirrel's
 crown camera in leafy oaks.
