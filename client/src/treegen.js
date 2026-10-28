@@ -2105,7 +2105,17 @@ export function trunkMaterial(patch = null, spec = null) {
   if (bark) chainShader(m, 'bark', shader => {
     shader.vertexShader = shader.vertexShader
       .replace('#include <common>', '#include <common>\nattribute float barkMix;\nvarying float vBarkMix;')
-      .replace('#include <begin_vertex>', '#include <begin_vertex>\nvBarkMix = barkMix;');
+      .replace('#include <begin_vertex>', '#include <begin_vertex>\nvBarkMix = barkMix;')
+      .replace('#include <uv_vertex>', `#include <uv_vertex>
+      #ifdef USE_INSTANCING
+        vec2 barkS = vec2(length(instanceMatrix[0].xyz), length(instanceMatrix[1].xyz));   // the bark tiles in metres: an instance scaled up (old growth from height, girth and height apart) keeps its plate size
+        #ifdef USE_MAP
+          vMapUv *= barkS;
+        #endif
+        #ifdef USE_NORMALMAP
+          vNormalMapUv *= barkS;
+        #endif
+      #endif`);
     shader.fragmentShader = shader.fragmentShader
       .replace('#include <common>', '#include <common>\nvarying float vBarkMix;')
       .replace('#include <map_fragment>', `#ifdef USE_INSTANCING

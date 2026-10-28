@@ -1839,3 +1839,11 @@ same code): the world builds with no console errors and 461 MB of heap; as the r
 wall and Clouds Rest read at once from above the meadows. Seen: the arrival caption says "near Tenaya Creek" for the
 Half Dome point, since the valley's names come from the OSM places within reach. Not yet: the three neighbouring cells
 that hold the rest of the valley (El Capitan and Bridalveil in utm11n_260_4170).
+
+Bark on scaled trees (2026-10-28, seen on Yosemite's old ponderosas): a tree drawn at an instance scale above 1 (old
+growth from the lidar or EVH height, girth and height scaled apart in vegetation.js) carried its bark plates scaled
+with it, a 2.5x trunk showing 1 m plates. The bark UVs are laid in metres on the unscaled geometry (treegen.js tube:
+u in texture widths round the stem, v in texture heights along it), so trunkMaterial's vertex shader now multiplies
+the map and normal-map UVs by the instance's (girth, height) scale under USE_INSTANCING; a tree at scale 1 is
+unchanged, the lineup's single meshes too. Verified at the Yosemite meadow: the giant ponderosa's plates are the
+species' size.
