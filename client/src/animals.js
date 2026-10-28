@@ -2082,7 +2082,7 @@ export class Animals {
   }
   drUpdate(a, dt) {
     const r = a.rng, g = a.group, H = this.heights, hr = this.hour;
-    const active = hr < 9.5 || hr > 16.5;   // dawn and dusk; bedded through the middle of the day
+    const active = !!g.pilot || hr < 9.5 || hr > 16.5;   // dawn and dusk; bedded through the middle of the day (a piloted herd is up)
     a.t -= dt;
     let speed = 0;
     if (!active) {
@@ -2090,7 +2090,11 @@ export class Animals {
     } else {
       a.pose = damp(a.pose, 0, 1.2, dt);
       if (a.pose > 0.3) { a.state = D_GRAZE; }
-      else if (g.leader === a) {
+      else if (g.leader === a && g.pilot) {   // piloted: to the player's point, at a trot when far behind it (pilot above)
+        const ex = g.pilot.x - a.x, ez = g.pilot.z - a.z, d = Math.hypot(ex, ez);
+        if (d < 2.5) { if (a.state === D_WALK) { a.state = D_GRAZE; a.t = 4 + r() * 8; } }
+        else { a.state = D_WALK; speed = Math.min(8, 0.6 + d * 0.3); a.x += ex / d * speed * dt;   // up to a run when the player has run ahead a.z += ez / d * speed * dt; a.yaw += wrapAngle(Math.atan2(ex, ez) - a.yaw) * Math.min(1, dt * 3); }
+      } else if (g.leader === a) {
         if (a.state !== D_WALK && a.t <= 0) {   // next waypoint: the most open of a few spots 40-110 m off, within 160 m of home
           let best = -2;
           for (let k = 0; k < 6; k++) {
@@ -2117,7 +2121,7 @@ export class Animals {
         } else { tx = L.x + a.ox; tz = L.z + a.oz; }
         const ex = tx - a.x, ez = tz - a.z, d = Math.hypot(ex, ez);
         if (d > (a.state === D_WALK ? 0.6 : 2.5)) {
-          a.state = D_WALK; speed = Math.min(1.6, 0.4 + d * 0.3);
+          a.state = D_WALK; speed = Math.min(g.pilot ? 8 : 1.6, 0.4 + d * 0.3);   // a piloted herd keeps up, at a run when strung out
           a.x += ex / d * speed * dt; a.z += ez / d * speed * dt;
           const want = Math.atan2(ex, ez); a.yaw += wrapAngle(want - a.yaw) * Math.min(1, dt * 3);
         } else a.state = D_GRAZE;
@@ -2137,6 +2141,22 @@ export class Animals {
   // The covey is the unit: it forages in a loose knot, now and then runs across an opening in a
   // stream, and flushes all at once (staggered by a few tenths of a second) away from a threat: the
   // raven low overhead, a stooping hawk, or now and then nothing anyone can see.
+  // ---- piloting a group (owner, 2026-10-27: "herd species piloted as a herd, a chaotic centre of gravity the animals
+  // trend towards; when the user stops moving for too long the herd takes back over") -------------------------------
+  // While the player is in a member of a deer herd, a quail covey or a turkey flock (groundControl.js herdDrive), the
+  // group trends toward a point the player steers: pilot(g, x, z) every frame sets it. The herd's leader walks to it at
+  // a trot when far behind and the rest follow in file as they do; the covey's and the flock's centre runs to it and the
+  // members keep their slots round the centre. pilot(g, null) hands the group back to its own life where it stands (its
+  // home moves there, so it does not walk back to the old one). A piloted herd is up and moving whatever the hour; a
+  // piloted covey or flock is not flushed by the player among it, but keeps its own flushes and the roost.
+  pilot(g, x, z) {
+    if (!g) return;
+    if (x == null) {
+      if (g.pilot) { const L = g.leader; g.hx = g.x ?? L?.x ?? g.hx; g.hz = g.z ?? L?.z ?? g.hz; g.pilot = null; }
+      return;
+    }
+    (g.pilot ||= { x: 0, z: 0 }).x = x; g.pilot.z = z;
+  }
   groupRng(g, list) {
     // A group can lose its leader (member cap hit while placing, or a rebuild mid-season); adopt any member.
     if (!g.leader || !g.leader.rng) { g.leader = null; for (const a of list) if (a.group === g) { g.leader = a; break; } }
@@ -2148,8 +2168,13 @@ export class Animals {
     g.t -= dt; g.cool -= dt;
     if (g.state !== G_SETTLE && g.cool <= 0) {
       const dx = px - g.x, dz = pz - g.z;
-      if (dx * dx + dz * dz < 48 * 48 && py - H.atXZ(g.x, g.z) < 42) { this.flushCovey(g, px, pz, 'raven'); return; }
+      if (!g.pilot && dx * dx + dz * dz < 48 * 48 && py - H.atXZ(g.x, g.z) < 42) { this.flushCovey(g, px, pz, 'raven'); return; }
       if (r() < dt / 160) { const ang = r() * TAU; this.flushCovey(g, g.x + Math.cos(ang) * 30, g.z + Math.sin(ang) * 30, 'self'); return; }
+    }
+    if (g.pilot && g.state !== G_SETTLE) {   // piloted: the knot runs to the player's point and forages there (pilot above)
+      const ex = g.pilot.x - g.x, ez = g.pilot.z - g.z, d = Math.hypot(ex, ez);
+      if (d > 2.5) { g.tx = g.pilot.x; g.tz = g.pilot.z; g.dx = ex / d; g.dz = ez / d; g.speed = Math.min(3.6, 1.4 + d * 0.3); g.state = G_RUN; }
+      else if (g.state === G_RUN) { g.state = G_FORAGE; g.t = 8 + r() * 10; }
     }
     if (g.state === G_FORAGE) {
       if (g.t <= 0) {   // run across an opening: 15-40 m, back toward home when strayed
@@ -2866,7 +2891,12 @@ export class Animals {
     if (g.state === TF_ROOST) { if (sun > 0.08) this.tkDown(g); return; }
     if (g.state === TF_TREE) { if (g.t <= 0) this.tkDown(g); return; }
     const near = g.near; g.near = false;
-    if (near && g.cool <= 0) { this.tkFlush(g, px, pz); return; }
+    if (near && g.cool <= 0 && !g.pilot) { this.tkFlush(g, px, pz); return; }
+    if (g.pilot && (g.state === TF_FORAGE || g.state === TF_WALK)) {   // piloted: to the player's point, then forage there (pilot above)
+      const ex = g.pilot.x - g.x, ez = g.pilot.z - g.z, d = Math.hypot(ex, ez);
+      if (d > 2.5) { g.tx = g.pilot.x; g.tz = g.pilot.z; g.state = TF_WALK; g.speed = Math.min(2.6, 0.6 + d * 0.2); }
+      else if (g.state === TF_WALK) { g.state = TF_FORAGE; g.t = 20 + r() * 40; g.speed = TURKEY.move[0]; }
+    }
     if (g.state === TF_FORAGE) {
       if (g.t <= 0) {   // walk on 15-40 m to the best of a few spots among the oaks (open woodland), back toward home when strayed
         let best = -Infinity;

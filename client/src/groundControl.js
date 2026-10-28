@@ -52,6 +52,13 @@ const smooth = u => u * u * (3 - 2 * u);
 // so that centre lands FRAME_Y of the half view below the screen's middle (-0.45: a little under a third up from the
 // bottom), whatever the body's size, its sitting or the ground; the drag's tilt adds to it. The yaw stays the aim's.
 export const CAM_RAISE = 1.3, FRAME_Y = -0.45;
+// The herd pilot (owner, 2026-10-27): in a member of a herd, covey or flock (HERD_WORD's species; the animal's group,
+// animals.js pilot) the group trends toward a point HERD_LEAD body half-lengths ahead of the player while the player
+// steers; after HERD_IDLE s without a key the group takes back over: it goes on with its own life from where it is,
+// and the player's body walks with it as a member (herdDrive: keys synthesized toward its slot, behind the leader in
+// file or round the centre) until any key, which takes the reins back. The HUD's where line says which.
+const HERD_WORD = { odocoileus_hemionus: 'herd', callipepla_californica: 'covey', meleagris_gallopavo: 'flock' };
+const HERD_LEAD = 5, HERD_IDLE = 6;
 export const GROUND = {
   odocoileus_hemionus: { short: 'deer', common: 'black-tailed deer', model: 'deer', rig: 'quad',
     walk: 1.3, run: 12, back: 0.8, ramp: 3, accel: 2.2, stop: 4, turn: 1.8, jumpH: 1.6, jumpL: 3.5, step: 0.5, wade: 0.7,
@@ -188,6 +195,7 @@ export class GroundControl {
     f.body.visible = !on && f.view === 'chase';
     if (this.body) this.body.mesh.visible = on;
     if (!on) for (const p of this.meshes.values()) p.then(b => { if (b) b.mesh.visible = false; });
+    if (!on && this.herd) { this.animals.pilot(this.herd.g, null); this.herd = null; }   // the group goes on with its own life
     if (this.hudRow) this.hudRow.style.display = on ? '' : 'none';
     if (on) { f.pitch = 0; f.roll = 0; f.hover = false; this.camSettled = false; this.place(f.pos.x, f.pos.z); }
     else {
@@ -259,6 +267,8 @@ export class GroundControl {
     }
     this.v = Math.min(S.run, o.speed || 0);
     this.camSettled = false; this.last.copy(f.pos);
+    this.herd = a?.group && HERD_WORD[o.code.split(':')[0]] ? { g: a.group, a, word: HERD_WORD[o.code.split(':')[0]] } : null;   // the herd pilot (herdDrive)
+    this.idleT = 0; this.auto = false;
     this.hud(this.on);
   }
   // Where the player leaves this animal (spirit.js), for the AI to carry on from (animals.js release): as info.
@@ -283,7 +293,7 @@ export class GroundControl {
     f.body.visible = false; f.flap = 0; f.flapping = false; f.hover = false;   // the raven's keys still land in flight; ignore them
     if (P.distanceToSquared(this.last) > 20 * 20) this.place(P.x, P.z);       // moved from outside (R, Go to): onto the ground there
     f.pitch = clamp(f.pitch, -0.6, 0.7);
-    const k = this.input(), jump = this.jumpQ, act = this.actQ, rest = this.restQ;
+    const k = this.herdDrive(dt, this.input(), this.jumpQ || this.actQ || this.restQ), jump = this.jumpQ, act = this.actQ, rest = this.restQ;
     this.jumpQ = this.actQ = this.restQ = false;
     if (this.mode === 'air') this.air(dt);
     else if (this.mode === 'fly') this.fly(dt, k, jump);
@@ -523,6 +533,32 @@ export class GroundControl {
   }
 
   // A HUD row: what the body is doing.
+  // The herd pilot: see HERD_WORD above. Returns the keys to drive the body with: the player's, or, once the group has
+  // taken back over, the ones that keep the body in its slot.
+  herdDrive(dt, k, pressed) {
+    const h = this.herd; if (!h) return k;
+    const f = this.flight, P = f.pos, S = this.S, A = this.animals, g = h.g, a = h.a;
+    if (k.fwd || k.turn || k.shift || pressed) { this.idleT = 0; if (this.auto) { this.auto = false; this.say(`you lead the ${h.word}`); } }
+    else this.idleT += dt;
+    if (!this.auto && this.idleT > HERD_IDLE) { this.auto = true; A.pilot(g, null); this.say(`the ${h.word} moves on; any key to lead it`); }
+    if (!this.auto) {   // the point the group trends toward: ahead of the body
+      const lead = Math.max(1, HERD_LEAD * S.half);
+      A.pilot(g, P.x - Math.sin(f.yaw) * lead, P.z - Math.cos(f.yaw) * lead);
+      return k;
+    }
+    // the group leads: the body keeps its slot (round the covey's or flock's centre; behind the herd's leader in file
+    // while it walks, spread round it while it grazes)
+    let tx, tz;
+    const L = g.leader && g.leader !== a ? g.leader : null;
+    if (g.x != null) { tx = g.x + (a.ox || 0); tz = g.z + (a.oz || 0); }
+    else if (L) {
+      if ((L.amp || 0) > 0.5) { const fx = Math.sin(L.yaw), fz = Math.cos(L.yaw), back = Math.max(1, a.rank || 1) * 2.6, side = (a.ox || 0) * 0.18; tx = L.x - fx * back + fz * side; tz = L.z - fz * back - fx * side; }
+      else { tx = L.x + (a.ox || 0); tz = L.z + (a.oz || 0); }
+    } else return { fwd: 0, turn: 0, shift: false };
+    const ex = tx - P.x, ez = tz - P.z, d = Math.hypot(ex, ez), dy = wrap(Math.atan2(-ex, -ez) - f.yaw);
+    const go = d > (Math.abs(this.v) > 0.1 ? 0.8 : 2.5) && Math.abs(dy) < 1.2;
+    return { fwd: go ? 1 : 0, turn: d > 0.5 ? Math.max(-1, Math.min(1, dy / 0.35)) : 0, shift: d < 10 };
+  }
   hudLine(ground) {
     if (!this.hudRow) {
       const hud = document.getElementById('hud'); if (!hud) return;
@@ -538,6 +574,7 @@ export class GroundControl {
     else if (this.actT > 0) text = S.act.word;
     else if (this.sit > 0.5) text = S.alert.pushups ? 'doing push-ups' : S.alert.pose ? 'sitting up' : 'alert';
     else text = Math.abs(this.v) > (S.trot ?? S.run * 0.4) * 1.4 ? 'running' : Math.abs(this.v) > 0.05 ? 'on the move' : 'on the ground';
+    if (this.herd) text += this.auto ? ` · the ${this.herd.word} leads` : ` · leading the ${this.herd.word}`;
     this.hudRow.style.display = '';
     const b = this.hudRow.lastChild; if (b.textContent !== text) b.textContent = text;
   }

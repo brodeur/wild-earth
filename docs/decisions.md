@@ -1527,3 +1527,23 @@ order on every tile: vole, fence lizard, brush rabbit, quail, squirrel, woodpeck
 ground squirrel, gray fox, raven, deer, coyote, wild turkey, vulture, hawk, mountain lion (red). Verified on the home
 tile: the bar's discs run purple to red in that order. The species list still carries the GBIF counts (species.json)
 for the field guide; they no longer colour anything.
+
+## 2026-10-27: herd species are piloted as a herd; the herd takes back over when the player stops
+
+Aaron: "herd species could be piloted as a herd, a chaotic centre of gravity the animals trend towards; when the user
+stops moving for too long the herd/flock takes back over." Where it sits: the group AI in animals.js already moves each
+herd, covey and flock as a unit (a deer leader's waypoints with the rest in file; a covey's and a flock's centre with
+members in slots round it), and a taken animal is lifted out of the population with its group intact (take/release).
+So the pilot is one hook on the group: `animals.pilot(g, x, z)` sets the point the group trends toward (the deer leader
+walks to it, up to a run when it has fallen behind; the covey's or flock's centre runs or walks to it), `pilot(g, null)`
+hands the group back to its own life where it stands (its home moves there). A piloted herd is up whatever the hour; a
+piloted covey or flock is not flushed by the player among it. The control side (groundControl.js herdDrive): in a
+member of a herd species (deer, quail, turkey: HERD_WORD) the point is HERD_LEAD (5) body half-lengths ahead of the
+player while any key is pressed; after HERD_IDLE (6) s without one the group takes over, and the player's body walks
+with it as a member (keys synthesized toward its slot: behind the leader in file while it walks, round it or round the
+centre otherwise), until any key, which takes the lead back; the HUD's where line adds "leading the herd" or "the herd
+leads" and a line is said at each handover. Verified on the home tile in a herd of four: running 12 s took the herd 87 m
+behind (at a trot cap of 4.5 m/s, since raised to 8 so a run keeps it in touch); idle, the herd took over at 6 s and
+closed from 62 to 11 m with the body walking in its slot; a key took the lead back. Not yet: the jay families (fliers,
+flierControl.js), the lion mother's young, the ground squirrel colony and the woodpecker family (they do not roam as a
+group). Open: the camera could follow the group's centroid while the herd leads.
