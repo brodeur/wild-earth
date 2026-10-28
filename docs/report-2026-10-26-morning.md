@@ -175,6 +175,7 @@ release, WebGL) was still running; its commit, if it verified, is the last in `g
 | 419e3ee | Perception gained range and sense: a signature per species by sight, sound and scent against each other's senses gives how far one notices another; the alarm links are now who notices a predator first, 4 to 51 on the home tile. |
 | 2ee9a5e | The animals read the detection matrix: a hunter is noticed at each prey's distance and a watcher's alarm call sends the hunted to cover; as a hawk, a raven's call flushed four coveys before the hawk was near. Also fixes a line swallowed by a comment in the herd pilot that had left the page blank. |
 | e538459 | The wheel zooms every view, out on up and in on down; in a herd, each member out of view is marked by its avatar in a circle at the nearest screen edge; the wisp has six tendrils, the new three shorter. |
+| fbfaae1 | The start screen's wisp is the live 3D one flying a circle; the animals arrive under pillars of light and a tile change beams the old lineup out first; the in-game wisp has two counter-weaving fainter ribbons. |
 
 Open from the day: the attribution form for generated assets; far placement on the lidar ground beyond the fine square; the squirrel's
 crown camera in leafy oaks.
