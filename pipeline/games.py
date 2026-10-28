@@ -40,18 +40,34 @@ ARCHETYPES = {
     "watch": "the collective's sentinel: someone looks up while the rest feed; an alarm sends everyone to cover",
 }
 ALARM_MARGIN = 1.25   # a watcher must notice the predator this much further off than the prey does
+# What a game needs the world to contain, per resource: the objects a player meets (and the client module that draws
+# them, or none yet), beside the resource raster the client reads (client/res_<resource>.png, resources.py). A game's
+# `requires` lists them; the tile's `requests` gathers every resource and prey species its games need with its status,
+# so what the pipeline and the client still have to make for the games of life is one list (docs/games.md).
+REQUIRES = {
+    "acorn_mast": [{"object": "acorns under and in the oaks", "client": "acorns.js", "status": "drawn"}],
+    "grass_forbs": [{"object": "grass blades and tufts, forbs", "client": "grass.js", "status": "drawn"}],
+    "browse": [{"object": "shrub and low tree foliage within reach", "client": "shrubfield.js, vegetation.js", "status": "drawn"}],
+    "insects": [{"object": "insects", "client": None, "status": "missing"}],
+    "water": [{"object": "water surfaces: streams, ponds", "client": "water.js", "status": "drawn"}],
+    "cover": [{"object": "shrubs and trees to hide in", "client": "shrubfield.js, vegetation.js", "status": "drawn"}],
+    "cavity": [{"object": "cavity trees and granaries", "client": "acorns.js (granaries); no other cavities", "status": "partial"}],
+    "cliff_or_snag": [{"object": "snags, cliffs and tall perch trees", "client": "vegetation.js (old trees), rocks.js", "status": "partial"}],
+    "burrow": [{"object": "burrows", "client": "animals.js placeBurrows (ground squirrels only)", "status": "partial"}],
+}
 HOT_FLOOR, HOT_PCT, HOT_N, HOT_SEP_M = 40, 97, 12, 150   # a hotspot cell is in the resource's top (100 - HOT_PCT)% that season and scores at least HOT_FLOOR; at most HOT_N per game, HOT_SEP_M apart
 
 
-def _hotspots(arr: np.ndarray, transform, res: float) -> list[list[float]]:
-    """The best cells, as [x, north, score] in tile metres, the first the best, none nearer HOT_SEP_M to a better one."""
+def _hotspots(arr: np.ndarray, transform, res: float, origin=(0.0, 0.0)) -> list[list[float]]:
+    """The best cells, as [x, north, score] in tile metres (the raster's CRS coordinates less the tile's origin), the
+    first the best, none nearer HOT_SEP_M to a better one."""
     ys, xs = np.nonzero(arr >= max(HOT_FLOOR, float(np.percentile(arr, HOT_PCT))))
     if not len(ys):
         return []
     order = np.argsort(-arr[ys, xs], kind="stable")
     out: list[list[float]] = []
     for k in order:
-        x = transform.c + (xs[k] + 0.5) * res; north = transform.f - (ys[k] + 0.5) * res
+        x = transform.c + (xs[k] + 0.5) * res - origin[0]; north = transform.f - (ys[k] + 0.5) * res - origin[1]
         if any((x - o[0]) ** 2 + (north - o[1]) ** 2 < HOT_SEP_M ** 2 for o in out):
             continue
         out.append([round(x, 1), round(north, 1), int(arr[ys[k], xs[k]])])
@@ -74,7 +90,7 @@ def derive_games(tile: Tile) -> dict:
             rasters[r] = {}
             for b, season in enumerate(SEASONS):
                 a = src.read(b + 1).astype("float32")
-                rasters[r][season] = {"hotspots": _hotspots(a, src.transform, src.res[0]),
+                rasters[r][season] = {"hotspots": _hotspots(a, src.transform, src.res[0], (tile.bounds[0], tile.bounds[1])),
                                       "scarcity": round(float((a < 50).mean()), 3), "mean": round(float(a.mean()), 1)}
     # relations: who hunts whom (DIET's prey, plus a species named as a resource of a hunt or fed to the young in the
     # calendar), who eats what when, who follows a predator to kills (DIET's carrion, plus a hunter named as a resource
@@ -133,6 +149,7 @@ def derive_games(tile: Tile) -> dict:
                         r = NEEDS[c]["court"]
                     if r:
                         g["resource"] = r
+                        g["requires"] = REQUIRES.get(r, []); g["raster"] = f"client/res_{r}.png"
                         rr = rasters.get(r, {}).get(season)
                         if rr:
                             g["hotspots"] = rr["hotspots"]; g["scarcity"] = rr["scarcity"]
@@ -174,12 +191,24 @@ def derive_games(tile: Tile) -> dict:
             games.append({"id": f"{c}:watch", "archetype": "watch", "verb": "watch", "season": "all", "unit": unit, "collective": True,
                           "predators": predators_of[c]})
         species[c] = {"unit": unit, "predators": predators_of[c], "prey": prey_of[c], "games": games}
-    out = {"generated": now_iso(), "tile_id": tile.tile_id, "archetypes": ARCHETYPES,
+    # the requests: what this tile's games need the world to contain, by resource and by prey species, with its status
+    requests = []
+    for r in RESOURCE_BASE:
+        needed_by = sorted({c for c, sp in species.items() for g in sp["games"] if g.get("resource") == r})
+        if not needed_by:
+            continue
+        objs = REQUIRES.get(r, [])
+        status = "missing" if any(o["status"] == "missing" for o in objs) else "partial" if any(o["status"] == "partial" for o in objs) else "drawn"
+        requests.append({"kind": "resource", "resource": r, "needed_by": needed_by, "raster": f"client/res_{r}.png" if r in rasters else None, "objects": objs, "status": status})
+    for q in sorted({q for p, q in predation}):
+        requests.append({"kind": "prey", "species": q, "needed_by": sorted({p for p, qq in predation if qq == q}), "status": "drawn"})
+    out = {"generated": now_iso(), "tile_id": tile.tile_id, "archetypes": ARCHETYPES, "requests": requests,
            "relations": {"predation": predation, "competition": competition, "scavenge": scavenge, "alarm": alarm},
            "resources": {r: {s: {"scarcity": v["scarcity"], "mean": v["mean"], "hotspots": len(v["hotspots"])} for s, v in d.items()} for r, d in rasters.items()},
            "species": species}
     write_json(tile.path("games.json"), out)
     n = sum(len(s["games"]) for s in species.values())
     return {"path": "games.json", "kind": "json", "species": len(species), "games": n,
+            "requests": {st: sum(1 for q in requests if q["status"] == st) for st in ("drawn", "partial", "missing")},
             "collective": sum(1 for s in species.values() for g in s["games"] if g["collective"]),
             "predation_pairs": len(predation), "alarm_links": len(alarm)}

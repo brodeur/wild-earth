@@ -40,7 +40,7 @@ import { Perches } from './perch.js';
 // banking) climbing a little in the thermal, A / D tightening or opening it, W, S or H again flying on.
 const SPIRIT_CRUISE = 25, SPIRIT_MAX = 90, SPIRIT_BACK = 10, SPIRIT_FLOOR = 0.8;   // m/s, m/s, m/s, m
 const SPIRIT_FRAME = -0.45;   // where the wisp sits in the frame: this much of the half view below the middle (the lower third)
-// Scroll to zoom (owner, 2026-10-27): the wheel up zooms out, down zooms in. `zoom` scales the chase distance of every
+// Scroll to zoom (owner, 2026-10-27): the wheel down zooms out, up zooms in. `zoom` scales the chase distance of every
 // camera (this one, the spirit's, the ground animals' in groundControl.js, the squirrel's, the woodpecker's), ZOOM_RANGE
 // times the set-up's own; a notch of 100 is about 11%. Not over the panel, the credits, a card or the opening screen.
 const ZOOM_RANGE = [0.35, 4], ZOOM_RATE = 0.0012, ZOOM_STEP = 60, ZOOM_REACH = 2.5, ZOOM_EASE = 7;
@@ -71,7 +71,7 @@ export class RavenFlight {
     window.addEventListener('wheel', e => {
       if (document.documentElement.classList.contains('opening') || e.target?.closest?.('#panel, #credits, #speciesCard, #opening, #fieldGuide')) return;
       const px = e.deltaMode === 1 ? e.deltaY * 16 : e.deltaMode === 2 ? e.deltaY * 400 : e.deltaY, d = Math.max(-ZOOM_STEP, Math.min(ZOOM_STEP, px));
-      const z = this.zoom, t = this.zoomTarget * Math.exp(-d * ZOOM_RATE);
+      const z = this.zoom, t = this.zoomTarget * Math.exp(d * ZOOM_RATE);   // down (positive) zooms out, up zooms in (owner, 2026-10-27: inverted from the first cut)
       this.zoomTarget = Math.min(ZOOM_RANGE[1], Math.max(ZOOM_RANGE[0], Math.min(z * ZOOM_REACH, Math.max(z / ZOOM_REACH, t))));
     }, { passive: true });
     this.view = 'chase';                                  // 'chase' | 'first'

@@ -332,6 +332,7 @@ export class GroundControl {
     let target = k.fwd > 0 ? (k.shift && S.stalk ? S.stalk : S.walk + (S.run - S.walk) * runK) : k.fwd < 0 ? -S.back : 0;
     if (this.resting) target = 0;
     if (this.wet) target *= 1 - 0.6 * Math.min(1, this.wet.depth / S.wade);
+    target *= this.needs?.slow ?? 1;   // hungry or thirsty: slower (needs.js)
     this.v = damp(this.v, target, Math.abs(target) < Math.abs(this.v) ? S.stop : S.accel, dt);
     if (Math.abs(this.v) < 0.01 && !target) this.v = 0;
     if (!this.resting) f.yaw += k.turn * S.turn * (1 - 0.45 * Math.min(1, Math.abs(this.v) / S.run)) * dt;

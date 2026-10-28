@@ -45,8 +45,8 @@ no hotspots; a new species in the calendar gets its games the same way.
 
 | archetype | the loop | exists in the client |
 |---|---|---|
-| gather | find the resource's hotspots, feed, keep an eye out; competitors deplete the same cells | the graze and forage idles; no scoring yet |
-| drink | reach water on a rhythm; in summer the few sources draw every species, and the ambushers | no |
+| gather | find the resource's hotspots, feed, keep an eye out; competitors deplete the same cells | the walkers: hunger, fed by holding E where a gather resource scores (needs.js, 2026-10-27); not yet for the birds, the squirrel or the hunters |
+| drink | reach water on a rhythm; in summer the few sources draw every species, and the ambushers | the walkers: thirst at the species' rhythm, met by E while wading or at the water (needs.js) |
 | hunt | find prey by perception, close unseen, strike | the AI hunts (fox pounce, lion ambush); not for the player |
 | evade | notice the predator first (perception, the watchers' alarms), reach cover, keep the group together | the AI flees; the covey and flock flush |
 | cache | store in season, recover later; competitors pilfer; a family defends its granary | the acorn game (raven), the squirrel and woodpecker caches |
@@ -55,6 +55,29 @@ no hotspots; a new species in the calendar gets its games the same way.
 | rear | keep the young fed and alive; an escort game, collective where the young travel with the group | the lion's young and the deer's fawns follow |
 | disperse | leave the natal range for an empty territory | no |
 | watch | the collective's sentinel; an alarm sends everyone to cover | the ground squirrel colony's alarm; the jay mobbing |
+
+## What a need asks the world to contain
+
+Aaron, 2026-10-27: "whenever a species has a need, we also need to generate a request for that species to be generated
+by the pipeline." Every game with a resource now carries `requires`: the objects a player meets for it and the client
+module that draws them (acorns under the oaks: acorns.js; grass: grass.js; browse and cover: the shrubs and trees;
+water: water.js; burrows: the ground squirrels' only; cavities: the granaries only; insects: nothing yet) and its raster
+(`client/res_<resource>.png`, the four seasons as RGBA on the 30 m grid, written by resources.py for the client to read
+the score under the player). The tile's `requests` gathers every resource and prey species its games need with a
+status: drawn, partial or missing. On the home tile: 9 resources needed, 5 drawn, 3 partial (cavities, snags and cliffs,
+burrows) and 1 missing (insects, needed by ten species), and 10 prey species, all drawn. That list is the pipeline's and
+the client's to-do for the games of life, and it is generated, so a new species or resource in the tables appears on it.
+
+## The games of life in the client
+
+needs.js (2026-10-27): in a walker, hunger and thirst from 1 to 0 over minutes (food 7; thirst by the drink game's rhythm:
+daily 4, often 8, rare 16; none means no thirst), eating by holding E where one of the species' gather resources this
+season scores at least 25 on its raster (about 20 s of grazing from empty), drinking by E while wading or at the water
+(10 s). Under a quarter the body slows to 0.7. The widget bottom right shows the meters and, when a need is low, the
+nearest good cell of the resource, found by scanning the raster in rings round the body, with bearing and distance.
+Everything comes from games.json and the rasters, so any species in the tables gets its needs; a species whose food this
+season is prey rather than a raster (the hunters) has no drain yet, since hunting is not a loop. The acorns are their
+real size (2 cm by 3 cm, ACORN_R in acorns.js) and lie on the ground; the glow still finds them.
 
 ## What it finds on the home tile
 

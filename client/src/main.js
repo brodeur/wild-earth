@@ -12,6 +12,7 @@ import { MiniMap } from './minimap.js';
 import { RoadsOverlay } from './roadsOverlay.js';
 import { setupGoTo, urlPoint, builtTileFor, localXY } from './goto.js';
 import { NearBar } from './nearBar.js';
+import { Needs } from './needs.js';
 import { OpeningScreen, Arrival, lastTile, rememberTile } from './arrival.js';
 import { SEASON_LOOK, seasonOfDate, sunDirection, dateForSeason, parseDate } from './season.js';
 import { AcornGame } from './acorns.js';
@@ -147,6 +148,7 @@ function restoreHud() {
   if (near) near.title = hudWords.near ?? '';
   if ($('credits') && hudWords.credits != null) $('credits').innerHTML = hudWords.credits;
   if ($('nearBar')) $('nearBar').hidden = true;   // the bar's slots went with the world's nodes; the bar itself waits for the next spirit
+  if ($('needs')) $('needs').hidden = true;
 }
 function closeBitmaps(tile) {
   for (const im of [tile?.textureImage, tile?.imageryTextureImage, tile?.groundTextureImage, tile?.seasonImage, tile?.imagery]) if (im?.bitmap) { im.bitmap.close(); delete im.bitmap; }
@@ -501,10 +503,13 @@ async function buildSteps(w, { params, pending, direct = false, arrive = null })
   // The spirit (spirit.js): the form the player arrives in; touching an animal puts the player in that body (onBody:
   // the observer, the perception line, the panel's way back), B or the panel button leaves it.
   const nearBar = w.m.nearBar = new NearBar({ el: $('nearBar'), animals });   // the species within reach, in spirit form (nearBar.js)
+  const needs = w.m.needs = new Needs({ tile, el: $('needs'), season: seasonNow });   // hunger and thirst in a walker (needs.js)
+  ground.needs = needs;
   const onBody = (code, sex = null) => {
     window.__we.playerSpecies = code; window.__we.playerSex = sex;
     animals.setObserver(code); showPerceives(code);
     $('spiritBtn').hidden = code === 'spirit'; $('nearBar').hidden = code !== 'spirit';
+    needs.setSpecies(code);
   };
   const spirit = w.m.spirit = new SpiritControl({ scene, renderer, camera, flight, raven, animals, squirrel, woodpecker, ground, flier, atmosphere, onBody });
   $('spiritBtn').onclick = () => { spirit.leave(); renderer.domElement.focus?.(); };
@@ -755,6 +760,7 @@ async function buildSteps(w, { params, pending, direct = false, arrive = null })
     const dt = Math.min((now - last) / 1000, 0.1); last = now;
     const s = seasonNow(), look = SEASON_LOOK[s], sun = sunDirection(tile.latitude, s, state.hour);
     const f = screenOpen ? arrival.hold() : squirrel.on ? squirrel.update(dt) : woodpecker.on ? woodpecker.update(dt) : ground.on ? ground.update(dt) : flier.on ? flier.update(dt) : arrival.active ? arrival.update(dt) : spirit.on ? spirit.update(dt) : flight.update(dt);
+    if (ground.on) needs.update(dt, { x: flight.pos.x, north: -flight.pos.z, acting: ground.actT > 0, wet: !!ground.wet });   // the games of life (needs.js)
     spirit.blendCamera(dt);   // across a switch of body: drawn from a blend of the old view and the new control's (spirit.js)
     raven.update(dt, flight.flapping, flight.speed);
     spirit.draw(dt);   // the wisp, while a spirit
