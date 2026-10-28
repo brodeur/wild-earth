@@ -410,6 +410,15 @@ CARRY[ST] = { py: 0.11, pz: 0.06, ty: 0.128, tz: 0.125, flick: 0.4, pose: 0 };  
 const damp = (a, b, k, dt) => b + (a - b) * Math.exp(-k * dt);
 const monthOf = d => d.getMonth() + 1 + (d.getDate() - 1) / 31;   // 1 = 1 January
 const FG_SEEN = { [TK]: 25, [GS]: 15, [LZ]: 3 };   // m from the player: the field guide's first-sighting card
+// Noticing (2026-10-27, docs/games.md): perception.json `detects` says how far each species notices each other by
+// sight, sound and scent. With the player in a species, notice[sp] is how far species sp notices the player; an animal
+// is alert (head up, frozen, the sentinel up) within min(notice, ALERT_MAX) m, and the flee and flush radii below are
+// capped by it, so a stalking lion is not fled until it is noticed. Alarm calls: a species in perception.json
+// `alarm_calls` that notices the player within ALARM_NEAR m, when the player's species hunts anyone here (games.json relations), calls
+// (once per ALARM_COOL s per species, the 'alarm' event); every animal of a species the player hunts within the
+// call's carry is alarmed for ALARM_T s, and an alarmed animal goes to cover or flees as if the player were at its
+// flee radius while it is within ALARM_REACT_R m of it.
+const ALERT_MAX = 120, ALARM_NEAR = 120, ALARM_T = 8, ALARM_COOL = 12, ALARM_REACT_R = 150, DEER_FLEE = 35;   // ALARM_NEAR: a watcher calls at a predator this close (and noticed), not one it merely sees far off
 // A ground squirrel's burrow mouth: a dark hole in a low ring of bare dirt, 0.27 m across, coloured per vertex.
 function burrowGeometry() {
   const R = [0, 0.045, 0.07, 0.15, 0.27], Y = [-0.03, 0, 0.022, 0.012, 0], C = [0x060504, 0x16110c, 0x6c5a46, 0x786650, 0x7d6b55], N = 14;
@@ -448,6 +457,7 @@ export class Animals {
     this.searches = SEARCHES;
     // v4: families by granary (rebuilt with the live set), raiders the families may chase
     this.fams = new Map(); this.threats = new Map();
+    this.notice = SPECIES.map(() => Infinity); this.preyOf = new Set(); this.alarmCool = {}; this.lastAlarm = null;   // noticing (ALERT_MAX above)
     if (game) { game.animals = this; game.on?.('dig', e => this.onDig(e)); }
     // Animals stand on the terrain as drawn this frame (tilepackage.js Heightfield.ground: the near fine mesh of the
     // lidar ground where the tile has one, else the 10 m mesh with each square split SW-NE), which in a hollow runs
@@ -693,7 +703,37 @@ export class Animals {
     const named = new Set(Object.values(this.tile.perception?.perceives || {}).flat());
     for (const c of PENDING) if (!named.has(c)) this.perceived.add(c);
     SPECIES.forEach((sp, k) => { this.meshes[k].visible = this.perceived.has(sp.code); });
+    // noticing: how far each species notices this observer (perception.json detects), and whom it hunts (games.json)
+    const det = this.tile.perception?.detects || null;
+    this.notice = SPECIES.map(sp => { const row = det?.[sp.code.split(':')[0]]; const v = row ? row[code] : undefined; return typeof v === 'number' ? v : Infinity; });
+    this.preyOf = new Set((this.tile.games?.relations?.predation || []).filter(([pr]) => pr === code).map(([, q]) => q));
     this.dirty = true;
+  }
+  // Danger to an animal or a group o of species sp at distance d from the player, whose own flee radius is base: within
+  // base and noticed, or alarmed by a call and within ALARM_REACT_R. alert: noticed, within ALERT_MAX.
+  danger(sp, o, d, base) { return ((o?.alarmUntil || 0) > this.time && d < ALARM_REACT_R) || d < Math.min(base, this.notice[sp]); }
+  alert(sp, d) { return d < Math.min(this.notice[sp], ALERT_MAX); }
+  alarmed(o) { return (o?.alarmUntil || 0) > this.time; }
+  // The alarm calls (the header): a watcher species that notices the player, while the player hunts someone here.
+  alarms(px, py, pz) {
+    if (!this.preyOf.size) return;
+    const calls = this.tile.perception?.alarm_calls; if (!calls) return;
+    for (const code in calls) {
+      const k = INDEX[code]; if (k === undefined || !this.meshes[k]?.visible || (this.alarmCool[code] || 0) > this.time) continue;
+      const R = Math.min(this.notice[k], ALARM_NEAR); if (!isFinite(R)) continue;
+      let caller = null;
+      for (const a of this.bySpecies[k]) { if (a.culled) continue; const dx = a.x - px, dy = a.y - py, dz = a.z - pz; if (dx * dx + dy * dy + dz * dz < R * R) { caller = a; break; } }
+      if (!caller) continue;
+      this.alarmCool[code] = this.time + ALARM_COOL;
+      const carry = calls[code], until = this.time + ALARM_T; let n = 0;
+      for (const a of this.list) {
+        if (!this.preyOf.has(SPECIES[a.sp].code.split(':')[0])) continue;
+        const dx = a.x - caller.x, dz = a.z - caller.z; if (dx * dx + dz * dz > carry * carry) continue;
+        a.alarmUntil = until; if (a.group) a.group.alarmUntil = until; n++;
+      }
+      this.lastAlarm = { code, t: this.time, n };
+      this.emit('alarm', { species: code, x: caller.x, y: caller.y, z: caller.z, carry, alarmed: n, predator: this.observer });
+    }
   }
 
   // ---- occurrence prior --------------------------------------------------------------------------
@@ -1529,7 +1569,7 @@ export class Animals {
     // in a game they let the player watch from closer; a player woodpecker (woodpeckerControl.js) is one of them: it
     // flushes none of them, at its granary or anywhere
     const game = this.gameOn(a), fr = this.observer === SPECIES[WP].code ? 0 : game ? 5 : 8;
-    const dx = a.x - px, dy = a.y - py, dz = a.z - pz, flush = dx * dx + dy * dy + dz * dz < fr * fr;
+    const dx = a.x - px, dy = a.y - py, dz = a.z - pz, flush = fr > 0 && this.danger(a.sp, a, Math.sqrt(dx * dx + dy * dy + dz * dz), fr);
     if (a.state === W_CLING) {
       a.pitch = damp(a.pitch, CLING_PITCH, 8, dt); a.yaw = a.face + Math.PI;
       // pecking: drilling and wedging acorns at the granary in fall, probing bark otherwise
@@ -2080,9 +2120,18 @@ export class Animals {
     const can = this.tile.canopy.at(x, -z) / 100;
     return c === 5 ? 1 : c === 9 ? 0.9 : c === 1 ? 0.95 - can : c === 6 ? 0.5 : c === 3 ? 0.35 - can * 0.2 : 0.2;
   }
-  drUpdate(a, dt) {
+  drUpdate(a, dt, px = 1e7, py = 1e7, pz = 1e7) {
     const r = a.rng, g = a.group, H = this.heights, hr = this.hour;
-    const active = !!g.pilot || hr < 9.5 || hr > 16.5;   // dawn and dusk; bedded through the middle of the day (a piloted herd is up)
+    // the player: alert (head up, standing) when noticed within ALERT_MAX; off at a trot when within DEER_FLEE and
+    // noticed, or alarmed by a call: the leader takes the herd 80-120 m the other way (the pilot's point, if piloted)
+    const dh = Math.hypot(a.x - px, a.z - pz), low = py - a.y < 30, alertNow = low && this.alert(DR, dh);
+    if (low && g.leader === a && !g.pilot && this.danger(DR, a, dh, DEER_FLEE) && (g.fleeT || 0) <= 0) {
+      const ang = Math.atan2(a.z - pz, a.x - px) + (r() - 0.5) * 0.6, d = 80 + r() * 40;
+      g.wx = a.x + Math.cos(ang) * d; g.wz = a.z + Math.sin(ang) * d; g.fleeT = 8; g.hx = g.wx; g.hz = g.wz;
+      for (const b of this.bySpecies[a.sp]) if (b.group === g) { b.state = D_WALK; b.pose = 0; }
+    }
+    if (g.leader === a && g.fleeT > 0) g.fleeT -= dt;
+    const active = !!g.pilot || g.fleeT > 0 || alertNow || hr < 9.5 || hr > 16.5;   // dawn and dusk; bedded through the middle of the day (a piloted, fleeing or alert herd is up)
     a.t -= dt;
     let speed = 0;
     if (!active) {
@@ -2093,7 +2142,7 @@ export class Animals {
       else if (g.leader === a && g.pilot) {   // piloted: to the player's point, at a trot when far behind it (pilot above)
         const ex = g.pilot.x - a.x, ez = g.pilot.z - a.z, d = Math.hypot(ex, ez);
         if (d < 2.5) { if (a.state === D_WALK) { a.state = D_GRAZE; a.t = 4 + r() * 8; } }
-        else { a.state = D_WALK; speed = Math.min(8, 0.6 + d * 0.3); a.x += ex / d * speed * dt;   // up to a run when the player has run ahead a.z += ez / d * speed * dt; a.yaw += wrapAngle(Math.atan2(ex, ez) - a.yaw) * Math.min(1, dt * 3); }
+        else { a.state = D_WALK; speed = Math.min(8, 0.6 + d * 0.3); a.x += ex / d * speed * dt; a.z += ez / d * speed * dt; a.yaw += wrapAngle(Math.atan2(ex, ez) - a.yaw) * Math.min(1, dt * 3); }   // up to a run when the player has run ahead
       } else if (g.leader === a) {
         if (a.state !== D_WALK && a.t <= 0) {   // next waypoint: the most open of a few spots 40-110 m off, within 160 m of home
           let best = -2;
@@ -2110,7 +2159,7 @@ export class Animals {
         if (a.state === D_WALK) {
           const ex = g.wx - a.x, ez = g.wz - a.z, d = Math.hypot(ex, ez);
           if (d < 1) { a.state = D_GRAZE; a.t = 4 + r() * 8; }
-          else { speed = 1.1; a.x += ex / d * speed * dt; a.z += ez / d * speed * dt; a.yaw += wrapAngle(Math.atan2(ex, ez) - a.yaw) * Math.min(1, dt * 2); }
+          else { speed = g.fleeT > 0 ? 4 : 1.1; a.x += ex / d * speed * dt; a.z += ez / d * speed * dt; a.yaw += wrapAngle(Math.atan2(ex, ez) - a.yaw) * Math.min(1, dt * 2); }
         }
       } else {   // walking: single file behind the leader; grazing: spread around it
         const L = g.leader || a, walking = L.state === D_WALK;   // a herd can lose its leader; follow yourself
@@ -2121,12 +2170,12 @@ export class Animals {
         } else { tx = L.x + a.ox; tz = L.z + a.oz; }
         const ex = tx - a.x, ez = tz - a.z, d = Math.hypot(ex, ez);
         if (d > (a.state === D_WALK ? 0.6 : 2.5)) {
-          a.state = D_WALK; speed = Math.min(g.pilot ? 8 : 1.6, 0.4 + d * 0.3);   // a piloted herd keeps up, at a run when strung out
+          a.state = D_WALK; speed = Math.min(g.pilot ? 8 : g.fleeT > 0 ? 4.5 : 1.6, 0.4 + d * 0.3);   // a piloted or fleeing herd keeps up, at a run when strung out
           a.x += ex / d * speed * dt; a.z += ez / d * speed * dt;
           const want = Math.atan2(ex, ez); a.yaw += wrapAngle(want - a.yaw) * Math.min(1, dt * 3);
         } else a.state = D_GRAZE;
       }
-      a.flick = damp(a.flick, a.state === D_GRAZE ? 1 : 0, 2, dt);
+      a.flick = damp(a.flick, a.state === D_GRAZE && !alertNow ? 1 : 0, 2, dt);   // alert: head up
     }
     a.amp = damp(a.amp, speed > 0.05 ? 1 : 0, 5, dt);
     a.phase += dt * TAU * speed / 1.5;
@@ -2166,10 +2215,11 @@ export class Animals {
     const r = this.groupRng(g, this.bySpecies[QU]); if (!r) return;
     const H = this.heights;
     g.t -= dt; g.cool -= dt;
-    if (g.state !== G_SETTLE && g.cool <= 0) {
+    if (g.state !== G_SETTLE && (g.cool <= 0 || this.alarmed(g))) {   // an alarm call sends a settled covey to cover again
       const dx = px - g.x, dz = pz - g.z;
-      if (!g.pilot && dx * dx + dz * dz < 48 * 48 && py - H.atXZ(g.x, g.z) < 42) { this.flushCovey(g, px, pz, 'raven'); return; }
-      if (r() < dt / 160) { const ang = r() * TAU; this.flushCovey(g, g.x + Math.cos(ang) * 30, g.z + Math.sin(ang) * 30, 'self'); return; }
+      const d = Math.hypot(dx, dz), al = this.alarmed(g);
+      if (!g.pilot && ((d < Math.min(48, this.notice[QU]) && py - H.atXZ(g.x, g.z) < 42) || (al && d < ALARM_REACT_R))) { this.flushCovey(g, px, pz, al ? 'alarm' : 'raven'); return; }
+      if (g.cool <= 0 && r() < dt / 160) { const ang = r() * TAU; this.flushCovey(g, g.x + Math.cos(ang) * 30, g.z + Math.sin(ang) * 30, 'self'); return; }
     }
     if (g.pilot && g.state !== G_SETTLE) {   // piloted: the knot runs to the player's point and forages there (pilot above)
       const ex = g.pilot.x - g.x, ez = g.pilot.z - g.z, d = Math.hypot(ex, ez);
@@ -2525,7 +2575,7 @@ export class Animals {
     const treed = a.state === M_CLIMB || a.state === M_TREE || a.state === M_DOWN || (a.state === M_FLEE && a.next === M_CLIMB);
     // a low player close by: off (bedded canids sit tighter; the lion slinks off at its full distance)
     const dx = a.x - px, dz = a.z - pz, dh = Math.hypot(dx, dz);
-    if (!treed && a.cool <= 0 && a.state !== M_FLEE && py - a.y < 30 && dh < cfg.flee * (a.state === M_BED && !lion ? 0.6 : 1)) {
+    if (!treed && a.cool <= 0 && a.state !== M_FLEE && py - a.y < 30 && this.danger(a.sp, a, dh, cfg.flee * (a.state === M_BED && !lion ? 0.6 : 1))) {
       a.cool = 6;
       const o = cfg.climb && r() < cfg.climb ? this.nearestOak(a.x, a.z, 14) : null;
       if (o && forkHeight(o) > 2) {   // a gray fox up a tree
@@ -2662,8 +2712,8 @@ export class Animals {
     const r = a.rng, H = this.heights, hr = this.hour, act = hr < 9.5 || hr > 16.5;
     a.t -= dt;
     const near = py - a.y < 20 ? Math.hypot(a.x - px, a.z - pz) : Infinity;
-    if (a.state !== B_BOLT && near < 9) this.rbBolt(a, px, pz);
-    else if (near < 22 && (a.state === B_FORAGE || (a.state === B_HOP && a.next !== B_FORM) || a.state === B_SIT)) { a.state = B_FREEZE; a.t = 4 + r() * 6; }
+    if (a.state !== B_BOLT && this.danger(RB, a, near, 9)) this.rbBolt(a, px, pz);
+    else if (this.alert(RB, near) && (a.state === B_FORAGE || (a.state === B_HOP && a.next !== B_FORM) || a.state === B_SIT)) { a.state = B_FREEZE; a.t = 4 + r() * 6; }
     let speed = 0, lift = 0, wantPose = 0, wantFlick = 0;
     switch (a.state) {
       case B_FORM:
@@ -2737,8 +2787,8 @@ export class Animals {
     const near = py - a.y < JACK.low ? Math.hypot(a.x - px, a.z - pz) : Infinity;
     if (a.state !== JK_BOLT) {
       const form = a.state === JK_FORM || (a.state === JK_FREEZE && a.next === JK_FORM);
-      if (near < (form ? JACK.formFlush : JACK.flush)) this.jkBolt(a, px, pz);
-      else if (near < JACK.freeze && a.state !== JK_FREEZE) {
+      if (this.danger(JR, a, near, form ? JACK.formFlush : JACK.flush)) this.jkBolt(a, px, pz);
+      else if (this.alert(JR, near) && a.state !== JK_FREEZE) {
         a.next = a.state === JK_FORM ? JK_FORM : JK_FEED; a.state = JK_FREEZE; a.speed = 0;
         a.t = a.next === JK_FORM ? 4 + r() * 6 : 1 + r() * 3; a.sx = px; a.sz = pz;
       }
@@ -2842,7 +2892,7 @@ export class Animals {
     const r = a.rng, H = this.heights, L = Math.max(0.5, Math.hypot(a.tx - a.sx, a.tz - a.sz));
     a.t -= dt;
     const near = py - a.y < 4 ? Math.hypot(a.x - px, a.z - pz) : Infinity;
-    if (near < 4 && a.state !== VL_HIDE && !(a.state === VL_RUN && a.next === VL_HIDE)) {
+    if (this.danger(VO, a, near, 4) && a.state !== VL_HIDE && !(a.state === VL_RUN && a.next === VL_HIDE)) {
       const d0 = Math.hypot(a.sx - px, a.sz - pz), d1 = Math.hypot(a.tx - px, a.tz - pz);
       a.h = d0 > d1 ? 0 : 1; a.speed = 1.6; a.state = VL_RUN; a.next = VL_HIDE;
     }
@@ -2986,7 +3036,7 @@ export class Animals {
     a.t -= dt;
     if (a.state === T_FORAGE || a.state === T_SCRATCH) {   // the player close to a bird on the ground: the flock flushes
       const dx = a.x - px, dy = a.y - py, dz = a.z - pz, R = this.tkFlushR();
-      if (dx * dx + dy * dy + dz * dz < R * R) g.near = true;
+      if (this.danger(TK, g, Math.sqrt(dx * dx + dy * dy + dz * dz), R)) g.near = true;
     }
     if (a.state === T_WAIT) {   // a crouch (or a few seconds on the limb at dawn), then off
       a.wait -= dt; a.amp = damp(a.amp, 0, 8, dt); a.pose = damp(a.pose, 1, 8, dt);
@@ -3066,7 +3116,7 @@ export class Animals {
     g.t -= dt; g.watch -= dt;
     const H = this.heights, gy = H.atXZ(g.x, g.z);
     const R = (this.observer === 'corvus_corax' || this.observer === 'buteo_jamaicensis' ? GSQ.raptor : GSQ.player) + GSQ.spread;
-    let threat = (px - g.x) ** 2 + (py - gy) ** 2 + (pz - g.z) ** 2 < R * R;
+    let threat = this.danger(GS, g, Math.sqrt((px - g.x) ** 2 + (py - gy) ** 2 + (pz - g.z) ** 2), R);
     if (!threat) for (const h of this.bySpecies[HK]) if ((h.x - g.x) ** 2 + (h.y - gy) ** 2 + (h.z - g.z) ** 2 < (GSQ.raptor + GSQ.spread) ** 2) { threat = true; break; }
     const night = atmo.sunDir.value.y < 0.06;
     g.threat = threat;
@@ -3282,7 +3332,7 @@ export class Animals {
       a.state = this.airT < 24 ? L_BASK : L_ALERT; a.t = r() * 8; a.vis = 0.001;
     }
     const dx = a.x - px, dy = a.y - py, dz = a.z - pz, near = Math.sqrt(dx * dx + dy * dy + dz * dz);
-    if (near < LIZ.flee && a.state !== L_SPRINT && a.state !== L_HIDE) this.lzSprint(a, px, py, pz);
+    if (this.danger(LZ, a, near, LIZ.flee) && a.state !== L_SPRINT && a.state !== L_HIDE) this.lzSprint(a, px, py, pz);
     let speed = 0, pose = 0, bend = 0;
     switch (a.state) {
       case L_HIDE:
@@ -3600,6 +3650,7 @@ export class Animals {
     const ghost = this.observer === 'spirit';   // the spirit: nothing reacts to it (see the header)
     const px = ghost ? 1e7 : P.x, py = ghost ? 1e7 : P.y, pz = ghost ? 1e7 : P.z;
     const list = this.list, e = this._e, q = this._q, p = this._p, s = this._s, m = this._m;
+    if (!ghost) this.alarms(px, py, pz);   // the watchers' alarm calls (danger, alert above)
     if (this.meshes[QU].visible) for (let k = 0; k < this.coveys.length; k++) this.coveyUpdate(this.coveys[k], dt, px, py, pz);
     if (this.meshes[TK].visible) for (let k = 0; k < this.flocks.length; k++) this.flockUpdate(this.flocks[k], dt, px, pz);
     if (this.meshes[GS].visible) for (let k = 0; k < this.colonies.length; k++) this.colonyUpdate(this.colonies[k], dt, px, py, pz);
@@ -3629,7 +3680,7 @@ export class Animals {
         a.gm = this.meshOn(RV) && (a.state === R_GROUND || a.state === R_PERCH || a.state === R_WALK) ? 1 : 0;
         if (this.rvGM) this.rvGM[a.slot] = a.gm;
       }
-      else if (sp === DR || sp === BK) this.drUpdate(a, dt);
+      else if (sp === DR || sp === BK) this.drUpdate(a, dt, px, py, pz);
       else if (sp === FX || sp === CY || sp === ML) this.mmUpdate(a, dt, px, py, pz);
       else if (sp === RB) this.rbUpdate(a, dt, px, py, pz);
       else if (sp === JR) this.jkUpdate(a, dt, px, py, pz);
@@ -3753,6 +3804,7 @@ export class Animals {
     const parts = [];
     for (let k = 0; k < SPECIES.length; k++) if (c[k]) parts.push(`${c[k]} ${c[k] === 1 ? SPECIES[k].one : SPECIES[k].many}`);
     this.text = parts.length ? parts.join(' · ') : (this.list.length ? `none within ${NEAR_R} m` : '–');
+    if (this.lastAlarm && this.time - this.lastAlarm.t < 4) this.text = `${SPECIES[INDEX[this.lastAlarm.code]]?.one || this.lastAlarm.code} calls the alarm · ` + this.text;
     this.scanTags();
     return this.text;
   }

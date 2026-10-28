@@ -123,5 +123,6 @@ hardest gather on the tile. A drink game carries the species' rhythm (daily, oft
    bar at the bottom could show the current game's resource and the nearest hotspot's bearing), a score, and a hand-over
    to the AI when the player stops, as the herd does.
 2. Difficulty from competitors' populations against hotspot capacity.
-3. The client's animals read `detects` and the alarm links: a jay's scold sends the covey to cover before the covey sees
-   the hawk; a hunter is noticed at the prey's distance, not the AI's fixed radius.
+3. Done 2026-10-27: the client's animals read `detects` and `alarm_calls`: a hunter is noticed at each prey's distance
+   (alert, then the flee radius capped by it) and a watcher's call sends the hunted within its carry to cover
+   (decisions, "the animals notice the player at their own distance"). Still to do: AI predators as threats to AI prey.

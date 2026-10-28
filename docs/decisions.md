@@ -1615,3 +1615,23 @@ to 51, each with both distances; evade games carry `notice_m` and their watchers
 `noticed_at_m` per prey. The numbers are a first table from natural history, not measured; the animal briefs should
 check them. Next: the client's animals reading the matrix (the jay's scold sending the covey to cover; a hunter noticed
 at the prey's distance).
+
+## 2026-10-27: the animals notice the player at their own distance, and alarm calls send the hunted to cover
+
+Aaron: "make the client's animals read the detection matrix: alarm calls send others to cover, and a hunter is noticed
+at each prey's distance." animals.js: with the player in a species, `notice[sp]` is how far species sp notices that
+species (perception.json `detects`); `preyOf` is whom the player's species hunts (games.json relations). An animal is
+alert within min(notice, 120 m): deer stand with their heads up, rabbits and jackrabbits freeze; its flee or flush radius
+(the covey's 48 m, the turkeys', the colony's, the canids' and the lion's, the rabbits', the vole's, the lizard's, the
+woodpecker's) is capped by its notice, so a lion is not fled until it is noticed. Deer flee at 35 m: the leader takes the
+herd 80-120 m the other way at a trot and the home moves there. Alarm calls: a species in perception.json `alarm_calls`
+with a member within min(notice, 120 m) of the player, while the player hunts someone here, calls once per 12 s (the
+'alarm' event; the HUD's animals-near line says who called for 4 s); every animal of a hunted species within the call's
+carry is alarmed for 8 s, and an alarmed animal or group within 150 m of the player goes to cover or flees as if the
+player were at its flee radius (a settled covey flushes again on an alarm). Verified on the home tile with the player
+read as a red-tailed hawk: at 82 m from a covey a raven within 120 m called, 203 animals within its 700 m carry were
+alarmed, four coveys flushed with the alarm as the cause, then the jays, quail and squirrels called in turn; the deer
+near the first test fled and stood alert. Found on the way: the herd pilot's commit (0a7687c) had a comment that
+swallowed the rest of its line and a closing brace, which left the page blank from then until this commit; every
+client module is now syntax-checked as an ES module before a commit (the memory note). Not done: the AI predators are
+not threats to the AI prey (only the player is, as before); the sound layer has no voice for the 'alarm' event yet.
