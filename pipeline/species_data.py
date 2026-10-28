@@ -302,3 +302,48 @@ CALENDAR = {
         "fall": [act("hunt", "odocoileus_hemionus", goal="deer gather at mast")],
     },
 }
+
+
+# What each species needs whatever the season (the games step, pipeline/games.py, reads these beside CALENDAR; docs/games.md):
+#   water: how it drinks: "daily" (open water every day, dawn and dusk), "often" (open water when near it), "rare"
+#          (mostly metabolic water or dew; drinks in drought), "none" (never needs open water: moisture from food);
+#   shelter: the resource raster it hides, dens or roosts in (cover, cavity, burrow, cliff_or_snag for a tall roost);
+#   court: the resource raster where it courts (the rut's open ground, the strutting ground, a granary, a cliff).
+NEEDS = {
+    "corvus_corax":             {"water": "often", "shelter": "cliff_or_snag", "court": "cliff_or_snag"},
+    "buteo_jamaicensis":        {"water": "often", "shelter": "cliff_or_snag", "court": "cliff_or_snag"},
+    "odocoileus_hemionus":      {"water": "daily", "shelter": "cover", "court": "grass_forbs"},
+    "urocyon_cinereoargenteus": {"water": "often", "shelter": "burrow", "court": "cover"},
+    "sciurus_griseus":          {"water": "often", "shelter": "cavity", "court": "cavity"},
+    "melanerpes_formicivorus":  {"water": "often", "shelter": "cavity", "court": "cavity"},
+    "aphelocoma_californica":   {"water": "often", "shelter": "cover", "court": "cover"},
+    "cyanocitta_stelleri":      {"water": "often", "shelter": "cover", "court": "cover"},
+    "cathartes_aura":           {"water": "often", "shelter": "cliff_or_snag", "court": "cliff_or_snag"},
+    "callipepla_californica":   {"water": "daily", "shelter": "cover", "court": "cover"},
+    "sylvilagus_bachmani":      {"water": "none", "shelter": "cover", "court": "cover"},
+    "lepus_californicus":       {"water": "none", "shelter": "cover", "court": "grass_forbs"},
+    "microtus_californicus":    {"water": "none", "shelter": "burrow", "court": "burrow"},
+    "canis_latrans":            {"water": "daily", "shelter": "burrow", "court": "cover"},
+    "meleagris_gallopavo":      {"water": "daily", "shelter": "cliff_or_snag", "court": "grass_forbs"},
+    "otospermophilus_beecheyi": {"water": "rare", "shelter": "burrow", "court": "burrow"},
+    "sceloporus_occidentalis":  {"water": "none", "shelter": "burrow", "court": "cliff_or_snag"},
+    "puma_concolor":            {"water": "daily", "shelter": "cover", "court": "cover"},
+}
+
+# What each predator eats among the species here (the prey's side of the calendar's hunt lists, which were written for
+# the hunter's story), and whose kills a scavenger follows. Prey not in the tile's list are simply absent there.
+DIET = {
+    "buteo_jamaicensis":        {"prey": ["microtus_californicus", "otospermophilus_beecheyi", "sylvilagus_bachmani", "lepus_californicus",
+                                          "sciurus_griseus", "sceloporus_occidentalis", "callipepla_californica"]},
+    "canis_latrans":            {"prey": ["lepus_californicus", "sylvilagus_bachmani", "microtus_californicus", "otospermophilus_beecheyi",
+                                          "odocoileus_hemionus", "callipepla_californica", "meleagris_gallopavo"],
+                                 "carrion": ["puma_concolor"]},
+    "urocyon_cinereoargenteus": {"prey": ["microtus_californicus", "sylvilagus_bachmani", "otospermophilus_beecheyi", "callipepla_californica",
+                                          "sceloporus_occidentalis"]},
+    "puma_concolor":            {"prey": ["odocoileus_hemionus", "lepus_californicus", "sylvilagus_bachmani", "otospermophilus_beecheyi",
+                                          "meleagris_gallopavo", "canis_latrans"]},
+    "corvus_corax":             {"prey": ["sceloporus_occidentalis", "microtus_californicus", "callipepla_californica"],   # the quail: eggs and chicks
+                                 "carrion": ["puma_concolor", "canis_latrans"]},
+    "aphelocoma_californica":   {"prey": ["sceloporus_occidentalis"]},
+    "cathartes_aura":           {"carrion": ["puma_concolor", "canis_latrans"]},
+}

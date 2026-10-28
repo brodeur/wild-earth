@@ -18,7 +18,7 @@ import numpy as np
 import rasterio
 from .config import Tile, now_iso, read_json, write_json
 from .habitat import RESOURCE_BASE
-from .species_data import CALENDAR, PERCEPTION, SEASONS
+from .species_data import CALENDAR, DIET, NEEDS, PERCEPTION, SEASONS
 
 # verb -> archetype: the loop the client plays it as (docs/games.md)
 ARCHETYPE = {"forage": "gather", "graze": "gather", "hunt": "hunt", "cache": "cache", "shelter": "shelter", "den": "shelter",
@@ -75,10 +75,13 @@ def derive_games(tile: Tile) -> dict:
                 a = src.read(b + 1).astype("float32")
                 rasters[r][season] = {"hotspots": _hotspots(a, src.transform, src.res[0]),
                                       "scarcity": round(float((a < 50).mean()), 3), "mean": round(float(a.mean()), 1)}
-    # relations from the calendar: who hunts whom (a species named as a resource of a hunt, or fed to the young), who
-    # eats what when, who follows a predator (a hunter named as a resource of a forage: carrion at its kills)
-    hunters = {c for c in codes if any(a["activity"] == "hunt" for acts in CALENDAR[c].values() for a in acts)}
-    predation: list[list[str]] = []; competition: dict[str, dict[str, list[str]]] = {}; scavenge: list[list[str]] = []
+    # relations: who hunts whom (DIET's prey, plus a species named as a resource of a hunt or fed to the young in the
+    # calendar), who eats what when, who follows a predator to kills (DIET's carrion, plus a hunter named as a resource
+    # of a forage in the calendar)
+    hunters = {c for c in codes if any(a["activity"] == "hunt" for acts in CALENDAR[c].values() for a in acts)} | {c for c in codes if DIET.get(c, {}).get("prey")}
+    predation = [[c, q] for c in codes for q in DIET.get(c, {}).get("prey", []) if q in codes]
+    scavenge = [[c, q] for c in codes for q in DIET.get(c, {}).get("carrion", []) if q in codes]
+    competition: dict[str, dict[str, list[str]]] = {}
     for c in codes:
         for season, acts in CALENDAR[c].items():
             for a in acts:
@@ -119,6 +122,8 @@ def derive_games(tile: Tile) -> dict:
                          "unit": unit, "collective": unit != "solitary"}
                     if a.get("goal"):
                         g["goal"] = a["goal"]
+                    if not r and arch == "court" and NEEDS.get(c, {}).get("court"):   # the courting ground (NEEDS)
+                        r = NEEDS[c]["court"]
                     if r:
                         g["resource"] = r
                         rr = rasters.get(r, {}).get(season)
@@ -126,12 +131,32 @@ def derive_games(tile: Tile) -> dict:
                             g["hotspots"] = rr["hotspots"]; g["scarcity"] = rr["scarcity"]
                         g["competitors"] = [o for o in competition.get(r, {}).get(season, []) if o != c]
                     if prey:
-                        g["prey"] = prey
+                        g["prey"] = [q for q in prey if q in prey_of[c]] or prey
                     if arch in ("gather", "cache", "shelter", "rear", "court") and predators_of[c]:
                         g["predators"] = predators_of[c]
                     games.append(g)
-                    if r == "water":   # every act at water is also the drink game
-                        games.append({**g, "id": f"{c}:{season}:drink", "archetype": "drink", "verb": "drink"})
+        # the needs (NEEDS): drink, for a species that uses open water, every season; shelter, in the seasons the
+        # calendar gives it none
+        need = NEEDS.get(c, {})
+        for season in SEASONS:
+            have = {g["archetype"] for g in games if g["season"] == season}
+            if need.get("water") in ("daily", "often", "rare") and "drink" not in have:
+                rr = rasters.get("water", {}).get(season, {})
+                g = {"id": f"{c}:{season}:drink", "archetype": "drink", "verb": "drink", "season": season, "unit": unit,
+                     "collective": unit != "solitary", "resource": "water", "rhythm": need["water"],
+                     "hotspots": rr.get("hotspots", []), "scarcity": rr.get("scarcity"),
+                     "competitors": [o for o in codes if o != c and NEEDS.get(o, {}).get("water") in ("daily", "often")]}
+                if predators_of[c]:
+                    g["predators"] = predators_of[c]
+                games.append(g)
+            if need.get("shelter") and "shelter" not in have:
+                r = need["shelter"]; rr = rasters.get(r, {}).get(season, {})
+                g = {"id": f"{c}:{season}:shelter:{r}", "archetype": "shelter", "verb": "shelter", "season": season, "unit": unit,
+                     "collective": unit != "solitary", "resource": r, "hotspots": rr.get("hotspots", []), "scarcity": rr.get("scarcity"),
+                     "competitors": [o for o in codes if o != c and NEEDS.get(o, {}).get("shelter") == r]}
+                if predators_of[c]:
+                    g["predators"] = predators_of[c]
+                games.append(g)
         # the duals and the collective's own games
         for pred in predators_of[c]:
             games.append({"id": f"{c}:{pred}:evade", "archetype": "evade", "verb": "evade", "season": "all", "unit": unit,

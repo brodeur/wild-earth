@@ -58,50 +58,55 @@ no hotspots; a new species in the calendar gets its games the same way.
 
 ## What it finds on the home tile
 
-Eighteen species, 160 games, 79 of them collective, 14 predator-prey pairs, 1 scavenging link (raven follows lion),
-4 alarm links (the brush rabbit cannot perceive the lion; the raven, fox, jackrabbit and coyote can, and see rabbits).
+Eighteen species, 275 games, 146 of them collective, 29 predator-prey pairs, 5 scavenging links
+(the raven and the vulture follow the lion and the coyote; the coyote follows the lion), 4 alarm links (the brush rabbit
+cannot perceive the lion; the raven, fox, jackrabbit and coyote can, and see rabbits). With the needs and diet tables
+(species_data.py NEEDS and DIET, 2026-10-27) every species that uses open water drinks each season, every species has
+a shelter game each season, every prey species has an evade game per predator and every group species a watch.
 
-| species | unit | gather | drink | cache | shelter | court | rear | hunt | evade | watch | predators | prey |
-|---|---|---|---|---|---|---|---|---|---|---|---|---|
-| raven | pair | 3 |  | 1 | 1 | 1 | 2 |  |  |  |  |  |
-| red-tailed hawk | solitary |  |  |  | 1 | 1 | 1 | 2 |  |  |  | jackrabbit, vole, ground squirrel, fence lizard, squirrel, brush rabbit |
-| black-tailed deer | herd | 5 | 2 |  | 2 | 1 | 2 |  | 2 | 1 | coyote, mountain lion |  |
-| gray fox | solitary | 1 |  |  | 2 | 1 | 2 | 2 |  |  |  | vole, brush rabbit |
-| western gray squirrel | solitary | 3 |  | 1 | 2 | 1 | 1 |  | 1 |  | hawk |  |
-| acorn woodpecker | family | 3 |  | 2 | 2 | 1 | 1 |  |  |  |  |  |
-| California quail | covey | 3 |  |  | 1 | 1 | 2 |  |  |  |  |  |
-| scrub-jay | family | 3 |  | 1 | 2 | 1 | 2 |  |  |  |  |  |
-| Steller's jay | family | 2 |  | 1 | 1 | 1 | 1 |  |  |  |  |  |
-| turkey vulture | solitary | 4 |  |  |  | 1 | 2 |  |  |  |  |  |
-| brush rabbit | solitary | 4 |  |  | 2 | 1 | 1 |  | 4 |  | hawk, coyote, lion, fox |  |
-| jackrabbit | solitary | 5 |  |  | 2 | 1 | 1 |  | 2 |  | hawk, coyote |  |
-| California vole | solitary | 3 |  |  | 2 |  | 2 |  | 3 |  | hawk, coyote, fox |  |
-| coyote | solitary | 2 |  |  | 1 | 1 | 1 | 2 |  |  |  | jackrabbit, vole, deer, brush rabbit |
-| mountain lion | mother and young |  |  |  |  |  | 1 | 4 |  |  |  | deer, brush rabbit |
-| wild turkey | flock | 4 |  |  | 2 | 1 | 2 |  |  |  |  |  |
-| ground squirrel | colony | 3 |  |  | 3 | 1 | 2 |  | 1 | 1 | hawk |  |
-| fence lizard | solitary | 3 |  |  | 3 | 1 | 1 |  | 1 |  | hawk |  |
+| species | unit | gather | drink | cache | shelter | court | rear | hunt | evade | watch | predators |
+|---|---|---|---|---|---|---|---|---|---|---|---|
+| raven | pair | 3 | 4 | 1 | 4 | 1 | 2 |  |  |  |  |
+| red-tailed hawk | solitary |  | 4 |  | 4 | 1 | 1 | 2 |  |  |  |
+| black-tailed deer | herd | 5 | 4 |  | 4 | 1 | 2 |  | 2 | 1 | coyote, lion |
+| gray fox | solitary | 1 | 4 |  | 5 | 1 | 2 | 2 |  |  |  |
+| western gray squirrel | solitary | 3 | 4 | 1 | 4 | 1 | 1 |  | 1 |  | hawk |
+| acorn woodpecker | family | 3 | 4 | 2 | 4 | 1 | 1 |  |  |  |  |
+| California quail | covey | 3 | 4 |  | 4 | 1 | 2 |  | 4 | 1 | hawk, coyote, raven, fox |
+| scrub-jay | family | 3 | 4 | 1 | 4 | 1 | 2 |  |  |  |  |
+| Steller's jay | family | 2 | 4 | 1 | 4 | 1 | 1 |  |  |  |  |
+| turkey vulture | solitary | 4 | 4 |  | 4 | 1 | 2 |  |  |  |  |
+| brush rabbit | solitary | 4 |  |  | 4 | 1 | 1 |  | 4 |  | hawk, coyote, lion, fox |
+| jackrabbit | solitary | 5 |  |  | 4 | 1 | 1 |  | 3 |  | hawk, coyote, lion |
+| California vole | solitary | 3 |  |  | 4 |  | 2 |  | 4 |  | hawk, coyote, raven, fox |
+| coyote | solitary | 2 | 4 |  | 4 | 1 | 1 | 2 | 1 |  | lion |
+| mountain lion | mother and young |  | 4 |  | 4 |  | 1 | 4 |  |  |  |
+| wild turkey | flock | 4 | 4 |  | 4 | 1 | 2 |  | 2 | 1 | coyote, lion |
+| ground squirrel | colony | 3 | 4 |  | 4 | 1 | 2 |  | 4 | 1 | hawk, coyote, lion, fox |
+| fence lizard | solitary | 3 |  |  | 4 | 1 | 1 |  | 4 |  | scrub-jay, hawk, raven, fox |
 
 Each game carries its hotspots (up to 12 cells in the resource's top 3% that season, at least 150 m apart, as tile
-metres with the score) and its scarcity. Water in summer and fall: 12 sources, scarcity 0.93. Acorn mast in fall: 12
-hotspots, scarcity 0.50, and ten species competing for it. Browse in spring is everywhere (scarcity 0.24); in winter it
-scores under 50 on the whole tile, so the deer's winter browse game is the hardest gather on the tile.
+metres with the score) and its scarcity. Water in summer and fall: 12 sources, scarcity 0.93, and thirteen species
+that drink. Acorn mast in fall: 12 hotspots, scarcity 0.50, and ten species competing for it. Browse in spring is
+everywhere (scarcity 0.24); in winter it scores under 50 on the whole tile, so the deer's winter browse game is the
+hardest gather on the tile. A drink game carries the species' rhythm (daily, often, rare); a court game its ground.
 
-## What the data is missing, which the classifier showed at once
+## What the data was missing, which the classifier showed at once
 
-- **The hunt lists are thin.** Quail, turkeys, the jays, the woodpecker and the raven have no predator in the calendar,
-  so no evade or watch game, though the hawk takes quail and the coyote and fox take turkeys and ground birds. The
-  calendar's `hunt` resources were written for the hunter's story, not the prey's. The fix is a diet table per predator
-  (the animal briefs in `library/animals/drafts/*.md` have it in words) that the step reads alongside the calendar.
-- **Drink is only the deer's**, because only the deer's calendar names water. Every species drinks; water belongs on a
-  needs table per species (daily water, where from: open water, dew, prey), not in the activity list.
+- **The hunt lists were thin** (fixed 2026-10-27 with `DIET`): quail, turkeys, the jays, the woodpecker and the raven
+  had no predator in the calendar, so no evade or watch game, though the hawk takes quail and the coyote and fox take
+  turkeys and ground birds. The calendar's `hunt` resources were written for the hunter's story, not the prey's. The
+  diet table per predator (prey, and whose kills it scavenges) is read beside the calendar; the raven and the scrub-jay
+  are predators of lizards, voles and quail nests, which the animal briefs say and the calendar did not.
+- **Drink was only the deer's** (fixed with `NEEDS`): every species that uses open water now drinks every season at its
+  rhythm (daily, often, rare), and the rabbits, the vole and the lizard, which take moisture from food and dew, do not.
+- **Shelter and court have places** (fixed with `NEEDS`): a shelter game in every season the calendar gave none, in the
+  species' own cover, cavity, burrow or tall roost; the courting ground (the rut's and the strutting ground's open grass,
+  a granary, a cliff) gives court its hotspots.
 - **Alarm needs the perception matrix to be sparse.** On the home tile nearly every species perceives every other, so
   the only alarm links are the brush rabbit's. The matrix should carry range and sense (a vole hears the hawk's shadow
   late; a jay sees it a kilometre off), which `species.json` already has per species (`senses`), so a watcher is a
   species that perceives the predator sooner, not only at all.
-- **Court has no place.** Leks, drumming trees and the rut's meeting grounds are places; the calendar gives court no
-  resource, so it has no hotspots. Cliff or snag for ravens and hawks, a granary tree for woodpeckers, the meadow edge
-  for turkeys would place them.
 - **Scarcity is per tile, not per animal.** A game's difficulty should also count the competitors' numbers (the
   population the rarity ranking already computes) against the hotspots' capacity.
 
@@ -111,6 +116,5 @@ scores under 50 on the whole tile, so the deer's winter browse game is the harde
    archetype's raven instance, the herd pilot the base for every collective game. Each loop has a visible target (the
    bar at the bottom could show the current game's resource and the nearest hotspot's bearing), a score, and a hand-over
    to the AI when the player stops, as the herd does.
-2. The needs table and the diet table in `species_data.py`, read by the step, so every species gets drink and evade.
-3. Perception with range and sense, so alarms are about who notices first.
-4. Difficulty from competitors' populations against hotspot capacity.
+2. Perception with range and sense, so alarms are about who notices first.
+3. Difficulty from competitors' populations against hotspot capacity.

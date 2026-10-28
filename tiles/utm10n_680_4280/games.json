@@ -1,5 +1,5 @@
 {
- "generated": "2026-10-28T03:38:39Z",
+ "generated": "2026-10-28T03:43:44Z",
  "tile_id": "utm10n_680_4280",
  "archetypes": {
   "gather": "find the resource's hotspots, feed, keep an eye out: the predators listed hunt here; the competitors eat the same cells",
@@ -16,8 +16,24 @@
  "relations": {
   "predation": [
    [
+    "corvus_corax",
+    "sceloporus_occidentalis"
+   ],
+   [
+    "corvus_corax",
+    "microtus_californicus"
+   ],
+   [
+    "corvus_corax",
+    "callipepla_californica"
+   ],
+   [
     "buteo_jamaicensis",
     "microtus_californicus"
+   ],
+   [
+    "buteo_jamaicensis",
+    "otospermophilus_beecheyi"
    ],
    [
     "buteo_jamaicensis",
@@ -33,11 +49,11 @@
    ],
    [
     "buteo_jamaicensis",
-    "otospermophilus_beecheyi"
+    "sceloporus_occidentalis"
    ],
    [
     "buteo_jamaicensis",
-    "sceloporus_occidentalis"
+    "callipepla_californica"
    ],
    [
     "urocyon_cinereoargenteus",
@@ -48,8 +64,20 @@
     "sylvilagus_bachmani"
    ],
    [
-    "canis_latrans",
-    "sylvilagus_bachmani"
+    "urocyon_cinereoargenteus",
+    "otospermophilus_beecheyi"
+   ],
+   [
+    "urocyon_cinereoargenteus",
+    "callipepla_californica"
+   ],
+   [
+    "urocyon_cinereoargenteus",
+    "sceloporus_occidentalis"
+   ],
+   [
+    "aphelocoma_californica",
+    "sceloporus_occidentalis"
    ],
    [
     "canis_latrans",
@@ -57,19 +85,51 @@
    ],
    [
     "canis_latrans",
+    "sylvilagus_bachmani"
+   ],
+   [
+    "canis_latrans",
     "microtus_californicus"
+   ],
+   [
+    "canis_latrans",
+    "otospermophilus_beecheyi"
    ],
    [
     "canis_latrans",
     "odocoileus_hemionus"
    ],
    [
+    "canis_latrans",
+    "callipepla_californica"
+   ],
+   [
+    "canis_latrans",
+    "meleagris_gallopavo"
+   ],
+   [
     "puma_concolor",
     "odocoileus_hemionus"
    ],
    [
     "puma_concolor",
+    "lepus_californicus"
+   ],
+   [
+    "puma_concolor",
     "sylvilagus_bachmani"
+   ],
+   [
+    "puma_concolor",
+    "otospermophilus_beecheyi"
+   ],
+   [
+    "puma_concolor",
+    "meleagris_gallopavo"
+   ],
+   [
+    "puma_concolor",
+    "canis_latrans"
    ]
   ],
   "competition": {
@@ -253,6 +313,22 @@
   "scavenge": [
    [
     "corvus_corax",
+    "puma_concolor"
+   ],
+   [
+    "corvus_corax",
+    "canis_latrans"
+   ],
+   [
+    "cathartes_aura",
+    "puma_concolor"
+   ],
+   [
+    "cathartes_aura",
+    "canis_latrans"
+   ],
+   [
+    "canis_latrans",
     "puma_concolor"
    ]
   ],
@@ -483,7 +559,11 @@
   "corvus_corax": {
    "unit": "pair",
    "predators": [],
-   "prey": [],
+   "prey": [
+    "callipepla_californica",
+    "microtus_californicus",
+    "sceloporus_occidentalis"
+   ],
    "games": [
     {
      "id": "corvus_corax:winter:forage",
@@ -1058,6 +1138,585 @@
       "meleagris_gallopavo",
       "otospermophilus_beecheyi"
      ]
+    },
+    {
+     "id": "corvus_corax:winter:drink",
+     "archetype": "drink",
+     "verb": "drink",
+     "season": "winter",
+     "unit": "pair",
+     "collective": true,
+     "resource": "water",
+     "rhythm": "often",
+     "hotspots": [
+      [
+       680045.0,
+       4289985.0,
+       100
+      ],
+      [
+       680315.3,
+       4289985.0,
+       100
+      ],
+      [
+       681156.2,
+       4289985.0,
+       100
+      ],
+      [
+       681846.8,
+       4289985.0,
+       100
+      ],
+      [
+       682477.5,
+       4289985.0,
+       100
+      ],
+      [
+       682807.8,
+       4289985.0,
+       100
+      ],
+      [
+       683558.6,
+       4289985.0,
+       100
+      ],
+      [
+       683918.9,
+       4289985.0,
+       100
+      ],
+      [
+       684069.1,
+       4289985.0,
+       100
+      ],
+      [
+       684369.4,
+       4289985.0,
+       100
+      ],
+      [
+       684519.5,
+       4289985.0,
+       100
+      ],
+      [
+       684819.8,
+       4289985.0,
+       100
+      ]
+     ],
+     "scarcity": 0.608,
+     "competitors": [
+      "buteo_jamaicensis",
+      "odocoileus_hemionus",
+      "urocyon_cinereoargenteus",
+      "sciurus_griseus",
+      "melanerpes_formicivorus",
+      "callipepla_californica",
+      "aphelocoma_californica",
+      "cyanocitta_stelleri",
+      "cathartes_aura",
+      "canis_latrans",
+      "puma_concolor",
+      "meleagris_gallopavo"
+     ]
+    },
+    {
+     "id": "corvus_corax:winter:shelter:cliff_or_snag",
+     "archetype": "shelter",
+     "verb": "shelter",
+     "season": "winter",
+     "unit": "pair",
+     "collective": true,
+     "resource": "cliff_or_snag",
+     "hotspots": [
+      [
+       680135.1,
+       4289985.0,
+       90
+      ],
+      [
+       680285.3,
+       4289985.0,
+       90
+      ],
+      [
+       682747.7,
+       4289985.0,
+       90
+      ],
+      [
+       682927.9,
+       4289985.0,
+       90
+      ],
+      [
+       684189.2,
+       4289955.0,
+       90
+      ],
+      [
+       685690.7,
+       4289924.9,
+       90
+      ],
+      [
+       680015.0,
+       4289894.9,
+       90
+      ],
+      [
+       680405.4,
+       4289894.9,
+       90
+      ],
+      [
+       684639.6,
+       4289894.9,
+       90
+      ],
+      [
+       680165.2,
+       4289834.8,
+       90
+      ],
+      [
+       684399.4,
+       4289834.8,
+       90
+      ],
+      [
+       685330.3,
+       4289834.8,
+       90
+      ]
+     ],
+     "scarcity": 0.672,
+     "competitors": [
+      "buteo_jamaicensis",
+      "cathartes_aura",
+      "meleagris_gallopavo"
+     ]
+    },
+    {
+     "id": "corvus_corax:spring:drink",
+     "archetype": "drink",
+     "verb": "drink",
+     "season": "spring",
+     "unit": "pair",
+     "collective": true,
+     "resource": "water",
+     "rhythm": "often",
+     "hotspots": [
+      [
+       680045.0,
+       4289985.0,
+       100
+      ],
+      [
+       680315.3,
+       4289985.0,
+       100
+      ],
+      [
+       681156.2,
+       4289985.0,
+       100
+      ],
+      [
+       681846.8,
+       4289985.0,
+       100
+      ],
+      [
+       682477.5,
+       4289985.0,
+       100
+      ],
+      [
+       682807.8,
+       4289985.0,
+       100
+      ],
+      [
+       683558.6,
+       4289985.0,
+       100
+      ],
+      [
+       683918.9,
+       4289985.0,
+       100
+      ],
+      [
+       684069.1,
+       4289985.0,
+       100
+      ],
+      [
+       684369.4,
+       4289985.0,
+       100
+      ],
+      [
+       684519.5,
+       4289985.0,
+       100
+      ],
+      [
+       684819.8,
+       4289985.0,
+       100
+      ]
+     ],
+     "scarcity": 0.608,
+     "competitors": [
+      "buteo_jamaicensis",
+      "odocoileus_hemionus",
+      "urocyon_cinereoargenteus",
+      "sciurus_griseus",
+      "melanerpes_formicivorus",
+      "callipepla_californica",
+      "aphelocoma_californica",
+      "cyanocitta_stelleri",
+      "cathartes_aura",
+      "canis_latrans",
+      "puma_concolor",
+      "meleagris_gallopavo"
+     ]
+    },
+    {
+     "id": "corvus_corax:summer:drink",
+     "archetype": "drink",
+     "verb": "drink",
+     "season": "summer",
+     "unit": "pair",
+     "collective": true,
+     "resource": "water",
+     "rhythm": "often",
+     "hotspots": [
+      [
+       684369.4,
+       4289985.0,
+       100
+      ],
+      [
+       684519.5,
+       4289985.0,
+       100
+      ],
+      [
+       684819.8,
+       4289985.0,
+       100
+      ],
+      [
+       685150.2,
+       4289985.0,
+       100
+      ],
+      [
+       685720.7,
+       4289985.0,
+       100
+      ],
+      [
+       685870.9,
+       4289985.0,
+       100
+      ],
+      [
+       686021.0,
+       4289955.0,
+       100
+      ],
+      [
+       684669.7,
+       4289924.9,
+       100
+      ],
+      [
+       685300.3,
+       4289924.9,
+       100
+      ],
+      [
+       686171.2,
+       4289924.9,
+       100
+      ],
+      [
+       685630.6,
+       4289864.9,
+       100
+      ],
+      [
+       686321.3,
+       4289864.9,
+       100
+      ]
+     ],
+     "scarcity": 0.934,
+     "competitors": [
+      "buteo_jamaicensis",
+      "odocoileus_hemionus",
+      "urocyon_cinereoargenteus",
+      "sciurus_griseus",
+      "melanerpes_formicivorus",
+      "callipepla_californica",
+      "aphelocoma_californica",
+      "cyanocitta_stelleri",
+      "cathartes_aura",
+      "canis_latrans",
+      "puma_concolor",
+      "meleagris_gallopavo"
+     ]
+    },
+    {
+     "id": "corvus_corax:summer:shelter:cliff_or_snag",
+     "archetype": "shelter",
+     "verb": "shelter",
+     "season": "summer",
+     "unit": "pair",
+     "collective": true,
+     "resource": "cliff_or_snag",
+     "hotspots": [
+      [
+       680135.1,
+       4289985.0,
+       90
+      ],
+      [
+       680285.3,
+       4289985.0,
+       90
+      ],
+      [
+       682747.7,
+       4289985.0,
+       90
+      ],
+      [
+       682927.9,
+       4289985.0,
+       90
+      ],
+      [
+       684189.2,
+       4289955.0,
+       90
+      ],
+      [
+       685690.7,
+       4289924.9,
+       90
+      ],
+      [
+       680015.0,
+       4289894.9,
+       90
+      ],
+      [
+       680405.4,
+       4289894.9,
+       90
+      ],
+      [
+       684639.6,
+       4289894.9,
+       90
+      ],
+      [
+       680165.2,
+       4289834.8,
+       90
+      ],
+      [
+       684399.4,
+       4289834.8,
+       90
+      ],
+      [
+       685330.3,
+       4289834.8,
+       90
+      ]
+     ],
+     "scarcity": 0.672,
+     "competitors": [
+      "buteo_jamaicensis",
+      "cathartes_aura",
+      "meleagris_gallopavo"
+     ]
+    },
+    {
+     "id": "corvus_corax:fall:drink",
+     "archetype": "drink",
+     "verb": "drink",
+     "season": "fall",
+     "unit": "pair",
+     "collective": true,
+     "resource": "water",
+     "rhythm": "often",
+     "hotspots": [
+      [
+       684369.4,
+       4289985.0,
+       100
+      ],
+      [
+       684519.5,
+       4289985.0,
+       100
+      ],
+      [
+       684819.8,
+       4289985.0,
+       100
+      ],
+      [
+       685150.2,
+       4289985.0,
+       100
+      ],
+      [
+       685720.7,
+       4289985.0,
+       100
+      ],
+      [
+       685870.9,
+       4289985.0,
+       100
+      ],
+      [
+       686021.0,
+       4289955.0,
+       100
+      ],
+      [
+       684669.7,
+       4289924.9,
+       100
+      ],
+      [
+       685300.3,
+       4289924.9,
+       100
+      ],
+      [
+       686171.2,
+       4289924.9,
+       100
+      ],
+      [
+       685630.6,
+       4289864.9,
+       100
+      ],
+      [
+       686321.3,
+       4289864.9,
+       100
+      ]
+     ],
+     "scarcity": 0.934,
+     "competitors": [
+      "buteo_jamaicensis",
+      "odocoileus_hemionus",
+      "urocyon_cinereoargenteus",
+      "sciurus_griseus",
+      "melanerpes_formicivorus",
+      "callipepla_californica",
+      "aphelocoma_californica",
+      "cyanocitta_stelleri",
+      "cathartes_aura",
+      "canis_latrans",
+      "puma_concolor",
+      "meleagris_gallopavo"
+     ]
+    },
+    {
+     "id": "corvus_corax:fall:shelter:cliff_or_snag",
+     "archetype": "shelter",
+     "verb": "shelter",
+     "season": "fall",
+     "unit": "pair",
+     "collective": true,
+     "resource": "cliff_or_snag",
+     "hotspots": [
+      [
+       680135.1,
+       4289985.0,
+       90
+      ],
+      [
+       680285.3,
+       4289985.0,
+       90
+      ],
+      [
+       682747.7,
+       4289985.0,
+       90
+      ],
+      [
+       682927.9,
+       4289985.0,
+       90
+      ],
+      [
+       684189.2,
+       4289955.0,
+       90
+      ],
+      [
+       685690.7,
+       4289924.9,
+       90
+      ],
+      [
+       680015.0,
+       4289894.9,
+       90
+      ],
+      [
+       680405.4,
+       4289894.9,
+       90
+      ],
+      [
+       684639.6,
+       4289894.9,
+       90
+      ],
+      [
+       680165.2,
+       4289834.8,
+       90
+      ],
+      [
+       684399.4,
+       4289834.8,
+       90
+      ],
+      [
+       685330.3,
+       4289834.8,
+       90
+      ]
+     ],
+     "scarcity": 0.672,
+     "competitors": [
+      "buteo_jamaicensis",
+      "cathartes_aura",
+      "meleagris_gallopavo"
+     ]
     }
    ]
   },
@@ -1065,6 +1724,7 @@
    "unit": "solitary",
    "predators": [],
    "prey": [
+    "callipepla_californica",
     "lepus_californicus",
     "microtus_californicus",
     "otospermophilus_beecheyi",
@@ -1094,7 +1754,75 @@
      "season": "spring",
      "unit": "solitary",
      "collective": false,
-     "goal": "sky dance"
+     "goal": "sky dance",
+     "resource": "cliff_or_snag",
+     "hotspots": [
+      [
+       680135.1,
+       4289985.0,
+       90
+      ],
+      [
+       680285.3,
+       4289985.0,
+       90
+      ],
+      [
+       682747.7,
+       4289985.0,
+       90
+      ],
+      [
+       682927.9,
+       4289985.0,
+       90
+      ],
+      [
+       684189.2,
+       4289955.0,
+       90
+      ],
+      [
+       685690.7,
+       4289924.9,
+       90
+      ],
+      [
+       680015.0,
+       4289894.9,
+       90
+      ],
+      [
+       680405.4,
+       4289894.9,
+       90
+      ],
+      [
+       684639.6,
+       4289894.9,
+       90
+      ],
+      [
+       680165.2,
+       4289834.8,
+       90
+      ],
+      [
+       684399.4,
+       4289834.8,
+       90
+      ],
+      [
+       685330.3,
+       4289834.8,
+       90
+      ]
+     ],
+     "scarcity": 0.672,
+     "competitors": [
+      "corvus_corax",
+      "sceloporus_occidentalis"
+     ]
     },
     {
      "id": "buteo_jamaicensis:spring:nest:cliff_or_snag",
@@ -1208,6 +1936,585 @@
      "prey": [
       "microtus_californicus",
       "sciurus_griseus"
+     ]
+    },
+    {
+     "id": "buteo_jamaicensis:winter:drink",
+     "archetype": "drink",
+     "verb": "drink",
+     "season": "winter",
+     "unit": "solitary",
+     "collective": false,
+     "resource": "water",
+     "rhythm": "often",
+     "hotspots": [
+      [
+       680045.0,
+       4289985.0,
+       100
+      ],
+      [
+       680315.3,
+       4289985.0,
+       100
+      ],
+      [
+       681156.2,
+       4289985.0,
+       100
+      ],
+      [
+       681846.8,
+       4289985.0,
+       100
+      ],
+      [
+       682477.5,
+       4289985.0,
+       100
+      ],
+      [
+       682807.8,
+       4289985.0,
+       100
+      ],
+      [
+       683558.6,
+       4289985.0,
+       100
+      ],
+      [
+       683918.9,
+       4289985.0,
+       100
+      ],
+      [
+       684069.1,
+       4289985.0,
+       100
+      ],
+      [
+       684369.4,
+       4289985.0,
+       100
+      ],
+      [
+       684519.5,
+       4289985.0,
+       100
+      ],
+      [
+       684819.8,
+       4289985.0,
+       100
+      ]
+     ],
+     "scarcity": 0.608,
+     "competitors": [
+      "corvus_corax",
+      "odocoileus_hemionus",
+      "urocyon_cinereoargenteus",
+      "sciurus_griseus",
+      "melanerpes_formicivorus",
+      "callipepla_californica",
+      "aphelocoma_californica",
+      "cyanocitta_stelleri",
+      "cathartes_aura",
+      "canis_latrans",
+      "puma_concolor",
+      "meleagris_gallopavo"
+     ]
+    },
+    {
+     "id": "buteo_jamaicensis:winter:shelter:cliff_or_snag",
+     "archetype": "shelter",
+     "verb": "shelter",
+     "season": "winter",
+     "unit": "solitary",
+     "collective": false,
+     "resource": "cliff_or_snag",
+     "hotspots": [
+      [
+       680135.1,
+       4289985.0,
+       90
+      ],
+      [
+       680285.3,
+       4289985.0,
+       90
+      ],
+      [
+       682747.7,
+       4289985.0,
+       90
+      ],
+      [
+       682927.9,
+       4289985.0,
+       90
+      ],
+      [
+       684189.2,
+       4289955.0,
+       90
+      ],
+      [
+       685690.7,
+       4289924.9,
+       90
+      ],
+      [
+       680015.0,
+       4289894.9,
+       90
+      ],
+      [
+       680405.4,
+       4289894.9,
+       90
+      ],
+      [
+       684639.6,
+       4289894.9,
+       90
+      ],
+      [
+       680165.2,
+       4289834.8,
+       90
+      ],
+      [
+       684399.4,
+       4289834.8,
+       90
+      ],
+      [
+       685330.3,
+       4289834.8,
+       90
+      ]
+     ],
+     "scarcity": 0.672,
+     "competitors": [
+      "corvus_corax",
+      "cathartes_aura",
+      "meleagris_gallopavo"
+     ]
+    },
+    {
+     "id": "buteo_jamaicensis:spring:drink",
+     "archetype": "drink",
+     "verb": "drink",
+     "season": "spring",
+     "unit": "solitary",
+     "collective": false,
+     "resource": "water",
+     "rhythm": "often",
+     "hotspots": [
+      [
+       680045.0,
+       4289985.0,
+       100
+      ],
+      [
+       680315.3,
+       4289985.0,
+       100
+      ],
+      [
+       681156.2,
+       4289985.0,
+       100
+      ],
+      [
+       681846.8,
+       4289985.0,
+       100
+      ],
+      [
+       682477.5,
+       4289985.0,
+       100
+      ],
+      [
+       682807.8,
+       4289985.0,
+       100
+      ],
+      [
+       683558.6,
+       4289985.0,
+       100
+      ],
+      [
+       683918.9,
+       4289985.0,
+       100
+      ],
+      [
+       684069.1,
+       4289985.0,
+       100
+      ],
+      [
+       684369.4,
+       4289985.0,
+       100
+      ],
+      [
+       684519.5,
+       4289985.0,
+       100
+      ],
+      [
+       684819.8,
+       4289985.0,
+       100
+      ]
+     ],
+     "scarcity": 0.608,
+     "competitors": [
+      "corvus_corax",
+      "odocoileus_hemionus",
+      "urocyon_cinereoargenteus",
+      "sciurus_griseus",
+      "melanerpes_formicivorus",
+      "callipepla_californica",
+      "aphelocoma_californica",
+      "cyanocitta_stelleri",
+      "cathartes_aura",
+      "canis_latrans",
+      "puma_concolor",
+      "meleagris_gallopavo"
+     ]
+    },
+    {
+     "id": "buteo_jamaicensis:summer:drink",
+     "archetype": "drink",
+     "verb": "drink",
+     "season": "summer",
+     "unit": "solitary",
+     "collective": false,
+     "resource": "water",
+     "rhythm": "often",
+     "hotspots": [
+      [
+       684369.4,
+       4289985.0,
+       100
+      ],
+      [
+       684519.5,
+       4289985.0,
+       100
+      ],
+      [
+       684819.8,
+       4289985.0,
+       100
+      ],
+      [
+       685150.2,
+       4289985.0,
+       100
+      ],
+      [
+       685720.7,
+       4289985.0,
+       100
+      ],
+      [
+       685870.9,
+       4289985.0,
+       100
+      ],
+      [
+       686021.0,
+       4289955.0,
+       100
+      ],
+      [
+       684669.7,
+       4289924.9,
+       100
+      ],
+      [
+       685300.3,
+       4289924.9,
+       100
+      ],
+      [
+       686171.2,
+       4289924.9,
+       100
+      ],
+      [
+       685630.6,
+       4289864.9,
+       100
+      ],
+      [
+       686321.3,
+       4289864.9,
+       100
+      ]
+     ],
+     "scarcity": 0.934,
+     "competitors": [
+      "corvus_corax",
+      "odocoileus_hemionus",
+      "urocyon_cinereoargenteus",
+      "sciurus_griseus",
+      "melanerpes_formicivorus",
+      "callipepla_californica",
+      "aphelocoma_californica",
+      "cyanocitta_stelleri",
+      "cathartes_aura",
+      "canis_latrans",
+      "puma_concolor",
+      "meleagris_gallopavo"
+     ]
+    },
+    {
+     "id": "buteo_jamaicensis:summer:shelter:cliff_or_snag",
+     "archetype": "shelter",
+     "verb": "shelter",
+     "season": "summer",
+     "unit": "solitary",
+     "collective": false,
+     "resource": "cliff_or_snag",
+     "hotspots": [
+      [
+       680135.1,
+       4289985.0,
+       90
+      ],
+      [
+       680285.3,
+       4289985.0,
+       90
+      ],
+      [
+       682747.7,
+       4289985.0,
+       90
+      ],
+      [
+       682927.9,
+       4289985.0,
+       90
+      ],
+      [
+       684189.2,
+       4289955.0,
+       90
+      ],
+      [
+       685690.7,
+       4289924.9,
+       90
+      ],
+      [
+       680015.0,
+       4289894.9,
+       90
+      ],
+      [
+       680405.4,
+       4289894.9,
+       90
+      ],
+      [
+       684639.6,
+       4289894.9,
+       90
+      ],
+      [
+       680165.2,
+       4289834.8,
+       90
+      ],
+      [
+       684399.4,
+       4289834.8,
+       90
+      ],
+      [
+       685330.3,
+       4289834.8,
+       90
+      ]
+     ],
+     "scarcity": 0.672,
+     "competitors": [
+      "corvus_corax",
+      "cathartes_aura",
+      "meleagris_gallopavo"
+     ]
+    },
+    {
+     "id": "buteo_jamaicensis:fall:drink",
+     "archetype": "drink",
+     "verb": "drink",
+     "season": "fall",
+     "unit": "solitary",
+     "collective": false,
+     "resource": "water",
+     "rhythm": "often",
+     "hotspots": [
+      [
+       684369.4,
+       4289985.0,
+       100
+      ],
+      [
+       684519.5,
+       4289985.0,
+       100
+      ],
+      [
+       684819.8,
+       4289985.0,
+       100
+      ],
+      [
+       685150.2,
+       4289985.0,
+       100
+      ],
+      [
+       685720.7,
+       4289985.0,
+       100
+      ],
+      [
+       685870.9,
+       4289985.0,
+       100
+      ],
+      [
+       686021.0,
+       4289955.0,
+       100
+      ],
+      [
+       684669.7,
+       4289924.9,
+       100
+      ],
+      [
+       685300.3,
+       4289924.9,
+       100
+      ],
+      [
+       686171.2,
+       4289924.9,
+       100
+      ],
+      [
+       685630.6,
+       4289864.9,
+       100
+      ],
+      [
+       686321.3,
+       4289864.9,
+       100
+      ]
+     ],
+     "scarcity": 0.934,
+     "competitors": [
+      "corvus_corax",
+      "odocoileus_hemionus",
+      "urocyon_cinereoargenteus",
+      "sciurus_griseus",
+      "melanerpes_formicivorus",
+      "callipepla_californica",
+      "aphelocoma_californica",
+      "cyanocitta_stelleri",
+      "cathartes_aura",
+      "canis_latrans",
+      "puma_concolor",
+      "meleagris_gallopavo"
+     ]
+    },
+    {
+     "id": "buteo_jamaicensis:fall:shelter:cliff_or_snag",
+     "archetype": "shelter",
+     "verb": "shelter",
+     "season": "fall",
+     "unit": "solitary",
+     "collective": false,
+     "resource": "cliff_or_snag",
+     "hotspots": [
+      [
+       680135.1,
+       4289985.0,
+       90
+      ],
+      [
+       680285.3,
+       4289985.0,
+       90
+      ],
+      [
+       682747.7,
+       4289985.0,
+       90
+      ],
+      [
+       682927.9,
+       4289985.0,
+       90
+      ],
+      [
+       684189.2,
+       4289955.0,
+       90
+      ],
+      [
+       685690.7,
+       4289924.9,
+       90
+      ],
+      [
+       680015.0,
+       4289894.9,
+       90
+      ],
+      [
+       680405.4,
+       4289894.9,
+       90
+      ],
+      [
+       684639.6,
+       4289894.9,
+       90
+      ],
+      [
+       680165.2,
+       4289834.8,
+       90
+      ],
+      [
+       684399.4,
+       4289834.8,
+       90
+      ],
+      [
+       685330.3,
+       4289834.8,
+       90
+      ]
+     ],
+     "scarcity": 0.672,
+     "competitors": [
+      "corvus_corax",
+      "cathartes_aura",
+      "meleagris_gallopavo"
      ]
     }
    ]
@@ -1629,84 +2936,6 @@
      ]
     },
     {
-     "id": "odocoileus_hemionus:spring:drink",
-     "archetype": "drink",
-     "verb": "drink",
-     "season": "spring",
-     "unit": "herd",
-     "collective": true,
-     "goal": "fawn in dense cover",
-     "resource": "water",
-     "hotspots": [
-      [
-       680045.0,
-       4289985.0,
-       100
-      ],
-      [
-       680315.3,
-       4289985.0,
-       100
-      ],
-      [
-       681156.2,
-       4289985.0,
-       100
-      ],
-      [
-       681846.8,
-       4289985.0,
-       100
-      ],
-      [
-       682477.5,
-       4289985.0,
-       100
-      ],
-      [
-       682807.8,
-       4289985.0,
-       100
-      ],
-      [
-       683558.6,
-       4289985.0,
-       100
-      ],
-      [
-       683918.9,
-       4289985.0,
-       100
-      ],
-      [
-       684069.1,
-       4289985.0,
-       100
-      ],
-      [
-       684369.4,
-       4289985.0,
-       100
-      ],
-      [
-       684519.5,
-       4289985.0,
-       100
-      ],
-      [
-       684819.8,
-       4289985.0,
-       100
-      ]
-     ],
-     "scarcity": 0.608,
-     "competitors": [],
-     "predators": [
-      "canis_latrans",
-      "puma_concolor"
-     ]
-    },
-    {
      "id": "odocoileus_hemionus:summer:forage:browse",
      "archetype": "gather",
      "verb": "forage",
@@ -1789,83 +3018,6 @@
      "id": "odocoileus_hemionus:summer:forage:water",
      "archetype": "gather",
      "verb": "forage",
-     "season": "summer",
-     "unit": "herd",
-     "collective": true,
-     "resource": "water",
-     "hotspots": [
-      [
-       684369.4,
-       4289985.0,
-       100
-      ],
-      [
-       684519.5,
-       4289985.0,
-       100
-      ],
-      [
-       684819.8,
-       4289985.0,
-       100
-      ],
-      [
-       685150.2,
-       4289985.0,
-       100
-      ],
-      [
-       685720.7,
-       4289985.0,
-       100
-      ],
-      [
-       685870.9,
-       4289985.0,
-       100
-      ],
-      [
-       686021.0,
-       4289955.0,
-       100
-      ],
-      [
-       684669.7,
-       4289924.9,
-       100
-      ],
-      [
-       685300.3,
-       4289924.9,
-       100
-      ],
-      [
-       686171.2,
-       4289924.9,
-       100
-      ],
-      [
-       685630.6,
-       4289864.9,
-       100
-      ],
-      [
-       686321.3,
-       4289864.9,
-       100
-      ]
-     ],
-     "scarcity": 0.934,
-     "competitors": [],
-     "predators": [
-      "canis_latrans",
-      "puma_concolor"
-     ]
-    },
-    {
-     "id": "odocoileus_hemionus:summer:drink",
-     "archetype": "drink",
-     "verb": "drink",
      "season": "summer",
      "unit": "herd",
      "collective": true,
@@ -2032,6 +3184,14 @@
      "unit": "herd",
      "collective": true,
      "goal": "rut",
+     "resource": "grass_forbs",
+     "hotspots": [],
+     "scarcity": 1.0,
+     "competitors": [
+      "callipepla_californica",
+      "lepus_californicus",
+      "microtus_californicus"
+     ],
      "predators": [
       "canis_latrans",
       "puma_concolor"
@@ -2127,6 +3287,538 @@
      ]
     },
     {
+     "id": "odocoileus_hemionus:winter:drink",
+     "archetype": "drink",
+     "verb": "drink",
+     "season": "winter",
+     "unit": "herd",
+     "collective": true,
+     "resource": "water",
+     "rhythm": "daily",
+     "hotspots": [
+      [
+       680045.0,
+       4289985.0,
+       100
+      ],
+      [
+       680315.3,
+       4289985.0,
+       100
+      ],
+      [
+       681156.2,
+       4289985.0,
+       100
+      ],
+      [
+       681846.8,
+       4289985.0,
+       100
+      ],
+      [
+       682477.5,
+       4289985.0,
+       100
+      ],
+      [
+       682807.8,
+       4289985.0,
+       100
+      ],
+      [
+       683558.6,
+       4289985.0,
+       100
+      ],
+      [
+       683918.9,
+       4289985.0,
+       100
+      ],
+      [
+       684069.1,
+       4289985.0,
+       100
+      ],
+      [
+       684369.4,
+       4289985.0,
+       100
+      ],
+      [
+       684519.5,
+       4289985.0,
+       100
+      ],
+      [
+       684819.8,
+       4289985.0,
+       100
+      ]
+     ],
+     "scarcity": 0.608,
+     "competitors": [
+      "corvus_corax",
+      "buteo_jamaicensis",
+      "urocyon_cinereoargenteus",
+      "sciurus_griseus",
+      "melanerpes_formicivorus",
+      "callipepla_californica",
+      "aphelocoma_californica",
+      "cyanocitta_stelleri",
+      "cathartes_aura",
+      "canis_latrans",
+      "puma_concolor",
+      "meleagris_gallopavo"
+     ],
+     "predators": [
+      "canis_latrans",
+      "puma_concolor"
+     ]
+    },
+    {
+     "id": "odocoileus_hemionus:spring:drink",
+     "archetype": "drink",
+     "verb": "drink",
+     "season": "spring",
+     "unit": "herd",
+     "collective": true,
+     "resource": "water",
+     "rhythm": "daily",
+     "hotspots": [
+      [
+       680045.0,
+       4289985.0,
+       100
+      ],
+      [
+       680315.3,
+       4289985.0,
+       100
+      ],
+      [
+       681156.2,
+       4289985.0,
+       100
+      ],
+      [
+       681846.8,
+       4289985.0,
+       100
+      ],
+      [
+       682477.5,
+       4289985.0,
+       100
+      ],
+      [
+       682807.8,
+       4289985.0,
+       100
+      ],
+      [
+       683558.6,
+       4289985.0,
+       100
+      ],
+      [
+       683918.9,
+       4289985.0,
+       100
+      ],
+      [
+       684069.1,
+       4289985.0,
+       100
+      ],
+      [
+       684369.4,
+       4289985.0,
+       100
+      ],
+      [
+       684519.5,
+       4289985.0,
+       100
+      ],
+      [
+       684819.8,
+       4289985.0,
+       100
+      ]
+     ],
+     "scarcity": 0.608,
+     "competitors": [
+      "corvus_corax",
+      "buteo_jamaicensis",
+      "urocyon_cinereoargenteus",
+      "sciurus_griseus",
+      "melanerpes_formicivorus",
+      "callipepla_californica",
+      "aphelocoma_californica",
+      "cyanocitta_stelleri",
+      "cathartes_aura",
+      "canis_latrans",
+      "puma_concolor",
+      "meleagris_gallopavo"
+     ],
+     "predators": [
+      "canis_latrans",
+      "puma_concolor"
+     ]
+    },
+    {
+     "id": "odocoileus_hemionus:spring:shelter:cover",
+     "archetype": "shelter",
+     "verb": "shelter",
+     "season": "spring",
+     "unit": "herd",
+     "collective": true,
+     "resource": "cover",
+     "hotspots": [
+      [
+       680885.9,
+       4289985.0,
+       90
+      ],
+      [
+       681126.1,
+       4289985.0,
+       90
+      ],
+      [
+       681336.3,
+       4289985.0,
+       90
+      ],
+      [
+       681666.7,
+       4289985.0,
+       90
+      ],
+      [
+       681816.8,
+       4289985.0,
+       90
+      ],
+      [
+       681997.0,
+       4289985.0,
+       90
+      ],
+      [
+       682177.2,
+       4289985.0,
+       90
+      ],
+      [
+       682327.3,
+       4289985.0,
+       90
+      ],
+      [
+       682477.5,
+       4289985.0,
+       90
+      ],
+      [
+       683198.2,
+       4289985.0,
+       90
+      ],
+      [
+       683468.5,
+       4289985.0,
+       90
+      ],
+      [
+       683768.8,
+       4289985.0,
+       90
+      ]
+     ],
+     "scarcity": 0.137,
+     "competitors": [
+      "callipepla_californica",
+      "aphelocoma_californica",
+      "cyanocitta_stelleri",
+      "sylvilagus_bachmani",
+      "lepus_californicus",
+      "puma_concolor"
+     ],
+     "predators": [
+      "canis_latrans",
+      "puma_concolor"
+     ]
+    },
+    {
+     "id": "odocoileus_hemionus:summer:drink",
+     "archetype": "drink",
+     "verb": "drink",
+     "season": "summer",
+     "unit": "herd",
+     "collective": true,
+     "resource": "water",
+     "rhythm": "daily",
+     "hotspots": [
+      [
+       684369.4,
+       4289985.0,
+       100
+      ],
+      [
+       684519.5,
+       4289985.0,
+       100
+      ],
+      [
+       684819.8,
+       4289985.0,
+       100
+      ],
+      [
+       685150.2,
+       4289985.0,
+       100
+      ],
+      [
+       685720.7,
+       4289985.0,
+       100
+      ],
+      [
+       685870.9,
+       4289985.0,
+       100
+      ],
+      [
+       686021.0,
+       4289955.0,
+       100
+      ],
+      [
+       684669.7,
+       4289924.9,
+       100
+      ],
+      [
+       685300.3,
+       4289924.9,
+       100
+      ],
+      [
+       686171.2,
+       4289924.9,
+       100
+      ],
+      [
+       685630.6,
+       4289864.9,
+       100
+      ],
+      [
+       686321.3,
+       4289864.9,
+       100
+      ]
+     ],
+     "scarcity": 0.934,
+     "competitors": [
+      "corvus_corax",
+      "buteo_jamaicensis",
+      "urocyon_cinereoargenteus",
+      "sciurus_griseus",
+      "melanerpes_formicivorus",
+      "callipepla_californica",
+      "aphelocoma_californica",
+      "cyanocitta_stelleri",
+      "cathartes_aura",
+      "canis_latrans",
+      "puma_concolor",
+      "meleagris_gallopavo"
+     ],
+     "predators": [
+      "canis_latrans",
+      "puma_concolor"
+     ]
+    },
+    {
+     "id": "odocoileus_hemionus:fall:drink",
+     "archetype": "drink",
+     "verb": "drink",
+     "season": "fall",
+     "unit": "herd",
+     "collective": true,
+     "resource": "water",
+     "rhythm": "daily",
+     "hotspots": [
+      [
+       684369.4,
+       4289985.0,
+       100
+      ],
+      [
+       684519.5,
+       4289985.0,
+       100
+      ],
+      [
+       684819.8,
+       4289985.0,
+       100
+      ],
+      [
+       685150.2,
+       4289985.0,
+       100
+      ],
+      [
+       685720.7,
+       4289985.0,
+       100
+      ],
+      [
+       685870.9,
+       4289985.0,
+       100
+      ],
+      [
+       686021.0,
+       4289955.0,
+       100
+      ],
+      [
+       684669.7,
+       4289924.9,
+       100
+      ],
+      [
+       685300.3,
+       4289924.9,
+       100
+      ],
+      [
+       686171.2,
+       4289924.9,
+       100
+      ],
+      [
+       685630.6,
+       4289864.9,
+       100
+      ],
+      [
+       686321.3,
+       4289864.9,
+       100
+      ]
+     ],
+     "scarcity": 0.934,
+     "competitors": [
+      "corvus_corax",
+      "buteo_jamaicensis",
+      "urocyon_cinereoargenteus",
+      "sciurus_griseus",
+      "melanerpes_formicivorus",
+      "callipepla_californica",
+      "aphelocoma_californica",
+      "cyanocitta_stelleri",
+      "cathartes_aura",
+      "canis_latrans",
+      "puma_concolor",
+      "meleagris_gallopavo"
+     ],
+     "predators": [
+      "canis_latrans",
+      "puma_concolor"
+     ]
+    },
+    {
+     "id": "odocoileus_hemionus:fall:shelter:cover",
+     "archetype": "shelter",
+     "verb": "shelter",
+     "season": "fall",
+     "unit": "herd",
+     "collective": true,
+     "resource": "cover",
+     "hotspots": [
+      [
+       680885.9,
+       4289985.0,
+       90
+      ],
+      [
+       681126.1,
+       4289985.0,
+       90
+      ],
+      [
+       681336.3,
+       4289985.0,
+       90
+      ],
+      [
+       681666.7,
+       4289985.0,
+       90
+      ],
+      [
+       681816.8,
+       4289985.0,
+       90
+      ],
+      [
+       681997.0,
+       4289985.0,
+       90
+      ],
+      [
+       682177.2,
+       4289985.0,
+       90
+      ],
+      [
+       682327.3,
+       4289985.0,
+       90
+      ],
+      [
+       682477.5,
+       4289985.0,
+       90
+      ],
+      [
+       683198.2,
+       4289985.0,
+       90
+      ],
+      [
+       683468.5,
+       4289985.0,
+       90
+      ],
+      [
+       683768.8,
+       4289985.0,
+       90
+      ]
+     ],
+     "scarcity": 0.137,
+     "competitors": [
+      "callipepla_californica",
+      "aphelocoma_californica",
+      "cyanocitta_stelleri",
+      "sylvilagus_bachmani",
+      "lepus_californicus",
+      "puma_concolor"
+     ],
+     "predators": [
+      "canis_latrans",
+      "puma_concolor"
+     ]
+    },
+    {
      "id": "odocoileus_hemionus:canis_latrans:evade",
      "archetype": "evade",
      "verb": "evade",
@@ -2164,7 +3856,10 @@
    "unit": "solitary",
    "predators": [],
    "prey": [
+    "callipepla_californica",
     "microtus_californicus",
+    "otospermophilus_beecheyi",
+    "sceloporus_occidentalis",
     "sylvilagus_bachmani"
    ],
    "games": [
@@ -2175,7 +3870,78 @@
      "season": "winter",
      "unit": "solitary",
      "collective": false,
-     "goal": "breeding season"
+     "goal": "breeding season",
+     "resource": "cover",
+     "hotspots": [
+      [
+       680885.9,
+       4289985.0,
+       76
+      ],
+      [
+       681126.1,
+       4289985.0,
+       76
+      ],
+      [
+       681336.3,
+       4289985.0,
+       76
+      ],
+      [
+       681666.7,
+       4289985.0,
+       76
+      ],
+      [
+       681816.8,
+       4289985.0,
+       76
+      ],
+      [
+       681997.0,
+       4289985.0,
+       76
+      ],
+      [
+       682177.2,
+       4289985.0,
+       76
+      ],
+      [
+       682327.3,
+       4289985.0,
+       76
+      ],
+      [
+       682477.5,
+       4289985.0,
+       76
+      ],
+      [
+       683198.2,
+       4289985.0,
+       76
+      ],
+      [
+       683468.5,
+       4289985.0,
+       76
+      ],
+      [
+       683768.8,
+       4289985.0,
+       76
+      ]
+     ],
+     "scarcity": 0.137,
+     "competitors": [
+      "odocoileus_hemionus",
+      "aphelocoma_californica",
+      "sylvilagus_bachmani",
+      "lepus_californicus",
+      "sceloporus_occidentalis"
+     ]
     },
     {
      "id": "urocyon_cinereoargenteus:winter:hunt",
@@ -2542,6 +4308,588 @@
      "unit": "solitary",
      "collective": false,
      "goal": "kits leave"
+    },
+    {
+     "id": "urocyon_cinereoargenteus:winter:drink",
+     "archetype": "drink",
+     "verb": "drink",
+     "season": "winter",
+     "unit": "solitary",
+     "collective": false,
+     "resource": "water",
+     "rhythm": "often",
+     "hotspots": [
+      [
+       680045.0,
+       4289985.0,
+       100
+      ],
+      [
+       680315.3,
+       4289985.0,
+       100
+      ],
+      [
+       681156.2,
+       4289985.0,
+       100
+      ],
+      [
+       681846.8,
+       4289985.0,
+       100
+      ],
+      [
+       682477.5,
+       4289985.0,
+       100
+      ],
+      [
+       682807.8,
+       4289985.0,
+       100
+      ],
+      [
+       683558.6,
+       4289985.0,
+       100
+      ],
+      [
+       683918.9,
+       4289985.0,
+       100
+      ],
+      [
+       684069.1,
+       4289985.0,
+       100
+      ],
+      [
+       684369.4,
+       4289985.0,
+       100
+      ],
+      [
+       684519.5,
+       4289985.0,
+       100
+      ],
+      [
+       684819.8,
+       4289985.0,
+       100
+      ]
+     ],
+     "scarcity": 0.608,
+     "competitors": [
+      "corvus_corax",
+      "buteo_jamaicensis",
+      "odocoileus_hemionus",
+      "sciurus_griseus",
+      "melanerpes_formicivorus",
+      "callipepla_californica",
+      "aphelocoma_californica",
+      "cyanocitta_stelleri",
+      "cathartes_aura",
+      "canis_latrans",
+      "puma_concolor",
+      "meleagris_gallopavo"
+     ]
+    },
+    {
+     "id": "urocyon_cinereoargenteus:winter:shelter:burrow",
+     "archetype": "shelter",
+     "verb": "shelter",
+     "season": "winter",
+     "unit": "solitary",
+     "collective": false,
+     "resource": "burrow",
+     "hotspots": [
+      [
+       682237.2,
+       4289985.0,
+       64
+      ],
+      [
+       686531.5,
+       4289985.0,
+       64
+      ],
+      [
+       686891.9,
+       4289985.0,
+       64
+      ],
+      [
+       688483.5,
+       4289985.0,
+       64
+      ],
+      [
+       687612.6,
+       4289955.0,
+       64
+      ],
+      [
+       680075.1,
+       4289894.9,
+       64
+      ],
+      [
+       688303.3,
+       4289894.9,
+       64
+      ],
+      [
+       686621.6,
+       4289864.9,
+       64
+      ],
+      [
+       689024.0,
+       4289864.9,
+       64
+      ],
+      [
+       681576.6,
+       4289804.8,
+       64
+      ],
+      [
+       681816.8,
+       4289804.8,
+       64
+      ],
+      [
+       682537.5,
+       4289804.8,
+       64
+      ]
+     ],
+     "scarcity": 0.87,
+     "competitors": [
+      "microtus_californicus",
+      "canis_latrans",
+      "otospermophilus_beecheyi",
+      "sceloporus_occidentalis"
+     ]
+    },
+    {
+     "id": "urocyon_cinereoargenteus:spring:drink",
+     "archetype": "drink",
+     "verb": "drink",
+     "season": "spring",
+     "unit": "solitary",
+     "collective": false,
+     "resource": "water",
+     "rhythm": "often",
+     "hotspots": [
+      [
+       680045.0,
+       4289985.0,
+       100
+      ],
+      [
+       680315.3,
+       4289985.0,
+       100
+      ],
+      [
+       681156.2,
+       4289985.0,
+       100
+      ],
+      [
+       681846.8,
+       4289985.0,
+       100
+      ],
+      [
+       682477.5,
+       4289985.0,
+       100
+      ],
+      [
+       682807.8,
+       4289985.0,
+       100
+      ],
+      [
+       683558.6,
+       4289985.0,
+       100
+      ],
+      [
+       683918.9,
+       4289985.0,
+       100
+      ],
+      [
+       684069.1,
+       4289985.0,
+       100
+      ],
+      [
+       684369.4,
+       4289985.0,
+       100
+      ],
+      [
+       684519.5,
+       4289985.0,
+       100
+      ],
+      [
+       684819.8,
+       4289985.0,
+       100
+      ]
+     ],
+     "scarcity": 0.608,
+     "competitors": [
+      "corvus_corax",
+      "buteo_jamaicensis",
+      "odocoileus_hemionus",
+      "sciurus_griseus",
+      "melanerpes_formicivorus",
+      "callipepla_californica",
+      "aphelocoma_californica",
+      "cyanocitta_stelleri",
+      "cathartes_aura",
+      "canis_latrans",
+      "puma_concolor",
+      "meleagris_gallopavo"
+     ]
+    },
+    {
+     "id": "urocyon_cinereoargenteus:summer:drink",
+     "archetype": "drink",
+     "verb": "drink",
+     "season": "summer",
+     "unit": "solitary",
+     "collective": false,
+     "resource": "water",
+     "rhythm": "often",
+     "hotspots": [
+      [
+       684369.4,
+       4289985.0,
+       100
+      ],
+      [
+       684519.5,
+       4289985.0,
+       100
+      ],
+      [
+       684819.8,
+       4289985.0,
+       100
+      ],
+      [
+       685150.2,
+       4289985.0,
+       100
+      ],
+      [
+       685720.7,
+       4289985.0,
+       100
+      ],
+      [
+       685870.9,
+       4289985.0,
+       100
+      ],
+      [
+       686021.0,
+       4289955.0,
+       100
+      ],
+      [
+       684669.7,
+       4289924.9,
+       100
+      ],
+      [
+       685300.3,
+       4289924.9,
+       100
+      ],
+      [
+       686171.2,
+       4289924.9,
+       100
+      ],
+      [
+       685630.6,
+       4289864.9,
+       100
+      ],
+      [
+       686321.3,
+       4289864.9,
+       100
+      ]
+     ],
+     "scarcity": 0.934,
+     "competitors": [
+      "corvus_corax",
+      "buteo_jamaicensis",
+      "odocoileus_hemionus",
+      "sciurus_griseus",
+      "melanerpes_formicivorus",
+      "callipepla_californica",
+      "aphelocoma_californica",
+      "cyanocitta_stelleri",
+      "cathartes_aura",
+      "canis_latrans",
+      "puma_concolor",
+      "meleagris_gallopavo"
+     ]
+    },
+    {
+     "id": "urocyon_cinereoargenteus:summer:shelter:burrow",
+     "archetype": "shelter",
+     "verb": "shelter",
+     "season": "summer",
+     "unit": "solitary",
+     "collective": false,
+     "resource": "burrow",
+     "hotspots": [
+      [
+       682237.2,
+       4289985.0,
+       80
+      ],
+      [
+       686531.5,
+       4289985.0,
+       80
+      ],
+      [
+       686891.9,
+       4289985.0,
+       80
+      ],
+      [
+       688483.5,
+       4289985.0,
+       80
+      ],
+      [
+       687612.6,
+       4289955.0,
+       80
+      ],
+      [
+       680075.1,
+       4289894.9,
+       80
+      ],
+      [
+       688303.3,
+       4289894.9,
+       80
+      ],
+      [
+       686621.6,
+       4289864.9,
+       80
+      ],
+      [
+       689024.0,
+       4289864.9,
+       80
+      ],
+      [
+       681576.6,
+       4289804.8,
+       80
+      ],
+      [
+       681816.8,
+       4289804.8,
+       80
+      ],
+      [
+       682537.5,
+       4289804.8,
+       80
+      ]
+     ],
+     "scarcity": 0.287,
+     "competitors": [
+      "microtus_californicus",
+      "canis_latrans",
+      "otospermophilus_beecheyi",
+      "sceloporus_occidentalis"
+     ]
+    },
+    {
+     "id": "urocyon_cinereoargenteus:fall:drink",
+     "archetype": "drink",
+     "verb": "drink",
+     "season": "fall",
+     "unit": "solitary",
+     "collective": false,
+     "resource": "water",
+     "rhythm": "often",
+     "hotspots": [
+      [
+       684369.4,
+       4289985.0,
+       100
+      ],
+      [
+       684519.5,
+       4289985.0,
+       100
+      ],
+      [
+       684819.8,
+       4289985.0,
+       100
+      ],
+      [
+       685150.2,
+       4289985.0,
+       100
+      ],
+      [
+       685720.7,
+       4289985.0,
+       100
+      ],
+      [
+       685870.9,
+       4289985.0,
+       100
+      ],
+      [
+       686021.0,
+       4289955.0,
+       100
+      ],
+      [
+       684669.7,
+       4289924.9,
+       100
+      ],
+      [
+       685300.3,
+       4289924.9,
+       100
+      ],
+      [
+       686171.2,
+       4289924.9,
+       100
+      ],
+      [
+       685630.6,
+       4289864.9,
+       100
+      ],
+      [
+       686321.3,
+       4289864.9,
+       100
+      ]
+     ],
+     "scarcity": 0.934,
+     "competitors": [
+      "corvus_corax",
+      "buteo_jamaicensis",
+      "odocoileus_hemionus",
+      "sciurus_griseus",
+      "melanerpes_formicivorus",
+      "callipepla_californica",
+      "aphelocoma_californica",
+      "cyanocitta_stelleri",
+      "cathartes_aura",
+      "canis_latrans",
+      "puma_concolor",
+      "meleagris_gallopavo"
+     ]
+    },
+    {
+     "id": "urocyon_cinereoargenteus:fall:shelter:burrow",
+     "archetype": "shelter",
+     "verb": "shelter",
+     "season": "fall",
+     "unit": "solitary",
+     "collective": false,
+     "resource": "burrow",
+     "hotspots": [
+      [
+       682237.2,
+       4289985.0,
+       80
+      ],
+      [
+       686531.5,
+       4289985.0,
+       80
+      ],
+      [
+       686891.9,
+       4289985.0,
+       80
+      ],
+      [
+       688483.5,
+       4289985.0,
+       80
+      ],
+      [
+       687612.6,
+       4289955.0,
+       80
+      ],
+      [
+       680075.1,
+       4289894.9,
+       80
+      ],
+      [
+       688303.3,
+       4289894.9,
+       80
+      ],
+      [
+       686621.6,
+       4289864.9,
+       80
+      ],
+      [
+       689024.0,
+       4289864.9,
+       80
+      ],
+      [
+       681576.6,
+       4289804.8,
+       80
+      ],
+      [
+       681816.8,
+       4289804.8,
+       80
+      ],
+      [
+       682537.5,
+       4289804.8,
+       80
+      ]
+     ],
+     "scarcity": 0.287,
+     "competitors": [
+      "microtus_californicus",
+      "canis_latrans",
+      "otospermophilus_beecheyi",
+      "sceloporus_occidentalis"
+     ]
     }
    ]
   },
@@ -2720,6 +5068,73 @@
      "unit": "solitary",
      "collective": false,
      "goal": "mating chases",
+     "resource": "cavity",
+     "hotspots": [
+      [
+       684669.7,
+       4287162.2,
+       91
+      ],
+      [
+       687822.8,
+       4285390.4,
+       91
+      ],
+      [
+       680855.9,
+       4285090.1,
+       91
+      ],
+      [
+       689955.0,
+       4284579.6,
+       91
+      ],
+      [
+       685930.9,
+       4284279.3,
+       91
+      ],
+      [
+       688633.6,
+       4282537.5,
+       91
+      ],
+      [
+       680195.2,
+       4281066.1,
+       91
+      ],
+      [
+       689144.1,
+       4288933.9,
+       90
+      ],
+      [
+       686952.0,
+       4288303.3,
+       90
+      ],
+      [
+       689054.1,
+       4287042.0,
+       90
+      ],
+      [
+       689834.8,
+       4286561.6,
+       90
+      ],
+      [
+       680795.8,
+       4285570.6,
+       90
+      ]
+     ],
+     "scarcity": 0.679,
+     "competitors": [
+      "melanerpes_formicivorus"
+     ],
      "predators": [
       "buteo_jamaicensis"
      ]
@@ -3067,6 +5482,522 @@
      ]
     },
     {
+     "id": "sciurus_griseus:winter:drink",
+     "archetype": "drink",
+     "verb": "drink",
+     "season": "winter",
+     "unit": "solitary",
+     "collective": false,
+     "resource": "water",
+     "rhythm": "often",
+     "hotspots": [
+      [
+       680045.0,
+       4289985.0,
+       100
+      ],
+      [
+       680315.3,
+       4289985.0,
+       100
+      ],
+      [
+       681156.2,
+       4289985.0,
+       100
+      ],
+      [
+       681846.8,
+       4289985.0,
+       100
+      ],
+      [
+       682477.5,
+       4289985.0,
+       100
+      ],
+      [
+       682807.8,
+       4289985.0,
+       100
+      ],
+      [
+       683558.6,
+       4289985.0,
+       100
+      ],
+      [
+       683918.9,
+       4289985.0,
+       100
+      ],
+      [
+       684069.1,
+       4289985.0,
+       100
+      ],
+      [
+       684369.4,
+       4289985.0,
+       100
+      ],
+      [
+       684519.5,
+       4289985.0,
+       100
+      ],
+      [
+       684819.8,
+       4289985.0,
+       100
+      ]
+     ],
+     "scarcity": 0.608,
+     "competitors": [
+      "corvus_corax",
+      "buteo_jamaicensis",
+      "odocoileus_hemionus",
+      "urocyon_cinereoargenteus",
+      "melanerpes_formicivorus",
+      "callipepla_californica",
+      "aphelocoma_californica",
+      "cyanocitta_stelleri",
+      "cathartes_aura",
+      "canis_latrans",
+      "puma_concolor",
+      "meleagris_gallopavo"
+     ],
+     "predators": [
+      "buteo_jamaicensis"
+     ]
+    },
+    {
+     "id": "sciurus_griseus:spring:drink",
+     "archetype": "drink",
+     "verb": "drink",
+     "season": "spring",
+     "unit": "solitary",
+     "collective": false,
+     "resource": "water",
+     "rhythm": "often",
+     "hotspots": [
+      [
+       680045.0,
+       4289985.0,
+       100
+      ],
+      [
+       680315.3,
+       4289985.0,
+       100
+      ],
+      [
+       681156.2,
+       4289985.0,
+       100
+      ],
+      [
+       681846.8,
+       4289985.0,
+       100
+      ],
+      [
+       682477.5,
+       4289985.0,
+       100
+      ],
+      [
+       682807.8,
+       4289985.0,
+       100
+      ],
+      [
+       683558.6,
+       4289985.0,
+       100
+      ],
+      [
+       683918.9,
+       4289985.0,
+       100
+      ],
+      [
+       684069.1,
+       4289985.0,
+       100
+      ],
+      [
+       684369.4,
+       4289985.0,
+       100
+      ],
+      [
+       684519.5,
+       4289985.0,
+       100
+      ],
+      [
+       684819.8,
+       4289985.0,
+       100
+      ]
+     ],
+     "scarcity": 0.608,
+     "competitors": [
+      "corvus_corax",
+      "buteo_jamaicensis",
+      "odocoileus_hemionus",
+      "urocyon_cinereoargenteus",
+      "melanerpes_formicivorus",
+      "callipepla_californica",
+      "aphelocoma_californica",
+      "cyanocitta_stelleri",
+      "cathartes_aura",
+      "canis_latrans",
+      "puma_concolor",
+      "meleagris_gallopavo"
+     ],
+     "predators": [
+      "buteo_jamaicensis"
+     ]
+    },
+    {
+     "id": "sciurus_griseus:summer:drink",
+     "archetype": "drink",
+     "verb": "drink",
+     "season": "summer",
+     "unit": "solitary",
+     "collective": false,
+     "resource": "water",
+     "rhythm": "often",
+     "hotspots": [
+      [
+       684369.4,
+       4289985.0,
+       100
+      ],
+      [
+       684519.5,
+       4289985.0,
+       100
+      ],
+      [
+       684819.8,
+       4289985.0,
+       100
+      ],
+      [
+       685150.2,
+       4289985.0,
+       100
+      ],
+      [
+       685720.7,
+       4289985.0,
+       100
+      ],
+      [
+       685870.9,
+       4289985.0,
+       100
+      ],
+      [
+       686021.0,
+       4289955.0,
+       100
+      ],
+      [
+       684669.7,
+       4289924.9,
+       100
+      ],
+      [
+       685300.3,
+       4289924.9,
+       100
+      ],
+      [
+       686171.2,
+       4289924.9,
+       100
+      ],
+      [
+       685630.6,
+       4289864.9,
+       100
+      ],
+      [
+       686321.3,
+       4289864.9,
+       100
+      ]
+     ],
+     "scarcity": 0.934,
+     "competitors": [
+      "corvus_corax",
+      "buteo_jamaicensis",
+      "odocoileus_hemionus",
+      "urocyon_cinereoargenteus",
+      "melanerpes_formicivorus",
+      "callipepla_californica",
+      "aphelocoma_californica",
+      "cyanocitta_stelleri",
+      "cathartes_aura",
+      "canis_latrans",
+      "puma_concolor",
+      "meleagris_gallopavo"
+     ],
+     "predators": [
+      "buteo_jamaicensis"
+     ]
+    },
+    {
+     "id": "sciurus_griseus:summer:shelter:cavity",
+     "archetype": "shelter",
+     "verb": "shelter",
+     "season": "summer",
+     "unit": "solitary",
+     "collective": false,
+     "resource": "cavity",
+     "hotspots": [
+      [
+       684669.7,
+       4287162.2,
+       91
+      ],
+      [
+       687822.8,
+       4285390.4,
+       91
+      ],
+      [
+       680855.9,
+       4285090.1,
+       91
+      ],
+      [
+       689955.0,
+       4284579.6,
+       91
+      ],
+      [
+       685930.9,
+       4284279.3,
+       91
+      ],
+      [
+       688633.6,
+       4282537.5,
+       91
+      ],
+      [
+       680195.2,
+       4281066.1,
+       91
+      ],
+      [
+       689144.1,
+       4288933.9,
+       90
+      ],
+      [
+       686952.0,
+       4288303.3,
+       90
+      ],
+      [
+       689054.1,
+       4287042.0,
+       90
+      ],
+      [
+       689834.8,
+       4286561.6,
+       90
+      ],
+      [
+       680795.8,
+       4285570.6,
+       90
+      ]
+     ],
+     "scarcity": 0.679,
+     "competitors": [
+      "melanerpes_formicivorus"
+     ],
+     "predators": [
+      "buteo_jamaicensis"
+     ]
+    },
+    {
+     "id": "sciurus_griseus:fall:drink",
+     "archetype": "drink",
+     "verb": "drink",
+     "season": "fall",
+     "unit": "solitary",
+     "collective": false,
+     "resource": "water",
+     "rhythm": "often",
+     "hotspots": [
+      [
+       684369.4,
+       4289985.0,
+       100
+      ],
+      [
+       684519.5,
+       4289985.0,
+       100
+      ],
+      [
+       684819.8,
+       4289985.0,
+       100
+      ],
+      [
+       685150.2,
+       4289985.0,
+       100
+      ],
+      [
+       685720.7,
+       4289985.0,
+       100
+      ],
+      [
+       685870.9,
+       4289985.0,
+       100
+      ],
+      [
+       686021.0,
+       4289955.0,
+       100
+      ],
+      [
+       684669.7,
+       4289924.9,
+       100
+      ],
+      [
+       685300.3,
+       4289924.9,
+       100
+      ],
+      [
+       686171.2,
+       4289924.9,
+       100
+      ],
+      [
+       685630.6,
+       4289864.9,
+       100
+      ],
+      [
+       686321.3,
+       4289864.9,
+       100
+      ]
+     ],
+     "scarcity": 0.934,
+     "competitors": [
+      "corvus_corax",
+      "buteo_jamaicensis",
+      "odocoileus_hemionus",
+      "urocyon_cinereoargenteus",
+      "melanerpes_formicivorus",
+      "callipepla_californica",
+      "aphelocoma_californica",
+      "cyanocitta_stelleri",
+      "cathartes_aura",
+      "canis_latrans",
+      "puma_concolor",
+      "meleagris_gallopavo"
+     ],
+     "predators": [
+      "buteo_jamaicensis"
+     ]
+    },
+    {
+     "id": "sciurus_griseus:fall:shelter:cavity",
+     "archetype": "shelter",
+     "verb": "shelter",
+     "season": "fall",
+     "unit": "solitary",
+     "collective": false,
+     "resource": "cavity",
+     "hotspots": [
+      [
+       684669.7,
+       4287162.2,
+       91
+      ],
+      [
+       687822.8,
+       4285390.4,
+       91
+      ],
+      [
+       680855.9,
+       4285090.1,
+       91
+      ],
+      [
+       689955.0,
+       4284579.6,
+       91
+      ],
+      [
+       685930.9,
+       4284279.3,
+       91
+      ],
+      [
+       688633.6,
+       4282537.5,
+       91
+      ],
+      [
+       680195.2,
+       4281066.1,
+       91
+      ],
+      [
+       689144.1,
+       4288933.9,
+       90
+      ],
+      [
+       686952.0,
+       4288303.3,
+       90
+      ],
+      [
+       689054.1,
+       4287042.0,
+       90
+      ],
+      [
+       689834.8,
+       4286561.6,
+       90
+      ],
+      [
+       680795.8,
+       4285570.6,
+       90
+      ]
+     ],
+     "scarcity": 0.679,
+     "competitors": [
+      "melanerpes_formicivorus"
+     ],
+     "predators": [
+      "buteo_jamaicensis"
+     ]
+    },
+    {
      "id": "sciurus_griseus:buteo_jamaicensis:evade",
      "archetype": "evade",
      "verb": "evade",
@@ -3321,7 +6252,74 @@
      "season": "spring",
      "unit": "family",
      "collective": true,
-     "goal": "drumming and wakka calls"
+     "goal": "drumming and wakka calls",
+     "resource": "cavity",
+     "hotspots": [
+      [
+       684669.7,
+       4287162.2,
+       91
+      ],
+      [
+       687822.8,
+       4285390.4,
+       91
+      ],
+      [
+       680855.9,
+       4285090.1,
+       91
+      ],
+      [
+       689955.0,
+       4284579.6,
+       91
+      ],
+      [
+       685930.9,
+       4284279.3,
+       91
+      ],
+      [
+       688633.6,
+       4282537.5,
+       91
+      ],
+      [
+       680195.2,
+       4281066.1,
+       91
+      ],
+      [
+       689144.1,
+       4288933.9,
+       90
+      ],
+      [
+       686952.0,
+       4288303.3,
+       90
+      ],
+      [
+       689054.1,
+       4287042.0,
+       90
+      ],
+      [
+       689834.8,
+       4286561.6,
+       90
+      ],
+      [
+       680795.8,
+       4285570.6,
+       90
+      ]
+     ],
+     "scarcity": 0.679,
+     "competitors": [
+      "sciurus_griseus"
+     ]
     },
     {
      "id": "melanerpes_formicivorus:summer:forage:insects",
@@ -3733,12 +6731,515 @@
      ],
      "scarcity": 0.672,
      "competitors": []
+    },
+    {
+     "id": "melanerpes_formicivorus:winter:drink",
+     "archetype": "drink",
+     "verb": "drink",
+     "season": "winter",
+     "unit": "family",
+     "collective": true,
+     "resource": "water",
+     "rhythm": "often",
+     "hotspots": [
+      [
+       680045.0,
+       4289985.0,
+       100
+      ],
+      [
+       680315.3,
+       4289985.0,
+       100
+      ],
+      [
+       681156.2,
+       4289985.0,
+       100
+      ],
+      [
+       681846.8,
+       4289985.0,
+       100
+      ],
+      [
+       682477.5,
+       4289985.0,
+       100
+      ],
+      [
+       682807.8,
+       4289985.0,
+       100
+      ],
+      [
+       683558.6,
+       4289985.0,
+       100
+      ],
+      [
+       683918.9,
+       4289985.0,
+       100
+      ],
+      [
+       684069.1,
+       4289985.0,
+       100
+      ],
+      [
+       684369.4,
+       4289985.0,
+       100
+      ],
+      [
+       684519.5,
+       4289985.0,
+       100
+      ],
+      [
+       684819.8,
+       4289985.0,
+       100
+      ]
+     ],
+     "scarcity": 0.608,
+     "competitors": [
+      "corvus_corax",
+      "buteo_jamaicensis",
+      "odocoileus_hemionus",
+      "urocyon_cinereoargenteus",
+      "sciurus_griseus",
+      "callipepla_californica",
+      "aphelocoma_californica",
+      "cyanocitta_stelleri",
+      "cathartes_aura",
+      "canis_latrans",
+      "puma_concolor",
+      "meleagris_gallopavo"
+     ]
+    },
+    {
+     "id": "melanerpes_formicivorus:spring:drink",
+     "archetype": "drink",
+     "verb": "drink",
+     "season": "spring",
+     "unit": "family",
+     "collective": true,
+     "resource": "water",
+     "rhythm": "often",
+     "hotspots": [
+      [
+       680045.0,
+       4289985.0,
+       100
+      ],
+      [
+       680315.3,
+       4289985.0,
+       100
+      ],
+      [
+       681156.2,
+       4289985.0,
+       100
+      ],
+      [
+       681846.8,
+       4289985.0,
+       100
+      ],
+      [
+       682477.5,
+       4289985.0,
+       100
+      ],
+      [
+       682807.8,
+       4289985.0,
+       100
+      ],
+      [
+       683558.6,
+       4289985.0,
+       100
+      ],
+      [
+       683918.9,
+       4289985.0,
+       100
+      ],
+      [
+       684069.1,
+       4289985.0,
+       100
+      ],
+      [
+       684369.4,
+       4289985.0,
+       100
+      ],
+      [
+       684519.5,
+       4289985.0,
+       100
+      ],
+      [
+       684819.8,
+       4289985.0,
+       100
+      ]
+     ],
+     "scarcity": 0.608,
+     "competitors": [
+      "corvus_corax",
+      "buteo_jamaicensis",
+      "odocoileus_hemionus",
+      "urocyon_cinereoargenteus",
+      "sciurus_griseus",
+      "callipepla_californica",
+      "aphelocoma_californica",
+      "cyanocitta_stelleri",
+      "cathartes_aura",
+      "canis_latrans",
+      "puma_concolor",
+      "meleagris_gallopavo"
+     ]
+    },
+    {
+     "id": "melanerpes_formicivorus:summer:drink",
+     "archetype": "drink",
+     "verb": "drink",
+     "season": "summer",
+     "unit": "family",
+     "collective": true,
+     "resource": "water",
+     "rhythm": "often",
+     "hotspots": [
+      [
+       684369.4,
+       4289985.0,
+       100
+      ],
+      [
+       684519.5,
+       4289985.0,
+       100
+      ],
+      [
+       684819.8,
+       4289985.0,
+       100
+      ],
+      [
+       685150.2,
+       4289985.0,
+       100
+      ],
+      [
+       685720.7,
+       4289985.0,
+       100
+      ],
+      [
+       685870.9,
+       4289985.0,
+       100
+      ],
+      [
+       686021.0,
+       4289955.0,
+       100
+      ],
+      [
+       684669.7,
+       4289924.9,
+       100
+      ],
+      [
+       685300.3,
+       4289924.9,
+       100
+      ],
+      [
+       686171.2,
+       4289924.9,
+       100
+      ],
+      [
+       685630.6,
+       4289864.9,
+       100
+      ],
+      [
+       686321.3,
+       4289864.9,
+       100
+      ]
+     ],
+     "scarcity": 0.934,
+     "competitors": [
+      "corvus_corax",
+      "buteo_jamaicensis",
+      "odocoileus_hemionus",
+      "urocyon_cinereoargenteus",
+      "sciurus_griseus",
+      "callipepla_californica",
+      "aphelocoma_californica",
+      "cyanocitta_stelleri",
+      "cathartes_aura",
+      "canis_latrans",
+      "puma_concolor",
+      "meleagris_gallopavo"
+     ]
+    },
+    {
+     "id": "melanerpes_formicivorus:summer:shelter:cavity",
+     "archetype": "shelter",
+     "verb": "shelter",
+     "season": "summer",
+     "unit": "family",
+     "collective": true,
+     "resource": "cavity",
+     "hotspots": [
+      [
+       684669.7,
+       4287162.2,
+       91
+      ],
+      [
+       687822.8,
+       4285390.4,
+       91
+      ],
+      [
+       680855.9,
+       4285090.1,
+       91
+      ],
+      [
+       689955.0,
+       4284579.6,
+       91
+      ],
+      [
+       685930.9,
+       4284279.3,
+       91
+      ],
+      [
+       688633.6,
+       4282537.5,
+       91
+      ],
+      [
+       680195.2,
+       4281066.1,
+       91
+      ],
+      [
+       689144.1,
+       4288933.9,
+       90
+      ],
+      [
+       686952.0,
+       4288303.3,
+       90
+      ],
+      [
+       689054.1,
+       4287042.0,
+       90
+      ],
+      [
+       689834.8,
+       4286561.6,
+       90
+      ],
+      [
+       680795.8,
+       4285570.6,
+       90
+      ]
+     ],
+     "scarcity": 0.679,
+     "competitors": [
+      "sciurus_griseus"
+     ]
+    },
+    {
+     "id": "melanerpes_formicivorus:fall:drink",
+     "archetype": "drink",
+     "verb": "drink",
+     "season": "fall",
+     "unit": "family",
+     "collective": true,
+     "resource": "water",
+     "rhythm": "often",
+     "hotspots": [
+      [
+       684369.4,
+       4289985.0,
+       100
+      ],
+      [
+       684519.5,
+       4289985.0,
+       100
+      ],
+      [
+       684819.8,
+       4289985.0,
+       100
+      ],
+      [
+       685150.2,
+       4289985.0,
+       100
+      ],
+      [
+       685720.7,
+       4289985.0,
+       100
+      ],
+      [
+       685870.9,
+       4289985.0,
+       100
+      ],
+      [
+       686021.0,
+       4289955.0,
+       100
+      ],
+      [
+       684669.7,
+       4289924.9,
+       100
+      ],
+      [
+       685300.3,
+       4289924.9,
+       100
+      ],
+      [
+       686171.2,
+       4289924.9,
+       100
+      ],
+      [
+       685630.6,
+       4289864.9,
+       100
+      ],
+      [
+       686321.3,
+       4289864.9,
+       100
+      ]
+     ],
+     "scarcity": 0.934,
+     "competitors": [
+      "corvus_corax",
+      "buteo_jamaicensis",
+      "odocoileus_hemionus",
+      "urocyon_cinereoargenteus",
+      "sciurus_griseus",
+      "callipepla_californica",
+      "aphelocoma_californica",
+      "cyanocitta_stelleri",
+      "cathartes_aura",
+      "canis_latrans",
+      "puma_concolor",
+      "meleagris_gallopavo"
+     ]
+    },
+    {
+     "id": "melanerpes_formicivorus:fall:shelter:cavity",
+     "archetype": "shelter",
+     "verb": "shelter",
+     "season": "fall",
+     "unit": "family",
+     "collective": true,
+     "resource": "cavity",
+     "hotspots": [
+      [
+       684669.7,
+       4287162.2,
+       91
+      ],
+      [
+       687822.8,
+       4285390.4,
+       91
+      ],
+      [
+       680855.9,
+       4285090.1,
+       91
+      ],
+      [
+       689955.0,
+       4284579.6,
+       91
+      ],
+      [
+       685930.9,
+       4284279.3,
+       91
+      ],
+      [
+       688633.6,
+       4282537.5,
+       91
+      ],
+      [
+       680195.2,
+       4281066.1,
+       91
+      ],
+      [
+       689144.1,
+       4288933.9,
+       90
+      ],
+      [
+       686952.0,
+       4288303.3,
+       90
+      ],
+      [
+       689054.1,
+       4287042.0,
+       90
+      ],
+      [
+       689834.8,
+       4286561.6,
+       90
+      ],
+      [
+       680795.8,
+       4285570.6,
+       90
+      ]
+     ],
+     "scarcity": 0.679,
+     "competitors": [
+      "sciurus_griseus"
+     ]
     }
    ]
   },
   "callipepla_californica": {
    "unit": "covey",
-   "predators": [],
+   "predators": [
+    "buteo_jamaicensis",
+    "canis_latrans",
+    "corvus_corax",
+    "urocyon_cinereoargenteus"
+   ],
    "prey": [],
    "games": [
     {
@@ -3818,6 +7319,12 @@
       "lepus_californicus",
       "microtus_californicus",
       "meleagris_gallopavo"
+     ],
+     "predators": [
+      "buteo_jamaicensis",
+      "canis_latrans",
+      "corvus_corax",
+      "urocyon_cinereoargenteus"
      ]
     },
     {
@@ -3826,7 +7333,86 @@
      "verb": "court",
      "season": "spring",
      "unit": "covey",
-     "collective": true
+     "collective": true,
+     "resource": "cover",
+     "hotspots": [
+      [
+       680885.9,
+       4289985.0,
+       90
+      ],
+      [
+       681126.1,
+       4289985.0,
+       90
+      ],
+      [
+       681336.3,
+       4289985.0,
+       90
+      ],
+      [
+       681666.7,
+       4289985.0,
+       90
+      ],
+      [
+       681816.8,
+       4289985.0,
+       90
+      ],
+      [
+       681997.0,
+       4289985.0,
+       90
+      ],
+      [
+       682177.2,
+       4289985.0,
+       90
+      ],
+      [
+       682327.3,
+       4289985.0,
+       90
+      ],
+      [
+       682477.5,
+       4289985.0,
+       90
+      ],
+      [
+       683198.2,
+       4289985.0,
+       90
+      ],
+      [
+       683468.5,
+       4289985.0,
+       90
+      ],
+      [
+       683768.8,
+       4289985.0,
+       90
+      ]
+     ],
+     "scarcity": 0.137,
+     "competitors": [
+      "odocoileus_hemionus",
+      "urocyon_cinereoargenteus",
+      "aphelocoma_californica",
+      "cyanocitta_stelleri",
+      "sylvilagus_bachmani",
+      "puma_concolor",
+      "meleagris_gallopavo"
+     ],
+     "predators": [
+      "buteo_jamaicensis",
+      "canis_latrans",
+      "corvus_corax",
+      "urocyon_cinereoargenteus"
+     ]
     },
     {
      "id": "callipepla_californica:spring:nest:cover",
@@ -3907,6 +7493,12 @@
       "sylvilagus_bachmani",
       "puma_concolor",
       "meleagris_gallopavo"
+     ],
+     "predators": [
+      "buteo_jamaicensis",
+      "canis_latrans",
+      "corvus_corax",
+      "urocyon_cinereoargenteus"
      ]
     },
     {
@@ -3990,6 +7582,12 @@
       "canis_latrans",
       "meleagris_gallopavo",
       "sceloporus_occidentalis"
+     ],
+     "predators": [
+      "buteo_jamaicensis",
+      "canis_latrans",
+      "corvus_corax",
+      "urocyon_cinereoargenteus"
      ]
     },
     {
@@ -4070,6 +7668,12 @@
       "sylvilagus_bachmani",
       "lepus_californicus",
       "sceloporus_occidentalis"
+     ],
+     "predators": [
+      "buteo_jamaicensis",
+      "canis_latrans",
+      "corvus_corax",
+      "urocyon_cinereoargenteus"
      ]
     },
     {
@@ -4154,6 +7758,12 @@
       "canis_latrans",
       "meleagris_gallopavo",
       "otospermophilus_beecheyi"
+     ],
+     "predators": [
+      "buteo_jamaicensis",
+      "canis_latrans",
+      "corvus_corax",
+      "urocyon_cinereoargenteus"
      ]
     },
     {
@@ -4169,6 +7779,696 @@
      "competitors": [
       "lepus_californicus",
       "microtus_californicus"
+     ],
+     "predators": [
+      "buteo_jamaicensis",
+      "canis_latrans",
+      "corvus_corax",
+      "urocyon_cinereoargenteus"
+     ]
+    },
+    {
+     "id": "callipepla_californica:winter:drink",
+     "archetype": "drink",
+     "verb": "drink",
+     "season": "winter",
+     "unit": "covey",
+     "collective": true,
+     "resource": "water",
+     "rhythm": "daily",
+     "hotspots": [
+      [
+       680045.0,
+       4289985.0,
+       100
+      ],
+      [
+       680315.3,
+       4289985.0,
+       100
+      ],
+      [
+       681156.2,
+       4289985.0,
+       100
+      ],
+      [
+       681846.8,
+       4289985.0,
+       100
+      ],
+      [
+       682477.5,
+       4289985.0,
+       100
+      ],
+      [
+       682807.8,
+       4289985.0,
+       100
+      ],
+      [
+       683558.6,
+       4289985.0,
+       100
+      ],
+      [
+       683918.9,
+       4289985.0,
+       100
+      ],
+      [
+       684069.1,
+       4289985.0,
+       100
+      ],
+      [
+       684369.4,
+       4289985.0,
+       100
+      ],
+      [
+       684519.5,
+       4289985.0,
+       100
+      ],
+      [
+       684819.8,
+       4289985.0,
+       100
+      ]
+     ],
+     "scarcity": 0.608,
+     "competitors": [
+      "corvus_corax",
+      "buteo_jamaicensis",
+      "odocoileus_hemionus",
+      "urocyon_cinereoargenteus",
+      "sciurus_griseus",
+      "melanerpes_formicivorus",
+      "aphelocoma_californica",
+      "cyanocitta_stelleri",
+      "cathartes_aura",
+      "canis_latrans",
+      "puma_concolor",
+      "meleagris_gallopavo"
+     ],
+     "predators": [
+      "buteo_jamaicensis",
+      "canis_latrans",
+      "corvus_corax",
+      "urocyon_cinereoargenteus"
+     ]
+    },
+    {
+     "id": "callipepla_californica:winter:shelter:cover",
+     "archetype": "shelter",
+     "verb": "shelter",
+     "season": "winter",
+     "unit": "covey",
+     "collective": true,
+     "resource": "cover",
+     "hotspots": [
+      [
+       680885.9,
+       4289985.0,
+       76
+      ],
+      [
+       681126.1,
+       4289985.0,
+       76
+      ],
+      [
+       681336.3,
+       4289985.0,
+       76
+      ],
+      [
+       681666.7,
+       4289985.0,
+       76
+      ],
+      [
+       681816.8,
+       4289985.0,
+       76
+      ],
+      [
+       681997.0,
+       4289985.0,
+       76
+      ],
+      [
+       682177.2,
+       4289985.0,
+       76
+      ],
+      [
+       682327.3,
+       4289985.0,
+       76
+      ],
+      [
+       682477.5,
+       4289985.0,
+       76
+      ],
+      [
+       683198.2,
+       4289985.0,
+       76
+      ],
+      [
+       683468.5,
+       4289985.0,
+       76
+      ],
+      [
+       683768.8,
+       4289985.0,
+       76
+      ]
+     ],
+     "scarcity": 0.137,
+     "competitors": [
+      "odocoileus_hemionus",
+      "aphelocoma_californica",
+      "cyanocitta_stelleri",
+      "sylvilagus_bachmani",
+      "lepus_californicus",
+      "puma_concolor"
+     ],
+     "predators": [
+      "buteo_jamaicensis",
+      "canis_latrans",
+      "corvus_corax",
+      "urocyon_cinereoargenteus"
+     ]
+    },
+    {
+     "id": "callipepla_californica:spring:drink",
+     "archetype": "drink",
+     "verb": "drink",
+     "season": "spring",
+     "unit": "covey",
+     "collective": true,
+     "resource": "water",
+     "rhythm": "daily",
+     "hotspots": [
+      [
+       680045.0,
+       4289985.0,
+       100
+      ],
+      [
+       680315.3,
+       4289985.0,
+       100
+      ],
+      [
+       681156.2,
+       4289985.0,
+       100
+      ],
+      [
+       681846.8,
+       4289985.0,
+       100
+      ],
+      [
+       682477.5,
+       4289985.0,
+       100
+      ],
+      [
+       682807.8,
+       4289985.0,
+       100
+      ],
+      [
+       683558.6,
+       4289985.0,
+       100
+      ],
+      [
+       683918.9,
+       4289985.0,
+       100
+      ],
+      [
+       684069.1,
+       4289985.0,
+       100
+      ],
+      [
+       684369.4,
+       4289985.0,
+       100
+      ],
+      [
+       684519.5,
+       4289985.0,
+       100
+      ],
+      [
+       684819.8,
+       4289985.0,
+       100
+      ]
+     ],
+     "scarcity": 0.608,
+     "competitors": [
+      "corvus_corax",
+      "buteo_jamaicensis",
+      "odocoileus_hemionus",
+      "urocyon_cinereoargenteus",
+      "sciurus_griseus",
+      "melanerpes_formicivorus",
+      "aphelocoma_californica",
+      "cyanocitta_stelleri",
+      "cathartes_aura",
+      "canis_latrans",
+      "puma_concolor",
+      "meleagris_gallopavo"
+     ],
+     "predators": [
+      "buteo_jamaicensis",
+      "canis_latrans",
+      "corvus_corax",
+      "urocyon_cinereoargenteus"
+     ]
+    },
+    {
+     "id": "callipepla_californica:summer:drink",
+     "archetype": "drink",
+     "verb": "drink",
+     "season": "summer",
+     "unit": "covey",
+     "collective": true,
+     "resource": "water",
+     "rhythm": "daily",
+     "hotspots": [
+      [
+       684369.4,
+       4289985.0,
+       100
+      ],
+      [
+       684519.5,
+       4289985.0,
+       100
+      ],
+      [
+       684819.8,
+       4289985.0,
+       100
+      ],
+      [
+       685150.2,
+       4289985.0,
+       100
+      ],
+      [
+       685720.7,
+       4289985.0,
+       100
+      ],
+      [
+       685870.9,
+       4289985.0,
+       100
+      ],
+      [
+       686021.0,
+       4289955.0,
+       100
+      ],
+      [
+       684669.7,
+       4289924.9,
+       100
+      ],
+      [
+       685300.3,
+       4289924.9,
+       100
+      ],
+      [
+       686171.2,
+       4289924.9,
+       100
+      ],
+      [
+       685630.6,
+       4289864.9,
+       100
+      ],
+      [
+       686321.3,
+       4289864.9,
+       100
+      ]
+     ],
+     "scarcity": 0.934,
+     "competitors": [
+      "corvus_corax",
+      "buteo_jamaicensis",
+      "odocoileus_hemionus",
+      "urocyon_cinereoargenteus",
+      "sciurus_griseus",
+      "melanerpes_formicivorus",
+      "aphelocoma_californica",
+      "cyanocitta_stelleri",
+      "cathartes_aura",
+      "canis_latrans",
+      "puma_concolor",
+      "meleagris_gallopavo"
+     ],
+     "predators": [
+      "buteo_jamaicensis",
+      "canis_latrans",
+      "corvus_corax",
+      "urocyon_cinereoargenteus"
+     ]
+    },
+    {
+     "id": "callipepla_californica:summer:shelter:cover",
+     "archetype": "shelter",
+     "verb": "shelter",
+     "season": "summer",
+     "unit": "covey",
+     "collective": true,
+     "resource": "cover",
+     "hotspots": [
+      [
+       680885.9,
+       4289985.0,
+       90
+      ],
+      [
+       681126.1,
+       4289985.0,
+       90
+      ],
+      [
+       681336.3,
+       4289985.0,
+       90
+      ],
+      [
+       681666.7,
+       4289985.0,
+       90
+      ],
+      [
+       681816.8,
+       4289985.0,
+       90
+      ],
+      [
+       681997.0,
+       4289985.0,
+       90
+      ],
+      [
+       682177.2,
+       4289985.0,
+       90
+      ],
+      [
+       682327.3,
+       4289985.0,
+       90
+      ],
+      [
+       682477.5,
+       4289985.0,
+       90
+      ],
+      [
+       683198.2,
+       4289985.0,
+       90
+      ],
+      [
+       683468.5,
+       4289985.0,
+       90
+      ],
+      [
+       683768.8,
+       4289985.0,
+       90
+      ]
+     ],
+     "scarcity": 0.137,
+     "competitors": [
+      "odocoileus_hemionus",
+      "aphelocoma_californica",
+      "cyanocitta_stelleri",
+      "sylvilagus_bachmani",
+      "lepus_californicus",
+      "puma_concolor"
+     ],
+     "predators": [
+      "buteo_jamaicensis",
+      "canis_latrans",
+      "corvus_corax",
+      "urocyon_cinereoargenteus"
+     ]
+    },
+    {
+     "id": "callipepla_californica:fall:drink",
+     "archetype": "drink",
+     "verb": "drink",
+     "season": "fall",
+     "unit": "covey",
+     "collective": true,
+     "resource": "water",
+     "rhythm": "daily",
+     "hotspots": [
+      [
+       684369.4,
+       4289985.0,
+       100
+      ],
+      [
+       684519.5,
+       4289985.0,
+       100
+      ],
+      [
+       684819.8,
+       4289985.0,
+       100
+      ],
+      [
+       685150.2,
+       4289985.0,
+       100
+      ],
+      [
+       685720.7,
+       4289985.0,
+       100
+      ],
+      [
+       685870.9,
+       4289985.0,
+       100
+      ],
+      [
+       686021.0,
+       4289955.0,
+       100
+      ],
+      [
+       684669.7,
+       4289924.9,
+       100
+      ],
+      [
+       685300.3,
+       4289924.9,
+       100
+      ],
+      [
+       686171.2,
+       4289924.9,
+       100
+      ],
+      [
+       685630.6,
+       4289864.9,
+       100
+      ],
+      [
+       686321.3,
+       4289864.9,
+       100
+      ]
+     ],
+     "scarcity": 0.934,
+     "competitors": [
+      "corvus_corax",
+      "buteo_jamaicensis",
+      "odocoileus_hemionus",
+      "urocyon_cinereoargenteus",
+      "sciurus_griseus",
+      "melanerpes_formicivorus",
+      "aphelocoma_californica",
+      "cyanocitta_stelleri",
+      "cathartes_aura",
+      "canis_latrans",
+      "puma_concolor",
+      "meleagris_gallopavo"
+     ],
+     "predators": [
+      "buteo_jamaicensis",
+      "canis_latrans",
+      "corvus_corax",
+      "urocyon_cinereoargenteus"
+     ]
+    },
+    {
+     "id": "callipepla_californica:fall:shelter:cover",
+     "archetype": "shelter",
+     "verb": "shelter",
+     "season": "fall",
+     "unit": "covey",
+     "collective": true,
+     "resource": "cover",
+     "hotspots": [
+      [
+       680885.9,
+       4289985.0,
+       90
+      ],
+      [
+       681126.1,
+       4289985.0,
+       90
+      ],
+      [
+       681336.3,
+       4289985.0,
+       90
+      ],
+      [
+       681666.7,
+       4289985.0,
+       90
+      ],
+      [
+       681816.8,
+       4289985.0,
+       90
+      ],
+      [
+       681997.0,
+       4289985.0,
+       90
+      ],
+      [
+       682177.2,
+       4289985.0,
+       90
+      ],
+      [
+       682327.3,
+       4289985.0,
+       90
+      ],
+      [
+       682477.5,
+       4289985.0,
+       90
+      ],
+      [
+       683198.2,
+       4289985.0,
+       90
+      ],
+      [
+       683468.5,
+       4289985.0,
+       90
+      ],
+      [
+       683768.8,
+       4289985.0,
+       90
+      ]
+     ],
+     "scarcity": 0.137,
+     "competitors": [
+      "odocoileus_hemionus",
+      "aphelocoma_californica",
+      "cyanocitta_stelleri",
+      "sylvilagus_bachmani",
+      "lepus_californicus",
+      "puma_concolor"
+     ],
+     "predators": [
+      "buteo_jamaicensis",
+      "canis_latrans",
+      "corvus_corax",
+      "urocyon_cinereoargenteus"
+     ]
+    },
+    {
+     "id": "callipepla_californica:buteo_jamaicensis:evade",
+     "archetype": "evade",
+     "verb": "evade",
+     "season": "all",
+     "unit": "covey",
+     "collective": true,
+     "predator": "buteo_jamaicensis",
+     "watchers": []
+    },
+    {
+     "id": "callipepla_californica:canis_latrans:evade",
+     "archetype": "evade",
+     "verb": "evade",
+     "season": "all",
+     "unit": "covey",
+     "collective": true,
+     "predator": "canis_latrans",
+     "watchers": []
+    },
+    {
+     "id": "callipepla_californica:corvus_corax:evade",
+     "archetype": "evade",
+     "verb": "evade",
+     "season": "all",
+     "unit": "covey",
+     "collective": true,
+     "predator": "corvus_corax",
+     "watchers": []
+    },
+    {
+     "id": "callipepla_californica:urocyon_cinereoargenteus:evade",
+     "archetype": "evade",
+     "verb": "evade",
+     "season": "all",
+     "unit": "covey",
+     "collective": true,
+     "predator": "urocyon_cinereoargenteus",
+     "watchers": []
+    },
+    {
+     "id": "callipepla_californica:watch",
+     "archetype": "watch",
+     "verb": "watch",
+     "season": "all",
+     "unit": "covey",
+     "collective": true,
+     "predators": [
+      "buteo_jamaicensis",
+      "canis_latrans",
+      "corvus_corax",
+      "urocyon_cinereoargenteus"
      ]
     }
    ]
@@ -4176,7 +8476,9 @@
   "aphelocoma_californica": {
    "unit": "family",
    "predators": [],
-   "prey": [],
+   "prey": [
+    "sceloporus_occidentalis"
+   ],
    "games": [
     {
      "id": "aphelocoma_californica:winter:forage:acorn_mast",
@@ -4341,7 +8643,80 @@
      "verb": "court",
      "season": "spring",
      "unit": "family",
-     "collective": true
+     "collective": true,
+     "resource": "cover",
+     "hotspots": [
+      [
+       680885.9,
+       4289985.0,
+       90
+      ],
+      [
+       681126.1,
+       4289985.0,
+       90
+      ],
+      [
+       681336.3,
+       4289985.0,
+       90
+      ],
+      [
+       681666.7,
+       4289985.0,
+       90
+      ],
+      [
+       681816.8,
+       4289985.0,
+       90
+      ],
+      [
+       681997.0,
+       4289985.0,
+       90
+      ],
+      [
+       682177.2,
+       4289985.0,
+       90
+      ],
+      [
+       682327.3,
+       4289985.0,
+       90
+      ],
+      [
+       682477.5,
+       4289985.0,
+       90
+      ],
+      [
+       683198.2,
+       4289985.0,
+       90
+      ],
+      [
+       683468.5,
+       4289985.0,
+       90
+      ],
+      [
+       683768.8,
+       4289985.0,
+       90
+      ]
+     ],
+     "scarcity": 0.137,
+     "competitors": [
+      "odocoileus_hemionus",
+      "urocyon_cinereoargenteus",
+      "callipepla_californica",
+      "cyanocitta_stelleri",
+      "sylvilagus_bachmani",
+      "puma_concolor",
+      "meleagris_gallopavo"
+     ]
     },
     {
      "id": "aphelocoma_californica:spring:nest:cover",
@@ -4839,6 +9214,514 @@
       "meleagris_gallopavo",
       "otospermophilus_beecheyi"
      ]
+    },
+    {
+     "id": "aphelocoma_californica:winter:drink",
+     "archetype": "drink",
+     "verb": "drink",
+     "season": "winter",
+     "unit": "family",
+     "collective": true,
+     "resource": "water",
+     "rhythm": "often",
+     "hotspots": [
+      [
+       680045.0,
+       4289985.0,
+       100
+      ],
+      [
+       680315.3,
+       4289985.0,
+       100
+      ],
+      [
+       681156.2,
+       4289985.0,
+       100
+      ],
+      [
+       681846.8,
+       4289985.0,
+       100
+      ],
+      [
+       682477.5,
+       4289985.0,
+       100
+      ],
+      [
+       682807.8,
+       4289985.0,
+       100
+      ],
+      [
+       683558.6,
+       4289985.0,
+       100
+      ],
+      [
+       683918.9,
+       4289985.0,
+       100
+      ],
+      [
+       684069.1,
+       4289985.0,
+       100
+      ],
+      [
+       684369.4,
+       4289985.0,
+       100
+      ],
+      [
+       684519.5,
+       4289985.0,
+       100
+      ],
+      [
+       684819.8,
+       4289985.0,
+       100
+      ]
+     ],
+     "scarcity": 0.608,
+     "competitors": [
+      "corvus_corax",
+      "buteo_jamaicensis",
+      "odocoileus_hemionus",
+      "urocyon_cinereoargenteus",
+      "sciurus_griseus",
+      "melanerpes_formicivorus",
+      "callipepla_californica",
+      "cyanocitta_stelleri",
+      "cathartes_aura",
+      "canis_latrans",
+      "puma_concolor",
+      "meleagris_gallopavo"
+     ]
+    },
+    {
+     "id": "aphelocoma_californica:spring:drink",
+     "archetype": "drink",
+     "verb": "drink",
+     "season": "spring",
+     "unit": "family",
+     "collective": true,
+     "resource": "water",
+     "rhythm": "often",
+     "hotspots": [
+      [
+       680045.0,
+       4289985.0,
+       100
+      ],
+      [
+       680315.3,
+       4289985.0,
+       100
+      ],
+      [
+       681156.2,
+       4289985.0,
+       100
+      ],
+      [
+       681846.8,
+       4289985.0,
+       100
+      ],
+      [
+       682477.5,
+       4289985.0,
+       100
+      ],
+      [
+       682807.8,
+       4289985.0,
+       100
+      ],
+      [
+       683558.6,
+       4289985.0,
+       100
+      ],
+      [
+       683918.9,
+       4289985.0,
+       100
+      ],
+      [
+       684069.1,
+       4289985.0,
+       100
+      ],
+      [
+       684369.4,
+       4289985.0,
+       100
+      ],
+      [
+       684519.5,
+       4289985.0,
+       100
+      ],
+      [
+       684819.8,
+       4289985.0,
+       100
+      ]
+     ],
+     "scarcity": 0.608,
+     "competitors": [
+      "corvus_corax",
+      "buteo_jamaicensis",
+      "odocoileus_hemionus",
+      "urocyon_cinereoargenteus",
+      "sciurus_griseus",
+      "melanerpes_formicivorus",
+      "callipepla_californica",
+      "cyanocitta_stelleri",
+      "cathartes_aura",
+      "canis_latrans",
+      "puma_concolor",
+      "meleagris_gallopavo"
+     ]
+    },
+    {
+     "id": "aphelocoma_californica:summer:drink",
+     "archetype": "drink",
+     "verb": "drink",
+     "season": "summer",
+     "unit": "family",
+     "collective": true,
+     "resource": "water",
+     "rhythm": "often",
+     "hotspots": [
+      [
+       684369.4,
+       4289985.0,
+       100
+      ],
+      [
+       684519.5,
+       4289985.0,
+       100
+      ],
+      [
+       684819.8,
+       4289985.0,
+       100
+      ],
+      [
+       685150.2,
+       4289985.0,
+       100
+      ],
+      [
+       685720.7,
+       4289985.0,
+       100
+      ],
+      [
+       685870.9,
+       4289985.0,
+       100
+      ],
+      [
+       686021.0,
+       4289955.0,
+       100
+      ],
+      [
+       684669.7,
+       4289924.9,
+       100
+      ],
+      [
+       685300.3,
+       4289924.9,
+       100
+      ],
+      [
+       686171.2,
+       4289924.9,
+       100
+      ],
+      [
+       685630.6,
+       4289864.9,
+       100
+      ],
+      [
+       686321.3,
+       4289864.9,
+       100
+      ]
+     ],
+     "scarcity": 0.934,
+     "competitors": [
+      "corvus_corax",
+      "buteo_jamaicensis",
+      "odocoileus_hemionus",
+      "urocyon_cinereoargenteus",
+      "sciurus_griseus",
+      "melanerpes_formicivorus",
+      "callipepla_californica",
+      "cyanocitta_stelleri",
+      "cathartes_aura",
+      "canis_latrans",
+      "puma_concolor",
+      "meleagris_gallopavo"
+     ]
+    },
+    {
+     "id": "aphelocoma_californica:summer:shelter:cover",
+     "archetype": "shelter",
+     "verb": "shelter",
+     "season": "summer",
+     "unit": "family",
+     "collective": true,
+     "resource": "cover",
+     "hotspots": [
+      [
+       680885.9,
+       4289985.0,
+       90
+      ],
+      [
+       681126.1,
+       4289985.0,
+       90
+      ],
+      [
+       681336.3,
+       4289985.0,
+       90
+      ],
+      [
+       681666.7,
+       4289985.0,
+       90
+      ],
+      [
+       681816.8,
+       4289985.0,
+       90
+      ],
+      [
+       681997.0,
+       4289985.0,
+       90
+      ],
+      [
+       682177.2,
+       4289985.0,
+       90
+      ],
+      [
+       682327.3,
+       4289985.0,
+       90
+      ],
+      [
+       682477.5,
+       4289985.0,
+       90
+      ],
+      [
+       683198.2,
+       4289985.0,
+       90
+      ],
+      [
+       683468.5,
+       4289985.0,
+       90
+      ],
+      [
+       683768.8,
+       4289985.0,
+       90
+      ]
+     ],
+     "scarcity": 0.137,
+     "competitors": [
+      "odocoileus_hemionus",
+      "callipepla_californica",
+      "cyanocitta_stelleri",
+      "sylvilagus_bachmani",
+      "lepus_californicus",
+      "puma_concolor"
+     ]
+    },
+    {
+     "id": "aphelocoma_californica:fall:drink",
+     "archetype": "drink",
+     "verb": "drink",
+     "season": "fall",
+     "unit": "family",
+     "collective": true,
+     "resource": "water",
+     "rhythm": "often",
+     "hotspots": [
+      [
+       684369.4,
+       4289985.0,
+       100
+      ],
+      [
+       684519.5,
+       4289985.0,
+       100
+      ],
+      [
+       684819.8,
+       4289985.0,
+       100
+      ],
+      [
+       685150.2,
+       4289985.0,
+       100
+      ],
+      [
+       685720.7,
+       4289985.0,
+       100
+      ],
+      [
+       685870.9,
+       4289985.0,
+       100
+      ],
+      [
+       686021.0,
+       4289955.0,
+       100
+      ],
+      [
+       684669.7,
+       4289924.9,
+       100
+      ],
+      [
+       685300.3,
+       4289924.9,
+       100
+      ],
+      [
+       686171.2,
+       4289924.9,
+       100
+      ],
+      [
+       685630.6,
+       4289864.9,
+       100
+      ],
+      [
+       686321.3,
+       4289864.9,
+       100
+      ]
+     ],
+     "scarcity": 0.934,
+     "competitors": [
+      "corvus_corax",
+      "buteo_jamaicensis",
+      "odocoileus_hemionus",
+      "urocyon_cinereoargenteus",
+      "sciurus_griseus",
+      "melanerpes_formicivorus",
+      "callipepla_californica",
+      "cyanocitta_stelleri",
+      "cathartes_aura",
+      "canis_latrans",
+      "puma_concolor",
+      "meleagris_gallopavo"
+     ]
+    },
+    {
+     "id": "aphelocoma_californica:fall:shelter:cover",
+     "archetype": "shelter",
+     "verb": "shelter",
+     "season": "fall",
+     "unit": "family",
+     "collective": true,
+     "resource": "cover",
+     "hotspots": [
+      [
+       680885.9,
+       4289985.0,
+       90
+      ],
+      [
+       681126.1,
+       4289985.0,
+       90
+      ],
+      [
+       681336.3,
+       4289985.0,
+       90
+      ],
+      [
+       681666.7,
+       4289985.0,
+       90
+      ],
+      [
+       681816.8,
+       4289985.0,
+       90
+      ],
+      [
+       681997.0,
+       4289985.0,
+       90
+      ],
+      [
+       682177.2,
+       4289985.0,
+       90
+      ],
+      [
+       682327.3,
+       4289985.0,
+       90
+      ],
+      [
+       682477.5,
+       4289985.0,
+       90
+      ],
+      [
+       683198.2,
+       4289985.0,
+       90
+      ],
+      [
+       683468.5,
+       4289985.0,
+       90
+      ],
+      [
+       683768.8,
+       4289985.0,
+       90
+      ]
+     ],
+     "scarcity": 0.137,
+     "competitors": [
+      "odocoileus_hemionus",
+      "callipepla_californica",
+      "cyanocitta_stelleri",
+      "sylvilagus_bachmani",
+      "lepus_californicus",
+      "puma_concolor"
+     ]
     }
    ]
   },
@@ -5014,7 +9897,80 @@
      "verb": "court",
      "season": "spring",
      "unit": "family",
-     "collective": true
+     "collective": true,
+     "resource": "cover",
+     "hotspots": [
+      [
+       680885.9,
+       4289985.0,
+       90
+      ],
+      [
+       681126.1,
+       4289985.0,
+       90
+      ],
+      [
+       681336.3,
+       4289985.0,
+       90
+      ],
+      [
+       681666.7,
+       4289985.0,
+       90
+      ],
+      [
+       681816.8,
+       4289985.0,
+       90
+      ],
+      [
+       681997.0,
+       4289985.0,
+       90
+      ],
+      [
+       682177.2,
+       4289985.0,
+       90
+      ],
+      [
+       682327.3,
+       4289985.0,
+       90
+      ],
+      [
+       682477.5,
+       4289985.0,
+       90
+      ],
+      [
+       683198.2,
+       4289985.0,
+       90
+      ],
+      [
+       683468.5,
+       4289985.0,
+       90
+      ],
+      [
+       683768.8,
+       4289985.0,
+       90
+      ]
+     ],
+     "scarcity": 0.137,
+     "competitors": [
+      "odocoileus_hemionus",
+      "urocyon_cinereoargenteus",
+      "callipepla_californica",
+      "aphelocoma_californica",
+      "sylvilagus_bachmani",
+      "puma_concolor",
+      "meleagris_gallopavo"
+     ]
     },
     {
      "id": "cyanocitta_stelleri:summer:rear:insects",
@@ -5268,6 +10224,594 @@
       "meleagris_gallopavo",
       "otospermophilus_beecheyi"
      ]
+    },
+    {
+     "id": "cyanocitta_stelleri:winter:drink",
+     "archetype": "drink",
+     "verb": "drink",
+     "season": "winter",
+     "unit": "family",
+     "collective": true,
+     "resource": "water",
+     "rhythm": "often",
+     "hotspots": [
+      [
+       680045.0,
+       4289985.0,
+       100
+      ],
+      [
+       680315.3,
+       4289985.0,
+       100
+      ],
+      [
+       681156.2,
+       4289985.0,
+       100
+      ],
+      [
+       681846.8,
+       4289985.0,
+       100
+      ],
+      [
+       682477.5,
+       4289985.0,
+       100
+      ],
+      [
+       682807.8,
+       4289985.0,
+       100
+      ],
+      [
+       683558.6,
+       4289985.0,
+       100
+      ],
+      [
+       683918.9,
+       4289985.0,
+       100
+      ],
+      [
+       684069.1,
+       4289985.0,
+       100
+      ],
+      [
+       684369.4,
+       4289985.0,
+       100
+      ],
+      [
+       684519.5,
+       4289985.0,
+       100
+      ],
+      [
+       684819.8,
+       4289985.0,
+       100
+      ]
+     ],
+     "scarcity": 0.608,
+     "competitors": [
+      "corvus_corax",
+      "buteo_jamaicensis",
+      "odocoileus_hemionus",
+      "urocyon_cinereoargenteus",
+      "sciurus_griseus",
+      "melanerpes_formicivorus",
+      "callipepla_californica",
+      "aphelocoma_californica",
+      "cathartes_aura",
+      "canis_latrans",
+      "puma_concolor",
+      "meleagris_gallopavo"
+     ]
+    },
+    {
+     "id": "cyanocitta_stelleri:winter:shelter:cover",
+     "archetype": "shelter",
+     "verb": "shelter",
+     "season": "winter",
+     "unit": "family",
+     "collective": true,
+     "resource": "cover",
+     "hotspots": [
+      [
+       680885.9,
+       4289985.0,
+       76
+      ],
+      [
+       681126.1,
+       4289985.0,
+       76
+      ],
+      [
+       681336.3,
+       4289985.0,
+       76
+      ],
+      [
+       681666.7,
+       4289985.0,
+       76
+      ],
+      [
+       681816.8,
+       4289985.0,
+       76
+      ],
+      [
+       681997.0,
+       4289985.0,
+       76
+      ],
+      [
+       682177.2,
+       4289985.0,
+       76
+      ],
+      [
+       682327.3,
+       4289985.0,
+       76
+      ],
+      [
+       682477.5,
+       4289985.0,
+       76
+      ],
+      [
+       683198.2,
+       4289985.0,
+       76
+      ],
+      [
+       683468.5,
+       4289985.0,
+       76
+      ],
+      [
+       683768.8,
+       4289985.0,
+       76
+      ]
+     ],
+     "scarcity": 0.137,
+     "competitors": [
+      "odocoileus_hemionus",
+      "callipepla_californica",
+      "aphelocoma_californica",
+      "sylvilagus_bachmani",
+      "lepus_californicus",
+      "puma_concolor"
+     ]
+    },
+    {
+     "id": "cyanocitta_stelleri:spring:drink",
+     "archetype": "drink",
+     "verb": "drink",
+     "season": "spring",
+     "unit": "family",
+     "collective": true,
+     "resource": "water",
+     "rhythm": "often",
+     "hotspots": [
+      [
+       680045.0,
+       4289985.0,
+       100
+      ],
+      [
+       680315.3,
+       4289985.0,
+       100
+      ],
+      [
+       681156.2,
+       4289985.0,
+       100
+      ],
+      [
+       681846.8,
+       4289985.0,
+       100
+      ],
+      [
+       682477.5,
+       4289985.0,
+       100
+      ],
+      [
+       682807.8,
+       4289985.0,
+       100
+      ],
+      [
+       683558.6,
+       4289985.0,
+       100
+      ],
+      [
+       683918.9,
+       4289985.0,
+       100
+      ],
+      [
+       684069.1,
+       4289985.0,
+       100
+      ],
+      [
+       684369.4,
+       4289985.0,
+       100
+      ],
+      [
+       684519.5,
+       4289985.0,
+       100
+      ],
+      [
+       684819.8,
+       4289985.0,
+       100
+      ]
+     ],
+     "scarcity": 0.608,
+     "competitors": [
+      "corvus_corax",
+      "buteo_jamaicensis",
+      "odocoileus_hemionus",
+      "urocyon_cinereoargenteus",
+      "sciurus_griseus",
+      "melanerpes_formicivorus",
+      "callipepla_californica",
+      "aphelocoma_californica",
+      "cathartes_aura",
+      "canis_latrans",
+      "puma_concolor",
+      "meleagris_gallopavo"
+     ]
+    },
+    {
+     "id": "cyanocitta_stelleri:summer:drink",
+     "archetype": "drink",
+     "verb": "drink",
+     "season": "summer",
+     "unit": "family",
+     "collective": true,
+     "resource": "water",
+     "rhythm": "often",
+     "hotspots": [
+      [
+       684369.4,
+       4289985.0,
+       100
+      ],
+      [
+       684519.5,
+       4289985.0,
+       100
+      ],
+      [
+       684819.8,
+       4289985.0,
+       100
+      ],
+      [
+       685150.2,
+       4289985.0,
+       100
+      ],
+      [
+       685720.7,
+       4289985.0,
+       100
+      ],
+      [
+       685870.9,
+       4289985.0,
+       100
+      ],
+      [
+       686021.0,
+       4289955.0,
+       100
+      ],
+      [
+       684669.7,
+       4289924.9,
+       100
+      ],
+      [
+       685300.3,
+       4289924.9,
+       100
+      ],
+      [
+       686171.2,
+       4289924.9,
+       100
+      ],
+      [
+       685630.6,
+       4289864.9,
+       100
+      ],
+      [
+       686321.3,
+       4289864.9,
+       100
+      ]
+     ],
+     "scarcity": 0.934,
+     "competitors": [
+      "corvus_corax",
+      "buteo_jamaicensis",
+      "odocoileus_hemionus",
+      "urocyon_cinereoargenteus",
+      "sciurus_griseus",
+      "melanerpes_formicivorus",
+      "callipepla_californica",
+      "aphelocoma_californica",
+      "cathartes_aura",
+      "canis_latrans",
+      "puma_concolor",
+      "meleagris_gallopavo"
+     ]
+    },
+    {
+     "id": "cyanocitta_stelleri:summer:shelter:cover",
+     "archetype": "shelter",
+     "verb": "shelter",
+     "season": "summer",
+     "unit": "family",
+     "collective": true,
+     "resource": "cover",
+     "hotspots": [
+      [
+       680885.9,
+       4289985.0,
+       90
+      ],
+      [
+       681126.1,
+       4289985.0,
+       90
+      ],
+      [
+       681336.3,
+       4289985.0,
+       90
+      ],
+      [
+       681666.7,
+       4289985.0,
+       90
+      ],
+      [
+       681816.8,
+       4289985.0,
+       90
+      ],
+      [
+       681997.0,
+       4289985.0,
+       90
+      ],
+      [
+       682177.2,
+       4289985.0,
+       90
+      ],
+      [
+       682327.3,
+       4289985.0,
+       90
+      ],
+      [
+       682477.5,
+       4289985.0,
+       90
+      ],
+      [
+       683198.2,
+       4289985.0,
+       90
+      ],
+      [
+       683468.5,
+       4289985.0,
+       90
+      ],
+      [
+       683768.8,
+       4289985.0,
+       90
+      ]
+     ],
+     "scarcity": 0.137,
+     "competitors": [
+      "odocoileus_hemionus",
+      "callipepla_californica",
+      "aphelocoma_californica",
+      "sylvilagus_bachmani",
+      "lepus_californicus",
+      "puma_concolor"
+     ]
+    },
+    {
+     "id": "cyanocitta_stelleri:fall:drink",
+     "archetype": "drink",
+     "verb": "drink",
+     "season": "fall",
+     "unit": "family",
+     "collective": true,
+     "resource": "water",
+     "rhythm": "often",
+     "hotspots": [
+      [
+       684369.4,
+       4289985.0,
+       100
+      ],
+      [
+       684519.5,
+       4289985.0,
+       100
+      ],
+      [
+       684819.8,
+       4289985.0,
+       100
+      ],
+      [
+       685150.2,
+       4289985.0,
+       100
+      ],
+      [
+       685720.7,
+       4289985.0,
+       100
+      ],
+      [
+       685870.9,
+       4289985.0,
+       100
+      ],
+      [
+       686021.0,
+       4289955.0,
+       100
+      ],
+      [
+       684669.7,
+       4289924.9,
+       100
+      ],
+      [
+       685300.3,
+       4289924.9,
+       100
+      ],
+      [
+       686171.2,
+       4289924.9,
+       100
+      ],
+      [
+       685630.6,
+       4289864.9,
+       100
+      ],
+      [
+       686321.3,
+       4289864.9,
+       100
+      ]
+     ],
+     "scarcity": 0.934,
+     "competitors": [
+      "corvus_corax",
+      "buteo_jamaicensis",
+      "odocoileus_hemionus",
+      "urocyon_cinereoargenteus",
+      "sciurus_griseus",
+      "melanerpes_formicivorus",
+      "callipepla_californica",
+      "aphelocoma_californica",
+      "cathartes_aura",
+      "canis_latrans",
+      "puma_concolor",
+      "meleagris_gallopavo"
+     ]
+    },
+    {
+     "id": "cyanocitta_stelleri:fall:shelter:cover",
+     "archetype": "shelter",
+     "verb": "shelter",
+     "season": "fall",
+     "unit": "family",
+     "collective": true,
+     "resource": "cover",
+     "hotspots": [
+      [
+       680885.9,
+       4289985.0,
+       90
+      ],
+      [
+       681126.1,
+       4289985.0,
+       90
+      ],
+      [
+       681336.3,
+       4289985.0,
+       90
+      ],
+      [
+       681666.7,
+       4289985.0,
+       90
+      ],
+      [
+       681816.8,
+       4289985.0,
+       90
+      ],
+      [
+       681997.0,
+       4289985.0,
+       90
+      ],
+      [
+       682177.2,
+       4289985.0,
+       90
+      ],
+      [
+       682327.3,
+       4289985.0,
+       90
+      ],
+      [
+       682477.5,
+       4289985.0,
+       90
+      ],
+      [
+       683198.2,
+       4289985.0,
+       90
+      ],
+      [
+       683468.5,
+       4289985.0,
+       90
+      ],
+      [
+       683768.8,
+       4289985.0,
+       90
+      ]
+     ],
+     "scarcity": 0.137,
+     "competitors": [
+      "odocoileus_hemionus",
+      "callipepla_californica",
+      "aphelocoma_californica",
+      "sylvilagus_bachmani",
+      "lepus_californicus",
+      "puma_concolor"
+     ]
     }
    ]
   },
@@ -5300,7 +10844,76 @@
      "season": "spring",
      "unit": "solitary",
      "collective": false,
-     "goal": "ground display, wings spread"
+     "goal": "ground display, wings spread",
+     "resource": "cliff_or_snag",
+     "hotspots": [
+      [
+       680135.1,
+       4289985.0,
+       90
+      ],
+      [
+       680285.3,
+       4289985.0,
+       90
+      ],
+      [
+       682747.7,
+       4289985.0,
+       90
+      ],
+      [
+       682927.9,
+       4289985.0,
+       90
+      ],
+      [
+       684189.2,
+       4289955.0,
+       90
+      ],
+      [
+       685690.7,
+       4289924.9,
+       90
+      ],
+      [
+       680015.0,
+       4289894.9,
+       90
+      ],
+      [
+       680405.4,
+       4289894.9,
+       90
+      ],
+      [
+       684639.6,
+       4289894.9,
+       90
+      ],
+      [
+       680165.2,
+       4289834.8,
+       90
+      ],
+      [
+       684399.4,
+       4289834.8,
+       90
+      ],
+      [
+       685330.3,
+       4289834.8,
+       90
+      ]
+     ],
+     "scarcity": 0.672,
+     "competitors": [
+      "corvus_corax",
+      "buteo_jamaicensis",
+      "sceloporus_occidentalis"
+     ]
     },
     {
      "id": "cathartes_aura:summer:forage",
@@ -5466,6 +11079,662 @@
      "unit": "solitary",
      "collective": false,
      "goal": "roost communally on snags"
+    },
+    {
+     "id": "cathartes_aura:winter:drink",
+     "archetype": "drink",
+     "verb": "drink",
+     "season": "winter",
+     "unit": "solitary",
+     "collective": false,
+     "resource": "water",
+     "rhythm": "often",
+     "hotspots": [
+      [
+       680045.0,
+       4289985.0,
+       100
+      ],
+      [
+       680315.3,
+       4289985.0,
+       100
+      ],
+      [
+       681156.2,
+       4289985.0,
+       100
+      ],
+      [
+       681846.8,
+       4289985.0,
+       100
+      ],
+      [
+       682477.5,
+       4289985.0,
+       100
+      ],
+      [
+       682807.8,
+       4289985.0,
+       100
+      ],
+      [
+       683558.6,
+       4289985.0,
+       100
+      ],
+      [
+       683918.9,
+       4289985.0,
+       100
+      ],
+      [
+       684069.1,
+       4289985.0,
+       100
+      ],
+      [
+       684369.4,
+       4289985.0,
+       100
+      ],
+      [
+       684519.5,
+       4289985.0,
+       100
+      ],
+      [
+       684819.8,
+       4289985.0,
+       100
+      ]
+     ],
+     "scarcity": 0.608,
+     "competitors": [
+      "corvus_corax",
+      "buteo_jamaicensis",
+      "odocoileus_hemionus",
+      "urocyon_cinereoargenteus",
+      "sciurus_griseus",
+      "melanerpes_formicivorus",
+      "callipepla_californica",
+      "aphelocoma_californica",
+      "cyanocitta_stelleri",
+      "canis_latrans",
+      "puma_concolor",
+      "meleagris_gallopavo"
+     ]
+    },
+    {
+     "id": "cathartes_aura:winter:shelter:cliff_or_snag",
+     "archetype": "shelter",
+     "verb": "shelter",
+     "season": "winter",
+     "unit": "solitary",
+     "collective": false,
+     "resource": "cliff_or_snag",
+     "hotspots": [
+      [
+       680135.1,
+       4289985.0,
+       90
+      ],
+      [
+       680285.3,
+       4289985.0,
+       90
+      ],
+      [
+       682747.7,
+       4289985.0,
+       90
+      ],
+      [
+       682927.9,
+       4289985.0,
+       90
+      ],
+      [
+       684189.2,
+       4289955.0,
+       90
+      ],
+      [
+       685690.7,
+       4289924.9,
+       90
+      ],
+      [
+       680015.0,
+       4289894.9,
+       90
+      ],
+      [
+       680405.4,
+       4289894.9,
+       90
+      ],
+      [
+       684639.6,
+       4289894.9,
+       90
+      ],
+      [
+       680165.2,
+       4289834.8,
+       90
+      ],
+      [
+       684399.4,
+       4289834.8,
+       90
+      ],
+      [
+       685330.3,
+       4289834.8,
+       90
+      ]
+     ],
+     "scarcity": 0.672,
+     "competitors": [
+      "corvus_corax",
+      "buteo_jamaicensis",
+      "meleagris_gallopavo"
+     ]
+    },
+    {
+     "id": "cathartes_aura:spring:drink",
+     "archetype": "drink",
+     "verb": "drink",
+     "season": "spring",
+     "unit": "solitary",
+     "collective": false,
+     "resource": "water",
+     "rhythm": "often",
+     "hotspots": [
+      [
+       680045.0,
+       4289985.0,
+       100
+      ],
+      [
+       680315.3,
+       4289985.0,
+       100
+      ],
+      [
+       681156.2,
+       4289985.0,
+       100
+      ],
+      [
+       681846.8,
+       4289985.0,
+       100
+      ],
+      [
+       682477.5,
+       4289985.0,
+       100
+      ],
+      [
+       682807.8,
+       4289985.0,
+       100
+      ],
+      [
+       683558.6,
+       4289985.0,
+       100
+      ],
+      [
+       683918.9,
+       4289985.0,
+       100
+      ],
+      [
+       684069.1,
+       4289985.0,
+       100
+      ],
+      [
+       684369.4,
+       4289985.0,
+       100
+      ],
+      [
+       684519.5,
+       4289985.0,
+       100
+      ],
+      [
+       684819.8,
+       4289985.0,
+       100
+      ]
+     ],
+     "scarcity": 0.608,
+     "competitors": [
+      "corvus_corax",
+      "buteo_jamaicensis",
+      "odocoileus_hemionus",
+      "urocyon_cinereoargenteus",
+      "sciurus_griseus",
+      "melanerpes_formicivorus",
+      "callipepla_californica",
+      "aphelocoma_californica",
+      "cyanocitta_stelleri",
+      "canis_latrans",
+      "puma_concolor",
+      "meleagris_gallopavo"
+     ]
+    },
+    {
+     "id": "cathartes_aura:spring:shelter:cliff_or_snag",
+     "archetype": "shelter",
+     "verb": "shelter",
+     "season": "spring",
+     "unit": "solitary",
+     "collective": false,
+     "resource": "cliff_or_snag",
+     "hotspots": [
+      [
+       680135.1,
+       4289985.0,
+       90
+      ],
+      [
+       680285.3,
+       4289985.0,
+       90
+      ],
+      [
+       682747.7,
+       4289985.0,
+       90
+      ],
+      [
+       682927.9,
+       4289985.0,
+       90
+      ],
+      [
+       684189.2,
+       4289955.0,
+       90
+      ],
+      [
+       685690.7,
+       4289924.9,
+       90
+      ],
+      [
+       680015.0,
+       4289894.9,
+       90
+      ],
+      [
+       680405.4,
+       4289894.9,
+       90
+      ],
+      [
+       684639.6,
+       4289894.9,
+       90
+      ],
+      [
+       680165.2,
+       4289834.8,
+       90
+      ],
+      [
+       684399.4,
+       4289834.8,
+       90
+      ],
+      [
+       685330.3,
+       4289834.8,
+       90
+      ]
+     ],
+     "scarcity": 0.672,
+     "competitors": [
+      "corvus_corax",
+      "buteo_jamaicensis",
+      "meleagris_gallopavo"
+     ]
+    },
+    {
+     "id": "cathartes_aura:summer:drink",
+     "archetype": "drink",
+     "verb": "drink",
+     "season": "summer",
+     "unit": "solitary",
+     "collective": false,
+     "resource": "water",
+     "rhythm": "often",
+     "hotspots": [
+      [
+       684369.4,
+       4289985.0,
+       100
+      ],
+      [
+       684519.5,
+       4289985.0,
+       100
+      ],
+      [
+       684819.8,
+       4289985.0,
+       100
+      ],
+      [
+       685150.2,
+       4289985.0,
+       100
+      ],
+      [
+       685720.7,
+       4289985.0,
+       100
+      ],
+      [
+       685870.9,
+       4289985.0,
+       100
+      ],
+      [
+       686021.0,
+       4289955.0,
+       100
+      ],
+      [
+       684669.7,
+       4289924.9,
+       100
+      ],
+      [
+       685300.3,
+       4289924.9,
+       100
+      ],
+      [
+       686171.2,
+       4289924.9,
+       100
+      ],
+      [
+       685630.6,
+       4289864.9,
+       100
+      ],
+      [
+       686321.3,
+       4289864.9,
+       100
+      ]
+     ],
+     "scarcity": 0.934,
+     "competitors": [
+      "corvus_corax",
+      "buteo_jamaicensis",
+      "odocoileus_hemionus",
+      "urocyon_cinereoargenteus",
+      "sciurus_griseus",
+      "melanerpes_formicivorus",
+      "callipepla_californica",
+      "aphelocoma_californica",
+      "cyanocitta_stelleri",
+      "canis_latrans",
+      "puma_concolor",
+      "meleagris_gallopavo"
+     ]
+    },
+    {
+     "id": "cathartes_aura:summer:shelter:cliff_or_snag",
+     "archetype": "shelter",
+     "verb": "shelter",
+     "season": "summer",
+     "unit": "solitary",
+     "collective": false,
+     "resource": "cliff_or_snag",
+     "hotspots": [
+      [
+       680135.1,
+       4289985.0,
+       90
+      ],
+      [
+       680285.3,
+       4289985.0,
+       90
+      ],
+      [
+       682747.7,
+       4289985.0,
+       90
+      ],
+      [
+       682927.9,
+       4289985.0,
+       90
+      ],
+      [
+       684189.2,
+       4289955.0,
+       90
+      ],
+      [
+       685690.7,
+       4289924.9,
+       90
+      ],
+      [
+       680015.0,
+       4289894.9,
+       90
+      ],
+      [
+       680405.4,
+       4289894.9,
+       90
+      ],
+      [
+       684639.6,
+       4289894.9,
+       90
+      ],
+      [
+       680165.2,
+       4289834.8,
+       90
+      ],
+      [
+       684399.4,
+       4289834.8,
+       90
+      ],
+      [
+       685330.3,
+       4289834.8,
+       90
+      ]
+     ],
+     "scarcity": 0.672,
+     "competitors": [
+      "corvus_corax",
+      "buteo_jamaicensis",
+      "meleagris_gallopavo"
+     ]
+    },
+    {
+     "id": "cathartes_aura:fall:drink",
+     "archetype": "drink",
+     "verb": "drink",
+     "season": "fall",
+     "unit": "solitary",
+     "collective": false,
+     "resource": "water",
+     "rhythm": "often",
+     "hotspots": [
+      [
+       684369.4,
+       4289985.0,
+       100
+      ],
+      [
+       684519.5,
+       4289985.0,
+       100
+      ],
+      [
+       684819.8,
+       4289985.0,
+       100
+      ],
+      [
+       685150.2,
+       4289985.0,
+       100
+      ],
+      [
+       685720.7,
+       4289985.0,
+       100
+      ],
+      [
+       685870.9,
+       4289985.0,
+       100
+      ],
+      [
+       686021.0,
+       4289955.0,
+       100
+      ],
+      [
+       684669.7,
+       4289924.9,
+       100
+      ],
+      [
+       685300.3,
+       4289924.9,
+       100
+      ],
+      [
+       686171.2,
+       4289924.9,
+       100
+      ],
+      [
+       685630.6,
+       4289864.9,
+       100
+      ],
+      [
+       686321.3,
+       4289864.9,
+       100
+      ]
+     ],
+     "scarcity": 0.934,
+     "competitors": [
+      "corvus_corax",
+      "buteo_jamaicensis",
+      "odocoileus_hemionus",
+      "urocyon_cinereoargenteus",
+      "sciurus_griseus",
+      "melanerpes_formicivorus",
+      "callipepla_californica",
+      "aphelocoma_californica",
+      "cyanocitta_stelleri",
+      "canis_latrans",
+      "puma_concolor",
+      "meleagris_gallopavo"
+     ]
+    },
+    {
+     "id": "cathartes_aura:fall:shelter:cliff_or_snag",
+     "archetype": "shelter",
+     "verb": "shelter",
+     "season": "fall",
+     "unit": "solitary",
+     "collective": false,
+     "resource": "cliff_or_snag",
+     "hotspots": [
+      [
+       680135.1,
+       4289985.0,
+       90
+      ],
+      [
+       680285.3,
+       4289985.0,
+       90
+      ],
+      [
+       682747.7,
+       4289985.0,
+       90
+      ],
+      [
+       682927.9,
+       4289985.0,
+       90
+      ],
+      [
+       684189.2,
+       4289955.0,
+       90
+      ],
+      [
+       685690.7,
+       4289924.9,
+       90
+      ],
+      [
+       680015.0,
+       4289894.9,
+       90
+      ],
+      [
+       680405.4,
+       4289894.9,
+       90
+      ],
+      [
+       684639.6,
+       4289894.9,
+       90
+      ],
+      [
+       680165.2,
+       4289834.8,
+       90
+      ],
+      [
+       684399.4,
+       4289834.8,
+       90
+      ],
+      [
+       685330.3,
+       4289834.8,
+       90
+      ]
+     ],
+     "scarcity": 0.672,
+     "competitors": [
+      "corvus_corax",
+      "buteo_jamaicensis",
+      "meleagris_gallopavo"
+     ]
     }
    ]
   },
@@ -5736,6 +12005,79 @@
      "season": "spring",
      "unit": "solitary",
      "collective": false,
+     "resource": "cover",
+     "hotspots": [
+      [
+       680885.9,
+       4289985.0,
+       90
+      ],
+      [
+       681126.1,
+       4289985.0,
+       90
+      ],
+      [
+       681336.3,
+       4289985.0,
+       90
+      ],
+      [
+       681666.7,
+       4289985.0,
+       90
+      ],
+      [
+       681816.8,
+       4289985.0,
+       90
+      ],
+      [
+       681997.0,
+       4289985.0,
+       90
+      ],
+      [
+       682177.2,
+       4289985.0,
+       90
+      ],
+      [
+       682327.3,
+       4289985.0,
+       90
+      ],
+      [
+       682477.5,
+       4289985.0,
+       90
+      ],
+      [
+       683198.2,
+       4289985.0,
+       90
+      ],
+      [
+       683468.5,
+       4289985.0,
+       90
+      ],
+      [
+       683768.8,
+       4289985.0,
+       90
+      ]
+     ],
+     "scarcity": 0.137,
+     "competitors": [
+      "odocoileus_hemionus",
+      "urocyon_cinereoargenteus",
+      "callipepla_californica",
+      "aphelocoma_californica",
+      "cyanocitta_stelleri",
+      "puma_concolor",
+      "meleagris_gallopavo"
+     ],
      "predators": [
       "buteo_jamaicensis",
       "canis_latrans",
@@ -6020,6 +12362,178 @@
      ]
     },
     {
+     "id": "sylvilagus_bachmani:spring:shelter:cover",
+     "archetype": "shelter",
+     "verb": "shelter",
+     "season": "spring",
+     "unit": "solitary",
+     "collective": false,
+     "resource": "cover",
+     "hotspots": [
+      [
+       680885.9,
+       4289985.0,
+       90
+      ],
+      [
+       681126.1,
+       4289985.0,
+       90
+      ],
+      [
+       681336.3,
+       4289985.0,
+       90
+      ],
+      [
+       681666.7,
+       4289985.0,
+       90
+      ],
+      [
+       681816.8,
+       4289985.0,
+       90
+      ],
+      [
+       681997.0,
+       4289985.0,
+       90
+      ],
+      [
+       682177.2,
+       4289985.0,
+       90
+      ],
+      [
+       682327.3,
+       4289985.0,
+       90
+      ],
+      [
+       682477.5,
+       4289985.0,
+       90
+      ],
+      [
+       683198.2,
+       4289985.0,
+       90
+      ],
+      [
+       683468.5,
+       4289985.0,
+       90
+      ],
+      [
+       683768.8,
+       4289985.0,
+       90
+      ]
+     ],
+     "scarcity": 0.137,
+     "competitors": [
+      "odocoileus_hemionus",
+      "callipepla_californica",
+      "aphelocoma_californica",
+      "cyanocitta_stelleri",
+      "lepus_californicus",
+      "puma_concolor"
+     ],
+     "predators": [
+      "buteo_jamaicensis",
+      "canis_latrans",
+      "puma_concolor",
+      "urocyon_cinereoargenteus"
+     ]
+    },
+    {
+     "id": "sylvilagus_bachmani:fall:shelter:cover",
+     "archetype": "shelter",
+     "verb": "shelter",
+     "season": "fall",
+     "unit": "solitary",
+     "collective": false,
+     "resource": "cover",
+     "hotspots": [
+      [
+       680885.9,
+       4289985.0,
+       90
+      ],
+      [
+       681126.1,
+       4289985.0,
+       90
+      ],
+      [
+       681336.3,
+       4289985.0,
+       90
+      ],
+      [
+       681666.7,
+       4289985.0,
+       90
+      ],
+      [
+       681816.8,
+       4289985.0,
+       90
+      ],
+      [
+       681997.0,
+       4289985.0,
+       90
+      ],
+      [
+       682177.2,
+       4289985.0,
+       90
+      ],
+      [
+       682327.3,
+       4289985.0,
+       90
+      ],
+      [
+       682477.5,
+       4289985.0,
+       90
+      ],
+      [
+       683198.2,
+       4289985.0,
+       90
+      ],
+      [
+       683468.5,
+       4289985.0,
+       90
+      ],
+      [
+       683768.8,
+       4289985.0,
+       90
+      ]
+     ],
+     "scarcity": 0.137,
+     "competitors": [
+      "odocoileus_hemionus",
+      "callipepla_californica",
+      "aphelocoma_californica",
+      "cyanocitta_stelleri",
+      "lepus_californicus",
+      "puma_concolor"
+     ],
+     "predators": [
+      "buteo_jamaicensis",
+      "canis_latrans",
+      "puma_concolor",
+      "urocyon_cinereoargenteus"
+     ]
+    },
+    {
      "id": "sylvilagus_bachmani:buteo_jamaicensis:evade",
      "archetype": "evade",
      "verb": "evade",
@@ -6070,7 +12584,8 @@
    "unit": "solitary",
    "predators": [
     "buteo_jamaicensis",
-    "canis_latrans"
+    "canis_latrans",
+    "puma_concolor"
    ],
    "prey": [],
    "games": [
@@ -6153,7 +12668,8 @@
      ],
      "predators": [
       "buteo_jamaicensis",
-      "canis_latrans"
+      "canis_latrans",
+      "puma_concolor"
      ]
     },
     {
@@ -6233,7 +12749,8 @@
      ],
      "predators": [
       "buteo_jamaicensis",
-      "canis_latrans"
+      "canis_latrans",
+      "puma_concolor"
      ]
     },
     {
@@ -6316,7 +12833,8 @@
      ],
      "predators": [
       "buteo_jamaicensis",
-      "canis_latrans"
+      "canis_latrans",
+      "puma_concolor"
      ]
     },
     {
@@ -6327,9 +12845,79 @@
      "unit": "solitary",
      "collective": false,
      "goal": "chases and boxing",
+     "resource": "grass_forbs",
+     "hotspots": [
+      [
+       682237.2,
+       4289985.0,
+       90
+      ],
+      [
+       686531.5,
+       4289985.0,
+       90
+      ],
+      [
+       686891.9,
+       4289985.0,
+       90
+      ],
+      [
+       688483.5,
+       4289985.0,
+       90
+      ],
+      [
+       687612.6,
+       4289955.0,
+       90
+      ],
+      [
+       680075.1,
+       4289894.9,
+       90
+      ],
+      [
+       688303.3,
+       4289894.9,
+       90
+      ],
+      [
+       686621.6,
+       4289864.9,
+       90
+      ],
+      [
+       689024.0,
+       4289864.9,
+       90
+      ],
+      [
+       681576.6,
+       4289804.8,
+       90
+      ],
+      [
+       681816.8,
+       4289804.8,
+       90
+      ],
+      [
+       682537.5,
+       4289804.8,
+       90
+      ]
+     ],
+     "scarcity": 0.488,
+     "competitors": [
+      "odocoileus_hemionus",
+      "microtus_californicus",
+      "otospermophilus_beecheyi"
+     ],
      "predators": [
       "buteo_jamaicensis",
-      "canis_latrans"
+      "canis_latrans",
+      "puma_concolor"
      ]
     },
     {
@@ -6411,7 +12999,8 @@
      ],
      "predators": [
       "buteo_jamaicensis",
-      "canis_latrans"
+      "canis_latrans",
+      "puma_concolor"
      ]
     },
     {
@@ -6431,7 +13020,8 @@
      ],
      "predators": [
       "buteo_jamaicensis",
-      "canis_latrans"
+      "canis_latrans",
+      "puma_concolor"
      ]
     },
     {
@@ -6516,7 +13106,8 @@
      ],
      "predators": [
       "buteo_jamaicensis",
-      "canis_latrans"
+      "canis_latrans",
+      "puma_concolor"
      ]
     },
     {
@@ -6535,7 +13126,8 @@
      ],
      "predators": [
       "buteo_jamaicensis",
-      "canis_latrans"
+      "canis_latrans",
+      "puma_concolor"
      ]
     },
     {
@@ -6614,7 +13206,178 @@
      ],
      "predators": [
       "buteo_jamaicensis",
-      "canis_latrans"
+      "canis_latrans",
+      "puma_concolor"
+     ]
+    },
+    {
+     "id": "lepus_californicus:spring:shelter:cover",
+     "archetype": "shelter",
+     "verb": "shelter",
+     "season": "spring",
+     "unit": "solitary",
+     "collective": false,
+     "resource": "cover",
+     "hotspots": [
+      [
+       680885.9,
+       4289985.0,
+       90
+      ],
+      [
+       681126.1,
+       4289985.0,
+       90
+      ],
+      [
+       681336.3,
+       4289985.0,
+       90
+      ],
+      [
+       681666.7,
+       4289985.0,
+       90
+      ],
+      [
+       681816.8,
+       4289985.0,
+       90
+      ],
+      [
+       681997.0,
+       4289985.0,
+       90
+      ],
+      [
+       682177.2,
+       4289985.0,
+       90
+      ],
+      [
+       682327.3,
+       4289985.0,
+       90
+      ],
+      [
+       682477.5,
+       4289985.0,
+       90
+      ],
+      [
+       683198.2,
+       4289985.0,
+       90
+      ],
+      [
+       683468.5,
+       4289985.0,
+       90
+      ],
+      [
+       683768.8,
+       4289985.0,
+       90
+      ]
+     ],
+     "scarcity": 0.137,
+     "competitors": [
+      "odocoileus_hemionus",
+      "callipepla_californica",
+      "aphelocoma_californica",
+      "cyanocitta_stelleri",
+      "sylvilagus_bachmani",
+      "puma_concolor"
+     ],
+     "predators": [
+      "buteo_jamaicensis",
+      "canis_latrans",
+      "puma_concolor"
+     ]
+    },
+    {
+     "id": "lepus_californicus:fall:shelter:cover",
+     "archetype": "shelter",
+     "verb": "shelter",
+     "season": "fall",
+     "unit": "solitary",
+     "collective": false,
+     "resource": "cover",
+     "hotspots": [
+      [
+       680885.9,
+       4289985.0,
+       90
+      ],
+      [
+       681126.1,
+       4289985.0,
+       90
+      ],
+      [
+       681336.3,
+       4289985.0,
+       90
+      ],
+      [
+       681666.7,
+       4289985.0,
+       90
+      ],
+      [
+       681816.8,
+       4289985.0,
+       90
+      ],
+      [
+       681997.0,
+       4289985.0,
+       90
+      ],
+      [
+       682177.2,
+       4289985.0,
+       90
+      ],
+      [
+       682327.3,
+       4289985.0,
+       90
+      ],
+      [
+       682477.5,
+       4289985.0,
+       90
+      ],
+      [
+       683198.2,
+       4289985.0,
+       90
+      ],
+      [
+       683468.5,
+       4289985.0,
+       90
+      ],
+      [
+       683768.8,
+       4289985.0,
+       90
+      ]
+     ],
+     "scarcity": 0.137,
+     "competitors": [
+      "odocoileus_hemionus",
+      "callipepla_californica",
+      "aphelocoma_californica",
+      "cyanocitta_stelleri",
+      "sylvilagus_bachmani",
+      "puma_concolor"
+     ],
+     "predators": [
+      "buteo_jamaicensis",
+      "canis_latrans",
+      "puma_concolor"
      ]
     },
     {
@@ -6636,6 +13399,16 @@
      "collective": false,
      "predator": "canis_latrans",
      "watchers": []
+    },
+    {
+     "id": "lepus_californicus:puma_concolor:evade",
+     "archetype": "evade",
+     "verb": "evade",
+     "season": "all",
+     "unit": "solitary",
+     "collective": false,
+     "predator": "puma_concolor",
+     "watchers": []
     }
    ]
   },
@@ -6644,6 +13417,7 @@
    "predators": [
     "buteo_jamaicensis",
     "canis_latrans",
+    "corvus_corax",
     "urocyon_cinereoargenteus"
    ],
    "prey": [],
@@ -6728,6 +13502,7 @@
      "predators": [
       "buteo_jamaicensis",
       "canis_latrans",
+      "corvus_corax",
       "urocyon_cinereoargenteus"
      ]
     },
@@ -6808,6 +13583,7 @@
      "predators": [
       "buteo_jamaicensis",
       "canis_latrans",
+      "corvus_corax",
       "urocyon_cinereoargenteus"
      ]
     },
@@ -6890,6 +13666,7 @@
      "predators": [
       "buteo_jamaicensis",
       "canis_latrans",
+      "corvus_corax",
       "urocyon_cinereoargenteus"
      ]
     },
@@ -6972,6 +13749,7 @@
      "predators": [
       "buteo_jamaicensis",
       "canis_latrans",
+      "corvus_corax",
       "urocyon_cinereoargenteus"
      ]
     },
@@ -7053,6 +13831,7 @@
      "predators": [
       "buteo_jamaicensis",
       "canis_latrans",
+      "corvus_corax",
       "urocyon_cinereoargenteus"
      ]
     },
@@ -7073,6 +13852,7 @@
      "predators": [
       "buteo_jamaicensis",
       "canis_latrans",
+      "corvus_corax",
       "urocyon_cinereoargenteus"
      ]
     },
@@ -7153,6 +13933,175 @@
      "predators": [
       "buteo_jamaicensis",
       "canis_latrans",
+      "corvus_corax",
+      "urocyon_cinereoargenteus"
+     ]
+    },
+    {
+     "id": "microtus_californicus:spring:shelter:burrow",
+     "archetype": "shelter",
+     "verb": "shelter",
+     "season": "spring",
+     "unit": "solitary",
+     "collective": false,
+     "resource": "burrow",
+     "hotspots": [
+      [
+       682237.2,
+       4289985.0,
+       80
+      ],
+      [
+       686531.5,
+       4289985.0,
+       80
+      ],
+      [
+       686891.9,
+       4289985.0,
+       80
+      ],
+      [
+       688483.5,
+       4289985.0,
+       80
+      ],
+      [
+       687612.6,
+       4289955.0,
+       80
+      ],
+      [
+       680075.1,
+       4289894.9,
+       80
+      ],
+      [
+       688303.3,
+       4289894.9,
+       80
+      ],
+      [
+       686621.6,
+       4289864.9,
+       80
+      ],
+      [
+       689024.0,
+       4289864.9,
+       80
+      ],
+      [
+       681576.6,
+       4289804.8,
+       80
+      ],
+      [
+       681816.8,
+       4289804.8,
+       80
+      ],
+      [
+       682537.5,
+       4289804.8,
+       80
+      ]
+     ],
+     "scarcity": 0.287,
+     "competitors": [
+      "urocyon_cinereoargenteus",
+      "canis_latrans",
+      "otospermophilus_beecheyi",
+      "sceloporus_occidentalis"
+     ],
+     "predators": [
+      "buteo_jamaicensis",
+      "canis_latrans",
+      "corvus_corax",
+      "urocyon_cinereoargenteus"
+     ]
+    },
+    {
+     "id": "microtus_californicus:fall:shelter:burrow",
+     "archetype": "shelter",
+     "verb": "shelter",
+     "season": "fall",
+     "unit": "solitary",
+     "collective": false,
+     "resource": "burrow",
+     "hotspots": [
+      [
+       682237.2,
+       4289985.0,
+       80
+      ],
+      [
+       686531.5,
+       4289985.0,
+       80
+      ],
+      [
+       686891.9,
+       4289985.0,
+       80
+      ],
+      [
+       688483.5,
+       4289985.0,
+       80
+      ],
+      [
+       687612.6,
+       4289955.0,
+       80
+      ],
+      [
+       680075.1,
+       4289894.9,
+       80
+      ],
+      [
+       688303.3,
+       4289894.9,
+       80
+      ],
+      [
+       686621.6,
+       4289864.9,
+       80
+      ],
+      [
+       689024.0,
+       4289864.9,
+       80
+      ],
+      [
+       681576.6,
+       4289804.8,
+       80
+      ],
+      [
+       681816.8,
+       4289804.8,
+       80
+      ],
+      [
+       682537.5,
+       4289804.8,
+       80
+      ]
+     ],
+     "scarcity": 0.287,
+     "competitors": [
+      "urocyon_cinereoargenteus",
+      "canis_latrans",
+      "otospermophilus_beecheyi",
+      "sceloporus_occidentalis"
+     ],
+     "predators": [
+      "buteo_jamaicensis",
+      "canis_latrans",
+      "corvus_corax",
       "urocyon_cinereoargenteus"
      ]
     },
@@ -7177,6 +14126,16 @@
      "watchers": []
     },
     {
+     "id": "microtus_californicus:corvus_corax:evade",
+     "archetype": "evade",
+     "verb": "evade",
+     "season": "all",
+     "unit": "solitary",
+     "collective": false,
+     "predator": "corvus_corax",
+     "watchers": []
+    },
+    {
      "id": "microtus_californicus:urocyon_cinereoargenteus:evade",
      "archetype": "evade",
      "verb": "evade",
@@ -7190,11 +14149,16 @@
   },
   "canis_latrans": {
    "unit": "solitary",
-   "predators": [],
+   "predators": [
+    "puma_concolor"
+   ],
    "prey": [
+    "callipepla_californica",
     "lepus_californicus",
+    "meleagris_gallopavo",
     "microtus_californicus",
     "odocoileus_hemionus",
+    "otospermophilus_beecheyi",
     "sylvilagus_bachmani"
    ],
    "games": [
@@ -7204,7 +14168,81 @@
      "verb": "court",
      "season": "winter",
      "unit": "solitary",
-     "collective": false
+     "collective": false,
+     "resource": "cover",
+     "hotspots": [
+      [
+       680885.9,
+       4289985.0,
+       76
+      ],
+      [
+       681126.1,
+       4289985.0,
+       76
+      ],
+      [
+       681336.3,
+       4289985.0,
+       76
+      ],
+      [
+       681666.7,
+       4289985.0,
+       76
+      ],
+      [
+       681816.8,
+       4289985.0,
+       76
+      ],
+      [
+       681997.0,
+       4289985.0,
+       76
+      ],
+      [
+       682177.2,
+       4289985.0,
+       76
+      ],
+      [
+       682327.3,
+       4289985.0,
+       76
+      ],
+      [
+       682477.5,
+       4289985.0,
+       76
+      ],
+      [
+       683198.2,
+       4289985.0,
+       76
+      ],
+      [
+       683468.5,
+       4289985.0,
+       76
+      ],
+      [
+       683768.8,
+       4289985.0,
+       76
+      ]
+     ],
+     "scarcity": 0.137,
+     "competitors": [
+      "odocoileus_hemionus",
+      "aphelocoma_californica",
+      "sylvilagus_bachmani",
+      "lepus_californicus",
+      "sceloporus_occidentalis"
+     ],
+     "predators": [
+      "puma_concolor"
+     ]
     },
     {
      "id": "canis_latrans:winter:hunt",
@@ -7295,6 +14333,9 @@
       "urocyon_cinereoargenteus",
       "microtus_californicus",
       "otospermophilus_beecheyi"
+     ],
+     "predators": [
+      "puma_concolor"
      ]
     },
     {
@@ -7303,7 +14344,10 @@
      "verb": "rear",
      "season": "spring",
      "unit": "solitary",
-     "collective": false
+     "collective": false,
+     "predators": [
+      "puma_concolor"
+     ]
     },
     {
      "id": "canis_latrans:summer:hunt:insects",
@@ -7394,7 +14438,10 @@
      "verb": "forage",
      "season": "summer",
      "unit": "solitary",
-     "collective": false
+     "collective": false,
+     "predators": [
+      "puma_concolor"
+     ]
     },
     {
      "id": "canis_latrans:fall:disperse",
@@ -7486,7 +14533,623 @@
       "cyanocitta_stelleri",
       "meleagris_gallopavo",
       "otospermophilus_beecheyi"
+     ],
+     "predators": [
+      "puma_concolor"
      ]
+    },
+    {
+     "id": "canis_latrans:winter:drink",
+     "archetype": "drink",
+     "verb": "drink",
+     "season": "winter",
+     "unit": "solitary",
+     "collective": false,
+     "resource": "water",
+     "rhythm": "daily",
+     "hotspots": [
+      [
+       680045.0,
+       4289985.0,
+       100
+      ],
+      [
+       680315.3,
+       4289985.0,
+       100
+      ],
+      [
+       681156.2,
+       4289985.0,
+       100
+      ],
+      [
+       681846.8,
+       4289985.0,
+       100
+      ],
+      [
+       682477.5,
+       4289985.0,
+       100
+      ],
+      [
+       682807.8,
+       4289985.0,
+       100
+      ],
+      [
+       683558.6,
+       4289985.0,
+       100
+      ],
+      [
+       683918.9,
+       4289985.0,
+       100
+      ],
+      [
+       684069.1,
+       4289985.0,
+       100
+      ],
+      [
+       684369.4,
+       4289985.0,
+       100
+      ],
+      [
+       684519.5,
+       4289985.0,
+       100
+      ],
+      [
+       684819.8,
+       4289985.0,
+       100
+      ]
+     ],
+     "scarcity": 0.608,
+     "competitors": [
+      "corvus_corax",
+      "buteo_jamaicensis",
+      "odocoileus_hemionus",
+      "urocyon_cinereoargenteus",
+      "sciurus_griseus",
+      "melanerpes_formicivorus",
+      "callipepla_californica",
+      "aphelocoma_californica",
+      "cyanocitta_stelleri",
+      "cathartes_aura",
+      "puma_concolor",
+      "meleagris_gallopavo"
+     ],
+     "predators": [
+      "puma_concolor"
+     ]
+    },
+    {
+     "id": "canis_latrans:winter:shelter:burrow",
+     "archetype": "shelter",
+     "verb": "shelter",
+     "season": "winter",
+     "unit": "solitary",
+     "collective": false,
+     "resource": "burrow",
+     "hotspots": [
+      [
+       682237.2,
+       4289985.0,
+       64
+      ],
+      [
+       686531.5,
+       4289985.0,
+       64
+      ],
+      [
+       686891.9,
+       4289985.0,
+       64
+      ],
+      [
+       688483.5,
+       4289985.0,
+       64
+      ],
+      [
+       687612.6,
+       4289955.0,
+       64
+      ],
+      [
+       680075.1,
+       4289894.9,
+       64
+      ],
+      [
+       688303.3,
+       4289894.9,
+       64
+      ],
+      [
+       686621.6,
+       4289864.9,
+       64
+      ],
+      [
+       689024.0,
+       4289864.9,
+       64
+      ],
+      [
+       681576.6,
+       4289804.8,
+       64
+      ],
+      [
+       681816.8,
+       4289804.8,
+       64
+      ],
+      [
+       682537.5,
+       4289804.8,
+       64
+      ]
+     ],
+     "scarcity": 0.87,
+     "competitors": [
+      "urocyon_cinereoargenteus",
+      "microtus_californicus",
+      "otospermophilus_beecheyi",
+      "sceloporus_occidentalis"
+     ],
+     "predators": [
+      "puma_concolor"
+     ]
+    },
+    {
+     "id": "canis_latrans:spring:drink",
+     "archetype": "drink",
+     "verb": "drink",
+     "season": "spring",
+     "unit": "solitary",
+     "collective": false,
+     "resource": "water",
+     "rhythm": "daily",
+     "hotspots": [
+      [
+       680045.0,
+       4289985.0,
+       100
+      ],
+      [
+       680315.3,
+       4289985.0,
+       100
+      ],
+      [
+       681156.2,
+       4289985.0,
+       100
+      ],
+      [
+       681846.8,
+       4289985.0,
+       100
+      ],
+      [
+       682477.5,
+       4289985.0,
+       100
+      ],
+      [
+       682807.8,
+       4289985.0,
+       100
+      ],
+      [
+       683558.6,
+       4289985.0,
+       100
+      ],
+      [
+       683918.9,
+       4289985.0,
+       100
+      ],
+      [
+       684069.1,
+       4289985.0,
+       100
+      ],
+      [
+       684369.4,
+       4289985.0,
+       100
+      ],
+      [
+       684519.5,
+       4289985.0,
+       100
+      ],
+      [
+       684819.8,
+       4289985.0,
+       100
+      ]
+     ],
+     "scarcity": 0.608,
+     "competitors": [
+      "corvus_corax",
+      "buteo_jamaicensis",
+      "odocoileus_hemionus",
+      "urocyon_cinereoargenteus",
+      "sciurus_griseus",
+      "melanerpes_formicivorus",
+      "callipepla_californica",
+      "aphelocoma_californica",
+      "cyanocitta_stelleri",
+      "cathartes_aura",
+      "puma_concolor",
+      "meleagris_gallopavo"
+     ],
+     "predators": [
+      "puma_concolor"
+     ]
+    },
+    {
+     "id": "canis_latrans:summer:drink",
+     "archetype": "drink",
+     "verb": "drink",
+     "season": "summer",
+     "unit": "solitary",
+     "collective": false,
+     "resource": "water",
+     "rhythm": "daily",
+     "hotspots": [
+      [
+       684369.4,
+       4289985.0,
+       100
+      ],
+      [
+       684519.5,
+       4289985.0,
+       100
+      ],
+      [
+       684819.8,
+       4289985.0,
+       100
+      ],
+      [
+       685150.2,
+       4289985.0,
+       100
+      ],
+      [
+       685720.7,
+       4289985.0,
+       100
+      ],
+      [
+       685870.9,
+       4289985.0,
+       100
+      ],
+      [
+       686021.0,
+       4289955.0,
+       100
+      ],
+      [
+       684669.7,
+       4289924.9,
+       100
+      ],
+      [
+       685300.3,
+       4289924.9,
+       100
+      ],
+      [
+       686171.2,
+       4289924.9,
+       100
+      ],
+      [
+       685630.6,
+       4289864.9,
+       100
+      ],
+      [
+       686321.3,
+       4289864.9,
+       100
+      ]
+     ],
+     "scarcity": 0.934,
+     "competitors": [
+      "corvus_corax",
+      "buteo_jamaicensis",
+      "odocoileus_hemionus",
+      "urocyon_cinereoargenteus",
+      "sciurus_griseus",
+      "melanerpes_formicivorus",
+      "callipepla_californica",
+      "aphelocoma_californica",
+      "cyanocitta_stelleri",
+      "cathartes_aura",
+      "puma_concolor",
+      "meleagris_gallopavo"
+     ],
+     "predators": [
+      "puma_concolor"
+     ]
+    },
+    {
+     "id": "canis_latrans:summer:shelter:burrow",
+     "archetype": "shelter",
+     "verb": "shelter",
+     "season": "summer",
+     "unit": "solitary",
+     "collective": false,
+     "resource": "burrow",
+     "hotspots": [
+      [
+       682237.2,
+       4289985.0,
+       80
+      ],
+      [
+       686531.5,
+       4289985.0,
+       80
+      ],
+      [
+       686891.9,
+       4289985.0,
+       80
+      ],
+      [
+       688483.5,
+       4289985.0,
+       80
+      ],
+      [
+       687612.6,
+       4289955.0,
+       80
+      ],
+      [
+       680075.1,
+       4289894.9,
+       80
+      ],
+      [
+       688303.3,
+       4289894.9,
+       80
+      ],
+      [
+       686621.6,
+       4289864.9,
+       80
+      ],
+      [
+       689024.0,
+       4289864.9,
+       80
+      ],
+      [
+       681576.6,
+       4289804.8,
+       80
+      ],
+      [
+       681816.8,
+       4289804.8,
+       80
+      ],
+      [
+       682537.5,
+       4289804.8,
+       80
+      ]
+     ],
+     "scarcity": 0.287,
+     "competitors": [
+      "urocyon_cinereoargenteus",
+      "microtus_californicus",
+      "otospermophilus_beecheyi",
+      "sceloporus_occidentalis"
+     ],
+     "predators": [
+      "puma_concolor"
+     ]
+    },
+    {
+     "id": "canis_latrans:fall:drink",
+     "archetype": "drink",
+     "verb": "drink",
+     "season": "fall",
+     "unit": "solitary",
+     "collective": false,
+     "resource": "water",
+     "rhythm": "daily",
+     "hotspots": [
+      [
+       684369.4,
+       4289985.0,
+       100
+      ],
+      [
+       684519.5,
+       4289985.0,
+       100
+      ],
+      [
+       684819.8,
+       4289985.0,
+       100
+      ],
+      [
+       685150.2,
+       4289985.0,
+       100
+      ],
+      [
+       685720.7,
+       4289985.0,
+       100
+      ],
+      [
+       685870.9,
+       4289985.0,
+       100
+      ],
+      [
+       686021.0,
+       4289955.0,
+       100
+      ],
+      [
+       684669.7,
+       4289924.9,
+       100
+      ],
+      [
+       685300.3,
+       4289924.9,
+       100
+      ],
+      [
+       686171.2,
+       4289924.9,
+       100
+      ],
+      [
+       685630.6,
+       4289864.9,
+       100
+      ],
+      [
+       686321.3,
+       4289864.9,
+       100
+      ]
+     ],
+     "scarcity": 0.934,
+     "competitors": [
+      "corvus_corax",
+      "buteo_jamaicensis",
+      "odocoileus_hemionus",
+      "urocyon_cinereoargenteus",
+      "sciurus_griseus",
+      "melanerpes_formicivorus",
+      "callipepla_californica",
+      "aphelocoma_californica",
+      "cyanocitta_stelleri",
+      "cathartes_aura",
+      "puma_concolor",
+      "meleagris_gallopavo"
+     ],
+     "predators": [
+      "puma_concolor"
+     ]
+    },
+    {
+     "id": "canis_latrans:fall:shelter:burrow",
+     "archetype": "shelter",
+     "verb": "shelter",
+     "season": "fall",
+     "unit": "solitary",
+     "collective": false,
+     "resource": "burrow",
+     "hotspots": [
+      [
+       682237.2,
+       4289985.0,
+       80
+      ],
+      [
+       686531.5,
+       4289985.0,
+       80
+      ],
+      [
+       686891.9,
+       4289985.0,
+       80
+      ],
+      [
+       688483.5,
+       4289985.0,
+       80
+      ],
+      [
+       687612.6,
+       4289955.0,
+       80
+      ],
+      [
+       680075.1,
+       4289894.9,
+       80
+      ],
+      [
+       688303.3,
+       4289894.9,
+       80
+      ],
+      [
+       686621.6,
+       4289864.9,
+       80
+      ],
+      [
+       689024.0,
+       4289864.9,
+       80
+      ],
+      [
+       681576.6,
+       4289804.8,
+       80
+      ],
+      [
+       681816.8,
+       4289804.8,
+       80
+      ],
+      [
+       682537.5,
+       4289804.8,
+       80
+      ]
+     ],
+     "scarcity": 0.287,
+     "competitors": [
+      "urocyon_cinereoargenteus",
+      "microtus_californicus",
+      "otospermophilus_beecheyi",
+      "sceloporus_occidentalis"
+     ],
+     "predators": [
+      "puma_concolor"
+     ]
+    },
+    {
+     "id": "canis_latrans:puma_concolor:evade",
+     "archetype": "evade",
+     "verb": "evade",
+     "season": "all",
+     "unit": "solitary",
+     "collective": false,
+     "predator": "puma_concolor",
+     "watchers": []
     }
    ]
   },
@@ -7494,7 +15157,11 @@
    "unit": "mother_and_young",
    "predators": [],
    "prey": [
+    "canis_latrans",
+    "lepus_californicus",
+    "meleagris_gallopavo",
     "odocoileus_hemionus",
+    "otospermophilus_beecheyi",
     "sylvilagus_bachmani"
    ],
    "games": [
@@ -7625,12 +15292,683 @@
      "prey": [
       "odocoileus_hemionus"
      ]
+    },
+    {
+     "id": "puma_concolor:winter:drink",
+     "archetype": "drink",
+     "verb": "drink",
+     "season": "winter",
+     "unit": "mother_and_young",
+     "collective": true,
+     "resource": "water",
+     "rhythm": "daily",
+     "hotspots": [
+      [
+       680045.0,
+       4289985.0,
+       100
+      ],
+      [
+       680315.3,
+       4289985.0,
+       100
+      ],
+      [
+       681156.2,
+       4289985.0,
+       100
+      ],
+      [
+       681846.8,
+       4289985.0,
+       100
+      ],
+      [
+       682477.5,
+       4289985.0,
+       100
+      ],
+      [
+       682807.8,
+       4289985.0,
+       100
+      ],
+      [
+       683558.6,
+       4289985.0,
+       100
+      ],
+      [
+       683918.9,
+       4289985.0,
+       100
+      ],
+      [
+       684069.1,
+       4289985.0,
+       100
+      ],
+      [
+       684369.4,
+       4289985.0,
+       100
+      ],
+      [
+       684519.5,
+       4289985.0,
+       100
+      ],
+      [
+       684819.8,
+       4289985.0,
+       100
+      ]
+     ],
+     "scarcity": 0.608,
+     "competitors": [
+      "corvus_corax",
+      "buteo_jamaicensis",
+      "odocoileus_hemionus",
+      "urocyon_cinereoargenteus",
+      "sciurus_griseus",
+      "melanerpes_formicivorus",
+      "callipepla_californica",
+      "aphelocoma_californica",
+      "cyanocitta_stelleri",
+      "cathartes_aura",
+      "canis_latrans",
+      "meleagris_gallopavo"
+     ]
+    },
+    {
+     "id": "puma_concolor:winter:shelter:cover",
+     "archetype": "shelter",
+     "verb": "shelter",
+     "season": "winter",
+     "unit": "mother_and_young",
+     "collective": true,
+     "resource": "cover",
+     "hotspots": [
+      [
+       680885.9,
+       4289985.0,
+       76
+      ],
+      [
+       681126.1,
+       4289985.0,
+       76
+      ],
+      [
+       681336.3,
+       4289985.0,
+       76
+      ],
+      [
+       681666.7,
+       4289985.0,
+       76
+      ],
+      [
+       681816.8,
+       4289985.0,
+       76
+      ],
+      [
+       681997.0,
+       4289985.0,
+       76
+      ],
+      [
+       682177.2,
+       4289985.0,
+       76
+      ],
+      [
+       682327.3,
+       4289985.0,
+       76
+      ],
+      [
+       682477.5,
+       4289985.0,
+       76
+      ],
+      [
+       683198.2,
+       4289985.0,
+       76
+      ],
+      [
+       683468.5,
+       4289985.0,
+       76
+      ],
+      [
+       683768.8,
+       4289985.0,
+       76
+      ]
+     ],
+     "scarcity": 0.137,
+     "competitors": [
+      "odocoileus_hemionus",
+      "callipepla_californica",
+      "aphelocoma_californica",
+      "cyanocitta_stelleri",
+      "sylvilagus_bachmani",
+      "lepus_californicus"
+     ]
+    },
+    {
+     "id": "puma_concolor:spring:drink",
+     "archetype": "drink",
+     "verb": "drink",
+     "season": "spring",
+     "unit": "mother_and_young",
+     "collective": true,
+     "resource": "water",
+     "rhythm": "daily",
+     "hotspots": [
+      [
+       680045.0,
+       4289985.0,
+       100
+      ],
+      [
+       680315.3,
+       4289985.0,
+       100
+      ],
+      [
+       681156.2,
+       4289985.0,
+       100
+      ],
+      [
+       681846.8,
+       4289985.0,
+       100
+      ],
+      [
+       682477.5,
+       4289985.0,
+       100
+      ],
+      [
+       682807.8,
+       4289985.0,
+       100
+      ],
+      [
+       683558.6,
+       4289985.0,
+       100
+      ],
+      [
+       683918.9,
+       4289985.0,
+       100
+      ],
+      [
+       684069.1,
+       4289985.0,
+       100
+      ],
+      [
+       684369.4,
+       4289985.0,
+       100
+      ],
+      [
+       684519.5,
+       4289985.0,
+       100
+      ],
+      [
+       684819.8,
+       4289985.0,
+       100
+      ]
+     ],
+     "scarcity": 0.608,
+     "competitors": [
+      "corvus_corax",
+      "buteo_jamaicensis",
+      "odocoileus_hemionus",
+      "urocyon_cinereoargenteus",
+      "sciurus_griseus",
+      "melanerpes_formicivorus",
+      "callipepla_californica",
+      "aphelocoma_californica",
+      "cyanocitta_stelleri",
+      "cathartes_aura",
+      "canis_latrans",
+      "meleagris_gallopavo"
+     ]
+    },
+    {
+     "id": "puma_concolor:spring:shelter:cover",
+     "archetype": "shelter",
+     "verb": "shelter",
+     "season": "spring",
+     "unit": "mother_and_young",
+     "collective": true,
+     "resource": "cover",
+     "hotspots": [
+      [
+       680885.9,
+       4289985.0,
+       90
+      ],
+      [
+       681126.1,
+       4289985.0,
+       90
+      ],
+      [
+       681336.3,
+       4289985.0,
+       90
+      ],
+      [
+       681666.7,
+       4289985.0,
+       90
+      ],
+      [
+       681816.8,
+       4289985.0,
+       90
+      ],
+      [
+       681997.0,
+       4289985.0,
+       90
+      ],
+      [
+       682177.2,
+       4289985.0,
+       90
+      ],
+      [
+       682327.3,
+       4289985.0,
+       90
+      ],
+      [
+       682477.5,
+       4289985.0,
+       90
+      ],
+      [
+       683198.2,
+       4289985.0,
+       90
+      ],
+      [
+       683468.5,
+       4289985.0,
+       90
+      ],
+      [
+       683768.8,
+       4289985.0,
+       90
+      ]
+     ],
+     "scarcity": 0.137,
+     "competitors": [
+      "odocoileus_hemionus",
+      "callipepla_californica",
+      "aphelocoma_californica",
+      "cyanocitta_stelleri",
+      "sylvilagus_bachmani",
+      "lepus_californicus"
+     ]
+    },
+    {
+     "id": "puma_concolor:summer:drink",
+     "archetype": "drink",
+     "verb": "drink",
+     "season": "summer",
+     "unit": "mother_and_young",
+     "collective": true,
+     "resource": "water",
+     "rhythm": "daily",
+     "hotspots": [
+      [
+       684369.4,
+       4289985.0,
+       100
+      ],
+      [
+       684519.5,
+       4289985.0,
+       100
+      ],
+      [
+       684819.8,
+       4289985.0,
+       100
+      ],
+      [
+       685150.2,
+       4289985.0,
+       100
+      ],
+      [
+       685720.7,
+       4289985.0,
+       100
+      ],
+      [
+       685870.9,
+       4289985.0,
+       100
+      ],
+      [
+       686021.0,
+       4289955.0,
+       100
+      ],
+      [
+       684669.7,
+       4289924.9,
+       100
+      ],
+      [
+       685300.3,
+       4289924.9,
+       100
+      ],
+      [
+       686171.2,
+       4289924.9,
+       100
+      ],
+      [
+       685630.6,
+       4289864.9,
+       100
+      ],
+      [
+       686321.3,
+       4289864.9,
+       100
+      ]
+     ],
+     "scarcity": 0.934,
+     "competitors": [
+      "corvus_corax",
+      "buteo_jamaicensis",
+      "odocoileus_hemionus",
+      "urocyon_cinereoargenteus",
+      "sciurus_griseus",
+      "melanerpes_formicivorus",
+      "callipepla_californica",
+      "aphelocoma_californica",
+      "cyanocitta_stelleri",
+      "cathartes_aura",
+      "canis_latrans",
+      "meleagris_gallopavo"
+     ]
+    },
+    {
+     "id": "puma_concolor:summer:shelter:cover",
+     "archetype": "shelter",
+     "verb": "shelter",
+     "season": "summer",
+     "unit": "mother_and_young",
+     "collective": true,
+     "resource": "cover",
+     "hotspots": [
+      [
+       680885.9,
+       4289985.0,
+       90
+      ],
+      [
+       681126.1,
+       4289985.0,
+       90
+      ],
+      [
+       681336.3,
+       4289985.0,
+       90
+      ],
+      [
+       681666.7,
+       4289985.0,
+       90
+      ],
+      [
+       681816.8,
+       4289985.0,
+       90
+      ],
+      [
+       681997.0,
+       4289985.0,
+       90
+      ],
+      [
+       682177.2,
+       4289985.0,
+       90
+      ],
+      [
+       682327.3,
+       4289985.0,
+       90
+      ],
+      [
+       682477.5,
+       4289985.0,
+       90
+      ],
+      [
+       683198.2,
+       4289985.0,
+       90
+      ],
+      [
+       683468.5,
+       4289985.0,
+       90
+      ],
+      [
+       683768.8,
+       4289985.0,
+       90
+      ]
+     ],
+     "scarcity": 0.137,
+     "competitors": [
+      "odocoileus_hemionus",
+      "callipepla_californica",
+      "aphelocoma_californica",
+      "cyanocitta_stelleri",
+      "sylvilagus_bachmani",
+      "lepus_californicus"
+     ]
+    },
+    {
+     "id": "puma_concolor:fall:drink",
+     "archetype": "drink",
+     "verb": "drink",
+     "season": "fall",
+     "unit": "mother_and_young",
+     "collective": true,
+     "resource": "water",
+     "rhythm": "daily",
+     "hotspots": [
+      [
+       684369.4,
+       4289985.0,
+       100
+      ],
+      [
+       684519.5,
+       4289985.0,
+       100
+      ],
+      [
+       684819.8,
+       4289985.0,
+       100
+      ],
+      [
+       685150.2,
+       4289985.0,
+       100
+      ],
+      [
+       685720.7,
+       4289985.0,
+       100
+      ],
+      [
+       685870.9,
+       4289985.0,
+       100
+      ],
+      [
+       686021.0,
+       4289955.0,
+       100
+      ],
+      [
+       684669.7,
+       4289924.9,
+       100
+      ],
+      [
+       685300.3,
+       4289924.9,
+       100
+      ],
+      [
+       686171.2,
+       4289924.9,
+       100
+      ],
+      [
+       685630.6,
+       4289864.9,
+       100
+      ],
+      [
+       686321.3,
+       4289864.9,
+       100
+      ]
+     ],
+     "scarcity": 0.934,
+     "competitors": [
+      "corvus_corax",
+      "buteo_jamaicensis",
+      "odocoileus_hemionus",
+      "urocyon_cinereoargenteus",
+      "sciurus_griseus",
+      "melanerpes_formicivorus",
+      "callipepla_californica",
+      "aphelocoma_californica",
+      "cyanocitta_stelleri",
+      "cathartes_aura",
+      "canis_latrans",
+      "meleagris_gallopavo"
+     ]
+    },
+    {
+     "id": "puma_concolor:fall:shelter:cover",
+     "archetype": "shelter",
+     "verb": "shelter",
+     "season": "fall",
+     "unit": "mother_and_young",
+     "collective": true,
+     "resource": "cover",
+     "hotspots": [
+      [
+       680885.9,
+       4289985.0,
+       90
+      ],
+      [
+       681126.1,
+       4289985.0,
+       90
+      ],
+      [
+       681336.3,
+       4289985.0,
+       90
+      ],
+      [
+       681666.7,
+       4289985.0,
+       90
+      ],
+      [
+       681816.8,
+       4289985.0,
+       90
+      ],
+      [
+       681997.0,
+       4289985.0,
+       90
+      ],
+      [
+       682177.2,
+       4289985.0,
+       90
+      ],
+      [
+       682327.3,
+       4289985.0,
+       90
+      ],
+      [
+       682477.5,
+       4289985.0,
+       90
+      ],
+      [
+       683198.2,
+       4289985.0,
+       90
+      ],
+      [
+       683468.5,
+       4289985.0,
+       90
+      ],
+      [
+       683768.8,
+       4289985.0,
+       90
+      ]
+     ],
+     "scarcity": 0.137,
+     "competitors": [
+      "odocoileus_hemionus",
+      "callipepla_californica",
+      "aphelocoma_californica",
+      "cyanocitta_stelleri",
+      "sylvilagus_bachmani",
+      "lepus_californicus"
+     ]
     }
    ]
   },
   "meleagris_gallopavo": {
    "unit": "flock",
-   "predators": [],
+   "predators": [
+    "canis_latrans",
+    "puma_concolor"
+   ],
    "prey": [],
    "games": [
     {
@@ -7710,6 +16048,10 @@
       "melanerpes_formicivorus",
       "aphelocoma_californica",
       "cyanocitta_stelleri"
+     ],
+     "predators": [
+      "canis_latrans",
+      "puma_concolor"
      ]
     },
     {
@@ -7789,6 +16131,10 @@
       "sylvilagus_bachmani",
       "lepus_californicus",
       "microtus_californicus"
+     ],
+     "predators": [
+      "canis_latrans",
+      "puma_concolor"
      ]
     },
     {
@@ -7865,6 +16211,10 @@
      "scarcity": 0.672,
      "competitors": [
       "corvus_corax"
+     ],
+     "predators": [
+      "canis_latrans",
+      "puma_concolor"
      ]
     },
     {
@@ -7874,7 +16224,81 @@
      "season": "spring",
      "unit": "flock",
      "collective": true,
-     "goal": "toms gobble and strut"
+     "goal": "toms gobble and strut",
+     "resource": "grass_forbs",
+     "hotspots": [
+      [
+       682237.2,
+       4289985.0,
+       90
+      ],
+      [
+       686531.5,
+       4289985.0,
+       90
+      ],
+      [
+       686891.9,
+       4289985.0,
+       90
+      ],
+      [
+       688483.5,
+       4289985.0,
+       90
+      ],
+      [
+       687612.6,
+       4289955.0,
+       90
+      ],
+      [
+       680075.1,
+       4289894.9,
+       90
+      ],
+      [
+       688303.3,
+       4289894.9,
+       90
+      ],
+      [
+       686621.6,
+       4289864.9,
+       90
+      ],
+      [
+       689024.0,
+       4289864.9,
+       90
+      ],
+      [
+       681576.6,
+       4289804.8,
+       90
+      ],
+      [
+       681816.8,
+       4289804.8,
+       90
+      ],
+      [
+       682537.5,
+       4289804.8,
+       90
+      ]
+     ],
+     "scarcity": 0.488,
+     "competitors": [
+      "odocoileus_hemionus",
+      "lepus_californicus",
+      "microtus_californicus",
+      "otospermophilus_beecheyi"
+     ],
+     "predators": [
+      "canis_latrans",
+      "puma_concolor"
+     ]
     },
     {
      "id": "meleagris_gallopavo:spring:nest:cover",
@@ -7955,6 +16379,10 @@
       "aphelocoma_californica",
       "cyanocitta_stelleri",
       "sylvilagus_bachmani",
+      "puma_concolor"
+     ],
+     "predators": [
+      "canis_latrans",
       "puma_concolor"
      ]
     },
@@ -8040,6 +16468,10 @@
       "cyanocitta_stelleri",
       "canis_latrans",
       "sceloporus_occidentalis"
+     ],
+     "predators": [
+      "canis_latrans",
+      "puma_concolor"
      ]
     },
     {
@@ -8057,6 +16489,10 @@
       "sylvilagus_bachmani",
       "lepus_californicus",
       "otospermophilus_beecheyi"
+     ],
+     "predators": [
+      "canis_latrans",
+      "puma_concolor"
      ]
     },
     {
@@ -8140,6 +16576,10 @@
       "cyanocitta_stelleri",
       "canis_latrans",
       "sceloporus_occidentalis"
+     ],
+     "predators": [
+      "canis_latrans",
+      "puma_concolor"
      ]
     },
     {
@@ -8225,6 +16665,568 @@
       "cyanocitta_stelleri",
       "canis_latrans",
       "otospermophilus_beecheyi"
+     ],
+     "predators": [
+      "canis_latrans",
+      "puma_concolor"
+     ]
+    },
+    {
+     "id": "meleagris_gallopavo:winter:drink",
+     "archetype": "drink",
+     "verb": "drink",
+     "season": "winter",
+     "unit": "flock",
+     "collective": true,
+     "resource": "water",
+     "rhythm": "daily",
+     "hotspots": [
+      [
+       680045.0,
+       4289985.0,
+       100
+      ],
+      [
+       680315.3,
+       4289985.0,
+       100
+      ],
+      [
+       681156.2,
+       4289985.0,
+       100
+      ],
+      [
+       681846.8,
+       4289985.0,
+       100
+      ],
+      [
+       682477.5,
+       4289985.0,
+       100
+      ],
+      [
+       682807.8,
+       4289985.0,
+       100
+      ],
+      [
+       683558.6,
+       4289985.0,
+       100
+      ],
+      [
+       683918.9,
+       4289985.0,
+       100
+      ],
+      [
+       684069.1,
+       4289985.0,
+       100
+      ],
+      [
+       684369.4,
+       4289985.0,
+       100
+      ],
+      [
+       684519.5,
+       4289985.0,
+       100
+      ],
+      [
+       684819.8,
+       4289985.0,
+       100
+      ]
+     ],
+     "scarcity": 0.608,
+     "competitors": [
+      "corvus_corax",
+      "buteo_jamaicensis",
+      "odocoileus_hemionus",
+      "urocyon_cinereoargenteus",
+      "sciurus_griseus",
+      "melanerpes_formicivorus",
+      "callipepla_californica",
+      "aphelocoma_californica",
+      "cyanocitta_stelleri",
+      "cathartes_aura",
+      "canis_latrans",
+      "puma_concolor"
+     ],
+     "predators": [
+      "canis_latrans",
+      "puma_concolor"
+     ]
+    },
+    {
+     "id": "meleagris_gallopavo:spring:drink",
+     "archetype": "drink",
+     "verb": "drink",
+     "season": "spring",
+     "unit": "flock",
+     "collective": true,
+     "resource": "water",
+     "rhythm": "daily",
+     "hotspots": [
+      [
+       680045.0,
+       4289985.0,
+       100
+      ],
+      [
+       680315.3,
+       4289985.0,
+       100
+      ],
+      [
+       681156.2,
+       4289985.0,
+       100
+      ],
+      [
+       681846.8,
+       4289985.0,
+       100
+      ],
+      [
+       682477.5,
+       4289985.0,
+       100
+      ],
+      [
+       682807.8,
+       4289985.0,
+       100
+      ],
+      [
+       683558.6,
+       4289985.0,
+       100
+      ],
+      [
+       683918.9,
+       4289985.0,
+       100
+      ],
+      [
+       684069.1,
+       4289985.0,
+       100
+      ],
+      [
+       684369.4,
+       4289985.0,
+       100
+      ],
+      [
+       684519.5,
+       4289985.0,
+       100
+      ],
+      [
+       684819.8,
+       4289985.0,
+       100
+      ]
+     ],
+     "scarcity": 0.608,
+     "competitors": [
+      "corvus_corax",
+      "buteo_jamaicensis",
+      "odocoileus_hemionus",
+      "urocyon_cinereoargenteus",
+      "sciurus_griseus",
+      "melanerpes_formicivorus",
+      "callipepla_californica",
+      "aphelocoma_californica",
+      "cyanocitta_stelleri",
+      "cathartes_aura",
+      "canis_latrans",
+      "puma_concolor"
+     ],
+     "predators": [
+      "canis_latrans",
+      "puma_concolor"
+     ]
+    },
+    {
+     "id": "meleagris_gallopavo:summer:drink",
+     "archetype": "drink",
+     "verb": "drink",
+     "season": "summer",
+     "unit": "flock",
+     "collective": true,
+     "resource": "water",
+     "rhythm": "daily",
+     "hotspots": [
+      [
+       684369.4,
+       4289985.0,
+       100
+      ],
+      [
+       684519.5,
+       4289985.0,
+       100
+      ],
+      [
+       684819.8,
+       4289985.0,
+       100
+      ],
+      [
+       685150.2,
+       4289985.0,
+       100
+      ],
+      [
+       685720.7,
+       4289985.0,
+       100
+      ],
+      [
+       685870.9,
+       4289985.0,
+       100
+      ],
+      [
+       686021.0,
+       4289955.0,
+       100
+      ],
+      [
+       684669.7,
+       4289924.9,
+       100
+      ],
+      [
+       685300.3,
+       4289924.9,
+       100
+      ],
+      [
+       686171.2,
+       4289924.9,
+       100
+      ],
+      [
+       685630.6,
+       4289864.9,
+       100
+      ],
+      [
+       686321.3,
+       4289864.9,
+       100
+      ]
+     ],
+     "scarcity": 0.934,
+     "competitors": [
+      "corvus_corax",
+      "buteo_jamaicensis",
+      "odocoileus_hemionus",
+      "urocyon_cinereoargenteus",
+      "sciurus_griseus",
+      "melanerpes_formicivorus",
+      "callipepla_californica",
+      "aphelocoma_californica",
+      "cyanocitta_stelleri",
+      "cathartes_aura",
+      "canis_latrans",
+      "puma_concolor"
+     ],
+     "predators": [
+      "canis_latrans",
+      "puma_concolor"
+     ]
+    },
+    {
+     "id": "meleagris_gallopavo:summer:shelter:cliff_or_snag",
+     "archetype": "shelter",
+     "verb": "shelter",
+     "season": "summer",
+     "unit": "flock",
+     "collective": true,
+     "resource": "cliff_or_snag",
+     "hotspots": [
+      [
+       680135.1,
+       4289985.0,
+       90
+      ],
+      [
+       680285.3,
+       4289985.0,
+       90
+      ],
+      [
+       682747.7,
+       4289985.0,
+       90
+      ],
+      [
+       682927.9,
+       4289985.0,
+       90
+      ],
+      [
+       684189.2,
+       4289955.0,
+       90
+      ],
+      [
+       685690.7,
+       4289924.9,
+       90
+      ],
+      [
+       680015.0,
+       4289894.9,
+       90
+      ],
+      [
+       680405.4,
+       4289894.9,
+       90
+      ],
+      [
+       684639.6,
+       4289894.9,
+       90
+      ],
+      [
+       680165.2,
+       4289834.8,
+       90
+      ],
+      [
+       684399.4,
+       4289834.8,
+       90
+      ],
+      [
+       685330.3,
+       4289834.8,
+       90
+      ]
+     ],
+     "scarcity": 0.672,
+     "competitors": [
+      "corvus_corax",
+      "buteo_jamaicensis",
+      "cathartes_aura"
+     ],
+     "predators": [
+      "canis_latrans",
+      "puma_concolor"
+     ]
+    },
+    {
+     "id": "meleagris_gallopavo:fall:drink",
+     "archetype": "drink",
+     "verb": "drink",
+     "season": "fall",
+     "unit": "flock",
+     "collective": true,
+     "resource": "water",
+     "rhythm": "daily",
+     "hotspots": [
+      [
+       684369.4,
+       4289985.0,
+       100
+      ],
+      [
+       684519.5,
+       4289985.0,
+       100
+      ],
+      [
+       684819.8,
+       4289985.0,
+       100
+      ],
+      [
+       685150.2,
+       4289985.0,
+       100
+      ],
+      [
+       685720.7,
+       4289985.0,
+       100
+      ],
+      [
+       685870.9,
+       4289985.0,
+       100
+      ],
+      [
+       686021.0,
+       4289955.0,
+       100
+      ],
+      [
+       684669.7,
+       4289924.9,
+       100
+      ],
+      [
+       685300.3,
+       4289924.9,
+       100
+      ],
+      [
+       686171.2,
+       4289924.9,
+       100
+      ],
+      [
+       685630.6,
+       4289864.9,
+       100
+      ],
+      [
+       686321.3,
+       4289864.9,
+       100
+      ]
+     ],
+     "scarcity": 0.934,
+     "competitors": [
+      "corvus_corax",
+      "buteo_jamaicensis",
+      "odocoileus_hemionus",
+      "urocyon_cinereoargenteus",
+      "sciurus_griseus",
+      "melanerpes_formicivorus",
+      "callipepla_californica",
+      "aphelocoma_californica",
+      "cyanocitta_stelleri",
+      "cathartes_aura",
+      "canis_latrans",
+      "puma_concolor"
+     ],
+     "predators": [
+      "canis_latrans",
+      "puma_concolor"
+     ]
+    },
+    {
+     "id": "meleagris_gallopavo:fall:shelter:cliff_or_snag",
+     "archetype": "shelter",
+     "verb": "shelter",
+     "season": "fall",
+     "unit": "flock",
+     "collective": true,
+     "resource": "cliff_or_snag",
+     "hotspots": [
+      [
+       680135.1,
+       4289985.0,
+       90
+      ],
+      [
+       680285.3,
+       4289985.0,
+       90
+      ],
+      [
+       682747.7,
+       4289985.0,
+       90
+      ],
+      [
+       682927.9,
+       4289985.0,
+       90
+      ],
+      [
+       684189.2,
+       4289955.0,
+       90
+      ],
+      [
+       685690.7,
+       4289924.9,
+       90
+      ],
+      [
+       680015.0,
+       4289894.9,
+       90
+      ],
+      [
+       680405.4,
+       4289894.9,
+       90
+      ],
+      [
+       684639.6,
+       4289894.9,
+       90
+      ],
+      [
+       680165.2,
+       4289834.8,
+       90
+      ],
+      [
+       684399.4,
+       4289834.8,
+       90
+      ],
+      [
+       685330.3,
+       4289834.8,
+       90
+      ]
+     ],
+     "scarcity": 0.672,
+     "competitors": [
+      "corvus_corax",
+      "buteo_jamaicensis",
+      "cathartes_aura"
+     ],
+     "predators": [
+      "canis_latrans",
+      "puma_concolor"
+     ]
+    },
+    {
+     "id": "meleagris_gallopavo:canis_latrans:evade",
+     "archetype": "evade",
+     "verb": "evade",
+     "season": "all",
+     "unit": "flock",
+     "collective": true,
+     "predator": "canis_latrans",
+     "watchers": []
+    },
+    {
+     "id": "meleagris_gallopavo:puma_concolor:evade",
+     "archetype": "evade",
+     "verb": "evade",
+     "season": "all",
+     "unit": "flock",
+     "collective": true,
+     "predator": "puma_concolor",
+     "watchers": []
+    },
+    {
+     "id": "meleagris_gallopavo:watch",
+     "archetype": "watch",
+     "verb": "watch",
+     "season": "all",
+     "unit": "flock",
+     "collective": true,
+     "predators": [
+      "canis_latrans",
+      "puma_concolor"
      ]
     }
    ]
@@ -8232,7 +17234,10 @@
   "otospermophilus_beecheyi": {
    "unit": "colony",
    "predators": [
-    "buteo_jamaicensis"
+    "buteo_jamaicensis",
+    "canis_latrans",
+    "puma_concolor",
+    "urocyon_cinereoargenteus"
    ],
    "prey": [],
    "games": [
@@ -8312,7 +17317,10 @@
       "microtus_californicus"
      ],
      "predators": [
-      "buteo_jamaicensis"
+      "buteo_jamaicensis",
+      "canis_latrans",
+      "puma_concolor",
+      "urocyon_cinereoargenteus"
      ]
     },
     {
@@ -8392,7 +17400,10 @@
       "canis_latrans"
      ],
      "predators": [
-      "buteo_jamaicensis"
+      "buteo_jamaicensis",
+      "canis_latrans",
+      "puma_concolor",
+      "urocyon_cinereoargenteus"
      ]
     },
     {
@@ -8473,7 +17484,10 @@
       "canis_latrans"
      ],
      "predators": [
-      "buteo_jamaicensis"
+      "buteo_jamaicensis",
+      "canis_latrans",
+      "puma_concolor",
+      "urocyon_cinereoargenteus"
      ]
     },
     {
@@ -8554,7 +17568,10 @@
       "microtus_californicus"
      ],
      "predators": [
-      "buteo_jamaicensis"
+      "buteo_jamaicensis",
+      "canis_latrans",
+      "puma_concolor",
+      "urocyon_cinereoargenteus"
      ]
     },
     {
@@ -8574,7 +17591,10 @@
       "meleagris_gallopavo"
      ],
      "predators": [
-      "buteo_jamaicensis"
+      "buteo_jamaicensis",
+      "canis_latrans",
+      "puma_concolor",
+      "urocyon_cinereoargenteus"
      ]
     },
     {
@@ -8590,7 +17610,10 @@
      "scarcity": 1.0,
      "competitors": [],
      "predators": [
-      "buteo_jamaicensis"
+      "buteo_jamaicensis",
+      "canis_latrans",
+      "puma_concolor",
+      "urocyon_cinereoargenteus"
      ]
     },
     {
@@ -8669,7 +17692,10 @@
       "microtus_californicus"
      ],
      "predators": [
-      "buteo_jamaicensis"
+      "buteo_jamaicensis",
+      "canis_latrans",
+      "puma_concolor",
+      "urocyon_cinereoargenteus"
      ]
     },
     {
@@ -8757,7 +17783,10 @@
       "meleagris_gallopavo"
      ],
      "predators": [
-      "buteo_jamaicensis"
+      "buteo_jamaicensis",
+      "canis_latrans",
+      "puma_concolor",
+      "urocyon_cinereoargenteus"
      ]
     },
     {
@@ -8835,7 +17864,470 @@
       "microtus_californicus"
      ],
      "predators": [
-      "buteo_jamaicensis"
+      "buteo_jamaicensis",
+      "canis_latrans",
+      "puma_concolor",
+      "urocyon_cinereoargenteus"
+     ]
+    },
+    {
+     "id": "otospermophilus_beecheyi:winter:drink",
+     "archetype": "drink",
+     "verb": "drink",
+     "season": "winter",
+     "unit": "colony",
+     "collective": true,
+     "resource": "water",
+     "rhythm": "rare",
+     "hotspots": [
+      [
+       680045.0,
+       4289985.0,
+       100
+      ],
+      [
+       680315.3,
+       4289985.0,
+       100
+      ],
+      [
+       681156.2,
+       4289985.0,
+       100
+      ],
+      [
+       681846.8,
+       4289985.0,
+       100
+      ],
+      [
+       682477.5,
+       4289985.0,
+       100
+      ],
+      [
+       682807.8,
+       4289985.0,
+       100
+      ],
+      [
+       683558.6,
+       4289985.0,
+       100
+      ],
+      [
+       683918.9,
+       4289985.0,
+       100
+      ],
+      [
+       684069.1,
+       4289985.0,
+       100
+      ],
+      [
+       684369.4,
+       4289985.0,
+       100
+      ],
+      [
+       684519.5,
+       4289985.0,
+       100
+      ],
+      [
+       684819.8,
+       4289985.0,
+       100
+      ]
+     ],
+     "scarcity": 0.608,
+     "competitors": [
+      "corvus_corax",
+      "buteo_jamaicensis",
+      "odocoileus_hemionus",
+      "urocyon_cinereoargenteus",
+      "sciurus_griseus",
+      "melanerpes_formicivorus",
+      "callipepla_californica",
+      "aphelocoma_californica",
+      "cyanocitta_stelleri",
+      "cathartes_aura",
+      "canis_latrans",
+      "puma_concolor",
+      "meleagris_gallopavo"
+     ],
+     "predators": [
+      "buteo_jamaicensis",
+      "canis_latrans",
+      "puma_concolor",
+      "urocyon_cinereoargenteus"
+     ]
+    },
+    {
+     "id": "otospermophilus_beecheyi:spring:drink",
+     "archetype": "drink",
+     "verb": "drink",
+     "season": "spring",
+     "unit": "colony",
+     "collective": true,
+     "resource": "water",
+     "rhythm": "rare",
+     "hotspots": [
+      [
+       680045.0,
+       4289985.0,
+       100
+      ],
+      [
+       680315.3,
+       4289985.0,
+       100
+      ],
+      [
+       681156.2,
+       4289985.0,
+       100
+      ],
+      [
+       681846.8,
+       4289985.0,
+       100
+      ],
+      [
+       682477.5,
+       4289985.0,
+       100
+      ],
+      [
+       682807.8,
+       4289985.0,
+       100
+      ],
+      [
+       683558.6,
+       4289985.0,
+       100
+      ],
+      [
+       683918.9,
+       4289985.0,
+       100
+      ],
+      [
+       684069.1,
+       4289985.0,
+       100
+      ],
+      [
+       684369.4,
+       4289985.0,
+       100
+      ],
+      [
+       684519.5,
+       4289985.0,
+       100
+      ],
+      [
+       684819.8,
+       4289985.0,
+       100
+      ]
+     ],
+     "scarcity": 0.608,
+     "competitors": [
+      "corvus_corax",
+      "buteo_jamaicensis",
+      "odocoileus_hemionus",
+      "urocyon_cinereoargenteus",
+      "sciurus_griseus",
+      "melanerpes_formicivorus",
+      "callipepla_californica",
+      "aphelocoma_californica",
+      "cyanocitta_stelleri",
+      "cathartes_aura",
+      "canis_latrans",
+      "puma_concolor",
+      "meleagris_gallopavo"
+     ],
+     "predators": [
+      "buteo_jamaicensis",
+      "canis_latrans",
+      "puma_concolor",
+      "urocyon_cinereoargenteus"
+     ]
+    },
+    {
+     "id": "otospermophilus_beecheyi:spring:shelter:burrow",
+     "archetype": "shelter",
+     "verb": "shelter",
+     "season": "spring",
+     "unit": "colony",
+     "collective": true,
+     "resource": "burrow",
+     "hotspots": [
+      [
+       682237.2,
+       4289985.0,
+       80
+      ],
+      [
+       686531.5,
+       4289985.0,
+       80
+      ],
+      [
+       686891.9,
+       4289985.0,
+       80
+      ],
+      [
+       688483.5,
+       4289985.0,
+       80
+      ],
+      [
+       687612.6,
+       4289955.0,
+       80
+      ],
+      [
+       680075.1,
+       4289894.9,
+       80
+      ],
+      [
+       688303.3,
+       4289894.9,
+       80
+      ],
+      [
+       686621.6,
+       4289864.9,
+       80
+      ],
+      [
+       689024.0,
+       4289864.9,
+       80
+      ],
+      [
+       681576.6,
+       4289804.8,
+       80
+      ],
+      [
+       681816.8,
+       4289804.8,
+       80
+      ],
+      [
+       682537.5,
+       4289804.8,
+       80
+      ]
+     ],
+     "scarcity": 0.287,
+     "competitors": [
+      "urocyon_cinereoargenteus",
+      "microtus_californicus",
+      "canis_latrans",
+      "sceloporus_occidentalis"
+     ],
+     "predators": [
+      "buteo_jamaicensis",
+      "canis_latrans",
+      "puma_concolor",
+      "urocyon_cinereoargenteus"
+     ]
+    },
+    {
+     "id": "otospermophilus_beecheyi:summer:drink",
+     "archetype": "drink",
+     "verb": "drink",
+     "season": "summer",
+     "unit": "colony",
+     "collective": true,
+     "resource": "water",
+     "rhythm": "rare",
+     "hotspots": [
+      [
+       684369.4,
+       4289985.0,
+       100
+      ],
+      [
+       684519.5,
+       4289985.0,
+       100
+      ],
+      [
+       684819.8,
+       4289985.0,
+       100
+      ],
+      [
+       685150.2,
+       4289985.0,
+       100
+      ],
+      [
+       685720.7,
+       4289985.0,
+       100
+      ],
+      [
+       685870.9,
+       4289985.0,
+       100
+      ],
+      [
+       686021.0,
+       4289955.0,
+       100
+      ],
+      [
+       684669.7,
+       4289924.9,
+       100
+      ],
+      [
+       685300.3,
+       4289924.9,
+       100
+      ],
+      [
+       686171.2,
+       4289924.9,
+       100
+      ],
+      [
+       685630.6,
+       4289864.9,
+       100
+      ],
+      [
+       686321.3,
+       4289864.9,
+       100
+      ]
+     ],
+     "scarcity": 0.934,
+     "competitors": [
+      "corvus_corax",
+      "buteo_jamaicensis",
+      "odocoileus_hemionus",
+      "urocyon_cinereoargenteus",
+      "sciurus_griseus",
+      "melanerpes_formicivorus",
+      "callipepla_californica",
+      "aphelocoma_californica",
+      "cyanocitta_stelleri",
+      "cathartes_aura",
+      "canis_latrans",
+      "puma_concolor",
+      "meleagris_gallopavo"
+     ],
+     "predators": [
+      "buteo_jamaicensis",
+      "canis_latrans",
+      "puma_concolor",
+      "urocyon_cinereoargenteus"
+     ]
+    },
+    {
+     "id": "otospermophilus_beecheyi:fall:drink",
+     "archetype": "drink",
+     "verb": "drink",
+     "season": "fall",
+     "unit": "colony",
+     "collective": true,
+     "resource": "water",
+     "rhythm": "rare",
+     "hotspots": [
+      [
+       684369.4,
+       4289985.0,
+       100
+      ],
+      [
+       684519.5,
+       4289985.0,
+       100
+      ],
+      [
+       684819.8,
+       4289985.0,
+       100
+      ],
+      [
+       685150.2,
+       4289985.0,
+       100
+      ],
+      [
+       685720.7,
+       4289985.0,
+       100
+      ],
+      [
+       685870.9,
+       4289985.0,
+       100
+      ],
+      [
+       686021.0,
+       4289955.0,
+       100
+      ],
+      [
+       684669.7,
+       4289924.9,
+       100
+      ],
+      [
+       685300.3,
+       4289924.9,
+       100
+      ],
+      [
+       686171.2,
+       4289924.9,
+       100
+      ],
+      [
+       685630.6,
+       4289864.9,
+       100
+      ],
+      [
+       686321.3,
+       4289864.9,
+       100
+      ]
+     ],
+     "scarcity": 0.934,
+     "competitors": [
+      "corvus_corax",
+      "buteo_jamaicensis",
+      "odocoileus_hemionus",
+      "urocyon_cinereoargenteus",
+      "sciurus_griseus",
+      "melanerpes_formicivorus",
+      "callipepla_californica",
+      "aphelocoma_californica",
+      "cyanocitta_stelleri",
+      "cathartes_aura",
+      "canis_latrans",
+      "puma_concolor",
+      "meleagris_gallopavo"
+     ],
+     "predators": [
+      "buteo_jamaicensis",
+      "canis_latrans",
+      "puma_concolor",
+      "urocyon_cinereoargenteus"
      ]
     },
     {
@@ -8849,6 +18341,36 @@
      "watchers": []
     },
     {
+     "id": "otospermophilus_beecheyi:canis_latrans:evade",
+     "archetype": "evade",
+     "verb": "evade",
+     "season": "all",
+     "unit": "colony",
+     "collective": true,
+     "predator": "canis_latrans",
+     "watchers": []
+    },
+    {
+     "id": "otospermophilus_beecheyi:puma_concolor:evade",
+     "archetype": "evade",
+     "verb": "evade",
+     "season": "all",
+     "unit": "colony",
+     "collective": true,
+     "predator": "puma_concolor",
+     "watchers": []
+    },
+    {
+     "id": "otospermophilus_beecheyi:urocyon_cinereoargenteus:evade",
+     "archetype": "evade",
+     "verb": "evade",
+     "season": "all",
+     "unit": "colony",
+     "collective": true,
+     "predator": "urocyon_cinereoargenteus",
+     "watchers": []
+    },
+    {
      "id": "otospermophilus_beecheyi:watch",
      "archetype": "watch",
      "verb": "watch",
@@ -8856,7 +18378,10 @@
      "unit": "colony",
      "collective": true,
      "predators": [
-      "buteo_jamaicensis"
+      "buteo_jamaicensis",
+      "canis_latrans",
+      "puma_concolor",
+      "urocyon_cinereoargenteus"
      ]
     }
    ]
@@ -8864,7 +18389,10 @@
   "sceloporus_occidentalis": {
    "unit": "solitary",
    "predators": [
-    "buteo_jamaicensis"
+    "aphelocoma_californica",
+    "buteo_jamaicensis",
+    "corvus_corax",
+    "urocyon_cinereoargenteus"
    ],
    "prey": [],
    "games": [
@@ -8947,7 +18475,10 @@
       "lepus_californicus"
      ],
      "predators": [
-      "buteo_jamaicensis"
+      "aphelocoma_californica",
+      "buteo_jamaicensis",
+      "corvus_corax",
+      "urocyon_cinereoargenteus"
      ]
     },
     {
@@ -9027,7 +18558,10 @@
       "buteo_jamaicensis"
      ],
      "predators": [
-      "buteo_jamaicensis"
+      "aphelocoma_californica",
+      "buteo_jamaicensis",
+      "corvus_corax",
+      "urocyon_cinereoargenteus"
      ]
     },
     {
@@ -9105,7 +18639,10 @@
       "corvus_corax"
      ],
      "predators": [
-      "buteo_jamaicensis"
+      "aphelocoma_californica",
+      "buteo_jamaicensis",
+      "corvus_corax",
+      "urocyon_cinereoargenteus"
      ]
     },
     {
@@ -9189,7 +18726,10 @@
       "lepus_californicus"
      ],
      "predators": [
-      "buteo_jamaicensis"
+      "aphelocoma_californica",
+      "buteo_jamaicensis",
+      "corvus_corax",
+      "urocyon_cinereoargenteus"
      ]
     },
     {
@@ -9275,7 +18815,10 @@
       "meleagris_gallopavo"
      ],
      "predators": [
-      "buteo_jamaicensis"
+      "aphelocoma_californica",
+      "buteo_jamaicensis",
+      "corvus_corax",
+      "urocyon_cinereoargenteus"
      ]
     },
     {
@@ -9359,7 +18902,10 @@
       "lepus_californicus"
      ],
      "predators": [
-      "buteo_jamaicensis"
+      "aphelocoma_californica",
+      "buteo_jamaicensis",
+      "corvus_corax",
+      "urocyon_cinereoargenteus"
      ]
     },
     {
@@ -9374,7 +18920,10 @@
      "scarcity": 1.0,
      "competitors": [],
      "predators": [
-      "buteo_jamaicensis"
+      "aphelocoma_californica",
+      "buteo_jamaicensis",
+      "corvus_corax",
+      "urocyon_cinereoargenteus"
      ]
     },
     {
@@ -9451,8 +19000,105 @@
      "scarcity": 0.137,
      "competitors": [],
      "predators": [
-      "buteo_jamaicensis"
+      "aphelocoma_californica",
+      "buteo_jamaicensis",
+      "corvus_corax",
+      "urocyon_cinereoargenteus"
      ]
+    },
+    {
+     "id": "sceloporus_occidentalis:spring:shelter:burrow",
+     "archetype": "shelter",
+     "verb": "shelter",
+     "season": "spring",
+     "unit": "solitary",
+     "collective": false,
+     "resource": "burrow",
+     "hotspots": [
+      [
+       682237.2,
+       4289985.0,
+       80
+      ],
+      [
+       686531.5,
+       4289985.0,
+       80
+      ],
+      [
+       686891.9,
+       4289985.0,
+       80
+      ],
+      [
+       688483.5,
+       4289985.0,
+       80
+      ],
+      [
+       687612.6,
+       4289955.0,
+       80
+      ],
+      [
+       680075.1,
+       4289894.9,
+       80
+      ],
+      [
+       688303.3,
+       4289894.9,
+       80
+      ],
+      [
+       686621.6,
+       4289864.9,
+       80
+      ],
+      [
+       689024.0,
+       4289864.9,
+       80
+      ],
+      [
+       681576.6,
+       4289804.8,
+       80
+      ],
+      [
+       681816.8,
+       4289804.8,
+       80
+      ],
+      [
+       682537.5,
+       4289804.8,
+       80
+      ]
+     ],
+     "scarcity": 0.287,
+     "competitors": [
+      "urocyon_cinereoargenteus",
+      "microtus_californicus",
+      "canis_latrans",
+      "otospermophilus_beecheyi"
+     ],
+     "predators": [
+      "aphelocoma_californica",
+      "buteo_jamaicensis",
+      "corvus_corax",
+      "urocyon_cinereoargenteus"
+     ]
+    },
+    {
+     "id": "sceloporus_occidentalis:aphelocoma_californica:evade",
+     "archetype": "evade",
+     "verb": "evade",
+     "season": "all",
+     "unit": "solitary",
+     "collective": false,
+     "predator": "aphelocoma_californica",
+     "watchers": []
     },
     {
      "id": "sceloporus_occidentalis:buteo_jamaicensis:evade",
@@ -9462,6 +19108,26 @@
      "unit": "solitary",
      "collective": false,
      "predator": "buteo_jamaicensis",
+     "watchers": []
+    },
+    {
+     "id": "sceloporus_occidentalis:corvus_corax:evade",
+     "archetype": "evade",
+     "verb": "evade",
+     "season": "all",
+     "unit": "solitary",
+     "collective": false,
+     "predator": "corvus_corax",
+     "watchers": []
+    },
+    {
+     "id": "sceloporus_occidentalis:urocyon_cinereoargenteus:evade",
+     "archetype": "evade",
+     "verb": "evade",
+     "season": "all",
+     "unit": "solitary",
+     "collective": false,
+     "predator": "urocyon_cinereoargenteus",
      "watchers": []
     }
    ]

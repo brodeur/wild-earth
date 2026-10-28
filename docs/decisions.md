@@ -1586,3 +1586,17 @@ tries four times 45 s apart, deletes a bad cache file between tries, and fails w
 endpoint of the service is not enabled and no 2024 class table is published, so there is no fallback source; the build is
 retried every 15 minutes while the service is down. Known: a build run writes the manifest after each step from the copy
 it loaded, so two runs on one tile at once lose each other's layers (the lidar step is cheap to rerun from its cache).
+
+## 2026-10-27: a needs table and a diet table per species feed the games step
+
+Aaron: "add the per-species needs and diet tables and feed them into the games step." species_data.py NEEDS: per
+species how it drinks (daily, often, rare, none: open water, or moisture from food and dew), the resource it shelters in
+(cover, cavity, burrow, a tall roost) and its courting ground; DIET: per predator its prey among the species here and
+whose kills it scavenges (the hawk takes quail; the coyote and the lion take turkeys; the raven and the scrub-jay take
+lizards, voles and quail nests; the raven, the vulture and the coyote follow the lion's kills). games.py reads them beside
+the calendar: predation and scavenging come from DIET (the calendar's hunt lists were the hunter's story), a drink game
+per season for every species that uses open water, a shelter game in every season the calendar left bare, the courting
+ground on court. Home tile before and after: 160 games, 14 predator-prey pairs, 1 scavenging link, drink for the deer
+alone; now 275 games, 146 collective, 29 pairs, 5 scavenging links, drink for thirteen species, the covey with four
+evade games and a sentinel. Still open (games.md): alarms need perception with range and sense; difficulty needs the
+competitors' numbers against the hotspots' capacity.
