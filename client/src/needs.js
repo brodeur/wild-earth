@@ -11,7 +11,7 @@ import { bodyKind } from './playable.js';
 // good cell of the resource (the rasters, scanned round the body) with its bearing and distance. Everything here comes
 // from games.json and the rasters, so a new species in the pipeline's tables gets its needs the same way. The widget (#needs, index.html) shows the two
 // meters bottom right while the player is a walker; a spirit, and the birds and the squirrel for now, have no needs.
-const NEED_T = { food: 7, daily: 4, often: 8, rare: 16 };   // minutes from sated to empty
+const NEED_T = { hunt: 14, food: 7, daily: 4, often: 8, rare: 16 };   // minutes from sated to empty
 const EAT_MIN = 25, EAT_RATE = 0.06, DRINK_RATE = 0.1;      // score floor; fill per second at score 100 (empty to full in about 20 s of grazing); fill per second at water (10 s)
 const NEED_LOW = 0.25, NEED_SLOW = 0.7;
 const TARGET_MIN = 70, TARGET_CELLS = 70;   // the target: the nearest cell scoring at least TARGET_MIN within TARGET_CELLS cells (2.1 km), scanned in rings
@@ -39,13 +39,15 @@ export class Needs {
     return null;
   }
   foods(season) { return [...new Set(this.sp.games.filter(g => g.archetype === 'gather' && g.season === season && g.resource).map(g => g.resource))]; }
+  fed() { this.hunger = 1; }   // a catch (animals.js catchNear)
   get slow() { return this.sp && Math.min(this.hunger, this.rhythm === 'none' ? 1 : this.thirst) < NEED_LOW ? NEED_SLOW : 1; }
   // every frame in a walker: x, north the body; acting: E held (the act); wet: wading
   update(dt, { x, north, acting, wet }) {
     if (!this.sp) return;
     const season = this.season(), ch = SEASON_CH[season] ?? 3;
     const foods = this.foods(season);
-    if (foods.length) this.hunger = Math.max(0, this.hunger - dt / (NEED_T.food * 60));   // a species whose food this season is prey, not a raster (the hunters), has no eating loop yet: no drain
+    if (foods.length) this.hunger = Math.max(0, this.hunger - dt / (NEED_T.food * 60));
+    else if (this.hunter) this.hunger = Math.max(0, this.hunger - dt / (NEED_T.hunt * 60));   // a hunter's food is prey: the catch (fed) fills it
     if (this.rhythm !== 'none') this.thirst = Math.max(0, this.thirst - dt / ((NEED_T[this.rhythm] || NEED_T.often) * 60));
     let here = 0;
     for (const r of foods) { const g = this.raster(r); if (g) here = Math.max(here, g.at(x, north, ch)); }

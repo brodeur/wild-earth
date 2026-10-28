@@ -182,6 +182,8 @@ export class GroundControl {
   useSpecies(code, modelName = null) {
     const S = GROUND[code]; if (!S) return false;
     this.code = code; this.S = S; this.modelName = modelName || S.model; this.body = null;
+    { const A = this.animals; if (A && !A.preySlots) A.buildHunts?.(); const k = A ? A.speciesList().findIndex(sp => sp.code === code) : -1;
+      if (this.needs) this.needs.hunter = !!(k >= 0 && A.preySlots?.[k]); }   // a hunter's hunger drains until a catch (needs.js)
     const want = this.modelName;
     for (const [n, p] of this.meshes) if (n !== want) p.then(b => { if (b) b.mesh.visible = false; });
     this.meshFor(want).then(b => { if (this.modelName !== want) return; this.body = b; if (b) b.mesh.visible = this.on; });
@@ -328,6 +330,10 @@ export class GroundControl {
     const alert = k.shift && still && !this.resting;
     this.sit = damp(this.sit, alert ? 1 : 0, alert ? 4 : 8, dt);
     if (act) { this.actT = S.act.t; this.resting = false; if (S.act.headFlick) ps.fl = (Math.random() < 0.5 ? -1 : 1) * (0.6 + Math.random() * 0.6); if (S.act.scratch) this.scratch = Math.random() < 0.4; }
+    if (act && this.animals?.catchNear) {   // a hunter's E within reach of its prey: the catch (animals.js kill, CARRION)
+      const c = this.animals.catchNear(P.x, P.y, P.z);
+      if (c) { this.needs?.fed?.(); this.say(`caught a ${this.animals.speciesList()[c.sp]?.one || 'prey'}`); }
+    }
     if (k.fwd || Math.abs(this.v) > 0.5) this.actT = 0;
     this.actT = Math.max(0, this.actT - dt);
     // speed: W from a walk to the run over `ramp` s (Shift + W: a walk, the lion's stalk), S back; wading slows it

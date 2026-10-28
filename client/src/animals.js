@@ -432,6 +432,14 @@ const ALERT_MAX = 120, ALARM_NEAR = 120, ALARM_T = 8, ALARM_COOL = 12, ALARM_REA
 // and goes back to its routine, at most once per HUNT.lionCool s. A fox or coyote trots at a vole, rabbit, jackrabbit
 // or ground squirrel within HUNT.canidR m and pounces on it (a short run first if it bolts). A hawk stoops now and then
 // (HUNT.hawk of its stoops) at a vole or ground squirrel. Nothing is caught yet: the hunter gives up after the rush.
+// Kills (2026-10-28, the hunt archetype's end): a rush that reaches its prey, a pounce that lands, or the player's E
+// within reach of prey its species hunts (reach by hunter) kills it with the chance given; the prey lies where it fell
+// as carrion for t s (small prey small s), on its side, then goes (its cell's rebuild brings another in later). The
+// scavengers of games.json relations.scavenge come: ravens circle in from scavR m and land beside it, vultures bring
+// their circle over it, a coyote trots to it. Only KILLABLE species die: those without a flock, covey or colony whose
+// unit the code keeps a member list for. feed: how long the lion stands by its kill.
+const CARRION = { t: 600, small: 150, reach: { [ML]: 2.4, [CY]: 1.6, [FX]: 1.3 }, lionCatch: 0.35, canidCatch: 0.4, scavR: 300, ravenStay: [20, 45], feed: 45 };
+const KILLABLE = new Set([DR, BK, JR, RB, VO]);
 const HUNT = { r: 300, every: 0.3, lionR: 200, near: 60, stalk: 0.5, rush: 25, rushFar: 50, rushT: [4, 5], lose: 260, stalkMax: 180,
   lionCool: [60, 120], canidR: 60, trotMax: 25, pounceD: 2.4, chaseT: [2, 3.5], canidCool: [20, 45], look: [8, 16], hawk: 0.5, quail: 30 };
 const ALARM_AT = new Set([FX, CY, ML, HK]);
@@ -473,7 +481,7 @@ export class Animals {
     this.searches = SEARCHES;
     // v4: families by granary (rebuilt with the live set), raiders the families may chase
     this.fams = new Map(); this.threats = new Map();
-    this.notice = SPECIES.map(() => Infinity); this.preyOf = new Set(); this.alarmCool = {}; this.lastAlarm = null;   // noticing (ALERT_MAX above)
+    this.notice = SPECIES.map(() => Infinity); this.preyOf = new Set(); this.alarmCool = {}; this.lastAlarm = null; this.carrion = []; this.lastKill = null;   // noticing (ALERT_MAX above); carrion (CARRION)
     if (game) { game.animals = this; game.on?.('dig', e => this.onDig(e)); }
     // Animals stand on the terrain as drawn this frame (tilepackage.js Heightfield.ground: the near fine mesh of the
     // lidar ground where the tile has one, else the 10 m mesh with each square split SW-NE), which in a hollow runs
@@ -877,13 +885,56 @@ export class Animals {
     return best;
   }
   // A fox, coyote or lion (a group's leader or alone) looks for prey: when it is off its cooldown and finds some, the
+  // ---- kills and carrion (CARRION above) ------------------------------------------------------------
+  kill(prey, by) {
+    if (!prey || prey.dead || prey.sp === undefined || !KILLABLE.has(prey.sp)) return false;
+    const small = prey.sp === VO || prey.sp === RB;
+    prey.dead = true; prey.diedAt = this.time; prey.carrionUntil = this.time + (small ? CARRION.small : CARRION.t);
+    prey.hunt = null; prey.air = 0; prey.speed = 0; prey.amp = 0; prey.flick = 0; prey.flickV = 0; prey.lift = 0; prey.fleeT = 0; prey.spd = 0;
+    prey.state = prey.sp === VO ? VL_SIT : prey.sp === RB ? B_FORM : prey.sp === JR ? JK_FORM : D_BED; prey.pose = 1;   // the rest pose (the skin drive's bed clip), on its side
+    prey.lieRoll = (prey.rng ? prey.rng() : Math.random()) < 0.5 ? -1 : 1;
+    if (prey.group) {   // a herd member: the herd goes on without it
+      const g = prey.group; prey.group = null;
+      if (g.leader === prey) { const o = this.list.find(b => b !== prey && b.group === g && !b.dead); if (o) g.leader = o; else prey.group = g; }
+    }
+    this.carrion.push(prey);
+    const who = by === 'player' ? this.observer || 'player' : SPECIES[by.sp].code;
+    this.lastKill = { prey: SPECIES[prey.sp].code, by: who, t: this.time, x: Math.round(prey.x), z: Math.round(prey.z) };
+    this.emit('kill', { prey: SPECIES[prey.sp].code, by: who, x: prey.x, y: prey.y, z: prey.z, small });
+    return true;
+  }
+  lieStill(a) {   // on its side on the ground, a little up so the body is not under it
+    a.y = this.heights.atXZ(a.x, a.z) + 0.04;
+    a.roll = a.lieRoll * 1.45; a.pitch = 0; a.amp = 0; a.pose = 1; a.speed = 0; a.flick = 0;
+  }
+  bury(a) {   // the carrion goes: unseen at once, dropped by the next rebuild
+    a.gone = true; a.vis = 0; a.culled = true;
+    if (a.slot >= 0 && this.meshes[a.sp]) this.meshes[a.sp].instanceMatrix.array.fill(0, a.slot * 16, a.slot * 16 + 16);
+    this.byId.delete(a.id); this.carrion = this.carrion.filter(c => c !== a); this.dirty = true;
+  }
+  carrionNear(x, z, R) {
+    let best = null, bd = R * R;
+    for (const c of this.carrion) { if (c.gone) continue; const d2 = (c.x - x) ** 2 + (c.z - z) ** 2; if (d2 < bd) { bd = d2; best = c; } }
+    return best;
+  }
+  // The player's catch (E within reach of prey its species hunts): the kill, or null.
+  catchNear(x, y, z) {
+    const k = INDEX[this.observer], prey = this.preySlots?.[k], reach = CARRION.reach[k]; if (!prey || !reach) return null;
+    let best = null, bd = reach * reach;
+    for (const a of this.list) {
+      if (!prey.has(a.sp) || a.dead || a.culled || !KILLABLE.has(a.sp)) continue;
+      const d2 = (a.x - x) ** 2 + (a.y - y) ** 2 * 0.25 + (a.z - z) ** 2; if (d2 < bd) { bd = d2; best = a; }
+    }
+    if (best) this.kill(best, 'player');
+    return best;
+  }
   // lion stalks (M_STALK with a.hunt), a canid trots at it (M_RUSH). true when a hunt starts.
   huntStart(a) {
     if (this.time < (a.huntAt || 0) || !this.preySlots?.[a.sp]) return false;
     const r = a.rng, lion = a.sp === ML;
     const t = lion ? this.huntTarget(a, HUNT.lionR, [DR, BK, JR]) : this.huntTarget(a, HUNT.canidR, [VO, RB, JR, GS]);
     if (!t) { a.huntAt = this.time + HUNT.look[0] + r() * (HUNT.look[1] - HUNT.look[0]); return false; }
-    a.hunt = t; a.rush = 0; a.huntEnd = this.time + (lion ? HUNT.stalkMax : HUNT.trotMax); a.tx = t.x; a.tz = t.z;
+    a.hunt = t; a.rush = 0; a.rolled = 0; a.huntEnd = this.time + (lion ? HUNT.stalkMax : HUNT.trotMax); a.tx = t.x; a.tz = t.z;
     if (lion) { a.state = M_STALK; a.speed = MAMMAL[ML].walk; a.t = 1e9; }
     else { a.state = M_RUSH; a.speed = MAMMAL[a.sp].trot; }
     this.lastHunt = { id: a.id, hunter: SPECIES[a.sp].code, prey: t.sp === undefined ? 'meleagris_gallopavo' : SPECIES[t.sp].code, t: this.time };
@@ -1811,6 +1862,16 @@ export class Animals {
     a.flapT -= dt;
     a.air = a.state === R_PERCH || a.state === R_GROUND || a.state === R_WALK ? 0 : 1;
     if (a.state === R_SOAR) {
+      if (a.carr && (a.carr.gone || a.carr.carrionUntil < this.time)) a.carr = null;
+      if (!a.carr && this.carrion.length && this.time > (a.fedAt || 0) && r() < dt * 0.5) {   // carrion in sight: the circle moves over it
+        const c = this.carrionNear(a.x, a.z, CARRION.scavR); if (c) { a.carr = c; a.hx = c.x; a.hz = c.z; a.alt = 18; a.t = 6 + r() * 8; }
+      }
+      if (a.carr && a.t <= 0 && Math.hypot(a.x - a.carr.x, a.z - a.carr.z) < 80) {   // down to it: a glide to the ground beside it
+        const c = a.carr; a.sx = a.x; a.sy = a.y; a.sz = a.z; a.tx = c.x + (r() - 0.5) * 3; a.tz = c.z + (r() - 0.5) * 3; a.ty = H.atXZ(a.tx, a.tz);
+        a.task = 0; a.perchTop = false; a.arc = 0; a.fedAt = this.time + CARRION.t; a.carr = null; a.hx = a.cx; a.hz = a.cz;
+        const d = Math.hypot(a.tx - a.sx, a.ty - a.sy, a.tz - a.sz); a.dur = Math.max(1.5, d / V); a.u = 0; a.state = R_GLIDE;
+        return;
+      }
       // the centre drifts on the breeze and is pulled back toward home
       const hx = a.hx - a.cx, hz = a.hz - a.cz, hd = Math.hypot(hx, hz);
       a.cx += (0.6 + (hd > 120 ? hx / hd * 1.5 : 0)) * dt; a.cz += (0.3 + (hd > 120 ? hz / hd * 1.5 : 0)) * dt;
@@ -2665,6 +2726,11 @@ export class Animals {
     // teetering: an uneven rock on the dihedral, the vulture's signature at any distance
     const rock = 0.2 * Math.sin(this.time * 1.7 + a.rock) + 0.09 * Math.sin(this.time * 3.3 + a.rock * 2.1);
     if (a.state === V_SOAR) {
+      if (a.carr && (a.carr.gone || a.carr.carrionUntil < this.time)) { a.carr = null; a.alt = 40 + r() * 140; }
+      if (!a.carr && this.carrion.length && r() < dt * 0.3) { const c = this.carrionNear(a.x, a.z, CARRION.scavR * 2); if (c) { a.carr = c; a.t = 60 + r() * 90; } }
+      if (a.carr) {   // the circle slides over the carrion and tightens and lowers
+        const k = Math.min(1, dt * 0.06); a.cx += (a.carr.x - a.cx) * k; a.cz += (a.carr.z - a.cz) * k; a.alt = damp(a.alt, 28, 0.08, dt); a.R = damp(a.R, 28, 0.08, dt);
+      }
       a.cx += 0.4 * dt; a.cz += 0.2 * dt;   // drifts on the breeze
       const bank = this.circle(a, dt, 30);
       a.roll = damp(a.roll, bank * 0.8 + rock, 3, dt); a.pitch = damp(a.pitch, 0.05, 2, dt);
@@ -2729,6 +2795,10 @@ export class Animals {
     const r = a.rng, cfg = MAMMAL[a.sp], g = a.group, q = r();
     if (!act) { a.tx = g.bx + a.ox; a.tz = g.bz + a.oz; this.mmGo(a, cfg.walk, M_BED); return; }
     if (this.huntStart(a)) return;   // prey in reach: a stalk (the lion) or a trot at it (HUNT above)
+    if (a.sp === CY && this.carrion.length && this.time > (a.fedAt || 0)) {   // carrion about: trot to it and nose it over
+      const c = this.carrionNear(a.x, a.z, 200);
+      if (c) { a.tx = c.x + (r() - 0.5) * 2; a.tz = c.z + (r() - 0.5) * 2; a.fedAt = this.time + CARRION.t; this.mmGo(a, cfg.trot, M_SNIFF); return; }
+    }
     if (a.sp === ML && q < 0.45) { this.mmPoint(a, 15, 40, cfg.range); a.speed = 0.35; a.state = M_STALK; a.t = 4 + r() * 6; return; }
     if (q < 0.5) {
       const far = a.sp === CY ? [30, 120] : a.sp === FX ? [15, 60] : [40, 150];
@@ -2848,11 +2918,16 @@ export class Animals {
         const t = a.hunt, d = t && this.huntAlive(t) ? Math.hypot(t.x - a.x, t.z - a.z) : Infinity;
         if (d === Infinity) { this.huntOver(a, lion ? M_STAND : M_SNIFF); break; }
         a.tx = t.x; a.tz = t.z;
-        if (!lion && d < HUNT.pounceD) {   // on it: the pounce (nothing is caught yet)
+        if (lion && a.rush && !a.rolled && d < CARRION.reach[ML]) {   // the rush reaches it: a kill, or it twists away
+          a.rolled = 1;
+          if (KILLABLE.has(t.sp) && r() < CARRION.lionCatch) { this.kill(t, a); this.huntOver(a, M_STAND); a.t = CARRION.feed; break; }
+        }
+        if (!lion && d < HUNT.pounceD) {   // on it: the pounce (a kill with CARRION.canidCatch)
           const L = Math.min(d, 2.2);
           a.yaw = Math.atan2(t.x - a.x, t.z - a.z);
           a.sx = a.x; a.sz = a.z; a.tx = a.x + Math.sin(a.yaw) * L; a.tz = a.z + Math.cos(a.yaw) * L;
           a.u = 0; a.dur = 0.55 + L * 0.1; a.peak = a.sp === CY ? 0.6 : 0.45;
+          if (KILLABLE.has(t.sp) && r() < CARRION.canidCatch) this.kill(t, a);
           this.huntOver(a, M_POUNCE); this.lastPounce = { id: a.id, prey: SPECIES[t.sp].code, t: this.time };
           break;
         }
@@ -3884,6 +3959,8 @@ export class Animals {
       const a = list[k], sp = a.sp;
       const ex = a.x - cx, ey = a.y - cy, ez = a.z - cz, d2 = ex * ex + ey * ey + ez * ez;
       a.acc += dt0;
+      const dead = a.dead;   // carrion (kill): lies where it fell (no thinking, still drawn), then goes
+      if (dead) { if (!a.gone) { if (this.time > a.carrionUntil) this.bury(a); else this.lieStill(a); } if (a.gone) { a.acc = 0; continue; } }
       if (cull[sp]) {   // rabbits, jackrabbits and voles: neither drawn nor thought beyond CULL (voles: also under a high camera)
         const R = CULL[sp];
         if (d2 > R * R || (sp === VO && camAGL > VOLE_CAM)) {
@@ -3895,7 +3972,8 @@ export class Animals {
       if (!fresh && !a.air && d2 > LOD_R2 && ((k & 1) === odd)) continue;   // far and on the ground: every other frame
       const dt = a.acc; a.acc = 0;
       a.flick = sp === WP || sp === WF || sp === LZ ? a.flick : damp(a.flick, 0, 1, dt);
-      if (sp === SQ) this.sqUpdate(a, dt, px, py, pz);
+      if (dead) a.acc = 0;
+      else if (sp === SQ) this.sqUpdate(a, dt, px, py, pz);
       else if (sp === WP || sp === WF) this.wpUpdate(a, dt, px, py, pz);
       else if (sp === RV) {
         this.rvUpdate(a, dt);

@@ -1967,3 +1967,22 @@ at 1.7-2.5 Hz (a real doe walks nearer 1.4 Hz with longer strides); an alert pos
 for now; the lineup page draws the skinned deer in its first clip's first frame rather than its motion switches. A
 web auto-rigger (autorig.online) could give the Meshy species (lion, rabbits, rodents, turkey) skeletons and retargeted
 clips for the same path; that is a separate step and uploads nothing from here.
+
+Kills and carrion (2026-10-28, the hunt archetype's end; animals.js CARRION, kill, catchNear, lieStill, bury; needs.js
+fed and the hunter's drain; groundControl's E). A decision taken under the standing authorization, for Aaron to
+veto in the morning: predation now ends in a death. The player in a hunter's body (lion, coyote, fox) presses E
+within reach (2.4, 1.6, 1.3 m) of prey its species hunts (games.json relations.predation) and catches it: "caught a
+deer", the hunger meter fills (a hunter's hunger drains over 14 min with no raster food, so the hunt is its eating
+loop). An AI lion's rush that reaches its prey kills it with chance 0.35 and the lion stands by the kill 45 s; a
+canid's pounce that lands kills with 0.4. Only species without a kept member list die (deer, bucks, jackrabbits,
+rabbits, voles: KILLABLE); turkeys, quail and ground squirrels scatter and live. The dead animal lies where it fell
+on its side in its species' rest pose (the skin drive's bed clip; state D_BED and pose 1, rolled 1.45 rad) for 10 min
+(small prey 2.5 min), no longer thinking but drawn every frame, the herd going on without it (a new leader if it was
+one), then goes (bury: unseen at once, dropped at the next rebuild; its cell's rebuild brings another in later, so
+numbers hold). The scavengers of relations.scavenge come: a raven within 300 m that is not fed moves its circle over
+the carrion at 18 m and glides down beside it to stand there 15-50 s; a vulture within 600 m slides its circle over
+it, tightening to 28 m and 28 m up, for 1-2.5 min; a coyote within 200 m trots to it and noses it over, once per
+carcass. Verified: as a lion, E at 1.6 m killed a deer, the caption read, hunger filled; the carcass lay in the open
+grass; within 30 s three vultures circled 31 m over it and ravens came in (one landed and left). Not seen in a test:
+an AI lion's or canid's own kill (the chance paths are the rush's and the pounce's). Open: no 'kill' sound; no blood
+or feeding pose; the lion's own feeding is a stand; a death the player's herd sees has no reaction beyond the flee.
