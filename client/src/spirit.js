@@ -84,9 +84,9 @@ const GLOW_LUM = [0.55, 1.4], GLOW_BUBBLE = 2.4, GLOW_BUBBLE_A = 0.09;
 // animals.js LIVE_R, so the far end means the whole live population), and its quad grows with rarity by up to
 // GLOW_RARE_SIZE. BEACON: species whose souls are a test beacon, lit full and large at any distance (owner, 2026-10-27:
 // "make it extremely bright or obvious where the mountain lions are even from far away").
-const GLOW_REACH = [250, 600], GLOW_RARE_SIZE = 1.6, BEACON = new Set(['puma_concolor']), BEACON_LUM = 8.0, BEACON_SIZE = 5.0;
+const GLOW_REACH = [250, 600], GLOW_RARE_SIZE = 1.6, BEACON = new Set(['puma_concolor']), BEACON_LUM = 2.4, BEACON_SIZE = 5.0;   // BEACON_LUM: 30% of the 8 it was (owner, 2026-10-27)
 // A beacon animal also carries a beam: a BEAM_H m column of light BEAM_W m wide over it, a billboard turning about the
-// vertical, additive and drawn through the terrain, in its soul's colour, so it is found from anywhere in the live set.
+// vertical, additive, hidden by what stands between (depth-tested), in its soul's colour, at 30% of its first brightness.
 const BEAM_CAP = 32, BEAM_W = 2.5, BEAM_H = 90;
 const COOL = new THREE.Color(0.6, 0.78, 1.0), WARM = new THREE.Color(1.0, 0.84, 0.58), WHITE = new THREE.Color(0.9, 0.95, 1.0);
 const smooth = u => u * u * (3 - 2 * u);
@@ -381,11 +381,11 @@ class SpiritLook {
         uniform float uAmt; varying vec2 vUv; varying vec3 vColor;
         void main() {
           float x = abs(vUv.x), t = (vUv.y + 1.0) * 0.5;
-          float a = (1.0 - smoothstep(0.0, 1.0, x)) * (1.0 - t * t) * uAmt * 1.8;   // soft sides, fading up
+          float a = (1.0 - smoothstep(0.0, 1.0, x)) * (1.0 - t * t) * uAmt * 0.55;   // soft sides, fading up; 30% of the 1.8 it was
           if (a < 0.003) discard;
           gl_FragColor = vec4(vColor * a, 1.0);
         }`,
-      transparent: true, depthWrite: false, depthTest: false, blending: THREE.AdditiveBlending, toneMapped: false });
+      transparent: true, depthWrite: false, depthTest: true, blending: THREE.AdditiveBlending, toneMapped: false });   // depthTest: the trees hide it (owner, 2026-10-27)
     this.beam = new THREE.Mesh(bg, this.beamMat); this.beam.frustumCulled = false; this.beam.renderOrder = 10; this.beam.name = 'beacon beams';
     this.beam.layers.set(1);
     scene.add(this.beam);

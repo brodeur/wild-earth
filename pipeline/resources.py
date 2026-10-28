@@ -84,7 +84,7 @@ def derive_resources(tile: Tile) -> dict:
                   dst_transform=png_transform, dst_crs="EPSG:4326", resampling=Resampling.nearest, dst_nodata=0)
         return out
 
-    files, stats = {}, {}
+    files, stats, client_png = {}, {}, {}
     for resource, base in RESOURCE_BASE.items():
         lut = np.zeros(256, "float32")
         for cls, v in base.items():
@@ -111,6 +111,10 @@ def derive_resources(tile: Tile) -> dict:
             Image.fromarray(rgba, "RGBA").save(tile.path(rel), optimize=True)
             files[resource][season] = rel
             stats[resource][season] = round(float(arr.mean()), 1)
+        # the client's copy (needs.js: the games of life read the score under the player): the four seasons as RGBA on
+        # the tile grid, 0..100 per channel, north up as the other client rasters
+        Image.fromarray(np.stack(bands, axis=-1), "RGBA").save(tile.path(f"client/res_{resource}.png"), optimize=True)
+        client_png[resource] = f"client/res_{resource}.png"
         x0, y0, x1, y1 = tile.bounds
         with rasterio.open(tile.path(f"resources/{resource}.tif"), "w", driver="GTiff", dtype="uint8", count=4,
                            width=n, height=n, crs=tile.crs, transform=from_bounds(x0, y0, x1, y1, n, n),
@@ -118,10 +122,10 @@ def derive_resources(tile: Tile) -> dict:
             dst.write(np.stack(bands))
             dst.descriptions = tuple(SEASONS)
     meta = {"grid": {"resolution_m": res, "pixels": n, "crs": tile.crs}, "seasons": SEASONS,
-            "resources": list(RESOURCE_BASE), "png": files, "png_bounds": [w, s, e, nn],
+            "resources": list(RESOURCE_BASE), "png": files, "png_bounds": [w, s, e, nn], "client_png": client_png,
             "tables": {"base": RESOURCE_BASE, "season": RESOURCE_SEASON}, "colors": RESOURCE_COLORS,
             "mean_score": stats}
     write_json(tile.path("resources/resources.json"), meta)
     return {"path": "resources/resources.json", "kind": "table", "derived_from": ["vegetation.habitat", "vegetation.evc",
                                                                                  "terrain.dem", "hydro.flowlines"],
-            "resources": list(RESOURCE_BASE), "mean_score": stats}
+            "resources": list(RESOURCE_BASE), "mean_score": stats, "client_png": client_png}

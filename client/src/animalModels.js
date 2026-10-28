@@ -461,7 +461,10 @@ async function loadClips(base, skinExtras) {
     tex.magFilter = tex.minFilter = THREE.NearestFilter; tex.generateMipmaps = false; tex.needsUpdate = true; tex.name = `${base.pathname} bones`;
     const names = Object.keys(index.clips), clip = Object.fromEntries(names.map((n, i) => [n, i]));
     const table = names.map(n => index.clips[n]);
-    return { index, tex, names, clip, table, joints: index.joints, texScale: index.scale, key: `${index.width}x${index.height}|${table.map(c => `${c.first},${c.count},${c.loop ? 1 : 0}`).join(';')}` };
+    // the head chain (neck, head, ears: contiguous in the skin order) and the neck base, for the player's look (PLAYER_HEAD)
+    const headIdx = index.joints.map((n, i) => /^(Neck|Head|Ear)/.test(n) ? i : -1).filter(i => i >= 0);
+    const head = headIdx.length ? { first: headIdx[0], last: headIdx[headIdx.length - 1], pivot: index.joint_rest?.[headIdx[0]] || [0, 0, 0] } : null;
+    return { index, tex, names, clip, table, joints: index.joints, head, texScale: index.scale, key: `${index.width}x${index.height}|${table.map(c => `${c.first},${c.count},${c.loop ? 1 : 0}`).join(';')}` };
   })());
   const shared = await clipCache.get(key);
   return { ...shared, ratio: (skinExtras.scale || shared.texScale) / shared.texScale };
@@ -766,6 +769,9 @@ if (animPart == 1 || animPart == 2) {
 #endif
 } else if (animPart == 6) {
   animR = animRX(aAnim.w * uAmp.z + animPose * uPose.z);
+#ifdef PLAYER_HEAD
+  animR = animRY(uHeadYaw) * animR;   // the player's head turned by the look (animalMaterial head; flight.js look)
+#endif
 #ifdef ANIM_RIG
   animR = animRX(sin(2.0 * aAnim.x + 0.6) * aAnim.y * rig_bob) * animR;
 #endif
@@ -909,6 +915,7 @@ const REPTILE_COLOR = `
 const SKIN_DECL = `
 attribute vec4 skinIndex; attribute vec4 skinWeight; attribute vec4 aClip;
 uniform highp sampler2D uBones;
+mat3 skinRY(float a) { float c = cos(a), s = sin(a); return mat3(c, 0.0, -s, 0.0, 1.0, 0.0, s, 0.0, c); }
 mat4 skinBone(int frame, int j) {
   vec4 r0 = texelFetch(uBones, ivec2(j * 3, frame), 0), r1 = texelFetch(uBones, ivec2(j * 3 + 1, frame), 0), r2 = texelFetch(uBones, ivec2(j * 3 + 2, frame), 0);
   return mat4(vec4(r0.x, r1.x, r2.x, 0.0), vec4(r0.y, r1.y, r2.y, 0.0), vec4(r0.z, r1.z, r2.z, 0.0), vec4(r0.w, r1.w, r2.w, 0.0) * skin_ratio + vec4(0.0, 0.0, 0.0, 1.0));
@@ -945,6 +952,16 @@ if (aClip.w > 0.001) {
 }
 mat3 animR = mat3(skinM);
 vec3 transformed = (skinM * vec4(animPos, 1.0)).xyz;
+#if defined(PLAYER_HEAD) && defined(SKIN_HEAD)
+{   // the player's look: the vertices weighted to the neck and head joints turn about the vertical through the neck base
+  vec4 inHead = step(vec4(skin_head.x - 0.5), skinIndex) * step(skinIndex, vec4(skin_head.y + 0.5));
+  float headW = dot(inHead, skinWeight);
+  if (headW > 0.0) {
+    vec3 hp = (skinM * vec4(skin_neck, 1.0)).xyz;
+    transformed = mix(transformed, skinRY(uHeadYaw) * (transformed - hp) + hp, headW);
+  }
+}
+#endif
 #ifdef USE_ALPHAHASH
   vPosition = vec3( position );
 #endif`;
@@ -952,7 +969,8 @@ function skinDecl(model) {
   const sk = model.skin; if (!sk) return '';
   const f = x => (+x || 0).toFixed(4);
   const rows = sk.table.map(c => `vec4(${c.first.toFixed(1)}, ${c.count.toFixed(1)}, ${c.loop ? '1.0' : '0.0'}, 0.0)`);
-  return `#define ANIM_SKIN\nconst float skin_ratio = ${f(sk.ratio)};\nconst vec4 skin_clips[${rows.length}] = vec4[${rows.length}](${rows.join(', ')});\n${SKIN_DECL}\n`;
+  const head = sk.head ? `#define SKIN_HEAD\nconst vec2 skin_head = vec2(${sk.head.first.toFixed(1)}, ${sk.head.last.toFixed(1)});\nconst vec3 skin_neck = vec3(${sk.head.pivot.map(f).join(', ')});\n` : '';
+  return `#define ANIM_SKIN\nconst float skin_ratio = ${f(sk.ratio)};\nconst vec4 skin_clips[${rows.length}] = vec4[${rows.length}](${rows.join(', ')});\n${head}${SKIN_DECL}\n`;
 }
 export const skinUniforms = model => model.skin ? { uBones: { value: model.skin.tex } } : {};
 const animBody = model => model.skin ? SKIN_BODY : model.rig?.kind === 'reptile' ? REPTILE_BODY : ANIM_BODY;
@@ -1042,7 +1060,9 @@ void RE_Direct_Underwing( const in IncidentLight directLight, const in vec3 geom
 #define RE_Direct RE_Direct_Underwing`;
 
 // map: a textured tier (the ground raven's lod0): the texture instead of the vertex colours, smooth shaded.
-export function animalMaterial(atmosphere, model, { map = null } = {}) {
+// head: a { value } uniform (radians) that turns the HEAD part about the vertical through its pivot: the player's own
+// body (groundControl.js and the other controls), whose head follows the camera's look (flight.js look).
+export function animalMaterial(atmosphere, model, { map = null, head = null } = {}) {
   const m = map ? new THREE.MeshLambertMaterial({ map, vertexColors: false }) : new THREE.MeshLambertMaterial({ vertexColors: true, flatShading: true });
   atmosphere.patchLambert(m);
   const prev = m.onBeforeCompile;
@@ -1051,12 +1071,13 @@ export function animalMaterial(atmosphere, model, { map = null } = {}) {
   const v4 = a => `vec4(${a.map(x => x.toFixed(4)).join(', ')})`;
   const consts = `\nconst vec4 uAmp = ${v4(model.amp)};\nconst vec4 uPose = ${v4(model.pose)};`;
   const uw = map ? null : underwingSpec(model);
-  const key = `atmosphere-lambert|animal|${programKey(model)}${map ? "|map" : ""}${uw ? `|uw${uw.lead.toFixed(4)},${uw.inv.toFixed(3)},${uw.perch ? 1 : 0}` : ''}`;
+  const key = `atmosphere-lambert|animal|${programKey(model)}${map ? "|map" : ""}${uw ? `|uw${uw.lead.toFixed(4)},${uw.inv.toFixed(3)},${uw.perch ? 1 : 0}` : ''}${head ? '|head' : ''}`;
   m.onBeforeCompile = (shader, renderer) => {
     prev.call(m, shader, renderer);
     if (model.skin) shader.uniforms.uBones = { value: model.skin.tex };
     const uwDecl = uw ? `\n#define ANIM_UNDERWING\n${uw.perch ? '#define UNDERWING_PERCH\n' : ''}const float uw_lead = ${uw.lead.toFixed(4)};\nconst float uw_invChord = ${uw.inv.toFixed(4)};\nvarying float vUnderwing;` : '';
-    shader.vertexShader = shader.vertexShader.replace('#include <common>', '#include <common>\n' + animDecl(model) + consts + uwDecl);
+    if (head) shader.uniforms.uHeadYaw = head;
+    shader.vertexShader = shader.vertexShader.replace('#include <common>', '#include <common>\n' + animDecl(model) + consts + uwDecl + (head ? '\n#define PLAYER_HEAD\nuniform float uHeadYaw;' : ''));
     // Smooth shaded (a textured tier): pose first, where the normal begins, so the normals turn with the parts.
     if (map) shader.vertexShader = shader.vertexShader
       .replace('#include <beginnormal_vertex>', animBody(model) + '\nvec3 objectNormal = normal;\n#if defined(ANIM_SKIN)\n  objectNormal = normalize(animR * normal);\n#elif defined(ANIM_WEIGHTED)\n  objectNormal = normalize(mix(normal, animR * normal, aPartW));\n#else\n  objectNormal = animR * normal;\n#endif')
@@ -1098,6 +1119,32 @@ ${animBody(model)}
 }`,
     fragmentShader: 'void main() { gl_FragColor = vec4(1.0); }',
     colorWrite: false, side: THREE.DoubleSide,
+  });
+}
+
+// The silhouette twin of animalMaterial (herdSilhouette.js: a hidden herd member seen through foliage): the same part
+// animation, a flat glow in `soul` fading from fade.x to fade.y m from the eye, drawn only where the body is behind
+// what is already drawn (depthFunc GreaterDepth), additive, no depth write.
+export function animalSilhouetteMaterial(model, { soul, fade, gain = 0.85 }) {
+  const v4 = a => `vec4(${a.map(x => x.toFixed(4)).join(', ')})`;
+  return new THREE.ShaderMaterial({
+    uniforms: { uSoul: { value: soul }, uSilFade: { value: fade }, ...skinUniforms(model) },
+    vertexShader: `${animDecl(model)}
+const vec4 uAmp = ${v4(model.amp)};
+const vec4 uPose = ${v4(model.pose)};
+varying float vSilD;
+void main() {
+${animBody(model)}
+  vec4 mv = viewMatrix * modelMatrix * instanceMatrix * vec4(transformed, 1.0);
+  vSilD = length(mv.xyz);
+  gl_Position = projectionMatrix * mv;
+}`,
+    fragmentShader: `uniform vec3 uSoul; uniform vec2 uSilFade; varying float vSilD;
+void main() { gl_FragColor = vec4(uSoul * ((1.0 - smoothstep(uSilFade.x, uSilFade.y, vSilD)) * ${gain.toFixed(2)}), 1.0); }`,
+    // front faces only, pushed a little toward the eye (the polygon offset), so a body's own far side and its parts just
+    // behind its nearer parts do not count as hidden; what foliage covers does
+    depthFunc: THREE.GreaterDepth, depthWrite: false, transparent: true, blending: THREE.AdditiveBlending, toneMapped: false, side: THREE.FrontSide,
+    polygonOffset: true, polygonOffsetFactor: -6, polygonOffsetUnits: -16,
   });
 }
 

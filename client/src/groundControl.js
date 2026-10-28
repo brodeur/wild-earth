@@ -3,6 +3,7 @@ import { trunkAt } from './animals.js';
 import { animalMaterial, animalDepthMaterial, hasAnim2, antlerState, driveClips, makeClipState, DEER_DRIVE } from './animalModels.js';
 import { addCaster } from './shadows.js';
 import { HerdMarks } from './herdMarks.js';
+import { HerdSilhouette } from './herdSilhouette.js';
 
 // The playable walkers (owner's request 2026-10-26, "make the other animals playable"): one controller for every
 // species that lives on the ground, parameterised per species by GROUND below. Black-tailed deer (doe and buck), gray
@@ -135,6 +136,7 @@ export class GroundControl {
     this.jumpQ = false; this.actQ = false; this.restQ = false; this.wet = null; this.told = 0; this.fl = null;
     this.camOff = new THREE.Vector3(); this.aimOff = new THREE.Vector3(); this.camSettled = false; this.camSide = 0.4; this.camLift = 0;
     this.marks = new HerdMarks({ el: document.getElementById('herdMarks'), camera, animals });   // off-screen herd members (herdMarks.js)
+    this.sil = new HerdSilhouette({ scene, animals, atmosphere });   // hidden herd members as luminous silhouettes (herdSilhouette.js)
     this.last = new THREE.Vector3(); this.N = new THREE.Vector3(0, 1, 0);
     this.meshes = new Map();   // model name -> Promise of { mesh, model, rig }
     this._t = { x: 0, y: 0, z: 0, r: 0 }; this._m = new THREE.Matrix4(); this._q = new THREE.Quaternion(); this._qt = new THREE.Quaternion();
@@ -164,7 +166,7 @@ export class GroundControl {
         geo.setAttribute('aAnim', new THREE.InstancedBufferAttribute(new Float32Array(4), 4));
         if (rig) geo.setAttribute('aAnim2', new THREE.InstancedBufferAttribute(new Float32Array(4), 4));
         if (model.skin) geo.setAttribute('aClip', new THREE.InstancedBufferAttribute(new Float32Array(4), 4));   // the skinned deer: clip, phase, blend
-        const mesh = new THREE.InstancedMesh(geo, animalMaterial(this.atmosphere, model, { map: model.maps?.[0] || null }), 1);
+        const mesh = new THREE.InstancedMesh(geo, animalMaterial(this.atmosphere, model, { map: model.maps?.[0] || null, head: this.flight.headYaw }), 1);   // head: the look (flight.js)
         mesh.instanceMatrix.setUsage(THREE.DynamicDrawUsage);
         mesh.frustumCulled = false; mesh.castShadow = mesh.receiveShadow = true; mesh.name = `player ${name}`;
         mesh.customDepthMaterial = animalDepthMaterial(model);
@@ -199,8 +201,9 @@ export class GroundControl {
     if (this.body) this.body.mesh.visible = on;
     if (!on) for (const p of this.meshes.values()) p.then(b => { if (b) b.mesh.visible = false; });
     if (!on && this.herd) { this.animals.pilot(this.herd.g, null); this.herd = null; }   // the group goes on with its own life
-    if (!on) this.marks.clear();
+    if (!on) { this.marks.clear(); this.sil.clear(); }
     if (this.hudRow) this.hudRow.style.display = on ? '' : 'none';
+    f.look = 0; f.headYaw.value = 0; f.lookMax = on ? (this.S.rig === 'quad' ? 1.0 : this.S.rig === 'bird' ? 1.3 : 1.2) : 0;   // how far this body's head turns before the body follows a drag
     if (on) { f.pitch = 0; f.roll = 0; f.hover = false; this.camSettled = false; this.place(f.pos.x, f.pos.z); }
     else {
       this.camera.up.set(0, 1, 0); f.reset(f.pos.x, f.pos.z, 30);
@@ -305,7 +308,7 @@ export class GroundControl {
     if (this.mode === 'ground') this.trunkPush(P);
     this.draw(dt);
     this.updateCamera(dt);
-    if (this.herd) this.marks.update(this.herd.g, this.herd.a, (S.shoulder || 0.3) * 0.5); else if (this.marks.marks.size) this.marks.clear();
+    if (this.herd) { this.marks.update(this.herd.g, this.herd.a, (S.shoulder || 0.3) * 0.5); this.sil.update(this.herd.g, this.herd.a); } else { if (this.marks.marks.size) this.marks.clear(); this.sil.clear(); }
     this.last.copy(P);
     const ground = Math.max(this.heights.atXZ(P.x, P.z), this.wet ? this.wet.surf : -Infinity);
     const speed = this.mode === 'fly' ? this.fl.v : this.mode === 'air' ? Math.hypot(this.vel.x, this.vel.z) : Math.abs(this.v);
@@ -333,9 +336,11 @@ export class GroundControl {
     let target = k.fwd > 0 ? (k.shift && S.stalk ? S.stalk : S.walk + (S.run - S.walk) * runK) : k.fwd < 0 ? -S.back : 0;
     if (this.resting) target = 0;
     if (this.wet) target *= 1 - 0.6 * Math.min(1, this.wet.depth / S.wade);
+    target *= this.needs?.slow ?? 1;   // hungry or thirsty: slower (needs.js)
     this.v = damp(this.v, target, Math.abs(target) < Math.abs(this.v) ? S.stop : S.accel, dt);
     if (Math.abs(this.v) < 0.01 && !target) this.v = 0;
     if (!this.resting) f.yaw += k.turn * S.turn * (1 - 0.45 * Math.min(1, Math.abs(this.v) / S.run)) * dt;
+    if (k.fwd || k.turn) f.settleLook(dt);   // moving: the body turns into the look
     const fx = -Math.sin(f.yaw), fz = -Math.cos(f.yaw);
     if (jump) {
       if (S.flush && this.v >= S.flush.from) return this.startFlush();
@@ -509,9 +514,9 @@ export class GroundControl {
     const rate = wrap(f.yaw - (this.camYaw ?? f.yaw)) / Math.max(dt, 1e-3); this.camYaw = f.yaw;
     if (Math.abs(rate) > 0.3) this.camSide = damp(this.camSide, -Math.sign(rate) * C.side, 1.6, dt);
     const low = this.resting ? 0.7 : 1, fly = this.mode === 'fly' ? 1.4 : 1;
-    const z = f.zoom || 1, back = (C.back + CAM_PLUS.back) * (1 - 0.15 * this.sit) * fly * z, up = (C.up * CAM_RAISE + CAM_PLUS.up) * low * (1 + 0.3 * this.sit) * fly * z, a = f.yaw + this.camSide;   // z: the wheel's zoom (flight.js)
+    const z = f.zoom || 1, back = (C.back + CAM_PLUS.back) * (1 - 0.15 * this.sit) * fly * z, up = (C.up * CAM_RAISE + CAM_PLUS.up) * low * (1 + 0.3 * this.sit) * fly * z, ly = f.yaw + f.look, a = ly + this.camSide;   // z: the wheel's zoom; ly: the look's yaw (flight.js)
     off.set(Math.sin(a) * back, up, Math.cos(a) * back);
-    const fx = -Math.sin(f.yaw), fz = -Math.cos(f.yaw);
+    const fx = -Math.sin(ly), fz = -Math.cos(ly);
     aim.set(fx * C.look, C.aimUp * low + Math.tan(f.pitch) * (back + C.look), fz * C.look);
     if (C.up > 0.5) this.sq.crownClear(P, off);
     if (!this.camSettled) { this.camOff.copy(off); this.aimOff.copy(aim); this.camSettled = true; this.camLift = 0; }

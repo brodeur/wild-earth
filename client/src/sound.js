@@ -55,7 +55,7 @@ import { sunDirection } from './season.js';
 
 const clamp = (x, a = 0, b = 1) => Math.min(b, Math.max(a, x));
 const smooth = (a, b, x) => { const t = clamp((x - a) / (b - a)); return t * t * (3 - 2 * t); };
-const SPIRIT_WIND = 30, SPIRIT_WIND_RISE = 0.12;   // m/s: the spirit's wind is the raven's up to this, then rises only this much more (wind layer)
+const SPIRIT_WIND = 30, SPIRIT_WIND_RISE = 0.06, SPIRIT_WIND_GAIN = 0.45;   // m/s: the spirit's wind is the raven's up to this, then rises only this much more (wind layer); SPIRIT_WIND_GAIN: at that fraction of the raven's loudness (owner, 2026-10-27: too loud)
 const rand = (a, b) => a + Math.random() * (b - a);
 const typing = e => e.target instanceof HTMLInputElement || e.target instanceof HTMLSelectElement || e.target instanceof HTMLTextAreaElement;
 const STORE = 'wildearth.sound';
@@ -1359,7 +1359,7 @@ export class Soundscape {
       // SPIRIT_WIND m/s and rises only gently past it (SPIRIT_WIND_RISE more by 90 m/s), with less rumble, a rumble
       // filter left more open and the hiss filtered higher, so it is lighter and airier
       const ghost = !!f.spirit;
-      const vAir = ghost ? Math.min(spd, SPIRIT_WIND) / 28 + SPIRIT_WIND_RISE * smooth(SPIRIT_WIND, 90, spd) : clamp(spd / 28, 0, 1.45);
+      const vAir = ghost ? SPIRIT_WIND_GAIN * (Math.min(spd, SPIRIT_WIND) / 28 + SPIRIT_WIND_RISE * smooth(SPIRIT_WIND, 90, spd)) : clamp(spd / 28, 0, 1.45);
       // the day's wind (at 10 m; stronger aloft, a little weaker in the lee of the ground), as if flying into it
       const vAmb = weather?.on ? (weather.windMs / 28) * (0.75 + 0.25 * g) * (weather.gust ?? 1) * (0.8 + 0.4 * (1 - Math.exp(-agl / 45))) : 0;
       const v = Math.max(vAir, vAmb);

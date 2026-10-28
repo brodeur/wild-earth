@@ -58,7 +58,7 @@ export class FlierControl {
         const geo = geometry.clone(), rig = hasAnim2(model);
         geo.setAttribute('aAnim', new THREE.InstancedBufferAttribute(new Float32Array(4), 4));
         if (rig) geo.setAttribute('aAnim2', new THREE.InstancedBufferAttribute(new Float32Array(4), 4));
-        const mesh = new THREE.InstancedMesh(geo, animalMaterial(this.atmosphere, model, { map: model.maps?.[0] || null }), 1);
+        const mesh = new THREE.InstancedMesh(geo, animalMaterial(this.atmosphere, model, { map: model.maps?.[0] || null, head: this.flight.headYaw }), 1);   // head: the look (flight.js)
         mesh.instanceMatrix.setUsage(THREE.DynamicDrawUsage);
         mesh.frustumCulled = false; mesh.castShadow = mesh.receiveShadow = true; mesh.name = `player ${name}`;
         mesh.customDepthMaterial = animalDepthMaterial(model);
@@ -81,6 +81,7 @@ export class FlierControl {
 
   // On as `code` (a FLIERS key), or off (back to the spirit, which places itself).
   setOn(on, code = null) {
+    this.flight.look = 0; this.flight.headYaw.value = 0;   // the look (flight.js) starts straight; its limit is the raven's
     on = !!on;
     if (on && code && code !== this.code) this.useSpecies(code);
     if (on && !this.S) this.useSpecies('buteo_jamaicensis');

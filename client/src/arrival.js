@@ -193,7 +193,7 @@ export class OpeningScreen {
             <span class="op-map"><img alt="" src="../tiles/${esc(id)}/client/imagery.png" draggable="false"></span>
             <button class="op-pick" aria-pressed="false" aria-label="${esc(id)}"></button>
             <span class="op-cover" aria-live="polite"><span class="op-mid"><i class="op-wisp" aria-hidden="true"></i><button class="op-begin" tabindex="-1" disabled>Begin</button><span class="op-status"></span></span></span>
-            <span class="op-name"><b class="op-title"></b><span class="op-sub"></span></span>
+            <span class="op-name"><b class="op-title"></b><span class="op-sub"></span><span class="op-terr"></span></span>
           </div>`).join('')}
         </div>
         <div class="op-lineup" aria-hidden="true"></div>
@@ -272,6 +272,7 @@ export class OpeningScreen {
       const card = this.cardOf(id), roads = majorRoads(f).join(', '), place = locality(f);
       card.querySelector('.op-title').textContent = place || roads || id;
       card.querySelector('.op-sub').textContent = place ? roads : '';
+      card.querySelector('.op-terr').textContent = (f?.territories || []).map(t => t.name).join(' · ');   // Native Land Digital (pipeline/fetch_territories.py)
       card.querySelector('.op-pick').setAttribute('aria-label', [place, roads].filter(Boolean).join(': ') + ` (${id})`);
     }));
     const maps = Promise.all([...this.root.querySelectorAll('.op-map img')].map(im => im.complete ? null : new Promise(r => { im.onload = im.onerror = r; })));

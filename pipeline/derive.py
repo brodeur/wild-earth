@@ -486,14 +486,19 @@ def client_features(tile: Tile) -> dict | None:
     # Named places (OSM place nodes: pipeline/fetch_places.py), for the opening screen's card title and the HUD's
     # place names; an Overpass outage leaves them out rather than failing the build.
     from .fetch_places import places_or_none
+    from .fetch_territories import territories_or_none
     places, places_note = places_or_none(tile)
+    # the Indigenous territories over the tile (Native Land Digital: pipeline/fetch_territories.py), under the card's
+    # title; without a key or on an outage the tile has none
+    terr, terr_note = territories_or_none(tile)
     path = tile.path("client/features.json")
     with open(path, "w") as f:
         json.dump({"roads": roads, "streams": streams, "waterbodies": waterbodies, "places": places,
-                   "places_source": places_note, "size_m": TILE_SIZE_M}, f, separators=(",", ":"))
+                   "places_source": places_note, "territories": terr, "territories_source": terr_note, "size_m": TILE_SIZE_M}, f, separators=(",", ":"))
     return {"path": "client/features.json", "kind": "vector", "crs": tile.crs, "bounds": list(tile.bounds),
             "encoding": "tile-local metres [x east, north from south edge]",
-            "counts": {"roads": len(roads), "streams": len(streams), "waterbodies": len(waterbodies), "places": len(places)},
+            "counts": {"roads": len(roads), "streams": len(streams), "waterbodies": len(waterbodies), "places": len(places), "territories": len(terr)},
+            **({"sources_used": ["native_land"]} if terr else {}),
             "streams_from": stream_source, **({"places_from": "osm"} if places_note else {}),
             "derived_from": ["footprint.mask", stream_source, "hydro.waterbodies"] + (["osm"] if places_note else [])}
 

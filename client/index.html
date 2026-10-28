@@ -8,7 +8,7 @@
   // The opening screen shows unless the URL goes straight in (?game=1, ?skip=1); main.js clears the class.
   if (!/[?&](game|skip)=1(&|$)/.test(location.search)) document.documentElement.classList.add('opening');
 </script>
-<link rel="stylesheet" href="opening.css?v=2026-10-27e">
+<link rel="stylesheet" href="opening.css?v=2026-10-27f">
 <style>
   html,body { margin:0; height:100%; background:#0b0f0d; color:#e6ede7; font:13px/1.4 -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif; overflow:hidden; }
   canvas { display:block; }
@@ -36,6 +36,17 @@
   #herdMarks { position:fixed; inset:0; z-index:4; pointer-events:none; }
   .hm { position:absolute; left:-17px; top:-17px; width:34px; height:34px; border-radius:50%; background:#0f1512cc; border:2px solid #e6ede7; box-shadow:0 1px 4px #0008; box-sizing:border-box; display:flex; align-items:center; justify-content:center; overflow:hidden; }
   .hm img { width:26px; height:26px; object-fit:contain; }
+  /* the needs (needs.js): hunger and thirst meters, bottom right, while the player is a walker */
+  #needs { position:fixed; right:14px; bottom:14px; z-index:5; display:flex; flex-direction:column; gap:4px; font-size:11px; color:#b7c4ba; pointer-events:none; }
+  #needs[hidden] { display:none; }
+  .nd { display:flex; align-items:center; gap:6px; }
+  .nd[hidden] { display:none; }
+  .nd span { width:34px; text-align:right; }
+  .nd i { display:block; width:110px; height:6px; border-radius:3px; background:#0f1512bb; overflow:hidden; }
+  .nd b { display:block; height:100%; width:100%; background:#c98a4e; transition:width .3s linear; }
+  .nd.water b { background:#6fb6ff; }
+  .nd.low b { background:#e0583f; }
+  .nd em { font-style:normal; min-width:90px; color:#e6ede7; text-shadow:0 1px 2px #000a; }
   /* the nearby-animals bar (nearBar.js): in spirit form, the species within reach as a small toolbar at the bottom */
   #nearBar { position:fixed; left:50%; bottom:14px; transform:translateX(-50%); z-index:5; display:flex; align-items:flex-end; gap:4px; pointer-events:none; }   /* no box: the stills stand on the world */
   #nearBar[hidden] { display:none; }
@@ -43,7 +54,7 @@
   .nb-disc { position:absolute; left:4px; right:4px; bottom:1px; height:14px; border-radius:50%; opacity:.85;   /* the soul's glow under the feet: the species' rarity colour (nearBar.js --soul) */
     background:radial-gradient(closest-side, color-mix(in srgb, var(--soul, #fff) 70%, #fff) 0%, var(--soul, #fff) 35%, transparent 100%); }
   .nb-img { position:relative; display:block; width:auto; height:auto; max-height:40px; max-width:54px; object-fit:contain; margin-bottom:6px; filter:drop-shadow(0 1px 1px #0008); }
-  .nb-n { position:absolute; left:3px; bottom:0; min-width:8px; padding:0 5px; border-radius:9px; background:#c98a4ecc; color:#141a16; font-size:11px; font-weight:600; line-height:16px; text-align:center; font-variant-numeric:tabular-nums; }   /* the count: bottom left of the slot, the highlight colour at .8 */
+  .nb-n { position:absolute; left:3px; bottom:0; min-width:8px; padding:0 5px; border-radius:9px; background:color-mix(in srgb, color-mix(in srgb, var(--soul, #c98a4e) 42%, #fff) 80%, transparent); color:#141a16; font-size:11px; font-weight:600; line-height:16px; text-align:center; font-variant-numeric:tabular-nums; }   /* the count: bottom left of the slot, a white tinted with the species' soul colour (nearBar.js --soul), at .8 */
   #help kbd { background:#1f2a23; border:1px solid #263128; border-radius:4px; padding:0 5px; color:#e6ede7; font:inherit; }
   #status { position:fixed; left:50%; top:45%; transform:translate(-50%,-50%); background:#0f1512dd; padding:14px 18px; border-radius:10px; font-size:14px; }
   #status.hidden { display:none; }
@@ -203,6 +214,7 @@
 </div>
 <div id="nearBar" hidden></div>
 <div id="herdMarks" aria-hidden="true"></div>
+<div id="needs" hidden><div class="nd food"><span>food</span><i><b></b></i><em></em></div><div class="nd water"><span>water</span><i><b></b></i><em></em></div></div>
 <div id="minimap"></div>
 <div id="peekBanner" class="hidden">present day · 2022 imagery</div>
 <div id="status">loading tile…</div>

@@ -146,6 +146,13 @@ NAIP_PAGE = "https://www.fpacbc.usda.gov/geo/imagery-programs/naip-imagery"
 ATTRIBUTION_FIELDS = ("license", "license_url", "attribution", "attribution_url", "attribution_required")
 
 SOURCES = {
+    "native_land": {"name": "Native Land Digital territories map",
+                    "url": "https://native-land.ca",
+                    "license": "Native Land Digital API terms (free account; see their data sovereignty treaty)",
+                    "license_url": "https://api-docs.native-land.ca",
+                    "attribution": "Indigenous territories: Native Land Digital (native-land.ca). Their map does not represent or intend to represent official or legal boundaries of any Indigenous nation.",
+                    "attribution_url": "https://native-land.ca",
+                    "attribution_required": True},
     "usgs_3dep": {"name": "USGS 3D Elevation Program (3DEP) bare-earth DEM",
                   "url": "https://elevation.nationalmap.gov/arcgis/rest/services/3DEPElevation/ImageServer",
                   "license": "public domain", "license_url": USGS_CREDITS,

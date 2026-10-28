@@ -179,6 +179,12 @@ release, WebGL) was still running; its commit, if it verified, is the last in `g
 | 09ad842 | The arrival is an aurora: wiggling vertical lines at differing heights, the animal as a silhouette in their colour, then its colours fading in as the lines shimmer out at odd intervals; a tile change runs it backwards. |
 | 1b1b796 | The wheel zoom is bounded per gesture and eased so a trackpad flick cannot pin it; walkers' cameras sit 0.5 m further back; the lineup moves with the cards and sticks to them while scrolling; the count pill bottom left in the highlight tint; the spirit framed in the lower third. |
 | 6ea68c2 | The aurora arrival in white and grey with no hue, and quicker: 1.3 s in, 0.9 s out. |
+| c20e31a | Each count pill is a white tinted with its species' soul colour, at .8. |
+| bee719d | The games of life (committed under the report's message by mistake): every game declares what the world must contain and each tile lists its requests (insects missing; burrows, cavities and snags partial); a walker's hunger and thirst, fed and watered by E on the resource rasters with the nearest good cell as the target; acorns at real size; the lion beacon at 30% behind trees; the wheel inverted. |
+| d444adf | The wisp cruises at 12 m/s with a quieter wind; a tap of W or S nudges its speed, a hold ramps exponentially and eases into the top or bottom. |
+| 2d7ba15 | Herd members hidden by foliage show as luminous silhouettes in their soul colour, drawn only where the body is behind what is drawn and fading out by 150 m. |
+| d632823 | The Indigenous territories over a tile, from Native Land Digital, go under the card's place name; the pipeline fetches them with a free key you have to sign up for, and the credits carry their disclaimer. |
+| 5f67e33 | A drag turns the camera with the animal's head up to its limit, then the body turns so the camera keeps moving; walking settles the head straight. |
 
 Open from the day: the attribution form for generated assets; far placement on the lidar ground beyond the fine square; the squirrel's
 crown camera in leafy oaks.

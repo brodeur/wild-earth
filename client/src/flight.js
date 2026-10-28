@@ -38,9 +38,14 @@ import { Perches } from './perch.js';
 // (perch.js: a red-tail on a snag or a pine), the chase camera's scale (by wingspan). A soarer's H (sp.soar) is a soar
 // instead of a hover: it holds its speed in a slow circle (radius sp.soar.r at sp.soar.v m/s, in the way it was
 // banking) climbing a little in the thermal, A / D tightening or opening it, W, S or H again flying on.
-const SPIRIT_CRUISE = 25, SPIRIT_MAX = 90, SPIRIT_BACK = 10, SPIRIT_FLOOR = 0.8;   // m/s, m/s, m/s, m
+const SPIRIT_CRUISE = 12, SPIRIT_MAX = 90, SPIRIT_BACK = 10, SPIRIT_FLOOR = 0.8;   // m/s, m/s, m/s, m (cruise 25 before 2026-10-27: "too fast")
+// W and S (owner, 2026-10-27): a tap nudges the speed by SPIRIT_TAP m/s; a hold ramps on an exponential curve, the
+// rate toward the top (W) or the bottom (S) growing from SPIRIT_RAMP[0] per second to SPIRIT_RAMP[1] over
+// SPIRIT_RAMP_T s of holding, and since it is a rate toward the end speed, the speed eases into it.
+const SPIRIT_TAP = 2.5, SPIRIT_RAMP = [0.08, 2.2], SPIRIT_RAMP_T = 3;
+const RAVEN_LOOK = 1.3;   // rad: how far the raven's head turns before the body follows a drag (flight.js look)
 const SPIRIT_FRAME = -0.45;   // where the wisp sits in the frame: this much of the half view below the middle (the lower third)
-// Scroll to zoom (owner, 2026-10-27): the wheel up zooms out, down zooms in. `zoom` scales the chase distance of every
+// Scroll to zoom (owner, 2026-10-27): the wheel down zooms out, up zooms in. `zoom` scales the chase distance of every
 // camera (this one, the spirit's, the ground animals' in groundControl.js, the squirrel's, the woodpecker's), ZOOM_RANGE
 // times the set-up's own; a notch of 100 is about 11%. Not over the panel, the credits, a card or the opening screen.
 const ZOOM_RANGE = [0.35, 4], ZOOM_RATE = 0.0012, ZOOM_STEP = 60, ZOOM_REACH = 2.5, ZOOM_EASE = 7;
@@ -67,11 +72,17 @@ export class RavenFlight {
     this.body = new THREE.Group();
     this.pos = this.body.position; this.yaw = 0; this.pitch = 0; this.roll = 0; this.speed = 12;
     this.keys = new Set(); this.flap = 0; this.drag = null; this.hover = false; this.sDwell = 0;
+    // The look (owner, 2026-10-27): a drag turns the camera, and the player's head with it, up to lookMax rad each way
+    // (the control sets it for its body; 0 for the spirit, which has no head); past that the drag turns the body
+    // instead so the camera keeps moving. look is the head's yaw off the body; the cameras look along yaw + look;
+    // moving (W, turns) settles the look back into the body's heading (settleLook: the body turns under a camera
+    // that stays). headYaw is the uniform the player's material reads (animalModels.js animalMaterial head).
+    this.look = 0; this.lookMax = 0; this.headYaw = { value: 0 }; this._d2 = new THREE.Vector3();
     this._zoom = 1; this.zoomTarget = 1; this._zoomAt = performance.now();   // the wheel's zoom (ZOOM_RANGE): every chase camera scales its distance by it
     window.addEventListener('wheel', e => {
       if (document.documentElement.classList.contains('opening') || e.target?.closest?.('#panel, #credits, #speciesCard, #opening, #fieldGuide')) return;
       const px = e.deltaMode === 1 ? e.deltaY * 16 : e.deltaMode === 2 ? e.deltaY * 400 : e.deltaY, d = Math.max(-ZOOM_STEP, Math.min(ZOOM_STEP, px));
-      const z = this.zoom, t = this.zoomTarget * Math.exp(-d * ZOOM_RATE);
+      const z = this.zoom, t = this.zoomTarget * Math.exp(d * ZOOM_RATE);   // down (positive) zooms out, up zooms in (owner, 2026-10-27: inverted from the first cut)
       this.zoomTarget = Math.min(ZOOM_RANGE[1], Math.max(ZOOM_RANGE[0], Math.min(z * ZOOM_REACH, Math.max(z / ZOOM_REACH, t))));
     }, { passive: true });
     this.view = 'chase';                                  // 'chase' | 'first'
@@ -105,7 +116,7 @@ export class RavenFlight {
     window.addEventListener('keyup', e => this.keys.delete(e.code));
     dom.addEventListener('pointerdown', e => { this.drag = { x: e.clientX, y: e.clientY }; });
     window.addEventListener('pointerup', () => this.drag = null);
-    window.addEventListener('pointermove', e => { if (!this.drag) return; this.yaw -= (e.clientX - this.drag.x) * 0.0035; this.pitch -= (e.clientY - this.drag.y) * 0.0025; this.drag = { x: e.clientX, y: e.clientY }; });
+    window.addEventListener('pointermove', e => { if (!this.drag) return; this.turnLook(-(e.clientX - this.drag.x) * 0.0035); this.pitch -= (e.clientY - this.drag.y) * 0.0025; this.drag = { x: e.clientX, y: e.clientY }; });
   }
   setHover(on) {
     if (on && this.sp.soar) this.soarDir = this.roll < -0.05 ? -1 : 1;   // a soar: on round the way it banks
@@ -114,6 +125,15 @@ export class RavenFlight {
   // Another bird's numbers (flierControl.js), or null for the raven's.
   setSpecies(sp) { this.sp = sp ? { ...RAVEN_SP, ...sp } : RAVEN_SP; }
   setView(v) { this.view = v; this.camSettled = false; this.body.visible = v === 'chase'; }
+  // the look (see the constructor): a drag's turn goes to the head up to lookMax, the rest to the body
+  turnLook(d) {
+    this.look += d; const m = this.lookMax;
+    if (this.look > m) { this.yaw += this.look - m; this.look = m; } else if (this.look < -m) { this.yaw += this.look + m; this.look = -m; }
+    this.headYaw.value = this.look;
+  }
+  settleLook(dt, k = 3) { if (!this.look) return; const d = this.look * (1 - Math.exp(-dt * k)); this.yaw += d; this.look -= d; if (Math.abs(this.look) < 1e-4) this.look = 0; this.headYaw.value = this.look; }
+  get lookYaw() { return this.yaw + this.look; }
+  moving() { const k = this.keys; return k.has('KeyW') || k.has('KeyA') || k.has('KeyS') || k.has('KeyD') || k.has('ArrowUp') || k.has('ArrowDown') || k.has('ArrowLeft') || k.has('ArrowRight') || k.has('Space'); }
   // The zoom the cameras read: eased toward the wheel's target by the time since the last read (the controls read it
   // every frame; none of them runs this flight's update while they are on).
   get zoom() {
@@ -144,7 +164,9 @@ export class RavenFlight {
     this.spaceQ = this.actQ = this.launchQ = false;
   }
   update(dt) {
-    if (this.spirit) return this.updateSpirit(dt);
+    this.lookMax = this.spirit ? 0 : RAVEN_LOOK;
+    if (this.spirit) { if (this.look) { this.yaw += this.look; this.look = 0; this.headYaw.value = 0; } return this.updateSpirit(dt); }
+    if (this.moving()) this.settleLook(dt);
     if (this.landed) return this.updateGround(dt);
     const k = this.keys, sp = this.sp, turn = sp.turn, pitchRate = 1.0, soar = !!sp.soar && this.hover;
     let yawIn = (k.has('ArrowLeft') || k.has('KeyA') ? 1 : 0) - (k.has('ArrowRight') || k.has('KeyD') ? 1 : 0);
@@ -224,13 +246,23 @@ export class RavenFlight {
     this.pitch = THREE.MathUtils.clamp(this.pitch + pitchIn * pitchRate * dt, -1.3, 1.1);
     if (!pitchIn && !this.drag) this.pitch = THREE.MathUtils.lerp(this.pitch, 0, 1 - Math.exp(-dt * 0.3));   // levels out, slowly
     this.roll = THREE.MathUtils.lerp(this.roll, yawIn * 0.5, 1 - Math.exp(-dt * 2));
-    const boost = k.has('ShiftLeft') || k.has('ShiftRight'), push = k.has('KeyW') || boost;
-    if (push) { this.hover = false; this.speed = Math.min(SPIRIT_MAX, Math.max(this.speed, 0) + (boost ? 70 : 32) * dt); }
-    if (k.has('KeyS')) {
-      if (this.speed > 0.4) { this.speed = Math.max(0, this.speed - 30 * dt); this.sDwell = 0; }
+    const boost = k.has('ShiftLeft') || k.has('ShiftRight'), push = k.has('KeyW') || boost, slow = k.has('KeyS');
+    const ramp = hold => SPIRIT_RAMP[0] * Math.pow(SPIRIT_RAMP[1] / SPIRIT_RAMP[0], Math.min(1, hold / SPIRIT_RAMP_T));   // the rate per second, exponential in the hold
+    if (push) {
+      this.hover = false;
+      if (!this.wHold) this.speed = Math.min(SPIRIT_MAX, Math.max(this.speed, 0) + SPIRIT_TAP);   // the tap
+      this.wHold = (this.wHold || 0) + dt;
+      this.speed += (SPIRIT_MAX - this.speed) * Math.min(1, (boost ? 2 : 1) * ramp(this.wHold) * dt);   // eases into the top
+    } else this.wHold = 0;
+    if (slow) {
+      if (!this.sHold && this.speed > 0.4) this.speed = Math.max(0, this.speed - SPIRIT_TAP);   // the tap
+      this.sHold = (this.sHold || 0) + dt;
+      const r = Math.min(1, ramp(this.sHold) * dt);
+      if (this.speed > 0.4) { this.speed = Math.max(0, this.speed - this.speed * r); this.sDwell = 0; }
       else if (this.speed >= -0.01 && (this.sDwell += dt) < 0.5) this.speed = 0;
-      else this.speed = Math.max(-SPIRIT_BACK, this.speed - 10 * dt);
-    } else this.sDwell = 0;
+      else this.speed += (-SPIRIT_BACK - this.speed) * r;   // eases into the bottom (backing)
+    } else this.sHold = 0;
+    if (!slow) this.sDwell = 0;
     if (this.hover) this.speed = THREE.MathUtils.lerp(this.speed, 0, 1 - Math.exp(-dt * 3));
     else if (!push && !k.has('KeyS') && this.speed > 4) this.speed += (SPIRIT_CRUISE - this.speed) * (1 - Math.exp(-dt * 0.7));   // back to cruise
     const holding = this.hover || Math.abs(this.speed) < 1.0;
@@ -540,7 +572,7 @@ export class RavenFlight {
     const perched = this.landed && this.gnd.perch ? 1 : 0;
     this.camP = (this.camP || 0) + (perched - (this.camP || 0)) * (1 - Math.exp(-dt * 3));   // perched: closer in (less of the crown between)
     const L = THREE.MathUtils.lerp, c = this.spirit ? 1 : this.sp.cam;   // c: the camera's scale for another bird (sp.cam)
-    const z = this.zoom, back = L(L(5.5, 2.5, gk), 1.7, this.camP) * c * z, up = L(L(1.6, 0.8, gk), 0.55, this.camP) * c * z, lookAhead = L(6, 0.8, gk) * c, yaw = this.camYaw + 0.4 * gk;
+    const z = this.zoom, back = L(L(5.5, 2.5, gk), 1.7, this.camP) * c * z, up = L(L(1.6, 0.8, gk), 0.55, this.camP) * c * z, lookAhead = L(6, 0.8, gk) * c, yaw = this.camYaw + 0.4 * gk + this.look;
     const cp = Math.cos(this.pitch * 0.5), sp = Math.sin(this.pitch * 0.5);
     // Smooth the offset from the bird, not the camera position, so forward flight never lags the bird out of frame.
     const off = this._look.set(Math.sin(yaw) * cp, -sp, Math.cos(yaw) * cp).multiplyScalar(back);
@@ -560,6 +592,7 @@ export class RavenFlight {
       const cy = Math.cos(this.pitch);
       dir = this._d.set(-Math.sin(this.camYaw) * cy, Math.sin(this.pitch), -Math.cos(this.camYaw) * cy).lerp(dir, 1 - gk);
     }
+    if (this.look) { const c = Math.cos(this.look), sn = Math.sin(this.look); dir = this._d2.set(dir.x * c + dir.z * sn, dir.y, dir.z * c - dir.x * sn); }   // the aim turned by the look
     const aim = this._look.copy(this.pos).addScaledVector(dir, lookAhead); aim.y += L(0.3, 0.05, gk);
     if (this.spirit) {   // the spirit in the lower third of the frame (owner, 2026-10-27; as the walkers, groundControl.js FRAME_Y): the
       // pitch from the line to the wisp, looking SPIRIT_FRAME of the half view above it, plus half the wisp's own pitch; the yaw the aim's

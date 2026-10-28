@@ -74,7 +74,7 @@ export function oakInfo(oak, mast, season, heights) {
       y = heights.atXZ(x, z) + 1.2 + v * 1.3;
     } else {            // on the ground under the canopy
       r = Math.sqrt(u) * 3.5 * s; x = oak.x + Math.cos(a) * r; z = oak.z + Math.sin(a) * r;
-      y = heights.atXZ(x, z) + 0.22;
+      y = heights.atXZ(x, z) + ACORN_R * 1.1;   // lying on the ground (it sat 22 cm up when the nut was 70 cm across)
     }
     acorns.push({ n, x, y, z, spin, branch: inBranches, key: `${oak.id}:${n}`, oak: oak.id, species: oak.species });
   }
@@ -151,13 +151,14 @@ function quad(cap) {
   return g;
 }
 
+export const ACORN_R = 0.012;   // m: a real acorn, about 2 cm across and 3 cm long (owner, 2026-10-27: "acorns can be realistically sized"); the glow finds it
 export function acornGeometry() {
-  const g = new THREE.IcosahedronGeometry(0.35, 1);   // (a polyhedron is already non-indexed)
+  const g = new THREE.IcosahedronGeometry(ACORN_R, 1);   // (a polyhedron is already non-indexed)
   g.scale(0.85, 1.2, 0.85);
   const pos = g.attributes.position, col = new Float32Array(pos.count * 3);
   const body = new THREE.Color(0x6b4a2b), cap = new THREE.Color(0x8a7a5a);   // brown nut, paler scaly cap
   for (let i = 0; i < pos.count; i++) {
-    const c = pos.getY(i) > 0.16 ? cap : body;
+    const c = pos.getY(i) > ACORN_R * 0.46 ? cap : body;
     col[i * 3] = c.r; col[i * 3 + 1] = c.g; col[i * 3 + 2] = c.b;
   }
   g.setAttribute('color', new THREE.BufferAttribute(col, 3));
@@ -601,7 +602,7 @@ export class AcornGame {
   carryAt(x, y, z, yaw, pitch, s) {
     if (this.nc >= CARRY_CAP) return;
     const t = this.tmp, i = this.nc++;
-    t.position.set(x, y, z); t.rotation.set(Math.PI / 2 + pitch, yaw, 0, 'YXZ'); t.scale.setScalar(s * 0.045); t.updateMatrix();
+    t.position.set(x, y, z); t.rotation.set(Math.PI / 2 + pitch, yaw, 0, 'YXZ'); t.scale.setScalar(s * 0.045 * 0.35 / ACORN_R); t.updateMatrix();   // the same size in the bill as before the nuts shrank
     this.carriedNuts.setMatrixAt(i, t.matrix);
     t.rotation.set(0, 0, 0); t.scale.setScalar(1); t.updateMatrix(); this.carriedGlow.setMatrixAt(i, t.matrix);
   }

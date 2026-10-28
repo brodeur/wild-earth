@@ -18,7 +18,7 @@
 #
 # Output: OUT_PREFIX.bin, the texture's texels row-major (RGBA, half floats by default, --f32 for floats), width
 # joints x 3 texels (the matrix's three rows), one row per frame; and OUT_PREFIX.json, the index:
-#   { rate, width, height, format, joints: [names in skin order], scale, offset, source,
+#   { rate, width, height, format, joints: [names in skin order], joint_rest: [[x, y, z] each joint's head at rest], scale, offset, source,
 #     clips: { name: { first, count, loop, duration, root_motion, stride_m, touchdown, speed_mps } } }
 # first / count are the clip's first frame (texture row) and frame count; a looping clip's frame `count` is frame 0
 # again (the client wraps). root_motion: the root joint's translation over the clip (metres; in-place clips give ~0).
@@ -279,7 +279,8 @@ open(OUT + '.bin', 'wb').write(data)
 if not F32:
     err = float(np.abs(tex.astype(np.float16).astype(np.float32) - tex).max()); print(f'INFO half-float rounding error up to {err * 1000:.3f} mm (or per unit of rotation)')
 idx = {'rate': RATE, 'width': W, 'height': H, 'format': 'rgba32f' if F32 else 'rgba16f', 'texels': 'row f = frame f; texels j*3..j*3+2 = rows 0..2 of joint j\'s 3x4 matrix (adopted frame)',
-       'joints': JN, 'scale': round(SCALE, 6), 'offset': [round(float(x), 5) for x in OFFSET],
+       'joints': JN, 'joint_rest': [[round(float(x), 4) for x in joint_pos(G_REST, j)] for j in JOINTS],   # each joint's head at rest (adopted frame)
+       'scale': round(SCALE, 6), 'offset': [round(float(x), 5) for x in OFFSET],
        'source': {'file': os.path.basename(SRC), 'fit': FIT, 'recipe': opt('--recipe'), 'clips_in_source': sorted(anims)},
        'clips': index}
 json.dump(idx, open(OUT + '.json', 'w'), indent=1)
