@@ -19,6 +19,11 @@
 //            range. Two calls are events of animals.js instead of chance:
 //            a quail covey's flush (a whirring burst of wingbeats, one per bird, staggered as they go up,
 //            and a few alarm "pit"s) and a red-tailed hawk's stoop (its scream, on the hawk).
+//            The mountain quail (oreortyx_pictus) rides this layer too: the male's loud "quee-ark" from a real bird within
+//            400 m only (no habitat fallback), mostly in spring and early summer (by animals.js's month), in a bout of
+//            3-6 calls 4-8 s apart (the later ones wait in `pending`); its covey's flush (animals.js 'flush' with species
+//            oreortyx_pictus and group null, so none of the California quail's pits or "chi-ca-go") is one voice: the
+//            sharp trilled "krrr" alarm of 2-3 birds (within 150 m), then the whirr.
 //   near     calls tied to the animals of animals.js close to the player and to what they are doing (_nearTick,
 //            4x a second): acorn woodpeckers' "waka" rally when one lands (mostly at its granary) and now and
 //            then around it, and the knocks of their hammering in step with the AI's pecking (W_CLING with
@@ -39,8 +44,8 @@
 //            putts; a few settling flaps as birds land in the oak; with no oak in reach only the putts as they run) and
 //            'gsAlarm' (the sentinel's whistle-chirp alarm, then a scuffle as the first of the others goes down a burrow).
 //            And 'alarm' (a watcher calling at a predator that hunts near it, animals.js alarms()): the caller's own alarm
-//            voice (ALARM: the jays' scolds, the waka, a kraa, alarm putts, pits, the whistle, the bark, a deer's snort and
-//            stamp) from where it calls, heard out to the call's carry and faint at a distance; at most ALARM_MAX at once.
+//            voice (ALARM: the jays' scolds, the waka, a kraa, alarm putts, pits, a mountain quail's "krrr"s, the whistle, the
+//            bark, a deer's snort and stamp) from where it calls, heard out to the call's carry and faint at a distance; at most ALARM_MAX at once.
 //            And 'kill' (animals.js kill()): at the spot, the prey's last cry (a deer's hoarse bawl, a rabbit's scream, a vole's
 //            squeak) and the struggle, a scuffle of grass with thumps and the hunter over it (a lion's growl, a coyote's or fox's
 //            snarl, a hawk's wing-slaps); heard out to 120 m (a rabbit or vole 50 m), faint past 60 m; the player's own catch at
@@ -95,6 +100,12 @@ const CALLERS = [
   // Coyote: a few yips running into a wavering howl, at dawn and dusk (and on into the night) over grass and savanna.
   { key: 'coyote', code: 'canis_latrans', label: 'coyote', hab: { 5: 1, 9: 0.7, 1: 0.45, 4: 0.5, 6: 0.3 }, rate: 0.035, gain: 0.5,
     tod: c => c, height: [0.4, 0.6], synth: 'coyote' },
+  // Mountain quail: the male's "quee-ark", only from a real bird within `r` m (`real`: no habitat fallback, animals.js keeps
+  // them to their brush at 600-3,000 m), in a bout of `bout` calls `boutGap` s apart (_bout), weighted by `months` (January
+  // first, by animals.js's month; `seasons` when it has none) in place of SEASON_BIRDS: spring and early summer.
+  { key: 'mquail', code: 'oreortyx_pictus', label: 'mountain quail', hab: { 4: 1, 3: 0.8, 2: 0.5, 6: 0.55, 1: 0.35, 8: 0.15 }, rate: 0.08,
+    gain: 0.5, ref: 20, tod: (c, d) => c + d * 0.1, height: [0.2, 2], synth: 'mquail', r: 400, real: true, bout: [3, 6], boutGap: [4, 8],
+    months: [0.05, 0.1, 0.35, 0.85, 1, 1, 0.55, 0.2, 0.08, 0.05, 0.04, 0.04], seasons: { spring: 0.85, summer: 0.6, fall: 0.06, winter: 0.05 } },
 ];
 
 // The near layer's calls (keys for _play): label for the HUD and log, gain, the panner's refDistance (m; a
@@ -133,6 +144,7 @@ const ALARM = {
   corvus_corax:             { label: 'raven alarm', gain: 0.6, ref: 20, range: 600, synth: 'kraaAlarm' },
   meleagris_gallopavo:      { label: 'turkey alarm', gain: 0.8, ref: 12, range: 250, synth: 'alarmPutts' },
   callipepla_californica:   { label: 'quail alarm', gain: 0.6, ref: 10, range: 200, synth: 'pitAlarm' },
+  oreortyx_pictus:          { label: 'mountain quail alarm', gain: 0.6, ref: 12, range: 150, synth: 'mqAlarm' },
   otospermophilus_beecheyi: { label: 'ground squirrel alarm', gain: 0.4, ref: 12, range: 250, synth: 'gsWhistle' },
   sciurus_griseus:          { label: 'gray squirrel alarm', gain: 0.8, ref: 10, range: 160, synth: 'barkAlarm' },
   odocoileus_hemionus:      { label: 'deer alarm', gain: 0.6, ref: 10, range: 160, synth: 'deerSnort' },
@@ -155,6 +167,7 @@ const KILL_MAX = 2;        // kill voices playing at once
 const KILL_NEAR = 60;      // m: past this a kill fades a further 60 % toward its range (faint), on top of the inverse rolloff
 const KILL_OWN = 0.6;      // the player's own catch, unpanned at the player: 1.3x (a touch louder) of the kill within its refDistance, the HRTF panner's ~6.5 dB loss taken off (about the player's own kraa)
 const GS_CODE = 'otospermophilus_beecheyi';   // its 'gsAlarm' and 'alarm' within a second are one call
+const MQ_CODE = 'oreortyx_pictus';            // the mountain quail: its flush's alarm and an 'alarm' within a second are one call
 // animals.js state values the near layer reads (not exported there; keep in step with its constants)
 const S_PAUSE = 0, S_OUT = 3, S_SIT = 4, S_WORK = 7, S_EAT = 8;            // squirrel
 const W_CLING = 10, W_TOP = 11, W_FLY = 12, T_STORE = 2;                   // woodpecker; the acorn game's store task
@@ -552,8 +565,8 @@ export class Soundscape {
   // A covey flushing: n quail burst up, each a run of wingbeats (16-22 Hz) for 0.6-1.0 s, staggered by
   // up to half a second as in animals.js (flushCovey: rank * 0.04 + 0-0.45 s), then gliding. One noise
   // source through a low thrum and a band-passed whirr, under one gain curve summed over the birds;
-  // and two or three alarm "pit"s from the covey.
-  _flush(v, t, n) {
+  // and two or three alarm "pit"s from the covey (pits false: the whirr alone, the mountain quail's).
+  _flush(v, t, n, pits = true) {
     const birds = Math.max(1, Math.min(n, 12)), RATE = 400, total = 1.9, N = Math.ceil(total * RATE);
     const curve = new Float32Array(N);
     for (let b = 0; b < birds; b++) {
@@ -571,7 +584,7 @@ export class Soundscape {
     const gl = v.gain(1.4), mix = v.gain(1), g = v.gain(0);
     ns.connect(bp).connect(mix); ns.connect(lp).connect(gl).connect(mix); mix.connect(g).connect(v.input);
     g.gain.setValueCurveAtTime(curve, t, total);
-    this._pits(v, t + 0.1, 2 + (Math.random() < 0.5));
+    if (pits) this._pits(v, t + 0.1, 2 + (Math.random() < 0.5));
   }
   // Quail alarm "pit"s: n short falling chips (a sine 2.9 -> 2.1 kHz in 50 ms, peak a) 0.13-0.19 s apart.
   _pits(v, t, n, a = 0.35) {
@@ -584,6 +597,54 @@ export class Soundscape {
     }
   }
   _pitAlarm(v, t) { this._pits(v, t, 3 + (Math.random() < 0.5), 0.6); }
+
+  // Mountain quail "quee-ark", the male's advertising call: a clear whistle rising 1.3 -> 1.9 kHz over 0.25 s, a 60-90 ms gap,
+  // then a falling "ark" 1.7 -> 1.1 kHz over 0.2 s; a touch of 2nd and 3rd harmonic (a PeriodicWave, made once) and a little
+  // breath noise band-passed on the pitch. One call per voice (_bout queues the rest of the bout).
+  _mquail(v, t) {
+    const pm = rand(0.95, 1.05), a1 = t + 0.25, b0 = a1 + rand(0.06, 0.09), b1 = b0 + 0.2;
+    const o = v.osc('sine', 1300 * pm, t, b1 + 0.02), ns = v.noise(t, b1 + 0.02), bp = v.filter('bandpass', 1600 * pm, 4);
+    const ng = v.gain(0.3), g = v.gain(0);
+    this.mqWave ||= new PeriodicWave(this.ctx, { real: new Float32Array(4), imag: new Float32Array([0, 1, 0.16, 0.05]) });
+    o.setPeriodicWave(this.mqWave);
+    o.connect(g); ns.connect(bp).connect(ng).connect(g); g.connect(v.input);
+    for (const F of [o.frequency, bp.frequency]) {
+      F.setValueAtTime(1300 * pm, t); F.exponentialRampToValueAtTime(1900 * pm, a1);
+      F.setValueAtTime(1700 * pm, b0); F.exponentialRampToValueAtTime(1100 * pm, b1);
+    }
+    env(g.gain, t, [[0, 0], [0.03, 0.8], [0.2, 1], [0.25, 0]]);
+    env(g.gain, b0, [[0, 0], [0.02, 0.9], [0.12, 0.7], [0.2, 0]]);
+  }
+  // Mountain quail alarm: sharp "krrr"s (and now and then a "quit-quit") from `birds` birds, staggered by 0.08-0.2 s each,
+  // each 3-5 notes of 0.1 s, 0.13-0.18 s apart: a triangle of its own pitch (2.5-3.5 kHz, falling a tenth over the note),
+  // trilled at 45-65 Hz by a square wave on its gain ("quit": barely trilled, shorter), a 3 ms noise tick on every onset
+  // for the bite (one noise source for all, its onsets sorted); peak a.
+  _mqClucks(v, t, birds = 2 + (Math.random() < 0.5), a = 0.5) {
+    const ticks = []; let end = t, s0 = t;
+    for (let b = 0; b < birds; b++, s0 += rand(0.08, 0.2)) {
+      const n = 3 + Math.floor(Math.random() * 3), f = rand(2500, 3500), step = rand(0.13, 0.18), quit = Math.random() < 0.3;
+      const e = s0 + (n - 1) * step + 0.11, o = v.osc('triangle', f, s0, e), am = v.osc('square', rand(45, 65), s0, e);
+      const amd = v.gain(quit ? 0.08 : 0.5), ch = v.gain(quit ? 0.92 : 0.5), g = v.gain(0), d = quit ? 0.07 : 0.1;
+      am.connect(amd).connect(ch.gain); o.connect(ch).connect(g).connect(v.input);
+      g.gain.setValueAtTime(0, s0);
+      for (let i = 0; i < n; i++) {
+        const s = s0 + i * step, k = a * rand(0.8, 1);
+        o.frequency.setValueAtTime(f * 1.04, s); o.frequency.exponentialRampToValueAtTime(f * 0.92, s + d);
+        env(g.gain, s, [[0, 0], [0.008, k], [d * 0.6, k * 0.7], [d, 0]]);
+        ticks.push(s);
+      }
+      end = Math.max(end, e);
+    }
+    const ns = v.noise(t, end), bp = v.filter('bandpass', 3000, 1), tg = v.gain(0);
+    ns.connect(bp).connect(tg).connect(v.input); tg.gain.setValueAtTime(0, t);
+    for (const s of ticks.sort((x, y) => x - y)) env(tg.gain, s, [[0, 0], [0.001, a * 0.6], [0.004, 0]]);
+  }
+  _mqAlarm(v, t) { this._mqClucks(v, t, 2 + (Math.random() < 0.5), 0.6); }
+  // A mountain quail covey flushing: the alarm (clucks true) and, 0.3 s in, the whirr without the California quail's pits.
+  _mqFlush(v, t, n, clucks) {
+    if (clucks) this._mqClucks(v, t, 2 + (Math.random() < 0.5), 0.45);
+    this._flush(v, t + (clucks ? 0.3 : 0), n, false);
+  }
 
   // Steller's jay "shaaar": a harsh, drawn-out, falling scold, once or twice: a sawtooth (900 -> 600 Hz) and
   // as much noise through a wide band-pass sliding 2.4 -> 1.6 kHz, roughened by a 70 Hz amplitude flutter. The alarm "shaack
@@ -1103,12 +1164,21 @@ export class Soundscape {
   _onAnimal(a) { return { x: a.x, y: a.y + 0.3, z: a.z }; }
   _onFlush(e) {
     if (!this._live() || this._listenerDist(e.x, e.y, e.z) > EVENT_R) return;
+    if (e.species === MQ_CODE) return this._onMqFlush(e);
     this._play('quail', { x: e.x, y: e.y + 0.5, z: e.z }, e.group?.leader || null, 'event', (v, t) => this._flush(v, t, e.n));
     // scattered, they call each other back together: a "chi-ca-go" or two from where the covey lands
     const g = e.group; if (!g || !(this.elevDeg > -6) || this._listenerDist(e.x, e.y, e.z) > NEAR.assembly.range || Math.random() > 0.6) return;   // not in the dark
     let at = this.t + rand(4, 9);
     if (this.pending.some(p => p.covey === g)) return;
     for (let i = 0, n = 1 + (Math.random() < 0.3); i < n; i++, at += rand(2, 5)) this.pending.push({ at, key: 'assembly', animal: g.leader, covey: g });
+  }
+  // A mountain quail covey flushing: one voice on the covey's leader, the alarm "krrr"s of 2-3 birds then the whirr (_mqFlush).
+  // The clucks only within the alarm's range (ALARM, 150 m) and not when the species' alarm was voiced in the last second (a
+  // covey flushing on an alarm call); a flush with clucks marks that alarm time too, so an 'alarm' right after is not doubled.
+  _onMqFlush(e) {
+    const clucks = this._listenerDist(e.x, e.y, e.z) <= ALARM[MQ_CODE].range && this.t - (this.alarmT[MQ_CODE] ?? -9) >= 1;
+    const v = this._play('mquail', { x: e.x, y: e.y + 0.5, z: e.z }, e.covey?.leader || null, 'event', (w, t) => this._mqFlush(w, t, e.n || 8, clucks));
+    if (v && clucks) this.alarmT[MQ_CODE] = this.t;
   }
   // Acorn game v4: a woodpecker family rallying against a raider at its granary: the waka from the nearest bird, and a
   // second from a family member a moment later.
@@ -1286,14 +1356,28 @@ export class Soundscape {
     const p = this.flight.pos, a = Math.random() * Math.PI * 2, d = rand(50, 300), size = this.tile.size;
     const x = clamp(p.x + Math.cos(a) * d, 0, size), z = clamp(p.z + Math.sin(a) * d, -size, 0);
     const h = this.tile.habitat.at(x, -z);
-    let total = 0; const w = [];
-    for (const c of this.callers) { const wi = (c.hab[h] || 0) * c.rate * c.tod(act.chorus, act.day, act.noon) * act.season; w.push(wi); total += wi; }
+    let total = 0; const w = [], mo = this._animals()?.month;
+    for (const c of this.callers) {
+      const se = !c.months ? act.season : Number.isFinite(mo) ? c.months[(Math.floor(mo) + 11) % 12] : c.seasons?.[act.name] ?? act.season;
+      const wi = (c.hab[h] || 0) * c.rate * c.tod(act.chorus, act.day, act.noon) * se; w.push(wi); total += wi;
+    }
     if (Math.random() >= Math.min(1, total)) return;
     let r = Math.random() * total, i = 0; while (i < w.length - 1 && (r -= w[i]) > 0) i++;
-    const c = this.callers[i], bird = this._pick(c.code, REAL_R);
+    const c = this.callers[i];
+    if (c.bout && this.pending.some(p => p.key === c.key)) return;   // one bout of a species at a time
+    const bird = this._pick(c.code, c.r ?? REAL_R);
+    if (!bird && c.real) return;
     if (bird && c.key === 'woodpecker' && this._listenerDist(bird.x, bird.y, bird.z) < NEAR.waka.range) return;   // the near layer voices these
-    if (bird) this._play(c.key, this._onAnimal(bird), bird, 'animal');
+    if (bird) { if (this._play(c.key, this._onAnimal(bird), bird, 'animal') && c.bout) this._bout(c, bird); }
     else this._play(c.key, { x, y: this.tile.heights.atXZ(x, z) + rand(...c.height), z }, null, 'habitat');
+  }
+
+  // The rest of a CALLERS bout (`bout` [min, max] calls in all, `boutGap` [min, max] s apart) queued on the same bird; each is
+  // dropped when the bird is gone or the listener is beyond the caller's `r`.
+  _bout(c, a) {
+    const n = c.bout[0] + Math.floor(Math.random() * (c.bout[1] - c.bout[0] + 1));
+    let at = this.t;
+    for (let i = 1; i < n; i++) this.pending.push({ at: at += rand(...c.boutGap), key: c.key, animal: a, source: 'animal', range: c.r ?? REAL_R });
   }
 
   // ---- near layer: calls tied to the animals close by and their states --------------------------------------
@@ -1527,7 +1611,7 @@ export class Soundscape {
         let a = p.animal;
         if (p.covey) a = p.covey.leader || a;   // where the covey is now
         if (!a || (A?.alive && !A.alive(a))) continue;
-        if (this._listenerDist(a.x, a.y, a.z) > NEAR[p.key].range) continue;
+        if (this._listenerDist(a.x, a.y, a.z) > (p.range ?? NEAR[p.key].range)) continue;
         if (p.key === 'bark') this._squirrelAlarm(a, p.source);
         else this._play(p.key, this._onAnimal(a), a, p.source || 'near');
       }
@@ -1680,7 +1764,7 @@ export class Soundscape {
     // ambient birds: chorus at sunrise and sunset, a floor by day, almost nothing at night
     const day = smooth(-8, 3, elevDeg), noon = smooth(30, 55, elevDeg);
     const chorus = Math.exp(-(((elevDeg - 7) / 10) ** 2)) * (hour > 12 ? 0.85 : 1);
-    const act = { day, noon, chorus, season: SEASON_BIRDS[season] ?? 0.6 };
+    const act = { day, noon, chorus, season: SEASON_BIRDS[season] ?? 0.6, name: season };
     if (this.voices.length < MAX_VOICES && Math.random() < dt * 1.0) this._attempt(act);
     // the animals close by (near layer) and the calls waiting their turn
     if ((this.nearT += dt) > 0.25) { this._nearTick(this.nearT, elevDeg); this.nearT = 0; }

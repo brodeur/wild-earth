@@ -2111,3 +2111,14 @@ their highest brush; a flushed covey glides downhill into brush; hawks stoop at 
 `mtnquail` with the covey pilot. In the pipeline: RANGE 600-3,000 m on chaparral and mixed and conifer forest, prey
 of the hawk, coyote, fox and raven, ALARM_CALL 150 m, UNIT covey. Open: the female's shorter plume, plumes laid back
 when running, its quee-ark call in sound.js, the lineup's back-colour flag (the buff wing stripe is broad).
+
+Mountain quail voice (2026-10-28, an Opus lane; sound.js; verified here: a synthetic alarm logged "mountain quail
+alarm" and a flush "mountain quail" at 14-15 m with no errors). The male's "quee-ark" (rising 1.3 -> 1.9 kHz, a gap,
+falling 1.7 -> 1.1 kHz, a whistle with a breath of noise) is a CALLERS entry that plays only from a real bird within
+400 m (no random-spot fallback, since animals.js keeps the birds to their brush and 600-3,000 m), weighted by the
+month (April-June full, July half, fall and winter near silent) and given in bouts of 3-6 calls 4-8 s apart on the
+same bird, one bout per species at a time. Its covey's flush (species oreortyx_pictus, group null) is one voice:
+2-3 birds' trilled "krrr"/"quit" alarm clucks (2.5-3.5 kHz, 0.1 s notes) within 150 m, then the existing whirr
+without the California quail's pits or "chi-ca-go"; the same clucks are its ALARM entry (refDistance 12 m, range
+150 m), and a flush with clucks and an alarm within a second share the de-duplication time. The caller fields `r`,
+`real`, `bout` and `months` are optional and leave the other callers unchanged.
