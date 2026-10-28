@@ -39,17 +39,19 @@ import { bodyKind } from './playable.js';
 // velocity; and a small warm core sprite. Three draws (the ribbons and motes are one mesh), additive, no tone mapping,
 // no asset files. Everything nearer the lens than ~1.5 m fades out, so a trail passing under the camera does not blot it.
 
-const RIBBONS = 6, SEG = 40, RIB_LEN = 2.2, MIST = 7, MOTES = 22, HIST_T = 0.9;   // HIST_T s: how old a path point still shapes the ribbons
+const RIBBONS = 8, SEG = 40, RIB_LEN = 2.2, MIST = 7, MOTES = 22, HIST_T = 0.9;   // HIST_T s: how old a path point still shapes the ribbons
 // In flight the ribbons hang along the path the spirit has flown (a ring of past positions resampled every TRAIL_RS m,
 // HIST_N of them), so a turn leaves a curved trail in the air that the body pulls away from: the longest one is
 // TRAIL_T s of travel, at most TRAIL_MAX m (x 0.55-1 with the swell); hovering they shorten to the curl up and back
 // (RIB_LEN), blended by speed between TRAIL_SLOW and TRAIL_FAST m/s. Along a long trail the weave turns TRAIL_WAVE rad/m.
 const TRAIL_RS = 0.15, HIST_N = 160, TRAIL_T = 0.8, TRAIL_MAX = 14, TRAIL_SLOW = 1.5, TRAIL_FAST = 10, TRAIL_WAVE = 0.9;
-// The six ribbons differ so they never fall into step: the first three as the wisp was first made (a short, a middle and
-// a long one), then three more of the same kind, each shorter than the last (owner, 2026-10-27): lengths (x RIB_LEN),
-// weave periods (x RIB_PERIOD s; ratios with no simple multiples), weave radii (x the base) and starting phases (rad).
-const RIB_LENS = [1, 1.4, 1.9, 0.75, 0.55, 0.4], RIB_PERIOD = 4.2, RIB_PERIODS = [1, 1.31, 1.73, 0.87, 1.13, 0.79];
-const RIB_RADII = [1, 0.8, 1.18, 0.9, 0.7, 0.6], RIB_PHASES = [0, 2.3, 4.1, 1.1, 3.4, 5.2];
+// The eight ribbons differ so they never fall into step: the first three as the wisp was first made (a short, a middle
+// and a long one), then three more of the same kind, each shorter than the last, then a medium and a short one that
+// weave the other way round the spine (a negative period) at a lower brightness (RIB_ALPHA) (owner, 2026-10-27):
+// lengths (x RIB_LEN), weave periods (x RIB_PERIOD s; ratios with no simple multiples), weave radii (x the base),
+// starting phases (rad) and brightness (x the base).
+const RIB_LENS = [1, 1.4, 1.9, 0.75, 0.55, 0.4, 1.0, 0.55], RIB_PERIOD = 4.2, RIB_PERIODS = [1, 1.31, 1.73, 0.87, 1.13, 0.79, -1.07, -0.93];
+const RIB_RADII = [1, 0.8, 1.18, 0.9, 0.7, 0.6, 0.85, 0.65], RIB_PHASES = [0, 2.3, 4.1, 1.1, 3.4, 5.2, 0.6, 2.9], RIB_ALPHA = [1, 1, 1, 1, 1, 1, 0.65, 0.65];
 // The wisp at rest is REST_SCALE of its full size (RIB_LEN etc. are the full size) and REST_LUM of its full brightness;
 // near a body it can inhabit it swells: from SWELL_FAR m off to full at the contact radius (smoothstep with distance,
 // eased at SWELL_K 1/s so animals coming and going do not make it flicker), its ribbons and mist turning up to
@@ -669,7 +671,7 @@ export class Wisp {
     // the ribbons: woven round the spine, camera-facing, tapering and fading
     const rp = this.rp, rc = this.rc, n1 = this._n1, n2 = this._n2, side = this._s, c = this._q;
     for (let r = 0; r < RIBBONS; r++) {
-      const om = 2 * Math.PI / (RIB_PERIOD * RIB_PERIODS[r]), ph = RIB_PHASES[r], Lr = L * RIB_LENS[r], breathe = 1 + 0.18 * Math.sin(1.3 * t / RIB_PERIODS[r] + r * 1.7);
+      const om = 2 * Math.PI / (RIB_PERIOD * RIB_PERIODS[r]), ph = RIB_PHASES[r], Lr = L * RIB_LENS[r], breathe = 1 + 0.18 * Math.sin(1.3 * t / Math.abs(RIB_PERIODS[r]) + r * 1.7);   // a negative period weaves the other way
       for (let j = 0; j <= SEG; j++) {
         const u = j / SEG, x = u * Lr / step, i0 = Math.min(SEG - 1, Math.floor(x)), fr = x - i0;   // this ribbon's point along the spine
         const T = this._t.copy(this.tan[i0]).lerp(this.tan[i0 + 1], fr).normalize();
@@ -680,7 +682,7 @@ export class Wisp {
         const hw = (0.12 - 0.07 * u) * ks * (0.4 + 0.6 * grow), v = (r * (SEG + 1) + j) * 2;
         rp[v * 3] = c.x - side.x * hw; rp[v * 3 + 1] = c.y - side.y * hw; rp[v * 3 + 2] = c.z - side.z * hw;
         rp[v * 3 + 3] = c.x + side.x * hw; rp[v * 3 + 4] = c.y + side.y * hw; rp[v * 3 + 5] = c.z + side.z * hw;
-        const w = smooth(Math.min(1, u * 2.2)), f = 0.75 * lum * (1 - u) ** 1.1 * Math.min(bright, 2.5) * (0.85 + 0.15 * Math.sin(3 * t - 6 * u + r));
+        const w = smooth(Math.min(1, u * 2.2)), f = 0.75 * lum * RIB_ALPHA[r] * (1 - u) ** 1.1 * Math.min(bright, 2.5) * (0.85 + 0.15 * Math.sin(3 * t - 6 * u + r));
         const cr = (WARM.r * (1 - w) + COOL.r * w) * f, cg = (WARM.g * (1 - w) + COOL.g * w) * f, cb = (WARM.b * (1 - w) + COOL.b * w) * f;
         rc.set([cr, cg, cb, cr, cg, cb], v * 3);
       }

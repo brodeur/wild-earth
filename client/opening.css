@@ -77,6 +77,8 @@ html:not(.opening) #opening:not(.out) { display:none; }
 .op-wisp { --ws:min(200px, 52cqw); position:absolute; left:0; top:0; width:var(--ws); height:var(--ws); margin:calc(var(--ws) / -2) 0 0 calc(var(--ws) / -2);
   background:url(assets/opening/wisp.webp) 0 0 / calc(var(--ws) * 8) calc(var(--ws) * 6) no-repeat; opacity:0; visibility:hidden; pointer-events:none;
   mix-blend-mode:plus-lighter; transition:opacity .25s ease, visibility 0s linear .25s; }
+.op-wisp.live { background:none; }   /* the live wisp (wispLoop.js): the canvas in place of the sprite sheet */
+.op-wisp.live canvas { position:absolute; inset:0; width:100%; height:100%; display:block; }
 .op-wisp::after { content:''; position:absolute; inset:28%; border-radius:50%; background:radial-gradient(closest-side, #ffe8c055, #ffe8c000); animation:op-glow 2.4s ease-in-out infinite; }
 .op-tile.loading .op-wisp, .op-tile.ready .op-wisp { visibility:visible; transition-delay:0s;
   animation:op-wx .2s steps(8) infinite, op-wy 1.2s steps(6) infinite; }
@@ -111,15 +113,30 @@ html:not(.opening) #opening:not(.out) { display:none; }
 .op-an > i { display:block; width:100%; height:100%; }
 .op-an img { display:block; width:100%; height:100%; }
 .op-an.flip img { transform:scaleX(-1); }
-.op-an.in { animation:op-pop .55s cubic-bezier(.2, 1.5, .4, 1) both; }   /* its delay: inline, set once as it loads */
+/* Arrivals and departures (owner, 2026-10-27, "dancing pillars of light, like Star Trek"): each animal beams in under a
+   column of shimmering light (::after: a tall soft column with fine bright streaks running up it, flickering), the
+   still forming inside it from a bright blur; a tile change beams the whole lineup out the same way and the new tile's
+   animals in, one by one. Its delay: inline, set once as it loads. */
+.op-an.in, .op-an.out { opacity:1; }   /* the base rule starts a still at 0; the inner's animation fades it in */
+.op-an.in > i { animation:op-materialize 1.5s ease-out both; animation-delay:inherit; }
+.op-an.out > i { animation:op-dematerialize 1.1s ease-in both; }
 .op-an.ground::before { content:''; position:absolute; left:8%; right:8%; bottom:-3%; height:max(4px, 9%); border-radius:50%; background:radial-gradient(closest-side, #000a, #0000); z-index:-1; }
 .op-an::after { content:''; position:absolute; left:50%; top:50%; width:max(70px, 140%); aspect-ratio:1; margin:0; translate:-50% -50%; border-radius:50%; pointer-events:none;
   background:radial-gradient(closest-side, #fffaf0 0%, #fff1d8cc 18%, #ffe6be40 50%, #ffe6be00 100%); mix-blend-mode:plus-lighter; opacity:0; scale:.25; }
-.op-an.in::after { animation:op-glimmer .42s ease-out both; animation-delay:inherit; }
+.op-an.in::after, .op-an.out::after { left:50%; right:auto; top:auto; bottom:-6%; width:max(18px, 40%); height:max(90px, 230%); aspect-ratio:auto; margin:0; translate:-50% 0; border-radius:40% / 6%; mix-blend-mode:plus-lighter;   /* a column at least 90 px tall whatever the still's size */
+  background:repeating-linear-gradient(90deg, #dff2ff00 0px, #ffffffcc 1px, #dff2ff00 2px, #dff2ff00 5px), repeating-linear-gradient(0deg, #cfe9ff00 0px, #e8f6ffa0 2px, #cfe9ff00 6px), linear-gradient(180deg, #bfe3ff00 0%, #dff2ffb0 25%, #e8f6ffd0 60%, #bfe3ff30 100%);
+  background-size:7px 100%, 100% 60px, 100% 100%; opacity:0; scale:1 1; filter:blur(.4px); }
+.op-an.in::after { animation:op-pillar 1.5s linear both, op-dance .32s steps(4) infinite; animation-delay:inherit; }
+.op-an.out::after { animation:op-pillar-out 1.1s linear both, op-dance .32s steps(4) infinite; }
 .op-an.bird.in > i { animation:op-float var(--fd, 6s) ease-in-out infinite alternate; }
 .op-an.gone { animation:op-gone .4s ease forwards; }   /* a species the newly chosen tile does not have */
 @keyframes op-gone { from { opacity:1; transform:scale(1); } to { opacity:0; transform:scale(.6); } }
 @keyframes op-pop { 0% { opacity:0; transform:scale(.3); } 60% { opacity:1; } 100% { opacity:1; transform:scale(1); } }
+@keyframes op-materialize { 0% { opacity:0; filter:brightness(6) saturate(0) blur(3px); } 35% { opacity:.6; filter:brightness(4) saturate(.2) blur(2px); } 75% { opacity:1; filter:brightness(1.8) saturate(.8) blur(.5px); } 100% { opacity:1; filter:none; } }
+@keyframes op-dematerialize { 0% { opacity:1; filter:none; } 30% { opacity:1; filter:brightness(3) saturate(.3) blur(1px); } 100% { opacity:0; filter:brightness(6) saturate(0) blur(3px); } }
+@keyframes op-pillar { 0% { opacity:0; scale:.6 .2; } 15% { opacity:1; scale:1 1; } 70% { opacity:.9; } 100% { opacity:0; scale:.8 1.05; } }
+@keyframes op-pillar-out { 0% { opacity:0; scale:.8 .5; } 25% { opacity:1; scale:1 1; } 100% { opacity:0; scale:.5 1.1; } }
+@keyframes op-dance { from { background-position:0 0, 0 0, 0 0; } to { background-position:-7px 0, 0 -60px, 0 0; } }
 @keyframes op-glimmer { 0% { opacity:0; scale:.25; } 18% { opacity:1; } 100% { opacity:0; scale:1.4; } }
 @keyframes op-float { 0% { transform:translate(0, 0) rotate(-2deg); } 50% { transform:translate(calc(var(--fx, 8px) * .5), -6px) rotate(1deg); } 100% { transform:translate(var(--fx, 8px), 3px) rotate(2deg); } }
 

@@ -1652,3 +1652,28 @@ placed every frame, removed when the body is left. Verified in a herd of four: n
 bottom edge for the member behind the camera. The wisp (spirit.js): six ribbons, the first three as before and three more
 of the same kind at 0.75, 0.55 and 0.4 of the base length with their own weave periods, radii and phases; the spine still
 runs the longest one's length.
+
+## 2026-10-27: the start screen's wisp is the live one; eight tendrils; the animals beam in under pillars of light
+
+Aaron: the first-load wisp "is irregularly shaped and spins at a weird angle; make it a rendered wisp, even lo-res,
+flying in a circle, a glowing ball with ribbons trailing behind"; "for the in-game wisp one medium and one short ribbon
+more, spinning the opposite direction at a slightly lower opacity"; on the start screen, loading a second tile "the
+animals just move to the new tile; the new tile could be a completely different continent; the animals should come in as
+their own sequence, with dancing pillars of light, similar to Star Trek". wispLoop.js: the real Wisp (spirit.js) in a
+256 px canvas of its own with a small renderer, flying one anticlockwise lap of a 0.45 m circle every 1.6 s, seen from
+above at a slant; it takes the dark start's slot and then a loading card's (one live wisp serves the screen), the sprite
+sheet's inline background removed; disposed with the screen. The page composites a WebGL canvas as premultiplied
+colour, where no channel may exceed the alpha, and the wisp's additive materials write light with no alpha (so the
+mist's and ribbons' quads came out as dark squares, then, with a custom blend, vanished): the scene renders to an opaque
+black target and a full-canvas quad writes it as light, alpha the brightest channel, so only the light reaches the page.
+spirit.js: eight ribbons, the sixth and seventh added last (0.75, 0.55, 0.4 of the base) and now a medium and a short
+one (1.0, 0.55) with negative weave periods, the other way round the spine, at 0.65 brightness (RIB_ALPHA). The
+transporter (opening.css, arrival.js lineup): each still arrives inside a column of light (its ::after: a soft column at
+least 90 px tall with fine bright streaks running up it, stepping at 4 frames per 0.32 s, plus-lighter) while the still
+forms from a bright, desaturated blur over 1.5 s, staggered as before; on a tile change the whole lineup beams out the
+same way over 1.1 s (shared species included) and the new tile's animals come in after it; the old op-pop and glimmer
+are gone, and since the base rule starts a still at opacity 0 the in and out states set it to 1. Verified: the card's
+live wisp as a glowing ball with a trailing ribbon; a change from the home card to Placerville with 18 out and 18 in,
+the pillars standing over the lion, fox and turkey as they went and over each arrival. Found on the way: the browser
+kept an old opening.css while the page was fresh, so the stylesheet link now carries a version query. Known: the first
+load's boot is too short to see its wisp with cached assets; the pillars read as a fine grid at close range.

@@ -2,6 +2,7 @@ import * as THREE from 'three';
 import { pointInTileId } from './goto.js';
 import { SEASONS, seasonOfDate, parseDate } from './season.js';
 import { PlaceNames } from './placenames.js';
+import { WispLoop } from './wispLoop.js';
 
 // The weather words come from weather.js when it is there (loaded apart, so the screen still opens without it:
 // dayWords below has its own small table until then, and the label is redrawn once the module arrives).
@@ -190,6 +191,8 @@ export class OpeningScreen {
     }, { passive: false });
     // the lineup follows the chosen card when the row scrolls or the window changes (its positions are CSS from these)
     this.place = () => this.placeLineup();
+    // the wisp, live (wispLoop.js): in the dark start's slot, then a loading card's
+    try { this.wispLoop = new WispLoop(); this.wispLoop.attach(this.$('.op-boot .op-wisp')); } catch (e) { console.warn('opening: live wisp unavailable, the sprite sheet stays', e); this.wispLoop = null; }
     this.relayout = () => this.layoutCards();
     row.addEventListener('scroll', this.place, { passive: true }); addEventListener('resize', this.relayout);
     // a hovering pointer (not touch) grows the card under it a little and steps the rest back (layoutCards)
@@ -296,7 +299,7 @@ export class OpeningScreen {
     const card = this.cardOf(id);
     card.classList.add('sel'); card.querySelector('.op-pick').setAttribute('aria-pressed', 'true');
     card.querySelector('.op-status').textContent = this.status[id] || 'loading…';
-    if (this.readyIds.has(id)) this.showReady(card); else card.classList.add('loading');
+    if (this.readyIds.has(id)) this.showReady(card); else { card.classList.add('loading'); this.wispLoop?.attach(card.querySelector('.op-wisp')); }
     this.layoutCards(); this.centreCard(true);
     this.lineup(id);
     this.loadWeather(id).then(() => this.update());
@@ -362,8 +365,13 @@ export class OpeningScreen {
     let acc = 0;
     const items = order.map((c, i) => { const f = (acc + wts[i] / 2) / sum; acc += wts[i]; return { c, x: (f - 0.5) * SPAN, back: i % 2 === 1 }; })
       .concat(birds.map((c, k) => ({ c, bird: k })));
-    // the ones not in this tile go
-    for (const [c, el] of this.anEls) if (!known.includes(c)) { el.classList.add('gone'); this.anEls.delete(c); setTimeout(() => el.remove(), 500); }
+    // another tile's lineup beams out whole (opening.css .out), and this tile's animals come in as their own sequence
+    // after it, shared species included (owner, 2026-10-27: a new tile may be another continent)
+    if (this.lineupTile && this.lineupTile !== id && this.anEls.size) {
+      for (const el of this.anEls.values()) { el.classList.remove('in'); el.classList.add('out'); el.style.animationDelay = '0s'; setTimeout(() => el.remove(), 1200); }
+      this.anEls = new Map(); this.popAt = performance.now() / 1000 + 0.7;
+    }
+    this.lineupTile = id;
     for (const it of items.sort(() => rnd() - 0.5)) {   // new ones created, so loaded, in a random order
       const sp = index.species[it.c], k = PX_PER_M_CARD / sp.px_per_m;   // card heights per still pixel
       const s = it.bird == null && it.back ? 0.92 : 1;   // the back row a step further off
@@ -515,6 +523,7 @@ export class OpeningScreen {
     document.activeElement?.blur?.();
     this.root.classList.add('out');
     this.closed = true; removeEventListener('resize', this.relayout);
+    this.wispLoop?.dispose(); this.wispLoop = null;
     setTimeout(() => { this.root.hidden = true; this.root.innerHTML = ''; }, 900);
   }
 }
