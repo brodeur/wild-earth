@@ -308,7 +308,7 @@ export class GroundControl {
     if (this.mode === 'ground') this.trunkPush(P);
     this.draw(dt);
     this.updateCamera(dt);
-    if (this.herd) { this.marks.update(this.herd.g, this.herd.a, (S.shoulder || 0.3) * 0.5); this.sil.update(this.herd.g, this.herd.a); } else { if (this.marks.marks.size) this.marks.clear(); this.sil.clear(); }
+    if (this.herd) { this.marks.update(this.herd.g, this.herd.a, (S.shoulder || 0.3) * 0.5); this.sil.update(this.herd.g, this.herd.a, this.body?.mesh || null); } else { if (this.marks.marks.size) this.marks.clear(); this.sil.clear(); }
     this.last.copy(P);
     const ground = Math.max(this.heights.atXZ(P.x, P.z), this.wet ? this.wet.surf : -Infinity);
     const speed = this.mode === 'fly' ? this.fl.v : this.mode === 'air' ? Math.hypot(this.vel.x, this.vel.z) : Math.abs(this.v);
