@@ -196,6 +196,7 @@ release, WebGL) was still running; its commit, if it verified, is the last in `g
 | 5f7e7a0 | The world hunts without you: prey now react to the nearest predator they notice, AI or player; jays, woodpeckers, quail, squirrels, deer and ravens call at a fox, coyote, lion or hawk; a lion stalks a herd and rushes it, foxes and coyotes trot at voles and rabbits and pounce, hawks stoop at voles. Nothing is killed yet. |
 | cd93e27 | Waterfalls: wherever a drawn stream drops steeply there is a white curtain, foam and mist; Yosemite Falls shows in spring as a 415 m upper fall, cascades and a 106 m lower fall (dry in autumn, as in life). |
 | f33df90 | The hunt ends: as a lion, coyote or fox, E within reach catches prey (your hunger fills); an AI rush or pounce that lands sometimes kills; the dead lie where they fell for ten minutes and ravens, vultures and coyotes come to them. Your call to keep: predation now ends in a death. |
+| d6a669d | As a hawk or raven, a pass within reach of a vole, rabbit or jackrabbit takes it: the stoop that connects is the strike. |
 
 Open from the day: the attribution form for generated assets; far placement on the lidar ground beyond the fine square; the squirrel's
 crown camera in leafy oaks.
