@@ -1,4 +1,5 @@
 import * as THREE from 'three';
+import { releaseTexture } from './gpuRelease.js';
 
 // Shared atmosphere: one set of uniforms and one GLSL chunk used by every material, so the
 // terrain, trees, impostors, grass and sky dome all see the same air. Aerial perspective is two
@@ -303,7 +304,7 @@ function cloudNoiseTexture(size = 512) {
   const t = new THREE.DataTexture(data, size, size, THREE.RGBAFormat, THREE.UnsignedByteType);
   t.wrapS = t.wrapT = THREE.RepeatWrapping; t.magFilter = THREE.LinearFilter; t.minFilter = THREE.LinearMipmapLinearFilter;
   t.colorSpace = THREE.NoColorSpace; t.generateMipmaps = true; t.anisotropy = 4; t.needsUpdate = true;
-  return t;
+  return releaseTexture(t);   // its bytes go once uploaded (gpuRelease.js)
 }
 
 // The baked shadow: a full-screen pass that, for each point of the cloud base around the camera,

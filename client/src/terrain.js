@@ -1,6 +1,7 @@
 import * as THREE from 'three';
 import { drain } from './slice.js';
 import { uploadImageSteps, canBand } from './gpuUpload.js';
+import { releaseGeometry, releaseTexture } from './gpuRelease.js';
 import { uniforms as atmo, ATMOSPHERE_GLSL } from './atmosphere.js';
 import { windUniforms, WIND_GLSL } from './wind.js';
 import { GroundDetail, detailUniforms, DETAIL_GLSL, buildDetailMaskSteps, resetDetailUniforms } from './groundDetail.js';
@@ -273,7 +274,7 @@ function riparianMask(tile) {
   const t = new THREE.DataTexture(a, W, H, THREE.RedFormat, THREE.UnsignedByteType);
   t.unpackAlignment = 1; t.magFilter = THREE.LinearFilter; t.minFilter = THREE.LinearMipmapLinearFilter; t.generateMipmaps = true;
   t.needsUpdate = true;
-  return t;
+  return releaseTexture(t);   // its bytes go once uploaded (gpuRelease.js)
 }
 
 // The constructor only records its arguments; build() (a generator main.js steps with slice.js runSliced, a terrain
@@ -327,9 +328,13 @@ export class Terrain {
         uv.setXY(k, x / size, north / size);
       }
       g.computeVertexNormals(); g.computeBoundingSphere();
+      // Positions, normals and uvs go once uploaded (gpuRelease.js; 31 MB a tile): the heights are tile.heights, the uv is
+      // x / size, and the normals are made again where the fine mesh needs them (chunkVertexNormal). The index stays:
+      // FineTerrain.hole rewrites it.
+      releaseGeometry(g, { keepIndex: true });
       const mesh = new THREE.Mesh(g, this.material); mesh.frustumCulled = true;
       this.group.add(mesh);
-      this.chunks.push({ mesh, g, x0, north1, full: g.index.array.slice(), holed: false });
+      this.chunks.push({ mesh, g, x0, north1, holed: false });
       yield;
     }
     // Near the player, on a tile with the lidar residual: a 2 m mesh of the 1 m ground (see FineTerrain).
@@ -483,6 +488,34 @@ export class Terrain {
 // (either axis) from the centre a new square is computed in slices (a time budget per frame) into
 // staging arrays and swapped in in one frame, coarse hole and Heightfield.ground's grid with it.
 const FINE_HALF = 110, FINE_BAND = 20, FINE_RECENTRE = 10, FINE_SKIRT = 0.6, FINE_BUDGET_MS = 1.5;
+// A coarse chunk's vertex normal, as THREE.BufferGeometry.computeVertexNormals made it in Terrain.build: the plane's
+// triangles that meet at vertex (column ix, row iy) — quad (qx, qy) is (a, b, d) then (b, c, d) with a = qx + nv * qy,
+// b a row south, c and d a column east, the quads in row order — each face's unnormalised cross product added in that
+// order and rounded to float32 at each step as the attribute array rounded it, then normalised as Vector3 does. The
+// positions are made as the build made them (PlaneGeometry's float32 corner plus the chunk's origin, the height from
+// H.vert at the same double), so the result is what the array held, bit for bit (checked over every vertex of the
+// home tile's 100 chunks before the arrays were let go).
+function chunkVertexNormal(H, ch, nv, cs, ix, iy) {
+  const q = nv - 1, sw = cs / q, f = Math.fround;
+  const P = (i, j) => {
+    const lx = f(i * sw - cs / 2) + cs / 2, lz = f(j * sw - cs / 2) + cs / 2, x = ch.x0 + lx, north = ch.north1 - lz;
+    return [f(x), f(H.vert(x, north)), f(-north)];
+  };
+  let nx = 0, ny = 0, nz = 0;
+  const face = (A, B, C) => {   // cb x ab, accumulated as computeVertexNormals does
+    const cbx = C[0] - B[0], cby = C[1] - B[1], cbz = C[2] - B[2], abx = A[0] - B[0], aby = A[1] - B[1], abz = A[2] - B[2];
+    nx = f(nx + (cby * abz - cbz * aby)); ny = f(ny + (cbz * abx - cbx * abz)); nz = f(nz + (cbx * aby - cby * abx));
+  };
+  const quad = (qx, qy, first, second) => {
+    if (qx < 0 || qy < 0 || qx >= q || qy >= q) return;
+    const a = P(qx, qy), b = P(qx, qy + 1), c = P(qx + 1, qy + 1), d = P(qx + 1, qy);
+    if (first) face(a, b, d);
+    if (second) face(b, c, d);
+  };
+  quad(ix - 1, iy - 1, false, true); quad(ix, iy - 1, true, true); quad(ix - 1, iy, true, true); quad(ix, iy, true, false);
+  const k = 1 / (Math.sqrt(nx * nx + ny * ny + nz * nz) || 1);
+  return [f(nx * k), f(ny * k), f(nz * k)];
+}
 class FineTerrain {
   constructor(terrain) {
     this.terrain = terrain; this.H = terrain.tile.heights; this.size = terrain.tile.size;
@@ -555,7 +588,7 @@ class FineTerrain {
         if (t >= 1) { J.y[k] = H.at(x, north); continue; }
         const c = H.coarse(x, north);
         J.y[k] = t > 0 ? c + t * (H.at(x, north) - c) : c;
-        this.coarseNormal(x, north, nc); J.nc[k * 3] = nc.x; J.nc[k * 3 + 1] = nc.y; J.nc[k * 3 + 2] = nc.z;
+        this.coarseNormal(x, north, nc, J); J.nc[k * 3] = nc.x; J.nc[k * 3 + 1] = nc.y; J.nc[k * 3 + 2] = nc.z;
       }
       if (performance.now() - t0 > budget) { J.ms += performance.now() - t0; return false; }
     }
@@ -585,20 +618,25 @@ class FineTerrain {
   vx(J, i, j) { const x = J.xs[i]; return (j === 0 || j === this.n - 1) && (x - 1) % 10 === 0 ? x - 1 : x; }
   vn(J, i, j) { const v = J.ns[j]; return (i === 0 || i === this.n - 1) && (v - 1) % 10 === 0 ? v - 1 : v; }
   // The coarse chunks' own vertex normal at a point, interpolated over the coarse triangle as its height is
-  // (so the fine edge shades exactly as the coarse mesh beside it).
-  coarseNormal(x, north, out) {
+  // (so the fine edge shades exactly as the coarse mesh beside it). The chunks' normal arrays are let go once
+  // uploaded (gpuRelease.js, 12 MB a tile), so the vertex normals are made again here (chunkVertexNormal), the
+  // value the array held, a few hundred per rebuild, cached on the job.
+  coarseNormal(x, north, out, J) {
     const T = this.terrain, { chunks, cs, nv, spacing: S } = T.chunkInfo, size = this.size, nMax = Math.round(size / S) - 1;
     const fx = x / S, fn = north / S, i0 = Math.min(Math.max(Math.floor(fx), 0), nMax), n0 = Math.min(Math.max(Math.floor(fn), 0), nMax);
     const u = Math.min(Math.max(fx - i0, 0), 1), w = Math.min(Math.max(fn - n0, 0), 1);
     const cx = Math.min(Math.floor((i0 + 0.5) * S / cs), chunks - 1), cy = Math.min(Math.floor((size - (n0 + 0.5) * S) / cs), chunks - 1);
-    const ch = T.chunks[cy * chunks + cx], a = ch.g.attributes.normal.array;
-    const v = (X, N) => (Math.round((ch.north1 - N) / S) * nv + Math.round((X - ch.x0) / S)) * 3;
-    const SW = v(i0 * S, n0 * S), SE = v((i0 + 1) * S, n0 * S), NW = v(i0 * S, (n0 + 1) * S), NE = v((i0 + 1) * S, (n0 + 1) * S);
-    for (let c = 0; c < 3; c++) {
-      const sw = a[SW + c], se = a[SE + c], nw = a[NW + c], ne = a[NE + c];
-      out.setComponent(c, w > u ? sw + u * (ne - nw) + w * (nw - sw) : sw + u * (se - sw) + w * (ne - se));
-    }
+    const ci = cy * chunks + cx, ch = T.chunks[ci];
+    const v = (X, N) => this.chunkNormal(ci, ch, Math.round((X - ch.x0) / S), Math.round((ch.north1 - N) / S), J);
+    const sw = v(i0 * S, n0 * S), se = v((i0 + 1) * S, n0 * S), nw = v(i0 * S, (n0 + 1) * S), ne = v((i0 + 1) * S, (n0 + 1) * S);
+    for (let c = 0; c < 3; c++) out.setComponent(c, w > u ? sw[c] + u * (ne[c] - nw[c]) + w * (nw[c] - sw[c]) : sw[c] + u * (se[c] - sw[c]) + w * (ne[c] - se[c]));
     return out.normalize();
+  }
+  chunkNormal(ci, ch, ix, iy, J) {
+    const { nv, cs } = this.terrain.chunkInfo, key = (ci * nv + iy) * nv + ix, cache = J.normals ??= new Map();
+    let n = cache.get(key);
+    if (!n) { n = chunkVertexNormal(this.H, ch, nv, cs, ix, iy); cache.set(key, n); }
+    return n;
   }
   commit(J) {
     const t0 = performance.now(), n = this.n, g = this.geo, size = this.size;
@@ -623,24 +661,26 @@ class FineTerrain {
     const st = this.stats; st.builds++; st.lastMs = Math.round(J.ms * 100) / 100; st.lastFrames = J.frames;
     st.commitMs = Math.round((performance.now() - t0) * 100) / 100;
   }
-  // Re-index the coarse chunks the old or new square touches: every quad wholly inside the new square is dropped.
+  // Re-index the coarse chunks the old or new square touches: every quad wholly inside the new square is dropped. The
+  // index is written again in the plane's own order (THREE.PlaneGeometry: quad (ix, iy) is the triangles (a, b, d) and
+  // (b, c, d) with a = ix + nv * iy, b below it, c and d one column east), so no copy of the full index is kept.
   hole(old, J) {
-    const T = this.terrain, { cs, nv, spacing: S } = T.chunkInfo, q = nv - 1;
+    const T = this.terrain, { cs, nv, spacing: S } = T.chunkInfo, q = nv - 1, full = q * q * 6;
     for (const ch of T.chunks) {
       const hit = R => R && R.x0 < ch.x0 + cs && R.x1 > ch.x0 && R.n0 < ch.north1 && R.n1 > ch.north1 - cs;
       if (!hit(J) && !(ch.holed && hit(old))) continue;
-      const idx = ch.g.index, out = idx.array, full = ch.full;
+      const idx = ch.g.index, out = idx.array;
       let m = 0;
       for (let iy = 0; iy < q; iy++) {
         const nTop = ch.north1 - iy * S, nBot = nTop - S, rowIn = nBot >= J.n0 && nTop <= J.n1;
         for (let ix = 0; ix < q; ix++) {
           const xl = ch.x0 + ix * S;
           if (rowIn && xl >= J.x0 && xl + S <= J.x1) continue;
-          const o = (iy * q + ix) * 6;
-          for (let c = 0; c < 6; c++) out[m++] = full[o + c];
+          const a = ix + nv * iy, b = a + nv, c = b + 1, d = a + 1;
+          out[m++] = a; out[m++] = b; out[m++] = d; out[m++] = b; out[m++] = c; out[m++] = d;
         }
       }
-      ch.g.setDrawRange(0, m); idx.needsUpdate = true; ch.holed = m < full.length;
+      ch.g.setDrawRange(0, m); idx.needsUpdate = true; ch.holed = m < full;
     }
   }
 }

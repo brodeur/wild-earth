@@ -5,6 +5,7 @@ import { SEASON_LOOK } from './season.js';
 import { rockKeep } from './tilepackage.js';
 import { hasCrowns, loadCrowns, planCrownsSteps, oldClassOf, crownId, crownOf, SCALE, ASPECT } from './crowns.js';
 import { runSliced, drain } from './slice.js';
+import { releaseGeometry } from './gpuRelease.js';
 
 // Species mix per habitat class (codes from pipeline/habitat.py). Weights sum to 1. Ids may be the
 // short aliases; trees.js maps them to the species library (library/species/<id>.json).
@@ -446,11 +447,16 @@ export class Vegetation {
         const g = t.canopy; if (!g.boundingBox) g.computeBoundingBox();
         const b = g.boundingBox; entry.radius = Math.max(0.5, (b.max.x - b.min.x + b.max.z - b.min.z) / 4);   // mean crown half-width
       }
+      // The CPU arrays go once uploaded (gpuRelease.js). The near tier keeps what identify.js's pick raycasts (position and
+      // index; the canopy's uv and leafRank for opaque()); the mid tier keeps nothing (shadows.js takes its bounds, computed here).
+      if (lod === 'near') { releaseGeometry(t.trunk, { keep: ['position'], keepIndex: true }); releaseGeometry(t.canopy, { keep: ['position', 'uv', 'leafRank'], keepIndex: true }); }
+      else { releaseGeometry(t.trunk); releaseGeometry(t.canopy); }
     }
     yield;
     const c = buildTree(id, seed, 'close'), ccap = CLOSE_CAP[spec.shrub ? 'shrub' : 'tree'];
     yield;
     const closeSeat = seatAttr(ccap); c.canopy.setAttribute('seatDc', closeSeat); if (c.twigs) c.twigs.setAttribute('seatDc', closeSeat);
+    releaseGeometry(c.canopy, { keep: ['position', 'uv', 'leafRank'], keepIndex: true }); if (c.twigs) releaseGeometry(c.twigs);   // as the near canopy: picked within CLOSE_R
     const closeCanopy = new THREE.InstancedMesh(c.canopy, this.canopyMat[id].close, ccap);
     closeCanopy.count = 0; closeCanopy.frustumCulled = false; closeCanopy.visible = false;
     this.group.add(closeCanopy);

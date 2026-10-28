@@ -2,6 +2,7 @@ import * as THREE from 'three';
 import { uniforms as atmo, ATMOSPHERE_GLSL } from './atmosphere.js';
 import { SEASON_LOOK } from './season.js';
 import { loadImageData } from './tilepackage.js';
+import { releaseGeometry } from './gpuRelease.js';
 
 // Water in the streams and ponds, by season (docs/roadmap.md, browser push item 5).
 //
@@ -437,6 +438,7 @@ export class Water {
     this.pondsSeasonal = new THREE.Mesh(merge(seasonal), this.pondMaterial); this.pondsSeasonal.renderOrder = 3;
     this.pondBeds = new THREE.Mesh(merge(dry), this.pondBedMaterial);
     this.group.add(this.ponds, this.pondsSeasonal, this.pondBeds);
+    for (const m of [this.ponds, this.pondsSeasonal, this.pondBeds]) releaseGeometry(m.geometry);   // read by nothing after this (the squirrel uses pondRings)
     return rings;
   }
 
@@ -525,6 +527,7 @@ export class Water {
     this.stats.reaches = reaches; this.stats.skippedInPond = skippedInPond;
     this.sectionIndex(sec);
     this.beds = new THREE.Mesh(bed.geometry(), this.bedMaterial);
+    releaseGeometry(this.beds.geometry);   // the dry beds' arrays go once uploaded (gpuRelease.js); the streams keep theirs: squirrelControl.js streamAt reads them
     this.streams = {};
     for (const c of CLASSES) { this.streams[c] = new THREE.Mesh(water[c].geometry(), this.waterMaterial); this.group.add(this.streams[c]); }
     this.group.add(this.beds);
