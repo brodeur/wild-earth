@@ -168,6 +168,7 @@ release, WebGL) was still running; its commit, if it verified, is the last in `g
 | ef24ad6 | The bar's discs glow in each species' soul colour, purple to red along the row, instead of a black shadow. |
 | 2f9474e | The tree and plant labels show only while the menu is open; the animals' tags are unchanged. |
 | 30105b8 | The ground animals' camera sits 1.3 times higher and pitches so the body's centre lands 27% up from the bottom of the screen, whatever its size; deer and vole checked. |
+| 97a4440 | Rarity now ranks the game's expected population per species, vole to mountain lion, the same on every tile; the GBIF counts ranked reports and made a lion green on Cosumnes. |
 
 Open from the day: the attribution form for generated assets; far placement on the lidar ground beyond the fine square; the squirrel's
 crown camera in leafy oaks.
