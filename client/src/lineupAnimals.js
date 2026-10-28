@@ -42,6 +42,7 @@ const DRAWN = {
   canis_latrans: { file: 'coyote.glb', loader: 'loadCoyoteMesh' },
   urocyon_cinereoargenteus: { file: 'fox.glb', loader: 'loadFoxMesh' },
   puma_concolor: { file: 'cougar.glb', loader: 'loadCougarMesh' },
+  ursus_americanus: { file: 'bear.glb', loader: 'loadBearMesh' },
   sylvilagus_bachmani: { file: 'rabbit.glb', loader: 'loadRabbitMesh' },
   lepus_californicus: { file: 'jackrabbit.glb', loader: 'loadJackrabbitMesh' },
   microtus_californicus: { file: 'vole.glb', loader: 'loadVoleMesh' },
@@ -59,6 +60,7 @@ const PROC = {
   urocyon_cinereoargenteus: 'buildFox', canis_latrans: 'buildCoyote', puma_concolor: 'buildCougar',
   sylvilagus_bachmani: 'buildRabbit', lepus_californicus: 'buildJackrabbit', microtus_californicus: 'buildVole', cyanocitta_stelleri: 'buildStellersJay',
   meleagris_gallopavo: 'buildTurkey', otospermophilus_beecheyi: 'buildGroundSquirrel', sceloporus_occidentalis: 'buildLizard',
+  ursus_americanus: 'buildBear',
 };
 // Body plan for the motion switch: quadruped, rodent (bounding pair, sits up), bird (ground bird: hops, flushes),
 // soarer (glides, flaps in bursts, perches), reptile (sprawling walk and sprint with the spine wave, basks, pushes up).
@@ -67,20 +69,22 @@ const PLAN = {
   sciurus_griseus: 'rodent', sylvilagus_bachmani: 'rodent', lepus_californicus: 'rodent', microtus_californicus: 'rodent',
   callipepla_californica: 'bird', aphelocoma_californica: 'bird', melanerpes_formicivorus: 'bird', cyanocitta_stelleri: 'bird',
   corvus_corax: 'soarer', buteo_jamaicensis: 'soarer', cathartes_aura: 'soarer',
-  meleagris_gallopavo: 'bird', otospermophilus_beecheyi: 'rodent', sceloporus_occidentalis: 'reptile',
+  meleagris_gallopavo: 'bird', otospermophilus_beecheyi: 'rodent', sceloporus_occidentalis: 'reptile', ursus_americanus: 'quadruped',
 };
 // Cycle rates (Hz) from animals.js: deer walk speed / 1.5 m at 1.1 m/s, squirrel bound 3.5, quail whirr 19 and
 // walk speed / 0.14, jay rowing 11, woodpecker 13, raven 2.6, hawk 2.4; fox, coyote and lion walk (MAMMAL walk speed
 // over the stride) and gallop (run), rabbit forage hop and bolt (1.1 m/s / 0.32 m, 5.5 / 0.9), jackrabbit lope and
 // bolt (4.5 m/s / 1.61 m, 14 / 4.27: animals.js JACK.bound), vole scurry
 // (0.55 m/s / 0.09 m, dash 1.6); turkey walk 0.35 m/s / 0.55 m and the flush's beat 5; ground squirrel feeding run
-// (0.5 / 0.16) and dash (3.6 / 0.32); fence lizard walk (0.6 / 0.1) and sprint (12, the cap).
+// (0.5 / 0.16) and dash (3.6 / 0.32); fence lizard walk (0.6 / 0.1) and sprint (12, the cap); black bear amble (1.0 m/s
+// over 0.9 m x 1.05) and run (9 m/s).
 const RATE = {
   odocoileus_hemionus: { walk: 0.73 }, canis_latrans: { walk: 1.28, run: 3.4 }, urocyon_cinereoargenteus: { walk: 1.45, run: 4 }, puma_concolor: { walk: 0.85, run: 2.6 },
   sciurus_griseus: { walk: 3.5 }, sylvilagus_bachmani: { walk: 3.4, run: 6.1 }, lepus_californicus: { walk: 2.8, run: 3.3 }, microtus_californicus: { walk: 6, run: 17 },
   callipepla_californica: { walk: 2.1, flap: 19 }, aphelocoma_californica: { walk: 2.5, flap: 11 }, cyanocitta_stelleri: { walk: 2.5, flap: 11 }, melanerpes_formicivorus: { flap: 13 },
   corvus_corax: { flap: 2.6 }, buteo_jamaicensis: { flap: 2.4 }, cathartes_aura: { flap: 3 },
   meleagris_gallopavo: { walk: 0.64, flap: 5 }, otospermophilus_beecheyi: { walk: 3.1, run: 11 }, sceloporus_occidentalis: { walk: 6, run: 12 },
+  ursus_americanus: { walk: 1.06, run: 3.3 },
 };
 // Generic constants for a GLB read here (no loader in animalModels.js): the deer's amplitudes for quadrupeds,
 // the squirrel's for rodents, the jay's for birds; rig constants (RIG keys) kept small.

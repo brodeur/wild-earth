@@ -2052,3 +2052,26 @@ beyond the tile because it needs no new downloads, keeps routing on the lidar ti
 untouched; the home tile changes by under 1 km2 on two creeks (dry run, not rewritten). Not covered: a creek the DEM
 sends off the edge far from any NHD line (Tenaya Creek here, 400 m off, so the Merced below shows 587 km2 against
 NHD's 707); the connectors where NHD stays inside are straight (Snow Creek's longest 398 m along the east edge).
+
+American black bear (Ursus americanus) for the Yosemite tile (2026-10-28, an Opus lane; verified here: a sow with two
+cubs summoned at the village meadow, brown with a tan muzzle, standing, walking and bedding, the player in the sow's
+body, no errors). No CC0 or CC BY mesh reads as a black bear, so it was generated: one Meshy `latest` preview (20
+credits, job 01a1814a; 380 of the 1,000 spent in all), prompt A of library/animals/drafts/ursus_americanus.md. It
+read as a black bear, not a grizzly (no shoulder hump, straight face, tall ears, stub tail), so no second preview and
+no refine. tools/build_bear.py turns the head back to the midline (18 degrees off), lengthens the body 1.12x and
+scales it to 0.8 m at the shoulder (1.34 m nose to rump), colours a brown-phase Sierra bear with a tan muzzle and
+builds tiers of 2,998 / 1,199 / 459 triangles (lod2 decimates the body, then the head, so the far tier keeps a
+snout). The client spawns it like the lion: one lone bear or a sow with cubs per 1.5 km territory cell, at most one
+group live; home is forest and chaparral from 1,000 m, or oak woodland from 800 m in fall; few are about in winter.
+It is about at dawn and dusk, all day in fall (hyperphagia), bedded at the summer midday; it ambles, digs and forages
+with its head down, goes to oaks in fall, feeds at carrion within 300 m for a minute, hunts nothing and flees from
+nothing; a player inside 8 m gets a short bluff charge or a stare. Playable (E digs, X lies down); a lineup row and
+the opening-screen still (client/tools/opening_sprites.js gained `?only=`). The pipeline lists it with an 800-3,000 m
+range (this project's estimate), everyone perceives it, and it scavenges the lion's and the coyote's kills.
+Open: a cinnamon colour variant; standing on the hind legs; in shade the brown reads near black at a distance.
+
+The client honours the present species (2026-10-28, the species lane's follow-ups): the spirit, which has no
+`perceives` row, now perceives the union of every row (the present species) rather than every species the client
+knows, and PENDING (species the client draws that a tile package predates) applies only to a species the package's
+species.json does not know at all, so an absent species is not re-added; the sound module's callers skip absent
+species as well. On Yosemite the spirit no longer sees jackrabbits, brush rabbits or voles.

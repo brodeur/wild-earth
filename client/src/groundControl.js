@@ -7,7 +7,7 @@ import { HerdSilhouette } from './herdSilhouette.js';
 
 // The playable walkers (owner's request 2026-10-26, "make the other animals playable"): one controller for every
 // species that lives on the ground, parameterised per species by GROUND below. Black-tailed deer (doe and buck), gray
-// fox, coyote, mountain lion, brush rabbit, black-tailed jackrabbit, California vole, California ground squirrel,
+// fox, coyote, mountain lion, black bear, brush rabbit, black-tailed jackrabbit, California vole, California ground squirrel,
 // western fence lizard, and the wild turkey and California quail on foot. When the player is one of them main.js calls
 // this instead of flight.update; it drives `flight.pos` and `flight.yaw` (forward -z at yaw 0) as the squirrel's
 // controller does, so the forest, grass, minimap, identify, animals and sound follow it. The raven's body is hidden.
@@ -47,7 +47,7 @@ const smooth = u => u * u * (3 - 2 * u);
 // chase camera, scaled to the body: back, up, look (the aim ahead), aimUp, side (rad off the heading), clear (m over
 // the ground round the lens) and near (the near plane). Gait: quad stride (m, as animals.js MAMMAL) and trot (m/s: the
 // trot-to-gallop switch); rodent bound(v) (m per bound), lift(v) (m of air in a bound), rock (pitch in a bound);
-// bird stride. act: E's head dip (flick) and how long (s); alert: Shift's head lift (flick) or sit-up (pose); rest:
+// bird stride. act: E's head dip (flick; dig: a quadruped's shoulders down and the head working) and how long (s); alert: Shift's head lift (flick) or sit-up (pose); rest:
 // X's pose (null: none). flush (birds): the flush flight from a run over `from` m/s: speed, duration, climb, beat Hz.
 // Framing (owner, 2026-10-27: "raise the camera so that the animal is in the bottom third of the screen"): the camera
 // sits CAM_RAISE times higher than each body's `up`, and its pitch is set each frame from the line to the body's centre
@@ -82,6 +82,13 @@ export const GROUND = {
     half: 0.45, rad: 0.25, shoulder: 0.72, stride: 1.0, trot: 2.0, stalk: 0.45,
     cam: { back: 3.5, up: 1.3, look: 2.5, aimUp: 0.6, side: 0.35, clear: 0.3, near: 0.2 },
     act: { flick: 0.6, t: 3, word: 'sniffing' }, alert: { flick: -0.3 }, rest: 'bed' },
+  // the black bear: an amble, a bounding run in bursts (to ~13 m/s), a heavy short jump; E digs and scratches at the
+  // ground (the head down), X lies down
+  ursus_americanus: { short: 'bear', common: 'black bear', model: 'bear', rig: 'quad',
+    walk: 1.0, run: 11, back: 0.6, ramp: 3, accel: 2.5, stop: 4, turn: 1.6, jumpH: 0.7, jumpL: 1.8, step: 0.55, wade: 0.7,
+    half: 0.5, rad: 0.3, shoulder: 0.8, stride: 0.9, trot: 2.6,
+    cam: { back: 3.8, up: 1.4, look: 2.5, aimUp: 0.6, side: 0.35, clear: 0.35, near: 0.2 },
+    act: { flick: 1, dig: true, t: 4, word: 'digging' }, alert: { flick: -0.4 }, rest: 'bed' },
   sylvilagus_bachmani: { short: 'rabbit', common: 'brush rabbit', model: 'rabbit', rig: 'rodent',
     walk: 1.0, run: 7, back: 0.5, ramp: 1, accel: 5, stop: 8, turn: 3.5, jumpH: 0.35, jumpL: 0.9, step: 0.15, wade: 0.04,
     half: 0.12, rad: 0.07, shoulder: 0.15,
@@ -434,6 +441,7 @@ export class GroundControl {
       const stalk = S.stalk && this.input().shift && sp > 0.05;
       ps.pose = damp(ps.pose, this.resting ? pmax : stalk ? 0.45 * pmax / 0.6 : 0, this.resting ? 0.9 : 2, dt);
       ps.flick = damp(ps.flick, act ? S.act.flick : alert ? S.alert.flick : stalk ? 0.25 : 0, 3, dt);
+      if (act && S.act.dig) { ps.pose = damp(ps.pose, 0.3 * pmax, 3, dt); ps.flick += 0.1 * Math.sin(performance.now() * 0.013); }   // a dig: shoulders down, the head working
       if (this.code === 'puma_concolor') ps.e1 = damp(ps.e1, (stalk || this.resting ? 0.7 : 0.15) * Math.sin(performance.now() * 0.0033) * (Math.sin(performance.now() * 0.0006) > 0.1 ? 1 : 0.15), 8, dt);
       if (this.buck) { const st = antlerState(this.animals.month ?? 10.5, this.buck.u1, this.buck.u2, this.buck.u3); ps.e0 = st.growth; ps.e1 = st.velvet; ps.e2 = this.buck.young; }
       if (!inAir) ps.pitch = damp(ps.pitch, slope * 0.8, 6, dt);

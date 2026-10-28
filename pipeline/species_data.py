@@ -74,6 +74,14 @@ SPECIES = [
      "group": "mammal", "role": "ambient", "scale": "deer",
      "senses": {"vision": {"range_m": 500, "color": "dichromat"},
                 "hearing": {"range_m": 600}, "smell": {"range_m": 500}}},
+    # the Sierra's only bear: conifer and mixed forest, riparian woodland and chaparral, down to the foothill oaks for
+    # acorns in fall; dens December-March; an omnivore that hunts nothing here but comes to carrion from far off. Its nose
+    # is its sense (kilometres downwind); eyes and ears middling.
+    {"code": "ursus_americanus", "common": "American black bear", "scientific": "Ursus americanus",
+     "group": "mammal", "role": "ambient", "scale": "deer", "gbif_key": 2433407,
+     "habitat": {"oak_woodland": 0.6, "conifer": 1.0, "mixed": 1.0, "chaparral": 0.8, "riparian": 0.8},
+     "senses": {"vision": {"range_m": 200, "color": "dichromat"},
+                "hearing": {"range_m": 500}, "smell": {"range_m": 2000}}},
     # oak woodland and savanna in flocks of 6-15 (larger in winter), roosting in tall oaks and pines at night;
     # active all year. The Sierra foothill birds are introduced stock (Rio Grande and Merriam's, 1950s-80s).
     {"code": "meleagris_gallopavo", "common": "wild turkey", "scientific": "Meleagris gallopavo",
@@ -111,7 +119,9 @@ ALL = [s["code"] for s in SPECIES]
 # north of El Portal (1220 m); the California vole east to El Portal and Cascades (3600 ft, 1100 m); the
 # black-tailed jackrabbit Lower and Upper Sonoran on the west slope; the gray fox Upper Sonoran and Transition, east
 # to the floor of Yosemite Valley, chiefly in chaparral; the mountain lion Sonoran, Transition and Canadian; the
-# ground squirrel's highest record 8200 ft (2500 m). The others are coarse (whole slope for the wide-ranging ones).
+# ground squirrel's highest record 8200 ft (2500 m). The others are coarse (whole slope for the wide-ranging ones). The
+# black bear's band (800-3000 m: the conifer belt, with the oak woodland it comes down to in fall) is this project's
+# estimate, not the book's; it keeps the bear off the foothill tiles and on the Yosemite one.
 # A band says where the species can be, not that it is: the records decide first, the band only keeps a species the
 # records miss (a cryptic or nocturnal one, on a tile few people watch). Other regions need their own bands.
 _ALL_HAB = ["oak_woodland", "conifer_forest", "mixed_forest", "chaparral", "grassland", "riparian", "barren"]
@@ -134,6 +144,7 @@ RANGE = {
     "meleagris_gallopavo":      {"elev_m": [0, 1500], "habitats": ["oak_woodland", "mixed_forest", "grassland", "riparian"]},
     "otospermophilus_beecheyi": {"elev_m": [0, 2500], "habitats": ["grassland", "oak_woodland", "chaparral", "riparian", "barren"]},
     "sceloporus_occidentalis":  {"elev_m": [0, 2700], "habitats": ["oak_woodland", "conifer_forest", "mixed_forest", "chaparral", "grassland", "riparian", "barren"]},
+    "ursus_americanus":         {"elev_m": [800, 3000], "habitats": ["conifer_forest", "mixed_forest", "chaparral", "riparian", "oak_woodland"]},
 }
 
 # Who exists for whom, wherever both live. A species absent from a player's list is not rendered for them; on a tile the
@@ -194,7 +205,13 @@ PERCEPTION = {
     "sceloporus_occidentalis": ["sceloporus_occidentalis", "buteo_jamaicensis", "corvus_corax",
                                 "aphelocoma_californica", "urocyon_cinereoargenteus", "canis_latrans",
                                 "otospermophilus_beecheyi", "meleagris_gallopavo", "sciurus_griseus"],
+    "ursus_americanus": ["ursus_americanus", "odocoileus_hemionus", "canis_latrans", "puma_concolor", "corvus_corax",
+                         "sciurus_griseus"],
 }
+# Everyone sees the bear (a big animal that goes where it likes): added to every row that does not list it already.
+for _row in PERCEPTION.values():
+    if "ursus_americanus" not in _row:
+        _row.append("ursus_americanus")
 
 
 def perceives_on(present) -> dict[str, list[str]]:
@@ -344,6 +361,16 @@ CALENDAR = {
         "summer": [act("hunt", "odocoileus_hemionus", "sylvilagus_bachmani")],
         "fall": [act("hunt", "odocoileus_hemionus", goal="deer gather at mast")],
     },
+    # dens December-March; new grass and winter-killed carcasses in spring; berries, ants and grubs in summer, bedded in
+    # shade at midday; in fall hyperphagia, feeding nearly all day on acorns and manzanita berries
+    "ursus_americanus": {
+        "winter": [act("den", "cover", goal="den under a fallen tree, in a rock cave or a hollow; out on a warm day")],
+        "spring": [act("forage", "grass_forbs", "carrion", goal="new grass and sedge, winter-killed carcasses"),
+                   act("rear", "cover", goal="sows lead cubs out of the den")],
+        "summer": [act("forage", "browse", "insects", goal="berries, ants and grubs under logs"),
+                   act("court", "cover", goal="mating in June and July"), act("shelter", "cover", goal="bed in shade at midday")],
+        "fall": [act("forage", "acorn_mast", "browse", "carrion", goal="fatten for the den: acorns and berries up to 20 hours a day")],
+    },
 }
 
 
@@ -373,7 +400,9 @@ SIGNATURE = {
     "meleagris_gallopavo":      {"sight": 250, "sound": 300, "scent": 20},
     "otospermophilus_beecheyi": {"sight": 60, "sound": 200, "scent": 30},
     "sceloporus_occidentalis":  {"sight": 8, "sound": 2, "scent": 5},
+    "ursus_americanus":         {"sight": 150, "sound": 60, "scent": 400},
 }
+# (the black bear gives no alarm call others heed: not in ALARM_CALL)
 ALARM_CALL = {"aphelocoma_californica": 400, "cyanocitta_stelleri": 400, "melanerpes_formicivorus": 400, "corvus_corax": 700,
               "meleagris_gallopavo": 300, "callipepla_californica": 250, "otospermophilus_beecheyi": 200, "sciurus_griseus": 150,
               "odocoileus_hemionus": 60}
@@ -418,10 +447,12 @@ NEEDS = {
     "otospermophilus_beecheyi": {"water": "rare", "shelter": "burrow", "court": "burrow"},
     "sceloporus_occidentalis":  {"water": "none", "shelter": "burrow", "court": "cliff_or_snag"},
     "puma_concolor":            {"water": "daily", "shelter": "cover", "court": "cover"},
+    "ursus_americanus":         {"water": "daily", "shelter": "cover", "court": "cover"},
 }
 
 # What each predator eats among the species here (the prey's side of the calendar's hunt lists, which were written for
-# the hunter's story), and whose kills a scavenger follows. Prey not in the tile's list are simply absent there.
+# the hunter's story), and whose kills a scavenger follows. Prey not in the tile's list are simply absent there. plants:
+# the resource rasters an omnivore eats (for reference; the games step reads them from the calendar's forage acts).
 DIET = {
     "buteo_jamaicensis":        {"prey": ["microtus_californicus", "otospermophilus_beecheyi", "sylvilagus_bachmani", "lepus_californicus",
                                           "sciurus_griseus", "sceloporus_occidentalis", "callipepla_californica"]},
@@ -436,4 +467,7 @@ DIET = {
                                  "carrion": ["puma_concolor", "canis_latrans"]},
     "aphelocoma_californica":   {"prey": ["sceloporus_occidentalis"]},
     "cathartes_aura":           {"carrion": ["puma_concolor", "canis_latrans"]},
+    # acorns, berries (browse), grass, insects and grubs; hunts nothing here; comes to the lion's and the coyote's kills
+    "ursus_americanus":         {"plants": ["acorn_mast", "browse", "grass_forbs", "insects"],
+                                 "carrion": ["puma_concolor", "canis_latrans"]},
 }

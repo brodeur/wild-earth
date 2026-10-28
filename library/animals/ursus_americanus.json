@@ -1,0 +1,60 @@
+{
+  "id": "ursus_americanus",
+  "aliases": [
+    "black_bear",
+    "american_black_bear",
+    "bear"
+  ],
+  "scientific": "Ursus americanus",
+  "common": "American black bear",
+  "body_plan": "quadruped",
+  "size": {
+    "length_m": 1.34,
+    "shoulder_or_wingspan_m": 0.8,
+    "note": "Sierra black bears 1.2-1.9 m head and body (measured along the spine), 0.7-0.9 m at the shoulder; tail a stub of 8-14 cm. The build turns the generated head back to the midline, lengthens the bear 1.12x and scales it to 0.8 m at the withers: 1.34 m nose to rump in a straight line. Cubs are drawn at 0.45x (animals.js), sows 0.92x, boars 1.06x."
+  },
+  "source": {
+    "kind": "meshy",
+    "title": "American black bear (generated)",
+    "author": "generated with Meshy (meshy.ai) by agent (Claude) for Aaron Brodeur",
+    "url": "https://www.meshy.ai",
+    "file": "library/animals/jobs/ursus_americanus/01a1814a-bb04-7644-bd83-16c7c1947527/model.glb (local, git-ignored)",
+    "original": "text-to-3D preview, ai_model latest (meshy-7.1), triangle remesh to 20,000 faces: 20,825 triangles, one piece, untextured, sculpted fur shards; head turned about 17 degrees to the bear's left",
+    "prompt": "An American black bear (Ursus americanus) of the Sierra Nevada, California, NOT a grizzly: no shoulder hump, a straight face profile and tall rounded ears. One adult standing still on all four legs, side-on neutral pose, legs straight with clear gaps between them, big flat paws with short dark claws, head level and a little lower than the shoulders. Realistic proportions: 80 cm at the shoulder, 1.5 m head and body, a heavy round body, the rump as high as the shoulders, short thick legs, a tiny stub tail. Dark brown fur, tan muzzle, black nose, small dark eyes. No base, no ground. Game-ready.",
+    "reference_image": null,
+    "job_id": "01a1814a-bb04-7644-bd83-16c7c1947527",
+    "job": "library/animals/jobs/ursus_americanus/01a1814a-bb04-7644-bd83-16c7c1947527/job.json",
+    "credits": 20,
+    "date": "2026-10-28 (UTC)",
+    "adopted_by": "tools/build_bear.py"
+  },
+  "license": "CC BY-SA 4.0",
+  "license_detail": {
+    "source_terms": "Meshy Terms of Use (https://www.meshy.ai/terms-of-use, last updated 2026-09-19) 3.2: paid-plan API output is owned by the account holder, who releases it with the project's assets under CC BY-SA 4.0.",
+    "redistribute_under_cc_by_sa": true,
+    "note": "Credit \"generated with Meshy (meshy.ai)\" is kept in the build script header and the GLB asset.copyright. The file carried no Meshy metadata or watermark to carry over (Terms 2.4). Terms 2.6(xi) (no training of competing models) binds the account holder, not CC BY-SA licensees. AI output may carry little copyright in some jurisdictions; the licence covers what rights exist."
+  },
+  "tiers": {
+    "lod0": 2998,
+    "lod1": 1199,
+    "lod2": 459,
+    "file": "client/assets/bear.glb",
+    "attributes": [
+      "POSITION",
+      "COLOR_0 (linear)",
+      "_PART",
+      "_PARTW",
+      "_PIVOT"
+    ]
+  },
+  "rig": "quadruped template Q: BODY, LEG_A (left fore + right hind), LEG_B, TAIL (the stub, pivot at its root), HEAD (neck and head, pivot at the neck's base; kept off the chest and the tops of the forelegs). No TAIL_TIP. Parts found from the geometry (the stub within ~8 cm of the rump's farthest point, legs below the belly line between the feet with pivots there: elbow and stifle, head ahead of a vertical plane at the neck's base); weights blended over 5-12 cm. Pivots and the bedded drop (0.19 m) in extras.rig. lod2 is decimated in two passes (the body with the head kept, then the head) so the far tier keeps a snout and ears.",
+  "status": "agent draft, needs local sign-off",
+  "accuracy_notes": "Generated, not adopted from a download: no CC0 or CC BY black bear mesh reads as one. Reads as a black bear, not a grizzly: no shoulder hump (the top line is nearly level: the fur over the shoulders stands about 3 cm above the hips, a long gentle rise, not a muscled hump), a straight face profile with a long snout, tall rounded ears up on the crown, short curved claws, a heavy round body on short thick legs, a stub tail. Coloured as a brown-phase Sierra bear: dark brown body, darker back and legs, a little lighter belly, tan snout to the eyes, black nose pad. Fixed by the build: the head was turned 17-19 degrees to the bear's left (turned back about a vertical axis behind the ears); the body was short (lengthened 1.12x). Still wrong or unchecked: the eye is one dark face behind the stop at every tier (the head is a smooth low-poly sculpt with no modelled eye); the generator's fur shards make the lod0 flanks faceted; the far tier is boxy; no cinnamon or black phase yet (a second colour set would do it); one bear size for both sexes (instances scaled). Check the snout length, the ear size and the brown against Yosemite photos.",
+  "authors": [
+    "agent (Claude) for Aaron Brodeur (generation, adoption, recolour, tiers)"
+  ],
+  "sources": [
+    "library/animals/drafts/ursus_americanus.md (field marks, sizes, palette, prompts; its sources are listed there)",
+    "docs/animal-library.md (Meshy terms and costs)"
+  ]
+}

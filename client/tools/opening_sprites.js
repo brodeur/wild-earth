@@ -3,7 +3,7 @@ import { Wisp } from '../src/spirit.js';
 import {
   animalMaterial, hasAnim2, buildRaven, buildWoodpecker, loadDeerMesh, loadFoxMesh, loadCoyoteMesh, loadCougarMesh,
   loadSquirrelMesh, loadGroundSquirrelMesh, loadRabbitMesh, loadJackrabbitMesh, loadVoleMesh, loadQuailMesh, loadTurkeyMesh,
-  loadLizardMesh, loadJayMesh, loadStellersJayMesh, loadRedtailMesh, loadVultureMesh,
+  loadLizardMesh, loadJayMesh, loadStellersJayMesh, loadRedtailMesh, loadVultureMesh, loadBearMesh,
 } from '../src/animalModels.js';
 
 // The opening screen's sprites (client/src/arrival.js plays them with CSS, so nothing on the screen animates from
@@ -17,6 +17,8 @@ import {
 //               little above, facing right, ground animals standing, birds on the wing; PX_PER_M px per metre for all
 //               (the deer ~360 px tall), cropped to the drawn pixels.
 // Sends PNGs to tools/sprite_receiver.py, which converts them to WebP and writes index.json.
+// ?only=<code,...>: render just those stills (no wisp) and merge them into the index.json already published, so a new
+// species does not re-render (and re-encode) the rest.
 
 const RECV = 'http://127.0.0.1:8798';
 const N = 48, FRAME = 384, COLS = 8, ROWS = 6, LOOP_S = 1.2;     // the wisp loop
@@ -25,7 +27,7 @@ const PX_PER_M = 268;                                              // the stills
 const TILT = 0.24, YAW = Math.PI / 2 - 0.45;                       // the lineup's view: a little from above, 3/4 facing right
 const G = 'ground', B = 'bird';
 const SPECIES = {
-  odocoileus_hemionus: [G, loadDeerMesh], puma_concolor: [G, loadCougarMesh], canis_latrans: [G, loadCoyoteMesh],
+  odocoileus_hemionus: [G, loadDeerMesh], ursus_americanus: [G, loadBearMesh], puma_concolor: [G, loadCougarMesh], canis_latrans: [G, loadCoyoteMesh],
   urocyon_cinereoargenteus: [G, loadFoxMesh], meleagris_gallopavo: [G, loadTurkeyMesh, 1], lepus_californicus: [G, loadJackrabbitMesh],
   sciurus_griseus: [G, loadSquirrelMesh], otospermophilus_beecheyi: [G, loadGroundSquirrelMesh], sylvilagus_bachmani: [G, loadRabbitMesh],
   callipepla_californica: [G, loadQuailMesh, 1], sceloporus_occidentalis: [G, loadLizardMesh], microtus_californicus: [G, loadVoleMesh],
@@ -132,11 +134,14 @@ async function renderStill(renderer, code, [kind, load, pose = 0, soar]) {
 async function run() {
   $('go').disabled = true; $('log').textContent = ''; $('out').innerHTML = '';
   try {
-    const wisp = await renderWisp();
+    const only = (new URLSearchParams(location.search).get('only') || '').split(',').filter(Boolean);
+    const prev = only.length ? await fetch('../assets/opening/index.json', { cache: 'no-store' }).then(r => r.json()) : null;
+    const wisp = only.length ? prev.wisp : await renderWisp();
     const renderer = new THREE.WebGLRenderer({ alpha: true, premultipliedAlpha: true, antialias: true, preserveDrawingBuffer: true });
     renderer.setPixelRatio(1); renderer.setClearColor(0, 0); renderer.outputColorSpace = THREE.SRGBColorSpace;
-    const species = {};
+    const species = only.length ? { ...prev.species } : {};
     for (const [code, spec] of Object.entries(SPECIES)) {
+      if (only.length && !only.includes(code)) continue;
       try { species[code] = await renderStill(renderer, code, spec); } catch (e) { log(`${code}: skipped (${e.message})`); }
     }
     renderer.dispose();

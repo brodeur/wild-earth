@@ -1,5 +1,5 @@
 {
- "generated": "2026-10-27T05:17:08.059Z",
+ "generated": "2026-10-28T07:12:17.769Z",
  "generator": "client/tools/opening_sprites.html (three.js) + tools/sprite_receiver.py (PIL WebP q90)",
  "note": "Pre-rendered for the opening screen (client/src/arrival.js), which plays them with CSS only.",
  "credits": "Derived renders of the client's animal models (client/assets/*.glb, built by tools/build_*.py, and the procedural models in client/src/animalModels.js) and of the spirit's wisp (client/src/spirit.js). The models' sources, authors and licences are in docs/animal-library.md and in each tile manifest's sources; these renders carry the same credits.",
@@ -204,7 +204,17 @@
    "foot_px": 61,
    "pose": "flying, wings up-stroke",
    "bytes": 1222
+  },
+  "ursus_americanus": {
+   "file": "ursus_americanus.webp",
+   "width": 339,
+   "height": 234,
+   "px_per_m": 268,
+   "kind": "ground",
+   "foot_px": 215,
+   "pose": "standing",
+   "bytes": 6258
   }
  },
- "total_bytes": 938174
+ "total_bytes": 944432
 }

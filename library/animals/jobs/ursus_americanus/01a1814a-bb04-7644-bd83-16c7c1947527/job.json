@@ -1,0 +1,66 @@
+{
+  "species": "ursus_americanus",
+  "mode": "preview",
+  "kind": "text-to-3d",
+  "task_id": "01a1814a-bb04-7644-bd83-16c7c1947527",
+  "endpoint": "https://api.meshy.ai/openapi/v2/text-to-3d",
+  "request": {
+    "mode": "preview",
+    "prompt": "An American black bear (Ursus americanus) of the Sierra Nevada, California, NOT a grizzly: no shoulder hump, a straight face profile and tall rounded ears. One adult standing still on all four legs, side-on neutral pose, legs straight with clear gaps between them, big flat paws with short dark claws, head level and a little lower than the shoulders. Realistic proportions: 80 cm at the shoulder, 1.5 m head and body, a heavy round body, the rump as high as the shoulders, short thick legs, a tiny stub tail. Dark brown fur, tan muzzle, black nose, small dark eyes. No base, no ground. Game-ready.",
+    "ai_model": "latest",
+    "target_formats": [
+      "glb"
+    ],
+    "should_remesh": true,
+    "topology": "triangle",
+    "target_polycount": 20000,
+    "moderation": false
+  },
+  "prompt": "An American black bear (Ursus americanus) of the Sierra Nevada, California, NOT a grizzly: no shoulder hump, a straight face profile and tall rounded ears. One adult standing still on all four legs, side-on neutral pose, legs straight with clear gaps between them, big flat paws with short dark claws, head level and a little lower than the shoulders. Realistic proportions: 80 cm at the shoulder, 1.5 m head and body, a heavy round body, the rump as high as the shoulders, short thick legs, a tiny stub tail. Dark brown fur, tan muzzle, black nose, small dark eyes. No base, no ground. Game-ready.",
+  "image": null,
+  "preview_job": null,
+  "estimated_credits": 20,
+  "balance_before": 2692,
+  "status": "SUCCEEDED",
+  "timestamps": {
+    "submitted": "2026-10-28T06:55:20+00:00",
+    "created_at": "2026-10-28T06:55:22+00:00",
+    "started_at": "2026-10-28T06:55:22+00:00",
+    "finished_at": "2026-10-28T06:56:50+00:00",
+    "downloaded": "2026-10-28T06:57:00+00:00"
+  },
+  "tool": "tools/meshy_generate.py",
+  "pricing_source": {
+    "url": "https://docs.meshy.ai/en/api/pricing",
+    "read": "2026-10-24"
+  },
+  "licence_note": "Generated through the Meshy API, which requires a paid plan (402 on a free plan). Meshy Terms of Use (https://www.meshy.ai/terms-of-use, last updated 2026-09-19), section 3.2: customers on a paid plan own their Customer Output to the extent permitted by law (free-plan output is owned by Meshy and offered under CC BY 4.0 with credit to Meshy). As owner, the account holder may license this model under the project's CC BY-SA 4.0 asset licence, to the extent copyright subsists in AI-generated output. Section 2.4: do not remove or alter AI-identifying metadata or watermarks Meshy embeds; carry them into adopted tiers. Section 2.5: API output is deleted by Meshy 3 days after generation, so keep this folder until the model is adopted. Credit: \"generated with Meshy (meshy.ai)\".",
+  "maintainer": "agent (Claude) for Aaron Brodeur",
+  "progress": 100,
+  "task": {
+    "id": "01a1814a-bb04-7644-bd83-16c7c1947527",
+    "type": "text-to-3d-preview",
+    "status": "SUCCEEDED",
+    "created_at": 1793170522344,
+    "started_at": 1793170522355,
+    "finished_at": 1793170610307,
+    "consumed_credits": 20,
+    "task_error": null
+  },
+  "credits_charged": 20,
+  "files": [
+    {
+      "file": "model.glb",
+      "bytes": 1275320,
+      "sha256": "964bdfe4e152e63049ded60b416a7515f77ff4eb62785c7e7347f32dbf94ad22",
+      "source": "https://assets.meshy.ai/<account>/tasks/01a1814a-bb04-7644-bd83-16c7c1947527/output/model.glb"
+    },
+    {
+      "file": "thumbnail.png",
+      "bytes": 83665,
+      "sha256": "c3a28a93718f75b15553015f7e0f921d4e479f9c7272ca5276a4c348d85f0970",
+      "source": "https://assets.meshy.ai/<account>/tasks/01a1814a-bb04-7644-bd83-16c7c1947527/output/preview.png"
+    }
+  ],
+  "balance_after": 2672
+}

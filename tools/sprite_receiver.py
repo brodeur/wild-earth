@@ -5,7 +5,8 @@
 The render page POSTs each PNG to /save/<name>.png; it is written under client/assets/opening/_png/ and nowhere
 else (the name is reduced to [a-z0-9_.-], no paths). POST /done converts every PNG there to WebP next to it
 (client/assets/opening/<name>.webp, PIL, quality 90 with alpha; the wisp sheet at WISP_Q) and writes index.json from
-the JSON body the page sends. Stdlib http.server plus PIL from the .venv; not part of the game or server.py.
+the JSON body the page sends. Stdlib http.server plus PIL from the .venv; not part of the game or server.py. After a
+run, delete client/assets/opening/_png/ (the WebPs are what ship).
 """
 from __future__ import annotations
 
@@ -59,7 +60,9 @@ class Handler(BaseHTTPRequestHandler):
                     v["bytes"] = sizes[v["file"]]
             if index.get("wisp", {}).get("file") in sizes:
                 index["wisp"]["bytes"] = sizes[index["wisp"]["file"]]
-            index["total_bytes"] = sum(sizes.values())
+            # every file the index names (a partial render, ?only=, converts a few and keeps the rest)
+            named = [v.get("file") for v in (index.get("species") or {}).values()] + [index.get("wisp", {}).get("file")]
+            index["total_bytes"] = sum((ROOT / f).stat().st_size for f in named if f and (ROOT / f).is_file())
             (ROOT / "index.json").write_text(json.dumps(index, indent=1) + "\n")
             return self._reply(200, {"written": sizes, "total": index["total_bytes"]})
         self._reply(404, {"error": "unknown"})

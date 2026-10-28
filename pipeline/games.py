@@ -26,7 +26,8 @@ ARCHETYPE = {"forage": "gather", "graze": "gather", "hunt": "hunt", "cache": "ca
 # how each species moves as a unit (animals.js groups); anything else is solitary
 UNIT = {"odocoileus_hemionus": "herd", "callipepla_californica": "covey", "meleagris_gallopavo": "flock",
         "melanerpes_formicivorus": "family", "aphelocoma_californica": "family", "cyanocitta_stelleri": "family",
-        "otospermophilus_beecheyi": "colony", "corvus_corax": "pair", "puma_concolor": "mother_and_young"}
+        "otospermophilus_beecheyi": "colony", "corvus_corax": "pair", "puma_concolor": "mother_and_young",
+        "ursus_americanus": "mother_and_young"}
 ARCHETYPES = {
     "gather": "find the resource's hotspots, feed, keep an eye out: the predators listed hunt here; the competitors eat the same cells",
     "drink": "reach water on a rhythm; in summer the few sources draw every species, and the ambush predators, together",

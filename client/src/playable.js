@@ -7,7 +7,7 @@ import { FLIERS } from './flierControl.js';
 export const OWN = { corvus_corax: 'raven', sciurus_griseus: 'squirrel', melanerpes_formicivorus: 'woodpecker' };
 export function bodyKind(code) { return OWN[code] || (GROUND[code] ? 'ground' : FLIERS[code] ? 'flier' : null); }
 // Short names for tests (?skip=1&as=<short>): deer, fox, coyote, rabbit, jackrabbit, quail, scrubjay, stellers,
-// vulture, hawk, lion, vole, turkey, groundsquirrel, lizard.
+// vulture, hawk, lion, bear, vole, turkey, groundsquirrel, lizard.
 export const SHORT = Object.fromEntries([...Object.entries(GROUND), ...Object.entries(FLIERS)].map(([code, s]) => [s.short, code]));
 
 // Tests: into the AI animal of that species nearest (x, z) (the tile's centre, or the chosen point) through the

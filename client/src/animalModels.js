@@ -32,7 +32,7 @@ import { uniforms as atmo } from './atmosphere.js';
 //           tail; lags it for a wave, curls further on pose). aAnim2 = (leg splay for climbing, tail-tip lag, -, -).
 //   quadruped  the deer's parts (BODY, LEG_A left fore + right hind, LEG_B, TAIL, HEAD), drawn by the plain path
 //           (doe, buck, gray fox, coyote) or the rig path when it has a TAIL_TIP (mountain lion: the outer tail, child
-//           of the tail). aAnim2.w is the gait selector (0 diagonal pairs: walk, trot; 1 fore pair against the hind
+//           of the tail) or RIG constants of its own (black bear: a stub tail, a head bob). aAnim2.w is the gait selector (0 diagonal pairs: walk, trot; 1 fore pair against the hind
 //           pair: bound, gallop), from the sign of each leg's pivot z. The buck adds its antlers (ANIM_ANTLER below):
 //           aAnim2 = (antler growth, velvet, young forked-horn, gait).
 // Every model also carries `drop`: how far animals.js lowers the body at pose 1 (bedded) so the folded legs meet the
@@ -212,11 +212,15 @@ export function buildDeerBuck() {
 // and ?fox=proc etc. for A/B): body, chest and rump, belly, neck and head with ears and muzzle (HEAD, pivot at the
 // withers), a tail (TAIL, pivot at the rump), four legs in the diagonal pairs. W withers, L head and body (nose to
 // tail root), leg the leg pivots' height (the leg length), bw and bh the body's half width and depth, tail length,
-// tailR its radius, tailDown its droop (rad), head length, ear height, c colours (back, flank, belly, leg, dark, tip).
-function quadruped({ W, L, leg, bw, bh, tail, tailR, tailDown, head, ear, earW = 0.6, muzzle = 0.5, c, anim }) {
+// tailR its radius, tailDown its droop (rad), head length, ear height, c colours (back, flank, belly, leg, dark, tip;
+// optional muzzle and ear, else belly and dark). Optional: headY, the head's centre height when it is carried low (the
+// neck then follows the line from the withers to it; default a little above the withers), and hump, a rounded rise
+// of the back over the shoulders as a fraction of the body's depth (0 none).
+function quadruped({ W, L, leg, bw, bh, tail, tailR, tailDown, head, ear, earW = 0.6, muzzle = 0.5, c, anim, headY = null, hump = 0 }) {
   const yb = W - bh, zf = L * 0.27, zh = -L * 0.26;
   const hp = { part: PART.HEAD, pivot: [0, yb + bh * 0.3, zf + L * 0.06] };
-  const hy = W + head * 0.35, hz = zf + L * 0.2;
+  const hy = headY ?? W + head * 0.35, hz = zf + L * 0.2;
+  const neckRot = headY === null ? 0.75 : Math.atan2(hz - zf, hy - yb);
   const tp = { part: PART.TAIL, pivot: [0, yb + bh * 0.45, -L * 0.42] };
   const tdz = -Math.cos(tailDown) * tail, tdy = -Math.sin(tailDown) * tail;
   const p = [
@@ -225,12 +229,13 @@ function quadruped({ W, L, leg, bw, bh, tail, tailR, tailDown, head, ear, earW =
     ball({ color: c.flank, pos: [0, yb + bh * 0.05, zf * 0.85], scale: [bw * 1.05, bh * 1.05, L * 0.17] }),
     ball({ color: c.back, pos: [0, yb + bh * 0.05, zh * 0.95], scale: [bw, bh, L * 0.16] }),
     ball({ color: c.belly, pos: [0, yb - bh * 0.45, 0.02 * L], scale: [bw * 0.75, bh * 0.55, L * 0.26] }, 5, 3),
+    ...(hump > 0 ? [ball({ color: c.back, pos: [0, yb + bh * (0.55 + 0.3 * hump), zf * 0.55], scale: [bw * 0.8, bh * (0.35 + 0.4 * hump), L * 0.22] })] : []),
     // neck and head
-    box({ color: c.flank, ...hp, pos: [0, (yb + hy) / 2, (zf + hz) / 2], rot: [0.75, 0, 0], scale: [bw * 1.1, Math.hypot(hy - yb, hz - zf) * 1.1, bw * 1.2] }),
+    box({ color: c.flank, ...hp, pos: [0, (yb + hy) / 2, (zf + hz) / 2], rot: [neckRot, 0, 0], scale: [bw * 1.1, Math.hypot(hy - yb, hz - zf) * 1.1, bw * 1.2] }),
     ball({ color: c.back, ...hp, pos: [0, hy, hz], scale: [bw * 0.75, head * 0.32, head * 0.42] }),
-    box({ color: c.belly, ...hp, pos: [0, hy - head * 0.1, hz + head * (0.3 + muzzle * 0.3)], scale: [bw * 0.45, head * 0.24, head * muzzle] }),
+    box({ color: c.muzzle ?? c.belly, ...hp, pos: [0, hy - head * 0.1, hz + head * (0.3 + muzzle * 0.3)], scale: [bw * 0.45, head * 0.24, head * muzzle] }),
     box({ color: c.dark, ...hp, pos: [0, hy - head * 0.02, hz + head * (0.3 + muzzle * 0.8)], scale: [bw * 0.25, head * 0.12, head * 0.08] }),
-    ...mirror(s => cone({ color: c.dark, ...hp, pos: [s * bw * 0.45, hy + head * 0.25 + ear * 0.5, hz - head * 0.1], rot: [-0.15, 0, -s * 0.25], scale: [ear * 0.3 * earW, ear, ear * 0.18] })),
+    ...mirror(s => cone({ color: c.ear ?? c.dark, ...hp, pos: [s * bw * 0.45, hy + head * 0.25 + ear * 0.5, hz - head * 0.1], rot: [-0.15, 0, -s * 0.25], scale: [ear * 0.3 * earW, ear, ear * 0.18] })),
     // tail: two pieces, the tip darker
     box({ color: c.back, ...tp, pos: [0, tp.pivot[1] + tdy * 0.35, tp.pivot[2] + tdz * 0.35], rot: [-(Math.PI / 2 + tailDown), 0, 0], scale: [tailR * 2, tail * 0.7, tailR * 2] }),
     box({ color: c.tip, ...tp, pos: [0, tp.pivot[1] + tdy * 0.85, tp.pivot[2] + tdz * 0.85], rot: [-(Math.PI / 2 + tailDown), 0, 0], scale: [tailR * 1.6, tail * 0.32, tailR * 1.6] }),
@@ -256,6 +261,13 @@ export const buildCoyote = () => quadruped({ W: 0.58, L: 0.85, leg: 0.36, bw: 0.
 export const buildCougar = () => quadruped({ W: 0.72, L: 1.07, leg: 0.3, bw: 0.13, bh: 0.19, tail: 0.75, tailR: 0.04, tailDown: 1.2, head: 0.2, ear: 0.05, earW: 1.2, muzzle: 0.3,
   c: { back: 0x8b6a4b, flank: 0xa37e58, belly: 0xe4dccd, leg: 0xa37e58, dark: 0x2a221d, tip: 0x2a221d },
   anim: { amp: [0.35, 0.3, 0.6, 0], pose: [0.35, 0.6, 0.3, 0], poseMax: 0.6 } });
+// American black bear, 0.8 m at the shoulder, 1.34 m nose to rump: a heavy, round body on short thick legs, the head
+// carried below the back line, small round ears, a low rise of the back over the shoulders, a stub tail; dark brown,
+// darker legs, a tan muzzle (the drawn bear's palette, tools/build_bear.py).
+export const buildBear = () => quadruped({ W: 0.8, L: 1.34, leg: 0.27, bw: 0.22, bh: 0.27, tail: 0.1, tailR: 0.04, tailDown: 0.7, head: 0.3, ear: 0.07,
+  earW: 1.6, muzzle: 0.5, headY: 0.64, hump: 0.4,
+  c: { back: 0x36261b, flank: 0x45301f, belly: 0x50392a, leg: 0x2b201a, dark: 0x1d1714, tip: 0x36261b, muzzle: 0xa8845e, ear: 0x36261b },
+  anim: { amp: [0.3, 0.1, 0.85, 0], pose: [0.3, 0.1, 0.35, 0], drop: 0.19 } });
 
 // Brush rabbit, 0.33 m head and body, crouched 0.17 m at the back: grey-brown, short dark-rimmed ears, a small tail
 // pale beneath. Bounds fore pair (A) against the hind pair (B); pose raises the head and ears (sitting up).
@@ -514,6 +526,12 @@ const RIG = {
   // up (tipCurl) to keep it out of the ground.
   lion: { amp: [0.35, 0.3, 0.6, 0], pose: [0.35, 0.6, 0.3, 0], drop: 0.19, poseMax: 0.6, gait: true,
     k: { tipLag: 0.55, tipWave: 0.25, tipCurl: 0.6, bob: 0.04, foreFold: 0, abduct: 0, spine: 0, sit: 0 } },
+  // American black bear (tools/build_bear.py): the quadruped template with a stub tail (no TAIL_TIP), on the rig path for
+  // its constants. A short leg swing (amp.x) at a long amble; the head dips far (amp.z) to sniff, dig and forage, and
+  // nods a little with each step (bob); pose 1 is bedded (legs folded, belly down, head lowered). drop: the leg pivots
+  // 0.27 m x (1 - 0.3), the file's extras.rig.drop.
+  bear: { amp: [0.3, 0.1, 0.85, 0], pose: [0.3, 0.1, 0.35, 0], drop: 0.19, gait: true,
+    k: { tipLag: 0, tipWave: 0, tipCurl: 0, bob: 0.05, foreFold: 0, abduct: 0, spine: 0, sit: 0 } },
   // Brush rabbit (tools/build_rabbit.py): template R with a chest and a stub tail (no tip). Bounds fore pair against
   // hind pair, the chest flexing; pose sits it up on its haunches (alert), the head kept about level; flick nibbles
   // and flashes the white tail.
@@ -561,7 +579,8 @@ const RIG = {
 const urls = { jay: '../assets/scrubjay.glb', quail: '../assets/quail.glb', squirrel: '../assets/squirrel.glb',
   stjay: '../assets/stellersjay.glb', hawk: '../assets/redtail.glb', vulture: '../assets/vulture.glb',
   lion: '../assets/cougar.glb', rabbit: '../assets/rabbit.glb', jackrabbit: '../assets/jackrabbit.glb', vole: '../assets/vole.glb', ravenGround: '../assets/raven_ground.glb',
-  turkey: '../assets/turkey.glb', groundSquirrel: '../assets/ground_squirrel.glb', lizard: '../assets/fence_lizard.glb' };
+  turkey: '../assets/turkey.glb', groundSquirrel: '../assets/ground_squirrel.glb', lizard: '../assets/fence_lizard.glb',
+  bear: '../assets/bear.glb' };
 function rigModel(name, opts) {
   const r = RIG[name];
   return loadTiers(new URL(urls[name], import.meta.url), { amp: r.amp, pose: r.pose, drop: r.drop || 0, poseMax: r.poseMax || 1, gait: !!r.gait, rig: { name, k: r.k } }, opts)
@@ -574,6 +593,7 @@ export const loadStellersJayMesh = () => rigModel('stjay');
 export const loadRedtailMesh = () => rigModel('hawk');
 export const loadVultureMesh = () => rigModel('vulture');
 export const loadCougarMesh = () => rigModel('lion');
+export const loadBearMesh = () => rigModel('bear');
 export const loadRabbitMesh = () => rigModel('rabbit');
 export const loadJackrabbitMesh = () => rigModel('jackrabbit');
 export const loadVoleMesh = () => rigModel('vole');
