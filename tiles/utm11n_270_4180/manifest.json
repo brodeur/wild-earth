@@ -15,7 +15,7 @@
   37.830918414113654
  ],
  "size_m": 10000,
- "generated_at": "2026-10-28T07:51:35Z",
+ "generated_at": "2026-10-28T08:13:42Z",
  "generator": {
   "name": "wild-earth-pipeline",
   "version": "0.2.0"
@@ -631,23 +631,23 @@
    "path": "species/species.json",
    "kind": "table",
    "source": "gbif",
-   "count": 19,
-   "present": 16,
+   "count": 20,
+   "present": 17,
    "absent": [
     "sylvilagus_bachmani",
     "lepus_californicus",
     "microtus_californicus"
    ],
-   "sha256": "b238d8c50cc6b04a53fec19b6149a97803846340d7f66ef303f8847e6edbc38d",
-   "bytes": 12565
+   "sha256": "c2a7ed60512e35b45487cf8480bf3bda34ea9e51565f251ddc9937bfca3b7c1c",
+   "bytes": 13274
   },
   "species.occurrences": {
    "path": "species/occurrences.geojson",
    "kind": "vector",
    "source": "gbif",
-   "feature_count": 7926,
-   "sha256": "9d1c5388ce486ba3bff6dc47d4c0b5a3a3b0d5289befd7c5832a111075f66755",
-   "bytes": 3547630,
+   "feature_count": 8281,
+   "sha256": "f1c3cf92a76b7ec1b9b35897440dd37b2c303e8fd4f9949b3b64b12114eda268",
+   "bytes": 3705389,
    "for_clients": false,
    "for_clients_note": "per-record licences include CC BY-NC; clients read client.species_prior, built from CC0 and CC BY records only"
   },
@@ -655,8 +655,8 @@
    "path": "species/seasonal.json",
    "kind": "table",
    "source": "gbif",
-   "sha256": "4a6da2cc7919f7c40ffa79042c54b4d6561bd969ff0adf5a0d3768ad1f899791",
-   "bytes": 2201,
+   "sha256": "cc1cb8a5233c083e18327ee0f33cf6fd857bf4be01282f70fce5ad162028e89c",
+   "bytes": 2307,
    "for_clients": false
   },
   "species.inventory": {
@@ -669,14 +669,14 @@
   "perception": {
    "path": "perception.json",
    "kind": "table",
-   "sha256": "5c7d79a86569dbea61ac650be615699b96499d9584b81c7b1894e4b93466022f",
-   "bytes": 18112
+   "sha256": "f77ef70e89ae7117935336eb3dc7990cc719b7e32dc93b468dec1cb25d37e3b5",
+   "bytes": 19801
   },
   "calendar": {
    "path": "calendar.json",
    "kind": "table",
-   "sha256": "8f0eb1c146c5264dcddfd854df5416fbc9add4fd45dd756252d2e9bba33dc093",
-   "bytes": 17025
+   "sha256": "eb24973810ce537a56fe3241fbac42580271ef64f2de6efd261d4bba4aba5aec",
+   "bytes": 18259
   },
   "client.species_prior": {
    "path": "client/species_prior.json",
@@ -698,15 +698,15 @@
     "CC BY 4.0",
     "CC0 1.0"
    ],
-   "records_used": 4941,
+   "records_used": 5234,
    "records_used_by_license": {
-    "CC0 1.0": 103,
-    "CC BY 4.0": 4838
+    "CC0 1.0": 147,
+    "CC BY 4.0": 5087
    },
    "records_excluded": {
-    "CC BY-NC 4.0": 2587
+    "CC BY-NC 4.0": 2633
    },
-   "records_outside": 398,
+   "records_outside": 414,
    "species": {
     "aphelocoma_californica": 132,
     "buteo_jamaicensis": 360,
@@ -718,14 +718,15 @@
     "melanerpes_formicivorus": 1361,
     "meleagris_gallopavo": 19,
     "odocoileus_hemionus": 64,
+    "oreortyx_pictus": 293,
     "otospermophilus_beecheyi": 77,
     "sceloporus_occidentalis": 60,
     "sciurus_griseus": 34,
     "ursus_americanus": 23
    },
-   "datasets": 9,
-   "sha256": "267e660128672a9bd6b5bd3b79ca0e242f7149df9d8e9d322774fb8ec919b480",
-   "bytes": 188890
+   "datasets": 10,
+   "sha256": "6a260ad143826993741c42e13387e66e0ea473177dadae483ff66aea80f9dd6f",
+   "bytes": 202361
   },
   "terrain.hillshade": {
    "path": "terrain/hillshade.png",
@@ -2273,18 +2274,18 @@
   "games": {
    "path": "games.json",
    "kind": "json",
-   "species": 16,
-   "games": 249,
+   "species": 17,
+   "games": 274,
    "requests": {
-    "drawn": 12,
+    "drawn": 13,
     "partial": 3,
     "missing": 1
    },
-   "collective": 161,
-   "predation_pairs": 18,
-   "alarm_links": 44,
-   "sha256": "e8df8836bc99b326e5224098e3045d40a938253bdbbf45ab6ecbf7c23a9bdc8f",
-   "bytes": 309113
+   "collective": 186,
+   "predation_pairs": 22,
+   "alarm_links": 50,
+   "sha256": "edfc1f8de273a1ea01781aca8a4052fadc0e9396b13adec5c047817ada2df05a",
+   "bytes": 345181
   },
   "client.texture_imagery": {
    "path": "client/texture_imagery.jpg",
@@ -3024,6 +3025,18 @@
    "step": "rewild_hydro",
    "at": "2026-10-28T07:51:35Z",
    "seconds": 32.3,
+   "ok": true
+  },
+  {
+   "step": "species",
+   "at": "2026-10-28T08:13:10Z",
+   "seconds": 201.0,
+   "ok": true
+  },
+  {
+   "step": "derive",
+   "at": "2026-10-28T08:13:42Z",
+   "seconds": 31.2,
    "ok": true
   }
  ]

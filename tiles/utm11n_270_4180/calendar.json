@@ -1085,6 +1085,76 @@
      "goal": "fatten for the den: acorns and berries up to 20 hours a day"
     }
    ]
+  },
+  "oreortyx_pictus": {
+   "winter": [
+    {
+     "activity": "forage",
+     "resources": [
+      "acorn_mast",
+      "browse"
+     ],
+     "goal": "coveys below the snow line: acorns, seeds and berries in the brush"
+    },
+    {
+     "activity": "shelter",
+     "resources": [
+      "cover"
+     ],
+     "goal": "roost in dense brush or a low conifer"
+    }
+   ],
+   "spring": [
+    {
+     "activity": "court",
+     "resources": [
+      "cover"
+     ],
+     "goal": "pairs; the male calls quee-ark from a rock or a shrub top"
+    },
+    {
+     "activity": "nest",
+     "resources": [
+      "cover"
+     ],
+     "goal": "a ground nest under brush or a log"
+    },
+    {
+     "activity": "forage",
+     "resources": [
+      "grass_forbs",
+      "insects"
+     ]
+    }
+   ],
+   "summer": [
+    {
+     "activity": "rear",
+     "resources": [
+      "insects",
+      "cover"
+     ],
+     "goal": "both parents with the brood"
+    },
+    {
+     "activity": "forage",
+     "resources": [
+      "grass_forbs",
+      "browse",
+      "water"
+     ]
+    }
+   ],
+   "fall": [
+    {
+     "activity": "forage",
+     "resources": [
+      "acorn_mast",
+      "browse"
+     ],
+     "goal": "family coveys walk downslope in single file"
+    }
+   ]
   }
  }
 }

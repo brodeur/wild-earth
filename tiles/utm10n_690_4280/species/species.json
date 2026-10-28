@@ -217,6 +217,44 @@
   "evidence": "1658 records within 10 km in 2011-2026 (>= 3)"
  },
  {
+  "code": "oreortyx_pictus",
+  "common": "mountain quail",
+  "scientific": "Oreortyx pictus",
+  "group": "bird",
+  "role": "ambient",
+  "scale": "bird",
+  "habitat": {
+   "chaparral": 1.0,
+   "mixed": 0.8,
+   "conifer": 0.5,
+   "riparian": 0.55,
+   "oak_woodland": 0.35
+  },
+  "senses": {
+   "vision": {
+    "range_m": 300,
+    "color": "tetrachromat"
+   },
+   "hearing": {
+    "range_m": 300
+   },
+   "smell": {
+    "range_m": 20
+   }
+  },
+  "gbif_key": 2474320,
+  "sources": [
+   "gbif"
+  ],
+  "confidence": "unverified",
+  "occurrence_count": 4,
+  "present": true,
+  "rule": "records",
+  "records_buffer": 66,
+  "range_share": 0.4474,
+  "evidence": "66 records within 10 km in 2011-2026 (>= 3)"
+ },
+ {
   "code": "aphelocoma_californica",
   "common": "California scrub-jay",
   "scientific": "Aphelocoma californica",

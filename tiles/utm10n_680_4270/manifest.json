@@ -15,7 +15,7 @@
   38.65029129231017
  ],
  "size_m": 10000,
- "generated_at": "2026-10-28T07:32:35Z",
+ "generated_at": "2026-10-28T08:22:11Z",
  "generator": {
   "name": "wild-earth-pipeline",
   "version": "0.2.0"
@@ -992,11 +992,11 @@
    "path": "species/species.json",
    "kind": "table",
    "source": "gbif",
-   "count": 19,
-   "present": 19,
+   "count": 20,
+   "present": 20,
    "absent": [],
-   "sha256": "76d6c5ec0cd63a958b9c8b843bb3a226655daf7d9a0ec19e0cfa71a1e3f8d274",
-   "bytes": 12229
+   "sha256": "7331c7218e093391bcf90141a827507800d6bcdfbf4026b9dd98c75af62a2cc1",
+   "bytes": 12932
   },
   "species.occurrences": {
    "path": "species/occurrences.geojson",
@@ -1012,8 +1012,8 @@
    "path": "species/seasonal.json",
    "kind": "table",
    "source": "gbif",
-   "sha256": "e14d22756cb3d93ccd15c1b46d7187502232d791997063b563a92b9a6952a491",
-   "bytes": 2064,
+   "sha256": "04710c9225e584d29f09a7df3fe08a083c19529ed0cb3aaf2079ebea37aca572",
+   "bytes": 2163,
    "for_clients": false
   },
   "species.inventory": {
@@ -1026,14 +1026,14 @@
   "perception": {
    "path": "perception.json",
    "kind": "table",
-   "sha256": "004a4c60446ebda421331154d07dc59ad7b92d46d05c16c84e4ba58e8cf90b27",
-   "bytes": 19311
+   "sha256": "a736fb817c480b241e2f8d5bb26d7506c05ca7b57e227a2718bc36aaf0dee4ce",
+   "bytes": 21000
   },
   "calendar": {
    "path": "calendar.json",
    "kind": "table",
-   "sha256": "8f0eb1c146c5264dcddfd854df5416fbc9add4fd45dd756252d2e9bba33dc093",
-   "bytes": 17025
+   "sha256": "eb24973810ce537a56fe3241fbac42580271ef64f2de6efd261d4bba4aba5aec",
+   "bytes": 18259
   },
   "terrain.hillshade": {
    "path": "terrain/hillshade.png",
@@ -5157,18 +5157,18 @@
   "games": {
    "path": "games.json",
    "kind": "json",
-   "species": 19,
-   "games": 290,
+   "species": 20,
+   "games": 315,
    "requests": {
-    "drawn": 15,
+    "drawn": 16,
     "partial": 3,
     "missing": 1
    },
-   "collective": 161,
-   "predation_pairs": 29,
-   "alarm_links": 51,
-   "sha256": "dc2481c0d79e6763edf4bc7887c6ee2f983a0520eeb87f480c993b56ed05069a",
-   "bytes": 359656
+   "collective": 186,
+   "predation_pairs": 33,
+   "alarm_links": 57,
+   "sha256": "fadec269d958801615d342f1ce1dc2ea2081246b8d8c9d7bb7916dec098d2553",
+   "bytes": 396728
   }
  },
  "sources": {
@@ -5639,6 +5639,18 @@
    "step": "derive",
    "at": "2026-10-28T07:32:35Z",
    "seconds": 28.8,
+   "ok": true
+  },
+  {
+   "step": "species",
+   "at": "2026-10-28T08:21:37Z",
+   "seconds": 109.1,
+   "ok": true
+  },
+  {
+   "step": "derive",
+   "at": "2026-10-28T08:22:11Z",
+   "seconds": 33.5,
    "ok": true
   }
  ]

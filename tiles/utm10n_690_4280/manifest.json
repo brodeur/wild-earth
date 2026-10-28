@@ -15,7 +15,7 @@
   38.73825606650576
  ],
  "size_m": 10000,
- "generated_at": "2026-10-28T07:30:10Z",
+ "generated_at": "2026-10-28T08:19:48Z",
  "generator": {
   "name": "wild-earth-pipeline",
   "version": "0.2.0"
@@ -51,19 +51,19 @@
    "path": "species/species.json",
    "kind": "table",
    "source": "gbif",
-   "count": 19,
-   "present": 19,
+   "count": 20,
+   "present": 20,
    "absent": [],
-   "sha256": "2553074e2374888a6533426930e967337c5ef14ff7f5da23fb78cdc588f552d7",
-   "bytes": 12249
+   "sha256": "1013cf2ef4db32e8e0055d1640d295e00e0fd3d304e0ffc32a139a64a452d51e",
+   "bytes": 12954
   },
   "species.occurrences": {
    "path": "species/occurrences.geojson",
    "kind": "vector",
    "source": "gbif",
-   "feature_count": 4906,
-   "sha256": "ec46b766dfadfa24814ec13c004cbd70dd691396a37c1f877b804f0e14d645cb",
-   "bytes": 2193117,
+   "feature_count": 4910,
+   "sha256": "bc13362828b9139c7452f4811ce2a96e9d6d9cba1250405a2663ea4236e9f7c1",
+   "bytes": 2194888,
    "for_clients": false,
    "for_clients_note": "per-record licences include CC BY-NC; clients read client.species_prior, built from CC0 and CC BY records only"
   },
@@ -71,8 +71,8 @@
    "path": "species/seasonal.json",
    "kind": "table",
    "source": "gbif",
-   "sha256": "799f77b94caf48f45cbb69e7d32b21c659561e9fd46e9f0f8938e9b1e7616dc1",
-   "bytes": 2147,
+   "sha256": "ea06225d998b98bdbe9b6c8994524decefc8126f4efeea814e7d73273dfd81b0",
+   "bytes": 2246,
    "for_clients": false
   },
   "species.inventory": {
@@ -85,14 +85,14 @@
   "perception": {
    "path": "perception.json",
    "kind": "table",
-   "sha256": "004a4c60446ebda421331154d07dc59ad7b92d46d05c16c84e4ba58e8cf90b27",
-   "bytes": 19311
+   "sha256": "a736fb817c480b241e2f8d5bb26d7506c05ca7b57e227a2718bc36aaf0dee4ce",
+   "bytes": 21000
   },
   "calendar": {
    "path": "calendar.json",
    "kind": "table",
-   "sha256": "8f0eb1c146c5264dcddfd854df5416fbc9add4fd45dd756252d2e9bba33dc093",
-   "bytes": 17025
+   "sha256": "eb24973810ce537a56fe3241fbac42580271ef64f2de6efd261d4bba4aba5aec",
+   "bytes": 18259
   },
   "hydro.flowlines": {
    "path": "hydro/flowlines.geojson",
@@ -3430,10 +3430,10 @@
     "CC BY 4.0",
     "CC0 1.0"
    ],
-   "records_used": 4764,
+   "records_used": 4768,
    "records_used_by_license": {
-    "CC0 1.0": 374,
-    "CC BY 4.0": 4390
+    "CC0 1.0": 375,
+    "CC BY 4.0": 4393
    },
    "records_excluded": {
     "CC BY-NC 4.0": 84
@@ -3451,6 +3451,7 @@
     "melanerpes_formicivorus": 784,
     "meleagris_gallopavo": 313,
     "odocoileus_hemionus": 65,
+    "oreortyx_pictus": 4,
     "otospermophilus_beecheyi": 4,
     "puma_concolor": 0,
     "sceloporus_occidentalis": 8,
@@ -3460,8 +3461,8 @@
     "ursus_americanus": 2
    },
    "datasets": 13,
-   "sha256": "b452a89a424d5827dfa37a72a0c55d4b0d56096917146313a8b4404e1e24faa0",
-   "bytes": 242769
+   "sha256": "092b8a149bbe852fe4bdb87b7f5ac11b5f3d8e416bf8b173d64dcbef63416191",
+   "bytes": 256158
   },
   "terrain.dem_1m": {
    "path": "terrain/dem_1m.tif",
@@ -6890,18 +6891,18 @@
   "games": {
    "path": "games.json",
    "kind": "json",
-   "species": 19,
-   "games": 290,
+   "species": 20,
+   "games": 315,
    "requests": {
-    "drawn": 15,
+    "drawn": 16,
     "partial": 3,
     "missing": 1
    },
-   "collective": 161,
-   "predation_pairs": 29,
-   "alarm_links": 51,
-   "sha256": "57a77a74808d6bf94faaa079e851510c3be962b720fbda3ee60e9da541ffee6a",
-   "bytes": 359719
+   "collective": 186,
+   "predation_pairs": 33,
+   "alarm_links": 57,
+   "sha256": "88885735dd2305461739263180e5a79d56ba8cdadacaff9c6abcb0ea6237d6de",
+   "bytes": 396807
   }
  },
  "sources": {
@@ -7440,6 +7441,18 @@
    "step": "derive",
    "at": "2026-10-28T07:30:10Z",
    "seconds": 32.9,
+   "ok": true
+  },
+  {
+   "step": "species",
+   "at": "2026-10-28T08:19:15Z",
+   "seconds": 168.3,
+   "ok": true
+  },
+  {
+   "step": "derive",
+   "at": "2026-10-28T08:19:48Z",
+   "seconds": 32.5,
    "ok": true
   }
  ]
