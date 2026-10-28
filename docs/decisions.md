@@ -1870,3 +1870,20 @@ attack) and a 40-80 Hz forefoot stamp; any other caller a generic chip. The call
 as 'event' sources, at most one voice per event and two alarms at once, with small refDistances (10-20 m), so at
 200 m a call is about 20 dB under its 10 m level. A ground squirrel's 'gsAlarm' whistle and its 'alarm' within a
 second are one call.
+
+AI hunters are threats (2026-10-28, an Opus lane; animals.js `threat`, `aiAlarms`, `huntStart`). Prey used to react
+only to the player. Now they react to the nearest predator they notice: the player at `notice[sp]` as before, or
+any live AI fox, coyote, lion, hawk, raven or jay whose species hunts them in games.json `relations.predation`, at
+perception.json `detects[prey][hunter]`. The hunter list is rebuilt every 0.3 s from the live set within 300 m, and
+hunters more than 30 m above the prey do not count. Its position goes into the existing flee, freeze, bolt, flush and
+dive code. Things that are about the player as a camera stay on the player (field-guide sightings, the raven's low
+pass over a covey, the acorn game). Watchers call at an AI fox, coyote, lion or hawk as they do at a hunting player,
+at 2.5x the cooldown per watcher species (foxes and coyotes are about all dawn: with the player's cooldown seven
+calls came in 15 s), and the alarmed prey flee from that hunter. Hunters hunt: a lion stalks a deer herd, jackrabbit
+or turkey flock within 200 m and rushes for 4-5 s when within 25 m or when the prey breaks within 50 m, at most once
+a minute or two. Foxes and coyotes trot at voles, rabbits, jackrabbits and ground squirrels within 60 m and pounce.
+Half the hawk's stoops go at voles and ground squirrels. Nothing is killed yet: the hunter gives up after the rush or
+pounce, so prey numbers are unchanged until kills are added (a kill should leave carrion for the scavenge relation).
+Verified: the lane saw a summoned lion stalk a herd leader from 45 m, the herd flee 2.5 s later and the lion rush at
+6 m/s, a fox pounce a vole, a coyote trot at a jackrabbit, the hawk stoop at a vole; here, a dawn with foxes and
+coyotes about raised jay, woodpecker, quail, squirrel, deer and raven alarms at them with no errors.
