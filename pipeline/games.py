@@ -10,7 +10,7 @@ share of the tile where the resource scores under 50), and who stands in the way
 hunt lists; competitors, the species after the same resource the same season) or helps (scavengers following a predator
 to kills; watchers, species that perceive a predator this one cannot). The relations among species (predation,
 competition, scavenging, alarm) are written once for the tile too. Nothing here is hand-listed per tile: a species that
-is not in the tile's list has no games there, a resource the tile lacks makes no hotspots, and a new species in the
+is not present on the tile (species.json `present`) has no games there, a resource the tile lacks makes no hotspots, and a new species in the
 calendar gets its games the same way. docs/games.md has the design and the archetypes.
 """
 from __future__ import annotations
@@ -18,7 +18,7 @@ import numpy as np
 import rasterio
 from .config import Tile, now_iso, read_json, write_json
 from .habitat import RESOURCE_BASE
-from .species_data import ALARM_CALL, CALENDAR, DIET, NEEDS, PERCEPTION, SEASONS, detect_m
+from .species_data import ALARM_CALL, CALENDAR, DIET, NEEDS, SEASONS, detect_m, perceives_on
 
 # verb -> archetype: the loop the client plays it as (docs/games.md)
 ARCHETYPE = {"forage": "gather", "graze": "gather", "hunt": "hunt", "cache": "cache", "shelter": "shelter", "den": "shelter",
@@ -77,9 +77,9 @@ def _hotspots(arr: np.ndarray, transform, res: float, origin=(0.0, 0.0)) -> list
 
 
 def derive_games(tile: Tile) -> dict:
-    present = [s["code"] for s in read_json(tile.path("species/species.json"))]
+    present = [s["code"] for s in read_json(tile.path("species/species.json")) if s.get("present", True)]   # fetch_species.presence
     codes = [c for c in present if c in CALENDAR]
-    perceives = read_json(tile.path("perception.json")).get("perceives", {}) if tile.path("perception.json").exists() else PERCEPTION
+    perceives = read_json(tile.path("perception.json")).get("perceives", {}) if tile.path("perception.json").exists() else perceives_on(present)
     # the resource rasters: per resource and season, the hotspots and the scarcity
     rasters: dict[str, dict[str, dict]] = {}
     for r in RESOURCE_BASE:

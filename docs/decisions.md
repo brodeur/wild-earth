@@ -2005,3 +2005,22 @@ The plume by season (2026-10-28): a fall's curtain, run-out and mist are built o
 `flow` uniform now widens them by season (waterfall.js FLOW: spring 2.2, winter 1.5, summer 0.6, fall 0.45; the mist
 by the square root), since a Sierra fall is a broad sheet in May's melt and a thread by October. Verified at
 Yosemite Falls: the upper fall is a wide white sheet on 15 May and a narrow ribbon on 20 January.
+
+Species follow the place (2026-10-28, an Opus lane; pipeline/fetch_species.py, species_data.py RANGE and
+perceives_on, games.py, build_tile.py). Every tile used to get the same 18 curated species, so the Yosemite Valley
+tile had brush rabbits and jackrabbits. Now the species step decides `present` per tile. A species is present if GBIF
+has at least 3 records of it within 10 km of the tile in the last 15 years, or else if at least 5% of the tile lies
+in its elevation band on its habitats (species_data.RANGE, central Sierra west-slope life zones from Grinnell and
+Storer's 1924 Yosemite transect). Records alone would fail both ways: the brush rabbit has no record near the home
+tile since 2011, and the mountain lion and gray fox have only one or two around Yosemite Valley, though all three
+live where they are kept; the range alone would ignore the evidence we have. So the records decide first, and the
+band only keeps a species the records miss where it can live. Yosemite loses the brush rabbit, jackrabbit and
+California vole and keeps 15; the three foothill tiles keep all 18 (home: perception.json unchanged). An absent
+species has no row in perception.json `perceives`, appears in no row, and has no games; the species-level tables
+(`detects`, `signatures`, `alarm_calls`) still list everyone; species.json carries `present`, `rule`,
+`records_buffer`, `range_share` and `evidence`; the buffered GBIF counts are cached per tile. The bands fit only the
+central Sierra west slope; other regions will need their own. The species Yosemite really has (black bear, mountain
+quail) need new species, not this rule (the bear is in progress). Client follow-ups still open: animals.js PENDING
+re-adds a species no `perceives` row names (on Yosemite the jackrabbit), the spirit perceives every species the client
+knows rather than the present ones, sound.js builds its callers from every species.json entry; the lineup already
+skips absent species (arrival.js).

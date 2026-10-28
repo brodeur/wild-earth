@@ -15,7 +15,7 @@
   38.73825606650576
  ],
  "size_m": 10000,
- "generated_at": "2026-10-27T04:51:06Z",
+ "generated_at": "2026-10-28T06:51:31Z",
  "generator": {
   "name": "wild-earth-pipeline",
   "version": "0.2.0"
@@ -52,8 +52,10 @@
    "kind": "table",
    "source": "gbif",
    "count": 18,
-   "sha256": "7bf2320b58fe718445f88769a908957101cb175640b673b08e4c19b7bfc0b783",
-   "bytes": 8640
+   "present": 18,
+   "absent": [],
+   "sha256": "120640bf26fe3e5e38c29172a3389f045549fb5952f880f40ea22eb5664f7d2b",
+   "bytes": 11538
   },
   "species.occurrences": {
    "path": "species/occurrences.geojson",
@@ -83,8 +85,8 @@
   "perception": {
    "path": "perception.json",
    "kind": "table",
-   "sha256": "6373175f3454aaa21dab00ef47975ee59067076822279ac8e7451ec1a84a2597",
-   "bytes": 5954
+   "sha256": "5883a823770d88b864150ca0775e0da54b09096bfdce3c0fa2f3152ab6048fff",
+   "bytes": 17582
   },
   "calendar": {
    "path": "calendar.json",
@@ -435,8 +437,19 @@
      "fall": 19.3
     }
    },
-   "sha256": "ccf0e69f2837951ed5ff3c86a8b38d295dd8cfaa03c1b3a9b594c1ccbdef2a03",
-   "bytes": 5140
+   "client_png": {
+    "acorn_mast": "client/res_acorn_mast.png",
+    "grass_forbs": "client/res_grass_forbs.png",
+    "browse": "client/res_browse.png",
+    "cover": "client/res_cover.png",
+    "insects": "client/res_insects.png",
+    "cavity": "client/res_cavity.png",
+    "cliff_or_snag": "client/res_cliff_or_snag.png",
+    "burrow": "client/res_burrow.png",
+    "water": "client/res_water.png"
+   },
+   "sha256": "823dc0ae63ffcad0c8d8fb3c72367740fb2d6fa9e237dbc333f806972622ad3a",
+   "bytes": 5523
   },
   "client.heights": {
    "path": "client/heights.png",
@@ -585,18 +598,19 @@
     "roads": 1000,
     "streams": 396,
     "waterbodies": 61,
-    "places": 7
+    "places": 7,
+    "territories": 0
    },
    "streams_from": "hydro.channels",
+   "places_from": "osm",
    "derived_from": [
     "footprint.mask",
     "hydro.channels",
     "hydro.waterbodies",
     "osm"
    ],
-   "sha256": "62b985c3f2cad2e3dbe056de4c8ba13d456ec1ce3ae648e222f9b56fbae07169",
-   "bytes": 626629,
-   "places_from": "osm"
+   "sha256": "132e2628b2785bad0f6c25c8bfaacc2ae278998d473ddb21bbad6d556229c4c7",
+   "bytes": 626752
   },
   "client.roads": {
    "path": "client/roads.png",
@@ -610,8 +624,11 @@
    ],
    "pixels": 2000,
    "resolution_m": 5.0,
-   "derived_from": "footprint.mask",
-   "encoding": "road weight 0..255 (255 pavement, verge 136 falling to 0; tracks half weight)",
+   "derived_from": [
+    "footprint.mask",
+    "footprint.urban"
+   ],
+   "encoding": "road weight 0..255 (255 pavement, verge 136 falling to 0; tracks half weight); 0 inside footprint.urban except motorways and trunk roads",
    "road_fraction": 0.03791225,
    "sha256": "915e87d9661131f2c9fd00e0beb555e5d2666b5eb4be99cfe8fa910b8fed8ee3",
    "bytes": 306771
@@ -6828,6 +6845,62 @@
    },
    "sha256": "022818f6a304cf6664d7a5d740c5f2205d5202a6ceb674ac2abe12984e09a8e5",
    "bytes": 634245
+  },
+  "footprint.urban": {
+   "path": "footprint/urban.tif",
+   "kind": "raster",
+   "crs": "EPSG:32610",
+   "bounds": [
+    690000,
+    4280000,
+    700000,
+    4290000
+   ],
+   "pixels": 2000,
+   "resolution_m": 5.0,
+   "source": "osm",
+   "sources_used": [
+    "landfire"
+   ],
+   "derived_from": [
+    "footprint.mask",
+    "vegetation.evt"
+   ],
+   "encoding": "uint8, row 0 north: 1 densely built (streets, blocks and street trees rewilded whole), 0 not",
+   "method": "OSM building cover (rasterised at 2.5 m) averaged within 100 m; dense where >= 0.15, or >= 0.075 on LANDFIRE EVT Developed-Medium / High Intensity cells; kept within 25 m of a building or on those cells; closed by 40 m, enclosed gaps under 3 ha filled, components under 75 ha dropped",
+   "stats": {
+    "fraction": 0.0,
+    "area_ha": 0.0,
+    "components": 0,
+    "component_area_ha": [],
+    "dropped_components": 41,
+    "dropped_area_ha": 99.8,
+    "holes_filled": 0,
+    "buildings": 2801,
+    "building_cover": 0.0068,
+    "building_cover_inside": null,
+    "seed_fraction": 0.0084,
+    "evt_medhigh_fraction": 0.0128,
+    "evt_medhigh_inside": null
+   },
+   "sha256": "c32da7cf8d26b7d5d3075d7c816d25ea9bc78b4bcf089050cfeb649744525792",
+   "bytes": 6272
+  },
+  "games": {
+   "path": "games.json",
+   "kind": "json",
+   "species": 18,
+   "games": 275,
+   "requests": {
+    "drawn": 15,
+    "partial": 3,
+    "missing": 1
+   },
+   "collective": 146,
+   "predation_pairs": 29,
+   "alarm_links": 51,
+   "sha256": "7ed10a017ce84b41a6d32f9481d40600944deffc16abdf7e73c2393b09d0f1ea",
+   "bytes": 334826
   }
  },
  "sources": {
@@ -6839,7 +6912,7 @@
    "attribution": "\u00a9 OpenStreetMap contributors",
    "attribution_url": "https://www.openstreetmap.org/copyright",
    "attribution_required": true,
-   "retrieved": "2026-10-26"
+   "retrieved": "2026-10-28"
   },
   "gbif": {
    "name": "GBIF occurrence API (includes iNaturalist research-grade and eBird)",
@@ -6849,7 +6922,7 @@
    "attribution": "Species occurrences: GBIF.org and its contributing datasets, including iNaturalist and eBird (CC0, CC BY 4.0 or CC BY-NC 4.0 per record)",
    "attribution_url": "https://www.gbif.org/",
    "attribution_required": true,
-   "retrieved": "2026-10-26"
+   "retrieved": "2026-10-28"
   },
   "nhdplus_hr": {
    "name": "USGS NHDPlus High Resolution",
@@ -6869,7 +6942,7 @@
    "attribution": "Imagery: USDA National Agriculture Imagery Program (NAIP), via Microsoft Planetary Computer",
    "attribution_url": "https://www.fpacbc.usda.gov/geo/imagery-programs/naip-imagery",
    "attribution_required": false,
-   "retrieved": "2026-10-26"
+   "retrieved": "2026-10-28"
   },
   "usgs_3dep": {
    "name": "USGS 3D Elevation Program (3DEP) bare-earth DEM",
@@ -6889,7 +6962,7 @@
    "attribution": "Vegetation: LANDFIRE 2025 (EVT, EVC, EVH) and LANDFIRE 2016 Biophysical Settings, U.S. Department of the Interior, Geological Survey, and U.S. Department of Agriculture",
    "attribution_url": "https://landfire.gov",
    "attribution_required": false,
-   "retrieved": "2026-10-25"
+   "retrieved": "2026-10-28"
   },
   "macrostrat": {
    "name": "Macrostrat API geologic_units/map (Burwell map compilation)",
@@ -7342,6 +7415,18 @@
    "step": "weather",
    "at": "2026-10-27T04:51:06Z",
    "seconds": 4.2,
+   "ok": true
+  },
+  {
+   "step": "species",
+   "at": "2026-10-28T06:50:53Z",
+   "seconds": 186.1,
+   "ok": true
+  },
+  {
+   "step": "derive",
+   "at": "2026-10-28T06:51:31Z",
+   "seconds": 38.0,
    "ok": true
   }
  ]

@@ -102,7 +102,42 @@ SPECIES = [
 
 ALL = [s["code"] for s in SPECIES]
 
-# Who exists for whom. A species absent from a player's list is not rendered for them.
+# Where each species can live, for the presence rule (fetch_species.presence): an elevation band (m) and the habitat
+# classes (habitat.py CLASSES) it uses there. The bands are the central Sierra Nevada west slope's, from Grinnell and
+# Storer, Animal Life in the Yosemite (1924), which walked a transect from the San Joaquin valley over Yosemite to Mono
+# Lake and gave each species its life zones: Lower Sonoran below ~300 m, Upper Sonoran (foothill woodland and
+# chaparral) to ~1200 m, Transition (the yellow pine belt; Yosemite Valley's floor, 1200 m) to ~2000 m, Canadian to
+# ~2500 m, Hudsonian to ~3200 m. Where the book gives a limit it is used: the brush rabbit "to altitude of 4000 feet"
+# north of El Portal (1220 m); the California vole east to El Portal and Cascades (3600 ft, 1100 m); the
+# black-tailed jackrabbit Lower and Upper Sonoran on the west slope; the gray fox Upper Sonoran and Transition, east
+# to the floor of Yosemite Valley, chiefly in chaparral; the mountain lion Sonoran, Transition and Canadian; the
+# ground squirrel's highest record 8200 ft (2500 m). The others are coarse (whole slope for the wide-ranging ones).
+# A band says where the species can be, not that it is: the records decide first, the band only keeps a species the
+# records miss (a cryptic or nocturnal one, on a tile few people watch). Other regions need their own bands.
+_ALL_HAB = ["oak_woodland", "conifer_forest", "mixed_forest", "chaparral", "grassland", "riparian", "barren"]
+RANGE = {
+    "corvus_corax":             {"elev_m": [0, 4000], "habitats": _ALL_HAB},
+    "buteo_jamaicensis":        {"elev_m": [0, 3500], "habitats": _ALL_HAB},
+    "odocoileus_hemionus":      {"elev_m": [0, 3500], "habitats": _ALL_HAB},
+    "urocyon_cinereoargenteus": {"elev_m": [0, 2000], "habitats": ["chaparral", "oak_woodland", "mixed_forest", "conifer_forest", "riparian"]},
+    "sciurus_griseus":          {"elev_m": [0, 2000], "habitats": ["oak_woodland", "mixed_forest", "conifer_forest", "riparian"]},
+    "melanerpes_formicivorus":  {"elev_m": [0, 2000], "habitats": ["oak_woodland", "mixed_forest", "riparian"]},
+    "callipepla_californica":   {"elev_m": [0, 1500], "habitats": ["grassland", "chaparral", "oak_woodland", "riparian"]},
+    "aphelocoma_californica":   {"elev_m": [0, 1500], "habitats": ["oak_woodland", "chaparral", "riparian", "mixed_forest"]},
+    "cyanocitta_stelleri":      {"elev_m": [300, 3000], "habitats": ["conifer_forest", "mixed_forest", "riparian"]},
+    "cathartes_aura":           {"elev_m": [0, 3000], "habitats": _ALL_HAB},
+    "sylvilagus_bachmani":      {"elev_m": [0, 1220], "habitats": ["chaparral", "oak_woodland", "riparian"]},
+    "lepus_californicus":       {"elev_m": [0, 1200], "habitats": ["grassland", "oak_woodland", "chaparral"]},
+    "microtus_californicus":    {"elev_m": [0, 1100], "habitats": ["grassland", "riparian", "oak_woodland"]},
+    "canis_latrans":            {"elev_m": [0, 3500], "habitats": _ALL_HAB},
+    "puma_concolor":            {"elev_m": [0, 2500], "habitats": ["oak_woodland", "conifer_forest", "mixed_forest", "chaparral", "riparian", "barren"]},
+    "meleagris_gallopavo":      {"elev_m": [0, 1500], "habitats": ["oak_woodland", "mixed_forest", "grassland", "riparian"]},
+    "otospermophilus_beecheyi": {"elev_m": [0, 2500], "habitats": ["grassland", "oak_woodland", "chaparral", "riparian", "barren"]},
+    "sceloporus_occidentalis":  {"elev_m": [0, 2700], "habitats": ["oak_woodland", "conifer_forest", "mixed_forest", "chaparral", "grassland", "riparian", "barren"]},
+}
+
+# Who exists for whom, wherever both live. A species absent from a player's list is not rendered for them; on a tile the
+# species step keeps only the species present there (fetch_species.presence, perceives_on).
 PERCEPTION = {
     "corvus_corax": ALL,
     "buteo_jamaicensis": [c for c in ALL if c != "puma_concolor"],
@@ -160,6 +195,14 @@ PERCEPTION = {
                                 "aphelocoma_californica", "urocyon_cinereoargenteus", "canis_latrans",
                                 "otospermophilus_beecheyi", "meleagris_gallopavo", "sciurus_griseus"],
 }
+
+
+def perceives_on(present) -> dict[str, list[str]]:
+    """PERCEPTION on a tile: rows only for the species present there (an absent one cannot be played), each row
+    filtered to the present species."""
+    present = set(present)
+    return {o: [c for c in row if c in present] for o, row in PERCEPTION.items() if o in present}
+
 
 SEASONS = {"winter": [12, 1, 2], "spring": [3, 4, 5], "summer": [6, 7, 8], "fall": [9, 10, 11]}
 

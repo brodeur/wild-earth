@@ -17,7 +17,7 @@ import traceback
 
 from .config import (ATTRIBUTION_FIELDS, GENERATOR, SPEC_VERSION, TILES_DIR, Tile, all_sources, now_iso,
                      read_json, sha256, today, write_json)
-from .species_data import CALENDAR, PERCEPTION, SEASONS
+from .species_data import CALENDAR, SEASONS
 
 ALL_STEPS = ["dem", "lidar", "naip", "osm", "hydro", "channels", "rewild_hydro", "veg", "ground", "species", "derive", "crowns", "erase", "inpaint", "seasons", "weather", "unreal"]
 
@@ -130,8 +130,11 @@ def run(tile: Tile, steps: list[str], force=False) -> dict:
                 from .fetch_species import fetch_species
                 for k, v in fetch_species(tile, force).items():
                     add_layer(m, tile, k, v)
-                from .species_data import ALARM_CALL, SIGNATURE, detection_matrix
-                write_json(tile.path("perception.json"), {"perceives": PERCEPTION, "detects": detection_matrix(), "signatures": SIGNATURE,
+                from .species_data import ALARM_CALL, SIGNATURE, detection_matrix, perceives_on
+                # perceives: only the species present on the tile (species.json `present`, fetch_species.presence), so an
+                # absent one is neither met nor played here; detects, signatures and alarm_calls stay species-level tables
+                present = [s["code"] for s in read_json(tile.path("species/species.json")) if s.get("present", True)]
+                write_json(tile.path("perception.json"), {"perceives": perceives_on(present), "detects": detection_matrix(), "signatures": SIGNATURE,
                                                          "alarm_calls": ALARM_CALL})   # detects: how far each notices each, m (species_data.detect_m)
                 write_json(tile.path("calendar.json"), {"seasons": SEASONS, "activities": CALENDAR})
                 add_layer(m, tile, "perception", {"path": "perception.json", "kind": "table"})

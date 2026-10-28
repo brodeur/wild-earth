@@ -107,10 +107,10 @@ tiles/<tile_id>/
   unreal/weights/<class>.png    derived   8-bit weight-blended layer per habitat class
   unreal/canopy_<kind>.png      derived   8-bit tree / shrub / herb cover for PCG density
   unreal/unreal.json            derived   Landscape scale, actor Z, component layout, layer list
-  species/species.json          required  species list with roles, senses, sources
+  species/species.json          required  the curated species with roles, senses, sources, and whether each lives on the tile (`present`, with the evidence)
   species/occurrences.geojson   required  occurrence points for listed species; pipeline and viewer only (`for_clients: false`)
   species/seasonal.json         derived   per-species counts by month (phenology proxy); counts every record, so `for_clients: false`
-  perception.json               required  who perceives whom, and how far each notices each by sight, sound and scent (detects, m)
+  perception.json               required  who perceives whom among the species present (perceives), and how far each notices each by sight, sound and scent (detects, m)
   client/res_<resource>.png     derived   each resource's four seasons as RGBA, 0..100, on the 30 m grid (resources.py; needs.js)
   client/features.json          derived   roads, streams, waterbodies, places (OSM) and the Indigenous territories over the tile (Native Land Digital, with a key) for the client
   games.json                    derived   the species' games by season, classified, placed and scored (pipeline/games.py; docs/games.md)
@@ -700,9 +700,24 @@ resolved at run time from species, not rasters.
   "senses": {"vision": {"range_m": 300, "color": "dichromat"},
              "hearing": {"range_m": 400}, "smell": {"range_m": 600}},
   "sources": ["gbif"],
-  "confidence": "unverified"
+  "confidence": "unverified",
+  "present": true,
+  "rule": "records",
+  "records_buffer": 77,
+  "range_share": 0.863,
+  "evidence": "77 records within 10 km in 2011-2026 (>= 3)"
 }
 ```
+
+The list is the whole curated set on every tile; `present` says whether the species lives on this one
+(`pipeline/fetch_species.py` `presence`). It is present if GBIF has at least 3 records of it within 10 km
+of the tile in the last 15 calendar years (`records_buffer`; `rule: "records"`), or else if at least 5% of
+the tile lies in its elevation band on one of its habitat classes (`species_data.RANGE`, central Sierra west
+slope life zones after Grinnell and Storer 1924; `range_share`, on the DEM and the rewilded habitat raster;
+`rule: "range"`); otherwise `rule: "absent"`. `evidence` is the same as one line. A species that is not
+present has no row in `perception.json` `perceives` and is in no row there, has no games in `games.json`,
+and is not in its relations or requests. A file without `present` (built before 2026-10-27) means every
+species is present.
 
 `role` is `playable` or `ambient`. `scale` is the LOD bucket (`insect`, `vole`,
 `squirrel`, `fox`, `deer`, `bird`). `confidence` is `unverified`, `verified` or
@@ -839,6 +854,9 @@ the review process are in [species-library.md](species-library.md).
 
 A species exists for a player only if it is in that player's list. Senses in
 `species.json` set how far and in what color; this matrix sets what at all.
+`perceives` holds only the species present on the tile (`species.json` `present`): an absent
+species has no row (it cannot be played there) and is dropped from every row. `detects`,
+`signatures` and `alarm_calls` are species-level tables and list every curated species.
 
 ## calendar.json
 

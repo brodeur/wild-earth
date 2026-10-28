@@ -15,7 +15,7 @@
   38.65029129231017
  ],
  "size_m": 10000,
- "generated_at": "2026-10-27T04:51:13Z",
+ "generated_at": "2026-10-28T06:54:10Z",
  "generator": {
   "name": "wild-earth-pipeline",
   "version": "0.2.0"
@@ -674,18 +674,19 @@
     "roads": 139,
     "streams": 417,
     "waterbodies": 16,
-    "places": 2
+    "places": 2,
+    "territories": 0
    },
    "streams_from": "hydro.channels",
+   "places_from": "osm",
    "derived_from": [
     "footprint.mask",
     "hydro.channels",
     "hydro.waterbodies",
     "osm"
    ],
-   "sha256": "6766434da68c92521ac794e74fd5b39ef4e6cb81f7ed38d03ac72b900a2c0b33",
-   "bytes": 366302,
-   "places_from": "osm"
+   "sha256": "87fd2b982704126e8083b5c5d861cc158267a555b631c415f22782d5821d64a0",
+   "bytes": 366425
   },
   "vegetation.evt": {
    "path": "vegetation/evt.tif",
@@ -992,8 +993,10 @@
    "kind": "table",
    "source": "gbif",
    "count": 18,
-   "sha256": "227add932620671057a4200ba6c316f3a67e21752773c75065b0c7c41cf3f529",
-   "bytes": 8627
+   "present": 18,
+   "absent": [],
+   "sha256": "3217e3807fbda7562e8cc7ac007f79d5fa9aa736a9ccac7d340e8ff54eb0fa88",
+   "bytes": 11521
   },
   "species.occurrences": {
    "path": "species/occurrences.geojson",
@@ -1023,8 +1026,8 @@
   "perception": {
    "path": "perception.json",
    "kind": "table",
-   "sha256": "6373175f3454aaa21dab00ef47975ee59067076822279ac8e7451ec1a84a2597",
-   "bytes": 5954
+   "sha256": "5883a823770d88b864150ca0775e0da54b09096bfdce3c0fa2f3152ab6048fff",
+   "bytes": 17582
   },
   "calendar": {
    "path": "calendar.json",
@@ -1485,8 +1488,19 @@
      "fall": 14.7
     }
    },
-   "sha256": "bf6e4427e2ebc1e68c85f47047557fb740dcc023ca23b165200a0a33d77b878f",
-   "bytes": 5141
+   "client_png": {
+    "acorn_mast": "client/res_acorn_mast.png",
+    "grass_forbs": "client/res_grass_forbs.png",
+    "browse": "client/res_browse.png",
+    "cover": "client/res_cover.png",
+    "insects": "client/res_insects.png",
+    "cavity": "client/res_cavity.png",
+    "cliff_or_snag": "client/res_cliff_or_snag.png",
+    "burrow": "client/res_burrow.png",
+    "water": "client/res_water.png"
+   },
+   "sha256": "dd28fe4578f5e60cdd817f4923c608c55d9555847bb778f326eb7b9e285b60da",
+   "bytes": 5524
   },
   "unreal": {
    "path": "unreal/unreal.json",
@@ -1576,8 +1590,11 @@
    ],
    "pixels": 2000,
    "resolution_m": 5.0,
-   "derived_from": "footprint.mask",
-   "encoding": "road weight 0..255 (255 pavement, verge 136 falling to 0; tracks half weight)",
+   "derived_from": [
+    "footprint.mask",
+    "footprint.urban"
+   ],
+   "encoding": "road weight 0..255 (255 pavement, verge 136 falling to 0; tracks half weight); 0 inside footprint.urban except motorways and trunk roads",
    "road_fraction": 0.0135125,
    "sha256": "a0af6eb95b455290e8e56a6bb23862405bd566ad574df5dbb4eaaec8de45e43c",
    "bytes": 132186
@@ -5095,6 +5112,62 @@
    },
    "sha256": "192e8fcd02e8ac9bfacf75ae44fce086ebe22d1e5cfa83abc6d639443adcb6b2",
    "bytes": 633557
+  },
+  "footprint.urban": {
+   "path": "footprint/urban.tif",
+   "kind": "raster",
+   "crs": "EPSG:32610",
+   "bounds": [
+    680000,
+    4270000,
+    690000,
+    4280000
+   ],
+   "pixels": 2000,
+   "resolution_m": 5.0,
+   "source": "osm",
+   "sources_used": [
+    "landfire"
+   ],
+   "derived_from": [
+    "footprint.mask",
+    "vegetation.evt"
+   ],
+   "encoding": "uint8, row 0 north: 1 densely built (streets, blocks and street trees rewilded whole), 0 not",
+   "method": "OSM building cover (rasterised at 2.5 m) averaged within 100 m; dense where >= 0.15, or >= 0.075 on LANDFIRE EVT Developed-Medium / High Intensity cells; kept within 25 m of a building or on those cells; closed by 40 m, enclosed gaps under 3 ha filled, components under 75 ha dropped",
+   "stats": {
+    "fraction": 0.0,
+    "area_ha": 0.0,
+    "components": 0,
+    "component_area_ha": [],
+    "dropped_components": 0,
+    "dropped_area_ha": 0.0,
+    "holes_filled": 0,
+    "buildings": 37,
+    "building_cover": 0.0001,
+    "building_cover_inside": null,
+    "seed_fraction": 0.0,
+    "evt_medhigh_fraction": 0.0011,
+    "evt_medhigh_inside": null
+   },
+   "sha256": "97a780fb04f7c6fb815b14dfef2d6769613c42e26960c86c16c232c24477292e",
+   "bytes": 6272
+  },
+  "games": {
+   "path": "games.json",
+   "kind": "json",
+   "species": 18,
+   "games": 275,
+   "requests": {
+    "drawn": 15,
+    "partial": 3,
+    "missing": 1
+   },
+   "collective": 146,
+   "predation_pairs": 29,
+   "alarm_links": 51,
+   "sha256": "adda8be7fde931ab75fedc379cb8684cbbcdc54717c2367f032b0222f7f79095",
+   "bytes": 334778
   }
  },
  "sources": {
@@ -5116,7 +5189,7 @@
    "attribution": "Imagery: USDA National Agriculture Imagery Program (NAIP), via Microsoft Planetary Computer",
    "attribution_url": "https://www.fpacbc.usda.gov/geo/imagery-programs/naip-imagery",
    "attribution_required": false,
-   "retrieved": "2026-10-26"
+   "retrieved": "2026-10-28"
   },
   "nhdplus_hr": {
    "name": "USGS NHDPlus High Resolution",
@@ -5136,7 +5209,7 @@
    "attribution": "Vegetation: LANDFIRE 2025 (EVT, EVC, EVH) and LANDFIRE 2016 Biophysical Settings, U.S. Department of the Interior, Geological Survey, and U.S. Department of Agriculture",
    "attribution_url": "https://landfire.gov",
    "attribution_required": false,
-   "retrieved": "2026-10-25"
+   "retrieved": "2026-10-28"
   },
   "macrostrat": {
    "name": "Macrostrat API geologic_units/map (Burwell map compilation)",
@@ -5176,7 +5249,7 @@
    "attribution": "Species occurrences: GBIF.org and its contributing datasets, including iNaturalist and eBird (CC0, CC BY 4.0 or CC BY-NC 4.0 per record)",
    "attribution_url": "https://www.gbif.org/",
    "attribution_required": true,
-   "retrieved": "2026-10-26"
+   "retrieved": "2026-10-28"
   },
   "osm": {
    "name": "OpenStreetMap via Overpass API",
@@ -5186,7 +5259,7 @@
    "attribution": "\u00a9 OpenStreetMap contributors",
    "attribution_url": "https://www.openstreetmap.org/copyright",
    "attribution_required": true,
-   "retrieved": "2026-10-26"
+   "retrieved": "2026-10-28"
   },
   "usgs_3dep_1m": {
    "name": "USGS 3DEP 1 m bare-earth DEM (standard 1-meter DEM tiles) via the AWS public bucket prd-tnm",
@@ -5541,6 +5614,18 @@
    "step": "weather",
    "at": "2026-10-27T04:51:13Z",
    "seconds": 3.7,
+   "ok": true
+  },
+  {
+   "step": "species",
+   "at": "2026-10-28T06:53:38Z",
+   "seconds": 126.7,
+   "ok": true
+  },
+  {
+   "step": "derive",
+   "at": "2026-10-28T06:54:10Z",
+   "seconds": 31.8,
    "ok": true
   }
  ]

@@ -15,7 +15,7 @@
   37.830918414113654
  ],
  "size_m": 10000,
- "generated_at": "2026-10-28T06:07:10Z",
+ "generated_at": "2026-10-28T06:44:23Z",
  "generator": {
   "name": "wild-earth-pipeline",
   "version": "0.2.0"
@@ -555,8 +555,14 @@
    "kind": "table",
    "source": "gbif",
    "count": 18,
-   "sha256": "07504e6760086ae9938e1c9809079b21082aac40a6604e7c59dbfc28f0fc9ad0",
-   "bytes": 8644
+   "present": 15,
+   "absent": [
+    "sylvilagus_bachmani",
+    "lepus_californicus",
+    "microtus_californicus"
+   ],
+   "sha256": "78ed1e838d8614223d5dfe93121ea994a94da8402855012ce65632c9bd8693a6",
+   "bytes": 11850
   },
   "species.occurrences": {
    "path": "species/occurrences.geojson",
@@ -586,8 +592,8 @@
   "perception": {
    "path": "perception.json",
    "kind": "table",
-   "sha256": "6373175f3454aaa21dab00ef47975ee59067076822279ac8e7451ec1a84a2597",
-   "bytes": 5954
+   "sha256": "4b64e0b0151ebc22a147f4744bdc539693c16bbf1b15a7390200c37bee299b28",
+   "bytes": 16452
   },
   "calendar": {
    "path": "calendar.json",
@@ -2189,18 +2195,18 @@
   "games": {
    "path": "games.json",
    "kind": "json",
-   "species": 18,
-   "games": 275,
+   "species": 15,
+   "games": 234,
    "requests": {
-    "drawn": 15,
+    "drawn": 12,
     "partial": 3,
     "missing": 1
    },
    "collective": 146,
-   "predation_pairs": 29,
-   "alarm_links": 51,
-   "sha256": "89ab037f5422c73ead3f8013f9d3926cf72f9b32b40861b7759ec71d3b67ecbd",
-   "bytes": 334649
+   "predation_pairs": 18,
+   "alarm_links": 44,
+   "sha256": "709b7b9e283c4ef4978cd57c6e898e2088b263d06b183671d45b25091e85c4ed",
+   "bytes": 285065
   },
   "client.texture_imagery": {
    "path": "client/texture_imagery.jpg",
@@ -2284,6 +2290,23 @@
    "encoding": "NAIP 2022 RGB with human footprint inpainted or synthesized, pavement bleached; JPEG q88",
    "sha256": "5c78b90acd1eb8d0bffdb77eced4a32ebf0a3b5e68346baf564613382e28625d",
    "bytes": 5968778
+  },
+  "client.mast": {
+   "path": "client/mast.png",
+   "kind": "raster",
+   "crs": "EPSG:32611",
+   "bounds": [
+    270000,
+    4180000,
+    280000,
+    4190000
+   ],
+   "pixels": 333,
+   "resolution_m": 30.03003003003003,
+   "derived_from": "resources.acorn_mast",
+   "encoding": "R = fall acorn_mast score 0..100",
+   "sha256": "a9b628b61bf99749a7cd1ed049ae99a84fee7eb271821bd775c46d862b08f4ac",
+   "bytes": 19462
   }
  },
  "sources": {
@@ -2875,6 +2898,18 @@
    "step": "unreal",
    "at": "2026-10-28T06:07:10Z",
    "seconds": 1.7,
+   "ok": true
+  },
+  {
+   "step": "species",
+   "at": "2026-10-28T06:43:51Z",
+   "seconds": 216.2,
+   "ok": true
+  },
+  {
+   "step": "derive",
+   "at": "2026-10-28T06:44:23Z",
+   "seconds": 31.9,
    "ok": true
   }
  ]

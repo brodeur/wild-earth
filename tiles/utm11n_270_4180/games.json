@@ -1,5 +1,5 @@
 {
- "generated": "2026-10-28T06:06:51Z",
+ "generated": "2026-10-28T06:44:23Z",
  "tile_id": "utm11n_270_4180",
  "archetypes": {
   "gather": "find the resource's hotspots, feed, keep an eye out: the predators listed hunt here; the competitors eat the same cells",
@@ -45,12 +45,9 @@
    "resource": "grass_forbs",
    "needed_by": [
     "callipepla_californica",
-    "lepus_californicus",
     "meleagris_gallopavo",
-    "microtus_californicus",
     "odocoileus_hemionus",
-    "otospermophilus_beecheyi",
-    "sylvilagus_bachmani"
+    "otospermophilus_beecheyi"
    ],
    "raster": "client/res_grass_forbs.png",
    "objects": [
@@ -66,10 +63,8 @@
    "kind": "resource",
    "resource": "browse",
    "needed_by": [
-    "lepus_californicus",
     "odocoileus_hemionus",
-    "sciurus_griseus",
-    "sylvilagus_bachmani"
+    "sciurus_griseus"
    ],
    "raster": "client/res_browse.png",
    "objects": [
@@ -90,12 +85,10 @@
     "canis_latrans",
     "corvus_corax",
     "cyanocitta_stelleri",
-    "lepus_californicus",
     "meleagris_gallopavo",
     "odocoileus_hemionus",
     "puma_concolor",
     "sceloporus_occidentalis",
-    "sylvilagus_bachmani",
     "urocyon_cinereoargenteus"
    ],
    "raster": "client/res_cover.png",
@@ -177,7 +170,6 @@
    "resource": "burrow",
    "needed_by": [
     "canis_latrans",
-    "microtus_californicus",
     "otospermophilus_beecheyi",
     "sceloporus_occidentalis",
     "urocyon_cinereoargenteus"
@@ -242,31 +234,10 @@
   },
   {
    "kind": "prey",
-   "species": "lepus_californicus",
-   "needed_by": [
-    "buteo_jamaicensis",
-    "canis_latrans",
-    "puma_concolor"
-   ],
-   "status": "drawn"
-  },
-  {
-   "kind": "prey",
    "species": "meleagris_gallopavo",
    "needed_by": [
     "canis_latrans",
     "puma_concolor"
-   ],
-   "status": "drawn"
-  },
-  {
-   "kind": "prey",
-   "species": "microtus_californicus",
-   "needed_by": [
-    "buteo_jamaicensis",
-    "canis_latrans",
-    "corvus_corax",
-    "urocyon_cinereoargenteus"
    ],
    "status": "drawn"
   },
@@ -308,17 +279,6 @@
     "buteo_jamaicensis"
    ],
    "status": "drawn"
-  },
-  {
-   "kind": "prey",
-   "species": "sylvilagus_bachmani",
-   "needed_by": [
-    "buteo_jamaicensis",
-    "canis_latrans",
-    "puma_concolor",
-    "urocyon_cinereoargenteus"
-   ],
-   "status": "drawn"
   }
  ],
  "relations": {
@@ -329,27 +289,11 @@
    ],
    [
     "corvus_corax",
-    "microtus_californicus"
-   ],
-   [
-    "corvus_corax",
     "callipepla_californica"
    ],
    [
     "buteo_jamaicensis",
-    "microtus_californicus"
-   ],
-   [
-    "buteo_jamaicensis",
     "otospermophilus_beecheyi"
-   ],
-   [
-    "buteo_jamaicensis",
-    "sylvilagus_bachmani"
-   ],
-   [
-    "buteo_jamaicensis",
-    "lepus_californicus"
    ],
    [
     "buteo_jamaicensis",
@@ -362,14 +306,6 @@
    [
     "buteo_jamaicensis",
     "callipepla_californica"
-   ],
-   [
-    "urocyon_cinereoargenteus",
-    "microtus_californicus"
-   ],
-   [
-    "urocyon_cinereoargenteus",
-    "sylvilagus_bachmani"
    ],
    [
     "urocyon_cinereoargenteus",
@@ -386,18 +322,6 @@
    [
     "aphelocoma_californica",
     "sceloporus_occidentalis"
-   ],
-   [
-    "canis_latrans",
-    "lepus_californicus"
-   ],
-   [
-    "canis_latrans",
-    "sylvilagus_bachmani"
-   ],
-   [
-    "canis_latrans",
-    "microtus_californicus"
    ],
    [
     "canis_latrans",
@@ -418,14 +342,6 @@
    [
     "puma_concolor",
     "odocoileus_hemionus"
-   ],
-   [
-    "puma_concolor",
-    "lepus_californicus"
-   ],
-   [
-    "puma_concolor",
-    "sylvilagus_bachmani"
    ],
    [
     "puma_concolor",
@@ -485,15 +401,11 @@
      "odocoileus_hemionus",
      "callipepla_californica",
      "aphelocoma_californica",
-     "sylvilagus_bachmani",
-     "lepus_californicus",
      "sceloporus_occidentalis"
     ],
     "winter": [
      "odocoileus_hemionus",
      "aphelocoma_californica",
-     "sylvilagus_bachmani",
-     "lepus_californicus",
      "sceloporus_occidentalis"
     ],
     "spring": [
@@ -502,7 +414,6 @@
      "callipepla_californica",
      "aphelocoma_californica",
      "cyanocitta_stelleri",
-     "sylvilagus_bachmani",
      "puma_concolor",
      "meleagris_gallopavo"
     ],
@@ -537,41 +448,26 @@
    },
    "browse": {
     "winter": [
-     "odocoileus_hemionus",
-     "sylvilagus_bachmani",
-     "lepus_californicus"
+     "odocoileus_hemionus"
     ],
     "summer": [
      "odocoileus_hemionus",
      "sciurus_griseus"
-    ],
-    "fall": [
-     "sylvilagus_bachmani",
-     "lepus_californicus"
     ]
    },
    "grass_forbs": {
     "spring": [
      "odocoileus_hemionus",
-     "lepus_californicus",
-     "microtus_californicus",
      "otospermophilus_beecheyi"
     ],
     "winter": [
      "callipepla_californica",
-     "sylvilagus_bachmani",
-     "lepus_californicus",
-     "microtus_californicus",
      "meleagris_gallopavo"
     ],
     "fall": [
-     "callipepla_californica",
-     "lepus_californicus",
-     "microtus_californicus"
+     "callipepla_californica"
     ],
     "summer": [
-     "sylvilagus_bachmani",
-     "lepus_californicus",
      "meleagris_gallopavo",
      "otospermophilus_beecheyi"
     ]
@@ -587,20 +483,16 @@
    "burrow": {
     "spring": [
      "urocyon_cinereoargenteus",
-     "microtus_californicus",
      "canis_latrans",
      "otospermophilus_beecheyi"
     ],
     "winter": [
-     "microtus_californicus",
      "otospermophilus_beecheyi"
     ],
     "summer": [
-     "microtus_californicus",
      "otospermophilus_beecheyi"
     ],
     "fall": [
-     "microtus_californicus",
      "otospermophilus_beecheyi"
     ]
    },
@@ -719,13 +611,6 @@
     120
    ],
    [
-    "corvus_corax",
-    "lepus_californicus",
-    "buteo_jamaicensis",
-    1200,
-    400
-   ],
-   [
     "odocoileus_hemionus",
     "meleagris_gallopavo",
     "canis_latrans",
@@ -738,27 +623,6 @@
     "puma_concolor",
     300,
     60
-   ],
-   [
-    "corvus_corax",
-    "microtus_californicus",
-    "buteo_jamaicensis",
-    1200,
-    100
-   ],
-   [
-    "corvus_corax",
-    "microtus_californicus",
-    "canis_latrans",
-    300,
-    100
-   ],
-   [
-    "corvus_corax",
-    "microtus_californicus",
-    "urocyon_cinereoargenteus",
-    120,
-    50
    ],
    [
     "corvus_corax",
@@ -975,27 +839,6 @@
     "sciurus_griseus",
     "buteo_jamaicensis",
     400,
-    200
-   ],
-   [
-    "corvus_corax",
-    "sylvilagus_bachmani",
-    "buteo_jamaicensis",
-    1200,
-    400
-   ],
-   [
-    "corvus_corax",
-    "sylvilagus_bachmani",
-    "canis_latrans",
-    300,
-    200
-   ],
-   [
-    "callipepla_californica",
-    "sylvilagus_bachmani",
-    "canis_latrans",
-    300,
     200
    ]
   ]
@@ -1206,7 +1049,6 @@
    "predators": [],
    "prey": [
     "callipepla_californica",
-    "microtus_californicus",
     "sceloporus_occidentalis"
    ],
    "games": [
@@ -1653,8 +1495,6 @@
       "odocoileus_hemionus",
       "callipepla_californica",
       "aphelocoma_californica",
-      "sylvilagus_bachmani",
-      "lepus_californicus",
       "sceloporus_occidentalis"
      ]
     },
@@ -2429,12 +2269,9 @@
    "predators": [],
    "prey": [
     "callipepla_californica",
-    "lepus_californicus",
-    "microtus_californicus",
     "otospermophilus_beecheyi",
     "sceloporus_occidentalis",
-    "sciurus_griseus",
-    "sylvilagus_bachmani"
+    "sciurus_griseus"
    ],
    "games": [
     {
@@ -2444,17 +2281,7 @@
      "season": "winter",
      "unit": "solitary",
      "collective": false,
-     "goal": "hunt from perches",
-     "prey": [
-      "microtus_californicus",
-      "sylvilagus_bachmani",
-      "lepus_californicus"
-     ],
-     "noticed_at_m": {
-      "microtus_californicus": 100,
-      "sylvilagus_bachmani": 400,
-      "lepus_californicus": 400
-     }
+     "goal": "hunt from perches"
     },
     {
      "id": "buteo_jamaicensis:spring:court",
@@ -2637,15 +2464,11 @@
      "prey": [
       "sciurus_griseus",
       "otospermophilus_beecheyi",
-      "sylvilagus_bachmani",
-      "microtus_californicus",
       "sceloporus_occidentalis"
      ],
      "noticed_at_m": {
       "sciurus_griseus": 200,
       "otospermophilus_beecheyi": 300,
-      "sylvilagus_bachmani": 400,
-      "microtus_californicus": 100,
       "sceloporus_occidentalis": 30
      }
     },
@@ -2666,11 +2489,9 @@
      "unit": "solitary",
      "collective": false,
      "prey": [
-      "microtus_californicus",
       "sciurus_griseus"
      ],
      "noticed_at_m": {
-      "microtus_californicus": 100,
       "sciurus_griseus": 200
      }
     },
@@ -3342,10 +3163,7 @@
       ]
      ],
      "scarcity": 1.0,
-     "competitors": [
-      "sylvilagus_bachmani",
-      "lepus_californicus"
-     ],
+     "competitors": [],
      "predators": [
       "canis_latrans",
       "puma_concolor"
@@ -3433,8 +3251,6 @@
      "scarcity": 0.19,
      "competitors": [
       "aphelocoma_californica",
-      "sylvilagus_bachmani",
-      "lepus_californicus",
       "sceloporus_occidentalis"
      ],
      "predators": [
@@ -3522,8 +3338,6 @@
      ],
      "scarcity": 0.941,
      "competitors": [
-      "lepus_californicus",
-      "microtus_californicus",
       "otospermophilus_beecheyi"
      ],
      "predators": [
@@ -3616,7 +3430,6 @@
       "callipepla_californica",
       "aphelocoma_californica",
       "cyanocitta_stelleri",
-      "sylvilagus_bachmani",
       "puma_concolor",
       "meleagris_gallopavo"
      ],
@@ -3967,8 +3780,6 @@
       "corvus_corax",
       "callipepla_californica",
       "aphelocoma_californica",
-      "sylvilagus_bachmani",
-      "lepus_californicus",
       "sceloporus_occidentalis"
      ],
      "predators": [
@@ -3996,9 +3807,7 @@
      "hotspots": [],
      "scarcity": 1.0,
      "competitors": [
-      "callipepla_californica",
-      "lepus_californicus",
-      "microtus_californicus"
+      "callipepla_californica"
      ],
      "predators": [
       "canis_latrans",
@@ -4359,8 +4168,6 @@
       "callipepla_californica",
       "aphelocoma_californica",
       "cyanocitta_stelleri",
-      "sylvilagus_bachmani",
-      "lepus_californicus",
       "puma_concolor"
      ],
      "predators": [
@@ -4625,8 +4432,6 @@
       "callipepla_californica",
       "aphelocoma_californica",
       "cyanocitta_stelleri",
-      "sylvilagus_bachmani",
-      "lepus_californicus",
       "puma_concolor"
      ],
      "predators": [
@@ -4675,10 +4480,8 @@
    "predators": [],
    "prey": [
     "callipepla_californica",
-    "microtus_californicus",
     "otospermophilus_beecheyi",
-    "sceloporus_occidentalis",
-    "sylvilagus_bachmani"
+    "sceloporus_occidentalis"
    ],
    "games": [
     {
@@ -4764,8 +4567,6 @@
      "competitors": [
       "odocoileus_hemionus",
       "aphelocoma_californica",
-      "sylvilagus_bachmani",
-      "lepus_californicus",
       "sceloporus_occidentalis"
      ]
     },
@@ -4775,15 +4576,7 @@
      "verb": "hunt",
      "season": "winter",
      "unit": "solitary",
-     "collective": false,
-     "prey": [
-      "microtus_californicus",
-      "sylvilagus_bachmani"
-     ],
-     "noticed_at_m": {
-      "microtus_californicus": 50,
-      "sylvilagus_bachmani": 200
-     }
+     "collective": false
     },
     {
      "id": "urocyon_cinereoargenteus:spring:den:burrow",
@@ -4866,7 +4659,6 @@
      ],
      "scarcity": 0.689,
      "competitors": [
-      "microtus_californicus",
       "canis_latrans",
       "otospermophilus_beecheyi"
      ]
@@ -4956,7 +4748,6 @@
       "callipepla_californica",
       "aphelocoma_californica",
       "cyanocitta_stelleri",
-      "sylvilagus_bachmani",
       "puma_concolor",
       "meleagris_gallopavo"
      ]
@@ -5330,7 +5121,6 @@
      ],
      "scarcity": 0.97,
      "competitors": [
-      "microtus_californicus",
       "canis_latrans",
       "otospermophilus_beecheyi",
       "sceloporus_occidentalis"
@@ -5582,7 +5372,6 @@
      ],
      "scarcity": 0.689,
      "competitors": [
-      "microtus_californicus",
       "canis_latrans",
       "otospermophilus_beecheyi",
       "sceloporus_occidentalis"
@@ -5747,7 +5536,6 @@
      ],
      "scarcity": 0.689,
      "competitors": [
-      "microtus_californicus",
       "canis_latrans",
       "otospermophilus_beecheyi",
       "sceloporus_occidentalis"
@@ -8339,9 +8127,6 @@
      ],
      "scarcity": 0.97,
      "competitors": [
-      "sylvilagus_bachmani",
-      "lepus_californicus",
-      "microtus_californicus",
       "meleagris_gallopavo"
      ],
      "predators": [
@@ -8435,7 +8220,6 @@
       "urocyon_cinereoargenteus",
       "aphelocoma_californica",
       "cyanocitta_stelleri",
-      "sylvilagus_bachmani",
       "puma_concolor",
       "meleagris_gallopavo"
      ],
@@ -8530,7 +8314,6 @@
       "urocyon_cinereoargenteus",
       "aphelocoma_californica",
       "cyanocitta_stelleri",
-      "sylvilagus_bachmani",
       "puma_concolor",
       "meleagris_gallopavo"
      ],
@@ -8721,8 +8504,6 @@
       "corvus_corax",
       "odocoileus_hemionus",
       "aphelocoma_californica",
-      "sylvilagus_bachmani",
-      "lepus_californicus",
       "sceloporus_occidentalis"
      ],
      "predators": [
@@ -8848,10 +8629,7 @@
      "raster": "client/res_grass_forbs.png",
      "hotspots": [],
      "scarcity": 1.0,
-     "competitors": [
-      "lepus_californicus",
-      "microtus_californicus"
-     ],
+     "competitors": [],
      "predators": [
       "buteo_jamaicensis",
       "canis_latrans",
@@ -9027,8 +8805,6 @@
       "odocoileus_hemionus",
       "aphelocoma_californica",
       "cyanocitta_stelleri",
-      "sylvilagus_bachmani",
-      "lepus_californicus",
       "puma_concolor"
      ],
      "predators": [
@@ -9299,8 +9075,6 @@
       "odocoileus_hemionus",
       "aphelocoma_californica",
       "cyanocitta_stelleri",
-      "sylvilagus_bachmani",
-      "lepus_californicus",
       "puma_concolor"
      ],
      "predators": [
@@ -9478,8 +9252,6 @@
       "odocoileus_hemionus",
       "aphelocoma_californica",
       "cyanocitta_stelleri",
-      "sylvilagus_bachmani",
-      "lepus_californicus",
       "puma_concolor"
      ],
      "predators": [
@@ -9772,8 +9544,6 @@
      "scarcity": 0.19,
      "competitors": [
       "odocoileus_hemionus",
-      "sylvilagus_bachmani",
-      "lepus_californicus",
       "sceloporus_occidentalis"
      ]
     },
@@ -9861,7 +9631,6 @@
       "urocyon_cinereoargenteus",
       "callipepla_californica",
       "cyanocitta_stelleri",
-      "sylvilagus_bachmani",
       "puma_concolor",
       "meleagris_gallopavo"
      ]
@@ -9951,7 +9720,6 @@
       "urocyon_cinereoargenteus",
       "callipepla_californica",
       "cyanocitta_stelleri",
-      "sylvilagus_bachmani",
       "puma_concolor",
       "meleagris_gallopavo"
      ]
@@ -10130,8 +9898,6 @@
       "corvus_corax",
       "odocoileus_hemionus",
       "callipepla_californica",
-      "sylvilagus_bachmani",
-      "lepus_californicus",
       "sceloporus_occidentalis"
      ]
     },
@@ -10747,8 +10513,6 @@
       "odocoileus_hemionus",
       "callipepla_californica",
       "cyanocitta_stelleri",
-      "sylvilagus_bachmani",
-      "lepus_californicus",
       "puma_concolor"
      ]
     },
@@ -10914,8 +10678,6 @@
       "odocoileus_hemionus",
       "callipepla_californica",
       "cyanocitta_stelleri",
-      "sylvilagus_bachmani",
-      "lepus_californicus",
       "puma_concolor"
      ]
     }
@@ -11098,7 +10860,6 @@
       "urocyon_cinereoargenteus",
       "callipepla_californica",
       "aphelocoma_californica",
-      "sylvilagus_bachmani",
       "puma_concolor",
       "meleagris_gallopavo"
      ]
@@ -11187,7 +10948,6 @@
       "urocyon_cinereoargenteus",
       "callipepla_californica",
       "aphelocoma_californica",
-      "sylvilagus_bachmani",
       "puma_concolor",
       "meleagris_gallopavo"
      ]
@@ -11631,8 +11391,6 @@
       "odocoileus_hemionus",
       "callipepla_californica",
       "aphelocoma_californica",
-      "sylvilagus_bachmani",
-      "lepus_californicus",
       "puma_concolor"
      ]
     },
@@ -11885,8 +11643,6 @@
       "odocoileus_hemionus",
       "callipepla_californica",
       "aphelocoma_californica",
-      "sylvilagus_bachmani",
-      "lepus_californicus",
       "puma_concolor"
      ]
     },
@@ -12052,8 +11808,6 @@
       "odocoileus_hemionus",
       "callipepla_californica",
       "aphelocoma_californica",
-      "sylvilagus_bachmani",
-      "lepus_californicus",
       "puma_concolor"
      ]
     }
@@ -13006,2647 +12760,6 @@
     }
    ]
   },
-  "sylvilagus_bachmani": {
-   "unit": "solitary",
-   "predators": [
-    "buteo_jamaicensis",
-    "canis_latrans",
-    "puma_concolor",
-    "urocyon_cinereoargenteus"
-   ],
-   "prey": [],
-   "games": [
-    {
-     "id": "sylvilagus_bachmani:winter:forage:grass_forbs",
-     "archetype": "gather",
-     "verb": "forage",
-     "season": "winter",
-     "unit": "solitary",
-     "collective": false,
-     "resource": "grass_forbs",
-     "requires": [
-      {
-       "object": "grass blades and tufts, forbs",
-       "client": "grass.js",
-       "status": "drawn"
-      }
-     ],
-     "raster": "client/res_grass_forbs.png",
-     "hotspots": [
-      [
-       7252.3,
-       9985.0,
-       54
-      ],
-      [
-       7552.6,
-       9985.0,
-       54
-      ],
-      [
-       525.5,
-       9955.0,
-       54
-      ],
-      [
-       6801.8,
-       9955.0,
-       54
-      ],
-      [
-       915.9,
-       9924.9,
-       54
-      ],
-      [
-       6141.1,
-       9924.9,
-       54
-      ],
-      [
-       8843.8,
-       9894.9,
-       54
-      ],
-      [
-       645.6,
-       9864.9,
-       54
-      ],
-      [
-       1096.1,
-       9864.9,
-       54
-      ],
-      [
-       795.8,
-       9834.8,
-       54
-      ],
-      [
-       3558.6,
-       9834.8,
-       54
-      ],
-      [
-       7282.3,
-       9804.8,
-       54
-      ]
-     ],
-     "scarcity": 0.97,
-     "competitors": [
-      "callipepla_californica",
-      "lepus_californicus",
-      "microtus_californicus",
-      "meleagris_gallopavo"
-     ],
-     "predators": [
-      "buteo_jamaicensis",
-      "canis_latrans",
-      "puma_concolor",
-      "urocyon_cinereoargenteus"
-     ]
-    },
-    {
-     "id": "sylvilagus_bachmani:winter:forage:browse",
-     "archetype": "gather",
-     "verb": "forage",
-     "season": "winter",
-     "unit": "solitary",
-     "collective": false,
-     "resource": "browse",
-     "requires": [
-      {
-       "object": "shrub and low tree foliage within reach",
-       "client": "shrubfield.js, vegetation.js",
-       "status": "drawn"
-      }
-     ],
-     "raster": "client/res_browse.png",
-     "hotspots": [
-      [
-       15.0,
-       9985.0,
-       48
-      ],
-      [
-       165.2,
-       9985.0,
-       48
-      ],
-      [
-       315.3,
-       9985.0,
-       48
-      ],
-      [
-       495.5,
-       9985.0,
-       48
-      ],
-      [
-       1006.0,
-       9985.0,
-       48
-      ],
-      [
-       1216.2,
-       9985.0,
-       48
-      ],
-      [
-       1426.4,
-       9985.0,
-       48
-      ],
-      [
-       1576.6,
-       9985.0,
-       48
-      ],
-      [
-       1876.9,
-       9985.0,
-       48
-      ],
-      [
-       2237.2,
-       9985.0,
-       48
-      ],
-      [
-       3168.2,
-       9985.0,
-       48
-      ],
-      [
-       3708.7,
-       9985.0,
-       48
-      ]
-     ],
-     "scarcity": 1.0,
-     "competitors": [
-      "odocoileus_hemionus",
-      "lepus_californicus"
-     ],
-     "predators": [
-      "buteo_jamaicensis",
-      "canis_latrans",
-      "puma_concolor",
-      "urocyon_cinereoargenteus"
-     ]
-    },
-    {
-     "id": "sylvilagus_bachmani:winter:shelter:cover",
-     "archetype": "shelter",
-     "verb": "shelter",
-     "season": "winter",
-     "unit": "solitary",
-     "collective": false,
-     "resource": "cover",
-     "requires": [
-      {
-       "object": "shrubs and trees to hide in",
-       "client": "shrubfield.js, vegetation.js",
-       "status": "drawn"
-      }
-     ],
-     "raster": "client/res_cover.png",
-     "hotspots": [
-      [
-       15.0,
-       9985.0,
-       76
-      ],
-      [
-       165.2,
-       9985.0,
-       76
-      ],
-      [
-       315.3,
-       9985.0,
-       76
-      ],
-      [
-       495.5,
-       9985.0,
-       76
-      ],
-      [
-       1006.0,
-       9985.0,
-       76
-      ],
-      [
-       1216.2,
-       9985.0,
-       76
-      ],
-      [
-       1426.4,
-       9985.0,
-       76
-      ],
-      [
-       1576.6,
-       9985.0,
-       76
-      ],
-      [
-       1876.9,
-       9985.0,
-       76
-      ],
-      [
-       2237.2,
-       9985.0,
-       76
-      ],
-      [
-       3168.2,
-       9985.0,
-       76
-      ],
-      [
-       3708.7,
-       9985.0,
-       76
-      ]
-     ],
-     "scarcity": 0.19,
-     "competitors": [
-      "odocoileus_hemionus",
-      "aphelocoma_californica",
-      "lepus_californicus",
-      "sceloporus_occidentalis"
-     ],
-     "predators": [
-      "buteo_jamaicensis",
-      "canis_latrans",
-      "puma_concolor",
-      "urocyon_cinereoargenteus"
-     ]
-    },
-    {
-     "id": "sylvilagus_bachmani:spring:court",
-     "archetype": "court",
-     "verb": "court",
-     "season": "spring",
-     "unit": "solitary",
-     "collective": false,
-     "resource": "cover",
-     "requires": [
-      {
-       "object": "shrubs and trees to hide in",
-       "client": "shrubfield.js, vegetation.js",
-       "status": "drawn"
-      }
-     ],
-     "raster": "client/res_cover.png",
-     "hotspots": [
-      [
-       15.0,
-       9985.0,
-       90
-      ],
-      [
-       165.2,
-       9985.0,
-       90
-      ],
-      [
-       315.3,
-       9985.0,
-       90
-      ],
-      [
-       495.5,
-       9985.0,
-       90
-      ],
-      [
-       1006.0,
-       9985.0,
-       90
-      ],
-      [
-       1216.2,
-       9985.0,
-       90
-      ],
-      [
-       1426.4,
-       9985.0,
-       90
-      ],
-      [
-       1576.6,
-       9985.0,
-       90
-      ],
-      [
-       1876.9,
-       9985.0,
-       90
-      ],
-      [
-       2237.2,
-       9985.0,
-       90
-      ],
-      [
-       3168.2,
-       9985.0,
-       90
-      ],
-      [
-       3708.7,
-       9985.0,
-       90
-      ]
-     ],
-     "scarcity": 0.19,
-     "competitors": [
-      "odocoileus_hemionus",
-      "urocyon_cinereoargenteus",
-      "callipepla_californica",
-      "aphelocoma_californica",
-      "cyanocitta_stelleri",
-      "puma_concolor",
-      "meleagris_gallopavo"
-     ],
-     "predators": [
-      "buteo_jamaicensis",
-      "canis_latrans",
-      "puma_concolor",
-      "urocyon_cinereoargenteus"
-     ]
-    },
-    {
-     "id": "sylvilagus_bachmani:spring:rear:cover",
-     "archetype": "rear",
-     "verb": "rear",
-     "season": "spring",
-     "unit": "solitary",
-     "collective": false,
-     "resource": "cover",
-     "requires": [
-      {
-       "object": "shrubs and trees to hide in",
-       "client": "shrubfield.js, vegetation.js",
-       "status": "drawn"
-      }
-     ],
-     "raster": "client/res_cover.png",
-     "hotspots": [
-      [
-       15.0,
-       9985.0,
-       90
-      ],
-      [
-       165.2,
-       9985.0,
-       90
-      ],
-      [
-       315.3,
-       9985.0,
-       90
-      ],
-      [
-       495.5,
-       9985.0,
-       90
-      ],
-      [
-       1006.0,
-       9985.0,
-       90
-      ],
-      [
-       1216.2,
-       9985.0,
-       90
-      ],
-      [
-       1426.4,
-       9985.0,
-       90
-      ],
-      [
-       1576.6,
-       9985.0,
-       90
-      ],
-      [
-       1876.9,
-       9985.0,
-       90
-      ],
-      [
-       2237.2,
-       9985.0,
-       90
-      ],
-      [
-       3168.2,
-       9985.0,
-       90
-      ],
-      [
-       3708.7,
-       9985.0,
-       90
-      ]
-     ],
-     "scarcity": 0.19,
-     "competitors": [
-      "odocoileus_hemionus",
-      "urocyon_cinereoargenteus",
-      "callipepla_californica",
-      "aphelocoma_californica",
-      "cyanocitta_stelleri",
-      "puma_concolor",
-      "meleagris_gallopavo"
-     ],
-     "predators": [
-      "buteo_jamaicensis",
-      "canis_latrans",
-      "puma_concolor",
-      "urocyon_cinereoargenteus"
-     ]
-    },
-    {
-     "id": "sylvilagus_bachmani:summer:forage:grass_forbs",
-     "archetype": "gather",
-     "verb": "forage",
-     "season": "summer",
-     "unit": "solitary",
-     "collective": false,
-     "resource": "grass_forbs",
-     "requires": [
-      {
-       "object": "grass blades and tufts, forbs",
-       "client": "grass.js",
-       "status": "drawn"
-      }
-     ],
-     "raster": "client/res_grass_forbs.png",
-     "hotspots": [],
-     "scarcity": 1.0,
-     "competitors": [
-      "lepus_californicus",
-      "meleagris_gallopavo",
-      "otospermophilus_beecheyi"
-     ],
-     "predators": [
-      "buteo_jamaicensis",
-      "canis_latrans",
-      "puma_concolor",
-      "urocyon_cinereoargenteus"
-     ]
-    },
-    {
-     "id": "sylvilagus_bachmani:summer:shelter:cover",
-     "archetype": "shelter",
-     "verb": "shelter",
-     "season": "summer",
-     "unit": "solitary",
-     "collective": false,
-     "resource": "cover",
-     "requires": [
-      {
-       "object": "shrubs and trees to hide in",
-       "client": "shrubfield.js, vegetation.js",
-       "status": "drawn"
-      }
-     ],
-     "raster": "client/res_cover.png",
-     "hotspots": [
-      [
-       15.0,
-       9985.0,
-       90
-      ],
-      [
-       165.2,
-       9985.0,
-       90
-      ],
-      [
-       315.3,
-       9985.0,
-       90
-      ],
-      [
-       495.5,
-       9985.0,
-       90
-      ],
-      [
-       1006.0,
-       9985.0,
-       90
-      ],
-      [
-       1216.2,
-       9985.0,
-       90
-      ],
-      [
-       1426.4,
-       9985.0,
-       90
-      ],
-      [
-       1576.6,
-       9985.0,
-       90
-      ],
-      [
-       1876.9,
-       9985.0,
-       90
-      ],
-      [
-       2237.2,
-       9985.0,
-       90
-      ],
-      [
-       3168.2,
-       9985.0,
-       90
-      ],
-      [
-       3708.7,
-       9985.0,
-       90
-      ]
-     ],
-     "scarcity": 0.19,
-     "competitors": [
-      "corvus_corax",
-      "odocoileus_hemionus",
-      "callipepla_californica",
-      "aphelocoma_californica",
-      "lepus_californicus",
-      "sceloporus_occidentalis"
-     ],
-     "predators": [
-      "buteo_jamaicensis",
-      "canis_latrans",
-      "puma_concolor",
-      "urocyon_cinereoargenteus"
-     ]
-    },
-    {
-     "id": "sylvilagus_bachmani:fall:forage:browse",
-     "archetype": "gather",
-     "verb": "forage",
-     "season": "fall",
-     "unit": "solitary",
-     "collective": false,
-     "resource": "browse",
-     "requires": [
-      {
-       "object": "shrub and low tree foliage within reach",
-       "client": "shrubfield.js, vegetation.js",
-       "status": "drawn"
-      }
-     ],
-     "raster": "client/res_browse.png",
-     "hotspots": [
-      [
-       15.0,
-       9985.0,
-       40
-      ],
-      [
-       165.2,
-       9985.0,
-       40
-      ],
-      [
-       315.3,
-       9985.0,
-       40
-      ],
-      [
-       495.5,
-       9985.0,
-       40
-      ],
-      [
-       1006.0,
-       9985.0,
-       40
-      ],
-      [
-       1216.2,
-       9985.0,
-       40
-      ],
-      [
-       1426.4,
-       9985.0,
-       40
-      ],
-      [
-       1576.6,
-       9985.0,
-       40
-      ],
-      [
-       1876.9,
-       9985.0,
-       40
-      ],
-      [
-       2237.2,
-       9985.0,
-       40
-      ],
-      [
-       3168.2,
-       9985.0,
-       40
-      ],
-      [
-       3708.7,
-       9985.0,
-       40
-      ]
-     ],
-     "scarcity": 1.0,
-     "competitors": [
-      "lepus_californicus"
-     ],
-     "predators": [
-      "buteo_jamaicensis",
-      "canis_latrans",
-      "puma_concolor",
-      "urocyon_cinereoargenteus"
-     ]
-    },
-    {
-     "id": "sylvilagus_bachmani:spring:shelter:cover",
-     "archetype": "shelter",
-     "verb": "shelter",
-     "season": "spring",
-     "unit": "solitary",
-     "collective": false,
-     "resource": "cover",
-     "hotspots": [
-      [
-       15.0,
-       9985.0,
-       90
-      ],
-      [
-       165.2,
-       9985.0,
-       90
-      ],
-      [
-       315.3,
-       9985.0,
-       90
-      ],
-      [
-       495.5,
-       9985.0,
-       90
-      ],
-      [
-       1006.0,
-       9985.0,
-       90
-      ],
-      [
-       1216.2,
-       9985.0,
-       90
-      ],
-      [
-       1426.4,
-       9985.0,
-       90
-      ],
-      [
-       1576.6,
-       9985.0,
-       90
-      ],
-      [
-       1876.9,
-       9985.0,
-       90
-      ],
-      [
-       2237.2,
-       9985.0,
-       90
-      ],
-      [
-       3168.2,
-       9985.0,
-       90
-      ],
-      [
-       3708.7,
-       9985.0,
-       90
-      ]
-     ],
-     "scarcity": 0.19,
-     "competitors": [
-      "odocoileus_hemionus",
-      "callipepla_californica",
-      "aphelocoma_californica",
-      "cyanocitta_stelleri",
-      "lepus_californicus",
-      "puma_concolor"
-     ],
-     "predators": [
-      "buteo_jamaicensis",
-      "canis_latrans",
-      "puma_concolor",
-      "urocyon_cinereoargenteus"
-     ]
-    },
-    {
-     "id": "sylvilagus_bachmani:fall:shelter:cover",
-     "archetype": "shelter",
-     "verb": "shelter",
-     "season": "fall",
-     "unit": "solitary",
-     "collective": false,
-     "resource": "cover",
-     "hotspots": [
-      [
-       15.0,
-       9985.0,
-       90
-      ],
-      [
-       165.2,
-       9985.0,
-       90
-      ],
-      [
-       315.3,
-       9985.0,
-       90
-      ],
-      [
-       495.5,
-       9985.0,
-       90
-      ],
-      [
-       1006.0,
-       9985.0,
-       90
-      ],
-      [
-       1216.2,
-       9985.0,
-       90
-      ],
-      [
-       1426.4,
-       9985.0,
-       90
-      ],
-      [
-       1576.6,
-       9985.0,
-       90
-      ],
-      [
-       1876.9,
-       9985.0,
-       90
-      ],
-      [
-       2237.2,
-       9985.0,
-       90
-      ],
-      [
-       3168.2,
-       9985.0,
-       90
-      ],
-      [
-       3708.7,
-       9985.0,
-       90
-      ]
-     ],
-     "scarcity": 0.19,
-     "competitors": [
-      "odocoileus_hemionus",
-      "callipepla_californica",
-      "aphelocoma_californica",
-      "cyanocitta_stelleri",
-      "lepus_californicus",
-      "puma_concolor"
-     ],
-     "predators": [
-      "buteo_jamaicensis",
-      "canis_latrans",
-      "puma_concolor",
-      "urocyon_cinereoargenteus"
-     ]
-    },
-    {
-     "id": "sylvilagus_bachmani:buteo_jamaicensis:evade",
-     "archetype": "evade",
-     "verb": "evade",
-     "season": "all",
-     "unit": "solitary",
-     "collective": false,
-     "predator": "buteo_jamaicensis",
-     "notice_m": 400,
-     "watchers": [
-      {
-       "species": "corvus_corax",
-       "notice_m": 1200
-      }
-     ]
-    },
-    {
-     "id": "sylvilagus_bachmani:canis_latrans:evade",
-     "archetype": "evade",
-     "verb": "evade",
-     "season": "all",
-     "unit": "solitary",
-     "collective": false,
-     "predator": "canis_latrans",
-     "notice_m": 200,
-     "watchers": [
-      {
-       "species": "corvus_corax",
-       "notice_m": 300
-      },
-      {
-       "species": "callipepla_californica",
-       "notice_m": 300
-      }
-     ]
-    },
-    {
-     "id": "sylvilagus_bachmani:puma_concolor:evade",
-     "archetype": "evade",
-     "verb": "evade",
-     "season": "all",
-     "unit": "solitary",
-     "collective": false,
-     "predator": "puma_concolor",
-     "notice_m": 200,
-     "watchers": []
-    },
-    {
-     "id": "sylvilagus_bachmani:urocyon_cinereoargenteus:evade",
-     "archetype": "evade",
-     "verb": "evade",
-     "season": "all",
-     "unit": "solitary",
-     "collective": false,
-     "predator": "urocyon_cinereoargenteus",
-     "notice_m": 200,
-     "watchers": []
-    }
-   ]
-  },
-  "lepus_californicus": {
-   "unit": "solitary",
-   "predators": [
-    "buteo_jamaicensis",
-    "canis_latrans",
-    "puma_concolor"
-   ],
-   "prey": [],
-   "games": [
-    {
-     "id": "lepus_californicus:winter:forage:grass_forbs",
-     "archetype": "gather",
-     "verb": "forage",
-     "season": "winter",
-     "unit": "solitary",
-     "collective": false,
-     "resource": "grass_forbs",
-     "requires": [
-      {
-       "object": "grass blades and tufts, forbs",
-       "client": "grass.js",
-       "status": "drawn"
-      }
-     ],
-     "raster": "client/res_grass_forbs.png",
-     "hotspots": [
-      [
-       7252.3,
-       9985.0,
-       54
-      ],
-      [
-       7552.6,
-       9985.0,
-       54
-      ],
-      [
-       525.5,
-       9955.0,
-       54
-      ],
-      [
-       6801.8,
-       9955.0,
-       54
-      ],
-      [
-       915.9,
-       9924.9,
-       54
-      ],
-      [
-       6141.1,
-       9924.9,
-       54
-      ],
-      [
-       8843.8,
-       9894.9,
-       54
-      ],
-      [
-       645.6,
-       9864.9,
-       54
-      ],
-      [
-       1096.1,
-       9864.9,
-       54
-      ],
-      [
-       795.8,
-       9834.8,
-       54
-      ],
-      [
-       3558.6,
-       9834.8,
-       54
-      ],
-      [
-       7282.3,
-       9804.8,
-       54
-      ]
-     ],
-     "scarcity": 0.97,
-     "competitors": [
-      "callipepla_californica",
-      "sylvilagus_bachmani",
-      "microtus_californicus",
-      "meleagris_gallopavo"
-     ],
-     "predators": [
-      "buteo_jamaicensis",
-      "canis_latrans",
-      "puma_concolor"
-     ]
-    },
-    {
-     "id": "lepus_californicus:winter:forage:browse",
-     "archetype": "gather",
-     "verb": "forage",
-     "season": "winter",
-     "unit": "solitary",
-     "collective": false,
-     "resource": "browse",
-     "requires": [
-      {
-       "object": "shrub and low tree foliage within reach",
-       "client": "shrubfield.js, vegetation.js",
-       "status": "drawn"
-      }
-     ],
-     "raster": "client/res_browse.png",
-     "hotspots": [
-      [
-       15.0,
-       9985.0,
-       48
-      ],
-      [
-       165.2,
-       9985.0,
-       48
-      ],
-      [
-       315.3,
-       9985.0,
-       48
-      ],
-      [
-       495.5,
-       9985.0,
-       48
-      ],
-      [
-       1006.0,
-       9985.0,
-       48
-      ],
-      [
-       1216.2,
-       9985.0,
-       48
-      ],
-      [
-       1426.4,
-       9985.0,
-       48
-      ],
-      [
-       1576.6,
-       9985.0,
-       48
-      ],
-      [
-       1876.9,
-       9985.0,
-       48
-      ],
-      [
-       2237.2,
-       9985.0,
-       48
-      ],
-      [
-       3168.2,
-       9985.0,
-       48
-      ],
-      [
-       3708.7,
-       9985.0,
-       48
-      ]
-     ],
-     "scarcity": 1.0,
-     "competitors": [
-      "odocoileus_hemionus",
-      "sylvilagus_bachmani"
-     ],
-     "predators": [
-      "buteo_jamaicensis",
-      "canis_latrans",
-      "puma_concolor"
-     ]
-    },
-    {
-     "id": "lepus_californicus:winter:shelter:cover",
-     "archetype": "shelter",
-     "verb": "shelter",
-     "season": "winter",
-     "unit": "solitary",
-     "collective": false,
-     "goal": "form under a shrub",
-     "resource": "cover",
-     "requires": [
-      {
-       "object": "shrubs and trees to hide in",
-       "client": "shrubfield.js, vegetation.js",
-       "status": "drawn"
-      }
-     ],
-     "raster": "client/res_cover.png",
-     "hotspots": [
-      [
-       15.0,
-       9985.0,
-       76
-      ],
-      [
-       165.2,
-       9985.0,
-       76
-      ],
-      [
-       315.3,
-       9985.0,
-       76
-      ],
-      [
-       495.5,
-       9985.0,
-       76
-      ],
-      [
-       1006.0,
-       9985.0,
-       76
-      ],
-      [
-       1216.2,
-       9985.0,
-       76
-      ],
-      [
-       1426.4,
-       9985.0,
-       76
-      ],
-      [
-       1576.6,
-       9985.0,
-       76
-      ],
-      [
-       1876.9,
-       9985.0,
-       76
-      ],
-      [
-       2237.2,
-       9985.0,
-       76
-      ],
-      [
-       3168.2,
-       9985.0,
-       76
-      ],
-      [
-       3708.7,
-       9985.0,
-       76
-      ]
-     ],
-     "scarcity": 0.19,
-     "competitors": [
-      "odocoileus_hemionus",
-      "aphelocoma_californica",
-      "sylvilagus_bachmani",
-      "sceloporus_occidentalis"
-     ],
-     "predators": [
-      "buteo_jamaicensis",
-      "canis_latrans",
-      "puma_concolor"
-     ]
-    },
-    {
-     "id": "lepus_californicus:spring:court",
-     "archetype": "court",
-     "verb": "court",
-     "season": "spring",
-     "unit": "solitary",
-     "collective": false,
-     "goal": "chases and boxing",
-     "resource": "grass_forbs",
-     "requires": [
-      {
-       "object": "grass blades and tufts, forbs",
-       "client": "grass.js",
-       "status": "drawn"
-      }
-     ],
-     "raster": "client/res_grass_forbs.png",
-     "hotspots": [
-      [
-       7252.3,
-       9985.0,
-       90
-      ],
-      [
-       7552.6,
-       9985.0,
-       90
-      ],
-      [
-       525.5,
-       9955.0,
-       90
-      ],
-      [
-       6801.8,
-       9955.0,
-       90
-      ],
-      [
-       915.9,
-       9924.9,
-       90
-      ],
-      [
-       6141.1,
-       9924.9,
-       90
-      ],
-      [
-       8843.8,
-       9894.9,
-       90
-      ],
-      [
-       645.6,
-       9864.9,
-       90
-      ],
-      [
-       1096.1,
-       9864.9,
-       90
-      ],
-      [
-       795.8,
-       9834.8,
-       90
-      ],
-      [
-       3558.6,
-       9834.8,
-       90
-      ],
-      [
-       7282.3,
-       9804.8,
-       90
-      ]
-     ],
-     "scarcity": 0.941,
-     "competitors": [
-      "odocoileus_hemionus",
-      "microtus_californicus",
-      "otospermophilus_beecheyi"
-     ],
-     "predators": [
-      "buteo_jamaicensis",
-      "canis_latrans",
-      "puma_concolor"
-     ]
-    },
-    {
-     "id": "lepus_californicus:spring:rear:grass_forbs",
-     "archetype": "rear",
-     "verb": "rear",
-     "season": "spring",
-     "unit": "solitary",
-     "collective": false,
-     "goal": "leverets in a form",
-     "resource": "grass_forbs",
-     "requires": [
-      {
-       "object": "grass blades and tufts, forbs",
-       "client": "grass.js",
-       "status": "drawn"
-      }
-     ],
-     "raster": "client/res_grass_forbs.png",
-     "hotspots": [
-      [
-       7252.3,
-       9985.0,
-       90
-      ],
-      [
-       7552.6,
-       9985.0,
-       90
-      ],
-      [
-       525.5,
-       9955.0,
-       90
-      ],
-      [
-       6801.8,
-       9955.0,
-       90
-      ],
-      [
-       915.9,
-       9924.9,
-       90
-      ],
-      [
-       6141.1,
-       9924.9,
-       90
-      ],
-      [
-       8843.8,
-       9894.9,
-       90
-      ],
-      [
-       645.6,
-       9864.9,
-       90
-      ],
-      [
-       1096.1,
-       9864.9,
-       90
-      ],
-      [
-       795.8,
-       9834.8,
-       90
-      ],
-      [
-       3558.6,
-       9834.8,
-       90
-      ],
-      [
-       7282.3,
-       9804.8,
-       90
-      ]
-     ],
-     "scarcity": 0.941,
-     "competitors": [
-      "odocoileus_hemionus",
-      "microtus_californicus",
-      "otospermophilus_beecheyi"
-     ],
-     "predators": [
-      "buteo_jamaicensis",
-      "canis_latrans",
-      "puma_concolor"
-     ]
-    },
-    {
-     "id": "lepus_californicus:summer:forage:grass_forbs",
-     "archetype": "gather",
-     "verb": "forage",
-     "season": "summer",
-     "unit": "solitary",
-     "collective": false,
-     "resource": "grass_forbs",
-     "requires": [
-      {
-       "object": "grass blades and tufts, forbs",
-       "client": "grass.js",
-       "status": "drawn"
-      }
-     ],
-     "raster": "client/res_grass_forbs.png",
-     "hotspots": [],
-     "scarcity": 1.0,
-     "competitors": [
-      "sylvilagus_bachmani",
-      "meleagris_gallopavo",
-      "otospermophilus_beecheyi"
-     ],
-     "predators": [
-      "buteo_jamaicensis",
-      "canis_latrans",
-      "puma_concolor"
-     ]
-    },
-    {
-     "id": "lepus_californicus:summer:shelter:cover",
-     "archetype": "shelter",
-     "verb": "shelter",
-     "season": "summer",
-     "unit": "solitary",
-     "collective": false,
-     "goal": "rest in shade midday",
-     "resource": "cover",
-     "requires": [
-      {
-       "object": "shrubs and trees to hide in",
-       "client": "shrubfield.js, vegetation.js",
-       "status": "drawn"
-      }
-     ],
-     "raster": "client/res_cover.png",
-     "hotspots": [
-      [
-       15.0,
-       9985.0,
-       90
-      ],
-      [
-       165.2,
-       9985.0,
-       90
-      ],
-      [
-       315.3,
-       9985.0,
-       90
-      ],
-      [
-       495.5,
-       9985.0,
-       90
-      ],
-      [
-       1006.0,
-       9985.0,
-       90
-      ],
-      [
-       1216.2,
-       9985.0,
-       90
-      ],
-      [
-       1426.4,
-       9985.0,
-       90
-      ],
-      [
-       1576.6,
-       9985.0,
-       90
-      ],
-      [
-       1876.9,
-       9985.0,
-       90
-      ],
-      [
-       2237.2,
-       9985.0,
-       90
-      ],
-      [
-       3168.2,
-       9985.0,
-       90
-      ],
-      [
-       3708.7,
-       9985.0,
-       90
-      ]
-     ],
-     "scarcity": 0.19,
-     "competitors": [
-      "corvus_corax",
-      "odocoileus_hemionus",
-      "callipepla_californica",
-      "aphelocoma_californica",
-      "sylvilagus_bachmani",
-      "sceloporus_occidentalis"
-     ],
-     "predators": [
-      "buteo_jamaicensis",
-      "canis_latrans",
-      "puma_concolor"
-     ]
-    },
-    {
-     "id": "lepus_californicus:fall:forage:grass_forbs",
-     "archetype": "gather",
-     "verb": "forage",
-     "season": "fall",
-     "unit": "solitary",
-     "collective": false,
-     "resource": "grass_forbs",
-     "requires": [
-      {
-       "object": "grass blades and tufts, forbs",
-       "client": "grass.js",
-       "status": "drawn"
-      }
-     ],
-     "raster": "client/res_grass_forbs.png",
-     "hotspots": [],
-     "scarcity": 1.0,
-     "competitors": [
-      "callipepla_californica",
-      "microtus_californicus"
-     ],
-     "predators": [
-      "buteo_jamaicensis",
-      "canis_latrans",
-      "puma_concolor"
-     ]
-    },
-    {
-     "id": "lepus_californicus:fall:forage:browse",
-     "archetype": "gather",
-     "verb": "forage",
-     "season": "fall",
-     "unit": "solitary",
-     "collective": false,
-     "resource": "browse",
-     "requires": [
-      {
-       "object": "shrub and low tree foliage within reach",
-       "client": "shrubfield.js, vegetation.js",
-       "status": "drawn"
-      }
-     ],
-     "raster": "client/res_browse.png",
-     "hotspots": [
-      [
-       15.0,
-       9985.0,
-       40
-      ],
-      [
-       165.2,
-       9985.0,
-       40
-      ],
-      [
-       315.3,
-       9985.0,
-       40
-      ],
-      [
-       495.5,
-       9985.0,
-       40
-      ],
-      [
-       1006.0,
-       9985.0,
-       40
-      ],
-      [
-       1216.2,
-       9985.0,
-       40
-      ],
-      [
-       1426.4,
-       9985.0,
-       40
-      ],
-      [
-       1576.6,
-       9985.0,
-       40
-      ],
-      [
-       1876.9,
-       9985.0,
-       40
-      ],
-      [
-       2237.2,
-       9985.0,
-       40
-      ],
-      [
-       3168.2,
-       9985.0,
-       40
-      ],
-      [
-       3708.7,
-       9985.0,
-       40
-      ]
-     ],
-     "scarcity": 1.0,
-     "competitors": [
-      "sylvilagus_bachmani"
-     ],
-     "predators": [
-      "buteo_jamaicensis",
-      "canis_latrans",
-      "puma_concolor"
-     ]
-    },
-    {
-     "id": "lepus_californicus:spring:shelter:cover",
-     "archetype": "shelter",
-     "verb": "shelter",
-     "season": "spring",
-     "unit": "solitary",
-     "collective": false,
-     "resource": "cover",
-     "hotspots": [
-      [
-       15.0,
-       9985.0,
-       90
-      ],
-      [
-       165.2,
-       9985.0,
-       90
-      ],
-      [
-       315.3,
-       9985.0,
-       90
-      ],
-      [
-       495.5,
-       9985.0,
-       90
-      ],
-      [
-       1006.0,
-       9985.0,
-       90
-      ],
-      [
-       1216.2,
-       9985.0,
-       90
-      ],
-      [
-       1426.4,
-       9985.0,
-       90
-      ],
-      [
-       1576.6,
-       9985.0,
-       90
-      ],
-      [
-       1876.9,
-       9985.0,
-       90
-      ],
-      [
-       2237.2,
-       9985.0,
-       90
-      ],
-      [
-       3168.2,
-       9985.0,
-       90
-      ],
-      [
-       3708.7,
-       9985.0,
-       90
-      ]
-     ],
-     "scarcity": 0.19,
-     "competitors": [
-      "odocoileus_hemionus",
-      "callipepla_californica",
-      "aphelocoma_californica",
-      "cyanocitta_stelleri",
-      "sylvilagus_bachmani",
-      "puma_concolor"
-     ],
-     "predators": [
-      "buteo_jamaicensis",
-      "canis_latrans",
-      "puma_concolor"
-     ]
-    },
-    {
-     "id": "lepus_californicus:fall:shelter:cover",
-     "archetype": "shelter",
-     "verb": "shelter",
-     "season": "fall",
-     "unit": "solitary",
-     "collective": false,
-     "resource": "cover",
-     "hotspots": [
-      [
-       15.0,
-       9985.0,
-       90
-      ],
-      [
-       165.2,
-       9985.0,
-       90
-      ],
-      [
-       315.3,
-       9985.0,
-       90
-      ],
-      [
-       495.5,
-       9985.0,
-       90
-      ],
-      [
-       1006.0,
-       9985.0,
-       90
-      ],
-      [
-       1216.2,
-       9985.0,
-       90
-      ],
-      [
-       1426.4,
-       9985.0,
-       90
-      ],
-      [
-       1576.6,
-       9985.0,
-       90
-      ],
-      [
-       1876.9,
-       9985.0,
-       90
-      ],
-      [
-       2237.2,
-       9985.0,
-       90
-      ],
-      [
-       3168.2,
-       9985.0,
-       90
-      ],
-      [
-       3708.7,
-       9985.0,
-       90
-      ]
-     ],
-     "scarcity": 0.19,
-     "competitors": [
-      "odocoileus_hemionus",
-      "callipepla_californica",
-      "aphelocoma_californica",
-      "cyanocitta_stelleri",
-      "sylvilagus_bachmani",
-      "puma_concolor"
-     ],
-     "predators": [
-      "buteo_jamaicensis",
-      "canis_latrans",
-      "puma_concolor"
-     ]
-    },
-    {
-     "id": "lepus_californicus:buteo_jamaicensis:evade",
-     "archetype": "evade",
-     "verb": "evade",
-     "season": "all",
-     "unit": "solitary",
-     "collective": false,
-     "predator": "buteo_jamaicensis",
-     "notice_m": 400,
-     "watchers": [
-      {
-       "species": "corvus_corax",
-       "notice_m": 1200
-      }
-     ]
-    },
-    {
-     "id": "lepus_californicus:canis_latrans:evade",
-     "archetype": "evade",
-     "verb": "evade",
-     "season": "all",
-     "unit": "solitary",
-     "collective": false,
-     "predator": "canis_latrans",
-     "notice_m": 300,
-     "watchers": []
-    },
-    {
-     "id": "lepus_californicus:puma_concolor:evade",
-     "archetype": "evade",
-     "verb": "evade",
-     "season": "all",
-     "unit": "solitary",
-     "collective": false,
-     "predator": "puma_concolor",
-     "notice_m": 200,
-     "watchers": []
-    }
-   ]
-  },
-  "microtus_californicus": {
-   "unit": "solitary",
-   "predators": [
-    "buteo_jamaicensis",
-    "canis_latrans",
-    "corvus_corax",
-    "urocyon_cinereoargenteus"
-   ],
-   "prey": [],
-   "games": [
-    {
-     "id": "microtus_californicus:winter:forage:grass_forbs",
-     "archetype": "gather",
-     "verb": "forage",
-     "season": "winter",
-     "unit": "solitary",
-     "collective": false,
-     "resource": "grass_forbs",
-     "requires": [
-      {
-       "object": "grass blades and tufts, forbs",
-       "client": "grass.js",
-       "status": "drawn"
-      }
-     ],
-     "raster": "client/res_grass_forbs.png",
-     "hotspots": [
-      [
-       7252.3,
-       9985.0,
-       54
-      ],
-      [
-       7552.6,
-       9985.0,
-       54
-      ],
-      [
-       525.5,
-       9955.0,
-       54
-      ],
-      [
-       6801.8,
-       9955.0,
-       54
-      ],
-      [
-       915.9,
-       9924.9,
-       54
-      ],
-      [
-       6141.1,
-       9924.9,
-       54
-      ],
-      [
-       8843.8,
-       9894.9,
-       54
-      ],
-      [
-       645.6,
-       9864.9,
-       54
-      ],
-      [
-       1096.1,
-       9864.9,
-       54
-      ],
-      [
-       795.8,
-       9834.8,
-       54
-      ],
-      [
-       3558.6,
-       9834.8,
-       54
-      ],
-      [
-       7282.3,
-       9804.8,
-       54
-      ]
-     ],
-     "scarcity": 0.97,
-     "competitors": [
-      "callipepla_californica",
-      "sylvilagus_bachmani",
-      "lepus_californicus",
-      "meleagris_gallopavo"
-     ],
-     "predators": [
-      "buteo_jamaicensis",
-      "canis_latrans",
-      "corvus_corax",
-      "urocyon_cinereoargenteus"
-     ]
-    },
-    {
-     "id": "microtus_californicus:winter:shelter:burrow",
-     "archetype": "shelter",
-     "verb": "shelter",
-     "season": "winter",
-     "unit": "solitary",
-     "collective": false,
-     "resource": "burrow",
-     "requires": [
-      {
-       "object": "burrows",
-       "client": "animals.js placeBurrows (ground squirrels only)",
-       "status": "partial"
-      }
-     ],
-     "raster": "client/res_burrow.png",
-     "hotspots": [
-      [
-       7252.3,
-       9985.0,
-       64
-      ],
-      [
-       7552.6,
-       9985.0,
-       64
-      ],
-      [
-       525.5,
-       9955.0,
-       64
-      ],
-      [
-       6801.8,
-       9955.0,
-       64
-      ],
-      [
-       915.9,
-       9924.9,
-       64
-      ],
-      [
-       6141.1,
-       9924.9,
-       64
-      ],
-      [
-       8843.8,
-       9894.9,
-       64
-      ],
-      [
-       645.6,
-       9864.9,
-       64
-      ],
-      [
-       1096.1,
-       9864.9,
-       64
-      ],
-      [
-       795.8,
-       9834.8,
-       64
-      ],
-      [
-       3558.6,
-       9834.8,
-       64
-      ],
-      [
-       7282.3,
-       9804.8,
-       64
-      ]
-     ],
-     "scarcity": 0.97,
-     "competitors": [
-      "otospermophilus_beecheyi"
-     ],
-     "predators": [
-      "buteo_jamaicensis",
-      "canis_latrans",
-      "corvus_corax",
-      "urocyon_cinereoargenteus"
-     ]
-    },
-    {
-     "id": "microtus_californicus:spring:rear:burrow",
-     "archetype": "rear",
-     "verb": "rear",
-     "season": "spring",
-     "unit": "solitary",
-     "collective": false,
-     "resource": "burrow",
-     "requires": [
-      {
-       "object": "burrows",
-       "client": "animals.js placeBurrows (ground squirrels only)",
-       "status": "partial"
-      }
-     ],
-     "raster": "client/res_burrow.png",
-     "hotspots": [
-      [
-       7252.3,
-       9985.0,
-       80
-      ],
-      [
-       7552.6,
-       9985.0,
-       80
-      ],
-      [
-       525.5,
-       9955.0,
-       80
-      ],
-      [
-       6801.8,
-       9955.0,
-       80
-      ],
-      [
-       915.9,
-       9924.9,
-       80
-      ],
-      [
-       6141.1,
-       9924.9,
-       80
-      ],
-      [
-       8843.8,
-       9894.9,
-       80
-      ],
-      [
-       645.6,
-       9864.9,
-       80
-      ],
-      [
-       1096.1,
-       9864.9,
-       80
-      ],
-      [
-       795.8,
-       9834.8,
-       80
-      ],
-      [
-       3558.6,
-       9834.8,
-       80
-      ],
-      [
-       7282.3,
-       9804.8,
-       80
-      ]
-     ],
-     "scarcity": 0.689,
-     "competitors": [
-      "urocyon_cinereoargenteus",
-      "canis_latrans",
-      "otospermophilus_beecheyi"
-     ],
-     "predators": [
-      "buteo_jamaicensis",
-      "canis_latrans",
-      "corvus_corax",
-      "urocyon_cinereoargenteus"
-     ]
-    },
-    {
-     "id": "microtus_californicus:spring:forage:grass_forbs",
-     "archetype": "gather",
-     "verb": "forage",
-     "season": "spring",
-     "unit": "solitary",
-     "collective": false,
-     "resource": "grass_forbs",
-     "requires": [
-      {
-       "object": "grass blades and tufts, forbs",
-       "client": "grass.js",
-       "status": "drawn"
-      }
-     ],
-     "raster": "client/res_grass_forbs.png",
-     "hotspots": [
-      [
-       7252.3,
-       9985.0,
-       90
-      ],
-      [
-       7552.6,
-       9985.0,
-       90
-      ],
-      [
-       525.5,
-       9955.0,
-       90
-      ],
-      [
-       6801.8,
-       9955.0,
-       90
-      ],
-      [
-       915.9,
-       9924.9,
-       90
-      ],
-      [
-       6141.1,
-       9924.9,
-       90
-      ],
-      [
-       8843.8,
-       9894.9,
-       90
-      ],
-      [
-       645.6,
-       9864.9,
-       90
-      ],
-      [
-       1096.1,
-       9864.9,
-       90
-      ],
-      [
-       795.8,
-       9834.8,
-       90
-      ],
-      [
-       3558.6,
-       9834.8,
-       90
-      ],
-      [
-       7282.3,
-       9804.8,
-       90
-      ]
-     ],
-     "scarcity": 0.941,
-     "competitors": [
-      "odocoileus_hemionus",
-      "lepus_californicus",
-      "otospermophilus_beecheyi"
-     ],
-     "predators": [
-      "buteo_jamaicensis",
-      "canis_latrans",
-      "corvus_corax",
-      "urocyon_cinereoargenteus"
-     ]
-    },
-    {
-     "id": "microtus_californicus:summer:shelter:burrow",
-     "archetype": "shelter",
-     "verb": "shelter",
-     "season": "summer",
-     "unit": "solitary",
-     "collective": false,
-     "goal": "aestivate in dry grass",
-     "resource": "burrow",
-     "requires": [
-      {
-       "object": "burrows",
-       "client": "animals.js placeBurrows (ground squirrels only)",
-       "status": "partial"
-      }
-     ],
-     "raster": "client/res_burrow.png",
-     "hotspots": [
-      [
-       7252.3,
-       9985.0,
-       80
-      ],
-      [
-       7552.6,
-       9985.0,
-       80
-      ],
-      [
-       525.5,
-       9955.0,
-       80
-      ],
-      [
-       6801.8,
-       9955.0,
-       80
-      ],
-      [
-       915.9,
-       9924.9,
-       80
-      ],
-      [
-       6141.1,
-       9924.9,
-       80
-      ],
-      [
-       8843.8,
-       9894.9,
-       80
-      ],
-      [
-       645.6,
-       9864.9,
-       80
-      ],
-      [
-       1096.1,
-       9864.9,
-       80
-      ],
-      [
-       795.8,
-       9834.8,
-       80
-      ],
-      [
-       3558.6,
-       9834.8,
-       80
-      ],
-      [
-       7282.3,
-       9804.8,
-       80
-      ]
-     ],
-     "scarcity": 0.689,
-     "competitors": [
-      "otospermophilus_beecheyi"
-     ],
-     "predators": [
-      "buteo_jamaicensis",
-      "canis_latrans",
-      "corvus_corax",
-      "urocyon_cinereoargenteus"
-     ]
-    },
-    {
-     "id": "microtus_californicus:fall:forage:grass_forbs",
-     "archetype": "gather",
-     "verb": "forage",
-     "season": "fall",
-     "unit": "solitary",
-     "collective": false,
-     "resource": "grass_forbs",
-     "requires": [
-      {
-       "object": "grass blades and tufts, forbs",
-       "client": "grass.js",
-       "status": "drawn"
-      }
-     ],
-     "raster": "client/res_grass_forbs.png",
-     "hotspots": [],
-     "scarcity": 1.0,
-     "competitors": [
-      "callipepla_californica",
-      "lepus_californicus"
-     ],
-     "predators": [
-      "buteo_jamaicensis",
-      "canis_latrans",
-      "corvus_corax",
-      "urocyon_cinereoargenteus"
-     ]
-    },
-    {
-     "id": "microtus_californicus:fall:rear:burrow",
-     "archetype": "rear",
-     "verb": "rear",
-     "season": "fall",
-     "unit": "solitary",
-     "collective": false,
-     "resource": "burrow",
-     "requires": [
-      {
-       "object": "burrows",
-       "client": "animals.js placeBurrows (ground squirrels only)",
-       "status": "partial"
-      }
-     ],
-     "raster": "client/res_burrow.png",
-     "hotspots": [
-      [
-       7252.3,
-       9985.0,
-       80
-      ],
-      [
-       7552.6,
-       9985.0,
-       80
-      ],
-      [
-       525.5,
-       9955.0,
-       80
-      ],
-      [
-       6801.8,
-       9955.0,
-       80
-      ],
-      [
-       915.9,
-       9924.9,
-       80
-      ],
-      [
-       6141.1,
-       9924.9,
-       80
-      ],
-      [
-       8843.8,
-       9894.9,
-       80
-      ],
-      [
-       645.6,
-       9864.9,
-       80
-      ],
-      [
-       1096.1,
-       9864.9,
-       80
-      ],
-      [
-       795.8,
-       9834.8,
-       80
-      ],
-      [
-       3558.6,
-       9834.8,
-       80
-      ],
-      [
-       7282.3,
-       9804.8,
-       80
-      ]
-     ],
-     "scarcity": 0.689,
-     "competitors": [
-      "otospermophilus_beecheyi"
-     ],
-     "predators": [
-      "buteo_jamaicensis",
-      "canis_latrans",
-      "corvus_corax",
-      "urocyon_cinereoargenteus"
-     ]
-    },
-    {
-     "id": "microtus_californicus:spring:shelter:burrow",
-     "archetype": "shelter",
-     "verb": "shelter",
-     "season": "spring",
-     "unit": "solitary",
-     "collective": false,
-     "resource": "burrow",
-     "hotspots": [
-      [
-       7252.3,
-       9985.0,
-       80
-      ],
-      [
-       7552.6,
-       9985.0,
-       80
-      ],
-      [
-       525.5,
-       9955.0,
-       80
-      ],
-      [
-       6801.8,
-       9955.0,
-       80
-      ],
-      [
-       915.9,
-       9924.9,
-       80
-      ],
-      [
-       6141.1,
-       9924.9,
-       80
-      ],
-      [
-       8843.8,
-       9894.9,
-       80
-      ],
-      [
-       645.6,
-       9864.9,
-       80
-      ],
-      [
-       1096.1,
-       9864.9,
-       80
-      ],
-      [
-       795.8,
-       9834.8,
-       80
-      ],
-      [
-       3558.6,
-       9834.8,
-       80
-      ],
-      [
-       7282.3,
-       9804.8,
-       80
-      ]
-     ],
-     "scarcity": 0.689,
-     "competitors": [
-      "urocyon_cinereoargenteus",
-      "canis_latrans",
-      "otospermophilus_beecheyi",
-      "sceloporus_occidentalis"
-     ],
-     "predators": [
-      "buteo_jamaicensis",
-      "canis_latrans",
-      "corvus_corax",
-      "urocyon_cinereoargenteus"
-     ]
-    },
-    {
-     "id": "microtus_californicus:fall:shelter:burrow",
-     "archetype": "shelter",
-     "verb": "shelter",
-     "season": "fall",
-     "unit": "solitary",
-     "collective": false,
-     "resource": "burrow",
-     "hotspots": [
-      [
-       7252.3,
-       9985.0,
-       80
-      ],
-      [
-       7552.6,
-       9985.0,
-       80
-      ],
-      [
-       525.5,
-       9955.0,
-       80
-      ],
-      [
-       6801.8,
-       9955.0,
-       80
-      ],
-      [
-       915.9,
-       9924.9,
-       80
-      ],
-      [
-       6141.1,
-       9924.9,
-       80
-      ],
-      [
-       8843.8,
-       9894.9,
-       80
-      ],
-      [
-       645.6,
-       9864.9,
-       80
-      ],
-      [
-       1096.1,
-       9864.9,
-       80
-      ],
-      [
-       795.8,
-       9834.8,
-       80
-      ],
-      [
-       3558.6,
-       9834.8,
-       80
-      ],
-      [
-       7282.3,
-       9804.8,
-       80
-      ]
-     ],
-     "scarcity": 0.689,
-     "competitors": [
-      "urocyon_cinereoargenteus",
-      "canis_latrans",
-      "otospermophilus_beecheyi",
-      "sceloporus_occidentalis"
-     ],
-     "predators": [
-      "buteo_jamaicensis",
-      "canis_latrans",
-      "corvus_corax",
-      "urocyon_cinereoargenteus"
-     ]
-    },
-    {
-     "id": "microtus_californicus:buteo_jamaicensis:evade",
-     "archetype": "evade",
-     "verb": "evade",
-     "season": "all",
-     "unit": "solitary",
-     "collective": false,
-     "predator": "buteo_jamaicensis",
-     "notice_m": 100,
-     "watchers": [
-      {
-       "species": "corvus_corax",
-       "notice_m": 1200
-      }
-     ]
-    },
-    {
-     "id": "microtus_californicus:canis_latrans:evade",
-     "archetype": "evade",
-     "verb": "evade",
-     "season": "all",
-     "unit": "solitary",
-     "collective": false,
-     "predator": "canis_latrans",
-     "notice_m": 100,
-     "watchers": [
-      {
-       "species": "corvus_corax",
-       "notice_m": 300
-      }
-     ]
-    },
-    {
-     "id": "microtus_californicus:corvus_corax:evade",
-     "archetype": "evade",
-     "verb": "evade",
-     "season": "all",
-     "unit": "solitary",
-     "collective": false,
-     "predator": "corvus_corax",
-     "notice_m": 100,
-     "watchers": []
-    },
-    {
-     "id": "microtus_californicus:urocyon_cinereoargenteus:evade",
-     "archetype": "evade",
-     "verb": "evade",
-     "season": "all",
-     "unit": "solitary",
-     "collective": false,
-     "predator": "urocyon_cinereoargenteus",
-     "notice_m": 50,
-     "watchers": [
-      {
-       "species": "corvus_corax",
-       "notice_m": 120
-      }
-     ]
-    }
-   ]
-  },
   "canis_latrans": {
    "unit": "solitary",
    "predators": [
@@ -15654,12 +12767,9 @@
    ],
    "prey": [
     "callipepla_californica",
-    "lepus_californicus",
     "meleagris_gallopavo",
-    "microtus_californicus",
     "odocoileus_hemionus",
-    "otospermophilus_beecheyi",
-    "sylvilagus_bachmani"
+    "otospermophilus_beecheyi"
    ],
    "games": [
     {
@@ -15744,8 +12854,6 @@
      "competitors": [
       "odocoileus_hemionus",
       "aphelocoma_californica",
-      "sylvilagus_bachmani",
-      "lepus_californicus",
       "sceloporus_occidentalis"
      ],
      "predators": [
@@ -15760,15 +12868,9 @@
      "unit": "solitary",
      "collective": false,
      "prey": [
-      "sylvilagus_bachmani",
-      "lepus_californicus",
-      "microtus_californicus",
       "odocoileus_hemionus"
      ],
      "noticed_at_m": {
-      "sylvilagus_bachmani": 200,
-      "lepus_californicus": 300,
-      "microtus_californicus": 100,
       "odocoileus_hemionus": 400
      }
     },
@@ -15853,7 +12955,6 @@
      "scarcity": 0.689,
      "competitors": [
       "urocyon_cinereoargenteus",
-      "microtus_californicus",
       "otospermophilus_beecheyi"
      ],
      "predators": [
@@ -16239,7 +13340,6 @@
      "scarcity": 0.97,
      "competitors": [
       "urocyon_cinereoargenteus",
-      "microtus_californicus",
       "otospermophilus_beecheyi",
       "sceloporus_occidentalis"
      ],
@@ -16500,7 +13600,6 @@
      "scarcity": 0.689,
      "competitors": [
       "urocyon_cinereoargenteus",
-      "microtus_californicus",
       "otospermophilus_beecheyi",
       "sceloporus_occidentalis"
      ],
@@ -16671,7 +13770,6 @@
      "scarcity": 0.689,
      "competitors": [
       "urocyon_cinereoargenteus",
-      "microtus_californicus",
       "otospermophilus_beecheyi",
       "sceloporus_occidentalis"
      ],
@@ -16697,11 +13795,9 @@
    "predators": [],
    "prey": [
     "canis_latrans",
-    "lepus_californicus",
     "meleagris_gallopavo",
     "odocoileus_hemionus",
-    "otospermophilus_beecheyi",
-    "sylvilagus_bachmani"
+    "otospermophilus_beecheyi"
    ],
    "games": [
     {
@@ -16818,7 +13914,6 @@
       "callipepla_californica",
       "aphelocoma_californica",
       "cyanocitta_stelleri",
-      "sylvilagus_bachmani",
       "meleagris_gallopavo"
      ]
     },
@@ -16830,12 +13925,10 @@
      "unit": "mother_and_young",
      "collective": true,
      "prey": [
-      "odocoileus_hemionus",
-      "sylvilagus_bachmani"
+      "odocoileus_hemionus"
      ],
      "noticed_at_m": {
-      "odocoileus_hemionus": 300,
-      "sylvilagus_bachmani": 200
+      "odocoileus_hemionus": 300
      }
     },
     {
@@ -17015,9 +14108,7 @@
       "odocoileus_hemionus",
       "callipepla_californica",
       "aphelocoma_californica",
-      "cyanocitta_stelleri",
-      "sylvilagus_bachmani",
-      "lepus_californicus"
+      "cyanocitta_stelleri"
      ]
     },
     {
@@ -17182,9 +14273,7 @@
       "odocoileus_hemionus",
       "callipepla_californica",
       "aphelocoma_californica",
-      "cyanocitta_stelleri",
-      "sylvilagus_bachmani",
-      "lepus_californicus"
+      "cyanocitta_stelleri"
      ]
     },
     {
@@ -17349,9 +14438,7 @@
       "odocoileus_hemionus",
       "callipepla_californica",
       "aphelocoma_californica",
-      "cyanocitta_stelleri",
-      "sylvilagus_bachmani",
-      "lepus_californicus"
+      "cyanocitta_stelleri"
      ]
     },
     {
@@ -17516,9 +14603,7 @@
       "odocoileus_hemionus",
       "callipepla_californica",
       "aphelocoma_californica",
-      "cyanocitta_stelleri",
-      "sylvilagus_bachmani",
-      "lepus_californicus"
+      "cyanocitta_stelleri"
      ]
     }
    ]
@@ -17703,10 +14788,7 @@
      ],
      "scarcity": 0.97,
      "competitors": [
-      "callipepla_californica",
-      "sylvilagus_bachmani",
-      "lepus_californicus",
-      "microtus_californicus"
+      "callipepla_californica"
      ],
      "predators": [
       "canis_latrans",
@@ -17883,8 +14965,6 @@
      "scarcity": 0.941,
      "competitors": [
       "odocoileus_hemionus",
-      "lepus_californicus",
-      "microtus_californicus",
       "otospermophilus_beecheyi"
      ],
      "predators": [
@@ -17978,7 +15058,6 @@
       "callipepla_californica",
       "aphelocoma_californica",
       "cyanocitta_stelleri",
-      "sylvilagus_bachmani",
       "puma_concolor"
      ],
      "predators": [
@@ -18102,8 +15181,6 @@
      "hotspots": [],
      "scarcity": 1.0,
      "competitors": [
-      "sylvilagus_bachmani",
-      "lepus_californicus",
       "otospermophilus_beecheyi"
      ],
      "predators": [
@@ -18965,9 +16042,7 @@
       ]
      ],
      "scarcity": 0.97,
-     "competitors": [
-      "microtus_californicus"
-     ],
+     "competitors": [],
      "predators": [
       "buteo_jamaicensis",
       "canis_latrans",
@@ -19056,7 +16131,6 @@
      "scarcity": 0.689,
      "competitors": [
       "urocyon_cinereoargenteus",
-      "microtus_californicus",
       "canis_latrans"
      ],
      "predators": [
@@ -19148,7 +16222,6 @@
      "scarcity": 0.689,
      "competitors": [
       "urocyon_cinereoargenteus",
-      "microtus_californicus",
       "canis_latrans"
      ],
      "predators": [
@@ -19239,9 +16312,7 @@
      ],
      "scarcity": 0.941,
      "competitors": [
-      "odocoileus_hemionus",
-      "lepus_californicus",
-      "microtus_californicus"
+      "odocoileus_hemionus"
      ],
      "predators": [
       "buteo_jamaicensis",
@@ -19270,8 +16341,6 @@
      "hotspots": [],
      "scarcity": 1.0,
      "competitors": [
-      "sylvilagus_bachmani",
-      "lepus_californicus",
       "meleagris_gallopavo"
      ],
      "predators": [
@@ -19388,9 +16457,7 @@
       ]
      ],
      "scarcity": 0.689,
-     "competitors": [
-      "microtus_californicus"
-     ],
+     "competitors": [],
      "predators": [
       "buteo_jamaicensis",
       "canis_latrans",
@@ -19576,9 +16643,7 @@
       ]
      ],
      "scarcity": 0.689,
-     "competitors": [
-      "microtus_californicus"
-     ],
+     "competitors": [],
      "predators": [
       "buteo_jamaicensis",
       "canis_latrans",
@@ -19847,7 +16912,6 @@
      "scarcity": 0.689,
      "competitors": [
       "urocyon_cinereoargenteus",
-      "microtus_californicus",
       "canis_latrans",
       "sceloporus_occidentalis"
      ],
@@ -20234,9 +17298,7 @@
      "scarcity": 0.19,
      "competitors": [
       "odocoileus_hemionus",
-      "aphelocoma_californica",
-      "sylvilagus_bachmani",
-      "lepus_californicus"
+      "aphelocoma_californica"
      ],
      "predators": [
       "aphelocoma_californica",
@@ -20509,9 +17571,7 @@
       "corvus_corax",
       "odocoileus_hemionus",
       "callipepla_californica",
-      "aphelocoma_californica",
-      "sylvilagus_bachmani",
-      "lepus_californicus"
+      "aphelocoma_californica"
      ],
      "predators": [
       "aphelocoma_californica",
@@ -20701,9 +17761,7 @@
       "corvus_corax",
       "odocoileus_hemionus",
       "callipepla_californica",
-      "aphelocoma_californica",
-      "sylvilagus_bachmani",
-      "lepus_californicus"
+      "aphelocoma_californica"
      ],
      "predators": [
       "aphelocoma_californica",
@@ -20899,7 +17957,6 @@
      "scarcity": 0.689,
      "competitors": [
       "urocyon_cinereoargenteus",
-      "microtus_californicus",
       "canis_latrans",
       "otospermophilus_beecheyi"
      ],
