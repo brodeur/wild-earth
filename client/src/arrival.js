@@ -376,7 +376,7 @@ export class OpeningScreen {
     if (this.closed || id !== this.sel || !index?.species) return;
     const box = this.$('.op-lineup'), rnd = Math.random;
     this.anEls ||= new Map();
-    const known = [...new Set((lists[id] || []).map(s => s.code))].filter(c => index.species[c]);
+    const known = [...new Set((lists[id] || []).filter(s => s.present !== false).map(s => s.code))].filter(c => index.species[c]);   // present: the pipeline's record-and-range rule (species.json)
     const ground = known.filter(c => index.species[c].kind === 'ground'), birds = known.filter(c => index.species[c].kind === 'bird');
     const m = c => index.species[c].width / index.species[c].px_per_m;   // the still's width in metres
     // ground slots: biggest at the two ends, smallest toward the middle; each slot's share of the span by its width

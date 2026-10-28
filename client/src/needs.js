@@ -27,10 +27,11 @@ export class Needs {
   // the player's species: a walker with games in games.json has needs; anything else has none (the widget hides)
   setSpecies(code) {
     const base = code ? code.split(':')[0] : null;
-    this.code = base; this.sp = base && bodyKind(base) === 'ground' ? this.tile.games?.species?.[base] || null : null;
+    const kind = base ? bodyKind(base) : null, flier = kind === 'flier';
+    this.code = base; this.sp = base && (kind === 'ground' || flier) ? this.tile.games?.species?.[base] || null : null;   // walkers and fliers (a flier's only loop is the hunt: no thirst)
     this.hunger = 1; this.thirst = 1; this.target = null;
     const drink = this.sp?.games.find(g => g.archetype === 'drink');
-    this.rhythm = drink?.rhythm || (drink ? 'often' : 'none');
+    this.rhythm = flier ? 'none' : drink?.rhythm || (drink ? 'often' : 'none');
     if (this.el) { this.el.hidden = !this.sp; if (this.bars?.water) this.bars.water.hidden = this.rhythm === 'none'; }
   }
   raster(r) {   // client/res_<r>.png as a Grid8, loaded on first need (null until then)

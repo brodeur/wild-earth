@@ -148,4 +148,10 @@ hardest gather on the tile. A drink game carries the species' rhythm (daily, oft
 2. Difficulty from competitors' populations against hotspot capacity.
 3. Done 2026-10-27: the client's animals read `detects` and `alarm_calls`: a hunter is noticed at each prey's distance
    (alert, then the flee radius capped by it) and a watcher's call sends the hunted within its carry to cover
-   (decisions, "the animals notice the player at their own distance"). Still to do: AI predators as threats to AI prey.
+   (decisions, "the animals notice the player at their own distance"). Done 2026-10-28: AI predators are threats to AI
+   prey (prey react to the nearest noticed predator, AI or player; watchers call at AI hunters; lions stalk and rush
+   herds, canids trot at and pounce on small prey, hawks stoop at voles), alarm calls are heard, and the hunt ends: a
+   rush or pounce that lands, or the player's E within reach (a lion, coyote or fox) or pass within reach (a hawk or
+   raven), kills; the dead lie as carrion for ten minutes and the scavenge relation brings ravens, vultures and
+   coyotes to them; a hunter's hunger drains until a catch. Still to do: the hunt's difficulty from the prey's notice
+   (a crouching stalk should shrink the hunter's signature), the court and rear loops, a kill sound.

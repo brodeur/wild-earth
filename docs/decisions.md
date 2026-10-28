@@ -1991,3 +1991,12 @@ The fliers' strike (2026-10-28): a player hawk or raven passing within reach (1.
 takes it, in flight or standing beside it (flierControl.js, every 0.1 s through animals.js catchNear; the toast says
 "took a jackrabbit"). No key: the stoop that connects is the strike. Verified: a hawk reset 1.2 m over a jackrabbit
 took it at once. The fliers have no hunger meter yet (needs.js is the walkers'), so the strike is its own reward.
+
+The stalk and the fliers' hunger (2026-10-28). A hunter's signature follows how it moves: groundControl scales every
+species' notice of the player (animals.js setStalk over the observer's noticeBase) by 0.4 frozen (shift), 0.55 creeping
+(under 0.9 m/s), 1 walking, 1.3 running (over 2.4 m/s), so a lion creeping in is noticed by a deer at 165 m instead of
+300 and a running one at 390; the factor resets when the body is left. The fliers (hawk, raven, the jays, the vulture)
+have the needs widget now (needs.js takes a flier body: hunger only, no thirst, since a flier has no drinking loop
+yet), a hunter's hunger draining over 14 min and filling on a strike. The start screen's lineup (arrival.js) skips the
+species the pipeline marks `present: false` in species.json (the species lane's record-and-range rule), so Yosemite's
+card shows fifteen animals, without the brush rabbit, the jackrabbit and the vole.

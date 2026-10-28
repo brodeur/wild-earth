@@ -74,6 +74,8 @@ export class FlierControl {
   useSpecies(code) {
     const S = FLIERS[code]; if (!S) return false;
     this.code = code; this.S = S; this.body = null;
+    { const A = this.animals; if (A && !A.preySlots) A.buildHunts?.(); const k = A ? A.speciesList().findIndex(sp => sp.code === code) : -1;
+      if (this.needs) this.needs.hunter = !!(k >= 0 && A.preySlots?.[k]); }   // a hunter's hunger drains until a strike (needs.js)
     for (const [n, p] of this.meshes) if (n !== S.model) p.then(b => { if (b) b.mesh.visible = false; });
     this.meshFor(S.model).then(b => { if (this.S !== S) return; this.body = b; if (b) b.mesh.visible = this.on; });
     if (this.on) this.flight.setSpecies(S.flight);
@@ -143,7 +145,7 @@ export class FlierControl {
     const r = this.flight.update(dt);
     if (this.on && this.animals?.catchNear && (this.catchT = (this.catchT || 0) - dt) <= 0) {   // a hunter's strike: prey within reach in flight (animals.js CARRION)
       this.catchT = 0.1; const P = this.flight.pos;
-      const c = this.animals.catchNear(P.x, P.y, P.z); if (c) this.say?.(`took a ${this.animals.speciesList()[c.sp]?.one || 'prey'}`);   // in flight or on the ground beside it
+      const c = this.animals.catchNear(P.x, P.y, P.z); if (c) { this.needs?.fed?.(); this.say?.(`took a ${this.animals.speciesList()[c.sp]?.one || 'prey'}`); }   // in flight or on the ground beside it
     }
     this.draw(dt);
     return r;

@@ -203,6 +203,7 @@ export class GroundControl {
     if (this.body) this.body.mesh.visible = on;
     if (!on) for (const p of this.meshes.values()) p.then(b => { if (b) b.mesh.visible = false; });
     if (!on && this.herd) { this.animals.pilot(this.herd.g, null); this.herd = null; }   // the group goes on with its own life
+    if (!on) this.animals?.setStalk?.(1);
     if (!on) { this.marks.clear(); this.sil.clear(); }
     if (this.hudRow) this.hudRow.style.display = on ? '' : 'none';
     f.look = 0; f.headYaw.value = 0; f.lookMax = on ? (this.S.rig === 'quad' ? 1.0 : this.S.rig === 'bird' ? 1.3 : 1.2) : 0;   // how far this body's head turns before the body follows a drag
@@ -329,6 +330,9 @@ export class GroundControl {
     const still = !k.fwd && Math.abs(this.v) < 0.6;
     const alert = k.shift && still && !this.resting;
     this.sit = damp(this.sit, alert ? 1 : 0, alert ? 4 : 8, dt);
+    if (this.needs?.hunter && this.animals?.setStalk) {   // a hunter's stalk: still 0.4, creeping 0.55, walking 1, running 1.3 (animals.js setStalk)
+      const v = Math.abs(this.v); this.animals.setStalk(this.sit > 0.5 ? 0.4 : v < 0.9 ? 0.55 : v < 2.4 ? 1 : 1.3);
+    }
     if (act) { this.actT = S.act.t; this.resting = false; if (S.act.headFlick) ps.fl = (Math.random() < 0.5 ? -1 : 1) * (0.6 + Math.random() * 0.6); if (S.act.scratch) this.scratch = Math.random() < 0.4; }
     if (act && this.animals?.catchNear) {   // a hunter's E within reach of its prey: the catch (animals.js kill, CARRION)
       const c = this.animals.catchNear(P.x, P.y, P.z);

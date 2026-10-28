@@ -733,10 +733,14 @@ export class Animals {
     SPECIES.forEach((sp, k) => { this.meshes[k].visible = this.perceived.has(sp.code); });
     // noticing: how far each species notices this observer (perception.json detects), and whom it hunts (games.json)
     const det = this.tile.perception?.detects || null;
-    this.notice = SPECIES.map(sp => { const row = det?.[sp.code.split(':')[0]]; const v = row ? row[code] : undefined; return typeof v === 'number' ? v : Infinity; });
+    this.noticeBase = SPECIES.map(sp => { const row = det?.[sp.code.split(':')[0]]; const v = row ? row[code] : undefined; return typeof v === 'number' ? v : Infinity; });
+    this.stalkK = 1; this.notice = this.noticeBase.slice();
     this.preyOf = new Set((this.tile.games?.relations?.predation || []).filter(([pr]) => pr === code).map(([, q]) => q));
     this.dirty = true;
   }
+  // The player's stalk (groundControl): k scales how far every species notices the player (1 walking; 0.55 creeping,
+  // 0.4 frozen, 1.3 running: the signature of a hunter moving low and slow is smaller, a running one's larger).
+  setStalk(k) { if (k === this.stalkK || !this.noticeBase) return; this.stalkK = k; this.notice = this.noticeBase.map(v => v * k); }
   // Danger to an animal or a group o of species sp at distance d from the player, whose own flee radius is base: within
   // base and noticed, or alarmed by a call and within ALARM_REACT_R. alert: noticed, within ALERT_MAX.
   // n: how far sp notices the threat at hand (threat() T.n; the player's notice[sp] by default).

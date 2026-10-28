@@ -60,6 +60,7 @@ sequenced; Parked is in the brief but deliberately not started.
 - Ground colour by date, 2026-10-26: the base is the NAIP photo with the tree crowns replaced by ground, recoloured per 20 m by the Sentinel-2 monthly median for the day over July (class-aware 100 m blur of open ground, slope shading regressed out, per-class flat-ground brightness), forest litter under closed canopy, grass blades and the rewilded palette from the same means; fps unchanged. Weak: oak-woodland and chaparral open ground greens less than grassland (measured, reads grey-olive in April), litter is one fixed colour, the first build costs 0.6 s at load.
 
 - Yosemite, 2026-10-28: `utm11n_270_4180` (Half Dome, Yosemite Falls, the village meadows) built end to end with the DEM-only lidar fallback (no public point cloud); Half Dome recognisable from the meadow. Weak: no fall drawn, flat grey granite, foothill species on a Sierra tile, start point on Tioga Road.
+- Night 2026-10-27/28 (standing authorization, up to $100 of credits; docs/report-2026-10-26-morning.md rows from fbc2c07): the herd silhouettes masked by the herd's own bodies (stencil); the Yosemite tile finished; the world hunts without the player (AI hunters as threats, watchers calling at them, lions stalking herds, canids pouncing, hawks stooping); alarm calls heard; kills and carrion with ravens, vultures and coyotes coming (a death in the world: Aaron's call to keep); the player's catch as lion, coyote, fox, hawk or raven; waterfalls on steep channels (Yosemite Falls); cliffs read as rock at any distance; bark plates at their size on old trees; the skinned, clip-animated deer merged; species present per tile from GBIF records (pipeline). Weak: no kill sound or feeding pose; the fliers have no hunger; the falls are a few metres wide where May's plume is twenty; the Sierra species (bear, mule deer, mountain quail) have no models yet.
 - Overnight 2026-10-24/25 (Aaron asleep, standing authorization): present-day peek (P)
   with place names; pipeline present-day texture, LANDFIRE species mix per cell, acorn
   woodpecker and scrub-jay; local-knowledge edits saved to the manifest from the viewer
@@ -186,8 +187,8 @@ browser stays the renderer.
 - Get a licensing read on density surfaces derived from CC BY-NC mammal records
   before any paid product (open question in the decision log).
 
-- First animals with behaviour from the activity calendar; perception matrix decides
-  who is rendered for whom.
+- ~~First animals with behaviour from the activity calendar; perception matrix decides
+  who is rendered for whom.~~ done: twenty species with behaviour, the detection matrix, hunts and kills (2026-10-28).
 - Competitors for the acorn stash (squirrels, other ravens) and cache recovery in the
   winter world.
 - Species density surfaces from CWHR habitat suitability; then the +10-year delta.
