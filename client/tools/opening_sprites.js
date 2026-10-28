@@ -3,7 +3,7 @@ import { Wisp } from '../src/spirit.js';
 import {
   animalMaterial, hasAnim2, buildRaven, buildWoodpecker, loadDeerMesh, loadFoxMesh, loadCoyoteMesh, loadCougarMesh,
   loadSquirrelMesh, loadGroundSquirrelMesh, loadRabbitMesh, loadJackrabbitMesh, loadVoleMesh, loadQuailMesh, loadTurkeyMesh,
-  loadLizardMesh, loadJayMesh, loadStellersJayMesh, loadRedtailMesh, loadVultureMesh, loadBearMesh,
+  loadLizardMesh, loadJayMesh, loadStellersJayMesh, loadRedtailMesh, loadVultureMesh, loadBearMesh, loadMountainQuailMesh,
 } from '../src/animalModels.js';
 
 // The opening screen's sprites (client/src/arrival.js plays them with CSS, so nothing on the screen animates from
@@ -30,7 +30,7 @@ const SPECIES = {
   odocoileus_hemionus: [G, loadDeerMesh], ursus_americanus: [G, loadBearMesh], puma_concolor: [G, loadCougarMesh], canis_latrans: [G, loadCoyoteMesh],
   urocyon_cinereoargenteus: [G, loadFoxMesh], meleagris_gallopavo: [G, loadTurkeyMesh, 1], lepus_californicus: [G, loadJackrabbitMesh],
   sciurus_griseus: [G, loadSquirrelMesh], otospermophilus_beecheyi: [G, loadGroundSquirrelMesh], sylvilagus_bachmani: [G, loadRabbitMesh],
-  callipepla_californica: [G, loadQuailMesh, 1], sceloporus_occidentalis: [G, loadLizardMesh], microtus_californicus: [G, loadVoleMesh],
+  callipepla_californica: [G, loadQuailMesh, 1], oreortyx_pictus: [G, loadMountainQuailMesh, 1], sceloporus_occidentalis: [G, loadLizardMesh], microtus_californicus: [G, loadVoleMesh],
   corvus_corax: [B, async () => buildRaven()], buteo_jamaicensis: [B, loadRedtailMesh, 0, 'soar'], cathartes_aura: [B, loadVultureMesh, 0, 'soar'],
   aphelocoma_californica: [B, loadJayMesh], cyanocitta_stelleri: [B, loadStellersJayMesh], melanerpes_formicivorus: [B, async () => buildWoodpecker()],
 };

@@ -1,0 +1,66 @@
+{
+  "species": "oreortyx_pictus",
+  "mode": "preview",
+  "kind": "text-to-3d",
+  "task_id": "01a18176-1a9a-7457-80c0-bfdd555bdf38",
+  "endpoint": "https://api.meshy.ai/openapi/v2/text-to-3d",
+  "request": {
+    "mode": "preview",
+    "prompt": "A mountain quail (Oreortyx pictus), a plump round ground bird like a small partridge, NOT a dove, NOT a songbird. One adult walking on the ground, side-on, body low and horizontal, a short thick neck, a very short rounded tail, short legs. Two long thin straight black plumes rising from the crown and leaning back over the nape. About 27 cm long. Slate blue-grey head, nape and breast; a chestnut throat outlined in white; chestnut flanks with bold white vertical bars; olive-brown back and wings; a short stout black bill. Realistic proportions. No base, no rock. Game-ready, clean closed mesh.",
+    "ai_model": "latest",
+    "target_formats": [
+      "glb"
+    ],
+    "should_remesh": true,
+    "topology": "triangle",
+    "target_polycount": 20000,
+    "moderation": false
+  },
+  "prompt": "A mountain quail (Oreortyx pictus), a plump round ground bird like a small partridge, NOT a dove, NOT a songbird. One adult walking on the ground, side-on, body low and horizontal, a short thick neck, a very short rounded tail, short legs. Two long thin straight black plumes rising from the crown and leaning back over the nape. About 27 cm long. Slate blue-grey head, nape and breast; a chestnut throat outlined in white; chestnut flanks with bold white vertical bars; olive-brown back and wings; a short stout black bill. Realistic proportions. No base, no rock. Game-ready, clean closed mesh.",
+  "image": null,
+  "preview_job": null,
+  "estimated_credits": 20,
+  "balance_before": 2652,
+  "status": "SUCCEEDED",
+  "timestamps": {
+    "submitted": "2026-10-28T07:42:43+00:00",
+    "created_at": "2026-10-28T07:42:45+00:00",
+    "started_at": "2026-10-28T07:42:45+00:00",
+    "finished_at": "2026-10-28T07:43:48+00:00",
+    "downloaded": "2026-10-28T07:43:53+00:00"
+  },
+  "tool": "tools/meshy_generate.py",
+  "pricing_source": {
+    "url": "https://docs.meshy.ai/en/api/pricing",
+    "read": "2026-10-24"
+  },
+  "licence_note": "Generated through the Meshy API, which requires a paid plan (402 on a free plan). Meshy Terms of Use (https://www.meshy.ai/terms-of-use, last updated 2026-09-19), section 3.2: customers on a paid plan own their Customer Output to the extent permitted by law (free-plan output is owned by Meshy and offered under CC BY 4.0 with credit to Meshy). As owner, the account holder may license this model under the project's CC BY-SA 4.0 asset licence, to the extent copyright subsists in AI-generated output. Section 2.4: do not remove or alter AI-identifying metadata or watermarks Meshy embeds; carry them into adopted tiers. Section 2.5: API output is deleted by Meshy 3 days after generation, so keep this folder until the model is adopted. Credit: \"generated with Meshy (meshy.ai)\".",
+  "maintainer": "agent (Claude) for Aaron Brodeur",
+  "progress": 100,
+  "task": {
+    "id": "01a18176-1a9a-7457-80c0-bfdd555bdf38",
+    "type": "text-to-3d-preview",
+    "status": "SUCCEEDED",
+    "created_at": 1793173365037,
+    "started_at": 1793173365054,
+    "finished_at": 1793173428852,
+    "consumed_credits": 20,
+    "task_error": null
+  },
+  "credits_charged": 20,
+  "files": [
+    {
+      "file": "model.glb",
+      "bytes": 1144096,
+      "sha256": "8309a64891733021535b7314ee569600536e466c3ceb164eaf85404ba562de11",
+      "source": "https://assets.meshy.ai/<account>/tasks/01a18176-1a9a-7457-80c0-bfdd555bdf38/output/model.glb"
+    },
+    {
+      "file": "thumbnail.png",
+      "bytes": 79049,
+      "sha256": "c597cc9cf1c0254f81dbbff110aecbd568e8fa84dc89acf111f49d6155c4d261",
+      "source": "https://assets.meshy.ai/<account>/tasks/01a18176-1a9a-7457-80c0-bfdd555bdf38/output/preview.png"
+    }
+  ],
+  "balance_after": 2632
+}

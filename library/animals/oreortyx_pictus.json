@@ -1,0 +1,93 @@
+{
+  "id": "oreortyx_pictus",
+  "aliases": [
+    "mountain_quail",
+    "plumed_quail"
+  ],
+  "scientific": "Oreortyx pictus",
+  "common": "mountain quail",
+  "body_plan": "bird",
+  "size": {
+    "length_m": 0.27,
+    "shoulder_or_wingspan_m": 0.37,
+    "note": "Length 26-29 cm, wingspan about 35-40 cm, 230-290 g; the largest North American quail. The build scales the standing model to 0.27 m bill to tail (tail fan included); the plumes stand 5.5 cm above the crown. One size for both sexes (instances scaled 0.9-1.1)."
+  },
+  "source": {
+    "kind": "meshy",
+    "title": "Mountain quail (generated)",
+    "author": "generated with Meshy (meshy.ai) by agent (Claude) for Aaron Brodeur",
+    "url": "https://www.meshy.ai",
+    "file": "library/animals/jobs/oreortyx_pictus/01a18176-1a9a-7457-80c0-bfdd555bdf38/model.glb (local, git-ignored)",
+    "original": "text-to-3D preview, ai_model latest (meshy-7.1), triangle remesh to 20,000 faces: 20,469 triangles in two pieces (the body, and a plume crest floating apart over the back), untextured; the breast and lower flanks sculpted as overlapping scale flaps",
+    "prompt": "A mountain quail (Oreortyx pictus), a plump round ground bird like a small partridge, NOT a dove, NOT a songbird. One adult walking on the ground, side-on, body low and horizontal, a short thick neck, a very short rounded tail, short legs. Two long thin straight black plumes rising from the crown and leaning back over the nape. About 27 cm long. Slate blue-grey head, nape and breast; a chestnut throat outlined in white; chestnut flanks with bold white vertical bars; olive-brown back and wings; a short stout black bill. Realistic proportions. No base, no rock. Game-ready, clean closed mesh.",
+    "reference_image": null,
+    "job_id": "01a18176-1a9a-7457-80c0-bfdd555bdf38",
+    "job": "library/animals/jobs/oreortyx_pictus/01a18176-1a9a-7457-80c0-bfdd555bdf38/job.json",
+    "credits": 20,
+    "date": "2026-10-28 (UTC)",
+    "adopted_by": "tools/build_mountain_quail.py"
+  },
+  "license": "CC BY-SA 4.0",
+  "license_detail": {
+    "source_terms": "Meshy Terms of Use (https://www.meshy.ai/terms-of-use, last updated 2026-09-19) 3.2: paid-plan API output is owned by the account holder, who releases it with the project's assets under CC BY-SA 4.0.",
+    "redistribute_under_cc_by_sa": true,
+    "note": "Credit \"generated with Meshy (meshy.ai)\" is kept in the build script header and the GLB asset.copyright. The file carried no Meshy metadata or watermark to carry over (Terms 2.4). Terms 2.6(xi) (no training of competing models) binds the account holder, not CC BY-SA licensees. AI output may carry little copyright in some jurisdictions; the licence covers what rights exist."
+  },
+  "tiers": {
+    "lod0": 1000,
+    "lod1": 400,
+    "lod2": 119,
+    "file": "client/assets/mountain_quail.glb",
+    "attributes": [
+      "POSITION",
+      "COLOR_0 (linear)",
+      "_PART",
+      "_PARTW",
+      "_PIVOT",
+      "_COLORB (female, linear)"
+    ],
+    "lod_m": [
+      12,
+      40
+    ],
+    "note": "The body re-skinned (a 56 x 30 UV sphere pushed out along rays from the body's centre to the outermost surface: the envelope over the generator's scale flaps, whose tunnels stopped Blender's collapse at ~550-1,100 faces) and the generator's own head and neck joined into it; the floating crest deleted and two procedural straight plumes added (5.5 cm, leaning 25 degrees back; asserted: tips above and behind their bases); the head carried lower and forward on a shorter neck; bill shortened 0.65x and widened 1.5x at the base; long legs cut at the belly and short grey procedural legs added; the thin blade tail deleted and a short rounded fan added; body tipped 6 degrees nose-down; scaled to 0.27 m; recoloured with faint per-face noise (+-4%) and a female colour set in _COLORB; flight wing cards added (8 % larger than the California quail's). Triangles: lod0 1,000 = 844 body + 156 (legs, wing cards, plumes, tail fan, eyes); lod1 400 = 326 + 74; lod2 119 = 94 + 25. Tiers switch at 12 and 40 m. GLB 270,308 bytes."
+  },
+  "rig": "bird rig template (client/src/animalModels.js RIG.mquail, the California quail's constants; PART BODY, LEG_A/B procedural legs, TAIL procedural fan, HEAD with the neck and the procedural plumes, WING_L/R and HAND_L/R cards that collapse into the shoulder on pose); aAnim2 = (wing bow in the glide, tail spread, -, female colour set)",
+  "candidates": [
+    {
+      "kind": "meshy",
+      "purpose": "the brief's prompt A (standing, neutral); not adopted",
+      "job": "library/animals/jobs/oreortyx_pictus/01a18174-6786-74a4-99ea-5760f23a40db/job.json",
+      "job_id": "01a18174-6786-74a4-99ea-5760f23a40db",
+      "mode": "text-to-3d preview, ai_model latest, remeshed to triangles, target 20,000 faces",
+      "prompt": "A mountain quail (Oreortyx pictus) of the Sierra Nevada, California, NOT a California quail: two long thin STRAIGHT black plumes rising from the crown and leaning back, no forward-curling topknot. One adult bird standing on the ground, side-on, body level, wings folded against a plump round body, about 27 cm long. Slate blue-grey head, nape and breast; a chestnut throat outlined by a white line from the bill under the eye; chestnut flanks with bold white vertical bars; olive-brown back, wings and short tail; short black bill; short grey legs. Realistic proportions. No base, no rock. Game-ready, clean closed mesh.",
+      "author": "generated with Meshy (meshy.ai) by agent (Claude) for Aaron Brodeur",
+      "date": "2026-10-28 (UTC)",
+      "credits": 20,
+      "raw_triangles": 20144,
+      "license": "owned by the paid account holder (Meshy Terms of Use 3.2)",
+      "status": "not adopted",
+      "review": "A slender dove or thrush, not a quail: a long upright neck, a long thin bill, a long tapered blade tail, long thin legs, no plumes. Clearly wrong for the body; the brief's prompt B (body low and horizontal, short neck, very short tail, partridge-like) was run instead and adopted."
+    },
+    {
+      "kind": "meshy",
+      "purpose": "the brief's prompt B (walking, body level); adopted",
+      "job": "library/animals/jobs/oreortyx_pictus/01a18176-1a9a-7457-80c0-bfdd555bdf38/job.json",
+      "job_id": "01a18176-1a9a-7457-80c0-bfdd555bdf38",
+      "credits": 20,
+      "raw_triangles": 20469,
+      "status": "adopted 2026-10-28 by tools/build_mountain_quail.py",
+      "review": "Reads as a plump partridge-shaped quail from the side: a round body carried level, a short neck, a small head, a short tail. Faults: the plume came out as a fan crest floating apart from the head over the back; the bill long and thin; the legs long and thin (one striding forward); the tail a thin blade; the breast and lower flanks sculpted as overlapping scale flaps (fins and tunnels). All fixed or replaced by the build."
+    }
+  ],
+  "status": "agent draft, needs local sign-off",
+  "accuracy_notes": "Generated, not adopted from a download: no CC0 or CC BY mountain quail mesh exists. Reads as a mountain quail, not a California quail, at 3-15 m: two long straight black plumes standing up and back from the crown (not a forward teardrop), a slate blue-grey head, nape and breast, a chestnut throat bordered by a white line from the gape under the eye and down the side of the neck, chestnut flanks crossed by white bars, a cinnamon-buff belly, a dark chestnut undertail, an olive-brown back and wings, grey legs. Female variant (the nape and hindneck washed brown) for half the birds. Still open: the female's shorter plume is not drawn (one plume length for both, as the California quail's); the plumes do not lie back when it runs; the flank bars are as coarse as the triangles (four or five at lod0, a blotch at lod2); the buff line along the folded wing is faint; the head and the re-skinned body are two overlapping pieces (no seam is visible at the lineup's distances, but the far tier's neck is blocky); the body's width (11 cm) is at the plump end. A local birder should check the plume length and angle, the throat border and the posture.",
+  "authors": [
+    "agent (Claude) for Aaron Brodeur (brief, generation, adoption, recolour, tiers)"
+  ],
+  "sources": [
+    "library/animals/drafts/oreortyx_pictus.md (field marks, sizes, palette, prompts; its sources are listed there)",
+    "docs/animal-library.md (Meshy terms and costs)",
+    "tools/build_mountain_quail.py (adoption)"
+  ]
+}

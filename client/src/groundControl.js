@@ -8,7 +8,7 @@ import { HerdSilhouette } from './herdSilhouette.js';
 // The playable walkers (owner's request 2026-10-26, "make the other animals playable"): one controller for every
 // species that lives on the ground, parameterised per species by GROUND below. Black-tailed deer (doe and buck), gray
 // fox, coyote, mountain lion, black bear, brush rabbit, black-tailed jackrabbit, California vole, California ground squirrel,
-// western fence lizard, and the wild turkey and California quail on foot. When the player is one of them main.js calls
+// western fence lizard, and the wild turkey, California quail and mountain quail on foot. When the player is one of them main.js calls
 // this instead of flight.update; it drives `flight.pos` and `flight.yaw` (forward -z at yaw 0) as the squirrel's
 // controller does, so the forest, grass, minimap, identify, animals and sound follow it. The raven's body is hidden.
 //
@@ -59,7 +59,7 @@ export const CAM_RAISE = 1.3, FRAME_Y = -0.45, CAM_PLUS = { back: 0.5, up: 0.2 }
 // steers; after HERD_IDLE s without a key the group takes back over: it goes on with its own life from where it is,
 // and the player's body walks with it as a member (herdDrive: keys synthesized toward its slot, behind the leader in
 // file or round the centre) until any key, which takes the reins back. The HUD's where line says which.
-const HERD_WORD = { odocoileus_hemionus: 'herd', callipepla_californica: 'covey', meleagris_gallopavo: 'flock' };
+const HERD_WORD = { odocoileus_hemionus: 'herd', callipepla_californica: 'covey', oreortyx_pictus: 'covey', meleagris_gallopavo: 'flock' };
 const HERD_LEAD = 5, HERD_IDLE = 6;
 export const GROUND = {
   odocoileus_hemionus: { short: 'deer', common: 'black-tailed deer', model: 'deer', rig: 'quad',
@@ -130,6 +130,14 @@ export const GROUND = {
     flush: { from: 2, v: 13, T: 2.4, peak: 3, beat: 19, up: 0.5 },
     cam: { back: 0.9, up: 0.35, look: 0.8, aimUp: 0.12, side: 0.4, clear: 0.1, near: 0.05 },
     act: { peck: true, t: 1, word: 'pecking' }, alert: { flick: -0.4 }, rest: null },
+  // the mountain quail: the California quail's body a size up; a runner first (it flies only when pressed), the flush a
+  // whirring burst and a long glide downhill
+  oreortyx_pictus: { short: 'mtnquail', common: 'mountain quail', model: 'mountain-quail', rig: 'bird',
+    walk: 0.8, run: 5, back: 0.4, ramp: 0.8, accel: 6, stop: 9, turn: 4, jumpH: 0.13, jumpL: 0.28, step: 0.13, wade: 0.035,
+    half: 0.11, rad: 0.065, shoulder: 0.16, stride: 0.15,
+    flush: { from: 2.2, v: 13, T: 2.8, peak: 3, beat: 19, up: 0.5 },
+    cam: { back: 0.95, up: 0.37, look: 0.85, aimUp: 0.13, side: 0.4, clear: 0.1, near: 0.05 },
+    act: { peck: true, t: 1, word: 'scratching and pecking' }, alert: { flick: -0.4 }, rest: null },
 };
 
 export class GroundControl {

@@ -2094,3 +2094,20 @@ themselves, and a rise only when none is left (ATTACH_PASSES 2000; the accumulat
 is unchanged in a dry run (named creeks within 2.3 m, the same areas and orders); the other tiles shift slightly on
 their next channels build. Burning NHD perennial lines into the DEM was tried first and rejected: even half a metre
 pulled the home tile's lidar creeks up to 50 m onto NHD's offset lines, and the fix does not need it.
+
+Mountain quail (Oreortyx pictus) for the Sierra (2026-10-28, an Opus lane; verified here: a summoned covey of 11 and
+seven natural coveys, 51 birds, on the rocky ground by the village meadow, no errors). The Sierra's own quail, for
+the Yosemite tile: a Meshy `latest` preview (prompt B; prompt A came out a dove; 40 credits in all, 420 of the 1,000
+spent) adopted by tools/build_mountain_quail.py into client/assets/mountain_quail.glb, 0.27 m, tiers 1,000/400/119
+at 12 and 40 m, the bird rig with HEAD-tagged plumes and a female colour set. The generator sculpted the breast as
+overlapping scale flaps whose tunnels stopped Blender's collapse at 550-1,100 faces and broke a voxel remesh, so the
+build re-skins the body (a sphere pushed out to the outer surface along rays from the body's centre) and keeps the
+generator's head and neck; the plumes (two straight 5.5 cm quills leaning back), legs and tail fan are procedural.
+In animals.js it is slot MQ and reuses the California quail's covey machinery through a covey's own species, on its
+own covey list so sound.js's California quail clucks and assembly calls stay with the California quail; its flush
+event has group null with species and covey. Coveys of 6-12 (pairs in spring) live on chaparral, brushy edges and
+forest understory from 600 to 3,000 m (2,000 m in winter, below the snow), so the foothill tiles have it only in
+their highest brush; a flushed covey glides downhill into brush; hawks stoop at it and coyotes flush it. Playable as
+`mtnquail` with the covey pilot. In the pipeline: RANGE 600-3,000 m on chaparral and mixed and conifer forest, prey
+of the hawk, coyote, fox and raven, ALARM_CALL 150 m, UNIT covey. Open: the female's shorter plume, plumes laid back
+when running, its quee-ark call in sound.js, the lineup's back-colour flag (the buff wing stripe is broad).

@@ -17,7 +17,7 @@ import { uniforms as atmo } from './atmosphere.js';
 // Rig templates (the drawn meshes, built by tools/build_<species>.py; see RIG below). They extend PART and add a
 // one-level parent chain and a second per-instance vec4, aAnim2, without changing what parts 0-6 do for the deer
 // and the procedural models:
-//   bird    BODY, LEG_A/B, TAIL, HEAD (head and neck, pivot at the base of the neck), WING_L/R (the arm, pivot
+//   bird    BODY, LEG_A/B, TAIL, HEAD (head and neck, pivot at the base of the neck; the quails' plumes), WING_L/R (the arm, pivot
 //           at the shoulder) and HAND_L/R (pivot at the wrist; child of the wing). Folded wings stay body geometry;
 //           the flight wings are cards that collapse into the shoulder as pose goes to 1 (perched or on the ground).
 //           The hand lags the arm through the stroke. aAnim2 = (wing bow, tail spread, -, colour variant).
@@ -502,6 +502,10 @@ const RIG = {
   // California quail (tools/build_quail.py): walks with a nod, whirrs up and glides on bowed wings
   quail: { amp: [0.9, 0.25, 0.5, 1.0], pose: [1, 0, 0, 0.2],
     k: { handLag: 0.6, handAmp: 0.7, bow: 0.35, spread: 0.5, collapse: 1, bob: 0.12 } },
+  // Mountain quail (tools/build_mountain_quail.py): the California quail's template and constants; the plumes are HEAD
+  // geometry, so they nod and dip with it
+  mquail: { amp: [0.9, 0.25, 0.5, 1.0], pose: [1, 0, 0, 0.2],
+    k: { handLag: 0.6, handAmp: 0.7, bow: 0.35, spread: 0.5, collapse: 1, bob: 0.12 } },
   // Western gray squirrel (tools/build_squirrel.py): bounds, sits up, flicks and curls the plume, climbs
   squirrel: { amp: [0.9, 0.5, 0.35, 0], pose: [1, 0.95, 0.75, 0],
     k: { spine: 0.28, spinePhase: 1.2, sit: 0.7, foreFold: 1.1, tipLag: 0.7, tipWave: 0.25, tipCurl: 1.1, abduct: 0.9 } },
@@ -580,7 +584,7 @@ const urls = { jay: '../assets/scrubjay.glb', quail: '../assets/quail.glb', squi
   stjay: '../assets/stellersjay.glb', hawk: '../assets/redtail.glb', vulture: '../assets/vulture.glb',
   lion: '../assets/cougar.glb', rabbit: '../assets/rabbit.glb', jackrabbit: '../assets/jackrabbit.glb', vole: '../assets/vole.glb', ravenGround: '../assets/raven_ground.glb',
   turkey: '../assets/turkey.glb', groundSquirrel: '../assets/ground_squirrel.glb', lizard: '../assets/fence_lizard.glb',
-  bear: '../assets/bear.glb' };
+  bear: '../assets/bear.glb', mquail: '../assets/mountain_quail.glb' };
 function rigModel(name, opts) {
   const r = RIG[name];
   return loadTiers(new URL(urls[name], import.meta.url), { amp: r.amp, pose: r.pose, drop: r.drop || 0, poseMax: r.poseMax || 1, gait: !!r.gait, rig: { name, k: r.k } }, opts)
@@ -588,6 +592,7 @@ function rigModel(name, opts) {
 }
 export const loadJayMesh = () => rigModel('jay');
 export const loadQuailMesh = () => rigModel('quail');
+export const loadMountainQuailMesh = () => rigModel('mquail');
 export const loadSquirrelMesh = () => rigModel('squirrel');
 export const loadStellersJayMesh = () => rigModel('stjay');
 export const loadRedtailMesh = () => rigModel('hawk');
@@ -643,6 +648,32 @@ export function buildQuail() {
     ...mirror(s => wingSlab(s, wp(s), { dx: 0.085, len: 0.17, chord: 0.085, thick: 0.008, dihedral: 0.05, color: wingc, under: 0xb7a58b })).flat(),
   ];
   // wings fold hard (pose 1.5) on the ground, where they read as part of the body
+  return finish(p, { amp: [0.9, 0.25, 0.5, 1.0], pose: [0.5, 0, 0, 1.5] });
+}
+
+// Mountain quail, ~0.27 m: the California quail's body a little larger and longer, slate blue-grey head and breast, a
+// chestnut throat bordered white, chestnut flanks barred white, an olive-brown back, and two long STRAIGHT black plumes
+// standing up and back from the crown (not the California quail's forward teardrop). The same quick legs and whirring
+// flush (the drawn mesh: tools/build_mountain_quail.py).
+export function buildMountainQuail() {
+  const back = 0x6a5a43, grey = 0x5e6a79, flank = 0x7a3a22, bar = 0xece6d8, throat = 0x76321f, white = 0xebe7dc, plume = 0x18161a;
+  const head = { part: PART.HEAD, pivot: [0, 0.12, 0.065] };
+  const wp = s => [s * 0.043, 0.105, 0.0];
+  const p = [
+    ball({ color: back, pos: [0, 0.09, -0.008], scale: [0.066, 0.06, 0.108] }),
+    ball({ color: grey, pos: [0, 0.085, 0.045], scale: [0.058, 0.058, 0.064] }),
+    ...mirror(s => ball({ color: flank, pos: [s * 0.03, 0.07, -0.005], scale: [0.04, 0.04, 0.07] }, 5, 3)),
+    ...mirror(s => box({ color: bar, pos: [s * 0.062, 0.072, 0.0], rot: [0.25, 0, 0], scale: [0.006, 0.05, 0.012] })),
+    ...mirror(s => box({ color: bar, pos: [s * 0.06, 0.07, -0.035], rot: [0.25, 0, 0], scale: [0.006, 0.045, 0.012] })),
+    ball({ color: grey, ...head, pos: [0, 0.14, 0.08], scale: [0.031, 0.031, 0.036] }, 5, 3),
+    ball({ color: throat, ...head, pos: [0, 0.125, 0.095], scale: [0.022, 0.02, 0.018] }, 5, 3),
+    ...mirror(s => box({ color: white, ...head, pos: [s * 0.02, 0.128, 0.09], rot: [0.6, 0, 0], scale: [0.004, 0.03, 0.006] })),
+    ...mirror(s => cone({ color: plume, ...head, pos: [s * 0.002, 0.193, 0.068], rot: [-0.45, 0, 0], scale: [0.004, 0.06, 0.004] })),   // the plumes
+    cone({ color: 0x1c1c1e, ...head, pos: [0, 0.133, 0.118], rot: FWD, scale: [0.007, 0.015, 0.006] }),
+    box({ color: back, part: PART.TAIL, pivot: [0, 0.095, -0.085], pos: [0, 0.092, -0.12], rot: [0.25, 0, 0], scale: [0.045, 0.01, 0.07] }),
+    ...mirror(s => box({ color: 0x7a7672, part: s > 0 ? PART.LEG_A : PART.LEG_B, pivot: [s * 0.022, 0.05, 0.005], pos: [s * 0.022, 0.025, 0.005], scale: [0.011, 0.05, 0.012] })),
+    ...mirror(s => wingSlab(s, wp(s), { dx: 0.075, len: 0.15, chord: 0.088, thick: 0.008, dihedral: 0.05, color: back, under: 0xa89878 })).flat(),
+  ];
   return finish(p, { amp: [0.9, 0.25, 0.5, 1.0], pose: [0.5, 0, 0, 1.5] });
 }
 

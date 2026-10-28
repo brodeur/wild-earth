@@ -35,6 +35,14 @@ SPECIES = [
      "group": "bird", "role": "ambient", "scale": "bird",
      "senses": {"vision": {"range_m": 300, "color": "tetrachromat"},
                 "hearing": {"range_m": 300}, "smell": {"range_m": 20}}},
+    # the Sierra's own quail, above the California quail's foothills: mountain chaparral, brushy forest edges and the
+    # shrubby understory of mixed and conifer forest, 600-3,000 m; coveys of 6-12 that walk downslope below the snow in
+    # fall and back up in spring; heard far more than seen (the male's "quee-ark" in spring)
+    {"code": "oreortyx_pictus", "common": "mountain quail", "scientific": "Oreortyx pictus",
+     "group": "bird", "role": "ambient", "scale": "bird",
+     "habitat": {"chaparral": 1.0, "mixed": 0.8, "conifer": 0.5, "riparian": 0.55, "oak_woodland": 0.35},
+     "senses": {"vision": {"range_m": 300, "color": "tetrachromat"},
+                "hearing": {"range_m": 300}, "smell": {"range_m": 20}}},
     {"code": "aphelocoma_californica", "common": "California scrub-jay", "scientific": "Aphelocoma californica",
      "group": "bird", "role": "ambient", "scale": "bird",
      "senses": {"vision": {"range_m": 400, "color": "tetrachromat"},
@@ -121,7 +129,10 @@ ALL = [s["code"] for s in SPECIES]
 # to the floor of Yosemite Valley, chiefly in chaparral; the mountain lion Sonoran, Transition and Canadian; the
 # ground squirrel's highest record 8200 ft (2500 m). The others are coarse (whole slope for the wide-ranging ones). The
 # black bear's band (800-3000 m: the conifer belt, with the oak woodland it comes down to in fall) is this project's
-# estimate, not the book's; it keeps the bear off the foothill tiles and on the Yosemite one.
+# estimate, not the book's; it keeps the bear off the foothill tiles and on the Yosemite one. The mountain quail (the
+# book's "plumed quail", Transition and Canadian zones, coming down into the upper chaparral in winter): 600-3000 m on
+# chaparral and the mixed and conifer forest (whose brushy edges and understory it keeps to), so the foothill tiles
+# have it only where their records put it.
 # A band says where the species can be, not that it is: the records decide first, the band only keeps a species the
 # records miss (a cryptic or nocturnal one, on a tile few people watch). Other regions need their own bands.
 _ALL_HAB = ["oak_woodland", "conifer_forest", "mixed_forest", "chaparral", "grassland", "riparian", "barren"]
@@ -145,6 +156,7 @@ RANGE = {
     "otospermophilus_beecheyi": {"elev_m": [0, 2500], "habitats": ["grassland", "oak_woodland", "chaparral", "riparian", "barren"]},
     "sceloporus_occidentalis":  {"elev_m": [0, 2700], "habitats": ["oak_woodland", "conifer_forest", "mixed_forest", "chaparral", "grassland", "riparian", "barren"]},
     "ursus_americanus":         {"elev_m": [800, 3000], "habitats": ["conifer_forest", "mixed_forest", "chaparral", "riparian", "oak_woodland"]},
+    "oreortyx_pictus":          {"elev_m": [600, 3000], "habitats": ["chaparral", "mixed_forest", "conifer_forest"]},
 }
 
 # Who exists for whom, wherever both live. A species absent from a player's list is not rendered for them; on a tile the
@@ -172,10 +184,10 @@ PERCEPTION = {
                                "sciurus_griseus", "melanerpes_formicivorus", "urocyon_cinereoargenteus",
                                "canis_latrans", "callipepla_californica", "cyanocitta_stelleri",
                                "cathartes_aura", "meleagris_gallopavo", "otospermophilus_beecheyi",
-                               "sceloporus_occidentalis"],
+                               "sceloporus_occidentalis", "oreortyx_pictus"],
     "cyanocitta_stelleri": ["cyanocitta_stelleri", "buteo_jamaicensis", "corvus_corax",
                             "sciurus_griseus", "melanerpes_formicivorus", "aphelocoma_californica",
-                            "urocyon_cinereoargenteus", "canis_latrans", "cathartes_aura"],
+                            "urocyon_cinereoargenteus", "canis_latrans", "cathartes_aura", "oreortyx_pictus"],
     "cathartes_aura": ["cathartes_aura", "corvus_corax", "buteo_jamaicensis", "odocoileus_hemionus",
                        "canis_latrans", "puma_concolor", "urocyon_cinereoargenteus"],
     "callipepla_californica": ["callipepla_californica", "buteo_jamaicensis",
@@ -193,7 +205,7 @@ PERCEPTION = {
     "puma_concolor": ["puma_concolor", "odocoileus_hemionus", "canis_latrans",
                       "urocyon_cinereoargenteus", "sylvilagus_bachmani", "lepus_californicus", "sciurus_griseus",
                       "callipepla_californica", "corvus_corax", "meleagris_gallopavo",
-                      "otospermophilus_beecheyi"],
+                      "otospermophilus_beecheyi", "oreortyx_pictus"],
     "meleagris_gallopavo": ["meleagris_gallopavo", "odocoileus_hemionus", "canis_latrans",
                             "urocyon_cinereoargenteus", "puma_concolor", "buteo_jamaicensis",
                             "corvus_corax", "callipepla_californica", "sciurus_griseus",
@@ -207,6 +219,11 @@ PERCEPTION = {
                                 "otospermophilus_beecheyi", "meleagris_gallopavo", "sciurus_griseus"],
     "ursus_americanus": ["ursus_americanus", "odocoileus_hemionus", "canis_latrans", "puma_concolor", "corvus_corax",
                          "sciurus_griseus"],
+    # the mountain quail sees its hunters (the hawk, the raven, the fox, the coyote, the lion), the jays whose alarms it
+    # heeds, and the big animals about it; the raven, fox and coyote (ALL), the hawk, the lion and the jays see it
+    "oreortyx_pictus": ["oreortyx_pictus", "buteo_jamaicensis", "corvus_corax", "urocyon_cinereoargenteus",
+                        "canis_latrans", "puma_concolor", "aphelocoma_californica", "cyanocitta_stelleri",
+                        "odocoileus_hemionus", "sciurus_griseus", "callipepla_californica"],
 }
 # Everyone sees the bear (a big animal that goes where it likes): added to every row that does not list it already.
 for _row in PERCEPTION.values():
@@ -371,6 +388,17 @@ CALENDAR = {
                    act("court", "cover", goal="mating in June and July"), act("shelter", "cover", goal="bed in shade at midday")],
         "fall": [act("forage", "acorn_mast", "browse", "carrion", goal="fatten for the den: acorns and berries up to 20 hours a day")],
     },
+    # coveys from late summer to late winter, walking downslope below the snow in fall and back up in spring; pairs from
+    # March, the male calling "quee-ark"; a ground nest under brush, chicks from June with both parents; drinks daily in
+    # summer at springs and seeps
+    "oreortyx_pictus": {
+        "winter": [act("forage", "acorn_mast", "browse", goal="coveys below the snow line: acorns, seeds and berries in the brush"),
+                   act("shelter", "cover", goal="roost in dense brush or a low conifer")],
+        "spring": [act("court", "cover", goal="pairs; the male calls quee-ark from a rock or a shrub top"),
+                   act("nest", "cover", goal="a ground nest under brush or a log"), act("forage", "grass_forbs", "insects")],
+        "summer": [act("rear", "insects", "cover", goal="both parents with the brood"), act("forage", "grass_forbs", "browse", "water")],
+        "fall": [act("forage", "acorn_mast", "browse", goal="family coveys walk downslope in single file")],
+    },
 }
 
 
@@ -401,11 +429,12 @@ SIGNATURE = {
     "otospermophilus_beecheyi": {"sight": 60, "sound": 200, "scent": 30},
     "sceloporus_occidentalis":  {"sight": 8, "sound": 2, "scent": 5},
     "ursus_americanus":         {"sight": 150, "sound": 60, "scent": 400},
+    "oreortyx_pictus":          {"sight": 60, "sound": 250, "scent": 30},   # hidden in brush; its loud "quee-ark" carries
 }
 # (the black bear gives no alarm call others heed: not in ALARM_CALL)
 ALARM_CALL = {"aphelocoma_californica": 400, "cyanocitta_stelleri": 400, "melanerpes_formicivorus": 400, "corvus_corax": 700,
               "meleagris_gallopavo": 300, "callipepla_californica": 250, "otospermophilus_beecheyi": 200, "sciurus_griseus": 150,
-              "odocoileus_hemionus": 60}
+              "odocoileus_hemionus": 60, "oreortyx_pictus": 150}
 _SENSE = {"sight": "vision", "sound": "hearing", "scent": "smell"}
 _SENSES = {s["code"]: s["senses"] for s in SPECIES}
 
@@ -448,6 +477,7 @@ NEEDS = {
     "sceloporus_occidentalis":  {"water": "none", "shelter": "burrow", "court": "cliff_or_snag"},
     "puma_concolor":            {"water": "daily", "shelter": "cover", "court": "cover"},
     "ursus_americanus":         {"water": "daily", "shelter": "cover", "court": "cover"},
+    "oreortyx_pictus":          {"water": "daily", "shelter": "cover", "court": "cover"},
 }
 
 # What each predator eats among the species here (the prey's side of the calendar's hunt lists, which were written for
@@ -455,19 +485,22 @@ NEEDS = {
 # the resource rasters an omnivore eats (for reference; the games step reads them from the calendar's forage acts).
 DIET = {
     "buteo_jamaicensis":        {"prey": ["microtus_californicus", "otospermophilus_beecheyi", "sylvilagus_bachmani", "lepus_californicus",
-                                          "sciurus_griseus", "sceloporus_occidentalis", "callipepla_californica"]},
+                                          "sciurus_griseus", "sceloporus_occidentalis", "callipepla_californica", "oreortyx_pictus"]},
     "canis_latrans":            {"prey": ["lepus_californicus", "sylvilagus_bachmani", "microtus_californicus", "otospermophilus_beecheyi",
-                                          "odocoileus_hemionus", "callipepla_californica", "meleagris_gallopavo"],
+                                          "odocoileus_hemionus", "callipepla_californica", "meleagris_gallopavo", "oreortyx_pictus"],
                                  "carrion": ["puma_concolor"]},
     "urocyon_cinereoargenteus": {"prey": ["microtus_californicus", "sylvilagus_bachmani", "otospermophilus_beecheyi", "callipepla_californica",
-                                          "sceloporus_occidentalis"]},
+                                          "sceloporus_occidentalis", "oreortyx_pictus"]},
     "puma_concolor":            {"prey": ["odocoileus_hemionus", "lepus_californicus", "sylvilagus_bachmani", "otospermophilus_beecheyi",
                                           "meleagris_gallopavo", "canis_latrans"]},
-    "corvus_corax":             {"prey": ["sceloporus_occidentalis", "microtus_californicus", "callipepla_californica"],   # the quail: eggs and chicks
+    "corvus_corax":             {"prey": ["sceloporus_occidentalis", "microtus_californicus", "callipepla_californica",
+                                          "oreortyx_pictus"],   # the quails: eggs and chicks
                                  "carrion": ["puma_concolor", "canis_latrans"]},
     "aphelocoma_californica":   {"prey": ["sceloporus_occidentalis"]},
     "cathartes_aura":           {"carrion": ["puma_concolor", "canis_latrans"]},
     # acorns, berries (browse), grass, insects and grubs; hunts nothing here; comes to the lion's and the coyote's kills
     "ursus_americanus":         {"plants": ["acorn_mast", "browse", "grass_forbs", "insects"],
                                  "carrion": ["puma_concolor", "canis_latrans"]},
+    # seeds (grass and forbs), acorns, berries (browse), and insects in spring and for the chicks; hunts nothing
+    "oreortyx_pictus":          {"plants": ["grass_forbs", "acorn_mast", "browse", "insects"]},
 }

@@ -6,11 +6,11 @@ import { seasonOfDate, parseDate } from './season.js';
 import { uniforms as atmo } from './atmosphere.js';
 import { fieldGuide } from './fieldguide.js';
 import { buildSquirrel, buildWoodpecker, buildRaven, buildDeer, buildQuail, buildJay, buildHawk, buildVulture, buildStellersJay,
-  buildDeerBuck, buildFox, buildCoyote, buildCougar, buildRabbit, buildVole, buildJackrabbit, buildTurkey, buildGroundSquirrel, buildLizard, buildBear,
+  buildDeerBuck, buildFox, buildCoyote, buildCougar, buildRabbit, buildVole, buildJackrabbit, buildTurkey, buildGroundSquirrel, buildLizard, buildBear, buildMountainQuail,
   animalMaterial, animalDepthMaterial, planarShadowMaterial, loadDeerMesh, loadSquirrelMesh, loadQuailMesh, loadJayMesh, driveClips, makeClipState, DEER_DRIVE,
   loadStellersJayMesh, loadRedtailMesh, loadVultureMesh, loadDeerBuckMesh, loadFoxMesh, loadCoyoteMesh, loadCougarMesh,
   loadRabbitMesh, loadJackrabbitMesh, loadVoleMesh, loadRavenGroundMesh, loadTurkeyMesh, loadGroundSquirrelMesh, loadLizardMesh, loadBearMesh,
-  RAVEN_GROUND, hasAnim2, antlerState, SEASON_MONTH } from './animalModels.js';
+  loadMountainQuailMesh, RAVEN_GROUND, hasAnim2, antlerState, SEASON_MONTH } from './animalModels.js';
 
 // Ambient animals: the first step toward "many of each species always present" (docs/brief.md,
 // Direction; roadmap visual pass step 6 "Life"). Western gray squirrels, acorn woodpeckers, other
@@ -86,8 +86,17 @@ import { buildSquirrel, buildWoodpecker, buildRaven, buildDeer, buildQuail, buil
 // in fall to feed under it, and comes to carrion within 300 m and feeds there a minute. It hunts nothing here and
 // flees from nothing: a low player inside 8 m gets a short bluff charge or a hard stare, head up.
 //
-// Events (for sound.js): on(type, fn) / off(type, fn). 'flush' { group, x, y, z, n, cause } when a
-// quail covey bursts up (x, y, z: where it takes off; cause 'raven', 'hawk', 'self' or 'debug');
+// Mountain quail (2026-10-28; the Yosemite tile): the California quail's covey machinery (coveyUpdate, flushCovey,
+// quUpdate; each covey carries its species, g.sp) on its own coveys (this.mcoveys, so sound.js's California quail
+// clucks and "chi-ca-go" stay with the California quail's this.coveys). Coveys of 6-12 (pairs in spring) in chaparral,
+// brushy forest edges and the shrubby understory of mixed and conifer forest from 600 m to 3,000 m (down to 2,000 m at
+// most in winter: they walk below the snow), so absent from the foothill tiles but for their highest brush. Hours as
+// the California quail's. The covey runs across openings and flushes on whirring wings from a low player, a stooping
+// hawk or an AI hunter (threat()), gliding downhill into brush (flushCovey picks a landing in chaparral or forest).
+//
+// Events (for sound.js): on(type, fn) / off(type, fn). 'flush' { group, x, y, z, n, cause, species, covey } when a
+// quail covey bursts up (x, y, z: where it takes off; cause 'raven', 'hawk', 'self' or 'debug'; group is null for a
+// mountain quail covey, whose assembly call is not the California quail's: covey and species say which it was);
 // 'stoop' { animal, x, y, z, target } when a red-tailed hawk tips into a stoop.
 //
 // Acorn game v2 (acorns.js, docs/game-acorn-stash.md): while a game runs, woodpeckers, squirrels and ravens are
@@ -131,7 +140,8 @@ const LIVE_R = 400, REBUILD_MOVE = 100, NEAR_R = 150, TAG_R = 40, TAG_MAX = 6, B
 // procedural model (animalModels.js build*) still holds every animal's matrix and pose and is drawn instead
 // until the GLB has loaded, if it fails to load, or with ?<param>=proc (?deer=proc, ?squirrel=proc,
 // ?quail=proc, ?jay=proc, ?stjay=proc, ?hawk=proc, ?vulture=proc, ?fox=proc, ?coyote=proc, ?rabbit=proc, ?jackrabbit=proc, ?vole=proc,
-// ?lion=proc or ?cougar=proc, ?buck=proc (?deer=proc covers the buck too), ?turkey=proc, ?gsquirrel=proc, ?lizard=proc, ?bear=proc;
+// ?lion=proc or ?cougar=proc, ?buck=proc (?deer=proc covers the buck too), ?turkey=proc, ?gsquirrel=proc, ?lizard=proc, ?bear=proc,
+// ?mquail=proc;
 // ?animals=proc for all) for A/B; live:
 // __we.animals.setMesh('quail', false) (and
 // __we.animals.deerMesh = false as before). __we.animals.lodForce.quail = 0/1/2 pins every quail to one tier
@@ -154,7 +164,8 @@ const FLY_NEAR = 30, FLY_FAR = 100, FLY_GROW = 0.6;   // birds in flight: true s
 const VISUAL_ONLY = new Set(['cathartes_aura']);     // not in the species list or perception matrix yet: seen by everyone
 // in pipeline/species_data.py but maybe not yet in this tile's package (run its species step): seen by everyone until
 // the tile's perception matrix names it, then as the matrix says
-const PENDING = new Set(['lepus_californicus', 'meleagris_gallopavo', 'otospermophilus_beecheyi', 'sceloporus_occidentalis', 'ursus_americanus']);
+const PENDING = new Set(['lepus_californicus', 'meleagris_gallopavo', 'otospermophilus_beecheyi', 'sceloporus_occidentalis', 'ursus_americanus',
+  'oreortyx_pictus']);
 const TAU = Math.PI * 2;
 const CLING_PITCH = -1.72;   // a clinging woodpecker: nose up, tipped just past vertical so the tail braces on the bark
 
@@ -187,6 +198,7 @@ const SUIT = {
   otospermophilus_beecheyi: { 1: 0.6, 4: 0.2, 5: 1, 6: 0.3, 8: 0.3, 9: 0.9 },   // grass and open savanna; times openness
   sceloporus_occidentalis:  { 1: 1, 2: 0.5, 3: 0.8, 4: 0.9, 5: 0.5, 6: 0.4, 8: 0.8, 9: 0.8 },   // times rock and trunks (spawnCell)
   ursus_americanus:         { 1: 1, 2: 1, 3: 1, 4: 1, 6: 1 },   // a territory's home (bearHome: forest and chaparral from 1,000 m; oak in fall)
+  oreortyx_pictus:          { 1: 0.35, 2: 0.5, 3: 0.8, 4: 1, 5: 0.1, 6: 0.55, 8: 0.15 },   // mountain chaparral, brushy edges, forest understory; 600-3,000 m (rebuild)
 };
 // Expected individuals (or groups) per 30 m cell at suitability 1, and season multipliers.
 const SEASON = {
@@ -207,6 +219,7 @@ const SEASON = {
   otospermophilus_beecheyi: { fall: 0.9, winter: 0, spring: 1, summer: 1 },   // below ground December to February
   sceloporus_occidentalis:  { fall: 1, winter: 0, spring: 1, summer: 1 },     // March to October (lzActive narrows fall)
   ursus_americanus:         { fall: 1, winter: 0.15, spring: 1, summer: 1 },  // denned December to March (a few out on warm days)
+  oreortyx_pictus:          { fall: 1, winter: 0.9, spring: 1, summer: 1.1 },  // the winter coveys walk down below 2,000 m (rebuild)
 };
 const SPECIES = [
   { code: 'sciurus_griseus', one: 'squirrel', many: 'squirrels', k: 0.45, salt: 9101, cap: 160, scale: 1, build: buildSquirrel },
@@ -239,15 +252,18 @@ const SPECIES = [
   { code: 'sceloporus_occidentalis', one: 'fence lizard', many: 'fence lizards', k: 0.55, salt: 9941, cap: 120, scale: 1, build: buildLizard, liveR: 70, common: 'Western fence lizard' },
   // 2026-10-28: the American black bear, on territory cells like the lion (spawnBear)
   { code: 'ursus_americanus', one: 'bear', many: 'bears', salt: 9942, cap: 3, scale: 1, build: buildBear, planar: true, common: 'Black bear', territory: 1500, p: 0.45 },
+  // 2026-10-28: the mountain quail, coveys per 30 m cell as the California quail's (k for a covey), within its band
+  { code: 'oreortyx_pictus', one: 'mountain quail', many: 'mountain quail', k: 0.02, salt: 9943, cap: 120, scale: 1, build: buildMountainQuail, bird: true, common: 'Mountain quail' },
 ];
-const SQ = 0, WP = 1, RV = 2, DR = 3, QU = 4, SJ = 5, HK = 6, TV = 7, ST = 8, FX = 9, CY = 10, RB = 11, VO = 12, ML = 13, BK = 14, WF = 15, JR = 16, TK = 17, GS = 18, LZ = 19, BE = 20;
+const SQ = 0, WP = 1, RV = 2, DR = 3, QU = 4, SJ = 5, HK = 6, TV = 7, ST = 8, FX = 9, CY = 10, RB = 11, VO = 12, ML = 13, BK = 14, WF = 15, JR = 16, TK = 17, GS = 18, LZ = 19, BE = 20,
+  MQ = 21;
 SPECIES[DR].planar = true;
 // the spirit's bodies (playableNear): the species a player can take over (all of them), and their body centre over the
 // origin standing (m; in the air the origin is the body)
 const PLAYABLE = SPECIES.map((sp, k) => k);
 const BODY_Y = SPECIES.map(() => 0); BODY_Y[SQ] = 0.12; BODY_Y[RV] = 0.2; BODY_Y[WP] = BODY_Y[WF] = 0.05;
 BODY_Y[DR] = 0.75; BODY_Y[BK] = 0.8; BODY_Y[FX] = 0.25; BODY_Y[CY] = 0.4; BODY_Y[ML] = 0.5; BODY_Y[RB] = 0.1; BODY_Y[JR] = 0.15;
-BODY_Y[VO] = 0.02; BODY_Y[TK] = 0.45; BODY_Y[GS] = 0.08; BODY_Y[LZ] = 0.02; BODY_Y[QU] = 0.1; BODY_Y[SJ] = BODY_Y[ST] = 0.1; BODY_Y[BE] = 0.55;
+BODY_Y[VO] = 0.02; BODY_Y[TK] = 0.45; BODY_Y[GS] = 0.08; BODY_Y[LZ] = 0.02; BODY_Y[QU] = 0.1; BODY_Y[SJ] = BODY_Y[ST] = 0.1; BODY_Y[BE] = 0.55; BODY_Y[MQ] = 0.11;
 // The spirit's view (spirit.js SpiritLook): while the world's light goes faint and blue-green, the playable species are
 // drawn in their own colour, self-lit and clear of the haze: SELF_LIT.value (0..1) blends their lit and hazed colour
 // toward their albedo times SELF_LIGHT. A wrapper on their materials (selfLit), with its own program cache key. Their meshes are also on camera
@@ -273,15 +289,17 @@ function selfLit(m) {
   m.needsUpdate = true;
   return m;
 }
-const TAG_DY = [0.5, 0.5, 0.7, 2.1, 0.4, 0.4, 0.7, 0.7, 0.45, 0.65, 0.95, 0.4, 0.2, 1.1, 2.2, 0.5, 0.6, 1.2, 0.32, 0.12, 1.25];
+const TAG_DY = [0.5, 0.5, 0.7, 2.1, 0.4, 0.4, 0.7, 0.7, 0.45, 0.65, 0.95, 0.4, 0.2, 1.1, 2.2, 0.5, 0.6, 1.2, 0.32, 0.12, 1.25, 0.45];
 const INDEX = Object.fromEntries(SPECIES.map((sp, k) => [sp.code, k]).filter(([, k]) => SPECIES[k].variantOf === undefined));
 // The expected population per km^2 of each species, from the spawn rules above: a cell species (k per BUCKET m cell,
 // spawnCell) is k times the mean size of what a cell spawns (GROUP: a woodpecker family of 3-6, a quail covey of 5-20, a
 // turkey flock of 6-15, a ground squirrel colony of 4-12, a raven pair 55% of the time...) over the cell's area, at a
 // mean suitability of 0.5; a soarer (hawk, vulture) is one per `grid` m cell with probability p (spawnSoarers); the lion
 // one adult, or a mother with young, per `territory` m cell with probability p (spawnLion; the bear's spawnBear); a
-// variant (buck, female woodpecker) is its base species. Only the order matters (rarity).
-const GROUP = { [WP]: 4.5, [RV]: 1.55, [DR]: 1.6, [QU]: 12, [SJ]: 3, [ST]: 3, [CY]: 1.4, [RB]: 1.3, [VO]: 1.3, [TK]: 10.5, [GS]: 8, [ML]: 1.3, [BE]: 1.4 };
+// variant (buck, female woodpecker) is its base species. Only the order matters (rarity). The mountain quail: coveys of
+// 6-12 (9), half the California quail's k: rarer than it, commoner than the turkey.
+const GROUP = { [WP]: 4.5, [RV]: 1.55, [DR]: 1.6, [QU]: 12, [SJ]: 3, [ST]: 3, [CY]: 1.4, [RB]: 1.3, [VO]: 1.3, [TK]: 10.5, [GS]: 8, [ML]: 1.3, [BE]: 1.4,
+  [MQ]: 9 };
 export function expectedPerKm2(s) {
   const sp = SPECIES[s];
   if (sp.variantOf !== undefined) return expectedPerKm2(sp.variantOf);
@@ -293,6 +311,7 @@ const DRAWN = {
   [DR]: { name: 'deer', param: 'deer', load: loadDeerMesh, lod: [30, 90], planar: true },
   [SQ]: { name: 'squirrel', param: 'squirrel', load: loadSquirrelMesh, lod: [12, 40] },
   [QU]: { name: 'quail', param: 'quail', load: loadQuailMesh, lod: [12, 40] },
+  [MQ]: { name: 'mountain-quail', param: 'mquail', load: loadMountainQuailMesh, lod: [12, 40] },
   [SJ]: { name: 'scrub-jay', param: 'jay', load: loadJayMesh, lod: [12, 40] },
   [ST]: { name: 'stellers-jay', param: 'stjay', load: loadStellersJayMesh, lod: [12, 40] },
   // soarers: seen at 100-400 m nearly always; lod0 only on pull-outs near the ground or a raven alongside
@@ -576,7 +595,7 @@ export class Animals {
     this._sqF = new THREE.Vector3(); this._sqN = new THREE.Vector3(); this._sqX = new THREE.Vector3(); this._sqM = new THREE.Matrix4(); this._sqE = new THREE.Euler(0, 0, 0, 'YXZ');
     // name tags
     this.tagGroup = new THREE.Group(); this.tagGroup.renderOrder = 19; this.group.add(this.tagGroup);
-    this.coveys = []; this.frame = 0; this.camPos = camera.position;
+    this.coveys = []; this.mcoveys = []; this.frame = 0; this.camPos = camera.position;
     this.tagPool = []; this.tagMats = {}; this.tagged = [];
     this.setObserver((typeof window !== 'undefined' && window.__we?.playerSpecies) || 'corvus_corax');
     // drawn meshes (DRAWN): per species { on, tiers, planar, loading, casting }, filled by setMesh
@@ -1168,6 +1187,10 @@ export class Animals {
         else if (s === WP) f *= 0.3 + 0.7 * Math.min(1, tree * 2);
         else if (s === RV) f *= 0.6 + 0.6 * edge;
         else if (s === QU) f *= (0.35 + 0.65 * edge) * (1 - 0.5 * Math.min(1, tree));   // open ground with cover near
+        else if (s === MQ) {   // brush and brushy edges in the mountains: 600-3,000 m (below 2,000 m in winter, under the snow)
+          const e = t.heights.at(cx, cn); if (e < 600 || e > (this.season === 'winter' ? 2000 : 3000)) continue;
+          f *= (0.5 + 0.5 * edge) * (1 - 0.4 * Math.max(0, tree - 0.5)) * (0.3 + 0.7 * clamp01((e - 600) / 250));   // thins out toward the band's foot
+        }
         else if (s === SJ) f *= 0.4 + 0.6 * Math.min(1, tree * 2);
         else if (s === ST) f *= 0.3 + 0.7 * Math.min(1, tree * 1.5);
         else if (s === FX) f *= 0.35 + 0.65 * edge;                                  // woodland and chaparral edges
@@ -1205,6 +1228,8 @@ export class Animals {
     for (const a of this.list) a.culled = false;
     const cov = new Set(); for (const a of this.bySpecies[QU]) cov.add(a.group);
     this.coveys = [...cov];
+    const mcov = new Set(); for (const a of this.bySpecies[MQ]) mcov.add(a.group);
+    this.mcoveys = [...mcov];
     const fl = new Set(); for (const a of this.bySpecies[TK]) fl.add(a.group);
     this.flocks = [...fl];
     const col = new Set(); for (const a of this.bySpecies[GS]) col.add(a.group);
@@ -1325,9 +1350,10 @@ export class Animals {
       for (let m = 0; m < n; m++) this.add(`${base}:${m}`, s, rnd, a => {
         a.hx = x; a.hz = z; this.rvStart(a, x, z, R + m * 8, alt + m * 6, dir, th + m * 0.6);
       }, keep);
-    } else if (s === QU) {
-      const se = this.season, n = se === 'spring' ? 2 + Math.floor(rnd() * 3) : se === 'summer' ? 6 + Math.floor(rnd() * 7) : 8 + Math.floor(rnd() * 8);
-      const g = { x, z, hx: x, hz: z, tx: x, tz: z, dx: 0, dz: 1, state: G_FORAGE, t: 5 + rnd() * 30, cool: 10 + rnd() * 60, n, leader: null, speed: 3 };
+    } else if (s === QU || s === MQ) {   // a covey (the mountain quail's: a pair or three in spring, 6-12 the rest of the year)
+      const se = this.season, n = s === MQ ? (se === 'spring' ? 2 + (rnd() < 0.3) : 6 + Math.floor(rnd() * 7))
+        : se === 'spring' ? 2 + Math.floor(rnd() * 3) : se === 'summer' ? 6 + Math.floor(rnd() * 7) : 8 + Math.floor(rnd() * 8);
+      const g = { sp: s, x, z, hx: x, hz: z, tx: x, tz: z, dx: 0, dz: 1, state: G_FORAGE, t: 5 + rnd() * 30, cool: 10 + rnd() * 60, n, leader: null, speed: 3 };
       for (let m = 0; m < n; m++) this.add(`${base}:${m}`, s, rnd, a => {
         a.group = g; a.rank = m; if (!m) g.leader = a;
         const ang = rnd() * TAU, d = Math.sqrt(rnd()) * 2.8;
@@ -1447,7 +1473,7 @@ export class Animals {
       anchor: null, tree: null, face: 0, h: 0, scared: 0,
       hx: 0, hz: 0, cx: 0, cz: 0, R: 50, alt: 80, dir: 1, th: 0, flapT: 0,
       group: null, ox: 0, oz: 0, rank: 0, air: 0, fly: 0, acc: 0, wait: 0, moveSeen: 0, peak: 0, V: 10, rock: 0,
-      e0: 0, e1: 0, variant: s === QU ? seedOf(id, 0x5e7) & 1 : 0,   // aAnim2 (drawn meshes); the quail's sex
+      e0: 0, e1: 0, variant: s === QU || s === MQ ? seedOf(id, 0x5e7) & 1 : 0,   // aAnim2 (drawn meshes); the quail's sex
       hopU: 1, hopX: 0, hopZ: 0, hopDX: 0, hopDZ: 0, hopH: 0,         // scrub-jay ground hop
       hFrac: 0.5,                                                      // Steller's jay: perch height in the crown (fraction of the tree)
       e2: 0, e3: 0, vis: 1, culled: false, next2: 0, cool: 0, zig: 0, zigT: 0,   // mammals (aAnim2.z, .w; hidden; pounce lift)
@@ -2509,12 +2535,13 @@ export class Animals {
     return g.leader ? g.leader.rng : null;
   }
   coveyUpdate(g, dt, px, py, pz) {
-    const r = this.groupRng(g, this.bySpecies[QU]); if (!r) return;
+    const s = g.sp ?? QU;   // California or mountain quail (the same machinery)
+    const r = this.groupRng(g, this.bySpecies[s]); if (!r) return;
     const H = this.heights;
     g.t -= dt; g.cool -= dt;
     if (g.state !== G_SETTLE && (g.cool <= 0 || this.alarmed(g))) {   // an alarm call sends a settled covey to cover again
       // the player's low pass (48 m), or an AI hunter of quail on the ground within HUNT.quail m (threat())
-      const gy = H.atXZ(g.x, g.z), T = this.threat(QU, g, g.x, gy, g.z, px, py, pz), ai = T.who;
+      const gy = H.atXZ(g.x, g.z), T = this.threat(s, g, g.x, gy, g.z, px, py, pz), ai = T.who;
       const dx = T.x - g.x, dz = T.z - g.z;
       const d = Math.hypot(dx, dz), al = this.alarmed(g);
       if (!g.pilot && ((d < Math.min(ai ? HUNT.quail : 48, T.n) && T.y - gy < 42) || (al && d < ALARM_REACT_R))) {
@@ -2543,15 +2570,24 @@ export class Animals {
   }
   flushCovey(g, fx, fz, cause = 'raven') {
     if (g.state === G_SETTLE) return;
-    const r = this.groupRng(g, this.bySpecies[QU]); if (!r) return;
-    let n = 0; for (const a of this.bySpecies[QU]) if (a.group === g) n++;
-    if (n) this.emit('flush', { group: g, x: g.x, y: this.heights.atXZ(g.x, g.z), z: g.z, n, cause });
+    const s = g.sp ?? QU, list = this.bySpecies[s];
+    const r = this.groupRng(g, list); if (!r) return;
+    let n = 0; for (const a of list) if (a.group === g) n++;
+    if (n) this.emit('flush', { group: s === QU ? g : null, covey: g, species: SPECIES[s].code, x: g.x, y: this.heights.atXZ(g.x, g.z), z: g.z, n, cause });
     let ang = Math.atan2(g.z - fz, g.x - fx) + (r() - 0.5) * 0.8;   // away from the threat
     const d = 35 + r() * 40;
     let lx = g.x + Math.cos(ang) * d, lz = g.z + Math.sin(ang) * d;
-    const o = this.nearestOak(lx, lz, 30); if (o) { lx = o.x + (lx - o.x) * 0.3; lz = o.z + (lz - o.z) * 0.3; }   // into cover
+    if (s === MQ) {   // the mountain quail: downhill if it can, into brush (chaparral best, then forest understory and streamside)
+      const hab = this.tile.habitat, H = this.heights;
+      let best = -Infinity;
+      for (let k = 0; k < 6; k++) {
+        const a2 = ang + (k - 2.5) * 0.3, x2 = g.x + Math.cos(a2) * d, z2 = g.z + Math.sin(a2) * d, c = hab.at(x2, -z2);
+        const sc = (c === 4 ? 2 : c === 2 || c === 3 || c === 6 ? 1 : 0) + (H.atXZ(g.x, g.z) - H.atXZ(x2, z2)) / 20 + r() * 0.3;
+        if (sc > best) { best = sc; lx = x2; lz = z2; }
+      }
+    } else { const o = this.nearestOak(lx, lz, 30); if (o) { lx = o.x + (lx - o.x) * 0.3; lz = o.z + (lz - o.z) * 0.3; } }   // into cover
     g.x = lx; g.z = lz; g.state = G_SETTLE; g.t = 9; g.cool = 40 + r() * 40;
-    for (const a of this.bySpecies[QU]) if (a.group === g) {
+    for (const a of list) if (a.group === g) {
       a.state = Q_WAIT; a.wait = a.rank * 0.04 + r() * 0.45;
       a.tx = lx + a.ox * 2.2 + (r() - 0.5) * 5; a.tz = lz + a.oz * 2.2 + (r() - 0.5) * 5;
     }
@@ -2760,7 +2796,8 @@ export class Animals {
       if (a.flapT > 0) a.phase += dt * TAU * 2.4; else a.phase = damp(a.phase, Math.round(a.phase / Math.PI) * Math.PI, 3, dt);
       if (a.t <= 0) {   // stoop: at a covey in reach (if this observer sees quail), else at open ground below
         let tx = 0, tz = 0, cov = null, bd = 230 * 230;
-        if (this.meshes[QU].visible) for (const g of this.coveys) { const dx = g.x - a.x, dz = g.z - a.z, d2 = dx * dx + dz * dz; if (d2 < bd && g.state !== G_SETTLE) { bd = d2; cov = g; } }
+        for (const [k, list] of [[QU, this.coveys], [MQ, this.mcoveys]]) if (this.meshes[k].visible)
+          for (const g of list) { const dx = g.x - a.x, dz = g.z - a.z, d2 = dx * dx + dz * dz; if (d2 < bd && g.state !== G_SETTLE) { bd = d2; cov = g; } }
         // now and then a vole or a ground squirrel below instead, when nearer (HUNT.hawk; they react to it as a threat)
         let prey = null;
         if (r() < HUNT.hawk) { prey = this.huntTarget(a, Math.sqrt(bd), [VO, GS]); if (prey) cov = null; }
@@ -3797,6 +3834,8 @@ export class Animals {
     if (a.sp === LZ) return s === L_BASK ? 'basking in the sun' : s === L_PUSH ? 'doing push-ups (a male showing off)' : s === L_SPRINT ? 'dashing for cover' : 'watching';
     if (a.sp === BE) return s === M_BED ? 'bedded down at the foot of a tree' : s === M_CHARGE ? 'bluff-charging' : s === M_SNIFF ? 'nosing and digging for food'
       : s === M_MOVE ? 'ambling along' : a.watch > 0 ? 'standing its ground, watching you' : 'standing, testing the air';
+    if (a.sp === MQ) return s === Q_FLY ? 'flushed, whirring off downhill into the brush' : s === Q_WAIT ? 'crouched, about to flush'
+      : a.group?.state === G_RUN ? 'running in single file with its covey' : 'scratching for seeds and berries with its covey';
     return '';
   }
   codeOf(a) { return SPECIES[a.sp].code; }
@@ -3810,7 +3849,8 @@ export class Animals {
     return true;
   }
 
-  // debugging: a group of a species (code, SPECIES index, or its one/DRAWN name: 'gray fox', 'fox', 'buck', 'lion', 'bear')
+  // debugging: a group of a species (code, SPECIES index, or its one/DRAWN name: 'gray fox', 'fox', 'buck', 'lion', 'bear',
+  // 'mountain quail' or 'mountain-quail' or 'mquail'; 'quail' is the California quail)
   // d m ahead of the camera, kept through rebuilds until clearSummoned(). Returns the new animals.
   summon(which, d = 12) {
     const k = typeof which === 'number' ? which : SPECIES.findIndex((sp, i) => sp.code === which && sp.variantOf === undefined || sp.one === which || DRAWN[i]?.name === which || DRAWN[i]?.param === which || DRAWN[i]?.alias === which);
@@ -3891,7 +3931,7 @@ export class Animals {
         o.pitch = -a.pitch;
         o.soaring = a.state === H_SOAR || a.state === V_SOAR || a.state === V_GLIDE;
         o.speed = s === HK || s === TV ? (a.state === H_STOOP ? 24 : a.state === H_PULL ? a.speed : a.V || 9)
-          : s === QU ? 13 : s === TK ? TURKEY.fly : Math.min(14, Math.hypot(a.tx - a.sx, a.tz - a.sz) / Math.max(0.5, a.dur));
+          : s === QU || s === MQ ? 13 : s === TK ? TURKEY.fly : Math.min(14, Math.hypot(a.tx - a.sx, a.tz - a.sz) / Math.max(0.5, a.dur));
       } else o.speed = a.amp > 0.3 ? a.speed || 0 : 0;
     }
     return o;
@@ -3999,7 +4039,7 @@ export class Animals {
       let fx = Math.sin(a.yaw), fz = Math.cos(a.yaw); const d = fx * h.nx + fz * h.nz;
       let fy = -h.ny * d; fx -= h.nx * d; fz -= h.nz * d; const L = Math.hypot(fx, fy, fz) || 1; h.fx = fx / L; h.fy = fy / L; h.fz = fz / L;
       this.lzHome(a); a.state = L_ALERT; a.t = 2 + r() * 4; a.tries = 0; a.fails = 0; a.pose = 0;
-    } else if (s === QU) { a.state = Q_FORAGE; a.t = 1 + r() * 2; a.pose = 1; a.pitch = 0; if (grp) { a.ox = a.x - grp.x; a.oz = a.z - grp.z; } }
+    } else if (s === QU || s === MQ) { a.state = Q_FORAGE; a.t = 1 + r() * 2; a.pose = 1; a.pitch = 0; if (grp) { a.ox = a.x - grp.x; a.oz = a.z - grp.z; } }
     else if (s === TK) { a.state = T_FORAGE; a.t = 1 + r() * 3; a.pose = 1; a.pitch = 0; if (grp) { a.ox = a.x - grp.x; a.oz = a.z - grp.z; } }
   }
   // Is this animal still in the live set (not dropped by a rebuild)?
@@ -4007,7 +4047,7 @@ export class Animals {
   // debugging: flush the covey nearest to the player, as if the raven had dropped onto it
   flush() {
     const P = this.flight.pos; let best = null, bd = Infinity;
-    for (const g of this.coveys) { const d = Math.hypot(g.x - P.x, g.z - P.z); if (d < bd) { bd = d; best = g; } }
+    for (const g of [...this.coveys, ...this.mcoveys]) { const d = Math.hypot(g.x - P.x, g.z - P.z); if (d < bd) { bd = d; best = g; } }
     if (best) { best.cool = 0; if (best.state === G_SETTLE) best.state = G_FORAGE; this.flushCovey(best, P.x, P.z, 'debug'); }
     return best ? Math.round(bd) : null;
   }
@@ -4060,6 +4100,7 @@ export class Animals {
     this.huntT = (this.huntT || 0) - dt;
     if (fresh || this.huntT <= 0) { this.huntT = HUNT.every; this.refreshHunters(P); this.aiAlarms(); }   // the AI hunters (HUNT above)
     if (this.meshes[QU].visible) for (let k = 0; k < this.coveys.length; k++) this.coveyUpdate(this.coveys[k], dt, px, py, pz);
+    if (this.meshes[MQ].visible) for (let k = 0; k < this.mcoveys.length; k++) this.coveyUpdate(this.mcoveys[k], dt, px, py, pz);
     if (this.meshes[TK].visible) for (let k = 0; k < this.flocks.length; k++) this.flockUpdate(this.flocks[k], dt, px, pz);
     if (this.meshes[GS].visible) for (let k = 0; k < this.colonies.length; k++) this.colonyUpdate(this.colonies[k], dt, px, py, pz);
     this.burrows.visible = this.meshes[GS].visible && this.burrowN > 0;
@@ -4099,7 +4140,7 @@ export class Animals {
       else if (sp === TK) this.tkUpdate(a, dt, px, py, pz);
       else if (sp === GS) this.gsUpdate(a, dt);
       else if (sp === LZ) this.lzUpdate(a, dt, px, py, pz);
-      else if (sp === QU) this.quUpdate(a, dt);
+      else if (sp === QU || sp === MQ) this.quUpdate(a, dt);
       else if (sp === SJ || sp === ST) this.sjUpdate(a, dt, px, py, pz);
       else if (sp === HK) this.hkUpdate(a, dt);
       else this.tvUpdate(a, dt);
@@ -4117,7 +4158,7 @@ export class Animals {
       const an = mesh.geometry.attributes.aAnim.array;
       an[o * 4] = a.phase % TAU; an[o * 4 + 1] = a.amp; an[o * 4 + 2] = a.pose; an[o * 4 + 3] = a.flick;
       const a2 = this.anim2[sp];
-      if (a2) { this.extra(a, dt); a2[o * 4] = a.e0; a2[o * 4 + 1] = a.e1; a2[o * 4 + 2] = a.e2; a2[o * 4 + 3] = sp === QU || sp === TK ? a.variant : a.e3; }
+      if (a2) { this.extra(a, dt); a2[o * 4] = a.e0; a2[o * 4 + 1] = a.e1; a2[o * 4 + 2] = a.e2; a2[o * 4 + 3] = sp === QU || sp === MQ || sp === TK ? a.variant : a.e3; }
       // the skinned models (deer, buck): clip and phase from the speed, pose and flick (animalModels.js driveClips)
       const sk = this.drawn[sp]?.model?.skin;
       if (sk) driveClips(sk, DEER_DRIVE, a.cs ||= makeClipState(), a.spd || 0, a.pose, a.flick, dt, this.clip[sp], o);
@@ -4161,7 +4202,7 @@ export class Animals {
       const wood = a.path && (a.state === S_CLIMB || a.state === S_OUT || a.state === S_IN || a.state === S_SIT);
       a.e0 = damp(a.e0, wood ? a.splay || 0 : a.state === S_CLIMB || a.state === S_DOWN || a.state === S_RAIDP ? 1 : 0, 8, dt);   // legs splayed round the trunk
       a.e1 = damp(a.e1, a.flick, 5, dt);                                             // the tail tip lags the flick
-    } else if (a.sp === QU) {
+    } else if (a.sp === QU || a.sp === MQ) {
       const fly = a.state === Q_FLY;
       a.e0 = damp(a.e0, fly && a.amp < 0.5 ? 1 : 0, 6, dt);                          // wings set and bowed in the glide
       a.e1 = damp(a.e1, fly ? (a.u > 0.85 ? 1 : 0.4) : 0, 8, dt);                    // tail fanned to land
