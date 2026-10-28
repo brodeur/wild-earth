@@ -1466,3 +1466,23 @@ to 1024 since every animal present gets one (the far ones leave the vertex shade
 tile as a spirit near a jackrabbit: the menu opens and closes, the HUD at 54 px under the button; the bar shows nine
 species with pills and discs; the jackrabbit's soul yellow-green. Known: with the menu open the key line runs under the
 bar at the bottom; the stills are side views at one size, so a vole and a deer are the same height in the bar.
+
+## 2026-10-27: the bar without its box, the map top right, the rare found from further off, a lion beacon for testing
+
+Aaron: remove the dark box from the species list; move the map to the top right; the goal is finding the rarest species,
+so they should appear from further away and brighter; for testing, make it extremely bright or obvious where the mountain
+lions are even from far away. The bar (`#nearBar`) lost its background, blur and padding: the stills stand on the world.
+The mini-map is at the top right; the panel, when the menu opens it, sits under the map (`--mapH`, set by layoutHud from
+the map's height, the panel's max-height the rest of the window, scrolling), the key line runs to the window's edge and
+rises above the bar while the bar is up. The souls (spirit.js): a soul's reach, the distance its far strength fades over,
+runs from 250 m for the most abundant to 600 m for the rarest (GLOW_REACH; animals live within 400 m of the player,
+animals.js LIVE_R, so the rare are lit across the whole live population) and its quad grows with rarity up to 1.6 times
+(GLOW_RARE_SIZE); the glow's alpha attribute now carries the rarity itself (brightness and reach are mixed in the vertex
+shader), or 2 for a beacon species. BEACON = { puma_concolor }: a beacon's soul never fades with distance, is 8 times
+the base brightness and 5 times the size, and carries a beam: a 90 m column of light 2.5 m wide over the animal, a
+billboard turning about the vertical, additive, drawn through the terrain (no depth test, on layer 1 over the spirit's
+post pass), in the soul's colour (red for the lion, the rarest). Verified on the home tile: a lion lives in territory
+cell (2, 0) at about x 3994, z -386; from 362 m away at 45 m up the beam and the pink soul are the brightest thing in
+the view; at 122 m the lion is seen under it. Known: the beacon is a test aid (the set is one line to empty); a lion only
+exists within the live radius, so "far away" means up to about 500 m; the beam reads white at its core where the additive
+blend saturates.

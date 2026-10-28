@@ -44,12 +44,16 @@ let screen = null, screenOpen = false;   // the opening screen (arrival.js) whil
 // the HUD; the panel stops above the mini-map (and scrolls), the help line wraps before the mini-map and the species
 // card sits above the help line. Run on resize and with the HUD's text updates (the HUD's width follows its text).
 function layoutHud() {
+  document.documentElement.style.setProperty('--mapH', `${$('minimap')?.offsetHeight || 0}px`);   // the panel sits under the mini-map, top right (index.html #panel)
   const W = innerWidth, H = innerHeight;
   html.classList.toggle('narrow', W < 1200 || H < 760);
-  const box = id => $(id).getBoundingClientRect(), mm = box('minimap'), pan = $('panel'), cs = getComputedStyle(pan);
-  pan.style.maxHeight = `${Math.max(120, Math.floor(mm.top - 10 - pan.getBoundingClientRect().top - parseFloat(cs.paddingTop) - parseFloat(cs.paddingBottom)))}px`;
-  const help = $('help'), hs = getComputedStyle(help);
-  help.style.maxWidth = `${Math.max(200, Math.floor(mm.left - 10 - help.getBoundingClientRect().left - parseFloat(hs.paddingLeft) - parseFloat(hs.paddingRight)))}px`;
+  const box = id => $(id).getBoundingClientRect(), pan = $('panel'), cs = getComputedStyle(pan);
+  // the panel under the mini-map (top right) scrolls within the window; the key line (bottom left) runs to the window's
+  // edge and, while the nearby-animals bar is up, sits above it
+  pan.style.maxHeight = `${Math.max(120, Math.floor(H - 12 - pan.getBoundingClientRect().top - parseFloat(cs.paddingTop) - parseFloat(cs.paddingBottom)))}px`;
+  const help = $('help'), hs = getComputedStyle(help), bar = $('nearBar');
+  help.style.maxWidth = `${Math.max(200, Math.floor(W - 14 - help.getBoundingClientRect().left - parseFloat(hs.paddingLeft) - parseFloat(hs.paddingRight)))}px`;
+  help.style.bottom = bar && !bar.hidden ? `${12 + bar.offsetHeight + 10}px` : '';
   $('speciesCard').style.bottom = `${Math.max(12, Math.round(H - help.getBoundingClientRect().top + 8))}px`;
   const g = $('game'); if (g.classList.contains('hidden')) return;
   g.style.left = g.style.top = g.style.transform = '';   // centred, as styled

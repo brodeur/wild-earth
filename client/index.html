@@ -16,7 +16,7 @@
   #hud h1 { font-size:14px; margin:0 0 4px; }
   #hud .row { display:flex; justify-content:space-between; gap:12px; color:#b7c4ba; }
   #hud .row b { color:#e6ede7; font-weight:600; font-variant-numeric:tabular-nums; }
-  #panel { position:fixed; right:14px; top:12px; background:#0f1512bb; padding:10px 12px; border-radius:8px; width:230px; backdrop-filter:blur(4px); }
+  #panel { position:fixed; right:14px; top:calc(var(--mapH, 0px) + 24px); max-height:calc(100vh - var(--mapH, 0px) - 36px); box-sizing:border-box; background:#0f1512bb; padding:10px 12px; border-radius:8px; width:230px; backdrop-filter:blur(4px); }
   #panel label { display:block; color:#b7c4ba; margin:6px 0 2px; font-size:11px; text-transform:uppercase; letter-spacing:.06em; }
   #panel select, #panel input[type=range] { width:100%; }
   #panel select { background:#0d1310; color:#e6ede7; border:1px solid #263128; border-radius:6px; padding:4px 6px; font:inherit; }
@@ -33,7 +33,7 @@
   html:not(.menu) #hud, html:not(.menu) #panel, html:not(.menu) #help { opacity:0; visibility:hidden; pointer-events:none; transition:opacity .2s ease, visibility 0s linear .2s; }
   html.opening #menuBtn { display:none; }
   /* the nearby-animals bar (nearBar.js): in spirit form, the species within reach as a small toolbar at the bottom */
-  #nearBar { position:fixed; left:50%; bottom:14px; transform:translateX(-50%); z-index:5; display:flex; align-items:flex-end; gap:4px; padding:4px 6px 2px; border-radius:10px; background:#0f1512bb; backdrop-filter:blur(4px); pointer-events:none; }
+  #nearBar { position:fixed; left:50%; bottom:14px; transform:translateX(-50%); z-index:5; display:flex; align-items:flex-end; gap:4px; pointer-events:none; }   /* no box: the stills stand on the world */
   #nearBar[hidden] { display:none; }
   .nb-slot { position:relative; width:58px; height:50px; display:flex; align-items:flex-end; justify-content:center; }
   .nb-disc { position:absolute; left:7px; right:7px; bottom:3px; height:11px; border-radius:50%; background:#000; opacity:.4; }
@@ -42,7 +42,7 @@
   #help kbd { background:#1f2a23; border:1px solid #263128; border-radius:4px; padding:0 5px; color:#e6ede7; font:inherit; }
   #status { position:fixed; left:50%; top:45%; transform:translate(-50%,-50%); background:#0f1512dd; padding:14px 18px; border-radius:10px; font-size:14px; }
   #status.hidden { display:none; }
-  #minimap { position:fixed; right:14px; bottom:12px; background:#0f1512bb; padding:6px; border-radius:8px; backdrop-filter:blur(4px); line-height:0; }
+  #minimap { position:fixed; right:14px; top:12px; background:#0f1512bb; padding:6px; border-radius:8px; backdrop-filter:blur(4px); line-height:0; }
   #minimap canvas { border-radius:4px; cursor:crosshair; }
   #help { max-width:calc(100vw - 310px); }   /* wrap rather than run under the mini-map */
   .muted { color:#8fa094; }

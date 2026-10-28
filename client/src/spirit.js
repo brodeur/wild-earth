@@ -75,6 +75,15 @@ const GLOW_CAP = 1024, GLOW_FAR = 0.6;   // GLOW_CAP: every animal present gets 
 // the abundant to red for the rare), its brightness from GLOW_LUM[0] for the most abundant to GLOW_LUM[1] for the rarest,
 // and round the core a wider faint bubble, GLOW_BUBBLE times the core's radius at GLOW_BUBBLE_A of its strength.
 const GLOW_LUM = [0.55, 1.4], GLOW_BUBBLE = 2.4, GLOW_BUBBLE_A = 0.09;
+// The rare are found from further off (owner): a soul's reach, the distance its far strength fades out over, runs from
+// GLOW_REACH[0] m for the most abundant to GLOW_REACH[1] for the rarest (animals live within 400 m of the player,
+// animals.js LIVE_R, so the far end means the whole live population), and its quad grows with rarity by up to
+// GLOW_RARE_SIZE. BEACON: species whose souls are a test beacon, lit full and large at any distance (owner, 2026-10-27:
+// "make it extremely bright or obvious where the mountain lions are even from far away").
+const GLOW_REACH = [250, 600], GLOW_RARE_SIZE = 1.6, BEACON = new Set(['puma_concolor']), BEACON_LUM = 8.0, BEACON_SIZE = 5.0;
+// A beacon animal also carries a beam: a BEAM_H m column of light BEAM_W m wide over it, a billboard turning about the
+// vertical, additive and drawn through the terrain, in its soul's colour, so it is found from anywhere in the live set.
+const BEAM_CAP = 32, BEAM_W = 2.5, BEAM_H = 90;
 const COOL = new THREE.Color(0.6, 0.78, 1.0), WARM = new THREE.Color(1.0, 0.84, 0.58), WHITE = new THREE.Color(0.9, 0.95, 1.0);
 const smooth = u => u * u * (3 - 2 * u);
 
@@ -310,19 +319,26 @@ class SpiritLook {
     g.instanceCount = 0;
     this.glowMat = new THREE.ShaderMaterial({
       uniforms: { uSpirit: { value: new THREE.Vector3() }, uAmt: { value: 0 },
-        uTouch: { value: TOUCH_R }, uSwell: { value: SWELL_FAR }, uFar: { value: GLOW_FAR }, uBubble: { value: GLOW_BUBBLE }, uBubbleA: { value: GLOW_BUBBLE_A } },
+        uTouch: { value: TOUCH_R }, uSwell: { value: SWELL_FAR }, uFar: { value: GLOW_FAR }, uBubble: { value: GLOW_BUBBLE }, uBubbleA: { value: GLOW_BUBBLE_A },
+        uLum: { value: new THREE.Vector2(...GLOW_LUM) }, uReach: { value: new THREE.Vector2(...GLOW_REACH) }, uRareSize: { value: GLOW_RARE_SIZE },
+        uBeacon: { value: new THREE.Vector2(BEACON_LUM, BEACON_SIZE) } },
       vertexShader: /* glsl */`
-        attribute vec3 aPos; attribute vec4 aColor;
-        uniform vec3 uSpirit; uniform float uAmt, uTouch, uSwell, uFar, uBubble;
+        attribute vec3 aPos; attribute vec4 aColor;   // rgb the soul's colour; a its rarity 0..1, or 2 for a beacon
+        uniform vec3 uSpirit; uniform float uAmt, uTouch, uSwell, uFar, uBubble, uRareSize; uniform vec2 uLum, uReach, uBeacon;
         varying vec2 vUv; varying float vI; varying vec3 vColor;
         void main() {
           float ds = distance(aPos, uSpirit), dc = distance(aPos, cameraPosition);
           float near = 1.0 - smoothstep(uTouch, uSwell, ds);                    // the wisp's swell easing
-          vI = uAmt * aColor.a * (uFar * (1.0 - smoothstep(150.0, 400.0, ds)) + (1.0 - uFar) * near);
+          float beacon = step(1.5, aColor.a), rar = min(aColor.a, 1.0);
+          float reach = mix(uReach.x, uReach.y, rar);
+          float far = mix(1.0 - smoothstep(reach * 0.4, reach, ds), 1.0, beacon);   // a beacon never fades with distance
+          float lum = mix(mix(uLum.x, uLum.y, rar), uBeacon.x, beacon);
+          vI = uAmt * lum * (uFar * far + (1.0 - uFar) * near);
           vColor = aColor.rgb;
           vec4 mv = viewMatrix * vec4(aPos, 1.0);
           mv.xyz += normalize(-mv.xyz) * min(1.8, dc * 0.4);                    // toward the eye: ground and bark do not clip it
-          mv.xy += position.xy * uBubble * (mix(0.6, 4.0, smoothstep(6.0, 200.0, dc)) * (1.0 + 0.8 * near));   // the quad holds the bubble; the core is 1 / uBubble of it
+          float size = mix(mix(1.0, uRareSize, rar), uBeacon.y, beacon);        // the rare larger, a beacon larger still
+          mv.xy += position.xy * uBubble * size * (mix(0.6, 4.0, smoothstep(6.0, 200.0, dc)) * (1.0 + 0.8 * near));   // the quad holds the bubble; the core is 1 / uBubble of it
           vUv = position.xy;
           gl_Position = vI > 0.002 ? projectionMatrix * mv : vec4(2.0, 2.0, 2.0, 1.0);
         }`,
@@ -340,6 +356,35 @@ class SpiritLook {
     this.glow = new THREE.Mesh(g, this.glowMat); this.glow.frustumCulled = false; this.glow.renderOrder = 9; this.glow.name = 'spirit glow';
     this.glow.layers.set(1);
     scene.add(this.glow);
+    // the beacon beams (BEACON species)
+    const bg = new THREE.InstancedBufferGeometry().copy(new THREE.PlaneGeometry(2, 2));
+    this.bp = new Float32Array(BEAM_CAP * 3); bg.setAttribute('aPos', new THREE.InstancedBufferAttribute(this.bp, 3).setUsage(THREE.DynamicDrawUsage));
+    this.bc = new Float32Array(BEAM_CAP * 3); bg.setAttribute('aColor', new THREE.InstancedBufferAttribute(this.bc, 3).setUsage(THREE.DynamicDrawUsage));
+    bg.instanceCount = 0;
+    this.beamMat = new THREE.ShaderMaterial({
+      uniforms: { uAmt: { value: 0 }, uSize: { value: new THREE.Vector2(BEAM_W, BEAM_H) } },
+      vertexShader: /* glsl */`
+        attribute vec3 aPos; attribute vec3 aColor; uniform vec2 uSize;
+        varying vec2 vUv; varying vec3 vColor;
+        void main() {
+          vec3 toCam = cameraPosition - aPos; toCam.y = 0.0;
+          vec3 fwd = normalize(toCam + vec3(1e-4, 0.0, 0.0)), right = normalize(cross(vec3(0.0, 1.0, 0.0), fwd));
+          vec3 p = aPos + right * (position.x * uSize.x) + vec3(0.0, (position.y + 1.0) * 0.5 * uSize.y, 0.0);
+          vUv = position.xy; vColor = aColor;
+          gl_Position = projectionMatrix * viewMatrix * vec4(p, 1.0);
+        }`,
+      fragmentShader: /* glsl */`
+        uniform float uAmt; varying vec2 vUv; varying vec3 vColor;
+        void main() {
+          float x = abs(vUv.x), t = (vUv.y + 1.0) * 0.5;
+          float a = (1.0 - smoothstep(0.0, 1.0, x)) * (1.0 - t * t) * uAmt * 1.8;   // soft sides, fading up
+          if (a < 0.003) discard;
+          gl_FragColor = vec4(vColor * a, 1.0);
+        }`,
+      transparent: true, depthWrite: false, depthTest: false, blending: THREE.AdditiveBlending, toneMapped: false });
+    this.beam = new THREE.Mesh(bg, this.beamMat); this.beam.frustumCulled = false; this.beam.renderOrder = 10; this.beam.name = 'beacon beams';
+    this.beam.layers.set(1);
+    scene.add(this.beam);
   }
   // In place of renderer.render(scene, camera) (main.js): the frame, then while the look is on the post pass and the
   // layer-1 redraw; with the look off but the wisp shown (the arrival, a jump's dive), the layer-1 draw alone.
@@ -388,15 +433,18 @@ class SpiritLook {
     su.uVeil.value = LOOK_VEIL * k; su.uContrast.value = POST_CONTRAST * k;
     su.uGlow.value.copy(LOOK_GLOW).multiplyScalar(glowL * k);
     // the glow
-    let n = 0; const gp = this.gp, gc = this.gc, rar = this.animals.rarity, cols = this.glowCols ||= [];
+    let n = 0, b = 0; const gp = this.gp, gc = this.gc, bp = this.bp, bc = this.bc, rar = this.animals.rarity, cols = this.glowCols ||= [], sl = this.animals.speciesList();
     this.animals.eachPlayable((x, y, z, s) => {
       if (n >= GLOW_CAP) return;
       gp[n * 3] = x; gp[n * 3 + 1] = y; gp[n * 3 + 2] = z;
-      const c = cols[s] ||= rarityColor(rar[s]), r = rar[s];   // the species' soul colour and brightness (once per species)
-      gc[n * 4] = c.r; gc[n * 4 + 1] = c.g; gc[n * 4 + 2] = c.b; gc[n * 4 + 3] = GLOW_LUM[0] + (GLOW_LUM[1] - GLOW_LUM[0]) * r;
+      const c = cols[s] ||= rarityColor(rar[s]), beacon = BEACON.has(sl[s].code.split(':')[0]);   // the species' soul colour (once per species); a its rarity, 2 for a beacon species
+      gc[n * 4] = c.r; gc[n * 4 + 1] = c.g; gc[n * 4 + 2] = c.b; gc[n * 4 + 3] = beacon ? 2 : rar[s];
+      if (beacon && b < BEAM_CAP) { bp[b * 3] = x; bp[b * 3 + 1] = y; bp[b * 3 + 2] = z; bc[b * 3] = c.r; bc[b * 3 + 1] = c.g; bc[b * 3 + 2] = c.b; b++; }
       n++;
     });
     this.glow.geometry.instanceCount = n; this.glow.geometry.attributes.aPos.needsUpdate = true; this.glow.geometry.attributes.aColor.needsUpdate = true;
+    this.beam.geometry.instanceCount = b; this.beam.geometry.attributes.aPos.needsUpdate = true; this.beam.geometry.attributes.aColor.needsUpdate = true;
+    this.beamMat.uniforms.uAmt.value = k; this.beam.visible = b > 0 && k > 0.001;
     this.glowMat.uniforms.uSpirit.value.copy(this.flight.pos); this.glowMat.uniforms.uAmt.value = k;
   }
 }
