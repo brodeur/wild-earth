@@ -181,6 +181,7 @@ release, WebGL) was still running; its commit, if it verified, is the last in `g
 | 6ea68c2 | The aurora arrival in white and grey with no hue, and quicker: 1.3 s in, 0.9 s out. |
 | c20e31a | Each count pill is a white tinted with its species' soul colour, at .8. |
 | bee719d | The games of life (committed under the report's message by mistake): every game declares what the world must contain and each tile lists its requests (insects missing; burrows, cavities and snags partial); a walker's hunger and thirst, fed and watered by E on the resource rasters with the nearest good cell as the target; acorns at real size; the lion beacon at 30% behind trees; the wheel inverted. |
+| d444adf | The wisp cruises at 12 m/s with a quieter wind; a tap of W or S nudges its speed, a hold ramps exponentially and eases into the top or bottom. |
 
 Open from the day: the attribution form for generated assets; far placement on the lidar ground beyond the fine square; the squirrel's
 crown camera in leafy oaks.
