@@ -47,6 +47,11 @@ const smooth = u => u * u * (3 - 2 * u);
 // trot-to-gallop switch); rodent bound(v) (m per bound), lift(v) (m of air in a bound), rock (pitch in a bound);
 // bird stride. act: E's head dip (flick) and how long (s); alert: Shift's head lift (flick) or sit-up (pose); rest:
 // X's pose (null: none). flush (birds): the flush flight from a run over `from` m/s: speed, duration, climb, beat Hz.
+// Framing (owner, 2026-10-27: "raise the camera so that the animal is in the bottom third of the screen"): the camera
+// sits CAM_RAISE times higher than each body's `up`, and its pitch is set each frame from the line to the body's centre
+// so that centre lands FRAME_Y of the half view below the screen's middle (-0.45: a little under a third up from the
+// bottom), whatever the body's size, its sitting or the ground; the drag's tilt adds to it. The yaw stays the aim's.
+export const CAM_RAISE = 1.3, FRAME_Y = -0.45;
 export const GROUND = {
   odocoileus_hemionus: { short: 'deer', common: 'black-tailed deer', model: 'deer', rig: 'quad',
     walk: 1.3, run: 12, back: 0.8, ramp: 3, accel: 2.2, stop: 4, turn: 1.8, jumpH: 1.6, jumpL: 3.5, step: 0.5, wade: 0.7,
@@ -484,7 +489,7 @@ export class GroundControl {
     const rate = wrap(f.yaw - (this.camYaw ?? f.yaw)) / Math.max(dt, 1e-3); this.camYaw = f.yaw;
     if (Math.abs(rate) > 0.3) this.camSide = damp(this.camSide, -Math.sign(rate) * C.side, 1.6, dt);
     const low = this.resting ? 0.7 : 1, fly = this.mode === 'fly' ? 1.4 : 1;
-    const back = C.back * (1 - 0.15 * this.sit) * fly, up = C.up * low * (1 + 0.3 * this.sit) * fly, a = f.yaw + this.camSide;
+    const back = C.back * (1 - 0.15 * this.sit) * fly, up = C.up * CAM_RAISE * low * (1 + 0.3 * this.sit) * fly, a = f.yaw + this.camSide;
     off.set(Math.sin(a) * back, up, Math.cos(a) * back);
     const fx = -Math.sin(f.yaw), fz = -Math.cos(f.yaw);
     aim.set(fx * C.look, C.aimUp * low + Math.tan(f.pitch) * (back + C.look), fz * C.look);
@@ -496,7 +501,13 @@ export class GroundControl {
     this.camLift = need > this.camLift ? need : damp(this.camLift, need, 3, dt);
     if (this.camLift > 0) cam.position.y += this.camLift;
     cam.up.set(0, 1, 0);
-    cam.lookAt(aim.copy(P).add(this.aimOff));
+    // the aim point: the smoothed aim's x and z (the three-quarter view's yaw), its height from the framing rule above
+    aim.copy(P).add(this.aimOff);
+    const S = this.S, bodyY = P.y + (S.shoulder || C.aimUp) * 0.5, hd = Math.hypot(P.x - cam.position.x, P.z - cam.position.z);
+    const toBody = Math.atan2(bodyY - cam.position.y, Math.max(hd, 1e-3)), above = Math.atan(-FRAME_Y * Math.tan(cam.fov * Math.PI / 360));
+    const ha = Math.hypot(aim.x - cam.position.x, aim.z - cam.position.z);
+    aim.y = cam.position.y + Math.max(ha, 1e-3) * Math.tan(toBody + above + f.pitch);
+    cam.lookAt(aim);
   }
   camClear(P, Cp, C) {
     const H = this.heights, r = Math.max(0.05, C.near * 1.6);

@@ -1501,3 +1501,15 @@ Aaron: "labels for trees and plants should only appear when the menu is open." i
 visible when tags are on (T), the present-day peek is not hiding them (main.js sets `identify.hidden`) and `html.menu` is
 set; read every HUD tick, so the labels come and go with the hamburger at once. The animals' tags (animals.js) are
 unchanged. Verified on the home tile: 33 tags hidden with the menu closed, shown when opened, hidden again on close.
+
+## 2026-10-27: the walkers' camera raised, the body framed in the bottom third
+
+Aaron: "for all ground animals, raise the camera so that the animal is in the bottom third of the screen." groundControl.js:
+the chase camera sits CAM_RAISE (1.3) times each body's `up` above it, and instead of looking at a fixed point ahead and
+`aimUp` up, its pitch is set every frame from the line to the body's centre (half the shoulder height up) so that centre
+lands FRAME_Y (-0.45) of the half view below the screen's middle, about 27% up from the bottom, whatever the body's size,
+its sitting or lying, the ground under the lens or the lift the clearances add; the drag's tilt adds to that pitch, the yaw
+is the smoothed aim's as before (the three-quarter view on the inside of a turn). Verified on the home tile in a deer and
+a vole: both centres at 27% from the bottom (NDC -0.46), the horizon in the upper half. Not tried: a turkey (none within
+reach); the rule is one for every walker. The fliers (flierControl.js), the raven, the squirrel and the woodpecker are
+unchanged.
