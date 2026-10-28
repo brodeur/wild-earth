@@ -281,6 +281,9 @@ step `channels`): depressions at least 1 m deep outside mapped waterbodies are b
 least-cost path to lower ground (lidar sees a road embankment over a culvert as a dam), the rest
 filled with the tile border as the outlet, flats resolved, D8 flow directions and accumulation,
 with the upstream area of creeks entering the tile seeded where NHD flowlines cross its edge.
+Cells pysheds leaves without a direction (some level stretches of channel; stat
+`unresolved_flat_cells`) are attached to a neighbour that drains out of the tile, one no higher
+than the cell while any such attachment remains, a rise only when none does.
 The fill makes every border cell an outlet, so a creek on a flat floor along the edge wanders out
 of the tile and takes its basin with it. A border outlet draining 0.15 km² or more with an NHD
 flowline within 60 m is judged against that stream followed downstream: if it stays inside for

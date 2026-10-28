@@ -9,13 +9,15 @@ the NHD reaches each channel runs alongside.
      least-cost path (<= 300 m) to lower ground, since lidar sees a road embankment over a culvert
      as a dam; then pysheds fills what is left with the tile border as the outlet, resolves flats,
      and gives D8 flow directions; any cell still without a way out is attached to a neighbour that
-     has one, and accumulation runs on the result. Flow from outside the tile is seeded where
-     NHD flowlines cross into it (their `totdasqkm`), so a creek entering the tile carries its
-     upstream area instead of starting from zero at the edge. The fill makes every border cell an
-     outlet, so a creek on a flat floor along the edge wanders out of the tile (and its basin with
-     it); a border outlet with an NHD stream within 60 m that stays inside, or leaves and comes
-     back in at an inflow seed, is pointed back at that stream (the seed then brings only the area
-     the linked flow does not already carry). See _link_edge_leaks.
+     has one (one no higher than itself while any such attachment is left to make: pysheds leaves
+     some level stretches of channel unresolved), and accumulation runs on the result. Flow from
+     outside the tile is seeded where NHD flowlines cross into it (their `totdasqkm`), so a creek
+     entering the tile carries its upstream area instead of starting from zero at the edge. The
+     fill makes every border cell an outlet, so a creek on a flat floor along the edge wanders out
+     of the tile (and its basin with it); a border outlet with an NHD stream within 60 m that
+     stays inside, or leaves and comes back in at an inflow seed, is pointed back at that stream
+     (the seed then brings only the area the linked flow does not already carry). See
+     _link_edge_leaks.
   2. Channels: cells draining >= `threshold_km2` (0.15 km2). Reaches run between channel heads,
      junctions and outlets, walked downstream cell by cell; short headwater stubs (< 40 m) are
      pruned; Strahler order is computed on what remains (a seeded inflow head starts at its NHD
@@ -65,6 +67,7 @@ LEAK_EXIT_M = 100.0         # a border outlet is its NHD stream really leaving w
 LEAK_CHAIN_M = 3000.0       # how far down the NHD stream to look for its way back into the tile
 LEAK_SEARCH_M = 500.0       # how far along the stream, inside, to look for the cell an edge leak is handed to
 LEAK_PASSES = 40
+ATTACH_PASSES = 2000        # cap on _route's passes attaching undrained cells to a draining neighbour
 PERENNIAL, INTERMITTENT, EPHEMERAL = 46006, 46003, 46007
 CANAL = 33600
 # D8 encoding (pysheds default order N, NE, E, SE, S, SW, W, NW)
@@ -108,7 +111,11 @@ def _route(dem_path, weights: np.ndarray, z: np.ndarray):
         down.flat[idx[ok]] = r2[ok] * nc + c2[ok]
     # Cells pysheds left without a direction (unresolved flats, -2; pits, -1) away from the border
     # would swallow their flow. Attach every cell that does not reach a border outlet to an adjacent
-    # cell that does (lowest filled height, preferring no rise), until the whole grid drains.
+    # cell that does (lowest filled height), until the whole grid drains. A pass attaches only the
+    # cells with such a neighbour no higher than themselves; a rise is taken only when a pass finds
+    # none. (Attaching each cell to the first draining neighbour, rise or not, once sent Tenaya
+    # Creek out of a level stretch of its own channel 6 m up the bank and across Yosemite Valley
+    # out of the tile, when the level channel reached the Merced a few cells on.)
     down = down.ravel()
     border = np.zeros(fdir.shape, bool)
     border[0, :] = border[-1, :] = border[:, 0] = border[:, -1] = True
@@ -116,7 +123,7 @@ def _route(dem_path, weights: np.ndarray, z: np.ndarray):
     unresolved = int(((down < 0) & ~border).sum())
     zflat = zf.ravel()
     nbr_off = [(-1, 0), (-1, 1), (0, 1), (1, 1), (1, 0), (1, -1), (0, -1), (-1, -1)]
-    for _ in range(200):
+    for _ in range(ATTACH_PASSES):
         good = _drains_out(down, border)
         bad = np.flatnonzero(~good)
         if bad.size == 0:
@@ -128,17 +135,16 @@ def _route(dem_path, weights: np.ndarray, z: np.ndarray):
             r2, c2 = br + dr, bc + dc
             ok = (r2 >= 0) & (r2 < nr) & (c2 >= 0) & (c2 < nc)
             j = np.where(ok, r2 * nc + c2, 0)
-            cand = ok & good[j]
-            zj = np.where(cand, zflat[j], np.inf)
-            # no rise first; a rise only if a cell has no other way out (never needed after a fill)
-            zj = np.where(zj <= zflat[bad] + 1e-6, zj, zj + 1e6)
+            zj = np.where(ok & good[j], zflat[j], np.inf)
             better = zj < bz
             best[better], bz[better] = j[better], zj[better]
-        fix = best >= 0
+        fix = (best >= 0) & (bz <= zflat[bad] + 1e-6)
         if not fix.any():
-            break
+            fix = best >= 0
+            if not fix.any():
+                break
         down[bad[fix]] = best[fix]
-        acc = _accumulate(down, weights.ravel().astype("float64"))
+    acc = _accumulate(down, weights.ravel().astype("float64"))
     return zf, down, acc.reshape(fdir.shape), unresolved
 
 

@@ -15,7 +15,7 @@
   37.830918414113654
  ],
  "size_m": 10000,
- "generated_at": "2026-10-28T07:24:04Z",
+ "generated_at": "2026-10-28T07:51:35Z",
  "generator": {
   "name": "wild-earth-pipeline",
   "version": "0.2.0"
@@ -121,6 +121,19 @@
     "seeds": 20,
     "seeds_moved": [
      {
+      "name": "Snow Creek",
+      "area_km2": 5.4,
+      "from": [
+       32,
+       1996
+      ],
+      "to": [
+       61,
+       1990
+      ],
+      "moved_m": 148.1
+     },
+     {
       "name": "Hoffmann Creek",
       "area_km2": 5.1,
       "from": [
@@ -132,32 +145,6 @@
        1771
       ],
       "moved_m": 152.1
-     },
-     {
-      "name": null,
-      "area_km2": 2.0,
-      "from": [
-       3,
-       1482
-      ],
-      "to": [
-       32,
-       1481
-      ],
-      "moved_m": 145.1
-     },
-     {
-      "name": null,
-      "area_km2": 0.9,
-      "from": [
-       1996,
-       628
-      ],
-      "to": [
-       1980,
-       611
-      ],
-      "moved_m": 116.7
      },
      {
       "name": "Merced River",
@@ -186,35 +173,21 @@
       "moved_m": 60.8
      }
     ],
-    "edge_links": 6,
+    "edge_links": 5,
     "edge_links_detail": [
      {
-      "name": "Snow Creek",
-      "kind": "stay",
+      "name": "Porcupine Creek",
+      "kind": "reentry",
       "from": [
-       35,
-       1999
+       0,
+       1151
       ],
       "to": [
-       114,
-       1989
+       3,
+       968
       ],
-      "jump_m": 398.2,
-      "area_km2": 5.47
-     },
-     {
-      "name": "Snow Creek",
-      "kind": "stay",
-      "from": [
-       103,
-       1999
-      ],
-      "to": [
-       116,
-       1988
-      ],
-      "jump_m": 85.1,
-      "area_km2": 0.2
+      "jump_m": 915.1,
+      "area_km2": 0.18
      },
      {
       "name": "Yosemite Creek",
@@ -228,7 +201,7 @@
        14
       ],
       "jump_m": 78.3,
-      "area_km2": 80.93
+      "area_km2": 80.92
      },
      {
       "name": "Yosemite Creek",
@@ -242,7 +215,7 @@
        1
       ],
       "jump_m": 335.0,
-      "area_km2": 83.65
+      "area_km2": 83.63
      },
      {
       "name": "Yosemite Creek",
@@ -275,6 +248,11 @@
     ],
     "seeds_carried": [
      {
+      "name": "Porcupine Creek",
+      "area_km2": 2.7,
+      "carried_km2": 0.2
+     },
+     {
       "name": "Yosemite Creek",
       "area_km2": 99.7,
       "carried_km2": 83.9
@@ -290,35 +268,35 @@
     "unresolved_flat_cells": 12,
     "pruned_stubs": 7,
     "interior_outlets": 0,
-    "channel_cells": 32008,
-    "dem_reaches": 347,
-    "dem_matched": 172,
-    "dem_unmatched": 175,
+    "channel_cells": 32259,
+    "dem_reaches": 348,
+    "dem_matched": 175,
+    "dem_unmatched": 173,
     "nhd_flowlines": 139,
-    "nhd_covered": 117,
+    "nhd_covered": 118,
     "nhd_partial": 6,
-    "nhd_uncovered": 8,
-    "nhd_kept_reaches": 15,
-    "nhd_tips_dropped": 45,
-    "nhd_tips_length_km": 8.89,
-    "dem_length_km": 176.71,
-    "nhd_kept_length_km": 0.77,
+    "nhd_uncovered": 7,
+    "nhd_kept_reaches": 14,
+    "nhd_tips_dropped": 42,
+    "nhd_tips_length_km": 7.77,
+    "dem_length_km": 177.58,
+    "nhd_kept_length_km": 0.73,
     "nhd_length_km": 105.03,
-    "nhd_covered_length_km": 94.32,
-    "median_offset_m": 9.9,
-    "median_reach_offset_m": 9.3,
-    "p90_offset_m": 30.2,
+    "nhd_covered_length_km": 95.54,
+    "median_offset_m": 9.8,
+    "median_reach_offset_m": 9.2,
+    "p90_offset_m": 30.0,
     "in_waterbody_pieces": 11,
     "features": 376,
     "downhill_check": {
      "points": 200,
      "step_m": 10.0,
      "tolerance_m": 0.5,
-     "violations": 0,
-     "violation_rate": 0.0,
-     "max_rise_m": 0.27
+     "violations": 1,
+     "violation_rate": 0.005,
+     "max_rise_m": 0.68
     },
-    "max_area_km2": 587.16,
+    "max_area_km2": 706.18,
     "breach_max_m": 300.0,
     "rewilded_waterbodies": 2,
     "rewild_check": {
@@ -347,8 +325,8 @@
     },
     "routed_on": "terrain/dem_rewilded.tif"
    },
-   "sha256": "062ad66d487cb5b26435a0b46f22bdaab06324f82bec57f44e7956ff02c77e01",
-   "bytes": 885835
+   "sha256": "fb7faaa68b847b25c92c77cecae2c99508b173b6746373af898d6e9509cbbf3e",
+   "bytes": 891894
   },
   "client.channel_depth": {
    "path": "client/channel_depth.png",
@@ -367,8 +345,8 @@
     "hydro.channels"
    ],
    "encoding": "uint8 decimetres: mean DEM on a 20 m ring minus the channel cell, clamped 0-25 m, x10; 0 off channel",
-   "sha256": "61b137b871f3c440e57c5c14c7d433b23bd8666b31e592f56e66c7cdf919e8e2",
-   "bytes": 78042
+   "sha256": "dad366b129d13cbb25e949f118e1a45fe5720149ee230f665682342ae33237d2",
+   "bytes": 78435
   },
   "hydro.human_water": {
    "path": "hydro/human_water.geojson",
@@ -607,18 +585,18 @@
    "depth_model": "mean depth 0.10 A^0.32 m (A km2) x exp(-0.85 t), t = tanh(1.1 ln((S_local + 0.002) / (S_reach + 0.002))); S_local over max(7.5 m, 2.5 widths), S_reach over max(75 m, 10 widths), on the non-increasing DEM long profile every 2.5 m",
    "stats": {
     "reaches": 376,
-    "samples": 71176,
-    "riffle_share": 0.203,
-    "pool_share": 0.17,
-    "run_share": 0.627,
-    "depth_m_p50": 0.109,
-    "depth_m_p95": 0.51,
+    "samples": 71509,
+    "riffle_share": 0.205,
+    "pool_share": 0.172,
+    "run_share": 0.623,
+    "depth_m_p50": 0.11,
+    "depth_m_p95": 0.526,
     "depth_m_max": 1.056,
     "bed_cells": 71,
     "corridor_cells": 0
    },
-   "sha256": "6103b8bebd90e7011288af80dbccfc514110ea4e78bcae9f8803d129753cb326",
-   "bytes": 362194
+   "sha256": "35701c08b0bcc231525f5964d045f93e506a51021fd7d339e3731404684769db",
+   "bytes": 363296
   },
   "client.features": {
    "path": "client/features.json",
@@ -646,8 +624,8 @@
     "hydro.waterbodies",
     "osm"
    ],
-   "sha256": "29d16c37f9a2a61c1811b844468ebafd16725b5585e6c0f8774fa4439f4cf43a",
-   "bytes": 313183
+   "sha256": "cb2671a04d313f1a8325d600f5c5545e3c47b17fe9260c75275956aff69e1eee",
+   "bytes": 314936
   },
   "species.list": {
    "path": "species/species.json",
@@ -3034,6 +3012,18 @@
    "step": "derive",
    "at": "2026-10-28T07:24:04Z",
    "seconds": 27.7,
+   "ok": true
+  },
+  {
+   "step": "channels",
+   "at": "2026-10-28T07:51:03Z",
+   "seconds": 38.2,
+   "ok": true
+  },
+  {
+   "step": "rewild_hydro",
+   "at": "2026-10-28T07:51:35Z",
+   "seconds": 32.3,
    "ok": true
   }
  ]

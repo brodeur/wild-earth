@@ -2081,3 +2081,16 @@ coyote, bear) feeds at carrion within 2.5 m: E for a walker, landing beside it f
 groundControl, flierControl); the hunger fills once per carcass and the toast says "fed at the deer". Feeding does
 not consume the carcass. Verified: a coyote's E beside its own kill filled its hunger from 0.4. So the raven's loop
 closes: follow the lion's kill, land, feed.
+
+Tenaya Creek reaches the Merced (2026-10-28, an Opus lane; pipeline/channels.py `_route`; verified here: Tenaya
+Creek 123 km2 ending at the Merced, the Merced 707 km2 at the exit against NHD's 707-708, no unnamed stream over
+100 km2, Yosemite Creek over the falls unchanged at 110 km2). On the Yosemite Valley tile, Tenaya Creek left its
+channel east of the village, crossed the floor south-west and left the tile at (4452, 2) with 114 km2, so the Merced
+reached the west edge with 587 km2. The cause was routing, not terrain: pysheds leaves a few cells with no flow
+direction, one on a level stretch of Tenaya's own channel, and the fallback that hooks such cells to a neighbour
+that drains out of the tile took the first one reached, rise or not, hooking the channel 6 m up the bank though the
+level channel led on to the Merced. Now a pass attaches only cells with a draining neighbour no higher than
+themselves, and a rise only when none is left (ATTACH_PASSES 2000; the accumulation runs once after). The home tile
+is unchanged in a dry run (named creeks within 2.3 m, the same areas and orders); the other tiles shift slightly on
+their next channels build. Burning NHD perennial lines into the DEM was tried first and rejected: even half a metre
+pulled the home tile's lidar creeks up to 50 m onto NHD's offset lines, and the fix does not need it.
