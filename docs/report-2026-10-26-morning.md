@@ -209,8 +209,8 @@ What to look at first, in order:
 4. The deer herd is skinned and clip-animated now (the morning's side session, merged): walk, graze, alert, bed.
 
 Credits: the black bear cost 20 on Meshy (one preview); 380 of the 1,000 spent in all. Open after the night: the
-fliers' hunger has no drink; Tenaya Creek still leaves the Yosemite tile off the DEM; the Sierra species beyond the
-bear (mountain quail, mule deer by name); a cinnamon bear.
+fliers' hunger has no drink; the Sierra species beyond the bear and the mountain quail (mule deer by name); a
+cinnamon bear; the other tiles' channels shift slightly on their next build after the two routing fixes.
 
 | Commit | What you will see |
 |---|---|
