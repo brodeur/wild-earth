@@ -185,6 +185,8 @@ release, WebGL) was still running; its commit, if it verified, is the last in `g
 | 2d7ba15 | Herd members hidden by foliage show as luminous silhouettes in their soul colour, drawn only where the body is behind what is drawn and fading out by 150 m. |
 | d632823 | The Indigenous territories over a tile, from Native Land Digital, go under the card's place name; the pipeline fetches them with a free key you have to sign up for, and the credits carry their disclaimer. |
 | 5f67e33 | A drag turns the camera with the animal's head up to its limit, then the body turns so the camera keeps moving; walking settles the head straight. |
+| 6df6841 | A herd's bucks are their own species slot: the stencil mask now marks every slot in the group, so the buck shows no slivers either. |
+| 9e8c96c | The Yosemite tile is built and loads: Half Dome reads from the village meadow; no lidar point cloud is public for it, so the ground is DEM-only, the granite flat grey, and the species are still the foothill set. |
 | fbc2c07 | The herd silhouettes are no longer triggered by a member's own body or by other members: the herd's bodies mask the pass through the stencil buffer, so only foliage, trunks, rocks and ground count as cover. |
 
 Open from the day: the attribution form for generated assets; far placement on the lidar ground beyond the fine square; the squirrel's
