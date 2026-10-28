@@ -1566,3 +1566,23 @@ woodpecker and the raven no predator, only the deer's calendar names water, the 
 alarms to mean much, and court has no place. Next: a needs table and a diet table per species for the step to read,
 perception with range and sense, and the client's games.js, one runtime per archetype, with the acorn game as the cache
 archetype's raven instance and the herd pilot as the base of every collective game.
+
+## 2026-10-27: the pipeline survives a lidar collection without a point cloud, and a LANDFIRE service that answers errors
+
+The first tile outside zone 10, Yosemite Valley's utm11n_270_4180 (Half Dome, Yosemite Falls, the village meadows), found two
+holes. The lidar step: the newest 1 m collection over the tile (CA_YosemiteNP_2019_D19) has its DEM published, but no
+Entwine point cloud in the public bucket usgs-lidar-public matches its name or overlaps the tile (all 2,292 projects
+listed; the CA_SierraNevada_*_2022 and Eldorado 2019 projects stop short of the park; the requester-pays raw bucket is
+not used). `fetch_lidar.find_ept` now raises `NoPointCloud`, and `lidar.build_lidar` falls back to `build_dem_only`: the
+products the 1 m DEM alone gives, the client's 2 m terrain detail and the 10 m roughness (18.6 s), recorded in
+terrain/lidar_dem_only.json with `status.lidar = "dem_only"`; no DSM, canopy height, multi-return or crowns, so the crowns
+step skips as before, the inpaint step now skips too (the client draws the imagery where there is no ground texture),
+the vegetation places trees from the cell mix, and the ground step's lidar term is 1. The vegetation step: LANDFIRE's
+image services (lfps.usgs.gov, LF2025 and LF2024 alike, EVT, EVC and EVH, for every bbox tried including the home tile
+that built two days ago; only LF2016 BPS answers) returned a 130-byte JSON error ({"error":{"code":400,...,"General
+function failure"}}) under an image/tiff content-type, which `http.download` cached as the raster, so every rerun read
+the same bad file. `download` now sniffs a small body that starts with "{" or "<" and refuses it; `fetch_vegetation._export`
+tries four times 45 s apart, deletes a bad cache file between tries, and fails with the service's words. The WCS
+endpoint of the service is not enabled and no 2024 class table is published, so there is no fallback source; the build is
+retried every 15 minutes while the service is down. Known: a build run writes the manifest after each step from the copy
+it loaded, so two runs on one tile at once lose each other's layers (the lidar step is cheap to rerun from its cache).

@@ -6,6 +6,7 @@ from __future__ import annotations
 
 import csv
 import io
+import time
 
 import numpy as np
 import rasterio
@@ -43,15 +44,31 @@ def _table(name: str) -> dict[int, dict]:
     return {int(r["VALUE"]): r for r in rows}
 
 
+EXPORT_TRIES, EXPORT_WAIT_S = 4, 45   # the LANDFIRE image services fail in runs ("General function failure"); wait and try again
+
+
 def _export(tile: Tile, name: str, n: int, force=False) -> np.ndarray:
     x0, y0, x1, y1 = tile.bounds
     raw = tile.path(f"_cache/landfire_{name}.tif")
-    download(PRODUCTS[name][0] + "/exportImage", {
-        "bbox": f"{x0},{y0},{x1},{y1}", "bboxSR": tile.epsg, "imageSR": tile.epsg,
-        "size": f"{n},{n}", "format": "tiff", "pixelType": "S16", "noData": NODATA,
-        "interpolation": "RSP_NearestNeighbor", "f": "image"}, raw, force=force)
-    with rasterio.open(raw) as src:
-        return src.read(1).astype("int16")
+    # 2026-10-27: the service answered every export with a JSON error under an image content-type for hours (every
+    # tile, every year's service); http.download now refuses such a body, and this tries a few times with a wait.
+    last = None
+    for attempt in range(EXPORT_TRIES):
+        try:
+            download(PRODUCTS[name][0] + "/exportImage", {
+                "bbox": f"{x0},{y0},{x1},{y1}", "bboxSR": tile.epsg, "imageSR": tile.epsg,
+                "size": f"{n},{n}", "format": "tiff", "pixelType": "S16", "noData": NODATA,
+                "interpolation": "RSP_NearestNeighbor", "f": "image"}, raw, force=force)
+            with rasterio.open(raw) as src:
+                return src.read(1).astype("int16")
+        except Exception as e:  # noqa: BLE001
+            last = e
+            if raw.exists():
+                raw.unlink()   # never keep a bad answer as the raster
+            print(f"[landfire] {name} export failed ({attempt + 1}/{EXPORT_TRIES}): {str(e)[:160]}", flush=True)
+            if attempt + 1 < EXPORT_TRIES:
+                time.sleep(EXPORT_WAIT_S)
+    raise RuntimeError(f"LANDFIRE {name} export failed after {EXPORT_TRIES} tries: {last}")
 
 
 def _write(tile: Tile, rel: str, arr: np.ndarray, n: int, dtype: str, nodata) -> None:

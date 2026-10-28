@@ -155,6 +155,10 @@ def find_dem_project(tile: Tile, cache: Path) -> dict:
     return out
 
 
+class NoPointCloud(RuntimeError):
+    """The 1 m collection has no Entwine point cloud in the public bucket (lidar.py then builds DEM-only products)."""
+
+
 def _stem(project: str) -> str:
     """CA_SierraNevada_B22 -> ca_sierranevada; CA_UpperSouthAmerican_Eldorado_2019_B19 -> ..._eldorado."""
     parts = [x for x in project.split("_") if not re.fullmatch(r"([A-Z]\d{2}|\d{4}|\d{1,2}|QL\d|B\d+[a-z]?)", x)]
@@ -192,7 +196,7 @@ def find_ept(tile: Tile, dem_project: str, cache: Path) -> dict:
                      "data_type": e["dataType"], "srs": e.get("srs", {}).get("horizontal"),
                      "schema": [d["name"] for d in e["schema"]], "url": f"{EPT_BUCKET}/{n}/ept.json"})
     if not hits:
-        raise RuntimeError(f"no EPT project matching {dem_project} (stem {stem}) overlaps {tile.tile_id}")
+        raise NoPointCloud(f"no EPT project matching {dem_project} (stem {stem}) overlaps {tile.tile_id}")
     out = {"dem_project": dem_project, "stem": stem, "candidates": cands, "chosen": hits[0], "overlapping": hits}
     write_json(p, out)
     return out

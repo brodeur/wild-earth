@@ -51,8 +51,18 @@ def download(url: str, params, dest: Path, *, force=False) -> Path:
     if "json" in ctype or "html" in ctype:
         raise RuntimeError(f"expected binary from {url}, got {ctype}: {r.text[:300]}")
     tmp = dest.with_suffix(dest.suffix + ".part")
+    head = b""
     with open(tmp, "wb") as f:
         for chunk in r.iter_content(1 << 20):
+            if not head:
+                head = chunk[:64]
             f.write(chunk)
+    # An ArcGIS ImageServer answers a failed exportImage with a JSON error under an image content-type
+    # (2026-10-27: LANDFIRE's "General function failure", 130 bytes of {"error":...} as image/tiff), which must
+    # not be cached as the raster: sniff the body.
+    if tmp.stat().st_size < 4096 and head.lstrip()[:1] in (b"{", b"<"):
+        body = tmp.read_bytes()[:300]
+        tmp.unlink()
+        raise RuntimeError(f"expected binary from {url}, got an error body: {body!r}")
     tmp.rename(dest)
     return dest

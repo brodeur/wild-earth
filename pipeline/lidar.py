@@ -756,12 +756,56 @@ def layers(tile: Tile, dem_info: dict, stats: dict) -> dict:
     return L
 
 
+# DEM-only (2026-10-27, Yosemite: the 2019 collection's 1 m DEM is published but its point cloud is not in the public
+# Entwine bucket): the products the 1 m DEM alone gives, the terrain detail and the roughness; no DSM, canopy or crowns
+# (the crowns and inpaint steps skip, the vegetation uses the cell mix, the client draws the imagery). The build records
+# status.lidar = "dem_only". Stats in terrain/lidar_dem_only.json; terrain/lidar_stats.json stays absent.
+def build_dem_only(tile: Tile, dem_info: dict, force=False) -> dict:
+    p = tile.dir / "terrain" / "lidar_dem_only.json"
+    if force or not p.exists():
+        t0 = time.time()
+        dem = _read(tile.path("terrain/dem_1m.tif"))
+        stats = {"dem_only": True, "terrain_detail": terrain_detail(tile, dem), "roughness": roughness(tile, dem)}
+        log(f"dem-only products: terrain detail {stats['terrain_detail']}; roughness {stats['roughness']}")
+        stats["products_seconds"] = round(time.time() - t0, 1)
+        write_json(p, stats)
+    stats = read_json(p)
+    from .fetch_lidar import dem_tile_name
+    grid = {"crs": tile.crs, "bounds": list(tile.bounds)}
+    L = {
+        "terrain.dem_1m": dem_info,
+        "client.terrain_detail": {"path": "client/terrain_detail.png", "kind": "raster", **grid, "pixels": N1 // DETAIL_RES,
+                                  "resolution_m": float(DETAIL_RES),
+                                  "encoding": "8-bit grey, row 0 north, pixel centres at x = 2i + 1, north = 10000 - (2j + 1): "
+                                              "residual m = (v - 128) * 0.04 (clamped +-5.08 m) = the 1 m DEM averaged to 2 m minus "
+                                              "client.heights decoded and interpolated bilinearly between ITS pixel centres "
+                                              "(x = 5i + 2.5, north = 10000 - 5j - 2.5). Linear, so texture filtering interpolates it",
+                                  "source": "usgs_3dep_1m", "derived_from": ["terrain.dem_1m", "client.heights"],
+                                  "stats": stats["terrain_detail"]},
+        "terrain.roughness": {"path": "terrain/roughness_10m.tif", "kind": "raster", **grid, "pixels": N1 // ROUGH_RES,
+                              "resolution_m": float(ROUGH_RES), "units": "m", "nodata": NODATA,
+                              "encoding": "float32: std of the 1 m DEM about its least-squares quadratic within the 10 m cell",
+                              "source": "usgs_3dep_1m", "derived_from": ["terrain.dem_1m"], "stats": stats["roughness"]},
+    }
+    L["terrain.dem_1m"]["tile_key"] = dem_tile_name(tile)
+    L["terrain.dem_1m"]["point_cloud"] = "none in the public Entwine bucket (DEM-only products)"
+    return L
+
+
 def build_lidar(tile: Tile, force=False, workers=10, max_depth=None, stage="all") -> dict:
-    """The build step: returns manifest layers. Stages already done are not redone (force redoes them)."""
+    """The build step: returns manifest layers. Stages already done are not redone (force redoes them). Without a
+    point cloud for the collection (fetch_lidar.NoPointCloud) the DEM-only products (build_dem_only)."""
+    from .fetch_lidar import NoPointCloud
     dem_info = build_dem_1m(tile, force)
     stats_p = tile.dir / "terrain" / "lidar_stats.json"
+    if (tile.dir / "terrain" / "lidar_dem_only.json").exists() and not force and not stats_p.exists():
+        return build_dem_only(tile, dem_info, force)
     if stage in ("all", "grid") and (force or not stats_p.exists()):
-        build_grid(tile, workers, max_depth, force)
+        try:
+            build_grid(tile, workers, max_depth, force)
+        except NoPointCloud as e:
+            log(f"no point cloud: {e}")
+            return build_dem_only(tile, dem_info, force)
     if stage == "grid":
         return {}
     if force or not stats_p.exists():
