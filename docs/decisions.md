@@ -1443,3 +1443,26 @@ product added and rounded to float32 as the attribute array rounded it, then nor
 (587 ms for the whole tile). The rebuild caches the vertices it touches on its job (`J.normals`); a 220 m square's band
 takes about 4,400 fine vertices from a few hundred chunk vertices, 5 ms over 4 frames, as before. Rejected: a compact
 copy (an Int16 copy halves it but changes the band's normals in the last bit; an exact recompute costs nothing visible).
+
+## 2026-10-27: the HUD behind a hamburger, a nearby-animals bar, and souls by rarity
+
+Aaron: the HUD behind a small hamburger menu top left that becomes an X when everything is open; in spirit form the
+animals nearby at the bottom of the screen, small, about an action bar, with a count pill (white, dark text) and a disc
+shadow under each to stand on at about .4 opacity; the spirits' colours by rarity, purple for the most abundant species
+to red for the rarest; then: a wider faint bubble round every creature's soul, the abundant dimmer, the rare brighter.
+The menu (index.html `#menuBtn`, main.js): closed on load, so the readouts, the key line and the controls panel are
+hidden (opacity and visibility, so their layout still measures) and the HUD moved down under the button; a click sets
+`html.menu` (the three bars turn into an X by CSS) and shows all three; hidden behind the opening screen. The bar
+(nearBar.js, `#nearBar`): the species within NEAR_R of the spirit, the counts `animals.describe` already fills for the
+HUD's line, one slot each with the start screen's still (assets/opening, fitted to a 58 x 50 px slot rather than to
+scale), a black disc at .4 under its feet and the count pill top right; the slots are ordered by rarity, abundant left,
+rare right; rebuilt only when the set or a count changes; hidden in a body (onBody) and after a world is torn down. The
+souls (spirit.js glow): rarity per species (animals.js `rarity`, 0 to 1 by rank of the tile's GBIF occurrence_count in
+species/species.json, unlisted species and ties by the game's density k, evenly spaced), `rarityColor` a hue from 275
+(purple) to 0 (red) through blue, green and yellow at HSL .85 / .62; each glow quad carries its species' colour and a
+brightness from 0.55 for the most abundant to 1.4 for the rarest; the quad is 2.4 times the core and a faint bubble
+(0.09 of the core's peak, a wide gaussian fading out at the quad's edge) surrounds it; the instance cap went from 256
+to 1024 since every animal present gets one (the far ones leave the vertex shader off screen). Verified on the home
+tile as a spirit near a jackrabbit: the menu opens and closes, the HUD at 54 px under the button; the bar shows nine
+species with pills and discs; the jackrabbit's soul yellow-green. Known: with the menu open the key line runs under the
+bar at the bottom; the stills are side views at one size, so a vole and a deer are the same height in the bar.

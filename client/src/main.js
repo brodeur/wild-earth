@@ -11,6 +11,7 @@ import { Grass } from './grass.js';
 import { MiniMap } from './minimap.js';
 import { RoadsOverlay } from './roadsOverlay.js';
 import { setupGoTo, urlPoint, builtTileFor, localXY } from './goto.js';
+import { NearBar } from './nearBar.js';
 import { OpeningScreen, Arrival, lastTile, rememberTile } from './arrival.js';
 import { SEASON_LOOK, seasonOfDate, sunDirection, dateForSeason, parseDate } from './season.js';
 import { AcornGame } from './acorns.js';
@@ -141,6 +142,7 @@ function restoreHud() {
   if ($('help') && hudWords.help != null) $('help').innerHTML = hudWords.help;
   if (near) near.title = hudWords.near ?? '';
   if ($('credits') && hudWords.credits != null) $('credits').innerHTML = hudWords.credits;
+  if ($('nearBar')) $('nearBar').hidden = true;   // the bar's slots went with the world's nodes; the bar itself waits for the next spirit
 }
 function closeBitmaps(tile) {
   for (const im of [tile?.textureImage, tile?.imageryTextureImage, tile?.groundTextureImage, tile?.seasonImage, tile?.imagery]) if (im?.bitmap) { im.bitmap.close(); delete im.bitmap; }
@@ -264,6 +266,9 @@ async function main() {
     current: () => (world?.tile && world.m.flight ? { tile: world.tile, flight: world.m.flight, ready: world.ready } : null),
     switchTile: (id, p) => { switchWorld(id, p, params); } });
   if (pending) $('gotoInput').value = `${pending.lat}, ${pending.lon}`;
+  // The menu (owner, 2026-10-27): the HUD, the help line and the panel live behind the hamburger top left (index.html
+  // #menuBtn, html.menu); open, it is an X. Closed on load.
+  $('menuBtn').onclick = () => { const on = html.classList.toggle('menu'); $('menuBtn').setAttribute('aria-expanded', String(on)); renderer.domElement.focus?.(); };
   // The lens: ?fov=<degrees, vertical> (30..110, default LENS_DEFAULT). 70 shows about 103 degrees across a widescreen,
   // a wide-angle lens; the view is undistorted only when it matches the angle the screen fills in the eye, about
   // 45-50 degrees across at a desk (under 30 vertical), so a narrower lens makes the hills loom as they do in life
@@ -491,10 +496,11 @@ async function buildSteps(w, { params, pending, direct = false, arrive = null })
   const flier = new FlierControl({ scene, camera, flight, raven, animals, atmosphere });
   // The spirit (spirit.js): the form the player arrives in; touching an animal puts the player in that body (onBody:
   // the observer, the perception line, the panel's way back), B or the panel button leaves it.
+  const nearBar = w.m.nearBar = new NearBar({ el: $('nearBar'), animals });   // the species within reach, in spirit form (nearBar.js)
   const onBody = (code, sex = null) => {
     window.__we.playerSpecies = code; window.__we.playerSex = sex;
     animals.setObserver(code); showPerceives(code);
-    $('spiritBtn').hidden = code === 'spirit';
+    $('spiritBtn').hidden = code === 'spirit'; $('nearBar').hidden = code !== 'spirit';
   };
   const spirit = w.m.spirit = new SpiritControl({ scene, renderer, camera, flight, raven, animals, squirrel, woodpecker, ground, flier, atmosphere, onBody });
   $('spiritBtn').onclick = () => { spirit.leave(); renderer.domElement.focus?.(); };
@@ -786,6 +792,7 @@ async function buildSteps(w, { params, pending, direct = false, arrive = null })
       const wd = weather.describe(), wb = $('weatherNow');
       if (wd) { const i = document.createElement('i'); i.textContent = ` · ${wd.note}`; wb.replaceChildren(wd.text, i); } else wb.textContent = '–';
       $('animalsNear').textContent = animals.describe(now);
+      nearBar.update(animals.counts, spirit.on);
       $('over').textContent = where.text; minimap.place = where.place;
       layoutHud();
       const h = Math.floor(state.hour), mnt = Math.round((state.hour - h) * 60); $('timeLabel').textContent = `${h}:${String(mnt).padStart(2, '0')} · sun ${(sun.elevation * 180 / Math.PI).toFixed(0)}°`;
