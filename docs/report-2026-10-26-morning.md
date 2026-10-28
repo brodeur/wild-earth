@@ -166,6 +166,7 @@ release, WebGL) was still running; its commit, if it verified, is the last in `g
 | 103c3e4 | The HUD, key line and panel sit behind a hamburger top left that becomes an X; in spirit form a nearby-animals bar at the bottom: stills on disc shadows with white count pills, ordered by rarity. |
 | 8f998a0 | The bar lost its box, the map moved to the top right with the panel under it, rare souls reach across the whole live population and grow with rarity, and mountain lions carry a test beacon: a 90 m beam of light seen through the hills. |
 | ef24ad6 | The bar's discs glow in each species' soul colour, purple to red along the row, instead of a black shadow. |
+| 2f9474e | The tree and plant labels show only while the menu is open; the animals' tags are unchanged. |
 
 Open from the day: the attribution form for generated assets; far placement on the lidar ground beyond the fine square; the squirrel's
 crown camera in leafy oaks.
