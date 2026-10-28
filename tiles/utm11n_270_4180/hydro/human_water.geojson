@@ -1,0 +1,1274 @@
+{
+ "type": "FeatureCollection",
+ "breach_max_m": 300.0,
+ "features": [
+  {
+   "type": "Feature",
+   "geometry": {
+    "type": "Polygon",
+    "coordinates": [
+     [
+      [
+       -119.598,
+       37.74430699999999
+      ],
+      [
+       -119.59790299999999,
+       37.74434
+      ],
+      [
+       -119.597799,
+       37.74421399999999
+      ],
+      [
+       -119.59807600000002,
+       37.74407099999999
+      ],
+      [
+       -119.598187,
+       37.74419799999999
+      ],
+      [
+       -119.598,
+       37.74430699999999
+      ]
+     ]
+    ]
+   },
+   "properties": {
+    "id": "nhd:66491037",
+    "nhd_id": "66491037",
+    "name": null,
+    "source": "nhd",
+    "fcode": 39004,
+    "ftype": 390,
+    "evidence": {
+     "area_m2": 518.8,
+     "level_m": 1212.02,
+     "outlet": [
+      1101.9,
+      608.0
+     ],
+     "drop_below_m": 1.79,
+     "crest_above_m": 0.18,
+     "edge_len_m": 25.8,
+     "edge_rms": 0.095,
+     "dam_evidence": true
+    },
+    "reasons": [
+     "stock pond: 0.05 ha off the routed network (a hillside tank fed by a swale under 0.15 km2), straight 26 m downstream edge, ground 1.8 m below the water within 45 m of it, crest +0.2 m"
+    ],
+    "kind": "stock_pond",
+    "carve": null,
+    "breach": {
+     "breaches": 0,
+     "unbreached": 0,
+     "breach_length_m": 0.0,
+     "breach_max_cut_m": 0.0,
+     "held_on_thalweg_m": null,
+     "thalweg_held_fraction": null,
+     "bed_held_fraction": 0.0,
+     "bed_held_max_m": 0.02,
+     "cells": 21
+    },
+    "rewilded": true,
+    "area_m2": 518.8
+   }
+  },
+  {
+   "type": "Feature",
+   "geometry": {
+    "type": "Polygon",
+    "coordinates": [
+     [
+      [
+       -119.56779799999998,
+       37.821846
+      ],
+      [
+       -119.56770799999998,
+       37.821918
+      ],
+      [
+       -119.567645,
+       37.821841
+      ],
+      [
+       -119.56761100000001,
+       37.821763999999995
+      ],
+      [
+       -119.567645,
+       37.82161599999999
+      ],
+      [
+       -119.567652,
+       37.821527999999994
+      ],
+      [
+       -119.567742,
+       37.821413
+      ],
+      [
+       -119.567943,
+       37.82138
+      ],
+      [
+       -119.56800499999999,
+       37.821439999999996
+      ],
+      [
+       -119.567964,
+       37.821594000000005
+      ],
+      [
+       -119.56792899999999,
+       37.821649
+      ],
+      [
+       -119.56779799999998,
+       37.821846
+      ]
+     ]
+    ]
+   },
+   "properties": {
+    "id": "nhd:66490845",
+    "nhd_id": "66490845",
+    "name": null,
+    "source": "nhd",
+    "fcode": 39004,
+    "ftype": 390,
+    "evidence": {
+     "area_m2": 1251.6,
+     "level_m": 2507.59,
+     "outlet": [
+      3994.6,
+      9107.3
+     ],
+     "drop_below_m": 15.72,
+     "crest_above_m": 0.22,
+     "edge_len_m": 25.8,
+     "edge_rms": 0.064,
+     "dam_evidence": true
+    },
+    "reasons": [
+     "stock pond: 0.13 ha off the routed network (a hillside tank fed by a swale under 0.15 km2), straight 26 m downstream edge, ground 15.7 m below the water within 45 m of it, crest +0.2 m"
+    ],
+    "kind": "stock_pond",
+    "carve": null,
+    "breach": {
+     "breaches": 0,
+     "unbreached": 0,
+     "breach_length_m": 0.0,
+     "breach_max_cut_m": 0.0,
+     "held_on_thalweg_m": null,
+     "thalweg_held_fraction": null,
+     "bed_held_fraction": 0.24,
+     "bed_held_max_m": 0.43,
+     "cells": 50
+    },
+    "rewilded": true,
+    "area_m2": 1251.6
+   }
+  },
+  {
+   "type": "Feature",
+   "geometry": {
+    "type": "Polygon",
+    "coordinates": [
+     [
+      [
+       -119.599024,
+       37.744576
+      ],
+      [
+       -119.59897500000001,
+       37.74462
+      ],
+      [
+       -119.598865,
+       37.74467
+      ],
+      [
+       -119.598768,
+       37.744686
+      ],
+      [
+       -119.598685,
+       37.74461499999999
+      ],
+      [
+       -119.598733,
+       37.74452699999999
+      ],
+      [
+       -119.598775,
+       37.744499
+      ],
+      [
+       -119.598933,
+       37.744357
+      ],
+      [
+       -119.59902299999999,
+       37.744362
+      ],
+      [
+       -119.599058,
+       37.744428
+      ],
+      [
+       -119.599024,
+       37.744576
+      ]
+     ]
+    ]
+   },
+   "properties": {
+    "id": "nhd:66491031",
+    "nhd_id": "66491031",
+    "name": null,
+    "source": "nhd",
+    "fcode": 39004,
+    "ftype": 390,
+    "evidence": {
+     "area_m2": 727.4,
+     "level_m": 1213.09,
+     "outlet": [
+      1021.0,
+      642.6
+     ],
+     "drop_below_m": 1.44,
+     "crest_above_m": 0.76,
+     "edge_len_m": 28.9,
+     "edge_rms": 0.006,
+     "dam_evidence": false
+    },
+    "kind": "natural",
+    "reasons": [
+     "no routed channel through it and no human tag: a natural pond or swale"
+    ],
+    "rewilded": false,
+    "area_m2": 727.4
+   }
+  },
+  {
+   "type": "Feature",
+   "geometry": {
+    "type": "Polygon",
+    "coordinates": [
+     [
+      [
+       -119.50997200000002,
+       37.815022
+      ],
+      [
+       -119.50966700000001,
+       37.81532899999999
+      ],
+      [
+       -119.509674,
+       37.815471999999986
+      ],
+      [
+       -119.50975,
+       37.815768999999996
+      ],
+      [
+       -119.509701,
+       37.815972
+      ],
+      [
+       -119.50954900000002,
+       37.816208
+      ],
+      [
+       -119.50941,
+       37.816301
+      ],
+      [
+       -119.50927099999998,
+       37.81633899999999
+      ],
+      [
+       -119.50914,
+       37.816339
+      ],
+      [
+       -119.50897399999998,
+       37.816279
+      ],
+      [
+       -119.508746,
+       37.81609199999998
+      ],
+      [
+       -119.50860700000001,
+       37.81582800000001
+      ],
+      [
+       -119.508476,
+       37.81545499999999
+      ],
+      [
+       -119.50842100000001,
+       37.81507100000001
+      ],
+      [
+       -119.508483,
+       37.814851
+      ],
+      [
+       -119.50861500000002,
+       37.814725
+      ],
+      [
+       -119.50896100000001,
+       37.814632
+      ],
+      [
+       -119.50937,
+       37.814614999999996
+      ],
+      [
+       -119.509723,
+       37.814686999999985
+      ],
+      [
+       -119.50995800000001,
+       37.814786
+      ],
+      [
+       -119.50997900000002,
+       37.814917
+      ],
+      [
+       -119.50997200000002,
+       37.815022
+      ]
+     ]
+    ]
+   },
+   "properties": {
+    "id": "nhd:66490881",
+    "nhd_id": "66490881",
+    "name": null,
+    "source": "nhd",
+    "fcode": 39004,
+    "ftype": 390,
+    "evidence": {
+     "area_m2": 19049.2,
+     "osm": [
+      {
+       "natural": "water",
+       "osm_id": "way/170521784"
+      }
+     ],
+     "level_m": 2557.69,
+     "channel_area_km2": 0.317,
+     "channel_fcode": 46007,
+     "channel_name": null,
+     "outlet": [
+      9073.7,
+      8275.0
+     ],
+     "drop_below_m": 0.35,
+     "crest_above_m": 0.47,
+     "edge_len_m": 92.9,
+     "edge_rms": 0.055,
+     "dam_evidence": false
+    },
+    "kind": "natural",
+    "reasons": [
+     "on a routed channel but no dam (no straight downstream edge with a drop or rim)"
+    ],
+    "rewilded": false,
+    "area_m2": 19049.2
+   }
+  },
+  {
+   "type": "Feature",
+   "geometry": {
+    "type": "Polygon",
+    "coordinates": [
+     [
+      [
+       -119.568386,
+       37.82352100000001
+      ],
+      [
+       -119.56835200000002,
+       37.823362
+      ],
+      [
+       -119.56851800000001,
+       37.82336699999999
+      ],
+      [
+       -119.56865599999999,
+       37.823388999999985
+      ],
+      [
+       -119.56871800000002,
+       37.823428
+      ],
+      [
+       -119.568642,
+       37.823646999999994
+      ],
+      [
+       -119.568511,
+       37.82374600000001
+      ],
+      [
+       -119.568386,
+       37.82352100000001
+      ]
+     ]
+    ]
+   },
+   "properties": {
+    "id": "nhd:66490839",
+    "nhd_id": "66490839",
+    "name": null,
+    "source": "nhd",
+    "fcode": 39004,
+    "ftype": 390,
+    "evidence": {
+     "area_m2": 863.2,
+     "level_m": 2510.92,
+     "outlet": [
+      3946.8,
+      9325.1
+     ],
+     "drop_below_m": 1.74,
+     "crest_above_m": 1.13,
+     "edge_len_m": 18.5,
+     "edge_rms": 0.184,
+     "dam_evidence": false
+    },
+    "kind": "natural",
+    "reasons": [
+     "no routed channel through it and no human tag: a natural pond or swale"
+    ],
+    "rewilded": false,
+    "area_m2": 863.2
+   }
+  },
+  {
+   "type": "Feature",
+   "geometry": {
+    "type": "Polygon",
+    "coordinates": [
+     [
+      [
+       -119.54929600000001,
+       37.747829
+      ],
+      [
+       -119.54930299999998,
+       37.74764199999999
+      ],
+      [
+       -119.54933799999999,
+       37.747543
+      ],
+      [
+       -119.54940700000002,
+       37.747505000000004
+      ],
+      [
+       -119.549531,
+       37.747488
+      ],
+      [
+       -119.549538,
+       37.747538
+      ],
+      [
+       -119.54951799999999,
+       37.747653
+      ],
+      [
+       -119.549448,
+       37.74781800000001
+      ],
+      [
+       -119.549352,
+       37.747911
+      ],
+      [
+       -119.54929600000001,
+       37.747829
+      ]
+     ]
+    ]
+   },
+   "properties": {
+    "id": "nhd:66491059",
+    "nhd_id": "66491059",
+    "name": "Mirror Lake",
+    "source": "nhd",
+    "fcode": 39004,
+    "ftype": 390,
+    "evidence": {
+     "area_m2": 664.6,
+     "osm": [
+      {
+       "natural": "water",
+       "water": "lake",
+       "name": "Mirror Lake",
+       "osm_id": "way/62002226"
+      }
+     ],
+     "level_m": 1244.18,
+     "channel_area_km2": 113.078,
+     "channel_fcode": 46006,
+     "channel_name": "Tenaya Creek",
+     "outlet": [
+      5373.6,
+      863.7
+     ],
+     "drop_below_m": 2.22,
+     "crest_above_m": 1.81,
+     "edge_len_m": 19.1,
+     "edge_rms": 0.206,
+     "dam_evidence": false
+    },
+    "kind": "natural",
+    "reasons": [
+     "wide spot of a creek: on a channel draining 113.1 km2 with no dam"
+    ],
+    "rewilded": false,
+    "area_m2": 664.6
+   }
+  },
+  {
+   "type": "Feature",
+   "geometry": {
+    "type": "Polygon",
+    "coordinates": [
+     [
+      [
+       -119.57399099999999,
+       37.747114
+      ],
+      [
+       -119.57383200000001,
+       37.747074999999995
+      ],
+      [
+       -119.573798,
+       37.74702
+      ],
+      [
+       -119.573805,
+       37.74697700000001
+      ],
+      [
+       -119.573902,
+       37.746927
+      ],
+      [
+       -119.57401200000001,
+       37.746944
+      ],
+      [
+       -119.574068,
+       37.747009
+      ],
+      [
+       -119.574074,
+       37.74705900000001
+      ],
+      [
+       -119.57399099999999,
+       37.747114
+      ]
+     ]
+    ]
+   },
+   "properties": {
+    "id": "nhd:66491045",
+    "nhd_id": "66491045",
+    "name": null,
+    "source": "nhd",
+    "fcode": 39004,
+    "ftype": 390,
+    "evidence": {
+     "area_m2": 359.1,
+     "osm": [
+      {
+       "natural": "water",
+       "water": "pond",
+       "osm_id": "way/1084083692"
+      }
+     ],
+     "level_m": 1213.14,
+     "outlet": [
+      3215.0,
+      858.2
+     ],
+     "drop_below_m": 0.42,
+     "crest_above_m": 0.61,
+     "edge_len_m": 23.2,
+     "edge_rms": 0.123,
+     "dam_evidence": false
+    },
+    "kind": "natural",
+    "reasons": [
+     "no routed channel through it and no human tag: a natural pond or swale"
+    ],
+    "rewilded": false,
+    "area_m2": 359.1
+   }
+  },
+  {
+   "type": "Feature",
+   "geometry": {
+    "type": "Polygon",
+    "coordinates": [
+     [
+      [
+       -119.61097800000002,
+       37.760947
+      ],
+      [
+       -119.61097800000002,
+       37.760793
+      ],
+      [
+       -119.61098258926658,
+       37.76079203115868
+      ],
+      [
+       -119.61099252022701,
+       37.76107436352551
+      ],
+      [
+       -119.61097800000002,
+       37.760947
+      ]
+     ]
+    ]
+   },
+   "properties": {
+    "id": "nhd:66492577",
+    "nhd_id": "66492577",
+    "name": null,
+    "source": "nhd",
+    "fcode": 46600,
+    "ftype": 466,
+    "evidence": {
+     "area_m2": 17.3,
+     "level_m": 2174.38,
+     "outlet": [
+      0.0,
+      2485.4
+     ],
+     "drop_below_m": 0.94,
+     "crest_above_m": 1.61,
+     "edge_len_m": 14.2,
+     "edge_rms": 0.022,
+     "dam_evidence": false
+    },
+    "kind": "natural",
+    "reasons": [
+     "no routed channel through it and no human tag: a natural pond or swale"
+    ],
+    "rewilded": false,
+    "area_m2": 17.3
+   }
+  },
+  {
+   "type": "Feature",
+   "geometry": {
+    "type": "Polygon",
+    "coordinates": [
+     [
+      [
+       -119.54886099999999,
+       37.748564
+      ],
+      [
+       -119.548826,
+       37.748674
+      ],
+      [
+       -119.548792,
+       37.74872400000001
+      ],
+      [
+       -119.548736,
+       37.74872899999999
+      ],
+      [
+       -119.54868099999999,
+       37.748685
+      ],
+      [
+       -119.54868099999999,
+       37.748574999999995
+      ],
+      [
+       -119.548736,
+       37.748471
+      ],
+      [
+       -119.548798,
+       37.748405
+      ],
+      [
+       -119.54886099999999,
+       37.74847700000001
+      ],
+      [
+       -119.54886099999999,
+       37.748564
+      ]
+     ]
+    ]
+   },
+   "properties": {
+    "id": "nhd:66491055",
+    "nhd_id": "66491055",
+    "name": "Mirror Lake",
+    "source": "nhd",
+    "fcode": 39004,
+    "ftype": 390,
+    "evidence": {
+     "area_m2": 404.1,
+     "level_m": 1245.72,
+     "channel_area_km2": 0.469,
+     "channel_fcode": 46007,
+     "channel_name": null,
+     "outlet": [
+      5439.0,
+      962.9
+     ],
+     "drop_below_m": 0.8,
+     "crest_above_m": 0.42,
+     "edge_len_m": 16.6,
+     "edge_rms": 0.257,
+     "dam_evidence": false
+    },
+    "kind": "natural",
+    "reasons": [
+     "on a routed channel but no dam (no straight downstream edge with a drop or rim)"
+    ],
+    "rewilded": false,
+    "area_m2": 404.1
+   }
+  },
+  {
+   "type": "Feature",
+   "geometry": {
+    "type": "Polygon",
+    "coordinates": [
+     [
+      [
+       -119.568116,
+       37.824235
+      ],
+      [
+       -119.56797100000001,
+       37.824361
+      ],
+      [
+       -119.568047,
+       37.824801
+      ],
+      [
+       -119.56797799999998,
+       37.824954
+      ],
+      [
+       -119.567895,
+       37.825047000000005
+      ],
+      [
+       -119.567784,
+       37.82503700000001
+      ],
+      [
+       -119.567549,
+       37.824998
+      ],
+      [
+       -119.567216,
+       37.82478400000001
+      ],
+      [
+       -119.56718199999999,
+       37.82473499999999
+      ],
+      [
+       -119.567209,
+       37.824444
+      ],
+      [
+       -119.567258,
+       37.824283999999984
+      ],
+      [
+       -119.56752100000001,
+       37.82413600000001
+      ],
+      [
+       -119.56763199999999,
+       37.824043
+      ],
+      [
+       -119.56770799999998,
+       37.823944000000004
+      ],
+      [
+       -119.56781200000002,
+       37.823873
+      ],
+      [
+       -119.56790200000002,
+       37.823867
+      ],
+      [
+       -119.56817899999999,
+       37.823999
+      ],
+      [
+       -119.56827499999999,
+       37.824081
+      ],
+      [
+       -119.568116,
+       37.824235
+      ]
+     ]
+    ]
+   },
+   "properties": {
+    "id": "nhd:66490835",
+    "nhd_id": "66490835",
+    "name": null,
+    "source": "nhd",
+    "fcode": 39004,
+    "ftype": 390,
+    "evidence": {
+     "area_m2": 7650.8,
+     "level_m": 2511.37,
+     "channel_area_km2": 0.265,
+     "channel_fcode": 46006,
+     "channel_name": null,
+     "outlet": [
+      3995.1,
+      9380.5
+     ],
+     "drop_below_m": 0.78,
+     "crest_above_m": 0.58,
+     "edge_len_m": 49.3,
+     "edge_rms": 0.115,
+     "dam_evidence": false
+    },
+    "kind": "natural",
+    "reasons": [
+     "on a routed channel but no dam (no straight downstream edge with a drop or rim)"
+    ],
+    "rewilded": false,
+    "area_m2": 7650.8
+   }
+  },
+  {
+   "type": "Feature",
+   "geometry": {
+    "type": "Polygon",
+    "coordinates": [
+     [
+      [
+       -119.58150000000002,
+       37.74387800000001
+      ],
+      [
+       -119.581618,
+       37.74390600000001
+      ],
+      [
+       -119.581784,
+       37.74401
+      ],
+      [
+       -119.582054,
+       37.74414199999999
+      ],
+      [
+       -119.582067,
+       37.744218999999994
+      ],
+      [
+       -119.581978,
+       37.744263000000004
+      ],
+      [
+       -119.581673,
+       37.744296
+      ],
+      [
+       -119.58145900000001,
+       37.744355999999996
+      ],
+      [
+       -119.58118899999998,
+       37.744285
+      ],
+      [
+       -119.58090600000001,
+       37.744212999999995
+      ],
+      [
+       -119.58083699999999,
+       37.744164000000005
+      ],
+      [
+       -119.580774,
+       37.74408199999999
+      ],
+      [
+       -119.580733,
+       37.743779999999994
+      ],
+      [
+       -119.58074699999999,
+       37.743669999999995
+      ],
+      [
+       -119.58150000000002,
+       37.74387800000001
+      ]
+     ]
+    ]
+   },
+   "properties": {
+    "id": "nhd:66492591",
+    "nhd_id": "66492591",
+    "name": null,
+    "source": "nhd",
+    "fcode": 46600,
+    "ftype": 466,
+    "evidence": {
+     "area_m2": 5111.5,
+     "level_m": 1206.9,
+     "channel_area_km2": 461.248,
+     "channel_fcode": 46006,
+     "channel_name": "Merced River",
+     "outlet": [
+      2531.9,
+      542.5
+     ],
+     "drop_below_m": 1.05,
+     "crest_above_m": -0.62,
+     "edge_len_m": 48.2,
+     "edge_rms": 0.023,
+     "dam_evidence": false
+    },
+    "kind": "natural",
+    "reasons": [
+     "wide spot of a creek: on a channel draining 461.2 km2 with no dam"
+    ],
+    "rewilded": false,
+    "area_m2": 5111.5
+   }
+  },
+  {
+   "type": "Feature",
+   "geometry": {
+    "type": "Polygon",
+    "coordinates": [
+     [
+      [
+       -119.568234,
+       37.82168200000002
+      ],
+      [
+       -119.56831700000001,
+       37.82169799999999
+      ],
+      [
+       -119.568386,
+       37.821753
+      ],
+      [
+       -119.568441,
+       37.821857
+      ],
+      [
+       -119.568462,
+       37.82198900000001
+      ],
+      [
+       -119.56843400000001,
+       37.822181
+      ],
+      [
+       -119.56834400000001,
+       37.82225799999999
+      ],
+      [
+       -119.568234,
+       37.822264
+      ],
+      [
+       -119.56815100000001,
+       37.822165000000005
+      ],
+      [
+       -119.568081,
+       37.821962000000006
+      ],
+      [
+       -119.568081,
+       37.82172
+      ],
+      [
+       -119.568234,
+       37.82168200000002
+      ]
+     ]
+    ]
+   },
+   "properties": {
+    "id": "nhd:66490841",
+    "nhd_id": "66490841",
+    "name": null,
+    "source": "nhd",
+    "fcode": 39004,
+    "ftype": 390,
+    "evidence": {
+     "area_m2": 1719.3,
+     "level_m": 2507.54,
+     "outlet": [
+      3957.6,
+      9139.9
+     ],
+     "drop_below_m": 0.49,
+     "crest_above_m": 2.22,
+     "edge_len_m": 24.5,
+     "edge_rms": 0.105,
+     "dam_evidence": false
+    },
+    "kind": "natural",
+    "reasons": [
+     "no routed channel through it and no human tag: a natural pond or swale"
+    ],
+    "rewilded": false,
+    "area_m2": 1719.3
+   }
+  },
+  {
+   "type": "Feature",
+   "geometry": {
+    "type": "Polygon",
+    "coordinates": [
+     [
+      [
+       -119.54983600000001,
+       37.747251999999996
+      ],
+      [
+       -119.54988400000002,
+       37.747208
+      ],
+      [
+       -119.550126,
+       37.74716999999999
+      ],
+      [
+       -119.55020900000001,
+       37.74710900000001
+      ],
+      [
+       -119.550292,
+       37.74686200000001
+      ],
+      [
+       -119.550403,
+       37.746779999999994
+      ],
+      [
+       -119.55050699999998,
+       37.746857000000006
+      ],
+      [
+       -119.55052700000002,
+       37.746945
+      ],
+      [
+       -119.550451,
+       37.74720299999999
+      ],
+      [
+       -119.55024400000002,
+       37.74730199999999
+      ],
+      [
+       -119.55004300000002,
+       37.747378000000005
+      ],
+      [
+       -119.549967,
+       37.747384
+      ],
+      [
+       -119.549829,
+       37.74732900000001
+      ],
+      [
+       -119.54983600000001,
+       37.747251999999996
+      ]
+     ]
+    ]
+   },
+   "properties": {
+    "id": "nhd:66491063",
+    "nhd_id": "66491063",
+    "name": "Mirror Lake",
+    "source": "nhd",
+    "fcode": 39004,
+    "ftype": 390,
+    "evidence": {
+     "area_m2": 1721.7,
+     "osm": [
+      {
+       "natural": "water",
+       "water": "lake",
+       "name": "Mirror Lake",
+       "osm_id": "way/62002226"
+      }
+     ],
+     "level_m": 1242.48,
+     "channel_area_km2": 113.078,
+     "channel_fcode": 46006,
+     "channel_name": "Tenaya Creek",
+     "outlet": [
+      5287.3,
+      812.2
+     ],
+     "drop_below_m": 0.9,
+     "crest_above_m": 0.84,
+     "edge_len_m": 28.4,
+     "edge_rms": 0.009,
+     "dam_evidence": false
+    },
+    "kind": "natural",
+    "reasons": [
+     "wide spot of a creek: on a channel draining 113.1 km2 with no dam"
+    ],
+    "rewilded": false,
+    "area_m2": 1721.7
+   }
+  },
+  {
+   "type": "Feature",
+   "geometry": {
+    "type": "Polygon",
+    "coordinates": [
+     [
+      [
+       -119.54995300000002,
+       37.748636
+      ],
+      [
+       -119.55016099999999,
+       37.748477
+      ],
+      [
+       -119.550258,
+       37.748444000000006
+      ],
+      [
+       -119.55033400000002,
+       37.748521000000004
+      ],
+      [
+       -119.55025099999999,
+       37.748658
+      ],
+      [
+       -119.55005000000001,
+       37.748861
+      ],
+      [
+       -119.550007,
+       37.74897
+      ],
+      [
+       -119.54997400000002,
+       37.749052999999996
+      ],
+      [
+       -119.55002300000001,
+       37.74931699999999
+      ],
+      [
+       -119.549988,
+       37.749443
+      ],
+      [
+       -119.54993900000001,
+       37.749476
+      ],
+      [
+       -119.549822,
+       37.749454
+      ],
+      [
+       -119.549725,
+       37.749361
+      ],
+      [
+       -119.54967,
+       37.749151999999995
+      ],
+      [
+       -119.549739,
+       37.74898199999999
+      ],
+      [
+       -119.54995300000002,
+       37.748636
+      ]
+     ]
+    ]
+   },
+   "properties": {
+    "id": "nhd:66491053",
+    "nhd_id": "66491053",
+    "name": null,
+    "source": "nhd",
+    "fcode": 39004,
+    "ftype": 390,
+    "evidence": {
+     "area_m2": 2635.3,
+     "level_m": 1244.99,
+     "channel_area_km2": 0.579,
+     "channel_fcode": 46007,
+     "channel_name": null,
+     "outlet": [
+      5344.3,
+      995.7
+     ],
+     "drop_below_m": 0.38,
+     "crest_above_m": 1.3,
+     "edge_len_m": 35.2,
+     "edge_rms": 0.018,
+     "dam_evidence": false
+    },
+    "kind": "natural",
+    "reasons": [
+     "on a routed channel but no dam (no straight downstream edge with a drop or rim)"
+    ],
+    "rewilded": false,
+    "area_m2": 2635.3
+   }
+  }
+ ]
+}

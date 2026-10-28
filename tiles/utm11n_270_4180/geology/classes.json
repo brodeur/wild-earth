@@ -1,0 +1,265 @@
+{
+ "rock_classes": [
+  "greenstone_metavolcanic",
+  "serpentinite",
+  "slate_phyllite",
+  "schist",
+  "granitic",
+  "volcanic",
+  "sandstone_conglomerate",
+  "limestone_marble",
+  "alluvium",
+  "other"
+ ],
+ "resistance": {
+  "greenstone_metavolcanic": 0.9,
+  "granitic": 0.8,
+  "serpentinite": 0.8,
+  "schist": 0.6,
+  "slate_phyllite": 0.6,
+  "volcanic": 0.7,
+  "sandstone_conglomerate": 0.4,
+  "limestone_marble": 0.7,
+  "alluvium": 0.0,
+  "other": 0.4
+ },
+ "units": {
+  "1": {
+   "name": "Sentinel Granodiorite",
+   "lithology": "",
+   "age": "Late Cretaceous",
+   "age_bottom_ma": 100.5,
+   "age_top_ma": 66,
+   "rock_class": "granitic",
+   "rock_class_index": 5,
+   "water": false,
+   "description": "Coarse-grained, dark-gray, biotite-hornblende granodiorite with abundant sphene. Age about 93 Ma (K-Ar)",
+   "reference": "Intrusive suite of Sonora Pass",
+   "color": "#A6D84A",
+   "fraction": 0.1709
+  },
+  "2": {
+   "name": "Talus",
+   "lithology": "",
+   "age": "Holocene",
+   "age_bottom_ma": 0.0117,
+   "age_top_ma": 0,
+   "rock_class": "other",
+   "rock_class_index": 10,
+   "water": false,
+   "description": "Rock waste derived from cliffs. Only especially extensive areas shown",
+   "reference": null,
+   "color": "#FEF2E0",
+   "fraction": 0.0415
+  },
+  "3": {
+   "name": "Half Dome Granodiorite",
+   "lithology": "",
+   "age": "Late Cretaceous",
+   "age_bottom_ma": 100.5,
+   "age_top_ma": 66,
+   "rock_class": "granitic",
+   "rock_class_index": 5,
+   "water": false,
+   "description": "Medium-grained biotite-hornblende granodiorite with conspicuous sphene. Locally porphyritic with abundant large phenocrysts of potassium feldspar",
+   "reference": "Tuolumne Intrusive Suite",
+   "color": "#A6D84A",
+   "fraction": 0.3667
+  },
+  "4": {
+   "name": "Granodiorite of Kuna Crest and similar rocks",
+   "lithology": "",
+   "age": "Late Cretaceous",
+   "age_bottom_ma": 100.5,
+   "age_top_ma": 66,
+   "rock_class": "granitic",
+   "rock_class_index": 5,
+   "water": false,
+   "description": "Dark-colored, fine- to medium-grained, biotite-hornblende granodiorite with minor tonalite. Age about 88 Ma (U-Pb)",
+   "reference": "Tuolumne Intrusive Suite",
+   "color": "#A6D84A",
+   "fraction": 0.1314
+  },
+  "5": {
+   "name": "El Capitan Granite and similar Rocks",
+   "lithology": "",
+   "age": "Early Cretaceous",
+   "age_bottom_ma": 145,
+   "age_top_ma": 100.5,
+   "rock_class": "granitic",
+   "rock_class_index": 5,
+   "water": false,
+   "description": "Coarse-grained, white to light-gray biotite granite and biotite granodiorite. Commonly porphyritic and blocky phenocrysts of potassium feldspar and conspicuous quartz grains. Age about 102 Ma (U-Pb)",
+   "reference": "Intrusive suite of Yosemite Valley",
+   "color": "#8CCD57",
+   "fraction": 0.0933
+  },
+  "6": {
+   "name": "Aplite and pegmatite",
+   "lithology": "",
+   "age": "Late Cretaceous",
+   "age_bottom_ma": 100.5,
+   "age_top_ma": 66,
+   "rock_class": "granitic",
+   "rock_class_index": 5,
+   "water": false,
+   "description": "Dikes and small masses; mostly late differentiates of the Tuolumne Intrusive Suite",
+   "reference": "Tuolumne Intrusive Suite",
+   "color": "#A6D84A",
+   "fraction": 0.0145
+  },
+  "7": {
+   "name": "Alluvium",
+   "lithology": "",
+   "age": "Holocene",
+   "age_bottom_ma": 0.0117,
+   "age_top_ma": 0,
+   "rock_class": "alluvium",
+   "rock_class_index": 9,
+   "water": false,
+   "description": "Stream deposits in major valleys and upland meadow areas; locally includes alluvial  fan deposits on the margins of major valleys and glacial outwash deposits",
+   "reference": null,
+   "color": "#FEF2E0",
+   "fraction": 0.0478
+  },
+  "8": {
+   "name": "Tioga Till",
+   "lithology": "",
+   "age": "Pleistocene",
+   "age_bottom_ma": 2.588,
+   "age_top_ma": 0.0117,
+   "rock_class": "other",
+   "rock_class_index": 10,
+   "water": false,
+   "description": "Moraines usually sharp-crested with abundant boulders at surface",
+   "reference": null,
+   "color": "#FFF2AE",
+   "fraction": 0.1199
+  },
+  "9": {
+   "name": "Pre-Tahoe Till",
+   "lithology": "",
+   "age": "Pleistocene",
+   "age_bottom_ma": 2.588,
+   "age_top_ma": 0.0117,
+   "rock_class": "other",
+   "rock_class_index": 10,
+   "water": false,
+   "description": "Moraines hummocky and dissected. Includes till mapped by some as Sherwin Till east of the Sierra Nevada crest",
+   "reference": null,
+   "color": "#FFF2AE",
+   "fraction": 0.0082
+  },
+  "10": {
+   "name": "Tahoe Till",
+   "lithology": "",
+   "age": "Pleistocene",
+   "age_bottom_ma": 2.588,
+   "age_top_ma": 0.0117,
+   "rock_class": "other",
+   "rock_class_index": 10,
+   "water": false,
+   "description": "Moraines usually crested, but subdued, with scattered, weathered boulders at surface. Includes till mapped by some as Tenaya Till and Mono Basin Till east of Sierra Nevada crest",
+   "reference": null,
+   "color": "#FFF2AE",
+   "fraction": 0.0026
+  },
+  "11": {
+   "name": "Metavolcanic rocks, undivided",
+   "lithology": "",
+   "age": "Jurassic",
+   "age_bottom_ma": 201.3,
+   "age_top_ma": 145,
+   "rock_class": "greenstone_metavolcanic",
+   "rock_class_index": 1,
+   "water": false,
+   "description": "Hornfels and other metamorphic rocks derived chiefly from sandstone, siltstone, shale, limestone, and conglomerate. Known to be of Jurassic age in Strawberry Tungsten Mine area near southeast corner of map area. Other bodies of rock assigned to this map unit are of questionable age",
+   "reference": "Eastern metamorphic belt",
+   "color": "#34B2C9",
+   "fraction": 0.0017
+  },
+  "12": {
+   "name": "Diorite and gabbro",
+   "lithology": "",
+   "age": "Jurassic to Cretaceous",
+   "age_bottom_ma": 201.3,
+   "age_top_ma": 66,
+   "rock_class": "granitic",
+   "rock_class_index": 5,
+   "water": false,
+   "description": "Occurs as generally small, irregular-shaped bodies throughout map area. Some bodies older and some younger than the plutonic rocks with which they are in contact",
+   "reference": "Fine Gold Intrusive Suite",
+   "color": "#5ABC8C",
+   "fraction": 0.0008
+  },
+  "13": {
+   "name": "water",
+   "lithology": "",
+   "age": "Holocene",
+   "age_bottom_ma": 0.0117,
+   "age_top_ma": 0,
+   "rock_class": "other",
+   "rock_class_index": 10,
+   "water": true,
+   "description": null,
+   "reference": null,
+   "color": "",
+   "fraction": 0.0007
+  }
+ },
+ "rules": [
+  [
+   "serpentinite",
+   "serpentin|ultramafic|peridotit|dunite|harzburgite|pyroxenite"
+  ],
+  [
+   "greenstone_metavolcanic",
+   "greenstone|meta-?volcanic|metabasalt|meta-?andesite|amphibolite|spilite"
+  ],
+  [
+   "slate_phyllite",
+   "slate|phyllite|argillite"
+  ],
+  [
+   "schist",
+   "schist|gneiss|hornfels|quartzite|metasediment"
+  ],
+  [
+   "limestone_marble",
+   "limestone|marble|dolomite|dolostone|carbonate"
+  ],
+  [
+   "granitic",
+   "granit|granodiorit|tonalit|diorit|monzonit|syenit|gabbro|trondhjemit|plutonic|intrusive|pegmatit|aplite"
+  ],
+  [
+   "volcanic",
+   "volcanic|andesit|basalt|rhyolit|dacit|tuff|pyroclastic|lahar|mudflow|latite"
+  ],
+  [
+   "alluvium",
+   "alluvi|terrace|alluvial fan|unconsolidated|colluvi|landslide|surficial|\\bgravels?\\b|\\bsands?\\b"
+  ],
+  [
+   "sandstone_conglomerate",
+   "sandstone|conglomerate|gr[ae]ywacke|siltstone|mudstone|shale|breccia|clastic|sedimentary"
+  ]
+ ],
+ "rule_notes": "first match over major lithologies, then name, then description; volcanic with bottom age >= 145.0 Ma -> greenstone_metavolcanic; clastic sedimentary with bottom age <= 2.58 Ma -> alluvium; 'water' -> other",
+ "source": {
+  "source": "macrostrat",
+  "endpoint": "https://macrostrat.org/api/v2/geologic_units/map",
+  "scale": "large",
+  "macrostrat_source_id": 84,
+  "scale_coverage_of_sample_points": {
+   "large": 25,
+   "medium": 25,
+   "small": 25,
+   "tiny": 25
+  },
+  "sample_points": 25,
+  "requests": 93,
+  "uncovered_pieces": 0,
+  "fallback_errors": []
+ }
+}

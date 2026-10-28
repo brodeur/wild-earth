@@ -1821,3 +1821,21 @@ valley: no black bear, no mule deer, no Steller's-jay-dominant corvids, no coyot
 ask. The start point is the tile centre on Tioga Road rather than the valley floor. The buck in a herd showed
 silhouette slivers: the stencil mask marked only the player's species slot, and the buck is its own slot; fixed
 (herdSilhouette.js marks every species slot present in the group, reconciled each frame).
+
+## 2026-10-27: the first Yosemite tile, utm11n_270_4180, built DEM-only and played
+
+Aaron: "with all the pipeline upgrades we should try a new region", then "build the Yosemite tile utm11n_270_4180 (Half
+Dome, Yosemite Falls, the village meadows) first." The first tile outside UTM zone 10 (the zone comes from the anchor,
+config.py; nothing else cared). The full build ran in about 25 minutes before the two failures above (lidar: the 2019
+collection has no public point cloud; veg: LANDFIRE's services answering errors for hours); with the fixes, the DEM-only
+lidar step took 18.6 s (terrain detail: residual std 1.1 m, 26% of 2 m cells over 0.5 m, 0.4% clipped at +-5.08 m on
+the cliffs; roughness median 0.08 m), the vegetation came through on the ninth 15-minute retry, and derive, erase and
+the Unreal export followed (crowns and inpaint skipped). What the tile has: the 1 m DEM's detail on the 5 m heights,
+NAIP erased, the habitat and species mix (foothill species standing in: ponderosa, black oak and incense cedar are in the
+library, white fir and sugar pine are not), the rewilded hydrology, Sentinel-2 months, weather, the resource rasters
+and the games file. What it lacks: a canopy height, crowns and trees on real crowns (3.9 M far trees from the cell mix
+instead), the ground-only texture (the client draws the erased imagery under the trees). In the viewer (port 8783, the
+same code): the world builds with no console errors and 461 MB of heap; as the raven at midday Half Dome, the north
+wall and Clouds Rest read at once from above the meadows. Seen: the arrival caption says "near Tenaya Creek" for the
+Half Dome point, since the valley's names come from the OSM places within reach. Not yet: the three neighbouring cells
+that hold the rest of the valley (El Capitan and Bridalveil in utm11n_260_4170).

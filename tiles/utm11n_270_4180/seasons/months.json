@@ -1,0 +1,156 @@
+{
+ "source": "copernicus_sentinel2_l2a",
+ "years": [
+  2019,
+  2026
+ ],
+ "stretch": 0.35,
+ "ndvi_range": [
+  -0.2,
+  0.9
+ ],
+ "min_looks": 3,
+ "naip_reference": {
+  "naip_year": 2022,
+  "flight_dates": [
+   "2022-08-06",
+   "2022-08-12",
+   "2022-08-20"
+  ],
+  "month": 8
+ },
+ "months": [
+  {
+   "month": 1,
+   "looks_dates": 37,
+   "looks_median": 1,
+   "looks_min": 0,
+   "looks_p05": 0,
+   "refused": true,
+   "filled_fraction": 0.999,
+   "filled_pixels": 249744,
+   "classes": {}
+  },
+  {
+   "month": 2,
+   "looks_dates": 24,
+   "looks_median": 0,
+   "looks_min": 0,
+   "looks_p05": 0,
+   "refused": true,
+   "filled_fraction": 0.9991,
+   "filled_pixels": 249783,
+   "classes": {}
+  },
+  {
+   "month": 3,
+   "looks_dates": 32,
+   "looks_median": 1,
+   "looks_min": 0,
+   "looks_p05": 0,
+   "refused": true,
+   "filled_fraction": 0.9991,
+   "filled_pixels": 249779,
+   "classes": {}
+  },
+  {
+   "month": 4,
+   "looks_dates": 38,
+   "looks_median": 4,
+   "looks_min": 0,
+   "looks_p05": 0,
+   "refused": false,
+   "filled_fraction": 0.3485,
+   "filled_pixels": 87124,
+   "classes": {}
+  },
+  {
+   "month": 5,
+   "looks_dates": 47,
+   "looks_median": 32,
+   "looks_min": 0,
+   "looks_p05": 11,
+   "refused": false,
+   "filled_fraction": 0.0093,
+   "filled_pixels": 2320,
+   "classes": {}
+  },
+  {
+   "month": 6,
+   "looks_dates": 46,
+   "looks_median": 38,
+   "looks_min": 0,
+   "looks_p05": 28,
+   "refused": false,
+   "filled_fraction": 0.0031,
+   "filled_pixels": 775,
+   "classes": {}
+  },
+  {
+   "month": 7,
+   "looks_dates": 52,
+   "looks_median": 48,
+   "looks_min": 0,
+   "looks_p05": 40,
+   "refused": false,
+   "filled_fraction": 0.0014,
+   "filled_pixels": 359,
+   "classes": {}
+  },
+  {
+   "month": 8,
+   "looks_dates": 47,
+   "looks_median": 37,
+   "looks_min": 0,
+   "looks_p05": 28,
+   "refused": false,
+   "filled_fraction": 0.0043,
+   "filled_pixels": 1068,
+   "classes": {}
+  },
+  {
+   "month": 9,
+   "looks_dates": 45,
+   "looks_median": 38,
+   "looks_min": 0,
+   "looks_p05": 24,
+   "refused": false,
+   "filled_fraction": 0.0067,
+   "filled_pixels": 1685,
+   "classes": {}
+  },
+  {
+   "month": 10,
+   "looks_dates": 42,
+   "looks_median": 33,
+   "looks_min": 0,
+   "looks_p05": 18,
+   "refused": false,
+   "filled_fraction": 0.0151,
+   "filled_pixels": 3783,
+   "classes": {}
+  },
+  {
+   "month": 11,
+   "looks_dates": 28,
+   "looks_median": 15,
+   "looks_min": 0,
+   "looks_p05": 4,
+   "refused": false,
+   "filled_fraction": 0.037,
+   "filled_pixels": 9259,
+   "classes": {}
+  },
+  {
+   "month": 12,
+   "looks_dates": 22,
+   "looks_median": 7,
+   "looks_min": 0,
+   "looks_p05": 0,
+   "refused": false,
+   "filled_fraction": 0.2268,
+   "filled_pixels": 56703,
+   "classes": {}
+  }
+ ]
+}
