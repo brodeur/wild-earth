@@ -1425,3 +1425,16 @@ Placerville builds and the home world finalises (FinalizationRegistry on world, 
 idles; `__weDrop()` frees the Placerville world the same way, heap 84 MB with no world (old code 87). Known: an attribute
 is released on its first draw, so chunks and trees never yet in any view (about 6 MB at the start view) keep their arrays
 until they are; the roads overlay's lines keep theirs until G shows them.
+
+## 2026-10-27: the terrain chunks' normals go too; the fine mesh makes the ones it needs again
+
+The one reader of a coarse chunk's normal array was FineTerrain.coarseNormal, which blends the fine square's outer band
+onto the coarse mesh's own vertex normals so the seam shades as the mesh beside it. Rather than keep 12 MB for a few hundred
+reads per rebuild, `chunkVertexNormal` makes a chunk vertex's normal the way `BufferGeometry.computeVertexNormals` made it
+in Terrain.build: the same float32 positions (PlaneGeometry's corner plus the chunk's origin, the height from H.vert at the
+same double), the same faces in the same order (quad (ix, iy) is (a, b, d) then (b, c, d), quads in row order), each cross
+product added and rounded to float32 as the attribute array rounded it, then normalised as Vector3 does. Checked over all
+1,020,100 vertices of the home tile's 100 chunks against the live arrays before they were let go: 0 differing components
+(587 ms for the whole tile). The rebuild caches the vertices it touches on its job (`J.normals`); a 220 m square's band
+takes about 4,400 fine vertices from a few hundred chunk vertices, 5 ms over 4 frames, as before. Rejected: a compact
+copy (an Int16 copy halves it but changes the band's normals in the last bit; an exact recompute costs nothing visible).

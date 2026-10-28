@@ -8,8 +8,8 @@ import * as THREE from 'three';
 // releaseGeometry(g, { keep, keepIndex }): once a static attribute of g is uploaded (BufferAttribute.onUpload, which
 // WebGLAttributes calls right after its gl.bufferData, on the first draw) its array is dropped, except the attributes
 // named in `keep` and, with keepIndex, the index: whatever a CPU reader still needs (a raycast wants position and
-// index, identify.js's pick the canopy's uv and leafRank too; the fine terrain reads the coarse chunks' normals; a
-// hole is cut by rewriting the index). Dynamic attributes (usage DynamicDrawUsage: instance seats, per-frame buffers)
+// index, identify.js's pick the canopy's uv and leafRank too; the fine terrain cuts its hole by rewriting the coarse
+// chunks' index). Dynamic attributes (usage DynamicDrawUsage: instance seats, per-frame buffers)
 // and interleaved ones are never touched. The bounds are computed first, since a frustum test or a raycast would
 // compute them from the array later. A released attribute cannot be uploaded again: never set needsUpdate on it,
 // clone it, or dispose the geometry and draw it again. A geometry never drawn keeps its arrays (the callback never
