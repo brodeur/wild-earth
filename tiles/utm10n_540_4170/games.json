@@ -1,5 +1,5 @@
 {
- "generated": "2026-10-28T03:43:44Z",
+ "generated": "2026-10-28T03:46:46Z",
  "tile_id": "utm10n_540_4170",
  "archetypes": {
   "gather": "find the resource's hotspots, feed, keep an eye out: the predators listed hunt here; the competitors eat the same cells",
@@ -335,23 +335,360 @@
   "alarm": [
    [
     "corvus_corax",
-    "sylvilagus_bachmani",
-    "puma_concolor"
+    "callipepla_californica",
+    "buteo_jamaicensis",
+    1200,
+    300
    ],
    [
-    "urocyon_cinereoargenteus",
-    "sylvilagus_bachmani",
-    "puma_concolor"
+    "odocoileus_hemionus",
+    "callipepla_californica",
+    "buteo_jamaicensis",
+    400,
+    300
    ],
    [
-    "lepus_californicus",
-    "sylvilagus_bachmani",
-    "puma_concolor"
+    "melanerpes_formicivorus",
+    "callipepla_californica",
+    "buteo_jamaicensis",
+    400,
+    300
    ],
    [
+    "aphelocoma_californica",
+    "callipepla_californica",
+    "buteo_jamaicensis",
+    400,
+    300
+   ],
+   [
+    "meleagris_gallopavo",
+    "callipepla_californica",
+    "buteo_jamaicensis",
+    400,
+    300
+   ],
+   [
+    "odocoileus_hemionus",
+    "callipepla_californica",
     "canis_latrans",
+    400,
+    300
+   ],
+   [
+    "odocoileus_hemionus",
+    "callipepla_californica",
+    "corvus_corax",
+    600,
+    300
+   ],
+   [
+    "melanerpes_formicivorus",
+    "callipepla_californica",
+    "corvus_corax",
+    400,
+    300
+   ],
+   [
+    "aphelocoma_californica",
+    "callipepla_californica",
+    "corvus_corax",
+    400,
+    300
+   ],
+   [
+    "meleagris_gallopavo",
+    "callipepla_californica",
+    "corvus_corax",
+    400,
+    300
+   ],
+   [
+    "odocoileus_hemionus",
+    "callipepla_californica",
+    "urocyon_cinereoargenteus",
+    250,
+    120
+   ],
+   [
+    "corvus_corax",
+    "lepus_californicus",
+    "buteo_jamaicensis",
+    1200,
+    400
+   ],
+   [
+    "odocoileus_hemionus",
+    "meleagris_gallopavo",
+    "canis_latrans",
+    400,
+    300
+   ],
+   [
+    "odocoileus_hemionus",
+    "meleagris_gallopavo",
+    "puma_concolor",
+    300,
+    60
+   ],
+   [
+    "corvus_corax",
+    "microtus_californicus",
+    "buteo_jamaicensis",
+    1200,
+    100
+   ],
+   [
+    "corvus_corax",
+    "microtus_californicus",
+    "canis_latrans",
+    300,
+    100
+   ],
+   [
+    "corvus_corax",
+    "microtus_californicus",
+    "urocyon_cinereoargenteus",
+    120,
+    50
+   ],
+   [
+    "corvus_corax",
+    "otospermophilus_beecheyi",
+    "buteo_jamaicensis",
+    1200,
+    300
+   ],
+   [
+    "odocoileus_hemionus",
+    "otospermophilus_beecheyi",
+    "buteo_jamaicensis",
+    400,
+    300
+   ],
+   [
+    "melanerpes_formicivorus",
+    "otospermophilus_beecheyi",
+    "buteo_jamaicensis",
+    400,
+    300
+   ],
+   [
+    "aphelocoma_californica",
+    "otospermophilus_beecheyi",
+    "buteo_jamaicensis",
+    400,
+    300
+   ],
+   [
+    "meleagris_gallopavo",
+    "otospermophilus_beecheyi",
+    "buteo_jamaicensis",
+    400,
+    300
+   ],
+   [
+    "odocoileus_hemionus",
+    "otospermophilus_beecheyi",
+    "canis_latrans",
+    400,
+    300
+   ],
+   [
+    "odocoileus_hemionus",
+    "otospermophilus_beecheyi",
+    "puma_concolor",
+    300,
+    60
+   ],
+   [
+    "odocoileus_hemionus",
+    "otospermophilus_beecheyi",
+    "urocyon_cinereoargenteus",
+    250,
+    120
+   ],
+   [
+    "corvus_corax",
+    "sceloporus_occidentalis",
+    "aphelocoma_californica",
+    400,
+    30
+   ],
+   [
+    "melanerpes_formicivorus",
+    "sceloporus_occidentalis",
+    "aphelocoma_californica",
+    400,
+    30
+   ],
+   [
+    "sciurus_griseus",
+    "sceloporus_occidentalis",
+    "aphelocoma_californica",
+    200,
+    30
+   ],
+   [
+    "corvus_corax",
+    "sceloporus_occidentalis",
+    "buteo_jamaicensis",
+    1200,
+    30
+   ],
+   [
+    "melanerpes_formicivorus",
+    "sceloporus_occidentalis",
+    "buteo_jamaicensis",
+    400,
+    30
+   ],
+   [
+    "aphelocoma_californica",
+    "sceloporus_occidentalis",
+    "buteo_jamaicensis",
+    400,
+    30
+   ],
+   [
+    "otospermophilus_beecheyi",
+    "sceloporus_occidentalis",
+    "buteo_jamaicensis",
+    300,
+    30
+   ],
+   [
+    "sciurus_griseus",
+    "sceloporus_occidentalis",
+    "buteo_jamaicensis",
+    200,
+    30
+   ],
+   [
+    "melanerpes_formicivorus",
+    "sceloporus_occidentalis",
+    "corvus_corax",
+    400,
+    30
+   ],
+   [
+    "aphelocoma_californica",
+    "sceloporus_occidentalis",
+    "corvus_corax",
+    400,
+    30
+   ],
+   [
+    "otospermophilus_beecheyi",
+    "sceloporus_occidentalis",
+    "corvus_corax",
+    300,
+    30
+   ],
+   [
+    "sciurus_griseus",
+    "sceloporus_occidentalis",
+    "corvus_corax",
+    200,
+    30
+   ],
+   [
+    "corvus_corax",
+    "sceloporus_occidentalis",
+    "urocyon_cinereoargenteus",
+    120,
+    30
+   ],
+   [
+    "sciurus_griseus",
+    "sceloporus_occidentalis",
+    "urocyon_cinereoargenteus",
+    120,
+    30
+   ],
+   [
+    "melanerpes_formicivorus",
+    "sceloporus_occidentalis",
+    "urocyon_cinereoargenteus",
+    120,
+    30
+   ],
+   [
+    "aphelocoma_californica",
+    "sceloporus_occidentalis",
+    "urocyon_cinereoargenteus",
+    120,
+    30
+   ],
+   [
+    "otospermophilus_beecheyi",
+    "sceloporus_occidentalis",
+    "urocyon_cinereoargenteus",
+    120,
+    30
+   ],
+   [
+    "corvus_corax",
+    "sciurus_griseus",
+    "buteo_jamaicensis",
+    1200,
+    200
+   ],
+   [
+    "odocoileus_hemionus",
+    "sciurus_griseus",
+    "buteo_jamaicensis",
+    400,
+    200
+   ],
+   [
+    "melanerpes_formicivorus",
+    "sciurus_griseus",
+    "buteo_jamaicensis",
+    400,
+    200
+   ],
+   [
+    "aphelocoma_californica",
+    "sciurus_griseus",
+    "buteo_jamaicensis",
+    400,
+    200
+   ],
+   [
+    "cyanocitta_stelleri",
+    "sciurus_griseus",
+    "buteo_jamaicensis",
+    400,
+    200
+   ],
+   [
+    "meleagris_gallopavo",
+    "sciurus_griseus",
+    "buteo_jamaicensis",
+    400,
+    200
+   ],
+   [
+    "corvus_corax",
     "sylvilagus_bachmani",
-    "puma_concolor"
+    "buteo_jamaicensis",
+    1200,
+    400
+   ],
+   [
+    "corvus_corax",
+    "sylvilagus_bachmani",
+    "canis_latrans",
+    300,
+    200
+   ],
+   [
+    "callipepla_californica",
+    "sylvilagus_bachmani",
+    "canis_latrans",
+    300,
+    200
    ]
   ]
  },
@@ -575,7 +912,10 @@
      "goal": "follow predators to kills",
      "prey": [
       "puma_concolor"
-     ]
+     ],
+     "noticed_at_m": {
+      "puma_concolor": 600
+     }
     },
     {
      "id": "corvus_corax:winter:court:cliff_or_snag",
@@ -1745,7 +2085,12 @@
       "microtus_californicus",
       "sylvilagus_bachmani",
       "lepus_californicus"
-     ]
+     ],
+     "noticed_at_m": {
+      "microtus_californicus": 100,
+      "sylvilagus_bachmani": 400,
+      "lepus_californicus": 400
+     }
     },
     {
      "id": "buteo_jamaicensis:spring:court",
@@ -1915,7 +2260,14 @@
       "sylvilagus_bachmani",
       "microtus_californicus",
       "sceloporus_occidentalis"
-     ]
+     ],
+     "noticed_at_m": {
+      "sciurus_griseus": 200,
+      "otospermophilus_beecheyi": 300,
+      "sylvilagus_bachmani": 400,
+      "microtus_californicus": 100,
+      "sceloporus_occidentalis": 30
+     }
     },
     {
      "id": "buteo_jamaicensis:fall:disperse",
@@ -1936,7 +2288,11 @@
      "prey": [
       "microtus_californicus",
       "sciurus_griseus"
-     ]
+     ],
+     "noticed_at_m": {
+      "microtus_californicus": 100,
+      "sciurus_griseus": 200
+     }
     },
     {
      "id": "buteo_jamaicensis:winter:drink",
@@ -3826,6 +4182,7 @@
      "unit": "herd",
      "collective": true,
      "predator": "canis_latrans",
+     "notice_m": 400,
      "watchers": []
     },
     {
@@ -3836,6 +4193,7 @@
      "unit": "herd",
      "collective": true,
      "predator": "puma_concolor",
+     "notice_m": 300,
      "watchers": []
     },
     {
@@ -3953,7 +4311,11 @@
      "prey": [
       "microtus_californicus",
       "sylvilagus_bachmani"
-     ]
+     ],
+     "noticed_at_m": {
+      "microtus_californicus": 50,
+      "sylvilagus_bachmani": 200
+     }
     },
     {
      "id": "urocyon_cinereoargenteus:spring:den:burrow",
@@ -6005,7 +6367,33 @@
      "unit": "solitary",
      "collective": false,
      "predator": "buteo_jamaicensis",
-     "watchers": []
+     "notice_m": 200,
+     "watchers": [
+      {
+       "species": "corvus_corax",
+       "notice_m": 1200
+      },
+      {
+       "species": "odocoileus_hemionus",
+       "notice_m": 400
+      },
+      {
+       "species": "melanerpes_formicivorus",
+       "notice_m": 400
+      },
+      {
+       "species": "aphelocoma_californica",
+       "notice_m": 400
+      },
+      {
+       "species": "cyanocitta_stelleri",
+       "notice_m": 400
+      },
+      {
+       "species": "meleagris_gallopavo",
+       "notice_m": 400
+      }
+     ]
     }
    ]
   },
@@ -8425,7 +8813,29 @@
      "unit": "covey",
      "collective": true,
      "predator": "buteo_jamaicensis",
-     "watchers": []
+     "notice_m": 300,
+     "watchers": [
+      {
+       "species": "corvus_corax",
+       "notice_m": 1200
+      },
+      {
+       "species": "odocoileus_hemionus",
+       "notice_m": 400
+      },
+      {
+       "species": "melanerpes_formicivorus",
+       "notice_m": 400
+      },
+      {
+       "species": "aphelocoma_californica",
+       "notice_m": 400
+      },
+      {
+       "species": "meleagris_gallopavo",
+       "notice_m": 400
+      }
+     ]
     },
     {
      "id": "callipepla_californica:canis_latrans:evade",
@@ -8435,7 +8845,13 @@
      "unit": "covey",
      "collective": true,
      "predator": "canis_latrans",
-     "watchers": []
+     "notice_m": 300,
+     "watchers": [
+      {
+       "species": "odocoileus_hemionus",
+       "notice_m": 400
+      }
+     ]
     },
     {
      "id": "callipepla_californica:corvus_corax:evade",
@@ -8445,7 +8861,25 @@
      "unit": "covey",
      "collective": true,
      "predator": "corvus_corax",
-     "watchers": []
+     "notice_m": 300,
+     "watchers": [
+      {
+       "species": "odocoileus_hemionus",
+       "notice_m": 600
+      },
+      {
+       "species": "melanerpes_formicivorus",
+       "notice_m": 400
+      },
+      {
+       "species": "aphelocoma_californica",
+       "notice_m": 400
+      },
+      {
+       "species": "meleagris_gallopavo",
+       "notice_m": 400
+      }
+     ]
     },
     {
      "id": "callipepla_californica:urocyon_cinereoargenteus:evade",
@@ -8455,7 +8889,13 @@
      "unit": "covey",
      "collective": true,
      "predator": "urocyon_cinereoargenteus",
-     "watchers": []
+     "notice_m": 120,
+     "watchers": [
+      {
+       "species": "odocoileus_hemionus",
+       "notice_m": 250
+      }
+     ]
     },
     {
      "id": "callipepla_californica:watch",
@@ -12541,7 +12981,13 @@
      "unit": "solitary",
      "collective": false,
      "predator": "buteo_jamaicensis",
-     "watchers": []
+     "notice_m": 400,
+     "watchers": [
+      {
+       "species": "corvus_corax",
+       "notice_m": 1200
+      }
+     ]
     },
     {
      "id": "sylvilagus_bachmani:canis_latrans:evade",
@@ -12551,7 +12997,17 @@
      "unit": "solitary",
      "collective": false,
      "predator": "canis_latrans",
-     "watchers": []
+     "notice_m": 200,
+     "watchers": [
+      {
+       "species": "corvus_corax",
+       "notice_m": 300
+      },
+      {
+       "species": "callipepla_californica",
+       "notice_m": 300
+      }
+     ]
     },
     {
      "id": "sylvilagus_bachmani:puma_concolor:evade",
@@ -12561,12 +13017,8 @@
      "unit": "solitary",
      "collective": false,
      "predator": "puma_concolor",
-     "watchers": [
-      "canis_latrans",
-      "corvus_corax",
-      "lepus_californicus",
-      "urocyon_cinereoargenteus"
-     ]
+     "notice_m": 200,
+     "watchers": []
     },
     {
      "id": "sylvilagus_bachmani:urocyon_cinereoargenteus:evade",
@@ -12576,6 +13028,7 @@
      "unit": "solitary",
      "collective": false,
      "predator": "urocyon_cinereoargenteus",
+     "notice_m": 200,
      "watchers": []
     }
    ]
@@ -13388,7 +13841,13 @@
      "unit": "solitary",
      "collective": false,
      "predator": "buteo_jamaicensis",
-     "watchers": []
+     "notice_m": 400,
+     "watchers": [
+      {
+       "species": "corvus_corax",
+       "notice_m": 1200
+      }
+     ]
     },
     {
      "id": "lepus_californicus:canis_latrans:evade",
@@ -13398,6 +13857,7 @@
      "unit": "solitary",
      "collective": false,
      "predator": "canis_latrans",
+     "notice_m": 300,
      "watchers": []
     },
     {
@@ -13408,6 +13868,7 @@
      "unit": "solitary",
      "collective": false,
      "predator": "puma_concolor",
+     "notice_m": 200,
      "watchers": []
     }
    ]
@@ -14113,7 +14574,13 @@
      "unit": "solitary",
      "collective": false,
      "predator": "buteo_jamaicensis",
-     "watchers": []
+     "notice_m": 100,
+     "watchers": [
+      {
+       "species": "corvus_corax",
+       "notice_m": 1200
+      }
+     ]
     },
     {
      "id": "microtus_californicus:canis_latrans:evade",
@@ -14123,7 +14590,13 @@
      "unit": "solitary",
      "collective": false,
      "predator": "canis_latrans",
-     "watchers": []
+     "notice_m": 100,
+     "watchers": [
+      {
+       "species": "corvus_corax",
+       "notice_m": 300
+      }
+     ]
     },
     {
      "id": "microtus_californicus:corvus_corax:evade",
@@ -14133,6 +14606,7 @@
      "unit": "solitary",
      "collective": false,
      "predator": "corvus_corax",
+     "notice_m": 100,
      "watchers": []
     },
     {
@@ -14143,7 +14617,13 @@
      "unit": "solitary",
      "collective": false,
      "predator": "urocyon_cinereoargenteus",
-     "watchers": []
+     "notice_m": 50,
+     "watchers": [
+      {
+       "species": "corvus_corax",
+       "notice_m": 120
+      }
+     ]
     }
    ]
   },
@@ -14256,7 +14736,13 @@
       "lepus_californicus",
       "microtus_californicus",
       "odocoileus_hemionus"
-     ]
+     ],
+     "noticed_at_m": {
+      "sylvilagus_bachmani": 200,
+      "lepus_californicus": 300,
+      "microtus_californicus": 100,
+      "odocoileus_hemionus": 400
+     }
     },
     {
      "id": "canis_latrans:spring:den:burrow",
@@ -15149,6 +15635,7 @@
      "unit": "solitary",
      "collective": false,
      "predator": "puma_concolor",
+     "notice_m": 300,
      "watchers": []
     }
    ]
@@ -15175,7 +15662,10 @@
      "goal": "ambush on deer trails",
      "prey": [
       "odocoileus_hemionus"
-     ]
+     ],
+     "noticed_at_m": {
+      "odocoileus_hemionus": 300
+     }
     },
     {
      "id": "puma_concolor:spring:hunt",
@@ -15186,7 +15676,10 @@
      "collective": true,
      "prey": [
       "odocoileus_hemionus"
-     ]
+     ],
+     "noticed_at_m": {
+      "odocoileus_hemionus": 300
+     }
     },
     {
      "id": "puma_concolor:spring:rear:cover",
@@ -15279,7 +15772,11 @@
      "prey": [
       "odocoileus_hemionus",
       "sylvilagus_bachmani"
-     ]
+     ],
+     "noticed_at_m": {
+      "odocoileus_hemionus": 300,
+      "sylvilagus_bachmani": 200
+     }
     },
     {
      "id": "puma_concolor:fall:hunt",
@@ -15291,7 +15788,10 @@
      "goal": "deer gather at mast",
      "prey": [
       "odocoileus_hemionus"
-     ]
+     ],
+     "noticed_at_m": {
+      "odocoileus_hemionus": 300
+     }
     },
     {
      "id": "puma_concolor:winter:drink",
@@ -17205,7 +17705,13 @@
      "unit": "flock",
      "collective": true,
      "predator": "canis_latrans",
-     "watchers": []
+     "notice_m": 300,
+     "watchers": [
+      {
+       "species": "odocoileus_hemionus",
+       "notice_m": 400
+      }
+     ]
     },
     {
      "id": "meleagris_gallopavo:puma_concolor:evade",
@@ -17215,7 +17721,13 @@
      "unit": "flock",
      "collective": true,
      "predator": "puma_concolor",
-     "watchers": []
+     "notice_m": 60,
+     "watchers": [
+      {
+       "species": "odocoileus_hemionus",
+       "notice_m": 300
+      }
+     ]
     },
     {
      "id": "meleagris_gallopavo:watch",
@@ -18338,7 +18850,29 @@
      "unit": "colony",
      "collective": true,
      "predator": "buteo_jamaicensis",
-     "watchers": []
+     "notice_m": 300,
+     "watchers": [
+      {
+       "species": "corvus_corax",
+       "notice_m": 1200
+      },
+      {
+       "species": "odocoileus_hemionus",
+       "notice_m": 400
+      },
+      {
+       "species": "melanerpes_formicivorus",
+       "notice_m": 400
+      },
+      {
+       "species": "aphelocoma_californica",
+       "notice_m": 400
+      },
+      {
+       "species": "meleagris_gallopavo",
+       "notice_m": 400
+      }
+     ]
     },
     {
      "id": "otospermophilus_beecheyi:canis_latrans:evade",
@@ -18348,7 +18882,13 @@
      "unit": "colony",
      "collective": true,
      "predator": "canis_latrans",
-     "watchers": []
+     "notice_m": 300,
+     "watchers": [
+      {
+       "species": "odocoileus_hemionus",
+       "notice_m": 400
+      }
+     ]
     },
     {
      "id": "otospermophilus_beecheyi:puma_concolor:evade",
@@ -18358,7 +18898,13 @@
      "unit": "colony",
      "collective": true,
      "predator": "puma_concolor",
-     "watchers": []
+     "notice_m": 60,
+     "watchers": [
+      {
+       "species": "odocoileus_hemionus",
+       "notice_m": 300
+      }
+     ]
     },
     {
      "id": "otospermophilus_beecheyi:urocyon_cinereoargenteus:evade",
@@ -18368,7 +18914,13 @@
      "unit": "colony",
      "collective": true,
      "predator": "urocyon_cinereoargenteus",
-     "watchers": []
+     "notice_m": 120,
+     "watchers": [
+      {
+       "species": "odocoileus_hemionus",
+       "notice_m": 250
+      }
+     ]
     },
     {
      "id": "otospermophilus_beecheyi:watch",
@@ -19098,7 +19650,21 @@
      "unit": "solitary",
      "collective": false,
      "predator": "aphelocoma_californica",
-     "watchers": []
+     "notice_m": 30,
+     "watchers": [
+      {
+       "species": "corvus_corax",
+       "notice_m": 400
+      },
+      {
+       "species": "melanerpes_formicivorus",
+       "notice_m": 400
+      },
+      {
+       "species": "sciurus_griseus",
+       "notice_m": 200
+      }
+     ]
     },
     {
      "id": "sceloporus_occidentalis:buteo_jamaicensis:evade",
@@ -19108,7 +19674,29 @@
      "unit": "solitary",
      "collective": false,
      "predator": "buteo_jamaicensis",
-     "watchers": []
+     "notice_m": 30,
+     "watchers": [
+      {
+       "species": "corvus_corax",
+       "notice_m": 1200
+      },
+      {
+       "species": "melanerpes_formicivorus",
+       "notice_m": 400
+      },
+      {
+       "species": "aphelocoma_californica",
+       "notice_m": 400
+      },
+      {
+       "species": "otospermophilus_beecheyi",
+       "notice_m": 300
+      },
+      {
+       "species": "sciurus_griseus",
+       "notice_m": 200
+      }
+     ]
     },
     {
      "id": "sceloporus_occidentalis:corvus_corax:evade",
@@ -19118,7 +19706,25 @@
      "unit": "solitary",
      "collective": false,
      "predator": "corvus_corax",
-     "watchers": []
+     "notice_m": 30,
+     "watchers": [
+      {
+       "species": "melanerpes_formicivorus",
+       "notice_m": 400
+      },
+      {
+       "species": "aphelocoma_californica",
+       "notice_m": 400
+      },
+      {
+       "species": "otospermophilus_beecheyi",
+       "notice_m": 300
+      },
+      {
+       "species": "sciurus_griseus",
+       "notice_m": 200
+      }
+     ]
     },
     {
      "id": "sceloporus_occidentalis:urocyon_cinereoargenteus:evade",
@@ -19128,7 +19734,29 @@
      "unit": "solitary",
      "collective": false,
      "predator": "urocyon_cinereoargenteus",
-     "watchers": []
+     "notice_m": 30,
+     "watchers": [
+      {
+       "species": "corvus_corax",
+       "notice_m": 120
+      },
+      {
+       "species": "sciurus_griseus",
+       "notice_m": 120
+      },
+      {
+       "species": "melanerpes_formicivorus",
+       "notice_m": 120
+      },
+      {
+       "species": "aphelocoma_californica",
+       "notice_m": 120
+      },
+      {
+       "species": "otospermophilus_beecheyi",
+       "notice_m": 120
+      }
+     ]
     }
    ]
   }

@@ -1600,3 +1600,18 @@ ground on court. Home tile before and after: 160 games, 14 predator-prey pairs, 
 alone; now 275 games, 146 collective, 29 pairs, 5 scavenging links, drink for thirteen species, the covey with four
 evade games and a sentinel. Still open (games.md): alarms need perception with range and sense; difficulty needs the
 competitors' numbers against the hotspots' capacity.
+
+## 2026-10-27: perception has range and sense; alarms are about who notices first
+
+Aaron: "give perception range and sense so the alarm links are about who notices first." species_data.py SIGNATURE: how
+far each species gives itself away in the open by sight (size, exposure, movement), sound (everyday calls and footfall;
+a coyote hunts quiet) and scent; `detect_m(p, q)` = the best of p's senses (the SPECIES senses, the sensor's reach)
+against q's signature, so a deer smells a lion at 300 m it would see at 60, a raven sees a hawk at 1,200 m, a vole
+notices a hawk at 100 m by hearing and a lizard at 30 m. The species step writes the whole matrix to perception.json
+(`detects`, with the signatures and ALARM_CALL, the species whose alarm calls others heed and how far they carry) beside
+the old `perceives` lists, which the client still reads. games.py: an alarm link is a watcher with an alarm call that
+perceives both and notices the predator at least a quarter further off than the prey; the home tile went from 4 links
+to 51, each with both distances; evade games carry `notice_m` and their watchers' distances, hunt games
+`noticed_at_m` per prey. The numbers are a first table from natural history, not measured; the animal briefs should
+check them. Next: the client's animals reading the matrix (the jay's scold sending the covey to cover; a hunter noticed
+at the prey's distance).

@@ -304,6 +304,53 @@ CALENDAR = {
 }
 
 
+# How far each species gives itself away, in the open, by each sense (m): sight (its size, exposure and movement as it
+# goes about: a soaring hawk is seen a kilometre off, a stalking lion not until it is close), sound (its everyday calls
+# and footfall; a coyote hunts quiet, its howls are not counted) and scent (how far its scent carries downwind). With
+# the species' own senses (SPECIES[...]["senses"], the sensor's reach) this gives how far one species notices another:
+# detect_m(p, q) = the best sense's min(p's reach, q's signature). The games step uses it for who notices a predator
+# first (the alarm links) and how close a hunter gets before it is noticed. ALARM_CALL: the species whose alarm calls
+# others heed, and how far the call carries.
+SIGNATURE = {
+    "corvus_corax":             {"sight": 800, "sound": 700, "scent": 5},
+    "buteo_jamaicensis":        {"sight": 1200, "sound": 400, "scent": 5},
+    "odocoileus_hemionus":      {"sight": 300, "sound": 60, "scent": 150},
+    "urocyon_cinereoargenteus": {"sight": 120, "sound": 40, "scent": 250},
+    "sciurus_griseus":          {"sight": 80, "sound": 150, "scent": 30},
+    "melanerpes_formicivorus":  {"sight": 150, "sound": 400, "scent": 5},
+    "callipepla_californica":   {"sight": 60, "sound": 250, "scent": 20},
+    "aphelocoma_californica":   {"sight": 150, "sound": 400, "scent": 5},
+    "cyanocitta_stelleri":      {"sight": 150, "sound": 400, "scent": 5},
+    "cathartes_aura":           {"sight": 1500, "sound": 20, "scent": 10},
+    "sylvilagus_bachmani":      {"sight": 40, "sound": 10, "scent": 80},
+    "lepus_californicus":       {"sight": 120, "sound": 10, "scent": 80},
+    "microtus_californicus":    {"sight": 10, "sound": 5, "scent": 40},
+    "canis_latrans":            {"sight": 300, "sound": 150, "scent": 400},
+    "puma_concolor":            {"sight": 60, "sound": 15, "scent": 300},
+    "meleagris_gallopavo":      {"sight": 250, "sound": 300, "scent": 20},
+    "otospermophilus_beecheyi": {"sight": 60, "sound": 200, "scent": 30},
+    "sceloporus_occidentalis":  {"sight": 8, "sound": 2, "scent": 5},
+}
+ALARM_CALL = {"aphelocoma_californica": 400, "cyanocitta_stelleri": 400, "melanerpes_formicivorus": 400, "corvus_corax": 700,
+              "meleagris_gallopavo": 300, "callipepla_californica": 250, "otospermophilus_beecheyi": 200, "sciurus_griseus": 150,
+              "odocoileus_hemionus": 60}
+_SENSE = {"sight": "vision", "sound": "hearing", "scent": "smell"}
+_SENSES = {s["code"]: s["senses"] for s in SPECIES}
+
+
+def detect_m(p: str, q: str) -> int:
+    """How far species p notices species q in the open, m: the best of its senses against q's signature."""
+    sp, sg = _SENSES.get(p), SIGNATURE.get(q)
+    if not sp or not sg:
+        return 0
+    return int(max(min(sp[_SENSE[k]]["range_m"], sg[k]) for k in sg))
+
+
+def detection_matrix(codes=None) -> dict[str, dict[str, int]]:
+    codes = list(codes or ALL)
+    return {p: {q: detect_m(p, q) for q in codes if q != p} for p in codes}
+
+
 # What each species needs whatever the season (the games step, pipeline/games.py, reads these beside CALENDAR; docs/games.md):
 #   water: how it drinks: "daily" (open water every day, dawn and dusk), "often" (open water when near it), "rare"
 #          (mostly metabolic water or dew; drinks in drought), "none" (never needs open water: moisture from food);

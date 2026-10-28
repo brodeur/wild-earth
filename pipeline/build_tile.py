@@ -130,7 +130,9 @@ def run(tile: Tile, steps: list[str], force=False) -> dict:
                 from .fetch_species import fetch_species
                 for k, v in fetch_species(tile, force).items():
                     add_layer(m, tile, k, v)
-                write_json(tile.path("perception.json"), {"perceives": PERCEPTION})
+                from .species_data import ALARM_CALL, SIGNATURE, detection_matrix
+                write_json(tile.path("perception.json"), {"perceives": PERCEPTION, "detects": detection_matrix(), "signatures": SIGNATURE,
+                                                         "alarm_calls": ALARM_CALL})   # detects: how far each notices each, m (species_data.detect_m)
                 write_json(tile.path("calendar.json"), {"seasons": SEASONS, "activities": CALENDAR})
                 add_layer(m, tile, "perception", {"path": "perception.json", "kind": "table"})
                 add_layer(m, tile, "calendar", {"path": "calendar.json", "kind": "table"})

@@ -110,7 +110,7 @@ tiles/<tile_id>/
   species/species.json          required  species list with roles, senses, sources
   species/occurrences.geojson   required  occurrence points for listed species; pipeline and viewer only (`for_clients: false`)
   species/seasonal.json         derived   per-species counts by month (phenology proxy); counts every record, so `for_clients: false`
-  perception.json               required  who perceives whom
+  perception.json               required  who perceives whom, and how far each notices each by sight, sound and scent (detects, m)
   games.json                    derived   the species' games by season, classified, placed and scored (pipeline/games.py; docs/games.md)
   calendar.json                 required  species x season activities and resources
 ```

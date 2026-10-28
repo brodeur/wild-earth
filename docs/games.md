@@ -59,8 +59,9 @@ no hotspots; a new species in the calendar gets its games the same way.
 ## What it finds on the home tile
 
 Eighteen species, 275 games, 146 of them collective, 29 predator-prey pairs, 5 scavenging links
-(the raven and the vulture follow the lion and the coyote; the coyote follows the lion), 4 alarm links (the brush rabbit
-cannot perceive the lion; the raven, fox, jackrabbit and coyote can, and see rabbits). With the needs and diet tables
+(the raven and the vulture follow the lion and the coyote; the coyote follows the lion), 51 alarm links (who notices
+a predator first: the raven sees the hawk at 1,200 m and warns the quail, vole, rabbits, squirrels and lizard; the deer
+smells the lion at 300 m and its snort warns the turkeys and ground squirrels, which would notice it at 60 m). With the needs and diet tables
 (species_data.py NEEDS and DIET, 2026-10-27) every species that uses open water drinks each season, every species has
 a shelter game each season, every prey species has an evade game per predator and every group species a watch.
 
@@ -103,10 +104,15 @@ hardest gather on the tile. A drink game carries the species' rhythm (daily, oft
 - **Shelter and court have places** (fixed with `NEEDS`): a shelter game in every season the calendar gave none, in the
   species' own cover, cavity, burrow or tall roost; the courting ground (the rut's and the strutting ground's open grass,
   a granary, a cliff) gives court its hotspots.
-- **Alarm needs the perception matrix to be sparse.** On the home tile nearly every species perceives every other, so
-  the only alarm links are the brush rabbit's. The matrix should carry range and sense (a vole hears the hawk's shadow
-  late; a jay sees it a kilometre off), which `species.json` already has per species (`senses`), so a watcher is a
-  species that perceives the predator sooner, not only at all.
+- **Alarm needed perception with range and sense** (fixed 2026-10-27): the yes-or-no matrix made nearly every species
+  perceive every other, so the only alarm links were the brush rabbit's (4). Now `species_data.SIGNATURE` gives how far
+  each species gives itself away in the open by sight, sound and scent (a soaring hawk is seen 1.2 km off, a stalking
+  lion not until 60 m, but smelt at 300 m), and `detect_m(p, q)` is the best of p's senses (`species.json` `senses`)
+  against q's signature. `perception.json` carries the whole matrix (`detects`, m) beside `perceives`. A watcher is a
+  species with an alarm call others heed (`ALARM_CALL`, with the call's carry) that notices the predator at least a
+  quarter further off than the prey does; the home tile has 51 such links, each with both distances. Every evade
+  game carries how far its prey notices the predator (`notice_m`) and its watchers with theirs; every hunt game how far
+  each prey notices the hunter (`noticed_at_m`): the stalk's difficulty.
 - **Scarcity is per tile, not per animal.** A game's difficulty should also count the competitors' numbers (the
   population the rarity ranking already computes) against the hotspots' capacity.
 
@@ -116,5 +122,6 @@ hardest gather on the tile. A drink game carries the species' rhythm (daily, oft
    archetype's raven instance, the herd pilot the base for every collective game. Each loop has a visible target (the
    bar at the bottom could show the current game's resource and the nearest hotspot's bearing), a score, and a hand-over
    to the AI when the player stops, as the herd does.
-2. Perception with range and sense, so alarms are about who notices first.
-3. Difficulty from competitors' populations against hotspot capacity.
+2. Difficulty from competitors' populations against hotspot capacity.
+3. The client's animals read `detects` and the alarm links: a jay's scold sends the covey to cover before the covey sees
+   the hawk; a hunter is noticed at the prey's distance, not the AI's fixed radius.

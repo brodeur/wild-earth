@@ -18,7 +18,7 @@ import numpy as np
 import rasterio
 from .config import Tile, now_iso, read_json, write_json
 from .habitat import RESOURCE_BASE
-from .species_data import CALENDAR, DIET, NEEDS, PERCEPTION, SEASONS
+from .species_data import ALARM_CALL, CALENDAR, DIET, NEEDS, PERCEPTION, SEASONS, detect_m
 
 # verb -> archetype: the loop the client plays it as (docs/games.md)
 ARCHETYPE = {"forage": "gather", "graze": "gather", "hunt": "hunt", "cache": "cache", "shelter": "shelter", "den": "shelter",
@@ -39,6 +39,7 @@ ARCHETYPES = {
     "disperse": "leave the natal range and find an empty territory: a map-scale game",
     "watch": "the collective's sentinel: someone looks up while the rest feed; an alarm sends everyone to cover",
 }
+ALARM_MARGIN = 1.25   # a watcher must notice the predator this much further off than the prey does
 HOT_FLOOR, HOT_PCT, HOT_N, HOT_SEP_M = 40, 97, 12, 150   # a hotspot cell is in the resource's top (100 - HOT_PCT)% that season and scores at least HOT_FLOOR; at most HOT_N per game, HOT_SEP_M apart
 
 
@@ -99,16 +100,22 @@ def derive_games(tile: Tile) -> dict:
                             predation.append(pair)
     predators_of = {c: sorted({p for p, q in predation if q == c}) for c in codes}
     prey_of = {c: sorted({q for p, q in predation if p == c}) for c in codes}
-    # alarm: a watcher perceives a predator of this species that it cannot perceive itself (perception.json)
-    alarm: list[list[str]] = []
+    # alarm: a watcher notices a predator of this species sooner than it does itself (species_data.detect_m: the
+    # watcher's senses against the predator's signature), by ALARM_MARGIN, gives an alarm call (ALARM_CALL) the prey
+    # can hear, and perceives both (perception.json). [watcher, prey, predator, watcher's m, prey's m]
+    alarm: list[list] = []
     for c in codes:
-        seen = set(perceives.get(c, []))
         for pred in predators_of[c]:
-            if pred in seen:
-                continue
+            mine = detect_m(c, pred)
             for w in codes:
-                if w != c and w != pred and pred in perceives.get(w, []) and c in perceives.get(w, []):
-                    alarm.append([w, c, pred])
+                if w == c or w == pred or w not in ALARM_CALL:
+                    continue
+                if pred not in perceives.get(w, []) or c not in perceives.get(w, []):
+                    continue
+                theirs = detect_m(w, pred)
+                if theirs >= max(mine * ALARM_MARGIN, mine + 20):
+                    alarm.append([w, c, pred, theirs, mine])
+    alarm.sort(key=lambda a: (a[1], a[2], -a[3]))
     species: dict[str, dict] = {}
     for c in codes:
         unit = UNIT.get(c, "solitary"); games = []
@@ -132,6 +139,7 @@ def derive_games(tile: Tile) -> dict:
                         g["competitors"] = [o for o in competition.get(r, {}).get(season, []) if o != c]
                     if prey:
                         g["prey"] = [q for q in prey if q in prey_of[c]] or prey
+                        g["noticed_at_m"] = {q: detect_m(q, c) for q in g["prey"]}   # how far each prey notices this hunter
                     if arch in ("gather", "cache", "shelter", "rear", "court") and predators_of[c]:
                         g["predators"] = predators_of[c]
                     games.append(g)
@@ -160,8 +168,8 @@ def derive_games(tile: Tile) -> dict:
         # the duals and the collective's own games
         for pred in predators_of[c]:
             games.append({"id": f"{c}:{pred}:evade", "archetype": "evade", "verb": "evade", "season": "all", "unit": unit,
-                          "collective": unit != "solitary", "predator": pred,
-                          "watchers": sorted({w for w, b, p in alarm if b == c and p == pred})})
+                          "collective": unit != "solitary", "predator": pred, "notice_m": detect_m(c, pred),
+                          "watchers": [{"species": w, "notice_m": wm} for w, b, p, wm, _ in alarm if b == c and p == pred]})
         if unit != "solitary" and predators_of[c]:
             games.append({"id": f"{c}:watch", "archetype": "watch", "verb": "watch", "season": "all", "unit": unit, "collective": True,
                           "predators": predators_of[c]})
