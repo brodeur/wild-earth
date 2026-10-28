@@ -177,6 +177,7 @@ release, WebGL) was still running; its commit, if it verified, is the last in `g
 | e538459 | The wheel zooms every view, out on up and in on down; in a herd, each member out of view is marked by its avatar in a circle at the nearest screen edge; the wisp has six tendrils, the new three shorter. |
 | fbfaae1 | The start screen's wisp is the live 3D one flying a circle; the animals arrive under pillars of light and a tile change beams the old lineup out first; the in-game wisp has two counter-weaving fainter ribbons. |
 | 09ad842 | The arrival is an aurora: wiggling vertical lines at differing heights, the animal as a silhouette in their colour, then its colours fading in as the lines shimmer out at odd intervals; a tile change runs it backwards. |
+| 1b1b796 | The wheel zoom is bounded per gesture and eased so a trackpad flick cannot pin it; walkers' cameras sit 0.5 m further back; the lineup moves with the cards and sticks to them while scrolling; the count pill bottom left in the highlight tint; the spirit framed in the lower third. |
 
 Open from the day: the attribution form for generated assets; far placement on the lidar ground beyond the fine square; the squirrel's
 crown camera in leafy oaks.
