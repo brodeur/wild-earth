@@ -1692,3 +1692,21 @@ change runs it backwards over 1.4 s (the colours go first, the silhouette holds,
 animals come in a second later. The pillars (the entry before) are gone. Verified: the deer forming as a mint silhouette
 among lines, the turkey and the small animals after it, the colours in by two seconds; on the change to Placerville the
 whole row to silhouettes with lines, then lines alone, then the new arrivals.
+
+## 2026-10-27: the wheel's zoom bounded and eased; the walkers' camera a little further; the lineup moves with the cards; the pill; the spirit in the lower third
+
+Aaron: "in game the camera starts way too close to the subject and isn't able to zoom in or out" (in a jackrabbit);
+"when the cards move horizontally there is a lag between when the cards move and when the animals move"; "the pill for
+the number of nearby animals can be in the bottom left of the bounding box, tinted the highlight colour, semi-transparent,
+maybe .8"; "in spirit mode the camera frame should be such that the spirit is in the lower third of the frame". The
+zoom (flight.js): a trackpad flick fires dozens of wheel events whose pixel deltas pinned the zoom to an end of its range
+at once, which looked like no zoom at all and a camera on the rabbit's back. Now one event moves the target by at most
+60 px worth (lines and pages scaled to px), the target stays within 2.5 times the zoom the camera is at, and the cameras
+read an eased zoom (7 per second). Verified: 80 events of 120 px in a burst take the target to 0.4, not 0.35, and 80
+back up return it to 1. The walkers' chase distance gains CAM_PLUS (0.5 m back, 0.2 m up) for every body, so a
+jackrabbit's camera starts at 2.2 m rather than 1.5. The lineup's left, top, width and height now transition in .5 s on
+the cards' own curve (they were .6 s, two curves), and while the row scrolls the lineup has no transition (.scrolling,
+set by the row's scroll events and dropped 150 ms after the last), so the animals stay under their card frame by frame.
+The bar's count pill (index.html .nb-n) sits bottom left of the slot in the highlight orange #c98a4e at .8 with dark
+text. The spirit (flight.js updateCamera): the same framing rule as the walkers', the camera's pitch from the line to the
+wisp looking 0.45 of the half view above it plus half the wisp's own pitch; verified at 29% up from the bottom.

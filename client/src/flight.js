@@ -39,10 +39,14 @@ import { Perches } from './perch.js';
 // instead of a hover: it holds its speed in a slow circle (radius sp.soar.r at sp.soar.v m/s, in the way it was
 // banking) climbing a little in the thermal, A / D tightening or opening it, W, S or H again flying on.
 const SPIRIT_CRUISE = 25, SPIRIT_MAX = 90, SPIRIT_BACK = 10, SPIRIT_FLOOR = 0.8;   // m/s, m/s, m/s, m
+const SPIRIT_FRAME = -0.45;   // where the wisp sits in the frame: this much of the half view below the middle (the lower third)
 // Scroll to zoom (owner, 2026-10-27): the wheel up zooms out, down zooms in. `zoom` scales the chase distance of every
 // camera (this one, the spirit's, the ground animals' in groundControl.js, the squirrel's, the woodpecker's), ZOOM_RANGE
 // times the set-up's own; a notch of 100 is about 11%. Not over the panel, the credits, a card or the opening screen.
-const ZOOM_RANGE = [0.35, 4], ZOOM_RATE = 0.0012;
+const ZOOM_RANGE = [0.35, 4], ZOOM_RATE = 0.0012, ZOOM_STEP = 60, ZOOM_REACH = 2.5, ZOOM_EASE = 7;
+// One wheel event moves the target by at most ZOOM_STEP px worth (a line or a page of deltaMode scaled to px), the
+// target stays within ZOOM_REACH times the zoom the camera is at (so a trackpad flick's hundreds of events cannot pin
+// it to an end of the range), and `zoom` eases toward the target at ZOOM_EASE per second as the cameras read it.
 const LAND_H = RAVEN_GROUND.bodyY;   // the body above the feet, standing (raven_ground.glb)
 const TERRAIN_SPACING = 10;          // terrain.js default vertex spacing (main.js builds it with the defaults)
 export const FOLD_T = 0.25, XFADE_T = 0.12, LIFT_T = 0.2;   // s: wings fold before the swap; the dissolve; wings lift before take-off
@@ -63,10 +67,12 @@ export class RavenFlight {
     this.body = new THREE.Group();
     this.pos = this.body.position; this.yaw = 0; this.pitch = 0; this.roll = 0; this.speed = 12;
     this.keys = new Set(); this.flap = 0; this.drag = null; this.hover = false; this.sDwell = 0;
-    this.zoom = 1;   // the wheel's zoom (ZOOM_RANGE): every chase camera scales its distance by it
+    this._zoom = 1; this.zoomTarget = 1; this._zoomAt = performance.now();   // the wheel's zoom (ZOOM_RANGE): every chase camera scales its distance by it
     window.addEventListener('wheel', e => {
       if (document.documentElement.classList.contains('opening') || e.target?.closest?.('#panel, #credits, #speciesCard, #opening, #fieldGuide')) return;
-      this.zoom = Math.min(ZOOM_RANGE[1], Math.max(ZOOM_RANGE[0], this.zoom * Math.exp(-e.deltaY * ZOOM_RATE)));
+      const px = e.deltaMode === 1 ? e.deltaY * 16 : e.deltaMode === 2 ? e.deltaY * 400 : e.deltaY, d = Math.max(-ZOOM_STEP, Math.min(ZOOM_STEP, px));
+      const z = this.zoom, t = this.zoomTarget * Math.exp(-d * ZOOM_RATE);
+      this.zoomTarget = Math.min(ZOOM_RANGE[1], Math.max(ZOOM_RANGE[0], Math.min(z * ZOOM_REACH, Math.max(z / ZOOM_REACH, t))));
     }, { passive: true });
     this.view = 'chase';                                  // 'chase' | 'first'
     this.camOff = new THREE.Vector3(); this.camUp = new THREE.Vector3(0, 1, 0); this.camSettled = false;
@@ -108,6 +114,14 @@ export class RavenFlight {
   // Another bird's numbers (flierControl.js), or null for the raven's.
   setSpecies(sp) { this.sp = sp ? { ...RAVEN_SP, ...sp } : RAVEN_SP; }
   setView(v) { this.view = v; this.camSettled = false; this.body.visible = v === 'chase'; }
+  // The zoom the cameras read: eased toward the wheel's target by the time since the last read (the controls read it
+  // every frame; none of them runs this flight's update while they are on).
+  get zoom() {
+    const now = performance.now(), dt = Math.min(0.1, (now - this._zoomAt) / 1000); this._zoomAt = now;
+    if (dt > 0) this._zoom += (this.zoomTarget - this._zoom) * (1 - Math.exp(-dt * ZOOM_EASE));
+    return this._zoom;
+  }
+  set zoom(v) { this._zoom = this.zoomTarget = Math.min(ZOOM_RANGE[1], Math.max(ZOOM_RANGE[0], v)); }
   // Height of the terrain as drawn this frame (tilepackage.js Heightfield.ground: the near fine mesh of the lidar
   // ground where the tile has one, else the 10 m mesh with each square split along its SW-NE diagonal), as
   // animals.js and rocks.js stand on.
@@ -547,6 +561,12 @@ export class RavenFlight {
       dir = this._d.set(-Math.sin(this.camYaw) * cy, Math.sin(this.pitch), -Math.cos(this.camYaw) * cy).lerp(dir, 1 - gk);
     }
     const aim = this._look.copy(this.pos).addScaledVector(dir, lookAhead); aim.y += L(0.3, 0.05, gk);
+    if (this.spirit) {   // the spirit in the lower third of the frame (owner, 2026-10-27; as the walkers, groundControl.js FRAME_Y): the
+      // pitch from the line to the wisp, looking SPIRIT_FRAME of the half view above it, plus half the wisp's own pitch; the yaw the aim's
+      const hd = Math.hypot(this.pos.x - cam.position.x, this.pos.z - cam.position.z), ha = Math.hypot(aim.x - cam.position.x, aim.z - cam.position.z);
+      const toBody = Math.atan2(this.pos.y - cam.position.y, Math.max(hd, 1e-3)), above = Math.atan(-SPIRIT_FRAME * Math.tan(cam.fov * Math.PI / 360));
+      aim.y = cam.position.y + Math.max(ha, 1e-3) * Math.tan(toBody + above + this.pitch * 0.5);
+    }
     // A third of the bank in the camera's up vector keeps the horizon alive without making the viewer seasick.
     this.camUp.set(Math.sin(this.roll * 0.33) * -Math.cos(this.yaw), Math.cos(this.roll * 0.33), Math.sin(this.roll * 0.33) * Math.sin(this.yaw));
     cam.up.copy(this.camUp);

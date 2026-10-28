@@ -212,7 +212,11 @@ export class OpeningScreen {
     // the wisp, live (wispLoop.js): in the dark start's slot, then a loading card's
     try { this.wispLoop = new WispLoop(); this.wispLoop.attach(this.$('.op-boot .op-wisp')); } catch (e) { console.warn('opening: live wisp unavailable, the sprite sheet stays', e); this.wispLoop = null; }
     this.relayout = () => this.layoutCards();
-    row.addEventListener('scroll', this.place, { passive: true }); addEventListener('resize', this.relayout);
+    // the row scrolling: the animals are placed every frame with no transition (opening.css .scrolling), so they stay
+    // under their card as it moves; the class goes 150 ms after the last scroll event
+    const box = this.$('.op-lineup');
+    this.onScroll = () => { box?.classList.add('scrolling'); clearTimeout(this.scrollT); this.scrollT = setTimeout(() => box?.classList.remove('scrolling'), 150); this.placeLineup(); };
+    row.addEventListener('scroll', this.onScroll, { passive: true }); addEventListener('resize', this.relayout);
     // a hovering pointer (not touch) grows the card under it a little and steps the rest back (layoutCards)
     for (const c of this.root.querySelectorAll('.op-tile')) {
       c.addEventListener('pointerenter', e => { if (e.pointerType === 'mouse') { this.hovered = c; this.layoutCards(); this.bringIntoView(c); } });

@@ -52,7 +52,7 @@ const smooth = u => u * u * (3 - 2 * u);
 // sits CAM_RAISE times higher than each body's `up`, and its pitch is set each frame from the line to the body's centre
 // so that centre lands FRAME_Y of the half view below the screen's middle (-0.45: a little under a third up from the
 // bottom), whatever the body's size, its sitting or the ground; the drag's tilt adds to it. The yaw stays the aim's.
-export const CAM_RAISE = 1.3, FRAME_Y = -0.45;
+export const CAM_RAISE = 1.3, FRAME_Y = -0.45, CAM_PLUS = { back: 0.5, up: 0.2 };   // CAM_PLUS: m added to every body's chase distance (owner, 2026-10-27: a rabbit's camera sat on its back)
 // The herd pilot (owner, 2026-10-27): in a member of a herd, covey or flock (HERD_WORD's species; the animal's group,
 // animals.js pilot) the group trends toward a point HERD_LEAD body half-lengths ahead of the player while the player
 // steers; after HERD_IDLE s without a key the group takes back over: it goes on with its own life from where it is,
@@ -503,7 +503,7 @@ export class GroundControl {
     const rate = wrap(f.yaw - (this.camYaw ?? f.yaw)) / Math.max(dt, 1e-3); this.camYaw = f.yaw;
     if (Math.abs(rate) > 0.3) this.camSide = damp(this.camSide, -Math.sign(rate) * C.side, 1.6, dt);
     const low = this.resting ? 0.7 : 1, fly = this.mode === 'fly' ? 1.4 : 1;
-    const z = f.zoom || 1, back = C.back * (1 - 0.15 * this.sit) * fly * z, up = C.up * CAM_RAISE * low * (1 + 0.3 * this.sit) * fly * z, a = f.yaw + this.camSide;   // z: the wheel's zoom (flight.js)
+    const z = f.zoom || 1, back = (C.back + CAM_PLUS.back) * (1 - 0.15 * this.sit) * fly * z, up = (C.up * CAM_RAISE + CAM_PLUS.up) * low * (1 + 0.3 * this.sit) * fly * z, a = f.yaw + this.camSide;   // z: the wheel's zoom (flight.js)
     off.set(Math.sin(a) * back, up, Math.cos(a) * back);
     const fx = -Math.sin(f.yaw), fz = -Math.cos(f.yaw);
     aim.set(fx * C.look, C.aimUp * low + Math.tan(f.pitch) * (back + C.look), fz * C.look);
