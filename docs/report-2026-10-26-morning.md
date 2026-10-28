@@ -164,6 +164,7 @@ release, WebGL) was still running; its commit, if it verified, is the last in `g
 | f6239ca | Merged the heap lane: a built world lets go of the CPU copies of what lives on the GPU (static geometry arrays, texture bytes, the far bake, the terrain index copy; the fine mesh remakes the chunk normals bit for bit). 139 MB fewer bytes per world, same draws and picks; verified here: build, a Location box switch, a drop to 90 MB. |
 | 9092c65 | Every creature's soul in spirit form is coloured by its species' rarity on the tile, purple for the abundant to red for the rare, brighter the rarer, with a wider faint bubble. |
 | 103c3e4 | The HUD, key line and panel sit behind a hamburger top left that becomes an X; in spirit form a nearby-animals bar at the bottom: stills on disc shadows with white count pills, ordered by rarity. |
+| 8f998a0 | The bar lost its box, the map moved to the top right with the panel under it, rare souls reach across the whole live population and grow with rarity, and mountain lions carry a test beacon: a 90 m beam of light seen through the hills. |
 
 Open from the day: the attribution form for generated assets; far placement on the lidar ground beyond the fine square; the squirrel's
 crown camera in leafy oaks.
