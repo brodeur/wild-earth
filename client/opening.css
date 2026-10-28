@@ -113,13 +113,25 @@ html:not(.opening) #opening:not(.out) { display:none; }
 .op-an > i { display:block; width:100%; height:100%; }
 .op-an img { display:block; width:100%; height:100%; }
 .op-an.flip img { transform:scaleX(-1); }
-/* Arrivals and departures (owner, 2026-10-27, "dancing pillars of light, like Star Trek"): each animal beams in under a
-   column of shimmering light (::after: a tall soft column with fine bright streaks running up it, flickering), the
-   still forming inside it from a bright blur; a tile change beams the whole lineup out the same way and the new tile's
-   animals in, one by one. Its delay: inline, set once as it loads. */
-.op-an.in, .op-an.out { opacity:1; }   /* the base rule starts a still at 0; the inner's animation fades it in */
-.op-an.in > i { animation:op-materialize 1.5s ease-out both; animation-delay:inherit; }
-.op-an.out > i { animation:op-dematerialize 1.1s ease-in both; }
+/* Arrivals and departures (owner, 2026-10-27, "like vertical aurora borealis lines"): AUR_N (arrival.js) vertical
+   lines clustered over the still at differing heights, wiggling left and right, each with its own life; the animal
+   forms as a flat silhouette in the lines' colour (.op-sil: the still as a mask over the colour), then its own colours
+   fade in as the lines shimmer out at their own odd intervals. A tile change runs it backwards (.out) over the whole
+   lineup, then the new tile's animals come in. Each still's delay (--d) is set once as it loads. */
+.op-an.in, .op-an.out { opacity:1; }   /* the base rule starts a still at 0 */
+.op-an .op-sil { position:absolute; inset:0; background:var(--aur, #8dffd2); -webkit-mask:var(--still) center / 100% 100% no-repeat; mask:var(--still) center / 100% 100% no-repeat; opacity:0; pointer-events:none; }
+.op-an.flip .op-sil { transform:scaleX(-1); }
+.op-an .op-aur { position:absolute; left:0; right:0; bottom:0; height:100%; pointer-events:none; }
+.op-an .op-aur i { position:absolute; bottom:-4%; left:var(--lx); width:2px; height:calc(var(--lh) * 1%); margin-left:-1px; border-radius:1px; transform-origin:50% 100%;
+  background:linear-gradient(180deg, #0000 0%, var(--lc) 22%, var(--lc) 72%, #0000 100%); filter:blur(.5px); mix-blend-mode:plus-lighter; opacity:0; }
+.op-an.in img { animation:op-colour-in 2.3s ease both; animation-delay:var(--d, 0s); }
+.op-an.in .op-sil { animation:op-sil-in 2.3s ease both; animation-delay:var(--d, 0s); }
+.op-an.in .op-aur i { animation:op-aur-in var(--ld) ease-in-out both, op-wiggle var(--lw) ease-in-out infinite alternate; animation-delay:calc(var(--d, 0s) + var(--la)), var(--la); }
+.op-an.out img { animation:op-colour-out 1.4s ease both; }
+.op-an.out .op-sil { animation:op-sil-out 1.4s ease both; }
+.op-an.out .op-aur i { animation:op-aur-out var(--ld) ease-in-out both, op-wiggle var(--lw) ease-in-out infinite alternate; animation-delay:var(--la), var(--la); }
+.op-an.bird.in > i { animation:op-float var(--fd, 6s) ease-in-out infinite alternate; }
+.op-an.gone { animation:op-gone .4s ease forwards; }   /* a species the newly chosen tile does not have */
 .op-an.ground::before { content:''; position:absolute; left:8%; right:8%; bottom:-3%; height:max(4px, 9%); border-radius:50%; background:radial-gradient(closest-side, #000a, #0000); z-index:-1; }
 .op-an::after { content:''; position:absolute; left:50%; top:50%; width:max(70px, 140%); aspect-ratio:1; margin:0; translate:-50% -50%; border-radius:50%; pointer-events:none;
   background:radial-gradient(closest-side, #fffaf0 0%, #fff1d8cc 18%, #ffe6be40 50%, #ffe6be00 100%); mix-blend-mode:plus-lighter; opacity:0; scale:.25; }
@@ -128,15 +140,15 @@ html:not(.opening) #opening:not(.out) { display:none; }
   background-size:7px 100%, 100% 60px, 100% 100%; opacity:0; scale:1 1; filter:blur(.4px); }
 .op-an.in::after { animation:op-pillar 1.5s linear both, op-dance .32s steps(4) infinite; animation-delay:inherit; }
 .op-an.out::after { animation:op-pillar-out 1.1s linear both, op-dance .32s steps(4) infinite; }
-.op-an.bird.in > i { animation:op-float var(--fd, 6s) ease-in-out infinite alternate; }
-.op-an.gone { animation:op-gone .4s ease forwards; }   /* a species the newly chosen tile does not have */
 @keyframes op-gone { from { opacity:1; transform:scale(1); } to { opacity:0; transform:scale(.6); } }
 @keyframes op-pop { 0% { opacity:0; transform:scale(.3); } 60% { opacity:1; } 100% { opacity:1; transform:scale(1); } }
-@keyframes op-materialize { 0% { opacity:0; filter:brightness(6) saturate(0) blur(3px); } 35% { opacity:.6; filter:brightness(4) saturate(.2) blur(2px); } 75% { opacity:1; filter:brightness(1.8) saturate(.8) blur(.5px); } 100% { opacity:1; filter:none; } }
-@keyframes op-dematerialize { 0% { opacity:1; filter:none; } 30% { opacity:1; filter:brightness(3) saturate(.3) blur(1px); } 100% { opacity:0; filter:brightness(6) saturate(0) blur(3px); } }
-@keyframes op-pillar { 0% { opacity:0; scale:.6 .2; } 15% { opacity:1; scale:1 1; } 70% { opacity:.9; } 100% { opacity:0; scale:.8 1.05; } }
-@keyframes op-pillar-out { 0% { opacity:0; scale:.8 .5; } 25% { opacity:1; scale:1 1; } 100% { opacity:0; scale:.5 1.1; } }
-@keyframes op-dance { from { background-position:0 0, 0 0, 0 0; } to { background-position:-7px 0, 0 -60px, 0 0; } }
+@keyframes op-aur-in { 0% { opacity:0; transform:scaleY(.25); } 10% { opacity:1; transform:scaleY(1); } 50% { opacity:.8; } 64% { opacity:1; } 100% { opacity:0; transform:scaleY(1.08); } }
+@keyframes op-aur-out { 0% { opacity:0; transform:scaleY(.25); } 10% { opacity:1; transform:scaleY(1); } 50% { opacity:.8; } 64% { opacity:1; } 100% { opacity:0; transform:scaleY(1.08); } }
+@keyframes op-wiggle { from { translate:-3px 0; } to { translate:3px 0; } }
+@keyframes op-sil-in { 0% { opacity:0; } 30% { opacity:1; } 58% { opacity:1; } 100% { opacity:0; } }
+@keyframes op-colour-in { 0%, 50% { opacity:0; } 100% { opacity:1; } }
+@keyframes op-sil-out { 0% { opacity:0; } 28% { opacity:1; } 70% { opacity:1; } 100% { opacity:0; } }
+@keyframes op-colour-out { 0% { opacity:1; } 35% { opacity:0; } 100% { opacity:0; } }
 @keyframes op-glimmer { 0% { opacity:0; scale:.25; } 18% { opacity:1; } 100% { opacity:0; scale:1.4; } }
 @keyframes op-float { 0% { transform:translate(0, 0) rotate(-2deg); } 50% { transform:translate(calc(var(--fx, 8px) * .5), -6px) rotate(1deg); } 100% { transform:translate(var(--fx, 8px), 3px) rotate(2deg); } }
 

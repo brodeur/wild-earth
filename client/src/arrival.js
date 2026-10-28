@@ -101,6 +101,24 @@ class SeasonYear {
 const label = d => `${MONTH[d.getMonth()]} ${d.getDate()}`;
 const PX_PER_M_CARD = 0.112;              // the lineup's scale: a metre as a fraction of the card's height (the deer ~15%)
 const POP_GAP = [0.18, 0.42];             // s between the animals' arrivals
+const AUR_N = [10, 15], AUR_COLOURS = ['#8dffd2', '#9ff5ff', '#b8ffb0', '#c7b3ff', '#7df0c4'];   // the aurora lines over an arriving still (opening.css .op-aur)
+// The lines: AUR_N of them, clustered round the still's middle at differing heights (40-170% of the still), each with
+// its own colour, wiggle period (--lw), delay (--la) and life (--ld), so they shimmer out at their own odd intervals.
+function auroraLines(rnd) {
+  const box = document.createElement('span'); box.className = 'op-aur';
+  const n = AUR_N[0] + Math.floor(rnd() * (AUR_N[1] - AUR_N[0] + 1));
+  for (let i = 0; i < n; i++) {
+    const l = document.createElement('i');
+    l.style.setProperty('--lx', `${(50 + (rnd() + rnd() - 1) * 30).toFixed(1)}%`);
+    l.style.setProperty('--lh', `${(40 + rnd() * 130).toFixed(0)}`);
+    l.style.setProperty('--lc', AUR_COLOURS[Math.floor(rnd() * AUR_COLOURS.length)]);
+    l.style.setProperty('--lw', `${(0.45 + rnd() * 0.9).toFixed(2)}s`);
+    l.style.setProperty('--la', `${(rnd() * 0.5).toFixed(2)}s`);
+    l.style.setProperty('--ld', `${(1.3 + rnd() * 1.4).toFixed(2)}s`);
+    box.append(l);
+  }
+  return box;
+}
 const FOOT_BELOW = 0.035, FOOT_MARGIN = 0.03;   // the ground animals' foot line: card heights under the card's bottom edge, and the least above the window's
 const BOOT_MAX = 12;                      // s: the dark start waits at most this long for its assets
 // The track's own season colours at its four titles (opening.css .op-track, the same stops): the selected card's
@@ -368,8 +386,8 @@ export class OpeningScreen {
     // another tile's lineup beams out whole (opening.css .out), and this tile's animals come in as their own sequence
     // after it, shared species included (owner, 2026-10-27: a new tile may be another continent)
     if (this.lineupTile && this.lineupTile !== id && this.anEls.size) {
-      for (const el of this.anEls.values()) { el.classList.remove('in'); el.classList.add('out'); el.style.animationDelay = '0s'; setTimeout(() => el.remove(), 1200); }
-      this.anEls = new Map(); this.popAt = performance.now() / 1000 + 0.7;
+      for (const el of this.anEls.values()) { el.classList.remove('in'); el.classList.add('out'); el.style.animationDelay = '0s'; el.style.setProperty('--d', '0s'); setTimeout(() => el.remove(), 2900); }
+      this.anEls = new Map(); this.popAt = performance.now() / 1000 + 1.0;
     }
     this.lineupTile = id;
     for (const it of items.sort(() => rnd() - 0.5)) {   // new ones created, so loaded, in a random order
@@ -380,16 +398,17 @@ export class OpeningScreen {
       if (!el) {
         fresh = true; el = document.createElement('span'); this.anEls.set(it.c, el);
         el.className = `op-an ${it.bird != null ? 'bird' : 'ground'}`;
-        const img = new Image(), inner = document.createElement('i');
-        img.alt = ''; img.decoding = 'async';
+        const img = new Image(), inner = document.createElement('i'), sil = document.createElement('b');
+        img.alt = ''; img.decoding = 'async'; sil.className = 'op-sil';
+        el.style.setProperty('--still', `url("./assets/opening/${sp.file}")`);   // the silhouette's mask (opening.css .op-sil)
         img.onload = () => {
           const now = performance.now() / 1000, at = Math.max(now + 0.05, this.popAt || 0);
           this.popAt = at + POP_GAP[0] + rnd() * (POP_GAP[1] - POP_GAP[0]);
-          el.style.animationDelay = `${(at - now).toFixed(3)}s`;
+          el.style.animationDelay = `${(at - now).toFixed(3)}s`; el.style.setProperty('--d', `${(at - now).toFixed(3)}s`);
           el.classList.add('in');
         };
         img.src = `./assets/opening/${sp.file}`;
-        inner.append(img); el.append(inner); box.append(el);
+        inner.append(img, sil); el.append(inner, auroraLines(rnd)); box.append(el);
       }
       let x, y;   // the still's centre x and top y, in card heights: birds from the card's centre x and bottom, ground
                   // animals from the card's centre x and the foot line (--fy, just under the card: placeLineup)

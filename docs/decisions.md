@@ -1677,3 +1677,18 @@ live wisp as a glowing ball with a trailing ribbon; a change from the home card 
 the pillars standing over the lion, fox and turkey as they went and over each arrival. Found on the way: the browser
 kept an old opening.css while the page was fresh, so the stylesheet link now carries a version query. Known: the first
 load's boot is too short to see its wisp with cached assets; the pillars read as a fine grid at close range.
+
+## 2026-10-27: the animals arrive as an aurora
+
+Aaron, after the pillars: "more like vertical aurora borealis lines, 10-15 vertical lines that wiggle left and right all
+clustered together at differing heights, then the model of the animal fades in at the same colour and then the colour
+fades in on the animal as the vertical lines shimmer out at different odd intervals." arrival.js `auroraLines`: 10-15
+lines per still, clustered round its middle (a two-dice spread of 30%), 40-170% of the still's height, each with its own
+colour from five aurora greens, cyans and a violet, wiggle period (0.45-1.35 s, left and right by 3 px), delay (0-0.5 s)
+and life (1.3-2.7 s), so they shimmer out at their own odd intervals; a silhouette (.op-sil: the still as a mask over
+the lines' colour) under the still. opening.css: on arrival the lines rise and the silhouette fades in over the first
+third, the still's own colours fade in from the middle as the silhouette goes, the lines by their own lives; a tile
+change runs it backwards over 1.4 s (the colours go first, the silhouette holds, the lines last) and the new tile's
+animals come in a second later. The pillars (the entry before) are gone. Verified: the deer forming as a mint silhouette
+among lines, the turkey and the small animals after it, the colours in by two seconds; on the change to Placerville the
+whole row to silhouettes with lines, then lines alone, then the new arrivals.
