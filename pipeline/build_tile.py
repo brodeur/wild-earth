@@ -90,9 +90,11 @@ def run(tile: Tile, steps: list[str], force=False) -> dict:
                 # Long (the point cloud streams for the better part of an hour); `python -m pipeline.lidar`
                 # runs the same stages without holding the manifest, and this step then only records them.
                 from .lidar import build_lidar
-                for k, v in build_lidar(tile, force).items():
+                out = build_lidar(tile, force)
+                for k, v in out.items():
                     add_layer(m, tile, k, v)
-                m["status"]["lidar"] = True
+                # "dem_only": the 1 m DEM products alone, no point cloud in the public Entwine bucket (lidar.py)
+                m["status"]["lidar"] = True if "vegetation.chm_1m" in out else "dem_only"
             elif step == "naip":
                 from .fetch_naip import fetch_naip
                 add_layer(m, tile, "imagery.naip", fetch_naip(tile, force))
@@ -158,6 +160,9 @@ def run(tile: Tile, steps: list[str], force=False) -> dict:
                     if "hydro.flowlines" in m["layers"] and "terrain.dem" in m["layers"]:
                         from .resources import derive_resources
                         add_layer(m, tile, "resources", derive_resources(tile))
+                    if "resources" in m["layers"]:   # the species' games, classified from the calendar, perception and the resources (pipeline/games.py)
+                        from .games import derive_games
+                        add_layer(m, tile, "games", derive_games(tile), fetched=False)
             elif step == "crowns":
                 # The crown finder again, now that osm (buildings, bridges), veg (the rewilded classes) and derive (the
                 # dense-urban mask) exist: the lidar step runs before them and its first crown list knows none of them.
@@ -176,11 +181,14 @@ def run(tile: Tile, steps: list[str], force=False) -> dict:
             elif step == "inpaint":
                 # The ground-only base texture: tree crowns (lidar CHM 3 m and taller) and their shadows synthesized
                 # from clean ground of the same class (pipeline/inpaint_crowns.py); needs erase and lidar.
-                from .inpaint_crowns import inpaint_crowns
-                info = inpaint_crowns(tile)
-                for k in ("client.texture_ground", "client.texture_ground_mask"):
-                    add_layer(m, tile, k, info[k])
-                m["status"]["crowns_inpainted"] = True
+                if "vegetation.chm_1m" in m["layers"]:
+                    from .inpaint_crowns import inpaint_crowns
+                    info = inpaint_crowns(tile)
+                    for k in ("client.texture_ground", "client.texture_ground_mask"):
+                        add_layer(m, tile, k, info[k])
+                    m["status"]["crowns_inpainted"] = True
+                else:
+                    print(f"[{tile.tile_id}] inpaint: no lidar canopy on this tile, skipped (the client draws the imagery)")
             elif step == "seasons":
                 # Sentinel-2 L2A per calendar month (requirements-sentinel.txt); dates already read
                 # are cached under pipeline/_cache/sentinel/<tile>/looks/.

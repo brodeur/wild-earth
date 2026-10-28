@@ -1547,3 +1547,22 @@ behind (at a trot cap of 4.5 m/s, since raised to 8 so a run keeps it in touch);
 closed from 62 to 11 m with the body walking in its slot; a key took the lead back. Not yet: the jay families (fliers,
 flierControl.js), the lion mother's young, the ground squirrel colony and the woodpecker family (they do not roam as a
 group). Open: the camera could follow the group's centroid while the herd leads.
+
+## 2026-10-27: games are found and classified from the package, not written per tile
+
+Aaron: "figure out a pipeline for games: species-level games, collective games... predator-prey, get water, get food:
+graze, forage. What are the games for the species we have, and how do we discover and classify them from a pipeline
+perspective." The design is docs/games.md. In short: a game is a calendar activity (the verb, its resources, its goal)
+with a place (the resource raster's best cells that season), an opposition (the other species' hunt lists, the species
+after the same resource the same season, the season's scarcity) and a unit (how the species moves: herd, covey, flock,
+family, colony, pair, mother and young, or alone; a group's games are collective, and only groups have watch). A new
+`games` step (pipeline/games.py, in derive after the resources) writes `games.json` per tile with every species' games
+by season, classified into ten archetypes (gather, drink, hunt, evade, cache, shelter, court, rear, disperse, watch),
+placed (up to 12 hotspots in the resource's top 3%, 150 m apart) and scored (scarcity), and the tile's relations
+(predation, competition per resource and season, scavenging, alarm from the perception matrix). On the five built tiles:
+18 species, 160 games, 79 collective, 14 predator-prey pairs, the raven following the lion, 4 alarm links. The classifier
+showed the data's gaps at once (games.md lists them): the calendar's hunt lists give quail, turkeys, the jays, the
+woodpecker and the raven no predator, only the deer's calendar names water, the perception matrix is too full for
+alarms to mean much, and court has no place. Next: a needs table and a diet table per species for the step to read,
+perception with range and sense, and the client's games.js, one runtime per archetype, with the acorn game as the cache
+archetype's raven instance and the herd pilot as the base of every collective game.

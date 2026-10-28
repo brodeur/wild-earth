@@ -1,0 +1,9470 @@
+{
+ "generated": "2026-10-28T03:38:40Z",
+ "tile_id": "utm10n_540_4180",
+ "archetypes": {
+  "gather": "find the resource's hotspots, feed, keep an eye out: the predators listed hunt here; the competitors eat the same cells",
+  "drink": "reach water on a rhythm; in summer the few sources draw every species, and the ambush predators, together",
+  "hunt": "find the prey (perception), close unseen, strike; the prey's game is its dual: evade",
+  "evade": "notice the predator before it is close (perception, the watchers' alarms), reach cover, keep the group together",
+  "cache": "store the resource in its season, recover it later; the competitors pilfer; a family's granary is defended together",
+  "shelter": "be in cover, a cavity, a burrow or a roost before dusk, a storm or a predator; the weather sets the pressure",
+  "court": "find and win a mate in the season: display, call, chase",
+  "rear": "keep the young fed and alive through the season: an escort game, collective where the young travel with the group",
+  "disperse": "leave the natal range and find an empty territory: a map-scale game",
+  "watch": "the collective's sentinel: someone looks up while the rest feed; an alarm sends everyone to cover"
+ },
+ "relations": {
+  "predation": [
+   [
+    "buteo_jamaicensis",
+    "microtus_californicus"
+   ],
+   [
+    "buteo_jamaicensis",
+    "sylvilagus_bachmani"
+   ],
+   [
+    "buteo_jamaicensis",
+    "lepus_californicus"
+   ],
+   [
+    "buteo_jamaicensis",
+    "sciurus_griseus"
+   ],
+   [
+    "buteo_jamaicensis",
+    "otospermophilus_beecheyi"
+   ],
+   [
+    "buteo_jamaicensis",
+    "sceloporus_occidentalis"
+   ],
+   [
+    "urocyon_cinereoargenteus",
+    "microtus_californicus"
+   ],
+   [
+    "urocyon_cinereoargenteus",
+    "sylvilagus_bachmani"
+   ],
+   [
+    "canis_latrans",
+    "sylvilagus_bachmani"
+   ],
+   [
+    "canis_latrans",
+    "lepus_californicus"
+   ],
+   [
+    "canis_latrans",
+    "microtus_californicus"
+   ],
+   [
+    "canis_latrans",
+    "odocoileus_hemionus"
+   ],
+   [
+    "puma_concolor",
+    "odocoileus_hemionus"
+   ],
+   [
+    "puma_concolor",
+    "sylvilagus_bachmani"
+   ]
+  ],
+  "competition": {
+   "cliff_or_snag": {
+    "winter": [
+     "corvus_corax",
+     "meleagris_gallopavo"
+    ],
+    "spring": [
+     "corvus_corax",
+     "buteo_jamaicensis",
+     "sceloporus_occidentalis"
+    ],
+    "fall": [
+     "melanerpes_formicivorus"
+    ],
+    "summer": [
+     "cathartes_aura"
+    ]
+   },
+   "insects": {
+    "spring": [
+     "corvus_corax",
+     "sceloporus_occidentalis"
+    ],
+    "summer": [
+     "corvus_corax",
+     "urocyon_cinereoargenteus",
+     "sciurus_griseus",
+     "melanerpes_formicivorus",
+     "callipepla_californica",
+     "aphelocoma_californica",
+     "cyanocitta_stelleri",
+     "canis_latrans",
+     "meleagris_gallopavo",
+     "sceloporus_occidentalis"
+    ],
+    "fall": [
+     "sceloporus_occidentalis"
+    ]
+   },
+   "cover": {
+    "summer": [
+     "corvus_corax",
+     "odocoileus_hemionus",
+     "callipepla_californica",
+     "aphelocoma_californica",
+     "sylvilagus_bachmani",
+     "lepus_californicus",
+     "sceloporus_occidentalis"
+    ],
+    "winter": [
+     "odocoileus_hemionus",
+     "aphelocoma_californica",
+     "sylvilagus_bachmani",
+     "lepus_californicus",
+     "sceloporus_occidentalis"
+    ],
+    "spring": [
+     "odocoileus_hemionus",
+     "urocyon_cinereoargenteus",
+     "callipepla_californica",
+     "aphelocoma_californica",
+     "cyanocitta_stelleri",
+     "sylvilagus_bachmani",
+     "puma_concolor",
+     "meleagris_gallopavo"
+    ],
+    "fall": [
+     "sceloporus_occidentalis"
+    ]
+   },
+   "acorn_mast": {
+    "fall": [
+     "corvus_corax",
+     "odocoileus_hemionus",
+     "urocyon_cinereoargenteus",
+     "sciurus_griseus",
+     "melanerpes_formicivorus",
+     "callipepla_californica",
+     "aphelocoma_californica",
+     "cyanocitta_stelleri",
+     "canis_latrans",
+     "meleagris_gallopavo",
+     "otospermophilus_beecheyi"
+    ],
+    "winter": [
+     "sciurus_griseus",
+     "melanerpes_formicivorus",
+     "aphelocoma_californica",
+     "cyanocitta_stelleri",
+     "meleagris_gallopavo"
+    ],
+    "summer": [
+     "otospermophilus_beecheyi"
+    ]
+   },
+   "browse": {
+    "winter": [
+     "odocoileus_hemionus",
+     "sylvilagus_bachmani",
+     "lepus_californicus"
+    ],
+    "summer": [
+     "odocoileus_hemionus",
+     "sciurus_griseus"
+    ],
+    "fall": [
+     "sylvilagus_bachmani",
+     "lepus_californicus"
+    ]
+   },
+   "grass_forbs": {
+    "spring": [
+     "odocoileus_hemionus",
+     "lepus_californicus",
+     "microtus_californicus",
+     "otospermophilus_beecheyi"
+    ],
+    "winter": [
+     "callipepla_californica",
+     "sylvilagus_bachmani",
+     "lepus_californicus",
+     "microtus_californicus",
+     "meleagris_gallopavo"
+    ],
+    "fall": [
+     "callipepla_californica",
+     "lepus_californicus",
+     "microtus_californicus"
+    ],
+    "summer": [
+     "sylvilagus_bachmani",
+     "lepus_californicus",
+     "meleagris_gallopavo",
+     "otospermophilus_beecheyi"
+    ]
+   },
+   "water": {
+    "spring": [
+     "odocoileus_hemionus"
+    ],
+    "summer": [
+     "odocoileus_hemionus"
+    ]
+   },
+   "burrow": {
+    "spring": [
+     "urocyon_cinereoargenteus",
+     "microtus_californicus",
+     "canis_latrans",
+     "otospermophilus_beecheyi"
+    ],
+    "winter": [
+     "microtus_californicus",
+     "otospermophilus_beecheyi"
+    ],
+    "summer": [
+     "microtus_californicus",
+     "otospermophilus_beecheyi"
+    ],
+    "fall": [
+     "microtus_californicus",
+     "otospermophilus_beecheyi"
+    ]
+   },
+   "cavity": {
+    "winter": [
+     "sciurus_griseus",
+     "melanerpes_formicivorus"
+    ],
+    "spring": [
+     "sciurus_griseus",
+     "melanerpes_formicivorus"
+    ],
+    "summer": [
+     "cathartes_aura"
+    ]
+   }
+  },
+  "scavenge": [
+   [
+    "corvus_corax",
+    "puma_concolor"
+   ]
+  ],
+  "alarm": [
+   [
+    "corvus_corax",
+    "sylvilagus_bachmani",
+    "puma_concolor"
+   ],
+   [
+    "urocyon_cinereoargenteus",
+    "sylvilagus_bachmani",
+    "puma_concolor"
+   ],
+   [
+    "lepus_californicus",
+    "sylvilagus_bachmani",
+    "puma_concolor"
+   ],
+   [
+    "canis_latrans",
+    "sylvilagus_bachmani",
+    "puma_concolor"
+   ]
+  ]
+ },
+ "resources": {
+  "acorn_mast": {
+   "winter": {
+    "scarcity": 1.0,
+    "mean": 4.6,
+    "hotspots": 12
+   },
+   "spring": {
+    "scarcity": 1.0,
+    "mean": 0.9,
+    "hotspots": 0
+   },
+   "summer": {
+    "scarcity": 1.0,
+    "mean": 0.4,
+    "hotspots": 0
+   },
+   "fall": {
+    "scarcity": 0.899,
+    "mean": 9.3,
+    "hotspots": 12
+   }
+  },
+  "grass_forbs": {
+   "winter": {
+    "scarcity": 0.976,
+    "mean": 6.8,
+    "hotspots": 12
+   },
+   "spring": {
+    "scarcity": 0.894,
+    "mean": 11.3,
+    "hotspots": 12
+   },
+   "summer": {
+    "scarcity": 1.0,
+    "mean": 2.3,
+    "hotspots": 0
+   },
+   "fall": {
+    "scarcity": 1.0,
+    "mean": 3.4,
+    "hotspots": 0
+   }
+  },
+  "browse": {
+   "winter": {
+    "scarcity": 1.0,
+    "mean": 18.7,
+    "hotspots": 12
+   },
+   "spring": {
+    "scarcity": 0.586,
+    "mean": 31.1,
+    "hotspots": 12
+   },
+   "summer": {
+    "scarcity": 0.707,
+    "mean": 21.8,
+    "hotspots": 12
+   },
+   "fall": {
+    "scarcity": 1.0,
+    "mean": 15.6,
+    "hotspots": 12
+   }
+  },
+  "cover": {
+   "winter": {
+    "scarcity": 0.553,
+    "mean": 31.8,
+    "hotspots": 12
+   },
+   "spring": {
+    "scarcity": 0.553,
+    "mean": 37.6,
+    "hotspots": 12
+   },
+   "summer": {
+    "scarcity": 0.553,
+    "mean": 37.6,
+    "hotspots": 12
+   },
+   "fall": {
+    "scarcity": 0.553,
+    "mean": 37.6,
+    "hotspots": 12
+   }
+  },
+  "insects": {
+   "winter": {
+    "scarcity": 1.0,
+    "mean": 2.5,
+    "hotspots": 0
+   },
+   "spring": {
+    "scarcity": 0.562,
+    "mean": 25.4,
+    "hotspots": 12
+   },
+   "summer": {
+    "scarcity": 0.955,
+    "mean": 20.3,
+    "hotspots": 12
+   },
+   "fall": {
+    "scarcity": 1.0,
+    "mean": 10.1,
+    "hotspots": 0
+   }
+  },
+  "cavity": {
+   "winter": {
+    "scarcity": 0.946,
+    "mean": 6.0,
+    "hotspots": 12
+   },
+   "spring": {
+    "scarcity": 0.946,
+    "mean": 6.0,
+    "hotspots": 12
+   },
+   "summer": {
+    "scarcity": 0.946,
+    "mean": 6.0,
+    "hotspots": 12
+   },
+   "fall": {
+    "scarcity": 0.946,
+    "mean": 6.0,
+    "hotspots": 12
+   }
+  },
+  "cliff_or_snag": {
+   "winter": {
+    "scarcity": 0.785,
+    "mean": 17.3,
+    "hotspots": 12
+   },
+   "spring": {
+    "scarcity": 0.785,
+    "mean": 17.3,
+    "hotspots": 12
+   },
+   "summer": {
+    "scarcity": 0.785,
+    "mean": 17.3,
+    "hotspots": 12
+   },
+   "fall": {
+    "scarcity": 0.785,
+    "mean": 17.3,
+    "hotspots": 12
+   }
+  },
+  "burrow": {
+   "winter": {
+    "scarcity": 0.976,
+    "mean": 19.0,
+    "hotspots": 12
+   },
+   "spring": {
+    "scarcity": 0.601,
+    "mean": 23.7,
+    "hotspots": 12
+   },
+   "summer": {
+    "scarcity": 0.601,
+    "mean": 23.7,
+    "hotspots": 12
+   },
+   "fall": {
+    "scarcity": 0.601,
+    "mean": 23.7,
+    "hotspots": 12
+   }
+  },
+  "water": {
+   "winter": {
+    "scarcity": 0.921,
+    "mean": 14.9,
+    "hotspots": 12
+   },
+   "spring": {
+    "scarcity": 0.921,
+    "mean": 14.9,
+    "hotspots": 12
+   },
+   "summer": {
+    "scarcity": 0.921,
+    "mean": 14.9,
+    "hotspots": 12
+   },
+   "fall": {
+    "scarcity": 0.921,
+    "mean": 14.9,
+    "hotspots": 12
+   }
+  }
+ },
+ "species": {
+  "corvus_corax": {
+   "unit": "pair",
+   "predators": [],
+   "prey": [],
+   "games": [
+    {
+     "id": "corvus_corax:winter:forage",
+     "archetype": "gather",
+     "verb": "forage",
+     "season": "winter",
+     "unit": "pair",
+     "collective": true,
+     "goal": "follow predators to kills",
+     "prey": [
+      "puma_concolor"
+     ]
+    },
+    {
+     "id": "corvus_corax:winter:court:cliff_or_snag",
+     "archetype": "court",
+     "verb": "court",
+     "season": "winter",
+     "unit": "pair",
+     "collective": true,
+     "goal": "pair up before nesting",
+     "resource": "cliff_or_snag",
+     "hotspots": [
+      [
+       541726.7,
+       4189985.0,
+       90
+      ],
+      [
+       543678.7,
+       4189985.0,
+       90
+      ],
+      [
+       543888.9,
+       4189985.0,
+       90
+      ],
+      [
+       544039.0,
+       4189985.0,
+       90
+      ],
+      [
+       544189.2,
+       4189985.0,
+       90
+      ],
+      [
+       544339.3,
+       4189985.0,
+       90
+      ],
+      [
+       544549.5,
+       4189985.0,
+       90
+      ],
+      [
+       545090.1,
+       4189985.0,
+       90
+      ],
+      [
+       545690.7,
+       4189985.0,
+       90
+      ],
+      [
+       549024.0,
+       4189985.0,
+       90
+      ],
+      [
+       549174.2,
+       4189985.0,
+       90
+      ],
+      [
+       549324.3,
+       4189985.0,
+       90
+      ]
+     ],
+     "scarcity": 0.785,
+     "competitors": [
+      "meleagris_gallopavo"
+     ]
+    },
+    {
+     "id": "corvus_corax:spring:nest:cliff_or_snag",
+     "archetype": "shelter",
+     "verb": "nest",
+     "season": "spring",
+     "unit": "pair",
+     "collective": true,
+     "goal": "build a stick nest",
+     "resource": "cliff_or_snag",
+     "hotspots": [
+      [
+       541726.7,
+       4189985.0,
+       90
+      ],
+      [
+       543678.7,
+       4189985.0,
+       90
+      ],
+      [
+       543888.9,
+       4189985.0,
+       90
+      ],
+      [
+       544039.0,
+       4189985.0,
+       90
+      ],
+      [
+       544189.2,
+       4189985.0,
+       90
+      ],
+      [
+       544339.3,
+       4189985.0,
+       90
+      ],
+      [
+       544549.5,
+       4189985.0,
+       90
+      ],
+      [
+       545090.1,
+       4189985.0,
+       90
+      ],
+      [
+       545690.7,
+       4189985.0,
+       90
+      ],
+      [
+       549024.0,
+       4189985.0,
+       90
+      ],
+      [
+       549174.2,
+       4189985.0,
+       90
+      ],
+      [
+       549324.3,
+       4189985.0,
+       90
+      ]
+     ],
+     "scarcity": 0.785,
+     "competitors": [
+      "buteo_jamaicensis",
+      "sceloporus_occidentalis"
+     ]
+    },
+    {
+     "id": "corvus_corax:spring:rear:insects",
+     "archetype": "rear",
+     "verb": "rear",
+     "season": "spring",
+     "unit": "pair",
+     "collective": true,
+     "goal": "feed nestlings",
+     "resource": "insects",
+     "hotspots": [
+      [
+       540495.5,
+       4189985.0,
+       90
+      ],
+      [
+       545780.8,
+       4189985.0,
+       90
+      ],
+      [
+       549744.7,
+       4189955.0,
+       90
+      ],
+      [
+       549144.1,
+       4189924.9,
+       90
+      ],
+      [
+       549384.4,
+       4189894.9,
+       90
+      ],
+      [
+       540525.5,
+       4189834.8,
+       90
+      ],
+      [
+       549654.7,
+       4189774.8,
+       90
+      ],
+      [
+       540555.6,
+       4189684.7,
+       90
+      ],
+      [
+       540585.6,
+       4189534.5,
+       90
+      ],
+      [
+       543108.1,
+       4189444.4,
+       90
+      ],
+      [
+       545780.8,
+       4189384.4,
+       90
+      ],
+      [
+       540615.6,
+       4189324.3,
+       90
+      ]
+     ],
+     "scarcity": 0.562,
+     "competitors": [
+      "sceloporus_occidentalis"
+     ]
+    },
+    {
+     "id": "corvus_corax:summer:forage:insects",
+     "archetype": "gather",
+     "verb": "forage",
+     "season": "summer",
+     "unit": "pair",
+     "collective": true,
+     "resource": "insects",
+     "hotspots": [
+      [
+       540495.5,
+       4189985.0,
+       72
+      ],
+      [
+       545780.8,
+       4189985.0,
+       72
+      ],
+      [
+       549744.7,
+       4189955.0,
+       72
+      ],
+      [
+       549144.1,
+       4189924.9,
+       72
+      ],
+      [
+       549384.4,
+       4189894.9,
+       72
+      ],
+      [
+       540525.5,
+       4189834.8,
+       72
+      ],
+      [
+       549654.7,
+       4189774.8,
+       72
+      ],
+      [
+       540555.6,
+       4189684.7,
+       72
+      ],
+      [
+       540585.6,
+       4189534.5,
+       72
+      ],
+      [
+       543108.1,
+       4189444.4,
+       72
+      ],
+      [
+       545780.8,
+       4189384.4,
+       72
+      ],
+      [
+       540615.6,
+       4189324.3,
+       72
+      ]
+     ],
+     "scarcity": 0.955,
+     "competitors": [
+      "urocyon_cinereoargenteus",
+      "sciurus_griseus",
+      "melanerpes_formicivorus",
+      "callipepla_californica",
+      "aphelocoma_californica",
+      "cyanocitta_stelleri",
+      "canis_latrans",
+      "meleagris_gallopavo",
+      "sceloporus_occidentalis"
+     ]
+    },
+    {
+     "id": "corvus_corax:summer:rear:cover",
+     "archetype": "rear",
+     "verb": "rear",
+     "season": "summer",
+     "unit": "pair",
+     "collective": true,
+     "goal": "fledglings",
+     "resource": "cover",
+     "hotspots": [
+      [
+       540015.0,
+       4189985.0,
+       90
+      ],
+      [
+       540225.2,
+       4189985.0,
+       90
+      ],
+      [
+       540375.4,
+       4189985.0,
+       90
+      ],
+      [
+       540735.7,
+       4189985.0,
+       90
+      ],
+      [
+       540915.9,
+       4189985.0,
+       90
+      ],
+      [
+       541066.1,
+       4189985.0,
+       90
+      ],
+      [
+       541216.2,
+       4189985.0,
+       90
+      ],
+      [
+       541366.4,
+       4189985.0,
+       90
+      ],
+      [
+       541516.5,
+       4189985.0,
+       90
+      ],
+      [
+       541696.7,
+       4189985.0,
+       90
+      ],
+      [
+       541846.8,
+       4189985.0,
+       90
+      ],
+      [
+       541997.0,
+       4189985.0,
+       90
+      ]
+     ],
+     "scarcity": 0.553,
+     "competitors": [
+      "odocoileus_hemionus",
+      "callipepla_californica",
+      "aphelocoma_californica",
+      "sylvilagus_bachmani",
+      "lepus_californicus",
+      "sceloporus_occidentalis"
+     ]
+    },
+    {
+     "id": "corvus_corax:fall:forage:acorn_mast",
+     "archetype": "gather",
+     "verb": "forage",
+     "season": "fall",
+     "unit": "pair",
+     "collective": true,
+     "resource": "acorn_mast",
+     "hotspots": [
+      [
+       540165.2,
+       4189985.0,
+       90
+      ],
+      [
+       541336.3,
+       4189985.0,
+       90
+      ],
+      [
+       541606.6,
+       4189985.0,
+       90
+      ],
+      [
+       541756.8,
+       4189985.0,
+       90
+      ],
+      [
+       541906.9,
+       4189985.0,
+       90
+      ],
+      [
+       543618.6,
+       4189985.0,
+       90
+      ],
+      [
+       543768.8,
+       4189985.0,
+       90
+      ],
+      [
+       543918.9,
+       4189985.0,
+       90
+      ],
+      [
+       544069.1,
+       4189985.0,
+       90
+      ],
+      [
+       544849.8,
+       4189985.0,
+       90
+      ],
+      [
+       545000.0,
+       4189985.0,
+       90
+      ],
+      [
+       545150.2,
+       4189985.0,
+       90
+      ]
+     ],
+     "scarcity": 0.899,
+     "competitors": [
+      "odocoileus_hemionus",
+      "urocyon_cinereoargenteus",
+      "sciurus_griseus",
+      "melanerpes_formicivorus",
+      "callipepla_californica",
+      "aphelocoma_californica",
+      "cyanocitta_stelleri",
+      "canis_latrans",
+      "meleagris_gallopavo",
+      "otospermophilus_beecheyi"
+     ]
+    },
+    {
+     "id": "corvus_corax:fall:cache:acorn_mast",
+     "archetype": "cache",
+     "verb": "cache",
+     "season": "fall",
+     "unit": "pair",
+     "collective": true,
+     "goal": "hide food from other ravens",
+     "resource": "acorn_mast",
+     "hotspots": [
+      [
+       540165.2,
+       4189985.0,
+       90
+      ],
+      [
+       541336.3,
+       4189985.0,
+       90
+      ],
+      [
+       541606.6,
+       4189985.0,
+       90
+      ],
+      [
+       541756.8,
+       4189985.0,
+       90
+      ],
+      [
+       541906.9,
+       4189985.0,
+       90
+      ],
+      [
+       543618.6,
+       4189985.0,
+       90
+      ],
+      [
+       543768.8,
+       4189985.0,
+       90
+      ],
+      [
+       543918.9,
+       4189985.0,
+       90
+      ],
+      [
+       544069.1,
+       4189985.0,
+       90
+      ],
+      [
+       544849.8,
+       4189985.0,
+       90
+      ],
+      [
+       545000.0,
+       4189985.0,
+       90
+      ],
+      [
+       545150.2,
+       4189985.0,
+       90
+      ]
+     ],
+     "scarcity": 0.899,
+     "competitors": [
+      "odocoileus_hemionus",
+      "urocyon_cinereoargenteus",
+      "sciurus_griseus",
+      "melanerpes_formicivorus",
+      "callipepla_californica",
+      "aphelocoma_californica",
+      "cyanocitta_stelleri",
+      "canis_latrans",
+      "meleagris_gallopavo",
+      "otospermophilus_beecheyi"
+     ]
+    }
+   ]
+  },
+  "buteo_jamaicensis": {
+   "unit": "solitary",
+   "predators": [],
+   "prey": [
+    "lepus_californicus",
+    "microtus_californicus",
+    "otospermophilus_beecheyi",
+    "sceloporus_occidentalis",
+    "sciurus_griseus",
+    "sylvilagus_bachmani"
+   ],
+   "games": [
+    {
+     "id": "buteo_jamaicensis:winter:hunt",
+     "archetype": "hunt",
+     "verb": "hunt",
+     "season": "winter",
+     "unit": "solitary",
+     "collective": false,
+     "goal": "hunt from perches",
+     "prey": [
+      "microtus_californicus",
+      "sylvilagus_bachmani",
+      "lepus_californicus"
+     ]
+    },
+    {
+     "id": "buteo_jamaicensis:spring:court",
+     "archetype": "court",
+     "verb": "court",
+     "season": "spring",
+     "unit": "solitary",
+     "collective": false,
+     "goal": "sky dance"
+    },
+    {
+     "id": "buteo_jamaicensis:spring:nest:cliff_or_snag",
+     "archetype": "shelter",
+     "verb": "nest",
+     "season": "spring",
+     "unit": "solitary",
+     "collective": false,
+     "goal": "large tree or cliff",
+     "resource": "cliff_or_snag",
+     "hotspots": [
+      [
+       541726.7,
+       4189985.0,
+       90
+      ],
+      [
+       543678.7,
+       4189985.0,
+       90
+      ],
+      [
+       543888.9,
+       4189985.0,
+       90
+      ],
+      [
+       544039.0,
+       4189985.0,
+       90
+      ],
+      [
+       544189.2,
+       4189985.0,
+       90
+      ],
+      [
+       544339.3,
+       4189985.0,
+       90
+      ],
+      [
+       544549.5,
+       4189985.0,
+       90
+      ],
+      [
+       545090.1,
+       4189985.0,
+       90
+      ],
+      [
+       545690.7,
+       4189985.0,
+       90
+      ],
+      [
+       549024.0,
+       4189985.0,
+       90
+      ],
+      [
+       549174.2,
+       4189985.0,
+       90
+      ],
+      [
+       549324.3,
+       4189985.0,
+       90
+      ]
+     ],
+     "scarcity": 0.785,
+     "competitors": [
+      "corvus_corax",
+      "sceloporus_occidentalis"
+     ]
+    },
+    {
+     "id": "buteo_jamaicensis:summer:rear",
+     "archetype": "rear",
+     "verb": "rear",
+     "season": "summer",
+     "unit": "solitary",
+     "collective": false,
+     "goal": "feed chicks",
+     "prey": [
+      "sciurus_griseus",
+      "otospermophilus_beecheyi",
+      "sylvilagus_bachmani",
+      "microtus_californicus",
+      "sceloporus_occidentalis"
+     ]
+    },
+    {
+     "id": "buteo_jamaicensis:fall:disperse",
+     "archetype": "disperse",
+     "verb": "disperse",
+     "season": "fall",
+     "unit": "solitary",
+     "collective": false,
+     "goal": "juveniles leave the territory"
+    },
+    {
+     "id": "buteo_jamaicensis:fall:hunt",
+     "archetype": "hunt",
+     "verb": "hunt",
+     "season": "fall",
+     "unit": "solitary",
+     "collective": false,
+     "prey": [
+      "microtus_californicus",
+      "sciurus_griseus"
+     ]
+    }
+   ]
+  },
+  "odocoileus_hemionus": {
+   "unit": "herd",
+   "predators": [
+    "canis_latrans",
+    "puma_concolor"
+   ],
+   "prey": [],
+   "games": [
+    {
+     "id": "odocoileus_hemionus:winter:forage:browse",
+     "archetype": "gather",
+     "verb": "forage",
+     "season": "winter",
+     "unit": "herd",
+     "collective": true,
+     "resource": "browse",
+     "hotspots": [
+      [
+       540015.0,
+       4189985.0,
+       48
+      ],
+      [
+       540225.2,
+       4189985.0,
+       48
+      ],
+      [
+       540375.4,
+       4189985.0,
+       48
+      ],
+      [
+       540735.7,
+       4189985.0,
+       48
+      ],
+      [
+       540915.9,
+       4189985.0,
+       48
+      ],
+      [
+       541066.1,
+       4189985.0,
+       48
+      ],
+      [
+       541216.2,
+       4189985.0,
+       48
+      ],
+      [
+       541366.4,
+       4189985.0,
+       48
+      ],
+      [
+       541516.5,
+       4189985.0,
+       48
+      ],
+      [
+       541696.7,
+       4189985.0,
+       48
+      ],
+      [
+       541846.8,
+       4189985.0,
+       48
+      ],
+      [
+       541997.0,
+       4189985.0,
+       48
+      ]
+     ],
+     "scarcity": 1.0,
+     "competitors": [
+      "sylvilagus_bachmani",
+      "lepus_californicus"
+     ],
+     "predators": [
+      "canis_latrans",
+      "puma_concolor"
+     ]
+    },
+    {
+     "id": "odocoileus_hemionus:winter:shelter:cover",
+     "archetype": "shelter",
+     "verb": "shelter",
+     "season": "winter",
+     "unit": "herd",
+     "collective": true,
+     "goal": "avoid storms and lions",
+     "resource": "cover",
+     "hotspots": [
+      [
+       540015.0,
+       4189985.0,
+       76
+      ],
+      [
+       540225.2,
+       4189985.0,
+       76
+      ],
+      [
+       540375.4,
+       4189985.0,
+       76
+      ],
+      [
+       540735.7,
+       4189985.0,
+       76
+      ],
+      [
+       540915.9,
+       4189985.0,
+       76
+      ],
+      [
+       541066.1,
+       4189985.0,
+       76
+      ],
+      [
+       541216.2,
+       4189985.0,
+       76
+      ],
+      [
+       541366.4,
+       4189985.0,
+       76
+      ],
+      [
+       541516.5,
+       4189985.0,
+       76
+      ],
+      [
+       541696.7,
+       4189985.0,
+       76
+      ],
+      [
+       541846.8,
+       4189985.0,
+       76
+      ],
+      [
+       541997.0,
+       4189985.0,
+       76
+      ]
+     ],
+     "scarcity": 0.553,
+     "competitors": [
+      "aphelocoma_californica",
+      "sylvilagus_bachmani",
+      "lepus_californicus",
+      "sceloporus_occidentalis"
+     ],
+     "predators": [
+      "canis_latrans",
+      "puma_concolor"
+     ]
+    },
+    {
+     "id": "odocoileus_hemionus:spring:forage:grass_forbs",
+     "archetype": "gather",
+     "verb": "forage",
+     "season": "spring",
+     "unit": "herd",
+     "collective": true,
+     "resource": "grass_forbs",
+     "hotspots": [
+      [
+       540135.1,
+       4189985.0,
+       90
+      ],
+      [
+       540615.6,
+       4189985.0,
+       90
+      ],
+      [
+       540795.8,
+       4189985.0,
+       90
+      ],
+      [
+       541967.0,
+       4189985.0,
+       90
+      ],
+      [
+       542147.1,
+       4189985.0,
+       90
+      ],
+      [
+       542477.5,
+       4189985.0,
+       90
+      ],
+      [
+       542897.9,
+       4189985.0,
+       90
+      ],
+      [
+       543198.2,
+       4189985.0,
+       90
+      ],
+      [
+       543348.3,
+       4189985.0,
+       90
+      ],
+      [
+       543528.5,
+       4189985.0,
+       90
+      ],
+      [
+       549204.2,
+       4189985.0,
+       90
+      ],
+      [
+       540976.0,
+       4189955.0,
+       90
+      ]
+     ],
+     "scarcity": 0.894,
+     "competitors": [
+      "lepus_californicus",
+      "microtus_californicus",
+      "otospermophilus_beecheyi"
+     ],
+     "predators": [
+      "canis_latrans",
+      "puma_concolor"
+     ]
+    },
+    {
+     "id": "odocoileus_hemionus:spring:rear:cover",
+     "archetype": "rear",
+     "verb": "rear",
+     "season": "spring",
+     "unit": "herd",
+     "collective": true,
+     "goal": "fawn in dense cover",
+     "resource": "cover",
+     "hotspots": [
+      [
+       540015.0,
+       4189985.0,
+       90
+      ],
+      [
+       540225.2,
+       4189985.0,
+       90
+      ],
+      [
+       540375.4,
+       4189985.0,
+       90
+      ],
+      [
+       540735.7,
+       4189985.0,
+       90
+      ],
+      [
+       540915.9,
+       4189985.0,
+       90
+      ],
+      [
+       541066.1,
+       4189985.0,
+       90
+      ],
+      [
+       541216.2,
+       4189985.0,
+       90
+      ],
+      [
+       541366.4,
+       4189985.0,
+       90
+      ],
+      [
+       541516.5,
+       4189985.0,
+       90
+      ],
+      [
+       541696.7,
+       4189985.0,
+       90
+      ],
+      [
+       541846.8,
+       4189985.0,
+       90
+      ],
+      [
+       541997.0,
+       4189985.0,
+       90
+      ]
+     ],
+     "scarcity": 0.553,
+     "competitors": [
+      "urocyon_cinereoargenteus",
+      "callipepla_californica",
+      "aphelocoma_californica",
+      "cyanocitta_stelleri",
+      "sylvilagus_bachmani",
+      "puma_concolor",
+      "meleagris_gallopavo"
+     ],
+     "predators": [
+      "canis_latrans",
+      "puma_concolor"
+     ]
+    },
+    {
+     "id": "odocoileus_hemionus:spring:rear:water",
+     "archetype": "rear",
+     "verb": "rear",
+     "season": "spring",
+     "unit": "herd",
+     "collective": true,
+     "goal": "fawn in dense cover",
+     "resource": "water",
+     "hotspots": [
+      [
+       540465.5,
+       4189985.0,
+       100
+      ],
+      [
+       540615.6,
+       4189985.0,
+       100
+      ],
+      [
+       549234.2,
+       4189985.0,
+       100
+      ],
+      [
+       549444.4,
+       4189985.0,
+       100
+      ],
+      [
+       540525.5,
+       4189834.8,
+       100
+      ],
+      [
+       543588.6,
+       4189714.7,
+       100
+      ],
+      [
+       540525.5,
+       4189684.7,
+       100
+      ],
+      [
+       542447.4,
+       4189654.7,
+       100
+      ],
+      [
+       541967.0,
+       4189624.6,
+       100
+      ],
+      [
+       543438.4,
+       4189624.6,
+       100
+      ],
+      [
+       540615.6,
+       4189564.6,
+       100
+      ],
+      [
+       542567.6,
+       4189564.6,
+       100
+      ]
+     ],
+     "scarcity": 0.921,
+     "competitors": [],
+     "predators": [
+      "canis_latrans",
+      "puma_concolor"
+     ]
+    },
+    {
+     "id": "odocoileus_hemionus:spring:drink",
+     "archetype": "drink",
+     "verb": "drink",
+     "season": "spring",
+     "unit": "herd",
+     "collective": true,
+     "goal": "fawn in dense cover",
+     "resource": "water",
+     "hotspots": [
+      [
+       540465.5,
+       4189985.0,
+       100
+      ],
+      [
+       540615.6,
+       4189985.0,
+       100
+      ],
+      [
+       549234.2,
+       4189985.0,
+       100
+      ],
+      [
+       549444.4,
+       4189985.0,
+       100
+      ],
+      [
+       540525.5,
+       4189834.8,
+       100
+      ],
+      [
+       543588.6,
+       4189714.7,
+       100
+      ],
+      [
+       540525.5,
+       4189684.7,
+       100
+      ],
+      [
+       542447.4,
+       4189654.7,
+       100
+      ],
+      [
+       541967.0,
+       4189624.6,
+       100
+      ],
+      [
+       543438.4,
+       4189624.6,
+       100
+      ],
+      [
+       540615.6,
+       4189564.6,
+       100
+      ],
+      [
+       542567.6,
+       4189564.6,
+       100
+      ]
+     ],
+     "scarcity": 0.921,
+     "competitors": [],
+     "predators": [
+      "canis_latrans",
+      "puma_concolor"
+     ]
+    },
+    {
+     "id": "odocoileus_hemionus:summer:forage:browse",
+     "archetype": "gather",
+     "verb": "forage",
+     "season": "summer",
+     "unit": "herd",
+     "collective": true,
+     "resource": "browse",
+     "hotspots": [
+      [
+       540015.0,
+       4189985.0,
+       56
+      ],
+      [
+       540225.2,
+       4189985.0,
+       56
+      ],
+      [
+       540375.4,
+       4189985.0,
+       56
+      ],
+      [
+       540735.7,
+       4189985.0,
+       56
+      ],
+      [
+       540915.9,
+       4189985.0,
+       56
+      ],
+      [
+       541066.1,
+       4189985.0,
+       56
+      ],
+      [
+       541216.2,
+       4189985.0,
+       56
+      ],
+      [
+       541366.4,
+       4189985.0,
+       56
+      ],
+      [
+       541516.5,
+       4189985.0,
+       56
+      ],
+      [
+       541696.7,
+       4189985.0,
+       56
+      ],
+      [
+       541846.8,
+       4189985.0,
+       56
+      ],
+      [
+       541997.0,
+       4189985.0,
+       56
+      ]
+     ],
+     "scarcity": 0.707,
+     "competitors": [
+      "sciurus_griseus"
+     ],
+     "predators": [
+      "canis_latrans",
+      "puma_concolor"
+     ]
+    },
+    {
+     "id": "odocoileus_hemionus:summer:forage:water",
+     "archetype": "gather",
+     "verb": "forage",
+     "season": "summer",
+     "unit": "herd",
+     "collective": true,
+     "resource": "water",
+     "hotspots": [
+      [
+       540465.5,
+       4189985.0,
+       100
+      ],
+      [
+       540615.6,
+       4189985.0,
+       100
+      ],
+      [
+       549234.2,
+       4189985.0,
+       100
+      ],
+      [
+       549444.4,
+       4189985.0,
+       100
+      ],
+      [
+       540525.5,
+       4189834.8,
+       100
+      ],
+      [
+       543588.6,
+       4189714.7,
+       100
+      ],
+      [
+       540525.5,
+       4189684.7,
+       100
+      ],
+      [
+       542447.4,
+       4189654.7,
+       100
+      ],
+      [
+       541967.0,
+       4189624.6,
+       100
+      ],
+      [
+       543438.4,
+       4189624.6,
+       100
+      ],
+      [
+       540615.6,
+       4189564.6,
+       100
+      ],
+      [
+       542567.6,
+       4189564.6,
+       100
+      ]
+     ],
+     "scarcity": 0.921,
+     "competitors": [],
+     "predators": [
+      "canis_latrans",
+      "puma_concolor"
+     ]
+    },
+    {
+     "id": "odocoileus_hemionus:summer:drink",
+     "archetype": "drink",
+     "verb": "drink",
+     "season": "summer",
+     "unit": "herd",
+     "collective": true,
+     "resource": "water",
+     "hotspots": [
+      [
+       540465.5,
+       4189985.0,
+       100
+      ],
+      [
+       540615.6,
+       4189985.0,
+       100
+      ],
+      [
+       549234.2,
+       4189985.0,
+       100
+      ],
+      [
+       549444.4,
+       4189985.0,
+       100
+      ],
+      [
+       540525.5,
+       4189834.8,
+       100
+      ],
+      [
+       543588.6,
+       4189714.7,
+       100
+      ],
+      [
+       540525.5,
+       4189684.7,
+       100
+      ],
+      [
+       542447.4,
+       4189654.7,
+       100
+      ],
+      [
+       541967.0,
+       4189624.6,
+       100
+      ],
+      [
+       543438.4,
+       4189624.6,
+       100
+      ],
+      [
+       540615.6,
+       4189564.6,
+       100
+      ],
+      [
+       542567.6,
+       4189564.6,
+       100
+      ]
+     ],
+     "scarcity": 0.921,
+     "competitors": [],
+     "predators": [
+      "canis_latrans",
+      "puma_concolor"
+     ]
+    },
+    {
+     "id": "odocoileus_hemionus:summer:shelter:cover",
+     "archetype": "shelter",
+     "verb": "shelter",
+     "season": "summer",
+     "unit": "herd",
+     "collective": true,
+     "goal": "rest in shade midday",
+     "resource": "cover",
+     "hotspots": [
+      [
+       540015.0,
+       4189985.0,
+       90
+      ],
+      [
+       540225.2,
+       4189985.0,
+       90
+      ],
+      [
+       540375.4,
+       4189985.0,
+       90
+      ],
+      [
+       540735.7,
+       4189985.0,
+       90
+      ],
+      [
+       540915.9,
+       4189985.0,
+       90
+      ],
+      [
+       541066.1,
+       4189985.0,
+       90
+      ],
+      [
+       541216.2,
+       4189985.0,
+       90
+      ],
+      [
+       541366.4,
+       4189985.0,
+       90
+      ],
+      [
+       541516.5,
+       4189985.0,
+       90
+      ],
+      [
+       541696.7,
+       4189985.0,
+       90
+      ],
+      [
+       541846.8,
+       4189985.0,
+       90
+      ],
+      [
+       541997.0,
+       4189985.0,
+       90
+      ]
+     ],
+     "scarcity": 0.553,
+     "competitors": [
+      "corvus_corax",
+      "callipepla_californica",
+      "aphelocoma_californica",
+      "sylvilagus_bachmani",
+      "lepus_californicus",
+      "sceloporus_occidentalis"
+     ],
+     "predators": [
+      "canis_latrans",
+      "puma_concolor"
+     ]
+    },
+    {
+     "id": "odocoileus_hemionus:fall:court",
+     "archetype": "court",
+     "verb": "court",
+     "season": "fall",
+     "unit": "herd",
+     "collective": true,
+     "goal": "rut",
+     "predators": [
+      "canis_latrans",
+      "puma_concolor"
+     ]
+    },
+    {
+     "id": "odocoileus_hemionus:fall:forage:acorn_mast",
+     "archetype": "gather",
+     "verb": "forage",
+     "season": "fall",
+     "unit": "herd",
+     "collective": true,
+     "goal": "fatten before winter",
+     "resource": "acorn_mast",
+     "hotspots": [
+      [
+       540165.2,
+       4189985.0,
+       90
+      ],
+      [
+       541336.3,
+       4189985.0,
+       90
+      ],
+      [
+       541606.6,
+       4189985.0,
+       90
+      ],
+      [
+       541756.8,
+       4189985.0,
+       90
+      ],
+      [
+       541906.9,
+       4189985.0,
+       90
+      ],
+      [
+       543618.6,
+       4189985.0,
+       90
+      ],
+      [
+       543768.8,
+       4189985.0,
+       90
+      ],
+      [
+       543918.9,
+       4189985.0,
+       90
+      ],
+      [
+       544069.1,
+       4189985.0,
+       90
+      ],
+      [
+       544849.8,
+       4189985.0,
+       90
+      ],
+      [
+       545000.0,
+       4189985.0,
+       90
+      ],
+      [
+       545150.2,
+       4189985.0,
+       90
+      ]
+     ],
+     "scarcity": 0.899,
+     "competitors": [
+      "corvus_corax",
+      "urocyon_cinereoargenteus",
+      "sciurus_griseus",
+      "melanerpes_formicivorus",
+      "callipepla_californica",
+      "aphelocoma_californica",
+      "cyanocitta_stelleri",
+      "canis_latrans",
+      "meleagris_gallopavo",
+      "otospermophilus_beecheyi"
+     ],
+     "predators": [
+      "canis_latrans",
+      "puma_concolor"
+     ]
+    },
+    {
+     "id": "odocoileus_hemionus:canis_latrans:evade",
+     "archetype": "evade",
+     "verb": "evade",
+     "season": "all",
+     "unit": "herd",
+     "collective": true,
+     "predator": "canis_latrans",
+     "watchers": []
+    },
+    {
+     "id": "odocoileus_hemionus:puma_concolor:evade",
+     "archetype": "evade",
+     "verb": "evade",
+     "season": "all",
+     "unit": "herd",
+     "collective": true,
+     "predator": "puma_concolor",
+     "watchers": []
+    },
+    {
+     "id": "odocoileus_hemionus:watch",
+     "archetype": "watch",
+     "verb": "watch",
+     "season": "all",
+     "unit": "herd",
+     "collective": true,
+     "predators": [
+      "canis_latrans",
+      "puma_concolor"
+     ]
+    }
+   ]
+  },
+  "urocyon_cinereoargenteus": {
+   "unit": "solitary",
+   "predators": [],
+   "prey": [
+    "microtus_californicus",
+    "sylvilagus_bachmani"
+   ],
+   "games": [
+    {
+     "id": "urocyon_cinereoargenteus:winter:court",
+     "archetype": "court",
+     "verb": "court",
+     "season": "winter",
+     "unit": "solitary",
+     "collective": false,
+     "goal": "breeding season"
+    },
+    {
+     "id": "urocyon_cinereoargenteus:winter:hunt",
+     "archetype": "hunt",
+     "verb": "hunt",
+     "season": "winter",
+     "unit": "solitary",
+     "collective": false,
+     "prey": [
+      "microtus_californicus",
+      "sylvilagus_bachmani"
+     ]
+    },
+    {
+     "id": "urocyon_cinereoargenteus:spring:den:burrow",
+     "archetype": "shelter",
+     "verb": "den",
+     "season": "spring",
+     "unit": "solitary",
+     "collective": false,
+     "goal": "den in a hollow or rock pile",
+     "resource": "burrow",
+     "hotspots": [
+      [
+       540135.1,
+       4189985.0,
+       80
+      ],
+      [
+       540615.6,
+       4189985.0,
+       80
+      ],
+      [
+       540795.8,
+       4189985.0,
+       80
+      ],
+      [
+       541967.0,
+       4189985.0,
+       80
+      ],
+      [
+       542147.1,
+       4189985.0,
+       80
+      ],
+      [
+       542477.5,
+       4189985.0,
+       80
+      ],
+      [
+       542897.9,
+       4189985.0,
+       80
+      ],
+      [
+       543198.2,
+       4189985.0,
+       80
+      ],
+      [
+       543348.3,
+       4189985.0,
+       80
+      ],
+      [
+       543528.5,
+       4189985.0,
+       80
+      ],
+      [
+       549204.2,
+       4189985.0,
+       80
+      ],
+      [
+       540976.0,
+       4189955.0,
+       80
+      ]
+     ],
+     "scarcity": 0.601,
+     "competitors": [
+      "microtus_californicus",
+      "canis_latrans",
+      "otospermophilus_beecheyi"
+     ]
+    },
+    {
+     "id": "urocyon_cinereoargenteus:spring:den:cover",
+     "archetype": "shelter",
+     "verb": "den",
+     "season": "spring",
+     "unit": "solitary",
+     "collective": false,
+     "goal": "den in a hollow or rock pile",
+     "resource": "cover",
+     "hotspots": [
+      [
+       540015.0,
+       4189985.0,
+       90
+      ],
+      [
+       540225.2,
+       4189985.0,
+       90
+      ],
+      [
+       540375.4,
+       4189985.0,
+       90
+      ],
+      [
+       540735.7,
+       4189985.0,
+       90
+      ],
+      [
+       540915.9,
+       4189985.0,
+       90
+      ],
+      [
+       541066.1,
+       4189985.0,
+       90
+      ],
+      [
+       541216.2,
+       4189985.0,
+       90
+      ],
+      [
+       541366.4,
+       4189985.0,
+       90
+      ],
+      [
+       541516.5,
+       4189985.0,
+       90
+      ],
+      [
+       541696.7,
+       4189985.0,
+       90
+      ],
+      [
+       541846.8,
+       4189985.0,
+       90
+      ],
+      [
+       541997.0,
+       4189985.0,
+       90
+      ]
+     ],
+     "scarcity": 0.553,
+     "competitors": [
+      "odocoileus_hemionus",
+      "callipepla_californica",
+      "aphelocoma_californica",
+      "cyanocitta_stelleri",
+      "sylvilagus_bachmani",
+      "puma_concolor",
+      "meleagris_gallopavo"
+     ]
+    },
+    {
+     "id": "urocyon_cinereoargenteus:spring:rear",
+     "archetype": "rear",
+     "verb": "rear",
+     "season": "spring",
+     "unit": "solitary",
+     "collective": false
+    },
+    {
+     "id": "urocyon_cinereoargenteus:summer:hunt:insects",
+     "archetype": "hunt",
+     "verb": "hunt",
+     "season": "summer",
+     "unit": "solitary",
+     "collective": false,
+     "resource": "insects",
+     "hotspots": [
+      [
+       540495.5,
+       4189985.0,
+       72
+      ],
+      [
+       545780.8,
+       4189985.0,
+       72
+      ],
+      [
+       549744.7,
+       4189955.0,
+       72
+      ],
+      [
+       549144.1,
+       4189924.9,
+       72
+      ],
+      [
+       549384.4,
+       4189894.9,
+       72
+      ],
+      [
+       540525.5,
+       4189834.8,
+       72
+      ],
+      [
+       549654.7,
+       4189774.8,
+       72
+      ],
+      [
+       540555.6,
+       4189684.7,
+       72
+      ],
+      [
+       540585.6,
+       4189534.5,
+       72
+      ],
+      [
+       543108.1,
+       4189444.4,
+       72
+      ],
+      [
+       545780.8,
+       4189384.4,
+       72
+      ],
+      [
+       540615.6,
+       4189324.3,
+       72
+      ]
+     ],
+     "scarcity": 0.955,
+     "competitors": [
+      "corvus_corax",
+      "sciurus_griseus",
+      "melanerpes_formicivorus",
+      "callipepla_californica",
+      "aphelocoma_californica",
+      "cyanocitta_stelleri",
+      "canis_latrans",
+      "meleagris_gallopavo",
+      "sceloporus_occidentalis"
+     ]
+    },
+    {
+     "id": "urocyon_cinereoargenteus:summer:rear",
+     "archetype": "rear",
+     "verb": "rear",
+     "season": "summer",
+     "unit": "solitary",
+     "collective": false,
+     "goal": "teach kits to hunt"
+    },
+    {
+     "id": "urocyon_cinereoargenteus:fall:forage:acorn_mast",
+     "archetype": "gather",
+     "verb": "forage",
+     "season": "fall",
+     "unit": "solitary",
+     "collective": false,
+     "goal": "fruit and acorns",
+     "resource": "acorn_mast",
+     "hotspots": [
+      [
+       540165.2,
+       4189985.0,
+       90
+      ],
+      [
+       541336.3,
+       4189985.0,
+       90
+      ],
+      [
+       541606.6,
+       4189985.0,
+       90
+      ],
+      [
+       541756.8,
+       4189985.0,
+       90
+      ],
+      [
+       541906.9,
+       4189985.0,
+       90
+      ],
+      [
+       543618.6,
+       4189985.0,
+       90
+      ],
+      [
+       543768.8,
+       4189985.0,
+       90
+      ],
+      [
+       543918.9,
+       4189985.0,
+       90
+      ],
+      [
+       544069.1,
+       4189985.0,
+       90
+      ],
+      [
+       544849.8,
+       4189985.0,
+       90
+      ],
+      [
+       545000.0,
+       4189985.0,
+       90
+      ],
+      [
+       545150.2,
+       4189985.0,
+       90
+      ]
+     ],
+     "scarcity": 0.899,
+     "competitors": [
+      "corvus_corax",
+      "odocoileus_hemionus",
+      "sciurus_griseus",
+      "melanerpes_formicivorus",
+      "callipepla_californica",
+      "aphelocoma_californica",
+      "cyanocitta_stelleri",
+      "canis_latrans",
+      "meleagris_gallopavo",
+      "otospermophilus_beecheyi"
+     ]
+    },
+    {
+     "id": "urocyon_cinereoargenteus:fall:disperse",
+     "archetype": "disperse",
+     "verb": "disperse",
+     "season": "fall",
+     "unit": "solitary",
+     "collective": false,
+     "goal": "kits leave"
+    }
+   ]
+  },
+  "sciurus_griseus": {
+   "unit": "solitary",
+   "predators": [
+    "buteo_jamaicensis"
+   ],
+   "prey": [],
+   "games": [
+    {
+     "id": "sciurus_griseus:winter:forage:acorn_mast",
+     "archetype": "gather",
+     "verb": "forage",
+     "season": "winter",
+     "unit": "solitary",
+     "collective": false,
+     "goal": "recover caches",
+     "resource": "acorn_mast",
+     "hotspots": [
+      [
+       540165.2,
+       4189985.0,
+       45
+      ],
+      [
+       541336.3,
+       4189985.0,
+       45
+      ],
+      [
+       541606.6,
+       4189985.0,
+       45
+      ],
+      [
+       541756.8,
+       4189985.0,
+       45
+      ],
+      [
+       541906.9,
+       4189985.0,
+       45
+      ],
+      [
+       543618.6,
+       4189985.0,
+       45
+      ],
+      [
+       543768.8,
+       4189985.0,
+       45
+      ],
+      [
+       543918.9,
+       4189985.0,
+       45
+      ],
+      [
+       544069.1,
+       4189985.0,
+       45
+      ],
+      [
+       544849.8,
+       4189985.0,
+       45
+      ],
+      [
+       545000.0,
+       4189985.0,
+       45
+      ],
+      [
+       545150.2,
+       4189985.0,
+       45
+      ]
+     ],
+     "scarcity": 1.0,
+     "competitors": [
+      "melanerpes_formicivorus",
+      "aphelocoma_californica",
+      "cyanocitta_stelleri",
+      "meleagris_gallopavo"
+     ],
+     "predators": [
+      "buteo_jamaicensis"
+     ]
+    },
+    {
+     "id": "sciurus_griseus:winter:shelter:cavity",
+     "archetype": "shelter",
+     "verb": "shelter",
+     "season": "winter",
+     "unit": "solitary",
+     "collective": false,
+     "resource": "cavity",
+     "hotspots": [
+      [
+       543318.3,
+       4181786.8,
+       96
+      ],
+      [
+       545870.9,
+       4188723.7,
+       92
+      ],
+      [
+       545750.8,
+       4188603.6,
+       92
+      ],
+      [
+       545480.5,
+       4188183.2,
+       92
+      ],
+      [
+       544669.7,
+       4186921.9,
+       92
+      ],
+      [
+       546321.3,
+       4184699.7,
+       92
+      ],
+      [
+       546231.2,
+       4184339.3,
+       92
+      ],
+      [
+       546651.7,
+       4183168.2,
+       92
+      ],
+      [
+       547342.3,
+       4182927.9,
+       92
+      ],
+      [
+       547192.2,
+       4182837.8,
+       92
+      ],
+      [
+       547432.4,
+       4182807.8,
+       92
+      ],
+      [
+       547702.7,
+       4180765.8,
+       92
+      ]
+     ],
+     "scarcity": 0.946,
+     "competitors": [
+      "melanerpes_formicivorus"
+     ],
+     "predators": [
+      "buteo_jamaicensis"
+     ]
+    },
+    {
+     "id": "sciurus_griseus:spring:court",
+     "archetype": "court",
+     "verb": "court",
+     "season": "spring",
+     "unit": "solitary",
+     "collective": false,
+     "goal": "mating chases",
+     "predators": [
+      "buteo_jamaicensis"
+     ]
+    },
+    {
+     "id": "sciurus_griseus:spring:nest:cavity",
+     "archetype": "shelter",
+     "verb": "nest",
+     "season": "spring",
+     "unit": "solitary",
+     "collective": false,
+     "goal": "dray or cavity",
+     "resource": "cavity",
+     "hotspots": [
+      [
+       543318.3,
+       4181786.8,
+       96
+      ],
+      [
+       545870.9,
+       4188723.7,
+       92
+      ],
+      [
+       545750.8,
+       4188603.6,
+       92
+      ],
+      [
+       545480.5,
+       4188183.2,
+       92
+      ],
+      [
+       544669.7,
+       4186921.9,
+       92
+      ],
+      [
+       546321.3,
+       4184699.7,
+       92
+      ],
+      [
+       546231.2,
+       4184339.3,
+       92
+      ],
+      [
+       546651.7,
+       4183168.2,
+       92
+      ],
+      [
+       547342.3,
+       4182927.9,
+       92
+      ],
+      [
+       547192.2,
+       4182837.8,
+       92
+      ],
+      [
+       547432.4,
+       4182807.8,
+       92
+      ],
+      [
+       547702.7,
+       4180765.8,
+       92
+      ]
+     ],
+     "scarcity": 0.946,
+     "competitors": [
+      "melanerpes_formicivorus"
+     ],
+     "predators": [
+      "buteo_jamaicensis"
+     ]
+    },
+    {
+     "id": "sciurus_griseus:summer:forage:insects",
+     "archetype": "gather",
+     "verb": "forage",
+     "season": "summer",
+     "unit": "solitary",
+     "collective": false,
+     "resource": "insects",
+     "hotspots": [
+      [
+       540495.5,
+       4189985.0,
+       72
+      ],
+      [
+       545780.8,
+       4189985.0,
+       72
+      ],
+      [
+       549744.7,
+       4189955.0,
+       72
+      ],
+      [
+       549144.1,
+       4189924.9,
+       72
+      ],
+      [
+       549384.4,
+       4189894.9,
+       72
+      ],
+      [
+       540525.5,
+       4189834.8,
+       72
+      ],
+      [
+       549654.7,
+       4189774.8,
+       72
+      ],
+      [
+       540555.6,
+       4189684.7,
+       72
+      ],
+      [
+       540585.6,
+       4189534.5,
+       72
+      ],
+      [
+       543108.1,
+       4189444.4,
+       72
+      ],
+      [
+       545780.8,
+       4189384.4,
+       72
+      ],
+      [
+       540615.6,
+       4189324.3,
+       72
+      ]
+     ],
+     "scarcity": 0.955,
+     "competitors": [
+      "corvus_corax",
+      "urocyon_cinereoargenteus",
+      "melanerpes_formicivorus",
+      "callipepla_californica",
+      "aphelocoma_californica",
+      "cyanocitta_stelleri",
+      "canis_latrans",
+      "meleagris_gallopavo",
+      "sceloporus_occidentalis"
+     ],
+     "predators": [
+      "buteo_jamaicensis"
+     ]
+    },
+    {
+     "id": "sciurus_griseus:summer:forage:browse",
+     "archetype": "gather",
+     "verb": "forage",
+     "season": "summer",
+     "unit": "solitary",
+     "collective": false,
+     "resource": "browse",
+     "hotspots": [
+      [
+       540015.0,
+       4189985.0,
+       56
+      ],
+      [
+       540225.2,
+       4189985.0,
+       56
+      ],
+      [
+       540375.4,
+       4189985.0,
+       56
+      ],
+      [
+       540735.7,
+       4189985.0,
+       56
+      ],
+      [
+       540915.9,
+       4189985.0,
+       56
+      ],
+      [
+       541066.1,
+       4189985.0,
+       56
+      ],
+      [
+       541216.2,
+       4189985.0,
+       56
+      ],
+      [
+       541366.4,
+       4189985.0,
+       56
+      ],
+      [
+       541516.5,
+       4189985.0,
+       56
+      ],
+      [
+       541696.7,
+       4189985.0,
+       56
+      ],
+      [
+       541846.8,
+       4189985.0,
+       56
+      ],
+      [
+       541997.0,
+       4189985.0,
+       56
+      ]
+     ],
+     "scarcity": 0.707,
+     "competitors": [
+      "odocoileus_hemionus"
+     ],
+     "predators": [
+      "buteo_jamaicensis"
+     ]
+    },
+    {
+     "id": "sciurus_griseus:summer:rear",
+     "archetype": "rear",
+     "verb": "rear",
+     "season": "summer",
+     "unit": "solitary",
+     "collective": false,
+     "predators": [
+      "buteo_jamaicensis"
+     ]
+    },
+    {
+     "id": "sciurus_griseus:fall:cache:acorn_mast",
+     "archetype": "cache",
+     "verb": "cache",
+     "season": "fall",
+     "unit": "solitary",
+     "collective": false,
+     "goal": "scatter-hoard acorns before rain",
+     "resource": "acorn_mast",
+     "hotspots": [
+      [
+       540165.2,
+       4189985.0,
+       90
+      ],
+      [
+       541336.3,
+       4189985.0,
+       90
+      ],
+      [
+       541606.6,
+       4189985.0,
+       90
+      ],
+      [
+       541756.8,
+       4189985.0,
+       90
+      ],
+      [
+       541906.9,
+       4189985.0,
+       90
+      ],
+      [
+       543618.6,
+       4189985.0,
+       90
+      ],
+      [
+       543768.8,
+       4189985.0,
+       90
+      ],
+      [
+       543918.9,
+       4189985.0,
+       90
+      ],
+      [
+       544069.1,
+       4189985.0,
+       90
+      ],
+      [
+       544849.8,
+       4189985.0,
+       90
+      ],
+      [
+       545000.0,
+       4189985.0,
+       90
+      ],
+      [
+       545150.2,
+       4189985.0,
+       90
+      ]
+     ],
+     "scarcity": 0.899,
+     "competitors": [
+      "corvus_corax",
+      "odocoileus_hemionus",
+      "urocyon_cinereoargenteus",
+      "melanerpes_formicivorus",
+      "callipepla_californica",
+      "aphelocoma_californica",
+      "cyanocitta_stelleri",
+      "canis_latrans",
+      "meleagris_gallopavo",
+      "otospermophilus_beecheyi"
+     ],
+     "predators": [
+      "buteo_jamaicensis"
+     ]
+    },
+    {
+     "id": "sciurus_griseus:buteo_jamaicensis:evade",
+     "archetype": "evade",
+     "verb": "evade",
+     "season": "all",
+     "unit": "solitary",
+     "collective": false,
+     "predator": "buteo_jamaicensis",
+     "watchers": []
+    }
+   ]
+  },
+  "melanerpes_formicivorus": {
+   "unit": "family",
+   "predators": [],
+   "prey": [],
+   "games": [
+    {
+     "id": "melanerpes_formicivorus:winter:forage:acorn_mast",
+     "archetype": "gather",
+     "verb": "forage",
+     "season": "winter",
+     "unit": "family",
+     "collective": true,
+     "goal": "eat acorns cached in the granary",
+     "resource": "acorn_mast",
+     "hotspots": [
+      [
+       540165.2,
+       4189985.0,
+       45
+      ],
+      [
+       541336.3,
+       4189985.0,
+       45
+      ],
+      [
+       541606.6,
+       4189985.0,
+       45
+      ],
+      [
+       541756.8,
+       4189985.0,
+       45
+      ],
+      [
+       541906.9,
+       4189985.0,
+       45
+      ],
+      [
+       543618.6,
+       4189985.0,
+       45
+      ],
+      [
+       543768.8,
+       4189985.0,
+       45
+      ],
+      [
+       543918.9,
+       4189985.0,
+       45
+      ],
+      [
+       544069.1,
+       4189985.0,
+       45
+      ],
+      [
+       544849.8,
+       4189985.0,
+       45
+      ],
+      [
+       545000.0,
+       4189985.0,
+       45
+      ],
+      [
+       545150.2,
+       4189985.0,
+       45
+      ]
+     ],
+     "scarcity": 1.0,
+     "competitors": [
+      "sciurus_griseus",
+      "aphelocoma_californica",
+      "cyanocitta_stelleri",
+      "meleagris_gallopavo"
+     ]
+    },
+    {
+     "id": "melanerpes_formicivorus:winter:shelter:cavity",
+     "archetype": "shelter",
+     "verb": "shelter",
+     "season": "winter",
+     "unit": "family",
+     "collective": true,
+     "goal": "roost in tree cavities",
+     "resource": "cavity",
+     "hotspots": [
+      [
+       543318.3,
+       4181786.8,
+       96
+      ],
+      [
+       545870.9,
+       4188723.7,
+       92
+      ],
+      [
+       545750.8,
+       4188603.6,
+       92
+      ],
+      [
+       545480.5,
+       4188183.2,
+       92
+      ],
+      [
+       544669.7,
+       4186921.9,
+       92
+      ],
+      [
+       546321.3,
+       4184699.7,
+       92
+      ],
+      [
+       546231.2,
+       4184339.3,
+       92
+      ],
+      [
+       546651.7,
+       4183168.2,
+       92
+      ],
+      [
+       547342.3,
+       4182927.9,
+       92
+      ],
+      [
+       547192.2,
+       4182837.8,
+       92
+      ],
+      [
+       547432.4,
+       4182807.8,
+       92
+      ],
+      [
+       547702.7,
+       4180765.8,
+       92
+      ]
+     ],
+     "scarcity": 0.946,
+     "competitors": [
+      "sciurus_griseus"
+     ]
+    },
+    {
+     "id": "melanerpes_formicivorus:spring:nest:cavity",
+     "archetype": "shelter",
+     "verb": "nest",
+     "season": "spring",
+     "unit": "family",
+     "collective": true,
+     "goal": "excavate or reuse a cavity, nest cooperatively",
+     "resource": "cavity",
+     "hotspots": [
+      [
+       543318.3,
+       4181786.8,
+       96
+      ],
+      [
+       545870.9,
+       4188723.7,
+       92
+      ],
+      [
+       545750.8,
+       4188603.6,
+       92
+      ],
+      [
+       545480.5,
+       4188183.2,
+       92
+      ],
+      [
+       544669.7,
+       4186921.9,
+       92
+      ],
+      [
+       546321.3,
+       4184699.7,
+       92
+      ],
+      [
+       546231.2,
+       4184339.3,
+       92
+      ],
+      [
+       546651.7,
+       4183168.2,
+       92
+      ],
+      [
+       547342.3,
+       4182927.9,
+       92
+      ],
+      [
+       547192.2,
+       4182837.8,
+       92
+      ],
+      [
+       547432.4,
+       4182807.8,
+       92
+      ],
+      [
+       547702.7,
+       4180765.8,
+       92
+      ]
+     ],
+     "scarcity": 0.946,
+     "competitors": [
+      "sciurus_griseus"
+     ]
+    },
+    {
+     "id": "melanerpes_formicivorus:spring:court",
+     "archetype": "court",
+     "verb": "court",
+     "season": "spring",
+     "unit": "family",
+     "collective": true,
+     "goal": "drumming and wakka calls"
+    },
+    {
+     "id": "melanerpes_formicivorus:summer:forage:insects",
+     "archetype": "gather",
+     "verb": "forage",
+     "season": "summer",
+     "unit": "family",
+     "collective": true,
+     "goal": "flycatch from snags",
+     "resource": "insects",
+     "hotspots": [
+      [
+       540495.5,
+       4189985.0,
+       72
+      ],
+      [
+       545780.8,
+       4189985.0,
+       72
+      ],
+      [
+       549744.7,
+       4189955.0,
+       72
+      ],
+      [
+       549144.1,
+       4189924.9,
+       72
+      ],
+      [
+       549384.4,
+       4189894.9,
+       72
+      ],
+      [
+       540525.5,
+       4189834.8,
+       72
+      ],
+      [
+       549654.7,
+       4189774.8,
+       72
+      ],
+      [
+       540555.6,
+       4189684.7,
+       72
+      ],
+      [
+       540585.6,
+       4189534.5,
+       72
+      ],
+      [
+       543108.1,
+       4189444.4,
+       72
+      ],
+      [
+       545780.8,
+       4189384.4,
+       72
+      ],
+      [
+       540615.6,
+       4189324.3,
+       72
+      ]
+     ],
+     "scarcity": 0.955,
+     "competitors": [
+      "corvus_corax",
+      "urocyon_cinereoargenteus",
+      "sciurus_griseus",
+      "callipepla_californica",
+      "aphelocoma_californica",
+      "cyanocitta_stelleri",
+      "canis_latrans",
+      "meleagris_gallopavo",
+      "sceloporus_occidentalis"
+     ]
+    },
+    {
+     "id": "melanerpes_formicivorus:summer:rear:insects",
+     "archetype": "rear",
+     "verb": "rear",
+     "season": "summer",
+     "unit": "family",
+     "collective": true,
+     "goal": "feed nestlings",
+     "resource": "insects",
+     "hotspots": [
+      [
+       540495.5,
+       4189985.0,
+       72
+      ],
+      [
+       545780.8,
+       4189985.0,
+       72
+      ],
+      [
+       549744.7,
+       4189955.0,
+       72
+      ],
+      [
+       549144.1,
+       4189924.9,
+       72
+      ],
+      [
+       549384.4,
+       4189894.9,
+       72
+      ],
+      [
+       540525.5,
+       4189834.8,
+       72
+      ],
+      [
+       549654.7,
+       4189774.8,
+       72
+      ],
+      [
+       540555.6,
+       4189684.7,
+       72
+      ],
+      [
+       540585.6,
+       4189534.5,
+       72
+      ],
+      [
+       543108.1,
+       4189444.4,
+       72
+      ],
+      [
+       545780.8,
+       4189384.4,
+       72
+      ],
+      [
+       540615.6,
+       4189324.3,
+       72
+      ]
+     ],
+     "scarcity": 0.955,
+     "competitors": [
+      "corvus_corax",
+      "urocyon_cinereoargenteus",
+      "sciurus_griseus",
+      "callipepla_californica",
+      "aphelocoma_californica",
+      "cyanocitta_stelleri",
+      "canis_latrans",
+      "meleagris_gallopavo",
+      "sceloporus_occidentalis"
+     ]
+    },
+    {
+     "id": "melanerpes_formicivorus:fall:forage:acorn_mast",
+     "archetype": "gather",
+     "verb": "forage",
+     "season": "fall",
+     "unit": "family",
+     "collective": true,
+     "resource": "acorn_mast",
+     "hotspots": [
+      [
+       540165.2,
+       4189985.0,
+       90
+      ],
+      [
+       541336.3,
+       4189985.0,
+       90
+      ],
+      [
+       541606.6,
+       4189985.0,
+       90
+      ],
+      [
+       541756.8,
+       4189985.0,
+       90
+      ],
+      [
+       541906.9,
+       4189985.0,
+       90
+      ],
+      [
+       543618.6,
+       4189985.0,
+       90
+      ],
+      [
+       543768.8,
+       4189985.0,
+       90
+      ],
+      [
+       543918.9,
+       4189985.0,
+       90
+      ],
+      [
+       544069.1,
+       4189985.0,
+       90
+      ],
+      [
+       544849.8,
+       4189985.0,
+       90
+      ],
+      [
+       545000.0,
+       4189985.0,
+       90
+      ],
+      [
+       545150.2,
+       4189985.0,
+       90
+      ]
+     ],
+     "scarcity": 0.899,
+     "competitors": [
+      "corvus_corax",
+      "odocoileus_hemionus",
+      "urocyon_cinereoargenteus",
+      "sciurus_griseus",
+      "callipepla_californica",
+      "aphelocoma_californica",
+      "cyanocitta_stelleri",
+      "canis_latrans",
+      "meleagris_gallopavo",
+      "otospermophilus_beecheyi"
+     ]
+    },
+    {
+     "id": "melanerpes_formicivorus:fall:cache:acorn_mast",
+     "archetype": "cache",
+     "verb": "cache",
+     "season": "fall",
+     "unit": "family",
+     "collective": true,
+     "goal": "store acorns in granary holes in a snag or oak",
+     "resource": "acorn_mast",
+     "hotspots": [
+      [
+       540165.2,
+       4189985.0,
+       90
+      ],
+      [
+       541336.3,
+       4189985.0,
+       90
+      ],
+      [
+       541606.6,
+       4189985.0,
+       90
+      ],
+      [
+       541756.8,
+       4189985.0,
+       90
+      ],
+      [
+       541906.9,
+       4189985.0,
+       90
+      ],
+      [
+       543618.6,
+       4189985.0,
+       90
+      ],
+      [
+       543768.8,
+       4189985.0,
+       90
+      ],
+      [
+       543918.9,
+       4189985.0,
+       90
+      ],
+      [
+       544069.1,
+       4189985.0,
+       90
+      ],
+      [
+       544849.8,
+       4189985.0,
+       90
+      ],
+      [
+       545000.0,
+       4189985.0,
+       90
+      ],
+      [
+       545150.2,
+       4189985.0,
+       90
+      ]
+     ],
+     "scarcity": 0.899,
+     "competitors": [
+      "corvus_corax",
+      "odocoileus_hemionus",
+      "urocyon_cinereoargenteus",
+      "sciurus_griseus",
+      "callipepla_californica",
+      "aphelocoma_californica",
+      "cyanocitta_stelleri",
+      "canis_latrans",
+      "meleagris_gallopavo",
+      "otospermophilus_beecheyi"
+     ]
+    },
+    {
+     "id": "melanerpes_formicivorus:fall:cache:cliff_or_snag",
+     "archetype": "cache",
+     "verb": "cache",
+     "season": "fall",
+     "unit": "family",
+     "collective": true,
+     "goal": "store acorns in granary holes in a snag or oak",
+     "resource": "cliff_or_snag",
+     "hotspots": [
+      [
+       541726.7,
+       4189985.0,
+       90
+      ],
+      [
+       543678.7,
+       4189985.0,
+       90
+      ],
+      [
+       543888.9,
+       4189985.0,
+       90
+      ],
+      [
+       544039.0,
+       4189985.0,
+       90
+      ],
+      [
+       544189.2,
+       4189985.0,
+       90
+      ],
+      [
+       544339.3,
+       4189985.0,
+       90
+      ],
+      [
+       544549.5,
+       4189985.0,
+       90
+      ],
+      [
+       545090.1,
+       4189985.0,
+       90
+      ],
+      [
+       545690.7,
+       4189985.0,
+       90
+      ],
+      [
+       549024.0,
+       4189985.0,
+       90
+      ],
+      [
+       549174.2,
+       4189985.0,
+       90
+      ],
+      [
+       549324.3,
+       4189985.0,
+       90
+      ]
+     ],
+     "scarcity": 0.785,
+     "competitors": []
+    }
+   ]
+  },
+  "callipepla_californica": {
+   "unit": "covey",
+   "predators": [],
+   "prey": [],
+   "games": [
+    {
+     "id": "callipepla_californica:winter:forage:grass_forbs",
+     "archetype": "gather",
+     "verb": "forage",
+     "season": "winter",
+     "unit": "covey",
+     "collective": true,
+     "goal": "coveys",
+     "resource": "grass_forbs",
+     "hotspots": [
+      [
+       540135.1,
+       4189985.0,
+       54
+      ],
+      [
+       540615.6,
+       4189985.0,
+       54
+      ],
+      [
+       540795.8,
+       4189985.0,
+       54
+      ],
+      [
+       541967.0,
+       4189985.0,
+       54
+      ],
+      [
+       542147.1,
+       4189985.0,
+       54
+      ],
+      [
+       542477.5,
+       4189985.0,
+       54
+      ],
+      [
+       542897.9,
+       4189985.0,
+       54
+      ],
+      [
+       543198.2,
+       4189985.0,
+       54
+      ],
+      [
+       543348.3,
+       4189985.0,
+       54
+      ],
+      [
+       543528.5,
+       4189985.0,
+       54
+      ],
+      [
+       549204.2,
+       4189985.0,
+       54
+      ],
+      [
+       540976.0,
+       4189955.0,
+       54
+      ]
+     ],
+     "scarcity": 0.976,
+     "competitors": [
+      "sylvilagus_bachmani",
+      "lepus_californicus",
+      "microtus_californicus",
+      "meleagris_gallopavo"
+     ]
+    },
+    {
+     "id": "callipepla_californica:spring:court",
+     "archetype": "court",
+     "verb": "court",
+     "season": "spring",
+     "unit": "covey",
+     "collective": true
+    },
+    {
+     "id": "callipepla_californica:spring:nest:cover",
+     "archetype": "shelter",
+     "verb": "nest",
+     "season": "spring",
+     "unit": "covey",
+     "collective": true,
+     "resource": "cover",
+     "hotspots": [
+      [
+       540015.0,
+       4189985.0,
+       90
+      ],
+      [
+       540225.2,
+       4189985.0,
+       90
+      ],
+      [
+       540375.4,
+       4189985.0,
+       90
+      ],
+      [
+       540735.7,
+       4189985.0,
+       90
+      ],
+      [
+       540915.9,
+       4189985.0,
+       90
+      ],
+      [
+       541066.1,
+       4189985.0,
+       90
+      ],
+      [
+       541216.2,
+       4189985.0,
+       90
+      ],
+      [
+       541366.4,
+       4189985.0,
+       90
+      ],
+      [
+       541516.5,
+       4189985.0,
+       90
+      ],
+      [
+       541696.7,
+       4189985.0,
+       90
+      ],
+      [
+       541846.8,
+       4189985.0,
+       90
+      ],
+      [
+       541997.0,
+       4189985.0,
+       90
+      ]
+     ],
+     "scarcity": 0.553,
+     "competitors": [
+      "odocoileus_hemionus",
+      "urocyon_cinereoargenteus",
+      "aphelocoma_californica",
+      "cyanocitta_stelleri",
+      "sylvilagus_bachmani",
+      "puma_concolor",
+      "meleagris_gallopavo"
+     ]
+    },
+    {
+     "id": "callipepla_californica:summer:rear:insects",
+     "archetype": "rear",
+     "verb": "rear",
+     "season": "summer",
+     "unit": "covey",
+     "collective": true,
+     "resource": "insects",
+     "hotspots": [
+      [
+       540495.5,
+       4189985.0,
+       72
+      ],
+      [
+       545780.8,
+       4189985.0,
+       72
+      ],
+      [
+       549744.7,
+       4189955.0,
+       72
+      ],
+      [
+       549144.1,
+       4189924.9,
+       72
+      ],
+      [
+       549384.4,
+       4189894.9,
+       72
+      ],
+      [
+       540525.5,
+       4189834.8,
+       72
+      ],
+      [
+       549654.7,
+       4189774.8,
+       72
+      ],
+      [
+       540555.6,
+       4189684.7,
+       72
+      ],
+      [
+       540585.6,
+       4189534.5,
+       72
+      ],
+      [
+       543108.1,
+       4189444.4,
+       72
+      ],
+      [
+       545780.8,
+       4189384.4,
+       72
+      ],
+      [
+       540615.6,
+       4189324.3,
+       72
+      ]
+     ],
+     "scarcity": 0.955,
+     "competitors": [
+      "corvus_corax",
+      "urocyon_cinereoargenteus",
+      "sciurus_griseus",
+      "melanerpes_formicivorus",
+      "aphelocoma_californica",
+      "cyanocitta_stelleri",
+      "canis_latrans",
+      "meleagris_gallopavo",
+      "sceloporus_occidentalis"
+     ]
+    },
+    {
+     "id": "callipepla_californica:summer:rear:cover",
+     "archetype": "rear",
+     "verb": "rear",
+     "season": "summer",
+     "unit": "covey",
+     "collective": true,
+     "resource": "cover",
+     "hotspots": [
+      [
+       540015.0,
+       4189985.0,
+       90
+      ],
+      [
+       540225.2,
+       4189985.0,
+       90
+      ],
+      [
+       540375.4,
+       4189985.0,
+       90
+      ],
+      [
+       540735.7,
+       4189985.0,
+       90
+      ],
+      [
+       540915.9,
+       4189985.0,
+       90
+      ],
+      [
+       541066.1,
+       4189985.0,
+       90
+      ],
+      [
+       541216.2,
+       4189985.0,
+       90
+      ],
+      [
+       541366.4,
+       4189985.0,
+       90
+      ],
+      [
+       541516.5,
+       4189985.0,
+       90
+      ],
+      [
+       541696.7,
+       4189985.0,
+       90
+      ],
+      [
+       541846.8,
+       4189985.0,
+       90
+      ],
+      [
+       541997.0,
+       4189985.0,
+       90
+      ]
+     ],
+     "scarcity": 0.553,
+     "competitors": [
+      "corvus_corax",
+      "odocoileus_hemionus",
+      "aphelocoma_californica",
+      "sylvilagus_bachmani",
+      "lepus_californicus",
+      "sceloporus_occidentalis"
+     ]
+    },
+    {
+     "id": "callipepla_californica:fall:forage:acorn_mast",
+     "archetype": "gather",
+     "verb": "forage",
+     "season": "fall",
+     "unit": "covey",
+     "collective": true,
+     "resource": "acorn_mast",
+     "hotspots": [
+      [
+       540165.2,
+       4189985.0,
+       90
+      ],
+      [
+       541336.3,
+       4189985.0,
+       90
+      ],
+      [
+       541606.6,
+       4189985.0,
+       90
+      ],
+      [
+       541756.8,
+       4189985.0,
+       90
+      ],
+      [
+       541906.9,
+       4189985.0,
+       90
+      ],
+      [
+       543618.6,
+       4189985.0,
+       90
+      ],
+      [
+       543768.8,
+       4189985.0,
+       90
+      ],
+      [
+       543918.9,
+       4189985.0,
+       90
+      ],
+      [
+       544069.1,
+       4189985.0,
+       90
+      ],
+      [
+       544849.8,
+       4189985.0,
+       90
+      ],
+      [
+       545000.0,
+       4189985.0,
+       90
+      ],
+      [
+       545150.2,
+       4189985.0,
+       90
+      ]
+     ],
+     "scarcity": 0.899,
+     "competitors": [
+      "corvus_corax",
+      "odocoileus_hemionus",
+      "urocyon_cinereoargenteus",
+      "sciurus_griseus",
+      "melanerpes_formicivorus",
+      "aphelocoma_californica",
+      "cyanocitta_stelleri",
+      "canis_latrans",
+      "meleagris_gallopavo",
+      "otospermophilus_beecheyi"
+     ]
+    },
+    {
+     "id": "callipepla_californica:fall:forage:grass_forbs",
+     "archetype": "gather",
+     "verb": "forage",
+     "season": "fall",
+     "unit": "covey",
+     "collective": true,
+     "resource": "grass_forbs",
+     "hotspots": [],
+     "scarcity": 1.0,
+     "competitors": [
+      "lepus_californicus",
+      "microtus_californicus"
+     ]
+    }
+   ]
+  },
+  "aphelocoma_californica": {
+   "unit": "family",
+   "predators": [],
+   "prey": [],
+   "games": [
+    {
+     "id": "aphelocoma_californica:winter:forage:acorn_mast",
+     "archetype": "gather",
+     "verb": "forage",
+     "season": "winter",
+     "unit": "family",
+     "collective": true,
+     "goal": "recover buried acorns",
+     "resource": "acorn_mast",
+     "hotspots": [
+      [
+       540165.2,
+       4189985.0,
+       45
+      ],
+      [
+       541336.3,
+       4189985.0,
+       45
+      ],
+      [
+       541606.6,
+       4189985.0,
+       45
+      ],
+      [
+       541756.8,
+       4189985.0,
+       45
+      ],
+      [
+       541906.9,
+       4189985.0,
+       45
+      ],
+      [
+       543618.6,
+       4189985.0,
+       45
+      ],
+      [
+       543768.8,
+       4189985.0,
+       45
+      ],
+      [
+       543918.9,
+       4189985.0,
+       45
+      ],
+      [
+       544069.1,
+       4189985.0,
+       45
+      ],
+      [
+       544849.8,
+       4189985.0,
+       45
+      ],
+      [
+       545000.0,
+       4189985.0,
+       45
+      ],
+      [
+       545150.2,
+       4189985.0,
+       45
+      ]
+     ],
+     "scarcity": 1.0,
+     "competitors": [
+      "sciurus_griseus",
+      "melanerpes_formicivorus",
+      "cyanocitta_stelleri",
+      "meleagris_gallopavo"
+     ]
+    },
+    {
+     "id": "aphelocoma_californica:winter:shelter:cover",
+     "archetype": "shelter",
+     "verb": "shelter",
+     "season": "winter",
+     "unit": "family",
+     "collective": true,
+     "resource": "cover",
+     "hotspots": [
+      [
+       540015.0,
+       4189985.0,
+       76
+      ],
+      [
+       540225.2,
+       4189985.0,
+       76
+      ],
+      [
+       540375.4,
+       4189985.0,
+       76
+      ],
+      [
+       540735.7,
+       4189985.0,
+       76
+      ],
+      [
+       540915.9,
+       4189985.0,
+       76
+      ],
+      [
+       541066.1,
+       4189985.0,
+       76
+      ],
+      [
+       541216.2,
+       4189985.0,
+       76
+      ],
+      [
+       541366.4,
+       4189985.0,
+       76
+      ],
+      [
+       541516.5,
+       4189985.0,
+       76
+      ],
+      [
+       541696.7,
+       4189985.0,
+       76
+      ],
+      [
+       541846.8,
+       4189985.0,
+       76
+      ],
+      [
+       541997.0,
+       4189985.0,
+       76
+      ]
+     ],
+     "scarcity": 0.553,
+     "competitors": [
+      "odocoileus_hemionus",
+      "sylvilagus_bachmani",
+      "lepus_californicus",
+      "sceloporus_occidentalis"
+     ]
+    },
+    {
+     "id": "aphelocoma_californica:spring:court",
+     "archetype": "court",
+     "verb": "court",
+     "season": "spring",
+     "unit": "family",
+     "collective": true
+    },
+    {
+     "id": "aphelocoma_californica:spring:nest:cover",
+     "archetype": "shelter",
+     "verb": "nest",
+     "season": "spring",
+     "unit": "family",
+     "collective": true,
+     "goal": "cup nest in a shrub or small oak",
+     "resource": "cover",
+     "hotspots": [
+      [
+       540015.0,
+       4189985.0,
+       90
+      ],
+      [
+       540225.2,
+       4189985.0,
+       90
+      ],
+      [
+       540375.4,
+       4189985.0,
+       90
+      ],
+      [
+       540735.7,
+       4189985.0,
+       90
+      ],
+      [
+       540915.9,
+       4189985.0,
+       90
+      ],
+      [
+       541066.1,
+       4189985.0,
+       90
+      ],
+      [
+       541216.2,
+       4189985.0,
+       90
+      ],
+      [
+       541366.4,
+       4189985.0,
+       90
+      ],
+      [
+       541516.5,
+       4189985.0,
+       90
+      ],
+      [
+       541696.7,
+       4189985.0,
+       90
+      ],
+      [
+       541846.8,
+       4189985.0,
+       90
+      ],
+      [
+       541997.0,
+       4189985.0,
+       90
+      ]
+     ],
+     "scarcity": 0.553,
+     "competitors": [
+      "odocoileus_hemionus",
+      "urocyon_cinereoargenteus",
+      "callipepla_californica",
+      "cyanocitta_stelleri",
+      "sylvilagus_bachmani",
+      "puma_concolor",
+      "meleagris_gallopavo"
+     ]
+    },
+    {
+     "id": "aphelocoma_californica:summer:rear:insects",
+     "archetype": "rear",
+     "verb": "rear",
+     "season": "summer",
+     "unit": "family",
+     "collective": true,
+     "resource": "insects",
+     "hotspots": [
+      [
+       540495.5,
+       4189985.0,
+       72
+      ],
+      [
+       545780.8,
+       4189985.0,
+       72
+      ],
+      [
+       549744.7,
+       4189955.0,
+       72
+      ],
+      [
+       549144.1,
+       4189924.9,
+       72
+      ],
+      [
+       549384.4,
+       4189894.9,
+       72
+      ],
+      [
+       540525.5,
+       4189834.8,
+       72
+      ],
+      [
+       549654.7,
+       4189774.8,
+       72
+      ],
+      [
+       540555.6,
+       4189684.7,
+       72
+      ],
+      [
+       540585.6,
+       4189534.5,
+       72
+      ],
+      [
+       543108.1,
+       4189444.4,
+       72
+      ],
+      [
+       545780.8,
+       4189384.4,
+       72
+      ],
+      [
+       540615.6,
+       4189324.3,
+       72
+      ]
+     ],
+     "scarcity": 0.955,
+     "competitors": [
+      "corvus_corax",
+      "urocyon_cinereoargenteus",
+      "sciurus_griseus",
+      "melanerpes_formicivorus",
+      "callipepla_californica",
+      "cyanocitta_stelleri",
+      "canis_latrans",
+      "meleagris_gallopavo",
+      "sceloporus_occidentalis"
+     ]
+    },
+    {
+     "id": "aphelocoma_californica:summer:rear:cover",
+     "archetype": "rear",
+     "verb": "rear",
+     "season": "summer",
+     "unit": "family",
+     "collective": true,
+     "resource": "cover",
+     "hotspots": [
+      [
+       540015.0,
+       4189985.0,
+       90
+      ],
+      [
+       540225.2,
+       4189985.0,
+       90
+      ],
+      [
+       540375.4,
+       4189985.0,
+       90
+      ],
+      [
+       540735.7,
+       4189985.0,
+       90
+      ],
+      [
+       540915.9,
+       4189985.0,
+       90
+      ],
+      [
+       541066.1,
+       4189985.0,
+       90
+      ],
+      [
+       541216.2,
+       4189985.0,
+       90
+      ],
+      [
+       541366.4,
+       4189985.0,
+       90
+      ],
+      [
+       541516.5,
+       4189985.0,
+       90
+      ],
+      [
+       541696.7,
+       4189985.0,
+       90
+      ],
+      [
+       541846.8,
+       4189985.0,
+       90
+      ],
+      [
+       541997.0,
+       4189985.0,
+       90
+      ]
+     ],
+     "scarcity": 0.553,
+     "competitors": [
+      "corvus_corax",
+      "odocoileus_hemionus",
+      "callipepla_californica",
+      "sylvilagus_bachmani",
+      "lepus_californicus",
+      "sceloporus_occidentalis"
+     ]
+    },
+    {
+     "id": "aphelocoma_californica:summer:forage:insects",
+     "archetype": "gather",
+     "verb": "forage",
+     "season": "summer",
+     "unit": "family",
+     "collective": true,
+     "resource": "insects",
+     "hotspots": [
+      [
+       540495.5,
+       4189985.0,
+       72
+      ],
+      [
+       545780.8,
+       4189985.0,
+       72
+      ],
+      [
+       549744.7,
+       4189955.0,
+       72
+      ],
+      [
+       549144.1,
+       4189924.9,
+       72
+      ],
+      [
+       549384.4,
+       4189894.9,
+       72
+      ],
+      [
+       540525.5,
+       4189834.8,
+       72
+      ],
+      [
+       549654.7,
+       4189774.8,
+       72
+      ],
+      [
+       540555.6,
+       4189684.7,
+       72
+      ],
+      [
+       540585.6,
+       4189534.5,
+       72
+      ],
+      [
+       543108.1,
+       4189444.4,
+       72
+      ],
+      [
+       545780.8,
+       4189384.4,
+       72
+      ],
+      [
+       540615.6,
+       4189324.3,
+       72
+      ]
+     ],
+     "scarcity": 0.955,
+     "competitors": [
+      "corvus_corax",
+      "urocyon_cinereoargenteus",
+      "sciurus_griseus",
+      "melanerpes_formicivorus",
+      "callipepla_californica",
+      "cyanocitta_stelleri",
+      "canis_latrans",
+      "meleagris_gallopavo",
+      "sceloporus_occidentalis"
+     ]
+    },
+    {
+     "id": "aphelocoma_californica:fall:forage:acorn_mast",
+     "archetype": "gather",
+     "verb": "forage",
+     "season": "fall",
+     "unit": "family",
+     "collective": true,
+     "resource": "acorn_mast",
+     "hotspots": [
+      [
+       540165.2,
+       4189985.0,
+       90
+      ],
+      [
+       541336.3,
+       4189985.0,
+       90
+      ],
+      [
+       541606.6,
+       4189985.0,
+       90
+      ],
+      [
+       541756.8,
+       4189985.0,
+       90
+      ],
+      [
+       541906.9,
+       4189985.0,
+       90
+      ],
+      [
+       543618.6,
+       4189985.0,
+       90
+      ],
+      [
+       543768.8,
+       4189985.0,
+       90
+      ],
+      [
+       543918.9,
+       4189985.0,
+       90
+      ],
+      [
+       544069.1,
+       4189985.0,
+       90
+      ],
+      [
+       544849.8,
+       4189985.0,
+       90
+      ],
+      [
+       545000.0,
+       4189985.0,
+       90
+      ],
+      [
+       545150.2,
+       4189985.0,
+       90
+      ]
+     ],
+     "scarcity": 0.899,
+     "competitors": [
+      "corvus_corax",
+      "odocoileus_hemionus",
+      "urocyon_cinereoargenteus",
+      "sciurus_griseus",
+      "melanerpes_formicivorus",
+      "callipepla_californica",
+      "cyanocitta_stelleri",
+      "canis_latrans",
+      "meleagris_gallopavo",
+      "otospermophilus_beecheyi"
+     ]
+    },
+    {
+     "id": "aphelocoma_californica:fall:cache:acorn_mast",
+     "archetype": "cache",
+     "verb": "cache",
+     "season": "fall",
+     "unit": "family",
+     "collective": true,
+     "goal": "scatter-hoard acorns in the ground, one at a time",
+     "resource": "acorn_mast",
+     "hotspots": [
+      [
+       540165.2,
+       4189985.0,
+       90
+      ],
+      [
+       541336.3,
+       4189985.0,
+       90
+      ],
+      [
+       541606.6,
+       4189985.0,
+       90
+      ],
+      [
+       541756.8,
+       4189985.0,
+       90
+      ],
+      [
+       541906.9,
+       4189985.0,
+       90
+      ],
+      [
+       543618.6,
+       4189985.0,
+       90
+      ],
+      [
+       543768.8,
+       4189985.0,
+       90
+      ],
+      [
+       543918.9,
+       4189985.0,
+       90
+      ],
+      [
+       544069.1,
+       4189985.0,
+       90
+      ],
+      [
+       544849.8,
+       4189985.0,
+       90
+      ],
+      [
+       545000.0,
+       4189985.0,
+       90
+      ],
+      [
+       545150.2,
+       4189985.0,
+       90
+      ]
+     ],
+     "scarcity": 0.899,
+     "competitors": [
+      "corvus_corax",
+      "odocoileus_hemionus",
+      "urocyon_cinereoargenteus",
+      "sciurus_griseus",
+      "melanerpes_formicivorus",
+      "callipepla_californica",
+      "cyanocitta_stelleri",
+      "canis_latrans",
+      "meleagris_gallopavo",
+      "otospermophilus_beecheyi"
+     ]
+    }
+   ]
+  },
+  "cyanocitta_stelleri": {
+   "unit": "family",
+   "predators": [],
+   "prey": [],
+   "games": [
+    {
+     "id": "cyanocitta_stelleri:winter:forage:acorn_mast",
+     "archetype": "gather",
+     "verb": "forage",
+     "season": "winter",
+     "unit": "family",
+     "collective": true,
+     "goal": "recover cached acorns in conifer and mixed forest",
+     "resource": "acorn_mast",
+     "hotspots": [
+      [
+       540165.2,
+       4189985.0,
+       45
+      ],
+      [
+       541336.3,
+       4189985.0,
+       45
+      ],
+      [
+       541606.6,
+       4189985.0,
+       45
+      ],
+      [
+       541756.8,
+       4189985.0,
+       45
+      ],
+      [
+       541906.9,
+       4189985.0,
+       45
+      ],
+      [
+       543618.6,
+       4189985.0,
+       45
+      ],
+      [
+       543768.8,
+       4189985.0,
+       45
+      ],
+      [
+       543918.9,
+       4189985.0,
+       45
+      ],
+      [
+       544069.1,
+       4189985.0,
+       45
+      ],
+      [
+       544849.8,
+       4189985.0,
+       45
+      ],
+      [
+       545000.0,
+       4189985.0,
+       45
+      ],
+      [
+       545150.2,
+       4189985.0,
+       45
+      ]
+     ],
+     "scarcity": 1.0,
+     "competitors": [
+      "sciurus_griseus",
+      "melanerpes_formicivorus",
+      "aphelocoma_californica",
+      "meleagris_gallopavo"
+     ]
+    },
+    {
+     "id": "cyanocitta_stelleri:spring:nest:cover",
+     "archetype": "shelter",
+     "verb": "nest",
+     "season": "spring",
+     "unit": "family",
+     "collective": true,
+     "goal": "bulky nest in a young conifer",
+     "resource": "cover",
+     "hotspots": [
+      [
+       540015.0,
+       4189985.0,
+       90
+      ],
+      [
+       540225.2,
+       4189985.0,
+       90
+      ],
+      [
+       540375.4,
+       4189985.0,
+       90
+      ],
+      [
+       540735.7,
+       4189985.0,
+       90
+      ],
+      [
+       540915.9,
+       4189985.0,
+       90
+      ],
+      [
+       541066.1,
+       4189985.0,
+       90
+      ],
+      [
+       541216.2,
+       4189985.0,
+       90
+      ],
+      [
+       541366.4,
+       4189985.0,
+       90
+      ],
+      [
+       541516.5,
+       4189985.0,
+       90
+      ],
+      [
+       541696.7,
+       4189985.0,
+       90
+      ],
+      [
+       541846.8,
+       4189985.0,
+       90
+      ],
+      [
+       541997.0,
+       4189985.0,
+       90
+      ]
+     ],
+     "scarcity": 0.553,
+     "competitors": [
+      "odocoileus_hemionus",
+      "urocyon_cinereoargenteus",
+      "callipepla_californica",
+      "aphelocoma_californica",
+      "sylvilagus_bachmani",
+      "puma_concolor",
+      "meleagris_gallopavo"
+     ]
+    },
+    {
+     "id": "cyanocitta_stelleri:spring:court",
+     "archetype": "court",
+     "verb": "court",
+     "season": "spring",
+     "unit": "family",
+     "collective": true
+    },
+    {
+     "id": "cyanocitta_stelleri:summer:rear:insects",
+     "archetype": "rear",
+     "verb": "rear",
+     "season": "summer",
+     "unit": "family",
+     "collective": true,
+     "goal": "feed nestlings",
+     "resource": "insects",
+     "hotspots": [
+      [
+       540495.5,
+       4189985.0,
+       72
+      ],
+      [
+       545780.8,
+       4189985.0,
+       72
+      ],
+      [
+       549744.7,
+       4189955.0,
+       72
+      ],
+      [
+       549144.1,
+       4189924.9,
+       72
+      ],
+      [
+       549384.4,
+       4189894.9,
+       72
+      ],
+      [
+       540525.5,
+       4189834.8,
+       72
+      ],
+      [
+       549654.7,
+       4189774.8,
+       72
+      ],
+      [
+       540555.6,
+       4189684.7,
+       72
+      ],
+      [
+       540585.6,
+       4189534.5,
+       72
+      ],
+      [
+       543108.1,
+       4189444.4,
+       72
+      ],
+      [
+       545780.8,
+       4189384.4,
+       72
+      ],
+      [
+       540615.6,
+       4189324.3,
+       72
+      ]
+     ],
+     "scarcity": 0.955,
+     "competitors": [
+      "corvus_corax",
+      "urocyon_cinereoargenteus",
+      "sciurus_griseus",
+      "melanerpes_formicivorus",
+      "callipepla_californica",
+      "aphelocoma_californica",
+      "canis_latrans",
+      "meleagris_gallopavo",
+      "sceloporus_occidentalis"
+     ]
+    },
+    {
+     "id": "cyanocitta_stelleri:fall:forage:acorn_mast",
+     "archetype": "gather",
+     "verb": "forage",
+     "season": "fall",
+     "unit": "family",
+     "collective": true,
+     "resource": "acorn_mast",
+     "hotspots": [
+      [
+       540165.2,
+       4189985.0,
+       90
+      ],
+      [
+       541336.3,
+       4189985.0,
+       90
+      ],
+      [
+       541606.6,
+       4189985.0,
+       90
+      ],
+      [
+       541756.8,
+       4189985.0,
+       90
+      ],
+      [
+       541906.9,
+       4189985.0,
+       90
+      ],
+      [
+       543618.6,
+       4189985.0,
+       90
+      ],
+      [
+       543768.8,
+       4189985.0,
+       90
+      ],
+      [
+       543918.9,
+       4189985.0,
+       90
+      ],
+      [
+       544069.1,
+       4189985.0,
+       90
+      ],
+      [
+       544849.8,
+       4189985.0,
+       90
+      ],
+      [
+       545000.0,
+       4189985.0,
+       90
+      ],
+      [
+       545150.2,
+       4189985.0,
+       90
+      ]
+     ],
+     "scarcity": 0.899,
+     "competitors": [
+      "corvus_corax",
+      "odocoileus_hemionus",
+      "urocyon_cinereoargenteus",
+      "sciurus_griseus",
+      "melanerpes_formicivorus",
+      "callipepla_californica",
+      "aphelocoma_californica",
+      "canis_latrans",
+      "meleagris_gallopavo",
+      "otospermophilus_beecheyi"
+     ]
+    },
+    {
+     "id": "cyanocitta_stelleri:fall:cache:acorn_mast",
+     "archetype": "cache",
+     "verb": "cache",
+     "season": "fall",
+     "unit": "family",
+     "collective": true,
+     "goal": "carry acorns up from the oaks and hoard them under the conifers",
+     "resource": "acorn_mast",
+     "hotspots": [
+      [
+       540165.2,
+       4189985.0,
+       90
+      ],
+      [
+       541336.3,
+       4189985.0,
+       90
+      ],
+      [
+       541606.6,
+       4189985.0,
+       90
+      ],
+      [
+       541756.8,
+       4189985.0,
+       90
+      ],
+      [
+       541906.9,
+       4189985.0,
+       90
+      ],
+      [
+       543618.6,
+       4189985.0,
+       90
+      ],
+      [
+       543768.8,
+       4189985.0,
+       90
+      ],
+      [
+       543918.9,
+       4189985.0,
+       90
+      ],
+      [
+       544069.1,
+       4189985.0,
+       90
+      ],
+      [
+       544849.8,
+       4189985.0,
+       90
+      ],
+      [
+       545000.0,
+       4189985.0,
+       90
+      ],
+      [
+       545150.2,
+       4189985.0,
+       90
+      ]
+     ],
+     "scarcity": 0.899,
+     "competitors": [
+      "corvus_corax",
+      "odocoileus_hemionus",
+      "urocyon_cinereoargenteus",
+      "sciurus_griseus",
+      "melanerpes_formicivorus",
+      "callipepla_californica",
+      "aphelocoma_californica",
+      "canis_latrans",
+      "meleagris_gallopavo",
+      "otospermophilus_beecheyi"
+     ]
+    }
+   ]
+  },
+  "cathartes_aura": {
+   "unit": "solitary",
+   "predators": [],
+   "prey": [],
+   "games": [
+    {
+     "id": "cathartes_aura:winter:forage",
+     "archetype": "gather",
+     "verb": "forage",
+     "season": "winter",
+     "unit": "solitary",
+     "collective": false,
+     "goal": "soar and sniff out carcasses"
+    },
+    {
+     "id": "cathartes_aura:spring:forage",
+     "archetype": "gather",
+     "verb": "forage",
+     "season": "spring",
+     "unit": "solitary",
+     "collective": false
+    },
+    {
+     "id": "cathartes_aura:spring:court",
+     "archetype": "court",
+     "verb": "court",
+     "season": "spring",
+     "unit": "solitary",
+     "collective": false,
+     "goal": "ground display, wings spread"
+    },
+    {
+     "id": "cathartes_aura:summer:forage",
+     "archetype": "gather",
+     "verb": "forage",
+     "season": "summer",
+     "unit": "solitary",
+     "collective": false
+    },
+    {
+     "id": "cathartes_aura:summer:rear:cliff_or_snag",
+     "archetype": "rear",
+     "verb": "rear",
+     "season": "summer",
+     "unit": "solitary",
+     "collective": false,
+     "goal": "raise chicks in a cliff or snag cavity, no nest built",
+     "resource": "cliff_or_snag",
+     "hotspots": [
+      [
+       541726.7,
+       4189985.0,
+       90
+      ],
+      [
+       543678.7,
+       4189985.0,
+       90
+      ],
+      [
+       543888.9,
+       4189985.0,
+       90
+      ],
+      [
+       544039.0,
+       4189985.0,
+       90
+      ],
+      [
+       544189.2,
+       4189985.0,
+       90
+      ],
+      [
+       544339.3,
+       4189985.0,
+       90
+      ],
+      [
+       544549.5,
+       4189985.0,
+       90
+      ],
+      [
+       545090.1,
+       4189985.0,
+       90
+      ],
+      [
+       545690.7,
+       4189985.0,
+       90
+      ],
+      [
+       549024.0,
+       4189985.0,
+       90
+      ],
+      [
+       549174.2,
+       4189985.0,
+       90
+      ],
+      [
+       549324.3,
+       4189985.0,
+       90
+      ]
+     ],
+     "scarcity": 0.785,
+     "competitors": []
+    },
+    {
+     "id": "cathartes_aura:summer:rear:cavity",
+     "archetype": "rear",
+     "verb": "rear",
+     "season": "summer",
+     "unit": "solitary",
+     "collective": false,
+     "goal": "raise chicks in a cliff or snag cavity, no nest built",
+     "resource": "cavity",
+     "hotspots": [
+      [
+       543318.3,
+       4181786.8,
+       96
+      ],
+      [
+       545870.9,
+       4188723.7,
+       92
+      ],
+      [
+       545750.8,
+       4188603.6,
+       92
+      ],
+      [
+       545480.5,
+       4188183.2,
+       92
+      ],
+      [
+       544669.7,
+       4186921.9,
+       92
+      ],
+      [
+       546321.3,
+       4184699.7,
+       92
+      ],
+      [
+       546231.2,
+       4184339.3,
+       92
+      ],
+      [
+       546651.7,
+       4183168.2,
+       92
+      ],
+      [
+       547342.3,
+       4182927.9,
+       92
+      ],
+      [
+       547192.2,
+       4182837.8,
+       92
+      ],
+      [
+       547432.4,
+       4182807.8,
+       92
+      ],
+      [
+       547702.7,
+       4180765.8,
+       92
+      ]
+     ],
+     "scarcity": 0.946,
+     "competitors": []
+    },
+    {
+     "id": "cathartes_aura:fall:forage",
+     "archetype": "gather",
+     "verb": "forage",
+     "season": "fall",
+     "unit": "solitary",
+     "collective": false,
+     "goal": "roost communally on snags"
+    }
+   ]
+  },
+  "sylvilagus_bachmani": {
+   "unit": "solitary",
+   "predators": [
+    "buteo_jamaicensis",
+    "canis_latrans",
+    "puma_concolor",
+    "urocyon_cinereoargenteus"
+   ],
+   "prey": [],
+   "games": [
+    {
+     "id": "sylvilagus_bachmani:winter:forage:grass_forbs",
+     "archetype": "gather",
+     "verb": "forage",
+     "season": "winter",
+     "unit": "solitary",
+     "collective": false,
+     "resource": "grass_forbs",
+     "hotspots": [
+      [
+       540135.1,
+       4189985.0,
+       54
+      ],
+      [
+       540615.6,
+       4189985.0,
+       54
+      ],
+      [
+       540795.8,
+       4189985.0,
+       54
+      ],
+      [
+       541967.0,
+       4189985.0,
+       54
+      ],
+      [
+       542147.1,
+       4189985.0,
+       54
+      ],
+      [
+       542477.5,
+       4189985.0,
+       54
+      ],
+      [
+       542897.9,
+       4189985.0,
+       54
+      ],
+      [
+       543198.2,
+       4189985.0,
+       54
+      ],
+      [
+       543348.3,
+       4189985.0,
+       54
+      ],
+      [
+       543528.5,
+       4189985.0,
+       54
+      ],
+      [
+       549204.2,
+       4189985.0,
+       54
+      ],
+      [
+       540976.0,
+       4189955.0,
+       54
+      ]
+     ],
+     "scarcity": 0.976,
+     "competitors": [
+      "callipepla_californica",
+      "lepus_californicus",
+      "microtus_californicus",
+      "meleagris_gallopavo"
+     ],
+     "predators": [
+      "buteo_jamaicensis",
+      "canis_latrans",
+      "puma_concolor",
+      "urocyon_cinereoargenteus"
+     ]
+    },
+    {
+     "id": "sylvilagus_bachmani:winter:forage:browse",
+     "archetype": "gather",
+     "verb": "forage",
+     "season": "winter",
+     "unit": "solitary",
+     "collective": false,
+     "resource": "browse",
+     "hotspots": [
+      [
+       540015.0,
+       4189985.0,
+       48
+      ],
+      [
+       540225.2,
+       4189985.0,
+       48
+      ],
+      [
+       540375.4,
+       4189985.0,
+       48
+      ],
+      [
+       540735.7,
+       4189985.0,
+       48
+      ],
+      [
+       540915.9,
+       4189985.0,
+       48
+      ],
+      [
+       541066.1,
+       4189985.0,
+       48
+      ],
+      [
+       541216.2,
+       4189985.0,
+       48
+      ],
+      [
+       541366.4,
+       4189985.0,
+       48
+      ],
+      [
+       541516.5,
+       4189985.0,
+       48
+      ],
+      [
+       541696.7,
+       4189985.0,
+       48
+      ],
+      [
+       541846.8,
+       4189985.0,
+       48
+      ],
+      [
+       541997.0,
+       4189985.0,
+       48
+      ]
+     ],
+     "scarcity": 1.0,
+     "competitors": [
+      "odocoileus_hemionus",
+      "lepus_californicus"
+     ],
+     "predators": [
+      "buteo_jamaicensis",
+      "canis_latrans",
+      "puma_concolor",
+      "urocyon_cinereoargenteus"
+     ]
+    },
+    {
+     "id": "sylvilagus_bachmani:winter:shelter:cover",
+     "archetype": "shelter",
+     "verb": "shelter",
+     "season": "winter",
+     "unit": "solitary",
+     "collective": false,
+     "resource": "cover",
+     "hotspots": [
+      [
+       540015.0,
+       4189985.0,
+       76
+      ],
+      [
+       540225.2,
+       4189985.0,
+       76
+      ],
+      [
+       540375.4,
+       4189985.0,
+       76
+      ],
+      [
+       540735.7,
+       4189985.0,
+       76
+      ],
+      [
+       540915.9,
+       4189985.0,
+       76
+      ],
+      [
+       541066.1,
+       4189985.0,
+       76
+      ],
+      [
+       541216.2,
+       4189985.0,
+       76
+      ],
+      [
+       541366.4,
+       4189985.0,
+       76
+      ],
+      [
+       541516.5,
+       4189985.0,
+       76
+      ],
+      [
+       541696.7,
+       4189985.0,
+       76
+      ],
+      [
+       541846.8,
+       4189985.0,
+       76
+      ],
+      [
+       541997.0,
+       4189985.0,
+       76
+      ]
+     ],
+     "scarcity": 0.553,
+     "competitors": [
+      "odocoileus_hemionus",
+      "aphelocoma_californica",
+      "lepus_californicus",
+      "sceloporus_occidentalis"
+     ],
+     "predators": [
+      "buteo_jamaicensis",
+      "canis_latrans",
+      "puma_concolor",
+      "urocyon_cinereoargenteus"
+     ]
+    },
+    {
+     "id": "sylvilagus_bachmani:spring:court",
+     "archetype": "court",
+     "verb": "court",
+     "season": "spring",
+     "unit": "solitary",
+     "collective": false,
+     "predators": [
+      "buteo_jamaicensis",
+      "canis_latrans",
+      "puma_concolor",
+      "urocyon_cinereoargenteus"
+     ]
+    },
+    {
+     "id": "sylvilagus_bachmani:spring:rear:cover",
+     "archetype": "rear",
+     "verb": "rear",
+     "season": "spring",
+     "unit": "solitary",
+     "collective": false,
+     "resource": "cover",
+     "hotspots": [
+      [
+       540015.0,
+       4189985.0,
+       90
+      ],
+      [
+       540225.2,
+       4189985.0,
+       90
+      ],
+      [
+       540375.4,
+       4189985.0,
+       90
+      ],
+      [
+       540735.7,
+       4189985.0,
+       90
+      ],
+      [
+       540915.9,
+       4189985.0,
+       90
+      ],
+      [
+       541066.1,
+       4189985.0,
+       90
+      ],
+      [
+       541216.2,
+       4189985.0,
+       90
+      ],
+      [
+       541366.4,
+       4189985.0,
+       90
+      ],
+      [
+       541516.5,
+       4189985.0,
+       90
+      ],
+      [
+       541696.7,
+       4189985.0,
+       90
+      ],
+      [
+       541846.8,
+       4189985.0,
+       90
+      ],
+      [
+       541997.0,
+       4189985.0,
+       90
+      ]
+     ],
+     "scarcity": 0.553,
+     "competitors": [
+      "odocoileus_hemionus",
+      "urocyon_cinereoargenteus",
+      "callipepla_californica",
+      "aphelocoma_californica",
+      "cyanocitta_stelleri",
+      "puma_concolor",
+      "meleagris_gallopavo"
+     ],
+     "predators": [
+      "buteo_jamaicensis",
+      "canis_latrans",
+      "puma_concolor",
+      "urocyon_cinereoargenteus"
+     ]
+    },
+    {
+     "id": "sylvilagus_bachmani:summer:forage:grass_forbs",
+     "archetype": "gather",
+     "verb": "forage",
+     "season": "summer",
+     "unit": "solitary",
+     "collective": false,
+     "resource": "grass_forbs",
+     "hotspots": [],
+     "scarcity": 1.0,
+     "competitors": [
+      "lepus_californicus",
+      "meleagris_gallopavo",
+      "otospermophilus_beecheyi"
+     ],
+     "predators": [
+      "buteo_jamaicensis",
+      "canis_latrans",
+      "puma_concolor",
+      "urocyon_cinereoargenteus"
+     ]
+    },
+    {
+     "id": "sylvilagus_bachmani:summer:shelter:cover",
+     "archetype": "shelter",
+     "verb": "shelter",
+     "season": "summer",
+     "unit": "solitary",
+     "collective": false,
+     "resource": "cover",
+     "hotspots": [
+      [
+       540015.0,
+       4189985.0,
+       90
+      ],
+      [
+       540225.2,
+       4189985.0,
+       90
+      ],
+      [
+       540375.4,
+       4189985.0,
+       90
+      ],
+      [
+       540735.7,
+       4189985.0,
+       90
+      ],
+      [
+       540915.9,
+       4189985.0,
+       90
+      ],
+      [
+       541066.1,
+       4189985.0,
+       90
+      ],
+      [
+       541216.2,
+       4189985.0,
+       90
+      ],
+      [
+       541366.4,
+       4189985.0,
+       90
+      ],
+      [
+       541516.5,
+       4189985.0,
+       90
+      ],
+      [
+       541696.7,
+       4189985.0,
+       90
+      ],
+      [
+       541846.8,
+       4189985.0,
+       90
+      ],
+      [
+       541997.0,
+       4189985.0,
+       90
+      ]
+     ],
+     "scarcity": 0.553,
+     "competitors": [
+      "corvus_corax",
+      "odocoileus_hemionus",
+      "callipepla_californica",
+      "aphelocoma_californica",
+      "lepus_californicus",
+      "sceloporus_occidentalis"
+     ],
+     "predators": [
+      "buteo_jamaicensis",
+      "canis_latrans",
+      "puma_concolor",
+      "urocyon_cinereoargenteus"
+     ]
+    },
+    {
+     "id": "sylvilagus_bachmani:fall:forage:browse",
+     "archetype": "gather",
+     "verb": "forage",
+     "season": "fall",
+     "unit": "solitary",
+     "collective": false,
+     "resource": "browse",
+     "hotspots": [
+      [
+       540015.0,
+       4189985.0,
+       40
+      ],
+      [
+       540225.2,
+       4189985.0,
+       40
+      ],
+      [
+       540375.4,
+       4189985.0,
+       40
+      ],
+      [
+       540735.7,
+       4189985.0,
+       40
+      ],
+      [
+       540915.9,
+       4189985.0,
+       40
+      ],
+      [
+       541066.1,
+       4189985.0,
+       40
+      ],
+      [
+       541216.2,
+       4189985.0,
+       40
+      ],
+      [
+       541366.4,
+       4189985.0,
+       40
+      ],
+      [
+       541516.5,
+       4189985.0,
+       40
+      ],
+      [
+       541696.7,
+       4189985.0,
+       40
+      ],
+      [
+       541846.8,
+       4189985.0,
+       40
+      ],
+      [
+       541997.0,
+       4189985.0,
+       40
+      ]
+     ],
+     "scarcity": 1.0,
+     "competitors": [
+      "lepus_californicus"
+     ],
+     "predators": [
+      "buteo_jamaicensis",
+      "canis_latrans",
+      "puma_concolor",
+      "urocyon_cinereoargenteus"
+     ]
+    },
+    {
+     "id": "sylvilagus_bachmani:buteo_jamaicensis:evade",
+     "archetype": "evade",
+     "verb": "evade",
+     "season": "all",
+     "unit": "solitary",
+     "collective": false,
+     "predator": "buteo_jamaicensis",
+     "watchers": []
+    },
+    {
+     "id": "sylvilagus_bachmani:canis_latrans:evade",
+     "archetype": "evade",
+     "verb": "evade",
+     "season": "all",
+     "unit": "solitary",
+     "collective": false,
+     "predator": "canis_latrans",
+     "watchers": []
+    },
+    {
+     "id": "sylvilagus_bachmani:puma_concolor:evade",
+     "archetype": "evade",
+     "verb": "evade",
+     "season": "all",
+     "unit": "solitary",
+     "collective": false,
+     "predator": "puma_concolor",
+     "watchers": [
+      "canis_latrans",
+      "corvus_corax",
+      "lepus_californicus",
+      "urocyon_cinereoargenteus"
+     ]
+    },
+    {
+     "id": "sylvilagus_bachmani:urocyon_cinereoargenteus:evade",
+     "archetype": "evade",
+     "verb": "evade",
+     "season": "all",
+     "unit": "solitary",
+     "collective": false,
+     "predator": "urocyon_cinereoargenteus",
+     "watchers": []
+    }
+   ]
+  },
+  "lepus_californicus": {
+   "unit": "solitary",
+   "predators": [
+    "buteo_jamaicensis",
+    "canis_latrans"
+   ],
+   "prey": [],
+   "games": [
+    {
+     "id": "lepus_californicus:winter:forage:grass_forbs",
+     "archetype": "gather",
+     "verb": "forage",
+     "season": "winter",
+     "unit": "solitary",
+     "collective": false,
+     "resource": "grass_forbs",
+     "hotspots": [
+      [
+       540135.1,
+       4189985.0,
+       54
+      ],
+      [
+       540615.6,
+       4189985.0,
+       54
+      ],
+      [
+       540795.8,
+       4189985.0,
+       54
+      ],
+      [
+       541967.0,
+       4189985.0,
+       54
+      ],
+      [
+       542147.1,
+       4189985.0,
+       54
+      ],
+      [
+       542477.5,
+       4189985.0,
+       54
+      ],
+      [
+       542897.9,
+       4189985.0,
+       54
+      ],
+      [
+       543198.2,
+       4189985.0,
+       54
+      ],
+      [
+       543348.3,
+       4189985.0,
+       54
+      ],
+      [
+       543528.5,
+       4189985.0,
+       54
+      ],
+      [
+       549204.2,
+       4189985.0,
+       54
+      ],
+      [
+       540976.0,
+       4189955.0,
+       54
+      ]
+     ],
+     "scarcity": 0.976,
+     "competitors": [
+      "callipepla_californica",
+      "sylvilagus_bachmani",
+      "microtus_californicus",
+      "meleagris_gallopavo"
+     ],
+     "predators": [
+      "buteo_jamaicensis",
+      "canis_latrans"
+     ]
+    },
+    {
+     "id": "lepus_californicus:winter:forage:browse",
+     "archetype": "gather",
+     "verb": "forage",
+     "season": "winter",
+     "unit": "solitary",
+     "collective": false,
+     "resource": "browse",
+     "hotspots": [
+      [
+       540015.0,
+       4189985.0,
+       48
+      ],
+      [
+       540225.2,
+       4189985.0,
+       48
+      ],
+      [
+       540375.4,
+       4189985.0,
+       48
+      ],
+      [
+       540735.7,
+       4189985.0,
+       48
+      ],
+      [
+       540915.9,
+       4189985.0,
+       48
+      ],
+      [
+       541066.1,
+       4189985.0,
+       48
+      ],
+      [
+       541216.2,
+       4189985.0,
+       48
+      ],
+      [
+       541366.4,
+       4189985.0,
+       48
+      ],
+      [
+       541516.5,
+       4189985.0,
+       48
+      ],
+      [
+       541696.7,
+       4189985.0,
+       48
+      ],
+      [
+       541846.8,
+       4189985.0,
+       48
+      ],
+      [
+       541997.0,
+       4189985.0,
+       48
+      ]
+     ],
+     "scarcity": 1.0,
+     "competitors": [
+      "odocoileus_hemionus",
+      "sylvilagus_bachmani"
+     ],
+     "predators": [
+      "buteo_jamaicensis",
+      "canis_latrans"
+     ]
+    },
+    {
+     "id": "lepus_californicus:winter:shelter:cover",
+     "archetype": "shelter",
+     "verb": "shelter",
+     "season": "winter",
+     "unit": "solitary",
+     "collective": false,
+     "goal": "form under a shrub",
+     "resource": "cover",
+     "hotspots": [
+      [
+       540015.0,
+       4189985.0,
+       76
+      ],
+      [
+       540225.2,
+       4189985.0,
+       76
+      ],
+      [
+       540375.4,
+       4189985.0,
+       76
+      ],
+      [
+       540735.7,
+       4189985.0,
+       76
+      ],
+      [
+       540915.9,
+       4189985.0,
+       76
+      ],
+      [
+       541066.1,
+       4189985.0,
+       76
+      ],
+      [
+       541216.2,
+       4189985.0,
+       76
+      ],
+      [
+       541366.4,
+       4189985.0,
+       76
+      ],
+      [
+       541516.5,
+       4189985.0,
+       76
+      ],
+      [
+       541696.7,
+       4189985.0,
+       76
+      ],
+      [
+       541846.8,
+       4189985.0,
+       76
+      ],
+      [
+       541997.0,
+       4189985.0,
+       76
+      ]
+     ],
+     "scarcity": 0.553,
+     "competitors": [
+      "odocoileus_hemionus",
+      "aphelocoma_californica",
+      "sylvilagus_bachmani",
+      "sceloporus_occidentalis"
+     ],
+     "predators": [
+      "buteo_jamaicensis",
+      "canis_latrans"
+     ]
+    },
+    {
+     "id": "lepus_californicus:spring:court",
+     "archetype": "court",
+     "verb": "court",
+     "season": "spring",
+     "unit": "solitary",
+     "collective": false,
+     "goal": "chases and boxing",
+     "predators": [
+      "buteo_jamaicensis",
+      "canis_latrans"
+     ]
+    },
+    {
+     "id": "lepus_californicus:spring:rear:grass_forbs",
+     "archetype": "rear",
+     "verb": "rear",
+     "season": "spring",
+     "unit": "solitary",
+     "collective": false,
+     "goal": "leverets in a form",
+     "resource": "grass_forbs",
+     "hotspots": [
+      [
+       540135.1,
+       4189985.0,
+       90
+      ],
+      [
+       540615.6,
+       4189985.0,
+       90
+      ],
+      [
+       540795.8,
+       4189985.0,
+       90
+      ],
+      [
+       541967.0,
+       4189985.0,
+       90
+      ],
+      [
+       542147.1,
+       4189985.0,
+       90
+      ],
+      [
+       542477.5,
+       4189985.0,
+       90
+      ],
+      [
+       542897.9,
+       4189985.0,
+       90
+      ],
+      [
+       543198.2,
+       4189985.0,
+       90
+      ],
+      [
+       543348.3,
+       4189985.0,
+       90
+      ],
+      [
+       543528.5,
+       4189985.0,
+       90
+      ],
+      [
+       549204.2,
+       4189985.0,
+       90
+      ],
+      [
+       540976.0,
+       4189955.0,
+       90
+      ]
+     ],
+     "scarcity": 0.894,
+     "competitors": [
+      "odocoileus_hemionus",
+      "microtus_californicus",
+      "otospermophilus_beecheyi"
+     ],
+     "predators": [
+      "buteo_jamaicensis",
+      "canis_latrans"
+     ]
+    },
+    {
+     "id": "lepus_californicus:summer:forage:grass_forbs",
+     "archetype": "gather",
+     "verb": "forage",
+     "season": "summer",
+     "unit": "solitary",
+     "collective": false,
+     "resource": "grass_forbs",
+     "hotspots": [],
+     "scarcity": 1.0,
+     "competitors": [
+      "sylvilagus_bachmani",
+      "meleagris_gallopavo",
+      "otospermophilus_beecheyi"
+     ],
+     "predators": [
+      "buteo_jamaicensis",
+      "canis_latrans"
+     ]
+    },
+    {
+     "id": "lepus_californicus:summer:shelter:cover",
+     "archetype": "shelter",
+     "verb": "shelter",
+     "season": "summer",
+     "unit": "solitary",
+     "collective": false,
+     "goal": "rest in shade midday",
+     "resource": "cover",
+     "hotspots": [
+      [
+       540015.0,
+       4189985.0,
+       90
+      ],
+      [
+       540225.2,
+       4189985.0,
+       90
+      ],
+      [
+       540375.4,
+       4189985.0,
+       90
+      ],
+      [
+       540735.7,
+       4189985.0,
+       90
+      ],
+      [
+       540915.9,
+       4189985.0,
+       90
+      ],
+      [
+       541066.1,
+       4189985.0,
+       90
+      ],
+      [
+       541216.2,
+       4189985.0,
+       90
+      ],
+      [
+       541366.4,
+       4189985.0,
+       90
+      ],
+      [
+       541516.5,
+       4189985.0,
+       90
+      ],
+      [
+       541696.7,
+       4189985.0,
+       90
+      ],
+      [
+       541846.8,
+       4189985.0,
+       90
+      ],
+      [
+       541997.0,
+       4189985.0,
+       90
+      ]
+     ],
+     "scarcity": 0.553,
+     "competitors": [
+      "corvus_corax",
+      "odocoileus_hemionus",
+      "callipepla_californica",
+      "aphelocoma_californica",
+      "sylvilagus_bachmani",
+      "sceloporus_occidentalis"
+     ],
+     "predators": [
+      "buteo_jamaicensis",
+      "canis_latrans"
+     ]
+    },
+    {
+     "id": "lepus_californicus:fall:forage:grass_forbs",
+     "archetype": "gather",
+     "verb": "forage",
+     "season": "fall",
+     "unit": "solitary",
+     "collective": false,
+     "resource": "grass_forbs",
+     "hotspots": [],
+     "scarcity": 1.0,
+     "competitors": [
+      "callipepla_californica",
+      "microtus_californicus"
+     ],
+     "predators": [
+      "buteo_jamaicensis",
+      "canis_latrans"
+     ]
+    },
+    {
+     "id": "lepus_californicus:fall:forage:browse",
+     "archetype": "gather",
+     "verb": "forage",
+     "season": "fall",
+     "unit": "solitary",
+     "collective": false,
+     "resource": "browse",
+     "hotspots": [
+      [
+       540015.0,
+       4189985.0,
+       40
+      ],
+      [
+       540225.2,
+       4189985.0,
+       40
+      ],
+      [
+       540375.4,
+       4189985.0,
+       40
+      ],
+      [
+       540735.7,
+       4189985.0,
+       40
+      ],
+      [
+       540915.9,
+       4189985.0,
+       40
+      ],
+      [
+       541066.1,
+       4189985.0,
+       40
+      ],
+      [
+       541216.2,
+       4189985.0,
+       40
+      ],
+      [
+       541366.4,
+       4189985.0,
+       40
+      ],
+      [
+       541516.5,
+       4189985.0,
+       40
+      ],
+      [
+       541696.7,
+       4189985.0,
+       40
+      ],
+      [
+       541846.8,
+       4189985.0,
+       40
+      ],
+      [
+       541997.0,
+       4189985.0,
+       40
+      ]
+     ],
+     "scarcity": 1.0,
+     "competitors": [
+      "sylvilagus_bachmani"
+     ],
+     "predators": [
+      "buteo_jamaicensis",
+      "canis_latrans"
+     ]
+    },
+    {
+     "id": "lepus_californicus:buteo_jamaicensis:evade",
+     "archetype": "evade",
+     "verb": "evade",
+     "season": "all",
+     "unit": "solitary",
+     "collective": false,
+     "predator": "buteo_jamaicensis",
+     "watchers": []
+    },
+    {
+     "id": "lepus_californicus:canis_latrans:evade",
+     "archetype": "evade",
+     "verb": "evade",
+     "season": "all",
+     "unit": "solitary",
+     "collective": false,
+     "predator": "canis_latrans",
+     "watchers": []
+    }
+   ]
+  },
+  "microtus_californicus": {
+   "unit": "solitary",
+   "predators": [
+    "buteo_jamaicensis",
+    "canis_latrans",
+    "urocyon_cinereoargenteus"
+   ],
+   "prey": [],
+   "games": [
+    {
+     "id": "microtus_californicus:winter:forage:grass_forbs",
+     "archetype": "gather",
+     "verb": "forage",
+     "season": "winter",
+     "unit": "solitary",
+     "collective": false,
+     "resource": "grass_forbs",
+     "hotspots": [
+      [
+       540135.1,
+       4189985.0,
+       54
+      ],
+      [
+       540615.6,
+       4189985.0,
+       54
+      ],
+      [
+       540795.8,
+       4189985.0,
+       54
+      ],
+      [
+       541967.0,
+       4189985.0,
+       54
+      ],
+      [
+       542147.1,
+       4189985.0,
+       54
+      ],
+      [
+       542477.5,
+       4189985.0,
+       54
+      ],
+      [
+       542897.9,
+       4189985.0,
+       54
+      ],
+      [
+       543198.2,
+       4189985.0,
+       54
+      ],
+      [
+       543348.3,
+       4189985.0,
+       54
+      ],
+      [
+       543528.5,
+       4189985.0,
+       54
+      ],
+      [
+       549204.2,
+       4189985.0,
+       54
+      ],
+      [
+       540976.0,
+       4189955.0,
+       54
+      ]
+     ],
+     "scarcity": 0.976,
+     "competitors": [
+      "callipepla_californica",
+      "sylvilagus_bachmani",
+      "lepus_californicus",
+      "meleagris_gallopavo"
+     ],
+     "predators": [
+      "buteo_jamaicensis",
+      "canis_latrans",
+      "urocyon_cinereoargenteus"
+     ]
+    },
+    {
+     "id": "microtus_californicus:winter:shelter:burrow",
+     "archetype": "shelter",
+     "verb": "shelter",
+     "season": "winter",
+     "unit": "solitary",
+     "collective": false,
+     "resource": "burrow",
+     "hotspots": [
+      [
+       540135.1,
+       4189985.0,
+       64
+      ],
+      [
+       540615.6,
+       4189985.0,
+       64
+      ],
+      [
+       540795.8,
+       4189985.0,
+       64
+      ],
+      [
+       541967.0,
+       4189985.0,
+       64
+      ],
+      [
+       542147.1,
+       4189985.0,
+       64
+      ],
+      [
+       542477.5,
+       4189985.0,
+       64
+      ],
+      [
+       542897.9,
+       4189985.0,
+       64
+      ],
+      [
+       543198.2,
+       4189985.0,
+       64
+      ],
+      [
+       543348.3,
+       4189985.0,
+       64
+      ],
+      [
+       543528.5,
+       4189985.0,
+       64
+      ],
+      [
+       549204.2,
+       4189985.0,
+       64
+      ],
+      [
+       540976.0,
+       4189955.0,
+       64
+      ]
+     ],
+     "scarcity": 0.976,
+     "competitors": [
+      "otospermophilus_beecheyi"
+     ],
+     "predators": [
+      "buteo_jamaicensis",
+      "canis_latrans",
+      "urocyon_cinereoargenteus"
+     ]
+    },
+    {
+     "id": "microtus_californicus:spring:rear:burrow",
+     "archetype": "rear",
+     "verb": "rear",
+     "season": "spring",
+     "unit": "solitary",
+     "collective": false,
+     "resource": "burrow",
+     "hotspots": [
+      [
+       540135.1,
+       4189985.0,
+       80
+      ],
+      [
+       540615.6,
+       4189985.0,
+       80
+      ],
+      [
+       540795.8,
+       4189985.0,
+       80
+      ],
+      [
+       541967.0,
+       4189985.0,
+       80
+      ],
+      [
+       542147.1,
+       4189985.0,
+       80
+      ],
+      [
+       542477.5,
+       4189985.0,
+       80
+      ],
+      [
+       542897.9,
+       4189985.0,
+       80
+      ],
+      [
+       543198.2,
+       4189985.0,
+       80
+      ],
+      [
+       543348.3,
+       4189985.0,
+       80
+      ],
+      [
+       543528.5,
+       4189985.0,
+       80
+      ],
+      [
+       549204.2,
+       4189985.0,
+       80
+      ],
+      [
+       540976.0,
+       4189955.0,
+       80
+      ]
+     ],
+     "scarcity": 0.601,
+     "competitors": [
+      "urocyon_cinereoargenteus",
+      "canis_latrans",
+      "otospermophilus_beecheyi"
+     ],
+     "predators": [
+      "buteo_jamaicensis",
+      "canis_latrans",
+      "urocyon_cinereoargenteus"
+     ]
+    },
+    {
+     "id": "microtus_californicus:spring:forage:grass_forbs",
+     "archetype": "gather",
+     "verb": "forage",
+     "season": "spring",
+     "unit": "solitary",
+     "collective": false,
+     "resource": "grass_forbs",
+     "hotspots": [
+      [
+       540135.1,
+       4189985.0,
+       90
+      ],
+      [
+       540615.6,
+       4189985.0,
+       90
+      ],
+      [
+       540795.8,
+       4189985.0,
+       90
+      ],
+      [
+       541967.0,
+       4189985.0,
+       90
+      ],
+      [
+       542147.1,
+       4189985.0,
+       90
+      ],
+      [
+       542477.5,
+       4189985.0,
+       90
+      ],
+      [
+       542897.9,
+       4189985.0,
+       90
+      ],
+      [
+       543198.2,
+       4189985.0,
+       90
+      ],
+      [
+       543348.3,
+       4189985.0,
+       90
+      ],
+      [
+       543528.5,
+       4189985.0,
+       90
+      ],
+      [
+       549204.2,
+       4189985.0,
+       90
+      ],
+      [
+       540976.0,
+       4189955.0,
+       90
+      ]
+     ],
+     "scarcity": 0.894,
+     "competitors": [
+      "odocoileus_hemionus",
+      "lepus_californicus",
+      "otospermophilus_beecheyi"
+     ],
+     "predators": [
+      "buteo_jamaicensis",
+      "canis_latrans",
+      "urocyon_cinereoargenteus"
+     ]
+    },
+    {
+     "id": "microtus_californicus:summer:shelter:burrow",
+     "archetype": "shelter",
+     "verb": "shelter",
+     "season": "summer",
+     "unit": "solitary",
+     "collective": false,
+     "goal": "aestivate in dry grass",
+     "resource": "burrow",
+     "hotspots": [
+      [
+       540135.1,
+       4189985.0,
+       80
+      ],
+      [
+       540615.6,
+       4189985.0,
+       80
+      ],
+      [
+       540795.8,
+       4189985.0,
+       80
+      ],
+      [
+       541967.0,
+       4189985.0,
+       80
+      ],
+      [
+       542147.1,
+       4189985.0,
+       80
+      ],
+      [
+       542477.5,
+       4189985.0,
+       80
+      ],
+      [
+       542897.9,
+       4189985.0,
+       80
+      ],
+      [
+       543198.2,
+       4189985.0,
+       80
+      ],
+      [
+       543348.3,
+       4189985.0,
+       80
+      ],
+      [
+       543528.5,
+       4189985.0,
+       80
+      ],
+      [
+       549204.2,
+       4189985.0,
+       80
+      ],
+      [
+       540976.0,
+       4189955.0,
+       80
+      ]
+     ],
+     "scarcity": 0.601,
+     "competitors": [
+      "otospermophilus_beecheyi"
+     ],
+     "predators": [
+      "buteo_jamaicensis",
+      "canis_latrans",
+      "urocyon_cinereoargenteus"
+     ]
+    },
+    {
+     "id": "microtus_californicus:fall:forage:grass_forbs",
+     "archetype": "gather",
+     "verb": "forage",
+     "season": "fall",
+     "unit": "solitary",
+     "collective": false,
+     "resource": "grass_forbs",
+     "hotspots": [],
+     "scarcity": 1.0,
+     "competitors": [
+      "callipepla_californica",
+      "lepus_californicus"
+     ],
+     "predators": [
+      "buteo_jamaicensis",
+      "canis_latrans",
+      "urocyon_cinereoargenteus"
+     ]
+    },
+    {
+     "id": "microtus_californicus:fall:rear:burrow",
+     "archetype": "rear",
+     "verb": "rear",
+     "season": "fall",
+     "unit": "solitary",
+     "collective": false,
+     "resource": "burrow",
+     "hotspots": [
+      [
+       540135.1,
+       4189985.0,
+       80
+      ],
+      [
+       540615.6,
+       4189985.0,
+       80
+      ],
+      [
+       540795.8,
+       4189985.0,
+       80
+      ],
+      [
+       541967.0,
+       4189985.0,
+       80
+      ],
+      [
+       542147.1,
+       4189985.0,
+       80
+      ],
+      [
+       542477.5,
+       4189985.0,
+       80
+      ],
+      [
+       542897.9,
+       4189985.0,
+       80
+      ],
+      [
+       543198.2,
+       4189985.0,
+       80
+      ],
+      [
+       543348.3,
+       4189985.0,
+       80
+      ],
+      [
+       543528.5,
+       4189985.0,
+       80
+      ],
+      [
+       549204.2,
+       4189985.0,
+       80
+      ],
+      [
+       540976.0,
+       4189955.0,
+       80
+      ]
+     ],
+     "scarcity": 0.601,
+     "competitors": [
+      "otospermophilus_beecheyi"
+     ],
+     "predators": [
+      "buteo_jamaicensis",
+      "canis_latrans",
+      "urocyon_cinereoargenteus"
+     ]
+    },
+    {
+     "id": "microtus_californicus:buteo_jamaicensis:evade",
+     "archetype": "evade",
+     "verb": "evade",
+     "season": "all",
+     "unit": "solitary",
+     "collective": false,
+     "predator": "buteo_jamaicensis",
+     "watchers": []
+    },
+    {
+     "id": "microtus_californicus:canis_latrans:evade",
+     "archetype": "evade",
+     "verb": "evade",
+     "season": "all",
+     "unit": "solitary",
+     "collective": false,
+     "predator": "canis_latrans",
+     "watchers": []
+    },
+    {
+     "id": "microtus_californicus:urocyon_cinereoargenteus:evade",
+     "archetype": "evade",
+     "verb": "evade",
+     "season": "all",
+     "unit": "solitary",
+     "collective": false,
+     "predator": "urocyon_cinereoargenteus",
+     "watchers": []
+    }
+   ]
+  },
+  "canis_latrans": {
+   "unit": "solitary",
+   "predators": [],
+   "prey": [
+    "lepus_californicus",
+    "microtus_californicus",
+    "odocoileus_hemionus",
+    "sylvilagus_bachmani"
+   ],
+   "games": [
+    {
+     "id": "canis_latrans:winter:court",
+     "archetype": "court",
+     "verb": "court",
+     "season": "winter",
+     "unit": "solitary",
+     "collective": false
+    },
+    {
+     "id": "canis_latrans:winter:hunt",
+     "archetype": "hunt",
+     "verb": "hunt",
+     "season": "winter",
+     "unit": "solitary",
+     "collective": false,
+     "prey": [
+      "sylvilagus_bachmani",
+      "lepus_californicus",
+      "microtus_californicus",
+      "odocoileus_hemionus"
+     ]
+    },
+    {
+     "id": "canis_latrans:spring:den:burrow",
+     "archetype": "shelter",
+     "verb": "den",
+     "season": "spring",
+     "unit": "solitary",
+     "collective": false,
+     "resource": "burrow",
+     "hotspots": [
+      [
+       540135.1,
+       4189985.0,
+       80
+      ],
+      [
+       540615.6,
+       4189985.0,
+       80
+      ],
+      [
+       540795.8,
+       4189985.0,
+       80
+      ],
+      [
+       541967.0,
+       4189985.0,
+       80
+      ],
+      [
+       542147.1,
+       4189985.0,
+       80
+      ],
+      [
+       542477.5,
+       4189985.0,
+       80
+      ],
+      [
+       542897.9,
+       4189985.0,
+       80
+      ],
+      [
+       543198.2,
+       4189985.0,
+       80
+      ],
+      [
+       543348.3,
+       4189985.0,
+       80
+      ],
+      [
+       543528.5,
+       4189985.0,
+       80
+      ],
+      [
+       549204.2,
+       4189985.0,
+       80
+      ],
+      [
+       540976.0,
+       4189955.0,
+       80
+      ]
+     ],
+     "scarcity": 0.601,
+     "competitors": [
+      "urocyon_cinereoargenteus",
+      "microtus_californicus",
+      "otospermophilus_beecheyi"
+     ]
+    },
+    {
+     "id": "canis_latrans:spring:rear",
+     "archetype": "rear",
+     "verb": "rear",
+     "season": "spring",
+     "unit": "solitary",
+     "collective": false
+    },
+    {
+     "id": "canis_latrans:summer:hunt:insects",
+     "archetype": "hunt",
+     "verb": "hunt",
+     "season": "summer",
+     "unit": "solitary",
+     "collective": false,
+     "resource": "insects",
+     "hotspots": [
+      [
+       540495.5,
+       4189985.0,
+       72
+      ],
+      [
+       545780.8,
+       4189985.0,
+       72
+      ],
+      [
+       549744.7,
+       4189955.0,
+       72
+      ],
+      [
+       549144.1,
+       4189924.9,
+       72
+      ],
+      [
+       549384.4,
+       4189894.9,
+       72
+      ],
+      [
+       540525.5,
+       4189834.8,
+       72
+      ],
+      [
+       549654.7,
+       4189774.8,
+       72
+      ],
+      [
+       540555.6,
+       4189684.7,
+       72
+      ],
+      [
+       540585.6,
+       4189534.5,
+       72
+      ],
+      [
+       543108.1,
+       4189444.4,
+       72
+      ],
+      [
+       545780.8,
+       4189384.4,
+       72
+      ],
+      [
+       540615.6,
+       4189324.3,
+       72
+      ]
+     ],
+     "scarcity": 0.955,
+     "competitors": [
+      "corvus_corax",
+      "urocyon_cinereoargenteus",
+      "sciurus_griseus",
+      "melanerpes_formicivorus",
+      "callipepla_californica",
+      "aphelocoma_californica",
+      "cyanocitta_stelleri",
+      "meleagris_gallopavo",
+      "sceloporus_occidentalis"
+     ]
+    },
+    {
+     "id": "canis_latrans:summer:forage",
+     "archetype": "gather",
+     "verb": "forage",
+     "season": "summer",
+     "unit": "solitary",
+     "collective": false
+    },
+    {
+     "id": "canis_latrans:fall:disperse",
+     "archetype": "disperse",
+     "verb": "disperse",
+     "season": "fall",
+     "unit": "solitary",
+     "collective": false
+    },
+    {
+     "id": "canis_latrans:fall:forage:acorn_mast",
+     "archetype": "gather",
+     "verb": "forage",
+     "season": "fall",
+     "unit": "solitary",
+     "collective": false,
+     "resource": "acorn_mast",
+     "hotspots": [
+      [
+       540165.2,
+       4189985.0,
+       90
+      ],
+      [
+       541336.3,
+       4189985.0,
+       90
+      ],
+      [
+       541606.6,
+       4189985.0,
+       90
+      ],
+      [
+       541756.8,
+       4189985.0,
+       90
+      ],
+      [
+       541906.9,
+       4189985.0,
+       90
+      ],
+      [
+       543618.6,
+       4189985.0,
+       90
+      ],
+      [
+       543768.8,
+       4189985.0,
+       90
+      ],
+      [
+       543918.9,
+       4189985.0,
+       90
+      ],
+      [
+       544069.1,
+       4189985.0,
+       90
+      ],
+      [
+       544849.8,
+       4189985.0,
+       90
+      ],
+      [
+       545000.0,
+       4189985.0,
+       90
+      ],
+      [
+       545150.2,
+       4189985.0,
+       90
+      ]
+     ],
+     "scarcity": 0.899,
+     "competitors": [
+      "corvus_corax",
+      "odocoileus_hemionus",
+      "urocyon_cinereoargenteus",
+      "sciurus_griseus",
+      "melanerpes_formicivorus",
+      "callipepla_californica",
+      "aphelocoma_californica",
+      "cyanocitta_stelleri",
+      "meleagris_gallopavo",
+      "otospermophilus_beecheyi"
+     ]
+    }
+   ]
+  },
+  "puma_concolor": {
+   "unit": "mother_and_young",
+   "predators": [],
+   "prey": [
+    "odocoileus_hemionus",
+    "sylvilagus_bachmani"
+   ],
+   "games": [
+    {
+     "id": "puma_concolor:winter:hunt",
+     "archetype": "hunt",
+     "verb": "hunt",
+     "season": "winter",
+     "unit": "mother_and_young",
+     "collective": true,
+     "goal": "ambush on deer trails",
+     "prey": [
+      "odocoileus_hemionus"
+     ]
+    },
+    {
+     "id": "puma_concolor:spring:hunt",
+     "archetype": "hunt",
+     "verb": "hunt",
+     "season": "spring",
+     "unit": "mother_and_young",
+     "collective": true,
+     "prey": [
+      "odocoileus_hemionus"
+     ]
+    },
+    {
+     "id": "puma_concolor:spring:rear:cover",
+     "archetype": "rear",
+     "verb": "rear",
+     "season": "spring",
+     "unit": "mother_and_young",
+     "collective": true,
+     "resource": "cover",
+     "hotspots": [
+      [
+       540015.0,
+       4189985.0,
+       90
+      ],
+      [
+       540225.2,
+       4189985.0,
+       90
+      ],
+      [
+       540375.4,
+       4189985.0,
+       90
+      ],
+      [
+       540735.7,
+       4189985.0,
+       90
+      ],
+      [
+       540915.9,
+       4189985.0,
+       90
+      ],
+      [
+       541066.1,
+       4189985.0,
+       90
+      ],
+      [
+       541216.2,
+       4189985.0,
+       90
+      ],
+      [
+       541366.4,
+       4189985.0,
+       90
+      ],
+      [
+       541516.5,
+       4189985.0,
+       90
+      ],
+      [
+       541696.7,
+       4189985.0,
+       90
+      ],
+      [
+       541846.8,
+       4189985.0,
+       90
+      ],
+      [
+       541997.0,
+       4189985.0,
+       90
+      ]
+     ],
+     "scarcity": 0.553,
+     "competitors": [
+      "odocoileus_hemionus",
+      "urocyon_cinereoargenteus",
+      "callipepla_californica",
+      "aphelocoma_californica",
+      "cyanocitta_stelleri",
+      "sylvilagus_bachmani",
+      "meleagris_gallopavo"
+     ]
+    },
+    {
+     "id": "puma_concolor:summer:hunt",
+     "archetype": "hunt",
+     "verb": "hunt",
+     "season": "summer",
+     "unit": "mother_and_young",
+     "collective": true,
+     "prey": [
+      "odocoileus_hemionus",
+      "sylvilagus_bachmani"
+     ]
+    },
+    {
+     "id": "puma_concolor:fall:hunt",
+     "archetype": "hunt",
+     "verb": "hunt",
+     "season": "fall",
+     "unit": "mother_and_young",
+     "collective": true,
+     "goal": "deer gather at mast",
+     "prey": [
+      "odocoileus_hemionus"
+     ]
+    }
+   ]
+  },
+  "meleagris_gallopavo": {
+   "unit": "flock",
+   "predators": [],
+   "prey": [],
+   "games": [
+    {
+     "id": "meleagris_gallopavo:winter:forage:acorn_mast",
+     "archetype": "gather",
+     "verb": "forage",
+     "season": "winter",
+     "unit": "flock",
+     "collective": true,
+     "goal": "large flocks scratch in the oak litter",
+     "resource": "acorn_mast",
+     "hotspots": [
+      [
+       540165.2,
+       4189985.0,
+       45
+      ],
+      [
+       541336.3,
+       4189985.0,
+       45
+      ],
+      [
+       541606.6,
+       4189985.0,
+       45
+      ],
+      [
+       541756.8,
+       4189985.0,
+       45
+      ],
+      [
+       541906.9,
+       4189985.0,
+       45
+      ],
+      [
+       543618.6,
+       4189985.0,
+       45
+      ],
+      [
+       543768.8,
+       4189985.0,
+       45
+      ],
+      [
+       543918.9,
+       4189985.0,
+       45
+      ],
+      [
+       544069.1,
+       4189985.0,
+       45
+      ],
+      [
+       544849.8,
+       4189985.0,
+       45
+      ],
+      [
+       545000.0,
+       4189985.0,
+       45
+      ],
+      [
+       545150.2,
+       4189985.0,
+       45
+      ]
+     ],
+     "scarcity": 1.0,
+     "competitors": [
+      "sciurus_griseus",
+      "melanerpes_formicivorus",
+      "aphelocoma_californica",
+      "cyanocitta_stelleri"
+     ]
+    },
+    {
+     "id": "meleagris_gallopavo:winter:forage:grass_forbs",
+     "archetype": "gather",
+     "verb": "forage",
+     "season": "winter",
+     "unit": "flock",
+     "collective": true,
+     "goal": "large flocks scratch in the oak litter",
+     "resource": "grass_forbs",
+     "hotspots": [
+      [
+       540135.1,
+       4189985.0,
+       54
+      ],
+      [
+       540615.6,
+       4189985.0,
+       54
+      ],
+      [
+       540795.8,
+       4189985.0,
+       54
+      ],
+      [
+       541967.0,
+       4189985.0,
+       54
+      ],
+      [
+       542147.1,
+       4189985.0,
+       54
+      ],
+      [
+       542477.5,
+       4189985.0,
+       54
+      ],
+      [
+       542897.9,
+       4189985.0,
+       54
+      ],
+      [
+       543198.2,
+       4189985.0,
+       54
+      ],
+      [
+       543348.3,
+       4189985.0,
+       54
+      ],
+      [
+       543528.5,
+       4189985.0,
+       54
+      ],
+      [
+       549204.2,
+       4189985.0,
+       54
+      ],
+      [
+       540976.0,
+       4189955.0,
+       54
+      ]
+     ],
+     "scarcity": 0.976,
+     "competitors": [
+      "callipepla_californica",
+      "sylvilagus_bachmani",
+      "lepus_californicus",
+      "microtus_californicus"
+     ]
+    },
+    {
+     "id": "meleagris_gallopavo:winter:shelter:cliff_or_snag",
+     "archetype": "shelter",
+     "verb": "shelter",
+     "season": "winter",
+     "unit": "flock",
+     "collective": true,
+     "goal": "roost high in oaks and pines at night",
+     "resource": "cliff_or_snag",
+     "hotspots": [
+      [
+       541726.7,
+       4189985.0,
+       90
+      ],
+      [
+       543678.7,
+       4189985.0,
+       90
+      ],
+      [
+       543888.9,
+       4189985.0,
+       90
+      ],
+      [
+       544039.0,
+       4189985.0,
+       90
+      ],
+      [
+       544189.2,
+       4189985.0,
+       90
+      ],
+      [
+       544339.3,
+       4189985.0,
+       90
+      ],
+      [
+       544549.5,
+       4189985.0,
+       90
+      ],
+      [
+       545090.1,
+       4189985.0,
+       90
+      ],
+      [
+       545690.7,
+       4189985.0,
+       90
+      ],
+      [
+       549024.0,
+       4189985.0,
+       90
+      ],
+      [
+       549174.2,
+       4189985.0,
+       90
+      ],
+      [
+       549324.3,
+       4189985.0,
+       90
+      ]
+     ],
+     "scarcity": 0.785,
+     "competitors": [
+      "corvus_corax"
+     ]
+    },
+    {
+     "id": "meleagris_gallopavo:spring:court",
+     "archetype": "court",
+     "verb": "court",
+     "season": "spring",
+     "unit": "flock",
+     "collective": true,
+     "goal": "toms gobble and strut"
+    },
+    {
+     "id": "meleagris_gallopavo:spring:nest:cover",
+     "archetype": "shelter",
+     "verb": "nest",
+     "season": "spring",
+     "unit": "flock",
+     "collective": true,
+     "goal": "ground nest under brush",
+     "resource": "cover",
+     "hotspots": [
+      [
+       540015.0,
+       4189985.0,
+       90
+      ],
+      [
+       540225.2,
+       4189985.0,
+       90
+      ],
+      [
+       540375.4,
+       4189985.0,
+       90
+      ],
+      [
+       540735.7,
+       4189985.0,
+       90
+      ],
+      [
+       540915.9,
+       4189985.0,
+       90
+      ],
+      [
+       541066.1,
+       4189985.0,
+       90
+      ],
+      [
+       541216.2,
+       4189985.0,
+       90
+      ],
+      [
+       541366.4,
+       4189985.0,
+       90
+      ],
+      [
+       541516.5,
+       4189985.0,
+       90
+      ],
+      [
+       541696.7,
+       4189985.0,
+       90
+      ],
+      [
+       541846.8,
+       4189985.0,
+       90
+      ],
+      [
+       541997.0,
+       4189985.0,
+       90
+      ]
+     ],
+     "scarcity": 0.553,
+     "competitors": [
+      "odocoileus_hemionus",
+      "urocyon_cinereoargenteus",
+      "callipepla_californica",
+      "aphelocoma_californica",
+      "cyanocitta_stelleri",
+      "sylvilagus_bachmani",
+      "puma_concolor"
+     ]
+    },
+    {
+     "id": "meleagris_gallopavo:summer:rear:insects",
+     "archetype": "rear",
+     "verb": "rear",
+     "season": "summer",
+     "unit": "flock",
+     "collective": true,
+     "goal": "hens with poults",
+     "resource": "insects",
+     "hotspots": [
+      [
+       540495.5,
+       4189985.0,
+       72
+      ],
+      [
+       545780.8,
+       4189985.0,
+       72
+      ],
+      [
+       549744.7,
+       4189955.0,
+       72
+      ],
+      [
+       549144.1,
+       4189924.9,
+       72
+      ],
+      [
+       549384.4,
+       4189894.9,
+       72
+      ],
+      [
+       540525.5,
+       4189834.8,
+       72
+      ],
+      [
+       549654.7,
+       4189774.8,
+       72
+      ],
+      [
+       540555.6,
+       4189684.7,
+       72
+      ],
+      [
+       540585.6,
+       4189534.5,
+       72
+      ],
+      [
+       543108.1,
+       4189444.4,
+       72
+      ],
+      [
+       545780.8,
+       4189384.4,
+       72
+      ],
+      [
+       540615.6,
+       4189324.3,
+       72
+      ]
+     ],
+     "scarcity": 0.955,
+     "competitors": [
+      "corvus_corax",
+      "urocyon_cinereoargenteus",
+      "sciurus_griseus",
+      "melanerpes_formicivorus",
+      "callipepla_californica",
+      "aphelocoma_californica",
+      "cyanocitta_stelleri",
+      "canis_latrans",
+      "sceloporus_occidentalis"
+     ]
+    },
+    {
+     "id": "meleagris_gallopavo:summer:rear:grass_forbs",
+     "archetype": "rear",
+     "verb": "rear",
+     "season": "summer",
+     "unit": "flock",
+     "collective": true,
+     "goal": "hens with poults",
+     "resource": "grass_forbs",
+     "hotspots": [],
+     "scarcity": 1.0,
+     "competitors": [
+      "sylvilagus_bachmani",
+      "lepus_californicus",
+      "otospermophilus_beecheyi"
+     ]
+    },
+    {
+     "id": "meleagris_gallopavo:summer:forage:insects",
+     "archetype": "gather",
+     "verb": "forage",
+     "season": "summer",
+     "unit": "flock",
+     "collective": true,
+     "resource": "insects",
+     "hotspots": [
+      [
+       540495.5,
+       4189985.0,
+       72
+      ],
+      [
+       545780.8,
+       4189985.0,
+       72
+      ],
+      [
+       549744.7,
+       4189955.0,
+       72
+      ],
+      [
+       549144.1,
+       4189924.9,
+       72
+      ],
+      [
+       549384.4,
+       4189894.9,
+       72
+      ],
+      [
+       540525.5,
+       4189834.8,
+       72
+      ],
+      [
+       549654.7,
+       4189774.8,
+       72
+      ],
+      [
+       540555.6,
+       4189684.7,
+       72
+      ],
+      [
+       540585.6,
+       4189534.5,
+       72
+      ],
+      [
+       543108.1,
+       4189444.4,
+       72
+      ],
+      [
+       545780.8,
+       4189384.4,
+       72
+      ],
+      [
+       540615.6,
+       4189324.3,
+       72
+      ]
+     ],
+     "scarcity": 0.955,
+     "competitors": [
+      "corvus_corax",
+      "urocyon_cinereoargenteus",
+      "sciurus_griseus",
+      "melanerpes_formicivorus",
+      "callipepla_californica",
+      "aphelocoma_californica",
+      "cyanocitta_stelleri",
+      "canis_latrans",
+      "sceloporus_occidentalis"
+     ]
+    },
+    {
+     "id": "meleagris_gallopavo:fall:forage:acorn_mast",
+     "archetype": "gather",
+     "verb": "forage",
+     "season": "fall",
+     "unit": "flock",
+     "collective": true,
+     "goal": "flocks gather under the oaks",
+     "resource": "acorn_mast",
+     "hotspots": [
+      [
+       540165.2,
+       4189985.0,
+       90
+      ],
+      [
+       541336.3,
+       4189985.0,
+       90
+      ],
+      [
+       541606.6,
+       4189985.0,
+       90
+      ],
+      [
+       541756.8,
+       4189985.0,
+       90
+      ],
+      [
+       541906.9,
+       4189985.0,
+       90
+      ],
+      [
+       543618.6,
+       4189985.0,
+       90
+      ],
+      [
+       543768.8,
+       4189985.0,
+       90
+      ],
+      [
+       543918.9,
+       4189985.0,
+       90
+      ],
+      [
+       544069.1,
+       4189985.0,
+       90
+      ],
+      [
+       544849.8,
+       4189985.0,
+       90
+      ],
+      [
+       545000.0,
+       4189985.0,
+       90
+      ],
+      [
+       545150.2,
+       4189985.0,
+       90
+      ]
+     ],
+     "scarcity": 0.899,
+     "competitors": [
+      "corvus_corax",
+      "odocoileus_hemionus",
+      "urocyon_cinereoargenteus",
+      "sciurus_griseus",
+      "melanerpes_formicivorus",
+      "callipepla_californica",
+      "aphelocoma_californica",
+      "cyanocitta_stelleri",
+      "canis_latrans",
+      "otospermophilus_beecheyi"
+     ]
+    }
+   ]
+  },
+  "otospermophilus_beecheyi": {
+   "unit": "colony",
+   "predators": [
+    "buteo_jamaicensis"
+   ],
+   "prey": [],
+   "games": [
+    {
+     "id": "otospermophilus_beecheyi:winter:shelter:burrow",
+     "archetype": "shelter",
+     "verb": "shelter",
+     "season": "winter",
+     "unit": "colony",
+     "collective": true,
+     "goal": "hibernate or stay below through the cold weeks",
+     "resource": "burrow",
+     "hotspots": [
+      [
+       540135.1,
+       4189985.0,
+       64
+      ],
+      [
+       540615.6,
+       4189985.0,
+       64
+      ],
+      [
+       540795.8,
+       4189985.0,
+       64
+      ],
+      [
+       541967.0,
+       4189985.0,
+       64
+      ],
+      [
+       542147.1,
+       4189985.0,
+       64
+      ],
+      [
+       542477.5,
+       4189985.0,
+       64
+      ],
+      [
+       542897.9,
+       4189985.0,
+       64
+      ],
+      [
+       543198.2,
+       4189985.0,
+       64
+      ],
+      [
+       543348.3,
+       4189985.0,
+       64
+      ],
+      [
+       543528.5,
+       4189985.0,
+       64
+      ],
+      [
+       549204.2,
+       4189985.0,
+       64
+      ],
+      [
+       540976.0,
+       4189955.0,
+       64
+      ]
+     ],
+     "scarcity": 0.976,
+     "competitors": [
+      "microtus_californicus"
+     ],
+     "predators": [
+      "buteo_jamaicensis"
+     ]
+    },
+    {
+     "id": "otospermophilus_beecheyi:spring:court:burrow",
+     "archetype": "court",
+     "verb": "court",
+     "season": "spring",
+     "unit": "colony",
+     "collective": true,
+     "resource": "burrow",
+     "hotspots": [
+      [
+       540135.1,
+       4189985.0,
+       80
+      ],
+      [
+       540615.6,
+       4189985.0,
+       80
+      ],
+      [
+       540795.8,
+       4189985.0,
+       80
+      ],
+      [
+       541967.0,
+       4189985.0,
+       80
+      ],
+      [
+       542147.1,
+       4189985.0,
+       80
+      ],
+      [
+       542477.5,
+       4189985.0,
+       80
+      ],
+      [
+       542897.9,
+       4189985.0,
+       80
+      ],
+      [
+       543198.2,
+       4189985.0,
+       80
+      ],
+      [
+       543348.3,
+       4189985.0,
+       80
+      ],
+      [
+       543528.5,
+       4189985.0,
+       80
+      ],
+      [
+       549204.2,
+       4189985.0,
+       80
+      ],
+      [
+       540976.0,
+       4189955.0,
+       80
+      ]
+     ],
+     "scarcity": 0.601,
+     "competitors": [
+      "urocyon_cinereoargenteus",
+      "microtus_californicus",
+      "canis_latrans"
+     ],
+     "predators": [
+      "buteo_jamaicensis"
+     ]
+    },
+    {
+     "id": "otospermophilus_beecheyi:spring:rear:burrow",
+     "archetype": "rear",
+     "verb": "rear",
+     "season": "spring",
+     "unit": "colony",
+     "collective": true,
+     "goal": "young above ground by May",
+     "resource": "burrow",
+     "hotspots": [
+      [
+       540135.1,
+       4189985.0,
+       80
+      ],
+      [
+       540615.6,
+       4189985.0,
+       80
+      ],
+      [
+       540795.8,
+       4189985.0,
+       80
+      ],
+      [
+       541967.0,
+       4189985.0,
+       80
+      ],
+      [
+       542147.1,
+       4189985.0,
+       80
+      ],
+      [
+       542477.5,
+       4189985.0,
+       80
+      ],
+      [
+       542897.9,
+       4189985.0,
+       80
+      ],
+      [
+       543198.2,
+       4189985.0,
+       80
+      ],
+      [
+       543348.3,
+       4189985.0,
+       80
+      ],
+      [
+       543528.5,
+       4189985.0,
+       80
+      ],
+      [
+       549204.2,
+       4189985.0,
+       80
+      ],
+      [
+       540976.0,
+       4189955.0,
+       80
+      ]
+     ],
+     "scarcity": 0.601,
+     "competitors": [
+      "urocyon_cinereoargenteus",
+      "microtus_californicus",
+      "canis_latrans"
+     ],
+     "predators": [
+      "buteo_jamaicensis"
+     ]
+    },
+    {
+     "id": "otospermophilus_beecheyi:spring:rear:grass_forbs",
+     "archetype": "rear",
+     "verb": "rear",
+     "season": "spring",
+     "unit": "colony",
+     "collective": true,
+     "goal": "young above ground by May",
+     "resource": "grass_forbs",
+     "hotspots": [
+      [
+       540135.1,
+       4189985.0,
+       90
+      ],
+      [
+       540615.6,
+       4189985.0,
+       90
+      ],
+      [
+       540795.8,
+       4189985.0,
+       90
+      ],
+      [
+       541967.0,
+       4189985.0,
+       90
+      ],
+      [
+       542147.1,
+       4189985.0,
+       90
+      ],
+      [
+       542477.5,
+       4189985.0,
+       90
+      ],
+      [
+       542897.9,
+       4189985.0,
+       90
+      ],
+      [
+       543198.2,
+       4189985.0,
+       90
+      ],
+      [
+       543348.3,
+       4189985.0,
+       90
+      ],
+      [
+       543528.5,
+       4189985.0,
+       90
+      ],
+      [
+       549204.2,
+       4189985.0,
+       90
+      ],
+      [
+       540976.0,
+       4189955.0,
+       90
+      ]
+     ],
+     "scarcity": 0.894,
+     "competitors": [
+      "odocoileus_hemionus",
+      "lepus_californicus",
+      "microtus_californicus"
+     ],
+     "predators": [
+      "buteo_jamaicensis"
+     ]
+    },
+    {
+     "id": "otospermophilus_beecheyi:summer:forage:grass_forbs",
+     "archetype": "gather",
+     "verb": "forage",
+     "season": "summer",
+     "unit": "colony",
+     "collective": true,
+     "goal": "seeds of the dry grass",
+     "resource": "grass_forbs",
+     "hotspots": [],
+     "scarcity": 1.0,
+     "competitors": [
+      "sylvilagus_bachmani",
+      "lepus_californicus",
+      "meleagris_gallopavo"
+     ],
+     "predators": [
+      "buteo_jamaicensis"
+     ]
+    },
+    {
+     "id": "otospermophilus_beecheyi:summer:forage:acorn_mast",
+     "archetype": "gather",
+     "verb": "forage",
+     "season": "summer",
+     "unit": "colony",
+     "collective": true,
+     "goal": "seeds of the dry grass",
+     "resource": "acorn_mast",
+     "hotspots": [],
+     "scarcity": 1.0,
+     "competitors": [],
+     "predators": [
+      "buteo_jamaicensis"
+     ]
+    },
+    {
+     "id": "otospermophilus_beecheyi:summer:shelter:burrow",
+     "archetype": "shelter",
+     "verb": "shelter",
+     "season": "summer",
+     "unit": "colony",
+     "collective": true,
+     "goal": "adults aestivate in the hottest weeks",
+     "resource": "burrow",
+     "hotspots": [
+      [
+       540135.1,
+       4189985.0,
+       80
+      ],
+      [
+       540615.6,
+       4189985.0,
+       80
+      ],
+      [
+       540795.8,
+       4189985.0,
+       80
+      ],
+      [
+       541967.0,
+       4189985.0,
+       80
+      ],
+      [
+       542147.1,
+       4189985.0,
+       80
+      ],
+      [
+       542477.5,
+       4189985.0,
+       80
+      ],
+      [
+       542897.9,
+       4189985.0,
+       80
+      ],
+      [
+       543198.2,
+       4189985.0,
+       80
+      ],
+      [
+       543348.3,
+       4189985.0,
+       80
+      ],
+      [
+       543528.5,
+       4189985.0,
+       80
+      ],
+      [
+       549204.2,
+       4189985.0,
+       80
+      ],
+      [
+       540976.0,
+       4189955.0,
+       80
+      ]
+     ],
+     "scarcity": 0.601,
+     "competitors": [
+      "microtus_californicus"
+     ],
+     "predators": [
+      "buteo_jamaicensis"
+     ]
+    },
+    {
+     "id": "otospermophilus_beecheyi:fall:forage:acorn_mast",
+     "archetype": "gather",
+     "verb": "forage",
+     "season": "fall",
+     "unit": "colony",
+     "collective": true,
+     "goal": "cache seeds and acorns",
+     "resource": "acorn_mast",
+     "hotspots": [
+      [
+       540165.2,
+       4189985.0,
+       90
+      ],
+      [
+       541336.3,
+       4189985.0,
+       90
+      ],
+      [
+       541606.6,
+       4189985.0,
+       90
+      ],
+      [
+       541756.8,
+       4189985.0,
+       90
+      ],
+      [
+       541906.9,
+       4189985.0,
+       90
+      ],
+      [
+       543618.6,
+       4189985.0,
+       90
+      ],
+      [
+       543768.8,
+       4189985.0,
+       90
+      ],
+      [
+       543918.9,
+       4189985.0,
+       90
+      ],
+      [
+       544069.1,
+       4189985.0,
+       90
+      ],
+      [
+       544849.8,
+       4189985.0,
+       90
+      ],
+      [
+       545000.0,
+       4189985.0,
+       90
+      ],
+      [
+       545150.2,
+       4189985.0,
+       90
+      ]
+     ],
+     "scarcity": 0.899,
+     "competitors": [
+      "corvus_corax",
+      "odocoileus_hemionus",
+      "urocyon_cinereoargenteus",
+      "sciurus_griseus",
+      "melanerpes_formicivorus",
+      "callipepla_californica",
+      "aphelocoma_californica",
+      "cyanocitta_stelleri",
+      "canis_latrans",
+      "meleagris_gallopavo"
+     ],
+     "predators": [
+      "buteo_jamaicensis"
+     ]
+    },
+    {
+     "id": "otospermophilus_beecheyi:fall:shelter:burrow",
+     "archetype": "shelter",
+     "verb": "shelter",
+     "season": "fall",
+     "unit": "colony",
+     "collective": true,
+     "resource": "burrow",
+     "hotspots": [
+      [
+       540135.1,
+       4189985.0,
+       80
+      ],
+      [
+       540615.6,
+       4189985.0,
+       80
+      ],
+      [
+       540795.8,
+       4189985.0,
+       80
+      ],
+      [
+       541967.0,
+       4189985.0,
+       80
+      ],
+      [
+       542147.1,
+       4189985.0,
+       80
+      ],
+      [
+       542477.5,
+       4189985.0,
+       80
+      ],
+      [
+       542897.9,
+       4189985.0,
+       80
+      ],
+      [
+       543198.2,
+       4189985.0,
+       80
+      ],
+      [
+       543348.3,
+       4189985.0,
+       80
+      ],
+      [
+       543528.5,
+       4189985.0,
+       80
+      ],
+      [
+       549204.2,
+       4189985.0,
+       80
+      ],
+      [
+       540976.0,
+       4189955.0,
+       80
+      ]
+     ],
+     "scarcity": 0.601,
+     "competitors": [
+      "microtus_californicus"
+     ],
+     "predators": [
+      "buteo_jamaicensis"
+     ]
+    },
+    {
+     "id": "otospermophilus_beecheyi:buteo_jamaicensis:evade",
+     "archetype": "evade",
+     "verb": "evade",
+     "season": "all",
+     "unit": "colony",
+     "collective": true,
+     "predator": "buteo_jamaicensis",
+     "watchers": []
+    },
+    {
+     "id": "otospermophilus_beecheyi:watch",
+     "archetype": "watch",
+     "verb": "watch",
+     "season": "all",
+     "unit": "colony",
+     "collective": true,
+     "predators": [
+      "buteo_jamaicensis"
+     ]
+    }
+   ]
+  },
+  "sceloporus_occidentalis": {
+   "unit": "solitary",
+   "predators": [
+    "buteo_jamaicensis"
+   ],
+   "prey": [],
+   "games": [
+    {
+     "id": "sceloporus_occidentalis:winter:shelter:cover",
+     "archetype": "shelter",
+     "verb": "shelter",
+     "season": "winter",
+     "unit": "solitary",
+     "collective": false,
+     "goal": "under bark, logs and rocks; out on warm days",
+     "resource": "cover",
+     "hotspots": [
+      [
+       540015.0,
+       4189985.0,
+       76
+      ],
+      [
+       540225.2,
+       4189985.0,
+       76
+      ],
+      [
+       540375.4,
+       4189985.0,
+       76
+      ],
+      [
+       540735.7,
+       4189985.0,
+       76
+      ],
+      [
+       540915.9,
+       4189985.0,
+       76
+      ],
+      [
+       541066.1,
+       4189985.0,
+       76
+      ],
+      [
+       541216.2,
+       4189985.0,
+       76
+      ],
+      [
+       541366.4,
+       4189985.0,
+       76
+      ],
+      [
+       541516.5,
+       4189985.0,
+       76
+      ],
+      [
+       541696.7,
+       4189985.0,
+       76
+      ],
+      [
+       541846.8,
+       4189985.0,
+       76
+      ],
+      [
+       541997.0,
+       4189985.0,
+       76
+      ]
+     ],
+     "scarcity": 0.553,
+     "competitors": [
+      "odocoileus_hemionus",
+      "aphelocoma_californica",
+      "sylvilagus_bachmani",
+      "lepus_californicus"
+     ],
+     "predators": [
+      "buteo_jamaicensis"
+     ]
+    },
+    {
+     "id": "sceloporus_occidentalis:spring:court:cliff_or_snag",
+     "archetype": "court",
+     "verb": "court",
+     "season": "spring",
+     "unit": "solitary",
+     "collective": false,
+     "goal": "males push up and flash their blue bellies",
+     "resource": "cliff_or_snag",
+     "hotspots": [
+      [
+       541726.7,
+       4189985.0,
+       90
+      ],
+      [
+       543678.7,
+       4189985.0,
+       90
+      ],
+      [
+       543888.9,
+       4189985.0,
+       90
+      ],
+      [
+       544039.0,
+       4189985.0,
+       90
+      ],
+      [
+       544189.2,
+       4189985.0,
+       90
+      ],
+      [
+       544339.3,
+       4189985.0,
+       90
+      ],
+      [
+       544549.5,
+       4189985.0,
+       90
+      ],
+      [
+       545090.1,
+       4189985.0,
+       90
+      ],
+      [
+       545690.7,
+       4189985.0,
+       90
+      ],
+      [
+       549024.0,
+       4189985.0,
+       90
+      ],
+      [
+       549174.2,
+       4189985.0,
+       90
+      ],
+      [
+       549324.3,
+       4189985.0,
+       90
+      ]
+     ],
+     "scarcity": 0.785,
+     "competitors": [
+      "corvus_corax",
+      "buteo_jamaicensis"
+     ],
+     "predators": [
+      "buteo_jamaicensis"
+     ]
+    },
+    {
+     "id": "sceloporus_occidentalis:spring:forage:insects",
+     "archetype": "gather",
+     "verb": "forage",
+     "season": "spring",
+     "unit": "solitary",
+     "collective": false,
+     "resource": "insects",
+     "hotspots": [
+      [
+       540495.5,
+       4189985.0,
+       90
+      ],
+      [
+       545780.8,
+       4189985.0,
+       90
+      ],
+      [
+       549744.7,
+       4189955.0,
+       90
+      ],
+      [
+       549144.1,
+       4189924.9,
+       90
+      ],
+      [
+       549384.4,
+       4189894.9,
+       90
+      ],
+      [
+       540525.5,
+       4189834.8,
+       90
+      ],
+      [
+       549654.7,
+       4189774.8,
+       90
+      ],
+      [
+       540555.6,
+       4189684.7,
+       90
+      ],
+      [
+       540585.6,
+       4189534.5,
+       90
+      ],
+      [
+       543108.1,
+       4189444.4,
+       90
+      ],
+      [
+       545780.8,
+       4189384.4,
+       90
+      ],
+      [
+       540615.6,
+       4189324.3,
+       90
+      ]
+     ],
+     "scarcity": 0.562,
+     "competitors": [
+      "corvus_corax"
+     ],
+     "predators": [
+      "buteo_jamaicensis"
+     ]
+    },
+    {
+     "id": "sceloporus_occidentalis:summer:rear:cover",
+     "archetype": "rear",
+     "verb": "rear",
+     "season": "summer",
+     "unit": "solitary",
+     "collective": false,
+     "goal": "eggs under loose soil",
+     "resource": "cover",
+     "hotspots": [
+      [
+       540015.0,
+       4189985.0,
+       90
+      ],
+      [
+       540225.2,
+       4189985.0,
+       90
+      ],
+      [
+       540375.4,
+       4189985.0,
+       90
+      ],
+      [
+       540735.7,
+       4189985.0,
+       90
+      ],
+      [
+       540915.9,
+       4189985.0,
+       90
+      ],
+      [
+       541066.1,
+       4189985.0,
+       90
+      ],
+      [
+       541216.2,
+       4189985.0,
+       90
+      ],
+      [
+       541366.4,
+       4189985.0,
+       90
+      ],
+      [
+       541516.5,
+       4189985.0,
+       90
+      ],
+      [
+       541696.7,
+       4189985.0,
+       90
+      ],
+      [
+       541846.8,
+       4189985.0,
+       90
+      ],
+      [
+       541997.0,
+       4189985.0,
+       90
+      ]
+     ],
+     "scarcity": 0.553,
+     "competitors": [
+      "corvus_corax",
+      "odocoileus_hemionus",
+      "callipepla_californica",
+      "aphelocoma_californica",
+      "sylvilagus_bachmani",
+      "lepus_californicus"
+     ],
+     "predators": [
+      "buteo_jamaicensis"
+     ]
+    },
+    {
+     "id": "sceloporus_occidentalis:summer:forage:insects",
+     "archetype": "gather",
+     "verb": "forage",
+     "season": "summer",
+     "unit": "solitary",
+     "collective": false,
+     "resource": "insects",
+     "hotspots": [
+      [
+       540495.5,
+       4189985.0,
+       72
+      ],
+      [
+       545780.8,
+       4189985.0,
+       72
+      ],
+      [
+       549744.7,
+       4189955.0,
+       72
+      ],
+      [
+       549144.1,
+       4189924.9,
+       72
+      ],
+      [
+       549384.4,
+       4189894.9,
+       72
+      ],
+      [
+       540525.5,
+       4189834.8,
+       72
+      ],
+      [
+       549654.7,
+       4189774.8,
+       72
+      ],
+      [
+       540555.6,
+       4189684.7,
+       72
+      ],
+      [
+       540585.6,
+       4189534.5,
+       72
+      ],
+      [
+       543108.1,
+       4189444.4,
+       72
+      ],
+      [
+       545780.8,
+       4189384.4,
+       72
+      ],
+      [
+       540615.6,
+       4189324.3,
+       72
+      ]
+     ],
+     "scarcity": 0.955,
+     "competitors": [
+      "corvus_corax",
+      "urocyon_cinereoargenteus",
+      "sciurus_griseus",
+      "melanerpes_formicivorus",
+      "callipepla_californica",
+      "aphelocoma_californica",
+      "cyanocitta_stelleri",
+      "canis_latrans",
+      "meleagris_gallopavo"
+     ],
+     "predators": [
+      "buteo_jamaicensis"
+     ]
+    },
+    {
+     "id": "sceloporus_occidentalis:summer:shelter:cover",
+     "archetype": "shelter",
+     "verb": "shelter",
+     "season": "summer",
+     "unit": "solitary",
+     "collective": false,
+     "goal": "shade at midday",
+     "resource": "cover",
+     "hotspots": [
+      [
+       540015.0,
+       4189985.0,
+       90
+      ],
+      [
+       540225.2,
+       4189985.0,
+       90
+      ],
+      [
+       540375.4,
+       4189985.0,
+       90
+      ],
+      [
+       540735.7,
+       4189985.0,
+       90
+      ],
+      [
+       540915.9,
+       4189985.0,
+       90
+      ],
+      [
+       541066.1,
+       4189985.0,
+       90
+      ],
+      [
+       541216.2,
+       4189985.0,
+       90
+      ],
+      [
+       541366.4,
+       4189985.0,
+       90
+      ],
+      [
+       541516.5,
+       4189985.0,
+       90
+      ],
+      [
+       541696.7,
+       4189985.0,
+       90
+      ],
+      [
+       541846.8,
+       4189985.0,
+       90
+      ],
+      [
+       541997.0,
+       4189985.0,
+       90
+      ]
+     ],
+     "scarcity": 0.553,
+     "competitors": [
+      "corvus_corax",
+      "odocoileus_hemionus",
+      "callipepla_californica",
+      "aphelocoma_californica",
+      "sylvilagus_bachmani",
+      "lepus_californicus"
+     ],
+     "predators": [
+      "buteo_jamaicensis"
+     ]
+    },
+    {
+     "id": "sceloporus_occidentalis:fall:forage:insects",
+     "archetype": "gather",
+     "verb": "forage",
+     "season": "fall",
+     "unit": "solitary",
+     "collective": false,
+     "resource": "insects",
+     "hotspots": [],
+     "scarcity": 1.0,
+     "competitors": [],
+     "predators": [
+      "buteo_jamaicensis"
+     ]
+    },
+    {
+     "id": "sceloporus_occidentalis:fall:shelter:cover",
+     "archetype": "shelter",
+     "verb": "shelter",
+     "season": "fall",
+     "unit": "solitary",
+     "collective": false,
+     "goal": "retreat as the nights cool",
+     "resource": "cover",
+     "hotspots": [
+      [
+       540015.0,
+       4189985.0,
+       90
+      ],
+      [
+       540225.2,
+       4189985.0,
+       90
+      ],
+      [
+       540375.4,
+       4189985.0,
+       90
+      ],
+      [
+       540735.7,
+       4189985.0,
+       90
+      ],
+      [
+       540915.9,
+       4189985.0,
+       90
+      ],
+      [
+       541066.1,
+       4189985.0,
+       90
+      ],
+      [
+       541216.2,
+       4189985.0,
+       90
+      ],
+      [
+       541366.4,
+       4189985.0,
+       90
+      ],
+      [
+       541516.5,
+       4189985.0,
+       90
+      ],
+      [
+       541696.7,
+       4189985.0,
+       90
+      ],
+      [
+       541846.8,
+       4189985.0,
+       90
+      ],
+      [
+       541997.0,
+       4189985.0,
+       90
+      ]
+     ],
+     "scarcity": 0.553,
+     "competitors": [],
+     "predators": [
+      "buteo_jamaicensis"
+     ]
+    },
+    {
+     "id": "sceloporus_occidentalis:buteo_jamaicensis:evade",
+     "archetype": "evade",
+     "verb": "evade",
+     "season": "all",
+     "unit": "solitary",
+     "collective": false,
+     "predator": "buteo_jamaicensis",
+     "watchers": []
+    }
+   ]
+  }
+ }
+}
