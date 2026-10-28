@@ -2075,3 +2075,9 @@ The client honours the present species (2026-10-28, the species lane's follow-up
 knows, and PENDING (species the client draws that a tile package predates) applies only to a species the package's
 species.json does not know at all, so an absent species is not re-added; the sound module's callers skip absent
 species as well. On Yosemite the spirit no longer sees jackrabbits, brush rabbits or voles.
+
+Scavengers feed (2026-10-28): a player whose species is a scavenger in games.json relations.scavenge (raven, vulture,
+coyote, bear) feeds at carrion within 2.5 m: E for a walker, landing beside it for a flier (animals.js feedNear,
+groundControl, flierControl); the hunger fills once per carcass and the toast says "fed at the deer". Feeding does
+not consume the carcass. Verified: a coyote's E beside its own kill filled its hunger from 0.4. So the raven's loop
+closes: follow the lion's kill, land, feed.

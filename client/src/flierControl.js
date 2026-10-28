@@ -146,6 +146,7 @@ export class FlierControl {
     if (this.on && this.animals?.catchNear && (this.catchT = (this.catchT || 0) - dt) <= 0) {   // a hunter's strike: prey within reach in flight (animals.js CARRION)
       this.catchT = 0.1; const P = this.flight.pos;
       const c = this.animals.catchNear(P.x, P.y, P.z); if (c) { this.needs?.fed?.(); this.say?.(`took a ${this.animals.speciesList()[c.sp]?.one || 'prey'}`); }   // in flight or on the ground beside it
+      else if (this.flight.landed) { const k = this.animals.feedNear?.(P.x, P.y, P.z); if (k && this.fedAt !== k) { this.fedAt = k; this.needs?.fed?.(); this.say?.(`fed at the ${this.animals.speciesList()[k.sp]?.one || 'carcass'}`); } }   // a raven or vulture down at carrion
     }
     this.draw(dt);
     return r;

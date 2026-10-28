@@ -944,6 +944,15 @@ export class Animals {
     for (const c of this.carrion) { if (c.gone) continue; const d2 = (c.x - x) ** 2 + (c.z - z) ** 2; if (d2 < bd) { bd = d2; best = c; } }
     return best;
   }
+  // The player's feed at carrion (a scavenger of games.json relations.scavenge, within reach of a carcass): the
+  // carcass, or null. Feeding does not consume it; the caller fills the hunger once per carcass.
+  feedNear(x, y, z, reach = 2.5) {
+    const code = this.observer; if (!code) return null;
+    if (!this.scavengers) this.scavengers = new Set((this.tile.games?.relations?.scavenge || []).map(([s]) => s));
+    if (!this.scavengers.has(code)) return null;
+    const c = this.carrionNear(x, z, reach); if (!c || Math.abs(c.y - y) > 3) return null;
+    return c;
+  }
   // The player's catch (E within reach of prey its species hunts): the kill, or null.
   catchNear(x, y, z) {
     const k = INDEX[this.observer], prey = this.preySlots?.[k], reach = CARRION.reach[k]; if (!prey || !reach) return null;

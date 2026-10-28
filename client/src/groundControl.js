@@ -344,6 +344,7 @@ export class GroundControl {
     if (act && this.animals?.catchNear) {   // a hunter's E within reach of its prey: the catch (animals.js kill, CARRION)
       const c = this.animals.catchNear(P.x, P.y, P.z);
       if (c) { this.needs?.fed?.(); this.say(`caught a ${this.animals.speciesList()[c.sp]?.one || 'prey'}`); }
+      else { const k = this.animals.feedNear?.(P.x, P.y, P.z); if (k && this.fedAt !== k) { this.fedAt = k; this.needs?.fed?.(); this.say(`fed at the ${this.animals.speciesList()[k.sp]?.one || 'carcass'}`); } }   // a scavenger at carrion
     }
     if (k.fwd || Math.abs(this.v) > 0.5) this.actT = 0;
     this.actT = Math.max(0, this.actT - dt);
