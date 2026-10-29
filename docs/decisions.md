@@ -2345,4 +2345,27 @@ and the legs stepping across sideways, the body whole; the player's D turn 1.8 r
 the antler program (15 attributes) without a shader error. Not measured: whether the planted hoof is now still on
 the ground to the centimetre (the turned swing follows the Walk's own stance travel, which was spread over the cycle
 by the bake); Aaron's eye decides whether a true sideways-step clip is still wanted. The same stepping turn for the
-fox, coyote, lion and bear on the part rig is in a lane as this is written.
+fox, coyote, lion and bear on the part rig followed the same hour (below).
+
+## 2026-10-29: the fox, coyote, lion and bear step round a turn too
+
+An Opus lane with the deer's design, on the part rig (animalModels.js PART_TURN: the deer's thresholds, step
+amplitude and rate, and the drawn body's lag, through the same turnFollow). The player's quadruped
+(groundControl.animate) standing and turning over 0.45 rad/s steps at 0.4-0.6 of the walk with the rate from the
+paws' travel round the turn (r half the body length, the stride the species'), off under 0.2 rad/s after 0.35 s, and
+draw lags its yaw as the deer's. The legs' swing is turned about the vertical through the pivot by atan2(w r, max(v,
+0.1)), carried in aAnim2.z, which the lane checked is unused on the part rig's quadrupeds (the gait selector is .w,
+the lion's tail twitch .y; the ground raven's hop and the buck's antlers read .z, so the block is behind ANIM_GAIT and
+not ANIM_ANTLER): the fore legs toward the turn, the hind legs against, by conjugating the fore-aft swing with a yaw.
+The AI (mmUpdate): mmStep turns by drSteer, 2.2 rad/s walking and 6 fleeing, rushing, charging or over 3 m/s, with
+the travel scaled by the heading error so an animal facing away turns on the spot first instead of crabbing; four
+instant yaw changes (the sniffing re-heading, the look back after a flight, a bear's stare at the player, and the
+bear's snap to face the player before a charge, which now steers round to its target instead) step round through
+a.wy at 1.2 rad/s; the turn rate measured from the previous yaw drives the step and aAnim2.z. Behaviour change
+beyond the drawing: a charging bear no longer faces its target instantly, so the charge's first half second turns.
+Measured by the lane: the player fox at 2.6 rad/s steps at 1.8 Hz, amp 0.6, legs 1.42 rad, body lag 0.35; the lion
+at 2.0 rad/s 1.5 Hz; a pinned AI fox at 1.5 rad/s 1.16 Hz, a bear at 1.2 rad/s 1.33 Hz; 36 fps as the fox, 35 as
+the lion; no shader errors. Checked on the clean worktree as the fox: 2.6 rad/s, amp 0.6, 1.63 Hz, legs 1.42 rad,
+lag 0.35, 35 fps, the legs splayed across the turn in the close frames; a pinned AI fox amp 0.53, 1.33 rad. Not
+driven: the coyote (the fox's path), a walk on a curve. Known: when a turn ends the last steps swing from sideways
+back to fore-aft as the smoothed rate falls while the amplitude eases out, continuous but visible.
