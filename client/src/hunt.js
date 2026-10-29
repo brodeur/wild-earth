@@ -64,7 +64,7 @@ export class Hunt {
       const dx = t.x - P.x, dz = t.z - P.z, d = Math.hypot(dx, dz);
       // bearing from the body's heading (yaw 0 faces -z): 0 ahead, clockwise
       const yaw = this.flight.yaw + (this.flight.look || 0), fx = -Math.sin(yaw), fz = -Math.cos(yaw);
-      const ang = Math.atan2(dx * fz - dz * fx, dx * fx + dz * fz);   // left-handed about y: positive to the right
+      const ang = Math.atan2(dz * fx - dx * fz, dx * fx + dz * fz);   // clockwise seen from above: positive to the right (facing north, east is +pi/2)
       const i = ((Math.round(ang / (TAU / 8)) % 8) + 8) % 8;
       const st = this.state(t, d), name = A.speciesList()[t.sp]?.one || 'prey';
       E.target.textContent = `${name} · ${Math.round(d)} m ${DIRS[i]} · ${st}`;

@@ -14,6 +14,7 @@ import { setupGoTo, urlPoint, builtTileFor, localXY } from './goto.js';
 import { NearBar } from './nearBar.js';
 import { Needs } from './needs.js';
 import { Hunt } from './hunt.js';
+import { Scent } from './scent.js';
 import { OpeningScreen, Arrival, lastTile, rememberTile } from './arrival.js';
 import { SEASON_LOOK, seasonOfDate, sunDirection, dateForSeason, parseDate } from './season.js';
 import { AcornGame } from './acorns.js';
@@ -39,6 +40,7 @@ import { groundUniforms } from './terrain.js';
 import { detailUniforms } from './groundDetail.js';
 import { setBodyScale } from './bodyScale.js';
 import { Litter } from './litter.js';
+import { Abilities } from './abilities.js';
 
 const $ = id => document.getElementById(id);
 const html = document.documentElement;
@@ -46,7 +48,9 @@ let screen = null, screenOpen = false;   // the opening screen (arrival.js) whil
 // HUD layout for the window's size (index.html, html.narrow): under 1200 x 760 px the HUD, game box and panel shrink.
 // The game box stays centred when it clears the HUD and the panel, else it moves into the gap between them, else under
 // the HUD; the panel stops above the mini-map (and scrolls), the help line wraps before the mini-map and the species
-// card sits above the help line. Run on resize and with the HUD's text updates (the HUD's width follows its text).
+// card sits above the help line. The body's row (abilities.js #bodyBar, bottom right, in place of the help line) rises
+// over the nearby-animals bar when the two would meet; the hunt panel and the walkers' toast stand on it, the panel
+// and the species card stop above it. Run on resize and with the HUD's text updates (the HUD's width follows its text).
 function layoutHud() {
   document.documentElement.style.setProperty('--mapH', `${$('minimap')?.offsetHeight || 0}px`);   // the panel sits under the mini-map, top right (index.html #panel)
   const W = innerWidth, H = innerHeight;
@@ -54,11 +58,21 @@ function layoutHud() {
   const box = id => $(id).getBoundingClientRect(), pan = $('panel'), cs = getComputedStyle(pan);
   // the panel under the mini-map (top right) scrolls within the window; the key line (bottom left) runs to the window's
   // edge and, while the nearby-animals bar is up, sits above it
-  pan.style.maxHeight = `${Math.max(120, Math.floor(H - 12 - pan.getBoundingClientRect().top - parseFloat(cs.paddingTop) - parseFloat(cs.paddingBottom)))}px`;
-  const help = $('help'), hs = getComputedStyle(help), bar = $('nearBar');
+  const help = $('help'), hs = getComputedStyle(help), bar = $('nearBar'), row = $('bodyBar'), up = !!row && !row.hidden;
+  if (up) {
+    row.style.bottom = '';
+    const nb = bar && !bar.hidden ? bar.getBoundingClientRect() : null;
+    if (nb && nb.width && row.getBoundingClientRect().left < nb.right + 10) row.style.bottom = `${12 + bar.offsetHeight + 10}px`;
+  }
+  const rr = up ? row.getBoundingClientRect() : null, rowTop = rr ? rr.top : H;
+  html.style.setProperty('--barTop', `${Math.round(H - rowTop + 10)}px`);   // the toast's bottom (index.html #gcToast)
+  const hn = $('hunt'); if (hn) hn.style.bottom = rr ? `${Math.round(H - rowTop + 8)}px` : '';
+  const floor = Math.min(H - 12, rowTop - 10, hn && !hn.hidden ? hn.getBoundingClientRect().top - 10 : H);   // the panel stops above the row and the hunt's lines
+  pan.style.maxHeight = `${Math.max(120, Math.floor(floor - pan.getBoundingClientRect().top - parseFloat(cs.paddingTop) - parseFloat(cs.paddingBottom)))}px`;
   help.style.maxWidth = `${Math.max(200, Math.floor(W - 14 - help.getBoundingClientRect().left - parseFloat(hs.paddingLeft) - parseFloat(hs.paddingRight)))}px`;
   help.style.bottom = bar && !bar.hidden ? `${12 + bar.offsetHeight + 10}px` : '';
-  $('speciesCard').style.bottom = `${Math.max(12, Math.round(H - help.getBoundingClientRect().top + 8))}px`;
+  const under = help.getClientRects().length ? help.getBoundingClientRect().top : rr && rr.left < 14 + 320 + 10 ? rowTop : H - 4;   // the help line, else the row where it reaches the card
+  $('speciesCard').style.bottom = `${Math.max(12, Math.round(H - under + 8))}px`;
   const g = $('game'); if (g.classList.contains('hidden')) return;
   g.style.left = g.style.top = g.style.transform = '';   // centred, as styled
   const hud = box('hud'), pr = pan.getBoundingClientRect(), gr = g.getBoundingClientRect(), lo = hud.right + 10, hi = pr.left - 10;
@@ -166,8 +180,9 @@ async function disposeWorld(w, renderer) {
   try { m.acorns?.net?.leave?.(); } catch (e) { /* closing */ }
   try { m.sound?.ctx?.close?.(); } catch (e) { /* closing */ }
   if (m.weather) m.weather.onThunder = null;
+  m.abilities?.dispose?.();   // the body's row: its slots go, the row hides (abilities.js)
   if (fieldGuide.game === m.acorns) { fieldGuide.game = null; fieldGuide.log = []; fieldGuide.anchor = null; }   // the page's field guide (identify.js attached the game)
-  m.water?.dispose?.(); m.shadows?.dispose?.(); m.terrain?.dispose?.(); m.litter?.dispose?.(); forgetQueuedCasters();
+  m.water?.dispose?.(); m.shadows?.dispose?.(); m.terrain?.dispose?.(); m.litter?.dispose?.(); m.scent?.dispose?.(); m.grass?.dispose?.(); forgetQueuedCasters();
   // then its listeners and the elements it put into the page; the HUD's own words back as the page had them
   for (const r of w.observer.takeRecords()) { for (const n of r.addedNodes) if (n.nodeType === 1) w.nodes.add(n); for (const n of r.removedNodes) w.nodes.delete(n); }
   w.observer.disconnect();
@@ -510,6 +525,7 @@ async function buildSteps(w, { params, pending, direct = false, arrive = null })
   const needs = w.m.needs = new Needs({ tile, el: $('needs'), season: seasonNow });   // hunger and thirst in a walker (needs.js)
   ground.needs = needs; flier.needs = needs;
   const hunt = w.m.hunt = new Hunt({ tile, animals, flight, ground, needs, el: $('hunt') });   // the hunt loop's goal and arc (hunt.js)
+  const scent = w.m.scent = new Scent({ tile, animals, flight, ground, flier, scene, camera });   // the smell sense: wisps round the head toward each scent (scent.js)
   needs.onStarve = () => { ground.say('starved: the body lies down and the spirit leaves it'); setTimeout(() => { if (ground.on || flier.on) toSpirit(); }, 2200); };
   const onBody = (code, sex = null) => {
     window.__we.playerSpecies = code; window.__we.playerSex = sex;
@@ -520,6 +536,8 @@ async function buildSteps(w, { params, pending, direct = false, arrive = null })
   const spirit = w.m.spirit = new SpiritControl({ scene, renderer, camera, flight, raven, animals, squirrel, woodpecker, ground, flier, atmosphere, onBody });
   $('spiritBtn').onclick = () => { spirit.leave(); renderer.domElement.focus?.(); };
   const toSpirit = () => { squirrel.setOn(false); woodpecker.setOn(false); ground.setOn(false); flier.setOn(false); spirit.setOn(true); onBody('spirit'); };
+  // The body's row (abilities.js): its status bars and its abilities, one slot each with its key, along the bottom right.
+  const abilities = w.m.abilities = new Abilities({ el: $('abilities'), legs: $('legs'), bar: $('bodyBar'), squirrel, woodpecker, ground, flier, spirit, flight, needs, hunt });
 
   // Present-day peek (hold P, or the panel button): the ground shows today's NAIP with the human
   // footprint still in it, the forest and grass step aside and the ghost roads come on, so a player
@@ -766,7 +784,7 @@ async function buildSteps(w, { params, pending, direct = false, arrive = null })
     const dt = Math.min((now - last) / 1000, 0.1); last = now;
     const s = seasonNow(), look = SEASON_LOOK[s], sun = sunDirection(tile.latitude, s, state.hour);
     const f = screenOpen ? arrival.hold() : squirrel.on ? squirrel.update(dt) : woodpecker.on ? woodpecker.update(dt) : ground.on ? ground.update(dt) : flier.on ? flier.update(dt) : arrival.active ? arrival.update(dt) : spirit.on ? spirit.update(dt) : flight.update(dt);
-    if (ground.on || flier.on) { needs.update(dt, { x: flight.pos.x, north: -flight.pos.z, acting: ground.on && ground.actT > 0, wet: ground.on && !!ground.wet }); hunt.update(dt); }   // the games of life (needs.js, hunt.js)
+    if (ground.on || flier.on) { needs.update(dt, { x: flight.pos.x, north: -flight.pos.z, acting: ground.on && ground.actT > 0, wet: ground.on && !!ground.wet }); hunt.update(dt); scent.update(dt); }   // the games of life (needs.js, hunt.js); the smell sense (scent.js)
     spirit.blendCamera(dt);   // across a switch of body: drawn from a blend of the old view and the new control's (spirit.js)
     raven.update(dt, flight.flapping, flight.speed);
     spirit.draw(dt);   // the wisp, while a spirit
@@ -795,6 +813,7 @@ async function buildSteps(w, { params, pending, direct = false, arrive = null })
     sound?.update(dt, { season: s, hour: state.hour, sunElevation: sun.elevation, weather: wx });
     if (peek.pending !== null) { if (peek.pending !== peek.shown) { crossFade(); applyPeek(peek.pending); } peek.pending = null; }
     minimap.update(flight.pos, f.heading);
+    abilities.update(!screenOpen);   // the abilities' slots lit by the keys held and the body's state (abilities.js)
     hudT += dt;
     if (hudT > 0.15) {
       hudT = 0;

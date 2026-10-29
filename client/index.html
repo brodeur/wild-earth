@@ -36,20 +36,48 @@
   #herdMarks { position:fixed; inset:0; z-index:4; pointer-events:none; }
   .hm { position:absolute; left:-17px; top:-17px; width:34px; height:34px; border-radius:50%; background:#0f1512cc; border:2px solid #e6ede7; box-shadow:0 1px 4px #0008; box-sizing:border-box; display:flex; align-items:center; justify-content:center; overflow:hidden; }
   .hm img { width:26px; height:26px; object-fit:contain; }
-  /* the needs (needs.js): hunger and thirst meters, bottom right, while the player is a walker */
-  #needs { position:fixed; right:14px; bottom:14px; z-index:5; display:flex; flex-direction:column; gap:4px; font-size:11px; color:#b7c4ba; pointer-events:none; }
+  /* the body's row (abilities.js): along the bottom right, the status bars (the needs, the legs) and the body's
+     abilities, one slot each with its key in the slot's bottom right corner, the page's keys dim above them. DOM order
+     abilities then status, laid out right to left; on a narrow window the status goes up a line and the slots wrap. */
+  #bodyBar { position:fixed; right:14px; bottom:12px; z-index:5; display:flex; flex-direction:row-reverse; flex-wrap:wrap-reverse; align-items:flex-end; gap:8px 14px; max-width:calc(100vw - 28px); pointer-events:none; }
+  #bodyBar[hidden] { display:none; }
+  #vitals { display:flex; flex-direction:column; gap:4px; flex:none; padding-bottom:3px; }
+  #abilities { display:flex; flex-direction:column; align-items:flex-end; gap:5px; min-width:0; flex:0 1 auto; }
+  .ab-row { display:flex; flex-wrap:wrap; justify-content:flex-end; gap:4px; }
+  .ab { box-sizing:border-box; display:flex; flex-direction:column; justify-content:space-between; min-width:44px; height:38px; padding:5px 4px 4px 7px; border-radius:7px; pointer-events:auto; cursor:default;
+    background:#0f1512c4; border:1px solid #263128; backdrop-filter:blur(4px); color:#d3ddd5; font-size:10px; font-weight:600; letter-spacing:.09em; text-transform:uppercase; line-height:12px; white-space:nowrap;
+    transition:background .12s, border-color .12s, box-shadow .12s, color .12s, opacity .2s; }
+  .ab[hidden] { display:none; }
+  .ab .ab-name { padding-right:3px; }
+  .ab .ab-k { display:flex; gap:2px; align-self:flex-end; }
+  .ab kbd, .ab-more kbd { font:600 8.5px/11px -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif; letter-spacing:.05em; text-transform:uppercase; padding:0 3px; min-width:6px; text-align:center;
+    border-radius:3px; background:#1f2a23; border:1px solid #33433a; color:#b7c4ba; }
+  .ab.off { background:#0f1512a0; border-color:#1d2620; }
+  .ab.off > * { opacity:.35; }   /* not built yet: the slot stays readable over a bright sky, its name and key greyed */
+  .ab.lit { background:#2a3a25ee; border-color:#bcd98a; color:#fff; box-shadow:0 0 0 1px #bcd98a55, 0 0 12px #bcd98a55; }
+  .ab.lit kbd { background:#3c5233; border-color:#bcd98a99; color:#fff; }
+  .ab.tired { border-color:#e0583f; color:#ffb3a3; }
+  .ab.tired.lit { background:#3a2420ee; box-shadow:0 0 0 1px #e0583f55, 0 0 12px #e0583f55; }
+  .ab-more { display:flex; flex-wrap:wrap; justify-content:flex-end; gap:2px 10px; padding:2px 8px; border-radius:6px; background:#0f1512a8; backdrop-filter:blur(4px); font-size:9px; font-weight:600; letter-spacing:.08em; text-transform:uppercase; color:#9fb0a4; }
+  .ab-more kbd { font-size:8px; line-height:10px; color:#8fa094; background:#0f1512aa; border-color:#263128; }
+  html.abilities #help { display:none; }   /* the row replaces the key line */
+  #gcToast, #sqToast, #wpToast { bottom:var(--barTop, 64px) !important; }   /* the controls' toasts (groundControl.js, squirrelControl.js, woodpeckerControl.js) over the row */
+  #sqHint { bottom:calc(var(--barTop, 64px) + 40px) !important; }   /* the squirrel's junction line over its toast */
+  /* the needs (needs.js): hunger and thirst meters, in the row's status column while the player is a walker */
+  #needs { display:flex; flex-direction:column; gap:4px; font-size:11px; color:#b7c4ba; pointer-events:none; }
   #needs[hidden] { display:none; }
+  #legs { font-size:11px; color:#b7c4ba; }
+  #legs b { background:#d9c36a; transition:width .15s linear; }
+  #legs i { height:5px; }
+  #legs.low b { background:#e0583f; }
+  #vitals:not(:has(> :not([hidden]))) { display:none; }
   /* the hunt (hunt.js): the nearest prey, its bearing and state, the legs (stamina) and the arc, above the needs */
   #hunt { position:fixed; right:14px; bottom:64px; z-index:5; display:flex; flex-direction:column; gap:3px; align-items:flex-end; font-size:11px; color:#b7c4ba; pointer-events:none; text-shadow:0 1px 2px #000a; }
   #hunt[hidden] { display:none; }
   #hunt .hn-target { color:#e6ede7; font-size:12px; }
   #hunt .hn-target.fleeing { color:#ffb37a; }
   #hunt .hn-target.unaware { color:#b9e6a8; }
-  #hunt .hn-legs { display:flex; align-items:center; gap:6px; }
-  #hunt .hn-legs span { width:34px; text-align:right; }
-  #hunt .hn-legs i { display:block; width:110px; height:5px; border-radius:3px; background:#0f1512bb; overflow:hidden; }
-  #hunt .hn-legs b { display:block; height:100%; width:100%; background:#d9c36a; transition:width .15s linear; }
-  #hunt .hn-legs.tired b { background:#e0583f; }
+  #hunt .hn-legs { display:none !important; }   /* the legs stand in the row's status column (abilities.js #legs) */
   #hunt .hn-arc { color:#9fb0a4; }
   #hunt .hn-arc.done { color:#e6ede7; }
   .nd { display:flex; align-items:center; gap:6px; }
@@ -163,7 +191,7 @@
   html.narrow #help { font-size:11.5px; padding:6px 10px; }
   /* The opening screen hides the HUD (its styles: opening.css); the arrival caption. A tile switch from the game
      (main.js switchWorld) hides it too, but keeps the panel, whose Location box can send the page elsewhere. */
-  html.opening #hud, html.opening #panel, html.opening #help, html.opening #minimap, html.opening #status,
+  html.opening #hud, html.opening #panel, html.opening #help, html.opening #minimap, html.opening #status, html.opening #bodyBar, html.arriving #bodyBar, html.switching #bodyBar,
   html.arriving #hud, html.arriving #panel, html.arriving #help, html.arriving #minimap, html.arriving #game, html.arriving #speciesCard,
   html.switching #hud, html.switching #help, html.switching #minimap, html.switching #game, html.switching #speciesCard { opacity:0; pointer-events:none; }
   #hud, #panel, #help, #minimap, #game { transition:opacity .9s ease; }
@@ -228,7 +256,7 @@
 <div id="nearBar" hidden></div>
 <div id="herdMarks" aria-hidden="true"></div>
 <div id="hunt" hidden><div class="hn-target"></div><div class="hn-legs"><span>legs</span><i><b></b></i></div><div class="hn-arc"></div></div>
-<div id="needs" hidden><div class="nd food"><span>food</span><i><b></b></i><em></em></div><div class="nd water"><span>water</span><i><b></b></i><em></em></div></div>
+<div id="bodyBar" hidden><div id="abilities"></div><div id="vitals"><div id="needs" hidden><div class="nd food"><span>food</span><i><b></b></i><em></em></div><div class="nd water"><span>water</span><i><b></b></i><em></em></div></div><div id="legs" class="nd legs" hidden><span>legs</span><i><b></b></i><em></em></div></div></div>
 <div id="minimap"></div>
 <div id="peekBanner" class="hidden">present day · 2022 imagery</div>
 <div id="status">loading tile…</div>

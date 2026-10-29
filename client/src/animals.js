@@ -978,6 +978,26 @@ export class Animals {
     const c = this.carrionNear(x, z, reach); if (!c || Math.abs(c.y - y) > 3) return null;
     return c;
   }
+  // ---- the smell sense's sources (scent.js) --------------------------------------------------------------
+  // Every animal within R m of (x, z) on the level that the observer's species perceives (a species it does not perceive
+  // at all it does not smell either): fn(a, k, carrion, y) with k its species index (Animals.rarity[k], speciesList()[k]),
+  // carrion true for a carcass not yet gone (kill), y the height its scent rises from (the body's centre standing, the
+  // ground under a carcass, the body in the air). The player's own body is held out of the list (take), so it never
+  // smells itself; the rest of its herd it does. No allocation; scent.js calls it four times a second.
+  scentSources(x, z, R, fn) {
+    const r2 = R * R, P = this.perceived;
+    for (const a of this.list) {
+      if (a.gone || a.sp === undefined) continue;
+      const dx = a.x - x, dz = a.z - z; if (dx * dx + dz * dz > r2) continue;
+      const sp = SPECIES[a.sp]; if (!P.has(sp.code)) continue;
+      fn(a, a.sp, !!a.dead, a.y + (a.dead || a.air ? 0 : BODY_Y[a.sp]));
+    }
+  }
+  // Does `code` scavenge (games.json relations.scavenge): its nose is drawn to carrion (scent.js).
+  scavenges(code) {
+    if (!this.scavengers) this.scavengers = new Set((this.tile.games?.relations?.scavenge || []).map(([s]) => s));
+    return this.scavengers.has(code);
+  }
   // The player's catch (E within reach of prey its species hunts): the kill, or null.
   catchNear(x, y, z) {
     const k = INDEX[this.observer], prey = this.preySlots?.[k], reach = CARRION.reach[k]; if (!prey || !reach) return null;
