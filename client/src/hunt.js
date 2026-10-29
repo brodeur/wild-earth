@@ -6,18 +6,20 @@
 // state: unaware (beyond its notice of you, which the stalk and the cover shrink: animals.js setStalk), alert (it has
 // noticed you, head up; it flees when you come within its flee radius, which is small for a hunter it can barely
 // see) or fleeing (a deer herd gallops for 7 s when the hunter is within 30 m, then trots; a rush from farther than
-// about 25 m fails). The legs: a hunter's full run lasts a few seconds (groundControl S.sprint), then it is tired at
+// about 25 m fails), and scented (2026-10-29) when the smell sense has the prey (scent.js smell(prey), main.js sets
+// hunt.scent): the hunter has its scent, so the prey is upwind and the hunter downwind of it, the side to stalk from;
+// "a faint scent" under SCENT_SURE. The legs: a hunter's full run lasts a few seconds (groundControl S.sprint), then it is tired at
 // half speed until the legs come back; a rush that reaches its prey catches it, a rush that fails makes you known
 // (every species notices you 1.6x as far for 45 s). The arc: a hunter's body is taken hungry (needs.js 0.45) and
 // drains over NEED_T.hunt min; a catch fills it: a full belly ends the arc with the time and the rushes it took;
 // an empty one ends the body (needs.js onStarve: the spirit leaves). Kills per tile and the best time are kept in
 // localStorage, like the acorn stash.
-const HUNT_R = 400, DIRS = ['↑', '↗', '→', '↘', '↓', '↙', '←', '↖'];
+const HUNT_R = 400, DIRS = ['↑', '↗', '→', '↘', '↓', '↙', '←', '↖'], SCENT_SURE = 0.3;
 const TAU = Math.PI * 2;
 
 export class Hunt {
-  constructor({ tile, animals, flight, ground, needs, el }) {
-    Object.assign(this, { tile, animals, flight, ground, needs, el });
+  constructor({ tile, animals, flight, ground, needs, el, scent = null }) {
+    Object.assign(this, { tile, animals, flight, ground, needs, el, scent });
     this.on = false; this.k = -1; this.target = null; this.pickT = 0; this.done = false; this.kills = 0; this.t0 = 0;
     this.total = 0; this.best = null; this.load();
     this.els = el ? { target: el.querySelector('.hn-target'), legs: el.querySelector('.hn-legs'), legsBar: el.querySelector('.hn-legs b'), arc: el.querySelector('.hn-arc') } : null;
@@ -68,7 +70,9 @@ export class Hunt {
       const i = ((Math.round(ang / (TAU / 8)) % 8) + 8) % 8;
       const st = this.state(t, d), name = A.speciesList()[t.sp]?.one || 'prey';
       E.target.textContent = `${name} · ${Math.round(d)} m ${DIRS[i]} · ${st}`;
-      E.target.className = `hn-target ${st}`;
+      const sc = this.scent?.smell(t) || 0;   // the smell sense has this prey: it is upwind of the hunter
+      if (sc > 0) { const sp = document.createElement('span'); sp.className = 'sc'; sp.textContent = ` · ${sc >= SCENT_SURE ? 'scented' : 'a faint scent'}`; E.target.appendChild(sp); }
+      E.target.className = `hn-target ${st}${sc ? ' scented' : ''}`;
     } else {
       E.target.textContent = `no prey within ${HUNT_R} m · dawn and dusk on the open edges`;
       E.target.className = 'hn-target';

@@ -526,6 +526,7 @@ async function buildSteps(w, { params, pending, direct = false, arrive = null })
   ground.needs = needs; flier.needs = needs;
   const hunt = w.m.hunt = new Hunt({ tile, animals, flight, ground, needs, el: $('hunt') });   // the hunt loop's goal and arc (hunt.js)
   const scent = w.m.scent = new Scent({ tile, animals, flight, ground, flier, scene, camera, squirrel });   // the smell sense: wisps round the head toward each scent (scent.js); the squirrel's own control smells too
+  hunt.scent = scent;   // the hunt panel's "scented" state (hunt.js)
   needs.onStarve = () => { ground.say('starved: the body lies down and the spirit leaves it'); setTimeout(() => { if (ground.on || flier.on) toSpirit(); }, 2200); };
   const onBody = (code, sex = null) => {
     window.__we.playerSpecies = code; window.__we.playerSex = sex;

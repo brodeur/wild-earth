@@ -984,13 +984,15 @@ export class Animals {
   // carrion true for a carcass not yet gone (kill), y the height its scent rises from (the body's centre standing, the
   // ground under a carcass, the body in the air). The player's own body is held out of the list (take), so it never
   // smells itself; the rest of its herd it does. No allocation; scent.js calls it four times a second.
+  // The height a scent comes from: a body's at BODY_Y over its feet; a carcass's or a flier's at its position.
+  scentHeight(a) { return a.y + (a.dead || a.air ? 0 : BODY_Y[a.sp]); }
   scentSources(x, z, R, fn) {
     const r2 = R * R, P = this.perceived;
     for (const a of this.list) {
       if (a.gone || a.sp === undefined) continue;
       const dx = a.x - x, dz = a.z - z; if (dx * dx + dz * dz > r2) continue;
       const sp = SPECIES[a.sp]; if (!P.has(sp.code)) continue;
-      fn(a, a.sp, !!a.dead, a.y + (a.dead || a.air ? 0 : BODY_Y[a.sp]));
+      fn(a, a.sp, !!a.dead, this.scentHeight(a));
     }
   }
   // Does `code` scavenge (games.json relations.scavenge): its nose is drawn to carrion (scent.js).

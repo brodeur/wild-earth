@@ -176,20 +176,31 @@ export class Scent {
     return R;
   }
 
+  // The strength (0..1) of one source at the head now, by the header's formula: 0 beyond its reach, and 0 while no body
+  // smells. hunt.js asks for its prey (which may be beyond the MAX_WISPS strongest that `smelled` keeps).
+  smell(a) {
+    if (this.stale() || !a || a.gone || a.sp === undefined) return 0;
+    return this.strengthOf(a, a.sp, !!a.dead, this.animals.scentHeight(a));
+  }
+  strengthOf(a, k, carrion, y) {
+    const code = this.animals.speciesList()[k].code, H = this.head;
+    const base = carrion ? this.carrionReach : this.reach * (SOURCE[code] ?? 1); if (base <= 0) return 0;
+    const w = windUniforms.windDir.value, ws = windUniforms.windStrength.value;
+    const windy = clamp((ws - WIND_CALM) / (WIND_FULL - WIND_CALM), 0, 1), wl = Math.hypot(w.x, w.y) || 1, wx = w.x / wl, wz = w.y / wl;
+    const dx = H.x - a.x, dz = H.z - a.z, dh = Math.hypot(dx, dz), d = Math.hypot(dh, (H.y - y) * 0.5);
+    const c = dh > 1e-3 ? (dx * wx + dz * wz) / dh : 0;   // the wind blows from the source toward the head: c > 0
+    const R = base * (STILL + (WIND_SHAPE(c) - STILL) * windy); if (d >= R) return 0;
+    let s = (1 - d / R) ** S_POW; if (carrion && this.scav) s = Math.min(1, s * SCAV_S);
+    return s;
+  }
+
   // The strongest MAX_WISPS scents at the head now (see the header): this.smelled, and the slots they fill.
   query() {
     const A = this.animals, H = this.head, smelled = [];
     const reachMax = Math.max(this.reach * 1.25, this.carrionReach * 1.25);   // the strongest source's reach (SOURCE up to 1.2)
     if (reachMax > 0) {
-      const w = windUniforms.windDir.value, ws = windUniforms.windStrength.value;
-      const windy = clamp((ws - WIND_CALM) / (WIND_FULL - WIND_CALM), 0, 1), wl = Math.hypot(w.x, w.y) || 1, wx = w.x / wl, wz = w.y / wl;
       A.scentSources(H.x, H.z, reachMax, (a, k, carrion, y) => {
-        const code = A.speciesList()[k].code;
-        const base = carrion ? this.carrionReach : this.reach * (SOURCE[code] ?? 1); if (base <= 0) return;
-        const dx = H.x - a.x, dz = H.z - a.z, dh = Math.hypot(dx, dz), d = Math.hypot(dh, (H.y - y) * 0.5);
-        const c = dh > 1e-3 ? (dx * wx + dz * wz) / dh : 0;   // the wind blows from the source toward the head: c > 0
-        const R = base * (STILL + (WIND_SHAPE(c) - STILL) * windy); if (d >= R) return;
-        let s = (1 - d / R) ** S_POW; if (carrion && this.scav) s = Math.min(1, s * SCAV_S);
+        const s = this.strengthOf(a, k, carrion, y); if (s <= 0) return;
         smelled.push({ animal: a, strength: s, bearing: 0, carrion, k });
       });
       smelled.sort((p, q) => q.strength - p.strength);
