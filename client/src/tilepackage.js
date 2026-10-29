@@ -251,6 +251,7 @@ export function rockKeep(tile, x, north) {
 const MIX_LAYOUT = { trees: { blue_oak: 0, live_oak: 1, gray_pine: 2, ponderosa: 3 }, shrubs: { manzanita: 4, chamise: 5 },
   tree_density: 6, shrub_density: 7 };
 const BLUE_OAK = ['quercus_douglasii', 'blue_oak'], LIVE_OAK = ['quercus_wislizeni', 'live_oak'];
+const RIP_ZONE = ['none', 'channel', 'margin', 'bank', 'terrace', 'pond_water', 'pond_margin', 'pond_shore', 'pond_terrace'];
 export class SpeciesMix {
   constructor(img, json, sizeM, density = null) {
     this.img = img; this.size = sizeM; this.res = sizeM / img.width; this.json = json;
@@ -281,7 +282,25 @@ export class SpeciesMix {
       this.rows[m.index] = { index: m.index, rule: m.rule, name: m.name, weights, trees, shrubs, ground, treeSum, shrubSum, groundSum,
         treeDensity: td / 100, shrubDensity: sd / 100, savanna: byteOf(BLUE_OAK) >= 128, oaks: { blue: wOf(BLUE_OAK), live: wOf(LIVE_OAK) } };
     }
+    // The riparian zone rows (2026-10-29, pipeline species_mix.py riparian_rows): per zone, order class and permanence,
+    // the trees, shrubs and ground species of a bank, a margin, a pond shore (ripRow); their species join `species`.
+    this.rip = new Map();
+    for (const [key, r] of Object.entries(json.riparian?.rows || {})) {
+      const row = { trees: {}, shrubs: {}, ground: {}, density: r.density || [1, 1, 1], key };
+      for (const layer of ['trees', 'shrubs', 'ground']) {
+        const L = r[layer] || [], tot = L.reduce((s, [, v]) => s + v, 0);
+        for (const [k, v] of L) if (v > 0 && tot) { row[layer][k] = v / tot; if (layer !== 'ground') species.add(k); }
+      }
+      row.treeSum = Object.keys(row.trees).length; row.shrubSum = Object.keys(row.shrubs).length; row.groundSum = Object.keys(row.ground).length;
+      this.rip.set(key, row);
+    }
     this.species = [...species];   // every species (id or alias) some row draws
+  }
+  // The riparian row for a WaterGrid info ({ zone, order, perennial }), or null: a zone's own species mix.
+  ripRow(info) {
+    if (!info || !info.zone || !this.rip.size) return null;
+    const zone = RIP_ZONE[info.zone], cls = info.zone >= 5 ? 'pond' : info.order <= 2 ? 'small' : info.order <= 4 ? 'medium' : 'large';
+    return this.rip.get(`${zone}|${cls}|${info.perennial ? 'perennial' : 'seasonal'}`) || null;
   }
   rowIndex(i, j) { const o = (j * this.img.width + i) * 4, d = this.img.data; return this.wide ? d[o] + 256 * d[o + 1] : d[o]; }
   at(i, j) { return this.rows[this.rowIndex(i, j)] || null; }
@@ -338,6 +357,74 @@ export class RewildGrid {
   at(x, north) {
     if (x < 0 || north < 0 || x >= this.size || north >= this.size) return 0;
     return this.b[Math.floor((this.size - north) / this.res) * this.width + Math.floor(x / this.res)];
+  }
+}
+
+// The water system (client/water.png, pipeline/water.py; docs/tile-spec.md "Water and riparian"): on the 5 m DEM grid,
+// row 0 north, every waterway and pond with its riparian zones, bed material, water level and channel width:
+//   R  zone (low 4 bits: WATER_ZONE), the stream order (bits 4-6) and 128 when the water is perennial
+//   G  bed material (low 3 bits: BED_MATERIAL) and 8 on a bar
+//   B  the water surface: heights.png's height at the cell + (B - 128) x 0.02 m; 0 off the water system
+//   client/water_width.png (8-bit grey, the same grid): the channel's water half width at the nearest centreline sample, 0.1 m
+// (a fourth channel in one RGBA file came back through the canvas premultiplied, the zone bits garbled)
+// water.js draws the streams at the level and at the width; rocks.js lays the bed's stones by the material; the plant
+// layers draw a zone's species from the species mix's riparian rows (SpeciesMix.ripRow); terrain.js tints the wet
+// margins and the ponds' mud. The cells are the pipeline's: a 5 m pixel is channel where the centreline runs through it.
+export const WATER_ZONE = { none: 0, channel: 1, margin: 2, bank: 3, terrace: 4, pond_water: 5, pond_margin: 6, pond_shore: 7, pond_terrace: 8 };
+export const WATER_ZONE_NAMES = ['none', 'channel', 'margin', 'bank', 'terrace', 'pond_water', 'pond_margin', 'pond_shore', 'pond_terrace'];
+export const BED_MATERIAL = ['none', 'silt', 'sand', 'gravel', 'cobble', 'boulder'];
+export class WaterGrid {
+  constructor(img, sizeM, heights, widthImg = null) {
+    this.img = img; this.width = img.width; this.size = sizeM; this.res = sizeM / img.width; this.d = img.data;
+    this.hw = widthImg && widthImg.width === img.width ? widthImg.data : null;
+    this.heights = heights; this.sameGrid = !!heights && heights.w === img.width;
+    this._info = { zone: 0, order: 0, perennial: false, pond: false };
+    this.any = false; const d = img.data; for (let i = 0; i < d.length; i += 4) if (d[i]) { this.any = true; break; }
+  }
+  index(x, north) {
+    if (!(x >= 0 && north >= 0 && x < this.size && north < this.size)) return -1;
+    return Math.floor((this.size - north) / this.res) * this.width + Math.floor(x / this.res);
+  }
+  zone(x, north) { const o = this.index(x, north); return o < 0 ? 0 : this.d[o * 4] & 15; }
+  // { zone, order (1-7; 0 at a pond), perennial, pond } at a point (one object, reused: copy what you keep)
+  info(x, north) {
+    const I = this._info, o = this.index(x, north), r = o < 0 ? 0 : this.d[o * 4];
+    I.zone = r & 15; I.order = (r >> 4) & 7; I.perennial = r >= 128; I.pond = I.zone >= 5; return I;
+  }
+  material(x, north) { const o = this.index(x, north); return o < 0 ? 0 : this.d[o * 4 + 1] & 7; }
+  bar(x, north) { const o = this.index(x, north); return o >= 0 && (this.d[o * 4 + 1] & 8) !== 0; }
+  // the water surface height at a point, or null off the water system
+  level(x, north) {
+    const o = this.index(x, north); if (o < 0) return null;
+    const b = this.d[o * 4 + 2]; if (!b) return null;
+    const base = this.sameGrid ? this.heights.z[o] : this.heights.base((Math.floor(x / this.res) + 0.5) * this.res, this.size - (Math.floor((this.size - north) / this.res) + 0.5) * this.res);
+    return base + (b - 128) * 0.02;
+  }
+  half(x, north) { const o = this.index(x, north); return o < 0 || !this.hw ? 0 : this.hw[o * 4] * 0.1; }
+  // the share of a 30 m vegetation cell (i, j, cell size res30) in the woody riparian zones (bank, terrace, pond shore
+  // and terrace) and in the wet ones (channel, margin, pond water and margin), cached: [woody, wet]
+  cellShare(i, j, res30) {
+    const key = j * 65536 + i; let v = this.shares?.get(key); if (v) return v;
+    this.shares ??= new Map();
+    const k = Math.max(1, Math.round(res30 / this.res)), x0 = Math.round(i * res30 / this.res), y0 = Math.round(j * res30 / this.res);
+    let woody = 0, wet = 0, n = 0;
+    for (let q = 0; q < k; q++) for (let p = 0; p < k; p++) {
+      const xx = x0 + p, yy = y0 + q; if (xx >= this.width || yy >= this.width) continue;
+      const z = this.d[(yy * this.width + xx) * 4] & 15; n++;
+      if (z === 3 || z === 4 || z === 7 || z === 8) woody++; else if (z === 1 || z === 2 || z === 5 || z === 6) wet++;
+    }
+    v = n ? [woody / n, wet / n] : [0, 0]; this.shares.set(key, v); return v;
+  }
+  // a random riparian pixel's centre in cell (i, j) for a draw u in [0, 1), or null: where the extra bank trees go
+  woodyPoint(i, j, res30, u) {
+    const k = Math.max(1, Math.round(res30 / this.res)), x0 = Math.round(i * res30 / this.res), y0 = Math.round(j * res30 / this.res), list = [];
+    for (let q = 0; q < k; q++) for (let p = 0; p < k; p++) {
+      const xx = x0 + p, yy = y0 + q; if (xx >= this.width || yy >= this.width) continue;
+      const z = this.d[(yy * this.width + xx) * 4] & 15; if (z === 3 || z === 4 || z === 7 || z === 8) list.push(xx, yy);
+    }
+    if (!list.length) return null;
+    const m = Math.min(list.length / 2 - 1, Math.floor(u * list.length / 2)) * 2;
+    return [(list[m] + 0.5) * this.res, this.size - (list[m + 1] + 0.5) * this.res];
   }
 }
 
@@ -482,7 +569,7 @@ export async function loadTile(tileId, base = '../tiles/', { signal = null } = {
   for (const k of ['client.heights', 'client.texture', 'client.habitat', 'client.canopy', 'client.masks'])
     if (!L[k]) throw new Error(`tile ${id} lacks ${k}; run the derive step`);
   const MX = L['client.species_mix'], mixFiles = MX?.files || {};
-  const [heights, texture, habitat, canopy, masks, species, perception, calendar, games, imagery, features, roads, imageryTexture, mast, mixIndex, mixJson, mixDensity, outcrop, geology, soils, groundClasses, profile, speciesPrior, detail, canopyHeight, groundTexture, seasonImage, lidarMicro] = await Promise.all([
+  const [heights, texture, habitat, canopy, masks, species, perception, calendar, games, imagery, features, roads, imageryTexture, mast, mixIndex, mixJson, mixDensity, outcrop, geology, soils, groundClasses, profile, speciesPrior, detail, canopyHeight, groundTexture, seasonImage, lidarMicro, waterImg, waterWidthImg] = await Promise.all([
     loadImageData(dir + L['client.heights'].path, signal), loadImageData(dir + L['client.texture'].path, signal),
     loadImageData(dir + L['client.habitat'].path, signal), loadImageData(dir + L['client.canopy'].path, signal),
     loadImageData(dir + L['client.masks'].path, signal),
@@ -527,6 +614,9 @@ export async function loadTile(tileId, base = '../tiles/', { signal = null } = {
     // lidar step, newer tiles (tile-spec "Lidar"): intensity, roughness and low-vegetation share on the 2 m grid, for the
     // micro relief under the body (terrain.js); optional and quiet when absent
     L['client.lidar_micro'] ? loadLidarMicro(dir + L['client.lidar_micro'].path, signal).catch(e => { if (!signal?.aborted) console.warn('lidar micro:', e.message); return null; }) : null,
+    // the water system (tile-spec "Water and riparian"): zones, bed material, levels and widths on the 5 m grid; optional
+    L['client.water'] ? loadImageData(dir + L['client.water'].path, signal).catch(e => { if (!signal?.aborted) console.warn('water grid:', e.message); return null; }) : null,
+    L['client.water'] ? loadImageData(dir + 'client/water_width.png', signal).catch(() => null) : null,
   ]);
   if (signal?.aborted) throw aborted(signal);
   if (features) markRewilded(features, m);
@@ -536,9 +626,13 @@ export async function loadTile(tileId, base = '../tiles/', { signal = null } = {
   const size = m.size_m || 10000;
   const waterMask = features ? new WaterMask(features, size, roads?.width || 2000) : null;
   if (waterMask) await runSliced(waterMask.buildSteps(), 'water mask', { signal });
+  const heightfield = new Heightfield(heights, size, detail, decoded);
+  const water = waterImg && waterImg.width === waterImg.height ? new WaterGrid(waterImg, size, heightfield, waterWidthImg) : null;
   return {
     id, manifest: m, size, dir, signal,   // signal: the world's (main.js); the modules' own loads and slices stop with it
-    heights: new Heightfield(heights, size, detail, decoded), textureImage: texture.image, masksImage: masks.image,
+    heights: heightfield, textureImage: texture.image, masksImage: masks.image,
+    // the water system's zones, bed material, levels and widths (WaterGrid), or null on a tile without the water step
+    water: water?.any ? water : null, waterImage: water?.any ? waterImg.image : null,
     habitat: new Grid8(habitat, size), canopy: new Grid8(canopy, size),
     roads: roads ? new Grid8(roads, size) : null, roadsImage: roads?.image || null,
     mast: mast ? new Grid8(mast, size) : null,

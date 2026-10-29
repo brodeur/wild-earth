@@ -963,7 +963,12 @@ export class Rocks {
         }
       }
     }
-    const wet = mode === 'full' ? null : this.wetIn(i, j);
+    // The water system's beds (tile.water, 2026-10-29): cobbles, gravel bars and boulders laid by the pipeline's bed
+    // material, in every mode (the boulders in 'full', the pebbles in 'peb' and 'count'); the old stream-bank stones
+    // only on a tile without the grid, the pond-shore gravel band on every tile.
+    const wg = this.tile.water;
+    if (wg) this.bedStones(i, j, d, mode, wg, pebble, bould, countOnly);
+    const wet = mode === 'full' ? null : this.wetIn(i, j, !!wg);
     if (wet) this.waterStones(i, j, d, wet, pebble);
     const result = mode === 'peb' ? (peb.length ? peb : null) : mode === 'count' ? { out, bould, peb }
       : out.length || bould.length ? { out, bould } : null;
@@ -987,7 +992,7 @@ export class Rocks {
   }
   // Streams and pond shores near each cell (tile.features, the same widths water.js draws): stream
   // segments with water and dry-bed widths, arc length and bend; pond ring edges with their outward side.
-  wetIn(i, j) {
+  wetIn(i, j, pondsOnly = false) {
     if (!this.wet) {
       const res = this.res, size = this.tile.size, W = this.W, map = this.wet = new Map(), wm = this.tile.waterMask, F = this.tile.features;
       const add = (x0, y0, x1, y1, ref, list) => {
@@ -998,7 +1003,7 @@ export class Rocks {
         }
       };
       const hasDem = (F?.streams || []).some(st => st.source && st.source !== 'nhd');
-      for (const st of F?.streams || []) {
+      for (const st of pondsOnly ? [] : F?.streams || []) {   // with the water grid the beds carry their own stones (bedStones)
         const cls = st.fcode in STREAM_CLASS ? STREAM_CLASS[st.fcode] : 'intermittent', P = st.path;
         if (!cls || !P || P.length < 2 || (hasDem && st.source === 'nhd')) continue;
         if (st.in_waterbody && wm) { const m = P[P.length >> 1]; if (wm.inPond(m[0], m[1])) continue; }
@@ -1031,6 +1036,59 @@ export class Rocks {
       }
     }
     return this.wet.get(j * this.W + i) || null;
+  }
+  // The bed's stones (tile.water, pipeline/water.py; docs/tile-spec.md "Water and riparian"): per 5 m cell of the water
+  // grid inside the 30 m cell, in a channel's bed (zone 1) or on its wet margin (zone 2), by the bed material:
+  //   gravel    a scatter of 26-50 water-worn pebbles 5-19 cm (a bar: twice as many, to 25 cm)
+  //   cobble    22-40 cobbles 10-39 cm, and in three cells of four one or two water-worn boulders 0.4-0.9 m
+  //   boulder   3-5 boulders 0.5-1.5 m (the cascades, the falls' feet) with 14-24 cobbles round them
+  //   sand      a few pebbles; silt none
+  // bigger stones on bigger channels (the half width A). The stones stand on the carved bed, under the water when the
+  // reach runs and bare when it dries. Own stream (SALT + 17), the same draws in every mode so the lists agree.
+  bedStones(i, j, d, mode, wg, pebble, bould, countOnly) {
+    const res = this.res, size = this.tile.size, r5 = mulberry32(hash(i, j, SALT + 17)), W = wg.width, wres = wg.res, D = wg.d;
+    const base = (d.cls && LOOK[d.cls] ? LOOK[d.cls] : LOOK.alluvium).color, look = d.cls && LOOK[d.cls] ? LOOK[d.cls] : LOOK.alluvium;
+    // water-worn: rounded and a little paler than the class's rock, but kept darker than the bank stones so the cobbles
+    // read against the pale sand and gravel of a dry bed (a third of them dark, wet-looking)
+    const col = () => { const dark = r5() < 0.35, t = (dark ? 0.55 : 0.8) + 0.25 * r5(), h = (r5() - 0.5) * 0.08, pale = dark ? 0.1 : 0.25 + 0.3 * r5(); return [0, 1, 2].map(c => srgb((base[c] + ([0.62, 0.6, 0.56][c] - base[c]) * pale) * t * (c === 0 ? 1 + h : c === 2 ? 1 - h : 1))); };
+    const x0 = i * res, n1 = size - j * res, k = Math.max(1, Math.round(res / wres));
+    const px0 = Math.round(x0 / wres), py0 = Math.round((size - n1) / wres);
+    let kb = 0;
+    // a water-worn boulder: the class's boulder form, rounder (a low lean), its ground point free of the water skips
+    const boulder = (x, n, sz) => {
+      const v = Math.floor(r5() * VARIANTS), az = r5() * Math.PI * 2, lean = (r5() - 0.5) * 0.2, sy = 0.6 + 0.3 * r5(), sz2 = 0.8 + 0.4 * r5();
+      const t = 0.9 + 0.2 * r5(), hue = (r5() - 0.5) * 0.06;
+      if (mode !== 'full' && mode !== 'count') return;
+      if (x < 0 || n < 0 || x > size || n > size) return;
+      const dims = this.dimsOf(d.cls || 'other', 'bould', v);
+      if (countOnly) { bould.push(1); return; }
+      const m = this.place(x, n, az, lean, sz, sy, sz2, dims, new Float32Array(16));
+      bould.push({ key: `${d.cls || 'other'}|${v}`, m, c: [t * (1 + hue) * 0.95, t * 0.95, t * (1 - hue) * 0.93], x, y: m[13], z: -n, s: Math.max(Math.hypot(m[0], m[1], m[2]), Math.hypot(m[8], m[9], m[10])) });
+      kb++;
+    };
+    for (let q = 0; q < k; q++) for (let p = 0; p < k; p++) {
+      const cx = px0 + p, cy = py0 + q; if (cx < 0 || cy < 0 || cx >= W || cy >= W) continue;
+      const o = (cy * W + cx) * 4, zone = D[o] & 15; if (zone !== 1 && zone !== 2) continue;
+      const mat = D[o + 1] & 7, bar = (D[o + 1] & 8) !== 0, half = D[o + 3] * 0.1;
+      if (mat < 2) continue;
+      const big = Math.min(1.6, 0.7 + 0.12 * half);   // cobbles grow with the channel
+      const wx0 = cx * wres, wn1 = size - cy * wres;
+      const at = () => [wx0 + r5() * wres, wn1 - r5() * wres];
+      if (mat === 2) { const n = r5() < 0.5 ? 3 + Math.floor(r5() * 6) : 0; for (let m = 0; m < n; m++) { const [x, n2] = at(); pebble(x, n2, 0.04 + 0.1 * r5(), 1, r5, col()); } continue; }
+      if (mat === 3) { const n = Math.floor((26 + 24 * r5()) * (bar ? 2 : 1)); for (let m = 0; m < n; m++) { const [x, n2] = at(); pebble(x, n2, (0.05 + 0.14 * Math.pow(r5(), 1.2)) * (bar ? 1.3 : 1) * big, 1, r5, col()); } continue; }
+      if (mat === 4) {
+        const n = Math.floor((22 + 18 * r5()) * (bar ? 1.6 : 1));
+        for (let m = 0; m < n; m++) { const [x, n2] = at(); pebble(x, n2, Math.min(0.39, (0.1 + 0.32 * Math.pow(r5(), 1.3)) * big), 1, r5, col()); }
+        const nb = r5() < 0.75 ? 1 + Math.floor(r5() * 2) : 0;
+        for (let m = 0; m < nb; m++) { const [x, n2] = at(); boulder(x, n2, (0.4 + 0.5 * r5()) * big); }
+        continue;
+      }
+      // boulders: a cascade
+      const nb = 3 + Math.floor(r5() * 3);
+      for (let m = 0; m < nb; m++) { const [x, n2] = at(); boulder(x, n2, (0.5 + 1.0 * Math.pow(r5(), 1.2)) * big); }
+      const nc = 14 + Math.floor(r5() * 10);
+      for (let m = 0; m < nc; m++) { const [x, n2] = at(); pebble(x, n2, Math.min(0.39, (0.12 + 0.27 * r5()) * big), 1, r5, col()); }
+    }
   }
   // Water-worn cobble and gravel on the dry bed and banks of each stream through the cell, between
   // the water's edge (water.js's width, with its pools and riffles) and a metre past the bed, in

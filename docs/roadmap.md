@@ -113,6 +113,16 @@ sequenced; Parked is in the brief but deliberately not started.
   coastal tile has no sea (the seabed is drawn as terrain), the city fill is a flat olive
   scrub, and the species library is the foothills' (see decisions.md, 2026-10-26).
 
+- The water system, 2026-10-29: a `water` pipeline pass carves every creek's bed and wet
+  margin and every pond's basin into the terrain, lays the bed material (boulders, cobble,
+  gravel, sand, silt, bars), writes the water level and the riparian zones (channel, margin,
+  bank, terrace; the pond's water, margin, shore, terrace) for the client, and builds a species
+  mix per zone from the records' new `habitat.riparian` blocks; twenty-one riparian records
+  (willows, sycamore, buttonbush, dogwood, blackberry, grape, spicebush, cattail, tule, bulrush,
+  sedges, rush, horsetail, mugwort, nettle, monkeyflower, watercress, duckweed) and a new
+  `emergent` form drawn by `emergents.js`; the streams drawn at their level in the carved
+  channel, the dry beds rocky, the margins tinted, the gallery trees by zone.
+
 ## Next: the visual pass, in order of effect per hour
 
 1. ~~Horizon~~ done 2026-10-23: two crossed-quad impostors with a canopy cap per
@@ -181,6 +191,12 @@ browser stays the renderer.
 - Needs: acorn woodpecker added to the species list and pipeline; an authoritative game
   server (the dev server grows into it; Rust is the candidate for the real node);
   WebSocket multiplayer; AI behaviour trees driven by the activity calendar.
+
+- Water, next: the ponds' drawdown ring and basin checked in the client; the raven's frame rate
+  over the creek; the emergents' far tier and their look against references (the tule and rush
+  pictures read dark against the water); the stones' contrast on the dry beds from the chase
+  camera; the other tiles rebuilt with `--steps water`; a water temperature from
+  `relations.shades_water`; the animals' crossings at the bars (deer, raven) made deliberate.
 
 ## Then
 

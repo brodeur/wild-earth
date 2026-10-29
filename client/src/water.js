@@ -31,6 +31,13 @@ import { Waterfalls } from './waterfall.js';
 // tile; until it arrives the water keeps its plain colour and depthAt() uses a notional depth.
 // Depth darkens the water (pools dark and glassy, riffles pale, rough and quick) and is exposed
 // as depthAt(x, north) in metres.
+//
+// The water system (2026-10-29, pipeline/water.py, client/water.png as tile.water): on a tile with it the terrain
+// carries every channel's carved bed and wet margin, so a stream ribbon is no longer draped on the ground: its
+// vertices sit at the reach's water level (WaterGrid.level at the section's centre) across the channel's carved width
+// (WaterGrid.half), and the bed below it is the terrain. The dry bed ribbon still drapes on the ground (the carved
+// bed) and takes its colour from the bed material (G: silt, sand, gravel, cobble, boulder). A pond's level comes from
+// the grid too (the basin carved under it), so depthAt() over a pond is the basin's depth.
 
 // NHD FCode -> class. 55800 artificial paths run through ponds and wide rivers (perennial);
 // 33400 connectors join reaches through culverts and gaps (treated as intermittent); 33600 canals
@@ -139,7 +146,7 @@ class RibbonBuffers {
 const COMMON = /* glsl */`
   #define CLIFF_FADE smoothstep(0.4, 0.65, normalize(vNormalW).y)
   varying vec3 vPosW; varying vec3 vNormalW; varying vec4 vFlow; varying vec2 vDir; varying vec2 vExtra;
-  uniform float uTime; uniform float depthPull; uniform float depthPullK;
+  uniform float uTime; uniform float depthPull; uniform float depthPullK; uniform float tileSize;
   uniform vec4 fineRect; uniform float fineBand;   // terrain.js fine mesh: x0, x1, n0, n1 (x1 < x0: none) and its blend band
 `;
 const VERT = /* glsl */`
@@ -176,7 +183,7 @@ const WATER_FRAG = /* glsl */`
   ${ATMOSPHERE_GLSL}
   ${NOISE}
   uniform float rippleAmp; uniform float opacity; uniform float pond;
-  uniform sampler2D profileTex; uniform float hasProfile; uniform float tileSize;
+  uniform sampler2D profileTex; uniform float hasProfile;
   // Ripple height in flow coordinates q = (metres downstream, metres across): crests run across
   // the flow (stretched across, short along), the fine octave scrolls faster than the coarse one.
   float ripple(vec2 q, float speed, float fine) {
@@ -255,6 +262,7 @@ const BED_FRAG = /* glsl */`
   ${NOISE}
   uniform vec3 classWet;   // 1 where the class runs this season (ephemeral, intermittent, perennial)
   uniform float opacity;
+  uniform sampler2D waterTex; uniform float hasWater; uniform float waterPx;   // the water system grid (tile.water): G is the bed material
   void main() {
     float px = length(fwidth(vPosW.xz));
     vec2 q = vec2(vFlow.x, vFlow.y);
@@ -262,6 +270,13 @@ const BED_FRAG = /* glsl */`
     float fineK = 1.0 - smoothstep(0.1, 0.5, px);
     vec3 sand = vec3(0.50, 0.45, 0.36), gravel = vec3(0.36, 0.33, 0.28);
     vec3 c = mix(sand, gravel, smoothstep(0.35, 0.75, n1 * 0.6 + n2 * 0.4));
+    if (hasWater > 0.5) {   // the bed material at the nearest grid cell: silt dark and fine, sand pale, gravel warm, cobble and boulder grey
+      vec2 wuv = (floor(vec2(vPosW.x, -vPosW.z) / tileSize * waterPx) + 0.5) / waterPx;
+      float m = mod(floor(texture2D(waterTex, wuv).g * 255.0 + 0.5), 8.0);
+      vec3 mc = m < 0.5 ? c : m < 1.5 ? vec3(0.30, 0.27, 0.22) : m < 2.5 ? vec3(0.56, 0.50, 0.38) : m < 3.5 ? vec3(0.42, 0.38, 0.31) : m < 4.5 ? vec3(0.34, 0.34, 0.32) : vec3(0.30, 0.30, 0.29);
+      float grain = m < 2.5 ? 0.08 : m < 3.5 ? 0.22 : 0.3;   // silt and sand smooth, gravel and cobble speckled
+      c = mix(mc, mc * (0.8 + 0.4 * n2), grain) * (0.92 + 0.16 * n1);
+    }
     c *= 0.9 + 0.2 * fineK * (n3 - 0.5);
     int cls = int(vExtra.y + 0.5);
     float wet = cls == 0 ? classWet.x : cls == 1 ? classWet.y : classWet.z;
@@ -287,9 +302,19 @@ export class Water {
     this.group = new THREE.Group(); this.group.name = 'water'; this.group.userData.water = this;
     this.season = null; this.look = null; this.stats = { skippedRings: 0, reaches: 0 };
     const time = { value: 0 };
-    const base = { uTime: time, depthPull: { value: 0.25 }, depthPullK: { value: 0.003 },
+    const base = { uTime: time, depthPull: { value: 0.25 }, depthPullK: { value: 0.003 }, tileSize: { value: tile.size },
       fineRect: { value: new THREE.Vector4(1, 0, 1, 0) }, fineBand: { value: 20 } };
     this.uniforms = base;
+    // the water system grid (tilepackage WaterGrid): levels, widths and the bed material; null on an older tile
+    this.grid = tile.water || null;
+    let waterTex = null;
+    if (this.grid && tile.waterImage) {
+      waterTex = new THREE.Texture(tile.waterImage); waterTex.colorSpace = THREE.NoColorSpace; waterTex.generateMipmaps = false;
+      waterTex.minFilter = THREE.NearestFilter; waterTex.magFilter = THREE.NearestFilter; waterTex.needsUpdate = true;
+    }
+    const blankW = new THREE.DataTexture(new Uint8Array(4), 1, 1); blankW.needsUpdate = true;
+    const wg = { waterTex: { value: waterTex || blankW }, hasWater: { value: waterTex ? 1 : 0 }, waterPx: { value: this.grid ? this.grid.width : 1 } };
+    this.waterTexture = waterTex;
     const mk = (frag, extra) => {
       const m = new THREE.ShaderMaterial({
         vertexShader: VERT, fragmentShader: frag, uniforms: { ...atmo, ...base, ...extra },
@@ -297,15 +322,15 @@ export class Water {
       });
       return m;
     };
-    this.bedMaterial = mk(BED_FRAG, { classWet: { value: new THREE.Vector3(1, 1, 1) }, opacity: { value: 1 } });
+    this.bedMaterial = mk(BED_FRAG, { classWet: { value: new THREE.Vector3(1, 1, 1) }, opacity: { value: 1 }, ...wg });
     // depth profile texture, shared by both water materials (a 1 px placeholder until it loads)
     const blank = new THREE.DataTexture(new Uint8Array(4), 1, 1); blank.needsUpdate = true;
-    const prof = { profileTex: { value: blank }, hasProfile: { value: 0 }, tileSize: { value: tile.size } };
+    const prof = { profileTex: { value: blank }, hasProfile: { value: 0 } };
     this.profileUniforms = prof;
     this.waterMaterial = mk(WATER_FRAG, { rippleAmp: { value: 0.22 }, opacity: { value: 0.88 }, pond: { value: 0 }, ...prof });
     if (tile.heights.detail) for (const m of [this.bedMaterial, this.waterMaterial]) m.defines = { DRAPE: '' };   // ribbons only; ponds are flat at their level
     this.pondMaterial = mk(WATER_FRAG, { rippleAmp: { value: 0.07 }, opacity: { value: 0.93 }, pond: { value: 1 }, ...prof });
-    this.pondBedMaterial = mk(BED_FRAG, { classWet: { value: new THREE.Vector3(0, 0, 0) }, opacity: { value: 0.8 } });
+    this.pondBedMaterial = mk(BED_FRAG, { classWet: { value: new THREE.Vector3(0, 0, 0) }, opacity: { value: 0.8 }, ...wg });
 
     const features = tile.features || {};
     const H = terrainHeight(tile);
@@ -344,7 +369,9 @@ export class Water {
   }
   // The world is being torn down (main.js): the module's depthAt / rewildAt stop answering for it. Its meshes,
   // materials and textures are disposed with the scene.
-  dispose() { if (current === this) current = null; }
+  dispose() { if (current === this) current = null; this.waterTexture?.dispose(); }
+  // the water system at a point (WaterGrid.info: zone, order, perennial, pond), or null on an older tile
+  zoneAt(x, north) { return this.grid ? this.grid.info(x, north) : null; }
 
   // Channel profile pixel (R, G, B) at a point, or null before it loads / off the tile.
   profileAt(x, north) {
@@ -427,9 +454,16 @@ export class Water {
         if (inRing(x, y, ring)) { const h = H(x, y); inside.push(h); lo = Math.min(lo, h); }
       inside.sort((a, b) => a - b);
       const med = inside.length ? inside[inside.length >> 1] : lo;
-      const level = area > POND_BIG
+      let level = area > POND_BIG
         ? Math.max(lo + 0.05, shore[Math.floor(0.6 * (shore.length - 1))] - 0.1)
         : lo + Math.min(Math.max(med - lo, 0), 1.5) + 0.05;
+      // the water system's level (the basin is carved under it): the median of the grid's levels inside the ring
+      if (this.grid) {
+        const lv = [];
+        for (let y = y0 + step / 2; y < y1; y += step) for (let x = x0 + step / 2; x < x1; x += step)
+          if (inRing(x, y, ring)) { const l = this.grid.level(x, y); if (l !== null && this.grid.info(x, y).pond) lv.push(l); }
+        if (lv.length) { lv.sort((a, b) => a - b); level = lv[lv.length >> 1]; }
+      }
       const g = pondGeometry(ring, level, Math.min(POND_FADE, Math.sqrt(area) * 0.08));
       const intermittent = POND_INTERMITTENT.has(w.fcode);
       if (intermittent) { seasonal.push(g); dry.push(g.clone()); } else permanent.push(g);
@@ -454,8 +488,9 @@ export class Water {
     const bed = new RibbonBuffers(), water = Object.fromEntries(CLASSES.map(c => [c, new RibbonBuffers()]));
     const sec = [];   // per section: x, north, half, s, tx, tz, class, has-next (SEC_W floats... see sectionIndex)
     const inPond = (x, y) => ponds.some(p => x >= p.bbox[0] && x <= p.bbox[2] && y >= p.bbox[1] && y <= p.bbox[3] && inRing(x, y, p.ring));
-    const nrm = new THREE.Vector3(), hf = this.tile.heights, drape = !!hf.detail;
+    const nrm = new THREE.Vector3(), hf = this.tile.heights, drape = !!hf.detail, G = this.grid;
     const normalAt = (x, n) => nrm.set(H(x - 2, n) - H(x + 2, n), 4, -(H(x, n - 2) - H(x, n + 2))).normalize();
+    let gridSections = 0, plainSections = 0;
     // Prefer the DEM's geometry: NHD-sourced stretches (kept where the DEM found no channel) are cut
     // wherever a DEM channel runs within DEM_PREFERRED_M of them, so a stream is never drawn twice.
     const nearDem = demIndex(streams, DEM_PREFERRED_M);
@@ -501,23 +536,32 @@ export class Water {
           if (i) s += Math.hypot(p[0] - r[i - 1][0], p[1] - r[i - 1][1]);
           const a = r[Math.max(0, i - 1)], b = r[Math.min(r.length - 1, i + 1)];
           let tx = b[0] - a[0], tz = -(b[1] - a[1]); const tl = Math.hypot(tx, tz) || 1; tx /= tl; tz /= tl;
-          return { x: p[0], n: p[1], s, tx, tz };
+          // the water system: the level and the carved half width at the section (null / 0 where the grid has none)
+          const lvl = G ? G.level(p[0], p[1]) : null, gh = G ? G.half(p[0], p[1]) : 0;
+          const half = gh > 0 ? gh : ww / 2 * wMod(s);
+          if (gh > 0 && lvl !== null) gridSections++; else plainSections++;
+          return { x: p[0], n: p[1], s, tx, tz, lvl, half, bedHalf: gh > 0 ? gh + marginWidth(order) : bw / 2 * bMod(s) };
         });
         // centreline sections with the drawn water half width, for depthAt()
         for (let i = 0; i < sections.length; i++) {
           const c = sections[i];
-          sec.push(c.x, c.n, ww / 2 * wMod(c.s), c.s, c.tx, c.tz, ci, i + 1 < sections.length ? 1 : 0);
+          sec.push(c.x, c.n, c.half, c.s, c.tx, c.tz, ci, i + 1 < sections.length ? 1 : 0);
         }
-        // Strip with `cols` cross-section vertices at offsets `offs` (metres, along the perp).
-        const strip = (buf, half0, offs, strength, sp, mod) => {
+        // Strip with `cols` cross-section vertices at offsets `offs` (fractions of the half width, -1..1): the dry bed
+        // draped on the ground (the carved bed), the water at the reach's level where the grid gives one (max with
+        // the ground drawn there, so a ribbon never sinks under the far mesh between its vertices).
+        const strip = (buf, offs, strength, sp, water) => {
           const cols = offs.length; let first = -1;
           for (const c of sections) {
             const px = -c.tz, pz = c.tx;   // perp in world xz
-            const m = mod(c.s), half = half0 * m;
-            for (const o0 of offs) {
-              const o = o0 * m, x = c.x + px * o, z = -c.n + pz * o, n = -z;
-              const nn = normalAt(x, n);
-              const k = buf.vertex(x, H(x, n), z, nn.x, nn.y, nn.z, c.s, o, half, sp, c.tx, c.tz, strength, ci, drape ? hf.coarse(x, n) : undefined);
+            const half = water ? c.half : c.bedHalf;
+            for (const f of offs) {
+              const o = f * half, x = c.x + px * o, z = -c.n + pz * o, n = -z;
+              const g = H(x, n), lv = water && c.lvl !== null ? c.lvl : null;
+              const y = lv !== null ? Math.max(lv, g) : g;
+              const nn = lv !== null ? nrm.set(0, 1, 0) : normalAt(x, n);
+              const cy = drape ? (lv !== null ? Math.max(lv, hf.coarse(x, n)) : hf.coarse(x, n)) : undefined;
+              const k = buf.vertex(x, y, z, nn.x, nn.y, nn.z, c.s, o, half, sp, c.tx, c.tz, strength, ci, cy);
               if (first < 0) first = k;
             }
           }
@@ -529,12 +573,12 @@ export class Water {
         // Interior vertices (at most ~5 m apart) let a wide ribbon fold into a V-valley instead of
         // bridging it; a ribbon under ~6 m fits inside one 10 m terrain quad and needs only its two
         // edges (half the triangles, most of the network).
-        const across = w => { const k = w > 6 ? Math.max(2, Math.ceil(w / 5)) : 1; return Array.from({ length: k + 1 }, (_, i) => -w / 2 + w * i / k); };
-        strip(bed, bw / 2, across(bw), BED_STRENGTH[cls] * (order === 1 ? 0.8 : 1), 0, bMod);
-        strip(water[cls], ww / 2, across(ww), 1, speed, wMod);
+        const across = w => { const k = w > 6 ? Math.max(2, Math.ceil(w / 5)) : 1; return Array.from({ length: k + 1 }, (_, i) => -1 + 2 * i / k); };
+        strip(bed, across(bw), BED_STRENGTH[cls] * (order === 1 ? 0.8 : 1), 0, false);
+        strip(water[cls], across(ww), 1, speed, true);
       }
     }
-    this.stats.reaches = reaches; this.stats.skippedInPond = skippedInPond;
+    this.stats.reaches = reaches; this.stats.skippedInPond = skippedInPond; this.stats.sections = { grid: gridSections, plain: plainSections };
     this.sectionIndex(sec);
     this.beds = new THREE.Mesh(bed.geometry(), this.bedMaterial);
     releaseGeometry(this.beds.geometry);   // the dry beds' arrays go once uploaded (gpuRelease.js); the streams keep theirs: squirrelControl.js streamAt reads them
@@ -586,6 +630,9 @@ export class Water {
     if (look && look !== this.look) { this.look = look; const s = seasonOf(look); if (s !== this.season) this.setSeason(s); }
   }
 }
+
+// The wet margin's width by stream order (pipeline/water.py bank_params), the dry bed ribbon's extent past the water.
+function marginWidth(order) { return 0.6 + 0.25 * Math.max(1, Math.min(7, order)); }
 
 // The Water built last (one per world): depthAt(x, north) and rewildAt(x, north) without a reference.
 let current = null;

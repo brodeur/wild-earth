@@ -37,6 +37,9 @@ export const groundUniforms = {
   // Weather (weather.js): x the ground's wetness (darker, a little more saturated), y lying snow's cover of the ground,
   // z its cover on the grass (grass.js); 0 in dry weather.
   wxGround: { value: new THREE.Vector3() },
+  // The water system (tilepackage WaterGrid, client/water.png; 2026-10-29): the zone byte tints the wet margins and the
+  // ponds' mud and basins (groundWater); waterOn is 0 on a tile without the grid.
+  waterMap: { value: null }, waterOn: { value: 0 }, waterPx: { value: 1 },
 };
 // The measured season for the CPU side: grass.js takes its blades' tint from `grass` (the open grass's
 // flat-ground ratio for the date over July, linear) when it is set; `version` bumps on each change.
@@ -56,7 +59,27 @@ export const GROUND_GLSL = /* glsl */`
   uniform float imagery; uniform vec3 grassRef; uniform vec3 oakRef;   // imagery: 1 when map is the erased NAIP
   uniform float groundFx; uniform sampler2D canopyMap; uniform sampler2D contactAO; uniform mat4 contactAOMatrix;
   uniform sampler2D seasonMap; uniform float seasonOn; uniform vec3 wxGround;
+  uniform sampler2D waterMap; uniform float waterOn; uniform float waterPx;
   const vec3 G_LUMA = vec3(0.299, 0.587, 0.114);
+  // The water system's ground (waterMap R: the zone in the low 4 bits): the wet margin of a channel darker and greener
+  // (moist soil under the sedges), a pond's drawdown margin mud, its basin dark silt when the water is gone, a dry
+  // channel bed a little darker under its gravel ribbon. The four nearest 5 m cells' tints are blended bilinearly, so the
+  // zones' edges are soft though their codes cannot be interpolated.
+  vec3 waterTintOf(float zone, vec3 c) {
+    float l = dot(c, G_LUMA);
+    if (zone < 0.5 || zone > 6.5 || zone == 3.0 || zone == 4.0) return c;
+    if (zone == 1.0) return c * 0.9;
+    if (zone == 2.0) return mix(c, vec3(l) * vec3(0.78, 0.86, 0.66), 0.55) * 0.82;
+    if (zone == 5.0) return mix(c, vec3(0.30, 0.28, 0.24) * (0.6 + 0.8 * l), 0.75);
+    return mix(c, vec3(0.42, 0.37, 0.30) * (0.5 + 1.0 * l), 0.7);   // 6: the drawdown mud
+  }
+  vec3 groundWater(vec3 c, vec2 uv) {
+    if (waterOn < 0.5) return c;
+    vec2 p = uv * waterPx - 0.5, f = fract(p), b = (floor(p) + 0.5) / waterPx, e = vec2(1.0 / waterPx, 0.0);
+    float z00 = mod(floor(texture2D(waterMap, b).r * 255.0 + 0.5), 16.0), z10 = mod(floor(texture2D(waterMap, b + e.xy).r * 255.0 + 0.5), 16.0);
+    float z01 = mod(floor(texture2D(waterMap, b + e.yx).r * 255.0 + 0.5), 16.0), z11 = mod(floor(texture2D(waterMap, b + e.xx).r * 255.0 + 0.5), 16.0);
+    return mix(mix(waterTintOf(z00, c), waterTintOf(z10, c), f.x), mix(waterTintOf(z01, c), waterTintOf(z11, c), f.x), f.y);
+  }
   // Weather on the ground (wxGround): wet ground about 40% darker and a little more saturated; lying snow over it,
   // fullest on flat ground and north-facing slopes (ny: the normal's y, north: 0..1 how much the slope faces north),
   // thinner under tree cover (tree 0..1).
@@ -161,6 +184,7 @@ const FRAG = /* glsl */`
       vec3 rr = ripTint / max(ripRef, vec3(0.01)); rr /= max(dot(rr, G_LUMA), 0.05);
       c = mix(c, c * rr * ripDark, wRip * ripMix);
     }
+    c = groundWater(c, vUv);   // the water system's wet margins and mud (groundUniforms.waterMap)
     vec2 cov = texture2D(canopyMap, vUv).rg * 2.55;     // tree, shrub cover 0..1 (sky occlusion and litter)
     float dist = distance(vPosW, cameraPosition);
     vec3 dpx = dFdx(vPosW), dpy = dFdy(vPosW);          // outside every branch: the detail fetches use them
@@ -367,6 +391,11 @@ export class Terrain {
     yield 'GroundDetail';
     ripUniforms.ripMask.value = riparianMask(tile);
     yield 'riparianMask';
+    if (tile.water && tile.waterImage) {   // the water system's zones (nearest-filtered: the shader blends the tints, not the codes)
+      const wt = new THREE.Texture(tile.waterImage); wt.colorSpace = THREE.NoColorSpace; wt.generateMipmaps = false;
+      wt.minFilter = THREE.NearestFilter; wt.magFilter = THREE.NearestFilter; wt.needsUpdate = true;
+      G.waterMap.value = wt; G.waterOn.value = 1; G.waterPx.value = tile.water.width; this.waterTexture = wt;
+    } else { G.waterMap.value = null; G.waterOn.value = 0; }
     this.uniforms = { ...G, ...windUniforms, ...atmo, ...detailUniforms, ...ripUniforms, geoSlope: { value: tile.heights.detail ? 1 : 0 } };   // shared objects, so one update reaches every material
     this.material = new THREE.ShaderMaterial({ vertexShader: VERT, fragmentShader: FRAG, uniforms: this.uniforms });
     const size = tile.size, cs = size / chunks, nv = Math.round(cs / spacing) + 1, H = tile.heights;
@@ -426,6 +455,7 @@ export class Terrain {
     this.micro?.dispose(); this.micro = null; this.material.onBeforeRender = () => {};
     if (this.tile.heights) this.tile.heights.micro = null;
     ripUniforms.ripMask.value = null;
+    this.waterTexture?.dispose(); if (G.waterMap.value === this.waterTexture) { G.waterMap.value = null; G.waterOn.value = 0; }
     resetDetailUniforms();
     seasonState.grass = null; seasonState.date = null; seasonState.version++;
     this.textures.clear(); this.season = null;

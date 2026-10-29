@@ -51,8 +51,8 @@ const others = me => {
 
 export class Identify {
   // els: { nearest, around, card } ; seasonNow(): current season name
-  constructor({ veg, grass = null, forbs = null, camera, dom, scene, flight, acorns, seasonNow, els }) {
-    Object.assign(this, { veg, grass, forbs, camera, dom, flight, acorns, seasonNow, els });
+  constructor({ veg, grass = null, forbs = null, emergents = null, camera, dom, scene, flight, acorns, seasonNow, els }) {
+    Object.assign(this, { veg, grass, forbs, emergents, camera, dom, flight, acorns, seasonNow, els });
     // Who took each acorn (the game's world records only when): collector species and kind per acorn key, kept per
     // world (a season has its own), from the game's pickup events. Acorns taken before this page loaded are unknown.
     this.takenBy = new WeakMap();
@@ -122,6 +122,7 @@ export class Identify {
     }
     if (!nearest) { nearest = nearestShrub; nearestD = shrubD; }
     if (this.forbs) for (const [id, n] of Object.entries(this.forbs.speciesAround(p.x, p.z, 30))) counts[id] = (counts[id] || 0) + n;   // the herbs within 30 m (forbs.js draws to 45)
+    if (this.emergents) for (const [id, n] of Object.entries(this.emergents.speciesAround(p.x, p.z, 30))) counts[id] = (counts[id] || 0) + n;   // the cattails, tules, sedges and rushes within 30 m (emergents.js)
     const { nearest: nEl, around: aEl } = this.els;
     if (nearest) {
       const s = SPECIES[nearest.species];
@@ -227,6 +228,8 @@ export class Identify {
     // ground with nothing else hit (grass.js speciesAt: the leading species of the sward there).
     const fb = this.forbs?.pick(o, d, Math.min(far, PICK_R));
     if (fb && (!best || fb.distance < best.distance)) best = fb;
+    const em = this.emergents?.pick(o, d, Math.min(far, PICK_R));   // a cattail or sedge (emergents.js)
+    if (em && (!best || em.distance < best.distance)) best = em;
     if (!best && far < PICK_R && this.grass) {
       const gx = o.x + d.x * far, gz = o.z + d.z * far, g = this.grass.speciesAt(gx, -gz);
       if (g) best = { distance: far, species: g.id, id: 'grass', point: new THREE.Vector3(gx, o.y + d.y * far, gz), x: gx, z: gz, grass: g };

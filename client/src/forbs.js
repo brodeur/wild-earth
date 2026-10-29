@@ -34,7 +34,7 @@ const FORB_R = 45, FADE = [36, 45], D0 = 18, KMIN = 0.25, REFILL = 8, CAP = 2400
 const T = 256, GS_MAX = 16;
 const HABITAT = { 5: 1.0, 1: 0.7, 6: 0.8, 3: 0.4, 4: 0.35, 2: 0.2 };
 const CLASS_NAME = { 1: 'oak_woodland', 2: 'conifer_forest', 3: 'mixed_forest', 4: 'chaparral', 5: 'grassland', 6: 'riparian' };
-const ASPECT = { erect: 0.7, bulb: 0.55, mound: 1.3, rosette: 1.7, sprawling: 1.9, climbing: 1.3 };   // picture box width / height by habit
+const ASPECT = { erect: 0.7, bulb: 0.55, mound: 1.3, rosette: 1.7, sprawling: 1.9, climbing: 1.3, floating: 40 };   // picture box width / height by habit (floating: duckweed, a mat on the water)
 const smooth = (a, b, x) => { const t = Math.min(Math.max((x - a) / (b - a), 0), 1); return t * t * (3 - 2 * t); };
 function hash2(i, j, s) { let h = (i * 374761393 + j * 668265263 + s * 982451653) | 0; h = Math.imul(h ^ (h >>> 13), 1274126177); return ((h ^ (h >>> 16)) >>> 0) / 4294967296; }
 function vnoise(x, y, s) {
@@ -59,7 +59,8 @@ export const FORB_SPECIES = SPECIES_IDS.filter(id => SPECIES[id].form === 'forb'
   const hbm = (g.height_by_month && g.height_by_month.length === 12) ? g.height_by_month : new Array(12).fill(1);
   return { id, k, common: s.common, habit, leaf: g.leaf || { shape: 'linear', size_m: 0.05, rgb: [100, 130, 80] }, flower: g.flower || null,
     hbm, dead: g.dead_rgb || [170, 150, 110], density: g.density ?? 1, classes: s.habitat?.classes || {}, shade: s.habitat?.shade ?? 0.2,
-    disturbed: s.habitat?.disturbed ?? 1, boxH: H[1], boxW: (ASPECT[habit] || 1) * H[1], evergreen: Math.min(...hbm) >= 0.5 };
+    disturbed: s.habitat?.disturbed ?? 1, boxH: habit === 'floating' ? 0.002 : H[1], boxW: habit === 'floating' ? 0.6 : (ASPECT[habit] || 1) * H[1], evergreen: Math.min(...hbm) >= 0.5,
+    floating: habit === 'floating', riparian: !!s.habitat?.riparian?.zones };
 });
 
 // ---- the plant's state in a month ------------------------------------------------------------------------------
@@ -128,6 +129,12 @@ function drawTile(g, F, st, cx, cy, top) {
   const base = css(F.leaf.rgb), leafCol = k => css(st.dead ? F.dead : F.leaf.rgb, k);
   const hb = F.habit, x0 = cx + T / 2, y0 = top ? cy + T / 2 : cy + T - 2;
   const nLeaves = Math.round(Math.min(60, 6 + 40 * (W * H) / (Lf * Lf) * 0.5));
+  if (F.floating) {   // a floating mat (duckweed): a ragged disc of tiny fronds, drawn on the water in the ground quad only
+    if (!top) { g.restore(); return; }
+    const R = T * 0.46, n = 900;
+    for (let q = 0; q < n; q++) { const b = rnd() * Math.PI * 2, r = R * Math.sqrt(rnd()) * (0.75 + 0.25 * vnoise(Math.cos(b) * 3, Math.sin(b) * 3, 77)); g.fillStyle = leafCol(0.8 + 0.45 * rnd()); g.beginPath(); g.arc(x0 + Math.cos(b) * r, y0 + Math.sin(b) * r, 2.2 + 1.5 * rnd(), 0, Math.PI * 2); g.fill(); }
+    g.restore(); return;
+  }
   if (top) {   // the plant from above: leaves radiating from the centre, the flowers on top
     const R = Math.min(W, T) * 0.5;
     for (let q = 0; q < nLeaves; q++) { const b = rnd() * Math.PI * 2, r = (hb === 'erect' || hb === 'bulb' ? 0.2 : 0.35 + 0.6 * rnd()) * R, L = Lf * (0.7 + 0.6 * rnd());
@@ -280,25 +287,57 @@ export class Forbs {
     }
     m = { cum, total: acc }; this.mixCache.set(key, m); return m;
   }
+  // The forbs of a riparian zone (tile.water, 2026-10-29): the zone row's forbs (SpeciesMix.ripRow: nettle, mugwort,
+  // monkeyflower, watercress, duckweed...) this month, as speciesMix's cum; cached per row and month. Null without a row.
+  zoneMix(row) {
+    const key = 'rip:' + row.key; let m = this.mixCache.get(key); if (m) return m;
+    const cum = []; let acc = 0;
+    for (const F of FORB_SPECIES) {
+      const st = this.states[F.k]; if (!st || st.h <= 0) continue;
+      const w = (row.ground[F.id] || 0) * F.density; if (w <= 0) continue;
+      acc += w; cum.push([F.k, acc]);
+    }
+    m = { cum, total: acc }; this.mixCache.set(key, m); return m;
+  }
   // The plants of cell (i, j): a Float32Array of instances (STRIDE each), in rank order, and the cell's bounds.
   cellData(i, j) {
     const key = j * this.W + i;
     let c = this.cache.get(key); if (c) return c;
-    const { habitat: hab, size, roads, waterMask: wm } = this.tile, res = hab.res, out = [];
-    const mix = this.speciesMix(i, j), N = Math.round(res * res * FORB_PER_M2);
-    if (mix.total > 0) for (let k = 0; k < N; k++) {
+    const { habitat: hab, size, roads, waterMask: wm, water: WG, speciesMix: SM } = this.tile, res = hab.res, out = [];
+    const cellMix = this.speciesMix(i, j), N = Math.round(res * res * FORB_PER_M2);
+    const ripCell = WG && SM?.rip?.size && WG.cellShare(i, j, res).some(v => v > 0);   // any riparian zone in the cell
+    if (cellMix.total > 0 || ripCell) for (let k = 0; k < N; k++) {
       draw(i, j, k);
       const px = (i + U[0]) * res, pn = size - (j + U[1]) * res;
-      const dens = this.sample(this.dens, px, pn) * rockKeep(this.tile, px, pn); if (dens <= 0) continue;
+      let dens = this.sample(this.dens, px, pn) * rockKeep(this.tile, px, pn);
       const rw = roads ? roads.at(px, pn) : 0; if (rw > 140) continue;
-      if (wm && waterAt(wm, px, pn) === 255) continue;
+      // The water system's zones (tile.water): in a zone the row's forbs (zoneMix) at the zone's density; a channel bed, a
+      // pond's basin and its mud hold only those (watercress in the shallows, duckweed on the water, nothing else); on the
+      // wet margin the upland forbs stay at half. In the water itself (the water mask) only a floating or riparian forb.
+      let mix = cellMix, wz = null, floatY = null;
+      if (WG) {
+        wz = WG.info(px, pn);
+        if (wz.zone) {
+          const row = SM?.ripRow(wz), zm = row && this.zoneMix(row);
+          const wetZone = wz.zone === 1 || wz.zone === 5 || wz.zone === 6;
+          if (zm && zm.total > 0) { mix = zm; dens = Math.max(dens, 0.6) * row.density[2] * (wetZone ? 0.6 : 1); }
+          else if (wetZone) continue;
+          else if (wz.zone === 2) dens *= 0.5;
+          if (wz.zone === 5) { floatY = WG.level(px, pn); }
+        }
+      }
+      if (dens <= 0 || mix.total <= 0) continue;
       // the species, then its own patches (drifts a few to twenty metres across) and the sward's bare patches
       let sp = mix.cum[0][0]; const r = U[2] * mix.total; for (const [kk, a] of mix.cum) { sp = kk; if (r <= a) break; }
-      const F = FORB_SPECIES[sp], patch = 0.12 + 0.88 * smooth(0.38, 0.72, 0.65 * vnoise(px / 13, pn / 13, 400 + sp) + 0.35 * vnoise(px / 4.5, pn / 4.5, 500 + sp));
+      const F = FORB_SPECIES[sp];
+      if (wm && waterAt(wm, px, pn) === 255 && !(F.floating || F.riparian)) continue;
+      if (F.floating && floatY === null) continue;
+      const patch = 0.12 + 0.88 * smooth(0.38, 0.72, 0.65 * vnoise(px / 13, pn / 13, 400 + sp) + 0.35 * vnoise(px / 4.5, pn / 4.5, 500 + sp));
       const bare = 0.35 + 0.65 * smooth(0.25, 0.45, bareField(px, pn)), verge = rw > 0 ? Math.min(1, 0.5 * F.disturbed) : 1;
       if (U[3] >= dens * patch * bare * verge * 0.9) continue;
       const sc = (0.75 + 0.5 * U[4]) * (0.8 + 0.3 * dens);
-      out.push(px, this.grass.ground(px, pn), -pn, sc, sp, U[5], U[6] * Math.PI * 2, (k + 0.5) / N);
+      const y = floatY !== null ? floatY + 0.01 : this.grass.ground(px, pn);
+      out.push(px, y, -pn, sc, sp, U[5], U[6] * Math.PI * 2, (k + 0.5) / N);
     }
     const arr = new Float32Array(out);
     let x0 = Infinity, x1 = -Infinity, y0 = Infinity, y1 = -Infinity, z0 = Infinity, z1 = -Infinity;

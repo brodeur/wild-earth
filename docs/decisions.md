@@ -2619,3 +2619,62 @@ calls, the nine shrub species' meshes), as a vole 14.0 / 10.0 against 11.7 / 6.7
 measurable difference. Not verified: the summer and winter looks of the herbs (soap plant's dry stalk, the bare
 months), a lineup measurement of the nine shrubs against their targets (buckbrush and mahogany read more open:
 gaps 0.32 / 0.48 against 0.15 / 0.3), the far look of the new impostor kinds, and the fliers' view of any of it.
+
+## 2026-10-29: the water system. Every creek and pond built as one thing, with its bed, banks and riparian plants
+
+Aaron: "work on the riparian habitat - make sure there are plenty of riparian plant species, and that banks have a
+transition 'down' into the body - the bottoms of waterways should also have lots of rocks when the waterway dries.
+There should be a pass in the pipeline to build all the waterways/water bodies and riparian systems. If there are
+missing important riparian species like willow or cattail have them generated. Water systems are first class citizens
+like animals - they should be very well made as every species will have to utilize them."
+
+Until now a creek was a ribbon draped on the ground at the ground's own height (the 5 m DEM is flattened at the water
+surface), so an animal met a flat shore with water painted on it; the riparian trees were a 12 m thinning band and two
+bank species; nothing grew in the water. Now:
+
+- **A pipeline pass, `water`** (`pipeline/water.py`, after `rewild_hydro`, re-runnable alone; docs/tile-spec.md "Water
+  and riparian"). Every drawn reach is sampled every 2.5 m with its level (the DEM along it, non-increasing downstream,
+  smoothed), the thalweg depth and riffle index from the profile, and a wandering water half width; every 5 m cell
+  (and, on a lidar tile, every 2 m cell) within reach is carved to the cross-section: the bed a parabola D deep under
+  the level, the wet margin rising hm over m metres, both by stream order. The banks and terraces are zones over the
+  real ground: a first run also cut a template bank (0.75-2.15 m high over 1.6-5 m) and it cut the lidar's real banks
+  back into a gentler, wider trough on every incised channel, so it was dropped; cells are only ever lowered, by at
+  most 2 m. Kept ponds get a basin (0.6-2.4 m deep by area, the shallows under 0.45 m the margin and drawdown mud), a
+  shore band and a terrace. The bed material follows the slope, the riffle index and the order (boulders on the
+  cascades, cobble on riffles and the big creeks, gravel on the runs, sand and silt in the pools, bars inside the
+  bends). All of it is one RGB raster for the client, `client/water.png` (zone, order and permanence; material;
+  the water level to 2 cm against the heights), plus the half width in `client/water_width.png`, plus the banked DEM,
+  the client's heights and the 2 m detail rebuilt from it. Rejected: writing the level into the ribbons' geometry at
+  build time in the client (it is a property of the reach, every layer needs it), and a fourth PNG channel for the
+  width (the browser's canvas premultiplies colour by alpha on decode and the zone bits came back garbled).
+- **Twenty-one riparian records** (docs/species-library.md "The water's plants"): red, Pacific and sandbar willow,
+  California sycamore (a new `mottled` bark), buttonbush, creek dogwood, blackberry, wild grape, spicebush, cattail,
+  tule, bulrush, two sedges, a rush, horsetail, mugwort, nettle, seep monkeyflower, watercress and duckweed, plus
+  `habitat.riparian` (zones, orders, permanence, water) and `relations.shades_water` on the sixteen riparian records
+  the library had. A new form, `emergent`, for the tall wetland monocots.
+- **The zone mixes** (`species_mix.py` riparian_rows): one row per zone x order class x permanence from the records'
+  blocks, like the ground layer, written into species_mix.json. Rejected: hand-weighting the zones per LANDFIRE rule
+  (a creek runs through every community; the zone is the habitat).
+- **The client**: `tilepackage.js` WaterGrid and SpeciesMix.ripRow; `water.js` draws the streams at the level across
+  the carved width (so the ribbon lies on a surface, the bed below it the terrain), the dry bed coloured by material,
+  the ponds at the grid's level; `rocks.js` lays the beds' stones by material (gravel scatters, cobbles with a
+  water-worn boulder, boulder cascades, the bars twice as dense; darker than the bank stones so they read on the
+  pale sand), bare when a reach dries and under the water when it runs; `terrain.js` tints the wet margins and the
+  ponds' mud; the plant layers take a zone's species from its row (vegetation.js zoneSpecies and the extra gallery
+  trees, also in impostors.js and crowns.js so a lidar crown on a bank is a willow, alder, cottonwood or sycamore;
+  shrubfield.js; forbs.js with duckweed floating on the pond's level); `emergents.js`, new, draws the cattails, tules,
+  sedges, rushes and horsetail in the beds, margins and shallows out to 120 m; grass thins to a fifth on a dry bed and
+  to nothing on the mud. The animals' water is unchanged in form: groundControl's footing reads the ribbon's height
+  and depthAt(), which now agree with the carved bed, so a wading deer stands on the bed under 0.34 m of Weber Creek.
+
+Verified on the worktree (port 8786, the pass run on the home tile: 377 reaches, 70,235 samples, 42 ha of channel bed,
+91 ha of margin, 124 ha of bank, 227 ha of terrace, 19 pond basins, 16,476 cells lowered by 0.48 m on average, 2 m at
+most; 48 zone rows; the licence audit passes): as a deer in Weber Creek (order 5, perennial) the water stands at
+450.44 m over a bed at 450.09 (depth 0.34, "at water: hold E"), tules in the channel and the banks rising either side;
+on Mound Springs Creek (order 3, intermittent) the bed is dry gravel and cobble in late October and runs 0.10 m deep in
+January; a sycamore with its mottled bark on the bank; from the raven the creek winds through its gallery. Frame rate
+at the same pose and date, alternating with main's build: as a deer at Weber Creek 11.7 / 11.3 fps against 11.3 / 11.3
+(40 more draw calls: the new species' meshes, the emergents, the bed boulders). Not verified: the ponds' drawdown ring
+and basin in the client (the browser pane went off screen before those shots, and a hidden pane runs no frames), the
+raven's frame rate, the emergents' and bed stones' far look, the willows' and cattails' look against references, and
+any tile but the home tile (the pass is additive and the other tiles need `--steps water`).
