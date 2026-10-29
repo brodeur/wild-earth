@@ -2167,8 +2167,8 @@ export function canopyMaterial(spec, lod = 'near', patch = null) {
 // little more at the outer limbs; and a little down, so a limb bends rather than tilts. A 12 m tree in a 0.5 wind
 // leans about 0.3 m at the top in a gust and 5 cm in a lull. The trunk's near tier flexes with it (trunkFlex), so the
 // crown stays on its limbs; the mid trunks beyond are still, like the mid cards. CROWN_FLEX is a uniform too.
-export const CROWN_SWAY = { value: new THREE.Vector4(0.35, 3.5, 4.0, 1.6) };
-export const CROWN_FLEX = { value: new THREE.Vector4(0.035, 0.4, 0.4, 0.3) };
+export const CROWN_SWAY = { value: new THREE.Vector4(0.2, 3.5, 4.0, 1.6) };   // 0.35 until Aaron's "the swaying is too intense" (2026-10-29)
+export const CROWN_FLEX = { value: new THREE.Vector4(0.02, 0.4, 0.3, 0.2) };   // (0.035, 0.4, 0.4, 0.3) the same
 export const LEAF_WAVE_GLSL = `
   uniform vec4 crownSway; uniform vec4 crownFlex;
   float leafWave(vec3 wp, float h, out float gate, out float slow) {

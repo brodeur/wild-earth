@@ -74,7 +74,7 @@ const CLOSE_BAND = 20, CLOSE_MOVE = 15, CLOSE_CAP = { tree: 600, shrub: 1500 };
 // is frustum-culled by its own crown. Outside R_leaf + band nothing is drawn by it and the close cards are as they
 // were. A species whose close cards show what single leaves cannot (bare twigs, flowers, berries: leafMaterial
 // userData.off) stays on its cards. leafStats (trees, quads, built, bytes, buildMs) is for inspection.
-const LEAF_R0 = 15, LEAF_R1 = 24, LEAF_FRAME_CAP = 1500000, LEAF_LRU = 24, LEAF_TREES = 48, LEAF_BUILD_MS = 5, LEAF_AHEAD = 6;
+const LEAF_R0 = 24, LEAF_R1 = 36, LEAF_FRAME_CAP = 2200000, LEAF_LRU = 32, LEAF_TREES = 72, LEAF_BUILD_MS = 5, LEAF_AHEAD = 6;
 export const leafRadius = scale => LEAF_R0 + (LEAF_R1 - LEAF_R0) * Math.min(1, Math.max(0, (1 - scale) / 0.9));
 const leafBand = R => Math.max(1.5, 0.2 * R);
 
