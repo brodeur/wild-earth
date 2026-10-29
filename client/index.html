@@ -114,9 +114,14 @@
   #help kbd { background:#1f2a23; border:1px solid #263128; border-radius:4px; padding:0 5px; color:#e6ede7; font:inherit; }
   #status { position:fixed; left:50%; top:45%; transform:translate(-50%,-50%); background:#0f1512dd; padding:14px 18px; border-radius:10px; font-size:14px; }
   #status.hidden { display:none; }
-  #minimap { position:fixed; right:14px; top:12px; background:#0f1512bb; padding:6px; border-radius:8px; backdrop-filter:blur(4px); line-height:0; }
-  #minimap canvas { border-radius:4px; cursor:crosshair; }
-  #help { max-width:calc(100vw - 310px); }   /* wrap rather than run under the mini-map */
+  #minimap { position:fixed; right:14px; top:12px; background:#0f1512bb; padding:4px; border-radius:8px; backdrop-filter:blur(4px); line-height:0; }
+  #minimap canvas { border-radius:4px; cursor:pointer; }
+  #help { max-width:calc(100vw - 200px); }   /* wrap rather than run under the mini-map */
+  /* the full map (minimap.js openFull: a click on the mini-map or M): the whole tile over the view, a click flies there */
+  #mapFull { position:fixed; inset:0; z-index:14; display:flex; align-items:center; justify-content:center; background:rgba(5,8,6,0.78); backdrop-filter:blur(3px); }
+  #mapFull[hidden] { display:none; }
+  #mapFull canvas { border-radius:8px; box-shadow:0 0 48px #000c; cursor:crosshair; }
+  #mapFull .hint { position:absolute; left:0; right:0; bottom:14px; text-align:center; color:#b7c4ba; font-size:12px; pointer-events:none; text-shadow:0 1px 2px #000a; }
   .muted { color:#8fa094; }
   #goto { display:flex; gap:6px; }
   #goto input { flex:1; min-width:0; background:#0d1310; color:#e6ede7; border:1px solid #263128; border-radius:6px; padding:4px 6px; font:inherit; }
@@ -202,7 +207,7 @@
   html.narrow #panel label { margin:5px 0 1px; font-size:10.5px; }
   html.narrow #gameBtn, html.narrow #hoverBtn, html.narrow #peekBtn, html.narrow #soundBtn { padding:4px 8px; margin-top:5px; }
   html.narrow #soundRow { margin-top:5px; }
-  html.narrow #minimap canvas { width:170px !important; height:170px !important; }
+  html.narrow #minimap canvas { width:120px !important; height:120px !important; }
   html.narrow #help { font-size:11.5px; padding:6px 10px; }
   /* The opening screen hides the HUD (its styles: opening.css); the arrival caption. A tile switch from the game
      (main.js switchWorld) hides it too, but keeps the panel, whose Location box can send the page elsewhere. */
