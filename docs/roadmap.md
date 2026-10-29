@@ -195,7 +195,8 @@ browser stays the renderer.
   round behind), the head leads, and the legs step sideways round a standing turn and arc on a curve (docs/decisions.md);
   next in the rig, in order: the Walk backwards on S, a trot, leg length to the slope, an alert pose of its own, a true
   sideways-step clip if the turned swing is not enough; the fox, coyote, lion and bear step round their turns the same way on the
-  part rig (2026-10-29, the legs' swing turned about the vertical in aAnim2.z); the mini-map shows the 800 m round the player and a
+  part rig, and the same day every other walker in its order's way (the rodents' fore-foot hops, the birds' steps in
+  place with the head leading, the lizard's C-bend; 2026-10-29); the mini-map shows the 800 m round the player and a
   click opens the full tile (2026-10-29); the crown wave loosens in a strong wind and the limbs flex
   downwind with the near trunks, and the near shadows move with them (2026-10-29); every body cruises on W and sprints on Shift with a
   species-sized legs meter (2026-10-29); docs/movement.md and the locomotion layer (library tree,

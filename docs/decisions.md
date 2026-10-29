@@ -2619,3 +2619,27 @@ calls, the nine shrub species' meshes), as a vole 14.0 / 10.0 against 11.7 / 6.7
 measurable difference. Not verified: the summer and winter looks of the herbs (soap plant's dry stalk, the bare
 months), a lineup measurement of the nine shrubs against their targets (buckbrush and mahogany read more open:
 gaps 0.32 / 0.48 against 0.15 / 0.3), the far look of the new impostor kinds, and the fliers' view of any of it.
+
+## 2026-10-29: every walker steps round a turn, and the controls read the locomotion table
+
+Aaron: "did you do this for all animals, if not, can you". The deer (the skin path) and the fox, coyote, lion and
+bear (the part rig) stepped round a turn since the morning; an Opus lane carried the principle to the nine other
+walkers, each in its order's way (docs/movement.md): the rodents and the gray squirrel on the ground turn with the
+bound at 0.35-0.5 of its slow length, the fore feet hopping round the hind feet (the fore legs' swing turned sideways
+in aAnim2.z under a new rig constant turnFore, the hind legs' swing fading as the angle grows so the hind feet stay
+planted), 1-3.5 Hz, the body lagging 0.1 s and at most 0.3 rad, nothing on a trunk or limb; the ground birds step in
+place at 0.45-0.65 of the walk with the head leading by 0.15 rad per rad/s up to 0.35 (aAnim2.z under turnHead),
+lag 0.12 s / 0.35 rad; the fence lizard turns by its C-bend (0.25 x the rate, capped at 0.8) with the sprawl gait at
+0.3-0.45 and 1.2-4 Hz, no lag beyond the bend. The AI of all nine turns at a capped rate (3.5 rad/s, 8 fleeing for
+the small bodies; 2.2 and 6 for the turkey; the lizard's turn on the spot takes |turn|/3.5 s), the travel scaled by
+the heading error, the rate from the previous yaw driving the step; a jackrabbit's settling and look-back, a sentry
+ground squirrel's look-round and a squirrel's heading after coming down a trunk step round instead of snapping, and
+foraging quail step round between spots. Measured by the lane as the player: rabbit 3.5 rad/s at 3.57 Hz, swing 1.44,
+lag 0.29; vole 4.0 at 3.44 Hz; squirrel 2.6 at 2.1 Hz; turkey 2.2 at 1.84 Hz, head 0.33; quail 4.0 at 3.51 Hz, head
+0.35; lizard 4.0 at 3.29 Hz, bend 0.8; a pinned AI of each at 1.5 rad/s stepping; no shader errors. Checked on the
+clean worktree: the rabbit 3.5 rad/s, amp 0.5, 3.33 Hz, swing 1.44, lag 0.23; the quail 4 rad/s, amp 0.65, 3.5 Hz,
+head 0.35, lag 0.35, 34.7 fps. Not driven: a walk on a curve, the flush hand-off. And the locomotion hook
+(groundControl.js): the species' entry is the hand-tuned table filled from the tile's locomotion table (cruise, sprint,
+recover), or a whole entry derived from the taxon and the body when the table has none, so a new species walks from
+its taxonomy alone once it has a mesh (the turkey's derived entry: walk 1.64, cruise 6.0, top 9.3 m/s, sprint 5.9 s;
+the tuned one: 0.7, 3.8, 6, 4). Open: the part rig's spine bend; the AI's gaits from the Froude bands.

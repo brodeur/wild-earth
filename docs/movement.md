@@ -42,8 +42,8 @@ state: fleeing, grazing, bedded; its needs: hungry is slower). Those are the AI'
   25 degrees, fully when standing and not at all at a walk; a planted foot travels round the turn, not straight back
   (the leg's swing turned about the vertical: the fore feet toward the turn, the hind feet away). Deer (the skin path,
   commits 41ca4f4 and fc7bfb0), fox, coyote, lion, bear (the part rig, f09af03); the rodents, the ground birds, the
-  lizard and the squirrel are in a lane as this is written, each in its order's way (a rabbit pivots on its hind feet
-  with hops of the fore feet; a bird steps in place with the head leading; a lizard C-bends).
+  lizard and the squirrel the same day, each in its order's way (a rabbit pivots on its hind feet with hops of the
+  fore feet; a bird steps in place with the head leading; a lizard C-bends).
 - **The head leads and the spine bends** (phylum). The deer's forequarters swing toward the heading the hips lag
   behind (a fan about the hips, nothing at the hips, all of it from the neck base), the head a little ahead of that.
   The part rig has no spine bend yet (open: the chest and head parts could carry it).
@@ -104,6 +104,5 @@ fawn's higher cadence); and the turn's hoof planting measured against the ground
 ## Open
 
 - The part rig's spine bend and head lead (the chest and head parts turning about the vertical by the lag).
-- The remaining walkers' stepping turn (in a lane: rodents, ground birds, lizard, squirrel).
 - The AI's gaits from the Froude bands of the table.
 - The tree's numbers for the birds' ground speeds (Garland's fit is for mammals; capped at 4 sqrt(g h) for now).
