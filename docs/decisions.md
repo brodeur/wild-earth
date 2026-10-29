@@ -2540,3 +2540,16 @@ capped at 4.2, recovering; the squirrel 4 and 6 with the meter half gone at 2 s;
 with the meter at 0.09 after 6 s; the legs meter shown for all three. Not driven: the woodpecker, the lizard, the
 quails. Note for the Windows player: Alt alone focuses a browser's menu bar on key-up; a creep key that is not Alt
 may be wanted there.
+
+## 2026-10-29: no twitch at peak wind
+
+Aaron: "When wind goes up in intensity when I'm near a single tree it still gets way too twitchy near peak intensity."
+The weather's gust swell is slow (13 to 71 s periods), so the twitch was the shader's fast terms growing with the
+wind: the leaf flutter wave ran at 2 + 9 x windStrength m/s (1.7 Hz at 1.5), the leaf's own tremble at 1.1-1.9 Hz
+and the cards' jitter at 1.6-3 Hz, all with amplitudes that grew to 1.5. Now (treegen.js LEAF_WAVE_GLSL and the leaf
+level) they stop growing: the flutter wave's speed is capped at windStrength 0.6 (0.8 Hz at most), the leaf's turn with
+it at 0.8 and its tremble at 0.6 and 0.8-1.4 Hz, and the cards' jitter keeps the amplitude it has at 0.5 and runs at
+0.8-1.6 Hz. The slow terms still grow (the crown wave at 0.45-0.65 Hz in a strong wind, the limb flex and the 0.4 Hz
+rock), so a strong wind reads as big slow motion. Verified on the clean worktree at a pinned windStrength 1.3 with
+the camera pinned inside a crown: frames 0.12 s apart shift the leaves a little each, no jumps; 35 fps; no shader
+errors. Not verified: the rhythm by eye over time.
