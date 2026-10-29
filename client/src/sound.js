@@ -261,6 +261,7 @@ export class Soundscape {
       if (performance.now() - this.startedAt < 500 && !this.muted) return;
       this.setMuted(!this.muted);
     });
+    if (els.mute) els.mute.addEventListener('click', () => this.setMuted(!this.muted));   // the HUD's speaker (owner, 2026-10-29: "Can we add a mute button"): a plain toggle, N's twin
     if (els.volume) {
       els.volume.value = this.volume;
       els.volume.addEventListener('input', () => this.setVolume(+els.volume.value));
@@ -272,6 +273,8 @@ export class Soundscape {
   setVolume(v) { this.volume = clamp(v); savePrefs({ volume: this.volume, muted: this.muted }); this._runState(); }
 
   _ui() {
+    const m = this.els.mute;
+    if (m) { m.classList.toggle('muted', !!this.muted); m.setAttribute('aria-pressed', this.muted ? 'true' : 'false'); m.title = this.muted ? 'sound is off: click or N for sound' : 'sound is on: click or N to mute'; }
     const b = this.els.button; if (!b) return;
     const on = this.ctx && !this.muted;
     b.textContent = !this.ctx ? (this.muted ? 'Sound off' : 'Sound') : on ? 'Sound on' : 'Sound off';

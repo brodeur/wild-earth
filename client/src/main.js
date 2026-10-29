@@ -624,7 +624,7 @@ async function buildSteps(w, { params, pending, direct = false, arrive = null })
   // screen it is made at Begin and started by that press, so choosing cards stays quiet.
   let sound = null;
   const makeSound = () => {
-    if (!sound) { sound = w.m.sound = new Soundscape({ tile, flight, raven, camera, els: { button: $('soundBtn'), volume: $('soundVol') } }); window.__we.sound = sound; weather.onThunder = (d, k) => sound.thunder(d, k); }
+    if (!sound) { sound = w.m.sound = new Soundscape({ tile, flight, raven, camera, els: { button: $('soundBtn'), volume: $('soundVol'), mute: $('muteBtn') } }); window.__we.sound = sound; weather.onThunder = (d, k) => sound.thunder(d, k); }
     return sound;
   };
 

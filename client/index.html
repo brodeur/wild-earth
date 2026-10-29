@@ -32,6 +32,16 @@
   #hud, #panel, #help { transition:opacity .25s ease; }
   html:not(.menu) #hud, html:not(.menu) #panel, html:not(.menu) #help { opacity:0; visibility:hidden; pointer-events:none; transition:opacity .2s ease, visibility 0s linear .2s; }
   html.opening #menuBtn { display:none; }
+  /* the mute button (sound.js els.mute; N does the same): under the menu button, a speaker, barred when muted */
+  #muteBtn { position:fixed; left:14px; top:54px; z-index:12; width:34px; height:34px; padding:0; border:0; border-radius:8px; background:#0f1512bb; backdrop-filter:blur(4px); cursor:pointer; display:flex; align-items:center; justify-content:center; color:#e6ede7; }
+  #muteBtn:hover { background:#1a241ecc; }
+  #muteBtn svg { width:18px; height:18px; display:block; }
+  #muteBtn .waves { transition:opacity .2s ease; }
+  #muteBtn .bar { opacity:0; transition:opacity .2s ease; }
+  #muteBtn.muted { color:#ffb3a3; }
+  #muteBtn.muted .waves { opacity:0; }
+  #muteBtn.muted .bar { opacity:1; }
+  html.opening #muteBtn { display:none; }
   /* off-screen herd members (herdMarks.js): an avatar in a circle at the screen's edge nearest each member out of view */
   #herdMarks { position:fixed; inset:0; z-index:4; pointer-events:none; }
   /* heard predators and prey (soundCues.js): ring waves pulsing out at the sound's origin on the screen, or at the
@@ -227,6 +237,7 @@
 </head>
 <body>
 <button id="menuBtn" type="button" aria-label="menu" aria-expanded="false" title="menu: the readouts, the keys and the controls"><i></i><i></i><i></i></button>
+<button id="muteBtn" type="button" aria-label="mute" aria-pressed="false" title="sound on or off (N)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 9v6h4l5 4V5L8 9H4z" fill="currentColor" stroke="none"/><path class="waves" d="M15.5 8.5a5 5 0 0 1 0 7M18.5 5.5a9 9 0 0 1 0 13"/><path class="bar" d="M3 3l18 18"/></svg></button>
 <div id="hud">
   <h1>common raven <span class="muted">· <span id="tileName">–</span></span><a id="creditsLink" href="#" role="button" aria-controls="credits" aria-expanded="false" title="data sources and credits">Data</a></h1>
   <div class="row"><span>altitude above ground</span><b id="agl">–</b></div>
