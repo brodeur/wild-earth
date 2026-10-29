@@ -2046,7 +2046,7 @@ export function canopyMaterial(spec, lod = 'near', patch = null) {
   chainShader(m, (close ? 'leaf-close' : lod === 'mid' ? 'leaf-mid' : 'leaf-near') + `-v${cv[0]}-${cv[1]}-${lv}${thin ? '-thin' : ''}${aux ? '-needle' : ''}`, shader => {
     shader.uniforms.leafOn = m.userData.leafOn; shader.uniforms.leafVar = m.userData.leafVar;
     shader.uniforms.time = windUniforms.time; shader.uniforms.windDir = windUniforms.windDir; shader.uniforms.windStrength = windUniforms.windStrength;
-    shader.uniforms.crownSway = CROWN_SWAY;
+    shader.uniforms.crownSway = CROWN_SWAY; shader.uniforms.crownFlex = CROWN_FLEX;
     if (aux) { shader.uniforms.needleAux = m.userData.needleAux; shader.uniforms.needleLight = m.userData.needleLight; shader.uniforms.needleScatterK = m.userData.needleScatterK; shader.uniforms.needleTint = m.userData.needleTint; }
     shader.vertexShader = shader.vertexShader
       .replace('#include <common>', '#include <common>\nattribute float leafRank;\nvarying float vLeafRank;\nvarying float vShim;\n' + WIND_GLSL + LEAF_WAVE_GLSL + (vary ? '\nvarying vec3 vPlantTint;\nuniform float leafVar;' : ''))
@@ -2150,20 +2150,49 @@ export function canopyMaterial(spec, lod = 'near', patch = null) {
 // frame is unchanged. The displacement is found in world axes and taken into the instance's frame by crownLocal
 // (M^-1 d = (M^T d) / column lengths squared, exact for a rotation with per-axis scale, which the plant matrices are).
 // CROWN_SWAY is a uniform, so it can be tuned live: (await import('/client/src/treegen.js')).CROWN_SWAY.value.
-export const CROWN_SWAY = { value: new THREE.Vector4(0.35, 3.5, 4.0, 0.7) };
+//
+// The second pass (2026-10-29, Aaron: "the sine waves are a little too tight sometimes when the wind is very intense,
+// it just makes the tree look like its vibrating rather than the leaves being individually disrupted because the cards
+// are all moving as one. If it's possible to have the limbs flex in the direction of the wind I think that would add
+// to the effect"): (1) the micro wave's wavelength grows with the wind, crownSway.y x (1 + 1.5 x windStrength up to
+// 1), so a strong wind's wave is long and slow (6 m and 0.65 Hz at 0.5, 8.75 m and 0.45 Hz at 1) instead of a 1.1 Hz
+// shiver of the whole crown; (2) the per-card phase is wider (crownSway.w 1.6: +-0.8 rad) and each card has a jitter
+// of its own (crownFlex.w of the sway's amplitude, 0.3, at its own 1.6-3 Hz from its rank, downwind and half as much
+// across), so neighbouring sprays are disrupted one by one; the twigs take no jitter (a card jitters about its twig
+// tip). (3) The limbs flex downwind (crownFlexW): every point of the tree, the trunk mesh and the twigs' bases as
+// well as the cards and the single leaves, is moved downwind by a lean of crownFlex.x rad per unit windStrength
+// (0.035) times the gust (0.4 in a lull, all of it in a gust) times a slow rock of the whole crown at crownFlex.y Hz
+// (0.4, the limbs' own swing, a phase per plant from its position) by +-crownFlex.z (0.4), times the height above
+// the plant's origin (quadratic over the first 6 m, linear above: the lower trunk holds, the top moves most) and a
+// little more at the outer limbs; and a little down, so a limb bends rather than tilts. A 12 m tree in a 0.5 wind
+// leans about 0.3 m at the top in a gust and 5 cm in a lull. The trunk's near tier flexes with it (trunkFlex), so the
+// crown stays on its limbs; the mid trunks beyond are still, like the mid cards. CROWN_FLEX is a uniform too.
+export const CROWN_SWAY = { value: new THREE.Vector4(0.35, 3.5, 4.0, 1.6) };
+export const CROWN_FLEX = { value: new THREE.Vector4(0.035, 0.4, 0.4, 0.3) };
 export const LEAF_WAVE_GLSL = `
-  uniform vec4 crownSway;
+  uniform vec4 crownSway; uniform vec4 crownFlex;
   float leafWave(vec3 wp, float h, out float gate, out float slow) {
     slow = smoothstep(0.15, 0.75, wNoise((wp.xz - windDir * time * 4.0) * 0.045));
     gate = smoothstep(0.03, 0.2, windStrength) * slow;
     return sin((dot(wp.xz, windDir) - (2.0 + 9.0 * windStrength) * time) * 0.7 + h * 1.6);
   }
   float crownMicro(vec3 rel, float rank) {
-    return 0.5 + 0.5 * sin((dot(rel.xz, windDir) - crownSway.z * time) * (6.2831853 / crownSway.y) + (rank - 0.5) * crownSway.w);
+    float lam = crownSway.y * (1.0 + 1.5 * min(windStrength, 1.0));   // a longer, slower wave in a stronger wind
+    return 0.5 + 0.5 * sin((dot(rel.xz, windDir) - crownSway.z * time) * (6.2831853 / lam) + (rank - 0.5) * crownSway.w);
   }
-  vec3 crownSwayW(vec3 rel, float micro, float slow) {
-    float a = crownSway.x * smoothstep(0.03, 0.2, windStrength) * min(windStrength, 1.5) * (0.3 + 0.7 * slow) * min(1.0, length(rel) * 0.125) * micro;
-    return vec3(windDir.x * a, -0.25 * a, windDir.y * a);
+  // the crown's wave at a point, and the card's own jitter (jit: 1 for a card or a leaf, 0 for a twig)
+  vec3 crownSwayW(vec3 rel, float micro, float slow, float rank, float jit) {
+    float a0 = crownSway.x * smoothstep(0.03, 0.2, windStrength) * min(windStrength, 1.5) * (0.3 + 0.7 * slow) * min(1.0, length(rel) * 0.125);
+    float a = a0 * micro;
+    float h = fract(rank * 37.7 + 0.13), j = jit * crownFlex.w * a0 * sin(time * (10.0 + 8.8 * h) + h * 50.0);
+    return vec3(windDir.x * (a + j) - windDir.y * 0.5 * j, -0.25 * a, windDir.y * (a + j) + windDir.x * 0.5 * j);
+  }
+  // the limbs' flex: the point's displacement downwind by the lean, the gust and the crown's slow rock (plantH: 0..1)
+  vec3 crownFlexW(vec3 rel, float slow, float plantH) {
+    float rock = sin(time * 6.2831853 * crownFlex.y + plantH * 6.2831853);
+    float lean = crownFlex.x * smoothstep(0.03, 0.2, windStrength) * min(windStrength, 1.5) * (0.4 + 0.6 * slow) * (1.0 + crownFlex.z * rock);
+    float y = max(rel.y, 0.0), d = lean * y * min(y, 6.0) / 6.0 * (0.7 + 0.3 * min(1.0, length(rel.xz) * 0.25));
+    return vec3(windDir.x * d, -0.5 * lean * d, windDir.y * d);
   }
   vec3 crownLocal(mat4 M, vec3 d) {
     return (transpose(mat3(M)) * d) / vec3(dot(M[0].xyz, M[0].xyz), dot(M[1].xyz, M[1].xyz), dot(M[2].xyz, M[2].xyz));
@@ -2180,7 +2209,7 @@ const shimmerVertex = (k, sway) => `
           float shimH = fract(leafRank * 173.37 + dot(shimM[3].xz, vec2(0.1031, 0.1173))), shimG, shimS;
           float shimW = leafWave(shimP, shimH, shimG, shimS), shimC = crownMicro(shimR, leafRank);
           shimG *= 0.7 + 0.6 * shimC;${sway ? `
-          transformed += crownLocal(shimM, crownSwayW(shimR, shimC, shimS));` : ''}
+          transformed += crownLocal(shimM, crownSwayW(shimR, shimC, shimS, leafRank, 1.0) + crownFlexW(shimR, shimS, fract(dot(shimM[3].xz, vec2(0.1031, 0.1173)))));` : ''}
           vShim = ${k.toFixed(2)} * (1.0 - smoothstep(900.0, 1300.0, distance(shimP, cameraPosition))) * leafShimmer(shimW, shimG, shimH); }
         #else
           vShim = 0.0;
@@ -2191,11 +2220,12 @@ const SHIMMER_FRAG = `
         outgoingLight = mix(outgoingLight, vec3(1.0, 1.02, 0.94) * max(shL * 1.8, max(outgoingLight.r, outgoingLight.g)), shK); }`;
 const SHIMMER_ALPHA = 'diffuseColor.a *= 1.0 - 0.5 * vShim;\n#include <alphatest_fragment>';
 // The close tier's twigs sway with the crown's own wave (CROWN_SWAY above) by their place along the twig (the twigT
-// attribute, 0 at the base on its limb, 1 at the tip where the close card hangs), so the cards keep their twigs.
-// Instanced twigs only, rank 0.5 (no per-card phase: a twig tip is off its card by at most a sixth of the sway).
+// attribute, 0 at the base on its limb, 1 at the tip where the close card hangs), so the cards keep their twigs, and
+// flex whole with the limbs (crownFlexW, as the trunk mesh does: trunkFlex). Instanced twigs only, rank 0.5 and no
+// jitter (a twig tip is off its card by at most a sixth of the sway; the card jitters about it).
 export function twigSway(material) {
   return chainShader(material, 'twig-sway', shader => {
-    Object.assign(shader.uniforms, { time: windUniforms.time, windDir: windUniforms.windDir, windStrength: windUniforms.windStrength, crownSway: CROWN_SWAY });
+    Object.assign(shader.uniforms, { time: windUniforms.time, windDir: windUniforms.windDir, windStrength: windUniforms.windStrength, crownSway: CROWN_SWAY, crownFlex: CROWN_FLEX });
     shader.vertexShader = shader.vertexShader
       .replace('#include <common>', '#include <common>\nattribute float twigT;\n' + WIND_GLSL + LEAF_WAVE_GLSL)
       .replace('#include <begin_vertex>', `#include <begin_vertex>
@@ -2203,7 +2233,23 @@ export function twigSway(material) {
         { mat4 swM = modelMatrix * instanceMatrix;
           vec3 swP = (swM * vec4(transformed, 1.0)).xyz, swR = swP - swM[3].xyz;
           float swS = smoothstep(0.15, 0.75, wNoise((swP.xz - windDir * time * 4.0) * 0.045));
-          transformed += twigT * crownLocal(swM, crownSwayW(swR, crownMicro(swR, 0.5), swS)); }
+          transformed += crownLocal(swM, twigT * crownSwayW(swR, crownMicro(swR, 0.5), swS, 0.5, 0.0) + crownFlexW(swR, swS, fract(dot(swM[3].xz, vec2(0.1031, 0.1173))))); }
+        #endif`);
+  });
+}
+// The trunk's near tier flexes with the limbs (crownFlexW: the base on the ground holds, the top moves most), so the
+// swaying crown stays on its limbs. Instanced trunks only; the mid trunks beyond are still, like the mid cards.
+export function trunkFlex(material) {
+  return chainShader(material, 'trunk-flex', shader => {
+    Object.assign(shader.uniforms, { time: windUniforms.time, windDir: windUniforms.windDir, windStrength: windUniforms.windStrength, crownSway: CROWN_SWAY, crownFlex: CROWN_FLEX });
+    shader.vertexShader = shader.vertexShader
+      .replace('#include <common>', '#include <common>\n' + WIND_GLSL + LEAF_WAVE_GLSL)
+      .replace('#include <begin_vertex>', `#include <begin_vertex>
+        #ifdef USE_INSTANCING
+        { mat4 flM = modelMatrix * instanceMatrix;
+          vec3 flP = (flM * vec4(transformed, 1.0)).xyz, flR = flP - flM[3].xyz;
+          float flS = smoothstep(0.15, 0.75, wNoise((flP.xz - windDir * time * 4.0) * 0.045));
+          transformed += crownLocal(flM, crownFlexW(flR, flS, fract(dot(flM[3].xz, vec2(0.1031, 0.1173))))); }
         #endif`);
   });
 }
@@ -2496,7 +2542,7 @@ export function leafMaterial(spec, patch = null) {
   const cv = F.color_var || [0, 0], lv = F.leaf_on_var || 0, T = LEAF_TILE, W = 2 * T, PD = LEAF_PAD;
   chainShader(m, `leaf-level-v${cv[0]}-${cv[1]}-${lv}`, shader => {
     Object.assign(shader.uniforms, { leafOn: ud.leafOn, leafVar: ud.leafVar, leafBase: ud.leafBase, leafLight: ud.leafLight, leafTint: ud.leafTint,
-      time: windUniforms.time, windDir: windUniforms.windDir, windStrength: windUniforms.windStrength, crownSway: CROWN_SWAY });
+      time: windUniforms.time, windDir: windUniforms.windDir, windStrength: windUniforms.windStrength, crownSway: CROWN_SWAY, crownFlex: CROWN_FLEX });
     shader.vertexShader = shader.vertexShader
       .replace('#include <common>', `#include <common>
         attribute vec4 lC; attribute vec4 lA; attribute vec4 lN; attribute vec4 lS; attribute vec4 lK; attribute vec4 lM;
@@ -2523,8 +2569,8 @@ export function leafMaterial(spec, patch = null) {
           // the leaf turns about its base: with the travelling wave (more in a gust) and a small tremble of its own
           float leafA = (0.06 + 0.4 * leafG) * min(windStrength, 1.5) * leafWv + 0.05 * windStrength * sin(time * (7.0 + 5.0 * leafH) + leafH * 40.0);
           transformed += leafNo * (position.y * (leafF + leafB) * leafA);
-          // and moves with its branch: the crown's own wave, as the card it replaces
-          transformed += crownLocal(modelMatrix, crownSwayW(leafR, leafC, leafS));
+          // and moves with its branch: the crown's own wave and the limbs' flex, as the card it replaces
+          transformed += crownLocal(modelMatrix, crownSwayW(leafR, leafC, leafS, lA.w * 0.5 + 0.5, 1.0) + crownFlexW(leafR, leafS, fract(dot(modelMatrix[3].xz, vec2(0.1031, 0.1173)))));
           vShim = leafShimmer(leafWv, leafG, leafH);
           plantH += dot(plantH, plantH.yxz + 33.33); plantH = fract((plantH.xxy + plantH.yxx) * plantH.zyx);
           float plantV = 1.0 + ${(2 * cv[0]).toFixed(4)} * (plantH.x - 0.5), plantS = ${(2 * cv[1]).toFixed(4)} * (plantH.y - 0.5);

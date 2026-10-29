@@ -1,6 +1,6 @@
 import * as THREE from 'three';
 import { SPECIES, SPECIES_IDS, mulberry32, resolveSpecies } from './trees.js';
-import { buildTree, canopyMaterial, trunkMaterial, applySeasonSteps, chainShader, SLOTS, variantSlots, seasonMonth, leafTextureSteps, barkTextureSteps, leafMaterial, leafGeometrySteps, twigSway } from './treegen.js';
+import { buildTree, canopyMaterial, trunkMaterial, applySeasonSteps, chainShader, SLOTS, variantSlots, seasonMonth, leafTextureSteps, barkTextureSteps, leafMaterial, leafGeometrySteps, twigSway, trunkFlex } from './treegen.js';
 import { bodyScale, onBodyScale } from './bodyScale.js';
 import { SEASON_LOOK } from './season.js';
 import { rockKeep } from './tilepackage.js';
@@ -395,7 +395,7 @@ export class Vegetation {
       this.offBody = off; }
     this.drape = !!tile.heights.detail; this.crownDc = null;
     const patch = this.patch = m => atmosphere.patchLambert(m);   // cloud shadow + aerial perspective
-    this.trunkMat = { near: lodPatch(trunkMaterial(patch), this.lodU, 'near'), mid: lodPatch(trunkMaterial(patch), this.lodU, 'mid') };   // shared (shadow casters use it)
+    this.trunkMat = { near: lodPatch(trunkFlex(trunkMaterial(patch)), this.lodU, 'near'), mid: lodPatch(trunkMaterial(patch), this.lodU, 'mid') };   // shared (shadow casters use it); the near trunks flex with the limbs
     this.twigMat = lodPatch(twigSway(trunkMaterial(patch)), this.lodU, 'close', true);   // close twigs: plain vertex colour, dithered in like the close canopy, swaying with it
     this.barkMat = {};     // species id -> { near, mid }: the species' bark texture and normal map (treegen barkTexture)
     this.canopyMat = {};   // species id -> { near, mid, close }
@@ -428,7 +428,7 @@ export class Vegetation {
       const mid = lodPatch(canopyMaterial(spec, 'mid', patch), this.lodU, 'mid', true); yield;
       this.canopyMat[id] = { near, mid, close: lodPatch(canopyMaterial(spec, 'close', patch), this.lodU, 'close', true, false, true) }; yield;
       const lm = leafMaterial(spec, patch); this.leafMat[id] = lm ? lodPatch(lm, this.lodU, 'leaf', true) : null; yield;
-      this.barkMat[id] = { near: lodPatch(trunkMaterial(patch, spec), this.lodU, 'near'), mid: this.trunkMat.mid };   // bark texture within NEAR_R; beyond, plain vertex colour (same mean)
+      this.barkMat[id] = { near: lodPatch(trunkFlex(trunkMaterial(patch, spec)), this.lodU, 'near'), mid: this.trunkMat.mid };   // bark texture within NEAR_R; beyond, plain vertex colour (same mean)
       yield;
       this.meshes[id] = []; this.slots[id] = [];
       const bySeed = new Map();
