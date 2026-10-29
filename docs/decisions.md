@@ -2312,3 +2312,94 @@ programs compile on ANGLE/Metal. On the clean worktree as a deer in the oak wood
 without (noise); no console errors. Open: the shadow casters (shadows.js) do not sway, so moving leaves can cross
 their still shadow; a slow sway of the whole crown bending the limbs; Aaron can tune the amplitude, wavelength and
 speed live through CROWN_SWAY.value in treegen.js.
+
+## 2026-10-29: the eyes and the ears: who the player has in sight, who sees the player, what the player hears
+
+Aaron: "I'd also like for sight and sound to have indicators for predators and prey. For prey animals, if they are
+within a certain distance of predators and visible to the camera, there is a chance that their body becomes highlighted
+in their rarity colors - the opposite of how a herd sees. The herd sees occluded, the predator sees only what is
+visible highlighted. Same vice versa - the prey animal has a chance of 'spotting' the predator. If that chance succeeds,
+the predator becomes highlighted. Any animal across species retains the highlight for 5 seconds - if they are spotted
+again within that 5 seconds, the timer resets. This makes it possible to hide in cover and 'lose' the predator or make
+it so the prey can't see you anymore. For sound, if I hear a predator or prey, little sound bubble waves pulse out
+around/near where the sound originated from. If the location is not in the viewport, the sound waves appear at the
+edge of the screen closest."
+
+**Sight** (sight.js): every live animal the player's species hunts or is hunted by (games.json relations.predation
+both ways, animals.js preySlots) within the player's vision of it (perception.json senses[player].vision against
+signatures[it].sight, the smaller: a lion sees a deer to 300 m, a deer a lion to 60) rolls, each frame it is in the
+camera's view, a chance of being spotted: 3 per second at the eye falling with distance as (1 - d/range)^1.5, times its
+motion (a still body 0.3, a walk 0.7, a trot 1.5, a bolt 4: a bolting deer is spotted at once, a bedded one in a few
+seconds, a lion standing 45 m off about once in nine) and times how much of it the camera can see. That visibility is
+a CPU line test from the camera to the body's centre: the drawn ground marched every 4 m (a rise hides outright; the
+micro-relief gets 15 cm of tolerance, since the first cut had two low bodies hidden from each other by the bumps of a
+flat field), every tree in vegetation.js's near set (inside 180 m) as a crown sphere at 0.62 of its height, a third of
+it across, hiding by the chord's depth (a glimpse through the edge keeps some), and a trunk cylinder up to the crown
+hiding 65 %; a plant under 6 m is a shrub, foliage to the ground (a sphere at half its height, nearly as wide as tall,
+no trunk); beyond the near set the canopy raster's tree cover per 30 m cell; and the shrub cover of the cell the body
+stands in. Tested four times a second per animal, 0.05-0.15 ms a frame with a herd and a lion about. A success holds
+the highlight 5 s from now (a re-spot resets it), so an animal that steps behind cover is lost once the hold runs out.
+The same the other way: each such animal's chance of spotting the player is judged as its AI judges a threat
+(animals.js noticeAt: its eyes and ears shrunk by the stalk, or its nose in the wind), the sight part scaled by its own
+view of the player's body (from its eye to the player's shoulder), 2 per second per unit of notice over distance above
+0.8: a lion's 300 m sight has a deer 45 m off in the open within a frame, and loses it behind a shrub (the hold lapsed
+both ways with the deer 1.3 m behind a 4.6 m shrub 45 m from a standing lion; stepping out, the lion had it again in
+0.2 s). Both are chances the player cannot inspect, which is the point: a lion in plain view is not always lit.
+
+The highlight is the herd silhouette's opposite (herdSilhouette.js draws what cover hides): one InstancedMesh per
+species with the species' own posing (animalModels.js animalSilhouetteMaterial, its depth test turned to LessEqual
+with a polygon offset toward the eye), so only the surface the camera sees is lit, additively at 0.42 (0.7 made a lit
+deer a flat cutout; at 0.42 its shading shows through the wash) in the species' rarity colour, fading over the last
+second of the hold; a body that sees the player throbs at 1.6 Hz. The intensity rides in the instance matrix's unused
+element [3] (m[0][3], zero in any affine matrix; the vertex shader reads it out and zeroes it): no new vertex
+attribute, the buck's skin path being at 15 of Metal's 16. The hunt panel (hunt.js) says "it sees you" in place of
+alert when the prey has the hunter in sight and adds " · spotted" in the prey's colour while the hunter has it.
+
+**Sound** (soundCues.js, index.html #soundCues): the same predators and prey are heard as far as the player's hearing
+(senses[player].hearing) and as far as their own sound carries now: signatures[it].sound (the carry of its loudest
+sound) times what it is doing, judged from its speed over the last frames: standing or grazing 0.06 (a grazing deer
+is heard from 4 m), a walk 0.35, a trot 0.8, a gallop or a bolt 1.6 (a bolting deer from 96 m), a bird on the wing
+0.15; plus the calls and flushes on the animals' event bus ('alarm' with its carry from alarm_calls, 'flush',
+'turkeyFlush', 'gsAlarm'), heard within their carry whoever made them. A heard source puts three thin concentric rings
+pulsing out on the screen at the projected point of the sound (20-56 px across by its level, the species' rarity
+colour, fading over a second), repeated every 0.55-1.1 s while it goes on (faster when louder), a burst of three for a
+call; a source outside the viewport, or behind the camera, shows at the screen's edge nearest its direction, as the
+herd's off-screen marks do (herdMarks.js: a source behind the camera is mirrored, so a deer bolting behind you rings at
+the top edge), inside an edge box that clears the menu button, the mini-map's column and the abilities row (the first
+cut's bottom rings sat under the row). At most 24 pulses on screen; 0.02-0.1 ms a frame.
+
+Verified on the worktree (port 8784) as a lion with a summoned herd (every species' notice damped and the herd pinned
+in place so it stood instead of bolting at a lion 14 m off; otherwise the watchers' alarm calls sent it off at once): a
+bedded buck lit beside its unlit herd-mates after a few seconds, the hunt line "unaware · spotted · scented"; the herd
+released, all five lit and throbbing within 1.8 s ("fleeing · spotted"), rings at each; the lion turned round, the rings
+at the top edge. As a deer with a summoned lion pinned standing 16 m off: the lion lit red and throbbing (both ways)
+within 4 s; behind the shrub at 45 m, lost both ways after the hold; out of the shrub, seen again in 0.2 s. No console
+errors. Not verified: the hunt loop played through with the indicators (the pinned and damped animals are a test
+rig); the sight of the fliers (a hawk's view of a vole goes through the same test, untried); a spotted animal
+with a drawn tier other than 0 (the pass copies tier 0's geometry, as the herd silhouette does); the cost with many
+spotted bodies of many species (one mesh per species, up to 16 bodies each). Open: the "it sees you" throb and the
+"spotted" steady wash share one colour, told apart only by the throb and the hunt line; the chance per second and the
+motion factors are first numbers for Aaron to tune (RATE, STILL..BOLT, SEES_K in sight.js); an animal's view of the
+player ignores the player's own cover beyond the shrub cover of its cell (the stalk already shrinks the notice).
+
+## 2026-10-29: the sniff: every scent on the air, and a new one flickers in
+
+Aaron: "For scent, each animal that relies on smell should have a 'Sniff' button that shows all the smells. When I
+smell something new, the smell should flicker onto the screen and then flicker away."
+
+Until now the smell sense (scent.js) drew the six strongest scents all the time. Now a scent is drawn when it is new
+(not smelled within the last 8 s: its strand blinks on over 0.6 s, on-off-on-off-on, holds 4 s and blinks away, then
+off at once) and whenever the player sniffs: the L key held (N is mute), the abilities row's "sniff L" slot held, or a
+tap of either for 3 s; the fox, the coyote and the lion sniff with their own E act too (groundControl S.act "sniffing",
+head down for 3 s), and for them the row shows no second sniff slot. Sniffing, the query keeps every source in reach
+(up to 24, not the six strongest) and every strand shows; the hold over, they flicker away. Each strand carries a
+label at its tip (index.html #scentLabels: the species' word, "dead" for carrion, in the rarity colour, as bright as
+the strand; one within 48 px of another's is not drawn, since four deer on one bearing stacked "DEER" four times). The
+hunt panel's "scented" (scent.js smell(a)) is unchanged: the nose knows what it is not showing.
+
+Verified on the worktree as a fox: before the sniff nothing drawn with six scents in reach; L held, six strands and
+their labels (two visible on screen, the rest behind the fox or overlapping), the slot lit; released, all flickered
+away within a second. A deer herd summoned 20 m off: the buck's strand blinked in (alpha 1,0,0,1,0,0,1... at 50 ms),
+its label "buck" with it, held 3.2 s more, blinked away and went dark; nothing drawn 5 s on. The fox's E sniff, on the committed code: one sniff slot (E) on its row, 24 strands and their labels while the act runs,
+none 3 s after. Not verified: the slot held with the pointer (the key path was used); a carcass's "dead" label. Open: the label's word is the species' short
+name, not "deer, upwind, 40 m"; the blink pattern is one fixed rhythm (a time-hash per strand would vary it).

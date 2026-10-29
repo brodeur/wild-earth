@@ -158,4 +158,8 @@ hardest gather on the tile. A drink game carries the species' rhythm (daily, oft
    its nose shaped by the wind (animals.js noticeAt: full with the wind from the player to it, a fifth the other way),
    whichever is farther; the hunt panel says "downwind of you" when the wind carries the hunter's scent to its prey. Done 2026-10-28: the hunt as a loop (client/src/hunt.js: the
    stake, the goal panel, the stalk in cover, the chase with stamina and the gallop, the arc; decisions "The hunt loop").
-   Still to do: the court and rear loops; the prey's own win.
+   Done 2026-10-29: the player's senses as indicators (sight.js, soundCues.js, scent.js): a predator or prey the
+   camera has in sight is lit in its rarity colour for a 5 s hold and throbs when it has the player in sight (the hunt
+   panel: "spotted", "it sees you"); a heard one rings on the screen at its point or at the nearest edge; a scent is
+   drawn when new (it flickers in and away) or while the player sniffs (L, the slot, or the canids' and the lion's E),
+   each strand labelled. Still to do: the court and rear loops; the prey's own win.
