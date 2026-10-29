@@ -1,5 +1,5 @@
 import * as THREE from 'three';
-import { mulberry32, SPECIES } from './trees.js';
+import { mulberry32, SPECIES, SPECIES_IDS } from './trees.js';
 import { leafOnAt, decoActive, seasonMonth } from './treegen.js';
 import { uniforms as atmo, ATMOSPHERE_GLSL } from './atmosphere.js';
 import { groundUniforms, GROUND_GLSL } from './terrain.js';
@@ -33,7 +33,23 @@ import { releaseTexture } from './gpuRelease.js';
 
 const STRIDE = 8, REFILL_MOVE = 15;
 export const KIND = { chamise: 0, manzanita: 1, annual: 2, bunch: 3, stalk: 4,   // 2-4: grass.js's impostors (tuft, tussock, oat)
-  toyon: -1, redbud: -2, poison_oak: -3, coyote_brush: -4, elderberry: -5, coffeeberry: -6 };   // negative: the foothill shrubs (FH below)
+  toyon: -1, redbud: -2, poison_oak: -3, coyote_brush: -4, elderberry: -5, coffeeberry: -6 };   // negative: the foothill shrubs (FH below; -1 - FH index)
+// The foothill shrubs drawn by this field (2026-10-26; every shrub of the library but the two chaparral ones since
+// 2026-10-29, in library order, up to FH_SLOTS): kind -1 - index. Their looks (FH_LOOK: lobe depth, how far the fringe
+// breaks up, a narrow base; and whether the leaves are fine, taking chamise's picture rather than manzanita's) are a
+// table by id; a shrub not in it takes the defaults.
+const FH_SLOTS = 16;
+const FH_LOOK = {   // [lobe, open, vase, fine]
+  heteromeles_arbutifolia: [0.34, 0.62, 0.0, 0], cercis_occidentalis: [0.24, 0.48, 0.26, 0], toxicodendron_diversilobum: [0.36, 0.38, 0.16, 0],
+  baccharis_pilularis: [0.1, 0.7, 0.0, 1], sambucus_nigra_caerulea: [0.3, 0.42, 0.06, 0], frangula_californica: [0.14, 0.68, 0.0, 0],
+  arctostaphylos_manzanita: [0.2, 0.55, 0.1, 0], ceanothus_cuneatus: [0.18, 0.62, 0.0, 1], ceanothus_integerrimus: [0.3, 0.4, 0.2, 0],
+  cercocarpus_betuloides: [0.3, 0.45, 0.25, 0], diplacus_aurantiacus: [0.2, 0.5, 0.0, 1], rosa_californica: [0.28, 0.5, 0.05, 0],
+  symphoricarpos_albus: [0.22, 0.4, 0.1, 1], ribes_roezlii: [0.26, 0.5, 0.05, 0], ribes_malvaceum: [0.22, 0.5, 0.15, 0] };
+const FH_DEFAULT = [0.25, 0.5, 0.05, 0];
+const FH = SPECIES_IDS.filter(id => SPECIES[id].shrubLike && id !== 'arctostaphylos_viscida' && id !== 'adenostoma_fasciculatum').slice(0, FH_SLOTS);
+FH.forEach((id, k) => { for (const a of SPECIES[id].aliases || []) if (KIND[a] === undefined) KIND[a] = -1 - k; });
+const FH_N = FH.length;
+const fhArr = i => `float[${FH_N}](${FH.map(id => (FH_LOOK[id] || FH_DEFAULT)[i].toFixed(2)).join(', ')})`;
 // The foothill shrubs take negative kinds: shadows.js casts every kind over 1.5 as grass (its season height and a
 // grass blade's sway, 0.35 H), which swung a toyon's shadow metres across its neighbours in the wind.
 // Seed layout: integer part random, fractional part the silhouette variant (variant + 0.5) / 4.
@@ -47,7 +63,7 @@ const VERT = /* glsl */`
   uniform vec4 band;      // fade in from x to y, out from z to w (distance to camera)
   uniform float heightScale; uniform float dry;   // dry: 0 green season .. 1 cured summer sward
   uniform vec2 nearBand;  // the near detail (leaves, wands, stems) is full to x, gone by y (distance to camera)
-  uniform vec3 fhCol[6];  // the foothill shrubs (FH, kind -1 - index): this season's leaf albedo, from the species files (fhSeason)
+  uniform vec3 fhCol[${FH_N}];  // the foothill shrubs (FH, kind -1 - index): this season's leaf albedo, from the species files (fhSeason)
   attribute vec4 iPos; attribute vec4 iVar;   // root x y z, crown radius | height, seed, kind, rank
   varying vec2 vQ; varying vec3 vRight; varying vec3 vUp; varying vec3 vView;
   varying vec3 vAlbedo; varying vec3 vSun; varying vec3 vAmb; varying vec3 vAmbUp; varying vec3 vT; varying vec3 vIn;
@@ -130,13 +146,14 @@ const FRAG = /* glsl */`
   uniform sampler2D leafM; uniform sampler2D leafC; uniform vec4 leafGain;   // leaf pictures (bakeLeaves); their gain in sun (manzanita, chamise) and in shade (same)
   // The foothill shrubs (FH: kinds -1 to -6, index -1 - kind), this season (fhSeason): leaf-on (0 bare .. 1), the bark
   // and bare-twig albedo, and the flowers or berries showing (albedo, share of the outer crown they cover).
-  uniform float fhLeaf[6]; uniform vec3 fhBark[6]; uniform vec4 fhDeco[6];
+  uniform float fhLeaf[${FH_N}]; uniform vec3 fhBark[${FH_N}]; uniform vec4 fhDeco[${FH_N}];
   // Their outlines (docs/species-library.md, "Foothill shrubs", impostor cards): lobe depth (toyon lumpy in
   // sub-crowns, coffeeberry and coyote brush smooth), how far the fringe breaks up (poison oak and elderberry
   // open and ragged), and a narrow base (redbud's vase, poison oak's leaning stems).
-  const float FH_LOBE[6] = float[6](0.34, 0.24, 0.36, 0.1, 0.3, 0.14);
-  const float FH_OPEN[6] = float[6](0.62, 0.48, 0.38, 0.7, 0.42, 0.68);
-  const float FH_VASE[6] = float[6](0.0, 0.26, 0.16, 0.0, 0.06, 0.0);
+  const float FH_LOBE[${FH_N}] = ${fhArr(0)};
+  const float FH_OPEN[${FH_N}] = ${fhArr(1)};
+  const float FH_VASE[${FH_N}] = ${fhArr(2)};
+  const float FH_FINE[${FH_N}] = ${fhArr(3)};
   varying vec2 vQ; varying vec3 vRight; varying vec3 vUp; varying vec3 vView;
   varying vec3 vAlbedo; varying vec3 vSun; varying vec3 vAmb; varying vec3 vAmbUp; varying vec3 vT; varying vec3 vIn;
   varying float vSeed; varying float vKind; varying float vLobes; varying float vYS; varying float vVar; varying float vDry; varying float vFade;
@@ -178,7 +195,7 @@ const FRAG = /* glsl */`
     float kind = vKind, vv = vVar;
     bool fh = kind < -0.5;           // a foothill shrub: drawn as manzanita is (leaf masses, stems), with its own look
     int fk = fh ? int(-kind - 0.5) : 0;
-    bool manz = kind > 0.5, broad = manz || fh, fine = fh && fk == 3;   // fine: coyote brush takes chamise's picture
+    bool manz = kind > 0.5, broad = manz || fh, fine = fh && FH_FINE[fk] > 0.5;   // fine: small-leaved shrubs (coyote brush, buckbrush) take chamise's picture
     bool picM = broad && !fine;   // up close: the round-leaf picture (manzanita's) or the fine one (chamise's)
     vec2 q0 = vQ, q = q0;
     float sc = 0.8, kSub = 0.0, seam = 1.0;
@@ -857,8 +874,7 @@ export function ShrubField(tile, ground, uniforms) {
 // brush along a grassland's edge). Their own random stream per cell (salt 0xf007), so the chamise and
 // manzanita of a chaparral cell are exactly as before. Sizes from the species files' classes (height_m and
 // weights) and crown_width_ratio, as the 3D shrubs.
-const FH = ['heteromeles_arbutifolia', 'cercis_occidentalis', 'toxicodendron_diversilobum', 'baccharis_pilularis',
-  'sambucus_nigra_caerulea', 'frangula_californica'];   // kinds -1..-6
+// FH (the list of ids, kinds -1..-FH_N) and FH_LOOK are declared with KIND above.
 const FH_UNDER = { 1: 0.14, 2: 0.08, 3: 0.12, 5: 0.03, 6: 0.18 }, FH_CHAP = 0.8, FH_AREA = 3, FH_MAX = 0.4;
 // Albedo from a species file's sRGB colour (linear, scaled to the chaparral shrubs' level: chamise's summer
 // colour comes out within a few per cent of its own albedo here).

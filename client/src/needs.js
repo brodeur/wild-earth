@@ -40,6 +40,14 @@ export class Needs {
     return null;
   }
   foods(season) { return [...new Set(this.sp.games.filter(g => g.archetype === 'gather' && g.season === season && g.resource).map(g => g.resource))]; }
+  // The plant species that are this body's food this season (games.json relations.forage, from the library's records: the
+  // plants' eaten_by; 2026-10-29), as a Set of ids; empty on a tile whose games predate the relations.
+  foodPlants(season) {
+    const key = `${this.code}:${season}`; if (this.plantKey === key) return this.plantIds;
+    const ids = new Set();
+    for (const [a, plant, , , seasons] of this.tile.games?.relations?.forage || []) if (a === this.code && (!seasons.length || seasons.includes(season))) ids.add(plant);
+    this.plantKey = key; this.plantIds = ids; return ids;
+  }
   fed() { this.hunger = 1; }   // a catch (animals.js catchNear)
   get slow() { return this.sp && Math.min(this.hunger, this.rhythm === 'none' ? 1 : this.thirst) < NEED_LOW ? NEED_SLOW : 1; }
   // every frame in a walker: x, north the body; acting: E held (the act); wet: wading
@@ -56,7 +64,12 @@ export class Needs {
     let here = 0;
     for (const r of foods) { const g = this.raster(r); if (g) here = Math.max(here, g.at(x, north, ch)); }
     this.foodHere = here;
-    if (acting && here >= EAT_MIN) this.hunger = Math.min(1, this.hunger + dt * EAT_RATE * here / 100);
+    // the plant being eaten (main.js plantHere: the herb, shrub or grass under the body among this season's food plants),
+    // looked up a few times a second while there is food here
+    this.plantT = (this.plantT || 0) - dt;
+    if (here >= EAT_MIN && this.plantHere && this.plantT <= 0) { this.plantT = 0.4; this.plant = this.plantHere(x, north, this.foodPlants(season)); }
+    else if (here < EAT_MIN) this.plant = null;
+    if (acting && here >= EAT_MIN) this.hunger = Math.min(1, this.hunger + dt * EAT_RATE * here / 100 * (this.plant ? 1.25 : 1));   // a named plant feeds a little faster
     const water = this.raster('water');
     this.atWater = !!wet || (!!water && water.at(x, north, ch) >= 100);
     if (acting && this.atWater && this.rhythm !== 'none') this.thirst = Math.min(1, this.thirst + dt * DRINK_RATE);
@@ -97,7 +110,8 @@ export class Needs {
     const B = this.bars; if (!B) return;
     const set = (bar, v, low, hint) => { if (!bar) return; bar.querySelector('b').style.width = `${Math.round(v * 100)}%`; bar.classList.toggle('low', low); const em = bar.querySelector('em'); if (em.textContent !== hint) em.textContent = hint; };
     const t = this.target, near = t ? `${t.resource.replace('_', ' ')} ${t.d < 1000 ? `${Math.round(t.d)} m` : `${(t.d / 1000).toFixed(1)} km`} ${t.bearing}` : '';
-    const foodHint = this.foodHere >= EAT_MIN ? (this.hunger < 0.98 ? 'food here: hold E' : 'food here') : (this.hunger < 0.6 && t && !wantWater ? near : '');
+    const what = this.plant && this.plantName ? this.plantName(this.plant) : null;
+    const foodHint = this.foodHere >= EAT_MIN ? (what ? `${what} here${this.hunger < 0.98 ? ': hold E' : ''}` : this.hunger < 0.98 ? 'food here: hold E' : 'food here') : (this.hunger < 0.6 && t && !wantWater ? near : '');
     set(B.food, this.hunger, this.hunger < NEED_LOW, foodHint);
     if (this.rhythm !== 'none') set(B.water, this.thirst, this.thirst < NEED_LOW, this.atWater ? (this.thirst < 0.98 ? 'at water: hold E' : 'at water') : (this.thirst < 0.6 && t && wantWater ? near : ''));
   }

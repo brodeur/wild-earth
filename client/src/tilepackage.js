@@ -238,8 +238,9 @@ export function rockKeep(tile, x, north) {
 // weights for any number of species. at(i, j) on the habitat grid (same 333 px grid) returns the row
 // record, or null where the index is 0 (no mix: callers fall back to the class mix); density(i, j) the
 // cell's [tree, shrub] multipliers (the row's where there is no density PNG).
-// Row record: { index, rule, name, trees, shrubs (non-zero weights 0..1, each summing to 1, keyed by
-// species id or alias, in the row's draw order), weights (every column, zeros included), treeSum, shrubSum
+// Row record: { index, rule, name, trees, shrubs, ground (non-zero weights 0..1, each summing to 1, keyed by
+// species id or alias, in the row's draw order; ground: the grasses and forbs, format 2 ground_bytes, 2026-10-29),
+// weights (every column, zeros included), treeSum, shrubSum, groundSum
 // (bytes), treeDensity, shrubDensity (multipliers, byte / 100), savanna (blue oak leads the trees),
 // oaks: { blue, live } weights }.
 // Formats: 2 (2026-10-25) mixes[].tree_bytes / shrub_bytes [[id, byte], ...] and density_bytes, keyed by
@@ -259,23 +260,25 @@ export class SpeciesMix {
     this.rows = [null];
     const species = new Set();
     for (const m of json.mixes || []) {
-      let T, S, td, sd;   // T, S: [[key, byte], ...] in column order
+      let T, S, td, sd, G = [];   // T, S, G: [[key, byte], ...] in column order
       if (this.format >= 2) {
-        T = m.tree_bytes || []; S = m.shrub_bytes || []; [td, sd] = m.density_bytes || [0, 0];
+        T = m.tree_bytes || []; S = m.shrub_bytes || []; G = m.ground_bytes || []; [td, sd] = m.density_bytes || [0, 0];
       } else {
         const lay = json.bytes_layout || MIX_LAYOUT, b = m.bytes || [];
         T = Object.entries(lay.trees).map(([k, c]) => [k, b[c] || 0]); S = Object.entries(lay.shrubs).map(([k, c]) => [k, b[c] || 0]);
         td = b[lay.tree_density]; sd = b[lay.shrub_density];
       }
-      const sum = L => L.reduce((s, [, v]) => s + v, 0), treeSum = sum(T), shrubSum = sum(S), weights = {}, trees = {}, shrubs = {};
+      const sum = L => L.reduce((s, [, v]) => s + v, 0), treeSum = sum(T), shrubSum = sum(S), groundSum = sum(G), weights = {}, trees = {}, shrubs = {}, ground = {};
       for (const [L, tot, out] of [[T, treeSum, trees], [S, shrubSum, shrubs]]) for (const [k, v] of L) {
         const wgt = tot ? v / tot : 0;
         weights[k] = wgt; if (wgt > 0) { out[k] = wgt; species.add(k); }
       }
+      // the ground layer (2026-10-29): the grasses and forbs, kept apart from `species` (vegetation.js grows no tree for them)
+      for (const [k, v] of G) if (v > 0 && groundSum) ground[k] = v / groundSum;
       const byteOf = names => { for (const [k, v] of T) if (names.includes(k)) return v; return 0; };
       const wOf = names => { for (const k of names) if (weights[k]) return weights[k]; return 0; };
       // blue oak savanna: a mix led by blue oak (grassland_savanna, blue_oak, blue_oak_foothill_pine)
-      this.rows[m.index] = { index: m.index, rule: m.rule, name: m.name, weights, trees, shrubs, treeSum, shrubSum,
+      this.rows[m.index] = { index: m.index, rule: m.rule, name: m.name, weights, trees, shrubs, ground, treeSum, shrubSum, groundSum,
         treeDensity: td / 100, shrubDensity: sd / 100, savanna: byteOf(BLUE_OAK) >= 128, oaks: { blue: wOf(BLUE_OAK), live: wOf(LIVE_OAK) } };
     }
     this.species = [...species];   // every species (id or alias) some row draws

@@ -20,7 +20,7 @@ for (const id of list('add')) {
   catch (e) { console.warn(`lineup: could not add species ${id}: ${e.message}`); }
 }
 const only = list('only');
-const ids = ORDER.filter(id => LIBRARY[id]).concat(Object.keys(LIBRARY).filter(id => !ORDER.includes(id))).filter(id => !only.length || only.includes(id));
+const ids = ORDER.filter(id => LIBRARY[id]).concat(Object.keys(LIBRARY).filter(id => !ORDER.includes(id))).filter(id => !only.length || only.includes(id)).filter(id => !LIBRARY[id].groundForm);   // the grasses and forbs are not grown here
 const SEEDS = [1000, 1017, 1034];   // the first three variant seeds vegetation.js uses (1000 + v * 17 + id length)
 
 const renderer = new THREE.WebGLRenderer({ antialias: true, preserveDrawingBuffer: true });
