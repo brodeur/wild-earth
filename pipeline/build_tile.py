@@ -7,6 +7,7 @@
     python -m pipeline.build_tile --tile utm10n_680_4280 --steps seasons         # Sentinel-2 monthly colour (pipeline/fetch_sentinel.py)
     python -m pipeline.build_tile --tile utm10n_680_4280 --steps weather         # last year's hourly weather (pipeline/fetch_weather.py)
     python -m pipeline.build_tile --tile utm10n_680_4280 --steps inpaint         # ground-only base texture (pipeline/inpaint_crowns.py)
+    python -m pipeline.build_tile --tile utm10n_680_4280 --steps water           # banks, beds and riparian zones (pipeline/water.py)
 """
 from __future__ import annotations
 
@@ -19,7 +20,7 @@ from .config import (ATTRIBUTION_FIELDS, GENERATOR, SPEC_VERSION, TILES_DIR, Til
                      read_json, sha256, today, write_json)
 from .species_data import CALENDAR, SEASONS
 
-ALL_STEPS = ["dem", "lidar", "naip", "osm", "hydro", "channels", "rewild_hydro", "veg", "ground", "species", "derive", "crowns", "erase", "inpaint", "seasons", "weather", "unreal"]
+ALL_STEPS = ["dem", "lidar", "naip", "osm", "hydro", "channels", "rewild_hydro", "water", "veg", "ground", "species", "derive", "crowns", "erase", "inpaint", "seasons", "weather", "unreal"]
 
 
 def load_manifest(tile: Tile) -> dict:
@@ -114,6 +115,14 @@ def run(tile: Tile, steps: list[str], force=False) -> dict:
                 for k, v in rewild_hydro(tile, force).items():
                     add_layer(m, tile, k, v)
                 m["status"]["hydrology_rewilded"] = True
+            elif step == "water":
+                # The water system (pipeline/water.py): every channel and pond carved to a graded bank profile into
+                # terrain/dem_banked.tif (the client's heights and 2 m detail rebuilt from it), the bed material, the
+                # water levels and the riparian zones (client/water.png), and the zone species mixes.
+                from .water import build_water
+                for k, v in build_water(tile, force).items():
+                    add_layer(m, tile, k, v, fetched=False)
+                m["status"]["water_banked"] = True
             elif step == "veg":
                 from .fetch_vegetation import fetch_vegetation
                 for k, v in fetch_vegetation(tile, force).items():

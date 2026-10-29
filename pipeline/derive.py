@@ -24,7 +24,10 @@ Image.MAX_IMAGE_PIXELS = None
 
 
 def _dem(tile: Tile):
-    with rasterio.open(tile.path("terrain/dem.tif")) as src:
+    # The water step (pipeline/water.py) carves the channels' banks and the pond basins into terrain/dem_banked.tif;
+    # the client's heights come from that copy when it exists, so a later derive keeps the banks.
+    banked = tile.path("terrain/dem_banked.tif")
+    with rasterio.open(banked if banked.exists() else tile.path("terrain/dem.tif")) as src:
         data = src.read(1)
         nodata = src.nodata
         res = src.res[0]

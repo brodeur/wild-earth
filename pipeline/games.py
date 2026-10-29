@@ -80,7 +80,7 @@ def plant_relations() -> tuple[list[list], list[list]]:
         if sid.startswith("_") or not f.exists():
             continue
         d = json.loads(f.read_text()); rel = d.get("relations") or {}
-        woody = d.get("form") not in ("grass", "forb")   # a shrub's or tree's leaves and flowers are browse
+        woody = d.get("form") not in ("grass", "forb", "emergent")   # a shrub's or tree's leaves and flowers are browse
         for e in rel.get("eaten_by", []):
             r = "browse" if woody and e.get("part") in ("leaves", "flowers") else PART_RESOURCE.get(e.get("part"))
             if e.get("animal") and r:

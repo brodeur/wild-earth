@@ -46,14 +46,18 @@ TREES = ["quercus_douglasii", "quercus_wislizeni", "pinus_sabiniana", "pinus_pon
          "salix_lasiolepis", "alnus_rhombifolia", "populus_fremontii",
          "quercus_lobata", "quercus_chrysolepis", "quercus_kelloggii", "aesculus_californica", "arbutus_menziesii",
          "umbellularia_californica", "juglans_hindsii", "acer_macrophyllum", "fraxinus_latifolia",
-         "calocedrus_decurrens", "pseudotsuga_menziesii"]
+         "calocedrus_decurrens", "pseudotsuga_menziesii",
+         # the riparian set (2026-10-29, pipeline/water.py): red willow, Pacific willow, California sycamore
+         "salix_laevigata", "salix_lasiandra", "platanus_racemosa"]
 SHRUBS = ["arctostaphylos_viscida", "adenostoma_fasciculatum",
           "heteromeles_arbutifolia", "cercis_occidentalis", "toxicodendron_diversilobum", "baccharis_pilularis",
           "sambucus_nigra_caerulea", "frangula_californica",
           # the understory set (2026-10-29): common manzanita, buckbrush, deerbrush, mountain mahogany, sticky
           # monkeyflower, California wild rose, snowberry, Sierra gooseberry, chaparral currant
           "arctostaphylos_manzanita", "ceanothus_cuneatus", "ceanothus_integerrimus", "cercocarpus_betuloides",
-          "diplacus_aurantiacus", "rosa_californica", "symphoricarpos_albus", "ribes_roezlii", "ribes_malvaceum"]
+          "diplacus_aurantiacus", "rosa_californica", "symphoricarpos_albus", "ribes_roezlii", "ribes_malvaceum",
+          # the riparian set (2026-10-29): sandbar willow, button willow, creek dogwood, California blackberry, wild grape, spicebush
+          "salix_exigua", "cephalanthus_occidentalis", "cornus_sericea", "rubus_ursinus", "vitis_californica", "calycanthus_occidentalis"]
 # Short names for the per-tile fraction tables (older docs and reports use them, and the client's aliases).
 SHORT = {"quercus_douglasii": "blue_oak", "quercus_wislizeni": "live_oak", "pinus_sabiniana": "gray_pine",
          "pinus_ponderosa": "ponderosa", "arctostaphylos_viscida": "manzanita", "adenostoma_fasciculatum": "chamise",
@@ -66,7 +70,10 @@ SHORT = {"quercus_douglasii": "blue_oak", "quercus_wislizeni": "live_oak", "pinu
          "baccharis_pilularis": "coyote_brush", "sambucus_nigra_caerulea": "elderberry", "frangula_californica": "coffeeberry",
          "arctostaphylos_manzanita": "common_manzanita", "ceanothus_cuneatus": "buckbrush", "ceanothus_integerrimus": "deerbrush",
          "cercocarpus_betuloides": "mountain_mahogany", "diplacus_aurantiacus": "monkeyflower", "rosa_californica": "wild_rose",
-         "symphoricarpos_albus": "snowberry", "ribes_roezlii": "gooseberry", "ribes_malvaceum": "currant"}
+         "symphoricarpos_albus": "snowberry", "ribes_roezlii": "gooseberry", "ribes_malvaceum": "currant",
+         "salix_laevigata": "red_willow", "salix_lasiandra": "pacific_willow", "platanus_racemosa": "sycamore",
+         "salix_exigua": "sandbar_willow", "cephalanthus_occidentalis": "button_willow", "cornus_sericea": "creek_dogwood",
+         "rubus_ursinus": "blackberry", "vitis_californica": "wild_grape", "calycanthus_occidentalis": "spicebush"}
 FORMAT = 2
 DENSITY_SCALE = 100   # density byte = round(multiplier * 100); 1.0 = the client's per-habitat-class count
 LIBRARY = pathlib.Path(__file__).resolve().parent.parent / "library" / "species"
@@ -81,13 +88,16 @@ WA, MP, AS, IC, DF = ("juglans_hindsii", "acer_macrophyllum", "fraxinus_latifoli
 MZ, CH = "arctostaphylos_viscida", "adenostoma_fasciculatum"
 TY, RB, PO, CB, EL, CF = ("heteromeles_arbutifolia", "cercis_occidentalis", "toxicodendron_diversilobum",
                           "baccharis_pilularis", "sambucus_nigra_caerulea", "frangula_californica")
+RW, PW, SY = "salix_laevigata", "salix_lasiandra", "platanus_racemosa"
+SW, BW, CD, BK, GR, SP = ("salix_exigua", "cephalanthus_occidentalis", "cornus_sericea", "rubus_ursinus", "vitis_californica",
+                          "calycanthus_occidentalis")
 CM, BB, DB, MM, MF, WR, SN, GB, CR = ("arctostaphylos_manzanita", "ceanothus_cuneatus", "ceanothus_integerrimus",
                                       "cercocarpus_betuloides", "diplacus_aurantiacus", "rosa_californica",
                                       "symphoricarpos_albus", "ribes_roezlii", "ribes_malvaceum")
 
 CONIFER = "sugar pine and white fir are not in the library: pinus_ponderosa stands in"
-UNDERSTORY = ("the riparian understory (blackberry, wild rose, spicebush, California grape) is not in the library: "
-              "elderberry and poison oak are the shrub layer, with a little manzanita")
+UNDERSTORY = ("the riparian understory: elderberry, poison oak, blackberry, wild grape, dogwood and spicebush (the riparian "
+              "set of 2026-10-29), with a little manzanita; the zone mixes (riparian_rows) place the bank and margin species")
 
 
 def _r(rid, kws, trees, shrubs, td, sd, note=None, any_of=False, fixed=()):
@@ -111,14 +121,14 @@ RULES = [
     # Riparian: arroyo willow thickets at the water, white alder rooted in the bank, Fremont cottonwood on the
     # floodplain, Oregon ash, black walnut and big-leaf maple beside them; valley oak and interior live oak up
     # the banks; elderberry and poison oak in the understory.
-    _r("riparian_shrubland", ["riparian", "shrubland"], {WI: 0.75, AL: 0.1, LO: 0.15, AS: 0.05},
-       {MZ: 0.5, CH: 0.5, EL: 0.45, PO: 0.45, CF: 0.1}, 1.2, 0.2, "willow scrub: arroyo willow is the shrubland; " + UNDERSTORY),
+    _r("riparian_shrubland", ["riparian", "shrubland"], {WI: 0.65, RW: 0.1, AL: 0.1, LO: 0.15, AS: 0.05},
+       {MZ: 0.5, CH: 0.5, EL: 0.45, PO: 0.45, CF: 0.1, SW: 0.5, BK: 0.3, BW: 0.1}, 1.2, 0.2, "willow scrub: arroyo willow is the shrubland; " + UNDERSTORY),
     _r("montane_riparian", ["montane riparian systems"],
-       {AL: 0.4, WI: 0.25, LO: 0.15, PP: 0.12, CW: 0.08, MP: 0.12, AS: 0.06, WA: 0.02, BA: 0.04, IC: 0.05, DF: 0.04},
-       {MZ: 1, EL: 0.5, PO: 0.6}, 1.3, 0.3, "alder-willow streamside forest with maple, ash, bay and some conifers; " + UNDERSTORY),
+       {AL: 0.4, WI: 0.22, PW: 0.05, LO: 0.15, PP: 0.12, CW: 0.08, MP: 0.12, AS: 0.06, WA: 0.02, BA: 0.04, IC: 0.05, DF: 0.04},
+       {MZ: 1, EL: 0.5, PO: 0.6, CD: 0.3, BK: 0.3, SP: 0.2}, 1.3, 0.3, "alder-willow streamside forest with maple, ash, bay and some conifers; " + UNDERSTORY),
     _r("riparian", ["riparian"],
-       {WI: 0.38, AL: 0.24, CW: 0.1, LO: 0.17, BO: 0.03, VO: 0.12, WA: 0.06, MP: 0.05, AS: 0.07, BA: 0.03, BU: 0.02},
-       {MZ: 0.3, EL: 0.5, PO: 0.7, CF: 0.1, CB: 0.1}, 1.6, 0.3, UNDERSTORY),
+       {WI: 0.32, RW: 0.08, AL: 0.22, CW: 0.1, SY: 0.05, LO: 0.15, BO: 0.03, VO: 0.12, WA: 0.06, MP: 0.05, AS: 0.07, BA: 0.03, BU: 0.02},
+       {MZ: 0.3, EL: 0.5, PO: 0.7, CF: 0.1, CB: 0.1, BK: 0.5, GR: 0.3, CD: 0.2, SW: 0.2, BW: 0.1, SP: 0.1}, 1.6, 0.3, UNDERSTORY),
     _r("blue_oak_foothill_pine", ["blue oak", "foothill pine"],
        {BO: 0.65, LO: 0.1, GP: 0.25, VO: 0.07, BU: 0.04, CO: 0.02, KO: 0.01},
        {MZ: 0.5, CH: 0.5, PO: 0.3, TY: 0.12, CF: 0.1, RB: 0.05, CB: 0.08}, 1.0, 0.5),
@@ -206,7 +216,7 @@ for _rule in RULES:
 REWILD_MEADOW = _r("rewilded_meadow", [], {BO: 0.55, VO: 0.35, LO: 0.1}, {}, 0.5, 0.0,
                    "former reservoir or stock-pond bed: wet meadow (sedge, rush, perennial grass) with scattered oaks",
                    fixed=[VO])
-REWILD_RIPARIAN = _r("rewilded_riparian", [], {WI: 0.45, AL: 0.25, CW: 0.12, LO: 0.18, VO: 0.06, AS: 0.05, MP: 0.03, WA: 0.02},
+REWILD_RIPARIAN = _r("rewilded_riparian", [], {WI: 0.4, RW: 0.06, AL: 0.25, CW: 0.12, LO: 0.18, VO: 0.06, AS: 0.05, MP: 0.03, WA: 0.02},
                      {}, 2.0, 0.0, "riparian corridor along the restored channel through a former bed")
 
 # Fallback when no keyword matches: the client's original fixed mix per habitat class (vegetation.js MIX).
@@ -260,6 +270,12 @@ TERRAIN = {
     SN: ([1.0, 1.0, 1.0, 1.0], [1.3, 1.0, 0.8], [0.6, 1.8]),      # shade: north slopes and the floors
     GB: ([0.6, 1.0, 1.0, 1.0], [0.7, 1.0, 1.4], [1.0, 1.0]),      # rocky slopes, up through the pines
     CR: ([1.0, 1.0, 0.8, 0.6], [0.8, 1.0, 1.2], [1.0, 0.9]),
+    # the riparian set (2026-10-29): the floors and swales, nothing on the steep ground
+    RW: ([1.0, 1.0, 0.9, 0.7], [2.5, 1.0, 0.1], [1.0, 1.0]), PW: ([1.0, 1.0, 1.0, 1.0], [2.5, 1.0, 0.1], [1.0, 1.0]),
+    SY: ([1.0, 0.9, 0.5, 0.2], [3.0, 1.0, 0.05], [1.0, 0.9]), SW: ([1.0, 1.0, 0.8, 0.5], [3.0, 1.0, 0.05], [1.0, 1.0]),
+    BW: ([1.0, 1.0, 0.6, 0.3], [3.0, 1.0, 0.05], [1.0, 1.0]), CD: ([1.0, 1.0, 1.0, 1.0], [2.5, 1.0, 0.1], [1.0, 1.2]),
+    BK: ([1.0, 1.0, 1.0, 1.0], [2.0, 1.0, 0.2], [1.0, 1.1]), GR: ([1.0, 1.0, 0.8, 0.6], [2.5, 1.0, 0.1], [1.0, 1.0]),
+    SP: ([1.0, 1.0, 1.0, 0.8], [2.5, 1.0, 0.1], [0.7, 1.6]),
 }
 POS_NAMES, BAND_NAMES = ("floor", "mid-slope", "steep"), ("<450 m", "450-525 m", "525-600 m", ">=600 m")
 
@@ -311,6 +327,78 @@ GROUND_RULES = {
     "ruderal_forest": {"bromus_diandrus": 1.6, "hordeum_murinum": 1.6, "erodium_cicutarium": 1.4},
     "ruderal_scrub": {"bromus_diandrus": 1.6, "hordeum_murinum": 1.6, "amsinckia_menziesii": 1.5},
 }
+
+
+# The riparian zones (2026-10-29, pipeline/water.py; Aaron: "water systems are first class citizens like animals").
+# Every record may carry habitat.riparian: { zones: { channel, margin, bank, terrace, pond_water, pond_margin, pond_shore,
+# pond_terrace: weight }, orders: [min, max] (the Strahler orders it lines), permanence: perennial | intermittent | any,
+# water: <text> } (docs/species-library.md). From those blocks the mix per zone is built here, like the ground layer: one
+# row per zone x stream order class x permanence (the pond zones: one order class), each row the species' zone weights
+# (x ground.density for the ground forms), halved where the order class only half overlaps the record's orders, and a
+# tenth for a species that needs perennial water beside a seasonal reach (a few at the seeps). The client reads a cell's
+# zone, order and permanence from client/water.png R and draws the zone's trees, shrubs and ground layer from the row.
+RIPARIAN_ZONES = ("channel", "margin", "bank", "terrace", "pond_water", "pond_margin", "pond_shore", "pond_terrace")
+RIPARIAN_ORDER_CLASSES = (("small", 1, 2), ("medium", 3, 4), ("large", 5, 9))
+RIPARIAN_FORMS = {"tree": "trees", "multi_stem_shrub_tree": "trees", "shrub": "shrubs", "grass": "ground", "forb": "ground", "emergent": "ground"}
+# plant density per zone (trees, shrubs, ground), relative to the client's per-class counts: a gallery on the bank and
+# terrace, willow clumps on the margin, no trees in the channel or the water
+RIPARIAN_DENSITY = {"channel": (0.0, 0.0, 1.0), "margin": (0.5, 1.2, 1.2), "bank": (1.6, 1.4, 1.0), "terrace": (1.3, 1.0, 1.0),
+                    "pond_water": (0.0, 0.0, 1.0), "pond_margin": (0.0, 0.2, 1.4), "pond_shore": (0.8, 1.2, 1.2), "pond_terrace": (1.0, 0.8, 1.0)}
+
+
+def riparian_species() -> list[dict]:
+    index = json.loads((LIBRARY / "index.json").read_text())
+    out = []
+    for sid in index.get("species", []):
+        f = LIBRARY / f"{sid}.json"
+        if sid.startswith("_") or not f.exists():
+            continue
+        d = json.loads(f.read_text())
+        rz = (d.get("habitat") or {}).get("riparian")
+        layer = RIPARIAN_FORMS.get(d.get("form"))
+        if not rz or not rz.get("zones") or not layer:
+            continue
+        out.append({"id": sid, "form": d["form"], "layer": layer, "zones": rz["zones"], "orders": rz.get("orders") or [1, 9],
+                    "permanence": rz.get("permanence") or "any",
+                    "density": float((d.get("ground") or {}).get("density", 1.0)) if layer == "ground" else 1.0})
+    return out
+
+
+def riparian_rows() -> dict:
+    """{ zones, rows: { "<zone>|<order class>|<perennial|seasonal>": { trees, shrubs, ground: [[id, byte]...], density } },
+    species: [ids] }; rows for the pond zones use the order class "pond"."""
+    sp = riparian_species()
+    rows = {}
+    for zone in RIPARIAN_ZONES:
+        classes = RIPARIAN_ORDER_CLASSES if not zone.startswith("pond") else (("pond", 1, 9),)
+        for cname, lo, hi in classes:
+            for perm in ("perennial", "seasonal"):
+                layers = {"trees": {}, "shrubs": {}, "ground": {}}
+                for r in sp:
+                    w = float(r["zones"].get(zone, 0.0))
+                    if w <= 0:
+                        continue
+                    if cname != "pond":
+                        o0, o1 = r["orders"]
+                        inter = max(0, min(hi, o1) - max(lo, o0) + 1)
+                        span = hi - lo + 1
+                        if inter <= 0:
+                            continue
+                        w *= 1.0 if inter >= span else 0.5
+                    if perm == "seasonal" and r["permanence"] == "perennial":
+                        w *= 0.1
+                    layers[r["layer"]][r["id"]] = w * r["density"]
+                row = {}
+                for layer, weights in layers.items():
+                    ids = list(weights)
+                    row[layer] = [[k, b] for k, b in zip(ids, _bytes(weights, ids)) if b]
+                row["density"] = list(RIPARIAN_DENSITY[zone])
+                rows[f"{zone}|{cname}|{perm}"] = row
+    return {"zones": list(RIPARIAN_ZONES), "order_classes": [list(c) for c in RIPARIAN_ORDER_CLASSES], "rows": rows,
+            "species": [r["id"] for r in sp],
+            "encoding": ("rows[zone|order class|permanence]: trees / shrubs / ground as [[species id, byte]] summing to 255 per layer "
+                         "(absent: none), density [tree, shrub, ground] multipliers; the zone, order (small 1-2, medium 3-4, large 5+) "
+                         "and permanence come from client/water.png R; pond zones use the class 'pond'")}
 
 
 def ground_species() -> list[dict]:
@@ -585,11 +673,13 @@ def species_mix(tile: Tile) -> dict:
         "communities": communities,
         "unmatched": unmatched,
         "fractions": fractions,
+        "riparian": riparian_rows(),   # the zone mixes (pipeline/water.py reads the zones; the water step rewrites this key too)
     }
     # One row (and one community) per line: several hundred rows indented one value per line ran to 600 KB.
-    text = json.dumps({**doc, "mixes": "@MIXES@", "communities": "@COMMUNITIES@"}, indent=1)
+    text = json.dumps({**doc, "mixes": "@MIXES@", "communities": "@COMMUNITIES@", "riparian": "@RIP@"}, indent=1)
     for k, rows_ in (("@MIXES@", table), ("@COMMUNITIES@", communities)):
         text = text.replace(f'"{k}"', "[\n" + ",\n".join("  " + json.dumps(r, separators=(",", ":")) for r in rows_) + "\n ]")
+    text = text.replace('"@RIP@"', json.dumps(doc["riparian"], separators=(",", ":")))
     tile.path("client/species_mix.json").write_text(text)
     files = ["client/species_mix_index.png", "client/species_mix_density.png"]
     return {"path": "client/species_mix.json", "kind": "raster", "crs": tile.crs, "bounds": list(tile.bounds),

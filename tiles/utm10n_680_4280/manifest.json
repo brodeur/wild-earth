@@ -15,7 +15,7 @@
   38.74035063713964
  ],
  "size_m": 10000,
- "generated_at": "2026-10-29T05:06:18Z",
+ "generated_at": "2026-10-29T20:03:15Z",
  "generator": {
   "name": "wild-earth-pipeline",
   "version": "0.2.0"
@@ -27,7 +27,8 @@
   "vegetation_backfilled": true,
   "imagery_erased": true,
   "lidar": true,
-  "crowns_inpainted": true
+  "crowns_inpainted": true,
+  "water_banked": true
  },
  "layers": {
   "terrain.dem": {
@@ -252,8 +253,8 @@
     "azimuth": 315.0,
     "altitude": 45.0
    },
-   "sha256": "211ee22b4c55decd78ddeff17176affae7eddf98c4e92a0824158383d5e46e26",
-   "bytes": 3211504
+   "sha256": "a3a84b410f26a5cdb741016c395e2c81be2fca2810454c3dc507f18ab6551846",
+   "bytes": 3215751
   },
   "terrain.terrain_rgb": {
    "path": "terrain/terrain_rgb.png",
@@ -272,8 +273,8 @@
     275.2411804199219,
     658.447021484375
    ],
-   "sha256": "ab8241bab8675619928924823b6843d7cb8a76e9327468ae13d15a347a5e2ed5",
-   "bytes": 2483211
+   "sha256": "4803043ea8b6a4a56ca1e47b857dbce099e36e5a51680469ea1d28105b1195b9",
+   "bytes": 2485189
   },
   "footprint.mask_raster": {
    "path": "footprint/mask.png",
@@ -461,8 +462,11 @@
     275.17584228515625,
     658.517333984375
    ],
-   "sha256": "8b96dce69a861a44e3e0bdcd95df4cd637cffb0d3c5fb745498e56e0df43af49",
-   "bytes": 2779712
+   "derived_from": [
+    "terrain.dem_banked"
+   ],
+   "sha256": "94329e70b32078ac0c2fe9b22c427702c9891c23256588f7c0e89e90e778535e",
+   "bytes": 2781910
   },
   "client.habitat": {
    "path": "client/habitat.png",
@@ -755,8 +759,8 @@
    "format": 2,
    "files": {
     "client/species_mix_index.png": {
-     "sha256": "414d14de81d699495fe42cdc3b7f1d5dda52de2c4b1c77425653dce0279e3897",
-     "bytes": 118422
+     "sha256": "8c169ba3c743206b0a6186b9ffa6de136c9f50fb4a1267873ae5df5711059bf0",
+     "bytes": 116063
     },
     "client/species_mix_density.png": {
      "sha256": "769949e51c1013c9875ea5bb64ed77d9a58ebf9315a9048221f8ed934630d63a",
@@ -791,7 +795,10 @@
      "acer_macrophyllum",
      "fraxinus_latifolia",
      "calocedrus_decurrens",
-     "pseudotsuga_menziesii"
+     "pseudotsuga_menziesii",
+     "salix_laevigata",
+     "salix_lasiandra",
+     "platanus_racemosa"
     ],
     "shrubs": [
      "arctostaphylos_viscida",
@@ -801,63 +808,155 @@
      "toxicodendron_diversilobum",
      "baccharis_pilularis",
      "sambucus_nigra_caerulea",
-     "frangula_californica"
+     "frangula_californica",
+     "arctostaphylos_manzanita",
+     "ceanothus_cuneatus",
+     "ceanothus_integerrimus",
+     "cercocarpus_betuloides",
+     "diplacus_aurantiacus",
+     "rosa_californica",
+     "symphoricarpos_albus",
+     "ribes_roezlii",
+     "ribes_malvaceum",
+     "salix_exigua",
+     "cephalanthus_occidentalis",
+     "cornus_sericea",
+     "rubus_ursinus",
+     "vitis_californica",
+     "calycanthus_occidentalis"
+    ],
+    "ground": [
+     "stipa_pulchra",
+     "elymus_glaucus",
+     "danthonia_californica",
+     "avena_fatua",
+     "bromus_hordeaceus",
+     "bromus_diandrus",
+     "hordeum_murinum",
+     "eschscholzia_californica",
+     "lupinus_bicolor",
+     "lupinus_albifrons",
+     "claytonia_perfoliata",
+     "trifolium_willdenovii",
+     "chlorogalum_pomeridianum",
+     "achillea_millefolium",
+     "wyethia_helenioides",
+     "dipterostemon_capitatus",
+     "amsinckia_menziesii",
+     "erodium_cicutarium",
+     "vicia_villosa",
+     "plagiobothrys_nothofulvus",
+     "madia_elegans",
+     "artemisia_douglasiana",
+     "urtica_dioica",
+     "erythranthe_guttata",
+     "nasturtium_officinale",
+     "lemna_minor"
     ]
    },
-   "mixes": 424,
+   "mixes": 468,
    "unmatched": 0,
    "fractions": {
     "from_evt": 0.6366,
     "from_bps_backfill": 0.3634,
     "tree_share": {
-     "blue_oak": 0.3834,
-     "live_oak": 0.144,
+     "blue_oak": 0.3833,
+     "live_oak": 0.1428,
      "gray_pine": 0.2158,
      "ponderosa": 0.0823,
-     "willow": 0.0235,
-     "alder": 0.018,
-     "cottonwood": 0.0058,
-     "valley_oak": 0.0397,
+     "willow": 0.0192,
+     "alder": 0.0165,
+     "cottonwood": 0.0055,
+     "valley_oak": 0.0391,
      "canyon_live_oak": 0.0217,
      "black_oak": 0.0128,
-     "buckeye": 0.0263,
+     "buckeye": 0.0262,
      "madrone": 0.0041,
      "bay": 0.0052,
-     "walnut": 0.0049,
-     "maple": 0.0043,
-     "ash": 0.0041,
+     "walnut": 0.0048,
+     "maple": 0.0042,
+     "ash": 0.004,
      "incense_cedar": 0.0029,
-     "douglas_fir": 0.0012
+     "douglas_fir": 0.0012,
+     "red_willow": 0.0046,
+     "pacific_willow": 0.0013,
+     "sycamore": 0.0024
     },
     "tree_share_by_canopy": {
      "blue_oak": 0.2123,
-     "live_oak": 0.1946,
+     "live_oak": 0.1927,
      "gray_pine": 0.212,
      "ponderosa": 0.169,
-     "willow": 0.0301,
-     "alder": 0.0205,
-     "cottonwood": 0.008,
-     "valley_oak": 0.0245,
+     "willow": 0.0243,
+     "alder": 0.0181,
+     "cottonwood": 0.0077,
+     "valley_oak": 0.0235,
      "canyon_live_oak": 0.0337,
      "black_oak": 0.0239,
-     "buckeye": 0.0262,
+     "buckeye": 0.0261,
      "madrone": 0.0086,
-     "bay": 0.01,
-     "walnut": 0.0084,
-     "maple": 0.0044,
-     "ash": 0.0056,
+     "bay": 0.0099,
+     "walnut": 0.0081,
+     "maple": 0.0043,
+     "ash": 0.0054,
      "incense_cedar": 0.0057,
-     "douglas_fir": 0.0024
+     "douglas_fir": 0.0024,
+     "red_willow": 0.0074,
+     "pacific_willow": 0.0004,
+     "sycamore": 0.0046
     },
     "shrub_share": {
-     "manzanita": 0.3107,
-     "chamise": 0.3341,
-     "toyon": 0.0685,
-     "redbud": 0.031,
-     "poison_oak": 0.1269,
-     "coyote_brush": 0.0681,
-     "elderberry": 0.0098,
-     "coffeeberry": 0.0509
+     "manzanita": 0.1936,
+     "chamise": 0.2121,
+     "toyon": 0.042,
+     "redbud": 0.0179,
+     "poison_oak": 0.082,
+     "coyote_brush": 0.0518,
+     "elderberry": 0.0052,
+     "coffeeberry": 0.0302,
+     "common_manzanita": 0.0343,
+     "buckbrush": 0.1123,
+     "deerbrush": 0.0098,
+     "mountain_mahogany": 0.04,
+     "monkeyflower": 0.0471,
+     "wild_rose": 0.0334,
+     "snowberry": 0.0423,
+     "gooseberry": 0.0247,
+     "currant": 0.0142,
+     "sandbar_willow": 0.0009,
+     "button_willow": 0.0004,
+     "creek_dogwood": 0.0015,
+     "blackberry": 0.0025,
+     "wild_grape": 0.0011,
+     "spicebush": 0.0007
+    },
+    "ground_share": {
+     "stipa_pulchra": 0.0515,
+     "elymus_glaucus": 0.0906,
+     "danthonia_californica": 0.0344,
+     "avena_fatua": 0.038,
+     "bromus_hordeaceus": 0.0426,
+     "bromus_diandrus": 0.0653,
+     "hordeum_murinum": 0.0473,
+     "eschscholzia_californica": 0.0381,
+     "lupinus_bicolor": 0.0393,
+     "lupinus_albifrons": 0.037,
+     "claytonia_perfoliata": 0.0659,
+     "trifolium_willdenovii": 0.0252,
+     "chlorogalum_pomeridianum": 0.038,
+     "achillea_millefolium": 0.0698,
+     "wyethia_helenioides": 0.0245,
+     "dipterostemon_capitatus": 0.0553,
+     "amsinckia_menziesii": 0.0341,
+     "erodium_cicutarium": 0.0603,
+     "vicia_villosa": 0.0268,
+     "plagiobothrys_nothofulvus": 0.0355,
+     "madia_elegans": 0.038,
+     "artemisia_douglasiana": 0.0143,
+     "urtica_dioica": 0.0061,
+     "erythranthe_guttata": 0.0151,
+     "nasturtium_officinale": 0.0031,
+     "lemna_minor": 0.0037
     },
     "mean_tree_density": 0.893,
     "mean_shrub_density": 0.6097,
@@ -889,8 +988,8 @@
      "great_basin_shrub": 0.0002
     }
    },
-   "sha256": "94794b62a08039a485f0e74798f16ae32f4caa8360e8ce9e12261f2b31632f2a",
-   "bytes": 261618
+   "sha256": "148f885009870210ce9949ea19aabefb9d2ca6dec7fa93b43d9fc82dc882cc44",
+   "bytes": 663624
   },
   "hydro.channels": {
    "path": "hydro/channels.geojson",
@@ -3290,25 +3389,23 @@
    ],
    "pixels": 5000,
    "resolution_m": 2.0,
-   "encoding": "8-bit grey, row 0 north, pixel centres at x = 2i + 1, north = 10000 - (2j + 1): residual m = (v - 128) * 0.04 (clamped +-5.08 m) = the 1 m DEM averaged to 2 m minus client.heights decoded and interpolated bilinearly between ITS pixel centres (x = 5i + 2.5, north = 10000 - 5j - 2.5). Linear, so texture filtering interpolates it",
-   "source": "usgs_3dep_1m",
    "derived_from": [
     "terrain.dem_1m",
-    "client.heights"
+    "terrain.dem_banked"
    ],
+   "encoding": "8-bit grey, row 0 north: the 1 m ground averaged to 2 m and carved with the water system's banks, minus client/heights.png bilinear between its pixel centres, residual m = (v - 128) * 0.04, clamped +-5.08 m",
    "stats": {
     "residual_m": {
-     "mean": -0.047,
-     "std": 0.291,
-     "p50_abs": 0.142,
-     "p99_abs": 0.938,
+     "mean": -0.048,
+     "std": 0.29,
+     "p50_abs": 0.141,
+     "p99_abs": 0.926,
      "max_abs": 11.01
     },
-    "fraction_over_0.5_m": 0.0675,
     "clipped_fraction": 9.4e-05
    },
-   "sha256": "4eeec782f1fbd2c8b607fd6de99c72ee0d8764d6a2e19bb73669772945a01a00",
-   "bytes": 9242676
+   "sha256": "b03d041e9003a8db2a636dda38fb116a128e0677e30e7316c283e63119f8e9ae",
+   "bytes": 9285664
   },
   "terrain.roughness": {
    "path": "terrain/roughness_10m.tif",
@@ -6467,8 +6564,9 @@
    "collective": 186,
    "predation_pairs": 33,
    "alarm_links": 57,
-   "sha256": "aefc6adcfe407842ca6b08aeb60cce9e16cdc93bde80d36c48d1dfc78a8610c2",
-   "bytes": 396643
+   "plant_relations": 249,
+   "sha256": "9240c468a7243b726f95bedc3af3fbcac26f39b3c57226ecf521c5499ddab36f",
+   "bytes": 441314
   },
   "vegetation.multi_1m": {
    "path": "vegetation/multi_1m.tif",
@@ -6545,6 +6643,386 @@
    },
    "sha256": "877d25aa87acecce43b4b7350bede79b04f621b6c4cee1544eb30dcc21a79be4",
    "bytes": 12956377
+  },
+  "terrain.dem_banked": {
+   "path": "terrain/dem_banked.tif",
+   "kind": "raster",
+   "units": "m",
+   "derived_from": [
+    "terrain.dem",
+    "hydro.channels",
+    "client.channel_profile",
+    "hydro.waterbodies",
+    "hydro.human_water"
+   ],
+   "modification": "terrain/dem.tif with every channel carved to its graded cross-section (channel bed L - D(1 - (o/wh)^2), wet margin, bank and the pond basins; cells only lowered, at most 3 m); the client's heights come from it",
+   "cells_lowered": 16476,
+   "max_cut_m": 2.0,
+   "sha256": "b0ac8d4eb99dc132faee735078d270aeabbd79178a0bf70aabf6aa4271121da6",
+   "bytes": 8974774
+  },
+  "client.water": {
+   "path": "client/water.png",
+   "kind": "raster",
+   "crs": "EPSG:32610",
+   "bounds": [
+    680000,
+    4280000,
+    690000,
+    4290000
+   ],
+   "pixels": 2000,
+   "resolution_m": 5.0,
+   "derived_from": [
+    "hydro.channels",
+    "client.channel_profile",
+    "hydro.waterbodies",
+    "hydro.human_water",
+    "terrain.dem_banked"
+   ],
+   "encoding": "RGB, row 0 north. R: zone (low 4 bits; 1 channel bed, 2 wet margin, 3 bank, 4 terrace, 5 pond water, 6 pond margin, 7 pond shore, 8 pond terrace) | stream order << 4 | 128 perennial. G: bed material (low 3 bits: 1 silt, 2 sand, 3 gravel, 4 cobble, 5 boulder) | 8 bar. B: water level = heights.png height at the cell + (B - 128) x 0.02 m (0: none). client/water_width.png (8-bit grey, same grid): water half width at the nearest centreline sample, 0.1 m units",
+   "files": {
+    "client/water_width.png": {
+     "sha256": "6d12363203f92fafc864af6c534bad2fa95e468d72f8241d6256b11dab65e5ad",
+     "bytes": 117638
+    }
+   },
+   "zones": {
+    "channel": 1,
+    "margin": 2,
+    "bank": 3,
+    "terrace": 4,
+    "pond_water": 5,
+    "pond_margin": 6,
+    "pond_shore": 7,
+    "pond_terrace": 8
+   },
+   "materials": {
+    "none": 0,
+    "silt": 1,
+    "sand": 2,
+    "gravel": 3,
+    "cobble": 4,
+    "boulder": 5
+   },
+   "bank_params": {
+    "1": {
+     "margin": 0.85,
+     "margin_rise": 0.12,
+     "bank": 1.6,
+     "bank_height": 0.75,
+     "terrace": 12.0
+    },
+    "2": {
+     "margin": 1.1,
+     "margin_rise": 0.16,
+     "bank": 2.2,
+     "bank_height": 1.1,
+     "terrace": 18.0
+    },
+    "3": {
+     "margin": 1.35,
+     "margin_rise": 0.2,
+     "bank": 2.8,
+     "bank_height": 1.4499999999999997,
+     "terrace": 24.0
+    },
+    "4": {
+     "margin": 1.6,
+     "margin_rise": 0.24,
+     "bank": 3.4,
+     "bank_height": 1.7999999999999998,
+     "terrace": 30.0
+    },
+    "5": {
+     "margin": 1.85,
+     "margin_rise": 0.28,
+     "bank": 4.0,
+     "bank_height": 2.15,
+     "terrace": 36.0
+    },
+    "6": {
+     "margin": 2.1,
+     "margin_rise": 0.32,
+     "bank": 4.6,
+     "bank_height": 2.4999999999999996,
+     "terrace": 42.0
+    },
+    "7": {
+     "margin": 2.35,
+     "margin_rise": 0.36000000000000004,
+     "bank": 5.2,
+     "bank_height": 2.8499999999999996,
+     "terrace": 48.0
+    }
+   },
+   "stats": {
+    "reaches": 377,
+    "samples": 70235,
+    "skipped": {
+     "in_pond": 15,
+     "nhd_duplicate": 0
+    },
+    "zone_cells": {
+     "channel": 16780,
+     "margin": 36269,
+     "bank": 49487,
+     "terrace": 90797,
+     "pond_water": 2825,
+     "pond_margin": 831,
+     "pond_shore": 1023,
+     "pond_terrace": 2278
+    },
+    "zone_area_ha": {
+     "channel": 41.95,
+     "margin": 90.67,
+     "bank": 123.72,
+     "terrace": 226.99,
+     "pond_water": 7.06,
+     "pond_margin": 2.08,
+     "pond_shore": 2.56,
+     "pond_terrace": 5.7
+    },
+    "material_cells": {
+     "silt": 4341,
+     "sand": 18562,
+     "gravel": 21965,
+     "cobble": 11143,
+     "boulder": 1717
+    },
+    "bar_cells": 31,
+    "cut": {
+     "cells": 16476,
+     "mean_m": 0.475,
+     "p95_m": 1.599,
+     "max_m": 2.0
+    },
+    "ponds": {
+     "kept": 19,
+     "intermittent": 1,
+     "basins": [
+      {
+       "id": "63423734",
+       "name": null,
+       "area_m2": 1900.2,
+       "level_m": 488.0,
+       "max_depth_m": 0.62,
+       "cells": 76,
+       "intermittent": false
+      },
+      {
+       "id": "63423952",
+       "name": null,
+       "area_m2": 489.8,
+       "level_m": 480.31,
+       "max_depth_m": 0.6,
+       "cells": 20,
+       "intermittent": false
+      },
+      {
+       "id": "121531046",
+       "name": null,
+       "area_m2": 760.0,
+       "level_m": 536.79,
+       "max_depth_m": 0.6,
+       "cells": 30,
+       "intermittent": false
+      },
+      {
+       "id": "{1CB221A1-1EA6-467C-B653-01D89696CD87}",
+       "name": null,
+       "area_m2": 1329.8,
+       "level_m": 542.23,
+       "max_depth_m": 0.6,
+       "cells": 52,
+       "intermittent": false
+      },
+      {
+       "id": "63423966",
+       "name": null,
+       "area_m2": 536.6,
+       "level_m": 494.71,
+       "max_depth_m": 0.6,
+       "cells": 22,
+       "intermittent": false
+      },
+      {
+       "id": "63430346",
+       "name": null,
+       "area_m2": 3491.9,
+       "level_m": 430.81,
+       "max_depth_m": 0.7,
+       "cells": 141,
+       "intermittent": false
+      },
+      {
+       "id": "63423943",
+       "name": null,
+       "area_m2": 39505.1,
+       "level_m": 458.19,
+       "max_depth_m": 1.39,
+       "cells": 1586,
+       "intermittent": false
+      },
+      {
+       "id": "121531067",
+       "name": null,
+       "area_m2": 323.8,
+       "level_m": 567.76,
+       "max_depth_m": 0.6,
+       "cells": 15,
+       "intermittent": false
+      },
+      {
+       "id": "121531047",
+       "name": null,
+       "area_m2": 2034.0,
+       "level_m": 537.7,
+       "max_depth_m": 0.63,
+       "cells": 81,
+       "intermittent": false
+      },
+      {
+       "id": "121531074",
+       "name": null,
+       "area_m2": 440.2,
+       "level_m": 478.18,
+       "max_depth_m": 0.6,
+       "cells": 19,
+       "intermittent": false
+      },
+      {
+       "id": "63423822",
+       "name": null,
+       "area_m2": 4245.5,
+       "level_m": 469.58,
+       "max_depth_m": 0.73,
+       "cells": 166,
+       "intermittent": false
+      },
+      {
+       "id": "63423864",
+       "name": null,
+       "area_m2": 10129.6,
+       "level_m": 468.39,
+       "max_depth_m": 0.9,
+       "cells": 407,
+       "intermittent": false
+      },
+      {
+       "id": "63430344",
+       "name": null,
+       "area_m2": 3139.9,
+       "level_m": 457.81,
+       "max_depth_m": 0.68,
+       "cells": 128,
+       "intermittent": false
+      },
+      {
+       "id": "63430340",
+       "name": null,
+       "area_m2": 5349.2,
+       "level_m": 423.1,
+       "max_depth_m": 0.77,
+       "cells": 213,
+       "intermittent": false
+      },
+      {
+       "id": "63430330",
+       "name": null,
+       "area_m2": 7865.6,
+       "level_m": 435.23,
+       "max_depth_m": 0.84,
+       "cells": 313,
+       "intermittent": false
+      },
+      {
+       "id": "63423752",
+       "name": null,
+       "area_m2": 1229.6,
+       "level_m": 510.24,
+       "max_depth_m": 0.6,
+       "cells": 47,
+       "intermittent": false
+      },
+      {
+       "id": "63423732",
+       "name": null,
+       "area_m2": 1763.8,
+       "level_m": 629.47,
+       "max_depth_m": 0.61,
+       "cells": 71,
+       "intermittent": false
+      },
+      {
+       "id": "121531044",
+       "name": null,
+       "area_m2": 6729.5,
+       "level_m": 527.98,
+       "max_depth_m": 0.81,
+       "cells": 269,
+       "intermittent": true
+      }
+     ]
+    },
+    "bank_params": {
+     "1": {
+      "margin": 0.85,
+      "margin_rise": 0.12,
+      "bank": 1.6,
+      "bank_height": 0.75,
+      "terrace": 12.0
+     },
+     "2": {
+      "margin": 1.1,
+      "margin_rise": 0.16,
+      "bank": 2.2,
+      "bank_height": 1.1,
+      "terrace": 18.0
+     },
+     "3": {
+      "margin": 1.35,
+      "margin_rise": 0.2,
+      "bank": 2.8,
+      "bank_height": 1.4499999999999997,
+      "terrace": 24.0
+     },
+     "4": {
+      "margin": 1.6,
+      "margin_rise": 0.24,
+      "bank": 3.4,
+      "bank_height": 1.7999999999999998,
+      "terrace": 30.0
+     },
+     "5": {
+      "margin": 1.85,
+      "margin_rise": 0.28,
+      "bank": 4.0,
+      "bank_height": 2.15,
+      "terrace": 36.0
+     }
+    },
+    "by_order": {
+     "1": 35653,
+     "2": 13180,
+     "3": 12486,
+     "4": 6024,
+     "5": 2892
+    },
+    "species_mix": "32 riparian rows written into client/species_mix.json"
+   },
+   "sha256": "2bc0b6fd7e77fc7a8a4d70a8d13003101fb6e8e7af0b315be649edfbbcbfa533",
+   "bytes": 462364
+  },
+  "hydro.water_reaches": {
+   "path": "hydro/water_reaches.json",
+   "kind": "table",
+   "derived_from": [
+    "hydro.channels"
+   ],
+   "encoding": "per drawn reach: id, name, order, area_km2, width, class (0 ephemeral, 1 intermittent, 2 perennial), samples, length; the kept ponds' basins",
+   "sha256": "fb8b76df9dc9844ea1588227587aaa493ee50efcfb10faa3bcf0ca98e8f64577",
+   "bytes": 60046
   }
  },
  "sources": {
@@ -7188,6 +7666,48 @@
    "step": "lidar",
    "at": "2026-10-29T05:06:18Z",
    "seconds": 3.0,
+   "ok": true
+  },
+  {
+   "step": "water",
+   "at": "2026-10-29T19:46:11Z",
+   "seconds": 29.1,
+   "ok": true
+  },
+  {
+   "step": "water",
+   "at": "2026-10-29T19:47:50Z",
+   "seconds": 25.7,
+   "ok": true
+  },
+  {
+   "step": "water",
+   "at": "2026-10-29T19:59:08Z",
+   "seconds": 29.9,
+   "ok": true
+  },
+  {
+   "step": "derive",
+   "at": "2026-10-29T19:59:15Z",
+   "seconds": 7.5,
+   "ok": false,
+   "error": "/Users/aaronbrodeur/Sites/wild-earth/.claude/worktrees/riparian-water-0fe63f/tiles/utm10n_680_4280/imagery/naip.tif: No such file or directory"
+  },
+  {
+   "step": "species_mix+games (water lane)",
+   "at": "2026-10-29T20:00:05Z",
+   "ok": true
+  },
+  {
+   "step": "water",
+   "at": "2026-10-29T20:02:46Z",
+   "seconds": 23.4,
+   "ok": true
+  },
+  {
+   "step": "water",
+   "at": "2026-10-29T20:03:15Z",
+   "seconds": 22.2,
    "ok": true
   }
  ]
