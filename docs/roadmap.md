@@ -179,7 +179,8 @@ browser stays the renderer.
   least served, its ring at half density; the DEM-only Yosemite tile has no roughness to condition on. The HUD's
   abilities row and the smell sense (scent.js) landed the same day; "scented" on the hunt panel and the leaf level to
   15 m for a deer (24 for the smallest) on 2026-10-29. Next: the greyed abilities one by one (dig, pounce, carry, swim,
-  climb, call, mark, den, display), and the prey's own nose (an animal upwind of the player should smell it and alert).
+  climb, call, mark, den, display); the prey's nose landed 2026-10-29 (animals.js noticeAt: the wind decides how far an
+  animal smells the player). Open: no wind between AI animals (an AI lion's prey notices it at detects, as before).
 
 - Geology and soils step done 2026-10-24 (Macrostrat/SGMC lithology at 1:750k, SSURGO
   texture, fragments and depth to bedrock; client rasters and an outcrop likelihood).

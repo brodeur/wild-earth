@@ -153,6 +153,9 @@ hardest gather on the tile. A drink game carries the species' rhythm (daily, oft
    herds, canids trot at and pounce on small prey, hawks stoop at voles), alarm calls are heard, and the hunt ends: a
    rush or pounce that lands, or the player's E within reach (a lion, coyote or fox) or pass within reach (a hawk or
    raven), kills; the dead lie as carrion for ten minutes and the scavenge relation brings ravens, vultures and
-   coyotes to them; a hunter's hunger drains until a catch. Done 2026-10-28: the hunt as a loop (client/src/hunt.js: the
+   coyotes to them; a hunter's hunger drains until a catch. Done 2026-10-29: the prey's nose: perception.json
+   carries each species' `senses`, and an animal notices the player by its eyes and ears (shrunk by the stalk) or by
+   its nose shaped by the wind (animals.js noticeAt: full with the wind from the player to it, a fifth the other way),
+   whichever is farther; the hunt panel says "downwind of you" when the wind carries the hunter's scent to its prey. Done 2026-10-28: the hunt as a loop (client/src/hunt.js: the
    stake, the goal panel, the stalk in cover, the chase with stamina and the gallop, the arc; decisions "The hunt loop").
    Still to do: the court and rear loops; the prey's own win.

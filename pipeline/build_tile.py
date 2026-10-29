@@ -130,12 +130,15 @@ def run(tile: Tile, steps: list[str], force=False) -> dict:
                 from .fetch_species import fetch_species
                 for k, v in fetch_species(tile, force).items():
                     add_layer(m, tile, k, v)
-                from .species_data import ALARM_CALL, SIGNATURE, detection_matrix, perceives_on
+                from .species_data import ALARM_CALL, SIGNATURE, SPECIES as SPECIES_DATA, detection_matrix, perceives_on
                 # perceives: only the species present on the tile (species.json `present`, fetch_species.presence), so an
                 # absent one is neither met nor played here; detects, signatures and alarm_calls stay species-level tables
                 present = [s["code"] for s in read_json(tile.path("species/species.json")) if s.get("present", True)]
+                # senses (2026-10-29): each species' own ranges, so the client can split a notice into what is seen and heard
+                # and what is smelled (animals.js noticeAt: the smell is shaped by the wind, the rest by the stalk)
+                senses = {sp["code"]: {k: v["range_m"] for k, v in sp["senses"].items()} for sp in SPECIES_DATA}
                 write_json(tile.path("perception.json"), {"perceives": perceives_on(present), "detects": detection_matrix(), "signatures": SIGNATURE,
-                                                         "alarm_calls": ALARM_CALL})   # detects: how far each notices each, m (species_data.detect_m)
+                                                         "senses": senses, "alarm_calls": ALARM_CALL})   # detects: how far each notices each, m (species_data.detect_m)
                 write_json(tile.path("calendar.json"), {"seasons": SEASONS, "activities": CALENDAR})
                 add_layer(m, tile, "perception", {"path": "perception.json", "kind": "table"})
                 add_layer(m, tile, "calendar", {"path": "calendar.json", "kind": "table"})

@@ -9,6 +9,19 @@ export const windUniforms = {
   time: { value: 0 }, windDir: { value: new THREE.Vector2(1, 0.25).normalize() }, windStrength: { value: 0.42 },
 };
 
+// The scent's carry (2026-10-28 scent.js, the player's nose; 2026-10-29 animals.js noticeAt, every animal's): how far a
+// nose reaches a source at (dx, dz) from it (from the source to the nose), as a share of its reach straight upwind: a
+// source the wind blows from carries at the full reach (SCENT_SHAPE(1)), crosswind at about half, downwind at a fifth,
+// and in a weak wind the shape gives way to still air (SCENT_STILL all round: the scent pools), between SCENT_CALM and
+// SCENT_FULL of windStrength.
+export const SCENT_SHAPE = c => c >= 0 ? 0.5 + 0.5 * c : 0.5 + 0.3 * c, SCENT_STILL = 0.45, SCENT_CALM = 0.14, SCENT_FULL = 0.34;
+export function scentCarry(dx, dz) {
+  const w = windUniforms.windDir.value, ws = windUniforms.windStrength.value;
+  const windy = Math.min(1, Math.max(0, (ws - SCENT_CALM) / (SCENT_FULL - SCENT_CALM))), wl = Math.hypot(w.x, w.y) || 1, dh = Math.hypot(dx, dz);
+  const c = dh > 1e-3 ? (dx * w.x + dz * w.y) / (wl * dh) : 0;   // the wind blows from the source toward the nose: c > 0
+  return SCENT_STILL + (SCENT_SHAPE(c) - SCENT_STILL) * windy;
+}
+
 export const WIND_GLSL = /* glsl */`
   uniform float time; uniform vec2 windDir; uniform float windStrength;
   float wHash(vec2 p) { return fract(sin(dot(p, vec2(127.1, 311.7))) * 43758.5453); }

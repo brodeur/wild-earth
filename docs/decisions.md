@@ -2222,3 +2222,24 @@ tile's oak woodland 13 trees and 958 k leaf quads (of the 1.5 M frame cap, 48 tr
 old radius and 28.7 with no leaves (the pane at 2x DPR, 2044 x 1848 px, 10 M triangles: GPU-bound there anyway); as a
 deer 11 trees and 914 k quads. The LRU of 24 built geometries is 28 MB at 12. If a spot ever fills the cap, the farthest
 trees keep their cards (nearest first), which is the designed fallback.
+
+## 2026-10-29: the prey's nose: every animal smells the player by the wind
+
+Aaron: "Yes, prey's nose". Until now an animal noticed the player at perception.json `detects` (species_data.detect_m:
+the best of its senses against the player's signature), one number per species, scaled by the stalk; a deer's best
+sense of a lion is its nose (300 m), so a lion creeping low was noticed at 120 m from any side and the wind meant
+nothing. Now perception.json carries each species' own `senses` (vision, hearing, smell; build_tile.py writes it,
+every tile's file updated in place), and the client splits the notice: what the species sees and hears of the player
+(min of its range and the player's signature, the larger of the two; scaled by the stalk and by being known) and what
+it smells (min of its smell and the player's scent signature), shaped by the wind through wind.js scentCarry, the
+same shape the player's nose uses (full with the wind blowing from the player to it, half crosswind, a fifth
+downwind, 0.45 in still air; not by the stalk, since a hunter low and slow smells the same; 1.6x while known).
+animals.js noticeAt gives the larger; threat() uses it for the player, so every species' alert, freeze, flee, bolt and
+flush code sees the wind through it. notice[sp] (the old best-of) stays for the callers with no position (a watcher's
+alarm call, a bird's flush) and for the AI hunters' prey (no wind between AI animals: a later pass).
+
+Measured as a lion frozen 72 m from a deer, wind 0.4: with the wind from the lion to the deer it notices at 300 m
+(capped at the 120 m alert), with it the other way at 60 m (its eyes 24 m, its nose 300 x 0.2); in still air 135 m.
+The hunt panel judges unaware/alert the same way and adds " · downwind of you" (orange) when the wind carries the
+hunter's scent to the prey it names (carry over 0.75), so the player learns to come round. A tile without `senses`
+(none now) falls back to the old one number, no wind.

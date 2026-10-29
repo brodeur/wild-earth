@@ -1,6 +1,6 @@
 import * as THREE from 'three';
 import { rarityColor } from './animals.js';
-import { windUniforms } from './wind.js';
+import { windUniforms, scentCarry } from './wind.js';
 import { bodyScale, onBodyScale } from './bodyScale.js';
 import { GROUND } from './groundControl.js';
 import { FLIERS } from './flierControl.js';
@@ -22,8 +22,8 @@ import { FLIERS } from './flierControl.js';
 //
 // The wind (wind.js windUniforms: windDir the way the measured wind blows, windStrength its strength; weather.js sets
 // them each frame) shapes the reach: a source the wind blows from (upwind of the body) carries at the full reach,
-// crosswind at about half, downwind at a fifth (WIND_SHAPE), and in a weak wind the shape gives way to still air
-// (STILL of the reach all round: the scent pools), between WIND_CALM and WIND_FULL of windStrength. A scent's strength
+// crosswind at about half, downwind at a fifth, and in a weak wind the shape gives way to still air (the scent pools)
+// (wind.js scentCarry, which every animal's nose shares since 2026-10-29: animals.js noticeAt). A scent's strength
 // falls from 1 at the body to 0 at that reach (S_POW). The query walks animals.list every QUERY_T s, not every frame,
 // and keeps the strongest MAX_WISPS: `smelled` is that list, strongest first, as { animal, strength, bearing, carrion }
 // (bearing from the body's heading, radians, 0 ahead and positive to the right: clockwise seen from above).
@@ -69,10 +69,7 @@ const SOURCE = {
   callipepla_californica: 0.6, oreortyx_pictus: 0.6, meleagris_gallopavo: 0.8, corvus_corax: 0.6, buteo_jamaicensis: 0.5,
   cathartes_aura: 0.7, aphelocoma_californica: 0.5, cyanocitta_stelleri: 0.5, melanerpes_formicivorus: 0.5,
 };
-// the wind: reach x WIND_SHAPE(c) with c the cosine between the wind and the line from the source to the body (1: the
-// source upwind), from 1 upwind through 0.5 crosswind to 0.2 downwind; STILL in still air, blended in by windStrength
-const WIND_SHAPE = c => c >= 0 ? 0.5 + 0.5 * c : 0.5 + 0.3 * c;
-const STILL = 0.45, WIND_CALM = 0.14, WIND_FULL = 0.34, S_POW = 1.4;
+const S_POW = 1.4;   // the wind's shaping of the reach: wind.js scentCarry
 const QUERY_T = 0.25, MAX_WISPS = 6, FADE = 0.5;
 // the ring and the strands (m, for the deer; times the body's scale)
 const RING_R = 0.9, WISP_LEN = [0.2, 0.4], MOTES = 20, MOTE_R = 0.065;   // 2026-10-28: half again as big as first built, so a wisp reads from the chase camera
@@ -185,11 +182,8 @@ export class Scent {
   strengthOf(a, k, carrion, y) {
     const code = this.animals.speciesList()[k].code, H = this.head;
     const base = carrion ? this.carrionReach : this.reach * (SOURCE[code] ?? 1); if (base <= 0) return 0;
-    const w = windUniforms.windDir.value, ws = windUniforms.windStrength.value;
-    const windy = clamp((ws - WIND_CALM) / (WIND_FULL - WIND_CALM), 0, 1), wl = Math.hypot(w.x, w.y) || 1, wx = w.x / wl, wz = w.y / wl;
-    const dx = H.x - a.x, dz = H.z - a.z, dh = Math.hypot(dx, dz), d = Math.hypot(dh, (H.y - y) * 0.5);
-    const c = dh > 1e-3 ? (dx * wx + dz * wz) / dh : 0;   // the wind blows from the source toward the head: c > 0
-    const R = base * (STILL + (WIND_SHAPE(c) - STILL) * windy); if (d >= R) return 0;
+    const dx = H.x - a.x, dz = H.z - a.z, d = Math.hypot(dx, dz, (H.y - y) * 0.5);
+    const R = base * scentCarry(dx, dz); if (d >= R) return 0;
     let s = (1 - d / R) ** S_POW; if (carrion && this.scav) s = Math.min(1, s * SCAV_S);
     return s;
   }

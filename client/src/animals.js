@@ -5,6 +5,7 @@ import { addCaster, removeCaster } from './shadows.js';
 import { seasonOfDate, parseDate } from './season.js';
 import { uniforms as atmo } from './atmosphere.js';
 import { fieldGuide } from './fieldguide.js';
+import { scentCarry } from './wind.js';
 import { buildSquirrel, buildWoodpecker, buildRaven, buildDeer, buildQuail, buildJay, buildHawk, buildVulture, buildStellersJay,
   buildDeerBuck, buildFox, buildCoyote, buildCougar, buildRabbit, buildVole, buildJackrabbit, buildTurkey, buildGroundSquirrel, buildLizard, buildBear, buildMountainQuail,
   animalMaterial, animalDepthMaterial, planarShadowMaterial, loadDeerMesh, loadSquirrelMesh, loadQuailMesh, loadJayMesh, driveClips, makeClipState, DEER_DRIVE,
@@ -774,8 +775,12 @@ export class Animals {
     for (const c of PENDING) if (!named.has(c) && !known.has(c)) this.perceived.add(c);
     SPECIES.forEach((sp, k) => { this.meshes[k].visible = this.perceived.has(sp.code); });
     // noticing: how far each species notices this observer (perception.json detects), and whom it hunts (games.json)
-    const det = this.tile.perception?.detects || null;
+    const det = this.tile.perception?.detects || null, sen = this.tile.perception?.senses || null, sig = this.tile.perception?.signatures?.[code] || null;
     this.noticeBase = SPECIES.map(sp => { const row = det?.[sp.code.split(':')[0]]; const v = row ? row[code] : undefined; return typeof v === 'number' ? v : Infinity; });
+    // the nose (2026-10-29, noticeAt): the notice split into what the species sees and hears of this observer and what
+    // it smells (perception.json senses against the observer's signature; a tile without senses: all sight, no wind)
+    this.noticeSight = SPECIES.map((sp, k) => { const o = sen?.[sp.code.split(':')[0]]; if (!o || !sig) return this.noticeBase[k]; return Math.max(Math.min(o.vision ?? 0, sig.sight ?? 0), Math.min(o.hearing ?? 0, sig.sound ?? 0)); });
+    this.noticeSmell = SPECIES.map(sp => { const o = sen?.[sp.code.split(':')[0]]; return o && sig ? Math.min(o.smell ?? 0, sig.scent ?? 0) : 0; });
     this.stalkK = 1; this.notice = this.noticeBase.slice();
     this.preyOf = new Set((this.tile.games?.relations?.predation || []).filter(([pr]) => pr === code).map(([, q]) => q));
     this.dirty = true;
@@ -787,6 +792,18 @@ export class Animals {
     if (kk === this.stalkK || !this.noticeBase) return; this.stalkK = kk; this.notice = this.noticeBase.map(v => v * kk);
   }
   known(t = 45) { this.knownUntil = this.time + t; }
+  // How far species sp at (x, z) notices the player at (px, pz) (2026-10-29, the nose): what it sees and hears
+  // (noticeSight, scaled by the stalk and by being known: setStalk) or what it smells (noticeSmell, shaped by the wind,
+  // wind.js scentCarry: the full reach with the wind blowing from the player to it, a fifth with it blowing the other
+  // way, 0.45 in still air; not by the stalk, since a hunter low and slow smells the same; 1.6x while known), whichever
+  // is farther. threat() uses it for the player; notice[sp] (the two at their best, as perception.json detects) stays
+  // for the callers with no position (a watcher's alarm call, a bird's flush) and for the AI hunters' prey.
+  noticeAt(sp, x, z, px, pz) {
+    const sight = (this.noticeSight?.[sp] ?? this.noticeBase?.[sp] ?? Infinity) * this.stalkK, m = this.noticeSmell?.[sp] || 0;
+    if (!(m > 0)) return sight;
+    const kn = this.time < (this.knownUntil || 0) ? 1.6 : 1;
+    return Math.max(sight, m * kn * scentCarry(x - px, z - pz));
+  }
   // Danger to an animal or a group o of species sp at distance d from the player, whose own flee radius is base: within
   // base and noticed, or alarmed by a call and within ALARM_REACT_R. alert: noticed, within ALERT_MAX.
   // n: how far sp notices the threat at hand (threat() T.n; the player's notice[sp] by default).
@@ -850,10 +867,10 @@ export class Animals {
   // before). Returns a shared { x, y, z, n (how far sp notices it), who (the hunter, or null for the player) }.
   threat(sp, o, x, y, z, px, py, pz) {
     const T = this._T ||= { x: 0, y: 0, z: 0, n: 0, who: null };
-    T.x = px; T.y = py; T.z = pz; T.n = this.notice[sp]; T.who = null;
+    T.x = px; T.y = py; T.z = pz; T.n = this.noticeAt(sp, x, z, px, pz); T.who = null;   // the player, by sight and sound or by the nose (the wind)
     const hs = this.huntersOf?.[sp], by = (o?.alarmUntil || 0) > this.time ? (o.alarmBy ?? null) : undefined;
     if ((!hs?.length && !by) || !this.det) return T;
-    const pn = this.notice[sp], dp = (px - x) ** 2 + (pz - z) ** 2, row = this.det[sp];
+    const pn = T.n, dp = (px - x) ** 2 + (pz - z) ** 2, row = this.det[sp];
     const lim = dp < pn * pn || by === null ? dp : Infinity;
     let best = null, bd = lim;
     for (const h of hs || []) {
