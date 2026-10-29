@@ -268,3 +268,4 @@ cinnamon bear; the other tiles' channels shift slightly on their next build afte
 | 4319cb2 | A tile at any whole-kilometre origin builds: the 1 m DEM step mosaics the product cells it straddles and falls back to the next collection where one is empty; the species step's locomotion hook fixed. |
 | (tile) | The re-centred Yosemite tile utm11n_267_4175: the valley centred north to south, El Capitan meadow to Half Dome; 45 min end to end, DEM-only lidar from four products, the water pass on it. |
 | (client) | The creeks drawn at their level in the carved channels with rocky beds when they dry, tinted wet margins, willows, alders, cottonwoods and sycamores on the banks, cattails and tules in the shallows, sedges and rushes on the margins; a deer wades Weber Creek 0.34 m deep; frame rate within noise. |
+| 30551f1 | A mute button: a speaker under the menu button, barred when muted; N does the same. |
