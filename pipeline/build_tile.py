@@ -145,7 +145,7 @@ def run(tile: Tile, steps: list[str], force=False) -> dict:
                 # locomotion (2026-10-29): how each present species moves, from its taxon and its body (locomotion.py;
                 # docs/movement.md), for the client's controls to fill what their hand-tuned tables do not give
                 from .locomotion import write_tile as write_locomotion
-                write_locomotion(tile.id, TILES_DIR)
+                write_locomotion(tile.tile_id, TILES_DIR)
                 add_layer(m, tile, "locomotion", {"path": "locomotion.json", "kind": "table"})
                 add_species_prior(m, tile)
             elif step == "species_prior":
