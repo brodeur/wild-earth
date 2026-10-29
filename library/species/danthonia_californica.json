@@ -30,7 +30,13 @@
   },
   "habitat": {
     "classes": { "grassland": 1.0, "oak_woodland": 0.7, "chaparral": 0.05, "mixed_forest": 0.1, "conifer_forest": 0.05, "riparian": 0.4 },
-    "floor": 1.5, "mid": 0.9, "steep": 0.6, "north": 1.2, "shade": 0.2, "disturbed": 0.4
+    "floor": 1.5, "mid": 0.9, "steep": 0.6, "north": 1.2, "shade": 0.2, "disturbed": 0.4,
+    "riparian": {
+      "zones": {"terrace": 0.8, "margin": 0.6, "pond_terrace": 0.6, "pond_shore": 0.4},
+      "orders": [1, 4],
+      "permanence": "any",
+      "water": "Likes winter-wet, seasonally saturated ground: swales, meadow edges, the terrace and margin of small creeks and the flat round ponds."
+    }
   },
   "relations": {
     "eaten_by": [
@@ -40,7 +46,8 @@
       { "animal": "microtus_californicus", "part": "leaves", "seasons": ["winter", "spring", "summer", "fall"] },
       { "animal": "callipepla_californica", "part": "seeds", "seasons": ["summer", "fall"] }
     ],
-    "cover_for": ["microtus_californicus"]
+    "cover_for": ["microtus_californicus"],
+    "shades_water": 0
   },
   "notes": "California oatgrass is a long-lived, tufted perennial of coastal prairie and of the moist grasslands, meadows and savannas inland, in the Sierra foothills mostly in swales, seeps, meadow edges and on the heavier, wetter soils of the valley floors and benches. The leaves are short (mostly basal, 10-25 cm) and the tuft is low and dense; the flowering culms, 20-60 cm, carry a narrow, open head of only a few (usually 3-6) large spikelets about 1.5-2 cm long, the lemmas hairy, two-toothed and with a flat, twisted, bent awn between the teeth. Besides these open flowers it makes cleistogamous spikelets inside the sheaths of the culm leaves, which self-pollinate and drop their seed with the old stem; that hidden seed is part of why it persists under grazing. The head is closer to a few-flowered panicle than a raceme, so the file uses the panicle shape with heads months [4, 6]. Height 0.6 and width 0.9 make a tuft of about 35 cm, low among the annuals, and cure 0.6 because in the damp ground it stays green at the base later than the needlegrass on the dry slopes. Grazed by deer in the green months and by rabbits, jackrabbits and voles through the year (it is a favoured vole grass of wet meadows); quail take its seed, and its low tufts shelter voles. The habitat factors put it on the floor (1.5) and the north slopes (1.2), little on the steep ground or disturbed verges, where the annuals outgrow it.",
   "sources": [

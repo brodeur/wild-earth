@@ -1,0 +1,51 @@
+{
+  "id": "schoenoplectus_californicus",
+  "aliases": ["california_bulrush", "california_tule", "giant_bulrush", "scirpus_californicus"],
+  "scientific": "Schoenoplectus californicus",
+  "common": "California bulrush",
+  "form": "emergent",
+  "lifespan": "perennial",
+  "native": true,
+  "height_m": [1.5, 3],
+  "description": "A tule of bright green, soft, bluntly three-sided stems 1.5-3 m tall in dense stands, with a hanging, branched cluster of many small reddish-brown spikelets near the top of each stem in summer. It grows in the shallow water of ponds and slow, warm reaches at the low end of the foothills, often beside hardstem tule and cattail.",
+  "season_notes": {
+    "winter": "Old stems tan and grey, many bent over; some green persists in mild winters.",
+    "spring": "Bright green new stems rise from the rhizomes in the warm shallows.",
+    "summer": "Drooping clusters of reddish-brown spikelets near the stem tips, June to September.",
+    "fall": "Stems yellow and tan from the tips."
+  },
+  "status": "agent draft, needs local sign-off",
+  "ground": {
+    "habit": "tule",
+    "palette": {
+      "winter": {"root": [118, 112, 82], "tip": [160, 146, 104], "head": [120, 90, 62]},
+      "spring": {"root": [82, 110, 62], "tip": [110, 140, 76], "head": [126, 100, 70]},
+      "summer": {"root": [74, 102, 58], "tip": [100, 130, 70], "head": [134, 86, 56]},
+      "fall": {"root": [96, 104, 66], "tip": [152, 138, 90], "head": [122, 86, 58]}
+    },
+    "heads": {"shape": "tassel", "months": [6, 9]},
+    "clump_m": 1.2,
+    "stems": 26,
+    "height_by_month": [0.8, 0.8, 0.85, 0.95, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 0.9, 0.85],
+    "density": 0.5
+  },
+  "habitat": {
+    "classes": {"riparian": 1.0},
+    "floor": 2.5, "mid": 0.05, "steep": 0.05, "north": 0.9, "shade": 0.05, "disturbed": 0.8,
+    "riparian": {
+      "zones": {"pond_margin": 1.0, "margin": 0.2, "channel": 0.05},
+      "orders": [3, 7],
+      "permanence": "perennial",
+      "water": "Rooted in mud under shallow, still or slow, warm water all summer: ponds, sloughs and the slow lower reaches."
+    }
+  },
+  "relations": {
+    "eaten_by": [],
+    "cover_for": [],
+    "shades_water": 0.1
+  },
+  "notes": "California bulrush (Schoenoplectus californicus; Scirpus californicus in older floras) is a tule of fresh and brackish marshes from California to South America, in California mostly at low elevation: the delta, the valley and the warm bottom of the foothills, where it is less common than hardstem tule. Drawn by the emergent module: habit tule, round to bluntly three-angled stems 1-3 m (sharper-angled near the top), softer and brighter green than hardstem tule's, leaves reduced to basal sheaths. Inflorescence a branched, drooping cluster of many reddish-brown spikelets 5-10 mm near the stem tip, June-September: heads tassel, more reddish than hardstem tule's. density 0.5 (less common here), orders [3, 7] (the larger, slower water), zones the pond margin, the margins of slow reaches little. Its stems were also used for mats and boats. Marsh birds, none in the game yet; relations empty. shades_water 0.1.",
+  "sources": ["https://ucjeps.berkeley.edu/eflora/ (Schoenoplectus californicus)", "https://www.calflora.org/ (Schoenoplectus californicus)", "https://calscape.org/ (Schoenoplectus californicus)", "https://en.wikipedia.org/wiki/Schoenoplectus_californicus", "https://www.fs.usda.gov/database/feis/ (Schoenoplectus californicus, where covered)"],
+  "authors": ["Wild Earth (agent draft, 2026-10-29); needs local sign-off"],
+  "license": "CC BY-SA 4.0"
+}

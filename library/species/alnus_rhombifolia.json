@@ -21,6 +21,23 @@
     "fall": "No real fall colour: the leaves turn dull green-brown and drop."
   },
   "status": "agent draft, needs local sign-off",
+  "habitat": {
+    "classes": {"riparian": 1.0, "mixed_forest": 0.15, "conifer_forest": 0.1},
+    "floor": 2.2, "mid": 0.2, "steep": 0.3, "north": 1.3, "shade": 0.3, "disturbed": 0.5,
+    "riparian": {
+      "zones": {"bank": 1.0, "margin": 0.6, "channel": 0.15, "pond_shore": 0.3},
+      "orders": [2, 7],
+      "permanence": "perennial",
+      "water": "Its roots must reach permanent running water: it grows at the toe of the bank and the channel edge of creeks that flow all year, usually a single row along the water."
+    }
+  },
+  "relations": {
+    "eaten_by": [
+      {"animal": "odocoileus_hemionus", "part": "browse", "seasons": ["spring", "summer"]}
+    ],
+    "cover_for": [],
+    "shades_water": 1.0
+  },
   "trunk": {
     "length_ratio": 0.92, "radius_ratio": 0.022, "taper": 0.85, "flare": 1.25, "bole_ratio": 0.25, "base_size": 0.18,
     "curve_deg": 4, "curve_var_deg": 6, "segments": 6, "lean_deg": 5, "stems": [1, 2], "stem_spread_deg": 10,

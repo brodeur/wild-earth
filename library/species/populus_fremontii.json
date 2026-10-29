@@ -21,6 +21,23 @@
     "fall": "Bright yellow in November, the brightest colour on the creek, then bare."
   },
   "status": "agent draft, needs local sign-off",
+  "habitat": {
+    "classes": {"riparian": 1.0, "oak_woodland": 0.05, "grassland": 0.03},
+    "floor": 2.4, "mid": 0.1, "steep": 0.05, "north": 1.0, "shade": 0.1, "disturbed": 0.8,
+    "riparian": {
+      "zones": {"terrace": 1.0, "bank": 0.6, "pond_terrace": 0.4, "pond_shore": 0.3},
+      "orders": [3, 7],
+      "permanence": "intermittent",
+      "water": "Needs a water table within a few metres all summer: the floodplain terraces and banks of the larger creeks and rivers, where floods lay down the fresh bars its seedlings need."
+    }
+  },
+  "relations": {
+    "eaten_by": [
+      {"animal": "odocoileus_hemionus", "part": "browse", "seasons": ["spring", "summer"]}
+    ],
+    "cover_for": ["buteo_jamaicensis", "melanerpes_formicivorus"],
+    "shades_water": 0.8
+  },
   "trunk": {
     "length_ratio": 0.36, "radius_ratio": 0.05, "taper": 0.6, "flare": 1.4, "bole_ratio": 0.5, "base_size": 0.38,
     "curve_deg": 10, "curve_var_deg": 14, "segments": 5, "lean_deg": 12, "stems": [1, 2], "stem_spread_deg": 18,

@@ -1,0 +1,95 @@
+{
+  "id": "vitis_californica",
+  "aliases": ["california_wild_grape", "wild_grape", "grape"],
+  "scientific": "Vitis californica",
+  "common": "California wild grape",
+  "form": "shrub",
+  "architectural_model": "Chamberlain (provisional: a sympodial vine, each unit ending in a tendril or a flower cluster; drawn here as the mound the vine makes over the thicket it climbs)",
+  "deciduous": true,
+  "height_m": [2, 4],
+  "variants": [
+    {"name": "young", "weight": 0.25, "height_m": [1, 2], "crown_scale": 0.85, "branches": 0.7, "set": {"trunk": {"stems": [2, 4]}}, "note": "a young vine sprawling over a low shrub"},
+    {"name": "mature", "weight": 0.5, "seeds": 1, "note": "the file as written: a broad leafy mound of vines draped over the bank thicket"},
+    {"name": "old", "weight": 0.25, "height_m": [3.5, 5], "crown_scale": 1.25, "gnarl": 1.3, "deadwood": {"fraction": 0.15, "levels": [0, 1], "where": "inner", "shorten": 0.7, "rgb": [140, 124, 108]}, "set": {"trunk": {"stems": [5, 9], "stem_spread_deg": 78}}, "note": "an old vine with a thick, shaggy trunk, curtaining a whole willow or a fallen tree"}
+  ],
+  "description": "A woody vine that climbs 5-15 m by tendrils over willows, alders and fallen trees, with big, round, shallowly lobed leaves and small, dusty purple grapes in early fall; old vines have shaggy, shredding trunks as thick as an arm. It drapes the banks and terraces of the foothill creeks in leafy curtains that turn bright yellow in the fall.",
+  "season_notes": {
+    "winter": "Bare, shaggy grey-brown vines looping through the willows and over the bank.",
+    "spring": "Leaves unfold in April, soft and pale; small greenish flower clusters scent the creek in May.",
+    "summer": "A heavy green curtain over the thicket; the bunches of hard green grapes swell.",
+    "fall": "Small purple grapes with a pale bloom in September and October, sour-sweet, eaten by bears, foxes, coyotes, jays and turkeys; leaves go bright yellow, some orange-red."
+  },
+  "status": "agent draft, needs local sign-off",
+  "habitat": {
+    "classes": {"riparian": 1.0, "oak_woodland": 0.2, "mixed_forest": 0.1},
+    "floor": 2.0, "mid": 0.4, "steep": 0.4, "north": 1.2, "shade": 0.3, "disturbed": 0.8,
+    "riparian": {
+      "zones": {"terrace": 1.0, "bank": 0.9, "pond_terrace": 0.3, "pond_shore": 0.3},
+      "orders": [2, 6],
+      "permanence": "intermittent",
+      "water": "Roots in moist alluvial soil with water below in summer, the vine climbing into the sun over the bank and terrace trees."
+    }
+  },
+  "relations": {
+    "eaten_by": [
+      {"animal": "ursus_americanus", "part": "berries", "seasons": ["fall"]},
+      {"animal": "urocyon_cinereoargenteus", "part": "berries", "seasons": ["fall"]},
+      {"animal": "canis_latrans", "part": "berries", "seasons": ["fall"]},
+      {"animal": "aphelocoma_californica", "part": "berries", "seasons": ["fall"]},
+      {"animal": "cyanocitta_stelleri", "part": "berries", "seasons": ["fall"]},
+      {"animal": "meleagris_gallopavo", "part": "berries", "seasons": ["fall"]},
+      {"animal": "sciurus_griseus", "part": "berries", "seasons": ["fall"]},
+      {"animal": "odocoileus_hemionus", "part": "browse", "seasons": ["spring", "summer"]}
+    ],
+    "cover_for": ["callipepla_californica", "sylvilagus_bachmani"],
+    "shades_water": 0.3
+  },
+  "trunk": {
+    "length_ratio": 0.85, "radius_ratio": 0.012, "taper": 0.75, "flare": 1.1, "bole_ratio": 0.05, "base_size": 0.05,
+    "curve_deg": 36, "curve_var_deg": 22, "segments": 3, "lean_deg": 12, "stems": [3, 6], "stem_spread_deg": 70,
+    "split_prob": 0.0, "split_count": 2, "split_angle_deg": 20, "sinuous_deg": 10, "bark_rgb": [118, 98, 80],
+    "bark_pattern": "shreddy", "twig_rgb": [132, 108, 86],
+    "bark": {"tile_m": [0.1, 0.3], "contrast": 0.6, "lichen": 0.1, "relief": 0.5}
+  },
+  "crown": {
+    "shape": "hemispherical",
+    "envelope": {"profile": [[0.0, 0.6], [0.15, 0.78], [0.35, 0.88], [0.55, 0.88], [0.75, 0.74], [0.9, 0.48], [1.0, 0.16]], "lobes": 5, "lobe_depth": 0.2, "asymmetry": 0.25, "fill": 0.9, "edge": 1.08}
+  },
+  "levels": [
+    {
+      "count": 6, "start": 0.08, "down_angle_deg": 55, "down_angle_tip_deg": 45, "down_angle_var_deg": 16, "rotation_deg": 140, "rotation_var_deg": 30,
+      "length_ratio": 0.7, "length_var": 0.3, "curve_deg": 18, "curve_var_deg": 22, "zigzag_deg": 10, "tropism": -0.04, "taper": 0.9,
+      "radius_ratio": 0.6, "segments": 2, "droop_deg": 24
+    },
+    {
+      "count": 4, "start": 0.2, "down_angle_deg": 50, "down_angle_var_deg": 16, "rotation_deg": -110,
+      "rotation_var_deg": 25, "length_ratio": 0.45, "length_var": 0.3, "curve_deg": 8, "curve_var_deg": 18,
+      "zigzag_deg": 12, "tropism": -0.03, "taper": 1.0, "radius_ratio": 0.5, "segments": 1
+    }
+  ],
+  "foliage": {
+    "type": "broadleaf", "leaf_size_m": 0.12, "leaf_shape": "cordate", "cluster_m": 0.6, "density": 14, "cards_per_m2": 2.6, "leaf_fill": 1.8,
+    "start": 0.03, "parent_start": 0.15, "orientation": "outward", "roll_deg": 35,
+    "colors": {"winter": [132, 108, 86], "spring": [134, 154, 92], "summer": [108, 126, 80], "fall": [184, 160, 72]},
+    "leaf_on": {"winter": 0.0, "spring": 0.75, "summer": 1.0, "fall": 0.65},
+    "leaf_on_by_month": [0.0, 0.0, 0.1, 0.6, 0.95, 1.0, 1.0, 1.0, 0.95, 0.8, 0.4, 0.0],
+    "clumps": {"radius_m": 0.4, "cards_per_clump": 7, "shell": 0.08, "flatten": 0.85, "tip_bias": 0.6},
+    "palette": [[0.8, [1, 1, 1]], [0.15, [1.12, 1.12, 1.16]], [0.05, [1.3, 1.0, 0.7]]], "winter_twigs": 0.5, "ao_min": 0.68,
+    "color_var": [0.08, 0.05], "leaf_on_var": 0.5,
+    "berries": {"season": "fall", "months": [9, 10], "form": "cluster", "rgb": [92, 70, 104], "size_m": 0.08, "density": 0.35}
+  },
+  "deadwood": {"fraction": 0.05, "where": "inner", "levels": [0, 1], "shorten": 0.7, "rgb": [140, 124, 108]},
+  "twigs": {"count": [1, 2], "length": 0.7, "down_deg": 50, "down_var_deg": 16, "curve_var_deg": 24, "segments": 1, "radius_m": 0.005, "taper": 0.6, "droop_deg": 16, "zigzag_deg": 12, "fan_deg": 55, "jitter": 0.24},
+  "lod": {
+    "near_tris_budget": 1400, "near_sides": [4, 3, 0], "mid_blobs": 4, "mid_branches": 0, "mid_sides": [0, 0], "mid_cards": 32
+  },
+  "targets": {
+    "crown_width_ratio": 1.8, "crown_base_ratio": 0.0, "porosity": 0.12, "foliage_rg": 0.72, "foliage_bg": 0.38,
+    "fall_rg": 1.36, "fall_bg": 0.18,
+    "from": "judgement values (2026-10-29) from knowledge of the species, not measured: no photographs were fetched for this draft. A dense, low, draped mound much wider than tall with leaves to the ground, standing in for the vine over a thicket; colour is the linear r/g and b/g of the file's summer and fall leaf colours. A reviewer should replace these with values measured from local photographs"
+  },
+  "notes": "California wild grape is a deciduous woody vine of streamsides, canyon bottoms and moist terraces in the Coast Ranges, the Central Valley and the Sierra foothills, climbing by forked tendrils over willows, alders, ash and oaks to 10 m or more, and sprawling over shrubs, rocks and fallen trees. The generator grows trees and shrubs, not vines on a host, so the file draws what the eye reads from the creek: a dense, low, leafy mound 2-4 m high and much wider than tall (W/H about 1.8), like a curtain of vine heaped over the bank thicket. Three to six thick, twisting stems (sinuous 10, trunk curve 36) splay almost flat (stem_spread 70); limbs droop heavily at their ends (droop 24, tropism down) so the leaves hang to the ground. The real vine on a willow or a fallen alder is a job for the client (a vine layer draped on a host plant, as poison oak's vine form on the oaks is). Bark grey-brown, shredding in long strips on old trunks (bark_pattern shreddy). Leaves alternate, round to kidney-shaped with a heart-shaped base, 6-15 cm, shallowly three- to five-lobed and toothed, soft and greyish-hairy beneath: leaf_shape cordate (the round heart-shaped leaf), leaf_size_m 0.12; a few leaves lightened for the grey undersides and a few warmer. Flowers tiny, greenish, fragrant, in clusters in May-June (too small to draw). Fruit: small grapes 5-10 mm, purple with a pale bloom, in loose bunches September-October, more seed than pulp: berries cluster, a dusty purple, size_m 0.08 for a bunch. Fall colour bright yellow, some leaves orange-red (the palette's warm 5%), bare December-March. Food for bears, foxes, coyotes, both jays, turkeys and the gray squirrel; raccoons and many songbirds eat them too but have no animal records yet. Zones: terrace and bank; orders [2, 6]; permanence intermittent. shades_water 0.3 where it curtains the bank trees. Architectural model: Chamberlain is the usual model for vines of this habit; provisional.",
+  "sources": ["https://ucjeps.berkeley.edu/eflora/ (Vitis californica)", "https://www.calflora.org/ (Vitis californica)", "https://calscape.org/ (Vitis californica)", "https://en.wikipedia.org/wiki/Vitis_californica", "https://www.fs.usda.gov/database/feis/ (Vitis californica, where covered)"],
+  "authors": ["Wild Earth (agent draft, 2026-10-29); needs local sign-off"],
+  "license": "CC BY-SA 4.0"
+}

@@ -21,6 +21,23 @@
     "fall": "Bright yellow in October, then bare before most of the creek's other trees."
   },
   "status": "agent draft, needs local sign-off",
+  "habitat": {
+    "classes": {"riparian": 1.0, "mixed_forest": 0.15, "oak_woodland": 0.1},
+    "floor": 2.2, "mid": 0.2, "steep": 0.2, "north": 1.2, "shade": 0.2, "disturbed": 0.5,
+    "riparian": {
+      "zones": {"terrace": 1.0, "bank": 0.5, "pond_terrace": 0.3, "pond_shore": 0.2},
+      "orders": [2, 6],
+      "permanence": "intermittent",
+      "water": "Takes winter flooding and wet, heavy soil and needs moisture near the surface into summer: creek terraces and banks, swales and pond edges."
+    }
+  },
+  "relations": {
+    "eaten_by": [
+      {"animal": "odocoileus_hemionus", "part": "browse", "seasons": ["spring", "summer"]}
+    ],
+    "cover_for": [],
+    "shades_water": 0.6
+  },
   "trunk": {
     "length_ratio": 0.6, "radius_ratio": 0.035, "taper": 0.7, "flare": 1.3, "bole_ratio": 0.35, "base_size": 0.1,
     "curve_deg": 8, "curve_var_deg": 10, "segments": 5, "lean_deg": 6, "stems": [1, 2], "stem_spread_deg": 12,

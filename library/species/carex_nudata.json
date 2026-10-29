@@ -1,0 +1,53 @@
+{
+  "id": "carex_nudata",
+  "aliases": ["torrent_sedge", "naked_sedge"],
+  "scientific": "Carex nudata",
+  "common": "torrent sedge",
+  "form": "emergent",
+  "lifespan": "perennial",
+  "native": true,
+  "height_m": [0.3, 0.7],
+  "description": "A sedge of dense, round, fountain-like tussocks of narrow arching blades that grows on the boulders, bedrock and gravel in the channel of the foothill and mountain creeks, standing in the current when the water is high. In spring dark, almost black flower spikes rise above each tussock; through summer the tussocks sit like green islands among the rocks.",
+  "season_notes": {
+    "winter": "Tussocks battered by the high water, the blades brown at the tips and laid downstream.",
+    "spring": "Dark purple-black spikes on bare stems above the tussocks in March-June, as the water drops.",
+    "summer": "Green tussocks on the rocks along the riffles and pools, half in and half out of the water.",
+    "fall": "Blades yellowing and curling at the ends, the base still green."
+  },
+  "status": "agent draft, needs local sign-off",
+  "ground": {
+    "habit": "sedge",
+    "palette": {
+      "winter": {"root": [90, 100, 66], "tip": [140, 130, 96], "head": [70, 58, 54]},
+      "spring": {"root": [76, 104, 58], "tip": [110, 138, 72], "head": [66, 54, 52]},
+      "summer": {"root": [74, 100, 58], "tip": [120, 136, 80], "head": [96, 80, 64]},
+      "fall": {"root": [88, 96, 64], "tip": [150, 136, 98], "head": [100, 84, 66]}
+    },
+    "heads": {"shape": "spike", "months": [3, 6]},
+    "clump_m": 0.5,
+    "stems": 60,
+    "height_by_month": [0.7, 0.75, 0.85, 1.0, 1.0, 1.0, 1.0, 1.0, 0.95, 0.9, 0.8, 0.7],
+    "density": 1.0
+  },
+  "habitat": {
+    "classes": {"riparian": 1.0},
+    "floor": 2.0, "mid": 0.4, "steep": 0.6, "north": 1.0, "shade": 0.3, "disturbed": 0.3,
+    "riparian": {
+      "zones": {"channel": 1.0, "margin": 0.4},
+      "orders": [2, 5],
+      "permanence": "intermittent",
+      "water": "Rooted in cracks of rock and in coarse gravel in the creek bed, flooded in winter and spring, with its roots in water or wet gravel all summer."
+    }
+  },
+  "relations": {
+    "eaten_by": [
+      {"animal": "odocoileus_hemionus", "part": "leaves", "seasons": ["summer"]}
+    ],
+    "cover_for": [],
+    "shades_water": 0
+  },
+  "notes": "Torrent sedge is a tussock sedge of rocky stream channels in northern California and Oregon, from the foothills into the mountains: it roots in cracks in bedrock and among boulders and cobbles in the bed of perennial and intermittent creeks, where floods pass over it every winter, and its tussocks help hold the gravel bars. Drawn by the emergent module: habit sedge, a dense, round tussock 30-50 cm across of narrow (2-4 mm) arching blades, 60 to a clump, 30-70 cm tall. Flowering stems in March-June, the spikes dark purplish-black, the top one male, the female spikes below with dark scales and with the stems rising bare (nudata: naked) above the leaves: heads spike, near-black. Blades brown and curling at the tips in fall and winter, scoured and laid down by the floods (height_by_month 0.7 in winter). Zones: the channel first, the in-channel rocks and bars of creeks of orders 2-5, then the wet margin; permanence intermittent: the creeks that run at least through spring and keep water in the gravel. Little eaten (deer may nip it in summer). shades_water 0. It is not to be drawn on a pond.",
+  "sources": ["https://ucjeps.berkeley.edu/eflora/ (Carex nudata)", "https://www.calflora.org/ (Carex nudata)", "https://calscape.org/ (Carex nudata)", "https://en.wikipedia.org/wiki/Carex_nudata"],
+  "authors": ["Wild Earth (agent draft, 2026-10-29); needs local sign-off"],
+  "license": "CC BY-SA 4.0"
+}

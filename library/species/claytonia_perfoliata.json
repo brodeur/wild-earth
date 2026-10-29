@@ -25,7 +25,13 @@
   },
   "habitat": {
     "classes": { "grassland": 0.15, "oak_woodland": 1.0, "chaparral": 0.15, "mixed_forest": 0.6, "conifer_forest": 0.3, "riparian": 1.0 },
-    "floor": 1.4, "mid": 0.9, "steep": 0.8, "north": 1.6, "shade": 0.8, "disturbed": 0.7
+    "floor": 1.4, "mid": 0.9, "steep": 0.8, "north": 1.6, "shade": 0.8, "disturbed": 0.7,
+    "riparian": {
+      "zones": {"terrace": 1.0, "bank": 0.5},
+      "orders": [1, 5],
+      "permanence": "any",
+      "water": "Wants winter-wet, shaded soil: the terraces under the creekside trees, where it grows through the rainy months only."
+    }
   },
   "relations": {
     "eaten_by": [
@@ -36,7 +42,8 @@
       { "animal": "callipepla_californica", "part": "leaves", "seasons": ["winter", "spring"] },
       { "animal": "callipepla_californica", "part": "seeds", "seasons": ["spring"] }
     ],
-    "cover_for": []
+    "cover_for": [],
+    "shades_water": 0
   },
   "notes": "Miner's lettuce is a cool-season annual of shade and moisture: under oak and bay canopies, in riparian strips, at the foot of north slopes and around seeps, rarely in the open grassland. The basal leaves are long-stalked and spoon- to kidney-shaped; the one pair of stem leaves below the flowers is joined into a single round, cupped disc 1-6 cm across that the stem pierces (leaf shape round, 5 cm, a juicy mid-green); the flowers are 5-petalled, white to faintly pink, about 5 mm, a dozen or so in a short cluster on the disc. It is succulent and mild, which is why so many animals eat it (deer, brush rabbits, voles, ground squirrels; quail take the greens and the seed), and the gold-rush miners ate it as a salad green, which gave the name. Each glossy black seed carries a small fatty appendage that ants harvest, so it is ant-sown. height_by_month: it germinates with the November rains, is fullest in March-April, and wilts in the first dry heat, so it is zero from June through October and its dead_rgb is never really shown. habitat: shade 0.8, north x1.6, the floors and swales x1.4; on dry steep ground and in the sun it is scarce.",
   "sources": [

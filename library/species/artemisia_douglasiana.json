@@ -1,0 +1,52 @@
+{
+  "id": "artemisia_douglasiana",
+  "aliases": ["california_mugwort", "mugwort", "douglas_mugwort"],
+  "scientific": "Artemisia douglasiana",
+  "common": "California mugwort",
+  "form": "forb",
+  "lifespan": "perennial",
+  "native": true,
+  "height_m": [0.8, 2.0],
+  "description": "A tall, leafy, strongly aromatic perennial of grey-green stems 1-2 m high with long leaves, green above and white-woolly beneath, some with a few deep lobes toward the tip; from midsummer the stems end in long, narrow sprays of tiny greenish flower heads. It spreads by its roots into thick stands on the creek terraces and banks and in damp swales, and the deer leave it almost untouched.",
+  "season_notes": {
+    "winter": "Old grey stalks standing among low rosettes of new grey-green leaves after the rains.",
+    "spring": "New stems shoot up fast, soft and silvery, through April and May.",
+    "summer": "Chest-high stands; narrow spikes of tiny greenish-yellow flower heads from July.",
+    "fall": "Flowering into October, then the stems brown and dry, smelling of sage when brushed."
+  },
+  "status": "agent draft, needs local sign-off",
+  "ground": {
+    "habit": "erect",
+    "leaf": { "shape": "lobed", "size_m": 0.1, "rgb": [128, 140, 112] },
+    "flower": { "shape": "spike", "rgb": [156, 156, 108], "size_m": 0.12, "months": [7, 10], "per_plant": 5 },
+    "height_by_month": [0.2, 0.3, 0.45, 0.65, 0.8, 0.9, 1.0, 1.0, 1.0, 0.9, 0.5, 0.25],
+    "dead_rgb": [140, 128, 108],
+    "density": 0.8
+  },
+  "habitat": {
+    "classes": { "riparian": 1.0, "oak_woodland": 0.3, "grassland": 0.15, "mixed_forest": 0.2, "chaparral": 0.05, "conifer_forest": 0.05 },
+    "floor": 1.8, "mid": 0.6, "steep": 0.4, "north": 1.2, "shade": 0.3, "disturbed": 1.2,
+    "riparian": {
+      "zones": { "terrace": 1.0, "bank": 0.7, "pond_terrace": 0.5, "margin": 0.2, "pond_shore": 0.3 },
+      "orders": [1, 6],
+      "permanence": "any",
+      "water": "Wants damp soil in spring and moisture within reach in summer: creek terraces and banks of any creek, swales and seeps; it tolerates a dry surface once grown."
+    }
+  },
+  "relations": {
+    "eaten_by": [
+      { "animal": "odocoileus_hemionus", "part": "leaves", "seasons": ["spring"] }
+    ],
+    "cover_for": ["sylvilagus_bachmani", "callipepla_californica", "microtus_californicus"],
+    "shades_water": 0
+  },
+  "notes": "California mugwort is a rhizomatous perennial of streambanks, floodplain terraces, moist swales, seeps and disturbed damp ground throughout cismontane California below about 2,000 m. Stems 0.5-2.5 m, erect, grey-green, leafy, often in dense stands from the spreading roots (density 0.8, patches): habit erect. Leaves 5-15 cm, narrowly elliptic, entire or with a few deep lobes near the tip, dark grey-green and thinly hairy above, densely white-woolly beneath, strongly aromatic (sage-like): leaf shape lobed, 10 cm, a grey-green. Flower heads tiny (3-4 mm), greenish to yellowish, many in long narrow leafy panicles at the stem tops, July-October: flower shape spike, size_m 0.12 for one spray. Winter-dormant in part: the old stalks stand dry and grey (dead_rgb) over low new rosettes after the rains, so height_by_month runs 0.2 in January to 1.0 July-September. Bitter and aromatic, it is browsed very little by deer (spring shoots, lightly); its stands are cover for rabbits, quail and voles. The leaves were a medicine and a smudge for many California peoples, and are used against poison oak rash. Zones: the terrace first, the bank, the flat round a pond; any creek (permanence any). shades_water 0.",
+  "sources": [
+    "https://ucjeps.berkeley.edu/eflora/ (Artemisia douglasiana)",
+    "https://www.calflora.org/ (Artemisia douglasiana)",
+    "https://calscape.org/ (Artemisia douglasiana)",
+    "https://en.wikipedia.org/wiki/Artemisia_douglasiana"
+  ],
+  "authors": ["Wild Earth (agent draft, 2026-10-29); needs local sign-off"],
+  "license": "CC BY-SA 4.0"
+}

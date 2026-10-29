@@ -1,0 +1,52 @@
+{
+  "id": "erythranthe_guttata",
+  "aliases": ["seep_monkeyflower", "yellow_monkeyflower", "common_monkeyflower", "mimulus_guttatus"],
+  "scientific": "Erythranthe guttata",
+  "common": "seep monkeyflower",
+  "form": "forb",
+  "lifespan": "perennial",
+  "native": true,
+  "height_m": [0.15, 0.8],
+  "description": "A soft, juicy plant of wet places with round, toothed leaves in pairs and bright yellow, snapdragon-like flowers, the lower lip spotted red at the throat; it ranges from a little annual to a sprawling perennial 0.8 m high. It lines the seeps, springs, wet rock and the wet margins of the creeks and ponds from early spring into summer, wherever the ground stays soaked.",
+  "season_notes": {
+    "winter": "Low clumps of round green leaves in the seeps and on the wet gravel.",
+    "spring": "Yellow flowers from March, thickest in April and May along every seep and creek margin.",
+    "summer": "Still flowering where water runs; where it dries the plants wither by July.",
+    "fall": "Mostly gone; a few perennial clumps stay green beside springs."
+  },
+  "status": "agent draft, needs local sign-off",
+  "ground": {
+    "habit": "mound",
+    "leaf": { "shape": "round", "size_m": 0.04, "rgb": [96, 140, 80] },
+    "flower": { "shape": "pea", "rgb": [246, 206, 40], "size_m": 0.03, "months": [3, 8], "per_plant": 6 },
+    "height_by_month": [0.4, 0.5, 0.8, 1.0, 1.0, 1.0, 0.9, 0.7, 0.5, 0.4, 0.35, 0.35],
+    "dead_rgb": [150, 140, 100],
+    "density": 0.8
+  },
+  "habitat": {
+    "classes": { "riparian": 1.0, "grassland": 0.1, "oak_woodland": 0.15, "chaparral": 0.05, "mixed_forest": 0.2, "conifer_forest": 0.1 },
+    "floor": 2.0, "mid": 0.6, "steep": 0.6, "north": 1.2, "shade": 0.3, "disturbed": 0.8,
+    "riparian": {
+      "zones": { "margin": 1.0, "pond_margin": 0.8, "pond_shore": 0.6, "channel": 0.3, "bank": 0.3 },
+      "orders": [1, 4],
+      "permanence": "intermittent",
+      "water": "Needs its roots in water or soaked ground while it grows: seeps, springs, wet rock, the wet margins of small creeks and the mud of pond edges."
+    }
+  },
+  "relations": {
+    "eaten_by": [
+      { "animal": "odocoileus_hemionus", "part": "leaves", "seasons": ["spring", "summer"] }
+    ],
+    "cover_for": [],
+    "shades_water": 0
+  },
+  "notes": "Seep monkeyflower (Erythranthe guttata; Mimulus guttatus in older floras) is one of the most variable plants of western North America, from small annuals in seasonal seeps to large perennials that root at the nodes along permanent springs; in the foothills both kinds grow along seeps, wet rock faces, creek margins and pond edges. Habit mound (a leafy clump, sprawling at the edges), 15-80 cm; stems hollow and succulent. Leaves opposite, round to ovate, 1-8 cm, irregularly toothed, bright green: leaf shape round, 4 cm. Flowers 2-4 cm, yellow, two-lipped like a snapdragon, the lower lip with red-brown spots and a hairy throat almost closing it: forbs.js has no two-lipped flower shape, so pea (the bilateral flower) is the nearest, bright yellow, March-August, six to a plant. lifespan perennial since the big plants along water are; the annual forms of drying seeps are in height_by_month's fall-off from July. Zones: the wet margin first, a pond's shallows and shore, the wet gravel of the channel edge (channel 0.3) and the bank's seeps; small creeks of orders 1-4, intermittent or wetter. Deer eat it a little. shades_water 0.",
+  "sources": [
+    "https://ucjeps.berkeley.edu/eflora/ (Erythranthe guttata)",
+    "https://www.calflora.org/ (Erythranthe guttata)",
+    "https://calscape.org/ (Erythranthe guttata)",
+    "https://en.wikipedia.org/wiki/Erythranthe_guttata"
+  ],
+  "authors": ["Wild Earth (agent draft, 2026-10-29); needs local sign-off"],
+  "license": "CC BY-SA 4.0"
+}

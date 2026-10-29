@@ -1,0 +1,97 @@
+{
+  "id": "rubus_ursinus",
+  "aliases": ["california_blackberry", "pacific_blackberry", "dewberry", "blackberry"],
+  "scientific": "Rubus ursinus",
+  "common": "California blackberry",
+  "form": "shrub",
+  "architectural_model": "Champagnat (provisional: biennial canes that arch over and trail, rooting at the tips; second-year canes flower and die)",
+  "deciduous": true,
+  "height_m": [0.6, 1.6],
+  "variants": [
+    {"name": "young", "weight": 0.25, "height_m": [0.3, 0.7], "crown_scale": 0.85, "branches": 0.7, "set": {"trunk": {"stems": [5, 9]}}, "note": "a low trailing patch of a few canes over the ground"},
+    {"name": "mature", "weight": 0.5, "seeds": 1, "note": "the file as written: a low mounded tangle of arching, prickly canes"},
+    {"name": "old", "weight": 0.25, "height_m": [1.4, 2.2], "crown_scale": 1.2, "gnarl": 1.1, "deadwood": {"fraction": 0.25, "levels": [0, 1], "where": "inner", "shorten": 0.7, "rgb": [150, 136, 116]}, "set": {"trunk": {"stems": [14, 20], "stem_spread_deg": 76}}, "note": "a deep old tangle heaped over the bank, dead grey canes inside"}
+  ],
+  "description": "The native blackberry: a low, sprawling tangle of slender, prickly, whitish-green canes 0.5-2 m high with leaves of three toothed leaflets, white five-petalled flowers in spring and small, sweet, black berries in early summer. It mounds over the creek terraces, banks and shady woodland edges, and its thickets shelter rabbits, quail and voles while nearly every animal of the woods eats its berries.",
+  "season_notes": {
+    "winter": "A tangle of thin, prickly canes, some still with dull leaves, the grey dead canes of last year among them.",
+    "spring": "New canes run out over the ground; white flowers from April into June, male and female on separate plants.",
+    "summer": "Small black berries ripen in June and July, eaten by bears, foxes, coyotes, quail, turkeys and jays.",
+    "fall": "Leaves go dull purple-red and many drop; the fruiting canes die back."
+  },
+  "status": "agent draft, needs local sign-off",
+  "habitat": {
+    "classes": {"riparian": 1.0, "oak_woodland": 0.4, "mixed_forest": 0.4, "chaparral": 0.1, "grassland": 0.1},
+    "floor": 1.6, "mid": 0.9, "steep": 0.6, "north": 1.3, "shade": 0.4, "disturbed": 1.3,
+    "riparian": {
+      "zones": {"terrace": 1.0, "bank": 1.0, "pond_terrace": 0.6, "pond_shore": 0.5, "margin": 0.2},
+      "orders": [1, 6],
+      "permanence": "any",
+      "water": "Likes moist soil in part shade but tolerates summer drought once rooted: creek terraces and banks of any creek, swales, and the shady edges of the woodland."
+    }
+  },
+  "relations": {
+    "eaten_by": [
+      {"animal": "ursus_americanus", "part": "berries", "seasons": ["summer"]},
+      {"animal": "urocyon_cinereoargenteus", "part": "berries", "seasons": ["summer"]},
+      {"animal": "canis_latrans", "part": "berries", "seasons": ["summer"]},
+      {"animal": "callipepla_californica", "part": "berries", "seasons": ["summer"]},
+      {"animal": "meleagris_gallopavo", "part": "berries", "seasons": ["summer"]},
+      {"animal": "aphelocoma_californica", "part": "berries", "seasons": ["summer"]},
+      {"animal": "cyanocitta_stelleri", "part": "berries", "seasons": ["summer"]},
+      {"animal": "sciurus_griseus", "part": "berries", "seasons": ["summer"]},
+      {"animal": "odocoileus_hemionus", "part": "browse", "seasons": ["winter", "spring", "summer"]},
+      {"animal": "sylvilagus_bachmani", "part": "browse", "seasons": ["winter", "spring"]}
+    ],
+    "cover_for": ["sylvilagus_bachmani", "callipepla_californica", "microtus_californicus"],
+    "shades_water": 0.1
+  },
+  "trunk": {
+    "length_ratio": 0.9, "radius_ratio": 0.008, "taper": 0.8, "flare": 1.05, "bole_ratio": 0.04, "base_size": 0.03,
+    "curve_deg": 34, "curve_var_deg": 18, "segments": 3, "lean_deg": 10, "stems": [8, 14], "stem_spread_deg": 68,
+    "split_prob": 0.0, "split_count": 2, "split_angle_deg": 20, "sinuous_deg": 6, "bark_rgb": [126, 132, 106],
+    "bark_pattern": "smooth", "twig_rgb": [120, 104, 90],
+    "bark": {"tile_m": [0.06, 0.18], "contrast": 0.3, "lichen": 0.0, "relief": 0.2}
+  },
+  "crown": {
+    "shape": "hemispherical",
+    "envelope": {"profile": [[0.0, 0.8], [0.15, 0.95], [0.35, 1.0], [0.55, 0.95], [0.75, 0.78], [0.9, 0.5], [1.0, 0.16]], "lobes": 6, "lobe_depth": 0.2, "asymmetry": 0.22, "fill": 0.8, "edge": 1.12}
+  },
+  "levels": [
+    {
+      "count": 4, "start": 0.1, "down_angle_deg": 50, "down_angle_tip_deg": 40, "down_angle_var_deg": 14, "rotation_deg": 140, "rotation_var_deg": 30,
+      "length_ratio": 0.55, "length_var": 0.3, "curve_deg": 14, "curve_var_deg": 18, "tropism": -0.02, "taper": 0.9,
+      "radius_ratio": 0.6, "segments": 2, "droop_deg": 14
+    },
+    {
+      "count": 3, "start": 0.3, "down_angle_deg": 45, "down_angle_var_deg": 14, "rotation_deg": 140,
+      "rotation_var_deg": 30, "length_ratio": 0.4, "length_var": 0.3, "curve_deg": 6, "curve_var_deg": 16,
+      "tropism": 0.0, "taper": 1.0, "radius_ratio": 0.5, "segments": 1
+    }
+  ],
+  "foliage": {
+    "type": "broadleaf", "leaf_size_m": 0.1, "leaf_shape": "trifoliate", "cluster_m": 0.4, "density": 18, "cards_per_m2": 5.0, "leaf_fill": 1.8,
+    "start": 0.02, "parent_start": 0.1, "orientation": "outward", "roll_deg": 50,
+    "colors": {"winter": [112, 104, 84], "spring": [112, 140, 82], "summer": [94, 110, 72], "fall": [130, 92, 76]},
+    "leaf_on": {"winter": 0.3, "spring": 0.9, "summer": 1.0, "fall": 0.6},
+    "leaf_on_by_month": [0.3, 0.35, 0.6, 0.9, 1.0, 1.0, 1.0, 0.95, 0.85, 0.65, 0.45, 0.35],
+    "clumps": {"radius_m": 0.25, "cards_per_clump": 6, "shell": 0.05, "flatten": 0.8, "tip_bias": 0.7},
+    "palette": [[0.8, [1, 1, 1]], [0.2, [1.12, 1.12, 1.1]]], "winter_twigs": 0.55, "ao_min": 0.68,
+    "color_var": [0.08, 0.05], "leaf_on_var": 0.5,
+    "flowers": {"season": "spring", "months": [4, 6], "form": "cluster", "rgb": [244, 242, 232], "size_m": 0.03, "density": 0.4, "before_leaves": false},
+    "berries": {"season": "summer", "months": [6, 8], "form": "cluster", "rgb": [44, 32, 44], "size_m": 0.025, "density": 0.45}
+  },
+  "deadwood": {"fraction": 0.12, "where": "inner", "levels": [0, 1], "shorten": 0.75, "rgb": [150, 136, 116]},
+  "twigs": {"count": [1, 2], "length": 0.7, "down_deg": 45, "down_var_deg": 16, "curve_var_deg": 22, "segments": 1, "radius_m": 0.003, "taper": 0.6, "droop_deg": 10, "fan_deg": 50, "jitter": 0.22},
+  "lod": {
+    "near_tris_budget": 1300, "near_sides": [3, 3, 0], "mid_blobs": 3, "mid_branches": 0, "mid_sides": [0, 0], "mid_cards": 24
+  },
+  "targets": {
+    "crown_width_ratio": 2.0, "crown_base_ratio": 0.03, "porosity": 0.2, "foliage_rg": 0.72, "foliage_bg": 0.42,
+    "from": "judgement values (2026-10-29) from knowledge of the species, not measured: no photographs were fetched for this draft. A low mounded tangle about twice as wide as tall, leafy to the ground; colour is the linear r/g and b/g of the file's summer leaf colour. A reviewer should replace these with values measured from local photographs"
+  },
+  "notes": "California blackberry (Pacific blackberry, dewberry) is the native trailing blackberry of California's creek terraces, woodland edges, clearings and fencerows from the coast to the conifer belt. Do not confuse it with Himalayan blackberry (Rubus armeniacus), the introduced, much coarser bramble with thick, angled canes that now dominates many foothill creeks; a reviewer may want that weed as a file of its own. Form: plain 'shrub', drawn as one mounded tangle 0.6-1.6 m (canes trail to 6 m and heap up over other plants and on themselves). Eight to fourteen thin canes (radius_ratio 0.008), round, glaucous green to whitish with slender straight prickles (not modelled), spreading almost flat (stem_spread 68) and arching hard (trunk curve 34, level-1 droop 14, tropism down), so the tangle is about twice as wide as tall (envelope widest 1.0 of height), leafy to the ground. First-year canes are leafy and sterile; second-year canes flower, fruit and die, so a patch always has grey dead canes in it (deadwood 0.12, old class 0.25). Leaves alternate, of three (on new canes sometimes five) ovate, doubly toothed leaflets, 4-10 cm, green above, paler and hairy beneath: leaf_shape trifoliate, leaf_size_m 0.1 for the whole leaf. Semi-evergreen in the low foothills: many leaves hang on, dull and purplish, through mild winters (leaf_on_by_month winter 0.3). Flowers white, 2-4 cm, five narrow petals, April-June, the plants male or female: flowers cluster. Fruit black, small (1-2 cm), sweet, June-August: berries cluster, black. Zones: the terrace and bank equally, pond terraces; any creek (permanence any) since it holds on with summer drought once rooted. shades_water 0.1: low, at the bank's top. Food for bear, fox, coyote, quail, turkey, both jays and the gray squirrel; deer browse the leaves through the year and rabbits the young canes; dense cover for brush rabbits (it is their classic thicket), quail and voles. Architectural model provisional.",
+  "sources": ["https://www.fs.usda.gov/database/feis/ (Rubus ursinus, where covered)", "https://ucjeps.berkeley.edu/eflora/ (Rubus ursinus)", "https://www.calflora.org/ (Rubus ursinus)", "https://calscape.org/ (Rubus ursinus)", "https://en.wikipedia.org/wiki/Rubus_ursinus"],
+  "authors": ["Wild Earth (agent draft, 2026-10-29); needs local sign-off"],
+  "license": "CC BY-SA 4.0"
+}

@@ -30,7 +30,13 @@
   },
   "habitat": {
     "classes": { "grassland": 0.4, "oak_woodland": 1.0, "chaparral": 0.2, "mixed_forest": 0.6, "conifer_forest": 0.3, "riparian": 0.9 },
-    "floor": 1.2, "mid": 1.0, "steep": 0.9, "north": 1.5, "shade": 0.6, "disturbed": 0.8
+    "floor": 1.2, "mid": 1.0, "steep": 0.9, "north": 1.5, "shade": 0.6, "disturbed": 0.8,
+    "riparian": {
+      "zones": {"terrace": 1.0, "bank": 0.7, "pond_terrace": 0.4},
+      "orders": [1, 6],
+      "permanence": "any",
+      "water": "A bunchgrass of the shaded, moist terrace and bank; it needs no surface water."
+    }
   },
   "relations": {
     "eaten_by": [
@@ -42,7 +48,8 @@
       { "animal": "oreortyx_pictus", "part": "seeds", "seasons": ["summer", "fall"] },
       { "animal": "meleagris_gallopavo", "part": "seeds", "seasons": ["summer", "fall"] }
     ],
-    "cover_for": ["microtus_californicus", "callipepla_californica", "oreortyx_pictus", "sylvilagus_bachmani"]
+    "cover_for": ["microtus_californicus", "callipepla_californica", "oreortyx_pictus", "sylvilagus_bachmani"],
+    "shades_water": 0
   },
   "notes": "Blue wildrye is a cool-season perennial bunchgrass found through most of California below the subalpine, in the foothills mostly where there is some shade or moisture: oak woodland edges and openings, north-facing slopes, swales and the banks of creeks, and the openings of the mixed and conifer forest above. Clumps are loose rather than dense, the leaves flat, 5-15 mm wide and often glaucous (the blue-green the palette carries), and the culms 0.6-1.5 m, each ending in a stiff, erect spike 5-20 cm long with usually two spikelets at a node and short, straight lemma awns of about 1-3 cm. It flowers late for a foothill grass, May to July, which is why its heads months are [5, 7] and not the annuals' April. The file's height of 1.5 (about 0.9 m of the bunch clump) is the typical leafy clump with its stems, not the tallest culm; the width 1.1 is a little wider than the needlegrass tussock because the clump is open. Cure 0.7: in the open it dries to straw by August, but the base keeps some grey-green where it is shaded, so the summer and fall root stays greyer than the annuals'. It is grazed by deer in the green months and by rabbits and voles, and its seed is taken by quail, turkeys and ground squirrels; its tall clumps on the shaded slopes are cover for voles, both quail and the brush rabbit. The habitat weights put it highest in oak woodland and riparian, with north 1.5 and shade 0.6 for its liking of the cooler slopes and partial canopy.",
   "sources": [
