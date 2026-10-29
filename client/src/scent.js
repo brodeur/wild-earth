@@ -50,6 +50,14 @@ import { FLIERS } from './flierControl.js';
 // spirit, the raven, the woodpecker, a menu) the wisps
 // go dark at the next draw (onBeforeRender: the observer is no longer the body that smelled, or the update is more than
 // STALE_MS old) and start from nothing when it is called again; `smelled` is empty meanwhile.
+//
+// What is shown, and the sniff (owner, 2026-10-29: "each animal that relies on smell should have a 'Sniff' button that
+// shows all the smells. When I smell something new, the smell should flicker onto the screen and then flicker away."):
+// a scent is drawn when it is new (not smelled within FORGET s: its strand flickers on over FLICK s, blinking, holds
+// NEW_HOLD s and flickers away) and whenever the player sniffs (sniff(true): the L key or the abilities row's sniff
+// slot held, or a tap for SNIFF_TAP s): then the query keeps every source in reach up to SNIFF_MAX, not the MAX_WISPS
+// strongest, and every strand shows; the hold over, the strands flicker away. Each strand carries a label at its tip
+// (index.html #scentLabels: the species' word, "dead" for carrion, in the rarity colour) that comes and goes with it.
 
 // m: the reach upwind, by species code (the body's)
 const REACH = {
@@ -71,6 +79,8 @@ const SOURCE = {
 };
 const S_POW = 1.4;   // the wind's shaping of the reach: wind.js scentCarry
 const QUERY_T = 0.25, MAX_WISPS = 6, FADE = 0.5;
+const SNIFF_MAX = 24, SNIFF_TAP = 3, NEW_HOLD = 4, FORGET = 8, FLICK = 0.6;   // the sniff and the new-scent flicker (the header)
+const SNIFF_KEY = 'KeyL';   // N is mute (sound.js)
 // the ring and the strands (m, for the deer; times the body's scale)
 const RING_R = 0.9, WISP_LEN = [0.2, 0.4], MOTES = 20, MOTE_R = 0.065;   // 2026-10-28: half again as big as first built, so a wisp reads from the chase camera
 const HEAD_UP = { quad: 1.25, rodent: 1.1, bird: 1.4, lizard: 1.2 };   // the head's height over the shoulder's, by rig
@@ -79,6 +89,7 @@ const STALE_MS = 1000;                                                 // update
 // a legibility floor (2026-10-29): a strand shorter than LEN_PX px on screen (the squirrel's 2.7 cm ring strand from its
 // chase camera 2.6 m off was 10 px, a smudge) is drawn longer, with its motes bigger, by up to GROW_MAX; the ring itself keeps its size
 const LEN_PX = 36, GROW_MAX = 6;
+const LABEL_PX = 48;   // px: a strand's label is not drawn over another's
 const NONE = Object.freeze([]);
 const clamp = (v, a, b) => Math.min(b, Math.max(a, v));
 
@@ -108,17 +119,20 @@ function hashStr(s) {   // FNV-1a over an animal's id, to 0..1
   return (h >>> 0) / 4294967296;
 }
 const h11 = x => { const s = Math.sin(x * 127.1 + 311.7) * 43758.5453; return s - Math.floor(s); };
+// the flicker: on and off over the first FLICK s of a strand's life (u s in), settling on
+const blink = u => (u < 0.06 || (u >= 0.13 && u < 0.24) || (u >= 0.3 && u < 0.43) || u >= 0.48) ? 1 : 0;
 
 export class Scent {
-  constructor({ tile, animals, flight, ground, flier, scene, camera, squirrel = null }) {
-    Object.assign(this, { tile, animals, flight, ground, flier, scene, camera, squirrel });
+  constructor({ tile, animals, flight, ground, flier, scene, camera, squirrel = null, labels = null }) {
+    Object.assign(this, { tile, animals, flight, ground, flier, scene, camera, squirrel, labels });
+    this.known = new Map(); this.sniffHeld = false; this.sniffUntil = -1;   // when each source was last smelled (by id); the sniff (the header)
     this.wind = windUniforms;   // debugging: the uniforms the query reads
     this._smelled = []; this.code = null; this.reach = 0; this.carrionReach = 0; this.scav = false;
     this.t = 0; this.qT = 0; this.lastT = -1e9; this.ms = 0;
     this.head = new THREE.Vector3(); this.headY = null; this.scale = bodyScale.v;
-    this.slots = Array.from({ length: MAX_WISPS }, () => ({ a: null, id: null, s: 0, sv: 0, k: 0, carrion: false, alpha: 0, want: 0,
-      ux: 1, uz: 0, seed: 0, col: new THREE.Color() }));
-    const N = MAX_WISPS * MOTES;
+    this.slots = Array.from({ length: SNIFF_MAX }, () => ({ a: null, id: null, s: 0, sv: 0, k: 0, carrion: false, alpha: 0, want: 0,
+      ux: 1, uz: 0, seed: 0, col: new THREE.Color(), newUntil: -1, flickIn: -1e9, flickOut: -1e9, alphaOut: 0, label: null, tip: new THREE.Vector3() }));
+    const N = SNIFF_MAX * MOTES;
     this.pos = new Float32Array(N * 3); this.col = new Float32Array(N * 3); this.size = new Float32Array(N);
     const g = new THREE.BufferGeometry(), dyn = (a, n) => new THREE.BufferAttribute(a, n).setUsage(THREE.DynamicDrawUsage);
     g.setAttribute('position', dyn(this.pos, 3)); g.setAttribute('aCol', dyn(this.col, 3)); g.setAttribute('aSize', dyn(this.size, 1));
@@ -131,7 +145,15 @@ export class Scent {
     scene.add(this.points);
     this._b = new THREE.Vector2();
     this.unhook = onBodyScale(v => { this.scale = v; this.headY = null; });
+    if (typeof addEventListener === 'function') {   // the sniff key, held or tapped (the abilities row's slot presses the same)
+      const typing = e => e.target instanceof HTMLInputElement || e.target instanceof HTMLSelectElement;
+      this.onKey = e => { if (e.code !== SNIFF_KEY || typing(e)) return; if (e.type === 'keydown') { if (!e.repeat) this.sniff(true); } else this.sniff(false); };
+      addEventListener('keydown', this.onKey); addEventListener('keyup', this.onKey);
+    }
   }
+  // The sniff (the header): on while held, and for SNIFF_TAP s from a press.
+  sniff(on) { this.sniffHeld = !!on; if (on) { this.sniffUntil = this.t + SNIFF_TAP; this.qT = 0; } }
+  get sniffing() { return this.sniffHeld || this.t < this.sniffUntil || !!(this.ground?.on && this.ground.actT > 0 && /sniff/.test(this.ground.S?.act?.word || '')); }   // or the body's own sniff act (E: the fox, the coyote, the lion)
   // The strongest scents now (see the header); empty while update is not being called (no body that smells).
   get smelled() { return this.stale() ? NONE : this._smelled; }
   // No body that smells now: the update has not run for STALE_MS, or the body has changed since it last did.
@@ -145,7 +167,7 @@ export class Scent {
     this.carrionReach = CARRION_REACH[code] ?? this.reach * (this.scav ? SCAV_K : 1);
     this.clear();
   }
-  clear() { for (const s of this.slots) { s.a = null; s.id = null; s.alpha = 0; s.want = 0; s.sv = 0; } this._smelled = []; this.qT = 0; this.headY = null; }
+  clear() { for (const s of this.slots) { s.a = null; s.id = null; s.alpha = 0; s.want = 0; s.sv = 0; s.newUntil = -1; s.flickIn = s.flickOut = -1e9; if (s.label) s.label.hidden = true; } this._smelled = []; this.qT = 0; this.headY = null; this.known.clear(); this.sniffHeld = false; this.sniffUntil = -1; }
 
   // The head: where the ring is centred (see the header). Writes this.head; returns the ring's radius.
   placeHead(dt) {
@@ -198,22 +220,31 @@ export class Scent {
         smelled.push({ animal: a, strength: s, bearing: 0, carrion, k });
       });
       smelled.sort((p, q) => q.strength - p.strength);
-      if (smelled.length > MAX_WISPS) smelled.length = MAX_WISPS;
+      const max = this.sniffing ? SNIFF_MAX : MAX_WISPS;   // sniffing: every source in reach
+      if (smelled.length > max) smelled.length = max;
     }
-    // the slots: a source still smelled keeps its slot; a lost one fades; a new one takes a slot that is dark or fading
-    const S = this.slots, keep = new Set(smelled.map(e => e.animal));
-    for (const s of S) if (s.a && !keep.has(s.a)) s.want = 0;
+    // the slots: a source still smelled keeps its slot; a lost one fades; a new one takes a slot that is dark or fading.
+    // Shown (want) while the player sniffs, or for NEW_HOLD s from a scent not smelled within FORGET s (the flicker)
+    const S = this.slots, keep = new Set(smelled.map(e => e.animal)), t = this.t, sniffing = this.sniffing;
+    for (const s of S) if (s.a && !keep.has(s.a) && s.want) { s.want = 0; s.flickOut = t; s.alphaOut = s.alpha; }
     for (const e of smelled) {
       let s = S.find(q => q.a === e.animal);
       if (!s) {
         s = S.find(q => !q.a) || S.filter(q => q.want === 0).sort((p, q) => p.alpha - q.alpha)[0];
         if (!s) continue;
-        s.a = e.animal; s.id = e.animal.id; s.alpha = 0; s.sv = e.strength; s.seed = hashStr(e.animal.id);
+        s.a = e.animal; s.id = e.animal.id; s.alpha = 0; s.sv = e.strength; s.seed = hashStr(e.animal.id); s.newUntil = -1; s.flickIn = s.flickOut = -1e9;
         const dx = e.animal.x - this.head.x, dz = e.animal.z - this.head.z, l = Math.hypot(dx, dz) || 1; s.ux = dx / l; s.uz = dz / l;
+        const seen = this.known.get(s.id);
+        if (seen === undefined || t - seen > FORGET) { s.newUntil = t + NEW_HOLD; s.flickIn = t; }   // new to the nose: it flickers on
       }
-      s.want = 1; s.s = e.strength; s.k = e.k; s.carrion = e.carrion;
+      this.known.set(s.id, t);
+      const want = sniffing || t < s.newUntil ? 1 : 0;
+      if (want && !s.want && s.flickIn < t - FLICK && t - s.flickOut < FLICK) s.flickIn = -1e9;   // sniffed mid-flicker-out: back without a blink
+      if (!want && s.want) { s.flickOut = t; s.alphaOut = s.alpha; }
+      s.want = want; s.s = e.strength; s.k = e.k; s.carrion = e.carrion;
       rarityColor(this.animals.rarity[e.k], s.col);
     }
+    if (this.known.size > 64) for (const [id, at] of this.known) if (t - at > FORGET * 2) this.known.delete(id);
     const yaw = this.flight.yaw, fx = -Math.sin(yaw), fz = -Math.cos(yaw);
     for (const e of smelled) {
       const dx = e.animal.x - this.head.x, dz = e.animal.z - this.head.z;
@@ -241,12 +272,19 @@ export class Scent {
     const camD = Math.max(cam.position.distanceTo(H), 0.05);   // the head's distance from the camera, for the legibility floor
     const A = this.animals, t = this.t, pos = this.pos, col = this.col, size = this.size;
     let any = false;
-    for (let i = 0; i < MAX_WISPS; i++) {
+    const sniffing = this.sniffing, cam2 = this.camera, W = typeof innerWidth === 'number' ? innerWidth : 1, Hh = typeof innerHeight === 'number' ? innerHeight : 1;
+    this.placed = 0;   // the labels placed this frame (placeLabel: one within LABEL_PX of another is not drawn)
+    for (let i = 0; i < SNIFF_MAX; i++) {
       const s = this.slots[i], o = i * MOTES;
       if (s.a && (s.a.gone || (!s.a.dead && !A.alive(s.a)))) s.want = 0;   // eaten, buried or rebuilt away
-      s.alpha = s.want ? Math.min(1, s.alpha + dt / FADE) : Math.max(0, s.alpha - dt / FADE);
-      if (s.a && !s.want && s.alpha <= 0) s.a = s.id = null;
-      if (!s.a || s.alpha <= 0) { col.fill(0, o * 3, (o + MOTES) * 3); size.fill(0, o, o + MOTES); continue; }
+      if (s.a && s.want && !sniffing && t >= s.newUntil) { s.want = 0; s.flickOut = t; s.alphaOut = s.alpha; }   // the new scent's hold over: it flickers away
+      const fi = t - s.flickIn, fo = t - s.flickOut;
+      if (s.want && fi < FLICK) s.alpha = blink(fi);                                   // flickering on
+      else if (!s.want && fo < FLICK) s.alpha = blink(FLICK - fo) * s.alphaOut;        // flickering away, then off at once
+      else if (!s.want && fo < FLICK + 1) s.alpha = 0;
+      else s.alpha = s.want ? Math.min(1, s.alpha + dt / FADE) : Math.max(0, s.alpha - dt / FADE);
+      if (s.a && !s.want && s.alpha <= 0 && fo >= FLICK) s.a = s.id = null;
+      if (!s.a || s.alpha <= 0) { col.fill(0, o * 3, (o + MOTES) * 3); size.fill(0, o, o + MOTES); if (s.label && !s.label.hidden) s.label.hidden = true; continue; }
       any = true;
       s.sv += (s.s - s.sv) * (1 - Math.exp(-dt * 4));
       // the bearing follows the source between queries, eased so a near one does not swing
@@ -273,14 +311,33 @@ export class Scent {
         const f = on * env * fl * lum * 1.8;
         col[q * 3] = c.r * f; col[q * 3 + 1] = c.g * f; col[q * 3 + 2] = c.b * f;
       }
+      if (this.labels) this.placeLabel(s, H, ux, uz, R + len, cam2, W, Hh);
     }
     this.points.visible = any;
     const ga = this.points.geometry.attributes; ga.position.needsUpdate = ga.aCol.needsUpdate = ga.aSize.needsUpdate = true;
     this.ms += (performance.now() - t0 - this.ms) * 0.05;
   }
+  // The strand's label at its tip (the header): the species' word in its colour, as bright as the strand
+  placeLabel(s, H, ux, uz, along, cam, W, Hh) {
+    let el = s.label;
+    if (!el) { el = s.label = document.createElement('span'); el.className = 'sl'; this.labels.append(el); el.hidden = true; }
+    const text = `${this.animals.speciesList()[s.k]?.one || 'scent'}${s.carrion ? ' · dead' : ''}`;
+    if (el.textContent !== text) { el.textContent = text; el.style.setProperty('--soul', `#${s.col.getHexString()}`); }
+    const p = s.tip.set(H.x + ux * along, H.y, H.z + uz * along).project(cam);
+    let off = p.z > 1 || Math.abs(p.x) > 1 || Math.abs(p.y) > 1;
+    const sx = (p.x + 1) / 2 * W, sy = (1 - p.y) / 2 * Hh - 6, L = this.labelAt ||= [];
+    if (!off) { for (let i = 0; i < this.placed; i++) if (Math.abs(L[i * 2] - sx) < LABEL_PX && Math.abs(L[i * 2 + 1] - sy) < 14) { off = true; break; } }   // over another's word: not drawn (two deer on one bearing)
+    if (off) { if (!el.hidden) el.hidden = true; return; }
+    L[this.placed * 2] = sx; L[this.placed * 2 + 1] = sy; this.placed++;
+    if (el.hidden) el.hidden = false;
+    el.style.transform = `translate(${sx.toFixed(0)}px, ${sy.toFixed(0)}px) translate(-50%, -100%)`;
+    el.style.opacity = (s.alpha * (0.55 + 0.45 * s.sv)).toFixed(2);
+  }
   // Everything released: off the scene, the geometry and material freed, the body-scale listener unhooked.
   dispose() {
     this.unhook?.(); this.unhook = null;
+    if (this.onKey) { removeEventListener('keydown', this.onKey); removeEventListener('keyup', this.onKey); this.onKey = null; }
+    for (const s of this.slots) { s.label?.remove(); s.label = null; }
     this.points.removeFromParent(); this.points.geometry.dispose(); this.mat.dispose();
     this._smelled = []; for (const s of this.slots) s.a = null;
     if (typeof window !== 'undefined' && window.__we?.scent === this) delete window.__we.scent;

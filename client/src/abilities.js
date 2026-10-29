@@ -41,7 +41,8 @@
 // burrow J (the lizard's hide), swim W in deep water (every mammal but the vole; not the birds), climb W into a trunk
 // (the bear, the lizard), roost or rest X where S.rest has none, nest J (the squirrel), drum Q (the woodpecker), call C for a species
 // whose voice sound.js has but the player cannot yet give (C now plays the raven's kraa for them), eat E at a kill
-// (the lion, the fox: the catch fills the belly at once). Smell is a passive sense (scent.js, another lane): lit, no key.
+// (the lion, the fox: the catch fills the belly at once). Smell is the sniff (scent.js, 2026-10-29): L held, or the slot
+// itself held, shows every scent on the air with its name; lit while sniffing.
 //
 // The table is by species code (SPECIES), falling back by the walker's rig (RIG: quad, rodent, bird, lizard) and by the
 // control (the moves: groundMoves, FLIER_AIR / FLIER_FOOT, SQUIRREL, WOODPECKER, SPIRIT). The slots are rebuilt when the
@@ -54,7 +55,8 @@ const E = c => c.k('KeyE');
 // the verbs shared across bodies
 const CATCH = on('catch', 'E', E, { title: 'E within reach of prey (a rush that reaches it catches it too)' });
 const FEED = on('feed', 'E', E, { title: 'E beside a carcass' });
-const SMELL = on('smell', '', null, { title: 'a passive sense' });
+// the sniff: its own slot (L) unless the body's act (E) is already a sniff (the fox, the coyote, the lion: groundControl S.act), which sniffs too
+const SMELL = on('sniff', 'L', c => !!c.scent?.sniffing, { press: (c, down) => c.scent?.sniff?.(down), show: c => !(c.ground?.on && /sniff/.test(c.ground.S?.act?.word || '')), title: 'L, or hold this: every scent on the air, each with its name; a new scent flickers in on its own (scent.js)' });
 const DRINK = on('drink', 'E', c => !!c.needs?.atWater && E(c), { show: c => !!c.needs && c.needs.rhythm !== 'none', title: 'E at water' });
 const DRINK_NO = no('drink', 'E');
 const POUNCE = no('pounce', 'F'), CARRY = no('carry', 'F'), DIG = no('dig', 'Q'), CACHE = no('cache', 'Q'), MARK = no('mark', 'K');
@@ -196,12 +198,12 @@ export function abilitiesFor(kind, code, S = null) {
 export class Abilities {
   // el: #abilities; legs: #legs (the legs meter in the status column); bar: #bodyBar (the row); the controls, the
   // flight, the needs and the hunt as main.js makes them
-  constructor({ el, legs, bar, squirrel, woodpecker, ground, flier, spirit, flight, needs, hunt }) {
-    Object.assign(this, { el, legs, bar, squirrel, woodpecker, ground, flier, spirit, flight, needs, hunt });
+  constructor({ el, legs, bar, squirrel, woodpecker, ground, flier, spirit, flight, needs, hunt, scent = null }) {
+    Object.assign(this, { el, legs, bar, squirrel, woodpecker, ground, flier, spirit, flight, needs, hunt, scent });
     this.body = ''; this.slots = []; this.visible = null;
     this.legsBar = legs?.querySelector('b') || null;
     const keys = flight.keys;
-    this.c = { k: (...codes) => codes.some(x => keys.has(x)), shift: false, squirrel, woodpecker, ground, flier, spirit, flight, needs, hunt };
+    this.c = { k: (...codes) => codes.some(x => keys.has(x)), shift: false, squirrel, woodpecker, ground, flier, spirit, flight, needs, hunt, scent };
   }
   // which body the player is in: [control, species code, the species' entry]
   which() {
@@ -223,6 +225,12 @@ export class Abilities {
         const k = document.createElement('span'); k.className = 'ab-k';
         for (const s of entry.key.split(' ')) { const b = document.createElement('kbd'); b.textContent = s; k.append(b); }
         d.append(k);
+      }
+      if (entry.built && entry.press) {   // a slot that is also a button: held down (the sniff)
+        d.style.cursor = 'pointer';
+        const up = e => { e.preventDefault(); entry.press(this.c, false); };
+        d.addEventListener('pointerdown', e => { e.preventDefault(); entry.press(this.c, true); });
+        d.addEventListener('pointerup', up); d.addEventListener('pointercancel', up); d.addEventListener('pointerleave', up);
       }
       row.append(d);
       return { entry, el: d, lit: false, tired: false, shown: true };

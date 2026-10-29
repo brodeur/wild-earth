@@ -11,13 +11,17 @@
 // "a faint scent" under SCENT_SURE. And the prey's own nose (the same day, animals.js noticeAt): unaware or alert is
 // judged as the prey judges it, by sight and sound shrunk by the stalk, or by smell shaped by the wind; when the wind
 // carries the hunter's scent to the prey (wind.js scentCarry over DOWNWIND) the line says " · downwind of you": the prey
-// will smell the hunter from far, and the stalk should come round. The legs: a hunter's full run lasts a few seconds (groundControl S.sprint), then it is tired at
+// will smell the hunter from far, and the stalk should come round. The eyes (sight.js, the same day, main.js sets
+// hunt.sight): "it sees you" in place of alert when the prey has spotted the hunter, and " · spotted" in the prey's
+// rarity colour while the hunter has it in sight. The legs: a hunter's full run lasts a few seconds (groundControl S.sprint), then it is tired at
 // half speed until the legs come back; a rush that reaches its prey catches it, a rush that fails makes you known
 // (every species notices you 1.6x as far for 45 s). The arc: a hunter's body is taken hungry (needs.js 0.45) and
 // drains over NEED_T.hunt min; a catch fills it: a full belly ends the arc with the time and the rushes it took;
 // an empty one ends the body (needs.js onStarve: the spirit leaves). Kills per tile and the best time are kept in
 // localStorage, like the acorn stash.
+import * as THREE from 'three';
 import { scentCarry } from './wind.js';
+import { rarityColor } from './animals.js';
 const HUNT_R = 400, DIRS = ['↑', '↗', '→', '↘', '↓', '↙', '←', '↖'], SCENT_SURE = 0.3, DOWNWIND = 0.75;
 const TAU = Math.PI * 2;
 
@@ -74,12 +78,14 @@ export class Hunt {
       const ang = Math.atan2(dz * fx - dx * fz, dx * fx + dz * fz);   // clockwise seen from above: positive to the right (facing north, east is +pi/2)
       const i = ((Math.round(ang / (TAU / 8)) % 8) + 8) % 8;
       const st = this.state(t, d, P), name = A.speciesList()[t.sp]?.one || 'prey';
-      E.target.textContent = `${name} · ${Math.round(d)} m ${DIRS[i]} · ${st}`;
+      const sees = st !== 'fleeing' && !!this.sight?.seesMe?.(t), seen = !!this.sight?.spotted?.(t);   // the eyes (sight.js): it has the hunter in sight; the hunter has it
+      E.target.textContent = `${name} · ${Math.round(d)} m ${DIRS[i]} · ${sees ? 'it sees you' : st}`;
+      if (seen) { const sp = document.createElement('span'); sp.className = 'sp'; sp.textContent = ' · spotted'; sp.style.color = `#${rarityColor(A.rarity[t.sp], this._c ||= new THREE.Color()).getHexString()}`; E.target.appendChild(sp); }
       const sc = this.scent?.smell(t) || 0;   // the smell sense has this prey: it is upwind of the hunter
       if (sc > 0) { const sp = document.createElement('span'); sp.className = 'sc'; sp.textContent = ` · ${sc >= SCENT_SURE ? 'scented' : 'a faint scent'}`; E.target.appendChild(sp); }
       const dw = st !== 'fleeing' && scentCarry(t.x - P.x, t.z - P.z) >= DOWNWIND;   // the wind carries the hunter's scent to the prey
       if (dw) { const sp = document.createElement('span'); sp.className = 'dw'; sp.textContent = ' · downwind of you'; E.target.appendChild(sp); }
-      E.target.className = `hn-target ${st}${sc ? ' scented' : ''}${dw ? ' downwind' : ''}`;
+      E.target.className = `hn-target ${st}${sc ? ' scented' : ''}${dw ? ' downwind' : ''}${seen ? ' spotted' : ''}${sees ? ' seen' : ''}`;
     } else {
       E.target.textContent = `no prey within ${HUNT_R} m · dawn and dusk on the open edges`;
       E.target.className = 'hn-target';

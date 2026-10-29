@@ -188,6 +188,14 @@ browser stays the renderer.
   15 m for a deer (24 for the smallest) on 2026-10-29. Next: the greyed abilities one by one (dig, pounce, carry, swim,
   climb, call, mark, den, display); the prey's nose landed 2026-10-29 (animals.js noticeAt: the wind decides how far an
   animal smells the player). Open: no wind between AI animals (an AI lion's prey notices it at detects, as before).
+  The player's own senses as indicators (2026-10-29, docs/decisions.md "the eyes and the ears" and "the sniff"):
+  sight.js lights a predator or prey the camera has in sight in its rarity colour for a 5 s hold (a chance per second by
+  distance, motion and a line test through the ground, the near trees and shrubs and the canopy raster), and throbs one
+  that has the player in sight; soundCues.js rings a heard one on the screen at its point, or at the nearest edge;
+  scent.js draws a scent only when new (it flickers in and away) or while the player sniffs (L, the slot, or the
+  canids' and the lion's E), every strand with its label. Open: the chance's numbers are first guesses to tune
+  (sight.js RATE, STILL..BOLT, SEES_K); one colour for "spotted" and "it sees you" (the throb tells them apart); the
+  fliers' sight untried; the sniff slot untried with the pointer; a carcass's "dead" label unseen.
 
 - Geology and soils step done 2026-10-24 (Macrostrat/SGMC lithology at 1:750k, SSURGO
   texture, fragments and depth to bedrock; client rasters and an outcrop likelihood).
