@@ -1,6 +1,7 @@
 import * as THREE from 'three';
 import { seasonOfDate } from './season.js';
 import { drain } from './slice.js';
+import { windUniforms, WIND_GLSL } from './wind.js';
 
 // Parametric trees in the spirit of Weber & Penn 1995, "Creation and Rendering of Realistic Trees".
 // Each species is a parameter file in library/species/<id>.json (schema: docs/species-library.md).
@@ -15,6 +16,10 @@ import { drain } from './slice.js';
 //          species with a `twigs` block, a third (shrubs: second) level of short twigs that the close
 //          cards hang from; the near trunk is drawn with it. Used within about 90 m of the camera
 //          (vegetation.js).
+//   leaf:  (2026-10-28) inside a few metres of the camera (vegetation.js: 6 m for a deer, 15 m for a squirrel), each
+//          close card's single leaves, recorded as its texture is drawn, as quads with their own depth and orientation
+//          (needle tufts as crossed quads, fir and cedar sprays as flat segments), fluttering in the wind; see "Leaf
+//          level" below. The close cards' twigs stay.
 //   near: tapered curved tubes for trunk and branches, leaf cards (alpha-tested spray textures)
 //   mid:  trunk and the main limbs as thin straight tubes (lod.mid_sides, lod.mid_segments,
 //         lod.mid_branches), foliage as one card per clump, merged down to lod.mid_cards per tree
@@ -987,7 +992,7 @@ function woodGeometry(sk, lod, rnd) {
 
 // `keep` < 1 draws a subset of the cards, enlarged to keep the same leaf area (the optional mid-LOD card mode).
 // `cards` and `scale` select the close tier: its own card list at a smaller size.
-function cardGeometry(sk, keep = 1, cards = sk.cards, scale = 1) {
+function cardGeometry(sk, keep = 1, cards = sk.cards, scale = 1, onQuad = null) {
   const spec = sk.spec, F = spec.foliage, G = new Geo(), C = sk.centre, Rr = sk.radii;
   const leaf = F.colors.summer.map(srgbToLin), size = scale * sk.cluster * Math.min(4, 1 / Math.sqrt(keep));   // area-preserving (unclumped mid cards)
   const out = new THREE.Vector3(), nrm = new THREE.Vector3(), up = new THREE.Vector3(), right = new THREE.Vector3(), vn = new THREE.Vector3();
@@ -999,7 +1004,9 @@ function cardGeometry(sk, keep = 1, cards = sk.cards, scale = 1) {
   const planes = keep < 1 ? Math.max(1, Math.round(spec.lod.mid_planes ?? cardPlanes(F))) : cardPlanes(F);   // lod.mid_planes: mid (whole-clump) cards
   let order = 0;
   if (keep < 1) G.off = [];
+  let plane = 0;   // the quad's plane on its card (onQuad: the leaf level reads each close card's frame)
   const quad = (c, n, u, w, h, col, rank, outN) => {
+    if (onQuad) onQuad(c, n, u, w, col, rank, outN, plane);
     right.crossVectors(u, n).normalize();
     const base = G.n;
     for (const [sx, sy, tu, tv] of corner) {
@@ -1084,12 +1091,12 @@ function cardGeometry(sk, keep = 1, cards = sk.cards, scale = 1) {
       // from the shoot. Near and close cards sit with their base on the branch (the drawn twig starts
       // at the card's lower edge); mid cards (a whole clump) stay centred on it.
       const cc = list ? card.c : card.c.clone().addScaledVector(up, s * (F.tuft_base ?? 0.42));
-      for (let k = 0; k < planes; k++) quad(cc, k ? vn.copy(nrm).applyAxisAngle(up, k * Math.PI / planes).clone() : nrm, up, s, s, col, r4, out);
+      for (let k = 0; k < planes; k++) { plane = k; quad(cc, k ? vn.copy(nrm).applyAxisAngle(up, k * Math.PI / planes).clone() : nrm, up, s, s, col, r4, out); }
     } else {
       // close cards on twigs (card.attach) hang from the twig tip by their base, where the spray's drawn stem starts
       const cc = card.attach ? card.c.clone().addScaledVector(up, s * (spec.twigs?.attach ?? 0.42)) : card.c;
-      quad(cc, nrm, up, s, s, col, r4, out);
-      if (F.crossed) quad(cc, nrm.clone().cross(up).normalize(), up, s, s, col, r4, out);
+      plane = 0; quad(cc, nrm, up, s, s, col, r4, out);
+      plane = 1; if (F.crossed) quad(cc, nrm.clone().cross(up).normalize(), up, s, s, col, r4, out);
     }
   }
   return G;
@@ -1239,6 +1246,8 @@ export function* leafTextureSteps(spec, scale = 1, variant = 'summer', deco = ''
   const S = 256, c = document.createElement('canvas'); c.width = c.height = S;
   const seed = hashStr(spec.id) ^ (scale === 1 ? 0 : 0x9e3779b9 ^ Math.round(scale * 977)) ^ (kind === 'twig' ? 0x7a11 : 0);
   const g = c.getContext('2d'), rnd = mulberry32(seed);
+  const rec = kind === 'twig' ? null : [];   // every leaf (or needle tuft, or spray) drawn, for the leaf level (leafRecords)
+  g.weRec = rec;
   const px = Math.max(5, Math.min(110, F.leaf_size_m / (F.cluster_m * scale) * S * (F.type === 'needle' ? 1 : 1.3)));
   // Tints: palette entries and the tip colour relative to the season's leaf colour; greys are scaled
   // down so the largest tint still fits under 255 (the material gain divides the mean back out).
@@ -1268,7 +1277,8 @@ export function* leafTextureSteps(spec, scale = 1, variant = 'summer', deco = ''
   g.lineCap = 'round';
   const area = Math.PI * (S * 0.4) * (S * 0.43);
   if (kind !== 'twig' && (F.leaf_shape === 'needle_brush' || F.leaf_shape === 'needle_drooping' || F.leaf_shape === 'needle_flat')) {   // needle cards: own mips
-    const t = yield* needleTexture(F, S, px, seed, rgb, pal, wsum, scale > 1.2);
+    const t = yield* needleTexture(F, S, px, seed, rgb, pal, wsum, scale > 1.2, rec);
+    t.userData.leaves = packLeaves(rec, S);
     textures.set(key, t);
     return t;
   }
@@ -1340,6 +1350,7 @@ export function* leafTextureSteps(spec, scale = 1, variant = 'summer', deco = ''
       for (let i = 0; i < n; i++) { const [x, y] = inside(); drawLeaf(g, x, y, rnd() * Math.PI * 2, px * (0.8 + 0.4 * rnd()), shape, grey(), rnd, F); }
     }
   }
+  g.weRec = null;
   let leafMean = null;
   if (decos.length) {
     leafMean = meanGrey(g.getImageData(0, 0, S, S));   // the leaves' own mean, before the flowers
@@ -1353,6 +1364,7 @@ export function* leafTextureSteps(spec, scale = 1, variant = 'summer', deco = ''
   t.colorSpace = THREE.NoColorSpace;   // multipliers on the linear vertex colour
   t.anisotropy = 4; t.needsUpdate = true;
   t.userData.mean = leafMean ?? meanGrey(t.mipmaps[0]);   // the material divides by this so cards match the baked colour
+  t.userData.leaves = packLeaves(rec, S);
   textures.set(key, t);
   return t;
 }
@@ -1390,12 +1402,13 @@ function drawTwigs(g, S, rnd, rgb, cat = null, ends = null) {
 // (texture.userData.aux) holding each needle's shading normal in the card's frame (rgb) and the
 // foliage's thinness around it (alpha), with its own mips from the same draws, for canopyMaterial.
 const NEEDLE_BEND = 0.6;   // needle normal: outward from the shoot plus this much of the needle's own direction
-function* needleTexture(F, S, px, seed, rgb, pal, wsum, far) {
+function* needleTexture(F, S, px, seed, rgb, pal, wsum, far, rec = null) {
   function* drawLevel(size, keep, minW) {
     const c = document.createElement('canvas'); c.width = c.height = size;
     const ca = document.createElement('canvas'); ca.width = ca.height = size;
     const g = c.getContext('2d'), ga = ca.getContext('2d'), r = mulberry32(seed);
     g.lineCap = 'round'; ga.lineCap = 'round';
+    if (size === S) g.weRec = rec;   // the leaf level's tufts and sprays, from the full-size level only
     const subs = Array.from({ length: 5 }, () => { const a = r() * Math.PI * 2, rr = 0.22 * r(); return [size / 2 + Math.cos(a) * rr * size, size / 2 + Math.sin(a) * rr * size * 1.05, size * (0.17 + 0.09 * r())]; });
     const inside = () => { for (;;) { const [cx, cy, R] = subs[Math.floor(r() * subs.length)], a = r() * Math.PI * 2, rr = R * Math.sqrt(r()), x = cx + Math.cos(a) * rr, y = cy + Math.sin(a) * rr;
       const ex = (x - size / 2) / (size * 0.42), ey = (y - size / 2) / (size * 0.45); if (ex * ex + ey * ey < 1) return [x, y]; } };
@@ -1537,6 +1550,7 @@ function drawNeedleCard(g, S, F, px, rnd, rgb, tintOf, far, inside, keep = 1, sk
     // from the clump.
     const comb = (x0, y0, a, L, w, nw) => {
       const x1 = x0 + Math.sin(a) * L, y1 = y0 - Math.cos(a) * L, Ax = Math.sin(a), Ay = Math.cos(a), Px = Math.cos(a), Py = -Math.sin(a);
+      if (g.weRec) recSpray(g.weRec, x0, y0, a, L, px * 0.95, px * 2.5);
       g.strokeStyle = rgb(100 + 20 * rnd()); g.lineWidth = Math.max(minW, w); g.beginPath(); g.moveTo(x0, y0); g.lineTo(x1, y1); g.stroke();
       if (ga) { ga.strokeStyle = encN([0, 0.6, 0.8]); ga.lineWidth = g.lineWidth; ga.beginPath(); ga.moveTo(x0, y0); ga.lineTo(x1, y1); ga.stroke(); }
       const step = Math.max(0.8, px * 0.12);
@@ -1643,6 +1657,7 @@ function drawNeedleCard(g, S, F, px, rnd, rgb, tintOf, far, inside, keep = 1, sk
       // the apex and spreading to square with the shoot (and a little back) within a needle length of
       // it, so the tuft is a round starburst; needles stiff, curving up the shoot
       const span = Math.min(len * 0.85, px * 1.4), nf = Math.round(12 + 40 * span / px);
+      if (g.weRec) g.weRec.push({ t: 1, x: xb - Math.sin(ta) * span, y: yb + Math.cos(ta) * span, a: ta, f: span + px * 1.15, b: px * 0.35, w: px * 1.15 });
       for (let i = 0; i < nf; i++) {
         const u = Math.pow(rnd(), 0.9), d = span * (1 - u), x = xb - Math.sin(ta) * d, y = yb + Math.cos(ta) * d;
         const th = 0.15 + 1.2 * Math.min(1, d / (px * 0.9)) + 0.3 * rnd();
@@ -1651,6 +1666,7 @@ function drawNeedleCard(g, S, F, px, rnd, rgb, tintOf, far, inside, keep = 1, sk
     } else {
       // gray pine: a loose tuft at the very tip, needles fanning wide and arcing down
       const nf = 16 + Math.floor(rnd() * 7);
+      if (g.weRec) g.weRec.push({ t: 1, x: xb, y: yb, a: ta, f: px * 1.1, b: px * 0.9, w: px * 1.2 });
       for (let i = 0; i < nf; i++) {
         const d = px * 0.2 * rnd(), x = xb - Math.sin(ta) * d, y = yb + Math.cos(ta) * d;
         fascicle(x, y, ta, 0.15 + 1.3 * rnd(), rnd() * Math.PI * 2, px * (0.75 + 0.4 * rnd()), lw * 1.2, 0, droop * (0.6 + 0.5 * rnd()));
@@ -1726,6 +1742,7 @@ function drawScaleSprays(g, S, px, rnd, grey, twigs, inside, area, F, far) {
   const w0 = Math.max(1.4, px * 0.085);
   const frond = (x0, y0, a, L, w) => {
     const x1 = x0 + Math.sin(a) * L, y1 = y0 - Math.cos(a) * L;
+    if (g.weRec) recSpray(g.weRec, x0, y0, a, L, px * 0.9, px * 2.5);
     g.strokeStyle = grey(140); g.lineWidth = w; g.beginPath(); g.moveTo(x0, y0); g.lineTo(x1, y1); g.stroke();
     const step = px * 0.32;
     let side = rnd() < 0.5 ? 1 : -1;
@@ -1934,6 +1951,7 @@ export function leafSpecimen(shape, F = {}, px = 200, seed = 1) {
 
 const glintOf = (g, a = 0.45) => { const v = g.weGlint ?? 255; return v >= 255 ? `rgba(255,255,255,${a})` : `rgba(${v},${v},${v},${a})`; };
 function drawLeaf(g, x, y, a, len, shape, fill, rnd, F = null) {
+  if (g.weRec) { const [hw, hh] = leafBox(shape, F); g.weRec.push({ t: 0, x, y, a, f: len * hh, b: len * hh, w: len * hw, fill }); }
   if (shape in LEAF_STEP) { g.save(); g.translate(x, y); g.rotate(a); drawShapedLeaf(g, len, shape, fill, rnd, F); g.restore(); return; }
   g.save(); g.translate(x, y); g.rotate(a); g.fillStyle = fill; g.beginPath();
   let w = leafWidth(shape);
@@ -2025,9 +2043,10 @@ export function canopyMaterial(spec, lod = 'near', patch = null) {
   if (aux) { m.userData.needleLight = { value: new THREE.Vector4(...NL) }; m.userData.needleScatterK = { value: F0.needle_scatter ?? 0.15 }; m.userData.needleTint = { value: new THREE.Vector3(...(F0.translucency_rgb || [1, 1.12, 0.55])) }; }
   chainShader(m, (close ? 'leaf-close' : lod === 'mid' ? 'leaf-mid' : 'leaf-near') + `-v${cv[0]}-${cv[1]}-${lv}${thin ? '-thin' : ''}${aux ? '-needle' : ''}`, shader => {
     shader.uniforms.leafOn = m.userData.leafOn; shader.uniforms.leafVar = m.userData.leafVar;
+    shader.uniforms.time = windUniforms.time; shader.uniforms.windDir = windUniforms.windDir; shader.uniforms.windStrength = windUniforms.windStrength;
     if (aux) { shader.uniforms.needleAux = m.userData.needleAux; shader.uniforms.needleLight = m.userData.needleLight; shader.uniforms.needleScatterK = m.userData.needleScatterK; shader.uniforms.needleTint = m.userData.needleTint; }
     shader.vertexShader = shader.vertexShader
-      .replace('#include <common>', '#include <common>\nattribute float leafRank;\nvarying float vLeafRank;' + (vary ? '\nvarying vec3 vPlantTint;\nuniform float leafVar;' : ''))
+      .replace('#include <common>', '#include <common>\nattribute float leafRank;\nvarying float vLeafRank;\nvarying float vShim;\n' + WIND_GLSL + LEAF_WAVE_GLSL + (vary ? '\nvarying vec3 vPlantTint;\nuniform float leafVar;' : ''))
       .replace('#include <common>', '#include <common>\n' + (thin ? 'attribute vec4 cardOff;' : ''))
       .replace('#include <begin_vertex>', `#include <begin_vertex>
         ${thin ? `#ifdef USE_INSTANCING
@@ -2044,9 +2063,11 @@ export function canopyMaterial(spec, lod = 'near', patch = null) {
         plantH += dot(plantH, plantH.yxz + 33.33); plantH = fract((plantH.xxy + plantH.yxx) * plantH.zyx);
         float plantV = 1.0 + ${(2 * cv[0]).toFixed(4)} * (plantH.x - 0.5), plantS = ${(2 * cv[1]).toFixed(4)} * (plantH.y - 0.5);
         vPlantTint = plantV * vec3(1.0 + plantS, 1.0, 1.0 - plantS);
-        vLeafRank = mix(leafRank, plantH.z, leafVar);` : 'vLeafRank = leafRank;'}`);
+        vLeafRank = mix(leafRank, plantH.z, leafVar);` : 'vLeafRank = leafRank;'}
+        ${shimmerVertex(near ? 1 : 0.5)}`);
     shader.fragmentShader = shader.fragmentShader
-      .replace('#include <common>', '#include <common>\nuniform float leafOn;\nvarying float vLeafRank;' + (vary ? '\nvarying vec3 vPlantTint;' : ''))
+      .replace('#include <common>', '#include <common>\nuniform float leafOn;\nvarying float vLeafRank;\nvarying float vShim;' + (vary ? '\nvarying vec3 vPlantTint;' : ''))
+      .replace('#include <alphatest_fragment>', SHIMMER_ALPHA)
       .replace('#include <clipping_planes_fragment>', 'if (vLeafRank >= leafOn) discard;\n#include <clipping_planes_fragment>')
       .replace('#include <color_fragment>', vary ? '#include <color_fragment>\ndiffuseColor.rgb *= vPlantTint;' : '#include <color_fragment>');
     if (near) shader.fragmentShader = shader.fragmentShader.replace('#include <normal_fragment_begin>',
@@ -2085,6 +2106,395 @@ export function canopyMaterial(spec, lod = 'near', patch = null) {
         }`)
       .replace('vec3 outgoingLight = reflectedLight.directDiffuse', `reflectedLight.indirectDiffuse += needleScatter${shader.fragmentShader.includes('cloudOnly(vAtmoPos)') ? ' * cloudOnly( vAtmoPos )' : ''};
         vec3 outgoingLight = reflectedLight.directDiffuse`);
+    shader.fragmentShader = shader.fragmentShader.replace(/vec3 outgoingLight = [^;]*;/, x => x + SHIMMER_FRAG);   // last: after the needle light's own line
+  });
+  return m;
+}
+
+// ---------------------------------------------------------------------------------------------
+// Shimmer: wind in the leaves, read from a distance (2026-10-28). Each card (each leaf inside the leaf level)
+// brightens toward a pale sheen, as the sun catches turning leaves, and the flicker runs across the crowns in the wind's
+// direction as waves: a sine of the distance downwind (wind.js windDir, 9 m wavelength) less the wind's speed times
+// time (2 + 9 x windStrength m/s, so the waves run faster in a stronger wind), with a small offset from the card's
+// own hash so neighbouring cards do not flash in lock-step. It is gated by the slow term of the shared gust field
+// (wind.js gust: the same ~20 m cells advected downwind), so the shimmer comes in gusts and dies in a lull, and is off
+// below windStrength 0.03. Only the cards whose hash says they face the sun (half of them) shimmer, by up to 25% of
+// the way to the sheen in a full gust, and only by the sunlit share of their light (a shaded card stays shaded); their alpha
+// dips by half that, so the crown's edge breathes. The hash is of the plant's world position and the card's rank (one
+// value per card, the same for every viewer), never an instance id. Per vertex: one sine and the gust noise, passed
+// on as one varying (vShim). Instanced crowns only (the lineup's single trees stay still); it fades out from 900 to
+// 1300 m, before the impostors, which do not shimmer. Mid blobs (not cards) shimmer at half strength. The leaf level
+// takes its flutter from the same wave (leafWave), so the rhythm carries through the handover. Measured on the home
+// tile (M-series, the GPU shared with other pages, so roughly): the vegetation pass at the opening view 9.1 ms without
+// it, 9.75 ms with it; as a deer at 8 am with windStrength 0.3, 10% of the vegetation's pixels brighten by over 3% and
+// 2.6% by over 25% (flutter included), 15% and 5% at 0.8; at windStrength 0.02 the frame is identical to a calm one.
+export const LEAF_WAVE_GLSL = `
+  float leafWave(vec3 wp, float h, out float gate) {
+    gate = smoothstep(0.03, 0.2, windStrength) * smoothstep(0.15, 0.75, wNoise((wp.xz - windDir * time * 4.0) * 0.045));
+    return sin((dot(wp.xz, windDir) - (2.0 + 9.0 * windStrength) * time) * 0.7 + h * 1.6);
+  }
+  float leafShimmer(float wave, float gate, float h) {
+    float s = max(wave, 0.0); s *= s;
+    return step(0.5, fract(h * 7.13)) * gate * (0.08 + 0.17 * gate) * s;
+  }
+`;
+const shimmerVertex = k => `
+        #ifdef USE_INSTANCING
+        { mat4 shimM = modelMatrix * instanceMatrix;
+          vec3 shimP = (shimM * vec4(transformed, 1.0)).xyz;
+          float shimH = fract(leafRank * 173.37 + dot(shimM[3].xz, vec2(0.1031, 0.1173))), shimG;
+          float shimW = leafWave(shimP, shimH, shimG);
+          vShim = ${k.toFixed(2)} * (1.0 - smoothstep(900.0, 1300.0, distance(shimP, cameraPosition))) * leafShimmer(shimW, shimG, shimH); }
+        #else
+          vShim = 0.0;
+        #endif`;
+const SHIMMER_FRAG = `
+      { float shL = dot(outgoingLight, vec3(0.2126, 0.7152, 0.0722)), shD = dot(reflectedLight.directDiffuse, vec3(0.2126, 0.7152, 0.0722));
+        float shK = vShim * clamp(shD / max(shL, 1e-4), 0.0, 1.0);
+        outgoingLight = mix(outgoingLight, vec3(1.0, 1.02, 0.94) * max(shL * 1.8, max(outgoingLight.r, outgoingLight.g)), shK); }`;
+const SHIMMER_ALPHA = 'diffuseColor.a *= 1.0 - 0.5 * vShim;\n#include <alphatest_fragment>';
+
+// ---------------------------------------------------------------------------------------------
+// Leaf level (2026-10-28): single leaves inside a few metres of the camera (vegetation.js picks the radius, by body
+// size, and the trees). When a card texture is drawn (leafTextureSteps), every leaf it draws is recorded in card
+// space: drawLeaf its centre, axis angle, length and the box its shape fills, and its palette tint; a pine's tuft
+// (drawNeedleCard: the brush round a ponderosa shoot's end, the loose hanging tuft at a gray pine's) its base, axis
+// and size; a Douglas-fir comb and an incense cedar frond (recSpray) as segments about 2.5 needle lengths long. Every
+// close card of a species shows the same texture, so one list per species serves all its cards (leafRecords). The
+// leaf geometry (leafGeometrySteps) walks the close cards of one (species, seed) exactly as cardGeometry places
+// them (it hands each card's frame to a callback) and puts each recorded leaf through the card's frame: the leaf
+// keeps its place in the card's plane, so it sits where the card drew it and the dithered handover does not move
+// the foliage, and then gets its own depth (a third of the card's size either side of the plane: a spray has
+// thickness and parallax) and its own orientation (rolled up to 65 degrees about its axis and pitched up to 35,
+// then turned toward the sky, as leaves are; a fir or cedar spray stays flatter, 25 and 12). A tuft is three quads
+// crossed through the shoot's axis, tilted out of the card's plane, not single needles. Chamise (fascicle_wand) and
+// twig textures record nothing: those species keep their close cards.
+// Quads are 4 vertices each, drawn from leafAtlas (the species' leaf, or tuft, or spray, drawn four ways into a
+// 256 px atlas, leaves with their veins) with a back-light tint, two-sided, alpha-tested with alpha to coverage.
+// Lighting (leafMaterial): the crown-shaped normal of the close cards mixed with the leaf's own face (LEAF_NORMAL_K),
+// so a leaf turned to the sun is brighter than its neighbour but the crown keeps its shading; light through the
+// leaf (foliage.leaf_translucency, foliage.translucency_rgb, default yellow-green) when the sun is behind it, most
+// when the camera looks toward the sun. Each leaf flutters about its base from leafWave (the same travelling wave
+// and gust gate as the shimmer) plus a small fast tremble of its own, and shimmers as the cards do.
+// Caps: a tree's leaves are capped at LEAF_CAP (100 k); beyond it a fixed fraction keep of them is kept (by hash) and
+// each kept leaf grows enough to keep its card's cover (leafCover: the card's effective cover over the leaves' summed
+// area, times LEAF_TILT_COVER for leaves seen at a slant; at most the area-preserving 1 / sqrt(keep)). The cap was
+// 40 k in the plan; at 40 k a mature blue oak (about 440 k recorded leaves) kept 9% and its leaves came out three
+// times their size, a canyon live oak's (1.7 M) five times, so it was raised once the format got small: one quad
+// instanced per leaf, 32 bytes a leaf (leafGeometrySteps), so a 100 k leaf tree is 3.2 MB. Measured (home tile):
+// blue oak keep 0.14-0.35 and leaves 1.3-1.5x, interior live oak 0.18-0.24 and 1.6-2.2x, valley oak 0.14 and 1.8x;
+// gray and ponderosa pine (a few tufts a card), manzanita and the small trees keep every leaf at its own size.
+export const LEAF_CAP = 100000, LEAF_Q = 512, LEAF_NORMAL_K = 0.45, LEAF_TILT_COVER = 1.5;
+const LEAF_BOX = { lanceolate: [0.18, 0.53], lobed: [0.4, 0.55], oblong_wavy: [0.25, 0.53], elliptic_glossy: [0.25, 0.53], round_vertical: [0.36, 0.53],
+  deltoid: [0.45, 0.53], palmate_compound: [0.47, 0.55], pinnate_compound: [0.37, 0.56], trifoliate: [0.44, 0.54], cordate: [0.5, 0.54] };
+// [half-width, half-length] of the box a leaf of this shape fills, in leaf lengths, centred on the leaf's centre
+function leafBox(shape, F) {
+  if (shape === 'lobed_large') return (F?.lobe_style ?? 'pinnate') === 'palmate' ? [0.55, 0.55] : [0.4, 0.55];
+  return LEAF_BOX[shape] || [leafWidth(shape) * 1.1, 0.53];
+}
+// A comb or frond of length L from (x0, y0) along a, recorded as segments about `seg` long (canvas px).
+function recSpray(rec, x0, y0, a, L, w, seg) {
+  const n = Math.max(1, Math.round(L / seg)), sl = L / n;
+  for (let k = 0; k < n; k++) rec.push({ t: 2, x: x0 + Math.sin(a) * sl * k, y: y0 - Math.cos(a) * sl * k, a, f: sl * 1.06, b: sl * 0.04, w });
+}
+// Records to a Float32Array, stride LEAF_STRIDE: type (0 leaf, 1 tuft, 2 spray), base x, y in the card's frame (card
+// size 1, centre 0, y up the card), axis angle (0 up the card, clockwise), forward and back extent along the axis,
+// half-width, tint rgb (the fill over the mean fill, 1 for needles).
+const LEAF_STRIDE = 10;
+function packLeaves(rec, S) {
+  if (!rec || !rec.length) return null;
+  let lum = 0, nl = 0;
+  for (const r of rec) if (r.fill) { const m = /rgb\((\d+),(\d+),(\d+)\)/.exec(r.fill); if (!m) continue; r.c = [+m[1], +m[2], +m[3]]; lum += 0.2126 * r.c[0] + 0.7152 * r.c[1] + 0.0722 * r.c[2]; nl++; }
+  const mean = nl ? lum / nl : 1, out = new Float32Array(rec.length * LEAF_STRIDE);
+  rec.forEach((r, i) => out.set([r.t, r.x / S - 0.5, 0.5 - r.y / S, r.a, r.f / S, r.b / S, r.w / S, ...(r.c ? r.c.map(v => v / mean) : [1, 1, 1])], i * LEAF_STRIDE));
+  return out;
+}
+// The recorded leaves of a species' close card (null: no leaf level for it).
+export function leafRecords(name) {
+  const id = resolveSpecies(name); if (!id || typeof document === 'undefined') return null;
+  const spec = LIBRARY[id]; return leafTexture(spec, spec.lod.close_scale).userData.leaves || null;
+}
+
+// The atlas: 2 x 2 tiles of LEAF_TILE px, each a variant of the species' leaf (type 0, the box of leafBox, tip up),
+// tuft (1) or spray segment (2, base at the bottom); content inset LEAF_PAD px so the mips do not bleed. RGB are
+// multipliers (the material divides by the mean), alpha the shape, with coverage-keeping mips as the cards'.
+const LEAF_TILE = 128, LEAF_PAD = 4, atlases = new Map();
+export function leafAtlas(spec) {
+  if (atlases.has(spec.id)) return atlases.get(spec.id);
+  const recs = leafRecords(spec.id); if (!recs) { atlases.set(spec.id, null); return null; }
+  const type = recs[0], F = spec.foliage, T = LEAF_TILE, I = T - 2 * LEAF_PAD;
+  const c = document.createElement('canvas'); c.width = c.height = 2 * T;
+  const g = c.getContext('2d'); g.lineCap = 'round';
+  // the canonical record each tile is drawn for: f, b, w in needle lengths (types 1, 2)
+  const pine = F.leaf_shape === 'needle_brush' ? [2.55, 0.35, 1.15] : [1.1, 0.9, 1.2], spray = [2.65, 0.1, F.leaf_shape === 'needle_scale' ? 0.9 : 0.95];
+  for (let t = 0; t < 4; t++) {
+    const ox = (t % 2) * T + LEAF_PAD, oy = (t >> 1) * T + LEAF_PAD, rnd = mulberry32(hashStr(spec.id) ^ (0x1eaf00 + t));
+    g.save(); g.beginPath(); g.rect(ox, oy, I, I); g.clip();
+    if (type === 0) paintLeafTile(g, ox, oy, I, F, rnd);
+    else {
+      const [f, b, w] = type === 1 ? pine : spray, P = (x, y) => [ox + I / 2 + x / w * I / 2, oy + I * f / (f + b) - y / (f + b) * I];   // needle lengths to px, y up the axis
+      if (type === 1) paintTuftTile(g, P, F, rnd, I / (f + b)); else paintSprayTile(g, P, F, rnd, I / (f + b));
+    }
+    g.restore();
+  }
+  const t = new THREE.Texture();
+  t.mipmaps = coverageMips(c, 0.5);
+  t.image = t.mipmaps[0];
+  t.generateMipmaps = false; t.minFilter = THREE.LinearMipmapLinearFilter; t.magFilter = THREE.LinearFilter;
+  t.colorSpace = THREE.NoColorSpace; t.anisotropy = 4; t.needsUpdate = true;
+  t.userData.mean = meanGrey(t.mipmaps[0]); t.userData.type = type;
+  atlases.set(spec.id, t);
+  return t;
+}
+// One leaf filling the tile (its leafBox), tip up, with a pale midrib and secondary veins on the blade.
+function paintLeafTile(g, ox, oy, I, F, rnd) {
+  const shape = F.leaf_shape, [hw, hh] = leafBox(shape, F), len = I / (2 * hh);
+  g.translate(ox + I / 2, oy + I / 2); g.scale(hh / hw, 1);
+  drawLeaf(g, 0, 0, 0, len, shape === 'round_vertical' ? 'oval' : shape, 'rgb(212,220,200)', rnd, F);
+  if (shape in COMPOUND) return;   // leaflets: the drawn stalks are the veins
+  g.globalCompositeOperation = 'source-atop';
+  g.strokeStyle = 'rgba(246,252,222,0.6)'; g.lineWidth = Math.max(1, len * 0.022);
+  g.beginPath(); g.moveTo(0, len * 0.5); g.lineTo(0, -len * 0.47); g.stroke();
+  g.lineWidth = Math.max(0.7, len * 0.009); g.strokeStyle = 'rgba(240,248,215,0.4)';
+  for (let k = 1; k <= 6; k++) {
+    const y = len * (0.36 - k * 0.12);
+    for (const sd of [-1, 1]) { g.beginPath(); g.moveTo(0, y); g.quadraticCurveTo(sd * len * hw * 0.45, y - len * 0.06, sd * len * hw * (0.85 + 0.1 * rnd()), y - len * 0.15); g.stroke(); }
+  }
+  g.globalCompositeOperation = 'source-over';
+}
+// A pine tuft seen from the side, P(x, y) in needle lengths (base at 0, the shoot up y), u px per needle length.
+function paintTuftTile(g, P, F, rnd, u) {
+  const brush = F.leaf_shape === 'needle_brush', droop = F.droop ?? (brush ? 0 : 0.8), shade = v => `rgb(${v},${Math.min(255, v + 8)},${Math.max(0, v - 12)})`;
+  const needle = (x, y, a, L, bend) => {
+    const pts = [P(x, y)]; let px0 = x, py0 = y;
+    for (let i = 1; i <= 5; i++) { const ai = a + bend * Math.pow((i - 0.5) / 5, 1.6); px0 += Math.sin(ai) * L / 5; py0 += Math.cos(ai) * L / 5; pts.push(P(px0, py0)); }
+    const gr = g.createLinearGradient(...pts[0], ...pts[5]); gr.addColorStop(0, shade(120 + 30 * rnd() | 0)); gr.addColorStop(0.6, shade(185 + 30 * rnd() | 0)); gr.addColorStop(1, shade(225 + 30 * rnd() | 0));
+    g.strokeStyle = gr; g.lineWidth = Math.max(1, u * (brush ? 0.03 : 0.022));
+    g.beginPath(); g.moveTo(...pts[0]); for (let i = 1; i < pts.length; i++) g.lineTo(...pts[i]); g.stroke();
+  };
+  g.strokeStyle = 'rgb(105,100,90)'; g.lineWidth = Math.max(1.5, u * 0.05);
+  if (brush) {
+    const [x0, y0] = P(0, 0), [x1, y1] = P(0, 1.4); g.beginPath(); g.moveTo(x0, y0); g.lineTo(x1, y1); g.stroke();
+    for (let i = 0; i < 70; i++) {
+      const d = 1.4 * Math.pow(rnd(), 0.9), th = (0.15 + 1.2 * Math.min(1, d / 0.9) + 0.3 * rnd()) * (rnd() < 0.5 ? -1 : 1), proj = 0.4 + 0.6 * rnd();
+      needle(0, 1.4 - d, th * proj, (0.7 + 0.45 * rnd()) * (0.4 + 0.6 * proj), -Math.sign(th) * 0.3);
+    }
+  } else {
+    for (let i = 0; i < 26; i++) {
+      const th = (0.15 + 1.3 * rnd()) * (rnd() < 0.5 ? -1 : 1), a = th, L = 0.75 + 0.35 * rnd();
+      needle(0, 0, a, L, Math.sign(a) * (Math.PI - Math.abs(a)) * Math.min(0.9, droop * (0.6 + 0.5 * rnd())) * 0.6);
+    }
+  }
+}
+// A spray segment: a Douglas-fir shoot with its comb of flat needles either side, or an incense cedar frond's rachis
+// with alternate branchlets of scale leaves, base at 0 and running up y.
+function paintSprayTile(g, P, F, rnd, u) {
+  const line = (a, b, w, v) => { g.strokeStyle = `rgb(${v | 0},${Math.min(255, v + 6) | 0},${Math.max(0, v - 10) | 0})`; g.lineWidth = Math.max(1, w); g.beginPath(); g.moveTo(...P(...a)); g.lineTo(...P(...b)); g.stroke(); };
+  line([0, -0.1], [0, 2.65], u * 0.05, 110);
+  if (F.leaf_shape === 'needle_scale') {
+    let side = rnd() < 0.5 ? 1 : -1;
+    for (let s = 0.15; s < 2.6; s += 0.32 * (0.85 + 0.3 * rnd())) {
+      const b = side * (0.8 + 0.25 * rnd()), l = 0.55 + 0.35 * rnd(), e = [Math.sin(b) * l, s + Math.cos(b) * l];
+      line([0, s], e, u * 0.085, 150 + 40 * rnd());
+      let s2 = rnd() < 0.5 ? 1 : -1;
+      for (let q = l * 0.3; q < l; q += 0.17) { const t = q / l, cx = e[0] * t, cy = s + (e[1] - s) * t, c = b + s2 * (0.75 + 0.3 * rnd()), cl = 0.26 * (1 - 0.5 * t); line([cx, cy], [cx + Math.sin(c) * cl, cy + Math.cos(c) * cl], u * 0.065, 165 + 40 * rnd()); s2 = -s2; }
+      side = -side;
+    }
+    return;
+  }
+  for (let s = 0.06; s < 2.62; s += 0.12 * (0.8 + 0.4 * rnd())) for (const sd of [-1, 1]) {
+    const a = sd * (0.95 + 0.4 * (rnd() - 0.5)), L = 0.85 + 0.25 * rnd();
+    const gr = g.createLinearGradient(...P(0, s), ...P(Math.sin(a) * L, s + Math.cos(a) * L)); gr.addColorStop(0, 'rgb(150,156,140)'); gr.addColorStop(1, `rgb(${215 + 30 * rnd() | 0},225,205)`);
+    g.strokeStyle = gr; g.lineWidth = Math.max(1, u * 0.07); g.beginPath(); g.moveTo(...P(0, s)); g.quadraticCurveTo(...P(Math.sin(a) * L * 0.5, s + Math.cos(a) * L * 0.55), ...P(Math.sin(a) * L, s + Math.cos(a) * L * 0.9)); g.stroke();
+  }
+}
+
+// leafGeometrySteps(speciesId, seed): the leaf level of one tree, in buildTree's frame (lean applied), as a generator
+// that yields every 150 cards (vegetation.js steps it within a time budget, so walking into a new tree does not
+// hitch). An InstancedBufferGeometry: one quad (four corners, `position` x -1 | 1 across, y 0 at the leaf's base and
+// 1 at its tip) drawn once per leaf, the leaves as instance attributes, 32 bytes a leaf: lC (Int16: the leaf's axis
+// point at 1/LEAF_Q m, w its hash), lA and lN (Int8: its axis and face, w the card's rank), lS (Uint16 over LEAF_SIZE_M:
+// forward and back extent and half-width, w the atlas tile), lK (Uint8: colour over the summer colour) and lM (Int8: the
+// crown-shaped normal of the close card there). Returns { geometry, leaves, total, keep, grow, bytes } or null.
+export const LEAF_SIZE_M = 2;
+export function* leafGeometrySteps(name, seed = 1) {
+  const id = resolveSpecies(name), recs = id ? leafRecords(id) : null; if (!recs) return null;
+  const sk = skeleton(specForSeed(LIBRARY[id], seed), seed), spec = sk.spec, F = spec.foliage, C = sk.centre, Rr = sk.radii;
+  const cover = leafCover(LIBRARY[id]);
+  const frames = [];
+  cardGeometry(sk, 1, sk.closeCards, spec.lod.close_scale, (c, n, u, s, col, rank, out, k) => { if (k === 0 && s > 0) frames.push([c.clone(), n.clone(), u.clone(), s, col.slice(), rank, out.clone()]); });
+  yield;
+  const nr = recs.length / LEAF_STRIDE;
+  let per = 0; for (let j = 0; j < nr; j++) per += recs[j * LEAF_STRIDE] === 1 ? 3 : 1;
+  const total = frames.length * per, keep = Math.min(1, LEAF_CAP / Math.max(1, total));
+  // fewer leaves, each larger, to keep the card's cover (1 - exp(-area)): the leaves of a card overlap, so the area to
+  // keep is the card's effective cover, not the drawn leaves' sum, times LEAF_TILT_COVER for the leaves turned out of
+  // the card's plane (seen at a slant); never more than the area-preserving 1 / sqrt(keep)
+  const grow = keep >= 1 ? 1 : Math.min(1 / Math.sqrt(keep), Math.max(1, Math.sqrt(LEAF_TILT_COVER * cover.eff / (keep * Math.max(1e-3, cover.area)))));
+  const cap = Math.ceil(total * keep * 1.06) + 64;
+  const lC = new Int16Array(cap * 4), lA = new Int8Array(cap * 4), lN = new Int8Array(cap * 4), lS = new Uint16Array(cap * 4), lK = new Uint8Array(cap * 4), lM = new Int8Array(cap * 4);
+  const summer = F.colors.summer.map(srgbToLin), xf = new THREE.Matrix4().makeRotationY(sk.leanDir).multiply(new THREE.Matrix4().makeRotationZ(sk.lean));
+  const right = new THREE.Vector3(), B = new THREE.Vector3(), A0 = new THREE.Vector3(), S0 = new THREE.Vector3(), A = new THREE.Vector3(), N = new THREE.Vector3(), Sd = new THREE.Vector3();
+  const cn = new THREE.Vector3(), q = new THREE.Vector3(), lo = new THREE.Vector3(Infinity, Infinity, Infinity), hi = new THREE.Vector3(-Infinity, -Infinity, -Infinity);
+  const ROLL = 65 * DEG, PITCH = 35 * DEG, ROLL2 = 25 * DEG, PITCH2 = 12 * DEG, TILT = 25 * DEG, DEPTH = 0.33, SKY = 0.4;
+  const q16 = v => Math.max(-32767, Math.min(32767, Math.round(v * LEAF_Q))), q8 = v => Math.max(-127, Math.min(127, Math.round(v * 127))), qs = v => Math.min(65535, Math.round(v / LEAF_SIZE_M * 65535));
+  let n = 0, frameOut = null, frameCol = null, maxR = 0;
+  // one leaf: axis point B, axis A, face N; extents f, b along A, half-width w; atlas tile t; hash h
+  const leaf = (f, b, w, t, h, rgb, rank) => {
+    if (n >= cap) return;
+    cn.subVectors(B, C).divide(Rr).normalize().multiplyScalar(0.8).addScaledVector(frameOut, 0.2).normalize().applyMatrix4(xf);
+    q.copy(B).applyMatrix4(xf); lo.min(q); hi.max(q); maxR = Math.max(maxR, f + w, b + w);
+    const o = n * 4;
+    lC[o] = q16(q.x); lC[o + 1] = q16(q.y); lC[o + 2] = q16(q.z); lC[o + 3] = Math.round((h * 2 - 1) * 32767);
+    q.copy(A).applyMatrix4(xf); lA[o] = q8(q.x); lA[o + 1] = q8(q.y); lA[o + 2] = q8(q.z); lA[o + 3] = q8(rank * 2 - 1);
+    q.copy(N).applyMatrix4(xf); lN[o] = q8(q.x); lN[o + 1] = q8(q.y); lN[o + 2] = q8(q.z);
+    lM[o] = q8(cn.x); lM[o + 1] = q8(cn.y); lM[o + 2] = q8(cn.z);
+    lS[o] = qs(f); lS[o + 1] = qs(b); lS[o + 2] = qs(w); lS[o + 3] = Math.round(t / 3 * 65535);
+    for (let i = 0; i < 3; i++) lK[o + i] = Math.max(0, Math.min(255, Math.round(frameCol[i] / Math.max(1e-6, summer[i]) * rgb[i] * 127.5)));
+    lK[o + 3] = 255;
+    n++;
+  };
+  for (let ci = 0; ci < frames.length; ci++) {
+    const [c, nn, u, s, col, rank, out] = frames[ci]; frameOut = out; frameCol = col;
+    right.crossVectors(u, nn).normalize();
+    const rnd = mulberry32(Math.imul(seed, 2654435761) ^ Math.imul(ci + 1, 40503) ^ 0x1eaf);
+    for (let j = 0; j < nr; j++) {
+      const o = j * LEAF_STRIDE, type = recs[o], h0 = rnd(), h1 = rnd(), h2 = rnd(), h3 = rnd(), h4 = rnd();
+      if (h0 >= keep) continue;
+      const a = recs[o + 3], f = recs[o + 4] * s * grow, b = recs[o + 5] * s * grow, w = recs[o + 6] * s * grow, rgb = [recs[o + 7], recs[o + 8], recs[o + 9]], tile = Math.floor(h4 * 4) & 3;
+      B.copy(c).addScaledVector(right, recs[o + 1] * s).addScaledVector(u, recs[o + 2] * s).addScaledVector(nn, (h1 - 0.5) * s * DEPTH);
+      A0.copy(right).multiplyScalar(Math.sin(a)).addScaledVector(u, Math.cos(a));
+      S0.copy(right).multiplyScalar(Math.cos(a)).addScaledVector(u, -Math.sin(a));
+      if (type === 1) {
+        // a tuft: tilted out of the card's plane, then three quads crossed through its axis
+        const ph = (h2 - 0.5) * 2 * TILT;
+        A.copy(A0).multiplyScalar(Math.cos(ph)).addScaledVector(nn, Math.sin(ph));
+        const N0 = nn.clone().multiplyScalar(Math.cos(ph)).addScaledVector(A0, -Math.sin(ph));
+        Sd.crossVectors(A, N0);
+        for (let p = 0; p < 3; p++) {
+          const th = h3 * Math.PI + p * Math.PI / 3;
+          N.copy(N0).multiplyScalar(Math.cos(th)).addScaledVector(Sd, Math.sin(th));
+          leaf(f, b, w, (tile + p) & 3, (h1 + p * 0.37) % 1, rgb, rank);
+        }
+        continue;
+      }
+      const roll = (h2 - 0.5) * 2 * (type ? ROLL2 : ROLL), pitch = (h3 - 0.5) * 2 * (type ? PITCH2 : PITCH);
+      N.copy(nn).multiplyScalar(Math.cos(roll)).addScaledVector(S0, Math.sin(roll));   // roll about the axis
+      A.copy(A0).multiplyScalar(Math.cos(pitch)).addScaledVector(N, Math.sin(pitch));   // pitch about the side
+      N.multiplyScalar(Math.cos(pitch)).addScaledVector(A0, -Math.sin(pitch));
+      if (!type) {   // leaves turn their face to the sky
+        if (N.y < 0) N.negate();
+        N.y += SKY; N.normalize();
+        A.addScaledVector(N, -A.dot(N)).normalize();
+      }
+      leaf(f, b, w, tile, h4 * 4 % 1, rgb, rank);
+    }
+    if (ci % 150 === 149) yield;
+  }
+  const g = new THREE.InstancedBufferGeometry();
+  g.setAttribute('position', new THREE.BufferAttribute(new Float32Array([-1, 0, 0, 1, 0, 0, -1, 1, 0, 1, 1, 0]), 3));
+  g.setIndex([0, 1, 2, 1, 3, 2]);
+  const ia = (arr, norm) => new THREE.InstancedBufferAttribute(arr.slice(0, n * 4), 4, norm);
+  g.setAttribute('lC', ia(lC, false)); g.setAttribute('lA', ia(lA, true)); g.setAttribute('lN', ia(lN, true));
+  g.setAttribute('lS', ia(lS, true)); g.setAttribute('lK', ia(lK, true)); g.setAttribute('lM', ia(lM, true));
+  g.instanceCount = n;
+  if (!n) lo.set(0, 0, 0), hi.set(0, 0, 0);
+  g.boundingBox = new THREE.Box3(lo, hi).expandByScalar(maxR);
+  g.boundingSphere = g.boundingBox.getBoundingSphere(new THREE.Sphere());
+  return { geometry: g, leaves: n, total, keep, grow, bytes: n * 32 };
+}
+export function buildLeaves(name, seed = 1) { return drain(leafGeometrySteps(name, seed)); }
+// A species' close card: the leaves' summed area (in card areas, the leafBox ellipse for a leaf, the box for the rest)
+// and its effective cover, -ln(1 - the texture's alpha-tested cover) (leafGeometrySteps' size compensation).
+function leafCover(spec) {
+  const t = leafTexture(spec, spec.lod.close_scale), ud = t.userData;
+  if (ud.leafCover) return ud.leafCover;
+  const r = ud.leaves; let area = 0;
+  for (let o = 0; o < r.length; o += LEAF_STRIDE) area += (r[o + 4] + r[o + 5]) * 2 * r[o + 6] * (r[o] ? 0.5 : Math.PI / 4) * (r[o] === 1 ? 3 : 1);
+  const d = t.mipmaps[0].data; let c = 0;
+  for (let i = 3; i < d.length; i += 4) if (d[i] >= 128) c++;
+  ud.leafCover = { area, eff: -Math.log(Math.max(1e-3, 1 - c / (d.length / 4))) };
+  return ud.leafCover;
+}
+
+// The leaf level's material (see above): the atlas, the shimmer and flutter (leafWave), the card's rank against
+// leafOn (the same cards leaf out and drop as the close tier's), the plant's tint (foliage.color_var). Drawn per tree
+// (a Mesh whose matrix is the close instance's, on leafGeometrySteps' instanced quads), so no instance matrix and no
+// drape: the leaf level is within 18 m of the camera, inside the fine ground square, where the drape is nil.
+// applySeason sets its colour (the season's over summer's) and userData.off when the close cards show what the
+// leaves cannot (a bare crown's twigs, flowers, berries): vegetation.js then keeps those crowns on their close cards.
+export function leafMaterial(spec, patch = null) {
+  const F = spec.foliage, atlas = typeof document !== 'undefined' ? leafAtlas(spec) : null; if (!atlas) return null;
+  const m = new THREE.MeshLambertMaterial({ map: atlas, alphaTest: 0.5, side: THREE.DoubleSide });
+  m.alphaToCoverage = true;
+  const ud = m.userData;
+  ud.leafLevel = true; ud.texScale = null; ud.gain = 1 / atlas.userData.mean; ud.off = false;
+  ud.leafOn = { value: 1 }; ud.leafVar = { value: F.leaf_on_var || 0 };
+  ud.leafBase = { value: new THREE.Vector3(...F.colors.summer.map(srgbToLin)) };
+  // (face weight, translucency, wrap, needle): leaves light by their face and pass light through it when the sun is
+  // behind; tufts and sprays (no face to speak of) as the needle cards do: wrapped, and light through them by how far
+  // the camera looks toward the sun (canopyMaterial's needle light: foliage.translucency, foliage.needle_wrap)
+  const ndl = F.type !== 'broadleaf';
+  ud.leafLight = { value: new THREE.Vector4(ndl ? 0.2 : LEAF_NORMAL_K, ndl ? (F.translucency ?? 2.5) * 0.6 : F.leaf_translucency ?? 0.5, ndl ? F.needle_wrap ?? 0.35 : 0, ndl ? 1 : 0) };
+  ud.leafTint = { value: new THREE.Vector3(...(F.translucency_rgb || [1, 1.12, 0.55])) };
+  m.color.setScalar(ud.gain);
+  if (patch) patch(m);
+  const cv = F.color_var || [0, 0], lv = F.leaf_on_var || 0, T = LEAF_TILE, W = 2 * T, PD = LEAF_PAD;
+  chainShader(m, `leaf-level-v${cv[0]}-${cv[1]}-${lv}`, shader => {
+    Object.assign(shader.uniforms, { leafOn: ud.leafOn, leafVar: ud.leafVar, leafBase: ud.leafBase, leafLight: ud.leafLight, leafTint: ud.leafTint,
+      time: windUniforms.time, windDir: windUniforms.windDir, windStrength: windUniforms.windStrength });
+    shader.vertexShader = shader.vertexShader
+      .replace('#include <common>', `#include <common>
+        attribute vec4 lC; attribute vec4 lA; attribute vec4 lN; attribute vec4 lS; attribute vec4 lK; attribute vec4 lM;
+        uniform vec3 leafBase; uniform float leafVar;
+        varying vec3 vLeafCol; varying vec3 vLeafNv; varying float vLeafRank; varying float vShim;
+        ${WIND_GLSL}
+        ${LEAF_WAVE_GLSL}`)
+      .replace('#include <uv_vertex>', `#include <uv_vertex>
+        #ifdef USE_MAP
+        { float t = floor(lS.w * 3.0 + 0.5), tx = mod(t, 2.0), ty = floor(t * 0.5);
+          vMapUv = vec2((tx * ${T}.0 + ${PD}.0 + (position.x * 0.5 + 0.5) * ${T - 2 * PD}.0) / ${W}.0, 1.0 - (ty * ${T}.0 + ${PD}.0 + (1.0 - position.y) * ${T - 2 * PD}.0) / ${W}.0); }
+        #endif`)
+      .replace('#include <beginnormal_vertex>', 'vec3 objectNormal = normalize(lM.xyz);')
+      .replace('#include <begin_vertex>', `
+        vec3 leafAx = normalize(lA.xyz), leafNo = normalize(lN.xyz), leafSd = cross(leafAx, leafNo);
+        float leafF = lS.x * ${LEAF_SIZE_M.toFixed(1)}, leafB = lS.y * ${LEAF_SIZE_M.toFixed(1)}, leafHW = lS.z * ${LEAF_SIZE_M.toFixed(1)};
+        vec3 transformed = lC.xyz * ${(1 / LEAF_Q).toFixed(8)} + leafSd * (position.x * leafHW) + leafAx * (position.y > 0.5 ? leafF : -leafB);
+        {
+          vec3 plantH = fract(modelMatrix[3].xzx * vec3(0.1031, 0.1030, 0.0973));
+          float leafH = lC.w / 65534.0 + 0.5, leafG;
+          float leafWv = leafWave((modelMatrix * vec4(transformed, 1.0)).xyz, leafH, leafG);
+          // the leaf turns about its base: with the travelling wave (more in a gust) and a small tremble of its own
+          float leafA = (0.06 + 0.4 * leafG) * min(windStrength, 1.5) * leafWv + 0.05 * windStrength * sin(time * (7.0 + 5.0 * leafH) + leafH * 40.0);
+          transformed += leafNo * (position.y * (leafF + leafB) * leafA);
+          vShim = leafShimmer(leafWv, leafG, leafH);
+          plantH += dot(plantH, plantH.yxz + 33.33); plantH = fract((plantH.xxy + plantH.yxx) * plantH.zyx);
+          float plantV = 1.0 + ${(2 * cv[0]).toFixed(4)} * (plantH.x - 0.5), plantS = ${(2 * cv[1]).toFixed(4)} * (plantH.y - 0.5);
+          vLeafCol = lK.rgb * 2.0 * leafBase * plantV * vec3(1.0 + plantS, 1.0, 1.0 - plantS);
+          vLeafRank = mix(lA.w * 0.5 + 0.5, plantH.z, leafVar);
+          vLeafNv = normalMatrix * leafNo;
+        }`);
+    shader.fragmentShader = shader.fragmentShader
+      .replace('#include <common>', `#include <common>
+        uniform float leafOn; uniform vec4 leafLight; uniform vec3 leafTint;
+        varying vec3 vLeafCol; varying vec3 vLeafNv; varying float vLeafRank; varying float vShim;
+        vec3 leafFace = vec3(0.0, 0.0, 1.0);`)
+      .replace('#include <clipping_planes_fragment>', 'if (vLeafRank >= leafOn) discard;\n#include <clipping_planes_fragment>')
+      .replace('#include <color_fragment>', 'diffuseColor.rgb *= vLeafCol;')
+      .replace('#include <alphatest_fragment>', SHIMMER_ALPHA)
+      .replace('#include <normal_fragment_begin>', THREE.ShaderChunk.normal_fragment_begin.replace('normal *= faceDirection;', '') + `
+        leafFace = normalize(vLeafNv) * faceDirection;
+        normal = normalize(mix(normal, leafFace, leafLight.x));`)
+      .replace('#include <lights_lambert_pars_fragment>', `#include <lights_lambert_pars_fragment>
+        void RE_Direct_Leaf( const in IncidentLight directLight, const in vec3 geometryPosition, const in vec3 geometryNormal, const in vec3 geometryViewDir, const in vec3 geometryClearcoatNormal, const in LambertMaterial material, inout ReflectedLight reflectedLight ) {
+          float dotNL = saturate( ( dot( geometryNormal, directLight.direction ) + leafLight.z ) / ( 1.0 + leafLight.z ) );
+          float back = saturate( -dot( leafFace, directLight.direction ) ), fwd = saturate( -dot( geometryViewDir, directLight.direction ) ), f2 = fwd * fwd;
+          vec3 tr = leafLight.y * mix( back * ( 0.35 + 0.65 * f2 ), 0.25 * fwd + 0.75 * f2 * f2, leafLight.w ) * leafTint;
+          reflectedLight.directDiffuse += directLight.color * BRDF_Lambert( material.diffuseColor ) * ( dotNL + tr );
+        }
+        #undef RE_Direct
+        #define RE_Direct RE_Direct_Leaf`);
+    shader.fragmentShader = shader.fragmentShader.replace(/vec3 outgoingLight = [^;]*;/, x => x + SHIMMER_FRAG);
   });
   return m;
 }
@@ -2149,6 +2559,13 @@ export function applySeason(material, spec, season, month = null) { return drain
 export function* applySeasonSteps(material, spec, season, month = null) {
   const F = spec.foliage, c = F.colors, ud = material.userData;
   let col = c[season] || c.summer, on = leafOnAt(spec, season, month);
+  if (ud.leafLevel) {   // leafMaterial: off while the close cards show bare twigs, flowers or berries
+    const fl = decoActive(F.flowers, season, month), be = decoActive(F.berries, season, month);
+    ud.off = (on <= 0.02 && !!F.winter_twigs) || !!fl || !!be || on <= 0;
+    material.color.setRGB(...col.map((v, i) => ud.gain * srgbToLin(v) / Math.max(1e-4, srgbToLin(c.summer[i]))));
+    ud.leafOn.value = on;
+    return on;
+  }
   if (ud.texScale != null) {
     const fl = decoActive(F.flowers, season, month), be = decoActive(F.berries, season, month);
     const bareFlowers = fl && F.flowers.before_leaves && on < 0.5;

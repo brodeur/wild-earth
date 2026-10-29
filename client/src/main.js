@@ -182,7 +182,7 @@ async function disposeWorld(w, renderer) {
   if (m.weather) m.weather.onThunder = null;
   m.abilities?.dispose?.();   // the body's row: its slots go, the row hides (abilities.js)
   if (fieldGuide.game === m.acorns) { fieldGuide.game = null; fieldGuide.log = []; fieldGuide.anchor = null; }   // the page's field guide (identify.js attached the game)
-  m.water?.dispose?.(); m.shadows?.dispose?.(); m.terrain?.dispose?.(); m.litter?.dispose?.(); m.scent?.dispose?.(); m.grass?.dispose?.(); forgetQueuedCasters();
+  m.water?.dispose?.(); m.shadows?.dispose?.(); m.terrain?.dispose?.(); m.litter?.dispose?.(); m.scent?.dispose?.(); m.grass?.dispose?.(); m.veg?.dispose?.(); forgetQueuedCasters();
   // then its listeners and the elements it put into the page; the HUD's own words back as the page had them
   for (const r of w.observer.takeRecords()) { for (const n of r.addedNodes) if (n.nodeType === 1) w.nodes.add(n); for (const n of r.removedNodes) w.nodes.delete(n); }
   w.observer.disconnect();
@@ -369,7 +369,7 @@ async function buildSteps(w, { params, pending, direct = false, arrive = null })
   const sky = new SkyDome(scene, renderer, atmosphere);
   status('growing forest…');
   await w.next('vegetation');
-  const veg = new Vegetation(tile, scene, atmosphere); await w.sliced(veg.build(), 'vegetation');
+  const veg = w.m.veg = new Vegetation(tile, scene, atmosphere); await w.sliced(veg.build(), 'vegetation');
   await w.next('impostors');
   const far = new Impostors(tile, scene); await w.sliced(far.build(), 'impostors');
   await w.next('grass');

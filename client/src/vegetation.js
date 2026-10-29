@@ -1,6 +1,7 @@
 import * as THREE from 'three';
 import { SPECIES, SPECIES_IDS, mulberry32, resolveSpecies } from './trees.js';
-import { buildTree, canopyMaterial, trunkMaterial, applySeasonSteps, chainShader, SLOTS, variantSlots, seasonMonth, leafTextureSteps, barkTextureSteps } from './treegen.js';
+import { buildTree, canopyMaterial, trunkMaterial, applySeasonSteps, chainShader, SLOTS, variantSlots, seasonMonth, leafTextureSteps, barkTextureSteps, leafMaterial, leafGeometrySteps } from './treegen.js';
+import { bodyScale, onBodyScale } from './bodyScale.js';
 import { SEASON_LOOK } from './season.js';
 import { rockKeep } from './tilepackage.js';
 import { hasCrowns, loadCrowns, planCrownsSteps, oldClassOf, crownId, crownOf, SCALE, ASPECT } from './crowns.js';
@@ -55,6 +56,26 @@ const NEAR_MARGIN = 60, NEAR_MOVE = 40, NEAR_CAP = { tree: 1500, shrub: 3000 };
 // matrices, faded in over the same band, drawn in every season.
 export const CLOSE_R = 90;
 const CLOSE_BAND = 20, CLOSE_MOVE = 15, CLOSE_CAP = { tree: 600, shrub: 1500 };
+// Leaf level (2026-10-28; treegen.js "Leaf level"): inside R_leaf of the camera each close card is replaced by its single
+// leaves (or needle tufts, or spray segments). R_leaf = 6 + 9 x clamp((1 - scale) / 0.9, 0, 1) m by the body scale
+// (bodyScale.js): a deer and the spirit 6 m, the squirrel and anything smaller 15 m; a hawk in the air is 6 m from
+// any leaf only when it skims a crown. The handover is per fragment, by the fragment's own distance to the camera:
+// across R_leaf +/- leafBand (a fifth of R_leaf, at least 1.5 m) the leaves keep the pixels whose dither value is at
+// least 1 - share and the close cards the others (lodPatch), so the band thins and fills with no tree-sized pop and
+// no seam on a crown that straddles it. Trees: the close instances whose crown (the close canopy's bounding sphere,
+// scaled) comes within R_leaf + band, nearest first, while the leaves drawn stay under LEAF_FRAME_CAP quads; each such
+// instance is flagged in the close canopy's leafHand attribute (only a flagged crown gives pixels up), so a tree whose
+// leaves are not built yet, or are over the budget, stays on its close cards. The geometry of a (species, seed) is built
+// when its crown first comes within LEAF_AHEAD m of that reach (treegen leafGeometrySteps, stepped LEAF_BUILD_MS a frame,
+// nearest first, one at a time, so it is ready before its leaves can enter the band) and kept in an LRU of LEAF_LRU;
+// each tree drawing leaves is a Mesh from a pool (LEAF_TREES) on its (species, seed) geometry with the close
+// instance's matrix (no drape: within 18 m of the camera the ground is the fine square, where the drape is nil), so it
+// is frustum-culled by its own crown. Outside R_leaf + band nothing is drawn by it and the close cards are as they
+// were. A species whose close cards show what single leaves cannot (bare twigs, flowers, berries: leafMaterial
+// userData.off) stays on its cards. leafStats (trees, quads, built, bytes, buildMs) is for inspection.
+const LEAF_R0 = 6, LEAF_R1 = 15, LEAF_FRAME_CAP = 1500000, LEAF_LRU = 24, LEAF_TREES = 48, LEAF_BUILD_MS = 5, LEAF_AHEAD = 6;
+export const leafRadius = scale => LEAF_R0 + (LEAF_R1 - LEAF_R0) * Math.min(1, Math.max(0, (1 - scale) / 0.9));
+const leafBand = R => Math.max(1.5, 0.2 * R);
 
 // Per-cell plan, shared by every placer (Vegetation.update; impostors.js should call it too, so the far
 // trees follow the same mix). The cell's random stream is the one placement has always used: this
@@ -309,10 +330,15 @@ const SEAT_GLSL = `#ifdef USE_INSTANCING
     transformed.y += seatOn * (1.0 - seatS) * seatDc / instanceMatrix[1][1]; }
   #endif
   `;
-function lodPatch(material, u, role, fade = false, inner = false) {
-  const W = fade ? LOD_BAND.toFixed(1) : '0.0', CW = CLOSE_BAND.toFixed(1), near = role === 'near', mid = role === 'mid';
-  const keep = role === 'close'   // vLodT: the fraction of pixels this layer gives up (near) or keeps (mid, close)
-    ? `float cD = distance(lodP, closeEye);
+// role 'leaf' (the leaf level): a vertex beyond R_leaf + band + 1 m is collapsed; in the fragment the leaf keeps the
+// pixels whose dither value is at least 1 - its share, by the fragment's distance. `hand` (the close canopy): a flagged
+// instance (leafHand 1) gives those pixels up, the complement.
+function lodPatch(material, u, role, fade = false, inner = false, hand = false) {
+  const W = fade ? LOD_BAND.toFixed(1) : '0.0', CW = CLOSE_BAND.toFixed(1), near = role === 'near', mid = role === 'mid', leaf = role === 'leaf';
+  const leafS = 'clamp((leafR.x + leafR.y - length(vViewPosition)) / (2.0 * leafR.y), 0.0, 1.0)';
+  const keep = leaf ? ''
+    : role === 'close'   // vLodT: the fraction of pixels this layer gives up (near) or keeps (mid, close)
+    ? `float cD = distance(lodP, closeEye);${hand ? '\n       vLeafH = leafHand;' : ''}
        vLodT = clamp((closeR + ${CW} - cD) / (2.0 * ${CW}), 0.0, 1.0);
        if (cD > closeR + ${CW}) gl_Position = vec4(2.0, 2.0, 2.0, 1.0);`
     : `float lodD = distance(lodP.xz, lodEye.xz);
@@ -324,22 +350,23 @@ function lodPatch(material, u, role, fade = false, inner = false) {
        ${inner ? `float cD = distance(lodP, closeEye);
        vLodT = max(vLodT, clamp((closeR + ${CW} - cD) / (2.0 * ${CW}), 0.0, 1.0));
        if (cD < closeR - ${CW}) gl_Position = vec4(2.0, 2.0, 2.0, 1.0);` : ''}`;
-  return chainShader(material, `lod-${role}${fade ? '-fade' : ''}${inner ? '-inner' : ''}`, shader => {
-    shader.uniforms.lodEye = u.lodEye; shader.uniforms.lodR = u.lodR; shader.uniforms.closeEye = u.closeEye; shader.uniforms.closeR = u.closeR;
+  return chainShader(material, `lod-${role}${fade ? '-fade' : ''}${inner ? '-inner' : ''}${hand ? '-hand' : ''}`, shader => {
+    shader.uniforms.lodEye = u.lodEye; shader.uniforms.lodR = u.lodR; shader.uniforms.closeEye = u.closeEye; shader.uniforms.closeR = u.closeR; shader.uniforms.leafR = u.leafR;
     shader.uniforms.farR = handover.r;
     shader.uniforms.seatF = u.seatF; shader.uniforms.seatB = u.seatB; shader.uniforms.seatOn = u.seatOn;
     shader.vertexShader = shader.vertexShader
-      .replace('#include <common>', '#include <common>\nuniform vec3 lodEye;\nuniform float lodR;\nuniform vec3 closeEye;\nuniform float closeR;\nuniform vec2 farR;\nvarying float vLodT;\nuniform vec4 seatF;\nuniform float seatB;\nuniform float seatOn;\n#ifdef USE_INSTANCING\nattribute float seatDc;\n#endif')
+      .replace('#include <common>', '#include <common>\nuniform vec3 lodEye;\nuniform float lodR;\nuniform vec3 closeEye;\nuniform float closeR;\nuniform vec2 farR;\nvarying float vLodT;\nuniform vec4 seatF;\nuniform float seatB;\nuniform float seatOn;\nuniform vec2 leafR;\n#ifdef USE_INSTANCING\nattribute float seatDc;\n#endif' + (hand ? '\nvarying float vLeafH;\n#ifdef USE_INSTANCING\nattribute float leafHand;\n#endif' : ''))
       .replace('#include <project_vertex>', `${SEAT_GLSL}#include <project_vertex>
-        vLodT = 0.0;
+        vLodT = 0.0;${hand ? ' vLeafH = 0.0;' : ''}${leaf ? `
+        if (distance((modelMatrix * vec4(transformed, 1.0)).xyz, closeEye) > leafR.x + leafR.y + 1.0) gl_Position = vec4(2.0, 2.0, 2.0, 1.0);` : ''}
         #ifdef USE_INSTANCING
         { vec3 lodP = (modelMatrix * instanceMatrix * vec4(0.0, 0.0, 0.0, 1.0)).xyz;
           ${keep} }
         #endif`);
     if (fade) shader.fragmentShader = shader.fragmentShader
-      .replace('#include <common>', '#include <common>\nvarying float vLodT;')
+      .replace('#include <common>', '#include <common>\nvarying float vLodT;\nuniform vec2 leafR;' + (hand ? '\nvarying float vLeafH;' : ''))
       .replace('#include <clipping_planes_fragment>', `{ float lodN = fract(52.9829189 * fract(dot(gl_FragCoord.xy, vec2(0.06711056, 0.00583715))));
-          if (${near ? 'lodN < vLodT' : 'lodN >= vLodT'}) discard; }
+          if (${leaf ? `lodN < 1.0 - ${leafS}` : hand ? `lodN >= min(vLodT, 1.0 - vLeafH * ${leafS})` : near ? 'lodN < vLodT' : 'lodN >= vLodT'}) discard; }
         #include <clipping_planes_fragment>`);
   });
 }
@@ -355,7 +382,16 @@ export class Vegetation {
     this.nearPlants = []; this.nearVersion = 0;   // every plant in the near set: { id, species, x, y, z, scale, height }
     this.closeCount = 0; this.lastClose = null; this.closeVersion = -1;
     this.lodU = { lodEye: handover.eye, lodR: { value: NEAR_R }, closeEye: { value: new THREE.Vector3(0, 1e9, 0) }, closeR: { value: CLOSE_R },
-      seatF: { value: new THREE.Vector4() }, seatB: { value: 0 }, seatOn: { value: 1 } };   // the drape (SEAT_GLSL)
+      seatF: { value: new THREE.Vector4() }, seatB: { value: 0 }, seatOn: { value: 1 },   // the drape (SEAT_GLSL)
+      leafR: { value: new THREE.Vector2(LEAF_R0, leafBand(LEAF_R0)) } };   // the leaf level: (R_leaf, band)
+    this.leafMat = {};          // species id -> the leaf level's material (null: the species has no leaf level)
+    this.leafCache = new Map(); // `${id}:${seed}` -> { geometry, material, holder, leaves, total, keep, grow, bytes, used, ms } (LRU, LEAF_LRU)
+    this.leafJob = null; this.leafDirty = true; this.lastLeaf = null; this.leafFrame = 0; this.leafPool = [];   // the pool: one Mesh per tree drawing leaves
+    this.leafStats = { trees: 0, quads: 0, built: 0, bytes: 0, buildMs: 0 };
+    this.setBodyScale(bodyScale.v);
+    { const ref = new WeakRef(this), sig = tile.signal;   // no strong reference: a dropped world's vegetation unhooks itself
+      const off = onBodyScale(v => { const me = ref.deref(); if (!me || sig?.aborted) { off(); return; } me.setBodyScale(v); });
+      this.offBody = off; }
     this.drape = !!tile.heights.detail; this.crownDc = null;
     const patch = this.patch = m => atmosphere.patchLambert(m);   // cloud shadow + aerial perspective
     this.trunkMat = { near: lodPatch(trunkMaterial(patch), this.lodU, 'near'), mid: lodPatch(trunkMaterial(patch), this.lodU, 'mid') };   // shared (shadow casters use it)
@@ -389,7 +425,8 @@ export class Vegetation {
       if (typeof document !== 'undefined') { yield `${id} bark`; yield* barkTextureSteps(spec); }
       const near = lodPatch(canopyMaterial(spec, 'near', patch), this.lodU, 'near', true, true); yield;
       const mid = lodPatch(canopyMaterial(spec, 'mid', patch), this.lodU, 'mid', true); yield;
-      this.canopyMat[id] = { near, mid, close: lodPatch(canopyMaterial(spec, 'close', patch), this.lodU, 'close', true) }; yield;
+      this.canopyMat[id] = { near, mid, close: lodPatch(canopyMaterial(spec, 'close', patch), this.lodU, 'close', true, false, true) }; yield;
+      const lm = leafMaterial(spec, patch); this.leafMat[id] = lm ? lodPatch(lm, this.lodU, 'leaf', true) : null; yield;
       this.barkMat[id] = { near: lodPatch(trunkMaterial(patch, spec), this.lodU, 'near'), mid: this.trunkMat.mid };   // bark texture within NEAR_R; beyond, plain vertex colour (same mean)
       yield;
       this.meshes[id] = []; this.slots[id] = [];
@@ -456,6 +493,7 @@ export class Vegetation {
     const c = buildTree(id, seed, 'close'), ccap = CLOSE_CAP[spec.shrub ? 'shrub' : 'tree'];
     yield;
     const closeSeat = seatAttr(ccap); c.canopy.setAttribute('seatDc', closeSeat); if (c.twigs) c.twigs.setAttribute('seatDc', closeSeat);
+    const hand = seatAttr(ccap); c.canopy.setAttribute('leafHand', hand);   // per close instance: 1 while its leaf level draws
     releaseGeometry(c.canopy, { keep: ['position', 'uv', 'leafRank'], keepIndex: true }); if (c.twigs) releaseGeometry(c.twigs);   // as the near canopy: picked within CLOSE_R
     const closeCanopy = new THREE.InstancedMesh(c.canopy, this.canopyMat[id].close, ccap);
     closeCanopy.count = 0; closeCanopy.frustumCulled = false; closeCanopy.visible = false;
@@ -467,7 +505,7 @@ export class Vegetation {
       closeTwigs.count = 0; closeTwigs.frustumCulled = false; closeTwigs.visible = false;
       this.group.add(closeTwigs);
     }
-    entry.close = { canopy: closeCanopy, twigs: closeTwigs, cap: ccap, n: 0, tris: c.tris.canopy, twigTris: c.tris.twigs || 0, seat: closeSeat };
+    entry.close = { canopy: closeCanopy, twigs: closeTwigs, cap: ccap, n: 0, tris: c.tris.canopy, twigTris: c.tris.twigs || 0, seat: closeSeat, hand, handN: 0 };
     this.meshes[id].push(entry);
     return entry;
   }
@@ -482,6 +520,8 @@ export class Vegetation {
       this.leafOn[id] = on;
       for (const e of this.meshes[id]) e[lod].canopy.visible = on > 0 && (lod !== 'close' || e.close.n > 0);   // a bare crown draws nothing
     }
+    for (const id of this.ids) if (this.leafMat[id]) yield* applySeasonSteps(this.leafMat[id], SPECIES[id], season, month);
+    this.leafDirty = true;
   }
   // Rebuild instances for cells within radius of (x, z). Deterministic per cell, so a tree is always in the same place.
   update(x, z, force = false) {
@@ -619,7 +659,10 @@ export class Vegetation {
   // near refresh) copies the near instances within reach into the close set. A plain array copy.
   updateClose(eye) {
     this.lodU.closeEye.value.copy(eye);
-    if (this.closeVersion === this.nearVersion && this.lastClose && this.lastClose.distanceToSquared(eye) < CLOSE_MOVE * CLOSE_MOVE) return;
+    if (!(this.closeVersion === this.nearVersion && this.lastClose && this.lastClose.distanceToSquared(eye) < CLOSE_MOVE * CLOSE_MOVE)) { this.copyClose(eye); this.leafDirty = true; }
+    this.updateLeaves(eye);
+  }
+  copyClose(eye) {
     this.lastClose = (this.lastClose || new THREE.Vector3()).copy(eye); this.closeVersion = this.nearVersion;
     const R2 = (CLOSE_R + CLOSE_BAND + CLOSE_MOVE + 2) ** 2;
     let total = 0;
@@ -638,5 +681,99 @@ export class Vegetation {
       if (c.twigs) { c.twigs.count = n; c.twigs.visible = n > 0; }   // bare crowns keep their twigs
     }
     this.closeCount = total;
+  }
+  // The leaf level's radius from the body scale (bodyScale.js; Vegetation subscribes in its constructor).
+  setBodyScale(v) {
+    const R = leafRadius(v); this.lodU.leafR.value.set(R, leafBand(R)); this.leafDirty = true;
+  }
+  // Per frame (from updateClose): step the geometry being built, and when the camera has moved 0.5 m or the close set
+  // or the season changed, choose the trees that draw leaves (nearest first, within LEAF_FRAME_CAP quads and LEAF_TREES
+  // trees), give each a mesh from the pool on its (species, seed) geometry with the close instance's matrix, and flag
+  // their close instances (leafHand).
+  updateLeaves(eye) {
+    this.leafFrame++;
+    if (this.leafJob) this.stepLeafJob();
+    if (!this.leafDirty && this.lastLeaf && this.lastLeaf.distanceToSquared(eye) < 0.25) return;
+    this.leafDirty = false; (this.lastLeaf ||= new THREE.Vector3()).copy(eye);
+    const LR = this.lodU.leafR.value, reach = LR.x + LR.y, cands = [];
+    for (const [id, arr] of Object.entries(this.meshes)) {
+      const mat = this.leafMat[id]; if (!mat || mat.userData.off) continue;
+      for (const e of arr) {
+        const c = e.close; if (!c.n || !c.canopy.visible) continue;
+        const bs = c.canopy.geometry.boundingSphere, M = c.canopy.instanceMatrix.array, bx = bs.center.x, by = bs.center.y, bz = bs.center.z;
+        for (let i = 0; i < c.n; i++) {
+          const o = i * 16, k = Math.max(Math.hypot(M[o], M[o + 1], M[o + 2]), Math.hypot(M[o + 4], M[o + 5], M[o + 6]));
+          const x = M[o] * bx + M[o + 4] * by + M[o + 8] * bz + M[o + 12], y = M[o + 1] * bx + M[o + 5] * by + M[o + 9] * bz + M[o + 13], z = M[o + 2] * bx + M[o + 6] * by + M[o + 10] * bz + M[o + 14];
+          const d = Math.hypot(x - eye.x, y - eye.y, z - eye.z) - bs.radius * k;
+          if (d < reach + LEAF_AHEAD) cands.push([d, id, e, i]);
+        }
+      }
+    }
+    cands.sort((a, b) => a[0] - b[0]);
+    let quads = 0, trees = 0;
+    const flags = new Map();
+    for (const [d, id, e, i] of cands) {
+      if (trees >= LEAF_TREES) break;
+      const L = this.leafEntry(id, e); if (!L || d >= reach) continue;   // beyond reach: only queued, built ahead of need
+      if (quads + L.leaves > LEAF_FRAME_CAP) continue;
+      let m = this.leafPool[trees];
+      if (!m) { m = this.leafPool[trees] = new THREE.Mesh(L.geometry, L.material); m.matrixAutoUpdate = false; m.raycast = () => {}; this.group.add(m); }
+      m.geometry = L.geometry; m.material = L.material; m.visible = true;
+      m.matrix.fromArray(e.close.canopy.instanceMatrix.array, i * 16); m.matrixWorldNeedsUpdate = true;
+      quads += L.leaves; trees++;
+      let f = flags.get(e); if (!f) flags.set(e, f = new Set()); f.add(i);
+    }
+    for (let k = trees; k < this.leafPool.length; k++) this.leafPool[k].visible = false;
+    for (const arr of Object.values(this.meshes)) for (const e of arr) {
+      const c = e.close, f = flags.get(e), h = c.hand.array, m = Math.max(c.n, c.handN);
+      let changed = false;
+      for (let i = 0; i < m; i++) { const v = f && f.has(i) ? 1 : 0; if (h[i] !== v) { h[i] = v; changed = true; } }
+      c.handN = c.n;
+      if (changed) seatUpload(c.hand, m);
+    }
+    Object.assign(this.leafStats, { trees, quads, built: this.leafCache.size, bytes: [...this.leafCache.values()].reduce((s, L) => s + (L.bytes || 0), 0) });
+  }
+  // The built leaf geometry of entry e (species id), or null: then it is queued (one at a time; the LRU makes room).
+  leafEntry(id, e) {
+    const key = `${id}:${e.seed}`, L = this.leafCache.get(key);
+    if (L) { L.used = this.leafFrame; return L.geometry ? L : null; }
+    if (!this.leafJob) this.leafJob = { key, id, gen: leafGeometrySteps(id, e.seed), ms: 0 };
+    return null;
+  }
+  stepLeafJob() {
+    const J = this.leafJob, t0 = performance.now();
+    let r;
+    do { r = J.gen.next(); } while (!r.done && performance.now() - t0 < LEAF_BUILD_MS);
+    J.ms += performance.now() - t0;
+    if (!r.done) return;
+    this.leafJob = null; this.leafDirty = true;
+    const out = r.value;
+    if (!out || !out.leaves) { this.leafCache.set(J.key, { geometry: null, used: this.leafFrame }); return; }
+    // a hidden holder in the group, so the world's teardown (main.js disposeGpu, a scene traversal) finds the geometry
+    const holder = new THREE.Mesh(out.geometry, this.leafMat[J.id]); holder.visible = false; holder.raycast = () => {}; this.group.add(holder);
+    this.leafCache.set(J.key, { geometry: out.geometry, material: this.leafMat[J.id], holder, leaves: out.leaves, total: out.total, keep: out.keep, grow: out.grow,
+      bytes: out.bytes, used: this.leafFrame, ms: Math.round(J.ms) });
+    this.leafStats.buildMs = Math.round(J.ms);
+    // the LRU: drop the least recently wanted geometry that no tree draws now
+    while (this.leafCache.size > LEAF_LRU) {
+      let worst = null, wk = null;
+      const drawn = new Set(this.leafPool.filter(m => m.visible).map(m => m.geometry));
+      for (const [k, L] of this.leafCache) if (k !== J.key && !drawn.has(L.geometry) && (!worst || L.used < worst.used)) { worst = L; wk = k; }
+      if (!worst) break;
+      this.dropLeaves(wk);
+    }
+  }
+  dropLeaves(key) {
+    const L = this.leafCache.get(key); this.leafCache.delete(key); if (!L?.geometry) return;
+    for (const m of this.leafPool) if (m.geometry === L.geometry) m.visible = false;   // reassigned before it is shown again
+    this.group.remove(L.holder);
+    L.geometry.dispose();
+  }
+  // Releases the leaf level (geometries, the body-scale hook). The world's teardown disposes the rest with the scene.
+  dispose() {
+    this.offBody?.(); this.offBody = null; this.leafJob = null;
+    for (const k of [...this.leafCache.keys()]) this.dropLeaves(k);
+    for (const m of this.leafPool) this.group.remove(m);
+    this.leafPool = [];
   }
 }
