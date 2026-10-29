@@ -1,0 +1,47 @@
+{
+  "id": "eschscholzia_californica",
+  "aliases": ["california_poppy", "poppy"],
+  "scientific": "Eschscholzia californica",
+  "common": "California poppy",
+  "form": "forb",
+  "lifespan": "annual",
+  "native": true,
+  "height_m": [0.15, 0.5],
+  "description": "The state flower: a mound of blue-green, finely cut leaves with silky orange cups, each on its own stalk, that open in the sun and close at dusk and in cloud; 15-50 cm tall. It flowers on open, sunny, well-drained ground from March into May, brightest on the south-facing grassy slopes and road banks, and a single plant may flower on into summer where the soil holds water.",
+  "season_notes": {
+    "winter": "A small rosette of ferny grey-green leaves after the rains.",
+    "spring": "Orange cups from March, most in April; closed in the morning cold and the evening, wide open at noon.",
+    "summer": "Long thin seed pods split and fling the seeds; the plant dries to a few pale stalks.",
+    "fall": "Gone, but for seed in the ground waiting for rain."
+  },
+  "status": "agent draft, needs local sign-off",
+  "ground": {
+    "habit": "mound",
+    "leaf": { "shape": "ferny", "size_m": 0.06, "rgb": [112, 142, 118] },
+    "flower": { "shape": "cup", "rgb": [244, 150, 24], "size_m": 0.05, "months": [3, 6], "per_plant": 5 },
+    "height_by_month": [0.25, 0.4, 0.7, 1.0, 1.0, 0.8, 0.5, 0.3, 0.0, 0.0, 0.1, 0.2],
+    "dead_rgb": [176, 160, 120],
+    "density": 1.0
+  },
+  "habitat": {
+    "classes": { "grassland": 1.0, "oak_woodland": 0.45, "chaparral": 0.3, "mixed_forest": 0.05, "conifer_forest": 0.0, "riparian": 0.1 },
+    "floor": 0.7, "mid": 1.0, "steep": 1.2, "north": 0.5, "shade": 0.0, "disturbed": 1.6
+  },
+  "relations": {
+    "eaten_by": [
+      { "animal": "odocoileus_hemionus", "part": "leaves", "seasons": ["spring"] },
+      { "animal": "otospermophilus_beecheyi", "part": "seeds", "seasons": ["summer"] },
+      { "animal": "callipepla_californica", "part": "seeds", "seasons": ["summer", "fall"] }
+    ],
+    "cover_for": []
+  },
+  "notes": "California poppy grows throughout the foothills in grassland, oak savanna, chaparral openings and on disturbed banks, on open sunny ground; in the hot interior it behaves as a winter annual, germinating with the fall rains, making a rosette, flowering March-May and dying back by July (coastal plants are perennial). The leaves are blue-green and dissected into narrow lobes (leaf shape ferny, 4-8 cm); the flowers are four-petalled cups 3-6 cm across, deep orange in spring and paler yellow-orange on late flowers, one per stalk, held above the mound; the fruit a slender 5-8 cm capsule. The animals barely touch it (it is bitter): deer take a few leaves in spring, quail and ground squirrels the seed, so its food relations are few and its value is as the colour of the spring slopes. habitat: sun (shade 0), south and steep slopes above north ones, road verges and old fields x1.6.",
+  "sources": [
+    "https://ucjeps.berkeley.edu/eflora/ (Eschscholzia californica)",
+    "https://www.calflora.org/ (Eschscholzia californica)",
+    "https://calscape.org/ (Eschscholzia californica)",
+    "https://en.wikipedia.org/wiki/Eschscholzia_californica"
+  ],
+  "authors": ["Wild Earth (agent draft, 2026-10-29); needs local sign-off"],
+  "license": "CC BY-SA 4.0"
+}

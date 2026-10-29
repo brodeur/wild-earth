@@ -16,6 +16,8 @@ calendar gets its games the same way. docs/games.md has the design and the arche
 from __future__ import annotations
 import numpy as np
 import rasterio
+import json
+import pathlib
 from .config import Tile, now_iso, read_json, write_json
 from .habitat import RESOURCE_BASE
 from .species_data import ALARM_CALL, CALENDAR, DIET, NEEDS, SEASONS, detect_m, perceives_on
@@ -56,6 +58,38 @@ REQUIRES = {
     "cliff_or_snag": [{"object": "snags, cliffs and tall perch trees", "client": "vegetation.js (old trees), rocks.js", "status": "partial"}],
     "burrow": [{"object": "burrows", "client": "animals.js placeBurrows (ground squirrels only)", "status": "partial"}],
 }
+# The plants (2026-10-29): which plant species each animal eats and hides in, from the species library's records
+# (library/species/<id>.json `relations`: eaten_by [{animal, part, seasons}], cover_for [animal ids]; docs/species-library.md
+# "Grasses, herbs and shrubs of the foothill understory"). A part names the resource raster it is part of (PART_RESOURCE), so
+# a gather game's `plants` lists the species that are its food this season, `relations.forage` holds every
+# [animal, plant, part, resource, seasons] and `relations.cover` every [animal, plant]: the client's needs widget names the plant
+# under the body when "food here" is one of them (needs.js), and the field guide's cards read the same records.
+LIBRARY = pathlib.Path(__file__).resolve().parent.parent / "library" / "species"
+PART_RESOURCE = {"leaves": "grass_forbs", "seeds": "grass_forbs", "flowers": "grass_forbs", "bulbs": "grass_forbs", "roots": "grass_forbs",
+                 "browse": "browse", "berries": "browse", "acorns": "acorn_mast"}
+
+
+def plant_relations() -> tuple[list[list], list[list]]:
+    """[animal, plant, part, resource, seasons] for every eaten_by entry in the library, and [animal, plant] for cover."""
+    index = LIBRARY / "index.json"
+    if not index.exists():
+        return [], []
+    forage, cover = [], []
+    for sid in json.loads(index.read_text()).get("species", []):
+        f = LIBRARY / f"{sid}.json"
+        if sid.startswith("_") or not f.exists():
+            continue
+        d = json.loads(f.read_text()); rel = d.get("relations") or {}
+        woody = d.get("form") not in ("grass", "forb")   # a shrub's or tree's leaves and flowers are browse
+        for e in rel.get("eaten_by", []):
+            r = "browse" if woody and e.get("part") in ("leaves", "flowers") else PART_RESOURCE.get(e.get("part"))
+            if e.get("animal") and r:
+                forage.append([e["animal"], sid, e.get("part"), r, list(e.get("seasons") or [])])
+        for a in rel.get("cover_for", []):
+            cover.append([a, sid])
+    return forage, cover
+
+
 HOT_FLOOR, HOT_PCT, HOT_N, HOT_SEP_M = 40, 97, 12, 150   # a hotspot cell is in the resource's top (100 - HOT_PCT)% that season and scores at least HOT_FLOOR; at most HOT_N per game, HOT_SEP_M apart
 
 
@@ -133,6 +167,7 @@ def derive_games(tile: Tile) -> dict:
                 if theirs >= max(mine * ALARM_MARGIN, mine + 20):
                     alarm.append([w, c, pred, theirs, mine])
     alarm.sort(key=lambda a: (a[1], a[2], -a[3]))
+    forage, cover = plant_relations()
     species: dict[str, dict] = {}
     for c in codes:
         unit = UNIT.get(c, "solitary"); games = []
@@ -155,6 +190,8 @@ def derive_games(tile: Tile) -> dict:
                         if rr:
                             g["hotspots"] = rr["hotspots"]; g["scarcity"] = rr["scarcity"]
                         g["competitors"] = [o for o in competition.get(r, {}).get(season, []) if o != c]
+                        if arch == "gather":
+                            g["plants"] = sorted({pl for a, pl, part, rr, ss in forage if a == c and rr == r and (not ss or season in ss)})
                     if prey:
                         g["prey"] = [q for q in prey if q in prey_of[c]] or prey
                         g["noticed_at_m"] = {q: detect_m(q, c) for q in g["prey"]}   # how far each prey notices this hunter
@@ -204,7 +241,8 @@ def derive_games(tile: Tile) -> dict:
     for q in sorted({q for p, q in predation}):
         requests.append({"kind": "prey", "species": q, "needed_by": sorted({p for p, qq in predation if qq == q}), "status": "drawn"})
     out = {"generated": now_iso(), "tile_id": tile.tile_id, "archetypes": ARCHETYPES, "requests": requests,
-           "relations": {"predation": predation, "competition": competition, "scavenge": scavenge, "alarm": alarm},
+           "relations": {"predation": predation, "competition": competition, "scavenge": scavenge, "alarm": alarm,
+                         "forage": [e for e in forage if e[0] in codes], "cover": [e for e in cover if e[0] in codes]},
            "resources": {r: {s: {"scarcity": v["scarcity"], "mean": v["mean"], "hotspots": len(v["hotspots"])} for s, v in d.items()} for r, d in rasters.items()},
            "species": species}
     write_json(tile.path("games.json"), out)
@@ -212,4 +250,5 @@ def derive_games(tile: Tile) -> dict:
     return {"path": "games.json", "kind": "json", "species": len(species), "games": n,
             "requests": {st: sum(1 for q in requests if q["status"] == st) for st in ("drawn", "partial", "missing")},
             "collective": sum(1 for s in species.values() for g in s["games"] if g["collective"]),
-            "predation_pairs": len(predation), "alarm_links": len(alarm)}
+            "predation_pairs": len(predation), "alarm_links": len(alarm),
+            "plant_relations": sum(1 for e in forage if e[0] in codes)}

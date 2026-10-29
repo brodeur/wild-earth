@@ -1,0 +1,441 @@
+{
+  "id": "symphoricarpos_albus",
+  "aliases": [
+    "snowberry",
+    "common_snowberry",
+    "creeping_snowberry",
+    "symphoricarpos_mollis"
+  ],
+  "scientific": "Symphoricarpos albus",
+  "common": "common snowberry",
+  "form": "shrub",
+  "architectural_model": "Champagnat (provisional: thin erect shoots from the base and from runners that arch over and branch along the arch)",
+  "deciduous": true,
+  "height_m": [
+    0.5,
+    1.5
+  ],
+  "variants": [
+    {
+      "name": "young",
+      "weight": 0.25,
+      "height_m": [
+        0.25,
+        0.6
+      ],
+      "crown_scale": 0.9,
+      "branches": 0.7,
+      "set": {
+        "trunk": {
+          "stems": [
+            4,
+            8
+          ],
+          "stem_spread_deg": 40
+        }
+      },
+      "note": "a low patch of a few thin shoots, the creeping snowberry's habit under the oaks"
+    },
+    {
+      "name": "mature",
+      "weight": 0.5,
+      "seeds": 1,
+      "note": "the file as written: a soft, see-through clump of many thin arching stems"
+    },
+    {
+      "name": "old",
+      "weight": 0.25,
+      "height_m": [
+        1.2,
+        2
+      ],
+      "crown_scale": 1.12,
+      "gnarl": 1.15,
+      "deadwood": {
+        "fraction": 0.2,
+        "levels": [
+          0,
+          1
+        ],
+        "shorten": 0.75
+      },
+      "set": {
+        "trunk": {
+          "stems": [
+            14,
+            22
+          ]
+        }
+      },
+      "note": "a dense old colony of many stems, some dead and grey"
+    }
+  ],
+  "description": "A low, airy shrub 0.5-1.5 m tall of many thin arching stems with small, soft, blue-green oval leaves in pairs, tiny pink bell flowers in early summer and clusters of round, waxy, snow-white berries that hang on the bare twigs into winter. It carpets the shady ground under oaks and on north slopes and along creek edges; deer browse it, and quail and thrushes eat the bitter berries late in the season when other food runs short.",
+  "season_notes": {
+    "winter": "Bare thin grey-brown twigs, still hung with clusters of white berries well into January.",
+    "spring": "One of the first shrubs to leaf out, in February and March: soft blue-green leaves in pairs along thin stems.",
+    "summer": "Tiny pink bell flowers, May to July, half-hidden in the leaf pairs at the twig ends; bees and hummingbirds visit.",
+    "fall": "White berries the size of a pea ripen from September in clusters at the tips; the leaves yellow and fall in October and November."
+  },
+  "status": "agent draft, needs local sign-off",
+  "habitat": {
+    "classes": {
+      "oak_woodland": 1.0,
+      "mixed_forest": 0.8,
+      "riparian": 0.7,
+      "conifer_forest": 0.3,
+      "chaparral": 0.1
+    },
+    "floor": 1.1,
+    "mid": 1.0,
+    "steep": 0.9,
+    "north": 1.5,
+    "shade": 0.7,
+    "disturbed": 0.6
+  },
+  "relations": {
+    "eaten_by": [
+      {
+        "animal": "odocoileus_hemionus",
+        "part": "browse",
+        "seasons": [
+          "spring",
+          "summer",
+          "fall"
+        ]
+      },
+      {
+        "animal": "callipepla_californica",
+        "part": "berries",
+        "seasons": [
+          "fall",
+          "winter"
+        ]
+      },
+      {
+        "animal": "oreortyx_pictus",
+        "part": "berries",
+        "seasons": [
+          "fall",
+          "winter"
+        ]
+      },
+      {
+        "animal": "meleagris_gallopavo",
+        "part": "berries",
+        "seasons": [
+          "winter"
+        ]
+      }
+    ],
+    "cover_for": [
+      "callipepla_californica",
+      "sylvilagus_bachmani",
+      "microtus_californicus"
+    ]
+  },
+  "trunk": {
+    "length_ratio": 0.85,
+    "radius_ratio": 0.008,
+    "taper": 0.8,
+    "flare": 1.1,
+    "bole_ratio": 0.05,
+    "base_size": 0.05,
+    "curve_deg": 20,
+    "curve_var_deg": 16,
+    "segments": 2,
+    "lean_deg": 6,
+    "stems": [
+      6,
+      10
+    ],
+    "stem_spread_deg": 52,
+    "split_prob": 0.0,
+    "split_count": 2,
+    "split_angle_deg": 20,
+    "sinuous_deg": 4,
+    "bark_rgb": [
+      126,
+      112,
+      98
+    ],
+    "bark_pattern": "shreddy",
+    "twig_rgb": [
+      142,
+      120,
+      102
+    ],
+    "bark": {
+      "tile_m": [
+        0.06,
+        0.2
+      ],
+      "contrast": 0.4,
+      "lichen": 0.05,
+      "relief": 0.25
+    }
+  },
+  "crown": {
+    "shape": "hemispherical",
+    "envelope": {
+      "profile": [
+        [
+          0.0,
+          0.32
+        ],
+        [
+          0.18,
+          0.48
+        ],
+        [
+          0.4,
+          0.56
+        ],
+        [
+          0.62,
+          0.55
+        ],
+        [
+          0.8,
+          0.45
+        ],
+        [
+          0.93,
+          0.27
+        ],
+        [
+          1.0,
+          0.08
+        ]
+      ],
+      "lobes": 5,
+      "lobe_depth": 0.16,
+      "asymmetry": 0.15,
+      "fill": 0.5,
+      "edge": 1.12
+    }
+  },
+  "levels": [
+    {
+      "count": 3,
+      "start": 0.1,
+      "down_angle_deg": 48,
+      "down_angle_var_deg": 12,
+      "rotation_deg": -80,
+      "rotation_var_deg": 20,
+      "length_ratio": 0.5,
+      "length_var": 0.3,
+      "curve_deg": 10,
+      "curve_var_deg": 16,
+      "tropism": 0.0,
+      "taper": 0.9,
+      "radius_ratio": 0.6,
+      "segments": 2,
+      "droop_deg": 10
+    },
+    {
+      "count": 4,
+      "start": 0.25,
+      "down_angle_deg": 45,
+      "down_angle_var_deg": 12,
+      "rotation_deg": -90,
+      "rotation_var_deg": 20,
+      "length_ratio": 0.4,
+      "length_var": 0.3,
+      "curve_deg": 6,
+      "curve_var_deg": 14,
+      "tropism": 0.0,
+      "taper": 1.0,
+      "radius_ratio": 0.5,
+      "segments": 1
+    }
+  ],
+  "foliage": {
+    "type": "broadleaf",
+    "leaf_size_m": 0.025,
+    "leaf_shape": "oval",
+    "cluster_m": 0.26,
+    "density": 16,
+    "cards_per_m2": 5.5,
+    "start": 0.05,
+    "parent_start": 0.2,
+    "orientation": "outward",
+    "roll_deg": 50,
+    "colors": {
+      "winter": [
+        140,
+        122,
+        106
+      ],
+      "spring": [
+        114,
+        136,
+        104
+      ],
+      "summer": [
+        104,
+        120,
+        108
+      ],
+      "fall": [
+        150,
+        136,
+        86
+      ]
+    },
+    "leaf_on": {
+      "winter": 0.0,
+      "spring": 0.85,
+      "summer": 0.95,
+      "fall": 0.5
+    },
+    "leaf_on_by_month": [
+      0.0,
+      0.15,
+      0.6,
+      0.95,
+      1.0,
+      1.0,
+      0.95,
+      0.85,
+      0.7,
+      0.45,
+      0.15,
+      0.0
+    ],
+    "clumps": {
+      "radius_m": 0.18,
+      "cards_per_clump": 4,
+      "shell": 0.1,
+      "flatten": 0.85,
+      "tip_bias": 0.9
+    },
+    "palette": [
+      [
+        0.8,
+        [
+          1,
+          1,
+          1
+        ]
+      ],
+      [
+        0.2,
+        [
+          1.1,
+          1.1,
+          1.14
+        ]
+      ]
+    ],
+    "winter_twigs": 0.55,
+    "ao_min": 0.76,
+    "color_var": [
+      0.08,
+      0.05
+    ],
+    "leaf_on_var": 0.5,
+    "flowers": {
+      "season": [
+        "spring",
+        "summer"
+      ],
+      "months": [
+        5,
+        7
+      ],
+      "form": "bud",
+      "rgb": [
+        232,
+        178,
+        186
+      ],
+      "size_m": 0.012,
+      "density": 0.3,
+      "before_leaves": false
+    },
+    "berries": {
+      "season": [
+        "fall",
+        "winter"
+      ],
+      "months": [
+        9,
+        1
+      ],
+      "form": "cluster",
+      "rgb": [
+        238,
+        236,
+        230
+      ],
+      "size_m": 0.03,
+      "density": 0.5
+    }
+  },
+  "deadwood": {
+    "fraction": 0.06,
+    "where": "inner",
+    "levels": [
+      0,
+      1
+    ],
+    "shorten": 0.75,
+    "rgb": [
+      146,
+      138,
+      128
+    ]
+  },
+  "twigs": {
+    "count": [
+      1,
+      2
+    ],
+    "length": 0.7,
+    "down_deg": 42,
+    "down_var_deg": 16,
+    "curve_var_deg": 20,
+    "segments": 1,
+    "radius_m": 0.003,
+    "taper": 0.6,
+    "droop_deg": 6,
+    "fan_deg": 50,
+    "jitter": 0.22
+  },
+  "lod": {
+    "near_tris_budget": 1300,
+    "near_sides": [
+      3,
+      3,
+      0
+    ],
+    "mid_blobs": 3,
+    "mid_branches": 0,
+    "mid_sides": [
+      0,
+      0
+    ],
+    "mid_cards": 20
+  },
+  "targets": {
+    "crown_width_ratio": 1.1,
+    "crown_base_ratio": 0.1,
+    "porosity": 0.4,
+    "foliage_rg": 0.74,
+    "foliage_bg": 0.8,
+    "from": "judgement values (2026-10-29) from knowledge of the species, not measured: no photographs were fetched for this draft. A clump of thin stems about as wide as tall (W/H 1.0-1.2), soft and see-through with ground and sky between the stems (porosity 0.4); colour is the linear r/g and b/g of the file's summer leaf colour (sRGB 104, 120, 108), a blue-green. A reviewer should replace these with values measured from local photographs"
+  },
+  "notes": "Common snowberry is a deciduous shrub 0.5-2 m of shady woodland, north slopes and stream edges; it spreads by rhizomes into patches. The creeping snowberry (Symphoricarpos mollis), lower (to about 0.6 m), softer and trailing, is the commoner one in the foothill oak understory near Placerville, and the two look much the same at game distance, so this file stands for both (alias creeping_snowberry; the 'young' class is low enough to pass for S. mollis). A reviewer should say which is the local one and whether S. mollis wants a file of its own. Form: plain 'shrub'. Many thin stems from the base (stems [10, 18], radius_ratio 0.008) spread widely and arch, with short side shoots in opposite pairs (rotation -80 and -90 alternate the branches left and right, for the flat, two-ranked sprays of an opposite-leaved plant). The crown is open and soft (porosity 0.4, cards_per_m2 5.5 with small cards and small clumps), about as wide as tall. Bark grey-brown, thin and shredding on old stems (bark_pattern shreddy). Leaves opposite, oval to round, 1.5-4 cm, entire or with a few wavy lobes on vigorous shoots, soft, dull blue-green with a paler underside: leaf_shape oval, leaf_size_m 0.025; the palette lightens a fifth of the leaves for the pale undersides. Flowers tiny (5-7 mm) pink bells in small clusters at the shoot tips and leaf axils, May-July: form bud. Berries white, waxy, round, about 1 cm, in clusters at the twig ends from September, staying on the bare twigs into January (berries months [9, 1], which the generator wraps across the new year): this is the plant's winter look, and winter_twigs 0.55 so the bare clump reads as a fine twig haze with white dots. The berries are bitter (saponins) and are eaten late in the season. Among the first shrubs to leaf out (February-March), yellow and bare by late November. Architectural model provisional. Lineup 2026-10-29: 10-18 stems of three segments took the whole near budget (12-24 cards left), so the stems are 6-10 of two segments with three limbs each and the budget 1,300.",
+  "sources": [
+    "https://www.fs.usda.gov/database/feis/plants/shrub/symalb/all.html",
+    "https://www.fs.usda.gov/database/feis/ (Symphoricarpos mollis, where covered)",
+    "https://ucjeps.berkeley.edu/eflora/ (Symphoricarpos albus var. laevigatus; Symphoricarpos mollis)",
+    "https://www.calflora.org/ (Symphoricarpos albus)",
+    "https://calscape.org/ (Symphoricarpos albus)"
+  ],
+  "authors": [
+    "Wild Earth (agent draft, 2026-10-29); needs local sign-off"
+  ],
+  "license": "CC BY-SA 4.0"
+}

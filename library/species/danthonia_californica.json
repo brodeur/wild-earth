@@ -1,0 +1,54 @@
+{
+  "id": "danthonia_californica",
+  "aliases": ["california_oatgrass", "oatgrass"],
+  "scientific": "Danthonia californica",
+  "common": "California oatgrass",
+  "form": "grass",
+  "lifespan": "perennial",
+  "native": true,
+  "height_m": [0.2, 0.6],
+  "description": "A low perennial grass of short, tufted leaves with a few large, shining spikelets held on thin stems in April and May, each like a small oat with a bent awn. It grows in the moist meadows, swales and open oak savanna, often in the wetter ground where the soil stays damp into spring, and it hides a second set of seeds in its leaf sheaths that never open, a reserve for a bad year.",
+  "season_notes": {
+    "winter": "Low green tufts from the first rains, short leaves close to the ground.",
+    "spring": "Thin stems in April with three to six big, pale spikelets each; flowering through May.",
+    "summer": "The tufts cure to a tawny straw but keep green at the base in the swales.",
+    "fall": "Low tawny tufts with a little green at the heart, among the gold of the annuals."
+  },
+  "status": "agent draft, needs local sign-off",
+  "ground": {
+    "type": "bunch",
+    "height": 0.6,
+    "width": 0.9,
+    "palette": {
+      "winter": { "root": [72, 88, 60], "tip": [112, 148, 86], "head": [132, 138, 106], "awn": [140, 138, 114] },
+      "spring": { "root": [68, 94, 56], "tip": [118, 160, 78], "head": [158, 156, 118], "awn": [166, 156, 124] },
+      "summer": { "root": [98, 104, 78], "tip": [190, 172, 124], "head": [208, 196, 154], "awn": [212, 200, 162] },
+      "fall": { "root": [92, 98, 76], "tip": [174, 160, 122], "head": [192, 182, 150], "awn": [198, 188, 156] }
+    },
+    "heads": { "shape": "panicle", "months": [4, 6] },
+    "cure": 0.6
+  },
+  "habitat": {
+    "classes": { "grassland": 1.0, "oak_woodland": 0.7, "chaparral": 0.05, "mixed_forest": 0.1, "conifer_forest": 0.05, "riparian": 0.4 },
+    "floor": 1.5, "mid": 0.9, "steep": 0.6, "north": 1.2, "shade": 0.2, "disturbed": 0.4
+  },
+  "relations": {
+    "eaten_by": [
+      { "animal": "odocoileus_hemionus", "part": "leaves", "seasons": ["winter", "spring"] },
+      { "animal": "sylvilagus_bachmani", "part": "leaves", "seasons": ["winter", "spring", "summer", "fall"] },
+      { "animal": "lepus_californicus", "part": "leaves", "seasons": ["winter", "spring", "summer", "fall"] },
+      { "animal": "microtus_californicus", "part": "leaves", "seasons": ["winter", "spring", "summer", "fall"] },
+      { "animal": "callipepla_californica", "part": "seeds", "seasons": ["summer", "fall"] }
+    ],
+    "cover_for": ["microtus_californicus"]
+  },
+  "notes": "California oatgrass is a long-lived, tufted perennial of coastal prairie and of the moist grasslands, meadows and savannas inland, in the Sierra foothills mostly in swales, seeps, meadow edges and on the heavier, wetter soils of the valley floors and benches. The leaves are short (mostly basal, 10-25 cm) and the tuft is low and dense; the flowering culms, 20-60 cm, carry a narrow, open head of only a few (usually 3-6) large spikelets about 1.5-2 cm long, the lemmas hairy, two-toothed and with a flat, twisted, bent awn between the teeth. Besides these open flowers it makes cleistogamous spikelets inside the sheaths of the culm leaves, which self-pollinate and drop their seed with the old stem; that hidden seed is part of why it persists under grazing. The head is closer to a few-flowered panicle than a raceme, so the file uses the panicle shape with heads months [4, 6]. Height 0.6 and width 0.9 make a tuft of about 35 cm, low among the annuals, and cure 0.6 because in the damp ground it stays green at the base later than the needlegrass on the dry slopes. Grazed by deer in the green months and by rabbits, jackrabbits and voles through the year (it is a favoured vole grass of wet meadows); quail take its seed, and its low tufts shelter voles. The habitat factors put it on the floor (1.5) and the north slopes (1.2), little on the steep ground or disturbed verges, where the annuals outgrow it.",
+  "sources": [
+    "https://ucjeps.berkeley.edu/eflora/ (Danthonia californica)",
+    "https://www.calflora.org/ (Danthonia californica)",
+    "https://www.fs.usda.gov/database/feis/plants/graminoid/dancal/all.html",
+    "https://calscape.org/ (Danthonia californica)"
+  ],
+  "authors": ["Wild Earth (agent draft, 2026-10-29); needs local sign-off"],
+  "license": "CC BY-SA 4.0"
+}

@@ -20,6 +20,16 @@
     "fall": "Covered in tiny cream flowers (August to December), full of bees, flies and butterflies."
   },
   "status": "agent draft, needs local sign-off",
+  "habitat": {
+    "classes": {"grassland": 0.8, "oak_woodland": 0.6, "chaparral": 0.4, "mixed_forest": 0.1, "conifer_forest": 0.0, "riparian": 0.3},
+    "floor": 1.3, "mid": 1.0, "steep": 0.7, "north": 1.0, "shade": 0.1, "disturbed": 1.8
+  },
+  "relations": {
+    "eaten_by": [
+      {"animal": "odocoileus_hemionus", "part": "browse", "seasons": ["winter"]}
+    ],
+    "cover_for": ["callipepla_californica", "sylvilagus_bachmani"]
+  },
   "trunk": {
     "length_ratio": 0.9, "radius_ratio": 0.015, "taper": 0.85, "flare": 1.4, "bole_ratio": 0.05, "base_size": 0.04,
     "curve_deg": 10, "curve_var_deg": 16, "segments": 3, "lean_deg": 0, "stems": [8, 14], "stem_spread_deg": 54,

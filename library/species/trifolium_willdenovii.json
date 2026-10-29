@@ -1,0 +1,50 @@
+{
+  "id": "trifolium_willdenovii",
+  "aliases": ["tomcat_clover", "clover", "native_clover"],
+  "scientific": "Trifolium willdenovii",
+  "common": "tomcat clover",
+  "form": "forb",
+  "lifespan": "annual",
+  "native": true,
+  "height_m": [0.1, 0.4],
+  "description": "A native annual clover with leaves of three long, narrow, finely toothed leaflets and round heads of purple-pink pea flowers tipped with white, each head sitting in a green, toothed collar; 10-40 cm, sprawling among the grass. It flowers in April and May in the grassland, the oak savanna and the moist open swales, where it and the other clovers are among the most heavily grazed plants in the foothills, and its roots fix nitrogen for the grasses around it.",
+  "season_notes": {
+    "winter": "Small three-leaved seedlings low in the new grass after the rains.",
+    "spring": "Purple-pink heads with white tips in April and May, often in patches in the damper swales.",
+    "summer": "Dry brown heads hold the seed into June; the plant is gone by July.",
+    "fall": "Gone, but for seed in the ground waiting for rain."
+  },
+  "status": "agent draft, needs local sign-off",
+  "ground": {
+    "habit": "sprawling",
+    "leaf": { "shape": "trifoliate", "size_m": 0.04, "rgb": [88, 128, 74] },
+    "flower": { "shape": "ball", "rgb": [190, 104, 168], "size_m": 0.025, "months": [4, 5], "per_plant": 6 },
+    "height_by_month": [0.2, 0.35, 0.6, 0.9, 1.0, 0.5, 0.0, 0.0, 0.0, 0.0, 0.05, 0.12],
+    "dead_rgb": [166, 146, 112],
+    "density": 0.9
+  },
+  "habitat": {
+    "classes": { "grassland": 1.0, "oak_woodland": 0.55, "chaparral": 0.1, "mixed_forest": 0.05, "conifer_forest": 0.0, "riparian": 0.3 },
+    "floor": 1.4, "mid": 1.0, "steep": 0.7, "north": 1.0, "shade": 0.1, "disturbed": 1.2
+  },
+  "relations": {
+    "eaten_by": [
+      { "animal": "odocoileus_hemionus", "part": "leaves", "seasons": ["winter", "spring"] },
+      { "animal": "odocoileus_hemionus", "part": "flowers", "seasons": ["spring"] },
+      { "animal": "sylvilagus_bachmani", "part": "leaves", "seasons": ["winter", "spring"] },
+      { "animal": "lepus_californicus", "part": "leaves", "seasons": ["winter", "spring"] },
+      { "animal": "microtus_californicus", "part": "leaves", "seasons": ["winter", "spring"] },
+      { "animal": "otospermophilus_beecheyi", "part": "leaves", "seasons": ["spring"] },
+      { "animal": "callipepla_californica", "part": "seeds", "seasons": ["summer", "fall"] }
+    ],
+    "cover_for": []
+  },
+  "notes": "Tomcat clover stands for all the foothill clovers in the world: the native annual clovers and the naturalised rose clover and subterranean clover of the rangeland are drawn the same way, so one record serves them. It is a winter annual: up with the November rains, flowering April-May, dead by July. Each leaf has three linear to narrowly lance-shaped leaflets 1-5 cm long with fine teeth (leaf shape trifoliate, 4 cm, a dark green); the flower heads are dense balls 1-3 cm across of small pea flowers, purple to rose with white tips, set in a wheel-like, sharply toothed involucre; several heads per plant on branching, sprawling stems. Clovers are rich in protein, so in spring they are eaten hard by deer, both rabbits, voles and ground squirrels, and quail take the small seeds that fall into the thatch; they fix nitrogen in root nodules, which is part of why the grass is greener where they grow. habitat: open sun (shade 0.1); likes the moister floors and swales (x1.4) and grazed or disturbed ground (x1.2), and is thinner on the steep dry slopes (0.7). June keeps a little height for the dry brown heads (dead_rgb).",
+  "sources": [
+    "https://ucjeps.berkeley.edu/eflora/ (Trifolium willdenovii)",
+    "https://www.calflora.org/ (Trifolium willdenovii)",
+    "https://calscape.org/ (Trifolium willdenovii)"
+  ],
+  "authors": ["Wild Earth (agent draft, 2026-10-29); needs local sign-off"],
+  "license": "CC BY-SA 4.0"
+}

@@ -1,0 +1,46 @@
+{
+  "id": "amsinckia_menziesii",
+  "aliases": ["fiddleneck", "amsinckia_intermedia", "common_fiddleneck"],
+  "scientific": "Amsinckia menziesii",
+  "common": "common fiddleneck",
+  "form": "forb",
+  "lifespan": "annual",
+  "native": true,
+  "height_m": [0.2, 0.8],
+  "description": "A bristly, rough-haired annual 20-80 cm tall whose small orange-yellow flowers open one after another along a spike that is coiled at the tip like the scroll of a fiddle. It comes up in masses from March to May in grassland, old fields and along the roads, and though quail, ground squirrels and voles take its nutlets, its leaves are poisonous to cattle and horses and deer leave it alone.",
+  "season_notes": {
+    "winter": "A small rosette of narrow, bristly leaves among the new grass.",
+    "spring": "Orange-yellow flowers unroll along the coiled spikes from March; whole fields go orange in April.",
+    "summer": "The stems dry dark and prickly by June and drop their hard nutlets; gone by July.",
+    "fall": "Gone; the seed waits in the soil for the rains."
+  },
+  "status": "agent draft, needs local sign-off",
+  "ground": {
+    "habit": "erect",
+    "leaf": { "shape": "linear", "size_m": 0.08, "rgb": [100, 128, 74] },
+    "flower": { "shape": "coil", "rgb": [236, 158, 40], "size_m": 0.05, "months": [3, 5], "per_plant": 6 },
+    "height_by_month": [0.15, 0.25, 0.6, 1.0, 0.9, 0.5, 0.2, 0.0, 0.0, 0.0, 0.05, 0.1],
+    "dead_rgb": [128, 108, 78],
+    "density": 1.0
+  },
+  "habitat": {
+    "classes": { "grassland": 1.0, "oak_woodland": 0.5, "chaparral": 0.15, "mixed_forest": 0.02, "conifer_forest": 0.0, "riparian": 0.1 },
+    "floor": 1.2, "mid": 1.0, "steep": 0.7, "north": 0.8, "shade": 0.1, "disturbed": 2.0
+  },
+  "relations": {
+    "eaten_by": [
+      { "animal": "callipepla_californica", "part": "seeds", "seasons": ["spring", "summer"] },
+      { "animal": "otospermophilus_beecheyi", "part": "seeds", "seasons": ["spring", "summer"] },
+      { "animal": "microtus_californicus", "part": "seeds", "seasons": ["spring", "summer"] }
+    ],
+    "cover_for": []
+  },
+  "notes": "Common fiddleneck (Jepson treats A. intermedia within A. menziesii) is a native winter annual of the grassland, oak savanna edges and above all of disturbed ground: overgrazed pastures, old fields, road verges and burns, where it can carpet whole hillsides, so disturbed is 2.0 and the swales and flats where the soil is deeper are a little above the mid-slopes (floor 1.2, steep 0.7). A single or branched stem 20-80 cm, the whole plant covered in stiff, spreading bristles; leaves narrow, 3-10 cm, rough (leaf linear, 0.08 m); the flowers tubular, 5-10 mm, orange-yellow, often with darker spots in the throat, in a one-sided cyme coiled at the tip that straightens as it flowers (drawn as the coil, about 5 cm, several to a plant). The fruits are four hard nutlets per flower. It germinates with the November rains, flowers March-May and dries to dark, prickly stems by June (dead_rgb a dark brown), so height_by_month is 0 from August to October. The leaves and seeds carry pyrrolizidine alkaloids and the plant can be high in nitrate, poisonous to cattle and horses; deer and rabbits barely touch it, so the file lists only the seed eaters (quail, ground squirrels, voles; sparrows and finches too, not in the world's animals).",
+  "sources": [
+    "https://ucjeps.berkeley.edu/eflora/ (Amsinckia menziesii)",
+    "https://www.calflora.org/ (Amsinckia menziesii)",
+    "https://calscape.org/ (Amsinckia menziesii)"
+  ],
+  "authors": ["Wild Earth (agent draft, 2026-10-29); needs local sign-off"],
+  "license": "CC BY-SA 4.0"
+}

@@ -1,0 +1,56 @@
+{
+  "id": "stipa_pulchra",
+  "aliases": ["purple_needlegrass", "needlegrass", "nassella_pulchra"],
+  "scientific": "Stipa pulchra",
+  "common": "purple needlegrass",
+  "form": "grass",
+  "lifespan": "perennial",
+  "native": true,
+  "height_m": [0.4, 1.0],
+  "description": "California's state grass: a dense, fine-leaved bunchgrass whose flowering stems rise in April and May, each seed tipped with a long, twice-bent awn that shines purple in the low sun. It holds the ground between the annual grasses on the drier slopes and under the blue oaks, stays grey-green at the base all summer while the annuals cure gold, and its deep roots live for decades.",
+  "season_notes": {
+    "winter": "Green again from the first rains; last year's grey leaves stand in the middle of each tussock.",
+    "spring": "Flowering stems rise in April; by May the seed heads nod, their long awns tinted purple.",
+    "summer": "The seeds have twisted themselves into the ground by June; the leaves cure to a grey straw with green at the base.",
+    "fall": "Grey-green tussocks in the gold of the annuals, waiting for rain."
+  },
+  "status": "agent draft, needs local sign-off",
+  "ground": {
+    "type": "bunch",
+    "height": 1.0,
+    "width": 1.0,
+    "palette": {
+      "winter": { "root": [74, 84, 61], "tip": [110, 145, 82], "head": [128, 133, 102], "awn": [140, 133, 115] },
+      "spring": { "root": [69, 89, 54], "tip": [115, 156, 71], "head": [133, 112, 112], "awn": [140, 107, 128] },
+      "summer": { "root": [94, 105, 82], "tip": [186, 168, 120], "head": [204, 191, 158], "awn": [214, 201, 168] },
+      "fall": { "root": [89, 99, 79], "tip": [171, 158, 120], "head": [189, 181, 158], "awn": [194, 186, 163] }
+    },
+    "heads": { "shape": "raceme", "months": [4, 6] },
+    "cure": 0.5
+  },
+  "habitat": {
+    "classes": { "grassland": 1.0, "oak_woodland": 0.9, "chaparral": 0.25, "mixed_forest": 0.2, "conifer_forest": 0.05, "riparian": 0.2 },
+    "floor": 0.8, "mid": 1.0, "steep": 1.1, "north": 0.9, "shade": 0.3, "disturbed": 0.5
+  },
+  "relations": {
+    "eaten_by": [
+      { "animal": "odocoileus_hemionus", "part": "leaves", "seasons": ["winter", "spring"] },
+      { "animal": "sylvilagus_bachmani", "part": "leaves", "seasons": ["winter", "spring", "summer", "fall"] },
+      { "animal": "lepus_californicus", "part": "leaves", "seasons": ["winter", "spring", "summer", "fall"] },
+      { "animal": "microtus_californicus", "part": "leaves", "seasons": ["winter", "spring", "fall"] },
+      { "animal": "otospermophilus_beecheyi", "part": "seeds", "seasons": ["summer"] },
+      { "animal": "callipepla_californica", "part": "seeds", "seasons": ["summer", "fall", "winter"] },
+      { "animal": "meleagris_gallopavo", "part": "seeds", "seasons": ["summer", "fall", "winter"] }
+    ],
+    "cover_for": ["microtus_californicus", "callipepla_californica"]
+  },
+  "notes": "Purple needlegrass is a perennial bunchgrass of the Central Valley edges and the Sierra foothills, in open grassland, blue oak savanna and openings in chaparral, most on the drier, shallower soils where the annual grasses are thinner. Tussocks 30-60 cm across with fine, rolled leaves to about 40 cm and flowering culms 60-100 cm in April-June; the single-flowered spikelets carry a 4-10 cm awn, bent twice, which drills the seed into the soil as it twists with the humidity, and which gives the inflorescence its purple sheen in April. The crown stays alive through the dry summer (some green leaves at the base), which is why the file's cure is 0.5 and the palette keeps the root grey-green in summer and fall, and the old grey leaves of last year stand among the new (the renderer's thatch). Deer, rabbits and voles graze the leaves in the green months; quail, turkeys and ground squirrels take the seed. Drawn by grass.js as the bunch type (the tussock clump), 1.0 of its height. The palette is the renderer's former needlegrass palette converted to sRGB 0-255, so the sward is unchanged where it is placed as before.",
+  "sources": [
+    "https://ucjeps.berkeley.edu/eflora/ (Stipa pulchra)",
+    "https://www.calflora.org/ (Stipa pulchra)",
+    "https://www.fs.usda.gov/database/feis/plants/graminoid/stipul/all.html",
+    "https://calscape.org/ (Stipa pulchra)"
+  ],
+  "authors": ["Wild Earth (agent draft, 2026-10-29); needs local sign-off"],
+  "license": "CC BY-SA 4.0"
+}

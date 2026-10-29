@@ -1,0 +1,58 @@
+{
+  "id": "bromus_hordeaceus",
+  "aliases": ["soft_chess", "soft_brome", "bromus_mollis"],
+  "scientific": "Bromus hordeaceus",
+  "common": "soft chess",
+  "form": "grass",
+  "lifespan": "annual",
+  "native": false,
+  "height_m": [0.2, 0.6],
+  "description": "A short annual brome with soft, downy leaves and a compact, upright panicle of plump, hairy spikelets with short awns, flowering in April and drying to a pale straw by the end of May, earlier than the oats. It is the commonest grass of the foothill sward, the low carpet between the taller oats on almost every open slope and under the oaks, and the one grass every grazer here eats.",
+  "season_notes": {
+    "winter": "A low, soft, grey-green carpet from the first rains: the bulk of the winter grazing.",
+    "spring": "Short upright heads of fat, downy spikelets in April; curing pale by late May.",
+    "summer": "Pale straw by June, the low mat under the gold of the oats; the seed lies on the ground.",
+    "fall": "A flattened, bleached mat, green showing through it after the first rain."
+  },
+  "status": "agent draft, needs local sign-off",
+  "ground": {
+    "type": "annual",
+    "height": 0.75,
+    "width": 0.9,
+    "palette": {
+      "winter": { "root": [58, 76, 44], "tip": [120, 160, 88], "head": [148, 158, 102], "awn": [150, 158, 108] },
+      "spring": { "root": [60, 80, 40], "tip": [134, 174, 84], "head": [180, 182, 116], "awn": [176, 178, 118] },
+      "summer": { "root": [132, 118, 86], "tip": [228, 210, 154], "head": [238, 228, 188], "awn": [230, 218, 178] },
+      "fall": { "root": [116, 106, 84], "tip": [206, 190, 150], "head": [216, 208, 178], "awn": [208, 200, 172] }
+    },
+    "heads": { "shape": "panicle", "months": [4, 5] },
+    "cure": 1.0
+  },
+  "habitat": {
+    "classes": { "grassland": 1.0, "oak_woodland": 0.9, "chaparral": 0.15, "mixed_forest": 0.1, "conifer_forest": 0.02, "riparian": 0.2 },
+    "floor": 1.1, "mid": 1.0, "steep": 0.9, "north": 0.9, "shade": 0.25, "disturbed": 1.4
+  },
+  "relations": {
+    "eaten_by": [
+      { "animal": "odocoileus_hemionus", "part": "leaves", "seasons": ["winter", "spring"] },
+      { "animal": "sylvilagus_bachmani", "part": "leaves", "seasons": ["winter", "spring"] },
+      { "animal": "lepus_californicus", "part": "leaves", "seasons": ["winter", "spring"] },
+      { "animal": "microtus_californicus", "part": "leaves", "seasons": ["winter", "spring"] },
+      { "animal": "otospermophilus_beecheyi", "part": "leaves", "seasons": ["winter", "spring"] },
+      { "animal": "otospermophilus_beecheyi", "part": "seeds", "seasons": ["spring", "summer", "fall"] },
+      { "animal": "microtus_californicus", "part": "seeds", "seasons": ["summer", "fall"] },
+      { "animal": "callipepla_californica", "part": "seeds", "seasons": ["summer", "fall", "winter"] },
+      { "animal": "meleagris_gallopavo", "part": "seeds", "seasons": ["summer", "fall", "winter"] }
+    ],
+    "cover_for": ["microtus_californicus"]
+  },
+  "notes": "Soft chess is a European annual brome naturalised through California's grasslands and oak savannas, where it is often the most abundant single species by cover. It is small and soft: culms 20-60 cm (often less where grazed), leaves and sheaths covered in fine soft hairs (the slightly greyer green of the palette), and a dense, erect, rather narrow panicle 3-10 cm long of ovoid spikelets about 1.5-2 cm, the lemmas hairy and the awns short (5-10 mm) and straight. It flowers early, April into May, and the heads and stems cure to a pale, almost white straw before the oats have finished; the heads months are [4, 5] and the summer palette is paler than the wild oat's. Height 0.75 of the annual clump (about 0.34 m) and width 0.9 make it the low mat of the sward; cure 1.0 as for all the annuals. Its seeds are not barbed and its leaves are soft, so it is grazed by everything that grazes here in the green months, deer, both rabbits, voles and the ground squirrels, and the seed is eaten by ground squirrels, voles, quail and turkeys; it gives voles their runway cover in winter and spring but is too short for quail. Disturbed 1.4: common on verges and old fields but less of a weed of bare ground than ripgut or hare barley.",
+  "sources": [
+    "https://ucjeps.berkeley.edu/eflora/ (Bromus hordeaceus)",
+    "https://www.calflora.org/ (Bromus hordeaceus)",
+    "https://www.fs.usda.gov/database/feis/ (Bromus hordeaceus)",
+    "https://www.cal-ipc.org/ (Bromus hordeaceus)"
+  ],
+  "authors": ["Wild Earth (agent draft, 2026-10-29); needs local sign-off"],
+  "license": "CC BY-SA 4.0"
+}

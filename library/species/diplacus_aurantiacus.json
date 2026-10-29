@@ -1,0 +1,80 @@
+{
+  "id": "diplacus_aurantiacus",
+  "aliases": ["sticky_monkeyflower", "bush_monkeyflower", "mimulus_aurantiacus", "monkeyflower"],
+  "scientific": "Diplacus aurantiacus",
+  "common": "sticky monkeyflower",
+  "form": "shrub",
+  "architectural_model": "Champagnat (provisional)",
+  "deciduous": false,
+  "height_m": [0.5, 1.5],
+  "variants": [
+    {"name": "young", "weight": 0.25, "height_m": [0.3, 0.6], "deadwood": 0.02, "set": {"trunk": {"stems": [4, 8]}}, "note": "a small leafy clump on a road cut"},
+    {"name": "mature", "weight": 0.5, "seeds": 2, "note": "the file as written: a soft, many-stemmed subshrub, orange with flowers in spring"},
+    {"name": "old", "weight": 0.25, "height_m": [1, 1.6], "crown_scale": 1.05, "gnarl": 1.15, "leaf_density": 0.85, "deadwood": {"fraction": 0.3, "levels": [0, 1], "shorten": 0.75}, "set": {"trunk": {"stems": [8, 14]}}, "note": "an older, leggier plant with woody, peeling lower stems and some dead ones"}
+  ],
+  "description": "A small, soft-wooded shrub 0.5-1.5 m tall with many slender stems, narrow dark green leaves sticky to the touch, and orange, trumpet-shaped two-lipped flowers 3-5 cm long all over it from April into July. It grows on rocky slopes, road cuts, canyon walls and chaparral edges and under open oaks, where hummingbirds work its flowers and deer nibble it now and then.",
+  "season_notes": {
+    "winter": "Green again after the rains, leaves flat and glossy on the slender stems.",
+    "spring": "Covered in orange flowers from April, each with a two-lipped mouth that closes when a bee or hummingbird touches it.",
+    "summer": "Still flowering into July, then the leaves curl and darken in the heat and some drop.",
+    "fall": "Half-leafless, the curled leaves dull and dusty, waiting for rain."
+  },
+  "status": "agent draft, needs local sign-off",
+  "habitat": {
+    "classes": {"grassland": 0.15, "oak_woodland": 0.6, "chaparral": 0.9, "mixed_forest": 0.3, "conifer_forest": 0.05, "riparian": 0.05},
+    "floor": 0.4, "mid": 1.0, "steep": 1.6, "north": 0.9, "shade": 0.25, "disturbed": 1.5
+  },
+  "relations": {
+    "eaten_by": [
+      {"animal": "odocoileus_hemionus", "part": "browse", "seasons": ["spring", "summer"]}
+    ],
+    "cover_for": ["sceloporus_occidentalis"]
+  },
+  "trunk": {
+    "length_ratio": 0.95, "radius_ratio": 0.012, "taper": 0.9, "flare": 1.2, "bole_ratio": 0.05, "base_size": 0.08,
+    "curve_deg": 12, "curve_var_deg": 16, "segments": 3, "lean_deg": 0, "stems": [6, 12], "stem_spread_deg": 35,
+    "split_prob": 0.0, "split_count": 2, "split_angle_deg": 20, "sinuous_deg": 8, "bark_rgb": [118, 98, 80],
+    "bark_pattern": "shreddy", "twig_rgb": [96, 104, 72],
+    "bark": {"tile_m": [0.08, 0.3]}
+  },
+  "crown": {
+    "shape": "hemispherical",
+    "envelope": {"profile": [[0.0, 0.3], [0.15, 0.46], [0.35, 0.58], [0.55, 0.6], [0.75, 0.54], [0.9, 0.38], [1.0, 0.14]], "lobes": 5, "lobe_depth": 0.14, "asymmetry": 0.15, "fill": 0.5, "edge": 1.1}
+  },
+  "levels": [
+    {
+      "count": 3, "start": 0.1, "down_angle_deg": 30, "down_angle_var_deg": 12, "rotation_deg": 90, "rotation_var_deg": 20,
+      "length_ratio": 0.45, "length_var": 0.3, "curve_deg": 12, "curve_var_deg": 16, "tropism": 0.1, "taper": 0.9,
+      "radius_ratio": 0.55, "segments": 1
+    },
+    {
+      "count": 3, "start": 0.3, "down_angle_deg": 35, "down_angle_var_deg": 12, "rotation_deg": 90,
+      "rotation_var_deg": 20, "length_ratio": 0.35, "length_var": 0.3, "curve_deg": 10, "curve_var_deg": 14,
+      "tropism": 0.1, "taper": 1.0, "radius_ratio": 0.5, "segments": 1
+    }
+  ],
+  "foliage": {
+    "type": "broadleaf", "leaf_size_m": 0.05, "leaf_shape": "lanceolate", "cluster_m": 0.28, "density": 22,
+    "start": 0.05, "parent_start": 0.15, "orientation": "outward", "roll_deg": 50,
+    "colors": {"winter": [80, 98, 58], "spring": [84, 104, 58], "summer": [92, 100, 62], "fall": [96, 98, 64]},
+    "leaf_on": {"winter": 0.85, "spring": 1.0, "summer": 0.8, "fall": 0.65},
+    "leaf_on_by_month": [0.85, 0.9, 1.0, 1.0, 1.0, 0.95, 0.8, 0.65, 0.6, 0.65, 0.75, 0.8],
+    "clumps": {"radius_m": 0.15, "cards_per_clump": 5, "shell": 0.05, "flatten": 0.85, "tip_bias": 0.8},
+    "ao_min": 0.72, "color_var": [0.08, 0.05],
+    "flowers": {"season": ["spring", "summer"], "months": [4, 7], "form": "cluster", "rgb": [232, 140, 48], "size_m": 0.04, "density": 0.6, "before_leaves": false}
+  },
+  "deadwood": {"fraction": 0.15, "levels": [0, 1], "shorten": 0.7, "rgb": [136, 128, 118]},
+  "twigs": {"count": [1, 2], "length": 0.5, "down_deg": 30, "down_var_deg": 12, "curve_var_deg": 20, "segments": 1, "radius_m": 0.003, "tropism": 0.1, "taper": 0.6, "fan_deg": 45, "jitter": 0.2},
+  "lod": {
+    "near_tris_budget": 1000, "near_sides": [3, 3, 0], "mid_blobs": 3, "mid_branches": 0, "mid_sides": [0, 0],
+    "mid_cards": 20
+  },
+  "targets": {
+    "crown_width_ratio": 1.1, "crown_base_ratio": 0.1, "porosity": 0.25, "foliage_rg": 0.88, "foliage_bg": 0.58,
+    "from": "judgement values from the drafter's knowledge of the species (2026-10-29), no photographs measured: a rounded clump a little wider than tall, some gaps between the slender stems, dark, slightly yellow-green leaves (r/g about 0.88, b/g about 0.58) in leaf; in flower the orange dominates. To be replaced by photo measurements"
+  },
+  "notes": "Sticky monkeyflower (formerly Mimulus aurantiacus) is a soft-wooded subshrub, 0.5-1.5 m, of rocky slopes, road cuts, canyon walls, chaparral edges and open oak woodland through the foothills; it takes to disturbed, well-drained ground, hence the steep and disturbed factors in the habitat block. Form: plain 'shrub', the smallest of the library's shrubs: many (6-12) slender stems from a woody base spreading 35 degrees, with two short branch levels; old stems brown and peeling ('shreddy'), young ones green-brown and glandular (twig_rgb). Leaves opposite (rotation_deg 90 on both levels), 3-7 cm, narrowly lance-shaped, dark green and shiny-sticky above with a resin that deters grazers, the margins rolled under: leaf_shape 'lanceolate' at 5 cm. Flowers tubular, two-lipped, 3-5 cm, pale to deep orange (the foothill plants are mostly a warm orange), one or two in each upper leaf axil and many at a time, April-July: flowers form 'cluster' at 4 cm (one or two flowers' worth), rgb (232, 140, 48), density 0.6. Pollinated by hummingbirds and bees; the stigma's two lobes close when touched. Summer-deciduous in part: in the dry season the leaves curl, darken and many drop, so leaf_on_by_month falls to 0.6 in September and comes back with the rain; the fall colour is a duller, browner green. Deer browse it lightly (the resin makes it a low-preference food). Architectural model Champagnat (provisional): basitonic, with many orthotropic stems from the base that lean or bend over with their own weight; a botanist should check.",
+  "sources": ["https://ucjeps.berkeley.edu/eflora/ (Diplacus aurantiacus)", "https://www.calflora.org/ (Diplacus aurantiacus)", "https://calscape.org/ (Diplacus aurantiacus)", "https://www.fs.usda.gov/database/feis/ (Mimulus aurantiacus; whether a species review exists was not checked)"],
+  "authors": ["Wild Earth (agent draft, 2026-10-29); needs local sign-off"],
+  "license": "CC BY-SA 4.0"
+}

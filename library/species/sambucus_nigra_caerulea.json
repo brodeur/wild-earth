@@ -20,6 +20,22 @@
     "fall": "Leaves turn yellow and drop; the stems that fruited may die back."
   },
   "status": "agent draft, needs local sign-off",
+  "habitat": {
+    "classes": {"grassland": 0.15, "oak_woodland": 0.6, "chaparral": 0.15, "mixed_forest": 0.5, "conifer_forest": 0.3, "riparian": 1.0},
+    "floor": 1.6, "mid": 1.0, "steep": 0.6, "north": 1.3, "shade": 0.35, "disturbed": 1.1
+  },
+  "relations": {
+    "eaten_by": [
+      {"animal": "ursus_americanus", "part": "berries", "seasons": ["summer", "fall"]},
+      {"animal": "urocyon_cinereoargenteus", "part": "berries", "seasons": ["summer", "fall"]},
+      {"animal": "canis_latrans", "part": "berries", "seasons": ["summer", "fall"]},
+      {"animal": "aphelocoma_californica", "part": "berries", "seasons": ["summer", "fall"]},
+      {"animal": "meleagris_gallopavo", "part": "berries", "seasons": ["summer", "fall"]},
+      {"animal": "callipepla_californica", "part": "berries", "seasons": ["summer", "fall"]},
+      {"animal": "odocoileus_hemionus", "part": "browse", "seasons": ["spring", "summer"]}
+    ],
+    "cover_for": ["callipepla_californica"]
+  },
   "trunk": {
     "length_ratio": 0.8, "radius_ratio": 0.025, "taper": 0.75, "flare": 1.3, "bole_ratio": 0.06, "base_size": 0.14,
     "curve_deg": 16, "curve_var_deg": 14, "segments": 3, "lean_deg": 10, "stems": [5, 10], "stem_spread_deg": 62,

@@ -20,6 +20,17 @@
     "fall": "Leaves turn yellow, orange and red-brown and drop by December; the pods turn brown and stay."
   },
   "status": "agent draft, needs local sign-off",
+  "habitat": {
+    "classes": {"grassland": 0.05, "oak_woodland": 0.7, "chaparral": 0.8, "mixed_forest": 0.3, "conifer_forest": 0.02, "riparian": 0.4},
+    "floor": 0.6, "mid": 1.0, "steep": 1.6, "north": 0.9, "shade": 0.2, "disturbed": 0.6
+  },
+  "relations": {
+    "eaten_by": [
+      {"animal": "odocoileus_hemionus", "part": "browse", "seasons": ["spring", "summer"]},
+      {"animal": "callipepla_californica", "part": "seeds", "seasons": ["fall", "winter"]}
+    ],
+    "cover_for": []
+  },
   "trunk": {
     "length_ratio": 0.88, "radius_ratio": 0.018, "taper": 0.8, "flare": 1.35, "bole_ratio": 0.08, "base_size": 0.15,
     "curve_deg": 8, "curve_var_deg": 10, "segments": 3, "lean_deg": 0, "stems": [5, 9], "stem_spread_deg": 34,

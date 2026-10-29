@@ -1,0 +1,45 @@
+{
+  "id": "lupinus_albifrons",
+  "aliases": ["silver_bush_lupine", "bush_lupine", "silver_lupine"],
+  "scientific": "Lupinus albifrons",
+  "common": "silver bush lupine",
+  "form": "forb",
+  "lifespan": "perennial",
+  "native": true,
+  "height_m": [0.5, 1.5],
+  "description": "A rounded, woody-based bush 0.5-1.5 m of silvery, silky-haired leaves, each spread like a hand of six to ten narrow leaflets, crowned from March into June by spikes 15-30 cm long of blue-purple pea flowers with a white or yellow spot. It grows on dry rocky slopes, road cuts, chaparral edges and in the oak savanna, evergreen all year, worked by hummingbirds and bees in spring and a shelter for quail, though its leaves and seeds are poisonous and little browsed.",
+  "season_notes": {
+    "winter": "A silver-grey mound, the brightest leaves on the slope.",
+    "spring": "Blue-purple flower spikes from March, fullest in April and May, humming with bees.",
+    "summer": "Hairy pods split with a snap and throw the seeds; the silver leaves hold through the drought.",
+    "fall": "Evergreen and silver; the spent grey spikes still stand above the leaves."
+  },
+  "status": "agent draft, needs local sign-off",
+  "ground": {
+    "habit": "mound",
+    "leaf": { "shape": "palmate", "size_m": 0.05, "rgb": [164, 174, 164] },
+    "flower": { "shape": "spike", "rgb": [112, 102, 192], "size_m": 0.2, "months": [3, 6], "per_plant": 10 },
+    "height_by_month": [1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0],
+    "dead_rgb": [140, 128, 104],
+    "density": 0.6
+  },
+  "habitat": {
+    "classes": { "grassland": 0.4, "oak_woodland": 0.6, "chaparral": 0.8, "mixed_forest": 0.2, "conifer_forest": 0.05, "riparian": 0.1 },
+    "floor": 0.6, "mid": 1.0, "steep": 1.4, "north": 0.7, "shade": 0.15, "disturbed": 1.5
+  },
+  "relations": {
+    "eaten_by": [
+      { "animal": "callipepla_californica", "part": "seeds", "seasons": ["summer"] },
+      { "animal": "otospermophilus_beecheyi", "part": "seeds", "seasons": ["summer"] }
+    ],
+    "cover_for": ["callipepla_californica"]
+  },
+  "notes": "Silver bush lupine is a native shrubby perennial, woody at the base, of the Coast Ranges and the Sierra foothills, on dry, rocky or sandy slopes, road cuts and banks, chaparral edges and openings in the oak savanna, often on thin soil where little else stands (steep 1.4, disturbed 1.5, floor 0.6); it fixes nitrogen and is one of the first plants on bare cuts. It is filed as a forb with the mound habit because forbs.js draws the low leafy clumps, though botanically it is a subshrub. The plant is a rounded bush 0.5-1.5 m (to 2 m), the leaves palmate with 6-10 narrow leaflets 1-3 cm, densely covered in silky silver hairs that give the bush its grey-white sheen (leaf palmate, 0.05 m, a silver-grey rgb). The flowers are 1-1.5 cm, blue to lavender with a white or yellow spot on the banner that turns purple once pollinated, in whorls along racemes 8-30 cm held above the leaves (flower spike, 0.2 m, about ten to a bush), March-June; the hairy pods split explosively in summer. It is evergreen and long-lived, so height_by_month holds at 1 all year; dead_rgb is for the spent spikes after June, not the leaves. Bees and hummingbirds visit the flowers. The leaves and seeds carry quinolizidine alkaloids, so deer and rabbits browse it little and the seeds are taken only in small amounts by quail and ground squirrels; the bush is cover for quail coveys, and for the fence and alligator lizards, which are not among the world's animals.",
+  "sources": [
+    "https://ucjeps.berkeley.edu/eflora/ (Lupinus albifrons)",
+    "https://www.calflora.org/ (Lupinus albifrons)",
+    "https://calscape.org/ (Lupinus albifrons)"
+  ],
+  "authors": ["Wild Earth (agent draft, 2026-10-29); needs local sign-off"],
+  "license": "CC BY-SA 4.0"
+}

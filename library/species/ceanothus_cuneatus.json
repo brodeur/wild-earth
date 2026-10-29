@@ -1,0 +1,403 @@
+{
+  "id": "ceanothus_cuneatus",
+  "aliases": [
+    "buckbrush",
+    "buck_brush",
+    "wedgeleaf_ceanothus"
+  ],
+  "scientific": "Ceanothus cuneatus",
+  "common": "buckbrush",
+  "form": "shrub",
+  "architectural_model": "Rauh (provisional)",
+  "deciduous": false,
+  "height_m": [
+    1,
+    3
+  ],
+  "variants": [
+    {
+      "name": "young",
+      "weight": 0.25,
+      "height_m": [
+        0.5,
+        1.2
+      ],
+      "deadwood": 0.03,
+      "set": {
+        "trunk": {
+          "stems": [
+            2,
+            5
+          ]
+        }
+      },
+      "note": "a small, dense, rounded young shrub, a few years after fire"
+    },
+    {
+      "name": "mature",
+      "weight": 0.5,
+      "seeds": 2,
+      "note": "the file as written: a stiff, intricately branched shrub with a dense rounded to flat top"
+    },
+    {
+      "name": "decadent",
+      "weight": 0.25,
+      "height_m": [
+        1.8,
+        3
+      ],
+      "crown_scale": 1.05,
+      "gnarl": 1.2,
+      "leaf_density": 0.75,
+      "deadwood": {
+        "fraction": 0.4,
+        "levels": [
+          0,
+          1,
+          2
+        ],
+        "shorten": 0.75
+      },
+      "set": {
+        "trunk": {
+          "stems": [
+            4,
+            9
+          ]
+        }
+      },
+      "note": "an old stand: grey, twiggy, many dead branches inside a thinning crown"
+    }
+  ],
+  "description": "A rigid, densely branched evergreen shrub 1-3 m tall with stiff grey stems set at right angles and tiny, wedge-shaped, dull green leaves in opposite pairs; in March and April it is covered in small white flower clusters whose honey scent drifts across the hillside. It grows on dry chaparral slopes and in the openings of blue oak and foothill pine woodland, where it is one of the foothills' most important deer browse plants and cover for quail and rabbits.",
+  "season_notes": {
+    "winter": "Evergreen and grey-green; deer browse the twig tips through the winter.",
+    "spring": "Covered in small white (now and then pale blue) flower clusters in March and April, sweet-scented and full of bees.",
+    "summer": "Small horned seed capsules ripen and burst with a snap, throwing their seeds out into the brush.",
+    "fall": "Dull green and dusty before the rains; quail work the ground beneath for fallen seed."
+  },
+  "status": "agent draft, needs local sign-off",
+  "habitat": {
+    "classes": {
+      "grassland": 0.1,
+      "oak_woodland": 0.6,
+      "chaparral": 1.0,
+      "mixed_forest": 0.3,
+      "conifer_forest": 0.05,
+      "riparian": 0.0
+    },
+    "floor": 0.6,
+    "mid": 1.0,
+    "steep": 1.2,
+    "north": 0.8,
+    "shade": 0.2,
+    "disturbed": 1.0
+  },
+  "relations": {
+    "eaten_by": [
+      {
+        "animal": "odocoileus_hemionus",
+        "part": "browse",
+        "seasons": [
+          "winter",
+          "spring",
+          "summer",
+          "fall"
+        ]
+      },
+      {
+        "animal": "odocoileus_hemionus",
+        "part": "flowers",
+        "seasons": [
+          "spring"
+        ]
+      },
+      {
+        "animal": "sylvilagus_bachmani",
+        "part": "browse",
+        "seasons": [
+          "winter",
+          "spring"
+        ]
+      },
+      {
+        "animal": "lepus_californicus",
+        "part": "browse",
+        "seasons": [
+          "winter",
+          "spring"
+        ]
+      },
+      {
+        "animal": "callipepla_californica",
+        "part": "seeds",
+        "seasons": [
+          "summer",
+          "fall"
+        ]
+      },
+      {
+        "animal": "oreortyx_pictus",
+        "part": "seeds",
+        "seasons": [
+          "summer",
+          "fall"
+        ]
+      }
+    ],
+    "cover_for": [
+      "callipepla_californica",
+      "oreortyx_pictus",
+      "sylvilagus_bachmani"
+    ]
+  },
+  "trunk": {
+    "length_ratio": 0.85,
+    "radius_ratio": 0.025,
+    "taper": 0.85,
+    "flare": 1.4,
+    "bole_ratio": 0.06,
+    "base_size": 0.05,
+    "curve_deg": 6,
+    "curve_var_deg": 10,
+    "segments": 3,
+    "lean_deg": 0,
+    "stems": [
+      3,
+      7
+    ],
+    "stem_spread_deg": 45,
+    "split_prob": 0.0,
+    "split_count": 2,
+    "split_angle_deg": 20,
+    "sinuous_deg": 4,
+    "bark_rgb": [
+      112,
+      108,
+      102
+    ],
+    "bark_pattern": "smooth_grey",
+    "twig_rgb": [
+      120,
+      112,
+      100
+    ],
+    "bark": {
+      "tile_m": [
+        0.1,
+        0.3
+      ],
+      "contrast": 0.5,
+      "lichen": 0.25,
+      "relief": 0.3
+    }
+  },
+  "crown": {
+    "shape": "hemispherical",
+    "envelope": {
+      "profile": [
+        [
+          0.0,
+          0.42
+        ],
+        [
+          0.15,
+          0.62
+        ],
+        [
+          0.35,
+          0.74
+        ],
+        [
+          0.55,
+          0.76
+        ],
+        [
+          0.75,
+          0.72
+        ],
+        [
+          0.9,
+          0.6
+        ],
+        [
+          1.0,
+          0.3
+        ]
+      ],
+      "lobes": 5,
+      "lobe_depth": 0.1,
+      "asymmetry": 0.12,
+      "fill": 0.5,
+      "edge": 1.06
+    }
+  },
+  "levels": [
+    {
+      "count": 5,
+      "start": 0.05,
+      "down_angle_deg": 55,
+      "down_angle_var_deg": 10,
+      "rotation_deg": 90,
+      "rotation_var_deg": 15,
+      "length_ratio": 0.5,
+      "length_var": 0.25,
+      "curve_deg": 6,
+      "curve_var_deg": 8,
+      "tropism": 0.06,
+      "taper": 0.9,
+      "radius_ratio": 0.6,
+      "segments": 2,
+      "zigzag_deg": 12
+    },
+    {
+      "count": 6,
+      "start": 0.15,
+      "down_angle_deg": 80,
+      "down_angle_var_deg": 10,
+      "rotation_deg": 90,
+      "rotation_var_deg": 15,
+      "length_ratio": 0.35,
+      "length_var": 0.3,
+      "curve_deg": 4,
+      "curve_var_deg": 8,
+      "tropism": 0.04,
+      "taper": 1.0,
+      "radius_ratio": 0.5,
+      "segments": 1,
+      "zigzag_deg": 10
+    }
+  ],
+  "foliage": {
+    "type": "broadleaf",
+    "leaf_size_m": 0.012,
+    "leaf_shape": "oval",
+    "cluster_m": 0.3,
+    "density": 26,
+    "start": 0.02,
+    "parent_start": 0.05,
+    "orientation": "outward",
+    "roll_deg": 50,
+    "colors": {
+      "winter": [
+        96,
+        108,
+        80
+      ],
+      "spring": [
+        108,
+        116,
+        86
+      ],
+      "summer": [
+        100,
+        110,
+        82
+      ],
+      "fall": [
+        100,
+        108,
+        82
+      ]
+    },
+    "leaf_on": {
+      "winter": 1.0,
+      "spring": 1.0,
+      "summer": 1.0,
+      "fall": 1.0
+    },
+    "clumps": {
+      "radius_m": 0.2,
+      "cards_per_clump": 6,
+      "shell": 0.05,
+      "flatten": 0.8,
+      "tip_bias": 0.7
+    },
+    "ao_min": 0.72,
+    "color_var": [
+      0.08,
+      0.04
+    ],
+    "flowers": {
+      "season": "spring",
+      "months": [
+        3,
+        4
+      ],
+      "form": "cluster",
+      "rgb": [
+        238,
+        236,
+        228
+      ],
+      "size_m": 0.03,
+      "density": 0.7,
+      "before_leaves": false
+    },
+    "cards_per_m2": 14
+  },
+  "deadwood": {
+    "fraction": 0.12,
+    "where": "inner",
+    "levels": [
+      1,
+      2
+    ],
+    "shorten": 0.7,
+    "rgb": [
+      138,
+      134,
+      128
+    ]
+  },
+  "twigs": {
+    "count": [
+      2,
+      3
+    ],
+    "length": 0.6,
+    "down_deg": 70,
+    "down_var_deg": 12,
+    "zigzag_deg": 15,
+    "curve_var_deg": 12,
+    "segments": 1,
+    "radius_m": 0.004,
+    "taper": 0.6,
+    "fan_deg": 50,
+    "jitter": 0.2
+  },
+  "lod": {
+    "near_tris_budget": 1300,
+    "near_sides": [
+      3,
+      3,
+      0
+    ],
+    "mid_blobs": 3,
+    "mid_branches": 0,
+    "mid_sides": [
+      0,
+      0
+    ],
+    "mid_cards": 28
+  },
+  "targets": {
+    "crown_width_ratio": 1.3,
+    "crown_base_ratio": 0.08,
+    "porosity": 0.15,
+    "foliage_rg": 0.9,
+    "foliage_bg": 0.73,
+    "from": "judgement values from the drafter's knowledge of the species (2026-10-29), no photographs measured: a dense, rounded to flat-topped shrub somewhat wider than tall, leafy nearly to the ground; dull olive to grey-green foliage, a little greyer than coyote brush. To be replaced by photo measurements"
+  },
+  "notes": "Buckbrush is a rigid evergreen shrub of dry chaparral, blue oak and foothill pine woodland openings and serpentine and gabbro outcrops across the foothills, 1-3 m. It has no burl (most plants are killed by fire and come back from heat-cracked seed in the soil), so stands are even-aged and older ones grow grey and twiggy with many dead branches: the 'decadent' class carries 40% dead wood. Its structure is modelled on chamise (many stems from a short base) but with a tighter, rounder crown: 3-7 stems spreading 45 degrees from near the ground, two branch levels. The unusual numbers are its stiffness and its opposite branching: rotation_deg 90 with a small variance puts successive branches in crossed pairs (the decussate habit), the second level leaves its parent at 80 degrees (the short side shoots stand off at near right angles, often ending in a spur or thorny tip), and curve variance is low (6-8 degrees) with a little zig-zag, so the branches read as rigid and angular rather than curved. Leaves 0.5-2 cm, wedge-shaped (broadest at the tip), thick, dull grey-green, opposite, crowded on short spurs: leaf_shape 'oval' at 1.2 cm in small cards (cluster_m 0.3) packed in small clumps, a fine texture like chamise's but rounder. Bark grey, smooth to slightly rough: 'smooth_grey'. Flowers small, white or occasionally pale blue to lavender, in dense round umbels all over the shrub in March-April, strongly sweet-scented (flowers density 0.7, cream-white). Fruit a small horned capsule that bursts in early summer: not drawn. One of the key deer browse species of the foothills, browsed all year and most in winter and spring; quail eat the seeds and shelter under it. Architectural model Rauh (provisional): rhythmic, monopodial growth with lateral flowering, which suits the axillary flower clusters; a botanist should check. Lineup 2026-10-29: gaps 0.39 against 0.15, so cards_per_m2 14 (the crown is dense, the leaves tiny) and the budget 1,300.",
+  "sources": [
+    "https://www.fs.usda.gov/database/feis/plants/shrub/ceacun/all.html",
+    "https://ucjeps.berkeley.edu/eflora/ (Ceanothus cuneatus)",
+    "https://www.calflora.org/ (Ceanothus cuneatus)",
+    "https://calscape.org/ (Ceanothus cuneatus)"
+  ],
+  "authors": [
+    "Wild Earth (agent draft, 2026-10-29); needs local sign-off"
+  ],
+  "license": "CC BY-SA 4.0"
+}

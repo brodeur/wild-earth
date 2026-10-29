@@ -1,0 +1,46 @@
+{
+  "id": "plagiobothrys_nothofulvus",
+  "aliases": ["popcorn_flower", "rusty_popcornflower"],
+  "scientific": "Plagiobothrys nothofulvus",
+  "common": "rusty popcorn flower",
+  "form": "forb",
+  "lifespan": "annual",
+  "native": true,
+  "height_m": [0.1, 0.4],
+  "description": "A slender annual 10-40 cm tall, a small rosette of narrow hairy leaves with thin stems that end in coiled sprays of tiny white five-petalled flowers with yellow eyes, like scattered popcorn. From March to May it flowers in sheets that whiten whole pastures and swales of the grassland and oak savanna, then seeds and vanishes by June, its nutlets food for quail and voles.",
+  "season_notes": {
+    "winter": "Small rosettes of narrow, hairy leaves under the new grass.",
+    "spring": "Thin stems with tiny white flowers from March; whole pastures white in April.",
+    "summer": "The stems dry and the nutlets fall by June; gone in July.",
+    "fall": "Gone; the seed waits for the rains."
+  },
+  "status": "agent draft, needs local sign-off",
+  "ground": {
+    "habit": "erect",
+    "leaf": { "shape": "linear", "size_m": 0.05, "rgb": [102, 132, 84] },
+    "flower": { "shape": "tiny", "rgb": [246, 244, 234], "size_m": 0.008, "months": [3, 5], "per_plant": 20 },
+    "height_by_month": [0.15, 0.25, 0.6, 1.0, 0.8, 0.3, 0.0, 0.0, 0.0, 0.0, 0.05, 0.1],
+    "dead_rgb": [162, 142, 112],
+    "density": 1.2
+  },
+  "habitat": {
+    "classes": { "grassland": 1.0, "oak_woodland": 0.6, "chaparral": 0.1, "mixed_forest": 0.02, "conifer_forest": 0.0, "riparian": 0.15 },
+    "floor": 1.3, "mid": 1.0, "steep": 0.7, "north": 0.9, "shade": 0.1, "disturbed": 1.0
+  },
+  "relations": {
+    "eaten_by": [
+      { "animal": "callipepla_californica", "part": "seeds", "seasons": ["spring", "summer"] },
+      { "animal": "microtus_californicus", "part": "seeds", "seasons": ["spring", "summer"] },
+      { "animal": "microtus_californicus", "part": "leaves", "seasons": ["winter", "spring"] }
+    ],
+    "cover_for": []
+  },
+  "notes": "Rusty popcorn flower is a native winter annual of the valley and foothill grassland and the open oak savanna, most abundant on the flats and gentle swales where the soil stays moist into spring (floor 1.3, steep 0.7), and the commonest of several popcorn flowers here. A basal rosette of narrow, bristly leaves 3-10 cm (leaf linear, 0.05 m), and from it one or a few slender, sparsely leafy stems 10-40 cm (to 60 in good years) ending in coiled cymes that unroll as the flowers open; each flower is 3-10 mm, white with a yellow ring at the throat (flower tiny, about twenty open on a plant). The calyx is covered in rust-brown hairs, which name the species, and the stems and roots stain purple when crushed. It germinates with the November rains, flowers March-May in such numbers that pastures look frosted, and is gone by June-July, so height_by_month is 0 from July to October. Small and hairy, it is little grazed; voles take the rosettes and the nutlets, quail the nutlets, and its density of 1.2 is for the sheets it forms.",
+  "sources": [
+    "https://ucjeps.berkeley.edu/eflora/ (Plagiobothrys nothofulvus)",
+    "https://www.calflora.org/ (Plagiobothrys nothofulvus)",
+    "https://calscape.org/ (Plagiobothrys nothofulvus)"
+  ],
+  "authors": ["Wild Earth (agent draft, 2026-10-29); needs local sign-off"],
+  "license": "CC BY-SA 4.0"
+}
