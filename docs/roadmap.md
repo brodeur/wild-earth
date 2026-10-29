@@ -256,7 +256,8 @@ browser stays the renderer.
 - Hand-drawn mask polygons in the viewer (mining scars, ditches, terraces) and
   appending viewer edits to the manifest's `edits` log.
 - Ground-truth the footprint mask on foot with the viewer on a phone.
-- Neighbouring tiles side by side in the viewer and client.
+- Neighbouring tiles side by side in the viewer and client. (A tile at any whole-kilometre origin builds since 2026-10-29: the re-centred Yosemite
+  tile utm11n_267_4175 holds the valley from El Capitan meadow to Half Dome; the first stitch is the next step.)
 - ~~World selection in the client (where, when, who) as the opening screen~~ done overnight.
 - Test the Unreal import on a real install.
 

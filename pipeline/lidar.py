@@ -159,23 +159,30 @@ def build_dem_1m(tile: Tile, force=False) -> dict:
         x0, y0, x1, y1 = tile.bounds
         z = np.full((N1, N1), NODATA, dtype="float32")
         for cell, cm in zip(cells, metas):   # each product covers its cell plus an apron: paste the overlap with the tile
-            url = cm["chosen"]["url"]
-            raw = download(url, None, raw_dir / Path(url).name, force=force)
-            log(f"dem: {raw.name} {raw.stat().st_size / 1e6:.0f} MB")
             cx0, cy0, cx1, cy1 = cell.bounds
             ox0, oy0, ox1, oy1 = max(x0, cx0), max(y0, cy0), min(x1, cx1), min(y1, cy1)
-            with rasterio.open(raw) as src:
-                if src.res != (1.0, 1.0):
-                    raise RuntimeError(f"unexpected resolution {src.res}")
-                win = window_from_bounds(ox0, oy0, ox1, oy1, src.transform)
-                c, r = win.col_off, win.row_off
-                if abs(c - round(c)) > 1e-3 or abs(r - round(r)) > 1e-3:
-                    raise RuntimeError(f"1 m product not aligned to whole metres: window {win}")
-                w, h = int(round(ox1 - ox0)), int(round(oy1 - oy0))
-                part = src.read(1, window=((round(r), round(r) + h), (round(c), round(c) + w))).astype("float32")
-                nod = src.nodata
-            bad = ~np.isfinite(part) | (part == nod) if nod is not None else ~np.isfinite(part)
-            part[bad] = NODATA
+            w, h = int(round(ox1 - ox0)), int(round(oy1 - oy0))
+            # the newest collection first, then the others: a collection's edge product can be empty over this overlap
+            # (the re-centred Yosemite tile's south-west cell: the 2020 Southern Sierra product covers none of it)
+            for cand in [cm["chosen"]] + [c for c in cm["candidates"] if c is not cm["chosen"] and c["url"] != cm["chosen"]["url"]]:
+                url = cand["url"]
+                raw = download(url, None, raw_dir / Path(url).name, force=force)
+                log(f"dem: {raw.name} {raw.stat().st_size / 1e6:.0f} MB")
+                with rasterio.open(raw) as src:
+                    if src.res != (1.0, 1.0):
+                        raise RuntimeError(f"unexpected resolution {src.res}")
+                    win = window_from_bounds(ox0, oy0, ox1, oy1, src.transform)
+                    c, r = win.col_off, win.row_off
+                    if abs(c - round(c)) > 1e-3 or abs(r - round(r)) > 1e-3:
+                        raise RuntimeError(f"1 m product not aligned to whole metres: window {win}")
+                    part = src.read(1, window=((round(r), round(r) + h), (round(c), round(c) + w)), boundless=True, fill_value=src.nodata if src.nodata is not None else NODATA).astype("float32")
+                    nod = src.nodata
+                bad = ~np.isfinite(part) | (part == nod) if nod is not None else ~np.isfinite(part)
+                part[bad] = NODATA
+                if (part == NODATA).mean() < 0.5:
+                    cm["used"] = cand["project"]
+                    break
+                log(f"dem: {raw.name} covers {(part != NODATA).mean():.0%} of the cell's overlap; trying the next collection")
             r0, c0 = int(round(y1 - oy1)), int(round(ox0 - x0))   # rows run from the tile's north edge
             z[r0:r0 + h, c0:c0 + w] = part
         _write(out, z, tile)
@@ -186,7 +193,7 @@ def build_dem_1m(tile: Tile, force=False) -> dict:
     v = z != NODATA
     return {"path": "terrain/dem_1m.tif", "kind": "raster", "crs": tile.crs,
             "bounds": list(tile.bounds), "pixels": N1, "resolution_m": 1.0, "units": "m (NAVD88)", "nodata": NODATA,
-            "source": "usgs_3dep_1m", "project": chosen["project"], "projects": [m["chosen"]["project"] for m in metas],
+            "source": "usgs_3dep_1m", "project": chosen["project"], "projects": [m.get("used", m["chosen"]["project"]) for m in metas],
             "collection": [chosen["collection_begin"], chosen["collection_end"]], "found_via": meta["found_via"],
             "other_collections": [c["project"] for c in meta["candidates"][1:]],
             "for_clients": False, "for_clients_note": "pipeline only; clients read client.heights (5 m) and client.terrain_detail",

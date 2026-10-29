@@ -2701,3 +2701,33 @@ at the same pose and date, alternating with main's build: as a deer at Weber Cre
 and basin in the client (the browser pane went off screen before those shots, and a hidden pane runs no frames), the
 raven's frame rate, the emergents' and bed stones' far look, the willows' and cattails' look against references, and
 any tile but the home tile (the pass is additive and the other tiles need `--steps water`).
+
+## 2026-10-29: the re-centred Yosemite tile, and a tile at any whole-kilometre origin
+
+Aaron: "Is stitching tiles together that are adjacent possible? ... Yosemite valley is not in the center of the tile - it
+goes off the tile in two directions", then "build a re-centred Yosemite tile with the valley in the middle". The
+pipeline's tile id was always any whole kilometre of easting and northing (config.py Tile.from_id), not only the
+10 km grid, so a tile can sit anywhere; nothing in the client cared. The valley's landmarks in UTM 11N (Pohono
+bridge 265.0 E, Bridalveil 266.7, El Capitan meadow 267.8, Yosemite Falls 271.2, the village 271.5, Glacier Point
+273.2, Mirror Lake 275.2, Half Dome 276.8; north 4177.7 to 4182.0 km) span 11.8 km east to west, more than a tile,
+so the origin is 267 E, 4175 N: the valley centred north to south (4180 at the tile's middle) and running from El
+Capitan meadow to Half Dome, Bridalveil 300 m off the west edge. `utm11n_267_4175` built end to end in 45 min (the
+DEM from the Planetary Computer seamless fallback, the USGS ImageServer answering 502; Overpass took 17 min of
+retries for the rewilded hydrology; the Sentinel months 10 min), with two failures fixed and re-run: the species
+step (my locomotion hook used tile.id for tile_id) and the lidar step, which read one 1 m DEM product at the tile's
+window and got a zero-width window because the 1 m products are 10 km cells on the grid and a tile off the grid
+straddles up to four. lidar.py build_dem_1m now lists the cells a tile covers (dem_cells), pastes each product's
+overlap into the tile's 1 m grid, and when a cell's newest product covers none of the overlap (the 2020 Southern
+Sierra edge product over the south-west cell: 10 MB, 0 %) falls back to the next collection (the 2019 Yosemite NP
+products, about 280 MB each); the manifest records the projects used. The 1 m mosaic against the 10 m fallback DEM:
+every quadrant valid, residual std 7 to 25 m on the cliffs (the first Yosemite tile had 1.1 m against the 1/3
+arc-second ImageServer DEM: the fallback is coarser, the detail is clipped at +-5 m as before). The water pass ran
+on it (363 reaches). What it lacks, as the first Yosemite tile: a point cloud, so no canopy height, crowns or
+inpaint. In the viewer: Yosemite Falls and the north wall from the arrival at the tile's centre, the mini-map reading
+Sentinel Drive.
+
+Stitching, answered: possible and laid out for (the shared UTM grid, the same seamless DEM, deterministic seeding);
+it needs a shared world origin, packages loaded with offsets, the edge rows joined, roads and streams continued,
+ranges that cross, and the map and games reconciled; the costs are memory (double for a pair) and colour seams
+between NAIP flights. A bigger tile is one constant (TILE_SIZE_M) at the same memory cost per area. The re-centred
+tile is the cheap answer for one valley; stitching is the long one.
