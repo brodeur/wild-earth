@@ -29,7 +29,7 @@ export class HerdSilhouette {
     const src = drawn ? st.tiers[0] : A.meshes[k], model = drawn ? st.model : A.speciesList()[k].model;
     if (!src?.geometry || !model) return null;
     const geo = src.geometry.clone();
-    for (const name of ['aAnim', 'aAnim2', 'aClip']) if (geo.attributes[name]) { const a = new THREE.InstancedBufferAttribute(new Float32Array(SIL_CAP * 4), 4); a.setUsage(THREE.DynamicDrawUsage); geo.setAttribute(name, a); }
+    for (const name of ['aAnim', 'aAnim2', 'aClip', 'aBend']) if (geo.attributes[name]) { const a = new THREE.InstancedBufferAttribute(new Float32Array(SIL_CAP * 4), 4); a.setUsage(THREE.DynamicDrawUsage); geo.setAttribute(name, a); }
     const mat = animalSilhouetteMaterial(model, { soul: rarityColor(A.rarity[k]), fade: new THREE.Vector2(SIL_NEAR, SIL_FAR), gain: SIL_GAIN });
     mat.stencilWrite = true; mat.stencilRef = STENCIL_HERD; mat.stencilFunc = THREE.NotEqualStencilFunc;   // not where a herd body is (mark below)
     mat.stencilFail = THREE.KeepStencilOp; mat.stencilZFail = THREE.KeepStencilOp; mat.stencilZPass = THREE.KeepStencilOp;
@@ -71,11 +71,13 @@ export class HerdSilhouette {
       if (anim2 && src2) anim2.array.set(src2.subarray(a.slot * 4, a.slot * 4 + 4), n * 4);
       const clip = m.geometry.attributes.aClip, srcC = A.clip?.[k];   // the skinned deer's clip and phase
       if (clip && srcC) clip.array.set(srcC.subarray(a.slot * 4, a.slot * 4 + 4), n * 4);
+      const bend = m.geometry.attributes.aBend, srcB = A.bend?.[k];   // and its bend in a turn
+      if (bend && srcB) bend.array.set(srcB.subarray(a.slot * 4, a.slot * 4 + 4), n * 4);
       counts.set(k, n + 1);
     }
     for (const [k, m] of this.meshes) {
       const n = counts.get(k) || 0; m.count = n; m.visible = n > 0;
-      if (n) { m.instanceMatrix.needsUpdate = true; for (const name of ['aAnim', 'aAnim2', 'aClip']) if (m.geometry.attributes[name]) m.geometry.attributes[name].needsUpdate = true; }
+      if (n) { m.instanceMatrix.needsUpdate = true; for (const name of ['aAnim', 'aAnim2', 'aClip', 'aBend']) if (m.geometry.attributes[name]) m.geometry.attributes[name].needsUpdate = true; }
     }
   }
   clear() { this.update(null, null); }

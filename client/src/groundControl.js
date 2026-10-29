@@ -1,6 +1,6 @@
 import * as THREE from 'three';
 import { trunkAt } from './animals.js';
-import { animalMaterial, animalDepthMaterial, hasAnim2, antlerState, driveClips, makeClipState, DEER_DRIVE, turnFollow } from './animalModels.js';
+import { animalMaterial, animalDepthMaterial, hasAnim2, antlerState, driveClips, makeClipState, DEER_DRIVE, turnFollow, bendOf } from './animalModels.js';
 import { addCaster } from './shadows.js';
 import { HerdMarks } from './herdMarks.js';
 import { HerdSilhouette } from './herdSilhouette.js';
@@ -180,7 +180,10 @@ export class GroundControl {
         const geo = geometry.clone(), rig = hasAnim2(model);
         geo.setAttribute('aAnim', new THREE.InstancedBufferAttribute(new Float32Array(4), 4));
         if (rig) geo.setAttribute('aAnim2', new THREE.InstancedBufferAttribute(new Float32Array(4), 4));
-        if (model.skin) geo.setAttribute('aClip', new THREE.InstancedBufferAttribute(new Float32Array(4), 4));   // the skinned deer: clip, phase, blend
+        if (model.skin) {   // the skinned deer: clip, phase, blend; the bend (spine, head, legs' step)
+          geo.setAttribute('aClip', new THREE.InstancedBufferAttribute(new Float32Array(4), 4));
+          geo.setAttribute('aBend', new THREE.InstancedBufferAttribute(new Float32Array(4), 4));
+        }
         const mesh = new THREE.InstancedMesh(geo, animalMaterial(this.atmosphere, model, { map: model.maps?.[0] || null, head: this.flight.headYaw }), 1);   // head: the look (flight.js)
         mesh.instanceMatrix.setUsage(THREE.DynamicDrawUsage);
         mesh.frustumCulled = false; mesh.castShadow = mesh.receiveShadow = true; mesh.name = `player ${name}`;
@@ -548,8 +551,9 @@ export class GroundControl {
     const an = m.geometry.attributes.aAnim; an.array[0] = ps.phase % TAU; an.array[1] = ps.amp; an.array[2] = ps.pose; an.array[3] = ps.flick; an.needsUpdate = true;
     if (b.rig) { const a2 = m.geometry.attributes.aAnim2; a2.array[0] = ps.e0; a2.array[1] = ps.e1; a2.array[2] = ps.e2; a2.array[3] = ps.e3; a2.needsUpdate = true; }
     if (sk) {   // the skinned deer: a jump runs the gallop in the air
-      const ac = m.geometry.attributes.aClip;
+      const ac = m.geometry.attributes.aClip, ab = m.geometry.attributes.aBend;
       driveClips(sk, DEER_DRIVE, this.cs, sv, Math.max(0, ps.pose) / (this.modelPoseMax() || 1), ps.flick, dt, ac.array, 0); ac.needsUpdate = true;
+      bendOf(DEER_DRIVE, this.cs, sv, this.flight.yaw, sk, ab.array, 0); ab.needsUpdate = true;   // the spine, the head and the legs' step in a turn
     }
     if (ps.phase > 1e4) ps.phase -= TAU * 1000;
   }

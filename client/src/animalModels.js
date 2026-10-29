@@ -476,7 +476,13 @@ async function loadClips(base, skinExtras) {
     // the head chain (neck, head, ears: contiguous in the skin order) and the neck base, for the player's look (PLAYER_HEAD)
     const headIdx = index.joints.map((n, i) => /^(Neck|Head|Ear)/.test(n) ? i : -1).filter(i => i >= 0);
     const head = headIdx.length ? { first: headIdx[0], last: headIdx[headIdx.length - 1], pivot: index.joint_rest?.[headIdx[0]] || [0, 0, 0] } : null;
-    return { index, tex, names, clip, table, joints: index.joints, head, texScale: index.scale, key: `${index.width}x${index.height}|${table.map(c => `${c.first},${c.count},${c.loop ? 1 : 0}`).join(';')}` };
+    // the bend (SKIN_BODY, bendOf): each joint's role (1 a fore leg, 2 a hind leg, 0 the rest), the fore and hind hoof's
+    // rest z (their lever round the turning centre), the hips' and the neck base's z (the spine's bend runs between them)
+    // and the standing reference frame (Idle's first) a leg's swing is measured from
+    const jz = n => index.joint_rest?.[index.joints.indexOf(n)]?.[2];
+    const roles = index.joints.map(n => /^(FrontShoulder|FrontUpperLeg|FrontLowerLeg|IKFrontLeg|FF\.|PoleTarget\.)/.test(n) ? 1 : /^(BackShoulder|BackLeg|BackUpperLeg|BackLowerLeg|IKBackLeg|FFB\.|PoleTargetBack)/.test(n) ? 2 : 0);
+    const legs = roles.some(r => r) ? { roles, legZ: [jz('FF.L') ?? 0.33, jz('FFB.L') ?? -0.45], hipZ: jz('BackShoulder.L') ?? -0.27, neckZ: (head && index.joint_rest?.[head.first]?.[2]) ?? 0.4, ref: index.clips.Idle?.first ?? 0 } : null;
+    return { index, tex, names, clip, table, joints: index.joints, head, legs, texScale: index.scale, key: `${index.width}x${index.height}|${table.map(c => `${c.first},${c.count},${c.loop ? 1 : 0}`).join(';')}|${legs ? roles.join('') : ''}` };
   })());
   const shared = await clipCache.get(key);
   return { ...shared, ratio: (skinExtras.scale || shared.texScale) / shared.texScale };
@@ -964,7 +970,7 @@ const REPTILE_COLOR = `
 // matrices from the bone texture at the instance's clip and frame, two frames blended, and a second clip blended in for a
 // transition. Matrices are blended linearly (a hair of shrink mid-blend, nothing the eye reads on a 0.3 s transition).
 const SKIN_DECL = `
-attribute vec4 skinIndex; attribute vec4 skinWeight; attribute vec4 aClip;
+attribute vec4 skinIndex; attribute vec4 skinWeight; attribute vec4 aClip; attribute vec4 aBend;
 uniform highp sampler2D uBones;
 mat3 skinRY(float a) { float c = cos(a), s = sin(a); return mat3(c, 0.0, -s, 0.0, 1.0, 0.0, s, 0.0, c); }
 mat4 skinBone(int frame, int j) {
@@ -982,6 +988,15 @@ mat4 skinClip(vec4 c, float phase) {
   if (skinWeight.y > 0.0) M += (skinBone(f0, j.y) * (1.0 - u) + skinBone(f1, j.y) * u) * skinWeight.y;
   if (skinWeight.z > 0.0) M += (skinBone(f0, j.z) * (1.0 - u) + skinBone(f1, j.z) * u) * skinWeight.z;
   if (skinWeight.w > 0.0) M += (skinBone(f0, j.w) * (1.0 - u) + skinBone(f1, j.w) * u) * skinWeight.w;
+  return M;
+}
+// the instance's skinning matrix at one frame (the standing reference the legs' step is measured from)
+mat4 skinFrame(int frame) {
+  ivec4 j = ivec4(skinIndex + 0.5);
+  mat4 M = skinBone(frame, j.x) * skinWeight.x;
+  if (skinWeight.y > 0.0) M += skinBone(frame, j.y) * skinWeight.y;
+  if (skinWeight.z > 0.0) M += skinBone(frame, j.z) * skinWeight.z;
+  if (skinWeight.w > 0.0) M += skinBone(frame, j.w) * skinWeight.w;
   return M;
 }`;
 const SKIN_BODY = `
@@ -1003,13 +1018,47 @@ if (aClip.w > 0.001) {
 }
 mat3 animR = mat3(skinM);
 vec3 transformed = (skinM * vec4(animPos, 1.0)).xyz;
-#if defined(PLAYER_HEAD) && defined(SKIN_HEAD)
-{   // the player's look: the vertices weighted to the neck and head joints turn about the vertical through the neck base
-  vec4 inHead = step(vec4(skin_head.x - 0.5), skinIndex) * step(skinIndex, vec4(skin_head.y + 0.5));
-  float headW = dot(inHead, skinWeight);
-  if (headW > 0.0) {
-    vec3 hp = (skinM * vec4(skin_neck, 1.0)).xyz;
-    transformed = mix(transformed, skinRY(uHeadYaw) * (transformed - hp) + hp, headW);
+// the bend (aBend, from bendOf): the legs' step direction, the head's lead, then the spine, in the body's frame
+#ifdef SKIN_LEGS
+if (abs(aBend.z) + abs(aBend.w) > 0.002) {
+  // the stepping turn: each leg's swing out of standing (its place under the reference frame) is turned about the
+  // vertical, the fore legs by aBend.z and the hind legs by aBend.w, so a planted hoof travels round the turn rather
+  // than straight back (a standing turn steps sideways, a walk on a curve arcs)
+  vec3 legRef = (skinFrame(skin_ref) * vec4(animPos, 1.0)).xyz, legD = transformed - legRef;
+  ivec4 lj = ivec4(skinIndex + 0.5);
+  vec4 lr = vec4(skin_role[lj.x], skin_role[lj.y], skin_role[lj.z], skin_role[lj.w]);
+  float wF = dot(step(0.5, lr) * step(lr, vec4(1.5)), skinWeight), wH = dot(step(1.5, lr), skinWeight);
+  if (wF > 0.0) transformed += wF * (skinRY(aBend.z) * legD - legD);
+  if (wH > 0.0) transformed += wH * (skinRY(aBend.w) * legD - legD);
+}
+#endif
+#ifdef SKIN_HEAD
+{   // the head's lead into a turn (aBend.y) and the player's look (uHeadYaw): the vertices weighted to the neck and
+    // head joints turn about the vertical through the neck base
+  float headYaw = aBend.y;
+  #ifdef PLAYER_HEAD
+  headYaw += uHeadYaw;
+  #endif
+  if (abs(headYaw) > 0.0005) {
+    vec4 inHead = step(vec4(skin_head.x - 0.5), skinIndex) * step(skinIndex, vec4(skin_head.y + 0.5));
+    float headW = dot(inHead, skinWeight);
+    if (headW > 0.0) {
+      vec3 hp = (skinM * vec4(skin_neck, 1.0)).xyz;
+      transformed = mix(transformed, skinRY(headYaw) * (transformed - hp) + hp, headW);
+    }
+  }
+}
+#endif
+#ifdef SKIN_LEGS
+if (abs(aBend.x) > 0.0005) {
+  // the spine's bend in a turn (aBend.x, rad at the neck): the forequarters swing about the vertical through the hips,
+  // the more the further forward (nothing at the hips, all of it from the neck base on), toward the heading the hips
+  // lag behind
+  float bendT = smoothstep(skin_hipZ, skin_neckZ, animPos.z);
+  if (bendT > 0.0) {
+    mat3 bendR = skinRY(aBend.x * bendT);
+    vec3 bc = vec3(0.0, transformed.y, skin_hipZ);
+    transformed = bendR * (transformed - bc) + bc; animR = bendR * animR;
   }
 }
 #endif
@@ -1021,7 +1070,8 @@ function skinDecl(model) {
   const f = x => (+x || 0).toFixed(4);
   const rows = sk.table.map(c => `vec4(${c.first.toFixed(1)}, ${c.count.toFixed(1)}, ${c.loop ? '1.0' : '0.0'}, 0.0)`);
   const head = sk.head ? `#define SKIN_HEAD\nconst vec2 skin_head = vec2(${sk.head.first.toFixed(1)}, ${sk.head.last.toFixed(1)});\nconst vec3 skin_neck = vec3(${sk.head.pivot.map(f).join(', ')});\n` : '';
-  return `#define ANIM_SKIN\nconst float skin_ratio = ${f(sk.ratio)};\nconst vec4 skin_clips[${rows.length}] = vec4[${rows.length}](${rows.join(', ')});\n${head}${SKIN_DECL}\n`;
+  const L = sk.legs, legs = L ? `#define SKIN_LEGS\nconst int skin_ref = ${L.ref | 0};\nconst float skin_hipZ = ${f(L.hipZ)}, skin_neckZ = ${f(L.neckZ)};\nconst float skin_role[${L.roles.length}] = float[${L.roles.length}](${L.roles.map(r => r.toFixed(1)).join(', ')});\n` : '';
+  return `#define ANIM_SKIN\nconst float skin_ratio = ${f(sk.ratio)};\nconst vec4 skin_clips[${rows.length}] = vec4[${rows.length}](${rows.join(', ')});\n${head}${legs}${SKIN_DECL}\n`;
 }
 export const skinUniforms = model => model.skin ? { uBones: { value: model.skin.tex } } : {};
 const animBody = model => model.skin ? SKIN_BODY : model.rig?.kind === 'reptile' ? REPTILE_BODY : ANIM_BODY;
@@ -1262,6 +1312,11 @@ export const DEER_DRIVE = {
   // The drawn body follows the legs (turnFollow): its yaw lags the control yaw by `lag` s, never more than `maxLag` rad,
   // fully under lagV[0] m/s and not at all from lagV[1] (a walking or running body faces where it goes).
   turn: { on: 0.45, off: 0.2, hold: 0.35, r: 0.42, amp: [0.4, 0.6], hz: [0.7, 2.4], lag: 0.15, maxLag: 0.44, lagV: [0.3, 1.2], rateK: 12, maxRate: 8 },
+  // The bend (bendOf, drawn by SKIN_BODY): the spine bends `spine` of the lag between the control yaw and the drawn hips
+  // (1: the head faces where the deer is going, the hips still behind), the head leads a turn by `lead` rad per rad/s
+  // up to `leadMax`, and the legs' step turns by the hooves' travel round the turn against the travel ahead, the speed
+  // floored at `vMin` m/s so a standing turn steps square sideways.
+  bend: { spine: 1.0, lead: 0.12, leadMax: 0.25, vMin: 0.1 },
 };
 if (typeof globalThis !== 'undefined') globalThis.__weDeerDrive = DEER_DRIVE;   // debugging: thresholds, rates, force
 export function makeClipState() { return { cur: -1, prev: 0, pA: 0, pB: 0, blend: 0, seed: Math.random(), kind: '', kindB: '', tBlend: 0.3, y0: NaN, dy: 0, wr: 0, tq: 0, th: 0 }; }
@@ -1297,6 +1352,21 @@ export function turnFollow(D, st, yaw, speed, dt) {
   const m = T.maxLag * k; if (e > m) e = m; else if (e < -m) e = -m;
   st.dy = yaw + e;
   return st.dy;
+}
+// The bend the body is drawn with (aBend; after turnFollow and driveClips): x the spine's bend at the neck (rad: the
+// forequarters swing on toward the control yaw the hips lag behind), y the head's lead into the turn, z and w the fore
+// and hind legs' step direction: the angle the Walk's leg swing is turned about the vertical, from the hooves' travel
+// round the turn against the travel ahead (atan2(w r, v): a standing turn steps sideways, the fore hooves toward the
+// turn and the hind hooves away; a walk on a curve arcs). Only while a gait clip plays (the standing clips' legs stay).
+export function bendOf(D, st, speed, yaw, skin, out, o) {
+  const B = D.bend, L = skin.legs;
+  let e = yaw - st.dy; e = Math.atan2(Math.sin(e), Math.cos(e));
+  const stepping = st.kind === 'turn' || st.kind === 'walk' || st.kind === 'run' || (st.blend > 0 && (st.kindB === 'turn' || st.kindB === 'walk' || st.kindB === 'run'));
+  const v = Math.max(speed, B.vMin);
+  out[o * 4] = B ? e * B.spine : 0;
+  out[o * 4 + 1] = B ? Math.max(-B.leadMax, Math.min(B.leadMax, st.wr * B.lead)) : 0;
+  out[o * 4 + 2] = stepping && L ? Math.atan2(st.wr * L.legZ[0], v) : 0;
+  out[o * 4 + 3] = stepping && L ? Math.atan2(st.wr * L.legZ[1], v) : 0;
 }
 export function driveClips(skin, D, st, speed, pose, flick, dt, out, o) {
   const kind = pickClip(D, st, speed, pose, flick, dt);

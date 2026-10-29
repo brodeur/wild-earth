@@ -169,7 +169,10 @@ function depthFor(model) {
 function instance(geo, model) {
   geo.setAttribute('aAnim', new THREE.InstancedBufferAttribute(new Float32Array(4), 4));
   if (AM.hasAnim2(model)) geo.setAttribute('aAnim2', new THREE.InstancedBufferAttribute(new Float32Array(4), 4));
-  if (model.skin) geo.setAttribute('aClip', new THREE.InstancedBufferAttribute(new Float32Array(4), 4));   // the skinned deer: its first clip's first frame
+  if (model.skin) {   // the skinned deer: its first clip's first frame, no bend
+    geo.setAttribute('aClip', new THREE.InstancedBufferAttribute(new Float32Array(4), 4));
+    geo.setAttribute('aBend', new THREE.InstancedBufferAttribute(new Float32Array(4), 4));
+  }
   const m = new THREE.InstancedMesh(geo, AM.animalMaterial(atmosphere, model), 1);
   m.setMatrixAt(0, new THREE.Matrix4()); m.frustumCulled = false;
   m.castShadow = m.receiveShadow = true;
