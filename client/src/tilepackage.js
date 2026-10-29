@@ -482,7 +482,7 @@ export async function loadTile(tileId, base = '../tiles/', { signal = null } = {
   for (const k of ['client.heights', 'client.texture', 'client.habitat', 'client.canopy', 'client.masks'])
     if (!L[k]) throw new Error(`tile ${id} lacks ${k}; run the derive step`);
   const MX = L['client.species_mix'], mixFiles = MX?.files || {};
-  const [heights, texture, habitat, canopy, masks, species, perception, calendar, games, imagery, features, roads, imageryTexture, mast, mixIndex, mixJson, mixDensity, outcrop, geology, soils, groundClasses, profile, speciesPrior, detail, canopyHeight, groundTexture, seasonImage, lidarMicro] = await Promise.all([
+  const [heights, texture, habitat, canopy, masks, species, perception, calendar, games, locomotion, imagery, features, roads, imageryTexture, mast, mixIndex, mixJson, mixDensity, outcrop, geology, soils, groundClasses, profile, speciesPrior, detail, canopyHeight, groundTexture, seasonImage, lidarMicro] = await Promise.all([
     loadImageData(dir + L['client.heights'].path, signal), loadImageData(dir + L['client.texture'].path, signal),
     loadImageData(dir + L['client.habitat'].path, signal), loadImageData(dir + L['client.canopy'].path, signal),
     loadImageData(dir + L['client.masks'].path, signal),
@@ -490,6 +490,7 @@ export async function loadTile(tileId, base = '../tiles/', { signal = null } = {
     fetch(dir + 'perception.json', { signal }).then(r => r.json()).catch(() => null),
     fetch(dir + 'calendar.json', { signal }).then(r => r.json()).catch(() => null),
     fetch(dir + 'games.json', { signal }).then(r => r.json()).catch(() => null),   // the species' games and relations (pipeline/games.py); optional
+    fetch(dir + 'locomotion.json', { signal }).then(r => r.json()).catch(() => null),   // how each species moves, from its taxon and body (pipeline/locomotion.py); optional
     // mini-map products (present-day imagery and features); optional
     L['client.imagery'] ? loadOptionalImage(dir + L['client.imagery'].path, signal) : null,
     L['client.features'] ? fetch(dir + L['client.features'].path, { signal }).then(r => r.ok ? r.json() : null).catch(() => null) : null,
@@ -558,7 +559,7 @@ export async function loadTile(tileId, base = '../tiles/', { signal = null } = {
     imageryTextureImage: imageryTexture, imageryRef: imageryTexture ? { grass_mean: ti.grass_mean, oak_mean: ti.oak_mean } : null,
     // the imagery without trees (client.texture_ground), and the season_rgb sheet (an Image; season.js reads its frames)
     groundTextureImage: groundTexture, seasonImage,
-    species, perception, calendar, games, imagery, features, speciesPrior,
+    species, perception, calendar, games, locomotion, imagery, features, speciesPrior,
     latitude: (m.bounds_wgs84[1] + m.bounds_wgs84[3]) / 2,
   };
 }

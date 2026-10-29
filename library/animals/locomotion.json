@@ -1,0 +1,47 @@
+{
+  "about": "How an animal moves, by taxon (pipeline/locomotion.py resolves a species: every node from kingdom down to the species merges over the one above it, so a value is set once at the widest rank where it holds and overridden only where a narrower group differs; the numbers a species does not give are derived from its body by the allometric rules in locomotion.py, from mass_kg and size in its record). Units: m, m/s, s, rad/s. docs/movement.md explains the principles and which rank each belongs to.",
+  "ranks": ["kingdom", "phylum", "class", "order", "family", "genus", "species"],
+  "taxa": {
+    "Animalia": {
+      "note": "every animal: muscle shortens, so motion is a pull toward a point; mass sets the tempo (small is quick, large is slow); the body accelerates before it is drawn there (a lag), and nothing moves by itself: a limb or a fin pushes against the world and the body follows",
+      "lag": { "s": 0.15, "max_rad": 0.44, "v": [0.3, 1.2] },
+      "turn": { "on": 0.45, "off": 0.2, "hold": 0.35, "amp": [0.4, 0.6], "hz": [0.7, 2.4] }
+    },
+    "Chordata": {
+      "note": "an axial skeleton: the head leads, the spine bends toward the turn, the tail trails; the body is bilateral and faces where it goes",
+      "bend": { "spine": 1.0, "lead": 0.12, "lead_max": 0.25 }
+    },
+    "Mammalia": {
+      "note": "limbs under the body (parasagittal), so the legs swing fore and aft and the gaits are walk, trot (or pace) and gallop, chosen by speed through the Froude number of the hip height (Alexander and Jayes 1983: walk to 0.5, trot to 2.5, gallop beyond); the spine flexes in the gallop; the head stays level over the stride; endotherm, so a sprint is aerobic for seconds to a minute by size",
+      "gaits": { "walk": "froude 0.5", "trot": "froude 2.5", "gallop": "beyond" },
+      "sprint": { "s_at_50kg": 10, "mass_exp": 0.25, "recover_s_at_50kg": 35 },
+      "posture": "parasagittal",
+      "feet": "turn by stepping: a standing turn walks in place, the fore feet toward the turn and the hind feet away, planted feet still on the ground"
+    },
+    "Artiodactyla": { "note": "unguligrade on hooves: a stiff-legged walk, a long trot, a bounding gallop; the alert is a frozen stance, head high", "posture": "unguligrade", "alert": "freeze head-high" },
+    "Cervidae": { "note": "the stot (all four feet off together) when alarmed, the white rump flag; a doe and a fawn walk in file", "stot": true, "cruise_of_top": 0.6 },
+    "Carnivora": { "note": "digitigrade (cats and dogs) or plantigrade (bears); a flexible spine that lengthens the gallop; the stalk, the rush and the pounce", "posture": "digitigrade", "cruise_of_top": 0.62 },
+    "Canidae": { "note": "the trot is the travelling gait, hours long; the gallop is for the chase; the tail carries the mood", "cruise_of_top": 0.65, "sprint": { "mass_exp": 0.3 } },
+    "Felidae": { "note": "a crouched stalk, then an explosive short rush of a few seconds and a pounce; a cat does not run far", "cruise_of_top": 0.45, "sprint": { "s_at_50kg": 3, "recover_s_at_50kg": 25 }, "stalk": true, "turn": { "amp": [0.35, 0.55] } },
+    "Ursidae": { "note": "plantigrade on the whole foot, an amble (a pace: the two legs of a side together) and a bounding run in bursts", "posture": "plantigrade", "gaits": { "walk": "amble", "run": "bound" }, "cruise_of_top": 0.5, "sprint": { "s_at_50kg": 6 } },
+    "Rodentia": { "note": "the bound (the fore pair then the hind pair) at every speed above a walk, the sit-up on the haunches to look and to eat, a quick freeze; small, so the tempo is fast and the turns tight", "gaits": { "run": "bound" }, "sit_up": true, "cruise_of_top": 0.65, "lag": { "s": 0.1, "max_rad": 0.3 }, "turn": { "on": 0.6, "hz": [1.2, 4.0] } },
+    "Sciuridae": { "note": "the tail flagged over the back, the bound with a long flight; the tree squirrels climb head-first down", "tail_flag": true },
+    "Cricetidae": { "note": "voles and mice: a scurry of quick short bounds close to the ground, runways through the grass", "turn": { "hz": [2.0, 5.0] } },
+    "Lagomorpha": { "note": "the half-bound hop: the long hind feet land together ahead of the fore feet; a standing turn pivots on the hind feet with hops of the fore feet; the freeze, then the burst and the zigzag", "gaits": { "run": "hop" }, "cruise_of_top": 0.6, "lag": { "s": 0.1, "max_rad": 0.3 }, "turn": { "on": 0.6, "hz": [1.2, 3.5] } },
+    "Reptilia": { "note": "ectotherm: speed and endurance with the body's warmth, a sprint of a second or two then a rest; the sprawl", "sprint": { "s_at_50kg": 2.5, "recover_s_at_50kg": 25 } },
+    "Squamata": { "note": "sprawling limbs out to the side with the body low, and the body undulating side to side with the stride (the lateral wave); a turn is a C-bend of the whole body with the legs stepping round the sprawl; the push-up display", "posture": "sprawling", "gaits": { "walk": "sprawl", "run": "sprawl-undulate" }, "turn_bend": true, "lag": { "s": 0.05, "max_rad": 0.2 } },
+    "Aves": { "note": "a biped on the ground: walk or hop, the head bobbing to hold the eyes still; the wings for flight: flap to climb, glide to settle, a stoop to dive; the head leads a turn on the neck", "posture": "biped", "head_lead": true, "lag": { "s": 0.12, "max_rad": 0.35 } },
+    "Galliformes": { "note": "runners first: a quick walk and a run with the head bobbing, a scratch and peck; flight is a burst flush of a few seconds and a glide downhill", "gaits": { "ground": "walk-run", "flight": "flush" }, "cruise_of_top": 0.65 },
+    "Passeriformes": { "note": "hop on the ground, perch; flapping flight with glides between (the jays), or the raven's long cruising flight", "gaits": { "ground": "hop", "flight": "flap-glide" } },
+    "Corvidae": { "note": "walk as well as hop; the raven soars and tumbles", "gaits": { "ground": "walk-hop" } },
+    "Accipitriformes": { "note": "the soaring hawks: a slow flap, circling on thermals, a stoop", "gaits": { "flight": "soar" }, "sprint": { "s_at_50kg": 5, "recover_s_at_50kg": 30 } },
+    "Cathartiformes": { "note": "the vultures: teetering soar with the wings in a dihedral, rarely flapping", "gaits": { "flight": "soar-teeter" }, "sprint": { "s_at_50kg": 3, "recover_s_at_50kg": 40 } },
+    "Piciformes": { "note": "the woodpeckers: undulating flight (flap, close the wings, fall, flap), cling to the bark, hitch up it", "gaits": { "flight": "undulate", "ground": "hop" }, "cling": true }
+  },
+  "species": {
+    "note": "a species names what no rank above it does: its size and mass (in its record), its own speeds where measured, its displays. Values here override the tree; the rest derive from the body.",
+    "puma_concolor": { "stalk_mps": 0.45 },
+    "microtus_californicus": { "top_mps": 1.6 },
+    "sceloporus_occidentalis": { "top_mps": 2.5 }
+  }
+}
