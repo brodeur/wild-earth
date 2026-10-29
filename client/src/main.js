@@ -525,7 +525,7 @@ async function buildSteps(w, { params, pending, direct = false, arrive = null })
   const needs = w.m.needs = new Needs({ tile, el: $('needs'), season: seasonNow });   // hunger and thirst in a walker (needs.js)
   ground.needs = needs; flier.needs = needs;
   const hunt = w.m.hunt = new Hunt({ tile, animals, flight, ground, needs, el: $('hunt') });   // the hunt loop's goal and arc (hunt.js)
-  const scent = w.m.scent = new Scent({ tile, animals, flight, ground, flier, scene, camera });   // the smell sense: wisps round the head toward each scent (scent.js)
+  const scent = w.m.scent = new Scent({ tile, animals, flight, ground, flier, scene, camera, squirrel });   // the smell sense: wisps round the head toward each scent (scent.js); the squirrel's own control smells too
   needs.onStarve = () => { ground.say('starved: the body lies down and the spirit leaves it'); setTimeout(() => { if (ground.on || flier.on) toSpirit(); }, 2200); };
   const onBody = (code, sex = null) => {
     window.__we.playerSpecies = code; window.__we.playerSex = sex;
@@ -785,6 +785,7 @@ async function buildSteps(w, { params, pending, direct = false, arrive = null })
     const s = seasonNow(), look = SEASON_LOOK[s], sun = sunDirection(tile.latitude, s, state.hour);
     const f = screenOpen ? arrival.hold() : squirrel.on ? squirrel.update(dt) : woodpecker.on ? woodpecker.update(dt) : ground.on ? ground.update(dt) : flier.on ? flier.update(dt) : arrival.active ? arrival.update(dt) : spirit.on ? spirit.update(dt) : flight.update(dt);
     if (ground.on || flier.on) { needs.update(dt, { x: flight.pos.x, north: -flight.pos.z, acting: ground.on && ground.actT > 0, wet: ground.on && !!ground.wet }); hunt.update(dt); scent.update(dt); }   // the games of life (needs.js, hunt.js); the smell sense (scent.js)
+    else if (squirrel.on && !arrival.active) scent.update(dt);   // the gray squirrel's own control smells too (its game is the acorns, not the needs)
     spirit.blendCamera(dt);   // across a switch of body: drawn from a blend of the old view and the new control's (spirit.js)
     raven.update(dt, flight.flapping, flight.speed);
     spirit.draw(dt);   // the wisp, while a spirit

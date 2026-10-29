@@ -2185,3 +2185,23 @@ subscribe. Five lanes, each an Opus agent with strict file ownership, verified h
   p90 3.1, p99 6), and the client subtracts only the tile's ranging noise (p10, 0.95 cm) before scaling the bumps 0.6-2.2x.
 
 Verification and what landed: see the report rows for each commit (docs/report-2026-10-26-morning.md).
+
+## 2026-10-29: the gray squirrel's own control smells too, with a legibility floor on the wisps
+
+The one body left out of the smell sense (scent.js, 3a7e015) was the western gray squirrel, which has its own control
+(squirrelControl.js) rather than the generic walker's, so main.js never called scent.update for it. Now it does
+(while the squirrel is on and not mid-arrival; its game stays the acorns, not the needs). Scent takes the squirrel
+control and places the ring as a rodent's: a 10 cm shoulder times the rodent head factor over its feet on the ground
+(11 cm), lifted 45 % when it sits up on shift (16 cm), 8 cm ahead of the body; on a trunk, a limb or in the air at the
+body. Its reach was already in the table (40 m, SOURCE 0.8 as a source).
+
+Found while verifying: at the squirrel's scale (0.1) the ring is 9 cm and a strand 2-3 cm, which from its chase camera
+2.6 m off was a 3 px by 10 px smudge, invisible on gravel. The deer's wisps are sized for a 90 cm ring seen from a few
+metres, so a small body seen from proportionally farther loses the strand. The floor: a strand shorter than 36 px on
+screen is drawn longer, with its motes bigger, by up to 6x (the squirrel's 3.6x: a 10 cm strand, 8 px motes); the ring
+keeps its size (Aaron's circle round the head), so what grows is the plume off it. The deer's strands (70-90 px) are
+untouched (the factor clamps to 1); a lizard's grow a little.
+
+Verified on the clean worktree as the squirrel (?skip=1&as=squirrel) with the wind pinned and a fox summoned 20 m and
+10 m upwind: smelled it at 0.37 and 0.65, bearing right, 0.04 ms a frame; the strand reads in profile from the chase
+camera; B back to the spirit leaves the list empty and the wisps dark.

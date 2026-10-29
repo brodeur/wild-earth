@@ -44,8 +44,10 @@ import { FLIERS } from './flierControl.js';
 // blend adds the mote's light and dims what is under it a little (premultiplied over, alpha at most 0.65), so a
 // yellow-green or violet wisp keeps its hue on sunlit ground instead of washing out to white as a purely additive one did.
 //
-// main.js builds it after the hunt, calls update(dt) in a walker or a flier (with needs and the hunt), and dispose()
-// in disposeWorld. When update is not called (the spirit, the raven, the squirrel, the woodpecker, a menu) the wisps
+// main.js builds it after the hunt, calls update(dt) in a walker or a flier (with needs and the hunt) and in the gray
+// squirrel's own control (squirrelControl.js, 2026-10-29: its head is a rodent's, SQ_SHOULDER over its feet, sitting
+// up on shift, on the trunk or a limb at the body), and dispose() in disposeWorld. When update is not called (the
+// spirit, the raven, the woodpecker, a menu) the wisps
 // go dark at the next draw (onBeforeRender: the observer is no longer the body that smelled, or the update is more than
 // STALE_MS old) and start from nothing when it is called again; `smelled` is empty meanwhile.
 
@@ -75,7 +77,11 @@ const QUERY_T = 0.25, MAX_WISPS = 6, FADE = 0.5;
 // the ring and the strands (m, for the deer; times the body's scale)
 const RING_R = 0.9, WISP_LEN = [0.2, 0.4], MOTES = 20, MOTE_R = 0.065;   // 2026-10-28: half again as big as first built, so a wisp reads from the chase camera
 const HEAD_UP = { quad: 1.25, rodent: 1.1, bird: 1.4, lizard: 1.2 };   // the head's height over the shoulder's, by rig
+const SQ_SHOULDER = 0.1, SQ_HALF = 0.12;                                // m: the gray squirrel's own control (no GROUND entry): shoulder height, half its body length
 const STALE_MS = 1000;                                                 // update older than this at a draw: the wisps are dark
+// a legibility floor (2026-10-29): a strand shorter than LEN_PX px on screen (the squirrel's 2.7 cm ring strand from its
+// chase camera 2.6 m off was 10 px, a smudge) is drawn longer, with its motes bigger, by up to GROW_MAX; the ring itself keeps its size
+const LEN_PX = 36, GROW_MAX = 6;
 const NONE = Object.freeze([]);
 const clamp = (v, a, b) => Math.min(b, Math.max(a, v));
 
@@ -107,8 +113,8 @@ function hashStr(s) {   // FNV-1a over an animal's id, to 0..1
 const h11 = x => { const s = Math.sin(x * 127.1 + 311.7) * 43758.5453; return s - Math.floor(s); };
 
 export class Scent {
-  constructor({ tile, animals, flight, ground, flier, scene, camera }) {
-    Object.assign(this, { tile, animals, flight, ground, flier, scene, camera });
+  constructor({ tile, animals, flight, ground, flier, scene, camera, squirrel = null }) {
+    Object.assign(this, { tile, animals, flight, ground, flier, scene, camera, squirrel });
     this.wind = windUniforms;   // debugging: the uniforms the query reads
     this._smelled = []; this.code = null; this.reach = 0; this.carrionReach = 0; this.scav = false;
     this.t = 0; this.qT = 0; this.lastT = -1e9; this.ms = 0;
@@ -146,9 +152,14 @@ export class Scent {
 
   // The head: where the ring is centred (see the header). Writes this.head; returns the ring's radius.
   placeHead(dt) {
-    const f = this.flight, P = f.pos, G = this.ground, F = this.flier, yaw = f.yaw, fx = -Math.sin(yaw), fz = -Math.cos(yaw);
+    const f = this.flight, P = f.pos, G = this.ground, Q = this.squirrel, yaw = f.yaw, fx = -Math.sin(yaw), fz = -Math.cos(yaw);
     let y, ahead, R;
-    if (G?.on && G.S) {
+    if (Q?.on) {   // the gray squirrel's own control: a rodent's head over its feet on the ground (sitting up on shift), at the body on wood or in the air
+      const onGround = Q.mode === 'ground', up = onGround ? 1 + 0.45 * (Q.sit || 0) : 0.5;
+      y = P.y + SQ_SHOULDER * HEAD_UP.rodent * up;
+      ahead = onGround ? SQ_HALF * 0.7 : 0;
+      R = RING_R * this.scale;
+    } else if (G?.on && G.S) {
       const S = G.S, k = HEAD_UP[S.rig] ?? 1.2, sit = G.sit || 0;
       const up = S.rig === 'rodent' ? 1 + 0.45 * sit : 1 + 0.1 * sit;   // a rodent sits up on its haunches; a quadruped's head lifts
       y = P.y + S.shoulder * k * up * (G.resting ? 0.55 : 1);
@@ -220,8 +231,9 @@ export class Scent {
     // the lens: the drawing buffer's height over the view's height at 1 m (as the spirit's mist)
     const cam = this.camera, rr = typeof window !== 'undefined' ? window.__we?.renderer : null;
     const bh = rr ? rr.getDrawingBufferSize(this._b).y : (typeof window !== 'undefined' ? window.innerHeight * (window.devicePixelRatio || 1) : 800);
-    this.mat.uniforms.uScale.value = bh / (2 * Math.tan(THREE.MathUtils.degToRad(cam.fov || 60) / 2));
+    const uScale = this.mat.uniforms.uScale.value = bh / (2 * Math.tan(THREE.MathUtils.degToRad(cam.fov || 60) / 2));
     this.mat.uniforms.uOn.value = 1;
+    const camD = Math.max(cam.position.distanceTo(H), 0.05);   // the head's distance from the camera, for the legibility floor
     const A = this.animals, t = this.t, pos = this.pos, col = this.col, size = this.size;
     let any = false;
     for (let i = 0; i < MAX_WISPS; i++) {
@@ -238,9 +250,10 @@ export class Scent {
       const sd = s.seed * 97, sw = 0.06 * Math.sin(t * 0.7 + sd) + 0.03 * Math.sin(t * 1.9 + sd * 1.7);   // the whole strand's slow sway (rad)
       const cs = Math.cos(sw), sn = Math.sin(sw), ux = s.ux * cs - s.uz * sn, uz = s.ux * sn + s.uz * cs, tx = -uz, tz = ux;
       const st = s.sv, heavy = s.carrion ? 1 : 0;
-      const len = R * (WISP_LEN[0] + (WISP_LEN[1] - WISP_LEN[0]) * st) / RING_R * (1 + 0.3 * heavy);
+      const len0 = R * (WISP_LEN[0] + (WISP_LEN[1] - WISP_LEN[0]) * st) / RING_R * (1 + 0.3 * heavy);
+      const grow = clamp(LEN_PX * camD / (len0 * uScale), 1, GROW_MAX), len = len0 * grow;   // the legibility floor (see LEN_PX)
       const flow = (0.55 + 0.5 * st) * (heavy ? 0.45 : 1), lum = (0.35 + 1.15 * st) * (heavy ? 0.6 : 1) * s.alpha;
-      const c = s.col, ms = R / RING_R;
+      const c = s.col, ms = R / RING_R * grow;
       for (let j = 0; j < MOTES; j++) {
         const q = o + j, hj = h11(j + sd);
         // shown: all for a strong scent, fewer and flickering for a faint one
