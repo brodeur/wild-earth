@@ -38,7 +38,7 @@ export const KIND = { chamise: 0, manzanita: 1, annual: 2, bunch: 3, stalk: 4,  
 // 2026-10-29, in library order, up to FH_SLOTS): kind -1 - index. Their looks (FH_LOOK: lobe depth, how far the fringe
 // breaks up, a narrow base; and whether the leaves are fine, taking chamise's picture rather than manzanita's) are a
 // table by id; a shrub not in it takes the defaults.
-const FH_SLOTS = 16;
+const FH_SLOTS = 24;   // the riparian set (2026-10-29) brought the library past 16 shrubs
 const FH_LOOK = {   // [lobe, open, vase, fine]
   heteromeles_arbutifolia: [0.34, 0.62, 0.0, 0], cercis_occidentalis: [0.24, 0.48, 0.26, 0], toxicodendron_diversilobum: [0.36, 0.38, 0.16, 0],
   baccharis_pilularis: [0.1, 0.7, 0.0, 1], sambucus_nigra_caerulea: [0.3, 0.42, 0.06, 0], frangula_californica: [0.14, 0.68, 0.0, 0],
@@ -923,7 +923,17 @@ function foothillShrubs(tile, ground, chap) {
       if (roads && roads.at(px, pn) > 60) continue;
       if (waterAt(wm, px, pn) === 255 || rockKeep(tile, px, pn) < u * 0.999) continue;
       const ci = Math.min(Math.max(Math.floor(px / res), 0), W - 1), cj = Math.min(Math.max(Math.floor((size - pn) / res), 0), H - 1);
-      const wt = weights[cj * W + ci] || weights[j * W + i]; if (!wt) continue;
+      let wt = weights[cj * W + ci] || weights[j * W + i];
+      // The water system's zones (tile.water, 2026-10-29): none in a channel's bed or a pond's basin and mud; on the margin,
+      // the bank, the terrace and a pond's shore the zone row's shrubs (blackberry, grape, sandbar and button willow,
+      // dogwood, rose...) in place of the cell's, at the zone's shrub density where the cell has less cover.
+      const wz = tile.water && tile.water.info(px, pn);
+      if (wz && wz.zone) {
+        if (wz.zone === 1 || wz.zone === 5 || wz.zone === 6) continue;
+        const row = mix?.ripRow(wz);
+        if (row?.shrubSum) { const rw = FH.map((id, k) => sizes[k] ? row.shrubs[id] || 0 : 0), sh = rw.reduce((a, b) => a + b, 0); if (sh > 0) { wt = rw.map(v => v / sh); if (keep * lamMax >= lam(Math.max(c, 0.22 * row.density[1]))) continue; } }
+      }
+      if (!wt) continue;
       let sp = 0, acc = wt[0]; while (sp < FH.length - 1 && v > acc) acc += wt[++sp];
       const sz = sizes[sp]; if (!sz) continue;
       let ci2 = 0, a2 = sz.cls[0].w, tot = sz.cls.reduce((s2, q) => s2 + q.w, 0) || 1;

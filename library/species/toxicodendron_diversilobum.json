@@ -22,7 +22,13 @@
   "status": "agent draft, needs local sign-off",
   "habitat": {
     "classes": {"grassland": 0.15, "oak_woodland": 1.0, "chaparral": 0.5, "mixed_forest": 0.7, "conifer_forest": 0.3, "riparian": 0.8},
-    "floor": 1.4, "mid": 1.0, "steep": 0.9, "north": 1.2, "shade": 0.6, "disturbed": 1.0
+    "floor": 1.4, "mid": 1.0, "steep": 0.9, "north": 1.2, "shade": 0.6, "disturbed": 1.0,
+    "riparian": {
+      "zones": {"terrace": 1.0, "bank": 0.6, "pond_terrace": 0.4},
+      "orders": [1, 6],
+      "permanence": "any",
+      "water": "Takes any moisture: thickest on shaded creek terraces and banks, but it grows everywhere from dry slopes to the floodplain."
+    }
   },
   "relations": {
     "eaten_by": [
@@ -32,7 +38,8 @@
       {"animal": "odocoileus_hemionus", "part": "browse", "seasons": ["spring", "summer", "fall"]},
       {"animal": "sylvilagus_bachmani", "part": "browse", "seasons": ["spring", "summer"]}
     ],
-    "cover_for": ["callipepla_californica", "sylvilagus_bachmani"]
+    "cover_for": ["callipepla_californica", "sylvilagus_bachmani"],
+    "shades_water": 0.1
   },
   "trunk": {
     "length_ratio": 0.9, "radius_ratio": 0.012, "taper": 0.85, "flare": 1.2, "bole_ratio": 0.08, "base_size": 0.15,

@@ -1,5 +1,5 @@
 {
-  "about": "Wild Earth species library: one parameter file per species, see docs/species-library.md. Parameter files are CC BY-SA 4.0. Trees and shrubs are grown by the client's generator; grasses (form grass) and herbs (form forb, 2026-10-29) are drawn by grass.js and forbs.js from their ground block.",
+  "about": "Wild Earth species library: one parameter file per species, see docs/species-library.md. Parameter files are CC BY-SA 4.0. Trees and shrubs are grown by the client's generator; grasses (form grass) and herbs (form forb, 2026-10-29) are drawn by grass.js and forbs.js from their ground block; the wetland monocots (form emergent, 2026-10-29) by their own client module from theirs. habitat.riparian places a species in the stream and pond zones.",
   "species": [
     "quercus_douglasii",
     "quercus_wislizeni",
@@ -56,6 +56,27 @@
     "erodium_cicutarium",
     "vicia_villosa",
     "plagiobothrys_nothofulvus",
-    "madia_elegans"
+    "madia_elegans",
+    "salix_laevigata",
+    "salix_lasiandra",
+    "platanus_racemosa",
+    "salix_exigua",
+    "cephalanthus_occidentalis",
+    "cornus_sericea",
+    "rubus_ursinus",
+    "vitis_californica",
+    "calycanthus_occidentalis",
+    "typha_latifolia",
+    "schoenoplectus_acutus",
+    "schoenoplectus_californicus",
+    "carex_barbarae",
+    "carex_nudata",
+    "juncus_effusus",
+    "equisetum_hyemale",
+    "artemisia_douglasiana",
+    "urtica_dioica",
+    "erythranthe_guttata",
+    "nasturtium_officinale",
+    "lemna_minor"
   ]
 }

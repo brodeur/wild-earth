@@ -1,0 +1,51 @@
+{
+  "id": "juncus_effusus",
+  "aliases": ["common_rush", "soft_rush", "bog_rush", "rush"],
+  "scientific": "Juncus effusus",
+  "common": "common rush",
+  "form": "emergent",
+  "lifespan": "perennial",
+  "native": true,
+  "height_m": [0.6, 1.2],
+  "description": "A stiff, round tussock of smooth, dark green, leafless stems 0.6-1.2 m tall, each filled with soft white pith, and seeming to bear a brown tuft of flowers on its side, two-thirds of the way up. It grows on the wet margins of creeks, around ponds and in seeps and wet swales, where it stays green through the summer.",
+  "season_notes": {
+    "winter": "Dark green to grey-green tussocks in the wet ground, a little dull, some old stems brown.",
+    "spring": "Fresh stems; the side tufts of small brown-green flowers appear in May.",
+    "summer": "Tussocks deep green beside the water while the grass around them has cured; the flower tufts turn brown with seed.",
+    "fall": "Old stems tan at the tips, the seed capsules splitting."
+  },
+  "status": "agent draft, needs local sign-off",
+  "ground": {
+    "habit": "rush",
+    "palette": {
+      "winter": {"root": [84, 98, 62], "tip": [120, 124, 84], "head": [118, 94, 64]},
+      "spring": {"root": [70, 100, 56], "tip": [96, 128, 64], "head": [130, 112, 72]},
+      "summer": {"root": [68, 96, 54], "tip": [98, 124, 66], "head": [128, 98, 62]},
+      "fall": {"root": [80, 96, 60], "tip": [128, 128, 84], "head": [120, 92, 62]}
+    },
+    "heads": {"shape": "cluster", "months": [5, 8]},
+    "clump_m": 0.5,
+    "stems": 60,
+    "height_by_month": [0.85, 0.85, 0.9, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 0.95, 0.9, 0.85],
+    "density": 0.9
+  },
+  "habitat": {
+    "classes": {"riparian": 1.0, "grassland": 0.05},
+    "floor": 2.4, "mid": 0.2, "steep": 0.1, "north": 1.1, "shade": 0.2, "disturbed": 0.9,
+    "riparian": {
+      "zones": {"margin": 1.0, "pond_shore": 1.0, "bank": 0.4, "pond_margin": 0.4, "channel": 0.05},
+      "orders": [1, 6],
+      "permanence": "intermittent",
+      "water": "Wants saturated ground through most of the summer: creek and pond margins, seeps, springs and wet swales."
+    }
+  },
+  "relations": {
+    "eaten_by": [],
+    "cover_for": ["microtus_californicus"],
+    "shades_water": 0
+  },
+  "notes": "Common (soft) rush is a tussock rush of wet ground worldwide; the California plants are native (Juncus effusus var. pacificus and var. brunneus in the Jepson eFlora, now often split), and in the foothill seeps the similar, greyer spreading rush (Juncus patens) is as common, which this record stands for too until it has one of its own. Drawn by the emergent module: habit rush, a stiff, dense tussock of 60 round, smooth, dark green, hollow-looking (pith-filled) stems 0.6-1.2 m, upright to slightly spreading, with no leaf blades (the leaves are brown basal sheaths). The inflorescence is a many-flowered cluster that seems to come out of the side of the stem about two-thirds of the way up (the stem above it is a bract), green-brown in flower in May, brown with seed through August: heads cluster. Evergreen: height_by_month stays 0.85-1 all year, the tips tan in fall and winter. Zones: the wet margin and the pond shore, the bank and the pond shallows less; intermittent creeks and seeps of orders 1-6. Animals barely eat it (tough, low in nutrients); voles run and nest in the tussocks (cover). shades_water 0.",
+  "sources": ["https://www.fs.usda.gov/database/feis/ (Juncus effusus, where covered)", "https://ucjeps.berkeley.edu/eflora/ (Juncus effusus)", "https://www.calflora.org/ (Juncus effusus)", "https://calscape.org/ (Juncus effusus)", "https://en.wikipedia.org/wiki/Juncus_effusus"],
+  "authors": ["Wild Earth (agent draft, 2026-10-29); needs local sign-off"],
+  "license": "CC BY-SA 4.0"
+}

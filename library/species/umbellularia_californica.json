@@ -20,6 +20,25 @@
     "fall": "Round green fruits like small olives ripen purple-brown and drop (October-November); squirrels and jays carry the nuts away."
   },
   "status": "agent draft, needs local sign-off",
+  "habitat": {
+    "classes": {"riparian": 0.9, "mixed_forest": 0.6, "oak_woodland": 0.5, "chaparral": 0.15},
+    "floor": 1.6, "mid": 0.8, "steep": 0.8, "north": 1.5, "shade": 0.5, "disturbed": 0.5,
+    "riparian": {
+      "zones": {"terrace": 1.0, "bank": 0.7},
+      "orders": [2, 5],
+      "permanence": "any",
+      "water": "Thrives on shaded, moist creek terraces and banks but also grows on dry rocky slopes and canyon walls; it does not need running water."
+    }
+  },
+  "relations": {
+    "eaten_by": [
+      {"animal": "odocoileus_hemionus", "part": "browse", "seasons": ["winter", "spring"]},
+      {"animal": "sciurus_griseus", "part": "seeds", "seasons": ["fall"]},
+      {"animal": "aphelocoma_californica", "part": "seeds", "seasons": ["fall"]}
+    ],
+    "cover_for": [],
+    "shades_water": 0.6
+  },
   "trunk": {
     "length_ratio": 0.55, "radius_ratio": 0.03, "taper": 0.7, "flare": 1.4, "bole_ratio": 0.2, "base_size": 0.04,
     "curve_deg": 12, "curve_var_deg": 16, "segments": 5, "lean_deg": 10, "stems": [2, 5], "stem_spread_deg": 20,

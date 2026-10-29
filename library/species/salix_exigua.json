@@ -1,0 +1,88 @@
+{
+  "id": "salix_exigua",
+  "aliases": ["sandbar_willow", "narrowleaf_willow", "coyote_willow"],
+  "scientific": "Salix exigua",
+  "common": "sandbar willow",
+  "form": "shrub",
+  "architectural_model": "Rauh (provisional: sympodial wands from the base and from root suckers, a clone rather than a plant)",
+  "deciduous": true,
+  "height_m": [2, 4.5],
+  "variants": [
+    {"name": "young", "weight": 0.3, "height_m": [0.8, 2], "crown_scale": 0.85, "branches": 0.7, "set": {"trunk": {"stems": [5, 9], "stem_spread_deg": 12}}, "note": "a stand of fresh suckers on a new gravel bar, straight and unbranched"},
+    {"name": "mature", "weight": 0.5, "seeds": 1, "note": "the file as written: a dense stand of slim upright wands"},
+    {"name": "old", "weight": 0.2, "height_m": [3.5, 5.5], "crown_scale": 1.1, "gnarl": 1.15, "deadwood": {"fraction": 0.25, "levels": [0, 1], "where": "inner", "shorten": 0.7, "rgb": [150, 144, 132]}, "set": {"trunk": {"stems": [12, 20], "stem_spread_deg": 24}}, "note": "an old thicket with grey dead wands standing among the living"}
+  ],
+  "description": "A willow of slender, straight, grey-brown wands 2-5 m tall that spreads by its roots into dense thickets, with very narrow, silky, grey-green leaves. It is the first woody plant on the fresh sand and gravel bars and the wet margins of the creeks, where its thickets catch silt in the floods and build the bank.",
+  "season_notes": {
+    "winter": "A thicket of bare, upright, grey to yellow-brown wands on the gravel bar, bent downstream by the floods.",
+    "spring": "Catkins with the new leaves in March and April; the silky leaves look silver in the wind.",
+    "summer": "Grey-green narrow leaves; cottony seed drifts onto the wet sand of the bars in May and June.",
+    "fall": "Leaves turn yellow and drop by late November."
+  },
+  "status": "agent draft, needs local sign-off",
+  "habitat": {
+    "classes": {"riparian": 1.0},
+    "floor": 2.2, "mid": 0.1, "steep": 0.1, "north": 1.0, "shade": 0.0, "disturbed": 1.2,
+    "riparian": {
+      "zones": {"margin": 1.0, "bank": 0.6, "channel": 0.2, "pond_shore": 0.6, "pond_margin": 0.3},
+      "orders": [2, 5],
+      "permanence": "intermittent",
+      "water": "Roots in wet sand and gravel at or just above the summer water line; it takes the scour of the floods and the open sun of the bars, but not a dry bank."
+    }
+  },
+  "relations": {
+    "eaten_by": [
+      {"animal": "odocoileus_hemionus", "part": "browse", "seasons": ["spring", "summer"]},
+      {"animal": "sylvilagus_bachmani", "part": "browse", "seasons": ["winter", "spring"]}
+    ],
+    "cover_for": ["sylvilagus_bachmani", "callipepla_californica"],
+    "shades_water": 0.3
+  },
+  "trunk": {
+    "length_ratio": 0.92, "radius_ratio": 0.01, "taper": 0.85, "flare": 1.1, "bole_ratio": 0.05, "base_size": 0.15,
+    "curve_deg": 6, "curve_var_deg": 8, "segments": 3, "lean_deg": 6, "stems": [8, 14], "stem_spread_deg": 18,
+    "split_prob": 0.0, "split_count": 2, "split_angle_deg": 20, "sinuous_deg": 3, "bark_rgb": [128, 118, 100],
+    "bark_pattern": "smooth", "twig_rgb": [150, 130, 90],
+    "bark": {"tile_m": [0.08, 0.2], "contrast": 0.35, "lichen": 0.05, "relief": 0.2}
+  },
+  "crown": {
+    "shape": "cylindrical",
+    "envelope": {"profile": [[0.0, 0.22], [0.15, 0.3], [0.35, 0.37], [0.55, 0.4], [0.72, 0.38], [0.86, 0.3], [0.95, 0.18], [1.0, 0.06]], "lobes": 7, "lobe_depth": 0.14, "asymmetry": 0.15, "fill": 0.7, "edge": 1.12}
+  },
+  "levels": [
+    {
+      "count": 6, "start": 0.2, "down_angle_deg": 30, "down_angle_var_deg": 10, "rotation_deg": 140, "rotation_var_deg": 30,
+      "length_ratio": 0.3, "length_var": 0.3, "curve_deg": 4, "curve_var_deg": 10, "tropism": 0.08, "taper": 0.9,
+      "radius_ratio": 0.5, "segments": 1
+    },
+    {
+      "count": 3, "start": 0.3, "down_angle_deg": 28, "down_angle_var_deg": 10, "rotation_deg": 140,
+      "rotation_var_deg": 30, "length_ratio": 0.45, "length_var": 0.3, "curve_deg": 2, "curve_var_deg": 10,
+      "tropism": 0.08, "taper": 1.0, "radius_ratio": 0.5, "segments": 1
+    }
+  ],
+  "foliage": {
+    "type": "broadleaf", "leaf_size_m": 0.08, "leaf_shape": "lanceolate", "cluster_m": 0.45, "density": 18, "cards_per_m2": 4.0, "leaf_fill": 2.2,
+    "start": 0.15, "parent_start": 0.2, "orientation": "outward", "roll_deg": 40,
+    "colors": {"winter": [150, 130, 90], "spring": [140, 152, 106], "summer": [128, 138, 108], "fall": [176, 160, 96]},
+    "leaf_on": {"winter": 0.0, "spring": 0.95, "summer": 1.0, "fall": 0.65},
+    "leaf_on_by_month": [0.0, 0.05, 0.5, 0.95, 1.0, 1.0, 1.0, 1.0, 0.95, 0.75, 0.35, 0.0],
+    "clumps": {"radius_m": 0.3, "cards_per_clump": 6, "shell": 0.15, "flatten": 0.6, "tip_bias": 0.9},
+    "palette": [[0.7, [1, 1, 1]], [0.3, [1.18, 1.18, 1.2]]], "winter_twigs": 0.55, "ao_min": 0.74,
+    "color_var": [0.07, 0.05], "leaf_on_var": 0.5
+  },
+  "deadwood": {"fraction": 0.08, "where": "inner", "levels": [0, 1], "shorten": 0.7, "rgb": [150, 144, 132]},
+  "twigs": {"count": [1, 2], "length": 0.6, "down_deg": 28, "down_var_deg": 10, "curve_var_deg": 12, "segments": 1, "radius_m": 0.004, "tropism": 0.1, "fan_deg": 35, "jitter": 0.2},
+  "lod": {
+    "near_tris_budget": 1300, "near_sides": [3, 3, 0], "mid_blobs": 3, "mid_branches": 0, "mid_sides": [0, 0], "mid_cards": 24
+  },
+  "targets": {
+    "crown_width_ratio": 0.8, "crown_base_ratio": 0.12, "porosity": 0.3, "foliage_rg": 0.85, "foliage_bg": 0.59,
+    "fall_rg": 1.24, "fall_bg": 0.33,
+    "from": "judgement values (2026-10-29) from knowledge of the species, not measured: no photographs were fetched for this draft. One clone's clump is taller than wide (W/H 0.7-0.9), a stand of upright wands leafy from a fifth of the height; colour is the linear r/g and b/g of the file's summer and fall leaf colours, a grey-green. A reviewer should replace these with values measured from local photographs"
+  },
+  "notes": "Sandbar (narrowleaf, coyote) willow is the pioneer of the gravel and sand bars and the wet margins of creeks and rivers across the West, from the valley into the lower mountains: it suckers from spreading roots into clonal thickets of many slim wands, survives burial and scour by the floods, and is first on any fresh bar. Form: plain 'shrub', 2-5 m (file 2-4.5). Many straight, slender, little-branched stems (stems [8, 14], radius_ratio 0.01, length_ratio 0.92 so each runs nearly to the top) held nearly upright (stem_spread 18), so a clump is taller than wide (W/H 0.7-0.9), the opposite of arroyo willow's mound; a thicket is many clumps side by side. Short upswept side shoots (level 1: six per stem, 30 degrees, length_ratio 0.3, tropism up) carry the leaves from about a fifth of the height (foliage start 0.15; the bars' floods strip the lowest). Bark smooth, grey to yellow-brown; twigs yellowish to reddish-brown. Leaves the narrowest of the willows: linear, 5-12 cm by only 2-10 mm, nearly untoothed, silky-hairy grey-green on both sides: leaf_shape lanceolate (the generator's narrowest), leaf_size_m 0.08, and three tenths of the palette lightened for the silvery sheen. Catkins with the leaves in March-May, seed in late spring onto the wet sand where it germinates. Yellow in fall, bare December-February. Old thickets carry grey dead wands (the old class). Zones: the wet margin above the summer water line first, the bank above it, and the gravel bars inside the channel (channel 0.2); intermittent creeks of orders 2-5, and pond shores. shades_water 0.3: a slim thicket shades the margin, not the channel. Architectural model provisional.",
+  "sources": ["https://www.fs.usda.gov/database/feis/plants/shrub/salexi/all.html", "https://ucjeps.berkeley.edu/eflora/ (Salix exigua)", "https://www.calflora.org/ (Salix exigua)", "https://calscape.org/ (Salix exigua)", "https://en.wikipedia.org/wiki/Salix_exigua"],
+  "authors": ["Wild Earth (agent draft, 2026-10-29); needs local sign-off"],
+  "license": "CC BY-SA 4.0"
+}

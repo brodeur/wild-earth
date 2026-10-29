@@ -1,0 +1,89 @@
+{
+  "id": "salix_lasiandra",
+  "aliases": ["pacific_willow", "shining_willow", "salix_lucida_lasiandra", "salix_lucida"],
+  "scientific": "Salix lasiandra (Salix lucida ssp. lasiandra)",
+  "common": "Pacific willow",
+  "form": "tree",
+  "architectural_model": "Rauh (provisional: sympodial, as the other willows)",
+  "deciduous": true,
+  "height_m": [5, 11],
+  "variants": [
+    {"name": "young", "weight": 0.25, "height_m": [2.5, 5], "trunk_radius": 0.7, "crown_scale": 0.85, "branches": 0.8, "set": {"trunk": {"stems": [2, 4]}}, "note": "a young clump of a few straight shoots"},
+    {"name": "mature", "weight": 0.5, "seeds": 2, "note": "the file as written"},
+    {"name": "old", "weight": 0.25, "height_m": [9, 12], "trunk_radius": 1.25, "crown_scale": 1.1, "gnarl": 1.25, "deadwood": {"fraction": 0.2, "levels": [1, 2], "where": "inner", "rgb": [132, 124, 114]}, "set": {"trunk": {"lean_deg": 18}}, "note": "an old leaning tree with a few heavy trunks and dead limbs"}
+  ],
+  "description": "A small streamside tree 5-12 m tall, often with several trunks, with the glossiest leaves of any willow here: long, pointed, dark shining green above, with small glands where the blade meets the stalk. It grows on the banks of the permanent creeks, often right at the water, and its yellow catkins open with the leaves in spring.",
+  "season_notes": {
+    "winter": "Bare, with shiny yellow-brown to reddish twigs over the water.",
+    "spring": "Leaves out in March with bright yellow male catkins and green female ones among them; cottony seed in May.",
+    "summer": "A dense crown of dark, glossy leaves that catch the light like a bay's.",
+    "fall": "Leaves turn yellow, late, and drop by December."
+  },
+  "status": "agent draft, needs local sign-off",
+  "habitat": {
+    "classes": {"riparian": 1.0, "mixed_forest": 0.05},
+    "floor": 2.0, "mid": 0.2, "steep": 0.3, "north": 1.2, "shade": 0.25, "disturbed": 0.6,
+    "riparian": {
+      "zones": {"bank": 1.0, "margin": 0.5, "terrace": 0.2, "pond_shore": 0.6},
+      "orders": [2, 6],
+      "permanence": "perennial",
+      "water": "Wants its roots in permanently wet ground: the banks of creeks that run all year, spring-fed reaches and pond shores."
+    }
+  },
+  "relations": {
+    "eaten_by": [
+      {"animal": "odocoileus_hemionus", "part": "browse", "seasons": ["spring", "summer"]},
+      {"animal": "sylvilagus_bachmani", "part": "browse", "seasons": ["winter"]}
+    ],
+    "cover_for": ["callipepla_californica", "sylvilagus_bachmani"],
+    "shades_water": 0.6
+  },
+  "trunk": {
+    "length_ratio": 0.6, "radius_ratio": 0.03, "taper": 0.75, "flare": 1.3, "bole_ratio": 0.2, "base_size": 0.15,
+    "curve_deg": 10, "curve_var_deg": 14, "segments": 4, "lean_deg": 12, "stems": [1, 4], "stem_spread_deg": 22,
+    "split_prob": 0.35, "split_count": 2, "split_angle_deg": 24, "sinuous_deg": 6, "bark_rgb": [104, 94, 82],
+    "bark_pattern": "furrowed", "twig_rgb": [164, 124, 70],
+    "bark": {"tile_m": [0.2, 0.5], "ridge_m": 0.02, "block_m": 0.06, "fissure": 0.45, "contrast": 0.8, "lichen": 0.3, "relief": 0.9}
+  },
+  "crown": {
+    "shape": "hemispherical",
+    "envelope": {"profile": [[0.14, 0.3], [0.26, 0.42], [0.42, 0.5], [0.58, 0.5], [0.72, 0.45], [0.86, 0.32], [0.95, 0.17], [1.0, 0.05]], "lobes": 6, "lobe_depth": 0.15, "asymmetry": 0.2, "fill": 0.7, "edge": 1.1}
+  },
+  "levels": [
+    {
+      "count": 14, "down_angle_deg": 58, "down_angle_tip_deg": 30, "down_angle_var_deg": 14, "rotation_deg": 140, "rotation_var_deg": 30,
+      "length_ratio": 1.4, "length_var": 0.3, "curve_deg": 8, "curve_var_deg": 16, "tropism": 0.05, "droop_deg": 8, "taper": 0.9,
+      "radius_ratio": 0.55, "segments": 3
+    },
+    {
+      "count": 9, "start": 0.12, "down_angle_deg": 36, "down_angle_var_deg": 14, "rotation_deg": 140,
+      "rotation_var_deg": 30, "length_ratio": 0.55, "length_var": 0.3, "curve_deg": 4, "curve_var_deg": 16,
+      "tropism": 0.06, "taper": 1.0, "radius_ratio": 0.45, "segments": 2
+    }
+  ],
+  "foliage": {
+    "type": "broadleaf", "leaf_size_m": 0.1, "leaf_shape": "lanceolate", "cluster_m": 1.15, "density": 15, "leaf_fill": 2.8,
+    "start": 0.06, "parent_start": 0.28, "orientation": "outward", "roll_deg": 55,
+    "colors": {"winter": [160, 124, 76], "spring": [122, 146, 70], "summer": [90, 108, 68], "fall": [164, 150, 84]},
+    "leaf_on": {"winter": 0.0, "spring": 1.0, "summer": 1.0, "fall": 0.8},
+    "leaf_on_by_month": [0.0, 0.05, 0.55, 0.95, 1.0, 1.0, 1.0, 1.0, 1.0, 0.9, 0.55, 0.1],
+    "clumps": {"radius_m": 0.75, "cards_per_clump": 7, "shell": 0.2, "flatten": 0.8, "tip_bias": 1.3},
+    "palette": [[0.85, [1, 1, 1]], [0.15, [1.25, 1.24, 1.12]]], "winter_twigs": 0.5, "ao_min": 0.68,
+    "color_var": [0.07, 0.05], "leaf_on_var": 0.5
+  },
+  "deadwood": {"fraction": 0.05, "where": "inner", "levels": [2], "shorten": 0.6, "rgb": [138, 130, 120]},
+  "twigs": {"count": [2, 3], "length": 0.6, "down_deg": 32, "down_var_deg": 12, "curve_var_deg": 15, "segments": 1, "radius_m": 0.006, "tropism": 0.08, "fan_deg": 40, "jitter": 0.2},
+  "lod": {
+    "near_tris_budget": 1800, "near_sides": [5, 3, 0], "mid_blobs": 5, "mid_branches": 4, "mid_segments": [3, 1], "mid_blob_scale": 0.9,
+    "close_factor": 2.5
+  },
+  "targets": {
+    "crown_width_ratio": 1.0, "crown_base_ratio": 0.15, "porosity": 0.2, "foliage_rg": 0.68, "foliage_bg": 0.39,
+    "fall_rg": 1.22, "fall_bg": 0.29,
+    "from": "judgement values (2026-10-29) from knowledge of the species, not measured: no photographs were fetched for this draft. A small, often several-trunked tree with a rounded, fairly dense crown about as wide as tall; colour is the linear r/g and b/g of the file's summer and fall leaf colours, a darker, glossier green than the other willows. A reviewer should replace these with values measured from local photographs"
+  },
+  "notes": "Pacific (shining) willow, Salix lasiandra, treated in the Jepson eFlora as Salix lucida ssp. lasiandra, is a shrub or small tree 2-12 m of permanently wet streambanks, lake and pond shores from the valley floor into the mountains. Here 5-11 m: one to four trunks from the base (stems [1, 4], spread 22), often leaning, forking at mid-height (trunk.length_ratio 0.6, split_prob 0.35), dbh 0.15-0.35 m (radius_ratio 0.03). Crown rounded and denser than red willow's (fill 0.7, porosity 0.2). Bark grey-brown, furrowed on old trunks; twigs shiny, yellow-brown to red-brown (twig_rgb and the winter tint). Leaves the glossiest of the willows: lanceolate to narrowly ovate with a long tapering tip, 5-15 cm, finely toothed, dark shiny green above and paler (green to slightly glaucous) beneath, with conspicuous glands at the top of the leaf stalk: leaf_shape lanceolate, leaf_size_m 0.1, the palette lightening 15% of the leaves for the glint of the glossy blades rather than for white undersides. Catkins with the leaves in March-April, the males bright yellow: not drawn on the winter texture. Fall yellow, late (leaf_on_by_month holds leaves into November). It needs more water than red or arroyo willow: permanence perennial, the bank and margin of creeks that run all year and pond shores. Architectural model provisional; no snag (willows split and resprout).",
+  "sources": ["https://ucjeps.berkeley.edu/eflora/ (Salix lucida subsp. lasiandra)", "https://www.calflora.org/ (Salix lasiandra)", "https://calscape.org/ (Salix lasiandra)", "https://en.wikipedia.org/wiki/Salix_lasiandra", "https://www.fs.usda.gov/database/feis/ (Salix lucida, where covered)"],
+  "authors": ["Wild Earth (agent draft, 2026-10-29); needs local sign-off"],
+  "license": "CC BY-SA 4.0"
+}

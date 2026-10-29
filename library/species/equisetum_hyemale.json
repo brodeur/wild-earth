@@ -1,0 +1,51 @@
+{
+  "id": "equisetum_hyemale",
+  "aliases": ["scouring_rush", "horsetail", "rough_horsetail", "common_scouring_rush"],
+  "scientific": "Equisetum hyemale",
+  "common": "scouring rush",
+  "form": "emergent",
+  "lifespan": "perennial",
+  "native": true,
+  "height_m": [0.5, 1.5],
+  "description": "An ancient, flowerless plant of straight, jointed, hollow, dark green stems 0.5-1.5 m tall, ringed at every joint with a black and ash-grey band and tipped with a small pointed cone; the stems are rough with silica and were used to scour pots. It forms dense colonies from creeping rhizomes on the sandy and gravelly banks and wet margins of the creeks.",
+  "season_notes": {
+    "winter": "Evergreen: the same dark green ringed stems stand through the winter.",
+    "spring": "New stems push up from the rhizomes; small dark cones at the tips shed green spores.",
+    "summer": "Dense dark stands on the sandy banks and bars, some stems with cones.",
+    "fall": "Unchanged, dark green and upright; old stems brown at the tips."
+  },
+  "status": "agent draft, needs local sign-off",
+  "ground": {
+    "habit": "horsetail",
+    "palette": {
+      "winter": {"root": [64, 82, 60], "tip": [84, 102, 70], "head": [72, 66, 50]},
+      "spring": {"root": [62, 84, 58], "tip": [82, 106, 66], "head": [80, 74, 52]},
+      "summer": {"root": [60, 82, 56], "tip": [78, 102, 64], "head": [76, 68, 50]},
+      "fall": {"root": [64, 82, 58], "tip": [92, 104, 70], "head": [72, 66, 50]}
+    },
+    "heads": {"shape": "none", "months": [4, 7]},
+    "clump_m": 0.6,
+    "stems": 40,
+    "height_by_month": [0.95, 0.95, 0.95, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 0.95, 0.95],
+    "density": 0.8
+  },
+  "habitat": {
+    "classes": {"riparian": 1.0, "mixed_forest": 0.05},
+    "floor": 2.2, "mid": 0.2, "steep": 0.3, "north": 1.2, "shade": 0.35, "disturbed": 0.9,
+    "riparian": {
+      "zones": {"margin": 1.0, "bank": 0.8, "pond_shore": 0.5, "terrace": 0.3, "channel": 0.05},
+      "orders": [1, 6],
+      "permanence": "intermittent",
+      "water": "Wants its rhizomes in moist sand or gravel with water near the surface: creek margins, sandy banks and bars, seeps and pond shores."
+    }
+  },
+  "relations": {
+    "eaten_by": [],
+    "cover_for": [],
+    "shades_water": 0
+  },
+  "notes": "Scouring rush (Equisetum hyemale ssp. affine) is a horsetail of moist sandy and gravelly ground across North America, in the foothills on creek banks, bars, the wet margins and seeps, often in dense colonies spread by deep rhizomes. A spore plant, not a rush: no leaves (they are reduced to a fused sheath at each joint), no flowers. Drawn by the emergent module: habit horsetail, 40 straight, upright, unbranched, hollow stems 0.5-1.5 m and 5-10 mm thick to a 0.6 m clump, dark green and ridged, each joint ringed by its sheath, ash-grey with a black band above and below (the module should draw the bands; the palette gives only the stem). Evergreen: height_by_month 0.95-1 all year. The stem tips carry a small, pointed, dark cone (strobilus) 1-2.5 cm in spring and early summer: heads shape none (a cone is too small to draw), months [4, 7] and the head colour kept only for when the module learns a cone. Zones: the wet margin first, the bank, pond shores, the terrace a little and the gravel bars of the channel; permanence intermittent, orders [1, 6]. Animals avoid it (silica and a thiamine-destroying enzyme make it poor food), so relations are empty. shades_water 0.",
+  "sources": ["https://www.fs.usda.gov/database/feis/ (Equisetum hyemale, where covered)", "https://ucjeps.berkeley.edu/eflora/ (Equisetum hyemale subsp. affine)", "https://www.calflora.org/ (Equisetum hyemale)", "https://calscape.org/ (Equisetum hyemale)", "https://en.wikipedia.org/wiki/Equisetum_hyemale"],
+  "authors": ["Wild Earth (agent draft, 2026-10-29); needs local sign-off"],
+  "license": "CC BY-SA 4.0"
+}

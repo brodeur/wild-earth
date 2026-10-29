@@ -1,0 +1,53 @@
+{
+  "id": "nasturtium_officinale",
+  "aliases": ["watercress", "water_cress", "rorippa_nasturtium_aquaticum"],
+  "scientific": "Nasturtium officinale",
+  "common": "watercress",
+  "form": "forb",
+  "lifespan": "perennial",
+  "native": false,
+  "height_m": [0.1, 0.5],
+  "description": "A sprawling, hollow-stemmed perennial of cold running water, floating and rooting in mats in the shallows, with dark green leaves of three to nine round leaflets and small white four-petalled flowers in short clusters. Brought from Europe as a salad green, it now fills the shallow edges of the spring-fed creeks and seeps, green all winter.",
+  "season_notes": {
+    "winter": "Dark green mats in the cold shallow water, one of the few fresh greens of the season.",
+    "spring": "Mats thicken and stems rise; small white flowers from April.",
+    "summer": "Flowering into August; where the creek dries the mats wither on the stones.",
+    "fall": "Fresh growth again as the water cools."
+  },
+  "status": "agent draft, needs local sign-off",
+  "ground": {
+    "habit": "sprawling",
+    "leaf": { "shape": "pinnate", "size_m": 0.08, "rgb": [70, 118, 60] },
+    "flower": { "shape": "tiny", "rgb": [246, 246, 240], "size_m": 0.006, "months": [4, 8], "per_plant": 10 },
+    "height_by_month": [0.7, 0.7, 0.85, 1.0, 1.0, 1.0, 0.9, 0.85, 0.8, 0.8, 0.75, 0.7],
+    "dead_rgb": [140, 130, 96],
+    "density": 0.9
+  },
+  "habitat": {
+    "classes": { "riparian": 1.0 },
+    "floor": 2.5, "mid": 0.1, "steep": 0.1, "north": 1.0, "shade": 0.2, "disturbed": 1.0,
+    "riparian": {
+      "zones": { "channel": 1.0, "margin": 0.8, "pond_margin": 0.7 },
+      "orders": [1, 4],
+      "permanence": "perennial",
+      "water": "Lives in shallow, cool, clear, slowly running water, rooted in the mud and gravel of the bed: spring-fed creeks, seeps and ditches, and the shallows of ponds fed by springs."
+    }
+  },
+  "relations": {
+    "eaten_by": [
+      { "animal": "odocoileus_hemionus", "part": "leaves", "seasons": ["winter", "spring", "summer"] },
+      { "animal": "callipepla_californica", "part": "leaves", "seasons": ["winter", "spring"] }
+    ],
+    "cover_for": [],
+    "shades_water": 0
+  },
+  "notes": "Watercress is a European perennial, naturalized throughout California in springs, seeps, slow clear streams and ditches; in the foothills it fills the shallow, cool, spring-fed reaches of small creeks. Habit sprawling: hollow stems trail and float, rooting at the nodes, forming mats 10-50 cm high (the module draws the sprawl on the wet bed and the shallows). Leaves alternate, odd-pinnate with three to nine (to thirteen) roundish leaflets, the end one largest, dark glossy green: leaf shape pinnate, 8 cm. Flowers small (4-5 mm), white, four petals, in short racemes elongating in fruit, April-August (on through the year in mild places): flower shape tiny, white. It grows through the winter in the water, so height_by_month stays 0.7 and up all year; where the creek dries in late summer it withers (dead_rgb). Introduced (native false); the native yellow cresses (Rorippa) of the same places are not drawn. Deer and quail eat the greens. Zones: in the channel of small perennial creeks (channel 1.0), the wet margin, a spring-fed pond's shallows; orders [1, 4], permanence perennial. shades_water 0.",
+  "sources": [
+    "https://ucjeps.berkeley.edu/eflora/ (Nasturtium officinale)",
+    "https://www.calflora.org/ (Nasturtium officinale)",
+    "https://en.wikipedia.org/wiki/Watercress",
+    "https://plants.usda.gov/ (NAOF)"
+  ],
+  "authors": ["Wild Earth (agent draft, 2026-10-29); needs local sign-off"],
+  "license": "CC BY-SA 4.0"
+}

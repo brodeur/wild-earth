@@ -1,0 +1,51 @@
+{
+  "id": "typha_latifolia",
+  "aliases": ["broadleaf_cattail", "cattail", "common_cattail", "tule_potato"],
+  "scientific": "Typha latifolia",
+  "common": "broadleaf cattail",
+  "form": "emergent",
+  "lifespan": "perennial",
+  "native": true,
+  "height_m": [1.5, 2.5],
+  "description": "A tall marsh plant of flat, sword-like, grey-green blades 1.5-2.5 m high that stands in shallow still water in dense colonies, with the familiar brown velvet sausage of female flowers on a stiff stalk and a thin spike of male flowers just above it. It fills the shallows of ponds, sloughs and slow pools of the creeks, its rhizomes spreading through the mud, and its heads burst into drifting fluff in winter.",
+  "season_notes": {
+    "winter": "Standing dead blades, tan and brown, bent and broken; the old heads split open into masses of cottony fluff.",
+    "spring": "New green blades push up through the dead ones from March, grey-green and fast-growing.",
+    "summer": "A dense green wall at the water's edge; the brown heads form in July, the male spikes above them shedding yellow pollen.",
+    "fall": "Blades yellowing from the tips, the dark brown heads ripe and solid."
+  },
+  "status": "agent draft, needs local sign-off",
+  "ground": {
+    "habit": "cattail",
+    "palette": {
+      "winter": {"root": [120, 98, 72], "tip": [168, 142, 102], "head": [104, 78, 56]},
+      "spring": {"root": [96, 120, 72], "tip": [122, 152, 86], "head": [120, 100, 70]},
+      "summer": {"root": [82, 108, 64], "tip": [112, 138, 76], "head": [96, 62, 40]},
+      "fall": {"root": [116, 116, 76], "tip": [170, 150, 96], "head": [92, 62, 42]}
+    },
+    "heads": {"shape": "cattail", "months": [7, 10]},
+    "clump_m": 1.0,
+    "stems": 14,
+    "height_by_month": [0.8, 0.8, 0.85, 0.9, 1.0, 1.0, 1.0, 1.0, 1.0, 0.95, 0.85, 0.8],
+    "density": 1.0
+  },
+  "habitat": {
+    "classes": {"riparian": 1.0},
+    "floor": 2.5, "mid": 0.05, "steep": 0.05, "north": 1.0, "shade": 0.05, "disturbed": 1.1,
+    "riparian": {
+      "zones": {"pond_margin": 1.0, "margin": 0.4, "channel": 0.15, "pond_shore": 0.2},
+      "orders": [2, 7],
+      "permanence": "perennial",
+      "water": "Stands rooted in mud under 0-60 cm of still or slow water through the summer: pond shallows, sloughs and the quiet pools of the creeks, never the riffles."
+    }
+  },
+  "relations": {
+    "eaten_by": [],
+    "cover_for": [],
+    "shades_water": 0.1
+  },
+  "notes": "Broadleaf cattail grows across the continent in shallow fresh water; in the foothills it fills stock ponds, mill ponds, ditches and the slow, silty pools of creeks below dams and in beaver-less backwaters. Drawn by the emergent module (not the tree generator, not grass.js): habit cattail, a clump of flat, upright to arching blades 1-2.5 cm wide and to 2.5 m, with in its months a stiff stalk carrying the head. The head is the female spike, a dark brown cylinder 10-20 cm long and 2-3.5 cm thick, with the male spike directly above it (no gap, which separates it from the narrow-leaved T. angustifolia and T. domingensis, where there is a gap): heads shape cattail, July to October, dark brown; the old heads stay on into winter and break up into fluff, which is in the winter head colour (paler) but not drawn as a head, since the months stop in October. Blades grey-green in growth, yellowing from the tip in fall, tan and brown standing dead in winter; the dead stand stays tall (height_by_month 0.8 in winter, the bent dead blades) while new green blades come through in spring. clump_m 1.0 and 14 blades per clump: one clump is a ramet group; the stand is many clumps side by side, as dense as the zone weight allows. Zones: the pond margin first, the wet margin and pools of slow creeks (margin 0.4, channel 0.15 for the still pools in the channel), orders [2, 7] where water is slow, permanence perennial. shades_water 0.1: it shades only its own shallows. The rhizomes are starchy and were a staple food for California peoples; marsh birds (red-winged blackbirds, wrens, rails) and muskrats live in it, none of them in the game yet, so relations are empty.",
+  "sources": ["https://www.fs.usda.gov/database/feis/plants/graminoid/typlat/all.html", "https://ucjeps.berkeley.edu/eflora/ (Typha latifolia)", "https://www.calflora.org/ (Typha latifolia)", "https://calscape.org/ (Typha latifolia)", "https://en.wikipedia.org/wiki/Typha_latifolia"],
+  "authors": ["Wild Earth (agent draft, 2026-10-29); needs local sign-off"],
+  "license": "CC BY-SA 4.0"
+}

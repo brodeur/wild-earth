@@ -91,7 +91,13 @@
     "steep": 0.9,
     "north": 1.5,
     "shade": 0.7,
-    "disturbed": 0.6
+    "disturbed": 0.6,
+    "riparian": {
+      "zones": {"terrace": 1.0, "bank": 0.3},
+      "orders": [1, 5],
+      "permanence": "any",
+      "water": "Likes the shaded, moist terrace under the creekside trees, but needs no water at the surface."
+    }
   },
   "relations": {
     "eaten_by": [
@@ -132,7 +138,8 @@
       "callipepla_californica",
       "sylvilagus_bachmani",
       "microtus_californicus"
-    ]
+    ],
+    "shades_water": 0.05
   },
   "trunk": {
     "length_ratio": 0.85,

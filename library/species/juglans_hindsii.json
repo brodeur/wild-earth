@@ -21,6 +21,24 @@
     "fall": "Leaves turn yellow and drop early (October); the nuts fall, and their husks blacken on the ground."
   },
   "status": "agent draft, needs local sign-off",
+  "habitat": {
+    "classes": {"riparian": 1.0, "oak_woodland": 0.2, "grassland": 0.05},
+    "floor": 2.0, "mid": 0.3, "steep": 0.2, "north": 1.0, "shade": 0.1, "disturbed": 1.0,
+    "riparian": {
+      "zones": {"terrace": 1.0, "bank": 0.3, "pond_terrace": 0.3},
+      "orders": [3, 6],
+      "permanence": "intermittent",
+      "water": "Deep-rooted in alluvial soil with water below: the terraces of creeks and rivers and the valley floors, not the wet bank."
+    }
+  },
+  "relations": {
+    "eaten_by": [
+      {"animal": "sciurus_griseus", "part": "seeds", "seasons": ["fall", "winter"]},
+      {"animal": "aphelocoma_californica", "part": "seeds", "seasons": ["fall"]}
+    ],
+    "cover_for": ["sciurus_griseus"],
+    "shades_water": 0.5
+  },
   "trunk": {
     "length_ratio": 0.4, "radius_ratio": 0.048, "taper": 0.6, "flare": 1.35, "bole_ratio": 0.4, "base_size": 0.12,
     "curve_deg": 8, "curve_var_deg": 12, "segments": 5, "lean_deg": 8, "stems": [1, 1], "stem_spread_deg": 0,

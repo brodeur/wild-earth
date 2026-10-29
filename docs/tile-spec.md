@@ -48,6 +48,10 @@ tiles/<tile_id>/
   hydro/human_water.geojson     derived   every waterbody judged: human (rewilded: true) or kept, with the reasons and evidence
   hydro/osm_water.geojson       derived   OSM water polygons, dams and NID dam points (Overpass cache for the rewild step)
   terrain/dem_rewilded.tif      derived   dem.tif with the restored thalwegs carved through rewilded beds (routing only; dem.tif untouched)
+  terrain/dem_banked.tif        derived   dem.tif with every channel's bed and wet margin and every kept pond's basin carved (see Water and riparian); the client's heights come from it
+  hydro/water_reaches.json      derived   the reaches the water step drew (id, name, order, area, width, class, samples, length) and the ponds' basins (level, depth)
+  client/water.png              derived   RGB on the DEM grid: R riparian zone | order << 4 | 128 perennial, G bed material | 8 bar, B water level (see Water and riparian)
+  client/water_width.png        derived   8-bit grey on the DEM grid: the channel's water half width at the nearest centreline sample, 0.1 m
   terrain/dem_1m.tif            optional  lidar step: 3DEP 1 m bare-earth DEM cut to the tile, float32 m NAVD88; pipeline only (see Lidar)
   terrain/dsm_1m.tif            optional  lidar step: highest point-cloud return per 1 m cell (first-return surface), float32; pipeline only
   terrain/lidar_dtm_check.tif   optional  lidar step: point-cloud ground minus dem_1m, 10 m mean, float32
@@ -135,6 +139,7 @@ share the DEM grid unless the manifest says otherwise.
   "status": {
     "human_landforms_removed": false,
     "hydrology_rewilded": false,
+    "water_banked": false,
     "vegetation_backfilled": true,
     "projection_years": 0
   },
@@ -394,6 +399,90 @@ exposes `depthAt(x, north, {anySeason})` (water depth in metres: ponds holding w
 level over the drawn ground; creeks running this season, thalweg depth across a parabolic section
 of the drawn ribbon; 0 elsewhere) and `rewildAt(x, north)` (B), both as methods of the `Water`
 object and as module functions.
+
+## Water and riparian
+
+Build step `water` (`pipeline/water.py`, after `rewild_hydro`; re-run alone with `--steps water`) builds every
+waterway and water body of the tile as one system: the channel geometry with its bed below the water, the bed
+material, the water level, and the riparian zones around it with their species, so the client draws the water in a
+carved channel and places the riparian plants by zone and every animal can use it. `status.water_banked` is true
+once it has run. Aaron (2026-10-29): "banks have a transition 'down' into the body; the bottoms of waterways should
+have lots of rocks when the waterway dries; water systems are first class citizens like animals."
+
+Reaches. Every drawn reach of `hydro/channels.geojson` (canals 33600 left out, pieces inside a kept pond and
+NHD-sourced stretches within 15 m of a DEM reach left out as the client leaves them) is sampled every 2.5 m with its
+order, drainage area, width, permanence (perennial 46006/55800, intermittent 46003/33400, else ephemeral), the
+thalweg depth D and riffle-pool index t from `client/channel_profile.png` at the sample's cell, and a water level L:
+the DEM along the reach made non-increasing downstream and smoothed over max(7.5 m, 2.5 widths). The water half
+width at a sample is wh = width / 2 x (1 + 0.15 t) x a slow wander along the reach (periods 41 and 17 m, 0.55-1.4),
+the local slope the smoothed gradient of L.
+
+The cross-section, per 5 m cell by its distance o to the nearest sample (a Euclidean distance transform; the bigger
+stream owns a shared cell):
+  channel bed    o < wh: the ground lowered to L - D (1 - (o / wh)^2), the parabola water.js depthAt() uses
+  wet margin     wh <= o < wh + m: lowered to L + hm (o - wh) / m, flooded in winter, mud and sedges in summer
+  bank           to wh + m + b: the ground as it is (the lidar resolves the real banks; a template bank cut them back
+                 on the first run and was dropped)
+  terrace        to wt, where the ground stands under L + Hb + 1.5 m: the floodplain
+with m = 0.6 + 0.25 x order, hm = 0.08 + 0.04 x order, b = 1 + 0.6 x order, Hb = 0.4 + 0.35 x order, wt = 6 + 6 x
+order (`bank_params`). Cells are only ever lowered, by at most 2 m, into `terrain/dem_banked.tif`; a shore the DEM
+holds flat at the water level drops into the bed from the water's edge, an incised channel keeps its banks and gains
+a bed of its bed width. An ephemeral order-1 swale has no bed: its channel cells are margin. `client/heights.png` is
+rebuilt from the banked DEM (derive reads it too once it exists) and on a lidar tile `client/terrain_detail.png` from
+the 1 m ground averaged to 2 m and carved the same way, so the far mesh and the fine mesh both carry the beds.
+
+Ponds. Every NHD waterbody not rewilded (`hydro/human_water.geojson`) gets a basin: its level by water.js's rule
+(a pond over 1 ha at its shoreline's 60th percentile - 0.1 m, a smaller one at its lowest cell plus the interior's rise
+to the median, at most 1.5 m, + 0.05), the bed lowered to level - min(Dmax, 0.08 + 0.12 d) with d the distance inside
+the ring and Dmax 0.6-2.4 m by area (0.4 + 0.5 sqrt(ha)); the shallows under 0.45 m are its margin (the drawdown mud
+when the pond is dry), a shore band 6 m outside the ring and a terrace to 25 m where the ground is under level + 2 m.
+A pond with an intermittent NHD FCode is seasonal, every other holds water all year.
+
+Bed material, per sample: boulders where the slope exceeds 4.5% on orders 2+ (the cascades), cobble on riffles
+(t > 0.3), on slopes over 2% and on every order-4+ bed, sand in the pools (t < -0.3) of orders 3+ and silt in the
+smaller creeks' pools, gravel on the runs; the margin sand (gravel from order 3, cobble on the steep reaches); a bar
+on the inside of a bend (|turn| over 0.12 rad per sample) over the margin of orders 2+; a pond's basin silt, its
+margin and shore sand.
+
+`client/water.png` (RGB, DEM grid, row 0 north): R = zone (low 4 bits: 1 channel bed, 2 wet margin, 3 bank, 4
+terrace, 5 pond water, 6 pond margin, 7 pond shore, 8 pond terrace) | stream order << 4 | 128 when perennial; G =
+material (low 3 bits: 1 silt, 2 sand, 3 gravel, 4 cobble, 5 boulder) | 8 on a bar; B = the water level as (L -
+heights.png's height at the cell) / 0.02 m + 128 (0 off the system), so a client adds it to the decoded height and
+has the level to the centimetre wherever a stream or pond cell is; `client/water_width.png` (8-bit grey, the same
+grid) the water half width at the nearest sample in 0.1 m (a fourth channel of one RGBA file came back through the
+browser's canvas premultiplied, the zone bits garbled). The manifest layer `client.water` carries the zones, materials, bank parameters and stats (cells and hectares
+per zone, material counts, the cut depths, the ponds' levels and depths, reaches and samples by order).
+
+The riparian zone mixes (`pipeline/species_mix.py` riparian_rows, written into `client/species_mix.json` as
+`riparian` by `derive` and by the water step): every library record may carry `habitat.riparian` (zones with
+weights, the stream orders it lines, the permanence of water it needs; docs/species-library.md), and from those one
+row is built per zone, stream order class (small 1-2, medium 3-4, large 5+; ponds one class) and permanence
+(perennial, seasonal), each a trees / shrubs / ground mix as [[id, byte]] summing to 255 per layer with density
+multipliers per zone (no trees in a channel or a pond, a gallery on the banks and terraces), halved where the order
+class only half overlaps the record's orders and a tenth for a species that needs perennial water beside a seasonal
+reach. 48 rows on the home tile.
+
+Client. `tilepackage.js` loads the grid as `tile.water` (WaterGrid: zone, info, material, level, half, cellShare)
+and the rows into `SpeciesMix.ripRow(info)`. `water.js` draws each stream ribbon at its level across its half width
+(the ground drawn there where that is higher, so a ribbon never sinks under the far mesh), the dry bed ribbon on
+the carved ground coloured by the material, and a pond at the grid's level over its basin; depthAt() over a pond is
+the basin's depth, over a creek the profile's parabola, which the bed was carved to, so a wading animal's feet meet
+the bed (groundControl's footing is unchanged). `rocks.js` lays the beds' stones by the material (bedStones: gravel
+scatters, cobbles with a water-worn boulder, boulder cascades, the bars twice as dense), under the water when the
+reach runs and bare when it dries; the old stream-bank cobbles are replaced on a tile with the grid, the pond-shore
+gravel band stays. `terrain.js` tints the wet margin darker and greener, a pond's margin mud and its basin silt
+(groundWater, the four nearest cells' tints blended). The plant layers take a zone's species from its row
+(`vegetation.js` zoneSpecies and riparianExtra, also in `impostors.js` and `crowns.js` so a crown on a bank is a
+bank tree; `shrubfield.js`, `forbs.js` zoneMix with the floating duckweed on the pond's level) and the new
+`emergents.js` draws the cattails, tules, sedges, rushes and horsetail of the channel beds, margins and pond shallows
+(form `emergent`) as clumps of crossed cards baked from the records; `grass.js` thins to a fifth on a dry bed, to
+nothing on a pond's mud. Nothing woody stands in a bed, a basin or a drawdown margin; on the wet margin only the
+willows (BANK) and the shrubs.
+
+Run order: after `lidar` (the 1 m ground) and `rewild_hydro` (the profile); before `derive`. A later `lidar`
+products stage rewrites terrain_detail.png without the banks: run `water` again. Known: the carve follows the
+routed centreline, which can run a metre or two off the lidar's channel on a small creek; a 5 m zone cell is wider
+than an order-1 bed, so the margin and bed zones are one cell each along the swales.
 
 ## Geology and soils
 

@@ -1,0 +1,49 @@
+{
+  "id": "lemna_minor",
+  "aliases": ["common_duckweed", "duckweed", "lesser_duckweed"],
+  "scientific": "Lemna minor",
+  "common": "common duckweed",
+  "form": "forb",
+  "lifespan": "perennial",
+  "native": true,
+  "height_m": [0.003, 0.01],
+  "description": "One of the smallest flowering plants: a free-floating green oval frond 2-4 mm across with a single root hanging beneath, budding off new fronds so fast that it covers a still pond in a bright green skin in summer. It grows on the still water of ponds, sloughs and quiet backwaters, drifting with the wind into the corners.",
+  "season_notes": {
+    "winter": "A thin, scattered film; many fronds sink to the bottom as resting buds until spring.",
+    "spring": "Fronds rise and multiply as the water warms, spreading from the pond edges.",
+    "summer": "A continuous bright green carpet on still water, broken by every animal that wades through.",
+    "fall": "Still green, thinning as the water cools."
+  },
+  "status": "agent draft, needs local sign-off",
+  "ground": {
+    "habit": "floating",
+    "leaf": { "shape": "round", "size_m": 0.003, "rgb": [118, 164, 70] },
+    "height_by_month": [0.4, 0.4, 0.6, 0.85, 1.0, 1.0, 1.0, 1.0, 1.0, 0.9, 0.6, 0.4],
+    "dead_rgb": [140, 140, 90],
+    "density": 1.0
+  },
+  "habitat": {
+    "classes": { "riparian": 1.0 },
+    "floor": 3.0, "mid": 0.0, "steep": 0.0, "north": 1.0, "shade": 0.2, "disturbed": 1.0,
+    "riparian": {
+      "zones": { "pond_water": 1.0 },
+      "orders": [1, 7],
+      "permanence": "perennial",
+      "water": "Floats on still, sheltered, fresh water that lasts through the summer, richest where the water is warm and fertile; current or wind-swept open water clears it."
+    }
+  },
+  "relations": {
+    "eaten_by": [],
+    "cover_for": [],
+    "shades_water": 0
+  },
+  "notes": "Common duckweed is a tiny floating aquatic of still fresh water nearly worldwide, native to California; on foothill stock ponds and mill ponds it forms a green skin in summer. Each plant is a flat, oval, slightly thick frond (a stem and leaf in one) 1-4 mm across with a single hanging root; it buds new fronds from pockets at the base, so colonies are clonal and double in a few days in warm water. Flowers are microscopic and rare (no flower block). Habit floating (new): a flat mat on the water surface, which the module draws only from above on a pond's open water; leaf shape round, 3 mm, a bright yellow-green. height_m is the frond's thickness and the hanging root, not a height that matters for drawing; height_by_month is read here as the mat's cover through the year (0.4 in winter when many fronds sink as starchy resting buds, 1.0 in summer). Zone pond_water only; orders and permanence say only that the water must be still and last the summer (orders [1, 7] is a placeholder: a pond is not a stream order). Ducks, geese and many other water birds eat it, and none is in the game's animal library yet, so eaten_by is empty. shades_water 0, though a full mat shades the water under it.",
+  "sources": [
+    "https://ucjeps.berkeley.edu/eflora/ (Lemna minor)",
+    "https://www.calflora.org/ (Lemna minor)",
+    "https://calscape.org/ (Lemna minor)",
+    "https://en.wikipedia.org/wiki/Lemna_minor"
+  ],
+  "authors": ["Wild Earth (agent draft, 2026-10-29); needs local sign-off"],
+  "license": "CC BY-SA 4.0"
+}

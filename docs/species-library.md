@@ -1380,3 +1380,71 @@ the herbs in `forbs.js` within 45 m, the shrubs as 3D plants of `vegetation.js` 
 herbs; its shrub shares are in decisions.md (2026-10-29). Not done: a lineup measurement of the nine shrubs against
 their targets (they build without errors), a far tier for the herbs (a poppy field from the air), herb shadows, the
 grass clump shapes per species (one geometry per type), and the local sign-off every record waits for.
+
+## The water's plants and the riparian zones (2026-10-29)
+
+Aaron: "make sure there are plenty of riparian plant species ... if there are missing important riparian species like
+willow or cattail have them generated." Twenty-one records join the library (77 now), every one an agent draft, CC BY-SA
+4.0, needing local sign-off, nothing downloaded, and the sixteen riparian records already in it gained the blocks below.
+Two schema additions and one new form:
+
+`habitat.riparian` (every plant of the water's edge; `pipeline/species_mix.py` riparian_rows builds the zone mixes
+from it, `pipeline/water.py` places the zones, docs/tile-spec.md "Water and riparian"):
+
+| field | meaning |
+|---|---|
+| `zones` | relative weight per zone: `channel` (the bed, in the water when the creek runs), `margin` (the wet margin above the summer line, flooded in winter), `bank`, `terrace` (the floodplain), `pond_water` (the open water: duckweed), `pond_margin` (the shallows and drawdown mud), `pond_shore` (just outside the water), `pond_terrace` |
+| `orders` | `[min, max]` Strahler orders of the reaches it lines (1 a swale, 5 Weber Creek) |
+| `permanence` | `perennial`, `intermittent` or `any`: the least permanent water it stands beside (a perennial species gets a tenth beside a seasonal reach) |
+| `water` | one sentence on its water needs, for the card and the reviewer |
+
+`relations.shades_water` (0-1): how much a mature plant shades the channel (alder 1.0, cottonwood 0.8, the willow
+thickets 0.5-0.6, shrubs 0.1-0.3, herbs 0); written for the day the water has a temperature.
+
+**Form `emergent`** (the tall wetland monocots and the horsetail; drawn by `client/src/emergents.js` as clumps of two
+crossed cards baked from the record for the month, placed in the channel beds, wet margins and pond shallows by zone):
+
+| field | meaning |
+|---|---|
+| `ground.habit` | `cattail` (flat blades to 2.5 m), `tule` (round stems with a tassel), `sedge` (an arching tussock), `rush` (a stiff one), `horsetail` (jointed evergreen stems) |
+| `ground.palette` | per season: `root`, `tip` (the stem or blade from its base to its tip), `head` |
+| `ground.heads` | `{ shape: cattail | tassel | spike | cluster | none, months: [from, to] }` |
+| `ground.clump_m`, `ground.stems` | one clump's diameter and its stems |
+| `ground.height_by_month`, `ground.density` | as the forbs |
+
+Forb habits gain `floating` (duckweed: a mat drawn on the water's level in the ground quad only).
+
+**The records.** The trees and shrubs are grown by the generator (the sycamore's bark is the new `mottled` pattern: a
+mosaic of cream, pale green-grey and tan patches); the emergents and forbs are cards.
+
+| form | id (common) | size | zones; orders, permanence | relations |
+|---|---|---|---|---|
+| tree | `salix_laevigata` (red willow) | 6-13 m | bank, pond_shore, terrace, margin, pond_terrace; orders [2, 5], intermittent | 2 eaten_by, shades 0.6 |
+| tree | `salix_lasiandra` (Pacific willow) | 5-11 m | bank, pond_shore, margin, terrace; orders [2, 6], perennial | 2 eaten_by, shades 0.6 |
+| tree | `platanus_racemosa` (California sycamore) | 15-26 m | terrace, bank, pond_terrace; orders [3, 7], intermittent | 1 eaten_by, shades 0.7 |
+| shrub | `salix_exigua` (sandbar willow) | 2-4.5 m | margin, bank, pond_shore, pond_margin, channel; orders [2, 5], intermittent | 2 eaten_by, shades 0.3 |
+| shrub | `cephalanthus_occidentalis` (buttonbush) | 2-4 m | margin, pond_shore, pond_margin, bank; orders [2, 7], perennial | 1 eaten_by, shades 0.3 |
+| shrub | `cornus_sericea` (creek dogwood) | 1.8-3.5 m | bank, pond_shore, margin, terrace; orders [2, 6], perennial | 7 eaten_by, shades 0.3 |
+| shrub | `rubus_ursinus` (California blackberry) | 0.6-1.6 m | terrace, bank, pond_terrace, pond_shore, margin; orders [1, 6], any | 10 eaten_by, shades 0.1 |
+| shrub | `vitis_californica` (California wild grape) | 2-4 m | terrace, bank, pond_terrace, pond_shore; orders [2, 6], intermittent | 8 eaten_by, shades 0.3 |
+| shrub | `calycanthus_occidentalis` (western spicebush) | 1.5-3 m | bank, terrace, margin, pond_shore; orders [2, 4], perennial | 0 eaten_by, shades 0.2 |
+| emergent | `typha_latifolia` (broadleaf cattail) | 1.5-2.5 m | pond_margin, margin, pond_shore, channel; orders [2, 7], perennial | 0 eaten_by, shades 0.1 |
+| emergent | `schoenoplectus_acutus` (hardstem tule) | 1.5-3 m | pond_margin, margin, channel; orders [2, 7], perennial | 0 eaten_by, shades 0.1 |
+| emergent | `schoenoplectus_californicus` (California bulrush) | 1.5-3 m | pond_margin, margin, channel; orders [3, 7], perennial | 0 eaten_by, shades 0.1 |
+| emergent | `carex_barbarae` (Santa Barbara sedge) | 0.5-1.0 m | margin, pond_shore, bank, terrace, pond_margin; orders [1, 6], any | 3 eaten_by, shades 0 |
+| emergent | `carex_nudata` (torrent sedge) | 0.3-0.7 m | channel, margin; orders [2, 5], intermittent | 1 eaten_by, shades 0 |
+| emergent | `juncus_effusus` (common rush) | 0.6-1.2 m | margin, pond_shore, bank, pond_margin, channel; orders [1, 6], intermittent | 0 eaten_by, shades 0 |
+| emergent | `equisetum_hyemale` (scouring rush) | 0.5-1.5 m | margin, bank, pond_shore, terrace, channel; orders [1, 6], intermittent | 0 eaten_by, shades 0 |
+| forb | `artemisia_douglasiana` (California mugwort) | 0.8-2.0 m | terrace, bank, pond_terrace, pond_shore, margin; orders [1, 6], any | 1 eaten_by, shades 0 |
+| forb | `urtica_dioica` (hoary nettle) | 1.0-2.5 m | terrace, margin, bank, pond_shore, pond_terrace; orders [1, 6], intermittent | 1 eaten_by, shades 0 |
+| forb | `erythranthe_guttata` (seep monkeyflower) | 0.15-0.8 m | margin, pond_margin, pond_shore, channel, bank; orders [1, 4], intermittent | 1 eaten_by, shades 0 |
+| forb | `nasturtium_officinale` (watercress) | 0.1-0.5 m | channel, margin, pond_margin; orders [1, 4], perennial | 2 eaten_by, shades 0 |
+| forb | `lemna_minor` (common duckweed) | 0.003-0.01 m | pond_water; orders [1, 7], perennial | 0 eaten_by, shades 0 |
+
+The sixteen older records with the new blocks: white alder (bank at the toe, perennial, shades 1.0), arroyo willow
+(margin and bank, any), Fremont cottonwood (terrace, 0.8), big-leaf maple, Oregon ash, black walnut, valley oak, bay,
+blue elderberry, wild rose, snowberry, poison oak, blue wildrye, miner's lettuce, California oatgrass and yarrow; the
+eight trees had no `habitat` or `relations` block before and got both. The library has no ducks, raccoon or towhee,
+so duckweed lists no eaters and those animals are named in the notes. Not done: the local sign-off every record
+waits for, a lineup measurement of the new trees and shrubs against targets (they build without errors), and the
+emergents' far look (they fade at 120 m).

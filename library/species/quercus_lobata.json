@@ -22,6 +22,29 @@
     "fall": "The long acorns ripen and drop (September-November) and the leaves turn yellow-brown before falling."
   },
   "status": "agent draft, needs local sign-off",
+  "habitat": {
+    "classes": {"oak_woodland": 0.8, "riparian": 0.8, "grassland": 0.3},
+    "floor": 2.0, "mid": 0.5, "steep": 0.2, "north": 1.0, "shade": 0.05, "disturbed": 0.6,
+    "riparian": {
+      "zones": {"terrace": 1.0, "pond_terrace": 0.6, "bank": 0.2},
+      "orders": [2, 6],
+      "permanence": "any",
+      "water": "Its deep roots reach the water table under valley floors and creek terraces; it needs no surface water and stands well back from the channel on deep soil."
+    }
+  },
+  "relations": {
+    "eaten_by": [
+      {"animal": "odocoileus_hemionus", "part": "acorns", "seasons": ["fall", "winter"]},
+      {"animal": "ursus_americanus", "part": "acorns", "seasons": ["fall"]},
+      {"animal": "meleagris_gallopavo", "part": "acorns", "seasons": ["fall", "winter"]},
+      {"animal": "aphelocoma_californica", "part": "acorns", "seasons": ["fall", "winter"]},
+      {"animal": "melanerpes_formicivorus", "part": "acorns", "seasons": ["fall", "winter"]},
+      {"animal": "sciurus_griseus", "part": "acorns", "seasons": ["fall", "winter"]},
+      {"animal": "otospermophilus_beecheyi", "part": "acorns", "seasons": ["fall"]}
+    ],
+    "cover_for": ["melanerpes_formicivorus", "sciurus_griseus"],
+    "shades_water": 0.4
+  },
   "trunk": {
     "length_ratio": 0.32, "radius_ratio": 0.06, "taper": 0.6, "flare": 1.4, "bole_ratio": 0.45, "base_size": 0.3,
     "curve_deg": 10, "curve_var_deg": 16, "segments": 5, "lean_deg": 6, "stems": [1, 1], "stem_spread_deg": 0,

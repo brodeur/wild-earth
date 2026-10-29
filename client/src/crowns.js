@@ -163,6 +163,11 @@ export function* planCrownsSteps(tile, raw, { treeMix, dims: given, speciesIds }
     if ((q & (YIELD_EVERY - 1)) === 0) yield;
     const i = Math.min(W - 1, Math.max(0, Math.floor(x[q] / res))), j = Math.min(Hh - 1, Math.max(0, Math.floor((size - n[q]) / res)));
     let mix = treeMix(i, j), c = mix && cands(mix);
+    // The water system's zones (tile.water, 2026-10-29): a crown on a bank, terrace, pond shore or terrace is a tree of
+    // the zone's row (SpeciesMix.ripRow: willows, alder, cottonwood, sycamore...); one on the wet margin a margin tree
+    // (a willow) when the row has one; the gallery the lidar saw along the creeks is then those species.
+    const wz = tile.water && tile.water.info(x[q], n[q]);
+    if (wz && wz.zone && wz.zone !== 1 && wz.zone !== 5 && wz.zone !== 6) { const row = tile.speciesMix?.ripRow(wz); if (row?.treeSum) { const rc = cands(row.trees); if (rc.length) { mix = row.trees; c = rc; } } }
     if (!c || !c.length) {   // water, barren, or a row without trees: the nearest cell with a tree mix within 2 cells
       borrowed++; c = null;
       for (let d = 1; d <= 2 && !c; d++) for (let jj = j - d; jj <= j + d && !c; jj++) for (let ii = i - d; ii <= i + d && !c; ii++) {

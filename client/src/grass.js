@@ -547,6 +547,11 @@ function vnoise(x, y, s) {
 }
 // Field for bare patches (gopher workings, rock, trails), 11 m and 4 m: a few metres across, not
 // the 30 m bald spots a coarser field gave.
+// The water system (tile.water, 2026-10-29): the sward thins to a fifth on a channel's dry bed (gravel and cobble),
+// to nothing in a pond's basin and on its drawdown mud, and to half on the wet margin (the sedges and rushes of
+// emergents.js stand there instead); 1 elsewhere and on a tile without the grid.
+const ZONE_GRASS = [1, 0.2, 0.5, 1, 1, 0, 0, 0.8, 1];
+const zoneGrass = (tile, x, n) => tile.water ? ZONE_GRASS[tile.water.zone(x, n)] : 1;
 const bareField = (x, n) => 0.6 * vnoise(x / 11, n / 11, 3) + 0.4 * vnoise(x / 4, n / 4, 4);
 const smooth = (a, b, x) => { const t = Math.min(Math.max((x - a) / (b - a), 0), 1); return t * t * (3 - 2 * t); };
 // Needlegrass drifts (18 m and 6 m): needlegrass holds the thin-soiled knolls and old ground, the annuals
@@ -835,7 +840,7 @@ export class Grass {
   // Grass density at a point as the clump placement sees it (habitat x herb cover, bare patches,
   // decayed pavement and its verge, none on ponds or in stream channels), for the shells, tussocks and oats.
   swardDensity(x, n) {
-    const dens = this.sample(this.dens, x, n);
+    const dens = this.sample(this.dens, x, n) * zoneGrass(this.tile, x, n);
     if (dens <= 0 || waterAt(this.tile.waterMask, x, n) === 255) return 0;
     const herb = this.sample(this.herb, x, n), thr = 0.28 + 0.14 * (1 - herb), rw = this.tile.roads ? this.tile.roads.at(x, n) : 0;
     return Math.min(dens * smooth(thr - 0.1, thr + 0.1, bareField(x, n)) * (rw > 140 ? 0 : rw > 0 ? 0.5 : 1) * 1.15, 1) * rockKeep(this.tile, x, n);   // thin on outcrops
@@ -858,7 +863,7 @@ export class Grass {
     draw(i, j, k);
     const { habitat: hab, size, roads, waterMask: wm } = this.tile, res = hab.res, P = this._p;
     const ux = U[0], uy = U[1], keep = U[2], px = (i + ux) * res, pn = size - (j + uy) * res;
-    const dens = this.sample(this.dens, px, pn) * rockKeep(this.tile, px, pn);   // thin on outcrops too
+    const dens = this.sample(this.dens, px, pn) * rockKeep(this.tile, px, pn) * zoneGrass(this.tile, px, pn);   // thin on outcrops, the dry beds and the mud too
     if (keep >= dens) return false;
     // Decayed roads: no grass on the pavement, half density across the verge.
     const rw = roads ? roads.at(px, pn) : 0;
@@ -991,7 +996,7 @@ export class Grass {
       let any = 0;
       for (let b = 0; b < LN; b++) for (let a = 0; a < LN; a++) {
         const x = x0 + a * st, n = n0 + b * st, o = b * LN + a;
-        const dens = this.sample(this.dens, x, n) * rockKeep(tile, x, n), rw = roads ? roads.at(x, n) : 0;
+        const dens = this.sample(this.dens, x, n) * rockKeep(tile, x, n) * zoneGrass(tile, x, n), rw = roads ? roads.at(x, n) : 0;
         const herb = this.sample(this.herb, x, n), bare = bareField(x, n), thr = 0.28 + 0.14 * (1 - herb);
         const wet = wm && waterAt(wm, x, n) === 255;
         kf[o] = dens <= 0 || wet || rw > 140 ? 0 : dens * (rw > 0 ? 0.5 : 1) * (0.2 + 0.8 * smooth(thr - 0.06, thr + 0.06, bare));

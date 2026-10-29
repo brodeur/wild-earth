@@ -1,0 +1,53 @@
+{
+  "id": "urtica_dioica",
+  "aliases": ["stinging_nettle", "hoary_nettle", "nettle", "urtica_dioica_holosericea"],
+  "scientific": "Urtica dioica ssp. holosericea",
+  "common": "hoary nettle",
+  "form": "forb",
+  "lifespan": "perennial",
+  "native": true,
+  "height_m": [1.0, 2.5],
+  "description": "A tall, upright perennial 1-2.5 m high with square stems and opposite, coarsely toothed, heart-based leaves, the whole plant covered in stinging hairs and softer grey hairs; from early summer thin green strings of tiny flowers hang from the leaf joints. It grows in thick patches on the moist, shady terraces and margins of the creeks, and few animals but the caterpillars of a few butterflies touch it.",
+  "season_notes": {
+    "winter": "Dead brown stalks standing over new low shoots that come up with the rains.",
+    "spring": "Fresh, soft shoots grow fast in March-May: the time people gather them, with gloves, as greens.",
+    "summer": "Head-high stands; drooping strings of tiny green flowers from June into September.",
+    "fall": "Leaves yellowing, the stalks drying to brown and standing into winter."
+  },
+  "status": "agent draft, needs local sign-off",
+  "ground": {
+    "habit": "erect",
+    "leaf": { "shape": "ovate", "size_m": 0.1, "rgb": [92, 120, 72] },
+    "flower": { "shape": "spike", "rgb": [150, 160, 112], "size_m": 0.06, "months": [6, 9], "per_plant": 8 },
+    "height_by_month": [0.15, 0.25, 0.45, 0.7, 0.9, 1.0, 1.0, 1.0, 0.9, 0.7, 0.35, 0.15],
+    "dead_rgb": [150, 132, 104],
+    "density": 0.7
+  },
+  "habitat": {
+    "classes": { "riparian": 1.0, "oak_woodland": 0.15, "mixed_forest": 0.2, "conifer_forest": 0.05 },
+    "floor": 2.0, "mid": 0.3, "steep": 0.3, "north": 1.3, "shade": 0.6, "disturbed": 1.3,
+    "riparian": {
+      "zones": { "terrace": 1.0, "margin": 0.7, "bank": 0.6, "pond_shore": 0.4, "pond_terrace": 0.4 },
+      "orders": [1, 6],
+      "permanence": "intermittent",
+      "water": "Wants rich, moist soil in part shade through the growing season: shaded creek terraces and margins, seeps and the damp ground round springs and ponds."
+    }
+  },
+  "relations": {
+    "eaten_by": [
+      { "animal": "odocoileus_hemionus", "part": "leaves", "seasons": ["spring"] }
+    ],
+    "cover_for": ["microtus_californicus"],
+    "shades_water": 0
+  },
+  "notes": "Hoary nettle (Urtica dioica ssp. holosericea, the native western nettle; in some treatments Urtica dioica ssp. gracilis) is a rhizomatous perennial of moist, rich, often shaded ground along streams, seeps and springs, around old corrals and other nitrogen-rich spots, from the valley into the mountains. Stems 1-3 m, erect, four-angled, little branched, in dense clonal patches (density 0.7): habit erect. Leaves opposite, 5-15 cm, lance-ovate to ovate with a rounded or heart-shaped base and coarse saw teeth, dark green, grey-hairy beneath (holosericea: silky all over), with stinging hairs: leaf shape ovate, 10 cm. Flowers tiny, greenish, in thin, branched, drooping strings from the leaf axils, June-September (male and female often on the same plant in this subspecies): flower shape spike, greenish, size 6 cm. The stems die to the ground in late fall and stand brown (dead_rgb) while new shoots rise with the rains (height_by_month 0.15 in winter). Animals mostly leave it: deer may take the young shoots in spring; voles shelter in the stands. The young tops are a cooked green and the stem fibre was made into cordage. Zones: the terrace first, the margin and bank, the ground round ponds; shade 0.6. shades_water 0.",
+  "sources": [
+    "https://ucjeps.berkeley.edu/eflora/ (Urtica dioica subsp. holosericea)",
+    "https://www.calflora.org/ (Urtica dioica ssp. holosericea)",
+    "https://calscape.org/ (Urtica dioica ssp. holosericea)",
+    "https://en.wikipedia.org/wiki/Urtica_dioica",
+    "https://www.fs.usda.gov/database/feis/ (Urtica dioica, where covered)"
+  ],
+  "authors": ["Wild Earth (agent draft, 2026-10-29); needs local sign-off"],
+  "license": "CC BY-SA 4.0"
+}

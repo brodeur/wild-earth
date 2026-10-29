@@ -185,6 +185,9 @@ export function drawnSeed(id, v, level) {
 // the meadow cells' scattered oaks are cellPlan's savanna rule and are left alone.
 export function placementSkip(tile, i, j, k, px, pn, isTree, plant = true, name = null) {
   const roads = tile.roads, rw = roads ? roads.at(px, pn) : 0;
+  // The water system (tile.water, 2026-10-29): nothing woody in a channel's bed, a pond's basin or its drawdown
+  // margin; on the wet margin only the bank species (BANK: the willows, alder) and the shrubs.
+  if (plant && tile.water) { const wz = tile.water.zone(px, pn); if (wz === 1 || wz === 5 || wz === 6 || (wz === 2 && isTree && !(name && BANK[resolveSpecies(name)]))) return true; }
   if (rw > 140 || (isTree && rw > 0 && hash(k, i + j * 4096, 13) / 4294967296 < rw / 255)) return true;
   if (plant && tile.outcrop) { const rk = rockKeep(tile, px, pn); if (rk < 1 && hash(k, i + j * 4096, 41) / 4294967296 > rk) return true; }
   if (plant && isTree && tile.rewild && tile.speciesMix?.at(i, j)?.rule === 'rewilded_riparian'
@@ -206,7 +209,7 @@ export function placementSkip(tile, i, j, k, px, pn, isTree, plant = true, name 
 // the 12 m corridor (pipeline/rewild_hydro.py CORRIDOR_M) so the bed rule does not thin it. A move that
 // would land in water (another reach, a pond), on a road (any width) or off the tile is not made: the
 // plant keeps its drawn position. Cottonwood and every other species stay where they fall.
-const BANK = { salix_lasiolepis: [2, 10], alnus_rhombifolia: [3, 15] }, PULL_M = 30, CORRIDOR_M = 12;
+const BANK = { salix_lasiolepis: [2, 10], alnus_rhombifolia: [3, 15], salix_laevigata: [3, 14], salix_lasiandra: [3, 12], salix_exigua: [1, 6], cephalanthus_occidentalis: [1, 6], cornus_sericea: [2, 10] }, PULL_M = 30, CORRIDOR_M = 12;
 const placed = { x: 0, n: 0 };
 // Nearest channel centreline (a segment with a channel, s[4] > 0, or any reach with `swales`) within
 // PULL_M of (x, north): [distance, half-width, nearest point x, north], or null. The water mask's
@@ -253,14 +256,41 @@ export function placePlant(tile, i, j, k, name, px, pn, isTree) {
   placed.x = px; placed.n = pn; return placed;
 }
 
+// The species plant k of cell (i, j) drawn at (px, pn) becomes on the water system's riparian zones (tile.water,
+// 2026-10-29): on a bank, a terrace, a pond's shore or terrace the zone row's trees or shrubs (SpeciesMix.ripRow,
+// pipeline species_mix.py riparian_rows) replace the cell's draw, by a hash of the plant (salt 53), never the cell's
+// stream, so nothing else moves; on the wet margin a tree becomes a margin tree (a willow) when the row has one.
+// Elsewhere, or on a tile without the grid, the name is returned as it is. The far impostors (impostors.js) call it
+// too, so a tree is one species on both sides of the hand-over.
+export function zoneSpecies(tile, i, j, k, isTree, name, px, pn) {
+  const W = tile.water, M = tile.speciesMix; if (!W || !M?.rip?.size) return name;
+  const z = W.info(px, pn); if (!z.zone || z.zone === 1 || z.zone === 5 || z.zone === 6) return name;
+  const row = M.ripRow(z); if (!row) return name;
+  const mix = isTree ? row.trees : row.shrubs;
+  if (!(isTree ? row.treeSum : row.shrubSum)) return name;
+  const u = hash(k, i + j * 4096, 53) / 4294967296;
+  let acc = 0, last = name;
+  for (const [id, w] of Object.entries(mix)) { if (!resolveSpecies(id)) continue; acc += w; last = id; if (u < acc) return id; }
+  return last;
+}
+// The extra trees of a cell's riparian gallery (tile.water cellShare: the share of the 30 m cell on a bank, terrace,
+// pond shore or terrace), beyond the cell's own count: a gallery runs about a tree per RIP_TREE_M2, times the zone's
+// tree density (the row's); 0 on a crown tile (the lidar's crowns are the gallery) or without the grid.
+const RIP_TREE_M2 = 60;
+export function riparianExtra(tile, i, j, crowns) {
+  const W = tile.water; if (!W || crowns || !tile.speciesMix?.rip?.size) return 0;
+  const res = tile.habitat.res, [woody] = W.cellShare(i, j, res); if (woody <= 0) return 0;
+  return Math.round(woody * res * res / RIP_TREE_M2 * 1.3 + (hash(i, j, 59) / 4294967296));
+}
+
 // The species (canonical ids) a tile can place: every species its mix rows draw, plus the class
 // mixes' (cells without a row). Vegetation builds meshes and the far impostors bake trees only for these,
 // so a library of any size costs a tile only what it grows.
 export function tileSpecies(tile) {
   const out = new Set();
   for (const m of [...Object.values(MIX), ...Object.values(SHRUB_MIX)]) for (const k of Object.keys(m)) out.add(resolveSpecies(k));
-  for (const k of tile.speciesMix?.species || []) { const id = resolveSpecies(k); if (id) out.add(id); }
-  return SPECIES_IDS.filter(id => out.has(id) && !SPECIES[id].groundForm);   // library order; never a grass or forb (grass.js, forbs.js)
+  for (const k of tile.speciesMix?.species || []) { const id = resolveSpecies(k); if (id) out.add(id); }   // the riparian rows' trees and shrubs are in it too
+  return SPECIES_IDS.filter(id => out.has(id) && !SPECIES[id].groundForm);   // library order; never a grass, forb or emergent (grass.js, forbs.js, emergents.js)
 }
 // The month (1 to 12.99) a season stands for in the client: today's date when the season is today's,
 // else the season's middle month (treegen seasonMonth), for leaf_on_by_month, flowers and berries.
@@ -548,13 +578,17 @@ export class Vegetation {
       const cx = (i + 0.5) * res, cn = size - (j + 0.5) * res;
       if (Math.hypot(cx - x, cn - north) > r) continue;
       const plan = cellPlan(tile, i, j); if (!plan) continue;
-      const { rnd, nTrees, nShrubs, treeMix, shrubMix } = plan;
-      for (let k = 0; k < nTrees + nShrubs; k++) {
-        const isTree = k < nTrees;
-        const name = pick(isTree ? treeMix : shrubMix, rnd());
-        const sid = resolveSpecies(name), variants = this.slots[sid], e = variants[Math.floor(rnd() * variants.length)], m = e.mid;   // slot draw as before: VARIANTS slots, weighted by class
-        const px = (i + rnd()) * res, pn = size - (j + rnd()) * res;
+      const { rnd, nTrees, nShrubs, treeMix, shrubMix } = plan, nRip = riparianExtra(tile, i, j, crowns);
+      for (let k = 0; k < nTrees + nShrubs + nRip; k++) {
+        const isTree = k < nTrees || k >= nTrees + nShrubs, rip = k >= nTrees + nShrubs;
+        let name = pick(isTree ? treeMix : shrubMix, rnd());
+        const vdraw = rnd();
+        let px = (i + rnd()) * res, pn = size - (j + rnd()) * res;
         const s = 0.75 + rnd() * 0.5, rot = rnd() * Math.PI * 2;   // all draws before any skip, so neighbours keep their place
+        if (rip) { const at = tile.water.woodyPoint(i, j, res, hash(k, i + j * 4096, 61) / 4294967296); if (!at) continue; px = at[0] + (hash(k, i, 63) / 4294967296 - 0.5) * 5; pn = at[1] + (hash(k, j, 67) / 4294967296 - 0.5) * 5; }
+        name = zoneSpecies(tile, i, j, k, isTree, name, px, pn);   // a bank, terrace or pond-shore plant takes its zone's species
+        const sid = resolveSpecies(name), variants = this.slots[sid]; if (!variants) continue;
+        const e = variants[Math.floor(vdraw * variants.length)], m = e.mid;   // slot draw as before: VARIANTS slots, weighted by class
         if (isTree && crowns) continue;   // after the draws, so the shrubs stand where they always did
         if (m.n >= m.cap) continue;   // after the draws: a full model slot must not shift the rest of the cell (impostors use the same sequence)
         // Decayed roads: nothing on the pavement; trees thin out across the verge (shrubs creep in).

@@ -1,0 +1,55 @@
+{
+  "id": "carex_barbarae",
+  "aliases": ["santa_barbara_sedge", "white_root_sedge", "whiteroot"],
+  "scientific": "Carex barbarae",
+  "common": "Santa Barbara sedge",
+  "form": "emergent",
+  "lifespan": "perennial",
+  "native": true,
+  "height_m": [0.5, 1.0],
+  "description": "A sedge of arching, keeled, bright green blades 0.5-1 m long that spreads by long white rhizomes into a continuous sward on the wet ground beside creeks and ponds, with slim brown flower spikes on triangular stems in spring. Its rhizomes are the white root of the finest California baskets, and weavers tended its beds along the creeks for generations.",
+  "season_notes": {
+    "winter": "Green again after the rains, with last year's tan blades lying in the sward.",
+    "spring": "Triangular stems rise with slim dark brown spikes in April-June, the male spikes at the top shedding pollen.",
+    "summer": "Arching green blades where the ground stays damp; tips browning where it dries.",
+    "fall": "Blades tan at the ends, green at the base."
+  },
+  "status": "agent draft, needs local sign-off",
+  "ground": {
+    "habit": "sedge",
+    "palette": {
+      "winter": {"root": [86, 104, 66], "tip": [120, 132, 88], "head": [104, 84, 62]},
+      "spring": {"root": [78, 104, 60], "tip": [112, 140, 74], "head": [108, 82, 58]},
+      "summer": {"root": [84, 104, 64], "tip": [140, 140, 94], "head": [132, 106, 72]},
+      "fall": {"root": [94, 102, 70], "tip": [158, 146, 104], "head": [130, 108, 80]}
+    },
+    "heads": {"shape": "spike", "months": [4, 6]},
+    "clump_m": 0.6,
+    "stems": 40,
+    "height_by_month": [0.6, 0.7, 0.85, 1.0, 1.0, 1.0, 0.95, 0.9, 0.85, 0.8, 0.7, 0.6],
+    "density": 1.0
+  },
+  "habitat": {
+    "classes": {"riparian": 1.0, "grassland": 0.05, "oak_woodland": 0.05},
+    "floor": 2.2, "mid": 0.2, "steep": 0.1, "north": 1.1, "shade": 0.3, "disturbed": 0.6,
+    "riparian": {
+      "zones": {"margin": 1.0, "pond_shore": 1.0, "bank": 0.8, "terrace": 0.4, "pond_margin": 0.3},
+      "orders": [1, 6],
+      "permanence": "any",
+      "water": "Wants ground wet in winter and spring and damp into summer: creek margins and banks, pond shores and seasonally wet swales; it goes partly dormant where the soil dries."
+    }
+  },
+  "relations": {
+    "eaten_by": [
+      {"animal": "odocoileus_hemionus", "part": "leaves", "seasons": ["winter", "spring"]},
+      {"animal": "microtus_californicus", "part": "leaves", "seasons": ["winter", "spring", "summer"]},
+      {"animal": "sylvilagus_bachmani", "part": "leaves", "seasons": ["winter", "spring"]}
+    ],
+    "cover_for": ["microtus_californicus"],
+    "shades_water": 0
+  },
+  "notes": "Santa Barbara sedge (white root) is a rhizomatous sedge of moist ground in the California foothills, valley and coast ranges: creek margins and banks, pond shores, wet swales and floodplain flats. Drawn by the emergent module: habit sedge, a tussock of arching, keeled (V-shaped) blades 3-8 mm wide, 0.5-1 m long, bright to yellowish green; it spreads by long, straight, white rhizomes into a sward, so clump_m 0.6 with 40 blades is one tuft of a continuous stand, and density 1.0. Flowering stems triangular, 30-100 cm, with one or two slender male spikes at the top and several cylindrical female spikes below, dark brown to purplish with paler margins, April-June: heads spike. Partly evergreen: the blades stay green at the base where the soil stays damp, browning at the tips in summer and fall (summer and fall tips tan; height_by_month 0.6 in winter after the old blades lie down). Zones: the wet margin and the pond shore first, the bank second, the terrace and a pond's shallows a little; any creek, including the ephemeral swales of order 1 (permanence any). It is the classic basketry sedge of central California: Pomo, Miwok, Maidu and other weavers dig and split its rhizomes for the white weft, and tended beds of it along the creeks by digging, which keeps the rhizomes long and straight. Deer and rabbits graze the green blades; voles graze and run in it (cover). shades_water 0.",
+  "sources": ["https://ucjeps.berkeley.edu/eflora/ (Carex barbarae)", "https://www.calflora.org/ (Carex barbarae)", "https://calscape.org/ (Carex barbarae)", "https://en.wikipedia.org/wiki/Carex_barbarae"],
+  "authors": ["Wild Earth (agent draft, 2026-10-29); needs local sign-off"],
+  "license": "CC BY-SA 4.0"
+}

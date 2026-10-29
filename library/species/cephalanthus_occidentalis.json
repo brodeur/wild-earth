@@ -1,0 +1,88 @@
+{
+  "id": "cephalanthus_occidentalis",
+  "aliases": ["buttonbush", "button_willow", "buttonwillow"],
+  "scientific": "Cephalanthus occidentalis",
+  "common": "buttonbush",
+  "form": "shrub",
+  "architectural_model": "Leeuwenberg (provisional: each shoot ends in a flower head and branches below it in pairs or threes)",
+  "deciduous": true,
+  "height_m": [2, 4],
+  "variants": [
+    {"name": "young", "weight": 0.25, "height_m": [0.8, 2], "crown_scale": 0.85, "branches": 0.7, "set": {"trunk": {"stems": [3, 5], "stem_spread_deg": 30}}, "note": "a few young stems at the water's edge"},
+    {"name": "mature", "weight": 0.5, "seeds": 1, "note": "the file as written: a rounded, irregular shrub of crooked stems standing in the shallows"},
+    {"name": "old", "weight": 0.25, "height_m": [3.5, 5], "crown_scale": 1.12, "gnarl": 1.3, "deadwood": {"fraction": 0.2, "levels": [0, 1], "where": "inner", "shorten": 0.7, "rgb": [140, 132, 122]}, "set": {"trunk": {"stems": [6, 11], "lean_deg": 14}}, "note": "an old clump with thick, crooked, swollen-based trunks and dead limbs"}
+  ],
+  "description": "A many-stemmed shrub 2-4 m tall with glossy, pointed leaves in pairs or threes, and in summer round white flower balls the size of a golf ball, bristling with long styles like pins in a pincushion. It stands with its feet in the water at the edges of ponds, sloughs and slow reaches of the creeks, and its seed balls turn brown and hang on into winter.",
+  "season_notes": {
+    "winter": "Bare, crooked grey-brown stems standing in the water, hung with brown, knobbly seed balls.",
+    "spring": "Leafs out late, in April and May, bright glossy green.",
+    "summer": "White pincushion flower balls from June to August, sweet-scented, crowded with bees and butterflies.",
+    "fall": "The flower balls ripen to hard reddish-brown spheres; the leaves yellow and drop."
+  },
+  "status": "agent draft, needs local sign-off",
+  "habitat": {
+    "classes": {"riparian": 1.0},
+    "floor": 2.4, "mid": 0.05, "steep": 0.05, "north": 1.0, "shade": 0.15, "disturbed": 0.6,
+    "riparian": {
+      "zones": {"margin": 1.0, "pond_shore": 1.0, "pond_margin": 0.6, "bank": 0.5},
+      "orders": [2, 7],
+      "permanence": "perennial",
+      "water": "Stands in shallow, slow or still water or in mud that stays saturated all summer: pond edges, sloughs, backwaters and slow pools, not the fast riffles."
+    }
+  },
+  "relations": {
+    "eaten_by": [
+      {"animal": "odocoileus_hemionus", "part": "browse", "seasons": ["summer"]}
+    ],
+    "cover_for": ["sylvilagus_bachmani"],
+    "shades_water": 0.3
+  },
+  "trunk": {
+    "length_ratio": 0.7, "radius_ratio": 0.02, "taper": 0.75, "flare": 1.35, "bole_ratio": 0.1, "base_size": 0.18,
+    "curve_deg": 18, "curve_var_deg": 18, "segments": 3, "lean_deg": 10, "stems": [4, 8], "stem_spread_deg": 40,
+    "split_prob": 0.0, "split_count": 2, "split_angle_deg": 20, "sinuous_deg": 7, "bark_rgb": [116, 104, 92],
+    "bark_pattern": "furrowed", "twig_rgb": [134, 104, 82],
+    "bark": {"tile_m": [0.1, 0.3], "ridge_m": 0.008, "block_m": 0.025, "fissure": 0.35, "contrast": 0.5, "lichen": 0.2, "relief": 0.5}
+  },
+  "crown": {
+    "shape": "hemispherical",
+    "envelope": {"profile": [[0.05, 0.35], [0.2, 0.5], [0.4, 0.58], [0.6, 0.57], [0.76, 0.48], [0.9, 0.3], [1.0, 0.1]], "lobes": 5, "lobe_depth": 0.2, "asymmetry": 0.22, "fill": 0.6, "edge": 1.1}
+  },
+  "levels": [
+    {
+      "count": 6, "start": 0.15, "down_angle_deg": 48, "down_angle_tip_deg": 36, "down_angle_var_deg": 14, "rotation_deg": -90, "rotation_var_deg": 25,
+      "length_ratio": 0.6, "length_var": 0.3, "curve_deg": 10, "curve_var_deg": 18, "zigzag_deg": 8, "tropism": 0.02, "taper": 0.9,
+      "radius_ratio": 0.55, "segments": 2
+    },
+    {
+      "count": 4, "start": 0.3, "down_angle_deg": 42, "down_angle_var_deg": 14, "rotation_deg": -90,
+      "rotation_var_deg": 20, "length_ratio": 0.45, "length_var": 0.3, "curve_deg": 4, "curve_var_deg": 16,
+      "tropism": 0.03, "taper": 1.0, "radius_ratio": 0.5, "segments": 1
+    }
+  ],
+  "foliage": {
+    "type": "broadleaf", "leaf_size_m": 0.11, "leaf_shape": "elliptic_glossy", "cluster_m": 0.55, "density": 16, "cards_per_m2": 3.5, "leaf_fill": 2.0,
+    "start": 0.05, "parent_start": 0.25, "orientation": "outward", "roll_deg": 45,
+    "colors": {"winter": [134, 104, 82], "spring": [118, 146, 76], "summer": [98, 118, 74], "fall": [160, 146, 80]},
+    "leaf_on": {"winter": 0.0, "spring": 0.6, "summer": 1.0, "fall": 0.6},
+    "leaf_on_by_month": [0.0, 0.0, 0.05, 0.4, 0.85, 1.0, 1.0, 1.0, 0.95, 0.75, 0.3, 0.0],
+    "clumps": {"radius_m": 0.35, "cards_per_clump": 6, "shell": 0.15, "flatten": 0.75, "tip_bias": 1.0},
+    "palette": [[0.85, [1, 1, 1]], [0.15, [1.15, 1.12, 1.0]]], "winter_twigs": 0.45, "ao_min": 0.7,
+    "color_var": [0.07, 0.05], "leaf_on_var": 0.5,
+    "flowers": {"season": "summer", "months": [6, 8], "form": "bud", "rgb": [240, 236, 222], "size_m": 0.035, "density": 0.5, "before_leaves": false},
+    "berries": {"season": ["fall", "winter"], "months": [9, 1], "form": "bud", "rgb": [124, 84, 58], "size_m": 0.025, "density": 0.4}
+  },
+  "deadwood": {"fraction": 0.06, "where": "inner", "levels": [0, 1], "shorten": 0.7, "rgb": [140, 132, 122]},
+  "twigs": {"count": [1, 2], "length": 0.6, "down_deg": 42, "down_var_deg": 14, "curve_var_deg": 18, "segments": 1, "radius_m": 0.005, "taper": 0.6, "zigzag_deg": 10, "fan_deg": 45, "jitter": 0.2},
+  "lod": {
+    "near_tris_budget": 1300, "near_sides": [4, 3, 0], "mid_blobs": 3, "mid_branches": 2, "mid_sides": [3, 3], "mid_cards": 32
+  },
+  "targets": {
+    "crown_width_ratio": 1.2, "crown_base_ratio": 0.12, "porosity": 0.25, "foliage_rg": 0.67, "foliage_bg": 0.38,
+    "from": "judgement values (2026-10-29) from knowledge of the species, not measured: no photographs were fetched for this draft. A rounded, irregular, somewhat open shrub a little wider than tall, leafy nearly to the water; colour is the linear r/g and b/g of the file's summer leaf colour, a glossy green. A reviewer should replace these with values measured from local photographs"
+  },
+  "notes": "Buttonbush (button willow) is a deciduous shrub 1-5 m of pond and lake edges, sloughs, backwaters and slow, permanent reaches, in California mostly in the Central Valley and the low foothills (below about 500 m here, at the bottom of the game's range); it is one of the few woody plants that grows standing in water for months. Form: plain 'shrub'. Four to eight crooked, often leaning stems with swollen, buttressed bases in the water (stems [4, 8], flare 1.35, sinuous), branching in pairs or threes (rotation -90: opposite to whorled), into a rounded, irregular, open crown a little wider than tall. Bark grey-brown, becoming furrowed on old trunks (bark_pattern furrowed). Leaves opposite or in whorls of three, ovate to lanceolate, 7-15 cm, pointed, glossy bright green: leaf_shape elliptic_glossy, leaf_size_m 0.11. It leafs out late (April-May) and is bare December-March (leaf_on_by_month). Flowers in dense spherical heads 2-4 cm, white to cream, with long protruding styles (the pincushion), June-August: flowers form bud (a round knob is the closest form), size_m 0.035, white. Fruit the same ball ripening to a hard reddish-brown cluster of nutlets that hangs on the bare stems into winter: berries form bud, brown, months [9, 1]. The foliage is reported toxic to livestock and is little browsed (eaten_by: deer, summer, lightly); its seeds feed waterfowl, which the game has none of yet. Zones: the margin and the pond shore first (it stands in the water), the bank of slow reaches; permanence perennial; orders [2, 7] where the water is slow. Architectural model provisional.",
+  "sources": ["https://www.fs.usda.gov/database/feis/plants/shrub/cepocc/all.html", "https://ucjeps.berkeley.edu/eflora/ (Cephalanthus occidentalis)", "https://www.calflora.org/ (Cephalanthus occidentalis)", "https://calscape.org/ (Cephalanthus occidentalis)", "https://en.wikipedia.org/wiki/Cephalanthus_occidentalis"],
+  "authors": ["Wild Earth (agent draft, 2026-10-29); needs local sign-off"],
+  "license": "CC BY-SA 4.0"
+}

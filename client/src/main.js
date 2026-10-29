@@ -9,6 +9,7 @@ import { Vegetation, crownPlan } from './vegetation.js';
 import { Impostors } from './impostors.js';
 import { Grass } from './grass.js';
 import { Forbs } from './forbs.js';
+import { Emergents } from './emergents.js';
 import { SPECIES } from './trees.js';
 import { MiniMap } from './minimap.js';
 import { RoadsOverlay } from './roadsOverlay.js';
@@ -186,7 +187,7 @@ async function disposeWorld(w, renderer) {
   if (m.weather) m.weather.onThunder = null;
   m.abilities?.dispose?.();   // the body's row: its slots go, the row hides (abilities.js)
   if (fieldGuide.game === m.acorns) { fieldGuide.game = null; fieldGuide.log = []; fieldGuide.anchor = null; }   // the page's field guide (identify.js attached the game)
-  m.water?.dispose?.(); m.shadows?.dispose?.(); m.terrain?.dispose?.(); m.litter?.dispose?.(); m.scent?.dispose?.(); m.sight?.dispose?.(); m.cues?.dispose?.(); m.grass?.dispose?.(); m.forbs?.dispose?.(); m.veg?.dispose?.(); forgetQueuedCasters();
+  m.water?.dispose?.(); m.shadows?.dispose?.(); m.terrain?.dispose?.(); m.litter?.dispose?.(); m.scent?.dispose?.(); m.sight?.dispose?.(); m.cues?.dispose?.(); m.grass?.dispose?.(); m.forbs?.dispose?.(); m.emergents?.dispose?.(); m.veg?.dispose?.(); forgetQueuedCasters();
   // then its listeners and the elements it put into the page; the HUD's own words back as the page had them
   for (const r of w.observer.takeRecords()) { for (const n of r.addedNodes) if (n.nodeType === 1) w.nodes.add(n); for (const n of r.removedNodes) w.nodes.delete(n); }
   w.observer.disconnect();
@@ -379,6 +380,7 @@ async function buildSteps(w, { params, pending, direct = false, arrive = null })
   await w.next('grass');
   const grass = w.m.grass = new Grass(tile, scene); await w.sliced(grass.build(), 'grass');
   const forbs = w.m.forbs = new Forbs(tile, scene, grass);   // the herbs: poppies, lupines, clover, filaree... within 45 m (forbs.js)
+  const emergents = w.m.emergents = new Emergents(tile, scene);   // cattail, tule, the sedges and rushes of the water system's margins (emergents.js)
   await w.next('water');
   const water = w.m.water = new Water(tile, scene); await w.sliced(water.build(), 'water');   // streams, dry beds and ponds by season (water.js)
   await w.next('rocks');
@@ -508,7 +510,7 @@ async function buildSteps(w, { params, pending, direct = false, arrive = null })
 
   // Species identification: HUD rows, click a tree for its card, T toggles name tags (identify.js).
   await w.next('identify');
-  const identify = new Identify({ veg, grass, forbs, camera, dom: renderer.domElement, scene, flight, acorns, seasonNow,
+  const identify = new Identify({ veg, grass, forbs, emergents, camera, dom: renderer.domElement, scene, flight, acorns, seasonNow,
     els: { nearest: $('nearestTree'), around: $('aroundYou'), card: $('speciesCard') } });
 
   // Ambient animals (animals.js): squirrels, acorn woodpeckers, other ravens, deer, filtered by perception.
@@ -533,6 +535,7 @@ async function buildSteps(w, { params, pending, direct = false, arrive = null })
   needs.plantName = id => SPECIES[id]?.common || id.replace(/_/g, ' ');
   needs.plantHere = (x, north, ids) => {
     const f = forbs.nearest(x, -north, 1.5, ids); if (f) return f.species;
+    const em = emergents.nearest(x, -north, 1.5, ids); if (em) return em.species;
     let best = null, bd = 9;
     for (const q of veg.nearPlants) { if (!ids.has(q.species)) continue; const d = Math.hypot(q.x - x, q.z + north) - 0.5 * (q.radius || 1); if (d < 3 && d < bd) { bd = d; best = q.species; } }
     if (best) return best;
@@ -631,7 +634,7 @@ async function buildSteps(w, { params, pending, direct = false, arrive = null })
   const setFov = deg => { const v = Math.min(LENS_RANGE[1], Math.max(LENS_RANGE[0], +deg || LENS_DEFAULT)); camera.fov = v; camera.updateProjectionMatrix(); return v; };
   const setHour = h => { state.hour = +h; $('time').value = state.hour; return state.hour; };
   animals.weatherTemp = () => (weather.day ? weather.fx.temp : null);   // the lizards' air (animals.js airT)
-  w.handle = window.__we = { setDate, setFov, setHour, weather, tile, flight, raven, camera, veg, terrain, far, grass, forbs, roads, scene, renderer, minimap, atmosphere, sky, acorns, identify, places, peek, setPeek, sound, animals, arrival, rocks, water, waterfalls: water.waterfalls, squirrel, woodpecker, ground, flier, spirit, credits, sight, cues };   // debugging handle
+  w.handle = window.__we = { setDate, setFov, setHour, weather, tile, flight, raven, camera, veg, terrain, far, grass, forbs, emergents, roads, scene, renderer, minimap, atmosphere, sky, acorns, identify, places, peek, setPeek, sound, animals, arrival, rocks, water, waterfalls: water.waterfalls, squirrel, woodpecker, ground, flier, spirit, credits, sight, cues };   // debugging handle
   const as = direct ? params.get('as') : null;
   if (!['raven', 'squirrel', 'woodpecker'].includes(as)) toSpirit();   // a spirit from the start (behind the opening screen too)
   if (!screenOpen) makeSound();
@@ -823,6 +826,7 @@ async function buildSteps(w, { params, pending, direct = false, arrive = null })
     far.update(camera, veg.radius);
     grass.update(flight.pos.x, flight.pos.z, dt, camera, look);
     forbs.update(camera, look);
+    emergents.update(camera, look);
     water.update(dt, look);
     rocks.update(camera);
     litter.update(dt, camera, flight.pos);
