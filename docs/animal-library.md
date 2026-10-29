@@ -563,3 +563,23 @@ clip set beside it is drawn skinned instead of by the part rig, still one Instan
   Eating (180), Walk (35; stride 0.65 m, left fore touchdown at 0.4, authored at 0.56 m/s), Gallop (15; stride set to
   3 m), bed (1, synthetic). Open: no trot clip (the Walk hurries, capped at 2.6 Hz), no eared alert pose, the lineup page
   shows the first frame only.
+
+
+## What the animals eat and hide in (2026-10-29)
+
+The plant records carry the animals (`library/species/<id>.json` `relations`: `eaten_by` [{animal, part, seasons}],
+`cover_for` [animal ids]; the schema in `docs/species-library.md`, "Grasses, herbs and shrubs of the foothill
+understory"), so the food web is written once, on the plant's side, and `pipeline/games.py` turns it into each
+tile's `games.json` `relations.forage` ([animal, plant, part, resource, seasons]: a grass's or herb's leaves, seeds,
+flowers, bulbs and roots are the grass_forbs resource, a shrub's leaves, flowers and berries browse, acorns
+acorn_mast) and `relations.cover`, and lists each gather game's `plants`. On the home tile: 187 forage relations.
+A deer browses buckbrush, deerbrush, mountain mahogany, toyon, coffeeberry, redbud, wild rose, snowberry, poison
+oak, elderberry, monkeyflower and the manzanitas, and grazes the grasses, filaree, clover, vetch, miner's lettuce,
+mule's ears and the poppy in spring; the brush rabbit and the jackrabbit graze filaree, clover, vetch, the annual
+grasses and needlegrass and hide in buckbrush, coyote brush, poison oak, toyon, wild rose and snowberry; the vole
+grazes the grasses, filaree, popcorn flower and clover and digs blue dicks; the ground squirrel takes the grass
+seed, filaree, clover and the corms; the quail take seed of the grasses, filaree, lupine, fiddleneck, popcorn
+flower and madia and the berries of toyon, snowberry, coffeeberry, elderberry and poison oak, and hide in
+buckbrush, coyote brush, toyon, wild rose and the tall grasses; the turkey the acorns, the grass seed, poison
+oak's and elderberry's berries. The client reads it in `needs.js` (the plant under a feeding body is named: "blue
+dicks here: hold E") and `identify.js` (every plant card's "eaten by" and "shelter for" lines).

@@ -2515,3 +2515,70 @@ with the trees, and cascade 1 keeps the pose it last rendered (under its 0.6 m t
 casters and the contact AO are unchanged. Verified: no shader errors in the caster programs, cascade 0 rendering
 every frame, 37.7 fps as a deer with the wind pinned at 0.6. Not verified: the shadows' motion frame to frame (the
 light at the spot was hazy; the motion follows from the shared functions). Open in the wind: the rhythm by eye.
+
+## 2026-10-29: the understory. Grasses, herbs and shrubs the animals live in and on
+
+Aaron: "Can we add more grass and shrub and herb species - especially for terrestrial animals." Thirty species join
+the library (56 now; `docs/species-library.md`, "Grasses, herbs and shrubs of the foothill understory"), every one an
+agent draft, CC BY-SA 4.0, needing local sign-off, with the animals written into the records for the first time
+(`relations.eaten_by` and `cover_for`) and where each belongs (`habitat`: class weights, floor / mid / steep / north,
+shade, disturbed ground). Nothing downloaded: the plants are procedural.
+
+- **Nine shrubs**, grown by the tree generator and drawn by the shrub impostor field like the six of 2026-10-26: common
+  manzanita, buckbrush and deerbrush (the ceanothus), birch-leaf mountain mahogany, sticky monkeyflower, California
+  wild rose, snowberry, Sierra gooseberry and chaparral currant. The species mix (`pipeline/species_mix.py`
+  UNDERSTORY_SHRUBS, TERRAIN) weights them per community: buckbrush leads the dry chaparral and the blue oak slopes,
+  deerbrush the pine and black oak belt above about 525 m, mountain mahogany and monkeyflower the rock, snowberry
+  the north slopes and the oak understory, wild rose the floors and the riparian strips. The impostor field
+  (`shrubfield.js`) now takes every shrub of the library but chamise and manzanita (FH, kinds -1 down, up to 16) with a
+  look table (FH_LOOK: lobes, fringe, vase, fine leaves) instead of six hard-wired constants. Home tile shrub shares:
+  chamise 21%, manzanita 19, buckbrush 11, poison oak 8, coyote brush 5, monkeyflower 5, snowberry 4, toyon 4,
+  mountain mahogany 4, wild rose 4, common manzanita 3, coffeeberry 3, gooseberry 2, redbud 2, currant 1, deerbrush 1,
+  elderberry 1.
+- **Seven grasses** (`form: "grass"`): purple needlegrass, blue wildrye, California oatgrass, wild oat, soft chess,
+  ripgut brome and hare barley. `grass.js` draws every plant as a species now: the blades, the body tier and the cards
+  carry a species index (the instance code's 64s; the cards' kind + 8 species), the shaders read the species' season
+  palette (root, tip, head, awn) and whether its heads show from uniform arrays, and the plant's clump is scaled by
+  the species' height and width (blue wildrye 1.5x the bunch, hare barley 0.6x the annual). The species comes from the
+  cell's ground mix (below) by type: the needlegrass share and its drifts still decide annual against bunch, so the
+  sward's pattern is as it was, and the wild oat stands are the wild oat. The old two palettes are the wild oat's and
+  the needlegrass's records, so the sward is the colour it was where they are placed.
+- **Fourteen herbs** (`form: "forb"`), a new layer (`forbs.js`): California poppy, miniature and silver bush lupine,
+  miner's lettuce, tomcat clover, soap plant, yarrow, gray mule's ears, blue dicks, fiddleneck, redstem filaree, hairy
+  vetch, popcorn flower and common madia. Each is three alpha-tested quads (two crossed uprights and one on the
+  ground for the rosettes) textured from a picture of the species baked at load with canvas 2D from its record (habit,
+  leaf shape, size and colour, flower shape, colour and months, height by month, dead-stalk colour), side and top, for
+  the month the season stands for: a poppy is a mound of ferny leaves with orange cups in April and a few pale stalks
+  in July; soap plant a rosette of straps, then a dry stalk; blue dicks a bare stalk with a purple ball. Placed within
+  45 m of the camera per 30 m cell (1.2 candidates per m², kept by the herb cover, the habitat, the verge and water,
+  outcrops and the sward's bare patches) as a species from the cell's ground mix weighted by the month (gone when its
+  height is 0), the cell's tree cover against the species' shade, and a patch noise of its own; density LOD by rank
+  from 18 m to a quarter; a dithered fade at 36-45 m. No shadows from them.
+- **The ground mix in the tile build**: `species_mix.json` rows carry `ground_bytes` beside the tree and shrub bytes
+  (`species.ground`), each community's grasses and forbs from the records' own `habitat` blocks (class weight x
+  density, then the record's floor / mid / steep / north factors as its terrain row; GROUND_RULES for the meadow and
+  the ruderal rows), so a new grass or herb needs only its record. 465 rows on the home tile (424 before).
+  `tilepackage.js` reads them as `row.ground`; cells without a row take the records' class weights.
+- **The animals**: `pipeline/games.py` reads every record's `relations` and writes `games.json` `relations.forage`
+  ([animal, plant, part, resource, seasons]; 187 on the home tile) and `relations.cover`, and each gather game's
+  `plants`; a shrub's leaves and flowers count as browse, a grass's and herb's as grass_forbs. `needs.js` names the
+  plant under a feeding body when "food here" is one of its foods this season ("blue dicks here: hold E", "hairy
+  vetch here", "blue wildrye here"): the nearest herb within 1.5 m, else a food shrub of the near set within 3 m, else
+  the leading grass of the sward there; a named plant feeds a quarter faster. The field guide (`identify.js`) picks a
+  herb under the cursor and, where the ray meets bare sward, the grass there (the card lists the rest of the sward),
+  and every plant card now has "eaten by" (this season, with the part) and "shelter for" lines from its record; a
+  grass or herb card says annual or perennial and native or introduced instead of the architecture line. The HUD's
+  species counts include the herbs within 30 m.
+
+Verified on the worktree (port 8785) as a deer with the date set to 18 April: a grassland with lupine, popcorn flower,
+poppies and blue dicks among the sward and "blue dicks here: hold E"; a click on one opens the blue dicks card with
+its eaters; a dry-mesic chaparral slope seen from 9 m with buckbrush in white flower among chamise and manzanita and
+soap plant rosettes between (16 impostor kinds drawn, 8,942 instances; 3D buckbrush, common manzanita, mountain
+mahogany and monkeyflower within 40 m); an oak understory with miner's lettuce in the shade, poison oak and
+snowberry impostors, blue wildrye tussocks and "soap plant here"; as a vole the body ring draws 2,903 clumps of all seven
+species; no shader errors; the licence audit passes. Frame rate, alternating with main's build at the same pose with
+three worlds open on a contended machine: as a deer at the spawn 12.7 / 11.7 fps against 13.3 / 12.3 (26 more draw
+calls, the nine shrub species' meshes), as a vole 14.0 / 10.0 against 11.7 / 6.7; the herbs on or off made no
+measurable difference. Not verified: the summer and winter looks of the herbs (soap plant's dry stalk, the bare
+months), a lineup measurement of the nine shrubs against their targets (buckbrush and mahogany read more open:
+gaps 0.32 / 0.48 against 0.15 / 0.3), the far look of the new impostor kinds, and the fliers' view of any of it.
