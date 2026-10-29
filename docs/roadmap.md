@@ -177,8 +177,9 @@ browser stays the renderer.
   conditions the bumps on the lidar tiles. Open: the gray squirrel's own control has no body-scaled hooks beyond the leaf
   level and the smell (2026-10-29); the leaf level does not cover chamise or bare-twig textures; a mid-scale (fox, coyote) is the
   least served, its ring at half density; the DEM-only Yosemite tile has no roughness to condition on. The HUD's
-  abilities row and the smell sense (scent.js) landed the same day: next, the greyed abilities one by one (dig, pounce,
-  carry, swim, climb, call, mark, den, display), and "scented" as a state in the hunt panel from scent.smelled.
+  abilities row and the smell sense (scent.js) landed the same day; "scented" on the hunt panel and the leaf level to
+  15 m for a deer (24 for the smallest) on 2026-10-29. Next: the greyed abilities one by one (dig, pounce, carry, swim,
+  climb, call, mark, den, display), and the prey's own nose (an animal upwind of the player should smell it and alert).
 
 - Geology and soils step done 2026-10-24 (Macrostrat/SGMC lithology at 1:750k, SSURGO
   texture, fragments and depth to bedrock; client rasters and an outcrop likelihood).

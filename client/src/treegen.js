@@ -16,7 +16,7 @@ import { windUniforms, WIND_GLSL } from './wind.js';
 //          species with a `twigs` block, a third (shrubs: second) level of short twigs that the close
 //          cards hang from; the near trunk is drawn with it. Used within about 90 m of the camera
 //          (vegetation.js).
-//   leaf:  (2026-10-28) inside a few metres of the camera (vegetation.js: 6 m for a deer, 15 m for a squirrel), each
+//   leaf:  (2026-10-28) inside a few metres of the camera (vegetation.js: 15 m for a deer, 24 m for a squirrel), each
 //          close card's single leaves, recorded as its texture is drawn, as quads with their own depth and orientation
 //          (needle tufts as crossed quads, fir and cedar sprays as flat segments), fluttering in the wind; see "Leaf
 //          level" below. The close cards' twigs stay.

@@ -6,7 +6,7 @@
 //   grass.js       the ground tier's radius and density (real blade density inside a ring a few metres wide for a vole)
 //   litter.js      the body-scaled ring of pebbles, leaves, twigs and stems drawn from the ground detail's material weights
 //   terrain.js     the micro-relief patch under the body (its finest cell size) and the third detail octave
-//   vegetation.js  the leaf level's distance (a squirrel gets single leaves to ~15 m, a deer to ~6 m, a hawk never)
+//   vegetation.js  the leaf level's distance (a squirrel gets single leaves to ~24 m, a deer to ~15 m, a hawk never)
 // The scale is the species' shoulder height over the deer's (groundControl.js GROUND[code].shoulder), clamped to
 // [MIN, 1]. The spirit and the fliers are 1 (the air does not need it; a landed raven is near enough a rabbit's
 // world but spends its time in the air). The squirrel (its own control) is 0.1.

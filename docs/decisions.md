@@ -2205,3 +2205,20 @@ untouched (the factor clamps to 1); a lizard's grow a little.
 Verified on the clean worktree as the squirrel (?skip=1&as=squirrel) with the wind pinned and a fox summoned 20 m and
 10 m upwind: smelled it at 0.37 and 0.65, bearing right, 0.04 ms a frame; the strand reads in profile from the chase
 camera; B back to the spirit leaves the list empty and the wisps dark.
+
+## 2026-10-29: "scented" on the hunt panel, and the leaf level to 15 m
+
+**Scented** (Aaron: "Yes, scented state"): the hunt panel's goal line (hunt.js) gains " · scented" (or " · a faint
+scent" under 0.3) when the smell sense has the prey it names. The first cut read scent.smelled, the list of the six
+strongest wisps, and the fox's vole 31 m off was not in it (six other animals were stronger), so the panel showed
+nothing; the sense now answers for one animal (scent.js smell(a), the query's formula factored out as strengthOf) and
+the hunt asks for its target. What it tells the player: the prey is upwind, so the hunter is on the side it cannot
+smell from. The prey's own nose is not modelled yet (no animal smells the player; see the roadmap).
+
+**The leaf level to 15 m** (Aaron, the same hour: "The individual leaves look great on trees - can you expand the
+radius where I see that from 10ft or so to 50 feet?"): vegetation.js LEAF_R0 6 -> 15 m for a deer (the spirit and the
+fliers too), LEAF_R1 15 -> 24 m for the smallest bodies (the fox 21). The caps hold it: at a fox's spot in the home
+tile's oak woodland 13 trees and 958 k leaf quads (of the 1.5 M frame cap, 48 trees), 25.7 fps against 26.7 at the
+old radius and 28.7 with no leaves (the pane at 2x DPR, 2044 x 1848 px, 10 M triangles: GPU-bound there anyway); as a
+deer 11 trees and 914 k quads. The LRU of 24 built geometries is 28 MB at 12. If a spot ever fills the cap, the farthest
+trees keep their cards (nearest first), which is the designed fallback.

@@ -57,9 +57,10 @@ const NEAR_MARGIN = 60, NEAR_MOVE = 40, NEAR_CAP = { tree: 1500, shrub: 3000 };
 export const CLOSE_R = 90;
 const CLOSE_BAND = 20, CLOSE_MOVE = 15, CLOSE_CAP = { tree: 600, shrub: 1500 };
 // Leaf level (2026-10-28; treegen.js "Leaf level"): inside R_leaf of the camera each close card is replaced by its single
-// leaves (or needle tufts, or spray segments). R_leaf = 6 + 9 x clamp((1 - scale) / 0.9, 0, 1) m by the body scale
-// (bodyScale.js): a deer and the spirit 6 m, the squirrel and anything smaller 15 m; a hawk in the air is 6 m from
-// any leaf only when it skims a crown. The handover is per fragment, by the fragment's own distance to the camera:
+// leaves (or needle tufts, or spray segments). R_leaf = 15 + 9 x clamp((1 - scale) / 0.9, 0, 1) m by the body scale
+// (bodyScale.js): a deer and the spirit 15 m (2026-10-29, Aaron: "expand the radius where I see that from 10 ft or so
+// to 50 feet"; it was 6 m), the squirrel and anything smaller 24 m; a hawk in the air is 15 m from any leaf only when
+// it skims a crown. The handover is per fragment, by the fragment's own distance to the camera:
 // across R_leaf +/- leafBand (a fifth of R_leaf, at least 1.5 m) the leaves keep the pixels whose dither value is at
 // least 1 - share and the close cards the others (lodPatch), so the band thins and fills with no tree-sized pop and
 // no seam on a crown that straddles it. Trees: the close instances whose crown (the close canopy's bounding sphere,
@@ -73,7 +74,7 @@ const CLOSE_BAND = 20, CLOSE_MOVE = 15, CLOSE_CAP = { tree: 600, shrub: 1500 };
 // is frustum-culled by its own crown. Outside R_leaf + band nothing is drawn by it and the close cards are as they
 // were. A species whose close cards show what single leaves cannot (bare twigs, flowers, berries: leafMaterial
 // userData.off) stays on its cards. leafStats (trees, quads, built, bytes, buildMs) is for inspection.
-const LEAF_R0 = 6, LEAF_R1 = 15, LEAF_FRAME_CAP = 1500000, LEAF_LRU = 24, LEAF_TREES = 48, LEAF_BUILD_MS = 5, LEAF_AHEAD = 6;
+const LEAF_R0 = 15, LEAF_R1 = 24, LEAF_FRAME_CAP = 1500000, LEAF_LRU = 24, LEAF_TREES = 48, LEAF_BUILD_MS = 5, LEAF_AHEAD = 6;
 export const leafRadius = scale => LEAF_R0 + (LEAF_R1 - LEAF_R0) * Math.min(1, Math.max(0, (1 - scale) / 0.9));
 const leafBand = R => Math.max(1.5, 0.2 * R);
 
