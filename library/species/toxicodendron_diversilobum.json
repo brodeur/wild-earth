@@ -20,6 +20,20 @@
     "fall": "The brightest red in the woodland: whole patches turn scarlet, orange and yellow before the leaves drop in November."
   },
   "status": "agent draft, needs local sign-off",
+  "habitat": {
+    "classes": {"grassland": 0.15, "oak_woodland": 1.0, "chaparral": 0.5, "mixed_forest": 0.7, "conifer_forest": 0.3, "riparian": 0.8},
+    "floor": 1.4, "mid": 1.0, "steep": 0.9, "north": 1.2, "shade": 0.6, "disturbed": 1.0
+  },
+  "relations": {
+    "eaten_by": [
+      {"animal": "callipepla_californica", "part": "berries", "seasons": ["fall", "winter"]},
+      {"animal": "meleagris_gallopavo", "part": "berries", "seasons": ["fall", "winter"]},
+      {"animal": "aphelocoma_californica", "part": "berries", "seasons": ["fall", "winter"]},
+      {"animal": "odocoileus_hemionus", "part": "browse", "seasons": ["spring", "summer", "fall"]},
+      {"animal": "sylvilagus_bachmani", "part": "browse", "seasons": ["spring", "summer"]}
+    ],
+    "cover_for": ["callipepla_californica", "sylvilagus_bachmani"]
+  },
   "trunk": {
     "length_ratio": 0.9, "radius_ratio": 0.012, "taper": 0.85, "flare": 1.2, "bole_ratio": 0.08, "base_size": 0.15,
     "curve_deg": 10, "curve_var_deg": 16, "segments": 3, "lean_deg": 10, "stems": [3, 7], "stem_spread_deg": 28,

@@ -1,0 +1,49 @@
+{
+  "id": "dipterostemon_capitatus",
+  "aliases": ["blue_dicks", "brodiaea", "dichelostemma_capitatum", "wild_hyacinth"],
+  "scientific": "Dipterostemon capitatus",
+  "common": "blue dicks",
+  "form": "forb",
+  "lifespan": "perennial",
+  "native": true,
+  "height_m": [0.2, 0.6],
+  "description": "Two or three long, grass-like leaves from a buried corm and a single bare stalk, 20-60 cm, topped by a tight head of blue-violet flowers that sways above the green grass from March into May. It grows everywhere on the open ground of the foothills, in grassland, oak savanna and chaparral openings, and its starchy corms are dug by ground squirrels, voles and bears, as they were by the people who lived here.",
+  "season_notes": {
+    "winter": "Two or three narrow leaves from the corm after the rains, easy to miss among the grass blades.",
+    "spring": "The bare stalks rise in March and carry their blue-violet heads into May.",
+    "summer": "Leaves and stalks wither by June; the corm sleeps underground through the dry months.",
+    "fall": "Nothing above ground until the first rains wake the corm."
+  },
+  "status": "agent draft, needs local sign-off",
+  "ground": {
+    "habit": "bulb",
+    "leaf": { "shape": "linear", "size_m": 0.3, "rgb": [96, 130, 82] },
+    "flower": { "shape": "ball", "rgb": [128, 110, 196], "size_m": 0.035, "months": [3, 5], "per_plant": 1 },
+    "height_by_month": [0.2, 0.3, 0.7, 1.0, 1.0, 0.3, 0.0, 0.0, 0.0, 0.0, 0.05, 0.15],
+    "dead_rgb": [172, 152, 112],
+    "density": 1.0
+  },
+  "habitat": {
+    "classes": { "grassland": 1.0, "oak_woodland": 0.8, "chaparral": 0.5, "mixed_forest": 0.2, "conifer_forest": 0.05, "riparian": 0.1 },
+    "floor": 0.8, "mid": 1.0, "steep": 1.0, "north": 0.9, "shade": 0.2, "disturbed": 0.8
+  },
+  "relations": {
+    "eaten_by": [
+      { "animal": "otospermophilus_beecheyi", "part": "bulbs", "seasons": ["spring", "summer"] },
+      { "animal": "microtus_californicus", "part": "bulbs", "seasons": ["winter", "spring"] },
+      { "animal": "ursus_americanus", "part": "bulbs", "seasons": ["spring"] },
+      { "animal": "odocoileus_hemionus", "part": "flowers", "seasons": ["spring"] },
+      { "animal": "sylvilagus_bachmani", "part": "leaves", "seasons": ["winter", "spring"] },
+      { "animal": "lepus_californicus", "part": "flowers", "seasons": ["spring"] }
+    ],
+    "cover_for": []
+  },
+  "notes": "Blue dicks (long known as Dichelostemma capitatum, now Dipterostemon capitatus) is a perennial from a small corm 1-2 cm across, one of the commonest spring flowers of the foothills from the valley edge into the lower conifer belt, on grassy slopes, in oak savanna and in chaparral openings, on almost any soil. Each corm sends up two or three keeled, grass-like leaves 10-40 cm long that often lie half on the ground (leaf linear, 0.3 m), then a leafless stalk 20-60 cm carrying a dense umbel 2-4 cm across of six-lobed, blue-violet (rarely white) tubular flowers with papery purplish bracts beneath (flower ball, one per plant). The leaves come with the winter rains and wither as the stalk flowers, so the plant is gone above ground by June and the height_by_month runs from 0.05 in November (the first leaf tips) to the full stalk in April and May, with only the drying stalk left in June. The corms are the food that matters here: ground squirrels, pocket gophers, voles and black bears dig them, and the Miwok and Maidu gathered them; deer and jackrabbits nip the flower heads and rabbits the leaves. habitat: open sun to the light shade of the oaks (shade 0.2), a little less on the wettest swales (floor 0.8), and a little fewer on ploughed and graded ground, where the corms were broken up (disturbed 0.8).",
+  "sources": [
+    "https://ucjeps.berkeley.edu/eflora/ (Dipterostemon capitatus)",
+    "https://www.calflora.org/ (Dipterostemon capitatus)",
+    "https://calscape.org/ (Dipterostemon capitatus)"
+  ],
+  "authors": ["Wild Earth (agent draft, 2026-10-29); needs local sign-off"],
+  "license": "CC BY-SA 4.0"
+}

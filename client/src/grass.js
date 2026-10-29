@@ -8,6 +8,8 @@ import { ShrubField, ClumpField, KIND, waterAt, shrubLeaves } from './shrubfield
 import { GrassShells } from './grassShells.js';
 import { rockKeep } from './tilepackage.js';
 import { bodyScale, onBodyScale } from './bodyScale.js';
+import { SPECIES, SPECIES_IDS } from './trees.js';
+import { seasonMonth } from './treegen.js';
 
 // Grass in the Sierra foothill savanna: non-native annuals (wild oat, bromes, medusahead) over
 // purple needlegrass bunchgrass. One population of plants, drawn two ways:
@@ -144,6 +146,29 @@ const PALETTE = {
 };
 const THATCH = [0.58, 0.54, 0.45];   // last year's grey dead leaves, in among the new growth
 
+// ---- the grass species (2026-10-29) ------------------------------------------------------------------
+// The library's records of form "grass" (library/species, docs/species-library.md "Grasses, herbs and shrubs of
+// the foothill understory"): each is drawn as its `ground.type`'s blade clump (annual or bunch, the two geometries
+// above), at `ground.height` x `ground.width` of it, in its own season palette (root, tip, head, awn), with its
+// seed heads in its `heads.months`. Every plant (blades, body tier, cards) carries its species index: the instance
+// code's 64s (blades: type + 2 tier + 8 role + 64 species; cards: kind + 8 species in iVar.z's integer part), and the
+// shaders read the species' palette from uniform arrays (spRoot ... spHeads, GS_MAX slots). A plant's species is
+// drawn from its cell's ground mix (tile.speciesMix row.ground, pipeline species_mix.py ground_bytes: the grasses'
+// share of it, by type; GS_DEFAULT by habitat class where a cell has no row): the type (annual or bunch) is still
+// the needlegrass share and its drifts, so the sward's pattern is unchanged, and the wild oat stands (ROLE.oat)
+// are the wild oat. The old two-palette sward is exactly the first annual and the first bunch species (the wild oat
+// and the needlegrass carry the former palettes).
+const GS_MAX = 12;
+const CLASS_NAME = { 1: 'oak_woodland', 2: 'conifer_forest', 3: 'mixed_forest', 4: 'chaparral', 5: 'grassland', 6: 'riparian' };
+export const GRASS_SPECIES = SPECIES_IDS.filter(id => SPECIES[id].form === 'grass').slice(0, GS_MAX).map((id, k) => {
+  const s = SPECIES[id], g = s.ground || {};
+  return { id, k, type: g.type === 'bunch' ? 1 : 0, height: g.height ?? 1, width: g.width ?? 1, palette: g.palette || null,
+    heads: g.heads?.months || null, cure: g.cure ?? 1, classes: s.habitat?.classes || {}, common: s.common };
+});
+const GS_FALLBACK = [GRASS_SPECIES.find(s => s.type === 0)?.k ?? 0, GRASS_SPECIES.find(s => s.type === 1)?.k ?? 0];
+const GS_OAT = GRASS_SPECIES.find(s => s.id === 'avena_fatua' || (SPECIES[s.id].aliases || []).includes('wild_oats'))?.k ?? GS_FALLBACK[0];
+const spDraw = seed => (seed * 7919.17) % 1;   // a second uniform from a plant's seed, for its species
+
 // ---- GLSL shared by both LODs ---------------------------------------------------------------
 const COMMON_VERT = /* glsl */`
   ${WIND_GLSL}
@@ -153,7 +178,8 @@ const COMMON_VERT = /* glsl */`
   uniform float heightScale; uniform float heads; uniform float thatch; uniform float leafScale; uniform float dry;
   uniform vec3 aRoot; uniform vec3 aTip; uniform vec3 aHead; uniform vec3 aAwn;
   uniform vec3 bRoot; uniform vec3 bTip; uniform vec3 bHead; uniform vec3 bAwn; uniform vec3 thatchCol;
-  attribute vec4 iPos; attribute vec4 iVar;   // blades: x y z yaw | scale xz, scale y, seed, code; cards: see IMP_VERT
+  uniform vec3 spRoot[${GS_MAX}]; uniform vec3 spTip[${GS_MAX}]; uniform vec3 spHead[${GS_MAX}]; uniform vec3 spAwn[${GS_MAX}]; uniform float spHeads[${GS_MAX}];   // per species (GRASS_SPECIES)
+  attribute vec4 iPos; attribute vec4 iVar;   // blades: x y z yaw | scale xz, scale y, seed, code (+ 64 species); cards: see IMP_VERT
   float h11(float n) { return fract(sin(n) * 43758.5453123); }
   float h21(vec2 p) { return fract(sin(dot(p, vec2(127.1, 311.7))) * 43758.5453); }
   float vnoise(vec2 p) { vec2 i = floor(p), f = fract(p); f = f * f * (3.0 - 2.0 * f);
@@ -168,9 +194,8 @@ const COMMON_VERT = /* glsl */`
   vec2 yawRot(vec2 v, float a) { float c = cos(a), s = sin(a); return vec2(c * v.x + s * v.y, -s * v.x + c * v.y); }
   // Albedo (linear): root-to-tip gradient per type, culms grading to the head colour, last year's
   // thatch in the green seasons, per-blade and per-clump hue/brightness, and field-scale patches.
-  vec3 grassAlbedo(float type, float t, float part, float br, float seed, vec2 wxz) {
-    bool bunch = type > 0.5;
-    vec3 root = bunch ? bRoot : aRoot, tip = bunch ? bTip : aTip, head = bunch ? bHead : aHead, awn = bunch ? bAwn : aAwn;
+  vec3 grassAlbedo(int sp, float t, float part, float br, float seed, vec2 wxz) {
+    vec3 root = spRoot[sp], tip = spTip[sp], head = spHead[sp], awn = spAwn[sp];
     vec3 c;
     if (part < 0.5) {
       c = mix(root, tip, smoothstep(0.0, 0.9, t));
@@ -253,7 +278,8 @@ const NEAR_VERT = /* glsl */`
   varying vec3 vColor;
   void main() {
     float t = aBlade.x, br = aBlade.y, part = aBlade.z, seed = iVar.z;
-    float role = floor(iVar.w / 8.0 + 0.01), code = iVar.w - 8.0 * role, type = mod(code, 2.0);
+    float spf = floor(iVar.w / 64.0 + 0.01), rest = iVar.w - 64.0 * spf; int sp = int(spf);   // the species (GRASS_SPECIES)
+    float role = floor(rest / 8.0 + 0.01), code = rest - 8.0 * role, type = mod(code, 2.0);
     float d = distance(cameraPosition, iPos.xyz);
     // Hand-over: the clump thins blade by blade over dOut +/- w (a stable threshold per blade), at
     // full height; no fragment discard, so the opaque blades keep their hidden-surface removal. A plant
@@ -269,7 +295,7 @@ const NEAR_VERT = /* glsl */`
     float gs = role > 0.5 ? (seed < 0.5 ? 0.25 : 0.75) : seed;
     float hb = h11(gs * 71.9 + br * 131.7);
     float s = step(h11(seed * 23.9 + br * 97.3), 1.0 - smoothstep(dOut - w, dOut + w, d));
-    if (part > 0.5) s *= step(hb, heads * (type < 0.5 ? 0.9 : 0.85));   // culms (~1/3 of blades): none in winter
+    if (part > 0.5) s *= step(hb, heads * spHeads[sp] * (type < 0.5 ? 0.9 : 0.85));   // culms (~1/3 of blades): none in winter, nor out of the species' months
     // Distance LOD (collapsed triangles never reach the tiler, and sub-pixel triangles are what
     // this GPU pays for): main-tier clumps thin to 40% from 30 to 80 m, leaves to half from 25 to
     // 50 m, awns go once sub-pixel. The grazing view keeps the far band looking full regardless.
@@ -304,7 +330,7 @@ const NEAR_VERT = /* glsl */`
     // brightness far off: through the green mean's ratios it turned rust-red.
     float m = smoothstep(12.0, 45.0, d), th = part < 0.5 && h11(br * 17.3 + seed * 3.7) < thatch ? m : 0.0;
     vec3 G = groundMatch(vec3(1.0), type, iPos.xyz, m);
-    vec3 alb = grassAlbedo(type, t, part, br, seed, iPos.xz) * mix(G, vec3(dot(G, G_LUMA)), th);
+    vec3 alb = grassAlbedo(sp, t, part, br, seed, iPos.xz) * mix(G, vec3(dot(G, G_LUMA)), th);
     vColor = grassShade(alb, n, wp, t, mix(0.35, 1.0, smoothstep(0.0, 0.7, t)) * skyOcc(iPos.xyz), part > 1.5 ? 1.6 : 1.0);
     gl_Position = projectionMatrix * viewMatrix * vec4(wp, 1.0);
   }`;
@@ -328,7 +354,7 @@ const BODY_VERT = /* glsl */`
   attribute vec4 aBlade; attribute vec3 aSide;   // t, blade random, blade index / 6, side | width direction
   varying vec3 vColor;
   void main() {
-    float t = aBlade.x, br = aBlade.y, seed = iVar.z, type = mod(iVar.w, 2.0);
+    float t = aBlade.x, br = aBlade.y, seed = iVar.z, type = mod(iVar.w, 2.0); int sp = int(floor(iVar.w / 64.0 + 0.01));
     float d = distance(cameraPosition.xz, iPos.xz);
     float nb = 3.0 + floor(4.0 * h11(seed * 5.31 + 0.2));
     float s = step(aBlade.z * 6.0, nb) * step(h11(seed * 23.9 + br * 97.3), 1.0 - smoothstep(bodyFade.x, bodyFade.y, d));
@@ -355,7 +381,7 @@ const BODY_VERT = /* glsl */`
     if (dot(n, cameraPosition - wp) < 0.0) n = -n;
     n = normalize(n + 0.6 * aBlade.w * sd);
     vec3 G = groundMatch(vec3(1.0), type, iPos.xyz, 0.0);
-    vec3 alb = grassAlbedo(type, t, 0.0, br, seed, iPos.xz) * G;
+    vec3 alb = grassAlbedo(sp, t, 0.0, br, seed, iPos.xz) * G;
     if (h11(br * 29.1 + seed * 5.9) < 0.1 + 0.5 * thatch) alb = thatchCol * mix(0.65, 1.0, t) * dot(G, G_LUMA);
     alb *= mix(vec3(1.0), vec3(1.12, 1.06, 0.84), 0.6 * smoothstep(0.7, 1.0, t) * hb);
     vColor = grassShade(alb, n, wp, t, mix(0.3, 1.0, smoothstep(0.0, 0.75, t)) * skyOcc(iPos.xyz), 1.0);
@@ -377,9 +403,10 @@ const IMP_VERT = /* glsl */`
   uniform vec2 kParams; uniform vec4 cardBand; uniform float bandW; uniform vec2 impKind;   // atlas kind, grass type
   // (the field's own band uniform is what shadows.js casts with: see update)
   varying vec2 vQ; varying vec4 vTile; varying vec2 vSV; varying float vWe; varying vec3 vF; varying vec3 vFth; varying vec3 vSun; varying float vDiff;
-  varying vec2 vBack; varying vec3 vAmbG; varying vec3 vAmbS; varying vec3 vT; varying vec3 vIn; varying float vFade;
+  varying vec2 vBack; varying vec3 vAmbG; varying vec3 vAmbS; varying vec3 vT; varying vec3 vIn; varying float vFade; varying float vSp;
   void main() {
     float R = iPos.w * ${(1 / CARD_RK).toFixed(5)}, H = iVar.x * ${(1 / CARD_HK).toFixed(5)}, seed = iVar.y, rank = iVar.w, yaw = fract(iVar.z) * ${(2 * Math.PI / 0.999).toFixed(6)};
+    vSp = floor(iVar.z / 8.0 + 0.001);   // the species: kind + 8 species in the integer part
     float d = distance(cameraPosition, iPos.xyz);
     float keep = clamp(kParams.x * kParams.x / max(d * d, 1.0), kParams.y, 1.0);
     // In at the plant's own hand-over distance (the hash its blade clump uses), out past band.zw; both
@@ -438,8 +465,9 @@ const IMP_FRAG = /* glsl */`
   uniform sampler2D impAtlas; uniform vec2 impKind; uniform vec3 wxGround;
   uniform vec3 aRoot; uniform vec3 aTip; uniform vec3 aHead; uniform vec3 aAwn;
   uniform vec3 bRoot; uniform vec3 bTip; uniform vec3 bHead; uniform vec3 bAwn; uniform vec3 thatchCol;
+  uniform vec3 spRoot[${GS_MAX}]; uniform vec3 spTip[${GS_MAX}]; uniform vec3 spHead[${GS_MAX}]; uniform vec3 spAwn[${GS_MAX}];
   varying vec2 vQ; varying vec4 vTile; varying vec2 vSV; varying float vWe; varying vec3 vF; varying vec3 vFth; varying vec3 vSun; varying float vDiff;
-  varying vec2 vBack; varying vec3 vAmbG; varying vec3 vAmbS; varying vec3 vT; varying vec3 vIn; varying float vFade;
+  varying vec2 vBack; varying vec3 vAmbG; varying vec3 vAmbS; varying vec3 vT; varying vec3 vIn; varying float vFade; varying float vSp;
   vec4 tap(float col, float row, vec2 uv) { return texture(impAtlas, (vec2(col, row) + clamp(uv, 0.0, 1.0)) * vec2(${(1 / IMP.TX).toFixed(6)}, ${(1 / IMP.TY).toFixed(6)})); }
   void main() {
     // Distance fades: screen-space dither (the interleaved gradient noise the tree tiers use).
@@ -458,8 +486,8 @@ const IMP_FRAG = /* glsl */`
     float cov = 1.0 - pow(1.0 - clamp(g.g, 0.0, 1.0), 1.0 + 2.0 * clamp(mip - 0.7, 0.0, 3.0));
     if (cov < 0.04) discard;
     float gc = max(g.g, 1e-4), t = clamp(g.b / gc, 0.0, 1.0), part = clamp(g.a / gc * 3.0, 0.0, 3.0), th = clamp(g.r / gc, 0.0, 1.0);
-    bool bunch = impKind.y > 0.5;
-    vec3 root = bunch ? bRoot : aRoot, tip = bunch ? bTip : aTip, head = bunch ? bHead : aHead, awn = bunch ? bAwn : aAwn;
+    int sp = int(vSp + 0.5);   // the plant's species palette (GRASS_SPECIES)
+    vec3 root = spRoot[sp], tip = spTip[sp], head = spHead[sp], awn = spAwn[sp];
     vec3 leafC = mix(mix(root, tip, smoothstep(0.0, 0.9, t)) * vF, thatchCol * mix(0.75, 1.05, t) * vFth, th);
     vec3 culmC = mix(root, mix(tip, head, 0.6), smoothstep(0.1, 1.0, t)) * vF;
     vec3 c = part < 1.0 ? mix(leafC, culmC, part) : part < 2.0 ? mix(culmC, head * vF, part - 1.0) : mix(head, awn, part - 2.0) * vF;
@@ -607,7 +635,8 @@ export class Grass {
     this.cache = LAYERS.map(() => new Map());   // per layer: cell index -> instance groups
     this.queue = new Map(); this.dirty = { near: false, ground: false };   // cells waiting to be generated; pools to refill
     this.buildDensityGrid();
-    this._p = { ux: 0, uy: 0, px: 0, pn: 0, yaw: 0, sxz: 0, sy: 0, seed: 0, type: 0, role: 0 };
+    this._p = { ux: 0, uy: 0, px: 0, pn: 0, yaw: 0, sxz: 0, sy: 0, seed: 0, type: 0, role: 0, sp: 0 };
+    this.mixCache = new Map();   // species mix row (or -habitat class) -> the cell's grass species by type (speciesMix)
     const col = () => new THREE.Color();
     this.uniforms = {
       ...windUniforms, ...groundUniforms, groundK: { value: 1.12 }, matchOn: { value: 1 }, tiltOn: { value: 1 },
@@ -618,6 +647,9 @@ export class Grass {
       aRoot: { value: col() }, aTip: { value: col() }, aHead: { value: col() }, aAwn: { value: col() },
       bRoot: { value: col() }, bTip: { value: col() }, bHead: { value: col() }, bAwn: { value: col() },
       thatchCol: { value: col().setRGB(...THATCH, THREE.SRGBColorSpace) },
+      spRoot: { value: Array.from({ length: GS_MAX }, col) }, spTip: { value: Array.from({ length: GS_MAX }, col) },
+      spHead: { value: Array.from({ length: GS_MAX }, col) }, spAwn: { value: Array.from({ length: GS_MAX }, col) },
+      spHeads: { value: new Float32Array(GS_MAX).fill(1) },   // per species (GRASS_SPECIES): this season's palette and whether its heads show
       ...atmo,
     };
     const nearMat = new THREE.ShaderMaterial({ vertexShader: NEAR_VERT, fragmentShader: NEAR_FRAG, uniforms: this.uniforms, side: THREE.DoubleSide });
@@ -822,7 +854,7 @@ export class Grass {
   // Candidate k of N in cell (i, j): the plant, or false where none grows (density, outcrops, roads,
   // water, bare patches). Fills this._p. A pure function of (i, j, k), so every tier that reads this
   // rank sees the same plant: position, type, size, yaw, seed, and its card (role), if any.
-  plantAt(i, j, k, N, annualShare) {
+  plantAt(i, j, k, N, annualShare, mix = null) {
     draw(i, j, k);
     const { habitat: hab, size, roads, waterMask: wm } = this.tile, res = hab.res, P = this._p;
     const ux = U[0], uy = U[1], keep = U[2], px = (i + ux) * res, pn = size - (j + uy) * res;
@@ -853,8 +885,10 @@ export class Grass {
     }
     // A needlegrass with a card is a mature tussock, a little larger than the young bunches around it.
     const big = role === ROLE.tussock ? 1.2 : 1;
-    P.ux = ux; P.uy = uy; P.px = px; P.pn = pn; P.yaw = U[3] * Math.PI * 2; P.sxz = s * (0.85 + 0.3 * U[5]) * big; P.sy = s * big;
-    P.seed = U[7]; P.type = type; P.role = role;
+    // The species: the wild oat for an oat stand, else drawn from the cell's mix of this type (GRASS_SPECIES), at its own size.
+    const sp = role === ROLE.oat ? GS_OAT : this.pickSpecies(mix || this.speciesMix(i, j), type, spDraw(U[7])), G = GRASS_SPECIES[sp];
+    P.ux = ux; P.uy = uy; P.px = px; P.pn = pn; P.yaw = U[3] * Math.PI * 2; P.sxz = s * (0.85 + 0.3 * U[5]) * big * (G ? G.width : 1); P.sy = s * big * (G ? G.height : 1);
+    P.seed = U[7]; P.type = type; P.role = role; P.sp = sp;
     return true;
   }
   // A former reservoir or stock-pond bed (species mix row rewilded_meadow) is a wet meadow: perennial
@@ -862,6 +896,31 @@ export class Grass {
   annualAt(i, j) {
     if (this.tile.rewild && this.tile.speciesMix?.at(i, j)?.rule === 'rewilded_meadow') return WET_MEADOW_ANNUAL;
     const hb = HABITAT[this.tile.habitat.channel(i, j, 0)]; return hb ? hb.annual : 0.6;
+  }
+  // The grass species of cell (i, j) by type (GRASS_SPECIES): { w: weight per species, cum: [[k, cumulative]] per type },
+  // from the cell's species mix row (its ground weights, the grasses among them), else the records' own habitat class
+  // weights (GS_DEFAULT); cached per row.
+  speciesMix(i, j) {
+    const row = this.tile.speciesMix?.at(i, j), key = row ? row.index : -this.tile.habitat.channel(i, j, 0);
+    let m = this.mixCache.get(key); if (m) return m;
+    const w = new Float64Array(GRASS_SPECIES.length), cls = CLASS_NAME[this.tile.habitat.channel(i, j, 0)];
+    for (const s of GRASS_SPECIES) w[s.k] = row?.groundSum && Object.keys(row.ground).some(id => SPECIES[id]?.form === 'grass') ? row.ground[s.id] || 0 : s.classes[cls] || 0;
+    const cum = [[], []];
+    for (const s of GRASS_SPECIES) if (w[s.k] > 0) cum[s.type].push([s.k, w[s.k]]);
+    for (const c of cum) { const t = c.reduce((a, e) => a + e[1], 0) || 1; let acc = 0; for (const e of c) { acc += e[1] / t; e[1] = acc; } }
+    m = { w, cum }; this.mixCache.set(key, m); return m;
+  }
+  pickSpecies(m, type, r) { const c = m.cum[type]; for (let q = 0; q < c.length; q++) if (r <= c[q][1]) return c[q][0]; return c.length ? c[c.length - 1][0] : GS_FALLBACK[type]; }
+  // The grass at a point, for the field guide and the needs (identify.js, needs.js): the leading species of the type the
+  // drifts give there, and every species the cell's mix holds; null where no grass grows.
+  speciesAt(x, north) {
+    const hab = this.tile.habitat, [i, j] = hab.cellOf(x, north);
+    if (i < 0 || j < 0 || i >= this.W || j >= this.Hh || !this.cellAny(i, j) || this.sample(this.dens, x, north) <= 0) return null;
+    const share = this.annualAt(i, j), bunch = Math.min((1 - share) * driftRaw(x, north) / DRIFT_MEAN, 0.95), type = bunch > 0.5 ? 1 : 0, m = this.speciesMix(i, j);
+    let best = -1, bw = 0; for (const s of GRASS_SPECIES) if (s.type === type && m.w[s.k] > bw) { bw = m.w[s.k]; best = s.k; }
+    if (best < 0) for (const s of GRASS_SPECIES) if (m.w[s.k] > bw) { bw = m.w[s.k]; best = s.k; }
+    if (best < 0) return null;
+    return { id: GRASS_SPECIES[best].id, type, bunch, ids: GRASS_SPECIES.filter(s => m.w[s.k] > 0).map(s => s.id) };
   }
 
   // Instances of one cell for one blade layer (its rank range), generated once and cached, sorted into
@@ -873,12 +932,12 @@ export class Grass {
     const ns = Math.max(1, Math.round(this.tile.habitat.res / L.sub)), nb = ns * ns;
     const out = Array.from({ length: 4 * nb }, () => []);   // by mesh (annual, bunch, tussock, oat), then block
     if (this.cellAny(i, j)) {
-      const N = this.candidates(), k1 = Math.round(N * L.r[1]), share = this.annualAt(i, j), P = this._p;
+      const N = this.candidates(), k1 = Math.round(N * L.r[1]), share = this.annualAt(i, j), P = this._p, mix = this.speciesMix(i, j);
       for (let k = Math.round(N * L.r[0]); k < k1; k++) {
-        if (!this.plantAt(i, j, k, N, share)) continue;
+        if (!this.plantAt(i, j, k, N, share, mix)) continue;
         const blk = Math.min(Math.floor(P.uy * ns), ns - 1) * ns + Math.min(Math.floor(P.ux * ns), ns - 1);
         const mesh = P.role === ROLE.tussock ? 2 : P.role === ROLE.oat ? 3 : P.type;
-        out[mesh * nb + blk].push(P.px, this.ground(P.px, P.pn), -P.pn, P.yaw, P.sxz, P.sy, P.seed, P.type + 2 * L.tier + 8 * P.role);
+        out[mesh * nb + blk].push(P.px, this.ground(P.px, P.pn), -P.pn, P.yaw, P.sxz, P.sy, P.seed, P.type + 2 * L.tier + 8 * P.role + 64 * P.sp);
       }
     }
     groups = [];
@@ -889,7 +948,7 @@ export class Grass {
         x0 = Math.min(x0, a[o]); x1 = Math.max(x1, a[o]); y0 = Math.min(y0, a[o + 1]); y1 = Math.max(y1, a[o + 1]);
         z0 = Math.min(z0, a[o + 2]); z1 = Math.max(z1, a[o + 2]); sy = Math.max(sy, a[o + 5]);
       }
-      const h = 1.6 * sy + 0.3;   // grass height above the highest root (wild oat culms reach 1.5 x sy)
+      const h = 1.7 * sy + 0.3;   // grass height above the highest root (wild oat culms reach 1.5 x sy; sy carries the species' height)
       groups.push({ mesh: Math.floor(g / nb), tier: L.tier, data: new Float32Array(a), x: (x0 + x1) / 2, y: (y0 + y1 + h) / 2, z: (z0 + z1) / 2,
         r: Math.hypot((x1 - x0) / 2 + 0.6, (y1 - y0 + h) / 2, (z1 - z0) / 2 + 0.6) });
     });
@@ -903,11 +962,11 @@ export class Grass {
   cardCell(i, j, role, kind) {
     const out = [];
     if (!this.cellAny(i, j)) return out;
-    const N = this.candidates(), share = this.annualAt(i, j), P = this._p, box = this.box[kind], code = [0, KIND.annual, KIND.bunch, KIND.stalk][role];
+    const N = this.candidates(), share = this.annualAt(i, j), P = this._p, box = this.box[kind], code = [0, KIND.annual, KIND.bunch, KIND.stalk][role], mix = this.speciesMix(i, j);
     const k0 = role === ROLE.oat ? Math.floor(N * R_TUFT) : 0, k1 = Math.ceil(N * (role === ROLE.tussock ? R_TUS : role === ROLE.tuft ? R_TUFT : R_OAT_END));
     for (let k = k0; k < k1; k++) {
-      if (!this.plantAt(i, j, k, N, share) || P.role !== role) continue;
-      out.push(P.px, this.ground(P.px, P.pn), -P.pn, CARD_RK * box.R * P.sxz, CARD_HK * box.H * P.sy, P.seed, code + 0.999 * P.yaw / (Math.PI * 2), 0);
+      if (!this.plantAt(i, j, k, N, share, mix) || P.role !== role) continue;
+      out.push(P.px, this.ground(P.px, P.pn), -P.pn, CARD_RK * box.R * P.sxz, CARD_HK * box.H * P.sy, P.seed, code + 8 * P.sp + 0.999 * P.yaw / (Math.PI * 2), 0);
     }
     return out;
   }
@@ -927,7 +986,8 @@ export class Grass {
     const hi = Math.floor((x0 + h) / res), hj = Math.floor((size - n0 - h) / res);
     if (x0 >= 0 && n0 >= 0 && x0 < size && n0 < size && this.cellAny(hi, hj)) {
       const LN = BODY_LN, st = BODY_CELL / (LN - 1), kf = B.kf, sz = B.sz, bt = B.bt, wm = tile.waterMask, roads = tile.roads;
-      const share = this.annualAt(Math.min(Math.max(hi, 0), this.W - 1), Math.min(Math.max(hj, 0), this.Hh - 1));
+      const ci0 = Math.min(Math.max(hi, 0), this.W - 1), cj0 = Math.min(Math.max(hj, 0), this.Hh - 1);
+      const share = this.annualAt(ci0, cj0), mix = this.speciesMix(ci0, cj0);
       let any = 0;
       for (let b = 0; b < LN; b++) for (let a = 0; a < LN; a++) {
         const x = x0 + a * st, n = n0 + b * st, o = b * LN + a;
@@ -950,8 +1010,9 @@ export class Grass {
           o = ib * LN + ia; tx = fx - ia; ty = fy - ib;
           if (UB[2] >= bil(kf)) continue;
           const x = x0 + lx, n = n0 + ln, type = UB[3] < bil(bt) ? 1 : 0, sc = (0.75 + 0.5 * UB[4]) * bil(sz), y = this.ground(x, n);
+          const spk = this.pickSpecies(mix, type, spDraw(UB[7])), GS = GRASS_SPECIES[spk];   // the species, at its own size (G and sp are the lattice's)
           y0 = Math.min(y0, y); y1 = Math.max(y1, y);
-          lists[type].push(UB[8], x, y, -n, UB[5] * Math.PI * 2, sc * (0.85 + 0.3 * UB[6]), sc, UB[7], type + 2 * BODY_TIER);
+          lists[type].push(UB[8], x, y, -n, UB[5] * Math.PI * 2, sc * (0.85 + 0.3 * UB[6]) * (GS ? GS.width : 1), sc * (GS ? GS.height : 1), UB[7], type + 2 * BODY_TIER + 64 * spk);
         }
         const sorted = L => {
           const m = L.length / 9, idx = Array.from({ length: m }, (_, k) => k), out = new Float32Array(m * STRIDE);
@@ -1184,11 +1245,22 @@ export class Grass {
       const ms = mean(PALETTE.summer.annual), mp = mean(P.annual);
       kl = ms.map((v, i) => Math.min(Math.max(v * g[i] / mp[i], 0.4), 2.5));
     }
-    const set = kl
-      ? (uni, rgb) => { uni.value.setRGB(rgb[0], rgb[1], rgb[2], THREE.SRGBColorSpace); uni.value.r *= kl[0]; uni.value.g *= kl[1]; uni.value.b *= kl[2]; }
-      : (uni, rgb) => uni.value.setRGB(rgb[0] * k[0], rgb[1] * k[1], rgb[2] * k[2], THREE.SRGBColorSpace);
+    const set = kl   // uni: a uniform, or a Color of the species arrays
+      ? (uni, rgb) => { const c = uni.value || uni; c.setRGB(rgb[0], rgb[1], rgb[2], THREE.SRGBColorSpace); c.r *= kl[0]; c.g *= kl[1]; c.b *= kl[2]; }
+      : (uni, rgb) => (uni.value || uni).setRGB(rgb[0] * k[0], rgb[1] * k[1], rgb[2] * k[2], THREE.SRGBColorSpace);
     set(u.aRoot, P.annual.root); set(u.aTip, P.annual.tip); set(u.aHead, P.annual.head); set(u.aAwn, P.annual.awn);
     set(u.bRoot, P.bunch.root); set(u.bTip, P.bunch.tip); set(u.bHead, P.bunch.head); set(u.bAwn, P.bunch.awn);
+    // Each species' palette for the season (its record's sRGB 0-255, scaled as the type palettes are), and whether its
+    // seed heads show this month; a species without a palette takes its type's.
+    const month = seasonMonth(season), s255 = rgb => rgb.map(v => v / 255);
+    for (let k = 0; k < GS_MAX; k++) {
+      const G = GRASS_SPECIES[k], T = G && G.type ? P.bunch : P.annual, pal = G?.palette?.[season];
+      set(u.spRoot.value[k], pal ? s255(pal.root) : T.root); set(u.spTip.value[k], pal ? s255(pal.tip) : T.tip);
+      set(u.spHead.value[k], pal ? s255(pal.head) : T.head); set(u.spAwn.value[k], pal ? s255(pal.awn) : T.awn);
+      // the heads stand from the species' first flowering month until four months after its last (the dry culms and
+      // empty glumes of the cured sward stand into the fall); the season's `heads` still takes them all down in winter
+      const hm = G?.heads; u.spHeads.value[k] = !hm ? 1 : month >= hm[0] && month < Math.min(hm[1] + 5, 12) ? 1 : 0;
+    }
     u.heightScale.value = P.height; u.heads.value = P.heads; u.thatch.value = P.thatch; u.leafScale.value = P.leaf; u.dry.value = P.dry;
     this.season = season;
   }

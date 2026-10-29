@@ -260,7 +260,7 @@ export function tileSpecies(tile) {
   const out = new Set();
   for (const m of [...Object.values(MIX), ...Object.values(SHRUB_MIX)]) for (const k of Object.keys(m)) out.add(resolveSpecies(k));
   for (const k of tile.speciesMix?.species || []) { const id = resolveSpecies(k); if (id) out.add(id); }
-  return SPECIES_IDS.filter(id => out.has(id));   // library order
+  return SPECIES_IDS.filter(id => out.has(id) && !SPECIES[id].groundForm);   // library order; never a grass or forb (grass.js, forbs.js)
 }
 // The month (1 to 12.99) a season stands for in the client: today's date when the season is today's,
 // else the season's middle month (treegen seasonMonth), for leaf_on_by_month, flowers and berries.

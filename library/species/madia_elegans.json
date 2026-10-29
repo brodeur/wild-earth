@@ -1,0 +1,46 @@
+{
+  "id": "madia_elegans",
+  "aliases": ["common_madia", "tarweed", "elegant_tarweed"],
+  "scientific": "Madia elegans",
+  "common": "common madia",
+  "form": "forb",
+  "lifespan": "annual",
+  "native": true,
+  "height_m": [0.3, 1.2],
+  "description": "A sticky, tar-scented annual 30-120 cm tall with narrow leaves and yellow daisy heads 2-4 cm across, often with a maroon ring at the centre, that open in the evening and the early morning and fold shut by midday. It is the one flower of the dry summer grassland, blooming from June into October on the golden slopes, oak savanna and road verges, and its oily seeds feed quail, doves, ground squirrels and voles in late summer and fall.",
+  "season_notes": {
+    "winter": "Small rosettes of narrow, hairy leaves, hidden in the green grass.",
+    "spring": "The stems rise slowly as the grass grows tall, sticky and smelling of tar.",
+    "summer": "Yellow heads open each evening and morning above the cured grass, closed and dull in the afternoon heat.",
+    "fall": "Still flowering in September and October; the stalks stand dead and dark by November, dropping their seeds."
+  },
+  "status": "agent draft, needs local sign-off",
+  "ground": {
+    "habit": "erect",
+    "leaf": { "shape": "linear", "size_m": 0.08, "rgb": [108, 130, 86] },
+    "flower": { "shape": "daisy", "rgb": [244, 204, 40], "size_m": 0.03, "months": [6, 10], "per_plant": 8 },
+    "height_by_month": [0.08, 0.1, 0.15, 0.3, 0.5, 0.75, 0.95, 1.0, 1.0, 0.95, 0.7, 0.05],
+    "dead_rgb": [118, 102, 76],
+    "density": 0.9
+  },
+  "habitat": {
+    "classes": { "grassland": 1.0, "oak_woodland": 0.6, "chaparral": 0.3, "mixed_forest": 0.1, "conifer_forest": 0.02, "riparian": 0.1 },
+    "floor": 0.9, "mid": 1.0, "steep": 1.0, "north": 0.7, "shade": 0.05, "disturbed": 1.4
+  },
+  "relations": {
+    "eaten_by": [
+      { "animal": "callipepla_californica", "part": "seeds", "seasons": ["summer", "fall"] },
+      { "animal": "otospermophilus_beecheyi", "part": "seeds", "seasons": ["summer", "fall"] },
+      { "animal": "microtus_californicus", "part": "seeds", "seasons": ["fall"] }
+    ],
+    "cover_for": []
+  },
+  "notes": "Common madia is a native annual tarweed of the grassland, oak savanna, open slopes and road verges from the valley into the lower conifer belt, in full sun (shade 0.05), a little more on the south slopes than the north (north 0.7) and well on worked ground (disturbed 1.4). It germinates with the fall rains and passes the winter and spring as a low rosette under the annual grasses, then bolts as the grasses die, drawing on deep soil moisture: a branched stem 30-120 cm (taller in good soil), the whole plant glandular-hairy, sticky and smelling of tar; leaves narrow, 5-20 cm, the upper ones shorter (leaf linear, 0.08 m). The heads are 2-4 cm across, with 5-20 bright yellow three-toothed rays, often marked with a maroon blotch at the base that makes a ring around the disc (flower daisy, about eight open on a plant). The rays open in the late afternoon and evening and stay open through the night and morning, closing by midday in the heat. It is the one flower of the summer slopes, June to October, which is why its height_by_month runs the opposite way to the winter annuals: low through spring, full from July to October, 0.7 in November for the dead, dark standing stalks, and 0.05 in December for the new seedlings after the rains (the renderer should draw a low December value as green leaves, not dead stalks). Grazers avoid the sticky leaves; the oily achenes are an important late-summer and fall seed for quail, mourning doves (not among the world's animals), ground squirrels and voles.",
+  "sources": [
+    "https://ucjeps.berkeley.edu/eflora/ (Madia elegans)",
+    "https://www.calflora.org/ (Madia elegans)",
+    "https://calscape.org/ (Madia elegans)"
+  ],
+  "authors": ["Wild Earth (agent draft, 2026-10-29); needs local sign-off"],
+  "license": "CC BY-SA 4.0"
+}

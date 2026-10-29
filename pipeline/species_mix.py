@@ -49,7 +49,11 @@ TREES = ["quercus_douglasii", "quercus_wislizeni", "pinus_sabiniana", "pinus_pon
          "calocedrus_decurrens", "pseudotsuga_menziesii"]
 SHRUBS = ["arctostaphylos_viscida", "adenostoma_fasciculatum",
           "heteromeles_arbutifolia", "cercis_occidentalis", "toxicodendron_diversilobum", "baccharis_pilularis",
-          "sambucus_nigra_caerulea", "frangula_californica"]
+          "sambucus_nigra_caerulea", "frangula_californica",
+          # the understory set (2026-10-29): common manzanita, buckbrush, deerbrush, mountain mahogany, sticky
+          # monkeyflower, California wild rose, snowberry, Sierra gooseberry, chaparral currant
+          "arctostaphylos_manzanita", "ceanothus_cuneatus", "ceanothus_integerrimus", "cercocarpus_betuloides",
+          "diplacus_aurantiacus", "rosa_californica", "symphoricarpos_albus", "ribes_roezlii", "ribes_malvaceum"]
 # Short names for the per-tile fraction tables (older docs and reports use them, and the client's aliases).
 SHORT = {"quercus_douglasii": "blue_oak", "quercus_wislizeni": "live_oak", "pinus_sabiniana": "gray_pine",
          "pinus_ponderosa": "ponderosa", "arctostaphylos_viscida": "manzanita", "adenostoma_fasciculatum": "chamise",
@@ -59,7 +63,10 @@ SHORT = {"quercus_douglasii": "blue_oak", "quercus_wislizeni": "live_oak", "pinu
          "juglans_hindsii": "walnut", "acer_macrophyllum": "maple", "fraxinus_latifolia": "ash",
          "calocedrus_decurrens": "incense_cedar", "pseudotsuga_menziesii": "douglas_fir",
          "heteromeles_arbutifolia": "toyon", "cercis_occidentalis": "redbud", "toxicodendron_diversilobum": "poison_oak",
-         "baccharis_pilularis": "coyote_brush", "sambucus_nigra_caerulea": "elderberry", "frangula_californica": "coffeeberry"}
+         "baccharis_pilularis": "coyote_brush", "sambucus_nigra_caerulea": "elderberry", "frangula_californica": "coffeeberry",
+         "arctostaphylos_manzanita": "common_manzanita", "ceanothus_cuneatus": "buckbrush", "ceanothus_integerrimus": "deerbrush",
+         "cercocarpus_betuloides": "mountain_mahogany", "diplacus_aurantiacus": "monkeyflower", "rosa_californica": "wild_rose",
+         "symphoricarpos_albus": "snowberry", "ribes_roezlii": "gooseberry", "ribes_malvaceum": "currant"}
 FORMAT = 2
 DENSITY_SCALE = 100   # density byte = round(multiplier * 100); 1.0 = the client's per-habitat-class count
 LIBRARY = pathlib.Path(__file__).resolve().parent.parent / "library" / "species"
@@ -74,6 +81,9 @@ WA, MP, AS, IC, DF = ("juglans_hindsii", "acer_macrophyllum", "fraxinus_latifoli
 MZ, CH = "arctostaphylos_viscida", "adenostoma_fasciculatum"
 TY, RB, PO, CB, EL, CF = ("heteromeles_arbutifolia", "cercis_occidentalis", "toxicodendron_diversilobum",
                           "baccharis_pilularis", "sambucus_nigra_caerulea", "frangula_californica")
+CM, BB, DB, MM, MF, WR, SN, GB, CR = ("arctostaphylos_manzanita", "ceanothus_cuneatus", "ceanothus_integerrimus",
+                                      "cercocarpus_betuloides", "diplacus_aurantiacus", "rosa_californica",
+                                      "symphoricarpos_albus", "ribes_roezlii", "ribes_malvaceum")
 
 CONIFER = "sugar pine and white fir are not in the library: pinus_ponderosa stands in"
 UNDERSTORY = ("the riparian understory (blackberry, wild rose, spicebush, California grape) is not in the library: "
@@ -162,6 +172,32 @@ RULES = [
        {CH: 0.6, MZ: 0.4, RB: 0.2, TY: 0.1}, 0.25, 0.3, any_of=True),
 ]
 
+# The understory shrubs (2026-10-29; Aaron: "more grass and shrub and herb species, especially for terrestrial
+# animals"): their weights beside the rules' own, by community. Buckbrush, common manzanita, mountain mahogany,
+# monkeyflower, chaparral currant and gooseberry in the chaparral and the dry oak woodland; deerbrush in the pine
+# and black oak belt (TERRAIN lifts it above ~525 m); snowberry and wild rose in the oak understory and the riparian
+# strips (snowberry north, rose on the floors); mountain mahogany and monkeyflower on the rock. The existing eight
+# keep their weights, so their shares shrink in proportion where these are added.
+_CHAP = {BB: 0.5, CM: 0.25, MM: 0.2, MF: 0.15, CR: 0.1, GB: 0.08, DB: 0.1}
+_OAK = {BB: 0.3, CM: 0.1, MM: 0.1, MF: 0.12, SN: 0.15, WR: 0.08, GB: 0.08, CR: 0.05}
+_PINE = {DB: 0.5, SN: 0.2, GB: 0.15, MM: 0.08, BB: 0.1, CM: 0.1}
+_RIP = {WR: 0.6, SN: 0.3, GB: 0.05}
+UNDERSTORY_SHRUBS = {
+    "xeric_chaparral": {**_CHAP, BB: 0.6}, "dry_mesic_chaparral": _CHAP, "mesic_chaparral": {**_CHAP, DB: 0.3},
+    "chaparral": _CHAP, "montane_woodland_chaparral": {**_CHAP, DB: 0.3}, "serpentine_woodland": {BB: 0.3, MM: 0.2, MF: 0.1},
+    "blue_oak_foothill_pine": _OAK, "blue_oak": _OAK, "foothill_pine": {**_OAK, BB: 0.4}, "mixed_oak": _OAK,
+    "mixed_oak_savanna": {**_OAK, BB: 0.2, SN: 0.08}, "mixed_evergreen": {**_PINE, SN: 0.3},
+    "black_oak_conifer": _PINE, "black_oak": _PINE, "ponderosa_jeffrey": _PINE, "dry_mesic_mixed_conifer": _PINE,
+    "mesic_mixed_conifer": {**_PINE, SN: 0.3}, "lower_montane_conifer": _PINE,
+    "riparian": _RIP, "riparian_shrubland": _RIP, "montane_riparian": _RIP, "wet_meadow_marsh": {WR: 0.3},
+    "grassland_savanna": {WR: 0.1, BB: 0.1, MF: 0.05, SN: 0.05},
+    "ruderal_forest": {BB: 0.2, WR: 0.15, MF: 0.15, SN: 0.1}, "ruderal_scrub": {BB: 0.2, WR: 0.15, MF: 0.15},
+    "sparse_rock": {MM: 0.5, MF: 0.3, BB: 0.2, CM: 0.1}, "great_basin_shrub": {BB: 0.3},
+}
+for _rule in RULES:
+    for _k, _w in UNDERSTORY_SHRUBS.get(_rule["id"], {}).items():
+        _rule["shrubs"].setdefault(_k, _w)
+
 # Rewilded water beds (habitat.rewilded_cells): not LANDFIRE communities, so not matched by name.
 # The corridor along the restored channel is a young riparian strip: willow dominant at the water, alder next,
 # a few cottonwoods, ash, maple and walnut, live oak and valley oak where they climb the old bed's banks; no
@@ -214,6 +250,16 @@ TERRAIN = {
     CB: ([1.0, 1.0, 1.0, 0.8], [1.4, 1.0, 0.6], [1.0, 1.0]),      # flats and disturbed edges
     EL: ([1.0, 1.0, 1.0, 1.0], [1.5, 1.0, 0.5], [1.0, 1.0]),
     CF: ([1.0, 1.0, 1.0, 1.0], [1.0, 1.0, 1.0], [0.9, 1.2]),
+    # the understory shrubs (2026-10-29)
+    CM: ([1.0, 1.0, 0.7, 0.4], [0.8, 1.0, 1.1], [1.0, 0.9]),      # the lower slopes
+    BB: ([1.0, 1.0, 0.8, 0.5], [0.7, 1.0, 1.2], [1.1, 0.7]),      # dry south-facing slopes, below ~600 m
+    DB: ([0.05, 0.4, 0.9, 1.0], [0.8, 1.0, 1.0], [0.8, 1.3]),     # the pine belt above ~525 m, cooler slopes
+    MM: ([1.0, 1.0, 1.0, 1.0], [0.4, 1.0, 2.2], [1.0, 1.0]),      # rocky slopes and canyon walls
+    MF: ([1.0, 1.0, 1.0, 0.8], [0.5, 1.0, 1.8], [1.0, 1.0]),      # rock, road cuts, canyon sides
+    WR: ([1.0, 1.0, 1.0, 1.0], [2.0, 1.0, 0.3], [1.0, 1.1]),      # the floors, swales and seeps
+    SN: ([1.0, 1.0, 1.0, 1.0], [1.3, 1.0, 0.8], [0.6, 1.8]),      # shade: north slopes and the floors
+    GB: ([0.6, 1.0, 1.0, 1.0], [0.7, 1.0, 1.4], [1.0, 1.0]),      # rocky slopes, up through the pines
+    CR: ([1.0, 1.0, 0.8, 0.6], [0.8, 1.0, 1.2], [1.0, 0.9]),
 }
 POS_NAMES, BAND_NAMES = ("floor", "mid-slope", "steep"), ("<450 m", "450-525 m", "525-600 m", ">=600 m")
 
@@ -249,6 +295,62 @@ def terrain_weights(weights: dict, t: int, fixed=()) -> dict:
     for k, w in weights.items():
         f = TERRAIN.get(k)
         out[k] = w if (f is None or k in fixed) else w * f[0][band] * f[1][pos] * f[2][nf]
+    return out
+
+
+# The ground layer (2026-10-29): the grasses and forbs (library/species records with form "grass" or "forb",
+# docs/species-library.md "Grasses, herbs and shrubs of the foothill understory"). Unlike the trees and shrubs
+# they are not weighted by hand per rule: each record's `habitat` block gives its weight per habitat class
+# (`classes`, by class name) times its `ground.density` (forbs), and its floor / mid / steep / north factors are
+# its own TERRAIN row; a rule may still add to or override them (GROUND_RULES, by rule id). The client's grass
+# and forb layers draw each cell's grasses and forbs from the row's ground_bytes (the grasses' share and the
+# forbs' share of it, by form). Cells without a row keep the client's own defaults.
+GROUND_FORMS = ("grass", "forb")
+GROUND_RULES = {
+    "rewilded_meadow": {"danthonia_californica": 2.0, "elymus_glaucus": 1.5, "achillea_millefolium": 1.5},   # a wet meadow: the perennials
+    "ruderal_forest": {"bromus_diandrus": 1.6, "hordeum_murinum": 1.6, "erodium_cicutarium": 1.4},
+    "ruderal_scrub": {"bromus_diandrus": 1.6, "hordeum_murinum": 1.6, "amsinckia_menziesii": 1.5},
+}
+
+
+def ground_species() -> list[dict]:
+    """The ground-layer records, in index.json order: id, form, habitat, density."""
+    index = json.loads((LIBRARY / "index.json").read_text())
+    out = []
+    for sid in index.get("species", []):
+        f = LIBRARY / f"{sid}.json"
+        if sid.startswith("_") or not f.exists():
+            continue
+        d = json.loads(f.read_text())
+        if d.get("form") not in GROUND_FORMS:
+            continue
+        out.append({"id": sid, "form": d["form"], "habitat": d.get("habitat") or {},
+                    "density": float((d.get("ground") or {}).get("density", 1.0))})
+    return out
+
+
+def ground_weights(hab_code: int, rule_id: str, species: list[dict]) -> dict:
+    """A community's ground weights: each species' habitat class weight x its density, plus the rule's own."""
+    cls = CLASSES.get(hab_code)
+    out = {}
+    for sp in species:
+        w = float((sp["habitat"].get("classes") or {}).get(cls, 0.0)) * sp["density"]
+        w = GROUND_RULES.get(rule_id, {}).get(sp["id"], w)
+        if w > 0:
+            out[sp["id"]] = w
+    return out
+
+
+def ground_terrain(weights: dict, t: int, species: list[dict]) -> dict:
+    """The terrain factors of the ground species (their own habitat.floor / mid / steep / north)."""
+    pos, nf = (t // 2) % 3, t % 2
+    by = {sp["id"]: sp["habitat"] for sp in species}
+    out = {}
+    for k, w in weights.items():
+        h = by.get(k, {})
+        f = [float(h.get("floor", 1.0)), float(h.get("mid", 1.0)), float(h.get("steep", 1.0))][pos]
+        n = float(h.get("north", 1.0)) if nf else (2.0 - float(h.get("north", 1.0)) if float(h.get("north", 1.0)) < 1.0 else 1.0)
+        out[k] = w * f * n
     return out
 
 
@@ -333,7 +435,7 @@ def species_mix(tile: Tile) -> dict:
                          "trees": {k: v for k, v in rule["trees"].items() if v},
                          "shrubs": {k: v for k, v in rule["shrubs"].items() if v},
                          "tree_density": rule["tree_density"], "shrub_density": rule["shrub_density"],
-                         "note": rule.get("note"), "fixed": list(rule.get("fixed") or []), "cells": 0}
+                         "note": rule.get("note"), "fixed": list(rule.get("fixed") or []), "cells": 0, "habitat": hab_code}
             if rows[key]["index"] > 65535:
                 raise ValueError("more than 65535 distinct mixes; species_mix_index.png holds 16 bits")
         return rows[key]["index"]
@@ -363,7 +465,11 @@ def species_mix(tile: Tile) -> dict:
     # weights differ; cells of one community and terrain response share a row.
     base_rows = sorted(rows.values(), key=lambda r: r["index"])
     trees_cols, shrub_cols = columns(base_rows)
-    nt, ns = len(trees_cols), len(shrub_cols)
+    gspecies = ground_species()
+    ground_cols = [sp["id"] for sp in gspecies]
+    for b in base_rows:
+        b["ground"] = ground_weights(b["habitat"], b["rule"], gspecies)
+    nt, ns, ng = len(trees_cols), len(shrub_cols), len(ground_cols)
     tcls = terrain_classes(tile, index.shape)
     pair = index * 24 + tcls
     final: dict[tuple, dict] = {}
@@ -375,11 +481,12 @@ def species_mix(tile: Tile) -> dict:
         t = code % 24
         tb = _bytes(terrain_weights(b["trees"], t, b["fixed"]), trees_cols)
         sb = _bytes(terrain_weights(b["shrubs"], t, b["fixed"]), shrub_cols)
-        key = (b["source"], b["code"], tuple(tb), tuple(sb))
+        gb = _bytes(ground_terrain(b["ground"], t, gspecies), ground_cols)
+        key = (b["source"], b["code"], tuple(tb), tuple(sb), tuple(gb))
         r = final.get(key)
         if r is None:
             r = final[key] = {"index": len(final) + 1, "source": b["source"], "code": b["code"], "name": b["name"],
-                              "rule": b["rule"], "community": b["index"], "terrain": [], "cells": 0, "_tb": tb, "_sb": sb,
+                              "rule": b["rule"], "community": b["index"], "terrain": [], "cells": 0, "_tb": tb, "_sb": sb, "_gb": gb,
                               "tree_density": b["tree_density"], "shrub_density": b["shrub_density"]}
             if r["index"] > 65535:
                 raise ValueError("more than 65535 distinct mixes; species_mix_index.png holds 16 bits")
@@ -389,24 +496,25 @@ def species_mix(tile: Tile) -> dict:
     table = sorted(final.values(), key=lambda r: r["index"])
     # Per-row bytes: tree weights over the tree columns, shrub weights over the shrub columns (each
     # summing to 255 or all zero), then the two density bytes. lut[0] (no mix) is all zero.
-    lut = np.zeros((len(table) + 1, nt + ns + 2), "int64")
+    lut = np.zeros((len(table) + 1, nt + ns + ng + 2), "int64")
     for r in table:
-        tb, sb = r.pop("_tb"), r.pop("_sb")
+        tb, sb, gb = r.pop("_tb"), r.pop("_sb"), r.pop("_gb")
         td = min(round(r["tree_density"] * DENSITY_SCALE), 255)
         sd = min(round(r["shrub_density"] * DENSITY_SCALE), 255)
-        lut[r["index"]] = tb + sb + [td, sd]
+        lut[r["index"]] = tb + sb + gb + [td, sd]
         r["cells"] = int((index == r["index"]).sum())
         r["tree_bytes"] = [[k, b] for k, b in zip(trees_cols, tb) if b]
         r["shrub_bytes"] = [[k, b] for k, b in zip(shrub_cols, sb) if b]
+        r["ground_bytes"] = [[k, b] for k, b in zip(ground_cols, gb) if b]
         r["density_bytes"] = [td, sd]
         del r["tree_density"], r["shrub_density"]
     # The communities as written (one per source and code, before the terrain factors), for people.
     communities = [{"community": b["index"], "source": b["source"], "code": b["code"], "name": b["name"], "rule": b["rule"],
-                    "trees": b["trees"], "shrubs": b["shrubs"], "tree_density": b["tree_density"],
+                    "trees": b["trees"], "shrubs": b["shrubs"], "ground": {k: round(v, 3) for k, v in b["ground"].items()}, "tree_density": b["tree_density"],
                     "shrub_density": b["shrub_density"], "note": b["note"], "fixed": b["fixed"],
                     "cells": int(sum(r["cells"] for r in table if r["community"] == b["index"]))} for b in base_rows]
     px = lut[index]
-    TD, SD = nt + ns, nt + ns + 1
+    TD, SD = nt + ns + ng, nt + ns + ng + 1
     for old in ("species_mix_a.png", "species_mix_b.png", "species_mix_c.png"):   # format 1 products
         if tile.path(f"client/{old}").exists():
             tile.path(f"client/{old}").unlink()
@@ -432,13 +540,14 @@ def species_mix(tile: Tile) -> dict:
     by_rule: dict[str, int] = {}
     for r in table:
         by_rule[r["rule"]] = by_rule.get(r["rule"], 0) + r["cells"]
-    tcols, scols = list(range(nt)), list(range(nt, nt + ns))
+    tcols, scols, gcols = list(range(nt)), list(range(nt, nt + ns)), list(range(nt + ns, nt + ns + ng))
     fractions = {
         "from_evt": round(sum(r["cells"] for r in table if r["source"] == "evt") / n, 4),
         "from_bps_backfill": round(sum(r["cells"] for r in table if r["source"] != "evt") / n, 4),
         "tree_share": share(tcols, trees_cols, td),
         "tree_share_by_canopy": share(tcols, trees_cols, td * tree_cover),
         "shrub_share": share(scols, shrub_cols, sd),
+        "ground_share": share(gcols, ground_cols, np.ones_like(sd)),
         "mean_tree_density": round(float(td.mean()), 4),
         "mean_shrub_density": round(float(sd.mean()), 4),
         "rules": {k: round(v / n, 4) for k, v in sorted(by_rule.items(), key=lambda kv: -kv[1])},
@@ -447,7 +556,7 @@ def species_mix(tile: Tile) -> dict:
         "format": FORMAT,
         "grid": {"crs": tile.crs, "bounds": list(tile.bounds), "pixels": int(index.shape[0]), "resolution_m": res,
                  "origin": "row 0 = north edge, same grid as client/habitat.png"},
-        "species": {"trees": trees_cols, "shrubs": shrub_cols},
+        "species": {"trees": trees_cols, "shrubs": shrub_cols, "ground": ground_cols},
         "cells": {
             "index": "client/species_mix_index.png", "index_bytes": index_bytes,
             "density": "client/species_mix_density.png",
@@ -461,6 +570,11 @@ def species_mix(tile: Tile) -> dict:
             "weights": "mixes[].tree_bytes and shrub_bytes: [[species id, byte], ...], the species with a non-zero weight "
                        "in the column order of `species`, each layer summing to 255 (absent: no trees or no shrubs). "
                        "The client draws a species by walking this list in order, so the order is part of the format",
+            "ground": "mixes[].ground_bytes: [[species id, byte], ...] over species.ground (the grasses and forbs, "
+                      "library records of form grass or forb), summing to 255; from each record's habitat block "
+                      "(classes, floor / mid / steep / north) and ground.density, with GROUND_RULES per rule. The "
+                      "client's grass layer draws a cell's grasses from the grasses' share of it and the forb layer "
+                      "its forbs from the forbs' share",
             "terrain": "mixes[].terrain: the terrain classes (effective elevation band, floor / mid-slope / steep, north) "
                        "whose cells use the row; a community (communities[], one per source and code: its name, the "
                        "weights and densities as written, and a note) has one row per distinct terrain response "
@@ -485,5 +599,5 @@ def species_mix(tile: Tile) -> dict:
                              "terrain.dem"],
             "encoding": "format 2: species_mix_index L = row in mixes; species_mix_density RGB = tree_density, shrub_density "
                         "(byte/100); per-row weights as mixes[].tree_bytes / shrub_bytes over species.trees / species.shrubs",
-            "species": {"trees": trees_cols, "shrubs": shrub_cols},
+            "species": {"trees": trees_cols, "shrubs": shrub_cols, "ground": ground_cols},
             "mixes": len(table), "unmatched": len(unmatched), "fractions": fractions}

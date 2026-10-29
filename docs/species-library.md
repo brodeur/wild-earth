@@ -1278,3 +1278,105 @@ show the acorn line and the field-guide button.
 
 **Species card.** The form line shows plain words (`identify.js` `FORM_WORD`): toyon and elderberry read
 "multi-stemmed shrub or small tree".
+
+## Grasses, herbs and shrubs of the foothill understory (2026-10-29)
+
+Aaron: "Can we add more grass and shrub and herb species - especially for terrestrial animals." The library gains
+two ground-layer forms beside `tree`, `shrub` and `multi_stem_shrub_tree`: **`grass`** (drawn by `grass.js` as a
+blade clump of its type, coloured and sized from the file) and **`forb`** (drawn by `forbs.js` as a small plant card:
+leaves and, in its months, flowers, baked from the file at load). Neither is grown by the tree generator, so a grass or
+forb file has no `trunk`, `levels` or `foliage`; `vegetation.js`, the far atlas and the lineup skip any species whose
+form is not a tree or shrub. Every record is CC BY-SA 4.0, `status` "agent draft, needs local sign-off", with
+`sources` read and `notes` in the author's own words, as the trees. Nothing is downloaded: the plants are procedural.
+
+Common fields (all forms): `id`, `aliases`, `scientific`, `common`, `form`, `description` (two sentences for the card),
+`season_notes`, `status`, `notes`, `sources`, `authors`, `license`, and the two blocks below, which the trees and shrubs
+now carry too.
+
+`habitat` (where it belongs; the pipeline's species mix reads it, `pipeline/species_mix.py` GROUND):
+
+| field | meaning |
+|---|---|
+| `classes` | relative weight per habitat class name: `grassland`, `oak_woodland`, `chaparral`, `mixed_forest`, `conifer_forest`, `riparian` (0 or absent: not there) |
+| `floor`, `mid`, `steep` | terrain position factors (valley floors and swales; mid-slopes; 16 degrees and over), default 1 |
+| `north` | factor on north-facing ground (default 1): shade and moisture lovers above 1, sun lovers below |
+| `shade` | 0 (open sun) to 1 (under the canopy): the client places it by the cell's tree cover |
+| `disturbed` | factor on road verges and old fields (default 1): the weeds and pioneers above 1 |
+
+`relations` (the animals; `pipeline/games.py` writes them into each tile's `games.json` `relations.forage` and
+`relations.cover`, and `needs.js` names the plant under the body when "food here" is one of its foods):
+
+| field | meaning |
+|---|---|
+| `eaten_by` | `[{ animal: <animal id>, part: leaves / seeds / flowers / browse / berries / bulbs / roots / acorns, seasons: [...] }]` |
+| `cover_for` | animal ids that hide, nest or form in it (quail coveys, rabbits, towhees) |
+
+`ground` for `form: "grass"` (the renderer's parameters, `grass.js` GRASS_SPECIES):
+
+| field | meaning |
+|---|---|
+| `type` | `annual` (a soft, leafy tuft that cures gold: the bromes, wild oats, barley) or `bunch` (a perennial tussock: needlegrass, wildrye, oatgrass); the blade clump the renderer grows |
+| `height` | times the type's clump height (the annual clump is about 0.45 m at full height, the bunch 0.6 m) |
+| `width` | times the clump's spread |
+| `palette` | per season (`winter`, `spring`, `summer`, `fall`): `root`, `tip`, `head`, `awn` sRGB 0-255, the blade from its base to its tip, the seed head and the awns; summer and fall are the cured colours |
+| `heads` | `{ shape, months: [from, to] }`: `panicle` (open, nodding: oats, ripgut), `spike` (a dense head: barley, wildrye), `raceme` (needlegrass's loose, awned); drawn while the month is in range, else the blades alone |
+| `cure` | 0-1, how fully it dries to straw in summer (annuals 1; needlegrass 0.5 stays grey-green at the base) |
+
+`ground` for `form: "forb"` (`forbs.js` bakes one picture per species per month from it):
+
+| field | meaning |
+|---|---|
+| `habit` | `rosette` (leaves flat on the ground, a stalk up: filaree, soap plant), `erect` (a stem with leaves and a flower on top: poppy, fiddleneck, tarweed), `mound` (a leafy clump: lupine, yarrow, mule's ears), `sprawling` (clover, miner's lettuce), `climbing` (vetch, over the grass), `bulb` (a few grass-like leaves and a bare stalk: blue dicks) |
+| `leaf` | `{ shape, size_m, rgb }`: `ferny` (poppy, yarrow, filaree), `palmate` (lupine), `trifoliate` (clover), `round` (miner's lettuce), `strap` (soap plant), `ovate` (mule's ears, big and grey), `pinnate` (vetch), `linear` (blue dicks, popcorn flower, tarweed), `lobed` |
+| `flower` | `{ shape, rgb, size_m, months: [from, to], per_plant }`: `cup` (poppy), `spike` (lupine, fiddleneck's coil as `coil`), `umbel` (yarrow's flat plate), `ball` (blue dicks, clover), `daisy` (mule's ears, tarweed), `pea` (vetch), `tiny` (popcorn flower, filaree, miner's lettuce) |
+| `height_by_month` | 12 values, 0-1: the plant's height this month as a share of `height_m`; 0 is gone (the annuals from July to the rains), so the field reads the calendar |
+| `dead_rgb` | the colour of the dried stalks after flowering (shown while `height_by_month` is above 0 after the last flowering month) |
+| `density` | relative abundance, 1 the common ones |
+
+Grass species are placed by `grass.js` per plant from the cell's ground mix (`species_mix.json` `ground_bytes`, the
+grasses' share of it) in the drifts the needlegrass share already used; forbs by `forbs.js` from the same row, in
+patches, at a density from the cell's herb cover (`canopy.png` B) and the season. Both tell the field guide what a
+click on them is (`identify.js`): a forb by its card, a grass by the species under the cursor.
+
+**The records (2026-10-29).** Thirty agent drafts, each with `habitat` and `relations`; the eight shrubs of 10-25 gained
+the two blocks too. Grasses and herbs have no lineup (nothing grows them); the shrubs build at near, mid and close.
+
+| form | id (common) | habit, size | where | eaten by |
+|---|---|---|---|---|
+| grass | `stipa_pulchra` (purple needlegrass) | bunch, 0.4-1 m, awns purple in April | grassland, oak savanna | deer, rabbits, vole (leaves); quail, turkey, ground squirrel (seed) |
+| grass | `elymus_glaucus` (blue wildrye) | bunch 1.5x, 0.6-1.5 m, a spike | oak woodland edges, north slopes, riparian | deer (leaves); quail, turkey, squirrel (seed) |
+| grass | `danthonia_californica` (California oatgrass) | bunch 0.6x, 0.2-0.6 m | meadows, swales, savanna | deer, rabbits, vole |
+| grass | `avena_fatua` (wild oat) | annual 1.25x, 0.6-1.3 m, the oat stands | grassland, verges | squirrels, quail, turkey, vole (seed); deer, rabbits (green) |
+| grass | `bromus_hordeaceus` (soft chess) | annual 0.75x, 0.2-0.6 m | the annual sward | everything that grazes; seed to quail, squirrels, vole |
+| grass | `bromus_diandrus` (ripgut brome) | annual 1.15x, 0.4-1 m, coarse | under the oaks, verges | deer, rabbits when green; squirrel seed |
+| grass | `hordeum_murinum` (hare barley) | annual 0.6x, 0.2-0.5 m, bristly red-tinged heads | verges, burrow mounds | rabbits, vole, deer green; squirrel, quail seed |
+| forb | `eschscholzia_californica` (California poppy) | mound, ferny, orange cups March-June | open sunny ground, south slopes, verges | deer (a little), quail, squirrel seed |
+| forb | `lupinus_bicolor` (miniature lupine) | mound, palmate, blue spikes March-May | grassland, open slopes | deer (a little); quail, squirrel seed |
+| forb | `lupinus_albifrons` (silver bush lupine) | mound to 1.5 m, silver, blue spikes, evergreen | rocky slopes, road cuts, chaparral edges | quail, squirrel seed; cover for quail |
+| forb | `claytonia_perfoliata` (miner's lettuce) | sprawling, round leaves, Feb-May | shade under oaks, riparian, north slopes | deer, quail, rabbits, vole, squirrel |
+| forb | `trifolium_willdenovii` (tomcat clover) | sprawling, trifoliate, purple balls April-May | grassland, moist open ground | deer, rabbits, jackrabbit, vole, squirrel; quail seed |
+| forb | `chlorogalum_pomeridianum` (soap plant) | rosette of straps, a 1-2 m stalk May-July | grassland, oak woodland, chaparral openings | bear (bulb), deer (leaves) |
+| forb | `achillea_millefolium` (yarrow) | mound, ferny, white plates May-Aug | meadows, open woodland, disturbed | deer, rabbits (a little) |
+| forb | `wyethia_helenioides` (gray mule's ears) | mound, big grey leaves, yellow heads March-May | blue oak savanna, north and east slopes | deer (leaves, flowers); squirrel, quail seed |
+| forb | `dipterostemon_capitatus` (blue dicks) | bulb, a bare stalk with a purple ball March-May | everywhere open | squirrel, vole, bear (corms); deer, rabbits, jackrabbit |
+| forb | `amsinckia_menziesii` (fiddleneck) | erect, bristly, orange coils March-May | grassland, verges, old fields | quail, squirrel, vole seed |
+| forb | `erodium_cicutarium` (redstem filaree) | rosette, ferny, pink Feb-May | everywhere; the most eaten plant | deer, rabbits, jackrabbit, squirrel, vole, quail, turkey |
+| forb | `vicia_villosa` (hairy vetch) | climbing over the grass, purple pea April-June | grassland, verges, savanna | deer, rabbits, jackrabbit, vole; quail, turkey, squirrel seed |
+| forb | `plagiobothrys_nothofulvus` (popcorn flower) | erect, tiny white, sheets March-May | grassland, swales | quail, vole |
+| forb | `madia_elegans` (common madia) | erect, sticky, yellow June-Oct | grassland, open slopes | quail, squirrel, vole seed |
+| shrub | `arctostaphylos_manzanita` (common manzanita) | 2-6 m, red stems, green oval leaves | chaparral and oak woodland, the lower slopes | bear, fox, coyote, jays, quail (berries); deer (a little) |
+| shrub | `ceanothus_cuneatus` (buckbrush) | 1-3 m, rigid, tiny leaves, white March-April | dry chaparral, blue oak slopes | deer (the browse), jackrabbit; cover for quail, rabbits |
+| shrub | `ceanothus_integerrimus` (deerbrush) | 1-4 m, open, deciduous, white plumes May-June | the pine and black oak belt above ~525 m | deer; cover for quail |
+| shrub | `cercocarpus_betuloides` (mountain mahogany) | 2-6 m, erect, silver seed plumes July-Oct | rocky chaparral, canyon walls | deer (winter browse) |
+| shrub | `diplacus_aurantiacus` (sticky monkeyflower) | 0.5-1.5 m, orange April-July | rock, road cuts, chaparral edges | deer (a little); cover for lizards |
+| shrub | `rosa_californica` (California wild rose) | 1-2.5 m thicket, pink May-July, red hips into winter | riparian, swales, floors | bear, fox, coyote, quail, turkey, jays (hips); deer, rabbit; cover for quail, rabbits |
+| shrub | `symphoricarpos_albus` (snowberry; S. mollis drawn the same) | 0.5-1.5 m, thin stems, white berries Sept-Jan | oak understory, north slopes, riparian edges | deer; quail, turkey (berries); cover for quail, rabbits, voles |
+| shrub | `ribes_roezlii` (Sierra gooseberry) | 0.5-1.5 m, spiny, red berries June-Aug | rocky slopes, pine and oak woodland | bear, fox, coyote, jays, quail; cover for quail, rabbits |
+| shrub | `ribes_malvaceum` (chaparral currant) | 1-2.5 m, pink Nov-March on bare stems, summer-deciduous | chaparral, dry oak edges | jays, quail, fox, coyote, bear; deer (a little); cover for quail |
+
+Where they draw: the grasses in every blade tier and card of `grass.js` (the species in the instance code; `GRASS_SPECIES`),
+the herbs in `forbs.js` within 45 m, the shrubs as 3D plants of `vegetation.js` from the species mix and as impostors of
+`shrubfield.js` (`FH`, `FH_LOOK`). The home tile's ground mix (species_mix.json `ground_bytes`) places all 21 grasses and
+herbs; its shrub shares are in decisions.md (2026-10-29). Not done: a lineup measurement of the nine shrubs against
+their targets (they build without errors), a far tier for the herbs (a poppy field from the air), herb shadows, the
+grass clump shapes per species (one geometry per type), and the local sign-off every record waits for.

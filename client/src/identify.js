@@ -21,7 +21,14 @@ const SCAN_MS = 250, AROUND_R = 100, PICK_R = 150, CLICK_PX = 4;
 const TAG_R = 160, TAG_MAX = 200, TAG_EVERY = 10;
 const SEASON_WORD = { winter: 'winter', spring: 'spring', summer: 'summer', fall: 'fall' };
 // The species file's `form` token in plain words (any other token: its underscores as spaces).
-const FORM_WORD = { tree: 'tree', shrub: 'shrub', multi_stem_shrub_tree: 'multi-stemmed shrub or small tree' };
+const FORM_WORD = { tree: 'tree', shrub: 'shrub', multi_stem_shrub_tree: 'multi-stemmed shrub or small tree', grass: 'grass', forb: 'herb' };
+// The animals' short names for a plant card's "eaten by" and "shelter for" lines (the records' relations, 2026-10-29).
+const ANIMAL_WORD = { odocoileus_hemionus: 'mule deer', sylvilagus_bachmani: 'brush rabbit', lepus_californicus: 'jackrabbit', microtus_californicus: 'vole',
+  otospermophilus_beecheyi: 'ground squirrel', callipepla_californica: 'California quail', oreortyx_pictus: 'mountain quail', meleagris_gallopavo: 'wild turkey',
+  ursus_americanus: 'black bear', sciurus_griseus: 'gray squirrel', urocyon_cinereoargenteus: 'gray fox', canis_latrans: 'coyote', aphelocoma_californica: 'scrub-jay',
+  cyanocitta_stelleri: "Steller's jay", sceloporus_occidentalis: 'fence lizard', corvus_corax: 'raven', puma_concolor: 'mountain lion', buteo_jamaicensis: 'red-tailed hawk',
+  cathartes_aura: 'turkey vulture', melanerpes_formicivorus: 'acorn woodpecker' };
+const animalWord = id => ANIMAL_WORD[id] || id.replace(/_/g, ' ');
 const formWord = f => FORM_WORD[f] || String(f || 'plant').replace(/_/g, ' ');
 // Animal cards: the pick sphere's radius (m at size 1) and how far up the body its centre is, per species code.
 const ANIMAL_PICK = { meleagris_gallopavo: [0.45, 0.5], otospermophilus_beecheyi: [0.16, 0.08], sceloporus_occidentalis: [0.09, 0.02] };
@@ -44,8 +51,8 @@ const others = me => {
 
 export class Identify {
   // els: { nearest, around, card } ; seasonNow(): current season name
-  constructor({ veg, camera, dom, scene, flight, acorns, seasonNow, els }) {
-    Object.assign(this, { veg, camera, dom, flight, acorns, seasonNow, els });
+  constructor({ veg, grass = null, forbs = null, camera, dom, scene, flight, acorns, seasonNow, els }) {
+    Object.assign(this, { veg, grass, forbs, camera, dom, flight, acorns, seasonNow, els });
     // Who took each acorn (the game's world records only when): collector species and kind per acorn key, kept per
     // world (a season has its own), from the game's pickup events. Acorns taken before this page loaded are unknown.
     this.takenBy = new WeakMap();
@@ -114,6 +121,7 @@ export class Identify {
       }
     }
     if (!nearest) { nearest = nearestShrub; nearestD = shrubD; }
+    if (this.forbs) for (const [id, n] of Object.entries(this.forbs.speciesAround(p.x, p.z, 30))) counts[id] = (counts[id] || 0) + n;   // the herbs within 30 m (forbs.js draws to 45)
     const { nearest: nEl, around: aEl } = this.els;
     if (nearest) {
       const s = SPECIES[nearest.species];
@@ -215,6 +223,14 @@ export class Identify {
       }
     }
     this.probe.geometry = null;
+    // The herbs (forbs.js) when one is nearer than any tree, and the grass under the cursor where the ray meets the
+    // ground with nothing else hit (grass.js speciesAt: the leading species of the sward there).
+    const fb = this.forbs?.pick(o, d, Math.min(far, PICK_R));
+    if (fb && (!best || fb.distance < best.distance)) best = fb;
+    if (!best && far < PICK_R && this.grass) {
+      const gx = o.x + d.x * far, gz = o.z + d.z * far, g = this.grass.speciesAt(gx, -gz);
+      if (g) best = { distance: far, species: g.id, id: 'grass', point: new THREE.Vector3(gx, o.y + d.y * far, gz), x: gx, z: gz, grass: g };
+    }
     if (best && this.onPickup(o, d, best.distance)) return null;   // the acorn game's pickups and stashes stay quiet
     return best;
   }
@@ -263,16 +279,24 @@ export class Identify {
     const s = SPECIES[hit.species], season = this.seasonNow(), card = this.els.card;
     this.selected = { id: hit.id, species: hit.species };
     const h = s.height_m ? `${s.height_m[0]}-${s.height_m[1]} m` : '–';
-    const kind = s.deciduous ? 'deciduous' : 'evergreen';
+    const kind = s.groundForm ? `${s.lifespan || 'herb'}${s.native === false ? ', introduced' : s.native ? ', native' : ''}` : s.deciduous ? 'deciduous' : 'evergreen';
     const note = s.season_notes?.[season];
+    // the animals (the record's relations): who eats it this season and who shelters in it
+    const rel = s.relations || {}, eats = (rel.eaten_by || []).filter(e => !e.seasons?.length || e.seasons.includes(season));
+    const byAnimal = new Map(); for (const e of eats) { const k = animalWord(e.animal); byAnimal.set(k, (byAnimal.get(k) || new Set()).add(e.part)); }
+    const eatenHtml = byAnimal.size ? `<div class="row"><span>eaten by</span><b>${esc([...byAnimal].map(([a, parts]) => `${a} (${[...parts].join(', ')})`).join(', '))}</b></div>` : '';
+    const coverHtml = rel.cover_for?.length ? `<div class="row"><span>shelter for</span><b>${esc(rel.cover_for.map(animalWord).join(', '))}</b></div>` : '';
+    const grassHtml = hit.grass ? `<div class="row"><span>the sward here</span><b>${esc(hit.grass.ids.filter(id => id !== s.id).map(id => SPECIES[id]?.common || id).join(', ') || 'only this')}</b></div>` : '';
     card.innerHTML = `<button class="close" data-close title="close (Esc)">×</button>
       <h1>${esc(s.common)}</h1>
       <div class="sci"><i>${esc(s.scientific)}</i> · ${hit.distance.toFixed(0)} m away</div>
       <div class="row"><span>form</span><b>${esc(formWord(s.form))} · ${kind}</b></div>
-      <div class="row"><span>architecture</span><b>${esc(s.architectural_model || '–')} model</b></div>
+      ${s.groundForm ? '' : `<div class="row"><span>architecture</span><b>${esc(s.architectural_model || '–')} model</b></div>`}
       <div class="row"><span>height here</span><b>${esc(h)}</b></div>
+      ${grassHtml}
       ${s.description ? `<p>${esc(s.description)}</p>` : ''}
       <p class="season"><b>${esc(SEASON_WORD[season] || season)}:</b> ${esc(note || (s.deciduous ? 'deciduous: the crown empties in winter.' : 'evergreen: in leaf all year.'))}</p>
+      ${eatenHtml}${coverHtml}
       ${this.acornHtml(hit)}
       <div class="status">status: ${esc(s.status || 'agent draft, needs local sign-off')}</div>`;
     card.classList.remove('hidden');

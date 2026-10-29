@@ -1,0 +1,47 @@
+{
+  "id": "wyethia_helenioides",
+  "aliases": ["gray_mules_ears", "mules_ears", "grey_mules_ears"],
+  "scientific": "Wyethia helenioides",
+  "common": "gray mule's ears",
+  "form": "forb",
+  "lifespan": "perennial",
+  "native": true,
+  "height_m": [0.2, 0.6],
+  "description": "A stout perennial from a deep taproot with big, upright, oval leaves 20-40 cm long, grey and woolly when young, and a large yellow sunflower-like head 7-10 cm across on a short, leafy stem; 20-60 cm tall. It flowers from March into May in the blue oak savanna and on grassy slopes, most often on north- and east-facing ground and among rocks, where deer eat its young leaves and flowers in spring and quail and ground squirrels pick up its seed.",
+  "season_notes": {
+    "winter": "The first woolly grey leaves push up through the grass after the rains.",
+    "spring": "Clumps of big grey ears, with one or a few large yellow heads each, March into May.",
+    "summer": "The leaves brown and wither in June; by July nothing shows above the root.",
+    "fall": "Nothing above ground; the taproot waits for the rains."
+  },
+  "status": "agent draft, needs local sign-off",
+  "ground": {
+    "habit": "mound",
+    "leaf": { "shape": "ovate", "size_m": 0.3, "rgb": [148, 160, 138] },
+    "flower": { "shape": "daisy", "rgb": [242, 196, 40], "size_m": 0.09, "months": [3, 5], "per_plant": 2 },
+    "height_by_month": [0.2, 0.4, 0.75, 1.0, 1.0, 0.5, 0.0, 0.0, 0.0, 0.0, 0.0, 0.08],
+    "dead_rgb": [150, 134, 108],
+    "density": 0.5
+  },
+  "habitat": {
+    "classes": { "grassland": 0.8, "oak_woodland": 1.0, "chaparral": 0.3, "mixed_forest": 0.15, "conifer_forest": 0.0, "riparian": 0.05 },
+    "floor": 0.6, "mid": 1.0, "steep": 1.2, "north": 1.4, "shade": 0.2, "disturbed": 0.5
+  },
+  "relations": {
+    "eaten_by": [
+      { "animal": "odocoileus_hemionus", "part": "leaves", "seasons": ["spring"] },
+      { "animal": "odocoileus_hemionus", "part": "flowers", "seasons": ["spring"] },
+      { "animal": "otospermophilus_beecheyi", "part": "seeds", "seasons": ["summer"] },
+      { "animal": "callipepla_californica", "part": "seeds", "seasons": ["summer"] }
+    ],
+    "cover_for": []
+  },
+  "notes": "Gray mule's ears is a foothill perennial of the Sierra Nevada and Coast Range, in blue oak savanna, open woodland and grassland, usually on slopes, frequently north- or east-facing and in rocky ground. The leaves are mostly basal, broadly elliptic to ovate, 20-40 cm long, held up and out like a mule's ears and covered with a dense grey-white wool that thins with age (leaf shape ovate, 0.3 m, a grey-green); the heads are solitary or few on short stems, 7-10 cm across, a ring of bright yellow rays round a yellow disc like a small sunflower (flower shape daisy, 9 cm, 2 per plant). It is summer-dormant: the leaves appear in December-January, flowering is March-May, and the leaves dry and collapse by July, so height_by_month is zero from July to November and the June value shows the browning leaves (dead_rgb). Deer eat the tender young leaves and the flower heads; ground squirrels and quail take the seeds. habitat: north x1.4 and steep x1.2 follow its liking for the cooler slopes; the rock outcrops have no factor of their own, so the slope factors stand for them; light shade at most (0.2); rarely on disturbed ground (0.5), since the taproot plant is slow to establish.",
+  "sources": [
+    "https://ucjeps.berkeley.edu/eflora/ (Wyethia helenioides)",
+    "https://www.calflora.org/ (Wyethia helenioides)",
+    "https://calscape.org/ (Wyethia helenioides)"
+  ],
+  "authors": ["Wild Earth (agent draft, 2026-10-29); needs local sign-off"],
+  "license": "CC BY-SA 4.0"
+}

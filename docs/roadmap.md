@@ -56,6 +56,17 @@ sequenced; Parked is in the brief but deliberately not started.
   cuts under them (typically 0.4 m) when the square arrives; an old rare tree's trunk
   switches branching at the 180 m hand-over; crowns taller than 1.7x their tree are drawn
   shorter than measured.
+- The understory, 2026-10-29: thirty more species in the library (56), every one with the animals that eat it and
+  shelter in it and where it belongs: nine shrubs (buckbrush, deerbrush, common manzanita, mountain mahogany,
+  monkeyflower, wild rose, snowberry, gooseberry, currant) grown and drawn as the six of 10-26, the shrub impostor
+  field taking any shrub of the library; seven grasses drawn by grass.js as species (palette, height, heads per
+  record, from each cell's ground mix); fourteen herbs in a new layer (forbs.js: side and top pictures baked from the
+  record per month, crossed quads within 45 m). The species mix carries a ground layer per community from the
+  records' habitat blocks; games.json carries who eats which plant; the needs widget names the plant under the body;
+  the field guide names a herb or the grass under the cursor and says who eats it. Weak: the herbs are flat pictures
+  (no shadow, a visible X from above), the chaparral impostors' near leaf pictures repeat on big crowns as before,
+  the 3D shrubs of the woodland understory are still few (the impostors carry it), the grass species change only the
+  blades' colour and size (one clump shape per type), and the nine shrubs are unmeasured on the lineup.
 - Trees on the lidar crowns, 2026-10-26: one tree per real crown on the home tile, species by the cell's mix and the crown's height, the biggest real trees old-growth with landmark ids; start view 295 draw calls (412 before). Weak: shrub-only for the first moments after load, rare species' old crowns are scaled mature trees.
 - Ground colour by date, 2026-10-26: the base is the NAIP photo with the tree crowns replaced by ground, recoloured per 20 m by the Sentinel-2 monthly median for the day over July (class-aware 100 m blur of open ground, slope shading regressed out, per-class flat-ground brightness), forest litter under closed canopy, grass blades and the rewilded palette from the same means; fps unchanged. Weak: oak-woodland and chaparral open ground greens less than grassland (measured, reads grey-olive in April), litter is one fixed colour, the first build costs 0.6 s at load.
 

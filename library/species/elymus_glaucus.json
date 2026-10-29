@@ -1,0 +1,56 @@
+{
+  "id": "elymus_glaucus",
+  "aliases": ["blue_wildrye", "wildrye", "blue_wild_rye"],
+  "scientific": "Elymus glaucus",
+  "common": "blue wildrye",
+  "form": "grass",
+  "lifespan": "perennial",
+  "native": true,
+  "height_m": [0.6, 1.5],
+  "description": "A tall, loose bunchgrass with flat, blue-green leaves and slender stems that lift a narrow, erect spike of short-awned seeds above the clump from May into July. It grows in the half shade at the edges of the oak woodland, on the moist north slopes and along the creeks, where it stays green weeks longer than the annuals and gives deer an early bite and voles and quail a tall place to hide.",
+  "season_notes": {
+    "winter": "New blue-green leaves from the base of the clump after the rains, among last year's pale stems.",
+    "spring": "Leafy clumps knee-high by April; the flowering stems rise in May with a stiff, upright spike.",
+    "summer": "The spikes ripen and shatter in July; the leaves cure to straw but the base stays grey-green in the shade.",
+    "fall": "Pale standing stems over a grey-green clump, waiting for rain."
+  },
+  "status": "agent draft, needs local sign-off",
+  "ground": {
+    "type": "bunch",
+    "height": 1.5,
+    "width": 1.1,
+    "palette": {
+      "winter": { "root": [70, 88, 74], "tip": [102, 140, 120], "head": [122, 134, 112], "awn": [134, 138, 118] },
+      "spring": { "root": [66, 92, 74], "tip": [106, 150, 126], "head": [128, 150, 116], "awn": [140, 152, 122] },
+      "summer": { "root": [96, 106, 88], "tip": [182, 170, 130], "head": [196, 184, 142], "awn": [204, 192, 152] },
+      "fall": { "root": [90, 100, 84], "tip": [166, 158, 126], "head": [184, 176, 144], "awn": [190, 182, 152] }
+    },
+    "heads": { "shape": "spike", "months": [5, 7] },
+    "cure": 0.7
+  },
+  "habitat": {
+    "classes": { "grassland": 0.4, "oak_woodland": 1.0, "chaparral": 0.2, "mixed_forest": 0.6, "conifer_forest": 0.3, "riparian": 0.9 },
+    "floor": 1.2, "mid": 1.0, "steep": 0.9, "north": 1.5, "shade": 0.6, "disturbed": 0.8
+  },
+  "relations": {
+    "eaten_by": [
+      { "animal": "odocoileus_hemionus", "part": "leaves", "seasons": ["winter", "spring", "fall"] },
+      { "animal": "sylvilagus_bachmani", "part": "leaves", "seasons": ["winter", "spring", "summer", "fall"] },
+      { "animal": "microtus_californicus", "part": "leaves", "seasons": ["winter", "spring", "fall"] },
+      { "animal": "otospermophilus_beecheyi", "part": "seeds", "seasons": ["summer"] },
+      { "animal": "callipepla_californica", "part": "seeds", "seasons": ["summer", "fall"] },
+      { "animal": "oreortyx_pictus", "part": "seeds", "seasons": ["summer", "fall"] },
+      { "animal": "meleagris_gallopavo", "part": "seeds", "seasons": ["summer", "fall"] }
+    ],
+    "cover_for": ["microtus_californicus", "callipepla_californica", "oreortyx_pictus", "sylvilagus_bachmani"]
+  },
+  "notes": "Blue wildrye is a cool-season perennial bunchgrass found through most of California below the subalpine, in the foothills mostly where there is some shade or moisture: oak woodland edges and openings, north-facing slopes, swales and the banks of creeks, and the openings of the mixed and conifer forest above. Clumps are loose rather than dense, the leaves flat, 5-15 mm wide and often glaucous (the blue-green the palette carries), and the culms 0.6-1.5 m, each ending in a stiff, erect spike 5-20 cm long with usually two spikelets at a node and short, straight lemma awns of about 1-3 cm. It flowers late for a foothill grass, May to July, which is why its heads months are [5, 7] and not the annuals' April. The file's height of 1.5 (about 0.9 m of the bunch clump) is the typical leafy clump with its stems, not the tallest culm; the width 1.1 is a little wider than the needlegrass tussock because the clump is open. Cure 0.7: in the open it dries to straw by August, but the base keeps some grey-green where it is shaded, so the summer and fall root stays greyer than the annuals'. It is grazed by deer in the green months and by rabbits and voles, and its seed is taken by quail, turkeys and ground squirrels; its tall clumps on the shaded slopes are cover for voles, both quail and the brush rabbit. The habitat weights put it highest in oak woodland and riparian, with north 1.5 and shade 0.6 for its liking of the cooler slopes and partial canopy.",
+  "sources": [
+    "https://ucjeps.berkeley.edu/eflora/ (Elymus glaucus)",
+    "https://www.calflora.org/ (Elymus glaucus)",
+    "https://www.fs.usda.gov/database/feis/plants/graminoid/elygla/all.html",
+    "https://calscape.org/ (Elymus glaucus)"
+  ],
+  "authors": ["Wild Earth (agent draft, 2026-10-29); needs local sign-off"],
+  "license": "CC BY-SA 4.0"
+}

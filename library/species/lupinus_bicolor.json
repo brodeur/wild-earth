@@ -1,0 +1,46 @@
+{
+  "id": "lupinus_bicolor",
+  "aliases": ["miniature_lupine", "lupine", "annual_lupine"],
+  "scientific": "Lupinus bicolor",
+  "common": "miniature lupine",
+  "form": "forb",
+  "lifespan": "annual",
+  "native": true,
+  "height_m": [0.1, 0.4],
+  "description": "A small, hairy annual lupine with hand-shaped leaves of five to seven narrow leaflets and short spikes of little blue pea flowers, each with a white patch on its upper petal that turns pink-purple once the flower has been visited; 10-40 cm tall. It flowers from March into May across the open grassland, the oak savanna and the road banks, often in blue drifts with the poppies, and like all lupines it feeds the soil with the nitrogen fixed in its roots.",
+  "season_notes": {
+    "winter": "Small rosettes of palmate leaves among the new grass after the rains.",
+    "spring": "Blue and white spikes from March, thickest in April; the white spots blush pink as the bees work them.",
+    "summer": "Hairy pods split and twist in June, flinging the seeds; the plant is gone by July.",
+    "fall": "Gone, but for seed in the ground waiting for rain."
+  },
+  "status": "agent draft, needs local sign-off",
+  "ground": {
+    "habit": "mound",
+    "leaf": { "shape": "palmate", "size_m": 0.04, "rgb": [98, 132, 92] },
+    "flower": { "shape": "spike", "rgb": [96, 100, 200], "size_m": 0.05, "months": [3, 5], "per_plant": 4 },
+    "height_by_month": [0.25, 0.4, 0.7, 1.0, 0.9, 0.5, 0.0, 0.0, 0.0, 0.0, 0.1, 0.18],
+    "dead_rgb": [172, 156, 116],
+    "density": 1.0
+  },
+  "habitat": {
+    "classes": { "grassland": 1.0, "oak_woodland": 0.5, "chaparral": 0.35, "mixed_forest": 0.05, "conifer_forest": 0.0, "riparian": 0.05 },
+    "floor": 0.8, "mid": 1.0, "steep": 1.1, "north": 0.6, "shade": 0.1, "disturbed": 1.5
+  },
+  "relations": {
+    "eaten_by": [
+      { "animal": "odocoileus_hemionus", "part": "leaves", "seasons": ["spring"] },
+      { "animal": "callipepla_californica", "part": "seeds", "seasons": ["summer"] },
+      { "animal": "otospermophilus_beecheyi", "part": "seeds", "seasons": ["summer"] }
+    ],
+    "cover_for": []
+  },
+  "notes": "Miniature lupine is one of the commonest spring wildflowers of the foothill grassland and savanna, a winter annual that germinates with the November rains and dies by July. The leaves are palmately compound with 5-7 narrow, hairy leaflets 1-3 cm long on a long stalk (leaf shape palmate, the whole leaf about 4 cm across, a slightly grey green from the hairs); the flowers are small (under 1 cm), in whorls on a short raceme a few centimetres long, blue to violet with a white banner spot (the rgb is the blue; the white is part of the spike the renderer draws); the fruit a small hairy pod with a few seeds. A single plant carries a few spikes on short branches, hence per_plant 4 and the mound habit. Lupine foliage and especially seeds hold bitter alkaloids, so the animals take little: deer a few leaves in spring, quail and ground squirrels some of the seed after it is shed, which is why the relation list is short for so common a plant. habitat: open sun (shade 0.1), favours the warm slopes over the north ones (0.6), and comes up thickly on graded banks and road verges (disturbed 1.5), where its nitrogen fixing lets it pioneer thin soil. height_by_month holds a little in June for the dry stalks and pods (dead_rgb) before the plant is gone.",
+  "sources": [
+    "https://ucjeps.berkeley.edu/eflora/ (Lupinus bicolor)",
+    "https://www.calflora.org/ (Lupinus bicolor)",
+    "https://calscape.org/ (Lupinus bicolor)"
+  ],
+  "authors": ["Wild Earth (agent draft, 2026-10-29); needs local sign-off"],
+  "license": "CC BY-SA 4.0"
+}

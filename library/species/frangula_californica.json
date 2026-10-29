@@ -20,6 +20,22 @@
     "fall": "Red and shiny black berries hang together on the branches, a fall feast for birds and bears."
   },
   "status": "agent draft, needs local sign-off",
+  "habitat": {
+    "classes": {"grassland": 0.03, "oak_woodland": 1.0, "chaparral": 0.9, "mixed_forest": 0.6, "conifer_forest": 0.3, "riparian": 0.3},
+    "floor": 0.6, "mid": 1.0, "steep": 1.4, "north": 1.1, "shade": 0.45, "disturbed": 0.6
+  },
+  "relations": {
+    "eaten_by": [
+      {"animal": "ursus_americanus", "part": "berries", "seasons": ["fall"]},
+      {"animal": "urocyon_cinereoargenteus", "part": "berries", "seasons": ["fall"]},
+      {"animal": "canis_latrans", "part": "berries", "seasons": ["fall"]},
+      {"animal": "aphelocoma_californica", "part": "berries", "seasons": ["fall"]},
+      {"animal": "callipepla_californica", "part": "berries", "seasons": ["fall"]},
+      {"animal": "meleagris_gallopavo", "part": "berries", "seasons": ["fall"]},
+      {"animal": "odocoileus_hemionus", "part": "browse", "seasons": ["winter", "spring", "summer", "fall"]}
+    ],
+    "cover_for": []
+  },
   "trunk": {
     "length_ratio": 0.8, "radius_ratio": 0.022, "taper": 0.8, "flare": 1.4, "bole_ratio": 0.08, "base_size": 0.02,
     "curve_deg": 12, "curve_var_deg": 14, "segments": 3, "lean_deg": 0, "stems": [5, 9], "stem_spread_deg": 58,

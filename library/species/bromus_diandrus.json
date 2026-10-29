@@ -1,0 +1,53 @@
+{
+  "id": "bromus_diandrus",
+  "aliases": ["ripgut", "ripgut_brome", "ripgut_grass"],
+  "scientific": "Bromus diandrus",
+  "common": "ripgut brome",
+  "form": "grass",
+  "lifespan": "annual",
+  "native": false,
+  "height_m": [0.4, 1.0],
+  "description": "A coarse annual brome with hairy leaves and a loose, drooping panicle of large spikelets, each seed tipped with a long, stiff awn; when they dry in June the barbed seeds catch in fur and work into the mouths, eyes and ears of animals. It crowds the bare and disturbed ground: road verges, old fields, the trampled shade under the oaks and the soil turned over by squirrels and gophers.",
+  "season_notes": {
+    "winter": "Coarse, greyish green tufts from the first rains, thickest under the oaks.",
+    "spring": "Drooping, open heads in April with long, stiff awns; still eaten while soft and green.",
+    "summer": "Dry and sharp by June: the barbed seeds shatter and cling to fur and socks, and the grazers leave it.",
+    "fall": "Grey straw and the spent heads in the oak shade, the seed on the ground waiting for rain."
+  },
+  "status": "agent draft, needs local sign-off",
+  "ground": {
+    "type": "annual",
+    "height": 1.15,
+    "width": 1.0,
+    "palette": {
+      "winter": { "root": [60, 74, 48], "tip": [114, 150, 86], "head": [140, 148, 104], "awn": [146, 148, 112] },
+      "spring": { "root": [58, 78, 42], "tip": [120, 162, 78], "head": [168, 166, 112], "awn": [172, 162, 120] },
+      "summer": { "root": [118, 106, 82], "tip": [204, 184, 136], "head": [214, 200, 162], "awn": [206, 192, 158] },
+      "fall": { "root": [106, 98, 82], "tip": [184, 172, 138], "head": [194, 186, 160], "awn": [188, 180, 156] }
+    },
+    "heads": { "shape": "panicle", "months": [4, 6] },
+    "cure": 1.0
+  },
+  "habitat": {
+    "classes": { "grassland": 0.7, "oak_woodland": 1.0, "chaparral": 0.2, "mixed_forest": 0.2, "conifer_forest": 0.05, "riparian": 0.3 },
+    "floor": 1.1, "mid": 1.0, "steep": 0.8, "north": 1.0, "shade": 0.6, "disturbed": 1.8
+  },
+  "relations": {
+    "eaten_by": [
+      { "animal": "odocoileus_hemionus", "part": "leaves", "seasons": ["winter", "spring"] },
+      { "animal": "sylvilagus_bachmani", "part": "leaves", "seasons": ["winter", "spring"] },
+      { "animal": "lepus_californicus", "part": "leaves", "seasons": ["winter"] },
+      { "animal": "otospermophilus_beecheyi", "part": "seeds", "seasons": ["summer", "fall"] }
+    ],
+    "cover_for": ["microtus_californicus"]
+  },
+  "notes": "Ripgut brome is a Mediterranean annual brome that is now one of the most widespread grasses of disturbed ground in California, abundant on road and trail edges, in old fields and corrals, on the soil thrown up by burrowing animals and in the shaded, nutrient-rich duff under oaks, where it often takes over from the shorter annuals. The plant is coarse and loosely tufted, 40-100 cm, with hairy sheaths and blades, and its open panicle, 10-25 cm, droops and spreads under few, large spikelets 3-4 cm long (awns included), the lemmas narrow with a stiff, straight, rough awn of 3-6 cm. The florets are sharp at the base and covered in backward-pointing barbs, so once dry in late May and June they migrate one way only into fur, skin, the gums and the eyes; it is the 'ripgut' that stockmen avoid, and its feed value ends when it heads. That is why the relations list only green leaves, winter and spring, for deer and rabbits and the seed only for ground squirrels, which husk it. Height 1.15 of the annual clump (about 0.52 m) and a palette a little greyer and duller than the wild oat's, its summer straw less golden, for the coarse, hairy blades. Heads months [4, 6], cure 1.0. Habitat: oak woodland 1.0 above grassland 0.7, shade 0.6 for its place under the canopy, disturbed 1.8 for the verges and burrow mounds. Its loose stand is some cover for voles but the animals avoid it once dry.",
+  "sources": [
+    "https://ucjeps.berkeley.edu/eflora/ (Bromus diandrus)",
+    "https://www.calflora.org/ (Bromus diandrus)",
+    "https://www.fs.usda.gov/database/feis/ (Bromus diandrus)",
+    "https://www.cal-ipc.org/ (Bromus diandrus)"
+  ],
+  "authors": ["Wild Earth (agent draft, 2026-10-29); needs local sign-off"],
+  "license": "CC BY-SA 4.0"
+}

@@ -1,0 +1,46 @@
+{
+  "id": "achillea_millefolium",
+  "aliases": ["yarrow", "common_yarrow", "western_yarrow"],
+  "scientific": "Achillea millefolium",
+  "common": "yarrow",
+  "form": "forb",
+  "lifespan": "perennial",
+  "native": true,
+  "height_m": [0.3, 0.8],
+  "description": "A perennial with soft, finely divided, feathery leaves that smell sharp and herbal when crushed, and flat-topped plates of many small white flower heads on stiff stems 30-80 cm tall. It flowers from May through August in the meadows, the grassland, the open woodland and along moist or disturbed ground from the foothills up into the high mountains, and its open plates feed a crowd of small bees, flies and beetles after most of the spring flowers are gone.",
+  "season_notes": {
+    "winter": "Low tufts of green, feathery leaves stay through the cold.",
+    "spring": "The leafy clump fills out; flowering stems start to rise in May.",
+    "summer": "Flat white plates through June, July and August, green into the dry months where the ground holds water.",
+    "fall": "The stems dry to brown with dark seed heads; the feathery leaves stay at the base."
+  },
+  "status": "agent draft, needs local sign-off",
+  "ground": {
+    "habit": "mound",
+    "leaf": { "shape": "ferny", "size_m": 0.08, "rgb": [102, 134, 94] },
+    "flower": { "shape": "umbel", "rgb": [240, 238, 224], "size_m": 0.08, "months": [5, 8], "per_plant": 3 },
+    "height_by_month": [0.2, 0.25, 0.35, 0.5, 0.85, 1.0, 1.0, 0.9, 0.7, 0.5, 0.25, 0.2],
+    "dead_rgb": [140, 118, 90],
+    "density": 0.6
+  },
+  "habitat": {
+    "classes": { "grassland": 0.8, "oak_woodland": 0.8, "chaparral": 0.3, "mixed_forest": 0.7, "conifer_forest": 0.7, "riparian": 0.6 },
+    "floor": 1.3, "mid": 1.0, "steep": 0.8, "north": 1.2, "shade": 0.4, "disturbed": 1.3
+  },
+  "relations": {
+    "eaten_by": [
+      { "animal": "odocoileus_hemionus", "part": "leaves", "seasons": ["spring", "summer"] },
+      { "animal": "sylvilagus_bachmani", "part": "leaves", "seasons": ["spring", "summer"] }
+    ],
+    "cover_for": []
+  },
+  "notes": "Yarrow is one of the most widespread plants in California, from the coast and foothills to the alpine; here it grows in meadows and grassy swales, open oak and pine woodland, creek edges, road banks and old fields. It spreads by rhizomes into loose clumps. The leaves are 3-15 cm long and two or three times pinnately divided into very fine segments, aromatic and somewhat woolly (leaf shape ferny, 8 cm, a grey-green); the flower heads are small (about 5 mm) with a few short white rays, packed by the dozen into a flat or slightly domed cluster 4-10 cm across (flower shape umbel, though botanically a corymb), a few per clump. Unlike the annuals it stays green into summer and keeps a winter rosette, so height_by_month holds through June-August and falls slowly in fall, the brown stalks shown in dead_rgb from September. Its bitter, aromatic oils make it a minor food: deer and brush rabbits nibble it. habitat: tolerant of light shade (0.4), more on the moist floors (x1.3) and north slopes (x1.2), common on disturbed ground (x1.3), less on steep dry slopes.",
+  "sources": [
+    "https://ucjeps.berkeley.edu/eflora/ (Achillea millefolium)",
+    "https://www.calflora.org/ (Achillea millefolium)",
+    "https://calscape.org/ (Achillea millefolium)",
+    "https://www.fs.usda.gov/database/feis/ (Achillea millefolium)"
+  ],
+  "authors": ["Wild Earth (agent draft, 2026-10-29); needs local sign-off"],
+  "license": "CC BY-SA 4.0"
+}

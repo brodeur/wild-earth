@@ -1,0 +1,45 @@
+{
+  "id": "chlorogalum_pomeridianum",
+  "aliases": ["soap_plant", "soaproot", "amole", "wavyleaf_soap_plant"],
+  "scientific": "Chlorogalum pomeridianum",
+  "common": "soap plant",
+  "form": "forb",
+  "lifespan": "perennial",
+  "native": true,
+  "height_m": [0.8, 2.0],
+  "description": "A perennial from a large bulb wrapped in coarse brown fibres: in winter and spring a sprawling rosette of long, narrow leaves with strongly wavy edges, 20-60 cm, then in early summer a bare, branched stalk 1-2 m tall whose small white star flowers open only in the late afternoon and evening. It grows scattered through the grassland, the oak woodland and the chaparral openings on dry slopes, where bears and pigs dig its bulb, and the bulb's soapy sap was used by the native peoples for washing and to stun fish.",
+  "season_notes": {
+    "winter": "Rosettes of long, wavy-edged leaves spread over the ground among the new grass.",
+    "spring": "The rosettes at their fullest; a tall, bare stalk rises from the middle in May.",
+    "summer": "White starry flowers open in the evenings, May into July; the leaves wither as they open.",
+    "fall": "Only the dry, branched stalk stands, brown, over a bulb deep in the ground."
+  },
+  "status": "agent draft, needs local sign-off",
+  "ground": {
+    "habit": "rosette",
+    "leaf": { "shape": "strap", "size_m": 0.4, "rgb": [100, 132, 92] },
+    "flower": { "shape": "tiny", "rgb": [244, 242, 234], "size_m": 0.02, "months": [5, 7], "per_plant": 24 },
+    "height_by_month": [0.15, 0.2, 0.22, 0.28, 0.7, 1.0, 1.0, 0.5, 0.45, 0.4, 0.1, 0.12],
+    "dead_rgb": [150, 128, 96],
+    "density": 0.6
+  },
+  "habitat": {
+    "classes": { "grassland": 0.9, "oak_woodland": 1.0, "chaparral": 0.6, "mixed_forest": 0.2, "conifer_forest": 0.05, "riparian": 0.05 },
+    "floor": 0.7, "mid": 1.0, "steep": 1.1, "north": 0.9, "shade": 0.3, "disturbed": 0.6
+  },
+  "relations": {
+    "eaten_by": [
+      { "animal": "ursus_americanus", "part": "bulbs", "seasons": ["spring", "fall"] },
+      { "animal": "odocoileus_hemionus", "part": "leaves", "seasons": ["winter", "spring"] }
+    ],
+    "cover_for": []
+  },
+  "notes": "Soap plant is a long-lived perennial of dry, open foothill ground: grassland, blue oak and live oak woodland, chaparral clearings, often on rocky or shallow slopes. The bulb, 5-15 cm long and buried deep, is sheathed in a thick coat of brown fibres (once bundled into brushes). The leaves are all basal, linear, 20-60 cm long and 1-2.5 cm wide, grey-green with strongly wavy margins, sprawling outward from the bulb (leaf shape strap, 0.4 m); they come up with the winter rains and wither as the plant flowers. The flowering stalk is leafless, 1-2 m, with spreading branches; the flowers are about 2-3 cm across, six narrow white petals with a green or purple midvein, opening in the late afternoon for one evening each, visited by evening bees and moths (pomeridianum: of the afternoon). height_by_month is a share of the stalk's height: the rosette alone is about a fifth of it from November to April, the stalk rises in May, and from August the dry stalk stands at about half (dead_rgb), the leaves gone; that is a compromise, since the stalk keeps its full height but is thin and leafless, and a full-height brown figure would read heavier than it looks. Bears and feral pigs dig the bulbs; deer crop the young leaves in winter and spring. habitat: open to light shade (0.3), slopes over floors, undisturbed ground (0.6), since the bulb takes years to grow.",
+  "sources": [
+    "https://ucjeps.berkeley.edu/eflora/ (Chlorogalum pomeridianum)",
+    "https://www.calflora.org/ (Chlorogalum pomeridianum)",
+    "https://calscape.org/ (Chlorogalum pomeridianum)"
+  ],
+  "authors": ["Wild Earth (agent draft, 2026-10-29); needs local sign-off"],
+  "license": "CC BY-SA 4.0"
+}

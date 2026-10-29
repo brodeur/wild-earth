@@ -1,0 +1,57 @@
+{
+  "id": "avena_fatua",
+  "aliases": ["wild_oat", "wild_oats", "avena_barbata", "slender_wild_oat"],
+  "scientific": "Avena fatua",
+  "common": "wild oat",
+  "form": "grass",
+  "lifespan": "annual",
+  "native": false,
+  "height_m": [0.6, 1.3],
+  "description": "A tall annual oat from the Mediterranean with broad, flat leaves and a wide, nodding panicle of big, drooping spikelets, each seed with a long, bent and twisted awn; waist-high by May and gold by June. With slender wild oat it is the grass that turns the foothills from green to gold, on every open slope, under the oaks and along the roads, and its heavy seeds feed ground squirrels, quail and turkeys through the dry months.",
+  "season_notes": {
+    "winter": "Broad, bright green leaves from the first rains, the sward's early grazing.",
+    "spring": "Tall stems in April with open, nodding panicles of dangling spikelets; flowering into May.",
+    "summer": "Cured to gold by June; the seeds drop and the awns twist them into the cracks of the soil.",
+    "fall": "Standing pale straw, bleached and broken, until the rains bring the new green underneath."
+  },
+  "status": "agent draft, needs local sign-off",
+  "ground": {
+    "type": "annual",
+    "height": 1.25,
+    "width": 1.0,
+    "palette": {
+      "winter": { "root": [56, 74, 38], "tip": [120, 168, 77], "head": [158, 168, 92], "awn": [158, 168, 102] },
+      "spring": { "root": [54, 79, 31], "tip": [128, 179, 66], "head": [189, 196, 97], "awn": [179, 189, 102] },
+      "summer": { "root": [117, 102, 69], "tip": [219, 191, 122], "head": [237, 219, 163], "awn": [224, 204, 153] },
+      "fall": { "root": [105, 94, 71], "tip": [199, 176, 128], "head": [212, 199, 161], "awn": [201, 191, 161] }
+    },
+    "heads": { "shape": "panicle", "months": [4, 6] },
+    "cure": 1.0
+  },
+  "habitat": {
+    "classes": { "grassland": 1.0, "oak_woodland": 0.8, "chaparral": 0.15, "mixed_forest": 0.1, "conifer_forest": 0.0, "riparian": 0.2 },
+    "floor": 1.1, "mid": 1.0, "steep": 0.8, "north": 0.9, "shade": 0.2, "disturbed": 1.6
+  },
+  "relations": {
+    "eaten_by": [
+      { "animal": "odocoileus_hemionus", "part": "leaves", "seasons": ["winter", "spring"] },
+      { "animal": "sylvilagus_bachmani", "part": "leaves", "seasons": ["winter", "spring"] },
+      { "animal": "lepus_californicus", "part": "leaves", "seasons": ["winter", "spring"] },
+      { "animal": "microtus_californicus", "part": "leaves", "seasons": ["winter", "spring"] },
+      { "animal": "otospermophilus_beecheyi", "part": "seeds", "seasons": ["spring", "summer", "fall"] },
+      { "animal": "microtus_californicus", "part": "seeds", "seasons": ["summer", "fall"] },
+      { "animal": "callipepla_californica", "part": "seeds", "seasons": ["summer", "fall", "winter"] },
+      { "animal": "meleagris_gallopavo", "part": "seeds", "seasons": ["summer", "fall", "winter"] }
+    ],
+    "cover_for": ["microtus_californicus", "callipepla_californica"]
+  },
+  "notes": "Wild oat is an annual grass of Eurasian origin that came with the Spanish missions and their livestock and, with slender wild oat (Avena barbata) and the annual bromes, replaced most of the native perennial grassland of the Central Valley and the foothills. It germinates with the first autumn rains, grows through the winter, and flowers in April and May on culms of 0.6-1.3 m; the leaves are flat and broad (to about 15 mm), and the open panicle, 10-40 cm, nods under spikelets of two or three florets 2-3 cm long, each floret with a stout awn 3-4 cm long, bent at the middle and twisted below the bend, which drives the seed into the ground as it dries and wets. Slender wild oat is the commoner of the two on the thin, dry foothill soils and differs in its narrower spikelets and two-bristled lemma tips; at the renderer's scale they look alike, so the file stands for both and carries avena_barbata as an alias. Cure 1.0 because the whole plant dies by June. The palette is exactly the renderer's former annual palette in sRGB 0-255, so the sward where it was the default annual is unchanged; the other annuals' palettes are set relative to it. Height 1.25 of the annual clump (about 0.55 m) is the leafy mass with its heads, shorter than the tallest culms. Deer, rabbits, jackrabbits and voles graze it while green, winter and spring; ground squirrels cut the ripening heads from late spring and cache the seed, and quail, turkeys and voles eat the fallen grain through summer and fall; its tall stand shelters voles and quail. Disturbed 1.6 for its abundance on verges and old fields.",
+  "sources": [
+    "https://ucjeps.berkeley.edu/eflora/ (Avena fatua)",
+    "https://www.calflora.org/ (Avena fatua)",
+    "https://www.fs.usda.gov/database/feis/ (Avena fatua)",
+    "https://www.cal-ipc.org/ (Avena fatua)"
+  ],
+  "authors": ["Wild Earth (agent draft, 2026-10-29); needs local sign-off"],
+  "license": "CC BY-SA 4.0"
+}

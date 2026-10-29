@@ -1,0 +1,53 @@
+{
+  "id": "erodium_cicutarium",
+  "aliases": ["filaree", "redstem_filaree", "storksbill", "erodium_botrys"],
+  "scientific": "Erodium cicutarium",
+  "common": "redstem filaree",
+  "form": "forb",
+  "lifespan": "annual",
+  "native": false,
+  "height_m": [0.05, 0.35],
+  "description": "A flat rosette of ferny, finely cut leaves 5-20 cm across, the first green of the year after the rains, that sends out reddish sprawling stems with small pink five-petalled flowers and long, beaked fruits like a stork's bill. Brought from the Mediterranean with the first livestock, it now grows everywhere in the foothill grassland and savanna and is one of the most eaten plants of the hills: deer, rabbits, jackrabbits, ground squirrels, voles and quail feed on its leaves through winter and spring and on its seeds in summer.",
+  "season_notes": {
+    "winter": "Flat ferny rosettes everywhere in the short grass, often tinged red by the cold; the first food of the year.",
+    "spring": "Small pink flowers from February, then the long beaked fruits; the stems sprawl outward.",
+    "summer": "The beaks split and twist, corkscrewing the seeds into the soil; the plant dries to reddish-brown stems and is gone by July.",
+    "fall": "Gone, until the first rains bring a new crop of rosettes."
+  },
+  "status": "agent draft, needs local sign-off",
+  "ground": {
+    "habit": "rosette",
+    "leaf": { "shape": "ferny", "size_m": 0.07, "rgb": [92, 128, 72] },
+    "flower": { "shape": "tiny", "rgb": [206, 122, 176], "size_m": 0.012, "months": [2, 5], "per_plant": 12 },
+    "height_by_month": [0.3, 0.45, 0.7, 1.0, 0.9, 0.4, 0.15, 0.0, 0.0, 0.0, 0.1, 0.2],
+    "dead_rgb": [150, 98, 72],
+    "density": 1.3
+  },
+  "habitat": {
+    "classes": { "grassland": 1.0, "oak_woodland": 0.7, "chaparral": 0.2, "mixed_forest": 0.05, "conifer_forest": 0.0, "riparian": 0.1 },
+    "floor": 1.0, "mid": 1.0, "steep": 0.9, "north": 0.8, "shade": 0.15, "disturbed": 1.6
+  },
+  "relations": {
+    "eaten_by": [
+      { "animal": "odocoileus_hemionus", "part": "leaves", "seasons": ["winter", "spring"] },
+      { "animal": "sylvilagus_bachmani", "part": "leaves", "seasons": ["winter", "spring"] },
+      { "animal": "lepus_californicus", "part": "leaves", "seasons": ["winter", "spring"] },
+      { "animal": "microtus_californicus", "part": "leaves", "seasons": ["winter", "spring"] },
+      { "animal": "microtus_californicus", "part": "seeds", "seasons": ["summer"] },
+      { "animal": "otospermophilus_beecheyi", "part": "leaves", "seasons": ["spring"] },
+      { "animal": "otospermophilus_beecheyi", "part": "seeds", "seasons": ["summer"] },
+      { "animal": "callipepla_californica", "part": "leaves", "seasons": ["winter", "spring"] },
+      { "animal": "callipepla_californica", "part": "seeds", "seasons": ["summer", "fall"] },
+      { "animal": "meleagris_gallopavo", "part": "leaves", "seasons": ["winter", "spring"] }
+    ],
+    "cover_for": []
+  },
+  "notes": "Redstem filaree is a Mediterranean annual that reached California with the Spanish missions' livestock and is now one of the commonest plants of the grassland and oak savanna, from the valley floor into the lower conifer belt, on almost any open ground; it is greatest where the grass is grazed short or disturbed (disturbed 1.6) and thins in the shade of the oaks (shade 0.15). The leaves are pinnately divided into deeply toothed leaflets (leaf ferny, 3-10 cm), pressed flat in a rosette in winter, often reddened; in spring the stems lengthen and sprawl or rise 10-35 cm, with umbels of two to ten pink-lavender flowers about 1 cm across (flower tiny, a dozen per plant) and fruits whose beaks grow 2-5 cm long. When dry, each of the five segments coils its tail into a spiral that winds and unwinds with the humidity and drives the seed into the soil. It germinates with the first rains (0.1 in November), is green and flat all winter, flowers February-May and is dead by July, its stems a reddish brown (dead_rgb). Long-beaked filaree (E. botrys) grows with it in the same places and is drawn the same, as the alias. Filaree is one of the most valuable forage plants of the foothills: deer, both rabbits, voles, ground squirrels, quail and turkeys graze the rosettes in winter and spring, and the seed is a staple of ground squirrels, voles and quail in summer, so density is 1.3, a little above the common forbs. Calscape covers native plants only, so it is not among the sources.",
+  "sources": [
+    "https://ucjeps.berkeley.edu/eflora/ (Erodium cicutarium)",
+    "https://www.calflora.org/ (Erodium cicutarium)",
+    "https://www.fs.usda.gov/database/feis/plants/forb/erocic/all.html"
+  ],
+  "authors": ["Wild Earth (agent draft, 2026-10-29); needs local sign-off"],
+  "license": "CC BY-SA 4.0"
+}

@@ -1,0 +1,49 @@
+{
+  "id": "vicia_villosa",
+  "aliases": ["hairy_vetch", "vetch", "vicia_sativa"],
+  "scientific": "Vicia villosa",
+  "common": "hairy vetch",
+  "form": "forb",
+  "lifespan": "annual",
+  "native": false,
+  "height_m": [0.3, 1.0],
+  "description": "A soft-haired vine that climbs and sprawls over the grass to 30-100 cm, its pinnate leaves ending in curling tendrils, with one-sided sprays of purple pea flowers from April into June. A European forage and cover crop gone wild, it tangles the grassland, verges, old fields and oak savanna, where deer, rabbits and voles graze its leaves in spring and quail, turkeys and ground squirrels take the seeds from its pods.",
+  "season_notes": {
+    "winter": "Low, soft green shoots among the grass after the rains.",
+    "spring": "The stems climb over the grass; purple flower sprays from April, thickest in May.",
+    "summer": "Flat pods ripen and split in June; the vines dry to a brown tangle and are gone by August.",
+    "fall": "Gone; hard seed in the soil waits for the rains."
+  },
+  "status": "agent draft, needs local sign-off",
+  "ground": {
+    "habit": "climbing",
+    "leaf": { "shape": "pinnate", "size_m": 0.1, "rgb": [90, 124, 72] },
+    "flower": { "shape": "pea", "rgb": [138, 82, 184], "size_m": 0.05, "months": [4, 6], "per_plant": 8 },
+    "height_by_month": [0.15, 0.25, 0.45, 0.8, 1.0, 0.9, 0.4, 0.0, 0.0, 0.0, 0.05, 0.1],
+    "dead_rgb": [132, 112, 82],
+    "density": 0.8
+  },
+  "habitat": {
+    "classes": { "grassland": 1.0, "oak_woodland": 0.7, "chaparral": 0.1, "mixed_forest": 0.1, "conifer_forest": 0.0, "riparian": 0.3 },
+    "floor": 1.3, "mid": 1.0, "steep": 0.7, "north": 1.0, "shade": 0.2, "disturbed": 1.8
+  },
+  "relations": {
+    "eaten_by": [
+      { "animal": "odocoileus_hemionus", "part": "leaves", "seasons": ["spring"] },
+      { "animal": "sylvilagus_bachmani", "part": "leaves", "seasons": ["winter", "spring"] },
+      { "animal": "lepus_californicus", "part": "leaves", "seasons": ["spring"] },
+      { "animal": "microtus_californicus", "part": "leaves", "seasons": ["winter", "spring"] },
+      { "animal": "callipepla_californica", "part": "seeds", "seasons": ["summer"] },
+      { "animal": "meleagris_gallopavo", "part": "seeds", "seasons": ["summer"] },
+      { "animal": "otospermophilus_beecheyi", "part": "seeds", "seasons": ["summer"] }
+    ],
+    "cover_for": []
+  },
+  "notes": "Hairy vetch is a European annual (sometimes living a second year) sown in California for forage, hay and as an orchard and vineyard cover crop, and now wild in the foothill grassland, oak savanna, road verges and old fields, most on the deeper soils of the flats and swales (floor 1.3) and on worked ground (disturbed 1.8). The stems are weak and four-angled, covered in soft spreading hairs, 0.5-2 m long, climbing over the grass by the branched tendrils at the end of each leaf, so the plant stands 30-100 cm where it has something to climb; the leaves have 10-20 narrow leaflets 1-2.5 cm (leaf pinnate, the whole leaf about 10 cm). The flowers are 12-18 mm, violet-purple with paler wings, 10-40 in a dense one-sided raceme on a long stalk; the file draws each raceme as one pea spray about 5 cm, eight to a plant. Pods 2-3 cm, flat, with a few round seeds. It comes up with the rains, climbs in April, flowers April-June and is dead by August (height_by_month 0.4 in July for the dry tangle). Common vetch (V. sativa), with fewer, larger flowers in the leaf axils, grows in the same places and is drawn the same, as the alias. Calscape covers native plants only, so it is not among the sources.",
+  "sources": [
+    "https://ucjeps.berkeley.edu/eflora/ (Vicia villosa)",
+    "https://www.calflora.org/ (Vicia villosa)"
+  ],
+  "authors": ["Wild Earth (agent draft, 2026-10-29); needs local sign-off"],
+  "license": "CC BY-SA 4.0"
+}

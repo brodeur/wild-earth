@@ -1,0 +1,55 @@
+{
+  "id": "hordeum_murinum",
+  "aliases": ["hare_barley", "foxtail_barley", "foxtail", "wall_barley", "mouse_barley"],
+  "scientific": "Hordeum murinum",
+  "common": "hare barley",
+  "form": "grass",
+  "lifespan": "annual",
+  "native": false,
+  "height_m": [0.2, 0.5],
+  "description": "A low annual barley with soft, bright green leaves and a dense, bristly spike of long awns that blushes reddish purple as it ripens in April and breaks apart in May into the barbed foxtails that catch in fur. It grows on bare and trampled ground: road edges, yards, the mounds and runways of ground squirrel colonies and the shade under oaks where cattle and deer rest.",
+  "season_notes": {
+    "winter": "Bright, soft green tufts early in the rains, among the first grass to grow on bare ground.",
+    "spring": "Bristly spikes in March and April, tinged red-purple as they ripen; by May they shatter into foxtails.",
+    "summer": "Dry pale stubble and loose foxtails on the ground, clinging to every passing coat.",
+    "fall": "Bleached stubble on the bare patches, the seed in the dust."
+  },
+  "status": "agent draft, needs local sign-off",
+  "ground": {
+    "type": "annual",
+    "height": 0.6,
+    "width": 0.8,
+    "palette": {
+      "winter": { "root": [54, 80, 38], "tip": [124, 178, 76], "head": [150, 170, 98], "awn": [156, 170, 106] },
+      "spring": { "root": [52, 84, 34], "tip": [134, 188, 72], "head": [168, 148, 112], "awn": [176, 140, 122] },
+      "summer": { "root": [124, 108, 76], "tip": [222, 198, 136], "head": [232, 214, 162], "awn": [226, 206, 158] },
+      "fall": { "root": [108, 98, 76], "tip": [198, 180, 138], "head": [208, 196, 164], "awn": [202, 192, 162] }
+    },
+    "heads": { "shape": "spike", "months": [4, 5] },
+    "cure": 1.0
+  },
+  "habitat": {
+    "classes": { "grassland": 0.7, "oak_woodland": 0.8, "chaparral": 0.05, "mixed_forest": 0.05, "conifer_forest": 0.0, "riparian": 0.2 },
+    "floor": 1.2, "mid": 0.9, "steep": 0.6, "north": 0.9, "shade": 0.4, "disturbed": 2.0
+  },
+  "relations": {
+    "eaten_by": [
+      { "animal": "odocoileus_hemionus", "part": "leaves", "seasons": ["winter"] },
+      { "animal": "sylvilagus_bachmani", "part": "leaves", "seasons": ["winter", "spring"] },
+      { "animal": "lepus_californicus", "part": "leaves", "seasons": ["winter", "spring"] },
+      { "animal": "microtus_californicus", "part": "leaves", "seasons": ["winter", "spring"] },
+      { "animal": "otospermophilus_beecheyi", "part": "seeds", "seasons": ["spring", "summer"] },
+      { "animal": "callipepla_californica", "part": "seeds", "seasons": ["summer", "fall"] }
+    ],
+    "cover_for": []
+  },
+  "notes": "Hare barley (Hordeum murinum, in California mostly subsp. leporinum) is a Mediterranean annual weed of trampled and enriched ground, abundant around buildings and corrals, on road shoulders and trail edges, on the bare soil of ground squirrel colonies and under the oaks where animals bed down. Tufted, 20-50 cm, with soft, flat, bright green blades that grow quickly in the early rains (a valued green bite in winter); the inflorescence is a dense, cylindrical, bristly spike 4-9 cm long with three one-flowered spikelets at each node and awns of 2-4 cm, often tinged red-purple as it ripens, which the spring palette's head and awn carry. In late April and May the spike breaks apart at its nodes into the barbed three-spikelet units, the 'foxtails' that work into fur, paws, ears and eyes. The name foxtail barley strictly belongs to the native perennial Hordeum jubatum, a wetter-ground plant not modelled here; the alias is kept because people call this one foxtail too. Heads months [4, 5], a spike; cure 1.0; height 0.6 of the annual clump (about 0.27 m) and width 0.8, a small tuft. It is grazed while green by rabbits, jackrabbits, voles and a little by deer, and once the heads form the animals leave it; ground squirrels take the seed as it ripens and quail pick the fallen grain. Disturbed 2.0 and floor 1.2 put it on the trampled, nitrogen-rich ground, shade 0.4 under the oaks; its low, sparse growth is no cover, so cover_for is empty.",
+  "sources": [
+    "https://ucjeps.berkeley.edu/eflora/ (Hordeum murinum)",
+    "https://www.calflora.org/ (Hordeum murinum)",
+    "https://www.fs.usda.gov/database/feis/ (Hordeum murinum)",
+    "https://www.cal-ipc.org/ (Hordeum murinum)"
+  ],
+  "authors": ["Wild Earth (agent draft, 2026-10-29); needs local sign-off"],
+  "license": "CC BY-SA 4.0"
+}

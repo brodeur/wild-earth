@@ -1,0 +1,49 @@
+{
+  "id": "claytonia_perfoliata",
+  "aliases": ["miners_lettuce", "miner_s_lettuce", "indian_lettuce"],
+  "scientific": "Claytonia perfoliata",
+  "common": "miner's lettuce",
+  "form": "forb",
+  "lifespan": "annual",
+  "native": true,
+  "height_m": [0.05, 0.3],
+  "description": "A soft, succulent little annual whose upper leaves are fused right round the stem into a round green disc, with a short spray of tiny white flowers rising from its centre; long-stalked basal leaves sprawl beneath it, 5-30 cm tall. It carpets the moist, shaded ground under the oaks, along the creeks and on the north slopes from February into May, a fresh green that deer, rabbits, voles and quail all eat, and its shiny black seeds are carried off by ants.",
+  "season_notes": {
+    "winter": "Bright green rosettes of long-stalked leaves in the shade of the oaks, thickening after each storm.",
+    "spring": "The round cup-leaves open, each with tiny white flowers at its centre, February into May.",
+    "summer": "Wilted and gone as the shade dries out in June.",
+    "fall": "Nothing above ground until the rains; the seed waits in the leaf litter."
+  },
+  "status": "agent draft, needs local sign-off",
+  "ground": {
+    "habit": "sprawling",
+    "leaf": { "shape": "round", "size_m": 0.05, "rgb": [104, 152, 86] },
+    "flower": { "shape": "tiny", "rgb": [246, 245, 238], "size_m": 0.006, "months": [2, 5], "per_plant": 12 },
+    "height_by_month": [0.5, 0.8, 1.0, 1.0, 0.7, 0.0, 0.0, 0.0, 0.0, 0.0, 0.15, 0.3],
+    "dead_rgb": [168, 160, 118],
+    "density": 0.8
+  },
+  "habitat": {
+    "classes": { "grassland": 0.15, "oak_woodland": 1.0, "chaparral": 0.15, "mixed_forest": 0.6, "conifer_forest": 0.3, "riparian": 1.0 },
+    "floor": 1.4, "mid": 0.9, "steep": 0.8, "north": 1.6, "shade": 0.8, "disturbed": 0.7
+  },
+  "relations": {
+    "eaten_by": [
+      { "animal": "odocoileus_hemionus", "part": "leaves", "seasons": ["winter", "spring"] },
+      { "animal": "sylvilagus_bachmani", "part": "leaves", "seasons": ["winter", "spring"] },
+      { "animal": "microtus_californicus", "part": "leaves", "seasons": ["winter", "spring"] },
+      { "animal": "otospermophilus_beecheyi", "part": "leaves", "seasons": ["spring"] },
+      { "animal": "callipepla_californica", "part": "leaves", "seasons": ["winter", "spring"] },
+      { "animal": "callipepla_californica", "part": "seeds", "seasons": ["spring"] }
+    ],
+    "cover_for": []
+  },
+  "notes": "Miner's lettuce is a cool-season annual of shade and moisture: under oak and bay canopies, in riparian strips, at the foot of north slopes and around seeps, rarely in the open grassland. The basal leaves are long-stalked and spoon- to kidney-shaped; the one pair of stem leaves below the flowers is joined into a single round, cupped disc 1-6 cm across that the stem pierces (leaf shape round, 5 cm, a juicy mid-green); the flowers are 5-petalled, white to faintly pink, about 5 mm, a dozen or so in a short cluster on the disc. It is succulent and mild, which is why so many animals eat it (deer, brush rabbits, voles, ground squirrels; quail take the greens and the seed), and the gold-rush miners ate it as a salad green, which gave the name. Each glossy black seed carries a small fatty appendage that ants harvest, so it is ant-sown. height_by_month: it germinates with the November rains, is fullest in March-April, and wilts in the first dry heat, so it is zero from June through October and its dead_rgb is never really shown. habitat: shade 0.8, north x1.6, the floors and swales x1.4; on dry steep ground and in the sun it is scarce.",
+  "sources": [
+    "https://ucjeps.berkeley.edu/eflora/ (Claytonia perfoliata)",
+    "https://www.calflora.org/ (Claytonia perfoliata)",
+    "https://calscape.org/ (Claytonia perfoliata)"
+  ],
+  "authors": ["Wild Earth (agent draft, 2026-10-29); needs local sign-off"],
+  "license": "CC BY-SA 4.0"
+}

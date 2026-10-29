@@ -20,6 +20,21 @@
     "fall": "The berries turn from green to orange to red as the first rains come."
   },
   "status": "agent draft, needs local sign-off",
+  "habitat": {
+    "classes": {"grassland": 0.05, "oak_woodland": 1.0, "chaparral": 0.9, "mixed_forest": 0.5, "conifer_forest": 0.1, "riparian": 0.3},
+    "floor": 0.8, "mid": 1.0, "steep": 1.2, "north": 1.1, "shade": 0.4, "disturbed": 0.7
+  },
+  "relations": {
+    "eaten_by": [
+      {"animal": "aphelocoma_californica", "part": "berries", "seasons": ["fall", "winter"]},
+      {"animal": "callipepla_californica", "part": "berries", "seasons": ["fall", "winter"]},
+      {"animal": "ursus_americanus", "part": "berries", "seasons": ["fall", "winter"]},
+      {"animal": "urocyon_cinereoargenteus", "part": "berries", "seasons": ["fall", "winter"]},
+      {"animal": "canis_latrans", "part": "berries", "seasons": ["fall", "winter"]},
+      {"animal": "odocoileus_hemionus", "part": "browse", "seasons": ["winter", "spring", "summer", "fall"]}
+    ],
+    "cover_for": ["callipepla_californica", "sylvilagus_bachmani"]
+  },
   "trunk": {
     "length_ratio": 0.72, "radius_ratio": 0.024, "taper": 0.75, "flare": 1.35, "bole_ratio": 0.06, "base_size": 0.02,
     "curve_deg": 14, "curve_var_deg": 14, "segments": 3, "lean_deg": 8, "stems": [3, 6], "stem_spread_deg": 22,

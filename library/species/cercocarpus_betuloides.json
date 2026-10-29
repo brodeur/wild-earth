@@ -1,0 +1,391 @@
+{
+  "id": "cercocarpus_betuloides",
+  "aliases": [
+    "mountain_mahogany",
+    "mountain-mahogany",
+    "birchleaf_mountain_mahogany"
+  ],
+  "scientific": "Cercocarpus betuloides",
+  "common": "birch-leaf mountain mahogany",
+  "form": "shrub",
+  "architectural_model": "Rauh (provisional)",
+  "deciduous": false,
+  "height_m": [
+    2,
+    5
+  ],
+  "variants": [
+    {
+      "name": "young",
+      "weight": 0.25,
+      "height_m": [
+        1,
+        2
+      ],
+      "trunk_radius": 0.8,
+      "deadwood": 0.03,
+      "set": {
+        "trunk": {
+          "stems": [
+            2,
+            4
+          ]
+        }
+      },
+      "note": "a narrow, upright young shrub"
+    },
+    {
+      "name": "mature",
+      "weight": 0.5,
+      "seeds": 2,
+      "note": "the file as written: an erect, open shrub of grey stems with dark leaves on short spurs"
+    },
+    {
+      "name": "old",
+      "weight": 0.25,
+      "height_m": [
+        4,
+        6.5
+      ],
+      "trunk_radius": 1.25,
+      "crown_scale": 1.1,
+      "gnarl": 1.2,
+      "deadwood": {
+        "fraction": 0.2,
+        "levels": [
+          0,
+          1
+        ],
+        "shorten": 0.8
+      },
+      "set": {
+        "trunk": {
+          "stems": [
+            2,
+            4
+          ],
+          "base_size": 0.25
+        }
+      },
+      "note": "a small tree: two to four grey trunks, an open, irregular crown, a few dead limbs"
+    }
+  ],
+  "description": "An erect, open, grey-barked shrub or small tree 2-6 m tall whose small, dark green, wedge-shaped leaves are toothed at the tip and crowded on short spur shoots; in summer it is hung with long, twisted, silver-plumed seed tails that catch the light. It grows on rocky chaparral slopes, canyon walls and in foothill pine woodland, and it is a favourite deer browse, most of all in winter when its leaves stay on.",
+  "season_notes": {
+    "winter": "Most leaves stay on through a foothill winter, and deer come to browse them.",
+    "spring": "Fresh leaves on the spurs and tiny, inconspicuous yellowish flowers in March and April.",
+    "summer": "Silvery feathered tails 5-10 cm long grow from the seeds and shine against the dark leaves when the sun is behind them.",
+    "fall": "The plumes twist and drift off on the wind, drilling their seeds into the soil."
+  },
+  "status": "agent draft, needs local sign-off",
+  "habitat": {
+    "classes": {
+      "grassland": 0.02,
+      "oak_woodland": 0.4,
+      "chaparral": 1.0,
+      "mixed_forest": 0.35,
+      "conifer_forest": 0.1,
+      "riparian": 0.05
+    },
+    "floor": 0.3,
+    "mid": 1.0,
+    "steep": 1.8,
+    "north": 1.0,
+    "shade": 0.2,
+    "disturbed": 0.5
+  },
+  "relations": {
+    "eaten_by": [
+      {
+        "animal": "odocoileus_hemionus",
+        "part": "browse",
+        "seasons": [
+          "winter",
+          "spring",
+          "summer",
+          "fall"
+        ]
+      },
+      {
+        "animal": "sylvilagus_bachmani",
+        "part": "browse",
+        "seasons": [
+          "winter",
+          "spring"
+        ]
+      }
+    ],
+    "cover_for": [
+      "callipepla_californica",
+      "oreortyx_pictus",
+      "sylvilagus_bachmani"
+    ]
+  },
+  "trunk": {
+    "length_ratio": 0.9,
+    "radius_ratio": 0.022,
+    "taper": 0.85,
+    "flare": 1.4,
+    "bole_ratio": 0.1,
+    "base_size": 0.15,
+    "curve_deg": 10,
+    "curve_var_deg": 12,
+    "segments": 3,
+    "lean_deg": 4,
+    "stems": [
+      2,
+      5
+    ],
+    "stem_spread_deg": 22,
+    "split_prob": 0.15,
+    "split_count": 2,
+    "split_angle_deg": 20,
+    "sinuous_deg": 6,
+    "bark_rgb": [
+      120,
+      116,
+      110
+    ],
+    "bark_pattern": "smooth_grey",
+    "twig_rgb": [
+      112,
+      96,
+      84
+    ],
+    "bark": {
+      "tile_m": [
+        0.15,
+        0.35
+      ],
+      "contrast": 0.5,
+      "lichen": 0.35,
+      "relief": 0.3
+    }
+  },
+  "crown": {
+    "shape": "inverse_conical",
+    "envelope": {
+      "profile": [
+        [
+          0.0,
+          0.25
+        ],
+        [
+          0.15,
+          0.38
+        ],
+        [
+          0.35,
+          0.52
+        ],
+        [
+          0.55,
+          0.6
+        ],
+        [
+          0.75,
+          0.58
+        ],
+        [
+          0.9,
+          0.45
+        ],
+        [
+          1.0,
+          0.2
+        ]
+      ],
+      "lobes": 4,
+      "lobe_depth": 0.18,
+      "asymmetry": 0.15,
+      "fill": 0.5,
+      "edge": 1.1
+    }
+  },
+  "levels": [
+    {
+      "count": 4,
+      "start": 0.12,
+      "down_angle_deg": 32,
+      "down_angle_var_deg": 12,
+      "rotation_deg": 140,
+      "rotation_var_deg": 30,
+      "length_ratio": 0.55,
+      "length_var": 0.3,
+      "curve_deg": 14,
+      "curve_var_deg": 14,
+      "tropism": 0.08,
+      "taper": 0.9,
+      "radius_ratio": 0.55,
+      "segments": 2
+    },
+    {
+      "count": 5,
+      "start": 0.2,
+      "down_angle_deg": 50,
+      "down_angle_var_deg": 15,
+      "rotation_deg": 140,
+      "rotation_var_deg": 30,
+      "length_ratio": 0.3,
+      "length_var": 0.3,
+      "curve_deg": 8,
+      "curve_var_deg": 12,
+      "tropism": 0.06,
+      "taper": 1.0,
+      "radius_ratio": 0.45,
+      "segments": 1
+    }
+  ],
+  "foliage": {
+    "type": "broadleaf",
+    "leaf_size_m": 0.025,
+    "leaf_shape": "oval",
+    "cluster_m": 0.32,
+    "density": 18,
+    "start": 0.05,
+    "parent_start": 0.15,
+    "orientation": "outward",
+    "roll_deg": 50,
+    "colors": {
+      "winter": [
+        84,
+        98,
+        72
+      ],
+      "spring": [
+        98,
+        112,
+        76
+      ],
+      "summer": [
+        86,
+        102,
+        72
+      ],
+      "fall": [
+        88,
+        100,
+        72
+      ]
+    },
+    "leaf_on": {
+      "winter": 0.6,
+      "spring": 1.0,
+      "summer": 1.0,
+      "fall": 0.9
+    },
+    "winter_twigs": 0.3,
+    "clumps": {
+      "radius_m": 0.22,
+      "cards_per_clump": 5,
+      "shell": 0.1,
+      "flatten": 0.75,
+      "tip_bias": 0.8
+    },
+    "palette": [
+      [
+        0.8,
+        [
+          1,
+          1,
+          1
+        ]
+      ],
+      [
+        0.2,
+        [
+          1.15,
+          1.15,
+          1.12
+        ]
+      ]
+    ],
+    "ao_min": 0.72,
+    "color_var": [
+      0.08,
+      0.04
+    ],
+    "berries": {
+      "season": [
+        "summer",
+        "fall"
+      ],
+      "months": [
+        7,
+        10
+      ],
+      "form": "cluster",
+      "rgb": [
+        206,
+        206,
+        200
+      ],
+      "size_m": 0.07,
+      "density": 0.5
+    },
+    "cards_per_m2": 9
+  },
+  "deadwood": {
+    "fraction": 0.1,
+    "where": "inner",
+    "levels": [
+      1,
+      2
+    ],
+    "shorten": 0.7,
+    "rgb": [
+      140,
+      136,
+      130
+    ]
+  },
+  "twigs": {
+    "count": [
+      1,
+      2
+    ],
+    "length": 0.5,
+    "down_deg": 50,
+    "down_var_deg": 15,
+    "curve_var_deg": 20,
+    "segments": 1,
+    "radius_m": 0.004,
+    "taper": 0.6,
+    "fan_deg": 50,
+    "jitter": 0.2
+  },
+  "lod": {
+    "near_tris_budget": 1300,
+    "near_sides": [
+      3,
+      3,
+      0
+    ],
+    "mid_blobs": 3,
+    "mid_branches": 0,
+    "mid_sides": [
+      0,
+      0
+    ],
+    "mid_cards": 24
+  },
+  "targets": {
+    "crown_width_ratio": 0.9,
+    "crown_base_ratio": 0.15,
+    "porosity": 0.3,
+    "foliage_rg": 0.84,
+    "foliage_bg": 0.7,
+    "from": "judgement values from the drafter's knowledge of the species (2026-10-29), no photographs measured: an erect, open shrub a little taller than wide, gappy (porosity 0.3), dark green leaves with paler undersides (r/g about 0.84, b/g about 0.7). To be replaced by photo measurements"
+  },
+  "notes": "Birch-leaf mountain mahogany (C. montanus var. glaber in some treatments) is an erect, open shrub or small tree, 2-6 m, of rocky chaparral, canyon walls and the drier foothill pine and oak woodland, often on thin soils and rock outcrops; it resprouts from the root crown after fire. Form: plain 'shrub' with few (2-5) upright stems (stem_spread_deg 22, an inverse-conical envelope) and an 'old' class to 6.5 m with a bare base for the small-tree form. Branching is of long shoots and short spur shoots: level 2 is many short side shoots (length_ratio 0.3) that carry the leaves in tufts, so the foliage cards are small (cluster_m 0.32) and gathered in small clumps. Bark smooth, grey, often lichened ('smooth_grey'); twigs reddish grey-brown. Leaves 1-3 cm, obovate to wedge-shaped, toothed above the middle, dark green above and paler, finely hairy beneath, with straight parallel side veins like a birch leaf: leaf_shape 'oval' at 2.5 cm, palette 20% paler for the undersides. Leaf-on: mostly evergreen at foothill elevations but it drops part of its leaves in cold winters and in drought, so leaf_on winter 0.6 and winter_twigs 0.3 (deciduous stays false). Flowers small and inconspicuous, March-April: not drawn. Fruit an achene with a twisted, feathery style 5-10 cm long that stays on the shrub through summer and silvers the whole crown in back light; the generator has no plume form, so these are drawn as 'berries' (form cluster, a pale silver-grey, size 7 cm, months 7-10): the berries block here stands for the plumed achenes, not for fruit. A valued deer browse throughout the year and especially in winter, when its leaves are still there. Architectural model Rauh (provisional): rhythmic monopodial long shoots with lateral short shoots. Lineup 2026-10-29: gaps 0.51 against 0.3, so cards_per_m2 9 and the budget 1,300.",
+  "sources": [
+    "https://www.fs.usda.gov/database/feis/plants/shrub/cerbet/all.html",
+    "https://ucjeps.berkeley.edu/eflora/ (Cercocarpus betuloides)",
+    "https://www.calflora.org/ (Cercocarpus betuloides)",
+    "https://calscape.org/ (Cercocarpus betuloides)"
+  ],
+  "authors": [
+    "Wild Earth (agent draft, 2026-10-29); needs local sign-off"
+  ],
+  "license": "CC BY-SA 4.0"
+}

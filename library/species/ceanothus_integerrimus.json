@@ -1,0 +1,85 @@
+{
+  "id": "ceanothus_integerrimus",
+  "aliases": ["deerbrush", "deer_brush"],
+  "scientific": "Ceanothus integerrimus",
+  "common": "deerbrush",
+  "form": "shrub",
+  "architectural_model": "Rauh (provisional)",
+  "deciduous": true,
+  "height_m": [1.5, 4],
+  "variants": [
+    {"name": "young", "weight": 0.25, "height_m": [0.6, 1.5], "leaf_density": 1.1, "deadwood": 0.02, "set": {"trunk": {"stems": [4, 8]}}, "note": "dense young growth on a burn or a cut-over slope"},
+    {"name": "mature", "weight": 0.5, "seeds": 2, "note": "the file as written: an open vase of slender, arching green stems"},
+    {"name": "old", "weight": 0.25, "height_m": [3, 4.5], "crown_scale": 1.1, "gnarl": 1.15, "leaf_density": 0.85, "deadwood": {"fraction": 0.3, "levels": [0, 1], "shorten": 0.8}, "set": {"trunk": {"stems": [3, 6], "bark_rgb": [116, 108, 96]}}, "note": "an old shrub under closing pines: taller, sparser, with grey dead stems"}
+  ],
+  "description": "An open, loosely branched shrub 1-4 m tall with slender, arching green stems and thin, bright green oval leaves, covered in May and June with big fluffy plumes of white to pale blue flowers. It grows in the ponderosa pine and black oak belt above about 500 m, thickest on burned and logged slopes and along roads, and it is the browse plant deer are named for here, as well as cover for quail.",
+  "season_notes": {
+    "winter": "Mostly bare: green stems with a few leaves left, browsed by deer at their tips.",
+    "spring": "Bright new leaves in April, then from May big fluffy plumes of white or pale blue flowers that scent the pine woods.",
+    "summer": "Seed capsules ripen and pop in July; in a dry year leaves begin to yellow and drop.",
+    "fall": "Leaves thin and yellow; deer keep browsing the green twigs."
+  },
+  "status": "agent draft, needs local sign-off",
+  "habitat": {
+    "classes": {"grassland": 0.02, "oak_woodland": 0.25, "chaparral": 0.5, "mixed_forest": 1.0, "conifer_forest": 1.0, "riparian": 0.1},
+    "floor": 0.8, "mid": 1.0, "steep": 1.0, "north": 1.1, "shade": 0.35, "disturbed": 1.6
+  },
+  "relations": {
+    "eaten_by": [
+      {"animal": "odocoileus_hemionus", "part": "browse", "seasons": ["spring", "summer", "fall"]},
+      {"animal": "odocoileus_hemionus", "part": "flowers", "seasons": ["spring", "summer"]},
+      {"animal": "sylvilagus_bachmani", "part": "browse", "seasons": ["spring", "summer"]},
+      {"animal": "callipepla_californica", "part": "seeds", "seasons": ["summer", "fall"]},
+      {"animal": "oreortyx_pictus", "part": "seeds", "seasons": ["summer", "fall"]}
+    ],
+    "cover_for": ["callipepla_californica", "oreortyx_pictus", "sylvilagus_bachmani"]
+  },
+  "trunk": {
+    "length_ratio": 0.95, "radius_ratio": 0.014, "taper": 0.85, "flare": 1.3, "bole_ratio": 0.08, "base_size": 0.12,
+    "curve_deg": 14, "curve_var_deg": 14, "segments": 3, "lean_deg": 3, "stems": [3, 6], "stem_spread_deg": 30,
+    "split_prob": 0.0, "split_count": 2, "split_angle_deg": 20, "sinuous_deg": 6, "bark_rgb": [104, 112, 84],
+    "bark_pattern": "smooth", "twig_rgb": [104, 122, 82],
+    "bark": {"tile_m": [0.1, 0.3], "contrast": 0.4, "relief": 0.25}
+  },
+  "crown": {
+    "shape": "inverse_conical",
+    "envelope": {"profile": [[0.0, 0.18], [0.15, 0.32], [0.35, 0.5], [0.55, 0.62], [0.75, 0.66], [0.9, 0.56], [1.0, 0.3]], "lobes": 4, "lobe_depth": 0.18, "asymmetry": 0.18, "fill": 0.4, "edge": 1.12}
+  },
+  "levels": [
+    {
+      "count": 4, "start": 0.15, "down_angle_deg": 40, "down_angle_var_deg": 12, "rotation_deg": 140, "rotation_var_deg": 30,
+      "length_ratio": 0.6, "length_var": 0.3, "curve_deg": 22, "curve_var_deg": 14, "tropism": 0.02, "taper": 0.9,
+      "radius_ratio": 0.55, "segments": 2, "droop_deg": 10
+    },
+    {
+      "count": 4, "start": 0.3, "down_angle_deg": 45, "down_angle_var_deg": 15, "rotation_deg": 140,
+      "rotation_var_deg": 30, "length_ratio": 0.4, "length_var": 0.3, "curve_deg": 18, "curve_var_deg": 18,
+      "tropism": -0.02, "taper": 1.0, "radius_ratio": 0.5, "segments": 1
+    }
+  ],
+  "foliage": {
+    "type": "broadleaf", "leaf_size_m": 0.04, "leaf_shape": "oval", "cluster_m": 0.4, "density": 18,
+    "start": 0.1, "parent_start": 0.2, "orientation": "outward", "roll_deg": 50,
+    "colors": {"winter": [104, 120, 80], "spring": [118, 146, 82], "summer": [108, 132, 78], "fall": [128, 128, 80]},
+    "leaf_on": {"winter": 0.3, "spring": 0.85, "summer": 0.9, "fall": 0.6},
+    "leaf_on_by_month": [0.3, 0.3, 0.5, 0.85, 1.0, 1.0, 0.95, 0.8, 0.7, 0.6, 0.45, 0.35],
+    "winter_twigs": 0.4,
+    "clumps": {"radius_m": 0.3, "cards_per_clump": 5, "shell": 0.15, "flatten": 0.8, "tip_bias": 0.9},
+    "ao_min": 0.74, "color_var": [0.08, 0.05],
+    "flowers": {"season": ["spring", "summer"], "months": [5, 6], "form": "candle", "width": 0.3, "rgb": [232, 236, 244], "size_m": 0.12, "per_card": 6, "before_leaves": false}
+  },
+  "deadwood": {"fraction": 0.08, "where": "inner", "levels": [1, 2], "shorten": 0.7, "rgb": [140, 136, 128]},
+  "twigs": {"count": [1, 2], "length": 0.8, "down_deg": 40, "down_var_deg": 18, "curve_var_deg": 25, "segments": 1, "radius_m": 0.004, "tropism": -0.02, "taper": 0.6, "fan_deg": 55, "jitter": 0.25},
+  "lod": {
+    "near_tris_budget": 1100, "near_sides": [3, 3, 0], "mid_blobs": 3, "mid_branches": 0, "mid_sides": [0, 0],
+    "mid_cards": 24
+  },
+  "targets": {
+    "crown_width_ratio": 1.0, "crown_base_ratio": 0.15, "porosity": 0.35, "foliage_rg": 0.83, "foliage_bg": 0.59,
+    "from": "judgement values from the drafter's knowledge of the species (2026-10-29), no photographs measured: an open vase about as wide as tall, sky through it (porosity 0.35), bright clear green (r/g about 0.83, b/g about 0.59). To be replaced by photo measurements"
+  },
+  "notes": "Deerbrush is a loosely branched shrub, 1-4 m, of the ponderosa pine, black oak and mixed conifer belt of the western Sierra, most abundant in openings, on burns, logged and cut-over slopes and road edges, where it seeds in from long-lived soil seed after fire and also sprouts from the root crown. It is rare below about 450 m. Band: the habitat block has no elevation field, so the band is here for the species mix to carry in TERRAIN: none below 450 m, sparse at 450-525 m, common at 525 m and above (band factors about [0.0, 0.2, 0.8, 1.0], like incense cedar); habitat classes weight conifer_forest and mixed_forest highest, chaparral moderate. Form: plain 'shrub', a few (3-6) slender stems in an open vase (stem_spread_deg 30, crown shape inverse_conical with a narrow envelope base), the limbs arching out and down at the tips (droop_deg 10, negative tropism on level 2): porosity target 0.35, the most open of the foothill shrubs. Stems and young branches smooth and green to yellow-green (twig_rgb green; the bark is a green-grey 'smooth', and old stems go greyer in the 'old' class). Leaves alternate, 2-6 cm, thin, oval, three-veined from the base, bright green: leaf_shape 'oval' at 4 cm. Leaf-on: drought- and winter-deciduous at this elevation, so leaf_on_by_month falls to 0.3 in January and winter_twigs 0.4 shows the bare green twigs. Flowers in big fluffy panicles 5-15 cm long, white in most plants here, sometimes pale blue, May-June: drawn as 'candle' (width 0.3 for a plume rather than a spike), rgb a slightly blue-white, per_card 6 so the close tier keeps whole plumes (as buckeye and elderberry, see the polish of the foothill set). Seed capsules July: not drawn. A preferred deer browse all through the growing season, and its seeds are taken by quail. Architectural model Rauh (provisional): rhythmic monopodial shoots with lateral inflorescences.",
+  "sources": ["https://www.fs.usda.gov/database/feis/plants/shrub/ceaint/all.html", "https://ucjeps.berkeley.edu/eflora/ (Ceanothus integerrimus)", "https://www.calflora.org/ (Ceanothus integerrimus)", "https://calscape.org/ (Ceanothus integerrimus)"],
+  "authors": ["Wild Earth (agent draft, 2026-10-29); needs local sign-off"],
+  "license": "CC BY-SA 4.0"
+}

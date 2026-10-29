@@ -20,6 +20,16 @@
     "fall": "Rust-brown seed heads still cap the stems while the shrubs wait out the dry season for the first rain."
   },
   "status": "agent draft, needs local sign-off",
+  "habitat": {
+    "classes": {"grassland": 0.05, "oak_woodland": 0.2, "chaparral": 1.0, "mixed_forest": 0.1, "conifer_forest": 0.02, "riparian": 0.0},
+    "floor": 0.3, "mid": 1.0, "steep": 1.4, "north": 0.5, "shade": 0.05, "disturbed": 0.7
+  },
+  "relations": {
+    "eaten_by": [
+      {"animal": "odocoileus_hemionus", "part": "browse", "seasons": ["winter", "spring"]}
+    ],
+    "cover_for": ["callipepla_californica", "sylvilagus_bachmani"]
+  },
   "trunk": {
     "length_ratio": 1.0, "radius_ratio": 0.012, "taper": 0.9, "flare": 1.5, "bole_ratio": 0.05, "base_size": 0.3,
     "curve_deg": 8, "curve_var_deg": 16, "segments": 3, "lean_deg": 0, "stems": [16, 28], "stem_spread_deg": 33,
