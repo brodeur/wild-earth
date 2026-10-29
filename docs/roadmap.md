@@ -31,7 +31,7 @@ sequenced; Parked is in the brief but deliberately not started.
   agent drafts awaiting local sign-off, and a lineup review page (`client/lineup.html`).
   Start view went from ~38 to ~50-60 fps. Weak: chaparral reads far too sparse (shrub
   counts were tuned for blobs), ponderosa limbs too straight, leaf cards alias under
-  5 m, no wind in canopies yet.
+  5 m, no wind in canopies yet (the crowns sway since 2026-10-29).
 - Species library, 2026-10-26: twenty-six species. The seventeen foothill species Aaron
   sees around him (valley, canyon live and black oak, buckeye, madrone, bay, walnut,
   maple, ash, incense cedar, Douglas-fir, toyon, redbud, poison oak, coyote brush,
@@ -125,7 +125,9 @@ sequenced; Parked is in the brief but deliberately not started.
    level and ~0 at altitude. Weak: from 10-40 m up the grass reads as stubble and the
    ground texture carries it; a mid-height grass impression (denser tufts or a shaded
    ground cover) is a follow-up.
-4. Wind: vertex sway in canopies (grass has it), stronger on ridges.
+4. Wind: done 2026-10-29 for the crowns (treegen.js CROWN_SWAY: a wave across each crown from the windward side,
+   the single leaves and the close twigs with it); open: the shadow casters do not sway, no whole-crown limb bend,
+   not stronger on ridges.
 5. Water: streams and ponds from the hydrology layer, with reflection.
 6. Life: a circling hawk and a deer herd as placeholder motion, filtered by the
    perception matrix.
@@ -177,7 +179,10 @@ browser stays the renderer.
   conditions the bumps on the lidar tiles. Open: the gray squirrel's own control has no body-scaled hooks beyond the leaf
   level and the smell (2026-10-29); the leaf level does not cover chamise or bare-twig textures; a mid-scale (fox, coyote) is the
   least served, its ring at half density; the DEM-only Yosemite tile has no roughness to condition on. The HUD's
-  abilities row and the smell sense (scent.js) landed the same day; "scented" on the hunt panel and the leaf level to
+  abilities row and the smell sense (scent.js) landed the same day. The rig (2026-10-29): a turning deer steps and its
+  body follows the legs (docs/decisions.md); next in the rig, in order: a spine twist (head, shoulders, hips), hooves
+  planted in a turn (a sideways-step clip or IK), the Walk backwards on S, a trot, leg length to the slope, an alert
+  pose of its own; the same stepping turn for the fox, coyote, lion and bear in groundControl.animate; "scented" on the hunt panel and the leaf level to
   15 m for a deer (24 for the smallest) on 2026-10-29. Next: the greyed abilities one by one (dig, pounce, carry, swim,
   climb, call, mark, den, display); the prey's nose landed 2026-10-29 (animals.js noticeAt: the wind decides how far an
   animal smells the player). Open: no wind between AI animals (an AI lion's prey notices it at detects, as before).

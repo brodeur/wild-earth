@@ -1156,7 +1156,9 @@ function twigGeometry(sk, rnd) {
   const live = (TW.rgb || spec.trunk.twig_rgb || spec.trunk.bark_rgb).map(srgbToLin), dead = (spec.deadwood?.rgb || [150, 146, 136]).map(srgbToLin);
   for (const s of sk.twigs) {
     const c0 = s.dead ? dead : live;
+    const v0 = G.n, last = s.pts.length - 1;
     tube(G, s, s.pts.map((_, i) => i), TW.sides, () => { const f = 0.85 + 0.3 * rnd(); return c0.map(v => v * f); }, rnd, 0, 1, 0);
+    for (let i = v0; i < G.n; i++) G.rank[i] = Math.floor((i - v0) / TW.sides) / Math.max(1, last);   // twigT: 0 at the base, 1 at the tip
   }
   return G;
 }
@@ -1171,7 +1173,7 @@ export function buildTree(name, seed = 1, lod = 'near') {
   const xf = new THREE.Matrix4().makeRotationY(sk.leanDir).multiply(new THREE.Matrix4().makeRotationZ(sk.lean));
   if (lod === 'close') {
     const canopy = cardGeometry(sk, 1, sk.closeCards, sk.spec.lod.close_scale).build(xf, { uv: true, rank: true });
-    const twigs = sk.twigs.length ? twigGeometry(sk, mulberry32(seed ^ 0x51a7e)).build(xf) : null;
+    const twigs = sk.twigs.length ? twigGeometry(sk, mulberry32(seed ^ 0x51a7e)).build(xf, { rank: true, rankName: 'twigT' }) : null;
     return { trunk: null, twigs, canopy, height: sk.H, stem: { ...sk.stem }, species: id,
       tris: { trunk: 0, twigs: twigs ? triCount(twigs) : 0, twigCount: sk.twigs.length, canopy: triCount(canopy), cards: sk.closeCards.length } };
   }
@@ -2044,6 +2046,7 @@ export function canopyMaterial(spec, lod = 'near', patch = null) {
   chainShader(m, (close ? 'leaf-close' : lod === 'mid' ? 'leaf-mid' : 'leaf-near') + `-v${cv[0]}-${cv[1]}-${lv}${thin ? '-thin' : ''}${aux ? '-needle' : ''}`, shader => {
     shader.uniforms.leafOn = m.userData.leafOn; shader.uniforms.leafVar = m.userData.leafVar;
     shader.uniforms.time = windUniforms.time; shader.uniforms.windDir = windUniforms.windDir; shader.uniforms.windStrength = windUniforms.windStrength;
+    shader.uniforms.crownSway = CROWN_SWAY;
     if (aux) { shader.uniforms.needleAux = m.userData.needleAux; shader.uniforms.needleLight = m.userData.needleLight; shader.uniforms.needleScatterK = m.userData.needleScatterK; shader.uniforms.needleTint = m.userData.needleTint; }
     shader.vertexShader = shader.vertexShader
       .replace('#include <common>', '#include <common>\nattribute float leafRank;\nvarying float vLeafRank;\nvarying float vShim;\n' + WIND_GLSL + LEAF_WAVE_GLSL + (vary ? '\nvarying vec3 vPlantTint;\nuniform float leafVar;' : ''))
@@ -2064,7 +2067,7 @@ export function canopyMaterial(spec, lod = 'near', patch = null) {
         float plantV = 1.0 + ${(2 * cv[0]).toFixed(4)} * (plantH.x - 0.5), plantS = ${(2 * cv[1]).toFixed(4)} * (plantH.y - 0.5);
         vPlantTint = plantV * vec3(1.0 + plantS, 1.0, 1.0 - plantS);
         vLeafRank = mix(leafRank, plantH.z, leafVar);` : 'vLeafRank = leafRank;'}
-        ${shimmerVertex(near ? 1 : 0.5)}`);
+        ${shimmerVertex(near ? 1 : 0.5, lod !== 'mid')}`);
     shader.fragmentShader = shader.fragmentShader
       .replace('#include <common>', '#include <common>\nuniform float leafOn;\nvarying float vLeafRank;\nvarying float vShim;' + (vary ? '\nvarying vec3 vPlantTint;' : ''))
       .replace('#include <alphatest_fragment>', SHIMMER_ALPHA)
@@ -2128,22 +2131,56 @@ export function canopyMaterial(spec, lod = 'near', patch = null) {
 // tile (M-series, the GPU shared with other pages, so roughly): the vegetation pass at the opening view 9.1 ms without
 // it, 9.75 ms with it; as a deer at 8 am with windStrength 0.3, 10% of the vegetation's pixels brighten by over 3% and
 // 2.6% by over 25% (flutter included), 15% and 5% at 0.8; at windStrength 0.02 the frame is identical to a calm one.
+//
+// The crown's own wave (2026-10-29, Aaron: "there should be a micro-sine-wave in each tree. Right now all the branches of
+// a tree move in unison. The wind intensity should ripple across them in a transition from the direction of the wind to
+// its destination."). Inside each crown the gust's intensity rides a short travelling sine (crownMicro): a sine of the
+// point's distance along the wind from the plant's origin over CROWN_SWAY.y m (3.5) less CROWN_SWAY.z m/s (4: the
+// speed wind.js gust advects its cells, so the micro wave runs with the gust it sits in) times time, plus a per-card
+// phase from the card's rank (CROWN_SWAY.w: +-0.35 rad), so the windward side of a crown leads the leeward by about a
+// second across a 4 m crown and neighbouring sprays are not in lock-step. It (1) moves the branches: each card's
+// vertices (and the close tier's twigs, by their place along the twig: twigT, so a twig's base stays on its limb) are
+// pushed downwind and a little down by up to CROWN_SWAY.x m per unit windStrength (0.35), times the micro wave, times
+// the slow gust term (30% in a lull, all of it in a gust), times the reach (the point's distance from the plant's
+// origin over 8 m, at most 1: the trunk and inner crown hold, the outer crown moves); (2) modulates the shimmer and the
+// leaf flutter's gust gate by 0.7 to 1.3. The leaf level computes the same displacement from the same field (the
+// leaf's point, the card's rank: lA.w), so a crown does not change its motion at the leaf radius. The near and close
+// card tiers and the close twigs sway; the mid cards (beyond 180 m, where 10 cm is under a pixel) take only the
+// shimmer modulation, the impostors nothing. All of it is multiplied by smoothstep(0.03, 0.2, windStrength): a calm
+// frame is unchanged. The displacement is found in world axes and taken into the instance's frame by crownLocal
+// (M^-1 d = (M^T d) / column lengths squared, exact for a rotation with per-axis scale, which the plant matrices are).
+// CROWN_SWAY is a uniform, so it can be tuned live: (await import('/client/src/treegen.js')).CROWN_SWAY.value.
+export const CROWN_SWAY = { value: new THREE.Vector4(0.35, 3.5, 4.0, 0.7) };
 export const LEAF_WAVE_GLSL = `
-  float leafWave(vec3 wp, float h, out float gate) {
-    gate = smoothstep(0.03, 0.2, windStrength) * smoothstep(0.15, 0.75, wNoise((wp.xz - windDir * time * 4.0) * 0.045));
+  uniform vec4 crownSway;
+  float leafWave(vec3 wp, float h, out float gate, out float slow) {
+    slow = smoothstep(0.15, 0.75, wNoise((wp.xz - windDir * time * 4.0) * 0.045));
+    gate = smoothstep(0.03, 0.2, windStrength) * slow;
     return sin((dot(wp.xz, windDir) - (2.0 + 9.0 * windStrength) * time) * 0.7 + h * 1.6);
+  }
+  float crownMicro(vec3 rel, float rank) {
+    return 0.5 + 0.5 * sin((dot(rel.xz, windDir) - crownSway.z * time) * (6.2831853 / crownSway.y) + (rank - 0.5) * crownSway.w);
+  }
+  vec3 crownSwayW(vec3 rel, float micro, float slow) {
+    float a = crownSway.x * smoothstep(0.03, 0.2, windStrength) * min(windStrength, 1.5) * (0.3 + 0.7 * slow) * min(1.0, length(rel) * 0.125) * micro;
+    return vec3(windDir.x * a, -0.25 * a, windDir.y * a);
+  }
+  vec3 crownLocal(mat4 M, vec3 d) {
+    return (transpose(mat3(M)) * d) / vec3(dot(M[0].xyz, M[0].xyz), dot(M[1].xyz, M[1].xyz), dot(M[2].xyz, M[2].xyz));
   }
   float leafShimmer(float wave, float gate, float h) {
     float s = max(wave, 0.0); s *= s;
     return step(0.5, fract(h * 7.13)) * gate * (0.08 + 0.17 * gate) * s;
   }
 `;
-const shimmerVertex = k => `
+const shimmerVertex = (k, sway) => `
         #ifdef USE_INSTANCING
         { mat4 shimM = modelMatrix * instanceMatrix;
-          vec3 shimP = (shimM * vec4(transformed, 1.0)).xyz;
-          float shimH = fract(leafRank * 173.37 + dot(shimM[3].xz, vec2(0.1031, 0.1173))), shimG;
-          float shimW = leafWave(shimP, shimH, shimG);
+          vec3 shimP = (shimM * vec4(transformed, 1.0)).xyz, shimR = shimP - shimM[3].xyz;
+          float shimH = fract(leafRank * 173.37 + dot(shimM[3].xz, vec2(0.1031, 0.1173))), shimG, shimS;
+          float shimW = leafWave(shimP, shimH, shimG, shimS), shimC = crownMicro(shimR, leafRank);
+          shimG *= 0.7 + 0.6 * shimC;${sway ? `
+          transformed += crownLocal(shimM, crownSwayW(shimR, shimC, shimS));` : ''}
           vShim = ${k.toFixed(2)} * (1.0 - smoothstep(900.0, 1300.0, distance(shimP, cameraPosition))) * leafShimmer(shimW, shimG, shimH); }
         #else
           vShim = 0.0;
@@ -2153,6 +2190,23 @@ const SHIMMER_FRAG = `
         float shK = vShim * clamp(shD / max(shL, 1e-4), 0.0, 1.0);
         outgoingLight = mix(outgoingLight, vec3(1.0, 1.02, 0.94) * max(shL * 1.8, max(outgoingLight.r, outgoingLight.g)), shK); }`;
 const SHIMMER_ALPHA = 'diffuseColor.a *= 1.0 - 0.5 * vShim;\n#include <alphatest_fragment>';
+// The close tier's twigs sway with the crown's own wave (CROWN_SWAY above) by their place along the twig (the twigT
+// attribute, 0 at the base on its limb, 1 at the tip where the close card hangs), so the cards keep their twigs.
+// Instanced twigs only, rank 0.5 (no per-card phase: a twig tip is off its card by at most a sixth of the sway).
+export function twigSway(material) {
+  return chainShader(material, 'twig-sway', shader => {
+    Object.assign(shader.uniforms, { time: windUniforms.time, windDir: windUniforms.windDir, windStrength: windUniforms.windStrength, crownSway: CROWN_SWAY });
+    shader.vertexShader = shader.vertexShader
+      .replace('#include <common>', '#include <common>\nattribute float twigT;\n' + WIND_GLSL + LEAF_WAVE_GLSL)
+      .replace('#include <begin_vertex>', `#include <begin_vertex>
+        #ifdef USE_INSTANCING
+        { mat4 swM = modelMatrix * instanceMatrix;
+          vec3 swP = (swM * vec4(transformed, 1.0)).xyz, swR = swP - swM[3].xyz;
+          float swS = smoothstep(0.15, 0.75, wNoise((swP.xz - windDir * time * 4.0) * 0.045));
+          transformed += twigT * crownLocal(swM, crownSwayW(swR, crownMicro(swR, 0.5), swS)); }
+        #endif`);
+  });
+}
 
 // ---------------------------------------------------------------------------------------------
 // Leaf level (2026-10-28): single leaves inside a few metres of the camera (vegetation.js picks the radius, by body
@@ -2442,7 +2496,7 @@ export function leafMaterial(spec, patch = null) {
   const cv = F.color_var || [0, 0], lv = F.leaf_on_var || 0, T = LEAF_TILE, W = 2 * T, PD = LEAF_PAD;
   chainShader(m, `leaf-level-v${cv[0]}-${cv[1]}-${lv}`, shader => {
     Object.assign(shader.uniforms, { leafOn: ud.leafOn, leafVar: ud.leafVar, leafBase: ud.leafBase, leafLight: ud.leafLight, leafTint: ud.leafTint,
-      time: windUniforms.time, windDir: windUniforms.windDir, windStrength: windUniforms.windStrength });
+      time: windUniforms.time, windDir: windUniforms.windDir, windStrength: windUniforms.windStrength, crownSway: CROWN_SWAY });
     shader.vertexShader = shader.vertexShader
       .replace('#include <common>', `#include <common>
         attribute vec4 lC; attribute vec4 lA; attribute vec4 lN; attribute vec4 lS; attribute vec4 lK; attribute vec4 lM;
@@ -2462,11 +2516,15 @@ export function leafMaterial(spec, patch = null) {
         vec3 transformed = lC.xyz * ${(1 / LEAF_Q).toFixed(8)} + leafSd * (position.x * leafHW) + leafAx * (position.y > 0.5 ? leafF : -leafB);
         {
           vec3 plantH = fract(modelMatrix[3].xzx * vec3(0.1031, 0.1030, 0.0973));
-          float leafH = lC.w / 65534.0 + 0.5, leafG;
-          float leafWv = leafWave((modelMatrix * vec4(transformed, 1.0)).xyz, leafH, leafG);
+          float leafH = lC.w / 65534.0 + 0.5, leafG, leafS;
+          vec3 leafP = (modelMatrix * vec4(transformed, 1.0)).xyz, leafR = leafP - modelMatrix[3].xyz;
+          float leafWv = leafWave(leafP, leafH, leafG, leafS), leafC = crownMicro(leafR, lA.w * 0.5 + 0.5);
+          leafG *= 0.7 + 0.6 * leafC;
           // the leaf turns about its base: with the travelling wave (more in a gust) and a small tremble of its own
           float leafA = (0.06 + 0.4 * leafG) * min(windStrength, 1.5) * leafWv + 0.05 * windStrength * sin(time * (7.0 + 5.0 * leafH) + leafH * 40.0);
           transformed += leafNo * (position.y * (leafF + leafB) * leafA);
+          // and moves with its branch: the crown's own wave, as the card it replaces
+          transformed += crownLocal(modelMatrix, crownSwayW(leafR, leafC, leafS));
           vShim = leafShimmer(leafWv, leafG, leafH);
           plantH += dot(plantH, plantH.yxz + 33.33); plantH = fract((plantH.xxy + plantH.yxx) * plantH.zyx);
           float plantV = 1.0 + ${(2 * cv[0]).toFixed(4)} * (plantH.x - 0.5), plantS = ${(2 * cv[1]).toFixed(4)} * (plantH.y - 0.5);

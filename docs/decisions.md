@@ -2243,3 +2243,72 @@ Measured as a lion frozen 72 m from a deer, wind 0.4: with the wind from the lio
 The hunt panel judges unaware/alert the same way and adds " · downwind of you" (orange) when the wind carries the
 hunter's scent to the prey it names (carry over 0.75), so the player learns to come round. A tile without `senses`
 (none now) falls back to the old one number, no wind.
+
+## 2026-10-29: a turning deer steps first, and the body follows the legs
+
+Aaron: "Can you do another pass on animal rigging - its looking much better but I think we still have some ways to
+go. For instance, when a deer rotates or turns in place it should move its legs and step for its torso to move - the
+legs move first in real life and pull/push the body." A deer turning in place rotated about its origin with the idle
+clip playing: a figure on a turntable.
+
+Now (animalModels.js DEER_DRIVE.turn, driveClips, turnFollow; groundControl.js draw; animals.js drSteer): a standing
+deer (under 0.08 m/s) turning faster than 0.45 rad/s plays a 'turn' kind, the Walk clip laid over the standing clip
+it came from (idle, grazing, alert) at 0.4 of its stride for a slow turn and 0.6 at 2 rad/s, with the step rate from
+the hooves' ground travel round the turn (0.42 m from the turning centre to a hoof over the stride): the player's full
+A/D turn at 1.8 rad/s steps at 2.0 Hz, a 0.6 rad/s turn at 0.9 Hz, held between 0.7 and 2.4 Hz. Hysteresis: in above
+0.45 rad/s, out after 0.35 s under 0.2 so the step under way finishes; blends 0.2 s in and 0.5 s out, and a change
+undone mid-blend swaps the two clip slots keeping each clip's phase (this also removed a leg-phase jump on walk, idle,
+walk). The body follows the legs: the drawn yaw lags the control yaw by 0.15 s, never more than 25 degrees, fully
+under 0.3 m/s and gone by 1.2 m/s; flight.yaw, the camera and the look are untouched, and the instance matrix carries
+the lagged yaw so the planar shadow and the herd silhouette agree. No assets added (no Meshy credits). The AI deer got
+the same through a new steer: a turn capped at 2.2 rad/s (6 fleeing) and the walk scaled down by heading error (full
+within about 29 degrees, standing past about 80), so a deer whose waypoint or herd is behind it turns on the spot,
+stepping, then walks, instead of crabbing sideways while spinning at 6 rad/s; a standing deer steps round to face a
+threat it is alert to more than 40 degrees off, and a grazing one takes a new heading about every 14 s from its own
+seeded numbers. One behaviour change to know: a fleeing herd wheels for about 0.35 s before it bolts, which widens a
+rush's window a little; kept, since that is what a herd does. The fox, coyote, lion and bear are on the procedural part
+rig, not driveClips, so the deer alone has it; the same for them is a small change in groundControl.animate (leg
+amplitude 0.5 and phase from the turn rate at a standstill, turnFollow in draw).
+
+Verified on the clean worktree as the deer: holding A from a standstill goes to 'turn' within 0.25 s at 2.0 Hz, the
+Walk at 0.45 of the blend, the body 12-13 degrees behind; releasing ends it 0.5 s later with no flicker; a side view
+mid-turn shows a fore leg lifted and a hind leg stepping back as the body comes round. Hooves still slide some in a
+turn (the Walk moves a planted hoof back along the body, not sideways round the arc); the lane's list of the next rig
+fixes, in order: a spine twist so the head, shoulders and hips turn in that order; a sideways-step clip or IK on the
+cannon bones so hooves plant in a turn; the Walk phase run backwards when backing up (S); a trot between 2.2 and 3.5
+m/s; leg length to the slope (downhill hooves float on a cross-slope); an alert pose of its own (head high, ears
+forward, a fore hoof raised) instead of the Idle clip.
+
+## 2026-10-29: the wind ripples across each crown
+
+Aaron: "The wind in an individual tree is good - I can tell its on a sine wave in a larger system - but there should
+be a micro-sine-wave in each tree. Right now all the branches of a tree move in unison. The wind intensity should
+ripple across them in a transition from the direction of the wind to its destination." The crown cards had no
+positional sway at all: the only wind in a tree was the leaf shimmer (a 9 m brightness wave) and the leaf level's
+flutter, both scaled by the slow gust term whose cells are about 20 m across, so a whole tree swelled and faded
+together.
+
+Now (treegen.js LEAF_WAVE_GLSL, CROWN_SWAY = (0.35 m, 3.5 m, 4 m/s, 0.7)): a sine of the point's distance along the
+wind from the plant's origin, travelling downwind at 4 m/s (the speed the gust cells already travel, so the small
+wave rides inside the big one; about 1.1 Hz, a branch's frequency; the windward side of a 4 m crown leads the leeward
+by about a second), wavelength 3.5 m (an oak crown holds two or three waves; a 2 m shrub moves nearly as one, as real
+ones do; not scaled by crown size, which the shader does not have short of a new attribute), plus a per-branch phase
+of up to 0.35 rad from the card's rank (the leaf level has the same rank, so its phase agrees). Each vertex is pushed
+downwind, and a quarter as much down, by up to 0.35 m times windStrength, scaled by the wave, by the slow gust (30 %
+in a lull, 100 % in a gust) and by its reach from the plant's origin over 8 m, so trunks and inner crowns hold still:
+at windStrength 0.3 the outer branches move up to about 10 cm. The shimmer's and the flutter's gate is multiplied
+0.7-1.3 by the same wave, so the brightening ripples across the crown too. The offset comes from the vertex position
+less the plant's origin, taken into the plant's frame by crownLocal() (rotation and per-axis scale): no new
+attribute, about a sine and a dozen operations a vertex. Near and close cards sway, the leaf level's single leaves
+with the identical displacement (a tree's motion does not change at the leaf radius), and the close twigs: a 1-float
+twigT (0 at the base, 1 at the tip) in twigGeometry and vegetation.js twigSway() keep a twig's base on its limb while
+its tip follows the card hanging from it. Mid cards (beyond 180 m) get the shimmer change only (10 cm is under a pixel
+there); impostors unchanged. Every term is gated by smoothstep(0.03, 0.2, windStrength): the calm frame is unchanged.
+
+Verified: the lane rendered one blue oak with time frozen and compared frames 0.1 s apart, sway on against off: the
+peak moves downwind about 0.5 m per 0.1 s (the 4 m/s) with a repeat about 3 m (the 3.5 m wavelength); at windStrength
+0.02 the sway-on and sway-off frames differ by 100 pixels, the same as two identical frames (96). All 277 shader
+programs compile on ANGLE/Metal. On the clean worktree as a deer in the oak woodland: 30.0 fps with the sway and 28.7
+without (noise); no console errors. Open: the shadow casters (shadows.js) do not sway, so moving leaves can cross
+their still shadow; a slow sway of the whole crown bending the limbs; Aaron can tune the amplitude, wavelength and
+speed live through CROWN_SWAY.value in treegen.js.
