@@ -2459,3 +2459,18 @@ away within a second. A deer herd summoned 20 m off: the buck's strand blinked i
 its label "buck" with it, held 3.2 s more, blinked away and went dark; nothing drawn 5 s on. The fox's E sniff, on the committed code: one sniff slot (E) on its row, 24 strands and their labels while the act runs,
 none 3 s after. Not verified: the slot held with the pointer (the key path was used); a carcass's "dead" label. Open: the label's word is the species' short
 name, not "deer, upwind, 40 m"; the blink pattern is one fixed rhythm (a time-hash per strand would vary it).
+
+## 2026-10-29: the map, small and close, and the full map on a click
+
+Aaron: "The map should be smaller relative to the viewport and show a much more zoomed in view. Clicking on it should
+open a fullscreen map. The roads markers should be white and semi-transparent." The mini-map (minimap.js) was the
+whole 10 km tile at 240 px, 42 m a pixel, so a walking animal never moved on it. Now it is 150 px (120 on a narrow
+window) and shows the 800 m round the player, 5 m a pixel, north up: the base (imagery, water, roads, names) is drawn
+once for the whole tile at that scale (capped at 2400 px a side, so 4 m a pixel at dpr 2) and each frame the window
+round the player is blitted from it, with the trail, the player, the nearest place name, the N and the caption drawn
+over. A click on it, or M, opens the full map: the whole tile over the view, with the same overlay, where a click
+flies there as the mini-map's click did and closes it; M, Esc or a click outside close it. M no longer hides the
+mini-map. Roads are white and half transparent (minor 0.35, major 0.55 at 2 px over a faint dark casing, the names
+white at 0.8) instead of orange over a dark casing. Verified on the clean worktree as a deer: Swan Lane under the
+player in the window; the full map 876 px on the pane; a click a quarter of the way in flies to (2500, 7500) exactly
+and closes; M opens, Esc closes. Memory: the two bases (present day and rewilded) are 23 MB each at 2400 px.
