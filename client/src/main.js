@@ -37,6 +37,8 @@ import { runSliced, yieldToMain, slicer, sliceStats } from './slice.js';
 import { uniforms as atmo } from './atmosphere.js';
 import { groundUniforms } from './terrain.js';
 import { detailUniforms } from './groundDetail.js';
+import { setBodyScale } from './bodyScale.js';
+import { Litter } from './litter.js';
 
 const $ = id => document.getElementById(id);
 const html = document.documentElement;
@@ -165,7 +167,7 @@ async function disposeWorld(w, renderer) {
   try { m.sound?.ctx?.close?.(); } catch (e) { /* closing */ }
   if (m.weather) m.weather.onThunder = null;
   if (fieldGuide.game === m.acorns) { fieldGuide.game = null; fieldGuide.log = []; fieldGuide.anchor = null; }   // the page's field guide (identify.js attached the game)
-  m.water?.dispose?.(); m.shadows?.dispose?.(); m.terrain?.dispose?.(); forgetQueuedCasters();
+  m.water?.dispose?.(); m.shadows?.dispose?.(); m.terrain?.dispose?.(); m.litter?.dispose?.(); forgetQueuedCasters();
   // then its listeners and the elements it put into the page; the HUD's own words back as the page had them
   for (const r of w.observer.takeRecords()) { for (const n of r.addedNodes) if (n.nodeType === 1) w.nodes.add(n); for (const n of r.removedNodes) w.nodes.delete(n); }
   w.observer.disconnect();
@@ -361,6 +363,7 @@ async function buildSteps(w, { params, pending, direct = false, arrive = null })
   const water = w.m.water = new Water(tile, scene); await w.sliced(water.build(), 'water');   // streams, dry beds and ponds by season (water.js)
   await w.next('rocks');
   const rocks = new Rocks(tile, scene, atmosphere);   // outcrops and boulders from the geology and soils rasters (rocks.js)
+  const litter = w.m.litter = new Litter(tile, scene, { terrain, atmosphere });   // the body-scaled ring of pebbles, leaves and stems (litter.js)
   await w.next('roads+flight');
   const roads = new RoadsOverlay(tile, scene);   // ghost roads, G to toggle
   const flight = new RavenFlight(camera, tile.heights, renderer.domElement);
@@ -512,7 +515,7 @@ async function buildSteps(w, { params, pending, direct = false, arrive = null })
     window.__we.playerSpecies = code; window.__we.playerSex = sex;
     animals.setObserver(code); showPerceives(code);
     $('spiritBtn').hidden = code === 'spirit'; $('nearBar').hidden = code !== 'spirit';
-    needs.setSpecies(code); hunt.setSpecies(code);
+    needs.setSpecies(code); hunt.setSpecies(code); setBodyScale(code);
   };
   const spirit = w.m.spirit = new SpiritControl({ scene, renderer, camera, flight, raven, animals, squirrel, woodpecker, ground, flier, atmosphere, onBody });
   $('spiritBtn').onclick = () => { spirit.leave(); renderer.domElement.focus?.(); };
@@ -779,6 +782,7 @@ async function buildSteps(w, { params, pending, direct = false, arrive = null })
     grass.update(flight.pos.x, flight.pos.z, dt, camera, look);
     water.update(dt, look);
     rocks.update(camera);
+    litter.update(dt, camera, flight.pos);
     acorns.update(dt, camera, s);
     animals.update(dt, s, state.hour);
     if (!peek.shown) terrain.setLook(look);
