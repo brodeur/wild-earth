@@ -501,20 +501,24 @@ async function loadClips(base, skinExtras) {
 //   ground             1: RIG_GROUND (the ground raven): aAnim2 = (wing flick, head yaw, hop, -);  flickLift,
 //                      flickOpen  the folded wing's lift (about the body axis) and swing out (about the vertical)
 //                      at the shoulder for a flick of 1 (the hand follows by bow, negative: further than the arm)
+//   turnFore           1: the stepping turn of the small walkers (PART_TURN.rodent; aAnim2.z, free on the rodent
+//                      template): the fore pair's swing turned about the vertical by aAnim2.z, the hind pair's fore-aft
+//                      swing scaled by its cosine (a standing rabbit pivots on its hind feet)
+//   turnHead           1: a ground bird's head leads its turn (PART_TURN.bird; aAnim2.z, free on the bird template)
 const RIG = {
   // California scrub-jay (tools/build_scrubjay.py): hops on the ground, perches, short rowing flights
   jay: { amp: [0.35, 0.35, 0.4, 1.0], pose: [1, 0.15, 0, 0.2],
     k: { handLag: 0.7, handAmp: 0.8, bow: 0.25, spread: 0.6, collapse: 1, bob: 0 } },
   // California quail (tools/build_quail.py): walks with a nod, whirrs up and glides on bowed wings
   quail: { amp: [0.9, 0.25, 0.5, 1.0], pose: [1, 0, 0, 0.2],
-    k: { handLag: 0.6, handAmp: 0.7, bow: 0.35, spread: 0.5, collapse: 1, bob: 0.12 } },
+    k: { handLag: 0.6, handAmp: 0.7, bow: 0.35, spread: 0.5, collapse: 1, bob: 0.12, turnHead: 1 } },
   // Mountain quail (tools/build_mountain_quail.py): the California quail's template and constants; the plumes are HEAD
   // geometry, so they nod and dip with it
   mquail: { amp: [0.9, 0.25, 0.5, 1.0], pose: [1, 0, 0, 0.2],
-    k: { handLag: 0.6, handAmp: 0.7, bow: 0.35, spread: 0.5, collapse: 1, bob: 0.12 } },
+    k: { handLag: 0.6, handAmp: 0.7, bow: 0.35, spread: 0.5, collapse: 1, bob: 0.12, turnHead: 1 } },
   // Western gray squirrel (tools/build_squirrel.py): bounds, sits up, flicks and curls the plume, climbs
   squirrel: { amp: [0.9, 0.5, 0.35, 0], pose: [1, 0.95, 0.75, 0],
-    k: { spine: 0.28, spinePhase: 1.2, sit: 0.7, foreFold: 1.1, tipLag: 0.7, tipWave: 0.25, tipCurl: 1.1, abduct: 0.9 } },
+    k: { spine: 0.28, spinePhase: 1.2, sit: 0.7, foreFold: 1.1, tipLag: 0.7, tipWave: 0.25, tipCurl: 1.1, abduct: 0.9, turnFore: 1 } },
   // Steller's jay (tools/build_stellersjay.py): the scrub-jay's hops, perches and rowing flights, in the conifers
   stjay: { amp: [0.35, 0.35, 0.4, 1.0], pose: [1, 0.15, 0, 0.2],
     k: { handLag: 0.7, handAmp: 0.8, bow: 0.25, spread: 0.6, collapse: 1, bob: 0 } },
@@ -546,18 +550,18 @@ const RIG = {
   // hind pair, the chest flexing; pose sits it up on its haunches (alert), the head kept about level; flick nibbles
   // and flashes the white tail.
   rabbit: { amp: [0.8, 0.6, 0.35, 0], pose: [1, 0.3, 0.4, 0],
-    k: { spine: 0.16, spinePhase: 1.2, sit: 0.55, foreFold: 0.5, tipLag: 0, tipWave: 0, tipCurl: 0, abduct: 0 } },
+    k: { spine: 0.16, spinePhase: 1.2, sit: 0.55, foreFold: 0.5, tipLag: 0, tipWave: 0, tipCurl: 0, abduct: 0, turnFore: 1 } },
   // Black-tailed jackrabbit (tools/build_jackrabbit.py): the brush rabbit's template on a hare (chest, no tail tip),
   // with a longer reach in the bound (amp.x) and more chest flex; flick dips the head much further (amp.z: the nose
   // to the grass from the raised fore body when feeding).
   // animals.js also drives pose below 0 for the day rest: the chest pitched down, the forelegs reaching forward and
   // the head tilted back up, a low hunch with the ears still up (there is no ears part to lay them flat).
   jackrabbit: { amp: [0.95, 0.4, 0.85, 0], pose: [1, 0.2, 0.4, 0],
-    k: { spine: 0.26, spinePhase: 1.2, sit: 0.5, foreFold: 0.5, tipLag: 0, tipWave: 0, tipCurl: 0, abduct: 0 } },
+    k: { spine: 0.26, spinePhase: 1.2, sit: 0.5, foreFold: 0.5, tipLag: 0, tipWave: 0, tipCurl: 0, abduct: 0, turnFore: 1 } },
   // California vole (tools/build_vole.py): template R without a tail part (too short; it stays with the body).
   // Scurries in quick small steps; pose lifts the chest to sit up and eat; flick dips the head to clip grass.
   vole: { amp: [0.9, 0, 0.35, 0], pose: [1, 0, 0.45, 0],
-    k: { spine: 0.15, spinePhase: 1.2, sit: 0.6, foreFold: 0.8, tipLag: 0, tipWave: 0, tipCurl: 0, abduct: 0 } },
+    k: { spine: 0.15, spinePhase: 1.2, sit: 0.6, foreFold: 0.8, tipLag: 0, tipWave: 0, tipCurl: 0, abduct: 0, turnFore: 1 } },
   // Common raven on the ground (tools/build_raven_ground.py): walks (legs alternate) and hops (together, aAnim2.z),
   // pecks and caches (flick dips the head, the tail lifts a little), turns its head (aAnim2.y) and flicks its folded
   // wings (aAnim2.x). The folded wings never collapse (collapse 0) and gait never flaps them (amp.w 0); pose does
@@ -569,12 +573,12 @@ const RIG = {
   // short heavy flight on the wing cards, which collapse into the shoulder on the ground (collapse 1). aAnim2 = (wing
   // bow, tail spread, -, hen): the hen's colour set (_COLORB) at 0.8 scale (animals.js).
   turkey: { amp: [0.55, 0.25, 0.9, 1.0], pose: [1, 0, 0, 0.2],
-    k: { handLag: 0.6, handAmp: 0.7, bow: 0.35, spread: 0.5, collapse: 1, bob: 0.12 } },
+    k: { handLag: 0.6, handAmp: 0.7, bow: 0.35, spread: 0.5, collapse: 1, bob: 0.12, turnHead: 1 } },
   // California ground squirrel (tools/build_ground_squirrel.py): the rodent template with the build lane's sit-up
   // constants (the entry's rig_notes): pose 1 is the sentinel bolt upright (sit 1.25 rad, the fore legs folded to the
   // chest, the tail laid out behind on the ground, the head pitched back to level), the rump down by drop.
   groundSquirrel: { amp: [0.9, 0.5, 0.35, 0], pose: [0.4, -0.3, 1.05, 0], drop: 0.016,
-    k: { spine: 0.2, spinePhase: 1.2, sit: 1.25, foreFold: 2.2, tipLag: 0.6, tipWave: 0.25, tipCurl: 0.2, abduct: 0 } },
+    k: { spine: 0.2, spinePhase: 1.2, sit: 1.25, foreFold: 2.2, tipLag: 0.6, tipWave: 0.25, tipCurl: 0.2, abduct: 0, turnFore: 1 } },
   // Western fence lizard (tools/build_fence_lizard.py): the reptile template (RIG_REPTILE below). amp.x the legs'
   // swing; k: wave (m of lateral offset at the tail tip at a sprint), waveK (rad of phase along the body), envS (the
   // wave's envelope at the snout), pushPitch (rad, the fore body about the hips at the top of a push-up), baskAbduct
@@ -819,6 +823,14 @@ if (animPart == 1 || animPart == 2) {
   float legTurn = aPivot.z > 0.0 ? aAnim2.z : -aAnim2.z;
   animR = animRY(legTurn) * animR * animRY(-legTurn);
 #endif
+#if defined(ANIM_RIG) && !defined(RIG_GROUND)
+  // the small walkers' stepping turn (PART_TURN.rodent; aAnim2.z): the fore pair's swing turned about the vertical
+  // toward the turn, the hind pair's fore-aft swing fading by its cosine (a standing rabbit pivots on its hind feet)
+  if (rig_turnFore > 0.0) {
+    if (animPart == 1) animR = animRY(aAnim2.z) * animR * animRY(-aAnim2.z);
+    else animR = animRX(sin(aAnim.x + legOff) * aAnim.y * uAmp.x * cos(aAnim2.z));
+  }
+#endif
 #ifdef ANIM_RIG
   if (animPart == 1) animR = animRX(animPose * rig_foreFold) * animR;
   animR = animRZ(rigSide * aAnim2.x * rig_abduct) * animR;   // splay outward
@@ -840,6 +852,10 @@ if (animPart == 1 || animPart == 2) {
 #endif
 #ifdef RIG_GROUND
   animR = animRY(aAnim2.y) * animR;   // the head turns about the base of the neck
+#else
+  #ifdef ANIM_RIG
+  animR = animRY(aAnim2.z * rig_turnHead) * animR;   // a ground bird's head leads its turn (PART_TURN.bird)
+  #endif
 #endif
 } else if (animPart == 4 || animPart == 5) {
   float side = animPart == 4 ? 1.0 : -1.0;
@@ -1082,7 +1098,7 @@ function skinDecl(model) {
 export const skinUniforms = model => model.skin ? { uBones: { value: model.skin.tex } } : {};
 const animBody = model => model.skin ? SKIN_BODY : model.rig?.kind === 'reptile' ? REPTILE_BODY : ANIM_BODY;
 const RIG_KEYS = ['spine', 'spinePhase', 'sit', 'foreFold', 'tipLag', 'tipWave', 'tipCurl', 'abduct', 'bob', 'handLag', 'handAmp', 'bow', 'spread', 'collapse', 'flickLift', 'flickOpen',
-  'wave', 'waveK', 'envS', 'pushPitch', 'baskAbduct', 'squash', 'legLift', 'hindK', 'bend', 'flickYaw'];
+  'wave', 'waveK', 'envS', 'pushPitch', 'baskAbduct', 'squash', 'legLift', 'hindK', 'bend', 'flickYaw', 'turnFore', 'turnHead'];
 // aAnim2 is declared for the rig templates, the quadrupeds' gait selector and the antlers (the geometry must then
 // carry it: a missing instanced attribute reads (0, 0, 0, 1), a bound gait and no antler growth).
 const hasAnim2 = model => !!(model.rig || model.gait || model.antler);
@@ -1329,7 +1345,25 @@ export const DEER_DRIVE = {
 // (turnFollow takes this as its D), the hoof's lever r from each body's half length (groundControl.js S.half,
 // animals.js MAMMAL half). The legs' swing is turned about the vertical by atan2(w r, max(v, vMin)) in aAnim2.z
 // (ANIM_BODY under ANIM_GAIT): the fore legs toward the turn, the hind legs away.
-export const PART_TURN = { turn: { on: 0.45, off: 0.2, hold: 0.35, amp: [0.4, 0.6], hz: [0.7, 2.4], lag: 0.15, maxLag: 0.44, lagV: [0.3, 1.2], rateK: 12, maxRate: 8 }, vMin: 0.1 };
+// The other walkers (owner, 2026-10-29: "did you do this for all animals"), each in its own way, as turnFollow's D (.turn)
+// and for the step (groundControl.js animate, squirrelControl.js ground, animals.js turnStep and the updates):
+//   rodent  the brush rabbit, jackrabbit, vole, ground squirrel and gray squirrel on the ground: the bound at `amp` of
+//           its slow length (GROUND bound(0.5); the squirrel's 0.48 m), the rate from the fore feet's travel round the
+//           hind feet they pivot on (lever twice the half length), the lift and rock at the slow values times the amp;
+//           the fore pair's swing turned by atan2(w lever, max(v, vMin)) in aAnim2.z (RIG turnFore). The body lags
+//           0.1 s, never more than 0.3 rad (small bodies turn quick).
+//   bird    the quails and the turkey: walking in place, short steps at `amp` of the walk (lever the half length, the
+//           walk's stride); the head leads the turn by `lead` rad per rad/s up to `leadMax` (aAnim2.z, RIG turnHead).
+//           The turkey turns at the deer's rates (w, fast); the quails at the small bodies'.
+//   lizard  no lag (lag 0): the C-bend (aAnim2.x) is `bendK` x the turn rate, capped at `bendMax` (the template's 0.8),
+//           the legs at the sprawl gait at `amp` (lever the half length, LIZ.stride per cycle).
+// w, fast: the AI's turn-rate cap (rad/s walking, fleeing; animals.js drSteer); slow: a standing turn to a new heading.
+const SMALL_TURN = { on: 0.45, off: 0.2, hold: 0.3, hz: [1, 3.5], lagV: [0.2, 1.0], rateK: 12, maxRate: 10 };
+const BIRD_TURN = { turn: { ...SMALL_TURN, amp: [0.45, 0.65], lag: 0.12, maxLag: 0.35 }, vMin: 0.1, lead: 0.15, leadMax: 0.35, w: 3.5, fast: 8, slow: 2.5 };
+export const PART_TURN = { turn: { on: 0.45, off: 0.2, hold: 0.35, amp: [0.4, 0.6], hz: [0.7, 2.4], lag: 0.15, maxLag: 0.44, lagV: [0.3, 1.2], rateK: 12, maxRate: 8 }, vMin: 0.1,
+  rodent: { turn: { ...SMALL_TURN, amp: [0.35, 0.5], lag: 0.1, maxLag: 0.3 }, vMin: 0.1, w: 3.5, fast: 8, slow: 2.5 },
+  bird: BIRD_TURN, turkey: { ...BIRD_TURN, w: 2.2, fast: 6, slow: 1.2 },
+  lizard: { turn: { ...SMALL_TURN, hold: 0.25, amp: [0.3, 0.45], hz: [1.2, 4], lag: 0, maxLag: 0 }, bendK: 0.25, bendMax: 0.8, w: 3.5, fast: 8 } };
 if (typeof globalThis !== 'undefined') globalThis.__weDeerDrive = DEER_DRIVE;   // debugging: thresholds, rates, force
 export function makeClipState() { return { cur: -1, prev: 0, pA: 0, pB: 0, blend: 0, seed: Math.random(), kind: '', kindB: '', tBlend: 0.3, y0: NaN, dy: 0, wr: 0, tq: 0, th: 0 }; }
 const standKind = (flick) => flick > 0.5 ? 'graze' : flick < -0.15 ? 'alert' : 'idle';

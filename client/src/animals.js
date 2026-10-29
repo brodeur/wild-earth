@@ -1681,7 +1681,9 @@ export class Animals {
   }
   sqUpdate(a, dt, px, py, pz) {
     const r = a.rng, H = this.heights;
-    if (a.guard) { this.sqGuard(a, dt); return; }   // v4: off to its dug-up cache, or after the thief
+    a.turnC = null;   // the drawn body's lag: on the ground only (below)
+    if (a.guard) { a.yP = a.yaw; a.e2 = 0; this.sqGuard(a, dt); return; }   // v4: off to its dug-up cache, or after the thief
+    let sqV = 0;   // the run's speed after the turn (S_RUN)
     if (a.fleeOak) this.fleeing(a);
     const dx = a.x - px, dy = a.y - py, dz = a.z - pz, near2 = dx * dx + dy * dy + dz * dz;
     // (a player squirrel, squirrelControl.js, is one of them: it does not send them up the trees by being near)
@@ -1696,7 +1698,8 @@ export class Animals {
     a.t -= dt;
     switch (a.state) {
       case S_PAUSE: {
-        a.amp = damp(a.amp, 0, 10, dt); a.pose = damp(a.pose, 0.15, 4, dt); a.pitch = damp(a.pitch, 0, 6, dt);
+        if (!(a.tq > 0)) a.amp = damp(a.amp, 0, 10, dt);   // (stepping round a turn: turnStep's, below)
+        a.pose = damp(a.pose, 0.15, 4, dt); a.pitch = damp(a.pitch, 0, 6, dt);
         if (r() < dt * 1.2) a.flickV = 1;   // tail flicks and a dip of the head
         a.y = H.atXZ(a.x, a.z);
         if (a.t <= 0 && this.gameOn(a) && this.sqCollect(a)) break;
@@ -1714,12 +1717,12 @@ export class Animals {
         }
         break;
       }
-      case S_RUN: {
-        const ex = a.tx - a.x, ez = a.tz - a.z, d = Math.hypot(ex, ez), step = a.speed * dt;
-        a.amp = damp(a.amp, 1, 12, dt); a.pose = damp(a.pose, 0, 10, dt);
-        a.phase += dt * TAU * a.speed / 0.42;
-        a.yaw = Math.atan2(ex, ez);
-        if (d <= step) {
+      case S_RUN: {   // turned at the small bodies' rates (PART_TURN.rodent), on the spot first when well off its way
+        const ex = a.tx - a.x, ez = a.tz - a.z, d = Math.hypot(ex, ez), RT = PART_TURN.rodent, fast = a.scared || a.speed > 2.5;
+        sqV = d > 1e-4 ? a.speed * this.drSteer(a, Math.atan2(ex, ez), 12, dt, fast, fast ? RT.fast : RT.w) : a.speed;
+        const step = sqV * dt;
+        a.pose = damp(a.pose, 0, 10, dt);
+        if (d <= Math.max(step, a.speed * dt * 0.05)) {
           a.x = a.tx; a.z = a.tz;
           if (a.via) { a.via = false; a.tx = a.vx; a.tz = a.vz; a.y = H.atXZ(a.x, a.z); break; }   // round the trunk's foot, then on
           if (a.next === S_CLIMB) { a.state = S_CLIMB; a.h = 0; if (a.path) { a.pu = 0; a.pi = 0; a.pdir = 1; } }
@@ -1728,7 +1731,6 @@ export class Animals {
             a.t = a.task === T_GET ? 0.5 + r() * 0.4 : a.task === T_STORE ? 2.2 + r() * 1.2 : 1.6 + r();
           } else { a.state = S_PAUSE; a.t = (this.season === 'fall' ? 2 : 1) + r() * 4; }
         } else { a.x += ex / d * step; a.z += ez / d * step; }
-        a.y = H.atXZ(a.x, a.z) + Math.abs(Math.sin(a.phase)) * 0.05 * a.amp;
         break;
       }
       case S_CLIMB: case S_DOWN: {
@@ -1744,7 +1746,7 @@ export class Animals {
         a.x = t.x + Math.sin(a.face) * rr; a.y = t.y; a.z = t.z + Math.cos(a.face) * rr;
         if (up && a.task === T_RAID && a.h >= a.raidH) { a.state = S_RAIDP; a.t = 1.8 + r() * 0.8; a.wait = 7; }   // v4: at the granary's holes
         else if (up && a.h >= fh) { this.sqBranch(a); a.sx = a.x; a.sy = a.y; a.sz = a.z; a.u = 0; a.state = S_OUT; }
-        else if (!up && a.h <= 0) { a.state = S_PAUSE; a.t = 1 + r() * 2; a.pitch = 0; a.yaw = a.face + (r() - 0.5) * 2; a.scared = 0; }
+        else if (!up && a.h <= 0) { a.state = S_PAUSE; a.t = 1 + r() * 2; a.pitch = 0; a.yaw = a.face; a.wy = a.face + (r() - 0.5) * 2; a.scared = 0; }   // down, then stepped round to a new heading (below)
         break;
       }
       case S_OUT: case S_IN: {
@@ -1813,6 +1815,17 @@ export class Animals {
         break;
       }
     }
+    // on the ground (pausing, running, working, eating): the stepping turn as the rabbit's (PART_TURN.rodent), the run's
+    // bound by its speed after the turn; on the trunk and the limbs nothing changes
+    const gnd = a.state === S_PAUSE || a.state === S_RUN || a.state === S_WORK || a.state === S_EAT;
+    if (!gnd) { a.yP = a.yaw; a.tq = 0; a.wr = 0; a.e2 = 0; return; }
+    const RT = PART_TURN.rodent, lever = 0.24 * a.size, run = a.state === S_RUN;
+    if (a.state === S_PAUSE) this.turnTo(a, dt, RT); else a.wy = NaN;
+    const tA = this.turnStep(a, dt, RT, sqV < 0.05 && a.pose < 0.5 && (a.state === S_PAUSE || run), lever, 0.48);
+    if (run && !tA) { a.amp = damp(a.amp, sqV > 0.05 ? 1 : 0, 12, dt); a.phase += dt * TAU * sqV / 0.42; }
+    a.e2 = a.amp > 0.05 ? Math.atan2(a.wr * lever, Math.max(sqV, RT.vMin)) : damp(a.e2 || 0, 0, 8, dt);   // the fore legs' step turned (aAnim2.z)
+    a.spd = sqV;
+    if (run || tA) a.y = H.atXZ(a.x, a.z) + Math.abs(Math.sin(a.phase)) * 0.05 * a.amp;
   }
 
   // Acorn game: the squirrel's part at a pause. Carrying: off to bury it, 4-30 m from where it was found. Otherwise
@@ -2668,6 +2681,7 @@ export class Animals {
   quUpdate(a, dt) {
     const r = a.rng, g = a.group, H = this.heights;
     a.t -= dt;
+    if (a.state === Q_WAIT || a.state === Q_FLY) { a.turnC = null; a.yP = a.yaw; a.tq = 0; a.wr = 0; a.e2 = damp(a.e2 || 0, 0, 8, dt); }   // off the ground: no stepping turn
     if (a.state === Q_WAIT) {   // crouch, then go
       a.wait -= dt; a.amp = damp(a.amp, 0, 10, dt);
       if (a.wait <= 0) {
@@ -2709,13 +2723,18 @@ export class Animals {
     }
     const ex = tx - a.x, ez = tz - a.z, d = Math.hypot(ex, ez);
     let speed = 0;
-    if (d > 0.25) {
-      speed = Math.min(g.state === G_RUN ? 4.5 : 3, d * 2.5);
+    const BT = PART_TURN.bird;
+    if (d > 0.25) {   // turned at the small bodies' rates (PART_TURN.bird), on the spot first when well off its way
+      const fast = g.state === G_RUN;
+      speed = Math.min(g.state === G_RUN ? 4.5 : 3, d * 2.5) * this.drSteer(a, Math.atan2(ex, ez), 10, dt, fast, fast ? BT.fast : BT.w);
       a.x += ex / d * speed * dt; a.z += ez / d * speed * dt;
-      a.yaw += wrapAngle(Math.atan2(ex, ez) - a.yaw) * Math.min(1, dt * 10);
     } else if (r() < dt * 1.5) a.flickV = 1;   // peck
-    a.amp = damp(a.amp, speed > 0.1 ? 1 : 0, 12, dt); a.pose = damp(a.pose, 1, 10, dt);
-    a.phase += dt * TAU * speed / 0.14;
+    // standing and turning: walking in place in short steps, the head leading the turn (PART_TURN.bird; aAnim2.z)
+    const tA = this.turnStep(a, dt, BT, speed < 0.05, (a.sp === MQ ? 0.11 : 0.1) * a.size, 0.14);
+    if (!tA) { a.amp = damp(a.amp, speed > 0.1 ? 1 : 0, 12, dt); a.phase += dt * TAU * speed / 0.14; }
+    a.pose = damp(a.pose, 1, 10, dt);
+    a.e2 = damp(a.e2 || 0, Math.max(-BT.leadMax, Math.min(BT.leadMax, a.wr * BT.lead)), 10, dt);
+    a.spd = speed;
     a.pitch = damp(a.pitch, 0, 8, dt);
     a.y = H.atXZ(a.x, a.z);
   }
@@ -3218,6 +3237,32 @@ export class Animals {
     a.y = Math.min(hf, hb) * 0.5 + H.atXZ(a.x, a.z) * 0.5 - this.drops[a.sp] * a.pose * a.size + a.lift;
   }
 
+  // The stepping turn of the small walkers and the ground birds (animalModels.js PART_TURN.rodent, .bird, .turkey; the
+  // deer's and the part rig's pattern, mmUpdate): the turn rate this frame from the yaw a frame before (a.wr, rad/s,
+  // smoothed as turnFollow's; a jump of over 1.2 rad is a placement) and the hysteresis (a.tq). Standing (`still`) and
+  // turning over C.turn.on rad/s the legs step round at C.turn.amp of the gait, the rate from the feet's travel round
+  // the turn (`lever` m) over a step of `len` m at full amplitude. Returns the step's amplitude, 0 when not stepping
+  // (the caller's own gait then). a.turnC: the drawn body's lag (the draw loop's turnFollow) while it is on the ground.
+  turnStep(a, dt, C, still, lever, len) {
+    const T = C.turn, d = wrapAngle(a.yaw - (a.yP ?? a.yaw)); a.yP = a.yaw;
+    const raw = Math.abs(d) > 1.2 || !(dt > 0) ? 0 : Math.max(-T.maxRate, Math.min(T.maxRate, d / dt));
+    a.wr = raw + ((a.wr || 0) - raw) * Math.exp(-T.rateK * dt);
+    const aw = Math.abs(a.wr);
+    if (still && aw > ((a.tq || 0) > 0 ? T.off : T.on)) a.tq = T.hold; else a.tq = still ? (a.tq || 0) - dt : 0;
+    a.turnC = C;
+    if (!(a.tq > 0)) return 0;
+    const tAmp = T.amp[0] + (T.amp[1] - T.amp[0]) * Math.min(1, Math.max(0, (aw - T.on) / (2 - T.on)));
+    a.amp = damp(a.amp, tAmp, 10, dt);
+    a.phase += dt * TAU * Math.min(T.hz[1], Math.max(T.hz[0], aw * lever / (tAmp * len)));
+    return tAmp;
+  }
+  // A standing small body's turn to a new heading (a.wy; NaN: none), stepped round at C.slow rad/s (turnStep).
+  turnTo(a, dt, C) {
+    if (a.wy !== a.wy) return;
+    this.drSteer(a, a.wy, 3, dt, false, C.slow);
+    if (Math.abs(wrapAngle(a.wy - a.yaw)) < 0.05) a.wy = NaN;
+  }
+
   // ---- brush rabbit -------------------------------------------------------------------------------
   // Out of cover (its form, a.hx/hz: under an oak or in the brush) at dawn and dusk to feed within ~7 m of it in short
   // hops, nibbling, now and then sitting up; in the form through the day. A low player inside ~22 m: it freezes; inside
@@ -3275,21 +3320,25 @@ export class Animals {
         if (d <= step) {
           a.x = a.tx; a.z = a.tz; speed = 0; a.zig = 0;
           if (bolt) { a.state = B_FORM; a.t = 15 + r() * 20; } else { a.state = a.next; a.t = a.next === B_FORM ? 20 + r() * 30 : 1.5 + r() * 4; }
-        } else {
-          const want = Math.atan2(ex, ez) + (bolt && d > 2 ? a.zig : 0);
-          a.yaw += wrapAngle(want - a.yaw) * Math.min(1, dt * (bolt ? 12 : 8));
-          a.x += Math.sin(a.yaw) * step; a.z += Math.cos(a.yaw) * step;
-          lift = (bolt ? 0.13 : 0.06) * Math.max(0, Math.sin(a.phase));
+        } else {   // turned at the small bodies' rate (PART_TURN.rodent), on the spot first when well off its way
+          const want = Math.atan2(ex, ez) + (bolt && d > 2 ? a.zig : 0), RT = PART_TURN.rodent;
+          speed *= this.drSteer(a, want, bolt ? 12 : 8, dt, bolt, bolt ? RT.fast : RT.w);
+          a.x += Math.sin(a.yaw) * speed * dt; a.z += Math.cos(a.yaw) * speed * dt;
+          if (speed > 0.05) lift = (bolt ? 0.13 : 0.06) * Math.max(0, Math.sin(a.phase));
         }
         if (bolt) wantFlick = 0.8;   // the tail up: the white flash
         break;
       }
     }
-    a.amp = damp(a.amp, speed > 0.05 ? 1 : 0, 10, dt);
-    a.phase += dt * TAU * speed / (speed > 2 ? 0.9 : 0.32);
+    // standing and turning: the bound at low amplitude, the fore feet hopping round the hind feet (PART_TURN.rodent)
+    const RT = PART_TURN.rodent, lever = 0.24 * a.size, tA = this.turnStep(a, dt, RT, speed < 0.05 && a.pose < 0.5, lever, 0.32);
+    if (!tA) { a.amp = damp(a.amp, speed > 0.05 ? 1 : 0, 10, dt); a.phase += dt * TAU * speed / (speed > 2 ? 0.9 : 0.32); }
+    else lift = 0.06 * a.amp * Math.max(0, Math.sin(a.phase));
+    a.e2 = a.amp > 0.05 ? Math.atan2(a.wr * lever, Math.max(speed, RT.vMin)) : damp(a.e2 || 0, 0, 8, dt);   // the fore legs' step turned (aAnim2.z)
+    a.spd = speed;
     a.pose = damp(a.pose, wantPose, 5, dt);
     if (wantFlick) a.flick = damp(a.flick, wantFlick, 8, dt);
-    a.pitch = damp(a.pitch, speed > 0.05 ? -0.18 * Math.cos(a.phase) : 0, 12, dt);
+    a.pitch = damp(a.pitch, speed > 0.05 ? -0.18 * Math.cos(a.phase) : tA ? -0.18 * a.amp * Math.cos(a.phase) : 0, 12, dt);
     a.y = H.atXZ(a.x, a.z) + lift;
   }
 
@@ -3362,7 +3411,7 @@ export class Animals {
           }
         }
         break;
-      case JK_SIT: wantPose = 1; if (a.t <= 0) { a.state = JK_FEED; a.t = 1 + r() * 3; } break;
+      case JK_SIT: wantPose = a.wy === a.wy ? 0 : 1; if (a.t <= 0) { a.state = JK_FEED; a.t = 1 + r() * 3; } break;   // round first (stepping, below), then up
       case JK_FREEZE:
         wantPose = a.next === JK_FORM ? JACK.hunch * 0.3 : JACK.alert;   // ears up, still; in the form it raises its head a little
         if (a.t <= 0) {
@@ -3371,13 +3420,20 @@ export class Animals {
           else { a.state = a.next; a.t = a.next === JK_FORM ? 10 + r() * 20 : 1 + r() * 3; }
         }
         break;
-      case JK_HOP: {
+      case JK_HOP: {   // (mmStep's arc at the small bodies' turn rates, PART_TURN.rodent: on the spot first when well off its way)
         speed = a.speed;
-        if (this.mmStep(a, dt, speed, speed > 2 ? 6 : 10)) {
+        const ex = a.tx - a.x, ez = a.tz - a.z, d = Math.hypot(ex, ez);
+        if (d <= Math.max(speed * dt, 0.05)) {
+          a.x = a.tx; a.z = a.tz;
           speed = 0; a.state = a.next;
-          if (a.state === JK_FORM) { a.t = 30 + r() * 60; a.yaw += (r() - 0.5) * 2; }
-          else if (a.state === JK_SIT) { a.t = 3 + r() * 4; a.yaw = Math.atan2(a.sx - a.x, a.sz - a.z); }   // looks back
+          if (a.state === JK_FORM) { a.t = 30 + r() * 60; a.wy = a.yaw + (r() - 0.5) * 2; }   // settles in, stepped round (below)
+          else if (a.state === JK_SIT) { a.t = 3 + r() * 4; a.wy = Math.atan2(a.sx - a.x, a.sz - a.z); }   // looks back
           else a.t = 1.5 + r() * 4;
+        } else {
+          const RT = PART_TURN.rodent, fast = speed > 3;
+          speed *= this.drSteer(a, Math.atan2(ex, ez), speed > 2 ? 6 : 10, dt, fast, fast ? RT.fast : RT.w);
+          if (d < 1.5) { a.x += ex / d * speed * dt; a.z += ez / d * speed * dt; }
+          else { a.x += Math.sin(a.yaw) * speed * dt; a.z += Math.cos(a.yaw) * speed * dt; }
         }
         break;
       }
@@ -3387,7 +3443,7 @@ export class Animals {
         let want = Math.atan2(a.x - a.sx, a.z - a.sz) + a.zig;
         const ax = a.x + Math.sin(want) * 8, az = a.z + Math.cos(want) * 8;
         if (!this.landOK(ax, az)) { a.zig = -a.zig; want = Math.atan2(a.x - a.sx, a.z - a.sz) + a.zig; }
-        a.yaw += wrapAngle(want - a.yaw) * Math.min(1, dt * 12);
+        speed *= this.drSteer(a, want, 12, dt, true, PART_TURN.rodent.fast);   // facing the threat: round on the spot first
         const step = speed * dt;
         a.x += Math.sin(a.yaw) * step; a.z += Math.cos(a.yaw) * step; a.u -= step;
         if (a.u <= 0) {   // run out: lope a few metres on and sit up, looking back
@@ -3399,20 +3455,26 @@ export class Animals {
         break;
       }
     }
-    // the bound: amplitude and length by speed, the body lifted through the flight phase of each bound
-    const prev = a.phase, L = JACK.bound(Math.max(speed, 0.5), a.peak);
-    a.amp = damp(a.amp, speed < 0.05 ? 0 : speed < 2 ? 0.7 : speed < 7 ? 1 : 1.15, 8, dt);
-    a.phase += dt * TAU * speed / L;
+    // standing: stepped round to a new heading (a.wy: the form, a look back), as the deer
+    if (speed < 0.05 && (a.state === JK_FORM || a.state === JK_SIT || a.state === JK_FEED || a.state === JK_FREEZE)) this.turnTo(a, dt, PART_TURN.rodent);
+    else a.wy = NaN;
+    // the bound: amplitude and length by speed, the body lifted through the flight phase of each bound; standing and
+    // turning, the bound at low amplitude, the fore feet hopping round the hind feet (PART_TURN.rodent)
+    const prev = a.phase, L = JACK.bound(Math.max(speed, 0.5), a.peak), RT = PART_TURN.rodent, lever = 0.4 * a.size;
+    const tA = this.turnStep(a, dt, RT, speed < 0.05 && a.pose < 0.5, lever, JACK.bound(0.5, 1));
+    if (!tA) { a.amp = damp(a.amp, speed < 0.05 ? 0 : speed < 2 ? 0.7 : speed < 7 ? 1 : 1.15, 8, dt); a.phase += dt * TAU * speed / L; }
+    a.e2 = a.amp > 0.05 ? Math.atan2(a.wr * lever, Math.max(speed, RT.vMin)) : damp(a.e2 || 0, 0, 8, dt);   // the fore legs' step turned (aAnim2.z)
+    a.spd = speed;
     if (speed > 0.05 && Math.floor(a.phase / TAU) !== Math.floor(prev / TAU)) {   // a bound landed
       a.peak = a.state === JK_BOLT && r() < 0.12 ? 1.35 : 1;
       if (a.state === JK_BOLT && --a.zigT <= 0) {   // the zigzag: 15-30 degrees to the other side of the line, a 30-60 degree turn
         a.zig = -Math.sign(a.zig || 1) * (0.26 + r() * 0.26); a.zigT = 2 + Math.floor(r() * 3);
       }
     }
-    const lift = speed > 0.05 ? JACK.lift(speed) * (a.peak > 1 ? 1.7 : 1) * Math.max(0, Math.sin(a.phase)) : 0;
+    const lift = speed > 0.05 ? JACK.lift(speed) * (a.peak > 1 ? 1.7 : 1) * Math.max(0, Math.sin(a.phase)) : tA ? JACK.lift(0.5) * a.amp * Math.max(0, Math.sin(a.phase)) : 0;
     a.pose = damp(a.pose, wantPose, a.state === JK_FREEZE ? 8 : 4, dt);
     if (wantFlick) a.flick = damp(a.flick, wantFlick, 6, dt);
-    a.pitch = damp(a.pitch, speed > 0.05 ? -0.14 * Math.cos(a.phase) * Math.min(1, speed / 4 + 0.4) : 0, 12, dt);
+    a.pitch = damp(a.pitch, speed > 0.05 ? -0.14 * Math.cos(a.phase) * Math.min(1, speed / 4 + 0.4) : tA ? -0.14 * a.amp * Math.cos(a.phase) : 0, 12, dt);
     a.y = H.atXZ(a.x, a.z) + lift;
   }
 
@@ -3431,12 +3493,12 @@ export class Animals {
     }
     let speed = 0, wantPose = 0;
     switch (a.state) {
-      case VL_RUN: {
-        speed = a.speed;
-        const du = speed * dt / L, dir = Math.sign(a.h - a.u);
-        if (Math.abs(a.h - a.u) <= du) { a.u = a.h; a.state = a.next; a.t = a.next === VL_HIDE ? 6 + r() * 14 : 1 + r() * 3; speed = 0; }
+      case VL_RUN: {   // along the runway, turned round at the small bodies' rate (PART_TURN.rodent): about on the spot first
+        const dir = Math.sign(a.h - a.u), flee = a.next === VL_HIDE, RT = PART_TURN.rodent;
+        speed = a.speed * this.drSteer(a, Math.atan2(a.tx - a.sx, a.tz - a.sz) + (dir < 0 ? Math.PI : 0), 12, dt, flee, flee ? RT.fast : RT.w);
+        const du = speed * dt / L;
+        if (Math.abs(a.h - a.u) <= Math.max(du, 1e-4)) { a.u = a.h; a.state = a.next; a.t = a.next === VL_HIDE ? 6 + r() * 14 : 1 + r() * 3; speed = 0; }
         else a.u += dir * du;
-        a.yaw = Math.atan2(a.tx - a.sx, a.tz - a.sz) + (dir < 0 ? Math.PI : 0);
         break;
       }
       case VL_PAUSE:
@@ -3452,8 +3514,11 @@ export class Animals {
     }
     a.vis = a.state === VL_HIDE ? (a.vis < 0.03 ? 0 : damp(a.vis, 0, 14, dt)) : damp(a.vis, 1, 6, dt);
     a.x = a.sx + (a.tx - a.sx) * a.u; a.z = a.sz + (a.tz - a.sz) * a.u;
-    a.amp = damp(a.amp, speed > 0.05 ? 1 : 0, 14, dt);
-    a.phase += dt * TAU * speed / 0.09;
+    // standing and turning: small shuffles of the fore feet round the hind feet (PART_TURN.rodent)
+    const RT = PART_TURN.rodent, lever = 0.1 * a.size, tA = this.turnStep(a, dt, RT, speed < 0.05 && a.pose < 0.5 && a.state !== VL_HIDE, lever, 0.09);
+    if (!tA) { a.amp = damp(a.amp, speed > 0.05 ? 1 : 0, 14, dt); a.phase += dt * TAU * speed / 0.09; }
+    a.e2 = a.amp > 0.05 ? Math.atan2(a.wr * lever, Math.max(speed, RT.vMin)) : damp(a.e2 || 0, 0, 8, dt);   // the fore legs' step turned (aAnim2.z)
+    a.spd = speed;
     a.pose = damp(a.pose, wantPose, 6, dt);
     a.y = H.atXZ(a.x, a.z) + 0.004 * Math.abs(Math.sin(a.phase)) * a.amp;
   }
@@ -3572,6 +3637,7 @@ export class Animals {
       const dx = a.x - T.x, dy = a.y - T.y, dz = a.z - T.z, R = T.who ? TURKEY.flushOther : this.tkFlushR();
       if (this.danger(TK, g, Math.sqrt(dx * dx + dy * dy + dz * dz), R, T.n)) { g.near = true; g.nx = T.x; g.nz = T.z; }
     }
+    if (a.state === T_WAIT || a.state === T_FLY || a.state === T_PERCH) { a.turnC = null; a.yP = a.yaw; a.tq = 0; a.wr = 0; a.e2 = damp(a.e2 || 0, 0, 8, dt); }   // off the ground: no stepping turn
     if (a.state === T_WAIT) {   // a crouch (or a few seconds on the limb at dawn), then off
       a.wait -= dt; a.amp = damp(a.amp, 0, 8, dt); a.pose = damp(a.pose, 1, 8, dt);
       if (a.wait <= 0) {
@@ -3623,13 +3689,17 @@ export class Animals {
     if (a.state === T_SCRATCH) {   // two or three kicks back through the litter, then a look at what turned up
       a.scr -= dt; a.phase += dt * TAU * 2.4; a.amp = damp(a.amp, 0.8, 10, dt);
       if (a.scr <= 0 || d > 2) { a.state = T_FORAGE; a.flickV = 1; }
-    } else if (d > 0.3) {
-      speed = Math.min(g.state === TF_WALK ? g.speed * 1.4 : TURKEY.walk, d * 0.8);
+    } else if (d > 0.3) {   // turned at the deer's rates (PART_TURN.turkey), on the spot first when well off its way
+      const BT = PART_TURN.turkey, fast = g.speed > 2;
+      speed = Math.min(g.state === TF_WALK ? g.speed * 1.4 : TURKEY.walk, d * 0.8) * this.drSteer(a, Math.atan2(ex, ez), 3, dt, fast, fast ? BT.fast : BT.w);
       a.x += ex / d * speed * dt; a.z += ez / d * speed * dt;
-      a.yaw += wrapAngle(Math.atan2(ex, ez) - a.yaw) * Math.min(1, dt * 3);
     } else if (r() < dt * 0.9) a.flickV = 1;   // peck
     else if (r() < dt * 0.25) { a.state = T_SCRATCH; a.scr = 0.7 + r() * 0.8; }
-    if (a.state !== T_SCRATCH) { a.amp = damp(a.amp, speed > 0.05 ? Math.min(1, 0.45 + speed * 0.6) : 0, 6, dt); a.phase += dt * TAU * speed / TURKEY.stride; }
+    // standing and turning: walking in place in short steps, the head leading the turn (PART_TURN.turkey; aAnim2.z)
+    const BT = PART_TURN.turkey, tA = this.turnStep(a, dt, BT, speed < 0.05 && a.state !== T_SCRATCH, 0.3 * a.size, TURKEY.stride);
+    if (a.state !== T_SCRATCH && !tA) { a.amp = damp(a.amp, speed > 0.05 ? Math.min(1, 0.45 + speed * 0.6) : 0, 6, dt); a.phase += dt * TAU * speed / TURKEY.stride; }
+    a.e2 = damp(a.e2 || 0, Math.max(-BT.leadMax, Math.min(BT.leadMax, a.wr * BT.lead)), 10, dt);
+    a.spd = speed;
     a.pose = damp(a.pose, 1, 6, dt); a.pitch = damp(a.pitch, 0, 6, dt);
     a.y = H.atXZ(a.x, a.z);
     this.tkVis(a, dt);
@@ -3713,19 +3783,27 @@ export class Animals {
           a.x = a.tx; a.z = a.tz; speed = 0;
           if (a.state === G_DIVE) a.state = G_DOWN;
           else { a.state = a.next; a.t = 2 + r() * 4; }
-        } else { a.x += ex / d * speed * dt; a.z += ez / d * speed * dt; a.yaw += wrapAngle(Math.atan2(ex, ez) - a.yaw) * Math.min(1, dt * 12); }
+        } else {   // turned at the small bodies' rates (PART_TURN.rodent), on the spot first when well off its way
+          const RT = PART_TURN.rodent, dive = a.state === G_DIVE;
+          speed *= this.drSteer(a, Math.atan2(ex, ez), 12, dt, dive, dive ? RT.fast : RT.w);
+          a.x += ex / d * speed * dt; a.z += ez / d * speed * dt;
+        }
         break;
       }
       case G_SIT: pose = 0.75; if (a.t <= 0) { a.state = G_FEED; a.t = 2 + r() * 4; } break;
-      case G_SENTRY: pose = 1; if (r() < dt * 0.35) a.yaw += (r() - 0.5) * 1.4; break;   // bolt upright, turning to look
+      case G_SENTRY: pose = 1; if (a.wy !== a.wy && r() < dt * 0.35) a.wy = a.yaw + (r() - 0.5) * 1.4; break;   // bolt upright, turning to look (below)
       case G_DOWN:
-        if (a.up && a.t <= 0) { a.up = 0; a.state = G_PEEK; a.t = 2 + r() * 3; a.x = a.hb.x; a.z = a.hb.z; a.yaw = r() * TAU; }
+        if (a.up && a.t <= 0) { a.up = 0; a.state = G_PEEK; a.t = 2 + r() * 3; a.x = a.hb.x; a.z = a.hb.z; a.yaw = a.yP = r() * TAU; }   // (up out of sight: no turn)
         break;
       case G_PEEK: pose = 0.6; if (a.t <= 0) { a.state = G_FEED; a.t = 1 + r() * 3; } break;
     }
     a.vis = a.state === G_DOWN ? (a.vis < 0.03 ? 0 : damp(a.vis, 0, 18, dt)) : damp(a.vis, 1, a.state === G_PEEK ? 3 : 6, dt);
-    a.amp = damp(a.amp, speed > 0.05 ? 1 : 0, 12, dt);
-    a.phase += dt * TAU * speed / (speed > 2 ? 0.32 : 0.16);
+    if (a.state === G_SENTRY || a.state === G_SIT || a.state === G_FEED || a.state === G_PEEK) this.turnTo(a, dt, PART_TURN.rodent); else a.wy = NaN;
+    // standing and turning: the bound at low amplitude, the fore feet hopping round the hind feet (PART_TURN.rodent)
+    const RT = PART_TURN.rodent, lever = 0.2 * a.size, tA = this.turnStep(a, dt, RT, speed < 0.05 && a.pose < 0.5 && a.state !== G_DOWN, lever, 0.16);
+    if (!tA) { a.amp = damp(a.amp, speed > 0.05 ? 1 : 0, 12, dt); a.phase += dt * TAU * speed / (speed > 2 ? 0.32 : 0.16); }
+    a.e2 = a.amp > 0.05 ? Math.atan2(a.wr * lever, Math.max(speed, RT.vMin)) : damp(a.e2 || 0, 0, 8, dt);   // the fore legs' step turned (aAnim2.z)
+    a.spd = speed;
     a.pose = damp(a.pose, pose, 5, dt);
     a.y = H.atXZ(a.x, a.z) - this.drops[GS] * Math.max(0, a.pose) * a.size;
   }
@@ -3872,7 +3950,7 @@ export class Animals {
     const T = this.threat(LZ, a, a.x, a.y, a.z, px, py, pz), tn = T.n; px = T.x; py = T.y; pz = T.z;   // the player or an AI hunter
     const dx = a.x - px, dy = a.y - py, dz = a.z - pz, near = Math.sqrt(dx * dx + dy * dy + dz * dz);
     if (this.danger(LZ, a, near, LIZ.flee, tn) && a.state !== L_SPRINT && a.state !== L_HIDE) this.lzSprint(a, px, py, pz);
-    let speed = 0, pose = 0, bend = 0;
+    let speed = 0, pose = 0, bend = 0, turnW = 0;
     switch (a.state) {
       case L_HIDE:
         if (a.t <= 0 && near > LIZ.flee + 1.5) { this.lzHome(a); a.state = L_ALERT; a.t = 3 + r() * 5; }
@@ -3884,9 +3962,11 @@ export class Animals {
         if (k >= a.bobs) { a.state = L_ALERT; a.t = 2 + r() * 4; }
         break;
       }
-      case L_TURN: {   // a quick turn on the spot, the body curved into it
+      case L_TURN: {   // a quick turn on the spot (at most PART_TURN.lizard.w rad/s), the body curved into it by the turn rate, the legs stepping round
+        const LT = PART_TURN.lizard;
+        if (a.u === 0) a.dur = Math.max(a.dur, Math.abs(a.turn) / LT.w);
         a.u += dt; const w = a.turn / a.dur;
-        a.F.applyAxisAngle(a.N, w * dt); this.lzOrient(a); bend = Math.sign(a.turn) * 0.8; speed = 0.4;
+        a.F.applyAxisAngle(a.N, w * dt); this.lzOrient(a); bend = Math.max(-LT.bendMax, Math.min(LT.bendMax, w * LT.bendK)); turnW = w;
         if (a.u >= a.dur) { a.state = L_ALERT; a.t = 1 + r() * 4; }
         break;
       }
@@ -3916,8 +3996,15 @@ export class Animals {
     a.flick = damp(a.flick, a.fl, 12, dt);
     a.bend = damp(a.bend || 0, bend, 10, dt);
     a.vis = a.state === L_HIDE ? (a.vis < 0.05 ? 0 : damp(a.vis, 0, 25, dt)) : damp(a.vis, 1, 4, dt);
-    a.amp = damp(a.amp, speed > 0.05 ? Math.min(1, speed / LIZ.dash + 0.3) : 0, 20, dt);
-    a.phase += dt * TAU * Math.min(12, speed / LIZ.stride);
+    a.wr = turnW;
+    if (turnW) {   // the turn's step: the sprawl gait at low amplitude at the rate of the feet's travel round it (lever the 4 cm half length)
+      const T = PART_TURN.lizard.turn, aw = Math.abs(turnW), tAmp = T.amp[0] + (T.amp[1] - T.amp[0]) * Math.min(1, Math.max(0, (aw - T.on) / (2 - T.on)));
+      a.amp = damp(a.amp, tAmp, 20, dt);
+      a.phase += dt * TAU * Math.min(T.hz[1], Math.max(T.hz[0], aw * 0.04 * a.size / (tAmp * LIZ.stride)));
+    } else {
+      a.amp = damp(a.amp, speed > 0.05 ? Math.min(1, speed / LIZ.dash + 0.3) : 0, 20, dt);
+      a.phase += dt * TAU * Math.min(12, speed / LIZ.stride);
+    }
     a.pose = a.state === L_PUSH ? pose : damp(a.pose, pose, 4, dt);
   }
   // What an animal is doing, in a few words (identify.js species cards).
@@ -4253,9 +4340,11 @@ export class Animals {
         grow = 1 + FLY_GROW * a.fly * clamp01((Math.sqrt(d2) - FLY_NEAR) / (FLY_FAR - FLY_NEAR));
       }
       // the skinned models (deer, buck) step round a turn and are drawn a beat behind it (animalModels.js turnFollow)
-      // and so do the part rig's fox, coyote, lion and bear (PART_TURN; their legs' step: mmUpdate)
-      const sk = this.drawn[sp]?.model?.skin, dyaw = sk ? turnFollow(DEER_DRIVE, a.cs ||= makeClipState(), a.yaw, a.spd || 0, dt)
-        : sp === FX || sp === CY || sp === ML || sp === BE ? turnFollow(PART_TURN, a.cs ||= makeClipState(), a.yaw, a.spd || 0, dt) : a.yaw;
+      // and so do the part rig's fox, coyote, lion and bear (PART_TURN; their legs' step: mmUpdate), and on the ground the
+      // rodents, the gray squirrel and the ground birds (a.turnC: PART_TURN.rodent, .bird, .turkey; turnStep)
+      const sk = this.drawn[sp]?.model?.skin, TF = sk ? DEER_DRIVE : sp === FX || sp === CY || sp === ML || sp === BE ? PART_TURN : a.turnC;
+      if (!TF && a.cs) a.cs.y0 = NaN;   // off the ground: the lag starts afresh when it is back
+      const dyaw = TF ? turnFollow(TF, a.cs ||= makeClipState(), a.yaw, a.spd || 0, dt) : a.yaw;
       e.set(a.pitch, dyaw, a.roll, 'YXZ'); q.setFromEuler(e); p.set(a.x, a.y, a.z); s.setScalar(a.size * SPECIES[sp].scale * grow * a.vis);
       m.compose(p, q, s); m.toArray(mesh.instanceMatrix.array, o * 16);
       const an = mesh.geometry.attributes.aAnim.array;

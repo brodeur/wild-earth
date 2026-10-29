@@ -1,6 +1,6 @@
 import * as THREE from 'three';
 import { SPECIES as PLANTS } from './trees.js';
-import { animalMaterial, animalDepthMaterial, hasAnim2 } from './animalModels.js';
+import { animalMaterial, animalDepthMaterial, hasAnim2, makeClipState, turnFollow, PART_TURN } from './animalModels.js';
 import { addCaster } from './shadows.js';
 import { trunkAt } from './animals.js';
 import { acornGeometry } from './acorns.js';
@@ -91,7 +91,8 @@ export class SquirrelControl {
     this.v = 0; this.vel = new THREE.Vector3(); this.tree = null; this.h = 0; this.face = 0; this.headUp = true;
     this.stamina = 1; this.tired = false;
     this.work = null; this.limb = null; this.auto = null; this.sit = 0;
-    this.pose = { phase: 0, amp: 0, pose: 0, flick: 0, flickV: 0, e0: 0, e1: 0, pitch: 0, yaw: 0, roll: 0, bob: 0 };
+    this.pose = { phase: 0, amp: 0, pose: 0, flick: 0, flickV: 0, e0: 0, e1: 0, e2: 0, pitch: 0, yaw: 0, roll: 0, bob: 0 };
+    this.cs = makeClipState();   // the stepping turn on the ground (turnFollow: the drawn body's lag, cs.wr the turn rate; ground)
     this.jumpQ = false; this.actQ = false; this.camOrbit = 0; this.lastYaw = 0; this.camSide = CAM_SIDE; this.camLift = 0;
     this.camOff = new THREE.Vector3(); this.aimOff = new THREE.Vector3(); this.camSettled = false;
     this.last = new THREE.Vector3(); this.trees = new Map(); this.treeVersion = -1;
@@ -480,6 +481,7 @@ export class SquirrelControl {
       case 'stun': this.stunned(dt); break;
     }
     if (this.mode !== 'wood') { this.cands.length = 0; this.candA = this.candD = null; }
+    if (this.mode !== 'ground' || this.swimming) { this.cs.y0 = NaN; this.cs.tq = 0; ps.e2 = 0; }   // the stepping turn is the ground's only
     this.showJunctions();
     if (this.mode !== 'trunk' && this.mode !== 'limb' && this.mode !== 'wood' && this.mode !== 'work') this.camOrbit = damp(this.camOrbit, 0, 3, dt);
     this.lastYaw = f.yaw;
@@ -566,14 +568,28 @@ export class SquirrelControl {
       ps.yaw = f.yaw + Math.PI; ps.roll = damp(ps.roll, Math.sin(ps.phase) * 0.06, 8, dt);
       return;
     }
+    // the stepping turn (animalModels.js PART_TURN.rodent, as the rabbit's): the drawn body lags the turn (turnFollow) and,
+    // standing, the fore feet hop round the hind feet it pivots on, the bound at low amplitude at the rate of their travel
+    // (lever twice the 0.12 m half length; the slow bound 0.48 m), the fore pair's swing turned toward the turn (aAnim2.z)
+    const RT = PART_TURN.rodent, T = RT.turn, cs = this.cs;
+    ps.yaw = turnFollow(RT, cs, f.yaw, sp, dt) + Math.PI;
+    const wr = cs.wr, aw = Math.abs(wr), lever = 0.24, still = sp < 0.05 && ps.pose < 0.5;
+    if (still && aw > (cs.tq > 0 ? T.off : T.on)) cs.tq = T.hold; else cs.tq = still ? cs.tq - dt : 0;
+    const tAmp = cs.tq > 0 ? T.amp[0] + (T.amp[1] - T.amp[0]) * Math.max(0, Math.min(1, (aw - T.on) / (2 - T.on))) : 0;
     // pose: the bound (stride lengthens with speed), sit-up, the body along the slope
     const stride = 0.42 + 0.12 * sp;
-    ps.amp = damp(ps.amp, sp > 0.15 ? Math.min(1, 0.35 + sp / 3) : 0, 10, dt);
-    ps.phase += dt * TAU * sp / stride;
+    if (tAmp) {
+      ps.amp = damp(ps.amp, tAmp, 10, dt);
+      ps.phase += dt * TAU * Math.max(T.hz[0], Math.min(T.hz[1], aw * lever / (tAmp * 0.48)));
+    } else {
+      ps.amp = damp(ps.amp, sp > 0.15 ? Math.min(1, 0.35 + sp / 3) : 0, 10, dt);
+      ps.phase += dt * TAU * sp / stride;
+    }
+    ps.e2 = ps.amp > 0.05 ? Math.atan2(wr * lever, Math.max(sp, RT.vMin)) : damp(ps.e2, 0, 8, dt);
     ps.bob = Math.abs(Math.sin(ps.phase)) * (0.04 + 0.018 * sp) * ps.amp;
     ps.pose = damp(ps.pose, Math.max(this.sit, sp < 0.2 ? 0.12 : 0), 6, dt);
     ps.pitch = damp(ps.pitch, slope * (1 - this.sit), 10, dt);
-    ps.yaw = f.yaw + Math.PI; ps.roll = damp(ps.roll, 0, 8, dt);
+    ps.roll = damp(ps.roll, 0, 8, dt);
   }
   // The water at the feet from a footing: wading, or swimming once deeper than SWIM_IN (until shallower than SWIM_OUT).
   setWet(F) {
@@ -1109,7 +1125,7 @@ export class SquirrelControl {
     this._m.compose(this._p, this._q, this._s);
     this._m.toArray(m.instanceMatrix.array, 0); m.instanceMatrix.needsUpdate = true;
     const an = m.geometry.attributes.aAnim; an.array[0] = ps.phase % TAU; an.array[1] = ps.amp; an.array[2] = ps.pose; an.array[3] = ps.flick; an.needsUpdate = true;
-    if (this.rig) { const a2 = m.geometry.attributes.aAnim2; a2.array[0] = ps.e0; a2.array[1] = ps.e1; a2.array[2] = 0; a2.array[3] = 0; a2.needsUpdate = true; }
+    if (this.rig) { const a2 = m.geometry.attributes.aAnim2; a2.array[0] = ps.e0; a2.array[1] = ps.e1; a2.array[2] = ps.e2; a2.array[3] = 0; a2.needsUpdate = true; }
     // the acorn in its mouth
     const carrying = this.acorns?.running && this.acorns.player.carrying > 0;
     this.nut.visible = !!carrying;

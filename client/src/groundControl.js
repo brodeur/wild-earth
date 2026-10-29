@@ -4,6 +4,7 @@ import { animalMaterial, animalDepthMaterial, hasAnim2, antlerState, driveClips,
 import { addCaster } from './shadows.js';
 import { HerdMarks } from './herdMarks.js';
 import { HerdSilhouette } from './herdSilhouette.js';
+import { Locomotion } from './locomotion.js';
 
 // The playable walkers (owner's request 2026-10-26, "make the other animals playable"): one controller for every
 // species that lives on the ground, parameterised per species by GROUND below. Black-tailed deer (doe and buck), gray
@@ -211,8 +212,12 @@ export class GroundControl {
   }
   // The species (GROUND key) and model this body uses; the mesh comes in when it has loaded.
   useSpecies(code, modelName = null) {
-    const S = GROUND[code]; if (!S) return false;
-    this.code = code; this.S = S; this.modelName = modelName || S.model; this.body = null;
+    // the species' entry: the hand-tuned table, filled from the tile's locomotion table (cruise, sprint, recover it may
+    // lack; client/src/locomotion.js, docs/movement.md), or a whole entry derived from the species' taxon and body when
+    // the table has none (a new species on a new tile walks from its taxonomy alone; its mesh must still exist)
+    const L = this.tile?.locomotion ? (this.loco ||= new Locomotion(this.tile.locomotion)) : null;
+    const S = GROUND[code] ? (L ? L.fill(code, GROUND[code]) : GROUND[code]) : L?.groundEntry(code); if (!S || !S.model) return false;
+    this.code = code; this.S = S; this.modelName = modelName || S.model; this.body = null; this.cs = null;   // cs: a fresh turn state (turnFollow) per body
     { const A = this.animals; if (A && !A.preySlots) A.buildHunts?.(); const k = A ? A.speciesList().findIndex(sp => sp.code === code) : -1;
       if (this.needs) { this.needs.hunter = !!(k >= 0 && A.preySlots?.[k]); } }   // a hunter's hunger drains until a catch (needs.js); needs.setSpecies takes the body hungry
     this.stamina = 1; this.tired = false; this.rush = null; this.rushes = 0;
@@ -470,6 +475,7 @@ export class GroundControl {
     if (whirr) ps.phase += dt * TAU * S.flush.beat; else ps.phase = damp(ps.phase, Math.round(ps.phase / TAU) * TAU + 0.6, 8, dt);
     ps.e0 = damp(ps.e0, glide ? 1 : 0, 6, dt); ps.e1 = damp(ps.e1, u > 0.85 ? 1 : 0.4, 8, dt);
     ps.pitch = -Math.atan2((P.y - oy) / Math.max(dt, 1e-3), L.v) * 0.6; ps.roll = damp(ps.roll, -k.turn * 0.4, 4, dt); ps.lift = 0; ps.flick = damp(ps.flick, 0, 6, dt);
+    ps.e2 = damp(ps.e2, 0, 8, dt);   // the head's lead into a turn (animate): straight in the air
   }
 
   // The rig's channels from the controller's state (as the AI's update functions drive them for this species).
@@ -506,35 +512,68 @@ export class GroundControl {
       if (!inAir) ps.pitch = damp(ps.pitch, slope * 0.8, 6, dt);
       else ps.pitch = damp(ps.pitch, -Math.atan2(this.vel.y, Math.max(1, Math.hypot(this.vel.x, this.vel.z))) * 0.5, 8, dt);
     } else if (S.rig === 'rodent') {
-      ps.amp = damp(ps.amp, inAir ? 0.3 : sp > 0.05 ? (this.code === 'lepus_californicus' ? (sp < 2 ? 0.7 : sp < 7 ? 1 : 1.15) : 1) : 0, 10, dt);
-      ps.phase += dt * TAU * (inAir ? 2 : sp / S.bound(Math.max(sp, 0.5)));
+      // the stepping turn (animalModels.js PART_TURN.rodent; draw's turnFollow measures cs.wr): standing and turning, the
+      // bound at low amplitude, the fore feet hopping round the hind feet they pivot on (lever twice the half length)
+      const RT = PART_TURN.rodent, T = RT.turn, cs = this.cs, wr = cs?.wr || 0, aw = Math.abs(wr), r = 2 * S.half * this.size;
+      const still = sp < 0.05 && !inAir && !this.resting && ps.pose < 0.5;
+      if (cs && still && aw > (cs.tq > 0 ? T.off : T.on)) cs.tq = T.hold; else if (cs) cs.tq = still ? cs.tq - dt : 0;
+      const tAmp = cs && cs.tq > 0 ? T.amp[0] + (T.amp[1] - T.amp[0]) * clamp((aw - T.on) / (2 - T.on), 0, 1) : 0;
+      if (tAmp) {
+        ps.amp = damp(ps.amp, tAmp, 10, dt);
+        ps.phase += dt * TAU * clamp(aw * r / (tAmp * S.bound(0.5)), T.hz[0], T.hz[1]);
+      } else {
+        ps.amp = damp(ps.amp, inAir ? 0.3 : sp > 0.05 ? (this.code === 'lepus_californicus' ? (sp < 2 ? 0.7 : sp < 7 ? 1 : 1.15) : 1) : 0, 10, dt);
+        ps.phase += dt * TAU * (inAir ? 2 : sp / S.bound(Math.max(sp, 0.5)));
+      }
+      ps.e2 = ps.amp > 0.05 && !inAir ? Math.atan2(wr * r, Math.max(sp, RT.vMin)) : damp(ps.e2, 0, 8, dt);   // the fore legs' step turned round the turn (aAnim2.z)
       const rest = this.resting && S.rest === 'hunch' ? -0.6 : 0;
       ps.pose = damp(ps.pose, alert ? S.alert.pose : rest, alert ? 5 : 4, dt);
       if (act && S.act.nibble && Math.random() < dt * 1.5) ps.flickV = 0.8;
       if (ps.flickV > 0) { ps.flick = Math.max(ps.flick, Math.sin(Math.min(1, 1 - ps.flickV) * Math.PI)); ps.flickV -= dt * 3; }
       else ps.flick = damp(ps.flick, act && S.act.flick ? S.act.flick : 0, act ? 6 : 2, dt);
-      ps.lift = !inAir && sp > 0.05 ? S.lift(sp) * Math.max(0, Math.sin(ps.phase)) : 0;
-      ps.pitch = damp(ps.pitch, inAir ? 0 : (sp > 0.05 ? -S.rock * Math.cos(ps.phase) * Math.min(1, sp / 4 + 0.4) : 0) + slope * (1 - Math.max(0, ps.pose)) * 0.8, 12, dt);
+      ps.lift = !inAir && sp > 0.05 ? S.lift(sp) * Math.max(0, Math.sin(ps.phase)) : tAmp ? S.lift(0.5) * ps.amp * Math.max(0, Math.sin(ps.phase)) : 0;
+      ps.pitch = damp(ps.pitch, inAir ? 0 : (sp > 0.05 ? -S.rock * Math.cos(ps.phase) * Math.min(1, sp / 4 + 0.4) : tAmp ? -S.rock * ps.amp * Math.cos(ps.phase) : 0) + slope * (1 - Math.max(0, ps.pose)) * 0.8, 12, dt);
       ps.e0 = 0; ps.e1 = damp(ps.e1, ps.flick, 5, dt);
     } else if (S.rig === 'bird') {
       const turkey = this.code === 'meleagris_gallopavo', scratching = act && turkey && this.scratch;
+      // the stepping turn (PART_TURN.bird, .turkey): standing and turning, it walks in place in short steps, the feet's
+      // travel round the turn (lever the half length) giving the rate; the head leads the turn (aAnim2.z)
+      const BT = turkey ? PART_TURN.turkey : PART_TURN.bird, T = BT.turn, cs = this.cs, wr = cs?.wr || 0, aw = Math.abs(wr);
+      const still = sp < 0.05 && !inAir && !scratching;
+      if (cs && still && aw > (cs.tq > 0 ? T.off : T.on)) cs.tq = T.hold; else if (cs) cs.tq = still ? cs.tq - dt : 0;
       ps.pose = damp(ps.pose, 1, 10, dt);
       if (scratching) { ps.phase += dt * TAU * 2.4; ps.amp = damp(ps.amp, 0.8, 10, dt); }
+      else if (cs && cs.tq > 0) {
+        const tAmp = T.amp[0] + (T.amp[1] - T.amp[0]) * clamp((aw - T.on) / (2 - T.on), 0, 1);
+        ps.amp = damp(ps.amp, tAmp, 10, dt);
+        ps.phase += dt * TAU * clamp(aw * S.half * this.size / (tAmp * S.stride * this.size), T.hz[0], T.hz[1]);
+      }
       else { ps.amp = damp(ps.amp, sp > 0.1 ? (turkey ? Math.min(1, 0.45 + sp * 0.6) : 1) : 0, turkey ? 6 : 12, dt); ps.phase += dt * TAU * sp / S.stride; }
+      ps.e2 = damp(ps.e2, inAir ? 0 : clamp(wr * BT.lead, -BT.leadMax, BT.leadMax), 10, dt);   // the head leads the turn
       if (act && S.act.peck && !scratching && Math.random() < dt * 2) ps.flickV = 1;
       if (ps.flickV > 0) { ps.flick = Math.max(ps.flick, Math.sin(Math.min(1, 1 - ps.flickV) * Math.PI)); ps.flickV -= dt * 3; }
       else ps.flick = damp(ps.flick, alert ? S.alert.flick : 0, 4, dt);
       ps.e0 = damp(ps.e0, 0, 6, dt); ps.e1 = damp(ps.e1, 0, 6, dt); ps.e3 = this.variant;
       ps.pitch = damp(ps.pitch, inAir ? 0 : slope * 0.5, 6, dt);
     } else {   // lizard: the dash, the bend into a turn, the tail whip, push-ups, the flat bask
-      const k = this.input();
-      ps.amp = damp(ps.amp, sp > 0.05 ? Math.min(1, sp / S.run + 0.3) : 0, 20, dt);
-      ps.phase += dt * TAU * Math.min(12, sp / 0.1);
+      // the turn (PART_TURN.lizard; draw's turnFollow measures cs.wr, no lag): the C-bend from the turn rate, and standing,
+      // the legs stepping at the sprawl gait's low amplitude at the rate of the feet's travel round it
+      const LT = PART_TURN.lizard, T = LT.turn, cs = this.cs, wr = cs?.wr || 0, aw = Math.abs(wr), r = S.half * this.size;
+      const still = sp < 0.05 && !inAir && !this.resting && !alert;
+      if (cs && still && aw > (cs.tq > 0 ? T.off : T.on)) cs.tq = T.hold; else if (cs) cs.tq = still ? cs.tq - dt : 0;
+      if (cs && cs.tq > 0) {
+        const tAmp = T.amp[0] + (T.amp[1] - T.amp[0]) * clamp((aw - T.on) / (2 - T.on), 0, 1);
+        ps.amp = damp(ps.amp, tAmp, 20, dt);
+        ps.phase += dt * TAU * clamp(aw * r / (tAmp * 0.1), T.hz[0], T.hz[1]);
+      } else {
+        ps.amp = damp(ps.amp, sp > 0.05 ? Math.min(1, sp / S.run + 0.3) : 0, 20, dt);
+        ps.phase += dt * TAU * Math.min(12, sp / 0.1);
+      }
       this.pushT = alert ? this.pushT + dt : 0;
       const push = alert ? 0.5 - 0.5 * Math.cos(TAU * this.pushT * 2) : 0;
       if (alert) ps.pose = push; else ps.pose = damp(ps.pose, this.resting ? -0.95 : 0, 4, dt);
       ps.fl *= Math.exp(-1.5 * dt); ps.flick = damp(ps.flick, ps.fl, 12, dt);
-      ps.bend = damp(ps.bend, k.turn && sp < 1.2 ? k.turn * 0.8 : 0, 10, dt);
+      ps.bend = damp(ps.bend, sp < 1.2 && !inAir ? clamp(wr * LT.bendK, -LT.bendMax, LT.bendMax) : 0, 10, dt);
       ps.e0 = ps.bend; ps.e1 = damp(ps.e1, sp > 1.5 ? Math.sin(ps.phase * 0.5) : alert ? 0.3 * Math.sin(this.pushT * 9) : 0, 10, dt);
       ps.e2 = 0; ps.e3 = this.male;
     }
@@ -562,9 +601,13 @@ export class GroundControl {
     // the skinned deer steps round a turn and its body follows the legs a beat later (animalModels.js turnFollow,
     // DEER_DRIVE.turn): the drawn yaw lags flight.yaw; the control yaw, the camera and the look are untouched
     const sk = b.model.skin, sv = this.inAir ? Math.max(this.spd || 0, DEER_DRIVE.runAt + 0.1) : (this.spd || 0);
-    // the part rig's quadrupeds (fox, coyote, lion, bear) the same, with PART_TURN (their legs' step: animate)
-    const yawA = (sk ? turnFollow(DEER_DRIVE, this.cs ||= makeClipState(), this.flight.yaw, sv, dt)
-      : S.rig === 'quad' ? turnFollow(PART_TURN, this.cs ||= makeClipState(), this.flight.yaw, this.spd || 0, dt) : this.flight.yaw) + Math.PI;
+    // the part rig's quadrupeds (fox, coyote, lion, bear) the same, with PART_TURN (their legs' step: animate); the
+    // rodents and the ground birds with their own lag (PART_TURN.rodent, .bird, .turkey) and the lizard with none
+    // (PART_TURN.lizard: the turn rate for its bend), on the ground or in a jump; in a flush the drawn yaw is the control's
+    const TC = sk ? DEER_DRIVE : S.rig === 'quad' ? PART_TURN : this.mode !== 'ground' && this.mode !== 'air' ? null
+      : S.rig === 'rodent' ? PART_TURN.rodent : S.rig === 'bird' ? (this.code === 'meleagris_gallopavo' ? PART_TURN.turkey : PART_TURN.bird) : S.rig === 'lizard' ? PART_TURN.lizard : null;
+    if (!TC && this.cs) this.cs.y0 = NaN;   // back on the ground: the turn state starts from where it is
+    const yawA = (TC ? turnFollow(TC, this.cs ||= makeClipState(), this.flight.yaw, sk ? sv : this.spd || 0, dt) : this.flight.yaw) + Math.PI;
     if (S.rig === 'lizard' && this.mode === 'ground') {   // flat on the ground it stands on (a rock top, the slope)
       const sq = this.sq, d = 0.06, top = P.y + 0.3;
       const nx = sq.surface(P.x - d, P.z, top) - sq.surface(P.x + d, P.z, top), nz = sq.surface(P.x, P.z - d, top) - sq.surface(P.x, P.z + d, top);
