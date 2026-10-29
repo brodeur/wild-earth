@@ -136,28 +136,48 @@ def log(msg: str) -> None:
 
 
 # ---------------------------------------------------------------------------------------------- dem
+def dem_cells(tile: Tile) -> list[Tile]:
+    """The 10 km cells of the 1 m DEM products that cover this tile, as tiles on the product grid (one for a tile on
+    the grid; up to four for a tile at any whole-kilometre origin, 2026-10-29: the re-centred Yosemite tile)."""
+    x0, y0, x1, y1 = tile.bounds
+    cells = []
+    for X in range(int(x0 // 10000), int(-(-x1 // 10000))):
+        for Y in range(int(y0 // 10000), int(-(-y1 // 10000))):
+            cells.append(Tile(tile.zone, tile.north, X * 10, Y * 10, tile.dem_res_m, tile.imagery_res_m))
+    return cells
+
+
 def build_dem_1m(tile: Tile, force=False) -> dict:
     from .fetch_lidar import find_dem_project
     from .http import download
-    meta = find_dem_project(tile, _src_cache(tile, "lidar_index"))
-    chosen = meta["chosen"]
+    cells = dem_cells(tile)
+    metas = [find_dem_project(c, _src_cache(tile, "lidar_index" if len(cells) == 1 else f"lidar_index_{c.easting_km}_{c.northing_km}")) for c in cells]
+    meta, chosen = metas[0], metas[0]["chosen"]
     out = tile.path("terrain/dem_1m.tif")
     if force or not out.exists():
         raw_dir = _src_cache(tile, "lidar_dem1m")
-        raw = download(chosen["url"], None, raw_dir / Path(chosen["url"]).name, force=force)
-        log(f"dem: {raw.name} {raw.stat().st_size / 1e6:.0f} MB")
         x0, y0, x1, y1 = tile.bounds
-        with rasterio.open(raw) as src:
-            if src.res != (1.0, 1.0):
-                raise RuntimeError(f"unexpected resolution {src.res}")
-            win = window_from_bounds(x0, y0, x1, y1, src.transform)
-            c, r = win.col_off, win.row_off
-            if abs(c - round(c)) > 1e-3 or abs(r - round(r)) > 1e-3:
-                raise RuntimeError(f"1 m product not aligned to whole metres: window {win}")
-            z = src.read(1, window=((round(r), round(r) + N1), (round(c), round(c) + N1))).astype("float32")
-            nod = src.nodata
-        bad = ~np.isfinite(z) | (z == nod) if nod is not None else ~np.isfinite(z)
-        z[bad] = NODATA
+        z = np.full((N1, N1), NODATA, dtype="float32")
+        for cell, cm in zip(cells, metas):   # each product covers its cell plus an apron: paste the overlap with the tile
+            url = cm["chosen"]["url"]
+            raw = download(url, None, raw_dir / Path(url).name, force=force)
+            log(f"dem: {raw.name} {raw.stat().st_size / 1e6:.0f} MB")
+            cx0, cy0, cx1, cy1 = cell.bounds
+            ox0, oy0, ox1, oy1 = max(x0, cx0), max(y0, cy0), min(x1, cx1), min(y1, cy1)
+            with rasterio.open(raw) as src:
+                if src.res != (1.0, 1.0):
+                    raise RuntimeError(f"unexpected resolution {src.res}")
+                win = window_from_bounds(ox0, oy0, ox1, oy1, src.transform)
+                c, r = win.col_off, win.row_off
+                if abs(c - round(c)) > 1e-3 or abs(r - round(r)) > 1e-3:
+                    raise RuntimeError(f"1 m product not aligned to whole metres: window {win}")
+                w, h = int(round(ox1 - ox0)), int(round(oy1 - oy0))
+                part = src.read(1, window=((round(r), round(r) + h), (round(c), round(c) + w))).astype("float32")
+                nod = src.nodata
+            bad = ~np.isfinite(part) | (part == nod) if nod is not None else ~np.isfinite(part)
+            part[bad] = NODATA
+            r0, c0 = int(round(y1 - oy1)), int(round(ox0 - x0))   # rows run from the tile's north edge
+            z[r0:r0 + h, c0:c0 + w] = part
         _write(out, z, tile)
         with rasterio.open(out, "r+") as dst:
             dst.build_overviews([2, 4, 8, 16], Resampling.average)
@@ -166,7 +186,7 @@ def build_dem_1m(tile: Tile, force=False) -> dict:
     v = z != NODATA
     return {"path": "terrain/dem_1m.tif", "kind": "raster", "crs": tile.crs,
             "bounds": list(tile.bounds), "pixels": N1, "resolution_m": 1.0, "units": "m (NAVD88)", "nodata": NODATA,
-            "source": "usgs_3dep_1m", "project": chosen["project"],
+            "source": "usgs_3dep_1m", "project": chosen["project"], "projects": [m["chosen"]["project"] for m in metas],
             "collection": [chosen["collection_begin"], chosen["collection_end"]], "found_via": meta["found_via"],
             "other_collections": [c["project"] for c in meta["candidates"][1:]],
             "for_clients": False, "for_clients_note": "pipeline only; clients read client.heights (5 m) and client.terrain_detail",
