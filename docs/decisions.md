@@ -2500,3 +2500,18 @@ cards and mid trunks beyond 180 m are still; the calm frame is unchanged by the 
 worktree with the wind pinned at 0.6: at seven times the lean a pine's trunk tip and crown move downwind together and
 a near tree's crown stays on its stem; no shader errors; 36 fps as before. Not verified: the rhythm by eye over time
 (a recording would show it); the shadows still do not sway or flex (shadows.js, open).
+
+## 2026-10-29: the wind softened, the leaves from further, and the shadows move with the trees
+
+Aaron, after the limb flex: "The swaying is too intense. Also I think the individual leaves can appear from further
+away", and yes to the shadows. CROWN_SWAY.x 0.35 -> 0.2 m per unit windStrength and CROWN_FLEX (0.035, 0.4, 0.4, 0.3)
+-> (0.02, 0.4, 0.3, 0.2): the lean 2 cm per metre of height per unit wind, the rock +-0.3, the jitter 0.2. The leaf
+level's radius 15/24 -> 24/36 m (a deer 24 m, the smallest bodies 36), its frame cap 1.5 -> 2.2 M quads, the pool
+48 -> 72 trees, the LRU 24 -> 32: as a deer at the home spawn 21 trees draw 1.54 M leaf quads at 31 fps (11 trees and
+0.9 M at 33-36 before). And the shadows (shadows.js DEPTH_VERT): the near card casters take the crown's wave, their
+jitter and the limbs' flex, the near trunk casters the flex, through treegen.js LEAF_WAVE_GLSL's own functions and
+uniforms, so a leaf's shadow is where the leaf is; cascade 0 re-renders every frame, so the shadows within 120 m move
+with the trees, and cascade 1 keeps the pose it last rendered (under its 0.6 m texel). The mid ellipsoids, the far
+casters and the contact AO are unchanged. Verified: no shader errors in the caster programs, cascade 0 rendering
+every frame, 37.7 fps as a deer with the wind pinned at 0.6. Not verified: the shadows' motion frame to frame (the
+light at the spot was hazy; the motion follows from the shared functions). Open in the wind: the rhythm by eye.
