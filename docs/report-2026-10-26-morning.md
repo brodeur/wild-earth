@@ -256,3 +256,4 @@ cinnamon bear; the other tiles' channels shift slightly on their next build afte
 | c62e228 | The wind again: the crown wave lengthens and slows as the wind strengthens (no 1 Hz shiver of a whole tree), each card and leaf jitters on its own, and the limbs flex downwind with a slow rock of the whole crown, the near trunks bending with them; tune CROWN_FLEX live. |
 | 546cb66 | The sway softened (the wave 0.2 m, the lean 0.02) and the single leaves from 24 m for a deer, 36 for the smallest bodies (21 trees and 1.5 M leaf quads at 31 fps). |
 | eb4f6fa | The near shadows sway and flex with the crowns (the caster depth shader takes the same wind functions); 37.7 fps. |
+| 61a9b7d | Every body cruises on W and sprints on Shift at its true top, with a legs meter sized to its species (the deer 10 s, the lion's rush 3, the vole 3); Alt W walks or stalks; the birds, the squirrel and the woodpecker the same. |

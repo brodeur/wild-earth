@@ -186,7 +186,8 @@ browser stays the renderer.
   sideways-step clip if the turned swing is not enough; the fox, coyote, lion and bear step round their turns the same way on the
   part rig (2026-10-29, the legs' swing turned about the vertical in aAnim2.z); the mini-map shows the 800 m round the player and a
   click opens the full tile (2026-10-29); the crown wave loosens in a strong wind and the limbs flex
-  downwind with the near trunks, and the near shadows move with them (2026-10-29); "scented" on the hunt panel and the leaf level to
+  downwind with the near trunks, and the near shadows move with them (2026-10-29); every body cruises on W and sprints on Shift with a
+  species-sized legs meter (2026-10-29); "scented" on the hunt panel and the leaf level to
   15 m for a deer (24 for the smallest) on 2026-10-29. Next: the greyed abilities one by one (dig, pounce, carry, swim,
   climb, call, mark, den, display); the prey's nose landed 2026-10-29 (animals.js noticeAt: the wind decides how far an
   animal smells the player). Open: no wind between AI animals (an AI lion's prey notices it at detects, as before).

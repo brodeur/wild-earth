@@ -2515,3 +2515,28 @@ with the trees, and cascade 1 keeps the pose it last rendered (under its 0.6 m t
 casters and the contact AO are unchanged. Verified: no shader errors in the caster programs, cascade 0 rendering
 every frame, 37.7 fps as a deer with the wind pinned at 0.6. Not verified: the shadows' motion frame to frame (the
 light at the spot was hazy; the motion follows from the shared functions). Open in the wind: the rhythm by eye.
+
+## 2026-10-29: a cruise, a sprint and a meter for every body
+
+Aaron: "All animals should have a top speed that is not their top speed - and a sprint button (shift) with a sprint
+meter that is appropriate for their species." Until now W ramped a ground body all the way to its true top (S.run)
+and Shift W walked; only the hunters had a meter (the legs: S.sprint seconds of a full run, shown during a hunt), and
+the birds' Shift boost ran to vmax without end.
+
+Now (groundControl.js LEGS, per species [cruise, sprint, recover]): W ramps from the walk to a cruise the body can
+hold (deer 7 m/s, coyote 7.5, lion 6, fox and bear 5.5, jackrabbit 8, rabbit 4, turkey 3.8, ground squirrel 2.8,
+quail 2.8 and 3.2, lizard 1.4, vole 1.0), Shift W is the sprint to S.run, the true top, for `sprint` s (deer 10,
+coyote 9, jackrabbit 7, fox and bear 5, rabbit, turkey and ground squirrel 4, the quails and the vole 3, the lion's
+rush 3, the lizard 2.5), after which the legs are tired (the top falls to 0.6 of the cruise) until they come back
+over `recover` s (15 for the vole to 40 for the deer; sprinting again from half). The hunters' rush and the catch
+ride the sprint exactly as before (hunt.js), and only a hunter's failed rush makes it known to the prey. Alt W is the
+walk (the lion's stalk); the herd pilot walks with Alt near its slot. The birds (flight.js): W holds sp.fast (raven
+18, hawk 16, vulture 14, jays 10 and 11), a dive still runs past it, and Shift sprints to vmax for sp.sprint s (raven
+8, hawk 5, jays 4, vulture 3; recover 20-40). The squirrel: W 4 m/s, Shift W the full 6 m/s bound for 4 s, back over
+20; Shift still sits up as before. The woodpecker: W holds 9 m/s, Shift the full 12 for 4 s. The abilities row shows
+walk (alt W) and sprint or rush (shift W, red when tired) for every body, and the legs meter for every control.
+Verified on the clean worktree: the deer 6.98 m/s on W, 11.99 on Shift, the meter empty after 10 s and the speed
+capped at 4.2, recovering; the squirrel 4 and 6 with the meter half gone at 2 s; the hawk 16 on W, 44-45 on Shift
+with the meter at 0.09 after 6 s; the legs meter shown for all three. Not driven: the woodpecker, the lizard, the
+quails. Note for the Windows player: Alt alone focuses a browser's menu bar on key-up; a creep key that is not Alt
+may be wanted there.
