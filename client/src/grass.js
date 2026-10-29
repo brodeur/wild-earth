@@ -1,12 +1,13 @@
 import * as THREE from 'three';
 import { uniforms as atmo, ATMOSPHERE_GLSL } from './atmosphere.js';
 import { SEASON_LOOK } from './season.js';
-import { buildAnnualClump, buildBunchClump, buildTussockClump, buildOatClump } from './grassBlades.js';
+import { buildAnnualClump, buildBunchClump, buildTussockClump, buildOatClump, buildSwardClump } from './grassBlades.js';
 import { windUniforms, WIND_GLSL } from './wind.js';
 import { groundUniforms, GROUND_GLSL, seasonState } from './terrain.js';
 import { ShrubField, ClumpField, KIND, waterAt, shrubLeaves } from './shrubfield.js';
 import { GrassShells } from './grassShells.js';
 import { rockKeep } from './tilepackage.js';
+import { bodyScale, onBodyScale } from './bodyScale.js';
 
 // Grass in the Sierra foothill savanna: non-native annuals (wild oat, bromes, medusahead) over
 // purple needlegrass bunchgrass. One population of plants, drawn two ways:
@@ -31,6 +32,29 @@ import { rockKeep } from './tilepackage.js';
 // chaparral shrub impostors (shrubfield.js) hang off this class too.
 // Every grass material takes its colour from the ground texture under it (terrain.js GROUND_GLSL)
 // and moves with the shared gust field (wind.js), which the terrain also paints as a sheen.
+// The body tier (2026-10-28): the tiers above are tuned for a chase camera 3-5 m up, and to a lizard or a vole (its
+// eye a few cm up, its chase camera ~0.3 m) the ground tier's 8 plants per m^2 read as sparse stalks on a blurred photo, where the
+// real sward is blades 2-5 cm apart. So under a small body (bodyScale.js, scale below BODY_MAX = 0.6: lizard,
+// vole, ground squirrel, rabbits, fox; never a deer, lion, bear, coyote, turkey, the spirit or a flier, whose
+// frame is exactly what it was) a ring of blades at real density follows the camera: radius
+// 16 sqrt(scale) m clamped to 1.5-10 m (lizard 2.6, vole 3.3, rabbit 6.4, fox 10), thinning blade by blade
+// over its outer quarter. Its unit is a young tiller clump of 3-6 leaves (grassBlades.js buildSwardClump: real
+// sizes, tapered, rolled and twisted, normals rounded across each blade), annual or needlegrass by the same
+// share and drifts as the plants, placed on a jittered 6.7 cm grid (225 clumps, ~1000 blades per m^2 on open
+// grassland) thinned by the habitat's density, herb cover, outcrops, roads, water and the bare patches as the
+// plants are, sized by the season's height like the other tiers. It has its own hashed placement, cached per
+// 2 m cell (a pure function of the world position: every client sees the same blades) and sorted by rank, so
+// any prefix of a cell is an even subsample: a 10 m ring for the fox would stage ~115 k clumps, so the ring is
+// staged at BODY_CAP / its area (a lizard's and a rabbit's whole, a fox's about half). Cells
+// within half the radius are made at once, the rest of the ring queued and made under 1 ms a frame, so moving
+// never stalls a frame (a cell is ~0.2-0.4 ms). Inside terrain.js's micro patch (a few cm of relief under the body)
+// the roots are re-seated on its surface as drawn, nearest first, in what is left of ~1.5 ms a frame (bodySeat).
+// Its shader (BODY_VERT) is the near tier's: the palette's root-to-tip ramp, the ground match, wind, sky
+// occlusion and grassShade, with a share of grey dead leaves, paler drying tips and a deeper shade at the root.
+// The tiers above draw on unchanged inside it: their culms and seed heads stand out of this sward. Measured
+// 2026-10-28 (M-series, open grassland at 6960, 7032 on 680_4280): drawn after culling, lizard ~7.9 k clumps,
+// vole ~10 k, rabbit ~21 k, fox ~20 k (of ~60 k staged); the tier's own draws, timed alone, 0.6 ms at the lizard,
+// 0.7 at the vole, 1.2-1.3 at the rabbit and fox (best of 40; more under load).
 
 const NEAR_FADE = [55, 85], NEAR_REBUILD = 25, NEAR_PLACE = NEAR_FADE[1] + NEAR_REBUILD + 2;
 const MID_END = 250;
@@ -52,6 +76,10 @@ const MID_IN = [26, 38], MID_IN_HIGH = [9, 15];   // seen from the air (6-10 m u
 // Tussock and oat cards hand over at 6-12 m at every height, so the plants you see from the air are
 // the plants around you when you land.
 const IMP_IN = [6, 12], IMP_W = 1.5, TUFT_W = 3;
+// Body tier (see the header): on below BODY_MAX scale; BODY_CELL m cells of BODY_G x BODY_G candidates; at most
+// BODY_CAP clumps staged; the ring's radius from the scale.
+const BODY_MAX = 0.6, BODY_CELL = 2, BODY_G = 30, BODY_CAP = 60000, BODY_TIER = 3, BODY_LN = 5;
+const bodyRadius = s => Math.min(Math.max(16 * Math.sqrt(s), 1.5), 10);
 
 // ---- one placement per cell, read by every tier -----------------------------------------------
 // A cell holds N = 900 m^2 x P_TOTAL candidate plants, candidate k with rank (k + 0.5) / N. Each tier
@@ -288,6 +316,52 @@ const NEAR_FRAG = /* glsl */`
     #include <colorspace_fragment>
   }`;
 
+// The body tier's blades (header): NEAR_VERT's rules for a sward clump at real size. A clump keeps its first 3-6
+// blades and thins out blade by blade (a stable threshold per blade) over bodyFade, the ring's outer quarter,
+// measured across the ground from the camera. Each blade's normal leans toward its edge on either side (aBlade.w,
+// aSide), so a flat strip shades as if round; the wind bends it in proportion to its own length; a share of the
+// leaves are last year's grey dead ones, the tips pale as they dry, and the root sits in the shade of the sward.
+const BODY_VERT = /* glsl */`
+  ${COMMON_VERT}
+  ${SHADE_VERT}
+  uniform vec2 bodyFade;
+  attribute vec4 aBlade; attribute vec3 aSide;   // t, blade random, blade index / 6, side | width direction
+  varying vec3 vColor;
+  void main() {
+    float t = aBlade.x, br = aBlade.y, seed = iVar.z, type = mod(iVar.w, 2.0);
+    float d = distance(cameraPosition.xz, iPos.xz);
+    float nb = 3.0 + floor(4.0 * h11(seed * 5.31 + 0.2));
+    float s = step(aBlade.z * 6.0, nb) * step(h11(seed * 23.9 + br * 97.3), 1.0 - smoothstep(bodyFade.x, bodyFade.y, d));
+    float H = iVar.y * heightScale;
+    if (s < 0.01 || offscreen(iPos.xyz, 0.3 * H + 0.05)) { gl_Position = vec4(0.0, 0.0, 2.0, 1.0); return; }
+    float hb = h11(seed * 71.9 + br * 131.7);
+    vec3 p = position;
+    p.y *= (0.7 + 0.6 * h11(seed * 13.7 + br * 57.1)) * leafScale;
+    float la = h11(seed * 3.1 + br * 7.9) * 6.2832;
+    p.xz += vec2(cos(la), sin(la)) * t * t * 0.02;
+    p.xz *= iVar.x * mix(0.8, 1.0, heightScale);
+    p.y *= H;
+    vec3 w3 = vec3(yawRot(p.xz, iPos.w), p.y).xzy;
+    vec3 n = vec3(yawRot(normal.xz, iPos.w), normal.y).xzy;
+    vec3 sd = vec3(yawRot(aSide.xz, iPos.w), aSide.y).xzy;
+    vec2 cs = tiltCS(iPos.xyz); w3 = tilt(w3, iPos.xyz, cs); n = tilt(n, iPos.xyz, cs); sd = tilt(sd, iPos.xyz, cs);
+    float g = gust(iPos.xz);
+    float b = windStrength * g * (0.75 + 0.5 * h11(br * 3.7 + seed));
+    float L = 0.3 * max(H, 0.3);
+    float fl = sin(time * (5.0 + 4.0 * hb) + br * 40.0 + iPos.x * 2.0) * (0.03 + 0.05 * g);
+    vec2 off = (windDir * b + vec2(-windDir.y, windDir.x) * fl) * t * t * L;
+    w3.xz += off; w3.y -= 0.5 * dot(off, off) / L * t;
+    vec3 wp = iPos.xyz + w3;
+    if (dot(n, cameraPosition - wp) < 0.0) n = -n;
+    n = normalize(n + 0.6 * aBlade.w * sd);
+    vec3 G = groundMatch(vec3(1.0), type, iPos.xyz, 0.0);
+    vec3 alb = grassAlbedo(type, t, 0.0, br, seed, iPos.xz) * G;
+    if (h11(br * 29.1 + seed * 5.9) < 0.1 + 0.5 * thatch) alb = thatchCol * mix(0.65, 1.0, t) * dot(G, G_LUMA);
+    alb *= mix(vec3(1.0), vec3(1.12, 1.06, 0.84), 0.6 * smoothstep(0.7, 1.0, t) * hb);
+    vColor = grassShade(alb, n, wp, t, mix(0.3, 1.0, smoothstep(0.0, 0.75, t)) * skyOcc(iPos.xyz), 1.0);
+    gl_Position = projectionMatrix * viewMatrix * vec4(wp, 1.0);
+  }`;
+
 // ---- cards: a baked picture of the plant's own blade clump -------------------------------------
 // One camera-facing quad per plant (ClumpField instance layout: root x y z, R | H, seed, kind + yaw /
 // 2pi, rank; R and H are the clump's bake box at this plant's scale). The quad samples the atlas at
@@ -466,6 +540,19 @@ function draw(i, j, k) {
     U[m] = ((t ^ (t >>> 14)) >>> 0) / 4294967296;
   }
 }
+// Body tier candidate (gi, gj) on the tile-wide 6.7 cm grid: nine uniforms (jitter x, y, keep, type, size, yaw,
+// width, seed, rank), a pure function of the grid point.
+const UB = new Float64Array(9);
+function bodyDraw(gi, gj) {
+  let a = (Math.imul(gi, 0x27d4eb2d) ^ Math.imul(gj + 7, 0x165667b1) ^ 0x5bd1e995) | 0;
+  for (let m = 0; m < 9; m++) {
+    a = (a + 0x6D2B79F5) | 0;
+    let t = Math.imul(a ^ (a >>> 15), 1 | a);
+    t = (t + Math.imul(t ^ (t >>> 7), 61 | t)) ^ t;
+    UB[m] = ((t ^ (t >>> 14)) >>> 0) / 4294967296;
+  }
+}
+const EMPTY = new Float32Array(0);
 
 // Ground height on the rendered terrain mesh (Terrain's default 10 chunks of ~10 m quads, split
 // NW-SE as PlaneGeometry does), so roots sit exactly on the triangles rather than the heightfield.
@@ -526,7 +613,7 @@ export class Grass {
       ...windUniforms, ...groundUniforms, groundK: { value: 1.12 }, matchOn: { value: 1 }, tiltOn: { value: 1 },
       nearFade: { value: new THREE.Vector2(...NEAR_FADE) }, closeFade: { value: new THREE.Vector2(...CLOSE_FADE) },
       groundFade: { value: new THREE.Vector2(...GROUND_FADE) }, midIn: { value: new THREE.Vector2(...MID_IN) },
-      impIn: { value: new THREE.Vector2(...IMP_IN) }, impW: { value: IMP_W },
+      impIn: { value: new THREE.Vector2(...IMP_IN) }, impW: { value: IMP_W }, bodyFade: { value: new THREE.Vector2(2, 3) },
       heightScale: { value: 1 }, heads: { value: 1 }, thatch: { value: 0 }, leafScale: { value: 1 }, dry: { value: 1 },
       aRoot: { value: col() }, aTip: { value: col() }, aHead: { value: col() }, aAwn: { value: col() },
       bRoot: { value: col() }, bTip: { value: col() }, bHead: { value: col() }, bAwn: { value: col() },
@@ -552,6 +639,18 @@ export class Grass {
       groundA: this.makeSet(annualGeo, nearMat, this.groundCap, groundBands),
       groundB: this.makeSet(bunchGeo, nearMat, this.groundCap, groundBands),
     };
+    // The body tier's two meshes (annual and needlegrass sward clumps), off until a small body is taken. Its
+    // band (indexed by tier) is set with the ring's radius; the listener holds this world only weakly, so a world
+    // torn down without dispose() is still freed (and the listener drops itself on the next body change).
+    const bodyMat = new THREE.ShaderMaterial({ vertexShader: BODY_VERT, fragmentShader: NEAR_FRAG, uniforms: this.uniforms, side: THREE.DoubleSide });
+    const bodyBands = () => [null, null, null, [0, 0]];
+    this.sets.bodyA = this.makeSet(buildSwardClump(false), bodyMat, BODY_CAP, bodyBands());
+    this.sets.bodyB = this.makeSet(buildSwardClump(true), bodyMat, BODY_CAP, bodyBands());
+    this.body = { scale: bodyScale.v, R: 0, rebuild: 1, last: null, dirty: false, active: false, microV: 0, seat: null, stale: null, work: null, wi: 0, reseat: false, cache: new Map(), queue: new Map(),
+      kf: new Float32Array(BODY_LN * BODY_LN), sz: new Float32Array(BODY_LN * BODY_LN), bt: new Float32Array(BODY_LN * BODY_LN) };
+    const ref = new WeakRef(this);
+    const off = onBodyScale(v => { const g = ref.deref(); if (!g || !g.body) { off(); return; } g.body.scale = v; });
+    this._offBody = off;
     this.group = new THREE.Group(); this.group.name = 'grass';
     for (const s of Object.values(this.sets)) this.group.add(s.mesh);
     scene.add(this.group);
@@ -599,7 +698,8 @@ export class Grass {
     return { nearPlaced: s.annual.staged + s.bunch.staged + s.tussock.staged + s.oat.staged + s.groundA.staged + s.groundB.staged,
       nearDrawn: s.annual.n + s.bunch.n + s.tussock.n + s.oat.n + s.groundA.n + s.groundB.n,
       annualDrawn: s.annual.n + s.oat.n + s.groundA.n, bunchDrawn: s.bunch.n + s.tussock.n + s.groundB.n, cardBladesDrawn: s.tussock.n + s.oat.n,
-      groundDrawn: s.groundA.n + s.groundB.n, midDrawn: this.tufts.n, tussockDrawn: this.clumps.n, oatDrawn: this.stalks.n };
+      groundDrawn: s.groundA.n + s.groundB.n, bodyPlaced: s.bodyA.staged + s.bodyB.staged, bodyDrawn: s.bodyA.n + s.bodyB.n,
+      bodyR: this.body?.active ? this.body.R : 0, midDrawn: this.tufts.n, tussockDrawn: this.clumps.n, oatDrawn: this.stalks.n };
   }
 
   // Bake the card atlas (IMP) from the blade clumps with the main renderer: each row of tiles (one
@@ -658,6 +758,10 @@ export class Grass {
     renderer.setRenderTarget(this.strip); out.push(renderer.compileAsync(this.bakeScene, this.bakeCam));
     renderer.setRenderTarget(this.atlas); out.push(renderer.compileAsync(this.copyScene, this.bakeCam));
     renderer.setRenderTarget(prev);
+    // the body tier's program too (both its meshes share it), against the screen as it is drawn, so taking a small
+    // body does not compile it inside a frame
+    const bm = this.sets.bodyA.mesh; bm.visible = true;
+    try { out.push(renderer.compileAsync(bm, this.bakeCam, this.scene)); } finally { bm.visible = false; }
     return out;
   }
 
@@ -808,6 +912,189 @@ export class Grass {
     return out;
   }
 
+  // ---- the body tier ----------------------------------------------------------------------------
+  // One 2 m cell of the body tier: its clumps by type (annual, needlegrass), each a Float32Array in rank order (so
+  // any prefix is an even subsample), and the cell's bounding sphere. The plant rules are read at a 0.5 m lattice
+  // (5 x 5 points) and interpolated: density x outcrops x roads (none on the pavement, half on the verge) x water x
+  // the bare patches (a fifth of the sward in them, so they read as open ground), the size factor of herb cover and
+  // bare ground, and the needlegrass share with its drifts, all as plantAt takes them. Made once and cached.
+  bodyCellData(ci, cj) {
+    const B = this.body, key = cj * 100000 + ci;
+    let c = B.cache.get(key);
+    if (c) return c;
+    const tile = this.tile, size = tile.size, res = tile.habitat.res, x0 = ci * BODY_CELL, n0 = cj * BODY_CELL, h = BODY_CELL / 2;
+    c = { a: EMPTY, b: EMPTY, x: x0 + h, y: 0, z: -(n0 + h), r: 0 };
+    const hi = Math.floor((x0 + h) / res), hj = Math.floor((size - n0 - h) / res);
+    if (x0 >= 0 && n0 >= 0 && x0 < size && n0 < size && this.cellAny(hi, hj)) {
+      const LN = BODY_LN, st = BODY_CELL / (LN - 1), kf = B.kf, sz = B.sz, bt = B.bt, wm = tile.waterMask, roads = tile.roads;
+      const share = this.annualAt(Math.min(Math.max(hi, 0), this.W - 1), Math.min(Math.max(hj, 0), this.Hh - 1));
+      let any = 0;
+      for (let b = 0; b < LN; b++) for (let a = 0; a < LN; a++) {
+        const x = x0 + a * st, n = n0 + b * st, o = b * LN + a;
+        const dens = this.sample(this.dens, x, n) * rockKeep(tile, x, n), rw = roads ? roads.at(x, n) : 0;
+        const herb = this.sample(this.herb, x, n), bare = bareField(x, n), thr = 0.28 + 0.14 * (1 - herb);
+        const wet = wm && waterAt(wm, x, n) === 255;
+        kf[o] = dens <= 0 || wet || rw > 140 ? 0 : dens * (rw > 0 ? 0.5 : 1) * (0.2 + 0.8 * smooth(thr - 0.06, thr + 0.06, bare));
+        sz[o] = (0.7 + 0.45 * herb) * (0.6 + 0.4 * smooth(thr, thr + 0.15, bare));
+        bt[o] = Math.min((1 - share) * driftRaw(x, n) / DRIFT_MEAN, 0.95);
+        any = Math.max(any, kf[o]);
+      }
+      if (any > 0) {
+        const G = BODY_G, sp = BODY_CELL / G, lists = [[], []];
+        let o = 0, tx = 0, ty = 0, y0 = Infinity, y1 = -Infinity;
+        const bil = A => (A[o] * (1 - tx) + A[o + 1] * tx) * (1 - ty) + (A[o + LN] * (1 - tx) + A[o + LN + 1] * tx) * ty;
+        for (let gb = 0; gb < G; gb++) for (let ga = 0; ga < G; ga++) {
+          bodyDraw(ci * G + ga, cj * G + gb);
+          const lx = (ga + UB[0]) * sp, ln = (gb + UB[1]) * sp, fx = lx / st, fy = ln / st;
+          const ia = Math.min(Math.floor(fx), LN - 2), ib = Math.min(Math.floor(fy), LN - 2);
+          o = ib * LN + ia; tx = fx - ia; ty = fy - ib;
+          if (UB[2] >= bil(kf)) continue;
+          const x = x0 + lx, n = n0 + ln, type = UB[3] < bil(bt) ? 1 : 0, sc = (0.75 + 0.5 * UB[4]) * bil(sz), y = this.ground(x, n);
+          y0 = Math.min(y0, y); y1 = Math.max(y1, y);
+          lists[type].push(UB[8], x, y, -n, UB[5] * Math.PI * 2, sc * (0.85 + 0.3 * UB[6]), sc, UB[7], type + 2 * BODY_TIER);
+        }
+        const sorted = L => {
+          const m = L.length / 9, idx = Array.from({ length: m }, (_, k) => k), out = new Float32Array(m * STRIDE);
+          idx.sort((u, v) => L[u * 9] - L[v * 9]);
+          for (let k = 0; k < m; k++) for (let q = 0; q < STRIDE; q++) out[k * STRIDE + q] = L[idx[k] * 9 + 1 + q];
+          return out;
+        };
+        c.a = sorted(lists[0]); c.b = sorted(lists[1]);
+        for (const A of [c.a, c.b]) { const m = A.length / STRIDE, ys = A.base = new Float32Array(m); for (let k = 0; k < m; k++) ys[k] = A[k * STRIDE + 1]; }
+        if (y1 >= y0) { c.y = (y0 + y1) / 2 + 0.15; c.r = Math.hypot(h + 0.3, (y1 - y0) / 2 + 0.35, h + 0.3); }
+      }
+    }
+    if (B.cache.size > 400) {   // a few MB; drop the cells far from the ring first
+      const lp = B.last;
+      for (const [k, v] of B.cache) if (!lp || Math.hypot(v.x - lp[0], v.z + lp[1]) > 3 * (B.R + B.rebuild) + 4) B.cache.delete(k);
+      if (B.cache.size > 400) B.cache.clear();
+    }
+    B.cache.set(key, c);
+    return c;
+  }
+
+  // Stage the body ring around (x, north): every 2 m cell out to the ring plus a refill's travel, nearest first,
+  // each cell's rank-order prefix at the ring's staging fraction (BODY_CAP over the ring's candidate count, fixed
+  // per radius so the density never shifts as cells arrive). Cells within half the radius are made at once if
+  // missing (a few, on taking the body); the rest are queued (updateBody drains them).
+  bodyFill(x, north) {
+    const B = this.body, S = this.sets, tA = S.bodyA, tB = S.bodyB, place = B.R + B.rebuild + 0.75, h = BODY_CELL / 2;
+    for (const t of [tA, tB]) { t.staged = 0; t.blocks.length = 0; t.sig = NaN; }
+    B.queue.clear();
+    const frac = Math.min(1, BODY_CAP / (Math.PI * place * place * (BODY_G / BODY_CELL) ** 2));
+    const i0 = Math.floor((x - place) / BODY_CELL), i1 = Math.floor((x + place) / BODY_CELL);
+    const j0 = Math.floor((north - place) / BODY_CELL), j1 = Math.floor((north + place) / BODY_CELL), cells = [];
+    for (let j = j0; j <= j1; j++) for (let i = i0; i <= i1; i++) {
+      const d = Math.hypot((i + 0.5) * BODY_CELL - x, (j + 0.5) * BODY_CELL - north);
+      if (d - h * 1.42 <= place) cells.push([d, i, j]);
+    }
+    cells.sort((a, b) => a[0] - b[0]);
+    for (const [d, i, j] of cells) {
+      const key = j * 100000 + i;
+      if (!B.cache.has(key) && d - h * 1.42 > 0.5 * B.R) { B.queue.set(key, [i, j]); continue; }
+      const c = this.bodyCellData(i, j);
+      for (const [t, arr] of [[tA, c.a], [tB, c.b]]) {
+        const n = Math.round(arr.length / STRIDE * frac);
+        if (!n || t.staged + n > t.cap) continue;
+        t.stage.set(arr.subarray(0, n * STRIDE), t.staged * STRIDE);
+        t.blocks.push({ x: c.x, y: c.y, z: c.z, r: c.r, tier: BODY_TIER, start: t.staged, count: n, src: arr });
+        t.staged += n;
+      }
+    }
+    B.reseat = true;
+  }
+  // Under the body the ground is terrain.js's micro patch (a few cm of relief over the fine mesh, Heightfield.micro):
+  // the roots inside its square are re-seated on its surface as drawn, so no blade stands in the air over a hollow or
+  // grows out of a bump. The seated heights are written into the cell's own arrays (each keeps its ground heights in
+  // .base and the patch version it was seated at in .sv), so a refill copies them as they are. When the patch moves
+  // or rebuilds (its version) the blocks under the new square are re-seated and those only under the old one put back
+  // on the ground, nearest first, under `budget` ms a frame (a block, ~700 roots, at a time): the relief is anchored to
+  // the world, so a block still waiting is off only in the patch's eased rim. A reseat (after a refill) only seats
+  // the cells not yet seated at this version, and puts back any cell seated before that is now off the patch.
+  bodySeat(budget) {
+    const B = this.body, M = this.tile.heights.micro, v = M ? M.version : 0;
+    const hit = (k, R) => R && !(k.x + k.r < R.x0 || k.x - k.r > R.x1 || -k.z + k.r < R.n0 || -k.z - k.r > R.n1);
+    if (v !== B.microV || B.reseat) {
+      if (B.seat) { const o = B.stale, q = B.seat; B.stale = o ? { x0: Math.min(o.x0, q.x0), x1: Math.max(o.x1, q.x1), n0: Math.min(o.n0, q.n0), n1: Math.max(o.n1, q.n1) } : { ...q }; }
+      B.microV = v; B.reseat = false; B.seat = M ? { x0: M.x0, x1: M.x1, n0: M.n0, n1: M.n1 } : null;
+      const work = [], lp = B.last || [0, 0];
+      for (const t of [this.sets.bodyA, this.sets.bodyB]) for (const k of t.blocks) if (hit(k, B.seat) || hit(k, B.stale) || (k.src.sv | 0) !== 0) work.push([Math.hypot(k.x - lp[0], k.z + lp[1]), t, k]);
+      B.work = work.sort((a, b) => a[0] - b[0]); B.wi = 0;
+    }
+    if (!B.work) return;
+    const t0 = performance.now(), R = B.seat;
+    while (B.wi < B.work.length) {
+      const [, t, k] = B.work[B.wi++], src = k.src, ys = src.base, inR = hit(k, R);
+      if (inR ? src.sv !== v || src.sn < k.count : (src.sv | 0) !== 0) {
+        const m = inR ? k.count : src.sn | 0;
+        for (let q = 0; q < m; q++) {
+          const o = q * STRIDE, x = src[o], n = -src[o + 2];
+          src[o + 1] = inR && x > R.x0 && x < R.x1 && n > R.n0 && n < R.n1 ? M.ground(x, n) : ys[q];
+        }
+        src.sv = inR ? v : 0; src.sn = inR ? m : 0;
+      }
+      t.stage.set(src.subarray(0, k.count * STRIDE), k.start * STRIDE); t.sig = NaN;
+      if (performance.now() - t0 > budget) break;
+    }
+    if (B.wi >= B.work.length) { B.work = null; B.stale = null; }
+  }
+
+  // The body ring each frame: on below BODY_MAX scale while the camera is near the ground; its radius from the
+  // scale; refilled when the camera has moved a fifth of the radius, or when queued cells have been made (under
+  // 1 ms of them a frame); then the roots under the micro patch re-seated in what is left of ~1.5 ms. Off, it
+  // stages nothing and its meshes stay hidden: a deer's frame is untouched.
+  updateBody(cp, north, agl) {
+    const B = this.body, S = this.sets;
+    const on = this.bodyOn !== false && B.scale < BODY_MAX && agl < Math.max(3, 0.5 * bodyRadius(B.scale));   // bodyOn: false for A/B timing
+    if (!on) {
+      if (B.active) {
+        B.active = false; B.last = null; B.queue.clear(); B.work = null;
+        for (const t of [S.bodyA, S.bodyB]) { t.staged = t.n = 0; t.blocks.length = 0; t.sig = NaN; t.mesh.geometry.instanceCount = 0; }
+      }
+      S.bodyA.mesh.visible = S.bodyB.mesh.visible = false;
+      return;
+    }
+    B.active = true;
+    const R = bodyRadius(B.scale);
+    if (R !== B.R) {
+      B.R = R; B.rebuild = Math.max(0.4, 0.2 * R); B.last = null;
+      this.uniforms.bodyFade.value.set(0.75 * R, R);
+      S.bodyA.bands[BODY_TIER] = [0, R + 2]; S.bodyB.bands[BODY_TIER] = [0, R + 2];
+    }
+    const t0 = performance.now();
+    if (B.queue.size) {
+      for (const [k, [i, j]] of B.queue) {
+        B.queue.delete(k);
+        if (B.cache.has(k)) continue;
+        this.bodyCellData(i, j); B.dirty = true;
+        if (performance.now() - t0 > 1) break;
+      }
+    }
+    const move = !B.last || Math.hypot(cp.x - B.last[0], north - B.last[1]) > B.rebuild;
+    if (move || B.dirty) {
+      if (move) B.last = [cp.x, north];
+      B.dirty = false;
+      this.bodyFill(B.last[0], B.last[1]);
+    }
+    // the micro patch's re-seat takes what is left of ~1.5 ms after the cells and the refill (none if they used it)
+    const left = Math.min(0.75, 1.5 - (performance.now() - t0));
+    if (left > 0 && (B.reseat || B.work || (this.tile.heights.micro?.version ?? 0) !== B.microV)) this.bodySeat(left);
+    S.bodyA.mesh.visible = S.bodyA.staged > 0; S.bodyB.mesh.visible = S.bodyB.staged > 0;
+  }
+
+  // Let go of what the body tier holds and unhook its body-scale listener. The meshes stay in the group, so the
+  // world's GPU sweep (main.js disposeGpu) frees their geometry and material with the rest of the grass; disposing
+  // them here as well is harmless (three's dispose is idempotent).
+  dispose() {
+    this._offBody?.(); this._offBody = null;
+    if (this.body) { this.body.cache.clear(); this.body.queue.clear(); this.body = null; }
+    for (const k of ['bodyA', 'bodyB']) {
+      const set = this.sets?.[k]; if (!set) continue;
+      set.mesh.visible = false; set.mesh.geometry.dispose(); set.stage = EMPTY; set.blocks.length = 0; set.staged = set.n = 0;
+    }
+    this.sets?.bodyA?.mesh.material.dispose();
+  }
+
   // Cells within r of (x, north), nearest first, so a full buffer drops the farthest.
   cellsAround(x, north, r) {
     const hab = this.tile.habitat, res = hab.res, size = this.tile.size, cells = [];
@@ -936,6 +1223,7 @@ export class Grass {
     }
     const S = this.sets;
     for (const [pool, P] of Object.entries(POOLS)) for (const k of P.sets) S[k].mesh.visible = on[pool] && S[k].staged > 0;
+    if (this.body) this.updateBody(cp, north, agl);
     this.cull(camera);
     for (const set of Object.values(S)) if (set.n === 0) set.mesh.visible = false;
     // Shrub impostors: drawn to within 1.2-3.5 m of the camera at every height. The 3D shrubs of

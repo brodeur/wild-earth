@@ -12,15 +12,21 @@ import { mulberry32 } from './trees.js';
 //   normal    blade face normal (either side; the shader faces it to the camera)
 //   aBlade    x: t, 0 at the root to 1 at the tip (along the blade), y: per-blade random,
 //             z: part (0 leaf, 1 culm, 2 seed head / spikelet, 3 awn), w: unused
+// The sward clumps of the body tier (buildSwardClump) differ: aBlade.z is the blade's index over the clump's
+// blade count (the shader keeps the first 3-6 of them per clump), aBlade.w the side of the blade a vertex is on
+// (-1, +1, 0 at the pointed tip), and aSide the blade's width direction there, so the shader can bend the normal
+// outward toward each edge and a flat strip shades as if it were round (Ghost of Tsushima, docs/grass-notes.md).
 
 export const PART = { LEAF: 0, CULM: 1, HEAD: 2, AWN: 3 };
 const UP = new THREE.Vector3(0, 1, 0);
 const v3 = (x = 0, y = 0, z = 0) => new THREE.Vector3(x, y, z);
 
 class ClumpBuilder {
-  constructor() { this.p = []; this.n = []; this.b = []; this.idx = []; }
-  vert(pos, nrm, t, r, part) {
-    this.p.push(pos.x, pos.y, pos.z); this.n.push(nrm.x, nrm.y, nrm.z); this.b.push(t, r, part, 0);
+  // sides: also record each vertex's side of its blade and the width direction (the sward clumps' aSide).
+  constructor(sides = false) { this.p = []; this.n = []; this.b = []; this.idx = []; this.s = sides ? [] : null; }
+  vert(pos, nrm, t, r, part, side = 0, wdir = null) {
+    this.p.push(pos.x, pos.y, pos.z); this.n.push(nrm.x, nrm.y, nrm.z); this.b.push(t, r, part, this.s ? side : 0);
+    if (this.s) this.s.push(wdir ? wdir.x : 0, wdir ? wdir.y : 0, wdir ? wdir.z : 0);
     return this.p.length / 3 - 1;
   }
   // A tapered strip along a centreline; `pointed` ends it in a single tip vertex.
@@ -29,10 +35,10 @@ class ClumpBuilder {
     for (let k = 0; k <= last; k++) {
       const tan = (k < last ? pts[k + 1].clone().sub(pts[k]) : pts[k].clone().sub(pts[k - 1])).normalize();
       const nrm = v3().crossVectors(wdirs[k], tan).normalize();
-      if (pointed && k === last) { const i = this.vert(pts[k], nrm, ts[k], r, part); L.push(i); R.push(i); continue; }
+      if (pointed && k === last) { const i = this.vert(pts[k], nrm, ts[k], r, part, 0, wdirs[k]); L.push(i); R.push(i); continue; }
       const h = wdirs[k].clone().multiplyScalar(widths[k] / 2);
-      L.push(this.vert(pts[k].clone().sub(h), nrm, ts[k], r, part));
-      R.push(this.vert(pts[k].clone().add(h), nrm, ts[k], r, part));
+      L.push(this.vert(pts[k].clone().sub(h), nrm, ts[k], r, part, -1, wdirs[k]));
+      R.push(this.vert(pts[k].clone().add(h), nrm, ts[k], r, part, 1, wdirs[k]));
     }
     for (let k = 0; k < last; k++) {
       if (pointed && k === last - 1) { this.idx.push(L[k], R[k], L[k + 1]); continue; }
@@ -60,6 +66,7 @@ class ClumpBuilder {
     g.setAttribute('position', new THREE.Float32BufferAttribute(this.p, 3));
     g.setAttribute('normal', new THREE.Float32BufferAttribute(this.n, 3));
     g.setAttribute('aBlade', new THREE.Float32BufferAttribute(this.b, 4));
+    if (this.s) g.setAttribute('aSide', new THREE.Float32BufferAttribute(this.s, 3));
     g.setIndex(this.idx);
     return g;
   }
@@ -96,13 +103,13 @@ function widthDirs(pts, phi, roll, twist) {
   return out;
 }
 
-function leaf(B, rnd, { spread, theta, droop, len, width, segs = 4 }) {
+function leaf(B, rnd, { spread, theta, droop, len, width, segs = 4, part = PART.LEAF, taper = 0.85 }) {
   const a = rnd() * Math.PI * 2, rr = Math.sqrt(rnd()) * spread, r = rnd();
   const root = v3(Math.cos(a) * rr, 0, Math.sin(a) * rr), phi = a + (rnd() - 0.5) * 1.4;
   const { pts, ts } = arc(root, phi, theta[0] + rnd() * (theta[1] - theta[0]), droop[0] + rnd() * (droop[1] - droop[0]), len[0] + rnd() * (len[1] - len[0]), segs);
   const w0 = width[0] + rnd() * (width[1] - width[0]);
-  const widths = ts.map(t => w0 * (1 - 0.85 * Math.pow(t, 1.8)));
-  B.strip(pts, ts, widths, widthDirs(pts, phi, (rnd() - 0.5) * 1.2, (rnd() - 0.5) * 1.6), r, PART.LEAF, true);
+  const widths = ts.map(t => w0 * (1 - taper * Math.pow(t, 1.8)));
+  B.strip(pts, ts, widths, widthDirs(pts, phi, (rnd() - 0.5) * 1.2, (rnd() - 0.5) * 1.6), r, part, true);
 }
 
 // A flowering stem: thin, nearly straight; returns its top point, tangent and lean direction.
@@ -205,6 +212,24 @@ export function buildOatClump(seed = 31) {
       const tip = B.diamond(base, dir, 0.045 + 0.012 * rnd(), 0.013, c.r, PART.HEAD);
       if (s % 2 === 0) B.awn(tip, dir, dir.clone().add(v3(0, -0.3, 0)).normalize(), 0.035, 0.002, c.r);
     }
+  }
+  return B.geometry();
+}
+
+// The body tier's unit (grass.js): a young tiller clump at the base of the sward, as a lizard or a vole sees it
+// from a few centimetres away. Six leaves from a crown a couple of centimetres across, each a pointed strip of
+// four segments that narrows from the sheath to the tip, rolls a little about itself and twists toward the tip
+// (widthDirs), so a blade catches the light along part of its length and shows its edge along the rest. The
+// shader keeps the first 3-6 blades of each clump (aBlade.z is the blade's index / 6), scales the clump by the
+// plant's size and the season, and rounds the normals across each blade (aBlade.w, aSide). `fine`: the needlegrass
+// version, threadlike leaves (2-3 mm) arching from a tighter crown; otherwise the annuals' broader, flatter
+// blades (3.5-6 mm, 12-30 cm long: brome and wild oat leaves). Sizes are metres at full spring height.
+export function buildSwardClump(fine = false, seed = fine ? 43 : 41) {
+  const rnd = mulberry32(seed), B = new ClumpBuilder(true), n = 6;
+  for (let i = 0; i < n; i++) {
+    leaf(B, rnd, fine
+      ? { spread: 0.008, theta: [0.06, 0.4], droop: [0.5, 1.4], len: [0.15, 0.34], width: [0.0018, 0.0028], part: (i + 0.5) / n, taper: 0.7 }
+      : { spread: 0.014, theta: [0.08, 0.5], droop: [0.3, 1.1], len: [0.12, 0.30], width: [0.0035, 0.006], part: (i + 0.5) / n, taper: 0.8 });
   }
   return B.geometry();
 }
