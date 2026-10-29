@@ -2312,3 +2312,37 @@ programs compile on ANGLE/Metal. On the clean worktree as a deer in the oak wood
 without (noise); no console errors. Open: the shadow casters (shadows.js) do not sway, so moving leaves can cross
 their still shadow; a slow sway of the whole crown bending the limbs; Aaron can tune the amplitude, wavelength and
 speed live through CROWN_SWAY.value in treegen.js.
+
+## 2026-10-29: the deer bends into a turn and steps sideways round it
+
+The second rig pass of the day (Aaron: "Yes, next rig pass"), on the two opens the first left: the deer turned as a
+rigid body a beat behind its legs, and the hooves slid in a turn because the Walk clip moves a planted hoof straight
+back along the body while the body turns under it. Both are a per-instance bend now (aBend, a vec4 on the skin path
+beside aClip: animalModels.js bendOf, called after turnFollow and driveClips for the player in groundControl.draw and
+for the AI in animals.update, carried through the LOD tiers, the herd silhouette and the lineup):
+
+- The spine (aBend.x). The lag between the control yaw and the drawn hips (turnFollow's dy) is drawn as a bend: a
+  rotation about the vertical through the hips whose angle grows with the vertex's rest z, nothing at the hips, all
+  of it from the neck base on (smoothstep between the BackShoulder and Neck1 joints' rest z), so the head faces where
+  the deer is going and the hips come round behind it: head, shoulders, hips in order, as Aaron asked. At the full A/D
+  turn (1.8 rad/s) the bend is 12 degrees; the cap is turnFollow's 25.
+- The head (aBend.y) leads a turn by 0.12 rad per rad/s, up to 0.25, every deer; it is the look's rotation about the
+  neck base, which the player's look (uHeadYaw) adds to, so the PLAYER_HEAD block became the SKIN_HEAD block.
+- The legs (aBend.z the fore, aBend.w the hind). Each leg's swing out of standing (the vertex's place under the Idle
+  clip's first frame as the reference: 12 more texel fetches, for the leg vertices of a turning deer only) is turned
+  about the vertical by atan2(w r, v), w the smoothed turn rate, r the fore or hind hoof's rest z (0.35 m ahead,
+  0.43 behind, from the clip index's joint_rest), v the speed floored at 0.1 m/s: a standing turn steps square
+  sideways, the fore hooves toward the turn and the hind hooves away (the direction a planted hoof must travel for the
+  body to wheel about its centre); a walk on a curve arcs the hooves a little; a straight walk is unchanged. Only while
+  a gait clip plays. A leg swung forward by an angle, turned 90 degrees about the vertical through the shoulder, is
+  the same leg swung sideways by that angle, so the Walk's own clip does the sidestep: no new clip, no bake change.
+  The joints' roles come from the index's joint names (the Front*/IKFront*/FF.* joints the fore legs, Back*/IKBack*/
+  FFB.* the hind, PoleTarget* with their leg).
+
+Verified on the clean worktree: an AI deer pinned in front of the camera turning at 1.5 rad/s plays the turn at
+1.8 Hz with spine 0.21 rad and legs +1.38/-1.41 rad, and a sequence of close frames shows the forequarters leading
+and the legs stepping across sideways, the body whole; the player's D turn 1.8 rad/s at 33.7 fps; bucks draw with
+the antler program (15 attributes) without a shader error. Not measured: whether the planted hoof is now still on
+the ground to the centimetre (the turned swing follows the Walk's own stance travel, which was spread over the cycle
+by the bake); Aaron's eye decides whether a true sideways-step clip is still wanted. The same stepping turn for the
+fox, coyote, lion and bear on the part rig is in a lane as this is written.

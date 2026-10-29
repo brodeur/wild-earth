@@ -180,9 +180,11 @@ browser stays the renderer.
   level and the smell (2026-10-29); the leaf level does not cover chamise or bare-twig textures; a mid-scale (fox, coyote) is the
   least served, its ring at half density; the DEM-only Yosemite tile has no roughness to condition on. The HUD's
   abilities row and the smell sense (scent.js) landed the same day. The rig (2026-10-29): a turning deer steps and its
-  body follows the legs (docs/decisions.md); next in the rig, in order: a spine twist (head, shoulders, hips), hooves
-  planted in a turn (a sideways-step clip or IK), the Walk backwards on S, a trot, leg length to the slope, an alert
-  pose of its own; the same stepping turn for the fox, coyote, lion and bear in groundControl.animate; "scented" on the hunt panel and the leaf level to
+  body follows the legs; the same day its spine bends into the turn (the head faces where it is going, the hips come
+  round behind), the head leads, and the legs step sideways round a standing turn and arc on a curve (docs/decisions.md);
+  next in the rig, in order: the Walk backwards on S, a trot, leg length to the slope, an alert pose of its own, a true
+  sideways-step clip if the turned swing is not enough; the same stepping turn for the fox, coyote, lion and bear in
+  groundControl.animate (in a lane as this is written); "scented" on the hunt panel and the leaf level to
   15 m for a deer (24 for the smallest) on 2026-10-29. Next: the greyed abilities one by one (dig, pounce, carry, swim,
   climb, call, mark, den, display); the prey's nose landed 2026-10-29 (animals.js noticeAt: the wind decides how far an
   animal smells the player). Open: no wind between AI animals (an AI lion's prey notices it at detects, as before).
