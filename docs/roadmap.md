@@ -171,6 +171,15 @@ browser stays the renderer.
 
 ## Then
 
+- Detail at every scale (2026-10-28, docs/decisions.md "detail at every scale"): done, one body-scale number
+  (bodyScale.js) drives the body-scaled grass ring, the litter ring, the micro-relief patch with its 20 cm octave, the
+  leaf level and the leaf shimmer; the lidar micro raster (4 m: intensity, roughness about the DEM, low vegetation)
+  conditions the bumps on the lidar tiles. Open: the gray squirrel's own control has no smell and no body-scaled hooks
+  beyond the leaf level; the leaf level does not cover chamise or bare-twig textures; a mid-scale (fox, coyote) is the
+  least served, its ring at half density; the DEM-only Yosemite tile has no roughness to condition on. The HUD's
+  abilities row and the smell sense (scent.js) landed the same day: next, the greyed abilities one by one (dig, pounce,
+  carry, swim, climb, call, mark, den, display), and "scented" as a state in the hunt panel from scent.smelled.
+
 - Geology and soils step done 2026-10-24 (Macrostrat/SGMC lithology at 1:750k, SSURGO
   texture, fragments and depth to bedrock; client rasters and an outcrop likelihood).
   Outcrops and boulders placed from it in the client 2026-10-25 (rocks.js), with grass,
