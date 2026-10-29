@@ -2474,3 +2474,29 @@ mini-map. Roads are white and half transparent (minor 0.35, major 0.55 at 2 px o
 white at 0.8) instead of orange over a dark casing. Verified on the clean worktree as a deer: Swan Lane under the
 player in the window; the full map 876 px on the pane; a click a quarter of the way in flies to (2500, 7500) exactly
 and closes; M opens, Esc closes. Memory: the two bases (present day and rewilded) are 23 MB each at 2400 px.
+
+## 2026-10-29: the crown wave loosened in a strong wind, and the limbs flex
+
+Aaron, on the crown wave of the morning: "The wind in the trees is looking good. The sine waves are a little too
+tight sometimes when the wind is very intense, it just makes the tree look like its vibrating rather than the leaves
+being individually disrupted because the cards are all moving as one. If it's possible to have the limbs flex in the
+direction of the wind I think that would add to the effect." The wave's wavelength and speed were fixed (3.5 m at
+4 m/s, 1.1 Hz) whatever the wind, and only its amplitude grew, so a strong wind shook the whole crown at 1.1 Hz with
+the cards a few tenths of a radian apart.
+
+Now (treegen.js LEAF_WAVE_GLSL): the wavelength grows with the wind, 3.5 m x (1 + 1.5 x windStrength up to 1), so a
+strong wind's wave is long and slow (6 m and 0.65 Hz at 0.5, 8.75 m and 0.45 Hz at 1) and a light wind's is as it
+was; the per-card phase is +-0.8 rad (was +-0.35); and each card and single leaf has a jitter of its own, 0.3 of the
+sway's amplitude at 1.6-3 Hz from its rank, downwind and half as much across, so neighbouring sprays are disrupted
+one by one (the twigs take no jitter: a card jitters about its twig tip). And the limbs flex (crownFlexW, the new
+CROWN_FLEX uniform: lean 0.035 rad per unit windStrength, rock 0.4 Hz by +-0.4, jitter 0.3): every point of the tree
+is moved downwind by the lean times the gust (0.4 in a lull, all in a gust) times a slow rock of the whole crown at
+0.4 Hz with a phase from the plant's position, times its height above the plant's origin (quadratic over the first
+6 m, linear above, so the lower trunk holds and the top moves most) and a little more at the outer limbs, and a
+little down so a limb bends rather than tilts: about 0.3 m at the top of a 12 m tree in a 0.5 gust, 5 cm in a lull.
+The near and close cards, the single leaves, the whole twigs (their bases with the limbs, their tips with the
+cards) and the near trunk tier (trunkFlex on both trunk materials) take it, so the crown stays on its limbs; the mid
+cards and mid trunks beyond 180 m are still; the calm frame is unchanged by the same gate. Verified on the clean
+worktree with the wind pinned at 0.6: at seven times the lean a pine's trunk tip and crown move downwind together and
+a near tree's crown stays on its stem; no shader errors; 36 fps as before. Not verified: the rhythm by eye over time
+(a recording would show it); the shadows still do not sway or flex (shadows.js, open).
