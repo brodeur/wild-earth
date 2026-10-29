@@ -43,7 +43,8 @@ import { chainShader } from './treegen.js';
 // flick, leg splay on the trunk, the lagged tail tip. The acorn it carries rides at the mouth (animals.carryPoint).
 
 const CODE = 'sciurus_griseus';
-const RUN = 6, BACK = 1.8, ACCEL = 4.5, TURN = 2.6;          // m/s; 1/s to the target speed; rad/s
+const RUN = 6, CRUISE = 4, BACK = 1.8, ACCEL = 4.5, TURN = 2.6;          // m/s (RUN the true top, Shift W; CRUISE the top of W alone); 1/s to the target speed; rad/s
+const SPRINT_T = 4, RECOVER = 20;   // the legs: s of the full bound, s to come back (owner, 2026-10-29)
 const JUMP_UP = 3.3, JUMP_FWD = 2.5, GRAVITY = 9.8;          // a ~0.55 m, ~0.7 s hop; at a run it carries 3-4 m
 const STEP = 0.3;                                            // m: stepped onto without a jump (a rock edge, a bank)
 const CLIMB_UP = 2.4, CLIMB_DOWN = 2.0, ROUND = 1.3;         // m/s up, down and round the trunk
@@ -88,6 +89,7 @@ export class SquirrelControl {
     this.heights = animals.heights;   // the drawn terrain mesh, as the animals stand on it
     this.on = false; this.mode = 'ground';
     this.v = 0; this.vel = new THREE.Vector3(); this.tree = null; this.h = 0; this.face = 0; this.headUp = true;
+    this.stamina = 1; this.tired = false;
     this.work = null; this.limb = null; this.auto = null; this.sit = 0;
     this.pose = { phase: 0, amp: 0, pose: 0, flick: 0, flickV: 0, e0: 0, e1: 0, pitch: 0, yaw: 0, roll: 0, bob: 0 };
     this.jumpQ = false; this.actQ = false; this.camOrbit = 0; this.lastYaw = 0; this.camSide = CAM_SIDE; this.camLift = 0;
@@ -190,7 +192,7 @@ export class SquirrelControl {
     };
     const W = this.hudWas;
     if (h1?.firstChild) h1.firstChild.nodeValue = on ? 'western gray squirrel ' : W.h1;
-    if (help) help.innerHTML = on ? '<kbd>W</kbd><kbd>S</kbd> run · <kbd>A</kbd><kbd>D</kbd> turn · <kbd>space</kbd> jump · <kbd>shift</kbd> sit up · '
+    if (help) help.innerHTML = on ? '<kbd>W</kbd><kbd>S</kbd> run (<kbd>shift</kbd><kbd>W</kbd> sprint) · <kbd>A</kbd><kbd>D</kbd> turn · <kbd>space</kbd> jump · <kbd>shift</kbd> sit up · '
       + '<kbd>E</kbd> pick up, bury, dig · run into a trunk to climb (<kbd>W</kbd><kbd>S</kbd> up, down, out and in a limb; <kbd>A</kbd><kbd>D</kbd> onto the ringed limb, or round; <kbd>space</kbd> leap or drop) · '
       + '<kbd>M</kbd> map · <kbd>G</kbd> roads · <kbd>P</kbd> present day · <kbd>T</kbd> tags · <kbd>N</kbd> mute · <kbd>B</kbd> back to spirit form · click a tree to identify · drag mouse to turn and look' : W.help;
     const agl = $('agl')?.previousElementSibling, sp = $('speed')?.previousElementSibling;
@@ -506,9 +508,14 @@ export class SquirrelControl {
 
   ground(dt, k, jump, act) {
     const f = this.flight, P = f.pos, ps = this.pose, swim = this.swimming, wade = !swim && !!this.wet;
-    const sitting = k.sit && !swim && Math.abs(this.v) < 1.2;
+    const sitting = k.sit && !swim && Math.abs(this.v) < 1.2 && k.fwd <= 0;
     this.sit = damp(this.sit, sitting ? 1 : 0, sitting ? 4 : 8, dt);
-    const target = sitting ? 0 : swim ? (k.fwd > 0 ? SWIM : k.fwd < 0 ? -SWIM_BACK : 0) : (k.fwd > 0 ? RUN : k.fwd < 0 ? -BACK : 0) * (wade ? WADE : 1);
+    // Shift W: the sprint at the full bound for SPRINT_T s, then tired (0.6 of the cruise) until the legs come back over RECOVER s
+    const sprinting = k.sit && k.fwd > 0 && !swim && !this.tired, fast = sprinting && this.v > CRUISE * 0.95;
+    this.stamina = Math.max(0, Math.min(1, this.stamina + (fast ? -dt / SPRINT_T : dt / RECOVER)));
+    if (this.stamina <= 0) this.tired = true; else if (this.stamina > 0.5) this.tired = false;
+    const top = sprinting ? RUN : this.tired ? CRUISE * 0.6 : CRUISE;
+    const target = sitting ? 0 : swim ? (k.fwd > 0 ? SWIM : k.fwd < 0 ? -SWIM_BACK : 0) : (k.fwd > 0 ? top : k.fwd < 0 ? -BACK : 0) * (wade ? WADE : 1);
     // in deep water the run is lost at once (water drags) and the paddling builds speed slowly
     this.v = damp(this.v, target, swim ? (Math.abs(this.v) > Math.abs(target) ? 3 : 1.5) : target === 0 ? 7 : ACCEL, dt);
     if (Math.abs(this.v) < 0.02 && !target) this.v = 0;

@@ -64,7 +64,7 @@ const TAU = Math.PI * 2;
 const wrap = a => Math.atan2(Math.sin(a), Math.cos(a));
 const smooth = u => u * u * (3 - 2 * u);
 const yawOf = (dx, dz) => Math.atan2(-dx, -dz);   // the yaw whose forward (-sin yaw, -cos yaw) points along (dx, dz)
-export const RAVEN_SP = { cruise: 12, vmax: 40, sink: 0.6, flap: 6, climb: 9, turn: 1.4, attachV: ATTACH_V, contactG: CONTACT_G, landH: LAND_H,
+export const RAVEN_SP = { cruise: 12, fast: 18, vmax: 40, sprint: 8, recover: 30, sink: 0.6, flap: 6, climb: 9, turn: 1.4, attachV: ATTACH_V, contactG: CONTACT_G, landH: LAND_H,
   hopLen: HOP_LEN, hopBack: HOP_BACK, hopT: HOP_T, hopH: HOP_H, cam: 1, perch: null, soar: null };
 export class RavenFlight {
   constructor(camera, heights, dom) {
@@ -72,6 +72,7 @@ export class RavenFlight {
     this.body = new THREE.Group();
     this.pos = this.body.position; this.yaw = 0; this.pitch = 0; this.roll = 0; this.speed = 12;
     this.keys = new Set(); this.flap = 0; this.drag = null; this.hover = false; this.sDwell = 0;
+    this.stamina = 1; this.tired = false;   // the wings' sprint meter (sp.sprint s of the boost, back over sp.recover s)
     // The look (owner, 2026-10-27): a drag turns the camera, and the player's head with it, up to lookMax rad each way
     // (the control sets it for its body; 0 for the spirit, which has no head); past that the drag turns the body
     // instead so the camera keeps moving. look is the head's yaw off the body; the cameras look along yaw + look;
@@ -175,10 +176,15 @@ export class RavenFlight {
     this.pitch = THREE.MathUtils.clamp(this.pitch + pitchIn * pitchRate * dt, -1.2, 0.9);
     if (!pitchIn) this.pitch = THREE.MathUtils.lerp(this.pitch, -0.05, 1 - Math.exp(-dt * 0.15));  // settle toward a shallow glide, slowly (~7 s)
     this.roll = THREE.MathUtils.lerp(this.roll, yawIn * 0.6, 1 - Math.exp(-dt * 1.0));   // bank into the turn: left turn dips the left wing
-    // W speeds up; S slows to a stop and, if held on past zero for half a second, backs up.
-    const boost = k.has('ShiftLeft') || k.has('ShiftRight');
-    if (k.has('KeyW')) { this.hover = false; this.speed += 8 * dt; }
+    // W speeds up to sp.fast (a pace the bird holds; the true top sp.vmax is the sprint's, or a dive's); S slows to a stop
+    // and, if held on past zero for half a second, backs up. Shift is the sprint: full speed for sp.sprint s, then the
+    // wings are tired until they come back over sp.recover s (owner, 2026-10-29: every animal's top is not its top).
+    const boost = (k.has('ShiftLeft') || k.has('ShiftRight')) && !this.tired, fast = sp.fast ?? sp.cruise * 1.5;
+    if (k.has('KeyW')) { this.hover = false; if (this.speed < fast) this.speed = Math.min(fast, this.speed + 8 * dt); }
     if (boost) { this.hover = false; this.speed += 20 * dt; }
+    { const sprinting = boost && this.speed > sp.cruise * 1.2;
+      this.stamina = Math.max(0, Math.min(1, this.stamina + (sprinting ? -dt / (sp.sprint || 8) : dt / (sp.recover || 30))));
+      if (this.stamina <= 0) this.tired = true; else if (this.stamina > 0.5) this.tired = false; }
     if (k.has('KeyS')) {
       if (this.speed > 0.4) { this.speed = Math.max(0, this.speed - 8 * dt); this.sDwell = 0; }
       else if (this.speed >= -0.01 && (this.sDwell += dt) < 0.5) this.speed = 0;    // pause at zero: hover

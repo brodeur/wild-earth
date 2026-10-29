@@ -25,17 +25,17 @@ const conifer = rec => /^pinus_|^pseudotsuga|^calocedrus|^abies/.test(rec.specie
 // flight meshes, feet off: drawn at the flight body standing too).
 export const FLIERS = {
   aphelocoma_californica: { short: 'scrubjay', common: 'California scrub-jay', model: 'scrub-jay', jay: true, feet: true, span: 0.39, beat: 11, near: 0.12,
-    flight: { cruise: 7, vmax: 16, sink: 1.0, flap: 5, climb: 5, turn: 2.4, attachV: 6, contactG: 0.15, landH: 0.07,
+    flight: { cruise: 7, fast: 10, vmax: 16, sprint: 4, recover: 20, sink: 1.0, flap: 5, climb: 5, turn: 2.4, attachV: 6, contactG: 0.15, landH: 0.07,
       hopLen: 0.3, hopBack: 0.2, hopT: 0.16, hopH: 0.05, cam: 0.42 } },
   cyanocitta_stelleri: { short: 'stellers', common: "Steller's jay", model: 'stellers-jay', jay: true, feet: true, span: 0.45, beat: 10, near: 0.12,
-    flight: { cruise: 8, vmax: 17, sink: 0.9, flap: 5, climb: 5, turn: 2.3, attachV: 6, contactG: 0.16, landH: 0.08,
+    flight: { cruise: 8, fast: 11, vmax: 17, sprint: 4, recover: 20, sink: 0.9, flap: 5, climb: 5, turn: 2.3, attachV: 6, contactG: 0.16, landH: 0.08,
       hopLen: 0.32, hopBack: 0.2, hopT: 0.17, hopH: 0.06, cam: 0.46 } },
   buteo_jamaicensis: { short: 'hawk', common: 'red-tailed hawk', model: 'hawk', span: 1.25, beat: 2.6, near: 0.3,
-    flight: { cruise: 11, vmax: 45, sink: 0.45, flap: 5, climb: 5, turn: 1.25, attachV: 8, contactG: 0.4, landH: 0.25,
+    flight: { cruise: 11, fast: 16, vmax: 45, sprint: 5, recover: 30, sink: 0.45, flap: 5, climb: 5, turn: 1.25, attachV: 8, contactG: 0.4, landH: 0.25,
       hopLen: 0.45, hopBack: 0.3, hopT: 0.4, hopH: 0.12, cam: 1.05,
       perch: { r: 0.05, h: 5, rec: rec => rec.snag || conifer(rec) }, soar: { v: 9, r: 45, lift: 0.5 } } },
   cathartes_aura: { short: 'vulture', common: 'turkey vulture', model: 'vulture', span: 1.75, beat: 2.0, near: 0.35,
-    flight: { cruise: 10, vmax: 26, sink: 0.3, flap: 4, climb: 4, turn: 1.0, attachV: 7, contactG: 0.45, landH: 0.3,
+    flight: { cruise: 10, fast: 14, vmax: 26, sprint: 3, recover: 40, sink: 0.3, flap: 4, climb: 4, turn: 1.0, attachV: 7, contactG: 0.45, landH: 0.3,
       hopLen: 0.45, hopBack: 0.3, hopT: 0.45, hopH: 0.12, cam: 1.35,
       perch: { r: 0.05, h: 4, rec: rec => rec.snag || conifer(rec) || rec.scale > 0.9 }, soar: { v: 9, r: 60, lift: 0.4, teeter: true } } },
 };

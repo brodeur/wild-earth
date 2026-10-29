@@ -36,7 +36,7 @@ import { acornGeometry } from './acorns.js';
 const CODE = 'melanerpes_formicivorus';
 const CLING_PITCH = -1.72;                                    // animals.js: nose up, just past vertical, tail on the bark
 // flight
-const V_MAX = 12, V_MIN = 2.5, V_CRUISE = 7, ACCEL = 5, DECEL = 6, TURN = 2.1, PITCH_RATE = 1.1, PITCH_MAX = 0.6, CEIL = 80;
+const V_MAX = 12, V_FAST = 9, V_MIN = 2.5, V_CRUISE = 7, SPRINT_T = 4, RECOVER = 20, ACCEL = 5, DECEL = 6, TURN = 2.1, PITCH_RATE = 1.1, PITCH_MAX = 0.6, CEIL = 80;
 const BURST = 0.42, DIP = 0.36, UND_A = 0.17, BEAT = 12;      // s of beats, s wings shut; m half the dip; Hz
 const GRIP_R = 1.0, GRIP_T = 0.22;                            // m from the bark to take hold; s to settle onto it
 // clinging: one hitch is a short hop of the feet
@@ -62,6 +62,7 @@ export class WoodpeckerControl {
     this.heights = animals.heights;   // the drawn terrain mesh, as the animals stand on it
     this.on = false; this.mode = 'fly'; this.female = false;
     this.v = V_CRUISE; this.baseY = 0; this.burst = true; this.uc = 0; this.undA = 0; this.boost = 0; this.prevY = 0; this.vy = 0;
+    this.stamina = 1; this.tired = false;   // the wings' sprint meter (Shift: V_MAX for SPRINT_T s, else W tops at V_FAST)
     this.tree = null; this.h = 0; this.face = 0; this.hitch = null; this.hitchGap = 0; this.perch = 'ground';
     this.path = null; this.work = null; this.auto = null; this.granary = null; this.granaryRec = null;
     this.pose = { phase: 0, amp: 0, fold: 1, flick: 0, pitch: 0, yaw: 0, roll: 0 };
@@ -326,6 +327,7 @@ export class WoodpeckerControl {
       fwd: (k.has('KeyW') ? 1 : 0) - (k.has('KeyS') ? 1 : 0),
       turn: (k.has('KeyA') || k.has('ArrowLeft') ? 1 : 0) - (k.has('KeyD') || k.has('ArrowRight') ? 1 : 0),
       pitch: (k.has('ArrowUp') ? 1 : 0) - (k.has('ArrowDown') ? 1 : 0),
+      sprint: k.has('ShiftLeft') || k.has('ShiftRight'),
     };
   }
 
@@ -424,7 +426,10 @@ export class WoodpeckerControl {
 
   fly(dt, k, jump, act) {
     const f = this.flight, P = f.pos, ps = this.pose;
-    if (k.fwd > 0) this.v = Math.min(V_MAX, this.v + ACCEL * dt);
+    const sprinting = k.sprint && k.fwd > 0 && !this.tired, cap = sprinting ? V_MAX : this.tired ? V_CRUISE : V_FAST;   // W holds V_FAST; Shift W the true top while the wings last
+    this.stamina = Math.max(0, Math.min(1, this.stamina + (sprinting && this.v > V_FAST * 0.95 ? -dt / SPRINT_T : dt / RECOVER)));
+    if (this.stamina <= 0) this.tired = true; else if (this.stamina > 0.5) this.tired = false;
+    if (k.fwd > 0) this.v = this.v > cap ? damp(this.v, cap, 2, dt) : Math.min(cap, this.v + ACCEL * dt);
     else if (k.fwd < 0) this.v = Math.max(V_MIN, this.v - DECEL * dt);
     else this.v = damp(this.v, V_CRUISE, 0.25, dt);   // left alone, back to an easy cruise
     f.yaw += k.turn * TURN * dt;

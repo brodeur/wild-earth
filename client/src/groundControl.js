@@ -139,6 +139,19 @@ export const GROUND = {
     cam: { back: 0.95, up: 0.37, look: 0.85, aimUp: 0.13, side: 0.4, clear: 0.1, near: 0.05 },
     act: { peck: true, t: 1, word: 'scratching and pecking' }, alert: { flick: -0.4 }, rest: null },
 };
+// The legs (owner, 2026-10-29: "All animals should have a top speed that is not their top speed - and a sprint button
+// (shift) with a sprint meter that is appropriate for their species"): per species [cruise, sprint, recover]. cruise is
+// the top of W alone (m/s, the pace the body can hold); Shift W is the sprint at S.run, the true top, for `sprint` s
+// of full speed, then the legs are tired (the top falls to 0.6 of the cruise) until they come back over `recover` s
+// (sprinting again from half). A deer runs long, a coyote longer; a cat's rush is short and explosive; the small bodies
+// a few seconds; a lizard's legs go in a couple. The hunters' rush and the catch ride the sprint as before (hunt.js).
+const LEGS = {
+  odocoileus_hemionus: [7, 10, 40], urocyon_cinereoargenteus: [5.5, 5, 30], canis_latrans: [7.5, 9, 25], puma_concolor: [6, 3, 25],
+  ursus_americanus: [5.5, 5, 35], sylvilagus_bachmani: [4, 4, 30], lepus_californicus: [8, 7, 30], microtus_californicus: [1.0, 3, 15],
+  otospermophilus_beecheyi: [2.8, 4, 20], sceloporus_occidentalis: [1.4, 2.5, 25], meleagris_gallopavo: [3.8, 4, 25],
+  callipepla_californica: [2.8, 3, 20], oreortyx_pictus: [3.2, 3, 20],
+};
+for (const [code, [cruise, sprint, recover]] of Object.entries(LEGS)) Object.assign(GROUND[code], { cruise, sprint, recover });
 
 export class GroundControl {
   constructor({ tile, scene, camera, flight, veg, animals, atmosphere, squirrel }) {
@@ -256,7 +269,7 @@ export class GroundControl {
     const space = S.flush ? `${k('space')} hop; from a run, flush and fly` : `${k('space')} jump`;
     const shift = S.alert.pushups ? 'push-ups' : S.alert.pose ? 'sit up' : 'alert';
     const rest = S.rest === 'bed' ? ` · ${k('X')} lie down` : S.rest === 'hunch' ? ` · ${k('X')} hunch in a form` : S.rest === 'bask' ? ` · ${k('X')} bask` : '';
-    return `${k('W')}${k('S')} run, back (${k('shift')}${k('W')} walk) · ${k('A')}${k('D')} turn · ${space} · ${k('shift')} ${shift} · ${k('E')} ${S.act.word}${rest} · `
+    return `${k('W')}${k('S')} run, back (${k('shift')}${k('W')} sprint, ${k('alt')}${k('W')} ${S.stalk ? 'stalk' : 'walk'}) · ${k('A')}${k('D')} turn · ${space} · ${k('shift')} ${shift} · ${k('E')} ${S.act.word}${rest} · `
       + `${k('M')} map · ${k('G')} roads · ${k('P')} present day · ${k('T')} tags · ${k('N')} mute · ${k('B')} back to spirit form · click a tree to identify · drag mouse to turn and look`;
   }
   say(text) {
@@ -315,6 +328,7 @@ export class GroundControl {
       fwd: (k.has('KeyW') || k.has('ArrowUp') ? 1 : 0) - (k.has('KeyS') || k.has('ArrowDown') ? 1 : 0),
       turn: (k.has('KeyA') || k.has('ArrowLeft') ? 1 : 0) - (k.has('KeyD') || k.has('ArrowRight') ? 1 : 0),
       shift: k.has('ShiftLeft') || k.has('ShiftRight'),
+      alt: k.has('AltLeft') || k.has('AltRight'),   // a walk (the lion's stalk) under W
     };
   }
   update(dt) {
@@ -362,26 +376,28 @@ export class GroundControl {
     }
     if (k.fwd || Math.abs(this.v) > 0.5) this.actT = 0;
     this.actT = Math.max(0, this.actT - dt);
-    // speed: W from a walk to the run over `ramp` s (Shift + W: a walk, the lion's stalk), S back; wading slows it
+    // speed: W from a walk to the cruise over `ramp` s, Shift W the sprint to the true top (LEGS: the legs last S.sprint s),
+    // Alt W a walk (the lion's stalk), S back; wading slows it
     this.holdT = k.fwd > 0 ? this.holdT + dt : 0;
-    const runK = k.shift ? 0 : smooth(Math.min(1, this.holdT / S.ramp));
-    let target = k.fwd > 0 ? (k.shift && S.stalk ? S.stalk : S.walk + (S.run - S.walk) * runK) : k.fwd < 0 ? -S.back : 0;
+    const cruise = S.cruise ?? S.run * 0.65, sprinting = k.shift && k.fwd > 0 && !k.alt && !this.tired && !this.resting;
+    const runK = k.alt ? 0 : smooth(Math.min(1, this.holdT / S.ramp));
+    let target = k.fwd > 0 ? (k.alt && S.stalk ? S.stalk : S.walk + ((sprinting ? S.run : cruise) - S.walk) * runK) : k.fwd < 0 ? -S.back : 0;
     if (this.resting) target = 0;
     if (this.wet) target *= 1 - 0.6 * Math.min(1, this.wet.depth / S.wade);
     target *= this.needs?.slow ?? 1;   // hungry or thirsty: slower (needs.js)
-    if (S.sprint) {   // the legs (hunt.js): a full run lasts S.sprint s, then tired at half speed until the legs come back over S.recover s
-      const fast = Math.abs(this.v) > S.run * 0.6;
-      this.stamina = Math.max(0, Math.min(1, (this.stamina ?? 1) + (fast ? -dt / S.sprint : dt / S.recover)));
+    {   // the legs: a sprint lasts S.sprint s over the cruise, then the body is tired (0.6 of the cruise at most) until the legs come back over S.recover s
+      const fast = sprinting && Math.abs(this.v) > cruise * 0.95;
+      this.stamina = Math.max(0, Math.min(1, (this.stamina ?? 1) + (fast ? -dt / (S.sprint || 5) : dt / (S.recover || 25))));
       if (this.stamina <= 0) this.tired = true; else if (this.stamina > 0.5) this.tired = false;
-      if (this.tired) target *= 0.5;
+      if (this.tired && target > cruise * 0.6) target = cruise * 0.6;
       const rushing = fast && !this.tired;
       if (rushing && !this.rush) { this.rush = { t: 0, kill: false }; this.rushes = (this.rushes || 0) + 1; }
-      if (this.rush) { this.rush.t += dt; if (!rushing) { if (!this.rush.kill && this.rush.t > 1) this.animals?.known?.(45); this.rush = null; } }
+      if (this.rush) { this.rush.t += dt; if (!rushing) { if (!this.rush.kill && this.rush.t > 1 && this.needs?.hunter) this.animals?.known?.(45); this.rush = null; } }   // a hunter's failed rush makes it known; a deer's sprint is just a sprint
       if (rushing && this.needs?.hunter && (this.catchT = (this.catchT || 0) - dt) <= 0) {   // the rush that reaches its prey catches it
         this.catchT = 0.1; const c = this.animals.catchNear(P.x, P.y, P.z);
         if (c) { this.rush.kill = true; this.needs?.fed?.(); this.say(`caught a ${this.animals.speciesList()[c.sp]?.one || 'prey'}`); }
       }
-    } else this.stamina = 1;
+    }
     this.v = damp(this.v, target, Math.abs(target) < Math.abs(this.v) ? S.stop : S.accel, dt);
     if (Math.abs(this.v) < 0.01 && !target) this.v = 0;
     if (!this.resting) f.yaw += k.turn * S.turn * (1 - 0.45 * Math.min(1, Math.abs(this.v) / S.run)) * dt;
@@ -481,7 +497,7 @@ export class GroundControl {
       }
       ps.e3 = damp(ps.e3, inAir || sp > S.trot * 1.4 ? 1 : 0, 4, dt);
       if (part && !this.buck) ps.e2 = ps.amp > 0.05 && !inAir ? Math.atan2(wr * r, Math.max(sp, PART_TURN.vMin)) : damp(ps.e2, 0, 8, dt);   // the legs' step turned round the turn (aAnim2.z)
-      const stalk = S.stalk && this.input().shift && sp > 0.05;
+      const stalk = S.stalk && this.input().alt && sp > 0.05;
       ps.pose = damp(ps.pose, this.resting ? pmax : stalk ? 0.45 * pmax / 0.6 : 0, this.resting ? 0.9 : 2, dt);
       ps.flick = damp(ps.flick, act ? S.act.flick : alert ? S.alert.flick : stalk ? 0.25 : 0, 3, dt);
       if (act && S.act.dig) { ps.pose = damp(ps.pose, 0.3 * pmax, 3, dt); ps.flick += 0.1 * Math.sin(performance.now() * 0.013); }   // a dig: shoulders down, the head working
@@ -636,10 +652,10 @@ export class GroundControl {
     else if (L) {
       if ((L.amp || 0) > 0.5) { const fx = Math.sin(L.yaw), fz = Math.cos(L.yaw), back = Math.max(1, a.rank || 1) * 2.6, side = (a.ox || 0) * 0.18; tx = L.x - fx * back + fz * side; tz = L.z - fz * back - fx * side; }
       else { tx = L.x + (a.ox || 0); tz = L.z + (a.oz || 0); }
-    } else return { fwd: 0, turn: 0, shift: false };
+    } else return { fwd: 0, turn: 0, shift: false, alt: false };
     const ex = tx - P.x, ez = tz - P.z, d = Math.hypot(ex, ez), dy = wrap(Math.atan2(-ex, -ez) - f.yaw);
     const go = d > (Math.abs(this.v) > 0.1 ? 0.8 : 2.5) && Math.abs(dy) < 1.2;
-    return { fwd: go ? 1 : 0, turn: d > 0.5 ? Math.max(-1, Math.min(1, dy / 0.35)) : 0, shift: d < 10 };
+    return { fwd: go ? 1 : 0, turn: d > 0.5 ? Math.max(-1, Math.min(1, dy / 0.35)) : 0, shift: false, alt: d < 10 };   // near its slot it walks
   }
   hudLine(ground) {
     if (!this.hudRow) {

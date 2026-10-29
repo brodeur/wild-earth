@@ -68,10 +68,10 @@ function groundMoves(S) {
   const g = c => c.ground, still = c => !c.shift;
   const alert = S.alert?.pushups ? 'push-ups' : S.alert?.pose ? 'sit up' : 'alert';
   return [
-    on('run', 'W S', c => still(c) && c.k('KeyW', 'KeyS', 'ArrowUp', 'ArrowDown')),
+    on('run', 'W S', c => still(c) && !c.alt && c.k('KeyW', 'KeyS', 'ArrowUp', 'ArrowDown'), { title: `W: up to ${S.cruise ?? S.run} m/s, the pace it can hold` }),
     on('turn', 'A D', c => c.k('KeyA', 'KeyD', 'ArrowLeft', 'ArrowRight')),
-    on(S.stalk ? 'stalk' : 'walk', 'shift W', c => c.shift && c.k('KeyW', 'ArrowUp')),
-    S.sprint && on(S.stalk ? 'rush' : 'sprint', 'W', c => !!g(c).rush, { tired: c => !!g(c).tired, title: `hold W: a full run lasts ${S.sprint} s, then the legs are tired` }),
+    on(S.stalk ? 'stalk' : 'walk', 'alt W', c => c.alt && c.k('KeyW', 'ArrowUp')),
+    on(S.stalk ? 'rush' : 'sprint', 'shift W', c => !!g(c).rush || (c.shift && !g(c).tired && c.k('KeyW', 'ArrowUp')), { tired: c => !!g(c).tired, title: `Shift W: ${S.run} m/s for ${S.sprint} s, then the legs are tired; back over ${S.recover} s` }),
     on(S.flush ? 'hop' : 'jump', 'space', c => c.k('Space') && g(c).mode !== 'fly'),
     S.flush && on('flush', 'space', c => g(c).mode === 'fly', { title: 'Space from a run: flush and fly' }),
     on(alert, 'shift', c => g(c).sit > 0.5, { title: 'Shift held still' }),
@@ -118,7 +118,7 @@ function flierMoves(soar) {
     on('pitch', '↑ ↓', c => c.k('ArrowUp', 'ArrowDown'), { show: aloft }),
     on('turn', 'A D', c => c.k('KeyA', 'KeyD', 'ArrowLeft', 'ArrowRight'), { show: aloft }),
     on('speed', 'W S', c => c.k('KeyW', 'KeyS'), { show: aloft }),
-    on('boost', 'shift', c => c.shift, { show: aloft }),
+    on('sprint', 'shift', c => c.shift && !c.flight.tired, { show: aloft, tired: c => !!c.flight.tired, title: 'Shift: the true top speed for a few seconds, then the wings are tired' }),
     on('flap', 'space', c => c.k('Space') || c.flight.flap > 0, { show: aloft }),
     on('climb', 'X', c => c.k('KeyX'), { show: aloft }),
     on('descend', 'Z', c => c.k('KeyZ'), { show: aloft }),
@@ -135,6 +135,7 @@ const sqUp = c => ['trunk', 'wood', 'limb'].includes(c.squirrel.mode), sqWork = 
 const SQUIRREL = [
   on('run', 'W S', c => c.k('KeyW', 'KeyS', 'ArrowUp', 'ArrowDown')),
   on('turn', 'A D', c => c.k('KeyA', 'KeyD', 'ArrowLeft', 'ArrowRight')),
+  on('sprint', 'shift W', c => c.shift && !c.squirrel.tired && c.k('KeyW', 'ArrowUp') && !sqUp(c), { tired: c => !!c.squirrel.tired, title: 'Shift W: the full bound for 4 s, then tired; back over 20 s' }),
   on('jump', 'space', c => c.k('Space') && !sqUp(c)),
   on('sit up', 'shift', c => c.squirrel.sit > 0.5),
   on('climb', '', sqUp, { title: 'run into a trunk' }),
@@ -150,6 +151,7 @@ const WOODPECKER = [
   on('round', 'A D', c => c.k('KeyA', 'KeyD'), { show: wpOn }),
   on('fly', 'space', c => c.k('Space'), { show: wpOn }),
   on('speed', 'W S', c => c.k('KeyW', 'KeyS'), { show: wpFly }),
+  on('sprint', 'shift', c => c.shift && !c.woodpecker.tired, { show: wpFly, tired: c => !!c.woodpecker.tired, title: 'Shift: full speed for 4 s, then tired' }),
   on('turn', 'A D', c => c.k('KeyA', 'KeyD', 'ArrowLeft', 'ArrowRight'), { show: wpFly }),
   on('climb · dive', '↑ ↓', c => c.k('ArrowUp', 'ArrowDown'), { show: wpFly }),
   on('burst', 'space', c => c.k('Space'), { show: wpFly }),
@@ -246,7 +248,7 @@ export class Abilities {
     if (!show) return;
     const [kind, code, S] = this.which(), body = `${kind}:${code}`;
     if (body !== this.body) { this.body = body; this.build(kind, code, S); }
-    const c = this.c; c.shift = c.k('ShiftLeft', 'ShiftRight');
+    const c = this.c; c.shift = c.k('ShiftLeft', 'ShiftRight'); c.alt = c.k('AltLeft', 'AltRight');
     for (const s of this.slots) {
       const e = s.entry, shown = !e.show || !!e.show(c);
       if (shown !== s.shown) { s.shown = shown; s.el.hidden = !shown; }
@@ -255,13 +257,15 @@ export class Abilities {
       if (lit !== s.lit) { s.lit = lit; s.el.classList.toggle('lit', lit); }
       if (tired !== s.tired) { s.tired = tired; s.el.classList.toggle('tired', tired); }
     }
-    // the legs: a walking hunter's stamina (groundControl S.sprint), shown while the hunt is on
+    // the legs (the wings for a bird): every body's sprint meter (groundControl, squirrelControl, woodpeckerControl, the
+    // birds' flight: stamina 0..1 and tired), red when tired
     if (this.legs) {
-      const g = this.ground, want = !!(g.on && g.S?.sprint && this.hunt?.on);
+      const src = kind === 'ground' ? this.ground : kind === 'squirrel' ? this.squirrel : kind === 'woodpecker' ? this.woodpecker : kind === 'flier' || kind === 'raven' ? this.flight : null;
+      const want = !!(src && src.stamina !== undefined);
       if (this.legs.hidden === want) this.legs.hidden = !want;
       if (want) {
-        const w = `${Math.round((g.stamina ?? 1) * 100)}%`; if (this.legsBar && this.legsBar.style.width !== w) this.legsBar.style.width = w;
-        this.legs.classList.toggle('low', !!g.tired);
+        const w = `${Math.round((src.stamina ?? 1) * 100)}%`; if (this.legsBar && this.legsBar.style.width !== w) this.legsBar.style.width = w;
+        this.legs.classList.toggle('low', !!src.tired);
       }
     }
   }
