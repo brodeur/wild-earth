@@ -2,7 +2,8 @@ import * as THREE from 'three';
 import { uniforms as atmo } from './atmosphere.js';
 import { groundUniforms } from './terrain.js';
 import { NEAR_R, VARIANTS, handover } from './vegetation.js';
-import { WIND_GLSL } from './wind.js';
+import { WIND_GLSL, windUniforms } from './wind.js';
+import { LEAF_WAVE_GLSL, CROWN_SWAY, CROWN_FLEX } from './treegen.js';
 
 // Cascaded sun shadows, hand-rolled. Three depth maps (hardware-compare depth textures) are
 // rendered from a shadow scene of proxies: meshes that share the real ones' geometry and instance
@@ -65,8 +66,16 @@ export const CASCADES = [
 ];
 const L0 = 1 << 1, L1 = 1 << 2, L2 = 1 << 3;   // layer bits per cascade (layer 0 unused)
 
+// The near casters move with the wind as the lit meshes do (2026-10-29, Aaron: the shadows should sway and flex with
+// the crowns): the near cards take the crown's wave, their jitter and the limbs' flex, the near trunks the flex
+// (treegen.js LEAF_WAVE_GLSL, the same functions and uniforms, so a leaf's shadow is where the leaf is). Cascade 0
+// re-renders every frame, so the shadows within 120 m move; cascade 1 keeps the pose it last rendered.
 const DEPTH_VERT = /* glsl */`
   uniform vec3 lodEye; uniform float lodR; uniform vec2 farR;
+  #if defined(CANOPY) || defined(TRUNK)
+    ${WIND_GLSL}
+    ${LEAF_WAVE_GLSL}
+  #endif
   #ifdef CANOPY
     attribute float leafRank; varying float vRank;
   #endif
@@ -93,7 +102,19 @@ const DEPTH_VERT = /* glsl */`
       float dm = distance(base.xz, lodEye.xz);
       drop = drop || dm < lodR || dm > farR.x;
     #endif
-    gl_Position = drop ? vec4(2.0, 2.0, 2.0, 1.0) : projectionMatrix * viewMatrix * (m * vec4(position, 1.0));
+    vec3 pos = position;
+    #if defined(USE_INSTANCING) && (defined(CANOPY) || defined(TRUNK))
+    if (!drop) {   // the wind: as the lit near cards and trunks (treegen.js shimmerVertex, trunkFlex)
+      vec3 wp = (m * vec4(position, 1.0)).xyz, rel = wp - base;
+      float slow = smoothstep(0.15, 0.75, wNoise((wp.xz - windDir * time * 4.0) * 0.045)), ph = fract(dot(base.xz, vec2(0.1031, 0.1173)));
+      #ifdef CANOPY
+        pos += crownLocal(m, crownSwayW(rel, crownMicro(rel, leafRank), slow, leafRank, 1.0) + crownFlexW(rel, slow, ph));
+      #else
+        pos += crownLocal(m, crownFlexW(rel, slow, ph));
+      #endif
+    }
+    #endif
+    gl_Position = drop ? vec4(2.0, 2.0, 2.0, 1.0) : projectionMatrix * viewMatrix * (m * vec4(pos, 1.0));
   }`;
 const DEPTH_FRAG = /* glsl */`
   uniform sampler2D map; uniform float leafOn;
@@ -231,12 +252,13 @@ export class Shadows {
     this.vegProxies = [];
     const mat = (defines, src, side = src.side) => new THREE.ShaderMaterial({
       vertexShader: DEPTH_VERT, fragmentShader: DEPTH_FRAG, defines, side, colorWrite: false,
-      uniforms: { ...this.U, map: { value: src.map || null }, leafOn: src.userData.leafOn || { value: 1 } },
+      uniforms: { ...this.U, map: { value: src.map || null }, leafOn: src.userData.leafOn || { value: 1 },
+        time: windUniforms.time, windDir: windUniforms.windDir, windStrength: windUniforms.windStrength, crownSway: CROWN_SWAY, crownFlex: CROWN_FLEX },
       // leaf cards are double sided and alpha tested: a little slope-scaled offset keeps the lit
       // side of a crown from shadowing itself in stripes
       polygonOffset: !!src.map, polygonOffsetFactor: 1.5, polygonOffsetUnits: 2,
     });
-    const trunkDepth = mat({ LOD_NEAR: '' }, veg.trunkMat.near, THREE.BackSide);
+    const trunkDepth = mat({ LOD_NEAR: '', TRUNK: '' }, veg.trunkMat.near, THREE.BackSide);
     const ellipsoidDepth = mat({ LOD_MID: '' }, { userData: {}, side: THREE.FrontSide }, THREE.BackSide);
     const unit = new THREE.OctahedronGeometry(0.5, 1);   // 32 triangles: the crown's mass, not its lace
     for (const [id, arr] of Object.entries(veg.meshes)) {
