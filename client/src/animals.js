@@ -8,7 +8,7 @@ import { fieldGuide } from './fieldguide.js';
 import { scentCarry } from './wind.js';
 import { buildSquirrel, buildWoodpecker, buildRaven, buildDeer, buildQuail, buildJay, buildHawk, buildVulture, buildStellersJay,
   buildDeerBuck, buildFox, buildCoyote, buildCougar, buildRabbit, buildVole, buildJackrabbit, buildTurkey, buildGroundSquirrel, buildLizard, buildBear, buildMountainQuail,
-  animalMaterial, animalDepthMaterial, planarShadowMaterial, loadDeerMesh, loadSquirrelMesh, loadQuailMesh, loadJayMesh, driveClips, makeClipState, DEER_DRIVE,
+  animalMaterial, animalDepthMaterial, planarShadowMaterial, loadDeerMesh, loadSquirrelMesh, loadQuailMesh, loadJayMesh, driveClips, makeClipState, DEER_DRIVE, turnFollow,
   loadStellersJayMesh, loadRedtailMesh, loadVultureMesh, loadDeerBuckMesh, loadFoxMesh, loadCoyoteMesh, loadCougarMesh,
   loadRabbitMesh, loadJackrabbitMesh, loadVoleMesh, loadRavenGroundMesh, loadTurkeyMesh, loadGroundSquirrelMesh, loadLizardMesh, loadBearMesh,
   loadMountainQuailMesh, RAVEN_GROUND, hasAnim2, antlerState, SEASON_MONTH } from './animalModels.js';
@@ -459,6 +459,10 @@ const FG_SEEN = { [TK]: 25, [GS]: 15, [LZ]: 3 };   // m from the player: the fie
 // call's carry is alarmed for ALARM_T s, and an alarmed animal goes to cover or flees as if the player were at its
 // flee radius while it is within ALARM_REACT_R m of it.
 const ALERT_MAX = 120, ALARM_NEAR = 120, ALARM_T = 8, ALARM_COOL = 12, ALARM_REACT_R = 150, DEER_FLEE = 35;   // ALARM_NEAR: a watcher calls at a predator this close (and noticed), not one it merely sees far off
+// A deer's turn (drSteer): at most w rad/s walking and fast fleeing; it walks on at full speed within go rad of its way,
+// slows past it and stands to step round from stop rad (about 80 degrees). Standing, it steps round at slow rad/s to face
+// a threat it is alert to more than face rad off, and, grazing, takes a new heading about every 1/graze s.
+const DEER_TURN = { w: 2.2, fast: 6, go: 0.5, stop: 1.4, slow: 1.2, face: 0.7, graze: 0.07 };
 // AI hunters (2026-10-27): the threat an animal reacts to is the nearest predator of it that it notices: the player (at
 // notice[sp], as before) or an AI hunter, an animal whose species hunts it (games.json relations.predation), not bedded
 // or up a tree, within HUNT.r m of the player (huntersOf, rebuilt every HUNT.every s), noticed at perception.json
@@ -1522,6 +1526,7 @@ export class Animals {
       hopU: 1, hopX: 0, hopZ: 0, hopDX: 0, hopDZ: 0, hopH: 0,         // scrub-jay ground hop
       hFrac: 0.5,                                                      // Steller's jay: perch height in the crown (fraction of the tree)
       e2: 0, e3: 0, vis: 1, culled: false, next2: 0, cool: 0, zig: 0, zigT: 0,   // mammals (aAnim2.z, .w; hidden; pounce lift)
+      wy: NaN,                                                          // deer: the heading a standing deer steps round to (drUpdate)
       u1: 0.5, u2: 0.5, u3: 0.5, young: 0,                             // buck: antler calendar jitter, forked-horn
       task: 0, acorn: null, carry: 0, ep: -1, bx: 0, bz: 0, cid: null, work: 0,   // acorn game collector
       raidOak: null, raidH: 0, fleeOak: null, offT: 0, eatT: 0, guard: null, mob: null, mobT: 0, dive: 0,   // v4: raids, guards, mobbing
@@ -2486,6 +2491,16 @@ export class Animals {
     const can = this.tile.canopy.at(x, -z) / 100;
     return c === 5 ? 1 : c === 9 ? 0.9 : c === 1 ? 0.95 - can : c === 6 ? 0.5 : c === 3 ? 0.35 - can * 0.2 : 0.2;
   }
+  // Turn a deer toward `want` (rate k /s, at most DEER_TURN.w rad/s, `fast` when fleeing) and return how much of its
+  // walk to keep: one facing more than DEER_TURN.go off its way slows, and past DEER_TURN.stop turns on the spot first,
+  // stepping round (animalModels.js driveClips' turn), as a deer does, rather than crabbing off sideways while it spins.
+  drSteer(a, want, k, dt, fast, wMax = fast ? DEER_TURN.fast : DEER_TURN.w) {
+    const e = wrapAngle(want - a.yaw), m = wMax * dt;
+    let s = e * Math.min(1, dt * (fast ? Math.max(k, 8) : k)); if (s > m) s = m; else if (s < -m) s = -m;
+    a.yaw += s;
+    const ae = Math.abs(e);
+    return ae <= DEER_TURN.go ? 1 : ae >= DEER_TURN.stop ? 0 : (DEER_TURN.stop - ae) / (DEER_TURN.stop - DEER_TURN.go);
+  }
   drUpdate(a, dt, px = 1e7, py = 1e7, pz = 1e7) {
     const r = a.rng, g = a.group, H = this.heights, hr = this.hour;
     // the player: alert (head up, standing) when noticed within ALERT_MAX; off at a trot when within DEER_FLEE and
@@ -2514,7 +2529,7 @@ export class Animals {
       else if (g.leader === a && g.pilot) {   // piloted: to the player's point, at a trot when far behind it (pilot above)
         const ex = g.pilot.x - a.x, ez = g.pilot.z - a.z, d = Math.hypot(ex, ez);
         if (d < 2.5) { if (a.state === D_WALK) { a.state = D_GRAZE; a.t = 4 + r() * 8; } }
-        else { a.state = D_WALK; speed = Math.min(8, 0.6 + d * 0.3); a.x += ex / d * speed * dt; a.z += ez / d * speed * dt; a.yaw += wrapAngle(Math.atan2(ex, ez) - a.yaw) * Math.min(1, dt * 3); }   // up to a run when the player has run ahead
+        else { a.state = D_WALK; const v = Math.min(8, 0.6 + d * 0.3); speed = v * this.drSteer(a, Math.atan2(ex, ez), 3, dt, v > 3); a.x += ex / d * speed * dt; a.z += ez / d * speed * dt; }   // up to a run when the player has run ahead
       } else if (g.leader === a) {
         if (a.state !== D_WALK && a.t <= 0) {   // next waypoint: the most open of a few spots 40-110 m off, within 160 m of home
           let best = -2;
@@ -2531,7 +2546,7 @@ export class Animals {
         if (a.state === D_WALK) {
           const ex = g.wx - a.x, ez = g.wz - a.z, d = Math.hypot(ex, ez);
           if (d < 1) { a.state = D_GRAZE; a.t = 4 + r() * 8; }
-          else { speed = (g.gallopT || 0) > 0 ? 11 : g.fleeT > 0 ? 4 : 1.1; a.x += ex / d * speed * dt; a.z += ez / d * speed * dt; a.yaw += wrapAngle(Math.atan2(ex, ez) - a.yaw) * Math.min(1, dt * 2); }
+          else { speed = ((g.gallopT || 0) > 0 ? 11 : g.fleeT > 0 ? 4 : 1.1) * this.drSteer(a, Math.atan2(ex, ez), 2, dt, g.fleeT > 0); a.x += ex / d * speed * dt; a.z += ez / d * speed * dt; }
         }
       } else {   // walking: single file behind the leader; grazing: spread around it
         const L = g.leader || a, walking = L.state === D_WALK;   // a herd can lose its leader; follow yourself
@@ -2543,10 +2558,15 @@ export class Animals {
         const ex = tx - a.x, ez = tz - a.z, d = Math.hypot(ex, ez);
         if (d > (a.state === D_WALK ? 0.6 : 2.5)) {
           a.state = D_WALK; speed = Math.min(g.pilot ? 8 : (g.gallopT || 0) > 0 ? 11.5 : g.fleeT > 0 ? 4.5 : 1.6, 0.4 + d * 0.3);   // a piloted or fleeing herd keeps up, at a run when strung out
+          speed *= this.drSteer(a, Math.atan2(ex, ez), 3, dt, g.fleeT > 0 || speed > 3);
           a.x += ex / d * speed * dt; a.z += ez / d * speed * dt;
-          const want = Math.atan2(ex, ez); a.yaw += wrapAngle(want - a.yaw) * Math.min(1, dt * 3);
         } else a.state = D_GRAZE;
       }
+      if (a.state === D_GRAZE && speed === 0 && a.pose < 0.3) {   // standing: steps round to face a threat it is alert to; grazing, now and then a new heading
+        if (alertNow && Math.abs(wrapAngle(Math.atan2(px - a.x, pz - a.z) - a.yaw)) > DEER_TURN.face) a.wy = Math.atan2(px - a.x, pz - a.z);
+        else if (!alertNow && a.wy !== a.wy && r() < dt * DEER_TURN.graze) a.wy = a.yaw + (r() - 0.5) * 2.4;
+        if (a.wy === a.wy) { this.drSteer(a, a.wy, 3, dt, false, DEER_TURN.slow); if (Math.abs(wrapAngle(a.wy - a.yaw)) < 0.05) a.wy = NaN; }
+      } else a.wy = NaN;
       a.flick = damp(a.flick, a.state === D_GRAZE && !alertNow ? 1 : 0, 2, dt);   // alert: head up
     }
     a.amp = damp(a.amp, speed > 0.05 ? 1 : 0, 5, dt); a.spd = speed;   // spd: the skinned deer's clip choice (driveClips)
@@ -4202,15 +4222,16 @@ export class Animals {
         a.fly = damp(a.fly, a.air, 3, dt);
         grow = 1 + FLY_GROW * a.fly * clamp01((Math.sqrt(d2) - FLY_NEAR) / (FLY_FAR - FLY_NEAR));
       }
-      e.set(a.pitch, a.yaw, a.roll, 'YXZ'); q.setFromEuler(e); p.set(a.x, a.y, a.z); s.setScalar(a.size * SPECIES[sp].scale * grow * a.vis);
+      // the skinned models (deer, buck) step round a turn and are drawn a beat behind it (animalModels.js turnFollow)
+      const sk = this.drawn[sp]?.model?.skin, dyaw = sk ? turnFollow(DEER_DRIVE, a.cs ||= makeClipState(), a.yaw, a.spd || 0, dt) : a.yaw;
+      e.set(a.pitch, dyaw, a.roll, 'YXZ'); q.setFromEuler(e); p.set(a.x, a.y, a.z); s.setScalar(a.size * SPECIES[sp].scale * grow * a.vis);
       m.compose(p, q, s); m.toArray(mesh.instanceMatrix.array, o * 16);
       const an = mesh.geometry.attributes.aAnim.array;
       an[o * 4] = a.phase % TAU; an[o * 4 + 1] = a.amp; an[o * 4 + 2] = a.pose; an[o * 4 + 3] = a.flick;
       const a2 = this.anim2[sp];
       if (a2) { this.extra(a, dt); a2[o * 4] = a.e0; a2[o * 4 + 1] = a.e1; a2[o * 4 + 2] = a.e2; a2[o * 4 + 3] = sp === QU || sp === MQ || sp === TK ? a.variant : a.e3; }
-      // the skinned models (deer, buck): clip and phase from the speed, pose and flick (animalModels.js driveClips)
-      const sk = this.drawn[sp]?.model?.skin;
-      if (sk) driveClips(sk, DEER_DRIVE, a.cs ||= makeClipState(), a.spd || 0, a.pose, a.flick, dt, this.clip[sp], o);
+      // the skinned models (deer, buck): clip and phase from the speed, pose, flick and turn (animalModels.js driveClips)
+      if (sk) driveClips(sk, DEER_DRIVE, a.cs, a.spd || 0, a.pose, a.flick, dt, this.clip[sp], o);
     }
     // acorn game v4: the families' defence of their granaries
     if (this.game?.active) this.defend(); else if (this.threats.size) this.threats.clear();

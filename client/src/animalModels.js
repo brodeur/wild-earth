@@ -1252,45 +1252,99 @@ void main() { gl_FragColor = vec4(0.02, 0.025, 0.02, opacity * vFade); }`,
 // species would pass its own table.
 export const DEER_DRIVE = {
   idle: ['Idle', 'Idle_2'], relax: 'Idle_Headlow', graze: 'Eating', walk: 'Walk', run: 'Gallop', bed: 'bed', alert: 'Idle',
-  runAt: 3.5, walkAt: 2.8, walkMaxHz: 2.6, runHz: [1.3, 2.8], blend: { bed: 1.0, graze: 0.5, gait: 0.3, idle: 0.5 },
+  runAt: 3.5, walkAt: 2.8, walkMaxHz: 2.6, runHz: [1.3, 2.8], blend: { bed: 1.0, graze: 0.5, gait: 0.3, idle: 0.5, turn: 0.2, turnOut: 0.5 },
+  // The stepping turn (owner, 2026-10-29: "when a deer rotates or turns in place it should move its legs and step for its
+  // torso to move"). Standing (under 0.08 m/s) and turning faster than `on` rad/s, the deer steps: the Walk clip over the
+  // standing clip it came from (idle, grazing or alert), at `amp` of its stride (0.4 for a slow turn, 0.6 at 2 rad/s and
+  // over), the step rate from the hooves' ground travel round the turn (`r` m from the turning centre to a hoof: a radian
+  // of turn moves a hoof r m, a step covers amp x the Walk's 0.65 m stride), held to `hz`. It goes back to standing once
+  // the turn has been under `off` for `hold` s (the step under way finishes), so it does not flicker at the threshold.
+  // The drawn body follows the legs (turnFollow): its yaw lags the control yaw by `lag` s, never more than `maxLag` rad,
+  // fully under lagV[0] m/s and not at all from lagV[1] (a walking or running body faces where it goes).
+  turn: { on: 0.45, off: 0.2, hold: 0.35, r: 0.42, amp: [0.4, 0.6], hz: [0.7, 2.4], lag: 0.15, maxLag: 0.44, lagV: [0.3, 1.2], rateK: 12, maxRate: 8 },
 };
 if (typeof globalThis !== 'undefined') globalThis.__weDeerDrive = DEER_DRIVE;   // debugging: thresholds, rates, force
-export function makeClipState() { return { cur: -1, prev: 0, pA: 0, pB: 0, blend: 0, seed: Math.random(), kind: '' }; }
-// kind: what the current clip is for (idle, graze, bed, walk, run), for the hysteresis and the blend time
-function pickClip(D, st, speed, pose, flick) {
+export function makeClipState() { return { cur: -1, prev: 0, pA: 0, pB: 0, blend: 0, seed: Math.random(), kind: '', kindB: '', tBlend: 0.3, y0: NaN, dy: 0, wr: 0, tq: 0, th: 0 }; }
+const standKind = (flick) => flick > 0.5 ? 'graze' : flick < -0.15 ? 'alert' : 'idle';
+// kind: what the current clip is for (idle, graze, bed, walk, run, turn), for the hysteresis and the blend time
+function pickClip(D, st, speed, pose, flick, dt) {
   if (D.force) return D.force;   // debugging: __weDeerDrive.force = 'bed' holds every deer in one clip
-  if (pose > 0.5) return 'bed';
-  if (speed > D.runAt || (st.kind === 'run' && speed > D.walkAt)) return 'run';
-  if (speed > 0.08) return 'walk';
-  if (flick > 0.5) return 'graze';
-  if (flick < -0.15) return 'alert';
-  return 'idle';
+  if (pose > 0.5) { st.tq = 0; return 'bed'; }
+  if (speed > D.runAt || (st.kind === 'run' && speed > D.walkAt)) { st.tq = 0; return 'run'; }
+  if (speed > 0.08) { st.tq = 0; return 'walk'; }
+  const T = D.turn;
+  if (T) {
+    if (Math.abs(st.wr) > (st.kind === 'turn' || st.kind === 'walk' ? T.off : T.on)) st.tq = T.hold; else st.tq -= dt;   // a walk that stops mid-turn steps on
+    if (st.tq > 0) return 'turn';
+  }
+  return standKind(flick);
+}
+// The inverse of the blend's ease (smoothstep): the blend parameter whose eased weight is y.
+const unEase = y => 0.5 - Math.sin(Math.asin(1 - 2 * Math.min(1, Math.max(0, y))) / 3);
+// The yaw the body is drawn at, and the turn rate the drive steps to (st.wr, rad/s, smoothed), from the control yaw
+// (flight.yaw for the player, a.yaw for the AI) each frame. Call it before driveClips. The control yaw is untouched;
+// only the drawn body lags (D.turn: lag, maxLag, lagV). A jump of over 1.2 rad in a frame (a placement) snaps.
+export function turnFollow(D, st, yaw, speed, dt) {
+  const T = D.turn;
+  if (!T || st.y0 !== st.y0 || !(dt > 0)) { st.y0 = yaw; st.dy = yaw; st.wr = 0; return yaw; }
+  let d = yaw - st.y0; d = Math.atan2(Math.sin(d), Math.cos(d)); st.y0 = yaw;
+  if (Math.abs(d) > 1.2) { st.dy = yaw; st.wr = 0; return yaw; }
+  const raw = Math.max(-T.maxRate, Math.min(T.maxRate, d / dt));
+  st.wr = raw + (st.wr - raw) * Math.exp(-T.rateK * dt);
+  const k = Math.min(1, Math.max(0, (T.lagV[1] - speed) / (T.lagV[1] - T.lagV[0])));
+  if (k <= 0) { st.dy = yaw; return yaw; }
+  let e = st.dy - yaw; e = Math.atan2(Math.sin(e), Math.cos(e)) * Math.exp(-dt / (T.lag * k));
+  const m = T.maxLag * k; if (e > m) e = m; else if (e < -m) e = -m;
+  st.dy = yaw + e;
+  return st.dy;
 }
 export function driveClips(skin, D, st, speed, pose, flick, dt, out, o) {
-  const kind = pickClip(D, st, speed, pose, flick);
-  const C = skin.clip, T = skin.table;
+  const kind = pickClip(D, st, speed, pose, flick, dt);
+  const C = skin.clip, T = skin.table, TN = D.turn;
   if (kind !== st.kind) {
-    const name = kind === 'idle' ? D.idle[Math.floor(st.seed * D.idle.length) % D.idle.length] : D[kind];
-    const next = C[name] ?? 0;
-    if (st.cur >= 0 && next !== st.cur) {
-      st.prev = st.cur; st.pB = st.pA; st.blend = 1; st.kindB = st.kind;
+    const nameOf = k => k === 'idle' ? D.idle[Math.floor(st.seed * D.idle.length) % D.idle.length] : k === 'turn' ? D.walk : D[k];
+    const next = C[nameOf(kind)] ?? 0, fromTurn = st.kind === 'turn';
+    const tB = () => D.blend[kind === 'bed' || st.kind === 'bed' ? 'bed' : fromTurn ? 'turnOut' : kind === 'turn' ? 'turn' : kind === 'graze' || st.kind === 'graze' ? 'graze' : kind === 'walk' || kind === 'run' ? 'gait' : 'idle'];
+    if (st.blend > 0 && next === st.prev && next !== st.cur) {
+      // back to the clip it is leaving (out of a turn to the standing clip it stepped over, or a change undone mid-blend):
+      // swap the slots, each clip keeping its phase and the outgoing one fading from the share it had
+      st.prev = st.cur; const p = st.pA; st.pA = st.pB; st.pB = p; st.blend = 1 - st.blend; st.kindB = st.kind; st.tBlend = tB();
+    } else if (st.cur >= 0 && next !== st.cur) {
+      st.prev = st.cur; st.pB = st.pA; st.kindB = st.kind;
+      st.blend = fromTurn ? 1 - st.blend : 1;   // out of a turn the Walk leaves from the share it had
       // a gait change keeps the left fore hoof where it is in the stride
       const a = T[st.cur], b = T[next];
       st.pA = a.stride_m && b.stride_m ? ((st.pA - (a.touchdown || 0) + (b.touchdown || 0)) % 1 + 1) % 1 : st.seed;
-      st.tBlend = D.blend[kind === 'bed' || st.kind === 'bed' ? 'bed' : kind === 'graze' || st.kind === 'graze' ? 'graze' : kind === 'walk' || kind === 'run' ? 'gait' : 'idle'];
+      st.tBlend = tB();
     } else if (st.cur < 0) { st.pA = st.seed; st.blend = 0; }
+    else if (kind === 'turn') {   // from the walk (the same clip): the standing clip comes in under it
+      if (st.blend < 0.001 || st.prev === st.cur) { const sk = standKind(flick); st.prev = C[nameOf(sk)] ?? 0; st.pB = st.seed; st.kindB = sk; st.blend = 0; }
+      st.tBlend = D.blend.turn;
+    } else if (fromTurn) st.tBlend = D.blend.gait;   // into the walk (the same clip): the standing clip fades
     st.cur = next; st.kind = kind;
   }
-  // phases: the current clip's by distance (a gait) or on the clock (a loop); the old one goes on the same way
+  // the turn's step: amplitude and rate from the turn rate (D.turn above)
+  let tAmp = 1;
+  if (kind === 'turn' || st.kindB === 'turn') {
+    const w = Math.abs(st.wr), u = Math.min(1, Math.max(0, (w - TN.on) / (2 - TN.on))), stride = T[C[D.walk] ?? 0].stride_m || 0.65;
+    tAmp = TN.amp[0] + (TN.amp[1] - TN.amp[0]) * u;
+    st.th = Math.min(TN.hz[1], Math.max(TN.hz[0], w * TN.r / (tAmp * stride)));
+  }
+  // phases: the current clip's by distance (a gait), by the turn (a stepping turn) or on the clock (a loop); the old one goes on the same way
   const rate = (c, k) => {
+    if (k === 'turn') return st.th;
     if (c.stride_m) {
       if (k === 'run') return Math.min(D.runHz[1], Math.max(D.runHz[0], speed / c.stride_m));
-      return Math.min(D.walkMaxHz, speed / c.stride_m);
+      return Math.min(D.walkMaxHz, Math.max(speed, TN ? Math.abs(st.wr) * TN.r : 0) / c.stride_m);   // a tight turn at a walk steps quicker
     }
     return c.duration > 0 ? 1 / c.duration : 0;
   };
   st.pA = (st.pA + dt * rate(T[st.cur], kind)) % 1;
-  if (st.blend > 0) { st.pB = (st.pB + dt * rate(T[st.prev], st.kindB)) % 1; st.blend = Math.max(0, st.blend - dt / (st.tBlend || 0.3)); }
+  if (kind === 'turn') {   // the standing clip stays under the Walk at 1 - amp
+    const bt = unEase(1 - tAmp), s = dt / (st.tBlend || 0.2);
+    st.blend = st.blend > bt ? Math.max(bt, st.blend - s) : Math.min(bt, st.blend + s);
+    st.pB = (st.pB + dt * rate(T[st.prev], st.kindB)) % 1;
+  } else if (st.blend > 0) { st.pB = (st.pB + dt * rate(T[st.prev], st.kindB)) % 1; st.blend = Math.max(0, st.blend - dt / (st.tBlend || 0.3)); }
   const w = st.blend * st.blend * (3 - 2 * st.blend);   // eased
   out[o * 4] = st.cur; out[o * 4 + 1] = st.pA; out[o * 4 + 2] = st.prev + Math.min(st.pB, 0.9999); out[o * 4 + 3] = w;
 }

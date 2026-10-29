@@ -1,6 +1,6 @@
 import * as THREE from 'three';
 import { trunkAt } from './animals.js';
-import { animalMaterial, animalDepthMaterial, hasAnim2, antlerState, driveClips, makeClipState, DEER_DRIVE } from './animalModels.js';
+import { animalMaterial, animalDepthMaterial, hasAnim2, antlerState, driveClips, makeClipState, DEER_DRIVE, turnFollow } from './animalModels.js';
 import { addCaster } from './shadows.js';
 import { HerdMarks } from './herdMarks.js';
 import { HerdSilhouette } from './herdSilhouette.js';
@@ -528,7 +528,10 @@ export class GroundControl {
     const b = this.body; if (!b) return;
     const m = b.mesh, ps = this.pose, P = this.flight.pos, S = this.S;
     m.visible = true;
-    const yawA = this.flight.yaw + Math.PI;
+    // the skinned deer steps round a turn and its body follows the legs a beat later (animalModels.js turnFollow,
+    // DEER_DRIVE.turn): the drawn yaw lags flight.yaw; the control yaw, the camera and the look are untouched
+    const sk = b.model.skin, sv = this.inAir ? Math.max(this.spd || 0, DEER_DRIVE.runAt + 0.1) : (this.spd || 0);
+    const yawA = (sk ? turnFollow(DEER_DRIVE, this.cs ||= makeClipState(), this.flight.yaw, sv, dt) : this.flight.yaw) + Math.PI;
     if (S.rig === 'lizard' && this.mode === 'ground') {   // flat on the ground it stands on (a rock top, the slope)
       const sq = this.sq, d = 0.06, top = P.y + 0.3;
       const nx = sq.surface(P.x - d, P.z, top) - sq.surface(P.x + d, P.z, top), nz = sq.surface(P.x, P.z - d, top) - sq.surface(P.x, P.z + d, top);
@@ -544,9 +547,9 @@ export class GroundControl {
     this._m.toArray(m.instanceMatrix.array, 0); m.instanceMatrix.needsUpdate = true;
     const an = m.geometry.attributes.aAnim; an.array[0] = ps.phase % TAU; an.array[1] = ps.amp; an.array[2] = ps.pose; an.array[3] = ps.flick; an.needsUpdate = true;
     if (b.rig) { const a2 = m.geometry.attributes.aAnim2; a2.array[0] = ps.e0; a2.array[1] = ps.e1; a2.array[2] = ps.e2; a2.array[3] = ps.e3; a2.needsUpdate = true; }
-    if (b.model.skin) {   // the skinned deer: a jump runs the gallop in the air
-      const ac = m.geometry.attributes.aClip, v = this.inAir ? Math.max(this.spd || 0, DEER_DRIVE.runAt + 0.1) : (this.spd || 0);
-      driveClips(b.model.skin, DEER_DRIVE, this.cs ||= makeClipState(), v, Math.max(0, ps.pose) / (this.modelPoseMax() || 1), ps.flick, dt, ac.array, 0); ac.needsUpdate = true;
+    if (sk) {   // the skinned deer: a jump runs the gallop in the air
+      const ac = m.geometry.attributes.aClip;
+      driveClips(sk, DEER_DRIVE, this.cs, sv, Math.max(0, ps.pose) / (this.modelPoseMax() || 1), ps.flick, dt, ac.array, 0); ac.needsUpdate = true;
     }
     if (ps.phase > 1e4) ps.phase -= TAU * 1000;
   }
