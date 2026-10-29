@@ -238,7 +238,9 @@ def ept_nodes(tile: Tile, ept: dict, max_depth: int | None = None, margin_m: flo
 
 def read_node(base: str, key: str, session: requests.Session | None = None):
     """One EPT chunk decoded in memory: x, y (EPSG:3857), z, classification, return number, number of
-    returns, as numpy arrays. Noise and withheld points are dropped."""
+    returns and intensity (uint16, the sensor's raw return strength, uncalibrated between flight lines), as
+    numpy arrays. Noise and withheld points are dropped. A source without the Intensity dimension (every
+    3DEP EPT project read so far has it) gives zeros, which lidar.lidar_micro reports and writes as 128."""
     import laspy
     s = session or _session()
     last = None
@@ -261,5 +263,10 @@ def read_node(base: str, key: str, session: requests.Session | None = None):
         keep &= ~np.asarray(las.withheld, dtype=bool)
     except Exception:  # noqa: BLE001
         pass
+    try:
+        inten = np.asarray(las.intensity, dtype=np.uint16)[keep]
+    except Exception:  # noqa: BLE001
+        inten = np.zeros(int(keep.sum()), np.uint16)
     return (np.asarray(las.x)[keep], np.asarray(las.y)[keep], np.asarray(las.z, dtype=np.float32)[keep], cls[keep],
-            np.asarray(las.return_number, dtype=np.uint8)[keep], np.asarray(las.number_of_returns, dtype=np.uint8)[keep])
+            np.asarray(las.return_number, dtype=np.uint8)[keep], np.asarray(las.number_of_returns, dtype=np.uint8)[keep],
+            inten)

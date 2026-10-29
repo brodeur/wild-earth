@@ -2,9 +2,11 @@
 
     python -m pipeline.lidar --tile utm10n_680_4280              # everything (hours: the point cloud)
     python -m pipeline.lidar --tile utm10n_680_4280 --stage grid  # only stream the point cloud to 1 m grids
+    python -m pipeline.lidar --tile utm10n_680_4280 --stage products --keep-grids   # then the products alone
     python -m pipeline.build_tile --tile utm10n_680_4280 --steps lidar   # same, then the manifest
 
-Stages, each skipped when its output exists (unless --force):
+Stages, each skipped when its output exists (unless --force; an explicit --stage grid always runs, resuming
+from the done nodes of its cache, and --force there clears only that cache, not the DEM):
 
   dem       terrain/dem_1m.tif: the 1 m bare-earth DEM of the newest 3DEP collection covering the
             tile (fetch_lidar.find_dem_project), cut from its 10 km product file, which is the tile's
@@ -13,9 +15,11 @@ Stages, each skipped when its output exists (unless --force):
             resolution and the point-cloud check below measures any shift). Pipeline only.
   grid      The point cloud of the matching EPT project, every octree node overlapping the tile,
             streamed chunk by chunk (decoded in memory, never written) by a process pool and reduced
-            to 1 m grids on the tile: highest return (DSM), ground (class 2) sum and count, point count
-            and multi-return count. Grids live in _cache/lidar_grid/ as memmaps with a list of done
-            nodes, so an interrupted run resumes; they are deleted once the products are written.
+            to 1 m grids on the tile: highest return (DSM), ground (class 2) sum, sum of squares, count
+            and intensity sum, point count and multi-return count. Grids live in _cache/lidar_grid_v2/
+            (GRID_VERSION; the name changes whenever the fields do, so a cache from an older layout is
+            never read into a newer one) as memmaps with a list of done nodes, so an interrupted run
+            resumes; they are deleted once the products are written (unless --keep-grids).
   products  terrain/dsm_1m.tif (highest non-noise return, float32 m; pipeline only)
             vegetation/chm_1m.tif (canopy height model DSM - ground, uint16 cm; pipeline only)
             terrain/lidar_dtm_check.tif (10 m mean of point-cloud ground minus the 1 m DEM, float32)
@@ -23,6 +27,8 @@ Stages, each skipped when its output exists (unless --force):
               tree cover >= 4 m, shrub cover 0.5-4 m)
             client/trees_lidar.bin (one record per crown; see TREES_FORMAT)
             client/terrain_detail.png (2 m height residual against the client's 5 m grid)
+            client/lidar_micro.png (4 m RGB: ground-return intensity, sub-metre ground roughness, the
+              multi-return share of low standing vegetation; what the 1 m surface loses)
             terrain/roughness_10m.tif (std of the 1 m DEM about a quadratic per 10 m cell; ground.py)
 
 The CHM's ground is the 1 m DEM plus the median point-cloud-ground minus DEM offset (the DEM is the
@@ -65,6 +71,21 @@ SMOOTH_SIGMA = 1.0              # CHM smoothing for maxima, px (m)
 CROWN_EDGE = 0.5                # a crown's pixels are its watershed region down to this share of its height
 DETAIL_RES = 2
 DETAIL_UNIT = 0.04               # m per step of client/terrain_detail.png
+# client/lidar_micro.png: 4 m, 2500 px (the 1 m grids averaged 4 x 4). At 2 m it was 52 MB per tile and 75 MB
+# of RGB in the client (intensity and roughness are near noise to a PNG coder); 4 m is a quarter of both.
+MICRO_RES = 4
+MICRO_ROUGH_STEPS_PER_CM = 4    # G = ground std in cm * 4, so 0-63.75 cm
+MICRO_MIN_GROUND = 3            # a 4 m pixel needs this many ground returns for a roughness of its own
+MICRO_LOW_CHM = 1.0             # B counts only cells whose canopy height is under this (not a crown)
+# The point-cloud grid cache: the directory carries the field layout's version, so a cache written with
+# other fields (v1: dsm, gsum, gcnt, npts, nmulti) is never opened as this one; v2 adds, for
+# client/lidar_micro.png, the ground sum of squares and intensity sum, and each ground return's height above
+# the 1 m DEM surface there (bilinear between its pixel centres) summed, squared and counted (rsum, rsum2,
+# rcnt; float32 is ample for residuals of centimetres to metres).
+GRID_VERSION = 2
+GRID_DIR = f"lidar_grid_v{GRID_VERSION}"
+GRID_FIELDS = {"dsm": "float32", "gsum": "float64", "gsum2": "float64", "gcnt": "uint16", "isum": "float64",
+               "rsum": "float32", "rsum2": "float32", "rcnt": "uint16", "npts": "uint16", "nmulti": "uint16"}
 ROUGH_RES = 10
 CELL_M = 100                    # crown index cell
 # Half-widths (m) around OSM bridge ways within which no crown stands: the towers and cables sit beside
@@ -156,27 +177,46 @@ def build_dem_1m(tile: Tile, force=False) -> dict:
 _W: dict = {}
 
 
-def _worker_init(base: str, crs: str, bounds: tuple) -> None:
+def _worker_init(base: str, crs: str, bounds: tuple, dem_npy: str) -> None:
     from pyproj import Transformer
     from .fetch_lidar import _session
     _W.update(base=base, session=_session(), bounds=bounds,
-              to_utm=Transformer.from_crs("EPSG:3857", crs, always_xy=True))
+              to_utm=Transformer.from_crs("EPSG:3857", crs, always_xy=True),
+              dem=np.load(dem_npy, mmap_mode="r"))       # read-only memmap: the workers share its pages
+
+
+def _dem_residual(ux: np.ndarray, uy: np.ndarray, z: np.ndarray) -> tuple[np.ndarray, np.ndarray]:
+    """Each point's height above the 1 m DEM interpolated bilinearly between its pixel centres (x0 + c + 0.5,
+    y1 - r - 0.5), and whether all four pixels had data. Clamped at the tile's outer half metre."""
+    dem = _W["dem"]
+    x0, y0, x1, y1 = _W["bounds"]
+    fc, fr = ux - x0 - 0.5, (y1 - uy) - 0.5
+    c0 = np.clip(np.floor(fc), 0, N1 - 2).astype(np.int64)
+    r0 = np.clip(np.floor(fr), 0, N1 - 2).astype(np.int64)
+    tc = np.clip(fc - c0, 0, 1)
+    tr = np.clip(fr - r0, 0, 1)
+    z00, z01, z10, z11 = dem[r0, c0], dem[r0, c0 + 1], dem[r0 + 1, c0], dem[r0 + 1, c0 + 1]
+    ok = (z00 != NODATA) & (z01 != NODATA) & (z10 != NODATA) & (z11 != NODATA)
+    surf = (z00 * (1 - tc) + z01 * tc) * (1 - tr) + (z10 * (1 - tc) + z11 * tc) * tr
+    return (z - surf).astype(np.float64), ok
 
 
 def _reduce(idx: np.ndarray, vals: np.ndarray | None, op):
+    """Per distinct cell index: (index, op over its values, count). vals may be 2-D (points x fields),
+    reduced per column, so several sums share one sort."""
     o = np.argsort(idx, kind="stable")
     s = idx[o]
     starts = np.flatnonzero(np.r_[True, s[1:] != s[:-1]])
     u = s[starts]
     cnt = np.diff(np.r_[starts, len(s)]).astype(np.int32)
-    red = op.reduceat(vals[o], starts) if vals is not None else None
+    red = op.reduceat(vals[o], starts, axis=0) if vals is not None else None
     return u, red, cnt
 
 
 def _grid_node(key: str):
     from .fetch_lidar import read_node
     try:
-        x, y, z, cls, rn, nr = read_node(_W["base"], key, _W["session"])
+        x, y, z, cls, rn, nr, inten = read_node(_W["base"], key, _W["session"])
     except Exception as e:  # noqa: BLE001
         return key, None, str(e)[:200]
     if len(z) == 0:
@@ -189,23 +229,31 @@ def _grid_node(key: str):
     if not ok.any():
         return key, (len(z), None), None
     idx = (row[ok] * N1 + col[ok]).astype(np.int64)
-    z, cls, nr = z[ok], cls[ok], nr[ok]
+    z, cls, nr, inten, ux, uy = z[ok], cls[ok], nr[ok], inten[ok], ux[ok], uy[ok]
     u, zmax, cnt = _reduce(idx, z, np.maximum)
     m = nr > 1
     um, _, cm = _reduce(idx[m], None, None) if m.any() else (np.empty(0, np.int64), None, np.empty(0, np.int32))
     g = cls == 2
     if g.any():
-        ug, gs, gc = _reduce(idx[g], z[g].astype(np.float64), np.add)
+        # ground z, z squared (float64: z is ~1000 m and the spread wanted is centimetres, so the sum of
+        # squares keeps ~1e-9 m2 against the ~1e-4 m2 it measures) and intensity, in one sort
+        zg = z[g].astype(np.float64)
+        # and the height above the 1 m DEM surface (zero weight where the DEM has no data), counted apart
+        r, rok = _dem_residual(ux[g], uy[g], zg)
+        r = np.where(rok, r, 0.0)
+        ug, red, gc = _reduce(idx[g], np.stack([zg, zg * zg, inten[g].astype(np.float64), r, r * r,
+                                                rok.astype(np.float64)], 1), np.add)
+        gsums = red[:, :5].T.copy()                     # gsum, gsum2, isum, rsum, rsum2
+        rc = np.round(red[:, 5]).astype(np.int32)
     else:
-        ug, gs, gc = np.empty(0, np.int64), np.empty(0), np.empty(0, np.int32)
-    return key, (len(z), (u, zmax.astype(np.float32), cnt, um, cm, ug, gs, gc)), None
+        ug, gsums, rc, gc = np.empty(0, np.int64), np.empty((5, 0)), np.empty(0, np.int32), np.empty(0, np.int32)
+    return key, (len(z), (u, zmax.astype(np.float32), cnt, um, cm, ug, gsums, rc, gc)), None
 
 
 def _grids(tile: Tile, mode="r+"):
-    d = _src_cache(tile, "lidar_grid")
-    spec = {"dsm": "float32", "gsum": "float64", "gcnt": "uint16", "npts": "uint16", "nmulti": "uint16"}
+    d = _src_cache(tile, GRID_DIR)
     out = {}
-    for k, dt in spec.items():
+    for k, dt in GRID_FIELDS.items():
         p = d / f"{k}.dat"
         if not p.exists():
             mm = np.memmap(p, dtype=dt, mode="w+", shape=(N1 * N1,))
@@ -222,11 +270,17 @@ def build_grid(tile: Tile, workers: int = 10, max_depth: int | None = None, forc
     dem_meta = find_dem_project(tile)
     ept = find_ept(tile, dem_meta["chosen"]["project"], _src_cache(tile, "lidar_index"))["chosen"]
     if force:
-        shutil.rmtree(tile.dir / "_cache" / "lidar_grid", ignore_errors=True)
+        shutil.rmtree(tile.dir / "_cache" / GRID_DIR, ignore_errors=True)
     d, g = _grids(tile)
+    dem_npy = d / "dem_1m.npy"                          # the workers' copy of the 1 m DEM, for the residuals
+    if not dem_npy.exists():
+        np.save(dem_npy, _read(tile.path("terrain/dem_1m.tif")).astype(np.float32))
     state_p = d / "state.json"
     state = json.loads(state_p.read_text()) if state_p.exists() and not force else {"done": [], "failed": {}, "points": 0,
                                                                                    "points_in_tile": 0, "seconds": 0.0}
+    if state.get("fields", list(GRID_FIELDS)) != list(GRID_FIELDS):
+        raise RuntimeError(f"{d} holds fields {state['fields']}, not {list(GRID_FIELDS)}; re-run with --force")
+    state["fields"] = list(GRID_FIELDS)
     if state.get("complete") and not force:
         return state
     nodes_p = _src_cache(tile, "lidar_index") / f"nodes_{max_depth if max_depth is not None else 'all'}.json"
@@ -245,7 +299,7 @@ def build_grid(tile: Tile, workers: int = 10, max_depth: int | None = None, forc
     n_done_pts = sum(n for k, n in nodes if k in done)
     counts = dict(nodes)
     ctx = get_context("spawn")
-    with ctx.Pool(workers, initializer=_worker_init, initargs=(base, tile.crs, tile.bounds)) as pool:
+    with ctx.Pool(workers, initializer=_worker_init, initargs=(base, tile.crs, tile.bounds, str(dem_npy))) as pool:
         for i, (key, res, err) in enumerate(pool.imap_unordered(_grid_node, todo, chunksize=4)):
             if err is not None:
                 state["failed"][key] = err
@@ -253,14 +307,16 @@ def build_grid(tile: Tile, workers: int = 10, max_depth: int | None = None, forc
             n, arrs = res
             state["points"] += n
             if arrs is not None:
-                u, zmax, cnt, um, cm, ug, gs, gc = arrs
+                u, zmax, cnt, um, cm, ug, gsums, rc, gc = arrs
                 dsm = g["dsm"]
                 dsm[u] = np.maximum(dsm[u], zmax)
                 g["npts"][u] = np.minimum(g["npts"][u].astype(np.int32) + cnt, 65535)
                 if len(um):
                     g["nmulti"][um] = np.minimum(g["nmulti"][um].astype(np.int32) + cm, 65535)
                 if len(ug):
-                    g["gsum"][ug] += gs
+                    for f, v in zip(("gsum", "gsum2", "isum", "rsum", "rsum2"), gsums):
+                        g[f][ug] += v.astype(g[f].dtype)
+                    g["rcnt"][ug] = np.minimum(g["rcnt"][ug].astype(np.int32) + rc, 65535)
                     g["gcnt"][ug] = np.minimum(g["gcnt"][ug].astype(np.int32) + gc, 65535)
                 state["points_in_tile"] += int(cnt.sum())
             state["done"].append(key)
@@ -588,6 +644,130 @@ def terrain_detail(tile: Tile, dem: np.ndarray) -> dict:
             "clipped_fraction": round(float(((q < -128) | (q > 127)).mean()), 6)}
 
 
+def lidar_micro(tile: Tile, g: dict, chm: np.ndarray, multi: np.ndarray) -> dict:
+    """client/lidar_micro.png: what the point cloud knows below the 1 m surface, RGB 8-bit at MICRO_RES (4 m,
+    2500 px; row 0 north like terrain_detail, pixel centres x = 4i + 2, north = 10000 - (4j + 2)), each pixel
+    from its 4 x 4 block of the 1 m grids.
+
+    R  the mean intensity of the ground (class 2) returns, sum over the pixel's sixteen 1 m cells over their
+       count, mapped linearly from the tile's p2 .. p98 of those pixels to 0 .. 255: bare rock, gravel and
+       cut banks return strongly, wet soil, ash and dark duff weakly. Raw intensity is uncalibrated between
+       sensors, flight lines and scan channels, so it is relative within the tile only and may stripe.
+       A pixel with no ground return takes its nearest filled neighbour's value.
+    G  ground roughness: the pooled standard deviation of the ground returns' heights above the 1 m DEM
+       surface (bilinear between its pixel centres, so the slope and curvature the DEM holds are gone) about
+       their own 1 m cell's mean, in cm * 4, clamped to 255 (0 .. 63.75 cm): each cell's rsum2 - rsum^2 / n
+       summed over the sixteen cells, over their summed n - 1. What is left is the relief inside the metre that
+       the DEM smooths away: rock, clods, cut faces, tussocks, the lip of a bank. The plain deviation of
+       ground z about the cell mean (gsum2) is mostly the cell's tilt, s / sqrt(12) for slope s (on the home
+       tile its median matched that within a centimetre in every slope class, correlation with slope 0.87);
+       its percentiles are kept in the stats as with_tilt. A pixel with under MICRO_MIN_GROUND ground returns,
+       or none in a cell with two or more, takes its nearest filled neighbour's value. Heights are stored to
+       1 cm, so 0.3 cm is the floor.
+    B  the multi-return share (nmulti / npts) of the 1 m cells whose canopy height is under MICRO_LOW_CHM
+       (grass, forbs, low shrubs, litter that splits a pulse; not a crown), 0 where the CHM is 1 m or more or
+       the cell has no return, averaged over the sixteen cells, * 255. A crown's edge also scatters the second
+       echo of pulses that grazed it into the open cells beside it, so B rises in a halo round trees."""
+    from scipy.ndimage import distance_transform_edt
+    k = MICRO_RES
+    n2 = N1 // k
+    isum = np.asarray(g["isum"]).reshape(N1, N1)
+    gsum = np.asarray(g["gsum"]).reshape(N1, N1)
+    gsum2 = np.asarray(g["gsum2"]).reshape(N1, N1)
+    rsum = np.asarray(g["rsum"]).reshape(N1, N1)
+    rsum2 = np.asarray(g["rsum2"]).reshape(N1, N1)
+    rcnt = np.asarray(g["rcnt"]).reshape(N1, N1)
+    gcnt = np.asarray(g["gcnt"]).reshape(N1, N1)
+    npts = np.asarray(g["npts"]).reshape(N1, N1)
+    inten = np.zeros((n2, n2), np.float64)
+    gn = np.zeros((n2, n2), np.int32)
+    ss = np.zeros((n2, n2), np.float64)                        # about the DEM surface: G
+    ss_z = np.zeros((n2, n2), np.float64)                      # plain z, with the tilt: stats only
+    rn = np.zeros((n2, n2), np.int32)
+    dof = np.zeros((n2, n2), np.int32)
+    dof_z = np.zeros((n2, n2), np.int32)
+    low = np.zeros((n2, n2), np.float32)
+    lowc = 0                                                   # 1 m cells under MICRO_LOW_CHM with a return
+    lows = []                                                  # a 1 in 97 sample of their multi-return share
+    S = 1000                                                   # 1 m rows per strip (memmaps read in strips)
+    for r0 in range(0, N1, S):
+        r1, o0, o1 = r0 + S, r0 // k, (r0 + S) // k
+        n = gcnt[r0:r1].astype(np.int32)
+        gs = gsum[r0:r1]
+        cell_ss_z = np.maximum(np.where(n > 0, gsum2[r0:r1] - gs * gs / np.maximum(n, 1), 0.0), 0.0)
+        m = rcnt[r0:r1].astype(np.int32)
+        rs = rsum[r0:r1].astype(np.float64)
+        cell_ss = np.maximum(np.where(m > 0, rsum2[r0:r1] - rs * rs / np.maximum(m, 1), 0.0), 0.0)
+        def blk(a):
+            return a.reshape(S // k, k, n2, k).sum(axis=(1, 3))
+        inten[o0:o1] = blk(isum[r0:r1])
+        gn[o0:o1] = blk(n)
+        ss[o0:o1] = blk(cell_ss)
+        ss_z[o0:o1] = blk(cell_ss_z)
+        rn[o0:o1] = blk(m)
+        dof[o0:o1] = blk(np.maximum(m - 1, 0))
+        dof_z[o0:o1] = blk(np.maximum(n - 1, 0))
+        lo = chm[r0:r1] < MICRO_LOW_CHM
+        b = np.where(lo, multi[r0:r1], 0).astype(np.float32)       # multi is 0 where the cell has no return
+        low[o0:o1] = b.reshape(S // k, k, n2, k).mean(axis=(1, 3))
+        has = lo & (npts[r0:r1] > 0)
+        lowc += int(has.sum())
+        lows.append(np.asarray(multi[r0:r1][has][::97], np.float32))
+    del cell_ss, cell_ss_z, n, gs, m, rs
+
+    def fill(a, valid):
+        if valid.all() or not valid.any():
+            return a
+        idx = distance_transform_edt(~valid, return_distances=False, return_indices=True)
+        return a[idx[0], idx[1]]
+
+    stats = {}
+    # R
+    has_g = gn > 0
+    mean_i = np.where(has_g, inten / np.maximum(gn, 1), 0.0)
+    if has_g.any() and mean_i[has_g].max() > 0:
+        p2, p50, p98 = (float(np.percentile(mean_i[has_g], q)) for q in (2, 50, 98))
+        R = np.clip(np.round((mean_i - p2) / max(p98 - p2, 1e-6) * 255), 0, 255).astype(np.uint8)
+        R = fill(R, has_g)
+        stats["intensity"] = {"source_has_intensity": True, "p2": round(p2, 1), "p50": round(p50, 1),
+                              "p98": round(p98, 1), "ground_pixel_fraction": round(float(has_g.mean()), 4),
+                              "filled_fraction": round(float(1 - has_g.mean()), 4)}
+    else:
+        R = np.full((n2, n2), 128, np.uint8)
+        stats["intensity"] = {"source_has_intensity": False, "note": "no intensity in the source; R = 128"}
+    del inten, mean_i
+    # G
+    ok = (rn >= MICRO_MIN_GROUND) & (dof > 0)
+    okz = (gn >= MICRO_MIN_GROUND) & (dof_z > 0)
+    raw_cm = np.sqrt(ss_z[okz] / dof_z[okz]) * 100
+    cm = np.where(ok, np.sqrt(ss / np.maximum(dof, 1)), 0.0) * 100
+    G = np.clip(np.round(cm * MICRO_ROUGH_STEPS_PER_CM), 0, 255).astype(np.uint8)
+    G = fill(G, ok)
+    v = cm[ok]
+    stats["roughness_cm"] = {"p10": round(float(np.percentile(v, 10)), 2), "p50": round(float(np.percentile(v, 50)), 2),
+                             "p90": round(float(np.percentile(v, 90)), 2), "p99": round(float(np.percentile(v, 99)), 2),
+                             "clipped_fraction": round(float((v * MICRO_ROUGH_STEPS_PER_CM > 255).mean()), 5),
+                             "measured_fraction": round(float(ok.mean()), 4),
+                             "filled_fraction": round(float(1 - ok.mean()), 4),
+                             "with_tilt_p50": round(float(np.percentile(raw_cm, 50)), 2),
+                             "with_tilt_p90": round(float(np.percentile(raw_cm, 90)), 2)}
+    del ss, ss_z, rn, dof, dof_z, cm, v, raw_cm
+    # B
+    B = np.clip(np.round(low * 255), 0, 255).astype(np.uint8)
+    ls = np.concatenate(lows) if lows else np.zeros(0, np.float32)
+    stats["low_multi"] = {"low_cell_fraction": round(lowc / (N1 * N1), 4),
+                          "share_in_low_cells_p50": round(float(np.median(ls)), 3) if len(ls) else None,
+                          "share_in_low_cells_p90": round(float(np.percentile(ls, 90)), 3) if len(ls) else None,
+                          "pixels_b_over_0": round(float((B > 0).mean()), 4),
+                          "pixels_b_over_10pct": round(float((B >= 26).mean()), 4),
+                          "pixels_b_over_30pct": round(float((B >= 77).mean()), 4),
+                          "b_mean": round(float(B.mean()), 2)}
+    out = tile.path("client/lidar_micro.png")
+    Image.fromarray(np.stack([R, G, B], -1), "RGB").save(out, optimize=True)
+    stats["bytes"] = out.stat().st_size
+    return stats
+
+
 def roughness(tile: Tile, dem: np.ndarray) -> dict:
     """Std of the 1 m DEM about a least-squares quadratic within each 10 m cell (slope and curvature
     removed, so it is relief below 10 m: boulders, outcrop steps, cut banks)."""
@@ -666,6 +846,8 @@ def build_products(tile: Tile, force=False, keep_grids=False) -> dict:
     _write(tile.path("vegetation/multi_1m.tif"), np.round(multi * 255).astype(np.uint8), tile, nodata=None, predictor=2)
     stats["crowns"] = crowns(tile, chm, multi)
     log(f"products: crowns {stats['crowns']}")
+    stats["lidar_micro"] = lidar_micro(tile, g, chm, multi)
+    log(f"products: lidar micro {stats['lidar_micro']}")
     del chm, multi
     stats["terrain_detail"] = terrain_detail(tile, dem)
     log(f"products: terrain detail {stats['terrain_detail']}")
@@ -752,6 +934,24 @@ def layers(tile: Tile, dem_info: dict, stats: dict) -> dict:
                               "encoding": "float32: std of the 1 m DEM about its least-squares quadratic within the 10 m cell",
                               "source": "usgs_3dep_1m", "derived_from": ["terrain.dem_1m"], "stats": stats["roughness"]},
     }
+    if "lidar_micro" in stats:          # tiles whose grids were streamed with GRID_VERSION 2 or later
+        L["client.lidar_micro"] = {
+            "path": "client/lidar_micro.png", "kind": "raster", **grid, "pixels": N1 // MICRO_RES,
+            "resolution_m": float(MICRO_RES),
+            "encoding": f"RGB 8-bit, {N1 // MICRO_RES} px, {MICRO_RES} m, row 0 north like client.terrain_detail (pixel "
+                        f"centres at x = {MICRO_RES}i + {MICRO_RES / 2:g}, north = 10000 - ({MICRO_RES}j + {MICRO_RES / 2:g})), "
+                        f"each pixel from its {MICRO_RES} x {MICRO_RES} block of 1 m cells. R = mean intensity of the "
+                        "ground (class 2) returns, mapped linearly from the tile's p2 .. p98 (stats.intensity) to 0 .. 255, "
+                        "relative within the tile (raw intensity is uncalibrated); a pixel with no ground return takes "
+                        "the nearest filled. G = ground roughness, the standard deviation of the ground returns' heights "
+                        "above the 1 m DEM surface (terrain.dem_1m bilinear between its pixel centres, so its slope "
+                        "and curvature are removed) about their 1 m cell's mean, pooled over the block's cells with n - 1 "
+                        "each, in cm * 4, clamped to 255 (0 .. 63.75 cm); a pixel with "
+                        f"under {MICRO_MIN_GROUND} ground returns takes the nearest filled. B = multi-return share "
+                        f"(nmulti / npts) of the 1 m cells whose CHM is under {MICRO_LOW_CHM:g} m (standing low vegetation, "
+                        "not a crown), 0 where the CHM is 1 m or more or the cell has no return, averaged, * 255",
+            **pc_src, "derived_from": ["vegetation.chm_1m", "vegetation.multi_1m", "terrain.dem_1m"],
+            "for_clients": True, "stats": stats["lidar_micro"]}
     L["terrain.dem_1m"]["tile_key"] = dem_tile_name(tile)
     return L
 
@@ -829,6 +1029,12 @@ def main(argv=None) -> None:
         print(json.dumps(build_dem_1m(tile, a.force), indent=1))
     elif a.stage == "crowns":
         print(json.dumps(build_crowns(tile), indent=1))
+    elif a.stage == "grid":
+        # explicit: runs even when the products exist (a re-stream for new grid fields), resuming from the
+        # cache's done nodes; --force clears that cache only
+        build_dem_1m(tile)
+        print(json.dumps({k: v for k, v in build_grid(tile, a.workers, a.max_depth, a.force).items()
+                          if k not in ("done",)}, indent=1, default=str)[:4000])
     elif a.stage == "products":
         print(json.dumps(build_products(tile, a.force, a.keep_grids), indent=1))
     else:

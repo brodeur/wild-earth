@@ -777,8 +777,8 @@ class FineTerrain {
 //              trees, gravel on chaparral, bare and convex ground, rock on steep, concave or barren ground, pavement on
 //              the decayed roads), squared and normalised so the top material leads as the shader's top two do, times
 //              MICRO_AMP (rock 12 cm, gravel 4, tussocks 10, litter 2; pavement and water nothing)
-//   roughness  with client/lidar_micro.png: its G (the ground returns' spread about each 1 m cell) less the cell's own
-//              tilt (s / sqrt(12)) and the ranging noise (the tile's 10th percentile, 1.7 cm at home), in quadrature,
+//   roughness  with client/lidar_micro.png: its G (the ground returns' spread about the 1 m DEM surface, the slope and
+//              curvature removed by the pipeline) less the ranging noise (the tile's 10th percentile, 0.95 cm at home), in quadrature,
 //              takes rock, gravel and litter from 0.6x (smooth) up by 1x per 5 cm, to 2.2x (a 37 degree outcrop at
 //              home: 26 cm ridges); its B (the low vegetation's multi-return share) adds to the thatch weight and
 //              its amplitude (0.75x to 1.25x); its R (ground-return intensity) scales the photo's bare reading 0.75x
@@ -1083,10 +1083,11 @@ class MicroPatch {
       // intensity: bright returns are bare rock, gravel and cut banks, but dry grass is bright at 1064 nm too, so the
       // low-vegetation share takes it back
       bareK = (0.75 + 0.5 * r[0]) * (1 - 0.7 * r[2]); thatchAdd = r[2]; thatchK = 0.75 + 0.5 * r[2];
-      // roughness: G (cm x 4 -> m) less the cell's own tilt (a plane of slope s spreads s / sqrt(12) over the metre) and
-      // the ranging noise every return carries (the tile's 10th percentile, 1.7 cm on the home tile, in quadrature)
-      const sd = r[1] * 255 / 400, tilt = s / Math.sqrt(12), fl = this.lidarFloor ??= (T.manifest?.layers?.['client.lidar_micro']?.stats?.roughness_cm?.p10 ?? 2) / 100;
-      rough = Math.min(0.6 + Math.sqrt(Math.max(sd * sd - tilt * tilt - fl * fl, 0)) / 0.05, 2.2);
+      // roughness: G (cm x 4 -> m), the ground returns' spread about the 1 m DEM surface (the pipeline removes the cell's
+      // slope and curvature: docs/tile-spec.md "Lidar"), less the ranging noise every return carries (the tile's 10th
+      // percentile, 0.95 cm on the home tile, in quadrature): p50 1.7 cm reads 0.87, p90 3.1 cm 1.19, p99 6 cm 1.78
+      const sd = r[1] * 255 / 400, fl = this.lidarFloor ??= (T.manifest?.layers?.['client.lidar_micro']?.stats?.roughness_cm?.p10 ?? 1) / 100;
+      rough = Math.min(0.6 + Math.sqrt(Math.max(sd * sd - fl * fl, 0)) / 0.05, 2.2);
     } else if (H.detail) rough = 0.7 + 0.8 * smooth01(0.02, 0.1, this.residualRoughness(x, north));
     let rk = 0, gr = 0, th = 0, li = 0, dry = 1;
     if (mask?.data) {

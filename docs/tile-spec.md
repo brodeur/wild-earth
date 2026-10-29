@@ -486,6 +486,35 @@ residual rather than a normal map, because it gives the fine mesh near the playe
 ground contact for placed things) and normals follow from four taps; linear 8-bit rather than a 16-bit
 R/G split because it filters in hardware and is half the size (9 MB against 22 MB).
 
+`client/lidar_micro.png` is what the point cloud knows below the 1 m surface, for the client's
+micro-relief and near detail: RGB 8-bit, 4 m, 2500 px, row 0 the north edge like
+`client/terrain_detail.png` (pixel centres x = 4i + 2, north = 10000 - (4j + 2)), each pixel from its 4 x 4
+block of 1 m cells. (At 2 m it was 52 MB per tile and 75 MB of RGB in the client: intensity and roughness
+are close to noise for a PNG coder; 4 m is a quarter of both.) **R**
+is the mean intensity of the ground (class 2) returns, mapped linearly from the tile's p2 .. p98 of the
+pixels with ground (`stats.intensity`) to 0 .. 255: bare rock, gravel and cut banks return strongly, wet
+soil, ash and duff weakly. Raw intensity is uncalibrated between sensors, flight lines and scan channels,
+so R is relative within the tile and may stripe along flight lines; a pixel with no ground return takes
+the nearest filled. **G** is ground roughness: the standard deviation of the ground returns' heights above
+the 1 m DEM surface (bilinear between its pixel centres) about their own 1 m cell's mean (each cell's sum
+of squared deviations summed over the block, over their summed n - 1), in cm x 4, clamped to 255
+(0 .. 63.75 cm); a pixel with under 3 ground returns takes the nearest filled. Measured against the DEM
+surface rather than a flat cell mean because the plain deviation of z is mostly the cell's own tilt (a
+plane of slope s spread over the metre gives s / sqrt(12), 29 cm at 45 degrees): on the home tile its
+median matched that within a centimetre in every slope class (correlation with slope 0.87), which the
+DEM and `terrain_detail` already hold. What is left is the relief inside the metre (rock, clods, cut
+faces, tussocks); the plain figure's percentiles stay in the stats as `with_tilt`. Point heights are
+stored to 1 cm, so 0.3 cm is its floor. **B** is the multi-return share (nmulti / npts) of the 1 m cells
+whose CHM is under 1 m (grass, forbs, low shrubs: standing vegetation that is not a crown), 0 where the
+CHM is 1 m or more or the cell has no return, averaged over the block, x 255; the second echoes of pulses
+that grazed a crown's edge also land in the open cells beside it, so B has a halo round trees. The grid
+stage keeps for it the ground intensity sum, sum of squares, and each ground return's height above the
+DEM summed, squared and counted (the workers share the DEM as a read-only memmap); the cache is
+`_cache/lidar_grid_v2/`, named for the field layout so an older cache is never read into a newer one. Manifest
+`client.lidar_micro`, `for_clients: true`; per-tile percentiles in its `stats` and in
+`terrain/lidar_stats.json`. Tiles streamed before the v2 grid have no `lidar_micro` until the point cloud is
+streamed again (`python -m pipeline.lidar --tile <id> --stage grid --force`, then `--stage products`).
+
 `terrain/roughness_10m.tif` is the std of the 1 m DEM about a least-squares quadratic within each 10 m
 cell (slope and curvature removed): boulders, outcrop steps, cut banks. The ground step multiplies the
 outcrop likelihood by 0.5 + min(roughness / 0.12 m, 1.5), averaged to 30 m (Geology and soils).

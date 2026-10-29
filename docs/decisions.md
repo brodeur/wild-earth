@@ -2143,3 +2143,45 @@ first second and the arc closed; hunger 0.45 at the take; starvation returned th
 feel of a real stalk through brush to 12 m, and the coyote's loop on rabbits (its mechanics are the same, its
 sprint 7 s against a rabbit's 5-6 m/s bolt). Open: the fox and the coyote's small prey give no chase to speak of; the
 panel's arrow could become a mark on the ground; the prey's own win (a herd that reaches cover) has no reward yet.
+
+## 2026-10-28: detail at every scale: one body-scale number drives the near world
+
+Aaron's three asks, in one program ("way way more grass for lizards, and stones"; "individual leaves rather than cards
+for things < 20 m"; "simulated detail to create micro-variations so that the world looks good at every scale"; and
+"for the LIDAR map we have, can we add simulated detail there?"; "Ok move forward with all of this"). The principle:
+the instance budget per frame stays about constant and what shrinks with the body is the radius it is spent on; and
+each scale's data is the next scale's conditioning, nothing finer is random. `client/src/bodyScale.js` is the one knob:
+the species' shoulder height over the deer's (groundControl.js GROUND[code].shoulder), clamped to [0.025, 1]; the
+lizard 0.026, the vole 0.042, the ground squirrel 0.095, the rabbit 0.16, the fox 0.39, the deer 1; the squirrel's own
+control 0.1; the spirit and the fliers 1. main.js sets it from the body hook (onBody) and the near-detail systems
+subscribe. Five lanes, each an Opus agent with strict file ownership, verified here before its commit:
+
+- **The body-scaled grass ring** (grass.js): a tier that exists only below scale 0.6, radius 16 sqrt(scale) m clamped
+  to 1.5-10 (a lizard 2.6 m, a vole 3.3, a rabbit 6.4, a fox 10), blades at real density (400-1000 bases per m² on
+  grassland) from a separate denser hashed placement; at scale 1 the frame is byte-for-byte today's.
+- **The litter ring** (litter.js): pebbles and grit, fallen oak leaves, acorn caps, twigs and lying stems inside the
+  same ring, drawn from the terrain shader's own material weights (the ground-detail mask, the habitat masks and the
+  canopy), so the 3D pebbles sit where the photo and the 2 m detail texture already show gravel.
+- **Micro-relief and the third octave** (terrain.js, groundDetail.js, tilepackage.js): a nested patch under the body,
+  side 24 sqrt(scale) m over 96 cells (a lizard 3.9 m at 4 cm, a deer 24 m at 25 cm; 192 cost 2.2 ms of tiny triangles at
+  a lizard's eye, so the shape is 96 and the lighting comes from bump normals baked at 384, 1 cm for a lizard), displaced by a
+  deterministic noise implemented alike in JS and GLSL and conditioned on the material (rock sharp to 12 cm, tussock
+  bumps on thatch, nothing on pavement and water), scaled by the lidar's roughness where there is one; the ground
+  sampler returns the patch surface inside it so feet sit on the bumps; the five detail textures sampled again at a
+  20 cm repeat within the patch.
+- **The leaf level** (treegen.js, vegetation.js): a fourth meshing inside 6-15 m of the camera (a deer 6, the squirrel
+  15) where each close card becomes its individual leaves at the positions the card's texture was drawn from, instanced
+  through the close canopy's matrices, with per-leaf wind; conifers as fascicles; built lazily per (species, seed); at
+  most 100 k leaves a tree, not the 40 k first asked (a blue oak records ~440 k, a canyon live oak 1.7 M: at 40 k the kept
+  leaves came out 3-5x too large; at 100 k big oaks keep 14-35 % at 1.3-2.2x). Aaron's shimmer rides on the cards:
+  the lit colour lifts toward a pale sheen in waves travelling downwind at the wind's speed, phased by a hash of the
+  card's world position and gated by the gust field, pixel-identical to a calm frame at wind 0.02.
+- **The lidar micro raster** (pipeline/lidar.py): client/lidar_micro.png at 4 m (2500 px, 13 MB; the 2 m first cut was
+  52 MB, too heavy to ship) on the lidar tiles, R the ground-return intensity (the source has it), G the ground
+  roughness, B the multi-return share under a 1 m canopy (standing low vegetation), re-streamed from the point cloud
+  (about an hour a tile). G was first the spread of ground points about their 1 m cell's mean, as asked, and on the home
+  tile that was almost entirely slope (a tilted plane spreads s / sqrt(12) over the metre; correlation with slope 0.87),
+  so it is the spread about the 1 m DEM surface instead (slope and curvature removed; correlation 0.38; p50 1.7 cm,
+  p90 3.1, p99 6), and the client subtracts only the tile's ranging noise (p10, 0.95 cm) before scaling the bumps 0.6-2.2x.
+
+Verification and what landed: see the report rows for each commit (docs/report-2026-10-26-morning.md).
