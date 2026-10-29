@@ -813,6 +813,12 @@ if (animPart == 1 || animPart == 2) {
   legOff *= 1.0 - aAnim2.z;   // a hop: both legs together
 #endif
   animR = animRX(sin(aAnim.x + legOff) * aAnim.y * uAmp.x);
+#if defined(ANIM_GAIT) && !defined(ANIM_ANTLER)
+  // a turn's step (PART_TURN; aAnim2.z): the swing turned about the vertical through its pivot, the fore legs by the
+  // angle and the hind legs against it, so a standing turn steps sideways round it and a walk on a curve arcs
+  float legTurn = aPivot.z > 0.0 ? aAnim2.z : -aAnim2.z;
+  animR = animRY(legTurn) * animR * animRY(-legTurn);
+#endif
 #ifdef ANIM_RIG
   if (animPart == 1) animR = animRX(animPose * rig_foreFold) * animR;
   animR = animRZ(rigSide * aAnim2.x * rig_abduct) * animR;   // splay outward
@@ -1318,6 +1324,12 @@ export const DEER_DRIVE = {
   // floored at `vMin` m/s so a standing turn steps square sideways.
   bend: { spine: 1.0, lead: 0.12, leadMax: 0.25, vMin: 0.1 },
 };
+// The stepping turn on the part rig (the gray fox, coyote, mountain lion and black bear; owner, 2026-10-29: the legs move
+// first and pull the body round): DEER_DRIVE.turn's thresholds, step amplitude and rate and the drawn body's lag
+// (turnFollow takes this as its D), the hoof's lever r from each body's half length (groundControl.js S.half,
+// animals.js MAMMAL half). The legs' swing is turned about the vertical by atan2(w r, max(v, vMin)) in aAnim2.z
+// (ANIM_BODY under ANIM_GAIT): the fore legs toward the turn, the hind legs away.
+export const PART_TURN = { turn: { on: 0.45, off: 0.2, hold: 0.35, amp: [0.4, 0.6], hz: [0.7, 2.4], lag: 0.15, maxLag: 0.44, lagV: [0.3, 1.2], rateK: 12, maxRate: 8 }, vMin: 0.1 };
 if (typeof globalThis !== 'undefined') globalThis.__weDeerDrive = DEER_DRIVE;   // debugging: thresholds, rates, force
 export function makeClipState() { return { cur: -1, prev: 0, pA: 0, pB: 0, blend: 0, seed: Math.random(), kind: '', kindB: '', tBlend: 0.3, y0: NaN, dy: 0, wr: 0, tq: 0, th: 0 }; }
 const standKind = (flick) => flick > 0.5 ? 'graze' : flick < -0.15 ? 'alert' : 'idle';

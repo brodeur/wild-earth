@@ -1,6 +1,6 @@
 import * as THREE from 'three';
 import { trunkAt } from './animals.js';
-import { animalMaterial, animalDepthMaterial, hasAnim2, antlerState, driveClips, makeClipState, DEER_DRIVE, turnFollow, bendOf } from './animalModels.js';
+import { animalMaterial, animalDepthMaterial, hasAnim2, antlerState, driveClips, makeClipState, DEER_DRIVE, turnFollow, bendOf, PART_TURN } from './animalModels.js';
 import { addCaster } from './shadows.js';
 import { HerdMarks } from './herdMarks.js';
 import { HerdSilhouette } from './herdSilhouette.js';
@@ -466,9 +466,21 @@ export class GroundControl {
     ps.lift = 0; ps.roll = damp(ps.roll, 0, 8, dt);
     if (S.rig === 'quad') {
       const pmax = this.modelPoseMax();
-      ps.amp = damp(ps.amp, inAir ? 1.25 : sp < 0.05 ? 0 : sp < S.trot * 0.75 ? 0.75 : sp < S.trot * 1.4 ? 1 : 1.25, 5, dt);
+      // the stepping turn (animalModels.js PART_TURN; the part rig's quadrupeds, draw's turnFollow measures cs.wr):
+      // standing and turning, the legs step round first and the drawn body follows them
+      const part = !!this.body && !this.body.model.skin, cs = part ? this.cs : null, T = PART_TURN.turn;
+      const wr = cs?.wr || 0, aw = Math.abs(wr), r = S.half * this.size, still = sp < 0.05 && !inAir && !this.resting;
+      if (cs && still && aw > (cs.tq > 0 ? T.off : T.on)) cs.tq = T.hold; else if (cs) cs.tq = still ? cs.tq - dt : 0;
+      if (cs && cs.tq > 0) {
+        const u = clamp((aw - T.on) / (2 - T.on), 0, 1), tAmp = T.amp[0] + (T.amp[1] - T.amp[0]) * u;
+        ps.amp = damp(ps.amp, tAmp, 5, dt);
+        ps.phase += dt * TAU * clamp(aw * r / (tAmp * S.stride * this.size), T.hz[0], T.hz[1]);
+      } else {
+        ps.amp = damp(ps.amp, inAir ? 1.25 : sp < 0.05 ? 0 : sp < S.trot * 0.75 ? 0.75 : sp < S.trot * 1.4 ? 1 : 1.25, 5, dt);
+        ps.phase += dt * TAU * sp / (S.stride * this.size * (0.8 + 0.25 * sp));
+      }
       ps.e3 = damp(ps.e3, inAir || sp > S.trot * 1.4 ? 1 : 0, 4, dt);
-      ps.phase += dt * TAU * sp / (S.stride * this.size * (0.8 + 0.25 * sp));
+      if (part && !this.buck) ps.e2 = ps.amp > 0.05 && !inAir ? Math.atan2(wr * r, Math.max(sp, PART_TURN.vMin)) : damp(ps.e2, 0, 8, dt);   // the legs' step turned round the turn (aAnim2.z)
       const stalk = S.stalk && this.input().shift && sp > 0.05;
       ps.pose = damp(ps.pose, this.resting ? pmax : stalk ? 0.45 * pmax / 0.6 : 0, this.resting ? 0.9 : 2, dt);
       ps.flick = damp(ps.flick, act ? S.act.flick : alert ? S.alert.flick : stalk ? 0.25 : 0, 3, dt);
@@ -534,7 +546,9 @@ export class GroundControl {
     // the skinned deer steps round a turn and its body follows the legs a beat later (animalModels.js turnFollow,
     // DEER_DRIVE.turn): the drawn yaw lags flight.yaw; the control yaw, the camera and the look are untouched
     const sk = b.model.skin, sv = this.inAir ? Math.max(this.spd || 0, DEER_DRIVE.runAt + 0.1) : (this.spd || 0);
-    const yawA = (sk ? turnFollow(DEER_DRIVE, this.cs ||= makeClipState(), this.flight.yaw, sv, dt) : this.flight.yaw) + Math.PI;
+    // the part rig's quadrupeds (fox, coyote, lion, bear) the same, with PART_TURN (their legs' step: animate)
+    const yawA = (sk ? turnFollow(DEER_DRIVE, this.cs ||= makeClipState(), this.flight.yaw, sv, dt)
+      : S.rig === 'quad' ? turnFollow(PART_TURN, this.cs ||= makeClipState(), this.flight.yaw, this.spd || 0, dt) : this.flight.yaw) + Math.PI;
     if (S.rig === 'lizard' && this.mode === 'ground') {   // flat on the ground it stands on (a rock top, the slope)
       const sq = this.sq, d = 0.06, top = P.y + 0.3;
       const nx = sq.surface(P.x - d, P.z, top) - sq.surface(P.x + d, P.z, top), nz = sq.surface(P.x, P.z - d, top) - sq.surface(P.x, P.z + d, top);

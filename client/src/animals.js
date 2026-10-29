@@ -8,7 +8,7 @@ import { fieldGuide } from './fieldguide.js';
 import { scentCarry } from './wind.js';
 import { buildSquirrel, buildWoodpecker, buildRaven, buildDeer, buildQuail, buildJay, buildHawk, buildVulture, buildStellersJay,
   buildDeerBuck, buildFox, buildCoyote, buildCougar, buildRabbit, buildVole, buildJackrabbit, buildTurkey, buildGroundSquirrel, buildLizard, buildBear, buildMountainQuail,
-  animalMaterial, animalDepthMaterial, planarShadowMaterial, loadDeerMesh, loadSquirrelMesh, loadQuailMesh, loadJayMesh, driveClips, makeClipState, DEER_DRIVE, turnFollow, bendOf,
+  animalMaterial, animalDepthMaterial, planarShadowMaterial, loadDeerMesh, loadSquirrelMesh, loadQuailMesh, loadJayMesh, driveClips, makeClipState, DEER_DRIVE, turnFollow, bendOf, PART_TURN,
   loadStellersJayMesh, loadRedtailMesh, loadVultureMesh, loadDeerBuckMesh, loadFoxMesh, loadCoyoteMesh, loadCougarMesh,
   loadRabbitMesh, loadJackrabbitMesh, loadVoleMesh, loadRavenGroundMesh, loadTurkeyMesh, loadGroundSquirrelMesh, loadLizardMesh, loadBearMesh,
   loadMountainQuailMesh, RAVEN_GROUND, hasAnim2, antlerState, SEASON_MONTH } from './animalModels.js';
@@ -2967,10 +2967,15 @@ export class Animals {
   }
   mmGo(a, speed, next, state = M_MOVE) { a.speed = speed; a.next = next; a.state = state; }
   // Step toward (tx, tz) at a.speed, turning smoothly (an arc), straight in for the last metre and a half. true on arrival.
+  // Toward (a.tx, a.tz) at `speed`, turning at rate `turn` /s by drSteer: at most DEER_TURN.w rad/s, DEER_TURN.fast
+  // fleeing, rushing, charging or over 3 m/s; the travel scaled by the heading error (a.mvK, which mmUpdate applies to
+  // the gait), so one facing well off its way turns on the spot first, stepping round (PART_TURN), instead of crabbing.
   mmStep(a, dt, speed, turn = 3) {
-    const ex = a.tx - a.x, ez = a.tz - a.z, d = Math.hypot(ex, ez), step = speed * dt;
-    if (d <= Math.max(step, 0.05)) { a.x = a.tx; a.z = a.tz; return true; }
-    a.yaw += wrapAngle(Math.atan2(ex, ez) - a.yaw) * Math.min(1, dt * turn);
+    const ex = a.tx - a.x, ez = a.tz - a.z, d = Math.hypot(ex, ez);
+    if (d <= Math.max(speed * dt, 0.05)) { a.x = a.tx; a.z = a.tz; return true; }
+    const fast = a.state === M_FLEE || a.state === M_RUSH || a.state === M_CHARGE || speed > 3;
+    a.mvK = this.drSteer(a, Math.atan2(ex, ez), turn, dt, fast);
+    const step = speed * a.mvK * dt;
     if (d < 1.5) { a.x += ex / d * step; a.z += ez / d * step; }
     else { a.x += Math.sin(a.yaw) * step; a.z += Math.cos(a.yaw) * step; }
     return false;
@@ -3009,7 +3014,7 @@ export class Animals {
   mmUpdate(a, dt, px, py, pz) {
     const r = a.rng, cfg = MAMMAL[a.sp], g = a.group, H = this.heights, act = cfg.active(this.hour, this.season), lion = a.sp === ML, bear = a.sp === BE;
     const pmax = this.poseMax[a.sp];
-    a.t -= dt; a.cool -= dt;
+    a.t -= dt; a.cool -= dt; a.mvK = 1;
     let speed = 0, wantPose = 0, wantFlick = 0, twitch = 0;
     const treed = a.state === M_CLIMB || a.state === M_TREE || a.state === M_DOWN || (a.state === M_FLEE && a.next === M_CLIMB);
     // a low player (or an AI hunter of it: a coyote from a lion; threat()) close by: off (bedded canids sit tighter;
@@ -3034,8 +3039,7 @@ export class Animals {
       a.cool = 12 + r() * 6; a.stay = 0;
       a.watch = cfg.watch[0] + r() * (cfg.watch[1] - cfg.watch[0]);
       const d = Math.min(dh - 2.5, cfg.chargeD[0] + r() * (cfg.chargeD[1] - cfg.chargeD[0]));
-      a.yaw = Math.atan2(-dx, -dz);
-      if (a.state !== M_BED && d > 0.8 && r() < 0.67) {
+      if (a.state !== M_BED && d > 0.8 && r() < 0.67) {   // (no snap to face it: the charge steers round to its target, the stare steps round to the player)
         a.tx = a.x - dx / dh * d; a.tz = a.z - dz / dh * d; a.speed = cfg.run * 0.7; a.t = 1.6; a.state = M_CHARGE;
         this.lastCharge = { id: a.id, d: Math.round(dh * 10) / 10, t: this.time };
       } else { a.state = M_STAND; a.t = a.watch; }
@@ -3072,7 +3076,7 @@ export class Animals {
         wantFlick = -0.3;   // head up, alert
         if (bear && a.watch > 0) {   // after a charge or at a close player: turned to it, head up, still
           a.watch -= dt; wantFlick = -0.4;
-          a.yaw += wrapAngle(Math.atan2(px - a.x, pz - a.z) - a.yaw) * Math.min(1, dt * 3);
+          a.wy = Math.atan2(px - a.x, pz - a.z);   // stepped round to it (below)
         }
         if (a.t <= 0) this.mmNext(a, act);
         break;
@@ -3082,7 +3086,7 @@ export class Animals {
         break;
       case M_SNIFF:
         wantFlick = 1;
-        if (r() < dt * 0.4) a.yaw += (r() - 0.5) * 1.2;
+        if (a.wy !== a.wy && r() < dt * 0.4) a.wy = a.yaw + (r() - 0.5) * 1.2;   // a new heading, stepped round to (below)
         if (a.t <= 0) {
           if (act && this.huntStart(a)) break;   // a vole, rabbit, jackrabbit or ground squirrel in reach: after it
           if (cfg.pounce && r() < cfg.pounce) {   // a mouse pounce: up and over onto the forepaws
@@ -3108,7 +3112,7 @@ export class Animals {
           a.state = a.next; speed = 0;
           if (a.state === M_BED) a.t = 20 + r() * 40;
           else if (a.state === M_CLIMB) { a.h = 0; a.pose = 0; }
-          else { a.t = fled ? 4 + r() * 5 : a.stay || 2 + r() * 4; a.stay = 0; if (fled) a.yaw = Math.atan2(px - a.x, pz - a.z); }   // looks back; a.stay: a bear feeding (carrion, an oak's acorns)
+          else { a.t = fled ? 4 + r() * 5 : a.stay || 2 + r() * 4; a.stay = 0; if (fled) a.wy = Math.atan2(px - a.x, pz - a.z); }   // looks back; a.stay: a bear feeding (carrion, an oak's acorns)
         }
         if (lion && a.state === M_FLEE) { wantPose = 0.35; wantFlick = 0.2; }   // slinks, low
         break;
@@ -3176,17 +3180,39 @@ export class Animals {
         if (a.t <= 0 && !(py - a.y < 30 && dh < cfg.flee)) { a.state = M_DOWN; a.h = Math.min(forkHeight(a.tree), 3.5); }
         break;
     }
-    // gait: amplitude by speed (walk, trot, gallop) and the gait selector to the fore-against-hind gallop
-    a.amp = damp(a.amp, a.state === M_POUNCE ? 0 : speed < 0.05 ? 0 : speed < cfg.trot * 0.75 ? 0.75 : speed < cfg.trot * 1.4 ? 1 : 1.25, 5, dt);
+    speed *= a.mvK;   // the travel mmStep kept (turning on the spot: none)
+    // standing (sniffing, alert, watching, back from a flight): stepped round to a new heading (a.wy), as the deer
+    const standing = speed < 0.05 && (a.state === M_STAND || a.state === M_SNIFF || a.state === M_MOVE || a.state === M_FLEE);
+    if (standing && a.wy === a.wy) { this.drSteer(a, a.wy, 3, dt, false, DEER_TURN.slow); if (Math.abs(wrapAngle(a.wy - a.yaw)) < 0.05) a.wy = NaN; }
+    else if (!standing) a.wy = NaN;
+    // the turn rate this frame (a.wr, rad/s, smoothed as turnFollow's), the stepping turn's hysteresis (a.tq) and the
+    // hoof's lever round the turning centre (half the body)
+    const PT = PART_TURN.turn, half = cfg.half * a.size;
+    { const yp = a.yP ?? a.yaw, d = wrapAngle(a.yaw - yp); a.yP = a.yaw;
+      const raw = Math.abs(d) > 1.2 || !(dt > 0) ? 0 : Math.max(-PT.maxRate, Math.min(PT.maxRate, d / dt));
+      a.wr = raw + ((a.wr || 0) - raw) * Math.exp(-PT.rateK * dt); }
+    const aw = Math.abs(a.wr), still = speed < 0.05 && a.state !== M_POUNCE && a.state !== M_BED && a.pose < 0.5 && !treed && a.state !== M_TREE;
+    if (still && aw > ((a.tq || 0) > 0 ? PT.off : PT.on)) a.tq = PT.hold; else a.tq = still ? (a.tq || 0) - dt : 0;
+    // gait: amplitude by speed (walk, trot, gallop) and the gait selector to the fore-against-hind gallop; standing and
+    // turning, the legs step round first (PART_TURN: amp and rate from the turn rate)
+    if (a.tq > 0) {
+      const u = Math.min(1, Math.max(0, (aw - PT.on) / (2 - PT.on))), tAmp = PT.amp[0] + (PT.amp[1] - PT.amp[0]) * u;
+      a.amp = damp(a.amp, tAmp, 5, dt);
+      a.phase += dt * TAU * Math.min(PT.hz[1], Math.max(PT.hz[0], aw * half / (tAmp * cfg.stride * a.size)));
+    } else {
+      a.amp = damp(a.amp, a.state === M_POUNCE ? 0 : speed < 0.05 ? 0 : speed < cfg.trot * 0.75 ? 0.75 : speed < cfg.trot * 1.4 ? 1 : 1.25, 5, dt);
+      a.phase += dt * TAU * speed / (cfg.stride * a.size * (0.8 + 0.25 * speed));
+    }
     a.e3 = damp(a.e3, speed > cfg.trot * 1.4 ? 1 : 0, 4, dt);
-    a.phase += dt * TAU * speed / (cfg.stride * a.size * (0.8 + 0.25 * speed));
+    a.e2 = a.amp > 0.05 && a.state !== M_POUNCE && !treed ? Math.atan2(a.wr * half, Math.max(speed, PART_TURN.vMin)) : 0;   // the legs' step turned round the turn (aAnim2.z)
+    a.spd = speed;   // the drawn body's lag behind a turn (update: turnFollow)
     if (bear && a.state === M_SNIFF) wantPose = Math.max(wantPose, 0.3);   // digging and foraging: the shoulders down
     a.pose = damp(a.pose, Math.min(wantPose, pmax), 2, dt);
     a.flick = damp(a.flick, wantFlick, 3, dt);
     a.e1 = damp(a.e1, twitch * 0.7 * Math.sin(this.time * 3.3 + a.rock) * (Math.sin(this.time * 0.6 + a.rock) > 0.1 ? 1 : 0.15), 8, dt);
     if (a.state === M_CLIMB || a.state === M_DOWN) return;
     if (a.state === M_TREE) { a.y = trunkAt(a.tree, Math.min(forkHeight(a.tree), 3.5), this._t).y + 0.15 - this.drops[a.sp] * a.pose * a.size; return; }
-    const half = cfg.half * a.size, sy = Math.sin(a.yaw), cy = Math.cos(a.yaw);
+    const sy = Math.sin(a.yaw), cy = Math.cos(a.yaw);
     const hf = H.atXZ(a.x + sy * half, a.z + cy * half), hb = H.atXZ(a.x - sy * half, a.z - cy * half);
     if (a.state !== M_POUNCE) a.pitch = damp(a.pitch, -Math.atan2(hf - hb, 2 * half) * 0.8, 6, dt);
     a.y = Math.min(hf, hb) * 0.5 + H.atXZ(a.x, a.z) * 0.5 - this.drops[a.sp] * a.pose * a.size + a.lift;
@@ -4227,7 +4253,9 @@ export class Animals {
         grow = 1 + FLY_GROW * a.fly * clamp01((Math.sqrt(d2) - FLY_NEAR) / (FLY_FAR - FLY_NEAR));
       }
       // the skinned models (deer, buck) step round a turn and are drawn a beat behind it (animalModels.js turnFollow)
-      const sk = this.drawn[sp]?.model?.skin, dyaw = sk ? turnFollow(DEER_DRIVE, a.cs ||= makeClipState(), a.yaw, a.spd || 0, dt) : a.yaw;
+      // and so do the part rig's fox, coyote, lion and bear (PART_TURN; their legs' step: mmUpdate)
+      const sk = this.drawn[sp]?.model?.skin, dyaw = sk ? turnFollow(DEER_DRIVE, a.cs ||= makeClipState(), a.yaw, a.spd || 0, dt)
+        : sp === FX || sp === CY || sp === ML || sp === BE ? turnFollow(PART_TURN, a.cs ||= makeClipState(), a.yaw, a.spd || 0, dt) : a.yaw;
       e.set(a.pitch, dyaw, a.roll, 'YXZ'); q.setFromEuler(e); p.set(a.x, a.y, a.z); s.setScalar(a.size * SPECIES[sp].scale * grow * a.vis);
       m.compose(p, q, s); m.toArray(mesh.instanceMatrix.array, o * 16);
       const an = mesh.geometry.attributes.aAnim.array;
