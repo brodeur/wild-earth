@@ -2174,7 +2174,7 @@ export const LEAF_WAVE_GLSL = `
   float leafWave(vec3 wp, float h, out float gate, out float slow) {
     slow = smoothstep(0.15, 0.75, wNoise((wp.xz - windDir * time * 4.0) * 0.045));
     gate = smoothstep(0.03, 0.2, windStrength) * slow;
-    return sin((dot(wp.xz, windDir) - (2.0 + 9.0 * windStrength) * time) * 0.7 + h * 1.6);
+    return sin((dot(wp.xz, windDir) - (2.0 + 9.0 * min(windStrength, 0.6)) * time) * 0.7 + h * 1.6);   // the flutter wave's speed stops growing at 0.6 (0.8 Hz): a strong wind is heavy, not twitchy
   }
   float crownMicro(vec3 rel, float rank) {
     float lam = crownSway.y * (1.0 + 1.5 * min(windStrength, 1.0));   // a longer, slower wave in a stronger wind
@@ -2184,7 +2184,8 @@ export const LEAF_WAVE_GLSL = `
   vec3 crownSwayW(vec3 rel, float micro, float slow, float rank, float jit) {
     float a0 = crownSway.x * smoothstep(0.03, 0.2, windStrength) * min(windStrength, 1.5) * (0.3 + 0.7 * slow) * min(1.0, length(rel) * 0.125);
     float a = a0 * micro;
-    float h = fract(rank * 37.7 + 0.13), j = jit * crownFlex.w * a0 * sin(time * (10.0 + 8.8 * h) + h * 50.0);
+    float h = fract(rank * 37.7 + 0.13), aj = a0 * min(windStrength, 0.5) / max(min(windStrength, 1.5), 1e-3);   // the jitter's amplitude stops growing at 0.5
+    float j = jit * crownFlex.w * aj * sin(time * (5.0 + 5.0 * h) + h * 50.0);   // 0.8-1.6 Hz
     return vec3(windDir.x * (a + j) - windDir.y * 0.5 * j, -0.25 * a, windDir.y * (a + j) + windDir.x * 0.5 * j);
   }
   // the limbs' flex: the point's displacement downwind by the lean, the gust and the crown's slow rock (plantH: 0..1)
@@ -2567,7 +2568,7 @@ export function leafMaterial(spec, patch = null) {
           float leafWv = leafWave(leafP, leafH, leafG, leafS), leafC = crownMicro(leafR, lA.w * 0.5 + 0.5);
           leafG *= 0.7 + 0.6 * leafC;
           // the leaf turns about its base: with the travelling wave (more in a gust) and a small tremble of its own
-          float leafA = (0.06 + 0.4 * leafG) * min(windStrength, 1.5) * leafWv + 0.05 * windStrength * sin(time * (7.0 + 5.0 * leafH) + leafH * 40.0);
+          float leafA = (0.06 + 0.4 * leafG) * min(windStrength, 0.8) * leafWv + 0.05 * min(windStrength, 0.6) * sin(time * (5.0 + 4.0 * leafH) + leafH * 40.0);   // capped: a strong wind does not thrash the leaves faster
           transformed += leafNo * (position.y * (leafF + leafB) * leafA);
           // and moves with its branch: the crown's own wave and the limbs' flex, as the card it replaces
           transformed += crownLocal(modelMatrix, crownSwayW(leafR, leafC, leafS, lA.w * 0.5 + 0.5, 1.0) + crownFlexW(leafR, leafS, fract(dot(modelMatrix[3].xz, vec2(0.1031, 0.1173)))));
