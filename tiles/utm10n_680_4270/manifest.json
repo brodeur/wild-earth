@@ -15,7 +15,7 @@
   38.65029129231017
  ],
  "size_m": 10000,
- "generated_at": "2026-10-28T08:22:11Z",
+ "generated_at": "2026-10-29T06:17:25Z",
  "generator": {
   "name": "wild-earth-pipeline",
   "version": "0.2.0"
@@ -1917,16 +1917,19 @@
     4280000
    ],
    "encoding": "little-endian. Header 32 bytes: magic 'WECR', u16 version 1, u16 record bytes 8, u16 cells per side (100), u16 cell metres (100), u32 crown count, f32 xy unit (0.2 m), f32 height unit (0.25 m), f32 radius unit (0.1 m), u32 0. Then u32 offsets[cells*cells + 1]: the crowns of index cell (ci = floor(x / 100), cj = floor(north / 100)) are records offsets[cj*cells + ci] .. offsets[cj*cells + ci + 1], tallest first. Then 8-byte records: u16 x, u16 north (tile metres = value * 0.2 + 0.1, north from the south edge), u8 height (* 0.25 m), u8 crown radius (* 0.1 m), u8 confidence (0-255), u8 multi-return share (0-255)",
-   "method": "local maxima of the CHM (3x3 median, gaussian sigma 1.0 m) in a square window of radius round(1 + 0.1 h) m (1-5), h >= 4.0 m; height = the median CHM's 3x3 max; crown = watershed region down to 0.5 of the peak, radius sqrt(area / pi) clipped to 0.5 .. min(2 + 0.35 h, 15) m; dropped on OSM buildings and where the multi-return share in the 5x5 around the peak is < 0.08, where the crown is narrower than max(1 m, 0.06 h) (towers, poles), and where h < 8.0 m with prominence < 2.0 m (a taller shrub in a shrub canopy). confidence = 0.35 prominence (peak minus the minimum in a square of half-width 2 w + 1 around it, w the maxima window radius, over h) + 0.25 watershed radius over h / 4 + 0.2 multi-return share over 0.6 + 0.2 height above 4 m over 6 m, each clipped to 0..1",
+   "method": "local maxima of the CHM (3x3 median, gaussian sigma 1.0 m) in a square window of radius round(1 + 0.1 h) m (1-5), h >= 4.0 m; height = the median CHM's 3x3 max; crown = watershed region down to 0.5 of the peak, radius sqrt(area / pi) clipped to 0.5 .. min(2 + 0.35 h, 15) m; dropped on OSM buildings and where the multi-return share in the 5x5 around the peak is < 0.08, where the crown is narrower than max(1 m, 0.06 h) (towers, poles), and where h < 8.0 m with prominence < 2.0 m (a taller shrub in a shrub canopy); then dropped within 35 m of an OSM motorway or trunk bridge, 20 m of another road or rail bridge, 8 m of a footbridge and 10 m of a man_made=bridge outline (towers, cables), and inside the dense-urban mask (footprint.urban) where the 30 m rewilded class (vegetation.habitat) is not oak woodland, conifer or mixed forest or riparian (street trees). confidence = 0.35 prominence (peak minus the minimum in a square of half-width 2 w + 1 around it, w the maxima window radius, over h) + 0.25 watershed radius over h / 4 + 0.2 multi-return share over 0.6 + 0.2 height above 4 m over 6 m, each clipped to 0..1",
    "source": "usgs_3dep_lpc",
    "ept_project": "CA_SierraNevada_2_2022",
    "sources_used": [
     "usgs_3dep_1m",
-    "osm"
+    "osm",
+    "landfire"
    ],
    "derived_from": [
     "vegetation.chm_1m",
-    "footprint.mask"
+    "footprint.mask",
+    "footprint.urban",
+    "vegetation.habitat"
    ],
    "stats": {
     "maxima": 403965,
@@ -1934,6 +1937,8 @@
     "dropped_low_multi_return": 1589,
     "dropped_pole_like": 532,
     "dropped_shrub_in_shrub_canopy": 3793,
+    "dropped_on_bridges": 0,
+    "dropped_urban": 0,
     "crowns": 398018,
     "confidence_terms_median": {
      "prominence": 0.836,
@@ -1971,7 +1976,7 @@
      "p95": 8.0
     },
     "confidence_median": 0.918,
-    "seconds": 114.3
+    "seconds": 92.8
    },
    "sha256": "bdf5232ffcf8fa33d96bdb3fa73eeb786516ee57f483b6d5a021bffcc9fbb986",
    "bytes": 3224180
@@ -5169,6 +5174,82 @@
    "alarm_links": 57,
    "sha256": "fadec269d958801615d342f1ce1dc2ea2081246b8d8c9d7bb7916dec098d2553",
    "bytes": 396728
+  },
+  "vegetation.multi_1m": {
+   "path": "vegetation/multi_1m.tif",
+   "kind": "raster",
+   "crs": "EPSG:32610",
+   "bounds": [
+    680000,
+    4270000,
+    690000,
+    4280000
+   ],
+   "pixels": 10000,
+   "resolution_m": 1.0,
+   "encoding": "uint8: share of the cell's returns that are one of several per pulse, * 255 (vegetation echoes several times, roofs and water once); 0 where no return",
+   "source": "usgs_3dep_lpc",
+   "ept_project": "CA_SierraNevada_2_2022",
+   "derived_from": [],
+   "for_clients": false,
+   "for_clients_note": "pipeline only (1 m, hundreds of MB)",
+   "sha256": "d826211e7df5404e4a5da9af50ad174e1f6bbd13ff74c0ca6af6f39577194769",
+   "bytes": 68475448
+  },
+  "client.lidar_micro": {
+   "path": "client/lidar_micro.png",
+   "kind": "raster",
+   "crs": "EPSG:32610",
+   "bounds": [
+    680000,
+    4270000,
+    690000,
+    4280000
+   ],
+   "pixels": 2500,
+   "resolution_m": 4.0,
+   "encoding": "RGB 8-bit, 2500 px, 4 m, row 0 north like client.terrain_detail (pixel centres at x = 4i + 2, north = 10000 - (4j + 2)), each pixel from its 4 x 4 block of 1 m cells. R = mean intensity of the ground (class 2) returns, mapped linearly from the tile's p2 .. p98 (stats.intensity) to 0 .. 255, relative within the tile (raw intensity is uncalibrated); a pixel with no ground return takes the nearest filled. G = ground roughness, the standard deviation of the ground returns' heights above the 1 m DEM surface (terrain.dem_1m bilinear between its pixel centres, so its slope and curvature are removed) about their 1 m cell's mean, pooled over the block's cells with n - 1 each, in cm * 4, clamped to 255 (0 .. 63.75 cm); a pixel with under 3 ground returns takes the nearest filled. B = multi-return share (nmulti / npts) of the 1 m cells whose CHM is under 1 m (standing low vegetation, not a crown), 0 where the CHM is 1 m or more or the cell has no return, averaged, * 255",
+   "source": "usgs_3dep_lpc",
+   "ept_project": "CA_SierraNevada_2_2022",
+   "derived_from": [
+    "vegetation.chm_1m",
+    "vegetation.multi_1m",
+    "terrain.dem_1m"
+   ],
+   "for_clients": true,
+   "stats": {
+    "intensity": {
+     "source_has_intensity": true,
+     "p2": 25835.9,
+     "p50": 41995.8,
+     "p98": 53191.0,
+     "ground_pixel_fraction": 0.9968,
+     "filled_fraction": 0.0032
+    },
+    "roughness_cm": {
+     "p10": 1.08,
+     "p50": 1.79,
+     "p90": 3.26,
+     "p99": 6.24,
+     "clipped_fraction": 2e-05,
+     "measured_fraction": 0.9954,
+     "filled_fraction": 0.0046,
+     "with_tilt_p50": 8.32,
+     "with_tilt_p90": 15.01
+    },
+    "low_multi": {
+     "low_cell_fraction": 0.3923,
+     "share_in_low_cells_p50": 0.0,
+     "share_in_low_cells_p90": 0.214,
+     "pixels_b_over_0": 0.3283,
+     "pixels_b_over_10pct": 0.0648,
+     "pixels_b_over_30pct": 0.002,
+     "b_mean": 5.17
+    },
+    "bytes": 12605185
+   },
+   "sha256": "767e2b191863e8b8594ddcb7524e518ed7d0f9f2a9510855915fca97d16839c5",
+   "bytes": 12605185
   }
  },
  "sources": {
@@ -5210,7 +5291,7 @@
    "attribution": "Vegetation: LANDFIRE 2025 (EVT, EVC, EVH) and LANDFIRE 2016 Biophysical Settings, U.S. Department of the Interior, Geological Survey, and U.S. Department of Agriculture",
    "attribution_url": "https://landfire.gov",
    "attribution_required": false,
-   "retrieved": "2026-10-28"
+   "retrieved": "2026-10-29"
   },
   "macrostrat": {
    "name": "Macrostrat API geologic_units/map (Burwell map compilation)",
@@ -5260,7 +5341,7 @@
    "attribution": "\u00a9 OpenStreetMap contributors",
    "attribution_url": "https://www.openstreetmap.org/copyright",
    "attribution_required": true,
-   "retrieved": "2026-10-28"
+   "retrieved": "2026-10-29"
   },
   "usgs_3dep_1m": {
    "name": "USGS 3DEP 1 m bare-earth DEM (standard 1-meter DEM tiles) via the AWS public bucket prd-tnm",
@@ -5270,7 +5351,7 @@
    "attribution": "Elevation: U.S. Geological Survey, 3D Elevation Program (3DEP) 1 m DEM",
    "attribution_url": "https://www.usgs.gov/3d-elevation-program",
    "attribution_required": false,
-   "retrieved": "2026-10-26"
+   "retrieved": "2026-10-29"
   },
   "usgs_3dep_lpc": {
    "name": "USGS 3DEP lidar point cloud as Entwine Point Tiles via the AWS public bucket usgs-lidar-public",
@@ -5280,7 +5361,7 @@
    "attribution": "Lidar: U.S. Geological Survey, 3D Elevation Program (3DEP) point cloud, Entwine Point Tiles by Hobu, Inc. on AWS Open Data",
    "attribution_url": "https://registry.opendata.aws/usgs-lidar/",
    "attribution_required": false,
-   "retrieved": "2026-10-26"
+   "retrieved": "2026-10-29"
   },
   "copernicus_sentinel2_l2a": {
    "name": "Copernicus Sentinel-2 Level-2A surface reflectance via Microsoft Planetary Computer",
@@ -5651,6 +5732,12 @@
    "step": "derive",
    "at": "2026-10-28T08:22:11Z",
    "seconds": 33.5,
+   "ok": true
+  },
+  {
+   "step": "lidar",
+   "at": "2026-10-29T06:17:25Z",
+   "seconds": 3.0,
    "ok": true
   }
  ]

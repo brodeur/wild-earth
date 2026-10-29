@@ -12,7 +12,7 @@
   "density_pts_m2": 24.0,
   "empty_cell_fraction": 0.0019
  },
- "grid_seconds": 2496.1,
+ "grid_seconds": 1827.3,
  "dtm_check": {
   "ground_cell_fraction": 0.957,
   "median_offset_m": -0.0,
@@ -39,6 +39,8 @@
   "dropped_low_multi_return": 1589,
   "dropped_pole_like": 532,
   "dropped_shrub_in_shrub_canopy": 3793,
+  "dropped_on_bridges": 0,
+  "dropped_urban": 0,
   "crowns": 398018,
   "confidence_terms_median": {
    "prominence": 0.836,
@@ -76,7 +78,38 @@
    "p95": 8.0
   },
   "confidence_median": 0.918,
-  "seconds": 114.3
+  "seconds": 92.8
+ },
+ "lidar_micro": {
+  "intensity": {
+   "source_has_intensity": true,
+   "p2": 25835.9,
+   "p50": 41995.8,
+   "p98": 53191.0,
+   "ground_pixel_fraction": 0.9968,
+   "filled_fraction": 0.0032
+  },
+  "roughness_cm": {
+   "p10": 1.08,
+   "p50": 1.79,
+   "p90": 3.26,
+   "p99": 6.24,
+   "clipped_fraction": 2e-05,
+   "measured_fraction": 0.9954,
+   "filled_fraction": 0.0046,
+   "with_tilt_p50": 8.32,
+   "with_tilt_p90": 15.01
+  },
+  "low_multi": {
+   "low_cell_fraction": 0.3923,
+   "share_in_low_cells_p50": 0.0,
+   "share_in_low_cells_p90": 0.214,
+   "pixels_b_over_0": 0.3283,
+   "pixels_b_over_10pct": 0.0648,
+   "pixels_b_over_30pct": 0.002,
+   "b_mean": 5.17
+  },
+  "bytes": 12605185
  },
  "terrain_detail": {
   "residual_m": {
@@ -94,5 +127,5 @@
   "p90_m": 0.127,
   "p99_m": 0.295
  },
- "products_seconds": 190.0
+ "products_seconds": 187.8
 }
