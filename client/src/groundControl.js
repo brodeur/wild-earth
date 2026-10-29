@@ -391,6 +391,9 @@ export class GroundControl {
     }
     // the step: water too deep stops it (unless it is no deeper than where it stands: back out), a rock face is a wall
     const nx = P.x + fx * this.v * dt, nz = P.z + fz * this.v * dt;
+    // the ground under the body rose (the fine square or the micro patch arriving, a tussock where the spirit's patch
+    // had none: terrain.js): lift the body onto it before the step test, else the rise reads as a wall and it is stuck under it
+    { const U = this.sq.footing(P.x, P.z, P.y + S.step + 0.1), uy = U.surf !== null ? U.bed : U.y; if (uy > P.y && uy - P.y < 0.5) P.y = uy; }
     const F = this.sq.footing(nx, nz, P.y + S.step + 0.1), deep = F.depth > S.wade && F.depth > (this.wet?.depth ?? 0) + 1e-3;
     if (deep) {
       this.v = 0;

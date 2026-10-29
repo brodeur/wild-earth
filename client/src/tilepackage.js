@@ -60,6 +60,27 @@ async function loadDetail(url, signal = null) {
   return { width: W, height: H, data: out };
 }
 
+// Lidar micro raster (client/lidar_micro.png, docs/tile-spec.md "Lidar"): on terrain_detail.png's 2 m grid, rows north to
+// south, R ground-return intensity (relative within the tile), G ground roughness (cm x 4 about each 1 m cell's mean, the
+// cell's tilt included), B the multi-return share of the open cells (standing low vegetation). Kept as RGB, three bytes a
+// pixel (75 MB at 5000 px; the alpha would add a quarter), read in strips as loadDetail does. terrain.js reads it at the
+// micro patch's 1 m material nodes. Optional: absent on most tiles, and nothing warns.
+async function loadLidarMicro(url, signal = null) {
+  const img = await loadDecoded(url, signal);
+  const W = img.width, H = img.height, out = new Uint8Array(W * H * 3), S = 250;
+  const c = document.createElement('canvas'); c.width = W; c.height = S;
+  const ctx = c.getContext('2d', { willReadFrequently: true });
+  for (let y = 0; y < H; y += S) {
+    const h = Math.min(S, H - y);
+    ctx.clearRect(0, 0, W, S); ctx.drawImage(img.bitmap || img, 0, y, W, h, 0, 0, W, h);
+    const d = ctx.getImageData(0, 0, W, h).data;
+    for (let k = 0, o = y * W * 3, n = W * h; k < n; k++) { out[o + k * 3] = d[k * 4]; out[o + k * 3 + 1] = d[k * 4 + 1]; out[o + k * 3 + 2] = d[k * 4 + 2]; }
+    await yieldToMain(); if (signal?.aborted) throw aborted(signal);
+  }
+  img.bitmap?.close(); delete img.bitmap;
+  return { width: W, height: H, data: out, channels: 3 };
+}
+
 // Ground heights. Every raster sample is a pixel centre (the pipeline writes heights.png on a
 // rasterio from_bounds grid: sample (i, j) stands for x = (i + 0.5) res, north = size - (j + 0.5) res),
 // so the bilinear lookup is at x / res - 0.5, as the GPU's texture lookups at uv = x / size are.
@@ -67,9 +88,10 @@ async function loadDetail(url, signal = null) {
 //   at(x, north)      the ground: base plus the lidar residual where the tile has terrain_detail.png
 //                     (the 1 m ground averaged to 2 m), else base. Every footing query reads this.
 //   coarse(x, north)  the far terrain mesh as drawn: base at the 10 m vertices, each square split SW-NE
-//   ground(x, north)  the terrain exactly as drawn this frame: the near fine mesh (terrain.js) where it
-//                     is, else coarse. For things placed every frame (the raven, animals); cached
-//                     placement (grass, rocks) reads at(), which the fine mesh matches near the player.
+//   ground(x, north)  the terrain exactly as drawn this frame: the micro patch under the body (terrain.js
+//                     MicroPatch: the surface below plus a few cm of relief) where it is, then the near fine
+//                     mesh, else coarse. For things placed every frame (the raven, animals, a lizard's feet);
+//                     cached placement (grass, rocks) reads at(), which the fine mesh matches near the player.
 // The heights of heights.png (24-bit, 0.1 m from -10000 m), a generator that yields every 64 rows (loadTile steps it
 // with slice.js runSliced); returns { z, min, max }.
 export function* decodeHeights(img) {
@@ -92,6 +114,12 @@ export class Heightfield {
     if (this.detail) { this.dW = detail.width; this.dRes = sizeM / detail.width; }
     this.coarseSpacing = 10;   // terrain.js default vertex spacing
     this.fine = null;          // terrain.js: the near fine mesh's grid while it is drawn
+    // terrain.js: the micro patch under the body while it is drawn (MicroPatch): { x0, x1, n0, n1 (its square), band (m
+    // over which its relief eases to nothing at the edge), fn(x, north) (the relief at a point, eased as drawn, 0
+    // outside), ground(x, north) (the patch's surface exactly as drawn, between its own vertices), step (its cell, m),
+    // version (bumps at every rebuild or move) }. Things that stand on the ground near the body re-seat on it when the
+    // version changes.
+    this.micro = null;
   }
   // x east (m), north (m from south edge)
   base(x, north) {
@@ -125,7 +153,12 @@ export class Heightfield {
     const SW = this.vert(i0 * S, n0 * S), SE = this.vert((i0 + 1) * S, n0 * S), NW = this.vert(i0 * S, (n0 + 1) * S), NE = this.vert((i0 + 1) * S, (n0 + 1) * S);
     return w > u ? SW + u * (NE - NW) + w * (NW - SW) : SW + u * (SE - SW) + w * (NE - SE);
   }
-  ground(x, north) { return this.groundIn(this.fine, x, north); }
+  // Inside the micro patch its surface (the fine or coarse surface plus the micro relief, as drawn); elsewhere groundIn.
+  ground(x, north) {
+    const M = this.micro;
+    if (M && x > M.x0 && x < M.x1 && north > M.n0 && north < M.n1) return M.ground(x, north);
+    return this.groundIn(this.fine, x, north);
+  }
   // The surface a given fine square (a Heightfield.fine record, or null) draws: animals.js re-seats its still
   // animals from the square it placed them on to the one drawn now.
   groundIn(F, x, north) {
@@ -446,7 +479,7 @@ export async function loadTile(tileId, base = '../tiles/', { signal = null } = {
   for (const k of ['client.heights', 'client.texture', 'client.habitat', 'client.canopy', 'client.masks'])
     if (!L[k]) throw new Error(`tile ${id} lacks ${k}; run the derive step`);
   const MX = L['client.species_mix'], mixFiles = MX?.files || {};
-  const [heights, texture, habitat, canopy, masks, species, perception, calendar, games, imagery, features, roads, imageryTexture, mast, mixIndex, mixJson, mixDensity, outcrop, geology, soils, groundClasses, profile, speciesPrior, detail, canopyHeight, groundTexture, seasonImage] = await Promise.all([
+  const [heights, texture, habitat, canopy, masks, species, perception, calendar, games, imagery, features, roads, imageryTexture, mast, mixIndex, mixJson, mixDensity, outcrop, geology, soils, groundClasses, profile, speciesPrior, detail, canopyHeight, groundTexture, seasonImage, lidarMicro] = await Promise.all([
     loadImageData(dir + L['client.heights'].path, signal), loadImageData(dir + L['client.texture'].path, signal),
     loadImageData(dir + L['client.habitat'].path, signal), loadImageData(dir + L['client.canopy'].path, signal),
     loadImageData(dir + L['client.masks'].path, signal),
@@ -488,6 +521,9 @@ export async function loadTile(tileId, base = '../tiles/', { signal = null } = {
     // replaced by ground (the base the 3D trees stand on), and the Sentinel-2 monthly sheet; optional
     L['client.texture_ground'] ? loadOptionalImage(dir + L['client.texture_ground'].path, signal) : null,
     L['client.season_rgb'] ? loadOptionalImage(dir + L['client.season_rgb'].path, signal) : null,
+    // lidar step, newer tiles (tile-spec "Lidar"): intensity, roughness and low-vegetation share on the 2 m grid, for the
+    // micro relief under the body (terrain.js); optional and quiet when absent
+    L['client.lidar_micro'] ? loadLidarMicro(dir + L['client.lidar_micro'].path, signal).catch(e => { if (!signal?.aborted) console.warn('lidar micro:', e.message); return null; }) : null,
   ]);
   if (signal?.aborted) throw aborted(signal);
   if (features) markRewilded(features, m);
@@ -507,6 +543,8 @@ export async function loadTile(tileId, base = '../tiles/', { signal = null } = {
     soils: soils ? new Grid8(soils, size) : null, groundClasses,
     // lidar canopy (client/canopy_height.png, 10 m): R p95 canopy height x 0.25 m, G tree cover %, B shrub cover %; null without the lidar step
     canopyHeight: canopyHeight ? new Grid8(canopyHeight, size) : null,
+    // lidar micro (client/lidar_micro.png, 2 m, RGB as loadLidarMicro): { width, height, data, channels }, or null
+    lidarMicro: lidarMicro && lidarMicro.width === lidarMicro.height ? lidarMicro : null,
     // per-cell species weights and density multipliers (null: vegetation falls back to the class mix)
     speciesMix: mixIndex && mixJson?.mixes && mixIndex.width === habitat.width ? new SpeciesMix(mixIndex, mixJson, size, mixDensity) : null,
     // former reservoir and stock-pond beds (255) and their riparian corridor (160), or null

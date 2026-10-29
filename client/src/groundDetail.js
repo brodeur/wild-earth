@@ -19,7 +19,20 @@ import { releaseTexture } from './gpuRelease.js';
 //   A  road weight (tile.roads, 5 m, max over each 10 m texel). The shader uses the sharper 5 m
 //      roads texture it already reads; A is kept for anything that wants it without that fetch.
 // Habitat weights (grassland / oak / chaparral) and tree cover come from tile.masks and tile.canopy,
-// which the terrain shader samples anyway.
+// which the terrain shader samples anyway. The mask's bytes are kept on the CPU (mask.data, 4 MB) for
+// detailWeightsAt, the shader's material rule run in JS at a point: terrain.js's micro patch reads it to
+// choose its relief (rock ridges, gravel, tussocks, litter, nothing on pavement) to match the texture drawn.
+//
+// Third octave (2026-10-28): inside the micro patch under the body (terrain.js MicroPatch), the top material
+// is fetched again at a tenth of its repeat (0.2 m; the rock 0.3 m), turned DETAIL_TURN3 further, and
+// multiplied into the 2 m octave's albedo ratio, its tangent normal added to the 2 m octave's (rotated back
+// to the projection plane first). The second material's own copy cost a third more for a border's worth. From a lizard's eye 9 cm up the 2 m scans' texels are 2 mm and blur;
+// the tenth-scale copy puts stems in the thatch and grain in the rock. It fades with camera distance over
+// detailOct3.x .. y (35% .. 50% of the patch's side: 1.4-1.9 m for a lizard, 8-12 m for a deer) and, like the
+// 2 m octave, once one repeat spans fewer than ~40 pixels. Its coordinates are taken from vRel, the
+// position less detailOrigin (a point near the patch, moved with it), plus a per-material, per-plane
+// offset made here in double precision (setDetailOrigin): at 5 repeats a metre a world coordinate of
+// 5000 m in float32 steps 2 texels at a time, which shows as blocks from 5 cm.
 
 export const DETAIL_SLOTS = [
   // name,      metres per repeat, UV rotation (rad), normal strength, albedo contrast
@@ -43,11 +56,35 @@ export const detailUniforms = {
   // per slot: x = 1 / metres per repeat, y = cos(angle), z = sin(angle), w = normal strength
   detailParams: { value: DETAIL_SLOTS.map(s => new THREE.Vector4(1 / s.size, Math.cos(s.angle), Math.sin(s.angle), s.normal)) },
   detailContrast: { value: DETAIL_SLOTS.map(s => s.albedo) },
+  // Third octave: x, y the camera distances it fades over (m), z 1 on / 0 off, w unused. terrain.js sets it with the
+  // body scale; off while there is no micro patch.
+  detailOct3: { value: new THREE.Vector4(0, 0, 0, 0) },
+  // per slot: the third octave's metres -> repeats matrix, row-major (m00, m01, m10, m11): the slot's turn plus
+  // DETAIL_TURN3, at OCT3_RATIO of its repeat
+  detailM3: { value: DETAIL_SLOTS.map(() => new THREE.Vector4()) },
+  // per slot and projection plane (slot * 3 + axis): the fractional repeat at detailOrigin, so vRel's repeats line up
+  detailOff3: { value: DETAIL_SLOTS.flatMap(() => [new THREE.Vector2(), new THREE.Vector2(), new THREE.Vector2()]) },
+  detailOrigin: { value: new THREE.Vector3() },
 };
+export const DETAIL_TURN3 = 1.9, OCT3_RATIO = 0.1;
+for (let m = 0; m < DETAIL_SLOTS.length; m++) {
+  const sl = DETAIL_SLOTS[m], a = sl.angle + DETAIL_TURN3, k = 1 / (sl.size * OCT3_RATIO);
+  detailUniforms.detailM3.value[m].set(Math.cos(a) * k, -Math.sin(a) * k, Math.sin(a) * k, Math.cos(a) * k);
+}
+// Moves the third octave's origin (terrain.js, when the micro patch moves): o is world (x, y, z). The offsets are made
+// from the float32 matrix the shader holds, in double, so the octave is continuous across a move.
+export function setDetailOrigin(x, y, z) {
+  const U = detailUniforms; U.detailOrigin.value.set(x, y, z);
+  const o = U.detailOrigin.value, P = [[o.z, o.y], [o.x, o.z], [o.x, o.y]], f = Math.fround, fr = v => v - Math.floor(v);
+  for (let m = 0; m < DETAIL_SLOTS.length; m++) {
+    const M = U.detailM3.value[m], a = f(M.x), b = f(M.y), c = f(M.z), d = f(M.w);
+    for (let ax = 0; ax < 3; ax++) { const [u, v] = P[ax]; U.detailOff3.value[m * 3 + ax].set(fr(a * u + b * v), fr(c * u + d * v)); }
+  }
+}
 
 // Back to the blanks the page started with (terrain.js dispose: a world torn down lets go of its detail textures).
 const blanks = { detailAlbedo: detailUniforms.detailAlbedo.value, detailNormal: detailUniforms.detailNormal.value, detailMask: detailUniforms.detailMask.value };
-export function resetDetailUniforms() { detailUniforms.detailAlbedo.value = blanks.detailAlbedo; detailUniforms.detailNormal.value = blanks.detailNormal; detailUniforms.detailMask.value = blanks.detailMask; detailUniforms.detailReady.value = 0; }
+export function resetDetailUniforms() { detailUniforms.detailAlbedo.value = blanks.detailAlbedo; detailUniforms.detailNormal.value = blanks.detailNormal; detailUniforms.detailMask.value = blanks.detailMask; detailUniforms.detailReady.value = 0; detailUniforms.detailOct3.value.z = 0; }
 
 function smooth(e0, e1, x) { const t = Math.min(Math.max((x - e0) / (e1 - e0), 0), 1); return t * t * (3 - 2 * t); }
 
@@ -82,6 +119,67 @@ function bilinear8(g, x, north) {
   const x0 = Math.floor(fx), y0 = Math.floor(fy), tx = fx - x0, ty = fy - y0;
   const v = (i, j) => g.channel(Math.min(Math.max(i, 0), W - 1), Math.min(Math.max(j, 0), H - 1), 0);
   return ((v(x0, y0) * (1 - tx) + v(x0 + 1, y0) * tx) * (1 - ty) + (v(x0, y0 + 1) * (1 - tx) + v(x0 + 1, y0 + 1) * tx) * ty) / 255;
+}
+
+// The terrain shader's value noise in JS (terrain.js FRAG hash / vnoise / rnoise): the same integer hash, the same
+// rotated lattice, for the ragged material borders detailWeightsAt reproduces.
+function fragHash(i, j) {
+  let h = (Math.imul(i + 65536, 1597334677) ^ Math.imul(j + 65536, 3812015801 | 0)) >>> 0;
+  h = Math.imul(h ^ (h >>> 15), 2246822519 | 0) >>> 0; h = (h ^ (h >>> 13)) >>> 0;
+  return h / 4294967296;
+}
+export function fragRnoise(px, py, a, scale) {
+  const c = Math.cos(a), s = Math.sin(a), u = (c * px - s * py) / scale, v = (s * px + c * py) / scale;
+  const i = Math.floor(u), j = Math.floor(v); let fx = u - i, fy = v - j;
+  fx = fx * fx * (3 - 2 * fx); fy = fy * fy * (3 - 2 * fy);
+  const a0 = fragHash(i, j), a1 = fragHash(i + 1, j), b0 = fragHash(i, j + 1), b1 = fragHash(i + 1, j + 1);
+  return (a0 + (a1 - a0) * fx) * (1 - fy) + (b0 + (b1 - b0) * fx) * fy;
+}
+// Channel ch of a Grid8 bilinear between its pixel centres (as a linear-filtered texture of it), 0..1.
+function bilinearCh(g, x, north, ch) {
+  const W = g.img.width, H = g.img.height, fx = x / g.res - 0.5, fy = (g.size - north) / g.res - 0.5;
+  const x0 = Math.floor(fx), y0 = Math.floor(fy), tx = fx - x0, ty = fy - y0;
+  const v = (i, j) => g.channel(Math.min(Math.max(i, 0), W - 1), Math.min(Math.max(j, 0), H - 1), ch);
+  return ((v(x0, y0) * (1 - tx) + v(x0 + 1, y0) * tx) * (1 - ty) + (v(x0, y0 + 1) * (1 - tx) + v(x0 + 1, y0 + 1) * tx) * ty) / 255;
+}
+// The habitat classes' soft weights at a point: masks.png is the class one-hots on the 30 m habitat grid resampled
+// bilinearly (pipeline derive.py), so the same bilinear on tile.habitat gives the weights the shader reads.
+function classWeight(tile, x, north, cls) {
+  const g = tile.habitat, W = g.img.width, H = g.img.height, fx = x / g.res - 0.5, fy = (g.size - north) / g.res - 0.5;
+  const x0 = Math.floor(fx), y0 = Math.floor(fy), tx = fx - x0, ty = fy - y0;
+  const v = (i, j) => g.channel(Math.min(Math.max(i, 0), W - 1), Math.min(Math.max(j, 0), H - 1), 0) === cls ? 1 : 0;
+  return (v(x0, y0) * (1 - tx) + v(x0 + 1, y0) * tx) * (1 - ty) + (v(x0, y0 + 1) * (1 - tx) + v(x0 + 1, y0 + 1) * tx) * ty;
+}
+// The terrain shader's near-detail material rule (terrain.js FRAG, the wt[] block) at a point, in JS: the weights of
+// thatch, litter, gravel, rock and pavement before the shader keeps its top two. mask: buildDetailMask's result (its
+// data, rows south first); slopeDeg: the drawn surface's own slope where the tile has the lidar residual (the shader's
+// geoSlope), else 0. bareK scales the photo's bare reading and thatchAdd raises the thatch (terrain.js passes the lidar
+// micro raster's intensity and low-vegetation share there; 1 and 0 reproduce the shader). out: a 5-array, returned.
+// Also out.tree (cover 0..1) and out.water (0..1, habitat water) for the caller.
+export function detailWeightsAt(tile, mask, x, north, slopeDeg = 0, bareK = 1, thatchAdd = 0, out = [0, 0, 0, 0, 0]) {
+  const W = mask.width, D = mask.data, fx = x / tile.size * W - 0.5, fy = north / tile.size * W - 0.5;
+  const x0 = Math.floor(fx), y0 = Math.floor(fy), tx = fx - x0, ty = fy - y0;
+  const m = ch => {
+    const v = (i, j) => D[(Math.min(Math.max(j, 0), W - 1) * W + Math.min(Math.max(i, 0), W - 1)) * 4 + ch];
+    return ((v(x0, y0) * (1 - tx) + v(x0 + 1, y0) * tx) * (1 - ty) + (v(x0, y0 + 1) * (1 - tx) + v(x0 + 1, y0 + 1) * tx) * ty) / 255;
+  };
+  const road = tile.roadsImage && tile.roads ? bilinearCh(tile.roads, x, north, 0) : 0, keep = 1 - smooth(0.55, 0.75, road);
+  const wG = classWeight(tile, x, north, 5) * keep, wO = classWeight(tile, x, north, 1) * keep, wC = classWeight(tile, x, north, 4) * keep;
+  const tree = Math.min(Math.max(bilinearCh(tile.canopy, x, north, 0) * 2.55, 0), 1);
+  const slope = Math.max(m(0) * 90, slopeDeg), curv = m(1) * 2 - 1, bare = Math.min(m(2) * bareK, 1);
+  const bn = fragRnoise(x + 11, -north + 11, 0.8, 3.1) - 0.5;
+  const rock = Math.max(smooth(24, 32, slope), smooth(0.35, 0.7, -curv), smooth(0.7, 0.9, bare));
+  const pave = smooth(0.42, 0.68, road + 0.22 * bn + 0.18 * (fragRnoise(x + 3.3, -north + 3.3, 2.4, 0.9) - 0.5));
+  out[0] = Math.min(wG * (1 - 0.8 * tree) + thatchAdd, 1);
+  out[1] = Math.min(Math.max(Math.max(tree * 1.5, wO * 0.5), 0), 1);
+  out[2] = Math.min(Math.max(0.06 + 0.7 * wC + smooth(0.25, 0.6, bare) + 0.8 * smooth(0.15, 0.5, curv), 0), 1);
+  out[3] = rock;
+  for (let i = 0; i < 3; i++) out[i] *= (1 - 0.8 * rock) * Math.max(1 + (i < 2 ? -bn : bn) * 0.8, 0);
+  out[3] *= Math.max(1 + bn * 0.6, 0);
+  for (let i = 0; i < 4; i++) out[i] *= 1 - pave;
+  out[4] = pave;
+  out.tree = tree; out.water = classWeight(tile, x, north, 7);
+  return out;
 }
 
 // The world build steps buildDetailMaskSteps (slice.js runSliced, terrain.js) so the opening screen keeps responding;
@@ -145,8 +243,8 @@ export function* buildDetailMaskSteps(tile, W = MASK_PX) {
   const tex = new THREE.DataTexture(out, W, W, THREE.RGBAFormat, THREE.UnsignedByteType);
   tex.colorSpace = THREE.NoColorSpace; tex.magFilter = THREE.LinearFilter; tex.minFilter = THREE.LinearFilter;
   tex.generateMipmaps = false; tex.wrapS = tex.wrapT = THREE.ClampToEdgeWrapping; tex.needsUpdate = true;
-  releaseTexture(tex);   // its 4 MB go once uploaded (gpuRelease.js); nothing samples the mask on the CPU
-  return { texture: tex, width: W, ms: Math.round(performance.now() - t0) };
+  releaseTexture(tex);   // three's copy goes once uploaded (gpuRelease.js); data below keeps the bytes for detailWeightsAt
+  return { texture: tex, width: W, data: out, ms: Math.round(performance.now() - t0) };
 }
 
 // Decoded off the main thread into an ImageBitmap (createImageBitmap on the bytes), so pixelsOf's drawImage copies
@@ -321,5 +419,18 @@ export const DETAIL_GLSL = /* glsl */`
     vec3 L = vec3(co, float(m));
     alb = textureGrad(detailAlbedo, L, gx, gy).rgb * 2.0;          // 1.0 = the photo unchanged
     tn = textureGrad(detailNormal, L, gx, gy).rgb * 2.0 - 1.0; tn.xy *= P.w;
+  }
+  // The third octave of slot m on plane ax at q (vRel: the position less detailOrigin), with the 2 m octave's warp; the
+  // tangent normal comes back turned to the plane (the matrix's rotation undone), so a bump lights from the sun's side.
+  uniform vec4 detailOct3; uniform vec4 detailM3[${DETAIL_SLOTS.length}]; uniform vec2 detailOff3[${DETAIL_SLOTS.length * 3}];
+  void dSample3(int m, int ax, vec3 q, vec2 warp, vec3 dpx, vec3 dpy, out vec3 alb, out vec3 tn) {
+    vec4 M = detailM3[m];
+    vec2 pq = dProj(ax, q) + warp, ex = dProj(ax, dpx), ey = dProj(ax, dpy);
+    vec2 co = vec2(dot(M.xy, pq), dot(M.zw, pq)) + detailOff3[m * 3 + ax];
+    vec2 gx = vec2(dot(M.xy, ex), dot(M.zw, ex)), gy = vec2(dot(M.xy, ey), dot(M.zw, ey));
+    vec3 L = vec3(co, float(m));
+    alb = textureGrad(detailAlbedo, L, gx, gy).rgb * 2.0;
+    tn = textureGrad(detailNormal, L, gx, gy).rgb * 2.0 - 1.0;
+    tn.xy = vec2(M.x * tn.x + M.z * tn.y, M.y * tn.x + M.w * tn.y) / length(M.xy) * detailParams[m].w;
   }
 `;
