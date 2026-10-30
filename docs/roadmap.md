@@ -133,7 +133,10 @@ sequenced; Parked is in the brief but deliberately not started.
   flared), kills within reach and mantles over the kill, AI and player; the feet coming forward are not drawn (the
   red-tail builder has no leg parts: the next step for the hawk). The raven's strike and feed (grey before): three
   quick hard bill stabs on E, the kill on the last; the AI ravens at carrion stab in bursts; the jay's take sets it
-  down on the lizard with a few pecks.
+  down on the lizard with a few pecks. The catch is a family-level principle in the locomotion tree (a `catch` block
+  per family, resolved into the tile's table; the client picks a hunter's catch by it), so a new hunter on a new tile
+  gets its family's catch. Open: the hawk's feet (leg parts in the red-tail builder), the bear's swat, AI corvid hunts,
+  the jay carrying its take off, the prey's own struggle in the hold.
 
 ## Next: the visual pass, in order of effect per hour
 

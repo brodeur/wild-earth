@@ -6,6 +6,9 @@
 export class Locomotion {
   constructor(table) { this.rows = table?.species || {}; }
   get(code) { return this.rows[code] || null; }
+  // the hunter's catch by its family (docs/movement.md "The catch"): { move: 'leap' | 'pounce' | 'talon' | 'stab' | 'swat',
+  // reach_m, ... } as the tree gives it, or null for a species that hunts nothing
+  catchOf(code) { return this.get(code)?.catch || null; }
   // a GROUND-shaped entry for a walker (groundControl.js) with every field a control needs, from the resolved row
   groundEntry(code) {
     const r = this.get(code); if (!r || r.flier) return null;
@@ -22,6 +25,7 @@ export class Locomotion {
       derived: true,
     };
     if (r.stalk_mps) e.stalk = r.stalk_mps;
+    if (r.catch?.move === 'leap' || r.catch?.move === 'pounce') e.catch = r.catch.move;   // the walker's catch move (groundControl.js CATCH)
     if (plan === 'quadruped' && r.posture === 'plantigrade') e.act = { flick: 1, dig: true, t: 4, word: 'digging' };
     return e;
   }
@@ -29,6 +33,7 @@ export class Locomotion {
   fill(code, entry) {
     const r = this.get(code); if (!r || !entry) return entry;
     for (const [k, v] of [['cruise', r.cruise_mps], ['sprint', r.sprint_s], ['recover', r.recover_s]]) if (entry[k] === undefined && v !== undefined) entry[k] = v;
+    if (entry.catch === undefined && (r.catch?.move === 'leap' || r.catch?.move === 'pounce')) entry.catch = r.catch.move;   // the catch by family
     return entry;
   }
 }

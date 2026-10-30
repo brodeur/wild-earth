@@ -53,7 +53,19 @@
    "flags": {
     "head_lead": true
    },
-   "flier": true
+   "flier": true,
+   "catch": {
+    "move": "stab",
+    "name": "the bill stab",
+    "reach_m": 0.9,
+    "stabs": 3,
+    "stab_s": 0.2,
+    "feed": {
+     "pose": "stabs with pauses",
+     "burst_s": 0.75,
+     "hz": 4
+    }
+   }
   },
   "buteo_jamaicensis": {
    "code": "buteo_jamaicensis",
@@ -106,7 +118,21 @@
    "flags": {
     "head_lead": true
    },
-   "flier": true
+   "flier": true,
+   "catch": {
+    "move": "talon",
+    "name": "the talon strike and the mantle",
+    "reach_m": 1.4,
+    "brake_s": 0.4,
+    "over_m": 0.35,
+    "feed": {
+     "pose": "mantling: wings half spread and drooped round the kill, the tail fanned, head down",
+     "s": [
+      18,
+      35
+     ]
+    }
+   }
   },
   "odocoileus_hemionus": {
    "code": "odocoileus_hemionus",
@@ -214,7 +240,28 @@
     "lead_max": 0.25
    },
    "flags": {},
-   "flier": false
+   "flier": false,
+   "catch": {
+    "move": "pounce",
+    "name": "the mousing pounce",
+    "reach_m": 1.3,
+    "from_m": 2.4,
+    "fix_s": [
+     0.45,
+     0.8
+    ],
+    "duration_s": 0.55,
+    "height_m": 0.5,
+    "miss": {
+     "move": "paw strikes",
+     "hz": 4,
+     "s": 0.75
+    },
+    "feed": {
+     "pose": "the kill tossed in the jaws, then the nose down at it",
+     "toss_s": 0.3
+    }
+   }
   },
   "sciurus_griseus": {
    "code": "sciurus_griseus",
@@ -488,7 +535,19 @@
    "flags": {
     "head_lead": true
    },
-   "flier": true
+   "flier": true,
+   "catch": {
+    "move": "stab",
+    "name": "the bill stab",
+    "reach_m": 0.6,
+    "stabs": 3,
+    "stab_s": 0.2,
+    "feed": {
+     "pose": "stabs with pauses",
+     "burst_s": 0.75,
+     "hz": 4
+    }
+   }
   },
   "cyanocitta_stelleri": {
    "code": "cyanocitta_stelleri",
@@ -542,7 +601,19 @@
    "flags": {
     "head_lead": true
    },
-   "flier": true
+   "flier": true,
+   "catch": {
+    "move": "stab",
+    "name": "the bill stab",
+    "reach_m": 0.9,
+    "stabs": 3,
+    "stab_s": 0.2,
+    "feed": {
+     "pose": "stabs with pauses",
+     "burst_s": 0.75,
+     "hz": 4
+    }
+   }
   },
   "cathartes_aura": {
    "code": "cathartes_aura",
@@ -812,7 +883,28 @@
     "lead_max": 0.25
    },
    "flags": {},
-   "flier": false
+   "flier": false,
+   "catch": {
+    "move": "pounce",
+    "name": "the mousing pounce",
+    "reach_m": 1.6,
+    "from_m": 2.4,
+    "fix_s": [
+     0.45,
+     0.8
+    ],
+    "duration_s": 0.55,
+    "height_m": 0.75,
+    "miss": {
+     "move": "paw strikes",
+     "hz": 4,
+     "s": 0.75
+    },
+    "feed": {
+     "pose": "the kill tossed in the jaws, then the nose down at it",
+     "toss_s": 0.3
+    }
+   }
   },
   "puma_concolor": {
    "code": "puma_concolor",
@@ -868,7 +960,24 @@
     "stalk": true
    },
    "flier": false,
-   "stalk_mps": 0.45
+   "stalk_mps": 0.45,
+   "catch": {
+    "move": "leap",
+    "name": "the leap and the neck bite",
+    "reach_m": 2.4,
+    "from_m": 3.2,
+    "duration_s": 0.45,
+    "height_m": 0.55,
+    "over_m": 0.7,
+    "miss": {
+     "move": "a twist away",
+     "s": 0.4
+    },
+    "feed": {
+     "pose": "crouched over the kill, head low",
+     "s": 45
+    }
+   }
   },
   "ursus_americanus": {
    "code": "ursus_americanus",
@@ -922,7 +1031,16 @@
     "lead_max": 0.25
    },
    "flags": {},
-   "flier": false
+   "flier": false,
+   "catch": {
+    "move": "swat",
+    "name": "the swat",
+    "reach_m": 1.8,
+    "feed": {
+     "pose": "standing over it, head down",
+     "s": 60
+    }
+   }
   },
   "meleagris_gallopavo": {
    "code": "meleagris_gallopavo",

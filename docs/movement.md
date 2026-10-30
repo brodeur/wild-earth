@@ -172,8 +172,21 @@ gives three quick hard stabs on E, the kill on the last, and the same stabs besi
 carrion stab in bursts of three with pauses; the player's jay takes a lizard on contact in a dive, is set down on it
 and pecks three times (carrying it off is not built; no AI corvid hunts yet).
 
+**The principle in the tree.** The catch belongs to the family rank: it is the signature move of a family, not of a
+species (every cat leaps and bites the neck, every canid mouses, every hawk strikes with the feet, every corvid
+stabs), so `library/animals/locomotion.json` carries a `catch` block per family (Felidae, Canidae, Accipitridae,
+Corvidae, Ursidae: the move's name, its reach, the distance it is launched from, its duration and height, the miss and
+the feeding pose with its time), a species block overriding only a number (the fox's reach and height, the jay's
+reach). `pipeline/locomotion.py` resolves it into `tiles/<id>/locomotion.json`; `client/src/locomotion.js catchOf`
+and `animals.js buildHunts` read it, so the AI picks a hunter's catch by its family and a hunter new to a tile catches
+as its family does; the hand-tuned reaches in `animals.js CARRION.reach` win where set, as the controls' tables do.
+What is open: the hawk's feet (leg parts in the red-tail builder), the bear's swat and the AI corvid hunt (in the tree,
+not drawn), the jay carrying its take off, and the prey's own part in the hold (a deer that kicks, a rabbit that
+screams and twists).
+
 ## Open
 
 - The part rig's spine bend and head lead (the chest and head parts turning about the vertical by the lag).
 - The AI's gaits from the Froude bands of the table.
 - The tree's numbers for the birds' ground speeds (Garland's fit is for mammals; capped at 4 sqrt(g h) for now).
+- The catch (above): the hawk's feet, the bear's swat, the AI corvid hunt, the jay's carry, the prey's struggle.

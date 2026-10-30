@@ -2834,3 +2834,21 @@ each); carrying it off is not built. No AI corvid hunts yet (the ravens and jays
 the player's and the feed the AI's. Verified: the player's raven's three stabs at 5 Hz with the kill of a lizard at
 0.6 s; the summoned AI raven at a carcass stabbing in bursts (flick 1.15, 0.58, 1.15 over 0.25 s steps); the player's
 jay taking a lizard on a dive, set down and pecking three times.
+
+**6. The catch in the tree.** The catch is a family-level principle, so it lives in `library/animals/locomotion.json`
+as a `catch` block per family: Felidae the leap and the neck bite (reach 2.4 m, from 3.2 m, 0.45 s, 0.55 m high,
+landing 0.7 m short, 45 s crouched over the kill), Canidae the mousing pounce (reach 1.6, from 2.4, the fix 0.45-0.8 s,
+0.55 s and 0.75 m high, the paw strikes at 4 Hz for 0.75 s, the toss 0.3 s), Accipitridae (a new family node under
+Accipitriformes) the talon strike and the mantle (reach 1.4, the brake 0.4 s, 0.35 m over the prey, the mantle
+18-35 s), Corvidae the bill stab (reach 0.9, three stabs of 0.2 s, the feed in 0.75 s bursts at 4 Hz), Ursidae the
+swat (reach 1.8; not drawn yet), with species overrides for the fox (reach 1.3, 0.5 m high) and the jay (reach 0.6).
+`pipeline/locomotion.py` passes the merged block through to `tiles/<id>/locomotion.json` (rebuilt for the home tile
+and the re-centred Yosemite); `client/src/locomotion.js` gives `catchOf(code)` and sets a walker's `catch` move
+(groundControl's CATCH key) in the derived entry and in `fill`; `animals.js buildHunts` reads the table into
+`catchOf` and `reach` per species slot (CARRION.reach's hand-set values win, the table fills the rest), and the AI
+picks the leap or the pounce by the family's move (a lion leaps because Felidae says so, with the species test as the
+fallback), the kill reaches by `reach`. A hunter new to a tile gets its family's catch: a bobcat would leap, a kit fox
+pounce, a Cooper's hawk strike and mantle, a crow stab. Verified on the home tile after the change: the AI lion's leap
+and the AI fox's pounce as before, from the table. Not in the tree: the AI corvid hunt and the bear's swat (nothing
+draws them yet); the kill sound was already in sound.js (the prey's last cry on the kill event), so the roadmap's
+"no kill sound" was stale.

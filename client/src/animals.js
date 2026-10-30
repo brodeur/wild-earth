@@ -878,6 +878,12 @@ export class Animals {
     const det = this.tile.perception?.detects || {};
     this.det = SPECIES.map(p => SPECIES.map(h => { const v = det[p.code.split(':')[0]]?.[h.code.split(':')[0]]; return typeof v === 'number' ? v : Infinity; }));
     this.huntersOf = SPECIES.map(() => []); this.hunterList = [];
+    // each hunter's catch by its family (tiles/<id>/locomotion.json from library/animals/locomotion.json; docs/movement.md
+    // "The catch"): the move (leap, pounce, talon, stab, swat) and its reach; CARRION.reach's hand-set values win, the table
+    // fills the rest, so a hunter new to a tile catches as its family does
+    const L = this.tile.locomotion?.species || {};
+    this.catchOf = SPECIES.map(s => L[s.code]?.catch || null);
+    this.reach = SPECIES.map((s, k) => CARRION.reach[k] ?? this.catchOf[k]?.reach_m ?? null);
   }
   // The live AI hunters near the player (not bedded, not up a tree), by the prey slot they hunt.
   refreshHunters(P) {
@@ -1062,7 +1068,7 @@ export class Animals {
   // heading (the flight's yaw: 0 faces -z), within `cone` rad of it ahead; or null. The catch moves (groundControl's leap
   // and pounce, flierControl's strike) aim at it; catchNear kills it.
   preyNear(x, y, z, R = null, yaw = NaN, cone = 0.7) {
-    const k = INDEX[this.observer], prey = this.preySlots?.[k], reach = R ?? CARRION.reach[k]; if (!prey || !reach) return null;
+    const k = INDEX[this.observer], prey = this.preySlots?.[k], reach = R ?? this.reach?.[k]; if (!prey || !reach) return null;
     const fx = -Math.sin(yaw), fz = -Math.cos(yaw), cc = Math.cos(cone);
     let best = null, bd = reach * reach;
     for (const a of this.list) {
@@ -2965,7 +2971,7 @@ export class Animals {
       if (u > 0.9 && a.group) { this.flushCovey(a.group, a.x, a.z, 'hawk'); a.group = null; }
       if (u >= 1) {   // the grab: the kill within reach (the talons), then the mantle on the ground; else pull up out of it
         const d = prey ? Math.hypot(prey.x - a.x, prey.z - a.z) : Infinity;
-        if (prey && d < CARRION.reach[HK] && KILLABLE.has(prey.sp) && r() < HUNT.hawkCatch) {
+        if (prey && d < (this.reach?.[HK] ?? CARRION.reach[HK]) && KILLABLE.has(prey.sp) && r() < HUNT.hawkCatch) {
           this.kill(prey, a); a.state = H_MANTLE; a.t = HUNT.mantleT[0] + r() * (HUNT.mantleT[1] - HUNT.mantleT[0]);
           a.x = prey.x; a.z = prey.z; a.y = H.atXZ(a.x, a.z) + 0.25; a.air = 0; a.speed = 0; a.prey = null;
           this.lastHawkKill = { id: a.id, prey: SPECIES[prey.sp].code, t: this.time };
@@ -3207,7 +3213,7 @@ export class Animals {
         if (u >= 1) {
           a.lift = 0;
           const t = a.hunt, alive = t && this.huntAlive(t), d = alive ? Math.hypot(t.x - a.x, t.z - a.z) : Infinity;
-          if (alive && d < CARRION.reach[a.sp] && KILLABLE.has(t.sp) && r() < CARRION.canidCatch) { this.kill(t, a); this.huntOver(a, M_TOSS); a.t = HUNT.tossT; }
+          if (alive && d < (this.reach?.[a.sp] ?? CARRION.reach[a.sp] ?? 1.5) && KILLABLE.has(t.sp) && r() < CARRION.canidCatch) { this.kill(t, a); this.huntOver(a, M_TOSS); a.t = HUNT.tossT; }
           else if (a.hunt) { this.huntOver(a, M_PAW); a.t = HUNT.pawT; }
           else { a.state = M_SNIFF; a.t = 2 + r() * 3; }
         }
@@ -3258,12 +3264,13 @@ export class Animals {
         const t = a.hunt, d = t && this.huntAlive(t) ? Math.hypot(t.x - a.x, t.z - a.z) : Infinity;
         if (d === Infinity) { this.huntOver(a, lion ? M_STAND : M_SNIFF); break; }
         a.tx = t.x; a.tz = t.z;
-        if (lion && a.rush && !a.rolled && d < HUNT.leapD) {   // the rush's last bound: the leap onto it (M_LEAP: the kill or the miss at the landing)
+        const leap = (this.catchOf?.[a.sp]?.move || (lion ? 'leap' : 'pounce')) === 'leap';   // the catch by family (buildHunts): a cat leaps, a canid pounces
+        if (leap && a.rush && !a.rolled && d < HUNT.leapD) {   // the rush's last bound: the leap onto it (M_LEAP: the kill or the miss at the landing)
           a.sx = a.x; a.sz = a.z; a.tx = t.x; a.tz = t.z; a.u = 0; a.dur = HUNT.leapT; a.lift = 0; a.state = M_LEAP;
           this.lastLeap = { id: a.id, d, t: this.time };
           break;
         }
-        if (!lion && d < HUNT.pounceD) {   // on it: the fix (M_FIX: a beat of stillness, head cocked), then the spring (M_POUNCE: the kill at the landing)
+        if (!leap && d < HUNT.pounceD) {   // on it: the fix (M_FIX: a beat of stillness, head cocked), then the spring (M_POUNCE: the kill at the landing)
           a.yaw = Math.atan2(t.x - a.x, t.z - a.z); a.state = M_FIX; a.t = HUNT.fixT[0] + r() * (HUNT.fixT[1] - HUNT.fixT[0]); a.cock = r() < 0.5 ? -1 : 1;
           speed = 0; break;
         }
@@ -3294,7 +3301,7 @@ export class Animals {
         if (u >= 1) {
           a.lift = 0; a.rolled = 1;
           const d = alive ? Math.hypot(t.x - a.x, t.z - a.z) : Infinity;
-          if (d < CARRION.reach[ML] && KILLABLE.has(t.sp) && r() < CARRION.lionCatch) { this.kill(t, a); this.huntOver(a, M_FEED); a.t = CARRION.feed; }
+          if (d < (this.reach?.[a.sp] ?? CARRION.reach[ML]) && KILLABLE.has(t.sp) && r() < CARRION.lionCatch) { this.kill(t, a); this.huntOver(a, M_FEED); a.t = CARRION.feed; }
           else { this.huntOver(a, M_STAND); a.twist = HUNT.twistT; a.twistS = r() < 0.5 ? -1 : 1; }
         }
         break;

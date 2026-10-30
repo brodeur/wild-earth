@@ -47,7 +47,7 @@ no hotspots; a new species in the calendar gets its games the same way.
 |---|---|---|
 | gather | find the resource's hotspots, feed, keep an eye out; competitors deplete the same cells | the walkers: hunger, fed by holding E where a gather resource scores (needs.js, 2026-10-27); not yet for the birds, the squirrel or the hunters |
 | drink | reach water on a rhythm; in summer the few sources draw every species, and the ambushers | the walkers: thirst at the species' rhythm, met by E while wading or at the water (needs.js) |
-| hunt | find prey by perception, close unseen, strike | the AI hunts (fox pounce, lion ambush) and the player's (hunt.js: the lion, coyote, fox, hawk, raven, jay); the kill is the family's catch move and the prey falls (2026-10-30, docs/movement.md "The catch") |
+| hunt | find prey by perception, close unseen, strike | the AI hunts (fox pounce, lion ambush) and the player's (hunt.js: the lion, coyote, fox, hawk, raven, jay); the kill is the family's catch move and the prey falls (2026-10-30, docs/movement.md "The catch"): the cats' leap and neck bite, the canids' mousing pounce, the hawks' talon strike and mantle, the corvids' bill stab, from `catch` blocks per family in the locomotion tree |
 | evade | notice the predator first (perception, the watchers' alarms), reach cover, keep the group together | the AI flees; the covey and flock flush |
 | cache | store in season, recover later; competitors pilfer; a family defends its granary | the acorn game (raven), the squirrel and woodpecker caches |
 | shelter | be in cover, a cavity, a burrow or the roost before dusk, a storm or a predator | turkeys roost at dusk; deer bed by day |

@@ -24,6 +24,9 @@ for what no rank above says. resolve(code) merges the chain kingdom -> phylum ->
   turn            w      the on-the-spot turn rate: 2.2 rad/s x (1.3 m / body length)^0.5, capped at 8;
                          the step rate and amplitude from the taxon's turn block; the lag from the taxon's lag block
                          scaled by sqrt(body length / 1.3 m)
+  catch                  the family's catch move, passed through as the tree gives it (a cat's leap and neck bite, a
+                         canid's mousing pounce, a hawk's talon strike and mantle, a corvid's bill stab; a species block
+                         may override its reach): the client's hunters catch by it (docs/movement.md "The catch")
 Everything a species' record or the species block gives wins over the derivation. The output is a plain table per
 species the client reads (client/src/locomotion.js) to fill the fields its hand-tuned tables (groundControl.js GROUND,
 flierControl.js FLIERS) do not give, and for a species that has no hand-tuned entry at all: a new species on a new
@@ -112,6 +115,8 @@ def resolve(code: str, tree: dict | None = None) -> dict | None:
     }
     if merged.get("stalk_mps"):
         out["stalk_mps"] = merged["stalk_mps"]
+    if merged.get("catch"):   # the family's catch move (docs/movement.md "The catch"): the client picks a hunter's catch by it
+        out["catch"] = merged["catch"]
     return out
 
 
