@@ -129,7 +129,9 @@ sequenced; Parked is in the brief but deliberately not started.
   with the head driven into the neck, AI and player, then CARRION.feed s crouched over the kill (the feeding pose that
   was open), a miss a twist away. The canids' pounce is the mousing pounce: the fix with the head cocked, the high
   stiff-legged spring onto where the prey was, the head toss on a kill, the paw strikes on a miss; the player's E does
-  the same.
+  the same. The hawk's catch (open before): the stoop at prey brakes in its last 0.4 s (pitched up, wings and tail
+  flared), kills within reach and mantles over the kill, AI and player; the feet coming forward are not drawn (the
+  red-tail builder has no leg parts: the next step for the hawk).
 
 ## Next: the visual pass, in order of effect per hour
 

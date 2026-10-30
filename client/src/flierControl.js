@@ -16,6 +16,7 @@ import { addCaster } from './shadows.js';
 // hop, the head down with a peck. The raven itself stays on RavenFlight as it was.
 
 const TAU = Math.PI * 2;
+const FLARE = 0.4, FLARE_PITCH = 0.5;   // the hawk's brake at prey (update, draw): its length (s) and the drawn pitch-up (rad) at its peak
 const damp = (a, b, k, dt) => b + (a - b) * Math.exp(-k * dt);
 const conifer = rec => /^pinus_|^pseudotsuga|^calocedrus|^abies/.test(rec.species);
 
@@ -48,6 +49,7 @@ export class FlierControl {
     this.pose = { phase: 0, amp: 0, pose: 0, flick: 0, e0: 0, e1: 0 };
     this.meshes = new Map();
     this._m = new THREE.Matrix4(); this._q = new THREE.Quaternion(); this._qy = new THREE.Quaternion().setFromAxisAngle(new THREE.Vector3(0, 1, 0), Math.PI);
+    this._qf = new THREE.Quaternion(); this._xAxis = new THREE.Vector3(1, 0, 0); this.flare = 0; this.mantle = null;   // the hawk's brake and mantle (update)
     this._p = new THREE.Vector3(); this._s = new THREE.Vector3();
   }
 
@@ -141,13 +143,25 @@ export class FlierControl {
   }
 
   // The frame (main.js, in place of flight.update): the flight with the species' numbers, then the bird drawn.
+  // The hawk's catch (2026-10-30, docs/movement.md "The catch"): flying at prey, in the last FLARE s before contact the
+  // body pitches up and the wings and tail flare (the brake: draw) as the feet come forward; the strike within reach
+  // kills (animals.js catchNear) and the hawk comes down on the kill at once, mantling over it (wings half spread and
+  // drooped round it, the tail fanned, the head down) until it hops or takes off.
   update(dt) {
-    const r = this.flight.update(dt);
+    const f = this.flight, r = f.update(dt), hawk = this.S?.short === 'hawk';
     if (this.on && this.animals?.catchNear && (this.catchT = (this.catchT || 0) - dt) <= 0) {   // a hunter's strike: prey within reach in flight (animals.js CARRION)
-      this.catchT = 0.1; const P = this.flight.pos;
-      const c = this.animals.catchNear(P.x, P.y, P.z); if (c) { this.needs?.fed?.(); this.say?.(`took a ${this.animals.speciesList()[c.sp]?.one || 'prey'}`); }   // in flight or on the ground beside it
-      else if (this.flight.landed) { const k = this.animals.feedNear?.(P.x, P.y, P.z); if (k && this.fedAt !== k) { this.fedAt = k; this.needs?.fed?.(); this.say?.(`fed at the ${this.animals.speciesList()[k.sp]?.one || 'carcass'}`); } }   // a raven or vulture down at carrion
+      this.catchT = 0.1; const P = f.pos;
+      const c = this.animals.catchNear(P.x, P.y, P.z);
+      if (c) {   // in flight or on the ground beside it; the hawk comes down on its kill and mantles
+        this.needs?.fed?.(); this.say?.(`took a ${this.animals.speciesList()[c.sp]?.one || 'prey'}`);
+        if (hawk && !f.landed) { const g = f.footing(c.x, c.z, c.y + 1).y; f.pos.set(c.x, g + f.sp.landH, c.z); f.pitch = 0; f.roll = 0; f.settleOn(null, g); this.mantle = c; this.flare = 0; }
+        else if (hawk) this.mantle = c;
+      }
+      else if (f.landed) { const k = this.animals.feedNear?.(P.x, P.y, P.z); if (k && this.fedAt !== k) { this.fedAt = k; this.needs?.fed?.(); this.say?.(`fed at the ${this.animals.speciesList()[k.sp]?.one || 'carcass'}`); } }   // a raven or vulture down at carrion
+      else if (hawk && this.flare <= 0 && f.speed > 8 && this.animals.preyNear?.(P.x, P.y, P.z, Math.max(3, f.speed * FLARE), f.yaw, 0.7)) this.flare = FLARE;   // prey ahead within FLARE s: the brake
     }
+    if (this.flare > 0) this.flare = Math.max(0, this.flare - dt);
+    if (this.mantle && (!f.landed || f.gnd.hop > 0 || f.gnd.lift >= 0 || Math.hypot(f.pos.x - this.mantle.x, f.pos.z - this.mantle.z) > 1.5)) this.mantle = null;   // off the kill: the mantle ends
     this.draw(dt);
     return r;
   }
@@ -156,24 +170,28 @@ export class FlierControl {
     const m = b.mesh, G = f.gnd, landed = f.landed;
     m.visible = f.view === 'chase';
     // wings: working (beats at the species' rate), else set (the phase eased to level); folded or swept on a perch
-    const work = !landed && f.flapping, stoop = S.short === 'hawk' && !landed && f.pitch < -0.5 && f.speed > 20;
+    const work = !landed && f.flapping, flare = this.flare > 0, mantle = !!this.mantle && landed;
+    const stoop = S.short === 'hawk' && !landed && f.pitch < -0.5 && f.speed > 20 && !flare;
     if (landed) { ps.phase = G.phase; ps.amp = G.amp * 0.6; }
     else {
       ps.amp = damp(ps.amp, work ? 1 : 0, 6, dt);
       if (work) ps.phase += dt * TAU * S.beat * (f.flap > 0.5 ? 1.25 : 1);
       else ps.phase = damp(ps.phase, Math.round(ps.phase / Math.PI) * Math.PI, 3, dt);
     }
-    ps.pose = damp(ps.pose, landed ? 1 : stoop ? 0.75 : 0, landed ? 8 : 4, dt);
-    ps.flick = landed && G.peck > 0 ? Math.sin(Math.PI * (1 - G.peck)) : damp(ps.flick, landed ? -Math.max(-1, Math.min(0.6, f.pitch)) * 0.5 : 0, 6, dt);
+    ps.pose = damp(ps.pose, mantle ? 0.45 : landed ? 1 : flare ? 0 : stoop ? 0.75 : 0, mantle ? 6 : landed ? 8 : flare ? 14 : 4, dt);
+    ps.flick = landed && G.peck > 0 ? Math.sin(Math.PI * (1 - G.peck)) : mantle ? damp(ps.flick, 0.85 + 0.15 * Math.sin(performance.now() * 0.0035), 6, dt)
+      : damp(ps.flick, landed ? -Math.max(-1, Math.min(0.6, f.pitch)) * 0.5 : 0, 6, dt);
     if (S.jay) {
       ps.e0 = damp(ps.e0, !landed && !work ? 0.4 : 0, 6, dt);                                  // wings bowed in a glide
       ps.e1 = damp(ps.e1, landed ? 0 : f.speed < 5 || f.hover ? 1 : 0.35, 8, dt);              // tail fanned to land
-    } else if (S.short === 'hawk') {
-      ps.e0 = damp(ps.e0, stoop ? ps.pose : 0, 4, dt);                                          // hands droop as the wings tuck
-      ps.e1 = damp(ps.e1, stoop ? -ps.pose : f.speed < 6 && !landed ? 0.6 : 0, 4, dt);         // tail closed in the dive, fanned slow
+    } else if (S.short === 'hawk') {   // the brake at prey (flare) and the mantle over the kill
+      ps.e0 = damp(ps.e0, mantle ? 1 : flare ? 0 : stoop ? ps.pose : 0, mantle || flare ? 10 : 4, dt);                  // hands droop as the wings tuck; drooped round the kill
+      ps.e1 = damp(ps.e1, mantle ? 0.7 : flare ? 1 : stoop ? -ps.pose : f.speed < 6 && !landed ? 0.6 : 0, flare ? 10 : 4, dt);   // tail closed in the dive, fanned to brake, slow, and over the kill
     } else { ps.e0 = damp(ps.e0, 0, 4, dt); ps.e1 = damp(ps.e1, f.speed < 6 && !landed ? 0.5 : 0, 4, dt); }
-    // the body's attitude (flight.body: forward -z) turned to the model's (forward +z); the feet on the perch standing
+    // the body's attitude (flight.body: forward -z) turned to the model's (forward +z); the feet on the perch standing;
+    // in the brake the body is drawn pitched up FLARE_PITCH rad (the flight's own pitch is its course)
     this._q.copy(f.body.quaternion).multiply(this._qy);
+    if (flare && !landed) { this._qf.setFromAxisAngle(this._xAxis, -FLARE_PITCH * Math.sin(Math.PI * Math.min(1, this.flare / FLARE))); this._q.multiply(this._qf); }
     const lower = S.feet ? f.sp.landH * Math.min(1, f.camK * 1.2) : 0;
     this._p.set(f.pos.x, f.pos.y - lower, f.pos.z); this._s.setScalar(this.size);
     this._m.compose(this._p, this._q, this._s);

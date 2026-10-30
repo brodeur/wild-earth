@@ -359,7 +359,7 @@ const D_WALK = 30, D_GRAZE = 31, D_BED = 32;                                    
 const Q_FORAGE = 40, Q_WAIT = 41, Q_FLY = 42;                                           // quail (bird)
 const G_FORAGE = 0, G_RUN = 1, G_SETTLE = 2;                                            // quail (covey)
 const J_PERCH = 50, J_GROUND = 51, J_FLY = 52;                                          // scrub-jay
-const H_SOAR = 60, H_STOOP = 61, H_PULL = 62;                                           // hawk
+const H_SOAR = 60, H_STOOP = 61, H_PULL = 62, H_MANTLE = 63;                            // hawk (H_MANTLE: on the ground over its kill, the catch 2026-10-30)
 const V_SOAR = 70, V_GLIDE = 71;                                                        // vulture
 const M_BED = 80, M_STAND = 81, M_MOVE = 82, M_SNIFF = 83, M_POUNCE = 84, M_FLEE = 85,
   M_CLIMB = 86, M_TREE = 87, M_DOWN = 88, M_STALK = 89, M_CROUCH = 90, M_RUSH = 91,     // fox, coyote, lion (M_RUSH: a hunt's trot or rush, huntStart)
@@ -491,7 +491,6 @@ const DEER_TURN = { w: 2.2, fast: 6, go: 0.5, stop: 1.4, slow: 1.2, face: 0.7, g
 const CARRION = { t: 600, small: 150, reach: { [ML]: 2.4, [CY]: 1.6, [FX]: 1.3, [HK]: 1.4, [RV]: 0.9, [SJ]: 0.6 }, lionCatch: 0.35, canidCatch: 0.4, scavR: 300, ravenStay: [20, 45], feed: 45, fall: 0.4 };
 const KILLABLE = new Set([DR, BK, JR, RB, VO, LZ]);
 const REST_POSE = { [LZ]: -0.95 };   // the pose a dead body settles to (1 for the rest: the deer's bed, the small bodies' rest); the lizard flat
-if (typeof globalThis !== 'undefined') globalThis.__weCarrion = CARRION;   // debugging: lionCatch = 1 makes every rush that reaches its prey a kill
 const HUNT = { r: 300, every: 0.3, lionR: 200, near: 60, stalk: 0.5, rush: 25, rushFar: 50, rushT: [4, 5], lose: 260, stalkMax: 180,
   lionCool: [60, 120], canidR: 60, trotMax: 25, pounceD: 2.4, chaseT: [2, 3.5], canidCool: [20, 45], look: [8, 16], hawk: 0.5, quail: 30,
   // the cat's catch (M_LEAP, 2026-10-30; docs/movement.md "The catch"): the rush's last bound from leapD m is a leap of leapT s and
@@ -503,7 +502,13 @@ const HUNT = { r: 300, every: 0.3, lionR: 200, near: 60, stalk: 0.5, rush: 25, r
   // prey may have moved: the first pounce often misses), the forelegs straight for the jar, the head down at the forepaws at
   // the landing; a kill (within CARRION.reach, canidCatch) is taken with a head toss of tossT s and the nose down at it; a miss
   // gets pawHz quick paw strikes for pawT s, then the nose and paws dig at the spot
-  fixT: [0.45, 0.8], tossT: 0.3, pawT: 0.75, pawHz: 4 };
+  fixT: [0.45, 0.8], tossT: 0.3, pawT: 0.75, pawHz: 4,
+  // the hawk's catch (H_STOOP at prey, H_MANTLE): a stoop at a vole, rabbit, jackrabbit or lizard ends hawkOver m over it; in its
+  // last hawkBrake s the body pitches up and the wings and tail flare (the brake) while the feet come forward (no leg parts yet:
+  // tools/build_redtail.py deletes the feet); the kill at the end within CARRION.reach with hawkCatch; then it mantles over the kill
+  // for mantleT s (wings half spread and drooped round it, the tail fanned, the head down and tearing) before it flaps up
+  hawkBrake: 0.4, hawkOver: 0.35, hawkCatch: 0.4, mantleT: [18, 35] };
+if (typeof globalThis !== 'undefined') { globalThis.__weCarrion = CARRION; globalThis.__weHunt = HUNT; }   // debugging: lionCatch = 1 makes every rush that reaches its prey a kill
 const ALARM_AT = new Set([FX, CY, ML, HK]);
 // A ground squirrel's burrow mouth: a dark hole in a low ring of bare dirt, 0.27 m across, coloured per vertex.
 function burrowGeometry() {
@@ -881,7 +886,7 @@ export class Animals {
     const R2 = HUNT.r * HUNT.r;
     for (const a of this.list) {
       const prey = this.preySlots[a.sp]; if (!prey) continue;
-      if (a.state === M_BED || a.state === M_TREE || a.state === M_CLIMB || a.state === M_DOWN || a.state === M_FEED) continue;
+      if (a.state === M_BED || a.state === M_TREE || a.state === M_CLIMB || a.state === M_DOWN || a.state === M_FEED || a.state === H_MANTLE) continue;
       if ((a.x - P.x) ** 2 + (a.z - P.z) ** 2 > R2) continue;
       this.hunterList.push(a);
       for (const k of prey) this.huntersOf[k].push(a);
@@ -2929,27 +2934,40 @@ export class Animals {
           for (const g of list) { const dx = g.x - a.x, dz = g.z - a.z, d2 = dx * dx + dz * dz; if (d2 < bd && g.state !== G_SETTLE) { bd = d2; cov = g; } }
         // now and then a vole or a ground squirrel below instead, when nearer (HUNT.hawk; they react to it as a threat)
         let prey = null;
-        if (r() < HUNT.hawk) { prey = this.huntTarget(a, Math.sqrt(bd), [VO, GS]); if (prey) cov = null; }
+        if (r() < HUNT.hawk) { prey = this.huntTarget(a, Math.sqrt(bd), [VO, GS, RB, JR, LZ]); if (prey) cov = null; }
         if (prey) { tx = prey.x; tz = prey.z; }
         else if (cov) { tx = cov.x; tz = cov.z; }
         else { const ang = r() * TAU, d = 30 + r() * 90; tx = a.x + Math.cos(ang) * d; tz = a.z + Math.sin(ang) * d; }
-        if (cov || prey || this.openness(tx, tz) > 0.5) {
-          a.group = cov; a.sx = a.x; a.sy = a.y; a.sz = a.z; a.tx = tx; a.tz = tz; a.ty = H.atXZ(tx, tz) + 2.5;
-          a.dur = Math.hypot(a.tx - a.sx, a.ty - a.sy, a.tz - a.sz) / 24 + 0.8; a.u = 0; a.state = H_STOOP;
-          if (prey) this.lastStoop = { id: a.id, prey: SPECIES[prey.sp].code, t: this.time };
-          this.emit('stoop', { animal: a, x: a.x, y: a.y, z: a.z, target: cov || prey });
-        } else a.t = 15 + r() * 30;
+        if (cov || prey || this.openness(tx, tz) > 0.5) this.hkStoop(a, tx, tz, cov, prey);
+        else a.t = 15 + r() * 30;
       }
     } else if (a.state === H_STOOP) {
       a.u = Math.min(1, a.u + dt / a.dur);
       const u = a.u, ox = a.x, oy = a.y, oz = a.z, e = u * u * (1.6 - 0.6 * u);   // tips over slowly, then falls fast
+      const prey = a.prey && this.alive(a.prey) && !a.prey.dead ? a.prey : null;
+      if (prey && u > 0.5) { a.tx = prey.x; a.tz = prey.z; a.ty = H.atXZ(prey.x, prey.z) + HUNT.hawkOver; }   // the last half tracks the prey
       a.x = a.sx + (a.tx - a.sx) * e; a.z = a.sz + (a.tz - a.sz) * e; a.y = a.sy + (a.ty - a.sy) * e;
       const vx = a.x - ox, vy = a.y - oy, vz = a.z - oz, vh = Math.hypot(vx, vz);
       if (vh > 1e-5) a.yaw = Math.atan2(vx, vz);
-      a.pitch = damp(a.pitch, -Math.atan2(vy, vh + 1e-5) * 0.9, 4, dt); a.roll = damp(a.roll, 0, 4, dt);
-      a.amp = damp(a.amp, 0, 6, dt); a.pose = damp(a.pose, u > 0.15 ? 0.75 : 0.2, 3, dt);   // wings swept back
+      // the brake (HUNT.hawkBrake): the last moments at prey, the body pitched up, the wings thrown open and the tail fanned
+      // (extra: a.brake), the feet swung forward to grab
+      a.brake = a.prey && (1 - u) * a.dur < HUNT.hawkBrake ? 1 : 0;
+      a.pitch = damp(a.pitch, a.brake ? -0.45 : -Math.atan2(vy, vh + 1e-5) * 0.9, a.brake ? 12 : 4, dt); a.roll = damp(a.roll, 0, 4, dt);
+      a.amp = damp(a.amp, 0, 6, dt); a.pose = damp(a.pose, a.brake ? 0 : u > 0.15 ? 0.75 : 0.2, a.brake ? 14 : 3, dt);   // wings swept back, then flared
       if (u > 0.9 && a.group) { this.flushCovey(a.group, a.x, a.z, 'hawk'); a.group = null; }
-      if (u >= 1) { a.state = H_PULL; a.t = 2.5; a.speed = 18; }
+      if (u >= 1) {   // the grab: the kill within reach (the talons), then the mantle on the ground; else pull up out of it
+        const d = prey ? Math.hypot(prey.x - a.x, prey.z - a.z) : Infinity;
+        if (prey && d < CARRION.reach[HK] && KILLABLE.has(prey.sp) && r() < HUNT.hawkCatch) {
+          this.kill(prey, a); a.state = H_MANTLE; a.t = HUNT.mantleT[0] + r() * (HUNT.mantleT[1] - HUNT.mantleT[0]);
+          a.x = prey.x; a.z = prey.z; a.y = H.atXZ(a.x, a.z) + 0.25; a.air = 0; a.speed = 0; a.prey = null;
+          this.lastHawkKill = { id: a.id, prey: SPECIES[prey.sp].code, t: this.time };
+        } else { a.state = H_PULL; a.t = 2.5; a.speed = 18; a.brake = 0; a.prey = null; }
+      }
+    } else if (a.state === H_MANTLE) {   // on the ground over its kill: wings half spread and drooped round it, the tail fanned, the head down and tearing at it
+      a.air = 0; a.brake = 2; a.y = H.atXZ(a.x, a.z) + 0.25;
+      a.pitch = damp(a.pitch, 0.05, 6, dt); a.roll = damp(a.roll, 0, 6, dt); a.amp = damp(a.amp, 0, 8, dt);
+      a.pose = damp(a.pose, 0.45, 6, dt); a.flick = 0.85 + 0.15 * Math.sin(this.time * 3.5 + a.rock);
+      if (a.t <= 0) { a.state = H_PULL; a.t = 3; a.speed = 6; a.air = 1; a.brake = 0; a.y += 0.3; }
     } else {   // H_PULL: wings open, flap up out of the dive, then rejoin a circle and climb in it
       a.speed = damp(a.speed, 9, 0.8, dt);
       a.x += Math.sin(a.yaw) * a.speed * dt; a.z += Math.cos(a.yaw) * a.speed * dt;
@@ -2960,6 +2978,15 @@ export class Animals {
         a.alt = 100 + r() * 150; a.state = H_SOAR; a.t = 50 + r() * 70;
       }
     }
+  }
+  // A hawk tips into a stoop at (tx, tz): at a covey (cov), at prey (a vole, rabbit, jackrabbit or lizard: the catch,
+  // HUNT.hawkBrake and on), or at open ground. The stoop ends hawkOver m over prey, 2.5 m over anything else.
+  hkStoop(a, tx, tz, cov = null, prey = null) {
+    const H = this.heights;
+    a.group = cov; a.prey = prey; a.brake = 0; a.sx = a.x; a.sy = a.y; a.sz = a.z; a.tx = tx; a.tz = tz; a.ty = H.atXZ(tx, tz) + (prey ? HUNT.hawkOver : 2.5);
+    a.dur = Math.hypot(a.tx - a.sx, a.ty - a.sy, a.tz - a.sz) / 24 + 0.8; a.u = 0; a.state = H_STOOP;
+    if (prey) this.lastStoop = { id: a.id, prey: SPECIES[prey.sp].code, t: this.time };
+    this.emit('stoop', { animal: a, x: a.x, y: a.y, z: a.z, target: cov || prey });
   }
   tvUpdate(a, dt) {
     const r = a.rng, H = this.heights; a.t -= dt; a.air = 1;
@@ -4283,7 +4310,7 @@ export class Animals {
     const far = (x, z) => Math.hypot(o.x - x, o.z - z) > 30;
     if (s === HK || s === TV) {   // soaring on in a circle through here; a hawk off a perch or out of a glide flaps up first
       a.air = 1; a.fly = 1; a.pose = 0;
-      if (s === HK && !(o.where === 'air' && o.soaring)) { a.state = H_PULL; a.t = 4; a.speed = 9; a.pitch = 0; return; }
+      if (s === HK && !(o.where === 'air' && o.soaring)) { a.state = H_PULL; a.t = 4; a.speed = 9; a.pitch = 0; a.brake = 0; return; }
       this.joinCircle(a, s === HK ? 40 + r() * 40 : 50 + r() * 50, r() < 0.5 ? 1 : -1);
       a.alt = Math.max(s === HK ? 40 : 30, o.y - this.heights.atXZ(a.cx, a.cz)); a.V = 9;
       a.state = s === HK ? H_SOAR : V_SOAR; a.t = 30 + r() * 40; return;
@@ -4327,11 +4354,12 @@ export class Animals {
     if (best) { best.cool = 0; if (best.state === G_SETTLE) best.state = G_FORAGE; this.flushCovey(best, P.x, P.z, 'debug'); }
     return best ? Math.round(bd) : null;
   }
-  // debugging: send the hawk nearest the player into a stoop on its next frame
-  stoop() {
+  // debugging: send the hawk nearest the player into a stoop on its next frame, or (prey: an animal) at that prey now
+  stoop(prey = null) {
     const P = this.flight.pos, h = this.nearestOf('buteo_jamaicensis', P.x, P.y, P.z);
     if (!h) return null;
-    if (h.state === H_SOAR) h.t = 0;
+    if (prey && h.state !== H_MANTLE) this.hkStoop(h, prey.x, prey.z, null, prey);
+    else if (h.state === H_SOAR) h.t = 0;
     return Math.round(Math.hypot(h.x - P.x, h.y - P.y, h.z - P.z));
   }
 
@@ -4492,9 +4520,9 @@ export class Animals {
       a.e0 = damp(a.e0, fly && a.amp < 0.5 ? 0.4 : 0, 6, dt);
       a.e1 = damp(a.e1, fly ? (a.u > 0.75 ? 1 : 0.35) : 0, a.e1 > 0.9 && !fly ? 3 : 8, dt);   // fanned in, and briefly on a hop's landing
     } else if (a.sp === HK) {
-      const stoop = a.state === H_STOOP;
-      a.e0 = damp(a.e0, stoop ? a.pose : 0, 4, dt);                                  // hands droop as the wings tuck
-      a.e1 = damp(a.e1, stoop ? -a.pose : a.state === H_PULL ? 0.3 : 0, 4, dt);       // tail closed in the dive, fanned pulling out
+      const stoop = a.state === H_STOOP, brake = a.brake === 1, mantle = a.brake === 2;   // the brake at prey, the mantle over the kill (hkUpdate)
+      a.e0 = damp(a.e0, mantle ? 1 : stoop && !brake ? a.pose : 0, brake || mantle ? 10 : 4, dt);   // hands droop as the wings tuck; drooped round the kill
+      a.e1 = damp(a.e1, mantle ? 0.7 : brake ? 1 : stoop ? -a.pose : a.state === H_PULL ? 0.3 : 0, brake ? 10 : 4, dt);   // tail closed in the dive, fanned to brake, pulling out, and over the kill
     } else if (a.sp === RV) {   // the ground raven: wing flick, head yaw, hop (legs together)
       if (a.wfV > 0) { a.e0 = Math.max(a.e0 * Math.exp(-6 * dt), Math.sin(Math.PI * (1 - a.wfV)) * 0.9); a.wfV -= dt / 0.4; }
       else a.e0 = damp(a.e0, a.wing, a.wing > a.e0 ? 10 : 5, dt);

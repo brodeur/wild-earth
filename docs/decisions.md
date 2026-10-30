@@ -2796,3 +2796,25 @@ the body rocking, springs 0.49 m high and lands on it (the kill at 1.82 s), toss
 catch chance at 0 the same spring lands 1.4 m from a rabbit that moved during the fix, three paw strikes follow and
 the nose goes down; the player's fox from 2 m with E: the fix (roll -0.13, flick -0.3), the spring to 0.49 m, the
 kill at 1.36 s, the toss (flick -1.2) and the sniff.
+
+**4. The hawk's brake, grab and mantle.** The reading: a red-tail hunts from a perch or a stoop, folds the wings and
+drops, extends the legs and feet forward at the last moment to grab, kills by the talons piercing, then mantles over
+the kill, wings half spread and drooped round it, head down. The AI stoop (hkUpdate, now started by hkStoop) at prey
+(a vole, ground squirrel, rabbit, jackrabbit or lizard: huntTarget's kinds) ends HUNT.hawkOver (0.35 m) over it
+instead of 2.5 m, tracks the prey over the stoop's second half, and in its last HUNT.hawkBrake (0.4 s) brakes
+(`a.brake` 1): the body pitched up to -0.45 rad, the wings thrown from the tuck (pose 0.75) to full spread (pose 0) at
+rate 14, the hands un-drooped and the tail fanned (extra: e0 0, e1 1). At the end the kill within CARRION.reach[HK]
+(hawkCatch 0.4) puts the hawk on the ground over it in H_MANTLE for 18-35 s (`a.brake` 2: pose 0.45, the wings half
+swept and drooped round the kill by e0 1, the tail fanned 0.7, the head down and tearing at it, flick 0.85-1; no
+hunter to the prey meanwhile), then it flaps up (H_PULL); a miss pulls up as before. The feet: tools/build_redtail.py
+deletes the generated feet and the rig has no leg parts, so the feet coming forward is not drawn; a leg pair as
+LEG_A/LEG_B parts in the builder is the next step for the hawk and is left for a later commit (a Blender rebuild,
+with the same tooling the other builders use). The player's hawk (flierControl.js FLARE, FLARE_PITCH): flying at prey
+within FLARE s of contact (animals.js preyNear with the heading, a cone of 0.7) the body is drawn pitched up 0.5 rad
+over the flare while the wings and tail open (draw: pose 0, e0 0, e1 1); the strike within reach kills (catchNear, as
+before) and the hawk is set down on its kill at once (flight.settleOn) and mantles there (`mantle`: pose 0.45, e0 1,
+e1 0.7, the head down) until it hops, takes off or leaves the kill; landing beside a kill mantles too. Verified: the AI
+hawk from 40 m off and 35 m up stoops at a jackrabbit, brakes at 0.4 s out (pitch -0.43, pose 0.01, the tail at 0.93),
+kills at the end and mantles over it; the player's hawk on a dive at 20 m/s flares from 8 m out (the tail fanned to
+0.91, the wings open) and takes the jackrabbit at 1.5 s, then mantles. The stoop's montage was taken in a dark spot
+under the oaks; the mantle still reads (the hawk flat over the jackrabbit, wings out).

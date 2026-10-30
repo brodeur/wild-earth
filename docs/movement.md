@@ -147,6 +147,18 @@ coyote) high with no leg swing onto where the prey was, nose-up to nose-down, th
 taken with a head toss and the nose down at it; a miss gets 4 Hz paw strikes for 0.75 s and then the nose and paws at
 the spot. The player's E within 2.6 m does the same; a run onto prey springs at once.
 
+**Accipitridae: the talon strike and the mantle.** The red-tailed hawk hunts from a perch or a stoop; it folds the
+wings and drops, extending the legs and feet forward at the last moment to grab, kills by the talons piercing, then
+mantles over the kill, wings half spread and drooped around it, head down. Sources: Slater Museum of Natural History,
+"Red-tailed hawk" (https://www.pugetsound.edu/slater-museum-natural-history-0/exhibits/terrestrial-panel/red-tailed-hawk);
+All About Birds (https://www.allaboutbirds.org/news/?p=11342). In the client (animals.js hkStoop, HUNT.hawkBrake,
+H_MANTLE; flierControl.js FLARE): a stoop at prey ends 0.35 m over it and in its last 0.4 s the body pitches up and
+the wings and tail flare (the brake); the kill within reach puts the hawk on the ground over it for 18-35 s, mantling
+(wings half spread and drooped round it, the tail fanned, the head down and tearing). The player's hawk flying at prey
+flares in the last 0.4 s, takes it on contact, is set down on the kill and mantles until it hops or takes off. Not
+drawn yet: the feet coming forward (the red-tail mesh has no legs: tools/build_redtail.py deletes the generated feet;
+leg parts in the builder are the next step).
+
 ## Open
 
 - The part rig's spine bend and head lead (the chest and head parts turning about the vertical by the lag).
