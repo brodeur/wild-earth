@@ -355,6 +355,7 @@ const S_WORK = 7, S_EAT = 8;                                                    
 const W_CLING = 10, W_TOP = 11, W_FLY = 12, W_PICK = 13;                                // woodpecker (W_PICK: taking an acorn)
 const R_SOAR = 20, R_GLIDE = 21, R_PERCH = 22, R_CLIMB = 23, R_GROUND = 24;            // raven (R_GROUND: picking or caching)
 const R_WALK = 25;                                                                      // raven: walking or hopping on the ground (or on its perch)
+const RAVEN_STAB = { t: 0.75, hz: 4 };   // the corvid's bill work at carrion (rvUpdate, the catch 2026-10-30): a burst's length (s) and the stabs' rate
 const D_WALK = 30, D_GRAZE = 31, D_BED = 32;                                           // deer
 const Q_FORAGE = 40, Q_WAIT = 41, Q_FLY = 42;                                           // quail (bird)
 const G_FORAGE = 0, G_RUN = 1, G_SETTLE = 2;                                            // quail (covey)
@@ -2077,7 +2078,7 @@ export class Animals {
       }
       if (a.carr && a.t <= 0 && Math.hypot(a.x - a.carr.x, a.z - a.carr.z) < 80) {   // down to it: a glide to the ground beside it
         const c = a.carr; a.sx = a.x; a.sy = a.y; a.sz = a.z; a.tx = c.x + (r() - 0.5) * 3; a.tz = c.z + (r() - 0.5) * 3; a.ty = H.atXZ(a.tx, a.tz);
-        a.task = 0; a.perchTop = false; a.arc = 0; a.fedAt = this.time + CARRION.t; a.carr = null; a.hx = a.cx; a.hz = a.cz;
+        a.task = 0; a.perchTop = false; a.arc = 0; a.fedAt = this.time + CARRION.t; a.carr = null; a.feedOn = c; a.hx = a.cx; a.hz = a.cz;   // feedOn: the carcass it feeds at on the ground (the bill stabs)
         const d = Math.hypot(a.tx - a.sx, a.ty - a.sy, a.tz - a.sz); a.dur = Math.max(1.5, d / V); a.u = 0; a.state = R_GLIDE;
         return;
       }
@@ -2146,7 +2147,14 @@ export class Animals {
       this.rvWalk(a, dt);
     } else {   // R_PERCH on a treetop, or standing on the ground (a beat before taking off, or a while when summoned)
       a.amp = damp(a.amp, 0, 6, dt); a.pose = damp(a.pose, 1, 3, dt); a.roll = damp(a.roll, 0, 4, dt); a.pitch = damp(a.pitch, -0.1, 3, dt);
-      if (r() < dt * 0.3) a.flickV = 1;
+      // feeding at carrion (feedOn, within 2.5 m; the catch 2026-10-30): the corvid's bill work, bursts of three quick hard
+      // stabs (flickV 0.75: a 0.25 s dip each) with pauses between, the head turned to it
+      const feeding = a.feedOn && !a.feedOn.gone && a.perchY === null && Math.hypot(a.feedOn.x - a.x, a.feedOn.z - a.z) < 2.5;
+      if (feeding) {   // a burst: stabT s of stabs at stabHz, the head driven down and up each (flick set outright: the frame's slow decay would hold it down)
+        if (a.stabT > 0) { a.stabT -= dt; a.flick = 1.15 * Math.abs(Math.sin(Math.PI * (RAVEN_STAB.t - a.stabT) * RAVEN_STAB.hz)); }
+        else if (r() < dt * 0.6) a.stabT = RAVEN_STAB.t;
+      } else if (r() < dt * 0.3) a.flickV = 1;
+      if (a.feedOn && (a.feedOn.gone || a.perchY !== null)) a.feedOn = null;
       if (gm) {   // the ground model: glances about, flicks its wings, turns with a hop, walks or hops about and caches
         const ground = a.perchY === null;
         if (ground) a.y = H.atXZ(a.x, a.z);

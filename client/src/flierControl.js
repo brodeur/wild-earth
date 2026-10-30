@@ -152,15 +152,16 @@ export class FlierControl {
     if (this.on && this.animals?.catchNear && (this.catchT = (this.catchT || 0) - dt) <= 0) {   // a hunter's strike: prey within reach in flight (animals.js CARRION)
       this.catchT = 0.1; const P = f.pos;
       const c = this.animals.catchNear(P.x, P.y, P.z);
-      if (c) {   // in flight or on the ground beside it; the hawk comes down on its kill and mantles
+      if (c) {   // in flight or on the ground beside it; the hawk comes down on its kill and mantles; the jay comes down on it and pecks
         this.needs?.fed?.(); this.say?.(`took a ${this.animals.speciesList()[c.sp]?.one || 'prey'}`);
-        if (hawk && !f.landed) { const g = f.footing(c.x, c.z, c.y + 1).y; f.pos.set(c.x, g + f.sp.landH, c.z); f.pitch = 0; f.roll = 0; f.settleOn(null, g); this.mantle = c; this.flare = 0; }
-        else if (hawk) this.mantle = c;
+        if ((hawk || this.S.jay) && !f.landed) { const g = f.footing(c.x, c.z, c.y + 1).y; f.pos.set(c.x, g + f.sp.landH, c.z); f.pitch = 0; f.roll = 0; f.settleOn(null, g); this.flare = 0; }
+        if (hawk) this.mantle = c; else if (this.S.jay) { this.pecks = 3; this.peckGap = 0.25; }
       }
       else if (f.landed) { const k = this.animals.feedNear?.(P.x, P.y, P.z); if (k && this.fedAt !== k) { this.fedAt = k; this.needs?.fed?.(); this.say?.(`fed at the ${this.animals.speciesList()[k.sp]?.one || 'carcass'}`); } }   // a raven or vulture down at carrion
       else if (hawk && this.flare <= 0 && f.speed > 8 && this.animals.preyNear?.(P.x, P.y, P.z, Math.max(3, f.speed * FLARE), f.yaw, 0.7)) this.flare = FLARE;   // prey ahead within FLARE s: the brake
     }
     if (this.flare > 0) this.flare = Math.max(0, this.flare - dt);
+    if (this.pecks > 0 && f.landed && (this.peckGap -= dt) <= 0 && f.gnd.peck <= 0) { f.gnd.peck = 1; f.gnd.peckT = 0.3; this.pecks--; this.peckGap = 0.12; }   // the jay's pecks at its take
     if (this.mantle && (!f.landed || f.gnd.hop > 0 || f.gnd.lift >= 0 || Math.hypot(f.pos.x - this.mantle.x, f.pos.z - this.mantle.z) > 1.5)) this.mantle = null;   // off the kill: the mantle ends
     this.draw(dt);
     return r;

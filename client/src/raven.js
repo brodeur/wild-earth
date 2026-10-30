@@ -121,8 +121,9 @@ export class Raven {
     const g = this.g, amp = this.groundModel.amp;
     const head = THREE.MathUtils.clamp(wrap(f.yaw - G.yaw), -HEAD_MAX, HEAD_MAX);
     g.look += ((on ? head : 0) - g.look) * (1 - Math.exp(-dt * 10));
-    const peck = G.peck > 0 ? Math.sin(Math.PI * (1 - G.peck)) * 1.7 : 0;   // E: the head dips to the ground and back
-    g.flick += (THREE.MathUtils.clamp(-f.pitch / amp[2], -1.2, 1.0) + peck - g.flick) * (1 - Math.exp(-dt * (peck ? 18 : 8)));
+    const stab = (G.peckT || 0.45) < 0.3;   // a bill stab (flight.js STAB_T): faster and deeper than a peck
+    const peck = G.peck > 0 ? Math.sin(Math.PI * (1 - G.peck)) * (stab ? 2.3 : 1.7) : 0;   // E: the head dips to the ground and back
+    g.flick += (THREE.MathUtils.clamp(-f.pitch / amp[2], -1.2, 1.0) + peck - g.flick) * (1 - Math.exp(-dt * (peck ? (stab ? 32 : 18) : 8)));
     g.hop += ((G.hop ? 1 : 0) - g.hop) * (1 - Math.exp(-dt * 14));
     // the folded wings: lifted and opened before take-off, half lifted in a forward hop, a flick (C), settling
     if (G.lift >= 0 || !on) g.e0 = Math.max(g.e0, FOLD.lift * smooth(clamp01(on ? G.lift : 1)));

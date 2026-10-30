@@ -2818,3 +2818,19 @@ hawk from 40 m off and 35 m up stoops at a jackrabbit, brakes at 0.4 s out (pitc
 kills at the end and mantles over it; the player's hawk on a dive at 20 m/s flares from 8 m out (the tail fanned to
 0.91, the wings open) and takes the jackrabbit at 1.5 s, then mantles. The stoop's montage was taken in a dark spot
 under the oaks; the mantle still reads (the hawk flat over the jackrabbit, wings out).
+
+**5. The corvids' bill stab.** The reading: a raven kills small prey (voles, lizards, young rabbits, nestlings) with
+a stabbing strike of the bill, repeated jabs at the head and chest until the prey is still, then plucks and opens it
+with the bill; a scrub-jay dives down, grabs a lizard in the bill, pecks at it repeatedly and carries it off into
+cover. The player's raven (flight.js peck, STAB_N and STAB_T; raven.js): E on the ground within reach of the bill
+(animals.js preyNear, the raven's 0.9 m) of a lizard or vole gives three quick hard stabs (each a 0.2 s dip, drawn
+deeper and faster than a peck: 2.3 against 1.7, the head's lerp at 32), the kill on the last (catchNear, the belly
+filled, the toast); E beside a carcass (feedNear) the same stabs, fed once per carcass. abilities.js: the raven's grey
+strike and feed are lit, each while its stabs run. The AI raven at carrion (rvUpdate R_PERCH on the ground with
+`feedOn`, the carcass it glided down to) works it in bursts of three stabs at 4 Hz with pauses between, the head driven
+down and up outright (the frame's slow flick decay would hold it down). The player's scrub-jay (flierControl.js): the
+take on contact as before, then it is set down on the lizard at once and pecks three times (the ground peck at 0.3 s
+each); carrying it off is not built. No AI corvid hunts yet (the ravens and jays have no hunt state), so the stab is
+the player's and the feed the AI's. Verified: the player's raven's three stabs at 5 Hz with the kill of a lizard at
+0.6 s; the summoned AI raven at a carcass stabbing in bursts (flick 1.15, 0.58, 1.15 over 0.25 s steps); the player's
+jay taking a lizard on a dive, set down and pecking three times.

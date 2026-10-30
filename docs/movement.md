@@ -159,6 +159,19 @@ flares in the last 0.4 s, takes it on contact, is set down on the kill and mantl
 drawn yet: the feet coming forward (the red-tail mesh has no legs: tools/build_redtail.py deletes the generated feet;
 leg parts in the builder are the next step).
 
+**Corvidae: the bill stab.** The common raven kills small prey (voles, lizards, young rabbits, nestlings) with a
+stabbing strike of the bill, repeated jabs at the head and chest until the prey is still, often striking birds in
+mid-air; then it plucks and opens it with the bill. The California scrub-jay dives down and grabs a lizard in the
+bill, pecks at it repeatedly, and carries it off into cover (sometimes wedged for later). Sources: Strange Animals,
+"Common raven" (https://strangeanimals.info/birds/corvids/common-raven); Oregon Birds 21(1), notes on raven predation
+(https://sora.unm.edu/sites/default/files/31-37%20notes%20OB%20Vol%2021%231%20Apr%202003.pdf); Tweeters, a scrub-jay
+taking a lizard (https://mailman1.u.washington.edu/pipermail/tweeters/2025-September/007669.html); Macaulay Library
+asset 411845921 (https://macaulaylibrary.org/asset/411845921). In the client (flight.js peck and stabDone, raven.js;
+animals.js RAVEN_STAB; flierControl.js): the player's raven on the ground within reach of the bill of a lizard or vole
+gives three quick hard stabs on E, the kill on the last, and the same stabs beside a carcass to feed; the AI ravens at
+carrion stab in bursts of three with pauses; the player's jay takes a lizard on contact in a dive, is set down on it
+and pecks three times (carrying it off is not built; no AI corvid hunts yet).
+
 ## Open
 
 - The part rig's spine bend and head lead (the chest and head parts turning about the vertical by the lag).

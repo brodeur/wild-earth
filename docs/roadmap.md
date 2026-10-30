@@ -131,7 +131,9 @@ sequenced; Parked is in the brief but deliberately not started.
   stiff-legged spring onto where the prey was, the head toss on a kill, the paw strikes on a miss; the player's E does
   the same. The hawk's catch (open before): the stoop at prey brakes in its last 0.4 s (pitched up, wings and tail
   flared), kills within reach and mantles over the kill, AI and player; the feet coming forward are not drawn (the
-  red-tail builder has no leg parts: the next step for the hawk).
+  red-tail builder has no leg parts: the next step for the hawk). The raven's strike and feed (grey before): three
+  quick hard bill stabs on E, the kill on the last; the AI ravens at carrion stab in bursts; the jay's take sets it
+  down on the lizard with a few pecks.
 
 ## Next: the visual pass, in order of effect per hour
 

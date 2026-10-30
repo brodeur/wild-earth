@@ -60,6 +60,11 @@ const CONTACT_G = 0.35, CONTACT_B = 0.3, ATTACH_V = 7, BOUNCE_KEEP = 0.85, NO_LA
 const TURN_STEP = Math.PI / 4, STEP_ANG = 0.3, STEP_T = 0.2, TAP_T = 0.14, HOP_TURN_STILL = 1.0, TURN_HOP_T = 0.26;   // rad, rad, s, s, rad, s
 const HOP_LEN = 0.6, HOP_BACK = 0.4, HOP_T = 0.36, HOP_H = 0.12, HOP_GAP = 0.06;   // m, m, s, m, s
 const HOP_UP = 0.45, WADE = 0.04, SHORE = 0.5, PICK_R = 0.8, PICK_BRANCH = 1.2;   // m
+// The raven's strike and feed (2026-10-30, docs/movement.md "The catch"): E on the ground within reach of the bill of prey
+// its species hunts (animals.js preyNear: a lizard, a vole) gives STAB_N quick hard bill stabs of STAB_T s each, the kill on
+// the last (catchNear); E beside a carcass (feedNear) the same stabs, the belly filled once per carcass (needs.js). The
+// ground model draws a stab as a faster, deeper peck (raven.js).
+const STAB_N = 3, STAB_T = 0.2;
 const TAU = Math.PI * 2;
 const wrap = a => Math.atan2(Math.sin(a), Math.cos(a));
 const smooth = u => u * u * (3 - 2 * u);
@@ -444,12 +449,26 @@ export class RavenFlight {
   // E: an acorn within reach of the bill: on the ground within PICK_R, on a branch one in the crown within PICK_BRANCH
   // (acorns.js, the game's own pickup event, as the squirrel's E)
   peck() {
-    const G = this.gnd, A = window.__we?.acorns; G.peck = 1;
-    if (!A?.running || !A.player || A.player.carrying >= A.player.cap || !A.acornNear) return null;
+    const G = this.gnd, A = window.__we?.acorns; G.peck = 1; G.peckT = 0.45;
     const bx = this.pos.x - Math.sin(G.yaw) * 0.3, bz = this.pos.z - Math.cos(G.yaw) * 0.3;
+    const AN = window.__we?.animals;   // the raven's strike at prey within reach of the bill, or its feed at a carcass: the stabs (STAB_N)
+    if (!G.perch && AN?.observer === 'corvus_corax' && AN.preyNear) {
+      const p = AN.preyNear(bx, G.feet, bz, null, NaN), k = p ? null : AN.feedNear?.(bx, G.feet, bz);
+      if (p || k) { G.stab = STAB_N; G.stabAt = p || k; G.stabPrey = !!p; G.peckT = STAB_T; return p || k; }
+    }
+    if (!A?.running || !A.player || A.player.carrying >= A.player.cap || !A.acornNear) return null;
     const a = G.perch ? A.acornNear(bx, G.feet + 0.25, bz, PICK_BRANCH, true) : A.acornNear(bx, G.feet + 0.03, bz, PICK_R, null);
     if (a) A.playerPick(a);
     return a;
+  }
+  // The last stab of a series (peck): the kill of the prey within reach of the bill, or the feed at the carcass, fills the
+  // belly (needs.js) and says so (the ground control's toast).
+  stabDone() {
+    const G = this.gnd, AN = window.__we?.animals, M = window.__weWorld?.()?.m, N = M?.needs, say = t => M?.ground?.say?.(t);
+    const bx = this.pos.x - Math.sin(G.yaw) * 0.3, bz = this.pos.z - Math.cos(G.yaw) * 0.3, at = G.stabAt; G.stabAt = null;   // (peckT stays the stab's for the last dip; the next peck() resets it)
+    if (!AN) return;
+    if (G.stabPrey) { const c = AN.catchNear(bx, G.feet, bz); if (c) { N?.fed?.(); say(`took a ${AN.speciesList()[c.sp]?.one || 'prey'}`); } else say('the stab misses'); }
+    else if (at && this.fedAt !== at) { this.fedAt = at; N?.fed?.(); say(`fed at the ${AN.speciesList()[at.sp]?.one || 'carcass'}`); }
   }
   takeOff() {
     const G = this.gnd, up = G.liftMode === 'x', branch = !!G.perch;
@@ -491,7 +510,11 @@ export class RavenFlight {
     if (this.spaceQ) { this.spaceQ = false; if (ready) this.launch('space'); }
     if (this.launchQ) { this.launchQ = false; if (ready) this.launch('x'); }
     if (this.actQ) { this.actQ = false; if (ready && G.hop === 0) this.peck(); }
-    G.peck = Math.max(0, G.peck - dt / 0.45);
+    G.peck = Math.max(0, G.peck - dt / (G.peckT || 0.45));
+    if (G.stab > 0 && G.peck <= 0) {   // the next stab of the series; the last one lands the strike (the kill) or the feed
+      G.stab--; G.peck = 1; G.peckT = STAB_T;
+      if (G.stab === 0) this.stabDone();
+    }
     G.gap = Math.max(0, G.gap - dt);
     let lift = 0;
     if (G.hop === 1) {   // a turning hop, both feet (or a step round)

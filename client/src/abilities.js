@@ -101,9 +101,13 @@ const SPECIES = {
   // the fliers (flierControl.js FLIERS) and the raven: their verbs after the flight's moves
   buteo_jamaicensis: { verbs: [on('strike', '', null, { title: 'fly into prey: taken on contact' }), CARRY, DRINK_NO, CALL] },
   cathartes_aura: { verbs: [on('feed', '', null, { title: 'land beside a carcass: fed on contact' }), SMELL, DRINK_NO] },
-  aphelocoma_californica: { verbs: [on('take', '', null, { title: 'fly into a lizard: taken on contact' }), CACHE, DRINK_NO, CALL] },
+  aphelocoma_californica: { verbs: [on('take', '', null, { title: 'dive into a lizard: grabbed on contact, then down on it with a few pecks' }), CACHE, DRINK_NO, CALL] },
   cyanocitta_stelleri: { verbs: [CACHE, DRINK_NO, CALL] },
-  corvus_corax: { verbs: [on('call', 'C', c => c.k('KeyC')), no('strike'), CARRY, no('feed'), CACHE, DRINK_NO] },
+  corvus_corax: { verbs: [on('call', 'C', c => c.k('KeyC')),
+    on('strike', 'E', c => !!c.flight.landed && c.flight.gnd?.stab > 0 && !!c.flight.gnd?.stabPrey, { show: c => !!c.flight.landed, title: 'E on the ground within reach of a lizard or vole: three quick hard bill stabs, the kill on the last' }),
+    CARRY,
+    on('feed', 'E', c => !!c.flight.landed && c.flight.gnd?.stab > 0 && !c.flight.gnd?.stabPrey, { show: c => !!c.flight.landed, title: 'E beside a carcass: the same stabs; the belly filled once per carcass' }),
+    CACHE, DRINK_NO] },
 };
 // the fallbacks by the walker's rig, for a species the table does not have
 const RIG = {
