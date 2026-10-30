@@ -62,6 +62,12 @@ export const CAM_RAISE = 1.3, FRAME_Y = -0.45, CAM_PLUS = { back: 0.5, up: 0.2 }
 // file or round the centre) until any key, which takes the reins back. The HUD's where line says which.
 const HERD_WORD = { odocoileus_hemionus: 'herd', callipepla_californica: 'covey', oreortyx_pictus: 'covey', meleagris_gallopavo: 'flock' };
 const HERD_LEAD = 5, HERD_IDLE = 6;
+// The catch (2026-10-30, docs/movement.md "The catch"): a hunter's catch move is its family's (S.catch). 'leap' (Felidae): the
+// rush's last bound within d m of prey ahead is a leap of dur s and peak m that homes on the prey and lands with the
+// forequarters over its back (over m short of it), the head driven down into the neck; the kill at the landing within
+// reach (animals.js catchNear), a miss a twist away; then the body crouches over its kill for feed s, head low, until a
+// key moves it (E beside a kill crouches again). CARRION.feed in animals.js is the AI's 45 s.
+const CATCH = { leap: { d: 3.2, dur: 0.45, peak: 0.55, over: 0.7, feed: 45, twist: 0.4 } };
 export const GROUND = {
   odocoileus_hemionus: { short: 'deer', common: 'black-tailed deer', model: 'deer', rig: 'quad',
     walk: 1.3, run: 12, back: 0.8, ramp: 3, accel: 2.2, stop: 4, turn: 1.8, jumpH: 1.6, jumpL: 3.5, step: 0.5, wade: 0.7,
@@ -80,7 +86,7 @@ export const GROUND = {
     act: { flick: 1, t: 3, word: 'sniffing' }, alert: { flick: -0.3 }, rest: 'bed' },
   puma_concolor: { short: 'lion', common: 'mountain lion', model: 'lion', rig: 'quad',
     walk: 1.0, run: 14, back: 0.7, ramp: 1.0, accel: 4, stop: 5, turn: 2.0, jumpH: 1.6, jumpL: 4.5, step: 0.5, wade: 0.45,   // ramp 1 s: a cat's rush is explosive (the hunt)
-    half: 0.45, rad: 0.25, shoulder: 0.72, stride: 1.0, trot: 2.0, stalk: 0.45, sprint: 3, recover: 25,
+    half: 0.45, rad: 0.25, shoulder: 0.72, stride: 1.0, trot: 2.0, stalk: 0.45, sprint: 3, recover: 25, catch: 'leap',
     cam: { back: 3.5, up: 1.3, look: 2.5, aimUp: 0.6, side: 0.35, clear: 0.3, near: 0.2 },
     act: { flick: 0.6, t: 3, word: 'sniffing' }, alert: { flick: -0.3 }, rest: 'bed' },
   // the black bear: an amble, a bounding run in bursts (to ~13 m/s), a heavy short jump; E digs and scratches at the
@@ -345,6 +351,7 @@ export class GroundControl {
     this.jumpQ = this.actQ = this.restQ = false;
     if (this.mode === 'air') this.air(dt);
     else if (this.mode === 'fly') this.fly(dt, k, jump);
+    else if (this.mode === 'leap') this.leapStep(dt);
     else this.ground(dt, k, jump, act, rest);
     if (this.mode === 'ground') this.trunkPush(P);
     this.draw(dt);
@@ -376,8 +383,12 @@ export class GroundControl {
     if (act) { this.actT = S.act.t; this.resting = false; if (S.act.headFlick) ps.fl = (Math.random() < 0.5 ? -1 : 1) * (0.6 + Math.random() * 0.6); if (S.act.scratch) this.scratch = Math.random() < 0.4; }
     if (act && this.animals?.catchNear) {   // a hunter's E within reach of its prey: the catch (animals.js kill, CARRION)
       const c = this.animals.catchNear(P.x, P.y, P.z);
-      if (c) { this.needs?.fed?.(); this.say(`caught a ${this.animals.speciesList()[c.sp]?.one || 'prey'}`); }
+      if (c) this.caught(c);
       else { const k = this.animals.feedNear?.(P.x, P.y, P.z); if (k && this.fedAt !== k) { this.fedAt = k; this.needs?.fed?.(); this.say(`fed at the ${this.animals.speciesList()[k.sp]?.one || 'carcass'}`); } }   // a scavenger at carrion
+      if (!c && S.catch === 'leap' && this.needs?.hunter) { const c2 = this.animals.carrionNear?.(P.x, P.z, 2.5); if (c2) this.feeding = { t: CATCH.leap.feed, at: c2 }; }   // E beside a kill: crouch over it and feed
+    }
+    if (this.feeding) {   // crouched over the kill (caught, or E beside it): still, head low, until a key moves the body
+      if (k.fwd || k.turn || jump || this.feeding.t <= 0) this.feeding = null; else this.feeding.t -= dt;
     }
     if (k.fwd || Math.abs(this.v) > 0.5) this.actT = 0;
     this.actT = Math.max(0, this.actT - dt);
@@ -399,10 +410,14 @@ export class GroundControl {
       if (rushing && !this.rush) { this.rush = { t: 0, kill: false }; this.rushes = (this.rushes || 0) + 1; }
       if (this.rush) { this.rush.t += dt; if (!rushing) { if (!this.rush.kill && this.rush.t > 1 && this.needs?.hunter) this.animals?.known?.(45); this.rush = null; } }   // a hunter's failed rush makes it known; a deer's sprint is just a sprint
       if (rushing && this.needs?.hunter && (this.catchT = (this.catchT || 0) - dt) <= 0) {   // the rush that reaches its prey catches it
-        this.catchT = 0.1; const c = this.animals.catchNear(P.x, P.y, P.z);
-        if (c) { this.rush.kill = true; this.needs?.fed?.(); this.say(`caught a ${this.animals.speciesList()[c.sp]?.one || 'prey'}`); }
+        this.catchT = 0.1;
+        if (S.catch === 'leap') {   // the cat: the last bound is a leap onto prey within CATCH.leap.d m ahead (leapStep: the kill at the landing)
+          const p = this.animals.preyNear?.(P.x, P.y, P.z, CATCH.leap.d, f.yaw, 0.8);
+          if (p) return this.startLeap(p);
+        } else { const c = this.animals.catchNear(P.x, P.y, P.z); if (c) this.caught(c); }
       }
     }
+    if (this.feeding) target = 0;
     this.v = damp(this.v, target, Math.abs(target) < Math.abs(this.v) ? S.stop : S.accel, dt);
     if (Math.abs(this.v) < 0.01 && !target) this.v = 0;
     if (!this.resting) f.yaw += k.turn * S.turn * (1 - 0.45 * Math.min(1, Math.abs(this.v) / S.run)) * dt;
@@ -430,6 +445,39 @@ export class GroundControl {
       else { P.y = y; this.setWet(F); }
     }
     this.animate(dt, Math.abs(this.v), alert);
+  }
+  // The catch landed: fed, the hunt's count (hunt.js reads the kill event), the word; a cat crouches over it and feeds.
+  caught(c) {
+    if (this.rush) this.rush.kill = true;
+    this.needs?.fed?.(); this.say(`caught a ${this.animals.speciesList()[c.sp]?.one || 'prey'}`);
+    if (this.S.catch === 'leap') this.feeding = { t: CATCH.leap.feed, at: c };
+  }
+  // The cat's leap (CATCH.leap): from the rush, a bound of dur s that homes on the prey p and lands with the forequarters
+  // over its back; the controls are the leap's until it lands.
+  startLeap(p) {
+    const P = this.flight.pos, L = CATCH.leap;
+    this.leap = { u: 0, dur: L.dur, sx: P.x, sz: P.z, tx: p.x, tz: p.z, prey: p, peak: L.peak };
+    this.mode = 'leap'; this.sit = 0; this.resting = false; this.actT = 0;
+  }
+  leapStep(dt) {
+    const f = this.flight, P = f.pos, L = this.leap, S = this.S, ps = this.pose, t = L.prey, C = CATCH.leap;
+    L.u = Math.min(1, L.u + dt / L.dur); const u = L.u, k = u * u * (3 - 2 * u);
+    if (t && !t.dead && !t.gone) { f.yaw = Math.atan2(-(t.x - P.x), -(t.z - P.z)); L.tx = t.x + Math.sin(f.yaw) * C.over; L.tz = t.z + Math.cos(f.yaw) * C.over; }
+    P.x = clamp(L.sx + (L.tx - L.sx) * k, 5, this.tile.size - 5); P.z = clamp(L.sz + (L.tz - L.sz) * k, -this.tile.size + 5, -5);
+    const F = this.sq.footing(P.x, P.z, P.y + 1), g = F.surf !== null ? F.bed : F.y;
+    P.y = g + L.peak * Math.sin(Math.PI * u);
+    // the body: the forelegs reaching (the gallop's flight pose held, then gathered under it), nose-up at the launch to
+    // nose-down at the landing, the head driven down into the neck
+    ps.lift = 0; ps.amp = 1.25; ps.e3 = 1; ps.phase = Math.PI * 0.5 + Math.PI * k; ps.pitch = -0.45 + 0.9 * u;
+    ps.flick = damp(ps.flick, u > 0.6 ? 1 : -0.2, 12, dt); ps.pose = damp(ps.pose, (u > 0.7 ? 0.4 : 0.1) * this.modelPoseMax() / 0.6, 8, dt);
+    ps.e2 = 0; ps.roll = damp(ps.roll, 0, 8, dt);
+    this.v = Math.hypot(L.tx - L.sx, L.tz - L.sz) / L.dur;
+    if (u >= 1) {   // the landing: the kill within reach, or the miss (a twist away, and the rush that failed makes the hunter known: ground)
+      P.y = g; this.setWet(F); this.mode = 'ground'; this.leap = null; this.v = S.walk * 0.5;
+      const c = this.animals.catchNear(P.x, P.y, P.z);
+      if (c) this.caught(c); else { this.twist = { t: C.twist, s: Math.random() < 0.5 ? -1 : 1 }; this.say('the leap misses'); }
+    }
+    this.spd = this.v; this.inAir = true;
   }
   setWet(F) {
     if (F.surf === null || F.depth <= 0.005) { this.wet = null; return; }
@@ -503,9 +551,14 @@ export class GroundControl {
       }
       ps.e3 = damp(ps.e3, inAir || sp > S.trot * 1.4 ? 1 : 0, 4, dt);
       if (part && !this.buck) ps.e2 = ps.amp > 0.05 && !inAir ? Math.atan2(wr * r, Math.max(sp, PART_TURN.vMin)) : damp(ps.e2, 0, 8, dt);   // the legs' step turned round the turn (aAnim2.z)
-      const stalk = S.stalk && this.input().alt && sp > 0.05;
-      ps.pose = damp(ps.pose, this.resting ? pmax : stalk ? 0.45 * pmax / 0.6 : 0, this.resting ? 0.9 : 2, dt);
-      ps.flick = damp(ps.flick, act ? S.act.flick : alert ? S.alert.flick : stalk ? 0.25 : 0, 3, dt);
+      const stalk = S.stalk && this.input().alt && sp > 0.05, feeding = !!this.feeding;
+      ps.pose = damp(ps.pose, this.resting || feeding ? pmax : stalk ? 0.45 * pmax / 0.6 : 0, this.resting ? 0.9 : feeding ? 3 : 2, dt);
+      ps.flick = damp(ps.flick, feeding ? 0.85 + 0.15 * Math.sin(performance.now() * 0.0025) : act ? S.act.flick : alert ? S.alert.flick : stalk ? 0.25 : 0, 3, dt);
+      if (this.twist) {   // the leap that missed: a twist away, the body rolling and the heading swinging round (CATCH.leap.twist)
+        const T = this.twist, k = Math.max(0, T.t / CATCH.leap.twist); T.t -= dt;
+        ps.roll = T.s * 0.45 * Math.sin(Math.PI * k); f.yaw += T.s * 2.5 * dt;
+        if (T.t <= 0) this.twist = null;
+      }
       if (act && S.act.dig) { ps.pose = damp(ps.pose, 0.3 * pmax, 3, dt); ps.flick += 0.1 * Math.sin(performance.now() * 0.013); }   // a dig: shoulders down, the head working
       if (this.code === 'puma_concolor') ps.e1 = damp(ps.e1, (stalk || this.resting ? 0.7 : 0.15) * Math.sin(performance.now() * 0.0033) * (Math.sin(performance.now() * 0.0006) > 0.1 ? 1 : 0.15), 8, dt);
       if (this.buck) { const st = antlerState(this.animals.month ?? 10.5, this.buck.u1, this.buck.u2, this.buck.u3); ps.e0 = st.growth; ps.e1 = st.velvet; ps.e2 = this.buck.young; }
@@ -710,6 +763,8 @@ export class GroundControl {
     let text;
     if (this.mode === 'fly') text = `flying, ${Math.max(0, Math.round(P.y - ground))} m up`;
     else if (this.mode === 'air') text = 'in the air';
+    else if (this.mode === 'leap') text = 'leaping';
+    else if (this.feeding) text = 'feeding at the kill';
     else if (this.resting) text = rest;
     else if (this.wet) text = `wading, ${Math.round(this.wet.depth * 100)} cm deep`;
     else if (this.actT > 0) text = S.act.word;

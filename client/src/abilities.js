@@ -86,7 +86,7 @@ const SPECIES = {
   odocoileus_hemionus: { act: 'graze', verbs: [DRINK, SMELL, SWIM, MARK, no('rut', 'F'), CALL] },
   urocyon_cinereoargenteus: { act: 'sniff', verbs: [CATCH, DRINK, SMELL, EAT, DIG, DEN, MARK, SWIM] },
   canis_latrans: { act: 'sniff', verbs: [CATCH, FEED, DRINK, SMELL, DIG, DEN, MARK, SWIM, CALL] },
-  puma_concolor: { act: 'sniff', verbs: [CATCH, DRINK, SMELL, POUNCE, EAT, DEN, MARK, SWIM] },
+  puma_concolor: { act: 'sniff', verbs: [CATCH, on('leap', '', c => c.ground.mode === 'leap', { title: 'the rush\'s last bound: a leap onto prey within 3 m ahead, the kill at the landing' }), on('feed', 'E', c => !!c.ground.feeding, { title: 'crouched over the kill after a catch, or E beside one' }), DRINK, SMELL, DEN, MARK, SWIM] },
   ursus_americanus: { act: 'dig', verbs: [FEED, DRINK, SMELL, CARRY, CLIMB, DEN, MARK, SWIM] },
   sylvilagus_bachmani: { act: 'nibble', verbs: [DRINK, SMELL, SWIM] },
   lepus_californicus: { act: 'nibble', verbs: [DRINK, SMELL, SWIM] },

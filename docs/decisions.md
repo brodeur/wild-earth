@@ -2753,3 +2753,23 @@ its prey (a lizard not hidden, not up a trunk, drawn), `fled` reads its sprint a
 12 m kills a deer at 2.1 s of its rush, the deer rolls over 0.45 s (amp 0.71, 0.19, 0 at 0.2 s steps) into the bed
 clip; an AI fox trots at a lizard on its rock, pounces and the lizard rolls onto its side over 0.4 s, staying on the
 rock. Still a distance check at this step: the lion stands by its kill, the fox's kill lands at the pounce's start.
+
+**2. The cat's catch: the leap, the neck bite, the feeding crouch.** The reading (movement.md): a cougar closes in cover,
+then an explosive series of bounds, launches onto the prey's back and hangs on while it bites the nape or throat; over
+in seconds; then it feeds crouched over the kill. The AI lion's rush (M_RUSH) no longer kills at a distance: within
+`HUNT.leapD` (3.2 m) of its prey the last bound is M_LEAP, a bound of 0.45 s and 0.55 m that homes on the prey each
+frame and lands with the forequarters over its back (0.7 m short of the prey's centre); the gait is held at the
+gallop's flight pose with the fore pair reaching (amp 1.25, the phase pinned at pi/2 and swept to 3pi/2 by the
+landing, so the legs gather under it), the body pitches from nose-up at the launch to nose-down at the landing, and
+the head is driven down (flick 1) into the neck over the last 40 %. The kill is rolled at the landing (within
+CARRION.reach, lionCatch 0.35) and the lion goes to M_FEED for CARRION.feed s: pose at poseMax (the crouch), the head
+low and working at it (flick 0.85 with a slow tug, the tail tip twitching), no longer a hunter to the prey
+(refreshHunters); a miss is a twist away (`a.twist`: a roll pulse and the heading swung 1 rad over 0.4 s), then it
+stands. The player's lion (groundControl.js CATCH.leap, S.catch 'leap'): a rush within 3.2 m of prey ahead
+(animals.js preyNear, a cone of 0.8 rad) takes the controls for the leap (mode 'leap', leapStep), the same channels,
+the catch at the landing (catchNear, certain for the player as the rush was), and then the feeding crouch (`feeding`)
+until any key moves the body; E beside a kill crouches over it again. abilities.js: the lion's grey pounce became the
+lit leap (lit while leaping) and its grey eat the feed (lit while feeding). Verified: the AI lion from 12 m rushes,
+leaps at 3.2 m (1.95 s: lift 0.32, nose-up; 2.20 s: lift 0.41, nose-down), lands over the deer's hindquarters at
+2.32 s with its head down, the deer rolls under it and the lion stays crouched over the carcass; the player's lion the
+same from 9 m (the leap at 1.52 s, the kill at 1.84 s, feeding at pose 0.6 and flick 0.8-0.96).

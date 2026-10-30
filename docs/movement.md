@@ -114,6 +114,20 @@ amplitude slackens to nothing, the pose goes to the species' rest (the deer's be
 usual time; a lizard flat), the running pitch levels; where it died on a rock it stays on the rock. The lizard is prey
 (solitary, nothing to unwind): the fox's pounce, the raven's and the jay's takes land on it.
 
+**Felidae: the leap and the neck bite.** The mountain lion is a stalk-and-ambush cat with small lungs that cannot run
+far; it closes in cover, then an explosive series of bounds, strikes from behind, launches onto the prey's back and
+hangs on with its claws while it delivers the killing bite to the nape at the base of the skull or to the throat
+(suffocation); over within seconds. Then it feeds at the kill, crouched over it, head low. Sources: WildSafeBC,
+"Cougar" (https://wildsafebc.com/species/cougar/); ExplorersWeb, "Dealing with wildlife, part 1: cougars"
+(https://explorersweb.com/dealing-with-wildlife-part-1-cougars/); Santa Cruz Puma Project
+(https://www.santacruzpumas.org/?p=1478). In the client (animals.js M_LEAP and M_FEED, HUNT.leapD; groundControl.js
+CATCH.leap): the rush's last bound within 3.2 m is a leap of 0.45 s that homes on the prey and lands with the
+forequarters over its back, the fore pair reaching (the gallop's flight pose held, then gathered under it), the body
+pitching from nose-up to nose-down, the head driven down into the neck; the kill is rolled at the landing; then
+45 s crouched over the kill (poseMax, the head low and working), a miss a twist away. The player's lion does the same
+from its rush (the leap takes the controls for 0.45 s), and crouches to feed until a key moves it (E beside a kill
+crouches again).
+
 ## Open
 
 - The part rig's spine bend and head lead (the chest and head parts turning about the vertical by the lag).

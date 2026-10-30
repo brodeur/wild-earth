@@ -363,7 +363,8 @@ const H_SOAR = 60, H_STOOP = 61, H_PULL = 62;                                   
 const V_SOAR = 70, V_GLIDE = 71;                                                        // vulture
 const M_BED = 80, M_STAND = 81, M_MOVE = 82, M_SNIFF = 83, M_POUNCE = 84, M_FLEE = 85,
   M_CLIMB = 86, M_TREE = 87, M_DOWN = 88, M_STALK = 89, M_CROUCH = 90, M_RUSH = 91,     // fox, coyote, lion (M_RUSH: a hunt's trot or rush, huntStart)
-  M_CHARGE = 92;                                                                        // bear: a bluff charge at a close player
+  M_CHARGE = 92,                                                                        // bear: a bluff charge at a close player
+  M_LEAP = 93, M_FEED = 94;                                                             // lion: the rush's last bound onto the prey, and crouched over its kill (the catch, 2026-10-30)
 const B_FORM = 100, B_FORAGE = 101, B_HOP = 102, B_SIT = 103, B_FREEZE = 104, B_BOLT = 105;   // brush rabbit
 const VL_RUN = 110, VL_PAUSE = 111, VL_SIT = 112, VL_HIDE = 113;                         // vole
 const JK_FORM = 120, JK_FEED = 121, JK_HOP = 122, JK_SIT = 123, JK_FREEZE = 124, JK_BOLT = 125;   // jackrabbit
@@ -491,7 +492,11 @@ const KILLABLE = new Set([DR, BK, JR, RB, VO, LZ]);
 const REST_POSE = { [LZ]: -0.95 };   // the pose a dead body settles to (1 for the rest: the deer's bed, the small bodies' rest); the lizard flat
 if (typeof globalThis !== 'undefined') globalThis.__weCarrion = CARRION;   // debugging: lionCatch = 1 makes every rush that reaches its prey a kill
 const HUNT = { r: 300, every: 0.3, lionR: 200, near: 60, stalk: 0.5, rush: 25, rushFar: 50, rushT: [4, 5], lose: 260, stalkMax: 180,
-  lionCool: [60, 120], canidR: 60, trotMax: 25, pounceD: 2.4, chaseT: [2, 3.5], canidCool: [20, 45], look: [8, 16], hawk: 0.5, quail: 30 };
+  lionCool: [60, 120], canidR: 60, trotMax: 25, pounceD: 2.4, chaseT: [2, 3.5], canidCool: [20, 45], look: [8, 16], hawk: 0.5, quail: 30,
+  // the cat's catch (M_LEAP, 2026-10-30; docs/movement.md "The catch"): the rush's last bound from leapD m is a leap of leapT s and
+  // leapH m onto the prey, landing with its forequarters over the prey's back (leapOver m short of it); the kill at the landing
+  // within CARRION.reach, the miss a twist away (twistT s); then CARRION.feed s crouched over the kill, head low (M_FEED)
+  leapD: 3.2, leapT: 0.45, leapH: 0.55, leapOver: 0.7, twistT: 0.4 };
 const ALARM_AT = new Set([FX, CY, ML, HK]);
 // A ground squirrel's burrow mouth: a dark hole in a low ring of bare dirt, 0.27 m across, coloured per vertex.
 function burrowGeometry() {
@@ -869,7 +874,7 @@ export class Animals {
     const R2 = HUNT.r * HUNT.r;
     for (const a of this.list) {
       const prey = this.preySlots[a.sp]; if (!prey) continue;
-      if (a.state === M_BED || a.state === M_TREE || a.state === M_CLIMB || a.state === M_DOWN) continue;
+      if (a.state === M_BED || a.state === M_TREE || a.state === M_CLIMB || a.state === M_DOWN || a.state === M_FEED) continue;
       if ((a.x - P.x) ** 2 + (a.z - P.z) ** 2 > R2) continue;
       this.hunterList.push(a);
       for (const k of prey) this.huntersOf[k].push(a);
@@ -1040,14 +1045,24 @@ export class Animals {
     if (!this.scavengers) this.scavengers = new Set((this.tile.games?.relations?.scavenge || []).map(([s]) => s));
     return this.scavengers.has(code);
   }
-  // The player's catch (E within reach of prey its species hunts): the kill, or null.
-  catchNear(x, y, z) {
-    const k = INDEX[this.observer], prey = this.preySlots?.[k], reach = CARRION.reach[k]; if (!prey || !reach) return null;
+  // The nearest live prey of the player's species within R m of (x, y, z) (height counted a quarter), and, given a
+  // heading (the flight's yaw: 0 faces -z), within `cone` rad of it ahead; or null. The catch moves (groundControl's leap
+  // and pounce, flierControl's strike) aim at it; catchNear kills it.
+  preyNear(x, y, z, R = null, yaw = NaN, cone = 0.7) {
+    const k = INDEX[this.observer], prey = this.preySlots?.[k], reach = R ?? CARRION.reach[k]; if (!prey || !reach) return null;
+    const fx = -Math.sin(yaw), fz = -Math.cos(yaw), cc = Math.cos(cone);
     let best = null, bd = reach * reach;
     for (const a of this.list) {
       if (!prey.has(a.sp) || a.dead || a.culled || !KILLABLE.has(a.sp)) continue;
-      const d2 = (a.x - x) ** 2 + (a.y - y) ** 2 * 0.25 + (a.z - z) ** 2; if (d2 < bd) { bd = d2; best = a; }
+      const dx = a.x - x, dz = a.z - z, d2 = dx * dx + (a.y - y) ** 2 * 0.25 + dz * dz; if (d2 >= bd) continue;
+      if (yaw === yaw && d2 > 0.25 && (dx * fx + dz * fz) < cc * Math.sqrt(dx * dx + dz * dz)) continue;   // not ahead
+      bd = d2; best = a;
     }
+    return best;
+  }
+  // The player's catch (E within reach of prey its species hunts, or the catch move landing on it): the kill, or null.
+  catchNear(x, y, z) {
+    const best = this.preyNear(x, y, z);
     if (best) this.kill(best, 'player');
     return best;
   }
@@ -1063,7 +1078,7 @@ export class Animals {
     this.lastHunt = { id: a.id, hunter: SPECIES[a.sp].code, prey: t.sp === undefined ? 'meleagris_gallopavo' : SPECIES[t.sp].code, t: this.time };
     return true;
   }
-  // The hunt is over (nothing is caught yet): stand (the lion) or sniff (a canid), and no new hunt for a while.
+  // The hunt is over (a kill or not): stand or feed (the lion) or sniff (a canid), and no new hunt for a while.
   huntOver(a, state) {
     const r = a.rng, cool = a.sp === ML ? HUNT.lionCool : HUNT.canidCool;
     a.hunt = null; a.rush = 0; a.state = state; a.t = state === M_SNIFF ? 2 + r() * 3 : 3 + r() * 4;
@@ -3173,9 +3188,10 @@ export class Animals {
         const t = a.hunt, d = t && this.huntAlive(t) ? Math.hypot(t.x - a.x, t.z - a.z) : Infinity;
         if (d === Infinity) { this.huntOver(a, lion ? M_STAND : M_SNIFF); break; }
         a.tx = t.x; a.tz = t.z;
-        if (lion && a.rush && !a.rolled && d < CARRION.reach[ML]) {   // the rush reaches it: a kill, or it twists away
-          a.rolled = 1;
-          if (KILLABLE.has(t.sp) && r() < CARRION.lionCatch) { this.kill(t, a); this.huntOver(a, M_STAND); a.t = CARRION.feed; break; }
+        if (lion && a.rush && !a.rolled && d < HUNT.leapD) {   // the rush's last bound: the leap onto it (M_LEAP: the kill or the miss at the landing)
+          a.sx = a.x; a.sz = a.z; a.tx = t.x; a.tz = t.z; a.u = 0; a.dur = HUNT.leapT; a.lift = 0; a.state = M_LEAP;
+          this.lastLeap = { id: a.id, d, t: this.time };
+          break;
         }
         if (!lion && d < HUNT.pounceD) {   // on it: the pounce (a kill with CARRION.canidCatch)
           const L = Math.min(d, 2.2);
@@ -3199,6 +3215,29 @@ export class Animals {
         wantPose = pmax; wantFlick = 0.15; twitch = 1;
         if (a.t <= 0) { if (r() < 0.6) { a.state = M_STALK; a.t = 4 + r() * 6; } else { a.state = M_STAND; a.t = 2 + r() * 3; } }
         break;
+      case M_LEAP: {   // the cat's leap (HUNT.leapD): a bound of leapT s that homes on the prey, the forelegs reaching (the gallop's
+        // flight pose held), the body pitching from nose-up at the launch to nose-down at the landing, the head driven down into the
+        // neck as it lands with its forequarters over the prey's back; at the landing the kill (within reach, CARRION.lionCatch) or
+        // the miss, a twist away
+        const t = a.hunt, alive = t && this.huntAlive(t);
+        a.u = Math.min(1, a.u + dt / a.dur); const u = a.u, k = u * u * (3 - 2 * u);
+        if (alive) { a.yaw = Math.atan2(t.x - a.x, t.z - a.z); a.tx = t.x - Math.sin(a.yaw) * HUNT.leapOver; a.tz = t.z - Math.cos(a.yaw) * HUNT.leapOver; }
+        a.x = a.sx + (a.tx - a.sx) * k; a.z = a.sz + (a.tz - a.sz) * k;
+        a.lift = HUNT.leapH * Math.sin(Math.PI * u); a.pitch = -0.45 + 0.9 * u;
+        a.amp = 1.25; a.phase = Math.PI * 0.5 + Math.PI * k;   // the fore pair reaching forward, the hind pair back; gathered under it by the landing
+        wantFlick = u > 0.6 ? 1 : -0.2; wantPose = u > 0.7 ? 0.4 : 0.1;
+        if (u >= 1) {
+          a.lift = 0; a.rolled = 1;
+          const d = alive ? Math.hypot(t.x - a.x, t.z - a.z) : Infinity;
+          if (d < CARRION.reach[ML] && KILLABLE.has(t.sp) && r() < CARRION.lionCatch) { this.kill(t, a); this.huntOver(a, M_FEED); a.t = CARRION.feed; }
+          else { this.huntOver(a, M_STAND); a.twist = HUNT.twistT; a.twistS = r() < 0.5 ? -1 : 1; }
+        }
+        break;
+      }
+      case M_FEED:   // crouched over its kill, the head low and working at it, the tail tip twitching; up when the feed is done
+        wantPose = pmax; wantFlick = 0.85 + 0.15 * Math.sin(this.time * 2.5 + a.rock); twitch = 0.6;
+        if (a.t <= 0) { a.state = M_STAND; a.t = 2 + r() * 3; }
+        break;
       case M_CLIMB: case M_DOWN: {   // up (or down) the trunk, nose to the bark
         const up = a.state === M_CLIMB, top = Math.min(forkHeight(a.tree), 3.5);
         a.h += (up ? 1.3 : -1.0) * dt; speed = 1.2;
@@ -3215,6 +3254,12 @@ export class Animals {
         break;
     }
     speed *= a.mvK;   // the travel mmStep kept (turning on the spot: none)
+    if (a.twist > 0) {   // the leap that missed: a twist away, the body rolling and the heading swinging round (HUNT.twistT)
+      const k = Math.max(0, a.twist / HUNT.twistT); a.twist -= dt;
+      a.roll = a.twistS * 0.45 * Math.sin(Math.PI * k); a.yaw += a.twistS * 2.5 * dt; a.wy = NaN;
+      if (a.twist <= 0) a.roll = 0;
+    }
+    const air = a.state === M_POUNCE || a.state === M_LEAP;   // the catch moves set the gait, the pitch and the lift themselves
     // standing (sniffing, alert, watching, back from a flight): stepped round to a new heading (a.wy), as the deer
     const standing = speed < 0.05 && (a.state === M_STAND || a.state === M_SNIFF || a.state === M_MOVE || a.state === M_FLEE);
     if (standing && a.wy === a.wy) { this.drSteer(a, a.wy, 3, dt, false, DEER_TURN.slow); if (Math.abs(wrapAngle(a.wy - a.yaw)) < 0.05) a.wy = NaN; }
@@ -3225,7 +3270,7 @@ export class Animals {
     { const yp = a.yP ?? a.yaw, d = wrapAngle(a.yaw - yp); a.yP = a.yaw;
       const raw = Math.abs(d) > 1.2 || !(dt > 0) ? 0 : Math.max(-PT.maxRate, Math.min(PT.maxRate, d / dt));
       a.wr = raw + ((a.wr || 0) - raw) * Math.exp(-PT.rateK * dt); }
-    const aw = Math.abs(a.wr), still = speed < 0.05 && a.state !== M_POUNCE && a.state !== M_BED && a.pose < 0.5 && !treed && a.state !== M_TREE;
+    const aw = Math.abs(a.wr), still = speed < 0.05 && !air && a.state !== M_BED && a.state !== M_FEED && a.pose < 0.5 && !treed && a.state !== M_TREE;
     if (still && aw > ((a.tq || 0) > 0 ? PT.off : PT.on)) a.tq = PT.hold; else a.tq = still ? (a.tq || 0) - dt : 0;
     // gait: amplitude by speed (walk, trot, gallop) and the gait selector to the fore-against-hind gallop; standing and
     // turning, the legs step round first (PART_TURN: amp and rate from the turn rate)
@@ -3233,12 +3278,12 @@ export class Animals {
       const u = Math.min(1, Math.max(0, (aw - PT.on) / (2 - PT.on))), tAmp = PT.amp[0] + (PT.amp[1] - PT.amp[0]) * u;
       a.amp = damp(a.amp, tAmp, 5, dt);
       a.phase += dt * TAU * Math.min(PT.hz[1], Math.max(PT.hz[0], aw * half / (tAmp * cfg.stride * a.size)));
-    } else {
-      a.amp = damp(a.amp, a.state === M_POUNCE ? 0 : speed < 0.05 ? 0 : speed < cfg.trot * 0.75 ? 0.75 : speed < cfg.trot * 1.4 ? 1 : 1.25, 5, dt);
+    } else if (!air) {
+      a.amp = damp(a.amp, speed < 0.05 ? 0 : speed < cfg.trot * 0.75 ? 0.75 : speed < cfg.trot * 1.4 ? 1 : 1.25, 5, dt);
       a.phase += dt * TAU * speed / (cfg.stride * a.size * (0.8 + 0.25 * speed));
     }
-    a.e3 = damp(a.e3, speed > cfg.trot * 1.4 ? 1 : 0, 4, dt);
-    a.e2 = a.amp > 0.05 && a.state !== M_POUNCE && !treed ? Math.atan2(a.wr * half, Math.max(speed, PART_TURN.vMin)) : 0;   // the legs' step turned round the turn (aAnim2.z)
+    a.e3 = damp(a.e3, a.state === M_LEAP || speed > cfg.trot * 1.4 ? 1 : 0, 4, dt);
+    a.e2 = a.amp > 0.05 && !air && !treed ? Math.atan2(a.wr * half, Math.max(speed, PART_TURN.vMin)) : 0;   // the legs' step turned round the turn (aAnim2.z)
     a.spd = speed;   // the drawn body's lag behind a turn (update: turnFollow)
     if (bear && a.state === M_SNIFF) wantPose = Math.max(wantPose, 0.3);   // digging and foraging: the shoulders down
     a.pose = damp(a.pose, Math.min(wantPose, pmax), 2, dt);
@@ -3248,7 +3293,7 @@ export class Animals {
     if (a.state === M_TREE) { a.y = trunkAt(a.tree, Math.min(forkHeight(a.tree), 3.5), this._t).y + 0.15 - this.drops[a.sp] * a.pose * a.size; return; }
     const sy = Math.sin(a.yaw), cy = Math.cos(a.yaw);
     const hf = H.atXZ(a.x + sy * half, a.z + cy * half), hb = H.atXZ(a.x - sy * half, a.z - cy * half);
-    if (a.state !== M_POUNCE) a.pitch = damp(a.pitch, -Math.atan2(hf - hb, 2 * half) * 0.8, 6, dt);
+    if (!air) a.pitch = damp(a.pitch, -Math.atan2(hf - hb, 2 * half) * 0.8, 6, dt);
     a.y = Math.min(hf, hb) * 0.5 + H.atXZ(a.x, a.z) * 0.5 - this.drops[a.sp] * a.pose * a.size + a.lift;
   }
 
