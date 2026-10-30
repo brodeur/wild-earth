@@ -123,6 +123,10 @@ sequenced; Parked is in the brief but deliberately not started.
   `emergent` form drawn by `emergents.js`; the streams drawn at their level in the carved
   channel, the dry beds rocky, the margins tinted, the gallery trees by zone.
 
+- The catch, 2026-10-30 (branch claude/catch-rigging-4301f4, docs/decisions.md "the catch rigged", docs/movement.md
+  "The catch"): the prey falls over 0.4 s instead of snapping onto its side (the deer's bed clip blended in fast), the
+  lizard can be taken (the fox's pounce, the raven's and jay's takes).
+
 ## Next: the visual pass, in order of effect per hour
 
 1. ~~Horizon~~ done 2026-10-23: two crossed-quad impostors with a canopy cap per

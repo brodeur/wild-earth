@@ -481,9 +481,15 @@ const DEER_TURN = { w: 2.2, fast: 6, go: 0.5, stop: 1.4, slow: 1.2, face: 0.7, g
 // as carrion for t s (small prey small s), on its side, then goes (its cell's rebuild brings another in later). The
 // scavengers of games.json relations.scavenge come: ravens circle in from scavR m and land beside it, vultures bring
 // their circle over it, a coyote trots to it. Only KILLABLE species die: those without a flock, covey or colony whose
-// unit the code keeps a member list for. feed: how long the lion stands by its kill.
-const CARRION = { t: 600, small: 150, reach: { [ML]: 2.4, [CY]: 1.6, [FX]: 1.3, [HK]: 1.4, [RV]: 0.9 }, lionCatch: 0.35, canidCatch: 0.4, scavR: 300, ravenStay: [20, 45], feed: 45 };
-const KILLABLE = new Set([DR, BK, JR, RB, VO]);
+// unit the code keeps a member list for (the lizard, solitary, since 2026-10-30: the fox's pounce and the raven's and
+// jay's takes land on it). feed: how long the lion crouches over its kill. The death (2026-10-30): a killed animal
+// falls over `fall` s (lieStill): the roll onto its side and the drop of the legs under gravity (slow to start, hard
+// at the ground), the gait's amplitude slackening to nothing and the pose going to the species' rest (REST_POSE: the
+// deer's bed clip blended in at a third of its usual time, a lizard flat), instead of snapping onto its side.
+const CARRION = { t: 600, small: 150, reach: { [ML]: 2.4, [CY]: 1.6, [FX]: 1.3, [HK]: 1.4, [RV]: 0.9, [SJ]: 0.6 }, lionCatch: 0.35, canidCatch: 0.4, scavR: 300, ravenStay: [20, 45], feed: 45, fall: 0.4 };
+const KILLABLE = new Set([DR, BK, JR, RB, VO, LZ]);
+const REST_POSE = { [LZ]: -0.95 };   // the pose a dead body settles to (1 for the rest: the deer's bed, the small bodies' rest); the lizard flat
+if (typeof globalThis !== 'undefined') globalThis.__weCarrion = CARRION;   // debugging: lionCatch = 1 makes every rush that reaches its prey a kill
 const HUNT = { r: 300, every: 0.3, lionR: 200, near: 60, stalk: 0.5, rush: 25, rushFar: 50, rushT: [4, 5], lose: 260, stalkMax: 180,
   lionCool: [60, 120], canidR: 60, trotMax: 25, pounceD: 2.4, chaseT: [2, 3.5], canidCool: [20, 45], look: [8, 16], hawk: 0.5, quail: 30 };
 const ALARM_AT = new Set([FX, CY, ML, HK]);
@@ -930,6 +936,7 @@ export class Animals {
       case RB: return t.state === B_BOLT;
       case VO: return t.state === VL_HIDE || (t.state === VL_RUN && t.next === VL_HIDE);
       case GS: return t.state === G_DIVE || t.state === G_DOWN;
+      case LZ: return t.state === L_SPRINT || t.state === L_HIDE;
     }
     return false;
   }
@@ -939,6 +946,7 @@ export class Animals {
       case RB: return b.state !== B_FORM && b.state !== B_BOLT;
       case JR: return b.state !== JK_BOLT;
       case GS: return b.state !== G_DOWN && b.state !== G_DIVE && b.group?.state === C_OK;
+      case LZ: return b.state !== L_HIDE && !!b.home && b.vis > 0.5 && b.site?.kind !== 'trunk';   // not one up a trunk
     }
     return true;
   }
@@ -965,10 +973,15 @@ export class Animals {
   // ---- kills and carrion (CARRION above) ------------------------------------------------------------
   kill(prey, by) {
     if (!prey || prey.dead || prey.sp === undefined || !KILLABLE.has(prey.sp)) return false;
-    const small = prey.sp === VO || prey.sp === RB;
+    const small = prey.sp === VO || prey.sp === RB || prey.sp === LZ;
     prey.dead = true; prey.diedAt = this.time; prey.carrionUntil = this.time + (small ? CARRION.small : CARRION.t);
-    prey.hunt = null; prey.air = 0; prey.speed = 0; prey.amp = 0; prey.flick = 0; prey.flickV = 0; prey.lift = 0; prey.fleeT = 0; prey.spd = 0;
-    prey.state = prey.sp === VO ? VL_SIT : prey.sp === RB ? B_FORM : prey.sp === JR ? JK_FORM : D_BED; prey.pose = 1;   // the rest pose (the skin drive's bed clip), on its side
+    prey.hunt = null; prey.air = 0; prey.speed = 0; prey.flickV = 0; prey.lift = 0; prey.fleeT = 0; prey.spd = 0;
+    prey.state = prey.sp === VO ? VL_SIT : prey.sp === RB ? B_FORM : prey.sp === JR ? JK_FORM : prey.sp === LZ ? L_BASK : D_BED;
+    // the fall (lieStill): from the gait and pose it died in to the rest pose on its side over CARRION.fall s
+    const skin = !!this.drawn[prey.sp]?.model?.skin;
+    prey.fall = 0; prey.amp0 = prey.amp; prey.pose0 = skin ? 1 : prey.pose; prey.pitch0 = prey.pitch; prey.flick0 = prey.flick;
+    prey.yDead = Math.max(prey.y, this.heights.atXZ(prey.x, prey.z));   // where it died (a lizard on its rock stays on the rock)
+    if (skin) (prey.cs ||= makeClipState()).quick = 0.35;   // the deer: the bed clip from the first frame, blended in at a third of its time
     prey.lieRoll = (prey.rng ? prey.rng() : Math.random()) < 0.5 ? -1 : 1;
     if (prey.group) {   // a herd member: the herd goes on without it
       const g = prey.group; prey.group = null;
@@ -980,9 +993,11 @@ export class Animals {
     this.emit('kill', { prey: SPECIES[prey.sp].code, by: who, x: prey.x, y: prey.y, z: prey.z, small });
     return true;
   }
-  lieStill(a) {   // on its side on the ground, a little up so the body is not under it
-    a.y = this.heights.atXZ(a.x, a.z) + 0.04;
-    a.roll = a.lieRoll * 1.45; a.pitch = 0; a.amp = 0; a.pose = 1; a.speed = 0; a.flick = 0;
+  lieStill(a, dt = 0) {   // the fall over CARRION.fall s, then on its side on the ground, a little up so the body is not under it
+    const u = a.fall = Math.min(1, (a.fall ?? 1) + dt / CARRION.fall), e = u * u, rest = REST_POSE[a.sp] ?? 1;
+    a.y = Math.max(this.heights.atXZ(a.x, a.z), a.yDead ?? -Infinity) + 0.04 * e;
+    a.roll = a.lieRoll * 1.45 * e; a.pitch = (a.pitch0 || 0) * (1 - e); a.speed = 0;
+    a.amp = (a.amp0 || 0) * (1 - u); a.pose = (a.pose0 || 0) + (rest - (a.pose0 || 0)) * e; a.flick = (a.flick0 || 0) * (1 - u);
   }
   bury(a) {   // the carrion goes: unseen at once, dropped by the next rebuild
     a.gone = true; a.vis = 0; a.culled = true;
@@ -1040,7 +1055,7 @@ export class Animals {
   huntStart(a) {
     if (this.time < (a.huntAt || 0) || !this.preySlots?.[a.sp]) return false;
     const r = a.rng, lion = a.sp === ML;
-    const t = lion ? this.huntTarget(a, HUNT.lionR, [DR, BK, JR]) : this.huntTarget(a, HUNT.canidR, [VO, RB, JR, GS]);
+    const t = lion ? this.huntTarget(a, HUNT.lionR, [DR, BK, JR]) : this.huntTarget(a, HUNT.canidR, a.sp === FX ? [VO, RB, JR, GS, LZ] : [VO, RB, JR, GS]);
     if (!t) { a.huntAt = this.time + HUNT.look[0] + r() * (HUNT.look[1] - HUNT.look[0]); return false; }
     a.hunt = t; a.rush = 0; a.rolled = 0; a.huntEnd = this.time + (lion ? HUNT.stalkMax : HUNT.trotMax); a.tx = t.x; a.tz = t.z;
     if (lion) { a.state = M_STALK; a.speed = MAMMAL[ML].walk; a.t = 1e9; }
@@ -4298,7 +4313,7 @@ export class Animals {
       const ex = a.x - cx, ey = a.y - cy, ez = a.z - cz, d2 = ex * ex + ey * ey + ez * ez;
       a.acc += dt0;
       const dead = a.dead;   // carrion (kill): lies where it fell (no thinking, still drawn), then goes
-      if (dead) { if (!a.gone) { if (this.time > a.carrionUntil) this.bury(a); else this.lieStill(a); } if (a.gone) { a.acc = 0; continue; } }
+      if (dead) { if (!a.gone) { if (this.time > a.carrionUntil) this.bury(a); else this.lieStill(a, dt0); } if (a.gone) { a.acc = 0; continue; } }
       if (cull[sp]) {   // rabbits, jackrabbits and voles: neither drawn nor thought beyond CULL (voles: also under a high camera)
         const R = CULL[sp];
         if (d2 > R * R || (sp === VO && camAGL > VOLE_CAM)) {

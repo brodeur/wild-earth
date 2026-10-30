@@ -2731,3 +2731,25 @@ it needs a shared world origin, packages loaded with offsets, the edge rows join
 ranges that cross, and the map and games reconciled; the costs are memory (double for a pair) and colour seams
 between NAIP flights. A bigger tile is one constant (TILE_SIZE_M) at the same memory cost per area. The re-centred
 tile is the cheap answer for one valley; stitching is the long one.
+
+## 2026-10-30: the catch rigged (branch claude/catch-rigging-4301f4)
+
+Aaron asked for a bit of reading on how each hunter actually catches its prey, then the rigging: the moment of the kill
+as a bodily act for the AI animals and the player's body alike, and the prey's death, rather than a distance check
+that snaps a deer onto its side. docs/movement.md "The catch" has the reading and its sources; this entry is the
+decisions, one per step, each verified by eye in the worktree viewer (port 8784) from a browser harness
+(scratch/catch_harness.js: it teleports the spirit to a lion and a deer herd, makes the prey blind to the hunter,
+sets `__weCarrion.lionCatch = 1`, starts the hunt and records a montage from a camera that follows the prey).
+
+**1. The prey's death.** `kill()` no longer sets the rest pose and `lieStill()` no longer snaps the roll: a killed
+animal falls over `CARRION.fall` (0.4 s). The roll onto its side and the small drop follow u^2 (gravity: slow to
+start, hard at the ground), the gait's amplitude slackens linearly to nothing, the pose goes from the one it died in
+to its rest (`REST_POSE`: 1 for the rest, the lizard flat at -0.95), the pitch it ran with levels. The deer's bed clip
+is picked from the first frame (pose 1 at once) and blended in at 0.35 of its usual second (`makeClipState().quick`,
+read by driveClips' blend time), so the legs fold under it as it rolls. A body that died on a rock stays on the rock
+(`yDead`): the first dead lizard sank into its rock. The lizard is KILLABLE (solitary, no member list to unwind; its
+site and home are its own), with its own reach for the jay (0.6 m) beside the raven's; the fox's hunt lists it among
+its prey (a lizard not hidden, not up a trunk, drawn), `fled` reads its sprint and hide. Verified: an AI lion from
+12 m kills a deer at 2.1 s of its rush, the deer rolls over 0.45 s (amp 0.71, 0.19, 0 at 0.2 s steps) into the bed
+clip; an AI fox trots at a lizard on its rock, pounces and the lizard rolls onto its side over 0.4 s, staying on the
+rock. Still a distance check at this step: the lion stands by its kill, the fox's kill lands at the pounce's start.

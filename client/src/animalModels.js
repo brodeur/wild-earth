@@ -1365,7 +1365,7 @@ export const PART_TURN = { turn: { on: 0.45, off: 0.2, hold: 0.35, amp: [0.4, 0.
   bird: BIRD_TURN, turkey: { ...BIRD_TURN, w: 2.2, fast: 6, slow: 1.2 },
   lizard: { turn: { ...SMALL_TURN, hold: 0.25, amp: [0.3, 0.45], hz: [1.2, 4], lag: 0, maxLag: 0 }, bendK: 0.25, bendMax: 0.8, w: 3.5, fast: 8 } };
 if (typeof globalThis !== 'undefined') globalThis.__weDeerDrive = DEER_DRIVE;   // debugging: thresholds, rates, force
-export function makeClipState() { return { cur: -1, prev: 0, pA: 0, pB: 0, blend: 0, seed: Math.random(), kind: '', kindB: '', tBlend: 0.3, y0: NaN, dy: 0, wr: 0, tq: 0, th: 0 }; }
+export function makeClipState() { return { cur: -1, prev: 0, pA: 0, pB: 0, blend: 0, seed: Math.random(), kind: '', kindB: '', tBlend: 0.3, y0: NaN, dy: 0, wr: 0, tq: 0, th: 0, quick: 0 }; }
 const standKind = (flick) => flick > 0.5 ? 'graze' : flick < -0.15 ? 'alert' : 'idle';
 // kind: what the current clip is for (idle, graze, bed, walk, run, turn), for the hysteresis and the blend time
 function pickClip(D, st, speed, pose, flick, dt) {
@@ -1420,7 +1420,7 @@ export function driveClips(skin, D, st, speed, pose, flick, dt, out, o) {
   if (kind !== st.kind) {
     const nameOf = k => k === 'idle' ? D.idle[Math.floor(st.seed * D.idle.length) % D.idle.length] : k === 'turn' ? D.walk : D[k];
     const next = C[nameOf(kind)] ?? 0, fromTurn = st.kind === 'turn';
-    const tB = () => D.blend[kind === 'bed' || st.kind === 'bed' ? 'bed' : fromTurn ? 'turnOut' : kind === 'turn' ? 'turn' : kind === 'graze' || st.kind === 'graze' ? 'graze' : kind === 'walk' || kind === 'run' ? 'gait' : 'idle'];
+    const tB = () => (st.quick || 1) * D.blend[kind === 'bed' || st.kind === 'bed' ? 'bed' : fromTurn ? 'turnOut' : kind === 'turn' ? 'turn' : kind === 'graze' || st.kind === 'graze' ? 'graze' : kind === 'walk' || kind === 'run' ? 'gait' : 'idle'];   // quick: a dead body's bed clip (animals.js kill)
     if (st.blend > 0 && next === st.prev && next !== st.cur) {
       // back to the clip it is leaving (out of a turn to the standing clip it stepped over, or a change undone mid-blend):
       // swap the slots, each clip keeping its phase and the outgoing one fading from the share it had

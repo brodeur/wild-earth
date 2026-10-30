@@ -101,6 +101,19 @@ arthropods (the tripod gait at six legs, eight for the arachnids); the Froude ba
 directly from the table instead of the per-species `trot` constants; an individual's variance (a limping old deer, a
 fawn's higher cadence); and the turn's hoof planting measured against the ground rather than inferred from the clip.
 
+## The catch
+
+Aaron, 2026-10-30: a bit of reading on how each species catches its prey, then the rigging, so a kill reads as a bodily
+act rather than a distance check. The reading, by family (the catch is a family-level principle: a cat's leap and neck
+bite, a canid's mousing pounce, a hawk's talon strike, a corvid's bill stab), with its sources; then how the client
+draws each, step by step as the branch lands them (docs/decisions.md "the catch rigged").
+
+**The prey's death** (every family). A killed animal falls over 0.4 s (animals.js `CARRION.fall`, `lieStill`): the roll
+onto its side and the drop follow the square of time (gravity: slow to start, hard at the ground), the gait's
+amplitude slackens to nothing, the pose goes to the species' rest (the deer's bed clip blended in at a third of its
+usual time; a lizard flat), the running pitch levels; where it died on a rock it stays on the rock. The lizard is prey
+(solitary, nothing to unwind): the fox's pounce, the raven's and the jay's takes land on it.
+
 ## Open
 
 - The part rig's spine bend and head lead (the chest and head parts turning about the vertical by the lag).
