@@ -57,6 +57,78 @@ state: fleeing, grazing, bedded; its needs: hungry is slower). Those are the AI'
   and sit-up, the reptile template's sprawl and lateral wave, the bird template's walk, flush and wings, the quadruped
   template's walk, trot and gallop. A species names its template through its body plan; the template's constants are
   per species only where the sign-off wanted them (`RIG` in animalModels.js).
+- **The feet plant and the knees bend** (kingdom, class, order; 2026-10-30, "The legs" below). The drawn quadrupeds
+  other than the deer are skinned to one skeleton and posed live by the gait engine from their locomotion row: the
+  gait by the Froude bands, the footfalls of the gait diagrams, each foot held where it landed and swung to a plant
+  point read from the terrain, the legs solved by IK, the body's height and pitch from the planted feet.
+
+## The legs (2026-10-30): a skeleton and a gait engine for the quadrupeds
+
+Aaron: "the leg rigging for quadrupeds still needs work - how do we get a good result". The part rig swung each leg as
+one rigid box about the shoulder or hip from sin(phase): no knee, no foot, the feet sliding over the ground, a slope
+met by pitching the whole body. Now every drawn quadruped (the gray fox, the coyote, the mountain lion, the black
+bear) is skinned to one standard skeleton and posed by a gait engine, `client/src/gait.js`, that plants the feet on
+the terrain and bends the knees; the deer keeps its hero clips. The code: `tools/rig_quadruped.py` (the skeleton and
+the weights from a built GLB's geometry), `client/src/gait.js` (the engine), `tools/bake_gait.mjs` (the far tier's
+cycles from the same engine), `animalModels.js` (the `SKIN_LIVE` shader branch and the pose texture).
+
+**The skeleton** (`tools/rig_quadruped.py`, the same 20 joints for every quadruped): Hips (the root), Spine, Chest,
+Neck, Head, a tail chain of three, and per leg three bones: the upper (the shoulder or hip joint to the elbow or
+stifle), the lower (to the wrist or hock), the foot (the wrist or hock to the toe). Every joint's rest orientation is
+the identity, so a bone's matrix in the pose texture is [R | p - R q] for its posed head p, rest head q and rotation
+R. The joints come from the geometry alone (no source skeleton: the Meshy meshes never had one and the Quaternius
+sources are not in the repo): the elbow and stifle are the part pivots the build scripts found at the belly line, the
+wrist and hock sit at a fraction of that height (digitigrade 0.42 and 0.5, plantigrade 0.4 and 0.45 with the heel
+behind the toe), each centred on the leg column's vertices at its height, the toe at the paw's print; the shoulder
+joint above and ahead of the elbow in the chest (the humerus slopes down and back), the hip above and behind the
+stifle (the femur down and forward); a vertex ring is cut at each joint so the low-poly leg has an edge to bend at.
+Weights go by height along the leg with a short blend at each joint; the arm and thigh skin above the elbow and
+stifle takes the upper bone fading toward the shoulder and hip; the trunk splits Hips / Spine / Chest by z; the head
+part Neck / Head; the tail by its arc. The record's `rig` field names the joints and the posture.
+
+**The engine**, by the rank of the tree each principle belongs to:
+- *kingdom* a limb pushes against the world and the body follows: a foot that has landed is held at the world point
+  where it landed while the body passes over it; it lifts at the duty factor's phase and swings on an arc to the next
+  plant point, predicted half a stance ahead of where its shoulder or hip will be at touchdown (the body's speed and
+  turn rate carried forward), the height read from the terrain there. A standing turn is the same cycle run at the
+  turn's step rate: the feet step round the turn because their rest offsets turn with the body, and the body follows.
+- *class* Mammalia: the gait by the Froude number of the hip height (the row's `walk_mps`, `trot_mps`, with
+  hysteresis); Hildebrand's footfalls (the walk's lateral sequence LH 0, LF 0.25, RH 0.5, RF 0.75; the trot's diagonal
+  pairs at 0 and 0.5; the transverse gallop LH 0, RH 0.15, LF 0.5, RF 0.65, a rotary one for the cats and dogs at
+  speed, the bound for the rodents later); the duty factor from 0.72 at the slowest walk to 0.5 at the trot and 0.4
+  in the gallop; the cadence rising as v^0.45 to `stride_hz` at the trot-gallop change and nearly flat beyond, where
+  the stride stretches instead (Heglund & Taylor); the body vaulting at a walk, springing at a trot, rising once a
+  cycle in the gallop; the spine arching as the hind feet come under and extending as the fore feet reach; the head
+  counter-pitched level over the stride (and dipped by the flick, raised when alert); the shoulder sliding fore and aft
+  with its foot (the scapula's swing, which gives a real leg its reach) and a leg out of reach straightening toward
+  its toe.
+- *order* the foot: digitigrade (Carnivora: up on the toes, the wrist and hock in the air, the foot bone standing on
+  its toe and flexing in the swing), plantigrade (Ursidae: the sole flat, the ankle low behind the toe); the bear's
+  amble is a pace (the lateral pairs together) where the others trot, from the tree's `gaits.walk: amble`.
+- *phylum* the head leads a turn and the spine bends toward the heading the hips lag behind (the deer's `bendOf`):
+  the fore segment of the spine yaws about the Spine joint, the shoulders go with it and the planted fore feet stay,
+  the IK taking up the difference; the tail lags the turn and swings with the gallop.
+- *species* only its row (the Froude bands, the cadence and stride at the trot-gallop change, the posture, the turn
+  block) and its skeleton; nothing is written per species in the engine. A tile without a locomotion table gets the
+  numbers from the body (the hip height and a mass from it).
+- The body's height is the planted feet's: the hips sit over the ground under the hind feet and the chest over the
+  fore feet (the back following 80 % of a slope, the legs bending for the rest), the body rolling onto the supporting
+  side; the instance matrix no longer pitches a live body with the slope. Pose (the AI's `aAnim.z`) crouches the body
+  to a half (the lion's stalk, the bear's dig) and past it lowers it onto the ground with the legs folded (a sphinx:
+  the fore legs under the chest, the hind legs alongside, the tail along the ground); a body in the air (a jump, a
+  pounce) tucks its feet and replants on landing.
+
+**The output**: a pose texture per species (RGBA32F, three texels a joint, one row per live instance, `livePoseTexture`
+in animalModels.js), the engine writing a row per instance per frame (`writeRow`) in the frame `tools/bake_clips.py`
+writes, and the skin shader reading the instance's row when `aClip.x` is negative (`SKIN_LIVE`); no new vertex
+attribute (the Metal limit). Far instances take cycles baked offline by the same engine (`tools/bake_gait.mjs`: Idle,
+Walk, Trot, Gallop, Bed as `<name>_clips.bin` + `.json`), driven by distance over each clip's stride (`farDrive`), so
+the far tier is the same shader with a clip, as the deer.
+
+**Sign-off**: `client/lineup_animals.html` runs the engine on the legged rows at `walk`, `trot`, `run` and `turn`, the
+body travelling along the row with the camera following so a planted foot can be seen staying put on the ground
+beside the fixed pole while the body passes; `&feet=1` marks each foot's plant point (red the fore, blue the hind,
+small while swinging), `&slope=<deg>` tilts the ground, `&speed=<m/s>` sets the speed.
 
 ## The pipeline
 
@@ -95,7 +167,9 @@ not per species (quadruped, rodent, bird, flier, reptile today; a snake, a frog,
 gait and a spider's eight are the next templates, each one shader path on the same four floats). What does not
 scale and is not meant to: a hero species' own clips (the deer), which stay rare.
 
-What is missing, in order: the spine bend on the part rig; the templates for Amphibia (the hop and the swim), Pisces
+What is missing, in order: the rodents' bound and the ground birds' walk on the leg engine (their templates still
+swing rigid legs; the engine's footfall table has the bound ready); the deer on the engine where its clips run out (a
+trot, a slope); the templates for Amphibia (the hop and the swim), Pisces
 (the undulating swim), Serpentes (the lateral wave without limbs), Chiroptera (the flap on a membrane) and the
 arthropods (the tripod gait at six legs, eight for the arachnids); the Froude bands driving the AI's gait choice
 directly from the table instead of the per-species `trot` constants; an individual's variance (a limping old deer, a
@@ -103,6 +177,11 @@ fawn's higher cadence); and the turn's hoof planting measured against the ground
 
 ## Open
 
-- The part rig's spine bend and head lead (the chest and head parts turning about the vertical by the lag).
-- The AI's gaits from the Froude bands of the table.
+- The part rig's spine bend and head lead (the chest and head parts turning about the vertical by the lag): done for
+  the quadrupeds on the leg engine (2026-10-30); open on the rodent, bird and reptile templates.
+- The AI's gaits from the Froude bands of the table: the leg engine picks its gait so (2026-10-30); the AI's own
+  speeds (`MAMMAL` walk / trot / run) are still hand-set, not the row's.
+- The leg engine's numbers to tune by eye against footage: the duty factors, the cadence exponent (0.45), the swing
+  clearance, the walk's reach; the rotary gallop for Carnivora in the tree (`gaits.gallop`); a fore-aft asymmetry in
+  the Meshy lion's forelegs that the rig follows.
 - The tree's numbers for the birds' ground speeds (Garland's fit is for mammals; capped at 4 sqrt(g h) for now).

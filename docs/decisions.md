@@ -2731,3 +2731,38 @@ it needs a shared world origin, packages loaded with offsets, the edge rows join
 ranges that cross, and the map and games reconciled; the costs are memory (double for a pair) and colour seams
 between NAIP flights. A bigger tile is one constant (TILE_SIZE_M) at the same memory cost per area. The re-centred
 tile is the cheap answer for one valley; stitching is the long one.
+
+## 2026-10-30: the quadrupeds' legs: one skeleton, a gait engine that plants the feet, the far tier baked from it
+
+Aaron: "the leg rigging for quadrupeds still needs work - how do we get a good result". The part rig drew a quadruped's
+legs as two rigid boxes (the diagonal pairs) swinging about the shoulder and hip from sin(phase): no knee, no foot, the
+feet sliding, a slope met by pitching the body, the gallop with no spine. The decision: no baked clips per species (a
+hero clip set is the deer's privilege), but a skeleton every quadruped shares and an engine that poses it from what the
+AI and the player already know, driven from the locomotion tree, so a new species on a new tile walks right from its
+taxon and its body. `docs/movement.md` "The legs" has the principles by rank; in short:
+
+- `tools/rig_quadruped.py` gives a built GLB (fox, coyote, cougar, bear) the standard 20-joint skeleton from its
+  geometry alone: the elbow and stifle at the part pivots, the wrist and hock at a fraction of that height by posture,
+  the shoulder and hip in the body, the toe at the paw's print, a vertex ring cut at each joint, weights by height with
+  short blends; JOINTS_0 / WEIGHTS_0 and extras.skin as the deer's. The source Fox and Wolf GLBs are not on disk and the
+  Meshy meshes never had a skeleton, so the same rigger serves all four (and any quadruped the build scripts emit).
+  Free: no Meshy credits spent.
+- `client/src/gait.js`: per instance on the CPU each frame, the gait by the Froude bands of the row (walk, trot or the
+  bear's pace, a transverse or rotary gallop), Hildebrand's footfalls, the duty factor falling with speed, the cadence
+  and stride from `stride_hz` and `stride_m`; each foot held where it landed, lifted at the duty phase and swung to a
+  plant point predicted half a stance ahead of its hip at touchdown on the terrain; two-bone IK per leg with the foot
+  on its toe (digitigrade) or flat (plantigrade), the shoulder sliding with the foot; the hips and chest over the
+  ground under their feet (a slope met by the legs), the bob, the roll, the gallop's spine flex, the head level and
+  leading, the tail lagging; the standing turn as real steps; a crouch and a folded bed from pose. Pure arithmetic, no
+  three.js, so node runs it too.
+- The output is a live pose texture per species (one row per near instance, RGBA32F) read by a `SKIN_LIVE` branch of the
+  skin shader when `aClip.x` is negative: no new vertex attribute. The far tier is the same engine baked once per gait
+  (`tools/bake_gait.mjs`: Idle, Walk, Trot, Gallop, Bed in `tools/bake_clips.py`'s format) and driven by distance, so
+  the far tier is the deer's shader with a clip.
+- Verified on the lineup page (the engine walks the body along the row with the camera following, `&feet=1` marks the
+  plant points): the coyote's walk with the pole fixed and the planted feet staying put while the body passes, the
+  trot in diagonal pairs, the gallop with its gathered and stretched phases, the standing turn, the bed and the sniff;
+  the fox, lion and bear at a walk, the lion's gallop and bed. Not yet: in the world (the AI and the player), slopes.
+
+What it costs: four GLBs 40-55 % bigger (the cut rings and the skin), 17-29 KB of clips each, ~10 µs per live instance a
+frame (the mammals' caps are 16, 8, 3 and 3).

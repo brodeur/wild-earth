@@ -123,6 +123,12 @@ sequenced; Parked is in the brief but deliberately not started.
   `emergent` form drawn by `emergents.js`; the streams drawn at their level in the carved
   channel, the dry beds rocky, the margins tinted, the gallery trees by zone.
 
+- The legs, 2026-10-30: the gray fox, coyote, mountain lion and black bear skinned to one
+  20-joint skeleton from their geometry (`tools/rig_quadruped.py`) and posed live by a gait engine
+  (`client/src/gait.js`) from the locomotion row: planted feet, knees and hocks bending, the gaits
+  by the Froude bands with Hildebrand's footfalls, the body's height from the feet, a far tier baked
+  from the same engine (`tools/bake_gait.mjs`). Lineup-verified; the world and the player next.
+
 ## Next: the visual pass, in order of effect per hour
 
 1. ~~Horizon~~ done 2026-10-23: two crossed-quad impostors with a canopy cap per
@@ -211,7 +217,9 @@ browser stays the renderer.
   round behind), the head leads, and the legs step sideways round a standing turn and arc on a curve (docs/decisions.md);
   next in the rig, in order: the Walk backwards on S, a trot, leg length to the slope, an alert pose of its own, a true
   sideways-step clip if the turned swing is not enough; the fox, coyote, lion and bear step round their turns the same way on the
-  part rig, and the same day every other walker in its order's way (the rodents' fore-foot hops, the birds' steps in
+  part rig (2026-10-30: they left the part rig for the leg engine, docs/movement.md "The legs"; next on the engine:
+  the AI and the player in the world, the rodents' bound and the ground birds' walk, the deer where its clips run out,
+  the numbers tuned by eye), and the same day every other walker in its order's way (the rodents' fore-foot hops, the birds' steps in
   place with the head leading, the lizard's C-bend; 2026-10-29); the mini-map shows the 800 m round the player and a
   click opens the full tile (2026-10-29); the crown wave loosens in a strong wind and the limbs flex
   downwind with the near trunks, and the near shadows move with them (2026-10-29); every body cruises on W and sprints on Shift with a
