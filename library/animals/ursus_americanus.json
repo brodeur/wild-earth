@@ -44,19 +44,22 @@
     "note": "Credit \"generated with Meshy (meshy.ai)\" is kept in the build script header and the GLB asset.copyright. The file carried no Meshy metadata or watermark to carry over (Terms 2.4). Terms 2.6(xi) (no training of competing models) binds the account holder, not CC BY-SA licensees. AI output may carry little copyright in some jurisdictions; the licence covers what rights exist."
   },
   "tiers": {
-    "lod0": 2998,
-    "lod1": 1199,
-    "lod2": 459,
+    "lod0": 3408,
+    "lod1": 1441,
+    "lod2": 643,
     "file": "client/assets/bear.glb",
     "attributes": [
       "POSITION",
       "COLOR_0 (linear)",
       "_PART",
       "_PARTW",
-      "_PIVOT"
-    ]
+      "_PIVOT",
+      "JOINTS_0",
+      "WEIGHTS_0"
+    ],
+    "clips": "client/assets/bear_clips.bin + .json (tools/bake_gait.mjs: Idle, Walk, Trot, Gallop, Bed from the leg engine)"
   },
-  "rig": "quadruped template Q: BODY, LEG_A (left fore + right hind), LEG_B, TAIL (the stub, pivot at its root), HEAD (neck and head, pivot at the neck's base; kept off the chest and the tops of the forelegs). No TAIL_TIP. Parts found from the geometry (the stub within ~8 cm of the rump's farthest point, legs below the belly line between the feet with pivots there: elbow and stifle, head ahead of a vertical plane at the neck's base); weights blended over 5-12 cm. Pivots and the bedded drop (0.19 m) in extras.rig. lod2 is decimated in two passes (the body with the head kept, then the head) so the far tier keeps a snout and ears.",
+  "rig": "skinned, the standard quadruped skeleton of 20 joints (tools/rig_quadruped.py, 2026-10-30): Hips, Spine, Chest, Neck, Head, Tail1-3 and per leg UpperLeg (shoulder or hip), LowerLeg (elbow or stifle) and Foot (wrist or hock to the toe), FL FR HL HR; posture plantigrade, the wrist at 0.4 and the hock at 0.45 of the elbow's and stifle's height, the joints centred on the leg columns, a vertex ring cut at each joint; weights by height along each leg with short blends, the arm and thigh skin fading into the upper bone, the trunk Hips / Spine / Chest by z, the head part Neck / Head, the tail by its arc. Posed live by the leg engine (client/src/gait.js: planted feet, two-bone IK, the gaits by the Froude bands of the locomotion row) near the eye, by its baked cycles beyond. The part attributes stay for the fallback. Before: quadruped template Q: BODY, LEG_A (left fore + right hind), LEG_B, TAIL (the stub, pivot at its root), HEAD (neck and head, pivot at the neck's base; kept off the chest and the tops of the forelegs). No TAIL_TIP. Parts found from the geometry (the stub within ~8 cm of the rump's farthest point, legs below the belly line between the feet with pivots there: elbow and stifle, head ahead of a vertical plane at the neck's base); weights blended over 5-12 cm. Pivots and the bedded drop (0.19 m) in extras.rig. lod2 is decimated in two passes (the body with the head kept, then the head) so the far tier keeps a snout and ears.",
   "status": "agent draft, needs local sign-off",
   "accuracy_notes": "Generated, not adopted from a download: no CC0 or CC BY black bear mesh reads as one. Reads as a black bear, not a grizzly: no shoulder hump (the top line is nearly level: the fur over the shoulders stands about 3 cm above the hips, a long gentle rise, not a muscled hump), a straight face profile with a long snout, tall rounded ears up on the crown, short curved claws, a heavy round body on short thick legs, a stub tail. Coloured as a brown-phase Sierra bear: dark brown body, darker back and legs, a little lighter belly, tan snout to the eyes, black nose pad. Fixed by the build: the head was turned 17-19 degrees to the bear's left (turned back about a vertical axis behind the ears); the body was short (lengthened 1.12x). Still wrong or unchecked: the eye is one dark face behind the stop at every tier (the head is a smooth low-poly sculpt with no modelled eye); the generator's fur shards make the lod0 flanks faceted; the far tier is boxy; no cinnamon or black phase yet (a second colour set would do it); one bear size for both sexes (instances scaled). Check the snout length, the ear size and the brown against Yosemite photos.",
   "authors": [

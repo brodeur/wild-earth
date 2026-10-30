@@ -3,6 +3,7 @@ import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
 import * as AM from './animalModels.js';
 import { Atmosphere, uniforms as atmo } from './atmosphere.js';
 import { SEASON_LOOK, sunDirection, seasonOfDate } from './season.js';
+import { gaitParams, makeGait, gaitStep, writeRow, liveClip, footPoints, farTable, makeFar, farDrive } from './gait.js';
 
 // Animal lineup (client/lineup_animals.html): the counterpart of the tree lineup (lineup.js) for signing off the
 // animal meshes (docs/animal-library.md, "Lineup page"). One row per species in library/animals/index.json plus
@@ -13,6 +14,12 @@ import { SEASON_LOOK, sunDirection, seasonOfDate } from './season.js';
 // and are compared with the entry's size and the brief (library/animals/drafts/*.md).
 // URL: ?tier=0|1|2 &motion=idle|walk|graze|rest|flap|glide|climb &season= &hour= &view=side|three|top &fit=1
 //      &slow=1 &only=<species,...> &all=1 (load every GLB at once instead of as rows scroll into view)
+//      &feet=1 (the leg engine's plant points as markers) &slope=<deg> (the ground tilted, rising toward the nose)
+//      &speed=<m/s> (the engine's walk / trot / run speed instead of the species' bands) &far=1 (the far tier's baked
+//      cycles, tools/bake_gait.mjs, instead of the live engine)
+// The skinned quadrupeds with legs (animalModels.js model.legs: fox, coyote, lion, bear) move on the leg engine
+// (gait.js) at walk, trot, run and a standing turn: the body travels along the row and the camera follows it, so the
+// planted feet can be seen staying put on the ground (markers with &feet=1) while the body passes over them.
 // Scripting: window.__animalLineup (metrics(), table(), loadAll(), set({...}), rows, timing).
 
 const T0 = performance.now();
@@ -97,7 +104,7 @@ const GENERIC = {
   soarer: { amp: [0, 0.2, 0.4, 0.75], pose: [1, -0.25, 0, 1.45], k: { handLag: 0.6, handAmp: 0.8, bow: 0.25, spread: 0.6, collapse: 1 } },
 };
 const MOTIONS = [
-  ['idle', 'idle'], ['walk', 'walk / bound / hop'], ['run', 'run: gallop / bolt / dash / sprint'], ['graze', 'graze / tail flick / peck / head flick'], ['rest', 'bedded / sit up / perched / bask'],
+  ['idle', 'idle'], ['walk', 'walk / bound / hop'], ['trot', 'trot / pace (the leg engine)'], ['run', 'run: gallop / bolt / dash / sprint'], ['turn', 'standing turn: steps round (the leg engine)'], ['graze', 'graze / tail flick / peck / head flick'], ['rest', 'bedded / sit up / perched / bask'],
   ['flap', 'flap'], ['glide', 'glide / soar'], ['climb', 'climb (legs splayed)'], ['display', 'display: push-up'],
 ];
 const DRAFT_FALLBACK = { odocoileus_hemionus: 'odocoileus_hemionus_buck' };   // the doe has no brief of its own
@@ -612,6 +619,8 @@ function animFor(row, motion, t) {
   const idle = () => { if (plan === 'bird') a.pose = 1; return a; };
   if (plan === 'quadruped') {
     if (motion === 'walk') { a.phase = t * TAU * (r.walk || 0.8); a.gait = 0.75; }
+    else if (motion === 'trot') { a.phase = t * TAU * ((r.walk || 0.8) * 1.6); a.gait = 1; }
+    else if (motion === 'turn') { a.phase = t * TAU * 1.2; a.gait = 0.5; }
     else if (motion === 'run') { a.phase = t * TAU * (r.run || 2.5); a.gait = 1.25; a.e3 = 1; }   // the gallop: fore pair against hind pair
     else if (motion === 'graze') a.flick = 1;
     else if (motion === 'rest') { a.pose = 1; a.e1 = 0.7 * Math.sin(t * 3.3); }   // bedded (the model's drop below); the lion's tail tip twitches
@@ -648,9 +657,54 @@ function animFor(row, motion, t) {
 // The buck's antlers for the page's season (a buck with the calendar's middle dates; the second-colour box draws a
 // young forked-horn): aAnim2 = (growth, velvet, young), as animals.js antlers() writes them.
 const antlersFor = season => AM.antlerState(AM.SEASON_MONTH[season] ?? 10.5);
-function pose(row, t) {
+// The leg engine on a row (gait.js): the body travels along +x (the model's +z) at the motion's speed on the row's ground
+// (flat, or the &slope), wrapping every few metres; a standing turn yaws in place. The pose goes into the model's live
+// texture row; the mesh follows the body; the feet's plant points go to the markers.
+const SLOPE = (+params.get('slope') || 0) * Math.PI / 180, FEET = params.get('feet') === '1', SPEED = +params.get('speed') || 0, FAR = params.get('far') === '1';
+const groundY = (x, rowX) => Math.tan(SLOPE) * (x - rowX);
+if (SLOPE) ground.rotation.set(-Math.PI / 2, 0, SLOPE);   // rising toward +x (the noses)
+const LOCO = getJSON(new URL('../../tiles/utm10n_680_4280/locomotion.json', import.meta.url)).then(j => j?.species || {});
+function legsPose(row, model, meshes, t, dt) {
+  const G = row.gaitRow ||= { st: makeGait(), P: null, travel: 0, yaw: Math.PI / 2, marks: null };
+  if (!G.P) { G.P = gaitParams(null, model.legs); LOCO.then(L => { if (L[row.species]) G.P = gaitParams(L[row.species], model.legs); }); }
+  const P = G.P, want = state.motion;
+  const v = SPEED || (want === 'walk' ? 0.6 * P.vw : want === 'trot' ? 0.75 * P.vt : want === 'run' ? 1.6 * P.vt : 0);
+  const wr = want === 'turn' ? 1.2 : 0;
+  G.travel += v * dt; G.yaw += wr * dt;
+  if (G.travel > 1.6) { G.travel = -1.6; for (const F of G.st.feet) F.has = false; }
+  const x0 = row.x + row.posD, x = x0 + G.travel, terrain = (wx, wz) => groundY(wx, row.x);
+  const inp = { x, y: terrain(x, 0), z: 0, yaw: G.yaw, size: 1, v, wr, pose: want === 'rest' ? 1 : 0, flick: want === 'graze' ? 1 : 0, bend: 0,
+    twitch: row.species === 'puma_concolor' ? 0.7 * Math.sin(t * 3.3) : 0, terrain, air: false };
+  if (FAR) {   // the far tier: the baked cycles driven by distance (farDrive), the body sliding along at v
+    G.far ||= makeFar(); G.F ||= farTable(model.skin, P);
+    row.travel = G.travel;
+    for (const m of meshes) {
+      m.position.set(x - row.x, inp.y, 0); m.rotation.y = G.yaw;
+      const C = m.geometry.attributes.aClip; farDrive(G.far, G.F, v, inp.pose, dt, C.array, 0); C.needsUpdate = true;
+      const B = m.geometry.attributes.aBend; B.array.fill(0); B.needsUpdate = true;
+    }
+    return;
+  }
+  gaitStep(model.legs, P, G.st, inp, dt);
+  const liveRow = AM.playerLiveRow(model);   // the page's row: the last live row of the clip texture (as the player's)
+  writeRow(model.legs, G.st, model.live.data, liveRow); model.live.tex.needsUpdate = true;
+  row.travel = G.travel;
+  for (const m of meshes) {
+    m.position.set(x - row.x, inp.y, 0); m.rotation.y = G.yaw;
+    const C = m.geometry.attributes.aClip; liveClip(liveRow, C.array, 0); C.needsUpdate = true;
+    const B = m.geometry.attributes.aBend; B.array.fill(0); B.needsUpdate = true;
+  }
+  if (FEET) {
+    if (!G.marks) { G.marks = [0, 1, 2, 3].map(i => { const k = new THREE.Mesh(new THREE.SphereGeometry(0.02 * Math.max(0.6, model.legs.h), 8, 6), lambert(i < 2 ? 0xd94a2a : 0x2a6ad9)); row.group.add(k); return k; }); }
+    footPoints(G.st).forEach((f, i) => { G.marks[i].position.set(f[0] - row.x, f[1] + 0.005, f[2]); G.marks[i].scale.setScalar(f[3] ? 1 : 0.5); });
+  }
+}
+function pose(row, t, dt = 1 / 60) {
   const want = state.motion, sets = [];
-  if (row.drawn.state === 'ok' && !row.drawn.model.skinned) sets.push([row.drawn.model, row.drawn.meshes]);
+  const legs = row.drawn.state === 'ok' && row.drawn.model.legs ? row.drawn.model : null;
+  if (legs) legsPose(row, legs, row.drawn.meshes, t, dt); else if (row.gaitRow) { row.travel = 0; for (const m of row.drawn.meshes || []) { m.position.set(0, 0, 0); m.rotation.y = Math.PI / 2; } }
+  if (row.proc.mesh) row.proc.mesh.visible = !(legs && ['walk', 'trot', 'run', 'turn'].includes(want));   // the procedural model is off the engine's track
+  if (row.drawn.state === 'ok' && !row.drawn.model.skinned && !legs) sets.push([row.drawn.model, row.drawn.meshes]);
   if (row.proc.mesh) sets.push([row.proc.model, [row.proc.mesh]]);
   const a = animFor(row, want, t);
   for (const [model, meshes] of sets) {
@@ -804,7 +858,7 @@ if (params.get('all') === '1') loadAll(); else for (const row of rows) io.observ
 let snapLight = true, last = performance.now(), clock = 0;
 const v = new THREE.Vector3();
 function placeCamera(row, aspect) {
-  const tx = row.x + row.right / 2;
+  const tx = row.x + row.right / 2 + (row.travel || 0);   // the camera follows a body the leg engine walks along the row
   let D = FIXED_D, ty = EYE_Y;
   if (state.fit) {
     const vh = Math.tan(FOV * Math.PI / 360);
@@ -838,7 +892,7 @@ function frame(now) {
     if (r.bottom < 0 || r.top > H || r.width < 2) continue;
     for (const o of rows) o.group.visible = o === row;
     if (row.drawn.model?.mixer) row.drawn.model.mixer.update(dt * (state.slow ? 0.25 : 1));
-    pose(row, clock);
+    pose(row, clock, dt * (state.slow ? 0.25 : 1));
     const { tx } = placeCamera(row, r.width / r.height);
     const s = atmo.sunDir.value, span = Math.max(row.right, row.H) * 0.75 + 0.5;
     sunLight.target.position.set(tx, 0, 0); sunLight.position.set(tx + s.x * 20, Math.max(s.y, 0.05) * 20, s.z * 20);

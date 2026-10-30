@@ -42,19 +42,22 @@
     "note": "CC0 places no conditions, so the adopted tiers may ship in client/assets and be relicensed with the project's assets. Credit is kept anyway (README, build script header, GLB asset.copyright)."
   },
   "tiers": {
-    "lod0": 1900,
-    "lod1": 798,
-    "lod2": 218,
+    "lod0": 2136,
+    "lod1": 938,
+    "lod2": 282,
     "file": "client/assets/coyote.glb",
     "attributes": [
       "POSITION",
       "COLOR_0 (linear)",
       "_PART",
       "_PARTW",
-      "_PIVOT"
-    ]
+      "_PIVOT",
+      "JOINTS_0",
+      "WEIGHTS_0"
+    ],
+    "clips": "client/assets/coyote_clips.bin + .json (tools/bake_gait.mjs: Idle, Walk, Trot, Gallop, Bed from the leg engine)"
   },
-  "rig": "procedural part rig, quadruped template Q, as the fox (LEG_A left fore + right hind, LEG_B, TAIL at Tail1, HEAD at Neck1, paws with their leg); pivots in extras.rig. Source skeleton and clips dropped.",
+  "rig": "skinned, the standard quadruped skeleton of 20 joints (tools/rig_quadruped.py, 2026-10-30): Hips, Spine, Chest, Neck, Head, Tail1-3 and per leg UpperLeg (shoulder or hip), LowerLeg (elbow or stifle) and Foot (wrist or hock to the toe), FL FR HL HR; posture digitigrade, the wrist at 0.42 and the hock at 0.5 of the elbow's and stifle's height, the joints centred on the leg columns, a vertex ring cut at each joint; weights by height along each leg with short blends, the arm and thigh skin fading into the upper bone, the trunk Hips / Spine / Chest by z, the head part Neck / Head, the tail by its arc. Posed live by the leg engine (client/src/gait.js: planted feet, two-bone IK, the gaits by the Froude bands of the locomotion row) near the eye, by its baked cycles beyond. The part attributes stay for the fallback. Before: procedural part rig, quadruped template Q, as the fox (LEG_A left fore + right hind, LEG_B, TAIL at Tail1, HEAD at Neck1, paws with their leg); pivots in extras.rig. Source skeleton and clips dropped.",
   "status": "agent draft, needs local sign-off",
   "accuracy_notes": "Built from a wolf: chest 0.85x narrower, neck 0.85x thinner, legs 0.8x thinner, muzzle 0.8x narrower, ears 1.25x, tail shortened to 0.40 m, thinned and hung low (down and back, below the back line, tip easing back). Reads as a lean tan canid with a low bushy black-tipped tail, rufous forelegs, feet, ear backs and muzzle sides, whitish chin, throat, belly and inner legs, a dark dorsal line and shoulder cross. Still wrong or unchecked: the wolf's deep chest and heavy shoulders still show in profile (only the width was narrowed); the head is broad for a coyote and the ears (about 9 cm) could be larger; small ruff spikes remain under the jaw; the coat from above is a fairly even brown, greyer grizzle may be closer to winter coyotes; the gland spot is faint. Check ear size, chest depth and tail carriage against local coyotes.",
   "authors": [

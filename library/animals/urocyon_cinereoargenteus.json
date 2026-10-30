@@ -44,19 +44,22 @@
     "note": "CC0 places no conditions, so the adopted tiers may ship in client/assets and be relicensed with the project's assets. Credit is kept anyway (README, build script header, GLB asset.copyright)."
   },
   "tiers": {
-    "lod0": 1798,
-    "lod1": 698,
-    "lod2": 200,
+    "lod0": 1998,
+    "lod1": 794,
+    "lod2": 272,
     "file": "client/assets/fox.glb",
     "attributes": [
       "POSITION",
       "COLOR_0 (linear)",
       "_PART",
       "_PARTW",
-      "_PIVOT"
-    ]
+      "_PIVOT",
+      "JOINTS_0",
+      "WEIGHTS_0"
+    ],
+    "clips": "client/assets/fox_clips.bin + .json (tools/bake_gait.mjs: Idle, Walk, Trot, Gallop, Bed from the leg engine)"
   },
-  "rig": "procedural part rig, quadruped template Q (animalModels.js PART): LEG_A left fore + right hind, LEG_B the other diagonal (fore pivot FrontUpperLeg, hind pivot at the stifle, paws with their leg), TAIL (pivot Tail1), HEAD (neck, head, ears; pivot Neck1); pivots also in extras.rig. Source skeleton and clips dropped here; the source file keeps them for a later skinned player fox.",
+  "rig": "skinned, the standard quadruped skeleton of 20 joints (tools/rig_quadruped.py, 2026-10-30): Hips, Spine, Chest, Neck, Head, Tail1-3 and per leg UpperLeg (shoulder or hip), LowerLeg (elbow or stifle) and Foot (wrist or hock to the toe), FL FR HL HR; posture digitigrade, the wrist at 0.42 and the hock at 0.5 of the elbow's and stifle's height, the joints centred on the leg columns, a vertex ring cut at each joint; weights by height along each leg with short blends, the arm and thigh skin fading into the upper bone, the trunk Hips / Spine / Chest by z, the head part Neck / Head, the tail by its arc. Posed live by the leg engine (client/src/gait.js: planted feet, two-bone IK, the gaits by the Froude bands of the locomotion row) near the eye, by its baked cycles beyond. The part attributes stay for the fallback. Before: procedural part rig, quadruped template Q (animalModels.js PART): LEG_A left fore + right hind, LEG_B the other diagonal (fore pivot FrontUpperLeg, hind pivot at the stifle, paws with their leg), TAIL (pivot Tail1), HEAD (neck, head, ears; pivot Neck1); pivots also in extras.rig. Source skeleton and clips dropped here; the source file keeps them for a later skinned player fox.",
   "status": "agent draft, needs local sign-off",
   "accuracy_notes": "Recoloured and reshaped from a red fox. Reads as a gray fox from the side and from above: grizzled grey back with per-face noise, a black line down the back and along the top of the tail, a black tail tip (no white), rusty legs (no black stockings), a rufous collar behind the white cheeks, white throat and belly line, the black stripe from the eye down the muzzle, black nose. Legs below the belly and the muzzle 0.9x, tail lowered about 34 degrees and 1.15x thicker. Still wrong or unchecked: the build is leggier and less cat-like than a real gray fox; up close the white muzzle sides between the black stripe and the lips read a little raccoon-like; the rufous lower flank band is patchy; the tail mane thins to a line on lod1 and lod2. A local naturalist should check the face mask, the amount of rust on the neck and legs, and tail carriage.",
   "authors": [

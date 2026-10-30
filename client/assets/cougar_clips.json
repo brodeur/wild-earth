@@ -1,0 +1,227 @@
+{
+ "rate": 30,
+ "width": 60,
+ "height": 53,
+ "format": "rgba16f",
+ "texels": "row f = frame f; texels j*3..j*3+2 = rows 0..2 of joint j's 3x4 matrix (adopted frame)",
+ "joints": [
+  "Hips",
+  "Spine",
+  "Chest",
+  "Neck",
+  "Head",
+  "Tail1",
+  "Tail2",
+  "Tail3",
+  "UpperLeg.FL",
+  "LowerLeg.FL",
+  "Foot.FL",
+  "UpperLeg.FR",
+  "LowerLeg.FR",
+  "Foot.FR",
+  "UpperLeg.HL",
+  "LowerLeg.HL",
+  "Foot.HL",
+  "UpperLeg.HR",
+  "LowerLeg.HR",
+  "Foot.HR"
+ ],
+ "joint_rest": [
+  [
+   0,
+   0.4986,
+   -0.4491
+  ],
+  [
+   0,
+   0.52,
+   -0.1005
+  ],
+  [
+   0,
+   0.5414,
+   0.248
+  ],
+  [
+   0,
+   0.6013,
+   0.2633
+  ],
+  [
+   0,
+   0.6025,
+   0.4156
+  ],
+  [
+   0.0004,
+   0.3857,
+   -0.5328
+  ],
+  [
+   -0.0023,
+   0.1332,
+   -0.6017
+  ],
+  [
+   0.0026,
+   0.0284,
+   -0.7722
+  ],
+  [
+   0.0771,
+   0.527,
+   0.2484
+  ],
+  [
+   0.0907,
+   0.2911,
+   0.154
+  ],
+  [
+   0.0738,
+   0.1223,
+   0.2232
+  ],
+  [
+   -0.0738,
+   0.527,
+   0.2477
+  ],
+  [
+   -0.0868,
+   0.2911,
+   0.1534
+  ],
+  [
+   -0.0523,
+   0.1223,
+   0.1623
+  ],
+  [
+   0.0658,
+   0.4698,
+   -0.4516
+  ],
+  [
+   0.0774,
+   0.2911,
+   -0.3623
+  ],
+  [
+   0.0649,
+   0.1456,
+   -0.4155
+  ],
+  [
+   -0.067,
+   0.4698,
+   -0.4466
+  ],
+  [
+   -0.0789,
+   0.2911,
+   -0.3572
+  ],
+  [
+   -0.067,
+   0.1456,
+   -0.4155
+  ]
+ ],
+ "scale": 1,
+ "offset": [
+  0,
+  0,
+  0
+ ],
+ "source": {
+  "file": "cougar.glb",
+  "engine": "client/src/gait.js (tools/bake_gait.mjs)",
+  "species": "puma_concolor",
+  "tile": "utm10n_680_4280",
+  "params": {
+   "vw": 1.88,
+   "vt": 4.2,
+   "ft": 2.3,
+   "Lt": 1.83,
+   "posture": "digitigrade",
+   "pace": false,
+   "gallop": "transverse"
+  }
+ },
+ "clips": {
+  "Idle": {
+   "first": 0,
+   "count": 1,
+   "loop": false,
+   "duration": 0,
+   "root_motion": [
+    0,
+    0,
+    0
+   ]
+  },
+  "Walk": {
+   "first": 1,
+   "count": 24,
+   "loop": true,
+   "duration": 0.7856,
+   "root_motion": [
+    0,
+    0,
+    0
+   ],
+   "stride_m": 0.8861,
+   "touchdown": 0.25,
+   "speed_mps": 1.128,
+   "cadence_hz": 1.273,
+   "duty": 0.618,
+   "gait": 0
+  },
+  "Trot": {
+   "first": 25,
+   "count": 15,
+   "loop": true,
+   "duration": 0.4949,
+   "root_motion": [
+    0,
+    0,
+    0
+   ],
+   "stride_m": 1.5589,
+   "touchdown": 0.5333,
+   "speed_mps": 3.15,
+   "cadence_hz": 2.021,
+   "duty": 0.5,
+   "gait": 1
+  },
+  "Gallop": {
+   "first": 40,
+   "count": 12,
+   "loop": true,
+   "duration": 0.4056,
+   "root_motion": [
+    0,
+    0,
+    0
+   ],
+   "stride_m": 2.7255,
+   "touchdown": 0.5,
+   "speed_mps": 6.72,
+   "cadence_hz": 2.466,
+   "duty": 0.378,
+   "gait": 2
+  },
+  "Bed": {
+   "first": 52,
+   "count": 1,
+   "loop": false,
+   "duration": 0,
+   "root_motion": [
+    0,
+    0,
+    0
+   ]
+  }
+ }
+}

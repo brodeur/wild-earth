@@ -44,19 +44,22 @@
     "note": "Credit \"generated with Meshy (meshy.ai)\" is kept in the build script header and the GLB asset.copyright. The file carried no Meshy metadata or watermark to carry over (Terms 2.4). Terms 2.6(xi) (no training of competing models) binds the account holder, not CC BY-SA licensees. AI output may carry little copyright in some jurisdictions; the licence covers what rights exist."
   },
   "tiers": {
-    "lod0": 2999,
-    "lod1": 1200,
-    "lod2": 350,
+    "lod0": 3281,
+    "lod1": 1368,
+    "lod2": 416,
     "file": "client/assets/cougar.glb",
     "attributes": [
       "POSITION",
       "COLOR_0 (linear)",
       "_PART",
       "_PARTW",
-      "_PIVOT"
-    ]
+      "_PIVOT",
+      "JOINTS_0",
+      "WEIGHTS_0"
+    ],
+    "clips": "client/assets/cougar_clips.bin + .json (tools/bake_gait.mjs: Idle, Walk, Trot, Gallop, Bed from the leg engine)"
   },
-  "rig": "quadruped template Q with a two-part tail: BODY, LEG_A (left fore + right hind), LEG_B, TAIL (inner half, pivot at the root), TAIL_TIP 8 (outer half, pivot mid-tail, child of TAIL in the one-level parent chain), HEAD (neck, head, ears; pivot at the neck base). Parts found from the geometry (tail cut at the rump and traced by edge distance, legs below the belly line with pivots there: elbow and stifle, head ahead of a plane at the neck base); weights blended over 5-10 cm. Parent pivots in extras.rig.",
+  "rig": "skinned, the standard quadruped skeleton of 20 joints (tools/rig_quadruped.py, 2026-10-30): Hips, Spine, Chest, Neck, Head, Tail1-3 and per leg UpperLeg (shoulder or hip), LowerLeg (elbow or stifle) and Foot (wrist or hock to the toe), FL FR HL HR; posture digitigrade, the wrist at 0.42 and the hock at 0.5 of the elbow's and stifle's height, the joints centred on the leg columns, a vertex ring cut at each joint; weights by height along each leg with short blends, the arm and thigh skin fading into the upper bone, the trunk Hips / Spine / Chest by z, the head part Neck / Head, the tail by its arc. Posed live by the leg engine (client/src/gait.js: planted feet, two-bone IK, the gaits by the Froude bands of the locomotion row) near the eye, by its baked cycles beyond. The part attributes stay for the fallback. Before: quadruped template Q with a two-part tail: BODY, LEG_A (left fore + right hind), LEG_B, TAIL (inner half, pivot at the root), TAIL_TIP 8 (outer half, pivot mid-tail, child of TAIL in the one-level parent chain), HEAD (neck, head, ears; pivot at the neck base). Parts found from the geometry (tail cut at the rump and traced by edge distance, legs below the belly line with pivots there: elbow and stifle, head ahead of a plane at the neck base); weights blended over 5-10 cm. Parent pivots in extras.rig.",
   "candidates": [
     {
       "kind": "meshy",
