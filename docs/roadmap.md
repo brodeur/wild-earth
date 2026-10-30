@@ -127,7 +127,9 @@ sequenced; Parked is in the brief but deliberately not started.
   "The catch"): the prey falls over 0.4 s instead of snapping onto its side (the deer's bed clip blended in fast), the
   lizard can be taken (the fox's pounce, the raven's and jay's takes). The lion's catch is a leap onto the prey's back
   with the head driven into the neck, AI and player, then CARRION.feed s crouched over the kill (the feeding pose that
-  was open), a miss a twist away.
+  was open), a miss a twist away. The canids' pounce is the mousing pounce: the fix with the head cocked, the high
+  stiff-legged spring onto where the prey was, the head toss on a kill, the paw strikes on a miss; the player's E does
+  the same.
 
 ## Next: the visual pass, in order of effect per hour
 

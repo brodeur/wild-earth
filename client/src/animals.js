@@ -364,7 +364,8 @@ const V_SOAR = 70, V_GLIDE = 71;                                                
 const M_BED = 80, M_STAND = 81, M_MOVE = 82, M_SNIFF = 83, M_POUNCE = 84, M_FLEE = 85,
   M_CLIMB = 86, M_TREE = 87, M_DOWN = 88, M_STALK = 89, M_CROUCH = 90, M_RUSH = 91,     // fox, coyote, lion (M_RUSH: a hunt's trot or rush, huntStart)
   M_CHARGE = 92,                                                                        // bear: a bluff charge at a close player
-  M_LEAP = 93, M_FEED = 94;                                                             // lion: the rush's last bound onto the prey, and crouched over its kill (the catch, 2026-10-30)
+  M_LEAP = 93, M_FEED = 94,                                                             // lion: the rush's last bound onto the prey, and crouched over its kill (the catch, 2026-10-30)
+  M_FIX = 95, M_PAW = 96, M_TOSS = 97;                                                  // fox, coyote: the mousing pounce's fix before it, the paw strikes after a miss, the head toss after a kill
 const B_FORM = 100, B_FORAGE = 101, B_HOP = 102, B_SIT = 103, B_FREEZE = 104, B_BOLT = 105;   // brush rabbit
 const VL_RUN = 110, VL_PAUSE = 111, VL_SIT = 112, VL_HIDE = 113;                         // vole
 const JK_FORM = 120, JK_FEED = 121, JK_HOP = 122, JK_SIT = 123, JK_FREEZE = 124, JK_BOLT = 125;   // jackrabbit
@@ -496,7 +497,13 @@ const HUNT = { r: 300, every: 0.3, lionR: 200, near: 60, stalk: 0.5, rush: 25, r
   // the cat's catch (M_LEAP, 2026-10-30; docs/movement.md "The catch"): the rush's last bound from leapD m is a leap of leapT s and
   // leapH m onto the prey, landing with its forequarters over the prey's back (leapOver m short of it); the kill at the landing
   // within CARRION.reach, the miss a twist away (twistT s); then CARRION.feed s crouched over the kill, head low (M_FEED)
-  leapD: 3.2, leapT: 0.45, leapH: 0.55, leapOver: 0.7, twistT: 0.4 };
+  leapD: 3.2, leapT: 0.45, leapH: 0.55, leapOver: 0.7, twistT: 0.4,
+  // the canids' mousing pounce (M_FIX, M_POUNCE, M_PAW, M_TOSS): within pounceD m of the prey the hunter fixes it, frozen and
+  // braced for fixT s with the head cocked to each side, then springs high and stiff-legged onto where the prey was (the
+  // prey may have moved: the first pounce often misses), the forelegs straight for the jar, the head down at the forepaws at
+  // the landing; a kill (within CARRION.reach, canidCatch) is taken with a head toss of tossT s and the nose down at it; a miss
+  // gets pawHz quick paw strikes for pawT s, then the nose and paws dig at the spot
+  fixT: [0.45, 0.8], tossT: 0.3, pawT: 0.75, pawHz: 4 };
 const ALARM_AT = new Set([FX, CY, ML, HK]);
 // A ground squirrel's burrow mouth: a dark hole in a low ring of bare dirt, 0.27 m across, coloured per vertex.
 function burrowGeometry() {
@@ -3138,21 +3145,49 @@ export class Animals {
         if (a.wy !== a.wy && r() < dt * 0.4) a.wy = a.yaw + (r() - 0.5) * 1.2;   // a new heading, stepped round to (below)
         if (a.t <= 0) {
           if (act && this.huntStart(a)) break;   // a vole, rabbit, jackrabbit or ground squirrel in reach: after it
-          if (cfg.pounce && r() < cfg.pounce) {   // a mouse pounce: up and over onto the forepaws
-            const d = (a.sp === CY ? 1.5 : 1.1) + r() * 0.8;
-            a.sx = a.x; a.sz = a.z; a.tx = a.x + Math.sin(a.yaw) * d; a.tz = a.z + Math.cos(a.yaw) * d;
-            a.u = 0; a.dur = 0.55 + d * 0.1; a.peak = a.sp === CY ? 0.6 : 0.45; a.state = M_POUNCE;
+          if (cfg.pounce && r() < cfg.pounce) {   // a mouse pounce at a sound in the grass: the fix, then up and over onto the forepaws
+            a.state = M_FIX; a.t = HUNT.fixT[0] + r() * (HUNT.fixT[1] - HUNT.fixT[0]); a.cock = r() < 0.5 ? -1 : 1;
           } else this.mmNext(a, act);
         }
         break;
-      case M_POUNCE: {
+      case M_FIX: {   // the fix: frozen, braced in a slight crouch, the head cocked to each side (the whole body rolls a
+        // little: the plain quadruped rig has no head roll), the ears on the sound; then the spring at where the prey is now
+        const t = a.hunt, alive = t && this.huntAlive(t);
+        wantPose = 0.15; wantFlick = -0.3; a.roll = a.cock * 0.13 * Math.sin(this.time * 7 + a.rock);
+        if (a.t <= 0) {
+          if (alive) a.yaw = Math.atan2(t.x - a.x, t.z - a.z);
+          const L = alive ? Math.min(Math.hypot(t.x - a.x, t.z - a.z), HUNT.pounceD) : (a.sp === CY ? 1.5 : 1.1) + r() * 0.8;
+          a.sx = a.x; a.sz = a.z; a.tx = a.x + Math.sin(a.yaw) * L; a.tz = a.z + Math.cos(a.yaw) * L;
+          a.u = 0; a.dur = 0.5 + L * 0.08; a.peak = a.sp === CY ? 0.75 : 0.5; a.roll = 0; a.state = M_POUNCE;
+          if (alive) this.lastPounce = { id: a.id, prey: SPECIES[t.sp].code, t: this.time };
+        }
+        break;
+      }
+      case M_POUNCE: {   // the spring: high and stiff-legged (no leg swing), nose-up at the launch, nose-down and the head at the forepaws
+        // at the landing; then the kill (within reach, CARRION.canidCatch: the head toss), the miss (the paw strikes) or, at nothing, the nose down
         a.u = Math.min(1, a.u + dt / a.dur);
         const u = a.u; a.x = a.sx + (a.tx - a.sx) * u; a.z = a.sz + (a.tz - a.sz) * u;
         a.lift = a.peak * Math.sin(Math.PI * u); a.pitch = -0.6 * Math.cos(Math.PI * u);
         wantFlick = u > 0.55 ? 1 : -0.3; a.amp = 0;
-        if (u >= 1) { a.lift = 0; a.state = M_SNIFF; a.t = 2 + r() * 3; }
+        if (u >= 1) {
+          a.lift = 0;
+          const t = a.hunt, alive = t && this.huntAlive(t), d = alive ? Math.hypot(t.x - a.x, t.z - a.z) : Infinity;
+          if (alive && d < CARRION.reach[a.sp] && KILLABLE.has(t.sp) && r() < CARRION.canidCatch) { this.kill(t, a); this.huntOver(a, M_TOSS); a.t = HUNT.tossT; }
+          else if (a.hunt) { this.huntOver(a, M_PAW); a.t = HUNT.pawT; }
+          else { a.state = M_SNIFF; a.t = 2 + r() * 3; }
+        }
         break;
       }
+      case M_PAW: {   // the miss: quick paw strikes (the forequarters dropped on the spot, a small hop with each), then the nose and paws dig at it
+        const k = (HUNT.pawT - a.t) * HUNT.pawHz, pulse = Math.max(0, Math.sin(TAU * k));
+        a.pitch = 0.35 * pulse; a.lift = 0.05 * pulse; a.amp = 0; wantFlick = 0.7; wantPose = 0.1;
+        if (a.t <= 0) { a.lift = 0; a.state = M_SNIFF; a.t = 2 + r() * 2; }
+        break;
+      }
+      case M_TOSS:   // the kill taken in the jaws with a toss of the head, then the nose down at it
+        wantFlick = -1.2; wantPose = 0;
+        if (a.t <= 0) { a.state = M_SNIFF; a.t = 2.5 + r() * 2; }
+        break;
       case M_MOVE: case M_FLEE:
         if (a.state === M_MOVE && a.next !== M_BED && act && r() < dt * 0.5 && this.huntStart(a)) break;   // prey seen on the way
         speed = a.speed;
@@ -3193,14 +3228,9 @@ export class Animals {
           this.lastLeap = { id: a.id, d, t: this.time };
           break;
         }
-        if (!lion && d < HUNT.pounceD) {   // on it: the pounce (a kill with CARRION.canidCatch)
-          const L = Math.min(d, 2.2);
-          a.yaw = Math.atan2(t.x - a.x, t.z - a.z);
-          a.sx = a.x; a.sz = a.z; a.tx = a.x + Math.sin(a.yaw) * L; a.tz = a.z + Math.cos(a.yaw) * L;
-          a.u = 0; a.dur = 0.55 + L * 0.1; a.peak = a.sp === CY ? 0.6 : 0.45;
-          if (KILLABLE.has(t.sp) && r() < CARRION.canidCatch) this.kill(t, a);
-          this.huntOver(a, M_POUNCE); this.lastPounce = { id: a.id, prey: SPECIES[t.sp].code, t: this.time };
-          break;
+        if (!lion && d < HUNT.pounceD) {   // on it: the fix (M_FIX: a beat of stillness, head cocked), then the spring (M_POUNCE: the kill at the landing)
+          a.yaw = Math.atan2(t.x - a.x, t.z - a.z); a.state = M_FIX; a.t = HUNT.fixT[0] + r() * (HUNT.fixT[1] - HUNT.fixT[0]); a.cock = r() < 0.5 ? -1 : 1;
+          speed = 0; break;
         }
         if (!a.rush) {
           if (this.fled(t) && t.sp !== VO) { a.rush = 1; a.t = HUNT.chaseT[0] + r() * (HUNT.chaseT[1] - HUNT.chaseT[0]); }   // it bolts
@@ -3259,7 +3289,7 @@ export class Animals {
       a.roll = a.twistS * 0.45 * Math.sin(Math.PI * k); a.yaw += a.twistS * 2.5 * dt; a.wy = NaN;
       if (a.twist <= 0) a.roll = 0;
     }
-    const air = a.state === M_POUNCE || a.state === M_LEAP;   // the catch moves set the gait, the pitch and the lift themselves
+    const air = a.state === M_POUNCE || a.state === M_LEAP || a.state === M_PAW;   // the catch moves set the gait, the pitch and the lift themselves
     // standing (sniffing, alert, watching, back from a flight): stepped round to a new heading (a.wy), as the deer
     const standing = speed < 0.05 && (a.state === M_STAND || a.state === M_SNIFF || a.state === M_MOVE || a.state === M_FLEE);
     if (standing && a.wy === a.wy) { this.drSteer(a, a.wy, 3, dt, false, DEER_TURN.slow); if (Math.abs(wrapAngle(a.wy - a.yaw)) < 0.05) a.wy = NaN; }

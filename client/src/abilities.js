@@ -55,6 +55,8 @@ const E = c => c.k('KeyE');
 // the verbs shared across bodies
 const CATCH = on('catch', 'E', E, { title: 'E within reach of prey (a rush that reaches it catches it too)' });
 const FEED = on('feed', 'E', E, { title: 'E beside a carcass' });
+// the canids' mousing pounce (groundControl.js CATCH.pounce): E within 2.6 m of prey ahead, or a run that reaches it
+const POUNCE_AT = on('pounce', 'E', c => c.ground.mode === 'pounce', { title: 'E within 2.6 m of prey ahead: the fix, the spring, the kill at the landing (a run onto it springs at once)' });
 // the sniff: its own slot (L) unless the body's act (E) is already a sniff (the fox, the coyote, the lion: groundControl S.act), which sniffs too
 const SMELL = on('sniff', 'L', c => !!c.scent?.sniffing, { press: (c, down) => c.scent?.sniff?.(down), show: c => !(c.ground?.on && /sniff/.test(c.ground.S?.act?.word || '')), title: 'L, or hold this: every scent on the air, each with its name; a new scent flickers in on its own (scent.js)' });
 const DRINK = on('drink', 'E', c => !!c.needs?.atWater && E(c), { show: c => !!c.needs && c.needs.rhythm !== 'none', title: 'E at water' });
@@ -84,8 +86,8 @@ const actOf = (name, title) => on(name, 'E', c => c.ground.actT > 0 || E(c), tit
 // Per species: the walker's act word (E) and its verbs, built then not yet. Order on the bar: the moves, act, rest, verbs.
 const SPECIES = {
   odocoileus_hemionus: { act: 'graze', verbs: [DRINK, SMELL, SWIM, MARK, no('rut', 'F'), CALL] },
-  urocyon_cinereoargenteus: { act: 'sniff', verbs: [CATCH, DRINK, SMELL, EAT, DIG, DEN, MARK, SWIM] },
-  canis_latrans: { act: 'sniff', verbs: [CATCH, FEED, DRINK, SMELL, DIG, DEN, MARK, SWIM, CALL] },
+  urocyon_cinereoargenteus: { act: 'sniff', verbs: [POUNCE_AT, DRINK, SMELL, EAT, DIG, DEN, MARK, SWIM] },
+  canis_latrans: { act: 'sniff', verbs: [POUNCE_AT, FEED, DRINK, SMELL, DIG, DEN, MARK, SWIM, CALL] },
   puma_concolor: { act: 'sniff', verbs: [CATCH, on('leap', '', c => c.ground.mode === 'leap', { title: 'the rush\'s last bound: a leap onto prey within 3 m ahead, the kill at the landing' }), on('feed', 'E', c => !!c.ground.feeding, { title: 'crouched over the kill after a catch, or E beside one' }), DRINK, SMELL, DEN, MARK, SWIM] },
   ursus_americanus: { act: 'dig', verbs: [FEED, DRINK, SMELL, CARRY, CLIMB, DEN, MARK, SWIM] },
   sylvilagus_bachmani: { act: 'nibble', verbs: [DRINK, SMELL, SWIM] },

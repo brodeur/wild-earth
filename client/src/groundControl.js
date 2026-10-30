@@ -67,7 +67,12 @@ const HERD_LEAD = 5, HERD_IDLE = 6;
 // forequarters over its back (over m short of it), the head driven down into the neck; the kill at the landing within
 // reach (animals.js catchNear), a miss a twist away; then the body crouches over its kill for feed s, head low, until a
 // key moves it (E beside a kill crouches again). CARRION.feed in animals.js is the AI's 45 s.
-const CATCH = { leap: { d: 3.2, dur: 0.45, peak: 0.55, over: 0.7, feed: 45, twist: 0.4 } };
+// 'pounce' (Canidae: the mousing pounce): E within d m of prey ahead (or a rush that reaches it) fixes it, frozen and
+// braced with the head cocked for fix s (none from a run), then springs high and stiff-legged (peak: the body's jump
+// height x peakK) onto where the prey was, the head down at the forepaws at the landing; a kill is taken with a head
+// toss of toss s and the nose down at it; a miss gets quick paw strikes (pawHz) for paw s, then the nose down.
+const CATCH = { leap: { d: 3.2, dur: 0.45, peak: 0.55, over: 0.7, feed: 45, twist: 0.4 },
+  pounce: { d: 2.6, fix: 0.45, dur: 0.55, peakK: 0.65, toss: 0.3, paw: 0.75, pawHz: 4 } };
 export const GROUND = {
   odocoileus_hemionus: { short: 'deer', common: 'black-tailed deer', model: 'deer', rig: 'quad',
     walk: 1.3, run: 12, back: 0.8, ramp: 3, accel: 2.2, stop: 4, turn: 1.8, jumpH: 1.6, jumpL: 3.5, step: 0.5, wade: 0.7,
@@ -76,12 +81,12 @@ export const GROUND = {
     act: { flick: 1, t: 4, word: 'grazing' }, alert: { flick: -0.4 }, rest: 'bed' },
   urocyon_cinereoargenteus: { short: 'fox', common: 'gray fox', model: 'fox', rig: 'quad',
     walk: 1.0, run: 9, back: 0.7, ramp: 2, accel: 3.5, stop: 6, turn: 2.6, jumpH: 0.8, jumpL: 1.6, step: 0.35, wade: 0.2,
-    half: 0.25, rad: 0.12, shoulder: 0.37, stride: 0.6, trot: 2.3, sprint: 4, recover: 25,
+    half: 0.25, rad: 0.12, shoulder: 0.37, stride: 0.6, trot: 2.3, sprint: 4, recover: 25, catch: 'pounce',
     cam: { back: 2.2, up: 0.75, look: 1.5, aimUp: 0.35, side: 0.4, clear: 0.25, near: 0.15 },
     act: { flick: 1, t: 3, word: 'sniffing' }, alert: { flick: -0.3 }, rest: 'bed' },
   canis_latrans: { short: 'coyote', common: 'coyote', model: 'coyote', rig: 'quad',
     walk: 1.2, run: 12, back: 0.8, ramp: 2.5, accel: 3, stop: 5, turn: 2.2, jumpH: 1.0, jumpL: 2.2, step: 0.4, wade: 0.4,
-    half: 0.35, rad: 0.18, shoulder: 0.58, stride: 0.8, trot: 2.8, sprint: 7, recover: 30,
+    half: 0.35, rad: 0.18, shoulder: 0.58, stride: 0.8, trot: 2.8, sprint: 7, recover: 30, catch: 'pounce',
     cam: { back: 2.8, up: 1.0, look: 2, aimUp: 0.5, side: 0.4, clear: 0.3, near: 0.2 },
     act: { flick: 1, t: 3, word: 'sniffing' }, alert: { flick: -0.3 }, rest: 'bed' },
   puma_concolor: { short: 'lion', common: 'mountain lion', model: 'lion', rig: 'quad',
@@ -352,6 +357,7 @@ export class GroundControl {
     if (this.mode === 'air') this.air(dt);
     else if (this.mode === 'fly') this.fly(dt, k, jump);
     else if (this.mode === 'leap') this.leapStep(dt);
+    else if (this.mode === 'pounce') this.pounceStep(dt);
     else this.ground(dt, k, jump, act, rest);
     if (this.mode === 'ground') this.trunkPush(P);
     this.draw(dt);
@@ -381,6 +387,10 @@ export class GroundControl {
       this.animals.setStalk((this.sit > 0.5 ? 0.4 : v < 0.9 ? 0.55 : v < 2.4 ? 1 : 1.3) * (1 - 0.65 * this.cover));
     }
     if (act) { this.actT = S.act.t; this.resting = false; if (S.act.headFlick) ps.fl = (Math.random() < 0.5 ? -1 : 1) * (0.6 + Math.random() * 0.6); if (S.act.scratch) this.scratch = Math.random() < 0.4; }
+    if (act && S.catch === 'pounce' && this.needs?.hunter) {   // a canid's E: prey within CATCH.pounce.d m ahead gets the mousing pounce (pounceStep: the fix, the spring, the kill at the landing)
+      const p = this.animals.preyNear?.(P.x, P.y, P.z, CATCH.pounce.d, f.yaw, 1.0);
+      if (p) return this.startPounce(p, true);
+    }
     if (act && this.animals?.catchNear) {   // a hunter's E within reach of its prey: the catch (animals.js kill, CARRION)
       const c = this.animals.catchNear(P.x, P.y, P.z);
       if (c) this.caught(c);
@@ -414,6 +424,9 @@ export class GroundControl {
         if (S.catch === 'leap') {   // the cat: the last bound is a leap onto prey within CATCH.leap.d m ahead (leapStep: the kill at the landing)
           const p = this.animals.preyNear?.(P.x, P.y, P.z, CATCH.leap.d, f.yaw, 0.8);
           if (p) return this.startLeap(p);
+        } else if (S.catch === 'pounce') {   // a canid's run onto prey: the spring at once, no fix
+          const p = this.animals.preyNear?.(P.x, P.y, P.z, CATCH.pounce.d, f.yaw, 0.8);
+          if (p) return this.startPounce(p, false);
         } else { const c = this.animals.catchNear(P.x, P.y, P.z); if (c) this.caught(c); }
       }
     }
@@ -478,6 +491,47 @@ export class GroundControl {
       if (c) this.caught(c); else { this.twist = { t: C.twist, s: Math.random() < 0.5 ? -1 : 1 }; this.say('the leap misses'); }
     }
     this.spd = this.v; this.inAir = true;
+  }
+  // The canid's mousing pounce (CATCH.pounce) at prey p: the fix (when `fix`), the spring, and at the landing the kill
+  // (the head toss) or the miss (the paw strikes); the controls are the pounce's until it is done.
+  startPounce(p, fix) {
+    const P = this.flight.pos, C = CATCH.pounce;
+    this.pounce = { ph: fix ? 'fix' : 'spring', t: 0, u: 0, dur: C.dur, sx: P.x, sz: P.z, tx: p.x, tz: p.z, prey: p, peak: this.S.jumpH * C.peakK, cock: Math.random() < 0.5 ? -1 : 1 };
+    if (!fix) this.aimPounce();
+    this.mode = 'pounce'; this.sit = 0; this.resting = false; this.actT = 0; this.v = 0;
+  }
+  aimPounce() {   // the spring goes where the prey is now (it may move while the body is in the air: the first pounce often misses)
+    const f = this.flight, P = f.pos, Q = this.pounce, t = Q.prey;
+    if (t && !t.dead && !t.gone) { Q.tx = t.x; Q.tz = t.z; }
+    f.yaw = Math.atan2(-(Q.tx - P.x), -(Q.tz - P.z)); Q.sx = P.x; Q.sz = P.z; Q.dur = CATCH.pounce.dur + Math.hypot(Q.tx - P.x, Q.tz - P.z) * 0.06;
+  }
+  pounceStep(dt) {
+    const f = this.flight, P = f.pos, Q = this.pounce, S = this.S, ps = this.pose, C = CATCH.pounce, pmax = this.modelPoseMax();
+    const F = this.sq.footing(P.x, P.z, P.y + 1), g = F.surf !== null ? F.bed : F.y;
+    ps.lift = 0; ps.e2 = 0; this.v = 0;
+    if (Q.ph === 'fix') {   // frozen, braced in a slight crouch, the head cocked to each side (the body rolls a little: no head roll on this rig)
+      Q.t += dt; ps.amp = damp(ps.amp, 0, 12, dt); ps.pose = damp(ps.pose, 0.15 * pmax, 8, dt); ps.flick = damp(ps.flick, -0.3, 8, dt);
+      ps.roll = Q.cock * 0.13 * Math.sin(Q.t * 7); ps.pitch = damp(ps.pitch, 0, 8, dt);
+      if (Q.t >= C.fix) { Q.ph = 'spring'; Q.u = 0; ps.roll = 0; this.aimPounce(); }
+    } else if (Q.ph === 'spring') {   // high and stiff-legged, nose-up to nose-down, the head down at the forepaws as it lands
+      Q.u = Math.min(1, Q.u + dt / Q.dur); const u = Q.u;
+      P.x = clamp(Q.sx + (Q.tx - Q.sx) * u, 5, this.tile.size - 5); P.z = clamp(Q.sz + (Q.tz - Q.sz) * u, -this.tile.size + 5, -5);
+      P.y = g + Q.peak * Math.sin(Math.PI * u);
+      ps.amp = 0; ps.pitch = -0.6 * Math.cos(Math.PI * u); ps.flick = damp(ps.flick, u > 0.55 ? 1 : -0.3, 14, dt); ps.roll = damp(ps.roll, 0, 10, dt); ps.pose = damp(ps.pose, 0, 8, dt);
+      if (u >= 1) {
+        P.y = g; this.setWet(F); Q.t = 0;
+        const c = this.animals.catchNear(P.x, P.y, P.z);
+        if (c) { this.caught(c); Q.ph = 'toss'; } else { Q.ph = 'paw'; this.say('the pounce misses'); }
+      }
+    } else if (Q.ph === 'toss') {   // the kill taken in the jaws with a toss of the head
+      Q.t += dt; ps.flick = damp(ps.flick, -1.2, 14, dt); ps.pitch = damp(ps.pitch, 0, 8, dt); ps.amp = 0;
+      if (Q.t >= C.toss) { this.mode = 'ground'; this.pounce = null; this.actT = 2.5; }   // then the nose down at it (the act's sniff)
+    } else {   // 'paw': quick strikes, the forequarters dropped on the spot with a small hop each, then the nose and paws at it
+      Q.t += dt; const pulse = Math.max(0, Math.sin(TAU * Q.t * C.pawHz));
+      ps.pitch = 0.35 * pulse; ps.lift = 0.05 * pulse; ps.amp = 0; ps.flick = damp(ps.flick, 0.7, 10, dt); ps.pose = damp(ps.pose, 0.1 * pmax, 8, dt);
+      if (Q.t >= C.paw) { this.mode = 'ground'; this.pounce = null; this.actT = 2; ps.lift = 0; }
+    }
+    this.spd = 0; this.inAir = Q.ph === 'spring';
   }
   setWet(F) {
     if (F.surf === null || F.depth <= 0.005) { this.wet = null; return; }
@@ -764,6 +818,7 @@ export class GroundControl {
     if (this.mode === 'fly') text = `flying, ${Math.max(0, Math.round(P.y - ground))} m up`;
     else if (this.mode === 'air') text = 'in the air';
     else if (this.mode === 'leap') text = 'leaping';
+    else if (this.mode === 'pounce') text = this.pounce?.ph === 'fix' ? 'fixing it' : this.pounce?.ph === 'spring' ? 'pouncing' : this.pounce?.ph === 'toss' ? 'the kill tossed' : 'striking at it';
     else if (this.feeding) text = 'feeding at the kill';
     else if (this.resting) text = rest;
     else if (this.wet) text = `wading, ${Math.round(this.wet.depth * 100)} cm deep`;

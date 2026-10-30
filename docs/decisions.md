@@ -2773,3 +2773,26 @@ lit leap (lit while leaping) and its grey eat the feed (lit while feeding). Veri
 leaps at 3.2 m (1.95 s: lift 0.32, nose-up; 2.20 s: lift 0.41, nose-down), lands over the deer's hindquarters at
 2.32 s with its head down, the deer rolls under it and the lion stays crouched over the carcass; the player's lion the
 same from 9 m (the leap at 1.52 s, the kill at 1.84 s, feeding at pose 0.6 and flick 0.8-0.96).
+
+**3. The canids' mousing pounce.** The reading: a coyote fixes a rodent by ear, the head cocked to each side, freezes
+in a tense braced stance, springs high and drops on the prey hitting it with the front feet, the forelegs held
+straight and braced for the jar; the first pounce often misses and three or four quick paw strikes follow, then it
+digs it out with nose and paws and takes it in the jaws with a head toss; the gray fox is the same pounce at a
+smaller scale. M_POUNCE was a lift and a pitch with the kill rolled at its start; now the AI canid within
+HUNT.pounceD of its prey goes to M_FIX for 0.45-0.8 s (speed 0, the gait's amplitude damped out, a slight crouch, the
+head up with the ears on it, and the whole body rolling 0.13 rad side to side at 1.1 Hz as the head cock: the plain
+quadruped rig has no head roll), then springs (M_POUNCE: 0.5 m for the fox, 0.75 for the coyote, no leg swing so the
+legs hang straight, nose-up at the launch to nose-down at the landing, the head down at the forepaws over the last
+45 %) onto where the prey is at the launch, not homing: a prey that moves in the air is missed. At the landing the
+kill within CARRION.reach (canidCatch 0.4) goes to M_TOSS (0.3 s, the head thrown up, flick -1.2) and then the nose
+down at it (M_SNIFF, flick 1); a miss goes to M_PAW (0.75 s of 4 Hz paw strikes: the forequarters dropped 0.35 rad on
+the spot with a 5 cm hop each, the head half down) and then the nose and paws at the spot (M_SNIFF). The random
+mouse pounce from a sniff goes through the fix too. The player's fox and coyote (groundControl.js CATCH.pounce, S.catch
+'pounce'): E within 2.6 m of prey ahead (a cone of 1 rad) takes the controls (mode 'pounce') through the fix, the
+spring and the landing, where catchNear decides the kill (the toss, then the act's sniff with the nose down) or the
+miss (the paw strikes, then the sniff); a run that reaches prey springs at once with no fix. abilities.js: the canids'
+catch slot became the pounce (lit while pouncing). Verified: an AI fox from 3 m trots, fixes a rabbit for 0.6 s with
+the body rocking, springs 0.49 m high and lands on it (the kill at 1.82 s), tosses its head and noses it; with the
+catch chance at 0 the same spring lands 1.4 m from a rabbit that moved during the fix, three paw strikes follow and
+the nose goes down; the player's fox from 2 m with E: the fix (roll -0.13, flick -0.3), the spring to 0.49 m, the
+kill at 1.36 s, the toss (flick -1.2) and the sniff.

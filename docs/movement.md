@@ -128,6 +128,25 @@ pitching from nose-up to nose-down, the head driven down into the neck; the kill
 from its rush (the leap takes the controls for 0.45 s), and crouches to feed until a key moves it (E beside a kill
 crouches again).
 
+**Canidae: the mousing pounce.** A coyote mousing fixes a rodent by ear, the head cocked to each side, freezes in a
+tense braced stance, springs high and drops on the prey hitting it with the front feet, the forelegs held straight and
+braced for the jar; the first pounce often misses and three or four quick paw strikes follow, then it digs it out with
+nose and paws and takes it in the jaws with a head toss. On deer a pack works the hindquarters and grabs the neck or
+muzzle to pull it down. The gray fox is an ambusher: it sits still to listen and watch, then leaps and pounces to pin
+the prey with its forepaws, the same mousing pounce at a smaller scale; a cottontail specialist that also climbs.
+Sources: NPS Fauna Series 4, "Coyote" (https://www.nps.gov/parkhistory/online_books/fauna4/fauna10.htm); KTVQ, "A
+wilder view: the hunting behavior of coyotes" (https://ktvq.com/a-wilder-view-the-hunting-behavior-of-coyotes); Deer &
+Deer Hunting, a buck pulled down by coyotes
+(https://www.deeranddeerhunting.com/content/articles/deer-news/graphic-video-shows-buck-dying-after-coyote-attack);
+NH Nature, "Gray fox" (https://nhnature.org/visit/animal_info_sheets/gray_fox.php); USFS PSW GTR-37, mammals M074
+(https://fs.usda.gov/psw/publications/documents/psw_gtr037/mammals/m074.pdf); NPS Jewel Cave, "Gray fox"
+(https://home.nps.gov/jeca/learn/nature/gray-fox-urucyon-cineoargenteus.htm). In the client (animals.js M_FIX,
+M_POUNCE, M_PAW, M_TOSS; groundControl.js CATCH.pounce): within 2.4 m the hunter fixes its prey for 0.45-0.8 s, frozen
+and braced with the head up and the body rocking as the head cock, then springs 0.5 m (the fox) or 0.75 m (the
+coyote) high with no leg swing onto where the prey was, nose-up to nose-down, the head down at the forepaws; a kill is
+taken with a head toss and the nose down at it; a miss gets 4 Hz paw strikes for 0.75 s and then the nose and paws at
+the spot. The player's E within 2.6 m does the same; a run onto prey springs at once.
+
 ## Open
 
 - The part rig's spine bend and head lead (the chest and head parts turning about the vertical by the lag).
