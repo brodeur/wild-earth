@@ -6,6 +6,7 @@ import { seasonOfDate, parseDate } from './season.js';
 import { uniforms as atmo } from './atmosphere.js';
 import { fieldGuide } from './fieldguide.js';
 import { scentCarry } from './wind.js';
+import { LegsPool } from './legs.js';   // the quadrupeds' leg engine (gait.js; docs/movement.md "The legs")
 import { buildSquirrel, buildWoodpecker, buildRaven, buildDeer, buildQuail, buildJay, buildHawk, buildVulture, buildStellersJay,
   buildDeerBuck, buildFox, buildCoyote, buildCougar, buildRabbit, buildVole, buildJackrabbit, buildTurkey, buildGroundSquirrel, buildLizard, buildBear, buildMountainQuail,
   animalMaterial, animalDepthMaterial, planarShadowMaterial, loadDeerMesh, loadSquirrelMesh, loadQuailMesh, loadJayMesh, driveClips, makeClipState, DEER_DRIVE, turnFollow, bendOf, PART_TURN,
@@ -609,8 +610,10 @@ export class Animals {
     this.clip = SPECIES.map((sp, k) => DRAWN[k] ? new Float32Array(sp.cap * 4) : null);   // aClip for the skinned models (deer, buck)
     this.bend = SPECIES.map((sp, k) => DRAWN[k] ? new Float32Array(sp.cap * 4) : null);   // aBend: their spine, head and legs' step in a turn
     this.debugIds = new Set(); this.debugN = 0;
+    this._legInp = { x: 0, y: 0, z: 0, yaw: 0, size: 1, v: 0, wr: 0, pose: 0, flick: 0, bend: 0, twitch: 0, air: false, terrain: (x, z) => this.heights.atXZ(x, z) };   // the leg engine's input (legs.js)
     const q = typeof location === 'undefined' ? new URLSearchParams() : new URLSearchParams(location.search);
     this.fixedDate = parseDate(q.get('date'));   // ?date=MM-DD: the month (lizards, ground squirrels, antlers) follows it
+    this.feetMarks = q.get('feet') === '1';      // ?feet=1: the leg engine's plant points marked (legs.js FootMarks)
     for (const k of Object.keys(DRAWN)) {
       const D = DRAWN[k], proc = q.get(D.param) === 'proc' || (D.alias && q.get(D.alias) === 'proc') || q.get('animals') === 'proc';
       if (!proc) this.setMesh(+k, true);
@@ -659,6 +662,9 @@ export class Animals {
   buildTiers(k, model) {
     const sp = SPECIES[k], cap = sp.cap, D = DRAWN[k], st = this.drawn[k];
     st.model = model;
+    // the leg engine (legs.js, gait.js): a skinned quadruped with a skeleton runs live within D.lod[1] of the eye (its
+    // rows in the clip texture, SKIN_LIVE); the rest draw the engine's baked cycles
+    if (model.legs) st.legs = new LegsPool(model, cap, this.tile?.locomotion?.species?.[sp.code] || null, { liveR: D.lod[1], marks: this.feetMarks ? this.group : null });
     st.tiers = model.tiers.map((geo, t) => {
       const anim = new THREE.InstancedBufferAttribute(new Float32Array(cap * 4), 4); anim.setUsage(THREE.DynamicDrawUsage);
       geo.setAttribute('aAnim', anim);
@@ -4342,18 +4348,29 @@ export class Animals {
       // the skinned models (deer, buck) step round a turn and are drawn a beat behind it (animalModels.js turnFollow)
       // and so do the part rig's fox, coyote, lion and bear (PART_TURN; their legs' step: mmUpdate), and on the ground the
       // rodents, the gray squirrel and the ground birds (a.turnC: PART_TURN.rodent, .bird, .turkey; turnStep)
-      const sk = this.drawn[sp]?.model?.skin, TF = sk ? DEER_DRIVE : sp === FX || sp === CY || sp === ML || sp === BE ? PART_TURN : a.turnC;
+      const sk = this.drawn[sp]?.model?.skin, LG = this.drawn[sp]?.legs;   // LG: the leg engine's pool (legs.js) for the fox, coyote, lion and bear
+      const TF = sk && !LG ? DEER_DRIVE : sp === FX || sp === CY || sp === ML || sp === BE ? PART_TURN : a.turnC;
       if (!TF && a.cs) a.cs.y0 = NaN;   // off the ground: the lag starts afresh when it is back
       const dyaw = TF ? turnFollow(TF, a.cs ||= makeClipState(), a.yaw, a.spd || 0, dt) : a.yaw;
-      e.set(a.pitch, dyaw, a.roll, 'YXZ'); q.setFromEuler(e); p.set(a.x, a.y, a.z); s.setScalar(a.size * SPECIES[sp].scale * grow * a.vis);
+      // a live body on the leg engine meets the slope with its legs: its matrix stays level (the far tier keeps a.pitch)
+      const legRow = LG ? LG.row(a, d2, a.vis > 0 && !dead) : -1;
+      e.set(legRow >= 0 ? 0 : a.pitch, dyaw, a.roll, 'YXZ'); q.setFromEuler(e); p.set(a.x, a.y, a.z); s.setScalar(a.size * SPECIES[sp].scale * grow * a.vis);
       m.compose(p, q, s); m.toArray(mesh.instanceMatrix.array, o * 16);
       const an = mesh.geometry.attributes.aAnim.array;
       an[o * 4] = a.phase % TAU; an[o * 4 + 1] = a.amp; an[o * 4 + 2] = a.pose; an[o * 4 + 3] = a.flick;
       const a2 = this.anim2[sp];
       if (a2) { this.extra(a, dt); a2[o * 4] = a.e0; a2[o * 4 + 1] = a.e1; a2[o * 4 + 2] = a.e2; a2[o * 4 + 3] = sp === QU || sp === MQ || sp === TK ? a.variant : a.e3; }
       // the skinned models (deer, buck): clip and phase from the speed, pose, flick and turn (animalModels.js driveClips)
-      if (sk) { driveClips(sk, DEER_DRIVE, a.cs, a.spd || 0, a.pose, a.flick, dt, this.clip[sp], o); bendOf(DEER_DRIVE, a.cs, a.spd || 0, a.yaw, sk, this.bend[sp], o); }
+      if (sk && !LG) { driveClips(sk, DEER_DRIVE, a.cs, a.spd || 0, a.pose, a.flick, dt, this.clip[sp], o); bendOf(DEER_DRIVE, a.cs, a.spd || 0, a.yaw, sk, this.bend[sp], o); }
+      else if (LG) {   // the leg engine (legs.js): live within reach, the baked cycles beyond; dead: bedded, on its side by the matrix
+        const treed = a.state === M_CLIMB || a.state === M_DOWN || a.state === M_TREE;
+        this._legInp.x = a.x; this._legInp.y = a.y; this._legInp.z = a.z; this._legInp.yaw = dyaw; this._legInp.size = a.size * SPECIES[sp].scale;
+        this._legInp.v = dead ? 0 : a.spd || 0; this._legInp.wr = dead ? 0 : a.wr || 0; this._legInp.pose = dead ? 1 : a.pose; this._legInp.flick = dead ? 0 : a.flick;
+        this._legInp.bend = dead ? 0 : wrapAngle(a.yaw - dyaw); this._legInp.twitch = sp === ML ? a.e1 : 0; this._legInp.air = !dead && ((a.lift || 0) > 0.03 || treed);
+        LG.write(a, o, dt, legRow, this._legInp, this.clip[sp], this.bend[sp]);
+      }
     }
+    for (const k in this.drawn) this.drawn[k].legs?.end();   // the pose textures uploaded once a frame
     // acorn game v4: the families' defence of their granaries
     if (this.game?.active) this.defend(); else if (this.threats.size) this.threats.clear();
     // acorn game: the acorns carried in bills and mouths, every frame (also for animals thinking on alternate frames)

@@ -454,43 +454,56 @@ async function loadTiers(url, model, { keepNormals = false, skin = false } = {})
   const extras = gltf.parser.json.extras || {};
   const out = { tiers, maps, tris: tiers.map(g => g.index.count / 3), weighted: true, extras, ...model };
   if (skin && extras.skin?.clips && tiers.every(g => g.getAttribute('skinIndex') && g.getAttribute('skinWeight'))) {
-    try { out.skin = await loadClips(new URL(`${extras.skin.clips}`, url), extras.skin); out.drop = 0; }
+    const liveRows = extras.skin.legs ? LIVE_ROWS : 0;
+    try { out.skin = await loadClips(new URL(`${extras.skin.clips}`, url), extras.skin, liveRows); out.drop = 0; }
     catch (e) {
-      if (extras.skin.legs) { out.skin = restOnlySkin(extras.skin); out.drop = 0; console.warn(`${url.pathname}: clip set ${extras.skin.clips} failed to load; the leg engine draws it live, the far tier at rest`, e); }
+      if (extras.skin.legs) { out.skin = restOnlySkin(extras.skin, liveRows); out.drop = 0; console.warn(`${url.pathname}: clip set ${extras.skin.clips} failed to load; the leg engine draws it live, the far tier at rest`, e); }
       else console.warn(`${url.pathname}: clip set ${extras.skin.clips} failed to load; the part rig draws it`, e);
     }
-    // the leg engine's skeleton (tools/rig_quadruped.py; gait.js): the quadrupeds whose pose is computed live, the far
-    // tier on the engine's baked cycles; pose is the engine's (a crouch, then bedded: no squash, no drop)
-    if (out.skin && extras.skin.legs) { out.legs = skeletonOf(extras.skin); out.poseMax = 1; }
+    // the leg engine's skeleton (tools/rig_quadruped.py; gait.js): the quadrupeds whose pose is computed live into the
+    // clip texture's live rows, the far tier on the engine's baked cycles; pose is the engine's (a crouch, then bedded)
+    if (out.skin && extras.skin.legs) { out.legs = skeletonOf(extras.skin); out.poseMax = 1; out.live = out.skin.live; }
   }
   return out;
 }
 // A skin with no clip set (the baked cycles missing): one identity frame, so the far tier stands at rest and the engine
 // draws the near tier live.
-function restOnlySkin(sk) {
-  const n = sk.joints.length, data = new Uint16Array(n * 3 * 4);
-  for (let j = 0; j < n; j++) { const b = j * 12; data[b] = 0x3c00; data[b + 5] = 0x3c00; data[b + 10] = 0x3c00; }   // 1.0 in half floats
-  const tex = new THREE.DataTexture(data, n * 3, 1, THREE.RGBAFormat, THREE.HalfFloatType);
+function restOnlySkin(sk, liveRows = 0) {
+  const n = sk.joints.length, w = n * 3, rows = 1 + liveRows, data = new Float32Array(w * rows * 4);
+  for (let r = 0; r < rows; r++) for (let j = 0; j < n; j++) { const b = (r * w + j * 3) * 4; data[b] = 1; data[b + 5] = 1; data[b + 10] = 1; }
+  const tex = new THREE.DataTexture(data, w, rows, THREE.RGBAFormat, THREE.FloatType);
   tex.magFilter = tex.minFilter = THREE.NearestFilter; tex.generateMipmaps = false; tex.needsUpdate = true;
   const index = { joints: sk.joints, joint_rest: sk.joint_rest, scale: 1, clips: { Idle: { first: 0, count: 1, loop: false, duration: 0 } } };
   const headIdx = sk.joints.map((nm, i) => /^(Neck|Head|Ear)/.test(nm) ? i : -1).filter(i => i >= 0);
   const head = headIdx.length ? { first: headIdx[0], last: headIdx[headIdx.length - 1], pivot: sk.joint_rest[headIdx[0]] } : null;
-  return { index, tex, names: ['Idle'], clip: { Idle: 0 }, table: [index.clips.Idle], joints: sk.joints, head, legs: null, texScale: 1, ratio: 1, key: `rest${n}` };
+  const live = liveRows ? { tex, data, base: 1, rows: liveRows, width: w } : null;
+  return { index, tex, names: ['Idle'], clip: { Idle: 0 }, table: [index.clips.Idle], joints: sk.joints, head, legs: null, texScale: 1, ratio: 1, live, key: `rest${n}${liveRows ? ':live' : ''}` };
 }
+const halfToFloat = h => { const s = h & 0x8000 ? -1 : 1, e = (h >> 10) & 0x1f, m = h & 0x3ff; return e === 0 ? s * Math.pow(2, -14) * (m / 1024) : e === 31 ? (m ? NaN : s * Infinity) : s * Math.pow(2, e - 15) * (1 + m / 1024); };
 // The clip set (tools/bake_clips.py): the index and the texture, shared by every model of the skeleton (the buck reuses the
 // doe's; its translation column is scaled by its own extras.skin.scale over the texture's). The index's clips become a GLSL
 // constant table (first frame, frame count, loop) in clip order; `clip` maps names to indices for the drive.
 const clipCache = new Map();
-async function loadClips(base, skinExtras) {
-  const key = base.href;
+// liveRows: rows appended after the clips' frames for the leg engine's live poses (the texture then RGBA32F, the clips
+// decoded from half floats): skin.live = { tex, data, base, rows, width }
+async function loadClips(base, skinExtras, liveRows = 0) {
+  const key = `${base.href}|${liveRows}`;
   if (!clipCache.has(key)) clipCache.set(key, (async () => {
     const [index, bin] = await Promise.all([fetch(`${base.href}.json`).then(r => { if (!r.ok) throw new Error(`${r.status} ${base.href}.json`); return r.json(); }),
       fetch(`${base.href}.bin`).then(r => { if (!r.ok) throw new Error(`${r.status} ${base.href}.bin`); return r.arrayBuffer(); })]);
     const half = index.format !== 'rgba32f';
-    const data = half ? new Uint16Array(bin) : new Float32Array(bin);
+    let data = half ? new Uint16Array(bin) : new Float32Array(bin), type = half ? THREE.HalfFloatType : THREE.FloatType, rows = index.height;
     if (data.length !== index.width * index.height * 4) throw new Error(`clip texture ${base.href}.bin: ${data.length} values for ${index.width}x${index.height}`);
-    const tex = new THREE.DataTexture(data, index.width, index.height, THREE.RGBAFormat, half ? THREE.HalfFloatType : THREE.FloatType);
+    let live = null;
+    if (liveRows > 0) {
+      rows += liveRows; const src = data, w = index.width; data = new Float32Array(w * rows * 4); type = THREE.FloatType;
+      for (let i = 0; i < src.length; i++) data[i] = half ? halfToFloat(src[i]) : src[i];
+      for (let r = index.height; r < rows; r++) for (let j = 0; j < w / 3; j++) { const b = (r * w + j * 3) * 4; data[b] = 1; data[b + 5] = 1; data[b + 10] = 1; }   // at rest until written
+      live = { data, base: index.height, rows: liveRows, width: w };
+    }
+    const tex = new THREE.DataTexture(data, index.width, rows, THREE.RGBAFormat, type);
     tex.magFilter = tex.minFilter = THREE.NearestFilter; tex.generateMipmaps = false; tex.needsUpdate = true; tex.name = `${base.pathname} bones`;
+    if (live) live.tex = tex;
     const names = Object.keys(index.clips), clip = Object.fromEntries(names.map((n, i) => [n, i]));
     const table = names.map(n => index.clips[n]);
     // the head chain (neck, head, ears: contiguous in the skin order) and the neck base, for the player's look (PLAYER_HEAD)
@@ -502,7 +515,7 @@ async function loadClips(base, skinExtras) {
     const jz = n => index.joint_rest?.[index.joints.indexOf(n)]?.[2];
     const roles = index.joints.map(n => /^(FrontShoulder|FrontUpperLeg|FrontLowerLeg|IKFrontLeg|FF\.|PoleTarget\.)/.test(n) ? 1 : /^(BackShoulder|BackLeg|BackUpperLeg|BackLowerLeg|IKBackLeg|FFB\.|PoleTargetBack)/.test(n) ? 2 : 0);
     const legs = roles.some(r => r) ? { roles, legZ: [jz('FF.L') ?? 0.33, jz('FFB.L') ?? -0.45], hipZ: jz('BackShoulder.L') ?? -0.27, neckZ: (head && index.joint_rest?.[head.first]?.[2]) ?? 0.4, ref: index.clips.Idle?.first ?? 0 } : null;
-    return { index, tex, names, clip, table, joints: index.joints, head, legs, texScale: index.scale, key: `${index.width}x${index.height}|${table.map(c => `${c.first},${c.count},${c.loop ? 1 : 0}`).join(';')}|${legs ? roles.join('') : ''}` };
+    return { index, tex, names, clip, table, joints: index.joints, head, legs, live, texScale: index.scale, key: `${index.width}x${index.height}|${table.map(c => `${c.first},${c.count},${c.loop ? 1 : 0}`).join(';')}|${legs ? roles.join('') : ''}${live ? '|live' : ''}` };
   })());
   const shared = await clipCache.get(key);
   return { ...shared, ratio: (skinExtras.scale || shared.texScale) / shared.texScale };
@@ -1019,23 +1032,7 @@ mat4 skinBone(int frame, int j) {
   vec4 r0 = texelFetch(uBones, ivec2(j * 3, frame), 0), r1 = texelFetch(uBones, ivec2(j * 3 + 1, frame), 0), r2 = texelFetch(uBones, ivec2(j * 3 + 2, frame), 0);
   return mat4(vec4(r0.x, r1.x, r2.x, 0.0), vec4(r0.y, r1.y, r2.y, 0.0), vec4(r0.z, r1.z, r2.z, 0.0), vec4(r0.w, r1.w, r2.w, 0.0) * skin_ratio + vec4(0.0, 0.0, 0.0, 1.0));
 }
-#ifdef SKIN_LIVE
-// the live pose texture (gait.js writeRow, one row per near instance, the same texel layout, unscaled): the instance's
-// row is -aClip.x - 1
-uniform highp sampler2D uLive;
-mat4 liveBone(int row, int j) {
-  vec4 r0 = texelFetch(uLive, ivec2(j * 3, row), 0), r1 = texelFetch(uLive, ivec2(j * 3 + 1, row), 0), r2 = texelFetch(uLive, ivec2(j * 3 + 2, row), 0);
-  return mat4(vec4(r0.x, r1.x, r2.x, 0.0), vec4(r0.y, r1.y, r2.y, 0.0), vec4(r0.z, r1.z, r2.z, 0.0), vec4(r0.w, r1.w, r2.w, 1.0));
-}
-mat4 skinLive(int row) {
-  ivec4 j = ivec4(skinIndex + 0.5);
-  mat4 M = liveBone(row, j.x) * skinWeight.x;
-  if (skinWeight.y > 0.0) M += liveBone(row, j.y) * skinWeight.y;
-  if (skinWeight.z > 0.0) M += liveBone(row, j.z) * skinWeight.z;
-  if (skinWeight.w > 0.0) M += liveBone(row, j.w) * skinWeight.w;
-  return M;
-}
-#endif
+
 // the instance's skinning matrix at phase 0..1 of a clip (first frame, frame count, loop): the two frames round the phase
 mat4 skinClip(vec4 c, float phase) {
   float fp = c.x + clamp(phase, 0.0, 0.99999) * c.y;
@@ -1072,7 +1069,9 @@ vec3 animPos = position;
 #endif
 mat4 skinM;
 #ifdef SKIN_LIVE
-if (aClip.x < -0.5) skinM = skinLive(int(-aClip.x - 0.5));
+// a live row (gait.js writeRow: the rows after the clips' frames in the same texture, one per near instance, the
+// row -aClip.x - 1; the GPU's sixteen texture units leave no room for a second sampler)
+if (aClip.x < -0.5) skinM = skinFrame(int(-aClip.x - 0.5));
 else
 #endif
 skinM = skinClip(skin_clips[int(aClip.x + 0.5)], aClip.y);
@@ -1129,28 +1128,22 @@ if (abs(aBend.x) > 0.0005) {
 #ifdef USE_ALPHAHASH
   vPosition = vec3( position );
 #endif`;
-function skinDecl(model, live = false) {
+function skinDecl(model) {
   const sk = model.skin; if (!sk) return '';
   const f = x => (+x || 0).toFixed(4);
   const rows = sk.table.map(c => `vec4(${c.first.toFixed(1)}, ${c.count.toFixed(1)}, ${c.loop ? '1.0' : '0.0'}, 0.0)`);
   const head = sk.head ? `#define SKIN_HEAD\nconst vec2 skin_head = vec2(${sk.head.first.toFixed(1)}, ${sk.head.last.toFixed(1)});\nconst vec3 skin_neck = vec3(${sk.head.pivot.map(f).join(', ')});\n` : '';
   const L = sk.legs, legs = L ? `#define SKIN_LEGS\nconst int skin_ref = ${L.ref | 0};\nconst float skin_hipZ = ${f(L.hipZ)}, skin_neckZ = ${f(L.neckZ)};\nconst float skin_role[${L.roles.length}] = float[${L.roles.length}](${L.roles.map(r => r.toFixed(1)).join(', ')});\n` : '';
-  return `#define ANIM_SKIN\n${live ? '#define SKIN_LIVE\n' : ''}const float skin_ratio = ${f(sk.ratio)};\nconst vec4 skin_clips[${rows.length}] = vec4[${rows.length}](${rows.join(', ')});\n${head}${legs}${SKIN_DECL}\n`;
+  return `#define ANIM_SKIN\n${model.live ? '#define SKIN_LIVE\n' : ''}const float skin_ratio = ${f(sk.ratio)};\nconst vec4 skin_clips[${rows.length}] = vec4[${rows.length}](${rows.join(', ')});\n${head}${legs}${SKIN_DECL}\n`;
 }
-// The skin's samplers: the clip texture, and the live pose texture (gait.js) when the model or the caller has one (`live`:
-// the player's own pose texture, groundControl.js; the AI's is model.live, animals.js)
-export const skinUniforms = (model, live = null) => model.skin ? { uBones: { value: model.skin.tex }, ...(liveTex(model, live) ? { uLive: { value: liveTex(model, live) } } : {}) } : {};
-const liveTex = (model, live) => live?.tex || live || model.live?.tex || null;
-// A live pose texture for `rows` instances of a skinned model with legs (gait.js writeRow fills a row; animals.js and
-// groundControl.js own one each): RGBA32F, skel.n x 3 texels wide, nearest, uploaded whole when needsUpdate is set.
-export function livePoseTexture(skel, rows) {
-  const w = skel.n * 3, data = new Float32Array(w * rows * 4);
-  // identity rows: an instance whose row was never written draws at rest
-  for (let r = 0; r < rows; r++) for (let j = 0; j < skel.n; j++) { const b = (r * w + j * 3) * 4; data[b] = 1; data[b + 5] = 1; data[b + 10] = 1; }
-  const tex = new THREE.DataTexture(data, w, rows, THREE.RGBAFormat, THREE.FloatType);
-  tex.magFilter = tex.minFilter = THREE.NearestFilter; tex.generateMipmaps = false; tex.needsUpdate = true; tex.name = 'live pose';
-  return { tex, data, rows, width: w, skel };
-}
+export const skinUniforms = model => model.skin ? { uBones: { value: model.skin.tex } } : {};
+// The live pose rows of a model with legs (loadClips: LIVE_ROWS rows after the clips' frames in the clip texture, which is
+// then RGBA32F; model.live = { tex, data, base, rows, width }): gait.js writeRow fills row base + r; animals.js takes rows
+// 0 .. rows - 2 for its instances and the player's body (groundControl.js) and the lineup page the last. The texture is
+// uploaded whole (tens of KB) when needsUpdate is set.
+export const LIVE_ROWS = 32;
+export const liveRowOf = (model, r) => model.live.base + r;
+export const playerLiveRow = model => model.live.base + model.live.rows - 1;
 const animBody = model => model.skin ? SKIN_BODY : model.rig?.kind === 'reptile' ? REPTILE_BODY : ANIM_BODY;
 const RIG_KEYS = ['spine', 'spinePhase', 'sit', 'foreFold', 'tipLag', 'tipWave', 'tipCurl', 'abduct', 'bob', 'handLag', 'handAmp', 'bow', 'spread', 'collapse', 'flickLift', 'flickOpen',
   'wave', 'waveK', 'envS', 'pushPitch', 'baskAbduct', 'squash', 'legLift', 'hindK', 'bend', 'flickYaw', 'turnFore', 'turnHead'];
@@ -1186,9 +1179,9 @@ function rigDecl(model) {
   }
   return d;
 }
-const animDecl = (model, live = null) => model.skin ? (model.antler ? 'attribute vec4 aAnim2;\n' : '') + antlerDecl(model) + skinDecl(model, !!liveTex(model, live))
+const animDecl = model => model.skin ? (model.antler ? 'attribute vec4 aAnim2;\n' : '') + antlerDecl(model) + skinDecl(model)
   : (model.weighted ? '#define ANIM_WEIGHTED\nattribute float aPartW;' : '') + ANIM_DECL_BASE + '\n' + extraDecl(model);
-const programKey = (model, live = null) => `${model.amp.join(',')}|${model.pose.join(',')}|${model.weighted ? 'w' : ''}|${model.rig ? model.rig.name : ''}|${model.gait ? 'g' : ''}|${model.antler ? 'a' : ''}|${model.skin ? `s${model.skin.ratio.toFixed(4)}:${model.skin.key}${liveTex(model, live) ? ':live' : ''}` : ''}`;
+const programKey = model => `${model.amp.join(',')}|${model.pose.join(',')}|${model.weighted ? 'w' : ''}|${model.rig ? model.rig.name : ''}|${model.gait ? 'g' : ''}|${model.antler ? 'a' : ''}|${model.skin ? `s${model.skin.ratio.toFixed(4)}:${model.skin.key}${model.live ? ':live' : ''}` : ''}`;
 export { hasAnim2 };
 
 // Light through the feathers (UNDERWING): a bird's wing and tail seen with the sun beyond them glow with the light
@@ -1240,8 +1233,7 @@ void RE_Direct_Underwing( const in IncidentLight directLight, const in vec3 geom
 // map: a textured tier (the ground raven's lod0): the texture instead of the vertex colours, smooth shaded.
 // head: a { value } uniform (radians) that turns the HEAD part about the vertical through its pivot: the player's own
 // body (groundControl.js and the other controls), whose head follows the camera's look (flight.js look).
-// live: a pose texture record (livePoseTexture) for this material's instances when it is not the model's own (the player)
-export function animalMaterial(atmosphere, model, { map = null, head = null, live = null } = {}) {
+export function animalMaterial(atmosphere, model, { map = null, head = null } = {}) {
   const m = map ? new THREE.MeshLambertMaterial({ map, vertexColors: false }) : new THREE.MeshLambertMaterial({ vertexColors: true, flatShading: true });
   atmosphere.patchLambert(m);
   const prev = m.onBeforeCompile;
@@ -1250,13 +1242,13 @@ export function animalMaterial(atmosphere, model, { map = null, head = null, liv
   const v4 = a => `vec4(${a.map(x => x.toFixed(4)).join(', ')})`;
   const consts = `\nconst vec4 uAmp = ${v4(model.amp)};\nconst vec4 uPose = ${v4(model.pose)};`;
   const uw = map ? null : underwingSpec(model);
-  const key = `atmosphere-lambert|animal|${programKey(model, live)}${map ? "|map" : ""}${uw ? `|uw${uw.lead.toFixed(4)},${uw.inv.toFixed(3)},${uw.perch ? 1 : 0}` : ''}${head ? '|head' : ''}`;
+  const key = `atmosphere-lambert|animal|${programKey(model)}${map ? "|map" : ""}${uw ? `|uw${uw.lead.toFixed(4)},${uw.inv.toFixed(3)},${uw.perch ? 1 : 0}` : ''}${head ? '|head' : ''}`;
   m.onBeforeCompile = (shader, renderer) => {
     prev.call(m, shader, renderer);
-    if (model.skin) Object.assign(shader.uniforms, skinUniforms(model, live));
+    if (model.skin) Object.assign(shader.uniforms, skinUniforms(model));
     const uwDecl = uw ? `\n#define ANIM_UNDERWING\n${uw.perch ? '#define UNDERWING_PERCH\n' : ''}const float uw_lead = ${uw.lead.toFixed(4)};\nconst float uw_invChord = ${uw.inv.toFixed(4)};\nvarying float vUnderwing;` : '';
     if (head) shader.uniforms.uHeadYaw = head;
-    shader.vertexShader = shader.vertexShader.replace('#include <common>', '#include <common>\n' + animDecl(model, live) + consts + uwDecl + (head ? '\n#define PLAYER_HEAD\nuniform float uHeadYaw;' : ''));
+    shader.vertexShader = shader.vertexShader.replace('#include <common>', '#include <common>\n' + animDecl(model) + consts + uwDecl + (head ? '\n#define PLAYER_HEAD\nuniform float uHeadYaw;' : ''));
     // Smooth shaded (a textured tier): pose first, where the normal begins, so the normals turn with the parts.
     if (map) shader.vertexShader = shader.vertexShader
       .replace('#include <beginnormal_vertex>', animBody(model) + '\nvec3 objectNormal = normal;\n#if defined(ANIM_SKIN)\n  objectNormal = normalize(animR * normal);\n#elif defined(ANIM_WEIGHTED)\n  objectNormal = normalize(mix(normal, animR * normal, aPartW));\n#else\n  objectNormal = animR * normal;\n#endif')
@@ -1285,11 +1277,11 @@ export function animalMaterial(atmosphere, model, { map = null, head = null, liv
 
 // Depth-only twin of animalMaterial for the shadow scene (shadows.js renders it with colorWrite off):
 // same part animation, so a flapping wing's shadow flaps.
-export function animalDepthMaterial(model, { live = null } = {}) {
+export function animalDepthMaterial(model) {
   const v4 = a => `vec4(${a.map(x => x.toFixed(4)).join(', ')})`;
   return new THREE.ShaderMaterial({
-    uniforms: skinUniforms(model, live),
-    vertexShader: `${animDecl(model, live)}
+    uniforms: skinUniforms(model),
+    vertexShader: `${animDecl(model)}
 const vec4 uAmp = ${v4(model.amp)};
 const vec4 uPose = ${v4(model.pose)};
 void main() {

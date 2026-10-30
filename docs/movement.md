@@ -118,17 +118,36 @@ part Neck / Head; the tail by its arc. The record's `rig` field names the joints
   the fore legs under the chest, the hind legs alongside, the tail along the ground); a body in the air (a jump, a
   pounce) tucks its feet and replants on landing.
 
-**The output**: a pose texture per species (RGBA32F, three texels a joint, one row per live instance, `livePoseTexture`
-in animalModels.js), the engine writing a row per instance per frame (`writeRow`) in the frame `tools/bake_clips.py`
-writes, and the skin shader reading the instance's row when `aClip.x` is negative (`SKIN_LIVE`); no new vertex
-attribute (the Metal limit). Far instances take cycles baked offline by the same engine (`tools/bake_gait.mjs`: Idle,
-Walk, Trot, Gallop, Bed as `<name>_clips.bin` + `.json`), driven by distance over each clip's stride (`farDrive`), so
-the far tier is the same shader with a clip, as the deer.
+**The output**: live rows in the species' clip texture (32 rows after the baked frames, the texture then RGBA32F;
+`LIVE_ROWS` in animalModels.js, `model.live`), the engine writing a row per near instance per frame (`writeRow`) in
+the frame `tools/bake_clips.py` writes, and the skin shader reading the instance's row with its existing `skinFrame`
+when `aClip.x` is negative (`SKIN_LIVE`): no new vertex attribute (the Metal limit) and no second sampler (the GPU's
+sixteen texture units were already full with the atmosphere's and the bone texture; a separate pose texture was the
+seventeenth and three.js warned). The AI's instances take the first rows (`legs.js` LegsPool, within the species'
+lod1 radius, a row sticking to an instance until it leaves), the player's body the last (LegsBody). Far instances
+take cycles baked offline by the same engine (`tools/bake_gait.mjs`: Idle, Walk, Trot, Gallop, Bed as
+`<name>_clips.bin` + `.json`), driven by distance over each clip's stride (`farDrive`), so the far tier is the same
+shader with a clip, as the deer.
+
+**In the world** (2026-10-30, the same day): `animals.js` builds a LegsPool per legged species and, per frame, poses a
+live instance from its position, drawn yaw (turnFollow's), speed, turn rate, pose, flick, the spine's bend (the control
+yaw against the drawn), the lion's tail twitch and whether it is in the air (a pounce, a tree), the terrain from the
+tile's heights; a live body's matrix stays level (the slope is in the legs), the far tier keeps its pitch. A dead
+animal is bedded by the engine and rolled onto its side by the matrix as before. `groundControl.js` does the same for
+the player (the footing's surface for the feet, the signed speed so backing steps backward, the jump in the air),
+with pose to a half as the crouch (the lion's stalk). `?feet=1` draws every live foot's plant point.
 
 **Sign-off**: `client/lineup_animals.html` runs the engine on the legged rows at `walk`, `trot`, `run` and `turn`, the
 body travelling along the row with the camera following so a planted foot can be seen staying put on the ground
 beside the fixed pole while the body passes; `&feet=1` marks each foot's plant point (red the fore, blue the hind,
-small while swinging), `&slope=<deg>` tilts the ground, `&speed=<m/s>` sets the speed.
+small while swinging), `&slope=<deg>` tilts the ground, `&speed=<m/s>` sets the speed, `&far=1` draws the baked cycles
+instead. Checked 2026-10-30: the coyote's walk (the planted feet still beside the pole over three frames), trot
+(diagonal pairs), gallop (gathered and stretched), standing turn, bed and sniff; the fox's walk, the lion's walk,
+gallop and bed, the bear's amble; in the world the player's coyote walking (a side camera: `ground.camSide = 1.4`),
+up an 18-degree slope (the back pitched 14 degrees, the feet on the ground, the hips 6 cm below the chest's ground),
+stepping round a standing turn at 2.2 rad/s (1.5 steps a second), galloping; AI foxes live within 56 m and on the
+Walk and Bed clips beyond; the AI update 0.8 ms a frame with the mammals on the engine. Not checked: the lion and
+bear in the world (none near the start), the deer herd silhouette's rows, the Yosemite tile.
 
 ## The pipeline
 

@@ -2766,3 +2766,16 @@ taxon and its body. `docs/movement.md` "The legs" has the principles by rank; in
 
 What it costs: four GLBs 40-55 % bigger (the cut rings and the skin), 17-29 KB of clips each, ~10 µs per live instance a
 frame (the mammals' caps are 16, 8, 3 and 3).
+
+Step two, the same day: the AI (`animals.js`, a LegsPool per legged species in `legs.js`) and the player
+(`groundControl.js`, a LegsBody) on the engine in the world, verified as the player's coyote from a side camera on the
+flat and up an 18-degree slope, in a standing turn and at a gallop, and on AI foxes near and far. One correction on
+the way: the first build gave the live poses a texture of their own, and three.js warned of a seventeenth texture unit
+(the atmosphere's samplers and the bone texture already fill the sixteen), so the live rows moved into the species'
+clip texture (32 rows after the baked frames, read by the shader's existing `skinFrame`); the clip textures of the
+legged species are RGBA32F for it (the deer's stays half floats). Touch points for the merge with the catch lane:
+`animals.js` the import, the constructor's `_legInp` and `feetMarks`, `buildTiers` (the pool), the per-animal write
+block (`LG`, `legRow`, the level matrix, the engine call) and the `end()` loop after it; `groundControl.js` the
+import, `meshFor` (LegsBody), `useSpecies` (reset), the stalk's pose line, `draw` (the level matrix, the engine
+instead of driveClips for a legs body, the turn table); `animalModels.js` the skin shader's SKIN_LIVE branch, `skinDecl`,
+`loadClips` / `loadTiers` / `restOnlySkin` (the live rows, `model.legs`, `model.live`), the four loaders.

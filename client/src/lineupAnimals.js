@@ -3,7 +3,7 @@ import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
 import * as AM from './animalModels.js';
 import { Atmosphere, uniforms as atmo } from './atmosphere.js';
 import { SEASON_LOOK, sunDirection, seasonOfDate } from './season.js';
-import { gaitParams, makeGait, gaitStep, writeRow, liveClip, footPoints } from './gait.js';
+import { gaitParams, makeGait, gaitStep, writeRow, liveClip, footPoints, farTable, makeFar, farDrive } from './gait.js';
 
 // Animal lineup (client/lineup_animals.html): the counterpart of the tree lineup (lineup.js) for signing off the
 // animal meshes (docs/animal-library.md, "Lineup page"). One row per species in library/animals/index.json plus
@@ -15,7 +15,8 @@ import { gaitParams, makeGait, gaitStep, writeRow, liveClip, footPoints } from '
 // URL: ?tier=0|1|2 &motion=idle|walk|graze|rest|flap|glide|climb &season= &hour= &view=side|three|top &fit=1
 //      &slow=1 &only=<species,...> &all=1 (load every GLB at once instead of as rows scroll into view)
 //      &feet=1 (the leg engine's plant points as markers) &slope=<deg> (the ground tilted, rising toward the nose)
-//      &speed=<m/s> (the engine's walk / trot / run speed instead of the species' bands)
+//      &speed=<m/s> (the engine's walk / trot / run speed instead of the species' bands) &far=1 (the far tier's baked
+//      cycles, tools/bake_gait.mjs, instead of the live engine)
 // The skinned quadrupeds with legs (animalModels.js model.legs: fox, coyote, lion, bear) move on the leg engine
 // (gait.js) at walk, trot, run and a standing turn: the body travels along the row and the camera follows it, so the
 // planted feet can be seen staying put on the ground (markers with &feet=1) while the body passes over them.
@@ -179,7 +180,6 @@ function instance(geo, model) {
     geo.setAttribute('aClip', new THREE.InstancedBufferAttribute(new Float32Array(4), 4));
     geo.setAttribute('aBend', new THREE.InstancedBufferAttribute(new Float32Array(4), 4));
   }
-  if (model.legs && !model.live) model.live = AM.livePoseTexture(model.legs, 1);   // the leg engine's pose row (before the material: SKIN_LIVE)
   const m = new THREE.InstancedMesh(geo, AM.animalMaterial(atmosphere, model), 1);
   m.setMatrixAt(0, new THREE.Matrix4()); m.frustumCulled = false;
   m.castShadow = m.receiveShadow = true;
@@ -660,7 +660,7 @@ const antlersFor = season => AM.antlerState(AM.SEASON_MONTH[season] ?? 10.5);
 // The leg engine on a row (gait.js): the body travels along +x (the model's +z) at the motion's speed on the row's ground
 // (flat, or the &slope), wrapping every few metres; a standing turn yaws in place. The pose goes into the model's live
 // texture row; the mesh follows the body; the feet's plant points go to the markers.
-const SLOPE = (+params.get('slope') || 0) * Math.PI / 180, FEET = params.get('feet') === '1', SPEED = +params.get('speed') || 0;
+const SLOPE = (+params.get('slope') || 0) * Math.PI / 180, FEET = params.get('feet') === '1', SPEED = +params.get('speed') || 0, FAR = params.get('far') === '1';
 const groundY = (x, rowX) => Math.tan(SLOPE) * (x - rowX);
 if (SLOPE) ground.rotation.set(-Math.PI / 2, 0, SLOPE);   // rising toward +x (the noses)
 const LOCO = getJSON(new URL('../../tiles/utm10n_680_4280/locomotion.json', import.meta.url)).then(j => j?.species || {});
@@ -675,12 +675,23 @@ function legsPose(row, model, meshes, t, dt) {
   const x0 = row.x + row.posD, x = x0 + G.travel, terrain = (wx, wz) => groundY(wx, row.x);
   const inp = { x, y: terrain(x, 0), z: 0, yaw: G.yaw, size: 1, v, wr, pose: want === 'rest' ? 1 : 0, flick: want === 'graze' ? 1 : 0, bend: 0,
     twitch: row.species === 'puma_concolor' ? 0.7 * Math.sin(t * 3.3) : 0, terrain, air: false };
+  if (FAR) {   // the far tier: the baked cycles driven by distance (farDrive), the body sliding along at v
+    G.far ||= makeFar(); G.F ||= farTable(model.skin, P);
+    row.travel = G.travel;
+    for (const m of meshes) {
+      m.position.set(x - row.x, inp.y, 0); m.rotation.y = G.yaw;
+      const C = m.geometry.attributes.aClip; farDrive(G.far, G.F, v, inp.pose, dt, C.array, 0); C.needsUpdate = true;
+      const B = m.geometry.attributes.aBend; B.array.fill(0); B.needsUpdate = true;
+    }
+    return;
+  }
   gaitStep(model.legs, P, G.st, inp, dt);
-  writeRow(model.legs, G.st, model.live.data, 0); model.live.tex.needsUpdate = true;
+  const liveRow = AM.playerLiveRow(model);   // the page's row: the last live row of the clip texture (as the player's)
+  writeRow(model.legs, G.st, model.live.data, liveRow); model.live.tex.needsUpdate = true;
   row.travel = G.travel;
   for (const m of meshes) {
     m.position.set(x - row.x, inp.y, 0); m.rotation.y = G.yaw;
-    const C = m.geometry.attributes.aClip; liveClip(0, C.array, 0); C.needsUpdate = true;
+    const C = m.geometry.attributes.aClip; liveClip(liveRow, C.array, 0); C.needsUpdate = true;
     const B = m.geometry.attributes.aBend; B.array.fill(0); B.needsUpdate = true;
   }
   if (FEET) {

@@ -5,6 +5,7 @@ import { addCaster } from './shadows.js';
 import { HerdMarks } from './herdMarks.js';
 import { HerdSilhouette } from './herdSilhouette.js';
 import { Locomotion } from './locomotion.js';
+import { LegsBody } from './legs.js';   // the quadrupeds' leg engine (gait.js; docs/movement.md "The legs")
 
 // The playable walkers (owner's request 2026-10-26, "make the other animals playable"): one controller for every
 // species that lives on the ground, parameterised per species by GROUND below. Black-tailed deer (doe and buck), gray
@@ -192,6 +193,9 @@ export class GroundControl {
     if (!p) {
       p = this.animals.playerModel(name).then(({ model, geometry }) => {
         const geo = geometry.clone(), rig = hasAnim2(model);
+        // a skinned quadruped with a skeleton (model.legs): the player's body on the leg engine, the last live row of the
+        // species' clip texture (legs.js LegsBody; the AI's rows come before it)
+        const legs = model.legs ? new LegsBody(model, this.loco?.get(this.code) || null, new URLSearchParams(location.search).get('feet') === '1' ? this.scene : null) : null;
         geo.setAttribute('aAnim', new THREE.InstancedBufferAttribute(new Float32Array(4), 4));
         if (rig) geo.setAttribute('aAnim2', new THREE.InstancedBufferAttribute(new Float32Array(4), 4));
         if (model.skin) {   // the skinned deer: clip, phase, blend; the bend (spine, head, legs' step)
@@ -204,7 +208,7 @@ export class GroundControl {
         mesh.customDepthMaterial = animalDepthMaterial(model);
         mesh.visible = false; this.scene.add(mesh);
         addCaster(mesh, { cascades: [0], simple: false });   // follows the mesh's visibility
-        return { mesh, model, rig };
+        return { mesh, model, rig, legs };
       }).catch(e => { console.warn(`groundControl: no player model for ${name}`, e); return null; });
       this.meshes.set(name, p);
     }
@@ -218,6 +222,7 @@ export class GroundControl {
     const L = this.tile?.locomotion ? (this.loco ||= new Locomotion(this.tile.locomotion)) : null;
     const S = GROUND[code] ? (L ? L.fill(code, GROUND[code]) : GROUND[code]) : L?.groundEntry(code); if (!S || !S.model) return false;
     this.code = code; this.S = S; this.modelName = modelName || S.model; this.body = null; this.cs = null;   // cs: a fresh turn state (turnFollow) per body
+    this.meshFor(this.modelName).then(b => { if (b?.legs) b.legs.reset(); });   // the leg engine's feet replanted for a new body
     { const A = this.animals; if (A && !A.preySlots) A.buildHunts?.(); const k = A ? A.speciesList().findIndex(sp => sp.code === code) : -1;
       if (this.needs) { this.needs.hunter = !!(k >= 0 && A.preySlots?.[k]); } }   // a hunter's hunger drains until a catch (needs.js); needs.setSpecies takes the body hungry
     this.stamina = 1; this.tired = false; this.rush = null; this.rushes = 0;
@@ -504,7 +509,7 @@ export class GroundControl {
       ps.e3 = damp(ps.e3, inAir || sp > S.trot * 1.4 ? 1 : 0, 4, dt);
       if (part && !this.buck) ps.e2 = ps.amp > 0.05 && !inAir ? Math.atan2(wr * r, Math.max(sp, PART_TURN.vMin)) : damp(ps.e2, 0, 8, dt);   // the legs' step turned round the turn (aAnim2.z)
       const stalk = S.stalk && this.input().alt && sp > 0.05;
-      ps.pose = damp(ps.pose, this.resting ? pmax : stalk ? 0.45 * pmax / 0.6 : 0, this.resting ? 0.9 : 2, dt);
+      ps.pose = damp(ps.pose, this.resting ? pmax : stalk ? (this.body?.legs ? 0.45 : 0.45 * pmax / 0.6) : 0, this.resting ? 0.9 : 2, dt);   // on the leg engine pose to a half is a crouch
       ps.flick = damp(ps.flick, act ? S.act.flick : alert ? S.alert.flick : stalk ? 0.25 : 0, 3, dt);
       if (act && S.act.dig) { ps.pose = damp(ps.pose, 0.3 * pmax, 3, dt); ps.flick += 0.1 * Math.sin(performance.now() * 0.013); }   // a dig: shoulders down, the head working
       if (this.code === 'puma_concolor') ps.e1 = damp(ps.e1, (stalk || this.resting ? 0.7 : 0.15) * Math.sin(performance.now() * 0.0033) * (Math.sin(performance.now() * 0.0006) > 0.1 ? 1 : 0.15), 8, dt);
@@ -604,7 +609,7 @@ export class GroundControl {
     // the part rig's quadrupeds (fox, coyote, lion, bear) the same, with PART_TURN (their legs' step: animate); the
     // rodents and the ground birds with their own lag (PART_TURN.rodent, .bird, .turkey) and the lizard with none
     // (PART_TURN.lizard: the turn rate for its bend), on the ground or in a jump; in a flush the drawn yaw is the control's
-    const TC = sk ? DEER_DRIVE : S.rig === 'quad' ? PART_TURN : this.mode !== 'ground' && this.mode !== 'air' ? null
+    const TC = sk && !b.legs ? DEER_DRIVE : S.rig === 'quad' ? PART_TURN : this.mode !== 'ground' && this.mode !== 'air' ? null
       : S.rig === 'rodent' ? PART_TURN.rodent : S.rig === 'bird' ? (this.code === 'meleagris_gallopavo' ? PART_TURN.turkey : PART_TURN.bird) : S.rig === 'lizard' ? PART_TURN.lizard : null;
     if (!TC && this.cs) this.cs.y0 = NaN;   // back on the ground: the turn state starts from where it is
     const yawA = (TC ? turnFollow(TC, this.cs ||= makeClipState(), this.flight.yaw, sk ? sv : this.spd || 0, dt) : this.flight.yaw) + Math.PI;
@@ -615,7 +620,7 @@ export class GroundControl {
       this.N.lerp(N, 1 - Math.exp(-dt * 12)).normalize();
       const F = this._f.set(Math.sin(yawA), 0, Math.cos(yawA)); F.addScaledVector(this.N, -F.dot(this.N)).normalize();
       this._mb.makeBasis(this._x.crossVectors(this.N, F), this.N, F); this._qt.setFromRotationMatrix(this._mb);
-    } else { this._e.set(ps.pitch, yawA, ps.roll, 'YXZ'); this._qt.setFromEuler(this._e); }
+    } else { this._e.set(b.legs ? 0 : ps.pitch, yawA, ps.roll, 'YXZ'); this._qt.setFromEuler(this._e); }   // a body on the leg engine meets the slope with its legs
     if (this.qFresh) this._q.slerp(this._qt, 1 - Math.exp(-dt * 20)); else { this._q.copy(this._qt); this.qFresh = true; }
     const drop = (S.rig === 'quad' || this.code === 'otospermophilus_beecheyi') ? (b.model.drop || 0) * Math.max(0, ps.pose) * this.size : 0;
     this._p.set(P.x, P.y + ps.lift - drop, P.z); this._s.setScalar(this.size);
@@ -623,7 +628,13 @@ export class GroundControl {
     this._m.toArray(m.instanceMatrix.array, 0); m.instanceMatrix.needsUpdate = true;
     const an = m.geometry.attributes.aAnim; an.array[0] = ps.phase % TAU; an.array[1] = ps.amp; an.array[2] = ps.pose; an.array[3] = ps.flick; an.needsUpdate = true;
     if (b.rig) { const a2 = m.geometry.attributes.aAnim2; a2.array[0] = ps.e0; a2.array[1] = ps.e1; a2.array[2] = ps.e2; a2.array[3] = ps.e3; a2.needsUpdate = true; }
-    if (sk) {   // the skinned deer: a jump runs the gallop in the air
+    if (b.legs) {   // the leg engine (legs.js LegsBody): the feet planted on the footing, the body's speed and turn, a jump in the air
+      const ac = m.geometry.attributes.aClip, ab = m.geometry.attributes.aBend, air = this.mode === 'air' || this.mode === 'fly';
+      const L = this._legInp ||= { terrain: (x, z) => { const t = this.sq.surface(x, z, this.flight.pos.y + 0.6); return t === null || t === undefined || !(t === t) ? this.heights.atXZ(x, z) : t; } };
+      L.x = P.x; L.y = P.y; L.z = P.z; L.yaw = yawA; L.size = this.size; L.v = air ? Math.hypot(this.vel.x, this.vel.z) : this.v; L.wr = this.cs?.wr || 0;
+      L.pose = Math.max(0, ps.pose); L.flick = ps.flick; L.bend = wrap(this.flight.yaw + Math.PI - yawA); L.twitch = this.code === 'puma_concolor' ? ps.e1 : 0; L.air = air;
+      b.legs.write(L, dt, ac.array, ab.array); ac.needsUpdate = true; ab.needsUpdate = true;
+    } else if (sk) {   // the skinned deer: a jump runs the gallop in the air
       const ac = m.geometry.attributes.aClip, ab = m.geometry.attributes.aBend;
       driveClips(sk, DEER_DRIVE, this.cs, sv, Math.max(0, ps.pose) / (this.modelPoseMax() || 1), ps.flick, dt, ac.array, 0); ac.needsUpdate = true;
       bendOf(DEER_DRIVE, this.cs, sv, this.flight.yaw, sk, ab.array, 0); ab.needsUpdate = true;   // the spine, the head and the legs' step in a turn

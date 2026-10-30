@@ -127,7 +127,10 @@ sequenced; Parked is in the brief but deliberately not started.
   20-joint skeleton from their geometry (`tools/rig_quadruped.py`) and posed live by a gait engine
   (`client/src/gait.js`) from the locomotion row: planted feet, knees and hocks bending, the gaits
   by the Froude bands with Hildebrand's footfalls, the body's height from the feet, a far tier baked
-  from the same engine (`tools/bake_gait.mjs`). Lineup-verified; the world and the player next.
+  from the same engine (`tools/bake_gait.mjs`); the AI and the player on it in the world (`legs.js`).
+  Verified on the lineup and as the player's coyote in the world (flat, an 18-degree slope, a turn, a
+  gallop). Weak: the numbers (duty, cadence, clearance) are first guesses; the rodents and the birds
+  still swing rigid legs; the lion and bear unseen in the world.
 
 ## Next: the visual pass, in order of effect per hour
 
