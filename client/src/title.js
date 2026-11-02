@@ -15,8 +15,8 @@ import { HubStub } from './hubStub.js';
 // the page loads what the screen needs (the places' names from each tile's features.json, the hub's configuration,
 // the month's earth texture); no world is built. Then the title fades and the earth rises from the bottom of the
 // screen as a crescent, the sun almost behind it. There the sign-in modal (lane 3, account.js) takes over through
-// onGate(title) and calls title.onSignedIn(user) when done; with ?hub=stub the stub signs in by itself; with no hub (a
-// 404 from /api/hub/config, or no server) a plain Explore button stands where the modal will be. Signed in, the earth
+// onGate(title) and calls title.onSignedIn(user) when done (the modal says so and offers Explore when there is no hub);
+// with ?hub=stub the stub signs in by itself; with no onGate set a plain Explore button stands in. Signed in, the earth
 // rises the rest of the way, the sun swings round to light the side facing the player (the last tile played, else the
 // first in the index), a dot appears at each built tile (brighter with more players, the one under the pointer named)
 // and over the right side the places within 70 degrees of the facing point are listed, sorted by count then name.
@@ -168,6 +168,7 @@ export class TitleScreen {
     this.ownsCanvas = true;      // main.js: the world's loop leaves the canvas to the screen while this is true
     this.onPoint = null;         // main.js sets it (unused here: nothing moves the arrival point on the earth)
     this.onGate = null;          // lane 3: called with the screen when the sign-in's place is reached; it calls onSignedIn
+    this.onLit = null;           // lane 3: called with the user (null exploring alone) once onSignedIn has lit the earth
     this.user = null; this.config = null;
     this.hubParam = hub;
     // the places: one per built tile, at the centre of its bounds
@@ -199,7 +200,7 @@ export class TitleScreen {
     this.buildScene();
     window.__weScreen = window.__weTitle = this;   // debugging handle
     // Keys typed on the screen stay on the screen (flight, peek, sound and the rest listen on window).
-    this.guard = e => { if (!this.root.contains(e.target)) e.stopImmediatePropagation(); };
+    this.guard = e => { if (!e.target?.closest?.('#opening, #social, #chat')) e.stopImmediatePropagation(); };   // the social list and the chat (lane 3) keep their own keys too
     for (const ev of ['keydown', 'keyup']) { addEventListener(ev, this.guard, true); root.addEventListener(ev, e => e.stopPropagation()); }
     this.frameFn = now => this.frame(now);
     this.raf = requestAnimationFrame(this.frameFn);
@@ -244,7 +245,7 @@ export class TitleScreen {
   wirePointer() {
     const w = this.wrap;
     w.addEventListener('pointerdown', e => {
-      if (e.button || e.target.closest('button, .tt-places')) return;
+      if (e.button || e.target.closest('button, .tt-places, .tt-gate')) return;   // the gate: the modal's inputs and links keep their own pointer
       this.drag = { id: e.pointerId, x: e.clientX, y: e.clientY, moved: 0, t: performance.now() };
       w.setPointerCapture(e.pointerId); this.vyaw = this.vpitch = 0; this.tweens = this.tweens.filter(t => !t.view);
       e.preventDefault();
@@ -267,7 +268,7 @@ export class TitleScreen {
     w.addEventListener('pointerup', up); w.addEventListener('pointercancel', up);
     w.addEventListener('pointerleave', () => { this.px = this.py = -1; });
     w.addEventListener('wheel', e => {
-      if (e.target.closest('.tt-places')) return;
+      if (e.target.closest('.tt-places, .tt-gate')) return;
       this.distTarget = clamp(this.distTarget * (1 + e.deltaY * (e.deltaMode === 1 ? 0.03 : 0.0012)), DIST[0], DIST[1]); e.preventDefault();
     }, { passive: false });
   }
@@ -333,7 +334,7 @@ export class TitleScreen {
     if (this.closed) return;
     this.setPhase('gate');
     if (this.user) { await wait(400); if (!this.closed) this.onSignedIn(this.user); }   // the stub, or a session the hub already knows
-    else if (this.config && this.onGate) this.onGate(this);                               // lane 3's modal
+    else if (this.onGate) this.onGate(this);                                              // lane 3's modal (account.js; it handles no hub too)
     else this.showExplore(this.config ? 'the sign-in is not built yet' : 'no hub here: explore alone');
   }
   // Every place's name and region line from its features.json: the tile's locality as the card's title (its roads
@@ -374,6 +375,7 @@ export class TitleScreen {
     this.dots.visible = true;
     this.tween(1400, u => { this.dotU.uFade.value = u; }, easeInOut, 1500);
     setTimeout(() => { if (!this.closed) this.wrap.classList.add('listed'); }, 1900);
+    this.onLit?.(this.user);
   }
   // Ease the view to face a place (unless the player is dragging).
   face(id, ms = 900, delay = 0) {
@@ -531,7 +533,7 @@ export class TitleScreen {
     cancelAnimationFrame(this.raf);
     for (const ev of ['keydown', 'keyup']) removeEventListener(ev, this.guard, true);
     document.activeElement?.blur?.();
-    this.hub?.close?.();
+    if (this.hubParam && typeof this.hubParam === 'object') this.hub.watch?.(false); else this.hub?.close?.();   // a hub given from outside (multiplayer.js) lives on into the world
     for (const o of [this.globe, this.atmo, this.dots, this.stars]) { o.geometry.dispose(); o.material.dispose(); }
     this.tex?.dispose(); this.earthU.map.value = null;
     this.scene.clear(); this.scene = null;

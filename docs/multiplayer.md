@@ -265,6 +265,51 @@ together. Lane 3 needs lane 1's screen in main; lane 4 needs 1 to 3. Lane 5 is l
    toggles, all on the earth screen and carried into the world's HUD (the avatars, the chat), over
    `hub.js`. Done when two seats in one browser (`?seat=2`, as the game's tests do) make friends, a group
    and talk.
+
+   **Built (2026-11-01, branch `claude/optimistic-margulis-d0e20d`).** `client/src/account.js` (`AccountModal`:
+   the sign-in in the title's gate, sign-up with the six codes shown once and a copy button, the recover path, the
+   no-hub view with Explore in place of the title's placeholder), `client/src/social.js` (`Social`: the avatars row
+   and the list; `avatarFor(id, size)` draws the wisp on a canvas from the id, exported), `client/src/chat.js`
+   (`Chat`: the input, the picker when in several scopes, the fading pane), `client/src/multiplayer.js`
+   (`Multiplayer`: the one object `main.js` makes beside the title screen; it owns the page's `Hub`, gives the
+   title its `config()`, `me()`, `watch(on)`, `on('counts')` and `close()`, puts the modal at `title.onGate`, mounts
+   the rest on `title.onLit(user)`, joins the tile's room by wrapping `title.onBegin`, and keeps the three fixed
+   elements clear of the HUD's panels), `client/social.css`, and the Video and Audio toggles (`#media`, off, "soon"
+   on hover). Small changes: `title.js` (an `onLit` hook after `onSignedIn`; the gate goes to `onGate` whether or
+   not there is a hub; the drag and the wheel leave the gate alone; the key guard lets `#social` and `#chat` keep
+   their keys; a hub given from outside is not closed with the screen), `hub.js` (instance `config()` and `me()`),
+   `main.js` (one place, commented), `index.html` (the stylesheet). The seat: `hub.js` has none (the session is the
+   cookie), so the second user was a script over `tests/wsclient.py`. Verified in the viewer on the home tile against
+   the real hub with two users: sign-up with the codes and the copy button, sign-out, a wrong password refused with
+   the field marked, sign-in, recovery with a code ("5 recovery codes are left"), Explore with no hub (a static
+   `http.server`, 404 on `config`), a friend found by search and asked, the request accepted, the group made by the
+   other user and by the dialog, renamed and left, group chat both ways with the pane fading in and out (7 s after
+   the last line, kept while the input has focus), the tile chat once in El Dorado (tagged "here" beside the group's
+   lines), the earth's counts and list from the hub (Placerville "1 here" re-sorting to the top as the other user
+   entered its room), the row and the list carried into the world beside the menu button and the list moving right of
+   the HUD's readouts while the menu is open, the chat above the key line, the toggles' "soon", `?hub=stub`,
+   `?skip=1` and `?signin=failed` (the note shown, the flag taken off the URL), no new console errors (the browser
+   logs the hub's 401 to `me` with no session as a failed resource; that is the hub saying not signed in). Not
+   verified: Discord against Discord (no keys here, so the button is greyed; live it is a navigation to
+   `Hub.discordUrl()`), Google and Apple (drawn greyed), touch, narrow screens, two sessions of one user.
+   What lane 4 needs to know:
+   - `window.__weMp` is the `Multiplayer` (debugging); `mp.hub` the page's `Hub`; `mp.social.nameOf(id)` and
+     `avatarFor(id, size)` for the invite dialog; `mp.placeName(tileId)` the place's name from the title's list.
+   - The room is joined at Begin (`mp.entered(tileId)`, wrapping `title.onBegin`), not at the world's entry, and a
+     tile switch from the Location box does not move it: lane 4 moves the join to the entry and the switch (the doc's
+     "joined on entry and left on a switch") and calls `mp.chat.setRoom()` after, so the picker follows.
+   - The chat's picker lists the tile's room (when `hub.room` is set) and every group; the group lines carry their
+     group's name when there are several scopes. `title.choose(id)` is untouched: wrap it there for `place`.
+   - The elements are `#social` (top left; `html:not(.opening)` moves it beside the menu button), `#chat` (bottom
+     left) and `#media` (top middle), hidden with the HUD while `html.arriving` or `html.switching`;
+     `Multiplayer.layout()` runs on resize and on the `html` and `#game` class changes.
+   - Rules chosen: Sign out reloads the page; the display name and a group's name are edited through `prompt()`
+     and Block and Leave ask `confirm()` (inline editors are a later nicety); the search box asks 350 ms after the
+     typing stops, 3 characters or more; Escape leaves the chat input; a request to someone who asked first accepts
+     (the hub's rule); a group's chat history from `welcome` is in the pane without fading it in.
+   - Open: Unblock is offered only for users blocked this session (the hub sends no block list); the chat row and
+     the nearby-animals bar meet on a narrow window; the species card can overlap the chat pane; the chat's lines
+     do not say the time.
 4. **Group travel.** The `place` and `invite` messages on the client, the dialog, the joiner's world
    built for the picker's tile and the arrival behind the picker from the relayed position, the tile room
    joined on entry and left on a switch. Done when two seats go to Placerville together and the second

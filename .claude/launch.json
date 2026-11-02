@@ -4,14 +4,38 @@
     {
       "name": "viewer",
       "runtimeExecutable": ".venv/bin/python",
-      "runtimeArgs": ["server.py", "--port", "8781", "--bind", "127.0.0.1"],
+      "runtimeArgs": [
+        "server.py",
+        "--port",
+        "8781",
+        "--bind",
+        "127.0.0.1"
+      ],
       "port": 8781
     },
     {
       "name": "viewer-title",
       "runtimeExecutable": ".venv/bin/python",
-      "runtimeArgs": ["server.py", "--port", "8784", "--bind", "127.0.0.1"],
+      "runtimeArgs": [
+        "server.py",
+        "--port",
+        "8784",
+        "--bind",
+        "127.0.0.1"
+      ],
       "port": 8784
+    },
+    {
+      "name": "viewer-social",
+      "runtimeExecutable": ".venv/bin/python",
+      "runtimeArgs": [
+        "server.py",
+        "--port",
+        "8788",
+        "--bind",
+        "127.0.0.1"
+      ],
+      "port": 8788
     }
   ]
 }

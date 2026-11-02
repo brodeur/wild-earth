@@ -56,6 +56,10 @@ export class Hub {
     this.room = null; this.watching = false;
   }
 
+  // The title screen asks its hub object for these (title.js): the same HTTP calls as the statics.
+  config() { return Hub.config(); }
+  me() { return Hub.me(); }
+
   on(t, fn) {
     if (!this.handlers.has(t)) this.handlers.set(t, new Set());
     this.handlers.get(t).add(fn);

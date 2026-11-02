@@ -3058,3 +3058,51 @@ Open after this lane: the sign-in modal and hub.js (lane 3) over `onGate`/`onSig
 the three foothill tiles' dots merge at the lit zoom (the hover names the nearest); the card screen's removal with
 its sprites once Aaron has seen the earth; clouds; a touch screen and a narrow window are untested; the stars and
 the earth were judged on screenshots at 1280 x 800 only.
+
+## 2026-11-01: the social screen (lane 3 of docs/multiplayer.md)
+
+The sign-in, the friends and groups and the chat are built over `client/src/hub.js` and the real hub
+(`client/src/account.js`, `social.js`, `chat.js`, `multiplayer.js`, `client/social.css`; the Built note under
+lane 3 in `docs/multiplayer.md` has what was verified and what lane 4 needs). Decided where the design was
+silent:
+
+- **One hookup object, one place in main.js.** `Multiplayer` (multiplayer.js) is made beside the title screen
+  and owns the page's `Hub` for the page's life: the title screen is given the hub as the object the lane 1
+  note asked for (`config`, `me`, `watch`, `on('counts')`, `close`), the modal is put at `title.onGate`, the
+  friends, the chat and the toggles are mounted on a new `title.onLit(user)` hook, and the tile's room is
+  joined by wrapping `title.onBegin`. `main.js` changes at the one place the screen is made; the title screen
+  no longer closes a hub it did not make, so the socket lives on into the world. Rejected: mounting from
+  title.js (the screen would then own page-level elements that outlive it) and a second place in `main.js`'s
+  `enterWorld` for the room (lane 4 moves the join to the entry and the switch anyway).
+- **The elements are the page's, not the screen's.** `#social`, `#chat` and `#media` are fixed elements in
+  `body`, over the title screen (z 21 over its 20) and then in the world's HUD, where CSS moves the friends
+  beside the menu button and `Multiplayer.layout()` keeps the list right of the HUD's readouts while the menu
+  is open, the chat above the key line and the toggles under the game box, run on resize and on the `html`
+  and `#game` class changes (a MutationObserver, so `main.js`'s `layoutHud` is untouched). They hide with the
+  HUD while arriving or switching.
+- **The modal replaces the title's Explore placeholder for both cases.** The gate goes to `onGate` whether or
+  not there is a hub; with no `config` the modal says there is no hub and offers Explore
+  (`title.onSignedIn(null)`), with one it signs in, signs up (the six codes shown once, a copy button that
+  falls back to selecting them, a plain warning) or recovers. Errors are the hub's words with the field marked;
+  the rules are checked in the modal first in the same words. The way back from Discord (`?signin=`) is read
+  and taken off the URL by `Multiplayer`, signed in or not, and told to the modal.
+- **The title's input stays the title's; the modal's and the panes' stay theirs.** The earth's drag handler
+  captured the pointer on the modal's links and inputs (a click on "Make an account" went to the globe) and
+  the title's key guard killed every key typed outside `#opening` (Escape in the chat did nothing): the drag
+  and the wheel now leave `.tt-gate` alone and the guard lets `#social` and `#chat` keep their keys; both
+  elements stop their keys from reaching the window, where the world's controls listen.
+- **The avatar is drawn, not fetched.** `avatarFor(id, size)` hashes the id (FNV-1a) into a hue, a second hue,
+  a turn and two or three ribbons, and draws the wisp on a canvas: a dark disc, a glow, the ribbons spiralling
+  out through the two hues, a bright core. `--hue` is set on the canvas for the row's ring. Rows are written as
+  HTML with a blank canvas each and drawn after, since a canvas serialises blank.
+- **The chat's scope.** A picker appears only when there is more than one scope (the tile's room and the
+  groups); with one the placeholder names it; with none the input says there is no one to talk to yet. The
+  hub echoes the sender's line, so nothing is shown locally first. The pane hides 7 s after the last line and
+  stays while the input has focus; a group's history from `welcome` is put in without fading the pane in.
+- **Two seats.** `hub.js` has no seat (the session is the cookie), so the second user in the verification
+  was a script over `tests/wsclient.py` signed up over HTTP; the doc's `?seat=2` is left to a later step if
+  it is ever needed.
+- **Small things:** Sign out reloads the page (the cleanest way back to the title and its gate); the display
+  name and a group's name go through `prompt()` and Block and Leave through `confirm()` for now; the search
+  box asks 350 ms after the typing stops and only with 3 characters or more; the browser logs the hub's 401
+  to `me` with no session as a failed resource, which is the hub saying not signed in, not an error thrown.
