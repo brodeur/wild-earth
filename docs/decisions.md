@@ -3217,3 +3217,78 @@ Decided:
   and the one with a measured age table; the blue oak is the counter-case (compact, crooked, not weeping in any
   source), black and canyon live next, then the ponderosa for the conifer defaults.
 
+## 2026-11-01: the soul leaves a dead animal, and every soul carries a column by its rarity
+
+Aaron, 2026-11-01: "When an animal dies, especially of predation, a spirit sprite just like the user's should shoot
+up and out of the animal's body and fade away. Color should be the highlight color for that species." And: "In
+spirit form, the vertical column above mountain lions is excellent. It can be about 30% less bright. Lets see how it
+affects performance to have all other species shoot up a column. Lets take the mountain lion as the biggest, and the
+most common animal is the smallest - only a foot or so tall. Each other animal having a column relative to its
+species rarity."
+
+Built in `client/src/spirit.js` (`SoulPool`, the column shader, the `Wisp`'s `setTint` and shared textures) and
+`client/src/animals.js` (the `'kill'` event carries the species index, the id and the body's height; the dead are
+out of `eachPlayable` and `playableNear`). Decided on the way:
+
+- **The soul is the wisp itself.** Not a new sprite: the `Wisp` class the player flies as, tinted. `setTint(colour)`
+  makes the head the colour lightened toward white, the tail and mist the colour itself, the motes nearly white; the
+  player's wisp keeps WARM, COOL and WHITE. The colour is the species' soul colour (`rarityColor` of its rarity), the
+  one the spirit's view already gives its glow and the nearby-animals bar its disc. Six wisps are built once
+  (`SOULS`), sharing the player's wisp's two canvas textures (`maps`), and reused: a death takes a free one or the
+  oldest; nothing is allocated at a death and a finished wisp is hidden, so an idle pool costs nothing.
+- **Seen in every form.** The souls are on camera layer 2, drawn by `SpiritLook.render` in a pass after the world,
+  and after the spirit's post pass and layer-1 redraw when the look is on, so their colour is not cooled; depth-tested
+  against the world (a soul behind a trunk is hidden), with no light on the layer (the wisp's materials need none, so
+  no shadow pass runs). A coyote watching a lion take a deer sees the deer's soul rise; so does a vole, a hawk, a
+  raven. Rejected: layer 0 (the post pass would pull a red soul to grey-blue-green in spirit form) and layer 1 (its
+  pass redraws every playable animal, which the player in a body does not need).
+- **Its path.** 3.5 m up and 1.2 m to one side over 2.2 s, fast at first and slowing (1 - (1 - u)^2.4: "shoot up and
+  out"), swirling 1.6 times the player's resting rate, the burst's motes out of the body at the start, a 1.8x flare
+  falling to 1 (the 2.5x first tried read as a flashbulb at the kill), the fade over the second half, the form
+  shrinking to 55% by the end. Sized by the body: 0.55 of the player's wisp for the smallest to 1 for a body 1.6 m
+  tall or more (`TAG_DY` times the animal's size as the height). Grown with the eye's distance, x1 within 20 m to x8 at
+  300 m and beyond, so a kill at the hunt panel's range (400 m) still shows a mark; the near form is true size.
+- **Every death is `kill()`.** The hunts' kills, the player's catch, every path there is: `dead` is set in one
+  place. There is no starvation path for the AI in `animals.js` (the needs are the player's own, `needs.js`), so one
+  hook covers all deaths; a future one goes through `kill`. The player's own body is excluded by id (the player is
+  the spirit already). The carrion loses its glow and column, since the soul has gone, and a spirit can no longer
+  enter a carcass (it could, before: `playableNear` did not look at `dead`).
+- **The columns' scale: the log of the inverse frequency.** Every soul carries a column in spirit form (the lion's
+  beacon generalised: one instanced quad each, the height an instance attribute, cap 1024 as the glow's). Heights run
+  from 0.3 m for the most abundant species to 90 m for the rarest (the lion's, as it was), with the log of the height
+  linear in the log of the inverse of the species' expected population (`expectedPerKm2`, the game's own spawn rules;
+  the vole's 650 per km2 against the lion's 0.23, a ratio of 2800). The rarity rank that colours the souls was the
+  other candidate; it is evenly spaced, but it splits the deer from the buck and the woodpecker from the female,
+  which are one population each, so the two sexes would stand under columns of different heights. On this scale:
+  vole 0.30 m, lizard 0.52, rabbit 0.54, quail 0.57, gray squirrel 0.60, woodpecker 0.73, scrub-jay 1.03, Steller's
+  jay and mountain quail 1.15, jackrabbit 1.54, ground squirrel 1.81, fox 3.7, raven 3.8, deer and buck 4.5,
+  coyote 6.3, turkey 7.0, vulture 19, hawk 21, bear 78, lion 90. The width grows with the square root of the height
+  (0.26 m per sqrt m, at most 2.5 m: the lion's 2.47), so a vole's is a 14 cm thread and a deer's half a metre wide.
+  Brightness 0.385, the beacon's 0.55 less 30% (Aaron), for every column alike; the lion's glow keeps its beacon
+  size and its no-fade with distance. `window.__we.spirit.view.allColumns = false` gives the beacon-only build
+  (a debugging handle, for the measurement below).
+- **The cost: about 0.06 to 0.08 ms a frame.** Measured on the home tile with `EXT_disjoint_timer_query_webgl2`
+  (available on this Chrome and Metal): the column draw repeated 30 times a frame inside a GPU timer query from the
+  mesh's `onAfterRender` (`renderBufferDirect`), the median over 35 to 47 frames divided by 30, against an empty
+  query (median 0 ms) and against the beacon-only build. At the start view (the spirit 150 m up over the tile's
+  centre, 272 columns in the live set): 2.40 ms for 30 draws, 0.080 ms a frame; the beacon-only build drew nothing
+  there (no lion within 400 m). At a deer herd (the spirit 2.5 m up beside three bedded deer, 223 columns, a mother
+  lion and her young 230 m off): 1.71 ms for 30 draws, 0.057 ms a frame, against 1.50 ms, 0.050 ms, for the two lion
+  columns alone. The columns are filled in the loop that already fills the glow; nothing new is allocated. Well under
+  the 0.5 ms Aaron set, so they ship with no radius cut. Caveat: the browser pane ran at 7 to 12 frames a second
+  during the measurement (six sessions' viewers were open on the machine), the means were noisy (one sample of 238 ms
+  when the page janked) and only the medians are quoted; a quiet machine would read lower, not higher.
+
+Verified in the worktree's viewer on the home tile: a lion's kill of a deer (the catch harness's hunt, the deer blind
+to the lion) with the deer's yellow-green soul rising and swirling out of the body under the lion's red column, seen
+as the spirit; the same seen as a coyote 5 m away in daylight (the kill forced through `kill` with the lion as the
+killer, since the real hunt's kill landed 40 m off), rising to half its course; the lion's column dimmed; columns on
+a herd of three deer (4.5 m), a rabbit (0.54 m, blue-violet) and a vole (0.30 m, a purple glow with a thread of
+column); the counts and heights above; a second lion kill followed over the soul's whole course, the slot freed and
+nothing left at the end; two souls placed on open ground 100 m and 320 m from the spirit (the pool's `spawn`
+called directly) showing as a clear green glow and a small green mark against the frame after they had gone; no
+console errors from the new code (one 404 for a tile file the worktree had not symlinked). Not verified: a soul
+from a real kill at 300 m (the one tried lay behind trees), touch and narrow screens, a second world after
+`dispose` (`SpiritControl.dispose` exists for `main.js` to call in `disposeWorld`; `main.js` is another lane's
+file today, so the kill listener of an abandoned world is guarded by a flag until then), the frame cost on a quiet
+machine.

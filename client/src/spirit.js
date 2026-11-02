@@ -1,6 +1,6 @@
 import * as THREE from 'three';
 import { uniforms as atmo } from './atmosphere.js';
-import { SELF_LIT, rarityColor } from './animals.js';
+import { SELF_LIT, rarityColor, expectedPerKm2 } from './animals.js';
 import { bodyKind } from './playable.js';
 
 // The spirit: the form the player starts in (main.js enter). A glowing, swirling wisp flown with the raven's keys
@@ -85,9 +85,17 @@ const GLOW_LUM = [0.55, 1.4], GLOW_BUBBLE = 2.4, GLOW_BUBBLE_A = 0.09;
 // GLOW_RARE_SIZE. BEACON: species whose souls are a test beacon, lit full and large at any distance (owner, 2026-10-27:
 // "make it extremely bright or obvious where the mountain lions are even from far away").
 const GLOW_REACH = [250, 600], GLOW_RARE_SIZE = 1.6, BEACON = new Set(['puma_concolor']), BEACON_LUM = 2.4, BEACON_SIZE = 5.0;   // BEACON_LUM: 30% of the 8 it was (owner, 2026-10-27)
-// A beacon animal also carries a beam: a BEAM_H m column of light BEAM_W m wide over it, a billboard turning about the
-// vertical, additive, hidden by what stands between (depth-tested), in its soul's colour, at 30% of its first brightness.
-const BEAM_CAP = 32, BEAM_W = 2.5, BEAM_H = 90;
+// Every soul carries a column of light over it (owner, 2026-11-01; first the beacon's alone, 2026-10-27): a billboard
+// turning about the vertical, additive, hidden by what stands between (depth-tested), in the soul's colour, at COL_LUM
+// (the beacon's 0.55 less 30%, owner). Its height is the species' rarity: COL_H[0] m (about a foot) for the most
+// abundant species to COL_H[1] m for the rarest (the mountain lion, as its beacon was), the log of the height linear in
+// the log of the inverse frequency (animals.js expectedPerKm2, the game's own expected population; the rarity rank the
+// colours use would split the deer from the buck, which are one population): on this scale a rabbit's is about half a
+// metre, a jay's a metre, a deer's 4.5 m, a coyote's 6 m, a hawk's 20 m, a bear's 80 m. Its width grows with the square
+// root of its height, COL_W[1] m per sqrt(m), at most COL_W[0] m (the lion's 2.5 as before). One column per soul
+// (GLOW_CAP), only in spirit form. allColumns (SpiritLook, a debugging handle: window.__we.spirit.view.allColumns)
+// false gives the beacon species' columns alone, the build before this one, for measuring the cost.
+const COL_H = [0.3, 90], COL_W = [2.5, 0.26], COL_LUM = 0.385;
 const COOL = new THREE.Color(0.6, 0.78, 1.0), WARM = new THREE.Color(1.0, 0.84, 0.58), WHITE = new THREE.Color(0.9, 0.95, 1.0);
 const smooth = u => u * u * (3 - 2 * u);
 
@@ -98,8 +106,10 @@ export class SpiritControl {
     this.fx = null;                      // the flash: { kind: 'in' | 'out', t, dur, from, lift }
     this.coolT = 0; this.ignoreId = null; this.swell = 0; this.prevP = new THREE.Vector3(); this._p = new THREE.Vector3();
     this.wisp = new Wisp({ renderer, camera, scene, layer: 1 });   // layer 1: drawn over the spirit's view (SpiritLook.render)
+    this.souls = new SoulPool({ renderer, camera, scene, animals, maps: this.wisp.maps });   // the souls leaving the dead (SoulPool), in every form
+    this.unhook = animals.on?.('kill', e => { if (!this.gone && e.id !== this.body?.id) this.souls.spawn(e); }) || null;   // not the player's own body
     this.blend = new CameraBlend(camera, flight);
-    this.view = new SpiritLook(scene, renderer, atmosphere, animals, flight, camera, this.wisp);
+    this.view = new SpiritLook(scene, renderer, atmosphere, animals, flight, camera, this.wisp, this.souls);
     this._q = new THREE.Vector3();
     // the HUD's words as index.html has them (the raven's); hud(on) swaps the spirit's in and back
     const $ = id => document.getElementById(id), h1 = $('hud')?.querySelector('h1'), near = $('animalsNear')?.parentElement;
@@ -238,6 +248,13 @@ export class SpiritControl {
     this.swell += (want - this.swell) * (1 - Math.exp(-dt * SWELL_K));
     const sw = this.swell;
     this.wisp.update(dt, P, f.yaw, show, grow, bright, REST_SCALE + (1 - REST_SCALE) * sw, REST_LUM + (1 - REST_LUM) * sw, 1 + (SWELL_SWIRL - 1) * sw);
+    this.souls.update(dt);   // the souls leaving the dead, whatever form the player is in (nothing while none is out)
+  }
+  // A world's teardown: the kill listener off (the Animals may outlive this world), the souls' and the wisp's GPU
+  // resources and the look's passes freed.
+  dispose() {
+    this.gone = true; this.unhook?.(); this.unhook = null;
+    this.souls.dispose(); this.wisp.dispose(); this.view.dispose();
   }
   // main.js, right after the Atmosphere's frame update: the spirit's view, fading in while a spirit, out otherwise.
   look(dt) { this.view.update(dt, this.on); }
@@ -251,9 +268,9 @@ export class SpiritControl {
 // The spirit's view (see the header). update() runs after Atmosphere.update has set this frame's light and haze and
 // before SkyDome.update copies them to the sun and hemisphere lights, so the lights follow too.
 class SpiritLook {
-  constructor(scene, renderer, atmosphere, animals, flight, camera, wisp) {
-    Object.assign(this, { scene, renderer, atmosphere, animals, flight, camera, wisp });
-    this.amt = 0; this.k = 0; this._c = new THREE.Color(); this._b = new THREE.Vector2();
+  constructor(scene, renderer, atmosphere, animals, flight, camera, wisp, souls = null) {
+    Object.assign(this, { scene, renderer, atmosphere, animals, flight, camera, wisp, souls });
+    this.amt = 0; this.k = 0; this._c = new THREE.Color(); this._b = new THREE.Vector2(); this.allColumns = true;
     scene.traverse(o => { if (o.isLight) o.layers.enable(1); });   // the layer-1 redraw is lit as the first draw
     // the sky's veil: a shell past the land (the dome sits at the far plane, so only sky pixels are behind the shell), a
     // the colour the mist reaches far off (the haze's horizon radiance, tone mapped and post-passed as the land's is), from
@@ -360,42 +377,49 @@ class SpiritLook {
     this.glow = new THREE.Mesh(g, this.glowMat); this.glow.frustumCulled = false; this.glow.renderOrder = 9; this.glow.name = 'spirit glow';
     this.glow.layers.set(1);
     scene.add(this.glow);
-    // the beacon beams (BEACON species)
+    // the columns over the souls (COL_*): one quad each, its height an instance attribute
     const bg = new THREE.InstancedBufferGeometry().copy(new THREE.PlaneGeometry(2, 2));
-    this.bp = new Float32Array(BEAM_CAP * 3); bg.setAttribute('aPos', new THREE.InstancedBufferAttribute(this.bp, 3).setUsage(THREE.DynamicDrawUsage));
-    this.bc = new Float32Array(BEAM_CAP * 3); bg.setAttribute('aColor', new THREE.InstancedBufferAttribute(this.bc, 3).setUsage(THREE.DynamicDrawUsage));
+    this.bp = new Float32Array(GLOW_CAP * 3); bg.setAttribute('aPos', new THREE.InstancedBufferAttribute(this.bp, 3).setUsage(THREE.DynamicDrawUsage));
+    this.bc = new Float32Array(GLOW_CAP * 3); bg.setAttribute('aColor', new THREE.InstancedBufferAttribute(this.bc, 3).setUsage(THREE.DynamicDrawUsage));
+    this.bh = new Float32Array(GLOW_CAP); bg.setAttribute('aH', new THREE.InstancedBufferAttribute(this.bh, 1).setUsage(THREE.DynamicDrawUsage));
     bg.instanceCount = 0;
+    // each species' column height (m), by the log of its inverse frequency (see COL_H)
+    { const sl = animals.speciesList(), f = sl.map((s, k) => expectedPerKm2(k)), fmax = Math.max(...f), fmin = Math.min(...f.filter(v => v > 0));
+      this.colH = f.map(v => COL_H[0] * Math.pow(COL_H[1] / COL_H[0], Math.log(fmax / Math.max(v, fmin)) / Math.log(fmax / fmin))); }
     this.beamMat = new THREE.ShaderMaterial({
-      uniforms: { uAmt: { value: 0 }, uSize: { value: new THREE.Vector2(BEAM_W, BEAM_H) } },
+      uniforms: { uAmt: { value: 0 }, uSize: { value: new THREE.Vector2(COL_W[0], COL_W[1]) }, uLum: { value: COL_LUM } },
       vertexShader: /* glsl */`
-        attribute vec3 aPos; attribute vec3 aColor; uniform vec2 uSize;
+        attribute vec3 aPos; attribute vec3 aColor; attribute float aH; uniform vec2 uSize;   // aH: the column's height (m); uSize: the widest column, the width per sqrt(m) of height
         varying vec2 vUv; varying vec3 vColor;
         void main() {
           vec3 toCam = cameraPosition - aPos; toCam.y = 0.0;
           vec3 fwd = normalize(toCam + vec3(1e-4, 0.0, 0.0)), right = normalize(cross(vec3(0.0, 1.0, 0.0), fwd));
-          vec3 p = aPos + right * (position.x * uSize.x) + vec3(0.0, (position.y + 1.0) * 0.5 * uSize.y, 0.0);
+          float w = min(uSize.x, uSize.y * sqrt(aH));
+          vec3 p = aPos + right * (position.x * w) + vec3(0.0, (position.y + 1.0) * 0.5 * aH, 0.0);
           vUv = position.xy; vColor = aColor;
           gl_Position = projectionMatrix * viewMatrix * vec4(p, 1.0);
         }`,
       fragmentShader: /* glsl */`
-        uniform float uAmt; varying vec2 vUv; varying vec3 vColor;
+        uniform float uAmt, uLum; varying vec2 vUv; varying vec3 vColor;
         void main() {
           float x = abs(vUv.x), t = (vUv.y + 1.0) * 0.5;
-          float a = (1.0 - smoothstep(0.0, 1.0, x)) * (1.0 - t * t) * uAmt * 0.55;   // soft sides, fading up; 30% of the 1.8 it was
+          float a = (1.0 - smoothstep(0.0, 1.0, x)) * (1.0 - t * t) * uAmt * uLum;   // soft sides, fading up
           if (a < 0.003) discard;
           gl_FragColor = vec4(vColor * a, 1.0);
         }`,
       transparent: true, depthWrite: false, depthTest: true, blending: THREE.AdditiveBlending, toneMapped: false });   // depthTest: the trees hide it (owner, 2026-10-27)
-    this.beam = new THREE.Mesh(bg, this.beamMat); this.beam.frustumCulled = false; this.beam.renderOrder = 10; this.beam.name = 'beacon beams';
+    this.beam = new THREE.Mesh(bg, this.beamMat); this.beam.frustumCulled = false; this.beam.renderOrder = 10; this.beam.name = 'soul columns';
     this.beam.layers.set(1);
     scene.add(this.beam);
   }
   // In place of renderer.render(scene, camera) (main.js): the frame, then while the look is on the post pass and the
-  // layer-1 redraw; with the look off but the wisp shown (the arrival, a jump's dive), the layer-1 draw alone.
+  // layer-1 redraw; with the look off but the wisp shown (the arrival, a jump's dive), the layer-1 draw alone; then,
+  // while any soul is leaving a body (SoulPool), the layer-2 draw of the souls, in any form, over the pass and the
+  // redraw so their colour stands (no light is on layer 2: the souls' materials need none, and no shadow pass runs).
   render(renderer, scene, camera) {
     renderer.render(scene, camera);
-    const k = this.k, wisp = this.wisp.group.visible;
-    if (k <= 0.001 && !wisp) return;
+    const k = this.k, wisp = this.wisp.group.visible, souls = this.souls?.n > 0;
+    if (k <= 0.001 && !wisp && !souls) return;
     const ac = renderer.autoClear; renderer.autoClear = false;
     if (k > 0.001) {
       const P = this.post, b = renderer.getDrawingBufferSize(this._b);
@@ -404,9 +428,14 @@ class SpiritLook {
       this.postMat.uniforms.uWarm.value = POST_WARM * k; this.postMat.uniforms.uContrast.value = POST_CONTRAST * k;
       renderer.render(P.scene, P.cam);
     }
-    const mask = camera.layers.mask; camera.layers.set(1);
-    renderer.render(scene, camera);
+    const mask = camera.layers.mask;
+    if (k > 0.001 || wisp) { camera.layers.set(1); renderer.render(scene, camera); }
+    if (souls) { camera.layers.set(SOUL_LAYER); renderer.render(scene, camera); }
     camera.layers.mask = mask; renderer.autoClear = ac;
+  }
+  dispose() {
+    for (const o of [this.shell, this.glow, this.beam]) { o.removeFromParent(); o.geometry.dispose(); o.material.dispose(); }
+    this.post.tex?.dispose(); this.postMat.dispose(); this.post.scene.children[0]?.geometry.dispose();
   }
   update(dt, on) {
     this.amt = Math.min(1, Math.max(0, this.amt + (on ? dt : -dt) / LOOK_T));
@@ -437,17 +466,18 @@ class SpiritLook {
     su.uVeil.value = LOOK_VEIL * k; su.uContrast.value = POST_CONTRAST * k;
     su.uGlow.value.copy(LOOK_GLOW).multiplyScalar(glowL * k);
     // the glow
-    let n = 0, b = 0; const gp = this.gp, gc = this.gc, bp = this.bp, bc = this.bc, rar = this.animals.rarity, cols = this.glowCols ||= [], sl = this.animals.speciesList();
+    let n = 0, b = 0; const gp = this.gp, gc = this.gc, bp = this.bp, bc = this.bc, bh = this.bh, colH = this.colH, all = this.allColumns, rar = this.animals.rarity, cols = this.glowCols ||= [], sl = this.animals.speciesList();
+    const isBeacon = this.beacons ||= sl.map(sp => BEACON.has(sp.code.split(':')[0]));
     this.animals.eachPlayable((x, y, z, s) => {
       if (n >= GLOW_CAP) return;
       gp[n * 3] = x; gp[n * 3 + 1] = y; gp[n * 3 + 2] = z;
-      const c = cols[s] ||= rarityColor(rar[s]), beacon = BEACON.has(sl[s].code.split(':')[0]);   // the species' soul colour (once per species); a its rarity, 2 for a beacon species
+      const c = cols[s] ||= rarityColor(rar[s]), beacon = isBeacon[s];   // the species' soul colour (once per species); a its rarity, 2 for a beacon species
       gc[n * 4] = c.r; gc[n * 4 + 1] = c.g; gc[n * 4 + 2] = c.b; gc[n * 4 + 3] = beacon ? 2 : rar[s];
-      if (beacon && b < BEAM_CAP) { bp[b * 3] = x; bp[b * 3 + 1] = y; bp[b * 3 + 2] = z; bc[b * 3] = c.r; bc[b * 3 + 1] = c.g; bc[b * 3 + 2] = c.b; b++; }
+      if (all || beacon) { bp[b * 3] = x; bp[b * 3 + 1] = y; bp[b * 3 + 2] = z; bc[b * 3] = c.r; bc[b * 3 + 1] = c.g; bc[b * 3 + 2] = c.b; bh[b] = colH[s]; b++; }   // its column (COL_H)
       n++;
     });
     this.glow.geometry.instanceCount = n; this.glow.geometry.attributes.aPos.needsUpdate = true; this.glow.geometry.attributes.aColor.needsUpdate = true;
-    this.beam.geometry.instanceCount = b; this.beam.geometry.attributes.aPos.needsUpdate = true; this.beam.geometry.attributes.aColor.needsUpdate = true;
+    this.beam.geometry.instanceCount = b; this.beam.geometry.attributes.aPos.needsUpdate = true; this.beam.geometry.attributes.aColor.needsUpdate = true; this.beam.geometry.attributes.aH.needsUpdate = true;
     this.beamMat.uniforms.uAmt.value = k; this.beam.visible = b > 0 && k > 0.001;
     this.glowMat.uniforms.uSpirit.value.copy(this.flight.pos); this.glowMat.uniforms.uAmt.value = k;
   }
@@ -554,10 +584,22 @@ function mistTexture(n = 128) {
   const t = new THREE.CanvasTexture(cv); t.colorSpace = THREE.NoColorSpace; return t;
 }
 
+// The warm core sprite's gradient, on a canvas.
+function coreTexture() {
+  const cv = document.createElement('canvas'); cv.width = cv.height = 64;
+  const g = cv.getContext('2d'), grad = g.createRadialGradient(32, 32, 0, 32, 32, 32);
+  grad.addColorStop(0, 'rgba(255,255,255,1)'); grad.addColorStop(0.2, 'rgba(255,255,255,0.6)'); grad.addColorStop(0.55, 'rgba(255,255,255,0.12)'); grad.addColorStop(1, 'rgba(255,255,255,0)');
+  g.fillStyle = grad; g.fillRect(0, 0, 64, 64);
+  const map = new THREE.CanvasTexture(cv); map.colorSpace = THREE.SRGBColorSpace; return map;
+}
+
 // The wisp on its own (exported: the opening screen's spinner uses it too). No flight, atmosphere or game: it needs the
 // renderer (for the drawing buffer's size) and the camera it is seen through (its position and lens), both only in
 // update. API:
-//   new Wisp({ renderer, camera, scene = null, layer = 0 })   builds it; `group` is its Object3D (added to scene if given)
+//   new Wisp({ renderer, camera, scene = null, layer = 0, maps = null })   builds it; `group` is its Object3D (added to scene if given);
+//                                  maps: another wisp's `maps` (its mist and core textures) to share, else its own are made
+//   setTint(color)                 its colours from one (a soul's: the head paler, the tail and mist the colour itself,
+//                                  the motes nearly white); the player's are WARM, COOL and WHITE
 //   setSwell(s)                    0 the resting form (REST_SCALE, REST_LUM), 1 full size, brightness and swirl
 //   animate(dt, position?, yaw?)   a frame for a standalone wisp: shown, at `position` (a Vector3, default the origin),
 //                                  its ribbons trailing up and back from `yaw` (rad, the flight's frame) when still;
@@ -566,8 +608,10 @@ function mistTexture(n = 128) {
 //   dispose()                      off its parent, geometries, materials and textures freed
 // Its parts are world-space and drawn on `layer` (the spirit uses 1); give its camera that layer.
 export class Wisp {
-  constructor({ renderer, camera, scene = null, layer = 0 } = {}) {
+  constructor({ renderer, camera, scene = null, layer = 0, maps = null } = {}) {
     this.renderer = renderer; this.camera = camera; this.t = 0; this.ph = 0; this.swellK = 0; this._origin = new THREE.Vector3();
+    this.warm = WARM.clone(); this.cool = COOL.clone(); this.white = WHITE.clone();
+    this.maps = maps || { mist: mistTexture(), core: coreTexture() }; this.ownMaps = !maps;
     const add = { transparent: true, depthWrite: false, blending: THREE.AdditiveBlending, toneMapped: false };
     // ribbons and motes: one mesh of strips and quads
     const RV = RIBBONS * (SEG + 1) * 2, V = RV + MOTES * 4;
@@ -585,15 +629,10 @@ export class Wisp {
     this.mp = new Float32Array(MIST * 3); this.mc = new Float32Array(MIST * 3); this.ms = new Float32Array(MIST); this.mr = new Float32Array(MIST);
     const mg = new THREE.BufferGeometry();
     mg.setAttribute('position', dyn(this.mp, 3)); mg.setAttribute('aCol', dyn(this.mc, 3)); mg.setAttribute('aSize', dyn(this.ms, 1)); mg.setAttribute('aRot', dyn(this.mr, 1));
-    this.mistMat = new THREE.ShaderMaterial({ uniforms: { uScale: { value: 500 }, uMap: { value: mistTexture() } }, vertexShader: MIST_VERT, fragmentShader: MIST_FRAG, ...add });
+    this.mistMat = new THREE.ShaderMaterial({ uniforms: { uScale: { value: 500 }, uMap: { value: this.maps.mist } }, vertexShader: MIST_VERT, fragmentShader: MIST_FRAG, ...add });
     this.mist = new THREE.Points(mg, this.mistMat); this.mist.frustumCulled = false; this.mist.renderOrder = 7; this.mist.name = 'spirit mist';
-    // the core: a small warm sprite, its gradient a canvas
-    const cv = document.createElement('canvas'); cv.width = cv.height = 64;
-    const g = cv.getContext('2d'), grad = g.createRadialGradient(32, 32, 0, 32, 32, 32);
-    grad.addColorStop(0, 'rgba(255,255,255,1)'); grad.addColorStop(0.2, 'rgba(255,255,255,0.6)'); grad.addColorStop(0.55, 'rgba(255,255,255,0.12)'); grad.addColorStop(1, 'rgba(255,255,255,0)');
-    g.fillStyle = grad; g.fillRect(0, 0, 64, 64);
-    const map = new THREE.CanvasTexture(cv); map.colorSpace = THREE.SRGBColorSpace;
-    this.core = new THREE.Sprite(new THREE.SpriteMaterial({ map, color: WARM.clone(), fog: false, ...add }));
+    // the core: a small warm sprite, its gradient a canvas (coreTexture)
+    this.core = new THREE.Sprite(new THREE.SpriteMaterial({ map: this.maps.core, color: WARM.clone(), fog: false, ...add }));
     this.core.renderOrder = 9; this.core.name = 'spirit core';
     this.group = new THREE.Group(); this.group.add(this.mist, this.ribbons, this.core); this.group.visible = false; this.group.name = 'wisp';
     for (const o of [this.mist, this.ribbons, this.core]) o.layers.set(layer);
@@ -617,9 +656,10 @@ export class Wisp {
   }
   dispose() {
     this.group.removeFromParent();
-    for (const o of [this.mist, this.ribbons, this.core]) { o.geometry.dispose(); o.material.map?.dispose(); o.material.dispose(); }
-    this.mistMat.uniforms.uMap.value?.dispose();
+    for (const o of [this.mist, this.ribbons, this.core]) { o.geometry.dispose(); o.material.dispose(); }
+    if (this.ownMaps) { this.maps.mist.dispose(); this.maps.core.dispose(); }   // shared maps are their maker's to free
   }
+  setTint(c) { this.warm.copy(c).lerp(WHITE, 0.45); this.cool.copy(c); this.white.copy(c).lerp(WHITE, 0.7); }
   reset(P) { this.last.copy(P); this.vel.set(0, 0, 0); this.hn = 0; for (const m of this.motes) m.age = m.life = 1; }
   // Motes outward and up from P (rising out of a body).
   burst(P) {
@@ -637,6 +677,7 @@ export class Wisp {
   update(dt, P, yaw, show, grow, bright, scale = 1, lum = 1, swirl = 1) {
     if (show !== this.shown) { this.shown = show; this.group.visible = show; if (show) this.reset(P); }
     if (!show) return;
+    const WARM = this.warm, COOL = this.cool, WHITE = this.white;   // this wisp's colours (setTint), the player's by default
     this.t += dt; this.ph += dt * swirl; const t = this.t, sw = this.ph, ks = scale, cam = this.camera.position;
     if (dt > 0) { this._v.subVectors(P, this.last).divideScalar(dt); if (this._v.lengthSq() > 200 * 200) { this._v.set(0, 0, 0); this.hn = 0; } this.vel.lerp(this._v, 1 - Math.exp(-dt * 8)); }
     const spd = this.vel.length(), vx = spd > 0.05 ? this.vel.x / spd : 0, vy = spd > 0.05 ? this.vel.y / spd : 0, vz = spd > 0.05 ? this.vel.z / spd : 0;
@@ -732,4 +773,62 @@ export class Wisp {
     this.core.material.color.copy(WARM).multiplyScalar(Math.min(3, 0.9 * lum * bright));
     this.last.copy(P);
   }
+}
+
+// ---- the souls leaving the dead ------------------------------------------------------------------------------
+// A soul leaves every animal that dies (owner, 2026-11-01; animals.js kill: the hunts' kills and the player's catch,
+// every death there is; its 'kill' event carries the species, the body's height and where it lies): a wisp like the
+// player's, in that species' soul colour (rarityColor by its rarity, the colour the spirit's view gives its glow),
+// shooting up SOUL_RISE m and SOUL_OUT m to one side over SOUL_T s, fast at first and slowing, swirling SOUL_SWIRL
+// times as fast as the player's at rest, flaring at the start with the burst's motes and fading out over the second
+// half, shrinking a little as it goes. Scaled by the body (SOUL_SIZE[0] of the player's wisp for the smallest to
+// SOUL_SIZE[1] for a body SOUL_BIG m tall and up: a vole's a little smaller than a deer's) and grown with the eye's
+// distance (x1 within SOUL_FAR[0] m to x SOUL_FAR[2] at SOUL_FAR[1] m and beyond) so a kill seen from the hunt panel's
+// range (400 m) still shows it. Seen in every form, not only the spirit's: the pool's wisps are on camera layer
+// SOUL_LAYER, which SpiritLook.render draws after the world and after the spirit's post pass and redraw, so the colour
+// is not cooled, depth-tested against the world. SOULS wisps built once, sharing the player's wisp's textures, and
+// reused (the oldest taken when all are out); nothing is allocated at a death and nothing is left behind: a finished
+// wisp is hidden and costs nothing. Not for the player's own body (SpiritControl's listener).
+const SOULS = 6, SOUL_LAYER = 2, SOUL_T = 2.2, SOUL_RISE = 3.5, SOUL_OUT = 1.2, SOUL_SWIRL = 1.6;
+const SOUL_SIZE = [0.55, 1.0], SOUL_BIG = 1.6, SOUL_FAR = [20, 300, 8];
+class SoulPool {
+  constructor({ renderer, camera, scene, animals, maps = null }) {
+    this.camera = camera; this.animals = animals; this.n = 0;
+    this.slots = [];
+    for (let i = 0; i < SOULS; i++) {
+      const w = new Wisp({ renderer, camera, scene, layer: SOUL_LAYER, maps: maps || this.slots[0]?.wisp.maps || null });
+      w.group.name = 'soul ' + i;
+      this.slots.push({ wisp: w, t: Infinity, p0: new THREE.Vector3(), dx: 0, dz: 0, sz: 1 });
+    }
+    this._p = new THREE.Vector3(); this._c = new THREE.Color();
+  }
+  // A death (animals.js 'kill'): e.sp its species index, e.h the body's height (m), e.x/y/z where it lies.
+  spawn(e) {
+    let s = null; for (const o of this.slots) if (!s || o.t > s.t) s = o;   // a free slot (t Infinity), else the oldest
+    const w = s.wisp, a = Math.random() * Math.PI * 2, h = e.h || 0.5;
+    s.t = 0; s.p0.set(e.x, e.y + 0.35 * h, e.z); s.dx = Math.cos(a); s.dz = Math.sin(a);
+    s.sz = SOUL_SIZE[0] + (SOUL_SIZE[1] - SOUL_SIZE[0]) * Math.min(1, h / SOUL_BIG);
+    w.setTint(rarityColor(this.animals.rarity[e.sp] ?? 0.5, this._c));
+    w.update(0, s.p0, 0, true, 1, 1, s.sz, 0, 1);   // shown (which resets it), dark; then the burst's motes out of the body
+    w.burst(s.p0);
+    this.n++;
+  }
+  update(dt) {
+    if (!this.n) return;
+    let n = 0; const cam = this.camera.position, P = this._p;
+    for (const s of this.slots) {
+      if (s.t === Infinity) continue;
+      s.t += dt;
+      const u = s.t / SOUL_T;
+      if (u >= 1) { s.t = Infinity; s.wisp.update(0, s.p0, 0, false, 1, 1); continue; }   // hidden
+      const rise = SOUL_RISE * (1 - Math.pow(1 - u, 2.4)), out = SOUL_OUT * (1 - (1 - u) * (1 - u));
+      P.set(s.p0.x + s.dx * out, s.p0.y + rise, s.p0.z + s.dz * out);
+      const fade = smooth(Math.min(1, u / 0.08)) * (1 - smooth(Math.max(0, (u - 0.4) / 0.6)));
+      const dc = P.distanceTo(cam), far = 1 + (SOUL_FAR[2] - 1) * Math.min(1, Math.max(0, (dc - SOUL_FAR[0]) / (SOUL_FAR[1] - SOUL_FAR[0])));
+      s.wisp.update(dt, P, 0, true, 1 - 0.45 * u * u, 1 + 0.8 * (1 - u) * (1 - u), s.sz * far, fade, SOUL_SWIRL);
+      n++;
+    }
+    this.n = n;
+  }
+  dispose() { for (const s of this.slots) s.wisp.dispose(); }
 }
