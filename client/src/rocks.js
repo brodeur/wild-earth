@@ -5,6 +5,7 @@ import { hash, placementSkip } from './vegetation.js';
 import { STRIKE_DEG } from './tilepackage.js';
 import { chainShader } from './treegen.js';
 import { addCaster } from './shadows.js';
+import { emergentRocksIn } from './water.js';
 
 // Rock outcrops and boulders placed from the geology and soils step (docs/tile-spec.md "Geology and
 // soils"; decision 2026-10-25 "rocks come from geology and soils data"). Nothing here is downloaded:
@@ -968,6 +969,7 @@ export class Rocks {
     // only on a tile without the grid, the pond-shore gravel band on every tile.
     const wg = this.tile.water;
     if (wg) this.bedStones(i, j, d, mode, wg, pebble, bould, countOnly);
+    this.riverRocks(i, j, d, mode, bould, countOnly);
     const wet = mode === 'full' ? null : this.wetIn(i, j, !!wg);
     if (wet) this.waterStones(i, j, d, wet, pebble);
     const result = mode === 'peb' ? (peb.length ? peb : null) : mode === 'count' ? { out, bould, peb }
@@ -1088,6 +1090,27 @@ export class Rocks {
       for (let m = 0; m < nb; m++) { const [x, n2] = at(); boulder(x, n2, (0.5 + 1.0 * Math.pow(r5(), 1.2)) * big); }
       const nc = 14 + Math.floor(r5() * 10);
       for (let m = 0; m < nc; m++) { const [x, n2] = at(); pebble(x, n2, Math.min(0.39, (0.12 + 0.27 * r5()) * big), 1, r5, col()); }
+    }
+  }
+  // The white water's emergent rocks (water.js walkFoam, emergentRocksIn; docs/decisions.md "White water"): on the
+  // boulder cascades a boulder at each place the water shader draws a wake, its top standing clear of the water (the
+  // depth there plus 0.3 m plus half its radius), rounder and lower than a bank boulder. Own stream SALT + 19, the
+  // same draws in 'full' and 'count' so the census agrees.
+  riverRocks(i, j, d, mode, bould, countOnly) {
+    if (mode !== 'full' && mode !== 'count') return;
+    const res = this.res, size = this.tile.size, x0 = i * res, n1 = size - j * res;
+    const rocks = emergentRocksIn(x0, n1 - res, x0 + res, n1); if (!rocks.length) return;
+    const r6 = mulberry32(hash(i, j, SALT + 19)), cls = d.cls && LOOK[d.cls] ? d.cls : 'other';
+    for (const rk of rocks) {
+      const v = Math.floor(r6() * VARIANTS), az = r6() * Math.PI * 2, lean = (r6() - 0.5) * 0.15, t = 0.9 + 0.2 * r6(), hue = (r6() - 0.5) * 0.06, sz2 = 0.85 + 0.3 * r6();
+      if (rk.x < 0 || rk.north < 0 || rk.x > size || rk.north > size) continue;
+      if (countOnly) { bould.push(1); continue; }
+      const dims = this.dimsOf(cls, 'bould', v);
+      const depth = Math.max(0, (rk.level ?? rk.bed) - rk.bed), sx = 2 * rk.r;
+      const want = depth + 0.3 + 0.5 * rk.r;   // the top this far over the bed, the sink (place) allowed for
+      const sy = Math.min(2.0, Math.max(0.5, want * 1.3 / Math.max(0.1, dims.hgt * sx)));
+      const m = this.place(rk.x, rk.north, az, lean, sx, sy, sz2, dims, new Float32Array(16));
+      bould.push({ key: `${cls}|${v}`, m, c: [t * (1 + hue) * 0.95, t * 0.95, t * (1 - hue) * 0.93], x: rk.x, y: m[13], z: -rk.north, s: Math.max(Math.hypot(m[0], m[1], m[2]), Math.hypot(m[8], m[9], m[10])) });
     }
   }
   // Water-worn cobble and gravel on the dry bed and banks of each stream through the cell, between

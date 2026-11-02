@@ -2901,6 +2901,106 @@ import, `meshFor` (LegsBody), `useSpecies` (reset), the stalk's pose line, `draw
 instead of driveClips for a legs body, the turn table); `animalModels.js` the skin shader's SKIN_LIVE branch, `skinDecl`,
 `loadClips` / `loadTiers` / `restOnlySkin` (the live rows, `model.legs`, `model.live`), the four loaders.
 
+## 2026-11-01: white water that reads as water in motion (branch claude/water-whitewater-dc7695)
+
+Aaron: "I see there is white water, but it ends up looking like a misty haze." He asked for the research on how to get
+the water flowing right, then a lane to do it.
+
+**The diagnosis, checked in the code and the viewer.** In water.js the white water was one term, `froth`: a scrolling
+value-noise threshold where the riffle index was high, mixed 50 % into the water's body colour and only within the
+`coarse` distance: low in contrast, half transparent, shapeless, unrelated to rocks, drops or banks, so it read as a
+pale mist lying on the surface (the before captures: a Weber Creek riffle from a deer's eye is a grey-blue sheet with
+faint lighter streaks; the Hangtown Creek cascade from 6 m up is a translucent pale wash over the bed). In waterfall.js
+the curtain dissolved into "mist" over its lower part, the plunge was one soft radial billboard, and the run-out fell
+off over 10-30 m: three soft translucent things with no opaque white boil and no structure. Also found: the ripples and
+the froth scrolled by `uTime * speed` with the speed varying across the surface (riffles run 1.6 times faster than
+pools), so the pattern sheared without bound over the minutes of a session.
+
+**The reading** (kept short so the next person knows what came from where):
+- Vlachos, "Water Flow in Portal 2" (SIGGRAPH 2010 Advances course): the two-phase flow-map trick, two samples of the
+  texture offset by half a cycle of the scroll and blended by a triangle wave, so an advected texture never stretches
+  or snaps where the flow varies. Taken whole, for the ripples and the foam; the blend is renormalised so the coverage
+  does not pulse with the phase.
+- Yu, Neyret, Bruneton and Holzschuch, "Scalable real-time animation of rivers" (Eurographics 2009) and Proland's river
+  plugin: detail that rides a steady flow field (wave sprites advected along it). Taken as the principle that the flow
+  is steady, so nothing needs simulating: the foam's sources and sinks can be walked once and baked.
+- Malan, "Rendering Water in Horizon Forbidden West" (SIGGRAPH 2022 Advances; read as the slides, which carry it):
+  the rivers get localised 2D effects (standing waves round rocks, eddies, ripples) instanced where they belong, and
+  every waterfall impact is a broad opaque region of churning foam, not a cloud (the with-and-without pair of slides 38
+  and 39 is the whole argument); foam carried in vertex colour cannot make features smaller than a triangle, so the
+  fine structure must come from the shader (slide 41). Taken: the boil as an opaque disc, the foam's structure in the
+  fragment shader with only its coverage per vertex.
+- Reference photographs (Wikimedia Commons: the South Fork American at Coloma, Lava North rapid, a creek riffle, Yosemite
+  Falls in May and in October, the base of the Lower Fall): foam is bright and nearly opaque where it exists, in lace
+  and streaks drawn out along the flow with sharp edges over dark water; a cascade is white streaks and rafts over dark
+  water between the boulders, never a flat white sheet; each boulder has a pillow of broken water upstream and a tail
+  of foam downstream; the May plume is a broad sheet with a spray cloud tens of metres across at the foot, the October
+  fall a thread with a small boil.
+
+**What was built.**
+- **The foam itself** (`FOAM_GLSL`, in waterfall.js so both water shaders share it): a lace of value noise stretched
+  along the flow (a streaky octave and a ridged finer one, the bubble lines), advected in two phases at the water's
+  speed, cut by a sharp threshold set by the coverage (`foamCut`: full coverage still leaves gaps, a cascade is never a
+  flat white sheet), nearly opaque where it is, lit as a white scattering surface (the sun by the broken surface's
+  normal, never dark on the side turned away, the sky all round) with its own tone from the field. Far off it collapses
+  to its mean, a pale patch, never to nothing (the old froth vanished past the `coarse` distance). `FOAM_TUNE` /
+  the `foamTune` uniform (coverage scale, the threshold and its fall, the brightness) can be dialled live from the
+  console; the baked values came from captures at the deer's eye and the raven's height at three settings each.
+- **Sources and sinks, walked once** (water.js `walkFoam`): every run is walked every 2.5 m on the 1 m ground, the
+  profile made non-increasing downstream as waterfall.js does, the slope taken over +-5 m; foam is made at a rate
+  rising from a 3 % slope to full at 15 % and decays downstream over 6 + 2.5 x order metres, so it trails from every
+  drop in streaks and rafts; a section's coverage is the most foam within 5 m of it, its roughness the steepest slope
+  there. Both go into the water ribbon's vertices (`aFoam`). In the shader the coverage is made patchy along the reach
+  (the profile's riffle index and a slow pattern fixed to the bed: white where the water breaks over the drops, dark in
+  the pools between) and the riffles add their own crests. Rejected: a 1-D texture per reach (a new texture unit for
+  what four floats a vertex carry).
+- **The broken surface**: on a rough stretch the ripple amplitude grows up to 2.6 times, a field of standing waves fixed
+  in flow coordinates (haystacks, only breathing in time) is added to the normal, and the glint lobe widens four times,
+  so the glint pattern breaks with the surface.
+- **Emergent rocks and their wakes**: where the bed material is boulder on a stretch at least 4 % steep (order 2+, half
+  width 0.8 m+), a rock every 1.8 x the run's median half width (at least 5 m) of arc at a hashed place across the
+  channel, its radius 0.3-1.2 m. The water shader draws each one's wake from its arc length and offset (`rHash`, an
+  integer hash shared bit for bit with JS `rockHash`, so the wake is drawn exactly where the rock is): a pillow of
+  broken water upstream, a foam tail downstream that opens into a V and lingers in the eddy, the ripples bent round it,
+  windowed out smoothly before the shader's cell range ends. rocks.js `riverRocks` places a boulder at each (its top
+  clear of the water by the depth there plus 0.3 m plus half its radius, rounder and lower than a bank boulder; own
+  random stream, the same draws in 'full' and 'count'), through water.js's exported `emergentRocksIn`. Per vertex the
+  run's rock spacing and seed, the stretch's arc range and the previous stretch's (`aRock`), with a section repeated
+  at every change of stretch so the ranges never interpolate between two stretches and a wake runs on past the seam.
+  823 rocks on the home tile. Rejected: wakes for rocks.js's own random bed boulders (the water would have to know
+  their places; the walk owns the rocks instead and rocks.js draws them).
+- **The falls** (waterfall.js): the boil, a disc of opaque churning white water on the stream at the plunge (kind 3:
+  radius 0.9 x the plume's width plus 3 % of the drop, 2-14 m, pushed downstream by half its radius, its rim pushed out
+  by the season's flow, never clear at its centre, lace toward a ragged rim); the run-out as foam rafts and streaks cut
+  from the same lace and riding the current over 12 + 0.25 x drop + 2 x width metres (at most 50), thinning
+  downstream; the mist as three small ragged sprites about the foot that drift up and sway, thin and local, with one
+  wide faint cloud behind them only on a fall over 40 m; the curtain kept, its lower part breaking into clumps of
+  spray that stay strands instead of dissolving into a haze. Still one merged geometry and one draw call.
+- **The two-phase scroll** for the ripples too, so a reach's glint pattern no longer shears over a session.
+
+**Verified** (before and after at the same frozen poses from the same own camera, canvas captures posted to a scratch
+server because the browser pane gives no frames while hidden; scratch/whitewater_harness.js, whitewater_poses.js,
+whitewater_poses_yos.js): the Weber Creek riffle from a raven's height (30 m) reads as white water running down the
+channel in streaks; from a deer's eye on the right bank the foam is a lace with sharp edges over dark water between the
+boulders, lit from the sun's side, and a capture 0.7 s later in the water's time shows it moved; the Hangtown Creek
+cascade from 14 m and its biggest emergent rock from 6 m up: the pillow upstream, the V and the tail downstream of the
+rock, the foam streaks trailing from the drops into the pool below; Yosemite Falls on 15 May: the upper fall's foot a
+white boil with the run-out below it from 200 m, the Lower Fall's boil and run-out from 110 m and its run-out from the
+stream 55 m below the plunge; on 15 October the upper fall a thread with a small boil (the lower fall's reach is
+intermittent and dry, as before). No shader errors (`__ww.check()` reads every water program's log; a reserved word,
+`patch`, cost an hour) and no new console errors. Frame cost: the browser pane gives no frames while hidden, so the frame was timed as 40 renders each followed by a 1 x 1 readPixels (which waits for the GPU; gl.finish on ANGLE/Metal does not), with the water drawn and with it hidden, at the raven's and the deer's poses on both builds: the whole frame 27-35 ms on both (the pane's canvas at 1920 x 1200 here against 1536 x 1152 on main's tab), and the water's share, drawn minus hidden, within the measurement's noise of about 2 ms on both builds, so a rise of 1 ms cannot be resolved this way and none was seen; the draw-call count is unchanged (427-439 at the poses). The build's cost: the walk and the foam attributes add about 0.6 s to the water step on the home tile (not timed apart) and 8 bytes a vertex to the stream ribbons.
+
+**Not verified, and what still looks wrong.** The North Fork Cosumnes tile has no water pass yet (`--steps water`), so
+its cascades were not captured; the foam's motion was checked from two stills, not watched; the emergent boulders'
+look against the water from the bank was seen only at the Hangtown cascade; the falls were not seen from the valley
+floor at a walker's eye (the ribbon under a steep run-out fades on the face, so from the stream 70 m below the upper
+fall's plunge there is no water to stand by). The lace on a cascade is still too even in scale (one foam look for a 2 m
+creek and a 10 m fall's run-out); the standing waves are invisible under full foam; the boil has no spray thrown up and
+no wetness on the rocks round it; the wide May spray cloud is one faint sprite; the ribbon's own triangle edges show
+through the foam where a wide ribbon folds into a V-valley (a pre-existing fold); the lace and the ripples restart
+where one run meets the next (the flow coordinates are each run's arc length, as before), a straight seam across the
+channel at a junction; a wake's eddy does not slow the ripples, only the foam.
+
 ## 2026-11-01: multiplayer designed before it is built (docs/multiplayer.md)
 
 Aaron's spec of 2026-11-01 (the title on stars, the earth rising as a crescent, the sign-in, the lit earth
