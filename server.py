@@ -14,6 +14,15 @@ GET  /api/game/<tile>/<season>   that world's counts (board, round, players), no
 GET  /api/weather/<tile_id>   today's weather at the tile centre: Open-Meteo's forecast for yesterday, today
                               and tomorrow in client/weather.json's `days` format, plus `current`; cached
                               30 minutes per tile; 503 when Open-Meteo cannot be reached
+The hub (hub.py, docs/multiplayer.md "The hub"; SQLite at data/hub.sqlite):
+POST /api/hub/signup {name, password}     an account: {you, recovery: six one-time codes, shown once} + cookie
+POST /api/hub/signin {name, password}     {you} + the we_session cookie (HttpOnly, SameSite=Lax, 30 days sliding)
+POST /api/hub/signout                     the session ended
+POST /api/hub/recover {name, code, password}   a recovery code spent for a new password
+GET  /api/hub/me                          the signed-in user, or 401
+GET  /api/hub/config                      {hub, providers}: the sign-in providers whose keys exist
+GET  /api/hub/oauth/discord               Discord sign-in (scope identify); Discord redirects back to it
+GET  /api/hub/ws                          WebSocket: friends, groups, presence, rooms, counts, chat, positions
 
 Edit types and their fields (note is optional unless marked required):
   species_confidence  species_code, value: verified | flagged, note
@@ -29,19 +38,18 @@ the request log prints method, path without query, and status only. Request bodi
 (edits carry free-text notes) are never logged, and errors name the field, not the value.
 Weather: only the tile id reaches this server and only the tile's centre reaches Open-Meteo, never a
 player's point; nothing about a weather request is logged beyond the request line above.
+The hub keeps accounts, friends, blocks, groups and group chat; presence, rooms, counts, tile chat and
+positions are in memory only, a position relayed to the sender's group members in the same tile and never
+kept or logged. It logs the request line and counts, never names, chat, positions or bodies.
 """
 from __future__ import annotations
 
 import argparse
-import base64
 import hashlib
 import json
 import math
 import os
-import queue
 import re
-import socket
-import struct
 import threading
 import time
 import uuid
@@ -55,6 +63,8 @@ warnings.filterwarnings("ignore")
 
 from pipeline.build_tile import ALL_STEPS, run, update_index  # noqa: E402
 from pipeline.config import REPO_ROOT, TILES_DIR, Tile, now_iso, read_json  # noqa: E402
+from ws import WsConn, ws_frame, ws_upgrade  # noqa: E402
+import hub  # noqa: E402
 
 JOBS: dict[str, dict] = {}   # tile_id -> {status, steps, current, started_at}
 LOCK = threading.Lock()
@@ -292,8 +302,6 @@ STASH_ODDS = 1 / 8
 ROUND_S, ROUND_MIN, ROUND_MAX = 600, 20, 3600
 GAME_SAVE_S, SUM_S, PING_S, IDLE_S = 2.0, 5.0, 20.0, 60.0
 EV_RATE, EV_BURST = 40.0, 120.0  # events per second per connection (the AI host sends for ~100 animals)
-WS_GUID = "258EAFA5-E914-47DA-95CA-C5AB0DC85B11"
-WS_MAX_IN = 64 * 1024
 GAME_ID_RE = re.compile(r"^[A-Za-z0-9_.,:@+-]{1,96}$")
 SID_RE = re.compile(r"^[0-9a-f]{16,64}$")
 HELD_MAX = 200                   # a player's events held while its id for a new round is on the way
@@ -597,131 +605,20 @@ def round_winner(r: dict) -> str | None:
     return best if bn > 0 and not tie else None
 
 
-def ws_frame(data: bytes, op: int = 1) -> bytes:
-    n, b0 = len(data), 0x80 | op
-    if n < 126:
-        head = struct.pack(">BB", b0, n)
-    elif n < 65536:
-        head = struct.pack(">BBH", b0, 126, n)
-    else:
-        head = struct.pack(">BBQ", b0, 127, n)
-    return head + data
+class GameConn(WsConn):
+    """One acorn-game client (ws.py has the framing and the threads)."""
 
-
-class GameConn:
-    """One WebSocket client. Reads on the request's thread; a writer thread drains its queue, so a slow
-    client never holds a world's lock."""
+    TAG = "game"
+    RATE, BURST = EV_RATE, EV_BURST
 
     def __init__(self, sock, rfile):
-        self.sock, self.rfile = sock, rfile
-        self.q: queue.Queue = queue.Queue(maxsize=4000)
-        self.alive, self.world, self.pid = True, None, None
+        self.world, self.pid = None, None
         self.species, self.stale, self.held, self.carry = "corvus_corax", False, [], (0, 0)
-        self.tokens, self.tok_t, self.last_rx = EV_BURST, time.monotonic(), time.monotonic()
-        threading.Thread(target=self._write, daemon=True).start()
+        super().__init__(sock, rfile)
 
-    def send(self, obj) -> None:
-        self.raw(ws_frame(json.dumps(obj, separators=(",", ":")).encode()))
-
-    def raw(self, frame: bytes) -> None:
-        if not self.alive:
-            return
-        try:
-            self.q.put_nowait(frame)
-        except queue.Full:    # far behind: drop it, it reconnects and gets a fresh snapshot
-            self.kill()
-
-    def kill(self) -> None:
-        self.alive = False
-        try:
-            self.sock.shutdown(socket.SHUT_RDWR)
-        except OSError:
-            pass
-
-    def _write(self) -> None:
-        while True:
-            frame = self.q.get()
-            if frame is None or not self.alive:
-                return
-            try:
-                self.sock.sendall(frame)
-            except OSError:
-                self.kill()
-                return
-
-    def _read(self, n: int) -> bytes:
-        b = self.rfile.read(n)
-        if b is None or len(b) < n:
-            raise ConnectionError("closed")
-        return b
-
-    def recv(self) -> tuple[int, bytes]:
-        """One whole message (continuation frames joined): (opcode, payload)."""
-        op0, buf = None, b""
-        while True:
-            b0, b1 = self._read(2)
-            op, n = b0 & 0x0F, b1 & 0x7F
-            if n == 126:
-                n = struct.unpack(">H", self._read(2))[0]
-            elif n == 127:
-                n = struct.unpack(">Q", self._read(8))[0]
-            if n > WS_MAX_IN or len(buf) + n > WS_MAX_IN:
-                raise ConnectionError("message too large")
-            mask = self._read(4) if b1 & 0x80 else None
-            data = self._read(n) if n else b""
-            if mask:
-                data = bytes(c ^ mask[i & 3] for i, c in enumerate(data))
-            self.last_rx = time.monotonic()
-            if op >= 8:                 # control frames may come between fragments
-                if op == 8 or op == 9 or op == 10:
-                    return op, data
-                continue
-            if op0 is None:
-                op0 = op
-            buf += data
-            if b0 & 0x80:
-                return op0, buf
-
-    def allow(self) -> bool:
-        now = time.monotonic()
-        self.tokens = min(EV_BURST, self.tokens + (now - self.tok_t) * EV_RATE)
-        self.tok_t = now
-        if self.tokens < 1:
-            return False
-        self.tokens -= 1
-        return True
-
-    def run(self) -> None:
-        try:
-            while self.alive:
-                op, data = self.recv()
-                if op == 8:
-                    self.raw(ws_frame(b"", 8))
-                    break
-                if op == 9:
-                    self.raw(ws_frame(data, 10))
-                    continue
-                if op != 1:
-                    continue
-                try:
-                    msg = json.loads(data)
-                except ValueError:
-                    self.send({"t": "err", "why": "not JSON"})
-                    continue
-                if isinstance(msg, dict):
-                    self.on_message(msg)
-        except (OSError, ConnectionError):
-            pass
-        except Exception as e:  # noqa: BLE001  (say why a connection ended unexpectedly; never its messages)
-            print(f"[game] connection ended: {type(e).__name__}: {str(e)[:120]}", flush=True)
-        finally:
-            if self.world:
-                self.world.leave(self)
-            self.alive = False
-            try:
-                self.q.put_nowait(None)
-            except queue.Full:
-                pass
+    def on_close(self) -> None:
+        if self.world:
+            self.world.leave(self)
 
     def on_message(self, m: dict) -> None:
         t = m.get("t")
@@ -1163,6 +1060,8 @@ class Handler(SimpleHTTPRequestHandler):
     # -- routes
     def do_GET(self):
         u = urlsplit(self.path)
+        if hub.handle(self, "GET", u.path, u.query):
+            return
         if u.path == "/api/tiles":
             if not (TILES_DIR / "index.json").exists():
                 update_index()
@@ -1222,19 +1121,14 @@ class Handler(SimpleHTTPRequestHandler):
         self.send_json(answer)
 
     def game_ws(self):
-        """RFC 6455 handshake, then this request's thread reads the client's messages until it goes."""
-        key = self.headers.get("Sec-WebSocket-Key")
-        if "websocket" not in (self.headers.get("Upgrade") or "").lower() or not key:
-            return self.send_json({"error": "WebSocket upgrade expected"}, 400)
-        accept = base64.b64encode(hashlib.sha1((key.strip() + WS_GUID).encode()).digest()).decode()
-        self.wfile.write(("HTTP/1.1 101 Switching Protocols\r\nUpgrade: websocket\r\nConnection: Upgrade\r\n"
-                          f"Sec-WebSocket-Accept: {accept}\r\n\r\n").encode())
-        self.log_request(101)
-        self.close_connection = True
-        GameConn(self.connection, self.rfile).run()
+        """The handshake (ws.py), then this request's thread reads the client's messages until it goes."""
+        if ws_upgrade(self):
+            GameConn(self.connection, self.rfile).run()
 
     def do_POST(self):
         path = urlsplit(self.path).path
+        if hub.handle(self, "POST", path):
+            return
         if path.startswith("/api/edits/"):
             return self.api_edits(path.rsplit("/", 1)[1])
         try:
