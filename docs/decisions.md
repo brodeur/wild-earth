@@ -3619,6 +3619,10 @@ the sward pool under the nose was a saturated yellow wash and was cut to 0.3; th
 texel's alpha and the leaf's tone so the picture's structure stays. Reads wrong still: a dense herb (a poppy mound)
 seen from the deer's eye at 2 m is already a translucent block of mip-averaged leaves in the forbs' own draw, and lit
 it is a yellow block; the herbs' glow at this level is on the subtle side at a metre (`forage.k` scales it live).
+Checked again on the merged main (e1376c7, with the sward lane's grass, the social screen and the growth tool in):
+no shader diagnostics, the deer at the grassland with the three plant scents, the halo and the act slot ready, the
+same close-up; two runs of 100 renders each way on a quieter machine (load 8.5): p10 25.5 / 24.8 and 25.2 / 25.1 ms,
+median 26.6 / 26.4 and 26.5 / 26.5, so the forage's share is 0.1 to 0.7 ms.
 
 Open: the trees' browse and acorns (willow, alder, the valley oak's acorns) do not glow (the tree lane's files; the
 acorns on the ground are the acorn game's own glow); the emergents (sedge leaves for the deer and the vole) neither;
