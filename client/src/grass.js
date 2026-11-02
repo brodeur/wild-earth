@@ -1255,6 +1255,8 @@ export class Grass {
       : (uni, rgb) => (uni.value || uni).setRGB(rgb[0] * k[0], rgb[1] * k[1], rgb[2] * k[2], THREE.SRGBColorSpace);
     set(u.aRoot, P.annual.root); set(u.aTip, P.annual.tip); set(u.aHead, P.annual.head); set(u.aAwn, P.annual.awn);
     set(u.bRoot, P.bunch.root); set(u.bTip, P.bunch.tip); set(u.bHead, P.bunch.head); set(u.bAwn, P.bunch.awn);
+    // The sward painted on the ground (terrain.js swardPaint) takes the annual palette's root and tip: the photo is of the annual sward.
+    u.swardRoot.value.copy(u.aRoot.value); u.swardTip.value.copy(u.aTip.value);
     // Each species' palette for the season (its record's sRGB 0-255, scaled as the type palettes are), and whether its
     // seed heads show this month; a species without a palette takes its type's.
     const month = seasonMonth(season), s255 = rgb => rgb.map(v => v / 255);
