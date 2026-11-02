@@ -277,6 +277,13 @@ export const SELF_LIT = { value: 0 };
 // tile, evenly spaced so the spectrum is read whatever the numbers. (2026-10-27: the tile's GBIF record counts ranked
 // first, but those count reports, not animals: a lion with 7 records outranked a vole with none.)
 export function rarityColor(r, out = new THREE.Color()) { return out.setHSL(((1 - r) * 275) / 360, 0.85, 0.62); }
+// The same ranking by species code (a variant takes its base's), for a screen with no world: the title screen's card
+// colours each animal's arrival with its soul colour (title.js).
+export function rarityByCode() {
+  const order = SPECIES.map((sp, k) => k).sort((a, b) => (expectedPerKm2(b) - expectedPerKm2(a)) || (a - b)), out = {};
+  order.forEach((k, i) => { const c = SPECIES[k].code; if (!(c in out)) out[c] = i / Math.max(1, order.length - 1); });
+  return out;
+}
 const SELF_LIGHT = 1.15;
 function selfLit(m) {
   const prev = m.onBeforeCompile, key = m.customProgramCacheKey?.bind(m);

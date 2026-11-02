@@ -22,6 +22,7 @@ import { Sight } from './sight.js';
 import { SoundCues } from './soundCues.js';
 import { OpeningScreen, Arrival, lastTile, rememberTile } from './arrival.js';
 import { TitleScreen } from './title.js';
+import { Multiplayer } from './multiplayer.js';
 import { SEASON_LOOK, seasonOfDate, sunDirection, dateForSeason, parseDate } from './season.js';
 import { AcornGame } from './acorns.js';
 import { Identify } from './identify.js';
@@ -350,11 +351,15 @@ async function main() {
     // The title screen (title.js: the title on stars, the earth with a dot per built tile and the places in view listed
     // by how many players are in each; docs/multiplayer.md, lane 1) stands in for the card screen unless ?cards=1 asks
     // for the cards; both answer the same calls (onSelect, setPrep, setReady, readyIds, point, close). ?hub=stub answers
-    // as the hub would (hubStub.js). Lane 3 (the sign-in modal over hub.js) hooks in here, on the TitleScreen.
+    // as the hub would (hubStub.js).
     const Screen = params.get('cards') === '1' ? OpeningScreen : TitleScreen;
-    screen = new Screen({ root: $('opening'), renderer, index, tileId, pending, hub: params.get('hub'),
+    // Lane 3 (multiplayer.js): the page's hub, the sign-in modal at the title's gate, the friends, the chat and the
+    // toggles, mounted on sign-in and kept into the world's HUD; the title's Begin joins the tile's room.
+    const mp = Screen === TitleScreen ? new Multiplayer({ hubParam: params.get('hub') }) : null;
+    screen = new Screen({ root: $('opening'), renderer, index, tileId, pending, hub: mp ? mp.titleHub : params.get('hub'),
       onSelect: id => { select(id); },
       onBegin: c => { choice = c; if (world?.ready && world.tileId === c.tileId) world.enter(c, true); } });
+    mp?.attach(screen);
     screenOpen = true;
     return;
   }

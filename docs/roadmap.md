@@ -236,15 +236,17 @@ browser stays the renderer.
   form above and behind the picker), video and audio last. The hub beside `server.py` with SQLite;
   positions relayed to group members in the same tile and persisted nowhere; a place is a tile. Lanes in
   order: the title and the earth, the hub, the social screen, group travel, video and audio.
+  Lane 1 landed 2026-11-01 (`client/src/title.js`: the title on stars, the crescent, the lit earth with the dots
+  and the list, a stub hub behind `?hub=stub`; the card screen behind `?cards=1` until the earth is signed off).
   The hub (lane 2) is built (2026-11-01, branch claude/mp-hub-54b819): `ws.py` shared by the game and the
   hub, `hub.py` (accounts, recovery codes, Discord when its keys exist, sessions, friends, blocks, groups,
-  group chat, presence, rooms, counts, the position relay, invites), `tests/test_hub.py`. Next: lane 3 (the
-  social screen) over `client/src/hub.js`; Discord needs Aaron's application registered.
-
-  order: the title and the earth, the hub, the social screen, group travel, video and audio. Lane 1 landed
-  2026-11-01 (`client/src/title.js`: the title on stars, the crescent, the lit earth with the dots and the list,
-  a stub hub behind `?hub=stub`; the card screen behind `?cards=1` until the earth is signed off); next the
-  hub (lane 2, in its own worktree) and the sign-in modal over `title.onGate` (lane 3).
+  group chat, presence, rooms, counts, the position relay, invites), `tests/test_hub.py`. The social screen
+  (lane 3) is built (2026-11-01, branch claude/optimistic-margulis-d0e20d): `account.js` (the sign-in modal,
+  sign-up with recovery codes, recovery, Explore with no hub), `social.js` (the avatars row and the list: search,
+  requests, friends, groups, the wisp avatar from the id), `chat.js` (the input and the fading pane: group and
+  tile chat), `multiplayer.js` (the hookup; the title's counts from the real hub), the greyed Video and Audio
+  toggles. Next: lane 4 (group travel: `place` and `invite`, the room joined on entry and left on a switch,
+  the position relay); Discord needs Aaron's application registered; Google and Apple their keys.
 
 ## Then
 
