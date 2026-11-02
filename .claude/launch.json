@@ -12,6 +12,12 @@
       "runtimeExecutable": ".venv/bin/python",
       "runtimeArgs": ["server.py", "--port", "8784", "--bind", "127.0.0.1"],
       "port": 8784
+    },
+    {
+      "name": "viewer-souls",
+      "runtimeExecutable": ".venv/bin/python",
+      "runtimeArgs": ["server.py", "--port", "8789", "--bind", "127.0.0.1"],
+      "port": 8789
     }
   ]
 }

@@ -1020,7 +1020,8 @@ export class Animals {
     this.carrion.push(prey);
     const who = by === 'player' ? this.observer || 'player' : SPECIES[by.sp].code;
     this.lastKill = { prey: SPECIES[prey.sp].code, by: who, t: this.time, x: Math.round(prey.x), z: Math.round(prey.z) };
-    this.emit('kill', { prey: SPECIES[prey.sp].code, by: who, x: prey.x, y: prey.y, z: prey.z, small });
+    this.emit('kill', { prey: SPECIES[prey.sp].code, by: who, x: prey.x, y: prey.y, z: prey.z, small,
+      sp: prey.sp, id: prey.id, h: TAG_DY[prey.sp] * (prey.size || 1) });   // its species index, id and body height (m): the soul that leaves it (spirit.js SoulPool)
     return true;
   }
   lieStill(a, dt = 0) {   // the fall over CARRION.fall s, then on its side on the ground, a little up so the body is not under it
@@ -4221,7 +4222,7 @@ export class Animals {
       if (!this.meshes[s].visible) continue;
       const arr = this.bySpecies[s];
       for (let k = 0; k < arr.length; k++) {
-        const a = arr[k]; if (a.culled || a.id === skip || !this.present(a)) continue;
+        const a = arr[k]; if (a.culled || a.dead || a.id === skip || !this.present(a)) continue;   // not the dead: no body to take
         const R = a.air ? rAir : r, dx = a.x - x, dy = a.y + BODY_Y[s] * (a.air ? 0 : 1) - y, dz = a.z - z, d2 = dx * dx + dy * dy + dz * dz;
         if (d2 < R * R && d2 < bd) { bd = d2; best = a; }
       }
@@ -4260,12 +4261,13 @@ export class Animals {
     }
     return o;
   }
-  // Each playable animal drawn now: fn(x, y, z) at its body (the spirit's glow on them, spirit.js).
+  // Each living playable animal drawn now: fn(x, y, z, s) at its body (the spirit's glow and column on them, spirit.js).
+  // Not the dead: their soul has left (spirit.js SoulPool), and the carrion carries no glow.
   speciesList() { return SPECIES; }   // the bar's (nearBar.js): code, one, many, common, by the index counts and rarity use
   eachPlayable(fn) {
     for (const s of PLAYABLE) {
       if (!this.meshes[s].visible || !this.group.visible) continue;
-      for (const a of this.bySpecies[s]) if (!a.culled && this.present(a)) fn(a.x, a.y + BODY_Y[s] * (a.air ? 0 : 1), a.z, s);
+      for (const a of this.bySpecies[s]) if (!a.culled && !a.dead && this.present(a)) fn(a.x, a.y + BODY_Y[s] * (a.air ? 0 : 1), a.z, s);
     }
   }
   // A held or living animal's info by id (the spirit's flash closes on it), or null.
