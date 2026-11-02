@@ -392,3 +392,51 @@ rounds, contended machine): shrub draws at 3 m 9.44 -> 8.02 ms, at the start vie
 ground (the dome is an oblate ellipsoid, the crown base is lifted); low oblique views are 7-11% more
 open than before; backlit manzanita sprays glow white at 17:00 (HEAD too). Captures: the session
 scratchpad's shrubsize/ (head_*, new_*: 2/3/15/40/200/400 m, fall 10:00 and 17:00, squirrel).
+
+## Seventh pass (2026-11-01): the grassland as a continuous sward
+
+Report (Aaron): "the earth always looks bare no matter how many sparse tufts ... The foothills is entirely covered in
+grass where there's not forest, rocks or water, it's just everywhere." Looked at the home tile's open grassland (x 6960,
+north 7032): at the deer's eye the ground between the clumps was the photo's dry tan, which reads as dirt with tufts on it;
+from the raven at 30 m the open ground was the photo with a faint speckle. A 0.6 m NAIP texel is the mean of the sward it
+shows and carries none of its structure, so whatever stood on it, the gaps read as soil. Four steps, in the order of their
+likely gain, each A/B'd on its own uniform or flag:
+
+1. **The ground is the sward** (terrain.js `swardPaint`, `swardOn`). In grassland (and the grass under oaks) the surface
+   between the plants is painted as grass: strokes of blades lying along a direction that wanders over ~10 m around the
+   wind (as the shells' tufts do, leaning a few cm with the gusts), each lit root (dark, in the shade of the sward) to tip
+   (pale) with the season's annual palette (grass.js applyLook sets `swardRoot`/`swardTip` on the shared ground uniforms),
+   in three octaves (3, 6 and 12 cm wide, 25-75 cm long, each a lane-staggered lattice of blades of their own length and
+   width) that each fade by pixel footprint as the blade tiers fade theirs, over a shade floor (the photo at 0.52); the
+   photo keeps the metre-scale hue and brightness, so the swales and the season carry. It thins exactly where the plants
+   thin: `gBare` is grass.js's `bareField` (its hash2 and vnoise in uint arithmetic, which matches the JS 32-bit imul),
+   40% kept in a patch as `plantAt` keeps; none on rock, the photo's own bare ground or pavement, less under tree cover; out
+   to 160 m. The thatch scan backs off where the paint carries the structure. The largest win: at the deer's eye the fall
+   ground is a combed straw mat and the spring ground a green sward, at every distance at once.
+2. **Cover held as the tiers thin** (grass.js NEAR_VERT, `widenOn`; grassBlades.js). A blade that survives a thinning (its
+   tier's hand-over band, the main tier's clump and leaf cuts) is widened by the square root of what was cut, at most 1.8x
+   (AMD's `width *= max / count`; the full 1 / keep cost ~4 ms of overdraw when it was tried), pushed out on its side of the
+   blade (aBlade.w, now recorded for every clump) along the camera's right, so an edge-on blade never collapses to a sliver
+   either; a clump handing over to its card is not widened. The annual leaves lean more and arch over (theta 0.15-0.6, droop
+   0.5-1.4) and are broader (14-21 mm), the needlegrass leaves 7-11 mm: against the cured annual sward at 1-3 m the old
+   leaves stood too upright and thin to overlap at a grazing view. The cards are baked from the same clumps, so they follow.
+3. **Sward sheets for level eyes** (grass.js SHEET, `sheetsOn`). For the deer, the lion, the fox and the chase camera a couple
+   of metres up, the 5-80 m band is seen at grazing angles, where the shells separate into layers and the thinned tiers show
+   the ground between them. Strips of baked sward silhouette stand across the view on a jittered 2 m grid (a pure function of
+   the cell): 3 x 0.75 m (x0.7-1.3, x the season's height), bowed so the ends swing away from the camera, on the ground's
+   local plane, each a window of a 6 m strip of annual and needlegrass clumps (84 + 26, mulberry32) baked from the side into
+   a sixteenth row of the card atlas (no new texture: main.js disposes the atlas as before); at grazing angles they stack into a
+   continuous fuzzy sward with a soft horizon. Coloured and lit as the cards are (the ground under each, the palette root to
+   tip, thatch, sky occlusion, light through the blades, the top shearing with the gust), coverage built up with the
+   minification as the cards'. One instanced draw (~1,100 in view at the deer); dithered in from 4-8 m, out at 70-90 m,
+   faded out toward down-looking views (the sine of the depression angle over 0.12-0.3, where the shells come in) and from
+   8-14 m up; in 10 m blocks cached and culled like the tiers', made under 2 ms a frame; thinned by the sward density
+   (habitat, herb cover, the bare patches, outcrops, roads, water) as the plants are.
+4. **Lots of grass close for every body** (grass.js updateBody). The body-tier ring, which only bodies under BODY_MAX scale
+   had, is given to the big ones (the deer, the lion, the coyote, the bear, the turkey, the spirit near the ground, a landed
+   flier) at a third of its density (an even subsample, the cells being in rank order) and a 7 m radius.
+
+Kept: every tier, the deterministic placement (nothing re-rolls), the dithered fades, the colour from the ground under
+each plant, the shared wind field; no new texture unit.
+
+Costs and captures: see docs/decisions.md "2026-11-01: the grassland as a continuous sward".
