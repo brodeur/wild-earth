@@ -3106,3 +3106,13 @@ silent:
   name and a group's name go through `prompt()` and Block and Leave through `confirm()` for now; the search
   box asks 350 ms after the typing stops and only with 3 characters or more; the browser logs the hub's 401
   to `me` with no session as a failed resource, which is the hub saying not signed in, not an error thrown.
+- **The earth is the spirit world seen from space** (Aaron, 2026-11-01, after lane 1 was merged, done here since
+  this lane holds `title.js`): the earth's shader takes the spirit view's palette from `spirit.js` rather than a
+  hue of its own: the albedo goes through the same post pass (warm hues pulled to grey-blue-green by their
+  distance from the blue-green axis, contrast taken off toward 0.42), the day side is lit by the view's blue sun
+  tint and blue-green sky light (`LOOK_SUN_TINT`, `LOOK_AMB`, leaning to the sky light), the rim and the
+  atmosphere shell are the view's haze colour, the exposure is 0.95 where it was 1.7, and the night side is a
+  faint blue. The dots at the built tiles (the spirits gathered there) are brighter, with a wider halo and a
+  larger base size, still growing and whitening with more players, so they read as bright clusters on a dim
+  world. The crescent's rise and the sun's swing are untouched. Seen with the stub's counts on the home tile; the
+  foothill tiles' dots merge into one bright cluster at the lit zoom, as lane 1 noted.

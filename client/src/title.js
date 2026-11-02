@@ -80,19 +80,36 @@ const EARTH_VERT = /* glsl */`
     vec4 w = modelMatrix * vec4(position, 1.0); vW = w.xyz;
     gl_Position = projectionMatrix * viewMatrix * w;
   }`;
-// The day side lit by the sun with a soft terminator; the night side almost black (no city lights: the earth with no
-// humans); a thin blue rim inside the limb, stronger where the sun reaches.
+// The earth is the spirit world seen from space (Aaron, 2026-11-01): the day side lit by the sun with a soft terminator,
+// in the spirit view's palette (spirit.js SpiritLook: the sun's tint LOOK_SUN_TINT, the sky light LOOK_AMB, and its post
+// pass, which pulls the warm hues to grey-blue-green by their distance from the blue-green axis and takes contrast off),
+// dimmer overall, so the bright dots at the built tiles (the spirits gathered there) stand out; the night side a faint
+// blue (no city lights: the earth with no humans); a thin haze-coloured rim inside the limb, stronger where the sun reaches.
 const EARTH_FRAG = /* glsl */`
   uniform sampler2D map; uniform vec3 sunDir; uniform float exposure;
   varying vec3 vN; varying vec2 vUv; varying vec3 vW;
+  const vec3 SUN_TINT = vec3(0.4, 0.66, 1.0), AMB = vec3(0.3, 0.82, 0.95), HAZE = vec3(0.5, 0.85, 0.9);
   void main() {
     vec3 n = normalize(vN), v = normalize(cameraPosition - vW);
     float ndl = dot(n, sunDir);
     float day = smoothstep(-0.05, 0.28, ndl);
-    vec3 albedo = texture2D(map, vUv).rgb;
-    vec3 col = albedo * (0.010 + exposure * day * (0.3 + 0.7 * max(ndl, 0.0)));
+    vec3 c = texture2D(map, vUv).rgb;
+    // the spirit view's post pass on the albedo
+    float mx = max(c.r, max(c.g, c.b)), mn = min(c.r, min(c.g, c.b)), ch = mx - mn, hue = 0.0;
+    if (ch > 1e-4) {
+      if (mx == c.r) hue = 60.0 * mod((c.g - c.b) / ch, 6.0);
+      else if (mx == c.g) hue = 60.0 * ((c.b - c.r) / ch + 2.0);
+      else hue = 60.0 * ((c.r - c.g) / ch + 4.0);
+    }
+    float off = abs(mod(hue - 185.0 + 180.0, 360.0) - 180.0) / 180.0, sat = ch / max(mx, 1e-4);
+    float pull = smoothstep(0.22, 0.55, off) * smoothstep(0.02, 0.12, sat);
+    float l = dot(c, vec3(0.2126, 0.7152, 0.0722));
+    vec3 albedo = mix(c, l * vec3(0.86, 1.02, 1.04), pull);
+    albedo = (albedo - 0.42) * 0.85 + 0.42;
+    // lit by a blue sun and a blue-green sky light, dim
+    vec3 col = albedo * (0.02 * AMB + exposure * day * (0.45 * AMB + 0.55 * SUN_TINT * max(ndl, 0.0)));
     float rim = pow(1.0 - max(dot(n, v), 0.0), 3.5);
-    col += vec3(0.30, 0.55, 1.0) * rim * (0.06 + 0.9 * smoothstep(-0.15, 0.35, ndl)) * 0.8;
+    col += HAZE * rim * (0.06 + 0.9 * smoothstep(-0.15, 0.35, ndl)) * 0.55;
     gl_FragColor = vec4(col, 1.0);
     #include <tonemapping_fragment>
     #include <colorspace_fragment>
@@ -107,7 +124,7 @@ const ATMO_FRAG = /* glsl */`
     float edge = sqrt(1.0 - 1.0 / (shell * shell));
     float band = clamp(-dot(n, v) / edge, 0.0, 1.0);
     float lit = smoothstep(-0.3, 0.35, dot(n, sunDir));
-    vec3 col = vec3(0.35, 0.6, 1.0) * pow(band, 1.7) * (0.04 + 0.96 * lit) * 0.8;
+    vec3 col = vec3(0.5, 0.85, 0.9) * pow(band, 1.7) * (0.04 + 0.96 * lit) * 0.55;   // the spirit view's haze colour (spirit.js LOOK_HAZE)
     gl_FragColor = vec4(col, 1.0);
     #include <tonemapping_fragment>
     #include <colorspace_fragment>
@@ -131,7 +148,8 @@ const STAR_FRAG = /* glsl */`
     gl_FragColor = vec4(vec3(1.0, 0.97, 0.92) * a, 1.0);
     #include <colorspace_fragment>
   }`;
-// The dots: soft warm discs, larger and whiter with more players, the hovered one larger still.
+// The dots, the spirits gathered at each built tile: bright warm discs with a wide halo, larger and whiter with more
+// players, the hovered one larger still; bright against the dim earth.
 const DOT_VERT = /* glsl */`
   attribute float aSize; attribute float aGlow; attribute float aHot;
   uniform float uDpr;
@@ -148,8 +166,8 @@ const DOT_FRAG = /* glsl */`
   void main() {
     float r = length(gl_PointCoord - 0.5) * 2.0;
     if (r > 1.0) discard;
-    float core = smoothstep(0.5, 0.2, r), halo = pow(1.0 - r, 2.0) * 0.35;
-    float a = (core + halo) * uFade * (0.5 + 0.5 * vG + 0.5 * vH);
+    float core = smoothstep(0.55, 0.15, r), halo = pow(1.0 - r, 1.6) * 0.5;
+    float a = (core * 1.25 + halo) * uFade * (0.8 + 0.6 * vG + 0.5 * vH);
     vec3 c = mix(vec3(1.0, 0.78, 0.5), vec3(1.0, 0.98, 0.92), vG);
     gl_FragColor = vec4(c * a, 1.0);
     #include <colorspace_fragment>
@@ -293,7 +311,7 @@ export class TitleScreen {
     this.stars.rotation.z = 0.3; scene.add(this.stars);
     // the earth and its atmosphere
     const earth = this.earth = new THREE.Group(); earth.position.set(0, Y_BELOW, 0); scene.add(earth);
-    this.earthU = { map: { value: null }, sunDir: { value: sunDir }, exposure: { value: 1.7 } };
+    this.earthU = { map: { value: null }, sunDir: { value: sunDir }, exposure: { value: 0.95 } };   // dim: the spirit world from space
     this.globe = new THREE.Mesh(new THREE.SphereGeometry(1, 128, 80), new THREE.ShaderMaterial({ uniforms: this.earthU, vertexShader: EARTH_VERT, fragmentShader: EARTH_FRAG }));
     earth.add(this.globe);
     this.atmoU = { sunDir: { value: sunDir }, shell: { value: 1.035 } };
@@ -398,7 +416,7 @@ export class TitleScreen {
     this.counts = tiles || {};
     this.places.forEach((p, i) => {
       p.count = Math.max(0, Math.round(+this.counts[p.id] || 0));
-      this.dotSize.setX(i, 7 + 3 * Math.sqrt(p.count)); this.dotGlow.setX(i, Math.min(1, p.count / 6));
+      this.dotSize.setX(i, 9 + 4 * Math.sqrt(p.count)); this.dotGlow.setX(i, Math.min(1, p.count / 6));
       const c = p.el.querySelector('.tt-rcount'); if (c.textContent !== countText(p.count)) c.textContent = countText(p.count);
     });
     this.dotSize.needsUpdate = true; this.dotGlow.needsUpdate = true;

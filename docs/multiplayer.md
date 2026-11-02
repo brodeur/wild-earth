@@ -307,6 +307,8 @@ together. Lane 3 needs lane 1's screen in main; lane 4 needs 1 to 3. Lane 5 is l
      and Block and Leave ask `confirm()` (inline editors are a later nicety); the search box asks 350 ms after the
      typing stops, 3 characters or more; Escape leaves the chat input; a request to someone who asked first accepts
      (the hub's rule); a group's chat history from `welcome` is in the pane without fading it in.
+   - The earth is now the spirit world from space (Aaron's refinement, done here): `title.js`'s earth shader uses the
+     spirit view's palette and post pass, dimmer, and the dots are bright (`docs/decisions.md`, the lane 3 entry).
    - Open: Unblock is offered only for users blocked this session (the hub sends no block list); the chat row and
      the nearby-animals bar meet on a narrow window; the species card can overlap the chat pane; the chat's lines
      do not say the time.
