@@ -240,6 +240,13 @@ together. Lane 3 needs lane 1's screen in main; lane 4 needs 1 to 3. Lane 5 is l
      can still find the one they blocked (to unblock); blocks cut friendship, presence, chat, positions and
      invites both ways, and a group's chat history hides the blocked one's lines. Search: 20 results at
      most, one a second with a burst of five per user.
+   - **The client half** is `client/src/hub.js` (a second commit): `Hub.config()`, `Hub.me()`, `Hub.signup`,
+     `signin`, `recover`, `signout` (throwing `HubError {status, field}`), and `new Hub()` with `on(t, fn)`,
+     `connect()`, reconnect with backoff while `me` still answers (else a `signedout` event), the state as
+     last told (`you`, `friends`, `requests`, `groups`, `online`, `counts`), the room and the watch re-sent
+     after a reconnect, and a method per message (`enter(tile)` for the room). Verified in the browser pane
+     against the server: sign-up, two connections of one user counted once in a room, the tile chat reaching
+     the other, sign-out, and `signedout` with no reconnect on a socket without a session.
    - **Open:** Google and Apple; a hub-level ban list; the per-address limit uses the socket's address, so
      behind a proxy it needs `X-Forwarded-For` handled; the cookie is `Secure` only when
      `X-Forwarded-Proto: https` says so.
