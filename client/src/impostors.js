@@ -316,7 +316,8 @@ export class Impostors {
     this.tile = tile; this.group = new THREE.Group(); scene.add(this.group);
     this.crownMode = hasCrowns(tile);
   }
-  *build() {
+  // renderer: the page's, for the bake (impostorBake.js); without one the bake opens a context of its own.
+  *build(renderer = null) {
     const t0 = performance.now(), tile = this.tile;
     // Records first (each holds its species and slot), then the atlas: the species the tile places, with
     // slots by how common each is (planSlots), every slot's tree from its exact seed where it is baked.
@@ -334,7 +335,7 @@ export class Impostors {
       const n = plan.slots[id] ?? VARIANTS;
       bakeList.push({ id, seed: rare.has(id) && n >= rare.get(id) ? drawnSeed(id, v, rare.get(id)) : impostorSeed(id, v, n) });
     }
-    const bake = yield* bakeSteps(bakeList);
+    const bake = yield* bakeSteps(bakeList, renderer);
     this.bake = bake; this.bakeList = bakeList;
     // The atlases' level arrays (42 MB for 64 trees) go once on the GPU (gpuRelease.js): here when three uploads them on
     // first use, or in uploadSteps when the banded path has; the bake's frames, extents and index are all that is read after.

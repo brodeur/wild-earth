@@ -60,15 +60,18 @@ const FRAG = /* glsl */`
 // bakeSteps is the same bake as a generator that yields between trees, read-back bands and rows of the CPU passes
 // (slice.js runSliced steps it while the opening screen is up); bakeImpostors runs it in one go. The atlas is identical.
 const READ_BAND = 512;   // rows of the supersampled target read back per step
-export function bakeImpostors(input) { return drain(bakeSteps(input)); }
-export function* bakeSteps(input) {
+// renderer (optional): the page's own renderer to bake with, into a render target of this bake's (its target, clear
+// colour and alpha put back after each step, so the frames drawn between the steps are untouched). Without one the
+// bake opens a WebGLRenderer of its own and loses its context at the end; but a page's extra context counts towards
+// the browser's limit (Chromium: sixteen a process, the oldest lost past it), and the world is built on the page's.
+export function bakeImpostors(input, renderer = null) { return drain(bakeSteps(input, renderer)); }
+export function* bakeSteps(input, shared = null) {
   const t0 = performance.now();
   const keyOf = ({ id, seed }) => `${resolveSpecies(id)}:${seed}`, at = new Map(), trees = [];
   const index = input.map(t => { const k = keyOf(t); if (!at.has(k)) { at.set(k, trees.length); trees.push(t); } return at.get(k); });
   const rows = Math.ceil(trees.length * VIEWS / COLS), AW = COLS * CELL, AH = rows * CELL;
-  const canvas = document.createElement('canvas');
-  const renderer = new THREE.WebGLRenderer({ canvas, antialias: false, alpha: true, powerPreference: 'high-performance' });
-  renderer.setPixelRatio(1);
+  const renderer = shared || new THREE.WebGLRenderer({ canvas: document.createElement('canvas'), antialias: false, alpha: true, powerPreference: 'high-performance' });
+  if (!shared) renderer.setPixelRatio(1);
   const tCtx = performance.now();
   const rt = new THREE.WebGLRenderTarget(AW * SS, AH * SS, { depthBuffer: true, type: THREE.UnsignedByteType });
   const scene = new THREE.Scene();
@@ -123,11 +126,13 @@ export function* bakeSteps(input) {
   const tGeom = performance.now();
   // The bake's programs, compiled in parallel by the driver before the first render (runSliced waits for the promise;
   // drain does not, and the render compiles them as it always did).
-  renderer.setRenderTarget(rt); yield renderer.compileAsync(scene, cam); renderer.setRenderTarget(null);
+  { const prev = renderer.getRenderTarget(); renderer.setRenderTarget(rt); const compiled = renderer.compileAsync(scene, cam); renderer.setRenderTarget(prev); yield compiled; }
   // Rendered once per mode, read back in bands of READ_BAND rows (the target keeps its pixels between reads).
   function* read(mode) {
     for (const m of mats) m.uniforms.mode.value = mode;
+    const prev = renderer.getRenderTarget(), clear = renderer.getClearColor(new THREE.Color()), alpha = renderer.getClearAlpha();
     renderer.setRenderTarget(rt); renderer.setClearColor(0x000000, 0); renderer.clear(); renderer.render(scene, cam);
+    renderer.setClearColor(clear, alpha); renderer.setRenderTarget(prev);
     yield;
     const W = AW * SS, H = AH * SS, buf = new Uint8Array(W * H * 4);
     for (let y = 0; y < H; y += READ_BAND) {
@@ -140,8 +145,8 @@ export function* bakeSteps(input) {
   const albedoSS = yield* read(0), normalSS = yield* read(1);
   const tRead = performance.now();
   const tRender = performance.now() - t0;
-  renderer.setRenderTarget(null); rt.dispose(); for (const m of mats) m.dispose(); for (const g of geoms) g.dispose();
-  renderer.dispose(); renderer.forceContextLoss();   // leaf textures are shared with the main renderer: not disposed
+  rt.dispose(); for (const m of mats) m.dispose(); for (const g of geoms) g.dispose();
+  if (!shared) { renderer.setRenderTarget(null); renderer.dispose(); renderer.forceContextLoss(); }   // leaf textures are shared with the main renderer: not disposed
 
   yield;
   const albedo = yield* downsample(albedoSS, AW, AH, false), normal = yield* downsample(normalSS, AW, AH, true);
