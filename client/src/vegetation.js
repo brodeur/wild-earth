@@ -331,6 +331,16 @@ const fitCrown = (P, q, e) => {
 // The per-instance drape offset (SEAT_GLSL): one float per instance, uploaded with the matrices.
 const seatAttr = cap => new THREE.InstancedBufferAttribute(new Float32Array(cap), 1).setUsage(THREE.DynamicDrawUsage);
 const seatUpload = (a, n) => { a.clearUpdateRanges(); a.addUpdateRange(0, Math.max(n, 1)); a.needsUpdate = true; };
+// The slope bend (treegen.js trunkFlex, SLOPE_BEND_M): two floats per instance, the x and z of the ground's unit normal at
+// the plant's foot, from the 1 m heightfield a metre either side (north is -z). The mid set keeps a plain array; the
+// near trunk carries the attribute (the only mesh that bends), filled with the matrices in refreshNear.
+const leanAttr = cap => new THREE.InstancedBufferAttribute(new Float32Array(cap * 2), 2).setUsage(THREE.DynamicDrawUsage);
+const leanUpload = (a, n) => { a.clearUpdateRanges(); a.addUpdateRange(0, Math.max(n, 1) * 2); a.needsUpdate = true; };
+function groundLean(heights, x, n, out, k) {
+  const gx = (heights.at(x + 1, n) - heights.at(x - 1, n)) * 0.5, gn = (heights.at(x, n + 1) - heights.at(x, n - 1)) * 0.5;
+  const l = Math.hypot(gx, gn, 1);
+  out[k] = -gx / l; out[k + 1] = gn / l;
+}
 
 export function pick(mix, r) { let acc = 0; for (const [k, w] of Object.entries(mix)) { acc += w; if (r <= acc) return k; } return Object.keys(mix)[0]; }
 export function hash(i, j, salt) { let h = (i * 73856093) ^ (j * 19349663) ^ (salt * 83492791); return h >>> 0; }
@@ -509,7 +519,8 @@ export class Vegetation {
       trunk.count = canopy.count = 0; trunk.frustumCulled = canopy.frustumCulled = false;
       this.group.add(trunk, canopy);
       const seat = seatAttr(cap); t.trunk.setAttribute('seatDc', seat); t.canopy.setAttribute('seatDc', seat);   // one per tier, both parts
-      entry[lod] = { trunk, canopy, cap, n: 0, tris: t.tris.trunk + t.tris.canopy, ids: new Uint32Array(cap), seat };
+      const lean = lod === 'near' ? leanAttr(cap) : new Float32Array(cap * 2); if (lod === 'near') t.trunk.setAttribute('slopeN', lean);
+      entry[lod] = { trunk, canopy, cap, n: 0, tris: t.tris.trunk + t.tris.canopy, ids: new Uint32Array(cap), seat, lean };
       if (lod === 'near') {
         entry.stem = t.stem; entry.height = t.height;
         const g = t.canopy; if (!g.boundingBox) g.computeBoundingBox();
@@ -600,6 +611,7 @@ export class Vegetation {
         this.tmp.rotation.set(0, rot, 0); this.tmp.scale.setScalar(s); this.tmp.updateMatrix();
         m.trunk.setMatrixAt(m.n, this.tmp.matrix); m.ids[m.n] = hash(i, j, k + 101);
         m.seat.array[m.n] = this.drape ? heights.coarse(ax, an) - this.tmp.position.y - 0.3 : 0;
+        groundLean(heights, ax, an, m.lean, m.n * 2);
         if (m.to) m.to[m.n] = null;
         m.n++; total++;
         const oak = OAK_SHORT[sid];   // the acorn game's oaks, by their short names as before
@@ -640,6 +652,7 @@ export class Vegetation {
       tmp.rotation.set(0, rot, 0); tmp.scale.set(sw, sh, sw); tmp.updateMatrix();
       m.trunk.setMatrixAt(m.n, tmp.matrix); m.ids[m.n] = crownId(q);
       m.seat.array[m.n] = dcs ? (Number.isNaN(dcs[q]) ? (dcs[q] = heights.coarse(px, pn) - g) : dcs[q]) : 0;
+      groundLean(heights, px, pn, m.lean, m.n * 2);
       const on = this.oldNear[sid], to = on && on.slots.has(P.slot[q]) ? on.entry : null;   // a rare species' old crown: the old tree when near
       if (m.to) m.to[m.n] = to;
       m.n++; total++;
@@ -660,7 +673,7 @@ export class Vegetation {
     const plants = [];
     for (const arr of Object.values(this.meshes)) for (const e of arr) e.near.n = 0;
     for (const [species, arr] of Object.entries(this.meshes)) for (const e of arr) {
-      const src = e.mid.trunk.instanceMatrix.array, sS = e.mid.seat.array, to = e.mid.to;
+      const src = e.mid.trunk.instanceMatrix.array, sS = e.mid.seat.array, sL = e.mid.lean, to = e.mid.to;
       for (let i = 0; i < e.mid.n; i++) {
         const o = i * 16, dx = src[o + 12] - x, dz = src[o + 14] - z;
         if (dx * dx + dz * dz > R2) continue;
@@ -668,7 +681,7 @@ export class Vegetation {
         if (n >= N.cap) { dropped++; continue; }
         for (let k = 0; k < 16; k++) dst[n * 16 + k] = src[o + k];
         const id = e.mid.ids[i];
-        N.ids[n] = id; N.seat.array[n] = sS[i];
+        N.ids[n] = id; N.seat.array[n] = sS[i]; N.lean.array[n * 2] = sL[i * 2]; N.lean.array[n * 2 + 1] = sL[i * 2 + 1];
         let q = P ? crownOf(id) : -1;   // a crown's tree (a cell shrub's hashed id can have the high bit too: check the position)
         if (q >= P?.count || (q >= 0 && Math.abs(P.x[q] - src[o + 12]) > 0.01)) q = -1;
         if (t !== e && q >= 0) {   // the old tree's own fit: columns 0 and 2 by the width ratio, 1 by the height ratio
@@ -685,7 +698,7 @@ export class Vegetation {
     for (const arr of Object.values(this.meshes)) for (const e of arr) {
       const n = e.near.n;
       e.near.trunk.count = e.near.canopy.count = n; total += n;
-      e.near.trunk.instanceMatrix.addUpdateRange(0, n * 16); e.near.trunk.instanceMatrix.needsUpdate = true; seatUpload(e.near.seat, n);
+      e.near.trunk.instanceMatrix.addUpdateRange(0, n * 16); e.near.trunk.instanceMatrix.needsUpdate = true; seatUpload(e.near.seat, n); leanUpload(e.near.lean, n);
     }
     if (dropped && !this.warned) { this.warned = true; console.warn(`vegetation: near set full, ${dropped} plants within ${NEAR_R} m are not drawn; raise NEAR_CAP`); }
     this.nearCount = total; this.nearPlants = plants; this.nearVersion++;

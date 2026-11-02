@@ -223,6 +223,9 @@ browser stays the renderer.
   camera; the other tiles rebuilt with `--steps water`; a water temperature from
   `relations.shades_water`; the animals' crossings at the bars (deer, raven) made deliberate.
 
+- Tree bases perpendicular to the slope, 2026-11-01: each near-trunk instance carries the ground's normal at its foot;
+  the shader moves the collar uphill onto the surface and bends the first 1.8 m from the normal to the vertical, the
+  axis and the crown unmoved. Weak: the mid trunks past 180 m stay straight; the squirrel climbs the straight axis.
 - Trees that grow their age, built 2026-11-01 for valley oak, blue oak and ponderosa (`tools/grow_species.mjs`, the
   `growth` block, the fitted classes, the grown skeleton beside each class on the lineup page): the valley oak's limbs
   go from rising to level with rising ends to dipping below horizontal with the ends turned up; the blue oak stays

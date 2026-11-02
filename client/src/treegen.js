@@ -2295,13 +2295,38 @@ export function twigSway(material) {
 }
 // The trunk's near tier flexes with the limbs (crownFlexW: the base on the ground holds, the top moves most), so the
 // swaying crown stays on its limbs. Instanced trunks only; the mid trunks beyond are still, like the mid cards.
+// The slope bend (2026-11-01, Aaron: "the base of a tree should always be perpendicular to the surface it is on, and the
+// rest of the trunk should bend to go on its normal path from there"). Each near-trunk instance carries slopeN, the x and
+// z of the ground's unit normal at its foot (vegetation.js, from the 1 m heightfield; y follows). The instance's axis
+// stays where it was placed, upright (what reads the matrices is unchanged, the crown and the limbs stand where they
+// stood); the collar moves uphill along the surface to where a trunk leaving the ground along the normal and curving
+// back to vertical over SLOPE_BEND_M would have it (half the bend's height times the sine of the tilt), and the first
+// SLOPE_BEND_M of the trunk follow a cubic from that collar (tangent the normal) to the axis (tangent vertical), each
+// cross-section turned with the tangent. The mid trunks (past 180 m, a pixel wide) are not bent. A tree on the flat is
+// unchanged. Decided over baked slope classes: the slope varies per tree and the two floats cost nothing.
+export const SLOPE_BEND_M = 1.8;
 export function trunkFlex(material) {
   return chainShader(material, 'trunk-flex', shader => {
     Object.assign(shader.uniforms, { time: windUniforms.time, windDir: windUniforms.windDir, windStrength: windUniforms.windStrength, crownSway: CROWN_SWAY, crownFlex: CROWN_FLEX });
     shader.vertexShader = shader.vertexShader
-      .replace('#include <common>', '#include <common>\n' + WIND_GLSL + LEAF_WAVE_GLSL)
+      .replace('#include <common>', '#include <common>\n' + WIND_GLSL + LEAF_WAVE_GLSL + '\n#ifdef USE_INSTANCING\nattribute vec2 slopeN;\n#endif\n')
       .replace('#include <begin_vertex>', `#include <begin_vertex>
         #ifdef USE_INSTANCING
+        { mat4 lnM = modelMatrix * instanceMatrix;
+          vec3 ln = vec3(slopeN.x, sqrt(max(0.0, 1.0 - dot(slopeN, slopeN))), slopeN.y);
+          float lnA = acos(clamp(ln.y, -1.0, 1.0)), lnHB = ${SLOPE_BEND_M.toFixed(1)}, lnY = transformed.y * length(lnM[1].xyz);
+          if (lnA > 0.01 && lnY < lnHB) {
+            vec3 lnUp = vec3(0.0, 1.0, 0.0), lnH = normalize(vec3(ln.x, 0.0, ln.z));   // downhill
+            float lnD = 0.5 * lnHB * sin(lnA), lnT = clamp(lnY / lnHB, 0.0, 1.0);
+            vec3 lnP0 = -lnD * lnH + lnUp * (lnD * length(ln.xz) / max(ln.y, 0.05)), lnP1 = lnUp * lnHB;   // the collar on the surface uphill; the axis at the bend's top
+            float lnL = length(lnP1 - lnP0), lnT2 = lnT * lnT, lnT3 = lnT2 * lnT;
+            vec3 lnC = (2.0 * lnT3 - 3.0 * lnT2 + 1.0) * lnP0 + (lnT3 - 2.0 * lnT2 + lnT) * lnL * ln + (3.0 * lnT2 - 2.0 * lnT3) * lnP1 + (lnT3 - lnT2) * lnL * lnUp;
+            float lnW = lnA * (1.0 - (3.0 * lnT2 - 2.0 * lnT3));   // the tangent's tilt at this height
+            vec3 lnAx = normalize(cross(lnUp, ln));
+            vec3 lnR = (lnM * vec4(transformed, 1.0)).xyz - lnM[3].xyz, lnOff = lnR - lnM[1].xyz * transformed.y;   // the cross-section's offset from the axis
+            float lnCo = cos(lnW), lnSi = sin(lnW);
+            vec3 lnO2 = lnOff * lnCo + cross(lnAx, lnOff) * lnSi + lnAx * dot(lnAx, lnOff) * (1.0 - lnCo);
+            transformed += crownLocal(lnM, lnC + lnO2 - lnR); } }
         { mat4 flM = modelMatrix * instanceMatrix;
           vec3 flP = (flM * vec4(transformed, 1.0)).xyz, flR = flP - flM[3].xyz;
           float flS = smoothstep(0.15, 0.75, wNoise((flP.xz - windDir * time * 4.0) * 0.045));

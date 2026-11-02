@@ -2901,6 +2901,41 @@ import, `meshFor` (LegsBody), `useSpecies` (reset), the stalk's pose line, `draw
 instead of driveClips for a legs body, the turn table); `animalModels.js` the skin shader's SKIN_LIVE branch, `skinDecl`,
 `loadClips` / `loadTiers` / `restOnlySkin` (the live rows, `model.legs`, `model.live`), the four loaders.
 
+## 2026-11-01: a tree's base perpendicular to the slope (branch claude/gracious-swartz-132b77)
+
+Aaron: "The base of a tree should always be perpendicular to the surface it is on, and the rest of the trunk should bend
+to go on its normal path from there."
+
+**Decided: a per-instance attribute, not baked slope classes.** Every near-trunk instance carries `slopeN`, two floats:
+the x and z of the ground's unit normal at the plant's foot (vegetation.js `groundLean`, central differences of the 1 m
+heightfield a metre either side, filled with the matrices in `place`, `placeCrowns` and `refreshNear`; the mid set keeps
+a plain array). The slope varies tree by tree and two floats an instance cost nothing; a set of baked classes would have
+meant a mesh per class per species per seed. The attribute is read by the near trunk's vertex shader (treegen.js
+`trunkFlex`, with the wind flex) and by nothing else: the instance matrices stay upright, so what reads them (perch.js,
+the squirrel, the near-plant list, the close copies, the acorn stash holes) is unchanged, and the crown, limbs and twigs
+stand where they stood.
+
+**The bend.** The collar is moved uphill along the surface to where a trunk leaving the ground along the normal and
+curving back to vertical over `SLOPE_BEND_M` (1.8 m) would have it (half the bend's height times the sine of the tilt:
+0.64 m on a 45-degree slope, 0.16 m on 10), and the first 1.8 m of the trunk follow a cubic Hermite from that collar
+(tangent the normal) to the axis (tangent vertical), each cross-section turned with the tangent. The first formulation,
+a rotation about the root fading with height, was wrong: it moves the collar nowhere (a rotation about a point moves
+nothing at the point) and gave a 0.3 m S-curve on a 45-degree slope that read as nothing. Pinning the collar at the
+placed foot and shifting the whole tree downhill instead would have needed the same shift in every canopy, twig and
+leaf shader (the cards would float 0.6 m off their limbs); pinning the axis and moving the collar uphill keeps the bend
+in one shader. Not bent: the mid trunks (past 180 m, a pixel wide, no bark), the far impostors, the lineup page (not
+instanced). A tree on the flat is unchanged (the shader skips at under 0.6 degrees of tilt).
+
+**Verified** on the home tile, the page rendering its own camera and posting the frames to a scratch receiver (the pane
+gives no frames while hidden): a 9.5 m blue oak on a 45-degree slope at (4547, 5300) and a 10 m interior live oak on 50
+degrees at (4746, 4575), from a walker's eye across the slope at 7 m, from downhill at 8 m, at the collar from 3.5 m
+and from the air 40 m up. At the collar the trunk leaves the hillside perpendicular to the surface with the collar
+uphill of the axis and curves to vertical within two metres; from across the slope the foot of the trunk shows the
+curve; from the air nothing changes. No shader or console errors. Not verified: the near-to-mid hand-over at 180 m (the
+mid trunk is straight; at that distance the collar's 0.6 m is under a pixel), the squirrel climbing the bent base (it
+climbs the matrices' straight axis, 0.6 m off the drawn wood at the collar on the steepest slopes), the frame cost (one
+vec2 attribute and a few dozen vertex operations on the near trunks; not measured).
+
 ## 2026-11-01: trees grow their age, built (branch claude/gracious-swartz-132b77)
 
 Step 1 of `docs/tree-architecture.md`, with the valley oak's parts of steps 2 and 3: `tools/grow_species.mjs` grows a
