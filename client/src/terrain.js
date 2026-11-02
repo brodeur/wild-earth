@@ -455,7 +455,7 @@ export class Terrain {
     this.micro?.dispose(); this.micro = null; this.material.onBeforeRender = () => {};
     if (this.tile.heights) this.tile.heights.micro = null;
     ripUniforms.ripMask.value = null;
-    this.waterTexture?.dispose(); if (G.waterMap.value === this.waterTexture) { G.waterMap.value = null; G.waterOn.value = 0; }
+    this.waterTexture?.dispose(); if (groundUniforms.waterMap.value === this.waterTexture) { groundUniforms.waterMap.value = null; groundUniforms.waterOn.value = 0; }   // (G is uploadSteps's local; this threw on every second choice, 2026-11-01)
     resetDetailUniforms();
     seasonState.grass = null; seasonState.date = null; seasonState.version++;
     this.textures.clear(); this.season = null;

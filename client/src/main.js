@@ -21,6 +21,7 @@ import { Scent } from './scent.js';
 import { Sight } from './sight.js';
 import { SoundCues } from './soundCues.js';
 import { OpeningScreen, Arrival, lastTile, rememberTile } from './arrival.js';
+import { TitleScreen } from './title.js';
 import { SEASON_LOOK, seasonOfDate, sunDirection, dateForSeason, parseDate } from './season.js';
 import { AcornGame } from './acorns.js';
 import { Identify } from './identify.js';
@@ -326,7 +327,12 @@ async function main() {
       screen.setReady(id);
       if (choice?.tileId === id) w.enter(choice, true);   // Begin was pressed while it built
     };
-    screen = new OpeningScreen({ root: $('opening'), index, tileId, pending,
+    // The title screen (title.js: the title on stars, the earth with a dot per built tile and the places in view listed
+    // by how many players are in each; docs/multiplayer.md, lane 1) stands in for the card screen unless ?cards=1 asks
+    // for the cards; both answer the same calls (onSelect, setPrep, setReady, readyIds, point, close). ?hub=stub answers
+    // as the hub would (hubStub.js). Lane 3 (the sign-in modal over hub.js) hooks in here, on the TitleScreen.
+    const Screen = params.get('cards') === '1' ? OpeningScreen : TitleScreen;
+    screen = new Screen({ root: $('opening'), renderer, index, tileId, pending, hub: params.get('hub'),
       onSelect: id => { select(id); },
       onBegin: c => { choice = c; if (world?.ready && world.tileId === c.tileId) world.enter(c, true); } });
     screenOpen = true;
@@ -837,7 +843,7 @@ async function buildSteps(w, { params, pending, direct = false, arrive = null })
     const gated = screenOpen || now - readyAt < 2000;
     const draw = !gated || (!(compiling ||= compileNew()) && firstUse());
     if (draw) shadows.update(camera);
-    if (draw) spirit.render(renderer, scene, camera);   // renderer.render, plus the spirit's view's passes while it is on
+    if (draw && !(screenOpen && screen.ownsCanvas)) spirit.render(renderer, scene, camera);   // renderer.render, plus the spirit's view's passes while it is on; not while the title screen draws the earth on the shared canvas (title.js)
     spirit.unblendCamera();   // the control's own camera back for its next frame
     sound?.update(dt, { season: s, hour: state.hour, sunElevation: sun.elevation, weather: wx });
     if (peek.pending !== null) { if (peek.pending !== peek.shown) { crossFade(); applyPeek(peek.pending); } peek.pending = null; }

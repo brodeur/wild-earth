@@ -227,7 +227,10 @@ browser stays the renderer.
   players are in each, friends and groups, the chat, going somewhere together (the joiners arrive in spirit
   form above and behind the picker), video and audio last. The hub beside `server.py` with SQLite;
   positions relayed to group members in the same tile and persisted nowhere; a place is a tile. Lanes in
-  order: the title and the earth, the hub, the social screen, group travel, video and audio.
+  order: the title and the earth, the hub, the social screen, group travel, video and audio. Lane 1 landed
+  2026-11-01 (`client/src/title.js`: the title on stars, the crescent, the lit earth with the dots and the list,
+  a stub hub behind `?hub=stub`; the card screen behind `?cards=1` until the earth is signed off); next the
+  hub (lane 2, in its own worktree) and the sign-in modal over `title.onGate` (lane 3).
 
 ## Then
 

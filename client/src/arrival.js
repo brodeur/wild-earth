@@ -37,7 +37,7 @@ const esc = s => String(s).replace(/[&<>"]/g, c => ({ '&': '&amp;', '<': '&lt;',
 const getJSON = url => fetch(url).then(r => r.ok ? r.json() : null).catch(() => null);
 
 // The tile's best-known roads: named roads ranked by length times class, e.g. "Route 50, Missouri Flat Road".
-function majorRoads(features, n = 2) {
+export function majorRoads(features, n = 2) {   // shared with the title screen's places list (title.js)
   const score = new Map();
   for (const r of features?.roads || []) {
     const w = ROAD_WEIGHT[r.kind] || 0; if (!r.name || !w || !r.path) continue;
@@ -50,7 +50,7 @@ function majorRoads(features, n = 2) {
 // The tile's locality for its card: the best-ranked OSM place in features.json `places` (pipeline/fetch_places.py),
 // ties to the one nearest the tile's centre; null when the tile has none.
 const PLACE_RANK = { city: 0, town: 1, village: 2, suburb: 3, neighbourhood: 4, hamlet: 5, locality: 6 };
-function locality(features) {
+export function locality(features) {   // shared with the title screen's places list (title.js)
   const size = features?.size_m || 10000, c = size / 2;
   const ps = (features?.places || []).filter(p => p.name && p.kind in PLACE_RANK);
   ps.sort((a, b) => PLACE_RANK[a.kind] - PLACE_RANK[b.kind] || Math.hypot(a.x - c, a.north - c) - Math.hypot(b.x - c, b.north - c));

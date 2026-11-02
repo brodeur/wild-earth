@@ -2929,3 +2929,57 @@ every lane depends on are made once, by him, before any lane starts. Decided:
   together since they share no file; the social screen after the first merges; group travel after those;
   video and audio last.
 
+## 2026-11-01: the title and the earth (lane 1 of docs/multiplayer.md)
+
+The title screen is built (`client/src/title.js`, `client/title.css`, `client/src/hubStub.js`, the earth's
+textures in `client/assets/earth/`) and stands in for the card screen in `main.js`; the card screen stays behind
+`?cards=1` until the earth is verified on the home tile by Aaron. Seen in the viewer on the home tile against the
+stub hub and with no hub: the title on stars, the fade and the crescent rising, the Explore button where the modal
+will be, the sun swinging round, the dots and the list following a drag and re-sorting as the stub's counts change,
+the home tile built behind the earth and entered through Begin as a card did, a second choice tearing the first
+world down cleanly, the dev paths and the card screen unchanged. Decided on the way:
+
+- **The face.** Syncopate (Google Fonts, loaded as opening.css loads DM Sans) reads well at 0.45 em letter
+  spacing: wide, simple, geometric, as the spec asked. The body text stays DM Sans.
+- **The earth on the shared canvas.** The spec asks for the page's one renderer. Its canvas is also where a
+  building world warms up its shaders behind the screen (`main.js`'s held frames draw it), so the earth and the
+  world would have fought over the one surface. The screen owns the canvas while it is up (`ownsCanvas`): the
+  world loop's one visible draw is skipped then (one guarded line in `main.js`; its compiles, uploads and first-use
+  passes go on), and the earth renders every frame with the renderer's state put back as it found it. Rejected: a
+  second renderer and canvas for the earth (against the spec; the wisp of the card screen already has one), and
+  drawing the earth inside the world's loop (6 frames a second while a world builds).
+- **The root is #opening.** The title fills the card screen's element rather than one of its own, because
+  `main.js`'s MutationObserver, which removes an abandoned world's page elements, skips that root: a list row added
+  while a world built would otherwise go with the world. The root's background is made transparent so the canvas
+  shows through; `.out` fades it as before.
+- **Begin goes to black first.** A card's Begin faded the cards over a world already drawn behind them. Here the
+  canvas holds the earth until the world's first visible frame, which would be a cut; so Begin fades the screen to
+  black (0.55 s), then calls onBegin, and `.out` fades the black over the world: the world comes up from black.
+- **The list.** A row is the card's title (the tile's locality, else its roads, else its id, by the same
+  `locality` and `majorRoads` now exported from arrival.js), its region line (the roads when the title is a place,
+  then the Indigenous territories) and "N here" (0 is "no one here"). Sorted by count then name, the rows glide to
+  their new places (FLIP), and never re-sort while the pointer is over the list: a row stays where it is being
+  clicked (the first attempt to press Begin hit a row that had just moved under the pointer).
+- **The view.** Yaw and pitch of the earth group (pitch is the latitude of the facing point), a drag in radians per
+  earth-radius of pixels, inertia decaying at 2.4 per second, the fling capped at 3 rad/s (a synthetic drag flung
+  it to the pole), pitch within 80 degrees, the wheel between 2.7 and 4.6 radii. A chosen place eases the earth to
+  face it over a second unless the player is dragging. The crescent phase turns slowly and sits 0.6 rad east of the
+  facing point, so the sign-in's swing brings the player's place round.
+- **The sun** is a world-space direction: azimuth 152 degrees from the camera's side and 26 up for the crescent,
+  30 and 14 for the lit earth, tweened over 3 s on sign-in. No night lights, no clouds; the atmosphere is a rim term
+  inside the limb plus a back-faced shell 3.5% larger, both lit only where the sun reaches.
+- **The hub, before it exists.** The screen takes `hub`: `'stub'` (hubStub.js: `config`, `welcome`/`me`, counts
+  every 3 s that walk up and down, nothing on the network), an object with the same calls (lane 3's `hub.js`), else
+  HTTP alone: `GET /api/hub/config` (404 or a network error is "no hub") and `/api/hub/me`. The gate: a known user
+  signs in at once; a hub with no modal yet, or no hub, shows Explore; lane 3 sets `title.onGate` and calls
+  `title.onSignedIn(user)`. Group travel wraps `title.choose(id)`.
+- **Season** is `seasonOfDate()` at the choice: the world enters with the season on auto, today's date.
+- **Fixed in passing:** `Terrain.dispose` referenced `G`, a local of another method, and threw on every second
+  choice on either screen (the water commit of 2026-10-29); it is `groundUniforms` now.
+
+Open after this lane: the sign-in modal and hub.js (lane 3) over `onGate`/`onSignedIn`; counts over the hub's socket
+(the HTTP hub has none, so without the stub every place reads "no one here"); a Begin control on the earth itself
+(the row's is the one built); the two Yosemite tiles both titled "Yosemite Village" (their region lines differ);
+the three foothill tiles' dots merge at the lit zoom (the hover names the nearest); the card screen's removal with
+its sprites once Aaron has seen the earth; clouds; a touch screen and a narrow window are untested; the stars and
+the earth were judged on screenshots at 1280 x 800 only.
