@@ -169,6 +169,13 @@ sequenced; Parked is in the brief but deliberately not started.
    level and ~0 at altitude. Weak: from 10-40 m up the grass reads as stubble and the
    ground texture carries it; a mid-height grass impression (denser tufts or a shaded
    ground cover) is a follow-up.
+   The grassland as a continuous sward, 2026-11-01 (docs/grass-notes.md seventh pass): the ground
+   between the plants painted as the sward itself (blade strokes along the wind, root to tip, by
+   season), the thinned tiers' survivors widened, sward sheets stacking into a fuzzy horizon for level
+   eyes at 5-80 m, and the body-tier ring thinned to a third for the big bodies; the open ground no
+   longer reads as dirt at any distance. Open: the painted strokes are a tone past ~10 m at a level
+   eye (the sheets carry that band, as a pale haze rather than blades); the sheets' lower edge shows
+   at 4-8 m from the eye; the fall sward is as pale as the photo; costs measured on a loaded machine.
 4. Wind: done 2026-10-29 for the crowns (treegen.js CROWN_SWAY: a wave across each crown from the windward side,
    the single leaves and the close twigs with it); open: the shadow casters do not sway, no whole-crown limb bend,
    not stronger on ridges.

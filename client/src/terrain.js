@@ -40,6 +40,10 @@ export const groundUniforms = {
   // The water system (tilepackage WaterGrid, client/water.png; 2026-10-29): the zone byte tints the wet margins and the
   // ponds' mud and basins (groundWater); waterOn is 0 on a tile without the grid.
   waterMap: { value: null }, waterOn: { value: 0 }, waterPx: { value: 1 },
+  // The sward painted on the ground between the plants (the terrain FRAG's swardPaint, 2026-11-01): the grass palette's
+  // root and tip for the season (linear; grass.js applyLook sets them from the annual palette, since the photo is of the
+  // annual sward); swardOn 0 turns the paint off (A/B timing: __we.terrain.uniforms.swardOn.value = 0).
+  swardRoot: { value: new THREE.Color(0.14, 0.11, 0.064) }, swardTip: { value: new THREE.Color(0.57, 0.43, 0.21) }, swardOn: { value: 1 },
 };
 // The measured season for the CPU side: grass.js takes its blades' tint from `grass` (the open grass's
 // flat-ground ratio for the date over July, linear) when it is set; `version` bumps on each change.
@@ -169,6 +173,56 @@ const FRAG = /* glsl */`
   // Value noise on a rotated, scaled lattice: octaves on different rotations never line up into
   // the square grid a single lattice shows from the air.
   float rnoise(vec2 p, float a, float scale) { float c = cos(a), s = sin(a); return vnoise(mat2(c, s, -s, c) * p / scale); }
+  // ---- the ground is the sward (2026-11-01) --------------------------------------------------------------------
+  // In grassland the photo between the plants read as bare dirt at every distance: a 0.6 m texel is the mean of the
+  // sward it shows, with none of its structure. So the surface is painted as the sward itself: strokes of blades lying
+  // along a direction that wanders over ~10 m around the wind (as the sward shells' tufts do), each lit root (dark, in
+  // the shade of the sward) to tip (pale) with the season's palette, in three octaves (3, 6 and 12 cm wide) that each
+  // fade out by pixel footprint as the blade tiers fade theirs, over a shade floor; the photo keeps the metre-scale hue
+  // and brightness (patches, swales, the season). It thins exactly where the plants thin: gBare is grass.js's bareField
+  // (its hash2 and vnoise in uint arithmetic, which matches the JS 32-bit imul), so a bare patch is the same patch.
+  uniform vec3 swardRoot; uniform vec3 swardTip; uniform float swardOn;
+  float gHash2(vec2 ij, uint s) { uint h = uint(int(ij.x)) * 374761393u + uint(int(ij.y)) * 668265263u + s * 982451653u;
+    h = (h ^ (h >> 13)) * 1274126177u; return float(h ^ (h >> 16)) * (1.0 / 4294967296.0); }
+  float gVnoise(vec2 p, uint s) { vec2 i = floor(p), f = fract(p); f = f * f * (3.0 - 2.0 * f);
+    float a = gHash2(i, s), b = gHash2(i + vec2(1.0, 0.0), s), c = gHash2(i + vec2(0.0, 1.0), s), d = gHash2(i + vec2(1.0, 1.0), s);
+    return a + (b - a) * f.x + (c - a) * f.y + (a - b - c + d) * f.x * f.y; }
+  float gBare(vec2 xn) { return 0.6 * gVnoise(xn / 11.0, 3u) + 0.4 * gVnoise(xn / 4.0, 4u); }
+  // One lattice of blade strokes lying along dir: lanes W wide across it, cells L long along it, each lane's cells shifted
+  // along by a hash so no row shows; each cell one blade of its own length and width, tapering to its tip. Returns the
+  // blade's coverage at this pixel (aa: the pixel's width in lanes), t along it (0 root .. 1 tip) and a per-blade random.
+  vec3 gStrokes(vec2 p, vec2 dir, float L, float W, float aa) {
+    vec2 q = vec2(dot(p, dir), dot(p, vec2(-dir.y, dir.x))) / vec2(L, W);
+    q.x += gHash2(vec2(floor(q.y), 7.0), 11u) * 4.0;
+    vec2 i = floor(q), f = fract(q);
+    vec3 h = vec3(gHash2(i, 21u), gHash2(i, 22u), gHash2(i, 23u));
+    float t = f.x / (0.5 + 0.5 * h.x);
+    if (t > 1.0) return vec3(0.0);
+    float hw = 0.45 * (1.0 - 0.8 * t * t) * (0.65 + 0.35 * h.y);
+    return vec3(clamp((hw - abs(f.y - 0.5)) / max(aa, 1e-3) + 0.5, 0.0, 1.0), t, h.z);
+  }
+  // The sward at this pixel from the photo's colour c: the shade floor (c, darker) under the strokes of the octaves that
+  // still resolve at this footprint (foot: metres per pixel), each blade coloured by the palette's root-to-tip ratio to
+  // its mean (so the mean stays the photo's) and its own brightness; keep thins the strokes (the bare patches). cov
+  // returns how much of the pixel is blade.
+  vec3 swardPaint(vec3 c, vec2 pxz, float foot, float keep, out float cov) {
+    vec2 dir = normalize(windDir + 1.2 * (vec2(wNoise(pxz * 0.09), wNoise(pxz * 0.09 + 9.0)) - 0.5));
+    vec2 p = pxz - dir * (gust(pxz) - 0.7) * windStrength * 0.05;   // the sward leans a few cm with the gusts
+    vec3 mean = mix(swardRoot, swardTip, 0.6);
+    vec3 rr = swardRoot / max(mean, vec3(1e-3)), rt = swardTip / max(mean, vec3(1e-3));
+    vec3 col = c * 0.52; cov = 0.0;
+    for (int k = 0; k < 3; k++) {
+      float W = k == 0 ? 0.12 : k == 1 ? 0.06 : 0.03, L = k == 0 ? 0.75 : k == 1 ? 0.45 : 0.25;
+      float f = 1.0 - smoothstep(0.3 * W, 0.9 * W, foot);   // gone once a stroke is under a pixel wide
+      if (f <= 0.0) continue;
+      vec2 dk = k == 0 ? dir : k == 1 ? mat2(0.94, 0.34, -0.34, 0.94) * dir : mat2(0.94, -0.34, 0.34, 0.94) * dir;
+      vec3 s = gStrokes(p + float(k) * 3.7, dk, L, W, foot / W);
+      float cv = s.x * f * step(fract(s.z * 7.3), keep);
+      vec3 blade = c * mix(rr, rt, pow(s.y, 0.75)) * (0.82 + 0.36 * fract(s.z * 13.7)) * 1.06;
+      col = mix(col, blade, cv); cov = max(cov, cv);
+    }
+    return col;
+  }
   ${DETAIL_GLSL}
   uniform sampler2D ripMask; uniform vec3 ripRef; uniform float ripOn; uniform vec3 ripTint; uniform float ripDark; uniform float ripMix;
   uniform float geoSlope;   // 1 on a tile with the lidar residual: the rock rule takes the mesh's own slope too
@@ -185,7 +239,8 @@ const FRAG = /* glsl */`
       c = mix(c, c * rr * ripDark, wRip * ripMix);
     }
     c = groundWater(c, vUv);   // the water system's wet margins and mud (groundUniforms.waterMap)
-    vec2 cov = texture2D(canopyMap, vUv).rg * 2.55;     // tree, shrub cover 0..1 (sky occlusion and litter)
+    vec3 cov3 = texture2D(canopyMap, vUv).rgb * 2.55;   // tree, shrub, herb cover 0..1 (sky occlusion, litter, the sward)
+    vec2 cov = cov3.rg;
     float dist = distance(vPosW, cameraPosition);
     vec3 dpx = dFdx(vPosW), dpy = dFdy(vPosW);          // outside every branch: the detail fetches use them
     vec3 nGeo = normalize(vNormalW), nL = nGeo;         // geometric normal; lighting normal (detail-bent)
@@ -204,6 +259,16 @@ const FRAG = /* glsl */`
     // nothing by 12 pixels per repeat.
     float foot = sqrt(length(dpx) * length(dpy));        // metres per pixel (geometric mean of the two axes)
     float fade = detailReady * detailOn * (1.0 - smoothstep(40.0, 250.0, dist)) * (1.0 - smoothstep(2.5 / 40.0, 2.5 / 12.0, foot));
+    // Material weights (groundDetail.js mask: r slope/90, g curvature 0.5 +- convex/concave, b bare).
+    vec4 mk = textureLod(detailMask, vUv, 0.0);
+    // slope: the 10 m mask's (from the 5 m heights), or on a lidar tile the steeper of that and the drawn mesh's
+    // own (the fine mesh's 2 m triangles near the player), so a road cut's bank takes the rock material
+    float slopeDeg = max(mk.r * 90.0, geoSlope * degrees(acos(clamp(nMac.y, 0.0, 1.0)))), curv = mk.g * 2.0 - 1.0, bare = mk.b, tree = clamp(cov.r, 0.0, 1.0);
+    float bn = rnoise(vPosW.xz + 11.0, 0.8, 3.1) - 0.5;   // +-0.5 over ~3 m: ragged borders between materials
+    float rock = max(smoothstep(24.0, 32.0, slopeDeg), max(smoothstep(0.35, 0.7, -curv), smoothstep(0.7, 0.9, bare)));
+    // pavement where the road weight passes ~0.55, with a ragged, crumbling 1-2 m edge (the 5 m raster's own edge is straight)
+    float pave = smoothstep(0.42, 0.68, road + 0.22 * bn + 0.18 * (rnoise(vPosW.xz + 3.3, 2.4, 0.9) - 0.5));
+    float swCov = 0.0;   // how much of this pixel the painted sward's blades cover (swardPaint)
     // Fine detail so the ground is not a blurred photo up close: 2 m and 9 m value noise, on
     // lattices turned to two different angles so neither lines up with the world axes.
     float d = 0.86 + 0.14 * rnoise(vPosW.xz, 0.35, 2.0) + 0.10 * (rnoise(vPosW.xz + 6.3, 1.45, 9.1) - 0.5);
@@ -222,6 +287,15 @@ const FRAG = /* glsl */`
         float gs = clamp((gust(vPosW.xz) - 0.7) / 0.55, -1.0, 1.0);
         d *= 1.0 + 0.06 * gs * w.r * (1.0 - smoothstep(320.0, 420.0, dist));
       }
+      // The sward itself, painted between the plants (swardPaint): grassland and the grass under oaks, thinned where the
+      // plants are (the same bare-patch field and rule as grass.js plantAt: 40% kept in a patch), none on rock or the
+      // photo's own bare ground, less under tree cover, out to 160 m.
+      if (swardOn > 0.5 && dist < 160.0) {
+        float herb = clamp(max(cov3.b, 0.3), 0.0, 1.0), thr = 0.28 + 0.14 * (1.0 - herb);
+        float open = smoothstep(thr - 0.06, thr + 0.06, gBare(vec2(vPosW.x, -vPosW.z)));
+        float swW = smoothstep(0.05, 0.4, w.r + 0.5 * w.g) * (1.0 - 0.6 * tree) * (1.0 - rock) * (1.0 - smoothstep(0.25, 0.6, bare)) * (1.0 - smoothstep(110.0, 160.0, dist));
+        if (swW > 0.01) { float cv; vec3 sc = swardPaint(c, vPosW.xz, foot, 0.4 + 0.6 * open, cv); c = mix(c, sc, swW); swCov = swW * cv; }
+      }
       // Chaparral: dark gaps of shade and litter between ~2.5 m crowns, so the ground beyond the
       // shrub clumps keeps the mottled, closed-canopy look and the clumps never sit on bare photo.
       if (w.b > 0.02) {
@@ -234,15 +308,6 @@ const FRAG = /* glsl */`
     // of its strength there and all of it beyond 250 m.
     c *= mix(d, 1.0 + (d - 1.0) * 0.35, fade);
     if (fade > 0.0) {
-      // Material weights (groundDetail.js mask: r slope/90, g curvature 0.5 +- convex/concave, b bare).
-      vec4 mk = textureLod(detailMask, vUv, 0.0);
-      // slope: the 10 m mask's (from the 5 m heights), or on a lidar tile the steeper of that and the drawn mesh's
-      // own (the fine mesh's 2 m triangles near the player), so a road cut's bank takes the rock material
-      float slopeDeg = max(mk.r * 90.0, geoSlope * degrees(acos(clamp(nMac.y, 0.0, 1.0)))), curv = mk.g * 2.0 - 1.0, bare = mk.b, tree = clamp(cov.r, 0.0, 1.0);
-      float bn = rnoise(vPosW.xz + 11.0, 0.8, 3.1) - 0.5;   // +-0.5 over ~3 m: ragged borders between materials
-      float rock = max(smoothstep(24.0, 32.0, slopeDeg), max(smoothstep(0.35, 0.7, -curv), smoothstep(0.7, 0.9, bare)));
-      // pavement where the road weight passes ~0.55, with a ragged, crumbling 1-2 m edge (the 5 m raster's own edge is straight)
-      float pave = smoothstep(0.42, 0.68, road + 0.22 * bn + 0.18 * (rnoise(vPosW.xz + 3.3, 2.4, 0.9) - 0.5));
       float wt[5];
       wt[0] = w.r * (1.0 - 0.8 * tree);                                  // thatch: grassland in the open
       wt[1] = clamp(max(tree * 1.5, w.g * 0.5), 0.0, 1.0);               // litter: under tree cover
@@ -302,7 +367,7 @@ const FRAG = /* glsl */`
       }
       float con = mix(detailContrast[i1], detailContrast[mSec], mB);
       float m1 = rnoise(vPosW.xz + 5.0, 0.2, 29.0), m2 = rnoise(vPosW.xz + 41.0, 1.3, 47.0);
-      c *= mix(vec3(1.0), mix(a1c, a2c, mB), fade * con * (0.7 + 0.6 * m1)) * mix(1.0, 0.9 + 0.2 * m2, fade);
+      c *= mix(vec3(1.0), mix(a1c, a2c, mB), fade * con * (0.7 + 0.6 * m1) * (1.0 - 0.6 * swCov)) * mix(1.0, 0.9 + 0.2 * m2, fade);   // the scan backs off where the painted sward carries the structure
       vec3 nd = normalize(mix(dToWorld(axA, t1, nGeo), dToWorld(axB, t2, nGeo), mB));
       nL = normalize(mix(nGeo, nd, fade));
     }

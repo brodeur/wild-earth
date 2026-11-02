@@ -8,7 +8,7 @@ import { ShrubField, ClumpField, KIND, waterAt, shrubLeaves } from './shrubfield
 import { GrassShells } from './grassShells.js';
 import { rockKeep } from './tilepackage.js';
 import { bodyScale, onBodyScale } from './bodyScale.js';
-import { SPECIES, SPECIES_IDS } from './trees.js';
+import { SPECIES, SPECIES_IDS, mulberry32 } from './trees.js';
 import { seasonMonth } from './treegen.js';
 
 // Grass in the Sierra foothill savanna: non-native annuals (wild oat, bromes, medusahead) over
@@ -37,10 +37,12 @@ import { seasonMonth } from './treegen.js';
 // The body tier (2026-10-28): the tiers above are tuned for a chase camera 3-5 m up, and to a lizard or a vole (its
 // eye a few cm up, its chase camera ~0.3 m) the ground tier's 8 plants per m^2 read as sparse stalks on a blurred photo, where the
 // real sward is blades 2-5 cm apart. So under a small body (bodyScale.js, scale below BODY_MAX = 0.6: lizard,
-// vole, ground squirrel, rabbits, fox; never a deer, lion, bear, coyote, turkey, the spirit or a flier, whose
-// frame is exactly what it was) a ring of blades at real density follows the camera: radius
+// vole, ground squirrel, rabbits, fox) a ring of blades at real density follows the camera: radius
 // 16 sqrt(scale) m clamped to 1.5-10 m (lizard 2.6, vole 3.3, rabbit 6.4, fox 10), thinning blade by blade
-// over its outer quarter. Its unit is a young tiller clump of 3-6 leaves (grassBlades.js buildSwardClump: real
+// over its outer quarter. The big bodies (2026-11-01, step 4 of the grassland sward: the deer, the lion, the coyote, the
+// bear, the turkey, the spirit and a landed flier, whose frames had none of it) get the same ring thinned to a third of
+// the density (an even subsample: the cells are in rank order) at BODY_BIG_R, so there is lots of grass close for every
+// body within the full ring's cost. Its unit is a young tiller clump of 3-6 leaves (grassBlades.js buildSwardClump: real
 // sizes, tapered, rolled and twisted, normals rounded across each blade), annual or needlegrass by the same
 // share and drifts as the plants, placed on a jittered 6.7 cm grid (225 clumps, ~1000 blades per m^2 on open
 // grassland) thinned by the habitat's density, herb cover, outcrops, roads, water and the bare patches as the
@@ -81,6 +83,7 @@ const IMP_IN = [6, 12], IMP_W = 1.5, TUFT_W = 3;
 // Body tier (see the header): on below BODY_MAX scale; BODY_CELL m cells of BODY_G x BODY_G candidates; at most
 // BODY_CAP clumps staged; the ring's radius from the scale.
 const BODY_MAX = 0.6, BODY_CELL = 2, BODY_G = 30, BODY_CAP = 60000, BODY_TIER = 3, BODY_LN = 5;
+const BODY_BIG_R = 7, BODY_BIG_THIN = 1 / 3;   // the big bodies' ring: radius (m) and its share of the density
 const bodyRadius = s => Math.min(Math.max(16 * Math.sqrt(s), 1.5), 10);
 
 // ---- one placement per cell, read by every tier -----------------------------------------------
@@ -126,7 +129,19 @@ const STRIDE = 8;
 // Impostor atlas: every card kind baked from its blade clump, 8 azimuths x 5 elevations x 2 variants.
 // Kinds (atlas row blocks): 0 needlegrass tussock, 1 annual (tufts), 2 wild oat.
 const IMP = { T: 128, AZ: 8, EL: 5, VAR: 2, KINDS: 3, EL_STEP: 16 * Math.PI / 180, MARGIN: 124 / 128 };
-IMP.TX = IMP.AZ * IMP.VAR; IMP.TY = IMP.EL * IMP.KINDS;
+IMP.TX = IMP.AZ * IMP.VAR; IMP.TY = IMP.EL * IMP.KINDS + 1;   // + the sward sheets' strip in the last row (SHEET)
+// Sward sheets (2026-11-01, step 3 of the grassland sward): for a level eye (the deer, the lion, the fox, the chase camera a
+// couple of metres up) the 5-80 m band is seen at grazing angles, where the shells separate into layers and the thinned blade
+// tiers show the ground between them. So, for that view only, strips of baked sward silhouette stand across the view on a
+// jittered 2 m grid: each W x H m (x0.7-1.3), bowed so its ends swing away from the camera, on the ground's local plane, its
+// window of a 6 m strip of annual and needlegrass clumps baked from the side into the last row of the card atlas (bakeSetup,
+// bake); at grazing angles they stack into a continuous fuzzy sward with a soft horizon. Coloured and lit as the cards are
+// (the ground under each, the season's palette root to tip, sky occlusion, light through the blades), the top shearing with
+// the gust. One instanced draw. They dither in from 4-8 m, out at 70-90 m, fade out toward down-looking views (the sine of
+// the depression angle over EL, where the shells come in) and from 8-14 m up. Placed per 2 m cell of the world grid, a pure
+// function of the cell (nothing re-rolls), in 10 m blocks cached and culled like the tiers'; thinned by the sward density
+// (habitat, herb cover, the bare patches, outcrops, roads, water) as the plants are.
+const SHEET = { W: 3.0, H: 0.75, SPACING: 2, BLOCK: 10, PLACE: 92, REBUILD: 10, CAP: 14000, BAND: [4, 8, 70, 90], EL: [0.12, 0.3], TEXW: 6, ROW: IMP.EL * IMP.KINDS, TIER: 4, PLOT: [84, 26] };
 
 // Season palettes (sRGB). Annuals: wild oat and bromes; bunch: purple needlegrass. The season's
 // `grass` tint stays the overall tone: these are scaled by tint / SEASON_LOOK[season].grass.
@@ -174,7 +189,7 @@ const COMMON_VERT = /* glsl */`
   ${WIND_GLSL}
   ${GROUND_GLSL}
   uniform vec2 nearFade; uniform vec2 closeFade; uniform vec2 groundFade; uniform vec2 midIn; uniform vec2 impIn; uniform float impW;
-  uniform float groundK; uniform float matchOn; uniform float tiltOn;
+  uniform float groundK; uniform float matchOn; uniform float tiltOn; uniform float widenOn;
   uniform float heightScale; uniform float heads; uniform float thatch; uniform float leafScale; uniform float dry;
   uniform vec3 aRoot; uniform vec3 aTip; uniform vec3 aHead; uniform vec3 aAwn;
   uniform vec3 bRoot; uniform vec3 bTip; uniform vec3 bHead; uniform vec3 bAwn; uniform vec3 thatchCol;
@@ -299,12 +314,19 @@ const NEAR_VERT = /* glsl */`
     // Distance LOD (collapsed triangles never reach the tiler, and sub-pixel triangles are what
     // this GPU pays for): main-tier clumps thin to 40% from 30 to 80 m, leaves to half from 25 to
     // 50 m, awns go once sub-pixel. The grazing view keeps the far band looking full regardless.
-    // Far blades are NOT widened: tried, and the fattened blades cost ~4 ms of overdraw. A clump
-    // handing over to its card stays whole until it does, so the two match.
+    // Cover held as a tier thins (2026-11-01, AMD's width *= max / count, docs/grass-notes.md): the blades that survive
+    // a thinning (the tier's hand-over band, the main tier's clump and leaf cuts) are widened in view space by the
+    // square root of what was cut (at most 1.8x), so the sward keeps its cover while the count drops; a full 1 / keep
+    // was tried before and cost ~4 ms of overdraw. A clump handing over to its card stays whole until it does, so the
+    // two match, and is not widened.
+    float wf = 1.0;
     if (!hand) {
-      if (code < 1.5) s *= step(h11(seed * 41.3), mix(1.0, 0.4, smoothstep(30.0, 80.0, d)));
+      float kc = 1.0, kl = 1.0;
+      if (code < 1.5) { kc = mix(1.0, 0.4, smoothstep(30.0, 80.0, d)); s *= step(h11(seed * 41.3), kc); }
       if (part > 2.5) s *= step(d, 25.0 + 10.0 * hb);
-      if (part < 0.5) s *= step(hb, mix(1.0, 0.5, smoothstep(25.0, 50.0, d)));
+      if (part < 0.5) { kl = mix(1.0, 0.5, smoothstep(25.0, 50.0, d)); s *= step(hb, kl); }
+      float kb = 1.0 - smoothstep(dOut - w, dOut + w, d);   // the tier's own hand-over: what is left of it here
+      wf = mix(1.0, min(inversesqrt(max(kc * kl * max(kb, 0.3), 0.05)), 1.8), widenOn);   // widenOn 0: A/B timing
     }
     if (s < 0.01 || offscreen(iPos.xyz, 0.6 * max(iVar.y, iVar.x))) { gl_Position = vec4(0.0, 0.0, 2.0, 1.0); return; }
     vec3 p = position;
@@ -325,6 +347,12 @@ const NEAR_VERT = /* glsl */`
     vec2 off = (windDir * b + vec2(-windDir.y, windDir.x) * fl) * t * t * max(H, 0.2);
     w3.xz += off; w3.y -= 0.5 * dot(off, off) / max(H, 0.2) * t;   // roughly keep the blade's length
     vec3 wp = iPos.xyz + w3;
+    // the widening: the vertex is pushed out on its side of the blade along the camera's right, by the extra half width
+    // (the blade's own half width by part and taper, times wf - 1), so an edge-on blade never collapses to a sliver either
+    if (wf > 1.001) {
+      float hwid = (part < 0.5 ? 0.0075 * (1.0 - 0.85 * pow(t, 1.8)) : part < 1.5 ? 0.0023 * (1.0 - 0.35 * t) : part < 2.5 ? 0.005 : 0.0012) * iVar.x;
+      wp += vec3(viewMatrix[0][0], viewMatrix[1][0], viewMatrix[2][0]) * (aBlade.w * hwid * (wf - 1.0));
+    }
     // papery glumes and awns glow against the sun
     // groundMatch is linear in the colour, so a factor G. Last year's grey thatch takes only its
     // brightness far off: through the green mean's ratios it turned rust-red.
@@ -538,6 +566,99 @@ const BAKE_FRAG = /* glsl */`
 const COPY_VERT = /* glsl */`varying vec2 vUv; void main() { vUv = uv; gl_Position = vec4(position.xy, 0.0, 1.0); }`;
 const COPY_FRAG = /* glsl */`uniform sampler2D src; varying vec2 vUv; void main() { gl_FragColor = texture2D(src, vUv); }`;
 
+// ---- the sward sheets (SHEET) ---------------------------------------------------------------------------------------
+// Instance: iPos x y z seed | iVar density, dy/dx, dy/dz (the ground's local plane), the start of its window of the strip.
+const SHEET_VERT = /* glsl */`
+  ${COMMON_VERT}
+  ${SHADE_VERT}
+  uniform vec4 sheetBand; uniform vec2 sheetEl; uniform float sheetFade; uniform vec2 sheetSize;   // W, H (m)
+  varying vec2 vUv; varying vec3 vF; varying vec3 vFth; varying vec3 vSun; varying float vDiff; varying vec2 vBack; varying vec3 vAmbG; varying vec3 vAmbS; varying vec3 vT; varying vec3 vIn; varying float vFade;
+  void main() {
+    vec3 root = iPos.xyz; float seed = iPos.w, dens = iVar.x;
+    vec3 r = root - cameraPosition; float d = length(r), hd = length(r.xz);
+    float el = -r.y / max(d, 1e-3);   // the sine of the view's depression angle at this sheet
+    float din = mix(sheetBand.x, sheetBand.y, h11(seed * 517.3 + 0.37)), dout = mix(sheetBand.z, sheetBand.w, h11(seed * 91.3 + 0.71));
+    float s = smoothstep(0.1, 0.5, dens) * sheetFade * smoothstep(din - 1.0, din + 1.0, d) * (1.0 - smoothstep(dout - 4.0, dout + 4.0, d)) * (1.0 - smoothstep(sheetEl.x, sheetEl.y, el));
+    float W = sheetSize.x * (0.7 + 0.6 * h11(seed * 3.1)), H = sheetSize.y * heightScale * (0.75 + 0.5 * h11(seed * 7.7));
+    if (s < 0.02 || offscreen(root, 0.6 * W)) { gl_Position = vec4(0.0, 0.0, 2.0, 1.0); return; }
+    vFade = s;
+    // across the view (yaw only), bowed so the ends swing away from the camera, its base on the ground's local plane
+    vec2 to = r.xz / max(hd, 1e-3), right = vec2(-to.y, to.x);
+    float x = position.x * 0.5 * W;
+    vec2 off = right * x + to * (0.1 * W * position.x * position.x);
+    vec3 p = root + vec3(off.x, iVar.y * off.x + iVar.z * off.y, off.y);
+    p.y += position.y * H;
+    p.xz += windDir * windStrength * gust(root.xz) * position.y * position.y * H;   // the top shears with the gust as the card tops do
+    vUv = vec2(iVar.w + position.x * 0.5 * W / ${SHEET.TEXW.toFixed(1)}, position.y);
+    // colour and light as the cards (IMP_VERT): the per-sheet and field variation, the ground under the sheet at this distance
+    float v1 = h11(seed * 7.7 + 0.1), v2 = h11(seed * 3.3 + 1.0);
+    vec3 F = mix(vec3(0.94, 1.02, 1.05), vec3(1.06, 0.99, 0.88), v1) * (0.9 + 0.2 * v2);
+    F *= mix(vec3(0.95, 1.03, 1.0), vec3(1.06, 0.98, 0.9), vnoise(root.xz * 0.05)) * (0.92 + 0.16 * vnoise(root.xz * 0.13 + 7.0));
+    float m = smoothstep(12.0, 45.0, d);
+    vec3 G = groundMatch(vec3(1.0), 0.0, root, m);
+    vF = F * G; vFth = F * mix(G, vec3(dot(G, G_LUMA)), m);
+    float sunUp = smoothstep(-0.03, 0.08, sunDir.y);
+    vec3 V = -r / max(d, 1e-3); vec3 Nb = normalize(vec3(V.x, 0.0, V.z) + vec3(1e-4, 0.0, 0.0));
+    vSun = sunLight * cloudShadow(root);
+    vDiff = max(dot(normalize(Nb + vec3(0.0, 1.0, 0.0)), sunDir), 0.0);
+    vBack = vec2(max(-dot(Nb, sunDir), 0.0) * 0.3, pow(max(dot(-V, sunDir), 0.0), 5.0) * 0.55) * sunUp;
+    float occ = skyOcc(root);
+    vAmbG = ambientGround * occ; vAmbS = ambientSky * occ;
+    vIn = atmosphereApply(vec3(0.0), root, cameraPosition);
+    vT = atmosphereApply(vec3(1.0), root, cameraPosition) - vIn;
+    gl_Position = projectionMatrix * viewMatrix * vec4(p, 1.0);
+  }`;
+const SHEET_FRAG = /* glsl */`
+  uniform sampler2D impAtlas; uniform vec3 wxGround;
+  uniform vec3 aRoot; uniform vec3 aTip; uniform vec3 aHead; uniform vec3 aAwn; uniform vec3 thatchCol;
+  varying vec2 vUv; varying vec3 vF; varying vec3 vFth; varying vec3 vSun; varying float vDiff; varying vec2 vBack; varying vec3 vAmbG; varying vec3 vAmbS; varying vec3 vT; varying vec3 vIn; varying float vFade;
+  void main() {
+    if (vFade < 0.995 && fract(52.9829189 * fract(dot(gl_FragCoord.xy, vec2(0.06711056, 0.00583715)))) >= vFade) discard;
+    // the strip wraps along u (the mip from the unwrapped coordinate, so the seam has no pixel of its own); far off the
+    // coverage builds up with the minification as the cards' does (a sward of hundreds of leaves, not the plot's dozens)
+    vec2 tx = vec2(vUv.x * ${(IMP.T * IMP.TX).toFixed(1)}, vUv.y * ${IMP.T.toFixed(1)});
+    float mip = log2(max(max(length(dFdx(tx)), length(dFdy(tx))), 1.0));
+    vec2 uv = vec2(fract(vUv.x), (${SHEET.ROW.toFixed(1)} + 0.01 + 0.98 * clamp(vUv.y, 0.0, 1.0)) / ${IMP.TY.toFixed(1)});
+    vec4 g = textureLod(impAtlas, uv, mip);
+    float cov = 1.0 - pow(1.0 - clamp(g.g, 0.0, 1.0), 1.0 + 1.5 * clamp(mip - 0.7, 0.0, 3.0));
+    if (cov < 0.04) discard;
+    float gc = max(g.g, 1e-4), t = clamp(g.b / gc, 0.0, 1.0), part = clamp(g.a / gc * 3.0, 0.0, 3.0), th = clamp(g.r / gc, 0.0, 1.0);
+    vec3 leafC = mix(mix(aRoot, aTip, smoothstep(0.0, 0.9, t)) * vF, thatchCol * mix(0.75, 1.05, t) * vFth, th) * 0.92;   // a little under the blades: the sheets stand in the sward's own shade
+    vec3 culmC = mix(aRoot, mix(aTip, aHead, 0.6), smoothstep(0.1, 1.0, t)) * vF;
+    vec3 c = part < 1.0 ? mix(leafC, culmC, part) : part < 2.0 ? mix(culmC, aHead * vF, part - 1.0) : mix(aHead, aAwn, part - 2.0) * vF;
+    c = mix(c, vec3(0.7, 0.73, 0.78), wxGround.z * mix(1.0, 0.55, t));
+    float glow = mix(1.0, 1.6, clamp(part - 1.0, 0.0, 1.0));
+    vec3 trans = c * normalize(c + 1e-4) * 1.7;
+    vec3 amb = mix(vAmbG, vAmbS, 0.3 + 0.6 * t) * mix(0.35, 1.0, smoothstep(0.0, 0.7, t));
+    vec3 col = (c * (vSun * vDiff * mix(0.45, 1.0, t) + amb) + trans * vSun * (vBack.x + vBack.y * t) * glow) * 0.3183099;
+    gl_FragColor = vec4(col * vT + vIn, cov);
+    #include <tonemapping_fragment>
+    #include <colorspace_fragment>
+  }`;
+// The strip's bake: a plot of clumps (sInst: x along the strip, z into it, scale, seed), each with NEAR_VERT's per-blade
+// heights, leans and flowering and its own yaw, seen orthographically from the side; out as BAKE_FRAG (thatch, coverage, t, part / 3).
+const SHEET_BAKE_VERT = /* glsl */`
+  uniform float heads; uniform float thatch; uniform float leafScale; uniform float bType; uniform vec2 bSpan;   // the plot's width and the strip's height (m)
+  attribute vec4 aBlade; attribute vec4 sInst;
+  varying float vT; varying float vPart; varying float vTh;
+  float h11(float n) { return fract(sin(n) * 43758.5453123); }
+  void main() {
+    float t = aBlade.x, br = aBlade.y, part = aBlade.z, seed = sInst.w;
+    float hb = h11(seed * 71.9 + br * 131.7);
+    bool on = part < 0.5 || hb <= heads * (bType < 0.5 ? 0.9 : 0.85);
+    vec3 p = position;
+    p.y *= (0.75 + 0.5 * h11(seed * 13.7 + br * 57.1)) * (part < 0.5 ? leafScale : 1.0);
+    float la = h11(seed * 3.1 + br * 7.9) * 6.2832;
+    p.xz += vec2(cos(la), sin(la)) * t * t * 0.07;
+    float yaw = h11(seed * 5.3) * 6.2832, c = cos(yaw), s = sin(yaw);
+    p = vec3(c * p.x + s * p.z, p.y, -s * p.x + c * p.z) * sInst.z;
+    vTh = part < 0.5 && h11(br * 17.3 + seed * 3.7) < thatch ? 1.0 : 0.0; vT = t; vPart = part;
+    gl_Position = on ? vec4((sInst.x + p.x) / bSpan.x * 2.0 - 1.0, p.y / bSpan.y * 2.0 - 1.0, (sInst.y + p.z) / 4.0, 1.0) : vec4(0.0, 0.0, 2.0, 1.0);
+  }`;
+const SHEET_BAKE_FRAG = /* glsl */`
+  varying float vT; varying float vPart; varying float vTh;
+  void main() { gl_FragColor = vec4(vTh, 1.0, vT, vPart / 3.0); }`;
+
 // ---- placement helpers ----------------------------------------------------------------------
 function hash2(i, j, s) { let h = (i * 374761393 + j * 668265263 + s * 982451653) | 0; h = Math.imul(h ^ (h >>> 13), 1274126177); return ((h ^ (h >>> 16)) >>> 0) / 4294967296; }
 function vnoise(x, y, s) {
@@ -644,10 +765,10 @@ export class Grass {
     this.mixCache = new Map();   // species mix row (or -habitat class) -> the cell's grass species by type (speciesMix)
     const col = () => new THREE.Color();
     this.uniforms = {
-      ...windUniforms, ...groundUniforms, groundK: { value: 1.12 }, matchOn: { value: 1 }, tiltOn: { value: 1 },
+      ...windUniforms, ...groundUniforms, groundK: { value: 1.12 }, matchOn: { value: 1 }, tiltOn: { value: 1 }, widenOn: { value: 1 },
       nearFade: { value: new THREE.Vector2(...NEAR_FADE) }, closeFade: { value: new THREE.Vector2(...CLOSE_FADE) },
       groundFade: { value: new THREE.Vector2(...GROUND_FADE) }, midIn: { value: new THREE.Vector2(...MID_IN) },
-      impIn: { value: new THREE.Vector2(...IMP_IN) }, impW: { value: IMP_W }, bodyFade: { value: new THREE.Vector2(2, 3) },
+      impIn: { value: new THREE.Vector2(...IMP_IN) }, impW: { value: IMP_W }, bodyFade: { value: new THREE.Vector2(2, 3) }, sheetFade: { value: 1 },
       heightScale: { value: 1 }, heads: { value: 1 }, thatch: { value: 0 }, leafScale: { value: 1 }, dry: { value: 1 },
       aRoot: { value: col() }, aTip: { value: col() }, aHead: { value: col() }, aAwn: { value: col() },
       bRoot: { value: col() }, bTip: { value: col() }, bHead: { value: col() }, bAwn: { value: col() },
@@ -683,6 +804,12 @@ export class Grass {
     const bodyBands = () => [null, null, null, [0, 0]];
     this.sets.bodyA = this.makeSet(buildSwardClump(false), bodyMat, BODY_CAP, bodyBands());
     this.sets.bodyB = this.makeSet(buildSwardClump(true), bodyMat, BODY_CAP, bodyBands());
+    // The sward sheets (SHEET): one instanced draw of W x H strips, their own material on the card atlas's last row.
+    this.bladeGeos = { annual: annualGeo, bunch: bunchGeo };
+    const sheetMat = new THREE.ShaderMaterial({ vertexShader: SHEET_VERT, fragmentShader: SHEET_FRAG, side: THREE.DoubleSide, alphaToCoverage: true,
+      uniforms: { ...this.uniforms, impAtlas: { value: null }, sheetBand: { value: new THREE.Vector4(...SHEET.BAND) }, sheetEl: { value: new THREE.Vector2(...SHEET.EL) }, sheetSize: { value: new THREE.Vector2(SHEET.W, SHEET.H) } } });
+    this.sets.sheets = this.makeSet(new THREE.PlaneGeometry(2, 1, 8, 1).translate(0, 0.5, 0), sheetMat, SHEET.CAP, [null, null, null, null, [SHEET.BAND[0] - 2, SHEET.BAND[3] + 5]]);
+    this.sets.sheets.mesh.name = 'grassSheets'; this.sheetCache = new Map(); this.sheetLast = null; this.sheetDirty = false;
     this.body = { scale: bodyScale.v, R: 0, rebuild: 1, last: null, dirty: false, active: false, microV: 0, seat: null, stale: null, work: null, wi: 0, reseat: false, cache: new Map(), queue: new Map(),
       kf: new Float32Array(BODY_LN * BODY_LN), sz: new Float32Array(BODY_LN * BODY_LN), bt: new Float32Array(BODY_LN * BODY_LN) };
     const ref = new WeakRef(this);
@@ -761,6 +888,10 @@ export class Grass {
       this.atlas.viewport.set(0, (kind * IMP.EL + r) * T, T * IMP.TX, T);
       renderer.autoClear = false; renderer.setRenderTarget(this.atlas); renderer.render(this.copyScene, this.bakeCam);
     }
+    // the sward sheets' strip (SHEET): the plot seen from the side, into the last row
+    renderer.autoClear = true; renderer.setRenderTarget(this.strip); renderer.render(this.sheetScene, this.bakeCam);
+    this.atlas.viewport.set(0, SHEET.ROW * T, T * IMP.TX, T);
+    renderer.autoClear = false; renderer.setRenderTarget(this.atlas); renderer.render(this.copyScene, this.bakeCam);
     this.atlas.viewport.set(0, 0, T * IMP.TX, T * IMP.TY);
     this.atlas.texture.generateMipmaps = true;
     renderer.setRenderTarget(this.atlas); renderer.render(this.emptyScene, this.bakeCam);   // builds the mipmaps
@@ -786,13 +917,28 @@ export class Grass {
     copy.frustumCulled = false;
     this.copyScene = new THREE.Scene(); this.copyScene.add(copy); this.emptyScene = new THREE.Scene();
     for (const f of this.impKinds) f.uniforms.impAtlas.value = this.atlas.texture;
+    // The sheets' plot (SHEET.PLOT annual and needlegrass clumps over TEXW x 1.2 m at 0.7-1.3 scale, mulberry32: the same
+    // plot every load), two instanced meshes drawn from the side into the strip.
+    this.sheetScene = new THREE.Scene();
+    const rnd = mulberry32(97);
+    [[this.bladeGeos.annual, 0, SHEET.PLOT[0]], [this.bladeGeos.bunch, 1, SHEET.PLOT[1]]].forEach(([geo, type, n]) => {
+      const g = new THREE.InstancedBufferGeometry(); g.index = geo.index;
+      for (const [k, a] of Object.entries(geo.attributes)) g.setAttribute(k, a);
+      const inst = new Float32Array(n * 4);
+      for (let i = 0; i < n; i++) { inst[i * 4] = rnd() * SHEET.TEXW; inst[i * 4 + 1] = rnd() * 1.2; inst[i * 4 + 2] = 0.7 + 0.6 * rnd(); inst[i * 4 + 3] = rnd(); }
+      g.setAttribute('sInst', new THREE.InstancedBufferAttribute(inst, 4)); g.instanceCount = n;
+      const m = new THREE.Mesh(g, new THREE.ShaderMaterial({ vertexShader: SHEET_BAKE_VERT, fragmentShader: SHEET_BAKE_FRAG, side: THREE.DoubleSide,
+        uniforms: { bType: { value: type }, bSpan: { value: new THREE.Vector2(SHEET.TEXW, SHEET.H) }, heads: u.heads, thatch: u.thatch, leafScale: u.leafScale } }));
+      m.frustumCulled = false; this.sheetScene.add(m);
+    });
+    this.sets.sheets.mesh.material.uniforms.impAtlas.value = this.atlas.texture;
   }
   // The bake's programs compiled ahead (main.js, while the opening screen is up), each with its render target bound,
   // so the first bake does not compile them inside a frame. Returns the compileAsync promises.
   precompileBake(renderer) {
     this.bakeSetup();
     const prev = renderer.getRenderTarget(), out = [];
-    renderer.setRenderTarget(this.strip); out.push(renderer.compileAsync(this.bakeScene, this.bakeCam));
+    renderer.setRenderTarget(this.strip); out.push(renderer.compileAsync(this.bakeScene, this.bakeCam)); out.push(renderer.compileAsync(this.sheetScene, this.bakeCam));
     renderer.setRenderTarget(this.atlas); out.push(renderer.compileAsync(this.copyScene, this.bakeCam));
     renderer.setRenderTarget(prev);
     // the body tier's program too (both its meshes share it), against the screen as it is drawn, so taking a small
@@ -1047,7 +1193,7 @@ export class Grass {
     const B = this.body, S = this.sets, tA = S.bodyA, tB = S.bodyB, place = B.R + B.rebuild + 0.75, h = BODY_CELL / 2;
     for (const t of [tA, tB]) { t.staged = 0; t.blocks.length = 0; t.sig = NaN; }
     B.queue.clear();
-    const frac = Math.min(1, BODY_CAP / (Math.PI * place * place * (BODY_G / BODY_CELL) ** 2));
+    const frac = Math.min(1, BODY_CAP / (Math.PI * place * place * (BODY_G / BODY_CELL) ** 2)) * (B.thin || 1);
     const i0 = Math.floor((x - place) / BODY_CELL), i1 = Math.floor((x + place) / BODY_CELL);
     const j0 = Math.floor((north - place) / BODY_CELL), j1 = Math.floor((north + place) / BODY_CELL), cells = [];
     for (let j = j0; j <= j1; j++) for (let i = i0; i <= i1; i++) {
@@ -1111,7 +1257,8 @@ export class Grass {
   // stages nothing and its meshes stay hidden: a deer's frame is untouched.
   updateBody(cp, north, agl) {
     const B = this.body, S = this.sets;
-    const on = this.bodyOn !== false && B.scale < BODY_MAX && agl < Math.max(3, 0.5 * bodyRadius(B.scale));   // bodyOn: false for A/B timing
+    const big = B.scale >= BODY_MAX, R = big ? BODY_BIG_R : bodyRadius(B.scale), thin = big ? BODY_BIG_THIN : 1;
+    const on = this.bodyOn !== false && agl < Math.max(3, 0.5 * R);   // bodyOn: false for A/B timing
     if (!on) {
       if (B.active) {
         B.active = false; B.last = null; B.queue.clear(); B.work = null;
@@ -1121,9 +1268,8 @@ export class Grass {
       return;
     }
     B.active = true;
-    const R = bodyRadius(B.scale);
-    if (R !== B.R) {
-      B.R = R; B.rebuild = Math.max(0.4, 0.2 * R); B.last = null;
+    if (R !== B.R || thin !== B.thin) {
+      B.R = R; B.thin = thin; B.rebuild = Math.max(0.4, 0.2 * R); B.last = null;
       this.uniforms.bodyFade.value.set(0.75 * R, R);
       S.bodyA.bands[BODY_TIER] = [0, R + 2]; S.bodyB.bands[BODY_TIER] = [0, R + 2];
     }
@@ -1159,6 +1305,50 @@ export class Grass {
       set.mesh.visible = false; set.mesh.geometry.dispose(); set.stage = EMPTY; set.blocks.length = 0; set.staged = set.n = 0;
     }
     this.sets?.bodyA?.mesh.material.dispose();
+  }
+
+  // ---- the sward sheets ---------------------------------------------------------------------------------------
+  // One 10 m block of sheets: a sheet per 2 m cell of the world grid, jittered by the cell's hash (a pure function of the
+  // cell), where the sward density is over 0.15, with the ground's gradient under it. Cached; null where the block is empty.
+  sheetBlock(bi, bj) {
+    const key = bj * 100000 + bi, S = SHEET; let b = this.sheetCache.get(key);
+    if (b !== undefined) return b;
+    const n = S.BLOCK / S.SPACING, size = this.tile.size, a = [];
+    let y0 = Infinity, y1 = -Infinity;
+    for (let cj = 0; cj < n; cj++) for (let ci = 0; ci < n; ci++) {
+      const gi = bi * n + ci, gj = bj * n + cj;
+      const px = (gi + 0.1 + 0.8 * hash2(gi, gj, 71)) * S.SPACING, pn = (gj + 0.1 + 0.8 * hash2(gi, gj, 72)) * S.SPACING;
+      if (px < 1 || pn < 1 || px > size - 1 || pn > size - 1) continue;
+      const dens = this.swardDensity(px, pn); if (dens < 0.15) continue;
+      const y = this.ground(px, pn), gx = (this.ground(px + 1, pn) - this.ground(px - 1, pn)) / 2, gn = (this.ground(px, pn + 1) - this.ground(px, pn - 1)) / 2;
+      y0 = Math.min(y0, y); y1 = Math.max(y1, y);
+      a.push(px, y, -pn, hash2(gi, gj, 73), dens, gx, -gn, hash2(gi, gj, 74));
+    }
+    b = a.length ? { data: new Float32Array(a), x: (bi + 0.5) * S.BLOCK, y: (y0 + y1) / 2 + 0.4, z: -(bj + 0.5) * S.BLOCK, r: Math.hypot(S.BLOCK * 0.71 + 2, (y1 - y0) / 2 + 0.8) } : null;
+    if (this.sheetCache.size > 800) this.sheetCache.clear();
+    this.sheetCache.set(key, b);
+    return b;
+  }
+  // Stage the sheets around (x, north) out to SHEET.PLACE, nearest block first; blocks not yet made are made under `budget`
+  // ms, the rest left for the next frame (sheetDirty).
+  sheetFill(x, north, budget = 2) {
+    const t = this.sets.sheets, S = SHEET, place = S.PLACE, t0 = performance.now();
+    t.staged = 0; t.blocks.length = 0; t.sig = NaN; this.sheetDirty = false;
+    const i0 = Math.floor((x - place) / S.BLOCK), i1 = Math.floor((x + place) / S.BLOCK), j0 = Math.floor((north - place) / S.BLOCK), j1 = Math.floor((north + place) / S.BLOCK), blocks = [];
+    for (let bj = j0; bj <= j1; bj++) for (let bi = i0; bi <= i1; bi++) {
+      const d = Math.hypot((bi + 0.5) * S.BLOCK - x, (bj + 0.5) * S.BLOCK - north);
+      if (d - S.BLOCK * 0.71 <= place) blocks.push([d, bi, bj]);
+    }
+    blocks.sort((p, q) => p[0] - q[0]);
+    for (const [, bi, bj] of blocks) {
+      const key = bj * 100000 + bi;
+      if (!this.sheetCache.has(key) && performance.now() - t0 > budget) { this.sheetDirty = true; continue; }
+      const b = this.sheetBlock(bi, bj); if (!b) continue;
+      const n = b.data.length / STRIDE; if (t.staged + n > t.cap) continue;
+      t.stage.set(b.data, t.staged * STRIDE);
+      t.blocks.push({ x: b.x, y: b.y, z: b.z, r: b.r, tier: S.TIER, start: t.staged, count: n });
+      t.staged += n;
+    }
   }
 
   // Cells within r of (x, north), nearest first, so a full buffer drops the farthest.
@@ -1255,6 +1445,8 @@ export class Grass {
       : (uni, rgb) => (uni.value || uni).setRGB(rgb[0] * k[0], rgb[1] * k[1], rgb[2] * k[2], THREE.SRGBColorSpace);
     set(u.aRoot, P.annual.root); set(u.aTip, P.annual.tip); set(u.aHead, P.annual.head); set(u.aAwn, P.annual.awn);
     set(u.bRoot, P.bunch.root); set(u.bTip, P.bunch.tip); set(u.bHead, P.bunch.head); set(u.bAwn, P.bunch.awn);
+    // The sward painted on the ground (terrain.js swardPaint) takes the annual palette's root and tip: the photo is of the annual sward.
+    u.swardRoot.value.copy(u.aRoot.value); u.swardTip.value.copy(u.aTip.value);
     // Each species' palette for the season (its record's sRGB 0-255, scaled as the type palettes are), and whether its
     // seed heads show this month; a species without a palette takes its type's.
     const month = seasonMonth(season), s255 = rgb => rgb.map(v => v / 255);
@@ -1301,6 +1493,14 @@ export class Grass {
     const S = this.sets;
     for (const [pool, P] of Object.entries(POOLS)) for (const k of P.sets) S[k].mesh.visible = on[pool] && S[k].staged > 0;
     if (this.body) this.updateBody(cp, north, agl);
+    // The sward sheets (SHEET): for level eyes, so off from 14 m up, where the shells carry the sward.
+    const sh = S.sheets, shOn = this.sheetsOn !== false && agl < 14;   // sheetsOn: false for A/B timing
+    this.uniforms.sheetFade.value = 1 - smooth(8, 14, agl);
+    if (shOn) {
+      const last = this.sheetLast, move = !last || Math.hypot(cp.x - last[0], north - last[1]) > SHEET.REBUILD;
+      if (move || this.sheetDirty) { if (move) this.sheetLast = [cp.x, north]; this.sheetFill(this.sheetLast[0], this.sheetLast[1]); }
+    }
+    sh.mesh.visible = shOn && sh.staged > 0 && !!this.bakeKey;
     this.cull(camera);
     for (const set of Object.values(S)) if (set.n === 0) set.mesh.visible = false;
     // Shrub impostors: drawn to within 1.2-3.5 m of the camera at every height. The 3D shrubs of

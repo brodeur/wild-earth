@@ -11,7 +11,8 @@ import { mulberry32 } from './trees.js';
 //   position  rest position in clump space (root at y = 0)
 //   normal    blade face normal (either side; the shader faces it to the camera)
 //   aBlade    x: t, 0 at the root to 1 at the tip (along the blade), y: per-blade random,
-//             z: part (0 leaf, 1 culm, 2 seed head / spikelet, 3 awn), w: unused
+//             z: part (0 leaf, 1 culm, 2 seed head / spikelet, 3 awn), w: the side of its blade this vertex is on (-1, +1;
+//             0 at a pointed tip and on heads and awns), so the shader can widen a blade in view space (NEAR_VERT)
 // The sward clumps of the body tier (buildSwardClump) differ: aBlade.z is the blade's index over the clump's
 // blade count (the shader keeps the first 3-6 of them per clump), aBlade.w the side of the blade a vertex is on
 // (-1, +1, 0 at the pointed tip), and aSide the blade's width direction there, so the shader can bend the normal
@@ -25,7 +26,7 @@ class ClumpBuilder {
   // sides: also record each vertex's side of its blade and the width direction (the sward clumps' aSide).
   constructor(sides = false) { this.p = []; this.n = []; this.b = []; this.idx = []; this.s = sides ? [] : null; }
   vert(pos, nrm, t, r, part, side = 0, wdir = null) {
-    this.p.push(pos.x, pos.y, pos.z); this.n.push(nrm.x, nrm.y, nrm.z); this.b.push(t, r, part, this.s ? side : 0);
+    this.p.push(pos.x, pos.y, pos.z); this.n.push(nrm.x, nrm.y, nrm.z); this.b.push(t, r, part, side);
     if (this.s) this.s.push(wdir ? wdir.x : 0, wdir ? wdir.y : 0, wdir ? wdir.z : 0);
     return this.p.length / 3 - 1;
   }
@@ -127,7 +128,7 @@ function culm(B, rnd, { spread, theta, droop, len, width, segs = 3 }) {
 export function buildAnnualClump(seed = 7) {
   const rnd = mulberry32(seed), B = new ClumpBuilder();
   // Annuals are scattered stems, not tufts: blades rise from anywhere in a ~0.3 m patch.
-  for (let i = 0; i < 7; i++) leaf(B, rnd, { spread: 0.3, theta: [0.08, 0.45], droop: [0.3, 1.1], len: [0.26, 0.52], width: [0.011, 0.017] });
+  for (let i = 0; i < 7; i++) leaf(B, rnd, { spread: 0.3, theta: [0.15, 0.6], droop: [0.5, 1.4], len: [0.26, 0.52], width: [0.014, 0.021] });
   for (let i = 0; i < 4; i++) {
     const c = culm(B, rnd, { spread: 0.28, theta: [0.03, 0.2], droop: [0.05, 0.3], len: [0.62, 0.95], width: 0.0045 });
     const out = c.D, style = i % 3;
@@ -161,7 +162,7 @@ export function buildAnnualClump(seed = 7) {
 // of flowering culms whose florets carry long, twice-bent awns.
 export function buildBunchClump(seed = 19) {
   const rnd = mulberry32(seed), B = new ClumpBuilder();
-  for (let i = 0; i < 9; i++) leaf(B, rnd, { spread: 0.035, theta: [0.12, 0.55], droop: [0.9, 1.8], len: [0.24, 0.44], width: [0.0055, 0.0085] });
+  for (let i = 0; i < 9; i++) leaf(B, rnd, { spread: 0.035, theta: [0.15, 0.65], droop: [0.9, 1.8], len: [0.24, 0.44], width: [0.007, 0.011] });
   for (let i = 0; i < 2; i++) {
     const c = culm(B, rnd, { spread: 0.03, theta: [0.06, 0.28], droop: [0.1, 0.35], len: [0.45, 0.62], width: 0.0035 });
     for (let s = 0; s < 4; s++) {

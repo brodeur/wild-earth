@@ -3369,3 +3369,66 @@ silent:
   black; `onBegin` fires at 1.5 s and `enterWorld` closes the screen, whose own fade (`#opening.out`) brings the
   spirit world in as the black and the dot go. Rejected: keeping the dot in WebGL through the hand-over (the world
   owns the canvas from its first frame) and a second place in `main.js` (none was needed).
+
+## 2026-11-01: the grassland as a continuous sward (branch claude/busy-brattain-dbc54e)
+
+Aaron: "the earth always looks bare no matter how many sparse tufts. Is there a low cost way to add the sense of more
+grass at a middle distance and lots of grass at a close distance for appropriate grasslands? The foothills is entirely
+covered in grass where there's not forest, rocks or water, it's just everywhere."
+
+**Diagnosis.** On the home tile's open grassland (x 6960, north 7032) at the deer's eye, the ground between the clumps
+was the photo's dry tan and read as dirt with scattered tufts; from the raven at 30 m it was the photo with a faint
+speckle of plants. A 0.6 m NAIP texel is the mean of the sward it shows and carries none of its structure, and every tier
+of plants (the blade clumps to 85 m, the cards to 250 m, the shells from 8 m up) stood on it with gaps between them: the
+gaps are what read as soil, at every distance and in every season. A real foothill grassland is a continuous surface in
+every season: a solid green sward in spring, a mat of pale thatch in fall, never bare soil between plants.
+
+**The four steps** (docs/grass-notes.md "Seventh pass" has the mechanics), each on its own A/B switch:
+
+1. *The ground is the sward* (c035902; terrain.js `swardPaint`, `swardOn`). The largest win and no geometry: in grassland
+   the surface between the plants is painted as blades lying along the wind field, lit root to tip with the season's
+   palette, in three octaves that fade by pixel footprint, over a shade floor, the photo modulating only the metre scale.
+   Decided: the paint thins by the very same bare-patch field the plants use (grass.js's `bareField`, rebuilt in GLSL in
+   uint arithmetic so it matches the JS imul to the bit), so a bare patch is the same patch on the ground and in the
+   plants, rather than a second noise that would leave plants on painted dirt and paint under no plants; the material
+   terms (rock, the photo's own bare reading, pavement, tree cover) are hoisted out of the near-detail block so the paint
+   is excluded there at any distance; the thatch scan backs off under the paint rather than being removed (its relief
+   still reads). Rejected: painting with absolute palette colours (an absolute straw turned to snow on pale slopes when
+   the oat stands tried it); a single isotropic noise (reads as texture, not grass).
+2. *Cover held as the tiers thin* (0c74690; grass.js NEAR_VERT `widenOn`, grassBlades.js). Survivors of a thinning
+   widened by the square root of what was cut, at most 1.8x, in view space along the camera's right (AMD's trick, and
+   Ghost of Tsushima's push-apart so an edge-on blade is never a sliver); a full 1 / keep cost ~4 ms when tried before.
+   The annual and needlegrass leaves lean more, arch over and are broader, checked against the cured annual sward at
+   1-3 m. Every clump now records the side of its blade in aBlade.w.
+3. *Sward sheets for level eyes* (grass.js SHEET, `sheetsOn`). Where the shells fail (grazing views) and the thinned
+   tiers show the ground, strips of baked sward silhouette across the view on a jittered 2 m grid stack into a continuous
+   fuzzy sward with a soft horizon. Decided: the strip is baked into a sixteenth row of the existing card atlas, so no
+   texture, render target or disposal path is new (main.js, which the multiplayer lane owns, disposes the atlas as
+   before); the sheets fade out exactly where the shells fade in (the sine of the depression angle 0.12-0.3) and from
+   8-14 m up, so the two never stack; they are coloured by the ground under each and the cards' own colouring code, so
+   they hand over to the blades and the paint without a seam of their own. Bowed in plan, on the ground's local plane.
+4. *Lots of grass close for every body* (grass.js updateBody). The body-tier ring, which only bodies under 0.6 scale
+   had, goes to the big ones (the deer, the lion, the coyote, the bear, the turkey, the spirit near the ground, a landed
+   flier) at a third of its density and a 7 m radius: an even subsample, the cells being in rank order.
+
+**Seen** (captures in the session scratchpad's shots/, `before_*` against `s4_*`, 1280 x 800 at 1.5x): the deer at
+6945, -7022 (yaw 0.9) in fall and in spring, at its eye and from its chase camera; the raven at 30 and 80 m over
+6960, -7032 (pitch -0.75); the lion on the same ground. Fall at the eye: a combed straw mat from the feet to a fuzzy
+horizon, where it was tan dirt with tufts; spring: a green sward with blades over it; the chase camera's 5-40 m band a
+straw field with a soft sward beyond; the raven at 30 m sees grained ground. No console errors.
+
+**Cost** (EXT_disjoint_timer_query around every render call, summed per frame, A/B on the switch in alternating rounds,
+the medians' and the p10s' deltas; the machine ran at a load average of 12-17 throughout, other lanes rendering, so the
+p10 is the number to read): at the deer's chase camera (2.2 m up, the ground most of the frame, 1920 x 1200), each step on its own
+switch, 4 rounds of 14 frames: the paint +0.4 to +0.8 ms (measured while the frame was 21 ms; a later run at 36 ms frames gave
+-1.0, noise), the widening -1.7 (noise), the sheets +0.6, the ring +0.45 (about 6 k clumps drawn); all four at once +3.4 ms
+by the medians (+6.5 by the p10s) on a frame of 36 ms against the 21 ms of the quiet hour, so about 2 ms scaled to a quiet
+GPU and over the 2 ms asked for on this one. From the raven at 30 m the paint +0.2 to +0.4 (p10), the sheets and the ring
+off; at the start view (the tile centre, 150 m up) only the paint runs, within 110-160 m, and the A/B is within the noise
+(p10s 17-22 ms on and 17-23 off). Nothing new above 14 m but the paint.
+
+**Still wrong / not verified.** The painted strokes are a tone past ~10 m at a level eye (the sheets carry that band, as
+a pale haze rather than blades); the sheets' lower edge shows where they dither in at 4-8 m from the eye; the fall sward
+is as pale as the photo (it is the photo's brightness); the sheets do not cast shadows nor stand in the shells' shade; the
+coyote, the bear and the spirit were not seen with the ring (the deer and the lion were); touch and narrow screens
+untested; the costs are from a loaded machine.
