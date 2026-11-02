@@ -215,7 +215,9 @@ browser stays the renderer.
   server (the dev server grows into it; Rust is the candidate for the real node);
   WebSocket multiplayer (designed 2026-11-01: `docs/multiplayer.md`); AI behaviour trees driven by the activity calendar.
 
-- Water, next: the ponds' drawdown ring and basin checked in the client; the raven's frame rate
+- Water, next: the white water's open list (decisions.md 2026-11-01: a foam scale that follows the channel's
+  width, spray and wet rock at a boil, the wide May spray cloud, the Cosumnes tile's cascades once its water pass has
+  run); the ponds' drawdown ring and basin checked in the client; the raven's frame rate
   over the creek; the emergents' far tier and their look against references (the tule and rush
   pictures read dark against the water); the stones' contrast on the dry beds from the chase
   camera; the other tiles rebuilt with `--steps water`; a water temperature from

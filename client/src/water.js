@@ -3,7 +3,7 @@ import { uniforms as atmo, ATMOSPHERE_GLSL } from './atmosphere.js';
 import { SEASON_LOOK } from './season.js';
 import { loadImageData } from './tilepackage.js';
 import { releaseGeometry } from './gpuRelease.js';
-import { Waterfalls } from './waterfall.js';
+import { Waterfalls, NOISE_GLSL, FOAM_GLSL, FOAM_TUNE } from './waterfall.js';
 
 // Water in the streams and ponds, by season (docs/roadmap.md, browser push item 5).
 //
@@ -65,6 +65,20 @@ const WATER_WIDTH_SCALE = { ephemeral: 0.6, intermittent: 0.8, perennial: 1 };  
 const BED_STRENGTH = { ephemeral: 0.4, intermittent: 0.75, perennial: 0.95 };   // a grassy order-1 swale barely shows a bed
 const STEP = 10;                                                  // metres between cross-sections along a path
 const DEM_PREFERRED_M = 15;   // an NHD-sourced stretch within this of a DEM channel is a duplicate of it
+// The white water walk (buildStreams; docs/decisions.md "White water"): every WALK m along a run, the ground's slope
+// over +-WALK_WIN m makes foam from FOAM_G0 (a 2.5 % riffle: none) to FOAM_G1 (a cascade: full), decaying downstream
+// over a length that grows with the order; a stretch's coverage is the foam over 0.6 of that length. Emergent rocks are
+// placed where the bed material is boulder on a stretch at least ROCK_G steep, one per ROCK_P(half) m of arc.
+const WALK = 2.5, WALK_WIN = 5, FOAM_G0 = 0.03, FOAM_G1 = 0.15, ROCK_G = 0.04;
+const foamDecay = order => 6 + 2.5 * Math.min(7, order);
+const rockSpacing = half => Math.round(Math.max(5, 1.8 * half) * 2) / 2;   // a multiple of 0.5 m: exact in float32 on both sides
+const ZERO4 = [0, 0, 0, 0];
+// the GLSL rHash (FOAM_GLSL), bit for bit
+function rockHash(k, seed) {
+  let x = (Math.imul(k, 0x9E3779B1) + Math.imul(seed, 0x85EBCA77)) >>> 0;
+  x ^= x >>> 15; x = Math.imul(x, 0x85EBCA6B) >>> 0; x ^= x >>> 13; x = Math.imul(x, 0xC2B2AE35) >>> 0; x ^= x >>> 16;
+  return (x & 0xFFFFFF) / 16777216;
+}
 
 // Rendered terrain height: Terrain's 10 chunks of ~10 m quads split as PlaneGeometry does
 // (same function as grass.js), so draped vertices sit exactly on the visible triangles.
@@ -121,12 +135,15 @@ function selfIntersects(ring) {
 }
 
 // Growable typed buffers for one merged ribbon geometry.
+// foam: [cov, rough, sA, sB] (the white water baked by the walk, see buildStreams: the stretch's rocks lie in sA..sB)
+// and rock: [P, seed, sAp, sBp] (the run's rock spacing and hash seed, and the previous stretch's range, so a wake
+// runs on past the seam between two stretches), both 0 on the beds and ponds.
 class RibbonBuffers {
-  constructor() { this.pos = []; this.nrm = []; this.flow = []; this.dir = []; this.extra = []; this.idx = []; this.n = 0; this.cy = null; }
-  vertex(x, y, z, nx, ny, nz, s, across, half, speed, dx, dz, strength, cls, coarseY) {
+  constructor() { this.pos = []; this.nrm = []; this.flow = []; this.dir = []; this.extra = []; this.foam = []; this.rock = []; this.idx = []; this.n = 0; this.cy = null; }
+  vertex(x, y, z, nx, ny, nz, s, across, half, speed, dx, dz, strength, cls, coarseY, foam = ZERO4, rock = ZERO4) {
     if (coarseY !== undefined) (this.cy ??= []).push(coarseY);
     this.pos.push(x, y, z); this.nrm.push(nx, ny, nz); this.flow.push(s, across, half, speed);
-    this.dir.push(dx, dz); this.extra.push(strength, cls); return this.n++;
+    this.dir.push(dx, dz); this.extra.push(strength, cls); this.foam.push(foam[0], foam[1], foam[2], foam[3]); this.rock.push(rock[0], rock[1], rock[2], rock[3]); return this.n++;
   }
   geometry() {
     const g = new THREE.BufferGeometry();
@@ -135,6 +152,8 @@ class RibbonBuffers {
     g.setAttribute('aFlow', new THREE.Float32BufferAttribute(this.flow, 4));
     g.setAttribute('aDir', new THREE.Float32BufferAttribute(this.dir, 2));
     g.setAttribute('aExtra', new THREE.Float32BufferAttribute(this.extra, 2));
+    g.setAttribute('aFoam', new THREE.Float32BufferAttribute(this.foam, 4));
+    g.setAttribute('aRock', new THREE.Float32BufferAttribute(this.rock, 4));
     if (this.cy) g.setAttribute('aCoarseY', new THREE.Float32BufferAttribute(this.cy, 1));
     g.setIndex(this.n > 65535 ? new THREE.Uint32BufferAttribute(this.idx, 1) : new THREE.Uint16BufferAttribute(this.idx, 1));
     g.computeBoundingSphere(); g.computeBoundingBox();
@@ -145,13 +164,13 @@ class RibbonBuffers {
 // Ribbons fade out on faces steeper than ~55 degrees (normal y 0.4-0.65): there the fall is drawn instead.
 const COMMON = /* glsl */`
   #define CLIFF_FADE smoothstep(0.4, 0.65, normalize(vNormalW).y)
-  varying vec3 vPosW; varying vec3 vNormalW; varying vec4 vFlow; varying vec2 vDir; varying vec2 vExtra;
+  varying vec3 vPosW; varying vec3 vNormalW; varying vec4 vFlow; varying vec2 vDir; varying vec2 vExtra; varying vec4 vFoam; varying vec4 vRock;
   uniform float uTime; uniform float depthPull; uniform float depthPullK; uniform float tileSize;
   uniform vec4 fineRect; uniform float fineBand;   // terrain.js fine mesh: x0, x1, n0, n1 (x1 < x0: none) and its blend band
 `;
 const VERT = /* glsl */`
   ${COMMON}
-  attribute vec4 aFlow; attribute vec2 aDir; attribute vec2 aExtra;
+  attribute vec4 aFlow; attribute vec2 aDir; attribute vec2 aExtra; attribute vec4 aFoam; attribute vec4 aRock;
   #ifdef DRAPE
   attribute float aCoarseY;
   #endif
@@ -162,7 +181,7 @@ const VERT = /* glsl */`
     p.y = mix(aCoarseY, p.y, smoothstep(0.0, fineBand, e));   // smoothstep is 0 for e <= 0: outside, the 10 m mesh
     #endif
     vec4 wp = modelMatrix * vec4(p, 1.0);
-    vPosW = wp.xyz; vNormalW = normal; vFlow = aFlow; vDir = aDir; vExtra = aExtra;
+    vPosW = wp.xyz; vNormalW = normal; vFlow = aFlow; vDir = aDir; vExtra = aExtra; vFoam = aFoam; vRock = aRock;
     // Pull toward the camera along the view ray: the screen position is unchanged, but the draped
     // ribbon now beats the 10 m terrain triangles under it in the depth test. Grazing views need
     // more pull, so it grows with distance.
@@ -170,27 +189,34 @@ const VERT = /* glsl */`
     wp.xyz += toCam * ((depthPull + d * depthPullK) / max(d, 1e-3));
     gl_Position = projectionMatrix * viewMatrix * wp;
   }`;
-const NOISE = /* glsl */`
-  float wHash(vec2 p) { return fract(sin(dot(p, vec2(127.1, 311.7))) * 43758.5453); }
-  float wNoise(vec2 p) { vec2 i = floor(p), f = fract(p); vec2 u = f * f * (3.0 - 2.0 * f);
-    return mix(mix(wHash(i), wHash(i + vec2(1, 0)), u.x), mix(wHash(i + vec2(0, 1)), wHash(i + vec2(1, 1)), u.x), u.y); }
-`;
+// The noise and the white water GLSL (NOISE_GLSL, FOAM_GLSL) live in waterfall.js, which the fall shader shares.
+const NOISE = NOISE_GLSL;
 
 // Water: dark blue-green body, Fresnel sky reflection from the dome's own colours, a sun glint off
-// a rippled normal (two octaves scrolling downstream; ponds use slow wind ripples instead).
+// a rippled normal (two octaves scrolling downstream; ponds use slow wind ripples instead); white water on the
+// steep and broken stretches (FOAM_GLSL).
 const WATER_FRAG = /* glsl */`
   ${COMMON}
   ${ATMOSPHERE_GLSL}
   ${NOISE}
+  ${FOAM_GLSL}
   uniform float rippleAmp; uniform float opacity; uniform float pond;
   uniform sampler2D profileTex; uniform float hasProfile;
   // Ripple height in flow coordinates q = (metres downstream, metres across): crests run across
   // the flow (stretched across, short along), the fine octave scrolls faster than the coarse one.
-  float ripple(vec2 q, float speed, float fine) {
-    vec2 a = q * vec2(1.0 / 0.9, 1.0 / 2.2) - vec2(uTime * speed * 1.1, 0.0);
-    vec2 b = mat2(0.8, 0.6, -0.6, 0.8) * (q * vec2(1.0 / 0.33, 1.0 / 0.6)) - vec2(uTime * speed * 2.6, uTime * 0.3);
+  // Two phases (foamField above) so a speed that varies across the surface never shears them.
+  float rippleP(vec2 q, float speed, float fine, float ph) {
+    vec2 a = q * vec2(1.0 / 0.9, 1.0 / 2.2) - vec2(speed * 1.1 * ph, 0.0);
+    vec2 b = mat2(0.8, 0.6, -0.6, 0.8) * (q * vec2(1.0 / 0.33, 1.0 / 0.6)) - vec2(speed * 2.6 * ph, uTime * 0.3);
     return wNoise(a) + 0.45 * fine * wNoise(b);
   }
+  float ripple(vec2 q, float speed, float fine) {
+    float T = 4.0, p1 = fract(uTime / T), p2 = fract(p1 + 0.5), wA = 1.0 - abs(2.0 * p1 - 1.0);
+    float n = wA * (rippleP(q, speed, fine, p1 * T) - 0.725) + (1.0 - wA) * (rippleP(q + vec2(31.0, 7.0), speed, fine, p2 * T) - 0.725);
+    return 0.725 + n / sqrt(wA * wA + (1.0 - wA) * (1.0 - wA));
+  }
+  // Standing waves (a rapid's haystacks): a field fixed in flow coordinates, only breathing in time.
+  float standing(vec2 q) { return wNoise(q * vec2(1.0 / 2.4, 1.0 / 1.5)) + 0.5 * wNoise(q * vec2(1.0 / 1.1, 1.0 / 0.7) + vec2(uTime * 0.25, 0.0)); }
   void main() {
     float px = length(fwidth(vPosW.xz));   // metres per pixel
     vec2 dir = normalize(vDir), perp = vec2(-dir.y, dir.x);
@@ -210,9 +236,45 @@ const WATER_FRAG = /* glsl */`
     // Fade each octave before it shrinks below a pixel (it would only shimmer), and widen the glint
     // instead, so a distant reach still glitters as a band rather than aliased sparks.
     float fine = 1.0 - smoothstep(0.04, 0.2, px), coarse = 1.0 - smoothstep(0.15, 0.8, px);
-    float e = 0.12, h0 = ripple(q, speed, fine);
-    vec2 g = vec2(ripple(q + vec2(e, 0.0), speed, fine) - h0, ripple(q + vec2(0.0, e), speed, fine) - h0) / e;
-    g *= rippleAmp * max(coarse, 0.15) * (1.0 + 0.9 * max(rif, 0.0) - 0.35 * max(-rif, 0.0));
+    // White water: the walk's foam and roughness (aFoam), the riffles, and the emergent rocks' wakes (aRock: the
+    // run's rock spacing P and seed, and the previous stretch's range; aFoam.zw the arc range this stretch's rocks lie
+    // in). A rock k sits at s_k on its cell of P metres, offset across by its hash; upstream of it a pillow of broken
+    // water, downstream a foam tail in a V that opens with distance and an eddy where the foam lingers, and the
+    // ripples bend round it.
+    float rough = pond > 0.5 ? 0.0 : vFoam.y;
+    // the walk's foam, patchy along the reach (white where the water breaks over the drops, dark in the pools between:
+    // the profile's riffle index, and a slow pattern fixed to the bed), plus the riffles' own crests
+    float patchy = mix(0.55, 1.0, smoothstep(-0.8, 0.5, rif)) * (0.7 + 0.3 * wNoise(vec2(vFlow.x / 9.0, vFlow.y / 4.0 + 7.0)));
+    float cov = pond > 0.5 ? 0.0 : vFoam.x * patchy + 0.32 * smoothstep(0.45, 1.0, rif) + 0.2 * rough;
+    float slow = 1.0; vec2 qw = q;
+    if (pond < 0.5 && vRock.x > 0.0) {
+      float P = vRock.x, seed = vRock.y, kc = floor(vFlow.x / P);
+      for (int i = 0; i < 5; i++) {   // this cell and four upstream; a tail is windowed out before the fifth, so no cell edge cuts it
+        float k = kc - float(i); if (k < 0.0) continue;
+        float sk = (k + 0.3 + 0.4 * rHash(k * 3.0, seed)) * P;
+        if ((sk < vFoam.z || sk > vFoam.w) && (sk < vRock.z || sk > vRock.w)) continue;
+        float ok = (rHash(k * 3.0 + 1.0, seed) - 0.5) * 1.3 * vFlow.z;
+        float r = clamp((0.3 + 0.35 * rHash(k * 3.0 + 2.0, seed)) * min(2.0, 0.5 + vFlow.z / 3.0), 0.3, 1.2);
+        float ds = vFlow.x - sk, dd = vFlow.y - ok, d2 = ds * ds + dd * dd;
+        float L = 6.0 + 7.0 * r, down = step(0.0, ds);
+        qw.y += 1.2 * r * r * dd / (d2 + 0.25) * exp(-max(ds, 0.0) / L) * (1.0 - smoothstep(2.5 * P, 3.2 * P, ds));   // the bend dies with the wake
+        float pillow = (1.0 - smoothstep(r, r + 0.9, sqrt(d2))) * (1.0 - smoothstep(0.0, 0.6, ds));
+        float win = 1.0 - smoothstep(3.2 * P, 4.2 * P, ds);
+        float tail = down * win * exp(-ds / L) * (1.0 - smoothstep(r * 0.8 + 0.1 * ds, r * 1.2 + 0.24 * ds, abs(dd)));
+        float vee = down * win * exp(-ds / (L * 1.6)) * (1.0 - smoothstep(0.0, 0.4, abs(abs(dd) - (r + 0.22 * ds))));
+        cov += pillow * 0.95 + tail * 0.8 + vee * 0.55;
+        slow = min(slow, 1.0 - 0.6 * tail);
+      }
+    }
+    cov = clamp(cov, 0.0, 1.0);
+    float e = 0.12, h0 = ripple(qw, speed, fine);
+    vec2 g = vec2(ripple(qw + vec2(e, 0.0), speed, fine) - h0, ripple(qw + vec2(0.0, e), speed, fine) - h0) / e;
+    g *= rippleAmp * max(coarse, 0.15) * (1.0 + 0.9 * max(rif, 0.0) - 0.35 * max(-rif, 0.0)) * (1.0 + 1.6 * rough);
+    if (rough > 0.01) {   // the surface breaks in a rapid: standing waves under the foam, the glint pattern broken with it
+      float s0 = standing(qw);
+      vec2 gs = vec2(standing(qw + vec2(e, 0.0)) - s0, standing(qw + vec2(0.0, e)) - s0) / e;
+      g += gs * 0.5 * rough * max(coarse, 0.15);
+    }
     vec2 gw = pond > 0.5 ? g : g.x * dir + g.y * perp;   // gradient in world xz
     vec3 N = normalize(vec3(-gw.x, 1.0, -gw.y));
     vec3 V = normalize(cameraPosition - vPosW);
@@ -236,11 +298,9 @@ const WATER_FRAG = /* glsl */`
     // half a metre down; riffles carry broken white water where they are steepest.
     float column = 1.0 - exp(-dep / 0.2);
     body = mix(vec3(0.16, 0.14, 0.09) * lit, body * mix(1.1, 0.5, smoothstep(0.25, 1.0, dep)), column);
-    float froth = pond < 0.5 ? smoothstep(0.45, 1.0, rif) * smoothstep(0.55, 0.85, wNoise(q * vec2(1.6, 2.4) - vec2(uTime * speed * 3.0, 0.0))) * coarse : 0.0;
-    body = mix(body, vec3(0.55, 0.57, 0.55) * lit, froth * 0.5);
-    // Sun glint, normalised Blinn-Phong; the lobe widens with distance (see above).
+    // Sun glint, normalised Blinn-Phong; the lobe widens with distance (see above) and on a broken surface.
     vec3 H = normalize(V + sunDir);
-    float shin = mix(900.0, 90.0, smoothstep(0.03, 1.5, px));
+    float shin = mix(900.0, 90.0, smoothstep(0.03, 1.5, px)) * mix(1.0, 0.25, rough);
     float Fs = 0.02 + 0.98 * pow(1.0 - max(dot(H, V), 0.0), 5.0);
     float glint = Fs * (shin + 8.0) / 25.13 * pow(max(dot(N, H), 0.0), shin) * max(sunDir.y, 0.0);
     vec3 col = body * (1.0 - F) + skyR * F + sunLight * glint * sh;
@@ -248,6 +308,20 @@ const WATER_FRAG = /* glsl */`
     // Ponds carry their shoreline fade in vExtra.x (0 on the ring, 1 a metre or two inside).
     float edge = pond > 0.5 ? smoothstep(0.0, 1.0, vExtra.x) : 1.0 - smoothstep(0.55, 1.0, abs(vFlow.y) / vFlow.z);
     float a = clamp(edge * mix(opacity * mix(0.6, 1.0, column), 1.0, F) + glint * 0.5 * (pond > 0.5 ? edge : 1.0), 0.0, 1.0);
+    // The foam: opaque white lace lit by sun and sky (it scatters, so its shaded side is bright too), riding the
+    // flow at the water's speed, faster on the steep and the riffles, held in the eddies behind the rocks.
+    if (cov > 0.0) {
+      float fsp = speed * (1.0 + 1.5 * rough) * slow;
+      float n = foamField(qw, fsp);
+      float f = foamCut(n, cov);
+      f = mix(cov * 0.7, f, coarse) * (1.0 - smoothstep(0.75, 1.0, abs(vFlow.y) / vFlow.z));   // far off, the mean; thinning at the banks
+      // lit as a white scattering surface: the sun by the broken surface's normal (never dark on the side turned away),
+      // the sky all round; the lace's own tone from the field
+      vec3 foamLit = (sunLight * sh * (0.45 + 0.55 * max(dot(N, sunDir), 0.0)) + ambientSky * 1.5) * 0.3183099;
+      vec3 foamCol = vec3(0.86, 0.88, 0.89) * foamLit * (0.74 + 0.26 * n) * foamTune.w;
+      col = mix(col, foamCol, f);
+      a = max(a, f * 0.97);
+    }
     a *= CLIFF_FADE;   // a reach down a cliff is a fall (waterfall.js), not a sheet of water on the face
     gl_FragColor = vec4(atmosphereApply(col, vPosW, cameraPosition), a);
     #include <tonemapping_fragment>
@@ -303,7 +377,7 @@ export class Water {
     this.season = null; this.look = null; this.stats = { skippedRings: 0, reaches: 0 };
     const time = { value: 0 };
     const base = { uTime: time, depthPull: { value: 0.25 }, depthPullK: { value: 0.003 }, tileSize: { value: tile.size },
-      fineRect: { value: new THREE.Vector4(1, 0, 1, 0) }, fineBand: { value: 20 } };
+      fineRect: { value: new THREE.Vector4(1, 0, 1, 0) }, fineBand: { value: 20 }, foamTune: { value: new THREE.Vector4(...FOAM_TUNE) } };
     this.uniforms = base;
     // the water system grid (tilepackage WaterGrid): levels, widths and the bed material; null on an older tile
     this.grid = tile.water || null;
@@ -335,6 +409,7 @@ export class Water {
     const features = tile.features || {};
     const H = terrainHeight(tile);
     this.H = H;
+    this.emergentRocks = []; this.rockCells = null;   // the white water's rocks (walkFoam), drawn by rocks.js
     this.rewildList = tile.manifest?.layers?.['hydro.human_water']?.rewilded || [];
     const ponds = yield* this.buildPonds(features.waterbodies || [], H);
     yield* this.buildStreams(features.streams || [], H, ponds);
@@ -547,25 +622,28 @@ export class Water {
           const c = sections[i];
           sec.push(c.x, c.n, c.half, c.s, c.tx, c.tz, ci, i + 1 < sections.length ? 1 : 0);
         }
+        // the white water walk: foam, roughness and the emergent rocks per section (seams where the rock stretch changes)
+        const wsecs = this.walkFoam(sections, order, G, H, ph);
         // Strip with `cols` cross-section vertices at offsets `offs` (fractions of the half width, -1..1): the dry bed
         // draped on the ground (the carved bed), the water at the reach's level where the grid gives one (max with
         // the ground drawn there, so a ribbon never sinks under the far mesh between its vertices).
         const strip = (buf, offs, strength, sp, water) => {
-          const cols = offs.length; let first = -1;
-          for (const c of sections) {
+          const cols = offs.length, list = water ? wsecs : sections; let first = -1;
+          for (const c of list) {
             const px = -c.tz, pz = c.tx;   // perp in world xz
             const half = water ? c.half : c.bedHalf;
+            const foam = water ? [c.cov, c.rough, c.sA, c.sB] : ZERO4, rock = water ? [c.P, c.seed, c.sAp, c.sBp] : ZERO4;
             for (const f of offs) {
               const o = f * half, x = c.x + px * o, z = -c.n + pz * o, n = -z;
               const g = H(x, n), lv = water && c.lvl !== null ? c.lvl : null;
               const y = lv !== null ? Math.max(lv, g) : g;
               const nn = lv !== null ? nrm.set(0, 1, 0) : normalAt(x, n);
               const cy = drape ? (lv !== null ? Math.max(lv, hf.coarse(x, n)) : hf.coarse(x, n)) : undefined;
-              const k = buf.vertex(x, y, z, nn.x, nn.y, nn.z, c.s, o, half, sp, c.tx, c.tz, strength, ci, cy);
+              const k = buf.vertex(x, y, z, nn.x, nn.y, nn.z, c.s, o, half, sp, c.tx, c.tz, strength, ci, cy, foam, rock);
               if (first < 0) first = k;
             }
           }
-          for (let i = 0; i < sections.length - 1; i++) for (let j = 0; j < cols - 1; j++) {
+          for (let i = 0; i < list.length - 1; i++) for (let j = 0; j < cols - 1; j++) {
             const a = first + i * cols + j, b = a + 1, c = a + cols, d = c + 1;
             buf.idx.push(a, c, b, b, c, d);
           }
@@ -591,6 +669,93 @@ export class Water {
       ponds: tri(this.ponds) + tri(this.pondsSeasonal), pondBeds: tri(this.pondBeds),
     };
     this.stats.triangles.total = Object.values(this.stats.triangles).reduce((a, b) => a + b, 0);
+  }
+
+  // The white water walk along one run (docs/decisions.md "White water"): the ground every WALK m along the centreline,
+  // made non-increasing downstream (as waterfall.js does), its slope over +-WALK_WIN m; foam is made at a rate rising
+  // from FOAM_G0 to FOAM_G1 of slope and decays downstream over foamDecay(order) m, so it trails from every drop in
+  // streaks and rafts; a section's coverage is the most foam within WALK_WIN of it over half the decay length, its
+  // roughness (the broken surface) the steepest slope there. Where the bed material is boulder on a stretch steeper than
+  // ROCK_G (order 2+, half width 0.8 m+) emergent rocks are laid one per rockSpacing(median half) m of arc at a hashed
+  // place (rockHash, the shader's rHash: the wake is drawn where the rock is), listed in this.emergentRocks for rocks.js.
+  // Returns the sections with cov, rough, sA, sB (the arc range of the stretch's rocks), P and seed (the run's), sAp
+  // and sBp (the previous stretch's range, so its wakes run on past the seam), a section repeated (a seam) wherever
+  // the stretch changes so the ranges never interpolate between two stretches.
+  walkFoam(sections, order, G, H, ph) {
+    const n = sections.length, Ld = foamDecay(order);
+    const fs = [], fz = [], fi = [];   // arc length, ground, the nearest section of each sample
+    for (let i = 0; i < n; i++) {
+      const a = sections[i], b = sections[i + 1];
+      fs.push(a.s); fz.push(H(a.x, a.n)); fi.push(i);
+      if (!b) break;
+      const L = b.s - a.s, k = Math.max(1, Math.round(L / WALK));
+      for (let j = 1; j < k; j++) { const t = j / k; fs.push(a.s + L * t); fz.push(H(a.x + (b.x - a.x) * t, a.n + (b.n - a.n) * t)); fi.push(t < 0.5 ? i : i + 1); }
+    }
+    const m = fs.length;
+    for (let k = 1, z = fz[0]; k < m; k++) { z = Math.min(z, fz[k]); fz[k] = z; }
+    const out = sections.map(c => ({ ...c, cov: 0, rough: 0, gmax: 0, sA: -1, sB: -1, P: 0, seed: 0 }));
+    for (let k = 0, a = 0, b = 0, F = 0; k < m; k++) {
+      while (fs[a] < fs[k] - WALK_WIN) a++;
+      if (b < k) b = k;
+      while (b + 1 < m && fs[b + 1] <= fs[k] + WALK_WIN) b++;
+      const g = fs[b] > fs[a] ? (fz[a] - fz[b]) / (fs[b] - fs[a]) : 0;
+      const ds = k ? fs[k] - fs[k - 1] : 0, gen = Math.min(1, Math.max(0, (g - FOAM_G0) / (FOAM_G1 - FOAM_G0)));
+      F = F * Math.exp(-ds / Ld) + gen * ds;
+      const c = out[fi[k]];
+      c.cov = Math.max(c.cov, Math.min(1, F / (0.6 * Ld)));
+      c.gmax = Math.max(c.gmax, g);
+    }
+    const seed = Math.floor(ph * 655.36) & 0xFFFF, halves = sections.map(c => c.half).sort((a, b) => a - b), P = rockSpacing(halves[halves.length >> 1]);
+    let cur = null, prev = null;
+    for (let i = 0; i < n; i++) {
+      const c = out[i], r = (c.gmax - 0.03) / 0.15;
+      c.rough = Math.fround(r <= 0 ? 0 : r >= 1 ? 1 : r * r * (3 - 2 * r));
+      c.cov = Math.fround(c.cov); c.sAp = -1; c.sBp = -1;
+      const gate = order >= 2 && c.half >= 0.8 && c.gmax > ROCK_G && !!G && G.material(c.x, c.n) === 5;
+      if (gate && (!cur || !out[i - 1].gate)) { prev = cur; cur = { sA: Math.fround(c.s), sB: Math.fround(c.s) }; }   // a stretch starts here
+      c.gate = gate;
+      if (gate) cur.sB = Math.fround(c.s);
+      if (cur) { c.sA = cur.sA; c.sB = cur.sB; c.P = P; c.seed = seed; c.cur = cur; c.prev = prev; }
+    }
+    // a stretch's sB is known only at its end: read it back from the stretch objects
+    for (const c of out) { if (c.cur) { c.sB = c.cur.sB; if (c.prev) { c.sAp = c.prev.sA; c.sBp = c.prev.sB; } } }
+    // the rocks of each stretch, at the hashed place on each cell of P m of arc inside [sA, sB]
+    const seen = new Set();
+    for (const c of out) {
+      if (!c.cur || seen.has(c.cur)) continue; seen.add(c.cur);
+      for (let k = Math.floor(c.sA / c.P); k <= Math.floor(c.sB / c.P); k++) {
+        if (k < 0) continue;
+        const sk = (k + 0.3 + 0.4 * rockHash(k * 3, c.seed)) * c.P;
+        if (sk < c.sA || sk > c.sB) continue;
+        let i = 0; while (i + 1 < n && out[i + 1].s <= sk) i++;
+        const a = out[i], b = out[Math.min(n - 1, i + 1)], t = b.s > a.s ? (sk - a.s) / (b.s - a.s) : 0;
+        const half = a.half + (b.half - a.half) * t, cx = a.x + (b.x - a.x) * t, cn = a.n + (b.n - a.n) * t;
+        const tx = a.tx + (b.tx - a.tx) * t, tz = a.tz + (b.tz - a.tz) * t;
+        const ok = (rockHash(k * 3 + 1, c.seed) - 0.5) * 1.3 * half;
+        const r = Math.min(1.2, Math.max(0.3, (0.3 + 0.35 * rockHash(k * 3 + 2, c.seed)) * Math.min(2, 0.5 + half / 3)));
+        const x = cx + (-tz) * ok, north = cn - tx * ok;
+        const lvl = a.lvl !== null && b.lvl !== null ? a.lvl + (b.lvl - a.lvl) * t : (a.lvl ?? b.lvl);
+        this.emergentRocks.push({ x, north, r, s: sk, level: lvl, bed: H(x, north), order });
+      }
+    }
+    // seams: a section repeated with the previous stretch's ranges where the stretch changes
+    const res = [];
+    for (let i = 0; i < n; i++) {
+      if (i && out[i].cur !== out[i - 1].cur) res.push({ ...out[i], sA: out[i - 1].sA, sB: out[i - 1].sB, sAp: out[i - 1].sAp, sBp: out[i - 1].sBp });
+      res.push(out[i]);
+    }
+    return res;
+  }
+  // the emergent rocks (walkFoam) within a box of (x, north), nearest-first not guaranteed
+  rocksIn(x0, n0, x1, n1) {
+    if (!this.rockCells) {
+      const M = this.rockCells = new Map();
+      for (const r of this.emergentRocks) { const key = Math.floor(r.north / ROCK_B) * 4096 + Math.floor(r.x / ROCK_B); let l = M.get(key); if (!l) M.set(key, l = []); l.push(r); }
+    }
+    const out = [];
+    for (let j = Math.floor(n0 / ROCK_B); j <= Math.floor(n1 / ROCK_B); j++) for (let i = Math.floor(x0 / ROCK_B); i <= Math.floor(x1 / ROCK_B); i++)
+      for (const r of this.rockCells.get(j * 4096 + i) || []) if (r.x >= x0 && r.x < x1 && r.north >= n0 && r.north < n1) out.push(r);
+    return out;
   }
 
   // Segments between consecutive centreline sections on a SEC_B m grid (padded by the half width).
@@ -637,8 +802,11 @@ function marginWidth(order) { return 0.6 + 0.25 * Math.max(1, Math.min(7, order)
 // The Water built last (one per world): depthAt(x, north) and rewildAt(x, north) without a reference.
 let current = null;
 const SEC_B = 20, SEC_W = 10;   // depthAt section grid (m) and floats per segment
+const ROCK_B = 50;              // emergent rock index cell (m)
 export function depthAt(x, north, opts) { return current ? current.depthAt(x, north, opts) : 0; }
 export function rewildAt(x, north) { return current ? current.rewildAt(x, north) : 0; }
+// The emergent rocks of the white water (walkFoam) in a box, for rocks.js: [{ x, north, r (m), level, bed, order }].
+export function emergentRocksIn(x0, n0, x1, n1) { return current ? current.rocksIn(x0, n0, x1, n1) : []; }
 
 function bboxIoU(a, b) {
   const ix = Math.min(a[2], b[2]) - Math.max(a[0], b[0]), iy = Math.min(a[3], b[3]) - Math.max(a[1], b[1]);
@@ -719,6 +887,8 @@ function pondGeometry(ring, level, fade) {
   g.setAttribute('aFlow', new THREE.BufferAttribute(flow, 4));
   g.setAttribute('aDir', new THREE.BufferAttribute(dir, 2));
   g.setAttribute('aExtra', new THREE.BufferAttribute(extra, 2));
+  g.setAttribute('aFoam', new THREE.BufferAttribute(new Float32Array(nv * 4), 4));   // no white water on a pond
+  g.setAttribute('aRock', new THREE.BufferAttribute(new Float32Array(nv * 4), 4));
   g.setIndex(idx);
   return g;
 }
