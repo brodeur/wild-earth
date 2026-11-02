@@ -188,6 +188,7 @@ async function disposeWorld(w, renderer) {
   if (m.weather) m.weather.onThunder = null;
   m.abilities?.dispose?.();   // the body's row: its slots go, the row hides (abilities.js)
   if (fieldGuide.game === m.acorns) { fieldGuide.game = null; fieldGuide.log = []; fieldGuide.anchor = null; }   // the page's field guide (identify.js attached the game)
+  m.spirit?.dispose?.();   // the souls' columns and the leaving wisps (spirit.js, 2026-11-01)
   m.water?.dispose?.(); m.shadows?.dispose?.(); m.terrain?.dispose?.(); m.litter?.dispose?.(); m.scent?.dispose?.(); m.sight?.dispose?.(); m.cues?.dispose?.(); m.grass?.dispose?.(); m.forbs?.dispose?.(); m.emergents?.dispose?.(); m.veg?.dispose?.(); forgetQueuedCasters();
   // then its listeners and the elements it put into the page; the HUD's own words back as the page had them
   for (const r of w.observer.takeRecords()) { for (const n of r.addedNodes) if (n.nodeType === 1) w.nodes.add(n); for (const n of r.removedNodes) w.nodes.delete(n); }
