@@ -6,71 +6,137 @@
   "form": "tree",
   "architectural_model": "Rauh",
   "deciduous": true,
-  "height_m": [6, 12],
+  "height_m": [9, 12.5],
+  "growth": {
+    "note": "The growth tool's inputs (tools/grow_species.mjs,     docs/tree-architecture.md). The counter-case to the valley oak: slow growth,     a small crown for its height,     heavy self-pruning; it must come out compact and crooked,     never weeping.",
+    "leaf_type": "broadleaf",
+    "model": "Rauh",
+    "classes": {"sapling": 10, "young": 30, "mature": 80, "veteran": 200},
+    "height_m_by_age": {"asymptote": 14, "tau": 90, "p": 0.75, "source": "Chapman-Richards through Tallo's Sierra-foothill blue oaks (H = 1.30 dbh^0.525,     n 50,     fit 2026-11-01) at Silvics' diameters by age (McDonald 1990: 20 cm at about 40 y,     60 cm at 125 on good sites): 2.6 m at 10 y,     5.4 at 30,     9.4 at 80,     12.9 at 200,     13.6 at 300; height growth nearly stops past 65 cm dbh"},
+    "dbh_cm_by_age": {"asymptote": 100, "tau": 150, "p": 1, "source": "Silvics of North America,     Quercus douglasii (McDonald 1990): 23 cm at 40 y,     57 at 125,     74 at 200,     86 at 300; the oldest dated 459 y (Stahle et al. 2013)"},
+    "crown_width_m_by_dbh_cm": {"a": 1.197, "b": 0.1866, "source": "Bechtold 2004 table 3,     blue oak (n 184,     dbh 5-61 in): LCW ft = 3.9281 + 1.5550 dbh in; a check,     not an input. Tallo's six crowned trees: W/H 1.38 at 5-10 m,     0.59 at 10-15 m"},
+    "open_grown_factor": 1.15,
+    "wood": {"density_green_kg_m3": 1000, "modulus_green_gpa": 8.6, "source": "as the valley oak: no value for Q. douglasii in the Wood Handbook; the Global Wood Density Database was not consulted (not downloaded)", "modulus_effective_gpa": 2.8, "creep_factor": 2, "modulus_effective_note": "tuned 2026-11-01 against the photographs (docs/tree-likeness-review.md,     the record's targets.photos): at the Wood Handbook's green modulus over a creep factor of 2 (4.3 GPa) the grown limbs stay level to 200 y; at 2.5 the sag is heavy by 80 y and the ends barely rise; 2.8 gives a mature tree with level scaffolds whose ends rise and a veteran whose limbs arch below horizontal with the ends turned up. Branch wood is juvenile wood with knots (50-70 % of the clear-specimen modulus) under decades of creep; MAppleT fitted 1.1 GPa for apple limbs (1-7 tested). The trunk is stiffened 3 x: the loop has no eccentric growth or whole-tree righting,     which hold a real trunk upright; the same values as the valley oak so the two differ only in their growth,     crown and leaf inputs (the counter-case)"},
+    "leaf": {"dry_g_per_m2_crown": 310, "dry_fraction": 0.48, "fresh_g_m2": 240, "source": "Karlik and McKay 2002,     Leaf area index,     leaf mass density and leaf mass of native blue oaks (whole-tree harvest,     trees 70-180 y): leaf mass density 310 g dry per m2 of ground under the crown; here times the grown crown's projected area,     fresh at dw/fw 0.48,     shared over the live tips"},
+    "apical_control": {"lambda0": 0.54, "lambda_inf": 0.46, "tau_years": 40, "source": "as the valley oak"},
+    "shade_tolerance": "intolerant",
+    "lifespan_years": 300,
+    "sources": ["Silvics of North America vol. 2 (McDonald 1990,     Quercus douglasii)", "Tallo (Jucker et al. 2022),     Quercus douglasii rows,     read 2026-11-01", "Bechtold 2004", "Karlik and McKay 2002 (USDA PSW-GTR-184)", "Stahle et al. 2013 (old-growth blue oak ages)"],
+    "not_given": ["height by age directly (Silvics gives diameters; Tallo turns them into heights)", "a modulus or density for Q. douglasii", "the insertion angles and setpoints", "a leaf-area equation (Karlik's leaf mass per crown area stands in)"],
+    "trunk_stiffness_factor": 3
+  },
   "variants": [
-    {"name": "sapling", "weight": 0.08, "height_m": [2, 4], "trunk_radius": 0.4, "branches": 0.6, "leaf_density": 0.8, "set": {"trunk": {"length_ratio": 0.6, "split_prob": 0.1, "lean_deg": 4}, "crown": {"envelope": {"profile": [[0.15, 0.2], [0.35, 0.32], [0.55, 0.35], [0.75, 0.3], [0.9, 0.2], [1.0, 0.06]]}}, "levels": [{"down_angle_deg": 48, "down_angle_tip_deg": 30, "droop_deg": 0}], "foliage": {"clumps": {"radius_m": 0.55}}, "epiphytes": {"mistletoe": {"prob": 0}}}, "note": "a slender stem keeping its leader, narrow upright crown"},
-    {"name": "young", "weight": 0.22, "height_m": [5, 8], "trunk_radius": 0.6, "crown_scale": 0.85, "branches": 0.85, "set": {"trunk": {"length_ratio": 0.45, "split_prob": 0.3}, "foliage": {"clumps": {"radius_m": 0.8}}, "epiphytes": {"mistletoe": {"prob": 0.1}}}, "note": "a rounded crown still taller than wide"},
-    {"name": "mature", "weight": 0.55, "seeds": 2, "note": "the file as written"},
-    {"name": "veteran", "weight": 0.15, "height_m": [10, 14], "trunk_radius": 1.3, "crown_scale": 1.1, "gnarl": 1.35, "deadwood": {"fraction": 0.2, "levels": [1, 2], "where": "inner"}, "set": {"trunk": {"split_prob": 0.7, "lean_deg": 9}, "epiphytes": {"mistletoe": {"prob": 0.7, "count": [2, 5]}}}, "note": "gnarled and broad, a few dead limbs in a thinning crown, more mistletoe"}
+    {"name": "sapling", "weight": 0.08, "height_m": [2, 3], "branches": 0.6, "leaf_density": 0.8, "set": {"trunk": {"length_ratio": 1, "split_prob": 0.1, "lean_deg": 4, "radius_ratio": 0.025, "bole_ratio": 0.19, "base_size": 0.19}, "crown": {"envelope": {"profile": [[0.05, 0.5], [0.22, 0.65], [0.34, 0.7], [0.46, 0.7], [0.58, 0.63], [0.7, 0.45], [0.82, 0.29], [0.94, 0.06], [1, 0.03]]}}, "levels": [{"down_angle_deg": 68, "down_angle_tip_deg": 38, "droop_deg": -11, "upturn_deg": -2, "curve_deg": 14, "length_ratio": 0.58, "radius_ratio": 0.78}, {"down_angle_deg": 58, "droop_deg": -8, "upturn_deg": 7, "length_ratio": 0.43, "radius_ratio": 0.84}], "foliage": {"clumps": {"radius_m": 0.55}}, "epiphytes": {"mistletoe": {"prob": 0}}}, "note": "a slender stem keeping its leader,     narrow upright crown", "grown": {"age": 10, "dbh_cm": 6, "crown_width_m": 3.8}},
+    {"name": "young", "weight": 0.22, "height_m": [4.5, 6], "branches": 0.85, "set": {"trunk": {"length_ratio": 1, "split_prob": 0.3, "radius_ratio": 0.034, "bole_ratio": 0.13, "base_size": 0.13}, "foliage": {"clumps": {"radius_m": 0.8}}, "epiphytes": {"mistletoe": {"prob": 0.1}}, "crown": {"envelope": {"profile": [[0.13, 0.64], [0.29, 0.64], [0.4, 0.64], [0.51, 0.63], [0.62, 0.56], [0.73, 0.43], [0.84, 0.31], [0.95, 0.18], [1, 0.06]]}}, "levels": [{"down_angle_deg": 65, "down_angle_tip_deg": 43, "droop_deg": 2, "upturn_deg": 5, "curve_deg": 36, "length_ratio": 0.56, "radius_ratio": 0.59}, {"down_angle_deg": 53, "droop_deg": -9, "upturn_deg": 9, "length_ratio": 0.44, "radius_ratio": 0.69}]}, "note": "a rounded crown still taller than wide", "grown": {"age": 30, "dbh_cm": 18, "crown_width_m": 7}},
+    {"name": "mature", "weight": 0.55, "seeds": 2, "note": "the file as written", "grown": {"age": 80, "dbh_cm": 41, "crown_width_m": 12.5}},
+    {"name": "veteran", "weight": 0.15, "height_m": [12, 16.5], "gnarl": 1.35, "deadwood": {"fraction": 0.2, "levels": [1, 2], "where": "inner"}, "set": {"trunk": {"split_prob": 0.7, "lean_deg": 9, "length_ratio": 0.39, "radius_ratio": 0.051, "bole_ratio": 0.46, "base_size": 0.18}, "epiphytes": {"mistletoe": {"prob": 0.7, "count": [2, 5]}}, "crown": {"envelope": {"profile": [[0.06, 0.74], [0.24, 0.75], [0.36, 0.76], [0.47, 0.78], [0.59, 0.78], [0.71, 0.79], [0.82, 0.76], [0.94, 0.7], [1, 0.24]]}}, "levels": [{"down_angle_deg": 93, "down_angle_tip_deg": 92, "droop_deg": 36, "upturn_deg": 33, "curve_deg": 60, "length_ratio": 1.05, "radius_ratio": 0.31}, {"down_angle_deg": 27, "droop_deg": -15, "upturn_deg": 22, "length_ratio": 0.49, "radius_ratio": 0.76}]}, "note": "gnarled and broad,     a few dead limbs in a thinning crown,     more mistletoe", "grown": {"age": 200, "dbh_cm": 74, "crown_width_m": 23.2}}
   ],
-  "snag": {"fraction": 0.03, "from": "veteran", "height_m": [8, 13], "limbs": 0.6, "twigs": 0.3, "levels": 1, "shorten": [0.45, 0.95], "rgb": [168, 164, 156]},
-  "description": "A small, round-crowned oak with blue-green, shallowly lobed leaves and pale gray bark broken into small checks, usually 6-12 m tall here. It covers the dry, rocky slopes of the foothill woodland below about 1,200 m, often as open savanna with grass between the trees, and its acorns feed deer, western gray squirrels, scrub-jays and acorn woodpeckers.",
+  "snag": {
+    "fraction": 0.03,
+    "from": "veteran",
+    "height_m": [8, 13],
+    "limbs": 0.6,
+    "twigs": 0.3,
+    "levels": 1,
+    "shorten": [0.45, 0.95],
+    "rgb": [168, 164, 156]
+  },
+  "description": "A small,     round-crowned oak with blue-green,     shallowly lobed leaves and pale gray bark broken into small checks,     usually 6-12 m tall here. It covers the dry,     rocky slopes of the foothill woodland below about 1,    200 m,     often as open savanna with grass between the trees,     and its acorns feed deer,     western gray squirrels,     scrub-jays and acorn woodpeckers.",
   "season_notes": {
-    "winter": "Bare: blue oak drops its leaves in late fall, and the checkered gray bark and clumps of oak mistletoe show until leaf-out in March.",
+    "winter": "Bare: blue oak drops its leaves in late fall,     and the checkered gray bark and clumps of oak mistletoe show until leaf-out in March.",
     "spring": "Leafing out in pale green with hanging catkins (March-April); this year's acorns start on the new twigs.",
-    "summer": "In full blue-gray leaf, the colour that names it; in a dry year it drops leaves early to save water.",
-    "fall": "Acorns ripen and drop (September-October), then the leaves brown and fall."
+    "summer": "In full blue-gray leaf,     the colour that names it; in a dry year it drops leaves early to save water.",
+    "fall": "Acorns ripen and drop (September-October),     then the leaves brown and fall."
   },
-  "status": "agent draft, needs local sign-off",
+  "status": "agent draft,     needs local sign-off",
   "trunk": {
-    "length_ratio": 0.34, "radius_ratio": 0.075, "taper": 0.6, "flare": 1.3, "bole_ratio": 0.5, "base_size": 0.42,
-    "curve_deg": 12, "curve_var_deg": 18, "segments": 5, "lean_deg": 6, "stems": [1, 1], "stem_spread_deg": 0,
-    "split_prob": 0.45, "split_count": 2, "split_angle_deg": 32, "bark_rgb": [152, 150, 146],
-    "bark_pattern": "checkered", "twig_rgb": [150, 142, 132],
-    "bark": {"tile_m": [0.35, 0.7], "plate_m": [0.05, 0.08], "fissure": 0.5, "contrast": 1.0, "lichen": 0.8, "relief": 1.2}
+    "length_ratio": 0.52,
+    "radius_ratio": 0.038,
+    "taper": 0.6,
+    "flare": 1.3,
+    "bole_ratio": 0.21,
+    "base_size": 0.11,
+    "curve_deg": 12,
+    "curve_var_deg": 18,
+    "segments": 5,
+    "lean_deg": 6,
+    "stems": [1, 1],
+    "stem_spread_deg": 0,
+    "split_prob": 0.45,
+    "split_count": 2,
+    "split_angle_deg": 32,
+    "bark_rgb": [152, 150, 146],
+    "bark_pattern": "checkered",
+    "twig_rgb": [150, 142, 132],
+    "bark": {"tile_m": [0.35, 0.7], "plate_m": [0.05, 0.08], "fissure": 0.5, "contrast": 1, "lichen": 0.8, "relief": 1.2}
   },
-  "crown": {
-    "shape": "cylindrical",
-    "envelope": {"profile": [[0.06, 0.48], [0.2, 0.7], [0.35, 0.76], [0.5, 0.74], [0.65, 0.67], [0.78, 0.55], [0.9, 0.37], [1.0, 0.12]], "lobes": 4, "lobe_depth": 0.12, "asymmetry": 0.1, "fill": 0.6, "edge": 1.08}
-  },
+  "crown": {"shape": "cylindrical", "envelope": {"profile": [[0.11, 0.57], [0.27, 0.58], [0.39, 0.58], [0.5, 0.59], [0.61, 0.59], [0.72, 0.55], [0.83, 0.48], [0.94, 0.45], [1, 0.16]], "lobes": 4, "lobe_depth": 0.12, "asymmetry": 0.1, "fill": 0.6, "edge": 1.08}},
   "levels": [
-    {
-      "count": 7, "down_angle_deg": 66, "down_angle_tip_deg": 38, "down_angle_var_deg": 14, "rotation_deg": 140,
-      "rotation_var_deg": 30, "length_ratio": 2.6, "length_var": 0.25, "curve_deg": 6, "curve_var_deg": 24,
-      "zigzag_deg": 10, "tropism": 0.02, "droop_deg": 14, "taper": 0.9, "radius_ratio": 0.6, "segments": 5
-    },
-    {
-      "count": 6, "start": 0.15, "down_angle_deg": 46, "down_angle_var_deg": 16, "rotation_deg": 140,
-      "rotation_var_deg": 30, "length_ratio": 0.55, "length_var": 0.3, "curve_deg": 0, "curve_var_deg": 26,
-      "zigzag_deg": 16, "tropism": 0.05, "taper": 1.0, "radius_ratio": 0.45, "segments": 2
-    }
+    {"count": 7, "down_angle_deg": 79, "down_angle_tip_deg": 89, "down_angle_var_deg": 14, "rotation_deg": 140, "rotation_var_deg": 30, "length_ratio": 0.98, "length_var": 0.25, "curve_deg": 60, "curve_var_deg": 24, "zigzag_deg": 10, "tropism": 0.02, "droop_deg": 5, "taper": 0.9, "radius_ratio": 0.39, "segments": 5, "upturn_deg": 29},
+    {"count": 6, "start": 0.15, "down_angle_deg": 34, "down_angle_var_deg": 16, "rotation_deg": 140, "rotation_var_deg": 30, "length_ratio": 0.33, "length_var": 0.3, "curve_deg": 0, "curve_var_deg": 26, "zigzag_deg": 16, "tropism": 0.05, "taper": 1, "radius_ratio": 0.7, "segments": 2, "droop_deg": -20, "upturn_deg": 13}
   ],
   "foliage": {
-    "type": "broadleaf", "leaf_size_m": 0.06, "leaf_shape": "oblong_wavy", "cluster_m": 0.95, "density": 9, "cards_per_m2": 1.6, "leaf_fill": 3.2, "roll_deg": 90,
-    "start": 0.3, "orientation": "outward",
+    "type": "broadleaf",
+    "leaf_size_m": 0.06,
+    "leaf_shape": "oblong_wavy",
+    "cluster_m": 0.95,
+    "density": 9,
+    "cards_per_m2": 1.6,
+    "leaf_fill": 3.2,
+    "roll_deg": 90,
+    "start": 0.3,
+    "orientation": "outward",
     "colors": {"winter": [149, 119, 105], "spring": [144, 157, 100], "summer": [127, 137, 122], "fall": [168, 135, 98]},
-    "leaf_on": {"winter": 0.0, "spring": 1.0, "summer": 1.0, "fall": 0.85}, "parent_start": 0.6,
+    "leaf_on": {"winter": 0, "spring": 1, "summer": 1, "fall": 0.85},
+    "parent_start": 0.6,
     "clumps": {"radius_m": 0.85, "cards_per_clump": 7, "shell": 0.2, "flatten": 0.75, "tip_bias": 1.4},
-    "palette": [[0.8, [1, 1, 1]], [0.2, [1.05, 1.08, 0.95]]], "winter_twigs": 0.45, "ao_min": 0.7,
-    "color_var": [0.1, 0.06], "leaf_on_var": 0.6
+    "palette": [[0.8, [1, 1, 1]], [0.2, [1.05, 1.08, 0.95]]],
+    "winter_twigs": 0.45,
+    "ao_min": 0.7,
+    "color_var": [0.1, 0.06],
+    "leaf_on_var": 0.6
   },
   "deadwood": {
-    "fraction": 0.06, "where": "inner", "levels": [2], "shorten": 0.6, "rgb": [150, 146, 138]
+    "fraction": 0.06,
+    "where": "inner",
+    "levels": [2],
+    "shorten": 0.6,
+    "rgb": [150, 146, 138]
   },
-  "epiphytes": {
-    "mistletoe": {"prob": 0.4, "count": [1, 3], "radius_m": 0.35}
+  "epiphytes": {"mistletoe": {"prob": 0.4, "count": [1, 3], "radius_m": 0.35}},
+  "twigs": {
+    "count": [1, 2],
+    "length": 0.65,
+    "down_deg": 50,
+    "down_var_deg": 18,
+    "curve_var_deg": 25,
+    "segments": 2,
+    "radius_m": 0.012,
+    "taper": 0.55,
+    "fan_deg": 55,
+    "jitter": 0.2,
+    "zigzag_deg": 28,
+    "tris": 1140
   },
-  "twigs": {"count": [1, 2], "length": 0.65, "down_deg": 50, "down_var_deg": 18, "curve_var_deg": 25, "segments": 2, "radius_m": 0.012, "taper": 0.55, "fan_deg": 55, "jitter": 0.2, "zigzag_deg": 28, "tris": 1140},
   "lod": {
-    "near_tris_budget": 1900, "near_sides": [7, 4, 3], "mid_blobs": 5, "mid_branches": 4, "mid_segments": [3, 2], "mid_blob_scale": 0.85,
+    "near_tris_budget": 1900,
+    "near_sides": [7, 4, 3],
+    "mid_blobs": 5,
+    "mid_branches": 4,
+    "mid_segments": [3, 2],
+    "mid_blob_scale": 0.85,
     "close_factor": 2
   },
   "targets": {
-    "crown_width_ratio": 1.4, "crown_base_ratio": 0.15, "porosity": 0.2, "foliage_rg": 0.9, "foliage_bg": 0.78,
-    "from": "reference photographs, docs/tree-likeness-review.md: 01 Mount Diablo (W/H 1.59, porosity 0.21), 02 Shingle Springs, 04 savanna; woodland trees nearer 1.0"
+    "crown_width_ratio": 1.4,
+    "crown_base_ratio": 0.15,
+    "porosity": 0.2,
+    "foliage_rg": 0.9,
+    "foliage_bg": 0.78,
+    "from": "reference photographs,     docs/tree-likeness-review.md: 01 Mount Diablo (W/H 1.59,     porosity 0.21),     02 Shingle Springs,     04 savanna; woodland trees nearer 1.0"
   },
-  "notes": "Endemic to the California foothills; the signature tree of foothill savanna and oak woodland on dry, shallow soils. Usually 6-12 m (rarely to 20 m) with a single short, stout trunk (dbh 0.3-0.6 m, so dbh/height about 0.05), a clear bole of 1.5-3 m and a broad, rounded, irregular crown about as wide as the tree is tall. Oaks follow Rauh's model (rhythmic growth, orthotropic branches) but the crown is decurrent: the leader dissolves into a few big ascending limbs, so trunk.length_ratio is short (0.55) and level-1 limbs are long (0.85 of the trunk, hemispherical shape: the lowest limbs are the longest and most spreading). Limbs are crooked, hence high curve variance. Bark is light grey, finely checkered into small scales (the lightest-barked oak in the foothills). Leaves 3-10 cm, oblong, entire to shallowly lobed, distinctly blue-green and glaucous in summer; leaf_shape 'lobed'. Drought-deciduous: leaves out March-April with fresh yellow-green colour, blue-green by June, yellow-brown and partly shed by fall (shed earlier in dry years), bare December-February, hence leaf_on. Trunks of older trees often fork at the bole (split_prob 0.35). Acorns and stash holes in the acorn game sit on the straight bole (stem.len). In-world review (2026-10-24) found the crown too sparse (it read as a eucalyptus): photo porosity is about 0.2, so the crown is denser and rounder again: smaller cards (cluster_m 0.95), denser sprays (leaf_fill), a thinner empty shell, sprays rolled at random in their plane (roll_deg 90) so they do not all hang along drooping twigs, cards_per_m2 1.6 (capped by the near budget), leaf_on 1.0 in summer and 0.85 in fall (blue oaks hold their leaves into November; the calendar has one fall season).",
-  "sources": ["https://www.fs.usda.gov/database/feis/plants/tree/quedou/all.html", "https://en.wikipedia.org/wiki/Quercus_douglasii", "https://ucjeps.berkeley.edu/eflora/ (Quercus douglasii)", "Halle, Oldeman and Tomlinson 1978, Tropical Trees and Forests (Rauh's model; Quercus as example)"],
-  "authors": ["Wild Earth (agent draft, 2026-10-23); needs local sign-off"],
+  "notes": "Endemic to the California foothills; the signature tree of foothill savanna and oak woodland on dry,     shallow soils. Usually 6-12 m (rarely to 20 m) with a single short,     stout trunk (dbh 0.3-0.6 m,     so dbh/height about 0.05),     a clear bole of 1.5-3 m and a broad,     rounded,     irregular crown about as wide as the tree is tall. Oaks follow Rauh's model (rhythmic growth,     orthotropic branches) but the crown is decurrent: the leader dissolves into a few big ascending limbs,     so trunk.length_ratio is short (0.55) and level-1 limbs are long (0.85 of the trunk,     hemispherical shape: the lowest limbs are the longest and most spreading). Limbs are crooked,     hence high curve variance. Bark is light grey,     finely checkered into small scales (the lightest-barked oak in the foothills). Leaves 3-10 cm,     oblong,     entire to shallowly lobed,     distinctly blue-green and glaucous in summer; leaf_shape 'lobed'. Drought-deciduous: leaves out March-April with fresh yellow-green colour,     blue-green by June,     yellow-brown and partly shed by fall (shed earlier in dry years),     bare December-February,     hence leaf_on. Trunks of older trees often fork at the bole (split_prob 0.35). Acorns and stash holes in the acorn game sit on the straight bole (stem.len). In-world review (2026-10-24) found the crown too sparse (it read as a eucalyptus): photo porosity is about 0.2,     so the crown is denser and rounder again: smaller cards (cluster_m 0.95),     denser sprays (leaf_fill),     a thinner empty shell,     sprays rolled at random in their plane (roll_deg 90) so they do not all hang along drooping twigs,     cards_per_m2 1.6 (capped by the near budget),     leaf_on 1.0 in summer and 0.85 in fall (blue oaks hold their leaves into November; the calendar has one fall season).",
+  "sources": ["https://www.fs.usda.gov/database/feis/plants/tree/quedou/all.html", "https://en.wikipedia.org/wiki/Quercus_douglasii", "https://ucjeps.berkeley.edu/eflora/ (Quercus douglasii)", "Halle,     Oldeman and Tomlinson 1978,     Tropical Trees and Forests (Rauh's model; Quercus as example)"],
+  "authors": ["Wild Earth (agent draft,     2026-10-23); needs local sign-off"],
   "license": "CC BY-SA 4.0"
 }

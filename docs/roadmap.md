@@ -230,6 +230,18 @@ browser stays the renderer.
   camera; the other tiles rebuilt with `--steps water`; a water temperature from
   `relations.shades_water`; the animals' crossings at the bars (deer, raven) made deliberate.
 
+- Tree bases perpendicular to the slope, 2026-11-01: each near-trunk instance carries the ground's normal at its foot;
+  the shader moves the collar uphill onto the surface and bends the first 1.8 m from the normal to the vertical, the
+  axis and the crown unmoved. Weak: the mid trunks past 180 m stay straight; the squirrel climbs the straight axis.
+- Trees that grow their age, built 2026-11-01 for valley oak, blue oak and ponderosa (`tools/grow_species.mjs`, the
+  `growth` block, the fitted classes, the grown skeleton beside each class on the lineup page): the valley oak's limbs
+  go from rising to level with rising ends to dipping below horizontal with the ends turned up; the blue oak stays
+  compact with limbs at 30 degrees up to 80 years; the pine keeps its leader and level whorls. Weak: the limbs' effective modulus
+  is the one tuned number (2.8 GPa against the Handbook's 8.6 over creep); the 200-year oak's crown is 1.18 x its
+  height where the photographs show 1.3-1.8 and its sag milder than theirs; the blue oak weeps at 200 years on three
+  scaffolds where it should not; the pine's mature crown base is 0.5 H against the photographs' 0.4-0.6
+  but its grown pole still has limbs to the ground; run to run the sag moves by 10-20 degrees with which limbs live. Open: the
+  other 18 tree species' growth blocks, the generator reading the model (reiteration), classes blending by height.
 - Trees that grow their age, designed 2026-11-01 (`docs/tree-architecture.md`): a growth tool that runs the
   limb mechanics (a growing cantilever with shape memory and tension wood, apical control decaying by leaf type) once
   per species from a `growth` block in its record and writes the generator's age classes; the records filled from

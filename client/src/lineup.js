@@ -1,5 +1,6 @@
 import * as THREE from 'three';
 import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
+import { mergeGeometries } from 'three/addons/utils/BufferGeometryUtils.js';
 import { LIBRARY, LIBRARY_SOURCE, LIBRARY_RAW, BUILTIN, buildTree, canopyMaterial, trunkMaterial, applySeason, thinMidCanopy, ageClasses, SLOTS, addSpecies, SEASON_MONTH } from './treegen.js';
 
 // Review page for the species library (docs/species-library.md): every species, three seeds,
@@ -22,6 +23,35 @@ for (const id of list('add')) {
 const only = list('only');
 const ids = ORDER.filter(id => LIBRARY[id]).concat(Object.keys(LIBRARY).filter(id => !ORDER.includes(id))).filter(id => !only.length || only.includes(id)).filter(id => !LIBRARY[id].groundForm);   // the grasses and forbs are not grown here
 const SEEDS = [1000, 1017, 1034];   // the first three variant seeds vegetation.js uses (1000 + v * 17 + id length)
+// ?grown=1 with the classes layout: beside each class tree, the skeleton the growth tool grew for that class
+// (tools/grow_species.mjs writes library/species/grown/<id>.json; docs/tree-architecture.md), so the fit is visible.
+const GROWN = {};
+if (params.get('grown') === '1') for (const id of ids) {
+  try { const r = await fetch(new URL(`../../library/species/grown/${id}.json`, import.meta.url), { cache: 'no-cache' }); if (r.ok) GROWN[id] = await r.json(); }
+  catch (e) { console.warn(`lineup: no grown skeleton for ${id}: ${e.message}`); }
+}
+function grownMesh(cls) {   // wood 2 cm and over as six-sided tubes, the rest as lines; dead wood grey
+  const thick = [], thin = [], up = new THREE.Vector3(0, 1, 0), group = new THREE.Group();
+  for (const s of cls.segments) (s[6] >= 0.02 ? thick : thin).push(s);
+  if (thin.length) {
+    const pos = new Float32Array(thin.length * 6), col = new Float32Array(thin.length * 6);
+    thin.forEach((s, i) => { pos.set([s[0], s[1], s[2], s[3], s[4], s[5]], i * 6); const c = s[8] ? [0.45, 0.36, 0.26] : [0.72, 0.7, 0.66]; col.set([...c, ...c], i * 6); });
+    const geo = new THREE.BufferGeometry(); geo.setAttribute('position', new THREE.BufferAttribute(pos, 3)); geo.setAttribute('color', new THREE.BufferAttribute(col, 3));
+    group.add(new THREE.LineSegments(geo, new THREE.LineBasicMaterial({ vertexColors: true })));
+  }
+  const geos = [];
+  for (const s of thick) {
+    const a = new THREE.Vector3(s[0], s[1], s[2]), d = new THREE.Vector3(s[3] - s[0], s[4] - s[1], s[5] - s[2]), L = d.length(); if (L < 1e-3) continue;
+    const cyl = new THREE.CylinderGeometry(s[6] * 0.8, s[6], L, 6, 1); cyl.translate(0, L / 2, 0);
+    cyl.applyQuaternion(new THREE.Quaternion().setFromUnitVectors(up, d.normalize())); cyl.translate(a.x, a.y, a.z);
+    const n = cyl.attributes.position.count, col = new Float32Array(n * 3), c = s[8] ? [0.38, 0.3, 0.22] : [0.66, 0.64, 0.6];
+    for (let i = 0; i < n; i++) col.set(c, i * 3);
+    cyl.setAttribute('color', new THREE.BufferAttribute(col, 3)); geos.push(cyl);
+  }
+  if (geos.length) { const m = new THREE.Mesh(mergeGeometries(geos), new THREE.MeshLambertMaterial({ vertexColors: true })); m.castShadow = m.receiveShadow = true; group.add(m); }
+  let w = 1; for (const s of cls.segments) w = Math.max(w, Math.abs(s[0]), Math.abs(s[2]), Math.abs(s[3]), Math.abs(s[5]));
+  return { group, width: 2 * w };
+}
 
 const renderer = new THREE.WebGLRenderer({ antialias: true, preserveDrawingBuffer: true });
 renderer.setPixelRatio(Math.min(devicePixelRatio, 2)); renderer.setSize(innerWidth, innerHeight);
@@ -94,6 +124,15 @@ for (const id of ids) {
       labels.appendChild(el); g.trees.push({ x, el });
     }
     x += widths[i].w / 2 + gap;
+    const grown = kind === 'classes' && GROWN[id]?.classes?.[b.row.name];
+    if (grown) {   // the grown skeleton this class was fitted to, beside the tree
+      const { group, width } = grownMesh(grown);
+      x += width / 2; group.position.x = x; root.add(group);
+      const el = document.createElement('div'); el.className = 'lab sub';
+      el.innerHTML = `<b>grown</b> ${grown.age} y<br>${grown.height_m.toFixed(1)} m <span class="muted">${grown.segments.length} segs</span>`;
+      labels.appendChild(el); g.trees.push({ x, el });
+      x += width / 2 + gap;
+    }
   });
   const pole = scale5(); pole.position.x = x0 + 0.3; root.add(pole);
   g.x0 = x0; g.x1 = x - gap; g.h = Math.max(...built.map(b => b.near.height));
