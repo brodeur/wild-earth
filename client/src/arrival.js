@@ -104,14 +104,14 @@ const POP_GAP = [0.18, 0.42];             // s between the animals' arrivals
 const AUR_N = [10, 15], AUR_COLOURS = ['#ffffff', '#f1f1f1', '#dcdfe2', '#c9ccd0', '#f7f7f7'];   // the aurora lines over an arriving still (opening.css .op-aur): white to light grey, no hue (owner, 2026-10-27)
 // The lines: AUR_N of them, clustered round the still's middle at differing heights (40-170% of the still), each with
 // its own colour, wiggle period (--lw), delay (--la) and life (--ld), so they shimmer out at their own odd intervals.
-function auroraLines(rnd) {
+function auroraLines(rnd, colour = null) {   // colour: every line in the species' own colour (title.js's card), else the white ones
   const box = document.createElement('span'); box.className = 'op-aur';
   const n = AUR_N[0] + Math.floor(rnd() * (AUR_N[1] - AUR_N[0] + 1));
   for (let i = 0; i < n; i++) {
     const l = document.createElement('i');
     l.style.setProperty('--lx', `${(50 + (rnd() + rnd() - 1) * 30).toFixed(1)}%`);
     l.style.setProperty('--lh', `${(40 + rnd() * 130).toFixed(0)}`);
-    l.style.setProperty('--lc', AUR_COLOURS[Math.floor(rnd() * AUR_COLOURS.length)]);
+    l.style.setProperty('--lc', colour || AUR_COLOURS[Math.floor(rnd() * AUR_COLOURS.length)]);
     l.style.setProperty('--lw', `${(0.45 + rnd() * 0.9).toFixed(2)}s`);
     l.style.setProperty('--la', `${(rnd() * 0.3).toFixed(2)}s`);
     l.style.setProperty('--ld', `${(0.8 + rnd() * 0.8).toFixed(2)}s`);
@@ -124,6 +124,7 @@ const BOOT_MAX = 12;                      // s: the dark start waits at most thi
 // The track's own season colours at its four titles (opening.css .op-track, the same stops): the selected card's
 // highlight, the Begin button and the slider's marks take the colour under the thumb, continuously.
 const TRACK = [[0x8f, 0xb5, 0x9a], [0xd8, 0xbd, 0x6a], [0xc9, 0x8a, 0x4e], [0x8e, 0xa4, 0xb4]];
+export const seasonHighlight = season => trackColor(Math.max(0, TITLES.indexOf(season)) / 3);   // the card's colour for a season (title.js)
 function trackColor(p) {
   const q = Math.min(1, Math.max(0, p)) * 3, k = Math.min(2, Math.floor(q)), f = q - k;
   return `rgb(${TRACK[k].map((c, i) => Math.round(c + (TRACK[k + 1][i] - c) * f)).join(' ')})`;
@@ -209,6 +210,7 @@ export class OpeningScreen {
     }, { passive: false });
     // the lineup follows the chosen card when the row scrolls or the window changes (its positions are CSS from these)
     this.place = () => this.placeLineup();
+    this.lineupObj = new CardLineup({ box: this.$('.op-lineup'), data: () => this.lineupData });
     // the wisp, live (wispLoop.js): in the dark start's slot, then a loading card's
     try { this.wispLoop = new WispLoop(); this.wispLoop.attach(this.$('.op-boot .op-wisp')); } catch (e) { console.warn('opening: live wisp unavailable, the sprite sheet stays', e); this.wispLoop = null; }
     this.relayout = () => this.layoutCards();
@@ -363,73 +365,9 @@ export class OpeningScreen {
     this.onBegin({ tileId: this.sel, season: this.season, date: this.date, point: this.points[this.sel] || null, caption: this.caption() });
   }
 
-  // ---- the lineup ------------------------------------------------------------------------------------------------
-  // The chosen tile's animals as pre-rendered stills (assets/opening/index.json), true to scale (the deer's rule: a
-  // metre is PX_PER_M_CARD of the card's height), ground animals standing just below and in front of the chosen card, birds
-  // round its top on a slow CSS float. Each still is laid out in units of the card's height (--H) from the card's centre
-  // (--cx) and bottom (--by, birds) or the foot line (--fy, ground animals), so a scroll, a resize or a new card only
-  // changes those (a CSS transition carries the animals over). A new tile's lineup keeps the species both tiles share
-  // (they move to their new places), drops the others (they fade) and pops the new ones in with a glimmer, staggered by
-  // an animation-delay set once as each image is ready, in a random order POP_GAP s apart.
-  async lineup(id) {
-    const { index, lists } = await this.lineupData;
-    if (this.closed || id !== this.sel || !index?.species) return;
-    const box = this.$('.op-lineup'), rnd = Math.random;
-    this.anEls ||= new Map();
-    const known = [...new Set((lists[id] || []).filter(s => s.present !== false).map(s => s.code))].filter(c => index.species[c]);   // present: the pipeline's record-and-range rule (species.json)
-    const ground = known.filter(c => index.species[c].kind === 'ground'), birds = known.filter(c => index.species[c].kind === 'bird');
-    const m = c => index.species[c].width / index.species[c].px_per_m;   // the still's width in metres
-    // ground slots: biggest at the two ends, smallest toward the middle; each slot's share of the span by its width
-    ground.sort((a, b) => m(b) - m(a));
-    const order = []; ground.forEach((c, i) => { order[i % 2 ? ground.length - 1 - (i >> 1) : i >> 1] = c; });
-    const wts = order.map(c => m(c) * 0.8 + 0.05), sum = wts.reduce((a, b) => a + b, 0) || 1;
-    const Hc = (this.cardOf(id)?.offsetHeight || 600) * 1.08;
-    const SPAN = Math.min(0.74, (innerWidth - 24) / Hc);   // in card heights: about 1.3 card widths, within the window
-    let acc = 0;
-    const items = order.map((c, i) => { const f = (acc + wts[i] / 2) / sum; acc += wts[i]; return { c, x: (f - 0.5) * SPAN, back: i % 2 === 1 }; })
-      .concat(birds.map((c, k) => ({ c, bird: k })));
-    // another tile's lineup beams out whole (opening.css .out), and this tile's animals come in as their own sequence
-    // after it, shared species included (owner, 2026-10-27: a new tile may be another continent)
-    if (this.lineupTile && this.lineupTile !== id && this.anEls.size) {
-      for (const el of this.anEls.values()) { el.classList.remove('in'); el.classList.add('out'); el.style.animationDelay = '0s'; el.style.setProperty('--d', '0s'); setTimeout(() => el.remove(), 1800); }
-      this.anEls = new Map(); this.popAt = performance.now() / 1000 + 0.6;
-    }
-    this.lineupTile = id;
-    for (const it of items.sort(() => rnd() - 0.5)) {   // new ones created, so loaded, in a random order
-      const sp = index.species[it.c], k = PX_PER_M_CARD / sp.px_per_m;   // card heights per still pixel
-      const s = it.bird == null && it.back ? 0.92 : 1;   // the back row a step further off
-      const w = sp.width * k * s, h = sp.height * k * s;
-      let el = this.anEls.get(it.c), fresh = false;
-      if (!el) {
-        fresh = true; el = document.createElement('span'); this.anEls.set(it.c, el);
-        el.className = `op-an ${it.bird != null ? 'bird' : 'ground'}`;
-        const img = new Image(), inner = document.createElement('i'), sil = document.createElement('b');
-        img.alt = ''; img.decoding = 'async'; sil.className = 'op-sil';
-        el.style.setProperty('--still', `url("./assets/opening/${sp.file}")`);   // the silhouette's mask (opening.css .op-sil)
-        img.onload = () => {
-          const now = performance.now() / 1000, at = Math.max(now + 0.05, this.popAt || 0);
-          this.popAt = at + POP_GAP[0] + rnd() * (POP_GAP[1] - POP_GAP[0]);
-          el.style.animationDelay = `${(at - now).toFixed(3)}s`; el.style.setProperty('--d', `${(at - now).toFixed(3)}s`);
-          el.classList.add('in');
-        };
-        img.src = `./assets/opening/${sp.file}`;
-        inner.append(img, sil); el.append(inner, auroraLines(rnd)); box.append(el);
-      }
-      let x, y;   // the still's centre x and top y, in card heights: birds from the card's centre x and bottom, ground
-                  // animals from the card's centre x and the foot line (--fy, just under the card: placeLineup)
-      if (it.bird != null) {
-        const a = [-2.2, -0.9, -1.6, -0.4, -2.7, -1.25][it.bird % 6], r = 0.36 + 0.06 * (it.bird % 3);
-        x = Math.cos(a) * r * 1.15; y = -1 + 0.12 + Math.sin(a) * r * 0.32 - h / 2;   // round the card's top
-        if (fresh) { el.style.setProperty('--fd', `${(5 + rnd() * 3).toFixed(2)}s`); el.style.setProperty('--fx', `${(rnd() < 0.5 ? -1 : 1) * (6 + rnd() * 8) | 0}px`); }
-      } else {
-        x = it.x; y = (it.back ? -0.015 : 0) - (sp.foot_px ?? sp.height) * k * s;
-        el.classList.toggle('back', !!it.back);
-      }
-      el.classList.toggle('flip', x > 0.02);   // face the card's middle (the stills face right)
-      el.style.setProperty('--x', (x - w / 2).toFixed(4)); el.style.setProperty('--y', y.toFixed(4));
-      el.style.setProperty('--w', w.toFixed(4)); el.style.setProperty('--h', h.toFixed(4));
-    }
-    this.placeLineup();
+  // ---- the lineup (CardLineup below) ----------------------------------------------------------------------------
+  lineup(id) {
+    return this.lineupObj.show(id, this.cardOf(id), { scale: 1.08, still: () => !this.closed && id === this.sel });
   }
 
   // The cards' scales and brightness by state, and the sideways shifts that keep the gutters between them as wide as
@@ -472,21 +410,12 @@ export class OpeningScreen {
     row.scrollBy({ left: dx, behavior: 'smooth' });
   }
 
-  // The lineup's anchors for its CSS: the chosen card's centre x (where its shift is going), its bottom at the grown size
-  // (birds round its top), and the foot line: FOOT_BELOW card heights under the card's bottom, so the animals stand
-  // below and in front of the card, the taller ones' heads and backs over its lower edge (kept on screen when the
-  // window is short: the line stays FOOT_MARGIN above the window's bottom).
+  // The lineup under the chosen card: its centre x is where its shift is going (layoutCards).
   placeLineup() {
-    const card = this.cardOf(this.sel), box = this.$('.op-lineup'); if (!card || !box) return;
+    const card = this.cardOf(this.sel); if (!card) return;
     const r = card.getBoundingClientRect(), now = new DOMMatrix(getComputedStyle(card).transform).m41;
     const tx = this.cardShift?.el === card ? this.cardShift.tx : 0;
-    const H = card.offsetHeight * 1.08, cy = r.top + r.height / 2, by = cy + H / 2;
-    const fy = Math.min(by + FOOT_BELOW * H, this.root.clientHeight - FOOT_MARGIN * H);
-    box.style.setProperty('--cx', `${(r.left + r.width / 2 - now + tx).toFixed(1)}px`);
-    box.style.setProperty('--by', `${by.toFixed(1)}px`);
-    box.style.setProperty('--fy', `${fy.toFixed(1)}px`);
-    box.style.setProperty('--H', `${H.toFixed(1)}px`);
-    box.classList.add('on');
+    this.lineupObj.place(card, { scale: 1.08, cx: r.left + r.width / 2 - now + tx });
   }
 
   // ---- the slider's label: the date and that day's weather ------------------------------------------------------
@@ -549,6 +478,107 @@ export class OpeningScreen {
     this.closed = true; removeEventListener('resize', this.relayout);
     this.wispLoop?.dispose(); this.wispLoop = null;
     setTimeout(() => { this.root.hidden = true; this.root.innerHTML = ''; }, 900);
+  }
+}
+
+// ---- the lineup: a tile's animals round a card ------------------------------------------------------------------
+// The chosen tile's animals as pre-rendered stills (assets/opening/index.json), true to scale (the deer's rule: a metre
+// is PX_PER_M_CARD of the card's height), ground animals standing just below and in front of the card, birds round its
+// top on a slow CSS float. Each still is laid out in units of the card's height (--H) from the card's centre (--cx) and
+// bottom (--by, birds) or the foot line (--fy, ground animals), so a scroll, a resize or a new card only changes those
+// (a CSS transition carries the animals over). A new tile's lineup beams the old one out whole and pops the new ones in
+// with a glimmer, staggered by an animation-delay set once as each image is ready, in a random order gap s apart.
+// Shared by the card screen (OpeningScreen) and the title screen's card (title.js).
+//   new CardLineup({ box, data, gap, colourOf })   box: the .op-lineup element; data(): a promise of { index, lists }
+//     (assets/opening/index.json and each tile's species.json by tile id); gap: [min, max] s between arrivals; colourOf(code):
+//     a CSS colour for the species' arrival (the silhouette and the aurora lines), else the white lines (opening.css)
+//   show(id, card, { scale, still })   the tile's animals round card (an .op-tile element drawn at scale); still() false
+//     once another tile was chosen meanwhile
+//   place(card, { scale, cx })         the CSS anchors from the card's rect (cx: its centre x if its transform is moving)
+//   clear()                            beam every animal out
+export class CardLineup {
+  constructor({ box, data, gap = POP_GAP, colourOf = null }) {
+    this.box = box; this.data = data; this.gap = gap; this.colourOf = colourOf;
+    this.anEls = new Map(); this.popAt = 0; this.tile = null; this.card = null; this.scale = 1;
+  }
+  async show(id, card, { scale = 1, still = () => true } = {}) {
+    const { index, lists } = await this.data();
+    if (!still() || !index?.species || !card) return;
+    const box = this.box, rnd = Math.random;
+    this.card = card; this.scale = scale;
+    const known = [...new Set((lists[id] || []).filter(s => s.present !== false).map(s => s.code))].filter(c => index.species[c]);   // present: the pipeline's record-and-range rule (species.json)
+    const ground = known.filter(c => index.species[c].kind === 'ground'), birds = known.filter(c => index.species[c].kind === 'bird');
+    const m = c => index.species[c].width / index.species[c].px_per_m;   // the still's width in metres
+    // ground slots: biggest at the two ends, smallest toward the middle; each slot's share of the span by its width
+    ground.sort((a, b) => m(b) - m(a));
+    const order = []; ground.forEach((c, i) => { order[i % 2 ? ground.length - 1 - (i >> 1) : i >> 1] = c; });
+    const wts = order.map(c => m(c) * 0.8 + 0.05), sum = wts.reduce((a, b) => a + b, 0) || 1;
+    const Hc = (card.offsetHeight || 600) * scale;
+    const SPAN = Math.min(0.74, (innerWidth - 24) / Hc);   // in card heights: about 1.3 card widths, within the window
+    let acc = 0;
+    const items = order.map((c, i) => { const f = (acc + wts[i] / 2) / sum; acc += wts[i]; return { c, x: (f - 0.5) * SPAN, back: i % 2 === 1 }; })
+      .concat(birds.map((c, k) => ({ c, bird: k })));
+    // another tile's lineup beams out whole (opening.css .out), and this tile's animals come in as their own sequence
+    // after it, shared species included (owner, 2026-10-27: a new tile may be another continent)
+    if (this.tile && this.tile !== id && this.anEls.size) this.clear();
+    this.tile = id;
+    for (const it of items.sort(() => rnd() - 0.5)) {   // new ones created, so loaded, in a random order
+      const sp = index.species[it.c], k = PX_PER_M_CARD / sp.px_per_m;   // card heights per still pixel
+      const s = it.bird == null && it.back ? 0.92 : 1;   // the back row a step further off
+      const w = sp.width * k * s, h = sp.height * k * s;
+      let el = this.anEls.get(it.c), fresh = false;
+      if (!el) {
+        fresh = true; el = document.createElement('span'); this.anEls.set(it.c, el);
+        el.className = `op-an ${it.bird != null ? 'bird' : 'ground'}`;
+        const img = new Image(), inner = document.createElement('i'), sil = document.createElement('b');
+        img.alt = ''; img.decoding = 'async'; sil.className = 'op-sil';
+        el.style.setProperty('--still', `url("./assets/opening/${sp.file}")`);   // the silhouette's mask (opening.css .op-sil)
+        const colour = this.colourOf?.(it.c) || null;   // the species' own arrival colour (the spirit view's soul colour, title.js)
+        if (colour) el.style.setProperty('--aur', colour);
+        img.onload = () => {
+          const now = performance.now() / 1000, at = Math.max(now + 0.05, this.popAt || 0);
+          this.popAt = at + this.gap[0] + rnd() * (this.gap[1] - this.gap[0]);
+          el.style.animationDelay = `${(at - now).toFixed(3)}s`; el.style.setProperty('--d', `${(at - now).toFixed(3)}s`);
+          el.classList.add('in');
+        };
+        img.src = `./assets/opening/${sp.file}`;
+        inner.append(img, sil); el.append(inner, auroraLines(rnd, colour)); box.append(el);
+      }
+      let x, y;   // the still's centre x and top y, in card heights: birds from the card's centre x and bottom, ground
+                  // animals from the card's centre x and the foot line (--fy, just under the card: place)
+      if (it.bird != null) {
+        const a = [-2.2, -0.9, -1.6, -0.4, -2.7, -1.25][it.bird % 6], r = 0.36 + 0.06 * (it.bird % 3);
+        x = Math.cos(a) * r * 1.15; y = -1 + 0.12 + Math.sin(a) * r * 0.32 - h / 2;   // round the card's top
+        if (fresh) { el.style.setProperty('--fd', `${(5 + rnd() * 3).toFixed(2)}s`); el.style.setProperty('--fx', `${(rnd() < 0.5 ? -1 : 1) * (6 + rnd() * 8) | 0}px`); }
+      } else {
+        x = it.x; y = (it.back ? -0.015 : 0) - (sp.foot_px ?? sp.height) * k * s;
+        el.classList.toggle('back', !!it.back);
+      }
+      el.classList.toggle('flip', x > 0.02);   // face the card's middle (the stills face right)
+      el.style.setProperty('--x', (x - w / 2).toFixed(4)); el.style.setProperty('--y', y.toFixed(4));
+      el.style.setProperty('--w', w.toFixed(4)); el.style.setProperty('--h', h.toFixed(4));
+    }
+    this.place(card, { scale });
+  }
+  // The anchors for the CSS: the card's centre x, its bottom at the drawn size (birds round its top), and the foot line:
+  // FOOT_BELOW card heights under the card's bottom, so the animals stand below and in front of the card, the taller ones'
+  // heads and backs over its lower edge (kept on screen when the window is short: the line stays FOOT_MARGIN above the
+  // window's bottom).
+  place(card = this.card, { scale = this.scale, cx = null } = {}) {
+    const box = this.box; if (!card || !box) return;
+    const r = card.getBoundingClientRect();
+    const H = card.offsetHeight * scale, cy = r.top + r.height / 2, by = cy + H / 2;
+    const root = box.parentElement?.clientHeight || innerHeight;
+    const fy = Math.min(by + FOOT_BELOW * H, root - FOOT_MARGIN * H);
+    box.style.setProperty('--cx', `${(cx ?? r.left + r.width / 2).toFixed(1)}px`);
+    box.style.setProperty('--by', `${by.toFixed(1)}px`);
+    box.style.setProperty('--fy', `${fy.toFixed(1)}px`);
+    box.style.setProperty('--H', `${H.toFixed(1)}px`);
+    box.classList.add('on');
+  }
+  clear() {
+    for (const el of this.anEls.values()) { el.classList.remove('in'); el.classList.add('out'); el.style.animationDelay = '0s'; el.style.setProperty('--d', '0s'); setTimeout(() => el.remove(), 1800); }
+    this.anEls = new Map(); this.popAt = performance.now() / 1000 + 0.6; this.tile = null;
   }
 }
 

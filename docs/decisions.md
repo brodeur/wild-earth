@@ -3116,3 +3116,22 @@ silent:
   larger base size, still growing and whitening with more players, so they read as bright clusters on a dim
   world. The crescent's rise and the sun's swing are untouched. Seen with the stub's counts on the home tile; the
   foothill tiles' dots merge into one bright cluster at the lit zoom, as lane 1 noted.
+- **A choice zooms to the place and shows its card; Begin zooms into the dot** (Aaron, 2026-11-01, done here with
+  the earth tint). A click on a dot or a row turns the earth to face the place and zooms it (the camera from 3.5 to
+  2.6 radii) so the dot sits centred in the space left of the list, at mid height: the earth's centre is solved
+  each frame from the dot's wanted screen place and the current distance (the dot is nearer the camera than the
+  centre), smoothed toward. The tile's card stands beside the list on the right: the card screen's own markup and
+  styles (opening.css `.op-tile`, the map, the title with its roads and territories, the wisp and the build's
+  status under the cover, Begin growing in when the world is ready), in a box that is a size container so the card
+  rule's `100cqh` is the box's height; the rows' own Begin is gone. The tile's animals gather round the card
+  through `CardLineup`, factored out of `OpeningScreen` into a class of its own in `arrival.js` (the card screen
+  uses it unchanged behind `?cards=1`), paced 0.5 to 1 s apart while the world builds, each arriving in its
+  species' soul colour: `rarityByCode()` in `animals.js` ranks the species as `Animals.rarity` does and
+  `rarityColor` gives the hue, set on the still (`--aur`: the silhouette, the aurora lines, the pillar of light
+  recoloured in title.css). The card's highlight colour is the season's, `seasonHighlight` exported from
+  `arrival.js`. Begin: the earth zooms in to 1.45 radii over 1.5 s while the card and the list fade; a DOM spot takes
+  the chosen dot's place (the WebGL dot is zeroed) and is held at its screen position by setting the earth's place
+  outright each frame; the screen's fade to black starts at 0.7 s and is under the spot, so the dot stays on the
+  black; `onBegin` fires at 1.5 s and `enterWorld` closes the screen, whose own fade (`#opening.out`) brings the
+  spirit world in as the black and the dot go. Rejected: keeping the dot in WebGL through the hand-over (the world
+  owns the canvas from its first frame) and a second place in `main.js` (none was needed).

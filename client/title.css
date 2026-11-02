@@ -53,7 +53,7 @@
 .tt-rregion { display:block; font-size:12px; line-height:1.35; color:#d3ddd5a8; margin-top:1px; }
 .tt-rregion:empty { display:none; }
 .tt-rcount { display:block; font-size:12px; line-height:1.3; color:#e8dcc0d8; margin-top:4px; letter-spacing:.02em; }
-.tt-rstate { display:none; align-items:center; gap:10px; margin-top:8px; min-height:30px; }
+.tt-rstate { display:none; align-items:center; gap:10px; margin-top:6px; min-height:18px; }   /* the status while the world builds; Begin is on the card (.tt-cardbox) */
 .tt-row.sel .tt-rstate { display:flex; }
 .tt-rstatus { flex:1; font-size:12px; color:#8fa094; }
 .tt-row.loading .tt-rstatus::before { content:''; display:inline-block; width:10px; height:10px; margin:0 8px -1px 0; border-radius:50%; border:1.5px solid #8fa094; border-top-color:transparent; animation:tt-spin 1s linear infinite; }
@@ -65,11 +65,35 @@
 .tt-begin:disabled { opacity:.5; cursor:default; }
 @keyframes tt-grow { from { opacity:0; transform:scale(.7); } }
 
+/* the chosen place's card beside the list (title.js showCard): the card screen's own markup and styles (opening.css
+   .op-tile, its cover with the wisp, Begin and the status, the lineup of the tile's animals round it); the box is a size
+   container so the card's height rule (100cqh) is the box's. It fades in with a choice and out on Begin (.zooming). */
+.tt-cardbox { position:absolute; right:calc(max(24px, 3vw) + min(330px, 36vw) + 22px); top:50%; height:min(58vh, 560px); width:calc(min(58vh, 560px) * 9 / 16); transform:translateY(-56%) translateX(16px); container-type:size; --mt:0px; --mb:0px;
+  z-index:2; opacity:0; transition:opacity .6s ease, transform .6s cubic-bezier(.2, .8, .25, 1); pointer-events:none; }
+.tt-wrap.carded .tt-cardbox { opacity:1; transform:translateY(-56%); pointer-events:auto; }
+.tt-wrap.zooming .tt-cardbox, .tt-wrap.leaving .tt-cardbox { opacity:0; transform:translateY(-56%) scale(.96); transition:opacity .5s ease, transform .5s ease; }
+.tt-card[hidden] { display:none; }
+.tt-card { cursor:default; height:100% !important; width:100%; margin-top:0 !important; }   /* the box's size, not the card row's rule */
+.tt-lineup { z-index:3; transition:opacity .5s ease; }
+.tt-wrap.zooming .tt-lineup, .tt-wrap.leaving .tt-lineup { opacity:0 !important; }
+.tt-wrap.zooming .tt-places { opacity:0; pointer-events:none; }
+/* the animals arrive in their species' soul colour (--aur, set by title.js through CardLineup): the silhouette and the
+   aurora lines take it from opening.css; the pillar of light is recoloured here */
+.tt-lineup .op-an.in::after, .tt-lineup .op-an.out::after { background:repeating-linear-gradient(90deg, #0000 0px, color-mix(in srgb, var(--aur, #e4e6e8) 55%, #fff) 1px, #0000 2px, #0000 5px),
+  repeating-linear-gradient(0deg, #0000 0px, color-mix(in srgb, var(--aur, #e4e6e8) 65%, #fff) 2px, #0000 6px),
+  linear-gradient(180deg, #0000 0%, color-mix(in srgb, var(--aur, #e4e6e8) 70%, transparent) 25%, color-mix(in srgb, var(--aur, #e4e6e8) 80%, #fff) 60%, #0000 100%); background-size:7px 100%, 100% 60px, 100% 100%; }
+/* the chosen dot as a DOM spot while Begin zooms in and the earth fades to black (title.js begin): over the fade, so the
+   dot stays; it goes with the whole screen's fade (#opening.out) as the world comes in */
+.tt-spot { position:absolute; left:0; top:0; z-index:4; width:var(--d, 24px); height:var(--d, 24px); margin:calc(var(--d, 24px) / -2) 0 0 calc(var(--d, 24px) / -2); border-radius:50%; pointer-events:none;
+  background:radial-gradient(closest-side, #ffffff 0%, #fff8ee 22%, #ffdfb3d0 40%, #ffd9a860 62%, #ffd9a800 100%); }
+.tt-spot[hidden] { display:none; }
+
 /* to black before the world's first frame (title.js begin), then the whole screen fades (#opening.out) */
 .tt-fade { position:absolute; inset:0; background:#000; opacity:0; pointer-events:none; transition:opacity .55s ease; }
 .tt-wrap.leaving .tt-fade { opacity:1; }
 
 @media (max-width: 720px) {
   .tt-places { right:12px; width:min(260px, 46vw); }
+  .tt-cardbox { right:calc(12px + min(260px, 46vw) + 12px); height:min(44vh, 400px); width:calc(min(44vh, 400px) * 9 / 16); }
   .tt-rname { font-size:15px; }
 }

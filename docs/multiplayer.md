@@ -309,6 +309,11 @@ together. Lane 3 needs lane 1's screen in main; lane 4 needs 1 to 3. Lane 5 is l
      (the hub's rule); a group's chat history from `welcome` is in the pane without fading it in.
    - The earth is now the spirit world from space (Aaron's refinement, done here): `title.js`'s earth shader uses the
      spirit view's palette and post pass, dimmer, and the dots are bright (`docs/decisions.md`, the lane 3 entry).
+   - A choice zooms to the place and shows its card beside the list (Aaron's second refinement, done here): the card
+     screen's card (`arrival.js` `CardLineup`, now shared; `opening.css`), its animals arriving in their soul colours
+     (`animals.js` `rarityByCode`), Begin on the card; Begin zooms in to the dot, the earth goes black under the dot
+     (a DOM spot, `.tt-spot`), and the world fades in through `enterWorld` as the screen's fade takes the dot. Lane 4
+     wraps `title.choose(id)` as before; `title.begin()` is the one Begin.
    - Open: Unblock is offered only for users blocked this session (the hub sends no block list); the chat row and
      the nearby-animals bar meet on a narrow window; the species card can overlap the chat pane; the chat's lines
      do not say the time.

@@ -1,5 +1,6 @@
 import * as THREE from 'three';
-import { lastTile, locality, majorRoads } from './arrival.js';
+import { lastTile, locality, majorRoads, CardLineup, seasonHighlight } from './arrival.js';
+import { rarityColor, rarityByCode } from './animals.js';
 import { seasonOfDate } from './season.js';
 import { pointInTileId } from './goto.js';
 import { HubStub } from './hubStub.js';
@@ -21,9 +22,13 @@ import { HubStub } from './hubStub.js';
 // first in the index), a dot appears at each built tile (brighter with more players, the one under the pointer named)
 // and over the right side the places within 70 degrees of the facing point are listed, sorted by count then name.
 // A drag spins the earth with inertia, the wheel zooms a little, the list follows. Choosing a place (a dot or a row)
-// eases the earth to face it and asks main.js for its world, exactly as a card click did; Begin on the row enters it
-// through the same enterWorld path, after the screen has gone to black. choose(id) is the one function group travel
-// (lane 4) wraps.
+// turns and zooms the earth so the place sits centred in the space left of the list, and the tile's card (the card
+// screen's own: the map, its title, the wisp while the world builds, Begin when it is ready; arrival.js CardLineup and
+// opening.css) stands beside the list, the tile's animals teleporting in round it one by one in their species' soul
+// colour (animals.js rarityColor, the spirit view's) as main.js builds the world behind the earth. Begin zooms the earth
+// in closer to the dot while the earth fades to black and the dot stays (a DOM spot in the dot's place); then the world
+// (the spirit view's arrival) fades in through the same enterWorld path as the screen fades out, the dot with it.
+// choose(id) is the one function group travel (lane 4) wraps.
 //
 // The earth is drawn with the page's shared renderer: while the screen is up (ownsCanvas) main.js's world loop skips
 // its visible draws (its compiles and uploads behind the screen go on), so the earth and a building world never fight
@@ -33,7 +38,9 @@ import { HubStub } from './hubStub.js';
 
 const DEG = Math.PI / 180;
 const CAM_FOV = 38;
-const DIST = [2.7, 4.6], DIST0 = 3.5;                       // the camera's distance from the earth's centre (radius 1): the wheel's range and its start
+const DIST = [2.0, 4.6], DIST0 = 3.5;                       // the camera's distance from the earth's centre (radius 1): the wheel's range and its start
+const DIST_CARD = 2.6, DIST_BEGIN = 1.45;                   // the zoom when a place is chosen (its card beside the list), and Begin's zoom in to the dot
+const POP_CARD = [0.5, 1.0];                                // s between the card's animals' arrivals while the world builds
 const Y_BELOW = -2.7, Y_CRESCENT = -1.12, Y_LIT = -0.08, X_LIT = -0.3;   // where the earth's centre sits: off screen, the crescent, lit (left of middle, the list on the right)
 const SUN_CRESCENT = [152 * DEG, 26 * DEG], SUN_LIT = [30 * DEG, 14 * DEG];   // [azimuth about Y from the camera's side, elevation]
 const VIEW_COS = Math.cos(70 * DEG);                       // a place within 70 degrees of the facing point is listed
@@ -220,6 +227,8 @@ export class TitleScreen {
     // Keys typed on the screen stay on the screen (flight, peek, sound and the rest listen on window).
     this.guard = e => { if (!e.target?.closest?.('#opening, #social, #chat')) e.stopImmediatePropagation(); };   // the social list and the chat (lane 3) keep their own keys too
     for (const ev of ['keydown', 'keyup']) { addEventListener(ev, this.guard, true); root.addEventListener(ev, e => e.stopPropagation()); }
+    this.onResize = () => { if (this.wrap.classList.contains('carded')) this.lineup.place(this.card); };
+    addEventListener('resize', this.onResize);
     this.frameFn = now => this.frame(now);
     this.raf = requestAnimationFrame(this.frameFn);
     this.run().catch(e => { console.error('title screen:', e); this.showExplore(`error: ${e.message}`); });
@@ -238,20 +247,31 @@ export class TitleScreen {
         <div class="tt-title" aria-live="polite"><h1>Wild Earth</h1><p class="tt-load">loading…</p></div>
         <div class="tt-gate"><button class="tt-explore" type="button" hidden>Explore</button><p class="tt-gate-note" hidden></p></div>
         <div class="tt-dotname" hidden></div>
+        <div class="tt-cardbox"><div class="op-tile tt-card" hidden>
+          <span class="op-map"><img alt="" draggable="false"></span>
+          <span class="op-cover" aria-live="polite"><span class="op-mid"><i class="op-wisp" aria-hidden="true"></i><button class="op-begin" type="button" tabindex="-1" disabled>Begin</button><span class="op-status"></span></span></span>
+          <span class="op-name"><b class="op-title"></b><span class="op-sub"></span><span class="op-terr"></span></span>
+        </div></div>
+        <div class="op-lineup tt-lineup" aria-hidden="true"></div>
         <aside class="tt-places" aria-label="places"><div class="tt-rows" role="list"></div></aside>
         <div class="tt-fade" aria-hidden="true"></div>
+        <i class="tt-spot" aria-hidden="true" hidden></i>
       </div>`;
-    this.wrap = this.$('.tt-wrap');
+    this.wrap = this.$('.tt-wrap'); this.card = this.$('.tt-card'); this.spot = this.$('.tt-spot');
+    this.wrap.style.setProperty('--hl', seasonHighlight(this.season));   // the card's colour: the season's (opening.css)
+    this.card.querySelector('.op-begin').onclick = () => this.begin();
+    this.rarity = rarityByCode();
+    this.lineup = new CardLineup({ box: this.$('.tt-lineup'), data: () => this.lineupData, gap: POP_CARD,
+      colourOf: code => (code in this.rarity ? `#${rarityColor(this.rarity[code]).getHexString()}` : null) });
     requestAnimationFrame(() => this.$('.tt-title')?.classList.add('on'));   // fades in from black
     this.$('.tt-explore').onclick = () => this.onSignedIn(null);
     for (const p of this.places) {
       const el = document.createElement('div');
       el.className = 'tt-row'; el.dataset.tile = p.id; el.setAttribute('role', 'listitem'); el.tabIndex = 0;
       el.innerHTML = `<span class="tt-rname">${esc(p.name)}</span><span class="tt-rregion"></span><span class="tt-rcount">${countText(0)}</span>
-        <span class="tt-rstate"><span class="tt-rstatus"></span><button class="tt-begin" type="button" tabindex="-1" disabled>Begin</button></span>`;
-      el.addEventListener('click', e => { if (e.target.closest('.tt-begin')) return; this.choose(p.id); });
+        <span class="tt-rstate"><span class="tt-rstatus"></span></span>`;
+      el.addEventListener('click', () => this.choose(p.id));
       el.addEventListener('keydown', e => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); this.choose(p.id); } });
-      el.querySelector('.tt-begin').onclick = e => { e.stopPropagation(); this.begin(); };
       el.addEventListener('pointerenter', () => { this.hotRow = p.id; });
       el.addEventListener('pointerleave', () => { if (this.hotRow === p.id) this.hotRow = null; });
       p.el = el;
@@ -263,7 +283,7 @@ export class TitleScreen {
   wirePointer() {
     const w = this.wrap;
     w.addEventListener('pointerdown', e => {
-      if (e.button || e.target.closest('button, .tt-places, .tt-gate')) return;   // the gate: the modal's inputs and links keep their own pointer
+      if (e.button || e.target.closest('button, .tt-places, .tt-gate, .tt-cardbox')) return;   // the gate and the card keep their own pointer
       this.drag = { id: e.pointerId, x: e.clientX, y: e.clientY, moved: 0, t: performance.now() };
       w.setPointerCapture(e.pointerId); this.vyaw = this.vpitch = 0; this.tweens = this.tweens.filter(t => !t.view);
       e.preventDefault();
@@ -286,7 +306,7 @@ export class TitleScreen {
     w.addEventListener('pointerup', up); w.addEventListener('pointercancel', up);
     w.addEventListener('pointerleave', () => { this.px = this.py = -1; });
     w.addEventListener('wheel', e => {
-      if (e.target.closest('.tt-places, .tt-gate')) return;
+      if (e.target.closest('.tt-places, .tt-gate, .tt-cardbox')) return;
       this.distTarget = clamp(this.distTarget * (1 + e.deltaY * (e.deltaMode === 1 ? 0.03 : 0.0012)), DIST[0], DIST[1]); e.preventDefault();
     }, { passive: false });
   }
@@ -342,6 +362,9 @@ export class TitleScreen {
       .then(t => { t.colorSpace = THREE.SRGBColorSpace; t.anisotropy = Math.min(8, this.renderer.capabilities.getMaxAnisotropy()); this.tex = t; this.earthU.map.value = t; this.renderer.initTexture(t); })
       .catch(e => console.warn('title: the earth texture did not load', e));
     const names = this.loadNames(say);
+    // the card's animals: the stills' index and each tile's species list (arrival.js CardLineup reads them)
+    this.lineupData = Promise.all([getJSON('./assets/opening/index.json'), Promise.all(this.ids.map(id => getJSON(`../tiles/${id}/species/species.json`)))])
+      .then(([index, lists]) => ({ index, lists: Object.fromEntries(this.ids.map((id, i) => [id, lists[i] || []])) }));
     say('loading the earth…');
     await Promise.race([Promise.all([hubP, tex, names]), wait(LOAD_MAX_MS)]);
     await wait(Math.max(0, TITLE_MIN_MS - (performance.now() - t0)));
@@ -362,7 +385,7 @@ export class TitleScreen {
     return Promise.all(this.places.map(async p => {
       const f = await getJSON(`../tiles/${p.id}/client/features.json`);
       const place = locality(f), roads = majorRoads(f).join(', '), terr = (f?.territories || []).map(t => t.name).join(' · ');
-      p.name = place || roads || p.id;
+      p.name = place || roads || p.id; p.roads = place ? roads : ''; p.terr = terr;
       p.region = [place ? roads : '', terr].filter(Boolean).join(' · ');
       p.el.querySelector('.tt-rname').textContent = p.name; p.el.querySelector('.tt-rregion').textContent = p.region;
       p.el.setAttribute('aria-label', `${p.name} (${p.id})`);
@@ -387,7 +410,8 @@ export class TitleScreen {
     this.setPhase('lit');
     this.hub.watch?.(true);
     const y0 = this.earth.position.y, x0 = this.earth.position.x, s0 = [...this.sun];
-    this.tween(2400, u => { this.earth.position.y = lerp(y0, Y_LIT, u); this.earth.position.x = lerp(x0, X_LIT, u); }, easeInOut, 100);
+    this.rising = true;
+    this.tween(2400, u => { this.earth.position.y = lerp(y0, Y_LIT, u); this.earth.position.x = lerp(x0, X_LIT, u); }, easeInOut, 100).p.then(() => { this.rising = false; });
     this.tween(3000, u => { this.sun[0] = lerp(s0[0], SUN_LIT[0], u); this.sun[1] = lerp(s0[1], SUN_LIT[1], u); }, easeInOut, 300);
     this.face(this.faceId, 2600, 200);
     this.dots.visible = true;
@@ -431,8 +455,21 @@ export class TitleScreen {
     if (this.sel) this.byId[this.sel].el.classList.remove('sel', 'ready', 'loading');
     this.sel = id; this.tileId = id;
     this.face(id, 1000);
+    this.distTarget = Math.min(this.distTarget, DIST_CARD);   // zoom to the place (the wheel may have zoomed closer already)
+    this.showCard(id);
     this.renderRow(id);
     this.onSelect?.(id);
+  }
+  // The tile's card beside the list (the card screen's markup and styles, opening.css): its map, its title, the roads
+  // and territories under it; the wisp and the build's status until the world is ready, then Begin. The tile's animals
+  // gather round it (CardLineup), each arriving in its species' soul colour.
+  showCard(id) {
+    const p = this.byId[id], card = this.card;
+    card.hidden = false; card.classList.add('sel');
+    card.querySelector('.op-map img').src = `../tiles/${id}/client/imagery.png`;
+    card.querySelector('.op-title').textContent = p.name; card.querySelector('.op-sub').textContent = p.roads || ''; card.querySelector('.op-terr').textContent = p.terr || '';
+    this.wrap.classList.add('carded');
+    this.lineup.show(id, card, { still: () => !this.closed && this.sel === id });
   }
   renderRow(id) {
     const p = this.byId[id], el = p?.el; if (!el) return;
@@ -440,8 +477,12 @@ export class TitleScreen {
     el.classList.toggle('sel', isSel); el.classList.toggle('ready', isSel && ready); el.classList.toggle('loading', isSel && !ready);
     el.setAttribute('aria-pressed', String(isSel));
     el.querySelector('.tt-rstatus').textContent = isSel && !ready ? (this.status[id] || 'loading…') : '';
-    const b = el.querySelector('.tt-begin'); b.disabled = !(isSel && ready); b.tabIndex = isSel && ready ? 0 : -1;
-    if (isSel && ready && !this.begun) b.focus({ preventScroll: true });
+    if (!isSel) return;
+    const card = this.card;   // the card follows the chosen place's state: the wisp while loading, Begin when ready
+    card.classList.toggle('ready', ready); card.classList.toggle('loading', !ready);
+    card.querySelector('.op-status').textContent = ready ? '' : (this.status[id] || 'loading…');
+    const b = card.querySelector('.op-begin'); b.disabled = !ready || this.begun; b.tabIndex = ready ? 0 : -1;
+    if (ready && !this.begun) b.focus({ preventScroll: true });
   }
   // main.js reports "preparing <tileId>: <status>" while a world builds, and setReady when it is built.
   setPrep(a, b) {
@@ -455,18 +496,36 @@ export class TitleScreen {
     this.readyIds.add(id);
     if (id === this.sel) this.renderRow(id);
   }
-  // Begin: the screen goes to black over the earth (the world's first frame is never a cut from the earth), then
-  // onBegin enters the world through main.js's enterWorld; its fade from black is the screen's own (.out).
+  // Begin: the earth zooms in closer to the dot (the card and the list fading), the earth fades to black while the dot
+  // stays (the DOM spot takes the dot's place, so it is over the fade), then onBegin enters the world through main.js's
+  // enterWorld: the world's first frame is never a cut from the earth, and the screen's own fade (.out) brings the spirit
+  // world in as the black and the dot go.
   begin() {
     if (this.begun || !this.ready) return;
     this.begun = true;
-    this.byId[this.sel].el.querySelector('.tt-begin').disabled = true;
-    this.wrap.classList.add('leaving');
+    this.card.querySelector('.op-begin').disabled = true;
+    const i = this.places.indexOf(this.byId[this.sel]);
+    this.dotSize.setX(i, 0); this.dotSize.needsUpdate = true;   // the WebGL dot gives way to the spot
+    this.spotOn = true; this.spot.hidden = false;
+    this.face(this.sel, 1300);
+    const d0 = this.dist;
+    this.tween(1500, u => { this.dist = this.distTarget = lerp(d0, DIST_BEGIN, u); }, easeInOut);
+    this.wrap.classList.add('zooming');
+    setTimeout(() => { if (!this.closed) this.wrap.classList.add('leaving'); }, 700);
     this.hub.watch?.(false);
     setTimeout(() => {
       if (this.closed) return;
       this.onBegin({ tileId: this.sel, season: this.season, date: null, point: this.points[this.sel] || null });
-    }, 600);
+    }, 1500);
+  }
+  // Where the earth's centre goes, in world units: left of the middle when nothing is chosen (X_LIT, Y_LIT); with a
+  // card up, where the chosen place's dot (nearer the camera than the centre: DOT_R out from it, facing) sits in the
+  // middle of the space left of the card, at the screen's mid height. Smoothed toward in frame(), except while Begin
+  // zooms in, when it is set outright so the dot stays put as the distance changes.
+  wanted(W, H, out) {
+    if (!this.wrap.classList.contains('carded')) return out.set(X_LIT, Y_LIT, 0);
+    const left = this.$('.tt-cardbox').getBoundingClientRect().left, K = H / 2 / Math.tan(CAM_FOV / 2 * DEG), d = this.dist - DOT_R;
+    return out.set((left / 2 - W / 2) / K * d, 0, 0);
   }
 
   // ---- every frame --------------------------------------------------------------------------------------------------
@@ -490,6 +549,10 @@ export class TitleScreen {
       if (Math.abs(this.vyaw) < 1e-3) this.vyaw = 0; if (Math.abs(this.vpitch) < 1e-3) this.vpitch = 0;
     }
     this.dist += (this.distTarget - this.dist) * (1 - Math.exp(-dt * 8));
+    if (this.phase === 'lit' && !this.rising) {
+      const r0 = this.renderer.getSize(this._size), w = this.wanted(r0.x || innerWidth, r0.y || innerHeight, this._v), e = this.earth.position;
+      if (this.begun) e.set(w.x, w.y, 0); else { const k = 1 - Math.exp(-dt * 4); e.x += (w.x - e.x) * k; e.y += (w.y - e.y) * k; }
+    }
     this.earth.quaternion.setFromEuler(this._e.set(this.pitch, this.yaw, 0, 'XYZ'));
     this.stars.rotation.y += dt * 0.004; this.stars.rotation.x += dt * 0.0007;
     this.starU.uT.value = this.time; this.starU.uFade.value = Math.min(1, this.starU.uFade.value + dt * 0.5);
@@ -503,6 +566,10 @@ export class TitleScreen {
     r.render(this.scene, cam);
     r.setClearColor(this._cc, ca); r.autoClear = ac;
     if (this.phase === 'lit') this.syncPlaces(size.x, size.y);
+    if (this.spotOn) {   // the chosen dot as a DOM spot (begin): where the dot is, as big as the shader draws it
+      const p = this.byId[this.sel], d = (9 + 4 * Math.sqrt(p.count)) * 3.5 / Math.max(0.5, this.dist - DOT_R) * 1.6;
+      this.spot.style.setProperty('--d', `${d.toFixed(1)}px`); this.spot.style.transform = `translate(${p.sx.toFixed(1)}px, ${p.sy.toFixed(1)}px)`;
+    }
   }
   // The dots on screen (for the hover and its name) and the list of the places within 70 degrees of the facing point,
   // sorted by count then name, re-ordered only when the order changes (the rows glide to their new places).
@@ -550,6 +617,7 @@ export class TitleScreen {
     this.closed = true; this.ownsCanvas = false;
     cancelAnimationFrame(this.raf);
     for (const ev of ['keydown', 'keyup']) removeEventListener(ev, this.guard, true);
+    removeEventListener('resize', this.onResize);
     document.activeElement?.blur?.();
     if (this.hubParam && typeof this.hubParam === 'object') this.hub.watch?.(false); else this.hub?.close?.();   // a hub given from outside (multiplayer.js) lives on into the world
     for (const o of [this.globe, this.atmo, this.dots, this.stars]) { o.geometry.dispose(); o.material.dispose(); }
