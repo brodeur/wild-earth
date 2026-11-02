@@ -3158,3 +3158,30 @@ Open after this lane: the sign-in modal and hub.js (lane 3) over `onGate`/`onSig
 the three foothill tiles' dots merge at the lit zoom (the hover names the nearest); the card screen's removal with
 its sprites once Aaron has seen the earth; clouds; a touch screen and a narrow window are untested; the stars and
 the earth were judged on screenshots at 1280 x 800 only.
+
+## 2026-11-01: the landing made forgiving. The ground takes the bird at any speed, a limb within reach takes it, wood deflects instead of bouncing
+
+Aaron: "When flying, if the user runs into the ground they should land. When landing, there should be a few hops
+afterwards. Currently, running into branches causes a boomerang effect, I think I have to be going very slow and be
+very precise to land on a branch - make it a bit more forgiving." Before, a contact landed only under ATTACH_V (7 m/s,
+cruise is 12) and within 0.3 m of a limb; anything else mirrored the flight about the contact normal with 85 % of the
+speed kept (`flight.js` bounce), which is the boomerang. Now (`flight.js` contacts, deflect, enterGround, hop):
+
+- **The ground** takes the bird at any speed (the deep-water skim stays), and the landing speed runs out as hops: one
+  per RUNOUT_V (3 m/s), at most four, the first long and each shorter, before the keys take over. A hover landing
+  gives one settling hop.
+- **A limb** a bird can stand on within PERCH_REACH (0.6 m, was 0.3) of the body takes it at up to the species' fast
+  speed (18 m/s for the raven, was 7; the flare absorbs it), the stance searched 1.5 m along the limb (was 0.6); a
+  landing faster than ATTACH_V gives one hop along the limb.
+- **Wood that will not hold it** (a trunk, a steep limb) deflects the flight along the surface: the part of the
+  velocity into the wood is lost and half of the rest kept; near head-on there is nothing left, so the bird stops,
+  noses down and flutters down (dropV) onto the ground or a limb below. The wings open either way. The old bounce is
+  kept only for the water skim.
+
+Rejected: a landing assist that pulls the bird onto a limb from further off (it would land birds that meant to fly
+through a crown). Verified on the home tile as the raven with the flight scripted: a 12 m/s dive into the grassland
+lands with four run-out hops; a 10 m/s flight at a blue oak's trunk from 6 m takes a low limb instead of bouncing;
+deflect's head-on case stops the bird (1.5 m/s, nosed down, a 2.5 m/s drop) and its glancing case sends it along the
+wood at half the tangential speed. Not verified: the other fliers' feel (the hawk's and the jay's numbers are their
+own in flierControl.js and go through the same code), a crash into a pond.
+

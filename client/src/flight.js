@@ -5,13 +5,14 @@ import { Perches } from './perch.js';
 // The raven: constant forward flight with pitch and yaw, a slow sink while gliding, flapping to climb,
 // a hover (H, or S held to a stop) that holds position. The bird is `body` (a Group the model hangs
 // from); the camera chases it from behind and a little above, or sits on it in first person (V toggles).
-// Landing is by contact: fly into the ground (the body within CONTACT_G of the drawn terrain or a rock top) or into a
-// branch (its bark within CONTACT_B of the body; perch.js: wood at least 1.5 cm thick, sloping less than ~44 degrees,
-// 0.8 m or more above the ground) at under ATTACH_V m/s of airspeed and the bird takes hold: it stands there (`landed`;
-// body LAND_H above its feet, `groundY`), on the ground on its heading, on a branch along the limb (whichever way along
-// it is nearer the heading), its feet on the bark's top. Faster, or wood a bird cannot stand on (a trunk, a steep limb),
-// and it bounces off (its heading mirrored about the contact normal, BOUNCE_KEEP of the speed kept, a flare of the
-// wings); it skims a pond. Hover and Z down is the gentle way in (it reaches the contact
+// Landing is by contact: fly into the ground (the body within CONTACT_G of the drawn terrain or a rock top; at any speed,
+// the speed running out as hops) or near a branch (a limb a bird can stand on within PERCH_REACH of the body; perch.js:
+// wood at least 1.5 cm thick, sloping less than ~44 degrees, 0.8 m or more above the ground; at under the species' fast
+// speed, the flare absorbing it) and the bird takes hold: it stands there (`landed`; body LAND_H above its feet,
+// `groundY`), on the ground on its heading, on a branch along the limb (whichever way along it is nearer the heading),
+// its feet on the bark's top. Wood a bird cannot stand on (a trunk, a steep limb) deflects it along the wood (deflect:
+// the part of the velocity into it lost; head-on it stops and flutters down; before 2026-11-01 it bounced, mirrored
+// about the normal, BOUNCE_KEEP of the speed kept, a boomerang); it skims a pond (bounce, nosed up). Hover and Z down is the gentle way in (it reaches the contact
 // slowly). Taking off, the bird ignores contacts for NO_LAND s (and the plant it left for a second).
 // On the ground or a branch (updateGround; the first SETTLE s after touchdown the body slides onto its perch, the wings
 // fold and the models swap, raven.js, and the keys wait) the raven hops, both feet, as ravens on the ground mostly do:
@@ -57,6 +58,14 @@ const TERRAIN_SPACING = 10;          // terrain.js default vertex spacing (main.
 export const FOLD_T = 0.25, XFADE_T = 0.12, LIFT_T = 0.2;   // s: wings fold before the swap; the dissolve; wings lift before take-off
 const SETTLE = FOLD_T + XFADE_T;
 const CONTACT_G = 0.35, CONTACT_B = 0.3, ATTACH_V = 7, BOUNCE_KEEP = 0.85, NO_LAND = 0.6, SWEEP = 0.15;   // m, m, m/s, -, s, m
+// The landing (owner, 2026-11-01: "if the user runs into the ground they should land; a few hops afterwards; landing on a
+// branch should be more forgiving, no boomerang"): the ground takes the bird at any speed (the run-out below carries the
+// speed off as hops); a limb a bird can stand on within PERCH_REACH of the body takes it at up to the species' fast speed
+// (the flare absorbs it), the stance searched PERCH_ALONG m along the limb; wood that will not hold it (a trunk, a steep
+// limb) deflects the flight instead of mirroring it: the velocity's part into the wood is lost, DEFLECT_KEEP of the rest
+// kept, and a near head-on bump stops the bird and lets it flutter down (DEFLECT_DROP m/s) onto whatever is below.
+// A landing from speed runs out as hops: one per RUNOUT_V m/s, at most RUNOUT_MAX, the first long and each shorter.
+const PERCH_REACH = 0.6, PERCH_ALONG = 1.5, DEFLECT_KEEP = 0.5, DEFLECT_DROP = -2.5, RUNOUT_V = 3, RUNOUT_MAX = 4;   // m, m, -, m/s, m/s, -
 const TURN_STEP = Math.PI / 4, STEP_ANG = 0.3, STEP_T = 0.2, TAP_T = 0.14, HOP_TURN_STILL = 1.0, TURN_HOP_T = 0.26;   // rad, rad, s, s, rad, s
 const HOP_LEN = 0.6, HOP_BACK = 0.4, HOP_T = 0.36, HOP_H = 0.12, HOP_GAP = 0.06;   // m, m, s, m, s
 const HOP_UP = 0.45, WADE = 0.04, SHORE = 0.5, PICK_R = 0.8, PICK_BRANCH = 1.2;   // m
@@ -104,7 +113,7 @@ export class RavenFlight {
     // the touchdown's slide (from x, y, z, yaw to the perch)
     this.gnd = { yaw: 0, feet: 0, phase: 0, amp: 0, hop: 0, hopU: 1, hop0: 0, yawFrom: 0, yawTo: 0, hopT: TURN_HOP_T,
       hx: 0, hz: 0, hdx: 0, hdz: 0, hy0: 0, hy1: 0, hopL: 0, hopH: 0, hopS: 0, lift: -1, liftMode: '', peck: 0, visPitch: 0, lastX: 0, lastZ: 0,
-      perch: null, from: { x: 0, y: 0, z: 0, yaw: 0, look: 0 }, to: { x: 0, y: 0, z: 0, yaw: 0 }, turnHeld: 0, turnDir: 0, turned: false, gap: 0 };
+      perch: null, from: { x: 0, y: 0, z: 0, yaw: 0, look: 0 }, to: { x: 0, y: 0, z: 0, yaw: 0 }, turnHeld: 0, turnDir: 0, turned: false, gap: 0, runout: 0, runN: 0 };
     this.landT = 0; this.camDip = 0; this.actQ = false; this.launchQ = false; this.spaceQ = false; this.cut = false;
     this.camK = 0; this.camYaw = 0; this._F = { y: 0, depth: 0, pond: false, surf: null }; this._d = new THREE.Vector3(); this._from = new THREE.Vector3(); this._to = new THREE.Vector3(); this._a = {}; this._b = {};
     this.body.userData.flight = this;
@@ -301,33 +310,34 @@ export class RavenFlight {
   }
   // ---- contact: take hold of the ground or a branch, or bounce off ---------------------------------------
   contacts(dir, holding) {
-    const P = this.pos, sp = this.sp, slow = Math.abs(this.speed) < sp.attachV, free = this.noLand <= 0, CG = sp.contactG;
+    const P = this.pos, sp = this.sp, free = this.noLand <= 0, CG = sp.contactG;
     // the ground: the drawn terrain or a rock's top under the body; water deeper than WADE is skimmed at its surface
     const mesh = this.meshAt(P.x, P.z);
     if (P.y - mesh < CG + 3) {
       const F = this.footing(P.x, P.z, P.y), floor = (F.depth > WADE && F.surf != null ? F.surf : F.y);
       if (P.y < floor + CG) {
-        const y = free && slow ? this.standAt(P.x, P.z, F.y, 1e3) : null;
-        if (y !== null) return this.enterGround(null, y);
+        const y = free ? this.standAt(P.x, P.z, F.y, 1e3) : null;   // any speed: the run-out hops carry it off
+        if (y !== null) return this.enterGround(null, y, Math.abs(this.speed));
         P.y = floor + CG; this.hitNow = true;
         this.bounce(dir, 0, 1, 0, 0.1);
       }
     }
     // a branch: the closest wood surface within CONTACT_B of the body
     const Q = this.perchQuery(); if (!Q) return;
-    let h = slow && free ? Q.near(P.x, P.y, P.z, CONTACT_B, undefined, this.leftRec, true, sp.perch) : null;   // a limb to stand on first
+    const canHold = free && Math.abs(this.speed) < sp.fast;
+    let h = canHold ? Q.near(P.x, P.y, P.z, PERCH_REACH, undefined, this.leftRec, true, sp.perch) : null;   // a limb to stand on first, within reach
     if (h && h.perch) {
       // on the limb at the contact, or the nearest point along it a bird can stand on (clear of the parent limb)
       let s = NaN;
-      for (let d = 0; d <= 0.6 + 1e-6 && s !== s; d += 0.05) for (const q of d ? [h.s + d, h.s - d] : [h.s]) if (s !== s && Q.perchable(h.rec, h.stem, q, this._a, this.sp.perch)) s = q;
-      if (s === s) return this.enterGround({ rec: h.rec, st: h.stem, s }, 0);
+      for (let d = 0; d <= PERCH_ALONG + 1e-6 && s !== s; d += 0.05) for (const q of d ? [h.s + d, h.s - d] : [h.s]) if (s !== s && Q.perchable(h.rec, h.stem, q, this._a, this.sp.perch)) s = q;
+      if (s === s) return this.enterGround({ rec: h.rec, st: h.stem, s }, 0, Math.abs(this.speed));
     }
     h = Q.near(P.x, P.y, P.z, CONTACT_B, undefined, this.leftRec);
     if (!h) return;
-    // bounce: out of the bark, the velocity reflected about the normal (a bump against a limb that will not hold it)
+    // a bump against wood that will not hold it: out of the bark, the flight deflected along it (no boomerang)
     const out = CONTACT_B - h.gap; this.hitNow = true;
     P.x += h.nx * out; P.y += h.ny * out; P.z += h.nz * out;
-    this.bounce(dir, h.nx, h.ny, h.nz, -1);
+    this.deflect(dir, h.nx, h.ny, h.nz);
   }
   // Mirror the flight direction about the normal n when it runs into it (a flare: the wings open, BOUNCE_KEEP of the
   // speed kept); minPitch >= 0 noses the bird up off the ground (a skim along it: as the old flight floor).
@@ -346,11 +356,30 @@ export class RavenFlight {
     } else this.speed *= BOUNCE_KEEP;
     this.flap = 1; this.hover = false;   // the flare
   }
+  // A bump against wood that will not hold the bird: the velocity's part into the wood is lost and the flight goes on
+  // along the surface at DEFLECT_KEEP of what is left; near head-on there is nothing left, so the bird stops, noses down
+  // and flutters down (dropV) to land on the ground or a limb below. The wings open (the flare) either way.
+  deflect(dir, nx, ny, nz) {
+    const sp = this.speed, vx = dir.x * sp, vy = dir.y * sp + this.dropV, vz = dir.z * sp, vn = vx * nx + vy * ny + vz * nz;
+    if (vn >= -0.5 || Math.abs(sp) < 0.5) return;   // grazing, or barely moving: pushed out only
+    if (this.bounceT > 0) return;
+    this.bounceT = 0.25;
+    const tx = vx - vn * nx, ty = vy - vn * ny, tz = vz - vn * nz, t = Math.hypot(tx, ty, tz);
+    if (t > 1.5 && t > 0.35 * Math.abs(sp)) {   // a glancing bump: on along the wood, slower
+      this.speed = t * DEFLECT_KEEP; this.yaw = yawOf(tx, tz);
+      this.pitch = THREE.MathUtils.clamp(Math.asin(THREE.MathUtils.clamp(ty / t, -1, 1)), -1.0, 0.6);
+    } else {   // head-on: stopped, a flutter down
+      this.speed = Math.min(Math.abs(sp) * 0.15, 1.5); this.pitch = Math.min(this.pitch, -0.5); this.dropV = DEFLECT_DROP;
+    }
+    this.flap = 1; this.hover = false; this.noLand = 0;   // the flare; free to land on what is below
+  }
   // ---- on the ground or a branch ----------------------------------------------------------------------
   // perch: null for the ground (feet at `feet`), or { rec, st, s } for a branch. The bird slides from where it is to
   // the perch over FOLD_T (raven.js folds the wings meanwhile), its heading turning to the limb's.
-  enterGround(perch, feet) {
+  enterGround(perch, feet, v = 0) {
     const G = this.gnd, P = this.pos, Q = this.perches;
+    // the run-out: the landing speed carried off as hops (one per RUNOUT_V m/s; on a limb one at most, along it)
+    G.runN = G.runout = perch ? (v > this.sp.attachV ? 1 : 0) : Math.min(RUNOUT_MAX, Math.max(1, Math.round(v / RUNOUT_V)));
     G.from.x = P.x; G.from.y = P.y; G.from.z = P.z; G.from.yaw = this.yaw; G.from.look = this.yaw;
     if (perch) {
       const a = Q.top(perch.st, perch.s, this._a);
@@ -411,8 +440,8 @@ export class RavenFlight {
   // the way no higher than HOP_UP, no deep water, no landing on a high rock), the arc raised to clear whatever it passes
   // over. On a branch: along the limb, the way the body faces along it, as far as it stays perchable; facing across the
   // limb, or at its end, a hop on the spot.
-  hop(sign) {
-    const G = this.gnd, sp = this.sp, x = this.pos.x, z = this.pos.z, len = sign > 0 ? sp.hopLen : sp.hopBack;
+  hop(sign, len = sign > 0 ? this.sp.hopLen : this.sp.hopBack) {
+    const G = this.gnd, sp = this.sp, x = this.pos.x, z = this.pos.z;
     const fx = -Math.sin(G.yaw) * sign, fz = -Math.cos(G.yaw) * sign;
     let L = 0, y1 = G.feet, h = sp.hopH, tx = x, tz = z, yawTo = G.yaw;
     if (G.perch) {
@@ -503,9 +532,11 @@ export class RavenFlight {
       if (!G.turned && G.turnHeld > 0 && ready && G.hop === 0) this.turn(G.turnDir * STEP_ANG, true);
       G.turnDir = 0; G.turnHeld = 0; G.turned = false;
     }
+    // the landing's run-out: a few hops forward, the first long and each shorter, before the keys take over
+    if (G.runout > 0 && ready && G.hop === 0 && G.gap <= 0) { const k = G.runout / Math.max(1, G.runN); G.runout--; this.hop(1, this.sp.hopLen * (0.6 + 1.0 * k)); G.gap = 0; }
     // W / S: a hop, held hop after hop
     const fwd = shift ? 0 : (k.has('KeyW') ? 1 : 0) - (k.has('KeyS') ? 1 : 0);
-    if (fwd && ready && G.hop === 0 && G.gap <= 0 && !turnIn) this.hop(fwd);
+    if (fwd && ready && G.hop === 0 && G.gap <= 0 && !turnIn && G.runout <= 0) this.hop(fwd);
     // take off, peck
     if (this.spaceQ) { this.spaceQ = false; if (ready) this.launch('space'); }
     if (this.launchQ) { this.launchQ = false; if (ready) this.launch('x'); }
