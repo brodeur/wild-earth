@@ -9,6 +9,10 @@
 // fullscreen map. The roads markers should be white and semi-transparent").
 // During the present-day peek (P) the roles swap: the main view shows the real photo and the
 // map shows the rewilded texture instead (drawn once, on first peek).
+// The other players of the group (players.js sets `others`: {on, x, north, hue, name} per slot, updated each frame) are
+// dots in their avatar's hue: inside the 800 m round the player where they are; outside it, pinned at the map's rim in
+// their direction (the full map shows the whole tile, so none is pinned there). The name is drawn beside the dot under
+// the pointer.
 
 const VIEW_PX = 150;           // the mini-map, CSS px square
 const VIEW_M = 800;            // metres across it
@@ -18,6 +22,7 @@ const TRAIL_MAX = 200;
 const TRAIL_STEP_M = 20;       // record a trail point every 20 m moved (~4 km of trail)
 const TRAIL_BREAK_M = 500;     // a jump this long starts a new trail
 const FONT = '-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif';
+const DOT_R = 3.5, DOT_RIM = 5, DOT_HIT = 9;   // CSS px: a player's dot, its inset from the rim when pinned, the hover's reach
 
 export class MiniMap {
   constructor({ container, sizeM, imagery, features, flight, rewildImage = null }) {
@@ -38,6 +43,12 @@ export class MiniMap {
     this.ctx = this.canvas.getContext('2d');
     this.trail = [];
     this.pos = null; this.heading = 0;
+    this.others = null; this.hover = -1; this._dot = [0, 0];   // the other players (players.js), the one under the pointer
+    const hoverOn = (cv, view) => {
+      cv.addEventListener('mousemove', e => { if (!this.pos) return; const r = cv.getBoundingClientRect(); this.hover = this.dotAt(view(), (e.clientX - r.left) * (view().css / r.width), (e.clientY - r.top) * (view().css / r.height)); });
+      cv.addEventListener('mouseleave', () => { this.hover = -1; });
+    };
+    hoverOn(this.canvas, () => this.miniView(this.pos.x, -this.pos.z));
     this.base = this.presentBase = this.drawBase(imagery, features);
     this.label = 'today';
     this.canvas.addEventListener('click', () => this.openFull());
@@ -50,6 +61,7 @@ export class MiniMap {
     this.fullCanvas = document.createElement('canvas'); this.fullCtx = this.fullCanvas.getContext('2d');
     const hint = document.createElement('div'); hint.className = 'hint'; hint.textContent = 'click to fly there · M or Esc to close';
     full.append(this.fullCanvas, hint);
+    hoverOn(this.fullCanvas, () => this.fullView());
     full.addEventListener('click', e => { if (e.target === this.fullCanvas) this.jump(e); else this.closeFull(); });
     document.body.appendChild(full);
     this.fullOpen = false;
@@ -81,6 +93,49 @@ export class MiniMap {
   fullView() { return { s: this.fullCss / this.sizeM, ox: 0, oyN: this.sizeM, css: this.fullCss }; }
   // tile-local metres -> CSS pixels in a view (north up)
   toView(V, x, north) { return [(x - V.ox) * V.s, (V.oyN - north) * V.s]; }
+  // another player's dot in a view (CSS px, into `out`): where they are, or pinned DOT_RIM px inside the rim along the
+  // line from the player (the view's centre on the mini-map) when outside it; whether it was pinned is returned
+  dotIn(V, o, out) {
+    const S = V.css, [u, v] = this.toView(V, this.pos.x, -this.pos.z);
+    let x = (o.x - V.ox) * V.s, y = (V.oyN - o.north) * V.s;
+    const lo = DOT_RIM, hi = S - DOT_RIM, pinned = x < lo || x > hi || y < lo || y > hi;
+    if (pinned) {
+      const dx = x - u, dy = y - v;
+      const tx = dx > 0 ? (hi - u) / dx : dx < 0 ? (lo - u) / dx : Infinity, ty = dy > 0 ? (hi - v) / dy : dy < 0 ? (lo - v) / dy : Infinity;
+      const t = Math.max(0, Math.min(1, tx, ty));
+      x = Math.min(hi, Math.max(lo, u + dx * t)); y = Math.min(hi, Math.max(lo, v + dy * t));
+    }
+    out[0] = x; out[1] = y;
+    return pinned;
+  }
+  dotAt(V, px, py) {
+    let best = -1, bd = DOT_HIT;
+    if (this.others) for (let i = 0; i < this.others.length; i++) {
+      const o = this.others[i]; if (!o.on) continue;
+      this.dotIn(V, o, this._dot); const d = Math.hypot(this._dot[0] - px, this._dot[1] - py);
+      if (d < bd) { bd = d; best = i; }
+    }
+    return best;
+  }
+  // the other players' dots (and the hovered one's name), in a view
+  drawOthers(g, V) {
+    const S = V.css, d = this._dot; let named = null;
+    for (let i = 0; i < this.others.length; i++) {
+      const o = this.others[i]; if (!o.on) continue;
+      const pinned = this.dotIn(V, o, d);
+      g.beginPath(); g.arc(d[0], d[1], pinned ? DOT_R - 0.5 : DOT_R, 0, Math.PI * 2);
+      g.fillStyle = `hsl(${o.hue}, 80%, ${pinned ? 55 : 65}%)`; g.fill();
+      g.lineWidth = 1.2; g.strokeStyle = pinned ? 'rgba(10,15,12,0.9)' : '#fff'; g.stroke();
+      if (i === this.hover) named = { x: d[0], y: d[1], name: o.name };
+    }
+    if (named) {
+      g.font = `600 10px ${FONT}`; g.textBaseline = 'middle'; g.textAlign = 'center'; g.lineJoin = 'round';
+      const w = g.measureText(named.name).width;
+      const tx = Math.min(Math.max(named.x, w / 2 + 3), S - w / 2 - 3), ty = named.y > S - 20 ? named.y - 11 : named.y + 11;
+      g.lineWidth = 3; g.strokeStyle = 'rgba(10,15,12,0.9)'; g.strokeText(named.name, tx, ty);
+      g.fillStyle = '#fff'; g.fillText(named.name, tx, ty);
+    }
+  }
 
   drawBase(imagery, features, { roads: withRoads = true, dim = 0.25 } = {}) {
     const c = document.createElement('canvas'); c.width = c.height = this.basePx;
@@ -221,6 +276,7 @@ export class MiniMap {
       const [a, b] = this.toView(V, ...this.trail[n - 1]);
       g.strokeStyle = 'rgba(255,255,255,0.58)'; g.beginPath(); g.moveTo(a, b); g.lineTo(u, v); g.stroke();
     }
+    if (this.others) this.drawOthers(g, V);   // the other players (players.js), under the player's own mark
     g.save();
     g.translate(u, v); g.rotate(heading * Math.PI / 180);
     g.beginPath(); g.moveTo(0, -7); g.lineTo(5, 5); g.lineTo(0, 2.5); g.lineTo(-5, 5); g.closePath();

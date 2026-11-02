@@ -59,6 +59,16 @@
   .sl { position:absolute; left:0; top:0; transform:translate(-50%, -100%); font-size:10.5px; font-weight:600; letter-spacing:.09em; text-transform:uppercase; color:var(--soul, #e6ede7); text-shadow:0 1px 2px #000d, 0 0 6px #0009; white-space:nowrap; }
   .hm { position:absolute; left:-17px; top:-17px; width:34px; height:34px; border-radius:50%; background:#0f1512cc; border:2px solid #e6ede7; box-shadow:0 1px 4px #0008; box-sizing:border-box; display:flex; align-items:center; justify-content:center; overflow:hidden; }
   .hm img { width:26px; height:26px; object-fit:contain; }
+  /* the other players out of view (players.js): the member's avatar in the circle, ringed in their hue, the distance under
+     it (over it along the bottom edge) */
+  .hm.pm { overflow:visible; border-color:hsl(var(--hue, 200), 70%, 65%); box-shadow:0 0 0 1px #0f1512cc, 0 1px 4px #0008; }
+  .hm.pm[hidden] { display:none; }
+  .hm.pm b { position:absolute; left:50%; top:100%; transform:translate(-50%, 3px); font-size:10px; font-weight:600; letter-spacing:.04em; color:#e6ede7; text-shadow:0 1px 2px #000d, 0 0 6px #0009; white-space:nowrap; }
+  .hm.pm.up b { top:auto; bottom:100%; transform:translate(-50%, -3px); }
+  /* the other players' names (players.js): over each wisp within 60 m, in the member's hue */
+  #playerLabels { position:fixed; inset:0; z-index:4; pointer-events:none; }
+  .pl { position:absolute; left:0; top:0; transform:translate(-50%, -100%); font-size:11px; font-weight:600; letter-spacing:.05em; color:hsl(var(--hue, 200), 80%, 75%); text-shadow:0 1px 2px #000d, 0 0 6px #0009; white-space:nowrap; }
+  .pl[hidden] { display:none; }
   /* the body's row (abilities.js): along the bottom right, the status bars (the needs, the legs) and the body's
      abilities, one slot each with its key in the slot's bottom right corner, the page's keys dim above them. DOM order
      abilities then status, laid out right to left; on a narrow window the status goes up a line and the slots wrap. */
@@ -291,6 +301,7 @@
 <div id="herdMarks" aria-hidden="true"></div>
 <div id="soundCues" aria-hidden="true"></div>
 <div id="scentLabels" aria-hidden="true"></div>
+<div id="playerLabels" aria-hidden="true"></div>
 <div id="hunt" hidden><div class="hn-target"></div><div class="hn-legs"><span>legs</span><i><b></b></i></div><div class="hn-arc"></div></div>
 <div id="bodyBar" hidden><div id="abilities"></div><div id="vitals"><div id="needs" hidden><div class="nd food"><span>food</span><i><b></b></i><em></em></div><div class="nd water"><span>water</span><i><b></b></i><em></em></div></div><div id="legs" class="nd legs" hidden><span>legs</span><i><b></b></i><em></em></div></div></div>
 <div id="minimap"></div>

@@ -110,6 +110,7 @@ export class SpiritControl {
     this.unhook = animals.on?.('kill', e => { if (!this.gone && e.id !== this.body?.id) this.souls.spawn(e); }) || null;   // not the player's own body
     this.blend = new CameraBlend(camera, flight);
     this.view = new SpiritLook(scene, renderer, atmosphere, animals, flight, camera, this.wisp, this.souls);
+    this.others = null;   // the other players' wisps (players.js RemotePlayers; setOthers): on the souls' layer, drawn while any is live
     this._q = new THREE.Vector3();
     // the HUD's words as index.html has them (the raven's); hud(on) swaps the spirit's in and back
     const $ = id => document.getElementById(id), h1 = $('hud')?.querySelector('h1'), near = $('animalsNear')?.parentElement;
@@ -256,6 +257,8 @@ export class SpiritControl {
     this.gone = true; this.unhook?.(); this.unhook = null;
     this.souls.dispose(); this.wisp.dispose(); this.view.dispose();
   }
+  // main.js: the other players' wisps (players.js), drawn with the souls' layer-2 pass in every form while any is live.
+  setOthers(p) { this.others = p; this.view.extra = p; }
   // main.js, right after the Atmosphere's frame update: the spirit's view, fading in while a spirit, out otherwise.
   look(dt) { this.view.update(dt, this.on); }
   // main.js, in place of renderer.render: the frame with the spirit's view's passes (SpiritLook.render)
@@ -270,7 +273,7 @@ export class SpiritControl {
 class SpiritLook {
   constructor(scene, renderer, atmosphere, animals, flight, camera, wisp, souls = null) {
     Object.assign(this, { scene, renderer, atmosphere, animals, flight, camera, wisp, souls });
-    this.amt = 0; this.k = 0; this._c = new THREE.Color(); this._b = new THREE.Vector2(); this.allColumns = true;
+    this.amt = 0; this.k = 0; this._c = new THREE.Color(); this._b = new THREE.Vector2(); this.allColumns = true; this.extra = null;
     scene.traverse(o => { if (o.isLight) o.layers.enable(1); });   // the layer-1 redraw is lit as the first draw
     // the sky's veil: a shell past the land (the dome sits at the far plane, so only sky pixels are behind the shell), a
     // the colour the mist reaches far off (the haze's horizon radiance, tone mapped and post-passed as the land's is), from
@@ -414,11 +417,12 @@ class SpiritLook {
   }
   // In place of renderer.render(scene, camera) (main.js): the frame, then while the look is on the post pass and the
   // layer-1 redraw; with the look off but the wisp shown (the arrival, a jump's dive), the layer-1 draw alone; then,
-  // while any soul is leaving a body (SoulPool), the layer-2 draw of the souls, in any form, over the pass and the
-  // redraw so their colour stands (no light is on layer 2: the souls' materials need none, and no shadow pass runs).
+  // while any soul is leaving a body (SoulPool) or another player's wisp is live (players.js, `extra`), the layer-2
+  // draw of those, in any form, over the pass and the redraw so their colour stands (no light is on layer 2: the
+  // wisps' materials need none, and no shadow pass runs).
   render(renderer, scene, camera) {
     renderer.render(scene, camera);
-    const k = this.k, wisp = this.wisp.group.visible, souls = this.souls?.n > 0;
+    const k = this.k, wisp = this.wisp.group.visible, souls = this.souls?.n > 0 || this.extra?.n > 0;   // extra: the other players' wisps (SpiritControl.setOthers)
     if (k <= 0.001 && !wisp && !souls) return;
     const ac = renderer.autoClear; renderer.autoClear = false;
     if (k > 0.001) {

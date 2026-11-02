@@ -36,6 +36,7 @@ import { Rocks } from './rocks.js';
 import { SquirrelControl } from './squirrelControl.js';
 import { WoodpeckerControl } from './woodpeckerControl.js';
 import { SpiritControl } from './spirit.js';
+import { RemotePlayers } from './players.js';
 import { GroundControl } from './groundControl.js';
 import { FlierControl } from './flierControl.js';
 import { SHORT, playAs } from './playable.js';
@@ -190,6 +191,7 @@ async function disposeWorld(w, renderer) {
   if (m.weather) m.weather.onThunder = null;
   m.abilities?.dispose?.();   // the body's row: its slots go, the row hides (abilities.js)
   if (fieldGuide.game === m.acorns) { fieldGuide.game = null; fieldGuide.log = []; fieldGuide.anchor = null; }   // the page's field guide (identify.js attached the game)
+  m.players?.dispose?.();  // the other players' wisps, names and marks (players.js; before the spirit: they share its wisp's textures)
   m.spirit?.dispose?.();   // the souls' columns and the leaving wisps (spirit.js, 2026-11-01)
   m.water?.dispose?.(); m.shadows?.dispose?.(); m.terrain?.dispose?.(); m.litter?.dispose?.(); m.scent?.dispose?.(); m.forage?.dispose?.(); m.sight?.dispose?.(); m.cues?.dispose?.(); m.grass?.dispose?.(); m.forbs?.dispose?.(); m.emergents?.dispose?.(); m.veg?.dispose?.(); forgetQueuedCasters();
   // then its listeners and the elements it put into the page; the HUD's own words back as the page had them
@@ -603,6 +605,10 @@ async function buildSteps(w, { params, pending, direct = false, arrive = null })
   };
   const spirit = w.m.spirit = new SpiritControl({ scene, renderer, camera, flight, raven, animals, squirrel, woodpecker, ground, flier, atmosphere, onBody });
   $('spiritBtn').onclick = () => { spirit.leave(); renderer.domElement.focus?.(); };
+  // The other players of the group (players.js): their wisps, names, edge marks and map dots from the hub's relayed
+  // positions (multiplayer.js feeds them while in the room); nothing to draw on the dev paths with no hub.
+  const players = w.m.players = new RemotePlayers({ scene, renderer, camera, flight, minimap, maps: spirit.wisp.maps, marks: $('herdMarks'), labels: $('playerLabels'), nameOf: mp ? id => mp.social?.nameOf(id) || 'someone' : null });
+  spirit.setOthers(players);
   const toSpirit = () => { squirrel.setOn(false); woodpecker.setOn(false); ground.setOn(false); flier.setOn(false); spirit.setOn(true); onBody('spirit'); };
   // The body's row (abilities.js): its status bars and its abilities, one slot each with its key, along the bottom right.
   const abilities = w.m.abilities = new Abilities({ el: $('abilities'), legs: $('legs'), bar: $('bodyBar'), squirrel, woodpecker, ground, flier, spirit, flight, needs, hunt, scent });
@@ -677,7 +683,7 @@ async function buildSteps(w, { params, pending, direct = false, arrive = null })
   const setFov = deg => { const v = Math.min(LENS_RANGE[1], Math.max(LENS_RANGE[0], +deg || LENS_DEFAULT)); camera.fov = v; camera.updateProjectionMatrix(); return v; };
   const setHour = h => { state.hour = +h; $('time').value = state.hour; return state.hour; };
   animals.weatherTemp = () => (weather.day ? weather.fx.temp : null);   // the lizards' air (animals.js airT)
-  w.handle = window.__we = { setDate, setFov, setHour, weather, tile, flight, raven, camera, veg, terrain, far, grass, forbs, emergents, roads, scene, renderer, minimap, atmosphere, sky, acorns, identify, places, peek, setPeek, sound, animals, arrival, rocks, water, waterfalls: water.waterfalls, squirrel, woodpecker, ground, flier, spirit, credits, sight, cues, forage, needs };   // debugging handle
+  w.handle = window.__we = { setDate, setFov, setHour, weather, tile, flight, raven, camera, veg, terrain, far, grass, forbs, emergents, roads, scene, renderer, minimap, atmosphere, sky, acorns, identify, places, peek, setPeek, sound, animals, arrival, rocks, water, waterfalls: water.waterfalls, squirrel, woodpecker, ground, flier, spirit, players, credits, sight, cues, forage, needs };   // debugging handle
   const as = direct ? params.get('as') : null;
   if (!['raven', 'squirrel', 'woodpecker'].includes(as)) toSpirit();   // a spirit from the start (behind the opening screen too)
   if (!screenOpen) makeSound();
@@ -711,7 +717,7 @@ async function buildSteps(w, { params, pending, direct = false, arrive = null })
     closeScreen();
     // the hub's room is this tile from here (the tile chat, the group's positions; multiplayer.js): the spirit's position
     // goes to the group at 5 Hz, and a joiner's arrival follows the picker's
-    mp?.entered(tile.id, { flight, arrival, lead: c.lead || null, form: () => w.handle?.playerSpecies || 'spirit',
+    mp?.entered(tile.id, { flight, arrival, players, lead: c.lead || null, form: () => w.handle?.playerSpecies || 'spirit',
       caption: p => { const cap = $('caption'); if (cap && !cap.hidden) cap.querySelector('.cap-text').textContent = captionFor(p, seasonNow()); } });
   };
   const known = new WeakSet(), used = new WeakSet(), drawable = o => o.isMesh || o.isPoints || o.isLine || o.isSprite;   // meshes compiled ahead (below)
@@ -865,6 +871,7 @@ async function buildSteps(w, { params, pending, direct = false, arrive = null })
     spirit.blendCamera(dt);   // across a switch of body: drawn from a blend of the old view and the new control's (spirit.js)
     raven.update(dt, flight.flapping, flight.speed);
     spirit.draw(dt);   // the wisp, while a spirit
+    players.update(dt);   // the other players' wisps, names and marks (players.js)
     terrain.update(flight.pos.x, flight.pos.z);   // the near fine mesh follows the player
     veg.update(flight.pos.x, flight.pos.z);
     veg.updateClose(camera.position);

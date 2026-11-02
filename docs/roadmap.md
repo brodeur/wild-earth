@@ -268,9 +268,13 @@ browser stays the renderer.
   player in a group asks the group along (the dialog on the earth and over the HUD, Join · Not now), the joiner's
   world built and entered by itself, the arrival 6 m above and 10 m behind the picker from the relayed position
   (`arrival.js` follow), the room joined at the world's entry and left on a switch, the spirit's position to the
-  group at 5 Hz and kept nowhere, the picker's chat pane saying who joined and who declined. Next: lane 5 (video
-  and audio over WebRTC, signalling through the hub); the other players on a tile as their animals; Discord needs
-  Aaron's application registered; Google and Apple their keys.
+  group at 5 Hz and kept nowhere, the picker's chat pane saying who joined and who declined. The group's players
+  are seen (2026-11-02, `client/src/players.js`): each member in the same tile as a spirit wisp in their avatar's
+  colours gliding between the relayed samples with their name over it within 60 m (a small wisp over the body of a
+  member in a body), a dot in their hue on the mini-map pinned at the rim when beyond it, and off screen their
+  avatar at the screen's edge nearest them with the distance, as the herd marks place a herd member. Next: lane 5
+  (video and audio over WebRTC, signalling through the hub); the other players' bodies drawn as their species from
+  the relay; Discord needs Aaron's application registered; Google and Apple their keys.
 
 ## Then
 

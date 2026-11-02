@@ -384,7 +384,8 @@ together. Lane 3 needs lane 1's screen in main; lane 4 needs 1 to 3. Lane 5 is l
      `tests/wsclient.py` (sign up two users over HTTP, befriend, one group; then pick, wait-and-answer, invite,
      listen); `test_travel_together` is the same flow and the place to rebuild it from.
    - **Open.** The invite's dialog has no sound and no count of who else joined; a joiner sees no marker of the
-     picker once arrived (the next step in the doc's "Open": the other players as their animals); the final yaw is
+     picker once arrived (done 2026-11-02 for the spirit, the map and the screen's edge: the Built note under
+     "Seeing the other players" in Open; the bodies are still open); the final yaw is
      the heading at the plan, not the picker's yaw at the end; the chat's scope picker's choice is the group asked,
      with no way to ask another group without changing the chat; two invites from two groups show one dialog.
 5. **Video and audio.** WebRTC between the members of a group, signalling over the hub (`rtc` messages
@@ -398,5 +399,48 @@ together. Lane 3 needs lane 1's screen in main; lane 4 needs 1 to 3. Lane 5 is l
   later handle can carry the home hub without renumbering.
 - Seeing the other players on a tile as their animals, with their names over them for friends: the next
   step after group travel, under the same privacy rule (relay to the room, persist nothing).
+
+  **Built (2026-11-02, the group's players seen; the bodies are still open).** Aaron, after testing with two
+  browsers: "I can't see the other player's spirit. The players should show up on the map and just like if I'm in a
+  deer herd, if the other player is not visible on the screen their avatar should be shown at the edge of the screen
+  closest to them." `client/src/players.js` (`RemotePlayers`, built in `enterWorld` and fed by `multiplayer.js`
+  `gotPos`): each group member whose `pos` the hub relays (same tile room, 5 Hz) is drawn in the world as a spirit
+  wisp like the player's own (`spirit.js` `Wisp`, six built once sharing the player's wisp's textures, so no new
+  texture unit, on the souls' camera layer 2, which `SpiritLook.render` now draws while any is live, in every form)
+  in the two hues of the member's avatar (`social.js` `avatarSeed`, so the wisp and the avatar match), gliding
+  between samples (each sample starts a run from where the wisp is drawn to the sample over the samples' measured
+  spacing, 0.1 to 0.5 s, so it never jumps; past a run's end it carries on at the run's speed for 0.4 s, then
+  holds; 3 s without a sample and it fades over 1.5 s and the slot is freed), grown with the eye's distance as the
+  souls are (x1 within 8 m to x8 at 300 m), with the display name over it within 60 m while on screen
+  (`#playerLabels`, a label like the smell sense's, in the member's hue). A member in a body (`form` not `spirit`)
+  is a small wisp 0.7 m over the body's position for now: the bodies of other players are the open part of this
+  item. On the mini-map (`minimap.js` `others`, `dotIn`, `drawOthers`) each member is a dot in the avatar's hue,
+  pinned at the map's rim in their direction when outside the 800 m, the name drawn beside the dot under the
+  pointer (the full map too). Off screen, the member's avatar (`avatarFor`, 26 px) sits in a circle at the screen's
+  edge nearest them with the distance under it (over it along the bottom edge), placed by the herd marks' rule,
+  which moved into an exported `edgePlace(camera, x, y, z)` in `herdMarks.js` that `HerdMarks` now calls too; the
+  bottom edge's inset is measured from the HUD's bottom rows (`setEdgeBottom`; the abilities row with its key line,
+  the nearby bar, the chat) so a mark stands over them, for herd members too. A member the hub says is offline or
+  in another tile is dropped at once (`presence` in `multiplayer.js`); one online elsewhere, not in a world, or in
+  the tile but not in the group sends nothing here and is not drawn (the hub relays within the room to co-members
+  only). Positions live only in `RemotePlayers`' slots and `mp.poses`, in memory, cleared when the room is left;
+  nothing is written or logged. Debugging on `__weMp`: `fake(id, {x, y, z, yaw, form}, name)` feeds a position as
+  the hub's relay would; `fakes(n, r)` runs n fake members circling the player at r m at 5 Hz (`fakes(0)` stops).
+  Verified in the viewer on the home tile against the real hub with a scripted second user (`seen_b`, a script
+  over `tests/wsclient.py` circling at 1.5 to 2.5 m/s; the browser `seen_a`; one group "Seen"): the wisp in the
+  world in seen_b's hue gliding (2.77 m over 1.1 s at 2.5 m/s, continuous) with "seen_b" over it within 60 m, the
+  label gone past 60 m and the wisp still a glow at 180 m; the avatar circle at the left edge with "143 m" when the
+  view faced away, sliding to the right edge ("141 m") as the view turned, gone with the wisp in view; the dot on
+  the mini-map north-east of the player and "seen_b" beside it under the pointer; a far fake's dot pinned at the
+  rim; the same as a black-tailed deer (the body's `form` relayed, the mark at the top and bottom edges while the
+  script was 380 to 450 m off, the dot pinned at the rim); four fakes two of them "deer" drawn with their names.
+  The frame with four faked members by a CPU timer round `players.update` and the spirit's render over ~290
+  frames: four within 25 m add 0.2 ms (0.3 vs 0.1 ms median; 0.4 vs 0.1 at p90), four at 95 to 320 m 0.1 ms
+  (past 60 m a wisp's form is updated on alternate frames), the render's submit unchanged within its noise (three
+  small draws each); the hub's 12 tests pass; no console errors (a pre-existing warning, THREE's "17 texture units"
+  from the terrain's ground program with the micro-clump maps, fires with no member drawn too and is not this
+  lane's). Not verified: two real browsers (the second user never had the client: its own view of the first was not
+  seen), a member's wisp seen through the arrival, the hover name on a touch screen, the bottom-edge inset on a
+  window where the chat is hidden, more than six members at once (the seventh takes the slot longest unheard from).
 - Regions: a place is a tile now; when a bioregion holds several tiles the list can group them.
 - Moderation beyond blocking: a report button and a hub-level ban list, when there is a public hub.

@@ -3678,3 +3678,46 @@ verified and what lane 5 needs). Decided where the design was silent:
   dialog; the hub keeps the invite 30 s longer so a Join pressed at the last moment still lands (`INVITE_S` 90, was
   15 min). A newer invite replaces an older unanswered one without answering it (the picker is not told "declined"
   for an invite the member never saw go).
+
+## 2026-11-02: the group's players seen in the world, on the map and at the screen's edge
+
+Aaron, after testing with two browsers: "I can't see the other player's spirit. The players should show up on the
+map and just like if I'm in a deer herd, if the other player is not visible on the screen their avatar should be
+shown at the edge of the screen closest to them." Built as `client/src/players.js` over lane 4's position relay
+(the Built note under "Seeing the other players" in `docs/multiplayer.md`'s Open has the detail and what was
+verified). Decided where the words left room:
+
+- **A spirit wisp in the avatar's colours, whatever the member's form.** The relayed `pos` carries `form`, but the
+  bodies of other players (their species drawn and animated from the relay) are a step of their own; until then a
+  member in a body is a small wisp over where the body is, so the player sees them and sees that they are not a
+  spirit. The wisp is the player's own `Wisp` class in the two hues `avatarFor` draws the member's avatar with, so
+  what is seen in the world, in the friends row, in the chat and at the screen's edge is one identity. Rejected: a
+  plain marker sprite (nothing in the world looks like that), and the player's own warm-and-cool colours for every
+  member (they could not be told apart).
+- **Runs between samples, not extrapolation first.** A 5 Hz relay drawn raw steps five times a second. Each sample
+  starts a run from where the wisp is drawn to the sample over the samples' measured spacing, so the wisp is a
+  fifth of a second behind the member and never jumps; past a run's end it keeps the run's velocity for 0.4 s
+  (a late packet), then holds, and 3 s of silence fades it out. Rejected: dead reckoning ahead of the samples
+  (overshoots on every turn, and a spirit turns on the spot), and a fixed interpolation delay of two samples (half
+  a second behind for no gain over localhost or a good connection).
+- **The souls' camera layer, in every form.** The wisps are on layer 2 with the souls, drawn by `SpiritLook.render`
+  after the world and the spirit's post pass, so the colours stand under the spirit's view and the wisp is seen
+  from a deer's eyes as well as a spirit's; `extra` on the look is the pool, drawn while any slot is live. No new
+  texture unit: the pool shares the player's wisp's two textures (THREE already warns at 17 on the terrain's
+  program, a pre-existing count, not this lane's).
+- **The herd marks' placement, shared.** The circle at the screen's edge nearest an off-screen member is the same
+  rule the herd marks use for a herd member out of view, so it moved into one exported function (`edgePlace`)
+  rather than a copy; the bottom edge's inset is measured from the HUD's bottom rows (the abilities row with its
+  key line, the nearby bar, the chat) so a bottom mark stands over them, which the herd marks gain too. The mark is
+  the member's avatar with the distance under it, since a wisp at 300 m is a glow and the number says whether to
+  walk or fly.
+- **Grown with distance, the souls' rule, from nearer.** A resting wisp is 1 m of ribbon: at 150 m a few pixels.
+  The souls grow x8 by 300 m so a kill is seen from the hunt's range; a friend's wisp grows the same from 8 m,
+  so it stays a readable glow across a meadow. Within 8 m it is the player's own wisp's size, a little brighter.
+- **Who is not drawn.** The hub relays within a room to co-members only (lane 2's rule), so a member in another tile
+  or not in a world, and a stranger in the same tile, send nothing here; the social row says who is online. A
+  `presence` that says offline or another tile drops the slot at once; otherwise silence fades it, since a member
+  who hides their tile ("online" only) still sends positions while in the room.
+- **Measured.** Four faked members within 25 m: 0.2 ms more on the CPU in `players.update` (0.3 vs 0.1 ms median),
+  the render submit within noise; past 60 m a wisp's form updates on alternate frames and four far ones cost 0.1.
+

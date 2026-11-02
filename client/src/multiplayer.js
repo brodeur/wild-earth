@@ -24,14 +24,20 @@ import { Chat } from './chat.js';
 // switch (left()), and while in a room and in a group the spirit's position goes to the hub at 5 Hz (hub.js pos:
 // x, y, z, yaw, form; rounded to the centimetre as the hub rounds), relayed to the group members in the same room and
 // kept nowhere: not on disk, not in a log, not past the room. The last one relayed from each member is held in
-// `poses` for the arrival (and for debugging) and cleared when the room is left.
+// `poses` for the arrival (and for debugging) and cleared when the room is left. Each relayed position also goes to the
+// world's RemotePlayers (players.js, `world.players`): the member's wisp in the world, their name, their avatar at the
+// screen's edge when out of view and their dot on the mini-map. A member the hub says is offline or in another tile is
+// dropped from it at once; one who just stops sending fades there after a few seconds.
 //
 // With ?hub=stub (the title screen's own verification) nothing here is mounted: the title makes the stub itself and
 // signs in by itself. The dev paths (?skip=1, ?game=1, ?as=) never make this object.
 //
 // Debugging, on window.__weMp: showInvite({id, from, tile, point}) shows the dialog as the hub's invite would;
 // answer(true | false) presses Join or Not now; invite is the one showing; chose(tileId, point) asks the group along;
-// poses holds the last position relayed per member; room the world entered (its lead and follow while arriving).
+// poses holds the last position relayed per member; room the world entered (its lead and follow while arriving);
+// fake(id, {x, y, z, yaw, form}) feeds a position as the hub's relay would (a test user drawn in the world, on the map
+// and at the edge); fakes(n, r) runs n fake members circling the player at r m at 5 Hz (fakes(0) stops them), for the
+// frame cost and the look.
 
 const html = document.documentElement;
 const POS_MS = 200;             // the position relay: 5 Hz, the doc's rate
@@ -106,6 +112,9 @@ export class Multiplayer {
     hub.on('answer', d => { this.chat?.system(`${this.social.nameOf(d.from)} ${d.join ? 'joined' : 'declined'}`); this.unseen = true; });
     hub.on('err', d => { if ((d.re === 'place' || d.re === 'answer') && d.why) this.chat?.system(d.why); });
     hub.on('pos', d => this.gotPos(d));
+    hub.on('presence', d => {   // a member gone offline or to another tile is no longer seen here (players.js)
+      if (d.state === 'offline' || (d.state === 'tile' && d.tile && this.room && d.tile !== this.room.tileId)) { this.poses.delete(d.user); this.room?.players?.drop(d.user); }
+    });
     hub.connect();
     addEventListener('resize', this.layoutFn);
     // the HUD's menu (html.menu), the game box and the opening class change under us: keep clear of them
@@ -185,12 +194,14 @@ export class Multiplayer {
     this.left(false);
     this.hub.enter(tileId);
     this.chat?.setRoom();
-    this.room = { tileId, flight: world?.flight || null, arrival: world?.arrival || null, form: world?.form || null, caption: world?.caption || null, lead: world?.lead || null, follow: null };
+    this.room = { tileId, flight: world?.flight || null, arrival: world?.arrival || null, form: world?.form || null, caption: world?.caption || null, lead: world?.lead || null, follow: null, players: world?.players || null };
+    if (this.room.players && this.social) this.room.players.nameOf = id => this.social.nameOf(id);
     if (this.room.flight) this.posTimer = setInterval(() => this.sendPos(), POS_MS);
   }
   // The world is left (a tile switch): out of the room until the next world's entry; the positions held go.
   left(tell = true) {
-    clearInterval(this.posTimer); this.posTimer = null;
+    clearInterval(this.posTimer); this.posTimer = null; this.fakes(0);
+    this.room?.players?.clear();
     this.room = null; this.poses.clear();
     if (tell && this.hub?.room) { this.hub.enter(null); this.chat?.setRoom(); }
   }
@@ -201,7 +212,9 @@ export class Multiplayer {
   }
   gotPos(d) {
     this.poses.set(d.user, d);
-    const r = this.room; if (!r || !r.lead || d.user !== r.lead) return;
+    const r = this.room; if (!r) return;
+    r.players?.sample(d);
+    if (!r.lead || d.user !== r.lead) return;
     const a = r.arrival; if (!a) { r.lead = null; return; }
     if (!a.active) { r.lead = null; r.follow = null; return; }   // arrived: free
     if (r.follow) { Object.assign(r.follow, { x: d.x, y: d.y, z: d.z, yaw: d.yaw }); return; }   // the arrival slides with the picker
@@ -209,6 +222,27 @@ export class Multiplayer {
     r.follow = { x: d.x, y: d.y, z: d.z, yaw: d.yaw };
     a.plan(null, r.follow);
     r.caption?.({ x: d.x, north: -d.z });
+  }
+
+  // Debugging: a position as the hub would relay it, from a test user (named by `name` in the social list's found users,
+  // so the label and the chat have a name for it). fakes(n, r): n of them circling the player at r m, at 5 Hz.
+  fake(id, p, name = null) {
+    if (name && this.social) { const f = this.social.found || (this.social.found = []); if (!f.some(u => u.id === id)) f.push({ id, name, display: name }); }
+    this.gotPos({ t: 'pos', user: id, x: p.x, y: p.y, z: p.z, yaw: p.yaw || 0, form: p.form || 'spirit' });
+  }
+  fakes(n = 4, r = 15) {
+    clearInterval(this.fakeT); this.fakeT = null;
+    for (let i = 0; i < 8; i++) this.room?.players?.drop(`fake-${i}`);
+    if (!n || !this.room?.flight) return;
+    const t0 = performance.now();
+    this.fakeT = setInterval(() => {
+      const P = this.room?.flight?.pos; if (!P) return;
+      const t = (performance.now() - t0) / 1000;
+      for (let i = 0; i < n; i++) {
+        const a = t * 0.25 + i * Math.PI * 2 / n, R = r * (1 + 0.5 * (i % 3));
+        this.fake(`fake-${i}`, { x: r2(P.x + Math.cos(a) * R), y: r2(P.y + 1 + 0.5 * Math.sin(t + i)), z: r2(P.z + Math.sin(a) * R), yaw: r2(-a), form: i % 2 ? 'spirit' : 'odocoileus_hemionus' }, `fake ${i + 1}`);
+      }
+    }, POS_MS);
   }
 
   // Video and Audio, top middle (docs item 7): two toggles, off, "soon" on hover, nothing behind them until lane 5.
