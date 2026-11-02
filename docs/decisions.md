@@ -3185,3 +3185,35 @@ deflect's head-on case stops the bird (1.5 m/s, nosed down, a 2.5 m/s drop) and 
 wood at half the tangential speed. Not verified: the other fliers' feel (the hawk's and the jay's numbers are their
 own in flierControl.js and go through the same code), a crash into a pond.
 
+## 2026-11-01: trees grow their age. The droop of old limbs and the upturn of their tips is mechanics, grown once per species (docs/tree-architecture.md)
+
+Aaron: "many of the oaks here start out upright and then as they age, their branches droop down towards the ground,
+with the ends reaching upwards. Is there an algorithm there we can learn? What are the variables, and can we find
+them reliably for different species?" and "our goal is to improve the pipeline so that all trees are improved not
+just placerville oaks". Four research passes (botany and biomechanics, the five Placerville oaks species by species,
+the procedural-modelling literature and tools, a map of `treegen.js`) are written up in `docs/tree-architecture.md`.
+Decided:
+
+- **The model is general, not oak lore.** A limb is a growing cantilever: each year adds weight along its whole
+  reach but one thin ring of correcting tension wood, so thick old limbs lose to gravity and sag while thin new tips
+  grow up toward their setpoint; the sag is frozen into the wood ring by ring (shape memory); the leader's apical
+  control decays with age in broadleaves so the limbs' ends rise and found crowns of their own. Jirasek,
+  Prusinkiewicz and Moulia 2000 and the MAppleT model (Costes et al. 2008) implement the loop; Alméras and Fournier
+  2009 give the race between correction and weight; Bastien et al. 2013 the tip's curving. Conifers differ by leaf
+  type (compression wood, apical control kept).
+- **Principles by rank**, as the locomotion tree does for animals: universal physics, then by leaf type, then by
+  architectural model (the oaks are Rauh's model; `architectural_model` in the records, which the generator ignores
+  today, will drive the insertion angles and reiteration), then per species.
+- **Per species, only a small set of inputs**, most of them in databases covering thousands of species: wood density
+  (GWDD v2), modulus (the Wood Handbook, else from density), height and crown width against diameter (Tallo,
+  Bechtold 2004, FVS), growth by age (Silvics, the Urban Tree Database), lifespan, shade tolerance, phenology. Not
+  measured for almost any tree: branch insertion angles by order and the gravitropic setpoint; those default by model
+  and leaf type and are tuned against photographs, as now.
+- **The loop runs offline, once per species**, as a tool that grows the species through its life and writes the
+  generator's age classes (`variants`, already read per class by `classRaw`), not in the client per tree (meshes are
+  instanced per seed; the lidar crown list only picks a class). Rejected: a growth simulation in the client, and
+  hand-tuning droop per oak (what valley oak has today).
+- **The first case is the valley oak**, the one species whose weeping limbs are described repeatedly and historically
+  and the one with a measured age table; the blue oak is the counter-case (compact, crooked, not weeping in any
+  source), black and canyon live next, then the ponderosa for the conifer defaults.
+

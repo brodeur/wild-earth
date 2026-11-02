@@ -223,6 +223,12 @@ browser stays the renderer.
   camera; the other tiles rebuilt with `--steps water`; a water temperature from
   `relations.shades_water`; the animals' crossings at the bars (deer, raven) made deliberate.
 
+- Trees that grow their age, designed 2026-11-01 (`docs/tree-architecture.md`): a growth tool that runs the
+  limb mechanics (a growing cantilever with shape memory and tension wood, apical control decaying by leaf type) once
+  per species from a `growth` block in its record and writes the generator's age classes; the records filled from
+  GWDD, Tallo, Bechtold, Silvics and the Urban Tree Database; the generator reading `architectural_model` for the
+  insertion angles and reiteration; the lineup at four ages against photographs and the lidar crowns. Valley oak
+  first, blue oak the counter-case, then the ponderosa.
 - Multiplayer, designed 2026-11-01 (`docs/multiplayer.md`, from Aaron's spec): the title on stars, the earth
   rising as a crescent, the sign-in (username and password, Discord; Google and Apple greyed until their
   keys exist), the lit earth with a dot per built tile and a list of the places in view sorted by how many
