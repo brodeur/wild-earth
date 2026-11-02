@@ -46,7 +46,7 @@ const FH_LOOK = {   // [lobe, open, vase, fine]
   cercocarpus_betuloides: [0.3, 0.45, 0.25, 0], diplacus_aurantiacus: [0.2, 0.5, 0.0, 1], rosa_californica: [0.28, 0.5, 0.05, 0],
   symphoricarpos_albus: [0.22, 0.4, 0.1, 1], ribes_roezlii: [0.26, 0.5, 0.05, 0], ribes_malvaceum: [0.22, 0.5, 0.15, 0] };
 const FH_DEFAULT = [0.25, 0.5, 0.05, 0];
-const FH = SPECIES_IDS.filter(id => SPECIES[id].shrubLike && id !== 'arctostaphylos_viscida' && id !== 'adenostoma_fasciculatum').slice(0, FH_SLOTS);
+export const FH = SPECIES_IDS.filter(id => SPECIES[id].shrubLike && id !== 'arctostaphylos_viscida' && id !== 'adenostoma_fasciculatum').slice(0, FH_SLOTS);   // exported for forage.js (the glow weights by index)
 FH.forEach((id, k) => { for (const a of SPECIES[id].aliases || []) if (KIND[a] === undefined) KIND[a] = -1 - k; });
 const FH_N = FH.length;
 const fhArr = i => `float[${FH_N}](${FH.map(id => (FH_LOOK[id] || FH_DEFAULT)[i].toFixed(2)).join(', ')})`;
@@ -64,7 +64,9 @@ const VERT = /* glsl */`
   uniform float heightScale; uniform float dry;   // dry: 0 green season .. 1 cured summer sward
   uniform vec2 nearBand;  // the near detail (leaves, wands, stems) is full to x, gone by y (distance to camera)
   uniform vec3 fhCol[${FH_N}];  // the foothill shrubs (FH, kind -1 - index): this season's leaf albedo, from the species files (fhSeason)
+  uniform vec4 glow; uniform float glowFh[${FH_N}]; uniform vec2 glowKind;   // the forager's food (forage.js): the body x z, its radius, the gain; each foothill shrub's weight this season; chamise's and manzanita's
   attribute vec4 iPos; attribute vec4 iVar;   // root x y z, crown radius | height, seed, kind, rank
+  varying float vGlow;
   varying vec2 vQ; varying vec3 vRight; varying vec3 vUp; varying vec3 vView;
   varying vec3 vAlbedo; varying vec3 vSun; varying vec3 vAmb; varying vec3 vAmbUp; varying vec3 vT; varying vec3 vIn;
   varying float vSeed; varying float vKind; varying float vLobes; varying float vYS; varying float vVar; varying float vDry; varying float vFade;
@@ -98,6 +100,10 @@ const VERT = /* glsl */`
     #endif
     float grow = inversesqrt(keep);
     R *= grow; H *= sqrt(grow);
+    // the glow (forage.js): the species' weight, the gain, fading with the distance from the body, a boost for the nearest few
+    float gwt = kind < -0.5 ? glowFh[int(-kind - 0.5)] : kind < 0.5 ? glowKind.x : kind < 1.5 ? glowKind.y : 0.0;
+    float gd = distance(iPos.xz, glow.xy);
+    vGlow = gwt * glow.w * pow(clamp(1.0 - gd / max(glow.z, 0.01), 0.0, 1.0), 1.2) * (1.0 + 0.8 * (1.0 - smoothstep(0.0, 0.15 * glow.z, gd)));
     vec3 C = iPos.xyz + vec3(0.0, H * 0.5, 0.0);
     // Wind: woody shrubs lean a few cm in gusts.
     float g = gust(iPos.xz);
@@ -147,6 +153,7 @@ const FRAG = /* glsl */`
   // The foothill shrubs (FH: kinds -1 to -6, index -1 - kind), this season (fhSeason): leaf-on (0 bare .. 1), the bark
   // and bare-twig albedo, and the flowers or berries showing (albedo, share of the outer crown they cover).
   uniform float fhLeaf[${FH_N}]; uniform vec3 fhBark[${FH_N}]; uniform vec4 fhDeco[${FH_N}];
+  uniform vec3 glowCol; varying float vGlow;   // the forager's food (forage.js): the crown's rim lit warm and a skirt past its outline
   // Their outlines (docs/species-library.md, "Foothill shrubs", impostor cards): lobe depth (toyon lumpy in
   // sub-crowns, coffeeberry and coyote brush smooth), how far the fringe breaks up (poison oak and elderberry
   // open and ragged), and a narrow base (redbud's vase, poison oak's leaning stems).
@@ -365,7 +372,16 @@ const FRAG = /* glsl */`
       }
       alpha = alphaN;
     }
-    if (alpha < 0.05) discard;
+    float gref = dot(vSun * 0.5 + vAmb * 1.5, vec3(0.3333)) * 0.3183099;   // the glow's level against the light of the hour
+    if (alpha < 0.05) {
+      // outside the crown: a soft skirt of the glow past its outline (forage.js), else nothing
+      float hal = vGlow * (1.0 - smoothstep(rb, rb + 0.25, rr)) * 0.22;
+      if (hal < 0.02) discard;
+      gl_FragColor = vec4(glowCol * hal * gref * vT, hal);
+      #include <tonemapping_fragment>
+      #include <colorspace_fragment>
+      return;
+    }
     // Leaf clusters: brighter sunlit clumps over dark holes into the crown (up close, from the octaves
     // already at hand: the leaf picture carries the finer structure).
     #ifdef NEAR
@@ -469,7 +485,9 @@ const FRAG = /* glsl */`
       // Where only a wand or a stem covers the pixel, it is drawn.
       outN = mix(woodLit, folLit, clamp(body / max(alpha, 1e-3), 0.0, 1.0)) * crev;
     }
-    gl_FragColor = vec4(((near > 0.0 ? outN : outH) * 0.3183099) * vT + vIn, alpha);
+    vec3 outC = (near > 0.0 ? outN : outH) * 0.3183099;
+    if (vGlow > 0.0) outC += glowCol * vGlow * gref * (0.12 + 0.38 * (1.0 - z * z));   // the glow: most at the rim of the dome
+    gl_FragColor = vec4(outC * vT + vIn, alpha);
     #include <tonemapping_fragment>
     #include <colorspace_fragment>
   }`;
@@ -850,7 +868,8 @@ export function ShrubField(tile, ground, uniforms) {
   // The foothill shrubs' season (fhSeason), set from the field's season (grass.js's `dry`) when it changes.
   Object.assign(field.uniforms, {
     fhCol: { value: FH.map(() => new THREE.Vector3()) }, fhBark: { value: FH.map(() => new THREE.Vector3()) },
-    fhLeaf: { value: FH.map(() => 1) }, fhDeco: { value: FH.map(() => new THREE.Vector4()) } });
+    fhLeaf: { value: FH.map(() => 1) }, fhDeco: { value: FH.map(() => new THREE.Vector4()) },
+    glow: { value: new THREE.Vector4(0, 0, 1, 0) }, glowFh: { value: new Float32Array(FH_N) }, glowKind: { value: new THREE.Vector2() }, glowCol: { value: new THREE.Color(1, 0.76, 0.34) } });   // the forager's food (forage.js writes them)
   const update = field.update.bind(field);
   let fhKey = null;
   field.update = (camera, on = true, band = null) => {

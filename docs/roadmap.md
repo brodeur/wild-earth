@@ -300,7 +300,13 @@ browser stays the renderer.
   scent.js draws a scent only when new (it flickers in and away) or while the player sniffs (L, the slot, or the
   canids' and the lion's E), every strand with its label. Open: the chance's numbers are first guesses to tune
   (sight.js RATE, STILL..BOLT, SEES_K); one colour for "spotted" and "it sees you" (the throb tells them apart); the
-  fliers' sight untried; the sniff slot untried with the pointer; a carcass's "dead" label unseen.
+  fliers' sight untried; the sniff slot untried with the pointer; a carcass's "dead" label unseen. The forager's food
+  (2026-11-01, docs/decisions.md "the forager's food glows", client/src/forage.js): for a body with forage rows this
+  season the herbs, the shrub impostors, the near 3D shrubs and the sward under the nose glow warm within the body's
+  radius (a deer 22 m, a vole 3), brighter hungry and for the part in season, and the food plants are scents (0.35 of
+  the species' reach, drawn as the animals' are, three plant slots beside the six animals); the act slot lights "ready"
+  at a named plant. Open: the trees' browse and acorns and the emergents do not glow; no part-of-plant mask on the herb
+  pictures; a lit sward round the body rather than a pool under the nose; a forager in flight.
 
 - Geology and soils step done 2026-10-24 (Macrostrat/SGMC lithology at 1:750k, SSURGO
   texture, fragments and depth to bedrock; client rasters and an outcrop likelihood).

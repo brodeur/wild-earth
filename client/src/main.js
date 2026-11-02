@@ -18,6 +18,7 @@ import { NearBar } from './nearBar.js';
 import { Needs } from './needs.js';
 import { Hunt } from './hunt.js';
 import { Scent } from './scent.js';
+import { Forage } from './forage.js';
 import { Sight } from './sight.js';
 import { SoundCues } from './soundCues.js';
 import { OpeningScreen, Arrival, lastTile, rememberTile } from './arrival.js';
@@ -190,7 +191,7 @@ async function disposeWorld(w, renderer) {
   m.abilities?.dispose?.();   // the body's row: its slots go, the row hides (abilities.js)
   if (fieldGuide.game === m.acorns) { fieldGuide.game = null; fieldGuide.log = []; fieldGuide.anchor = null; }   // the page's field guide (identify.js attached the game)
   m.spirit?.dispose?.();   // the souls' columns and the leaving wisps (spirit.js, 2026-11-01)
-  m.water?.dispose?.(); m.shadows?.dispose?.(); m.terrain?.dispose?.(); m.litter?.dispose?.(); m.scent?.dispose?.(); m.sight?.dispose?.(); m.cues?.dispose?.(); m.grass?.dispose?.(); m.forbs?.dispose?.(); m.emergents?.dispose?.(); m.veg?.dispose?.(); forgetQueuedCasters();
+  m.water?.dispose?.(); m.shadows?.dispose?.(); m.terrain?.dispose?.(); m.litter?.dispose?.(); m.scent?.dispose?.(); m.forage?.dispose?.(); m.sight?.dispose?.(); m.cues?.dispose?.(); m.grass?.dispose?.(); m.forbs?.dispose?.(); m.emergents?.dispose?.(); m.veg?.dispose?.(); forgetQueuedCasters();
   // then its listeners and the elements it put into the page; the HUD's own words back as the page had them
   for (const r of w.observer.takeRecords()) { for (const n of r.addedNodes) if (n.nodeType === 1) w.nodes.add(n); for (const n of r.removedNodes) w.nodes.delete(n); }
   w.observer.disconnect();
@@ -580,6 +581,8 @@ async function buildSteps(w, { params, pending, direct = false, arrive = null })
   const hunt = w.m.hunt = new Hunt({ tile, animals, flight, ground, needs, el: $('hunt') });   // the hunt loop's goal and arc (hunt.js)
   const scent = w.m.scent = new Scent({ tile, animals, flight, ground, flier, scene, camera, squirrel, labels: $('scentLabels') });   // the smell sense: wisps round the head toward each scent (scent.js); the squirrel's own control smells too
   hunt.scent = scent;   // the hunt panel's "scented" state (hunt.js)
+  const forage = w.m.forage = new Forage({ tile, needs, forbs, shrubs: grass.shrubs, veg, grass, scene, flight, ground, squirrel, season: seasonNow });   // a forager's food plants glow and give a scent (forage.js)
+  scent.plants = forage;
   const sight = w.m.sight = new Sight({ tile, animals, flight, veg, scene, camera, ground });   // the predators and prey the player has in sight, and those that see the player, lit in their rarity colour (sight.js)
   const cues = w.m.cues = new SoundCues({ tile, animals, flight, camera, el: $('soundCues') });   // ring waves on the screen where a predator or prey is heard (soundCues.js)
   hunt.sight = sight;   // the hunt panel's "spotted" and "it sees you" (hunt.js)
@@ -666,7 +669,7 @@ async function buildSteps(w, { params, pending, direct = false, arrive = null })
   const setFov = deg => { const v = Math.min(LENS_RANGE[1], Math.max(LENS_RANGE[0], +deg || LENS_DEFAULT)); camera.fov = v; camera.updateProjectionMatrix(); return v; };
   const setHour = h => { state.hour = +h; $('time').value = state.hour; return state.hour; };
   animals.weatherTemp = () => (weather.day ? weather.fx.temp : null);   // the lizards' air (animals.js airT)
-  w.handle = window.__we = { setDate, setFov, setHour, weather, tile, flight, raven, camera, veg, terrain, far, grass, forbs, emergents, roads, scene, renderer, minimap, atmosphere, sky, acorns, identify, places, peek, setPeek, sound, animals, arrival, rocks, water, waterfalls: water.waterfalls, squirrel, woodpecker, ground, flier, spirit, credits, sight, cues };   // debugging handle
+  w.handle = window.__we = { setDate, setFov, setHour, weather, tile, flight, raven, camera, veg, terrain, far, grass, forbs, emergents, roads, scene, renderer, minimap, atmosphere, sky, acorns, identify, places, peek, setPeek, sound, animals, arrival, rocks, water, waterfalls: water.waterfalls, squirrel, woodpecker, ground, flier, spirit, credits, sight, cues, forage, needs };   // debugging handle
   const as = direct ? params.get('as') : null;
   if (!['raven', 'squirrel', 'woodpecker'].includes(as)) toSpirit();   // a spirit from the start (behind the opening screen too)
   if (!screenOpen) makeSound();
@@ -844,6 +847,7 @@ async function buildSteps(w, { params, pending, direct = false, arrive = null })
     const f = screenOpen ? arrival.hold() : squirrel.on ? squirrel.update(dt) : woodpecker.on ? woodpecker.update(dt) : ground.on ? ground.update(dt) : flier.on ? flier.update(dt) : arrival.active ? arrival.update(dt) : spirit.on ? spirit.update(dt) : flight.update(dt);
     if (ground.on || flier.on) { needs.update(dt, { x: flight.pos.x, north: -flight.pos.z, acting: ground.on && ground.actT > 0, wet: ground.on && !!ground.wet }); hunt.update(dt); scent.update(dt); }   // the games of life (needs.js, hunt.js); the smell sense (scent.js)
     else if (squirrel.on && !arrival.active) scent.update(dt);   // the gray squirrel's own control smells too (its game is the acorns, not the needs)
+    forage.update(dt);   // the forager's food plants lit and their halos (forage.js; off in any other body)
     if (ground.on || flier.on || (squirrel.on && !arrival.active)) { sight.update(dt); cues.update(dt); } else { sight.clear(); cues.clear(); }   // the eyes and the ears (sight.js, soundCues.js)
     spirit.blendCamera(dt);   // across a switch of body: drawn from a blend of the old view and the new control's (spirit.js)
     raven.update(dt, flight.flapping, flight.speed);
