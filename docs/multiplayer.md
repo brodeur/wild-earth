@@ -190,6 +190,16 @@ together. Lane 3 needs lane 1's screen in main; lane 4 needs 1 to 3. Lane 5 is l
    exists), and against the real hub's `config`, `me` and `counts` once it lands. Done when: the title on
    stars, the fade, the crescent rising, the sun swinging round, the dots and the list following a drag,
    a click building and arriving on the home tile, all seen in the viewer; the dev paths unchanged.
+
+   *Built 2026-11-01* (`client/src/title.js`, `client/title.css`, `client/src/hubStub.js`, `client/assets/earth/`;
+   `docs/decisions.md` "the title and the earth"): all of the above, seen on the home tile against `?hub=stub` and
+   with no hub (Explore where the modal will stand). The hooks for the lanes after it: the screen takes a `hub`
+   object with `config()`, `me()`, `watch(on)`, `on('counts', fn)` and `close()` (lane 3's `hub.js` replaces the
+   stub and the HTTP-only fallback behind the same calls); `title.onGate = title => …` is called when the sign-in's
+   place is reached and the modal calls `title.onSignedIn(user)`; `title.choose(tileId)` is the one function group
+   travel wraps; `title.user` and `title.config` hold the hub's `you` and `config`. Open: counts arrive only from
+   the stub until `hub.js`; the card screen (`?cards=1`) and its sprites stay until the earth is signed off; a
+   Begin on the earth itself (the row's is built); clouds; touch and narrow screens untested.
 2. **The hub** (server). `ws.py` factored out of `server.py`, `hub.py` with the tables, accounts (username
    and password, recovery codes, Discord when keys exist), sessions, friends, blocks, groups, group chat,
    presence, rooms, position relay, counts and the protocol above; `tests/test_hub.py` with a small

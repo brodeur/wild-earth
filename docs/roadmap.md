@@ -233,6 +233,11 @@ browser stays the renderer.
   group chat, presence, rooms, counts, the position relay, invites), `tests/test_hub.py`. Next: lane 3 (the
   social screen) over `client/src/hub.js`; Discord needs Aaron's application registered.
 
+  order: the title and the earth, the hub, the social screen, group travel, video and audio. Lane 1 landed
+  2026-11-01 (`client/src/title.js`: the title on stars, the crescent, the lit earth with the dots and the list,
+  a stub hub behind `?hub=stub`; the card screen behind `?cards=1` until the earth is signed off); next the
+  hub (lane 2, in its own worktree) and the sign-in modal over `title.onGate` (lane 3).
+
 ## Then
 
 - Detail at every scale (2026-10-28, docs/decisions.md "detail at every scale"): done, one body-scale number

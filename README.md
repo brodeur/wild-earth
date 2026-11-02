@@ -185,5 +185,5 @@ adds them to manifests built before the fields existed.
 
 ## Credits
 
-Icons: [Lucide](https://lucide.dev) (ISC licence). Ground detail textures are CC0 scans from [Poly Haven](https://polyhaven.com), credited in client/assets/ground/ATTRIBUTION.md. Data sources are credited under Data credits above
+Icons: [Lucide](https://lucide.dev) (ISC licence). The earth on the title screen is NASA's [Blue Marble: Next Generation](https://visibleearth.nasa.gov/collection/1484/blue-marble) (public domain; client/assets/earth/, credited in client/src/credits.js). Ground detail textures are CC0 scans from [Poly Haven](https://polyhaven.com), credited in client/assets/ground/ATTRIBUTION.md. Data sources are credited under Data credits above
 and listed per tile in each manifest.
