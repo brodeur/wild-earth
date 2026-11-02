@@ -68,6 +68,37 @@ defaults in `treegen.js` (`DEFAULTS`).
 | `variants` | how many seeds the client builds per species (3) |
 | `notes`, `sources`, `authors`, `license` | morphology and reasoning, references, contributors, `"CC BY-SA 4.0"` |
 
+`growth` (optional; `tools/grow_species.mjs` reads it, the generator does not; docs/tree-architecture.md): the
+inputs for growing the species through its life by its limb mechanics and fitting the age classes to the grown tree.
+Each number carries its source and the date it was read beside it, as the animal records do; `not_given` lists what
+the sources lacked. Run `node tools/grow_species.mjs <id> --write` after editing, then `python3 library/embed_builtin.py`.
+
+| field | meaning |
+|---|---|
+| `leaf_type`, `model` | `broadleaf` or `conifer` (default from `foliage.type`); the architectural model (default `architectural_model`). Both pick the defaults below |
+| `classes` | `{class name: age in years}`: which of `variants` the tool writes, at what age (oaks 10, 30, 80, 200; ponderosa 25, 110, 300) |
+| `height_m_by_age`, `dbh_cm_by_age` | Chapman-Richards curves `{asymptote, tau, p}`: A (1 - e^(-t/tau))^p. The leader follows the height; the trunk at breast height takes the dbh and the pipe rule shares it out |
+| `crown_width_m_by_age` | the same form, measured by age where it exists (the Urban Tree Database); drives the laterals' extension |
+| `crown_width_m_by_dbh_cm` | `{a, b, c}`: Bechtold 2004's largest crown width on the dbh, used for the laterals where no curve by age exists, times `open_grown_factor` (stand-grown trees are narrower) |
+| `wood` | `density_green_kg_m3`, `modulus_green_gpa` (the Wood Handbook's green values), `creep_factor` (2: the sag uses E over it), `modulus_effective_gpa` (sets the limbs' effective modulus outright; the oaks' 2.8 is the one value tuned against photographs) |
+| `trunk_stiffness_factor` | 3: the trunk alone is stiffer, standing in for the eccentric growth and righting the loop lacks |
+| `maturation_strain` | the reaction wood's maturation-strain difference across the section (1.5e-3 broadleaf, 3e-3 conifer) |
+| `pipe_exponent` | 2 (Leonardo), the thickening rule |
+| `leaf` | the load per live tip: `kg_per_tip`, or `area_m2_by_dbh` `{a, b, mse}` (the Urban Tree Database's log-log form) with `fresh_g_m2`, or `dry_g_per_m2_crown` with `dry_fraction` (leaf mass per crown area), capped by `max_kg_per_tip` (0.6) |
+| `apical_control` | `lambda0`, `lambda_inf`, `tau_years`: Palubicki's weight 0.54 to 0.46 decaying with age (null: held, conifers) |
+| `insertion_deg`, `laterals_per_unit`, `whorl` | by order from the trunk: the model's defaults (Rauh broadleaf 50, 58, 64 degrees and 2, 2, 1, 1 laterals a unit; Rauh conifer 82, 56, 50 in whorls of 5) |
+| `setpoint_floor` | how far the finer orders' setpoints steepen toward vertical as control fades (0.3 broadleaf, 0.85 conifer) |
+| `shade_tolerance` | `intolerant`, `intermediate` or `tolerant`: the light at which a tip dies (0.25, 0.15, 0.08 of full) |
+| `shoot_min_m`, `shoot_radius_m`, `shed_radius_m`, `browse_line_m`, `max_tips`, `max_order`, `epicormic` | a mature shoot's yearly growth, a new shoot's radius, the dead wood shed at once, the deer's reach, the live-tip budget (1,500), the orders kept, epicormic sprouting (off) |
+
+The tool writes, per class: `height_m`, `trunk.length_ratio`, `radius_ratio`, `bole_ratio`, `base_size`,
+`levels[0]` (`down_angle_deg`, `down_angle_tip_deg`, `droop_deg`, `upturn_deg`, `curve_deg`, `length_ratio`,
+`radius_ratio`) and `levels[1]`, and `crown.envelope.profile` from the grown crown's silhouette; the base class into the
+record's own fields, the others into their `set`; a `grown` note (age, dbh, crown width) on each. Everything hand-set
+(counts, variances, zig-zag, foliage, twigs, bark, deadwood, epiphytes) stays. The grown skeletons go to
+`library/species/grown/<id>.json` (git-ignored) and the lineup page draws them beside the class trees with
+`?classes=1&grown=1`.
+
 `trunk`:
 
 | field | meaning |

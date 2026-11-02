@@ -2901,6 +2901,94 @@ import, `meshFor` (LegsBody), `useSpecies` (reset), the stalk's pose line, `draw
 instead of driveClips for a legs body, the turn table); `animalModels.js` the skin shader's SKIN_LIVE branch, `skinDecl`,
 `loadClips` / `loadTiers` / `restOnlySkin` (the live rows, `model.legs`, `model.live`), the four loaders.
 
+## 2026-11-01: trees grow their age, built (branch claude/gracious-swartz-132b77)
+
+Step 1 of `docs/tree-architecture.md`, with the valley oak's parts of steps 2 and 3: `tools/grow_species.mjs` grows a
+species through its life by its limb mechanics from a `growth` block in its record and writes the generator's age
+classes; valley oak first, blue oak the counter-case, ponderosa the conifer control.
+
+**The loop as built** (node, no three.js; 10-35 k segments over 200 years in 8-14 s). A skeleton of yearly growth units,
+each with a rest orientation relative to its parent (a quaternion) and an elastic bend. Each year: the leader extends by
+the species' height curve and the laterals by what the crown lacks of the species' crown width for the age (never less
+than a mature shoot's 0.15 m), new units steering toward their gravitropic setpoint by Bastien's fraction; each unit
+bears the model's flush of laterals at the insertion angle for the next order (Rauh: spiralled; the pine's in whorls of
+five); a tip's light falls with its depth inside the crown's own surface and a shaded tip dies; thickening by the pipe
+rule from the measured dbh for the age; the sag from the mass beyond each joint (wood by green density, a leaf load per
+tip from the Urban Tree Database's leaf area) over E I, two relaxation passes; shape memory by the new ring's share of
+the stiffness; reaction wood toward the setpoint by at most 4 dmu dr l / r^2 over the share of the ring that is reaction
+wood. Apical control (lambda 0.54 to 0.46, decaying over 40 years for broadleaves, held for conifers) fades the leader's
+share and lets any steep tip at the crown's top grow for height (reiteration), and steepens the finer orders' setpoints
+toward vertical. The constants and their sources are in the tool's header.
+
+**What the sources gave** (each value's source and date sit beside it in the records). Valley oak: height, dbh and
+crown width by age fitted to the Urban Tree Database's 49 aged Sacramento trees (9.4 m at 10 y, 16.6 at 30, 20.6 at 80,
+21 at 200; dbh 18, 42, 81, 130 cm; crown 6.3, 12.6, 18.7, 21 m), its leaf-area equation, Bechtold's crown width as a
+check, dry density 550 from Pillsbury, white oak's green modulus 8.6 GPa standing in. Blue oak: Silvics' diameters by
+age (23 cm at 40 y, 57 at 125) turned into heights through Tallo's foothill fit (H = 1.30 dbh^0.525), Bechtold's crown
+width times 1.15 open-grown, Karlik and McKay's 310 g dry leaf per m2 of crown. Ponderosa: Silvics' site curves read by
+eye (12 m at 25 y, 35 at 110, 42 at 300), Tallo's California fit for the dbh, Bechtold times 1.2, the Handbook's 6.9 GPa
+and 0.38 specific gravity. Not given anywhere: the insertion angles and setpoints (defaults by model and leaf type),
+the moduli of the California oaks, a leaf mass per area for valley oak, how fast apical control fades.
+
+**What the build found.** (1) At the Handbook's modulus over a creep factor of 2 (4.3 GPa) the loop's limbs stay level
+to 200 years: a thick limb's base sags a tenth of a degree a century and its middle is held by reaction wood. The sag
+that matches the photographs needs the limbs' effective modulus at 2.8 GPa (branch wood is juvenile wood with knots at
+50-70 % of the clear-specimen value, under decades of creep; MAppleT fitted 1.1 GPa for apple limbs), with the trunk
+stiffened 3 x because the loop has no eccentric growth or whole-tree righting and a soft trunk bends over under its
+crown. This is the one number tuned to the photographs; at 2.5 the sag is heavy by 80 years, at 3.2 the veteran's
+limbs barely dip. (2) Three light models were tried: Palubicki's shadow propagation killed every tip a layer below the
+surface (it rations buds, it does not say which die); Beer's law down columns let a limb's own rising laterals shade
+its tip to death; depth inside the crown's own surface (top and underside counted as surfaces, so an open-grown tree is
+lit from below; a radius per height band and azimuth sector, because one radius per band let whichever side reached out
+first shade the other into a flag-shaped crown with the trunk leaning away) keeps a shell of live shoots and sheds the inside. (3) Lateral extension tied to the leader's dies when
+the height curve saturates, so the crown width by age drives it; a shoot past the species' reach idles and well past it
+dies back. (4) The reaction-wood share of the ring by MAppleT's formula on the lean (0.164 (1 - cos)) gives steep young
+limbs almost no righting and they sag in their first decade; half the sine of the angle off the setpoint keeps them.
+(5) Epicormic sprouting (0.8 a year for oaks) against a live-tip cap churned the crown apart; it is off until the cap is
+a light budget. (6) The tip cap must spare the leader (it died on a light tie at year 19) and the edge rule must spare
+it too (the pine's leaned 2 m and was cut).
+
+**The grown trees** (the tool's own measures from the final run; the lineup captures and the SVGs in the report).
+Valley oak: 9.3 m at 10 y, crown 0.73 of the height, limbs rising 32 degrees at the base with the shoot ends drooping
+to -20; 16.5 m at 30 y, crown 0.79 x, scaffolds leaving 10 degrees up, level at mid-limb, the ends rising 34; 22 m at
+80 y, dbh 81 cm, crown 0.96 x, scaffolds leaving 12 degrees up, dipping 4 below at mid-limb, the ends turned up 31 (the
+J, mild); 22.4 m at 200 y, dbh 129, crown 1.18 x, limbs leaving 3 degrees up, sagging to 9 below, the ends 10 up, the
+lowest wood 1.2 m off the ground. The trunk dissolves from the whole height at 30 y to 0.8 of it at 80 and 200 (the fit
+reads the trunk as ending where its radius falls to 40 % of the breast-height radius). An earlier run of the same
+inputs (before the light model got its azimuth sectors) gave a heavier sag, 17/-30/37 at 80 y and 9/-21/0 at 200: the
+sag depends on which limbs live, so run to run it moves by 10-20 degrees. Blue oak: 2.6, 5.4, 10.8, 14.4 m; crown
+1.2-1.6 x the height; the limbs at 30-44 degrees up at 10 and 30 y, level with rising ends at 80 (5/0/29), and at 200 y
+three huge scaffolds that sag to 39 degrees below horizontal at mid-limb (-3/-39/-6): the counter-case holds to 80 years
+and fails at 200, where the crown rests on three limbs each as long as the trunk and the fit's level-1 numbers rest on
+them. Ponderosa: 11.4, 34.8, 43.5 m with the leader to the top at every age; the whorls level (-13/-20/-6 degrees at
+25 y, -5/-2/5 at 110, 2/2/10 at 300); crown 0.45, 0.36, 0.42 of the height; the lowest live whorl at 0.16 H at 25 y, 0.11
+at 110 (the clear bole the photographs show, 0.4-0.6, does not form: the open-grown light rule keeps the low whorls lit
+from below), 0.8 H at 300 (flat-topped).
+
+**Against the lidar crowns of the home tile** (395,356 crowns, all species, mostly stand-grown): crown width over
+height by height class, medians 1.05 at 4-8 m, 0.82 at 8-12, 0.76 at 12-16, 0.72 at 16-20, 0.63 at 20-24, 0.53 at 24-28,
+0.46 at 28-32, 0.38 at 32-36, 0.33 at 36-40, 0.30 at 40-44. The grown pine (0.45, 0.29, 0.42 at 11, 35, 43 m) sits in
+the lidar's range for tall trees; the grown oaks (0.8-1.5) sit at or above the lidar's 95th percentile for their heights
+(1.52 at 4-8 m, 1.01 at 12-16, 0.89 at 20-24), as open-grown trees should against a list that is mostly closed stands
+with segmented crowns.
+
+**What still reads wrong.** The sapling valley oak's shoot ends droop (the record's note wants an upright crown); the
+200-year valley oak's sag is milder than the photographs' limbs-to-the-grass (3/-9/10 against a mid-limb well below
+horizontal), and its crown is 1.18 x the height against the open-grown photographs' 1.3-1.8 (the Urban Tree Database's
+curve, 1.14 at 220 y, is what it follows); the blue oak weeps at 200 years on three scaffolds (it should not: its old
+crown needs the reiteration of order-2 sub-crowns the loop does not give it, and a stiffer or shorter limb), so its
+veteran class carries a droop of 36 and an upturn of 33 that the photographs contradict; the pine's pole and mature trees keep whorls to near the ground where the photographs show a clear bole of 0.4-0.6 of the height (the open-grown light rule); the fit's
+envelope profile is the 92nd-percentile radius by band and jumps where a band is sparse; the envelope-depth light model
+has no neighbours, so every tree is open-grown. Not verified: the trees in the world (only the lineup page), winter, the
+mid and close tiers, the frame cost (the classes are the same parameter sets, so none expected).
+
+**Step 2 will need**, per species: a height curve by age (Silvics or the Urban Tree Database; else Tallo's height on
+Silvics' diameters), a dbh curve, a crown-width source (Bechtold's 53 western species cover most of the library's trees;
+an open-grown factor where the photographs show wider), a leaf load (the Urban Tree Database's leaf-area equations where
+the species is in it, else a leaf mass per crown area), the Handbook's modulus for the genus, shade tolerance from
+Silvics or FEIS, and the class ages. The defaults by model and leaf type carry the rest. A pipeline script can fill the
+curves from Tallo and Bechtold by scientific name; Silvics and the Handbook are prose and tables to read.
+
 ## 2026-11-01: white water that reads as water in motion (branch claude/water-whitewater-dc7695)
 
 Aaron: "I see there is white water, but it ends up looking like a misty haze." He asked for the research on how to get
