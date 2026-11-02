@@ -589,6 +589,7 @@ export class CardLineup {
 // weave (zero heading change at the end) and a bank from the turn rate keep it reading as flight.
 // The altitude profile is precomputed and lifted where the straight descent would clip a ridge.
 const T = 12, START_AGL = 400, END_AGL = 120, RUN = 1500, CRUISE = 12, CLEAR = 60;
+const FOLLOW_UP = 6, FOLLOW_BACK = 10, FOLLOW_RUN_MIN = 150, FOLLOW_END = 0.15;   // behind another player (plan's follow): the offset, the least run, the share of the path where the clearance gives way to the end pose
 const PITCH0 = -0.42, PITCH1 = -0.06;
 const smooth = (a, b, u) => { const t = Math.min(1, Math.max(0, (u - a) / (b - a))); return t * t * (3 - 2 * t); };
 
@@ -600,26 +601,50 @@ export class Arrival {
     this.plan(null);
   }
 
-  // point: { x, north } tile-local, or null for the tile centre.
-  plan(point) {
-    const S = this.size, M = 100;
-    const x = THREE.MathUtils.clamp(point?.x ?? S / 2, M, S - M), n = THREE.MathUtils.clamp(point?.north ?? S / 2, M, S - M);
-    let dir = 1, run = Math.min(RUN, n - M);   // from the south, heading north
-    if (run < 900) { const fromNorth = Math.min(RUN, S - M - n); if (fromNorth > run) { dir = -1; run = fromNorth; } }   // too near the south edge
-    this.x = x; this.n = n; this.dir = dir; this.run = run;
-    this.weave = (x < S / 2 ? 1 : -1) * Math.min(70, run * 0.05);   // bow toward the tile's middle
-    this.v1 = CRUISE * T / run;                                        // end slope of s(u): cruise speed
+  // point: { x, north } tile-local, or null for the tile centre: from 1.5 km south heading north (from the north when
+  // the point is near the south edge) to 120 m over it. follow: another player's position { x, y, z, yaw } in the
+  // flight's frame (the hub's relayed pos; docs/multiplayer.md lane 4): the flight comes in from behind them along their
+  // heading and ends 6 m above and 10 m behind them, slowing to a hover. The object is read every frame, so a lead who
+  // moves on is followed (the whole path slides with them; the heading stays the plan's).
+  plan(point, follow = null) {
+    const S = this.size, M = 100, clamp = THREE.MathUtils.clamp;
+    this.follow = follow;
+    let hx, hn, ex, en, run, yEnd = null;
+    if (follow) {
+      const yaw = follow.yaw || 0;
+      hx = -Math.sin(yaw); hn = Math.cos(yaw);   // the lead's forward, in (x, north)
+      this.at = { x: follow.x, y: follow.y, z: follow.z };   // where the lead was when planned: the end slides with them
+      ex = clamp(follow.x - hx * FOLLOW_BACK, M, S - M); en = clamp(-follow.z - hn * FOLLOW_BACK, M, S - M);
+      yEnd = follow.y + FOLLOW_UP;
+      run = RUN;   // the run back from the end, cut where it would leave the tile
+      for (const [e, h] of [[ex, hx], [en, hn]]) if (Math.abs(h) > 1e-6) run = Math.min(run, Math.max(0, h > 0 ? (e - M) / h : (e - (S - M)) / h));
+      run = Math.max(FOLLOW_RUN_MIN, run);
+    } else {
+      ex = clamp(point?.x ?? S / 2, M, S - M); en = clamp(point?.north ?? S / 2, M, S - M);
+      let dir = 1; run = Math.min(RUN, en - M);   // from the south, heading north
+      if (run < 900) { const fromNorth = Math.min(RUN, S - M - en); if (fromNorth > run) { dir = -1; run = fromNorth; } }   // too near the south edge
+      hx = 0; hn = dir;
+    }
+    this.ex = ex; this.en = en; this.hx = hx; this.hn = hn; this.run = run;
+    const toMid = (S / 2 - ex) * hn - (S / 2 - en) * hx;   // which side of the heading the tile's middle is
+    this.weave = (toMid >= 0 ? 1 : -1) * Math.min(70, run * 0.05);   // bow toward the tile's middle
+    this.v1 = follow ? 0.15 : CRUISE * T / run;                       // end slope of s(u): cruise speed, or nearly still behind the lead
     const N = 64, g = i => { const p = this.ground2(i / N); return this.heights.at(p.x, p.n); };
-    const y0 = g(0) + START_AGL, y1 = g(N) + END_AGL, base = [], need = [];
-    for (let i = 0; i <= N; i++) { const s = i / N; base[i] = y0 + (y1 - y0) * smooth(0, 1, s); need[i] = Math.max(0, g(i) + CLEAR - base[i]); }
+    const y0 = g(0) + START_AGL, y1 = yEnd ?? g(N) + END_AGL, base = [], need = [];
+    const endK = s => (follow ? Math.min(1, (1 - s) / FOLLOW_END) : 1);   // behind a lead the clearance gives way to the end pose over the last stretch
+    for (let i = 0; i <= N; i++) { const s = i / N; base[i] = y0 + (y1 - y0) * smooth(0, 1, s); need[i] = Math.max(0, g(i) + CLEAR * endK(s) - base[i]); }
     this.prof = base.map((b, i) => {   // lift: the largest deficit under a cos^2 window 0.35 wide
       let lift = 0;
       for (let j = 0; j <= N; j++) if (need[j]) { const d = Math.abs(i - j) / N; if (d < 0.35) lift = Math.max(lift, need[j] * Math.cos(Math.PI / 2 * d / 0.35) ** 2); }
-      return b + lift;
+      return b + lift * endK(i / N);
     });
     this.prevYaw = null; this.roll = 0;
   }
-  ground2(s) { return { x: this.x + this.weave * Math.sin(Math.PI * s) * (1 - s), n: this.n - this.dir * this.run * (1 - s) }; }
+  // The ground track: along the heading from run back to the end, with the weave across it (zero at the end).
+  ground2(s) {
+    const along = -this.run * (1 - s), across = this.weave * Math.sin(Math.PI * s) * (1 - s);
+    return { x: this.ex + this.hx * along + this.hn * across, n: this.en + this.hn * along - this.hx * across };
+  }
   ease(u) {   // cubic Hermite: s(0)=0, s(1)=1, s'(0)=1.4, s'(1)=v1
     const u2 = u * u, u3 = u2 * u;
     return 1.4 * (u3 - 2 * u2 + u) + (-2 * u3 + 3 * u2) + this.v1 * (u3 - u2);
@@ -630,15 +655,18 @@ export class Arrival {
     const f = this.flight, u = Math.min(1, t / T), s = Math.min(1, Math.max(0, this.ease(u)));
     const p = this.ground2(s), N = this.prof.length - 1, k = s * N, i = Math.min(N - 1, Math.floor(k));
     const y = this.prof[i] + (this.prof[i + 1] - this.prof[i]) * (k - i);
-    const dx = this.weave * (Math.PI * Math.cos(Math.PI * s) * (1 - s) - Math.sin(Math.PI * s)), dn = this.dir * this.run;
+    const dAcross = this.weave * (Math.PI * Math.cos(Math.PI * s) * (1 - s) - Math.sin(Math.PI * s));
+    const dx = this.hx * this.run + this.hn * dAcross, dn = this.hn * this.run - this.hx * dAcross;
     const yaw = Math.atan2(-dx, dn);
+    let ox = 0, oy = 0, oz = 0;   // a lead who moved on since the plan: the path slides with them
+    if (this.follow) { const F = this.follow, A = this.at; ox = F.x - A.x; oy = F.y - A.y; oz = F.z - A.z; }
     if (this.prevYaw !== null && dt > 0) {
       const rate = Math.atan2(Math.sin(yaw - this.prevYaw), Math.cos(yaw - this.prevYaw)) / dt;
       this.roll += (THREE.MathUtils.clamp(0.43 * rate, -0.5, 0.5) - this.roll) * (1 - Math.exp(-dt * 2));
     }
     this.prevYaw = yaw;
     const prev = f.pos.clone();
-    f.pos.set(p.x, y, -p.n); f.yaw = yaw; f.pitch = PITCH0 + (PITCH1 - PITCH0) * smooth(0, 1, u); f.roll = this.roll * (1 - smooth(0.85, 1, u));
+    f.pos.set(p.x + ox, y + oy, -p.n + oz); f.yaw = yaw; f.pitch = PITCH0 + (PITCH1 - PITCH0) * smooth(0, 1, u); f.roll = this.roll * (1 - smooth(0.85, 1, u));
     const speed = dt > 0 ? prev.distanceTo(f.pos) / dt : 0;
     f.speed = CRUISE; f.hover = false; f.flap = 0;
     f.flapping = u > 0.8 && u < 0.93;   // a few wingbeats as it slows to cruise
@@ -692,6 +720,7 @@ export class Arrival {
     if (skipped) { this.pose(T, 0); this.flight.camSettled = false; }
     const f = this.flight;
     f.speed = CRUISE; f.pitch = PITCH1; f.roll = 0; f.hover = false; f.flap = 0; f.keys.clear(); f.drag = null;
+    if (this.follow) { f.speed = 0; f.hover = true; }   // behind the lead: still, until the player moves
     if (skipped && this.capAnim) {   // a skipped caption still fades rather than vanishing
       const c = this.captionEl, o = +getComputedStyle(c).opacity;
       this.capAnim.cancel();

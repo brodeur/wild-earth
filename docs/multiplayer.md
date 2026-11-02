@@ -107,7 +107,8 @@ the places list needs to say how many players are at Placerville, so the rule be
 - A position is relayed, never persisted. It goes to the members of the player's group who are in the same
   tile, at 5 Hz, and to no one else in the first lanes (a later step may show every player on a tile as
   their animal, relaying to the tile's room; that is the same rule). It is not written to disk, not logged,
-  not kept after the connection closes.
+  not kept after the connection closes. The connection holds its last one in memory so that a group member
+  who enters the room after it is told where the player is (lane 4); it goes with the room or the connection.
 - The places list needs only a count per tile: the number of distinct users with a connection in that
   tile's room. Counts are what the hub sends to the earth; never who.
 - Presence tells friends and group members that a user is online and, when they are in a world, which tile
@@ -133,7 +134,8 @@ search    {q}                                 -> found {users[]}
 friend    {op: 'request'|'accept'|'remove'|'block'|'unblock', user}
 group     {op: 'create', name, users[]} | {op: 'add'|'remove', group, user} | {op: 'leave'|'name', group, name?}
 chat      {scope: 'group'|'tile', text}       (text <= 500 chars)
-place     {tile}                              -> the group's members get invite {from, tile, season}
+place     {tile, group?, point?}              -> the group's members get invite {from, tile, season, point?}
+                                              (point: the picker's planned arrival, tile-local {x, north}; lane 4)
 answer    {invite, join: true|false}
 room      {op: 'join'|'leave', tile}          (the client joins its tile's room when a world is entered)
 pos       {x, y, z, yaw, form}                (5 Hz, only while in a room and in a group)
@@ -149,7 +151,8 @@ friends   {friends[], requests[]}             (after any change)
 groups    {groups[]}                          (after any change; each with its members)
 chat      {scope, from, text, at}
 invite    {id, from, tile, season}
-pos       {user, x, y, z, yaw, form}          (from a group member in the same room)
+pos       {user, x, y, z, yaw, form}          (from a group member in the same room; on entering a room, the
+                                              last one from each group member already in it; lane 4)
 counts    {tiles: {tile_id: n}}               (every 2 s to watchers, only when changed)
 ```
 
@@ -321,6 +324,69 @@ together. Lane 3 needs lane 1's screen in main; lane 4 needs 1 to 3. Lane 5 is l
    built for the picker's tile and the arrival behind the picker from the relayed position, the tile room
    joined on entry and left on a switch. Done when two seats go to Placerville together and the second
    arrives above and behind the first.
+
+   **Built (2026-11-02, branch `claude/epic-ritchie-24d56d`).** `client/src/multiplayer.js` (the invite dialog, the
+   room on entry, the position relay, the arrival behind the picker), `client/src/arrival.js` (`plan(point, follow)`),
+   `client/src/main.js` (the room at `enterWorld` and the leave at `switchWorld`; a switch asks the group along; a
+   Join from a world is a switch carrying the picker), `client/src/hub.js` (`place(tile, group, point)`),
+   `client/src/chat.js` (`currentGroup()`), `client/social.css` (`#invite`), `hub.py` (below), `tests/test_hub.py`
+   (`test_travel_together`). Verified in the viewer on the home tile and Placerville against the real hub, the second
+   user a script over `tests/wsclient.py` (the session is a cookie): the scripted picker's `place` with a point put
+   the dialog on the earth ("trav_b wants to go to Placerville. Join · Not now", the avatar, Placerville "1 here");
+   Join built Placerville, Began itself, entered, joined the room, got the picker's last position from the hub on
+   entry and re-planned the arrival to end 6.00 m above and 10.00 m behind the picker along their heading, hovering
+   (the offsets read back from `flight.pos` against the relayed `pos`); the same from a world (the dialog over the
+   HUD, the switch, the arrival behind the picker); the browser as the picker from the earth (the row) and from a
+   world (the Location box, the point from the lat/lon) with the script joining and declining, the pane reading
+   "asked your group to come to Placerville" then "trav_b joined" / "trav_b declined"; Not now leaving the browser
+   user in El Dorado with the script told `join: false`; the room joined at the entry (the picker's `hub.room` null
+   while the card built, set as the arrival began, the script in the room getting the picker's first `pos`); the
+   arrival caption over the HUD ("near Silver Lode Drive · fall · spirit"; a joiner's names the road under the
+   picker); the forced dialog from the handle gone after a minute; `?skip=1` as before; the hub's 12 tests; no new
+   console errors. Not verified: two real browsers (one tab is one session, so the second user never had the client:
+   its dialog, its Join and its arrival were the browser's turn as the joiner), two joiners at once, a picker who
+   moves far during a joiner's 12 s arrival (the path slides with them, seen only with a still picker), touch and
+   narrow screens, a reconnect mid-arrival. What lane 5 needs to know:
+   - **The hub changed where the protocol needed it.** `place` takes `point {x, north}` (the picker's planned
+     arrival, tile-local, rounded to the centimetre as a position is) and the `invite` and the `placed` carry it; the
+     hub's invite record still holds no tile and no point. A connection keeps its last relayed `pos` in memory
+     (`HubConn.last_pos`; gone when it leaves the room or closes) and `room join` sends the joiner the last `pos` of
+     each group member already in that room, so a joiner has the picker's place at once instead of a fifth of a
+     second later; the Privacy section's rule is unchanged (relayed, never written, never logged; `test_zz` still
+     searches the file and the log for the numbers). `INVITE_S` is 90 s (the client's dialog lasts 60).
+   - **The flow.** `title.choose(id)` is wrapped: a choice by a player in a group sends `place` with the group (the
+     chat's scope when it is a group, else the first) and the title's point for the tile (null means the centre). A
+     switch from the Location box sends it from `main.js` once the tile is loaded (the point needs the manifest); a
+     rebuild after a lost context is `quiet`. Join on the earth is `title.choose` under `mp.quiet` (no invite of its
+     own), then `title.begin()` as soon as `setReady` names the tile (wrapped), and `title.onBegin`'s choice gets
+     `point` (the invite's) and `lead` (the picker's id); Join in a world is `mp.switchTile(tile, xy, lead)`, which
+     `main.js` sets to `switchWorld(id, null, params, xy, { lead })`. Not now answers and does nothing else. A newer
+     invite replaces an older unanswered one without answering it.
+   - **The room.** `mp.entered(tileId, { flight, arrival, form, caption, lead })` is called at the end of
+     `enterWorld` and `mp.left()` at the start of `switchWorld`; `mp.chat.setRoom()` follows both. While entered, a
+     200 ms timer sends `hub.pos` (x, y, z, yaw rounded to 2 decimals, `form` from `__we.playerSpecies` or `spirit`);
+     `hub.js` sends nothing unless in a room and in a group. `mp.poses` holds the last `pos` per member, cleared on
+     leaving.
+   - **The arrival.** `Arrival.plan(point, follow)`: with `follow` `{x, y, z, yaw}` the path comes in from 1.5 km
+     behind the lead along their heading (cut at the tile's edge, 150 m at least), ends 6 m up and 10 m back, slows
+     to a hover (`f.hover = true, speed 0` at finish) and the clearance lift fades out over the last 15 % of the path
+     so the end pose is exact; the object is read every frame, so the path slides with a lead who moves (the heading
+     stays). The joiner's arrival starts on the invite's point as before; the first `pos` from the lead within 2.5 s
+     of its start re-plans it (over localhost it comes with the room join, a few ms in; over the internet one round
+     trip), later ones only slide it; after 2.5 s the arrival goes on to the planned point, which is what the doc
+     asks when the picker has not entered. The picker's own position streams during their arrival too, so a joiner
+     who enters while the picker is still flying in follows that flight's samples.
+   - **Chat lines.** `placed` -> "asked your group to come to <place>" (or "no one else in the group to ask along"),
+     `answer` -> "<name> joined" / "<name> declined", `err` for `place` or `answer` -> its `why`. An answer that
+     comes while the chat is hidden (the picker switching or arriving) shows the pane again once they have arrived.
+   - **Debugging** (`window.__weMp`): `showInvite({id, from, tile, point})`, `answer(join)`, `invite`, `chose(tile,
+     point)`, `poses`, `room`. The scripted second user was a small script in the session's scratchpad over
+     `tests/wsclient.py` (sign up two users over HTTP, befriend, one group; then pick, wait-and-answer, invite,
+     listen); `test_travel_together` is the same flow and the place to rebuild it from.
+   - **Open.** The invite's dialog has no sound and no count of who else joined; a joiner sees no marker of the
+     picker once arrived (the next step in the doc's "Open": the other players as their animals); the final yaw is
+     the heading at the plan, not the picker's yaw at the end; the chat's scope picker's choice is the group asked,
+     with no way to ask another group without changing the chat; two invites from two groups show one dialog.
 5. **Video and audio.** WebRTC between the members of a group, signalling over the hub (`rtc` messages
    added to the protocol then), the two toggles live, a small tile of each member's video by their avatar.
    Not before the four above are in.

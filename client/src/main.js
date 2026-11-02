@@ -242,6 +242,7 @@ function* disposeGpu(w, renderer) {
 
 // The page: one renderer, one camera, the opening screen, the Location box; one world at a time.
 let renderer = null, camera = null, goto = null;
+let mp = null;   // the multiplayer hookup (multiplayer.js) when the title screen is up: the hub's room follows the world entered
 let world = null, gen = 0;   // the world the page builds, holds or plays, and the choice it answers to
 const LENS_DEFAULT = 70, LENS_RANGE = [30, 110];
 // Build the tile's world in place of the one the page has (building, ready behind the screen, or played), which is
@@ -265,12 +266,16 @@ async function replaceWorld(id, opts) {
 // for another tile's), and the tile holding the point is built in its place and entered there, the season and day
 // carried over: no reload, no URL change.
 // xy: a tile-local { x, north } to arrive at instead (the world built again after a lost context, where the player was).
-async function switchWorld(id, point, params, xy = null) {
+// extra: { lead } the picker's user id when the switch answers a group's invite (the arrival ends behind them,
+// multiplayer.js), or { quiet } for a build that asks no group along (the world built again after a lost context).
+// The hub's room is left here and joined again at the new world's entry (enterWorld).
+async function switchWorld(id, point, params, xy = null, extra = {}) {
   const carry = world?.carry?.() || world?.arrive || {};   // the world's season and day; a build's, before it has them
   html.classList.add('switching'); html.classList.remove('arriving');
   renderer.setClearColor(0x000000, 1); renderer.clear();
+  mp?.left();
   let w = null;
-  try { w = await replaceWorld(id, { params, pending: point, arrive: { season: carry.season, date: carry.date, point, xy } }); }
+  try { w = await replaceWorld(id, { params, pending: point, arrive: { season: carry.season, date: carry.date, point, xy, ...extra } }); }
   catch (e) { console.error(e); $('status').textContent = `error: ${e.message}`; $('status').classList.remove('hidden'); goto.say(`could not load ${id}`, true); return; }
   if (w) goto.say('');   // it entered itself (buildSteps, arrive)
 }
@@ -308,7 +313,7 @@ async function main() {
     const w = world; if (!w) return;
     if (screenOpen) { reselect?.(w.tileId); return; }
     const f = w.m.flight, xy = f ? { x: f.pos.x, north: -f.pos.z } : null;
-    switchWorld(w.tileId, null, params, xy);
+    switchWorld(w.tileId, null, params, xy, { quiet: true });
   });
   fieldGuide.mount();   // the field guide's card and listeners are the page's (fieldguide.js), mounted before any world
   snapHud();
@@ -354,9 +359,11 @@ async function main() {
     // for the cards; both answer the same calls (onSelect, setPrep, setReady, readyIds, point, close). ?hub=stub answers
     // as the hub would (hubStub.js).
     const Screen = params.get('cards') === '1' ? OpeningScreen : TitleScreen;
-    // Lane 3 (multiplayer.js): the page's hub, the sign-in modal at the title's gate, the friends, the chat and the
-    // toggles, mounted on sign-in and kept into the world's HUD; the title's Begin joins the tile's room.
-    const mp = Screen === TitleScreen ? new Multiplayer({ hubParam: params.get('hub') }) : null;
+    // Lanes 3 and 4 (multiplayer.js): the page's hub, the sign-in modal at the title's gate, the friends, the chat and
+    // the toggles, mounted on sign-in and kept into the world's HUD; the group's invites, and the tile's room joined at
+    // the world's entry (enterWorld) and left on a switch (switchWorld); a Join from a world is a switch with the picker.
+    mp = Screen === TitleScreen ? new Multiplayer({ hubParam: params.get('hub') }) : null;
+    if (mp) mp.switchTile = (id, xy, lead) => { switchWorld(id, null, params, xy, { lead }); };
     screen = new Screen({ root: $('opening'), renderer, index, tileId, pending, hub: mp ? mp.titleHub : params.get('hub'),
       onSelect: id => { select(id); },
       onBegin: c => { choice = c; if (world?.ready && world.tileId === c.tileId) world.enter(c, true); } });
@@ -387,6 +394,8 @@ async function buildSteps(w, { params, pending, direct = false, arrive = null })
   const tile = w.tile = await w.wait(loadTile(w.tileId, undefined, { signal: w.abort.signal }));
   w.tileId = tile.id;   // the loader's choice when none was named (the direct paths without ?tile=)
   phase('afterTile');
+  const arrivePoint = arrive?.xy ?? (arrive?.point ? localXY(tile, arrive.point.lat, arrive.point.lon) : null);   // a switch's arrival; null: the centre
+  if (arrive && !arrive.lead && !arrive.quiet) mp?.chose(tile.id, arrivePoint);   // a switch to another tile asks the group along (multiplayer.js)
   const flags = ['game', 'skip'].filter(k => params.get(k) === '1').map(k => `&${k}=1`).join('')
     + (params.has('fov') ? `&fov=${params.get('fov')}` : '');
   if (pending && direct) history.replaceState(null, '', `?tile=${tile.id}${flags}`);   // never keep the point in the URL
@@ -446,7 +455,6 @@ async function buildSteps(w, { params, pending, direct = false, arrive = null })
   // The scripted arrival (arrival.js); behind the screen the bird waits at its start so the forest streams in there.
   await w.next('arrival');
   const arrival = new Arrival({ flight, camera, heights: tile.heights, size: tile.size, caption: $('caption') });
-  const arrivePoint = arrive?.xy ?? (arrive?.point ? localXY(tile, arrive.point.lat, arrive.point.lon) : null);   // null: the centre
   if (screenOpen) { screen.onPoint = w.onPoint = p => { arrival.plan(p); arrival.hold(); }; arrival.plan(screen.point); }
   else if (arrive) arrival.plan(arrivePoint);
   if (!direct) { arrival.hold(); veg.update(flight.pos.x, flight.pos.z, true); }
@@ -680,7 +688,8 @@ async function buildSteps(w, { params, pending, direct = false, arrive = null })
     return `${near ? `${near.over ? 'over' : 'near'} ${near.name}` : tile.id} · ${season} · spirit`;
   };
   // c: the opening screen's { tileId, season, date ('MM-DD', or null for today), point, caption }, or a tile switch's
-  // arrival { season, date, point }. Older fields (species, sex) are ignored: everyone arrives as the spirit.
+  // arrival { season, date, point }. Older fields (species, sex) are ignored: everyone arrives as the spirit. c.lead is
+  // the picker's user id when the entry answers a group's invite (multiplayer.js): the arrival turns to end behind them.
   const enterWorld = (c, gesture) => {   // armed as w.enter once the world is ready (below), not while it compiles
     w.commit();   // from here this world is the page's: its listeners and HUD nodes stay
     rememberTile(tile.id);
@@ -700,6 +709,10 @@ async function buildSteps(w, { params, pending, direct = false, arrive = null })
     arrival.start(c.caption || captionFor(c.point, seasonNow()));
     html.classList.add('arriving'); html.classList.remove('opening'); html.classList.remove('switching');
     closeScreen();
+    // the hub's room is this tile from here (the tile chat, the group's positions; multiplayer.js): the spirit's position
+    // goes to the group at 5 Hz, and a joiner's arrival follows the picker's
+    mp?.entered(tile.id, { flight, arrival, lead: c.lead || null, form: () => w.handle?.playerSpecies || 'spirit',
+      caption: p => { const cap = $('caption'); if (cap && !cap.hidden) cap.querySelector('.cap-text').textContent = captionFor(p, seasonNow()); } });
   };
   const known = new WeakSet(), used = new WeakSet(), drawable = o => o.isMesh || o.isPoints || o.isLine || o.isSprite;   // meshes compiled ahead (below)
   // The rock plans around the bird (rocks.js warm), made in slices so the first frame's rock fill only places them.
@@ -805,7 +818,7 @@ async function buildSteps(w, { params, pending, direct = false, arrive = null })
     playAs(as, { animals, spirit, x: p?.x ?? tile.size / 2, z: -(p?.north ?? tile.size / 2) });
   }
   else if (direct) { const p = pending ? localXY(tile, pending.lat, pending.lon) : null; if (p) flight.reset(p.x, -p.north, 150); }   // a spirit, flying, at ?lat=&lon= or the centre
-  else if (arrive) enterWorld({ season: arrive.season, date: arrive.date, point: arrivePoint }, false);
+  else if (arrive) enterWorld({ season: arrive.season, date: arrive.date, point: arrivePoint, lead: arrive.lead || null }, false);
 
   let last = performance.now(), hudT = 0, heldAt = 0;
   // Behind the opening screen, meshes that appear after the build (the rock sets of the first fill, animal models as

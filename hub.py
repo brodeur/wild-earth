@@ -17,7 +17,9 @@ GET  /api/hub/ws                                   WebSocket, authenticated by t
 Privacy (the doc's "Privacy"): the tables hold accounts, friendships, blocks, groups and group chat (kept 7
 days), nothing that is a position, a tile or a time of play (a session's last_seen is kept to the day).
 Presence, rooms, counts, the tile chat, invites and positions are in memory only; a position goes to the
-sender's group members in the same room and nowhere else, and is gone when the message is sent. Nothing a
+sender's group members in the same room and nowhere else; the connection keeps its last one so that a group
+member who enters the room after it is told where the sender is, and it goes with the room or the connection
+(lane 4). An invite's point (the picker's planned arrival, tile-local) is relayed the same way and not kept. Nothing a
 player sends is printed: the log is the request line (server.py's), and counts. No email address is asked
 for. The Discord keys are read from the environment or .env and never printed.
 """
@@ -57,7 +59,7 @@ SESSION_DAYS = 30
 DAY = 86400
 MESSAGE_DAYS = 7
 WELCOME_MESSAGES = 50
-INVITE_S = 15 * 60
+INVITE_S = 90                           # the client's dialog lasts a minute; a late answer still lands
 COUNTS_S, PING_S, IDLE_S, PRUNE_S = 2.0, 20.0, 60.0, 3600.0
 FAIL_WINDOW_S = 15 * 60                 # sign-in and recovery failures counted over this window
 FAIL_PER_NAME, FAIL_PER_ADDR = 8, 30
@@ -135,6 +137,13 @@ def season_now(tile: str) -> str:
     m = datetime.now(timezone.utc).month - 1
     south = re.match(r"^utm\d{1,2}s_", tile) is not None
     return SEASONS_N[(m + 6) % 12 if south else m]
+
+
+def _coord(v, k: str) -> float:
+    """A coordinate (a position's, an invite's point's): a finite number, rounded to the centimetre."""
+    if not isinstance(v, (int, float)) or isinstance(v, bool) or not math.isfinite(v) or abs(v) > 1e6:
+        raise HubError(400, f"{k} must be a number", k)
+    return round(float(v), 2)
 
 
 def tile_built(tile) -> bool:
@@ -630,6 +639,7 @@ class HubConn(WsConn):
     def __init__(self, sock, rfile, hub: Hub, uid: str | None, th: str | None):
         self.hub, self.uid, self.th = hub, uid, th
         self.room, self.room_t, self.watch = None, 0.0, False
+        self.last_pos = None                   # the last position relayed, memory only (gone with the room or the connection)
         super().__init__(sock, rfile)
 
     def err(self, why: str, re_: str | None = None, field: str | None = None) -> None:
@@ -882,9 +892,13 @@ class HubConn(WsConn):
         season = season_now(tile)
         h.invites[iid] = {"from": me, "to": to, "at": time.time()}   # memory only, and no tile kept
         msg = {"t": "invite", "id": iid, "from": me, "group": gid, "tile": tile, "season": season}
+        point = m.get("point")   # the picker's planned arrival, tile-local {x, north}: relayed to the joiners, never kept
+        if isinstance(point, dict):
+            msg["point"] = {k: _coord(point.get(k), k) for k in ("x", "north")}
         for u in to:
             h.to_user(u, msg)
-        self.send({"t": "placed", "id": iid, "tile": tile, "season": season, "to": len(to)})
+        self.send({"t": "placed", "id": iid, "tile": tile, "season": season, "to": len(to),
+                   **({"point": msg["point"]} if "point" in msg else {})})
 
     def m_answer(self, m: dict) -> None:
         h, me = self.hub, self.uid
@@ -900,9 +914,19 @@ class HubConn(WsConn):
         if op == "join":
             if not tile_built(m.get("tile")):
                 raise HubError(404, "no such tile", "tile")
+            if self.room != m["tile"]:
+                self.last_pos = None
             self.room, self.room_t = m["tile"], time.monotonic()
+            # where the group members already in this room are (their last relayed positions), so a joiner arriving
+            # behind the one who picked the place has it at once (lane 4)
+            for u in h.comembers(self.uid):
+                if h.blocked(self.uid, u):
+                    continue
+                for c in list(h.conns.get(u, ())):
+                    if c.room == self.room and c.last_pos:
+                        self.send(c.last_pos)
         elif op == "leave":
-            self.room = None
+            self.room, self.last_pos = None, None
         else:
             raise HubError(400, "op must be join or leave", "op")
         h.tell_presence(self.uid)
@@ -914,12 +938,10 @@ class HubConn(WsConn):
             return
         out = {"t": "pos", "user": me}
         for k in ("x", "y", "z", "yaw"):
-            v = m.get(k)
-            if not isinstance(v, (int, float)) or isinstance(v, bool) or not math.isfinite(v) or abs(v) > 1e6:
-                raise HubError(400, f"{k} must be a number", k)
-            out[k] = round(float(v), 2)
+            out[k] = _coord(m.get(k), k)
         form = m.get("form")
         out["form"] = form if isinstance(form, str) and FORM_RE.match(form) else "spirit"
+        self.last_pos = out
         for u in h.comembers(me):
             if h.blocked(me, u):
                 continue

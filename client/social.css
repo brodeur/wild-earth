@@ -164,3 +164,19 @@ html.opening #media { z-index:21; }
   .so-panel, .so-dialog { width:min(300px, calc(100vw - 28px)); }
   #chat { width:min(300px, calc(100vw - 28px)); }
 }
+
+/* ---- an invitation to go somewhere together (src/multiplayer.js, lane 4): top middle under the toggles, on the earth and
+   over the HUD alike (not hidden while arriving: a member mid-flight can still be asked) ---- */
+#invite { position:fixed; left:50%; top:60px; transform:translate(-50%, -8px); z-index:22; display:flex; align-items:center; gap:14px; max-width:calc(100vw - 28px); box-sizing:border-box;
+  padding:9px 10px 9px 12px; border-radius:12px; background:#0f1512ee; border:1px solid #3d5244; backdrop-filter:blur(8px); box-shadow:0 6px 24px #0008;
+  font:13px/1.4 'DM Sans', system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif; color:#d3ddd5; opacity:0; transition:opacity .35s ease, transform .35s cubic-bezier(.2, .8, .25, 1); pointer-events:auto; }
+#invite.on { opacity:1; transform:translate(-50%, 0); }
+.iv-row { display:flex; align-items:center; gap:10px; min-width:0; }
+.iv-row .so-avatar { flex:none; box-shadow:0 0 0 2px hsla(var(--hue), 70%, 60%, .7); }
+.iv-text { white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+.iv-text b { color:#f3f6f1; font-weight:600; }
+.iv-btns { display:flex; gap:6px; }
+.iv-btns button { padding:6px 13px; border:1px solid #263128; border-radius:999px; background:#1f2a23; color:#d3ddd5; font:inherit; font-size:12px; cursor:pointer; white-space:nowrap; }
+.iv-btns button:hover { background:#27352c; color:#fff; }
+.iv-btns .iv-join { background:#f3f6f1; color:#0b0f0d; border-color:#f3f6f1; font-weight:600; }
+.iv-btns .iv-join:hover { background:#fff; color:#0b0f0d; }

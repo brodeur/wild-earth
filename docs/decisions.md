@@ -3629,3 +3629,52 @@ acorns on the ground are the acorn game's own glow); the emergents (sedge leaves
 the herbs' pictures have no part-of-plant mask, so a glowing bulb lights the whole soap plant; a flier that forages
 (the quail in flight) has no glow; the sward's pool is under the nose only, not a lit sward around the body; the
 captures were taken with the sward lane's grass unmerged.
+
+## 2026-11-02: going somewhere together (lane 4 of docs/multiplayer.md)
+
+The group's invites, the joiner's world and the arrival behind the picker are built over the hub as lanes 2 and 3
+left it (`client/src/multiplayer.js`, `arrival.js`, `main.js`, `hub.js`, `chat.js`, `social.css`; `hub.py` and
+`tests/test_hub.py` where the protocol needed it; the Built note under lane 4 in `docs/multiplayer.md` has what was
+verified and what lane 5 needs). Decided where the design was silent:
+
+- **The hub keeps a connection's last position for the next member to enter the room.** The doc relays a position
+  and keeps nothing; a joiner who enters the picker's tile needs the picker's place at once to plan an arrival
+  behind them, and the next 5 Hz tick is a fifth of a second away at best, a round trip over the internet at
+  worst, while the arrival has already started. So `HubConn.last_pos` holds the last relayed `pos` in memory and
+  `room join` sends the joiner each group member's last one in that room. The rule stands as the doc states it:
+  relayed, never written, never logged, gone with the room or the connection; `test_zz` still searches the
+  database file and the log for the numbers. Rejected: the client waiting on the room join before starting the
+  arrival (a pause on every entry for a rare case), and planning only from the invite's point (the joiner ends 120 m
+  over where the picker meant to arrive, not behind where they are).
+- **The invite carries the picker's planned point.** When both are still building, the joiner arrives over the
+  point the picker will arrive at (the doc's fallback), so `place` takes `point {x, north}` tile-local and the invite
+  relays it rounded to the centimetre; the hub's invite record keeps no point, as it keeps no tile. A switch from the
+  Location box sends `place` once the tile's manifest is loaded, because the lat/lon only becomes a tile-local point
+  then (a second or two after Go); the earth's choice sends it at once with the title's point.
+- **The arrival re-plans rather than waits.** The joiner's arrival starts on the invite's point as every arrival
+  does; the picker's first `pos` within 2.5 s of the start re-plans it as a follow (`Arrival.plan(point, follow)`:
+  in from behind the picker along their heading, ending 6 m up and 10 m back, slowing to a hover), later ones slide
+  the whole path with a picker who moves. The first 2.5 s are 400 m up and over a kilometre back under the screen's
+  fade, so the turn is not seen; over localhost the `pos` comes with the room join. After 2.5 s the arrival goes on
+  to the planned point, which is what the doc asks for when the picker has not entered. Rejected: a second flight
+  from the planned point to the picker (two arrivals), and a cut to the end pose at the end (a jump).
+- **Join Begins by itself.** The doc has the joiner's world "built for that tile" and the joiner arriving: on the
+  earth, Join chooses the place as the player would (`title.choose` under a quiet flag so no second invite goes
+  out), the card shows the build as for any choice, and `title.begin()` is pressed for them the moment the tile is
+  ready (the wrapped `setReady`), since they already said yes. In a world, Join is the Location box's switch with
+  the picker carried (`switchWorld`'s `extra.lead`). Not now answers and does nothing else.
+- **The room joins at the world's entry.** Lane 3 joined it at Begin; it is now `mp.entered` at the end of
+  `enterWorld` and `mp.left` at the start of `switchWorld`, so the counts say who is in a world rather than who is
+  zooming in to one, and a switch leaves one room before it enters the next. The position goes to the hub from a
+  200 ms timer while entered (`hub.js` still refuses it outside a room or a group), rounded to the centimetre before
+  it is sent so the client holds nothing finer than the hub relays.
+- **Which group is asked.** The chat's scope picker decides when the player is in several groups: the group the chat
+  goes to is the group asked along; when the chat goes to the tile, the first group. A picker in several groups who
+  wants another group can change the chat's scope first; a chooser for the invite itself is a later nicety.
+- **The picker is told in the chat pane, and told again after arriving.** `placed` and each `answer` are system
+  lines; an answer that comes while the pane is hidden with the HUD (the picker switching or arriving) shows the
+  pane again once they have arrived, else they would never see who joined without opening the chat.
+- **A dialog lasts a minute, the hub's invite a minute and a half.** The doc's "expires after a minute" is the
+  dialog; the hub keeps the invite 30 s longer so a Join pressed at the last moment still lands (`INVITE_S` 90, was
+  15 min). A newer invite replaces an older unanswered one without answering it (the picker is not told "declined"
+  for an invite the member never saw go).

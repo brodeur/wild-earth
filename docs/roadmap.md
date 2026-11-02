@@ -264,8 +264,13 @@ browser stays the renderer.
   sign-up with recovery codes, recovery, Explore with no hub), `social.js` (the avatars row and the list: search,
   requests, friends, groups, the wisp avatar from the id), `chat.js` (the input and the fading pane: group and
   tile chat), `multiplayer.js` (the hookup; the title's counts from the real hub), the greyed Video and Audio
-  toggles. Next: lane 4 (group travel: `place` and `invite`, the room joined on entry and left on a switch,
-  the position relay); Discord needs Aaron's application registered; Google and Apple their keys.
+  toggles. Lane 4 (group travel) is built (2026-11-02, branch claude/epic-ritchie-24d56d): a choice of place by a
+  player in a group asks the group along (the dialog on the earth and over the HUD, Join · Not now), the joiner's
+  world built and entered by itself, the arrival 6 m above and 10 m behind the picker from the relayed position
+  (`arrival.js` follow), the room joined at the world's entry and left on a switch, the spirit's position to the
+  group at 5 Hz and kept nowhere, the picker's chat pane saying who joined and who declined. Next: lane 5 (video
+  and audio over WebRTC, signalling through the hub); the other players on a tile as their animals; Discord needs
+  Aaron's application registered; Google and Apple their keys.
 
 ## Then
 

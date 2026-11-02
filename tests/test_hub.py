@@ -394,6 +394,52 @@ class HubTest(unittest.TestCase):
         watcher[2].none("counts", wait=2.6)
         self.assertNotIn("pos", json.dumps(hub.get().counts()))
 
+    def test_travel_together(self):
+        """Lane 4: place with a group and the picker's point; the invite carries both; the picker's last position
+        reaches a member who enters the room after it, and nobody else; it goes with the room."""
+        a, b, c = (self.player(n) for n in ("Fox_a", "Fox_b", "Fox_c"))
+        self.befriend(a, b)
+        self.befriend(a, c)
+        a[2].send({"t": "group", "op": "create", "name": "Fox walk", "users": [b[0]]})
+        g1 = b[2].wait("groups")["groups"][0]
+        a[2].send({"t": "group", "op": "create", "users": [c[0]]})
+        c[2].wait("groups")
+        a[2].wait("groups", where=lambda m: len(m["groups"]) == 2)
+        a[2].send({"t": "place", "tile": T2})                       # in two groups: the group is required
+        self.assertEqual(a[2].wait("err")["field"], "group")
+        point = {"x": POS["x"], "north": POS["z"]}
+        a[2].send({"t": "place", "tile": T2, "group": g1["id"], "point": point})
+        inv = b[2].wait("invite")
+        self.assertEqual((inv["from"], inv["tile"], inv["group"], inv["point"]),
+                         (a[0], T2, g1["id"], {"x": round(POS["x"], 2), "north": round(POS["z"], 2)}))
+        self.assertEqual(a[2].wait("placed")["point"], inv["point"])
+        c[2].none("invite")
+        a[2].send({"t": "place", "tile": T2, "group": g1["id"], "point": {"x": "here", "north": 1}})
+        self.assertEqual(a[2].wait("err")["field"], "x")
+        # the picker enters and moves; the member joins, answers, and enters the room: the picker's last position at once
+        a[2].send({"t": "room", "op": "join", "tile": T2})
+        a[2].send({"t": "pos", **POS, "form": "spirit"})
+        b[2].send({"t": "answer", "invite": inv["id"], "join": True})
+        self.assertTrue(a[2].wait("answer")["join"])
+        b[2].drain()
+        b[2].send({"t": "room", "op": "join", "tile": T2})
+        got = b[2].wait("pos", timeout=2)
+        self.assertEqual(got, {"t": "pos", "user": a[0], **{k: round(v, 2) for k, v in POS.items()}, "form": "spirit"})
+        b[2].none("pos")                                            # once, not again until the picker moves
+        c[2].send({"t": "room", "op": "join", "tile": T2})           # c shares a group with a, so c has it too...
+        c[2].wait("pos", timeout=2)
+        c[2].send({"t": "room", "op": "leave"})
+        c[2].drain()
+        b[2].send({"t": "room", "op": "join", "tile": T1})           # ...but not in another room
+        b[2].none("pos")
+        a[2].send({"t": "room", "op": "leave"})                     # leaving the room lets the position go
+        a[2].send({"t": "room", "op": "join", "tile": T2})
+        c[2].send({"t": "room", "op": "join", "tile": T2})
+        c[2].none("pos")
+        self.assertIsNone(hub.get().invites.get(inv["id"], {}).get("point"))   # the invite's record holds no point
+        for p in (a, b, c):
+            p[2].close()
+
     def test_framing(self):
         """ws.py joins fragments around a ping and answers the ping."""
         a = self.player("Vole_frag")

@@ -53,8 +53,10 @@ export class Chat {
     const names = g.members.filter(m => m.id !== this.hub.you?.id).map(m => m.display || m.name);
     return names.length ? names.slice(0, 3).join(', ') + (names.length > 3 ? ` +${names.length - 3}` : '') : 'just you';
   }
-  // The room changed (multiplayer.js, from the title's Begin or a tile switch): the picker follows.
+  // The room changed (multiplayer.js, from the world's entry or a tile switch): the picker follows.
   setRoom() { this.refresh(); }
+  // The group the chat goes to now (null when it goes to the tile, or nowhere): the group a place is asked of.
+  currentGroup() { return this.options().find(o => o.key === this.scope)?.group || null; }
   refresh() {
     const opts = this.options(), connected = this.hub.connected;
     if (!opts.some(o => o.key === this.scope)) this.scope = opts.find(o => o.key !== 'tile')?.key || opts[0]?.key || null;

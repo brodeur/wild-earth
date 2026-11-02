@@ -140,7 +140,11 @@ export class Hub {
   chat(text, scope = this.groups.length ? 'group' : 'tile', group) {
     return this.send(group ? { t: 'chat', scope, text, group } : { t: 'chat', scope, text });
   }
-  place(tile, group) { return this.send(group ? { t: 'place', tile, group } : { t: 'place', tile }); }
+  // point: the picker's planned arrival, tile-local { x, north } (relayed in the invite, never kept); group when in several.
+  place(tile, group, point = null) {
+    const m = { t: 'place', tile }; if (group) m.group = group; if (point) m.point = { x: point.x, north: point.north };
+    return this.send(m);
+  }
   answer(invite, join) { return this.send({ t: 'answer', invite, join: !!join }); }
   // The tile's room: joined when a world is entered (null leaves). Kept, and re-joined after a reconnect.
   enter(tile) {
