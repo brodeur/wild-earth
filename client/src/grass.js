@@ -37,10 +37,12 @@ import { seasonMonth } from './treegen.js';
 // The body tier (2026-10-28): the tiers above are tuned for a chase camera 3-5 m up, and to a lizard or a vole (its
 // eye a few cm up, its chase camera ~0.3 m) the ground tier's 8 plants per m^2 read as sparse stalks on a blurred photo, where the
 // real sward is blades 2-5 cm apart. So under a small body (bodyScale.js, scale below BODY_MAX = 0.6: lizard,
-// vole, ground squirrel, rabbits, fox; never a deer, lion, bear, coyote, turkey, the spirit or a flier, whose
-// frame is exactly what it was) a ring of blades at real density follows the camera: radius
+// vole, ground squirrel, rabbits, fox) a ring of blades at real density follows the camera: radius
 // 16 sqrt(scale) m clamped to 1.5-10 m (lizard 2.6, vole 3.3, rabbit 6.4, fox 10), thinning blade by blade
-// over its outer quarter. Its unit is a young tiller clump of 3-6 leaves (grassBlades.js buildSwardClump: real
+// over its outer quarter. The big bodies (2026-11-01, step 4 of the grassland sward: the deer, the lion, the coyote, the
+// bear, the turkey, the spirit and a landed flier, whose frames had none of it) get the same ring thinned to a third of
+// the density (an even subsample: the cells are in rank order) at BODY_BIG_R, so there is lots of grass close for every
+// body within the full ring's cost. Its unit is a young tiller clump of 3-6 leaves (grassBlades.js buildSwardClump: real
 // sizes, tapered, rolled and twisted, normals rounded across each blade), annual or needlegrass by the same
 // share and drifts as the plants, placed on a jittered 6.7 cm grid (225 clumps, ~1000 blades per m^2 on open
 // grassland) thinned by the habitat's density, herb cover, outcrops, roads, water and the bare patches as the
@@ -81,6 +83,7 @@ const IMP_IN = [6, 12], IMP_W = 1.5, TUFT_W = 3;
 // Body tier (see the header): on below BODY_MAX scale; BODY_CELL m cells of BODY_G x BODY_G candidates; at most
 // BODY_CAP clumps staged; the ring's radius from the scale.
 const BODY_MAX = 0.6, BODY_CELL = 2, BODY_G = 30, BODY_CAP = 60000, BODY_TIER = 3, BODY_LN = 5;
+const BODY_BIG_R = 7, BODY_BIG_THIN = 1 / 3;   // the big bodies' ring: radius (m) and its share of the density
 const bodyRadius = s => Math.min(Math.max(16 * Math.sqrt(s), 1.5), 10);
 
 // ---- one placement per cell, read by every tier -----------------------------------------------
@@ -1190,7 +1193,7 @@ export class Grass {
     const B = this.body, S = this.sets, tA = S.bodyA, tB = S.bodyB, place = B.R + B.rebuild + 0.75, h = BODY_CELL / 2;
     for (const t of [tA, tB]) { t.staged = 0; t.blocks.length = 0; t.sig = NaN; }
     B.queue.clear();
-    const frac = Math.min(1, BODY_CAP / (Math.PI * place * place * (BODY_G / BODY_CELL) ** 2));
+    const frac = Math.min(1, BODY_CAP / (Math.PI * place * place * (BODY_G / BODY_CELL) ** 2)) * (B.thin || 1);
     const i0 = Math.floor((x - place) / BODY_CELL), i1 = Math.floor((x + place) / BODY_CELL);
     const j0 = Math.floor((north - place) / BODY_CELL), j1 = Math.floor((north + place) / BODY_CELL), cells = [];
     for (let j = j0; j <= j1; j++) for (let i = i0; i <= i1; i++) {
@@ -1254,7 +1257,8 @@ export class Grass {
   // stages nothing and its meshes stay hidden: a deer's frame is untouched.
   updateBody(cp, north, agl) {
     const B = this.body, S = this.sets;
-    const on = this.bodyOn !== false && B.scale < BODY_MAX && agl < Math.max(3, 0.5 * bodyRadius(B.scale));   // bodyOn: false for A/B timing
+    const big = B.scale >= BODY_MAX, R = big ? BODY_BIG_R : bodyRadius(B.scale), thin = big ? BODY_BIG_THIN : 1;
+    const on = this.bodyOn !== false && agl < Math.max(3, 0.5 * R);   // bodyOn: false for A/B timing
     if (!on) {
       if (B.active) {
         B.active = false; B.last = null; B.queue.clear(); B.work = null;
@@ -1264,9 +1268,8 @@ export class Grass {
       return;
     }
     B.active = true;
-    const R = bodyRadius(B.scale);
-    if (R !== B.R) {
-      B.R = R; B.rebuild = Math.max(0.4, 0.2 * R); B.last = null;
+    if (R !== B.R || thin !== B.thin) {
+      B.R = R; B.thin = thin; B.rebuild = Math.max(0.4, 0.2 * R); B.last = null;
       this.uniforms.bodyFade.value.set(0.75 * R, R);
       S.bodyA.bands[BODY_TIER] = [0, R + 2]; S.bodyB.bands[BODY_TIER] = [0, R + 2];
     }
