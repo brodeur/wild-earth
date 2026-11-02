@@ -86,6 +86,12 @@ const RING_R = 0.9, WISP_LEN = [0.2, 0.4], MOTES = 20, MOTE_R = 0.065;   // 2026
 const HEAD_UP = { quad: 1.25, rodent: 1.1, bird: 1.4, lizard: 1.2 };   // the head's height over the shoulder's, by rig
 const SQ_SHOULDER = 0.1, SQ_HALF = 0.12;                                // m: the gray squirrel's own control (no GROUND entry): shoulder height, half its body length
 const STALE_MS = 1000;                                                 // update older than this at a draw: the wisps are dark
+// The plants (2026-11-01, forage.js; Aaron: "They can smell nearby plants"): `plants` is a provider (main.js sets it to
+// the forage module) whose sources(x, z, reach, cb) gives the forager's food plants in reach, one source per species
+// ({ id, x, z, plant: true, name, col }, kept objects), at PLANT_K of the body's reach and PLANT_S as strong; each is
+// drawn as an animal's scent is (the same slots, flicker, sniff and labels), in the plant glow's colour with the plant's
+// name. A body with no forage this season (a lion) gets none; the squirrel's own control smells them too.
+const PLANT_K = 0.35, PLANT_S = 0.85, PLANT_WISPS = 3;   // the plants' share of the reach, their strength, and their own slots beside the MAX_WISPS animals
 // a legibility floor (2026-10-29): a strand shorter than LEN_PX px on screen (the squirrel's 2.7 cm ring strand from its
 // chase camera 2.6 m off was 10 px, a smudge) is drawn longer, with its motes bigger, by up to GROW_MAX; the ring itself keeps its size
 const LEN_PX = 36, GROW_MAX = 6;
@@ -126,11 +132,12 @@ export class Scent {
   constructor({ tile, animals, flight, ground, flier, scene, camera, squirrel = null, labels = null }) {
     Object.assign(this, { tile, animals, flight, ground, flier, scene, camera, squirrel, labels });
     this.known = new Map(); this.sniffHeld = false; this.sniffUntil = -1;   // when each source was last smelled (by id); the sniff (the header)
+    this.plants = null;   // the plant sources' provider (forage.js; main.js sets it)
     this.wind = windUniforms;   // debugging: the uniforms the query reads
     this._smelled = []; this.code = null; this.reach = 0; this.carrionReach = 0; this.scav = false;
     this.t = 0; this.qT = 0; this.lastT = -1e9; this.ms = 0;
     this.head = new THREE.Vector3(); this.headY = null; this.scale = bodyScale.v;
-    this.slots = Array.from({ length: SNIFF_MAX }, () => ({ a: null, id: null, s: 0, sv: 0, k: 0, carrion: false, alpha: 0, want: 0,
+    this.slots = Array.from({ length: SNIFF_MAX }, () => ({ a: null, id: null, s: 0, sv: 0, k: 0, carrion: false, plant: false, alpha: 0, want: 0,
       ux: 1, uz: 0, seed: 0, col: new THREE.Color(), newUntil: -1, flickIn: -1e9, flickOut: -1e9, alphaOut: 0, label: null, tip: new THREE.Vector3() }));
     const N = SNIFF_MAX * MOTES;
     this.pos = new Float32Array(N * 3); this.col = new Float32Array(N * 3); this.size = new Float32Array(N);
@@ -219,9 +226,22 @@ export class Scent {
         const s = this.strengthOf(a, k, carrion, y); if (s <= 0) return;
         smelled.push({ animal: a, strength: s, bearing: 0, carrion, k });
       });
+    }
+    if (this.plants && this.reach > 0) {   // the forager's food plants (the header: the plants), at PLANT_K of the reach
+      const pr = this.reach * PLANT_K;
+      this.plants.sources(H.x, H.z, pr * 1.05, src => {
+        const dx = H.x - src.x, dz = H.z - src.z, d = Math.hypot(dx, dz), R = pr * scentCarry(dx, dz); if (d >= R) return;
+        smelled.push({ animal: src, strength: (1 - d / R) ** S_POW * PLANT_S, bearing: 0, carrion: false, plant: true, k: -1 });
+      });
+    }
+    if (smelled.length) {
       smelled.sort((p, q) => q.strength - p.strength);
-      const max = this.sniffing ? SNIFF_MAX : MAX_WISPS;   // sniffing: every source in reach
-      if (smelled.length > max) smelled.length = max;
+      if (this.sniffing) { if (smelled.length > SNIFF_MAX) smelled.length = SNIFF_MAX; }   // sniffing: every source in reach
+      else {   // the strongest MAX_WISPS animals and, apart from them, the strongest PLANT_WISPS plants (a herd's scents would crowd every plant out)
+        let na = 0, np = 0, w = 0;
+        for (let i = 0; i < smelled.length; i++) { const e = smelled[i]; if (e.plant ? np < PLANT_WISPS : na < MAX_WISPS) { if (e.plant) np++; else na++; smelled[w++] = e; } }
+        smelled.length = w;
+      }
     }
     // the slots: a source still smelled keeps its slot; a lost one fades; a new one takes a slot that is dark or fading.
     // Shown (want) while the player sniffs, or for NEW_HOLD s from a scent not smelled within FORGET s (the flicker)
@@ -241,8 +261,8 @@ export class Scent {
       const want = sniffing || t < s.newUntil ? 1 : 0;
       if (want && !s.want && s.flickIn < t - FLICK && t - s.flickOut < FLICK) s.flickIn = -1e9;   // sniffed mid-flicker-out: back without a blink
       if (!want && s.want) { s.flickOut = t; s.alphaOut = s.alpha; }
-      s.want = want; s.s = e.strength; s.k = e.k; s.carrion = e.carrion;
-      rarityColor(this.animals.rarity[e.k], s.col);
+      s.want = want; s.s = e.strength; s.k = e.k; s.carrion = e.carrion; s.plant = !!e.plant;
+      if (e.plant) s.col.copy(e.animal.col); else rarityColor(this.animals.rarity[e.k], s.col);
     }
     if (this.known.size > 64) for (const [id, at] of this.known) if (t - at > FORGET * 2) this.known.delete(id);
     const yaw = this.flight.yaw, fx = -Math.sin(yaw), fz = -Math.cos(yaw);
@@ -276,7 +296,7 @@ export class Scent {
     this.placed = 0;   // the labels placed this frame (placeLabel: one within LABEL_PX of another is not drawn)
     for (let i = 0; i < SNIFF_MAX; i++) {
       const s = this.slots[i], o = i * MOTES;
-      if (s.a && (s.a.gone || (!s.a.dead && !A.alive(s.a)))) s.want = 0;   // eaten, buried or rebuilt away
+      if (s.a && !s.plant && (s.a.gone || (!s.a.dead && !A.alive(s.a)))) s.want = 0;   // eaten, buried or rebuilt away (a plant source stays)
       if (s.a && s.want && !sniffing && t >= s.newUntil) { s.want = 0; s.flickOut = t; s.alphaOut = s.alpha; }   // the new scent's hold over: it flickers away
       const fi = t - s.flickIn, fo = t - s.flickOut;
       if (s.want && fi < FLICK) s.alpha = blink(fi);                                   // flickering on
@@ -321,7 +341,7 @@ export class Scent {
   placeLabel(s, H, ux, uz, along, cam, W, Hh) {
     let el = s.label;
     if (!el) { el = s.label = document.createElement('span'); el.className = 'sl'; this.labels.append(el); el.hidden = true; }
-    const text = `${this.animals.speciesList()[s.k]?.one || 'scent'}${s.carrion ? ' · dead' : ''}`;
+    const text = s.plant ? (s.a.name || 'plant') : `${this.animals.speciesList()[s.k]?.one || 'scent'}${s.carrion ? ' · dead' : ''}`;
     if (el.textContent !== text) { el.textContent = text; el.style.setProperty('--soul', `#${s.col.getHexString()}`); }
     const p = s.tip.set(H.x + ux * along, H.y, H.z + uz * along).project(cam);
     let off = p.z > 1 || Math.abs(p.x) > 1 || Math.abs(p.y) > 1;

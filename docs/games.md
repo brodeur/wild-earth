@@ -79,6 +79,15 @@ Everything comes from games.json and the rasters, so any species in the tables g
 season is prey rather than a raster (the hunters) has no drain yet, since hunting is not a loop. The acorns are their
 real size (2 cm by 3 cm, ACORN_R in acorns.js) and lie on the ground; the glow still finds them.
 
+The forage relation (`relations.forage`: [animal, plant, part, resource, seasons], written by pipeline/games.py from the
+plant records' `eaten_by`) is what the client reads to know a body's food plants this season (needs.js `foodPlants`),
+and it is used three ways (2026-10-29 and 2026-11-01): needs.js names the plant under a feeding body ("blue dicks here:
+hold E") and feeds a little faster on a named one; forage.js lights every food plant within the body's radius with a
+warm glow, weighted by the row's part against the plant's state this month (a flower while it flowers, seeds once
+set, berries while the crown shows them), dimmer as the body is fed; and scent.js draws the food plants in reach as
+scents, one per species, with their names. A species with no rows this season (the lion, the lizard) gets none of the
+three; a new plant record with `eaten_by` gets all three on the next `derive`.
+
 ## What it finds on the home tile
 
 Eighteen species, 275 games, 146 of them collective, 29 predator-prey pairs, 5 scavenging links

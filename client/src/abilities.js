@@ -81,7 +81,8 @@ function groundMoves(S) {
 }
 // X: lie down, hunch or bask (S.rest), else grey (a bird's roost, a rodent's rest)
 const restOf = S => { const r = { bed: 'lie down', hunch: 'hunch', bask: 'bask' }[S.rest]; return r ? on(r, 'X', c => !!c.ground.resting) : no(S.rig === 'bird' ? 'roost' : 'rest', 'X'); };
-const actOf = (name, title) => on(name, 'E', c => c.ground.actT > 0 || E(c), title ? { title } : {});
+// the act's slot is "ready" (a warm edge) while a named food plant is within reach of a hungry body (needs.js plant: the glowing one under the nose, forage.js)
+const actOf = (name, title) => on(name, 'E', c => c.ground.actT > 0 || E(c), { ready: c => !!c.needs?.plant && c.needs.hunger < 0.98, ...(title ? { title } : {}) });
 
 // Per species: the walker's act word (E) and its verbs, built then not yet. Order on the bar: the moves, act, rest, verbs.
 const SPECIES = {
@@ -241,7 +242,7 @@ export class Abilities {
         d.addEventListener('pointerup', up); d.addEventListener('pointercancel', up); d.addEventListener('pointerleave', up);
       }
       row.append(d);
-      return { entry, el: d, lit: false, tired: false, shown: true };
+      return { entry, el: d, lit: false, tired: false, ready: false, shown: true };
     });
     const more = document.createElement('div'); more.className = 'ab-more';
     for (const [key, word] of MORE[kind] || []) { const s = document.createElement('span'), b = document.createElement('kbd'); b.textContent = key; s.append(b, ` ${word}`); more.append(s); }
@@ -259,9 +260,10 @@ export class Abilities {
       const e = s.entry, shown = !e.show || !!e.show(c);
       if (shown !== s.shown) { s.shown = shown; s.el.hidden = !shown; }
       if (!e.built) continue;
-      const lit = shown && !!e.lit?.(c), tired = shown && !!e.tired?.(c);
+      const lit = shown && !!e.lit?.(c), tired = shown && !!e.tired?.(c), ready = shown && !lit && !!e.ready?.(c);
       if (lit !== s.lit) { s.lit = lit; s.el.classList.toggle('lit', lit); }
       if (tired !== s.tired) { s.tired = tired; s.el.classList.toggle('tired', tired); }
+      if (ready !== s.ready) { s.ready = ready; s.el.classList.toggle('ready', ready); }
     }
     // the legs (the wings for a bird): every body's sprint meter (groundControl, squirrelControl, woodpeckerControl, the
     // birds' flight: stamina 0..1 and tired), red when tired

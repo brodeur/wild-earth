@@ -3217,3 +3217,72 @@ Decided:
   and the one with a measured age table; the blue oak is the counter-case (compact, crooked, not weeping in any
   source), black and canyon live next, then the ponderosa for the conifer defaults.
 
+
+## 2026-11-01: the forager's food glows, and it can smell the plants (branch worktree-forage-glow)
+
+Aaron: "For animals that can forage, plants they can forage should glow. They can smell nearby plants." Built as
+`client/src/forage.js` on the understory of 2026-10-29 (the herbs of forbs.js, the shrub impostors of shrubfield.js,
+the sward of grass.js) and the senses of 2026-10-29 (scent.js). Decided:
+
+- **Who forages is the data, not a list.** A body forages when the tile's `games.json` `relations.forage` has rows for
+  its species this season (`needs.foodPlants`, from the library records' `eaten_by`). The deer in April has 53 plants,
+  the vole 15, the bear 3 (bulbs and currants), the lion none, the lizard none (its insects are not plants), the spirit
+  and the fliers none: nothing glows for them and they smell no plants. A coyote in fall would see manzanita berries lit,
+  which is what the records say it eats.
+- **One warm colour, not the species' rarity colour.** The spirit view's soul colours are by rarity: the abundant deer's
+  is purple, and a meadow of purple poppies would read as a different world. The glow is one warm plant light
+  (`GLOW_COL`, amber) for every forager, the same colour as the plant scents' strands and labels, so "this is food"
+  reads the same from the eyes and the nose. The flowering herbs keep their own colours under it.
+- **The glow rides on the existing draws.** A uniform `glow` (the body's x z, its radius, the gain) and a weight per
+  species this season (`glowSp[16]` in forbs.js, `glowFh[FH_N]` and `glowKind` in shrubfield.js) in the shaders that
+  already draw the plants: the herb is lit warm, most at the soft edges of its picture; a shrub impostor's dome is lit
+  at its rim with a skirt past its analytic outline. No new texture unit, no new vertex attribute, no second pass. A
+  halo from the herb picture's alpha skirt (the texels under the alpha cut) was tried first: the mipmapped alpha
+  spreads over the whole card a few metres off and drew each herb as a translucent yellow box. The near 3D shrubs (vegetation.js, treegen's materials:
+  the tree lane's files) and the sward (thousands of clumps, the sward lane's file) take a pool of light on the ground
+  instead, one instanced draw of soft additive discs from forage.js: under each 3D food shrub within the radius, and
+  under the body's nose when the sward's leading grass is food. A billboard halo behind the 3D crowns was tried first
+  and read as a yellow cutout over the shrub.
+- **The radius is the body's sight of the ground.** `R_BY` m by species: the deer and the bear 22, the jackrabbit and
+  the turkey 10, the brush rabbit and the ground squirrel 8, the quails 6, the vole 3; else 12. The glow falls as
+  (1 - d / R)^1.2 and the nearest few get a boost inside 0.15 R. The part in season is brighter (`PART`: a herb's
+  flower while it flowers at 1.35, its seeds once it has set them 1.2, a shrub's berries or flowers while its crown
+  shows them 1.3; a part out of season 0.4-0.45; leaves and browse 1), so blue dicks and mule's ears glow more in
+  April than filaree. Pulsing slowly (0.45 Hz, 15 %).
+- **Hunger sets the gain.** 0.3 at a full belly rising to 1 at an empty one ((1 - hunger)^0.7, needs.js); the gray
+  squirrel, which has no needs, sits at a middling 0.5.
+- **The plants are scents.** scent.js takes a `plants` provider (forage.js `sources`): one source per food species in
+  reach, the nearest herb of it among the staged herbs (forbs.js stages them within 45 m), the nearest food shrub among
+  the near 3D plants and the impostor field's cached cells, and the sward as one source at the nearest food sward on
+  rings of bearings when the body does not already stand in one. Their reach is 0.35 of the species' (a deer 70 m, a
+  vole 7, a bear 140), shaped by the wind as every scent is, their strength 0.85 of an animal's. They take the module's
+  rule unchanged: a scent is drawn only when new (it flickers in and away) or while the player sniffs (L), with its
+  label the plant's common name. One change to the slots: the strongest six animals and, beside them, the strongest
+  three plants, because a deer's own herd filled every slot and no plant was ever new.
+- **The feed verb lights.** abilities.js marks the act slot (graze, nibble, peck) "ready" (a warm edge, `.ab.ready`)
+  while needs.js has a named food plant within reach of a hungry body: the same plant the "blue dicks here: hold E"
+  line names, and the one glowing under the nose.
+
+Verified on the home tile in the worktree's viewer (the pane hidden, the frames driven by a scratch boot page's
+requestAnimationFrame shim, the machine's load average 10-20 all the while): a deer at the grassland (6960, 7032) on
+18 April with the lupine, the poppies, filaree, vetch and blue dicks weighted and the fiddleneck, popcorn flower, madia
+and silver lupine at zero; the gain 0.85 at hunger 0.3 and 0.25 fed; the same deer in the oak understory (7132, 6892)
+smelling miner's lettuce at 2 m, hairy vetch, yarrow, lupine and nettle, and with a sniff every food plant within 70 m
+by name (filaree, buckbrush, mugwort among them) beside the squirrel; a vole with its 3 m radius smelling popcorn
+flower, filaree, vetch and fiddleneck from its 7 m; a lion with no glow, no halo and no plant scent; the act slot
+"ready" at filaree. The frame at the understory pose, 36 renders each with the forage on and off, alternating:
+p10 58.6 / 58.5 ms, median 60.0 / 59.4, within the noise of a loaded machine; forage.js's own update 0.02 ms, the
+scent's query 0.1 ms; at the grassland pose p10 56.1 / 56.9, median 57.6 / 59.0. Captures in the session's scratchpad
+`shots/` (the v6 set at 11:00: the close-up of a popcorn flower left green beside a lit filaree at hunger 0.3, 1.0 and
+with the forage off; the deer's eye with and without; the wide view with the pool under the nose). Three rounds of
+tuning on the look: the shrub impostors' glow was first far too strong (a lime blob at 20 m) and was cut to a quarter;
+the sward pool under the nose was a saturated yellow wash and was cut to 0.3; the herbs' glow is weighted by the
+texel's alpha and the leaf's tone so the picture's structure stays. Reads wrong still: a dense herb (a poppy mound)
+seen from the deer's eye at 2 m is already a translucent block of mip-averaged leaves in the forbs' own draw, and lit
+it is a yellow block; the herbs' glow at this level is on the subtle side at a metre (`forage.k` scales it live).
+
+Open: the trees' browse and acorns (willow, alder, the valley oak's acorns) do not glow (the tree lane's files; the
+acorns on the ground are the acorn game's own glow); the emergents (sedge leaves for the deer and the vole) neither;
+the herbs' pictures have no part-of-plant mask, so a glowing bulb lights the whole soap plant; a flier that forages
+(the quail in flight) has no glow; the sward's pool is under the nose only, not a lit sward around the body; the
+captures were taken with the sward lane's grass unmerged.

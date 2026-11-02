@@ -32,6 +32,7 @@ import { SEASON_LOOK } from './season.js';
 // what grows round it.
 const FORB_R = 45, FADE = [36, 45], D0 = 18, KMIN = 0.25, REFILL = 8, CAP = 24000, FORB_PER_M2 = 1.2, STRIDE = 8;
 const T = 256, GS_MAX = 16;
+export const FORB_MAX = GS_MAX;   // the species slots (forage.js sizes its weights to it)
 const HABITAT = { 5: 1.0, 1: 0.7, 6: 0.8, 3: 0.4, 4: 0.35, 2: 0.2 };
 const CLASS_NAME = { 1: 'oak_woodland', 2: 'conifer_forest', 3: 'mixed_forest', 4: 'chaparral', 5: 'grassland', 6: 'riparian' };
 const ASPECT = { erect: 0.7, bulb: 0.55, mound: 1.3, rosette: 1.7, sprawling: 1.9, climbing: 1.3, floating: 40 };   // picture box width / height by habit (floating: duckweed, a mat on the water)
@@ -176,9 +177,10 @@ const VERT = /* glsl */`
   ${ATMOSPHERE_GLSL}
   uniform vec2 fade; uniform vec2 kParams; uniform vec4 spBox[${GS_MAX}];   // per species: box w, box h, height this month (0..1), top quad lift
   uniform float forbOn;
+  uniform vec4 glow; uniform float glowSp[${GS_MAX}];   // the forager's food (forage.js): the body x z, its radius, the gain; each species' weight this season (0: not food)
   attribute vec4 iPos; attribute vec4 iVar;   // root x y z, scale | species, seed, yaw, rank
   attribute float aQuad;   // 0, 1: the crossed uprights; 2: the one on the ground
-  varying vec2 vUv; varying vec3 vSun; varying vec3 vAmb; varying vec3 vT; varying vec3 vIn; varying float vFade; varying float vDiff;
+  varying vec2 vUv; varying vec3 vSun; varying vec3 vAmb; varying vec3 vT; varying vec3 vIn; varying float vFade; varying float vDiff; varying float vGlow;
   float h11(float n) { return fract(sin(n) * 43758.5453123); }
   void main() {
     int sp = int(iVar.x + 0.5); vec4 B = spBox[sp];
@@ -186,6 +188,8 @@ const VERT = /* glsl */`
     float keep = clamp(kParams.x * kParams.x / max(d * d, 1.0), kParams.y, 1.0);
     float s = step(iVar.w, keep) * (1.0 - smoothstep(fade.x, fade.y, d)) * forbOn;
     if (s < 0.01 || B.z <= 0.0) { gl_Position = vec4(0.0, 0.0, 2.0, 1.0); return; }
+    float gd = distance(iPos.xz, glow.xy);   // the glow: the species' weight, the gain, fading with the distance from the body, a boost for the nearest few
+    vGlow = glowSp[sp] * glow.w * pow(clamp(1.0 - gd / max(glow.z, 0.01), 0.0, 1.0), 1.2) * (1.0 + 0.8 * (1.0 - smoothstep(0.0, 0.15 * glow.z, gd)));
     float sc = iPos.w, yaw = iVar.z + aQuad * 1.5707963;
     float c = cos(yaw), sn = sin(yaw);
     vec3 p;
@@ -213,8 +217,8 @@ const VERT = /* glsl */`
     gl_Position = projectionMatrix * viewMatrix * vec4(p, 1.0);
   }`;
 const FRAG = /* glsl */`
-  uniform sampler2D atlas; uniform vec3 wxGround;
-  varying vec2 vUv; varying vec3 vSun; varying vec3 vAmb; varying vec3 vT; varying vec3 vIn; varying float vFade; varying float vDiff;
+  uniform sampler2D atlas; uniform vec3 wxGround; uniform vec3 glowCol;
+  varying vec2 vUv; varying vec3 vSun; varying vec3 vAmb; varying vec3 vT; varying vec3 vIn; varying float vFade; varying float vDiff; varying float vGlow;
   void main() {
     if (vFade < 0.995 && fract(52.9829189 * fract(dot(gl_FragCoord.xy, vec2(0.06711056, 0.00583715)))) >= vFade) discard;
     vec4 t = texture2D(atlas, vUv);
@@ -222,6 +226,11 @@ const FRAG = /* glsl */`
     vec3 alb = pow(t.rgb, vec3(2.2));
     alb = mix(alb, vec3(0.7, 0.73, 0.78), wxGround.z * 0.6);   // lying snow (weather.js)
     vec3 col = (alb * (vSun * (0.4 + 0.6 * vDiff) + vAmb) + alb * alb * vSun * 0.15) * 0.3183099;
+    // the forager's glow (forage.js): the plant lit warm against the light of the hour, by the leaf's own tone and its
+    // texel's alpha, so the picture's structure stays under the light and the mip-averaged haze of a dense card a few
+    // metres off is lit less than its leaves (a halo from the alpha skirt under the cut, and a glow strongest at the
+    // soft edges, were tried first: both lit that haze into a yellow block)
+    if (vGlow > 0.0) col += glowCol * vGlow * dot(vSun * 0.5 + vAmb * 1.5, vec3(0.3333)) * 0.3183099 * 0.6 * (0.35 + 0.65 * smoothstep(0.3, 0.8, t.a)) * (0.4 + 0.6 * min(1.0, dot(alb, vec3(0.3333)) / 0.2));
     gl_FragColor = vec4(col * vT + vIn, t.a);
     #include <tonemapping_fragment>
     #include <colorspace_fragment>
@@ -233,7 +242,8 @@ export class Forbs {
     this.cache = new Map(); this.last = null; this.month = -1; this.season = 'summer'; this.states = [];
     this.uniforms = { ...windUniforms, ...groundUniforms, ...atmo, atlas: { value: null }, fade: { value: new THREE.Vector2(...FADE) },
       kParams: { value: new THREE.Vector2(D0, KMIN) }, spBox: { value: FORB_SPECIES.map(F => new THREE.Vector4(F.boxW, F.boxH, 0, 0.03)).concat(Array.from({ length: GS_MAX - FORB_SPECIES.length }, () => new THREE.Vector4())) },
-      forbOn: { value: 1 } };
+      forbOn: { value: 1 },
+      glow: { value: new THREE.Vector4(0, 0, 1, 0) }, glowSp: { value: new Float32Array(GS_MAX) }, glowCol: { value: new THREE.Color(1, 0.76, 0.34) } };   // the forager's food (forage.js writes them)
     // geometry: two crossed upright quads (x across, uv.y up) and one on the ground, 12 vertices
     const g = new THREE.InstancedBufferGeometry(), pos = [], uv = [], quad = [], idx = [];
     for (let q = 0; q < 3; q++) {
