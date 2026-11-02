@@ -2929,3 +2929,33 @@ every lane depends on are made once, by him, before any lane starts. Decided:
   together since they share no file; the social screen after the first merges; group travel after those;
   video and audio last.
 
+## 2026-11-01: the hub built (lane 2 of docs/multiplayer.md, branch claude/mp-hub-54b819)
+
+The hub is `hub.py` beside `server.py`, mounted by a two-line hook in `do_GET` and `do_POST`, with the
+WebSocket framing and threads factored into `ws.py` for both it and the acorn game. Decided where the design
+was silent (the details are under lane 2's "Built" note in `docs/multiplayer.md`):
+
+- **PBKDF2 where there is no scrypt.** This machine's Python (3.9, LibreSSL) has no `hashlib.scrypt`, and the
+  rule is no new dependency, so the hash is scrypt where Python has it, else PBKDF2-HMAC-SHA256 at 600,000
+  iterations (0.2 s here); the stored hash names its algorithm and a sign-in rehashes to the preferred one.
+  Rejected: a pure-Python scrypt (seconds per sign-in), a dependency.
+- **Recovery codes** are 16 characters (80 bits) from an alphabet without look-alikes, so an unsalted
+  SHA-256 is enough; a recovery ends every other session, since whoever had the old password may hold one.
+- **A session's last_seen is kept to the day** and the session slides once a day: the table holds when an
+  account was last used to the day, not when anyone played. `PRAGMA secure_delete` is on, so a pruned chat
+  line or an ended session is overwritten in the file rather than left in a free page.
+- **Presence turned down** (the doc's "a user can turn presence down to online-only") needed a column:
+  `users.presence`, set by a new `me` message along with the display name and findability.
+- **A user may be in several groups**; chat and `place` name the group when it is ambiguous, and a position
+  goes to the members of any of the sender's groups in the same room. A group is made from friends.
+- **Discord is one path** (the redirect and the return are both `/api/hub/oauth/discord`, as the design names
+  the redirect Aaron registers); a signed-in user going through it links the identity.
+- **Cross-site requests are refused** by the `Origin` header (a page elsewhere could otherwise open the hub
+  socket with the visitor's cookie, or sign them in to another account).
+- **The game's framing fix.** `recv` returned a ping that arrived between a message's fragments and lost the
+  fragments before it; pings are now answered inside `recv`. Browsers do not fragment small messages, so
+  the game's behaviour is otherwise the same, and its client is untouched.
+- **Tests run the real server** on a free port with the hub's data and the tiles in a temporary folder, and
+  finish by reading the database file's bytes and the captured log for the tile ids, the position's
+  numbers, the chat, the password and every name used.
+

@@ -197,6 +197,52 @@ together. Lane 3 needs lane 1's screen in main; lane 4 needs 1 to 3. Lane 5 is l
    ways, a group, a chat line, an invite, a position relayed to a group member in the same room and to no
    one else, counts, and that nothing but the tables above is written. Done when the tests pass and the
    acorn game still runs over the factored framing.
+
+   **Built (2026-11-01, branch `claude/mp-hub-54b819`).** `ws.py` (`WsConn`, `ws_frame`, `ws_upgrade`: the
+   one handshake both endpoints call), `GameConn` on it unchanged in behaviour (one fix: a ping between the
+   fragments of a message no longer loses the message); `hub.py` mounted by `hub.handle()` from `server.py`'s
+   `do_GET` and `do_POST`; `tests/test_hub.py` and `tests/wsclient.py` (`.venv/bin/python -m unittest
+   tests.test_hub`, 11 tests, about 19 s). Verified: the tests; the acorn game in the viewer over the
+   factored framing ("1 player here · animals run here", the AI host's events accepted); a `curl` sign-up,
+   sign-in and `me`, and the hub socket opened with the cookie. Not verified: Discord against Discord itself
+   (no application is registered; the flow is tested with the exchange stubbed), a browser on the hub socket
+   (lane 3 brings one). What lane 3 needs to know, where the protocol above was silent or had to grow:
+   - **Passwords** are hashed by `hashlib.scrypt` where Python has it; this machine's Python 3.9 is built on
+     LibreSSL and has none, so there it is PBKDF2-HMAC-SHA256 at 600,000 iterations. The hash names its
+     algorithm and a sign-in rehashes to the preferred one, so a move to a host with scrypt upgrades quietly.
+   - **HTTP answers.** `signup` -> `{you, recovery: [6 codes]}`; `signin` -> `{you}`; `recover {name, code,
+     password}` -> `{you, left}` (it also ends every other session and closes their sockets); `me` -> `{you}`
+     or 401; errors are `{error, field?}` with 400, 401, 403, 404, 409 (name taken) or 429 (limited). `you` is
+     `{id, name, display, findable, presence, password: bool, providers: [...]}`. `config` -> `{hub,
+     providers}`, where providers lists only external ones (`discord` when both keys exist; the password
+     form is always there). A request whose `Origin` is another host is refused (403), the socket too.
+   - **Discord** is one path: `GET /api/hub/oauth/discord` without `code` redirects to Discord (state in a
+     short `we_oauth` cookie); Discord sends the browser back to the same path, which redirects to
+     `/client/?signin=discord` (or `?signin=failed`). The redirect URI to register is
+     `<origin>/api/hub/oauth/discord` (`HUB_ORIGIN` in `.env` overrides the Host header). A signed-in user
+     who goes through it links Discord to the account; otherwise the Discord username (lower-cased, to the
+     name rules, numbered if taken) is the name and its global name the display.
+   - **Messages added:** `me {display?, findable?, presence?: 'tile'|'online'}` -> `me {you}` (the doc's
+     changeable display name and presence turned down; a `users.presence` column holds the choice);
+     `placed {id, tile, season, to}` back to the picker; `answer {invite, from, join}` to the picker;
+     `found` carries `q`. `err` carries `re` (the `t` it answers) and `field` where there is one.
+   - **Several groups.** A user may be in more than one group, so `chat {scope: 'group'}` and `place` take
+     an optional `group` (required when in several); chat out carries `group`. `pos` goes to members of any
+     of the sender's groups in the same room. `invite` carries `group`; its `season` is the tile's by the
+     calendar (meteorological, the south six months on).
+   - **Shapes.** `welcome.online` is `[{user, state, tile?}]`; `requests` are `{id, name, display, dir:
+     'in'|'out'}`; each group is `{id, name, created_by, members: [{id, name, display}]}` and in `welcome`
+     also `messages: [{from, text, at}]` (the last 50). Tile chat carries `name` (the sender's display) since
+     the room's people may be strangers. `at` is Unix seconds. A position is rounded to the centimetre.
+   - **Rules chosen:** a group is made from accepted friends; any member adds a friend, the creator removes,
+     any member renames; when the creator leaves the longest-standing member becomes the creator; the last
+     to leave deletes the group and its chat. A request to someone who already asked you accepts. A blocker
+     can still find the one they blocked (to unblock); blocks cut friendship, presence, chat, positions and
+     invites both ways, and a group's chat history hides the blocked one's lines. Search: 20 results at
+     most, one a second with a burst of five per user.
+   - **Open:** Google and Apple; a hub-level ban list; the per-address limit uses the socket's address, so
+     behind a proxy it needs `X-Forwarded-For` handled; the cookie is `Secure` only when
+     `X-Forwarded-Proto: https` says so.
 3. **The social screen** (client). `account.js` (the sign-in modal, sign-up, recovery), `social.js` (the
    avatars row, the list, search, requests, groups), `chat.js` (the input and the fading pane), the two
    toggles, all on the earth screen and carried into the world's HUD (the avatars, the chat), over

@@ -228,6 +228,10 @@ browser stays the renderer.
   form above and behind the picker), video and audio last. The hub beside `server.py` with SQLite;
   positions relayed to group members in the same tile and persisted nowhere; a place is a tile. Lanes in
   order: the title and the earth, the hub, the social screen, group travel, video and audio.
+  The hub (lane 2) is built (2026-11-01, branch claude/mp-hub-54b819): `ws.py` shared by the game and the
+  hub, `hub.py` (accounts, recovery codes, Discord when its keys exist, sessions, friends, blocks, groups,
+  group chat, presence, rooms, counts, the position relay, invites), `tests/test_hub.py`. Next: lane 3 (the
+  social screen) over `client/src/hub.js`; Discord needs Aaron's application registered.
 
 ## Then
 
