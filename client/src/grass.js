@@ -174,7 +174,7 @@ const COMMON_VERT = /* glsl */`
   ${WIND_GLSL}
   ${GROUND_GLSL}
   uniform vec2 nearFade; uniform vec2 closeFade; uniform vec2 groundFade; uniform vec2 midIn; uniform vec2 impIn; uniform float impW;
-  uniform float groundK; uniform float matchOn; uniform float tiltOn;
+  uniform float groundK; uniform float matchOn; uniform float tiltOn; uniform float widenOn;
   uniform float heightScale; uniform float heads; uniform float thatch; uniform float leafScale; uniform float dry;
   uniform vec3 aRoot; uniform vec3 aTip; uniform vec3 aHead; uniform vec3 aAwn;
   uniform vec3 bRoot; uniform vec3 bTip; uniform vec3 bHead; uniform vec3 bAwn; uniform vec3 thatchCol;
@@ -299,12 +299,19 @@ const NEAR_VERT = /* glsl */`
     // Distance LOD (collapsed triangles never reach the tiler, and sub-pixel triangles are what
     // this GPU pays for): main-tier clumps thin to 40% from 30 to 80 m, leaves to half from 25 to
     // 50 m, awns go once sub-pixel. The grazing view keeps the far band looking full regardless.
-    // Far blades are NOT widened: tried, and the fattened blades cost ~4 ms of overdraw. A clump
-    // handing over to its card stays whole until it does, so the two match.
+    // Cover held as a tier thins (2026-11-01, AMD's width *= max / count, docs/grass-notes.md): the blades that survive
+    // a thinning (the tier's hand-over band, the main tier's clump and leaf cuts) are widened in view space by the
+    // square root of what was cut (at most 1.8x), so the sward keeps its cover while the count drops; a full 1 / keep
+    // was tried before and cost ~4 ms of overdraw. A clump handing over to its card stays whole until it does, so the
+    // two match, and is not widened.
+    float wf = 1.0;
     if (!hand) {
-      if (code < 1.5) s *= step(h11(seed * 41.3), mix(1.0, 0.4, smoothstep(30.0, 80.0, d)));
+      float kc = 1.0, kl = 1.0;
+      if (code < 1.5) { kc = mix(1.0, 0.4, smoothstep(30.0, 80.0, d)); s *= step(h11(seed * 41.3), kc); }
       if (part > 2.5) s *= step(d, 25.0 + 10.0 * hb);
-      if (part < 0.5) s *= step(hb, mix(1.0, 0.5, smoothstep(25.0, 50.0, d)));
+      if (part < 0.5) { kl = mix(1.0, 0.5, smoothstep(25.0, 50.0, d)); s *= step(hb, kl); }
+      float kb = 1.0 - smoothstep(dOut - w, dOut + w, d);   // the tier's own hand-over: what is left of it here
+      wf = mix(1.0, min(inversesqrt(max(kc * kl * max(kb, 0.3), 0.05)), 1.8), widenOn);   // widenOn 0: A/B timing
     }
     if (s < 0.01 || offscreen(iPos.xyz, 0.6 * max(iVar.y, iVar.x))) { gl_Position = vec4(0.0, 0.0, 2.0, 1.0); return; }
     vec3 p = position;
@@ -325,6 +332,12 @@ const NEAR_VERT = /* glsl */`
     vec2 off = (windDir * b + vec2(-windDir.y, windDir.x) * fl) * t * t * max(H, 0.2);
     w3.xz += off; w3.y -= 0.5 * dot(off, off) / max(H, 0.2) * t;   // roughly keep the blade's length
     vec3 wp = iPos.xyz + w3;
+    // the widening: the vertex is pushed out on its side of the blade along the camera's right, by the extra half width
+    // (the blade's own half width by part and taper, times wf - 1), so an edge-on blade never collapses to a sliver either
+    if (wf > 1.001) {
+      float hwid = (part < 0.5 ? 0.0075 * (1.0 - 0.85 * pow(t, 1.8)) : part < 1.5 ? 0.0023 * (1.0 - 0.35 * t) : part < 2.5 ? 0.005 : 0.0012) * iVar.x;
+      wp += vec3(viewMatrix[0][0], viewMatrix[1][0], viewMatrix[2][0]) * (aBlade.w * hwid * (wf - 1.0));
+    }
     // papery glumes and awns glow against the sun
     // groundMatch is linear in the colour, so a factor G. Last year's grey thatch takes only its
     // brightness far off: through the green mean's ratios it turned rust-red.
@@ -644,7 +657,7 @@ export class Grass {
     this.mixCache = new Map();   // species mix row (or -habitat class) -> the cell's grass species by type (speciesMix)
     const col = () => new THREE.Color();
     this.uniforms = {
-      ...windUniforms, ...groundUniforms, groundK: { value: 1.12 }, matchOn: { value: 1 }, tiltOn: { value: 1 },
+      ...windUniforms, ...groundUniforms, groundK: { value: 1.12 }, matchOn: { value: 1 }, tiltOn: { value: 1 }, widenOn: { value: 1 },
       nearFade: { value: new THREE.Vector2(...NEAR_FADE) }, closeFade: { value: new THREE.Vector2(...CLOSE_FADE) },
       groundFade: { value: new THREE.Vector2(...GROUND_FADE) }, midIn: { value: new THREE.Vector2(...MID_IN) },
       impIn: { value: new THREE.Vector2(...IMP_IN) }, impW: { value: IMP_W }, bodyFade: { value: new THREE.Vector2(2, 3) },
