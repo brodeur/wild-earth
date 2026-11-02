@@ -14,6 +14,8 @@ import * as THREE from 'three';
 // compute them from the array later. A released attribute cannot be uploaded again: never set needsUpdate on it,
 // clone it, or dispose the geometry and draw it again. A geometry never drawn keeps its arrays (the callback never
 // runs), so an entry only ever drawn far away costs what it always did.
+// A lost WebGL context is the one event three would upload everything again after (its context restore): the world cannot
+// be drawn again then, so main.js builds it again in its place when the context comes back.
 //
 // releaseTexture(t): a DataTexture or DataArrayTexture's image bytes and mip levels are dropped once three has
 // uploaded them (Texture.onUpdate, called at the end of WebGLTextures.uploadTexture); dropTextureData(t) drops them

@@ -2929,3 +2929,47 @@ every lane depends on are made once, by him, before any lane starts. Decided:
   together since they share no file; the social screen after the first merges; group travel after those;
   video and audio last.
 
+## 2026-11-01: the `byteLength` error at load was a lost WebGL context; the world is built again when it comes back
+
+Seen on the home tile at 37cd57b and e975425: once, during or just after the build, the shadow pass threw
+`TypeError: Cannot read properties of null (reading 'byteLength')` in three's `createBuffer` (`WebGLAttributes.update`,
+from `Shadows.update`, shadows.js:514, from `frame`), and the frame loop died with it (main.js requests the next frame
+at the end of `frame`), which is why it was seen once. `createBuffer` runs only for an attribute the renderer holds no
+buffer for, and the released geometries (gpuRelease.js, 2026-10-27) have no array to upload again, so the question was
+what makes three upload a released attribute a second time. Not a dispose and redraw: with `BufferGeometry.dispose`
+hooked, four loads of the home tile (direct, and through the opening screen with a card switch) disposed no released
+geometry; and the earlier check that every null-array geometry in the main scene "still carries its dispose listener"
+told nothing, because `WebGLGeometries.get` adds the listener again right before the upload that throws, and an
+emptied `_listeners.dispose` array is still truthy. The cause: a lost WebGL context given back. `forceContextLoss()`
+then `forceContextRestore()` on the page's renderer reproduces the stack exactly (three.module.js:70:22 is
+`array.byteLength` in `createBuffer`; the shadow pass first, since it renders before the screen pass): on the restore
+three makes new `WebGLAttributes`, `WebGLGeometries` and `WebGLTextures`, every geometry is uploaded again, and the
+first released one throws. What loses a context in play: Chromium holds at most sixteen WebGL contexts a process and
+loses the oldest past that, giving it back when one goes (verified in the pane: eighteen scratch contexts opened in the
+page lost the page's own). The viewer opened a context per world build (the impostor bake's own `WebGLRenderer`, lost
+at the end of the bake) besides the page's, the opening screen's wisp another, each lineup page one, and several viewer
+tabs ran side by side, so the oldest viewer's context went when a later page baked. A GPU reset loses a context the
+same way.
+
+The fix, in three parts. main.js: on `webglcontextlost` the frames hold (`w.lost`; three draws nothing on a lost context
+anyway, and the status says so); on `webglcontextrestored` the world is built again in its place, where the player
+was, with its season and day, through the tile switch path (`switchWorld` takes a tile-local `xy` now, carried in
+`arrive.xy`), or behind the opening screen through the screen's own select (`reselect`); the player arrives as the
+spirit, as after a tile switch. impostorBake.js: `bakeSteps(input, renderer)` bakes on the page's renderer into a
+render target of its own, putting the target, clear colour and alpha back after each step (the frames drawn between
+the sliced steps are untouched; a render target has no tone mapping and a linear output on either renderer, so the
+atlas is the same), so a build opens no context of its own; without a renderer it opens one as before (the lineups).
+And a bug in the way: `Terrain.dispose` read `G`, a name local to `build`, so every tile switch since the water commit
+(dba8539, 2026-10-29) ended in "error: G is not defined" with the old world half torn down; it reads `groundUniforms`.
+gpuRelease.js's header names the context restore as the one event three would upload everything again after.
+
+Verified in the worktree viewer (port 8786): five direct loads of the home tile with no `byteLength` error, the
+cascades rendering from the first frames (109 cascade-0 renders by frame 938 on the first), 64 of the 100 terrain
+chunks' arrays released by the first frame and 94 a few hundred frames on (the rest not drawn yet), the far layer baked on
+the page's renderer (202,139 far trees drawn). A forced loss in the world: the frames held (the frame counter still at 1511 after 0.8 s), the
+status line showed; a forced restore: the old world disposed in 22 ms and the same tile built again, the spirit
+arriving at the fox's point (x 4980, z -5023), no error. Behind the opening screen the same loss and restore built the
+chosen card's world again behind it; and the card switch that failed on `G` builds the second card's world. Cost: a
+loss costs a rebuild (as a tile switch does) and the body: the player comes back as the spirit where they were. Open:
+the opening screen's wisp loop still runs a renderer of its own (one a page, closed with the screen); a lost context
+that is never given back leaves the status line up for good.

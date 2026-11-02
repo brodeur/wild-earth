@@ -260,12 +260,13 @@ async function replaceWorld(id, opts) {
 // status (html.switching: the HUD hidden, the panel and its Location box kept, so another Go can abandon this build
 // for another tile's), and the tile holding the point is built in its place and entered there, the season and day
 // carried over: no reload, no URL change.
-async function switchWorld(id, point, params) {
+// xy: a tile-local { x, north } to arrive at instead (the world built again after a lost context, where the player was).
+async function switchWorld(id, point, params, xy = null) {
   const carry = world?.carry?.() || world?.arrive || {};   // the world's season and day; a build's, before it has them
   html.classList.add('switching'); html.classList.remove('arriving');
   renderer.setClearColor(0x000000, 1); renderer.clear();
   let w = null;
-  try { w = await replaceWorld(id, { params, pending: point, arrive: { season: carry.season, date: carry.date, point } }); }
+  try { w = await replaceWorld(id, { params, pending: point, arrive: { season: carry.season, date: carry.date, point, xy } }); }
   catch (e) { console.error(e); $('status').textContent = `error: ${e.message}`; $('status').classList.remove('hidden'); goto.say(`could not load ${id}`, true); return; }
   if (w) goto.say('');   // it entered itself (buildSteps, arrive)
 }
@@ -280,6 +281,7 @@ async function main() {
   const direct = params.get('game') === '1' || params.get('skip') === '1';
   html.classList.toggle('opening', !direct);
   let tileId = params.get('tile');
+  let reselect = null;   // the opening screen's select, for a world built again after a lost context (below)
   if (pending && !tileId) tileId = await builtTileFor(pending);   // null -> loader picks the first tile
 
   renderer = new THREE.WebGLRenderer({ antialias: true, powerPreference: 'high-performance', stencil: true });   // stencil: the herd silhouettes mask out the herd's own bodies (herdSilhouette.js)
@@ -287,6 +289,23 @@ async function main() {
   renderer.toneMapping = THREE.ACESFilmicToneMapping; renderer.outputColorSpace = THREE.SRGBColorSpace;
   document.body.prepend(renderer.domElement);
   window.__weRenderer = renderer;   // debugging: GPU memory (renderer.info) with or without a world
+  // The WebGL context lost and given back (Chromium loses a process's oldest context once it holds more than sixteen,
+  // a lineup page's, another viewer tab's, a bake's, and gives it back when one goes; a GPU reset does the same): three
+  // uploads every geometry and texture again on the context it gets back, and a built world has let go of the CPU
+  // side of its static ones (gpuRelease.js), so it cannot be drawn again (the first draw threw on a null array, in the
+  // shadow pass, and the frame loop died with it). So the frames hold while the context is gone, and when it is back
+  // the world is built again in its place: where the player was, with its season and day, as a tile switch builds;
+  // behind the opening screen, the chosen card's world is built again behind it.
+  renderer.domElement.addEventListener('webglcontextlost', () => {
+    if (world) world.lost = true;
+    if (!screenOpen) { $('status').textContent = 'the graphics context was lost; waiting for it…'; $('status').classList.remove('hidden'); }
+  });
+  renderer.domElement.addEventListener('webglcontextrestored', () => {
+    const w = world; if (!w) return;
+    if (screenOpen) { reselect?.(w.tileId); return; }
+    const f = w.m.flight, xy = f ? { x: f.pos.x, north: -f.pos.z } : null;
+    switchWorld(w.tileId, null, params, xy);
+  });
   fieldGuide.mount();   // the field guide's card and listeners are the page's (fieldguide.js), mounted before any world
   snapHud();
   // The Location box (goto.js) is the page's too: it flies within the world played, or switches the page to the tile
@@ -318,7 +337,7 @@ async function main() {
     if (pending) history.replaceState(null, '', `?tile=${tileId}`);   // never keep the point in the URL
     // a choice abandons the world before it (building, or ready behind the screen)
     let choice = null;
-    const select = async id => {
+    const select = reselect = async id => {
       choice = null;
       let w = null;
       try { w = await replaceWorld(id, { params, pending, direct }); } catch (e) { console.error(e); screen?.setPrep(id, `error: ${e.message}`); return; }
@@ -343,7 +362,8 @@ async function buildWorld(w, opts) {
   try { await buildSteps(w, opts); } finally { if (scope === w && !w.committed) scope = null; }
 }
 // pending: a lat/lon to land at, or null; direct: no opening screen, into the world at once; arrive: { season, date,
-// point } from a tile switch, entered at once when ready (the screen's Begin, or the direct paths' start, otherwise).
+// point, xy } from a tile switch (xy: a tile-local point instead of the lat/lon, the world built again after a lost
+// context), entered at once when ready (the screen's Begin, or the direct paths' start, otherwise).
 async function buildSteps(w, { params, pending, direct = false, arrive = null }) {
   const status = t => {
     if (w.dead) return;
@@ -376,7 +396,7 @@ async function buildSteps(w, { params, pending, direct = false, arrive = null })
   await w.next('vegetation');
   const veg = w.m.veg = new Vegetation(tile, scene, atmosphere); await w.sliced(veg.build(), 'vegetation');
   await w.next('impostors');
-  const far = new Impostors(tile, scene); await w.sliced(far.build(), 'impostors');
+  const far = new Impostors(tile, scene); await w.sliced(far.build(renderer), 'impostors');   // the bake renders on this renderer (impostorBake.js)
   await w.next('grass');
   const grass = w.m.grass = new Grass(tile, scene); await w.sliced(grass.build(), 'grass');
   const forbs = w.m.forbs = new Forbs(tile, scene, grass);   // the herbs: poppies, lupines, clover, filaree... within 45 m (forbs.js)
@@ -413,7 +433,7 @@ async function buildSteps(w, { params, pending, direct = false, arrive = null })
   // The scripted arrival (arrival.js); behind the screen the bird waits at its start so the forest streams in there.
   await w.next('arrival');
   const arrival = new Arrival({ flight, camera, heights: tile.heights, size: tile.size, caption: $('caption') });
-  const arrivePoint = arrive?.point ? localXY(tile, arrive.point.lat, arrive.point.lon) : null;   // null: the centre
+  const arrivePoint = arrive?.xy ?? (arrive?.point ? localXY(tile, arrive.point.lat, arrive.point.lon) : null);   // null: the centre
   if (screenOpen) { screen.onPoint = w.onPoint = p => { arrival.plan(p); arrival.hold(); }; arrival.plan(screen.point); }
   else if (arrive) arrival.plan(arrivePoint);
   if (!direct) { arrival.hold(); veg.update(flight.pos.x, flight.pos.z, true); }
@@ -801,6 +821,7 @@ async function buildSteps(w, { params, pending, direct = false, arrive = null })
   const readyAt = performance.now();
   function frame(now) {
     if (w.dead) return;   // torn down (an abandoned build behind the screen): its loop ends here
+    if (w.lost) { requestAnimationFrame(frame); return; }   // the context is gone (main): nothing can be drawn; built again when it is back
     if (screenOpen) {   // behind the opening screen: a few frames a second, enough to stream the world in and compile shaders
       if (now - heldAt < 150) { requestAnimationFrame(frame); return; }
       heldAt = now;
