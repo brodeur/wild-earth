@@ -213,13 +213,21 @@ browser stays the renderer.
 - Species-level leaderboard per world (tile plus season), persistent on the server.
 - Needs: acorn woodpecker added to the species list and pipeline; an authoritative game
   server (the dev server grows into it; Rust is the candidate for the real node);
-  WebSocket multiplayer; AI behaviour trees driven by the activity calendar.
+  WebSocket multiplayer (designed 2026-11-01: `docs/multiplayer.md`); AI behaviour trees driven by the activity calendar.
 
 - Water, next: the ponds' drawdown ring and basin checked in the client; the raven's frame rate
   over the creek; the emergents' far tier and their look against references (the tule and rush
   pictures read dark against the water); the stones' contrast on the dry beds from the chase
   camera; the other tiles rebuilt with `--steps water`; a water temperature from
   `relations.shades_water`; the animals' crossings at the bars (deer, raven) made deliberate.
+
+- Multiplayer, designed 2026-11-01 (`docs/multiplayer.md`, from Aaron's spec): the title on stars, the earth
+  rising as a crescent, the sign-in (username and password, Discord; Google and Apple greyed until their
+  keys exist), the lit earth with a dot per built tile and a list of the places in view sorted by how many
+  players are in each, friends and groups, the chat, going somewhere together (the joiners arrive in spirit
+  form above and behind the picker), video and audio last. The hub beside `server.py` with SQLite;
+  positions relayed to group members in the same tile and persisted nowhere; a place is a tile. Lanes in
+  order: the title and the earth, the hub, the social screen, group travel, video and audio.
 
 ## Then
 

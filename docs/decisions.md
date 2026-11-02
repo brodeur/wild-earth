@@ -2900,3 +2900,32 @@ block (`LG`, `legRow`, the level matrix, the engine call) and the `end()` loop a
 import, `meshFor` (LegsBody), `useSpecies` (reset), the stalk's pose line, `draw` (the level matrix, the engine
 instead of driveClips for a legs body, the turn table); `animalModels.js` the skin shader's SKIN_LIVE branch, `skinDecl`,
 `loadClips` / `loadTiers` / `restOnlySkin` (the live rows, `model.legs`, `model.live`), the four loaders.
+
+## 2026-11-01: multiplayer designed before it is built (docs/multiplayer.md)
+
+Aaron's spec of 2026-11-01 (the title on stars, the earth rising as a crescent, the sign-in, the lit earth
+with dots and a list of places by players, friends and groups, the chat, going somewhere together, video
+and audio toggles) is written up as a design in `docs/multiplayer.md` with a lane plan, so the decisions
+every lane depends on are made once, by him, before any lane starts. Decided:
+
+- **Sign-in:** username and password first, with no email address asked for (recovery codes shown once at
+  sign-up stand in for a reset by email), and Discord through the `identify` scope only; Google and Apple
+  drawn greyed until their keys exist. The application registrations are Aaron's to make; the keys live in
+  the git-ignored `.env` like `MESHY_API_KEY` and are never printed.
+- **The hub:** one process beside `server.py` (in it, for now) with SQLite at `data/hub.sqlite`, mounted
+  at `/api/hub/*` and `/api/hub/ws`; the WebSocket framing factored out of `GameConn` into `ws.py` and
+  shared. The acorn game's world and the hub never share an id. A public host is a later, separate step.
+- **Privacy, restated.** The rule was "never store a player id beside a position". Groups need positions
+  shared live and the places list needs a count per tile, so the rule becomes: a position is relayed to
+  the group members in the same tile and persisted nowhere, not logged, gone when the connection closes;
+  the places list is counts per tile, never who; presence is a tile id at most. Rejected: a presence table
+  or a last-seen tile in the database (nothing in the tables is a place or a time of play).
+- **A place is a tile.** "Go to Placerville, five other people are there": the dots on the earth are the
+  built tiles, the list is sorted by the hub's count for each. Regions can group tiles later.
+- **The season** on the earth is the real one at the tile; the opening screen's season slider does not
+  come across (the HUD's control stays for play). The dev paths (`?skip=1`, `?as=`) bypass the title, the
+  sign-in and the hub, so the viewer stays verifiable from a URL.
+- **Lanes:** the title and the earth (client, against a stub hub) and the hub (server, with tests) run
+  together since they share no file; the social screen after the first merges; group travel after those;
+  video and audio last.
+
