@@ -3968,3 +3968,70 @@ No console errors on either tile.
 Not done here: the meadow belt on the valley floor is mostly broadleaf (LANDFIRE's mix there: alder, willow,
 cottonwood, bay, ash, valley oak), so the ponderosa and incense cedar giants that stand over the real valley's
 meadows are few near them; sugar pine and white fir are not in the library.
+
+
+## 2026-11-02: cliffs with sharp geometry: a cliff material by rock class, slabs on the faces, and the rims left as measured (branch claude/cliff-geometry-1d20bb)
+
+Aaron: "Yosemite's cliffs look 'soft' because of their repeating patterns and lack of sharp geometry." Diagnosed in the
+viewer on `utm11n_267_4175` (El Capitan from the meadow at the raven's height and from the valley floor at a deer's
+eye, Half Dome's north-west face from the air, the walls above Yosemite Falls) against photographs of El Capitan
+(Wikimedia Commons: the sheeted face, its near-vertical joints and dihedrals, the dark water streaks, the pale scars of
+recent falls, the hard rim). Three things were soft: the texture (past ~35 degrees the photo is a smear stretched down
+the face, and the 2026-10-28 rule laid one set of 7 m and 2.6 m bands over it, the same for granite and a road cut),
+the geometry (a 10 m mesh of a DEM whose cliffs are smoothed: the 900 m wall is one surface, no edge, roof or ledge
+breaks it or throws a shadow), and, it was thought, the rims (the DEM's mosaic leaves "about 10 m of noise" there).
+
+- **A cliff material, by rock class, without repetition** (terrain.js CLIFF_GLSL cliffShade). On ground past 42-55
+  degrees, held off vegetated ground below 60 (tree or shrub cover, the habitat's oak and chaparral), the face is
+  painted in place of the photo at every distance: a base colour per rock pattern (groundDetail.js CLIFF_PATTERN from
+  geology.png's rock class, carried in the detail mask's A channel, which held a road weight nothing read: 1 sheeted
+  granite, pale; 2 bedded slate, schist and sandstone, grey-brown; 3 blocky greenstone and volcanic rock, dark; 0
+  without geology); 100 m bands; arching exfoliation scars at 22 m and 99 m spacings, a quarter of the small lines and
+  a third of the big ones kept in runs, each with a shadow line, a recess facing down below it and a lip above; dark
+  water-streak zones tens of metres wide and hundreds tall with 2 m ribbons in them; lichen on granite; a 15-40 m bulge
+  field tilting the light so a wall seen from the meadow is not one tone; a third of the photo's own light and dark
+  kept. The metre scale is two made layers in the detail array (groundDetail.js cliffLayerSteps: sheeted granite with
+  two near-vertical joint sets and diagonal dihedrals; bedded slate with beds dipping 27 degrees and cross joints;
+  cracks tapered to their tips, the albedo and normal dithered to 8 bits), hex-tiled (each cell of the triangle grid
+  turned +-14 degrees, half of them about, and shifted by its hash; three copies blended), on the two vertical planes
+  blended by facing, at the layer's repeat within ~0.1 m a pixel and again at 10x out to ~0.7 m a pixel. cliffOn 0
+  gives back the 2026-10-28 rule for A/B.
+  Mistakes on the way, each seen in captures: the face fields keyed on a dot of the world position (thousands of
+  metres out) with the per-pixel normal marbled every pattern into wood grain (a degree's turn of the normal moves the
+  coordinate tens of metres; now two world axes blended by facing, as a triplanar blend); the sheet-edge spacing taken
+  from a noise drew contours of the noise down the wall; three sheet steps a repeat in the joint layer tiled into ruled
+  lines every 1.3 m; the layer's cracks were never drawn (a typed array drops a write at a fractional index); the top-
+  down projection laid joints like straw on 45 degree slopes.
+- **Slabs and wedges on the faces** (cliffs.js). The texture cannot break a silhouette or throw a shadow, so over
+  every face past ~55 degrees (the 1 m ground over +-4 m and the 5 m heights over +-6 m past 48; none on vegetated
+  ground below 62) a 15 m lattice per 30 m cell places a group of instanced, flat-shaded slabs shaped by the rock's
+  pattern: granite big facets (sheets and buttresses 8-25 m along, 12-40 m up, 2-6 m thick, heavy-tailed, edges near
+  the joint sets, one in eight on the diagonal set, roofs as wedges one in five, a second sheet further out on a third),
+  bedded rock as tilted beds, blocky rock as cubes. Each slab is pushed back along the normal until nine points of its
+  back face are 0.25 m inside the ground (the vertical gap times the normal's y, exact for a plane), so no gap shows and
+  the heightfield is not edited (the brief asked for the mesh to be displaced toward the blocks; seating the blocks in
+  the ground does the same with no change to the terrain, its footing or the fine and micro meshes); a slab standing
+  under 0.4 m or over 7 m out is dropped. Drawn with the terrain's cliff material and a per-slab tone (one in six the
+  pale rock of a recent fall), casting into all three shadow cascades with back faces. Cached per cell, rebuilt every
+  150 m of camera travel in 2.5 ms slices into staging arrays and swapped whole; within 800 m every slab, to 2.2 km
+  the big ones, the small ones thinned by a per-slab hash; no per-frame allocation. The first pass laid 30 slabs of
+  2-10 m in a cell: from below the faces read as paving, each slab a dash of shadow; few big facets read better.
+- **The rims, measured and left as they are.** On the 5 m heights the rims are already near the grid's limit: the
+  knee (the run from 2 m to 25 m under the plateau) is a median 14 m, about three samples, and the edge's position
+  wanders a median 2.5 m RMS over 40 m along the rim (p90 6.3 m; 189 rim points) - not 10 m. At El Capitan's rim the
+  plateau sample is at 2147 m and the next one down at 2107 m. Two rules for an edit on the decoded heights were built
+  and measured (each sample at a knee snapped from rim-averaged profiles: raised to the plateau line, which widened
+  the knee from 23.5 to 24.5 m where it fired and built lips on domed plateaus; and snapped to the nearer of the
+  plateau and face lines, which narrowed it from 14.0 to 13.5 m), then lighting steep ground by its triangle's own
+  normal (under 1% of pixels changed by more than 8 levels, and those showed the 10 m mesh as slivers down the walls).
+  None was worth shipping; nothing of them is in the client. What softens a rim is the 10 m mesh drawing a 14 m knee in
+  one or two triangles; the slabs break the rims' silhouettes within a few hundred metres.
+- **Measured** (GPU timer query round each render, alternating the states, p10 of 24, 1920 x 1200, Yosemite at 15:00):
+  see the table in the report row of this branch. Texture units: the terrain's programs stay at 15; the slabs' at 7.
+  The micro patch's program asks for 17 (three.js warns "Trying to use 17 texture units"): that was so before this
+  branch (counted at the start, before any edit) and is not changed by it.
+- **Not done or not verified**: the slabs from 600 m and further read as small rectangles, not yet as the wall's own
+  big geometry; the near-vertical faces of El Capitan are still one smooth surface at a kilometre (the haze at 15:00
+  takes most of the contrast); talus at the foot of the walls is the rocks module's as before (nothing new placed where
+  the slope breaks); the slabs are drawn only (animals and the player stand on the heightfield under them); the frame
+  times in the pane are noisy (load average 13-19 from other lanes), so only the GPU-timed numbers are reported.
