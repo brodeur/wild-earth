@@ -653,7 +653,7 @@ export class Animals {
     this.clip = SPECIES.map((sp, k) => DRAWN[k] ? new Float32Array(sp.cap * 4) : null);   // aClip for the skinned models (deer, buck)
     this.bend = SPECIES.map((sp, k) => DRAWN[k] ? new Float32Array(sp.cap * 4) : null);   // aBend: their spine, head and legs' step in a turn
     this.debugIds = new Set(); this.debugN = 0;
-    this._legInp = { x: 0, y: 0, z: 0, yaw: 0, size: 1, v: 0, wr: 0, pose: 0, flick: 0, bend: 0, twitch: 0, air: false, terrain: (x, z) => this.heights.atXZ(x, z) };   // the leg engine's input (legs.js)
+    this._legInp = { x: 0, y: 0, z: 0, yaw: 0, size: 1, v: 0, wr: 0, pose: 0, flick: 0, bend: 0, twitch: 0, ears: NaN, air: false, terrain: (x, z) => this.heights.atXZ(x, z) };   // the leg engine's input (legs.js)
     const q = typeof location === 'undefined' ? new URLSearchParams() : new URLSearchParams(location.search);
     this.fixedDate = parseDate(q.get('date'));   // ?date=MM-DD: the month (lizards, ground squirrels, antlers) follows it
     this.feetMarks = q.get('feet') === '1';      // ?feet=1: the leg engine's plant points marked (legs.js FootMarks)
@@ -3540,6 +3540,27 @@ export class Animals {
     if (Math.abs(wrapAngle(a.wy - a.yaw)) < 0.05) a.wy = NaN;
   }
 
+  // The rabbits' states as the leg engine's pose and ears (gait.js hopStep; docs/movement.md "The rabbits"): the form
+  // is the crouch at -1 (in its scrape), the freeze crouched flat at -0.6 with the ears laid back, the sit-up the AI's
+  // pose (0..1) with the ears up and turning; a bolt lays them back and a brush rabbit's scut goes up (the white flash),
+  // the head no longer dipped by the flick that flashed it on the part rig. The zigzag stays the AI's.
+  lagoInput(a, I) {
+    const st = a.state;
+    if (a.sp === RB) {
+      if (st === B_FORM) { I.pose = -1; I.ears = -0.8; }
+      else if (st === B_FREEZE) { I.pose = -0.6; I.ears = -1; }
+      else if (st === B_SIT) I.ears = 1;
+      else if (st === B_BOLT) { I.ears = -1; I.twitch = 1; I.flick = 0; }
+      if (st !== B_SIT) I.pose = Math.min(I.pose, 0);
+    } else {
+      if (st === JK_FORM) { I.pose = -1; I.ears = -0.8; }
+      else if (st === JK_FREEZE) { I.pose = -0.6; I.ears = -1; }
+      else if (st === JK_SIT) { I.pose = Math.max(0, a.pose); I.ears = 1; }
+      else if (st === JK_BOLT) I.ears = -1;
+      else I.pose = Math.max(0, a.pose);
+    }
+  }
+
   // ---- brush rabbit -------------------------------------------------------------------------------
   // Out of cover (its form, a.hx/hz: under an oak or in the brush) at dawn and dusk to feed within ~7 m of it in short
   // hops, nibbling, now and then sitting up; in the form through the day. A low player inside ~22 m: it freezes; inside
@@ -3616,7 +3637,7 @@ export class Animals {
     a.pose = damp(a.pose, wantPose, 5, dt);
     if (wantFlick) a.flick = damp(a.flick, wantFlick, 8, dt);
     a.pitch = damp(a.pitch, speed > 0.05 ? -0.18 * Math.cos(a.phase) : tA ? -0.18 * a.amp * Math.cos(a.phase) : 0, 12, dt);
-    a.y = H.atXZ(a.x, a.z) + lift;
+    a.y = H.atXZ(a.x, a.z) + lift; a.hopY = lift;   // hopY: the bound's lift, which the leg engine draws itself (the drawn body stays on the ground)
   }
 
   // ---- black-tailed jackrabbit --------------------------------------------------------------------
@@ -3752,7 +3773,7 @@ export class Animals {
     a.pose = damp(a.pose, wantPose, a.state === JK_FREEZE ? 8 : 4, dt);
     if (wantFlick) a.flick = damp(a.flick, wantFlick, 6, dt);
     a.pitch = damp(a.pitch, speed > 0.05 ? -0.14 * Math.cos(a.phase) * Math.min(1, speed / 4 + 0.4) : tA ? -0.14 * a.amp * Math.cos(a.phase) : 0, 12, dt);
-    a.y = H.atXZ(a.x, a.z) + lift;
+    a.y = H.atXZ(a.x, a.z) + lift; a.hopY = lift;
   }
 
   // ---- California vole ----------------------------------------------------------------------------
@@ -4873,13 +4894,14 @@ export class Animals {
       // the skinned models (deer, buck) step round a turn and are drawn a beat behind it (animalModels.js turnFollow)
       // and so do the part rig's fox, coyote, lion and bear (PART_TURN; their legs' step: mmUpdate), and on the ground the
       // rodents, the gray squirrel and the ground birds (a.turnC: PART_TURN.rodent, .bird, .turkey; turnStep)
-      const sk = this.drawn[sp]?.model?.skin, LG = this.drawn[sp]?.legs;   // LG: the leg engine's pool (legs.js) for the fox, coyote, lion and bear
+      const sk = this.drawn[sp]?.model?.skin, LG = this.drawn[sp]?.legs;   // LG: the leg engine's pool (legs.js) for the fox, coyote, lion, bear and the two rabbits
+      const lago = !!LG?.P.hop;   // a rabbit on the engine's hop (gait.js hopStep): the body drawn on the ground, the bound's lift and rock are the engine's
       const TF = sk && !LG ? DEER_DRIVE : sp === FX || sp === CY || sp === ML || sp === BE ? PART_TURN : a.turnC;
       if (!TF && a.cs) a.cs.y0 = NaN;   // off the ground: the lag starts afresh when it is back
       const dyaw = TF ? turnFollow(TF, a.cs ||= makeClipState(), a.yaw, a.spd || 0, dt) : a.yaw;
       // a live body on the leg engine meets the slope with its legs: its matrix stays level (the far tier keeps a.pitch)
       const legRow = LG ? LG.row(a, d2, a.vis > 0 && !dead) : -1;
-      e.set(legRow >= 0 ? 0 : a.pitch, dyaw, a.roll, 'YXZ'); q.setFromEuler(e); p.set(a.x, a.y, a.z); s.setScalar(a.size * SPECIES[sp].scale * grow * a.vis);
+      e.set(legRow >= 0 || lago ? 0 : a.pitch, dyaw, a.roll, 'YXZ'); q.setFromEuler(e); p.set(a.x, lago ? a.y - (a.hopY || 0) : a.y, a.z); s.setScalar(a.size * SPECIES[sp].scale * grow * a.vis);
       m.compose(p, q, s); m.toArray(mesh.instanceMatrix.array, o * 16);
       const an = mesh.geometry.attributes.aAnim.array;
       an[o * 4] = dead && a.fall >= 1 ? -(1 + Math.min(0.999, a.decay || 0) + 2 * Math.round((a.fed || 0) * 15)) : a.phase % TAU; an[o * 4 + 1] = a.amp; an[o * 4 + 2] = a.pose; an[o * 4 + 3] = a.flick;   // a fallen body's phase channel carries its decay and the share eaten (carrion.js; animalModels.js DECAY_BODY)
@@ -4889,9 +4911,11 @@ export class Animals {
       if (sk && !LG) { driveClips(sk, DEER_DRIVE, a.cs, a.spd || 0, a.pose, a.flick, dt, this.clip[sp], o); bendOf(DEER_DRIVE, a.cs, a.spd || 0, a.yaw, sk, this.bend[sp], o); }
       else if (LG) {   // the leg engine (legs.js): live within reach, the baked cycles beyond; dead: bedded, on its side by the matrix
         const treed = a.state === M_CLIMB || a.state === M_DOWN || a.state === M_TREE;
-        this._legInp.x = a.x; this._legInp.y = a.y; this._legInp.z = a.z; this._legInp.yaw = dyaw; this._legInp.size = a.size * SPECIES[sp].scale;
-        this._legInp.v = dead ? 0 : a.spd || 0; this._legInp.wr = dead ? 0 : a.wr || 0; this._legInp.pose = dead ? 1 : a.pose; this._legInp.flick = dead ? 0 : a.flick;
-        this._legInp.bend = dead ? 0 : wrapAngle(a.yaw - dyaw); this._legInp.twitch = sp === ML ? a.e1 : 0; this._legInp.air = !dead && ((a.lift || 0) > 0.03 || treed);
+        const I = this._legInp;
+        I.x = a.x; I.y = lago ? a.y - (a.hopY || 0) : a.y; I.z = a.z; I.yaw = dyaw; I.size = a.size * SPECIES[sp].scale;
+        I.v = dead ? 0 : a.spd || 0; I.wr = dead ? 0 : a.wr || 0; I.pose = dead ? (lago ? -1 : 1) : a.pose; I.flick = dead ? 0 : a.flick;
+        I.bend = dead ? 0 : wrapAngle(a.yaw - dyaw); I.twitch = sp === ML ? a.e1 : 0; I.air = !dead && ((a.lift || 0) > 0.03 || treed); I.ears = NaN;
+        if (lago && !dead) this.lagoInput(a, I);
         LG.write(a, o, dt, legRow, this._legInp, this.clip[sp], this.bend[sp]);
       }
     }

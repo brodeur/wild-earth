@@ -85,8 +85,8 @@ function groundMoves(S) {
     on(alert, 'shift', c => g(c).sit > 0.5, { title: 'Shift held still' }),
   ].filter(Boolean);
 }
-// X: lie down, hunch or bask (S.rest), else grey (a bird's roost, a rodent's rest)
-const restOf = S => { const r = { bed: 'lie down', hunch: 'hunch', bask: 'bask' }[S.rest]; return r ? on(r, 'X', c => !!c.ground.resting) : no(S.rig === 'bird' ? 'roost' : 'rest', 'X'); };
+// X: lie down, hunch, freeze (the brush rabbit) or bask (S.rest), else grey (a bird's roost, a rodent's rest)
+const restOf = S => { const r = { bed: 'lie down', hunch: 'hunch', bask: 'bask', freeze: 'freeze' }[S.rest]; return r ? on(r, 'X', c => !!c.ground.resting) : no(S.rig === 'bird' ? 'roost' : 'rest', 'X'); };
 // the act's slot is "ready" (a warm edge) while a named food plant is within reach of a hungry body (needs.js plant: the glowing one under the nose, forage.js)
 const actOf = (name, title) => on(name, 'E', c => c.ground.actT > 0 || E(c), { ready: c => !!c.needs?.plant && c.needs.hunger < 0.98, ...(title ? { title } : {}) });
 

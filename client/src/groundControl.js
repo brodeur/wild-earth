@@ -107,7 +107,7 @@ export const GROUND = {
     half: 0.12, rad: 0.07, shoulder: 0.15,
     bound: v => v > 2 ? 0.9 : 0.32, lift: v => v > 2 ? 0.13 : 0.06, rock: 0.18,
     cam: { back: 1.0, up: 0.32, look: 0.8, aimUp: 0.15, side: 0.4, clear: 0.12, near: 0.06 },
-    act: { nibble: true, t: 3, word: 'nibbling' }, alert: { pose: 1 }, rest: null },
+    act: { nibble: true, t: 3, word: 'nibbling' }, alert: { pose: 1 }, rest: 'freeze' },
   lepus_californicus: { short: 'jackrabbit', common: 'black-tailed jackrabbit', model: 'jackrabbit', rig: 'rodent',
     walk: 1.2, run: 14, back: 0.6, ramp: 1.5, accel: 4, stop: 6, turn: 3, jumpH: 0.6, jumpL: 2.2, step: 0.2, wade: 0.07,
     half: 0.2, rad: 0.09, shoulder: 0.3,
@@ -290,7 +290,7 @@ export class GroundControl {
     const S = this.S, k = s => `<kbd>${s}</kbd>`;
     const space = S.flush ? `${k('space')} hop; from a run, flush and fly` : `${k('space')} jump`;
     const shift = S.alert.pushups ? 'push-ups' : S.alert.pose ? 'sit up' : 'alert';
-    const rest = S.rest === 'bed' ? ` · ${k('X')} lie down` : S.rest === 'hunch' ? ` · ${k('X')} hunch in a form` : S.rest === 'bask' ? ` · ${k('X')} bask` : '';
+    const rest = S.rest === 'bed' ? ` · ${k('X')} lie down` : S.rest === 'hunch' ? ` · ${k('X')} hunch in a form` : S.rest === 'freeze' ? ` · ${k('X')} freeze` : S.rest === 'bask' ? ` · ${k('X')} bask` : '';
     return `${k('W')}${k('S')} run, back (${k('shift')}${k('W')} sprint, ${k('alt')}${k('W')} ${S.stalk ? 'stalk' : 'walk'}) · ${k('A')}${k('D')} turn · ${space} · ${k('shift')} ${shift} · ${k('E')} ${S.act.word}${rest} · `
       + `${k('M')} map · ${k('G')} roads · ${k('P')} present day · ${k('T')} tags · ${k('N')} mute · ${k('B')} back to spirit form · click a tree to identify · drag to orbit the camera`;
   }
@@ -322,7 +322,7 @@ export class GroundControl {
     ps.e0 = a?.e0 ?? 0; ps.e1 = a?.e1 ?? 0; ps.e2 = a?.e2 ?? 0; ps.e3 = a?.e3 ?? 0; ps.pitch = 0; ps.roll = 0; ps.lift = 0;
     f.yaw = o.yaw; f.pitch = 0; f.roll = 0;
     this.place(o.x, o.z);
-    this.resting = S.rig === 'quad' ? ps.pose > 0.5 * (this.modelPoseMax() || 1) : S.rest === 'hunch' ? ps.pose < -0.3 : false;
+    this.resting = S.rig === 'quad' ? ps.pose > 0.5 * (this.modelPoseMax() || 1) : S.rest === 'hunch' || S.rest === 'freeze' ? ps.pose < -0.3 : false;
     const g = f.pos.y;
     if (o.where === 'air' && S.flush) {   // mid-flush: the rest of the flight, gliding down
       f.pos.y = Math.max(o.y, g + 0.3);
@@ -651,12 +651,12 @@ export class GroundControl {
         ps.phase += dt * TAU * (inAir ? 2 : sp / S.bound(Math.max(sp, 0.5)));
       }
       ps.e2 = ps.amp > 0.05 && !inAir ? Math.atan2(wr * r, Math.max(sp, RT.vMin)) : damp(ps.e2, 0, 8, dt);   // the fore legs' step turned round the turn (aAnim2.z)
-      const rest = this.resting && S.rest === 'hunch' ? -0.6 : 0;
+      const rest = this.resting && (S.rest === 'hunch' || S.rest === 'freeze') ? -0.6 : 0;   // a brush rabbit's X is the freeze, a jackrabbit's its form
       ps.pose = damp(ps.pose, alert ? S.alert.pose : rest, alert ? 5 : 4, dt);
       if (act && S.act.nibble && Math.random() < dt * 1.5) ps.flickV = 0.8;
       if (ps.flickV > 0) { ps.flick = Math.max(ps.flick, Math.sin(Math.min(1, 1 - ps.flickV) * Math.PI)); ps.flickV -= dt * 3; }
       else ps.flick = damp(ps.flick, act && S.act.flick ? S.act.flick : 0, act ? 6 : 2, dt);
-      ps.lift = !inAir && sp > 0.05 ? S.lift(sp) * Math.max(0, Math.sin(ps.phase)) : tAmp ? S.lift(0.5) * ps.amp * Math.max(0, Math.sin(ps.phase)) : 0;
+      ps.lift = this.body?.legs ? 0 : !inAir && sp > 0.05 ? S.lift(sp) * Math.max(0, Math.sin(ps.phase)) : tAmp ? S.lift(0.5) * ps.amp * Math.max(0, Math.sin(ps.phase)) : 0;   // on the leg engine the hop is the engine's
       ps.pitch = damp(ps.pitch, inAir ? 0 : (sp > 0.05 ? -S.rock * Math.cos(ps.phase) * Math.min(1, sp / 4 + 0.4) : tAmp ? -S.rock * ps.amp * Math.cos(ps.phase) : 0) + slope * (1 - Math.max(0, ps.pose)) * 0.8, 12, dt);
       ps.e0 = 0; ps.e1 = damp(ps.e1, ps.flick, 5, dt);
     } else if (S.rig === 'bird') {
@@ -752,7 +752,11 @@ export class GroundControl {
       const ac = m.geometry.attributes.aClip, ab = m.geometry.attributes.aBend, air = this.mode === 'air' || this.mode === 'fly';
       const L = this._legInp ||= { terrain: (x, z) => { const t = this.sq.surface(x, z, this.flight.pos.y + 0.6); return t === null || t === undefined || !(t === t) ? this.heights.atXZ(x, z) : t; } };
       L.x = P.x; L.y = P.y; L.z = P.z; L.yaw = yawA; L.size = this.size; L.v = air ? Math.hypot(this.vel.x, this.vel.z) : this.v; L.wr = this.cs?.wr || 0;
-      L.pose = Math.max(0, ps.pose); L.flick = ps.flick; L.bend = wrap(this.flight.yaw + Math.PI - yawA); L.twitch = this.code === 'puma_concolor' ? ps.e1 : 0; L.air = air;
+      L.pose = Math.max(0, ps.pose); L.flick = ps.flick; L.bend = wrap(this.flight.yaw + Math.PI - yawA); L.twitch = this.code === 'puma_concolor' ? ps.e1 : 0; L.air = air; L.ears = NaN;
+      if (b.legs.P.hop) {   // a rabbit on the engine's hop: the sit-up above 0, the freeze at -0.6, a jackrabbit's form at -1; a running brush rabbit's scut up
+        L.pose = this.resting && S.rest === 'hunch' ? -1 : ps.pose;
+        L.twitch = this.code === 'sylvilagus_bachmani' && L.v > 3 ? 1 : 0;
+      }
       b.legs.write(L, dt, ac.array, ab.array); ac.needsUpdate = true; ab.needsUpdate = true;
     } else if (sk) {   // the skinned deer: a jump runs the gallop in the air
       const ac = m.geometry.attributes.aClip, ab = m.geometry.attributes.aBend;

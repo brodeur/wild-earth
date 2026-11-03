@@ -4042,3 +4042,41 @@ breaks it or throws a shadow), and, it was thought, the rims (the DEM's mosaic l
   takes most of the contrast); talus at the foot of the walls is the rocks module's as before (nothing new placed where
   the slope breaks); the slabs are drawn only (animals and the player stand on the heightfield under them); the frame
   times in the pane are noisy (load average 13-19 from other lanes), so only the GPU-timed numbers are reported.
+
+## 2026-11-02: the rabbits rigged: a lagomorph skeleton, the half-bound hop on the leg engine (branch claude/rabbit-rig)
+
+Aaron: "Can you run a rigging pass on the rabbit". The brush rabbit and the black-tailed jackrabbit swung rigid boxes on
+the part rig (template R: the fore pair against the hind pair, a chest that pitched, a lift added to the body). They
+now join the quadrupeds on the leg engine with a gait set of their own; `docs/movement.md` "The rabbits" has the gait.
+
+- **The same rigger, a lagomorph path.** `tools/rig_quadruped.py` rigs a template R file whose species is in
+  Lagomorpha: twenty joints as the quadrupeds' (the legs in the same places, so the engine, the shader's live rows and
+  the bake need nothing new), the tail chain's three slots given to the two ears and the scut. The drawn crouch is read
+  as it stands: the hock is the heel and the foot bone the whole long foot lying flat; the hip behind the stifle. The
+  legs are weighted along their bones, not by height (the sole and the shank overlap in height); the haunch and the
+  upper arm by distance to the upper bone, the bottom of the haunch (it rests on the heel) with the shank. The ears are
+  found where the head splits into two above the crown. Free: no Meshy credits; the source FBX on disk had ear bones,
+  but rebuilding from it would have changed the meshes the lineup signed off.
+- **Ears and scut as carried joints.** An ear's pose is its parent's matrix times its own rotation (skel.attach,
+  st.loc), so it swivels about its own length, which the bones-from-positions writer cannot express.
+- **The gait set by the order.** The tree's Lagomorpha node carries `hop` and Lepus the observation hop; the engine
+  takes the hop path when the row has it (or the skeleton is a lagomorph's). Below Froude 1 the shuffle, above it the
+  half-bound; the turn on the hind feet; the pose's sign is the sit-up (above 0) or the crouch (the freeze at -0.6,
+  the form at -1). Two things the quadrupeds did not need: the body *lurches* at a forage (the hindquarters wait over
+  the planted hind feet, then hop up after the chest), because a rabbit's slow hop is not a steady glide and a steady
+  body with a 62 % hind stance dragged the feet far behind; and the shuffle's stride is held within the body's length.
+- **In the world.** The AI's states map to the engine's pose and ears (`animals.js` lagoInput: the form, the freeze
+  with the ears back, the sit-up, a bolt with the ears back and the brush rabbit's scut up); the drawn body stays on the
+  ground (the AI's bound lift and rock are the engine's now); the zigzag stays the AI's. Live within lod1 (20 m, 40 m),
+  the baked set beyond. **The player's rabbits keep the rodent controls** (Shift sits up, X is the brush rabbit's new
+  freeze and the jackrabbit's form) and are drawn on LegsBody with the hop: the brief said rig `quad`, but that would
+  have brought the quadrupeds' stalk, bed and feeding controls, which a rabbit has none of; the engine is chosen by the
+  model's legs as for the quadrupeds and the set by the row.
+- **Measured.** The engine costs 9 us per live rabbit a frame in node (the fox 9 us); in the world the AI update's
+  median was 0.5 ms with 17 rabbits drawn and 4 live (their pool writes 0.08 ms a frame), main's 0.5 ms at the same
+  spot and hour (load average 15-28 from other work; 122 and 30 frames). No new texture unit; the only "17 texture
+  units" warnings are the terrain micro patch's (`terrainMicro`), on main as well (the cliffs entry above). No new
+  console errors (counted over a live jackrabbit bolt and the player's freeze and run).
+- **Not done or weak.** The numbers are first guesses by eye (the lean, the lurch, the flight, the duty at speed, the
+  ears); at full stretch the pale belly and inner thigh show where the skin stretches as the hind legs extend; the far
+  tier has no observation hop and no ears' swivel; the vole and the ground squirrel still bound on the part rig.

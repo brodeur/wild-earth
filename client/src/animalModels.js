@@ -642,8 +642,8 @@ export const loadRedtailMesh = () => rigModel('hawk');
 export const loadVultureMesh = () => rigModel('vulture');
 export const loadCougarMesh = () => rigModel('lion', { skin: true });   // skinned, the leg engine (gait.js); the rig path's constants for the fallback
 export const loadBearMesh = () => rigModel('bear', { skin: true });
-export const loadRabbitMesh = () => rigModel('rabbit');
-export const loadJackrabbitMesh = () => rigModel('jackrabbit');
+export const loadRabbitMesh = () => rigModel('rabbit', { skin: true });   // skinned, the leg engine's hop (gait.js hopStep); the rig path's constants for the fallback
+export const loadJackrabbitMesh = () => rigModel('jackrabbit', { skin: true });
 export const loadVoleMesh = () => rigModel('vole');
 export const loadTurkeyMesh = () => rigModel('turkey');
 export const loadGroundSquirrelMesh = () => rigModel('groundSquirrel');

@@ -145,6 +145,12 @@ sequenced; Parked is in the brief but deliberately not started.
   Verified on the lineup and as the player's coyote in the world (flat, an 18-degree slope, a turn, a
   gallop). Weak: the numbers (duty, cadence, clearance) are first guesses; the rodents and the birds
   still swing rigid legs; the lion and bear unseen in the world.
+- The rabbits on the legs, 2026-11-02 (Aaron: "Can you run a rigging pass on the rabbit"): the brush rabbit and the
+  jackrabbit rigged by the same tool's lagomorph path (the long hind foot, two ear joints, the scut) and posed by the
+  engine's half-bound set from the tree's Lagomorpha `hop`: the shuffle, the half-bound, the hares' lope and
+  observation hop, the turn on the hind feet, the sit-up, the freeze and the form, the ears; the AI and the player on
+  it, the far tier baked. Weak: the numbers by eye, the belly's stretch at full extension; next: the vole and the
+  ground squirrel (Rodentia's bound) and the ground birds' walk.
 - Tree heights on a long-tailed curve, 2026-11-02 (Aaron: the flat horizon on Yosemite Valley's floor): on tiles
   without lidar a canopy tree's height comes from its species' size curve (`client/src/stature.js`; typical, tall
   and record heights in the records' `stature`), its age class from the height, an emergent in about one cell of 250
@@ -340,8 +346,9 @@ browser stays the renderer.
   round behind), the head leads, and the legs step sideways round a standing turn and arc on a curve (docs/decisions.md);
   next in the rig, in order: the Walk backwards on S, a trot, leg length to the slope, an alert pose of its own, a true
   sideways-step clip if the turned swing is not enough; the fox, coyote, lion and bear step round their turns the same way on the
-  part rig (2026-10-30: they left the part rig for the leg engine, docs/movement.md "The legs"; next on the engine:
-  the AI and the player in the world, the rodents' bound and the ground birds' walk, the deer where its clips run out,
+  part rig (2026-10-30: they left the part rig for the leg engine, docs/movement.md "The legs"; the rabbits followed
+  on its half-bound, 2026-11-02; next on the engine: the vole's and ground squirrel's bound and the ground birds' walk,
+  the deer where its clips run out,
   the numbers tuned by eye), and the same day every other walker in its order's way (the rodents' fore-foot hops, the birds' steps in
   place with the head leading, the lizard's C-bend; 2026-10-29); the mini-map shows the 800 m round the player and a
   click opens the full tile (2026-10-29); the crown wave loosens in a strong wind and the limbs flex
