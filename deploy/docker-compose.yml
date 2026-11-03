@@ -1,0 +1,32 @@
+# Any Docker host (docs/hosting.md): the server behind Caddy, which gets and renews the TLS certificate for HUB_DOMAIN
+# by itself. On the host, with the repo checked out and the tiles' rasters present (rsync them from the workstation):
+#   cp .env.example .env   (HUB_DOMAIN, HUB_ORIGIN, the Discord keys)
+#   docker compose -f deploy/docker-compose.yml up -d --build
+services:
+  web:
+    build:
+      context: ..
+      dockerfile: Dockerfile
+    restart: unless-stopped
+    env_file: ../.env
+    volumes:
+      - we_data:/app/data
+    expose:
+      - "8080"
+  caddy:
+    image: caddy:2
+    restart: unless-stopped
+    env_file: ../.env
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - ./Caddyfile:/etc/caddy/Caddyfile:ro
+      - caddy_data:/data
+      - caddy_config:/config
+    depends_on:
+      - web
+volumes:
+  we_data:
+  caddy_data:
+  caddy_config:

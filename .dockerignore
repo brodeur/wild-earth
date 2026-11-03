@@ -1,0 +1,28 @@
+# The image (Dockerfile) carries the server, the client, the library and each tile's client rasters and JSON layers;
+# the pipeline's intermediates (terrain, vegetation, imagery, seasons, the cache, the unreal export) stay out, as do
+# the workstation's own things.
+.git
+.github
+.venv
+.claude
+.env
+.env.*
+data
+scratch
+docs
+tools
+tests
+node_modules
+**/__pycache__
+**/*.pyc
+**/.DS_Store
+tiles/*/terrain
+tiles/*/vegetation
+tiles/*/imagery
+tiles/*/seasons
+tiles/*/_cache
+tiles/*/unreal
+tiles/*/lidar
+tiles/*/game
+tiles/*/footprint/*.tif
+tiles/*/footprint/mask.geojson

@@ -1,0 +1,8 @@
+# Caddy in front of the server (deploy/docker-compose.yml): TLS for the domain, everything proxied to the server, the
+# WebSocket upgrades (/api/game/ws, /api/hub/ws) carried through, the scheme passed so the hub marks its cookie Secure.
+{$HUB_DOMAIN} {
+	encode zstd gzip
+	reverse_proxy web:8080 {
+		header_up X-Forwarded-Proto {scheme}
+	}
+}

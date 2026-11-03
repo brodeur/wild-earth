@@ -61,8 +61,15 @@ from urllib.parse import parse_qs, urlsplit
 os.environ.setdefault("PYTHONWARNINGS", "ignore")
 warnings.filterwarnings("ignore")
 
-from pipeline.build_tile import ALL_STEPS, run, update_index  # noqa: E402
 from pipeline.config import REPO_ROOT, TILES_DIR, Tile, now_iso, read_json  # noqa: E402
+# The pipeline (rasterio, numpy, the lidar tools) is a development dependency: a hosted server (docs/hosting.md) ships
+# tiles built elsewhere and has only pyproj, so the build API is off there (503) and everything else serves.
+try:
+    from pipeline.build_tile import ALL_STEPS, run, update_index  # noqa: E402
+    BUILDS = True
+except Exception as _e:  # noqa: BLE001  (ImportError, or a dependency failing to load)
+    ALL_STEPS, run, update_index, BUILDS = [], None, None, False
+    print(f"[server] builds off: the pipeline could not load ({type(_e).__name__})", flush=True)
 from ws import WsConn, ws_frame, ws_upgrade  # noqa: E402
 import hub  # noqa: E402
 
@@ -1064,6 +1071,8 @@ class Handler(SimpleHTTPRequestHandler):
             return
         if u.path == "/api/tiles":
             if not (TILES_DIR / "index.json").exists():
+                if not BUILDS:
+                    return self.send_json({"error": "no tiles on this host"}, 404)
                 update_index()
             return self.send_json(read_json(TILES_DIR / "index.json"))
         if u.path == "/api/tile":
@@ -1171,6 +1180,8 @@ class Handler(SimpleHTTPRequestHandler):
                         "built": is_built(tile.tile_id), "building": building})
 
     def api_build(self, data: dict):
+        if not BUILDS:
+            return self.send_json({"error": "builds are off on this host (docs/hosting.md): tiles are built elsewhere and shipped"}, 503)
         tile = self.tile_from(data)
         steps = data.get("steps") or ALL_STEPS
         if not isinstance(steps, list) or any(s not in ALL_STEPS for s in steps):

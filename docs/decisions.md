@@ -3721,3 +3721,20 @@ verified). Decided where the words left room:
 - **Measured.** Four faked members within 25 m: 0.2 ms more on the CPU in `players.update` (0.3 vs 0.1 ms median),
   the render submit within noise; past 60 m a wisp's form updates on alternate frames and four far ones cost 0.1.
 
+## 2026-11-02: hosting: one origin, one always-on container; Vercel is not for the hub (docs/hosting.md)
+
+Aaron, after two players on one Mac lagged: "Maybe a hosted version would be faster?" then "I have a vercel instance we
+could use, but i think it's time". The lag was two worlds rendering on one machine, not the hub. Decided:
+
+- **Vercel does not hold the hub**: serverless functions have no WebSocket server, no process between requests, no
+  persistent SQLite. It could serve the static client, but the session cookie wants one origin. Rejected: splitting
+  the client from the hub across origins.
+- **One container, one origin, always on**: `server.py` as it runs on the workstation, behind TLS, on Fly.io
+  (`fly.toml`, TLS at the edge, a volume) or any Docker VPS (`deploy/docker-compose.yml` with Caddy). The hub's
+  database and the played game worlds on the volume (`deploy/entrypoint.sh` symlinks each tile's `game/` there).
+- **The pipeline is a workstation dependency**: `server.py` imports it if it can and otherwise turns the build API off
+  (503); the image is Python and pyproj, with each tile's `client/` rasters and JSON layers (412 MB for seven tiles)
+  and none of the pipeline's intermediates (`.dockerignore`).
+- Not run as a container here (the Docker daemon was off); the first `fly deploy` is the test. The accounts, the
+  domain and the Discord registration are Aaron's.
+
