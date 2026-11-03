@@ -44,6 +44,10 @@ export const groundUniforms = {
   // root and tip for the season (linear; grass.js applyLook sets them from the annual palette, since the photo is of the
   // annual sward); swardOn 0 turns the paint off (A/B timing: __we.terrain.uniforms.swardOn.value = 0).
   swardRoot: { value: new THREE.Color(0.14, 0.11, 0.064) }, swardTip: { value: new THREE.Color(0.57, 0.43, 0.21) }, swardOn: { value: 1 },
+  // The Dig game's openings (dig.js, docs/game-dig.md): the eight holes and pits nearest the camera, each (x, z, radius,
+  // 0); the terrain FRAG discards the ground inside them, so a hole is seen from above and the sky from below. The
+  // mesh is not edited; digCutN 0 costs one compare.
+  digCuts: { value: Array.from({ length: 8 }, () => new THREE.Vector4()) }, digCutN: { value: 0 },
 };
 // The measured season for the CPU side: grass.js takes its blades' tint from `grass` (the open grass's
 // flat-ground ratio for the date over July, linear) when it is set; `version` bumps on each change.
@@ -226,7 +230,9 @@ const FRAG = /* glsl */`
   ${DETAIL_GLSL}
   uniform sampler2D ripMask; uniform vec3 ripRef; uniform float ripOn; uniform vec3 ripTint; uniform float ripDark; uniform float ripMix;
   uniform float geoSlope;   // 1 on a tile with the lidar residual: the rock rule takes the mesh's own slope too
+  uniform vec4 digCuts[8]; uniform int digCutN;   // the Dig game's holes and pits (groundUniforms.digCuts)
   void main(){
+    for (int i = 0; i < 8; i++) { if (i >= digCutN) break; vec2 dc = vPosW.xz - digCuts[i].xy; if (dot(dc, dc) < digCuts[i].z * digCuts[i].z) discard; }
     vec3 w = texture2D(masks, vUv).rgb;                 // soft weights: grassland, oak woodland, chaparral
     float road = texture2D(roads, vUv).r;
     w *= 1.0 - smoothstep(0.55, 0.75, road);            // decayed pavement keeps its grey
