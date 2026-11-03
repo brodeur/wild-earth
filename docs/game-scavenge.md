@@ -70,13 +70,17 @@ the dig channel's socket and numbered by their own `cseq`, logged as `carrion` l
 (`carrion`: seq and the records, beside `dig`). Every client computes the stage from the birth on the server's clock
 (the welcome's `now` sets the offset), so every player sees the same carcass at the same stage, and a reload brings it
 back. The server's sweep (every minute, with Dig's) removes a carcass whose decay has reached 1 and tells everyone
-(`gone`). A player's kill is sent by that player; an AI kill only by the AI host (the dig channel's first member, as
-Dig's AI). Events are anonymous: the killer and the feeder are species codes. With no game server (a static host,
-`?net=0`) a carcass is this browser's alone, in memory.
+(`gone`). Each carcass is sent once, by one page: the page that runs the animals (the shared animals' host; with them
+off, the dig channel's host) sends every AI kill, every catch it confirms for a mirror and every AI bite, marked `ai`;
+a player's own kill on that page is sent unmarked; a mirror sends its bites but not its own catch, which its host sends
+(`carrion.js runsAnimals`). The server takes `ai` events only from the page that runs the animals (`server.py
+runs_animals`: the animals host's page id, else the dig host), and refuses a second birth of the same animal
+("taken"): the carcass's id is the animal's, the same on every page. Events are anonymous: the killer and the feeder are
+species codes. With no game server (a static host, `?net=0`) a carcass is this browser's alone, in memory.
 
-When the shared-animals lane lands, the kill itself is a server-ordered event; the carcass then hangs on it (onKill is
-called from `kill` whatever ordered it; `adopt` already kills the local animal of that id when the world reports a
-carcass the page has not seen).
+The kills are the shared animals' events (2026-11-02): a mirror's `kill(a, ...)` from its host's ordered event makes
+the carcass record there as on the host; `adopt` kills the local animal of that id when the world reports a carcass the
+page has not seen.
 
 ## The drawing and its cost
 

@@ -206,6 +206,9 @@ export class Carrion {
     if (dig?.net) this.attach(dig.net);
   }
   get live() { return this.shared && !!this.net?.connected; }
+  // Does this page run the AI animals (its kills, its scavengers' bites)? The animals channel's host (not a mirror) while
+  // the shared animals are on; else the dig channel's host, as before them (server.py runs_animals is the same rule).
+  runsAnimals() { const R = this.animals.relay; return R?.connected ? !this.animals.mirror : !!this.net?.host; }
   now() { return Date.now() / 1000 + this.offset + this.skew; }
   // debugging: this page's clock moved h hours on (the stage, the smell, the bones; not another page's)
   age(h) { this.skew = (h || 0) * 3600; this.stageT = 0; return this.skew; }
@@ -229,8 +232,11 @@ export class Carrion {
     rec.body = prey; prey.decay = 0; prey.carrionUntil = Infinity;
     if (by === 'player') rec.mine = true;
     this.stats.kills++;
-    // to the shared world: a player's kill, or the AI host's (a kill the world told us of is already there)
-    if (by !== 'shared' && this.live && (by === 'player' || this.net.host)) {
+    // to the shared world, once: a kill the page that runs the animals orders (an AI kill, or a mirror's catch it
+    // confirms) from that page, a player's own kill from the player's page unless it is a mirror's (its host sends it); a
+    // kill the world told us of is already there
+    const mirrored = by === 'player' && A.mirror && !!A.relay?.connected;
+    if (by !== 'shared' && !mirrored && this.live && (by === 'player' || this.runsAnimals())) {
       this.send({ type: 'carcass', id: rec.id, one, sp: code, x: +rec.x.toFixed(2), y: +rec.y.toFixed(2), z: +rec.z.toFixed(2), yaw: +rec.yaw.toFixed(3), size: +rec.size.toFixed(3), mass: +rec.mass.toFixed(3), by: rec.by || undefined, ...(by === 'player' ? {} : { ai: true }) });
     }
     return rec;
@@ -251,7 +257,7 @@ export class Carrion {
     const got = Math.min(rec.meat, kg); if (got <= 0) return 0;
     rec.meat -= got; rec.eaten += got; rec.feeds++; this.stats.feeds++;
     if (BIG.has(code)) rec.bigT = this.t; if (HUGE.has(code)) rec.hugeT = this.t;
-    if (this.live && (!ai || this.net.host)) this.send({ type: 'feed', id: rec.id, kg: +got.toFixed(3), by: code, ...(ai ? { ai: true } : {}) });
+    if (this.live && (!ai || this.runsAnimals())) this.send({ type: 'feed', id: rec.id, kg: +got.toFixed(3), by: code, ...(ai ? { ai: true } : {}) });
     this.stageT = 0;
     return got;
   }

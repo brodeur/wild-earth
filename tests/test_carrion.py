@@ -110,13 +110,43 @@ class CarrionTest(unittest.TestCase):
             a.wait("cev", where=lambda m, i=i: m.get("c") == i + 1)
         w = self.world("summer")
         with w.lock:
-            w.prune(time.time() + 5 * 3600)                    # five summer hours: the vole (6 h, x1.45) is gone, the deer not
+            # six summer hours: the vole (6 h, x1.45) is gone whatever the hour of the kill, the deer (at most 0.44) not; five
+            # were enough only by day (a vole killed at 9 pm reaches 0.97: the night is cooler than the mean)
+            w.prune(time.time() + 6 * 3600)
         m = a.wait("cev", where=lambda m: m["e"]["type"] == "gone")
         self.assertEqual(m["e"]["ids"], ["12:5,5:1"])
         self.assertIn("3:9,9:9", w.s["carrion"]["list"])
         with w.lock:
-            w.prune(time.time() + 18 * 3600)                   # a summer day's 18 h: the deer too
+            w.prune(time.time() + 20 * 3600)                   # 20 summer hours take the deer at any hour of the kill (18 only by day)
         self.assertEqual(a.wait("cev", where=lambda m: m["e"]["type"] == "gone")["e"]["ids"], ["3:9,9:9"])
+
+    def test_the_page_that_runs_the_animals_sends_the_ai_carcasses(self):
+        # Y is first on the dig channel, X first on the animals channel; Z, in the acorn game only, leads the hosts but is
+        # on neither, so each channel falls back to its first: the dig host is Y, the animals (and the AI's kills) X's
+        def ws():
+            w = WsClient(self.port, "/api/game/ws")
+            self.socks.append(w)
+            return w
+        y = ws(); y.send({"t": "dig", "tile": T1, "season": "fall", "pg": "b" * 16}); self.assertTrue(y.wait("dwelcome")["host"])
+        x = ws(); x.send({"t": "dig", "tile": T1, "season": "fall", "pg": "a" * 16}); x.wait("dwelcome")
+        xa = ws(); xa.send({"t": "animals", "tile": T1, "season": "fall", "pg": "a" * 16}); self.assertTrue(xa.wait("awelcome")["host"])
+        z = ws()
+        z.send({"t": "hello", "v": 1, "tile": T1, "season": "fall", "species": "corvus_corax", "pg": "c" * 16})
+        r = z.wait("epoch")["r"]
+        z.send({"t": "hello", "v": 1, "tile": T1, "season": "fall", "species": "corvus_corax", "pg": "c" * 16, "r": r, "sid": "cd" * 16})
+        z.wait("welcome")
+        w = self.world("fall")
+        with w.lock:
+            self.assertEqual(w.host_of(w.dconns).pg, "b" * 16)
+            self.assertEqual(w.host_of(w.aconns).pg, "a" * 16)
+        kill = {**DEER, "id": "3:5,5:5", "by": "canis_latrans", "ai": True}
+        y.send({"t": "cev", "c": 1, "e": kill})                 # the dig host does not run the animals: refused
+        self.assertEqual(y.wait("crej")["why"], "not the AI host")
+        x.send({"t": "cev", "c": 2, "e": kill})                 # the animals' page: born once
+        x.wait("cev", where=lambda m: m.get("c") == 2)
+        x.send({"t": "cev", "c": 3, "e": {"type": "feed", "id": "3:5,5:5", "kg": 0.25, "by": "canis_latrans", "ai": True}})
+        x.wait("cev", where=lambda m: m.get("c") == 3)
+        self.assertAlmostEqual(w.s["carrion"]["list"]["3:5,5:5"]["eaten"], 0.25)
 
     def test_decay(self):
         rec = {"born": 0.0, "mass": 50.0, "meat": 50.0, "eaten": 0.0, "lifeH": 24}

@@ -3896,6 +3896,13 @@ Aaron: "New game: Scavenge. When an animal dies, it begins to decompose over the
   without them, but the medians (63 and 46 ms) and tails swung by tens of ms with the other lanes' load, so the
   difference is inside the noise. Not seen: the bear or the fox at carrion, a summer carcass, two pages at one carcass
   at once (the tests do that on the server), a vole or lizard carcass's stages up close.
+- **After the shared animals (fix on main).** The AI's carcass births and bites were sent only by the dig channel's
+  host, but the AI now runs on the animals channel's host; when the two were different pages (the page leading the
+  hosts on neither channel, or a page without an id) a carcass was never born on the server, and a mirror's own catch
+  was sent twice (by the mirror and by its host; the server refused the second as "taken"). Now the page that runs the
+  animals sends them and the server takes `ai` events from it (`runs_animals`). The sweep test failed in the evening:
+  five summer hours take a vole only by day (a vole killed at 9 pm reaches 0.97, the night being cooler than the mean),
+  so it now uses margins that hold at any hour (6 h, and 20 for the deer).
 
 ## 2026-11-02: tree heights on a long-tailed curve, the giants drawn (client/src/stature.js)
 

@@ -1237,13 +1237,23 @@ class GameWorld:
             print(f"[game] {self.tile}/{self.season}: the {label} round began", flush=True)
 
     # -- the carcasses (carrionworld.py), on the dig channel's socket
+    def runs_animals(self, conn: GameConn) -> bool:
+        """Does the page of this dig connection run the AI animals? The animals channel's host's page (its kills, its
+        scavengers' bites and the catches it confirms for the mirrors happen there), or, with no one on the animals
+        channel, the dig channel's host. The two are one page when the page ids match (host_of); this holds when they
+        do not (the AI page not yet on the dig channel, a page with no id)."""
+        h = self.host_of(self.aconns)
+        if h is None or h.pg is None:
+            return self.host_of(self.dconns) is conn
+        return h.pg == conn.pg
+
     def carrion_event(self, conn: GameConn, c, e) -> None:
         with self.lock:
             try:
                 ev = carrionworld.clean(e)
             except (ValueError, KeyError, TypeError):
                 return conn.send({"t": "crej", "c": c, "why": "malformed event"})
-            if ev.get("ai") and self.host_of(self.dconns) is not conn:
+            if ev.get("ai") and not self.runs_animals(conn):
                 return conn.send({"t": "crej", "c": c, "why": "not the AI host"})
             now = time.time()
             why = carrionworld.carrion_reduce(self.s["carrion"], ev, now)
