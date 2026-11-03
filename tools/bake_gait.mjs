@@ -7,7 +7,8 @@
 //
 // Clips: Idle (one frame standing), Walk, Trot and Gallop (one cycle each on flat ground at 0.6 x walk_mps, 0.75 x trot_mps
 // and 1.6 x trot_mps of the species' locomotion row, read from the tile's locomotion.json; the body alone where it has
-// none), Bed (one frame, pose 1). A gait clip records stride_m (the engine's stride at that speed: the client advances the
+// none), Bed (one frame, pose 1). A lagomorph (the row's hop, gait.js hopStep): Idle, Shuffle (0.7 x the shuffle's top),
+// Bound (the half-bound), Run (its fast form at three quarters of the cruise: the jackrabbit's lope), Sit, Freeze, Form. A gait clip records stride_m (the engine's stride at that speed: the client advances the
 // phase by distance over it), touchdown (the left fore foot's landing phase) and speed_mps.
 import { readFileSync, writeFileSync } from 'node:fs';
 import { basename, dirname, join } from 'node:path';
@@ -28,6 +29,7 @@ const species = js.extras.species;
 let row = null;
 try { row = JSON.parse(readFileSync(join(ROOT, 'tiles', TILE, 'locomotion.json'), 'utf8')).species[species] || null; } catch { row = null; }
 const skel = skeletonOf(sk), P = gaitParams(row, skel);
+if (P.hop) P.observe = null;   // one even cycle a clip: the hares' observation hop is the live tier's
 console.log(`INFO ${basename(SRC)}: ${species}, ${row ? `row from tiles/${TILE}` : 'no row: the body alone'}; walk ${P.vw.toFixed(2)} trot ${P.vt.toFixed(2)} m/s, stride ${P.Lt.toFixed(2)} m at ${P.ft.toFixed(2)} Hz, ${P.posture}, ${P.pace ? 'pace' : 'trot'}, ${P.gallop} gallop`);
 
 const W = skel.n * 3, frames = [], clips = {};
@@ -43,7 +45,7 @@ function run(name, v, pose, loop) {
     clips[name] = { first, count: 1, loop: false, duration: 0, root_motion: [0, 0, 0] };
     return;
   }
-  const { f, L } = cadence(P, v), T = 1 / f, count = Math.max(8, Math.round(T * RATE)), h = T / count;
+  const { f, L } = cadence(P, v), T = 1 / f, count = Math.max(P.hop ? 12 : 8, Math.round(T * RATE)), h = T / count;   // a quick bound gets twelve frames
   // start the cycle at phase 0
   while (st.phase > 0.02) step(dt);
   let td = null;
@@ -57,11 +59,22 @@ function run(name, v, pose, loop) {
   clips[name] = { first, count, loop: true, duration: +T.toFixed(4), root_motion: [0, 0, 0], stride_m: +L.toFixed(4), touchdown: +(td ?? 0).toFixed(4), speed_mps: +v.toFixed(3), cadence_hz: +f.toFixed(3), duty: +st.duty.toFixed(3), gait: st.gait };
   console.log(`CLIP ${name}: ${count} frames, ${T.toFixed(3)} s, stride ${L.toFixed(3)} m at ${v.toFixed(2)} m/s, duty ${st.duty.toFixed(2)}, touchdown ${clips[name].touchdown}`);
 }
-run('Idle', 0, 0, false);
-run('Walk', 0.6 * P.vw, 0, true);
-run('Trot', 0.75 * P.vt, 0, true);
-run('Gallop', 1.6 * P.vt, 0, true);
-run('Bed', 0, 1, false);
+if (P.hop) {   // a lagomorph (gait.js hopStep; farTable's hop set): the shuffle, the half-bound and its fast form, the poses
+  const cruise = row?.cruise_mps || 2 * P.vt;
+  run('Idle', 0, 0, false);
+  run('Shuffle', 0.7 * P.vS, 0, true);
+  run('Bound', Math.max(1.6 * P.vS, 1.1 * P.vt), 0, true);
+  run('Run', Math.max(0.75 * cruise, 2.2 * P.vt), 0, true);
+  run('Sit', 0, 1, false);
+  run('Freeze', 0, -0.6, false);
+  run('Form', 0, -1, false);
+} else {
+  run('Idle', 0, 0, false);
+  run('Walk', 0.6 * P.vw, 0, true);
+  run('Trot', 0.75 * P.vt, 0, true);
+  run('Gallop', 1.6 * P.vt, 0, true);
+  run('Bed', 0, 1, false);
+}
 
 // half floats
 function toHalf(x) {

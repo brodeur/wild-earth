@@ -720,7 +720,12 @@
     "lead_max": 0.25
    },
    "flags": {},
-   "flier": false
+   "flier": false,
+   "hop": {
+    "set": "half-bound",
+    "shuffle_froude": 1.0,
+    "flex_rad": 0.28
+   }
   },
   "lepus_californicus": {
    "code": "lepus_californicus",
@@ -774,7 +779,20 @@
     "lead_max": 0.25
    },
    "flags": {},
-   "flier": false
+   "flier": false,
+   "hop": {
+    "set": "half-bound",
+    "shuffle_froude": 1.0,
+    "flex_rad": 0.28,
+    "observe": {
+     "every": [
+      4,
+      7
+     ],
+     "longer": 1.4,
+     "higher_hip": 0.6
+    }
+   }
   },
   "microtus_californicus": {
    "code": "microtus_californicus",

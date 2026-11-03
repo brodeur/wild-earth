@@ -115,6 +115,8 @@ def resolve(code: str, tree: dict | None = None) -> dict | None:
     }
     if merged.get("stalk_mps"):
         out["stalk_mps"] = merged["stalk_mps"]
+    if merged.get("hop"):   # the lagomorphs' gait set (client/src/gait.js hopStep: the shuffle, the half-bound, the hares' observation hop)
+        out["hop"] = {k: v for k, v in merged["hop"].items() if k != "note"}
     if merged.get("catch"):   # the family's catch move (docs/movement.md "The catch"): the client picks a hunter's catch by it
         out["catch"] = merged["catch"]
     return out

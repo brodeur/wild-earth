@@ -95,7 +95,7 @@ part Neck / Head; the tail by its arc. The record's `rig` field names the joints
 - *class* Mammalia: the gait by the Froude number of the hip height (the row's `walk_mps`, `trot_mps`, with
   hysteresis); Hildebrand's footfalls (the walk's lateral sequence LH 0, LF 0.25, RH 0.5, RF 0.75; the trot's diagonal
   pairs at 0 and 0.5; the transverse gallop LH 0, RH 0.15, LF 0.5, RF 0.65, a rotary one for the cats and dogs at
-  speed, the bound for the rodents later); the duty factor from 0.72 at the slowest walk to 0.5 at the trot and 0.4
+  speed, the lagomorphs' own set: "The rabbits" below); the duty factor from 0.72 at the slowest walk to 0.5 at the trot and 0.4
   in the gallop; the cadence rising as v^0.45 to `stride_hz` at the trot-gallop change and nearly flat beyond, where
   the stride stretches instead (Heglund & Taylor); the body vaulting at a walk, springing at a trot, rising once a
   cycle in the gallop; the spine arching as the hind feet come under and extending as the fore feet reach; the head
@@ -148,6 +148,74 @@ up an 18-degree slope (the back pitched 14 degrees, the feet on the ground, the 
 stepping round a standing turn at 2.2 rad/s (1.5 steps a second), galloping; AI foxes live within 56 m and on the
 Walk and Bed clips beyond; the AI update 0.8 ms a frame with the mammals on the engine. Not checked: the lion and
 bear in the world (none near the start), the deer herd silhouette's rows, the Yosemite tile.
+
+## The rabbits (2026-11-02): the half-bound on the leg engine
+
+Aaron: "Can you run a rigging pass on the rabbit". The brush rabbit and the black-tailed jackrabbit left the part
+rig's rigid bound for the leg engine, with a gait set of their own chosen by the order (the tree's Lagomorpha `hop`
+block, resolved into the tile's row as `hop`), not by the Froude bands alone. The code: `tools/rig_quadruped.py`
+(skeleton_lago, weights_lago), `client/src/gait.js` (hopStep; the far set in farTable / farDrive),
+`tools/bake_gait.mjs` (the hop's clips), `animals.js` lagoInput and `groundControl.js` (the states into the engine).
+
+**The skeleton**: the quadrupeds' twenty joints, the tail chain's three slots given to the two ears and the scut
+(Hips Spine Chest Neck Head Ear.L Ear.R Scut, the legs in their places), read from the drawn crouch as it is: the
+long hind foot is the foot bone from the heel (the hock, at the rear of the sole) to the toes, flat on the ground at
+rest; the shank rises forward from the heel to the stifle at the front of the haunch, the femur back up to the hip
+behind it; the short fore legs as the quadrupeds'. The legs are weighted by the nearest bone along the leg's polyline
+(height bands fail where the sole and the shank overlap in height); the haunch and the upper arm take the upper bone
+by distance, and the bottom of the haunch, which sits on the heel in the crouch, the shank. The ears are found above
+the skull's crown (the first slab down from the top that crosses the midline: above it the two stand apart), each a
+joint at its root carried by the head and turned by its own rotation, so it can swivel about its length; the scut is
+the tail part on one joint carried by the hips.
+
+**The gait set** (hopStep), the footfalls as the phase each foot lands, the hind pair at 0.55 in both gaits so the
+change between them blends the tables:
+- *the shuffle*, below `shuffle_froude` 1.0 of the hip height (1.29 m/s for the brush rabbit, 1.69 for the
+  jackrabbit): the fore feet step one after the other (FL 0, FR 0.18), the hind pair hop up after them together
+  (0.55, 0.57), duty 0.6 fore and 0.62 hind; the stride kept within 0.8 of the body's length (quick short hops, the
+  feet under it); the body lurches (the hindquarters wait over the planted hind feet and hop up after the chest, the
+  chest waits over the fore feet: they keep 0.6 and 0.7 of the speed while their feet stand), rises a little as the
+  hind pair hop and arches as they land.
+- *the half-bound* above it: the fore feet land one after the other (0, 0.11), the hind pair together at 0.55 (0.58
+  the trailing one), ahead of where the fore feet landed; the duty falls from 0.32 / 0.34 with speed (to about 0.14 at
+  full stretch: a hare is mostly in the air); after the push-off a flight with the body extended (the spine flexing to
+  `flex_rad` 0.28 the other way, the body at its highest, nose-up at the push-off and down over the fore feet), then
+  the back arching and the hips carried forward as the hind feet swing up under the chest; the long foot flat in the
+  stance, the heel rising off it at the push-off, the leg folding at the hock in the swing (which starts quickly);
+  stride length and rate from the row's cadence (`stride_hz`, `stride_m` at the trot-gallop change). On the move the
+  crouch leans forward: the back flatter, the hindquarters up, the head lower.
+- *the hares' lope and observation hop* (the tree's genus Lepus, `hop.observe`): above trot_mps every 4-7 bounds one
+  is 1.4 times as long and raised by 0.6 of the hip height.
+- *the standing turn* pivots on the hind feet (duty 0.88, replanted only when twisted out) while the fore pair hop
+  round together (FL 0, FR 0.04, duty 0.5), the chest lifting with each hop.
+- *the pose*, its sign the AI's and the player's: above 0 the sit-up (the trunk raised half a radian about the hips
+  onto the hind feet, the hips up and back, the fore paws held up under the chest, the head kept level, the ears up);
+  below 0 the crouch: at -0.6 the freeze (the chest down onto the belly, the haunch, already on its heels, hardly; the
+  ears laid back), at -1 the form (the whole pose sunk into a shallow scrape).
+- *the ears* (inp.ears, -1 laid back to 1 up and alert; by default from the pose and the speed): up and swivelling
+  each on its own when alert (wider and quicker sitting up), relaxed while feeding, laid back along the neck and drawn
+  together in a bound past 0.9 trot_mps, a freeze, the form and a bolt; they give a little to each bound. *The scut*
+  (inp.twitch) cocks up over the rump: a bolting brush rabbit's white flash.
+
+**In the world**: the AI's states map to the engine's (animals.js lagoInput): the form -1, the freeze -0.6 with the
+ears back, the sit-up the AI's pose with the ears up, a bolt the ears back (and the brush rabbit's scut up); a dead
+rabbit lies in its crouch at -1. The drawn body stays on the ground (the AI's bound lift and rock are the engine's
+now); the zigzag of a bolt is still the AI's, the engine only poses it. Live within the species' lod1 radius (20 m for
+the brush rabbit, 40 m for the jackrabbit), beyond it the baked set (Idle, Shuffle, Bound, Run at three quarters of
+the cruise, Sit, Freeze, Form; the observation hop is the live tier's only). The player's rabbits keep their controls
+(rig `rodent`: Shift still sits up, X is the brush rabbit's freeze and the jackrabbit's form) and are drawn on
+LegsBody with the hop.
+
+**Checked 2026-11-02** (the lineup with `&close=1&joints=1&weights=1` and `__animalLineup.film`, and the home tile):
+both rabbits at the shuffle, the half-bound and the run (the jackrabbit's lope at 5.9 m/s), the sit-up, the freeze, the
+form and the standing turn (from above); the baked Run on lod1; an AI brush rabbit foraging and bolting at 3-13 m
+(live rows) at 9:12; an AI jackrabbit loping at 63 m on the baked cycles (lod2); the player's jackrabbit hopping at
+2.8 and 6 m/s, turning and sitting up. The engine costs what the quadrupeds' does (9 us per live rabbit a frame in
+node); in the world the AI update's median was 0.5 ms with 17 rabbits drawn and 4 live (their pool writes 0.08 ms),
+the same as main's 0.5 ms at the same spot and hour (load average 15-28 from other work, 30 to 120 frames).
+Weak: at full stretch the pale belly and inner thigh show where the skin stretches as the hind legs extend; the
+crouch-to-run lean, the lurch, the flight and the ears' angles are first guesses; the far tier has no observation hop
+and no ears' swivel; the player's freeze is X (the AI's freeze is its own).
 
 ## The pipeline
 
@@ -290,5 +358,8 @@ screams and twists).
 - The leg engine's numbers to tune by eye against footage: the duty factors, the cadence exponent (0.45), the swing
   clearance, the walk's reach; the rotary gallop for Carnivora in the tree (`gaits.gallop`); a fore-aft asymmetry in
   the Meshy lion's forelegs that the rig follows.
+- The rabbits on the engine (2026-11-02, "The rabbits" above): the numbers by eye against footage (the lean, the
+  lurch, the flight, the duty at speed, the ears); the belly's stretch at full extension; the vole and the ground
+  squirrel (Rodentia's bound) on the same hop set or their own.
 - The tree's numbers for the birds' ground speeds (Garland's fit is for mammals; capped at 4 sqrt(g h) for now).
 - The catch (above): the hawk's feet, the bear's swat, the AI corvid hunt, the jay's carry, the prey's struggle.
