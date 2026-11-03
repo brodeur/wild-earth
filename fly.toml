@@ -4,7 +4,7 @@
 #
 
 app = 'wild-earth'
-primary_region = 'ams'
+primary_region = 'sjc'   # San Jose: the players are in California and the hub relays positions live (Fly's launch chose ams)
 
 [build]
   dockerfile = 'Dockerfile'
