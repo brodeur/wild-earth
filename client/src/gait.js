@@ -91,7 +91,15 @@ export function skeletonOf(sk) {
       foot: sub(rest[f], toe), bend: name[0] === 'F' ? -1 : 1 };   // foot: the rest vector from the toe up to the ankle; bend: the knee's side (the elbow back, the stifle forward)
   });
   const h = sk.withers_m || rest[idx.Chest][1] * 1.2;
+  // a lagomorph's ears and scut (rig_quadruped.py skeleton_lago): joints carried by the head and the hips, each turned by
+  // its own rotation in the parent's frame (st.loc, from hopStep), so an ear can swivel about its own length
+  const ears = sk.ears ? ['L', 'R'].map(e => ({ j: sk.ears[e].joint, tip: sk.ears[e].tip.slice(), sx: e === 'L' ? 1 : -1 })) : null;
+  const scut = sk.scut ? { j: sk.scut.joint, tip: sk.scut.tip.slice() } : null;
+  const attach = new Array(sk.joints.length).fill(null);
+  if (ears) for (const E of ears) attach[E.j] = { parent: idx.Head };
+  if (scut) attach[scut.j] = { parent: idx.Hips };
   return { n: sk.joints.length, names: sk.joints, idx, rest, legs, tip: sk.tail_tip.slice(), nose: sk.nose.slice(), posture: sk.posture || 'digitigrade', h,
+    kind: sk.kind || 'quadruped', ears, scut, attach,
     belly: Math.min(rest[idx['LowerLeg.FL']][1], rest[idx['LowerLeg.HL']][1]),   // the belly line: the elbow and stifle pivots
     rFoot: legs.reduce((s, L) => s + Math.hypot(L.toe[0], L.toe[2]), 0) / 4 };   // a foot's lever round the body's centre
 }
@@ -327,8 +335,18 @@ export function bedPose(skel) {
 const CHILD = { Hips: 'Spine', Spine: 'Chest', Chest: 'Neck', Neck: 'Head', Tail1: 'Tail2', Tail2: 'Tail3' };
 export function writeRow(skel, st, out, row) {
   const R = skel.rest, J = skel.idx, P = st.P, E = st.E, w = skel.n * 3 * 4, o = row * w;
+  const Ms = st.M || (st.M = new Array(skel.n));
   for (let j = 0; j < skel.n; j++) {
-    const name = skel.names[j];
+    const name = skel.names[j], at = skel.attach?.[j];
+    if (at) {   // an ear or the scut: its own turn in the parent's frame, carried with the parent
+      const Mp = Ms[at.parent], pp = P[at.parent], M = mul3(Mp, st.loc?.[j] || I3());
+      const p = add(pp, apply3(Mp, sub(R[j], R[at.parent]))); P[j] = p; Ms[j] = M;
+      const q = R[j], b = o + j * 12;
+      out[b] = M[0]; out[b + 1] = M[1]; out[b + 2] = M[2]; out[b + 3] = p[0] - (M[0] * q[0] + M[1] * q[1] + M[2] * q[2]);
+      out[b + 4] = M[3]; out[b + 5] = M[4]; out[b + 6] = M[5]; out[b + 7] = p[1] - (M[3] * q[0] + M[4] * q[1] + M[5] * q[2]);
+      out[b + 8] = M[6]; out[b + 9] = M[7]; out[b + 10] = M[8]; out[b + 11] = p[2] - (M[6] * q[0] + M[7] * q[1] + M[8] * q[2]);
+      continue;
+    }
     let childRest, childPose;
     if (CHILD[name]) { childRest = R[J[CHILD[name]]]; childPose = P[J[CHILD[name]]]; }
     else if (/^UpperLeg/.test(name)) { childRest = R[j + 1]; childPose = P[j + 1]; }
@@ -342,7 +360,7 @@ export function writeRow(skel, st, out, row) {
     if (name === 'Hips' || name === 'Spine' || name === 'Chest') M = mul3(M, axisAngle(unit(d0), st.roll3 || 0));
     else if (name === 'Head') M = mul3(rotY((st.lead || 0) + (st.bendYaw || 0)), M);
     else if (name === 'Neck') M = mul3(rotY(st.bendYaw || 0), M);
-    const q = R[j], p = P[j];
+    const q = R[j], p = P[j]; Ms[j] = M;
     const tx = p[0] - (M[0] * q[0] + M[1] * q[1] + M[2] * q[2]), ty = p[1] - (M[3] * q[0] + M[4] * q[1] + M[5] * q[2]), tz = p[2] - (M[6] * q[0] + M[7] * q[1] + M[8] * q[2]);
     const b = o + j * 12;
     out[b] = M[0]; out[b + 1] = M[1]; out[b + 2] = M[2]; out[b + 3] = tx;

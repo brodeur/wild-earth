@@ -44,7 +44,7 @@ J = {n: i for i, n in enumerate(JOINTS)}
 LEGS = ['FL', 'FR', 'HL', 'HR']
 # the wrist's (fore) and hock's (hind) height as a fraction of the elbow's / stifle's, by posture; the plantigrade foot
 # is flat on the ground, its ankle low
-DEFAULTS = {'digitigrade': {'wrist': 0.42, 'hock': 0.5}, 'plantigrade': {'wrist': 0.4, 'hock': 0.45}, 'unguligrade': {'wrist': 0.45, 'hock': 0.55}}
+DEFAULTS = {'lagomorph': {'wrist': 0.35, 'hock': 0.3}, 'digitigrade': {'wrist': 0.42, 'hock': 0.5}, 'plantigrade': {'wrist': 0.4, 'hock': 0.45}, 'unguligrade': {'wrist': 0.45, 'hock': 0.55}}
 
 # ---- glTF ---------------------------------------------------------------------------------------------------------
 CT = {5120: np.int8, 5121: np.uint8, 5122: np.int16, 5123: np.uint16, 5125: np.uint32, 5126: np.float32}
@@ -267,6 +267,158 @@ def weights(P, part, pw, piv, rest, legs, tail, H):
     order[ws == 0] = 0
     return order.astype(np.uint8), ws.astype(np.float32)
 
+# ---- the lagomorphs (Lagomorpha: tools/build_rabbit.py, build_jackrabbit.py) -----------------------------------------
+# A rabbit is drawn in its resting crouch (template R, extras.rig.kind 'rodent'): the long hind foot flat along the ground
+# from the heel (the hock) forward to the toes, the shank rising forward from the heel to the stifle at the front of the
+# haunch, the thigh back up to the hip; short fore legs straight down from the elbow to a small paw; the ears up off the
+# head; a scut for a tail. The skeleton keeps twenty joints and the legs' places (gait.js reads them by name), the tail
+# chain's three slots given to the two ears and the scut, the ears straight after the head so the head chain Neck..Ear
+# stays contiguous (animalModels.js: the player's look turns it):
+#   0 Hips 1 Spine 2 Chest 3 Neck 4 Head 5 Ear.L 6 Ear.R 7 Scut, 8-19 the legs as the quadrupeds'
+# Where it differs from the quadrupeds': the hind leg's hock is the heel (the rear of the sole, just above the ground) and
+# its toe the front of the sole, so the foot bone is the whole long foot lying flat; the hip sits behind and a little above
+# the stifle (the femur runs down and forward to it in the crouch). The legs are weighted by the nearest bone along the
+# leg's polyline (hip, stifle, hock, toe), blended over a band at each joint, not by height (the sole and the shank's foot
+# overlap in height); the haunch and the upper arm in the trunk's skin take the upper bone by distance to it. The ears are
+# the head's vertices above the highest slab that still crosses the midline (above it the two ears stand apart), each
+# ear's joint at its root on the skull; the scut is the tail part on one joint. Only the fore legs get cut rings.
+LAGO_JOINTS = ['Hips', 'Spine', 'Chest', 'Neck', 'Head', 'Ear.L', 'Ear.R', 'Scut'] + JOINTS[8:]
+JL = {n: i for i, n in enumerate(LAGO_JOINTS)}
+
+def seg_param(p, a, b):
+    ab = b - a; t = float(np.clip(np.dot(p - a, ab) / max(float(np.dot(ab, ab)), 1e-12), 0, 1))
+    return t, float(np.linalg.norm(p - (a + ab * t)))
+
+def skeleton_lago(P, part, pw, piv, rig, H, wrist_k):
+    part = part.astype(int)
+    fore_z = (rig['fore'][2] + rig['hind'][2]) / 2
+    rump = float(np.percentile(P[part == 0][:, 1], 95))
+    legs = {}
+    for name in LEGS:
+        fore = name[0] == 'F'; left = name[1] == 'L'
+        s = ((part == 1) | (part == 2)) & (pw > 0.5) & ((piv[:, 2] > fore_z) == fore) & ((piv[:, 0] > 0) == left)
+        if s.sum() < 6: raise SystemExit(f'leg {name}: only {s.sum()} vertices')
+        L = P[s]; mid = piv[s][0].copy(); ey = float(mid[1])
+        if fore:   # the elbow, a wrist low over the paw, the paw's print; the shoulder above and a little ahead
+            low = L[L[:, 1] < 0.12 * ey]
+            toe = np.array([low[:, 0].mean(), 0.0, low[:, 2].mean()])
+            wy = wrist_k * ey
+            band = L[np.abs(L[:, 1] - wy) < 0.12 * ey]
+            if len(band) < 3: band = L[np.abs(L[:, 1] - wy) < 0.25 * ey]
+            lowj = np.array([band[:, 0].mean(), wy, band[:, 2].mean()])
+            rise = H - ey
+            top = np.array([mid[0] * 0.85, ey + 0.5 * rise, mid[2] + 0.12 * rise])
+        else:      # the sole along the ground: the toes at its front, the hock at the heel; the hip behind the stifle
+            sole = L[L[:, 1] < 0.15 * ey]
+            z0, z1 = float(sole[:, 2].min()), float(sole[:, 2].max()); fl = z1 - z0
+            front = sole[sole[:, 2] > z1 - 0.3 * fl]
+            toe = np.array([front[:, 0].mean(), 0.0, front[:, 2].mean()])
+            heel = L[(L[:, 2] < z0 + 0.2 * fl) & (L[:, 1] < 0.6 * ey)]
+            lowj = np.array([heel[:, 0].mean(), heel[:, 1].mean(), heel[:, 2].mean() + 0.08 * fl])
+            shank = float(np.linalg.norm(mid - lowj))
+            top = np.array([mid[0] * 0.8, ey + 0.3 * max(rump - ey, 0.1 * H), mid[2] - 0.55 * shank])
+        legs[name] = dict(top=top, mid=mid, low=lowj, toe=toe, mask=s, r=0.0)
+    hipsP = (legs['HL']['top'] + legs['HR']['top']) / 2; hipsP[0] = 0
+    chestP = (legs['FL']['top'] + legs['FR']['top']) / 2; chestP[0] = 0
+    hipsP[1] += 0.06 * H; chestP[1] += 0.03 * H
+    spineP = (hipsP + chestP) / 2; spineP[1] += 0.06 * H      # the back arches over the crouch
+    neckP = np.array(rig['head'], float)
+    hm = (part == 6) & (pw > 0.5); Hd = P[hm]
+    nose_z = float(Hd[:, 2].max()); nz = Hd[Hd[:, 2] > nose_z - 0.03 * H]
+    noseP = np.array([0.0, nz[:, 1].mean(), nose_z])
+    headP = neckP + (noseP - neckP) * 0.55
+    # the ears: scanning down from the top of the head, the first slab with a vertex on the midline is the skull's crown
+    mw, sh = 0.035 * H, 0.02 * H
+    y = float(Hd[:, 1].max()); base = None
+    while y > headP[1]:
+        sl = Hd[np.abs(Hd[:, 1] - y) < sh]
+        if len(sl) and (np.abs(sl[:, 0]) < mw).any(): base = y + sh; break
+        y -= 0.01 * H
+    if base is None: raise SystemExit('no ears found above the crown')
+    top_y = float(Hd[:, 1].max()); el = top_y - base
+    ears = {}
+    for side, sx in (('L', 1), ('R', -1)):
+        E = Hd[(Hd[:, 0] * sx > 0) & (Hd[:, 1] > base)]
+        rootv = E[E[:, 1] < base + 0.15 * el]
+        root = np.array([rootv[:, 0].mean(), base, rootv[:, 2].mean()])
+        tipv = E[E[:, 1] > top_y - 0.12 * el]
+        tip = tipv.mean(axis=0)
+        r = float(np.percentile(np.hypot(rootv[:, 0] - root[0], rootv[:, 2] - root[2]), 90))
+        ears[side] = dict(root=root, tip=tip, r=max(r, 0.01 * H), sx=sx)
+    tm = (part == 3) & (pw > 0.3)
+    rootT = np.array(rig['tail'], float)
+    T = P[tm]
+    scut_tip = T[np.argmax(((T - rootT) ** 2).sum(axis=1))] if len(T) else rootT + np.array([0, 0.02, -0.03]) * H
+    rest = {'Hips': hipsP, 'Spine': spineP, 'Chest': chestP, 'Neck': neckP, 'Head': headP,
+            'Ear.L': ears['L']['root'], 'Ear.R': ears['R']['root'], 'Scut': rootT}
+    for n in LEGS:
+        rest[f'UpperLeg.{n}'] = legs[n]['top']; rest[f'LowerLeg.{n}'] = legs[n]['mid']; rest[f'Foot.{n}'] = legs[n]['low']
+    return rest, legs, ears, base, np.asarray(scut_tip, float), noseP
+
+def weights_lago(P, part, pw, piv, rest, legs, ears, base, H):
+    part = part.astype(int); n = len(P)
+    W = np.zeros((n, len(LAGO_JOINTS)), np.float32)
+    hipsZ, spineZ, chestZ = rest['Hips'][2], rest['Spine'][2], rest['Chest'][2]
+    def trunk(i, w):
+        z = P[i, 2]
+        if z <= hipsZ: W[i, JL['Hips']] += w
+        elif z >= chestZ: W[i, JL['Chest']] += w
+        elif z < spineZ:
+            t = (z - hipsZ) / (spineZ - hipsZ); W[i, JL['Hips']] += w * (1 - t); W[i, JL['Spine']] += w * t
+        else:
+            t = (z - spineZ) / (chestZ - spineZ); W[i, JL['Spine']] += w * (1 - t); W[i, JL['Chest']] += w * t
+    fore_z = (rest['LowerLeg.FL'][2] + rest['LowerLeg.HL'][2]) / 2
+    headZ = rest['Head'][2]
+    def leg(i, name, w):   # the nearest bone along the leg, blended over a band at the joints
+        L = legs[name]; pts = [L['top'], L['mid'], L['low'], L['toe']]
+        bones = [JL[f'UpperLeg.{name}'], JL[f'LowerLeg.{name}'], JL[f'Foot.{name}']]
+        tds = [seg_param(P[i], pts[k], pts[k + 1]) for k in range(3)]
+        k = min(range(3), key=lambda q: tds[q][1]); t = tds[k][0]; b = 0.15
+        if t < b and k > 0: u = 0.5 + 0.5 * t / b; W[i, bones[k]] += w * u; W[i, bones[k - 1]] += w * (1 - u)
+        elif t > 1 - b and k < 2: u = 0.5 + 0.5 * (1 - t) / b; W[i, bones[k]] += w * u; W[i, bones[k + 1]] += w * (1 - u)
+        else: W[i, bones[k]] += w
+    for i in range(n):
+        p = part[i]; w = float(pw[i]); x, y, z = (float(c) for c in P[i])
+        if p in (1, 2) and w > 0:
+            name = ('F' if piv[i, 2] > fore_z else 'H') + ('L' if piv[i, 0] > 0 else 'R')
+            leg(i, name, w)
+            if w < 1: trunk(i, 1 - w)
+            continue
+        if p == 6 and w > 0:
+            e = ears['L' if x > 0 else 'R']
+            k = float(smooth(base - 0.04 * H, base + 0.03 * H, y))   # the whole ear above its root; at the root only its footprint
+            if k > 0 and y < base + 0.03 * H: k *= float(smooth(e['r'] * 2.2, e['r'] * 1.2, math.hypot(x - e['root'][0], z - e['root'][2])))
+            t = float(smooth(headZ - 0.06 * H, headZ + 0.04 * H, z))
+            W[i, JL['Ear.' + ('L' if x > 0 else 'R')]] += w * k
+            W[i, JL['Head']] += w * (1 - k) * t; W[i, JL['Neck']] += w * (1 - k) * (1 - t)
+            if w < 1: trunk(i, 1 - w)
+            continue
+        if p == 3 and w > 0:
+            W[i, JL['Scut']] += w
+            if w < 1: W[i, JL['Hips']] += 1 - w
+            continue
+        # the trunk, with the haunch and the upper arm taking the upper bone by distance to it
+        rem = 1.0
+        for name in LEGS:
+            if (x > 0) != (name[1] == 'L') or (z > fore_z) != (name[0] == 'F'): continue
+            L = legs[name]; t, d = seg_param(P[i], L['top'], L['mid'])
+            ln = float(np.linalg.norm(L['top'] - L['mid'])); R = (1.15 if name[0] == 'H' else 0.5) * ln
+            k = float(smooth(R * 1.6, R * 0.7, d)) * (0.95 if name[0] == 'H' else 0.8) * float(smooth(0.0, 0.45, t))   # little at the hip itself
+            k *= float(smooth(L['top'][1] + 0.5 * R, L['top'][1], y)) * float(smooth(0.15 * abs(L['top'][0]), 0.6 * abs(L['top'][0]), abs(x)))   # not the back's ridge
+            if name[0] == 'H':   # the bottom of the haunch sits on the heel in the crouch: it goes with the shank
+                tl, dl = seg_param(P[i], L['mid'], L['low']); rl = 0.5 * float(np.linalg.norm(L['mid'] - L['low']))
+                kl = float(smooth(rl * 1.5, rl * 0.6, dl)) * float(smooth(L['mid'][1], L['mid'][1] - 0.3 * (L['mid'][1] - L['low'][1]), y))
+                if kl > k: W[i, JL[f'LowerLeg.{name}']] += (kl - k) * rem; rem -= (kl - k) * rem
+            if k > 0: W[i, JL[f'UpperLeg.{name}']] += k * rem; rem -= k * rem
+        if rem > 0: trunk(i, rem)
+    order = np.argsort(-W, axis=1)[:, :4]
+    ws = np.take_along_axis(W, order, axis=1)
+    ws[ws < 0] = 0
+    tot = ws.sum(axis=1, keepdims=True); tot[tot == 0] = 1
+    ws = ws / tot
+    order[ws == 0] = 0
+    return order.astype(np.uint8), ws.astype(np.float32)
+
 def main(argv):
     if not argv or argv[0] in ('-h', '--help'): print(__doc__ or open(__file__).read().split('import json')[0]); return 0
     src = argv[0]
@@ -275,12 +427,15 @@ def main(argv):
     js, bin = load_glb(src)
     ex = js.get('extras') or {}
     rig = ex.get('rig'); species = ex.get('species'); H = float(ex.get('withers_m') or 0)
-    if not rig or rig.get('kind') != 'quadruped' or not H: raise SystemExit(f'{src}: no quadruped extras.rig / withers_m')
     row = resolve_loco(species) if species else None
-    posture = (row or {}).get('posture') or 'digitigrade'
+    lago = bool(rig) and rig.get('kind') == 'rodent' and (row or {}).get('order') == 'Lagomorpha'   # a rabbit (see skeleton_lago)
+    if lago and not H: H = float((row or {}).get('hip_m') or 0)
+    if not rig or (rig.get('kind') != 'quadruped' and not lago) or not H: raise SystemExit(f'{src}: no quadruped (or lagomorph) extras.rig / withers_m')
+    posture = 'lagomorph' if lago else (row or {}).get('posture') or 'digitigrade'
     D = DEFAULTS.get(posture, DEFAULTS['digitigrade'])
     wrist_k = float(opt('--wrist', D['wrist'])); hock_k = float(opt('--hock', D['hock']))
     print(f'INFO {src}: species {species}, posture {posture}, withers {H} m, wrist {wrist_k} hock {hock_k}')
+    names = LAGO_JOINTS if lago else JOINTS; jx = JL if lago else J
     W = Writer()
     meshes = []; nodes = []; rest = None; skin_extra = None
     tier_stats = []
@@ -290,6 +445,13 @@ def main(argv):
         attrs = {k: accessor(js, bin, A[k]).astype(np.float32) for k in A if k != 'POSITION' and not k.startswith(('JOINTS', 'WEIGHTS'))}
         idx = accessor(js, bin, pr['indices']).reshape(-1, 3).astype(np.uint32)
         part = attrs['_PART'][:, 0]; pw = attrs['_PARTW'][:, 0]; piv = attrs['_PIVOT']
+        if rest is None and lago:
+            rest, legs, ears, ear_base, scut_tip, nose = skeleton_lago(P, part, pw, piv, rig, H, wrist_k)
+            tail = {'tip': scut_tip, 'frac': None}
+            for n in names: print(f'   {n:12s} {np.round(rest[n], 3).tolist()}')
+            for n in LEGS: print(f'   toe {n} {np.round(legs[n]["toe"], 3).tolist()}')
+            for e in 'LR': print(f'   ear {e} root {np.round(ears[e]["root"], 3).tolist()} tip {np.round(ears[e]["tip"], 3).tolist()} r {ears[e]["r"]:.3f}')
+            print(f'   ear base y {ear_base:.3f}; scut tip {np.round(scut_tip, 3).tolist()}; nose {np.round(nose, 3).tolist()}')
         if rest is None:   # the skeleton from lod0, shared by every tier
             rest, legs, tail, nose = skeleton(P, part, pw, piv, idx, rig, posture, wrist_k, hock_k, H)
             for n in JOINTS: print(f'   {n:12s} {np.round(rest[n], 3).tolist()}')
@@ -300,6 +462,7 @@ def main(argv):
         for name in LEGS:
             fore_z = (rig['fore'][2] + rig['hind'][2]) / 2
             fore = name[0] == 'F'; left = name[1] == 'L'
+            if lago and not fore: continue   # the long hind foot lies flat: no horizontal ring (weighted along the bones)
             for y0 in (rest[f'Foot.{name}'][1], rest[f'LowerLeg.{name}'][1] - 0.005):
                 p_ = attrs['_PART'][:, 0].astype(int); pw_ = attrs['_PARTW'][:, 0]; pv_ = attrs['_PIVOT']
                 allowed = ((p_ == 1) | (p_ == 2)) & (pw_ > 0.3) & ((pv_[:, 2] > fore_z) == fore) & ((pv_[:, 0] > 0) == left)
@@ -315,7 +478,8 @@ def main(argv):
             fr = np.zeros(len(P), np.float32); fr[list(frac.keys())] = list(frac.values()); tl['frac'] = fr
         legs_t = {n: dict(legs[n]) for n in LEGS}
         # the leg masks on this tier (for the painter's quadrant test it uses pivots, not masks)
-        ji, wv = weights(P, attrs['_PART'][:, 0], attrs['_PARTW'][:, 0], attrs['_PIVOT'], rest, legs_t, tl, H)
+        if lago: ji, wv = weights_lago(P, attrs['_PART'][:, 0], attrs['_PARTW'][:, 0], attrs['_PIVOT'], rest, legs_t, ears, ear_base, H)
+        else: ji, wv = weights(P, attrs['_PART'][:, 0], attrs['_PARTW'][:, 0], attrs['_PIVOT'], rest, legs_t, tl, H)
         tier_stats.append((mesh['name'], n0, len(P), len(idx)))
         # write the tier
         new_attrs = {'POSITION': W.acc(P, 5126, 'VEC3', minmax=True)}
@@ -331,11 +495,15 @@ def main(argv):
     stem = os.path.basename(out).replace('.glb', '')
     r3 = lambda p: [round(float(x), 4) for x in p]
     skin_extra = {
-        'joints': JOINTS, 'joint_rest': [r3(rest[n]) for n in JOINTS], 'scale': 1.0, 'offset': [0.0, 0.0, 0.0], 'clips': f'{stem}_clips',
-        'rig': 'quadruped-20 (tools/rig_quadruped.py)', 'posture': posture, 'withers_m': H,
-        'legs': {n: {'joints': [J[f'UpperLeg.{n}'], J[f'LowerLeg.{n}'], J[f'Foot.{n}']], 'toe': r3(legs[n]['toe'])} for n in LEGS},
+        'joints': names, 'joint_rest': [r3(rest[n]) for n in names], 'scale': 1.0, 'offset': [0.0, 0.0, 0.0], 'clips': f'{stem}_clips',
+        'rig': ('lagomorph-20' if lago else 'quadruped-20') + ' (tools/rig_quadruped.py)', 'posture': posture, 'withers_m': H,
+        'legs': {n: {'joints': [jx[f'UpperLeg.{n}'], jx[f'LowerLeg.{n}'], jx[f'Foot.{n}']], 'toe': r3(legs[n]['toe'])} for n in LEGS},
         'tail_tip': r3(tail['tip']), 'nose': r3(nose), 'wrist_k': wrist_k, 'hock_k': hock_k,
     }
+    if lago:   # the ears' roots are their joints; the tips the bones' ends (gait.js swivels and lays them back); the scut
+        skin_extra['kind'] = 'lagomorph'
+        skin_extra['ears'] = {e: {'joint': JL[f'Ear.{e}'], 'tip': r3(ears[e]['tip'])} for e in 'LR'}
+        skin_extra['scut'] = {'joint': JL['Scut'], 'tip': r3(tail['tip'])}
     while len(W.buf) % 4: W.buf.append(0)
     ex = dict(ex); ex['skin'] = skin_extra
     g = {'asset': js['asset'], 'scene': 0, 'scenes': [{'nodes': list(range(len(nodes)))}], 'nodes': nodes, 'meshes': meshes,

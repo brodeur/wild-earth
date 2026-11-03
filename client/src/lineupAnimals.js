@@ -16,11 +16,12 @@ import { gaitParams, makeGait, gaitStep, writeRow, liveClip, footPoints, farTabl
 //      &slow=1 &only=<species,...> &all=1 (load every GLB at once instead of as rows scroll into view)
 //      &feet=1 (the leg engine's plant points as markers) &slope=<deg> (the ground tilted, rising toward the nose)
 //      &speed=<m/s> (the engine's walk / trot / run speed instead of the species' bands) &far=1 (the far tier's baked
-//      cycles, tools/bake_gait.mjs, instead of the live engine)
-// The skinned quadrupeds with legs (animalModels.js model.legs: fox, coyote, lion, bear) move on the leg engine
+//      cycles, tools/bake_gait.mjs, instead of the live engine) &joints=1 (the engine's skeleton drawn over the mesh)
+//      &weights=1 (the skinned mesh coloured by its joints' weights) &close=1 (the camera on the drawn animal alone)
+// The skinned quadrupeds with legs (animalModels.js model.legs: fox, coyote, lion, bear, and the two rabbits on its hop) move on the leg engine
 // (gait.js) at walk, trot, run and a standing turn: the body travels along the row and the camera follows it, so the
 // planted feet can be seen staying put on the ground (markers with &feet=1) while the body passes over them.
-// Scripting: window.__animalLineup (metrics(), table(), loadAll(), set({...}), rows, timing).
+// Scripting: window.__animalLineup (metrics(), table(), loadAll(), set({...}), rows, timing, film(species, {n, step, every})).
 
 const T0 = performance.now();
 const $ = id => document.getElementById(id);
@@ -106,6 +107,7 @@ const GENERIC = {
 const MOTIONS = [
   ['idle', 'idle'], ['walk', 'walk / bound / hop'], ['trot', 'trot / pace (the leg engine)'], ['run', 'run: gallop / bolt / dash / sprint'], ['turn', 'standing turn: steps round (the leg engine)'], ['graze', 'graze / tail flick / peck / head flick'], ['rest', 'bedded / sit up / perched / bask'],
   ['flap', 'flap'], ['glide', 'glide / soar'], ['climb', 'climb (legs splayed)'], ['display', 'display: push-up'],
+  ['sit', 'sit up (the rabbits on the leg engine)'], ['freeze', 'freeze: crouched flat (the rabbits)'],
 ];
 const DRAFT_FALLBACK = { odocoileus_hemionus: 'odocoileus_hemionus_buck' };   // the doe has no brief of its own
 
@@ -629,7 +631,8 @@ function animFor(row, motion, t) {
     if (motion === 'walk') { a.phase = t * TAU * (r.walk || 3.5); a.gait = 1; }
     else if (motion === 'run') { a.phase = t * TAU * (r.run || r.walk * 1.8 || 6); a.gait = 1; a.flick = row.species === 'sylvilagus_bachmani' ? 0.8 : 0; }
     else if (motion === 'graze') { a.flick = pulse(1.2); a.e1 = pulse(1.2, 0.12); }
-    else if (motion === 'rest') a.pose = 1;
+    else if (motion === 'rest' || motion === 'sit') a.pose = 1;
+    else if (motion === 'freeze') a.pose = 0;
     else if (motion === 'climb') { a.e0 = 1; a.phase = t * TAU * (r.walk || 3.5) * 0.6; a.gait = 0.7; }
     else if (motion !== 'idle') return na();
   } else if (plan === 'bird') {
@@ -661,20 +664,25 @@ const antlersFor = season => AM.antlerState(AM.SEASON_MONTH[season] ?? 10.5);
 // (flat, or the &slope), wrapping every few metres; a standing turn yaws in place. The pose goes into the model's live
 // texture row; the mesh follows the body; the feet's plant points go to the markers.
 const SLOPE = (+params.get('slope') || 0) * Math.PI / 180, FEET = params.get('feet') === '1', SPEED = +params.get('speed') || 0, FAR = params.get('far') === '1';
+const JOINTS = params.get('joints') === '1', WEIGHTS = params.get('weights') === '1', CLOSE = params.get('close') === '1';
 const groundY = (x, rowX) => Math.tan(SLOPE) * (x - rowX);
 if (SLOPE) ground.rotation.set(-Math.PI / 2, 0, SLOPE);   // rising toward +x (the noses)
 const LOCO = getJSON(new URL('../../tiles/utm10n_680_4280/locomotion.json', import.meta.url)).then(j => j?.species || {});
 function legsPose(row, model, meshes, t, dt) {
   const G = row.gaitRow ||= { st: makeGait(), P: null, travel: 0, yaw: Math.PI / 2, marks: null };
-  if (!G.P) { G.P = gaitParams(null, model.legs); LOCO.then(L => { if (L[row.species]) G.P = gaitParams(L[row.species], model.legs); }); }
-  const P = G.P, want = state.motion;
-  const v = SPEED || (want === 'walk' ? 0.6 * P.vw : want === 'trot' ? 0.75 * P.vt : want === 'run' ? 1.6 * P.vt : 0);
+  if (!G.P) { G.P = gaitParams(null, model.legs); LOCO.then(L => { if (L[row.species]) { G.row = L[row.species]; G.P = gaitParams(L[row.species], model.legs); G.F = null; } }); }
+  const P = G.P, want = state.motion, hop = !!P.hop;
+  if (WEIGHTS && !G.painted) { for (const m of meshes) paintWeights(m.geometry); G.painted = true; }
+  // a lagomorph (gait.js hopStep): walk is the shuffle, trot the half-bound, run its fast form (three quarters of the cruise:
+  // the jackrabbit's lope); sit, freeze and rest (the form) from the pose's sign
+  const v = SPEED || (hop ? (want === 'walk' ? 0.75 * P.vS : want === 'trot' ? 1.5 * P.vS : want === 'run' ? Math.max(0.75 * (G.row?.cruise_mps || 2 * P.vt), 2.2 * P.vt) : 0)
+    : want === 'walk' ? 0.6 * P.vw : want === 'trot' ? 0.75 * P.vt : want === 'run' ? 1.6 * P.vt : 0);
   const wr = want === 'turn' ? 1.2 : 0;
   G.travel += v * dt; G.yaw += wr * dt;
   if (G.travel > 1.6) { G.travel = -1.6; for (const F of G.st.feet) F.has = false; }
   const x0 = row.x + row.posD, x = x0 + G.travel, terrain = (wx, wz) => groundY(wx, row.x);
-  const inp = { x, y: terrain(x, 0), z: 0, yaw: G.yaw, size: 1, v, wr, pose: want === 'rest' ? 1 : 0, flick: want === 'graze' ? 1 : 0, bend: 0,
-    twitch: row.species === 'puma_concolor' ? 0.7 * Math.sin(t * 3.3) : 0, terrain, air: false };
+  const inp = { x, y: terrain(x, 0), z: 0, yaw: G.yaw, size: 1, v, wr, pose: hop ? (want === 'sit' ? 1 : want === 'freeze' ? -0.6 : want === 'rest' ? -1 : 0) : want === 'rest' ? 1 : 0,
+    flick: want === 'graze' ? 1 : 0, bend: 0, twitch: row.species === 'puma_concolor' ? 0.7 * Math.sin(t * 3.3) : row.species === 'sylvilagus_bachmani' && want === 'run' ? 1 : 0, terrain, air: false };
   if (FAR) {   // the far tier: the baked cycles driven by distance (farDrive), the body sliding along at v
     G.far ||= makeFar(); G.F ||= farTable(model.skin, P);
     row.travel = G.travel;
@@ -694,16 +702,58 @@ function legsPose(row, model, meshes, t, dt) {
     const C = m.geometry.attributes.aClip; liveClip(liveRow, C.array, 0); C.needsUpdate = true;
     const B = m.geometry.attributes.aBend; B.array.fill(0); B.needsUpdate = true;
   }
+  if (JOINTS) drawJoints(row, model.legs, G.st, x - row.x, inp.y, G.yaw);
   if (FEET) {
     if (!G.marks) { G.marks = [0, 1, 2, 3].map(i => { const k = new THREE.Mesh(new THREE.SphereGeometry(0.02 * Math.max(0.6, model.legs.h), 8, 6), lambert(i < 2 ? 0xd94a2a : 0x2a6ad9)); row.group.add(k); return k; }); }
     footPoints(G.st).forEach((f, i) => { G.marks[i].position.set(f[0] - row.x, f[1] + 0.005, f[2]); G.marks[i].scale.setScalar(f[3] ? 1 : 0.5); });
   }
 }
+// &joints=1: the skeleton's posed joints (gait.js st.P, the ears' and scut's from writeRow) as dots and the bones as lines,
+// drawn through the mesh; &weights=1: every vertex coloured by its joints (rig_quadruped.py's weights, blended)
+const JCOL = [0xffffff, 0xd8d8d8, 0xb0b0b0, 0xffd24a, 0xff9a2a, 0xff3aa0, 0xa040ff, 0x60ffff, 0xff4040, 0xc02020, 0x701010, 0x40ff40, 0x20b020, 0x106010, 0x4080ff, 0x2050c0, 0x102a70, 0xffff40, 0xc0c020, 0x707010];
+function paintWeights(geo) {
+  const si = geo.getAttribute('skinIndex'), sw = geo.getAttribute('skinWeight'), col = geo.getAttribute('color');
+  if (!si || !sw || !col) return;
+  const c = new THREE.Color();
+  for (let i = 0; i < si.count; i++) {
+    let r = 0, g = 0, b = 0;
+    for (let k = 0; k < 4; k++) { const w = sw.getComponent(i, k); if (!w) continue; c.setHex(JCOL[si.getComponent(i, k) % JCOL.length]).convertSRGBToLinear(); r += c.r * w; g += c.g * w; b += c.b * w; }
+    col.setXYZ(i, r, g, b);
+  }
+  col.needsUpdate = true;
+}
+function drawJoints(row, skel, st, x, y, yaw) {
+  const G = row.gaitRow;
+  if (!G.jv) {
+    const grp = new THREE.Group(), mat = new THREE.MeshBasicMaterial({ color: 0xffffff, depthTest: false }), r = 0.012 * Math.max(0.5, skel.h);
+    const dots = skel.names.map((n, j) => { const m = new THREE.Mesh(new THREE.SphereGeometry(r, 8, 6), new THREE.MeshBasicMaterial({ color: JCOL[j % JCOL.length], depthTest: false })); m.renderOrder = 40; grp.add(m); return m; });
+    const lg = new THREE.BufferGeometry(); lg.setAttribute('position', new THREE.BufferAttribute(new Float32Array(skel.n * 2 * 3 * 2), 3));
+    const lines = new THREE.LineSegments(lg, new THREE.LineBasicMaterial({ color: 0x111111, depthTest: false })); lines.renderOrder = 39; grp.add(lines);
+    row.group.add(grp); G.jv = { grp, dots, lines, mat };
+  }
+  const { grp, dots, lines } = G.jv, P = st.P, E = st.E, R = skel.rest, pos = lines.geometry.attributes.position.array;
+  grp.position.set(x, y, 0); grp.rotation.y = yaw;
+  const end = j => {   // the bone's far end: its child joint, or its own end point (the toe, the nose, an ear's or the scut's tip)
+    const nm = skel.names[j];
+    const CH = { Hips: 'Spine', Spine: 'Chest', Chest: 'Neck', Neck: 'Head', Tail1: 'Tail2', Tail2: 'Tail3' };
+    if (CH[nm]) return P[skel.idx[CH[nm]]];
+    if (/^(UpperLeg|LowerLeg)/.test(nm)) return P[j + 1];
+    if (skel.attach?.[j] && st.M?.[j]) { const tip = (skel.ears?.find(e => e.j === j) || skel.scut).tip, M = st.M[j], d = [tip[0] - R[j][0], tip[1] - R[j][1], tip[2] - R[j][2]]; return [P[j][0] + M[0] * d[0] + M[1] * d[1] + M[2] * d[2], P[j][1] + M[3] * d[0] + M[4] * d[1] + M[5] * d[2], P[j][2] + M[6] * d[0] + M[7] * d[1] + M[8] * d[2]]; }
+    return E[j] || P[j];
+  };
+  let k = 0;
+  for (let j = 0; j < skel.n; j++) {
+    const p = P[j]; if (!p) continue;
+    dots[j].position.set(p[0], p[1], p[2]);
+    const q = end(j); pos.set(p, k); pos.set(q, k + 3); k += 6;
+  }
+  lines.geometry.setDrawRange(0, k / 3); lines.geometry.attributes.position.needsUpdate = true;
+}
 function pose(row, t, dt = 1 / 60) {
   const want = state.motion, sets = [];
   const legs = row.drawn.state === 'ok' && row.drawn.model.legs ? row.drawn.model : null;
   if (legs) legsPose(row, legs, row.drawn.meshes, t, dt); else if (row.gaitRow) { row.travel = 0; for (const m of row.drawn.meshes || []) { m.position.set(0, 0, 0); m.rotation.y = Math.PI / 2; } }
-  if (row.proc.mesh) row.proc.mesh.visible = !(legs && ['walk', 'trot', 'run', 'turn'].includes(want));   // the procedural model is off the engine's track
+  if (row.proc.mesh) row.proc.mesh.visible = !(legs && (CLOSE || ['walk', 'trot', 'run', 'turn'].includes(want)));   // the procedural model is off the engine's track
   if (row.drawn.state === 'ok' && !row.drawn.model.skinned && !legs) sets.push([row.drawn.model, row.drawn.meshes]);
   if (row.proc.mesh) sets.push([row.proc.model, [row.proc.mesh]]);
   const a = animFor(row, want, t);
@@ -768,7 +818,8 @@ function refresh(row) {
   if (D.state === 'none' && !P.mesh) msgs.push('nothing to draw: no mesh and no procedural model (sound only)');
   else if (D.state === 'none') msgs.push('no drawn mesh: procedural model only');
   if (!P.mesh && D.state !== 'none') msgs.push('no procedural model for this species');
-  if (!animFor(row, state.motion, 0).ok) msgs.push(`${state.motion}: not a motion of this body plan, idle shown`);
+  const engine = D.state === 'ok' && D.model?.legs && ['walk', 'trot', 'run', 'turn', 'rest', 'graze', 'idle', ...(D.model.legs.kind === 'lagomorph' ? ['sit', 'freeze'] : [])].includes(state.motion);
+  if (!engine && !animFor(row, state.motion, 0).ok) msgs.push(`${state.motion}: not a motion of this body plan, idle shown`);
   if (D.model?.skinned && !['flap', 'glide', 'idle'].includes(state.motion)) msgs.push(`drawn raven: skinned player model has only fly and glide clips, glide shown`);
   if (D.model?.generic && state.motion !== 'idle') msgs.push('drawn: generic rig constants (no loader in animalModels.js yet)');
   if (D.model?.antler) { const s = antlersFor(state.season); msgs.push(`antlers (${state.season}): ${s.growth === 0 ? 'cast' : s.velvet ? `velvet, ${Math.round(s.growth * 100)}% grown` : 'hard'}${state.variant ? ', young forked-horn' : ''}`); }
@@ -858,9 +909,13 @@ if (params.get('all') === '1') loadAll(); else for (const row of rows) io.observ
 let snapLight = true, last = performance.now(), clock = 0;
 const v = new THREE.Vector3();
 function placeCamera(row, aspect) {
-  const tx = row.x + row.right / 2 + (row.travel || 0);   // the camera follows a body the leg engine walks along the row
+  let tx = row.x + row.right / 2 + (row.travel || 0);   // the camera follows a body the leg engine walks along the row
   let D = FIXED_D, ty = EYE_Y;
-  if (state.fit) {
+  const dm = row.drawn.state === 'ok' ? row.drawn.metrics : null;
+  if (CLOSE && dm && row.posD != null) {   // &close=1: the drawn animal alone, filling the view
+    const vh = Math.tan(FOV * Math.PI / 360), w = dm.L * 1.3, h = Math.max(dm.top, 0.05) * 1.2;
+    tx = row.x + row.posD + (row.travel || 0); D = Math.max(h / (2 * vh), w / (2 * vh * aspect), 0.15); ty = dm.top * 0.5;
+  } else if (state.fit) {
     const vh = Math.tan(FOV * Math.PI / 360);
     const w = row.right + 0.4, h = Math.max(row.H, 0.15) * 1.35;
     D = Math.max(h / (2 * vh), w / (2 * vh * aspect), 0.6); ty = h * 0.42;
@@ -868,12 +923,40 @@ function placeCamera(row, aspect) {
   const el = state.view === 'top' ? 1.2 : state.view === 'three' ? 0.3 : 0;
   const az = (state.view === 'three' ? 0.6 : 0) + row.yaw;   // three-quarter: from the front (the animals face +x)
   camera.position.set(tx + Math.sin(az) * Math.cos(el) * D, ty + Math.sin(el) * D, Math.cos(az) * Math.cos(el) * D);
-  camera.lookAt(tx, state.fit ? ty : EYE_Y * (state.view === 'side' ? 1 : 0.5), 0);
+  camera.lookAt(tx, state.fit || CLOSE ? ty : EYE_Y * (state.view === 'side' ? 1 : 0.5), 0);
   camera.aspect = aspect; camera.updateProjectionMatrix();
   return { tx, D };
 }
 function frame(now) {
-  const dt = Math.min((now - last) / 1000, 0.1); last = now; clock += dt * (state.slow ? 0.25 : 1);
+  const dt = Math.min((now - last) / 1000, 0.1); last = now;
+  if (!paused) draw(dt);
+  requestAnimationFrame(frame);
+}
+// Scripting a filmstrip (__animalLineup.film): the clock paused, each still drawn after a fixed step and cut from the
+// canvas while the frame is still in the drawing buffer; the stills laid out in a grid on one canvas (returned as a PNG
+// data URL, and shown over the page with show=true)
+let paused = false;
+function film(species, { n = 12, step = 1 / 60, every = 4, cols = 4, warm = 120, show = true, crop = 1.7, raw = false } = {}) {
+  const row = rows.find(r => r.species === species); if (!row) return null;
+  paused = true; row.el.view.scrollIntoView({ block: 'center' });
+  for (let i = 0; i < warm; i++) draw(step);
+  const r = row.el.view.getBoundingClientRect(), pr = renderer.getPixelRatio(), h = Math.round(r.height * pr), w = Math.min(Math.round(r.width * pr), Math.round(h * crop));
+  const x0 = Math.round((r.left + r.width / 2) * pr - w / 2);   // the middle of the view (crop: its width over its height)
+  const out = document.createElement('canvas'); out.width = w * cols; out.height = h * Math.ceil(n / cols);
+  const g = out.getContext('2d');
+  for (let k = 0; k < n; k++) {
+    for (let i = 0; i < every; i++) draw(step);
+    g.drawImage(renderer.domElement, x0, Math.round(r.top * pr), w, h, (k % cols) * w, Math.floor(k / cols) * h, w, h);
+    g.fillStyle = '#000'; g.font = `${14 * pr}px sans-serif`; g.fillText(`${k}`, (k % cols) * w + 6, Math.floor(k / cols) * h + 18 * pr);
+  }
+  paused = false;
+  if (raw) return out;   // the canvas itself (a caller lays several out without decoding images)
+  const url = out.toDataURL('image/png');
+  if (show) { let im = document.getElementById('filmstrip'); if (!im) { im = document.createElement('img'); im.id = 'filmstrip'; im.style.cssText = 'position:fixed;left:0;top:0;width:100%;z-index:10;background:#fff'; im.onclick = () => im.remove(); document.body.appendChild(im); } im.src = url; }
+  return url;
+}
+function draw(dt) {
+  clock += dt * (state.slow ? 0.25 : 1);
   const W = innerWidth, H = innerHeight;
   if (canvas.width !== Math.floor(W * renderer.getPixelRatio()) || canvas.height !== Math.floor(H * renderer.getPixelRatio())) renderer.setSize(W, H, false);
   // the shared atmosphere for the season and hour; cloud shadows off (a review stand, not the open sky)
@@ -910,7 +993,6 @@ function frame(now) {
     drawn++;
   }
   if (drawn && timing.firstFrame == null) timing.firstFrame = performance.now() - T0;
-  requestAnimationFrame(frame);
 }
 requestAnimationFrame(frame);
 timing.ready = performance.now() - T0;
@@ -965,6 +1047,6 @@ function table() {
   }
   return out;
 }
-window.__animalLineup = { rows, state, timing, metrics, table, loadAll, set, scene, renderer, camera };
+window.__animalLineup = { rows, state, timing, metrics, table, loadAll, set, scene, renderer, camera, film };
 document.body.dataset.ready = '1';
 summary();
