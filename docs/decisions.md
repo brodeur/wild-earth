@@ -3830,6 +3830,20 @@ live oak is baked as one 8.6 m tree. Yosemite's far records then: ponderosa p50 
 incense cedar 28.8, 44.9, 53.3, 64.6; black oak 13.2, 24.6, 29.6, 37.7; Douglas-fir 34.5, 55.5, 63.0, 67; cottonwood
 19.5, 29.5, 32.8, 34.1; valley oak 20.9, 30.3, 35.8, 43.3.
 
+**On the lidar tile** (the home tile, 395,356 crowns, checked third): heights are the crowns', so only the clamp and
+the classes were checked. The old clamp 1.7 capped 16,011 crowns (4 %) by up to 29.7 m; at 3, 142 still exceed it.
+The tallest crowns (ponderosa 54.5, 54.0, 51.5 m) are drawn at their height on the old-growth tree (43 m, x1.27) with
+their landmark ids. The far tier now keeps every crown's measured height at any distance (before, beyond about
+1.75 km it was the species' spread about the baked tree). Found, not fixed: the crown plan gives a few 49-51 m crowns
+to madrone, sycamore and black oak (chooseSpecies falls back to the row's tallest-capable species when none reaches
+the crown), and those species draw one shared mature tree (12.7 m madrone), now stretched x3 to 38 m where it was
+x1.7 to 22 m; the species fit could read the records' `stature` record instead of the class ranges.
+
+**Cost**: the same draw calls and triangles at the home tile's poses before and after (316 / 7.73 M from the air, 423 /
+9.36 M on the ground) and within 3 % at Yosemite's (river bank 424 / 15.006 M before, 423 / 15.012 M after); the GPU
+timer-query medians overlap (the pane's GPU time wandered 18-38 ms round to round at one pose, so no finer claim).
+No console errors on either tile.
+
 Not done here: the meadow belt on the valley floor is mostly broadleaf (LANDFIRE's mix there: alder, willow,
 cottonwood, bay, ash, valley oak), so the ponderosa and incense cedar giants that stand over the real valley's
 meadows are few near them; sugar pine and white fir are not in the library.

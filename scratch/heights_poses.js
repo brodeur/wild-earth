@@ -40,3 +40,10 @@ window.__thGpu = async (tile, rounds = 3) => {
   await H.view(null);
   return out;
 };
+// GPU frame times per pose (one view, then `rounds` timer-query runs of 40 renders), into window.__gpuOut; call with a
+// few poses at a time (the hidden pane runs the page only while a call is open)
+window.__gpuRun = async (tile, keys, rounds = 2) => {
+  const H = window.__th, P = window.__thPoses[tile], out = window.__gpuOut ||= {};
+  for (const k of keys) { await H.view(...P[k], 200); for (let r = 0; r < rounds; r++) { const t = await H.gpuTime(40); (out[k] ||= []).push(t.median); out[k + ':calls'] = [t.calls, t.tris]; } }
+  await H.view(null); return out;
+};

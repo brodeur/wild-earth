@@ -57,11 +57,12 @@ window.__th = (() => {
     const c = useCam ? cam : we.camera, qs = [];
     for (let i = 0; i < 5; i++) we.renderer.render(we.scene, c);
     for (let i = 0; i < n; i++) { const q = gl.createQuery(); gl.beginQuery(ext.TIME_ELAPSED_EXT, q); we.renderer.render(we.scene, c); gl.endQuery(ext.TIME_ELAPSED_EXT); qs.push(q); }
+    const calls = we.renderer.info.render.calls, tris = we.renderer.info.render.triangles;   // before any yield: another render may run then
     const px = new Uint8Array(4); gl.readPixels(0, 0, 1, 1, gl.RGBA, gl.UNSIGNED_BYTE, px);
     for (let t = 0; t < 20000 && !gl.getQueryParameter(qs[n - 1], gl.QUERY_RESULT_AVAILABLE); t++) await frame();
     if (gl.getParameter(ext.GPU_DISJOINT_EXT)) return { disjoint: true };
     const ms = qs.map(q => gl.getQueryParameter(q, gl.QUERY_RESULT) / 1e6).sort((a, b) => a - b); qs.forEach(q => gl.deleteQuery(q));
-    return { median: +ms[n >> 1].toFixed(2), q1: +ms[n >> 2].toFixed(2), q3: +ms[(3 * n) >> 2].toFixed(2), calls: we.renderer.info.render.calls, tris: we.renderer.info.render.triangles };
+    return { median: +ms[n >> 1].toFixed(2), q1: +ms[n >> 2].toFixed(2), q3: +ms[(3 * n) >> 2].toFixed(2), calls, tris };
   }
   const pct = (a, p) => a.length ? a[Math.min(a.length - 1, Math.floor(p * a.length))] : 0;
   const summarize = (byId, bin = 5) => {
