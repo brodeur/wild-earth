@@ -169,6 +169,27 @@ class DigTest(unittest.TestCase):
         self.assertAlmostEqual(got["nodes"]["w.2"]["r"], 0.08)
         server.GAME_WORLDS[(T1, "winter")] = alone
 
+    def test_room(self):
+        """A chamber: one node in place of a loop's nodes; their outside segments end at it, inner ones go."""
+        d, now = digworld.empty(), time.time()
+        x, y, z = 3000.0, 200.0, -3000.0
+        ev = [{"type": "hole", "id": "r.h", "x": x, "y": y, "z": z, "r": 0.03},
+              {"type": "dig", "from": "r.h", "id": "r.1", "seg": "r.s1", "x": x, "y": y - 0.2, "z": z - 0.2},
+              {"type": "dig", "from": "r.1", "id": "r.2", "seg": "r.s2", "x": x + 0.07, "y": y - 0.2, "z": z - 0.27},
+              {"type": "dig", "from": "r.2", "id": "r.3", "seg": "r.s3", "x": x, "y": y - 0.2, "z": z - 0.34},
+              {"type": "dig", "from": "r.3", "id": "r.4", "seg": "r.s4", "x": x - 0.07, "y": y - 0.2, "z": z - 0.27},
+              {"type": "join", "a": "r.4", "b": "r.1", "seg": "r.s5"},
+              {"type": "dig", "from": "r.3", "id": "r.5", "seg": "r.s6", "x": x, "y": y - 0.2, "z": z - 0.6}]
+        for e in ev:
+            self.assertIsNone(digworld.dig_reduce(d, digworld.clean(e), now), e)
+        e = digworld.clean({"type": "room", "id": "r.R", "x": x, "y": y - 0.2, "z": z - 0.27, "r": 0.1, "absorb": ["r.1", "r.2", "r.3", "r.4"]})
+        self.assertIsNone(digworld.dig_reduce(d, e, now))
+        self.assertEqual(sorted(d["nodes"]), ["r.5", "r.R", "r.h"])
+        self.assertEqual(d["segs"], {"r.s1": ["r.R", "r.h"], "r.s6": ["r.R", "r.5"]})
+        self.assertEqual(d["nodes"]["r.R"]["k"], 1)
+        self.assertEqual(digworld.dig_reduce(d, digworld.clean({"type": "grow", "id": "r.R", "x": x, "y": y, "z": z}), now), "not a face")
+        self.assertEqual(digworld.dig_reduce(d, digworld.clean({"type": "room", "id": "r.Q", "x": x, "y": y, "z": z, "r": 0.1, "absorb": ["r.h"]}), now), "no such node")
+
     def test_v3_snapshot_loads(self):
         d = server.TILES_DIR / T1 / "game"
         d.mkdir(parents=True, exist_ok=True)

@@ -18,7 +18,8 @@ N_MAX, S_MAX, P_MAX = 1500, 1200, 120   # as client/src/dig.js draws them (MAX_N
 R_MIN, R_MAX, PIT_R_MAX, PIT_D_MAX = 0.01, 0.12, 1.3, 0.75
 STEP_MAX = 0.6                  # m from the node a dig starts at (the client's steps are 2 cm; a grown segment 35 cm)
 ID_RE = re.compile(r"^[A-Za-z0-9_.:-]{1,40}$")
-TYPES = ("hole", "dig", "grow", "join", "widen", "surface", "pit", "open", "visit")
+TYPES = ("hole", "dig", "grow", "join", "widen", "room", "surface", "pit", "open", "visit")
+ROOM_REACH = 0.45                # m: the farthest an absorbed node lies from a room's centre
 
 
 def empty() -> dict:
@@ -58,6 +59,11 @@ def clean(e) -> dict:
         if not isinstance(ids, list) or not 1 <= len(ids) <= 32:
             raise ValueError("ids must be a list of 1 to 32 ids")
         out.update(ids=[_id(i, "ids") for i in ids], r=_num(e.get("r"), "r", R_MIN, R_MAX))
+    elif t == "room":
+        ab = e.get("absorb")
+        if not isinstance(ab, list) or not 1 <= len(ab) <= 64:
+            raise ValueError("absorb must be a list of 1 to 64 ids")
+        out.update(id=_id(e.get("id"), "id"), **xyz(), r=_num(e.get("r"), "r", R_MIN, R_MAX), absorb=[_id(i, "absorb") for i in ab])
     elif t == "surface":
         out.update(id=_id(e.get("id"), "id"), y=_num(e.get("y"), "y", -1000, 9000))
     elif t == "pit":
@@ -127,7 +133,7 @@ def dig_reduce(d: dict, e: dict, now: float) -> str | None:
         return None
     if t == "grow":
         n = N.get(e["id"])
-        if not n or n["h"] or len(A.get(e["id"], [])) != 1:
+        if not n or n["h"] or n.get("k") or len(A.get(e["id"], [])) != 1:
             return "not a face"
         other = S[A[e["id"]][0]]
         o = N[other[0] if other[1] == e["id"] else other[1]]
@@ -167,6 +173,43 @@ def dig_reduce(d: dict, e: dict, now: float) -> str | None:
                     n["r"], ok = r, True
                 _see(d, n["sys"], now)
         return None if ok else "no change"
+    if t == "room":
+        # a chamber: one node (a sphere of radius r) in place of the nodes round it; their segments to the outside now
+        # end at it, the ones among them go, and of two to the same outside node one stays
+        if taken(e["id"]) or len(N) >= N_MAX:
+            return "taken"
+        ab = [N.get(i) for i in e["absorb"]]
+        if any(n is None or n["h"] for n in ab):
+            return "no such node"
+        sys = {n["sys"] for n in ab}
+        if len(sys) != 1 or any(math.dist((n["x"], n["y"], n["z"]), (e["x"], e["y"], e["z"])) > ROOM_REACH for n in ab):
+            return "not one place"
+        gone, rid = set(e["absorb"]), e["id"]
+        N[rid] = {"x": e["x"], "y": e["y"], "z": e["z"], "r": e["r"], "h": 0, "sys": ab[0]["sys"], "o": 1 if any(n["o"] for n in ab) else 0, "k": 1}
+        A[rid], dropped, outside = [], set(), set()
+        for sid in sorted({x for i in gone for x in A.get(i, [])}):
+            a, b = S[sid]
+            if a in gone and b in gone:
+                dropped.add(sid)
+                continue
+            other = b if a in gone else a
+            if other in outside:
+                dropped.add(sid)
+                continue
+            outside.add(other)
+            S[sid] = [rid, other]
+            A[rid].append(sid)
+        for sid in dropped:
+            del S[sid]
+        for i in gone:
+            del N[i]
+            A.pop(i, None)
+        for lst in A.values():
+            lst[:] = [x for x in lst if x not in dropped]
+        for p in P.values():
+            p["o"] = [x for x in p["o"] if x not in dropped]
+        _see(d, ab[0]["sys"], now)
+        return None
     if t == "surface":
         n = N.get(e["id"])
         if not n or n["h"]:

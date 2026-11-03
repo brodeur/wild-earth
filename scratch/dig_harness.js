@@ -43,3 +43,27 @@ window.__dh2 = (() => {
   function states(ids) { return ids.map(id => { const a = A.byId.get(id); return a ? [a.state, +a.x.toFixed(2), +a.y.toFixed(2), +a.z.toFixed(2), !!a.buried, a.tun ? a.tun.i + '/' + a.tun.path.length : a.dig ? 'dig' + a.dig.stage : '-'] : null; }); }
   return { voles, states };
 })();
+// __dh3.iso(n): the dig meshes' own GPU time (ms per draw): only they are drawn, K times in one timer query
+// (EXT_disjoint_timer_query_webgl2), against the same with them hidden; the median of n differences.
+// __dh3.camAt(p, t): hold the camera at p looking at t (null: the control's own camera again).
+window.__dh3 = (() => {
+  const we = window.__we, D = we.dig, R = we.renderer, gl = R.getContext(), ext = gl.getExtension('EXT_disjoint_timer_query_webgl2');
+  const S2 = new we.scene.constructor(), K = 10;
+  const timeK = (clones, src, vis) => new Promise(res => {
+    clones.forEach((c, i) => { c.visible = vis && src[i].visible; });
+    const ac = R.autoClear; R.autoClear = false; const q = gl.createQuery(); gl.beginQuery(ext.TIME_ELAPSED_EXT, q);
+    for (let k = 0; k < K; k++) { R.clearDepth(); R.render(S2, we.camera); }
+    gl.endQuery(ext.TIME_ELAPSED_EXT); R.autoClear = ac;
+    const poll = () => { if (!gl.getQueryParameter(q, gl.QUERY_RESULT_AVAILABLE)) return setTimeout(poll, 5); const dj = gl.getParameter(ext.GPU_DISJOINT_EXT), ns = gl.getQueryParameter(q, gl.QUERY_RESULT); gl.deleteQuery(q); res(dj ? null : ns / 1e6 / K); };
+    poll();
+  });
+  async function iso(n = 15) {
+    const src = [D.tubes.pre, D.rooms.pre, D.tubes, D.rooms, D.bowls, D.heaps].filter(Boolean);
+    const clones = src.map(m => { const c = new m.constructor(m.geometry, m.material); c.frustumCulled = false; c.renderOrder = m.renderOrder; S2.add(c); return c; });
+    const d = []; for (let i = 0; i < n; i++) { const a = await timeK(clones, src, true), b = await timeK(clones, src, false); if (a !== null && b !== null) d.push(a - b); }
+    clones.forEach(c => S2.remove(c)); d.sort((p, q) => p - q); return +d[d.length >> 1].toFixed(3);
+  }
+  const G = we.ground; G._uc ||= G.updateCamera;
+  function camAt(p, t) { if (!p) { G.updateCamera = G._uc; return; } G.updateCamera = function () { const c = we.camera; c.position.set(...p); c.up.set(0, 1, 0); c.lookAt(...t); }; }
+  return { iso, camAt };
+})();

@@ -47,6 +47,7 @@ const damp = (a, b, k, dt) => b + (a - b) * Math.exp(-k * dt);
 export const RATE = 0.0127;                 // m/s: half an inch a second
 export const R_TUBE = 0.03, R_CHAMBER = 0.10, CHAMBER_NEAR = 0.13, WIDEN_STEP = 0.025;
 const R_MAX = R_CHAMBER;
+const VIS_UNDER = 1.6, VIS_OPEN = 0.6, NEAR_UNDER = 0.004;   // m: Dig.visPass; the camera's near plane in a tunnel
 const JOIN_PATH = 0.3, R_TURN = 0.07;   // R_TURN: the tightest curve a digging vole makes (m): a chamber is dug round one   // m along the tunnel within which a node is the face's own last stretch, not a place to join
 const MAX_DEPTH = 0.5, SLOPE_MAX = 0.6, START_PITCH = -0.55, STEP = 0.02, BEND = 0.2, SEG_MAX = 0.35;
 const PIT_R0 = 0.1, PIT_RK = 0.45, PIT_MAX = 0.6, PIT_STEP = 0.01, PAW_AHEAD = 1.1;   // PAW_AHEAD: body half-lengths ahead of the centre
@@ -54,7 +55,7 @@ const HOLE_CUT = 1.15, COLLAR_UP = 0.45;    // the ground's cut disc and the col
 const SAVE_S = 2, GLOW_T = 0.25, GLOW_L = 1.0, VISIT_MS = 3600e3;   // glow falls by e per GLOW_L m along the tunnel from a vole
 const HOLE_SEEK = 2.5, HIDE_S = [15, 40], SYS_CAP = 4, AI_WALK = 0.45, AI_FLEE = 1.0;
 const AI_DIG_P = 0.004, AI_DIG_MAX = 2, AI_DIG_HOLES = 40;   // a calm AI vole's chance per pause of starting a burrow (the AI host), at most two at once, and none past forty holes in the world
-const MAX_S = 1200, MAX_N = 1500, MAX_P = 120, MAX_H = 300;   // segments, nodes, pits, holes with a collar (digworld.py N_MAX, S_MAX, P_MAX)
+const MAX_S = 1200, MAX_N = 1500, MAX_P = 120, MAX_H = 300, MAX_R = 60;   // segments, nodes, pits, holes with a collar (digworld.py N_MAX, S_MAX, P_MAX)
 const SIDES = 12, RINGS = 8, SEG_V = SIDES * RINGS, SEG_I = SIDES * (RINGS - 1) * 6;
 const LATHE_S = 14, LATHE_R = 6, LATHE_V = LATHE_S * LATHE_R, LATHE_I = LATHE_S * (LATHE_R - 1) * 6;
 const NB = 8;                                // neighbour capsules per vertex (two vec4 attributes)
@@ -71,7 +72,7 @@ const SOIL_DEFAULT = [0.34, 0.24, 0.14];
 // ground; sys the id of the hole the system began at); seg: { id, a, b }; pit: { id, x, z, y0, r, depth, hx, hz,
 // open: [segId] }. Ids are strings, `<tag>.<n>`: a tag of this page's and its own counter, so two players never make
 // the same id (the server refuses one it already has). Every event is anonymous.
-export const STEP_MAX = 0.6;   // m: the longest step a dig event may make from its node (digworld.py STEP_MAX)
+export const STEP_MAX = 0.6, ROOM_REACH = 0.45;   // m: the longest step a dig event may make from its node (digworld.py STEP_MAX)
 export function newWorld(tile) { return { v: 1, tile, nodes: [], segs: [], pits: [], byId: new Map() }; }
 const d3 = (a, b) => Math.hypot(a.x - b.x, a.y - b.y, a.z - b.z);
 export function applyEvent(w, e) {
@@ -90,7 +91,7 @@ export function applyEvent(w, e) {
       return true;
     }
     case 'grow': {   // the face advancing without a new node: a leaf node moves
-      const n = get(e.id); if (!n || !n.segs || n.segs.length !== 1 || n.hole) return false;
+      const n = get(e.id); if (!n || !n.segs || n.segs.length !== 1 || n.hole || n.room) return false;
       const s = get(n.segs[0]), o = get(s.a === n.id ? s.b : s.a); if (d3(o, e) > STEP_MAX) return false;
       n.x = e.x; n.y = e.y; n.z = e.z; n.gy = undefined; return true;
     }
@@ -104,6 +105,24 @@ export function applyEvent(w, e) {
     case 'widen': {   // nodes grown toward a chamber
       let ok = false; for (const id of e.ids) { const n = get(id); if (!n?.segs) continue; const r = Math.min(R_MAX, Math.max(n.r, e.r)); if (r !== n.r) { n.r = r; ok = true; } }
       return ok;
+    }
+    case 'room': {   // a chamber: one node (a sphere of radius r) in place of the nodes round it (digworld.py, the same rule)
+      if (taken(e.id)) return false;
+      const ab = e.absorb.map(get); if (ab.some(n => !n?.segs || n.hole)) return false;
+      const sys = ab[0].sys; if (ab.some(n => n.sys !== sys || d3(n, e) > ROOM_REACH)) return false;
+      const gone = new Set(e.absorb), room = { id: e.id, x: e.x, y: e.y, z: e.z, r: e.r, hole: false, sys, open: ab.some(n => n.open), segs: [], room: true, i: 0 };
+      const ids = [...new Set(ab.flatMap(n => n.segs))].sort(), dropped = new Set(), outside = new Set();
+      for (const sid of ids) {
+        const sg = get(sid); if (gone.has(sg.a) && gone.has(sg.b)) { dropped.add(sid); continue; }
+        const other = gone.has(sg.a) ? sg.b : sg.a; if (outside.has(other)) { dropped.add(sid); continue; }
+        outside.add(other); sg.a = room.id; sg.b = other; room.segs.push(sid);
+      }
+      w.nodes = w.nodes.filter(n => !gone.has(n.id)); w.nodes.push(room); w.byId.set(room.id, room);
+      for (const id of gone) w.byId.delete(id);
+      w.segs = w.segs.filter(sg => !dropped.has(sg.id)); for (const id of dropped) w.byId.delete(id);
+      for (const n of w.nodes) if (n !== room) n.segs = n.segs.filter(id => !dropped.has(id));
+      for (const p of w.pits) p.open = p.open.filter(id => !dropped.has(id));
+      reindex(w); return true;
     }
     case 'surface': {   // the face broke out: the node is a hole
       const n = get(e.id); if (!n?.segs || n.hole) return false;
@@ -136,14 +155,14 @@ export function applyEvent(w, e) {
 // the server's shape (digworld.py) and back: the welcome, the offline copy in localStorage, a clone
 export function toShared(w) {
   const nodes = {}, segs = {}, pits = {};
-  for (const n of w.nodes) nodes[n.id] = { x: n.x, y: n.y, z: n.z, r: n.r, h: n.hole ? 1 : 0, sys: n.sys, o: n.open ? 1 : 0 };
+  for (const n of w.nodes) nodes[n.id] = { x: n.x, y: n.y, z: n.z, r: n.r, h: n.hole ? 1 : 0, sys: n.sys, o: n.open ? 1 : 0, ...(n.room ? { k: 1 } : {}) };
   for (const s of w.segs) segs[s.id] = [s.a, s.b];
   for (const p of w.pits) pits[p.id] = { x: p.x, z: p.z, y0: p.y0, r: p.r, d: p.depth, hx: p.hx, hz: p.hz, o: [...p.open] };
   return { v: 1, nodes, segs, pits };
 }
 export function fromShared(tile, d) {
   const w = newWorld(tile); if (!d) return w;
-  for (const [id, n] of Object.entries(d.nodes || {})) { const o = { id, x: n.x, y: n.y, z: n.z, r: n.r, hole: !!n.h, sys: n.sys, open: !!n.o, segs: [] }; w.nodes.push(o); w.byId.set(id, o); }
+  for (const [id, n] of Object.entries(d.nodes || {})) { const o = { id, x: n.x, y: n.y, z: n.z, r: n.r, hole: !!n.h, sys: n.sys, open: !!n.o, segs: [], ...(n.k ? { room: true } : {}) }; w.nodes.push(o); w.byId.set(id, o); }
   for (const [id, [a, b]] of Object.entries(d.segs || {})) { const A = w.byId.get(a), B = w.byId.get(b); if (!A || !B) continue; const s = { id, a, b }; w.segs.push(s); w.byId.set(id, s); A.segs.push(id); B.segs.push(id); }
   for (const [id, p] of Object.entries(d.pits || {})) { const o = { id, x: p.x, z: p.z, y0: p.y0, r: p.r, depth: p.d, hx: p.hx, hz: p.hz, open: (p.o || []).filter(s => w.byId.has(s)), pit: true }; w.pits.push(o); w.byId.set(id, o); }
   return reindex(w);
@@ -234,9 +253,10 @@ export class DigNet {
 
 // ---- the dirt ---------------------------------------------------------------------------------------
 const DIRT_VERT = /* glsl */`
-  attribute float aGlow; attribute vec4 aNb0; attribute vec4 aNb1;
+  attribute float aGlow; attribute vec4 aNb0; attribute vec4 aNb1; attribute float aVis;
   varying vec3 vPos; varying vec3 vN; varying float vGlow; varying vec4 vNb0; varying vec4 vNb1;
-  void main(){ vPos = position; vN = normal; vGlow = aGlow; vNb0 = aNb0; vNb1 = aNb1; gl_Position = projectionMatrix * viewMatrix * vec4(position, 1.0); }`;
+  void main(){ if (aVis < 0.5) { gl_Position = vec4(2.0, 2.0, 2.0, 1.0); return; }   // a stretch that cannot be seen from here (Dig.visPass)
+    vPos = position; vN = normal; vGlow = aGlow; vNb0 = aNb0; vNb1 = aNb1; gl_Position = projectionMatrix * viewMatrix * vec4(position, 1.0); }`;
 const DIRT_FRAG = /* glsl */`
   varying vec3 vPos; varying vec3 vN; varying float vGlow; varying vec4 vNb0; varying vec4 vNb1;
   uniform sampler2D caps;                          // the capsules: texel 2i = (a, ra), 2i+1 = (b, rb)
@@ -250,17 +270,11 @@ const DIRT_FRAG = /* glsl */`
   float vnoise3(vec3 p){ vec3 i = floor(p), f = fract(p); f = f * f * (3.0 - 2.0 * f);
     return mix(mix(mix(hash3(i), hash3(i + vec3(1,0,0)), f.x), mix(hash3(i + vec3(0,1,0)), hash3(i + vec3(1,1,0)), f.x), f.y),
                mix(mix(hash3(i + vec3(0,0,1)), hash3(i + vec3(1,0,1)), f.x), mix(hash3(i + vec3(0,1,1)), hash3(i + vec3(1,1,1)), f.x), f.y), f.z); }
-  // a round cone: the tube between a (radius r1) and b (radius r2) with round ends (iq)
-  float sdRoundCone(vec3 p, vec3 a, vec3 b, float r1, float r2) {
-    vec3 ba = b - a; float l2 = dot(ba, ba), rr = r1 - r2, a2 = l2 - rr * rr, il2 = 1.0 / max(l2, 1e-9);
-    vec3 pa = p - a; float y = dot(pa, ba), z = y - l2, x2 = dot(pa * l2 - ba * y, pa * l2 - ba * y), y2 = y * y * l2, z2 = z * z * l2;
-    float k = sign(rr) * rr * rr * x2;
-    if (sign(z) * a2 * z2 > k) return sqrt(x2 + z2) * il2 - r2;
-    if (sign(y) * a2 * y2 < k) return sqrt(x2 + y2) * il2 - r1;
-    return (sqrt(x2 * a2 * il2) + y * rr) * il2 - r1; }
   bool inCap(float fi, vec3 p) { int i = int(fi + 0.5); if (i < 0) return false;
     vec4 A = texelFetch(caps, ivec2(2 * i, 0), 0), B = texelFetch(caps, ivec2(2 * i + 1, 0), 0);
-    return sdRoundCone(p, A.xyz, B.xyz, A.w, B.w) < -(0.045 * max(A.w, B.w) + 0.0012); }   // less the mesh's chord error (SIDES)
+    if (B.w < 0.0) return length(p - A.xyz) < A.w * 0.955 - 0.0012;   // a room: a sphere
+    vec3 ba = B.xyz - A.xyz, pa = p - A.xyz; float t = clamp(dot(pa, ba) / max(dot(ba, ba), 1e-9), 0.0, 1.0), r = mix(A.w, B.w, t) * 0.955 - 0.0012;   // less the mesh's chord error (SIDES)
+    vec3 q = pa - ba * t; return dot(q, q) < r * r; }   // the tube's axis at the interpolated radius (the round cone's ends near enough for a union)
   void main(){
     vec3 p = vPos;
     // the air: inside a neighbouring capsule, or inside a pit's bowl (the bowls' own fragments skip it)
@@ -271,13 +285,14 @@ const DIRT_FRAG = /* glsl */`
     vec3 n = normalize(vN); if (dot(n, cameraPosition - p) < 0.0) n = -n;   // the side the eye sees
     // the wall: the soil's colour, a 2 cm and a 6 mm grain, stones (cells of 3 cm, by the soil's rock fragments) and
     // roots (pale threads, denser near the surface's side of a tube)
-    float g1 = vnoise3(p * 50.0), g2 = vnoise3(p * 160.0 + 7.0), g3 = vnoise3(p * 500.0 + 3.0);
-    vec3 col = soil * (0.75 + 0.35 * g1 + 0.2 * (g2 - 0.5) + 0.12 * (g3 - 0.5));
-    { vec3 c = floor(p * 33.0), f = fract(p * 33.0) - 0.5; float h = hash3(c + 11.0);
+    float eye = distance(p, cameraPosition), near = 1.0 - smoothstep(1.0, 1.5, eye);   // the fine grain, the stones and the roots only near the eye
+    float g1 = vnoise3(p * 50.0), g2 = near > 0.0 ? vnoise3(p * 160.0 + 7.0) : 0.5, g3 = g2;
+    vec3 col = soil * (0.75 + 0.35 * g1 + 0.26 * (g2 - 0.5) * near);
+    if (near > 0.0) { vec3 c = floor(p * 33.0), f = fract(p * 33.0) - 0.5; float h = hash3(c + 11.0);
       if (h < stones * 0.55) { float s = 0.18 + 0.22 * hash3(c + 23.0); vec3 o = (vec3(hash3(c + 31.0), hash3(c + 37.0), hash3(c + 41.0)) - 0.5) * 0.5;
         float d = length(f - o) / s; if (d < 1.0) { float t = hash3(c + 47.0); col = mix(col, mix(vec3(0.3, 0.29, 0.27), vec3(0.42, 0.36, 0.3), t) * (0.8 + 0.4 * g2), smoothstep(1.0, 0.7, d)); } } }
-    if (kind == 0.0) { float rt = abs(vnoise3(vec3(p.x * 90.0, p.y * 25.0, p.z * 90.0) + 5.0) - 0.5) * 2.0;
-      float root = smoothstep(0.965, 1.0, 1.0 - rt) * clamp(-n.y + 0.3, 0.0, 1.0) * step(0.55, vnoise3(p * 9.0 + 2.0));   // the roots hang from the roof
+    if (kind == 0.0 && near > 0.0 && -n.y > -0.3) { float rt = abs(vnoise3(vec3(p.x * 90.0, p.y * 25.0, p.z * 90.0) + 5.0) - 0.5) * 2.0;
+      float root = smoothstep(0.965, 1.0, 1.0 - rt) * clamp(-n.y + 0.3, 0.0, 1.0) * step(0.55, g1) * near;   // the roots hang from the roof
       col = mix(col, vec3(0.5, 0.4, 0.27) * (0.8 + 0.4 * g3), root * 0.7); }
     vec3 L;
     if (kind == 0.0) {   // inside: the light down the nearest holes and pits, the whiskers, the scent glow, a floor
@@ -365,12 +380,13 @@ export class Dig {
       g.setAttribute('aGlow', new THREE.BufferAttribute(new Float32Array(nv), 1).setUsage(THREE.DynamicDrawUsage));
       g.setAttribute('aNb0', new THREE.BufferAttribute(new Float32Array(nv * 4).fill(-1), 4).setUsage(THREE.DynamicDrawUsage));
       g.setAttribute('aNb1', new THREE.BufferAttribute(new Float32Array(nv * 4).fill(-1), 4).setUsage(THREE.DynamicDrawUsage));
+      g.setAttribute('aVis', new THREE.BufferAttribute(new Float32Array(nv).fill(1), 1).setUsage(THREE.DynamicDrawUsage));
       g.setIndex(new THREE.BufferAttribute(new Uint32Array(ni), 1)); g.setDrawRange(0, 0);
       g.boundingSphere = new THREE.Sphere(new THREE.Vector3(), 1e6);   // never culled by a stale bound
       const m = new THREE.Mesh(g, this.material(kind)); m.frustumCulled = false; m.name = `dig ${kind}`; m.renderOrder = -1; m.visible = false;
       this.scene.add(m); return m;
     };
-    const capN = MAX_S + MAX_H;
+    const capN = MAX_S + MAX_H + MAX_R;
     this.capsData = new Float32Array(capN * 2 * 4); this.capsTex = new THREE.DataTexture(this.capsData, capN * 2, 1, THREE.RGBAFormat, THREE.FloatType);
     this.capsTex.magFilter = this.capsTex.minFilter = THREE.NearestFilter; this.capsTex.needsUpdate = true;
     this.u = {
@@ -383,6 +399,8 @@ export class Dig {
     this.bowls = mk(MAX_P * LATHE_V, MAX_P * LATHE_I, 1);
     this.heaps = mk((MAX_H + MAX_P) * LATHE_V, (MAX_H + MAX_P) * LATHE_I, 2);
     this.holeSlot = new Map();   // node id -> collar slot
+    this.rooms = mk(MAX_R * SEG_V, MAX_R * SEG_I, 0); this.roomSlot = new Map();   // the chambers, one sphere each (capsules MAX_S + MAX_H + slot)
+    this.segVis = new Uint8Array(MAX_S).fill(1); this.roomVis = new Uint8Array(MAX_R).fill(1); this.visT = 0;   // visPass
     // the scent trail over an opened system (a canid's nose): soft additive spots on the ground over its nodes and
     // segments, as bright as the tunnel's glow there (glowPass), drawn while the player is a coyote or a fox
     const TRAIL_N = this.TRAIL_N = 160, tg = new THREE.InstancedBufferGeometry();
@@ -408,8 +426,11 @@ export class Dig {
     this._best = { d: 0, n: null, s: null }; this.cutIdx = new Int32Array(CUTS + LIGHTS);
     this.cuts = groundUniforms.digCuts.value;
   }
+  // A tube or a room is only ever seen from inside: its front faces (this winding); a bowl and a heap both sides. (A
+  // depth pre-pass, so that the union's discard would not turn the early depth test off, was tried twice and cost
+  // more on this GPU: docs/game-dig.md.)
   material(kind) {
-    const m = new THREE.ShaderMaterial({ vertexShader: DIRT_VERT, fragmentShader: DIRT_FRAG, uniforms: { ...this.u, kind: { value: kind } }, side: THREE.DoubleSide });
+    const m = new THREE.ShaderMaterial({ vertexShader: DIRT_VERT, fragmentShader: DIRT_FRAG, uniforms: { ...this.u, kind: { value: kind } }, side: kind === 0 ? THREE.FrontSide : THREE.DoubleSide });
     m.name = `dirt ${kind}`; return m;
   }
   // the soil under the tile's origin cell for now: the map unit under the first hole (or the player) names the texture
@@ -467,6 +488,7 @@ export class Dig {
     const n = Math.min(w.segs.length, MAX_S); g.setDrawRange(0, n * SEG_I); this.tubes.visible = n > 0;
     this.capsule(i, A.x, A.y, A.z, A.r, B.x, B.y, B.z, B.r);
     this.writeGlow(s);
+    if (!this.segVis[i]) { this.segVis[i] = 1; const G = g.attributes.aVis; G.array.fill(1, v0, v0 + SEG_V); G.addUpdateRange(v0, SEG_V); G.needsUpdate = true; }   // shown until the next visPass
   }
   writeGlow(s) {
     const w = this.world, i = this.segIndex(s); if (i < 0 || i >= MAX_S) return;
@@ -480,7 +502,11 @@ export class Dig {
   nbOf(s, out) {
     const w = this.world, A = w.byId.get(s.a), B = w.byId.get(s.b); let n = 0; out.fill(-1);
     const add = i => { if (n < NB && i >= 0 && !out.includes(i)) out[n++] = i; };
-    for (const node of [A, B]) { for (const id of node.segs) { const o = w.byId.get(id); if (o !== s) add(this.segIndex(o)); } if (node.hole && this.holeSlot.has(node.id)) add(MAX_S + this.holeSlot.get(node.id)); }
+    for (const node of [A, B]) {
+      if (node.room && this.roomSlot.has(node.id)) add(MAX_S + MAX_H + this.roomSlot.get(node.id));
+      for (const id of node.segs) { const o = w.byId.get(id); if (o !== s) add(this.segIndex(o)); }
+      if (node.hole && this.holeSlot.has(node.id)) add(MAX_S + this.holeSlot.get(node.id));
+    }
     // capsules that overlap this one though not adjacent (a chamber swallowing a passing tube; a pit opened both)
     const rMax = Math.max(A.r, B.r) + R_CHAMBER, mx = (A.x + B.x) / 2, my = (A.y + B.y) / 2, mz = (A.z + B.z) / 2, hl = Math.hypot(B.x - A.x, B.y - A.y, B.z - A.z) / 2 + rMax;
     for (let j = 0; j < w.segs.length && n < NB; j++) {
@@ -505,6 +531,40 @@ export class Dig {
     for (const id of node.segs) { const s = w.byId.get(id); seen.add(s); const A = w.byId.get(s.a), B = w.byId.get(s.b); for (const m of [A, B]) for (const id2 of m.segs) seen.add(w.byId.get(id2)); }
     for (const s of seen) this.writeNb(s);
     if (node.hole) this.writeHole(node);
+    if (node.room) this.writeRoom(node);
+  }
+  // a chamber: a sphere of RINGS rings and SIDES sides; its capsule a sphere (rb < 0); its neighbours its segments
+  writeRoom(n) {
+    let slot = this.roomSlot.get(n.id);
+    if (slot === undefined) { if (this.roomSlot.size >= MAX_R) return; slot = this.roomSlot.size; this.roomSlot.set(n.id, slot); }
+    const g = this.rooms.geometry, P = g.attributes.position.array, N = g.attributes.normal.array, v0 = slot * SEG_V;
+    for (let k = 0; k < RINGS; k++) {
+      const phi = Math.PI * k / (RINGS - 1), sp = Math.sin(phi), cp = Math.cos(phi);
+      for (let j = 0; j < SIDES; j++) {
+        const a = j / SIDES * TAU, v = (v0 + k * SIDES + j) * 3, ox = Math.cos(a) * sp, oy = cp, oz = Math.sin(a) * sp;
+        P[v] = n.x + ox * n.r; P[v + 1] = n.y + oy * n.r * 0.8; P[v + 2] = n.z + oz * n.r; N[v] = ox; N[v + 1] = oy; N[v + 2] = oz;   // a little flattened
+      }
+    }
+    const I = g.index.array; let q = slot * SEG_I;
+    for (let k = 0; k < RINGS - 1; k++) for (let j = 0; j < SIDES; j++) {
+      const a = v0 + k * SIDES + j, b = v0 + k * SIDES + (j + 1) % SIDES, c = a + SIDES, d = b + SIDES;
+      I[q++] = a; I[q++] = c; I[q++] = b; I[q++] = b; I[q++] = c; I[q++] = d;
+    }
+    for (const at of ['position', 'normal']) { g.attributes[at].addUpdateRange(v0 * 3, SEG_V * 3); g.attributes[at].needsUpdate = true; }
+    g.index.needsUpdate = true; g.setDrawRange(0, this.roomSlot.size * SEG_I); this.rooms.visible = true;
+    if (!this.roomVis[slot]) { this.roomVis[slot] = 1; const G = g.attributes.aVis; G.array.fill(1, v0, v0 + SEG_V); G.addUpdateRange(v0, SEG_V); G.needsUpdate = true; }
+    this.capsule(MAX_S + MAX_H + slot, n.x, n.y, n.z, n.r * 0.8, n.x, n.y, n.z, -1);   // the union's sphere: the flattened room's inner radius
+    const nb = this.nbScratch; nb.fill(-1); let m = 0; for (const id of n.segs) if (m < NB) nb[m++] = this.segIndex(this.world.byId.get(id));
+    const N0 = g.attributes.aNb0, N1 = g.attributes.aNb1;
+    for (let v = v0; v < v0 + SEG_V; v++) for (let c = 0; c < 4; c++) { N0.array[v * 4 + c] = nb[c]; N1.array[v * 4 + c] = nb[4 + c]; }
+    N0.addUpdateRange(v0 * 4, SEG_V * 4); N0.needsUpdate = true; N1.addUpdateRange(v0 * 4, SEG_V * 4); N1.needsUpdate = true;
+    this.writeRoomGlow(n);
+  }
+  writeRoomGlow(n) {
+    const slot = this.roomSlot.get(n.id); if (slot === undefined) return;
+    const G = this.rooms.geometry.attributes.aGlow, v0 = slot * SEG_V, g = this.glowOf[n.i] || 0;
+    for (let v = v0; v < v0 + SEG_V; v++) G.array[v] = g;
+    G.addUpdateRange(v0, SEG_V); G.needsUpdate = true;
   }
   relinkAll() { for (const s of this.world.segs) this.writeNb(s); for (const p of this.world.pits) this.writePitNb(p); }
   // a hole: the collar (a vertical cylinder from under the node to COLLAR_UP radii over the ground) and the spoil ring
@@ -579,6 +639,7 @@ export class Dig {
       case 'surface': { const n = get(e.id); for (const id of n.segs) this.writeSeg(get(id)); this.writeHole(n); this.relinkAt(n); break; }
       case 'pit': { const p = get(e.id); this.writePit(p); this.writePitHeap(p); break; }
       case 'open': { const p = get(e.pit); this.writePitNb(p); for (const id of e.segs) { const s = get(id); if (s) this.writeNb(s); } this.glowT = 0; const s0 = get(e.segs[0]); if (s0?.a) this.flee(get(s0.a).sys, get(s0.a)); break; }   // the voles of that system run
+      case 'room': this.remap(e); this.redrawAll(); this.checkTun(); break;
       case 'decay': this.redrawAll(); this.checkTun(); break;
     }
   }
@@ -587,10 +648,22 @@ export class Dig {
   redrawAll() {
     const w = this.world; this.holeSlot.clear(); this.glowOf.fill(0);
     this.tubes.geometry.setDrawRange(0, 0); this.tubes.visible = false; this.bowls.geometry.setDrawRange(0, 0); this.bowls.visible = false;
+    this.roomSlot.clear(); this.rooms.geometry.setDrawRange(0, 0); this.rooms.visible = false;
+    for (const n of w.nodes) if (n.room) this.writeRoom(n);
     for (const s of w.segs) this.writeSeg(s);
     for (const n of w.nodes) if (n.hole) this.writeHole(n);
     for (const p of w.pits) { this.writePit(p); this.writePitHeap(p); }
     this.heapRange(); this.relinkAll();
+  }
+  // a room absorbed nodes: whoever was on one is in the room now (the player's vole, the AI's walkers and diggers)
+  remap(e) {
+    const gone = new Set(e.absorb), to = id => (gone.has(id) ? e.id : id), T = this.tun;
+    if (T && (gone.has(T.a) || gone.has(T.b))) { this.tun = { a: e.id, b: e.id, t: 1, prev: null }; }
+    if (this.pd && gone.has(this.pd.at)) { this.pd.at = e.id; this.pd.prev = null; }
+    for (const a of this.aiIn) {
+      if (a.tun) { const p = a.tun.path.map(to).filter((id, k, arr) => k === 0 || id !== arr[k - 1]); a.tun.i = Math.min(a.tun.i, p.length - 1); a.tun.path = p; a.tun.t = 0; }
+      if (a.dig) { a.dig.D.at = to(a.dig.D.at); if (a.dig.D.prev && gone.has(a.dig.D.prev)) a.dig.D.prev = null; }
+    }
   }
   // the player's vole underground in a system that is gone (decayed, or rolled back): back up on the surface
   checkTun() {
@@ -795,15 +868,14 @@ export class Dig {
       const cx = n.x + d.x * STEP, cy = n.y + d.y * STEP, cz = n.z + d.z * STEP, cur = D.prev ? this.node(D.prev) : null;
       // a chamber: the face comes within CHAMBER_NEAR of an older part of the system (not its own last stretch)
       const near = this.nearestNode(cx, cy, cz, CHAMBER_NEAR, n, cur);
-      if (near && !this.within(n, JOIN_PATH).has(near)) {
-        const seg = this.newId();
-        if (this.dispatch({ type: 'join', a: n.id, b: near.id, seg }, ai)) {
-          const ids = []; for (const o of [n, near]) if (!o.hole) ids.push(o.id);
-          for (const o of w.nodes) if (o !== n && o !== near && !o.hole && o.sys === n.sys && ids.length < 32 && (o.x - cx) ** 2 + (o.y - cy) ** 2 + (o.z - cz) ** 2 < (2 * CHAMBER_NEAR) ** 2) ids.push(o.id);
-          const r = Math.min(R_CHAMBER, Math.max(n.r, near.r) + WIDEN_STEP);
-          if (ids.length) this.dispatch({ type: 'widen', ids, r }, ai);
-          D.prev = n.id; D.at = near.id; D.face = 0; D.joinR = r;
-          return 'join';
+      if (near && !this.within(n, JOIN_PATH).has(near)) {   // the loop closed round: the nodes round the face become one room
+        const ids = []; let mx = 0, my = 0, mz = 0;
+        for (const o of w.nodes) if (o.sys === n.sys && !o.hole && ids.length < 64 && (o.x - cx) ** 2 + (o.y - cy) ** 2 + (o.z - cz) ** 2 < (2 * CHAMBER_NEAR) ** 2) { ids.push(o.id); mx += o.x; my += o.y; mz += o.z; }
+        if (ids.length >= 2) {
+          mx /= ids.length; my /= ids.length; mz /= ids.length; let far = 0;
+          for (const id of ids) { const o = this.node(id); far = Math.max(far, Math.hypot(o.x - mx, o.y - my, o.z - mz) + o.r); }
+          const r = clamp(far, R_TUBE + 0.03, R_CHAMBER), id = this.newId();
+          if (this.dispatch({ type: 'room', id, x: mx, y: my, z: mz, r, absorb: ids }, ai)) { D.prev = null; D.at = id; D.face = 0; D.joinR = r; return 'join'; }
         }
       }
       // straight on and short: the leaf node moves; else a new node
@@ -865,11 +937,13 @@ export class Dig {
     if (!this.camSet) { cam.position.copy(C); this.camSet = true; } else cam.position.lerp(C, 1 - Math.exp(-dt * 10));
     const aim = this._w.set(Q.x - bx * 0.1, Q.y - Q.w * 0.2 - by * 0.1, Q.z - bz * 0.1);   // past the body along the tunnel
     cam.up.set(0, 1, 0); cam.lookAt(aim);
+    if (cam.near !== NEAR_UNDER) { this.nearWas = cam.near; cam.near = NEAR_UNDER; cam.updateProjectionMatrix(); }   // the near plane's corners inside a 3 cm tube
     this.u.nose.value.set(f.pos.x - Math.sin(f.yaw) * gc.S.half * gc.size, f.pos.y + 0.02, f.pos.z - Math.cos(f.yaw) * gc.S.half * gc.size, 0.14);
     return true;
   }
   // (x, y, z) inside the tunnels by `margin` m: within some segment's tube of the nodes given
   inside(x, y, z, nodes, margin) {
+    for (const n of nodes) if (n.room && (n.x - x) ** 2 + ((n.y - y) / 0.8) ** 2 + (n.z - z) ** 2 < (n.r - margin) ** 2) return true;
     for (const n of nodes) for (const id of n.segs) {
       const s = this.node(id), A = this.node(s.a), B = this.node(s.b);
       const dx = B.x - A.x, dy = B.y - A.y, dz = B.z - A.z, l2 = dx * dx + dy * dy + dz * dz;
@@ -1077,6 +1151,7 @@ export class Dig {
       if (src.length) { this.search(null, src); for (let i = 0; i < N.length; i++) if (isFinite(this.dist[i]) && open.has(N[i].sys)) G[i] = Math.exp(-this.dist[i] / GLOW_L); }
     }
     for (const s of w.segs) { const ia = w.byId.get(s.a).i, ib = w.byId.get(s.b).i; if (G[ia] !== old[ia] || G[ib] !== old[ib]) this.writeGlow(s); }
+    for (const n of N) if (n.room && G[n.i] !== old[n.i]) this.writeRoomGlow(n);
     // the trail on the ground: a spot over each lit node and at each lit segment's middle
     const canid = this.gc.on && (this.gc.code === 'canis_latrans' || this.gc.code === 'urocyon_cinereoargenteus');
     const T = this.trail.geometry, A = T.attributes.aSpot.array; let k = 0;
@@ -1093,6 +1168,28 @@ export class Dig {
     this.trail.visible = k > 0;
   }
 
+  // Which stretches can be seen (aVis): underground, those within VIS_UNDER m along the tunnels from the body; above
+  // the ground, those within VIS_OPEN m of a hole or a pit (elsewhere the ground hides them, but the GPU would still
+  // shade every layer of them: the union's discard turns its early depth test off)
+  visPass() {
+    const w = this.world, T = this.tun, under = !!T && this.gc.mode === 'tunnel';
+    const near = under ? this.within(this.node(T.b) || this.node(T.a), VIS_UNDER) : null;
+    const opens = this._opens ||= []; opens.length = 0;
+    if (!under) { for (const n of w.nodes) if (n.hole) opens.push(n); for (const p of w.pits) opens.push(p); }
+    const seen = (A, B) => {
+      if (under) return near.has(A) || near.has(B);
+      for (const o of opens) {
+        const oy = o.pit ? o.y0 - o.depth * 0.5 : o.y, reach = VIS_OPEN + (o.pit ? o.r : o.r * 2);
+        const dx = B.x - A.x, dy = B.y - A.y, dz = B.z - A.z, l2 = dx * dx + dy * dy + dz * dz;
+        const t = l2 > 1e-12 ? clamp(((o.x - A.x) * dx + (oy - A.y) * dy + (o.z - A.z) * dz) / l2, 0, 1) : 0;
+        if ((A.x + dx * t - o.x) ** 2 + (A.y + dy * t - oy) ** 2 + (A.z + dz * t - o.z) ** 2 < reach * reach) return true;
+      }
+      return false;
+    };
+    const set = (mesh, slot, v, flags) => { if (flags[slot] === v) return; flags[slot] = v; const G = mesh.geometry.attributes.aVis, v0 = slot * SEG_V; G.array.fill(v, v0, v0 + SEG_V); G.addUpdateRange(v0, SEG_V); G.needsUpdate = true; };
+    for (const sg of w.segs) { if (sg.i >= MAX_S) continue; set(this.tubes, sg.i, seen(w.byId.get(sg.a), w.byId.get(sg.b)) ? 1 : 0, this.segVis); }
+    for (const [id, slot] of this.roomSlot) { const n = this.node(id); if (n) set(this.rooms, slot, seen(n, n) ? 1 : 0, this.roomVis); }
+  }
   srcOf(n) { const pool = this._srcPool ||= []; const o = pool[this.srcN] ||= { n: null, d: 0 }; this.srcN++; o.n = n; o.d = 0; return o; }   // no allocation per pass
   // ---- each frame -----------------------------------------------------------------------------------------
   update(dt) {
@@ -1101,7 +1198,7 @@ export class Dig {
     this.net.tick();
     const gc = this.gc, w = this.world, C = this.camera.position;
     this._C = C;
-    if (gc.mode !== 'tunnel') { this.camSet = false; if (this.tun) this.tun = null; }
+    if (gc.mode !== 'tunnel') { this.camSet = false; if (this.tun) this.tun = null; if (this.nearWas !== undefined && this.camera.near === NEAR_UNDER) { this.camera.near = gc.on ? gc.S.cam.near : this.nearWas; this.camera.updateProjectionMatrix(); } this.nearWas = undefined; }
     if (!gc.on || gc.mode !== 'tunnel') this.u.nose.value.set(0, -1e4, 0, 0.1);
     if (!gc.on || !gc.digging) { gc.digging = 0; this.digging = 0; }
     if (gc.on && gc.mode === 'ground' && !gc.digging) this.pit = null;
@@ -1129,13 +1226,13 @@ export class Dig {
     this.u.pitN.value = pn;
     this.u.skyK.value = clamp(0.25 + 0.75 * clamp(atmo.sunDir.value.y * 4 + 0.4, 0, 1), 0.08, 1);
     this.specksStep(dt);
-    if ((this.glowT -= dt) <= 0) { this.glowT = GLOW_T; this.glowPass(); }
+    if ((this.glowT -= dt) <= 0) { this.glowT = GLOW_T; this.glowPass(); this.visPass(); }
     if (this.saveT >= 0 && (this.saveT -= dt) <= 0) this.save();
     const ms = performance.now() - t0; this.stats.ms += (ms - this.stats.ms) * 0.05; if (ms > this.stats.max) this.stats.max = ms;
   }
   dispose(all = true) {
     if (all) { this.save(); this.net.leave(); removeEventListener('pagehide', this.onHide); if (window.__weDig === this) delete window.__weDig; groundUniforms.digCutN.value = 0; }
-    for (const m of [this.tubes, this.bowls, this.heaps, this.specks, this.trail]) { if (!m) continue; this.scene.remove(m); m.geometry.dispose(); m.material.dispose(); }
+    for (const m of [this.tubes, this.rooms, this.bowls, this.heaps, this.specks, this.trail]) { if (!m) continue; this.scene.remove(m); m.geometry.dispose(); m.material.dispose(); }
     this.capsTex?.dispose();
     for (const a of this.aiIn) { a.tun = null; a.buried = false; } this.aiIn.clear();
   }
