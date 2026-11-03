@@ -28,3 +28,18 @@ window.__dh = (() => {
   }
   return { become, hold, pose, state, wait };
 })();
+// __dh2: voles summoned onto runways beside a point; their states
+window.__dh2 = (() => {
+  const we = window.__we, A = we.animals;
+  function voles(x, z, n = 3) {
+    const made = A.summon('vole', 1.5) || [], out = [];
+    for (let i = 0; i < n && i < made.length; i++) {
+      const a = made[i], ang = i * 2.1;
+      a.sx = x + Math.cos(ang) * 0.3; a.sz = z + Math.sin(ang) * 0.3; a.tx = a.sx + Math.cos(ang) * 1.5; a.tz = a.sz + Math.sin(ang) * 1.5;
+      a.u = 0.1; a.h = 0.1; a.x = a.sx; a.z = a.sz; a.state = 111; a.t = 30; out.push(a.id);
+    }
+    return out;
+  }
+  function states(ids) { return ids.map(id => { const a = A.byId.get(id); return a ? [a.state, +a.x.toFixed(2), +a.y.toFixed(2), +a.z.toFixed(2), !!a.buried, a.tun ? a.tun.i + '/' + a.tun.path.length : a.dig ? 'dig' + a.dig.stage : '-'] : null; }); }
+  return { voles, states };
+})();

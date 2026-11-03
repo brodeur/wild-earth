@@ -49,10 +49,11 @@ export const R_TUBE = 0.03, R_CHAMBER = 0.10, CHAMBER_NEAR = 0.13, WIDEN_STEP = 
 const R_MAX = R_CHAMBER;
 const JOIN_PATH = 0.3, R_TURN = 0.07;   // R_TURN: the tightest curve a digging vole makes (m): a chamber is dug round one   // m along the tunnel within which a node is the face's own last stretch, not a place to join
 const MAX_DEPTH = 0.5, SLOPE_MAX = 0.6, START_PITCH = -0.55, STEP = 0.02, BEND = 0.2, SEG_MAX = 0.35;
-const PIT_R0 = 0.11, PIT_RK = 0.75, PIT_MAX = 0.6, PIT_STEP = 0.01, PAW_AHEAD = 1.1;   // PAW_AHEAD: body half-lengths ahead of the centre
+const PIT_R0 = 0.1, PIT_RK = 0.45, PIT_MAX = 0.6, PIT_STEP = 0.01, PAW_AHEAD = 1.1;   // PAW_AHEAD: body half-lengths ahead of the centre
 const HOLE_CUT = 1.15, COLLAR_UP = 0.45;    // the ground's cut disc and the collar's rim, in tube radii
 const SAVE_S = 2, GLOW_T = 0.25, GLOW_L = 1.0, VISIT_MS = 3600e3;   // glow falls by e per GLOW_L m along the tunnel from a vole
 const HOLE_SEEK = 2.5, HIDE_S = [15, 40], SYS_CAP = 4, AI_WALK = 0.45, AI_FLEE = 1.0;
+const AI_DIG_P = 0.004, AI_DIG_MAX = 2, AI_DIG_HOLES = 40;   // a calm AI vole's chance per pause of starting a burrow (the AI host), at most two at once, and none past forty holes in the world
 const MAX_S = 1200, MAX_N = 1500, MAX_P = 120, MAX_H = 300;   // segments, nodes, pits, holes with a collar (digworld.py N_MAX, S_MAX, P_MAX)
 const SIDES = 12, RINGS = 8, SEG_V = SIDES * RINGS, SEG_I = SIDES * (RINGS - 1) * 6;
 const LATHE_S = 14, LATHE_R = 6, LATHE_V = LATHE_S * LATHE_R, LATHE_I = LATHE_S * (LATHE_R - 1) * 6;
@@ -91,7 +92,7 @@ export function applyEvent(w, e) {
     case 'grow': {   // the face advancing without a new node: a leaf node moves
       const n = get(e.id); if (!n || !n.segs || n.segs.length !== 1 || n.hole) return false;
       const s = get(n.segs[0]), o = get(s.a === n.id ? s.b : s.a); if (d3(o, e) > STEP_MAX) return false;
-      n.x = e.x; n.y = e.y; n.z = e.z; return true;
+      n.x = e.x; n.y = e.y; n.z = e.z; n.gy = undefined; return true;
     }
     case 'join': {   // a new segment between two existing nodes (a loop closes; the systems merge)
       const a = get(e.a), b = get(e.b); if (!a?.segs || !b?.segs || a === b || taken(e.seg) || d3(a, b) > STEP_MAX) return false;
@@ -284,9 +285,8 @@ const DIRT_FRAG = /* glsl */`
       vec3 sky = (ambientSky * 0.8 + sunLight * 0.12 * max(sunDir.y, 0.0)) * skyK;
       for (int i = 0; i < ${LIGHTS}; i++) { if (i >= lightN) break;
         vec3 to = lights[i].xyz - p; float d = max(0.0, length(to) - lights[i].w);
-        L += sky * exp(-d / (2.5 * lights[i].w)) * (0.45 + 0.55 * clamp(dot(n, normalize(to)), 0.0, 1.0)); }   // falls by e every 2.5 widths of the opening
+        L += 0.6 * sky * exp(-d / (1.5 * lights[i].w)) * (0.45 + 0.55 * clamp(dot(n, normalize(to)), 0.0, 1.0)); }   // falls by e every 1.5 widths of the opening
       float dn = length(nose.xyz - p); L += vec3(1.0, 0.82, 0.55) * 2.4 * exp(-dn / nose.w);
-      L += glowCol * vGlow * (0.75 + 0.25 * sin(time * 3.0 + p.x * 20.0)) * 0.9;
     } else if (kind == 1.0) {   // a pit's bowl: the sky from above, less toward the bottom, the sun on the lit side
       float deep = clamp((pitY[0].x - p.y) / max(pits[0].w, 0.02), 0.0, 1.0);
       L = (ambientSky * (0.35 + 0.65 * max(n.y, 0.0)) * (1.0 - 0.55 * deep) + sunLight * max(dot(n, sunDir), 0.0) * (1.0 - 0.6 * deep)) * 0.3183;
@@ -294,7 +294,9 @@ const DIRT_FRAG = /* glsl */`
       col *= 0.62 * (0.8 + 0.4 * vnoise3(p * 320.0 + 9.0));
       L = (sunLight * max(dot(n, sunDir), 0.0) + mix(ambientGround, ambientSky, 0.5 + 0.5 * n.y)) * 0.3183;
     }
-    gl_FragColor = vec4(col * L, 1.0);
+    vec3 outc = col * L;
+    if (kind == 0.0) outc += glowCol * vGlow * (0.75 + 0.25 * sin(time * 3.0 + p.x * 20.0)) * 1.6;   // the scent of the voles along an opened tunnel
+    gl_FragColor = vec4(outc, 1.0);
     #include <tonemapping_fragment>
     #include <colorspace_fragment>
   }`;
@@ -330,6 +332,8 @@ export class Dig {
     this.saveT = -1; this.dirty = false; this.visits = new Map(); this.seasonT = 0;
     this.tun = null;            // the player's vole in the tunnel: { a, b, t, prev }
     this.face = 0; this.digging = 0; this.pit = null;
+    this.pd = { at: null, prev: null, yaw: 0, pitch: 0, face: 0, startDown: false };   // the player's vole's dig (digCore)
+    this.HOLE_SEEK = HOLE_SEEK; this.AI_DIG_P = AI_DIG_P;   // animals.js reads them
     this.glowT = 0; this.glowOf = new Float32Array(MAX_N); this.dist = new Float32Array(MAX_N); this.heap = new Int32Array(MAX_N); this.parent = new Int32Array(MAX_N);
     this.soil = new THREE.Color(...SOIL_DEFAULT);
     this.nbScratch = new Int32Array(NB);
@@ -379,6 +383,21 @@ export class Dig {
     this.bowls = mk(MAX_P * LATHE_V, MAX_P * LATHE_I, 1);
     this.heaps = mk((MAX_H + MAX_P) * LATHE_V, (MAX_H + MAX_P) * LATHE_I, 2);
     this.holeSlot = new Map();   // node id -> collar slot
+    // the scent trail over an opened system (a canid's nose): soft additive spots on the ground over its nodes and
+    // segments, as bright as the tunnel's glow there (glowPass), drawn while the player is a coyote or a fox
+    const TRAIL_N = this.TRAIL_N = 160, tg = new THREE.InstancedBufferGeometry();
+    tg.setAttribute('position', new THREE.BufferAttribute(new Float32Array([-1, -1, 0, 1, -1, 0, 1, 1, 0, -1, 1, 0]), 3)); tg.setIndex([0, 1, 2, 0, 2, 3]);
+    tg.setAttribute('aSpot', new THREE.InstancedBufferAttribute(new Float32Array(TRAIL_N * 4), 4).setUsage(THREE.DynamicDrawUsage));
+    tg.instanceCount = 0;
+    this.trail = new THREE.Mesh(tg, new THREE.ShaderMaterial({
+      uniforms: { glowCol: this.u.glowCol, time: this.u.time },
+      vertexShader: `attribute vec4 aSpot; varying vec2 vQ; varying float vG; uniform float time;
+        void main(){ vQ = position.xy; vG = aSpot.w * (0.8 + 0.2 * sin(time * 3.0 + aSpot.x * 7.0));
+          vec4 c = viewMatrix * vec4(aSpot.xyz, 1.0); float s = 0.1 + 0.12 * aSpot.w; c.xy += position.xy * s; gl_Position = projectionMatrix * c; }`,
+      fragmentShader: `uniform vec3 glowCol; varying vec2 vQ; varying float vG;
+        void main(){ float r = dot(vQ, vQ); if (r > 1.0) discard; gl_FragColor = vec4(glowCol * vG * (1.0 - r) * (1.0 - r) * 1.3, 1.0); }`,
+      transparent: true, blending: THREE.AdditiveBlending, depthWrite: false }));
+    this.trail.frustumCulled = false; this.trail.name = 'dig scent trail'; this.trail.renderOrder = 2; this.trail.visible = false; this.scene.add(this.trail);
     // the dirt thrown back: a pool of specks (DIRT_N) recycled from the nose or the paws
     const DIRT_N = this.DIRT_N = 48;
     this.specks = new THREE.InstancedMesh(new THREE.BoxGeometry(1, 1, 1), new THREE.MeshLambertMaterial({ color: new THREE.Color(0.25, 0.17, 0.1) }), DIRT_N);
@@ -636,7 +655,7 @@ export class Dig {
       const gy = this.groundY(nx, nz), id = this.newId();
       if (this.nearestNode(nx, gy - R_TUBE, nz, CHAMBER_NEAR)) { gc.say('a tunnel runs just here'); return false; }
       if (!this.dispatch({ type: 'hole', id, x: nx, y: gy - R_TUBE, z: nz })) return false;
-      const n = this.node(id); this.tun = { a: n.id, b: n.id, t: 1, prev: -1 }; this.face = 0; this.startDown = true;
+      const n = this.node(id); this.tun = { a: n.id, b: n.id, t: 1, prev: -1 }; this.pd.face = 0; this.pd.startDown = true;
       gc.mode = 'tunnel'; gc.v = 0; gc.sit = 0; gc.resting = false; gc.actT = 0; this.soilAt(nx, -nz);
       gc.say('digging in');
       return true;
@@ -685,7 +704,7 @@ export class Dig {
   // ---- the vole underground ------------------------------------------------------------------------------
   enterHole(h) {
     const gc = this.gc, f = gc.flight;
-    this.tun = { a: h.id, b: h.id, t: 1, prev: -1 }; this.face = 0; this.startDown = false;
+    this.tun = { a: h.id, b: h.id, t: 1, prev: -1 }; this.pd.face = 0; this.pd.startDown = false;
     // facing the first segment down
     if (h.segs.length) { const s = this.node(this.otherEnd(h.segs[0], h)); f.yaw = Math.atan2(-(s.x - h.x), -(s.z - h.z)); }
     gc.mode = 'tunnel'; gc.v = 0; gc.sit = 0; gc.resting = false; gc.actT = 0; this.soilAt(h.x, -h.z);
@@ -757,66 +776,76 @@ export class Dig {
   }
   // a dig from node n goes a new way when the body faces no existing segment within BEND of it (else it walks on)
   wantNewDig(n, f) {
-    const d = this.digDir(n, f), w = this.world;
+    const d = this.digDir(n, f.yaw, f.pitch, this.pd), w = this.world;
     for (const id of n.segs) { const o = this.node(this.otherEnd(id, n)); const dx = o.x - n.x, dy = o.y - n.y, dz = o.z - n.z, l = Math.hypot(dx, dy, dz) || 1e-6; if ((dx * d.x + dy * d.y + dz * d.z) / l > Math.cos(BEND)) return false; }
     return true;
   }
-  digDir(n, f) {
-    const d = this._dd ||= { x: 0, y: 0, z: 0, phi: 0 }, gy = this.groundY(n.x, n.z), depth = gy - n.y;
-    let phi = clamp(f.pitch, -SLOPE_MAX, SLOPE_MAX);
-    if (this.startDown && depth < 3 * R_TUBE) phi = Math.min(phi, START_PITCH); else this.startDown = false;   // from the surface: steeply in until under
-    if (depth > MAX_DEPTH) phi = Math.max(phi, 0.08);   // as deep as a vole goes: level or up
-    const c = Math.cos(phi); d.x = -Math.sin(f.yaw) * c; d.y = Math.sin(phi); d.z = -Math.cos(f.yaw) * c; d.phi = phi;
+  // the way a dig from node n goes: the heading yaw (the flight's convention: forward -z at 0) and the look's pitch,
+  // steeply down from the surface until under (D.startDown), level or up once as deep as a vole goes. Into D.d.
+  digDir(n, yaw, pitch, D) {
+    const d = D.d ||= { x: 0, y: 0, z: 0, phi: 0 }, gy = this.groundY(n.x, n.z), depth = gy - n.y;
+    let phi = clamp(pitch, -SLOPE_MAX, SLOPE_MAX);
+    if (D.startDown && depth < 3 * R_TUBE) phi = Math.min(phi, START_PITCH); else D.startDown = false;
+    if (depth > MAX_DEPTH) phi = Math.max(phi, 0.08);
+    const c = Math.cos(phi); d.x = -Math.sin(yaw) * c; d.y = Math.sin(phi); d.z = -Math.cos(yaw) * c; d.phi = phi;
     return d;
   }
-  digFrom(n, dt) {
-    const gc = this.gc, f = gc.flight, w = this.world, T = this.tun;
-    if (!this.wantNewDig(n, f)) { this.digging = 0; gc.digging = 0; return; }
-    if (n.hole && n.segs.length && this.digDir(n, f).y > -0.15) {   // at a hole the way up is the open air: W climbs out
-      this.digging = 0; gc.digging = 0; if (!this.toldOut) { this.toldOut = true; gc.say('at the surface: W climbs out'); } return;
-    }
-    this.toldOut = false;
-    this.digging = 1; gc.digging = 1; gc.actT = 0;
-    this.face += RATE * this.mult * dt;
-    const d = this.digDir(n, f);
-    this.specksFrom(n.x + d.x * n.r, n.y - n.r * 0.5, n.z + d.z * n.r, -d.x, -d.z, 0.004, dt, 30, 0.25);
-    let steps = Math.floor(this.face / STEP); if (steps <= 0) return;
-    this.face -= steps * STEP; if (steps > 4) steps = 4;
+  // The face advancing, for the player's vole and the AI's alike: D = { at, prev (node ids), yaw, pitch, face (m dug
+  // since the last step), startDown }; dt of digging at the rate. Returns 'join' (a chamber's join and widening),
+  // 'surface' (broke out: D.at is the new hole), 'stop' (refused) or ''.
+  digCore(D, dt, ai) {
+    const w = this.world; let n = this.node(D.at); if (!n) return 'stop';
+    D.face += RATE * this.mult * dt;
+    const d = this.digDir(n, D.yaw, D.pitch, D);
+    let steps = Math.floor(D.face / STEP); if (steps <= 0) return '';
+    D.face -= steps * STEP; if (steps > 4) steps = 4;
     for (let i = 0; i < steps; i++) {
-      const cx = n.x + d.x * STEP, cy = n.y + d.y * STEP, cz = n.z + d.z * STEP;
-      // a chamber: the face comes within CHAMBER_NEAR of another node (not the one it came from): join and widen
-      const cur = T.a === T.b ? null : this.node(T.a === n.id ? T.b : T.a);
-      const near = this.nearestNode(cx, cy, cz, CHAMBER_NEAR, n, cur), path = near ? this.within(n, JOIN_PATH) : null;
-      if (near && !path.has(near)) {   // not the tunnel's own last stretch: the face has come round to an older part
+      this.digDir(n, D.yaw, D.pitch, D);
+      const cx = n.x + d.x * STEP, cy = n.y + d.y * STEP, cz = n.z + d.z * STEP, cur = D.prev ? this.node(D.prev) : null;
+      // a chamber: the face comes within CHAMBER_NEAR of an older part of the system (not its own last stretch)
+      const near = this.nearestNode(cx, cy, cz, CHAMBER_NEAR, n, cur);
+      if (near && !this.within(n, JOIN_PATH).has(near)) {
         const seg = this.newId();
-        if (this.dispatch({ type: 'join', a: n.id, b: near.id, seg })) {
+        if (this.dispatch({ type: 'join', a: n.id, b: near.id, seg }, ai)) {
           const ids = []; for (const o of [n, near]) if (!o.hole) ids.push(o.id);
           for (const o of w.nodes) if (o !== n && o !== near && !o.hole && o.sys === n.sys && ids.length < 32 && (o.x - cx) ** 2 + (o.y - cy) ** 2 + (o.z - cz) ** 2 < (2 * CHAMBER_NEAR) ** 2) ids.push(o.id);
           const r = Math.min(R_CHAMBER, Math.max(n.r, near.r) + WIDEN_STEP);
-          if (ids.length) this.dispatch({ type: 'widen', ids, r });
-          T.prev = cur?.id ?? T.prev; T.a = n.id; T.b = near.id; T.t = 1;
-          gc.say(r >= R_CHAMBER ? 'a chamber' : 'the tunnel joins; the room widens');
-          this.face = 0; return;
+          if (ids.length) this.dispatch({ type: 'widen', ids, r }, ai);
+          D.prev = n.id; D.at = near.id; D.face = 0; D.joinR = r;
+          return 'join';
         }
       }
-      // the face advancing: the leaf node moves while the way is straight and the segment short, else a new node
-      const cur2 = T.a === T.b ? null : this.node(T.a === n.id ? T.b : T.a);
+      // straight on and short: the leaf node moves; else a new node
       let grown = false;
-      if (cur2 && n.segs.length === 1 && !n.hole) {
-        const sx = n.x - cur2.x, sy = n.y - cur2.y, sz = n.z - cur2.z, sl = Math.hypot(sx, sy, sz) || 1e-6;
-        if ((sx * d.x + sy * d.y + sz * d.z) / sl > Math.cos(BEND) && sl + STEP < SEG_MAX) grown = this.dispatch({ type: 'grow', id: n.id, x: cx, y: cy, z: cz });
+      if (cur && n.segs.length === 1 && !n.hole) {
+        const sx = n.x - cur.x, sy = n.y - cur.y, sz = n.z - cur.z, sl = Math.hypot(sx, sy, sz) || 1e-6;
+        if ((sx * d.x + sy * d.y + sz * d.z) / sl > Math.cos(BEND) && sl + STEP < SEG_MAX) grown = this.dispatch({ type: 'grow', id: n.id, x: cx, y: cy, z: cz }, ai);
       }
       if (!grown) {
         const id = this.newId(), seg = this.newId();
-        if (!this.dispatch({ type: 'dig', from: n.id, id, seg, x: cx, y: cy, z: cz })) { this.face = 0; return; }
-        T.prev = cur2?.id ?? T.prev; T.a = n.id; T.b = id; T.t = 1; n = this.node(id);
+        if (!this.dispatch({ type: 'dig', from: n.id, id, seg, x: cx, y: cy, z: cz }, ai)) { D.face = 0; return 'stop'; }
+        D.prev = n.id; D.at = id; n = this.node(id);
       }
-      // the surface: the face breaks out as a hole
       const gy = this.groundY(n.x, n.z);
-      if (n.y + n.r >= gy - 0.003 && !this.startDown) {
-        this.dispatch({ type: 'surface', id: n.id, y: gy - n.r }); gc.say('out into the light: W climbs out'); this.face = 0; this.broke = true; this.digging = 0; gc.digging = 0; return;
-      }
+      if (n.y + n.r >= gy - 0.003 && !D.startDown) { this.dispatch({ type: 'surface', id: n.id, y: gy - n.r }, ai); D.face = 0; return 'surface'; }
     }
+    return '';
+  }
+  // the player's vole digging from node n, the way it faces and looks
+  digFrom(n, dt) {
+    const gc = this.gc, f = gc.flight, T = this.tun, D = this.pd;
+    if (!this.wantNewDig(n, f)) { this.digging = 0; gc.digging = 0; return; }
+    if (n.hole && n.segs.length && this.digDir(n, f.yaw, f.pitch, D).y > -0.15) {   // at a hole the way up is the open air: W climbs out
+      this.digging = 0; gc.digging = 0; if (!this.toldOut) { this.toldOut = true; gc.say('at the surface: W climbs out'); } return;
+    }
+    this.toldOut = false; this.digging = 1; gc.digging = 1; gc.actT = 0;
+    const d = this.digDir(n, f.yaw, f.pitch, D);
+    this.specksFrom(n.x + d.x * n.r, n.y - n.r * 0.5, n.z + d.z * n.r, -d.x, -d.z, 0.004, dt, 30, 0.25);
+    D.at = n.id; D.prev = T.a === T.b ? null : (T.a === n.id ? T.b : T.a); D.yaw = f.yaw; D.pitch = f.pitch;
+    const res = this.digCore(D, dt, false);
+    if (D.at !== n.id) { T.prev = D.prev; T.a = D.prev ?? D.at; T.b = D.at; T.t = 1; }
+    if (res === 'join') gc.say(D.joinR >= R_CHAMBER ? 'a chamber' : 'the tunnel joins; the room widens');
+    if (res === 'surface') { gc.say('out into the light: W climbs out'); this.broke = true; this.digging = 0; gc.digging = 0; }
   }
   leaveHole(n) {
     const gc = this.gc, P = gc.flight.pos, gy = n.y + n.r;
@@ -863,7 +892,7 @@ export class Dig {
     const T = this.tun; if (!T) return '';
     const Q = this.axisAt(T, this._ax ||= new THREE.Vector4()), depth = this.groundY(Q.x, Q.z) - Q.y;
     const d = `${Math.max(0, Math.round(depth * 100))} cm down`;
-    if (this.digging) { const phi = this._dd?.phi || 0; return `digging, ${Math.abs(phi) < 0.08 ? 'level' : (phi < 0 ? 'down ' : 'up ') + Math.round(Math.abs(phi) * 180 / Math.PI) + '°'} · ${d}`; }
+    if (this.digging) { const phi = this.pd.d?.phi || 0; return `digging, ${Math.abs(phi) < 0.08 ? 'level' : (phi < 0 ? 'down ' : 'up ') + Math.round(Math.abs(phi) * 180 / Math.PI) + '°'} · ${d}`; }
     return `${Q.w > R_TUBE + 0.02 ? 'in a chamber' : 'in the tunnel'} · ${d}`;
   }
   // the player leaves the body underground (spirit.js): the AI vole takes it at the nearest hole on the surface
@@ -896,49 +925,91 @@ export class Dig {
   }
 
   // ---- the AI voles -----------------------------------------------------------------------------------------
-  // a vole at a hole goes down (animals.js: VL_RUN to a hole, then VL_TUN): to the far end of its system or a chamber,
-  // where it waits HIDE_S s, then back to a hole and up. aiStep moves it; false when it is out again.
+  // animals.js voBurrow: a vole at a hole goes down (aiEnter), through the system to its far end or a chamber, waits
+  // HIDE_S s, then back to a hole and up (aiStep false: out, with a runway from the hole); a vole the AI host sets
+  // digging (aiDigStart) digs a burrow at the rate (aiDigStep): down, along, round into a chamber, up to a second hole.
   aiEnter(a, hole) {
     if (!hole || !hole.segs.length) return false;
-    const goal = this.farNode(hole, null) || hole;
-    a.tun = { a: hole.id, b: hole.id, t: 1, path: this.pathTo(hole, goal), i: 0, wait: HIDE_S[0] + Math.random() * (HIDE_S[1] - HIDE_S[0]), speed: AI_WALK, out: false };
+    const goal = this.farNode(hole, null, true) || hole;
+    a.tun = { path: this.pathTo(hole, goal), i: 0, t: 0, wait: HIDE_S[0] + Math.random() * (HIDE_S[1] - HIDE_S[0]), speed: AI_WALK, out: false };
     this.aiIn.add(a); a.buried = true; a.vis = 1;
     return true;
   }
   aiStep(a, dt, danger) {
-    const T = a.tun; if (!T) return false;
-    const r = a.rng || Math.random;
+    const T = a.tun; if (!T) { this.aiIn.delete(a); return false; }
+    const r = a.rng || Math.random, last = this.node(T.path[T.path.length - 1]);
+    if (!last) return this.aiOut(a);   // its tunnels went (decayed, or rolled back): up where it is
     if (T.i >= T.path.length - 1) {   // at the goal: wait, then head for a hole; out when there
-      const here = this.node(T.path[T.path.length - 1]);
-      if (T.out) { if (here?.hole) { this.aiLeave(a, here); return false; } T.path = this.pathTo(here, this.nearestHoleOf(here) || here); T.i = 0; T.out = false; }
-      else { T.wait -= dt; a.amp = damp(a.amp, 0, 10, dt); if (r() < dt * 0.5) a.flickV = 0.5; if (T.wait <= 0 && !danger) { T.out = true; T.speed = AI_WALK; } }
+      if (T.out) { if (last.hole) { this.aiLeave(a, last); return false; } const h = this.nearestHoleOf(last); if (!h) return this.aiOut(a); T.path = this.pathTo(last, h); T.i = 0; T.t = 0; T.out = false; T.going = true; if (T.path.length < 2) { this.aiLeave(a, last); return false; } }
+      else if (T.going) { T.out = true; }
+      else { T.wait -= dt; a.amp = damp(a.amp, 0, 10, dt); a.spd = 0; if (r() < dt * 0.5) a.flickV = 0.5; if (T.wait <= 0 && !danger) { T.out = true; T.speed = AI_WALK; } }
+      this.visit(last.sys, false, true);
     }
     if (T.i < T.path.length - 1) {
       const A = this.node(T.path[T.i]), B = this.node(T.path[T.i + 1]);
-      if (!A || !B) { T.path = [T.path[T.i] ?? T.path[0]]; T.i = 0; return true; }
+      if (!A || !B) return this.aiOut(a);
       const L = Math.hypot(B.x - A.x, B.y - A.y, B.z - A.z) || 1e-6;
       T.t += T.speed * dt / L;
-      if (T.t >= 1) { T.t = 0; T.i++; }
-      const t = T.t, x = A.x + (B.x - A.x) * t, y = A.y + (B.y - A.y) * t, z = A.z + (B.z - A.z) * t, rr = A.r + (B.r - A.r) * t;
-      a.x = x; a.z = z; a.y = y - rr * 0.85 + 0.004 * Math.abs(Math.sin(a.phase)) * a.amp;
+      if (T.t >= 1) { T.t = 0; T.i++; if (T.i >= T.path.length - 1 && T.going) T.out = true; }
+      const t = Math.min(1, T.t), rr = A.r + (B.r - A.r) * t;
+      a.x = A.x + (B.x - A.x) * t; a.z = A.z + (B.z - A.z) * t; a.y = A.y + (B.y - A.y) * t - rr * 0.85 + 0.004 * Math.abs(Math.sin(a.phase)) * a.amp;
       a.yaw = Math.atan2(B.x - A.x, B.z - A.z); a.pitch = -Math.atan2(B.y - A.y, Math.hypot(B.x - A.x, B.z - A.z) || 1e-6);
       a.amp = damp(a.amp, 1, 14, dt); a.phase += dt * TAU * T.speed / 0.09; a.spd = T.speed;
       a.buried = !(A.open || B.open);
-    } else { const n = this.node(T.path[T.path.length - 1]); if (n) { a.buried = !n.open; } a.spd = 0; }
-    a.vis = 1; a.pose = damp(a.pose, 0, 6, dt); a.roll = 0;
+    } else a.buried = !last.open;
+    a.vis = 1; a.pose = damp(a.pose, 0, 6, dt); a.roll = 0; a.e2 = 0;
     return true;
   }
   aiLeave(a, hole) {
-    a.tun = null; a.buried = false; this.aiIn.delete(a);
+    a.tun = null; a.dig = null; a.buried = false; this.aiIn.delete(a);
     const L = 2 + Math.random() * 2, ang = Math.random() * TAU;
     a.x = hole.x; a.z = hole.z; a.y = hole.y + hole.r; a.pitch = 0;
     a.sx = hole.x; a.sz = hole.z; a.tx = hole.x + Math.cos(ang) * L; a.tz = hole.z + Math.sin(ang) * L; a.u = 0; a.h = 0;
+  }
+  aiDead(a) { a.tun = null; a.dig = null; this.aiIn.delete(a); }   // killed down here (animals.js kill): it lies where it died
+  aiOut(a) {   // its tunnels are gone: on the surface where it was
+    a.tun = null; a.dig = null; a.buried = false; this.aiIn.delete(a);
+    a.y = this.groundY(a.x, a.z); a.pitch = 0; a.sx = a.x; a.sz = a.z; a.tx = a.x + 2; a.tz = a.z; a.u = 0; a.h = 0;
+    return false;
+  }
+  // the AI host starts a calm vole digging a burrow where it is: none within 4 m of another hole, at most AI_DIG_MAX
+  // at once, none past AI_DIG_HOLES holes in the world, not in water
+  aiDigStart(a) {
+    if (!this.local && !this.net.host) return false;
+    let n = 0; for (const b of this.aiIn) if (b.dig) n++; if (n >= AI_DIG_MAX) return false;
+    let holes = 0; for (const o of this.world.nodes) if (o.hole) holes++; if (holes >= AI_DIG_HOLES) return false;
+    if (this.holeNear(a.x, a.z, 4, null, true)) return false;
+    const F = this.sq.footing(a.x, a.z, this.heights.atXZ(a.x, a.z) + 1); if (F.surf !== null) return false;
+    const id = this.newId(), gy = F.y;
+    if (!this.dispatch({ type: 'hole', id, x: a.x, y: gy - R_TUBE, z: a.z }, true)) return false;
+    const r = a.rng || Math.random, yaw = r() * TAU;
+    a.dig = { D: { at: id, prev: null, yaw, pitch: -0.5, face: 0, startDown: true }, stage: 0, depth: 0.12 + 0.12 * r(), len: 0.6 + 0.8 * r(), run: 0, turn: 0, wob: r() * TAU, side: r() < 0.5 ? -1 : 1 };
+    this.aiIn.add(a); a.buried = true; a.tun = null;
+    return true;
+  }
+  aiDigStep(a, dt, scared) {
+    const G = a.dig; if (!G) return false;
+    const D = G.D, n = this.node(D.at); if (!n) return this.aiOut(a);
+    const gy = this.groundY(n.x, n.z), depth = gy - n.y, adv = RATE * this.mult * dt;
+    if (G.stage === 0) { D.pitch = -0.5; if (depth >= G.depth) G.stage = 1; }
+    else if (G.stage === 1 || G.stage === 3) { D.pitch = clamp((G.depth - depth) * -3, -0.2, 0.2); G.wob += dt * 0.05 * this.mult; D.yaw += Math.sin(G.wob) * 0.4 * adv; G.run += adv; if (G.run >= (G.stage === 1 ? G.len : 0.35)) { G.stage++; G.run = 0; } }
+    else if (G.stage === 2) { D.pitch = 0; const w = Math.min(3, RATE * this.mult / R_TURN) * dt; D.yaw += G.side * w; G.turn += w; if (G.turn > TAU * 1.15) G.stage = 3; }
+    else D.pitch = 0.5;
+    const res = this.digCore(D, dt, true);
+    const m = this.node(D.at); if (!m) return this.aiOut(a);
+    a.x = m.x; a.z = m.z; a.y = m.y - m.r * 0.85; a.yaw = D.yaw + Math.PI; a.pitch = -(D.d?.phi || 0) * 0.8;
+    a.amp = 0.45; a.phase += dt * TAU * 9; a.spd = 0; a.vis = 1; a.buried = !m.open; a.pose = damp(a.pose, 0, 6, dt);
+    if (res === 'surface') { this.aiLeave(a, m); return false; }
+    if (res === 'stop' && G.stage < 4) G.stage = 4;
+    return true;
   }
   // the voles of a system flee the opened node down the other branches: each to the node farthest from it
   flee(sys, from) {
     for (const a of this.aiIn) {
       const T = a.tun; if (!T) continue; const here = this.node(T.path[Math.min(T.i, T.path.length - 1)]); if (!here || here.sys !== sys) continue;
-      const goal = this.farNode(from, null, true) || here; T.path = this.pathTo(here, goal); T.i = 0; T.t = 0; T.speed = AI_FLEE; T.wait = HIDE_S[1]; T.out = false;
+      let goal = this.farNode(from, null, true) || here, going = false;
+      if (goal.open) { const h = this.nearestHoleOf(here); if (h) { goal = h; going = true; } }   // nowhere closed left: out a hole
+      T.path = this.pathTo(here, goal); T.i = 0; T.t = 0; T.speed = AI_FLEE; T.wait = HIDE_S[1]; T.out = false; T.going = going;
     }
   }
   // graph search over a system (Dijkstra, preallocated): dist from `src` (a node, or every vole when `multi`)
@@ -957,7 +1028,7 @@ export class Dig {
   }
   farNode(from, _, chamberFirst = false) {
     this.search(from, null); const N = this.world.nodes; let best = null, bd = -1;
-    for (let i = 0; i < N.length; i++) { const n = N[i]; if (!isFinite(this.dist[i]) || n.hole) continue; const sc = this.dist[i] + (chamberFirst && n.r > R_TUBE + 0.02 ? 1 : 0); if (sc > bd) { bd = sc; best = n; } }
+    for (let i = 0; i < N.length; i++) { const n = N[i]; if (!isFinite(this.dist[i]) || n.hole) continue; const sc = this.dist[i] + (chamberFirst && n.r > R_TUBE + 0.02 ? 1 : 0) - (n.open ? 100 : 0); if (sc > bd) { bd = sc; best = n; } }   // never an opened node while a closed one is left
     return best;
   }
   pathTo(from, to) {
@@ -970,18 +1041,33 @@ export class Dig {
   // player's vole counts
   glowPass() {
     const w = this.world, N = w.nodes, G = this.glowOf;
-    const open = new Set(); for (const n of N) if (n.open) open.add(n.sys);
+    const open = this._open ||= new Set(); open.clear(); for (const n of N) if (n.open) open.add(n.sys);
     const old = this._gl ||= new Float32Array(MAX_N); old.set(G.subarray(0, N.length));
     G.fill(0, 0, N.length);
     if (open.size) {
-      const src = this._src ||= []; src.length = 0;
-      for (const a of this.aiIn) { const T = a.tun; if (!T) continue; const n = this.node(T.path[Math.min(T.i, T.path.length - 1)]); if (n && open.has(n.sys)) src.push({ n, d: 0 }); }
-      if (this.tun) { const n = this.node(this.tun.b); if (n && open.has(n.sys)) src.push({ n, d: 0 }); }
+      const src = this._src ||= []; src.length = 0; this.srcN = 0;
+      for (const a of this.aiIn) { const T = a.tun, n = T ? this.node(T.path[Math.min(T.i, T.path.length - 1)]) : a.dig ? this.node(a.dig.D.at) : null; if (n && open.has(n.sys)) src.push(this.srcOf(n)); }
+      if (this.tun) { const n = this.node(this.tun.b); if (n && open.has(n.sys)) src.push(this.srcOf(n)); }
       if (src.length) { this.search(null, src); for (let i = 0; i < N.length; i++) if (isFinite(this.dist[i]) && open.has(N[i].sys)) G[i] = Math.exp(-this.dist[i] / GLOW_L); }
     }
     for (const s of w.segs) { const ia = w.byId.get(s.a).i, ib = w.byId.get(s.b).i; if (G[ia] !== old[ia] || G[ib] !== old[ib]) this.writeGlow(s); }
+    // the trail on the ground: a spot over each lit node and at each lit segment's middle
+    const canid = this.gc.on && (this.gc.code === 'canis_latrans' || this.gc.code === 'urocyon_cinereoargenteus');
+    const T = this.trail.geometry, A = T.attributes.aSpot.array; let k = 0;
+    if (canid && open.size) {
+      const gyOf = n => (n.gy ??= this.groundY(n.x, n.z));
+      for (const n of N) { if (k >= this.TRAIL_N) break; const g = G[n.i]; if (g < 0.04) continue; A[k * 4] = n.x; A[k * 4 + 1] = gyOf(n) + 0.03; A[k * 4 + 2] = n.z; A[k * 4 + 3] = g; k++; }
+      for (const s of w.segs) {
+        if (k >= this.TRAIL_N) break; const a = w.byId.get(s.a), b = w.byId.get(s.b), g = (G[a.i] + G[b.i]) / 2; if (g < 0.04) continue;
+        if (Math.hypot(a.x - b.x, a.z - b.z) < 0.08) continue;
+        A[k * 4] = (a.x + b.x) / 2; A[k * 4 + 1] = (gyOf(a) + gyOf(b)) / 2 + 0.03; A[k * 4 + 2] = (a.z + b.z) / 2; A[k * 4 + 3] = g; k++;
+      }
+    }
+    if (k || T.instanceCount) { T.instanceCount = k; T.attributes.aSpot.needsUpdate = true; }
+    this.trail.visible = k > 0;
   }
 
+  srcOf(n) { const pool = this._srcPool ||= []; const o = pool[this.srcN] ||= { n: null, d: 0 }; this.srcN++; o.n = n; o.d = 0; return o; }   // no allocation per pass
   // ---- each frame -----------------------------------------------------------------------------------------
   update(dt) {
     const t0 = performance.now(); this.time += dt; this.u.time.value = this.time;
@@ -1023,7 +1109,7 @@ export class Dig {
   }
   dispose(all = true) {
     if (all) { this.save(); this.net.leave(); removeEventListener('pagehide', this.onHide); if (window.__weDig === this) delete window.__weDig; groundUniforms.digCutN.value = 0; }
-    for (const m of [this.tubes, this.bowls, this.heaps, this.specks]) { if (!m) continue; this.scene.remove(m); m.geometry.dispose(); m.material.dispose(); }
+    for (const m of [this.tubes, this.bowls, this.heaps, this.specks, this.trail]) { if (!m) continue; this.scene.remove(m); m.geometry.dispose(); m.material.dispose(); }
     this.capsTex?.dispose();
     for (const a of this.aiIn) { a.tun = null; a.buried = false; } this.aiIn.clear();
   }

@@ -376,7 +376,7 @@ const M_BED = 80, M_STAND = 81, M_MOVE = 82, M_SNIFF = 83, M_POUNCE = 84, M_FLEE
   M_LEAP = 93, M_FEED = 94,                                                             // lion: the rush's last bound onto the prey, and crouched over its kill (the catch, 2026-10-30)
   M_FIX = 95, M_PAW = 96, M_TOSS = 97;                                                  // fox, coyote: the mousing pounce's fix before it, the paw strikes after a miss, the head toss after a kill
 const B_FORM = 100, B_FORAGE = 101, B_HOP = 102, B_SIT = 103, B_FREEZE = 104, B_BOLT = 105;   // brush rabbit
-const VL_RUN = 110, VL_PAUSE = 111, VL_SIT = 112, VL_HIDE = 113;                         // vole
+const VL_RUN = 110, VL_PAUSE = 111, VL_SIT = 112, VL_HIDE = 113, VL_TOHOLE = 114, VL_TUN = 115, VL_DIG = 116;   // vole (the last three: the Dig game, dig.js)
 const JK_FORM = 120, JK_FEED = 121, JK_HOP = 122, JK_SIT = 123, JK_FREEZE = 124, JK_BOLT = 125;   // jackrabbit
 // Jackrabbit (jkUpdate): speeds (m/s; lope a range), how far out from the form it feeds (m), the freeze and the
 // flush-at-once distances for a low player (m; in the form it sits tighter), what counts as low (m above it), the
@@ -979,7 +979,7 @@ export class Animals {
   }
   huntable(b) {
     switch (b.sp) {
-      case VO: return b.state !== VL_HIDE;
+      case VO: return b.state !== VL_HIDE && !b.buried;   // not under the ground (dig.js)
       case RB: return b.state !== B_FORM && b.state !== B_BOLT;
       case JR: return b.state !== JK_BOLT;
       case GS: return b.state !== G_DOWN && b.state !== G_DIVE && b.group?.state === C_OK;
@@ -1017,7 +1017,8 @@ export class Animals {
     // the fall (lieStill): from the gait and pose it died in to the rest pose on its side over CARRION.fall s
     const skin = !!this.drawn[prey.sp]?.model?.skin;
     prey.fall = 0; prey.amp0 = prey.amp; prey.pose0 = skin ? 1 : prey.pose; prey.pitch0 = prey.pitch; prey.flick0 = prey.flick;
-    prey.yDead = Math.max(prey.y, this.heights.atXZ(prey.x, prey.z));   // where it died (a lizard on its rock stays on the rock)
+    prey.under = !!(prey.tun || prey.dig); if (prey.under) this.dig?.aiDead?.(prey);   // killed in a tunnel or a pit (dig.js): it lies there
+    prey.yDead = prey.under ? prey.y : Math.max(prey.y, this.heights.atXZ(prey.x, prey.z));   // where it died (a lizard on its rock stays on the rock)
     if (skin) (prey.cs ||= makeClipState()).quick = 0.35;   // the deer: the bed clip from the first frame, blended in at a third of its time
     prey.lieRoll = (prey.rng ? prey.rng() : Math.random()) < 0.5 ? -1 : 1;
     if (prey.group) {   // a herd member: the herd goes on without it
@@ -1033,7 +1034,7 @@ export class Animals {
   }
   lieStill(a, dt = 0) {   // the fall over CARRION.fall s, then on its side on the ground, a little up so the body is not under it
     const u = a.fall = Math.min(1, (a.fall ?? 1) + dt / CARRION.fall), e = u * u, rest = REST_POSE[a.sp] ?? 1;
-    a.y = Math.max(this.heights.atXZ(a.x, a.z), a.yDead ?? -Infinity) + 0.04 * e;
+    a.y = (a.under ? a.yDead : Math.max(this.heights.atXZ(a.x, a.z), a.yDead ?? -Infinity)) + (a.under ? 0.01 : 0.04) * e;
     a.roll = a.lieRoll * 1.45 * e; a.pitch = (a.pitch0 || 0) * (1 - e); a.speed = 0;
     a.amp = (a.amp0 || 0) * (1 - u); a.pose = (a.pose0 || 0) + (rest - (a.pose0 || 0)) * e; a.flick = (a.flick0 || 0) * (1 - u);
   }
@@ -1086,7 +1087,7 @@ export class Animals {
     const fx = -Math.sin(yaw), fz = -Math.cos(yaw), cc = Math.cos(cone);
     let best = null, bd = reach * reach;
     for (const a of this.list) {
-      if (!prey.has(a.sp) || a.dead || a.culled || !KILLABLE.has(a.sp)) continue;
+      if (!prey.has(a.sp) || a.dead || a.culled || a.buried || !KILLABLE.has(a.sp)) continue;   // buried: in a tunnel not opened (dig.js)
       const dx = a.x - x, dz = a.z - z, d2 = dx * dx + (a.y - y) ** 2 * 0.25 + dz * dz; if (d2 >= bd) continue;
       if (yaw === yaw && d2 > 0.25 && (dx * fx + dz * fz) < cc * Math.sqrt(dx * dx + dz * dz)) continue;   // not ahead
       bd = d2; best = a;
@@ -3633,7 +3634,18 @@ export class Animals {
     a.t -= dt;
     const T = this.threat(VO, a, a.x, a.y, a.z, px, py, pz), tn = T.n; px = T.x; py = T.y; pz = T.z;   // the player or an AI hunter
     const near = py - a.y < 4 ? Math.hypot(a.x - px, a.z - pz) : Infinity;
-    if (this.danger(VO, a, near, 4, tn) && a.state !== VL_HIDE && !(a.state === VL_RUN && a.next === VL_HIDE)) {
+    // the Dig game (dig.js): to a hole, through the tunnels, digging a burrow (the AI host's)
+    const D = this.dig, scared = this.danger(VO, a, near, 4, tn);
+    if (D && (a.state === VL_TOHOLE || a.state === VL_TUN || a.state === VL_DIG)) return this.voBurrow(a, dt, scared, near);
+    if (D && scared && a.state !== VL_HIDE) {   // alarmed with a hole within reach: down it (else the runway and the grass, as before)
+      const h = D.holeNear(a.x, a.z, D.HOLE_SEEK, a); if (h) { a.hole = h.id; a.state = VL_TOHOLE; a.speed = 1.6; return this.voBurrow(a, dt, scared, near); }
+    }
+    if (D && a.state === VL_PAUSE && a.t <= 0 && !scared) {   // now and then a calm vole goes down a hole nearby, or (the AI host) digs a burrow
+      const q = r();
+      if (q < 0.08) { const h = D.holeNear(a.x, a.z, 3, a); if (h) { a.hole = h.id; a.state = VL_TOHOLE; a.speed = 0.45; return this.voBurrow(a, dt, scared, near); } }
+      else if (q < 0.08 + D.AI_DIG_P && D.aiDigStart(a)) { a.state = VL_DIG; return this.voBurrow(a, dt, scared, near); }
+    }
+    if (scared && a.state !== VL_HIDE && !(a.state === VL_RUN && a.next === VL_HIDE)) {
       const d0 = Math.hypot(a.sx - px, a.sz - pz), d1 = Math.hypot(a.tx - px, a.tz - pz);
       a.h = d0 > d1 ? 0 : 1; a.speed = 1.6; a.state = VL_RUN; a.next = VL_HIDE;
     }
@@ -3667,6 +3679,30 @@ export class Animals {
     a.spd = speed;
     a.pose = damp(a.pose, wantPose, 6, dt);
     a.y = H.atXZ(a.x, a.z) + 0.004 * Math.abs(Math.sin(a.phase)) * a.amp;
+  }
+
+  // The Dig game's vole (dig.js): VL_TOHOLE runs to its hole (a.hole) and goes down it, VL_TUN goes through the tunnels
+  // (dig.aiStep: to the far end or a chamber, a wait, back up a hole to forage, or away down the other branches when a
+  // pit opens the system), VL_DIG digs a burrow on the AI host (dig.aiDigStep). Out again: a runway from the hole.
+  voBurrow(a, dt, scared, near) {
+    const D = this.dig, r = a.rng;
+    if (a.state === VL_TOHOLE) {
+      const h = D.node(a.hole);
+      if (!h || !h.hole) { a.state = VL_PAUSE; a.t = 1; this.voRunway(a); return; }
+      const ex = h.x - a.x, ez = h.z - a.z, d = Math.hypot(ex, ez), step = a.speed * dt;
+      if (d <= Math.max(step, 0.02)) { if (D.aiEnter(a, h)) a.state = VL_TUN; else { a.state = VL_PAUSE; a.t = 1; this.voRunway(a); } return; }
+      a.x += ex / d * step; a.z += ez / d * step; a.yaw = Math.atan2(ex, ez); a.spd = a.speed;
+      a.amp = damp(a.amp, 1, 14, dt); a.phase += dt * TAU * a.speed / 0.09; a.pose = damp(a.pose, 0, 8, dt); a.vis = damp(a.vis, 1, 6, dt);
+      a.y = this.heights.atXZ(a.x, a.z) + 0.004 * Math.abs(Math.sin(a.phase)) * a.amp;
+      return;
+    }
+    if (a.state === VL_DIG) { if (!D.aiDigStep(a, dt, scared)) { a.state = VL_PAUSE; a.t = 1 + r() * 2; } return; }
+    if (!D.aiStep(a, dt, scared || near < 3)) { a.state = VL_PAUSE; a.t = 1 + r() * 2; a.buried = false; }
+  }
+  // a fresh runway through where the vole is (after a burrow or a hole that went)
+  voRunway(a) {
+    const r = a.rng, ang = r() * TAU, L = 2 + r() * 2;
+    a.sx = a.x; a.sz = a.z; a.tx = a.x + Math.cos(ang) * L; a.tz = a.z + Math.sin(ang) * L; a.u = 0; a.h = 0; a.buried = false; a.tun = null;
   }
 
   // ---- wild turkey --------------------------------------------------------------------------------
@@ -4178,6 +4214,7 @@ export class Animals {
     if (a.sp === LZ) return this.lzOn && a.state !== L_HIDE;
     if (a.sp === GS) return a.state !== G_DOWN;
     if (a.sp === TK) return a.vis > 0.3;
+    if (a.sp === VO) return !a.buried;   // down its tunnels (dig.js)
     return true;
   }
 

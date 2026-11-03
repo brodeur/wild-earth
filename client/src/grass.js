@@ -188,6 +188,8 @@ const spDraw = seed => (seed * 7919.17) % 1;   // a second uniform from a plant'
 const COMMON_VERT = /* glsl */`
   ${WIND_GLSL}
   ${GROUND_GLSL}
+  uniform vec4 digCuts[8]; uniform int digCutN;   // the Dig game's holes and pits (terrain.js groundUniforms, dig.js): no clump stands in one
+  bool inDig(vec3 p) { for (int i = 0; i < 8; i++) { if (i >= digCutN) break; vec2 dc = p.xz - digCuts[i].xy; float r = digCuts[i].z + 0.04; if (dot(dc, dc) < r * r) return true; } return false; }
   uniform vec2 nearFade; uniform vec2 closeFade; uniform vec2 groundFade; uniform vec2 midIn; uniform vec2 impIn; uniform float impW;
   uniform float groundK; uniform float matchOn; uniform float tiltOn; uniform float widenOn;
   uniform float heightScale; uniform float heads; uniform float thatch; uniform float leafScale; uniform float dry;
@@ -328,7 +330,7 @@ const NEAR_VERT = /* glsl */`
       float kb = 1.0 - smoothstep(dOut - w, dOut + w, d);   // the tier's own hand-over: what is left of it here
       wf = mix(1.0, min(inversesqrt(max(kc * kl * max(kb, 0.3), 0.05)), 1.8), widenOn);   // widenOn 0: A/B timing
     }
-    if (s < 0.01 || offscreen(iPos.xyz, 0.6 * max(iVar.y, iVar.x))) { gl_Position = vec4(0.0, 0.0, 2.0, 1.0); return; }
+    if (s < 0.01 || offscreen(iPos.xyz, 0.6 * max(iVar.y, iVar.x)) || inDig(iPos.xyz)) { gl_Position = vec4(0.0, 0.0, 2.0, 1.0); return; }
     vec3 p = position;
     // Per blade per clump: height and a lean, so one clump mesh never repeats exactly.
     p.y *= (0.75 + 0.5 * h11(gs * 13.7 + br * 57.1)) * (part < 0.5 ? leafScale : 1.0);
@@ -387,7 +389,7 @@ const BODY_VERT = /* glsl */`
     float nb = 3.0 + floor(4.0 * h11(seed * 5.31 + 0.2));
     float s = step(aBlade.z * 6.0, nb) * step(h11(seed * 23.9 + br * 97.3), 1.0 - smoothstep(bodyFade.x, bodyFade.y, d));
     float H = iVar.y * heightScale;
-    if (s < 0.01 || offscreen(iPos.xyz, 0.3 * H + 0.05)) { gl_Position = vec4(0.0, 0.0, 2.0, 1.0); return; }
+    if (s < 0.01 || offscreen(iPos.xyz, 0.3 * H + 0.05) || inDig(iPos.xyz)) { gl_Position = vec4(0.0, 0.0, 2.0, 1.0); return; }
     float hb = h11(seed * 71.9 + br * 131.7);
     vec3 p = position;
     p.y *= (0.7 + 0.6 * h11(seed * 13.7 + br * 57.1)) * leafScale;
