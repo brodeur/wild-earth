@@ -153,7 +153,7 @@ export class FlierControl {
       this.catchT = 0.1; const P = f.pos;
       const c = this.animals.catchNear(P.x, P.y, P.z);
       if (c) this.took(c);
-      else if (f.landed) { const k = this.animals.feedNear?.(P.x, P.y, P.z); if (k && this.fedAt !== k) { this.fedAt = k; this.needs?.fed?.(); this.say?.(`fed at the ${this.animals.speciesList()[k.sp]?.one || 'carcass'}`); } }   // a raven or vulture down at carrion
+      else if (f.landed) { const k = this.animals.feedNear?.(P.x, P.y, P.z); if (k) { const fd = this.animals.playerFeed?.(k); if (fd) { this.needs?.fed?.(fd.share); this.say?.(fd.text); } } }   // a raven or vulture down at carrion: a bite every few seconds (carrion.js)
       else if (hawk && this.flare <= 0 && f.speed > 8 && this.animals.preyNear?.(P.x, P.y, P.z, Math.max(3, f.speed * FLARE), f.yaw, 0.7)) this.flare = FLARE;   // prey ahead within FLARE s: the brake
     }
     if (this.flare > 0) this.flare = Math.max(0, this.flare - dt);

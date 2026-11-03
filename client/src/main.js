@@ -20,6 +20,7 @@ import { Hunt } from './hunt.js';
 import { Scent } from './scent.js';
 import { Forage } from './forage.js';
 import { Dig } from './dig.js';
+import { Carrion } from './carrion.js';
 import { Sight } from './sight.js';
 import { SoundCues } from './soundCues.js';
 import { OpeningScreen, Arrival, lastTile, rememberTile } from './arrival.js';
@@ -197,6 +198,7 @@ async function disposeWorld(w, renderer) {
   if (fieldGuide.game === m.acorns) { fieldGuide.game = null; fieldGuide.log = []; fieldGuide.anchor = null; }   // the page's field guide (identify.js attached the game)
   m.players?.dispose?.();  // the other players' wisps, names and marks (players.js; before the spirit: they share its wisp's textures)
   m.spirit?.dispose?.();   // the souls' columns and the leaving wisps (spirit.js, 2026-11-01)
+  m.carrion?.dispose?.();   // Scavenge: the carcasses' records, bones and halos (carrion.js; before the dig, whose socket it rides)
   m.dig?.dispose?.();   // the Dig game's tunnels, its socket and the terrain's cut discs (dig.js)
   m.water?.dispose?.(); m.shadows?.dispose?.(); m.terrain?.dispose?.(); m.litter?.dispose?.(); m.scent?.dispose?.(); m.forage?.dispose?.(); m.sight?.dispose?.(); m.cues?.dispose?.(); m.grass?.dispose?.(); m.forbs?.dispose?.(); m.emergents?.dispose?.(); m.veg?.dispose?.(); forgetQueuedCasters();
   // then its listeners and the elements it put into the page; the HUD's own words back as the page had them
@@ -609,6 +611,11 @@ async function buildSteps(w, { params, pending, direct = false, arrive = null })
   hunt.scent = scent;   // the hunt panel's "scented" state (hunt.js)
   const forage = w.m.forage = new Forage({ tile, needs, forbs, shrubs: grass.shrubs, veg, grass, scene, flight, ground, squirrel, season: seasonNow });   // a forager's food plants glow and give a scent (forage.js)
   scent.plants = forage;
+  // Scavenge (carrion.js, docs/game-scavenge.md): every kill's carcass decays over a day in stages drawn on the body, smells
+  // ("dead animal") and glows for the carrion eaters; shared through the dig channel's socket, so every player sees the same
+  // carcass at the same stage. The AI's finding and feeding go through animals.scav.
+  const carrion = w.m.carrion = new Carrion({ tile, animals, scene, flight, ground, flier, needs, dig, season: seasonNow, hour: () => state.hour });
+  animals.scav = carrion; hunt.carrion = carrion;
   const sight = w.m.sight = new Sight({ tile, animals, flight, veg, scene, camera, ground });   // the predators and prey the player has in sight, and those that see the player, lit in their rarity colour (sight.js)
   const cues = w.m.cues = new SoundCues({ tile, animals, flight, camera, el: $('soundCues') });   // ring waves on the screen where a predator or prey is heard (soundCues.js)
   hunt.sight = sight;   // the hunt panel's "spotted" and "it sees you" (hunt.js)
@@ -630,7 +637,7 @@ async function buildSteps(w, { params, pending, direct = false, arrive = null })
   spirit.setOthers(players);
   const toSpirit = () => { squirrel.setOn(false); woodpecker.setOn(false); ground.setOn(false); flier.setOn(false); spirit.setOn(true); onBody('spirit'); };
   // The body's row (abilities.js): its status bars and its abilities, one slot each with its key, along the bottom right.
-  const abilities = w.m.abilities = new Abilities({ el: $('abilities'), legs: $('legs'), bar: $('bodyBar'), squirrel, woodpecker, ground, flier, spirit, flight, needs, hunt, scent });
+  const abilities = w.m.abilities = new Abilities({ el: $('abilities'), legs: $('legs'), bar: $('bodyBar'), squirrel, woodpecker, ground, flier, spirit, flight, needs, hunt, scent, carrion });
 
   // Present-day peek (hold P, or the panel button): the ground shows today's NAIP with the human
   // footprint still in it, the forest and grass step aside and the ghost roads come on, so a player
@@ -702,7 +709,7 @@ async function buildSteps(w, { params, pending, direct = false, arrive = null })
   const setFov = deg => { const v = Math.min(LENS_RANGE[1], Math.max(LENS_RANGE[0], +deg || LENS_DEFAULT)); camera.fov = v; camera.updateProjectionMatrix(); return v; };
   const setHour = h => { state.hour = +h; $('time').value = state.hour; return state.hour; };
   animals.weatherTemp = () => (weather.day ? weather.fx.temp : null);   // the lizards' air (animals.js airT)
-  w.handle = window.__we = { setDate, setFov, setHour, weather, tile, flight, raven, camera, veg, terrain, far, grass, forbs, emergents, roads, scene, renderer, minimap, atmosphere, sky, acorns, identify, places, peek, setPeek, sound, animals, anet, arrival, rocks, water, waterfalls: water.waterfalls, squirrel, woodpecker, ground, flier, spirit, players, credits, sight, cues, forage, needs, dig };   // debugging handle
+  w.handle = window.__we = { setDate, setFov, setHour, weather, tile, flight, raven, camera, veg, terrain, far, grass, forbs, emergents, roads, scene, renderer, minimap, atmosphere, sky, acorns, identify, places, peek, setPeek, sound, animals, anet, arrival, rocks, water, waterfalls: water.waterfalls, squirrel, woodpecker, ground, flier, spirit, players, credits, sight, cues, forage, needs, dig, carrion };   // debugging handle
   const as = direct ? params.get('as') : null;
   if (!['raven', 'squirrel', 'woodpecker'].includes(as)) toSpirit();   // a spirit from the start (behind the opening screen too)
   if (!screenOpen) makeSound();
@@ -888,6 +895,7 @@ async function buildSteps(w, { params, pending, direct = false, arrive = null })
     forage.update(dt);   // the forager's food plants lit and their halos (forage.js; off in any other body)
     dig.update(dt);   // the Dig game's world, its openings in the ground, its glow (dig.js)
     if (s !== anet.season) { anet.season = s; anet.join(tile.id, s); }   // the season's animals channel (animalNet.js)
+    carrion.update(dt);   // Scavenge: the carcasses' stages, bodies, bones and glow (carrion.js)
     if ((ground.on && ground.mode !== 'tunnel') || flier.on || (squirrel.on && !arrival.active)) { sight.update(dt); cues.update(dt); } else if (ground.on) { sight.clear(); cues.update(dt); } else { sight.clear(); cues.clear(); }   // underground (dig.js): heard, not seen   // the eyes and the ears (sight.js, soundCues.js)
     spirit.blendCamera(dt);   // across a switch of body: drawn from a blend of the old view and the new control's (spirit.js)
     raven.update(dt, flight.flapping, flight.speed);

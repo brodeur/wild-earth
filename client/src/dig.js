@@ -182,8 +182,10 @@ export class DigNet {
     this.want = null; this.ws = null; this.connected = false; this.host = true; this.n = 1; this.dseq = 0;
     this.confirmed = null; this.pending = []; this.c = 0; this.retry = 0; this.timer = null; this.needRebuild = false;
     this.stats = { sent: 0, accepted: 0, rejected: 0, remote: 0, rebuilds: 0, reconnects: 0 };
+    this.also = [];   // other riders on this socket (carrion.js: the carcasses' `cev` events): each sees every message, the welcome first
   }
   get live() { return this.mode === 'online' && !!this.want; }
+  send(obj) { if (this.ws && this.connected) this.ws.send(JSON.stringify(obj)); }   // a rider's own message
   async probe() {
     if (this.forcedOff) return (this.mode = 'offline');
     let mode = 'offline';
@@ -222,6 +224,8 @@ export class DigNet {
   }
   on(d) {
     const G = this.game;
+    if (d.t === 'dwelcome') { this.connected = true; this.host = !!d.host; }
+    for (const f of this.also) f(d);
     if (d.t === 'dwelcome') {
       this.connected = true; this.retry = 0; this.host = !!d.host; this.n = d.n; this.dseq = d.dig.seq; this.idle = d.idle;
       this.confirmed = fromShared(G.tile.id, d.dig);

@@ -48,7 +48,7 @@ export class Needs {
     for (const [a, plant, , , seasons] of this.tile.games?.relations?.forage || []) if (a === this.code && (!seasons.length || seasons.includes(season))) ids.add(plant);
     this.plantKey = key; this.plantIds = ids; return ids;
   }
-  fed() { this.hunger = 1; }   // a catch (animals.js catchNear)
+  fed(share = 1) { this.hunger = Math.min(1, this.hunger + share); }   // a catch (animals.js catchNear): a full belly; a bite at a carcass (carrion.js playerFeed): its share of one
   get slow() { return this.sp && Math.min(this.hunger, this.rhythm === 'none' ? 1 : this.thirst) < NEED_LOW ? NEED_SLOW : 1; }
   // every frame in a walker: x, north the body; acting: E held (the act); wet: wading
   update(dt, { x, north, acting, wet }) {
@@ -111,7 +111,8 @@ export class Needs {
     const set = (bar, v, low, hint) => { if (!bar) return; bar.querySelector('b').style.width = `${Math.round(v * 100)}%`; bar.classList.toggle('low', low); const em = bar.querySelector('em'); if (em.textContent !== hint) em.textContent = hint; };
     const t = this.target, near = t ? `${t.resource.replace('_', ' ')} ${t.d < 1000 ? `${Math.round(t.d)} m` : `${(t.d / 1000).toFixed(1)} km`} ${t.bearing}` : '';
     const what = this.plant && this.plantName ? this.plantName(this.plant) : null;
-    const foodHint = this.foodHere >= EAT_MIN ? (what ? `${what} here${this.hunger < 0.98 ? ': hold E' : ''}` : this.hunger < 0.98 ? 'food here: hold E' : 'food here') : (this.hunger < 0.6 && t && !wantWater ? near : '');
+    const foodHint = this.carrionHint ? this.carrionHint   // a carcass at hand or in sight, with its stage (carrion.js: "a deer, two hours dead · hold E")
+      : this.foodHere >= EAT_MIN ? (what ? `${what} here${this.hunger < 0.98 ? ': hold E' : ''}` : this.hunger < 0.98 ? 'food here: hold E' : 'food here') : (this.hunger < 0.6 && t && !wantWater ? near : '');
     set(B.food, this.hunger, this.hunger < NEED_LOW, foodHint);
     if (this.rhythm !== 'none') set(B.water, this.thirst, this.thirst < NEED_LOW, this.atWater ? (this.thirst < 0.98 ? 'at water: hold E' : 'at water') : (this.thirst < 0.6 && t && wantWater ? near : ''));
   }

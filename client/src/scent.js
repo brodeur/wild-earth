@@ -91,7 +91,8 @@ const STALE_MS = 1000;                                                 // update
 // ({ id, x, z, plant: true, name, col }, kept objects), at PLANT_K of the body's reach and PLANT_S as strong; each is
 // drawn as an animal's scent is (the same slots, flicker, sniff and labels), in the plant glow's colour with the plant's
 // name. A body with no forage this season (a lion) gets none; the squirrel's own control smells them too.
-const PLANT_K = 0.35, PLANT_S = 0.85, PLANT_WISPS = 3;   // the plants' share of the reach, their strength, and their own slots beside the MAX_WISPS animals
+const PLANT_K = 0.35, PLANT_S = 0.85, PLANT_WISPS = 3;
+const CARRION_WISPS = 2;   // the carcasses' own slots (Scavenge, carrion.js): a dead animal is never crowded out of the nose   // the plants' share of the reach, their strength, and their own slots beside the MAX_WISPS animals
 // a legibility floor (2026-10-29): a strand shorter than LEN_PX px on screen (the squirrel's 2.7 cm ring strand from its
 // chase camera 2.6 m off was 10 px, a smudge) is drawn longer, with its motes bigger, by up to GROW_MAX; the ring itself keeps its size
 const LEN_PX = 36, GROW_MAX = 6;
@@ -210,7 +211,7 @@ export class Scent {
   }
   strengthOf(a, k, carrion, y) {
     const code = this.animals.speciesList()[k].code, H = this.head;
-    const base = carrion ? this.carrionReach : this.reach * (SOURCE[code] ?? 1); if (base <= 0) return 0;
+    const base = carrion ? this.carrionReach * (this.animals.scav?.smellK(a) ?? 1) : this.reach * (SOURCE[code] ?? 1); if (base <= 0) return 0;   // a carcass's reach grows with its stage (carrion.js: fresh half, bloated a third more, bones a fifth)
     const dx = H.x - a.x, dz = H.z - a.z, d = Math.hypot(dx, dz, (H.y - y) * 0.5);
     const R = base * scentCarry(dx, dz); if (d >= R) return 0;
     let s = (1 - d / R) ** S_POW; if (carrion && this.scav) s = Math.min(1, s * SCAV_S);
@@ -236,12 +237,18 @@ export class Scent {
     }
     if (smelled.length) {
       smelled.sort((p, q) => q.strength - p.strength);
-      if (this.sniffing) { if (smelled.length > SNIFF_MAX) smelled.length = SNIFF_MAX; }   // sniffing: every source in reach
-      else {   // the strongest MAX_WISPS animals and, apart from them, the strongest PLANT_WISPS plants (a herd's scents would crowd every plant out)
-        let na = 0, np = 0, w = 0;
-        for (let i = 0; i < smelled.length; i++) { const e = smelled[i]; if (e.plant ? np < PLANT_WISPS : na < MAX_WISPS) { if (e.plant) np++; else na++; smelled[w++] = e; } }
-        smelled.length = w;
+      // the carcasses keep CARRION_WISPS slots of their own whatever else is on the air (a meadow's voles would crowd a
+      // faint dead deer out of every slot); then, sniffing, every other source in reach up to SNIFF_MAX; else the strongest
+      // MAX_WISPS animals and, apart from them, the strongest PLANT_WISPS plants (a herd's scents would crowd every plant out)
+      const sniffing = this.sniffing; let na = 0, np = 0, nc = 0, w = 0;
+      for (let i = 0; i < smelled.length; i++) {
+        const e = smelled[i];
+        const ok = e.carrion ? nc < CARRION_WISPS : sniffing ? na + np < SNIFF_MAX - CARRION_WISPS : e.plant ? np < PLANT_WISPS : na < MAX_WISPS;
+        if (!ok) continue;
+        if (e.carrion) nc++; else if (e.plant) np++; else na++;
+        smelled[w++] = e;
       }
+      smelled.length = w;
     }
     // the slots: a source still smelled keeps its slot; a lost one fades; a new one takes a slot that is dark or fading.
     // Shown (want) while the player sniffs, or for NEW_HOLD s from a scent not smelled within FORGET s (the flicker)
@@ -341,12 +348,13 @@ export class Scent {
   placeLabel(s, H, ux, uz, along, cam, W, Hh) {
     let el = s.label;
     if (!el) { el = s.label = document.createElement('span'); el.className = 'sl'; this.labels.append(el); el.hidden = true; }
-    const text = s.plant ? (s.a.name || 'plant') : `${this.animals.speciesList()[s.k]?.one || 'scent'}${s.carrion ? ' · dead' : ''}`;
+    const one = this.animals.speciesList()[s.k]?.one || 'scent';
+    const text = s.plant ? (s.a.name || 'plant') : s.carrion ? (this.animals.scav ? this.animals.scav.smellLabel(s.a, s.sv, one) : `${one} · dead`) : one;   // carrion: "dead animal" until the nose is close enough to know the species (carrion.js)
     if (el.textContent !== text) { el.textContent = text; el.style.setProperty('--soul', `#${s.col.getHexString()}`); }
     const p = s.tip.set(H.x + ux * along, H.y, H.z + uz * along).project(cam);
     let off = p.z > 1 || Math.abs(p.x) > 1 || Math.abs(p.y) > 1;
     const sx = (p.x + 1) / 2 * W, sy = (1 - p.y) / 2 * Hh - 6, L = this.labelAt ||= [];
-    if (!off) { for (let i = 0; i < this.placed; i++) if (Math.abs(L[i * 2] - sx) < LABEL_PX && Math.abs(L[i * 2 + 1] - sy) < 14) { off = true; break; } }   // over another's word: not drawn (two deer on one bearing)
+    if (!off && !s.carrion) { for (let i = 0; i < this.placed; i++) if (Math.abs(L[i * 2] - sx) < LABEL_PX && Math.abs(L[i * 2 + 1] - sy) < 14) { off = true; break; } }   // over another's word: not drawn (two deer on one bearing); a carcass's always is (Scavenge)
     if (off) { if (!el.hidden) el.hidden = true; return; }
     L[this.placed * 2] = sx; L[this.placed * 2 + 1] = sy; this.placed++;
     if (el.hidden) el.hidden = false;

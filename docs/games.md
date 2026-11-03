@@ -88,6 +88,13 @@ set, berries while the crown shows them), dimmer as the body is fed; and scent.j
 scents, one per species, with their names. A species with no rows this season (the lion, the lizard) gets none of the
 three; a new plant record with `eaten_by` gets all three on the next `derive`.
 
+Scavenge (2026-11-02, `docs/game-scavenge.md`, `client/src/carrion.js`): the scavenge relation played out. Every kill
+is a carcass that decays over a real day in stages drawn on the body, with a meat store by its mass that each feed
+draws down; it is a scent ("dead animal") whose reach grows with the stage, and for the species `relations.scavenge`
+lists (and the lion at a lion's kill) it glows from a distance by species, the vulture's kilometres from the air the
+farthest. The AI scavengers come by what they notice (the vulture and the raven by eye, the coyote and the bear by the
+nose), feed in a pecking order and leave. Shared through the game server's world for the tile and season, beside Dig.
+
 Dig (2026-11-02, `docs/game-dig.md`, `client/src/dig.js`): the first played game registered from the pipeline. A
 rule in `pipeline/games.py` (PLAYS) tags the games a client module plays out: the vole's shelter in a burrow (its den)
 and the coyote's hunt of the vole carry `play: ["dig"]`, and the tile's `plays.dig` lists the module and the species
@@ -170,8 +177,8 @@ hardest gather on the tile. A drink game carries the species' rhythm (daily, oft
    prey (prey react to the nearest noticed predator, AI or player; watchers call at AI hunters; lions stalk and rush
    herds, canids trot at and pounce on small prey, hawks stoop at voles), alarm calls are heard, and the hunt ends: a
    rush or pounce that lands, or the player's E within reach (a lion, coyote or fox) or pass within reach (a hawk or
-   raven), kills; the dead lie as carrion for ten minutes and the scavenge relation brings ravens, vultures and
-   coyotes to them; a hunter's hunger drains until a catch. Done 2026-10-29: the prey's nose: perception.json
+   raven), kills; the dead lie as carrion (since 2026-11-02 for a real day: Scavenge, `docs/game-scavenge.md`) and
+   the scavenge relation brings ravens, vultures and coyotes to them; a hunter's hunger drains until a catch. Done 2026-10-29: the prey's nose: perception.json
    carries each species' `senses`, and an animal notices the player by its eyes and ears (shrunk by the stalk) or by
    its nose shaped by the wind (animals.js noticeAt: full with the wind from the player to it, a fifth the other way),
    whichever is farther; the hunt panel says "downwind of you" when the wind carries the hunter's scent to its prey. Done 2026-10-28: the hunt as a loop (client/src/hunt.js: the

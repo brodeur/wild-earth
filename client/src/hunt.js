@@ -86,6 +86,9 @@ export class Hunt {
       const dw = st !== 'fleeing' && scentCarry(t.x - P.x, t.z - P.z) >= DOWNWIND;   // the wind carries the hunter's scent to the prey
       if (dw) { const sp = document.createElement('span'); sp.className = 'dw'; sp.textContent = ' · downwind of you'; E.target.appendChild(sp); }
       E.target.className = `hn-target ${st}${sc ? ' scented' : ''}${dw ? ' downwind' : ''}${seen ? ' spotted' : ''}${sees ? ' seen' : ''}`;
+    } else if (this.carrion?.hint) {   // no prey, but a carcass at hand or in sight: its stage (carrion.js: "a deer, two hours dead · 40 m NE")
+      E.target.textContent = this.carrion.hint;
+      E.target.className = 'hn-target carrion';
     } else {
       E.target.textContent = `no prey within ${HUNT_R} m · dawn and dusk on the open edges`;
       E.target.className = 'hn-target';

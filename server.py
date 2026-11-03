@@ -76,6 +76,7 @@ except Exception as _e:  # noqa: BLE001  (ImportError, or a dependency failing t
 from ws import WsConn, ws_frame, ws_upgrade  # noqa: E402
 import hub  # noqa: E402
 import digworld  # noqa: E402   (the Dig game's tunnels and pits: docs/game-dig.md)
+import carrionworld  # noqa: E402   (the Scavenge game's carcasses: docs/game-scavenge.md)
 
 JOBS: dict[str, dict] = {}   # tile_id -> {status, steps, current, started_at}
 LOCK = threading.Lock()
@@ -707,6 +708,12 @@ class GameConn(WsConn):
             if not self.allow():
                 return self.send({"t": "drej", "c": m.get("c"), "why": "too many events"})
             return self.dworld.dig_event(self, m.get("c"), m.get("e"))
+        if t == "cev":   # the Scavenge game's carcasses, on the dig channel's socket (carrionworld.py)
+            if not self.dworld:
+                return self.send({"t": "err", "why": "join the dig first"})
+            if not self.allow():
+                return self.send({"t": "crej", "c": m.get("c"), "why": "too many events"})
+            return self.dworld.carrion_event(self, m.get("c"), m.get("e"))
         if t == "hello":
             tile, season, sid = m.get("tile"), m.get("season"), m.get("sid")
             if not (isinstance(tile, str) and TILE_ID_RE.match(tile) and manifest(tile) is not None):
@@ -761,7 +768,7 @@ class GameWorld:
                 "picked": {}, "stashes": {}, "granaries": {}, "caches": [],
                 "board": {s: 0 for s in BOARD_SPECIES}, "collectors": {}, "round": None, "rounds": 0,
                 "cache_n": 0, "raided": {s: 0 for s in BOARD_SPECIES}, "mobbed": {},
-                "dig": digworld.empty(), "held": {}, "gone": {}, "since": round(time.time())}
+                "dig": digworld.empty(), "held": {}, "gone": {}, "since": round(time.time()), "carrion": carrionworld.empty()}
 
     # -- persistence
     def load(self) -> None:
@@ -783,6 +790,11 @@ class GameWorld:
                     if isinstance(m, dict) and m.get("t") == "dig":   # the dig channel's lines, by their own dseq
                         if m.get("dseq", 0) > self.s["dig"]["seq"]:
                             self.dig_replay(m)
+                            replayed += 1
+                    elif isinstance(m, dict) and m.get("t") == "carrion":   # the carcasses' lines, by their own cseq
+                        if m.get("cseq", 0) > self.s["carrion"]["seq"]:
+                            self.s["carrion"]["seq"] = m["cseq"]
+                            carrionworld.carrion_apply(self.s["carrion"], m.get("e") or {}, m.get("at", time.time()))
                             replayed += 1
                     elif isinstance(m, dict) and m.get("seq", 0) > base:   # (a burial's two lines share a seq)
                         self.replay(m)
@@ -1043,7 +1055,7 @@ class GameWorld:
             self.conns.append(conn)
             self.collector(conn.pid, species, "player", PLAYER_CAP[species])
             conn.send({"t": "welcome", "v": 1, "you": conn.pid, "r": self.epoch(), "host": self.host_of(self.conns) is conn,
-                       "n": self.players(), "world": {**self.s, "dig": None}, "now": round(time.time())})
+                       "n": self.players(), "world": {**self.s, "dig": None, "carrion": None}, "now": round(time.time())})
             self.tell_hosts()
             print(f"[game] {self.tile}/{self.season}: {self.players()} player(s) here", flush=True)
 
@@ -1142,6 +1154,9 @@ class GameWorld:
                 s["granaries"].pop(k, None)
                 s["held"].pop(k, None)
             self.record({"t": "gone", "oaks": oaks})
+        g = carrionworld.carrion_sweep(s["carrion"], now, self.season)   # the carcasses a day has taken (carrionworld.py)
+        if g:
+            self.carrion_record(g, now)
         e = digworld.dig_decay(s["dig"], now)
         if e:
             self.dig_record(e, now)
@@ -1153,7 +1168,8 @@ class GameWorld:
             conn.dworld = self
             self.dconns.append(conn)
             conn.send({"t": "dwelcome", "v": 1, "host": self.host_of(self.dconns) is conn, "n": len(self.dconns),
-                       "dig": digworld.persisted(self.s["dig"]), "now": round(time.time()), "idle": digworld.DIG_IDLE_S})
+                       "dig": digworld.persisted(self.s["dig"]), "now": round(time.time(), 3), "idle": digworld.DIG_IDLE_S,
+                       "carrion": self.s["carrion"]})
             h = self.host_of(self.dconns)
             for k in self.dconns:
                 if k is not conn:
@@ -1219,6 +1235,38 @@ class GameWorld:
                                "raided": {s: 0 for s in BOARD_SPECIES}, "mobbed": {}}
             self.record({"t": "round", "round": self.s["round"]})
             print(f"[game] {self.tile}/{self.season}: the {label} round began", flush=True)
+
+    # -- the carcasses (carrionworld.py), on the dig channel's socket
+    def carrion_event(self, conn: GameConn, c, e) -> None:
+        with self.lock:
+            try:
+                ev = carrionworld.clean(e)
+            except (ValueError, KeyError, TypeError):
+                return conn.send({"t": "crej", "c": c, "why": "malformed event"})
+            if ev.get("ai") and self.host_of(self.dconns) is not conn:
+                return conn.send({"t": "crej", "c": c, "why": "not the AI host"})
+            now = time.time()
+            why = carrionworld.carrion_reduce(self.s["carrion"], ev, now)
+            if why:
+                return conn.send({"t": "crej", "c": c, "why": why})
+            self.carrion_record(ev, now, conn, c)
+
+    def carrion_record(self, ev: dict, now: float, sender: GameConn | None = None, c=None) -> None:
+        """Number a carcass change by its own cseq, log it with the wall time (a birth's clock on replay) and send it to
+        everyone on the channel with that time (the sender's copy echoes c)."""
+        cw = self.s["carrion"]
+        cw["seq"] += 1
+        at = round(now, 1)
+        m = {"t": "carrion", "cseq": cw["seq"], "at": at, "e": ev}
+        if self.log is None:
+            self.dir.mkdir(parents=True, exist_ok=True)
+            self.log = open(self.log_path, "a")
+        self.log.write(json.dumps(m, separators=(",", ":")) + "\n")
+        self.log.flush()
+        self.dirty = True
+        out = {"t": "cev", "cseq": cw["seq"], "at": at, "e": ev}
+        for k in self.dconns:
+            k.send({**out, "c": c} if k is sender else out)
 
     def start_round(self, length) -> None:
         with self.lock:

@@ -1065,7 +1065,8 @@ export class Animals {
       if (g.leader === prey) { const o = this.list.find(b => b !== prey && b.group === g && !b.dead); if (o) g.leader = o; else prey.group = g; }
     }
     this.carrion.push(prey);
-    const who = by === 'player' ? this.observer || 'player' : by.code || SPECIES[by.sp].code;
+    const who = by === 'player' ? this.observer || 'player' : by === 'shared' ? 'shared' : by.code || SPECIES[by.sp].code;
+    if (this.scav) this.scav.onKill(prey, by === 'player' || by === 'shared' ? by : who, small);   // Scavenge (carrion.js): the carcass record, its day of decay, the shared world's event; it ends the body itself
     this.lastKill = { prey: SPECIES[prey.sp].code, by: who, t: this.time, x: Math.round(prey.x), z: Math.round(prey.z) };
     this.emit('kill', { prey: SPECIES[prey.sp].code, by: who, x: prey.x, y: prey.y, z: prey.z, small,
       sp: prey.sp, id: prey.id, h: TAG_DY[prey.sp] * (prey.size || 1), animal: prey, aid: by.aid || 0, mine: by === 'player' });   // its species index, id and body height (m): the soul that leaves it (spirit.js SoulPool); the record and the catcher's number (the stream, animalNet.js)
@@ -1083,19 +1084,53 @@ export class Animals {
     if (a.slot >= 0 && this.meshes[a.sp]) this.meshes[a.sp].instanceMatrix.array.fill(0, a.slot * 16, a.slot * 16 + 16);
     this.byId.delete(a.id); this.carrion = this.carrion.filter(c => c !== a); this.dirty = true;
   }
-  carrionNear(x, z, R) {
+  carrionNear(x, z, R, a = null) {
+    if (a && this.scav) return this.scav.aiNear(a);   // the AI's finding, by what its species would notice (carrion.js)
     let best = null, bd = R * R;
     for (const c of this.carrion) { if (c.gone) continue; const d2 = (c.x - x) ** 2 + (c.z - z) ** 2; if (d2 < bd) { bd = d2; best = c; } }
     return best;
   }
-  // The player's feed at carrion (a scavenger of games.json relations.scavenge, within reach of a carcass): the
-  // carcass, or null. Feeding does not consume it; the caller fills the hunger once per carcass.
+  // The player's feed at carrion (a scavenger of games.json relations.scavenge, or the lion at a kill, within reach of a
+  // carcass): the carcass, or null. playerFeed(c) takes the bite (carrion.js: the store drawn, the share of a belly).
   feedNear(x, y, z, reach = 2.5) {
     const code = this.observer; if (!code) return null;
     if (!this.scavengers) this.scavengers = new Set((this.tile.games?.relations?.scavenge || []).map(([s]) => s));
-    if (!this.scavengers.has(code)) return null;
+    if (!this.scavengers.has(code) && !(this.scav && code === 'puma_concolor')) return null;
     const c = this.carrionNear(x, z, reach); if (!c || Math.abs(c.y - y) > 3) return null;
     return c;
+  }
+  // The player's bite at carcass c: { kg, share, text } or null (too soon; or, with no Scavenge module, once per carcass
+  // and a full belly as before). The controls (groundControl.js, flierControl.js, flight.js stabDone) call it on E, the
+  // vulture's contact and the raven's last stab.
+  playerFeed(c) {
+    if (this.scav) return this.scav.playerFeed(c);
+    if (this.fedLast === c) return null; this.fedLast = c;
+    return { kg: 0, share: 1, text: `fed at the ${SPECIES[c.sp]?.one || 'carcass'}` };
+  }
+  // Scavenge (carrion.js): a carcass the shared world holds whose animal is not here (a kill elsewhere, a reload): a dead
+  // body of its species at its place, in the species' mesh, kept by rebuild while near. The record: { id, one, x, y, z,
+  // yaw, size }. Returns the animal, or null (no such species, or its mesh full). The live animal of that id (its cell
+  // spawned it again: the ids are the cells') is the one that died: it becomes the carcass where the record says.
+  spawnCarcass(rec) {
+    const k = SPECIES.findIndex(s => s.one === rec.one); if (k < 0) return null;
+    let a = this.byId.get(rec.id);
+    if (a?.dead) return a;
+    if (!a) {
+      const arr = this.bySpecies[k]; if (arr && arr.length >= SPECIES[k].cap) return null;
+      const keep = new Set(), rnd = mulberry32(hash(seedOf(rec.id, 0x5cab), 1, 2));
+      this.add(rec.id, k, rnd, b => { b.x = rec.x; b.z = rec.z; b.yaw = rec.yaw || 0; b.size = rec.size || 1; }, keep);
+      a = this.byId.get(rec.id); if (!a) return null;
+    } else { a.x = rec.x; a.z = rec.z; a.yaw = rec.yaw || 0; if (a.group) { const g = a.group; a.group = null; if (g.leader === a) { const o = this.list.find(b => b !== a && b.group === g && !b.dead); if (o) g.leader = o; } } }
+    const skin = !!this.drawn[k]?.model?.skin;
+    a.dead = true; a.diedAt = this.time; a.carrionUntil = Infinity; a.hunt = null; a.air = 0; a.speed = 0; a.spd = 0;
+    a.state = k === VO ? VL_SIT : k === RB ? B_FORM : k === JR ? JK_FORM : k === LZ ? L_BASK : D_BED;
+    a.fall = 1; a.amp0 = 0; a.pose0 = skin ? 1 : REST_POSE[k] ?? 1; a.pitch0 = 0; a.flick0 = 0; a.under = false;
+    a.yDead = Math.max(rec.y ?? -Infinity, this.heights.atXZ(rec.x, rec.z)); a.y = a.yDead;
+    if (skin) (a.cs ||= makeClipState()).quick = 0.35;
+    a.lieRoll = seedOf(rec.id, 0x11) & 1 ? -1 : 1;
+    this.lieStill(a, 0);
+    this.carrion.push(a); this.dirty = true;
+    return a;
   }
   // ---- the smell sense's sources (scent.js) --------------------------------------------------------------
   // Every animal within R m of (x, z) on the level that the observer's species perceives (a species it does not perceive
@@ -1393,6 +1428,7 @@ export class Animals {
     for (const id of this.debugIds) if (this.byId.has(id)) keep.add(id);   // summoned (debugging) animals stay
     for (const a of this.remotes.values()) keep.add(a.id);                  // the group members' bodies (players.js)
     if (this.familyIds) for (const id of this.familyIds) if (this.byId.has(id)) keep.add(id);   // the player woodpecker's family
+    for (const c of this.carrion) if (!c.gone && Math.hypot(c.x - px, c.z - pz) < LIVE_R + 100) keep.add(c.id);   // a carcass stays while near (carrion.js makes it again when the player comes back)
     for (const id of this.freed) {   // left by the player (release): kept while near, wherever its home cell is
       const a = this.byId.get(id);
       if (a && Math.hypot(a.x - px, a.z - pz) < LIVE_R + 100 && this.perceived.has(SPECIES[a.sp].code)) keep.add(id); else this.freed.delete(id);
@@ -2170,7 +2206,7 @@ export class Animals {
     if (a.state === R_SOAR) {
       if (a.carr && (a.carr.gone || a.carr.carrionUntil < this.time)) a.carr = null;
       if (!a.carr && this.carrion.length && this.time > (a.fedAt || 0) && r() < dt * 0.5) {   // carrion in sight: the circle moves over it
-        const c = this.carrionNear(a.x, a.z, CARRION.scavR); if (c) { a.carr = c; a.hx = c.x; a.hz = c.z; a.alt = 18; a.t = 6 + r() * 8; }
+        const c = this.carrionNear(a.x, a.z, CARRION.scavR, a); if (c) { a.carr = c; a.hx = c.x; a.hz = c.z; a.alt = 18; a.t = 6 + r() * 8; }
       }
       if (a.carr && a.t <= 0 && Math.hypot(a.x - a.carr.x, a.z - a.carr.z) < 80) {   // down to it: a glide to the ground beside it
         const c = a.carr; a.sx = a.x; a.sy = a.y; a.sz = a.z; a.tx = c.x + (r() - 0.5) * 3; a.tz = c.z + (r() - 0.5) * 3; a.ty = H.atXZ(a.tx, a.tz);
@@ -2246,9 +2282,10 @@ export class Animals {
       // feeding at carrion (feedOn, within 2.5 m; the catch 2026-10-30): the corvid's bill work, bursts of three quick hard
       // stabs (flickV 0.75: a 0.25 s dip each) with pauses between, the head turned to it
       const feeding = a.feedOn && !a.feedOn.gone && a.perchY === null && Math.hypot(a.feedOn.x - a.x, a.feedOn.z - a.z) < 2.5;
-      if (feeding) {   // a burst: stabT s of stabs at stabHz, the head driven down and up each (flick set outright: the frame's slow decay would hold it down)
+      if (feeding && this.scav?.yields(a, a.feedOn)) { a.feedOn = null; a.t = Math.min(a.t, 0.4); a.fedAt = this.time + 45; }   // a coyote, a bear or a lion at the carcass: the raven gives way (carrion.js), back later
+      else if (feeding) {   // a burst: stabT s of stabs at stabHz, the head driven down and up each (flick set outright: the frame's slow decay would hold it down)
         if (a.stabT > 0) { a.stabT -= dt; a.flick = 1.15 * Math.abs(Math.sin(Math.PI * (RAVEN_STAB.t - a.stabT) * RAVEN_STAB.hz)); }
-        else if (r() < dt * 0.6) a.stabT = RAVEN_STAB.t;
+        else if (r() < dt * 0.6) { a.stabT = RAVEN_STAB.t; if (this.scav && !this.scav.aiFeed(a, a.feedOn)) { a.feedOn = null; a.t = Math.min(a.t, 1); } }   // each burst draws from the carcass (carrion.js); nothing left: off
       } else if (r() < dt * 0.3) a.flickV = 1;
       if (a.feedOn && (a.feedOn.gone || a.perchY !== null)) a.feedOn = null;
       if (gm) {   // the ground model: glances about, flicks its wings, turns with a hop, walks or hops about and caches
@@ -3098,7 +3135,7 @@ export class Animals {
     const rock = 0.2 * Math.sin(this.time * 1.7 + a.rock) + 0.09 * Math.sin(this.time * 3.3 + a.rock * 2.1);
     if (a.state === V_SOAR) {
       if (a.carr && (a.carr.gone || a.carr.carrionUntil < this.time)) { a.carr = null; a.alt = 40 + r() * 140; }
-      if (!a.carr && this.carrion.length && r() < dt * 0.3) { const c = this.carrionNear(a.x, a.z, CARRION.scavR * 2); if (c) { a.carr = c; a.t = 60 + r() * 90; } }
+      if (!a.carr && this.carrion.length && r() < dt * 0.3) { const c = this.carrionNear(a.x, a.z, CARRION.scavR * 2, a); if (c) { a.carr = c; a.t = 60 + r() * 90; } }
       if (a.carr) {   // the circle slides over the carrion and tightens and lowers
         const k = Math.min(1, dt * 0.06); a.cx += (a.carr.x - a.cx) * k; a.cz += (a.carr.z - a.cz) * k; a.alt = damp(a.alt, 28, 0.08, dt); a.R = damp(a.R, 28, 0.08, dt);
       }
@@ -3170,12 +3207,13 @@ export class Animals {
   mmNext(a, act) {
     const r = a.rng, cfg = MAMMAL[a.sp], g = a.group, q = r();
     if (!act) { a.tx = g.bx + a.ox; a.tz = g.bz + a.oz; this.mmGo(a, cfg.walk, M_BED); return; }
+    a.carr = null; a.ate = 0;   // (a feeding spell over: carrion.js aiFeedTick)
     if (this.huntStart(a)) return;   // prey in reach: a stalk (the lion) or a trot at it (HUNT above)
-    if ((a.sp === CY || a.sp === BE) && this.carrion.length && this.time > (a.fedAt || 0)) {   // carrion about: trot (amble) to it and nose it over
-      const bear = a.sp === BE, c = this.carrionNear(a.x, a.z, bear ? cfg.scav : 200);
+    if ((a.sp === CY || a.sp === BE) && this.carrion.length && this.time > (a.fedAt || 0)) {   // carrion about: trot (amble) to it and feed (Scavenge: carrion.js aiFeedTick in M_SNIFF)
+      const bear = a.sp === BE, c = this.carrionNear(a.x, a.z, bear ? cfg.scav : 200, a);
       if (c) {
-        a.tx = c.x + (r() - 0.5) * 2; a.tz = c.z + (r() - 0.5) * 2; a.fedAt = this.time + CARRION.t;
-        if (bear) a.stay = cfg.feed;   // the bear stands over it and feeds a minute
+        a.tx = c.x + (r() - 0.5) * 2; a.tz = c.z + (r() - 0.5) * 2; a.fedAt = this.time + CARRION.t; a.carr = c;
+        a.stay = bear ? cfg.feed : 25 + r() * 20; a.stay0 = a.stay;   // the bear stands over it and feeds a minute, the coyote half that
         this.mmGo(a, bear ? cfg.walk * 1.4 : cfg.trot, M_SNIFF); return;
       }
     }
@@ -3273,6 +3311,7 @@ export class Animals {
         break;
       case M_SNIFF:
         wantFlick = 1;
+        if (a.carr && this.scav && this.scav.aiFeedTick(a, a.carr, dt) === false) { a.carr = null; a.t = 0; a.fedAt = this.time + 40; }   // feeding at carrion (carrion.js): the store drawn; off when it is empty or a bigger scavenger comes
         if (a.wy !== a.wy && r() < dt * 0.4) a.wy = a.yaw + (r() - 0.5) * 1.2;   // a new heading, stepped round to (below)
         if (a.t <= 0) {
           if (act && this.huntStart(a)) break;   // a vole, rabbit, jackrabbit or ground squirrel in reach: after it
@@ -3407,7 +3446,7 @@ export class Animals {
         if (u >= 1) {
           a.lift = 0; a.rolled = 1;
           const d = alive ? Math.hypot(t.x - a.x, t.z - a.z) : Infinity;
-          if (d < (this.reach?.[a.sp] ?? CARRION.reach[ML]) && KILLABLE.has(t.sp) && r() < CARRION.lionCatch) { this.kill(t, a); this.huntOver(a, M_FEED); a.t = CARRION.feed; }
+          if (d < (this.reach?.[a.sp] ?? CARRION.reach[ML]) && KILLABLE.has(t.sp) && r() < CARRION.lionCatch) { this.kill(t, a); this.huntOver(a, M_FEED); a.t = CARRION.feed; this.scav?.aiFeed(a, t); }   // the feed draws from the kill (carrion.js)
           else { this.huntOver(a, M_STAND); a.twist = HUNT.twistT; a.twistS = r() < 0.5 ? -1 : 1; }
         }
         break;
@@ -4843,7 +4882,7 @@ export class Animals {
       e.set(legRow >= 0 ? 0 : a.pitch, dyaw, a.roll, 'YXZ'); q.setFromEuler(e); p.set(a.x, a.y, a.z); s.setScalar(a.size * SPECIES[sp].scale * grow * a.vis);
       m.compose(p, q, s); m.toArray(mesh.instanceMatrix.array, o * 16);
       const an = mesh.geometry.attributes.aAnim.array;
-      an[o * 4] = a.phase % TAU; an[o * 4 + 1] = a.amp; an[o * 4 + 2] = a.pose; an[o * 4 + 3] = a.flick;
+      an[o * 4] = dead && a.fall >= 1 ? -(1 + Math.min(0.999, a.decay || 0) + 2 * Math.round((a.fed || 0) * 15)) : a.phase % TAU; an[o * 4 + 1] = a.amp; an[o * 4 + 2] = a.pose; an[o * 4 + 3] = a.flick;   // a fallen body's phase channel carries its decay and the share eaten (carrion.js; animalModels.js DECAY_BODY)
       const a2 = this.anim2[sp];
       if (a2) { if (!a.mirror || sp === BK) this.extra(a, dt); a2[o * 4] = a.e0; a2[o * 4 + 1] = a.e1; a2[o * 4 + 2] = a.e2; a2[o * 4 + 3] = sp === QU || sp === MQ || sp === TK ? a.variant : a.e3; }
       // the skinned models (deer, buck): clip and phase from the speed, pose, flick and turn (animalModels.js driveClips)

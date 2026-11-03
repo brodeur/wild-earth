@@ -256,6 +256,14 @@ browser stays the renderer.
   always-on container serving the client, the tiles and the hub from one origin; the pipeline a workstation
   dependency; Aaron's accounts, domain and Discord registration to do; not yet deployed. Then: a CDN for the tiles,
   shared animals between players.
+- Scavenge, built 2026-11-02 (`docs/game-scavenge.md`, branch claude/scavenge-game-e5b676): a kill is a carcass for a
+  real day (a deer 24 h, a jackrabbit 12, a vole 6; faster in summer, the afternoon and as it is eaten), drawn on the
+  body through fresh, bloated, opened, dried and bones; a "dead animal" scent whose reach grows with the stage; a glow
+  for the carrion eaters from the vulture's 3 km to the lion's 60 m; bites from a meat store; the AI scavengers by eye
+  and nose with a pecking order; shared through the game server (`carrionworld.py`, `cev` on the dig channel's socket),
+  so a reload keeps it. Next: the vulture lands to feed (it only circles: no ground model), the bear and the fox at
+  carrion verified, the kill hung on the shared-animals lane's server-ordered event once it lands, the frame cost
+  measured on a quiet machine.
 - Dig, built 2026-11-02 (`docs/game-dig.md`, branch claude/dig-game-aed701): the vole digs tunnels at 1.27 cm/s down,
   along and up the way it looks, a dug loop becomes a chamber, a break-out a second hole; it walks the tunnels and the
   camera goes with it into the dirt; the coyote digs a pit at the same rate, a tunnel it meets opens, the voles run down
