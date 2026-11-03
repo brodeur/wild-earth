@@ -4106,6 +4106,71 @@ now join the quadrupeds on the leg engine with a gait set of their own; `docs/mo
   and ridden, the orbit took the drag and the heading stayed; the spirit hovering, yaw +0.7. Not tried by hand with a
   mouse, nor the woodpecker's own flight (it keeps the orbit).
 
+## 2026-11-03: food shown by diet, and the eat reaches the food (acorns.js eatsAcorns; animalModels.js eatReach; gait.js reachDip)
+
+- **Why.** Aaron: "Right now acorns are seem to be visible to all players of all animals. Each animal should only see
+  fruits they can harvest/eat. For all animals, there should be a more dramatic eating/gathering animation - for
+  instance a quail's head should lower all the way to the ground."
+- **Food by diet.** The acorn game drew its acorns, their glows, the stash holes, the granary and stash tags and the dug
+  marks for every body. Now `acorns.js eatsAcorns(games, code, season)` decides from the tile's `games.json`: a gather or
+  cache game on `acorn_mast` that season, or a `relations.forage` row for an oak's `acorns` (the library's `eaten_by`);
+  a tile with no games falls back to the collector bodies. On the home tile in fall that is the raven, deer, fox,
+  coyote, bear, gray squirrel, ground squirrel, woodpecker, both quails, both jays and the turkey; not the hawk, vulture,
+  lion, rabbits, vole or lizard. In winter the jays, woodpecker, squirrel, mountain quail, turkey and deer. A body that
+  does not eat them this season neither sees them nor picks them up (`collecting`; the squirrel's and woodpecker's E
+  says "not your food this season"). The other food was already by diet: the forage glow and the plant scents
+  (`relations.forage`), carrion's glow (`relations.scavenge`; everyone still smells a carcass, a smell is not food).
+- **The shared state is untouched (evidence).** Only the drawing follows the body: the meshes sit in a `food` group
+  whose visibility is set per body and season, while `refresh()` still fills `liveAcorns` and `liveStashes` every
+  rebuild, and those are what the AI collectors (animals.js, on the host) and the squirrel's and woodpecker's controls
+  read; `world.picked`, the stashes, granaries and caches change only by events. Measured as a brush rabbit under the
+  oaks: `food.visible` false and 2,530 live acorns in the set. An acorn in an AI collector's bill or mouth is still
+  drawn (`carriedNuts` stays outside the food group): it is the animal's, not food lying about.
+- **The spirit sees no food.** It eats nothing, the forage and carrion glows already showed it none, and the open
+  world reads better from the air without a thousand glows; a body is how one sees as an animal.
+- **The eat's reach, three rigs.**
+  - *Leg engine* (fox, coyote, lion, bear, both rabbits): a flick of 1 was a fixed 0.9 rad dip that left a fox's nose
+    30 cm up. `gait.js reachDip` scans the neck-and-head dip for the least that puts the nose `EAT_CLEAR` (2.5% of the
+    hip height) above the terrain under it, and when the neck is too short lowers the forequarters (`st.eatDrop`, the fore
+    legs bending under planted feet, at most 0.6 of the leg). Above a flick of 0.5 it blends to that reach; below, the
+    old dip (a stalk's low head is unchanged). In node, standing on flat ground at flick 1, the nose ends 9 mm (fox),
+    14 mm (coyote), 18 mm (lion), 20 mm (bear), 4 mm and 7 mm (the rabbits) up. The far tier gets a baked `Eat` frame
+    (`tools/bake_gait.mjs`), taken standing at a flick over a half (`farDrive`). Re-baking also refreshed the other
+    clips, which were older than the engine (a bake of HEAD's engine matches the new bake's rows byte for byte).
+  - *Part rig* (the quails, turkey, jays, ground raven, vole, ground squirrel, gray squirrel, hawk, vulture): a flick
+    past 1, to 2, is the eat. `animalModels.js eatReach` solves per model from its own geometry: a ground bird leans
+    its body forward over its feet about the hips (the least lean, 0.2 to 0.8 rad, with its breast kept off the
+    ground, at which a head turn of at most 1.6 rad reaches), then turns its head down about the base of the neck
+    (`rig_eatHead`); a bird still short crouches the rest on its legs (`rig_eatDrop`, the turkey, whose HEAD part is the
+    head alone); a rodent turns its head only, and sitting up keeps the old dip to the forepaws. The quail's bill ends
+    3 mm up (lean 0.35, head 1.48), the mountain quail 2 mm, the jays 3-6 mm, the vole 2 mm, the ground squirrel 4 mm,
+    the gray squirrel 16 mm; `r.eat` on each model says how far. `animals.js carryPoint` follows it (`eatTurn`), so an
+    acorn stays at the bill. Flicks to 1 keep their old dip, so a perched jay's glance or a squirrel's tail flick on a
+    trunk is as before.
+  - *The deer's clips*: the source's Eating clip held the muzzle 19 cm up. `tools/bake_clips.py` gains a clip
+    `reach` (the recipe's `"Eating": { "reach": { "about": "Neck1", "head": "Head", "to": 0.03 } }`): each frame's neck
+    turned further down in proportion to how low the source already holds the head there, bisected so the lowest
+    frame's muzzle is 3 cm up (28 degrees at that frame); the source's own lifts to chew and look keep their height.
+    Only the Eating rows change; the buck shares the texture.
+- **Driven by the eat, not a timer.** The AI's feeding states set the reach: the quails' and turkey's pecks, the jays'
+  probing, the ground raven's pecks and its stabs at carrion, the vole's clipping, the ground squirrel's seeds, the gray
+  squirrel's pick and dig (`EAT_PECK`, the peck's `eatK`); the deer's graze and the canids' and bear's sniffing already
+  drove a flick of 1, which now reaches. The player (`groundControl.js`): while E's act runs where needs.js finds the
+  body's food under it (a gather resource scoring at least 25, or a named food plant) or a carcass it feeds on, a bird
+  pecks faster with each peck to the ground and the head held low between, a rodent keeps its nose down nibbling, a
+  quadruped holds the full reach; E with no food is the old shallow dip. The squirrel's own pick and dig, and the
+  fliers' pecks and the hawk's mantle (`flierControl.js`), reach too.
+- **Verified** in the viewer (8790) against main (8781), close-up montages from a scratch camera
+  (`scratch/eat_harness.js`, `scratch/eat-captures/`): the player quail leaning and pecking to the ground (main: a 30
+  degree dip in the air), the deer grazing with its muzzle in the grass (main: 19 cm up), the brush rabbit's nose to
+  the ground, the gray squirrel's nose to the acorn and carrying it, an AI quail of the covey pecking to flick 2; as a
+  rabbit no acorn or granary tag drawn, as the deer, squirrel and quail they are; as the spirit none. The 32 server tests
+  pass. **Not done or weak:** the AI deer herd was not caught mid-graze on camera (it shares the player's clip); the
+  fox, coyote, lion and bear reach was measured in node, not filmed; the quail's head folds close to its breast (the rig
+  turns the head part, it has no neck to stretch); the turkey crouches to reach; the woodpecker (procedural) and the
+  player's raven (RavenFlight) are unchanged; the lizard's food is insects, which nothing draws; holding E still runs
+  the act for the species' `act.t` per press.
+
 ## 2026-11-03: the rabbits dig, and the underground view sees through the ground (docs/game-dig.md, branch claude/rabbit-dig-xray)
 
 Aaron: "Rabbits should also be able to dig holes for themselves. When a vole or other rodent digs underground, the

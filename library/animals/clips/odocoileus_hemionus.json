@@ -11,7 +11,12 @@
       "loop": true
     },
     "Eating": {
-      "loop": true
+      "loop": true,
+      "reach": {
+        "about": "Neck1",
+        "head": "Head",
+        "to": 0.03
+      }
     },
     "Walk": {
       "loop": true,

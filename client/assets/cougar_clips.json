@@ -1,7 +1,7 @@
 {
  "rate": 30,
  "width": 60,
- "height": 53,
+ "height": 54,
  "format": "rgba16f",
  "texels": "row f = frame f; texels j*3..j*3+2 = rows 0..2 of joint j's 3x4 matrix (adopted frame)",
  "joints": [
@@ -214,6 +214,17 @@
   },
   "Bed": {
    "first": 52,
+   "count": 1,
+   "loop": false,
+   "duration": 0,
+   "root_motion": [
+    0,
+    0,
+    0
+   ]
+  },
+  "Eat": {
+   "first": 53,
    "count": 1,
    "loop": false,
    "duration": 0,

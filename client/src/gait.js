@@ -219,7 +219,8 @@ export function gaitStep(skel, P, st, inp, dt) {
   st.crouch = damp(st.crouch, clamp(pose * 2, 0, 1) * 0.3, 4, dt); st.bed = damp(st.bed, clamp((pose - 0.5) * 2, 0, 1), 3, dt);
   const legLen = R[J['UpperLeg.FL']][1], drop = st.crouch * legLen;
   const hipsRest = R[J.Hips], chestRest = R[J.Chest], spineRest = R[J.Spine];
-  const yH = hipsRest[1] + st.gH * share - drop + st.bob, yC = chestRest[1] + st.gF * share - drop + st.bob;
+  st.eatDrop = damp(st.eatDrop || 0, st.eatWant || 0, 3, dt);   // the eat's reach: the forequarters lowered (reachDip)
+  const yH = hipsRest[1] + st.gH * share - drop + st.bob, yC = chestRest[1] + st.gF * share - drop + st.bob - st.eatDrop;
   const pitch = Math.asin(clamp((yC - yH - (chestRest[1] - hipsRest[1])) / (chestRest[2] - hipsRest[2]), -0.9, 0.9));   // nose-up positive
   st.pitch = damp(st.pitch, pitch, 10, dt);
   const track = Math.abs(skel.legs[0].toe[0] - skel.legs[1].toe[0]) || 0.1;
@@ -256,12 +257,19 @@ export function gaitStep(skel, P, st, inp, dt) {
     if (swing > 0) fv = apply3(rotX(-(P.posture === 'plantigrade' ? 0.6 : 0.35) * swing * (Lg.fore ? 1 : 0.6)), fv);
     legIK(Lg, S[i], lf[i], fv, Pj, E);
   }
-  // ---- the head: level over the stride, dipped by the flick, leading a turn ----
-  const dip = (inp.flick || 0) * 0.9, lead = clamp((inp.wr || 0) * P.lead, -P.leadMax, P.leadMax);
+  // ---- the head: level over the stride, dipped by the flick (1: the nose at the ground, reachDip), leading a turn ----
+  const lead = clamp((inp.wr || 0) * P.lead, -P.leadMax, P.leadMax);
   st.lead = damp(st.lead, lead, 8, dt);
   const headBob = moving ? 0.03 * Math.sin(2 * ph) * (1 - st.gk) : 0;
-  const Rn = mul3(RB, rotX(dip * 0.6 + 0.4 * (st.pitch + st.flex)));                       // the neck: down with the dip, countering the chest
-  const Rh = mul3(mul3(RB, rotY(st.lead)), rotX(dip * 0.5 + 0.5 * (st.pitch + st.flex) + headBob));
+  const fl = inp.flick || 0, cN = 0.4 * (st.pitch + st.flex), cH = 0.5 * (st.pitch + st.flex) + headBob;
+  let dip = fl * 0.9;   // to a half (a stalk's low head, a sniff on the move) the old dip; past it toward the ground
+  if (fl > 0.5 && !inp.air && st.bed < 0.5) {
+    const r = reachDip(skel, RB, Pn0, 0.6, cN, 0.5, cH, st.lead, groundL), u = Math.min(1, (fl - 0.5) * 2);
+    dip = 0.45 + (r.q - 0.45) * u;
+    st.eatWant = clamp(st.eatDrop + r.short, 0, EAT_DROP * legLen) * u;
+  } else st.eatWant = 0;
+  const Rn = mul3(RB, rotX(dip * 0.6 + cN));                       // the neck: down with the dip, countering the chest
+  const Rh = mul3(mul3(RB, rotY(st.lead)), rotX(dip * 0.5 + cH));
   const Phd = add(Pn0, apply3(Rn, sub(R[J.Head], R[J.Neck])));
   const nose = add(Phd, apply3(Rh, sub(skel.nose, R[J.Head])));
   Pj[J.Neck] = Pn0; Pj[J.Head] = Phd; E[J.Head] = nose;
@@ -284,6 +292,25 @@ export function gaitStep(skel, P, st, inp, dt) {
   }
   st.roll3 = st.roll; st.bendYaw = bend;
   return st;
+}
+
+// ---- the eat's reach (Aaron, 2026-11-03: "a more dramatic eating/gathering animation") ----------------------------------
+// A flick of 1 is the mouth at the food on the ground (from a half up; below it the old dip, flick x 0.9). The head and neck are posed by one dip q (the neck turned down by
+// kN q on top of cN, the head by kH q on top of cH, as the frame poses them); reachDip finds the least q that takes the
+// nose to EAT_CLEAR of the hip height above the ground under it, scanning to REACH_MAX, and how far short it stays when
+// the neck is too short for the legs (a fox, a bear): the frame then lowers the forequarters by that much (st.eatDrop,
+// the fore legs bending under the planted feet, at most EAT_DROP of the leg's length), so the next frame reaches.
+const EAT_CLEAR = 0.025, REACH_MAX = 2.4, EAT_DROP = 0.6;
+function reachDip(skel, RB, Pn0, kN, cN, kH, cH, lead, groundL) {
+  const R = skel.rest, J = skel.idx, n0 = sub(R[J.Head], R[J.Neck]), h0 = sub(skel.nose, R[J.Head]), Rl = mul3(RB, rotY(lead));
+  let best = 0, gap0 = Infinity;
+  for (let q = 0; q <= REACH_MAX; q += 0.05) {
+    const p = add(add(Pn0, apply3(mul3(RB, rotX(q * kN + cN)), n0)), apply3(mul3(Rl, rotX(q * kH + cH)), h0));
+    const gap = p[1] - groundL([p[0], 0, p[2]]) - EAT_CLEAR * skel.h;
+    if (gap <= 0) return { q: Math.max(0, q - 0.05 * Math.min(1, -gap / Math.max(1e-6, gap0 - gap))), short: 0 };   // between this step and the last
+    if (gap < gap0) { gap0 = gap; best = q; } else break;   // past the lowest: the nose comes back up
+  }
+  return { q: best, short: gap0 };
 }
 
 // ---- the lagomorphs: the shuffle and the half-bound (the tree's Lagomorpha `hop`; docs/movement.md "The rabbits") -----
@@ -426,7 +453,8 @@ export function hopStep(skel, P, st, inp, dt) {
   const belly = skel.belly, dropH = uC * 0.15 * belly, dropC = uC * 0.8 * belly, scrape = Math.max(0, (st.crouch - 0.7) / 0.3) * (0.15 * belly + 0.06 * h);
   // the sit-up: the trunk raised about the hips onto the hind feet, the hips up a little and back
   const sitA = 0.5 * uS, sitY = 0.1 * h * uS, sitZ = -0.08 * trunkL * uS;
-  const yH = hipsRest[1] + st.gH * share - dropH + st.bob + sitY + 0.3 * h * st.lean, yC = chestRest[1] + st.gF * share - dropC + st.bob + sitY - 0.35 * belly * uD;
+  st.eatDrop = damp(st.eatDrop || 0, st.eatWant || 0, 3, dt);   // the eat's reach: the chest lowered onto the fore legs (reachDip)
+  const yH = hipsRest[1] + st.gH * share - dropH + st.bob + sitY + 0.3 * h * st.lean, yC = chestRest[1] + st.gF * share - dropC + st.bob + sitY - st.eatDrop - 0.35 * belly * uD;   // uD: the dig's chest low
   const pitch = Math.asin(clamp((yC - yH - (chestRest[1] - hipsRest[1])) / trunkL, -0.9, 0.9)) + pitchC + sitA - st.lean;
   st.pitch = damp(st.pitch, pitch, 12, dt);
   const track = Math.abs(skel.legs[0].toe[0] - skel.legs[1].toe[0]) || 0.1;
@@ -474,11 +502,18 @@ export function hopStep(skel, P, st, inp, dt) {
     legIK(Lg, S[i], toe, fv, Pj, E);
   }
   // ---- the head: level over the bound, dipped by the flick (nibbling), drawn in by the crouch, leading a turn ----
-  const dip = (inp.flick || 0) * 0.9 + 0.35 * uC + 0.55 * uD, lead = clamp((inp.wr || 0) * P.lead, -P.leadMax, P.leadMax);
+  const lead = clamp((inp.wr || 0) * P.lead, -P.leadMax, P.leadMax);
   st.lead = damp(st.lead, lead, 8, dt);
   const tilt = st.pitch - st.flex;   // the fore segment's pitch, countered
-  const Rn = mul3(RB, rotX(dip * 0.6 + 0.45 * tilt));
-  const Rh = mul3(mul3(RB, rotY(st.lead)), rotX(dip * 0.5 + 0.55 * tilt));
+  const fl = inp.flick || 0, d0 = 0.35 * uC + 0.55 * uD, cN = d0 * 0.6 + 0.45 * tilt, cH = d0 * 0.5 + 0.55 * tilt;   // uD: the dig's head down
+  let dip = fl * 0.9;   // sitting up, the nibble at the paws (the old dip); to a half the same
+  if (fl > 0.5 && !inp.air && uS < 0.3 && uD < 0.3) {   // on all fours, past a half (not digging): the nose to the grass (reachDip), the chest lowered if it must
+    const r = reachDip(skel, RB, Pn0, 0.6, cN, 0.5, cH, st.lead, groundL), u = Math.min(1, (fl - 0.5) * 2);
+    dip = 0.45 + (r.q - 0.45) * u;
+    st.eatWant = clamp(st.eatDrop + r.short, 0, EAT_DROP * belly) * u;
+  } else st.eatWant = 0;
+  const Rn = mul3(RB, rotX(dip * 0.6 + cN));
+  const Rh = mul3(mul3(RB, rotY(st.lead)), rotX(dip * 0.5 + cH));
   const Phd = add(Pn0, apply3(Rn, sub(R[J.Head], R[J.Neck])));
   const nose = add(Phd, apply3(Rh, sub(skel.nose, R[J.Head])));
   Pj[J.Neck] = Pn0; Pj[J.Head] = Phd; E[J.Head] = nose;
@@ -604,21 +639,23 @@ export function writeRow(skel, st, out, row) {
 // by distance (planted feet at any speed), a blend over 0.3 s (0.8 s into and out of the bed).
 // A lagomorph's set (bake_gait.mjs for P.hop): Idle, Shuffle, Bound, Run (the fast half-bound, the hares' lope and bolt),
 // Sit, Freeze and Form, by the hop's bands (the shuffle below P.vS, the bound to 3 x trot_mps) and the pose's sign.
+// Eat (2026-11-03): one frame standing with the nose at the ground (flick 1, reachDip), taken standing at a flick over a
+// half; a clip set baked before it has none, and the far tier stands at Idle.
 export function farTable(skin, P) {
   const C = skin.clip, T = skin.table, pick = (...n) => n.map(k => C[k]).find(c => c !== undefined) ?? C.Idle ?? 0;
   if (P.hop) return { hop: true, idle: pick('Idle'), walk: pick('Shuffle', 'Walk'), trot: pick('Bound', 'Trot'), gallop: pick('Run', 'Gallop'), bed: pick('Form', 'Bed'),
-    sit: pick('Sit'), freeze: pick('Freeze', 'Form'), T, vw: P.vS, vt: 3 * P.vt };
-  return { idle: pick('Idle'), walk: pick('Walk'), trot: pick('Trot'), gallop: pick('Gallop'), bed: pick('Bed'), T, vw: P.vw, vt: P.vt };
+    sit: pick('Sit'), freeze: pick('Freeze', 'Form'), eat: C.Eat ?? pick('Idle'), T, vw: P.vS, vt: 3 * P.vt };
+  return { idle: pick('Idle'), walk: pick('Walk'), trot: pick('Trot'), gallop: pick('Gallop'), bed: pick('Bed'), eat: C.Eat ?? pick('Idle'), T, vw: P.vw, vt: P.vt };
 }
 export function makeFar() { return { cur: -1, prev: 0, pA: 0, pB: 0, blend: 0, tBlend: 0.3, kind: '' }; }
-export function farDrive(st, F, v, pose, dt, out, o) {
+export function farDrive(st, F, v, pose, dt, out, o, flick = 0) {
   v = Math.abs(v || 0);
   let kind = F.hop ? (pose > 0.5 ? 'sit' : pose < -0.8 ? 'bed' : pose < -0.3 ? 'freeze' : '') : pose > 0.5 ? 'bed' : '';
-  if (!kind) kind = v < 0.05 ? 'idle' : v < F.vw * (st.kind === 'trot' ? 0.92 : 1.05) ? 'walk' : v < F.vt * (st.kind === 'gallop' ? 0.9 : 1.05) ? 'trot' : 'gallop';
+  if (!kind) kind = v < 0.05 ? (flick > 0.5 ? 'eat' : 'idle') : v < F.vw * (st.kind === 'trot' ? 0.92 : 1.05) ? 'walk' : v < F.vt * (st.kind === 'gallop' ? 0.9 : 1.05) ? 'trot' : 'gallop';
   if (kind !== st.kind) {
     const next = F[kind];
     if (st.cur >= 0 && next !== st.cur) {
-      st.prev = st.cur; st.pB = st.pA; st.blend = 1; st.tBlend = kind === 'bed' || st.kind === 'bed' ? 0.8 : kind === 'sit' || kind === 'freeze' || st.kind === 'sit' || st.kind === 'freeze' ? 0.4 : 0.3;
+      st.prev = st.cur; st.pB = st.pA; st.blend = 1; st.tBlend = kind === 'bed' || st.kind === 'bed' ? 0.8 : kind === 'sit' || kind === 'freeze' || kind === 'eat' || st.kind === 'sit' || st.kind === 'freeze' || st.kind === 'eat' ? 0.4 : 0.3;
       const a = F.T[st.cur], b = F.T[next];
       st.pA = a.stride_m && b.stride_m ? ((st.pA - (a.touchdown || 0) + (b.touchdown || 0)) % 1 + 1) % 1 : st.pA;
     } else if (st.cur < 0) st.blend = 0;

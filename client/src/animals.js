@@ -13,7 +13,7 @@ import { buildSquirrel, buildWoodpecker, buildRaven, buildDeer, buildQuail, buil
   animalMaterial, animalDepthMaterial, planarShadowMaterial, loadDeerMesh, loadSquirrelMesh, loadQuailMesh, loadJayMesh, driveClips, makeClipState, DEER_DRIVE, turnFollow, bendOf, PART_TURN,
   loadStellersJayMesh, loadRedtailMesh, loadVultureMesh, loadDeerBuckMesh, loadFoxMesh, loadCoyoteMesh, loadCougarMesh,
   loadRabbitMesh, loadJackrabbitMesh, loadVoleMesh, loadRavenGroundMesh, loadTurkeyMesh, loadGroundSquirrelMesh, loadLizardMesh, loadBearMesh,
-  loadMountainQuailMesh, RAVEN_GROUND, hasAnim2, antlerState, SEASON_MONTH } from './animalModels.js';
+  loadMountainQuailMesh, RAVEN_GROUND, hasAnim2, antlerState, SEASON_MONTH, eatTurn } from './animalModels.js';
 
 // Ambient animals: the first step toward "many of each species always present" (docs/brief.md,
 // Direction; roadmap visual pass step 6 "Life"). Western gray squirrels, acorn woodpeckers, other
@@ -365,6 +365,12 @@ const W_CLING = 10, W_TOP = 11, W_FLY = 12, W_PICK = 13;                        
 const R_SOAR = 20, R_GLIDE = 21, R_PERCH = 22, R_CLIMB = 23, R_GROUND = 24;            // raven (R_GROUND: picking or caching)
 const R_WALK = 25;                                                                      // raven: walking or hopping on the ground (or on its perch)
 const RAVEN_STAB = { t: 0.75, hz: 4 };   // the corvid's bill work at carrion (rvUpdate, the catch 2026-10-30): a burst's length (s) and the stabs' rate
+// The eat (Aaron, 2026-11-03: "a quail's head should lower all the way to the ground"): a feeding peck or nibble on the part
+// rig (the birds, the vole, the ground squirrel, the gray squirrel) peaks at flick EAT_PECK, the bill or nose at the ground
+// (animalModels.js eatReach); a.eatK carries it for the pulse a.flickV runs, so only the pecks of a feeding state go down
+// to the food and the other flicks (a look round, a tail flick) keep their old dip. On the leg engine (the fox, coyote,
+// lion, bear and the rabbits) a flick of 1 is already the nose at the ground (gait.js reachDip).
+const EAT_PECK = 2;
 const D_WALK = 30, D_GRAZE = 31, D_BED = 32;                                           // deer
 const Q_FORAGE = 40, Q_WAIT = 41, Q_FLY = 42;                                           // quail (bird)
 const G_FORAGE = 0, G_RUN = 1, G_SETTLE = 2;                                            // quail (covey)
@@ -1946,7 +1952,7 @@ export class Animals {
         const pick = a.work === T_GET;
         a.amp = damp(a.amp, pick ? 0 : 0.35, 10, dt); a.pose = damp(a.pose, 0, 6, dt); a.pitch = damp(a.pitch, 0.15, 6, dt);
         if (!pick) a.phase += dt * TAU * 4.5;
-        a.flick = pick ? damp(a.flick, 0.9, 10, dt) : 0.45 + 0.45 * Math.sin(this.time * 15 + a.phase * 0.1);
+        a.flick = pick ? damp(a.flick, EAT_PECK, 10, dt) : 1.4 + 0.5 * Math.sin(this.time * 15 + a.phase * 0.1);   // the nose at the acorn on the ground, or in the hole
         a.y = H.atXZ(a.x, a.z);
         if (a.t <= 0) this.sqWorkDone(a);
         break;
@@ -2274,7 +2280,7 @@ export class Animals {
       // (the ground model leans in a little and pecks with its head; the procedural raven tips its whole body)
       a.amp = damp(a.amp, 0, 6, dt); a.pose = damp(a.pose, 1, 4, dt); a.roll = damp(a.roll, 0, 4, dt); a.pitch = damp(a.pitch, gm ? 0.12 : 0.3, 4, dt);
       a.y = H.atXZ(a.x, a.z); a.look = 0;
-      if (r() < dt * 2.5) a.flickV = 1;   // pecks: working it loose, then poking it in and covering it
+      if (r() < dt * 2.5) { a.flickV = 1; a.eatK = EAT_PECK; }   // pecks: working it loose, then poking it in and covering it, the bill at the ground
       if (a.t <= 0) this.rvGroundDone(a);
     } else if (a.state === R_WALK) {
       this.rvWalk(a, dt);
@@ -2285,7 +2291,7 @@ export class Animals {
       const feeding = a.feedOn && !a.feedOn.gone && a.perchY === null && Math.hypot(a.feedOn.x - a.x, a.feedOn.z - a.z) < 2.5;
       if (feeding && this.scav?.yields(a, a.feedOn)) { a.feedOn = null; a.t = Math.min(a.t, 0.4); a.fedAt = this.time + 45; }   // a coyote, a bear or a lion at the carcass: the raven gives way (carrion.js), back later
       else if (feeding) {   // a burst: stabT s of stabs at stabHz, the head driven down and up each (flick set outright: the frame's slow decay would hold it down)
-        if (a.stabT > 0) { a.stabT -= dt; a.flick = 1.15 * Math.abs(Math.sin(Math.PI * (RAVEN_STAB.t - a.stabT) * RAVEN_STAB.hz)); }
+        if (a.stabT > 0) { a.stabT -= dt; a.flick = (gm ? EAT_PECK : 1.15) * Math.abs(Math.sin(Math.PI * (RAVEN_STAB.t - a.stabT) * RAVEN_STAB.hz)); }   // the ground model's bill into the carcass
         else if (r() < dt * 0.6) { a.stabT = RAVEN_STAB.t; if (this.scav && !this.scav.aiFeed(a, a.feedOn)) { a.feedOn = null; a.t = Math.min(a.t, 1); } }   // each burst draws from the carcass (carrion.js); nothing left: off
       } else if (r() < dt * 0.3) a.flickV = 1;
       if (a.feedOn && (a.feedOn.gone || a.perchY !== null)) a.feedOn = null;
@@ -2673,12 +2679,15 @@ export class Animals {
       if (piv?.head && !C.fromModel) { C.py = piv.head[1]; C.pz = piv.head[2]; if (piv.chest) { C.cy = piv.chest[1]; C.cz = piv.chest[2]; } C.fromModel = true; }
     }
     let y = C.ty - C.py, z = C.tz - C.pz;
-    let g = a.flick * C.flick + a.pose * C.pose, c = Math.cos(g), s = Math.sin(g);
+    // the eat past a flick of 1 (EAT_PECK) on a drawn rig model: the head's turn and the body's lean as the shader's (eatTurn)
+    const M = a.flick > 1 && ((a.sp === RV && a.gm) || chest) ? this.drawn[a.sp]?.model : null, E = M ? eatTurn(M, a.flick, a.pose) : null;
+    let g = (E ? E.head : a.flick * C.flick) + a.pose * C.pose, c = Math.cos(g), s = Math.sin(g);
     let y2 = c * y - s * z + C.py, z2 = s * y + c * z + C.pz;
     if (chest) {
       g = -(Math.sin(a.phase + 1.2) * a.amp * 0.28 + a.pose * 0.7); c = Math.cos(g); s = Math.sin(g);
       y = y2 - C.cy; z = z2 - C.cz; y2 = c * y - s * z + C.cy; z2 = s * y + c * z + C.cz;
     }
+    if (E?.tip && E.hip) { c = Math.cos(E.tip); s = Math.sin(E.tip); y = y2 - E.hip[1]; z = z2 - E.hip[2]; y2 = c * y - s * z + E.hip[1] - E.drop; z2 = s * y + c * z + E.hip[2]; }
     let x2 = 0;
     if (yaw) { z = z2 - C.pz; x2 = Math.sin(yaw) * z; z2 = C.pz + Math.cos(yaw) * z; }   // the ground raven's head turn
     return (this._cp ||= new THREE.Vector3()).set(x2, y2 + lift, z2).applyMatrix4(m);
@@ -2912,7 +2921,7 @@ export class Animals {
       const fast = g.state === G_RUN;
       speed = Math.min(g.state === G_RUN ? 4.5 : 3, d * 2.5) * this.drSteer(a, Math.atan2(ex, ez), 10, dt, fast, fast ? BT.fast : BT.w);
       a.x += ex / d * speed * dt; a.z += ez / d * speed * dt;
-    } else if (r() < dt * 1.5) a.flickV = 1;   // peck
+    } else if (r() < dt * 1.5) { a.flickV = 1; a.eatK = EAT_PECK; }   // peck: the bill to the seed on the ground
     // standing and turning: walking in place in short steps, the head leading the turn (PART_TURN.bird; aAnim2.z)
     const tA = this.turnStep(a, dt, BT, speed < 0.05, (a.sp === MQ ? 0.11 : 0.1) * a.size, 0.14);
     if (!tA) { a.amp = damp(a.amp, speed > 0.1 ? 1 : 0, 12, dt); a.phase += dt * TAU * speed / 0.14; }
@@ -3011,7 +3020,7 @@ export class Animals {
         a.y = H.atXZ(a.x, a.z) + Math.sin(Math.PI * k) * a.hopH;
         if (a.hopU >= 1) a.e1 = 1;
       } else {
-        if (r() < dt * (this.season === 'fall' ? 1.4 : 0.8)) a.flickV = 1;   // probing, or pushing an acorn in
+        if (r() < dt * (this.season === 'fall' ? 1.4 : 0.8)) { a.flickV = 1; a.eatK = EAT_PECK; }   // probing, or pushing an acorn in: the bill in the ground
         if (r() < dt * 0.04 && this.gameOn(a)) this.jayDig(a);               // v4: someone's buried acorn, dug up and eaten
         if (r() < dt * 0.5) {
           const h = 0.3 + r() * 0.4; a.yaw += (r() - 0.5) * 1.5;
@@ -3844,7 +3853,7 @@ export class Animals {
         break;
       }
       case VL_PAUSE:
-        if (r() < dt * 1.5) a.flickV = 1;   // clipping grass
+        if (r() < dt * 1.5) { a.flickV = 1; a.eatK = EAT_PECK; }   // clipping grass, the nose at its foot
         if (a.t <= 0) {
           const q = r();
           if (q < 0.25) { a.state = VL_SIT; a.t = 1.5 + r() * 2.5; }
@@ -4054,12 +4063,12 @@ export class Animals {
     let speed = 0;
     if (a.state === T_SCRATCH) {   // two or three kicks back through the litter, then a look at what turned up
       a.scr -= dt; a.phase += dt * TAU * 2.4; a.amp = damp(a.amp, 0.8, 10, dt);
-      if (a.scr <= 0 || d > 2) { a.state = T_FORAGE; a.flickV = 1; }
+      if (a.scr <= 0 || d > 2) { a.state = T_FORAGE; a.flickV = 1; a.eatK = EAT_PECK; }
     } else if (d > 0.3) {   // turned at the deer's rates (PART_TURN.turkey), on the spot first when well off its way
       const BT = PART_TURN.turkey, fast = g.speed > 2;
       speed = Math.min(g.state === TF_WALK ? g.speed * 1.4 : TURKEY.walk, d * 0.8) * this.drSteer(a, Math.atan2(ex, ez), 3, dt, fast, fast ? BT.fast : BT.w);
       a.x += ex / d * speed * dt; a.z += ez / d * speed * dt;
-    } else if (r() < dt * 0.9) a.flickV = 1;   // peck
+    } else if (r() < dt * 0.9) { a.flickV = 1; a.eatK = EAT_PECK; }   // peck
     else if (r() < dt * 0.25) { a.state = T_SCRATCH; a.scr = 0.7 + r() * 0.8; }
     // standing and turning: walking in place in short steps, the head leading the turn (PART_TURN.turkey; aAnim2.z)
     const BT = PART_TURN.turkey, tA = this.turnStep(a, dt, BT, speed < 0.05 && a.state !== T_SCRATCH, 0.3 * a.size, TURKEY.stride);
@@ -4131,7 +4140,7 @@ export class Animals {
     let speed = 0, pose = 0;
     switch (a.state) {
       case G_FEED:   // low in the grass, head down picking seeds; now and then a few steps on, or a sit-up to look
-        if (r() < dt * 1.2) a.flickV = 1;
+        if (r() < dt * 1.2) { a.flickV = 1; a.eatK = EAT_PECK; }
         if (a.t <= 0) {
           if (r() < 0.2) { a.state = G_SIT; a.t = 1 + r() * 3; }
           else {
@@ -4913,7 +4922,7 @@ export class Animals {
       else if (sp === SJ || sp === ST) this.sjUpdate(a, dt, px, py, pz);
       else if (sp === HK) this.hkUpdate(a, dt);
       else this.tvUpdate(a, dt);
-      if (a.flickV > 0 && a.sp !== WP && a.sp !== WF && a.sp !== LZ) { a.flick = Math.max(a.flick, Math.sin(Math.min(1, 1 - a.flickV) * Math.PI)); a.flickV -= dt * 3; }
+      if (a.flickV > 0 && a.sp !== WP && a.sp !== WF && a.sp !== LZ) { a.flick = Math.max(a.flick, Math.sin(Math.min(1, 1 - a.flickV) * Math.PI) * (a.eatK || 1)); a.flickV -= dt * 3; if (a.flickV <= 0) a.eatK = 0; }
       if (!a.mirror) a.phz = dt > 1e-4 ? (a.phase - a.phaseP) / dt : a.phz;   // the wing beat's or the gait's rate, for the stream (a mirror advances the phase by it)
       if (a.phase > 1e4) a.phase -= TAU * 1000;
       a.phaseP = a.phase;

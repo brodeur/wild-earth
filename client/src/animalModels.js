@@ -630,8 +630,63 @@ const urls = { jay: '../assets/scrubjay.glb', quail: '../assets/quail.glb', squi
   bear: '../assets/bear.glb', mquail: '../assets/mountain_quail.glb' };
 function rigModel(name, opts) {
   const r = RIG[name];
-  return loadTiers(new URL(urls[name], import.meta.url), { amp: r.amp, pose: r.pose, drop: r.drop || 0, poseMax: r.poseMax || 1, gait: !!r.gait, rig: { name, k: r.k } }, opts)
-    .then(m => { m.rig.piv = m.extras.rig || {}; m.rig.kind = m.rig.piv.kind; m.variant = m.tiers[0].hasAttribute('aColorB'); return m; });
+  return loadTiers(new URL(urls[name], import.meta.url), { amp: r.amp, pose: r.pose, drop: r.drop || 0, poseMax: r.poseMax || 1, gait: !!r.gait, rig: { name, k: { ...r.k } } }, opts)
+    .then(m => { m.rig.piv = m.extras.rig || {}; m.rig.kind = m.rig.piv.kind; m.variant = m.tiers[0].hasAttribute('aColorB'); eatReach(m); return m; });
+}
+// The eat's reach (Aaron, 2026-11-03: "a more dramatic eating/gathering animation - for instance a quail's head should
+// lower all the way to the ground"), solved once per model from its own geometry, so no species needs a hand number: a
+// flick of 2 (the eat; animals.js and the controls drive it while a body feeds) puts the lowest point of the HEAD part
+// (the bill or the nose) EAT_CLEAR of the body's length above the ground it stands on. A ground bird leans its body
+// forward over its feet, about the hips (the legs' pivots), by the least lean (from EAT_TIP[0], in steps, to at most
+// EAT_TIP[1], and never so far that its breast comes within 0.3 of its height of the ground) at which a turn of the head
+// down about the base of the neck of at most EAT_NECK reaches; rig_eatHead is that turn (from 0: a bird that leans far
+// may hold its head a little higher than the old dip). A bird still short at the most lean (the turkey, whose HEAD part
+// is the head alone, the long neck being body) crouches the rest on its legs (rig_eatDrop, at most EAT_CROUCH of the
+// hips' height: the legs shortened, everything above them lowered). A rodent turns only its head (a nose to the grass from all
+// fours). The soarers (wings spread for good) lean nothing, and a mesh whose head already sits at the ground at the old
+// dip keeps it. A model that cannot reach keeps the lean and turn that take it lowest (r.eat.reach says how far off).
+const EAT_TIP = [0.2, 0.8], EAT_CLEAR = 0.012, EAT_NECK = 1.6, EAT_HEAD_MAX = 2.2, EAT_CROUCH = 0.5;
+function eatReach(m) {
+  const r = m.rig, k = r.k, g = m.tiers[0], pos = g.getAttribute('position'), pa = g.getAttribute('aPart'), pv = g.getAttribute('aPivot');
+  k.eatHead = m.amp[2]; k.eatTip = 0; k.eatDrop = 0;
+  if (!pos || !pa || !pv || (r.kind !== 'bird' && r.kind !== 'rodent')) return;
+  const head = [], body = [], hip = [0, 0, 0]; let nh = 0, ph = null, minY = Infinity, minZ = Infinity, maxZ = -Infinity;
+  for (let i = 0; i < pos.count; i++) {
+    const p = Math.round(pa.getX(i)), v = [pos.getX(i), pos.getY(i), pos.getZ(i)];
+    minY = Math.min(minY, v[1]); minZ = Math.min(minZ, v[2]); maxZ = Math.max(maxZ, v[2]);
+    if (p === PART.HEAD) { head.push(v); ph ||= [pv.getX(i), pv.getY(i), pv.getZ(i)]; }
+    else if (p === PART.LEG_A || p === PART.LEG_B) { hip[1] += pv.getY(i); hip[2] += pv.getZ(i); nh++; }
+    else body.push(v);
+  }
+  if (!head.length || !ph) return;
+  const ground = Math.max(0, minY), clear = EAT_CLEAR * (maxZ - minZ), H = nh ? [0, hip[1] / nh, hip[2] / nh] : null;
+  const turn = (v, a, c) => { const y = v[1] - c[1], z = v[2] - c[2], co = Math.cos(a), si = Math.sin(a); return [v[0], co * y - si * z + c[1], si * y + co * z + c[2]]; };
+  const lowest = (a, tip) => head.reduce((lo, v) => { let w = turn(v, a, ph); if (tip) w = turn(w, tip, H); return Math.min(lo, w[1]); }, Infinity);
+  // the least head turn at this lean that reaches the ground, or the one that comes lowest: [angle, gap]
+  const solve = (tip, max) => { let best = 0, by = Infinity; for (let a = 0; a <= max + 1e-6; a += 0.02) { const y = lowest(a, tip) - ground - clear; if (y <= 0) return [a, y]; if (y < by) { by = y; best = a; } } return [best, by]; };
+  if (lowest(m.amp[2], 0) <= ground + clear) { r.eat = { head: k.eatHead, tip: 0, hip: null, reach: +(lowest(m.amp[2], 0) - ground).toFixed(4) }; return; }   // already down at the old dip
+  let tip = 0, sol = solve(0, EAT_HEAD_MAX);
+  if (r.kind === 'bird' && H && !(k.collapse === 0 && !k.ground)) {
+    const bodyLow = t => body.reduce((lo, v) => Math.min(lo, turn(v, t, H)[1]), Infinity);
+    const floor = ground + 0.3 * (bodyLow(0) - ground);   // the breast keeps 0.3 of its height off the ground
+    let low = null;
+    for (let t = EAT_TIP[0]; t <= EAT_TIP[1] + 1e-6 && bodyLow(t) >= floor; t += 0.05) {
+      const s1 = solve(t, EAT_NECK);
+      if (s1[1] <= 0) { tip = t; sol = s1; low = null; break; }
+      const s2 = solve(t, EAT_HEAD_MAX); if (!low || s2[1] < low[2]) low = [t, s2[0], s2[1]];
+    }
+    if (low && low[2] < sol[1]) { tip = low[0]; sol = [low[1], low[2]]; }
+    if (tip) { k.eatTip = tip; r.eatHip = H; }
+    if (tip && sol[1] > 0) { k.eatDrop = Math.min(sol[1], EAT_CROUCH * (H[1] - ground)); sol = [sol[0], sol[1] - k.eatDrop]; }   // the rest on the legs
+  }
+  k.eatHead = sol[0];
+  r.eat = { head: +sol[0].toFixed(3), tip: +tip.toFixed(3), drop: +k.eatDrop.toFixed(4), hip: tip ? H : null, reach: +(sol[1] + clear).toFixed(4) };   // debugging: reach, how far above the ground the mouth ends
+}
+// The head's turn and the body's lean for a flick (the part rig's, as the vertex shader turns them; animals.js carryPoint)
+export function eatTurn(model, flick, pose = 0) {
+  const k = model?.rig?.k, e = Math.min(Math.max(flick - 1, 0), 1), sit = model?.rig?.piv?.chest ? Math.min(Math.max(pose, 0), 1) : 0;
+  if (!k || k.eatHead === undefined) return { head: flick * (model?.amp?.[2] ?? 0), tip: 0, drop: 0, hip: null };
+  return { head: Math.min(flick, 1) * model.amp[2] + e * (1 - sit) * (k.eatHead - model.amp[2]), tip: e * (k.eatTip || 0), drop: e * (k.eatDrop || 0), hip: model.rig.eatHip || null };
 }
 export const loadJayMesh = () => rigModel('jay');
 export const loadQuailMesh = () => rigModel('quail');
@@ -832,7 +887,11 @@ float animPose = aAnim.z;
   float rigSide = aPivot.x >= 0.0 ? 1.0 : -1.0;
   // the parents' rotations, shared by their own vertices and their children's
   mat3 rigChestR = animRX(-(sin(aAnim.x + rig_spinePhase) * aAnim.y * rig_spine + animPose * rig_sit));
-  mat3 rigTailR = animRX(aAnim.w * uAmp.y + animPose * uPose.y);
+  mat3 rigTailR = animRX(min(aAnim.w, 1.0) * uAmp.y + animPose * uPose.y);
+  // the eat (a flick past 1, to 2): the mouth taken to the food on the ground, the head turned on by rig_eatHead (the
+  // load's solve, eatReach) and a bird's body tipped forward over its feet by rig_eatTip; sitting up (a rodent's pose 1)
+  // the head stays at the old dip, to the forepaws
+  float rigEat = clamp(aAnim.w - 1.0, 0.0, 1.0);
   #ifdef RIG_GROUND
   // the folded wing flicks: lifted off the body and swung out at the shoulder (the hand follows, below)
   #define RIG_ARM(s) (animRZ(s * aAnim2.x * rig_flickLift) * animRY(-s * aAnim2.x * rig_flickOpen))
@@ -876,7 +935,16 @@ if (animPart == 1 || animPart == 2) {
   animR = animRX(aAnim.w * uAmp.y + animPose * uPose.y);
 #endif
 } else if (animPart == 6) {
+#ifdef ANIM_RIG
+  #ifdef RIG_CHEST
+  float rigEatH = rigEat * (1.0 - clamp(animPose, 0.0, 1.0));
+  #else
+  float rigEatH = rigEat;
+  #endif
+  animR = animRX(min(aAnim.w, 1.0) * uAmp.z + rigEatH * (rig_eatHead - uAmp.z) + animPose * uPose.z);
+#else
   animR = animRX(aAnim.w * uAmp.z + animPose * uPose.z);
+#endif
 #ifdef PLAYER_HEAD
   animR = animRY(uHeadYaw) * animR;   // the player's head turned by the look (animalMaterial head; flight.js look)
 #endif
@@ -925,6 +993,18 @@ vec3 transformed = animR * animP + aPivot;
     vec3 wp = vec3(side * rig_pivWing.x, rig_pivWing.yz);
     if (animPart >= 9) transformed = RIG_ARM(side) * (transformed - wp) + wp;
     transformed = mix(transformed, wp, animPose * rig_collapse);   // folded: the cards vanish into the shoulder
+  }
+  #endif
+  #ifdef RIG_EATTIP
+  if (rigEat > 0.0) {   // the bird leans down over its feet to the food (and crouches on its legs, if it must)
+    float rigDrop = rigEat * rig_eatDrop;
+    if (animPart == 1 || animPart == 2) transformed.y *= 1.0 - rigDrop / rig_pivHip.y;
+    else {
+      mat3 rigTipR = animRX(rigEat * rig_eatTip);
+      transformed = rigTipR * (transformed - rig_pivHip) + rig_pivHip;
+      transformed.y -= rigDrop;
+      animR = rigTipR * animR;
+    }
   }
   #endif
 #endif
@@ -1191,7 +1271,7 @@ const decayConsts = model => {
 };
 const animBody = model => (model.skin ? SKIN_BODY : model.rig?.kind === 'reptile' ? REPTILE_BODY : ANIM_BODY) + DECAY_BODY;
 const RIG_KEYS = ['spine', 'spinePhase', 'sit', 'foreFold', 'tipLag', 'tipWave', 'tipCurl', 'abduct', 'bob', 'handLag', 'handAmp', 'bow', 'spread', 'collapse', 'flickLift', 'flickOpen',
-  'wave', 'waveK', 'envS', 'pushPitch', 'baskAbduct', 'squash', 'legLift', 'hindK', 'bend', 'flickYaw', 'turnFore', 'turnHead'];
+  'wave', 'waveK', 'envS', 'pushPitch', 'baskAbduct', 'squash', 'legLift', 'hindK', 'bend', 'flickYaw', 'turnFore', 'turnHead', 'eatHead', 'eatTip', 'eatDrop'];
 // aAnim2 is declared for the rig templates, the quadrupeds' gait selector and the antlers (the geometry must then
 // carry it: a missing instanced attribute reads (0, 0, 0, 1), a bound gait and no antler growth).
 const hasAnim2 = model => !!(model.rig || model.gait || model.antler);
@@ -1214,6 +1294,7 @@ function rigDecl(model) {
   if (piv.chest) d += `#define RIG_CHEST\nconst vec3 rig_pivChest = ${v3(piv.chest)};\n`;
   if (piv.tail_tip) d += `#define RIG_TAILTIP\nconst vec3 rig_pivTail = ${v3(piv.tail)};\n`;
   if (piv.wing) d += `#define RIG_WING\nconst vec3 rig_pivWing = ${v3(piv.wing)};\n`;
+  if (r.k.eatTip > 0 && r.eatHip) d += `#define RIG_EATTIP\nconst vec3 rig_pivHip = ${v3(r.eatHip)};\n`;
   if (model.variant) d += '#define ANIM_VARIANT\nattribute vec3 aColorB;\n';
   if (r.kind === 'reptile') {   // the reptile template's spine and patches (extras.rig; see REPTILE_BODY)
     const L = piv.legs || {}, hip = [L.HL, L.HR].filter(Boolean), hy = hip.length ? hip.reduce((a, h) => a + h[1], 0) / hip.length : (piv.hind?.[1] ?? 0.012);

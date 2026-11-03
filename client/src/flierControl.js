@@ -184,7 +184,7 @@ export class FlierControl {
       else ps.phase = damp(ps.phase, Math.round(ps.phase / Math.PI) * Math.PI, 3, dt);
     }
     ps.pose = damp(ps.pose, mantle ? 0.45 : landed ? 1 : flare ? 0 : stoop ? 0.75 : 0, mantle ? 6 : landed ? 8 : flare ? 14 : 4, dt);
-    ps.flick = landed && G.peck > 0 ? Math.sin(Math.PI * (1 - G.peck)) : mantle ? damp(ps.flick, 0.85 + 0.15 * Math.sin(performance.now() * 0.0035), 6, dt)
+    ps.flick = landed && G.peck > 0 ? 2 * Math.sin(Math.PI * (1 - G.peck)) : mantle ? damp(ps.flick, 1.7 + 0.3 * Math.sin(performance.now() * 0.0035), 6, dt)   // a peck, the mantle's bites: the bill to the food on the ground (animals.js EAT_PECK)
       : damp(ps.flick, landed ? -Math.max(-1, Math.min(0.6, f.pitch)) * 0.5 : 0, 6, dt);
     if (S.jay) {
       ps.e0 = damp(ps.e0, !landed && !work ? 0.4 : 0, 6, dt);                                  // wings bowed in a glide

@@ -565,6 +565,7 @@ export class WoodpeckerControl {
   ready() {
     const G = this.acorns;
     if (!G || !G.running) { this.say('start a game (panel: Start game) to gather acorns'); return false; }
+    if (!G.collecting) { this.say(`no acorns for you in the ${G.season}: not your food this season`); return false; }
     return true;
   }
   // Clinging: hammer the one in the bill into the granary, or take one from the crown (in reach, or a short flight).
