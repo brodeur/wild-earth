@@ -22,10 +22,10 @@ import { scentCarry } from './wind.js';
 //
 // The smell. A carcass is a scent source for scent.js as before (animals.js scentSources, carrion true), labelled
 // "dead animal" until the sniffer is close enough to know the species, with a reach that grows with the stage
-// (smellK: a fresh kill at half the species' carrion reach, bloated a third more, dried half, bones a fifth), shaped by
-// the wind (wind.js scentCarry) as every scent is: a coyote's nose (300 m, times 1.5 for a scavenger) finds a fresh deer
-// from about 250 m downwind and a bloated one from 600; the vulture's carrion nose (800 m) a bloated one from a
-// kilometre. The glow. For a carrion eater (games.json relations.scavenge: the raven, the vulture, the coyote, the bear;
+// (smellK: a fresh kill at three quarters of the species' carrion reach, bloated a third more than that reach, dried
+// half, bones a fifth), shaped by the wind (wind.js scentCarry) as every scent is: a coyote's nose (300 m, times 1.5 for
+// a scavenger) finds a fresh deer from about 340 m straight downwind and a bloated one from 580; the vulture's carrion
+// nose (800 m) a bloated one from a kilometre. The glow. For a carrion eater (games.json relations.scavenge: the raven, the vulture, the coyote, the bear;
 // and the lion for its own kills) a carcass glows as forage.js lights a forager's plants: a pool of warm light on the
 // ground under it within SEE_R m of the body (the vulture 3 km from the air, the raven 400 m, the coyote 150, the bear
 // 120, the lion 60), brighter with hunger (needs.js) and with the stage's smell, falling with distance, sized to stay a
@@ -56,7 +56,7 @@ export const SEASON_HEAT = { winter: 0.65, spring: 1, summer: 1.45, fall: 1 };
 const DIURNAL = 0.25, DIURNAL_PEAK = 14, TILE_UTC = -8;   // the day's swing of the decay rate; its peak hour (local); the tiles' zone (Pacific standard)
 const BITE = { cathartes_aura: 0.4, corvus_corax: 0.12, canis_latrans: 1.5, ursus_americanus: 4, puma_concolor: 4, urocyon_cinereoargenteus: 0.3 };   // kg a feed draws
 const NEED = { cathartes_aura: 0.4, corvus_corax: 0.1, canis_latrans: 1.5, ursus_americanus: 6, puma_concolor: 4, urocyon_cinereoargenteus: 0.3 };    // kg: a full belly
-const SMELL_K = [[0, 0.5], [0.1, 0.8], [0.25, 1.3], [0.5, 1.2], [0.7, 0.6], [0.9, 0.2], [1, 0.1]];   // the scent's reach by decay (times the species' carrion reach)
+const SMELL_K = [[0, 0.75], [0.1, 0.9], [0.25, 1.3], [0.5, 1.2], [0.7, 0.6], [0.9, 0.2], [1, 0.1]];   // the scent's reach by decay (times the species' carrion reach)
 const NAME_S = 0.45;   // a carrion scent this strong names the species; weaker is "dead animal"
 const SEE_R = { cathartes_aura: 3000, corvus_corax: 400, canis_latrans: 150, ursus_americanus: 120, puma_concolor: 60, urocyon_cinereoargenteus: 60 };
 const AI_R = { cathartes_aura: 1500, corvus_corax: 400, canis_latrans: 450, ursus_americanus: 600 };   // the AI's finding: the birds by sight (the vulture also by smell), the mammals by the nose
@@ -389,9 +389,10 @@ export class Carrion {
       if (stages || rec.decay === 0) { rec.decay = decayOf(rec, now, season); rec.stage = stageOf(rec.decay); }
       if (rec.decay >= 1) { if (this.skew === 0) this.remove(rec, false); else if (rec.body) { this.animals.bury(rec.body); rec.body = null; } continue; }   // gone (a debugging age keeps the record, so it comes back at age(0))
       let b = rec.body;
-      if (b && (b.gone || !A.alive(b) || !b.dead)) { b = rec.body = null; }   // dropped by a rebuild (far), or the world's copy went
+      if (b && (b.gone || !A.alive(b) || !b.dead)) { if (!b.gone && b.dead) { b.gone = true; const j = A.carrion.indexOf(b); if (j >= 0) A.carrion.splice(j, 1); } b = rec.body = null; }   // dropped by a rebuild (far): out of the AI's carrion too; made again when near
       const d2 = (rec.x - P.x) ** 2 + (rec.z - P.z) ** 2;
-      if (rec.decay >= BONES_D) { if (b) { A.bury(b); rec.body = b = null; } rec.boned = true; }
+      rec.boned = rec.decay >= BONES_D;
+      if (rec.boned) { if (b) { A.bury(b); rec.body = b = null; } }
       else if (!b && d2 < LIVE_R * LIVE_R) { const sp = A.spawnCarcass?.(rec); if (sp) { rec.body = b = sp; b.decay = rec.decay; } }
       if (b) { b.decay = rec.decay; b.fed = rec.meat0 > 0 ? rec.eaten / rec.meat0 : 0; }
       if (meBig && (feedingAt === b || (this.ground?.on && this.ground.actT > 0 && d2 < REACH * REACH))) { rec.bigT = this.t; if (HUGE.has(me)) rec.hugeT = this.t; }
@@ -422,7 +423,7 @@ export class Carrion {
       const g0 = (GAIN_FED + (1 - GAIN_FED) * Math.pow(1 - hunger, HUNGER_POW)) * pulse * this.k;
       const lion = code === 'puma_concolor';
       for (const rec of this.list) {
-        if (rec.gone || rec.boned || (lion && !rec.mine)) continue;
+        if (rec.gone || rec.boned || (lion && !rec.mine && rec.by !== 'puma_concolor')) continue;   // the lion: a lion's kill (its own; after a reload, any lion's)
         const dx = rec.x - P.x, dz = rec.z - P.z, d = Math.hypot(dx, dz);
         if (d < this.nearD) { this.nearD = d; this.near = rec; }
         if (d >= R || n >= HALO_CAP) continue;

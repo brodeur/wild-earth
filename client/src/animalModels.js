@@ -1150,7 +1150,7 @@ export const playerLiveRow = model => model.live.base + model.live.rows - 1;
 // in the bloated band (0.04-0.5), then shrinks toward the spine's line and sinks toward the ground (world up in the
 // body's frame, from the instance matrix; decay_hy the half height) in the dried band (0.45-0.8): hide over bones.
 // vDecay and vDecayW (the trunk weight times how much the face looks up: the flank the scavengers open) go to the
-// fragment, where DECAY_FRAG dulls the bloated body, darkens the upper flank to raw red-brown from the opened band
+// fragment (vDecayW: the upper flank, more toward the trunk's middle), where DECAY_FRAG dulls the bloated body, darkens the upper flank to raw red-brown from the opened band
 // (0.28 on, and from the first bite, growing down the flank with the share eaten: the channel's whole part, in 15ths) and greys the hide brown in the dried band. Every path (the part rig, the reptile, the skin, the textured
 // tier, the depth and silhouette twins) gets the body; only the lit material the colour.
 const DECAY_BODY = `
@@ -1166,18 +1166,19 @@ if (vDecay > 0.0) {
   transformed += dkRadial * (0.22 * dkBloat - 0.17 * dkDry) * dkTw;
   float dkH = dot(transformed - decay_c, dkUp) + decay_hy;
   transformed -= dkUp * dkH * 0.22 * dkDry * dkTw;
-  vDecayW = dkTw * clamp(0.5 + 0.5 * dot(normalize(animR * normal), dkUp), 0.0, 1.0);
+  float dkMid = 1.0 - clamp(abs(position.z - decay_c.z) / decay_hz, 0.0, 1.0);   // 1 at the trunk's middle, 0 at its ends
+  vDecayW = dkMid * smoothstep(0.15, 0.6, dot(normalize(animR * normal), dkUp));   // the upper flank, by how near the middle
 }`;
 const DECAY_FRAG = `
 if (vDecay > 0.0) {
   // opened: the upper flank from the top down, the more the more has been eaten (vDecayFed) and, unfed, a little by the stage
   float dkReach = clamp(max(vDecayFed * 1.6, 0.18 * smoothstep(0.28, 0.5, vDecay)), 0.0, 1.0);
-  float dkOpen = smoothstep(1.0 - dkReach, 1.0 - dkReach + 0.12, vDecayW) * step(0.001, dkReach) * (1.0 - 0.6 * smoothstep(0.7, 0.9, vDecay));
+  float dkOpen = smoothstep(1.0 - dkReach, 1.0 - dkReach + 0.1, vDecayW) * step(0.001, dkReach);
   float dkDry = smoothstep(0.5, 0.85, vDecay);
   float dkLum = dot(diffuseColor.rgb, vec3(0.2126, 0.7152, 0.0722));
   diffuseColor.rgb *= 1.0 - 0.25 * smoothstep(0.08, 0.3, vDecay) * (1.0 - dkDry);
-  diffuseColor.rgb = mix(diffuseColor.rgb, vec3(0.30, 0.25, 0.18) * (0.6 + 0.8 * dkLum), dkDry);
   diffuseColor.rgb = mix(diffuseColor.rgb, vec3(0.17, 0.055, 0.04), dkOpen);
+  diffuseColor.rgb = mix(diffuseColor.rgb, vec3(0.30, 0.25, 0.18) * (0.6 + 0.8 * dkLum) * (1.0 - 0.4 * dkOpen), dkDry);   // dried over the opened flank too, darker there
 }`;
 const decayConsts = model => {
   const g = model.geometry || model.tiers?.[0]; let c = [0, 0.2, 0], hz = 0.5, hy = 0.2;

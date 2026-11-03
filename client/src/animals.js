@@ -1070,13 +1070,18 @@ export class Animals {
   }
   // Scavenge (carrion.js): a carcass the shared world holds whose animal is not here (a kill elsewhere, a reload): a dead
   // body of its species at its place, in the species' mesh, kept by rebuild while near. The record: { id, one, x, y, z,
-  // yaw, size }. Returns the animal, or null (no such species, or its mesh full).
+  // yaw, size }. Returns the animal, or null (no such species, or its mesh full). The live animal of that id (its cell
+  // spawned it again: the ids are the cells') is the one that died: it becomes the carcass where the record says.
   spawnCarcass(rec) {
-    const k = SPECIES.findIndex(s => s.one === rec.one); if (k < 0 || this.byId.has(rec.id)) return this.byId.get(rec.id) || null;
-    const arr = this.bySpecies[k]; if (arr && arr.length >= SPECIES[k].cap) return null;
-    const keep = new Set(), rnd = mulberry32(hash(seedOf(rec.id, 0x5cab), 1, 2));
-    this.add(rec.id, k, rnd, a => { a.x = rec.x; a.z = rec.z; a.yaw = rec.yaw || 0; a.size = rec.size || 1; }, keep);
-    const a = this.byId.get(rec.id); if (!a) return null;
+    const k = SPECIES.findIndex(s => s.one === rec.one); if (k < 0) return null;
+    let a = this.byId.get(rec.id);
+    if (a?.dead) return a;
+    if (!a) {
+      const arr = this.bySpecies[k]; if (arr && arr.length >= SPECIES[k].cap) return null;
+      const keep = new Set(), rnd = mulberry32(hash(seedOf(rec.id, 0x5cab), 1, 2));
+      this.add(rec.id, k, rnd, b => { b.x = rec.x; b.z = rec.z; b.yaw = rec.yaw || 0; b.size = rec.size || 1; }, keep);
+      a = this.byId.get(rec.id); if (!a) return null;
+    } else { a.x = rec.x; a.z = rec.z; a.yaw = rec.yaw || 0; if (a.group) { const g = a.group; a.group = null; if (g.leader === a) { const o = this.list.find(b => b !== a && b.group === g && !b.dead); if (o) g.leader = o; } } }
     const skin = !!this.drawn[k]?.model?.skin;
     a.dead = true; a.diedAt = this.time; a.carrionUntil = Infinity; a.hunt = null; a.air = 0; a.speed = 0; a.spd = 0;
     a.state = k === VO ? VL_SIT : k === RB ? B_FORM : k === JR ? JK_FORM : k === LZ ? L_BASK : D_BED;
