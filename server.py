@@ -9,7 +9,8 @@ GET  /api/build/<tile_id>     build progress
 GET  /api/edits/<tile_id>     the manifest's append-only `edits` log (a JSON array)
 POST /api/edits/<tile_id>  [edit, ...]   validate, stamp (id, at) and append to the log
 GET  /api/game                the acorn game's protocol version (clients feature-detect the shared world)
-GET  /api/game/ws             WebSocket: one shared acorn-game world per (tile, season), see GameWorld
+GET  /api/game/ws             WebSocket: one shared acorn-game world per (tile, season), see GameWorld; its `dig`
+                              channel (hello t 'dig') carries the Dig game's tunnels and pits (digworld.py)
 GET  /api/game/<tile>/<season>   that world's counts (board, round, players), no player ids
 GET  /api/weather/<tile_id>   today's weather at the tile centre: Open-Meteo's forecast for yesterday, today
                               and tomorrow in client/weather.json's `days` format, plus `current`; cached
@@ -72,6 +73,7 @@ except Exception as _e:  # noqa: BLE001  (ImportError, or a dependency failing t
     print(f"[server] builds off: the pipeline could not load ({type(_e).__name__})", flush=True)
 from ws import WsConn, ws_frame, ws_upgrade  # noqa: E402
 import hub  # noqa: E402
+import digworld  # noqa: E402   (the Dig game's tunnels and pits: docs/game-dig.md)
 
 JOBS: dict[str, dict] = {}   # tile_id -> {status, steps, current, started_at}
 LOCK = threading.Lock()
@@ -296,6 +298,18 @@ def build_worker(tile: Tile, steps: list[str]) -> None:
 # granary holds one, the raider has room, is a raiding species and is not driven off (DRIVEN_S after a 'mob').
 # A cache's owner: an AI collector's id is kept in the cache record; a player's only in memory (GameWorld.owners,
 # cleared when a round starts), never written beside the cache's position.
+# v5 (2026-11-02, Aaron: "for both the acorn game and the dig game, I want the holes to be persistent. For holes in trees,
+# they should disappear if empty after 1 month. For holes in ground, they should disappear if no animal has been inside
+# for 1 week. I want them to be seen by all players and animals"): the snapshot (v 4) gains `dig` (digworld.py: the
+# tunnels, chambers, holes and pits, changed by anonymous events on the socket's dig channel, numbered by their own
+# dseq so the acorn game's seq never jumps under its clients, logged as `dig` lines), `held` (a stash or granary oak ->
+# the wall-clock time it last held an acorn), `since` (when this world first ran with the rule: an untouched stash hole
+# dates from then) and `gone` (the tree holes removed). Every client in a tile joins the dig channel while it is in the
+# world, the acorn game running or not; the first to join (dconns[0]) runs the AI's digging and sends it with ai: true.
+# The tick removes a tunnel system or pit unseen for digworld.DIG_IDLE_S (7 days) and a tree hole empty for
+# STASH_EMPTY_S (30 days), in wall-clock time, whether or not anyone is in the world (and once on load).
+STASH_EMPTY_S = 30 * 86400
+DIG_SWEEP_S = 60.0
 GAME_SEASONS = ("spring", "summer", "fall", "winter")
 BOARD_SPECIES = ("melanerpes_formicivorus", "sciurus_griseus", "corvus_corax")
 JAY_SPECIES = ("aphelocoma_californica", "cyanocitta_stelleri")   # AI only: they dig, raid and are mobbed; not on the board
@@ -619,16 +633,31 @@ class GameConn(WsConn):
     RATE, BURST = EV_RATE, EV_BURST
 
     def __init__(self, sock, rfile):
-        self.world, self.pid = None, None
+        self.world, self.pid, self.dworld = None, None, None   # dworld: the world whose dig channel this connection is on
         self.species, self.stale, self.held, self.carry = "corvus_corax", False, [], (0, 0)
         super().__init__(sock, rfile)
 
     def on_close(self) -> None:
         if self.world:
             self.world.leave(self)
+        if self.dworld:
+            self.dworld.dig_leave(self)
 
     def on_message(self, m: dict) -> None:
         t = m.get("t")
+        if t == "dig":   # the Dig game's channel: anonymous, no ids (digworld.py)
+            tile, season = m.get("tile"), m.get("season")
+            if not (isinstance(tile, str) and TILE_ID_RE.match(tile) and manifest(tile) is not None) or season not in GAME_SEASONS:
+                return self.send({"t": "err", "why": "unknown tile or season"})
+            if self.dworld:
+                self.dworld.dig_leave(self)
+            return game_world(tile, season).dig_join(self)
+        if t == "dev":
+            if not self.dworld:
+                return self.send({"t": "err", "why": "join the dig first"})
+            if not self.allow():
+                return self.send({"t": "drej", "c": m.get("c"), "why": "too many events"})
+            return self.dworld.dig_event(self, m.get("c"), m.get("e"))
         if t == "hello":
             tile, season, sid = m.get("tile"), m.get("season"), m.get("sid")
             if not (isinstance(tile, str) and TILE_ID_RE.match(tile) and manifest(tile) is not None):
@@ -668,6 +697,8 @@ class GameWorld:
         self.log_path = self.dir / f"{season}.events.jsonl"
         self.lock = threading.RLock()
         self.conns: list[GameConn] = []      # join order: conns[0] runs the AI collectors
+        self.dconns: list[GameConn] = []     # on the dig channel, in join order: dconns[0] runs the AI's digging
+        self.dig_t, self.dping_t = DIG_SWEEP_S, PING_S
         self.s = self.empty()
         self.dirty, self.saved_at, self.log, self.scrubbed = False, 0.0, None, 0
         self.owners: dict[str, str] = {}     # a player's buried acorn -> its player id: memory only (v4)
@@ -675,18 +706,19 @@ class GameWorld:
         self.load()
 
     def empty(self) -> dict:
-        return {"v": 3, "tile": self.tile, "season": self.season, "seq": 0, "clock": 0.0,
+        return {"v": 4, "tile": self.tile, "season": self.season, "seq": 0, "clock": 0.0,
                 "picked": {}, "stashes": {}, "granaries": {}, "caches": [],
                 "board": {s: 0 for s in BOARD_SPECIES}, "collectors": {}, "round": None, "rounds": 0,
-                "cache_n": 0, "raided": {s: 0 for s in BOARD_SPECIES}, "mobbed": {}}
+                "cache_n": 0, "raided": {s: 0 for s in BOARD_SPECIES}, "mobbed": {},
+                "dig": digworld.empty(), "held": {}, "gone": {}, "since": round(time.time())}
 
     # -- persistence
     def load(self) -> None:
         if self.snap_path.exists():
             try:
                 s = read_json(self.snap_path)
-                if isinstance(s, dict) and s.get("v") == 3:
-                    self.s = {**self.empty(), **s}
+                if isinstance(s, dict) and s.get("v") in (3, 4):   # a v3 snapshot: no dig, no tree-hole clocks yet
+                    self.s = {**self.empty(), **s, "v": 4}
             except ValueError:
                 print(f"[game] {self.tile}/{self.season}: snapshot unreadable, starting from the log", flush=True)
         base, replayed = self.s["seq"], 0
@@ -697,13 +729,18 @@ class GameWorld:
                         m = json.loads(line)
                     except ValueError:
                         continue          # a torn last line after a crash
-                    if isinstance(m, dict) and m.get("seq", 0) > base:   # (a burial's two lines share a seq)
+                    if isinstance(m, dict) and m.get("t") == "dig":   # the dig channel's lines, by their own dseq
+                        if m.get("dseq", 0) > self.s["dig"]["seq"]:
+                            self.dig_replay(m)
+                            replayed += 1
+                    elif isinstance(m, dict) and m.get("seq", 0) > base:   # (a burial's two lines share a seq)
                         self.replay(m)
                         replayed += 1
         if replayed:
             self.save()          # a snapshot covering the replayed lines, and the log scrubbed up to it
         else:
             self.scrub_log(self.s["seq"])
+        self.prune(time.time())
         print(f"[game] {self.tile}/{self.season} loaded: seq {self.s['seq']}, {replayed} replayed", flush=True)
 
     def replay(self, m: dict) -> None:
@@ -738,12 +775,29 @@ class GameWorld:
         elif m.get("t") == "regrow":
             for k in m["keys"]:
                 s["picked"].pop(k, None)
+        elif m.get("t") == "gone":
+            for k in m["oaks"]:
+                s["gone"][k] = 1
+                s["granaries"].pop(k, None)
+                s["stashes"].pop(k, None)
+                s["held"].pop(k, None)
+        elif m.get("t") == "held":
+            s["held"][m["oak"]] = m["at"]
+
+    def dig_replay(self, m: dict) -> None:
+        d = self.s["dig"]
+        d["seq"] = max(d["seq"], m["dseq"])
+        e = m.get("e") or {}
+        if e.get("type") == "decay":
+            digworld.dig_apply_decay(d, e)
+        else:
+            digworld.dig_reduce(d, e, m.get("at", time.time()))
 
     def save(self) -> None:
         self.dir.mkdir(parents=True, exist_ok=True)
         tmp = self.snap_path.with_name(f".{self.season}.{uuid.uuid4().hex[:8]}.tmp")
         with open(tmp, "w") as f:
-            json.dump({**self.s, "clock": round(self.s["clock"], 2), "saved_at": now_iso()}, f, separators=(",", ":"))
+            json.dump({**self.s, "dig": digworld.persisted(self.s["dig"]), "clock": round(self.s["clock"], 2), "saved_at": now_iso()}, f, separators=(",", ":"))
         os.replace(tmp, self.snap_path)
         self.dirty, self.saved_at = False, time.monotonic()
         self.scrub_log(self.s["seq"])
@@ -849,7 +903,7 @@ class GameWorld:
             self.conns.append(conn)
             self.collector(conn.pid, species, "player", PLAYER_CAP[species])
             conn.send({"t": "welcome", "v": 1, "you": conn.pid, "r": self.epoch(), "host": self.conns[0] is conn,
-                       "n": self.players(), "world": self.s})
+                       "n": self.players(), "world": {**self.s, "dig": None}, "now": round(time.time())})
             self.tell_players()
             print(f"[game] {self.tile}/{self.season}: {self.players()} player(s) here", flush=True)
 
@@ -905,9 +959,15 @@ class GameWorld:
             except (ValueError, KeyError, TypeError):
                 return conn.send({"t": "rej", "c": c, "why": "malformed event"})
             pre = [col["carrying"], col.get("dug", 0), col.get("loot", 0), col.get("off", 0)]
+            now = time.time()
+            if ev["type"] == "deposit" and ev["into"] == "stash" and self.hole_gone(ev["oak"], now):
+                return conn.send({"t": "rej", "c": c, "why": "no stash hole"})
             why = game_reduce(self.s, ev, self.owners)
             if why:
                 return conn.send({"t": "rej", "c": c, "why": why})
+            if ev["type"] in ("deposit", "raid"):   # the tree hole's clock: when it last held an acorn (or went empty)
+                self.s["held"][ev["oak"]] = round(now)
+                self.s["gone"].pop(ev["oak"], None)
             m = {"t": "ev", "e": ev, "pre": pre, "col": {"sp": col["species"], "k": col["kind"], "cap": col["cap"]}}
             log = None
             if player and ev["type"] == "bury":   # the count against the player, the place against k<n>
@@ -919,6 +979,82 @@ class GameWorld:
                 log = [{**m, "e": {k: ev[k] for k in ("type", "by", "keep", "own", "osp", "pil") if k in ev}},
                        {"t": "uncache", "id": ev["id"]}]
             self.record(m, conn, c, log)
+
+    # -- the tree holes' clocks (v5)
+    def hole_gone(self, oak: str, now: float) -> bool:
+        """A stash hole is gone once removed, or untouched since `since` for STASH_EMPTY_S."""
+        s = self.s
+        if oak in s["gone"]:
+            return True
+        return oak not in s["stashes"] and oak not in s["held"] and now - s["since"] > STASH_EMPTY_S
+
+    def prune(self, now: float) -> None:
+        """The tree holes empty for STASH_EMPTY_S and the tunnels and pits unseen for digworld.DIG_IDLE_S go."""
+        s, oaks = self.s, []
+        for kind in ("stashes", "granaries"):
+            for oak, n in list(s[kind].items()):
+                if n <= 0 and now - s["held"].get(oak, s["since"]) > STASH_EMPTY_S:
+                    oaks.append(oak)
+        if oaks:
+            for k in oaks:
+                s["gone"][k] = 1
+                s["stashes"].pop(k, None)
+                s["granaries"].pop(k, None)
+                s["held"].pop(k, None)
+            self.record({"t": "gone", "oaks": oaks})
+        e = digworld.dig_decay(s["dig"], now)
+        if e:
+            self.dig_record(e, now)
+            print(f"[game] {self.tile}/{self.season}: {len(e['nodes'])} tunnel nodes and {len(e['pits'])} pits decayed", flush=True)
+
+    # -- the dig channel (digworld.py)
+    def dig_join(self, conn: GameConn) -> None:
+        with self.lock:
+            conn.dworld = self
+            self.dconns.append(conn)
+            conn.send({"t": "dwelcome", "v": 1, "host": self.dconns[0] is conn, "n": len(self.dconns),
+                       "dig": digworld.persisted(self.s["dig"]), "now": round(time.time()), "idle": digworld.DIG_IDLE_S})
+
+    def dig_leave(self, conn: GameConn) -> None:
+        with self.lock:
+            if conn not in self.dconns:
+                return
+            self.dconns.remove(conn)
+            conn.dworld = None
+            for i, k in enumerate(self.dconns):
+                k.send({"t": "dhost", "host": i == 0, "n": len(self.dconns)})
+            if not self.dconns and not self.conns and self.dirty:
+                self.save()
+
+    def dig_event(self, conn: GameConn, c, e) -> None:
+        with self.lock:
+            try:
+                ev = digworld.clean(e)
+            except (ValueError, KeyError, TypeError):
+                return conn.send({"t": "drej", "c": c, "why": "malformed event"})
+            if ev.get("ai") and self.dconns[0] is not conn:
+                return conn.send({"t": "drej", "c": c, "why": "not the AI host"})
+            now = time.time()
+            why = digworld.dig_reduce(self.s["dig"], ev, now)
+            if why:
+                return conn.send({"t": "drej", "c": c, "why": why})
+            self.dig_record(ev, now, conn, c)
+
+    def dig_record(self, ev: dict, now: float, sender: GameConn | None = None, c=None) -> None:
+        """Number a dig change by its own dseq, log it (with the wall time, for the decay's clocks on replay) and
+        send it to everyone on the channel (the sender's copy echoes c)."""
+        d = self.s["dig"]
+        d["seq"] += 1
+        m = {"t": "dig", "dseq": d["seq"], "at": round(now), "e": ev}
+        if self.log is None:
+            self.dir.mkdir(parents=True, exist_ok=True)
+            self.log = open(self.log_path, "a")
+        self.log.write(json.dumps(m, separators=(",", ":")) + "\n")
+        self.log.flush()
+        self.dirty = True
+        out = {"t": "dev", "dseq": d["seq"], "e": ev}
+        for k in self.dconns:
+            k.send({**out, "c": c} if k is sender else out)
 
     def start_round(self, length) -> None:
         with self.lock:
@@ -972,6 +1108,18 @@ class GameWorld:
                             k.kill()           # its reader ends and leaves the world
                         else:
                             k.raw(ws_frame(b"", 9))
+            self.dig_t -= dt
+            if self.dig_t <= 0:
+                self.dig_t = DIG_SWEEP_S
+                self.prune(time.time())
+            self.dping_t -= dt
+            if self.dping_t <= 0:   # the dig channel's own connections (never in conns): pinged, and dropped when silent
+                self.dping_t = PING_S
+                for k in list(self.dconns):
+                    if now - k.last_rx > IDLE_S:
+                        k.kill()
+                    else:
+                        k.raw(ws_frame(b"", 9))
             if self.dirty and now - self.saved_at >= GAME_SAVE_S:
                 self.save()
 
