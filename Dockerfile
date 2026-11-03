@@ -8,7 +8,7 @@ FROM python:3.12-slim
 WORKDIR /app
 ENV PYTHONUNBUFFERED=1 PYTHONDONTWRITEBYTECODE=1 PIP_NO_CACHE_DIR=1
 RUN pip install pyproj==3.7.1
-COPY server.py hub.py ws.py digworld.py ./
+COPY server.py hub.py ws.py digworld.py carrionworld.py ./
 COPY pipeline/ pipeline/
 COPY library/ library/
 COPY client/ client/
