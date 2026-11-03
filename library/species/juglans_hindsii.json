@@ -7,6 +7,7 @@
   "architectural_model": "Rauh",
   "deciduous": true,
   "height_m": [12, 18],
+  "stature": {"typical_m": 14.5, "tall_m": 22, "record_m": 28, "source": "typical and tall: Jepson eFlora, trunk 6-23 m; record: not found, an estimate; read 2026-11-02"},
   "variants": [
     {"name": "young", "weight": 0.25, "height_m": [5, 10], "trunk_radius": 0.65, "crown_scale": 0.8, "branches": 0.8, "set": {"trunk": {"length_ratio": 0.55, "split_prob": 0.2}, "foliage": {"clumps": {"radius_m": 0.8}}}, "note": "a straight young tree with a leader, crown taller than wide"},
     {"name": "mature", "weight": 0.55, "seeds": 1, "note": "the file as written"},

@@ -7,6 +7,7 @@
   "architectural_model": "Rauh",
   "deciduous": false,
   "height_m": [29.5, 40],
+  "stature": {"typical_m": 34, "tall_m": 46, "record_m": 81.8, "source": "typical: the record's growth curve at 110 y (34.8 m), Silvics 27-40 m common; tall: between the growth curve's 42 m asymptote and the Gymnosperm Database's 50 m; record: 81.8 m, Rogue River-Siskiyou NF, Oregon (Taylor 2011, mdvaden.com); the Sierra's tallest 71.6 m (El Dorado Co., AF register); read 2026-11-02"},
   "growth": {
     "note": "The growth tool's inputs (tools/grow_species.mjs,     docs/tree-architecture.md). The conifer control: apical control held,     compression wood,     whorled laterals; it must keep its leader and level whorls.",
     "leaf_type": "conifer",

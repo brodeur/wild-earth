@@ -7,6 +7,7 @@
   "architectural_model": "Rauh",
   "deciduous": true,
   "height_m": [12, 20],
+  "stature": {"typical_m": 17, "tall_m": 23, "record_m": 25, "source": "typical and tall: Silvics, 18-24 m on good sites; record: Jepson eFlora, tree < 25 m (a range maximum); read 2026-11-02"},
   "variants": [
     {"name": "young", "weight": 0.25, "height_m": [5, 10], "trunk_radius": 0.65, "crown_scale": 0.8, "branches": 0.75, "set": {"trunk": {"length_ratio": 0.75, "split_prob": 0.15}, "foliage": {"clumps": {"radius_m": 0.7}}}, "note": "a slim young tree with a straight leader and a few stiff ascending branches, see-through"},
     {"name": "mature", "weight": 0.55, "seeds": 1, "note": "the file as written"},

@@ -7,6 +7,7 @@
   "architectural_model": "Rauh (provisional)",
   "deciduous": false,
   "height_m": [20, 36],
+  "stature": {"typical_m": 32, "tall_m": 46, "record_m": 69.8, "source": "typical: Gymnosperm Database 18-46 m; tall: Silvics, in the Sierra 'frequently near 46 m'; record: 69.8 m near Tiller, Oregon (Van Pelt 2001, Gymnosperm Database); Jepson eFlora: tree 20-69 m; read 2026-11-02"},
   "variants": [
     {"name": "young", "weight": 0.3, "height_m": [4, 12], "trunk_radius": 0.85, "branches": 0.8, "set": {"trunk": {"base_size": 0.04, "bole_ratio": 0.04, "flare": 1.25, "bark_rgb": [132, 92, 74]}, "crown": {"envelope": {"profile": [[0.04, 0.24], [0.2, 0.24], [0.4, 0.21], [0.6, 0.16], [0.8, 0.09], [1.0, 0.02]], "lobe_depth": 0.06, "asymmetry": 0.05}}, "levels": [{"droop_deg": 18, "upturn_deg": 30}]}, "note": "a dense, neat cone of bright green sprays with branches to the ground"},
     {"name": "mature", "weight": 0.5, "seeds": 1, "note": "the file as written"},

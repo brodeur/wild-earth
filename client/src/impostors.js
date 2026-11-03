@@ -52,6 +52,8 @@ import { seasonOfDate } from './season.js';
 
 const CHUNK = 250, MOVE = 80, SECTORS = 6, STRIDE = 8;   // record: x y z rot | scale tree rank width (crown aspect, crowns.js; 1 for cell trees)
 const THIN_P = 0.7;                // keep (thinStart / d)^P beyond thinStart
+const FAR_SCALE_MAX = 4;      // a far record's scale on its baked stand-in, at most (the near forest's SCALE is 3 on the slot's own tree: a
+                              // species baked as one short tree, canyon live oak's 8.6 m, stands in for its 30 m giants beyond the hand-over)
 const FAR_JITTER = 0.06;      // a far tree's height jitter with distance (hrange), about its own height
 const GROW_W = 0.72, GROW_H = 0.28; // a kept tree's width and height grow by keep^-GROW (GROW_W + GROW_H = 1: area / keep)
 const NEEDLE_FADE = [900, 1500];    // treegen canopyMaterial fades the needle light out over this view distance
@@ -450,7 +452,7 @@ export class Impostors {
       const k = p * VARIANTS + v; rec[o] = bake.index[k];
       if (rec[o - 1] < 0) {
         let h = H.get(k); if (h === undefined) { const b = this.bakeList[k]; h = treeWood(b.id, b.seed)?.H || 10; H.set(k, h); }
-        rec[o - 1] = Math.min(SCALE[1], Math.max(SCALE[0], -rec[o - 1] / h));
+        rec[o - 1] = Math.min(FAR_SCALE_MAX, Math.max(SCALE[0], -rec[o - 1] / h));
       }
     }
     if (missing) console.warn(`impostors: ${missing} plants of species the atlas did not bake drawn as ${ids[0]}`);

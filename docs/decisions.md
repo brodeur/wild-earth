@@ -3816,6 +3816,20 @@ Measured on the Yosemite tile (the far records, every tree on the tile): pondero
 39,415 trees within 2 % (mean 0.07 %); the rest are young trees under the 0.4 clamp on a taller stand-in. Same
 placement (43,462 mid plants, 562,105 far records before and after).
 
+**The records' numbers** (second commit): every tree species carries `stature` (typical, tall, record, with the
+source beside them), read 2026-11-02 from Jepson eFlora and Silvics (both through 2024 Wayback snapshots: Jepson is
+behind a Cloudflare check, Silvics left srs.fs.usda.gov), FEIS, the National Champion Tree register's 2024 file, the
+Gymnosperm Database and mdvaden.com; the three growth blocks' height curves set the oaks' and ponderosa's typical
+heights. Where no measured record was found (interior live oak, Hinds walnut, bigleaf maple, the willows, the Sierra's
+Douglas-fir) the record is an estimate and says so; a champion on the register's points is not taken as the tallest.
+Canyon live oak's typical is lowered to its foothill class trees (12 m, not FEIS's mid-range). With them a species
+first piled up at its record (capping the height there: Douglas-fir p99 = max = 67 m): the curve is now truncated by
+its quantile (the draw spread under the record's), and the emergents' span is fitted under the record. A far record's
+scale on its baked stand-in may reach 4 (`FAR_SCALE_MAX`; the near forest stays at 3 on the slot's own tree): canyon
+live oak is baked as one 8.6 m tree. Yosemite's far records then: ponderosa p50 31.1, p95 45.7, p99 52.2, max 65.5 m;
+incense cedar 28.8, 44.9, 53.3, 64.6; black oak 13.2, 24.6, 29.6, 37.7; Douglas-fir 34.5, 55.5, 63.0, 67; cottonwood
+19.5, 29.5, 32.8, 34.1; valley oak 20.9, 30.3, 35.8, 43.3.
+
 Not done here: the meadow belt on the valley floor is mostly broadleaf (LANDFIRE's mix there: alder, willow,
 cottonwood, bay, ash, valley oak), so the ponderosa and incense cedar giants that stand over the real valley's
 meadows are few near them; sugar pine and white fir are not in the library.

@@ -13,7 +13,8 @@
 //   emergentOf(...)     the 30 m cell's emergent, if it has one: a cell holds one with odds n / 250 (n its trees), the
 //                       tree by hash. Deterministic per cell, so nothing re-rolls.
 //   drawTree(...)       the tree's height and slot: the curve's quantile at the placement's own scale draw u
-//                       (truncated at the record), or for the cell's emergent tall x (1 to 1.35), skewed low; the class
+//                       (truncated at the record: u is spread under the record's quantile), or for the cell's emergent
+//                       tall x (1 to 1.35), skewed low, under the record; the class
 //                       whose range holds the height, the old class for the top OLD_Q of the curve and every emergent;
 //                       a slot of that class by hash. Fills and returns one shared object (no allocation per tree).
 //
@@ -45,6 +46,13 @@ export function probit(p) {
   if (p > 1 - 0.02425) return -probit(1 - p);
   const q = p - 0.5, r = q * q;
   return (((((A[0] * r + A[1]) * r + A[2]) * r + A[3]) * r + A[4]) * r + A[5]) * q / (((((B[0] * r + B[1]) * r + B[2]) * r + B[3]) * r + B[4]) * r + 1);
+}
+
+// The normal distribution's cumulative probability (Abramowitz and Stegun 7.1.26 on erfc, error under 1.5e-7).
+export function normalCdf(x) {
+  const z = Math.abs(x) / Math.SQRT2, t = 1 / (1 + 0.3275911 * z);
+  const erfc = t * (0.254829592 + t * (-0.284496736 + t * (1.421413741 + t * (-1.453152027 + t * 1.061405429)))) * Math.exp(-z * z);
+  return x >= 0 ? 1 - 0.5 * erfc : 0.5 * erfc;
 }
 
 // Defaults by form where a record has no `stature` block: typical the middle of height_m, tall its top x 1.15, record x 1.6.
@@ -106,14 +114,14 @@ const OUT = { v: 0, h: 0, old: false, emergent: false };
 // whether this plant is the cell's emergent. Returns OUT: v the slot to draw, h the height in metres.
 export function drawTree(st, i, j, k, u, m, emergent) {
   let h, q = u;
-  if (emergent) {
-    const w = h32(i, j, 0x5eb);
-    h = st.tall * m * (1 + EMERGENT_SPAN * w * Math.sqrt(w)); q = 1;
-  } else {
-    const p = Math.min(1 - U_MIN, Math.max(U_MIN, u));
+  if (emergent) {   // tall x 1 to 1.35 (skewed low), the span fitted under the record
+    const w = h32(i, j, 0x5eb), lo = Math.min(st.tall * m, st.record * 0.97), hi = Math.min(st.tall * m * (1 + EMERGENT_SPAN), st.record);
+    h = lo + (hi - lo) * w * Math.sqrt(w); q = 1;
+  } else {   // the curve truncated at the record: the draw rescaled under the record's quantile, so nothing piles up there
+    const top = Math.min(1 - U_MIN, normalCdf(Math.log(st.record / (st.typical * m)) / st.sigma));
+    const p = U_MIN + Math.min(1, Math.max(0, u)) * (top - U_MIN);
     h = st.typical * m * Math.exp(st.sigma * probit(p));
   }
-  h = Math.min(h, st.record);
   const c = (q >= OLD_Q && st.oldCls) ? st.oldCls : classFor(st.living.length ? st.living : st.classes, h);
   OUT.v = c.slots[Math.min(c.slots.length - 1, Math.floor(h32(i + k * 7919, j, 0x51a7) * c.slots.length))];
   OUT.h = h; OUT.old = c.old; OUT.emergent = !!emergent;
