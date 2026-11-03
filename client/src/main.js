@@ -929,6 +929,7 @@ async function buildSteps(w, { params, pending, direct = false, arrive = null })
     const draw = !gated || (!(compiling ||= compileNew()) && firstUse());
     if (draw) shadows.update(camera);
     if (draw && !(screenOpen && screen.ownsCanvas)) spirit.render(renderer, scene, camera);   // renderer.render, plus the spirit's view's passes while it is on; not while the title screen draws the earth on the shared canvas (title.js)
+    if (draw && !(screenOpen && screen.ownsCanvas)) dig.xray(renderer);   // the underground view's pass over it, while the body is underground (dig.js)
     spirit.unblendCamera();   // the control's own camera back for its next frame
     sound?.update(dt, { season: s, hour: state.hour, sunElevation: sun.elevation, weather: wx });
     if (peek.pending !== null) { if (peek.pending !== peek.shown) { crossFade(); applyPeek(peek.pending); } peek.pending = null; }

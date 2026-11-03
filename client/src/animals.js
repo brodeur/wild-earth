@@ -384,6 +384,7 @@ const M_BED = 80, M_STAND = 81, M_MOVE = 82, M_SNIFF = 83, M_POUNCE = 84, M_FLEE
   M_FIX = 95, M_PAW = 96, M_TOSS = 97,                                                  // fox, coyote: the mousing pounce's fix before it, the paw strikes after a miss, the head toss after a kill
   M_DIGP = 98;                                                                          // coyote: digging a pit over a vole it smells underground (the Dig game, dig.js; the AI host)
 const B_FORM = 100, B_FORAGE = 101, B_HOP = 102, B_SIT = 103, B_FREEZE = 104, B_BOLT = 105;   // brush rabbit
+const B_TOHOLE = 106, B_BURROW = 107, B_DIG = 108, RB_DIG_P = 0.3;   // brush rabbit, the Dig game (dig.js): to its burrow, in it, digging one (the chance a day's settling digs)
 const VL_RUN = 110, VL_PAUSE = 111, VL_SIT = 112, VL_HIDE = 113, VL_TOHOLE = 114, VL_TUN = 115, VL_DIG = 116;   // vole (the last three: the Dig game, dig.js)
 const JK_FORM = 120, JK_FEED = 121, JK_HOP = 122, JK_SIT = 123, JK_FREEZE = 124, JK_BOLT = 125;   // jackrabbit
 // Jackrabbit (jkUpdate): speeds (m/s; lope a range), how far out from the form it feeds (m), the freeze and the
@@ -659,7 +660,7 @@ export class Animals {
     this.clip = SPECIES.map((sp, k) => DRAWN[k] ? new Float32Array(sp.cap * 4) : null);   // aClip for the skinned models (deer, buck)
     this.bend = SPECIES.map((sp, k) => DRAWN[k] ? new Float32Array(sp.cap * 4) : null);   // aBend: their spine, head and legs' step in a turn
     this.debugIds = new Set(); this.debugN = 0;
-    this._legInp = { x: 0, y: 0, z: 0, yaw: 0, size: 1, v: 0, wr: 0, pose: 0, flick: 0, bend: 0, twitch: 0, ears: NaN, air: false, terrain: (x, z) => this.heights.atXZ(x, z) };   // the leg engine's input (legs.js)
+    this._legInp = { x: 0, y: 0, z: 0, yaw: 0, size: 1, v: 0, wr: 0, pose: 0, flick: 0, bend: 0, twitch: 0, ears: NaN, air: false, dig: 0, floor: null, terrain: (x, z) => this._legInp.floor ?? this.heights.atXZ(x, z) };   // the leg engine's input (legs.js); floor: a burrow's (lagoInput)
     const q = typeof location === 'undefined' ? new URLSearchParams() : new URLSearchParams(location.search);
     this.fixedDate = parseDate(q.get('date'));   // ?date=MM-DD: the month (lizards, ground squirrels, antlers) follows it
     this.feetMarks = q.get('feet') === '1';      // ?feet=1: the leg engine's plant points marked (legs.js FootMarks)
@@ -1024,7 +1025,7 @@ export class Animals {
     if (b.remote) return false;   // another player's body (players.js): not the AI's prey
     switch (b.sp) {
       case VO: return b.state !== VL_HIDE && !b.buried;   // not under the ground (dig.js)
-      case RB: return b.state !== B_FORM && b.state !== B_BOLT;
+      case RB: return b.state !== B_FORM && b.state !== B_BOLT && !b.buried;
       case JR: return b.state !== JK_BOLT;
       case GS: return b.state !== G_DOWN && b.state !== G_DIVE && b.group?.state === C_OK;
       case LZ: return b.state !== L_HIDE && !!b.home && b.vis > 0.5 && b.site?.kind !== 'trunk';   // not one up a trunk
@@ -3555,14 +3556,17 @@ export class Animals {
   // the head no longer dipped by the flick that flashed it on the part rig. The zigzag stays the AI's.
   lagoInput(a, I) {
     const st = a.state;
+    if (a.tun || a.dig || a.buried) I.floor = a.y;   // underground (dig.js): its feet on the burrow's floor
+    if (a.digK && (st === B_DIG || st === JK_FORM)) I.dig = 1;   // digging its burrow or scraping its form: the fore feet
     if (a.sp === RB) {
       if (st === B_FORM) { I.pose = -1; I.ears = -0.8; }
+      else if (st === B_BURROW && !(a.spd > 0.05)) { I.pose = -1; I.ears = -0.8; }   // lying up in its nest
       else if (st === B_FREEZE) { I.pose = -0.6; I.ears = -1; }
       else if (st === B_SIT) I.ears = 1;
       else if (st === B_BOLT) { I.ears = -1; I.twitch = 1; I.flick = 0; }
       if (st !== B_SIT) I.pose = Math.min(I.pose, 0);
     } else {
-      if (st === JK_FORM) { I.pose = -1; I.ears = -0.8; }
+      if (st === JK_FORM) { I.pose = I.dig ? 0 : -1; I.ears = I.dig ? 0.2 : -0.8; }
       else if (st === JK_FREEZE) { I.pose = -0.6; I.ears = -1; }
       else if (st === JK_SIT) { I.pose = Math.max(0, a.pose); I.ears = 1; }
       else if (st === JK_BOLT) I.ears = -1;
@@ -3576,6 +3580,8 @@ export class Animals {
   // ~9 m (or still within 15 m when the freeze ends) it bolts for cover in a zig-zag bound, the white tail up, and
   // sits tight there.
   rbBolt(a, px, pz) {
+    const D = this.dig, h = D?.holeNear(a.x, a.z, 6, a, false, D.BURROW.fit);   // a burrow within reach that is not past the player: down it (dig.js)
+    if (h && Math.hypot(h.x - px, h.z - pz) > Math.hypot(a.x - px, a.z - pz) * 0.8) { a.hole = h.id; a.state = B_TOHOLE; a.speed = 5; a.zigT = 0; a.bolted = true; return; }
     const r = a.rng, toCover = Math.hypot(a.hx - a.x, a.hz - a.z), coverToP = Math.hypot(a.hx - px, a.hz - pz), meToP = Math.hypot(a.x - px, a.z - pz);
     if (toCover > 1 && coverToP > meToP * 0.8) {   // cover is not past the player: into it and a little beyond
       const ang = Math.atan2(a.hz - pz, a.hx - px), d = 1 + r() * 2;
@@ -3595,12 +3601,13 @@ export class Animals {
     a.t -= dt;
     const T = this.threat(RB, a, a.x, a.y, a.z, px, py, pz), tn = T.n; px = T.x; py = T.y; pz = T.z;   // the player or an AI hunter
     const near = py - a.y < 20 ? Math.hypot(a.x - px, a.z - pz) : Infinity;
+    if (this.dig && (a.state === B_TOHOLE || a.state === B_BURROW || a.state === B_DIG)) return this.rbBurrow(a, dt, this.danger(RB, a, near, 9, tn), act);
     if (a.state !== B_BOLT && this.danger(RB, a, near, 9, tn)) this.rbBolt(a, px, pz);
     else if (this.alert(RB, near, tn) && (a.state === B_FORAGE || (a.state === B_HOP && a.next !== B_FORM) || a.state === B_SIT)) { a.state = B_FREEZE; a.t = 4 + r() * 6; }
     let speed = 0, lift = 0, wantPose = 0, wantFlick = 0;
     switch (a.state) {
       case B_FORM:
-        if (a.t <= 0) { if (act && near > 30) { const ang = r() * TAU; a.tx = a.hx + Math.cos(ang) * (2 + r() * 5); a.tz = a.hz + Math.sin(ang) * (2 + r() * 5); a.state = B_HOP; a.next = B_FORAGE; a.speed = 1.1; } else a.t = 5 + r() * 10; }
+        if (a.t <= 0) { if (act && near > 30) { const ang = r() * TAU; a.tx = a.hx + Math.cos(ang) * (2 + r() * 5); a.tz = a.hz + Math.sin(ang) * (2 + r() * 5); a.state = B_HOP; a.next = B_FORAGE; a.speed = 1.1; } else { a.t = 5 + r() * 10; if (this.dig && !act) this.rbDen(a); } }
         break;
       case B_FORAGE:
         if (r() < dt * 1.2) a.flickV = 1;   // nibbling
@@ -3685,6 +3692,7 @@ export class Animals {
     switch (a.state) {
       case JK_FORM:
         wantPose = JACK.hunch;
+        a.digK = this.dig?.aiForm(a, dt) ? 1 : 0;   // the Dig game (dig.js): it scrapes its form before it hunches in it
         if (a.t <= 0) {
           if (act && near > JACK.freeze) {   // out to feed: a point 10-40 m off on dry land
             for (let k = 0; k < 4; k++) {
@@ -3783,6 +3791,31 @@ export class Animals {
     if (wantFlick) a.flick = damp(a.flick, wantFlick, 6, dt);
     a.pitch = damp(a.pitch, speed > 0.05 ? -0.14 * Math.cos(a.phase) * Math.min(1, speed / 4 + 0.4) : tA ? -0.14 * a.amp * Math.cos(a.phase) : 0, 12, dt);
     a.y = H.atXZ(a.x, a.z) + lift; a.hopY = lift;
+  }
+
+  // The Dig game's brush rabbit (dig.js; docs/game-dig.md "The rabbits"). By day in its form it goes down a burrow there
+  // that fits it (B_TOHOLE, then B_BURROW: dig.aiStep to its far end or nest, a long wait, up by a hole, where its form
+  // is then), or on the AI host now and then digs one (B_DIG: dig.aiDigStep, a short burrow and its nest); bolting, it
+  // makes for a burrow within 6 m that is not past the danger (rbBolt).
+  rbDen(a) {
+    const D = this.dig, h = D.holeNear(a.x, a.z, 2, a, false, D.BURROW.fit);
+    if (h) { a.hole = h.id; a.state = B_TOHOLE; a.speed = 0.9; a.bolted = false; return; }
+    if (a.rng() < RB_DIG_P && D.aiDigStart(a, D.BURROW)) a.state = B_DIG;
+  }
+  rbBurrow(a, dt, scared, act) {
+    const D = this.dig, r = a.rng;
+    if (a.state === B_TOHOLE) {
+      const h = D.node(a.hole);
+      if (!h || !h.hole) { a.state = B_FORM; a.t = 2; return; }
+      const ex = h.x - a.x, ez = h.z - a.z, d = Math.hypot(ex, ez), step = a.speed * dt;
+      if (d <= Math.max(step, 0.03)) { if (D.aiEnter(a, h, a.bolted ? [20, 60] : [90, 240])) a.state = B_BURROW; else { a.state = B_FORM; a.t = 3; } a.spd = 0; return; }
+      a.x += ex / d * step; a.z += ez / d * step; a.yaw = Math.atan2(ex, ez); a.spd = a.speed;
+      a.amp = damp(a.amp, 1, 10, dt); a.phase += dt * TAU * a.speed / (a.speed > 2 ? 0.9 : 0.32); a.pose = damp(a.pose, 0, 8, dt);
+      a.y = this.heights.atXZ(a.x, a.z);
+      return;
+    }
+    if (a.state === B_DIG) { if (!D.aiDigStep(a, dt, scared)) { a.digK = 0; if (a.tun) a.state = B_BURROW; else { a.state = B_FORM; a.t = 5 + r() * 10; a.hx = a.x; a.hz = a.z; } } return; }
+    if (!D.aiStep(a, dt, scared)) { a.state = B_FORM; a.t = act ? 1 : 20 + r() * 40; a.hx = a.x; a.hz = a.z; a.buried = false; }   // up at a hole: its form is there now
   }
 
   // ---- California vole ----------------------------------------------------------------------------
@@ -4924,6 +4957,7 @@ export class Animals {
         I.x = a.x; I.y = lago ? a.y - (a.hopY || 0) : a.y; I.z = a.z; I.yaw = dyaw; I.size = a.size * SPECIES[sp].scale;
         I.v = dead ? 0 : a.spd || 0; I.wr = dead ? 0 : a.wr || 0; I.pose = dead ? (lago ? -1 : 1) : a.pose; I.flick = dead ? 0 : a.flick;
         I.bend = dead ? 0 : wrapAngle(a.yaw - dyaw); I.twitch = sp === ML ? a.e1 : 0; I.air = !dead && ((a.lift || 0) > 0.03 || treed); I.ears = NaN;
+        I.dig = 0; I.floor = null;
         if (lago && !dead) this.lagoInput(a, I);
         LG.write(a, o, dt, legRow, this._legInp, this.clip[sp], this.bend[sp]);
       }

@@ -69,6 +69,8 @@ const CLIMB = no('climb', 'W'), CALL = no('call', 'C'), EAT = no('eat', 'E', { t
 // the Dig game (dig.js, docs/game-dig.md): the vole's tunnels and the coyote's pit, Q held (or E held with nothing else for E to do)
 const DIG_VOLE = on('dig', 'Q', c => !!c.ground.digging, { title: 'Q held (or E with nothing to eat under the nose): a tunnel from the nose at 1.27 cm/s, down or up the way you look (drag); dig round in a small circle for a chamber; up to the surface for a second hole' });
 const BURROW_IN = on('burrow', '', c => c.ground.mode === 'tunnel', { title: 'walk onto a hole to go down it; underground W follows the tunnel, W at a hole comes up' });
+const DIG_BURROW = on('dig', 'Q', c => !!c.ground.digging, { title: 'Q held: a burrow of your own from the nose at an inch a second, down or up the way you look (drag); X at its end digs out a nest; brush rabbits dig none of their own in life (docs/game-dig.md)' });
+const DIG_FORM = on('dig', 'Q', c => !!c.ground.digging, { title: 'Q held: scrape a shallow form under the chest (30 cm across, 7 cm deep); X hunches in it' });
 const DIG_PIT = on('dig', 'Q', c => !!c.ground.digging, { title: 'Q held (or E with no prey within reach): a pit at the paws at 1.27 cm/s; a vole tunnel it meets opens and glows toward the voles in it' });
 
 // The walkers' moves, from groundControl's species entry S.
@@ -97,8 +99,8 @@ const SPECIES = {
   canis_latrans: { act: 'sniff', verbs: [POUNCE_AT, FEED, DRINK, SMELL, DIG_PIT, DEN, MARK, SWIM, CALL] },
   puma_concolor: { act: 'sniff', verbs: [CATCH, on('leap', '', c => c.ground.mode === 'leap', { title: 'the rush\'s last bound: a leap onto prey within 3 m ahead, the kill at the landing' }), on('feed', 'E', c => !!c.ground.feeding, { ready: carcassNear, title: 'crouched over the kill after a catch, or E beside one' }), DRINK, SMELL, DEN, MARK, SWIM] },
   ursus_americanus: { act: 'dig', verbs: [FEED, DRINK, SMELL, CARRY, CLIMB, DEN, MARK, SWIM] },
-  sylvilagus_bachmani: { act: 'nibble', verbs: [DRINK, SMELL, SWIM] },
-  lepus_californicus: { act: 'nibble', verbs: [DRINK, SMELL, SWIM] },
+  sylvilagus_bachmani: { act: 'nibble', verbs: [DRINK, SMELL, DIG_BURROW, BURROW_IN, SWIM] },
+  lepus_californicus: { act: 'nibble', verbs: [DRINK, SMELL, DIG_FORM, SWIM] },
   microtus_californicus: { act: 'nibble', verbs: [DRINK, SMELL, DIG_VOLE, BURROW_IN] },
   otospermophilus_beecheyi: { act: 'pick seeds', verbs: [DRINK, SMELL, DIG, BURROW, SWIM, CALL] },
   sceloporus_occidentalis: { act: 'head flick', verbs: [DRINK, no('climb', 'W', { title: 'not yet: up a trunk or a fence (rocks it steps onto)' }), no('hide', 'J')] },

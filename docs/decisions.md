@@ -4170,3 +4170,43 @@ now join the quadrupeds on the leg engine with a gait set of their own; `docs/mo
   turns the head part, it has no neck to stretch); the turkey crouches to reach; the woodpecker (procedural) and the
   player's raven (RavenFlight) are unchanged; the lizard's food is insects, which nothing draws; holding E still runs
   the act for the species' `act.t` per press.
+
+## 2026-11-03: the rabbits dig, and the underground view sees through the ground (docs/game-dig.md, branch claude/rabbit-dig-xray)
+
+Aaron: "Rabbits should also be able to dig holes for themselves. When a vole or other rodent digs underground, the
+camera should stay where it is but the ground/outside should become semi-transparent, and the hole becomes visible as a
+glowing channel that the animal is in." Decided:
+
+- **Each rabbit digs what it digs, sized to its body, through the same channel.** `dig.js` DIGGERS: the brush rabbit a
+  short burrow (6.5 cm tubes, 2.54 cm/s, to 32 cm, X at its end digs an 11 cm nest), the jackrabbit a scraped form (a
+  pit of kind `form`, to 15 cm radius and 7 cm deep). Rejected: one hole for both (a jackrabbit does not burrow); a new
+  event type for a form (a pit already persists, decays, opens tunnels and is drawn; `digworld.py` only had to keep
+  `k`). A body goes down only a hole that fits it, so a rabbit never squeezes into a vole's tunnel; a vole goes down a
+  rabbit's.
+- **Past the biology, said plainly.** The brush rabbit digs no burrow in life (Chapman 1990: it "occasionally uses
+  burrows made by other species, but does not dig its own"); it digs one here because Aaron asked, kept short and
+  shallow, a cottontail doe's nest cavity drawn out. The jackrabbit's form is the biology (forms a few centimetres
+  deep, Tiemeier & Plenert 1964), round rather than oval because the pits are round.
+- **The AI on the host.** A brush rabbit settled by day goes down a burrow that fits within 2 m or, with no hole within
+  3 m, three times in ten digs one and lies up in its nest; bolting, it makes for a burrow within 6 m not past the
+  danger. A jackrabbit scrapes its form as it settles into it (or uses one within 30 cm again). Caps: two diggers at
+  once, 40 holes, 30 forms in the world.
+- **The fore feet dig on the leg engine.** `gait.js` hopStep takes `inp.dig`: the chest low, the head down, the fore
+  feet in turn reaching to the ground and raking back under the chest at 4.5 Hz, curled on the way forward; the hind
+  feet planted. A burrowing body's legs stand on the tunnel's floor (`dig.floorAt` for the player's, lagoInput's floor
+  for the AI's). Kept to one input and one block so the eating lane's edits to the same function merge.
+- **The underground view: a second pass, not a transparent world.** The chase camera stays above (framed from the
+  ground over the body, a little higher); after the world's draw a full-screen quad dims the outside toward the soil,
+  the depth is cleared, and layer 5 draws the player's body, the tunnels within 10 m as an added rim-lit glow (the
+  dirt's own buffers, a cheap shader, the union by the same neighbour test) and a glow at every other animal
+  underground. Rejected: making the terrain, grass, trees and rocks truly translucent (every material, sorted blending,
+  and nothing below the ground to see but the tunnels: the dimmed overlay looks the same); drawing the AI's pools in
+  the pass (an instanced pool cannot draw only its buried members, so they are glows); keeping the camera inside. Cost
+  0.02-0.73 ms of GPU by pose at 1920 x 1200 (min to p10 over an empty pass, under load), under the 1 ms asked, where
+  the view from inside cost 3.1 ms. Another player's body underground is flagged buried in its sample, so it is no
+  one's prey and a glow in this view.
+- Found and fixed in passing: an AI digger dropped from the population stayed in the dig's list and held a digger's
+  slot for good; a room dug round the body left the tunnel step holding a replaced position object.
+- **Not done.** Another player's body underground as a glow was not looked at (the coyote's pit from below was: red
+  over the channel, the opened stretch glowing toward the vole);
+  the glows are discs, not bodies; a mirror's jackrabbit does not show the scrape.
