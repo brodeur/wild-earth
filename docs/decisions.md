@@ -4080,3 +4080,15 @@ now join the quadrupeds on the leg engine with a gait set of their own; `docs/mo
 - **Not done or weak.** The numbers are first guesses by eye (the lean, the lurch, the flight, the duty at speed, the
   ears); at full stretch the pale belly and inner thigh show where the skin stretches as the hind legs extend; the far
   tier has no observation hop and no ears' swivel; the vole and the ground squirrel still bound on the part rig.
+
+## 2026-11-03: static files are an allow-list (server.py static_allowed)
+
+- **Why.** The architecture review (`docs/architecture-review-2026-11-03.md`) found that the server served the
+  whole repo root with directory listings, and the Fly volume is mounted inside it: `https://wild-earth.fly.dev/data/hub.sqlite`
+  answered 200 (the accounts, friends, groups and group chat), and the dev server answered `/.env`.
+- **What.** Only `client/`, `viewer/`, `library/`, `tiles/index.json` and each tile's folder (not its `game/` or
+  `unreal/`) are served; no path segment may start with `.` or `_`; `scratch/` only when bound to loopback (the
+  browser harnesses); no directory listings; `/` redirects to `/client/`; `log_error` is silenced (it printed the
+  client address and raw request line). `tests/test_static.py`; all 32 server tests pass.
+- **Not done.** The rest of the review's server hardening (the real client address behind Fly's proxy for the rate
+  limits, socket timeouts, byte-capped send queues, a scrypt semaphore, the game socket's Origin check).

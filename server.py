@@ -59,7 +59,7 @@ import uuid
 import warnings
 from functools import partial
 from http.server import SimpleHTTPRequestHandler, ThreadingHTTPServer
-from urllib.parse import parse_qs, urlsplit
+from urllib.parse import parse_qs, unquote, urlsplit
 
 os.environ.setdefault("PYTHONWARNINGS", "ignore")
 warnings.filterwarnings("ignore")
@@ -1385,11 +1385,56 @@ def _game_ticker() -> None:
                 print(f"[game] tick {w.tile}/{w.season} failed: {type(e).__name__}", flush=True)
 
 
+# Static files are an allow-list (docs/architecture-review-2026-11-03.md, section 0). The server's directory is the
+# repo root, which also holds the hub's data (data/: on the host, the volume), the played game worlds
+# (tiles/<id>/game/), .env and the code. Only the client, the viewer, the species library and each tile's layers are
+# served; scratch/ (the browser harnesses) only on a server bound to loopback. No directory listings.
+STATIC_ROOTS = ("client", "viewer", "library", "tiles")
+DEV_ROOTS = ("scratch",)
+TILE_PRIVATE = ("game", "unreal")
+
+
+def static_allowed(path: str, dev: bool = False) -> bool:
+    parts = [p for p in unquote(path).replace("\\", "/").split("/") if p]
+    if not parts or any(p.startswith((".", "_")) for p in parts):
+        return False
+    if parts[0] not in STATIC_ROOTS + (DEV_ROOTS if dev else ()):
+        return False
+    if parts[0] == "tiles":
+        if parts[1:] == ["index.json"]:
+            return True
+        if len(parts) < 3 or not TILE_ID_RE.match(parts[1]) or parts[2] in TILE_PRIVATE:
+            return False
+    return True
+
+
 class Handler(SimpleHTTPRequestHandler):
+    dev_files = False   # main() sets it when bound to loopback
+
+    def send_head(self):
+        path = urlsplit(self.path).path
+        if path == "/":
+            self.send_response(302)
+            self.send_header("Location", "/client/")
+            self.send_header("Content-Length", "0")
+            self.end_headers()
+            return None
+        if not static_allowed(path, self.dev_files):
+            self.send_error(404)
+            return None
+        return super().send_head()
+
+    def list_directory(self, path):
+        self.send_error(404)
+        return None
+
     # -- logging: never print the query string (it may hold a lon/lat)
     def log_request(self, code="-", size="-"):
         code = getattr(code, "value", code)
         print(f"{self.command} {urlsplit(self.path).path} {code}", flush=True)
+
+    def log_error(self, format, *args):   # the default prints the client address and the raw request line
+        pass
 
     def end_headers(self):
         path = urlsplit(self.path).path
@@ -1579,6 +1624,7 @@ def main() -> None:
     ap.add_argument("--port", type=int, default=8781)
     ap.add_argument("--bind", default="127.0.0.1")
     a = ap.parse_args()
+    Handler.dev_files = a.bind in ("127.0.0.1", "localhost", "::1")
     httpd = ThreadingHTTPServer((a.bind, a.port), partial(Handler, directory=str(REPO_ROOT)))
     print(f"serving {REPO_ROOT} on http://{a.bind}:{a.port}/  (client: /client/, viewer: /viewer/)", flush=True)
     try:
