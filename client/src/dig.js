@@ -578,7 +578,7 @@ export class Dig {
       case 'widen': { const seen = new Set(); for (const id of e.ids) { const n = get(id); if (!n) continue; for (const sid of n.segs) seen.add(get(sid)); } for (const s of seen) this.writeSeg(s); for (const id of e.ids) { const n = get(id); if (n) this.relinkAt(n); } break; }
       case 'surface': { const n = get(e.id); for (const id of n.segs) this.writeSeg(get(id)); this.writeHole(n); this.relinkAt(n); break; }
       case 'pit': { const p = get(e.id); this.writePit(p); this.writePitHeap(p); break; }
-      case 'open': { const p = get(e.pit); this.writePitNb(p); for (const id of e.segs) { const s = get(id); if (s) this.writeNb(s); } this.glowT = 0; break; }
+      case 'open': { const p = get(e.pit); this.writePitNb(p); for (const id of e.segs) { const s = get(id); if (s) this.writeNb(s); } this.glowT = 0; const s0 = get(e.segs[0]); if (s0?.a) this.flee(get(s0.a).sys, get(s0.a)); break; }   // the voles of that system run
       case 'decay': this.redrawAll(); this.checkTun(); break;
     }
   }
@@ -671,17 +671,12 @@ export class Dig {
     }
     this.pit = p; gc.digging = 1; gc.actT = 0; this.visit(p.id, true);
     if (p.depth >= PIT_MAX) return false;
-    this.face += RATE * this.mult * dt;
     this.specksFrom(px, p.y0 - p.depth * 0.5, pz, -fx, -fz, 0.012 * gc.size, dt, 40, 0.9);
-    if (this.face >= PIT_STEP) {
-      const depth = Math.min(PIT_MAX, p.depth + Math.floor(this.face / PIT_STEP) * PIT_STEP); this.face %= PIT_STEP;
-      this.dispatch({ type: 'pit', id: p.id, x: p.x, z: p.z, y0: p.y0, r: Math.min(1.0, PIT_R0 + PIT_RK * depth), depth, hx: p.hx, hz: p.hz });
-      this.openCheck(p);
-    }
+    if (this.pitStep(p, dt, null, false) === 'open') this.gc.say('a tunnel opens under the paws');
     return false;
   }
   // the pit's bottom against the tunnels: a segment whose tube reaches up into the bowl opens
-  openCheck(p) {
+  openCheck(p, ai = false) {
     const w = this.world, bottom = p.y0 - p.depth, open = [];
     for (const s of w.segs) {
       if (p.open.includes(s.id)) continue;
@@ -693,12 +688,8 @@ export class Dig {
       const floor = bottom + p.depth * (rho2 / (p.r * p.r));
       if (qy + r > floor + 0.002) open.push(s.id);
     }
-    if (!open.length) return;
-    if (this.dispatch({ type: 'open', pit: p.id, segs: open })) {
-      const s = w.byId.get(open[0]), sys = w.byId.get(s.a).sys;
-      this.gc.say('a tunnel opens under the paws');
-      this.flee(sys, w.byId.get(s.a));
-    }
+    if (!open.length) return false;
+    return this.dispatch({ type: 'open', pit: p.id, segs: open }, ai);   // (drawEvent sends the system's voles off, here and on every page)
   }
 
   // ---- the vole underground ------------------------------------------------------------------------------
@@ -1002,6 +993,41 @@ export class Dig {
     if (res === 'surface') { this.aiLeave(a, m); return false; }
     if (res === 'stop' && G.stage < 4) G.stage = 4;
     return true;
+  }
+  // ---- the AI coyotes (animals.js M_DIGP; the AI host) -------------------------------------------------------
+  // a buried AI vole within R m of the coyote that its nose finds (the wind's notice is the coyote's own: animals.js
+  // decides it smelt it), the point over it on the ground; null on a page that is not the AI host
+  aiPitTarget(c, R) {
+    if (!this.local && !this.net.host) return null;
+    let best = null, bd = R * R;
+    for (const a of this.aiIn) { if (!a.buried || a.dead) continue; const d2 = (a.x - c.x) ** 2 + (a.z - c.z) ** 2; if (d2 < bd) { bd = d2; best = a; } }
+    return best ? { x: best.x, z: best.z } : null;
+  }
+  // a frame of an AI coyote's dig at (x, z): its own pit (c.pitId), widened and deepened at the rate. 'open' when
+  // a tunnel opened, 'stop' at the pit's full depth or a refusal, else ''
+  aiPit(c, dt, x, z) {
+    let p = c.pitId ? this.node(c.pitId) : null;
+    if (!p) {
+      for (const q of this.world.pits) if (Math.hypot(q.x - x, q.z - z) < Math.max(0.35, q.r)) { p = q; break; }
+      if (!p) { const id = this.newId(); if (!this.dispatch({ type: 'pit', id, x, z, y0: this.groundY(x, z), r: PIT_R0, depth: 0.004, hx: c.x - (x - c.x), hz: c.z - (z - c.z) }, true)) return 'stop'; p = this.node(id); }
+      c.pitId = p.id; c.pitFace = 0;
+    }
+    return this.pitStep(p, dt, c, true);
+  }
+  aiPitDone(c) { c.pitId = null; }
+  // a pit deepened by dt of digging (the player's coyote or an AI's: dig = c.pitFace / this.face)
+  pitStep(p, dt, c, ai) {
+    if (p.depth >= PIT_MAX) return 'stop';
+    const face = (ai ? c.pitFace : this.face) + RATE * this.mult * dt;
+    let res = '';
+    if (face >= PIT_STEP) {
+      const depth = Math.min(PIT_MAX, p.depth + Math.floor(face / PIT_STEP) * PIT_STEP);
+      if (!this.dispatch({ type: 'pit', id: p.id, x: p.x, z: p.z, y0: p.y0, r: Math.min(1.0, PIT_R0 + PIT_RK * depth), depth, hx: p.hx, hz: p.hz }, ai)) return 'stop';
+      if (this.openCheck(p, ai)) res = 'open';
+      this.visit(p.id, true, ai);
+    }
+    if (ai) c.pitFace = face % PIT_STEP; else this.face = face % PIT_STEP;
+    return res;
   }
   // the voles of a system flee the opened node down the other branches: each to the node farthest from it
   flee(sys, from) {

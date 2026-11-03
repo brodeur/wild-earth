@@ -73,6 +73,7 @@ class DigTest(unittest.TestCase):
         a, b = self.dig("spring"), self.dig("spring")
         self.assertTrue(a.welcome["host"])
         self.assertFalse(b.welcome["host"])
+        self.assertEqual(a.wait("dhost")["n"], 2)                # the first is told of the second
         x, y, z = 6960.0, 280.0, -7032.0
         a.send({"t": "dev", "c": 1, "e": {"type": "hole", "id": "a.1", "x": x, "y": y, "z": z, "r": 0.03, "by": "p:secret"}})
         mine = a.wait("dev", where=lambda m: m.get("c") == 1)
@@ -101,7 +102,7 @@ class DigTest(unittest.TestCase):
         self.assertEqual(c.welcome["idle"], 7 * 86400)
         # the host leaves: the next oldest is told
         a.close()
-        self.assertTrue(b.wait("dhost")["host"])
+        self.assertTrue(b.wait("dhost", where=lambda m: m["host"])["host"])   # (it heard of the third joining first)
 
     def test_pit_opens_and_decays(self):
         a = self.dig("summer")

@@ -1014,6 +1014,9 @@ class GameWorld:
             self.dconns.append(conn)
             conn.send({"t": "dwelcome", "v": 1, "host": self.dconns[0] is conn, "n": len(self.dconns),
                        "dig": digworld.persisted(self.s["dig"]), "now": round(time.time()), "idle": digworld.DIG_IDLE_S})
+            for k in self.dconns:
+                if k is not conn:
+                    k.send({"t": "dhost", "host": self.dconns[0] is k, "n": len(self.dconns)})
 
     def dig_leave(self, conn: GameConn) -> None:
         with self.lock:

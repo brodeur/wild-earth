@@ -374,7 +374,8 @@ const M_BED = 80, M_STAND = 81, M_MOVE = 82, M_SNIFF = 83, M_POUNCE = 84, M_FLEE
   M_CLIMB = 86, M_TREE = 87, M_DOWN = 88, M_STALK = 89, M_CROUCH = 90, M_RUSH = 91,     // fox, coyote, lion (M_RUSH: a hunt's trot or rush, huntStart)
   M_CHARGE = 92,                                                                        // bear: a bluff charge at a close player
   M_LEAP = 93, M_FEED = 94,                                                             // lion: the rush's last bound onto the prey, and crouched over its kill (the catch, 2026-10-30)
-  M_FIX = 95, M_PAW = 96, M_TOSS = 97;                                                  // fox, coyote: the mousing pounce's fix before it, the paw strikes after a miss, the head toss after a kill
+  M_FIX = 95, M_PAW = 96, M_TOSS = 97,                                                  // fox, coyote: the mousing pounce's fix before it, the paw strikes after a miss, the head toss after a kill
+  M_DIGP = 98;                                                                          // coyote: digging a pit over a vole it smells underground (the Dig game, dig.js; the AI host)
 const B_FORM = 100, B_FORAGE = 101, B_HOP = 102, B_SIT = 103, B_FREEZE = 104, B_BOLT = 105;   // brush rabbit
 const VL_RUN = 110, VL_PAUSE = 111, VL_SIT = 112, VL_HIDE = 113, VL_TOHOLE = 114, VL_TUN = 115, VL_DIG = 116;   // vole (the last three: the Dig game, dig.js)
 const JK_FORM = 120, JK_FEED = 121, JK_HOP = 122, JK_SIT = 123, JK_FREEZE = 124, JK_BOLT = 125;   // jackrabbit
@@ -1092,6 +1093,12 @@ export class Animals {
       if (yaw === yaw && d2 > 0.25 && (dx * fx + dz * fz) < cc * Math.sqrt(dx * dx + dz * dz)) continue;   // not ahead
       bd = d2; best = a;
     }
+    return best;
+  }
+  // An AI canid's exposed vole within R m (the Dig game's pit: dig.js), or null.
+  preyNear2(a, R) {
+    let best = null, bd = R * R;
+    for (const b of this.bySpecies[VO]) { if (b.dead || b.culled || b.buried || b.state !== VL_TUN) continue; const d2 = (b.x - a.x) ** 2 + (b.z - a.z) ** 2; if (d2 < bd) { bd = d2; best = b; } }
     return best;
   }
   // The player's catch (E within reach of prey its species hunts, or the catch move landing on it): the kill, or null.
@@ -3201,6 +3208,11 @@ export class Animals {
         if (a.wy !== a.wy && r() < dt * 0.4) a.wy = a.yaw + (r() - 0.5) * 1.2;   // a new heading, stepped round to (below)
         if (a.t <= 0) {
           if (act && this.huntStart(a)) break;   // a vole, rabbit, jackrabbit or ground squirrel in reach: after it
+          if (act && a.sp === CY && this.dig && (!g || g.leader === a) && (a.digAt ?? 0) < this.time) {   // the Dig game: a vole it smells underground, within 15 m: over it, and dig
+            a.digAt = this.time + 30;
+            const v = this.dig.aiPitTarget(a, 15);
+            if (v) { const back = 0.4 * a.size; a.digX = v.x; a.digZ = v.z; const d = Math.hypot(v.x - a.x, v.z - a.z) || 1; a.tx = v.x - (v.x - a.x) / d * back; a.tz = v.z - (v.z - a.z) / d * back; a.digT = 40 + r() * 50; this.mmGo(a, cfg.trot, M_DIGP); break; }
+          }
           if (cfg.pounce && r() < cfg.pounce) {   // a mouse pounce at a sound in the grass: the fix, then up and over onto the forepaws
             a.state = M_FIX; a.t = HUNT.fixT[0] + r() * (HUNT.fixT[1] - HUNT.fixT[0]); a.cock = r() < 0.5 ? -1 : 1;
           } else this.mmNext(a, act);
@@ -3238,6 +3250,17 @@ export class Animals {
         const k = (HUNT.pawT - a.t) * HUNT.pawHz, pulse = Math.max(0, Math.sin(TAU * k));
         a.pitch = 0.35 * pulse; a.lift = 0.05 * pulse; a.amp = 0; wantFlick = 0.7; wantPose = 0.1;
         if (a.t <= 0) { a.lift = 0; a.state = M_SNIFF; a.t = 2 + r() * 2; }
+        break;
+      }
+      case M_DIGP: {   // the Dig game (dig.js aiPit): the paw strikes over the vole's tunnel, the pit deepening at the rate;
+        // a vole the opened tunnel shows within the pounce's reach gets the fix and the pounce; gives up after a.digT s
+        a.yaw = Math.atan2(a.digX - a.x, a.digZ - a.z); a.digT -= dt;
+        const k = this.time * HUNT.pawHz * 1.5, pulse = Math.max(0, Math.sin(TAU * k));
+        a.pitch = 0.3 * pulse + 0.1; a.lift = 0.035 * pulse; a.amp = 0; wantFlick = 0.85; wantPose = 0.25;
+        const res = this.dig.aiPit(a, dt, a.digX, a.digZ);
+        const t = res !== 'stop' ? this.preyNear2?.(a, HUNT.pounceD) : null;
+        if (t) { a.hunt = t; a.state = M_FIX; a.t = HUNT.fixT[0]; a.cock = r() < 0.5 ? -1 : 1; a.pitch = 0; a.lift = 0; this.dig.aiPitDone(a); break; }
+        if (res === 'stop' || a.digT <= 0) { a.pitch = 0; a.lift = 0; this.dig.aiPitDone(a); a.state = M_SNIFF; a.t = 2 + r() * 3; a.digAt = this.time + 60; }
         break;
       }
       case M_TOSS:   // the kill taken in the jaws with a toss of the head, then the nose down at it
