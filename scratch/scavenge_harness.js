@@ -60,5 +60,31 @@ window.__sh = (() => {
     for (let i = 0; i < n; i++) { const t0 = performance.now(); we.renderer.render(we.scene, we.camera); gl.finish(); t.push(performance.now() - t0); }
     t.sort((a, b) => a - b); return { mean: +(t.reduce((s, v) => s + v, 0) / n).toFixed(2), p50: +t[n >> 1].toFixed(2), p90: +t[Math.floor(n * 0.9)].toFixed(2) };
   }
-  return { we, A, C, K, kill, stages, shot, show, hide, frames, frameCost, cam, aim };
+  // the body d m straight downwind of rec (the wind blows from the carcass to the nose), facing `face` rad off the line to it
+  function downwind(rec, d = 300, face = 1.2) {
+    const w = we.scent.wind.windDir.value, l = Math.hypot(w.x, w.y) || 1, x = rec.x + w.x / l * d, z = rec.z + w.y / l * d;
+    we.ground.place(x, z); we.flight.yaw = Math.atan2(x - rec.x, z - rec.z) + face;   // yaw 0 faces -z: toward the carcass is atan2(dx, dz) of (body - carcass)
+    return { x: Math.round(x), z: Math.round(z), wind: [+(w.x / l).toFixed(2), +(w.y / l).toFixed(2)], strength: +we.scent.wind.windStrength.value.toFixed(2) };
+  }
+  // the carrion scents the nose has now: { label, strength, bearing (deg, + right), d }
+  function smelt() {
+    const S = we.scent, P = we.flight.pos;
+    return S.smelled.filter(e => e.carrion).map(e => ({ id: e.animal.id, strength: +e.strength.toFixed(2), bearing: Math.round(e.bearing * 180 / Math.PI), d: Math.round(Math.hypot(e.animal.x - P.x, e.animal.z - P.z)),
+      label: S.slots.find(s => s.a === e.animal)?.label?.textContent || '' }));
+  }
+  // walk by the nose: each step turn by the carrion wisp's bearing and go `step` m that way (no knowledge of where the
+  // carcass is but the scent); returns the track
+  async function follow(step = 12, max = 60) {
+    const track = [];
+    for (let i = 0; i < max; i++) {
+      we.scent.qT = 0; await frames(3);
+      const s = smelt()[0]; if (!s) { track.push({ i, lost: true }); break; }
+      track.push({ i, d: s.d, strength: s.strength, bearing: s.bearing, label: s.label });
+      if (s.d < 3) break;
+      const yaw = we.flight.yaw - s.bearing * Math.PI / 180, P = we.flight.pos, go = Math.min(step, Math.max(1, s.d - 2));
+      we.ground.place(P.x - Math.sin(yaw) * go, P.z - Math.cos(yaw) * go); we.flight.yaw = yaw;
+    }
+    return track;
+  }
+  return { we, A, C, K, kill, stages, shot, show, hide, frames, frameCost, cam, aim, downwind, smelt, follow };
 })();
