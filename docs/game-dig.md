@@ -122,8 +122,10 @@ once on load):
 - **a tree hole** (the acorn game's stash holes and granaries): gone when it has held nothing for **30 days**
   (`server.py STASH_EMPTY_S`). The snapshot keeps `held` (an oak, the last time it held an acorn or went empty) and
   `since` (when the world first ran with the rule: an untouched stash hole dates from then); `gone` lists the holes
-  removed, and the acorn clients are told (`{t: 'gone', oaks}`); a deposit into a gone hole is refused ("no stash
-  hole"). A stash is never emptied in the game as it is (only granaries are raided), so in practice an unused stash
+  removed, and the acorn clients are told (`{t: 'gone', oaks}`: `net.js` drops the hole's counts, `acorns.js`
+  holeGone stops drawing it, and an untouched stash hole is gone on the client too once the rule is 30 days old by the
+  server's clock); a deposit into a gone hole is refused ("no stash hole"). Offline (the v2 world in localStorage)
+  the tree holes do not decay. A stash is never emptied in the game as it is (only granaries are raided), so in practice an unused stash
   hole goes 30 days after the rule began, a used one stays.
 
 What the shared version does not share: the animals. Each page still runs its own animals (`docs/game-acorn-stash.md`

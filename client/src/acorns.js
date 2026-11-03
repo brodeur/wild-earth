@@ -32,6 +32,7 @@ import { trunkAt } from './animals.js';
 // player's raid is proximity, like the raven's deposit: hold by the granary's trunk (raven) or climb it (squirrel).
 // The board gains a "raided N" line per species (granary raids and pilfered caches, this round and this season).
 
+const STASH_EMPTY_S = 30 * 86400;   // a tree hole empty this long is gone (server.py STASH_EMPTY_S; the shared world only)
 const LIVE_R = 300;            // m: oaks within this get acorn and stash objects
 const REFRESH_S = 0.5;         // s between live-set checks
 const REFRESH_MOVE = 10;       // m the raven must move (or the forest rebuild) before the live set is rebuilt
@@ -726,7 +727,7 @@ export class AcornGame {
         this.liveAcorns.push({ key, x: a.x, y: a.y, z: a.z, species: o.species, branch: a.branch }); na++;
       }
       const st = inf.stash;
-      if (st && ns < STASH_CAP) {
+      if (st && ns < STASH_CAP && !this.holeGone(o.id)) {
         const nx = Math.sin(st.facing), nz = Math.cos(st.facing), r = st.trunkR * 0.9;
         const hx = st.ax + nx * r, hz = st.az + nz * r;
         const holeR = Math.min(0.3, st.trunkR * 0.75);
@@ -755,6 +756,14 @@ export class AcornGame {
     for (const id of Object.keys(this.world.granaries)) this.granaryLabel(id);
     if (this.family) this.granaryLabel(this.family);
     this.applyReveal();
+  }
+
+  // A stash hole the shared world has removed (server.py v5: a tree hole empty for 30 days): named gone, or never used
+  // since the rule began more than 30 days ago (the server's clock). Offline (v2) the holes stay.
+  holeGone(id) {
+    const w = this.world; if (w.gone?.has(id)) return true;
+    const c = w.holeClock; if (!c?.since || w.stashes[id] !== undefined || w.held?.has(id)) return false;
+    return Date.now() / 1000 + c.off - c.since > STASH_EMPTY_S;
   }
 
   applyReveal() {
