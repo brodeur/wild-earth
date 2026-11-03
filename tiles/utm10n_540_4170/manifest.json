@@ -15,7 +15,7 @@
   37.76645207290539
  ],
  "size_m": 10000,
- "generated_at": "2026-10-27T04:51:21Z",
+ "generated_at": "2026-11-03T20:06:00Z",
  "generator": {
   "name": "wild-earth-pipeline",
   "version": "0.2.0"
@@ -5411,6 +5411,58 @@
    },
    "sha256": "9e65f698daf9d4e7c3cb0fef27e15b9830e731df7e3d1786b86dce5f6058def1",
    "bytes": 655897
+  },
+  "client.substrate": {
+   "path": "client/substrate.png",
+   "kind": "raster",
+   "crs": "EPSG:32610",
+   "bounds": [
+    540000,
+    4170000,
+    550000,
+    4180000
+   ],
+   "pixels": 2000,
+   "resolution_m": 5.0,
+   "encoding": {
+    "png": "client/substrate.png",
+    "pixels": 2000,
+    "resolution_m": 5.0,
+    "row0": "north",
+    "R": "exposed rock 0..255 (0..1)",
+    "G": "lithology index, 1-based into lithologies (0 none)",
+    "B": "exposed patch size: round(32 log2(1 + area / 100 m2)), 0 outside a patch"
+   },
+   "derived_from": [
+    "geology.units",
+    "geology.classes",
+    "soils.mapunits",
+    "terrain.dem",
+    "imagery.naip",
+    "vegetation"
+   ],
+   "exposed_fraction": 0.0211,
+   "exposed_mean": 0.0312,
+   "patches": 707,
+   "patches_over_1000m2": 112,
+   "patches_over_1ha": 31,
+   "largest_patch_m2": 534175,
+   "slope_source": "max(5 m, 0.85 x 1 m mean)",
+   "cover_source": "lidar canopy_height_10m (tree >= 4 m, shrub 0.5-4 m)",
+   "photo": "client/texture_imagery.jpg (NAIP, humans erased)",
+   "photo_green_ref": 0.0632,
+   "dem": "terrain/dem.tif",
+   "sha256": "203e647d30139a1286178b415ad4f92d7595c5a6a2641d1c4abaec129e2c8d1f",
+   "bytes": 841480
+  },
+  "client.substrate_classes": {
+   "path": "client/substrate.json",
+   "kind": "table",
+   "derived_from": [
+    "client.substrate"
+   ],
+   "sha256": "eaf0d2511fa986fd29a1a6a1f9a3b5be4382eae04fa6b872feba2ffda7938298",
+   "bytes": 11186
   }
  },
  "sources": {
@@ -5711,6 +5763,36 @@
    "step": "weather",
    "at": "2026-10-27T04:51:21Z",
    "seconds": 4.1,
+   "ok": true
+  },
+  {
+   "step": "substrate",
+   "at": "2026-11-03T19:40:52Z",
+   "seconds": 7.9,
+   "ok": true
+  },
+  {
+   "step": "substrate",
+   "at": "2026-11-03T19:42:52Z",
+   "seconds": 6.3,
+   "ok": true
+  },
+  {
+   "step": "substrate",
+   "at": "2026-11-03T19:44:11Z",
+   "seconds": 6.0,
+   "ok": true
+  },
+  {
+   "step": "substrate",
+   "at": "2026-11-03T19:47:39Z",
+   "seconds": 6.3,
+   "ok": true
+  },
+  {
+   "step": "substrate",
+   "at": "2026-11-03T20:06:00Z",
+   "seconds": 6.4,
    "ok": true
   }
  ]

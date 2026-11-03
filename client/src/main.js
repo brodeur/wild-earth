@@ -35,7 +35,6 @@ import { Shadows, forgetQueuedCasters } from './shadows.js';
 import { Animals } from './animals.js';
 import { Water } from './water.js';
 import { Rocks } from './rocks.js';
-import { Cliffs } from './cliffs.js';
 import { SquirrelControl } from './squirrelControl.js';
 import { WoodpeckerControl } from './woodpeckerControl.js';
 import { SpiritControl } from './spirit.js';
@@ -437,7 +436,6 @@ async function buildSteps(w, { params, pending, direct = false, arrive = null })
   const water = w.m.water = new Water(tile, scene); await w.sliced(water.build(), 'water');   // streams, dry beds and ponds by season (water.js)
   await w.next('rocks');
   const rocks = new Rocks(tile, scene, atmosphere);   // outcrops and boulders from the geology and soils rasters (rocks.js)
-  const cliffs = w.m.cliffs = new Cliffs(tile, scene);   // slabs and wedges on the faces past ~50 degrees (cliffs.js)
   const litter = w.m.litter = new Litter(tile, scene, { terrain, atmosphere });   // the body-scaled ring of pebbles, leaves and stems (litter.js)
   await w.next('roads+flight');
   const roads = new RoadsOverlay(tile, scene);   // ghost roads, G to toggle
@@ -711,7 +709,7 @@ async function buildSteps(w, { params, pending, direct = false, arrive = null })
   const setFov = deg => { const v = Math.min(LENS_RANGE[1], Math.max(LENS_RANGE[0], +deg || LENS_DEFAULT)); camera.fov = v; camera.updateProjectionMatrix(); return v; };
   const setHour = h => { state.hour = +h; $('time').value = state.hour; return state.hour; };
   animals.weatherTemp = () => (weather.day ? weather.fx.temp : null);   // the lizards' air (animals.js airT)
-  w.handle = window.__we = { setDate, setFov, setHour, weather, tile, flight, raven, camera, veg, terrain, far, grass, forbs, emergents, roads, scene, renderer, minimap, atmosphere, sky, acorns, identify, places, peek, setPeek, sound, animals, anet, arrival, rocks, cliffs, water, waterfalls: water.waterfalls, squirrel, woodpecker, ground, flier, spirit, players, credits, sight, cues, forage, needs, dig, carrion };   // debugging handle
+  w.handle = window.__we = { setDate, setFov, setHour, weather, tile, flight, raven, camera, veg, terrain, far, grass, forbs, emergents, roads, scene, renderer, minimap, atmosphere, sky, acorns, identify, places, peek, setPeek, sound, animals, anet, arrival, rocks, water, waterfalls: water.waterfalls, squirrel, woodpecker, ground, flier, spirit, players, credits, sight, cues, forage, needs, dig, carrion };   // debugging handle
   const as = direct ? params.get('as') : null;
   if (!['raven', 'squirrel', 'woodpecker'].includes(as)) toSpirit();   // a spirit from the start (behind the opening screen too)
   if (!screenOpen) makeSound();
@@ -752,7 +750,6 @@ async function buildSteps(w, { params, pending, direct = false, arrive = null })
   // The rock plans around the bird (rocks.js warm), made in slices so the first frame's rock fill only places them.
   await w.next('rocks.warm');
   await w.sliced(rocks.warm(flight.pos.x, flight.pos.z), 'rocks');
-  await w.sliced(cliffs.warm(flight.pos.x, flight.pos.z), 'cliffs');
   // Behind the opening screen the bird holds still, so the first frame's streaming (the fine terrain square, the far
   // impostor rebuild, the rock sets, the grass pools) is done here, a step per task, in the frame's own order; the
   // first frames then find it done (the same calls, at the same place) and only draw.
@@ -919,7 +916,6 @@ async function buildSteps(w, { params, pending, direct = false, arrive = null })
     emergents.update(camera, look);
     water.update(dt, look);
     rocks.update(camera);
-    cliffs.update(camera);
     litter.update(dt, camera, flight.pos);
     acorns.update(dt, camera, s);
     animals.update(dt, s, state.hour);

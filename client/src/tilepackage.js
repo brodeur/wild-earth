@@ -569,7 +569,7 @@ export async function loadTile(tileId, base = '../tiles/', { signal = null } = {
   for (const k of ['client.heights', 'client.texture', 'client.habitat', 'client.canopy', 'client.masks'])
     if (!L[k]) throw new Error(`tile ${id} lacks ${k}; run the derive step`);
   const MX = L['client.species_mix'], mixFiles = MX?.files || {};
-  const [heights, texture, habitat, canopy, masks, species, perception, calendar, games, locomotion, imagery, features, roads, imageryTexture, mast, mixIndex, mixJson, mixDensity, outcrop, geology, soils, groundClasses, profile, speciesPrior, detail, canopyHeight, groundTexture, seasonImage, lidarMicro, waterImg, waterWidthImg] = await Promise.all([
+  const [heights, texture, habitat, canopy, masks, species, perception, calendar, games, locomotion, imagery, features, roads, imageryTexture, mast, mixIndex, mixJson, mixDensity, outcrop, geology, soils, groundClasses, profile, speciesPrior, detail, canopyHeight, groundTexture, seasonImage, lidarMicro, waterImg, waterWidthImg, substrate, substrateInfo] = await Promise.all([
     loadImageData(dir + L['client.heights'].path, signal), loadImageData(dir + L['client.texture'].path, signal),
     loadImageData(dir + L['client.habitat'].path, signal), loadImageData(dir + L['client.canopy'].path, signal),
     loadImageData(dir + L['client.masks'].path, signal),
@@ -618,6 +618,10 @@ export async function loadTile(tileId, base = '../tiles/', { signal = null } = {
     // the water system (tile-spec "Water and riparian"): zones, bed material, levels and widths on the 5 m grid; optional
     L['client.water'] ? loadImageData(dir + L['client.water'].path, signal).catch(e => { if (!signal?.aborted) console.warn('water grid:', e.message); return null; }) : null,
     L['client.water'] ? loadImageData(dir + 'client/water_width.png', signal).catch(() => null) : null,
+    // the substrate step (tile-spec "Substrate and exposed rock"): exposed rock, lithology and patch size on the 5 m
+    // grid, and the lithologies' cliff morphology; optional (terrain.js then keeps the older cliff rule)
+    L['client.substrate'] ? loadImageData(dir + L['client.substrate'].path, signal).catch(e => { if (!signal?.aborted) console.warn('substrate:', e.message); return null; }) : null,
+    L['client.substrate_classes'] ? fetch(dir + L['client.substrate_classes'].path, { signal }).then(r => r.ok ? r.json() : null).catch(() => null) : null,
   ]);
   if (signal?.aborted) throw aborted(signal);
   if (features) markRewilded(features, m);
@@ -639,6 +643,8 @@ export async function loadTile(tileId, base = '../tiles/', { signal = null } = {
     mast: mast ? new Grid8(mast, size) : null,
     outcrop: outcrop ? new Grid8(outcrop, size) : null, geology: geology ? new Grid8(geology, size) : null,
     soils: soils ? new Grid8(soils, size) : null, groundClasses,
+    // client/substrate.png (5 m): R exposed rock 0..255, G lithology (1-based into substrateInfo.lithologies), B patch size
+    substrate: substrate && substrateInfo ? new Grid8(substrate, size) : null, substrateInfo: substrate ? substrateInfo : null,
     // lidar canopy (client/canopy_height.png, 10 m): R p95 canopy height x 0.25 m, G tree cover %, B shrub cover %; null without the lidar step
     canopyHeight: canopyHeight ? new Grid8(canopyHeight, size) : null,
     // lidar micro (client/lidar_micro.png, 2 m, RGB as loadLidarMicro): { width, height, data, channels }, or null

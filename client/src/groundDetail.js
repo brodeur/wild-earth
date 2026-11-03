@@ -42,14 +42,11 @@ export const DETAIL_SLOTS = [
   { name: 'gravel',   size: 2.0, angle: 2.05, normal: 1.1,  albedo: 0.9 },    // gravelly dirt
   { name: 'rock',     size: 3.0, angle: 2.75, normal: 1.25, albedo: 0.9 },    // cobbles and rock
   { name: 'pavement', size: 2.0, angle: 0.60, normal: 0.8,  albedo: 0.8 },    // worn pavement
-  // The cliff layers (2026-11-02, made here: cliffLayerSteps), read by the terrain shader's cliff material (terrain.js
-  // cliffShade) through its own hex-tiled fetch, never by the top-down material rule: a sheeted granite wall (joints in
-  // two near-vertical sets and diagonal dihedrals, sheet edges as steps) and a slaty bank (thin beds dipping 27 degrees,
-  // cross joints). size is the repeat the generator lays its joints over; the shader chooses the repeat it draws them at.
-  { name: 'sheeted',  size: 4.0, angle: 0.0,  normal: 2.0,  albedo: 1.0, proc: 'sheeted' },
-  { name: 'bedded',   size: 2.5, angle: 0.0,  normal: 1.2,  albedo: 1.0, proc: 'bedded' },
+  // The cliff facets' cells (2026-11-03, made here: cellLayerSteps), read only by terrain.js cliffFacets through texelFetch
+  // and an explicit-gradient fetch, never by the material rule
+  { name: 'cells',    size: 1.0, angle: 0.0,  normal: 0.0,  albedo: 1.0, proc: 'cells' },
 ];
-export const CLIFF_LAYER = { sheeted: 5, bedded: 6 };   // their slots
+export const CELL_LAYER = 5, CELL_N = 32;   // its slot; seeds a side
 // The cliff pattern of a rock class (tile-spec "Geology and soils"; rocks.js LOOK has the classes' colours): 0 plain
 // grey rock (no geology, or a cut in alluvium), 1 sheeted granite, 2 bedded slate and schist, 3 blocky greenstone and
 // volcanic rock. The mask's A channel carries it as pattern x 85, so a bilinear read between two texels rounds to one
@@ -300,109 +297,6 @@ function proceduralPixels(seed, kind) {
   return { albedo: a, normal: n };
 }
 
-// ---- the cliff layers (2026-11-02) -------------------------------------------------------------------------------
-// Made rather than scanned: no CC0 scan of a sheeted granite wall or a slaty bank was to hand, and a made one is
-// tileable, has crisp joints at a known scale, and carries the step at every sheet edge in its normal map, so the light
-// catches the edges. A height field in metres on a torus of DETAIL_PX texels over the slot's repeat (texels of 4 mm
-// at 4 m), grain plus carved lines: a crack is a V of the line's width and depth with a stained halo three times as
-// wide; a step (a sheet edge, a bed) drops the surface below the line by its height within 2 cm and lets it rise back
-// over 25 cm, so the edge is crisp and the sheet below faces a little down. A line is iterated along its long axis (a
-// row at a time within 45 degrees of vertical, a column at a time otherwise) and carved across it, which is exact for a
-// straight line and close for the wander (a tileable noise) every line carries. The albedo is the array's ratio form
-// (128 = the base colour), its mean 1, darker in the cracks and under the steps, with a slow tonal mottle and the
-// granite's dark-mineral speckle; the normal is the height's gradient. Rows run bottom to top as pixelsOf lays the
-// scans (v = 0 at row 0), so a line laid vertical here stands vertical on a wall.
-//   sheeted  granite: ~7 vertical joints over the repeat (two sets, a few degrees apart), 4 diagonal dihedrals at 55-75
-//            degrees; cracks 3-6 cm wide and 2-4 cm deep (the sheet edges are the shader's, tens of metres apart)
-//   bedded   slate: 24 beds across the repeat (the family y = x / 2 + c, which closes on the torus), each a step of 8 mm
-//            and a hairline crack, in two tones; 18 cross joints across them, 0.3-0.8 m long, 1.5 cm wide
-function tileHash(x, y, seed) { let q = (x * 374761393 + y * 668265263 + seed * 1013904223) | 0; q = Math.imul(q ^ (q >>> 13), 1274126177); return ((q ^ (q >>> 16)) >>> 0) / 4294967296; }
-// value noise on a lattice of P cells over the torus (x, y in cells), smooth, tileable
-function tileNoise(x, y, P, seed) {
-  const xi = Math.floor(x), yi = Math.floor(y), fx = x - xi, fy = y - yi, u = fx * fx * (3 - 2 * fx), v = fy * fy * (3 - 2 * fy), w = i => ((i % P) + P) % P;
-  const a = tileHash(w(xi), w(yi), seed), b = tileHash(w(xi + 1), w(yi), seed), c = tileHash(w(xi), w(yi + 1), seed), d = tileHash(w(xi + 1), w(yi + 1), seed);
-  return (a * (1 - u) + b * u) * (1 - v) + (c * (1 - u) + d * u) * v;
-}
-export function* cliffLayerSteps(kind, size, dst, off) {
-  const N = DETAIL_PX, tex = size / N, n = N * N, h = new Float32Array(n), tone = new Float32Array(n).fill(1), wrap = i => ((i % N) + N) % N;
-  const seed = kind === 'sheeted' ? 11 : 23, rnd = (() => { let s = seed * 7919; return () => { s = (Math.imul(s, 1664525) + 1013904223) >>> 0; return s / 4294967296; }; })();
-  const dark = kind === 'sheeted' ? 0.5 : 0.6;
-  // a crack along a line: rows y0..y0+len (texels, y up; floored: a typed array silently drops a write at a fractional
-  // index, which once left the layer with no cracks at all), its x centre xc(y) with wander; profile across in metres
-  const crackRows = (x0, y0, dxdy, len, w, depth, wander) => {
-    const R = Math.ceil(3 * w / tex), cosA = 1 / Math.sqrt(1 + dxdy * dxdy);
-    for (let t = 0; t < len; t++) {
-      const y = wrap(Math.floor(y0) + t), xc = x0 + dxdy * t + wander * (tileNoise((x0 + dxdy * t) / N * 16, y / N * 16, 16, seed + 3) - 0.5) / tex, xi = Math.round(xc);
-      const tip = Math.min(1, Math.min(t, len - t) / (0.15 * len + 1)), wt = w * (0.4 + 0.6 * tip);   // tapering to the tips
-      for (let i = -R; i <= R; i++) {
-        const d = Math.abs(xi + i - xc) * tex * cosA, k = y * N + wrap(xi + i);
-        if (d < wt) { const p = 1 - d / wt; h[k] -= depth * tip * Math.pow(p, 0.7); tone[k] *= 1 - (1 - dark) * tip * p; }
-        if (d < 3 * w) tone[k] *= 1 - 0.12 * tip * (1 - d / (3 * w));
-      }
-    }
-  };
-  // a step along a line within 45 degrees of horizontal: columns x0..x0+len, its y centre yc(x); the surface below
-  // dropped by `step` (crisp over 2 cm) rising back over 25 cm; with a hairline crack `w` wide
-  const stepCols = (x0, y0, dydx, len, step, w, wander, shade = 0.78) => {
-    const below = Math.ceil(0.27 / tex), above = Math.ceil(w / tex) + 1;
-    for (let t = 0; t < len; t++) {
-      const x = wrap(x0 + t), yc = y0 + dydx * t + wander * (tileNoise(x / N * 12, (y0 + dydx * t) / N * 12, 12, seed + 5) - 0.5) / tex, yi = Math.round(yc);
-      for (let j = -below; j <= above; j++) {
-        const y = wrap(yi + j), k = y * N + x, dd = (yc - (yi + j)) * tex;   // metres below the line (> 0 below)
-        if (dd > 0) { const s = dd < 0.008 ? dd / 0.008 : 1, back = dd < 0.02 ? 1 : Math.max(0, 1 - (dd - 0.02) / 0.25); h[k] -= step * s * back; if (dd < 0.04) tone[k] *= shade + (1 - shade) * dd / 0.04; }
-        const ad = Math.abs(dd); if (w > 0 && ad < w) { const p = 1 - ad / w; h[k] -= 0.6 * step * p; tone[k] *= 0.7 + 0.3 * (1 - p); }
-      }
-    }
-  };
-  // grain: the rock's own roughness at a millimetre (two fine octaves; no slow relief: a slow bump stored in 8 bits
-  // steps, and the steps showed as contour lines over the whole wall); the slow mottle goes to the tone only
-  for (let y = 0; y < N; y++) {
-    if ((y & 63) === 0) yield;
-    for (let x = 0; x < N; x++) { const k = y * N + x; h[k] = 0.0007 * tileNoise(x / 2, y / 2, N / 2, seed) + 0.0005 * tileNoise(x / 5, y / 5, N / 5, seed + 1); tone[k] = 0.93 + 0.14 * tileNoise(x / 128, y / 128, N / 128, seed + 2); }
-  }
-  if (kind === 'sheeted') {
-    for (let q = 0; q < 7; q++) {   // vertical joints: two sets a few degrees apart, each wandering, broken into runs
-      const set = q & 1, dxdy = Math.tan(((set ? 4 : -3) + (rnd() - 0.5) * 6) * Math.PI / 180), x0 = rnd() * N, w = 0.03 + 0.03 * rnd(), depth = 0.02 + 0.02 * rnd();
-      let y = rnd() * N; const runs = 1 + Math.floor(rnd() * 3);
-      for (let r = 0; r < runs; r++) { const len = Math.floor(N * (0.25 + 0.6 * rnd()) / runs); crackRows(x0 + dxdy * y, y, dxdy, len, w, depth, 0.04); y += len + N * 0.05 * rnd(); }
-      yield;
-    }
-    for (let q = 0; q < 4; q++) {   // diagonal dihedrals at 55-75 degrees, 0.4-0.9 repeats long
-      const ang = (55 + 20 * rnd()) * (rnd() < 0.5 ? 1 : -1) * Math.PI / 180, dxdy = 1 / Math.tan(ang), len = Math.floor(N * (0.4 + 0.5 * rnd()) * Math.abs(Math.sin(ang)));
-      crackRows(rnd() * N, rnd() * N, dxdy, len, 0.035 + 0.03 * rnd(), 0.025 + 0.02 * rnd(), 0.03);
-      yield;
-    }
-    // no sheet edges in the layer: three a repeat tiled into ruled lines every 1.3 m over a whole wall; the sheets are
-    // the shader's (terrain.js faceFields), at their own spacing of tens of metres
-    yield;
-  } else {
-    const M = 24, sp = N / M;   // beds: y = x / 2 + c, c every N / 24 rows (closed on the torus: a shift of x by N moves c by N / 2 = 12 beds)
-    for (let b = 0; b < M; b++) { stepCols(0, b * sp + (rnd() - 0.5) * 0.3 * sp, 0.5, N, 0.008, 0.004, 0.015, 0.82); if ((b & 7) === 7) yield; }
-    for (let y = 0; y < N; y++) {   // the beds' two tones (by bed index, period 12 so the pattern tiles)
-      if ((y & 127) === 0) yield;
-      for (let x = 0; x < N; x++) { const b = Math.floor((y - 0.5 * x) / sp); tone[y * N + x] *= 0.92 + 0.16 * tileHash(((b % 12) + 12) % 12, 0, seed + 9); }
-    }
-    for (let q = 0; q < 18; q++) {   // cross joints, perpendicular to the beds (63 degrees from horizontal), short
-      const dxdy = -0.5 + (rnd() - 0.5) * 0.1, len = Math.floor(N * (0.12 + 0.2 * rnd()) / size * 2.5);
-      crackRows(rnd() * N, rnd() * N, dxdy, len, 0.012 + 0.008 * rnd(), 0.012 + 0.01 * rnd(), 0.02);
-      if ((q & 5) === 5) yield;
-    }
-  }
-  // the albedo ratio (mean 1) with the granite's dark-mineral speckle, and the normal from the height's gradient
-  let mean = 0; for (let k = 0; k < n; k++) mean += tone[k]; mean /= n;
-  for (let y = 0; y < N; y++) {
-    if ((y & 63) === 0) yield;
-    for (let x = 0; x < N; x++) {
-      const k = y * N + x, sp = kind === 'sheeted' ? 1 + 0.08 * (tileNoise(x / 2, y / 2, N / 2, seed + 4) - 0.5) : 1;
-      const dz = tileHash(x, y, seed + 6) - 0.5;   // dithered to 8 bits, so no slow gradient steps into a contour
-      const g = Math.min(255, Math.max(0, Math.round(127.5 * tone[k] / mean * sp + dz)));
-      dst.alb[off + k * 4] = g; dst.alb[off + k * 4 + 1] = g; dst.alb[off + k * 4 + 2] = g; dst.alb[off + k * 4 + 3] = 255;
-      const nx = -(h[y * N + wrap(x + 1)] - h[y * N + wrap(x - 1)]) / (2 * tex), ny = -(h[wrap(y + 1) * N + x] - h[wrap(y - 1) * N + x]) / (2 * tex), l = Math.hypot(nx, ny, 1);
-      dst.nrm[off + k * 4] = Math.round((nx / l + 1) * 127.5 + dz); dst.nrm[off + k * 4 + 1] = Math.round((ny / l + 1) * 127.5 + dz); dst.nrm[off + k * 4 + 2] = Math.round((1 / l + 1) * 127.5); dst.nrm[off + k * 4 + 3] = 255;
-    }
-  }
-}
-
 // Tile-scale low-pass of a per-pixel quantity (tileable: wraps at the edges): average into a
 // 64 x 64 grid, gaussian blur there (sigma in grid cells), then read back bilinearly. Used to
 // take the scans' own slow gradients out (a patch a little brighter, or tilted, across one repeat),
@@ -466,6 +360,39 @@ function* normaliseAlbedo(src, dst, off) {
   }
 }
 
+// ---- the cliff cells (2026-11-03) ----------------------------------------------------------------------------------
+// A Voronoi diagram on a torus of CELL_N x CELL_N seeds (each lattice cell's own seed, jittered over 90% of it), baked
+// once so the cliff material reads its facets in two fetches instead of searching nine hashed cells per scale and plane
+// (that search cost about five times the 2026-11-02 material). Per texel: R the nearest seed's id byte, G the
+// neighbour's (the second nearest), B the distance to their bisector in lattice units, signed by the pair's order
+// (the lower seed index's side positive) as 128 + 254 e (+-0.5 cell), so a filtered read crosses zero on the edge, A the
+// bisector's normal (toward the neighbour) as an angle. The shader turns, stretches and offsets the diagram per scale
+// and plane (cliffFacets), so its period (32 facets) never lines up and no lattice shows.
+function* cellLayerSteps(alb, nrm, off) {
+  const N = DETAIL_PX, C = CELL_N, px = N / C, sx = new Float32Array(C * C), sy = new Float32Array(C * C), id = new Uint8Array(C * C);
+  let st = 0x2f6b1d;
+  const rnd = () => { st = (Math.imul(st, 1664525) + 1013904223) >>> 0; return st / 4294967296; };
+  for (let k = 0; k < C * C; k++) { sx[k] = (k % C) + 0.05 + 0.9 * rnd(); sy[k] = Math.floor(k / C) + 0.05 + 0.9 * rnd(); id[k] = Math.floor(rnd() * 256); }
+  for (let y = 0; y < N; y++) {
+    if ((y & 31) === 0) yield;
+    const fy = (y + 0.5) / px, cy = Math.floor(fy);
+    for (let x = 0; x < N; x++) {
+      const fx = (x + 0.5) / px, cx = Math.floor(fx);
+      let d1 = 1e9, d2 = 1e9, a1x = 0, a1y = 0, a2x = 0, a2y = 0, i1 = 0, i2 = 0;
+      for (let dj = -2; dj <= 2; dj++) for (let di = -2; di <= 2; di++) {
+        const gi = cx + di, gj = cy + dj, k = ((gj % C + C) % C) * C + ((gi % C + C) % C);
+        const qx = sx[k] + (gi - (((gi % C) + C) % C)), qy = sy[k] + (gj - (((gj % C) + C) % C)), d = (qx - fx) ** 2 + (qy - fy) ** 2;
+        if (d < d1) { d2 = d1; a2x = a1x; a2y = a1y; i2 = i1; d1 = d; a1x = qx; a1y = qy; i1 = k; } else if (d < d2) { d2 = d; a2x = qx; a2y = qy; i2 = k; }
+      }
+      let nx = a2x - a1x, ny = a2y - a1y; const l = Math.hypot(nx, ny) || 1; nx /= l; ny /= l;
+      const e = ((a1x + a2x) / 2 - fx) * nx + ((a1y + a2y) / 2 - fy) * ny;
+      const o = off + (y * N + x) * 4;
+      alb[o] = id[i1]; alb[o + 1] = id[i2]; alb[o + 2] = Math.max(0, Math.min(255, Math.round(128 + (i1 < i2 ? 1 : -1) * Math.min(e, 0.5) * 254))); alb[o + 3] = Math.round((Math.atan2(ny, nx) / (2 * Math.PI) + 0.5) * 255) & 255;
+      nrm[o] = 128; nrm[o + 1] = 128; nrm[o + 2] = 255; nrm[o + 3] = 255;
+    }
+  }
+}
+
 function arrayTexture(data) {
   const t = new THREE.DataArrayTexture(data, DETAIL_PX, DETAIL_PX, DETAIL_SLOTS.length);
   t.format = THREE.RGBAFormat; t.type = THREE.UnsignedByteType; t.colorSpace = THREE.NoColorSpace;
@@ -491,7 +418,7 @@ export class GroundDetail {
     const alb = new Uint8Array(S * L), nrm = new Uint8Array(S * L);
     await Promise.all(DETAIL_SLOTS.map(async (slot, s) => {
       let a, n;
-      if (slot.proc) { await runSliced(cliffLayerSteps(slot.proc, slot.size, { alb, nrm }, s * S), `cliff layer ${slot.name}`, { signal }); return; }   // made, not scanned (cliffLayerSteps)
+      if (slot.proc) { await runSliced(cellLayerSteps(alb, nrm, s * S), 'cliff cells', { signal }); return; }   // made, not scanned
       try {
         const [ia, ina] = await Promise.all([loadImage(`${this.base}${slot.name}_albedo.jpg?v=${ASSET_VERSION}`, signal), loadImage(`${this.base}${slot.name}_normal.jpg?v=${ASSET_VERSION}`, signal)]);
         a = pixelsOf(ia); n = pixelsOf(ina);

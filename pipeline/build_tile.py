@@ -8,6 +8,7 @@
     python -m pipeline.build_tile --tile utm10n_680_4280 --steps weather         # last year's hourly weather (pipeline/fetch_weather.py)
     python -m pipeline.build_tile --tile utm10n_680_4280 --steps inpaint         # ground-only base texture (pipeline/inpaint_crowns.py)
     python -m pipeline.build_tile --tile utm10n_680_4280 --steps water           # banks, beds and riparian zones (pipeline/water.py)
+    python -m pipeline.build_tile --tile utm10n_680_4280 --steps substrate       # lithology, cliff morphology, exposed rock (pipeline/substrate.py)
 """
 from __future__ import annotations
 
@@ -20,7 +21,7 @@ from .config import (ATTRIBUTION_FIELDS, GENERATOR, SPEC_VERSION, TILES_DIR, Til
                      read_json, sha256, today, write_json)
 from .species_data import CALENDAR, SEASONS
 
-ALL_STEPS = ["dem", "lidar", "naip", "osm", "hydro", "channels", "rewild_hydro", "water", "veg", "ground", "species", "derive", "crowns", "erase", "inpaint", "seasons", "weather", "unreal"]
+ALL_STEPS = ["dem", "lidar", "naip", "osm", "hydro", "channels", "rewild_hydro", "water", "veg", "ground", "substrate", "species", "derive", "crowns", "erase", "inpaint", "seasons", "weather", "unreal"]
 
 
 def load_manifest(tile: Tile) -> dict:
@@ -135,6 +136,12 @@ def run(tile: Tile, steps: list[str], force=False) -> dict:
                     add_layer(m, tile, k, v)
                 if errors:
                     raise RuntimeError("; ".join(errors))
+            elif step == "substrate":
+                # lithology by geology unit, how each rock breaks, and the exposed rock (pipeline/substrate.py); reads
+                # what ground, lidar, naip and veg wrote
+                from .substrate import build_substrate
+                for k, v in build_substrate(tile).items():
+                    add_layer(m, tile, k, v, fetched=False)
             elif step == "species":
                 from .fetch_species import fetch_species
                 for k, v in fetch_species(tile, force).items():

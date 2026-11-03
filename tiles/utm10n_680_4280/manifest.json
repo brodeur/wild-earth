@@ -15,7 +15,7 @@
   38.74035063713964
  ],
  "size_m": 10000,
- "generated_at": "2026-10-29T20:36:06Z",
+ "generated_at": "2026-11-03T20:06:20Z",
  "generator": {
   "name": "wild-earth-pipeline",
   "version": "0.2.0"
@@ -7023,6 +7023,58 @@
    "encoding": "per drawn reach: id, name, order, area_km2, width, class (0 ephemeral, 1 intermittent, 2 perennial), samples, length; the kept ponds' basins",
    "sha256": "fb8b76df9dc9844ea1588227587aaa493ee50efcfb10faa3bcf0ca98e8f64577",
    "bytes": 60046
+  },
+  "client.substrate": {
+   "path": "client/substrate.png",
+   "kind": "raster",
+   "crs": "EPSG:32610",
+   "bounds": [
+    680000,
+    4280000,
+    690000,
+    4290000
+   ],
+   "pixels": 2000,
+   "resolution_m": 5.0,
+   "encoding": {
+    "png": "client/substrate.png",
+    "pixels": 2000,
+    "resolution_m": 5.0,
+    "row0": "north",
+    "R": "exposed rock 0..255 (0..1)",
+    "G": "lithology index, 1-based into lithologies (0 none)",
+    "B": "exposed patch size: round(32 log2(1 + area / 100 m2)), 0 outside a patch"
+   },
+   "derived_from": [
+    "geology.units",
+    "geology.classes",
+    "soils.mapunits",
+    "terrain.dem_banked",
+    "imagery.naip",
+    "vegetation"
+   ],
+   "exposed_fraction": 0.002,
+   "exposed_mean": 0.0109,
+   "patches": 307,
+   "patches_over_1000m2": 40,
+   "patches_over_1ha": 3,
+   "largest_patch_m2": 20000,
+   "slope_source": "max(5 m, 0.85 x 1 m mean)",
+   "cover_source": "lidar canopy_height_10m (tree >= 4 m, shrub 0.5-4 m)",
+   "photo": "client/texture_imagery.jpg (NAIP, humans erased)",
+   "photo_green_ref": 0.1387,
+   "dem": "terrain/dem_banked.tif",
+   "sha256": "c07d7d4637b863703004c5332978968062f1ba11ccd85a9f5528fadf0a9c12ca",
+   "bytes": 839063
+  },
+  "client.substrate_classes": {
+   "path": "client/substrate.json",
+   "kind": "table",
+   "derived_from": [
+    "client.substrate"
+   ],
+   "sha256": "8e42534dbf11100d18d0613a611e232d82fe08e44b25e5a6a2797f63bd9b6fa6",
+   "bytes": 11731
   }
  },
  "sources": {
@@ -7714,6 +7766,48 @@
    "step": "water",
    "at": "2026-10-29T20:36:06Z",
    "seconds": 22.9,
+   "ok": true
+  },
+  {
+   "step": "substrate",
+   "at": "2026-11-03T19:33:28Z",
+   "seconds": 7.2,
+   "ok": true
+  },
+  {
+   "step": "substrate",
+   "at": "2026-11-03T19:34:41Z",
+   "seconds": 6.8,
+   "ok": true
+  },
+  {
+   "step": "substrate",
+   "at": "2026-11-03T19:41:36Z",
+   "seconds": 8.8,
+   "ok": true
+  },
+  {
+   "step": "substrate",
+   "at": "2026-11-03T19:42:38Z",
+   "seconds": 7.3,
+   "ok": true
+  },
+  {
+   "step": "substrate",
+   "at": "2026-11-03T19:44:31Z",
+   "seconds": 7.0,
+   "ok": true
+  },
+  {
+   "step": "substrate",
+   "at": "2026-11-03T19:48:00Z",
+   "seconds": 7.2,
+   "ok": true
+  },
+  {
+   "step": "substrate",
+   "at": "2026-11-03T20:06:20Z",
+   "seconds": 7.2,
    "ok": true
   }
  ]

@@ -4105,3 +4105,85 @@ now join the quadrupeds on the leg engine with a gait set of their own; `docs/mo
 - **Verified** by dispatched drags in the viewer: flying, yaw +0.7 and pitch +0.1 with the orbit untouched; hovering
   and ridden, the orbit took the drag and the heading stayed; the spirit hovering, yaw +0.7. Not tried by hand with a
   mouse, nor the woodpecker's own flight (it keeps the orbit).
+
+## 2026-11-03: cliffs from the substrate: each rock breaks its own way, the slabs gone (branch claude/cliff-substrate)
+
+Aaron, on the 2026-11-02 pass: "there is also heavy 'square' artifacting ... There aren't that many types of rocks on
+earth. We should know from rock/soil data what the substrate is ... Slate/shale will make a crumbly surface with lots
+of edges. Granitic substrate will result in big surfaces with cracks. There should be a pipeline for rendering these
+cliffs and steep slopes and analysis during the ground creation step to determine where large patches of exposed
+substrate area." And on a granite dome: "this was an earnest attempt to add geometry, but it is too regular for a cliff."
+
+- **The square artifacts, each traced to its source** in the viewer by switching one thing off at a time at the same
+  pose (Half Dome's north-west face from 1.2 km on `utm11n_267_4175`; slopes near the start on `utm10n_680_4280`):
+  1. *The grid of rounded-square dark blotches on the dome*: the cliff material's bulge field, a value noise on an
+     axis-aligned lattice (rnoise with angle 0) at 28 m in (h, 1.3 y), differentiated over 2 m and multiplied by 12
+     into the lighting normal. A value noise's gradient carries its lattice, so the face was lit in rounded squares on a
+     28 m grid. It went with the tilt alone switched off; it stayed with the slabs, the cast shadows and the canopy off.
+  2. *The rectangles stuck on at random angles, and the rectangular cast shadows*: the slabs of cliffs.js (boxes and
+     wedges, 8-25 m sheets and 2-6 m beds), each a flat-shaded rectangle; the bedded ones, stacked 1-2 m apart in 2-4
+     thin boards, are the "stacked boards".
+  3. *Pale parallel strips and large flat planes up close*: the made bedded layer (24 beds a 2.5 m repeat, hex-tiled in
+     cells of ~3.75 m, each cell's strips turned its own way) and the sheeted layer's 7 vertical cracks a 4 m repeat,
+     which read as straw at a few metres.
+  4. *Rounded squares where a slope sits near the threshold* (found on this pass, also in the 2026-11-02 rule): the
+     cliff weight took its slope from the 10 m detail mask, bilinear, so a smoothstep over 42-55 degrees drew 10 m
+     squares on the faces at the edge of the rule; and the hold-off on vegetated ground came from the 30 m canopy and
+     habitat cells, the same at 30 m. Not the shadow maps: the blotches stayed with csmStrength 0.
+  Not a cliff source, recorded for the record: on the home tile the steepest slate "faces" are the US-50 road cuts and
+  an erased quarry, and the new rule leaves most of them as photo (little exposed rock there).
+- **Substrate in the pipeline** (`pipeline/substrate.py`, build step `substrate`; tile-spec "Substrate and exposed
+  rock"). Each geology unit goes to one of ten lithologies (granitic, slate/phyllite/shale, schist, greenstone,
+  sandstone, basalt, volcanic, serpentinite, limestone/marble, surficial), by rock class and, where that is too coarse,
+  by name: Yosemite's Talus and Till units were `other` and got the blocky cliff; they are surficial now (no face).
+  Each lithology carries its morphology: form, facet sizes at three scales, elongation and its axis, tilt, the share
+  of edges that are open joints and of edges that step, joint width, talus, colour. Orientations from the data: the
+  fabric's strike from the geologic contacts (length-weighted doubled angles: N4W for the home tile's slate, R 0.68;
+  N11W schist; N50W Franciscan sandstone in San Francisco), the joint sets from the strikes of the DEM's faces past 55
+  degrees (Yosemite granite N47E and N77E; N42E and N12E on the next tile), dips by default (the maps carry none).
+- **Exposed rock at ground creation** (`client/substrate.png` R, 5 m): steepness (the 5 m DEM and the 1 m lidar's
+  slope), bareness (lidar tree and shrub cover, or LANDFIRE EVC), the humans-erased NAIP (grey or pale and not green,
+  relative to the photo's own canopy green; dry grass is pale but yellow, roofs and roads are erased first), convexity,
+  the soils' Rock outcrop share, none on surficial deposits; and the bare slabs at any slope (LANDFIRE barren). Patches
+  are connected runs over 0.5 with their size in B. Yosemite: 12.9% exposed, 107 patches over a hectare, the largest
+  2.7 km2; the home tile 0.2%, three over a hectare (its rock is under oak and grass or in road cuts). Built for all
+  seven tiles (about 8 s each, no fetch).
+- **The faces drawn from those layers** (terrain.js CLIFF_GLSL). The client folds the substrate into the 5 m roads
+  texture (R the road weight, G exposed rock, B lithology, A patch size; the terrain programs have no free texture
+  unit). Where the exposure passes 0.15-0.45 on ground past 34-48 degrees (the mesh's interpolated normal, not the 10 m
+  mask), the face is painted as its lithology breaks: cellular facets at the lithology's three sizes, elongated along
+  the dip (granite's vertical joints, basalt's columns) or along the fabric's trace on the face (the face's normal
+  crossed with the fabric's, so a slate face shows the strike the contacts gave); each facet its own plane, bending
+  smoothly into its neighbour where the edge is no open joint, a crisp joint and a groove on the lithology's share of
+  edges. Granite: 46 m facets over 110 m tall, few long joints along the elongation, a soft grain within a few metres,
+  the exfoliation arcs only on faces past ~60 degrees; slate: 4 m, 1.1 m and 0.3 m plates, nearly every edge a joint
+  or a groove: a crumbly face of small edges. On gentle rock the facets go on the ground plane, along the first joint
+  set. Every noise is on a rotated lattice; the lithology's contacts wander +-7 m rather than step along the 5 m
+  texels; the canopy's 30 m sky occlusion is not laid on rock. On a tile without the substrate step the 2026-11-02
+  rule chooses where (pattern from geology.png) with the new material.
+  The cells are baked once (groundDetail.js cellLayerSteps, a layer of the detail array where the two joint layers
+  were): a Voronoi diagram of 32 x 32 jittered seeds on a torus, per texel the facet's and its neighbour's id bytes,
+  the edge's normal, and the distance to the edge signed by the pair's order, so a filtered read crosses zero on the
+  edge (the unsigned distance drew the grooves as dashes; the nearest texel's ids alone stair-stepped them). The
+  shader turns, stretches and offsets the diagram per scale and plane, so its 32-facet period never lines up. The
+  first version searched nine hashed cells per scale and plane: about five times the 2026-11-02 material's cost.
+- **Removed**: cliffs.js (the slabs and wedges) and the two made joint layers of the detail array (groundDetail.js
+  slots 5 and 6, cliffLayerSteps). Geometry is not replaced on this pass: the facets are in the shading only, so a
+  rim's silhouette is the mesh's (see below).
+- **Mistakes on the way, each seen in captures**: vertical-plane facets on a 50-degree dome flank stretched into
+  zigzags (the ground plane added); the exfoliation arcs, lips and lichen as functions of height drew contour lines on
+  gentle flanks (arcs only past ~60 degrees, lichen on the face plane); every cell edge drawn as a joint made a mosaic
+  of flat tones at 300 m and a mesh of scratches at 9 m (open-joint and step shares per scale; bends elsewhere); a
+  second exfoliation set at an even 22 m read as rows of dashes; slate's first big facets (5 by 16 m, turned 26
+  degrees) shaded as rounded rectangles in a row on the home tile's face (big tilt 10, elongation 2).
+- **Measured** (GPU timer query, 1920 x 1200, the terrain drawn alone, cliffOn 1 against 0 at the same pose, one render
+  per query and 150 alternating samples, p10; longer queries were swamped: another Chrome on the machine was running
+  the game, and load averages ran 8-15): Half Dome from 1.2 km +3.6 ms (main's 2026-11-02 material by the same
+  protocol +1.7), El Capitan from 330 m +2.3 (main +2.6), El Capitan 9 m off, the whole screen three scales of rock,
+  +8.3. The terrain alone with the material off read 2.2-4.0 ms. The previous lane measured main's material at +0.4
+  to +1.0 ms as whole frames on a quieter machine, so this protocol reads high; by the ratio this material costs about
+  what the last one did at mid range and twice it at a distance. **Not verified: well under 1 ms.** The close-up
+  (+8 ms here) is the one to cut first, on a quiet machine: the third scale and the second plane near the player.
+- **Not done**: geometry (silhouettes, cast shadows from the facets); talus at the foot of the faces from the
+  lithology's `talus`; rocks.js's outcrop forms are still from the rock class; the dips from data (the maps have no
+  attitudes); the patch size (B, A in the client) is carried but nothing reads it yet.

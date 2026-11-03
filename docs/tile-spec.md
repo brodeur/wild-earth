@@ -85,6 +85,8 @@ tiles/<tile_id>/
   client/soils.png              derived   R soil map unit index, G surface rock fragments % 0-100, B depth to bedrock dm (255 none/unknown), 30 m grid
   client/outcrop.png            derived   outcrop likelihood 0-255 in R, 30 m grid (formula in the manifest layer)
   client/ground_classes.json    derived   rock classes, unit and map unit tables for the two PNGs, per-tile fractions, outcrop summary
+  client/substrate.png          derived   5 m RGB: R exposed rock 0-255, G lithology index (1-based into substrate.json), B exposed patch size code (see Substrate and exposed rock)
+  client/substrate.json         derived   the lithologies with their cliff morphology and the orientations derived for the tile, unit -> lithology table, exposure formula and stats
   client/texture_imagery.jpg    derived   NAIP with the human footprint erased and pavement bleached, 4000 px (2.5 m) JPEG
   client/texture_present.jpg    derived   present-day NAIP as captured, same 4000 px metric grid as texture_imagery, JPEG q88
   client/texture_ground.jpg     derived   texture_imagery with tree crowns (lidar CHM 3 m+) and their shadows replaced by synthesized ground of the same class, same grid (see Ground-only texture)
@@ -515,6 +517,56 @@ the lidar step (see Lidar), clipped to 0..1, and 0 on water. The manifest layer
 `client.outcrop` records the formula and parameters. The client places boulders and outcrop
 clusters from it, and takes gravel and dirt colour from the soil texture and fragments.
 Geology polygons from SGMC are public domain (through Macrostrat, CC-BY 4.0); SSURGO is public domain.
+
+## Substrate and exposed rock
+
+Build step `substrate`, after `ground`, `lidar`, `naip` and `veg` (`pipeline/substrate.py`; reads what they wrote,
+fetches nothing). It says what the ground is made of, how its rock breaks, and where the rock is bare, for the client's
+cliff material (terrain.js CLIFF_GLSL).
+
+**Lithology.** Each geology unit goes to one of ten lithologies by its rock class and, where that is too coarse, its
+name and lithology text: `granitic`, `slate_phyllite` (also shale, mudstone and argillite when they are the first major
+lithology), `schist`, `greenstone_metavolcanic`, `sandstone_conglomerate`, `basalt` (a volcanic unit whose first major
+lithology is basalt), `volcanic`, `serpentinite`, `limestone_marble`, `surficial` (alluvium, till, talus, dune sand,
+fill, landslides, water: no bedrock face). `substrate.json` `units` records each unit's lithology and the rule that
+chose it. The unit polygons (`geology/units.geojson`) are rasterized at 5 m, so a contact is not a 30 m staircase.
+
+**Morphology.** Each lithology carries how its rock breaks (`lithologies[i]`): `form` (`sheeted`: exfoliation sheets
+and steep joints, big smooth faces with long cracks; `fissile`: a steep cleavage splitting the face into small plates;
+`foliated`, `blocky`, `bedded` ledges, `columnar`, `scaly`, `massive`), `facet_m` (the facets' widths at three scales,
+m), `elong` (a facet's length over its width) and `along` (`dip`: down the face; `strike`: along the fabric's trace on
+the face; `bedding`), `tilt_deg` (how far a big facet turns from the face), `crack_m`, `step_m` (the recess at a facet
+edge), `talus`, `colour` (linear albedo). Orientations from the data where it has them:
+
+- `fabric` (the foliation, cleavage or bedding, for the lithologies that have one): `strike_deg` the length-weighted
+  mean orientation (doubled angles) of the lithology's geologic contacts inside the tile, used when the resultant
+  length is at least 0.25 (`strike_source: geologic contacts`, with the resultant and the contact length), else the
+  Mother Lode belt's N35W; its sense by the right-hand rule toward the regional north-east dip. `dip_deg` is the
+  lithology's default (the maps carry no attitudes): slate 75, schist 70, serpentinite 60, sandstone 12.
+- `joints`: the strikes of the lithology's faces steeper than 55 degrees on the 5 m DEM (aspect + 90, slope-weighted,
+  folded to 0-180, a 10-degree smoothed histogram): the strongest peak and a second at least 30 degrees off it and over
+  55% of it; `peak_over_mean` says how strong. Empty where the lithology has under 150 steep cells.
+
+**Exposed rock** (`client/substrate.png` R), on the 5 m grid:
+
+    steep    = smoothstep(28, 52, slope), slope = max(the 5 m DEM's, 0.85 x the 1 m lidar DEM's slope averaged over 5 m)
+    bare     = (1 - tree)(1 - 0.5 shrub) from the lidar canopy (10 m); without lidar 1 - 0.6 tree from LANDFIRE EVC (30 m, smoothed)
+    spectral = (1 - smoothstep(0.35 ref, 0.75 ref, exg)) (0.55 + 0.45 smoothstep(0.18, 0.42, luma)) (1 - 0.6 smoothstep(0.04, 0.09, yel))
+    convex   = 1 + 0.25 clip(TPI / 3 m, -1, 1), TPI against a 40 m gaussian mean
+    prior    = the soil map unit's Rock outcrop component % / 100
+    exposed  = rock (steep bare^0.7 (0.3 + 0.7 spectral) convex + 0.45 prior smoothstep(15, 35, slope) spectral)
+
+and at least rock bare (1 - smoothstep(0.25 ref, 0.5 ref, exg)) smoothstep(0.40, 0.55, luma) x (0.9 on LANDFIRE's barren
+class, else 0.6 (1 - smoothstep(0.02, 0.05, yel))): the bare slabs at any slope. The photo is the humans-erased NAIP
+(`client/texture_imagery.jpg`, roofs and roads are not rock); exg = (2G - R - B) / (R + G + B), yel = (R - B) / (R + G + B),
+ref the photo's median exg under tree cover over 50% (its own green: NAIP's balance differs by state and year). rock is
+0 on surficial deposits (0.5 past 60 degrees: a cut bank) and water, else 1. A 5 m gaussian follows. A patch is an
+8-connected run of cells over 0.5; B = round(32 log2(1 + area / 100 m2)), capped at 255 (100 m2 -> 32, 1 ha -> 213).
+The stats (exposed fraction, patches over 1000 m2 and 1 ha, the largest) are in `substrate.json` and the manifest layer.
+
+The client reads it through the ground-data texture (terrain.js `groundDataSteps`: the `roads` sampler's texture on a
+tile with the step, R the road weight, G exposed rock, B lithology, A the patch code), since the terrain's programs
+have no texture unit to spare. Rebuild it after `ground`, `lidar`, `erase` or `veg` change.
 
 ## Lidar
 
