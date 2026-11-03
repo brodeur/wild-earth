@@ -1,34 +1,33 @@
-# Fly.io (docs/hosting.md): one small always-on machine running the Dockerfile, TLS at Fly's edge (the hub reads
-# X-Forwarded-Proto and marks its cookie Secure), the hub's database and the game worlds on a volume.
-#   fly launch --copy-config --no-deploy      (once: makes the app; pick a region near the players, e.g. sjc)
-#   fly volumes create we_data --size 1 --region sjc
-#   fly secrets set HUB_ORIGIN=https://<your domain> DISCORD_CLIENT_ID=... DISCORD_CLIENT_SECRET=...
-#   fly deploy                                (builds the image from this checkout, rasters included)
-app = "wild-earth"
-primary_region = "sjc"
+# fly.toml app configuration file generated for wild-earth on 2026-11-03T02:12:48Z
+#
+# See https://fly.io/docs/reference/configuration/ for information about how to use this file.
+#
+
+app = 'wild-earth'
+primary_region = 'ams'
 
 [build]
-  dockerfile = "Dockerfile"
+  dockerfile = 'Dockerfile'
 
 [env]
-  PYTHONUNBUFFERED = "1"
+  PYTHONUNBUFFERED = '1'
 
 [[mounts]]
-  source = "we_data"
-  destination = "/app/data"
+  source = 'we_data'
+  destination = '/app/data'
 
 [http_service]
   internal_port = 8080
   force_https = true
-  auto_stop_machines = "off"     # the hub holds the players' sockets: never put the machine to sleep
+  auto_stop_machines = 'off'
   auto_start_machines = true
   min_machines_running = 1
 
   [http_service.concurrency]
-    type = "connections"
-    soft_limit = 200
+    type = 'connections'
     hard_limit = 400
+    soft_limit = 200
 
 [[vm]]
-  size = "shared-cpu-1x"
-  memory = "512mb"
+  size = 'shared-cpu-1x'
+  memory = '512mb'
