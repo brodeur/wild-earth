@@ -67,20 +67,23 @@ const ripUniforms = {
 // cellular facets (each nearest-seed cell of a fully jittered lattice is one plane of rock, turned its own way from the
 // face, with a joint along every cell edge and, where the neighbour stands proud, the step's wall), at the lithology's
 // three sizes, elongated along its fabric: down the dip for granite's vertical joints and basalt's columns, along the
-// cleavage's trace on the face for slate, schist and serpentinite (the trace is the face's normal crossed with the
-// fabric's, so it follows the strike the pipeline derived from the geologic contacts), along the beds for sandstone.
-// Sheeted granite: 46 m facets over 110 m tall, turned 5 degrees, 35 cm joints: big smooth surfaces, long cracks, and
-// the exfoliation sheets' arcs across them; fissile slate: 5 m, 1.3 m and 35 cm plates turned 26 degrees with thin
-// cracks: a crumbly face of many small edges. Nothing here is a lattice: every lattice is rotated off the face's axes
-// and fully jittered, and every noise is on a rotated lattice (rnoise's angle is never 0: an axis-aligned value noise,
-// differentiated into the lighting normal, drew the rounded-square grid the 2026-11-02 material showed on Half Dome).
-// The face is projected on the two vertical world planes it faces most (facing x: h = z; facing z: h = x) and blended
-// by facing, as a triplanar blend does: a coordinate taken along the face from the per-pixel normal swings by tens of
-// metres when the normal turns a degree (the 2026-11-02 lesson).
+// cleavage's trace for slate, schist and serpentinite (the projection plane's normal crossed with the fabric's, so it
+// follows the strike the pipeline derived from the geologic contacts), along the beds for sandstone. Sheeted granite:
+// 46 m facets over 110 m tall, turned 5 degrees, 35 cm joints: big smooth surfaces, long cracks, and the exfoliation
+// sheets' arcs across them; fissile slate: 4 m, 1.1 m and 30 cm plates, the finer ever thinner along the cleavage,
+// with thin cracks: a crumbly face of many small edges. Nothing here is a lattice: every lattice is rotated off the
+// face's axes and fully jittered, and every noise is on a rotated lattice (rnoise's angle is never 0: an axis-aligned
+// value noise, differentiated into the lighting normal, drew the rounded-square grid the 2026-11-02 material showed
+// on Half Dome). Each pixel takes one of three world planes (facing x: h = z; facing z: h = x; the ground plane on
+// gentle rock), the one it faces most, with a noise deciding where two face it alike; nothing in the lattice's frame
+// is taken from the per-pixel normal, whose degree of turn moves a coordinate of hundreds of metres by metres (the
+// 2026-11-02 lesson). Cost (the 2026-11-03 cost pass, docs/decisions.md): one plane, the scales by footprint, the ground's
+// own detail skipped under solid rock, and chunks without exposed rock drawn by a program without this code.
 // Per lithology (index 0: no substrate data, plain grey rock): cliffCol = linear colour and form (0 none, 1 sheeted,
-// 2 fissile, 3 foliated, 4 blocky, 5 bedded, 6 columnar, 7 scaly, 8 massive); cliffFacet = the three facet widths (m)
-// and the elongation; cliffBreak = the big facets' tilt (tan), the joint width (m), the step (m) and the axis (0 down
-// the dip, 1 along the fabric's trace); cliffFabric = the fabric's world normal and 1 where there is one.
+// 2 fissile, 3 foliated, 4 blocky, 5 bedded, 6 columnar, 7 scaly, 8 massive); cliffBreak = the tone, the joint width
+// (m), the step (m) and the axis (0 down the dip, 1 along the fabric's trace); cliffOct = per scale the facet width,
+// elongation, tilt (tan) and open share, then the step share, joint width, step depth and tone amplitude;
+// cliffFabric = the fabric's world normal and 1 where there is one; cliffJoint = the first joint set's strike.
 // cliffOn 0 restores the 2026-10-28 rule (A/B: __we.terrain.uniforms.cliffOn.value = 0).
 export const NOISE_GLSL = /* glsl */`
   // Integer lattice hash. The usual fract(sin(dot(p, k)) * 43758) breaks down here: lattice
@@ -108,13 +111,13 @@ const LITH_DEFAULT = [
   // form, colour, facet widths (m), elongation, tilt per scale (deg), open joints per scale, steps per scale, tone, joint width, step, axis
   { form: 4, colour: [0.40, 0.39, 0.36], facet: [12, 2.5, 0.6], elong: 1.5, tilt: [14, 10, 5], open: [0.5, 0.4, 0.2], steps: [0.3, 0.2, 0.1], tone: 0.06, crack: 0.12, step: 0.6, axis: 0 },   // 0 plain rock
   { form: 1, colour: [0.56, 0.54, 0.50], facet: [46, 9, 1.8], elong: 2.4, tilt: [11, 4, 1.5], open: [0.55, 0.3, 0], steps: [0.35, 0.15, 0], tone: 0.05, crack: 0.35, step: 1.5, axis: 0 },     // granitic
-  { form: 2, colour: [0.27, 0.27, 0.27], facet: [4, 1.1, 0.3], elong: 2, tilt: [10, 22, 18], open: [0.8, 0.75, 0.7], steps: [0.6, 0.55, 0.5], tone: 0.1, crack: 0.05, step: 0.25, axis: 1 },  // slate, phyllite, shale
-  { form: 3, colour: [0.36, 0.35, 0.33], facet: [8, 2, 0.5], elong: 2, tilt: [10, 14, 8], open: [0.7, 0.6, 0.4], steps: [0.5, 0.4, 0.3], tone: 0.08, crack: 0.08, step: 0.4, axis: 1 },     // schist
+  { form: 2, colour: [0.27, 0.27, 0.27], facet: [4, 1.1, 0.3], elong: 1.6, tilt: [5, 10, 9], open: [0.8, 0.75, 0.7], steps: [0.6, 0.55, 0.5], tone: 0.06, crack: 0.05, step: 0.25, axis: 1 },  // slate, phyllite, shale
+  { form: 3, colour: [0.36, 0.35, 0.33], facet: [8, 2, 0.5], elong: 2, tilt: [6, 11, 8], open: [0.7, 0.6, 0.4], steps: [0.5, 0.4, 0.3], tone: 0.06, crack: 0.08, step: 0.4, axis: 1 },     // schist
   { form: 4, colour: [0.29, 0.31, 0.27], facet: [10, 2.4, 0.6], elong: 1.25, tilt: [12, 15, 8], open: [0.6, 0.5, 0.4], steps: [0.45, 0.35, 0.2], tone: 0.08, crack: 0.1, step: 0.5, axis: 0 }, // greenstone
   { form: 5, colour: [0.48, 0.43, 0.36], facet: [16, 3, 0.7], elong: 2.2, tilt: [8, 6, 3], open: [0.6, 0.4, 0.2], steps: [0.6, 0.3, 0.1], tone: 0.07, crack: 0.12, step: 0.8, axis: 1 },          // sandstone
   { form: 6, colour: [0.17, 0.17, 0.17], facet: [12, 1.1, 0.3], elong: 4, tilt: [10, 14, 5], open: [0.3, 0.9, 0.4], steps: [0.3, 0.6, 0.2], tone: 0.05, crack: 0.06, step: 0.4, axis: 0 },       // basalt
   { form: 4, colour: [0.33, 0.31, 0.29], facet: [8, 2, 0.5], elong: 1.4, tilt: [12, 15, 8], open: [0.6, 0.5, 0.4], steps: [0.45, 0.35, 0.2], tone: 0.08, crack: 0.08, step: 0.5, axis: 0 },     // volcanic
-  { form: 7, colour: [0.24, 0.29, 0.25], facet: [4, 1, 0.3], elong: 1.5, tilt: [14, 24, 16], open: [0.7, 0.7, 0.6], steps: [0.5, 0.5, 0.4], tone: 0.1, crack: 0.04, step: 0.2, axis: 1 },       // serpentinite
+  { form: 7, colour: [0.24, 0.29, 0.25], facet: [4, 1, 0.3], elong: 1.5, tilt: [8, 18, 14], open: [0.7, 0.7, 0.6], steps: [0.5, 0.5, 0.4], tone: 0.07, crack: 0.04, step: 0.2, axis: 1 },       // serpentinite
   { form: 8, colour: [0.58, 0.57, 0.54], facet: [26, 5, 1], elong: 1.8, tilt: [8, 4, 2], open: [0.5, 0.25, 0.05], steps: [0.3, 0.1, 0], tone: 0.05, crack: 0.2, step: 0.8, axis: 0 },           // limestone, marble
   { form: 0, colour: [0.42, 0.39, 0.34], facet: [3, 0.8, 0.2], elong: 1, tilt: [14, 10, 5], open: [0.5, 0.4, 0.2], steps: [0.3, 0.2, 0.1], tone: 0.06, crack: 0, step: 0, axis: 0 },             // surficial
 ];
@@ -127,10 +130,9 @@ function fabricNormal(strike, dip) {
 }
 export const cliffUniforms = {
   cliffOn: { value: 1 }, cliffSub: { value: 0 },
-  cliffCol: { value: LITH_DEFAULT.map(() => new THREE.Vector4()) }, cliffFacet: { value: LITH_DEFAULT.map(() => new THREE.Vector4()) },
-  cliffBreak: { value: LITH_DEFAULT.map(() => new THREE.Vector4()) }, cliffFabric: { value: LITH_DEFAULT.map(() => new THREE.Vector4()) },
-  cliffJoint: { value: LITH_DEFAULT.map(() => new THREE.Vector4()) }, cliffTilt: { value: LITH_DEFAULT.map(() => new THREE.Vector4()) },
-  cliffOpen: { value: LITH_DEFAULT.map(() => new THREE.Vector4()) }, cliffSteps: { value: LITH_DEFAULT.map(() => new THREE.Vector4()) },
+  cliffCol: { value: LITH_DEFAULT.map(() => new THREE.Vector4()) }, cliffBreak: { value: LITH_DEFAULT.map(() => new THREE.Vector4()) },
+  cliffFabric: { value: LITH_DEFAULT.map(() => new THREE.Vector4()) }, cliffJoint: { value: LITH_DEFAULT.map(() => new THREE.Vector4()) },
+  cliffOct: { value: Array.from({ length: LITH_DEFAULT.length * 6 }, () => new THREE.Vector4()) },
 };
 // The lithologies' looks into the uniforms: the defaults, overridden by the tile's substrate.json (its colours, sizes
 // and the fabric it derived); without it the fabric is the Mother Lode belt's N35W, steep to the north-east.
@@ -142,9 +144,19 @@ export function setLithologies(info) {
     const tilt = Array.isArray(r?.tilt_deg) ? r.tilt_deg : d.tilt, open = r?.open || d.open, steps = r?.steps || d.steps, t = v => Math.tan(v * Math.PI / 180);
     const c = new THREE.Color().setRGB(...colour, THREE.SRGBColorSpace);
     U.cliffCol.value[i].set(c.r, c.g, c.b, r ? (FORMS[r.form] ?? 0) : d.form);
-    U.cliffFacet.value[i].set(facet[0], facet[1], facet[2], elong);
-    U.cliffBreak.value[i].set(r?.tone ?? d.tone, r?.crack_m ?? d.crack, r?.step_m ?? d.step, r ? (r.along === 'dip' ? 0 : 1) : d.axis);
-    U.cliffTilt.value[i].set(t(tilt[0]), t(tilt[1]), t(tilt[2]), 0); U.cliffOpen.value[i].set(...open, 0); U.cliffSteps.value[i].set(...steps, 0);
+    const tone = r?.tone ?? d.tone, crack = r?.crack_m ?? d.crack, step = r?.step_m ?? d.step;
+    U.cliffBreak.value[i].set(tone, crack, step, r ? (r.along === 'dip' ? 0 : 1) : d.axis);
+    // per octave, two vectors (cliffShade reads one pair per scale, so the loop holds no lithology's whole table):
+    // (width m, elongation, tilt tan, open share), (step share, joint width m, step depth m, tone amplitude); the
+    // finer scales' joints and steps narrow with their facets, and their elongation eases toward round, except on the
+    // foliated rocks, which split thinner along their cleavage: each finer scale 1 + k o times the big scale's
+    // elongation, k 1 for fissile slate (1.6, 3.2, 4.8), 0.5 for schist, 0.25 for serpentinite's scales
+    const form = r ? (FORMS[r.form] ?? 0) : d.form, thin = { 2: 1, 3: 0.5, 7: 0.25 }[form];
+    for (let o = 0; o < 3; o++) {
+      const f = facet[o] / facet[0];
+      U.cliffOct.value[i * 6 + 2 * o].set(facet[o], thin ? elong * (1 + thin * o) : o === 0 ? elong : elong + (1 - elong) * 0.35 * o, t(tilt[o]), open[o]);
+      U.cliffOct.value[i * 6 + 2 * o + 1].set(steps[o], crack * f, step * f, tone * (o === 0 ? 1 : 0.6));
+    }
     const fab = r?.fabric || (d.axis ? { strike_deg: 325, dip_deg: i === 5 ? 12 : 72 } : null);
     if (fab) U.cliffFabric.value[i].copy(fabricNormal(fab.strike_deg, fab.dip_deg)); else U.cliffFabric.value[i].set(0, 1, 0, 0);
     // the ground plane's facets run along the first joint set (the DEM's faces), else the fabric's strike, else N47E
@@ -156,14 +168,16 @@ export function setLithologies(info) {
 setLithologies(null);
 export const CLIFF_GLSL = /* glsl */`
   uniform float cliffOn; uniform float cliffSub;
-  uniform vec4 cliffCol[11]; uniform vec4 cliffFacet[11]; uniform vec4 cliffBreak[11]; uniform vec4 cliffFabric[11]; uniform vec4 cliffJoint[11];
-  uniform vec4 cliffTilt[11]; uniform vec4 cliffOpen[11]; uniform vec4 cliffSteps[11];
+  uniform vec4 cliffCol[11]; uniform vec4 cliffBreak[11]; uniform vec4 cliffFabric[11]; uniform vec4 cliffJoint[11];
+  uniform vec4 cliffOct[66];   // per lithology and scale (setLithologies): [6L + 2o] and [6L + 2o + 1]
+  // each scale's lattice turned its own way (0.37 + 1.13 o radians)
+  const vec2 CLIFF_ROT[3] = vec2[3](vec2(0.93233, 0.36162), vec2(0.07074, 0.99749), vec2(-0.87330, 0.48717));
   // The lithology at a point: the ground-data texture's B channel (roads; terrain.js groundData) read at its nearest
-  // 5 m texel from a point moved up to +-7 m by a rotated noise, so a contact between two rocks wanders instead of
-  // stepping along the texel grid
+  // 5 m texel from a point moved up to +-7 m by a rotated ~17 m noise (of a linear function of the position, so it
+  // wanders with height too), so a contact between two rocks wanders instead of stepping along the texel grid
   int cliffLith(vec3 p) {
-    vec2 wp = vnoise2(mat2(0.82, 0.57, -0.57, 0.82) * p.xz / 19.0) - 0.5;
-    vec2 uv = (vec2(p.x, -p.z) + 14.0 * wp) / tileSize;
+    vec2 jn = vnoise2(mat2(0.8, 0.6, -0.6, 0.8) * vec2(p.x + 0.6 * p.y, p.z - 0.6 * p.y) / 17.0) - 0.5;
+    vec2 uv = (vec2(p.x, -p.z) + 14.0 * jn) / tileSize;
     ivec2 sz = textureSize(roads, 0);
     ivec2 t = clamp(ivec2(uv * vec2(sz)), ivec2(0), sz - 1);
     return int(texelFetch(roads, t, 0).b * 255.0 + 0.5) & 15;
@@ -172,10 +186,9 @@ export const CLIFF_GLSL = /* glsl */`
   // diagram (groundDetail.js cellLayerSteps) in a frame turned to the elongation axis ax (a unit vector in the plane),
   // stretched along it by el, turned rot further and offset by off. Returns the facet's and its neighbour's id bytes
   // (cell.rg), the distance to their shared edge in metres and the edge's direction away from this facet, in the plane.
-  void cliffCells(vec2 q, vec2 gx, vec2 gy, vec2 ax, float w, float el, float rot, vec2 off, out vec2 ids, out float edge, out vec2 en) {
+  void cliffCells(vec2 q, vec2 gx, vec2 gy, vec2 ax, float w, float el, vec2 cs, vec2 off, out vec2 ids, out float edge, out vec2 en) {
     mat2 F = mat2(ax.y, ax.x, -ax.x, ax.y);                        // plane -> (across, along)
-    float c = cos(rot), s = sin(rot);
-    mat2 J = mat2(c, s, -s, c) * mat2(1.0 / w, 0.0, 0.0, 1.0 / (w * el)) * F;   // plane metres -> lattice units
+    mat2 J = mat2(cs.x, cs.y, -cs.y, cs.x) * mat2(1.0 / w, 0.0, 0.0, 1.0 / (w * el)) * F;   // plane metres -> lattice units
     const float CN = ${CELL_N}.0;
     vec2 uv = (J * q) / CN + off;
     vec4 cell = texelFetch(detailAlbedo, ivec3(ivec2(fract(uv) * ${DETAIL_PX}.0), ${CELL_LAYER}), 0);
@@ -186,52 +199,6 @@ export const CLIFF_GLSL = /* glsl */`
     // edge (from the lower seed's side), then by the filtered side: away from this side's facet, switching on the edge
     vec2 g = transpose(J) * vec2(cos(an), sin(an)) * (cell.b * 255.0 < 128.0 ? -1.0 : 1.0) * (es < 0.0 ? -1.0 : 1.0);
     edge = abs(es) / max(length(g), 1e-6); en = normalize(g); ids = cell.rg;
-  }
-  // The face's facets on one plane: the summed tilt of the facets at every scale (along h and y), the joint darkening,
-  // the step walls' shading (a turn of the normal toward the edge), a per-facet tone.
-  //   F: x the tilt along h, y the tilt along y, z the joint's dark (0..1), w the tone (around 1)
-  //   S: xy the step wall's facing in the plane (zero outside a wall), z how much of the pixel is wall, w the facet hash
-  void cliffFacets(vec2 q, vec2 gx, vec2 gy, vec2 ax, int L, float foot, float salt, out vec4 F, out vec4 S) {
-    vec4 fa = cliffFacet[L], br = cliffBreak[L], ti = cliffTilt[L], op = cliffOpen[L], sf = cliffSteps[L];
-    F = vec4(0.0, 0.0, 0.0, 1.0); S = vec4(0.0);
-    float form = cliffCol[L].w, wr = 1.0;
-    // only the scales still on screen (a facet spanning under ~15-30 pixels is gone), counted first so the loop's trip
-    // count is dynamic: the compiler keeps one copy of its body (unrolled, the three scales on two planes made the
-    // terrain's whole program heavier, cliff or not)
-    int no = detailReady > 0.5 ? int(foot < fa.x / 15.0) + int(foot < fa.y / 15.0) + int(foot < fa.z / 15.0) : 0;   // the cells stream in with the detail
-    for (int o = 0; o < no; o++) {
-      float w = fa[o], k = 1.0 - smoothstep(w / 30.0, w / 15.0, foot);
-      float el = o == 0 ? fa.w : mix(fa.w, 1.0, 0.35 * float(o));
-      vec2 ids, en; float edge;
-      cliffCells(q, gx, gy, ax, w, el, 0.37 + 1.13 * float(o), vec2(0.37, 0.71) * (float(o) + salt), ids, edge, en);
-      // the facet's numbers and its neighbour's from their id bytes, the edge's own from their sum (the same from both sides)
-      float h1 = ids.x, h2 = fract(ids.x * 13.71 + 0.37), h3 = fract(ids.x * 31.17 + 0.71);
-      float n1 = ids.y, n2 = fract(ids.y * 13.71 + 0.37), hn = fract(ids.y * 31.17 + 0.71);
-      float he = fract((ids.x + ids.y) * 57.31 + 0.13), hs = fract((ids.x + ids.y) * 91.73 + 0.59);
-      float ad = abs(edge), open = 1.0 - smoothstep(op[o] - 0.08, op[o] + 0.08, he);
-      if (form == 1.0 || form == 8.0 || form == 6.0) open *= mix(0.15, 1.0, smoothstep(0.6, 0.9, abs(dot(en, vec2(ax.y, -ax.x)))));
-      // the facet's plane: a random turn, a little more often down-and-out than up (a face weathers back from its rims);
-      // where the edge is no open joint the two facets bend into each other over a third of a facet (a crease only
-      // where the rock is broken), so the face is not a mosaic of flat tones
-      // (and at every edge across a texel of the baked cells, where the nearest-texel ids switch: no stair steps)
-      float bend = max((1.0 - open) * (1.0 - smoothstep(0.0, 0.35 * w, ad)), 1.0 - smoothstep(0.0, 1.5 * w / ${DETAIL_PX / CELL_N}.0 + foot, ad)) * 0.5;
-      vec2 t1 = vec2(2.0 * h1 - 1.0, 1.6 * h2 - 0.95), t2 = vec2(2.0 * n1 - 1.0, 1.6 * n2 - 0.95);
-      F.xy += ti[o] * k * mix(t1, t2, bend) * vec2(1.0, 0.8);
-      F.w *= 1.0 + k * br.x * (o == 0 ? 1.0 : 0.6) * (2.0 * mix(h3, hn, bend) - 1.0);
-      // the joint along the edge, on the lithology's share of edges at this scale; on sheeted, massive and columnar
-      // rock mostly the long ones, along the elongation (their normal across it). A dark line of the joint's width,
-      // never more than a pixel's worth of contrast (a thin line far off is faint, not shimmering)
-      float cw = br.y * wr;
-      float line = (1.0 - smoothstep(0.5 * cw, 0.5 * cw + foot, ad)) * min(cw / max(foot, 1e-3), 1.0);
-      F.z = max(F.z, line * k * open * (o == 0 ? 0.8 : 0.6));
-      // the step, on its share of edges: a groove of the step's depth either side of the edge, its walls turned toward
-      // it (one lit, one in shade), from the smooth distance alone, so it does not follow where the ids switch
-      float st = br.z * wr * (0.4 + 0.6 * hs) * (1.0 - smoothstep(sf[o] - 0.05, sf[o] + 0.05, hs));
-      float ws = 0.3 * st, wall = (1.0 - smoothstep(ws, ws + foot, ad)) * k * min(ws / max(foot, 1e-3), 1.0);
-      if (wall > S.z) S = vec4(-en, wall, S.w);
-      if (o == 0) S.w = h1;
-      wr *= fa[min(o + 1, 2)] / fa[o];
-    }
   }
   // The exfoliation sheets' edges on sheeted rock and the streaks on every face, at a horizontal coordinate h and
   // height y: E x the sheet edge's shadow line, y the recess below it, z the lip above it, w the streaks; lichen in w2.
@@ -263,46 +230,89 @@ export const CLIFF_GLSL = /* glsl */`
   vec3 cliffShade(vec3 p, vec3 nG, vec3 dpx, vec3 dpy, int L, float lum, float foot, out vec3 nOut) {
     vec4 col = cliffCol[L], fab = cliffFabric[L], br = cliffBreak[L];
     float form = col.w;
-    // the planes: facing x (h, y) = (z, y), facing z (x, y), and on gentle rock the ground plane (x, z); the weights
-    // sharpened so most of a face takes one plane
+    bool longJ = form == 1.0 || form == 8.0 || form == 6.0;
+    // One plane per pixel, the one the face faces most: facing x (h, y) = (z, y), facing z (x, y), and on gentle rock
+    // the ground plane (x, z). Where two face it about equally the choice follows a rotated ~17 m noise (of a linear
+    // function of the position, so continuous across the planes), so the boundary wanders over the face, and it is
+    // drawn as a joint: one plane's facets meet the other's along a fracture. (The two planes blended, as a triplanar
+    // blend does, cost the facets and sheets twice on every face turned between the axes, and their sums held registers
+    // that weighed on every pixel of the terrain program, cliff or not: 0.9 ms at 1920x1200, where this costs ~0.4.
+    // The blend's second plane, seen nearly edge-on, also stretched its facets into streaks: the slate's cleavage is
+    // drawn on purpose instead, below.)
     vec3 fw = pow(abs(nG) + 1e-3, vec3(4.0)); fw /= fw.x + fw.y + fw.z;
-    fw = smoothstep(0.12, 0.3, fw);
-    // the two planes it faces most (A, B) and B's share; a loop with a dynamic trip count over them, one copy of the
-    // facets and the sheets in the program (id 0: facing x, (h, y) = (z, y); 1: the ground plane (x, z); 2: facing z (x, y))
-    int A = fw.x >= fw.y && fw.x >= fw.z ? 0 : (fw.y >= fw.z ? 1 : 2);
-    vec3 r3 = fw; r3[A] = -1.0;
-    int B = r3.x >= r3.y && r3.x >= r3.z ? 0 : (r3.y >= r3.z ? 1 : 2);
-    float wA = fw[A], wB = fw[B]; wB = wB > 0.02 * (wA + wB) ? wB : 0.0;
-    float wS = wA + wB; wA /= wS; wB /= wS;
-    // the elongation axis on the face, in world: down the dip, or along the fabric's trace on the face (the face's
-    // normal crossed with the fabric's), turning back to the dip where the face lies in the fabric (it splits flat)
+    // (two octaves, ~17 m and ~5 m, strong enough that the boundary wanders off the slope's contours: where the face
+    // bends from the ground plane's to a wall's, it is not a line along the bend)
+    vec2 pn = vec2(p.x - 0.6 * p.y, p.z + 0.6 * p.y);
+    vec2 jn = vnoise2(mat2(0.6, 0.8, -0.8, 0.6) * pn / 17.0) - 0.5 + 0.5 * (vnoise2(mat2(-0.28, 0.96, -0.96, -0.28) * pn / 5.3) - 0.5);
+    vec3 sc = fw + 0.4 * vec3(jn.x, 0.7 * (jn.x + jn.y), jn.y);
+    int A = sc.x >= sc.y && sc.x >= sc.z ? 0 : (sc.y >= sc.z ? 1 : 2);
+    vec3 r3 = sc; r3[A] = -1.0;
+    float seam = (sc[A] - max(r3.x, max(r3.y, r3.z))) / 0.12;   // metres to the boundary, about (the noise's slope)
     vec3 upW = normalize(vec3(0.0, 1.0, 0.0) - nG * nG.y + 1e-5);
-    vec3 axW = upW;
+    vec2 q = A == 0 ? p.zy : A == 1 ? p.xz : p.xy;
+    // The elongation axis, in the plane's own coordinates and the same over the whole plane: on the walls down the dip
+    // (the plane's vertical), on the ground plane along the joints' strike (cliffJoint, from the DEM); on rock with a
+    // fabric along its trace on the plane (the plane's normal crossed with the fabric's), turning back where the plane
+    // lies in the fabric. Not from the pixel's normal: the lattice's coordinates are hundreds of metres, so an axis
+    // that turned a degree with the normal slid the cells by metres, and the facets marbled and kinked at every
+    // triangle of the mesh (long plates showed it as zigzag bands).
+    vec2 ax = A == 1 ? cliffJoint[L].xy : vec2(0.0, 1.0);
     if (br.w > 0.5 && fab.w > 0.5) {
-      vec3 tr = cross(nG, fab.xyz); float s = length(tr);
-      tr = tr / max(s, 1e-4); if (dot(tr, upW) < 0.0) tr = -tr;
-      axW = normalize(mix(upW, tr, smoothstep(0.15, 0.4, s)));
+      vec3 f = fab.xyz;
+      vec2 tr = A == 0 ? vec2(f.y, -f.z) : A == 1 ? vec2(f.z, -f.x) : vec2(-f.y, f.x);
+      float s = length(tr); tr /= max(s, 1e-4);
+      if (A != 1 && tr.y < 0.0) tr = -tr;
+      ax = normalize(mix(ax, tr, smoothstep(0.15, 0.4, s)) + 1e-5);
     }
+    vec2 gx = A == 0 ? dpx.zy : A == 1 ? dpx.xz : dpx.xy, gy = A == 0 ? dpy.zy : A == 1 ? dpy.xz : dpy.xy;
+    // The facets at every scale still on screen (a facet spanning under ~15-30 pixels is gone), in a loop with a
+    // dynamic trip count, so the compiler keeps one copy of its body: their summed tilt (along h, y), the darkest of
+    // their joints, the product of their tones, the step wall with the most of the pixel (its share and facing).
+    int b = 6 * L;
+    int no = detailReady > 0.5 ? int(foot < cliffOct[b].x / 15.0) + int(foot < cliffOct[b + 2].x / 15.0) + int(foot < cliffOct[b + 4].x / 15.0) : 0;   // the cells stream in with the detail
+    vec2 pt = vec2(0.0), pw = vec2(0.0); float dark = 0.0, tone = 1.0, wallK = 0.0, h1A = 0.0;
+    for (int o = 0; o < no; o++) {
+      vec4 oa = cliffOct[b + 2 * o], ob = cliffOct[b + 2 * o + 1];   // (width, elongation, tilt, open), (steps, joint, step, tone)
+      float w = oa.x, k = 1.0 - smoothstep(w / 30.0, w / 15.0, foot);
+      vec2 ids, en; float edge;
+      cliffCells(q, gx, gy, ax, w, oa.y, CLIFF_ROT[o], vec2(0.37, 0.71) * (float(o) + 3.0 * float(A)), ids, edge, en);
+      // the facet's numbers and its neighbour's from their id bytes, the edge's own from their sum (the same from both sides)
+      float h1 = ids.x, h2 = fract(ids.x * 13.71 + 0.37), h3 = fract(ids.x * 31.17 + 0.71);
+      float n1 = ids.y, n2 = fract(ids.y * 13.71 + 0.37), hn = fract(ids.y * 31.17 + 0.71);
+      float he = fract((ids.x + ids.y) * 57.31 + 0.13), hs = fract((ids.x + ids.y) * 91.73 + 0.59);
+      float ad = abs(edge), open = 1.0 - smoothstep(oa.w - 0.08, oa.w + 0.08, he);
+      if (longJ) open *= mix(0.15, 1.0, smoothstep(0.6, 0.9, abs(dot(en, vec2(ax.y, -ax.x)))));
+      // the facet's plane: a random turn, a little more often down-and-out than up (a face weathers back from its rims);
+      // where the edge is no open joint the two facets bend into each other over a third of a facet (a crease only
+      // where the rock is broken), so the face is not a mosaic of flat tones
+      // (and at every edge across a texel of the baked cells, where the nearest-texel ids switch: no stair steps)
+      float bend = max((1.0 - open) * (1.0 - smoothstep(0.0, 0.35 * w, ad)), 1.0 - smoothstep(0.0, 1.5 * w / ${DETAIL_PX / CELL_N}.0 + foot, ad)) * 0.5;
+      vec2 t1 = vec2(2.0 * h1 - 1.0, 1.6 * h2 - 0.95), t2 = vec2(2.0 * n1 - 1.0, 1.6 * n2 - 0.95);
+      pt += oa.z * k * mix(t1, t2, bend) * vec2(1.0, 0.8);
+      tone *= 1.0 + k * ob.w * (2.0 * mix(h3, hn, bend) - 1.0);
+      // the joint along the edge, on the lithology's share of edges at this scale; on sheeted, massive and columnar
+      // rock mostly the long ones, along the elongation (their normal across it). A dark line of the joint's width,
+      // never more than a pixel's worth of contrast (a thin line far off is faint, not shimmering)
+      float cw = ob.y;
+      float line = (1.0 - smoothstep(0.5 * cw, 0.5 * cw + foot, ad)) * min(cw / max(foot, 1e-3), 1.0);
+      dark = max(dark, line * k * open * (o == 0 ? 0.8 : 0.6));
+      // the step, on its share of edges: a groove of the step's depth either side of the edge, its walls turned toward
+      // it (one lit, one in shade), from the smooth distance alone, so it does not follow where the ids switch
+      float st = ob.z * (0.4 + 0.6 * hs) * (1.0 - smoothstep(ob.x - 0.05, ob.x + 0.05, hs));
+      float ws = 0.3 * st, wall = (1.0 - smoothstep(ws, ws + foot, ad)) * k * min(ws / max(foot, 1e-3), 1.0);
+      if (wall > wallK) { wallK = wall; pw = -en; }
+      if (o == 0) h1A = h1;
+    }
+    // the plane's boundary, a joint of the rock's width
+    float sw = br.y + 0.05;
+    dark = max(dark, 0.7 * (1.0 - smoothstep(0.5 * sw, 0.5 * sw + foot, seam)) * min(sw / max(foot, 1e-3), 1.0));
+    vec3 tiltW = A == 0 ? vec3(0.0, pt.y, pt.x) : A == 1 ? vec3(pt.x, 0.0, pt.y) : vec3(pt.x, pt.y, 0.0);
+    vec3 wallW = wallK * (A == 0 ? vec3(0.0, pw.y, pw.x) : A == 1 ? vec3(pw.x, 0.0, pw.y) : vec3(pw.x, pw.y, 0.0));
     // the sheets' arcs and streaks belong to steep faces: on a gentle flank they read as contour lines
+    vec4 E = vec4(0.0); float l1;
     float steepK = smoothstep(0.82, 0.95, length(nG.xz));   // past ~55-70 degrees
-    vec4 F = vec4(0.0), S = vec4(0.0), E = vec4(0.0), F1, S1, E1; float l1;
-    vec3 tiltW = vec3(0.0), wallW = vec3(0.0);
-    int np = wB > 0.0 ? 2 : 1;
-    for (int pi = 0; pi < np; pi++) {
-      int id = pi == 0 ? A : B; float wt = pi == 0 ? wA : wB;
-      vec2 q = id == 0 ? p.zy : id == 1 ? p.xz : p.xy;
-      // the ground plane's facets run along the joints' strike (cliffJoint, from the DEM), else the fabric's
-      vec2 ax = id == 1 ? cliffJoint[L].xy : normalize((id == 0 ? axW.zy : axW.xy) + 1e-5);
-      vec2 gqx = id == 0 ? dpx.zy : id == 1 ? dpx.xz : dpx.xy, gqy = id == 0 ? dpy.zy : id == 1 ? dpy.xz : dpy.xy;
-      cliffFacets(q, gqx, gqy, ax, L, foot, 3.0 * float(id), F1, S1);
-      if (id != 1) { cliffSheets(q.x, p.y, foot, form, E1, l1); E += wt * E1; }
-      F += wt * F1; S.z += wt * S1.z; S.w += wt * S1.w;
-      vec3 t3 = id == 0 ? vec3(0.0, F1.y, F1.x) : id == 1 ? vec3(F1.x, 0.0, F1.y) : vec3(F1.x, F1.y, 0.0);
-      vec3 s3 = id == 0 ? vec3(0.0, S1.y, S1.x) : id == 1 ? vec3(S1.x, 0.0, S1.y) : vec3(S1.x, S1.y, 0.0);
-      tiltW += wt * t3; wallW += wt * S1.z * s3;
-    }
-    E *= steepK;
-    vec2 gq = A == 0 ? p.zy : A == 1 ? p.xz : p.xy;   // the plane the face faces most
+    if (A != 1 && steepK > 0.0) { cliffSheets(q.x, p.y, foot, form, E, l1); E *= steepK; }
+    vec2 gq = q;   // the plane the face faces most
     float lich = smoothstep(0.55, 0.8, rnoise(gq + 19.0, 2.37, 14.0));
     // the rock's grain within a few metres: two rotated octaves of speckle on the plane the face faces most (granite's
     // salt and pepper; a finer, flatter grain on the dark rocks) in the albedo and, a little, the normal
@@ -317,19 +327,19 @@ export const CLIFF_GLSL = /* glsl */`
     }
     // colour: the lithology's, each facet its own tone, the joints dark, the sheets' shadow lines, streaks, lichen on
     // the old faces of granite and greenstone, rust on some plates of slate, schist and serpentinite
-    vec3 c = col.rgb * F.w * (1.0 - 0.55 * F.z) * (1.0 - 0.5 * E.x + 0.08 * E.z) * (1.0 - 0.55 * E.w) * grain;
+    vec3 c = col.rgb * tone * (1.0 - 0.55 * dark) * (1.0 - 0.5 * E.x + 0.08 * E.z) * (1.0 - 0.55 * E.w) * grain;
     float lk = (form == 1.0 || form == 4.0 || form == 8.0) ? 0.7 : 0.35;
     c = mix(c, c * vec3(1.18, 1.0, 0.62), 0.5 * lich * lk);
-    if (form == 2.0 || form == 3.0 || form == 7.0) c = mix(c, c * vec3(1.35, 0.95, 0.7), 0.5 * smoothstep(0.72, 0.9, S.w) * (1.0 - smoothstep(2.0, 6.0, foot)));
+    if (form == 2.0 || form == 3.0 || form == 7.0) c = mix(c, c * vec3(1.35, 0.95, 0.7), 0.5 * smoothstep(0.72, 0.9, h1A) * (1.0 - smoothstep(2.0, 6.0, foot)));
     c *= mix(1.0, clamp(lum / max(dot(col.rgb, G_LUMA), 0.02), 0.5, 1.5), 0.33);
     // the lighting normal: the facets' tilt, the step walls turned hard toward their edge, the sheets' recess facing
     // down, the grain
     tiltW -= nG * dot(tiltW, nG); wallW -= nG * dot(wallW, nG);
     vec3 n = normalize(nd + tiltW - upW * (0.9 * E.y));
     float wl = length(wallW);
-    if (wl > 1e-4) n = normalize(mix(n, normalize(0.35 * nG + wallW / wl), clamp(S.z, 0.0, 1.0) * 0.85));
+    if (wl > 1e-4) n = normalize(mix(n, normalize(0.35 * nG + wallW / wl), clamp(wallK, 0.0, 1.0) * 0.85));
     nOut = n;
-    return c * mix(1.0, 0.8, clamp(S.z, 0.0, 1.0));
+    return c * mix(1.0, 0.8, clamp(wallK, 0.0, 1.0));
   }
 `;
 export const GROUND_GLSL = /* glsl */`
@@ -537,11 +547,35 @@ const FRAG = /* glsl */`
     float rock = max(smoothstep(24.0, 32.0, slopeDeg), max(smoothstep(0.35, 0.7, -curv), smoothstep(0.7, 0.9, bare)));
     // pavement where the road weight passes ~0.55, with a ragged, crumbling 1-2 m edge (the 5 m raster's own edge is straight)
     float pave = smoothstep(0.42, 0.68, road + 0.22 * bn + 0.18 * (rnoise(vPosW.xz + 3.3, 2.4, 0.9) - 0.5));
+    // Where the face's rock goes (cliffShade below): on a tile with the substrate step, the exposed rock of the
+    // ground-data texture (G, 5 m, from slope, canopy, the photo and the soils; pipeline/substrate.py) on ground past
+    // ~40 degrees; without it the 2026-11-02 rule (held off vegetated ground below ~60 degrees by the 30 m canopy and
+    // habitat, whose cells showed as squares on the faces). Decided before the ground's detail, which a face wholly
+    // of rock skips (it would be drawn over). NO_CLIFF: a chunk without exposed rock (Terrain.build), whose program
+    // has none of the cliff code (its registers weighed on every pixel of the terrain: ~0.4 ms at 1920x1200).
+    float cliff = 0.0;
+    int lith = 0;
+    #ifndef NO_CLIFF
+    if (cliffSub > 0.5) {
+      // the slope from the drawn mesh's interpolated normal, not the 10 m mask: thresholding the mask's bilinear
+      // slope drew rounded 10 m squares wherever a face sat near the threshold (the exposure carries the 5 m slope)
+      float expo = textureLod(roads, vUv, 0.0).g, slopeM = degrees(acos(clamp(nMac.y, 0.0, 1.0)));
+      cliff = smoothstep(0.15, 0.45, expo) * smoothstep(34.0, 48.0, slopeM) * cliffOn;
+      lith = cliff > 0.0 ? cliffLith(vPosW) : 0;
+    } else {
+      float veg = max(max(tree, clamp(cov.g, 0.0, 1.0)), w.g + w.b);
+      cliff = smoothstep(42.0, 55.0, slopeDeg) * max(1.0 - smoothstep(0.25, 0.6, veg), smoothstep(58.0, 68.0, slopeDeg)) * cliffOn;
+      int pat = int(floor(mk.a * 3.0 + 0.5));   // groundDetail.js CLIFF_PATTERN: plain, sheeted, bedded, blocky
+      lith = pat == 1 ? 1 : pat == 2 ? 2 : pat == 3 ? 4 : 0;
+    }
+    if (lith == 10) cliff *= 0.5;   // a cut bank in a surficial deposit: half rock
+    #endif
+    bool allRock = cliff > 0.99;
     float swCov = 0.0;   // how much of this pixel the painted sward's blades cover (swardPaint)
     // Fine detail so the ground is not a blurred photo up close: 2 m and 9 m value noise, on
     // lattices turned to two different angles so neither lines up with the world axes.
     float d = 0.86 + 0.14 * rnoise(vPosW.xz, 0.35, 2.0) + 0.10 * (rnoise(vPosW.xz + 6.3, 1.45, 9.1) - 0.5);
-    if (dist < 420.0 && groundFx > 0.5) {
+    if (dist < 420.0 && groundFx > 0.5 && !allRock) {
       // Metres per pixel here: each pattern fades out before it gets small enough to shimmer.
       float px = length(fwidth(vPosW.xz));
       // Sward grain in grassland: tufts at ~0.45 m and bunches at ~1.6 m, light tops over darker
@@ -576,7 +610,7 @@ const FRAG = /* glsl */`
     // The detail textures carry the fine structure near the camera: the noise grain keeps a third
     // of its strength there and all of it beyond 250 m.
     c *= mix(d, 1.0 + (d - 1.0) * 0.35, fade);
-    if (fade > 0.0) {
+    if (fade > 0.0 && !allRock) {
       float wt[5];
       wt[0] = w.r * (1.0 - 0.8 * tree);                                  // thatch: grassland in the open
       wt[1] = clamp(max(tree * 1.5, w.g * 0.5), 0.0, 1.0);               // litter: under tree cover
@@ -641,36 +675,18 @@ const FRAG = /* glsl */`
       nL = normalize(mix(nGeo, nd, fade));
     }
     // Cliffs at any distance (CLIFF_GLSL cliffShade): past ~40 degrees the photo is a smear stretched down the face,
-    // so the face takes the cliff material in its place, at every distance, as its lithology breaks. Where it goes: on
-    // a tile with the substrate step, the exposed rock of the ground-data texture (G, 5 m, from slope, canopy, the
-    // photo and the soils; pipeline/substrate.py) on ground past ~40 degrees; without it the 2026-11-02 rule (held off
-    // vegetated ground below ~60 degrees by the 30 m canopy and habitat, whose cells showed as squares on the faces).
+    // so the face takes the cliff material in its place, at every distance, as its lithology breaks (where: cliff, above).
     float cliffW = 0.0;   // the face's rock: the canopy's 30 m sky occlusion is not laid on it (below)
     {
-      vec4 mkC = textureLod(detailMask, vUv, 0.0);
-      float slopeC = max(mkC.r * 90.0, geoSlope * degrees(acos(clamp(nMac.y, 0.0, 1.0))));
-      float cliff;
-      int lith;
-      if (cliffSub > 0.5) {
-        // the slope from the drawn mesh's interpolated normal, not the 10 m mask: thresholding the mask's bilinear
-        // slope drew rounded 10 m squares wherever a face sat near the threshold (the exposure carries the 5 m slope)
-        float expo = textureLod(roads, vUv, 0.0).g, slopeM = degrees(acos(clamp(nMac.y, 0.0, 1.0)));
-        cliff = smoothstep(0.15, 0.45, expo) * smoothstep(34.0, 48.0, slopeM) * cliffOn;
-        lith = cliff > 0.0 ? cliffLith(vPosW) : 0;
-      } else {
-        float veg = max(max(tree, clamp(cov.g, 0.0, 1.0)), w.g + w.b);
-        cliff = smoothstep(42.0, 55.0, slopeC) * max(1.0 - smoothstep(0.25, 0.6, veg), smoothstep(58.0, 68.0, slopeC)) * cliffOn;
-        int pat = int(floor(mkC.a * 3.0 + 0.5));   // groundDetail.js CLIFF_PATTERN: plain, sheeted, bedded, blocky
-        lith = pat == 1 ? 1 : pat == 2 ? 2 : pat == 3 ? 4 : 0;
-      }
-      if (lith == 10) cliff *= 0.5;   // a cut bank in a surficial deposit: half rock
+      #ifndef NO_CLIFF
       if (cliff > 0.0) {
         vec3 nC;
         vec3 cC = cliffShade(vPosW, nMac, dpx, dpy, lith, dot(photo, G_LUMA), foot, nC);
         c = mix(c, cC, cliff); nL = normalize(mix(nL, nC, cliff)); cliffW = cliff;
       }
+      #endif
       // cliffOn 0: the 2026-10-28 rule as it was (bands by height and streaks as a tone over the photo), kept for A/B
-      float cliffOld = smoothstep(33.0, 45.0, slopeC) * (1.0 - 0.7 * fade) * (1.0 - cliffOn);
+      float cliffOld = smoothstep(33.0, 45.0, slopeDeg) * (1.0 - 0.7 * fade) * (1.0 - cliffOn);
       if (cliffOld > 0.0) {
         vec2 along = normalize(vec2(nMac.z, -nMac.x) + vec2(1e-4, 0.0));
         float fx = dot(vPosW.xz, along);
@@ -800,8 +816,24 @@ export class Terrain {
     } else { G.waterMap.value = null; G.waterOn.value = 0; }
     this.uniforms = { ...G, ...windUniforms, ...atmo, ...detailUniforms, ...ripUniforms, ...cliffUniforms, geoSlope: { value: tile.heights.detail ? 1 : 0 } };   // shared objects, so one update reaches every material
     this.material = new THREE.ShaderMaterial({ vertexShader: VERT, fragmentShader: FRAG, uniforms: this.uniforms });
+    // the chunks with no exposed rock (nowhere over the chunk and two texels round it is the substrate's exposure past
+    // the cliff rule's 0.15 on ground steeper than 28 degrees, the rule's 34 less a margin for the mesh's normal) take
+    // the same program without the cliff code, which weighed on every pixel drawn with it
+    this.materialNoCliff = tile.substrate ? new THREE.ShaderMaterial({ vertexShader: VERT, fragmentShader: FRAG, uniforms: this.uniforms, defines: { NO_CLIFF: '' } }) : null;
     const size = tile.size, cs = size / chunks, nv = Math.round(cs / spacing) + 1, H = tile.heights;
     H.coarseSpacing = spacing;
+    const rocky = (x0, north1, cs) => {
+      const S = tile.substrate, r = S.res, W = S.img.width, Hh = S.img.height;
+      const i0 = Math.max(Math.floor(x0 / r) - 2, 0), i1 = Math.min(Math.ceil((x0 + cs) / r) + 2, W - 1);
+      const j0 = Math.max(Math.floor((S.size - north1) / r) - 2, 0), j1 = Math.min(Math.ceil((S.size - north1 + cs) / r) + 2, Hh - 1);
+      for (let j = j0; j <= j1; j++) for (let i = i0; i <= i1; i++) {
+        if (S.channel(i, j, 0) < 38) continue;   // 0.15 x 255
+        const x = (i + 0.5) * r, n = S.size - (j + 0.5) * r, d = 5;
+        const gx = (H.vert(x + d, n) - H.vert(x - d, n)) / (2 * d), gn = (H.vert(x, n + d) - H.vert(x, n - d)) / (2 * d);
+        if (gx * gx + gn * gn > 0.2827) return true;   // tan(28 degrees) squared
+      }
+      return false;
+    };
     this.chunks = []; this.chunkInfo = { chunks, cs, nv, spacing };
     for (let cj = 0; cj < chunks; cj++) for (let ci = 0; ci < chunks; ci++) {
       const g = new THREE.PlaneGeometry(cs, cs, nv - 1, nv - 1);
@@ -819,7 +851,7 @@ export class Terrain {
       // x / size, and the normals are made again where the fine mesh needs them (chunkVertexNormal). The index stays:
       // FineTerrain.hole rewrites it.
       releaseGeometry(g, { keepIndex: true });
-      const mesh = new THREE.Mesh(g, this.material); mesh.frustumCulled = true;
+      const mesh = new THREE.Mesh(g, this.materialNoCliff && !rocky(x0, north1, cs) ? this.materialNoCliff : this.material); mesh.frustumCulled = true;
       this.group.add(mesh);
       this.chunks.push({ mesh, g, x0, north1, holed: false });
       yield;
@@ -832,6 +864,7 @@ export class Terrain {
     this.micro.setScale(bodyScale.v);
     this.unScale = onBodyScale(v => this.micro?.setScale(v));
     this.material.onBeforeRender = (r, sc, cam) => { if (cam.isPerspectiveCamera && this.micro) { this.micro.cam = cam; this.micro.renderer = r; } };
+    if (this.materialNoCliff) this.materialNoCliff.onBeforeRender = this.material.onBeforeRender;
   }
   // The large ground images (the 4000 px photo, the 2000 px masks and roads) to the GPU a band at a time (gpuUpload.js;
   // main.js steps this before the first frame): three's own upload of such an image is one call of 50-350 ms. Each
@@ -859,7 +892,7 @@ export class Terrain {
   dispose() {
     for (const k of ['map', 'masks', 'roads', 'canopyMap', 'seasonMap', 'contactAO']) groundUniforms[k].value = null;
     this.unScale?.(); this.unScale = null;   // the body-scale listener, and the micro patch's mesh, texture and arrays
-    this.micro?.dispose(); this.micro = null; this.material.onBeforeRender = () => {};
+    this.micro?.dispose(); this.micro = null; this.material.onBeforeRender = () => {}; if (this.materialNoCliff) this.materialNoCliff.onBeforeRender = () => {};
     if (this.tile.heights) this.tile.heights.micro = null;
     ripUniforms.ripMask.value = null;
     this.waterTexture?.dispose(); if (groundUniforms.waterMap.value === this.waterTexture) { groundUniforms.waterMap.value = null; groundUniforms.waterOn.value = 0; }

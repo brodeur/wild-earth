@@ -147,3 +147,101 @@ window.__cliffProfile2 = async (tile, key, names, n = 100, K = 3) => {
   const r = await window.__cliffTerrainGpu(st, n, K);
   U.cliffOn.value = 1; U.cliffDbg?.value.set(1, 1, 1, 1); return r;
 };
+// Cost by term (2026-11-03, the cost pass): the terrain alone at a pose, K renders per query, medians; cliffDbg is a
+// debug uniform on this branch (x the octave cap, y sheets, z grain, w the second plane), cliffSkip the full-rock skip
+window.__cliffProf = async (tile, key, names, n = 24, K = 8) => {
+  const H = window.__ww, we = window.__we, U = we.terrain.uniforms; we.setHour(15.5);
+  await H.view(...window.__cliffSetPoses(tile)[key]); await H.wait(900);
+  const D = { off: [0, 3, 1, 1, 1, 1], all: [1, 3, 1, 1, 1, 1], noSkip: [1, 3, 1, 1, 1, 0], oct2: [1, 2, 1, 1, 1, 1], oct1: [1, 1, 1, 1, 1, 1],
+    oct0: [1, 0, 1, 1, 1, 1], noSheets: [1, 3, 0, 1, 1, 1], noGrain: [1, 3, 1, 0, 1, 1], onePlane: [1, 3, 1, 1, 0, 1], bare: [1, 0, 0, 0, 0, 1] };
+  const st = names.map(nm => ({ name: nm, apply: () => { const d = D[nm]; U.cliffOn.value = d[0]; U.cliffDbg?.value.set(d[1], d[2], d[3], d[4]); if (U.cliffSkip) U.cliffSkip.value = d[5]; } }));
+  const r = await window.__cliffTerrainGpu(st, n, K);
+  U.cliffOn.value = 1; U.cliffDbg?.value.set(3, 1, 1, 1); if (U.cliffSkip) U.cliffSkip.value = 1; return r;
+};
+// Timing with the GPU idle at every query's start (ANGLE/Metal's TIME_ELAPSED also counts work still queued from
+// before the begin: a render issued right after another read the other's time too). Per sample: the state applied and
+// rendered once untimed (uniforms uploaded, program bound), a fence waited on, then one render inside the query, its
+// result waited on before the next. Rounds of all the states; per state its min and median, and the median (and
+// quartiles) of its difference from state 0 in the same round.
+window.__gpuAB = (states, n = 60, K = 1) => new Promise(res => {
+  const we = window.__we, gl = we.renderer.getContext(), ext = gl.getExtension('EXT_disjoint_timer_query_webgl2'), cam = window.__ww.cam;
+  const saved = we.scene.children.map(c => [c, c.visible]); window.__rafPause = true;
+  for (const [c] of saved) c.visible = c === we.terrain.group;
+  const S = states.length, t = new Float64Array(n * S).fill(NaN); let i = 0, phase = 0, fence = null, q = null;
+  const step = () => {
+    if (phase === 0) { states[i % S].apply(); we.renderer.render(we.scene, cam); fence = gl.fenceSync(gl.SYNC_GPU_COMMANDS_COMPLETE, 0); gl.flush(); phase = 1; }
+    else if (phase === 1) {
+      if (gl.getSyncParameter(fence, gl.SYNC_STATUS) === gl.SIGNALED) {
+        gl.deleteSync(fence); q = gl.createQuery(); gl.beginQuery(ext.TIME_ELAPSED_EXT, q);
+        for (let k = 0; k < K; k++) we.renderer.render(we.scene, cam);
+        gl.endQuery(ext.TIME_ELAPSED_EXT); gl.flush(); phase = 2;
+      }
+    } else if (gl.getQueryParameter(q, gl.QUERY_RESULT_AVAILABLE)) {
+      if (!gl.getParameter(ext.GPU_DISJOINT_EXT)) t[i] = gl.getQueryParameter(q, gl.QUERY_RESULT) / 1e6 / K;
+      gl.deleteQuery(q); i++; phase = 0;
+    }
+    if (i >= n * S) {
+      for (const [c, v] of saved) c.visible = v;
+      states[0].apply();
+      const qt = (a, f) => { a = a.filter(x => !isNaN(x)).sort((x, y) => x - y); return +(a[Math.floor((a.length - 1) * f)] ?? NaN).toFixed(3); };
+      const out = {};
+      states.forEach((s, si) => {
+        const own = [], d = [];
+        for (let j = 0; j < n; j++) { own.push(t[j * S + si]); d.push(t[j * S + si] - t[j * S]); }
+        out[s.name] = { min: qt(own, 0), med: qt(own, 0.5), d25: qt(d, 0.25), d50: qt(d, 0.5), d75: qt(d, 0.75) };
+      });
+      res(out); return;
+    }
+    const c = new MessageChannel(); c.port1.onmessage = step; c.port2.postMessage(0);
+  };
+  step();
+});
+window.__cliffAB = async (tile, key, names, n = 60, K = 1) => {
+  const H = window.__ww, we = window.__we, U = we.terrain.uniforms; we.setHour(15.5);
+  await H.view(...window.__cliffSetPoses(tile)[key]); await H.wait(600);
+  const D = { off: [0, 3, 1, 1, 1, 1], all: [1, 3, 1, 1, 1, 1], noSkip: [1, 3, 1, 1, 1, 0], oct2: [1, 2, 1, 1, 1, 1], oct1: [1, 1, 1, 1, 1, 1],
+    oct0: [1, 0, 1, 1, 1, 1], noSheets: [1, 3, 0, 1, 1, 1], noGrain: [1, 3, 1, 0, 1, 1], onePlane: [1, 3, 1, 1, 0, 1], bare: [1, 0, 0, 0, 0, 1] };
+  const st = names.map(nm => ({ name: nm, apply: () => { const d = D[nm]; U.cliffOn.value = d[0]; U.cliffDbg?.value.set(d[1], d[2], d[3], d[4]); if (U.cliffSkip) U.cliffSkip.value = d[5]; } }));
+  const r = await window.__gpuAB(st, n, K);
+  U.cliffOn.value = 1; U.cliffDbg?.value.set(3, 1, 1, 1); if (U.cliffSkip) U.cliffSkip.value = 1; window.__rafPause = true; return r;
+};
+// Shader variants by define on the terrain's materials (recompiled once each, then cached by three.js): __cliffDef(names)
+window.__cliffDef = names => {
+  const mats = new Set(); window.__we.terrain.group.traverse(o => { if (o.material?.isShaderMaterial) mats.add(o.material); });
+  for (const m of mats) {
+    m.defines = m.defines || {}; let ch = false;
+    for (const k of Object.keys(m.defines)) if (/^(STUB_|CLIFF_)/.test(k) && !names.includes(k)) { delete m.defines[k]; ch = true; }
+    for (const k of names) if (!(k in m.defines)) { m.defines[k] = ''; ch = true; }
+    if (ch) m.needsUpdate = true;
+  }
+};
+// states as [name, cliffOn, defines]: the terrain alone at a pose
+window.__cliffVar = async (tile, key, list, n = 10, K = 8) => {
+  const H = window.__ww, we = window.__we, U = we.terrain.uniforms; we.setHour(15.5);
+  await H.view(...window.__cliffSetPoses(tile)[key]); await H.wait(600);
+  const st = list.map(([name, on, defs]) => ({ name, apply: () => { window.__cliffDef(defs); U.cliffOn.value = on; } }));
+  const r = await window.__gpuAB(st, n, K);
+  window.__cliffDef([]); U.cliffOn.value = 1; window.__rafPause = true;
+  return Object.fromEntries(Object.entries(r).map(([k, v]) => [k, [v.min, v.med, v.d25, v.d50, v.d75].join(' ')]));
+};
+// The cost pass's final protocol (2026-11-03): per pose the terrain alone with the fine mesh hidden (it follows the
+// player, who spawns in different places), the draw calls and triangles, then cliffOn 0 / 1 by __gpuAB (fenced,
+// K renders a query, medians)
+window.__cliffFinal = async (tile, keys = ['far', 'mid', 'close'], n = 14, K = 8, extra = {}) => {
+  const H = window.__ww, we = window.__we, U = we.terrain.uniforms, fine = we.terrain.fine?.mesh, out = {};
+  we.setHour(15.5);
+  for (const [k, v] of Object.entries({ ...Object.fromEntries(Object.entries(window.__cliffSetPoses(tile)).filter(([k]) => keys.includes(k))), ...extra })) {
+    await H.view(...v); await H.wait(600);
+    if (fine) fine.visible = false;
+    window.__rafPause = true;
+    const saved = we.scene.children.map(c => [c, c.visible]); for (const [c] of saved) c.visible = c === we.terrain.group;
+    const ar = we.renderer.info.autoReset; we.renderer.info.autoReset = false; we.renderer.info.reset(); we.renderer.render(we.scene, H.cam);
+    const calls = we.renderer.info.render.calls, tris = we.renderer.info.render.triangles; we.renderer.info.autoReset = ar;
+    for (const [c, vis] of saved) c.visible = vis;
+    const r = await window.__gpuAB([{ name: 'off', apply: () => { U.cliffOn.value = 0; } }, { name: 'on', apply: () => { U.cliffOn.value = 1; } }], n, K);
+    out[k] = { calls, tris, off: r.off.med, on: r.on.med, d: r.on.d50, q: [r.on.d25, r.on.d75], min: [r.off.min, r.on.min] };
+    if (fine) fine.visible = true;
+  }
+  U.cliffOn.value = 1; window.__rafPause = true;
+  return out;
+};

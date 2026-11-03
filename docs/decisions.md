@@ -4187,3 +4187,62 @@ substrate area." And on a granite dome: "this was an earnest attempt to add geom
 - **Not done**: geometry (silhouettes, cast shadows from the facets); talus at the foot of the faces from the
   lithology's `talus`; rocks.js's outcrop forms are still from the rock class; the dips from data (the maps have no
   attitudes); the patch size (B, A in the client) is carried but nothing reads it yet.
+
+## 2026-11-03: the cliffs' cost brought under main's (branch claude/cliff-substrate)
+
+The orchestrating session held the substrate cliffs for their cost (+8.3 ms at 9 m off El Capitan, +2.3 to +3.6 at a
+distance): "find the cost first ... cut by on-screen footprint ... measure on a quiet machine ... within about 0.5 ms
+of main's material at all three poses".
+
+- **The timer was reading other work.** ANGLE/Metal's TIME_ELAPSED query also counts GPU work still queued from before
+  its begin: renders issued back to back read each other's time (the first pass's one-render queries, and rounds of
+  states issued in one task, gave orderings that made no sense: a cheaper state slower than its superset). The
+  protocol now (`scratch/cliff_diag.js` __gpuAB, __cliffFinal): per sample the state is applied and rendered once
+  untimed, a fence (fenceSync) waited on so the GPU is idle, then K = 8 renders inside the query, its result waited
+  on before the next; states alternate in rounds; the terrain drawn alone, with the fine mesh hidden (it follows the
+  player, who spawns in different places: one page drew it at a pose and the other did not). Medians with
+  interquartile ranges of 0.1-0.3 ms on a machine still busy (a video call, other sessions' viewers, load 9-13).
+- **Where the cost was** (terms switched off one at a time, and the material compiled with the cliff code stubbed
+  out): (1) the code's mere presence: the cliff path's registers weighed on every pixel of the terrain program, cliff
+  or not, 0.9 ms at Half Dome, the nested loops (scales inside planes) and the two planes' sums the most of it; (2) the
+  second projection plane: the facets and sheets evaluated twice on any face turned between the axes (most of Half
+  Dome's north-west face), 1.35 ms there; (3) at 9 m the ground's own detail (four or five noises, three or four
+  detail-texture fetches) computed under rock that then covered it, 5 ms of the close-up; (4) the facets themselves,
+  about 1 ms for the big scale and 0.6 and 0.25 for the finer ones close up; the sheets 0.5, the grain 0.1.
+- **What changed**:
+  - One projection plane per pixel, the one the face faces most, chosen with two octaves of rotated noise where two
+    face it alike, so the boundary wanders off the slope's contours; the boundary is drawn as a joint. (One loop over
+    the planes and scales together was tried: the slate came back as it was, the register weight did not: 0.9 ms.)
+  - The elongation axis per plane from the lithology's fabric (the plane's normal crossed with the fabric's) or the
+    plane's vertical, never from the pixel's normal: with long plates the old axis drew zigzag bands and contour rings
+    (the lattice slid metres when the normal turned a degree, the 2026-11-02 lesson again).
+  - Each scale's numbers packed in two uniform vectors read inside the loop; the scales' rotations constant.
+  - The ground's detail skipped where the rock is whole (cliff weight > 0.99), decided before it.
+  - Chunks with no exposed rock (exposure under 0.15 or ground under 28 degrees over the chunk and two texels round it)
+    drawn by a second program compiled without the cliff code (`NO_CLIFF`): 46 of the home tile's 100 chunks, 3 of
+    Yosemite's.
+  - The sheets only past ~55 degrees (they were computed and multiplied by zero below).
+- **The slate's look.** The first pass's slate owed its fine horizontal striations to the second plane seen nearly
+  edge-on: a projection stretch, the smear this work set out to remove. With one plane the 47-degree slate face showed
+  a mosaic of flat-toned plates; the cleavage is now drawn on purpose: the foliated rocks' finer plates thinner (slate
+  1.6, 3.2, 4.8 times as long as wide; schist and serpentinite less), the slate's plates turned less (5, 10, 9
+  degrees) and toned less (0.06), schist's and serpentinite's softened likewise (`pipeline/substrate.py`
+  LITHOLOGIES; substrate.json rebuilt for the seven tiles, the PNGs unchanged byte for byte). The home tile's slate
+  cleavage strikes N4W, so on that east-west face its traces are steep: steep plates with many joints, where the
+  first pass showed horizontal streaks. Granite looks as it did; Half Dome's flank lost the faint contour marbling.
+- **Measured** (1920 x 1200, terrain alone, fine mesh hidden, median ms per render, two interleaved rounds each; main
+  is d2587bf, the branch's parent):
+
+  | pose | main off | main | branch off | branch | branch - main |
+  |---|---|---|---|---|---|
+  | Half Dome from 1.2 km | 2.16 / 2.19 | 4.75 / 4.69 | 2.50 / 2.38 | 4.10 / 4.28 | -0.65 / -0.41 |
+  | El Capitan from 330 m | 1.58 / 1.58 | 3.57 / 3.59 | 1.95 / 1.94 | 3.86 / 3.74 | +0.29 / +0.15 |
+  | El Capitan 9 m off | 3.64 / 3.63 | 6.69 / 6.97 | 4.20 / 4.35 | 5.23 / 5.24 | -1.46 / -1.73 |
+
+  Main's material costs +2.0 to +3.3 ms over its off state by this protocol at these poses (the "+0.4 to +1.0" of the
+  earlier lane was whole frames at other poses); the branch's +1.0 to +1.8. The branch's off state is 0.35-0.7 ms
+  above main's on Yosemite: the cliff code's registers in the rocky chunks. On the home tile's grassland (looking
+  north over rock-free chunks) the branch reads 1.85 ms against main's 2.43, and at the slate face 3.17 against 3.44.
+- **Not done**: the cliffs are still not "well under 1 ms" in absolute terms; neither was main's material. The next
+  cuts, if wanted: the big scale's facets at a distance (a facet over ~100 pixels could shade from one texel fetch
+  without the edge work), and the register weight in rocky chunks.

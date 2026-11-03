@@ -15,7 +15,7 @@
   37.76645207290539
  ],
  "size_m": 10000,
- "generated_at": "2026-11-03T20:06:00Z",
+ "generated_at": "2026-11-03T23:16:27Z",
  "generator": {
   "name": "wild-earth-pipeline",
   "version": "0.2.0"
@@ -5461,8 +5461,8 @@
    "derived_from": [
     "client.substrate"
    ],
-   "sha256": "eaf0d2511fa986fd29a1a6a1f9a3b5be4382eae04fa6b872feba2ffda7938298",
-   "bytes": 11186
+   "sha256": "b2913ce4679df7f9fb99e96fb52bfc7fc8fc20d78d67e3b7bf17fa824aebbbc3",
+   "bytes": 11184
   }
  },
  "sources": {
@@ -5793,6 +5793,18 @@
    "step": "substrate",
    "at": "2026-11-03T20:06:00Z",
    "seconds": 6.4,
+   "ok": true
+  },
+  {
+   "step": "substrate",
+   "at": "2026-11-03T23:13:50Z",
+   "seconds": 6.0,
+   "ok": true
+  },
+  {
+   "step": "substrate",
+   "at": "2026-11-03T23:16:27Z",
+   "seconds": 7.2,
    "ok": true
   }
  ]
