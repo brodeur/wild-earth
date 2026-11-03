@@ -921,6 +921,7 @@ export class SquirrelControl {
   woodAction() {
     const G = this.acorns, P = this.flight.pos, w = this.w;
     if (!G || !G.running) { this.say('start a game (panel: Start game) to gather acorns'); return true; }
+    if (!G.collecting) { this.say(`no acorns for you in the ${G.season}: not your food this season`); return true; }
     if (G.player.carrying > 0) { this.say('your mouth is full: bury this one first'); return true; }
     const near = G.acornNear(P.x, P.y, P.z, CROWN_R, true);
     if (near) { this.work = { kind: 'pick', t: WORK.pick, acorn: near, back: 'wood' }; this.mode = 'work'; return true; }
@@ -1024,7 +1025,7 @@ export class SquirrelControl {
     ps.amp = damp(ps.amp, pick ? 0 : 0.35, 10, dt); ps.pose = damp(ps.pose, 0, 6, dt);
     if (!bark) ps.pitch = damp(ps.pitch, 0.15, 6, dt);
     if (!pick) ps.phase += dt * TAU * 4.5;
-    ps.flick = pick ? damp(ps.flick, 0.9, 10, dt) : 0.45 + 0.45 * Math.sin((W.t0 = (W.t0 || 0) + dt) * 15);
+    ps.flick = pick ? damp(ps.flick, 2, 10, dt) : 1.4 + 0.5 * Math.sin((W.t0 = (W.t0 || 0) + dt) * 15);   // the eat's reach (animals.js EAT_PECK): the nose at the acorn on the ground or the limb, or in the hole
     ps.bob = 0; void P;
     if (W.t > 0) return;
     this.mode = W.back || 'ground'; this.work = null;
@@ -1044,6 +1045,7 @@ export class SquirrelControl {
   action() {
     const G = this.acorns, f = this.flight, P = f.pos, me = G?.player;
     if (!G || !G.running) { this.say('start a game (panel: Start game) to gather acorns'); return; }
+    if (!G.collecting) { this.say(`no acorns for you in the ${G.season}: not your food this season`); return; }
     const fx = -Math.sin(f.yaw), fz = -Math.cos(f.yaw), nx = P.x + fx * 0.2, nz = P.z + fz * 0.2;
     if (me.carrying > 0) {
       const g = this.heights.atXZ(nx, nz), hab = this.tile.habitat.at(nx, -nz);
@@ -1067,6 +1069,7 @@ export class SquirrelControl {
   crownAction() {
     const G = this.acorns, P = this.flight.pos;
     if (!G || !G.running) { this.say('start a game (panel: Start game) to gather acorns'); return true; }
+    if (!G.collecting) { this.say(`no acorns for you in the ${G.season}: not your food this season`); return true; }
     if (G.player.carrying > 0) { this.say('your mouth is full: bury this one first'); return true; }
     const near = G.acornNear(P.x, P.y, P.z, CROWN_R, true);
     if (near) { this.work = { kind: 'pick', t: WORK.pick, acorn: near, back: 'trunk' }; this.mode = 'work'; return true; }

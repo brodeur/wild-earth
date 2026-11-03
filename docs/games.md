@@ -78,6 +78,9 @@ nearest good cell of the resource, found by scanning the raster in rings round t
 Everything comes from games.json and the rasters, so any species in the tables gets its needs; a species whose food this
 season is prey rather than a raster (the hunters) has no drain yet, since hunting is not a loop. The acorns are their
 real size (2 cm by 3 cm, ACORN_R in acorns.js) and lie on the ground; the glow still finds them.
+Since 2026-11-03 they are drawn only for a body whose diet has acorns that season (a gather or cache game on the
+acorn mast, or a forage row for an oak's acorns: `acorns.js eatsAcorns`); the shared world keeps them for everyone else,
+and the spirit sees none. Eating takes the head to the food on every rig (decisions, "food shown by diet").
 
 The forage relation (`relations.forage`: [animal, plant, part, resource, seasons], written by pipeline/games.py from the
 plant records' `eaten_by`) is what the client reads to know a body's food plants this season (needs.js `foodPlants`),
