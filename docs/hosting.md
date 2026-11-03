@@ -37,7 +37,11 @@ exist; `fly deploy` uploads that context to Fly's builder.
   tiles, no times of play (`docs/multiplayer.md`, Privacy).
 - `data/game/<tile>/` on the volume: each tile's played acorn-game worlds (`server.py` writes `tiles/<tile>/game/`;
   `deploy/entrypoint.sh` makes that a symlink to the volume at start, so a redeploy keeps them).
-- The image: the tiles. A rebuilt tile means a new image (`fly deploy` again).
+- `data/tiles/<tile>/client/` on the volume: the tiles' client rasters (png, jpg, bin), pushed from the workstation
+  with `tools/push_tiles.sh` (a tar streamed over `fly ssh console`) and linked into the image's tile folders by
+  `deploy/entrypoint.sh` at start. The first deploy showed flyctl's build context drops the git-ignored rasters even
+  with a `.dockerignore`, and a deploy is far quicker without 400 MB of them anyway. A rebuilt tile means a push and a
+  `fly machine restart`; the JSON layers travel in the image.
 - Nothing else. Presence, rooms, counts, tile chat and positions are memory in the process and go with it.
 
 The hub logs method, path and status, never a body, a name, a chat line or a position. Open-Meteo is called with a
@@ -50,7 +54,7 @@ tile's centre only. The dev server's own request log goes to the container's std
    players), `fly volumes create we_data --size 1 --region <region>`, then the secrets:
    `fly secrets set HUB_ORIGIN=https://<domain>`; with the Discord application registered (its redirect is
    `https://<domain>/api/hub/oauth/discord`), add `DISCORD_CLIENT_ID=... DISCORD_CLIENT_SECRET=...`. Then
-   `fly deploy`. The first deploy uploads the tiles (a few hundred MB); later ones are layered.
+   `fly deploy` (the image: about 90 MB), then `tools/push_tiles.sh` for the rasters and `fly machine restart`.
 3. **A VPS instead:** check the repo out on the host, rsync the tiles' `client/` folders from the workstation (they are
    not in git), copy `.env.example` to `.env` and fill `HUB_DOMAIN`, `HUB_ORIGIN` and the Discord keys, then
    `docker compose -f deploy/docker-compose.yml up -d --build`.
@@ -74,9 +78,9 @@ tile's centre only. The dev server's own request log goes to the container's std
 
 ## Not done here
 
-- Not built or run as a container on this Mac: the Docker daemon was not running when the files were written. The
-  first `docker build` or `fly deploy` is the test; `server.py` with the pipeline missing was exercised (the hub's
-  tests pass, the build API answers 503 by code).
+- Deployed 2026-11-02 (Aaron's Fly account, the app `wild-earth`, San Jose, a 3 GB volume): the hub, the client and
+  the tiles answer at https://wild-earth.fly.dev; Fly's own GitHub launch had made a first machine in Amsterdam
+  without rasters, removed. The Docker image was never built on this Mac (the daemon was off); Fly's builder built it.
 - Shared animals between players (each browser runs its own animals today; `docs/multiplayer.md` Open) is a design
   step, not a hosting one.
 - A CDN for the tiles, a hub-level ban list, and moving the hub to its own process when the player count asks for it.
