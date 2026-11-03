@@ -110,7 +110,7 @@ export class FlierControl {
     if (help) help.innerHTML = on ? `${k('↑')}${k('↓')} pitch · ${k('←')}${k('→')} turn · ${k('W')}${k('S')} speed (${k('shift')} boost) · ${k('space')} flap · `
       + `${k('X')}${k('Z')} climb / descend · ${k('H')} ${S.flight.soar ? 'soar in a circle' : 'hover'} · fly slowly into a limb${S.flight.perch ? ' (a snag or a pine, high up)' : ''} or the ground to land · `
       + `on foot: ${k('W')}${k('S')} hop · ${k('A')}${k('D')} turn · ${k('space')} take off · ${k('E')} peck · `
-      + `${k('V')} view · ${k('M')} map · ${k('P')} present day · ${k('T')} tags · ${k('N')} mute · ${k('B')} back to spirit form · click a tree to identify · drag to orbit the camera` : W.help;
+      + `${k('V')} view · ${k('M')} map · ${k('P')} present day · ${k('T')} tags · ${k('N')} mute · ${k('B')} back to spirit form · click a tree to identify · drag to steer in flight, to orbit the camera when still` : W.help;
   }
 
   // The spirit (spirit.js) comes into an AI bird (animals.js info o): in the air at its speed; or standing where it

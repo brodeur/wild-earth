@@ -196,6 +196,8 @@ const MORE = {
   spirit: [['V', 'view'], ['R', 'reset'], ['M', 'map'], ['G', 'roads'], ['P', 'present day'], ['T', 'tags'], ['N', 'mute']],
 };
 const MOUSE = 'drag to orbit the camera · click a tree to identify';
+const MOUSE_AIR = 'drag to steer in flight, to orbit the camera when still · click a tree to identify';   // flight.js steering
+const MOUSE_SPIRIT = 'drag to steer · click a tree to identify';
 
 // The slots for a body: kind is the control (ground, flier, raven, squirrel, woodpecker, spirit), code the species.
 export function abilitiesFor(kind, code, S = null) {
@@ -252,7 +254,7 @@ export class Abilities {
     });
     const more = document.createElement('div'); more.className = 'ab-more';
     for (const [key, word] of MORE[kind] || []) { const s = document.createElement('span'), b = document.createElement('kbd'); b.textContent = key; s.append(b, ` ${word}`); more.append(s); }
-    const m = document.createElement('span'); m.textContent = MOUSE; more.append(m);
+    const m = document.createElement('span'); m.textContent = kind === 'spirit' ? MOUSE_SPIRIT : kind === 'raven' || kind === 'flier' ? MOUSE_AIR : MOUSE; more.append(m);
     this.el.replaceChildren(more, row);
   }
   // every frame: show: the world is up and playable (not behind the opening screen)

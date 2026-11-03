@@ -4092,3 +4092,16 @@ now join the quadrupeds on the leg engine with a gait set of their own; `docs/mo
   client address and raw request line). `tests/test_static.py`; all 32 server tests pass.
 - **Not done.** The rest of the review's server hardening (the real client address behind Fly's proxy for the rate
   limits, socket timeouts, byte-capped send queues, a scrypt semaphore, the game socket's Origin check).
+
+## 2026-11-03: a drag steers in flight again; it orbits when still (client/src/flight.js steering)
+
+- **Why.** Aaron: for birds in flight and the spirit, the mouse drag "used to change the flight path of the avatar.
+  This was lost when we shifted the pivot position. Lets return it."
+- **What.** `flight.steering()`: the spirit always, and a bird in the air that is not hovering, steer by a drag as
+  before the orbit (the head then the body by `turnLook`, the flight's pitch); standing, perched, hovering, or as a
+  walker or climber (`flight.ridden`, set by main.js each frame from the ground, squirrel and woodpecker controls) the
+  drag orbits the camera round the body. The orbit's hold timer only counts orbit drags, so a steering drag lets an
+  old orbit ease back behind. The raven's, the fliers' and the spirit's help lines say so.
+- **Verified** by dispatched drags in the viewer: flying, yaw +0.7 and pitch +0.1 with the orbit untouched; hovering
+  and ridden, the orbit took the drag and the heading stayed; the spirit hovering, yaw +0.7. Not tried by hand with a
+  mouse, nor the woodpecker's own flight (it keeps the orbit).

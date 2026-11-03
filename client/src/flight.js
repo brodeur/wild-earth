@@ -109,7 +109,7 @@ export class RavenFlight {
     this.view = 'chase';                                  // 'chase' | 'first'
     this.camOff = new THREE.Vector3(); this.camUp = new THREE.Vector3(0, 1, 0); this.camSettled = false;
     this.flapping = false; this.spirit = false; this.lift = 0; this.sp = RAVEN_SP; this.soarDir = 1;
-    this.landed = false; this.groundY = 0; this.lifting = false;
+    this.landed = false; this.groundY = 0; this.lifting = false; this.ridden = false;
     // in the air: contacts ignored for noLand s (and the plant `leftRec` for leftT s); a falling start off a branch (dropV,
     // m/s); a bounce's cool-down
     this.noLand = 0; this.leftRec = null; this.leftT = 0; this.dropV = 0; this.bounceT = 0; this.perches = null;
@@ -137,8 +137,19 @@ export class RavenFlight {
     window.addEventListener('keyup', e => this.keys.delete(e.code));
     dom.addEventListener('pointerdown', e => { this.drag = { x: e.clientX, y: e.clientY }; });
     window.addEventListener('pointerup', () => this.drag = null);
-    window.addEventListener('pointermove', e => { if (!this.drag) return; this.orbitBy(-(e.clientX - this.drag.x) * 0.0035, (e.clientY - this.drag.y) * 0.0025); this.drag = { x: e.clientX, y: e.clientY }; });
+    window.addEventListener('pointermove', e => {
+      if (!this.drag) return;
+      const dx = e.clientX - this.drag.x, dy = e.clientY - this.drag.y;
+      if (this.steering()) { this.turnLook(-dx * 0.0035); this.pitch -= dy * 0.0025; }
+      else this.orbitBy(-dx * 0.0035, dy * 0.0025);
+      this.drag = { x: e.clientX, y: e.clientY };
+    });
   }
+  // What a drag does (Aaron, 2026-11-03: the orbit "used to change the flight path"): in the air, the spirit always and
+  // a bird when it is not hovering, it steers as it did before the orbit (the head, then the body, and the flight's
+  // pitch); standing, perched, hovering, or as a walker or climber (ridden: main.js sets it each frame) it orbits the
+  // camera round the body.
+  steering() { return !this.ridden && (this.spirit || (!this.landed && !this.hover)); }
   setHover(on) {
     if (on && this.sp.soar) this.soarDir = this.roll < -0.05 ? -1 : 1;   // a soar: on round the way it banks
     this.hover = on; if (!on && this.speed < 6) this.speed = 8;
@@ -158,7 +169,7 @@ export class RavenFlight {
   // each camera calls this once a frame: the orbit eases back behind once the body moves on; the head turns toward it
   // going: whether the body is moving on (the walkers pass their keys; the fliers, a flight that is not hovering)
   easeOrbit(dt, going = this.moving() || (!this.landed && !this.hover && Math.abs(this.speed) > 3)) {
-    if (this.drag) this.orbitT = 0; else this.orbitT += dt;
+    if (this.drag && !this.steering()) this.orbitT = 0; else this.orbitT += dt;
     if (this.orbitT > ORBIT_HOLD && going && (this.orbitYaw || this.orbitPitch)) {
       const k = 1 - Math.exp(-dt * ORBIT_BACK);
       this.orbitYaw -= this.orbitYaw * k; this.orbitPitch -= this.orbitPitch * k;
