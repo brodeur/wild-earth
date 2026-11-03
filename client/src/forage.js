@@ -132,7 +132,7 @@ export class Forage {
   update(dt) {
     const t0 = performance.now();
     this.t += dt;
-    const N = this.needs, body = !!this.ground?.on || !!this.squirrel?.on, code = N.code, season = this.season();
+    const N = this.needs, body = (!!this.ground?.on && this.ground.mode !== 'tunnel') || !!this.squirrel?.on, code = N.code, season = this.season();   // underground (dig.js) no plant is in sight
     if (body && code && `${code}:${season}` !== this.key) this.setKey(code, season);
     const on = this.enabled && body && !!code && this.ids.size > 0;
     if (on !== this.on) { this.on = on; if (!on) { this.gain = 0; this.halos.visible = false; this.nHalo = 0; } }

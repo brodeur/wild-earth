@@ -188,6 +188,7 @@ export class GameNet {
       this.connected = true; this.retry = 0; this.pid = d.you; this.epoch = d.r; this.host = !!d.host; this.players = d.n;
       const prev = this.confirmed, seen = prev ? null : this.lastSeen();
       this.seq = d.world.seq; this.confirmed = this.toLocal(d.world);
+      this.confirmed.holeClock = { since: d.world.since ?? null, off: d.now != null ? d.now - Date.now() / 1000 : 0 };   // the tree holes' clock (server.py v5): the server's wall time less ours
       // the season total and the field notes are this browser's: from before the reconnect, or as last seen
       this.confirmed.you = prev ? prev.you : +seen?.you || 0;
       this.confirmed.species = prev ? [...prev.species] : (Array.isArray(seen?.species) ? seen.species.filter(id => acornSpecies(id) === id) : []);
@@ -217,6 +218,9 @@ export class GameNet {
       this.confirmed.round = this.toRound(d.round, this.confirmed.clock);
       const w = G.world; w.round = this.toRound(d.round, this.confirmed.clock); w.clock = this.confirmed.clock;
       G.roundChanged();
+    } else if (d.t === 'gone') {   // tree holes empty 30 days (server.py prune): no stash hole or granary there any more
+      for (const w of [this.confirmed, G.world]) { for (const k of d.oaks) { delete w.stashes[k]; delete w.granaries[k]; (w.gone ||= new Set()).add(k); } }
+      G.dirty = true;
     } else if (d.t === 'regrow') {
       for (const k of d.keys) { this.confirmed.picked.delete(k); G.world.picked.delete(k); }
       G.dirty = true;
@@ -305,6 +309,7 @@ export class GameNet {
         carrying: c.carrying, cap: c.cap, total: c.total || 0, dug: c.dug || 0, loot: c.loot || 0, off: c.off || 0 };
     }
     w.round = this.toRound(s.round, s.clock);   // (you and species: the caller's, from this browser)
+    w.gone = new Set(Object.keys(s.gone || {})); w.held = new Set(Object.keys(s.held || {}));   // the tree holes' clocks (server.py v5)
     return w;
   }
   toRound(r, clock) {

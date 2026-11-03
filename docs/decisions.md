@@ -3738,3 +3738,40 @@ could use, but i think it's time". The lag was two worlds rendering on one machi
 - Not run as a container here (the Docker daemon was off); the first `fly deploy` is the test. The accounts, the
   domain and the Discord registration are Aaron's.
 
+
+## 2026-11-02: Dig, a game for the vole and the coyote, shared from the first hole (docs/game-dig.md)
+
+Aaron: "a new game for voles and coyotes. Dig! Voles may dig tunnels at a rate of .5"/s. They can create tunnel
+systems, big chambers etc. coyotes may dig down at a rate of .5"/s if where they dig intersects with a tunnel they are
+able to see the tunnel along with a bright glow from the tunnel side containing voles", and the same day: "I want the
+holes to be persistent. For holes in trees, they should disappear if empty after 1 month. For holes in ground, they
+should disappear if no animal has been inside for 1 week. I want them to be seen by all players and animals. I want
+animals to do the behaviors as well." Decided:
+
+- **A graph, not a voxel field.** Tunnels are nodes on their centrelines with a radius and segments between them; a
+  chamber is one room node that absorbs the nodes round a dug loop; a pit is a bowl. Rejected: a voxel or signed-distance
+  field of the ground (memory per tile, a remesh per dig step, and nothing to send but bricks); merging a loop into
+  widened capsules (the first build: thirty overlapping 10 cm capsules a chamber, a ray through it crossing dozens of
+  walls).
+- **Events in the acorn game's world, from the start.** The tunnels go through `server.py`'s `GameWorld` for the tile
+  and season on the same socket, a dig channel with its own sequence (`dseq`) so the acorn clients' gap check never
+  trips, the same reducer in Python (`digworld.py`) and JS, the snapshot (v4) and log; the client predicts and rolls
+  back as `net.js` does; offline, localStorage. Every page in a tile is on the channel while in the world, the acorn game
+  running or not; the first is the AI host for the digging. Events carry no player or animal id, so a tunnel's position
+  is never kept beside whose it was. Rejected: localStorage first and the socket later (Aaron's change of plan); the
+  acorn game's player ids on the dig (nothing in the dig needs to know who).
+- **Decay on wall time, on the server's tick.** A system or pit unseen for 7 days goes (a dig or an hourly `visit` from a
+  page with an animal in it resets it); a stash hole or granary empty for 30 days goes (`held`, `since`, `gone`; an
+  untouched stash hole dates from when the rule began). Checked every 60 s whether or not anyone is in the world.
+- **The terrain is not edited.** The ground's shader discards a disc in the eight nearest openings, the grass drops a
+  clump rooted in one; the tubes' union is made in their fragment shader against their neighbours' capsules in a float
+  texture. Rejected: cutting the terrain mesh (the fine square and the micro patch rebuild on their own schedules) and a
+  stencil mask (a pass for every opening, and the grass and shells would need it too).
+- **The cost underground is over the 1 ms asked.** From above, with only the stretches near an opening drawn, 0.1-0.2
+  ms; from inside, the walls filling the screen, 3.1 ms of the dig's own GPU time at 1920 x 1200, though the frame was
+  no slower (the walls hide the world). A depth pre-pass to keep the early depth test (twice) and drawing after the
+  terrain cost more and were dropped. Next: a cheaper wall.
+- **AI coyotes dig too** (Aaron's change of plan; the first brief had them not): on the AI host, a coyote that smells a
+  buried vole within 15 m digs over it and pounces when the tunnel shows it.
+- Registered in `games.json` by a pipeline rule (`pipeline/games.py` PLAYS): the vole's burrow-shelter games and the
+  coyote's hunt of the vole carry `play: ['dig']`, the tile `plays.dig`; the client digs only for a species listed there.

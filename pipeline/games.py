@@ -56,7 +56,7 @@ REQUIRES = {
     "cover": [{"object": "shrubs and trees to hide in", "client": "shrubfield.js, vegetation.js", "status": "drawn"}],
     "cavity": [{"object": "cavity trees and granaries", "client": "acorns.js (granaries); no other cavities", "status": "partial"}],
     "cliff_or_snag": [{"object": "snags, cliffs and tall perch trees", "client": "vegetation.js (old trees), rocks.js", "status": "partial"}],
-    "burrow": [{"object": "burrows", "client": "animals.js placeBurrows (ground squirrels only)", "status": "partial"}],
+    "burrow": [{"object": "burrows", "client": "animals.js placeBurrows (ground squirrels); dig.js (vole tunnels, chambers and holes, dug in play)", "status": "partial"}],
 }
 # The plants (2026-10-29): which plant species each animal eats and hides in, from the species library's records
 # (library/species/<id>.json `relations`: eaten_by [{animal, part, seasons}], cover_for [animal ids]; docs/species-library.md
@@ -67,6 +67,34 @@ REQUIRES = {
 LIBRARY = pathlib.Path(__file__).resolve().parent.parent / "library" / "species"
 PART_RESOURCE = {"leaves": "grass_forbs", "seeds": "grass_forbs", "flowers": "grass_forbs", "bulbs": "grass_forbs", "roots": "grass_forbs",
                  "browse": "browse", "berries": "browse", "acorns": "acorn_mast"}
+
+
+# The games a client module plays (docs/game-dig.md): a name -> the species that play it and, per species, which of its
+# games it is played as. The game's entries carry `play` [names], and the tile's `plays` lists each with its module and
+# species present. Dig (2026-11-02): the vole digs its burrow (its shelter in a burrow, the den of the brief) and the
+# coyote digs for it (its hunt of the vole); played and shared by client/src/dig.js and server.py's dig channel.
+PLAYS = {
+    "dig": {"client": "client/src/dig.js",
+            "rules": {"microtus_californicus": lambda g: g["verb"] in ("den", "shelter") and g.get("resource") == "burrow",
+                      "canis_latrans": lambda g: g["verb"] == "hunt" and "microtus_californicus" in g.get("prey", [])}},
+}
+
+
+def add_plays(doc: dict) -> dict:
+    """Tag the games a client module plays (PLAYS) and list the plays on the tile; the burrow's objects from REQUIRES."""
+    for code, sp in doc.get("species", {}).items():
+        for g in sp["games"]:
+            names = [n for n, p in PLAYS.items() if p["rules"].get(code) and p["rules"][code](g)]
+            if names:
+                g["play"] = names
+            if g.get("resource") in REQUIRES and "requires" in g:
+                g["requires"] = REQUIRES[g["resource"]]
+    doc["plays"] = {n: {"client": p["client"], "species": sorted(c for c, sp in doc.get("species", {}).items() if any(n in g.get("play", []) for g in sp["games"]))}
+                    for n, p in PLAYS.items()}
+    for q in doc.get("requests", []):
+        if q.get("kind") == "resource" and q.get("resource") in REQUIRES:
+            q["objects"] = REQUIRES[q["resource"]]
+    return doc
 
 
 def plant_relations() -> tuple[list[list], list[list]]:
@@ -245,6 +273,7 @@ def derive_games(tile: Tile) -> dict:
                          "forage": [e for e in forage if e[0] in codes], "cover": [e for e in cover if e[0] in codes]},
            "resources": {r: {s: {"scarcity": v["scarcity"], "mean": v["mean"], "hotspots": len(v["hotspots"])} for s, v in d.items()} for r, d in rasters.items()},
            "species": species}
+    add_plays(out)
     write_json(tile.path("games.json"), out)
     n = sum(len(s["games"]) for s in species.values())
     return {"path": "games.json", "kind": "json", "species": len(species), "games": n,
@@ -252,3 +281,11 @@ def derive_games(tile: Tile) -> dict:
             "collective": sum(1 for s in species.values() for g in s["games"] if g["collective"]),
             "predation_pairs": len(predation), "alarm_links": len(alarm),
             "plant_relations": sum(1 for e in forage if e[0] in codes)}
+
+
+if __name__ == "__main__":   # the plays added to games.json files already derived (no rasters needed): python -m pipeline.games tiles/*/games.json
+    import sys
+    for path in sys.argv[1:]:
+        p = pathlib.Path(path)
+        write_json(p, add_plays(read_json(p)))
+        print(path, "plays:", read_json(p)["plays"])

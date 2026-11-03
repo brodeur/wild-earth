@@ -64,6 +64,10 @@ const DRINK_NO = no('drink', 'E');
 const POUNCE = no('pounce', 'F'), CARRY = no('carry', 'F'), DIG = no('dig', 'Q'), CACHE = no('cache', 'Q'), MARK = no('mark', 'K');
 const DEN = no('den', 'J'), BURROW = no('burrow', 'J'), SWIM = no('swim', 'W', { title: 'not yet: wading is built, deep water stops the body' });
 const CLIMB = no('climb', 'W'), CALL = no('call', 'C'), EAT = no('eat', 'E', { title: 'not yet: eating at the kill (the catch fills the belly at once)' });
+// the Dig game (dig.js, docs/game-dig.md): the vole's tunnels and the coyote's pit, Q held (or E held with nothing else for E to do)
+const DIG_VOLE = on('dig', 'Q', c => !!c.ground.digging, { title: 'Q held (or E with nothing to eat under the nose): a tunnel from the nose at 1.27 cm/s, down or up the way you look (drag); dig round in a small circle for a chamber; up to the surface for a second hole' });
+const BURROW_IN = on('burrow', '', c => c.ground.mode === 'tunnel', { title: 'walk onto a hole to go down it; underground W follows the tunnel, W at a hole comes up' });
+const DIG_PIT = on('dig', 'Q', c => !!c.ground.digging, { title: 'Q held (or E with no prey within reach): a pit at the paws at 1.27 cm/s; a vole tunnel it meets opens and glows toward the voles in it' });
 
 // The walkers' moves, from groundControl's species entry S.
 function groundMoves(S) {
@@ -88,12 +92,12 @@ const actOf = (name, title) => on(name, 'E', c => c.ground.actT > 0 || E(c), { r
 const SPECIES = {
   odocoileus_hemionus: { act: 'graze', verbs: [DRINK, SMELL, SWIM, MARK, no('rut', 'F'), CALL] },
   urocyon_cinereoargenteus: { act: 'sniff', verbs: [POUNCE_AT, DRINK, SMELL, EAT, DIG, DEN, MARK, SWIM] },
-  canis_latrans: { act: 'sniff', verbs: [POUNCE_AT, FEED, DRINK, SMELL, DIG, DEN, MARK, SWIM, CALL] },
+  canis_latrans: { act: 'sniff', verbs: [POUNCE_AT, FEED, DRINK, SMELL, DIG_PIT, DEN, MARK, SWIM, CALL] },
   puma_concolor: { act: 'sniff', verbs: [CATCH, on('leap', '', c => c.ground.mode === 'leap', { title: 'the rush\'s last bound: a leap onto prey within 3 m ahead, the kill at the landing' }), on('feed', 'E', c => !!c.ground.feeding, { title: 'crouched over the kill after a catch, or E beside one' }), DRINK, SMELL, DEN, MARK, SWIM] },
   ursus_americanus: { act: 'dig', verbs: [FEED, DRINK, SMELL, CARRY, CLIMB, DEN, MARK, SWIM] },
   sylvilagus_bachmani: { act: 'nibble', verbs: [DRINK, SMELL, SWIM] },
   lepus_californicus: { act: 'nibble', verbs: [DRINK, SMELL, SWIM] },
-  microtus_californicus: { act: 'nibble', verbs: [DRINK, SMELL, BURROW] },
+  microtus_californicus: { act: 'nibble', verbs: [DRINK, SMELL, DIG_VOLE, BURROW_IN] },
   otospermophilus_beecheyi: { act: 'pick seeds', verbs: [DRINK, SMELL, DIG, BURROW, SWIM, CALL] },
   sceloporus_occidentalis: { act: 'head flick', verbs: [DRINK, no('climb', 'W', { title: 'not yet: up a trunk or a fence (rocks it steps onto)' }), no('hide', 'J')] },
   meleagris_gallopavo: { act: 'peck · scratch', verbs: [DRINK, no('strut', 'F'), CALL] },

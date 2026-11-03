@@ -175,6 +175,7 @@ export class GroundControl {
     this.size = 1; this.variant = 0; this.male = 0; this.buck = null; this.modelName = null;
     this.pose = { phase: 0, amp: 0, pose: 0, flick: 0, flickV: 0, e0: 0, e1: 0, e2: 0, e3: 0, pitch: 0, roll: 0, lift: 0, fl: 0, bend: 0 };
     this.jumpQ = false; this.actQ = false; this.restQ = false; this.wet = null; this.told = 0; this.fl = null;
+    this.dig = null; this.digging = 0;   // the Dig game (dig.js; main.js sets dig): the vole's tunnels (mode 'tunnel'), the coyote's pit
     this.camOff = new THREE.Vector3(); this.aimOff = new THREE.Vector3(); this.camSettled = false; this.camSide = 0.4; this.camLift = 0;
     this.marks = new HerdMarks({ el: document.getElementById('herdMarks'), camera, animals });   // off-screen herd members (herdMarks.js)
     this.sil = new HerdSilhouette({ scene, animals, atmosphere });   // hidden herd members as luminous silhouettes (herdSilhouette.js)
@@ -263,7 +264,7 @@ export class GroundControl {
     if (on) { f.pitch = 0; f.roll = 0; f.hover = false; this.camSettled = false; this.place(f.pos.x, f.pos.z); }
     else {
       this.camera.up.set(0, 1, 0); f.reset(f.pos.x, f.pos.z, 30);
-      this.mode = 'ground'; this.fl = null; this.resting = false; this.jumpQ = this.actQ = this.restQ = false;
+      this.mode = 'ground'; this.fl = null; this.resting = false; this.jumpQ = this.actQ = this.restQ = false; this.digging = 0; if (this.dig) this.dig.tun = null;
     }
     if (on) this.nearWas = this.camera.near;
     this.camera.near = on ? this.S.cam.near : this.nearWas || 0.5; this.camera.updateProjectionMatrix();
@@ -303,6 +304,7 @@ export class GroundControl {
   place(x, z) {
     const P = this.flight.pos, F = this.sq.footing(x, z, this.heights.atXZ(x, z) + 50);
     P.set(x, F.surf !== null ? F.bed : F.y, z); this.setWet(F);
+    if (this.dig) this.dig.tun = null;
     this.mode = 'ground'; this.v = 0; this.vel.set(0, 0, 0); this.fl = null; this.holdT = 0;
     this.last.copy(P); this.camSettled = false;
   }
@@ -337,6 +339,7 @@ export class GroundControl {
   // Where the player leaves this animal (spirit.js), for the AI to carry on from (animals.js release): as info.
   leaveInfo() {
     const P = this.flight.pos, air = this.mode === 'fly' || this.mode === 'air';
+    if (this.mode === 'tunnel' && this.dig?.leavePoint(this._lp ||= {})) P.set(this._lp.x, this._lp.y, this._lp.z);   // underground: the AI takes it at its system's nearest hole
     return { x: P.x, y: air ? P.y : P.y, z: P.z, yaw: this.flight.yaw, where: air ? 'air' : 'ground', tree: null, face: 0, h: 0,
       speed: Math.abs(this.v), pose: this.pose.pose, resting: this.resting };
   }
@@ -363,10 +366,11 @@ export class GroundControl {
     else if (this.mode === 'fly') this.fly(dt, k, jump);
     else if (this.mode === 'leap') this.leapStep(dt);
     else if (this.mode === 'pounce') this.pounceStep(dt);
+    else if (this.mode === 'tunnel') this.dig.tunnelStep(dt, k);   // the vole underground (dig.js)
     else this.ground(dt, k, jump, act, rest);
     if (this.mode === 'ground') this.trunkPush(P);
     this.draw(dt);
-    this.updateCamera(dt);
+    if (!(this.mode === 'tunnel' && this.dig.camStep(dt))) this.updateCamera(dt);   // in a tunnel the camera is on its centreline (dig.js)
     if (this.herd) { this.marks.update(this.herd.g, this.herd.a, (S.shoulder || 0.3) * 0.5); this.sil.update(this.herd.g, this.herd.a, this.body?.mesh || null); } else { if (this.marks.marks.size) this.marks.clear(); this.sil.clear(); }
     this.last.copy(P);
     const ground = Math.max(this.heights.atXZ(P.x, P.z), this.wet ? this.wet.surf : -Infinity);
@@ -405,6 +409,10 @@ export class GroundControl {
     if (this.feeding) {   // crouched over the kill (caught, or E beside it): still, head low, until a key moves the body
       if (k.fwd || k.turn || jump || this.feeding.t <= 0) this.feeding = null; else this.feeding.t -= dt;
     }
+    // the Dig game (dig.js): Q held, or E held with nothing else for it to do, standing: the vole digs in at its nose (and
+    // is in the tunnel from then), the coyote digs a pit at its paws
+    if (this.dig && !k.fwd && !jump && !this.feeding && this.dig.wantDig(this)) { this.v = 0; if (this.dig.surfaceDig(dt)) return; }
+    else this.digging = 0;
     if (k.fwd || Math.abs(this.v) > 0.5) this.actT = 0;
     this.actT = Math.max(0, this.actT - dt);
     // speed: W from a walk to the cruise over `ramp` s, Shift W the sprint to the true top (LEGS: the legs last S.sprint s),
@@ -619,6 +627,11 @@ export class GroundControl {
         if (T.t <= 0) this.twist = null;
       }
       if (act && S.act.dig) { ps.pose = damp(ps.pose, 0.3 * pmax, 3, dt); ps.flick += 0.1 * Math.sin(performance.now() * 0.013); }   // a dig: shoulders down, the head working
+      if (this.digging) {   // the Dig game's pit (dig.js): the canid's paw strikes (pounceStep's 'paw'), shoulders down, the nose at the pit
+        const pulse = Math.max(0, Math.sin(TAU * performance.now() * 0.001 * CATCH.pounce.pawHz * 1.5));
+        ps.pose = damp(ps.pose, 0.25 * pmax, 6, dt); ps.flick = damp(ps.flick, 0.85, 8, dt); ps.amp = damp(ps.amp, 0, 10, dt);
+        ps.pitch = 0.3 * pulse + 0.1; ps.lift = 0.035 * pulse;
+      }
       if (this.code === 'puma_concolor') ps.e1 = damp(ps.e1, (stalk || this.resting ? 0.7 : 0.15) * Math.sin(performance.now() * 0.0033) * (Math.sin(performance.now() * 0.0006) > 0.1 ? 1 : 0.15), 8, dt);
       if (this.buck) { const st = antlerState(this.animals.month ?? 10.5, this.buck.u1, this.buck.u2, this.buck.u3); ps.e0 = st.growth; ps.e1 = st.velvet; ps.e2 = this.buck.young; }
       if (!inAir) ps.pitch = damp(ps.pitch, slope * 0.8, 6, dt);
@@ -830,6 +843,8 @@ export class GroundControl {
     else if (this.mode === 'air') text = 'in the air';
     else if (this.mode === 'leap') text = 'leaping';
     else if (this.mode === 'pounce') text = this.pounce?.ph === 'fix' ? 'fixing it' : this.pounce?.ph === 'spring' ? 'pouncing' : this.pounce?.ph === 'toss' ? 'the kill tossed' : 'striking at it';
+    else if (this.mode === 'tunnel') text = this.dig.hudText();
+    else if (this.digging && this.dig?.pit) text = `digging, the pit ${Math.round(this.dig.pit.depth * 100)} cm deep${this.dig.pit.open.length ? ' · a tunnel open' : ''}`;
     else if (this.feeding) text = 'feeding at the kill';
     else if (this.resting) text = rest;
     else if (this.wet) text = `wading, ${Math.round(this.wet.depth * 100)} cm deep`;

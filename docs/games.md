@@ -88,6 +88,15 @@ set, berries while the crown shows them), dimmer as the body is fed; and scent.j
 scents, one per species, with their names. A species with no rows this season (the lion, the lizard) gets none of the
 three; a new plant record with `eaten_by` gets all three on the next `derive`.
 
+Dig (2026-11-02, `docs/game-dig.md`, `client/src/dig.js`): the first played game registered from the pipeline. A
+rule in `pipeline/games.py` (PLAYS) tags the games a client module plays out: the vole's shelter in a burrow (its den)
+and the coyote's hunt of the vole carry `play: ["dig"]`, and the tile's `plays.dig` lists the module and the species
+(the five foothill and San Francisco tiles: the vole and the coyote; the Yosemite tiles, which have no vole: none). The
+vole digs tunnels, chambers and holes at half an inch a second; the coyote digs a pit at the same rate, and a tunnel it
+meets opens and glows toward the voles. The burrow request's objects now name dig.js beside the ground squirrels'
+burrows (still partial). The tunnels are the tile's shared state on the game server, decaying after a week no animal
+has been inside; the AI voles and coyotes dig and use them too.
+
 ## What it finds on the home tile
 
 Eighteen species, 275 games, 146 of them collective, 29 predator-prey pairs, 5 scavenging links
