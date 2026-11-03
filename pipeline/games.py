@@ -76,7 +76,10 @@ PART_RESOURCE = {"leaves": "grass_forbs", "seeds": "grass_forbs", "flowers": "gr
 PLAYS = {
     "dig": {"client": "client/src/dig.js",
             "rules": {"microtus_californicus": lambda g: g["verb"] in ("den", "shelter") and g.get("resource") == "burrow",
-                      "canis_latrans": lambda g: g["verb"] == "hunt" and "microtus_californicus" in g.get("prey", [])}},
+                      "canis_latrans": lambda g: g["verb"] == "hunt" and "microtus_californicus" in g.get("prey", []),
+                      # the rabbits' shelter: the brush rabbit's burrow, the jackrabbit's scraped form (docs/game-dig.md "The rabbits")
+                      "sylvilagus_bachmani": lambda g: g["verb"] == "shelter",
+                      "lepus_californicus": lambda g: g["verb"] == "shelter"}},
 }
 
 

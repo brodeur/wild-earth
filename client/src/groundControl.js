@@ -366,11 +366,11 @@ export class GroundControl {
     else if (this.mode === 'fly') this.fly(dt, k, jump);
     else if (this.mode === 'leap') this.leapStep(dt);
     else if (this.mode === 'pounce') this.pounceStep(dt);
-    else if (this.mode === 'tunnel') this.dig.tunnelStep(dt, k);   // the vole underground (dig.js)
+    else if (this.mode === 'tunnel') this.dig.tunnelStep(dt, k, rest);   // the vole or the brush rabbit underground (dig.js)
     else this.ground(dt, k, jump, act, rest);
     if (this.mode === 'ground') this.trunkPush(P);
     this.draw(dt);
-    if (!(this.mode === 'tunnel' && this.dig.camStep(dt))) this.updateCamera(dt);   // in a tunnel the camera is on its centreline (dig.js)
+    this.updateCamera(dt);   // underground too: the camera stays above, the ground seen through (dig.js xray)
     if (this.herd) { this.marks.update(this.herd.g, this.herd.a, (S.shoulder || 0.3) * 0.5); this.sil.update(this.herd.g, this.herd.a, this.body?.mesh || null); } else { if (this.marks.marks.size) this.marks.clear(); this.sil.clear(); }
     this.last.copy(P);
     const ground = Math.max(this.heights.atXZ(P.x, P.z), this.wet ? this.wet.surf : -Infinity);
@@ -750,12 +750,13 @@ export class GroundControl {
     if (b.rig) { const a2 = m.geometry.attributes.aAnim2; a2.array[0] = ps.e0; a2.array[1] = ps.e1; a2.array[2] = ps.e2; a2.array[3] = ps.e3; a2.needsUpdate = true; }
     if (b.legs) {   // the leg engine (legs.js LegsBody): the feet planted on the footing, the body's speed and turn, a jump in the air
       const ac = m.geometry.attributes.aClip, ab = m.geometry.attributes.aBend, air = this.mode === 'air' || this.mode === 'fly';
-      const L = this._legInp ||= { terrain: (x, z) => { const t = this.sq.surface(x, z, this.flight.pos.y + 0.6); return t === null || t === undefined || !(t === t) ? this.heights.atXZ(x, z) : t; } };
+      const L = this._legInp ||= { terrain: (x, z) => { if (this.mode === 'tunnel' && this.dig) return this.dig.floorAt(x, z); const t = this.sq.surface(x, z, this.flight.pos.y + 0.6); return t === null || t === undefined || !(t === t) ? this.heights.atXZ(x, z) : t; } };   // in a tunnel its floor (dig.js)
       L.x = P.x; L.y = P.y; L.z = P.z; L.yaw = yawA; L.size = this.size; L.v = air ? Math.hypot(this.vel.x, this.vel.z) : this.v; L.wr = this.cs?.wr || 0;
       L.pose = Math.max(0, ps.pose); L.flick = ps.flick; L.bend = wrap(this.flight.yaw + Math.PI - yawA); L.twitch = this.code === 'puma_concolor' ? ps.e1 : 0; L.air = air; L.ears = NaN;
       if (b.legs.P.hop) {   // a rabbit on the engine's hop: the sit-up above 0, the freeze at -0.6, a jackrabbit's form at -1; a running brush rabbit's scut up
         L.pose = this.resting && S.rest === 'hunch' ? -1 : ps.pose;
         L.twitch = this.code === 'sylvilagus_bachmani' && L.v > 3 ? 1 : 0;
+        L.dig = this.digging ? 1 : 0;   // the Dig game (dig.js): the fore feet scrabbling, the soil thrown back
       }
       b.legs.write(L, dt, ac.array, ab.array); ac.needsUpdate = true; ab.needsUpdate = true;
     } else if (sk) {   // the skinned deer: a jump runs the gallop in the air
@@ -771,12 +772,14 @@ export class GroundControl {
   // Kept over the drawn terrain round the lens, the sight line clear of a slope between, over a pond, and out of the
   // crowns (squirrelControl.js crownClear, for the taller bodies).
   updateCamera(dt) {
-    const f = this.flight, P = f.pos, cam = this.camera, C = this.S.cam, off = this._v, aim = this._w;
+    const f = this.flight, cam = this.camera, C = this.S.cam, off = this._v, aim = this._w;
+    const P = this.mode === 'tunnel' ? (this._pu ||= new THREE.Vector3()).set(f.pos.x, Math.max(f.pos.y, this.heights.atXZ(f.pos.x, f.pos.z)), f.pos.z) : f.pos;   // underground: framed from the ground over the body (dig.js xray)
     f.easeOrbit(dt, f.moving());   // the drag's orbit round the body (flight.js), back behind once the keys move it
     const rate = wrap(f.yaw - (this.camYaw ?? f.yaw)) / Math.max(dt, 1e-3); this.camYaw = f.yaw;
     if (Math.abs(rate) > 0.3) this.camSide = damp(this.camSide, -Math.sign(rate) * C.side, 1.6, dt);
     const low = this.resting ? 0.7 : 1, fly = this.mode === 'fly' ? 1.4 : 1;
-    const z = f.zoom || 1, back = (C.back + CAM_PLUS.back) * (1 - 0.15 * this.sit) * fly * z, up = (C.up * CAM_RAISE + CAM_PLUS.up) * low * (1 + 0.3 * this.sit) * fly * z, ly = f.yaw + f.look + f.orbitYaw, a = ly + this.camSide;   // z: the wheel's zoom; ly: the look's yaw (flight.js)
+    this.camUnder = damp(this.camUnder || 0, this.mode === 'tunnel' ? 1 : 0, 2, dt); const ug = 1 + 0.7 * this.camUnder;   // underground: a little higher, looking down into the ground
+    const z = f.zoom || 1, back = (C.back + CAM_PLUS.back) * (1 - 0.15 * this.sit) * fly * z * (1 + 0.15 * this.camUnder), up = (C.up * CAM_RAISE + CAM_PLUS.up) * low * (1 + 0.3 * this.sit) * fly * z * ug, ly = f.yaw + f.look + f.orbitYaw, a = ly + this.camSide;   // z: the wheel's zoom; ly: the look's yaw (flight.js)
     off.set(Math.sin(a) * back, up, Math.cos(a) * back);
     if (f.orbitPitch) { const r = Math.hypot(back, up), e = clamp(Math.atan2(up, back) + f.orbitPitch, -0.15, 1.4), h = r * Math.cos(e); off.set(Math.sin(a) * h, r * Math.sin(e), Math.cos(a) * h); }   // the orbit up or down round the body
     const ahead = C.look * (1 - 0.85 * Math.min(1, Math.abs(f.orbitPitch) / 0.5)), fx = -Math.sin(ly) * ahead / Math.max(C.look, 1e-6), fz = -Math.cos(ly) * ahead / Math.max(C.look, 1e-6);
@@ -791,7 +794,7 @@ export class GroundControl {
     cam.up.set(0, 1, 0);
     // the aim point: the smoothed aim's x and z (the three-quarter view's yaw), its height from the framing rule above
     aim.copy(P).add(this.aimOff);
-    const S = this.S, bodyY = P.y + (S.shoulder || C.aimUp) * 0.5, hd = Math.hypot(P.x - cam.position.x, P.z - cam.position.z);
+    const S = this.S, bodyY = P.y + (f.pos.y - P.y) * this.camUnder + (S.shoulder || C.aimUp) * 0.5, hd = Math.hypot(P.x - cam.position.x, P.z - cam.position.z);
     const toBody = Math.atan2(bodyY - cam.position.y, Math.max(hd, 1e-3)), above = Math.atan(-FRAME_Y * Math.tan(cam.fov * Math.PI / 360));
     const ha = Math.hypot(aim.x - cam.position.x, aim.z - cam.position.z);
     aim.y = cam.position.y + Math.max(ha, 1e-3) * Math.tan(toBody + above + f.pitch);
@@ -803,7 +806,7 @@ export class GroundControl {
     for (const [dx, dz] of [[0, 0], [r, 0], [-r, 0], [0, r], [0, -r]]) y = Math.max(y, H.atXZ(Cp.x + dx, Cp.z + dz) + C.clear);
     const w = this.sq.pondLevel(Cp.x, Cp.z); if (w !== null) y = Math.max(y, w + Math.max(C.clear, 0.1));
     const y0 = P.y + C.aimUp * 0.5, sight = C.clear * 0.5;
-    for (const t of [0.25, 0.5, 0.75]) {
+    if (this.mode !== 'tunnel') for (const t of [0.25, 0.5, 0.75]) {   // (underground the ground between is seen through)
       const g = H.atXZ(P.x + (Cp.x - P.x) * t, P.z + (Cp.z - P.z) * t) + sight;
       if (g > y0) y = Math.max(y, y0 + (g - y0) / t);
     }

@@ -70,6 +70,8 @@ def clean(e) -> dict:
         out.update(id=_id(e.get("id"), "id"), x=_num(e.get("x"), "x", 0, TILE_M), z=_num(e.get("z"), "z", -TILE_M, 0),
                    y0=_num(e.get("y0"), "y0", -1000, 9000), r=_num(e.get("r"), "r", 0.02, PIT_R_MAX),
                    depth=_num(e.get("depth"), "depth", 0, PIT_D_MAX), hx=_num(e.get("hx"), "hx", 0, TILE_M), hz=_num(e.get("hz"), "hz", -TILE_M, 0))
+        if e.get("k") == "form":   # a jackrabbit's scraped form (dig.js DIGGERS), not a coyote's pit
+            out["k"] = "form"
     elif t == "open":
         segs = e.get("segs")
         if not isinstance(segs, list) or not 1 <= len(segs) <= 64:
@@ -222,7 +224,7 @@ def dig_reduce(d: dict, e: dict, now: float) -> str | None:
         if not p:
             if taken(e["id"]) or len(P) >= P_MAX:
                 return "taken" if taken(e["id"]) else "full"
-            P[e["id"]] = {"x": e["x"], "z": e["z"], "y0": e["y0"], "r": e["r"], "d": e["depth"], "hx": e["hx"], "hz": e["hz"], "o": []}
+            P[e["id"]] = {"x": e["x"], "z": e["z"], "y0": e["y0"], "r": e["r"], "d": e["depth"], "hx": e["hx"], "hz": e["hz"], "o": [], **({"k": "form"} if e.get("k") == "form" else {})}
             _see(d, e["id"], now)
             return None
         if e["depth"] <= p["d"] and e["r"] <= p["r"]:

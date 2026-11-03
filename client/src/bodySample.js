@@ -1,5 +1,5 @@
 import * as THREE from 'three';
-import { NF, F, FL_AIR, FL_GM } from './animalNet.js';
+import { NF, F, FL_AIR, FL_GM, FL_BURIED } from './animalNet.js';
 
 // The player's own body as the shared animals' stream has an animal (animalNet.js FIELDS), for the group members who
 // draw it (docs/multiplayer.md "Players as their animals"; multiplayer.js sendPos puts it in the hub's `pos` at 5 Hz;
@@ -34,7 +34,7 @@ export function bodySample(we, out, cst, now = performance.now()) {
     fromMesh(g.body.mesh, out);
     out[F.yaw] = f.yaw + Math.PI;                       // the control's yaw: the drawing lags it as the AI's does
     out[F.spd] = g.spd || 0; out[F.wr] = g.cs?.wr || 0; out[F.lift] = g.pose.lift || 0;
-    out[F.fl] = g.mode === 'fly' || g.mode === 'air' ? FL_AIR : 0;
+    out[F.fl] = g.mode === 'fly' || g.mode === 'air' ? FL_AIR : g.mode === 'tunnel' ? FL_BURIED : 0;   // underground (dig.js): a glow in the others' underground view, no one's prey
   } else if (fl?.on && fl.body) {
     fromMesh(fl.body.mesh, out);
     out[F.fl] = f.landed ? 0 : FL_AIR; out[F.spd] = f.speed || 0;

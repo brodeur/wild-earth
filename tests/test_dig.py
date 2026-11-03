@@ -190,6 +190,45 @@ class DigTest(unittest.TestCase):
         self.assertEqual(digworld.dig_reduce(d, digworld.clean({"type": "grow", "id": "r.R", "x": x, "y": y, "z": z}), now), "not a face")
         self.assertEqual(digworld.dig_reduce(d, digworld.clean({"type": "room", "id": "r.Q", "x": x, "y": y, "z": z, "r": 0.1, "absorb": ["r.h"]}), now), "no such node")
 
+    def test_rabbits(self):
+        """A brush rabbit's burrow (6.5 cm tubes, a nest room at its end) and a jackrabbit's form (a pit of kind 'form')
+        reach a second player as they are dug and are in a late joiner's welcome; a form decays as a pit does."""
+        a, b = self.dig("spring"), self.dig("spring")
+        x, y, z = 6100.0, 290.0, -6100.0
+        evs = [{"type": "hole", "id": "rb.1", "x": x, "y": y - 0.065, "z": z, "r": 0.065},
+               {"type": "dig", "from": "rb.1", "id": "rb.2", "seg": "rb.3", "x": x, "y": y - 0.15, "z": z - 0.15, "r": 0.065},
+               {"type": "dig", "from": "rb.2", "id": "rb.4", "seg": "rb.5", "x": x, "y": y - 0.25, "z": z - 0.45, "r": 0.065},
+               {"type": "room", "id": "rb.6", "x": x, "y": y - 0.25, "z": z - 0.45, "r": 0.11, "absorb": ["rb.4"], "ai": True},
+               {"type": "pit", "id": "jk.1", "k": "form", "x": x + 4, "z": z, "y0": y, "r": 0.08, "depth": 0.01, "hx": x + 4.4, "hz": z},
+               {"type": "pit", "id": "jk.1", "k": "form", "x": x + 4, "z": z, "y0": y, "r": 0.15, "depth": 0.07, "hx": x + 4.4, "hz": z}]
+        for i, e in enumerate(evs):
+            a.send({"t": "dev", "c": i + 1, "e": e})
+            a.wait("dev", where=lambda m, i=i: m.get("c") == i + 1)
+            seen = b.wait("dev")
+            self.assertEqual(seen["e"]["type"], e["type"])
+        self.assertEqual(seen["e"]["k"], "form")
+        c = self.dig("spring")
+        d = c.welcome["dig"]
+        self.assertEqual(sorted(d["nodes"]), ["rb.1", "rb.2", "rb.6"])
+        self.assertAlmostEqual(d["nodes"]["rb.2"]["r"], 0.065)
+        self.assertEqual((d["nodes"]["rb.6"]["k"], d["nodes"]["rb.6"]["r"]), (1, 0.11))
+        self.assertEqual(d["segs"]["rb.5"], ["rb.6", "rb.2"])
+        f = d["pits"]["jk.1"]
+        self.assertEqual((f["k"], f["r"], f["d"]), ("form", 0.15, 0.07))
+        # an unknown kind is dropped (only a form is kept)
+        self.assertNotIn("k", digworld.clean({"type": "pit", "id": "p.1", "k": "lair", "x": x, "z": z, "y0": y, "r": 0.1, "depth": 0.1, "hx": x, "hz": z}))
+        w = self.world("spring")
+        with w.lock:
+            w.prune(time.time() + 8 * 86400)
+        a.wait("dev", where=lambda m: m["e"]["type"] == "decay" and "jk.1" in m["e"].get("pits", []))
+        self.assertEqual((w.s["dig"]["pits"], w.s["dig"]["nodes"]), ({}, {}))
+        for s in (a, b, c):   # the spring world as the other tests find it: empty, no one on its channel
+            s.close()
+        for _ in range(30):
+            if not w.dconns:
+                break
+            time.sleep(0.1)
+
     def test_v3_snapshot_loads(self):
         d = server.TILES_DIR / T1 / "game"
         d.mkdir(parents=True, exist_ok=True)

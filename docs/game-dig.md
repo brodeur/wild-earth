@@ -1,4 +1,4 @@
-# Dig: a game for the vole and the coyote
+# Dig: a game for the vole, the coyote and the rabbits
 
 Aaron, 2026-11-02: "a new game for voles and coyotes. Dig! Voles may dig tunnels at a rate of .5"/s. They can create
 tunnel systems, big chambers etc. coyotes may dig down at a rate of .5"/s if where they dig intersects with a tunnel
@@ -40,7 +40,89 @@ as if the coyote smells which way they went. A vole in an opened stretch is prey
 mousing pounce as before (`groundControl.js` CATCH.pounce, `animals.js` catchNear), and a vole killed in a tunnel
 lies where it died. The glow trail is drawn for a coyote or a fox.
 
-The abilities row: the vole's **dig** (Q) and **burrow** (lit underground); the coyote's **dig** (Q).
+**As the brush rabbit.** Q held (E nibbles) digs a burrow of its own from the nose, as the vole's tunnel but 6.5 cm in
+radius at **an inch a second (2.54 cm/s)**, steeply in until it is 20 cm under, no deeper than 32 cm; it walks the
+burrow faster than a vole (0.77 m/s). **X** at the dead end of its burrow digs out a **nest**: a room of 11 cm radius
+round the body, where it lies crouched; X again or any key gets up. The HUD says "in the burrow" and "in the nest". A
+rabbit goes down only a hole that fits it (6.5 cm or more: not a vole's), a vole down any.
+
+**As the jackrabbit.** Q held standing scrapes a **form** under its chest: a shallow bowl widening from 8 to 15 cm in
+radius as it deepens to **7 cm**, at 0.8 cm a second, the fore feet throwing the soil back into a low fan behind it.
+"The form is scraped: X settles into it": X then hunches it in the form, its crouch sunk into the scrape (the leg
+engine's form pose). Lying in its form keeps the form's clock.
+
+The abilities row: the vole's **dig** (Q) and **burrow** (lit underground); the coyote's **dig** (Q); the brush rabbit's
+**dig** and **burrow**; the jackrabbit's **dig** (its form).
+
+## The underground view
+
+Aaron, 2026-11-03: "When a vole or other rodent digs underground, the camera should stay where it is but the
+ground/outside should become semi-transparent, and the hole becomes visible as a glowing channel that the animal is in."
+It replaced the first build's camera inside the tunnel (on the centreline behind the body, its near plane 4 mm), which
+cost 3.1 ms of GPU from inside at 1920 x 1200.
+
+- **The camera** stays the chase camera above the ground for any body underground (the vole, the brush rabbit): framed
+  from the ground over the body, eased up by 0.7 of its height and back by 0.15 over half a second going down (and
+  back coming up) so it looks down into the ground, the line of sight not pushed up by the ground between
+  (`groundControl.js` updateCamera, camClear). The aim takes the body's real depth.
+- **The outside, semi-transparent.** After the world's draw (`main.js` calls `dig.xray`) a pass dims everything toward
+  the soil's colour (half, to 0.8 round the body: a full-screen quad), so the ground reads as looked through. The blend
+  keeps the canvas's alpha (the page composites the canvas by it; a blend that lowered it undid the dimming).
+- **The channel.** The depth is cleared and, on a layer of their own (5; the lights join it, as the spirit's layer 1),
+  drawn: the player's own body, lit as in the world; the tunnels, rooms and pits within 10 m from the dirt's own
+  buffers under a cheap shader: both faces added, bright at the silhouette and faint across (a glowing translucent
+  pipe), the union kept by the dirt's neighbour test so a junction shows no inner walls, the scent glow along an opened
+  stretch, a coyote's pit in a warning red; and a soft warm glow at every other animal underground within 10 m (an AI
+  vole or rabbit in a tunnel or digging, a mirror's streamed `buried`, another player's body underground: `bodySample.js`
+  now flags a body in a tunnel buried). The body's depth hides the channel behind it; the front wall glows over it.
+- **The hand-over**: eased in over about 0.6 s going down (a dig or a hole), out coming up; the camera never cuts.
+- **From above** nothing changed: the dirt is drawn only near an opening (visPass); the camera is never inside now.
+- **The coyote digging toward a vole**: the player's vole underground sees the pit's bowl in red come down through the
+  ground toward its channel, and the coyote itself dimmed above it; when the pit opens the tunnel, the opened stretch
+  carries the scent glow in the channel (seen: an AI pit dug over the player's vole's tunnel at x25 opened it at 22 cm,
+  the red bowl over the channel, the glow brightest at the vole).
+
+## The rabbits
+
+Aaron, 2026-11-03: "Rabbits should also be able to dig holes for themselves." What each does in life, and where the
+game goes past it:
+
+- **The brush rabbit** (*Sylvilagus bachmani*) digs no burrow of its own: it lives in dense brush on runways between
+  cleared resting forms and now and then uses a burrow another animal dug (Chapman 1974, *Mammalian Species* 34;
+  Chapman, Hockman & Ojeda 1990, *Rabbits, Hares and Pikas: Status Survey and Conservation Action Plan*, IUCN, p. 99:
+  it "occasionally uses burrows made by other species, but does not dig its own"; Animal Diversity Web: it uses burrows
+  less than other cottontails). **The game goes beyond the biology here, because Aaron asked for it**: the brush rabbit
+  digs a short burrow of its own, kept modest (6.5 cm in radius for a body about 10 cm wide, 20-28 cm down, 30-70 cm
+  long for the AI's) and ending in a nest chamber, in the way a cottontail doe digs the shallow cavity of her nest.
+  Its use of others' burrows is biology: it goes down any hole that fits it, a player's or another rabbit's.
+- **The black-tailed jackrabbit** (*Lepus californicus*) does not burrow; it rests in a **form**, a shallow
+  depression it scrapes under a shrub or in tall grass, and has been seen to use abandoned burrows for escape and
+  shade (Vorhies & Taylor 1933; Dunn, Chapman & Marsh 1982; the species' Wikipedia article, from the USFS Fire Effects
+  Information System; forms "no more than a few centimeters deep", after Tiemeier & Plenert 1964). A West Texas A&M
+  species account gives forms 10-20 cm wide, 30-45 cm long and 3-11 cm deep. The game's form is a round bowl 30 cm
+  across and 7 cm deep (the drawing has no oval pits), scraped with the fore feet: the biology, not past it.
+
+**AI brush rabbits** (`animals.js` rbDen, rbBurrow; states B_TOHOLE, B_BURROW, B_DIG). By day, settled in its form, a
+brush rabbit goes down a burrow that fits it within 2 m (its wait 90-240 s, then up by a hole, where its form is then);
+on the AI host, with no hole within 3 m, three settlings in ten it digs one (`dig.js` aiDigStart with the burrow's
+spec: on the way it faces, down to 20-28 cm, along 30-70 cm, then aiNest: the room, and it lies up in it 60-180 s).
+Bolting, it makes for a burrow within 6 m that is not past the danger (a short wait, 20-60 s). In a burrow it is
+buried: not prey, not counted present; its legs stand on the burrow's floor (lagoInput's floor), crouched in the nest.
+**AI jackrabbits** (jkUpdate, JK_FORM): on the AI host each scrapes its form as it settles in (`dig.js` aiForm: a form
+within 30 cm of it is used again; none past 30 forms in the world), standing over it with the fore feet working, then
+hunches in it; lying there keeps the form's clock. A mirror sees the form grow but the rabbit only crouched (the dig
+flag is not in the animal stream).
+
+**The digging motion** (`gait.js` hopStep, `inp.dig`): standing, the chest lowered by a third of the belly's height and
+the head down; the fore feet in turn (half a cycle apart) reach 35 % of the leg's length ahead to the ground and rake
+back 45 % behind under the chest at 4.5 strokes a second, lifted 18 % and curled on the way forward; the hind feet stay
+planted. The soil is thrown back from the paws (a rabbit's specks bigger and further than a vole's; the specks are
+small clods now, not cubes). The player's from `ground.digging` (groundControl draw), the AI's from `a.digK`.
+
+**Shared** through the same dig channel as the vole's and the coyote's: a burrow is holes, digs (with `r` 0.065), grows
+and a room; a form is a pit with `k: 'form'` (`digworld.py` keeps `k` on a pit and drops any other value), so both
+persist, decay after 7 days with no animal inside (a rabbit in its burrow or form sends the visits) and are seen by
+every player. `pipeline/games.py` PLAYS adds the two rabbits' shelter games to Dig (`plays.dig.species` of each tile).
 
 ## The animals
 
@@ -149,11 +231,11 @@ shows on a group member's screen (`players.js` draws a member in a body as a sma
   eight holes and pits nearest the camera (`groundUniforms.digCuts`, no new sampler), so a hole is seen from above and
   the sky from below; the grass's near and body tiers drop a clump rooted in one (`grass.js` inDig). A hole is a collar
   (the tube's mouth up through the surface) and a fan of fresh, darker spoil thrown out away from the tunnel; a pit a
-  bowl and a mound. Inside a tunnel the camera stays on the body's line, pulled in until it is inside the tunnels, its
-  near plane 4 mm (a 3 cm tube otherwise lets the frustum's corners out); the forage glow and the sight marks are off
-  there (the sound cues stay).
-- **What is drawn**: a pass four times a second (`visPass`) shows, underground, only the stretches within 1.6 m along
-  the tunnels from the body, and above ground only those within 60 cm of a hole or a pit.
+  bowl and a mound; a jackrabbit's form a shallow bowl and a low fan. Underground the camera stays above (the
+  underground view, above; until 2026-11-03 it went inside on the body's line with a 4 mm near plane); the forage glow
+  and the sight marks are off there (the sound cues stay).
+- **What is drawn**: a pass four times a second (`visPass`) shows the dirt only within 60 cm of a hole or a pit (the
+  camera is always above the ground now); underground the channel is the underground view's (above).
 
 ## Measured (2026-11-02, home tile, 1920 x 1200, the built-in browser)
 
@@ -186,17 +268,51 @@ blackened the near tube); drawing the dig after the terrain (2.3 ms against 0.5 
   its snapshot and from its log alone, a v3 snapshot, a room, the tree holes' clocks. `tests/test_hub.py` (12) passes.
 - Console: no errors; the 17-texture-unit warning is the terrain's program's, from before this lane.
 
+## Measured and verified, the rabbits and the underground view (2026-11-03, home tile, port 8792)
+
+- **GPU, the underground view's pass** (`dig.xray` drawn K = 8 times in one `EXT_disjoint_timer_query_webgl2` query per
+  frame after the world's draw, alternating with the same pass with its meshes hidden, 40-60 samples each, at 1920 x
+  1200 with load averages of 11-12 from other sessions; `scratch/xray_harness.js`): over the floor of
+  an empty pass (0.05-0.1 ms: the depth clear and an empty render), **0.02-0.1 ms** looking down at a vole 50 cm under
+  (the fade 0.03-0.1, the channel 0.02, the body within the noise), **0.16-0.33 ms** (min, p10 of the difference) from
+  an orbit with 3 m of tunnel and a chamber on screen, **0.24-0.73 ms** zoomed in to 0.3 m with the tube across the
+  screen. The medians were the machine's scheduling (1.5-11 ms on and off alike), so the min and p10 are quoted.
+  Under the 1 ms asked; the view from inside it replaces was 3.1 ms (measured by the first lane, not again here). The
+  pass's CPU (one more traversal of the scene, nothing on its layer but its own) was not timed.
+- The player's vole dug down 26-32 degrees to 50 cm and round into a chamber at x20-25, seen from above through the
+  dimmed ground as an amber channel with the vole drawn in it and the chamber a bulb; 304 events, none refused.
+- The player's brush rabbit dug a 3.4 m burrow at x10 and a 1 m one at x4 (to 26-30 cm); X at the end dug the nest
+  ("in the nest · 30 cm down"); it walked back up and out with W and the view eased out (1, 0.24, 0.02, 0 at half
+  seconds) with no cut. The mouth from the surface: the collar and the fan of spoil, 13 cm across.
+- The player's jackrabbit scraped a form (8 to 15 cm radius, to 7 cm deep, "the form is scraped: X settles into it");
+  the leg engine's fore paw read back each stroke: forward 10 cm lifted 3 cm, raked back along the ground.
+- AI rabbits at 13:00: the AI host's jackrabbits scraped 14 forms within minutes; a brush rabbit went down the burrow
+  the player had dug and lay in its nest; summoned brush rabbits dug their own burrows and nests (28 cm down, at x3-6),
+  one seen from a vole's underground view as a glow in the bulb of its nest beside the vole's own tunnel.
+- **Two pages** (the second `?seat=2`, not the host): its welcome held the rabbits' 8 burrow mouths, 6 rooms and 18
+  forms; a burrow the host's AI dug arrived as it was dug (its 6.5 cm mouth, 5 nodes, the nest), and the second page's
+  player's form reached the host at full depth (10 events, none refused). Its screen shows the AI's burrow mouth.
+- Found and fixed: a rabbit dropped from the population while digging stayed in the dig's list and held one of the two
+  diggers' slots for good (a vole the same: now let go four times a second); a room dug round the body replaced the
+  object the tunnel step held, so the step read an absorbed node (now updated in place).
+- `tests/test_dig.py` test_rabbits: a burrow (6.5 cm tubes, the nest room) and a form reach a second player as they are
+  dug and are in a late joiner's welcome; an unknown pit kind is dropped; a form decays as a pit does.
+
 ## Not verified, and what still reads wrong
 
+- The underground view: not seen with another player's body underground as a glow (the flag is sent; not looked at on a second
+  page); the glows of other animals are discs, not their bodies; the tube's segment ends show faintly as rings; not on
+  a phone or a slower GPU. The rabbits: not at the real rate for long; a brush rabbit's burrow the player holds Q for has
+  no length limit; the spoil of a rabbit's hole reads pale on dry sward; a mirror's jackrabbit does not show the scrape
+  (only the host's); the name tags of buried animals still draw over the ground.
 - Not seen at the real rate (1.27 cm/s) for long, only at x20; not on a phone or a narrow window; not on the hosted
   server; not with two real players digging the same system at once (only one page digging, one watching); not the
   decay in real time (the clock moved by hand in the test).
-- From inside, the dig costs 3.1 ms of GPU when the walls fill a 1920 x 1200 frame, over the 1 ms asked; the frame as a
-  whole was not slower in the A/B, but a slower GPU will feel it. Next: a cheaper wall (a noise texture in place of the
-  hash noise; the union test only near a node).
+- (2026-11-02) From inside, the dig cost 3.1 ms of GPU when the walls filled a 1920 x 1200 frame: gone with the view
+  from inside (the underground view, above).
 - The vole's body underground is lit as on the surface (the animal material knows nothing of the dirt). The animals'
   name tags (T) draw through the ground. A hole's spoil can sit a centimetre off the drawn ground (the micro relief is
-  not in the hole's height). The specks of dirt are small cubes. The coyote stands over its pit at ground height (its
+  not in the hole's height). The coyote stands over its pit at ground height (its
   footing does not know the pit). Tunnels do not avoid roots, rock or water; nothing stops two tunnels crossing without
   meeting except the 13 cm join. Bright specks were seen once at a room's crown.
 - The other players' animals and bodies are not shared (above), so another player's AI vole is not seen in your tunnel.

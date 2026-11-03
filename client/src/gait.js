@@ -297,8 +297,10 @@ export function gaitStep(skel, P, st, inp, dt) {
 // observation hop. Pose: above 0 the sit-up (the trunk raised on the hind feet, the fore paws off the ground, the ears
 // up), below it the crouch (the freeze: flat, the ears laid back), at -1 the form (crouched in a shallow scrape). The ears
 // (inp.ears, -1 laid back .. 1 up and alert; NaN: from the pose and the speed) swivel each on its own when up; the scut
-// (inp.twitch above 0) is cocked up over the rump, the white flash of a bolting brush rabbit.
-const HIND = 0.55;
+// (inp.twitch above 0) is cocked up over the rump, the white flash of a bolting brush rabbit. The dig (inp.dig 0..1, the
+// Dig game: dig.js): standing, the chest low and the head down, the fore feet in turn reach forward to the ground and rake
+// back under the chest at DIG_HZ, lifted and curled on the way forward; the hind feet stay planted.
+const HIND = 0.55, DIG_HZ = 4.5;
 const HOP_TD = { shuffle: [0.0, 0.18, 0.55, 0.57], bound: [0.0, 0.11, 0.55, 0.58], turn: [0.0, 0.04, 0.5, 0.5] };
 const rnd = st => (st.seed = (Math.imul(st.seed || 0x9e3779b9, 1664525) + 1013904223) >>> 0) / 4294967296;
 const crossed = (a, b, x) => a <= b ? a < x && b >= x : a < x || b >= x;   // the phase passed x going from a to b (wrapping)
@@ -323,6 +325,8 @@ export function hopStep(skel, P, st, inp, dt) {
   const pose = clamp(inp.pose || 0, -1, 1);
   st.sit = damp(st.sit || 0, Math.max(0, pose), 5, dt); st.crouch = damp(st.crouch, Math.max(0, -pose), 6, dt);
   const uS = ease(clamp((st.sit - 0.05) / 0.6, 0, 1)), uC = ease(clamp(st.crouch, 0, 1));
+  st.dig = damp(st.dig || 0, clamp(inp.dig || 0, 0, 1), 8, dt); const uD = st.dig < 0.002 ? 0 : st.dig;
+  if (uD) st.digPh = ((st.digPh || 0) + DIG_HZ * dt) % 1;
   // the standing turn's hysteresis (as gaitStep)
   const aw = Math.abs(inp.wr || 0), still = v < 0.05 && !inp.air && st.sit < 0.3 && st.crouch < 0.5;
   if (still && aw > (st.tq > 0 ? P.turn.off : P.turn.on)) st.tq = P.turn.hold; else st.tq = still ? st.tq - dt : 0;
@@ -422,7 +426,7 @@ export function hopStep(skel, P, st, inp, dt) {
   const belly = skel.belly, dropH = uC * 0.15 * belly, dropC = uC * 0.8 * belly, scrape = Math.max(0, (st.crouch - 0.7) / 0.3) * (0.15 * belly + 0.06 * h);
   // the sit-up: the trunk raised about the hips onto the hind feet, the hips up a little and back
   const sitA = 0.5 * uS, sitY = 0.1 * h * uS, sitZ = -0.08 * trunkL * uS;
-  const yH = hipsRest[1] + st.gH * share - dropH + st.bob + sitY + 0.3 * h * st.lean, yC = chestRest[1] + st.gF * share - dropC + st.bob + sitY;
+  const yH = hipsRest[1] + st.gH * share - dropH + st.bob + sitY + 0.3 * h * st.lean, yC = chestRest[1] + st.gF * share - dropC + st.bob + sitY - 0.35 * belly * uD;
   const pitch = Math.asin(clamp((yC - yH - (chestRest[1] - hipsRest[1])) / trunkL, -0.9, 0.9)) + pitchC + sitA - st.lean;
   st.pitch = damp(st.pitch, pitch, 12, dt);
   const track = Math.abs(skel.legs[0].toe[0] - skel.legs[1].toe[0]) || 0.1;
@@ -456,6 +460,11 @@ export function hopStep(skel, P, st, inp, dt) {
         const reach = Lg.a + Lg.b, hang = [S[i][0] * 0.9, S[i][1] - 0.62 * reach, S[i][2] + 0.3 * reach];
         toe = lerp3(toe, hang, uS); fv = apply3(rotX(0.9 * uS), fv);
       }
+      if (uD) {   // the dig: forward to the ground, raked back under the chest, the foot curled up on the way forward
+        const ph = ((st.digPh || 0) + (i === 1 ? 0.5 : 0)) % 1, reach = Lg.a + Lg.b, back = ph < 0.55 ? ph / 0.55 : 1 - (ph - 0.55) / 0.45;
+        const up = ph < 0.55 ? 0 : Math.sin(Math.PI * (ph - 0.55) / 0.45), g = groundL([Lg.toe[0], 0, Lg.toe[2]]);
+        toe = lerp3(toe, [Lg.toe[0] * 0.85, g + 0.18 * reach * up, Lg.toe[2] + (0.35 - 0.8 * back) * reach], uD); fv = apply3(rotX(0.9 * up * uD), fv);
+      }
     } else {         // the long foot flat in the stance, the heel rising off it at the push-off; folded up in the swing
       const prog = F.stance ? clamp((F.pf ?? 0) / (F.duty || 1), 0, 1) : 0;
       const heel = F.stance ? (0.95 * gk + 0.2) * ease(clamp((prog - 0.45) / 0.55, 0, 1)) * hop
@@ -465,7 +474,7 @@ export function hopStep(skel, P, st, inp, dt) {
     legIK(Lg, S[i], toe, fv, Pj, E);
   }
   // ---- the head: level over the bound, dipped by the flick (nibbling), drawn in by the crouch, leading a turn ----
-  const dip = (inp.flick || 0) * 0.9 + 0.35 * uC, lead = clamp((inp.wr || 0) * P.lead, -P.leadMax, P.leadMax);
+  const dip = (inp.flick || 0) * 0.9 + 0.35 * uC + 0.55 * uD, lead = clamp((inp.wr || 0) * P.lead, -P.leadMax, P.leadMax);
   st.lead = damp(st.lead, lead, 8, dt);
   const tilt = st.pitch - st.flex;   // the fore segment's pitch, countered
   const Rn = mul3(RB, rotX(dip * 0.6 + 0.45 * tilt));
