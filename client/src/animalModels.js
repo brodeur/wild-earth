@@ -1144,7 +1144,51 @@ export const skinUniforms = model => model.skin ? { uBones: { value: model.skin.
 export const LIVE_ROWS = 32;
 export const liveRowOf = (model, r) => model.live.base + r;
 export const playerLiveRow = model => model.live.base + model.live.rows - 1;
-const animBody = model => model.skin ? SKIN_BODY : model.rig?.kind === 'reptile' ? REPTILE_BODY : ANIM_BODY;
+// The carcass's decay (carrion.js, Scavenge 2026-11-02): a dead body writes -(1 + decay) into aAnim.x, the gait phase,
+// which is free once the fall is over (the gait's amplitude is 0; a live body's phase is never negative). DECAY_BODY,
+// after the pose: the trunk (the middle of the body's length, decay_hz its half length from decay_c) swells by a sixth
+// in the bloated band (0.04-0.5), then shrinks toward the spine's line and sinks toward the ground (world up in the
+// body's frame, from the instance matrix; decay_hy the half height) in the dried band (0.45-0.8): hide over bones.
+// vDecay and vDecayW (the trunk weight times how much the face looks up: the flank the scavengers open) go to the
+// fragment, where DECAY_FRAG dulls the bloated body, darkens the upper flank to raw red-brown from the opened band
+// (0.28 on, and from the first bite, growing down the flank with the share eaten: the channel's whole part, in 15ths) and greys the hide brown in the dried band. Every path (the part rig, the reptile, the skin, the textured
+// tier, the depth and silhouette twins) gets the body; only the lit material the colour.
+const DECAY_BODY = `
+float dkV = aAnim.x < -0.5 ? -aAnim.x - 1.0 : 0.0, dkK = floor(dkV * 0.5 + 0.0001);
+vDecay = clamp(dkV - 2.0 * dkK, 0.0, 1.0); vDecayFed = dkK / 15.0; vDecayW = 0.0;
+if (vDecay > 0.0) {
+  float dkTw = 1.0 - smoothstep(0.45, 0.95, abs(position.z - decay_c.z) / decay_hz);
+  vec3 dkUp = normalize(vec3(instanceMatrix[0].y, instanceMatrix[1].y, instanceMatrix[2].y));
+  float dkBloat = smoothstep(0.04, 0.22, vDecay) * (1.0 - smoothstep(0.3, 0.5, vDecay));
+  float dkDry = smoothstep(0.45, 0.8, vDecay);
+  vec3 dkRel = transformed - decay_c;
+  vec3 dkRadial = dkRel - vec3(0.0, 0.0, dkRel.z);
+  transformed += dkRadial * (0.22 * dkBloat - 0.17 * dkDry) * dkTw;
+  float dkH = dot(transformed - decay_c, dkUp) + decay_hy;
+  transformed -= dkUp * dkH * 0.22 * dkDry * dkTw;
+  vDecayW = dkTw * clamp(0.5 + 0.5 * dot(normalize(animR * normal), dkUp), 0.0, 1.0);
+}`;
+const DECAY_FRAG = `
+if (vDecay > 0.0) {
+  // opened: the upper flank from the top down, the more the more has been eaten (vDecayFed) and, unfed, a little by the stage
+  float dkReach = clamp(max(vDecayFed * 1.6, 0.18 * smoothstep(0.28, 0.5, vDecay)), 0.0, 1.0);
+  float dkOpen = smoothstep(1.0 - dkReach, 1.0 - dkReach + 0.12, vDecayW) * step(0.001, dkReach) * (1.0 - 0.6 * smoothstep(0.7, 0.9, vDecay));
+  float dkDry = smoothstep(0.5, 0.85, vDecay);
+  float dkLum = dot(diffuseColor.rgb, vec3(0.2126, 0.7152, 0.0722));
+  diffuseColor.rgb *= 1.0 - 0.25 * smoothstep(0.08, 0.3, vDecay) * (1.0 - dkDry);
+  diffuseColor.rgb = mix(diffuseColor.rgb, vec3(0.30, 0.25, 0.18) * (0.6 + 0.8 * dkLum), dkDry);
+  diffuseColor.rgb = mix(diffuseColor.rgb, vec3(0.17, 0.055, 0.04), dkOpen);
+}`;
+const decayConsts = model => {
+  const g = model.geometry || model.tiers?.[0]; let c = [0, 0.2, 0], hz = 0.5, hy = 0.2;
+  if (g) {
+    if (!g.boundingBox) g.computeBoundingBox();
+    const b = g.boundingBox; if (b && isFinite(b.min.x) && isFinite(b.max.x)) { c = [(b.min.x + b.max.x) / 2, (b.min.y + b.max.y) / 2, (b.min.z + b.max.z) / 2]; hz = Math.max(0.02, (b.max.z - b.min.z) / 2); hy = Math.max(0.01, (b.max.y - b.min.y) / 2); }
+  }
+  const f = x => x.toFixed(4);
+  return { key: `d${c.map(f).join(',')},${f(hz)},${f(hy)}`, decl: `\nvarying float vDecay; varying float vDecayW; varying float vDecayFed;\nconst vec3 decay_c = vec3(${c.map(f).join(', ')});\nconst float decay_hz = ${f(hz)}, decay_hy = ${f(hy)};\n` };
+};
+const animBody = model => (model.skin ? SKIN_BODY : model.rig?.kind === 'reptile' ? REPTILE_BODY : ANIM_BODY) + DECAY_BODY;
 const RIG_KEYS = ['spine', 'spinePhase', 'sit', 'foreFold', 'tipLag', 'tipWave', 'tipCurl', 'abduct', 'bob', 'handLag', 'handAmp', 'bow', 'spread', 'collapse', 'flickLift', 'flickOpen',
   'wave', 'waveK', 'envS', 'pushPitch', 'baskAbduct', 'squash', 'legLift', 'hindK', 'bend', 'flickYaw', 'turnFore', 'turnHead'];
 // aAnim2 is declared for the rig templates, the quadrupeds' gait selector and the antlers (the geometry must then
@@ -1179,9 +1223,10 @@ function rigDecl(model) {
   }
   return d;
 }
-const animDecl = model => model.skin ? (model.antler ? 'attribute vec4 aAnim2;\n' : '') + antlerDecl(model) + skinDecl(model)
-  : (model.weighted ? '#define ANIM_WEIGHTED\nattribute float aPartW;' : '') + ANIM_DECL_BASE + '\n' + extraDecl(model);
-const programKey = model => `${model.amp.join(',')}|${model.pose.join(',')}|${model.weighted ? 'w' : ''}|${model.rig ? model.rig.name : ''}|${model.gait ? 'g' : ''}|${model.antler ? 'a' : ''}|${model.skin ? `s${model.skin.ratio.toFixed(4)}:${model.skin.key}${model.live ? ':live' : ''}` : ''}`;
+// (the skin path declares aAnim too, for the decay: the deer's twelve attribute slots, the buck's fifteen, under Metal's sixteen)
+const animDecl = model => (model.skin ? 'attribute vec4 aAnim;\n' + (model.antler ? 'attribute vec4 aAnim2;\n' : '') + antlerDecl(model) + skinDecl(model)
+  : (model.weighted ? '#define ANIM_WEIGHTED\nattribute float aPartW;' : '') + ANIM_DECL_BASE + '\n' + extraDecl(model)) + decayConsts(model).decl;
+const programKey = model => `${model.amp.join(',')}|${model.pose.join(',')}|${model.weighted ? 'w' : ''}|${model.rig ? model.rig.name : ''}|${model.gait ? 'g' : ''}|${model.antler ? 'a' : ''}|${model.skin ? `s${model.skin.ratio.toFixed(4)}:${model.skin.key}${model.live ? ':live' : ''}` : ''}|${decayConsts(model).key}`;
 export { hasAnim2 };
 
 // Light through the feathers (UNDERWING): a bird's wing and tail seen with the sun beyond them glow with the light
@@ -1260,6 +1305,10 @@ export function animalMaterial(atmosphere, model, { map = null, head = null } = 
         // velvet: grey-brown skin over the growing antler (the burr ring keeps its colour)
         + '\n#ifdef ANIM_ANTLER\n  if (aAntler > 0.0 && int(aTine + 0.5) != 3) vColor.rgb = mix(vColor.rgb, vec3(0.13, 0.095, 0.07), aAnim2.y);\n#endif'
         + REPTILE_COLOR + UNDERWING_VERT);
+    // the carcass's colour (DECAY_FRAG): after the texture and the vertex colour
+    shader.fragmentShader = shader.fragmentShader
+      .replace('#include <common>', '#include <common>\nvarying float vDecay; varying float vDecayW; varying float vDecayFed;')
+      .replace('#include <color_fragment>', '#include <color_fragment>' + DECAY_FRAG);
     if (uw) {
       shader.uniforms.underwingK = underwingLight;
       shader.vertexShader = shader.vertexShader.replace('#include <fog_vertex>', 'vUnderwing *= 1.0 - smoothstep(300.0, 420.0, length(mvPosition.xyz));\n#include <fog_vertex>');
