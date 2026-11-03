@@ -121,8 +121,14 @@ export class Cliffs {
       const p = ci ? (CLIFF_PATTERN[classes[ci - 1]] ?? 3) : 3;
       return p || 3;   // a cliff in alluvium or till is a cut through it: blocky
     };
-    const cv = tile.canopy;   // tree cover %, the 30 m grid (tilepackage Grid8 channel 0)
-    this.treeAt = (x, north) => cv ? Math.min(cv.at(x, north, 0) / 100, 1) : 0;
+    // vegetation, as the terrain shader's cliff hold-off reads it: tree or shrub cover % (canopy R, G) or the habitat's
+    // oak woodland (1) or chaparral (4) class, on the 30 m grid
+    const cv = tile.canopy, hb = tile.habitat;
+    this.vegAt = (x, north) => {
+      const c = hb ? hb.at(x, north, 0) : 0;
+      if (c === 1 || c === 4) return 1;
+      return cv ? Math.min(Math.max(cv.at(x, north, 0), cv.at(x, north, 1)) / 100, 1) : 0;
+    };
     this.uniforms = { ...atmo, ...detailUniforms, ...cliffUniforms, map: groundUniforms.map, tileSize: groundUniforms.tileSize, cliffNearR: { value: NEAR_R } };
     this.material = new THREE.ShaderMaterial({ vertexShader: VERT, fragmentShader: FRAG, uniforms: this.uniforms });
     const make = (geo, cap, name) => {
@@ -180,7 +186,11 @@ export class Cliffs {
         const ge = (at(x + 4, north) - at(x - 4, north)) / 8, gn = (at(x, north + 4) - at(x, north - 4)) / 8;   // over +-4 m: the 1 m ground's roughness is not a cliff
         const slope = Math.atan(Math.hypot(ge, gn)) * 180 / Math.PI;
         if (slope < CLIFF_DEG + 2 * (r1 - 0.5) * 4 || r2 > pDensity) continue;
-        if (slope < 62 && this.treeAt(x, north) > 0.45) continue;   // a wooded steep slope is soil, as the terrain's cliff material holds off it
+        // and steep on the 5 m heights too (over +-6 m), as the terrain's cliff material tests it, so a step in the 1 m
+        // ground on a grassy slope gets no slab; none on vegetated ground below 62 degrees, as the material holds off it
+        const be = (H.base(x + 6, north) - H.base(x - 6, north)) / 12, bn = (H.base(x, north + 6) - H.base(x, north - 6)) / 12;
+        if (Math.atan(Math.hypot(be, bn)) * 180 / Math.PI < 48) continue;
+        if (slope < 62 && this.vegAt(x, north) > 0.45) continue;
         const pat = this.patternAt(x, north), y = at(x, north);
         V.n.set(-ge, 1, gn).normalize();
         V.u.set(0, 1, 0).addScaledVector(V.n, -V.n.y).normalize();   // up the face
