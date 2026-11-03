@@ -139,6 +139,13 @@ def season_now(tile: str) -> str:
     return SEASONS_N[(m + 6) % 12 if south else m]
 
 
+BODY_MAX, BODY_C_MAX = 32, 8      # pos: the body's sample and constants (m_pos)
+
+
+def _num(v) -> bool:
+    return isinstance(v, (int, float)) and not isinstance(v, bool) and math.isfinite(v)
+
+
 def _coord(v, k: str) -> float:
     """A coordinate (a position's, an invite's point's): a finite number, rounded to the centimetre."""
     if not isinstance(v, (int, float)) or isinstance(v, bool) or not math.isfinite(v) or abs(v) > 1e6:
@@ -941,6 +948,14 @@ class HubConn(WsConn):
             out[k] = _coord(m.get(k), k)
         form = m.get("form")
         out["form"] = form if isinstance(form, str) and FORM_RE.match(form) else "spirit"
+        # the body's pose for the members who draw it (docs/multiplayer.md "Players as their animals"): b, the animal
+        # stream's fields (client/src/animalNet.js FIELDS), and c, the body's few constants (size, sex, antlers); numbers
+        # only, relayed as they come, never kept past the connection
+        if out["form"] != "spirit":
+            for k, n in (("b", BODY_MAX), ("c", BODY_C_MAX)):
+                v = m.get(k)
+                if isinstance(v, list) and len(v) <= n and all(_num(x) and abs(x) <= 1e6 for x in v):
+                    out[k] = [round(float(x), 3) for x in v]
         self.last_pos = out
         for u in h.comembers(me):
             if h.blocked(me, u):

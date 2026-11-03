@@ -24,6 +24,15 @@ import { trunkAt } from './animals.js';
 // remote(), a rejected one rolls back (adoptWorld). The server runs the round; the AI collectors run in one
 // browser per world (aiLocal, read by animals.js). Without the endpoint everything below is v2, offline.
 //
+// v5 (2026-11-02, Aaron: "Games, rather than being something you turn on, are always available and playable"): no
+// Start button. main.js starts the game with the world, so every page joins the tile's shared world on entry and the AI
+// collectors (on the AI host) gather always; the player's own pickups, deposits, burials, digs and raids happen only in
+// a collector body (the raven, the gray squirrel, the acorn woodpecker: setBody from main.js's onBody; the spirit and
+// the other bodies do nothing here), and the game box stays hidden until the player first carries or caches an acorn
+// (showBox), so the HUD is quiet at entry. The round is the season (server.py season_round: one round per calendar
+// instance of the world's season, no length; offline, a round of length 0); the board's columns read "season" (this
+// one) and "all" (every season here); the round's timer row is hidden. ?round=N still makes a timed round offline.
+//
 // v4 (docs/game-acorn-stash.md, "v4: defence and pilfering"): stores get robbed and defended. Digging up someone
 // else's buried acorn (a pilfer) scores for the digger's species and against the owner's; a raven or squirrel (AI
 // jays and squirrels too) can pull an acorn from a woodpecker granary (a 'raid') when no family member is within
@@ -354,7 +363,8 @@ export class AcornGame {
     this.animals = null; this.raidOak = null; this.raidAt = null; this.raidPull = 0; this.raidScanT = 0; this.raidGuarded = false;
     this.mobbedT = 0; this.mobbedBy = null; this.fleeing = null; this.newsT = 0; this._tp = { x: 0, y: 0, z: 0, r: 0 };
     const q = typeof location === 'undefined' ? new URLSearchParams() : new URLSearchParams(location.search);
-    this.roundLength = +q.get('round') > 0 ? +q.get('round') : ROUND_S;
+    this.roundLength = +q.get('round') > 0 ? +q.get('round') : 0;   // v5: the round is the season (0: no end); ?round=N a timed one
+    this.bodyCode = undefined; this.boxShown = false;              // v5: the body the player is in (setBody), the box shown yet
 
     this.group = new THREE.Group(); this.group.visible = false; scene.add(this.group);
     const nutGeo = acornGeometry();
@@ -387,7 +397,7 @@ export class AcornGame {
       row.innerHTML = '<span>acorns found</span><b></b>';
       ui.box.insertBefore(row, ui.hint || null); ui.notes = row.querySelector('b');
     }
-    if (ui.time?.previousElementSibling) ui.time.previousElementSibling.textContent = 'round';
+    if (ui.time?.previousElementSibling) ui.time.previousElementSibling.textContent = 'round';   // (hidden while the round is the season: hud)
     this.mountBoard();
     if (ui.box && typeof document !== 'undefined') {   // v4: one line of news (a raid, a pilfer, mobbed), shown for NEWS_S
       const n = document.createElement('div'); n.className = 'acorn-news';
@@ -409,7 +419,18 @@ export class AcornGame {
   get key() { return `wild-earth:stash:${this.tile.id}/${this.season}`; }
   get state() { return this.world; }                       // v1 name
   get carriedCount() { return this.player.carrying; }
-  get active() { return this.running && !!this.season; }   // AI collectors work only during a game
+  get active() { return this.running && !!this.season; }   // AI collectors work only during a game (v5: always, in a world)
+  // v5: the body the player is in (main.js onBody: a species code, or 'spirit'); the player's own acorn actions only in a
+  // collector body. Before any body is named (a dev path that never calls it) the player collects as before.
+  setBody(code) { this.bodyCode = code; }
+  get collecting() { return this.bodyCode === undefined || PLAYER_CAP[this.bodyCode] !== undefined; }
+  // v5: the game box, hidden until the player first carries or caches (applied) or a dev path asks (?game=1)
+  showBox() {
+    if (this.boxShown) return;
+    this.boxShown = true;
+    if (this.ui.box) this.ui.box.classList.remove('hidden');
+    this.hud(true);
+  }
 
   // The player's collector record. species: the player is the raven today; a later lane sets this to play a
   // squirrel or woodpecker (the leaderboard line follows it).
@@ -468,6 +489,7 @@ export class AcornGame {
   on(type, fn) { (this.listeners[type] ||= []).push(fn); return () => { const a = this.listeners[type], i = a.indexOf(fn); if (i >= 0) a.splice(i, 1); }; }
   dispatch(e) {
     if (!this.active || (e.by !== 'player' && !this.aiLocal)) return false;   // AI events only from the AI host
+    if (e.by === 'player' && !this.collecting) return false;                  // v5: not in a collector body
     const pre = this.world.collectors[e.by]?.carrying;
     if (!applyEvent(this.world, e)) return false;
     if (this.net.live) this.net.event(e, pre);
@@ -475,6 +497,7 @@ export class AcornGame {
     return true;
   }
   applied(e) {
+    if (e.by === 'player' && (e.type === 'pickup' || e.type === 'bury' || e.type === 'deposit' || e.type === 'raid' || e.type === 'dig')) this.showBox();   // v5: the board when the player carries or caches
     this.effects(e);
     for (const fn of this.listeners[e.type] || []) { try { fn(e); } catch (err) { console.error(`acorns: '${e.type}' listener`, err); } }
     if (this.saveT < 0) this.saveT = SAVE_S;
@@ -616,15 +639,15 @@ export class AcornGame {
 
   start(season) {
     if (season && season !== this.season) this.setWorld(season);
-    this.running = true; this.group.visible = true; this.elapsed = 0; this.dirty = true; this.epoch++;
+    this.running = true; this.group.visible = true; this.elapsed = 0; this.dirty = true; this.epoch++;   // v5: with the world (main.js)
     const counts = Object.fromEntries(BOARD_SPECIES.map(s => [s, 0]));
     this.world.round = { t: 0, length: this.roundLength, counts, you: 0, over: false, winner: null,
       raided: Object.fromEntries(BOARD_SPECIES.map(s => [s, 0])), mobbed: {} };
     this.fleeing = null; this.raidPull = 0; this.mobbedT = 0;
     this.board.el.classList.remove('done');
-    if (this.ui.box) this.ui.box.classList.remove('hidden');
+    if (this.ui.box && this.boxShown) this.ui.box.classList.remove('hidden');   // v5: hidden until the player carries or caches
     this.hud();
-    this.net.join(this.tile.id, this.season);   // v3: the server's world when there is one (its round replaces this one)
+    this.net.join(this.tile.id, this.season);   // v3: the server's world when there is one (its round, the season's, replaces this one)
   }
   stop() {
     this.net.leave();
@@ -924,7 +947,8 @@ export class AcornGame {
 
     // pickup: the nearest live acorn within PICK_R
     const me = this.player, manual = !!this.manual;   // a squirrel player picks and buries on a key instead
-    if (!manual && me.carrying < me.cap) {
+    const collecting = this.collecting;               // v5: only in a collector body
+    if (collecting && !manual && me.carrying < me.cap) {
       let best = -1, bd = PICK_R * PICK_R;
       for (let i = 0; i < this.liveAcorns.length; i++) {
         const a = this.liveAcorns[i], dx = a.x - p.x, dy = a.y - p.y, dz = a.z - p.z, d2 = dx * dx + dy * dy + dz * dz;
@@ -934,7 +958,7 @@ export class AcornGame {
     }
     // deposit: one acorn per beat into a non-full stash within DEPOSIT_R
     let at = null, nearFull = false;
-    if (!manual && me.carrying > 0) {
+    if (collecting && !manual && me.carrying > 0) {
       let bd = DEPOSIT_R * DEPOSIT_R;
       for (let i = 0; i < this.liveStashes.length; i++) {
         const s = this.liveStashes[i], dx = s.x - p.x, dy = s.y - p.y, dz = s.z - p.z, d2 = dx * dx + dy * dy + dz * dz;
@@ -944,7 +968,7 @@ export class AcornGame {
       }
     }
     if (nearFull !== this.nearFull) { this.nearFull = nearFull; this.hud(); }
-    this.raidUpdate(dt, p);
+    if (collecting) this.raidUpdate(dt, p); else { this.raidPull = 0; this.raidAt = null; }
     if (this.newsT > 0 && (this.newsT -= dt) <= 0 && this.news) this.news.textContent = '';
     this.depositing = at !== null;
     if (at === null) this.depositT = DEPOSIT_BEAT / 2;   // first acorn goes in half a beat after arriving
@@ -955,7 +979,7 @@ export class AcornGame {
     }
     // the round
     const r = w.round;
-    if (r && !r.over && (r.t += dt) >= r.length && !this.net.live) this.endRound();   // shared: the server ends it
+    if (r && !r.over && (r.t += dt) >= r.length && r.length > 0 && !this.net.live) this.endRound();   // shared: the server ends it; v5: the season's round has no end here
     if (this.saveT >= 0 && (this.saveT -= dt) <= 0) this.save();
     this.hudT += dt;
     if (this.hudT > 0.25) { this.hudT = 0; this.hud(); }
@@ -1045,7 +1069,7 @@ export class AcornGame {
     const el = this.board.el; el.className = 'acorn-board';
     try { if (localStorage.getItem('wild-earth:board-off')) el.classList.add('off'); } catch (e) { /* private mode */ }
     const names = Object.fromEntries((this.tile.species || []).map(s => [s.code, s.common]));
-    el.innerHTML = `<div class="bh"><span>acorns gathered</span><span title="this round">round</span><span title="all rounds in this place and season">season</span></div>`
+    el.innerHTML = `<div class="bh"><span>acorns gathered</span><span title="this season (the round is the season)">season</span><span title="every season here, all years">all</span></div>`
       + BOARD_SPECIES.map(s => `<div class="br" data-sp="${s}"><span>${esc(BOARD_NAMES[s] || names[s] || s)} <i>${BOARD_VERB[s]}</i></span><b class="r">0</b><b class="a">0</b></div>`).join('')
       + '<div class="over"></div><div class="keys"><kbd>L</kbd> hides the board</div>';
     for (const r of el.querySelectorAll('.br')) this.board.rows[r.dataset.sp] = { el: r, r: r.querySelector('.r'), a: r.querySelector('.a') };
@@ -1122,7 +1146,8 @@ export class AcornGame {
       const notes = w.species.map(id => ACORNS[id].common).join(', ') || 'none yet';
       if (u.notes.textContent !== notes) u.notes.textContent = notes;
     }
-    const left = r ? Math.max(0, Math.ceil(r.length - r.t)) : 0;
+    const left = r ? Math.max(0, Math.ceil(r.length - r.t)) : 0, timed = !!r?.length;
+    if (u.time.parentElement) { const d = timed || r?.over ? '' : 'none'; if (u.time.parentElement.style.display !== d) u.time.parentElement.style.display = d; }   // v5: the season's round has no clock
     u.time.textContent = r?.over ? 'over' : `${String(Math.floor(left / 60)).padStart(2, '0')}:${String(left % 60).padStart(2, '0')} left`;
     const hint = this.raidHint() || (me.species === 'melanerpes_formicivorus' ? (me.carrying > 0
         ? 'an acorn in your bill: fly to your family\'s granary, cling to it and press E to hammer it in'

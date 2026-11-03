@@ -7,6 +7,7 @@ import { uniforms as atmo } from './atmosphere.js';
 import { fieldGuide } from './fieldguide.js';
 import { scentCarry } from './wind.js';
 import { LegsPool } from './legs.js';   // the quadrupeds' leg engine (gait.js; docs/movement.md "The legs")
+import { NF, F, FL_AIR, FL_GM, FL_BURIED, FL_HIDDEN, FL_DEAD } from './animalNet.js';   // the shared animals' stream (the mirror below)
 import { buildSquirrel, buildWoodpecker, buildRaven, buildDeer, buildQuail, buildJay, buildHawk, buildVulture, buildStellersJay,
   buildDeerBuck, buildFox, buildCoyote, buildCougar, buildRabbit, buildVole, buildJackrabbit, buildTurkey, buildGroundSquirrel, buildLizard, buildBear, buildMountainQuail,
   animalMaterial, animalDepthMaterial, planarShadowMaterial, loadDeerMesh, loadSquirrelMesh, loadQuailMesh, loadJayMesh, driveClips, makeClipState, DEER_DRIVE, turnFollow, bendOf, PART_TURN,
@@ -537,6 +538,10 @@ function burrowGeometry() {
 }
 const clamp01 = x => x < 0 ? 0 : x > 1 ? 1 : x;
 const wrapAngle = a => Math.atan2(Math.sin(a), Math.cos(a));
+const r2 = v => Math.round(v * 100) / 100, r3 = v => Math.round(v * 1000) / 1000;
+// the mirror (becomeMirror below): a run between two samples lasts their spacing clamped to [RUN_MIN, RUN_MAX] s, carries on
+// EXTRA s past its end at its velocity, snaps over SNAP m or after HOLD s of silence
+const MIRROR_RUN_MIN = 0.1, MIRROR_RUN_MAX = 1.2, MIRROR_EXTRA = 0.4, MIRROR_SNAP = 20, MIRROR_HOLD = 3;
 
 // A point on an oak's trunk axis at height h above the ground, following the variant's lean (the
 // same frame as acorns.js trunkPoint: limb along +y, rotateZ(lean), rotateY(leanDir + rot), scale).
@@ -574,6 +579,12 @@ export class Animals {
     this.lastCenter = null; this.vegVersion = -1; this.dirty = true;
     this.observer = null; this.perceived = new Set();
     this.held = new Map(); this.freed = new Set();   // the spirit's: animals the player is in, and ones it has left
+    // the shared animals (animalNet.js; docs/multiplayer.md "Shared animals"): this page the host (mirror false: the AI
+    // runs here, for every player in the world) or a mirror (the host's animals drawn from its stream, no AI); byN the
+    // stream's numbers; mgroups the mirrored groups; centres where the other players are (the host simulates round
+    // them and the species they perceive: sim); remotes the group members' bodies (players.js), mirrored the same way
+    this.mirror = false; this.relay = null; this.byN = new Map(); this.mgroups = new Map(); this.centres = []; this.lastCentres = [];
+    this.remotes = new Map(); this.sim = SPECIES.map(() => true); this.simSet = null; this.catchPending = 0; this.onCaught = null; this.onMiss = null;
     this.ms = 0; this.counts = new Int32Array(SPECIES.length); this.lastDescribe = -1e9; this.text = '–';
     this.prior = null; this.priorReady = false; this.priorDeadline = performance.now() + 4000;
     this.loadPrior();
@@ -802,6 +813,7 @@ export class Animals {
   on(type, fn) { (this.listeners[type] ||= []).push(fn); return () => this.off(type, fn); }
   off(type, fn) { const a = this.listeners[type]; if (a) { const i = a.indexOf(fn); if (i >= 0) a.splice(i, 1); } }
   emit(type, e) {
+    if (this.relay && this.relay.host) this.relay.emitted(type, e);   // the shared animals: the mirrors get it as an event
     const a = this.listeners[type]; if (!a) return;
     for (const fn of a.slice()) { try { fn(e); } catch (err) { console.error(`animals: '${type}' listener`, err); } }
   }
@@ -809,17 +821,41 @@ export class Animals {
   dispose() { for (const m of this.meshes) removeCaster(m); this.group.removeFromParent(); }
 
   // ---- perception --------------------------------------------------------------------------------
-  setObserver(code) {
-    this.observer = code;
+  // The species an observer of `code` perceives here (perception.json perceives): the spirit (no row) the present
+  // species; no matrix at all, everything; plus the visual-only and the pending species (PENDING).
+  perceivedOf(code) {
     const list = this.tile.perception?.perceives?.[code];
     const named = new Set(Object.values(this.tile.perception?.perceives || {}).flat());   // every species some observer here perceives: the present ones
-    this.perceived = new Set(list || (named.size ? [...named] : SPECIES.map(s => s.code)));   // the spirit (no row): the present species; no matrix: everything
-    for (const c of VISUAL_ONLY) this.perceived.add(c);
+    const out = new Set(list || (named.size ? [...named] : SPECIES.map(s => s.code)));   // the spirit (no row): the present species; no matrix: everything
+    for (const c of VISUAL_ONLY) out.add(c);
     // PENDING: species the client draws that this tile package predates (not in its species.json at all); a species the
     // package knows and leaves out of every row is absent from the place (species.json `present`, 2026-10-28), not pending
     const known = new Set((this.tile.species || []).map(s => s.code));
-    for (const c of PENDING) if (!named.has(c) && !known.has(c)) this.perceived.add(c);
+    for (const c of PENDING) if (!named.has(c) && !known.has(c)) out.add(c);
+    return out;
+  }
+  // The species simulated on this page (sim): the ones this player perceives and, as the host, the ones every other
+  // player in the world perceives (centres, from animalNet.js apos); a change rebuilds the live set.
+  simAll() {
+    const all = new Set(this.perceived);
+    for (const c of this.centres) for (const code of this.perceivedOf(c.sp || 'spirit')) all.add(code);
+    let same = !!this.simSet && this.simSet.size === all.size;
+    if (same) for (const c of all) if (!this.simSet.has(c)) { same = false; break; }
+    if (same) return;
+    this.simSet = all; this.sim = SPECIES.map(sp => all.has(sp.code)); this.dirty = true;
+  }
+  // Where the other players are and what they are (animalNet.js: the host alone gets them): the live set covers them.
+  setCentres(list) { this.centres = list; this.simAll(); }
+  centresMoved() {
+    const L = this.lastCentres, C = this.centres; if (L.length !== C.length) return true;
+    for (let i = 0; i < C.length; i++) if (Math.hypot(C[i].x - L[i][0], C[i].z - L[i][1]) > REBUILD_MOVE) return true;
+    return false;
+  }
+  setObserver(code) {
+    this.observer = code;
+    this.perceived = this.perceivedOf(code);
     SPECIES.forEach((sp, k) => { this.meshes[k].visible = this.perceived.has(sp.code); });
+    this.simAll();
     // noticing: how far each species notices this observer (perception.json detects), and whom it hunts (games.json)
     const det = this.tile.perception?.detects || null, sen = this.tile.perception?.senses || null, sig = this.tile.perception?.signatures?.[code] || null;
     this.noticeBase = SPECIES.map(sp => { const row = det?.[sp.code.split(':')[0]]; const v = row ? row[code] : undefined; return typeof v === 'number' ? v : Infinity; });
@@ -979,6 +1015,7 @@ export class Animals {
     return false;
   }
   huntable(b) {
+    if (b.remote) return false;   // another player's body (players.js): not the AI's prey
     switch (b.sp) {
       case VO: return b.state !== VL_HIDE && !b.buried;   // not under the ground (dig.js)
       case RB: return b.state !== B_FORM && b.state !== B_BOLT;
@@ -994,13 +1031,13 @@ export class Animals {
     const prey = this.preySlots?.[a.sp]; if (!prey) return null;
     let best = null, bd = R * R;
     for (const k of kinds) {
-      if (!prey.has(k) || !this.meshes[k].visible) continue;
+      if (!prey.has(k) || !this.sim[k]) continue;
       for (const b of this.bySpecies[k]) {
         if (!this.huntable(b)) continue;
         const d2 = (b.x - a.x) ** 2 + (b.z - a.z) ** 2; if (d2 < bd) { bd = d2; best = b; }
       }
     }
-    if (a.sp === ML && prey.has(TK) && this.meshes[TK].visible) for (const g of this.flocks) {
+    if (a.sp === ML && prey.has(TK) && this.sim[TK]) for (const g of this.flocks) {
       if (g.state !== TF_FORAGE && g.state !== TF_WALK) continue;
       const d2 = (g.x - a.x) ** 2 + (g.z - a.z) ** 2; if (d2 < bd) { bd = d2; best = g; }
     }
@@ -1009,8 +1046,9 @@ export class Animals {
   }
   // A fox, coyote or lion (a group's leader or alone) looks for prey: when it is off its cooldown and finds some, the
   // ---- kills and carrion (CARRION above) ------------------------------------------------------------
+  // by: 'player', the hunter's record, or { code, aid } (a remote player's catch the host confirms; the mirror: { code }).
   kill(prey, by) {
-    if (!prey || prey.dead || prey.sp === undefined || !KILLABLE.has(prey.sp)) return false;
+    if (!prey || prey.dead || prey.remote || prey.sp === undefined || !KILLABLE.has(prey.sp)) return false;
     const small = prey.sp === VO || prey.sp === RB || prey.sp === LZ;
     prey.dead = true; prey.diedAt = this.time; prey.carrionUntil = this.time + (small ? CARRION.small : CARRION.t);
     prey.hunt = null; prey.air = 0; prey.speed = 0; prey.flickV = 0; prey.lift = 0; prey.fleeT = 0; prey.spd = 0;
@@ -1027,10 +1065,10 @@ export class Animals {
       if (g.leader === prey) { const o = this.list.find(b => b !== prey && b.group === g && !b.dead); if (o) g.leader = o; else prey.group = g; }
     }
     this.carrion.push(prey);
-    const who = by === 'player' ? this.observer || 'player' : SPECIES[by.sp].code;
+    const who = by === 'player' ? this.observer || 'player' : by.code || SPECIES[by.sp].code;
     this.lastKill = { prey: SPECIES[prey.sp].code, by: who, t: this.time, x: Math.round(prey.x), z: Math.round(prey.z) };
     this.emit('kill', { prey: SPECIES[prey.sp].code, by: who, x: prey.x, y: prey.y, z: prey.z, small,
-      sp: prey.sp, id: prey.id, h: TAG_DY[prey.sp] * (prey.size || 1) });   // its species index, id and body height (m): the soul that leaves it (spirit.js SoulPool)
+      sp: prey.sp, id: prey.id, h: TAG_DY[prey.sp] * (prey.size || 1), animal: prey, aid: by.aid || 0, mine: by === 'player' });   // its species index, id and body height (m): the soul that leaves it (spirit.js SoulPool); the record and the catcher's number (the stream, animalNet.js)
     return true;
   }
   lieStill(a, dt = 0) {   // the fall over CARRION.fall s, then on its side on the ground, a little up so the body is not under it
@@ -1040,6 +1078,7 @@ export class Animals {
     a.amp = (a.amp0 || 0) * (1 - u); a.pose = (a.pose0 || 0) + (rest - (a.pose0 || 0)) * e; a.flick = (a.flick0 || 0) * (1 - u);
   }
   bury(a) {   // the carrion goes: unseen at once, dropped by the next rebuild
+    if (this.relay?.host) this.relay.emitted('gone', { animal: a });
     a.gone = true; a.vis = 0; a.culled = true;
     if (a.slot >= 0 && this.meshes[a.sp]) this.meshes[a.sp].instanceMatrix.array.fill(0, a.slot * 16, a.slot * 16 + 16);
     this.byId.delete(a.id); this.carrion = this.carrion.filter(c => c !== a); this.dirty = true;
@@ -1088,7 +1127,7 @@ export class Animals {
     const fx = -Math.sin(yaw), fz = -Math.cos(yaw), cc = Math.cos(cone);
     let best = null, bd = reach * reach;
     for (const a of this.list) {
-      if (!prey.has(a.sp) || a.dead || a.culled || a.buried || !KILLABLE.has(a.sp)) continue;   // buried: in a tunnel not opened (dig.js)
+      if (!prey.has(a.sp) || a.dead || a.culled || a.buried || a.remote || !KILLABLE.has(a.sp)) continue;   // buried: in a tunnel not opened (dig.js); remote: another player's body
       const dx = a.x - x, dz = a.z - z, d2 = dx * dx + (a.y - y) ** 2 * 0.25 + dz * dz; if (d2 >= bd) continue;
       if (yaw === yaw && d2 > 0.25 && (dx * fx + dz * fz) < cc * Math.sqrt(dx * dx + dz * dz)) continue;   // not ahead
       bd = d2; best = a;
@@ -1104,9 +1143,15 @@ export class Animals {
   // The player's catch (E within reach of prey its species hunts, or the catch move landing on it): the kill, or null.
   catchNear(x, y, z) {
     const best = this.preyNear(x, y, z);
+    if (best && this.mirror) {   // the host confirms (animalNet.js areq): the kill it orders is the one everyone sees; a miss is a miss
+      if (best.n >= 0 && this.time >= (best.askedAt || 0)) { best.askedAt = this.time + 0.5; this.catchPending = this.time + 1; this.relay?.request({ k: 'catch', n: best.n, x: r2(x), y: r2(y), z: r2(z), sp: this.observer }); }
+      return null;
+    }
     if (best) this.kill(best, 'player');
     return best;
   }
+  // Is a catch asked of the host still unanswered (the controls hold their "misses" toast while it is)?
+  get catchAsked() { return this.mirror && this.time < this.catchPending; }
   // lion stalks (M_STALK with a.hunt), a canid trots at it (M_RUSH). true when a hunt starts.
   huntStart(a) {
     if (this.time < (a.huntAt || 0) || !this.preySlots?.[a.sp]) return false;
@@ -1117,6 +1162,7 @@ export class Animals {
     if (lion) { a.state = M_STALK; a.speed = MAMMAL[ML].walk; a.t = 1e9; }
     else { a.state = M_RUSH; a.speed = MAMMAL[a.sp].trot; }
     this.lastHunt = { id: a.id, hunter: SPECIES[a.sp].code, prey: t.sp === undefined ? 'meleagris_gallopavo' : SPECIES[t.sp].code, t: this.time };
+    this.emit('hunt', { animal: a, prey: t.sp === undefined ? null : t });
     return true;
   }
   // The hunt is over (a kill or not): stand or feed (the lion) or sniff (a canid), and no new hunt for a while.
@@ -1272,16 +1318,24 @@ export class Animals {
   // ---- population ---------------------------------------------------------------------------------
   rebuild(px, pz) {
     this.lastCenter = [px, pz]; this.dirty = false;
+    this.lastCentres = this.centres.map(c => [c.x, c.z]);
     const t = this.tile, hab = t.habitat, can = t.canopy, res = hab.res, size = t.size, north = -pz;
-    const [ci, cj] = hab.cellOf(px, north), cells = Math.ceil(LIVE_R / res);
+    const cells = Math.ceil(LIVE_R / res);
     const keep = new Set();
-    const live = SPECIES.map(sp => this.perceived.has(sp.code));
+    const live = this.sim;   // this player's perception and, as the host, every other player's (simAll)
     const lzOn = this.lzMonth();   // March to October (a cool day keeps them hidden, lzUpdate)
+    // the cells within LIVE_R of this player and, as the host, of each other player in the world (centres), each once
+    const C = [[px, north]]; for (const c of this.centres) C.push([c.x, -c.z]);
+    const seen = C.length > 1 ? new Set() : null;
+    for (const [qx, qn] of C) {
+    const [ci, cj] = hab.cellOf(qx, qn);
     for (let j = cj - cells; j <= cj + cells; j++) for (let i = ci - cells; i <= ci + cells; i++) {
       if (i < 0 || j < 0 || i >= hab.img.width || j >= hab.img.height) continue;
+      if (seen) { const key = j * hab.img.width + i; if (seen.has(key)) continue; }
       const cx = (i + 0.5) * res, cn = size - (j + 0.5) * res;
-      const dist = Math.hypot(cx - px, cn - north);
+      let dist = Math.hypot(cx - qx, cn - qn);
       if (dist > LIVE_R) continue;
+      if (seen) { seen.add(j * hab.img.width + i); for (const [ox, on] of C) dist = Math.min(dist, Math.hypot(cx - ox, cn - on)); }
       const cls = hab.channel(i, j, 0); if (!cls) continue;
       const tree = can.channel(i, j, 0) / 100;
       let edge = 0;   // woodland next to open ground within 60 m
@@ -1332,10 +1386,12 @@ export class Animals {
         this.spawnCell(s, i, j, cx, cn, rnd, keep);
       }
     }
+    }
     for (const s of [HK, TV]) if (live[s]) this.spawnSoarers(s, px, pz, keep);
     if (live[ML]) this.spawnLion(px, pz, keep);
     if (live[BE]) this.spawnBear(px, pz, keep);
     for (const id of this.debugIds) if (this.byId.has(id)) keep.add(id);   // summoned (debugging) animals stay
+    for (const a of this.remotes.values()) keep.add(a.id);                  // the group members' bodies (players.js)
     if (this.familyIds) for (const id of this.familyIds) if (this.byId.has(id)) keep.add(id);   // the player woodpecker's family
     for (const id of this.freed) {   // left by the player (release): kept while near, wherever its home cell is
       const a = this.byId.get(id);
@@ -1343,20 +1399,26 @@ export class Animals {
     }
     // drop animals whose home cell left the live set; rebuild the per-species slot lists
     for (const [id, a] of this.byId) if (!keep.has(id)) this.byId.delete(id);
-    this.list = [...this.byId.values()];
+    this.layoutSlots();
+  }
+  // The live set's slots in the species' pools (the remote players' bodies first: a slot is kept for them), the
+  // per-species lists, the coveys, flocks, colonies and families: rebuild's tail, and the mirror's layout.
+  layoutSlots() {
+    const all = [...this.byId.values()];
+    this.list = all.filter(a => a.remote).concat(all.filter(a => !a.remote));
     this.bySpecies = SPECIES.map(() => []);
     for (const a of this.list) { const arr = this.bySpecies[a.sp]; if (arr.length < SPECIES[a.sp].cap) { a.slot = arr.length; arr.push(a); } else a.slot = -1; }
     this.list = this.list.filter(a => a.slot >= 0);
     this.bySpecies.forEach((arr, s) => { this.meshes[s].count = arr.length; });
     this.cullOn = SPECIES.map((sp, k) => !!CULL[k]);
     for (const a of this.list) a.culled = false;
-    const cov = new Set(); for (const a of this.bySpecies[QU]) cov.add(a.group);
+    const cov = new Set(); for (const a of this.bySpecies[QU]) if (a.group) cov.add(a.group);
     this.coveys = [...cov];
-    const mcov = new Set(); for (const a of this.bySpecies[MQ]) mcov.add(a.group);
+    const mcov = new Set(); for (const a of this.bySpecies[MQ]) if (a.group) mcov.add(a.group);
     this.mcoveys = [...mcov];
-    const fl = new Set(); for (const a of this.bySpecies[TK]) fl.add(a.group);
+    const fl = new Set(); for (const a of this.bySpecies[TK]) if (a.group) fl.add(a.group);
     this.flocks = [...fl];
-    const col = new Set(); for (const a of this.bySpecies[GS]) col.add(a.group);
+    const col = new Set(); for (const a of this.bySpecies[GS]) if (a.group?.burrows) col.add(a.group);
     this.colonies = [...col]; this.placeBurrows();
     this.fams = new Map();   // v4: each granary's family
     for (const a of this.list) if ((a.sp === WP || a.sp === WF) && a.anchor) { let f = this.fams.get(a.anchor.id); if (!f) this.fams.set(a.anchor.id, f = []); f.push(a); }
@@ -1588,16 +1650,22 @@ export class Animals {
     const old = this.byId.get(id);
     if (old) return;   // still live: keeps its state
     const seed = (rnd() * 4294967296) >>> 0;
+    const a = this.record(id, s, mulberry32(seed), 0.9 + rnd() * 0.2);
+    init(a);
+    this.byId.set(id, a);
+  }
+  // A fresh record of species s (the fields every update reads), not yet placed.
+  record(id, s, rng, size) {
     const a = {
-      id, sp: s, slot: -1, rng: mulberry32(seed), size: 0.9 + rnd() * 0.2,
+      id, sp: s, slot: -1, rng, size, n: -1, mirror: false, remote: null,
       x: 0, y: 0, z: 0, yaw: 0, pitch: 0, roll: 0, lift: 0,
       state: 0, t: 0, u: 0, dur: 1, speed: 0, next: 0,
-      phase: rnd() * TAU, amp: 0, pose: 0, flick: 0, flickV: 0,
+      phase: rng() * TAU, amp: 0, pose: 0, flick: 0, flickV: 0,
       sx: 0, sy: 0, sz: 0, tx: 0, ty: 0, tz: 0, arc: 0,
       anchor: null, tree: null, face: 0, h: 0, scared: 0,
       hx: 0, hz: 0, cx: 0, cz: 0, R: 50, alt: 80, dir: 1, th: 0, flapT: 0,
       group: null, ox: 0, oz: 0, rank: 0, air: 0, fly: 0, acc: 0, wait: 0, moveSeen: 0, peak: 0, V: 10, rock: 0,
-      e0: 0, e1: 0, variant: s === QU || s === MQ ? seedOf(id, 0x5e7) & 1 : 0,   // aAnim2 (drawn meshes); the quail's sex
+      e0: 0, e1: 0, variant: s === QU || s === MQ ? seedOf(id, 0x5e7) & 1 : 0,   // aAnim2 (drawn meshes); the quail's sex (from the id)
       hopU: 1, hopX: 0, hopZ: 0, hopDX: 0, hopDZ: 0, hopH: 0,         // scrub-jay ground hop
       hFrac: 0.5,                                                      // Steller's jay: perch height in the crown (fraction of the tree)
       e2: 0, e3: 0, vis: 1, culled: false, next2: 0, cool: 0, zig: 0, zigT: 0,   // mammals (aAnim2.z, .w; hidden; pounce lift)
@@ -1606,9 +1674,9 @@ export class Animals {
       task: 0, acorn: null, carry: 0, ep: -1, bx: 0, bz: 0, cid: null, work: 0,   // acorn game collector
       raidOak: null, raidH: 0, fleeOak: null, offT: 0, eatT: 0, guard: null, mob: null, mobT: 0, dive: 0,   // v4: raids, guards, mobbing
       gm: 0, wfV: 0, wing: 0, look: 0, hopping: 0, after: 0, afterT: 0, perchY: null, perchTop: false, hop0: 0, tRest: 0,   // raven on the ground (ground model)
+      spd: 0, wr: 0, phz: 0, phaseP: 0,   // the gait's speed and turn rate, the wing beat's rate (the stream, animalNet.js)
     };
-    init(a);
-    this.byId.set(id, a);
+    return a;
   }
 
   // ---- squirrel -----------------------------------------------------------------------------------
@@ -4289,7 +4357,7 @@ export class Animals {
       if (!this.meshes[s].visible) continue;
       const arr = this.bySpecies[s];
       for (let k = 0; k < arr.length; k++) {
-        const a = arr[k]; if (a.culled || a.dead || a.id === skip || !this.present(a)) continue;   // not the dead: no body to take
+        const a = arr[k]; if (a.culled || a.dead || a.remote || a.id === skip || !this.present(a)) continue;   // not the dead: no body to take; not another player's
         const R = a.air ? rAir : r, dx = a.x - x, dy = a.y + BODY_Y[s] * (a.air ? 0 : 1) - y, dz = a.z - z, d2 = dx * dx + dy * dy + dz * dz;
         if (d2 < R * R && d2 < bd) { bd = d2; best = a; }
       }
@@ -4334,14 +4402,14 @@ export class Animals {
   eachPlayable(fn) {
     for (const s of PLAYABLE) {
       if (!this.meshes[s].visible || !this.group.visible) continue;
-      for (const a of this.bySpecies[s]) if (!a.culled && !a.dead && this.present(a)) fn(a.x, a.y + BODY_Y[s] * (a.air ? 0 : 1), a.z, s);
+      for (const a of this.bySpecies[s]) if (!a.culled && !a.dead && !a.remote && this.present(a)) fn(a.x, a.y + BODY_Y[s] * (a.air ? 0 : 1), a.z, s);
     }
   }
   // A held or living animal's info by id (the spirit's flash closes on it), or null.
   peek(id) { const a = this.byId.get(id); return a ? this.info(a) : null; }
   // Lift a playable animal out of the population (the player is in it now); returns its info, or null.
   take(id) {
-    const a = this.byId.get(id); if (!a || !PLAYABLE.includes(a.sp)) return null;
+    const a = this.byId.get(id); if (!a || a.remote || !PLAYABLE.includes(a.sp)) return null;
     const o = this.info(a);
     this.dropTask(a);
     if (a.state === W_MOB) a.mob = null;
@@ -4349,6 +4417,7 @@ export class Animals {
     if (g && g.leader === a) { g.leader = null; for (const b of this.list) if (b !== a && b.group === g && this.byId.get(b.id) === b) { g.leader = b; break; } }
     this.byId.delete(id); this.freed.delete(id); this.held.set(id, a);
     this.dirty = true;   // rebuilt (and every matrix rewritten) on this frame's update
+    if (this.mirror && a.n >= 0) this.relay?.request({ k: 'take', n: a.n });   // the host takes it out of everyone's world
     return o;
   }
   // Put a held animal back where the player leaves it: o is { x, y, z, yaw (the flight's frame), where (as info), tree
@@ -4390,6 +4459,10 @@ export class Animals {
       }
     }
     this.byId.set(id, a); this.freed.add(id); this.dirty = true;
+    if (this.mirror) {   // it stands where it was left until the host, told, runs it again
+      a.mirror = true; a.n = -1; this.mirrorSeed(a);
+      this.relay?.request({ k: 'release', id, x: r2(o.x), y: r2(o.y), z: r2(o.z), yaw: r3(o.yaw), where: o.where, speed: r2(o.speed || 0), pose: r2(o.pose || 0), resting: !!o.resting, soaring: !!o.soaring });
+    } else a.mirror = false;
     return a;
   }
   // release() for the species of groundControl.js and flierControl.js: back into a state of its own behaviour where the
@@ -4453,6 +4526,208 @@ export class Animals {
     return Math.round(Math.hypot(h.x - P.x, h.y - P.y, h.z - P.z));
   }
 
+  // ---- the shared animals: the mirror (animalNet.js; docs/multiplayer.md "Shared animals") ---------------------------
+  // A mirrored record (a.mirror) is drawn from two samples, m0 (where it was drawn when the newer came) and m1 (the
+  // newer), each the stream's FIELDS: between them over their measured spacing (mdur), then on at the run's velocity
+  // for MIRROR_EXTRA s, then still; a jump of MIRROR_SNAP m snaps. The state, flags and phase rate step to the newer
+  // sample at once; the phase advances by the rate and is pulled the shorter way round to each sample. No allocation
+  // per frame or per sample: the two Float32Arrays live on the record.
+  becomeMirror() {
+    if (this.mirror) return;
+    this.mirror = true;
+    for (const a of this.byId.values()) if (!a.remote) { this.byId.delete(a.id); if (a.slot >= 0) this.meshes[a.sp].instanceMatrix.array.fill(0, a.slot * 16, a.slot * 16 + 16); }
+    this.byN.clear(); this.mgroups.clear(); this.carrion.length = 0; this.freed.clear(); this.threats.clear();
+    this.dirty = true;
+  }
+  // Named the host (the one before left): the live set is rebuilt here and each animal mirrored carries on from where
+  // the stream last had it (as a body the player leaves does: release), so nothing vanishes or jumps.
+  becomeHost() {
+    if (!this.mirror) return 0;
+    this.mirror = false;
+    const old = [...this.byId.values()].filter(a => a.mirror && !a.remote);
+    for (const a of old) this.byId.delete(a.id);
+    this.byN.clear(); this.mgroups.clear(); this.carrion = this.carrion.filter(c => !c.mirror);
+    const P = this.flight.pos; this.rebuild(P.x, P.z);
+    let kept = 0;
+    for (const m of old) {
+      m.mirror = false; m.n = -1;
+      if (m.dead) { if (!m.gone) { this.byId.set(m.id, m); this.carrion.push(m); } continue; }   // carrion stays where it lies
+      const a = this.byId.get(m.id); if (!a) continue;
+      a.x = m.x; a.y = m.y; a.z = m.z; a.yaw = m.yaw; a.pitch = m.pitch; a.roll = m.roll; a.pose = m.pose; a.amp = m.amp; a.flick = m.flick;
+      a.phase = m.phase; a.vis = m.vis; a.e0 = m.e0; a.e1 = m.e1; a.e2 = m.e2; a.e3 = m.e3; a.spd = m.spd; a.wr = m.wr;
+      const g = this.heights.atXZ(m.x, m.z), where = m.air ? 'air' : m.y - g > 0.5 ? 'top' : 'ground';
+      this.byId.delete(a.id); this.held.set(a.id, a);
+      this.release(a.id, { x: m.x, y: m.y, z: m.z, yaw: wrapAngle(m.yaw + Math.PI), where, tree: null, face: 0, h: 0, speed: m.spd || 0, pose: m.pose, resting: m.pose > 0.5 * (this.poseMax[m.sp] || 1), soaring: !!m.air });
+      kept++;
+    }
+    this.dirty = true;
+    return kept;
+  }
+  mgroup(n) {
+    let g = this.mgroups.get(n);
+    if (!g) { g = { gn: n, leader: null, state: 0, x: undefined, z: undefined, hx: 0, hz: 0, fleeT: 0, n: 0, move: 0 }; this.mgroups.set(n, g); }
+    return g;
+  }
+  mirrorSpawn(r, now = performance.now()) {
+    const [n, id, sp, size, variant, male, young, u1, u2, u3, gn, rank] = r;
+    if (typeof id !== 'string' || !SPECIES[sp]) return;
+    const old = this.byN.get(n); if (old && old.id !== id) this.mirrorDrop(n);
+    let a = this.byId.get(id) || this.held.get(id);
+    if (!a) { a = this.record(id, sp, mulberry32(seedOf(id)), size); a.mirror = true; a.group = null; this.byId.set(id, a); this.dirty = true; }
+    if (a.n >= 0 && a.n !== n) this.byN.delete(a.n);
+    a.n = n; this.byN.set(n, a);
+    if (this.held.has(id)) return;   // the body this player is in: numbered (its release goes by n), not drawn from the stream
+    a.mirror = true; a.size = size; a.variant = variant; a.male = male; a.young = young; a.u1 = u1; a.u2 = u2; a.u3 = u3; a.rank = rank;
+    a.group = gn >= 0 ? this.mgroup(gn) : null;
+    if (!a.m0) { a.m0 = new Float32Array(NF); a.m1 = new Float32Array(NF); }
+    a.mn = 0; a.mt = 0; a.mdur = 0; a.mAt = 0;
+    this.mirrorSeed(a);
+    if (r.length > 13) this.mirrorSample(a, r, 13, r[12], now);   // its first sample: placed before it is drawn
+  }
+  mirrorGroup(r) {
+    const g = this.mgroup(r[0]);
+    g.leader = r[1] >= 0 ? this.byN.get(r[1]) || null : null; g.state = r[2];
+    if (r.length > 3) { g.x = r[3]; g.z = r[4]; }
+  }
+  // the record's fields as a sample (the stream's order), into out
+  fieldsOf(a, out) {
+    out[F.x] = a.x; out[F.y] = a.y; out[F.z] = a.z; out[F.yaw] = a.yaw; out[F.pitch] = a.pitch; out[F.roll] = a.roll;
+    out[F.spd] = a.spd || 0; out[F.wr] = a.wr || 0; out[F.pose] = a.pose; out[F.amp] = a.amp; out[F.flick] = a.flick; out[F.vis] = a.vis; out[F.lift] = a.lift || 0;
+    out[F.e0] = a.e0; out[F.e1] = a.e1; out[F.e2] = a.e2; out[F.e3] = a.e3; out[F.state] = a.state; out[F.phase] = a.phase % TAU; out[F.phz] = a.phz || 0;
+    out[F.fl] = (a.air ? FL_AIR : 0) | (a.gm ? FL_GM : 0) | (a.buried ? FL_BURIED : 0) | (a.hidden ? FL_HIDDEN : 0); out[F.speed] = a.speed || 0;
+  }
+  mirrorSeed(a) {   // both samples from where the record is now: it stands there until a row comes
+    if (!a.m0) { a.m0 = new Float32Array(NF); a.m1 = new Float32Array(NF); }
+    this.fieldsOf(a, a.m1); a.m0.set(a.m1); a.mn = 0; a.mt = 0; a.mdur = 0;
+  }
+  // A row of the stream: [n, mask, ...the fields whose bit is set]; now: performance.now().
+  mirrorRow(r, now) {
+    const a = this.byN.get(r[0]); if (!a || !a.mirror || this.held.has(a.id)) return;
+    this.mirrorSample(a, r, 2, r[1], now);
+  }
+  mirrorSample(a, r, k, mask, now) {
+    const m0 = a.m0, m1 = a.m1;
+    this.fieldsOf(a, m0);   // the run starts where it is drawn now
+    for (let i = 0; i < NF; i++) if (mask & (1 << i)) m1[i] = +r[k++] || 0;
+    const gap = a.mn ? (now - a.mAt) / 1000 : 0; a.mAt = now;
+    a.mdur = a.mn ? Math.min(MIRROR_RUN_MAX, Math.max(MIRROR_RUN_MIN, gap)) : 0; a.mt = 0; a.mn++;
+    const dx = m1[F.x] - m0[F.x], dy = m1[F.y] - m0[F.y], dz = m1[F.z] - m0[F.z];
+    if (a.mn === 1 || gap > MIRROR_HOLD || dx * dx + dy * dy + dz * dz > MIRROR_SNAP * MIRROR_SNAP) { m0.set(m1); a.mdur = 0; }   // the first, a long silence, a jump: no run
+    // the discrete fields: now
+    a.state = m1[F.state]; const fl = m1[F.fl];
+    a.air = fl & FL_AIR ? 1 : 0; a.gm = fl & FL_GM ? 1 : 0; a.buried = !!(fl & FL_BURIED); a.hidden = fl & FL_HIDDEN ? 1 : 0;
+    if (this.rvGM && a.sp === RV && a.slot >= 0) this.rvGM[a.slot] = a.gm;
+    a.phz = m1[F.phz]; a.e3 = m1[F.e3]; a.speed = m1[F.speed];
+    if (fl & FL_DEAD && !a.dead) {   // carrion already lying when this page joined: as it lies, no fall and no soul
+      a.dead = true; a.fall = 1; a.carrionUntil = Infinity; a.lieRoll = m1[F.roll] < 0 ? -1 : 1; a.yDead = m1[F.y] - 0.04;
+      a.pose0 = a.pose = m1[F.pose]; a.amp0 = 0; a.flick0 = 0; a.pitch0 = 0; a.group = null; this.carrion.push(a);
+    }
+    a.phase += wrapAngle(m1[F.phase] - (a.phase % TAU));
+    if (a.mdur === 0) this.mirrorStep(a, 0);
+  }
+  // Every frame for a mirrored record: its fields from the samples.
+  mirrorStep(a, dt) {
+    const m0 = a.m0, m1 = a.m1; if (!m1) return;
+    a.mt += dt;
+    const dur = a.mdur;
+    if (dur <= 0 || a.mt >= dur) {
+      const k = dur > 0 ? Math.min(a.mt - dur, MIRROR_EXTRA) / dur : 0;   // on at the run's velocity, briefly
+      a.x = m1[F.x] + (m1[F.x] - m0[F.x]) * k; a.y = m1[F.y] + (m1[F.y] - m0[F.y]) * k; a.z = m1[F.z] + (m1[F.z] - m0[F.z]) * k;
+      a.yaw = m1[F.yaw]; a.pitch = m1[F.pitch]; a.roll = m1[F.roll];
+      a.spd = m1[F.spd]; a.wr = m1[F.wr]; a.pose = m1[F.pose]; a.amp = m1[F.amp]; a.flick = m1[F.flick]; a.vis = m1[F.vis]; a.lift = m1[F.lift];
+      a.e0 = m1[F.e0]; a.e1 = m1[F.e1]; a.e2 = m1[F.e2];
+    } else {
+      const u = a.mt / dur, v = 1 - u;
+      a.x = m0[F.x] * v + m1[F.x] * u; a.y = m0[F.y] * v + m1[F.y] * u; a.z = m0[F.z] * v + m1[F.z] * u;
+      a.yaw = m0[F.yaw] + wrapAngle(m1[F.yaw] - m0[F.yaw]) * u; a.pitch = m0[F.pitch] + wrapAngle(m1[F.pitch] - m0[F.pitch]) * u; a.roll = m0[F.roll] + wrapAngle(m1[F.roll] - m0[F.roll]) * u;
+      a.spd = m0[F.spd] * v + m1[F.spd] * u; a.wr = m0[F.wr] * v + m1[F.wr] * u; a.pose = m0[F.pose] * v + m1[F.pose] * u; a.amp = m0[F.amp] * v + m1[F.amp] * u;
+      a.flick = m0[F.flick] * v + m1[F.flick] * u; a.vis = m0[F.vis] * v + m1[F.vis] * u; a.lift = m0[F.lift] * v + m1[F.lift] * u;
+      a.e0 = m0[F.e0] * v + m1[F.e0] * u; a.e1 = m0[F.e1] * v + m1[F.e1] * u; a.e2 = m0[F.e2] * v + m1[F.e2] * u;
+    }
+    a.phase += (a.phz || 0) * dt;
+    if (a.sp === ML || a.sp === FX || a.sp === CY || a.sp === BE) a.lift = Math.max(0, a.lift);
+  }
+  mirrorDrop(n) {
+    const a = this.byN.get(n); if (!a) return;
+    this.byN.delete(n); a.n = -1;
+    if (this.held.has(a.id)) return;   // the body this player is in stays with the player
+    this.byId.delete(a.id);
+    if (a.dead) this.carrion = this.carrion.filter(c => c !== a);
+    if (a.slot >= 0 && this.meshes[a.sp]) this.meshes[a.sp].instanceMatrix.array.fill(0, a.slot * 16, a.slot * 16 + 16);
+    this.dirty = true;
+  }
+  // The animal the stream numbers n: a mirror's byN, the host's own count (animalNet.js byNum).
+  numbered(n) { return this.mirror ? this.byN.get(n) : this.relay?.byNum.get(n); }
+  // An ordered event from the host (animalNet.js aev); me: this page's number on the channel.
+  applyEvent(e, me) {
+    const a = e.n >= 0 ? this.byN.get(e.n) : null;
+    switch (e.k) {
+      case 'kill': {
+        if (!a || a.dead) return;
+        const mine = e.by === `p:${me}`;
+        a.x = e.x; a.y = e.y; a.z = e.z; a.yaw = e.yaw; a.pitch = e.pitch; a.roll = e.roll; a.amp = e.amp; a.pose = e.pose; a.flick = e.flick; a.air = 0; a.lift = 0;
+        this.kill(a, mine ? 'player' : { code: e.bysp || e.by });
+        a.lieRoll = e.lr || 1; this.mirrorSeed(a);
+        if (mine) { this.catchPending = 0; this.onCaught?.(a); }
+        return;
+      }
+      case 'miss': if (e.to === me) { this.catchPending = 0; this.onMiss?.(a); } return;
+      case 'gone': if (a && a.dead && !a.gone) this.bury(a); return;
+      case 'flush': case 'turkeyFlush': case 'gsAlarm': {
+        const g = e.g >= 0 ? this.mgroup(e.g) : null, quail = INDEX[e.species] === QU;
+        this.emit(e.k, { group: e.k === 'flush' ? (quail ? g : null) : g, covey: g, species: e.species, x: e.x, y: e.y, z: e.z, n: e.n, cause: e.cause });
+        return;
+      }
+      case 'alarm': this.lastAlarm = { code: e.species, t: this.time }; this.emit('alarm', { species: e.species, x: e.x, y: e.y, z: e.z, carry: e.carry, alarmed: e.alarmed, predator: this.observer }); return;
+      case 'stoop': this.emit('stoop', { animal: a, x: e.x, y: e.y, z: e.z, target: e.target >= 0 ? this.byN.get(e.target) || null : null }); return;
+      case 'rally': this.emit('rally', { animal: a, x: e.x, y: e.y, z: e.z, oak: null }); return;
+      case 'hunt': if (a) { a.hunt = e.prey >= 0 ? this.byN.get(e.prey) || null : null; this.lastHunt = { id: a.id, hunter: SPECIES[a.sp].code, prey: a.hunt ? SPECIES[a.hunt.sp].code : 'meleagris_gallopavo', t: this.time }; } return;
+    }
+  }
+  // A mirror asks the host (animalNet.js areq; from: its number): a catch (confirmed within the species' reach of the
+  // point it struck at, a little slack for the stream's lag), a body taken (out of everyone's world), a body given back.
+  request(e, from) {
+    if (e.k === 'catch') {
+      const a = this.numbered(e.n), k = INDEX[e.sp];
+      if (!this.preySlots) this.buildHunts();
+      const P = k === undefined ? null : this.preySlots?.[k], R = k === undefined ? null : this.reach?.[k];
+      let ok = !!(a && !a.dead && !a.buried && P && R && P.has(a.sp) && KILLABLE.has(a.sp));
+      if (ok) { const dx = a.x - e.x, dz = a.z - e.z, d2 = dx * dx + (a.y - e.y) ** 2 * 0.25 + dz * dz, slack = R + 1 + 0.3 * (a.spd || 0); ok = d2 <= slack * slack; }
+      if (ok) this.kill(a, { code: e.sp, aid: from }); else this.relay?.emitted('miss', { aid: from, animal: a });
+    } else if (e.k === 'take') {
+      const a = this.numbered(e.n); if (!a || a.dead || a.remote || !PLAYABLE.includes(a.sp) || this.held.has(a.id)) return;
+      const o = this.take(a.id); if (o) this.relay?.remoteHeld.set(a.id, { from, o });
+    } else if (e.k === 'release') {
+      const h = this.relay?.remoteHeld.get(e.id); if (!h || h.from !== from) return;
+      this.relay.remoteHeld.delete(e.id);
+      this.release(e.id, { x: +e.x || 0, y: +e.y || 0, z: +e.z || 0, yaw: +e.yaw || 0, where: e.where === 'air' || e.where === 'top' ? e.where : 'ground', tree: null, face: 0, h: 0, speed: +e.speed || 0, pose: +e.pose || 0, resting: !!e.resting, soaring: !!e.soaring });
+    }
+  }
+  // A group member's body (players.js; docs/multiplayer.md "Players as their animals"): a record in the species' pool,
+  // mirrored from the hub's 5 Hz samples as the host's animals are. v: the sample (the stream's FIELDS, all of them);
+  // c: the body's constants { size, variant, male, young, u1, u2, u3 }; returns the record.
+  remoteSample(user, code, v, c, now) {
+    const base = INDEX[code]; if (base === undefined) return null;
+    const s = c && c.slot >= 0 && SPECIES[c.slot] && SPECIES[c.slot].code.split(':')[0] === code ? c.slot : base;   // the slot: a buck, a female woodpecker
+    let a = this.remotes.get(user);
+    if (a && a.sp !== s) { this.remoteDrop(user); a = null; }
+    if (!a) {
+      a = this.record(`remote:${user}`, s, mulberry32(seedOf(user)), c?.size || 1); a.remote = user; a.mirror = true; a.group = null;
+      a.m0 = new Float32Array(NF); a.m1 = new Float32Array(NF); a.mn = 0; a.mt = 0; a.mdur = 0; a.mAt = 0;
+      this.remotes.set(user, a); this.byId.set(a.id, a); this.dirty = true;
+    }
+    if (c) { a.size = c.size || 1; a.variant = c.variant || 0; a.male = c.male || 0; a.young = c.young || 0; a.u1 = c.u1 ?? 0.5; a.u2 = c.u2 ?? 0.5; a.u3 = c.u3 ?? 0.5; }
+    this.mirrorSample(a, v, 0, (1 << NF) - 1, now);
+    return a;
+  }
+  tagHeight(a) { return TAG_DY[a.sp] * (a.size || 1); }   // m over the feet: a name tag's height (players.js)
+  remoteDrop(user) {
+    const a = this.remotes.get(user); if (!a) return;
+    this.remotes.delete(user); this.byId.delete(a.id);
+    if (a.slot >= 0 && this.meshes[a.sp]) this.meshes[a.sp].instanceMatrix.array.fill(0, a.slot * 16, a.slot * 16 + 16);
+    this.dirty = true;
+  }
+
   // ---- frame --------------------------------------------------------------------------------------
   update(dt, season, hour) {
     const t0 = performance.now();
@@ -4485,40 +4760,47 @@ export class Animals {
     this.airT = this.weatherTemp?.() ?? airTemp(this.month, hour);   // the day's measured air (main.js: weather.js), else the normals
     this.lzOn = this.lzMonth() && atmo.sunDir.value.y > 0.1 && this.airT >= LIZ.warm && this.airT <= LIZ.hot; this.lzBudget = LIZ.resolves;
     let fresh = false;   // slots were reassigned: every animal writes its matrix this frame
-    if (this.dirty || !this.lastCenter || Math.hypot(P.x - this.lastCenter[0], P.z - this.lastCenter[1]) > REBUILD_MOVE) { this.rebuild(P.x, P.z); fresh = true; }
+    const mirror = this.mirror;
+    if (mirror) { if (this.dirty) { this.dirty = false; this.layoutSlots(); fresh = true; } }   // the live set is the host's (animalNet.js)
+    else if (this.dirty || !this.lastCenter || Math.hypot(P.x - this.lastCenter[0], P.z - this.lastCenter[1]) > REBUILD_MOVE || this.centresMoved()) { this.rebuild(P.x, P.z); fresh = true; }
     const odd = (++this.frame) & 1;
     const ghost = this.observer === 'spirit';   // the spirit: nothing reacts to it (see the header)
     const px = ghost ? 1e7 : P.x, py = ghost ? 1e7 : P.y, pz = ghost ? 1e7 : P.z;
     const list = this.list, e = this._e, q = this._q, p = this._p, s = this._s, m = this._m;
-    if (!ghost) this.alarms(px, py, pz);   // the watchers' alarm calls (danger, alert above)
+    if (!ghost && !mirror) this.alarms(px, py, pz);   // the watchers' alarm calls (danger, alert above)
     this.huntT = (this.huntT || 0) - dt;
-    if (fresh || this.huntT <= 0) { this.huntT = HUNT.every; this.refreshHunters(P); this.aiAlarms(); }   // the AI hunters (HUNT above)
-    if (this.meshes[QU].visible) for (let k = 0; k < this.coveys.length; k++) this.coveyUpdate(this.coveys[k], dt, px, py, pz);
-    if (this.meshes[MQ].visible) for (let k = 0; k < this.mcoveys.length; k++) this.coveyUpdate(this.mcoveys[k], dt, px, py, pz);
-    if (this.meshes[TK].visible) for (let k = 0; k < this.flocks.length; k++) this.flockUpdate(this.flocks[k], dt, px, pz);
-    if (this.meshes[GS].visible) for (let k = 0; k < this.colonies.length; k++) this.colonyUpdate(this.colonies[k], dt, px, py, pz);
+    if (!mirror && (fresh || this.huntT <= 0)) { this.huntT = HUNT.every; this.refreshHunters(P); this.aiAlarms(); }   // the AI hunters (HUNT above)
+    const sim = this.sim;   // the species run here: this player's perception and, as the host, every other player's
+    if (!mirror && sim[QU]) for (let k = 0; k < this.coveys.length; k++) this.coveyUpdate(this.coveys[k], dt, px, py, pz);
+    if (!mirror && sim[MQ]) for (let k = 0; k < this.mcoveys.length; k++) this.coveyUpdate(this.mcoveys[k], dt, px, py, pz);
+    if (!mirror && sim[TK]) for (let k = 0; k < this.flocks.length; k++) this.flockUpdate(this.flocks[k], dt, px, pz);
+    if (!mirror && sim[GS]) for (let k = 0; k < this.colonies.length; k++) this.colonyUpdate(this.colonies[k], dt, px, py, pz);
     this.burrows.visible = this.meshes[GS].visible && this.burrowN > 0;
     const C = this.camPos, cx = C.x, cy = C.y, cz = C.z;
     const dt0 = dt;
     const camAGL = cy - this.heights.atXZ(cx, cz), cull = this.cullOn || [];
+    const CE = this.centres, NC = mirror ? 0 : CE.length;   // the host: an animal near another player is as near as one near the eye
     for (let k = 0; k < list.length; k++) {
       const a = list[k], sp = a.sp;
       const ex = a.x - cx, ey = a.y - cy, ez = a.z - cz, d2 = ex * ex + ey * ey + ez * ez;
+      let dn2 = d2, nearOther = false;
+      if (NC) for (let c = 0; c < NC; c++) { const dx = a.x - CE[c].x, dz = a.z - CE[c].z, q = dx * dx + dz * dz; if (q < dn2) { dn2 = q; nearOther = true; } }
       a.acc += dt0;
       const dead = a.dead;   // carrion (kill): lies where it fell (no thinking, still drawn), then goes
-      if (dead) { if (!a.gone) { if (this.time > a.carrionUntil) this.bury(a); else this.lieStill(a, dt0); } if (a.gone) { a.acc = 0; continue; } }
+      if (dead) { if (!a.gone) { if (this.time > a.carrionUntil && !mirror) this.bury(a); else this.lieStill(a, dt0); } if (a.gone) { a.acc = 0; continue; } }
       if (cull[sp]) {   // rabbits, jackrabbits and voles: neither drawn nor thought beyond CULL (voles: also under a high camera)
         const R = CULL[sp];
-        if (d2 > R * R || (sp === VO && camAGL > VOLE_CAM)) {
+        if (dn2 > R * R || (sp === VO && camAGL > VOLE_CAM && !nearOther)) {
           if (!a.culled || fresh) { this.meshes[sp].instanceMatrix.array.fill(0, a.slot * 16, a.slot * 16 + 16); a.culled = true; }
           a.acc = 0; continue;
         }
         a.culled = false;
       }
-      if (!fresh && !a.air && d2 > LOD_R2 && ((k & 1) === odd)) continue;   // far and on the ground: every other frame
+      if (!fresh && !a.air && dn2 > LOD_R2 && ((k & 1) === odd)) continue;   // far and on the ground: every other frame
       const dt = a.acc; a.acc = 0;
       a.flick = sp === WP || sp === WF || sp === LZ ? a.flick : damp(a.flick, 0, 1, dt);
       if (dead) a.acc = 0;
+      else if (a.mirror) this.mirrorStep(a, dt);   // the host's animal, or a group member's body: between its samples
       else if (sp === SQ) this.sqUpdate(a, dt, px, py, pz);
       else if (sp === WP || sp === WF) this.wpUpdate(a, dt, px, py, pz);
       else if (sp === RV) {
@@ -4539,7 +4821,9 @@ export class Animals {
       else if (sp === HK) this.hkUpdate(a, dt);
       else this.tvUpdate(a, dt);
       if (a.flickV > 0 && a.sp !== WP && a.sp !== WF && a.sp !== LZ) { a.flick = Math.max(a.flick, Math.sin(Math.min(1, 1 - a.flickV) * Math.PI)); a.flickV -= dt * 3; }
+      if (!a.mirror) a.phz = dt > 1e-4 ? (a.phase - a.phaseP) / dt : a.phz;   // the wing beat's or the gait's rate, for the stream (a mirror advances the phase by it)
       if (a.phase > 1e4) a.phase -= TAU * 1000;
+      a.phaseP = a.phase;
       const mesh = this.meshes[a.sp], o = a.slot;
       // birds in flight grow with distance from the eye so they stay a few pixels wide
       let grow = 1;
@@ -4561,7 +4845,7 @@ export class Animals {
       const an = mesh.geometry.attributes.aAnim.array;
       an[o * 4] = a.phase % TAU; an[o * 4 + 1] = a.amp; an[o * 4 + 2] = a.pose; an[o * 4 + 3] = a.flick;
       const a2 = this.anim2[sp];
-      if (a2) { this.extra(a, dt); a2[o * 4] = a.e0; a2[o * 4 + 1] = a.e1; a2[o * 4 + 2] = a.e2; a2[o * 4 + 3] = sp === QU || sp === MQ || sp === TK ? a.variant : a.e3; }
+      if (a2) { if (!a.mirror || sp === BK) this.extra(a, dt); a2[o * 4] = a.e0; a2[o * 4 + 1] = a.e1; a2[o * 4 + 2] = a.e2; a2[o * 4 + 3] = sp === QU || sp === MQ || sp === TK ? a.variant : a.e3; }
       // the skinned models (deer, buck): clip and phase from the speed, pose, flick and turn (animalModels.js driveClips)
       if (sk && !LG) { driveClips(sk, DEER_DRIVE, a.cs, a.spd || 0, a.pose, a.flick, dt, this.clip[sp], o); bendOf(DEER_DRIVE, a.cs, a.spd || 0, a.yaw, sk, this.bend[sp], o); }
       else if (LG) {   // the leg engine (legs.js): live within reach, the baked cycles beyond; dead: bedded, on its side by the matrix
@@ -4574,7 +4858,7 @@ export class Animals {
     }
     for (const k in this.drawn) this.drawn[k].legs?.end();   // the pose textures uploaded once a frame
     // acorn game v4: the families' defence of their granaries
-    if (this.game?.active) this.defend(); else if (this.threats.size) this.threats.clear();
+    if (this.game?.active && !mirror) this.defend(); else if (this.threats.size) this.threats.clear();
     // acorn game: the acorns carried in bills and mouths, every frame (also for animals thinking on alternate frames)
     const G = this.game;
     if (G && G.active) {
@@ -4657,6 +4941,7 @@ export class Animals {
     const P = this.flight.pos, c = this.counts; c.fill(0);
     for (const a of this.list) {
       const dx = a.x - P.x, dy = a.y - P.y, dz = a.z - P.z, d2 = dx * dx + dy * dy + dz * dz;
+      if (a.remote) continue;   // another player's body: named by players.js, not counted
       if (d2 < NEAR_R * NEAR_R && this.present(a)) c[a.sp]++;
       // the field guide's card for a turkey, ground squirrel or fence lizard the first time one is close and in view
       const fg = FG_SEEN[a.sp];
@@ -4679,7 +4964,7 @@ export class Animals {
     if (!this.tagsOn) return;
     const cam = this.camera.position, cand = [];
     for (const a of this.list) {
-      if (a.vis < 0.3 || a.culled || !this.present(a)) continue;   // down a burrow, in a crack, out of sight
+      if (a.vis < 0.3 || a.culled || a.remote || !this.present(a)) continue;   // down a burrow, in a crack, out of sight; another player (named by players.js)
       const dx = a.x - cam.x, dy = a.y - cam.y, dz = a.z - cam.z, d2 = dx * dx + dy * dy + dz * dz;
       if (d2 < TAG_R * TAG_R) cand.push([d2, a]);
     }

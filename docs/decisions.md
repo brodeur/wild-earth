@@ -3794,3 +3794,59 @@ camera. Now (`flight.js` `orbitBy`, `easeOrbit`, `resetOrbit`; read by every con
   cameras take the orbit as their own swing round the trunk.
 - Steering is the keys' alone now (A / D, the arrows); the help lines say "drag to orbit the camera".
 
+## 2026-11-02: shared animals: one page runs them, the others mirror its stream
+
+Aaron, after two browsers on the site: "Do both users see the same animals moving the same direction?" They did not:
+each browser ran its own. Decided (`docs/multiplayer.md` "Shared animals"):
+
+- **The host client simulates; the server only relays.** One page per world (tile and season) runs `animals.js` for
+  every player in the world and streams the state at 4 Hz; the server relays it to the others in memory and orders the
+  events that change the world (a kill, a carcass gone, a flush). Rejected: the animals on the server (Python would
+  need the whole AI, the terrain and the vegetation the AI reads; a port, not a relay); every page running the AI from a
+  shared seed (the AI reads the player's position and its own random draws every frame, so two pages part within
+  seconds); lockstep (the frame rates differ and a hidden tab stops).
+- **The AI host is one page.** The acorn game's AI collectors, the Dig game's AI digging and the animals are one
+  page's: the server matches a page's three sockets by a random page id and names the acorn game's AI host the host of
+  the other two. Rejected: separate hosts per channel (the collectors are animals; two pages would each run half an
+  animal).
+- **A mirror's catch is the host's decision.** The mirror asks; the host checks reach and orders the kill everyone
+  sees, or answers a miss. Rejected: the mirror kills and tells (two players striking the same rabbit would both eat
+  it); optimistic kills rolled back (a body that falls and gets up again).
+- **Interpolate, never simulate, on a mirror.** Two samples per animal, eased, extrapolated 0.4 s, snapped on a jump
+  or a silence; the state and the phase rate from the newer. The leg engine, the deer's clips and the far tier run on
+  the mirror from the streamed speed, turn rate and pose, so the legs look the same without streaming them.
+- **A byte cap, not a count.** 24 KB/s of JSON from the host, the near animals first, the far ones less often; a
+  spawn carries its first full sample so nothing is drawn unplaced. Binary packing was left for when the cap binds
+  with many players (JSON was kept so the server can stay a relay with no parser of its own).
+- **Hand-over from the mirror's last state.** The next host rebuilds the live set and releases each animal it was
+  mirroring into the AI where it stood, as a body the player leaves is; nothing vanishes near the players who stay.
+- Found in passing and fixed: the hunt panel counted an AI hunter's kill as the player's when they were the same
+  species (`hunt.js` read the kill's species); a kill now says whether it was the player's own (`mine`).
+
+## 2026-11-02: the other players as their animals, through the animals' own pool
+
+The second half of Aaron's observation ("each user can see the other, but not in their animal form"). A group member in
+a body sends its pose with the hub's 5 Hz position as the animal stream's fields (`bodySample.js`), and the receiving
+page draws it as a record in the species' pool of `animals.js`, mirrored like the host's animals. Rejected: a second
+renderer for player bodies (the controls' own meshes, one per species, a second copy of every model and its leg
+engine); streaming the leg engine's joints (the gait inputs reproduce the legs on the receiving side, as for the AI).
+Kept: the wisp for a member in spirit form, the group-only relay (the privacy rule), and a remote body is no one's
+prey and no one's body to take.
+
+## 2026-11-02: games are always on; the acorn game's round is the season
+
+Aaron: "Games, rather than being something you turn on, are always available and playable." Decided
+(`docs/game-acorn-stash.md` "v5: always on"):
+
+- **No Start button; the world is joined on entry.** The acorn game starts with the world, so every page is in the
+  tile's shared world (the same socket as the shared animals and the dig) and the AI collectors gather on the AI host
+  all the time. Rejected: starting it on the first acorn the player touches (the AI collectors and the other players'
+  events would be missing until then, and the board would jump).
+- **Live in a collector body, quiet otherwise.** The player's acorn actions only in the raven, squirrel or woodpecker;
+  the game box hidden until the player first carries or caches. Rejected: the box at entry (a HUD panel for a game the
+  player may never play, in every body).
+- **The round is the calendar's season.** One round per calendar instance of the world's season (`season_label`:
+  "2026-fall"), with no length, begun on the first join and replaced when that season comes round a year later; the
+  board's columns are this season and all seasons. Player ids are still derived per round, so they rotate per season.
+  Rejected: a round per real-time window (a clock nobody started); one round forever (the ids would never rotate, and
+  a player's caches would be linkable across years).

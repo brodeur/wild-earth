@@ -2,12 +2,18 @@ import * as THREE from 'three';
 import { Wisp } from './spirit.js';
 import { avatarSeed, avatarFor } from './social.js';
 import { edgePlace, setEdgeBottom } from './herdMarks.js';
+import { NF } from './animalNet.js';
 
 // The other players of the group, seen (docs/multiplayer.md, "Seeing the others"; Aaron, 2026-11-02: "I can't see the
 // other player's spirit. The players should show up on the map and ... if the other player is not visible on the screen
 // their avatar should be shown at the edge of the screen closest to them."). The hub relays each group member's `pos`
 // (x, y, z, yaw, form, 5 Hz) while they are in the same tile's room (multiplayer.js gotPos feeds sample()); this draws
 // them, in every form the player is in:
+//   - in a body (form not 'spirit', and the `pos` carrying the body's sample `b` and constants `c`: bodySample.js), the
+//     member as their animal (docs/multiplayer.md "Players as their animals", 2026-11-02): a record in the species' pool
+//     of animals.js, kept a slot there (layoutSlots puts the remote bodies first), mirrored from the 5 Hz samples as the
+//     host's animals are (remoteSample: two samples eased between, a gap snapped) and drawn by the same instanced draw,
+//     gait engine and far tier; no wisp over it, the name over the body. Back in spirit form, or gone, the body goes.
 //   - in the world, a spirit wisp like the player's own (spirit.js Wisp) at the relayed position and yaw, in the
 //     member's avatar colours (social.js avatarSeed: the two hues the avatar is drawn with, so the wisp and the avatar
 //     match), gliding between the 5 Hz samples: each sample starts a run from where the wisp is drawn to the sample over
@@ -48,15 +54,15 @@ export class RemotePlayers {
   // marks: the #herdMarks element (the circles share its layer and style); labels: #playerLabels; minimap: MiniMap
   // (its `others`); maps: the player's wisp's textures (spirit.wisp.maps); nameOf(id): the display name (set by
   // multiplayer.js once signed in; 'someone' until then).
-  constructor({ scene, renderer, camera, flight, minimap = null, maps = null, marks = null, labels = null, nameOf = null }) {
-    this.camera = camera; this.flight = flight; this.minimap = minimap; this.marksEl = marks; this.labelsEl = labels;
+  constructor({ scene, renderer, camera, flight, animals = null, minimap = null, maps = null, marks = null, labels = null, nameOf = null }) {
+    this.camera = camera; this.flight = flight; this.animals = animals; this.minimap = minimap; this.marksEl = marks; this.labelsEl = labels;
     this.nameOf = nameOf || (() => 'someone');
     this.n = 0;   // live slots (SpiritLook.render draws the layer while > 0)
     this.slots = [];
     for (let i = 0; i < SLOTS; i++) {
       const w = new Wisp({ renderer, camera, scene, layer: LAYER, maps: maps || this.slots[0]?.wisp.maps || null });
       w.group.name = 'player ' + i;
-      this.slots.push({ i, id: null, wisp: w, name: '', hue: 0, form: 'spirit', at: 0, t: 0, dur: 0, age: 0, n: 0,
+      this.slots.push({ i, id: null, wisp: w, name: '', hue: 0, form: 'spirit', at: 0, t: 0, dur: 0, age: 0, n: 0, rec: null, tagH: 0,
         p0: new THREE.Vector3(), p1: new THREE.Vector3(), v: new THREE.Vector3(), P: new THREE.Vector3(), yaw0: 0, yaw1: 0, yaw: 0,
         held: 0, label: null, mark: null, markD: null, dText: '', shown: false, labelOn: false, markOn: false, markUp: false });
     }
@@ -103,6 +109,15 @@ export class RemotePlayers {
       s.at = 0;
     }
     s.form = typeof d.form === 'string' ? d.form : 'spirit';
+    // in a body: the member's animal (animals.js remoteSample), drawn in its species' pool; back to spirit form: gone
+    const A = this.animals, body = s.form !== 'spirit' && Array.isArray(d.b) && d.b.length >= NF && A?.remoteSample;
+    if (body) {
+      const c = Array.isArray(d.c) ? d.c : null, k = c && Number.isInteger(c[7]) ? c[7] : -1;
+      const cst = this._c2 ||= { size: 1, variant: 0, male: 0, young: 0, u1: 0.5, u2: 0.5, u3: 0.5, slot: -1 };
+      if (c) { cst.size = +c[0] || 1; cst.variant = +c[1] || 0; cst.male = +c[2] || 0; cst.young = +c[3] || 0; cst.u1 = +c[4]; cst.u2 = +c[5]; cst.u3 = +c[6]; cst.slot = k; }
+      s.rec = A.remoteSample(d.user, s.form, d.b, c ? cst : null, performance.now());
+      if (s.rec) s.tagH = A.tagHeight?.(s.rec) ?? 1;
+    } else if (s.rec) { A?.remoteDrop(d.user); s.rec = null; }
     s.n++;
   }
   // A member known to be gone (offline, or in another tile): off at once.
@@ -110,6 +125,7 @@ export class RemotePlayers {
   clear() { for (const s of this.slots) this.free(s); }
   free(s) {
     if (!s.id) return;
+    if (s.rec) { this.animals?.remoteDrop(s.id); s.rec = null; }
     s.id = null; s.at = Infinity; s.n = 0;
     if (s.shown) { s.wisp.update(0, s.P, 0, false, 1, 1); s.shown = false; }
     s.label?.remove(); s.mark?.remove(); s.label = s.mark = s.markD = null; s.labelOn = s.markOn = false;
@@ -132,13 +148,16 @@ export class RemotePlayers {
         if (u <= 1) { s.P.lerpVectors(s.p0, s.p1, u); s.yaw = lerpYaw(s.yaw0, s.yaw1, u); }
         else { s.P.copy(s.p1).addScaledVector(s.v, Math.min(s.t - s.dur, EXTRA_S)); s.yaw = s.yaw1; }
       }
-      const body = s.form !== 'spirit';
-      p.copy(s.P); if (body) p.y += BODY_UP;
+      const body = s.form !== 'spirit', rec = s.rec;
+      if (rec) { p.set(rec.x, rec.y + s.tagH - LABEL_UP, rec.z); s.P.set(rec.x, rec.y, rec.z); }   // drawn as their animal (animals.js): the name over it
+      else { p.copy(s.P); if (body) p.y += BODY_UP; }
       const dc = p.distanceTo(camP), far = 1 + (FAR[2] - 1) * Math.min(1, Math.max(0, (dc - FAR[0]) / (FAR[1] - FAR[0])));
       const fade = s.at > STALE_S ? 1 - (s.at - STALE_S) / FADE_S : 1, grow = smooth(Math.min(1, s.age / GROW_S));
-      if (dc <= HALF_M || (fr + s.i) % 2 === 0 || !s.shown) { s.wisp.update(s.held, p, s.yaw, true, grow, 1, (body ? SCALE_BODY : SCALE_SPIRIT) * far, LUM * fade, 1); s.held = 0; }
-      s.shown = true;
-      n++;
+      if (rec) { if (s.shown) { s.wisp.update(0, p, 0, false, 1, 1); s.shown = false; } }
+      else {
+        if (dc <= HALF_M || (fr + s.i) % 2 === 0 || !s.shown) { s.wisp.update(s.held, p, s.yaw, true, grow, 1, (body ? SCALE_BODY : SCALE_SPIRIT) * far, LUM * fade, 1); s.held = 0; }
+        s.shown = true; n++;
+      }
       // the name, while near and on screen; else the mark at the edge
       const edge = edgePlace(cam, p.x, p.y, p.z, W, H);
       if (s.label) {

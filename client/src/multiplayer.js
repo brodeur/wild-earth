@@ -2,6 +2,7 @@ import { Hub } from './hub.js';
 import { AccountModal } from './account.js';
 import { Social, avatarFor } from './social.js';
 import { Chat } from './chat.js';
+import { NF } from './animalNet.js';
 
 // The social screen's hookup (docs/multiplayer.md, lanes 3 and 4): one object main.js makes beside the title screen. It
 // owns the page's Hub (hub.js) for the page's life, gives the title screen the hub to ask for config, me and the counts
@@ -46,7 +47,7 @@ const FOLLOW_WINDOW_S = 2.5;    // a joiner's arrival turns to follow the picker
 const CAMERA_ICON = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="7" width="12" height="10" rx="2"/><path d="M15 11l5-3v8l-5-3"/><path class="bar" d="M3 3l18 18"/></svg>';
 const MIC_ICON = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="9" y="3" width="6" height="11" rx="3"/><path d="M5.5 11a6.5 6.5 0 0 0 13 0M12 17.5V21M9 21h6"/><path class="bar" d="M3 3l18 18"/></svg>';
 const esc = s => String(s ?? '').replace(/[&<>"]/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' })[c]);
-const r2 = v => Math.round(v * 100) / 100;
+const r2 = v => Math.round(v * 100) / 100, r3 = v => Math.round(v * 1000) / 1000;
 
 export class Multiplayer {
   // hubParam: the URL's ?hub= ('stub' for the title screen's stub, else the real hub).
@@ -194,7 +195,7 @@ export class Multiplayer {
     this.left(false);
     this.hub.enter(tileId);
     this.chat?.setRoom();
-    this.room = { tileId, flight: world?.flight || null, arrival: world?.arrival || null, form: world?.form || null, caption: world?.caption || null, lead: world?.lead || null, follow: null, players: world?.players || null };
+    this.room = { tileId, flight: world?.flight || null, arrival: world?.arrival || null, form: world?.form || null, body: world?.body || null, caption: world?.caption || null, lead: world?.lead || null, follow: null, players: world?.players || null };
     if (this.room.players && this.social) this.room.players.nameOf = id => this.social.nameOf(id);
     if (this.room.flight) this.posTimer = setInterval(() => this.sendPos(), POS_MS);
   }
@@ -207,8 +208,11 @@ export class Multiplayer {
   }
   sendPos() {
     const r = this.room; if (!r?.flight || !this.hub) return;
-    const P = r.flight.pos;
-    this.hub.pos({ x: r2(P.x), y: r2(P.y), z: r2(P.z), yaw: r2(r.flight.yaw), form: r.form?.() || 'spirit' });
+    const P = r.flight.pos, m = { x: r2(P.x), y: r2(P.y), z: r2(P.z), yaw: r2(r.flight.yaw), form: r.form?.() || 'spirit' };
+    // in a body: its pose as the animal stream has an animal (bodySample.js), so the group draws the animal (players.js)
+    const b = this.bodyB ||= new Float32Array(32), c = this.bodyC ||= new Float32Array(8);
+    if (m.form !== 'spirit' && r.body && r.body(b, c) >= 0) { m.b = Array.from(b.subarray(0, NF), r3); m.c = Array.from(c, r3); }
+    this.hub.pos(m);
   }
   gotPos(d) {
     this.poses.set(d.user, d);
@@ -228,7 +232,7 @@ export class Multiplayer {
   // so the label and the chat have a name for it). fakes(n, r): n of them circling the player at r m, at 5 Hz.
   fake(id, p, name = null) {
     if (name && this.social) { const f = this.social.found || (this.social.found = []); if (!f.some(u => u.id === id)) f.push({ id, name, display: name }); }
-    this.gotPos({ t: 'pos', user: id, x: p.x, y: p.y, z: p.z, yaw: p.yaw || 0, form: p.form || 'spirit' });
+    this.gotPos({ t: 'pos', user: id, x: p.x, y: p.y, z: p.z, yaw: p.yaw || 0, form: p.form || 'spirit', ...(p.b ? { b: p.b, c: p.c } : {}) });
   }
   fakes(n = 4, r = 15) {
     clearInterval(this.fakeT); this.fakeT = null;

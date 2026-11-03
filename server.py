@@ -11,6 +11,8 @@ POST /api/edits/<tile_id>  [edit, ...]   validate, stamp (id, at) and append to 
 GET  /api/game                the acorn game's protocol version (clients feature-detect the shared world)
 GET  /api/game/ws             WebSocket: one shared acorn-game world per (tile, season), see GameWorld; its `dig`
                               channel (hello t 'dig') carries the Dig game's tunnels and pits (digworld.py)
+                              and its `animals` channel (hello t 'animals') relays the animal host's state to
+                              the other clients in the world and orders its events, in memory only (never logged)
 GET  /api/game/<tile>/<season>   that world's counts (board, round, players), no player ids
 GET  /api/weather/<tile_id>   today's weather at the tile centre: Open-Meteo's forecast for yesterday, today
                               and tomorrow in client/weather.json's `days` format, plus `current`; cached
@@ -326,6 +328,35 @@ EV_RATE, EV_BURST = 40.0, 120.0  # events per second per connection (the AI host
 GAME_ID_RE = re.compile(r"^[A-Za-z0-9_.,:@+-]{1,96}$")
 SID_RE = re.compile(r"^[0-9a-f]{16,64}$")
 HELD_MAX = 200                   # a player's events held while its id for a new round is on the way
+# The animals channel (2026-11-02, docs/multiplayer.md "Shared animals"): every client in a world joins it on entry
+# (hello t 'animals'); one of them, the animal host, runs the animal simulation (animals.js) for everyone and streams the
+# animals' state (`ast`, relayed to the others as it comes, never kept) and the events that change the world (`aev`: a
+# kill, carrion gone, a flush; numbered by aseq, in memory only). The others mirror it and send the host what they ask of
+# it (`areq`: a catch, a body taken or left) and where they are (`apos`: coarse, to the host only, never kept). The host
+# is the page that is the acorn game's AI host (the collectors are animals) when that page is on the channel, else the
+# first to join; the pages are matched across the three channels by `pg`, a random id the page makes per world (memory
+# only). When the host leaves, the next is named and carries on from the state it mirrored.
+PG_RE = re.compile(r"^[0-9a-f]{8,32}$")
+# Games always on (2026-11-02, Aaron: "Games, rather than being something you turn on, are always available and
+# playable"): no Start; every page joins its world on entry, and a world's round is the season: the calendar's instance
+# of it at the tile (season_label: "2026-fall", the last time that season began there, meteorological, the south six
+# months on), started on the first join and replaced when the season comes round again. The round has no length
+# (length 0); the board's counts per round and per world are as before, and a player's id is derived per round as
+# before, so it now rotates per season.
+SEASON_START = {"spring": 3, "summer": 6, "fall": 9, "winter": 12}   # the month a season begins in the north
+
+
+def season_label(tile: str, season: str, now: float | None = None) -> str:
+    """The calendar instance of `season` at the tile: the year it last began there and the season, e.g. 2026-fall."""
+    t = time.gmtime(time.time() if now is None else now)
+    m0 = SEASON_START[season]
+    if re.match(r"^utm\d{1,2}s_", tile):
+        m0 = (m0 + 6 - 1) % 12 + 1
+    y = t.tm_year if t.tm_mon >= m0 else t.tm_year - 1
+    return f"{y}-{season}"
+
+
+APOS_MAX = 100_000.0             # m: an apos coordinate beyond this is dropped
 GAME_WORLDS: dict[tuple, "GameWorld"] = {}
 GAME_LOCK = threading.Lock()
 _TICKER: list = []
@@ -634,6 +665,7 @@ class GameConn(WsConn):
 
     def __init__(self, sock, rfile):
         self.world, self.pid, self.dworld = None, None, None   # dworld: the world whose dig channel this connection is on
+        self.aworld, self.aid, self.pg = None, 0, None           # aworld: the world whose animals channel this is on; aid its number there
         self.species, self.stale, self.held, self.carry = "corvus_corax", False, [], (0, 0)
         super().__init__(sock, rfile)
 
@@ -642,9 +674,13 @@ class GameConn(WsConn):
             self.world.leave(self)
         if self.dworld:
             self.dworld.dig_leave(self)
+        if self.aworld:
+            self.aworld.animals_leave(self)
 
     def on_message(self, m: dict) -> None:
         t = m.get("t")
+        if t in ("dig", "animals", "hello") and isinstance(m.get("pg"), str) and PG_RE.match(m["pg"]):
+            self.pg = m["pg"]      # the page's id for this world: the same on its three channels (one AI host per page)
         if t == "dig":   # the Dig game's channel: anonymous, no ids (digworld.py)
             tile, season = m.get("tile"), m.get("season")
             if not (isinstance(tile, str) and TILE_ID_RE.match(tile) and manifest(tile) is not None) or season not in GAME_SEASONS:
@@ -652,6 +688,19 @@ class GameConn(WsConn):
             if self.dworld:
                 self.dworld.dig_leave(self)
             return game_world(tile, season).dig_join(self)
+        if t == "animals":   # the animals channel: anonymous, no ids
+            tile, season = m.get("tile"), m.get("season")
+            if not (isinstance(tile, str) and TILE_ID_RE.match(tile) and manifest(tile) is not None) or season not in GAME_SEASONS:
+                return self.send({"t": "err", "why": "unknown tile or season"})
+            if self.aworld:
+                self.aworld.animals_leave(self)
+            return game_world(tile, season).animals_join(self)
+        if t in ("ast", "aev", "areq", "apos"):
+            if not self.aworld:
+                return self.send({"t": "err", "why": "join the animals first"})
+            if not self.allow():
+                return    # over the rate: dropped (state comes again next tick)
+            return self.aworld.animals_message(self, t, m)
         if t == "dev":
             if not self.dworld:
                 return self.send({"t": "err", "why": "join the dig first"})
@@ -698,6 +747,8 @@ class GameWorld:
         self.lock = threading.RLock()
         self.conns: list[GameConn] = []      # join order: conns[0] runs the AI collectors
         self.dconns: list[GameConn] = []     # on the dig channel, in join order: dconns[0] runs the AI's digging
+        self.aconns: list[GameConn] = []     # on the animals channel, in join order (the host: host_of)
+        self.aseq, self.anext = 0, 0         # the animal events' order and the channel's numbers: memory only, never saved
         self.dig_t, self.dping_t = DIG_SWEEP_S, PING_S
         self.s = self.empty()
         self.dirty, self.saved_at, self.log, self.scrubbed = False, 0.0, None, 0
@@ -851,10 +902,98 @@ class GameWorld:
     def players(self) -> int:
         return len({k.pid for k in self.conns})
 
+    # -- the AI host: one page per world runs the AI collectors, the AI's digging and the animals (the three channels are
+    # three sockets; a page sends the same `pg` on each). The page that is first on the acorn channel, else first on the
+    # animals channel, else on the dig channel; a client with no pg (older) is matched by join order on its channel.
+    def ai_pg(self):
+        for lst in (self.conns, self.aconns, self.dconns):
+            if lst and lst[0].pg:
+                return lst[0].pg
+        return None
+
+    def host_of(self, lst: list) -> GameConn | None:
+        pg = self.ai_pg()
+        if pg:
+            for k in lst:
+                if k.pg == pg:
+                    return k
+        return lst[0] if lst else None
+
     def tell_players(self) -> None:
-        n = self.players()
-        for i, k in enumerate(self.conns):
-            k.send({"t": "players", "n": n, "host": i == 0})
+        n, h = self.players(), self.host_of(self.conns)
+        for k in self.conns:
+            k.send({"t": "players", "n": n, "host": k is h})
+
+    def tell_hosts(self) -> None:
+        """A channel's membership changed: every channel's host may have (the acorn host leads the others)."""
+        self.tell_players()
+        self.tell_dhost()
+        self.tell_ahost()
+
+    def tell_dhost(self) -> None:
+        h = self.host_of(self.dconns)
+        for k in self.dconns:
+            k.send({"t": "dhost", "host": k is h, "n": len(self.dconns)})
+
+    def tell_ahost(self, joined: GameConn | None = None) -> None:
+        h, ids = self.host_of(self.aconns), [k.aid for k in self.aconns]
+        for k in self.aconns:
+            m = {"t": "awelcome" if k is joined else "ahost", "host": k is h, "n": len(self.aconns), "you": k.aid, "m": ids, "aseq": self.aseq}
+            if k is h and joined is not None and joined is not k:
+                m["full"] = True      # someone joined: the host sends everything again
+            k.send(m)
+
+    # -- the animals channel (see the module notes; nothing here touches self.s or the log)
+    def animals_join(self, conn: GameConn) -> None:
+        with self.lock:
+            conn.aworld = self
+            self.anext += 1
+            conn.aid = self.anext
+            self.aconns.append(conn)
+            self.tell_ahost(joined=conn)
+            self.tell_players()
+            self.tell_dhost()
+
+    def animals_leave(self, conn: GameConn) -> None:
+        with self.lock:
+            if conn not in self.aconns:
+                return
+            was_host = self.host_of(self.aconns) is conn
+            self.aconns.remove(conn)
+            conn.aworld = None
+            self.tell_hosts()
+            if was_host and self.aconns:
+                print(f"[game] {self.tile}/{self.season}: animal host moved", flush=True)
+
+    def animals_message(self, conn: GameConn, t: str, m: dict) -> None:
+        with self.lock:
+            host = self.host_of(self.aconns)
+            if t == "ast":          # the host's state: relayed as it is, kept nowhere
+                if conn is not host:
+                    return
+                out = {"t": "ast", "s": m.get("s"), "u": m.get("u"), "d": m.get("d"), "g": m.get("g"), "at": m.get("at")}
+                for k in self.aconns:
+                    if k is not conn:
+                        k.send(out)
+            elif t == "aev":        # the host's event: numbered, to everyone (the host's copy echoes c)
+                if conn is not host or not isinstance(m.get("e"), dict):
+                    return
+                self.aseq += 1
+                out = {"t": "aev", "aseq": self.aseq, "e": m["e"]}
+                for k in self.aconns:
+                    k.send({**out, "c": m.get("c")} if k is conn else out)
+            elif t == "areq":       # a mirror asks the host (a catch, a body taken or left): to the host alone
+                if host is None or host is conn or not isinstance(m.get("e"), dict):
+                    return
+                host.send({"t": "areq", "from": conn.aid, "e": m["e"]})
+            elif t == "apos":       # where a mirror is (coarse) and what it is: to the host alone, never kept
+                if host is None or host is conn:
+                    return
+                x, z = m.get("x"), m.get("z")
+                if not (_num(x) and _num(z) and abs(x) < APOS_MAX and abs(z) < APOS_MAX):
+                    return
+                sp = m.get("sp") if isinstance(m.get("sp"), str) and GAME_ID_RE.match(m["sp"]) else None
+                host.send({"t": "apos", "from": conn.aid, "x": round(x, 1), "z": round(z, 1), "sp": sp})
 
     def epoch(self) -> int:
         """The round a player id belongs to: the running or last round (0 before the first)."""
@@ -895,6 +1034,7 @@ class GameWorld:
 
     def join(self, conn: GameConn, species: str, sid: str | None, r) -> None:
         with self.lock:
+            self.season_round()               # the round is the season: begun (or begun again) before any id is asked
             if sid is None or r != self.epoch():
                 return conn.send({"t": "epoch", "r": self.epoch()})
             conn.pid = "p:" + hashlib.sha256(sid.encode()).hexdigest()[:12]
@@ -902,19 +1042,19 @@ class GameWorld:
             conn.world = self
             self.conns.append(conn)
             self.collector(conn.pid, species, "player", PLAYER_CAP[species])
-            conn.send({"t": "welcome", "v": 1, "you": conn.pid, "r": self.epoch(), "host": self.conns[0] is conn,
+            conn.send({"t": "welcome", "v": 1, "you": conn.pid, "r": self.epoch(), "host": self.host_of(self.conns) is conn,
                        "n": self.players(), "world": {**self.s, "dig": None}, "now": round(time.time())})
-            self.tell_players()
+            self.tell_hosts()
             print(f"[game] {self.tile}/{self.season}: {self.players()} player(s) here", flush=True)
 
     def leave(self, conn: GameConn) -> None:
         with self.lock:
             if conn not in self.conns:
                 return
-            was_host = self.conns[0] is conn
+            was_host = self.host_of(self.conns) is conn
             self.conns.remove(conn)
             conn.world = None
-            self.tell_players()
+            self.tell_hosts()
             print(f"[game] {self.tile}/{self.season}: {self.players()} player(s) here"
                   + (", AI host moved" if was_host and self.conns else ""), flush=True)
             if not self.conns and self.dirty:
@@ -944,7 +1084,7 @@ class GameWorld:
                         ev["id"] = f"k{self.s['cache_n'] + 1}"   # anonymous, numbered per world
                     col = self.s["collectors"][conn.pid]
                 else:     # an AI collector's event: only from the AI host
-                    if self.conns[0] is not conn:
+                    if self.host_of(self.conns) is not conn:
                         return conn.send({"t": "rej", "c": c, "why": "not the AI host"})
                     by = _gid(e.get("by"), "by")
                     sp_ok = e.get("sp") in BOARD_SPECIES or (e.get("sp") in JAY_SPECIES and ev["type"] in ("dig", "raid", "mob"))
@@ -1012,11 +1152,14 @@ class GameWorld:
         with self.lock:
             conn.dworld = self
             self.dconns.append(conn)
-            conn.send({"t": "dwelcome", "v": 1, "host": self.dconns[0] is conn, "n": len(self.dconns),
+            conn.send({"t": "dwelcome", "v": 1, "host": self.host_of(self.dconns) is conn, "n": len(self.dconns),
                        "dig": digworld.persisted(self.s["dig"]), "now": round(time.time()), "idle": digworld.DIG_IDLE_S})
+            h = self.host_of(self.dconns)
             for k in self.dconns:
                 if k is not conn:
-                    k.send({"t": "dhost", "host": self.dconns[0] is k, "n": len(self.dconns)})
+                    k.send({"t": "dhost", "host": k is h, "n": len(self.dconns)})
+            self.tell_players()
+            self.tell_ahost()
 
     def dig_leave(self, conn: GameConn) -> None:
         with self.lock:
@@ -1024,8 +1167,7 @@ class GameWorld:
                 return
             self.dconns.remove(conn)
             conn.dworld = None
-            for i, k in enumerate(self.dconns):
-                k.send({"t": "dhost", "host": i == 0, "n": len(self.dconns)})
+            self.tell_hosts()
             if not self.dconns and not self.conns and self.dirty:
                 self.save()
 
@@ -1035,7 +1177,7 @@ class GameWorld:
                 ev = digworld.clean(e)
             except (ValueError, KeyError, TypeError):
                 return conn.send({"t": "drej", "c": c, "why": "malformed event"})
-            if ev.get("ai") and self.dconns[0] is not conn:
+            if ev.get("ai") and self.host_of(self.dconns) is not conn:
                 return conn.send({"t": "drej", "c": c, "why": "not the AI host"})
             now = time.time()
             why = digworld.dig_reduce(self.s["dig"], ev, now)
@@ -1059,6 +1201,25 @@ class GameWorld:
         for k in self.dconns:
             k.send({**out, "c": c} if k is sender else out)
 
+    def season_round(self, now: float | None = None) -> None:
+        """The round is the season (games always on): one round per calendar instance of this world's season, with no
+        length. A round of another instance (last year's fall), or an old timed round, ends with its winner and the new
+        one begins; a new round is a new epoch, so every player's id rotates."""
+        with self.lock:
+            label, r = season_label(self.tile, self.season, now), self.s["round"]
+            if r and r.get("cal") == label and not r["over"]:
+                return
+            if r and not r["over"]:
+                r["over"], r["winner"] = True, round_winner(r)
+                self.record({"t": "round", "round": r})
+            self.new_epoch()
+            self.s["rounds"] += 1
+            self.s["round"] = {"id": self.s["rounds"], "start": round(self.s["clock"], 2), "length": 0, "cal": label,
+                               "counts": {s: 0 for s in BOARD_SPECIES}, "by": {}, "over": False, "winner": None,
+                               "raided": {s: 0 for s in BOARD_SPECIES}, "mobbed": {}}
+            self.record({"t": "round", "round": self.s["round"]})
+            print(f"[game] {self.tile}/{self.season}: the {label} round began", flush=True)
+
     def start_round(self, length) -> None:
         with self.lock:
             r = self.s["round"]
@@ -1080,7 +1241,7 @@ class GameWorld:
             if self.conns:
                 self.s["clock"] += dt
                 r = self.s["round"]
-                if r and not r["over"] and self.s["clock"] - r["start"] >= r["length"]:
+                if r and not r["over"] and r["length"] and self.s["clock"] - r["start"] >= r["length"]:   # (a season's round: no length)
                     r["over"], r["winner"] = True, round_winner(r)
                     self.record({"t": "round", "round": r})
                     print(f"[game] {self.tile}/{self.season}: round {r['id']} over, winner {r['winner']}", flush=True)
@@ -1115,10 +1276,12 @@ class GameWorld:
             if self.dig_t <= 0:
                 self.dig_t = DIG_SWEEP_S
                 self.prune(time.time())
+                if self.conns:
+                    self.season_round()       # the season came round again while players were here
             self.dping_t -= dt
-            if self.dping_t <= 0:   # the dig channel's own connections (never in conns): pinged, and dropped when silent
+            if self.dping_t <= 0:   # the dig and animals channels' connections (never in conns): pinged, and dropped when silent
                 self.dping_t = PING_S
-                for k in list(self.dconns):
+                for k in list(self.dconns) + list(self.aconns):
                     if now - k.last_rx > IDLE_S:
                         k.kill()
                     else:
@@ -1135,7 +1298,7 @@ class GameWorld:
                     "caches": len(s["caches"]), "granaries": sum(s["granaries"].values()),
                     "stashes": sum(s["stashes"].values()), "raided": s["raided"], "mobbed": s["mobbed"],
                     "round": r and {k: r.get(k) for k in ("id", "length", "counts", "over", "winner", "raided", "mobbed")}
-                    | {"left": max(0.0, round(r["start"] + r["length"] - s["clock"], 1))}}
+                    | {"left": max(0.0, round(r["start"] + r["length"] - s["clock"], 1)) if r["length"] else None, "cal": r.get("cal")}}
 
 
 def game_world(tile: str, season: str) -> GameWorld:

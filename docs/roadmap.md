@@ -221,6 +221,10 @@ browser stays the renderer.
 - Needs: acorn woodpecker added to the species list and pipeline; an authoritative game
   server (the dev server grows into it; Rust is the candidate for the real node);
   WebSocket multiplayer (designed 2026-11-01: `docs/multiplayer.md`); AI behaviour trees driven by the activity calendar.
+- Always on (2026-11-02, Aaron: "Games, rather than being something you turn on, are always available and
+  playable"): no Start button, the shared world joined on entry, the player's acorn actions in a collector body,
+  the board shown once the player carries or caches, and the round is the calendar's season (player ids rotate
+  per season). `docs/game-acorn-stash.md` "v5: always on".
 
 - Water, next: the white water's open list (decisions.md 2026-11-01: a foam scale that follows the channel's
   width, spray and wet rock at a boil, the wide May spray cloud, the Cosumnes tile's cascades once its water pass has
@@ -285,9 +289,14 @@ browser stays the renderer.
   are seen (2026-11-02, `client/src/players.js`): each member in the same tile as a spirit wisp in their avatar's
   colours gliding between the relayed samples with their name over it within 60 m (a small wisp over the body of a
   member in a body), a dot in their hue on the mini-map pinned at the rim when beyond it, and off screen their
-  avatar at the screen's edge nearest them with the distance, as the herd marks place a herd member. Next: lane 5
-  (video and audio over WebRTC, signalling through the hub); the other players' bodies drawn as their species from
-  the relay; Discord needs Aaron's application registered; Google and Apple their keys.
+  avatar at the screen's edge nearest them with the distance, as the herd marks place a herd member. The animals are shared
+  (2026-11-02, `client/src/animalNet.js`, `docs/multiplayer.md` "Shared animals"): one page per world runs them for
+  everyone and streams them at 4 Hz under a 24 KB/s cap, the others mirror the stream through the same draw and leg
+  engine, kills and flushes are ordered events, a mirror's catch is confirmed by the host, and the next page takes
+  over when the host leaves. The group's members in a body are drawn as their animals (the same pool, legs and
+  draw), named over the body. Next: lane 5 (video and audio over WebRTC, signalling through the hub); the players on
+  a tile outside the group (unseen by the privacy rule until Aaron widens it); the stream's rate under many players
+  and the far fliers' detail; Discord needs Aaron's application registered; Google and Apple their keys.
 
 ## Then
 
