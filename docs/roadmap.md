@@ -145,6 +145,15 @@ sequenced; Parked is in the brief but deliberately not started.
   Verified on the lineup and as the player's coyote in the world (flat, an 18-degree slope, a turn, a
   gallop). Weak: the numbers (duty, cadence, clearance) are first guesses; the rodents and the birds
   still swing rigid legs; the lion and bear unseen in the world.
+- Cliffs with sharp geometry, 2026-11-02 (Aaron: "Yosemite's cliffs look 'soft' because of their repeating
+  patterns and lack of sharp geometry"; docs/decisions.md): a cliff material on faces past ~42-55 degrees chosen by
+  the rock class (granite sheeted and pale with dark streaks and lichen, slate bedded and grey-brown, greenstone
+  blocky), no repeat (hex-tiled joints at two scales, arching sheet scars, streak zones, a bulge field in the light);
+  instanced slabs and wedges seated in the faces past ~55 degrees (granite big facets, beds, blocks), casting hard
+  shadows, the rims' silhouettes breaking within a few hundred metres. The rims' heights measured and left as they
+  are (knees already ~14 m, edges wandering ~2.5 m RMS; two edit rules gained under a metre). Weak: from 600 m on
+  the slabs read as small rectangles, El Capitan's face is still one smooth surface at a kilometre in the afternoon
+  haze; no talus placed at the walls' feet; the slabs are not stood on.
 
 ## Next: the visual pass, in order of effect per hour
 
@@ -182,6 +191,11 @@ sequenced; Parked is in the brief but deliberately not started.
 5. Water: streams and ponds from the hydrology layer, with reflection.
 6. Life: a circling hawk and a deer herd as placeholder motion, filtered by the
    perception matrix.
+
+7. Cliffs, next (after 2026-11-02): the walls' big geometry from the valley (a coarse cliff mesh at 2-3 m over the
+   steep cells, or slabs that follow the wall's own buttresses and dihedrals rather than a lattice); talus cones at
+   the walls' feet from the rocks module where the slope breaks; standing on the slabs; the micro patch's program
+   at 17 texture units (three.js warns; one sampler is lost there) to bring under 16.
 
 Then judge the result against the "beautiful enough" bar and decide whether the
 browser stays the renderer.
