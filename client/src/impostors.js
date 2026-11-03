@@ -4,6 +4,7 @@ import { SPECIES, SPECIES_IDS, mulberry32, resolveSpecies } from './trees.js';
 import { VARIANTS, pick, hash, variantSeed, handover, cellPlan, placementSkip, placePlant, monthFor, crownPlan, rareSpecies, drawnSeed, tileSpecies, zoneSpecies, riparianExtra } from './vegetation.js';
 import { variantSlots, leafOnAt, treeWood } from './treegen.js';
 import { hasCrowns, SCALE } from './crowns.js';
+import { stature, siteFactor, emergentOf, drawTree } from './stature.js';
 import { bakeSteps, VIEWS, SIDE_VIEWS, ALPHA_REF } from './impostorBake.js';
 import { drain } from './slice.js';
 import { uploadDataSteps, canBand } from './gpuUpload.js';
@@ -51,6 +52,7 @@ import { seasonOfDate } from './season.js';
 
 const CHUNK = 250, MOVE = 80, SECTORS = 6, STRIDE = 8;   // record: x y z rot | scale tree rank width (crown aspect, crowns.js; 1 for cell trees)
 const THIN_P = 0.7;                // keep (thinStart / d)^P beyond thinStart
+const FAR_JITTER = 0.06;      // a far tree's height jitter with distance (hrange), about its own height
 const GROW_W = 0.72, GROW_H = 0.28; // a kept tree's width and height grow by keep^-GROW (GROW_W + GROW_H = 1: area / keep)
 const NEEDLE_FADE = [900, 1500];    // treegen canopyMaterial fades the needle light out over this view distance
 const NEEDLE_ON = 1200;             // compile the needle light where trees can be nearer than this (half of it left)
@@ -127,7 +129,7 @@ const GROWTH_GLSL = /* glsl */`
     if (alive <= 0.0) return vec4(0.0);
     float v = smoothstep(nearRadius + ${RING.toFixed(1)}, nearRadius + 1450.0, d);   // per-tree variety, none in the hand-over
     float seed = fract(rank * 7919.131) * 100.0, r1 = hsh(seed * 12.9898 + 1.0), r2 = hsh(seed * 78.233 + 2.0);
-    float hMul = mix(1.0, mix(hr.x, hr.y, r1) / s, v) * pow(keep, -${GROW_H.toFixed(2)}) * (1.0 + 0.5 * shrubFar) * alive;
+    float hMul = mix(1.0, mix(hr.x, hr.y, r1), v) * pow(keep, -${GROW_H.toFixed(2)}) * (1.0 + 0.5 * shrubFar) * alive;
     float wMul = mix(1.0, 0.85 + 0.3 * r2, v) * pow(keep, -${GROW_W.toFixed(2)}) * (1.0 + 2.0 * shrubFar) * alive;
     return vec4(wMul, hMul, alive, v);
   }`;
@@ -348,10 +350,11 @@ export class Impostors {
       albedoMap: { value: bake.albedo }, normalMap: { value: bake.normal },
       frame: { value: bake.frames.map(f => new THREE.Vector4(f.W, f.H, f.y0, f.capY)) },
       vext: { value: bake.extents.map(e => new THREE.Vector4(...e)) },
-      // Far height: the slot's own baked tree (a sapling or snag stays its size), varied per tree by the
-      // species range's relative spread about it ([6, 12] m: +-1/3), not stretched to the mature range.
-      hrange: { value: bake.frames.map(f => { const v = (f.hmax - f.hmin) / (f.hmax + f.hmin);
-        return new THREE.Vector4(1 - v, 1 + v, f.shrub ? 1 : 0, ids.indexOf(f.species)); }) },
+      // Far height: each record's own height (its scale on the baked tree: a canopy tree's drawn from its species'
+      // curve, stature.js, a crown's the lidar's), jittered +-6 % with distance so the baked trees do not repeat. Until
+      // 2026-11-02 the far tier replaced the record's scale with the species range's spread about the baked tree
+      // (ponderosa +-15 % about 32 m), which capped every species at its range's top: the flat horizon.
+      hrange: { value: bake.frames.map(f => new THREE.Vector4(1 - FAR_JITTER, 1 + FAR_JITTER, f.shrub ? 1 : 0, ids.indexOf(f.species))) },
       tint: { value: ids.map(() => new THREE.Vector3(1, 1, 1)) },
       // Needle light per species, as treegen canopyMaterial sets it for a card texture with needle aux data
       // (foliage.needle_wrap, translucency, needle_scatter, translucency_rgb), with the texture's mean thinness.
@@ -466,16 +469,20 @@ export class Impostors {
     const spCount = this.counts = {}, libIdx = Object.fromEntries(SPECIES_IDS.map((id, k) => [id, k]));
     let rec = new Float32Array(400000 * STRIDE), chunkOf = new Int32Array(400000), n = 0;
     const NC = Math.ceil(size / CHUNK); this.NC = NC;
+    const rare = rareSpecies(tile), slotHs = new Map();   // the height of the tree the near forest draws for a slot (Vegetation.build: drawnSeed)
+    const slotH = (id, v) => { const key = id + ':' + v; let h = slotHs.get(key); if (h === undefined) { h = treeWood(id, drawnSeed(id, v, rare.get(id)))?.H || 10; slotHs.set(key, h); } return h; };
     for (let j = 0; j < hab.img.height; j++) for (let i = 0; i < hab.img.width; i++) {
       if (i === 0 && (j & 3) === 0) yield;
       const plan = cellPlan(tile, i, j); if (!plan) continue;
       const { rnd, nTrees, nShrubs, treeMix, shrubMix } = plan, nRip = riparianExtra(tile, i, j, crowns);
+      const kE = crowns ? -1 : emergentOf(i, j, nTrees + nRip);   // the cell's emergent (stature.js), as in Vegetation.update
+      let site = -1;
       for (let k = 0; k < nTrees + nShrubs + nRip; k++) {
         const isTree = k < nTrees || k >= nTrees + nShrubs, rip = k >= nTrees + nShrubs;
         let name = pick(isTree ? treeMix : shrubMix, rnd());
-        const variant = Math.floor(rnd() * VARIANTS);
+        let variant = Math.floor(rnd() * VARIANTS);
         let px = (i + rnd()) * res, pn = size - (j + rnd()) * res;
-        const s = 0.75 + rnd() * 0.5, rot = rnd() * Math.PI * 2;
+        const us = rnd(), s = 0.75 + us * 0.5, rot = rnd() * Math.PI * 2;
         if (rip) { const at = tile.water.woodyPoint(i, j, res, hash(k, i + j * 4096, 61) / 4294967296); if (!at) continue; px = at[0] + (hash(k, i, 63) / 4294967296 - 0.5) * 5; pn = at[1] + (hash(k, j, 67) / 4294967296 - 0.5) * 5; }
         name = zoneSpecies(tile, i, j, k, isTree, name, px, pn);   // the near forest's zone species (vegetation.js)
         if (!resolveSpecies(name)) continue;
@@ -492,7 +499,17 @@ export class Impostors {
         const o = n * STRIDE;
         rec[o] = ax; rec[o + 1] = heights.at(ax, an) - 0.3; rec[o + 2] = -an; rec[o + 3] = rot;
         const sid = resolveSpecies(name), c = spCount[sid] || (spCount[sid] = { tree: 0, shrub: 0 }); if (isTree) c.tree++; else c.shrub++;
-        rec[o + 4] = s; rec[o + 5] = libIdx[sid] * VARIANTS + variant;   // species and slot; the constructor swaps in the baked tree
+        // A canopy tree's height from its species' curve (stature.js, the near forest's draw): the record carries the
+        // target height (negative) like a crown's, and its class's slot; mapRecords scales the baked tree to it.
+        // A young tree or a snag keeps its uniform scale on its slot's own tree; its record carries that height too, so
+        // the baked tree that stands in for it (the atlas bakes one or two a species) is drawn the near tree's height.
+        let sc = s; const st = isTree ? stature(sid) : null;
+        if (st && st.canopy[variant]) {
+          if (site < 0) site = siteFactor(tile, i, j);
+          const T = drawTree(st, i, j, k, us, site, (rip ? k - nShrubs : k) === kE);
+          variant = T.v; sc = -T.h;
+        } else if (isTree) sc = -s * slotH(sid, variant);
+        rec[o + 4] = sc; rec[o + 5] = libIdx[sid] * VARIANTS + variant;   // species and slot; the constructor swaps in the baked tree
         rec[o + 6] = own(); rec[o + 7] = 1;
         chunkOf[n] = Math.min(NC - 1, Math.floor(ax / CHUNK)) + NC * Math.min(NC - 1, Math.floor(an / CHUNK));
         n++;

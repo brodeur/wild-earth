@@ -145,6 +145,12 @@ sequenced; Parked is in the brief but deliberately not started.
   Verified on the lineup and as the player's coyote in the world (flat, an 18-degree slope, a turn, a
   gallop). Weak: the numbers (duty, cadence, clearance) are first guesses; the rodents and the birds
   still swing rigid legs; the lion and bear unseen in the world.
+- Tree heights on a long-tailed curve, 2026-11-02 (Aaron: the flat horizon on Yosemite Valley's floor): on tiles
+  without lidar a canopy tree's height comes from its species' size curve (`client/src/stature.js`; typical, tall
+  and record heights in the records' `stature`), its age class from the height, an emergent in about one cell of 250
+  trees; the far tier keeps each tree's height at every distance; the scale clamp 1.7 -> 3. Weak: the valley floor's
+  meadow belt is mostly broadleaf in the tile's mix, so few conifer giants stand near the meadows; no sugar pine or
+  white fir in the library.
 
 ## Next: the visual pass, in order of effect per hour
 

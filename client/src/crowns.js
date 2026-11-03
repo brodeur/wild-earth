@@ -36,7 +36,8 @@ export const CROWN_LAYER = 'client.trees_lidar';
 export const hasCrowns = tile => !!tile?.manifest?.layers?.[CROWN_LAYER];
 
 const REACH = 1.4;                // a species can stand on a crown up to 1.4 x the top of its tallest class's height range
-export const SCALE = [0.4, 1.7];  // the drawn tree's height scale, clamped
+export const SCALE = [0.4, 3];    // the drawn tree's height scale, clamped (1.7 until 2026-11-02; stature.js's giants on a rare
+                                  // species' one shared tree and the far records, which scale a baked mature tree to a drawn height, need the room)
 export const ASPECT = [0.8, 1.25]; // crown width over height scale, clamped
 const OLD_Q = 0.95, OLD_BLOCK = 500, OLD_MIN = 12, LANDMARKS = 20;
 const OLD_ABS = { quercus_douglasii: 15, quercus_lobata: 25, pinus_ponderosa: 40, pinus_sabiniana: 25 };   // else the old class's range top

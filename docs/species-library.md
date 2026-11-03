@@ -49,7 +49,10 @@ reasoning in your own words in `notes`, and never paste text from a source.
 Placement is not in the file. Habitat class and canopy cover per 30 m cell decide how
 many plants a cell holds, and the species mix per habitat decides which
 (`client/src/vegetation.js`; later the tile's own mix). Each plant is one of
-`variants` seeds, scaled 0.75-1.25 and rotated by a seed from the cell's coordinates.
+`variants` seeds, rotated by a seed from the cell's coordinates. A shrub, a young tree or a snag
+is scaled 0.75-1.25; a canopy tree (the base and old classes) on a tile without lidar crowns takes its
+height from the species' size curve (`stature` below, `client/src/stature.js`) and the age class that
+holds that height, and on a lidar tile the crown's measured height (`client/src/crowns.js`).
 
 ## Schema
 
@@ -65,6 +68,7 @@ defaults in `treegen.js` (`DEFAULTS`).
 | `architectural_model` | the Hallé-Oldeman-Tomlinson model, e.g. `Rauh` (oaks, pines), `Leeuwenberg` (manzanita), with "(provisional)" if unsure. Documentation for reviewers; the generator does not read it |
 | `deciduous` | true if the crown empties in some season (default: `leaf_on.winter < 0.5`) |
 | `height_m` | `[min, max]` mature height in this region |
+| `stature` | the species' size curve on tiles without lidar crowns (`client/src/stature.js`, 2026-11-02): `typical_m` (the median canopy tree), `tall_m` (about the 95th percentile), `record_m` (the tallest measured tree), `source` (where each came from). A log-normal is fitted to typical and tall and truncated at the record; one 30 m cell in about 250 trees holds an emergent at tall x 1 to 1.35; the stand's tree cover and slope lower or raise the curve (x0.88 to x1.1). Without the block: typical the middle of `height_m`, tall its top x 1.15, record x 1.6 |
 | `variants` | how many seeds the client builds per species (3) |
 | `notes`, `sources`, `authors`, `license` | morphology and reasoning, references, contributors, `"CC BY-SA 4.0"` |
 
