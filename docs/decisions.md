@@ -3804,3 +3804,13 @@ each browser ran its own. Decided (`docs/multiplayer.md` "Shared animals"):
   mirroring into the AI where it stood, as a body the player leaves is; nothing vanishes near the players who stay.
 - Found in passing and fixed: the hunt panel counted an AI hunter's kill as the player's when they were the same
   species (`hunt.js` read the kill's species); a kill now says whether it was the player's own (`mine`).
+
+## 2026-11-02: the other players as their animals, through the animals' own pool
+
+The second half of Aaron's observation ("each user can see the other, but not in their animal form"). A group member in
+a body sends its pose with the hub's 5 Hz position as the animal stream's fields (`bodySample.js`), and the receiving
+page draws it as a record in the species' pool of `animals.js`, mirrored like the host's animals. Rejected: a second
+renderer for player bodies (the controls' own meshes, one per species, a second copy of every model and its leg
+engine); streaming the leg engine's joints (the gait inputs reproduce the legs on the receiving side, as for the AI).
+Kept: the wisp for a member in spirit form, the group-only relay (the privacy rule), and a remote body is no one's
+prey and no one's body to take.

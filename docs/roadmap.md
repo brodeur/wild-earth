@@ -289,9 +289,10 @@ browser stays the renderer.
   (2026-11-02, `client/src/animalNet.js`, `docs/multiplayer.md` "Shared animals"): one page per world runs them for
   everyone and streams them at 4 Hz under a 24 KB/s cap, the others mirror the stream through the same draw and leg
   engine, kills and flushes are ordered events, a mirror's catch is confirmed by the host, and the next page takes
-  over when the host leaves. Next: lane 5 (video and audio over WebRTC, signalling through the hub); the other
-  players' bodies drawn as their species from the relay; the stream's rate under many players and the far fliers'
-  detail; Discord needs Aaron's application registered; Google and Apple their keys.
+  over when the host leaves. The group's members in a body are drawn as their animals (the same pool, legs and
+  draw), named over the body. Next: lane 5 (video and audio over WebRTC, signalling through the hub); the players on
+  a tile outside the group (unseen by the privacy rule until Aaron widens it); the stream's rate under many players
+  and the far fliers' detail; Discord needs Aaron's application registered; Google and Apple their keys.
 
 ## Then
 

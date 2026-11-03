@@ -482,6 +482,28 @@ not measured). The server's tests: `tests.test_animals` (the relay to the others
 only from the host, the events' order, a request and a position to the host alone, the hand-over, the acorn host
 leading the animal host, nothing in the world's files or the log).
 
+**Players as their animals** (2026-11-02, the second half of Aaron's observation: "each user can see the other, but
+not in their animal form"). The hub's `pos` (5 Hz, to the group members in the same tile room, as before) carries, for
+a player in a body, `b` (the body's pose as the animal stream's fields above: `client/src/bodySample.js`, read off the
+body's own drawn mesh where it shares the AI's conventions, the control's yaw and the gait's speed and turn rate where
+the AI's draw recomputes the rest, the raven put together from the flight) and `c` (its constants: size, sex,
+antlers, and the species slot, so a buck or a female woodpecker is drawn as one). The hub checks they are short lists
+of finite numbers and relays them; nothing is kept past the connection. `players.js` gives each member in a body a
+record in the species' pool of `animals.js` (`remoteSample`: the remote bodies are laid out first, so a slot is kept
+for them), mirrored from the 5 Hz samples exactly as the host's animals are, drawn by the same instanced draw, leg
+engine, clips and far tier; no wisp over it, the member's name over the body within 60 m while it is on screen, the
+avatar at the screen's edge and the dot on the mini-map as before. Back in spirit form, out of the room or silent, the
+body goes. A remote body is no one's prey and no one's body to take: the AI does not hunt it, the catch does not
+strike it, the spirit cannot enter it, the counts and the species tags leave it out. The privacy rule is unchanged:
+other players in the tile who are not in the player's group send nothing here and stay unseen, as animals or as
+spirits (Aaron may widen it later; the relay to the whole room is the same rule). Seen on the home tile against the
+worktree's server: a scripted group member (over `tests/wsclient.py`) walking a 12 m circle at 1.3 m/s as a deer was
+drawn as a black-tailed deer in slot 0 of the deer pool, on the slope, its legs in four phases of the walk over 0.75 s,
+"body_b" over it while in view and its avatar at the edge while not; flying a 40 m circle 30 m up as a raven, it was
+the ravens' flying model, banked, its wings beating and then set in the glide; the browser's own player in a deer
+body sent 225 positions in 45 s, each with the 22-field sample and its constants (slot 3, size 0.92); `tests.test_hub`
+covers the relay of `b` and `c`, their absence in spirit form and the malformed ones dropped.
+
 **Open.** The fliers' detail: a soaring bird far off gets a row once a second and its wing beat is the phase rate
 between rows (fine for a soar, coarse for a hawk's stoop seen from far); the AI's internal targets (a hunter's prey,
 a raven's cache, a squirrel's path) are not streamed, so a mirror's sound cues and the field guide's witness cards that
@@ -499,7 +521,9 @@ surroundings (two players 600 m apart: about 330 animals instead of 230).
   another node with it are for the federation step in the roadmap, not here. User ids are UUIDs so that a
   later handle can carry the home hub without renumbering.
 - Seeing the other players on a tile as their animals, with their names over them for friends: the next
-  step after group travel, under the same privacy rule (relay to the room, persist nothing).
+  step after group travel, under the same privacy rule (relay to the room, persist nothing). The group's members
+  are drawn as their animals since 2026-11-02 ("Shared animals" above, "Players as their animals"); the players
+  on the tile outside the group are still unseen.
 
   **Built (2026-11-02, the group's players seen; the bodies are still open).** Aaron, after testing with two
   browsers: "I can't see the other player's spirit. The players should show up on the map and just like if I'm in a

@@ -377,6 +377,18 @@ class HubTest(unittest.TestCase):
         a_tab2.none("pos")                                          # not echoed to one's own tabs
         a[2].send({"t": "pos", "x": "far", "y": 0, "z": 0, "yaw": 0})
         self.assertEqual(a[2].wait("err")["field"], "x")
+        # a body's pose (players.js): its sample and constants relayed with the position; dropped in spirit form or malformed
+        body = [4321.125, 287.5, -1234.75, 2.375, 0, 0, 1.5, 0, 0, 0.8]
+        a[2].send({"t": "pos", **POS, "form": "odocoileus_hemionus", "b": body, "c": [1.05, 0, 0, 0, 0.5, 0.5, 0.5]})
+        got = b[2].wait("pos")
+        self.assertEqual(got["b"], [round(v, 3) for v in body])
+        self.assertEqual(got["c"][0], 1.05)
+        a[2].send({"t": "pos", **POS, "form": "spirit", "b": body})
+        self.assertNotIn("b", b[2].wait("pos"))
+        a[2].send({"t": "pos", **POS, "form": "odocoileus_hemionus", "b": ["x"] + body, "c": list(range(20))})
+        got = b[2].wait("pos")
+        self.assertNotIn("b", got)
+        self.assertNotIn("c", got)
         # tile chat: the room only
         c[2].send({"t": "chat", "scope": "tile", "text": CHAT_TILE})
         self.assertEqual(a[2].wait("chat")["text"], CHAT_TILE)

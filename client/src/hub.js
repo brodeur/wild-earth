@@ -154,7 +154,7 @@ export class Hub {
   // {x, y, z, yaw, form}: at 5 Hz while in a room and in a group (the caller paces it). Relayed, never kept.
   pos(p) {
     if (!this.room || !this.groups.length) return false;
-    return this.send({ t: 'pos', x: p.x, y: p.y, z: p.z, yaw: p.yaw, form: p.form });
+    return this.send({ t: 'pos', x: p.x, y: p.y, z: p.z, yaw: p.yaw, form: p.form, ...(p.b ? { b: p.b, c: p.c } : {}) });   // b, c: the body's pose (bodySample.js)
   }
   watch(on) { this.watching = !!on; return this.send({ t: 'watch', on: !!on }); }
   setMe(fields) { return this.send({ t: 'me', ...fields }); }   // {display?, findable?, presence?: 'tile'|'online'}
