@@ -98,13 +98,18 @@ export function agePhrase(s) {
   return `${WORDS[Math.min(12, Math.round(h / 24))] || Math.round(h / 24)} days dead`;
 }
 
+// A pool of light lying on the ground near the eye; from farther it turns to face the eye and rises a little (a beacon:
+// a flat disc seen at a grazing angle from a kilometre is a pixel high)
 const HALO_VERT = /* glsl */`
   attribute vec4 iPos; attribute float iGain;
   varying vec2 vQ; varying float vA;
   void main() {
     if (iGain < 0.01) { gl_Position = vec4(0.0, 0.0, 2.0, 1.0); return; }
     vA = iGain; vQ = position.xy;
-    vec3 p = iPos.xyz + vec3(position.x, 0.0, position.y) * iPos.w;
+    float bb = smoothstep(60.0, 300.0, distance(cameraPosition, iPos.xyz));
+    vec3 right = vec3(viewMatrix[0][0], viewMatrix[1][0], viewMatrix[2][0]), up = vec3(viewMatrix[0][1], viewMatrix[1][1], viewMatrix[2][1]);
+    vec3 flat_ = vec3(position.x, 0.0, position.y), face = right * position.x + up * position.y + vec3(0.0, 0.35, 0.0);
+    vec3 p = iPos.xyz + mix(flat_, face, bb) * iPos.w;
     gl_Position = projectionMatrix * viewMatrix * vec4(p, 1.0);
   }`;
 const HALO_FRAG = /* glsl */`
@@ -430,7 +435,8 @@ export class Carrion {
         if (d >= R || n >= HALO_CAP) continue;
         const o = n * 4, r = Math.max(rec.len * 0.75, d * 0.012);
         pos[o] = rec.x; pos[o + 1] = (rec.body ? rec.body.y : this.animals.heights.atXZ(rec.x, rec.z)) + 0.05; pos[o + 2] = rec.z; pos[o + 3] = r;
-        gain[n] = g0 * Math.min(1.4, smellK(rec.decay)) * Math.pow(1 - d / R, 0.8) * (0.55 + 0.45 * Math.min(1, d / 15));   // dimmer at hand, where the body itself is plain to see
+        // dimmer at hand, where the body itself is plain to see; brighter far off, a beacon; capped (above it a few overlapping go white)
+        gain[n] = Math.min(1.2, g0 * Math.min(1.4, smellK(rec.decay)) * Math.pow(1 - d / R, 0.8) * (0.55 + 0.45 * Math.min(1, d / 15)) * (1 + 3 * Math.min(1, d / 800)));
         n++;
       }
       const nr = this.near;
