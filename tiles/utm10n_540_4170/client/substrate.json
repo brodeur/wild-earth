@@ -1,0 +1,553 @@
+{
+ "encoding": {
+  "png": "client/substrate.png",
+  "pixels": 2000,
+  "resolution_m": 5.0,
+  "row0": "north",
+  "R": "exposed rock 0..255 (0..1)",
+  "G": "lithology index, 1-based into lithologies (0 none)",
+  "B": "exposed patch size: round(32 log2(1 + area / 100 m2)), 0 outside a patch"
+ },
+ "lithologies": [
+  {
+   "name": "granitic",
+   "form": "sheeted",
+   "cliff": true,
+   "facet_m": [
+    46.0,
+    9.0,
+    1.8
+   ],
+   "elong": 2.4,
+   "along": "dip",
+   "tilt_deg": [
+    11.0,
+    4.0,
+    1.5
+   ],
+   "open": [
+    0.55,
+    0.3,
+    0.0
+   ],
+   "steps": [
+    0.35,
+    0.15,
+    0.0
+   ],
+   "tone": 0.05,
+   "crack_m": 0.35,
+   "step_m": 1.5,
+   "talus": "blocks",
+   "colour": [
+    0.56,
+    0.54,
+    0.5
+   ],
+   "dip_deg": null,
+   "notes": "massive; exfoliation sheets parallel to the surface, two steep joint sets: big smooth faces, long cracks",
+   "index": 1,
+   "fraction": 0.0,
+   "exposed_fraction": 0.0,
+   "joints": {
+    "strikes_deg": [],
+    "source": "too few steep faces"
+   }
+  },
+  {
+   "name": "slate_phyllite",
+   "form": "fissile",
+   "cliff": true,
+   "facet_m": [
+    4.0,
+    1.1,
+    0.3
+   ],
+   "elong": 1.6,
+   "along": "strike",
+   "tilt_deg": [
+    5.0,
+    10.0,
+    9.0
+   ],
+   "open": [
+    0.8,
+    0.75,
+    0.7
+   ],
+   "steps": [
+    0.6,
+    0.55,
+    0.5
+   ],
+   "tone": 0.06,
+   "crack_m": 0.05,
+   "step_m": 0.25,
+   "talus": "plates",
+   "colour": [
+    0.27,
+    0.27,
+    0.27
+   ],
+   "dip_deg": 75.0,
+   "notes": "slaty cleavage, steep: crumbly faces of many small plates and edges, platy talus",
+   "index": 2,
+   "fraction": 0.0,
+   "exposed_fraction": 0.0,
+   "fabric": {
+    "strike_deg": 325.0,
+    "dip_deg": 75.0,
+    "strike_source": "regional default (N35W)",
+    "contacts": null,
+    "dip_source": "lithology default"
+   },
+   "joints": {
+    "strikes_deg": [],
+    "source": "too few steep faces"
+   }
+  },
+  {
+   "name": "schist",
+   "form": "foliated",
+   "cliff": true,
+   "facet_m": [
+    8.0,
+    2.0,
+    0.5
+   ],
+   "elong": 2.0,
+   "along": "strike",
+   "tilt_deg": [
+    6.0,
+    11.0,
+    8.0
+   ],
+   "open": [
+    0.7,
+    0.6,
+    0.4
+   ],
+   "steps": [
+    0.5,
+    0.4,
+    0.3
+   ],
+   "tone": 0.06,
+   "crack_m": 0.08,
+   "step_m": 0.4,
+   "talus": "plates",
+   "colour": [
+    0.36,
+    0.35,
+    0.33
+   ],
+   "dip_deg": 70.0,
+   "notes": "wavy foliation, silvery; slabby faces",
+   "index": 3,
+   "fraction": 0.0,
+   "exposed_fraction": 0.0,
+   "fabric": {
+    "strike_deg": 325.0,
+    "dip_deg": 70.0,
+    "strike_source": "regional default (N35W)",
+    "contacts": null,
+    "dip_source": "lithology default"
+   },
+   "joints": {
+    "strikes_deg": [],
+    "source": "too few steep faces"
+   }
+  },
+  {
+   "name": "greenstone_metavolcanic",
+   "form": "blocky",
+   "cliff": true,
+   "facet_m": [
+    10.0,
+    2.4,
+    0.6
+   ],
+   "elong": 1.25,
+   "along": "dip",
+   "tilt_deg": [
+    12.0,
+    15.0,
+    8.0
+   ],
+   "open": [
+    0.6,
+    0.5,
+    0.4
+   ],
+   "steps": [
+    0.45,
+    0.35,
+    0.2
+   ],
+   "tone": 0.08,
+   "crack_m": 0.1,
+   "step_m": 0.5,
+   "talus": "rubble",
+   "colour": [
+    0.29,
+    0.31,
+    0.27
+   ],
+   "dip_deg": null,
+   "notes": "massive to blocky, irregular joints; knobby dark faces",
+   "index": 4,
+   "fraction": 0.0,
+   "exposed_fraction": 0.0,
+   "joints": {
+    "strikes_deg": [],
+    "source": "too few steep faces"
+   }
+  },
+  {
+   "name": "sandstone_conglomerate",
+   "form": "bedded",
+   "cliff": true,
+   "facet_m": [
+    16.0,
+    3.0,
+    0.7
+   ],
+   "elong": 2.2,
+   "along": "bedding",
+   "tilt_deg": [
+    8.0,
+    6.0,
+    3.0
+   ],
+   "open": [
+    0.6,
+    0.4,
+    0.2
+   ],
+   "steps": [
+    0.6,
+    0.3,
+    0.1
+   ],
+   "tone": 0.07,
+   "crack_m": 0.12,
+   "step_m": 0.8,
+   "talus": "blocks",
+   "colour": [
+    0.48,
+    0.43,
+    0.36
+   ],
+   "dip_deg": 12.0,
+   "notes": "bedded: ledges and overhangs along the beds, vertical joints between",
+   "index": 5,
+   "fraction": 0.2062,
+   "exposed_fraction": 0.0065,
+   "fabric": {
+    "strike_deg": 329.7,
+    "dip_deg": 12.0,
+    "strike_source": "geologic contacts",
+    "contacts": {
+     "strike_deg": 149.7,
+     "resultant": 0.253,
+     "contact_km": 49.33
+    },
+    "dip_source": "lithology default"
+   },
+   "joints": {
+    "strikes_deg": [],
+    "source": "too few steep faces"
+   }
+  },
+  {
+   "name": "basalt",
+   "form": "columnar",
+   "cliff": true,
+   "facet_m": [
+    12.0,
+    1.1,
+    0.3
+   ],
+   "elong": 4.0,
+   "along": "dip",
+   "tilt_deg": [
+    10.0,
+    14.0,
+    5.0
+   ],
+   "open": [
+    0.3,
+    0.9,
+    0.4
+   ],
+   "steps": [
+    0.3,
+    0.6,
+    0.2
+   ],
+   "tone": 0.05,
+   "crack_m": 0.06,
+   "step_m": 0.4,
+   "talus": "columns",
+   "colour": [
+    0.17,
+    0.17,
+    0.17
+   ],
+   "dip_deg": null,
+   "notes": "columnar jointing: vertical columns about a metre across",
+   "index": 6,
+   "fraction": 0.0,
+   "exposed_fraction": 0.0,
+   "joints": {
+    "strikes_deg": [],
+    "source": "too few steep faces"
+   }
+  },
+  {
+   "name": "volcanic",
+   "form": "blocky",
+   "cliff": true,
+   "facet_m": [
+    8.0,
+    2.0,
+    0.5
+   ],
+   "elong": 1.4,
+   "along": "dip",
+   "tilt_deg": [
+    12.0,
+    15.0,
+    8.0
+   ],
+   "open": [
+    0.6,
+    0.5,
+    0.4
+   ],
+   "steps": [
+    0.45,
+    0.35,
+    0.2
+   ],
+   "tone": 0.08,
+   "crack_m": 0.08,
+   "step_m": 0.5,
+   "talus": "rubble",
+   "colour": [
+    0.33,
+    0.31,
+    0.29
+   ],
+   "dip_deg": null,
+   "notes": "andesite, rhyolite, tuff and mudflow rock: blocky, rough",
+   "index": 7,
+   "fraction": 0.0,
+   "exposed_fraction": 0.0,
+   "joints": {
+    "strikes_deg": [],
+    "source": "too few steep faces"
+   }
+  },
+  {
+   "name": "serpentinite",
+   "form": "scaly",
+   "cliff": true,
+   "facet_m": [
+    4.0,
+    1.0,
+    0.3
+   ],
+   "elong": 1.5,
+   "along": "strike",
+   "tilt_deg": [
+    8.0,
+    18.0,
+    14.0
+   ],
+   "open": [
+    0.7,
+    0.7,
+    0.6
+   ],
+   "steps": [
+    0.5,
+    0.5,
+    0.4
+   ],
+   "tone": 0.07,
+   "crack_m": 0.04,
+   "step_m": 0.2,
+   "talus": "chips",
+   "colour": [
+    0.24,
+    0.29,
+    0.25
+   ],
+   "dip_deg": 60.0,
+   "notes": "sheared: scaly, slickensided lenses, waxy green",
+   "index": 8,
+   "fraction": 0.0,
+   "exposed_fraction": 0.0,
+   "fabric": {
+    "strike_deg": 325.0,
+    "dip_deg": 60.0,
+    "strike_source": "regional default (N35W)",
+    "contacts": null,
+    "dip_source": "lithology default"
+   },
+   "joints": {
+    "strikes_deg": [],
+    "source": "too few steep faces"
+   }
+  },
+  {
+   "name": "limestone_marble",
+   "form": "massive",
+   "cliff": true,
+   "facet_m": [
+    26.0,
+    5.0,
+    1.0
+   ],
+   "elong": 1.8,
+   "along": "dip",
+   "tilt_deg": [
+    8.0,
+    4.0,
+    2.0
+   ],
+   "open": [
+    0.5,
+    0.25,
+    0.05
+   ],
+   "steps": [
+    0.3,
+    0.1,
+    0.0
+   ],
+   "tone": 0.05,
+   "crack_m": 0.2,
+   "step_m": 0.8,
+   "talus": "blocks",
+   "colour": [
+    0.58,
+    0.57,
+    0.54
+   ],
+   "dip_deg": null,
+   "notes": "massive; solution flutes down the face",
+   "index": 9,
+   "fraction": 0.0,
+   "exposed_fraction": 0.0,
+   "joints": {
+    "strikes_deg": [],
+    "source": "too few steep faces"
+   }
+  },
+  {
+   "name": "surficial",
+   "form": "none",
+   "cliff": false,
+   "facet_m": [
+    3.0,
+    0.8,
+    0.2
+   ],
+   "elong": 1.0,
+   "along": "dip",
+   "tilt_deg": [
+    14.0,
+    10.0,
+    5.0
+   ],
+   "open": [
+    0.5,
+    0.4,
+    0.2
+   ],
+   "steps": [
+    0.3,
+    0.2,
+    0.1
+   ],
+   "tone": 0.06,
+   "crack_m": 0.0,
+   "step_m": 0.0,
+   "talus": "none",
+   "colour": [
+    0.42,
+    0.39,
+    0.34
+   ],
+   "dip_deg": null,
+   "notes": "alluvium, till, talus, dune sand, fill, landslides: no bedrock face (a cut bank at most)",
+   "index": 10,
+   "fraction": 0.4018,
+   "exposed_fraction": 0.0,
+   "joints": {
+    "strikes_deg": [],
+    "source": "too few steep faces"
+   }
+  }
+ ],
+ "units": {
+  "1": {
+   "name": "Pliocene marine rocks",
+   "rock_class": "sandstone_conglomerate",
+   "lithology": "sandstone_conglomerate",
+   "why": "rock class sandstone_conglomerate",
+   "fraction": 0.0481
+  },
+  "2": {
+   "name": "Quaternary alluvium and marine deposits",
+   "rock_class": "alluvium",
+   "lithology": "surficial",
+   "why": "name: surficial deposit",
+   "fraction": 0.2485
+  },
+  "3": {
+   "name": "Upper Cretaceous marine rocks, unit 1 (Upper Great Valley Sequence)",
+   "rock_class": "sandstone_conglomerate",
+   "lithology": "sandstone_conglomerate",
+   "why": "rock class sandstone_conglomerate",
+   "fraction": 0.0645
+  },
+  "4": {
+   "name": "water",
+   "rock_class": "other",
+   "lithology": "surficial",
+   "why": "water",
+   "fraction": 0.0117
+  },
+  "5": {
+   "name": "Quaternary sand deposits, unit 1 (coastal)",
+   "rock_class": "alluvium",
+   "lithology": "surficial",
+   "why": "name: surficial deposit",
+   "fraction": 0.1416
+  },
+  "6": {
+   "name": "Franciscan Complex, unit 1 (Coast Ranges)",
+   "rock_class": "sandstone_conglomerate",
+   "lithology": "sandstone_conglomerate",
+   "why": "rock class sandstone_conglomerate",
+   "fraction": 0.0935
+  }
+ },
+ "stats": {
+  "exposed_fraction": 0.0211,
+  "exposed_mean": 0.0312,
+  "patches": 707,
+  "patches_over_1000m2": 112,
+  "patches_over_1ha": 31,
+  "largest_patch_m2": 534175,
+  "slope_source": "max(5 m, 0.85 x 1 m mean)",
+  "cover_source": "lidar canopy_height_10m (tree >= 4 m, shrub 0.5-4 m)",
+  "photo": "client/texture_imagery.jpg (NAIP, humans erased)",
+  "photo_green_ref": 0.0632,
+  "dem": "terrain/dem.tif"
+ },
+ "formula": "on the 5 m grid from the DEM (and the 1 m lidar DEM where the tile has it), the canopy (lidar tree and\nshrub cover at 10 m, else LANDFIRE EVC tree cover at 30 m), the NAIP photo and the soils:\n    steep    = smoothstep(28, 52, slope)            slope = max(5 m slope, 0.85 x the 1 m slope's 5 m mean)\n    bare     = (1 - tree) (1 - 0.5 shrub)            on a tile without lidar: 1 - 0.6 tree (EVC is coarse)\n    spectral = (1 - smoothstep(0.35 ref, 0.75 ref, exg)) (0.55 + 0.45 smoothstep(0.18, 0.42, luma)) grey\n               on the humans-erased NAIP (client/texture_imagery.jpg: roofs and roads are not rock); exg the photo's excess green (2G - R - B) / (R + G + B) over 5 m: grey or pale, not green; ref the\n               median exg under tree cover over 50% on this tile (the photo's own green, at least 0.06); grey =\n               1 - 0.6 smoothstep(0.04, 0.09, yel), yel = (R - B) / (R + G + B): dry summer grass is pale too, but yellow\n    convex   = 1 + 0.25 clip(TPI / 3 m, -1, 1)       TPI = z - its 40 m gaussian mean (spurs and rims are barer)\n    prior    = the soil map unit's Rock outcrop component % / 100\n    rock     = 0 on surficial deposits (a cut bank past 60 degrees keeps 0.5) and water, else 1\n    exposed  = clip(rock (steep bare^0.7 (0.3 + 0.7 spectral) convex + 0.45 prior smoothstep(15, 35, slope) spectral), 0, 1)\n    and at any slope at least rock bare (1 - smoothstep(0.25 ref, 0.5 ref, exg)) smoothstep(0.40, 0.55, luma) times 0.9 on\n    LANDFIRE's barren class (client/habitat.png 8), else 0.6 (1 - smoothstep(0.02, 0.05, yel)): the pale bare slabs (the\n    backs of the domes), which are rock though no cliff\nthen a 5 m gaussian. A patch is a connected run (8-neighbour) of cells over 0.5."
+}

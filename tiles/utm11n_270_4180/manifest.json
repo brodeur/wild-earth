@@ -15,7 +15,7 @@
   37.830918414113654
  ],
  "size_m": 10000,
- "generated_at": "2026-10-28T08:13:42Z",
+ "generated_at": "2026-11-03T23:16:42Z",
  "generator": {
   "name": "wild-earth-pipeline",
   "version": "0.2.0"
@@ -2386,6 +2386,58 @@
    "encoding": "R = fall acorn_mast score 0..100",
    "sha256": "a9b628b61bf99749a7cd1ed049ae99a84fee7eb271821bd775c46d862b08f4ac",
    "bytes": 19462
+  },
+  "client.substrate": {
+   "path": "client/substrate.png",
+   "kind": "raster",
+   "crs": "EPSG:32611",
+   "bounds": [
+    270000,
+    4180000,
+    280000,
+    4190000
+   ],
+   "pixels": 2000,
+   "resolution_m": 5.0,
+   "encoding": {
+    "png": "client/substrate.png",
+    "pixels": 2000,
+    "resolution_m": 5.0,
+    "row0": "north",
+    "R": "exposed rock 0..255 (0..1)",
+    "G": "lithology index, 1-based into lithologies (0 none)",
+    "B": "exposed patch size: round(32 log2(1 + area / 100 m2)), 0 outside a patch"
+   },
+   "derived_from": [
+    "geology.units",
+    "geology.classes",
+    "soils.mapunits",
+    "terrain.dem",
+    "imagery.naip",
+    "vegetation"
+   ],
+   "exposed_fraction": 0.1229,
+   "exposed_mean": 0.1391,
+   "patches": 1691,
+   "patches_over_1000m2": 418,
+   "patches_over_1ha": 99,
+   "largest_patch_m2": 2572125,
+   "slope_source": "max(5 m, 0.85 x 1 m mean)",
+   "cover_source": "LANDFIRE EVC tree cover (30 m, smoothed)",
+   "photo": "client/texture_imagery.jpg (NAIP, humans erased)",
+   "photo_green_ref": 0.2025,
+   "dem": "terrain/dem.tif",
+   "sha256": "980f96e89cbf3b3c7947e613033259f3b399b206d0158ff7a1d3fec6a71257e3",
+   "bytes": 1797888
+  },
+  "client.substrate_classes": {
+   "path": "client/substrate.json",
+   "kind": "table",
+   "derived_from": [
+    "client.substrate"
+   ],
+   "sha256": "0ae92f2a4aeecbe984d07f350c944117965b5ec34ffe707f46fabcee81cd153d",
+   "bytes": 12179
   }
  },
  "sources": {
@@ -3037,6 +3089,42 @@
    "step": "derive",
    "at": "2026-10-28T08:13:42Z",
    "seconds": 31.2,
+   "ok": true
+  },
+  {
+   "step": "substrate",
+   "at": "2026-11-03T19:41:27Z",
+   "seconds": 7.8,
+   "ok": true
+  },
+  {
+   "step": "substrate",
+   "at": "2026-11-03T19:44:52Z",
+   "seconds": 6.8,
+   "ok": true
+  },
+  {
+   "step": "substrate",
+   "at": "2026-11-03T19:48:22Z",
+   "seconds": 7.1,
+   "ok": true
+  },
+  {
+   "step": "substrate",
+   "at": "2026-11-03T20:06:42Z",
+   "seconds": 7.1,
+   "ok": true
+  },
+  {
+   "step": "substrate",
+   "at": "2026-11-03T23:14:07Z",
+   "seconds": 10.4,
+   "ok": true
+  },
+  {
+   "step": "substrate",
+   "at": "2026-11-03T23:16:42Z",
+   "seconds": 8.2,
    "ok": true
   }
  ]

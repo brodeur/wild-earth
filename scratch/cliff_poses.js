@@ -81,9 +81,9 @@ window.__cliffGpu = (states, n = 30) => new Promise(res => {
   step();
 });
 window.__cliffStates = () => { const we = window.__we, U = we.terrain.uniforms; return [
-  { name: 'old', apply: () => { U.cliffOn.value = 0; we.cliffs.set(false); } },
-  { name: 'step1', apply: () => { U.cliffOn.value = 1; we.cliffs.set(false); } },
-  { name: 'step2', apply: () => { U.cliffOn.value = 1; we.cliffs.set(true); } },
+  { name: 'old', apply: () => { U.cliffOn.value = 0; we.cliffs?.set(false); } },
+  { name: 'step1', apply: () => { U.cliffOn.value = 1; we.cliffs?.set(false); } },
+  { name: 'step2', apply: () => { U.cliffOn.value = 1; we.cliffs?.set(true); } },
 ]; };
 // The rims where the rim rule (rims.js) raises the most: the wall west of Yosemite Falls (3600-3670, 6630-6860)
 window.__cliffRims = () => ({
