@@ -3775,3 +3775,49 @@ animals to do the behaviors as well." Decided:
   buried vole within 15 m digs over it and pounces when the tunnel shows it.
 - Registered in `games.json` by a pipeline rule (`pipeline/games.py` PLAYS): the vole's burrow-shelter games and the
   coyote's hunt of the vole carry `play: ['dig']`, the tile `plays.dig`; the client digs only for a species listed there.
+
+## 2026-11-02: Scavenge, a death in the world lasts a day (docs/game-scavenge.md, branch claude/scavenge-game-e5b676)
+
+Aaron: "New game: Scavenge. When an animal dies, it begins to decompose over the course of 1 day. It emits a smell
+'dead animal' and appears to glow from an appropriate distance for carrion eaters." Decided:
+
+- **The stages are drawn on the body that fell, by one number.** The dead animal keeps its instance in its species'
+  mesh and its bedded pose; its gait phase, free once the fall is over, carries the decay and the share eaten, and every
+  animal shader reads it (bloat, sink, dull, open, dry). Rejected: a carcass model of its own per species and stage (a
+  mesh per stage and species, and the catch's pose lost), a per-instance attribute (the deer's skin path is at 12 of
+  Metal's 16 slots and the buck's at 15), a texture (the 16 units are full). The bones are the one new mesh.
+- **A day by mass, the heat and the feeding.** A deer 24 h, a jackrabbit or brush rabbit 12, a vole or lizard 6;
+  summer half again as fast, winter two thirds; the afternoon faster, integrated over the age so the hour of the kill
+  does not change the day; a bite advances the decay by 0.45 of its share and an emptied store is bones. The first build
+  multiplied the whole age by the current hour's heat (a deer killed at 8 pm was bones at 19 h).
+- **The smell is the existing scent, its reach by stage, with slots of its own.** A fresh kill carries three quarters
+  of the nose's carrion reach (a coyote's 340 m downwind), a bloated one a third more than the reach (580 m; the
+  vulture's 1 km), a dried one half, bones a fifth. Its label is "dead animal" until the scent is strong enough to
+  name the species. Two slots are the carcasses' own: in a meadow the voles and squirrels filled every one of the 24
+  sniff slots and the dead deer at 0.2 was never drawn.
+- **The glow is a forager's pool near, a beacon far.** Within 60 m a pool of light on the ground (forage.js's halo); by
+  300 m it faces the eye and rises, grows to stay a few pixels and brightens up to four times. The reach by species:
+  the vulture 3 km, the raven 400 m, the coyote 150, the bear 120, the lion 60 (its own or a lion's kill).
+- **A meat store and bites, not a feed flag.** The player's and the AI's feeds take kilos by species (the coyote 1.5,
+  a raven's stab burst 0.12) and fill the belly by that share; the flank darkens as the store goes down.
+- **The AI by what it notices, in a pecking order.** The vulture and the raven by eye (the vulture once the kill
+  smells), the coyote and the bear by the nose and the wind, the coyote mostly at dusk and night; the birds give way to
+  a canid, bear or lion feeding, the coyote to a bear or lion. The vulture circles low and does not land (no ground
+  model): a gap.
+- **Shared on the dig channel's socket, as Dig.** `carrion` in the world's snapshot and log, `cev` messages with their
+  own `cseq`, a birth stamped with the server's clock, feeds as kilos, the sweep removing what a day has taken;
+  anonymous (species codes only). The carcass's id is the animal's: a page that holds a live animal of that id kills it
+  when the world reports the carcass, and a cell that spawns it again while its carcass lies there gets the carcass.
+  When the shared-animals lane lands, the kill is a server-ordered event and the carcass hangs on it.
+- **Verified** (the machine at load 10-30 from other lanes, the page stepped by hand where its frames crawled): a deer
+  killed as the lion through every stage to bones (montages at 0-23.5 h, and at 12, 26, 52 per cent eaten); the
+  coyote 300 m downwind smelling a fresh deer ("dead animal", faint) and following the wisp alone from 280 m to it,
+  the label turning to "deer · dead" at 160 m; E there taking 1.5 kg bites; the vulture 1.7 km off and 260 m up seeing
+  it glow with its stage on the panel; a vulture circling over a two-hour carcass, two ravens feeding in stab bursts,
+  an AI coyote smelling a jackrabbit carcass at dusk and feeding, then sent to the deer, the ravens taking off; the
+  carcass back after reloads at its age from the server; tests/test_carrion.py. Not resolved: the frame cost. With ten
+  carcasses in view the frame has 6 more draw calls (of about 500) and 29 thousand more triangles (of 12.3 million),
+  and the module's own update is under 0.01 ms; the GPU frame time at the 10th percentile was 37.2 ms against 36.1
+  without them, but the medians (63 and 46 ms) and tails swung by tens of ms with the other lanes' load, so the
+  difference is inside the noise. Not seen: the bear or the fox at carrion, a summer carcass, two pages at one carcass
+  at once (the tests do that on the server), a vole or lizard carcass's stages up close.

@@ -205,7 +205,11 @@ draws each, step by step as the branch lands them (docs/decisions.md "the catch 
 onto its side and the drop follow the square of time (gravity: slow to start, hard at the ground), the gait's
 amplitude slackens to nothing, the pose goes to the species' rest (the deer's bed clip blended in at a third of its
 usual time; a lizard flat), the running pitch levels; where it died on a rock it stays on the rock. The lizard is prey
-(solitary, nothing to unwind): the fox's pounce, the raven's and the jay's takes land on it.
+(solitary, nothing to unwind): the fox's pounce, the raven's and the jay's takes land on it. Then it is carrion for a
+real day (Scavenge, 2026-11-02, `docs/game-scavenge.md`, `client/src/carrion.js`): the body lies in that pose and
+decays through stages drawn on it (bloated, the upper flank opened as it is fed on, dried, then a few pale bones that
+fade), smells of "dead animal" farther as it bloats, glows for the carrion eaters, and is shared through the game
+server so every player sees the same carcass at the same stage; the ten-minute carrion and the bury step are gone.
 
 **Felidae: the leap and the neck bite.** The mountain lion is a stalk-and-ambush cat with small lungs that cannot run
 far; it closes in cover, then an explosive series of bounds, strikes from behind, launches onto the prey's back and
