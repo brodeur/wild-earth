@@ -7,6 +7,7 @@
   "architectural_model": "Rauh",
   "deciduous": true,
   "height_m": [15, 24],
+  "stature": {"typical_m": 16, "tall_m": 28, "record_m": 35, "source": "typical: Silvics, most mature trees about 15 m; tall: Silvics, large trees often 30 m; record: an estimate (Silvics' largest known in 1977, 30.8 m, is a size record); read 2026-11-02"},
   "variants": [
     {"name": "young", "weight": 0.25, "height_m": [6, 12], "trunk_radius": 0.65, "crown_scale": 0.8, "branches": 0.8, "set": {"trunk": {"length_ratio": 0.55, "split_prob": 0.25}, "foliage": {"clumps": {"radius_m": 0.9}}}, "note": "a slender young tree or a clump of sprouts from a cut stump, crown narrow and upright"},
     {"name": "mature", "weight": 0.5, "seeds": 1, "note": "the file as written"},

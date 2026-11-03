@@ -7,6 +7,7 @@
   "architectural_model": "Rauh",
   "deciduous": false,
   "height_m": [8, 18],
+  "stature": {"typical_m": 12, "tall_m": 22, "record_m": 37.8, "source": "typical: FEIS 5-30 m, the record's height_m 8-18 (the foothill canyons' trees are low); tall: Silvics 18-30 m with conifers, 30 m in sheltered canyons, lowered for the foothills; record: the AF champion, San Bernardino Co., 124 ft (37.8 m); read 2026-11-02"},
   "variants": [
     {"name": "young", "weight": 0.25, "height_m": [3, 8], "trunk_radius": 0.7, "crown_scale": 0.9, "branches": 0.85, "set": {"trunk": {"stems": [1, 3], "stem_spread_deg": 28}, "crown": {"envelope": {"profile": [[0.03, 0.45], [0.15, 0.58], [0.35, 0.62], [0.55, 0.58], [0.72, 0.48], [0.86, 0.32], [1.0, 0.08]]}}}, "note": "a dense, rounded shrub-like tree from one to three stems, leafy to the ground"},
     {"name": "mature", "weight": 0.55, "seeds": 1, "note": "the file as written"},

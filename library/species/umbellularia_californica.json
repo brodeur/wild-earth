@@ -7,6 +7,7 @@
   "architectural_model": "Rauh (provisional)",
   "deciduous": false,
   "height_m": [10, 20],
+  "stature": {"typical_m": 16, "tall_m": 28, "record_m": 33, "source": "typical: Silvics and FEIS 12-24 m; tall: Silvics, 30 m or more on bottomlands; record: FEIS's largest recorded, Mendocino Co., 108 ft (33 m); read 2026-11-02"},
   "variants": [
     {"name": "young", "weight": 0.25, "height_m": [3, 8], "trunk_radius": 0.65, "crown_scale": 0.9, "branches": 0.8, "set": {"trunk": {"stems": [2, 6], "stem_spread_deg": 26}}, "note": "a dense shrubby clump of upright stems, leafy to the ground"},
     {"name": "mature", "weight": 0.55, "seeds": 1, "note": "the file as written"},

@@ -5,6 +5,7 @@ import { bodyScale, onBodyScale } from './bodyScale.js';
 import { SEASON_LOOK } from './season.js';
 import { rockKeep } from './tilepackage.js';
 import { hasCrowns, loadCrowns, planCrownsSteps, oldClassOf, crownId, crownOf, SCALE, ASPECT } from './crowns.js';
+import { stature, siteFactor, emergentOf, drawTree } from './stature.js';
 import { runSliced, drain } from './slice.js';
 import { releaseGeometry } from './gpuRelease.js';
 
@@ -590,17 +591,27 @@ export class Vegetation {
       if (Math.hypot(cx - x, cn - north) > r) continue;
       const plan = cellPlan(tile, i, j); if (!plan) continue;
       const { rnd, nTrees, nShrubs, treeMix, shrubMix } = plan, nRip = riparianExtra(tile, i, j, crowns);
+      const kE = crowns ? -1 : emergentOf(i, j, nTrees + nRip);   // the cell's emergent, as an index among its trees (stature.js)
+      let site = -1;   // the cell's site factor (stature.js), once a canopy tree needs it
       for (let k = 0; k < nTrees + nShrubs + nRip; k++) {
         const isTree = k < nTrees || k >= nTrees + nShrubs, rip = k >= nTrees + nShrubs;
         let name = pick(isTree ? treeMix : shrubMix, rnd());
         const vdraw = rnd();
         let px = (i + rnd()) * res, pn = size - (j + rnd()) * res;
-        const s = 0.75 + rnd() * 0.5, rot = rnd() * Math.PI * 2;   // all draws before any skip, so neighbours keep their place
+        const us = rnd(), rot = rnd() * Math.PI * 2;   // all draws before any skip, so neighbours keep their place
+        let s = 0.75 + us * 0.5;   // a shrub's, a young tree's or a snag's scale; a canopy tree's height comes from its species' curve
         if (rip) { const at = tile.water.woodyPoint(i, j, res, hash(k, i + j * 4096, 61) / 4294967296); if (!at) continue; px = at[0] + (hash(k, i, 63) / 4294967296 - 0.5) * 5; pn = at[1] + (hash(k, j, 67) / 4294967296 - 0.5) * 5; }
         name = zoneSpecies(tile, i, j, k, isTree, name, px, pn);   // a bank, terrace or pond-shore plant takes its zone's species
         const sid = resolveSpecies(name), variants = this.slots[sid]; if (!variants) continue;
-        const e = variants[Math.floor(vdraw * variants.length)], m = e.mid;   // slot draw as before: VARIANTS slots, weighted by class
+        let v = Math.floor(vdraw * variants.length);   // slot draw as before: VARIANTS slots, weighted by class
         if (isTree && crowns) continue;   // after the draws, so the shrubs stand where they always did
+        const st = isTree ? stature(sid) : null;
+        if (st && st.canopy[v]) {   // a canopy tree: its height from the curve, its class (and so its slot) from the height
+          if (site < 0) site = siteFactor(tile, i, j);
+          const T = drawTree(st, i, j, k, us, site, (rip ? k - nShrubs : k) === kE);
+          v = T.v; s = Math.min(SCALE[1], Math.max(SCALE[0], T.h / variants[v].height));   // as the far record's (impostors.js mapRecords)
+        }
+        const e = variants[v], m = e.mid;
         if (m.n >= m.cap) continue;   // after the draws: a full model slot must not shift the rest of the cell (impostors use the same sequence)
         // Decayed roads: nothing on the pavement; trees thin out across the verge (shrubs creep in).
         // Nothing in ponds or stream channels; trees thin out toward a stream (placementSkip) but for

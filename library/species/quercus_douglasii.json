@@ -7,6 +7,7 @@
   "architectural_model": "Rauh",
   "deciduous": true,
   "height_m": [9, 12.5],
+  "stature": {"typical_m": 10, "tall_m": 15, "record_m": 28.7, "source": "typical: the record's growth curve, 9.4 m at 80 y to 12.8 at 200 (Jepson eFlora: tree 6-20 m); tall: the growth curve's 14 m asymptote; record: Silvics' champion, Alameda Co., 94 ft (28.7 m); read 2026-11-02"},
   "growth": {
     "note": "The growth tool's inputs (tools/grow_species.mjs,     docs/tree-architecture.md). The counter-case to the valley oak: slow growth,     a small crown for its height,     heavy self-pruning; it must come out compact and crooked,     never weeping.",
     "leaf_type": "broadleaf",

@@ -203,3 +203,12 @@ instance carries the ground's normal at its foot and its vertex shader moves the
 bends the first 1.8 m from the normal to the vertical (treegen.js `trunkFlex`, `SLOPE_BEND_M`; vegetation.js `groundLean`).
 Verified at a walker's eye and from the air on 45 and 50-degree slopes of the home tile; the decisions entry has the
 choice (a per-instance attribute over baked slope classes) and what is not bent.
+
+Also in the placement, 2026-11-02 (Aaron: "some trees live significantly longer and get significantly bigger on a bell
+curve, so the horizon should be more irregular"), the first part of step 3's "age classes blend by the drawn height":
+on tiles without lidar crowns a canopy tree's height is drawn from its species' size curve (`client/src/stature.js`, a
+log-normal on the record's `stature` typical and tall heights, truncated at the record, with an emergent in about one
+cell of 250 trees) and its age class is the one that holds that height, the top 8 % of the curve old, so the rare giant
+is drawn with the veteran's limbs, as the lidar tiles already did from the measured crowns. The decisions log has the
+diagnosis (the class ranges, the uniform scale and the far tier's rescale capped every species) and the numbers.
+

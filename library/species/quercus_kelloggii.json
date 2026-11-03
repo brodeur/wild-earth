@@ -7,6 +7,7 @@
   "architectural_model": "Rauh",
   "deciduous": true,
   "height_m": [10, 22],
+  "stature": {"typical_m": 17, "tall_m": 26, "record_m": 37.8, "source": "typical: FEIS 9-25 m; tall: Silvics, 100-year dominants average 26 m on the Sierra's east slopes; record: 37.8 m, Silvics' largest living tree (FEIS: the 124 ft champion, Siskiyou NF); read 2026-11-02"},
   "variants": [
     {"name": "sprout clump", "weight": 0.12, "height_m": [2.5, 6], "trunk_radius": 0.5, "crown_scale": 0.9, "branches": 0.6, "leaf_density": 0.9, "set": {"trunk": {"stems": [2, 4], "stem_spread_deg": 18, "split_prob": 0.1, "length_ratio": 0.6}, "epiphytes": {"mistletoe": {"prob": 0}}}, "note": "a clump of slim stems sprouting from the root crown of a tree killed by fire, as black oak does"},
     {"name": "young", "weight": 0.25, "height_m": [6, 12], "trunk_radius": 0.7, "crown_scale": 0.8, "branches": 0.85, "set": {"trunk": {"length_ratio": 0.6, "split_prob": 0.25}, "crown": {"envelope": {"profile": [[0.25, 0.18], [0.4, 0.28], [0.55, 0.32], [0.7, 0.3], [0.84, 0.22], [1.0, 0.06]]}}, "epiphytes": {"mistletoe": {"prob": 0.1}}}, "note": "a narrow, upright crown on a straight stem, as young trees grow among the pines"},

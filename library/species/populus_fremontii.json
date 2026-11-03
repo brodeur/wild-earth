@@ -7,6 +7,7 @@
   "architectural_model": "Rauh",
   "deciduous": true,
   "height_m": [15, 24],
+  "stature": {"typical_m": 20, "tall_m": 30, "record_m": 34.1, "source": "typical: FEIS 6-34 m, Jepson ssp. fremontii < 20 m; tall: an estimate between them; record: FEIS's 112 ft top of the range (34.1 m; the AF champion, Arizona, is 31.1 m); read 2026-11-02"},
   "variants": [
     {"name": "young", "weight": 0.25, "height_m": [6, 12], "trunk_radius": 0.65, "crown_scale": 0.8, "branches": 0.8, "set": {"trunk": {"length_ratio": 0.55, "split_prob": 0.3}, "foliage": {"clumps": {"radius_m": 0.8}}}, "note": "a fast-growing young tree, taller than wide, still with a leader"},
     {"name": "mature", "weight": 0.5, "seeds": 2, "note": "the file as written"},

@@ -7,6 +7,7 @@
   "architectural_model": "Rauh",
   "deciduous": false,
   "height_m": [12, 22],
+  "stature": {"typical_m": 18, "tall_m": 25, "record_m": 41.1, "source": "typical: Silvics and FEIS, mature trees average 12-24 m; tall: Gymnosperm Database 12-21(25) m; record: 41.1 m near Grass Valley (Van Pelt 2020, the AF champion, Nevada Co., 135 ft); read 2026-11-02"},
   "variants": [
     {"name": "young", "weight": 0.3, "height_m": [6, 12], "trunk_radius": 0.8, "crown_scale": 0.8, "branches": 0.8, "deadwood": 0.12, "set": {"trunk": {"split_prob": 0.15, "lean_deg": 8}}, "note": "a single leaning leader, crown open and narrow"},
     {"name": "mature", "weight": 0.5, "seeds": 2, "note": "the file as written"},

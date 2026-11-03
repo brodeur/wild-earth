@@ -7,6 +7,7 @@
   "architectural_model": "Rauh",
   "deciduous": true,
   "height_m": [18.5, 25.5],
+  "stature": {"typical_m": 20.5, "tall_m": 30, "record_m": 46.6, "source": "typical: the record's growth curve at 80 y (20.6 m), FEIS 9-23 m; tall: between the growth curve's 21 m asymptote and Jepson eFlora's < 35 m, a judgement; record: the Henley Oak, Mendocino Co., 153 ft (46.6 m, AF register); read 2026-11-02"},
   "growth": {
     "note": "The growth tool's inputs (tools/grow_species.mjs,     docs/tree-architecture.md): the tree grown through its life by its limb mechanics and the generator's age classes fitted to it. Each value with its source and the date it was read.",
     "leaf_type": "broadleaf",

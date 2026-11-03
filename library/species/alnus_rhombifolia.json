@@ -7,6 +7,7 @@
   "architectural_model": "Rauh",
   "deciduous": true,
   "height_m": [13, 22],
+  "stature": {"typical_m": 15, "tall_m": 25, "record_m": 27.7, "source": "typical and tall: FEIS usually 5-25 m; record: FEIS's champion, 91 ft (27.7 m), Polk Co., Oregon; Jepson eFlora: trunk < 35 m; read 2026-11-02"},
   "variants": [
     {"name": "young", "weight": 0.25, "height_m": [5, 10], "trunk_radius": 0.75, "crown_scale": 0.95, "branches": 0.8, "set": {"crown": {"envelope": {"profile": [[0.16, 0.16], [0.3, 0.26], [0.45, 0.29], [0.6, 0.27], [0.75, 0.21], [0.88, 0.13], [1.0, 0.03]]}}}, "note": "a slim, conical young tree with its leader still running to the top"},
     {"name": "mature", "weight": 0.5, "seeds": 2, "note": "the file as written"},

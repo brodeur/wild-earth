@@ -3896,3 +3896,75 @@ Aaron: "New game: Scavenge. When an animal dies, it begins to decompose over the
   without them, but the medians (63 and 46 ms) and tails swung by tens of ms with the other lanes' load, so the
   difference is inside the noise. Not seen: the bear or the fox at carrion, a summer carcass, two pages at one carcass
   at once (the tests do that on the server), a vole or lizard carcass's stages up close.
+
+## 2026-11-02: tree heights on a long-tailed curve, the giants drawn (client/src/stature.js)
+
+Aaron: "On a flat plane like the bottom of yosemite valley, it's very clear there is an upper bound to trees - the
+horizon looks flat. Really, some trees live significantly longer and get significantly bigger on a bell curve, so the
+horizon should be more irregular." Diagnosed on the Yosemite tile (DEM only, no crown list), three causes:
+
+- **The near and mid forest**: a tree was its slot's class tree times a uniform 0.75-1.25, so every species stopped at
+  1.25 x its tallest class tree (ponderosa 53.7 m in the mid set), and a rare species' one shared tree was its whole
+  range (every cottonwood 17 m +-25 %, max 21.3; valley oak 24.5; ash 22.1).
+- **The far tier beyond about 1.75 km** threw each record's scale away and drew the baked tree at the species range's
+  spread about it (`hrange`: ponderosa +-15 % about the baked 32 m), and the atlas bakes one or two trees a species
+  (no old-growth): every far ponderosa on the tile was 40.2 m or less. That is the flat line along the valley.
+- **The clamp** `SCALE` [0.4, 1.7] (crowns.js) on a drawn tree's height scale, shared by the far records.
+
+Decided:
+
+- **A size curve per species, the class from the height.** A canopy tree (a slot of the base or old class) takes its
+  height from a log-normal fitted to the species' typical (median) and tall (95th percentile) heights and truncated
+  at its record, at the quantile of the placement's own scale draw (the same random number, so nothing moves); the
+  stand's tree cover (x0.88 in a closed stand) and slope (x1.1 on a flat floor) shift the curve. One 30 m cell in 250
+  trees holds an emergent at tall x 1 to 1.35 (hash of the cell). The class is the one whose range holds the height,
+  the old class for the top 8 % of the curve and every emergent (the lidar tiles' rule is the top 5 % by size), and
+  the slot one of that class's by hash. Young classes and snags keep their class range and the uniform scale: the
+  regeneration and the dead stay as they were. Rejected: a Weibull (two parameters fit the same two numbers; the
+  log-normal's quantile is one probit); stretching every slot by the curve (the poles would vanish into the canopy).
+- **The far records carry the drawn height.** A cell tree's record holds its target height (negative), as a crown's
+  already did, and `mapRecords` scales the baked tree that stands in for it to that height; a young tree's or a snag's
+  record carries its slot tree's height x its scale, which also fixes the hand-over for them (they were drawn as the
+  atlas's stand-in times the near scale: a 2.6 m young canyon oak was 3.4 m far, a ponderosa snag 23 m near was 27 m
+  far). The far tier keeps the record's height at every distance with a +-6 % jitter (`FAR_JITTER`).
+- **The clamp raised to [0.4, 3]**, the near forest clamped the same way so both sides agree: a rare species' one
+  shared tree scaled to a giant (a 13 m buckeye on its 4.6 m tree) and a giant black oak far, drawn as the baked
+  mature 12.7 m tree, need it. The giants' crowns widen with them (the instance scale is uniform), as an old tree's do.
+
+Measured on the Yosemite tile (the far records, every tree on the tile): ponderosa p50 29.5 -> 32.6 m, p99 40.0 ->
+52.2, max 40.2 -> 64; incense cedar max 27.5 -> 54.9; black oak 15.8 -> 31.7; cottonwood 21.3 -> 38.4; Douglas-fir
+58.8 -> 76.8 (default numbers by form, before the records carry their own). Near and far heights agree for 39,200 of
+39,415 trees within 2 % (mean 0.07 %); the rest are young trees under the 0.4 clamp on a taller stand-in. Same
+placement (43,462 mid plants, 562,105 far records before and after).
+
+**The records' numbers** (second commit): every tree species carries `stature` (typical, tall, record, with the
+source beside them), read 2026-11-02 from Jepson eFlora and Silvics (both through 2024 Wayback snapshots: Jepson is
+behind a Cloudflare check, Silvics left srs.fs.usda.gov), FEIS, the National Champion Tree register's 2024 file, the
+Gymnosperm Database and mdvaden.com; the three growth blocks' height curves set the oaks' and ponderosa's typical
+heights. Where no measured record was found (interior live oak, Hinds walnut, bigleaf maple, the willows, the Sierra's
+Douglas-fir) the record is an estimate and says so; a champion on the register's points is not taken as the tallest.
+Canyon live oak's typical is lowered to its foothill class trees (12 m, not FEIS's mid-range). With them a species
+first piled up at its record (capping the height there: Douglas-fir p99 = max = 67 m): the curve is now truncated by
+its quantile (the draw spread under the record's), and the emergents' span is fitted under the record. A far record's
+scale on its baked stand-in may reach 4 (`FAR_SCALE_MAX`; the near forest stays at 3 on the slot's own tree): canyon
+live oak is baked as one 8.6 m tree. Yosemite's far records then: ponderosa p50 31.1, p95 45.7, p99 52.2, max 65.5 m;
+incense cedar 28.8, 44.9, 53.3, 64.6; black oak 13.2, 24.6, 29.6, 37.7; Douglas-fir 34.5, 55.5, 63.0, 67; cottonwood
+19.5, 29.5, 32.8, 34.1; valley oak 20.9, 30.3, 35.8, 43.3.
+
+**On the lidar tile** (the home tile, 395,356 crowns, checked third): heights are the crowns', so only the clamp and
+the classes were checked. The old clamp 1.7 capped 16,011 crowns (4 %) by up to 29.7 m; at 3, 142 still exceed it.
+The tallest crowns (ponderosa 54.5, 54.0, 51.5 m) are drawn at their height on the old-growth tree (43 m, x1.27) with
+their landmark ids. The far tier now keeps every crown's measured height at any distance (before, beyond about
+1.75 km it was the species' spread about the baked tree). Found, not fixed: the crown plan gives a few 49-51 m crowns
+to madrone, sycamore and black oak (chooseSpecies falls back to the row's tallest-capable species when none reaches
+the crown), and those species draw one shared mature tree (12.7 m madrone), now stretched x3 to 38 m where it was
+x1.7 to 22 m; the species fit could read the records' `stature` record instead of the class ranges.
+
+**Cost**: the same draw calls and triangles at the home tile's poses before and after (316 / 7.73 M from the air, 423 /
+9.36 M on the ground) and within 3 % at Yosemite's (river bank 424 / 15.006 M before, 423 / 15.012 M after); the GPU
+timer-query medians overlap (the pane's GPU time wandered 18-38 ms round to round at one pose, so no finer claim).
+No console errors on either tile.
+
+Not done here: the meadow belt on the valley floor is mostly broadleaf (LANDFIRE's mix there: alder, willow,
+cottonwood, bay, ash, valley oak), so the ponderosa and incense cedar giants that stand over the real valley's
+meadows are few near them; sugar pine and white fir are not in the library.
