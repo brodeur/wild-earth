@@ -501,7 +501,7 @@ export class GroundControl {
     if (u >= 1) {   // the landing: the kill within reach, or the miss (a twist away, and the rush that failed makes the hunter known: ground)
       P.y = g; this.setWet(F); this.mode = 'ground'; this.leap = null; this.v = S.walk * 0.5;
       const c = this.animals.catchNear(P.x, P.y, P.z);
-      if (c) this.caught(c); else { this.twist = { t: C.twist, s: Math.random() < 0.5 ? -1 : 1 }; this.say('the leap misses'); }
+      if (c) this.caught(c); else if (!this.animals.catchAsked) { this.twist = { t: C.twist, s: Math.random() < 0.5 ? -1 : 1 }; this.say('the leap misses'); }   // (asked of the animal host: its answer comes as a catch or a miss, animals.js)
     }
     this.spd = this.v; this.inAir = true;
   }
@@ -534,7 +534,7 @@ export class GroundControl {
       if (u >= 1) {
         P.y = g; this.setWet(F); Q.t = 0;
         const c = this.animals.catchNear(P.x, P.y, P.z);
-        if (c) { this.caught(c); Q.ph = 'toss'; } else { Q.ph = 'paw'; this.say('the pounce misses'); }
+        if (c) { this.caught(c); Q.ph = 'toss'; } else { Q.ph = 'paw'; if (!this.animals.catchAsked) this.say('the pounce misses'); }
       }
     } else if (Q.ph === 'toss') {   // the kill taken in the jaws with a toss of the head
       Q.t += dt; ps.flick = damp(ps.flick, -1.2, 14, dt); ps.pitch = damp(ps.pitch, 0, 8, dt); ps.amp = 0;

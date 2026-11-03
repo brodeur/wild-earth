@@ -38,6 +38,8 @@ import { SquirrelControl } from './squirrelControl.js';
 import { WoodpeckerControl } from './woodpeckerControl.js';
 import { SpiritControl } from './spirit.js';
 import { RemotePlayers } from './players.js';
+import { AnimalNet, PG } from './animalNet.js';
+import { bodySample } from './bodySample.js';
 import { GroundControl } from './groundControl.js';
 import { FlierControl } from './flierControl.js';
 import { SHORT, playAs } from './playable.js';
@@ -188,6 +190,7 @@ async function disposeWorld(w, renderer) {
   const m = w.m;
   // the modules' own page-level state first (closing the game's socket redraws its HUD row, so before the sweep)
   try { m.acorns?.net?.leave?.(); } catch (e) { /* closing */ }
+  try { m.anet?.leave?.(); } catch (e) { /* closing */ }   // the shared animals' socket (animalNet.js)
   try { m.sound?.ctx?.close?.(); } catch (e) { /* closing */ }
   if (m.weather) m.weather.onThunder = null;
   m.abilities?.dispose?.();   // the body's row: its slots go, the row hides (abilities.js)
@@ -562,6 +565,12 @@ async function buildSteps(w, { params, pending, direct = false, arrive = null })
   // During an acorn game the woodpeckers, squirrels and ravens gather from the game's acorns (game: acorns).
   await w.next('animals');
   const animals = new Animals({ tile, scene, flight, veg, atmosphere, camera, identify, game: acorns });
+  // The shared animals (animalNet.js, docs/multiplayer.md "Shared animals"): the game socket's animals channel, joined for
+  // the tile and season; one page in the world runs the animals for everyone and the rest mirror it. The three channels
+  // of the page (the acorn game's, the dig's, this) carry one page id (PG), so the server names one page the AI host of all.
+  acorns.net.pg = PG;
+  const anet = w.m.anet = new AnimalNet(animals, { pg: PG });
+  anet.join(tile.id, seasonNow()); anet.season = seasonNow();
   // The playable squirrel (squirrelControl.js): drives flight.pos and the camera in place of the raven when chosen.
   await w.next('controls');
   const squirrel = new SquirrelControl({ tile, scene, camera, flight, veg, animals, acorns, atmosphere, rocks, caption: $('caption') });
@@ -593,7 +602,7 @@ async function buildSteps(w, { params, pending, direct = false, arrive = null })
   // The Dig game (dig.js, docs/game-dig.md): the tile's tunnels, chambers, holes and pits, shared through the game
   // server's world for the tile and season; the vole digs and walks them, the coyote digs pits, the AI voles use them.
   const dig = w.m.dig = new Dig({ tile, scene, camera, flight, ground, animals, squirrel, needs, season: seasonNow });
-  ground.dig = dig; animals.dig = dig;
+  ground.dig = dig; animals.dig = dig; dig.net.pg = PG;
   const hunt = w.m.hunt = new Hunt({ tile, animals, flight, ground, needs, el: $('hunt') });   // the hunt loop's goal and arc (hunt.js)
   const scent = w.m.scent = new Scent({ tile, animals, flight, ground, flier, scene, camera, squirrel, labels: $('scentLabels') });   // the smell sense: wisps round the head toward each scent (scent.js); the squirrel's own control smells too
   hunt.scent = scent;   // the hunt panel's "scented" state (hunt.js)
@@ -603,6 +612,9 @@ async function buildSteps(w, { params, pending, direct = false, arrive = null })
   const cues = w.m.cues = new SoundCues({ tile, animals, flight, camera, el: $('soundCues') });   // ring waves on the screen where a predator or prey is heard (soundCues.js)
   hunt.sight = sight;   // the hunt panel's "spotted" and "it sees you" (hunt.js)
   needs.onStarve = () => { ground.say('starved: the body lies down and the spirit leaves it'); setTimeout(() => { if (ground.on || flier.on) toSpirit(); }, 2200); };
+  // a mirror's catch, confirmed by the host (animals.js request): the body that struck is fed and says so; a miss is said
+  animals.onCaught = c => { if (ground.on) ground.caught(c); else if (flier.on) flier.took(c); else { needs.fed?.(); ground.say(`took a ${animals.speciesList()[c.sp]?.one || 'prey'}`); } };
+  animals.onMiss = () => ground.say('the catch misses');
   const onBody = (code, sex = null) => {
     window.__we.playerSpecies = code; window.__we.playerSex = sex;
     animals.setObserver(code); showPerceives(code);
@@ -613,7 +625,7 @@ async function buildSteps(w, { params, pending, direct = false, arrive = null })
   $('spiritBtn').onclick = () => { spirit.leave(); renderer.domElement.focus?.(); };
   // The other players of the group (players.js): their wisps, names, edge marks and map dots from the hub's relayed
   // positions (multiplayer.js feeds them while in the room); nothing to draw on the dev paths with no hub.
-  const players = w.m.players = new RemotePlayers({ scene, renderer, camera, flight, minimap, maps: spirit.wisp.maps, marks: $('herdMarks'), labels: $('playerLabels'), nameOf: mp ? id => mp.social?.nameOf(id) || 'someone' : null });
+  const players = w.m.players = new RemotePlayers({ scene, renderer, camera, flight, animals, minimap, maps: spirit.wisp.maps, marks: $('herdMarks'), labels: $('playerLabels'), nameOf: mp ? id => mp.social?.nameOf(id) || 'someone' : null });
   spirit.setOthers(players);
   const toSpirit = () => { squirrel.setOn(false); woodpecker.setOn(false); ground.setOn(false); flier.setOn(false); spirit.setOn(true); onBody('spirit'); };
   // The body's row (abilities.js): its status bars and its abilities, one slot each with its key, along the bottom right.
@@ -689,7 +701,7 @@ async function buildSteps(w, { params, pending, direct = false, arrive = null })
   const setFov = deg => { const v = Math.min(LENS_RANGE[1], Math.max(LENS_RANGE[0], +deg || LENS_DEFAULT)); camera.fov = v; camera.updateProjectionMatrix(); return v; };
   const setHour = h => { state.hour = +h; $('time').value = state.hour; return state.hour; };
   animals.weatherTemp = () => (weather.day ? weather.fx.temp : null);   // the lizards' air (animals.js airT)
-  w.handle = window.__we = { setDate, setFov, setHour, weather, tile, flight, raven, camera, veg, terrain, far, grass, forbs, emergents, roads, scene, renderer, minimap, atmosphere, sky, acorns, identify, places, peek, setPeek, sound, animals, arrival, rocks, water, waterfalls: water.waterfalls, squirrel, woodpecker, ground, flier, spirit, players, credits, sight, cues, forage, needs, dig };   // debugging handle
+  w.handle = window.__we = { setDate, setFov, setHour, weather, tile, flight, raven, camera, veg, terrain, far, grass, forbs, emergents, roads, scene, renderer, minimap, atmosphere, sky, acorns, identify, places, peek, setPeek, sound, animals, anet, arrival, rocks, water, waterfalls: water.waterfalls, squirrel, woodpecker, ground, flier, spirit, players, credits, sight, cues, forage, needs, dig };   // debugging handle
   const as = direct ? params.get('as') : null;
   if (!['raven', 'squirrel', 'woodpecker'].includes(as)) toSpirit();   // a spirit from the start (behind the opening screen too)
   if (!screenOpen) makeSound();
@@ -723,7 +735,7 @@ async function buildSteps(w, { params, pending, direct = false, arrive = null })
     closeScreen();
     // the hub's room is this tile from here (the tile chat, the group's positions; multiplayer.js): the spirit's position
     // goes to the group at 5 Hz, and a joiner's arrival follows the picker's
-    mp?.entered(tile.id, { flight, arrival, players, lead: c.lead || null, form: () => w.handle?.playerSpecies || 'spirit',
+    mp?.entered(tile.id, { flight, arrival, players, lead: c.lead || null, form: () => w.handle?.playerSpecies || 'spirit', body: (out, cst) => bodySample(w.handle, out, cst),
       caption: p => { const cap = $('caption'); if (cap && !cap.hidden) cap.querySelector('.cap-text').textContent = captionFor(p, seasonNow()); } });
   };
   const known = new WeakSet(), used = new WeakSet(), drawable = o => o.isMesh || o.isPoints || o.isLine || o.isSprite;   // meshes compiled ahead (below)
@@ -874,6 +886,7 @@ async function buildSteps(w, { params, pending, direct = false, arrive = null })
     else if (squirrel.on && !arrival.active) scent.update(dt);   // the gray squirrel's own control smells too (its game is the acorns, not the needs)
     forage.update(dt);   // the forager's food plants lit and their halos (forage.js; off in any other body)
     dig.update(dt);   // the Dig game's world, its openings in the ground, its glow (dig.js)
+    if (s !== anet.season) { anet.season = s; anet.join(tile.id, s); }   // the season's animals channel (animalNet.js)
     if ((ground.on && ground.mode !== 'tunnel') || flier.on || (squirrel.on && !arrival.active)) { sight.update(dt); cues.update(dt); } else if (ground.on) { sight.clear(); cues.update(dt); } else { sight.clear(); cues.clear(); }   // underground (dig.js): heard, not seen   // the eyes and the ears (sight.js, soundCues.js)
     spirit.blendCamera(dt);   // across a switch of body: drawn from a blend of the old view and the new control's (spirit.js)
     raven.update(dt, flight.flapping, flight.speed);

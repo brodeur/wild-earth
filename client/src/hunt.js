@@ -45,7 +45,7 @@ export class Hunt {
     if (this.el) this.el.hidden = !this.on;
   }
   onKill(e) {
-    if (!this.on || e.by !== this.animals.observer) return;
+    if (!this.on || !e.mine) return;   // this player's catch (animals.js kill): not an AI hunter of its species, not another player's
     this.kills++; this.total++; this.save();
   }
   // the nearest live prey of a species the player's hunts, within HUNT_R, or null
@@ -53,7 +53,7 @@ export class Hunt {
     const A = this.animals, prey = A.preySlots?.[this.k]; if (!prey) return null;
     let best = null, bd = HUNT_R * HUNT_R;
     for (const a of A.list) {
-      if (!prey.has(a.sp) || a.dead || a.culled || a.air) continue;
+      if (!prey.has(a.sp) || a.dead || a.culled || a.air || a.remote) continue;
       const d2 = (a.x - x) ** 2 + (a.z - z) ** 2; if (d2 < bd) { bd = d2; best = a; }
     }
     return best;

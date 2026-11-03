@@ -112,7 +112,7 @@ export class GameNet {
     const w = this.want; if (!w || !this.ws) return;
     const r = this.epoch;
     this.ws.send(JSON.stringify({ t: 'hello', v: PROTOCOL, tile: w.tile, season: w.season, species: this.game.player.species,
-      ...(r === null ? {} : { r, sid: this.roundSid(r) }) }));
+      ...(this.pg ? { pg: this.pg } : {}), ...(r === null ? {} : { r, sid: this.roundSid(r) }) }));   // pg: the page's id, shared with its dig and animals channels (main.js)
   }
 
   // ---- joining and leaving ------------------------------------------------------------------------

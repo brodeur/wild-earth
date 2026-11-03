@@ -392,6 +392,107 @@ together. Lane 3 needs lane 1's screen in main; lane 4 needs 1 to 3. Lane 5 is l
    added to the protocol then), the two toggles live, a small tile of each member's video by their avatar.
    Not before the four above are in.
 
+## Shared animals
+
+Aaron, 2026-11-02, after two browsers on the site: "Do both users see the same animals moving the same direction? One
+interesting wrinkle is that each user can see the other, but not in their animal form." Until then each browser ran
+its own animals, so two players saw different herds and a kill was not shared. Built the same day
+(`client/src/animalNet.js`, `animals.js` mirror mode, `server.py` `GameWorld.animals_*`, `tests/test_animals.py`).
+
+**One authority per tile and season.** One page in a world, the animal host, runs `animals.js` as before for everyone
+in the world; every other page mirrors it. The host is the page the server names: the acorn game's AI host when that
+page is on the animals channel, else the first to join the channel; the AI collectors, the AI's digging and the animals
+are one page's (each page sends a random page id `pg`, memory only, on its acorn, dig and animals channels, so the
+server can match the three sockets of one page). When the host leaves, the server names the next page, which starts
+simulating from where its mirror last had each animal: the live set is rebuilt round the remaining players and every
+animal found in the mirror is released into the AI where it stood (as a body the player leaves is), carcasses stay
+where they lie. Alone in a world, or with no game endpoint (a static host, `?net=0`, the dev paths), the page is its
+own host and nothing changes.
+
+**What the host simulates.** Every page sends the host where it is, rounded to 10 m, and what it perceives as (its
+species, or spirit), once a second (`apos`, to the host alone, never kept); the host's live set covers a 400 m circle
+round each player and the species any player perceives, and its far-animal rule (ground animals past 250 m think on
+alternate frames; rabbits, voles and jackrabbits past their cull distance do not think) is judged from the nearest
+player, not only its own eye.
+
+**The protocol** (the game socket, `/api/game/ws`; JSON):
+
+```
+animals   {tile, season, pg}         -> awelcome {host, n, you, m: [members], aseq}   (join the channel)
+                                        ahost {host, n, you, m, aseq, full?}           (membership changed; full: send everything)
+ast       {s, u, d, g, at}           host -> server -> every other member, as it comes, kept nowhere
+aev       {c, e}                     host -> server -> everyone, numbered by aseq (memory only); the host's copy echoes c
+areq      {e}                        a mirror -> server -> the host, with from (the mirror's number)
+apos      {x, z, sp}                 a mirror -> server -> the host, with from; x, z rounded to 10 m
+```
+
+`ast` holds `s` spawns (per animal the host has not yet told: its number n, id, species, size, the sex or antler
+constants, its herd's number and rank, then its first full sample, so it is never drawn before it is placed), `u`
+updates (`[n, mask, ...the fields whose bit is set]`: a field unchanged since the last row sent is left out), `d` drops
+(numbers gone from the live set), `g` groups (number, leader, state, centre: the herd marks, the herd pilot and the
+sounds read them) and `at` the host's clock. The fields (`animalNet.js` FIELDS): x, y, z, yaw, pitch, roll, the gait's
+speed and turn rate, pose, the wings' or gait's amplitude, flick, visibility, lift, the four model channels e0 to e3,
+the state, the phase and its rate, flags (in the air, the raven's ground model, buried, hidden, dead) and the speed,
+each quantized (centimetres, milliradians, hundredths). `aev` carries the events that change the world: a kill (the
+prey's number, who killed it, where and how it fell), a carcass gone, a flush of a covey or a flock, a ground squirrel
+colony's alarm, an alarm call, a stoop, a hunt starting, a rally of a woodpecker family, and a catch refused (`miss`).
+`areq` asks the host for a catch (the prey's number, the point struck, the striker's species), a body taken (the
+player goes into an animal: the host takes it out of everyone's world) or given back (where and how it was left).
+
+**The rates and the cap.** The host's stream is 4 Hz. An animal within 80 m of any player gets a row every tick,
+within 250 m every other tick, beyond that every fourth; the rows go out most-overdue first until the tick's share of
+the cap is spent and the rest wait. **The cap is 24,000 bytes per second of JSON from the host** (6,000 a tick); the
+server relays the same bytes to each mirror, so a mirror receives at most the cap. Measured on the home tile (two
+pages, `?skip=1`): 20.8 KB/s out of the host and 19.8 KB/s into the mirror with the two players together and 232
+animals live; 23.9 KB/s, at the cap, with the players 600 m apart and about 330 animals, of which some rows waited a
+tick (about one in ten). A page alone on the channel sends nothing; a page joining makes the host send every animal's
+spawn and full sample once, over the cap for that tick. Dead animals are not streamed after their spawn: the kill
+event carries the last pose and the mirror lets the body fall and lie as the host does; the host's `gone` ends it.
+
+**The mirror** (`animals.js` `becomeMirror`, `mirrorSpawn`, `mirrorSample`, `mirrorStep`): each mirrored record holds
+two samples (two Float32Arrays on the record, no allocation per frame or per sample): where it was drawn when the
+newer came, and the newer. It eases from one to the other over their measured spacing (0.1 to 1.2 s), carries on at
+that velocity for 0.4 s past the end, then holds; a jump over 20 m or a silence over 3 s snaps. Angles go the shorter
+way round, the state and flags step at once, the phase advances by its rate and is pulled to each sample. The rest of
+the update is the host's: the same instanced draw, the leg engine for the quadrupeds, the deer's clips, the far tier,
+the ravens' two models, the carried acorns. A mirror runs no AI (no hunts, alarms, coveys, flocks, colonies, defence
+of granaries, burials of carcasses); its perception, senses, the hunt panel, the needs, the catch and feeding read the
+mirrored animals. A mirror's catch (`catchNear`) asks the host instead of killing: the host checks the prey is the
+striker's and within its reach of the point struck (a metre's slack and 0.3 s of the prey's speed for the stream's
+lag) and orders the kill, which everyone sees, the striker as its own catch (fed, "caught a brush rabbit", the hunt
+panel's count); a refused one comes back as "the catch misses". The controls hold their own "misses" while the host's
+answer is on its way.
+
+**Seen** (2026-11-02, two pages on the home tile against the worktree's server, the pane hidden so the frames came
+from a timer at 13 to 16 a second): both pages listed the same 327 animals with the same ids, and the deer herds at
+the same positions; six squirrels sampled on both pages on one wall-clock schedule followed the same paths and
+headings, the mirror 0.3 to 1 s behind (the far ones get a row once a second under the cap); a lion's kill of a deer
+on the host lay on the mirror at the same point, on its side; the mirror's player went into a coyote (the host took
+it out of its world), set down at a brush rabbit and struck: the host killed that rabbit at the same point and the
+mirror said "caught a brush rabbit" and counted the kill; a strike claimed 50 m from a quail came back "the catch
+misses" with the quail alive; leaving the coyote gave it back to the host's AI where it stood; the host's page
+closed and the mirror became the host within a second, ran its own AI, and kept all 82 animals within 350 m of its
+player where they were (the largest move in the 5 s after, 10 m, an animal walking), dropping only those that lived
+round the player who had left. The acorn game on both pages: one page the host of the acorn, dig and animal channels,
+its gathering animals' 36 events accepted, 28 applied on the other page, and both drawing the same 16 acorns in the
+same animals' bills. The frame on the home tile with 232 animals: the mirror's animal update 0.40 ms median (0.50
+p90) plus 0.11 ms to decode each of the four messages a second; the host's 0.50 ms (0.70 p90) plus 0.44 ms per
+stream tick (`performance.now` in the pane resolves 0.1 ms; the GPU's work is the same instanced draw on both and was
+not measured). The server's tests: `tests.test_animals` (the relay to the others and not the host, state and events
+only from the host, the events' order, a request and a position to the host alone, the hand-over, the acorn host
+leading the animal host, nothing in the world's files or the log).
+
+**Open.** The fliers' detail: a soaring bird far off gets a row once a second and its wing beat is the phase rate
+between rows (fine for a soar, coarse for a hawk's stoop seen from far); the AI's internal targets (a hunter's prey,
+a raven's cache, a squirrel's path) are not streamed, so a mirror's sound cues and the field guide's witness cards that
+read them see less; the Dig game's AI voles' tunnel state is not mirrored (the position is). The far animals: beyond
+250 m a row comes every second or less, so a running deer far off moves in visible steps of its interpolation, and a
+host far from the others streams animals nobody near it sees. The rate under many players: the cap is per host, so
+ten players together share 24 KB/s of rows (more animals, the same bytes: the far ones wait); the server's relay
+copies each message to every mirror (no fan-out cost measured past two pages). A host on a slow machine is everyone's
+animals; there is no choice of host by capability. The host's own frame does the work for every player's
+surroundings (two players 600 m apart: about 330 animals instead of 230).
+
 ## Open
 
 - Federation of accounts: a user is a row on one hub. A handle of the form name@hub and signing in to

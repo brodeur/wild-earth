@@ -205,7 +205,7 @@ export class DigNet {
     clearTimeout(this.timer);
     if (this.ws) { const old = this.ws; this.ws = null; old.onclose = null; try { old.close(); } catch (e) { /* closing */ } }
     const ws = new WebSocket(`${location.protocol === 'https:' ? 'wss' : 'ws'}://${location.host}/api/game/ws`); this.ws = ws;
-    ws.onopen = () => ws.send(JSON.stringify({ t: 'dig', tile: this.want.tile, season: this.want.season }));
+    ws.onopen = () => ws.send(JSON.stringify({ t: 'dig', tile: this.want.tile, season: this.want.season, ...(this.pg ? { pg: this.pg } : {}) }));   // pg: the page's id, shared with its acorn and animals channels (main.js)
     ws.onmessage = m => { if (this.ws !== ws) return; let d; try { d = JSON.parse(m.data); } catch (e) { return; } this.on(d); };
     ws.onerror = () => {};
     ws.onclose = () => { if (this.ws !== ws) return; this.ws = null; this.connected = false; if (this.want) this.later(); };

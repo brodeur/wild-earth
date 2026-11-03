@@ -3775,3 +3775,32 @@ animals to do the behaviors as well." Decided:
   buried vole within 15 m digs over it and pounces when the tunnel shows it.
 - Registered in `games.json` by a pipeline rule (`pipeline/games.py` PLAYS): the vole's burrow-shelter games and the
   coyote's hunt of the vole carry `play: ['dig']`, the tile `plays.dig`; the client digs only for a species listed there.
+
+## 2026-11-02: shared animals: one page runs them, the others mirror its stream
+
+Aaron, after two browsers on the site: "Do both users see the same animals moving the same direction?" They did not:
+each browser ran its own. Decided (`docs/multiplayer.md` "Shared animals"):
+
+- **The host client simulates; the server only relays.** One page per world (tile and season) runs `animals.js` for
+  every player in the world and streams the state at 4 Hz; the server relays it to the others in memory and orders the
+  events that change the world (a kill, a carcass gone, a flush). Rejected: the animals on the server (Python would
+  need the whole AI, the terrain and the vegetation the AI reads; a port, not a relay); every page running the AI from a
+  shared seed (the AI reads the player's position and its own random draws every frame, so two pages part within
+  seconds); lockstep (the frame rates differ and a hidden tab stops).
+- **The AI host is one page.** The acorn game's AI collectors, the Dig game's AI digging and the animals are one
+  page's: the server matches a page's three sockets by a random page id and names the acorn game's AI host the host of
+  the other two. Rejected: separate hosts per channel (the collectors are animals; two pages would each run half an
+  animal).
+- **A mirror's catch is the host's decision.** The mirror asks; the host checks reach and orders the kill everyone
+  sees, or answers a miss. Rejected: the mirror kills and tells (two players striking the same rabbit would both eat
+  it); optimistic kills rolled back (a body that falls and gets up again).
+- **Interpolate, never simulate, on a mirror.** Two samples per animal, eased, extrapolated 0.4 s, snapped on a jump
+  or a silence; the state and the phase rate from the newer. The leg engine, the deer's clips and the far tier run on
+  the mirror from the streamed speed, turn rate and pose, so the legs look the same without streaming them.
+- **A byte cap, not a count.** 24 KB/s of JSON from the host, the near animals first, the far ones less often; a
+  spawn carries its first full sample so nothing is drawn unplaced. Binary packing was left for when the cap binds
+  with many players (JSON was kept so the server can stay a relay with no parser of its own).
+- **Hand-over from the mirror's last state.** The next host rebuilds the live set and releases each animal it was
+  mirroring into the AI where it stood, as a body the player leaves is; nothing vanishes near the players who stay.
+- Found in passing and fixed: the hunt panel counted an AI hunter's kill as the player's when they were the same
+  species (`hunt.js` read the kill's species); a kill now says whether it was the player's own (`mine`).

@@ -496,7 +496,7 @@ export class RavenFlight {
     const G = this.gnd, AN = window.__we?.animals, M = window.__weWorld?.()?.m, N = M?.needs, say = t => M?.ground?.say?.(t);
     const bx = this.pos.x - Math.sin(G.yaw) * 0.3, bz = this.pos.z - Math.cos(G.yaw) * 0.3, at = G.stabAt; G.stabAt = null;   // (peckT stays the stab's for the last dip; the next peck() resets it)
     if (!AN) return;
-    if (G.stabPrey) { const c = AN.catchNear(bx, G.feet, bz); if (c) { N?.fed?.(); say(`took a ${AN.speciesList()[c.sp]?.one || 'prey'}`); } else say('the stab misses'); }
+    if (G.stabPrey) { const c = AN.catchNear(bx, G.feet, bz); if (c) { N?.fed?.(); say(`took a ${AN.speciesList()[c.sp]?.one || 'prey'}`); } else if (!AN.catchAsked) say('the stab misses'); }   // (asked of the animal host: animals.js onCaught / onMiss)
     else if (at && this.fedAt !== at) { this.fedAt = at; N?.fed?.(); say(`fed at the ${AN.speciesList()[at.sp]?.one || 'carcass'}`); }
   }
   takeOff() {

@@ -285,9 +285,13 @@ browser stays the renderer.
   are seen (2026-11-02, `client/src/players.js`): each member in the same tile as a spirit wisp in their avatar's
   colours gliding between the relayed samples with their name over it within 60 m (a small wisp over the body of a
   member in a body), a dot in their hue on the mini-map pinned at the rim when beyond it, and off screen their
-  avatar at the screen's edge nearest them with the distance, as the herd marks place a herd member. Next: lane 5
-  (video and audio over WebRTC, signalling through the hub); the other players' bodies drawn as their species from
-  the relay; Discord needs Aaron's application registered; Google and Apple their keys.
+  avatar at the screen's edge nearest them with the distance, as the herd marks place a herd member. The animals are shared
+  (2026-11-02, `client/src/animalNet.js`, `docs/multiplayer.md` "Shared animals"): one page per world runs them for
+  everyone and streams them at 4 Hz under a 24 KB/s cap, the others mirror the stream through the same draw and leg
+  engine, kills and flushes are ordered events, a mirror's catch is confirmed by the host, and the next page takes
+  over when the host leaves. Next: lane 5 (video and audio over WebRTC, signalling through the hub); the other
+  players' bodies drawn as their species from the relay; the stream's rate under many players and the far fliers'
+  detail; Discord needs Aaron's application registered; Google and Apple their keys.
 
 ## Then
 
