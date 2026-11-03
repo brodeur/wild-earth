@@ -548,11 +548,12 @@ async function buildSteps(w, { params, pending, direct = false, arrive = null })
   const acorns = w.m.acorns = new AcornGame(tile, scene, flight, veg, {
     box: $('game'), carried: $('gameCarried'), stashed: $('gameStashed'), found: $('gameFound'), time: $('gameTime'), hint: $('gameHint'),
   });
-  const setGame = on => {
-    if (on) acorns.start(seasonNow()); else acorns.stop();
-    $('gameBtn').textContent = on ? 'Stop game' : 'Start game'; $('gameBtn').classList.toggle('on', on);
-  };
-  $('gameBtn').onclick = () => setGame(!acorns.running);
+  // Games always on (2026-11-02, Aaron: "Games, rather than being something you turn on, are always available and
+  // playable"): the acorn game starts with the world (the tile's shared world joined on entry), its box hidden until the
+  // player carries or caches an acorn in a collector body (acorns.js v5); no Start button. ?game=1 shows the box at once.
+  $('gameBtn').hidden = true;
+  acorns.start(seasonNow());
+  const setGame = on => { if (on) acorns.showBox(); };
   $('hoverBtn').onclick = () => { flight.setHover(!flight.hover); renderer.domElement.focus?.(); };
   if (params.get('game') === '1') setGame(true);
 
@@ -617,7 +618,7 @@ async function buildSteps(w, { params, pending, direct = false, arrive = null })
   animals.onMiss = () => ground.say('the catch misses');
   const onBody = (code, sex = null) => {
     window.__we.playerSpecies = code; window.__we.playerSex = sex;
-    animals.setObserver(code); showPerceives(code);
+    animals.setObserver(code); showPerceives(code); acorns.setBody(code);   // the acorn game: collecting only in a collector body (acorns.js v5)
     $('spiritBtn').hidden = code === 'spirit'; $('nearBar').hidden = code !== 'spirit';
     needs.setSpecies(code); hunt.setSpecies(code); setBodyScale(code);
   };

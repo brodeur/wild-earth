@@ -3814,3 +3814,21 @@ renderer for player bodies (the controls' own meshes, one per species, a second 
 engine); streaming the leg engine's joints (the gait inputs reproduce the legs on the receiving side, as for the AI).
 Kept: the wisp for a member in spirit form, the group-only relay (the privacy rule), and a remote body is no one's
 prey and no one's body to take.
+
+## 2026-11-02: games are always on; the acorn game's round is the season
+
+Aaron: "Games, rather than being something you turn on, are always available and playable." Decided
+(`docs/game-acorn-stash.md` "v5: always on"):
+
+- **No Start button; the world is joined on entry.** The acorn game starts with the world, so every page is in the
+  tile's shared world (the same socket as the shared animals and the dig) and the AI collectors gather on the AI host
+  all the time. Rejected: starting it on the first acorn the player touches (the AI collectors and the other players'
+  events would be missing until then, and the board would jump).
+- **Live in a collector body, quiet otherwise.** The player's acorn actions only in the raven, squirrel or woodpecker;
+  the game box hidden until the player first carries or caches. Rejected: the box at entry (a HUD panel for a game the
+  player may never play, in every body).
+- **The round is the calendar's season.** One round per calendar instance of the world's season (`season_label`:
+  "2026-fall"), with no length, begun on the first join and replaced when that season comes round a year later; the
+  board's columns are this season and all seasons. Player ids are still derived per round, so they rotate per season.
+  Rejected: a round per real-time window (a clock nobody started); one round forever (the ids would never rotate, and
+  a player's caches would be linkable across years).

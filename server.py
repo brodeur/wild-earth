@@ -337,6 +337,25 @@ HELD_MAX = 200                   # a player's events held while its id for a new
 # first to join; the pages are matched across the three channels by `pg`, a random id the page makes per world (memory
 # only). When the host leaves, the next is named and carries on from the state it mirrored.
 PG_RE = re.compile(r"^[0-9a-f]{8,32}$")
+# Games always on (2026-11-02, Aaron: "Games, rather than being something you turn on, are always available and
+# playable"): no Start; every page joins its world on entry, and a world's round is the season: the calendar's instance
+# of it at the tile (season_label: "2026-fall", the last time that season began there, meteorological, the south six
+# months on), started on the first join and replaced when the season comes round again. The round has no length
+# (length 0); the board's counts per round and per world are as before, and a player's id is derived per round as
+# before, so it now rotates per season.
+SEASON_START = {"spring": 3, "summer": 6, "fall": 9, "winter": 12}   # the month a season begins in the north
+
+
+def season_label(tile: str, season: str, now: float | None = None) -> str:
+    """The calendar instance of `season` at the tile: the year it last began there and the season, e.g. 2026-fall."""
+    t = time.gmtime(time.time() if now is None else now)
+    m0 = SEASON_START[season]
+    if re.match(r"^utm\d{1,2}s_", tile):
+        m0 = (m0 + 6 - 1) % 12 + 1
+    y = t.tm_year if t.tm_mon >= m0 else t.tm_year - 1
+    return f"{y}-{season}"
+
+
 APOS_MAX = 100_000.0             # m: an apos coordinate beyond this is dropped
 GAME_WORLDS: dict[tuple, "GameWorld"] = {}
 GAME_LOCK = threading.Lock()
@@ -1015,6 +1034,7 @@ class GameWorld:
 
     def join(self, conn: GameConn, species: str, sid: str | None, r) -> None:
         with self.lock:
+            self.season_round()               # the round is the season: begun (or begun again) before any id is asked
             if sid is None or r != self.epoch():
                 return conn.send({"t": "epoch", "r": self.epoch()})
             conn.pid = "p:" + hashlib.sha256(sid.encode()).hexdigest()[:12]
@@ -1181,6 +1201,25 @@ class GameWorld:
         for k in self.dconns:
             k.send({**out, "c": c} if k is sender else out)
 
+    def season_round(self, now: float | None = None) -> None:
+        """The round is the season (games always on): one round per calendar instance of this world's season, with no
+        length. A round of another instance (last year's fall), or an old timed round, ends with its winner and the new
+        one begins; a new round is a new epoch, so every player's id rotates."""
+        with self.lock:
+            label, r = season_label(self.tile, self.season, now), self.s["round"]
+            if r and r.get("cal") == label and not r["over"]:
+                return
+            if r and not r["over"]:
+                r["over"], r["winner"] = True, round_winner(r)
+                self.record({"t": "round", "round": r})
+            self.new_epoch()
+            self.s["rounds"] += 1
+            self.s["round"] = {"id": self.s["rounds"], "start": round(self.s["clock"], 2), "length": 0, "cal": label,
+                               "counts": {s: 0 for s in BOARD_SPECIES}, "by": {}, "over": False, "winner": None,
+                               "raided": {s: 0 for s in BOARD_SPECIES}, "mobbed": {}}
+            self.record({"t": "round", "round": self.s["round"]})
+            print(f"[game] {self.tile}/{self.season}: the {label} round began", flush=True)
+
     def start_round(self, length) -> None:
         with self.lock:
             r = self.s["round"]
@@ -1202,7 +1241,7 @@ class GameWorld:
             if self.conns:
                 self.s["clock"] += dt
                 r = self.s["round"]
-                if r and not r["over"] and self.s["clock"] - r["start"] >= r["length"]:
+                if r and not r["over"] and r["length"] and self.s["clock"] - r["start"] >= r["length"]:   # (a season's round: no length)
                     r["over"], r["winner"] = True, round_winner(r)
                     self.record({"t": "round", "round": r})
                     print(f"[game] {self.tile}/{self.season}: round {r['id']} over, winner {r['winner']}", flush=True)
@@ -1237,6 +1276,8 @@ class GameWorld:
             if self.dig_t <= 0:
                 self.dig_t = DIG_SWEEP_S
                 self.prune(time.time())
+                if self.conns:
+                    self.season_round()       # the season came round again while players were here
             self.dping_t -= dt
             if self.dping_t <= 0:   # the dig and animals channels' connections (never in conns): pinged, and dropped when silent
                 self.dping_t = PING_S
@@ -1257,7 +1298,7 @@ class GameWorld:
                     "caches": len(s["caches"]), "granaries": sum(s["granaries"].values()),
                     "stashes": sum(s["stashes"].values()), "raided": s["raided"], "mobbed": s["mobbed"],
                     "round": r and {k: r.get(k) for k in ("id", "length", "counts", "over", "winner", "raided", "mobbed")}
-                    | {"left": max(0.0, round(r["start"] + r["length"] - s["clock"], 1))}}
+                    | {"left": max(0.0, round(r["start"] + r["length"] - s["clock"], 1)) if r["length"] else None, "cal": r.get("cal")}}
 
 
 def game_world(tile: str, season: str) -> GameWorld:

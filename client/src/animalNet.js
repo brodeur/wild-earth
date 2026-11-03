@@ -25,6 +25,8 @@
 
 const TICK_MS = 250;                       // the host's stream: 4 Hz
 const CAP_BPS = 24000;                     // bytes per second of state the host sends (the cap; see the doc)
+const SPAWN_MSG = 30000;                   // bytes of spawns in one message at most: a join's full snapshot is spread over
+                                           // ticks (the server refuses a message over 64 KB, ws.py WS_MAX_IN)
 const NEAR_M = 80, MID_M = 250;            // m from the nearest player: every tick, every other, else every fourth
 const POS_MS = 1000;                       // a mirror's apos: once a second (and at once on a species change)
 const RETRY_MAX = 30000;
@@ -196,7 +198,7 @@ export class AnimalNet {
     const full = this.full; this.full = false;
     if (full) { for (const a of A.list) a.wsFull = true; for (const r of this.groups.values()) { r.leader = -2; r.state = NaN; } }
     const s = [], u = [], d = [], g = [];
-    const live = new Set();
+    const live = new Set(); let sBytes = 0;
     // the centres: the host's player and the mirrors (where the animals are judged near or far)
     const C = this.cs ||= []; C.length = 0; C.push(A.flight.pos.x, A.flight.pos.z);
     for (const c of this.centres.values()) C.push(c.x, c.z);
@@ -208,11 +210,12 @@ export class AnimalNet {
       live.add(a.id);
       const fresh = n === undefined;
       if (fresh) { n = ++this.nextN; this.known.set(a.id, n); this.byNum.set(n, a); a.n = n; this.stats.spawns++; }
-      if (fresh || full || a.wsFull) {   // the constants, then the first sample in full
+      if (fresh || full || a.wsFull) {   // the constants, then the first sample in full (past SPAWN_MSG: the next tick)
         a.wsFull = true; a.wtick = 0;
+        if (sBytes > SPAWN_MSG) { this.stats.deferred++; continue; }
         const sr = [n, a.id, a.sp, r2(a.size), a.variant || 0, a.male || 0, a.young || 0, r3(a.u1 ?? 0.5), r3(a.u2 ?? 0.5), r3(a.u3 ?? 0.5), a.group ? this.groupNumber(a.group) : -1, a.rank || 0];
         const row = this.row(a); for (let i = 1; i < row.length; i++) sr.push(row[i]);
-        s.push(sr); continue;
+        s.push(sr); sBytes += JSON.stringify(sr).length + 1; continue;
       }
       if (a.dead || a.culled) continue;
       let bd = Infinity;
@@ -233,7 +236,7 @@ export class AnimalNet {
       }
     }
     // the rows, until the tick's share of the cap
-    let bytes = 30 + JSON.stringify(s).length + JSON.stringify(d).length + JSON.stringify(g).length, budget = CAP_BPS * TICK_MS / 1000;
+    let bytes = 30 + sBytes + JSON.stringify(d).length + JSON.stringify(g).length, budget = CAP_BPS * TICK_MS / 1000;
     let k = 0;
     for (; k < due.length; k++) {
       const a = due[k], row = this.row(a); if (!row) { a.wtick = 0; continue; }

@@ -221,6 +221,10 @@ browser stays the renderer.
 - Needs: acorn woodpecker added to the species list and pipeline; an authoritative game
   server (the dev server grows into it; Rust is the candidate for the real node);
   WebSocket multiplayer (designed 2026-11-01: `docs/multiplayer.md`); AI behaviour trees driven by the activity calendar.
+- Always on (2026-11-02, Aaron: "Games, rather than being something you turn on, are always available and
+  playable"): no Start button, the shared world joined on entry, the player's acorn actions in a collector body,
+  the board shown once the player carries or caches, and the round is the calendar's season (player ids rotate
+  per season). `docs/game-acorn-stash.md` "v5: always on".
 
 - Water, next: the white water's open list (decisions.md 2026-11-01: a foam scale that follows the channel's
   width, spray and wet rock at a boil, the wide May spray cloud, the Cosumnes tile's cascades once its water pass has

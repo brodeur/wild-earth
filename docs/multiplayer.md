@@ -446,7 +446,9 @@ server relays the same bytes to each mirror, so a mirror receives at most the ca
 pages, `?skip=1`): 20.8 KB/s out of the host and 19.8 KB/s into the mirror with the two players together and 232
 animals live; 23.9 KB/s, at the cap, with the players 600 m apart and about 330 animals, of which some rows waited a
 tick (about one in ten). A page alone on the channel sends nothing; a page joining makes the host send every animal's
-spawn and full sample once, over the cap for that tick. Dead animals are not streamed after their spawn: the kill
+spawn and full sample once, at most 30 KB of them a message (the server refuses a message over 64 KB: the first
+build sent 67 KB for 499 animals in one and lost the host's socket), so a join costs a second or so over the cap:
+measured, 30.5 KB (222 animals) and 16.2 KB (121) in the first two ticks, then about 6 KB a tick. Dead animals are not streamed after their spawn: the kill
 event carries the last pose and the mirror lets the body fall and lie as the host does; the host's `gone` ends it.
 
 **The mirror** (`animals.js` `becomeMirror`, `mirrorSpawn`, `mirrorSample`, `mirrorStep`): each mirrored record holds

@@ -194,9 +194,7 @@ export class GameNet {
       this.confirmed.species = prev ? [...prev.species] : (Array.isArray(seen?.species) ? seen.species.filter(id => acornSpecies(id) === id) : []);
       for (const p of this.pending) this.send({ t: 'ev', c: p.c, e: p.e });   // still unanswered: the server decides
       this.rebuild();
-      const r = this.confirmed.round;
-      if (this.wantRound && (!r || r.over)) this.startRound(G.roundLength);
-      this.wantRound = false;
+      this.wantRound = false;   // v5: the server begins the season's round on join (server.py season_round); nothing to ask
       G.aiLocal = this.host; this.line();
       return;
     }

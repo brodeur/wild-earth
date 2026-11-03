@@ -6,7 +6,8 @@ that loop, as Aaron described it on 2026-10-24, with the details filled in.
 ## What the player does
 
 1. Press **Start game** in the panel. A game HUD appears: acorns carried, acorns stashed,
-   stashes found, elapsed time.
+   stashes found, elapsed time. (Since v5, 2026-11-02, there is no button: the game is on whenever the player is in
+   a world, and the HUD appears when the player first carries or caches an acorn; see "v5: always on" at the end.)
 2. Every oak (blue oak, interior live oak) carries a few acorns, as small brown nuts on
    the ground under its canopy and in its lower branches. Acorns **glow** as the raven
    gets close (from about 60 m), brighter the closer you are, so a loaded oak is
@@ -728,3 +729,34 @@ else's" to its new id (a pilfer of one's own old cache scores +1 / -1 for the sa
 and +1 on the "you" line); the 8781 dev server runs the v3 node until it is restarted, and
 until then it refuses raid and mob events (the client rolls them back) and its dig scoring
 differs from the client's (the 5 s sum corrects it with a console warning).
+
+## v5: always on (2026-11-02)
+
+Aaron: "Games, rather than being something you turn on, are always available and playable." So:
+
+- **No Start button.** `main.js` starts the game with the world (`acorns.start(season)` in the build); the panel's
+  button is hidden. Every page joins the tile's shared world on entry (the game socket, the same one the shared
+  animals and the dig use: `docs/multiplayer.md` "Shared animals"), so the AI collectors gather on the AI host
+  always, whether or not anyone plays.
+- **Live in a collector body, quiet elsewhere.** The player's own pickups, deposits, burials, digs and raids happen
+  only in a collector body: the raven, the gray squirrel, the acorn woodpecker (`acorns.setBody`, from `main.js`'s
+  `onBody`); in spirit form or another animal's body nothing the player does touches the acorns (the raven's pickup
+  is by proximity, so before this the spirit would have picked acorns up as it flew). The game box (acorns carried,
+  stashed, the field notes, the board, the hint) stays hidden until the player first carries or caches an acorn
+  (`showBox`), so the HUD is quiet at entry; then it stays for the world. `?game=1` shows it at once (a dev path).
+- **The round is the season.** The server begins the world's round on the first join (`server.py` `season_round`):
+  one round per calendar instance of the world's season at the tile (`season_label`: "2026-fall", the last time that
+  season began there, meteorological, the south six months on), with no length; the tick never ends it, and the
+  same season a year on ends it with its winner and begins the next. The client no longer asks for a round
+  (`start` is still accepted and ignored while the season's round runs). The board's columns read **season** (this
+  one) and **all** (every season here, all years); the round's clock row is hidden while the round has no length.
+  Offline (no server) the round is the season too (length 0); `?round=N` still makes a timed round for testing.
+- **Ids rotate per season.** A player's id in a world is still derived per world and per round (`net.js`: sha256 of
+  the browser's random id, the tile, the season and the round number), so it now changes once a season instead of
+  once a timed round; the privacy scheme is otherwise as v3's.
+- The dev paths alone (no server, `?net=0`) play as v2 did, without the button.
+
+Verified (2026-11-02, the home tile, two pages on the worktree's server): see the report row of the commit; tests:
+`tests.test_season_round` (the label north and south across a year's end; the first join begins the season's round,
+with no length; the tick never ends it; the same season a year on ends it and begins the next; the player's id
+rotates; an old client's Start is ignored).
