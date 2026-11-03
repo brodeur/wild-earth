@@ -44,6 +44,7 @@ const SPIRIT_CRUISE = 12, SPIRIT_MAX = 90, SPIRIT_BACK = 10, SPIRIT_FLOOR = 0.8;
 // rate toward the top (W) or the bottom (S) growing from SPIRIT_RAMP[0] per second to SPIRIT_RAMP[1] over
 // SPIRIT_RAMP_T s of holding, and since it is a rate toward the end speed, the speed eases into it.
 const SPIRIT_TAP = 2.5, SPIRIT_RAMP = [0.08, 2.2], SPIRIT_RAMP_T = 3;
+const ORBIT_PITCH = [-0.45, 1.15], ORBIT_HOLD = 0.8, ORBIT_BACK = 1.6;   // rad down and up from the set-up's own; s; 1/s
 const RAVEN_LOOK = 1.3;   // rad: how far the raven's head turns before the body follows a drag (flight.js look)
 const SPIRIT_FRAME = -0.45;   // where the wisp sits in the frame: this much of the half view below the middle (the lower third)
 // Scroll to zoom (owner, 2026-10-27): the wheel down zooms out, up zooms in. `zoom` scales the chase distance of every
@@ -93,6 +94,11 @@ export class RavenFlight {
     // moving (W, turns) settles the look back into the body's heading (settleLook: the body turns under a camera
     // that stays). headYaw is the uniform the player's material reads (animalModels.js animalMaterial head).
     this.look = 0; this.lookMax = 0; this.headYaw = { value: 0 }; this._d2 = new THREE.Vector3();
+    // The orbit (owner, 2026-11-02: "the pivot point is the character, not the camera"): a drag swings the camera round
+    // the body, orbitYaw about the vertical (any amount) and orbitPitch up or down (ORBIT_PITCH), and never turns the body
+    // or pitches a flight. Every control's camera adds the two to its own set-up and keeps the body where it was in the
+    // frame. Moving (a key, or flying on), ORBIT_HOLD s after the last drag, the orbit eases back behind (ORBIT_BACK).
+    this.orbitYaw = 0; this.orbitPitch = 0; this.orbitT = 9;
     this._zoom = 1; this.zoomTarget = 1; this._zoomAt = performance.now();   // the wheel's zoom (ZOOM_RANGE): every chase camera scales its distance by it
     window.addEventListener('wheel', e => {
       if (document.documentElement.classList.contains('opening') || e.target?.closest?.('#panel, #credits, #speciesCard, #opening, #fieldGuide')) return;
@@ -131,7 +137,7 @@ export class RavenFlight {
     window.addEventListener('keyup', e => this.keys.delete(e.code));
     dom.addEventListener('pointerdown', e => { this.drag = { x: e.clientX, y: e.clientY }; });
     window.addEventListener('pointerup', () => this.drag = null);
-    window.addEventListener('pointermove', e => { if (!this.drag) return; this.turnLook(-(e.clientX - this.drag.x) * 0.0035); this.pitch -= (e.clientY - this.drag.y) * 0.0025; this.drag = { x: e.clientX, y: e.clientY }; });
+    window.addEventListener('pointermove', e => { if (!this.drag) return; this.orbitBy(-(e.clientX - this.drag.x) * 0.0035, (e.clientY - this.drag.y) * 0.0025); this.drag = { x: e.clientX, y: e.clientY }; });
   }
   setHover(on) {
     if (on && this.sp.soar) this.soarDir = this.roll < -0.05 ? -1 : 1;   // a soar: on round the way it banks
@@ -145,6 +151,20 @@ export class RavenFlight {
     this.look += d; const m = this.lookMax;
     if (this.look > m) { this.yaw += this.look - m; this.look = m; } else if (this.look < -m) { this.yaw += this.look + m; this.look = -m; }
     this.headYaw.value = this.look;
+  }
+  // a drag: the camera round the body (see the constructor)
+  orbitBy(dy, dp) { this.orbitYaw = wrap(this.orbitYaw + dy); this.orbitPitch = THREE.MathUtils.clamp(this.orbitPitch + dp, ORBIT_PITCH[0], ORBIT_PITCH[1]); this.orbitT = 0; }
+  resetOrbit() { this.orbitYaw = 0; this.orbitPitch = 0; this.orbitT = 9; }
+  // each camera calls this once a frame: the orbit eases back behind once the body moves on; the head turns toward it
+  // going: whether the body is moving on (the walkers pass their keys; the fliers, a flight that is not hovering)
+  easeOrbit(dt, going = this.moving() || (!this.landed && !this.hover && Math.abs(this.speed) > 3)) {
+    if (this.drag) this.orbitT = 0; else this.orbitT += dt;
+    if (this.orbitT > ORBIT_HOLD && going && (this.orbitYaw || this.orbitPitch)) {
+      const k = 1 - Math.exp(-dt * ORBIT_BACK);
+      this.orbitYaw -= this.orbitYaw * k; this.orbitPitch -= this.orbitPitch * k;
+      if (Math.abs(this.orbitYaw) < 1e-3 && Math.abs(this.orbitPitch) < 1e-3) this.orbitYaw = this.orbitPitch = 0;
+    }
+    if (this.lookMax) this.headYaw.value = THREE.MathUtils.clamp(this.look + 0.7 * this.orbitYaw, -this.lookMax, this.lookMax);
   }
   settleLook(dt, k = 3) { if (!this.look) return; const d = this.look * (1 - Math.exp(-dt * k)); this.yaw += d; this.look -= d; if (Math.abs(this.look) < 1e-4) this.look = 0; this.headYaw.value = this.look; }
   get lookYaw() { return this.yaw + this.look; }
@@ -620,6 +640,7 @@ export class RavenFlight {
   }
   updateCamera(dt, dir) {
     const cam = this.camera;
+    this.easeOrbit(dt);
     // camK: 0 the flight set-up, 1 the ground's (lower, closer, a three-quarter view); eased both ways
     const gk = this.camK += ((this.landed ? 1 : 0) - this.camK) * (1 - Math.exp(-dt * 4));
     this.camYaw = gk < 1e-3 ? this.yaw : this.camYaw + wrap(this.yaw - this.camYaw) * (1 - Math.exp(-dt * 6));
@@ -632,8 +653,8 @@ export class RavenFlight {
     const perched = this.landed && this.gnd.perch ? 1 : 0;
     this.camP = (this.camP || 0) + (perched - (this.camP || 0)) * (1 - Math.exp(-dt * 3));   // perched: closer in (less of the crown between)
     const L = THREE.MathUtils.lerp, c = this.spirit ? 1 : this.sp.cam;   // c: the camera's scale for another bird (sp.cam)
-    const z = this.zoom, back = L(L(5.5, 2.5, gk), 1.7, this.camP) * c * z, up = L(L(1.6, 0.8, gk), 0.55, this.camP) * c * z, lookAhead = L(6, 0.8, gk) * c, yaw = this.camYaw + 0.4 * gk + this.look;
-    const cp = Math.cos(this.pitch * 0.5), sp = Math.sin(this.pitch * 0.5);
+    const z = this.zoom, back = L(L(5.5, 2.5, gk), 1.7, this.camP) * c * z, up = L(L(1.6, 0.8, gk), 0.55, this.camP) * c * z, lookAhead = L(6, 0.8, gk) * c * (1 - 0.85 * Math.min(1, Math.abs(this.orbitPitch) / 0.5)), yaw = this.camYaw + 0.4 * gk + this.look + this.orbitYaw;
+    const q = THREE.MathUtils.clamp(this.pitch * 0.5 - this.orbitPitch, -1.35, 0.7), cp = Math.cos(q), sp = Math.sin(q);   // the orbit's tilt about the body
     // Smooth the offset from the bird, not the camera position, so forward flight never lags the bird out of frame.
     const off = this._look.set(Math.sin(yaw) * cp, -sp, Math.cos(yaw) * cp).multiplyScalar(back);
     off.y += up;
@@ -652,7 +673,8 @@ export class RavenFlight {
       const cy = Math.cos(this.pitch);
       dir = this._d.set(-Math.sin(this.camYaw) * cy, Math.sin(this.pitch), -Math.cos(this.camYaw) * cy).lerp(dir, 1 - gk);
     }
-    if (this.look) { const c = Math.cos(this.look), sn = Math.sin(this.look); dir = this._d2.set(dir.x * c + dir.z * sn, dir.y, dir.z * c - dir.x * sn); }   // the aim turned by the look
+    const turn = this.look + this.orbitYaw;
+    if (turn) { const c = Math.cos(turn), sn = Math.sin(turn); dir = this._d2.set(dir.x * c + dir.z * sn, dir.y, dir.z * c - dir.x * sn); }   // the aim turned by the look and the orbit, so the body keeps its place in the frame
     const aim = this._look.copy(this.pos).addScaledVector(dir, lookAhead); aim.y += L(0.3, 0.05, gk);
     if (this.spirit) {   // the spirit in the lower third of the frame (owner, 2026-10-27; as the walkers, groundControl.js FRAME_Y): the
       // pitch from the line to the wisp, looking SPIRIT_FRAME of the half view above it, plus half the wisp's own pitch; the yaw the aim's

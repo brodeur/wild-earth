@@ -193,7 +193,7 @@ const MORE = {
   woodpecker: [['M', 'map'], ['P', 'present day'], ['T', 'tags'], ['N', 'mute'], ['B', 'spirit form']],
   spirit: [['V', 'view'], ['R', 'reset'], ['M', 'map'], ['G', 'roads'], ['P', 'present day'], ['T', 'tags'], ['N', 'mute']],
 };
-const MOUSE = 'drag to look · click a tree to identify';
+const MOUSE = 'drag to orbit the camera · click a tree to identify';
 
 // The slots for a body: kind is the control (ground, flier, raven, squirrel, woodpecker, spirit), code the species.
 export function abilitiesFor(kind, code, S = null) {

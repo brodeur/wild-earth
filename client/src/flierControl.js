@@ -86,7 +86,7 @@ export class FlierControl {
 
   // On as `code` (a FLIERS key), or off (back to the spirit, which places itself).
   setOn(on, code = null) {
-    this.flight.look = 0; this.flight.headYaw.value = 0;   // the look (flight.js) starts straight; its limit is the raven's
+    this.flight.look = 0; this.flight.headYaw.value = 0; this.flight.resetOrbit();   // the look (flight.js) starts straight; its limit is the raven's
     on = !!on;
     if (on && code && code !== this.code) this.useSpecies(code);
     if (on && !this.S) this.useSpecies('buteo_jamaicensis');
@@ -110,7 +110,7 @@ export class FlierControl {
     if (help) help.innerHTML = on ? `${k('↑')}${k('↓')} pitch · ${k('←')}${k('→')} turn · ${k('W')}${k('S')} speed (${k('shift')} boost) · ${k('space')} flap · `
       + `${k('X')}${k('Z')} climb / descend · ${k('H')} ${S.flight.soar ? 'soar in a circle' : 'hover'} · fly slowly into a limb${S.flight.perch ? ' (a snag or a pine, high up)' : ''} or the ground to land · `
       + `on foot: ${k('W')}${k('S')} hop · ${k('A')}${k('D')} turn · ${k('space')} take off · ${k('E')} peck · `
-      + `${k('V')} view · ${k('M')} map · ${k('P')} present day · ${k('T')} tags · ${k('N')} mute · ${k('B')} back to spirit form · click a tree to identify · drag mouse to look` : W.help;
+      + `${k('V')} view · ${k('M')} map · ${k('P')} present day · ${k('T')} tags · ${k('N')} mute · ${k('B')} back to spirit form · click a tree to identify · drag to orbit the camera` : W.help;
   }
 
   // The spirit (spirit.js) comes into an AI bird (animals.js info o): in the air at its speed; or standing where it

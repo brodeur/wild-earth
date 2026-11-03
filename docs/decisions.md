@@ -3775,3 +3775,22 @@ animals to do the behaviors as well." Decided:
   buried vole within 15 m digs over it and pounces when the tunnel shows it.
 - Registered in `games.json` by a pipeline rule (`pipeline/games.py` PLAYS): the vole's burrow-shelter games and the
   coyote's hunt of the vole carry `play: ['dig']`, the tile `plays.dig`; the client digs only for a species listed there.
+
+## 2026-11-02: a drag orbits the camera round the body
+
+Aaron: "The camera should work so that the pivot point is the character, not the camera. So when the mouse is dragging
+and moving it is orbiting and panning with the user as the focal point." Before, a horizontal drag turned the head up
+to its limit and then the body (it steered), and a vertical drag pitched a flight or tilted the walker's look about the
+camera. Now (`flight.js` `orbitBy`, `easeOrbit`, `resetOrbit`; read by every control's camera):
+
+- A drag sets `orbitYaw` (any amount round the vertical) and `orbitPitch` (0.45 rad down to 1.15 rad up from the
+  set-up's own), and never turns the body or pitches a flight. Each camera adds the yaw to its own and swings its
+  boom up or down by the pitch about the body, and turns its aim by the same yaw and shortens its look-ahead as it
+  rises, so the body keeps its place in the frame: measured, a 100-degree orbit of the deer moved it 35 px on screen,
+  a 120-degree orbit of the hovering raven 12 px.
+- The orbit holds while the body stands or hovers; 0.8 s after the last drag, once the keys move the body (or a
+  flight flies on), it eases back behind at 1.6 per second. A new body starts behind (`resetOrbit`).
+- The head turns toward the orbit within its limit (`headYaw`). On the wood the squirrel's and woodpecker's tree
+  cameras take the orbit as their own swing round the trunk.
+- Steering is the keys' alone now (A / D, the arrows); the help lines say "drag to orbit the camera".
+

@@ -260,7 +260,7 @@ export class GroundControl {
     if (!on) this.animals?.setStalk?.(1);
     if (!on) { this.marks.clear(); this.sil.clear(); }
     if (this.hudRow) this.hudRow.style.display = on ? '' : 'none';
-    f.look = 0; f.headYaw.value = 0; f.lookMax = on ? (this.S.rig === 'quad' ? 1.0 : this.S.rig === 'bird' ? 1.3 : 1.2) : 0;   // how far this body's head turns before the body follows a drag
+    f.look = 0; f.headYaw.value = 0; f.resetOrbit(); f.lookMax = on ? (this.S.rig === 'quad' ? 1.0 : this.S.rig === 'bird' ? 1.3 : 1.2) : 0;   // how far this body's head turns before the body follows a drag
     if (on) { f.pitch = 0; f.roll = 0; f.hover = false; this.camSettled = false; this.place(f.pos.x, f.pos.z); }
     else {
       this.camera.up.set(0, 1, 0); f.reset(f.pos.x, f.pos.z, 30);
@@ -292,7 +292,7 @@ export class GroundControl {
     const shift = S.alert.pushups ? 'push-ups' : S.alert.pose ? 'sit up' : 'alert';
     const rest = S.rest === 'bed' ? ` · ${k('X')} lie down` : S.rest === 'hunch' ? ` · ${k('X')} hunch in a form` : S.rest === 'bask' ? ` · ${k('X')} bask` : '';
     return `${k('W')}${k('S')} run, back (${k('shift')}${k('W')} sprint, ${k('alt')}${k('W')} ${S.stalk ? 'stalk' : 'walk'}) · ${k('A')}${k('D')} turn · ${space} · ${k('shift')} ${shift} · ${k('E')} ${S.act.word}${rest} · `
-      + `${k('M')} map · ${k('G')} roads · ${k('P')} present day · ${k('T')} tags · ${k('N')} mute · ${k('B')} back to spirit form · click a tree to identify · drag mouse to turn and look`;
+      + `${k('M')} map · ${k('G')} roads · ${k('P')} present day · ${k('T')} tags · ${k('N')} mute · ${k('B')} back to spirit form · click a tree to identify · drag to orbit the camera`;
   }
   say(text) {
     const t = this.toast; t.textContent = text; t.style.opacity = '1';
@@ -768,12 +768,14 @@ export class GroundControl {
   // crowns (squirrelControl.js crownClear, for the taller bodies).
   updateCamera(dt) {
     const f = this.flight, P = f.pos, cam = this.camera, C = this.S.cam, off = this._v, aim = this._w;
+    f.easeOrbit(dt, f.moving());   // the drag's orbit round the body (flight.js), back behind once the keys move it
     const rate = wrap(f.yaw - (this.camYaw ?? f.yaw)) / Math.max(dt, 1e-3); this.camYaw = f.yaw;
     if (Math.abs(rate) > 0.3) this.camSide = damp(this.camSide, -Math.sign(rate) * C.side, 1.6, dt);
     const low = this.resting ? 0.7 : 1, fly = this.mode === 'fly' ? 1.4 : 1;
-    const z = f.zoom || 1, back = (C.back + CAM_PLUS.back) * (1 - 0.15 * this.sit) * fly * z, up = (C.up * CAM_RAISE + CAM_PLUS.up) * low * (1 + 0.3 * this.sit) * fly * z, ly = f.yaw + f.look, a = ly + this.camSide;   // z: the wheel's zoom; ly: the look's yaw (flight.js)
+    const z = f.zoom || 1, back = (C.back + CAM_PLUS.back) * (1 - 0.15 * this.sit) * fly * z, up = (C.up * CAM_RAISE + CAM_PLUS.up) * low * (1 + 0.3 * this.sit) * fly * z, ly = f.yaw + f.look + f.orbitYaw, a = ly + this.camSide;   // z: the wheel's zoom; ly: the look's yaw (flight.js)
     off.set(Math.sin(a) * back, up, Math.cos(a) * back);
-    const fx = -Math.sin(ly), fz = -Math.cos(ly);
+    if (f.orbitPitch) { const r = Math.hypot(back, up), e = clamp(Math.atan2(up, back) + f.orbitPitch, -0.15, 1.4), h = r * Math.cos(e); off.set(Math.sin(a) * h, r * Math.sin(e), Math.cos(a) * h); }   // the orbit up or down round the body
+    const ahead = C.look * (1 - 0.85 * Math.min(1, Math.abs(f.orbitPitch) / 0.5)), fx = -Math.sin(ly) * ahead / Math.max(C.look, 1e-6), fz = -Math.cos(ly) * ahead / Math.max(C.look, 1e-6);
     aim.set(fx * C.look, C.aimUp * low + Math.tan(f.pitch) * (back + C.look), fz * C.look);
     if (C.up > 0.5) this.sq.crownClear(P, off);
     if (!this.camSettled) { this.camOff.copy(off); this.aimOff.copy(aim); this.camSettled = true; this.camLift = 0; }

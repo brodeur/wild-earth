@@ -108,7 +108,7 @@ export class WoodpeckerControl {
 
   // ---- on and off ---------------------------------------------------------------------------------
   setOn(on, sex = null) {
-    this.flight.look = 0; this.flight.headYaw.value = 0; this.flight.lookMax = on ? 1.3 : 0;   // the look's head limit (flight.js)
+    this.flight.look = 0; this.flight.headYaw.value = 0; this.flight.resetOrbit(); this.flight.lookMax = on ? 1.3 : 0;   // the look's head limit (flight.js)
     on = !!on;
     if (sex) this.female = sex === 'female';
     if (on) this.acorns?.setPlayerSpecies(CODE);
@@ -143,7 +143,7 @@ export class WoodpeckerControl {
     const W = this.hudWas;
     if (h1?.firstChild) h1.firstChild.nodeValue = on ? 'acorn woodpecker ' : W.h1;
     if (help) help.innerHTML = on ? 'on a trunk: <kbd>W</kbd><kbd>S</kbd> hitch up, down · <kbd>A</kbd><kbd>D</kbd> round · <kbd>space</kbd> fly · '
-      + 'flying: <kbd>W</kbd><kbd>S</kbd> speed · <kbd>A</kbd><kbd>D</kbd> turn · <kbd>↑</kbd><kbd>↓</kbd> or drag to climb, dive · <kbd>space</kbd> burst · fly into a trunk to cling · <kbd>S</kbd> low to land · '
+      + 'flying: <kbd>W</kbd><kbd>S</kbd> speed · <kbd>A</kbd><kbd>D</kbd> turn · <kbd>↑</kbd><kbd>↓</kbd> climb, dive · drag to orbit the camera · <kbd>space</kbd> burst · fly into a trunk to cling · <kbd>S</kbd> low to land · '
       + '<kbd>E</kbd> take an acorn; at your granary, hammer it in · <kbd>M</kbd> map · <kbd>P</kbd> present day · <kbd>T</kbd> tags · <kbd>N</kbd> mute · <kbd>B</kbd> back to spirit form · click a tree to identify' : W.help;
     const agl = $('agl')?.previousElementSibling, sp = $('speed')?.previousElementSibling;
     if (agl) agl.textContent = on ? 'height above ground' : W.agl;
@@ -338,9 +338,9 @@ export class WoodpeckerControl {
     f.body.visible = false; f.flap = 0; f.flapping = false; f.hover = false;   // the raven's keys still land in flight; ignore them
     if (P.distanceToSquared(this.last) > 20 * 20) this.relocate();            // moved from outside (R, Go to)
     const k = this.input();
-    // a mouse drag: in flight it steers (flight.yaw, flight.pitch); on the bark it orbits the camera; perched it turns
+    // a mouse drag orbits the camera round the bird (flight.js orbitYaw, orbitPitch; 2026-11-02): on the bark it swings the tree camera
     const dragYaw = wrap(f.yaw - this.lastYaw);
-    if (this.mode === 'cling' || (this.mode === 'work' && this.work.back === 'cling') || this.mode === 'path') { this.camOrbit += dragYaw; f.yaw = this.lastYaw; }
+    if (this.mode === 'cling' || (this.mode === 'work' && this.work.back === 'cling') || this.mode === 'path') { this.camOrbit += dragYaw + f.orbitYaw; f.orbitYaw = 0; f.yaw = this.lastYaw; }   // on the bark the drag's orbit (flight.js) swings the tree camera
     if (this.auto && (this.auto.t += dt) > 4) this.finishArrival(false);
     if (this.familyDue > 0 && (this.familyDue -= dt) <= 0) this.family = this.animals.familyOn?.(this.granary) || [];
     // Space and E pressed during a short flight, a hop or the pecking wait for it to end (half a second at most)
@@ -676,7 +676,8 @@ export class WoodpeckerControl {
     } else {
       const cp = Math.cos(f.pitch * 0.5), sp = Math.sin(f.pitch * 0.5);
       const z = f.zoom || 1;   // the wheel's zoom (flight.js)
-      const ly = f.yaw + f.look;   // the look's yaw (flight.js)
+      f.easeOrbit(dt);   // the drag's orbit round the body, back behind in flight (flight.js)
+      const ly = f.yaw + f.look + f.orbitYaw;   // the look's yaw and the drag's orbit (flight.js)
       off.set(Math.sin(ly) * cp * CAM_BACK * z, (CAM_UP - sp * CAM_BACK) * z, Math.cos(ly) * cp * CAM_BACK * z);
       const fx = -Math.sin(ly), fz = -Math.cos(ly), look = 4;
       aim.set(fx * look, 0.2 + Math.sin(f.pitch) * look, fz * look);

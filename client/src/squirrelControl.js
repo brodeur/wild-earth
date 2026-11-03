@@ -159,7 +159,7 @@ export class SquirrelControl {
 
   // ---- on and off ---------------------------------------------------------------------------------
   setOn(on) {
-    this.flight.look = 0; this.flight.headYaw.value = 0; this.flight.lookMax = on ? 1.2 : 0;   // the look's head limit (flight.js)
+    this.flight.look = 0; this.flight.headYaw.value = 0; this.flight.resetOrbit(); this.flight.lookMax = on ? 1.2 : 0;   // the look's head limit (flight.js)
     on = !!on;
     this.acorns?.setPlayerSpecies(on ? CODE : 'corvus_corax');
     if (on === this.on) return;
@@ -462,7 +462,7 @@ export class SquirrelControl {
     const dragYaw = wrap(f.yaw - this.lastYaw);
     f.pitch = Math.max(-0.6, Math.min(0.7, f.pitch));
     const onWood = this.mode === 'wood' || (this.mode === 'work' && this.work?.back === 'wood');
-    if (this.mode === 'trunk' || this.mode === 'limb' || onWood) { this.camOrbit += dragYaw; f.yaw = this.lastYaw; }
+    if (this.mode === 'trunk' || this.mode === 'limb' || onWood) { this.camOrbit += dragYaw + f.orbitYaw; f.orbitYaw = 0; f.yaw = this.lastYaw; }   // on the wood the drag's orbit (flight.js) swings the tree camera
     this.leftT = Math.max(0, this.leftT - dt);
     if (this.auto) {
       this.auto.t += dt;
@@ -1183,7 +1183,8 @@ export class SquirrelControl {
       aim.set(0, this.headUp ? 0.5 : -0.35, 0);
       k = 5;
     } else {
-      const z = f.zoom || 1, back = (CAM_BACK - 0.5 * this.sit) * z, up = (CAM_UP + 0.45 * this.sit) * z, ly = f.yaw + f.look, a = ly + this.camSide;   // z: the wheel's zoom; ly: the look's yaw (flight.js)
+      f.easeOrbit(dt, f.moving());   // the drag's orbit round the body (flight.js)
+      const z = f.zoom || 1, back = (CAM_BACK - 0.5 * this.sit) * z, up = (CAM_UP + 0.45 * this.sit) * z, ly = f.yaw + f.look + f.orbitYaw, a = ly + this.camSide;   // z: the wheel's zoom; ly: the look's yaw and the drag's orbit (flight.js)
       off.set(Math.sin(a) * back, up, Math.cos(a) * back);
       const fx = -Math.sin(ly), fz = -Math.cos(ly), look = 1.2;
       aim.set(fx * look, 0.22 + 0.25 * this.sit + Math.tan(f.pitch) * (back + look), fz * look);
