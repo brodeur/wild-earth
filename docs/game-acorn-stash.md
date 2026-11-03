@@ -756,7 +756,16 @@ Aaron: "Games, rather than being something you turn on, are always available and
   once a timed round; the privacy scheme is otherwise as v3's.
 - The dev paths alone (no server, `?net=0`) play as v2 did, without the button.
 
-Verified (2026-11-02, the home tile, two pages on the worktree's server): see the report row of the commit; tests:
+Verified (2026-11-02, the home tile, pages on the worktree's server, the pane hidden so frames came from a timer): a
+fresh entry with no button pressed: the game running and joined to the shared world as its AI host, the season's
+round (length 0) in the welcome, the box hidden and the spirit not collecting; into a gray squirrel, set down at a
+ground acorn, E: "picked up an acorn (blue oak)", carrying 1 / 1, the box shown only then, the board's columns
+"season" and "all", the clock row hidden, 53 events (the AI collectors' and the pickup) accepted; a second page
+(`?seat=2`) counted as a second player, not the AI host, applying the first page's events, its box hidden; a dig
+`hole` sent by one page was in the other's tunnels; offline (`?net=0`) the game ran on the browser's own world with
+the endless round, and the squirrel picked an acorn up and buried it ("buried it: one acorn, one hole") with no
+button. The acorn game's own update stayed under the pane's 0.1 ms timer resolution (median 0, p90 0.1 ms with 2,229
+live acorns); the GPU's draw of the acorns and glows, now in every world, was not measured. Tests:
 `tests.test_season_round` (the label north and south across a year's end; the first join begins the season's round,
 with no length; the tick never ends it; the same season a year on ends it and begins the next; the player's id
 rotates; an old client's Start is ignored).
