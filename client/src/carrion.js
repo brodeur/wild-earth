@@ -275,6 +275,7 @@ export class Carrion {
     if (this.yields(a, c)) return false;
     if (Math.hypot(a.x - rec.x, a.z - rec.z) > 3.5) return true;   // still on its way
     if (rec.meat <= 1e-6) return false;
+    if (a.carrAt !== rec || this.t - (a.carrT || 0) > 180) { a.carrAt = rec; a.carrT = this.t; a.t = Math.max(a.t, a.stay0 || 30); }   // arrived (by a walk or a hunt's trot): the whole spell at it
     if (BIG.has(code)) rec.bigT = this.t; if (HUGE.has(code)) rec.hugeT = this.t;
     const bite = BITE[code] ?? 0.5, stay = Math.max(8, a.stay0 || 30);
     a.ate = (a.ate || 0) + bite / stay * dt;
