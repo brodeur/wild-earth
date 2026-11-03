@@ -72,6 +72,14 @@ const HERD_LEAD = 5, HERD_IDLE = 6;
 // braced with the head cocked for fix s (none from a run), then springs high and stiff-legged (peak: the body's jump
 // height x peakK) onto where the prey was, the head down at the forepaws at the landing; a kill is taken with a head
 // toss of toss s and the nose down at it; a miss gets quick paw strikes (pawHz) for paw s, then the nose down.
+// The eat (Aaron, 2026-11-03: "a more dramatic eating/gathering animation - for instance a quail's head should lower all
+// the way to the ground"): while E's act runs where the body's food is (needs.js: one of its gather resources this season
+// scores at least EAT_MIN under it, or a named food plant; or a carcass it is feeding on), the head goes all the way down
+// to it: a flick of 1 on the leg engine (gait.js reachDip: the nose at the ground, the forequarters lowered if the neck is
+// short) and for the deer's Eating clip, EAT_PECK on the part rig (animalModels.js eatReach: a bird leans over its feet
+// and its bill reaches the ground; a rodent's nose goes to the grass). The quails and the turkey peck faster at food; the
+// rodents keep their nose down, nibbling. An act with no food here is the old, shallower dip (a look, a sniff).
+const EAT_MIN = 25, EAT_PECK = 2;
 const CATCH = { leap: { d: 3.2, dur: 0.45, peak: 0.55, over: 0.7, feed: 45, twist: 0.4 },
   pounce: { d: 2.6, fix: 0.45, dur: 0.55, peakK: 0.65, toss: 0.3, paw: 0.75, pawHz: 4 } };
 export const GROUND = {
@@ -597,6 +605,8 @@ export class GroundControl {
   animate(dt, sp, alert, inAir = false) {
     const S = this.S, ps = this.pose, f = this.flight, P = f.pos, act = this.actT > 0;
     this.spd = sp; this.inAir = inAir;   // for the skinned deer's clip choice (draw)
+    const N = this.needs, eating = act && !inAir && (!!N && (N.foodHere >= EAT_MIN || !!N.plant) || !!this.animals.feedNear?.(P.x, P.y, P.z));   // food under it, or a carcass it feeds on
+    const eatTo = this.body?.legs || this.body?.model.skin ? 1 : EAT_PECK;   // the leg engine and the deer's clips: 1 is the ground
     const fx = -Math.sin(f.yaw), fz = -Math.cos(f.yaw), h = S.half * this.size;
     const hf = this.heights.atXZ(P.x + fx * h, P.z + fz * h), hb = this.heights.atXZ(P.x - fx * h, P.z - fz * h);
     const slope = -Math.atan2(hf - hb, 2 * h);   // nose down positive (the animals' pitch), as the ground runs
@@ -620,7 +630,7 @@ export class GroundControl {
       if (part && !this.buck) ps.e2 = ps.amp > 0.05 && !inAir ? Math.atan2(wr * r, Math.max(sp, PART_TURN.vMin)) : damp(ps.e2, 0, 8, dt);   // the legs' step turned round the turn (aAnim2.z)
       const stalk = S.stalk && this.input().alt && sp > 0.05, feeding = !!this.feeding;
       ps.pose = damp(ps.pose, this.resting || feeding ? pmax : stalk ? (this.body?.legs ? 0.45 : 0.45 * pmax / 0.6) : 0, this.resting ? 0.9 : feeding ? 3 : 2, dt);   // on the leg engine pose to a half is a crouch
-      ps.flick = damp(ps.flick, feeding ? 0.85 + 0.15 * Math.sin(performance.now() * 0.0025) : act ? S.act.flick : alert ? S.alert.flick : stalk ? 0.25 : 0, 3, dt);
+      ps.flick = damp(ps.flick, feeding ? 0.85 + 0.15 * Math.sin(performance.now() * 0.0025) : eating ? eatTo : act ? S.act.flick : alert ? S.alert.flick : stalk ? 0.25 : 0, 3, dt);
       if (this.twist) {   // the leap that missed: a twist away, the body rolling and the heading swinging round (CATCH.leap.twist)
         const T = this.twist, k = Math.max(0, T.t / CATCH.leap.twist); T.t -= dt;
         ps.roll = T.s * 0.45 * Math.sin(Math.PI * k); f.yaw += T.s * 2.5 * dt;
@@ -653,9 +663,12 @@ export class GroundControl {
       ps.e2 = ps.amp > 0.05 && !inAir ? Math.atan2(wr * r, Math.max(sp, RT.vMin)) : damp(ps.e2, 0, 8, dt);   // the fore legs' step turned round the turn (aAnim2.z)
       const rest = this.resting && (S.rest === 'hunch' || S.rest === 'freeze') ? -0.6 : 0;   // a brush rabbit's X is the freeze, a jackrabbit's its form
       ps.pose = damp(ps.pose, alert ? S.alert.pose : rest, alert ? 5 : 4, dt);
-      if (act && S.act.nibble && Math.random() < dt * 1.5) ps.flickV = 0.8;
-      if (ps.flickV > 0) { ps.flick = Math.max(ps.flick, Math.sin(Math.min(1, 1 - ps.flickV) * Math.PI)); ps.flickV -= dt * 3; }
-      else ps.flick = damp(ps.flick, act && S.act.flick ? S.act.flick : 0, act ? 6 : 2, dt);
+      if (eating && ps.pose < 0.5) ps.flick = damp(ps.flick, eatTo * (0.9 + 0.1 * Math.sin(performance.now() * 0.02)), 6, dt);   // the nose down in the food, nibbling
+      else {
+        if (act && S.act.nibble && Math.random() < dt * 1.5) ps.flickV = 0.8;
+        if (ps.flickV > 0) { ps.flick = Math.max(ps.flick, Math.sin(Math.min(1, 1 - ps.flickV) * Math.PI)); ps.flickV -= dt * 3; }
+        else ps.flick = damp(ps.flick, act && S.act.flick ? S.act.flick : 0, act ? 6 : 2, dt);
+      }
       ps.lift = this.body?.legs ? 0 : !inAir && sp > 0.05 ? S.lift(sp) * Math.max(0, Math.sin(ps.phase)) : tAmp ? S.lift(0.5) * ps.amp * Math.max(0, Math.sin(ps.phase)) : 0;   // on the leg engine the hop is the engine's
       ps.pitch = damp(ps.pitch, inAir ? 0 : (sp > 0.05 ? -S.rock * Math.cos(ps.phase) * Math.min(1, sp / 4 + 0.4) : tAmp ? -S.rock * ps.amp * Math.cos(ps.phase) : 0) + slope * (1 - Math.max(0, ps.pose)) * 0.8, 12, dt);
       ps.e0 = 0; ps.e1 = damp(ps.e1, ps.flick, 5, dt);
@@ -675,9 +688,9 @@ export class GroundControl {
       }
       else { ps.amp = damp(ps.amp, sp > 0.1 ? (turkey ? Math.min(1, 0.45 + sp * 0.6) : 1) : 0, turkey ? 6 : 12, dt); ps.phase += dt * TAU * sp / S.stride; }
       ps.e2 = damp(ps.e2, inAir ? 0 : clamp(wr * BT.lead, -BT.leadMax, BT.leadMax), 10, dt);   // the head leads the turn
-      if (act && S.act.peck && !scratching && Math.random() < dt * 2) ps.flickV = 1;
-      if (ps.flickV > 0) { ps.flick = Math.max(ps.flick, Math.sin(Math.min(1, 1 - ps.flickV) * Math.PI)); ps.flickV -= dt * 3; }
-      else ps.flick = damp(ps.flick, alert ? S.alert.flick : 0, 4, dt);
+      if (act && S.act.peck && !scratching && ps.flickV <= 0 && Math.random() < dt * (eating ? 4 : 2)) { ps.flickV = 1; ps.peak = eating ? eatTo : 1; }   // at food: quicker pecks, the bill to the ground
+      if (ps.flickV > 0) { ps.flick = Math.max(ps.flick, Math.sin(Math.min(1, 1 - ps.flickV) * Math.PI) * (ps.peak || 1)); ps.flickV -= dt * 3; if (ps.flickV <= 0) ps.flick = Math.min(ps.flick, eating ? 0.9 * eatTo : 1); }
+      else ps.flick = damp(ps.flick, eating ? 0.8 * eatTo : alert ? S.alert.flick : 0, 4, dt);   // feeding: the head kept low between the pecks
       ps.e0 = damp(ps.e0, 0, 6, dt); ps.e1 = damp(ps.e1, 0, 6, dt); ps.e3 = this.variant;
       ps.pitch = damp(ps.pitch, inAir ? 0 : slope * 0.5, 6, dt);
     } else {   // lizard: the dash, the bend into a turn, the tail whip, push-ups, the flat bask

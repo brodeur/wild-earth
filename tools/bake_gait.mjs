@@ -7,8 +7,8 @@
 //
 // Clips: Idle (one frame standing), Walk, Trot and Gallop (one cycle each on flat ground at 0.6 x walk_mps, 0.75 x trot_mps
 // and 1.6 x trot_mps of the species' locomotion row, read from the tile's locomotion.json; the body alone where it has
-// none), Bed (one frame, pose 1). A lagomorph (the row's hop, gait.js hopStep): Idle, Shuffle (0.7 x the shuffle's top),
-// Bound (the half-bound), Run (its fast form at three quarters of the cruise: the jackrabbit's lope), Sit, Freeze, Form. A gait clip records stride_m (the engine's stride at that speed: the client advances the
+// none), Bed (one frame, pose 1), Eat (one frame standing, the nose at the ground: flick 1, gait.js reachDip). A lagomorph (the row's hop, gait.js hopStep): Idle, Shuffle (0.7 x the shuffle's top),
+// Bound (the half-bound), Run (its fast form at three quarters of the cruise: the jackrabbit's lope), Sit, Freeze, Form, Eat. A gait clip records stride_m (the engine's stride at that speed: the client advances the
 // phase by distance over it), touchdown (the left fore foot's landing phase) and speed_mps.
 import { readFileSync, writeFileSync } from 'node:fs';
 import { basename, dirname, join } from 'node:path';
@@ -34,9 +34,9 @@ console.log(`INFO ${basename(SRC)}: ${species}, ${row ? `row from tiles/${TILE}`
 
 const W = skel.n * 3, frames = [], clips = {};
 const terrain = () => 0;
-function run(name, v, pose, loop) {
+function run(name, v, pose, loop, flick = 0) {
   const st = makeGait(); let x = 0, z = 0; const dt = 1 / 240;
-  const inp = { x: 0, y: 0, z: 0, yaw: 0, size: 1, v, wr: 0, pose, flick: 0, bend: 0, twitch: 0, terrain, air: false };
+  const inp = { x: 0, y: 0, z: 0, yaw: 0, size: 1, v, wr: 0, pose, flick, bend: 0, twitch: 0, terrain, air: false };
   const step = h => { z += v * h; inp.z = z; gaitStep(skel, P, st, inp, h); };
   for (let t = 0; t < 4; t += dt) step(dt);   // settle
   const first = frames.length;
@@ -68,12 +68,14 @@ if (P.hop) {   // a lagomorph (gait.js hopStep; farTable's hop set): the shuffle
   run('Sit', 0, 1, false);
   run('Freeze', 0, -0.6, false);
   run('Form', 0, -1, false);
+  run('Eat', 0, 0, false, 1);
 } else {
   run('Idle', 0, 0, false);
   run('Walk', 0.6 * P.vw, 0, true);
   run('Trot', 0.75 * P.vt, 0, true);
   run('Gallop', 1.6 * P.vt, 0, true);
   run('Bed', 0, 1, false);
+  run('Eat', 0, 0, false, 1);
 }
 
 // half floats

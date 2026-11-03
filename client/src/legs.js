@@ -58,7 +58,7 @@ export class LegsPool {
       writeRow(this.skel, st, this.live.data, liveRowOf(this.model, row)); this.dirty = true;
       liveClip(liveRowOf(this.model, row), clipOut, o);
       if (this.marks) this.marks.set(row, st, inp.size || 1);
-    } else farDrive(a.far ||= makeFar(), this.F, inp.v, inp.pose, dt, clipOut, o);
+    } else farDrive(a.far ||= makeFar(), this.F, inp.v, inp.pose, dt, clipOut, o, inp.flick);
     if (bendOut) { bendOut[o * 4] = 0; bendOut[o * 4 + 1] = 0; bendOut[o * 4 + 2] = 0; bendOut[o * 4 + 3] = 0; }
   }
   end() { if (this.dirty) { this.live.tex.needsUpdate = true; this.dirty = false; } }

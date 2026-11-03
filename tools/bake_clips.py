@@ -37,6 +37,11 @@
 # the first joint to the named end joint points along the (y, z) direction given (+z forward, y up); `rotate` turns by
 # degrees about x, y or z. Without a recipe every clip is baked as a loop. The hoof heads and the lowest joint are
 # printed so the pose can be tuned; the drawn result is checked in the browser.
+# A clip's `reach` (2026-11-03, Aaron: "a more dramatic eating/gathering animation"): { "about": "Neck1", "head": "Head",
+# "to": 0.02 } turns the joint `about` and everything it carries further down about x (nose down), in each frame by D times
+# how low that frame already holds the head (0 at the clip's highest head, 1 at its lowest), D found by bisection so the
+# lowest point of the head (the adopted mesh's vertices bound mostly to `head`) comes to `to` m above the ground (y 0, the
+# hooves) at the clip's lowest frame: the source's grazing motion kept, its muzzle taken down to the grass.
 import json, struct, sys, math, os
 import numpy as np
 
@@ -197,6 +202,49 @@ for a in js.get('animations', []):
     name = a.get('name', f'clip{len(anims)}'); short = name.split('|')[-1]
     anims.setdefault(short, a)
 wanted = RECIPE.get('clips') or {n: {'loop': True} for n in anims}
+
+def rot_about(axis, deg):
+    c, s = math.cos(math.radians(deg)), math.sin(math.radians(deg))
+    R = np.eye(4)
+    if axis == 'x': R[1:3, 1:3] = [[c, -s], [s, c]]
+    elif axis == 'y': R[0, 0], R[0, 2], R[2, 0], R[2, 2] = c, s, -s, c
+    else: R[0:2, 0:2] = [[c, -s], [s, c]]
+    return R
+def head_points(head):
+    """The adopted rest positions of the vertices bound mostly to joint `head`, and that joint's index in JOINTS."""
+    ibm = accessor(js, bin, skin['inverseBindMatrices']).reshape(-1, 4, 4).transpose(0, 2, 1)
+    Mj = np.array([G_REST[j] @ ibm[k] for k, j in enumerate(JOINTS)]); k0 = name2joint[head]
+    out = []
+    for node in N:
+        if node.get('skin') is None: continue
+        for pr in js['meshes'][node['mesh']]['primitives']:
+            A = pr['attributes']; P = accessor(js, bin, A['POSITION']); J = accessor(js, bin, A['JOINTS_0']).astype(int); W = accessor(js, bin, A['WEIGHTS_0'])
+            dom = J[np.arange(len(J)), W.argmax(1)]; sel = dom == k0
+            if sel.any():
+                Ph = np.c_[P[sel], np.ones(sel.sum())]; S = np.zeros((sel.sum(), 3))
+                for c in range(4): S += W[sel][:, c:c + 1] * np.einsum('nij,nj->ni', Mj[J[sel][:, c]], Ph)[:, :3]
+                out.append(S)
+    S = np.concatenate(out); return (T @ np.c_[S, np.ones(len(S))].T).T, k0
+def reach_edit(name, mats, Gs, spec):
+    """The clip's frames with the neck taken down to the ground (the header's `reach`)."""
+    Hp, kh = head_points(spec['head']); ka = name2joint[spec['about']]; to = float(spec.get('to', 0.02))
+    targets = [k for k in range(NJ) if JOINTS[k] in set(descendants(JOINTS[ka]))]
+    low = lambda M, k=kh: float((Hp @ M[k].T)[:, 1].min())
+    hy = np.array([low(M) for M in mats]); u = (hy.max() - hy) / max(1e-6, hy.max() - hy.min())
+    def edited(D):
+        out = []
+        for f, M in enumerate(mats):
+            h = joint_pos(Gs[f], JOINTS[ka]); X = np.eye(4); X[:3, 3] = h; X = X @ rot_about('x', D * u[f]); Tm = np.eye(4); Tm[:3, 3] = -h; X = X @ Tm
+            M2 = M.copy(); M2[targets] = np.einsum('ij,njk->nik', X, M[targets]); out.append(M2)
+        return out
+    lo, hi = 0.0, 80.0
+    if min(low(M) for M in mats) <= to: print(f'REACH {name}: already at {hy.min():.3f} m'); return mats
+    for _ in range(30):
+        mid = (lo + hi) / 2
+        if min(low(M) for M in edited(mid)) > to: lo = mid
+        else: hi = mid
+    print(f'REACH {name}: head lowest {hy.min():.3f} m -> {to:.3f} m, {spec["about"]} turned down to {hi:.1f} deg at the lowest frame')
+    return edited(hi)
 root_joint = JOINTS[0]
 frames = []   # (NJ, 4, 4) per frame
 index = {}
@@ -208,12 +256,13 @@ for name, spec in wanted.items():
     if name not in anims: raise SystemExit(f'clip {name!r} not in {SRC}; clips: {sorted(anims)}')
     a = anims[name]; dur = duration(a); loop = bool(spec.get('loop', True))
     count = max(1, int(round(dur * RATE))) if loop else int(math.floor(dur * RATE + 1e-6)) + 1
-    mats = []; hoof = []; root = []
+    mats = []; hoof = []; root = []; Gs = []
     hj = JOINTS[name2joint[spec['hoof']]] if spec.get('hoof') in name2joint else None
     for f in range(count):
-        G = pose_globals(a, f / RATE if loop else min(dur, f / RATE))
+        G = pose_globals(a, f / RATE if loop else min(dur, f / RATE)); Gs.append(G)
         mats.append(to_adopted(G)); root.append(joint_pos(G, root_joint))
         if hj is not None: hoof.append(joint_pos(G, hj))
+    if spec.get('reach'): mats = reach_edit(name, mats, Gs, spec['reach'])
     G_end = pose_globals(a, dur); rm = (joint_pos(G_end, root_joint) - joint_pos(pose_globals(a, 0.0), root_joint))
     meta = {'loop': loop, 'duration': round(dur, 4), 'root_motion': [round(float(x), 4) for x in rm]}
     if spec.get('gait') and hoof:
@@ -229,13 +278,6 @@ for name, spec in wanted.items():
     add_frames(name, mats, meta)
     print(f'CLIP {name}: {count} frames, {dur:.3f} s, loop {loop}, root motion {meta["root_motion"]}' + (f', stride {meta["stride_m"]} m, touchdown {meta["touchdown"]}, {meta["speed_mps"]} m/s' if 'stride_m' in meta else ''))
 
-def rot_about(axis, deg):
-    c, s = math.cos(math.radians(deg)), math.sin(math.radians(deg))
-    R = np.eye(4)
-    if axis == 'x': R[1:3, 1:3] = [[c, -s], [s, c]]
-    elif axis == 'y': R[0, 0], R[0, 2], R[2, 0], R[2, 2] = c, s, -s, c
-    else: R[0:2, 0:2] = [[c, -s], [s, c]]
-    return R
 for name, spec in (RECIPE.get('synthetic') or {}).items():
     a = anims[spec['from']]; G = pose_globals(a, float(spec.get('at', 0.0)))
     A = {j: T @ G[j] for j in JOINTS}   # adopted-frame globals

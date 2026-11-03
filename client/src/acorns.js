@@ -50,6 +50,19 @@ const PICK_R = 6, DEPOSIT_R = 6, CARRY_MAX = 3, DEPOSIT_BEAT = 0.6;
 const PLAYER_CAP = { corvus_corax: CARRY_MAX, sciurus_griseus: 1, melanerpes_formicivorus: 1 };   // a squirrel or woodpecker holds one
 const STASH_ODDS = 1 / 8;
 
+// Who sees the acorns (Aaron, 2026-11-03: "Each animal should only see fruits they can harvest/eat"): a body whose species
+// eats or caches acorns this season, from the tile's games.json: a gather or cache game on the acorn mast that season,
+// or a forage row (relations.forage, the library's eaten_by) for an oak's acorns. On a tile with no games the collector
+// bodies (PLAYER_CAP) see them. The spirit eats nothing and sees none. Only the drawing follows this: the acorns, holes,
+// granaries and caches stay in the shared world, and liveAcorns stays filled, for the AI collectors and the other
+// players' bodies.
+export function eatsAcorns(games, code, season) {
+  if (!code || code === 'spirit') return false;
+  if (!games?.species) return PLAYER_CAP[code] !== undefined;
+  if ((games.species[code]?.games || []).some(g => g.season === season && g.resource === 'acorn_mast' && (g.archetype === 'gather' || g.archetype === 'cache'))) return true;
+  return (games.relations?.forage || []).some(([a, , part, , s]) => a === code && part === 'acorns' && (!s?.length || s.includes(season)));
+}
+
 // FNV-1a over a string, then a salt mix: a 32-bit seed for mulberry32.
 function seedOf(str, salt = 0) {
   let h = 2166136261 ^ salt;
@@ -382,8 +395,10 @@ export class AcornGame {
       glowMaterial({ color: 0xffb050, near: 18, far: 140, sizeNear: 0.05, sizeFar: 1.3 }), CARRY_CAP);
     // dug marks: squirrels' scatter hoards and ravens' caches, fading
     this.marks = new THREE.InstancedMesh(markGeometry(MARK_CAP), markMaterial(), MARK_CAP);
+    // the food (everything but an acorn in an AI collector's bill or mouth): drawn only for a body that eats acorns (eatsAcorns)
+    this.food = new THREE.Group(); this.group.add(this.food); this.sees = true; this.seesKey = null;
     for (const m of [this.nuts, this.acornGlow, this.holes, this.ringGlow, this.carriedNuts, this.carriedGlow, this.marks]) {
-      m.count = 0; m.frustumCulled = false; this.group.add(m);
+      m.count = 0; m.frustumCulled = false; (m === this.carriedNuts ? this.group : this.food).add(m);
     }
     this.carriedNuts.instanceMatrix.setUsage(THREE.DynamicDrawUsage); this.carriedGlow.instanceMatrix.setUsage(THREE.DynamicDrawUsage);
     this.acornGlow.renderOrder = this.ringGlow.renderOrder = this.carriedGlow.renderOrder = 10; this.marks.renderOrder = 2;
@@ -422,8 +437,15 @@ export class AcornGame {
   get active() { return this.running && !!this.season; }   // AI collectors work only during a game (v5: always, in a world)
   // v5: the body the player is in (main.js onBody: a species code, or 'spirit'); the player's own acorn actions only in a
   // collector body. Before any body is named (a dev path that never calls it) the player collects as before.
-  setBody(code) { this.bodyCode = code; }
-  get collecting() { return this.bodyCode === undefined || PLAYER_CAP[this.bodyCode] !== undefined; }
+  setBody(code) { this.bodyCode = code; this.seesKey = null; }
+  get collecting() { return this.bodyCode === undefined || (PLAYER_CAP[this.bodyCode] !== undefined && this.sees); }
+  // the food drawn for this body and season (eatsAcorns); a body not named yet (a dev path) sees them
+  diet() {
+    const code = this.bodyCode?.split(':')[0], key = `${code}:${this.season}`;
+    if (key === this.seesKey) return;
+    this.seesKey = key; this.sees = code === undefined || eatsAcorns(this.tile.games, code, this.season);
+    this.food.visible = this.sees;
+  }
   // v5: the game box, hidden until the player first carries or caches (applied) or a dev path asks (?game=1)
   showBox() {
     if (this.boxShown) return;
@@ -691,11 +713,11 @@ export class AcornGame {
     } catch (e) { console.warn('acorns: could not load state', e); }
     this.player = this.addPlayer();
     this.revealed = Object.values(this.world.stashes).some(c => c > 0);
-    for (const sp of this.labels.values()) { this.group.remove(sp); sp.material.map.dispose(); sp.material.dispose(); }
+    for (const sp of this.labels.values()) { this.food.remove(sp); sp.material.map.dispose(); sp.material.dispose(); }
     this.labels.clear();
-    for (const sp of this.markers.values()) { this.group.remove(sp); sp.material.dispose(); }
+    for (const sp of this.markers.values()) { this.food.remove(sp); sp.material.dispose(); }
     this.markers.clear();
-    for (const sp of this.granaryLabels.values()) { this.group.remove(sp); sp.material.map.dispose(); sp.material.dispose(); }
+    for (const sp of this.granaryLabels.values()) { this.food.remove(sp); sp.material.map.dispose(); sp.material.dispose(); }
     this.granaryLabels.clear();
     this.dirty = true; this.layMarks();
     if (this.family) this.granaryLabel(this.family);
@@ -802,7 +824,7 @@ export class AcornGame {
       const map = new THREE.CanvasTexture(canvas); map.colorSpace = THREE.SRGBColorSpace;
       sp = new THREE.Sprite(new THREE.SpriteMaterial({ map, transparent: true, depthTest: false, depthWrite: false, toneMapped: false }));
       sp.scale.set(6, 1.5, 1); sp.renderOrder = 20; sp.userData = { canvas, text: null };
-      this.labels.set(s.id, sp); this.group.add(sp);
+      this.labels.set(s.id, sp); this.food.add(sp);
     }
     sp.position.set(s.x + s.nx * 0.4, s.y + 1.4, s.z + s.nz * 0.4); sp.visible = true;
     if (sp.userData.text !== text) {
@@ -827,7 +849,7 @@ export class AcornGame {
       const map = new THREE.CanvasTexture(canvas); map.colorSpace = THREE.SRGBColorSpace;
       sp = new THREE.Sprite(new THREE.SpriteMaterial({ map, transparent: true, depthTest: false, depthWrite: false, toneMapped: false, sizeAttenuation: false }));
       sp.scale.set(0.1, 0.022, 1); sp.renderOrder = 20; sp.userData = { canvas, text: null };
-      this.granaryLabels.set(id, sp); this.group.add(sp);
+      this.granaryLabels.set(id, sp); this.food.add(sp);
     }
     const at = this.granaryAt.get(id);
     if (at) sp.position.set(at[0], at[1] + 0.5, at[2]);
@@ -859,7 +881,7 @@ export class AcornGame {
       sp = new THREE.Sprite(new THREE.SpriteMaterial({ map: AcornGame.markerTexture, transparent: true, depthTest: false, depthWrite: false,
         toneMapped: false, sizeAttenuation: false }));
       sp.scale.set(0.095, 0.095, 1); sp.renderOrder = 21;
-      this.markers.set(s.id, sp); this.group.add(sp);
+      this.markers.set(s.id, sp); this.food.add(sp);
     }
     sp.position.set(s.tx, s.top + 4.5, s.tz); sp.visible = true;
   }
@@ -927,6 +949,7 @@ export class AcornGame {
     const t0 = performance.now();
     this.net.tick();
     this.elapsed += dt; this.world.clock += dt;
+    this.diet();
     const p = this.flight.pos, w = this.world;
     this.refreshT += dt;
     let rebuild = this.dirty || this.refVersion !== this.veg.version;
