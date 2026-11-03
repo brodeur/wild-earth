@@ -252,6 +252,15 @@ browser stays the renderer.
   always-on container serving the client, the tiles and the hub from one origin; the pipeline a workstation
   dependency; Aaron's accounts, domain and Discord registration to do; not yet deployed. Then: a CDN for the tiles,
   shared animals between players.
+- Dig, built 2026-11-02 (`docs/game-dig.md`, branch claude/dig-game-aed701): the vole digs tunnels at 1.27 cm/s down,
+  along and up the way it looks, a dug loop becomes a chamber, a break-out a second hole; it walks the tunnels and the
+  camera goes with it into the dirt; the coyote digs a pit at the same rate, a tunnel it meets opens, the voles run down
+  the other branches and a scent glow leads to them, and the pounce takes one in the opened stretch. Shared from the
+  first hole through the game server's world for the tile and season (a dig channel, `digworld.py`), every page in
+  the tile on it; a system or pit unseen for 7 days decays, a tree hole empty for 30 days too. The AI voles hide in
+  the tunnels and (on the AI host) dig burrows; the AI coyotes dig for buried voles. Next: a cheaper wall underground
+  (3.1 ms from inside at 1920 x 1200, over the 1 ms asked); the vole's body lit by the dirt; the animals and bodies
+  shared so another player's vole is seen in the tunnel; a server check that a dig is near its digger.
 - Multiplayer, designed 2026-11-01 (`docs/multiplayer.md`, from Aaron's spec): the title on stars, the earth
   rising as a crescent, the sign-in (username and password, Discord; Google and Apple greyed until their
   keys exist), the lit earth with a dot per built tile and a list of the places in view sorted by how many

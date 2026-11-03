@@ -196,7 +196,7 @@
    "objects": [
     {
      "object": "burrows",
-     "client": "animals.js placeBurrows (ground squirrels only)",
+     "client": "animals.js placeBurrows (ground squirrels); dig.js (vole tunnels, chambers and holes, dug in play)",
      "status": "partial"
     }
    ],
@@ -7786,7 +7786,7 @@
      "requires": [
       {
        "object": "burrows",
-       "client": "animals.js placeBurrows (ground squirrels only)",
+       "client": "animals.js placeBurrows (ground squirrels); dig.js (vole tunnels, chambers and holes, dug in play)",
        "status": "partial"
       }
      ],
@@ -20154,7 +20154,7 @@
      "requires": [
       {
        "object": "burrows",
-       "client": "animals.js placeBurrows (ground squirrels only)",
+       "client": "animals.js placeBurrows (ground squirrels); dig.js (vole tunnels, chambers and holes, dug in play)",
        "status": "partial"
       }
      ],
@@ -20230,6 +20230,9 @@
       "canis_latrans",
       "corvus_corax",
       "urocyon_cinereoargenteus"
+     ],
+     "play": [
+      "dig"
      ]
     },
     {
@@ -20243,7 +20246,7 @@
      "requires": [
       {
        "object": "burrows",
-       "client": "animals.js placeBurrows (ground squirrels only)",
+       "client": "animals.js placeBurrows (ground squirrels); dig.js (vole tunnels, chambers and holes, dug in play)",
        "status": "partial"
       }
      ],
@@ -20444,7 +20447,7 @@
      "requires": [
       {
        "object": "burrows",
-       "client": "animals.js placeBurrows (ground squirrels only)",
+       "client": "animals.js placeBurrows (ground squirrels); dig.js (vole tunnels, chambers and holes, dug in play)",
        "status": "partial"
       }
      ],
@@ -20520,6 +20523,9 @@
       "canis_latrans",
       "corvus_corax",
       "urocyon_cinereoargenteus"
+     ],
+     "play": [
+      "dig"
      ]
     },
     {
@@ -20570,7 +20576,7 @@
      "requires": [
       {
        "object": "burrows",
-       "client": "animals.js placeBurrows (ground squirrels only)",
+       "client": "animals.js placeBurrows (ground squirrels); dig.js (vole tunnels, chambers and holes, dug in play)",
        "status": "partial"
       }
      ],
@@ -20730,6 +20736,9 @@
       "canis_latrans",
       "corvus_corax",
       "urocyon_cinereoargenteus"
+     ],
+     "play": [
+      "dig"
      ]
     },
     {
@@ -20814,6 +20823,9 @@
       "canis_latrans",
       "corvus_corax",
       "urocyon_cinereoargenteus"
+     ],
+     "play": [
+      "dig"
      ]
     },
     {
@@ -21003,7 +21015,10 @@
       "lepus_californicus": 300,
       "microtus_californicus": 100,
       "odocoileus_hemionus": 400
-     }
+     },
+     "play": [
+      "dig"
+     ]
     },
     {
      "id": "canis_latrans:spring:den:burrow",
@@ -21016,7 +21031,7 @@
      "requires": [
       {
        "object": "burrows",
-       "client": "animals.js placeBurrows (ground squirrels only)",
+       "client": "animals.js placeBurrows (ground squirrels); dig.js (vole tunnels, chambers and holes, dug in play)",
        "status": "partial"
       }
      ],
@@ -25560,7 +25575,7 @@
      "requires": [
       {
        "object": "burrows",
-       "client": "animals.js placeBurrows (ground squirrels only)",
+       "client": "animals.js placeBurrows (ground squirrels); dig.js (vole tunnels, chambers and holes, dug in play)",
        "status": "partial"
       }
      ],
@@ -25649,7 +25664,7 @@
      "requires": [
       {
        "object": "burrows",
-       "client": "animals.js placeBurrows (ground squirrels only)",
+       "client": "animals.js placeBurrows (ground squirrels); dig.js (vole tunnels, chambers and holes, dug in play)",
        "status": "partial"
       }
      ],
@@ -25741,7 +25756,7 @@
      "requires": [
       {
        "object": "burrows",
-       "client": "animals.js placeBurrows (ground squirrels only)",
+       "client": "animals.js placeBurrows (ground squirrels); dig.js (vole tunnels, chambers and holes, dug in play)",
        "status": "partial"
       }
      ],
@@ -26004,7 +26019,7 @@
      "requires": [
       {
        "object": "burrows",
-       "client": "animals.js placeBurrows (ground squirrels only)",
+       "client": "animals.js placeBurrows (ground squirrels); dig.js (vole tunnels, chambers and holes, dug in play)",
        "status": "partial"
       }
      ],
@@ -26197,7 +26212,7 @@
      "requires": [
       {
        "object": "burrows",
-       "client": "animals.js placeBurrows (ground squirrels only)",
+       "client": "animals.js placeBurrows (ground squirrels); dig.js (vole tunnels, chambers and holes, dug in play)",
        "status": "partial"
       }
      ],
@@ -27735,6 +27750,15 @@
       }
      ]
     }
+   ]
+  }
+ },
+ "plays": {
+  "dig": {
+   "client": "client/src/dig.js",
+   "species": [
+    "canis_latrans",
+    "microtus_californicus"
    ]
   }
  }

@@ -709,6 +709,7 @@ export class Dig {
   // coyote with no prey within the pounce's reach and no carcass beside it).
   wantDig(gc, act) {
     const code = gc.code; if (code !== 'microtus_californicus' && code !== 'canis_latrans') return false;
+    const plays = this.tile.games?.plays?.dig?.species; if (plays && !plays.includes(code)) return false;   // games.json: the tile's species that play Dig (pipeline/games.py PLAYS)
     const k = gc.flight.keys; if (k.has('KeyQ')) return true;
     if (!k.has('KeyE')) return false;
     if (code === 'microtus_californicus') return !(this.needs && this.needs.foodHere >= 25);

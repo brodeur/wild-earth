@@ -188,7 +188,7 @@
    "objects": [
     {
      "object": "burrows",
-     "client": "animals.js placeBurrows (ground squirrels only)",
+     "client": "animals.js placeBurrows (ground squirrels); dig.js (vole tunnels, chambers and holes, dug in play)",
      "status": "partial"
     }
    ],
@@ -4760,7 +4760,7 @@
      "requires": [
       {
        "object": "burrows",
-       "client": "animals.js placeBurrows (ground squirrels only)",
+       "client": "animals.js placeBurrows (ground squirrels); dig.js (vole tunnels, chambers and holes, dug in play)",
        "status": "partial"
       }
      ],
@@ -15085,7 +15085,7 @@
      "requires": [
       {
        "object": "burrows",
-       "client": "animals.js placeBurrows (ground squirrels only)",
+       "client": "animals.js placeBurrows (ground squirrels); dig.js (vole tunnels, chambers and holes, dug in play)",
        "status": "partial"
       }
      ],
@@ -19548,7 +19548,7 @@
      "requires": [
       {
        "object": "burrows",
-       "client": "animals.js placeBurrows (ground squirrels only)",
+       "client": "animals.js placeBurrows (ground squirrels); dig.js (vole tunnels, chambers and holes, dug in play)",
        "status": "partial"
       }
      ],
@@ -19635,7 +19635,7 @@
      "requires": [
       {
        "object": "burrows",
-       "client": "animals.js placeBurrows (ground squirrels only)",
+       "client": "animals.js placeBurrows (ground squirrels); dig.js (vole tunnels, chambers and holes, dug in play)",
        "status": "partial"
       }
      ],
@@ -19726,7 +19726,7 @@
      "requires": [
       {
        "object": "burrows",
-       "client": "animals.js placeBurrows (ground squirrels only)",
+       "client": "animals.js placeBurrows (ground squirrels); dig.js (vole tunnels, chambers and holes, dug in play)",
        "status": "partial"
       }
      ],
@@ -19966,7 +19966,7 @@
      "requires": [
       {
        "object": "burrows",
-       "client": "animals.js placeBurrows (ground squirrels only)",
+       "client": "animals.js placeBurrows (ground squirrels); dig.js (vole tunnels, chambers and holes, dug in play)",
        "status": "partial"
       }
      ],
@@ -20154,7 +20154,7 @@
      "requires": [
       {
        "object": "burrows",
-       "client": "animals.js placeBurrows (ground squirrels only)",
+       "client": "animals.js placeBurrows (ground squirrels); dig.js (vole tunnels, chambers and holes, dug in play)",
        "status": "partial"
       }
      ],
@@ -21680,6 +21680,12 @@
      ]
     }
    ]
+  }
+ },
+ "plays": {
+  "dig": {
+   "client": "client/src/dig.js",
+   "species": []
   }
  }
 }
