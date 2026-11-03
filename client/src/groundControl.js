@@ -403,7 +403,7 @@ export class GroundControl {
     if (act && this.animals?.catchNear) {   // a hunter's E within reach of its prey: the catch (animals.js kill, CARRION)
       const c = this.animals.catchNear(P.x, P.y, P.z);
       if (c) this.caught(c);
-      else { const k = this.animals.feedNear?.(P.x, P.y, P.z); if (k && this.fedAt !== k) { this.fedAt = k; this.needs?.fed?.(); this.say(`fed at the ${this.animals.speciesList()[k.sp]?.one || 'carcass'}`); } }   // a scavenger at carrion
+      else { const k = this.animals.feedNear?.(P.x, P.y, P.z); if (k) { const f = this.animals.playerFeed?.(k); if (f) { this.needs?.fed?.(f.share); this.say(f.text); } } }   // a scavenger at carrion: a bite from it (carrion.js)
       if (!c && S.catch === 'leap' && this.needs?.hunter) { const c2 = this.animals.carrionNear?.(P.x, P.z, 2.5); if (c2) this.feeding = { t: CATCH.leap.feed, at: c2 }; }   // E beside a kill: crouch over it and feed
     }
     if (this.feeding) {   // crouched over the kill (caught, or E beside it): still, head low, until a key moves the body

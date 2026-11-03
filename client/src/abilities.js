@@ -54,7 +54,9 @@ const E = c => c.k('KeyE');
 
 // the verbs shared across bodies
 const CATCH = on('catch', 'E', E, { title: 'E within reach of prey (a rush that reaches it catches it too)' });
-const FEED = on('feed', 'E', E, { title: 'E beside a carcass' });
+// a scavenger's feed slot is "ready" (a warm edge) while a carcass is within reach (carrion.js: the needs panel names it and its stage)
+const carcassNear = c => !!c.carrion?.near && c.carrion.nearD < 3.2 && c.carrion.near.meat > 1e-6;
+const FEED = on('feed', 'E', E, { ready: carcassNear, title: 'E beside a carcass: a bite from it (the carcass decays over a day: carrion.js)' });
 // the canids' mousing pounce (groundControl.js CATCH.pounce): E within 2.6 m of prey ahead, or a run that reaches it
 const POUNCE_AT = on('pounce', 'E', c => c.ground.mode === 'pounce', { title: 'E within 2.6 m of prey ahead: the fix, the spring, the kill at the landing (a run onto it springs at once)' });
 // the sniff: its own slot (L) unless the body's act (E) is already a sniff (the fox, the coyote, the lion: groundControl S.act), which sniffs too
@@ -93,7 +95,7 @@ const SPECIES = {
   odocoileus_hemionus: { act: 'graze', verbs: [DRINK, SMELL, SWIM, MARK, no('rut', 'F'), CALL] },
   urocyon_cinereoargenteus: { act: 'sniff', verbs: [POUNCE_AT, DRINK, SMELL, EAT, DIG, DEN, MARK, SWIM] },
   canis_latrans: { act: 'sniff', verbs: [POUNCE_AT, FEED, DRINK, SMELL, DIG_PIT, DEN, MARK, SWIM, CALL] },
-  puma_concolor: { act: 'sniff', verbs: [CATCH, on('leap', '', c => c.ground.mode === 'leap', { title: 'the rush\'s last bound: a leap onto prey within 3 m ahead, the kill at the landing' }), on('feed', 'E', c => !!c.ground.feeding, { title: 'crouched over the kill after a catch, or E beside one' }), DRINK, SMELL, DEN, MARK, SWIM] },
+  puma_concolor: { act: 'sniff', verbs: [CATCH, on('leap', '', c => c.ground.mode === 'leap', { title: 'the rush\'s last bound: a leap onto prey within 3 m ahead, the kill at the landing' }), on('feed', 'E', c => !!c.ground.feeding, { ready: carcassNear, title: 'crouched over the kill after a catch, or E beside one' }), DRINK, SMELL, DEN, MARK, SWIM] },
   ursus_americanus: { act: 'dig', verbs: [FEED, DRINK, SMELL, CARRY, CLIMB, DEN, MARK, SWIM] },
   sylvilagus_bachmani: { act: 'nibble', verbs: [DRINK, SMELL, SWIM] },
   lepus_californicus: { act: 'nibble', verbs: [DRINK, SMELL, SWIM] },
@@ -105,13 +107,13 @@ const SPECIES = {
   oreortyx_pictus: { act: 'scratch', verbs: [DRINK, no('display', 'F'), CALL] },
   // the fliers (flierControl.js FLIERS) and the raven: their verbs after the flight's moves
   buteo_jamaicensis: { verbs: [on('strike', '', null, { title: 'fly into prey: taken on contact' }), CARRY, DRINK_NO, CALL] },
-  cathartes_aura: { verbs: [on('feed', '', null, { title: 'land beside a carcass: fed on contact' }), SMELL, DRINK_NO] },
+  cathartes_aura: { verbs: [on('feed', '', null, { ready: carcassNear, title: 'land beside a carcass: fed on contact, a bite every few seconds' }), SMELL, DRINK_NO] },
   aphelocoma_californica: { verbs: [on('take', '', null, { title: 'dive into a lizard: grabbed on contact, then down on it with a few pecks' }), CACHE, DRINK_NO, CALL] },
   cyanocitta_stelleri: { verbs: [CACHE, DRINK_NO, CALL] },
   corvus_corax: { verbs: [on('call', 'C', c => c.k('KeyC')),
     on('strike', 'E', c => !!c.flight.landed && c.flight.gnd?.stab > 0 && !!c.flight.gnd?.stabPrey, { show: c => !!c.flight.landed, title: 'E on the ground within reach of a lizard or vole: three quick hard bill stabs, the kill on the last' }),
     CARRY,
-    on('feed', 'E', c => !!c.flight.landed && c.flight.gnd?.stab > 0 && !c.flight.gnd?.stabPrey, { show: c => !!c.flight.landed, title: 'E beside a carcass: the same stabs; the belly filled once per carcass' }),
+    on('feed', 'E', c => !!c.flight.landed && c.flight.gnd?.stab > 0 && !c.flight.gnd?.stabPrey, { show: c => !!c.flight.landed, ready: carcassNear, title: 'E beside a carcass: the same stabs; each burst a bite from it' }),
     CACHE, DRINK_NO] },
 };
 // the fallbacks by the walker's rig, for a species the table does not have
@@ -211,12 +213,12 @@ export function abilitiesFor(kind, code, S = null) {
 export class Abilities {
   // el: #abilities; legs: #legs (the legs meter in the status column); bar: #bodyBar (the row); the controls, the
   // flight, the needs and the hunt as main.js makes them
-  constructor({ el, legs, bar, squirrel, woodpecker, ground, flier, spirit, flight, needs, hunt, scent = null }) {
-    Object.assign(this, { el, legs, bar, squirrel, woodpecker, ground, flier, spirit, flight, needs, hunt, scent });
+  constructor({ el, legs, bar, squirrel, woodpecker, ground, flier, spirit, flight, needs, hunt, scent = null, carrion = null }) {
+    Object.assign(this, { el, legs, bar, squirrel, woodpecker, ground, flier, spirit, flight, needs, hunt, scent, carrion });
     this.body = ''; this.slots = []; this.visible = null;
     this.legsBar = legs?.querySelector('b') || null;
     const keys = flight.keys;
-    this.c = { k: (...codes) => codes.some(x => keys.has(x)), shift: false, squirrel, woodpecker, ground, flier, spirit, flight, needs, hunt, scent };
+    this.c = { k: (...codes) => codes.some(x => keys.has(x)), shift: false, squirrel, woodpecker, ground, flier, spirit, flight, needs, hunt, scent, carrion };
   }
   // which body the player is in: [control, species code, the species' entry]
   which() {

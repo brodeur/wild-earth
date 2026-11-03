@@ -497,7 +497,7 @@ export class RavenFlight {
     const bx = this.pos.x - Math.sin(G.yaw) * 0.3, bz = this.pos.z - Math.cos(G.yaw) * 0.3, at = G.stabAt; G.stabAt = null;   // (peckT stays the stab's for the last dip; the next peck() resets it)
     if (!AN) return;
     if (G.stabPrey) { const c = AN.catchNear(bx, G.feet, bz); if (c) { N?.fed?.(); say(`took a ${AN.speciesList()[c.sp]?.one || 'prey'}`); } else say('the stab misses'); }
-    else if (at && this.fedAt !== at) { this.fedAt = at; N?.fed?.(); say(`fed at the ${AN.speciesList()[at.sp]?.one || 'carcass'}`); }
+    else if (at) { const f = AN.playerFeed?.(at); if (f) { N?.fed?.(f.share); say(f.text); } }   // a bite from the carcass (carrion.js)
   }
   takeOff() {
     const G = this.gnd, up = G.liftMode === 'x', branch = !!G.perch;
