@@ -17,13 +17,27 @@ import { emergentRocksIn } from './water.js';
 //   cls   rock class (geology G, 1-based into ground_classes.rock_classes)
 //   frag  surface rock fragments % (soils G); depth to bedrock (soils B) is already inside L.
 // Rules:
-//   outcrop cluster   L > 0.45: 2-6 main masses around a jittered cell centre, in the class's form
-//                     (below), plus slate tombstones or granite corestones; their size grows with L.
+//   (2026-11-03: every rule below places clusters, not one group per 30 m cell; docs/decisions.md "rocks cluster")
+//   outcrop cluster   L > 0.45 where the ~90 m patchiness (patch()) passes 0.55 (about three outcrop cells
+//                     in five): 2-8 main masses round a point anywhere in the cell, in the class's form
+//                     (below), plus slate tombstones or granite corestones; their size grows with L. None
+//                     on bare bedrock past ~35 degrees (onFace(): the cliff material draws that rock).
 //   boulders / float  L 0.15-0.45 ramps 0 -> 12 per cell; fragments > 25 % add 2-8 per cell (times
 //                     1 - tree cover / 2); an outcrop cell has 4-10; serpentinite x2.4 (at most 30,
-//                     others 20). Sizes 0.4-2 m (serpentinite blocks 0.5-1.5 m), truncated Pareto,
-//                     all in 1-3 clusters per cell (Rayleigh scatter of 1.5-4 m), most of a cell clear.
-//   talus             every mass and every boulder over 1 m gets 5-30 smaller stones round its base,
+//                     others 20); the rate times the patchiness. Spread as a Neyman-Scott process: a
+//                     Poisson number of groups (many cells none), each of a heavy-tailed size (3-40),
+//                     a Rayleigh scatter of 1-4 m round a point anywhere in the cell. Sizes 0.4-2 m
+//                     (serpentinite blocks 0.5-1.5 m), truncated Pareto.
+//   rockfall talus    below the substrate's bare faces (talusField): a deposit traced down the steepest
+//                     ground from each face cell, coming to rest over the runout past the slope break,
+//                     widening into cones; groups of a heavy-tailed size stretched down the slope, sorted
+//                     (fines at the apex, blocks at the toe), in the fallen rock's class (granite blocks
+//                     and slabs; slate fewer and platy). Mapped surficial talus counts too.
+//   domes             on bare granite under 30 degrees: an erratic now and then, groups of flat
+//                     exfoliation slabs.
+//   resting           no loose rock (float, talus, halos, bed stones) on ground past ~40 degrees, nor on
+//                     bare bedrock past ~30 (loose()).
+//   halos             every mass and every boulder over 1 m gets 5-30 smaller stones round its base,
 //                     smaller further out, stretched and weighted down the slope; plus groups of
 //                     5-20 small stones (0.08-0.4 m) at the clusters. Never a small stone alone.
 //   water edges       cobble and gravel on the dry bed and banks of every stream (water.js widths,
@@ -131,6 +145,16 @@ function fbm3(x, y, z, s, oct = 4) {   // about -1..1
   for (let o = 0; o < oct; o++) { a += amp * (vnoise3(x, y, z, s + o * 101) - 0.5) * 2; n += amp; amp *= 0.5; x *= 2.03; y *= 2.03; z *= 2.03; }
   return a / n;
 }
+// A Poisson count of mean mu from a seeded stream (Knuth's product of uniforms; a normal past 30)
+function poisson(mu, R) {
+  if (!(mu > 0)) return 0;
+  if (mu > 30) return Math.max(0, Math.round(mu + Math.sqrt(mu) * Math.sqrt(-2 * Math.log(1 - R() * 0.9999)) * Math.cos(2 * Math.PI * R())));
+  const e = Math.exp(-mu); let k = 0, p = R();
+  while (p > e) { k++; p *= R(); }
+  return k;
+}
+// The substrate step's lithologies (pipeline/substrate.py, client/substrate.json) as the rock classes (LOOK)
+const LITH_CLASS = [null, 'granitic', 'slate_phyllite', 'schist', 'greenstone_metavolcanic', 'sandstone_conglomerate', 'volcanic', 'volcanic', 'serpentinite', 'limestone_marble', null];
 const smooth = (e0, e1, x) => { const t = Math.min(Math.max((x - e0) / (e1 - e0), 0), 1); return t * t * (3 - 2 * t); };
 const srgb = c => Math.pow(c, 2.2);
 function hashStr(s) { let h = 2166136261; for (let i = 0; i < s.length; i++) { h ^= s.charCodeAt(i); h = Math.imul(h, 16777619); } return h >>> 0; }
@@ -834,7 +858,7 @@ export class Rocks {
       // for the talus around it, or null where it may not stand
       const push = (list, kind, v, x, north, az, lean, sx, sy, sz, k, ends = 0, R = rnd) => {
         const t = 0.86 + 0.28 * R(), hue = (R() - 0.5) * 0.08;   // drawn first: a skip moves nothing else
-        if (this.skip(i, j, k, x, north)) return null;
+        if (this.skip(i, j, k, x, north) || (kind === 'out' && this.onFace(x, north))) return null;
         if (ends) { const ce = Math.sin(az) * ends, cn = Math.cos(az) * ends; if (this.skip(i, j, k + 50, x + ce, north + cn) || this.skip(i, j, k + 51, x - ce, north - cn)) return null; }
         const dims = this.dimsOf(d.cls, kind === 'bould' ? 'bould' : 'out', v);
         const info = { x, north, az, a: 0.5 * sx, b: 0.5 * dims.wid * sx * sz, h: dims.hgt * sx * sy, s: sx };
@@ -844,15 +868,19 @@ export class Rocks {
         return info;
       };
       const parents = [];
-      const cx = (i + 0.5 + (rnd() - 0.5) * 0.5) * res, cn = size - (j + 0.5 + (rnd() - 0.5) * 0.5) * res;
+      const cx = (i + 0.5 + (rnd() - 0.5) * 0.9) * res, cn = size - (j + 0.5 + (rnd() - 0.5) * 0.9) * res;   // anywhere in the cell, not on a lattice
       // strike: regional for the bedded classes (slowly wandering +-8 degrees across the tile),
       // joint sets loosely tied to it for greenstone, free for the massive rocks.
       const wander = (vnoise3(i * 0.08, j * 0.08, 0.5, 977) - 0.5) * 16;
       const strike = (STRIKE_DEG + wander) * Math.PI / 180;
       const dipLean = (5 + 15 * rnd()) * Math.PI / 180;   // dip 70-85 degrees toward the north-east
       let k = 0, kl = 0;
-      if (L > 0.45) {
-        const t = smooth(0.45, 0.9, L), nMain = Math.min(6, 2 + Math.floor(rnd() * (1 + 4 * t)));
+      // the outcrops under the same ~90 m patchiness as the float (patch()): reefs and knobs in groups along the
+      // resistant ground with bare stretches between, about two outcrop cells in five without one, the rest with a
+      // few more masses (one group in every outcrop cell drew a jittered 30 m lattice on Half Dome's apron)
+      const pt = this.patch(i, j), outcrop = L > 0.45 && pt > 0.55;
+      if (outcrop) {
+        const t = smooth(0.45, 0.9, L), nMain = Math.min(8, 2 + Math.floor(rnd() * (1 + 4 * t) * Math.min(1.6, 0.6 + 0.4 * pt)));
         if (look.strike) {
           const thick = form === 'schist';
           const az = strike + (rnd() - 0.5) * 0.1, nb = 1 + Math.floor(rnd() * 2.5);
@@ -904,23 +932,34 @@ export class Rocks {
           }
         }
       }
-      // Boulders and float, in clusters: 1-3 centres per cell (the first on the outcrop), each a
-      // tight Rayleigh scatter of a few metres, so most of the cell stays clear and a few spots are stony.
+      // Boulders and float (the soils' rock fragments, the outcrop's own), in clusters: a Neyman-Scott process
+      // (2026-11-03, Aaron: "rocks should cluster together - if there are rocks nearby they should be even closer together
+      // or further apart"). The cell's rate is spread over a Poisson number of groups, so many cells have none; each
+      // group's size heavy-tailed (3 to 40 stones, most small), its stones in a Rayleigh scatter of a few metres round a
+      // centre anywhere in the cell; the rate itself under a ~90 m log-normal patchiness (patch()): stony stretches with
+      // clear ground between. The 2026-10-25 rule put 1-3 groups in every cell at the soils' rate, and the groups tiled
+      // the slope like a jittered grid (pair correlation flat past 8 m, under a fifth of 30 m squares empty). None where
+      // loose rock cannot rest (loose(): bare rock past ~30 degrees, any ground past ~40).
       let lam = L > 0.45 ? 4 + 6 * smooth(0.45, 0.9, L) : 12 * smooth(0.15, 0.45, L);
       if (fragOn) lam += (2 + 6 * Math.min((d.frag - 25) / 75, 1)) * (1 - 0.5 * d.tree);
-      lam = Math.min(lam * (look.rubble || 1), look.rubble ? 30 : 20);
-      const nB = Math.floor(lam + rnd()), nC = Math.max(1, Math.min(3, Math.round(nB / 6)));
+      lam = Math.min(lam * (look.rubble || 1), look.rubble ? 30 : 20) * this.patch(i, j);
       // rubble classes (serpentinite): blocks of 0.5-1.5 m with a heavier tail, not pebbles
       const maxS = look.rubble ? 1.5 : 2, s0 = look.rubble ? 0.5 : 0.4, al = look.rubble ? 1.2 : 1.7;
-      const cs = [];
-      for (let q = 0; q < nC; q++) cs.push(q === 0 && L > 0.45 ? [cx, cn, 4] : [(i + 0.15 + 0.7 * rnd()) * res, size - (j + 0.15 + 0.7 * rnd()) * res, 1.5 + 2 * rnd()]);
-      for (let q = 0; q < nB; q++) {
-        const c0 = cs[q % nC], r = c0[2] * Math.sqrt(-2 * Math.log(1 - rnd() * 0.995)), a = rnd() * Math.PI * 2;
+      const cs = [];   // the groups: [east, north, scatter (m), stones]
+      if (outcrop) cs.push([cx, cn, 4, 3 + Math.floor(rnd() * 6)]);   // round the outcrop's masses
+      const nPar = poisson(Math.max(0, lam - (cs.length ? cs[0][3] : 0)) / 7, rnd);
+      for (let q = 0; q < nPar; q++) {
+        const ns = Math.min(40, Math.floor(3 * Math.pow(1 - rnd() * 0.999, -1 / 1.3)));
+        cs.push([(i + rnd()) * res, size - (j + rnd()) * res, (0.8 + 0.45 * Math.sqrt(ns)) * (0.6 + 0.8 * rnd()), ns]);
+      }
+      for (const c0 of cs) for (let q = 0; q < c0[3]; q++) {
+        const r = c0[2] * Math.sqrt(-2 * Math.log(1 - rnd() * 0.995)), a = rnd() * Math.PI * 2;
         const x = c0[0] + Math.cos(a) * r, nn = c0[1] + Math.sin(a) * r;
         const u = rnd(), s = s0 * Math.pow(1 - u * (1 - Math.pow(s0 / maxS, al)), -1 / al);
         const v = Math.floor(rnd() * VARIANTS);
-        const az = look.strike ? strike + (rnd() - 0.5) * 0.7 : rnd() * Math.PI * 2;
-        const f = push(bould, 'bould', v, x, nn, az, (rnd() - 0.5) * 0.3, s, 0.8 + 0.4 * rnd(), 0.8 + 0.4 * rnd(), 100 + k++);
+        const az = look.strike ? strike + (rnd() - 0.5) * 0.7 : rnd() * Math.PI * 2, lean = (rnd() - 0.5) * 0.3, sy = 0.8 + 0.4 * rnd(), sz = 0.8 + 0.4 * rnd();
+        if (!this.loose(x, nn)) continue;
+        const f = push(bould, 'bould', v, x, nn, az, lean, s, sy, sz, 100 + k++);
         if (f && s > 1) parents.push(f);
       }
       // Talus: a halo of smaller stones around the base of every mass and every boulder over 1 m,
@@ -933,6 +972,7 @@ export class Rocks {
       };
       let kh = 0;
       const stone = (x, nn, s, az) => {
+        if (!this.loose(x, nn)) return;
         if (s >= 0.42) { const v = Math.floor(r3() * VARIANTS); push(bould, 'bould', v, x, nn, az, (r3() - 0.5) * 0.4, s, 0.8 + 0.4 * r3(), 0.8 + 0.4 * r3(), 500 + kh++, 0, r3); }
         else pebble(x, nn, s, 0, r3, tone());
       };
@@ -953,17 +993,20 @@ export class Rocks {
           stone(p.x + ex + ex / el * dd, p.north + en + en / el * dd, sz, r3() * Math.PI * 2);
         }
       }
-      const nG = Math.min(6, Math.floor((fragOn ? 1 + 2 * Math.min((d.frag - 25) / 75, 1) : 0) + 3 * smooth(0.15, 0.9, L) + 0.5 * nC + r3()));
+      const nG = cs.length ? Math.min(6, Math.floor((fragOn ? 1 + 2 * Math.min((d.frag - 25) / 75, 1) : 0) + 3 * smooth(0.15, 0.9, L) + 0.5 * cs.length + r3())) : 0;
       for (let q = 0; q < nG; q++) {
-        const c0 = r3() < 0.75 ? cs[q % nC] : [(i + r3()) * res, size - (j + r3()) * res, 3];
+        const c0 = cs[q % cs.length];
         const rr = (c0[2] + 1) * Math.sqrt(-2 * Math.log(1 - r3() * 0.99)), aa = r3() * Math.PI * 2;
         const gx = c0[0] + Math.cos(aa) * rr, gn = c0[1] + Math.sin(aa) * rr, n = 5 + Math.floor(r3() * 16), gr = 0.5 + 1.5 * r3();
         for (let k2 = 0; k2 < n; k2++) {
           const r = gr * Math.sqrt(r3()), a = r3() * Math.PI * 2;
-          pebble(gx + Math.cos(a) * r, gn + Math.sin(a) * r, 0.08 + 0.32 * Math.pow(r3(), 2.2), 0, r3, tone());
+          const px = gx + Math.cos(a) * r, pn = gn + Math.sin(a) * r, ps = 0.08 + 0.32 * Math.pow(r3(), 2.2), pc = tone();
+          if (this.loose(px, pn)) pebble(px, pn, ps, 0, r3, pc);
         }
       }
     }
+    // Rockfall talus below the faces and the erratics and slabs on granite domes (talusField), every mode
+    if (this.tile.habitat.channel(i, j, 0) !== 7) this.talusStones(i, j, d, mode, pebble, bould, countOnly);
     // The water system's beds (tile.water, 2026-10-29): cobbles, gravel bars and boulders laid by the pipeline's bed
     // material, in every mode (the boulders in 'full', the pebbles in 'peb' and 'count'); the old stream-bank stones
     // only on a tile without the grid, the pond-shore gravel band on every tile.
@@ -976,6 +1019,170 @@ export class Rocks {
       : out.length || bould.length ? { out, bould } : null;
     if (cache) cache.set(id, result);
     return result;
+  }
+  // The rate of loose rock under a ~90 m log-normal patchiness (mean about 1): stony stretches and clear ones.
+  patch(i, j) { return Math.exp(2 * fbm3(i / 3, j / 3, 0.7, 4441, 3)) / 1.25; }
+  // Whether loose rock can rest at (x, north): not on ground past ~40 degrees, nor on bare bedrock (the substrate's
+  // exposure past 0.4, a bedrock lithology) past ~30: a stone there slides or rolls on (the faces' rock is the cliff
+  // material's). Bare ground of a surficial deposit (lithology 10: talus, till, alluvium) is loose rock itself.
+  loose(x, n) {
+    const g = this.slopeAt(x, n), s2 = g[0] * g[0] + g[1] * g[1];
+    if (s2 > 0.70) return false;   // tan 40 degrees, squared
+    const S = this.tile.substrate;
+    return !(s2 > 0.33 && S && S.at(x, n, 0) > 102 && S.at(x, n, 1) !== 10);   // tan 30 degrees squared; 0.4 x 255
+  }
+  // Bare bedrock steeper than ~35 degrees (the substrate's exposure past 0.5, not a surficial deposit): the cliff
+  // material draws that rock, so no outcrop mass is set on it (granite domes there read as droplets on the slab)
+  onFace(x, n) {
+    const S = this.tile.substrate; if (!S || S.at(x, n, 0) < 128 || S.at(x, n, 1) === 10) return false;
+    const g = this.slopeAt(x, n); return g[0] * g[0] + g[1] * g[1] > 0.49;
+  }
+  // The rockfall field per 30 m cell, once per tile, from the substrate step (exposure, lithology) and the heights:
+  //   source   the share of the cell that is bare rock (exposure > 0.5) steeper than 40 degrees (16 samples)
+  //   path     from each source cell down the steepest of the eight neighbours: through the fall zone while the
+  //            ground is steeper than ~35 degrees (nothing rests there), then the runout, where the falling rock
+  //            comes to rest, a share per step (1 - exp(-step / Lr), Lr = 15 m + 0.12 x the drop above the break,
+  //            three times as fast on ground under ~6 degrees), a fifth of it to each side so the deposit widens
+  //            into a cone; it ends in a pit or past 5 Lr
+  //   A        the deposit (source shares come to rest here), T its mean runout position in Lr (size sorting: the
+  //            fines near the apex, T small; the big blocks roll furthest, T past 1), lith the substrate lithology
+  //            of its largest contributor
+  //   dome     the share of the cell that is bare granite under 30 degrees (erratics and exfoliation slabs)
+  //   mapped   bare ground of a surficial deposit on 20-40 degrees (the talus the geology maps and the photo shows
+  //            pale) adds its share to A at a middle runout (T 1), in the lithology of the nearest source cell
+  talusField() {
+    if (this._talus) return this._talus;
+    const W = this.W, res = this.res, size = this.tile.size, S = this.tile.substrate, H = this.tile.heights, N = W * W;
+    const A = new Float32Array(N), T = new Float32Array(N), lith = new Uint8Array(N), top = new Float32Array(N), dome = new Float32Array(N);
+    const t0 = performance.now();
+    this._talus = { A, T, lith, dome };
+    if (!S) return this._talus;
+    const ch = new Float32Array(N), src = new Float32Array(N), srcL = new Uint8Array(N);
+    for (let j = 0; j < W; j++) for (let i = 0; i < W; i++) {
+      const x0 = i * res, n1 = size - j * res, id = j * W + i;
+      ch[id] = H.at(x0 + res / 2, n1 - res / 2);
+      let steep = 0, gran = 0, surf = 0, lb = 0;
+      for (let b = 0; b < 4; b++) for (let a = 0; a < 4; a++) {
+        const x = x0 + (a + 0.5) * res / 4, n = n1 - (b + 0.5) * res / 4, e = S.at(x, n, 0);
+        if (e < 77) continue;
+        const li = S.at(x, n, 1); if (e < 128 && li !== 10) continue;
+        const gx = (H.at(x + 4, n) - H.at(x - 4, n)) / 8, gn = (H.at(x, n + 4) - H.at(x, n - 4)) / 8, g2 = gx * gx + gn * gn;
+        if (li === 10) { if (g2 > 0.13 && g2 < 0.70) surf++; }
+        else if (e >= 128) { if (g2 > 0.70) { steep++; lb = li; } else if (g2 < 0.33 && li === 1) gran++; }
+      }
+      src[id] = steep / 16; srcL[id] = lb; dome[id] = gran / 16; if (surf) { A[id] = 0.8 * surf / 16; T[id] = A[id]; top[id] = -1; }
+    }
+    const NB = [[1, 0], [-1, 0], [0, 1], [0, -1], [1, 1], [1, -1], [-1, 1], [-1, -1]];
+    const put = (i, j, dm, t, l) => {
+      if (i < 0 || j < 0 || i >= W || j >= W) return;
+      const k = j * W + i; A[k] += dm; T[k] += dm * t;
+      if (dm > top[k]) { top[k] = dm; lith[k] = l; }
+    };
+    for (let j = 0; j < W; j++) for (let i = 0; i < W; i++) {
+      const s0 = src[j * W + i]; if (s0 < 0.06) continue;
+      let ci = i, cj = j, m = s0, run = 0, drop = 0, Lr = 0;
+      for (let step = 0; step < 90 && m > 0.01 * s0; step++) {
+        let bi = -1, bj = -1, bs = 0, bd = 0, di = 0, dj = 0;
+        for (const [a, b] of NB) {
+          const ni = ci + a, nj = cj + b; if (ni < 0 || nj < 0 || ni >= W || nj >= W) continue;
+          const dd = (a && b ? Math.SQRT2 : 1) * res, sl = (ch[cj * W + ci] - ch[nj * W + ni]) / dd;
+          if (sl > bs) { bs = sl; bi = ni; bj = nj; bd = dd; di = a; dj = b; }
+        }
+        if (bi < 0) { if (Lr) put(ci, cj, m, run / Lr, srcL[j * W + i]); break; }   // a pit: the rest stops here
+        if (!Lr) {
+          if (bs > 0.7) { drop += bs * bd; ci = bi; cj = bj; continue; }   // the fall zone
+          Lr = 15 + 0.12 * drop;
+        }
+        run += bd;
+        const dm = m * (1 - Math.exp(-bd / Lr * (bs < 0.1 ? 3 : 1))), t = run / Lr, l = srcL[j * W + i];
+        put(bi, bj, 0.6 * dm, t, l); put(bi - dj, bj + di, 0.2 * dm, t, l); put(bi + dj, bj - di, 0.2 * dm, t, l);
+        m -= dm; ci = bi; cj = bj;
+        if (run > 5 * Lr) break;
+      }
+    }
+    for (let k = 0; k < N; k++) if (A[k] > 0) T[k] /= A[k];
+    // the mapped talus with no fallen rock's lithology yet: the nearest source cell's, within 150 m
+    for (let j = 0; j < W; j++) for (let i = 0; i < W; i++) {
+      const k = j * W + i; if (lith[k] || !(A[k] > 0)) continue;
+      for (let r = 1; r <= 5 && !lith[k]; r++) for (let b = -r; b <= r && !lith[k]; b++) for (let a = -r; a <= r; a++) {
+        const ii = i + a, jj = j + b; if (ii < 0 || jj < 0 || ii >= W || jj >= W) continue;
+        if (srcL[jj * W + ii]) { lith[k] = srcL[jj * W + ii]; break; }
+      }
+    }
+    this.stats.talusMs = Math.round(performance.now() - t0);
+    return this._talus;
+  }
+  // The talus of a cell (talusField): its stones in clusters (a Poisson number, each of a heavy-tailed size, a scatter
+  // stretched down the slope, as rock comes to rest in tongues and lobes), sorted by the runout (the fines near the
+  // apex, the blocks at the toe), in the class and form of the rock they fell from: granite blocks and a quarter of
+  // them flat exfoliation slabs; slate fewer and platy, lying flat. On bare granite under 30 degrees (a dome's back):
+  // a scattered erratic now and then, and groups of flat exfoliation slabs. Own stream (SALT + 23), the same draws in
+  // every mode.
+  talusStones(i, j, d, mode, pebble, bould, countOnly) {
+    const tf = this.talusField(), k0 = j * this.W + i, tA = tf.A[k0], dome = tf.dome[k0];
+    if (tA < 0.03 && dome < 0.25) return;
+    const res = this.res, size = this.tile.size, R = mulberry32(hash(i, j, SALT + 23));
+    const cls = LITH_CLASS[tf.lith[k0]] || (tA < 0.03 ? 'granitic' : d.cls && LOOK[d.cls] ? d.cls : 'other'), look = LOOK[cls];
+    const slate = look.form === 'fin' || look.form === 'schist', gran = look.form === 'dome';
+    const tone = () => {   // the class's weathered colour, a little paler on fresh-fallen rock
+      const t = 0.82 + 0.3 * R(), h = (R() - 0.5) * 0.06, c = [0, 1, 2].map(a => (look.color[a] + look.mottle[a]) / 2 * t);
+      return [srgb(c[0] * (1 + h)), srgb(c[1]), srgb(c[2] * (1 - h))];
+    };
+    let kb = 0;
+    const block = (x, n, sx, sy, sz, az, lean, flat) => {   // a boulder-tier block of the talus class
+      const v = flat ? (slate ? 6 + Math.floor(R() * 2) : Math.floor(R() * VARIANTS)) : Math.floor(R() * VARIANTS);
+      const t = 0.84 + 0.26 * R(), hue = (R() - 0.5) * 0.06;
+      if (mode !== 'full' && mode !== 'count') return;
+      if (x < 0 || n < 0 || x > size || n > size || this.skip(i, j, 700 + kb, x, n)) return;
+      const dims = this.dimsOf(cls, 'bould', v); kb++;
+      if (countOnly) { bould.push(1); return; }
+      const m = this.place(x, n, az, lean, sx, sy, sz, dims, new Float32Array(16));
+      bould.push({ key: `${cls}|${v}`, m, c: [t * (1 + hue), t, t * (1 - hue)], x, y: m[13], z: -n, s: Math.max(Math.hypot(m[0], m[1], m[2]), Math.hypot(m[8], m[9], m[10])) });
+    };
+    const stone = (x, n, s, flat) => {
+      const az = R() * Math.PI * 2, lean = (R() - 0.5) * (flat ? 0.12 : 0.4);
+      const sy = flat ? (slate ? 0.2 + 0.15 * R() : 0.28 + 0.15 * R()) : 0.7 + 0.35 * R(), sz = flat && slate ? 1 + 0.6 * R() : 0.8 + 0.4 * R();
+      if (!this.loose(x, n)) return;
+      if (s >= 0.42) block(x, n, s, sy, sz, az, lean, flat);
+      else pebble(x, n, s, 0, R, tone());
+    };
+    if (tA >= 0.03) {
+      const tm = tf.T[k0], g = this.slopeAt((i + 0.5) * res, size - (j + 0.5) * res), gl = Math.hypot(g[0], g[1]) || 1;
+      const dE = -g[0] / gl, dN = -g[1] / gl;   // downhill
+      const lam = Math.min(60, 16 * tA) * (slate ? 0.5 : 1) * Math.sqrt(this.patch(i, j));
+      const s0 = Math.min(0.7, 0.08 + 0.2 * Math.min(tm, 2.5)), maxS = slate ? 0.9 : gran ? 3.5 : 2.2, al = 1.6;
+      const nPar = poisson(lam / 9, R);
+      for (let q = 0; q < nPar; q++) {
+        const ns = Math.min(50, Math.floor(4 * Math.pow(1 - R() * 0.999, -1 / 1.4)));
+        const px = (i + R()) * res, pn = size - (j + R()) * res, sa = (2 + 0.6 * Math.sqrt(ns)) * (0.7 + 0.6 * R()), sc = sa * (0.45 + 0.3 * R());
+        for (let c = 0; c < ns; c++) {
+          const u = Math.sqrt(-2 * Math.log(1 - R() * 0.995)), a = R() * Math.PI * 2, along = u * Math.cos(a) * sa, across = u * Math.sin(a) * sc;
+          const x = px + dE * along - dN * across, n = pn + dN * along + dE * across;
+          const s = s0 * Math.pow(1 - R() * (1 - Math.pow(s0 / maxS, al)), -1 / al) * (1 + 0.3 * Math.max(0, along / sa));   // bigger at the lobe's foot
+          stone(x, n, Math.min(s, maxS), (gran && R() < 0.25) || slate);
+        }
+      }
+    }
+    if (dome >= 0.25 && cls === 'granitic') {
+      // erratics: a lone boulder now and then (one cell in ten), with a stone or two beside it
+      const ne = poisson(0.1 * dome, R);
+      for (let q = 0; q < ne; q++) {
+        const x = (i + R()) * res, n = size - (j + R()) * res, s = 1.2 + 2.3 * Math.pow(R(), 1.5);
+        stone(x, n, s, false);
+        const nc = Math.floor(R() * 3);
+        for (let c = 0; c < nc; c++) { const a = R() * Math.PI * 2, r = s * (0.7 + R()); stone(x + Math.cos(a) * r, n + Math.sin(a) * r, s * (0.15 + 0.25 * R()), false); }
+      }
+      // exfoliation slabs: groups of 2-5 flat plates 1-4 m across, lying on the sheet they came off
+      const ng = poisson(0.25 * dome, R);
+      for (let q = 0; q < ng; q++) {
+        const x = (i + R()) * res, n = size - (j + R()) * res, nsl = 2 + Math.floor(R() * 4);
+        for (let c = 0; c < nsl; c++) {
+          const a = R() * Math.PI * 2, r = 1.5 + 3 * R(), sx = 1 + 3 * Math.pow(R(), 1.3), sy = 0.1 + 0.08 * R(), az = R() * Math.PI * 2;
+          const xx = x + Math.cos(a) * r, nn = n + Math.sin(a) * r;
+          if (this.loose(xx, nn)) block(xx, nn, sx, sy, 0.6 + 0.4 * R(), az, (R() - 0.5) * 0.08, true);
+        }
+      }
+    }
   }
   // Downhill gradient of the drawn terrain at (x, north): [dh/dEast, dh/dNorth].
   slopeAt(x, n) { return [(this.meshH(x + 1, n) - this.meshH(x - 1, n)) / 2, (this.meshH(x, n + 1) - this.meshH(x, n - 1)) / 2]; }
@@ -1056,12 +1263,13 @@ export class Rocks {
     const x0 = i * res, n1 = size - j * res, k = Math.max(1, Math.round(res / wres));
     const px0 = Math.round(x0 / wres), py0 = Math.round((size - n1) / wres);
     let kb = 0;
+    const keep = pebble, noPebble = (x, n, s, round, R) => { R(); R(); R(); R(); };   // the same draws, nothing placed
     // a water-worn boulder: the class's boulder form, rounder (a low lean), its ground point free of the water skips
     const boulder = (x, n, sz) => {
       const v = Math.floor(r5() * VARIANTS), az = r5() * Math.PI * 2, lean = (r5() - 0.5) * 0.2, sy = 0.6 + 0.3 * r5(), sz2 = 0.8 + 0.4 * r5();
       const t = 0.9 + 0.2 * r5(), hue = (r5() - 0.5) * 0.06;
       if (mode !== 'full' && mode !== 'count') return;
-      if (x < 0 || n < 0 || x > size || n > size) return;
+      if (x < 0 || n < 0 || x > size || n > size || !this.loose(x, n)) return;
       const dims = this.dimsOf(d.cls || 'other', 'bould', v);
       if (countOnly) { bould.push(1); return; }
       const m = this.place(x, n, az, lean, sz, sy, sz2, dims, new Float32Array(16));
@@ -1076,6 +1284,9 @@ export class Rocks {
       const big = Math.min(1.6, 0.7 + 0.12 * half);   // cobbles grow with the channel
       const wx0 = cx * wres, wn1 = size - cy * wres;
       const at = () => [wx0 + r5() * wres, wn1 - r5() * wres];
+      // a bed on bare rock past ~30 degrees is the bare slab (loose()): its cobbles and boulders are drawn, not placed
+      const bare = !this.loose(wx0 + wres / 2, wn1 - wres / 2);
+      pebble = bare ? noPebble : keep;
       if (mat === 2) { const n = r5() < 0.5 ? 3 + Math.floor(r5() * 6) : 0; for (let m = 0; m < n; m++) { const [x, n2] = at(); pebble(x, n2, 0.04 + 0.1 * r5(), 1, r5, col()); } continue; }
       if (mat === 3) { const n = Math.floor((26 + 24 * r5()) * (bar ? 2 : 1)); for (let m = 0; m < n; m++) { const [x, n2] = at(); pebble(x, n2, (0.05 + 0.14 * Math.pow(r5(), 1.2)) * (bar ? 1.3 : 1) * big, 1, r5, col()); } continue; }
       if (mat === 4) {
@@ -1125,6 +1336,7 @@ export class Rocks {
     const ok = (x, n, sz, self = null) => {
       if (x < x0 || x >= x1 || n < n0 || n >= n1) return false;
       if (roads && roads.at(x, n) > 140) return false;
+      if (!this.loose(x, n)) return false;
       if (wm && wm.inPond(x, n)) return false;
       for (const q of wet.segs) {   // out of every other channel's water (at its widest pool)
         if (q === self) continue;

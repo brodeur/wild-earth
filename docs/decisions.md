@@ -4351,3 +4351,58 @@ of main's material at all three poses".
 - **Not done**: the cliffs are still not "well under 1 ms" in absolute terms; neither was main's material. The next
   cuts, if wanted: the big scale's facets at a distance (a facet over ~100 pixels could shade from one texel fetch
   without the edge work), and the register weight in rocky chunks.
+
+## 2026-11-03: rocks cluster: groups and gaps, rockfall talus below the faces (client/src/rocks.js)
+
+Aaron: "Rocks are looking better, but they are spaced too evenly - rocks should cluster together - if there are rocks
+nearby they should be even closer together or further apart." His shot: Yosemite near Mirror Lake, stones of every size
+at near-uniform spacing over a slope and up the lower face of a granite wall.
+
+- **Why the spacing was even** (`scratch/rock_cluster.js`: pair correlation, Clark-Evans, quadrat counts, plan maps).
+  The stones were already clustered at the scale of a few metres (Clark-Evans 0.4-0.5, pair correlation 4-10 under
+  4 m: each boulder's halo, each cell's tight groups), but the groups themselves tiled the ground: every 30 m cell at a
+  given outcrop likelihood or soil fragment share got the same rate, 1-3 groups and its outcrop masses at a centre
+  jittered a quarter of a cell. Pair correlation was flat (about 1.3) from 8 m to 64 m and under a third of 30 m
+  squares were empty; on Half Dome's apron the plan shows the outcrop masses on a 30 m lattice. Near Mirror Lake the
+  outcrop likelihood is 0 and the stones came from the soils' fragment share ("other" and alluvium cells: rounded
+  knobs) and the water system's beds, spread evenly over whole soil units, the steep bare slab included.
+- **What it is now:**
+  - Float and outcrop-cell boulders: a Neyman-Scott process. A Poisson number of groups per cell (so many cells have
+    none), each of a heavy-tailed size (3-40), a Rayleigh scatter round a point anywhere in the cell; the rate under a
+    ~90 m log-normal patchiness. Outcrop groups follow the same patchiness (about two outcrop cells in five bare, the
+    rest with a few more masses) and sit anywhere in their cell.
+  - Rockfall talus from the substrate step: each 30 m cell with bare rock past 40 degrees is a source; its share is
+    traced down the steepest neighbour through the fall zone (ground past ~35 degrees, where nothing rests) and comes to
+    rest over the runout (Lr = 15 m + 0.12 x the drop, faster on flat ground), a fifth to each side so the deposit
+    widens into a cone. Mapped surficial deposits that the photo shows bare on 20-40 degrees count as talus too. The
+    stones fall in groups stretched down the slope, sorted by the runout (fines at the apex, blocks at the toe, bigger
+    at a lobe's foot), in the fallen rock's class: granite blocks with a quarter flat slabs; slate fewer and platy.
+  - On bare granite under 30 degrees (dome backs): an erratic now and then, groups of flat exfoliation slabs.
+  - Resting: no loose stone (float, talus, halos, bed cobbles and boulders, bank gravel) on ground past ~40 degrees or
+    on bare bedrock past ~30, and no outcrop mass on bare bedrock past ~35 (the cliff material draws that rock: the
+    granite "domes" there read as droplets stuck to the slab).
+  - The talus field is computed once per tile when the first plan is made (82-87 ms on Yosemite, during the load).
+    Every placement is still a hash of the cell; every mode draws the same streams.
+- **Measured** (radius 200 m, stones of 0.4 m and up; main = 1369e80):
+
+  | window | rocks / ha | empty 10 m squares | empty 30 m squares | pair correlation 0.5-1 / 4-8 / 16-32 m |
+  |---|---|---|---|---|
+  | Half Dome NW apron, main | 187 | 0.59 | 0.30 | 4.9 / 2.7 / 1.4 |
+  | Half Dome NW apron, new | 31 | 0.89 | 0.56 | 13.2 / 5.5 / 1.1 |
+  | west of Mirror Lake, main | 31 | 0.84 | 0.42 | 11.7 / 7.0 / 2.1 |
+  | west of Mirror Lake, new | 23 | 0.90 | 0.67 | 27.3 / 11.1 / 3.0 |
+  | home slate slope, main | 28 | 0.89 | 0.51 | 79 / 11 / 2.2 |
+  | home slate slope, new | 19 | 0.94 | 0.70 | 143 / 37 / 1.3 |
+  | talus below the north wall, main | 15 | 0.93 | 0.77 | |
+  | talus below the north wall, new | 99 | 0.75 | 0.49 | 15.6 / 8.8 / 2.9 |
+
+  Whole Yosemite tile (census): masses 81,401 -> 54,645, boulders 754,245 -> 623,872, pebble-tier stones 6.38 M ->
+  4.37 M, cells with a boulder 57,213 -> 36,414. Drawn at the poses: Half Dome low 3,903 far masses and 295 boulders ->
+  1,643 and 59; from above 3,130 masses -> 1,242; the talus fan 1,012 masses and 180 boulders -> 255 and 899 (the
+  boulders now where the rock fell). The rocks' GPU time (terrain with and without them, fenced timer queries) read
+  within its noise of main's at the talus poses (0.1-0.2 ms) and lower at Half Dome (0.13 against 1.2 at the low pose;
+  quartiles span +-0.5 ms on this machine). Main's home grassland window: empty 30 m squares 0.30 -> 0.62.
+- **Not done**: the water system's bed stones still follow its channels, and the rewilded hydrology lays channels and a
+  pond basin on Half Dome's apron (its bed stones are now kept off the steep slab, the basin ring is the terrain's);
+  the talus is traced on the 30 m grid, so a cone's outline is coarse; the remaining knobs on the apron's gentler back
+  are the outcrop rule's (L from the pipeline).
