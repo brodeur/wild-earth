@@ -1,0 +1,260 @@
+{
+ "id": "rubus_spectabilis",
+ "scientific": "Rubus spectabilis",
+ "common": "salmonberry",
+ "aliases": [
+  "salmonberry"
+ ],
+ "family": "Rosaceae",
+ "form": "shrub",
+ "deciduous": true,
+ "template": "rubus_ursinus",
+ "regions": [
+  "pacific_northwest",
+  "california"
+ ],
+ "height_m": [
+  1.5,
+  3.5
+ ],
+ "variants_height_m": {
+  "young": [
+   0.5,
+   1.2
+  ],
+  "old": [
+   3,
+   4.5
+  ]
+ },
+ "crown": {
+  "shape": "hemispherical",
+  "profile": [
+   [
+    0.0,
+    0.3
+   ],
+   [
+    0.2,
+    0.42
+   ],
+   [
+    0.45,
+    0.5
+   ],
+   [
+    0.65,
+    0.5
+   ],
+   [
+    0.82,
+    0.42
+   ],
+   [
+    0.94,
+    0.26
+   ],
+   [
+    1.0,
+    0.08
+   ]
+  ],
+  "lobes": 6,
+  "lobe_depth": 0.15,
+  "asymmetry": 0.2,
+  "fill": 0.45,
+  "edge": 1.08
+ },
+ "foliage": {
+  "colors": {
+   "winter": [
+    140,
+    110,
+    80
+   ],
+   "spring": [
+    118,
+    148,
+    78
+   ],
+   "summer": [
+    82,
+    108,
+    58
+   ],
+   "fall": [
+    162,
+    142,
+    72
+   ]
+  },
+  "leaf_on": {
+   "winter": 0.0,
+   "spring": 0.8,
+   "summer": 1.0,
+   "fall": 0.6
+  },
+  "leaf_on_by_month": [
+   0.0,
+   0.0,
+   0.2,
+   0.7,
+   1.0,
+   1.0,
+   1.0,
+   1.0,
+   0.9,
+   0.6,
+   0.2,
+   0.0
+  ],
+  "leaf_shape": "trifoliate",
+  "leaf_size_m": 0.13,
+  "flowers": {
+   "season": "spring",
+   "months": [
+    3,
+    5
+   ],
+   "form": "cluster",
+   "rgb": [
+    214,
+    62,
+    120
+   ],
+   "size_m": 0.035,
+   "density": 0.3,
+   "before_leaves": false
+  },
+  "berries": {
+   "season": "summer",
+   "months": [
+    6,
+    7
+   ],
+   "form": "cluster",
+   "rgb": [
+    236,
+    136,
+    44
+   ],
+   "size_m": 0.025,
+   "density": 0.35
+  }
+ },
+ "trunk": {
+  "bark_rgb": [
+   152,
+   118,
+   78
+  ],
+  "bark_pattern": "shreddy",
+  "stems": [
+   8,
+   20
+  ],
+  "stem_spread_deg": 30
+ },
+ "targets": {
+  "crown_width_ratio": 1.0,
+  "crown_base_ratio": 0.08,
+  "porosity": 0.3,
+  "from": "judgement values from the drafter's reading of the sources and knowledge of the species (2026-11-04), no photographs measured; to be replaced by photo measurements: a dense, head-high thicket of erect, arching canes, leafy from the top third down; much more upright than the trailing blackberry template"
+ },
+ "variant_patches": {
+  "young": {
+   "note": "a few first-year canes spreading from the rhizomes into a gap"
+  },
+  "old": {
+   "note": "an impenetrable streamside or alder-flat thicket over a person's head"
+  }
+ },
+ "description": "A thicket-forming raspberry of the wet lowland, 1.5-3.5 m, its upright golden-brown canes spreading by rhizomes into dense stands along the streams and under the alders. Its magenta flowers open in March before most plants stir and its soft fruits, salmon-orange to deep red, are the first berries of the year.",
+ "season_notes": {
+  "winter": "Bare, golden-brown, shreddy canes with a few weak prickles.",
+  "spring": "Magenta flowers from March, visited by the first rufous hummingbirds; leaves of three toothed leaflets unfold.",
+  "summer": "Raspberry-like fruits ripen yellow-orange to red in June and July.",
+  "fall": "Leaves yellow and fall in October."
+ },
+ "habitat": {
+  "classes": {
+   "riparian": 1.0,
+   "mixed_forest": 0.9,
+   "conifer_forest": 0.5
+  },
+  "floor": 1.5,
+  "mid": 0.9,
+  "steep": 0.7,
+  "north": 1.2,
+  "shade": 0.5,
+  "disturbed": 1.4,
+  "riparian": {
+   "zones": {
+    "terrace": 1.0,
+    "bank": 1.0,
+    "margin": 0.4,
+    "pond_shore": 0.5,
+    "pond_terrace": 0.6
+   },
+   "orders": [
+    1,
+    7
+   ],
+   "permanence": "any",
+   "water": "Wants moist to wet ground: streambanks, river terraces, seeps and forest openings, and with red alder wherever it grows (FEIS)."
+  }
+ },
+ "relations": {
+  "eaten_by": [
+   {
+    "animal": "ursus_americanus",
+    "part": "berries",
+    "seasons": [
+     "summer"
+    ]
+   },
+   {
+    "animal": "canis_latrans",
+    "part": "berries",
+    "seasons": [
+     "summer"
+    ]
+   },
+   {
+    "animal": "cyanocitta_stelleri",
+    "part": "berries",
+    "seasons": [
+     "summer"
+    ]
+   },
+   {
+    "animal": "odocoileus_hemionus",
+    "part": "browse",
+    "seasons": [
+     "spring",
+     "summer"
+    ]
+   }
+  ],
+  "cover_for": [
+   "odocoileus_hemionus",
+   "ursus_americanus"
+  ],
+  "shades_water": 0.4
+ },
+ "range": {
+  "elev_m": [
+   0,
+   1200
+  ],
+  "where": "the Olympic lowland, abundant under canopy low down and confined to stream and lake margins higher up (FEIS); Alaska to the Santa Cruz Mountains"
+ },
+ "stand_in": "rubus_ursinus",
+ "notes": "Grown from the California blackberry (same genus, trifoliate leaves, cane architecture) as a taller, erect, less sprawling plant: crown width 1.0 of height against the template's 2.0, canes spreading 30 degrees. Leaves of three sharply toothed leaflets, 10-20 cm across the whole leaf; flowers magenta, single or in twos to fours, March to June; fruit 1.5-2 cm, yellowish to orange to deep red, June-July in the south of the range, July-August in the north and high (FEIS). Its rhizome spread into whole stands is not grown (one plant per placement). FEIS: black bears eat and spread the fruit, elk and deer browse the young leaves and stems, and birds, Pacific martens, banana slugs, rodents and rufous hummingbirds (pollinators) use it; Swainson's thrush is called the salmonberry bird in the region. Only the bear, coyote, deer and Steller's jay are in the animal library.",
+ "sources": [
+  "FEIS, Rubus spectabilis, https://www.fs.usda.gov/database/feis/plants/shrub/rubspe/all.html, read 2026-11-04"
+ ],
+ "authors": [
+  "Wild Earth (agent draft, 2026-11-04); needs local sign-off"
+ ]
+}

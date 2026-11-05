@@ -1,0 +1,121 @@
+{
+ "id": "oxalis_oregana",
+ "scientific": "Oxalis oregana",
+ "common": "redwood sorrel",
+ "aliases": [
+  "redwood_sorrel",
+  "oregon_oxalis",
+  "oregon_wood_sorrel"
+ ],
+ "family": "Oxalidaceae",
+ "form": "forb",
+ "deciduous": false,
+ "template": "trifolium_willdenovii",
+ "regions": [
+  "pacific_northwest",
+  "california"
+ ],
+ "height_m": [
+  0.05,
+  0.2
+ ],
+ "patch": {
+  "lifespan": "perennial",
+  "native": true,
+  "ground": {
+   "habit": "sprawling",
+   "leaf": {
+    "shape": "trifoliate",
+    "size_m": 0.06,
+    "rgb": [
+     86,
+     126,
+     64
+    ]
+   },
+   "flower": {
+    "shape": "cup",
+    "rgb": [
+     244,
+     226,
+     232
+    ],
+    "size_m": 0.02,
+    "months": [
+     4,
+     6
+    ],
+    "per_plant": 2
+   },
+   "height_by_month": [
+    0.7,
+    0.7,
+    0.8,
+    0.95,
+    1.0,
+    1.0,
+    1.0,
+    1.0,
+    0.95,
+    0.9,
+    0.8,
+    0.7
+   ],
+   "dead_rgb": [
+    140,
+    120,
+    90
+   ],
+   "density": 1.6
+  }
+ },
+ "description": "A low, soft carpet of the deepest shade, 5-20 cm, of clover-like leaves with three broad, heart-shaped leaflets that fold down like umbrellas when a sunfleck hits them. Single white to pink, purple-veined flowers rise just above the leaves in spring.",
+ "season_notes": {
+  "winter": "Mostly green in the mild lowland; some leaves die back in cold snaps.",
+  "spring": "White to pale pink flowers with fine reddish veins, from April.",
+  "summer": "A continuous green carpet under the spruce and hemlock; leaflets fold in sun.",
+  "fall": "Leaves still green; late flowers into September (Burke)."
+ },
+ "habitat": {
+  "classes": {
+   "conifer_forest": 1.0,
+   "mixed_forest": 0.9,
+   "riparian": 0.6
+  },
+  "floor": 1.3,
+  "mid": 1.0,
+  "steep": 0.8,
+  "north": 1.4,
+  "shade": 1.0,
+  "disturbed": 0.2
+ },
+ "relations": {
+  "eaten_by": [
+   {
+    "animal": "odocoileus_hemionus",
+    "part": "leaves",
+    "seasons": [
+     "spring",
+     "summer",
+     "fall"
+    ]
+   }
+  ],
+  "cover_for": []
+ },
+ "range": {
+  "elev_m": [
+   0,
+   900
+  ],
+  "where": "moist woods at low to moderate elevations, west of the Cascades and in the Olympics (Burke); the rain forest valley floors and terraces; Washington to the redwoods of California"
+ },
+ "stand_in": "trifolium_willdenovii",
+ "notes": "Drawn from tomcat clover (the 'sprawling' habit with 'trifoliate' leaves) as a denser, evergreen, shade-loving carpet without the clover's summer death: height_by_month never below 0.7, so forbs.js treats it as evergreen and never draws dead stalks. Leaflets are obcordate, up to 4.5 cm wide, drooping (Burke); the drawn trifoliate leaf has oval leaflets. Flowers single on 5-15 cm stalks, white to pinkish with red veins, 13-20 mm, April to September (Burke), the 'cup' form standing in for the five-petalled flower. The leaflets folding down in sun is not drawn. A real carpet is continuous by rhizomes; forbs.js places separate plants, at most 1.2 per square metre before density, so a high density and a strong shade preference are the closest. Elk and deer eat it (drafter's knowledge); only the deer is in the animal library. The forb slot limit noted on the sword fern card applies.",
+ "sources": [
+  "Burke Herbarium image collection (WTU), Oxalis oregana, https://burkeherbarium.org/imagecollection/taxon.php?Taxon=Oxalis%20oregana, read 2026-11-04"
+ ],
+ "authors": [
+  "Wild Earth (agent draft, 2026-11-04); needs local sign-off"
+ ]
+}

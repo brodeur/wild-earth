@@ -1,0 +1,121 @@
+{
+ "id": "mustela_frenata",
+ "scientific": "Mustela frenata",
+ "common": "long-tailed weasel",
+ "kind": "mammal",
+ "taxonomy": {
+  "kingdom": "Animalia",
+  "phylum": "Chordata",
+  "class": "Mammalia",
+  "order": "Carnivora",
+  "family": "Mustelidae",
+  "genus": "Mustela"
+ },
+ "body_plan": "quadruped",
+ "mass_kg": 0.147,
+ "size": {
+  "length_m": 0.19,
+  "shoulder_or_wingspan_m": 0.118
+ },
+ "diet": {
+  "role": [
+   "predator"
+  ],
+  "diet_tenths": {
+   "inv": 0.0,
+   "vend": 10.0,
+   "vect": 0.0,
+   "vfish": 0.0,
+   "vunk": 0.0,
+   "scav": 0.0,
+   "fruit": 0.0,
+   "nect": 0.0,
+   "seed": 0.0,
+   "planto": 0.0
+  },
+  "vertebrate_share": 1.0,
+  "mass_kg": 0.147,
+  "activity": [
+   "nocturnal",
+   "crepuscular",
+   "diurnal"
+  ],
+  "source": "eltontraits (species)"
+ },
+ "senses": {
+  "sight": {
+   "range_m": 170.4
+  },
+  "sound": {
+   "range_m": 238.5
+  },
+  "scent": {
+   "range_m": 340.7
+  }
+ },
+ "rig": "tools/rig_quadruped.py skeleton, gait.js / legs.js",
+ "locomotion": {
+  "code": "mustela_frenata",
+  "class": "Mammalia",
+  "order": "Carnivora",
+  "family": "Mustelidae",
+  "body_plan": "quadruped",
+  "mass_kg": 0.147,
+  "length_m": 0.19,
+  "hip_m": 0.118,
+  "posture": "digitigrade",
+  "gaits": {
+   "walk": "froude 0.5",
+   "trot": "froude 2.5",
+   "gallop": "beyond"
+  },
+  "walk_mps": 0.76,
+  "trot_mps": 1.7,
+  "cruise_mps": 2.85,
+  "top_mps": 4.6,
+  "stride_hz": 5.59,
+  "stride_m": 0.3,
+  "sprint_s": 2.3,
+  "recover_s": 8.1,
+  "turn_rad_s": 5.75,
+  "turn": {
+   "on": 0.45,
+   "off": 0.2,
+   "hold": 0.35,
+   "amp": [
+    0.4,
+    0.6
+   ],
+   "hz": [
+    0.7,
+    2.4
+   ]
+  },
+  "lag": {
+   "s": 0.057,
+   "max_rad": 0.44,
+   "v": [
+    0.3,
+    1.2
+   ]
+  },
+  "bend": {
+   "spine": 1.0,
+   "lead": 0.12,
+   "lead_max": 0.25
+  },
+  "flags": {},
+  "flier": false
+ },
+ "generated": {
+  "by": "pipeline/fauna.py",
+  "at": "2026-11-05T06:53:53Z",
+  "from": [
+   "gbif taxonomy",
+   "eltontraits (species)",
+   "pipeline/locomotion.py"
+  ],
+  "note": "behaviour data without a model; review the diet, senses and size before a mesh is made"
+ },
+ "license": "CC BY-SA 4.0 (the entry); diet and mass from EltonTraits 1.0 (CC BY 4.0, credited in the tile's sources)"
+}

@@ -101,6 +101,63 @@ LEXICON: dict[str, list[tuple[str, str]]] = {
     "alpine": [("phyllodoce_breweri", "shrub")],
 }
 
+# The same phrase means other species elsewhere (2026-11-04): a region's own reading wins over LEXICON's (which was
+# written for California). Keys are pipeline/regions.py NATURAL regions.
+LEXICON_BY_REGION: dict[str, dict[str, list[tuple[str, str]]]] = {
+    "pacific_northwest": {
+        "western red-cedar": [("thuja_plicata", "tree")], "red-cedar": [("thuja_plicata", "tree")],
+        "redcedar": [("thuja_plicata", "tree")], "western hemlock": [("tsuga_heterophylla", "tree")],
+        "silver fir": [("abies_amabilis", "tree")], "subalpine fir": [("abies_lasiocarpa", "tree")],
+        "sitka spruce": [("picea_sitchensis", "tree")], "red alder": [("alnus_rubra", "tree")],
+        "alder": [("alnus_rubra", "tree")], "cottonwood": [("populus_trichocarpa", "tree")],
+        "black cottonwood": [("populus_trichocarpa", "tree")], "vine maple": [("acer_circinatum", "shrub")],
+        "bigleaf maple": [("acer_macrophyllum", "tree")], "maple": [("acer_macrophyllum", "tree")],
+        "madrone": [("arbutus_menziesii", "tree")], "oregon white oak": [("quercus_garryana", "tree")],
+        "oak": [("quercus_garryana", "tree")], "willow": [("salix_lasiandra", "tree")],
+        "juniper": [("juniperus_occidentalis", "tree")],
+        "mixed conifer": [("pseudotsuga_menziesii", "tree"), ("tsuga_heterophylla", "tree"), ("thuja_plicata", "tree")],
+        "subalpine parkland": [("abies_lasiocarpa", "tree"), ("tsuga_mertensiana", "tree"), ("phyllodoce_empetriformis", "shrub"),
+                               ("cassiope_mertensiana", "shrub")],
+        "subalpine woodland": [("abies_lasiocarpa", "tree"), ("tsuga_mertensiana", "tree"), ("pinus_albicaulis", "tree")],
+        "alpine dwarf-shrubland": [("phyllodoce_empetriformis", "shrub"), ("cassiope_mertensiana", "shrub")],
+        "alpine": [("phyllodoce_empetriformis", "shrub"), ("cassiope_mertensiana", "shrub")],
+        "avalanche chute": [("acer_circinatum", "shrub"), ("rubus_spectabilis", "shrub"), ("alnus_rubra", "tree")],
+        "riparian": [("alnus_rubra", "tree"), ("populus_trichocarpa", "tree"), ("rubus_spectabilis", "shrub")],
+        "manzanita": [("arctostaphylos_columbiana", "shrub")],
+        "coastal sand dune": [("pinus_contorta", "tree"), ("picea_sitchensis", "tree"), ("gaultheria_shallon", "shrub")],
+        "headland": [("picea_sitchensis", "tree"), ("gaultheria_shallon", "shrub"), ("rubus_spectabilis", "shrub")],
+        "herbaceous bald": [("pseudotsuga_menziesii", "tree"), ("quercus_garryana", "tree")],
+        "volcanic flowage": [("pseudotsuga_menziesii", "tree"), ("tsuga_heterophylla", "tree"), ("pinus_contorta", "tree")],
+        "wet meadow": [("salix_lasiandra", "tree"), ("rubus_spectabilis", "shrub")],
+        "emergent marsh": [("salix_lasiandra", "tree")],
+    },
+}
+
+# The regions each library record grows in (2026-11-04), for records that do not say so themselves (`regions`, written
+# by plantgen from a card). Every record written before is California's; those that also grow in the Pacific
+# Northwest are named here, so the riparian zone rows and the ground layer of an Olympic tile can still draw them.
+ALSO_PNW = {
+    "pseudotsuga_menziesii", "acer_macrophyllum", "arbutus_menziesii", "pinus_ponderosa", "pinus_contorta", "pinus_monticola",
+    "pinus_albicaulis", "tsuga_mertensiana", "salix_lasiolepis", "salix_lasiandra", "salix_exigua", "cornus_sericea",
+    "rubus_ursinus", "sambucus_nigra_caerulea", "symphoricarpos_albus", "toxicodendron_diversilobum", "gaultheria_shallon",
+    "vaccinium_ovatum", "ceanothus_integerrimus", "rosa_californica", "achillea_millefolium", "elymus_glaucus",
+    "danthonia_californica", "claytonia_perfoliata", "erythranthe_guttata", "urtica_dioica", "carex_nudata", "juncus_effusus",
+    "typha_latifolia", "equisetum_hyemale", "schoenoplectus_acutus", "lemna_minor", "nasturtium_officinale",
+    "artemisia_douglasiana", "trifolium_willdenovii", "plagiobothrys_nothofulvus",
+}
+
+
+def regions_of(sid: str, rec: dict | None = None) -> list[str]:
+    """The natural regions a library record grows in: its own `regions`, else California (and the Pacific Northwest
+    for ALSO_PNW)."""
+    if rec is None:
+        p = LIBRARY / f"{sid}.json"
+        rec = json.loads(p.read_text()) if p.exists() else {}
+    if rec.get("regions"):
+        return list(rec["regions"])
+    return ["california", "pacific_northwest"] if sid in ALSO_PNW else ["california"]
+
+
 # For a species without a record: what is drawn instead (the same genus, else the same family and leaf type).
 # Every id here also has a trait card in library/plant_cards/ (or should get one); the card's own stand_in wins.
 STAND_IN = {
@@ -123,21 +180,35 @@ STAND_IN = {
     "chrysolepis_sempervirens": "frangula_californica", "chamaebatia_foliolosa": "symphoricarpos_albus",
     "phyllodoce_breweri": "ribes_roezlii", "salix_arctica": "salix_exigua",
     "vaccinium_ovatum": "frangula_californica", "gaultheria_shallon": "frangula_californica",
+    # the Pacific Northwest (2026-11-04)
+    "picea_sitchensis": "pseudotsuga_menziesii", "tsuga_heterophylla": "tsuga_mertensiana", "thuja_plicata": "calocedrus_decurrens",
+    "abies_amabilis": "abies_concolor", "abies_lasiocarpa": "abies_magnifica", "alnus_rubra": "alnus_rhombifolia",
+    "populus_trichocarpa": "populus_fremontii", "acer_circinatum": "acer_macrophyllum", "rubus_spectabilis": "rubus_ursinus",
+    "rubus_parviflorus": "rosa_californica", "vaccinium_parvifolium": "vaccinium_ovatum", "oplopanax_horridus": "sambucus_nigra_caerulea",
+    "mahonia_nervosa": "toxicodendron_diversilobum", "phyllodoce_empetriformis": "phyllodoce_breweri",
+    "cassiope_mertensiana": "phyllodoce_breweri", "quercus_garryana": "quercus_douglasii", "juniperus_occidentalis": "juniperus_grandis",
+    "arctostaphylos_columbiana": "arctostaphylos_patula", "polystichum_munitum": "artemisia_douglasiana",
 }
 
 
-def named_species(name: str) -> list[tuple[str, str]]:
-    """The species a community name names, longest phrase first; a phrase inside a matched one is not matched again."""
+def named_species(name: str, regions=None) -> list[tuple[str, str]]:
+    """The species a community name names, longest phrase first; a phrase inside a matched one is not matched again.
+    A tile's region reads a phrase its own way first (LEXICON_BY_REGION); regions None: California's reading."""
+    from .species_mix import CONTEXT
+    regions = list(regions) if regions is not None else (CONTEXT.get("regions") or ["california"])
+    lex = dict(LEXICON)
+    for r in regions:
+        lex.update(LEXICON_BY_REGION.get(r, {}))
     n = (name or "").lower()
     out, used = [], []
-    for phrase in sorted(LEXICON, key=len, reverse=True):
+    for phrase in sorted(lex, key=len, reverse=True):
         hit = next((mt.start() for mt in re.finditer(r"\b" + re.escape(phrase) + r"\b", n)
                     if not any(a <= mt.start() < b for a, b in used)), None)   # whole words: "subalpine" is not "alpine"
         if hit is None:
             continue
         i = hit
         used.append((i, i + len(phrase)))
-        for sid, kind in LEXICON[phrase]:
+        for sid, kind in lex[phrase]:
             if sid not in [s for s, _ in out]:
                 out.append((sid, kind))
     return out

@@ -153,7 +153,10 @@ def presence(tile: Tile, keys: dict[str, int | None], force=False) -> dict[str, 
     """Per species code: present, rule, records_buffer, range_share, evidence (see the module docstring)."""
     y1 = date.today().year
     years = (y1 - PRESENCE_YEARS, y1)
-    shares = range_shares(tile)
+    # the range test is California's (species_data.RANGE: the central Sierra's life zones after Grinnell and Storer):
+    # outside California a curated species is present by its records alone, never by a California elevation band
+    from .regions import natural_regions
+    shares = range_shares(tile) if "california" in natural_regions(tile) else None
     out = {}
     for code, key in keys.items():
         n = records_near(tile, key, years, force) if key else 0

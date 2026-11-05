@@ -1,0 +1,192 @@
+{
+ "id": "cassiope_mertensiana",
+ "scientific": "Cassiope mertensiana",
+ "common": "white mountain heather",
+ "aliases": [
+  "white_mountain_heather",
+  "mertens_moss_heather",
+  "western_moss_heather",
+  "white_heather"
+ ],
+ "family": "Ericaceae",
+ "form": "shrub",
+ "deciduous": false,
+ "template": "phyllodoce_breweri",
+ "regions": [
+  "pacific_northwest",
+  "california"
+ ],
+ "height_m": [
+  0.05,
+  0.3
+ ],
+ "variants_height_m": {
+  "young": [
+   0.03,
+   0.08
+  ],
+  "old": [
+   0.25,
+   0.35
+  ]
+ },
+ "crown": {
+  "shape": "hemispherical",
+  "profile": [
+   [
+    0.0,
+    0.8
+   ],
+   [
+    0.3,
+    1.0
+   ],
+   [
+    0.6,
+    1.0
+   ],
+   [
+    0.85,
+    0.8
+   ],
+   [
+    1.0,
+    0.35
+   ]
+  ],
+  "lobes": 7,
+  "lobe_depth": 0.1,
+  "asymmetry": 0.12,
+  "fill": 0.7,
+  "edge": 1.04
+ },
+ "foliage": {
+  "colors": {
+   "winter": [
+    54,
+    72,
+    52
+   ],
+   "spring": [
+    70,
+    94,
+    60
+   ],
+   "summer": [
+    58,
+    80,
+    54
+   ],
+   "fall": [
+    60,
+    80,
+    54
+   ]
+  },
+  "leaf_on": {
+   "winter": 1.0,
+   "spring": 1.0,
+   "summer": 1.0,
+   "fall": 1.0
+  },
+  "leaf_on_by_month": [
+   1.0,
+   1.0,
+   1.0,
+   1.0,
+   1.0,
+   1.0,
+   1.0,
+   1.0,
+   1.0,
+   1.0,
+   1.0,
+   1.0
+  ],
+  "leaf_shape": "lanceolate",
+  "leaf_size_m": 0.004,
+  "flowers": {
+   "season": "summer",
+   "months": [
+    7,
+    8
+   ],
+   "form": "bud",
+   "rgb": [
+    246,
+    244,
+    236
+   ],
+   "size_m": 0.01,
+   "density": 0.75,
+   "before_leaves": false
+  },
+  "berries": null
+ },
+ "trunk": {
+  "bark_rgb": [
+   72,
+   88,
+   62
+  ],
+  "bark_pattern": "smooth",
+  "stems": [
+   10,
+   20
+  ]
+ },
+ "targets": {
+  "crown_width_ratio": 2.0,
+  "crown_base_ratio": 0.02,
+  "porosity": 0.1,
+  "from": "judgement values from the drafter's reading of the sources and knowledge of the species (2026-11-04), no photographs measured; to be replaced by photo measurements: a dense, dark mat of upright, cord-like stems, finer and darker than pink heather, dotted white with hanging bells in midsummer"
+ },
+ "variant_patches": {
+  "young": {
+   "note": "a few tufted stems in a rock crack"
+  },
+  "old": {
+   "note": "an old mat over 20 years old filling a late-snow hollow (slow-growing; UW)"
+  }
+ },
+ "description": "A tiny, mat-forming evergreen heather of the high snow basins, 5-30 cm, whose upright stems are hidden by minute scale leaves pressed against them in four rows, so they look like dark green cords. In midsummer it hangs out small white bells on reddish stalks, like lily of the valley.",
+ "season_notes": {
+  "winter": "Under the deepest, longest-lying snow of the basins.",
+  "spring": "Melts out late, often not until July.",
+  "summer": "Nodding white bells with red sepals, July to September.",
+  "fall": "Stays dark green; seed capsules stand up on the stalks."
+ },
+ "habitat": {
+  "classes": {
+   "barren": 1.0,
+   "grassland": 0.4,
+   "conifer_forest": 0.2
+  },
+  "floor": 1.2,
+  "mid": 1.0,
+  "steep": 0.9,
+  "north": 1.6,
+  "shade": 0.1,
+  "disturbed": 0.1
+ },
+ "relations": {
+  "eaten_by": [],
+  "cover_for": []
+ },
+ "range": {
+  "elev_m": [
+   1400,
+   2200
+  ],
+  "where": "near or above timberline on open, moist slopes that hold snow (UW: usually 1,400-2,000 m); rocky alpine of the Olympics, Mount Olympus and the Bailey Range; Alaska to the Sierra Nevada and Nevada, the Canadian Rockies and Montana"
+ },
+ "stand_in": "phyllodoce_breweri",
+ "notes": "Grown from the red mountain heather record as a finer, darker mat: leaves are 2-5 mm scales in four rows hiding the 4-angled stems (Burke), drawn as the smallest lanceolate cards (0.004 m) with the stems coloured like the leaves, since no bark shows. A real scale-leaf shrub card (the needle_scale sprays of the cedars, made upright and cord-like) would be closer. Flowers white, bell-shaped, 5-8 mm, nodding near the branch tips, July-September (Burke). Its leaf_on_by_month is set to 1 all year (see phyllodoce_empetriformis on the template's deciduous months). Associates: pink mountain heather, Cascade blueberry, partridgefoot, woolly pussytoes, purple hairgrass (UW). Grows slowly and lives over 20 years (UW). No animal in the library eats it.",
+ "sources": [
+  "Burke Herbarium image collection (WTU), Cassiope mertensiana, https://burkeherbarium.org/imagecollection/taxon.php?Taxon=Cassiope%20mertensiana, read 2026-11-04",
+  "University of Washington, Native Plant Production: Cassiope mertensiana, https://depts.washington.edu/propplnt/Plants/cassiopemertensiana.htm, read 2026-11-04"
+ ],
+ "authors": [
+  "Wild Earth (agent draft, 2026-11-04); needs local sign-off"
+ ]
+}

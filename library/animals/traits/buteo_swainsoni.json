@@ -1,0 +1,131 @@
+{
+ "id": "buteo_swainsoni",
+ "scientific": "Buteo swainsoni",
+ "common": "swainson's hawk",
+ "kind": "bird",
+ "taxonomy": {
+  "kingdom": "Animalia",
+  "phylum": "Chordata",
+  "class": "Aves",
+  "order": "Accipitriformes",
+  "family": "Accipitridae",
+  "genus": "Buteo"
+ },
+ "body_plan": "bird",
+ "mass_kg": 0.9466,
+ "size": {
+  "length_m": 0.353,
+  "shoulder_or_wingspan_m": 0.565
+ },
+ "diet": {
+  "role": [
+   "predator"
+  ],
+  "diet_tenths": {
+   "inv": 3.0,
+   "vend": 6.0,
+   "vect": 1.0,
+   "vfish": 0.0,
+   "vunk": 0.0,
+   "scav": 0.0,
+   "fruit": 0.0,
+   "nect": 0.0,
+   "seed": 0.0,
+   "planto": 0.0
+  },
+  "vertebrate_share": 0.7,
+  "mass_kg": 0.9466,
+  "activity": [],
+  "source": "eltontraits (species)"
+ },
+ "senses": {
+  "sight": {
+   "range_m": 494.5
+  },
+  "sound": {
+   "range_m": 247.3
+  },
+  "scent": {
+   "range_m": 19.8
+  }
+ },
+ "rig": "bird part rig (animalModels.js RIG.bird), flierControl",
+ "locomotion": {
+  "code": "buteo_swainsoni",
+  "class": "Aves",
+  "order": "Accipitriformes",
+  "family": "Accipitridae",
+  "body_plan": "bird",
+  "mass_kg": 0.9466,
+  "length_m": 0.353,
+  "hip_m": 0.176,
+  "posture": "biped",
+  "gaits": {
+   "flight": "soar"
+  },
+  "walk_mps": 0.93,
+  "trot_mps": 2.08,
+  "cruise_mps": 3.16,
+  "top_mps": 5.26,
+  "stride_hz": 4.22,
+  "stride_m": 0.49,
+  "sprint_s": 1.9,
+  "recover_s": 11.1,
+  "turn_rad_s": 4.22,
+  "turn": {
+   "on": 0.45,
+   "off": 0.2,
+   "hold": 0.35,
+   "amp": [
+    0.4,
+    0.6
+   ],
+   "hz": [
+    0.7,
+    2.4
+   ]
+  },
+  "lag": {
+   "s": 0.063,
+   "max_rad": 0.35,
+   "v": [
+    0.3,
+    1.2
+   ]
+  },
+  "bend": {
+   "spine": 1.0,
+   "lead": 0.12,
+   "lead_max": 0.25
+  },
+  "flags": {
+   "head_lead": true
+  },
+  "flier": true,
+  "catch": {
+   "move": "talon",
+   "name": "the talon strike and the mantle",
+   "reach_m": 1.4,
+   "brake_s": 0.4,
+   "over_m": 0.35,
+   "feed": {
+    "pose": "mantling: wings half spread and drooped round the kill, the tail fanned, head down",
+    "s": [
+     18,
+     35
+    ]
+   }
+  }
+ },
+ "generated": {
+  "by": "pipeline/fauna.py",
+  "at": "2026-11-05T06:16:02Z",
+  "from": [
+   "gbif taxonomy",
+   "eltontraits (species)",
+   "pipeline/locomotion.py"
+  ],
+  "note": "behaviour data without a model; review the diet, senses and size before a mesh is made"
+ },
+ "license": "CC BY-SA 4.0 (the entry); diet and mass from EltonTraits 1.0 (CC BY 4.0, credited in the tile's sources)"
+}

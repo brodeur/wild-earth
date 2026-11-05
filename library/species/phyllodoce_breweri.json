@@ -255,18 +255,18 @@
    "fall": 1.0
   },
   "leaf_on_by_month": [
-   0.0,
-   0.05,
-   0.5,
-   0.95,
    1.0,
    1.0,
-   0.9,
-   0.6,
-   0.45,
-   0.35,
-   0.15,
-   0.0
+   1.0,
+   1.0,
+   1.0,
+   1.0,
+   1.0,
+   1.0,
+   1.0,
+   1.0,
+   1.0,
+   1.0
   ],
   "clumps": {
    "radius_m": 0.18,
@@ -373,7 +373,7 @@
  },
  "generated": {
   "by": "pipeline/plantgen.py",
-  "version": "1",
+  "version": "2",
   "card": "library/plant_cards/phyllodoce_breweri.json",
   "card_sha256": "ba250a5c702ecec5",
   "template": "ribes_roezlii",

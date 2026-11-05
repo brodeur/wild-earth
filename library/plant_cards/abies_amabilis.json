@@ -1,0 +1,212 @@
+{
+ "id": "abies_amabilis",
+ "scientific": "Abies amabilis",
+ "common": "Pacific silver fir",
+ "aliases": [
+  "pacific_silver_fir",
+  "silver_fir",
+  "amabilis_fir",
+  "lovely_fir"
+ ],
+ "family": "Pinaceae",
+ "form": "tree",
+ "deciduous": false,
+ "template": "pseudotsuga_menziesii",
+ "regions": [
+  "pacific_northwest"
+ ],
+ "height_m": [
+  30,
+  50
+ ],
+ "stature": {
+  "typical_m": 40,
+  "tall_m": 52,
+  "record_m": 71.9,
+  "source": "typical and tall: the Gymnosperm Database's 24-46 m, the drafter centring on the Olympic silver fir zone; record: 71.9 m, East Fork Humptulips River, Olympic National Forest, last seen 1999 (Gymnosperm Database); read 2026-11-04"
+ },
+ "variants_height_m": {
+  "young": [
+   2,
+   10
+  ],
+  "old-growth": [
+   45,
+   60
+  ]
+ },
+ "crown": {
+  "shape": "conical",
+  "profile": [
+   [
+    0.3,
+    0.15
+   ],
+   [
+    0.42,
+    0.17
+   ],
+   [
+    0.55,
+    0.17
+   ],
+   [
+    0.7,
+    0.15
+   ],
+   [
+    0.82,
+    0.11
+   ],
+   [
+    0.92,
+    0.06
+   ],
+   [
+    1.0,
+    0.02
+   ]
+  ],
+  "lobes": 4,
+  "lobe_depth": 0.08,
+  "asymmetry": 0.08,
+  "fill": 0.32,
+  "edge": 1.06
+ },
+ "foliage": {
+  "colors": {
+   "winter": [
+    52,
+    68,
+    62
+   ],
+   "spring": [
+    100,
+    124,
+    96
+   ],
+   "summer": [
+    56,
+    74,
+    66
+   ],
+   "fall": [
+    56,
+    72,
+    64
+   ]
+  },
+  "leaf_size_m": 0.025,
+  "leaf_on": {
+   "winter": 1.0,
+   "spring": 1.0,
+   "summer": 1.0,
+   "fall": 1.0
+  }
+ },
+ "trunk": {
+  "bark_rgb": [
+   150,
+   148,
+   144
+  ],
+  "bark_pattern": "smooth_grey",
+  "flare": 1.3
+ },
+ "targets": {
+  "crown_width_ratio": 0.32,
+  "crown_base_ratio": 0.3,
+  "porosity": 0.2,
+  "from": "judgement values from the drafter's reading of the sources and knowledge of the species (2026-11-04), no photographs measured; to be replaced by photo measurements: a dense, narrow, very dark spire on a smooth pale-grey trunk; old trees become cylindrical and flat-topped"
+ },
+ "variant_patches": {
+  "young": {
+   "set": {
+    "trunk": {
+     "bark_rgb": [
+      158,
+      156,
+      152
+     ],
+     "bark_pattern": "smooth_grey"
+    }
+   },
+   "note": "a sapling in deep shade, flat sprays of dark needles in tiers, waiting for a gap"
+  },
+  "old-growth": {
+   "set": {
+    "trunk": {
+     "bark_rgb": [
+      132,
+      118,
+      112
+     ],
+     "bark_pattern": "plates"
+    },
+    "crown": {
+     "shape": "cylindrical"
+    }
+   },
+   "note": "an old tree with a flat-topped, cylindrical crown and bark breaking into reddish-grey scaly plates"
+  }
+ },
+ "description": "The shade-loving fir of the Olympics' middle slopes, 30-50 m here, a dense, dark, narrow spire on a smooth, pale-grey trunk dotted with resin blisters. Its needles are a deep glossy green above and brilliant silvery-white beneath, so the forest flashes silver when wind turns the boughs.",
+ "season_notes": {
+  "winter": "Evergreen under deep, wet snow; the dense tiers hold it.",
+  "spring": "Shoots break late in pale green tufts; red pollen cones under the branches.",
+  "summer": "Upright, resinous purple cones 8-10 cm sit on the top branches.",
+  "fall": "The cones fall apart on the branch, leaving bare spikes; seedlings carpet the shaded duff."
+ },
+ "habitat": {
+  "classes": {
+   "conifer_forest": 1.0,
+   "mixed_forest": 0.3,
+   "riparian": 0.2,
+   "barren": 0.05
+  },
+  "floor": 0.9,
+  "mid": 1.0,
+  "steep": 0.9,
+  "north": 1.4,
+  "shade": 1.0,
+  "disturbed": 0.3
+ },
+ "relations": {
+  "eaten_by": [
+   {
+    "animal": "cyanocitta_stelleri",
+    "part": "seeds",
+    "seasons": [
+     "fall"
+    ]
+   },
+   {
+    "animal": "odocoileus_hemionus",
+    "part": "browse",
+    "seasons": [
+     "winter"
+    ]
+   }
+  ],
+  "cover_for": [
+   "odocoileus_hemionus",
+   "ursus_americanus",
+   "cyanocitta_stelleri"
+  ]
+ },
+ "range": {
+  "elev_m": [
+   600,
+   1500
+  ],
+  "where": "the Pacific silver fir zone of the Olympics, about 600-1,200 m on the west side, higher in the east; at sea level in the wettest western valleys and up to the subalpine; Alaska to the Oregon Cascades, a few stands in far northern California"
+ },
+ "stand_in": "pseudotsuga_menziesii",
+ "notes": "A fir grown from Douglas-fir: needles single and flat (the template's needle_flat cards are close), 1-2.5 cm, those on top of the twig pressed forward and covering it, and cones upright and shattering, unlike the template's hanging ones (not expressed). The colour is the point: very dark glossy green above, silver-white below (Gymnosperm Database); the summer colour is the dark top side as seen from the ground, and the silver flash of the undersides in wind is not drawn (a two-sided needle colour would carry it). Young trees are smooth, light grey with resin blisters; old ones break into reddish-grey scaly plates. It is among the most shade-tolerant conifers and very intolerant of fire (Gymnosperm Database). Douglas squirrels and grosbeaks take the seed, sooty grouse the needles, and elk and deer browse the saplings lightly in winter; only the deer and Steller's jay are in the animal library.",
+ "sources": [
+  "The Gymnosperm Database, Abies amabilis, https://www.conifers.org/pi/Abies_amabilis.php, read 2026-11-04"
+ ],
+ "authors": [
+  "Wild Earth (agent draft, 2026-11-04); needs local sign-off"
+ ]
+}

@@ -1,0 +1,189 @@
+{
+ "id": "tsuga_heterophylla",
+ "scientific": "Tsuga heterophylla",
+ "common": "western hemlock",
+ "aliases": [
+  "western_hemlock",
+  "pacific_hemlock"
+ ],
+ "family": "Pinaceae",
+ "form": "tree",
+ "deciduous": false,
+ "template": "pseudotsuga_menziesii",
+ "regions": [
+  "pacific_northwest",
+  "california"
+ ],
+ "height_m": [
+  35,
+  60
+ ],
+ "stature": {
+  "typical_m": 45,
+  "tall_m": 62,
+  "record_m": 83.3,
+  "source": "typical and tall: the drafter's estimate for the Olympic west-side lowland (the Gymnosperm Database gives the species to 75 m and no typical height); record: 83.34 m, Prairie Creek Redwoods State Park, California, found 2014 (Gymnosperm Database); read 2026-11-04"
+ },
+ "variants_height_m": {
+  "young": [
+   2,
+   14
+  ],
+  "old-growth": [
+   50,
+   70
+  ]
+ },
+ "crown": {
+  "shape": "conical",
+  "profile": [
+   [
+    0.25,
+    0.18
+   ],
+   [
+    0.4,
+    0.22
+   ],
+   [
+    0.55,
+    0.21
+   ],
+   [
+    0.7,
+    0.17
+   ],
+   [
+    0.82,
+    0.12
+   ],
+   [
+    0.92,
+    0.06
+   ],
+   [
+    1.0,
+    0.02
+   ]
+  ],
+  "lobes": 5,
+  "lobe_depth": 0.12,
+  "asymmetry": 0.12,
+  "fill": 0.32,
+  "edge": 1.1
+ },
+ "foliage": {
+  "colors": {
+   "winter": [
+    64,
+    80,
+    58
+   ],
+   "spring": [
+    116,
+    138,
+    82
+   ],
+   "summer": [
+    70,
+    88,
+    62
+   ],
+   "fall": [
+    68,
+    86,
+    60
+   ]
+  },
+  "leaf_size_m": 0.015,
+  "droop": 0.6,
+  "leaf_on": {
+   "winter": 1.0,
+   "spring": 1.0,
+   "summer": 1.0,
+   "fall": 1.0
+  }
+ },
+ "trunk": {
+  "bark_rgb": [
+   106,
+   90,
+   80
+  ],
+  "bark_pattern": "furrowed",
+  "flare": 1.4
+ },
+ "targets": {
+  "crown_width_ratio": 0.42,
+  "crown_base_ratio": 0.35,
+  "porosity": 0.24,
+  "from": "judgement values from the drafter's reading of the sources and knowledge of the species (2026-11-04), no photographs measured; to be replaced by photo measurements: a narrow cone of soft, drooping, feathery sprays with a leader that nods over at the top; finer-textured and darker than Douglas-fir"
+ },
+ "variant_patches": {
+  "young": {
+   "note": "a shade-grown sapling on a nurse log or stump, a thin, drooping cone that can wait a century for a gap"
+  },
+  "old-growth": {
+   "note": "a tall, narrow old tree with an irregular, often broken crown on a long grey-brown bole"
+  }
+ },
+ "description": "The most common tree of the rain forest and the lowland slopes, 35-60 m here, with a narrow crown of soft, flat, feathery dark-green sprays and a leader that always droops over at the tip. It grows up in deep shade on nurse logs and stumps and eventually replaces the spruce and Douglas-fir around it.",
+ "season_notes": {
+  "winter": "Evergreen; the drooping leader and sprays shed the wet snow of the lower slopes.",
+  "spring": "Bright yellow-green new growth tips every spray in May.",
+  "summer": "Tiny 2 cm cones hang in their hundreds from the spray tips.",
+  "fall": "The cones open and shed seed onto moss, rotting logs and stumps, where the seedlings take."
+ },
+ "habitat": {
+  "classes": {
+   "conifer_forest": 1.0,
+   "mixed_forest": 0.7,
+   "riparian": 0.4
+  },
+  "floor": 1.0,
+  "mid": 1.1,
+  "steep": 1.0,
+  "north": 1.2,
+  "shade": 1.0,
+  "disturbed": 0.5
+ },
+ "relations": {
+  "eaten_by": [
+   {
+    "animal": "odocoileus_hemionus",
+    "part": "browse",
+    "seasons": [
+     "winter",
+     "spring"
+    ]
+   },
+   {
+    "animal": "cyanocitta_stelleri",
+    "part": "seeds",
+    "seasons": [
+     "fall"
+    ]
+   }
+  ],
+  "cover_for": [
+   "odocoileus_hemionus",
+   "ursus_americanus",
+   "cyanocitta_stelleri"
+  ]
+ },
+ "range": {
+  "elev_m": [
+   0,
+   1200
+  ],
+  "where": "the whole Olympic lowland and lower slopes, from the rain forest valleys up into the Pacific silver fir zone; the coast from Alaska to Sonoma County, California, and the inland northwest"
+ },
+ "stand_in": "pseudotsuga_menziesii",
+ "notes": "Grown from Douglas-fir with a narrower, finer, darker crown and more drooping sprays (foliage droop 0.6 against the template's 0.4). Needles 0.5-3 cm, mostly 1-2 cm, flat and two-ranked, shiny green above with two white bands below (Gymnosperm Database), which the template's needle_flat cards approximate well. Not expressed: the nodding leader (the generator has no tip droop for the trunk; a bend of the last metre or two would carry it), the tiny pendant cones in the thousands, and the stilted roots of trees grown on nurse logs and stumps. Very shade-tolerant: saplings persist for centuries under the canopy (Gymnosperm Database). Roosevelt elk and black-tailed deer browse the seedlings in winter; Douglas squirrels, chickadees, crossbills and siskins eat the seed; only the deer and Steller's jay are in the animal library.",
+ "sources": [
+  "The Gymnosperm Database, Tsuga heterophylla, https://www.conifers.org/pi/Tsuga_heterophylla.php, read 2026-11-04"
+ ],
+ "authors": [
+  "Wild Earth (agent draft, 2026-11-04); needs local sign-off"
+ ]
+}

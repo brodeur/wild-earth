@@ -21,6 +21,26 @@ REGIONS = {
 }
 US = ("conus", "alaska", "hawaii", "puerto_rico")
 
+# Natural regions (2026-11-04): what the species tables were written for. A rule, a substitution table or a range test
+# tagged with a region applies only to a tile whose centre lies in it; everything California-tuned (the foothill rules,
+# the Sierra elevation zones, the coast's oaks, the curated animals' elevation ranges) is tagged "california", so a tile
+# elsewhere never falls back to them silently. Boxes, not borders: a tile near one is checked against its communities.
+NATURAL = {
+    "california": [(-124.5, 32.4, -114.1, 42.0)],
+    "pacific_northwest": [(-125.0, 42.0, -116.0, 49.5), (-128.5, 48.2, -122.5, 51.5)],
+    "great_basin": [(-120.0, 35.5, -110.5, 43.0)],
+}
+
+
+def natural_regions(tile) -> list[str]:
+    """The natural regions holding the tile's centre (empty outside every table's region)."""
+    lon, lat = centre(tile)
+    return [r for r, boxes in NATURAL.items() if any(w <= lon <= e and s <= lat <= n for (w, s, e, n) in boxes)]
+
+
+def in_region(tile, region: str | None) -> bool:
+    return region is None or region in natural_regions(tile)
+
 # source key -> what it covers, and what stands in elsewhere. licence: the stand-in's terms, so a fallback is only
 # implemented where they are CC0, CC BY or CC BY-SA (or public domain).
 COVERAGE = {

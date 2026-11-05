@@ -1,0 +1,190 @@
+{
+ "id": "abies_lasiocarpa",
+ "scientific": "Abies lasiocarpa",
+ "common": "subalpine fir",
+ "aliases": [
+  "subalpine_fir",
+  "alpine_fir"
+ ],
+ "family": "Pinaceae",
+ "form": "tree",
+ "deciduous": false,
+ "template": "pseudotsuga_menziesii",
+ "regions": [
+  "pacific_northwest"
+ ],
+ "height_m": [
+  12,
+  28
+ ],
+ "stature": {
+  "typical_m": 18,
+  "tall_m": 30,
+  "record_m": 52,
+  "source": "typical and tall: the drafter's estimate for the Olympic subalpine parkland; the largest in the park are about 38 m (Cream Lake, Wells Valley; Gymnosperm Database); record: about 52 m, Icicle Creek, Alpine Lakes Wilderness, 1988 (Gymnosperm Database); read 2026-11-04"
+ },
+ "variants_height_m": {
+  "young": [
+   1,
+   6
+  ],
+  "old-growth": [
+   25,
+   38
+  ]
+ },
+ "crown": {
+  "shape": "conical",
+  "profile": [
+   [
+    0.06,
+    0.13
+   ],
+   [
+    0.2,
+    0.14
+   ],
+   [
+    0.38,
+    0.13
+   ],
+   [
+    0.55,
+    0.11
+   ],
+   [
+    0.72,
+    0.08
+   ],
+   [
+    0.86,
+    0.05
+   ],
+   [
+    1.0,
+    0.01
+   ]
+  ],
+  "lobes": 3,
+  "lobe_depth": 0.06,
+  "asymmetry": 0.08,
+  "fill": 0.36,
+  "edge": 1.05
+ },
+ "foliage": {
+  "colors": {
+   "winter": [
+    70,
+    86,
+    88
+   ],
+   "spring": [
+    106,
+    128,
+    120
+   ],
+   "summer": [
+    78,
+    96,
+    96
+   ],
+   "fall": [
+    76,
+    92,
+    92
+   ]
+  },
+  "leaf_size_m": 0.022,
+  "leaf_on": {
+   "winter": 1.0,
+   "spring": 1.0,
+   "summer": 1.0,
+   "fall": 1.0
+  }
+ },
+ "trunk": {
+  "bark_rgb": [
+   132,
+   132,
+   128
+  ],
+  "bark_pattern": "smooth_grey",
+  "flare": 1.2
+ },
+ "targets": {
+  "crown_width_ratio": 0.26,
+  "crown_base_ratio": 0.06,
+  "porosity": 0.2,
+  "from": "judgement values from the drafter's reading of the sources and knowledge of the species (2026-11-04), no photographs measured; to be replaced by photo measurements: the narrowest spire of the mountains, a dense blue-green steeple with branches to the ground, the outline that names it from a distance (Gymnosperm Database)"
+ },
+ "variant_patches": {
+  "young": {
+   "note": "a treeline clump: a few low, layered spires around an old tree, or a wind-shorn krummholz mat"
+  },
+  "old-growth": {
+   "set": {
+    "trunk": {
+     "bark_pattern": "furrowed"
+    }
+   },
+   "note": "an old tree in a sheltered basin, its grey bark furrowed and scaly, the spire flattening at the top"
+  }
+ },
+ "description": "The fir of the high country, 12-28 m here, a very narrow, dense spire of blue-green needles with its branches swept down to the snow. At treeline it grows in tight clumps of layered stems around an old tree, and its dark purple cones stand upright on the top.",
+ "season_notes": {
+  "winter": "Buried to the waist or deeper; the narrow spire sheds snow, and lower limbs pressed into the ground take root.",
+  "spring": "Snow melts out of the tree wells first; new shoots break glaucous blue-green in late June.",
+  "summer": "Upright purple cones 5-10 cm on the top whorls; red pollen cones below.",
+  "fall": "Cones shatter on the branch in September; first snow in October."
+ },
+ "habitat": {
+  "classes": {
+   "conifer_forest": 1.0,
+   "barren": 0.5,
+   "grassland": 0.35
+  },
+  "floor": 0.9,
+  "mid": 1.0,
+  "steep": 0.9,
+  "north": 1.0,
+  "shade": 0.3,
+  "disturbed": 0.4
+ },
+ "relations": {
+  "eaten_by": [
+   {
+    "animal": "cyanocitta_stelleri",
+    "part": "seeds",
+    "seasons": [
+     "fall"
+    ]
+   },
+   {
+    "animal": "odocoileus_hemionus",
+    "part": "browse",
+    "seasons": [
+     "summer"
+    ]
+   }
+  ],
+  "cover_for": [
+   "odocoileus_hemionus",
+   "ursus_americanus"
+  ]
+ },
+ "range": {
+  "elev_m": [
+   1200,
+   1900
+  ],
+  "where": "the subalpine parkland and treeline of the Olympics, commonest in the drier northeast (Hurricane Ridge, Obstruction Point, Deer Park, Grand Valley), sparser on the wet west side where mountain hemlock takes its place; Alaska and the Yukon to the Oregon Cascades and the Rockies"
+ },
+ "stand_in": "pseudotsuga_menziesii",
+ "notes": "A fir grown from Douglas-fir as a much narrower, lower-based spire. Needles 1.1-3.1 cm, flexible, turned upward, light to blue-green and waxy (Gymnosperm Database); cones upright, dark purple, shattering (not expressed: the template's cones hang). The parkland clumps and krummholz (layered lower branches rooting into new leaders; Gymnosperm Database) are the treeline's look and are not grown: a clump would need several trees of a stand placed together, and krummholz a wind-sheared, flagged, mat form. The Gymnosperm Database notes that many Olympic and Cascade trees key out as var. bifolia; this card is the species as a whole. Clark's nutcracker, gray jay, Douglas squirrel and sooty grouse use it; mountain goats (introduced) and elk browse it; only the deer and Steller's jay are in the animal library. Heights here are the drafter's estimates for a wind-exposed, short-season site.",
+ "sources": [
+  "The Gymnosperm Database, Abies lasiocarpa, https://www.conifers.org/pi/Abies_lasiocarpa.php, read 2026-11-04"
+ ],
+ "authors": [
+  "Wild Earth (agent draft, 2026-11-04); needs local sign-off"
+ ]
+}

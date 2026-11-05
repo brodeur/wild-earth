@@ -1,0 +1,209 @@
+{
+ "id": "thuja_plicata",
+ "scientific": "Thuja plicata",
+ "common": "western redcedar",
+ "aliases": [
+  "western_redcedar",
+  "western_red_cedar",
+  "giant_arborvitae",
+  "canoe_cedar"
+ ],
+ "family": "Cupressaceae",
+ "form": "tree",
+ "deciduous": false,
+ "template": "calocedrus_decurrens",
+ "regions": [
+  "pacific_northwest",
+  "california"
+ ],
+ "height_m": [
+  35,
+  55
+ ],
+ "stature": {
+  "typical_m": 45,
+  "tall_m": 58,
+  "record_m": 71.3,
+  "source": "typical: the Gymnosperm Database gives up to about 50 m; the Olympic giants (Willaby Creek 59.4 m, Quinault Lake Cedar 53 m) set tall; record: 71.3 m near the Grove of the Patriarchs, Mount Rainier (Gymnosperm Database); read 2026-11-04"
+ },
+ "variants_height_m": {
+  "young": [
+   3,
+   12
+  ],
+  "old-growth": [
+   45,
+   60
+  ]
+ },
+ "crown": {
+  "shape": "conical",
+  "profile": [
+   [
+    0.12,
+    0.2
+   ],
+   [
+    0.28,
+    0.23
+   ],
+   [
+    0.44,
+    0.22
+   ],
+   [
+    0.6,
+    0.19
+   ],
+   [
+    0.75,
+    0.15
+   ],
+   [
+    0.88,
+    0.09
+   ],
+   [
+    1.0,
+    0.02
+   ]
+  ],
+  "lobes": 5,
+  "lobe_depth": 0.14,
+  "asymmetry": 0.15,
+  "fill": 0.35,
+  "edge": 1.08
+ },
+ "foliage": {
+  "colors": {
+   "winter": [
+    100,
+    102,
+    66
+   ],
+   "spring": [
+    104,
+    124,
+    72
+   ],
+   "summer": [
+    88,
+    108,
+    64
+   ],
+   "fall": [
+    98,
+    104,
+    64
+   ]
+  },
+  "leaf_size_m": 0.012,
+  "droop": 0.55,
+  "leaf_on": {
+   "winter": 1.0,
+   "spring": 1.0,
+   "summer": 1.0,
+   "fall": 1.0
+  }
+ },
+ "trunk": {
+  "bark_rgb": [
+   128,
+   84,
+   66
+  ],
+  "bark_pattern": "fibrous",
+  "flare": 2.1
+ },
+ "targets": {
+  "crown_width_ratio": 0.45,
+  "crown_base_ratio": 0.12,
+  "porosity": 0.18,
+  "from": "judgement values from the drafter's reading of the sources and knowledge of the species (2026-11-04), no photographs measured; to be replaced by photo measurements: a conical crown of upswept limbs whose flat sprays hang down like curtains; the base fluted and buttressed; old trees forked into several leaders and dead spike tops (candelabra)"
+ },
+ "variant_patches": {
+  "young": {
+   "note": "a soft, drooping, yellow-green cone in the shade of the rain forest floor"
+  },
+  "old-growth": {
+   "set": {
+    "trunk": {
+     "flare": 2.6
+    },
+    "crown": {
+     "envelope": {
+      "asymmetry": 0.3,
+      "lobe_depth": 0.26
+     }
+    }
+   },
+   "note": "a candelabra giant: a fluted, buttressed trunk several metres across, bark in long fibrous strips, several leaders and bleached spike tops above a ragged crown (Kalaloch, Quinault Lake, Nolan Creek)"
+  }
+ },
+ "description": "A huge, long-lived cedar of the wet flats, 35-55 m here, its trunk flaring into a fluted buttress and wrapped in red-brown bark that strips off in long fibrous ribbons. Its limbs sweep up and then hang their flat, glossy, scale-leaved sprays down in curtains, and old trees fork into several leaders with dead silver spike tops.",
+ "season_notes": {
+  "winter": "Evergreen; sprays in the sun bronze a little in the cold.",
+  "spring": "Tiny reddish pollen cones at the spray tips; new growth a fresh yellow-green.",
+  "summer": "Small, upright, egg-shaped cones ripen green to brown on the sprays.",
+  "fall": "The inner, oldest sprays turn orange-brown and drop, 'flagging' the crown for a few weeks; cones open and shed seed."
+ },
+ "habitat": {
+  "classes": {
+   "conifer_forest": 1.0,
+   "riparian": 0.9,
+   "mixed_forest": 0.6
+  },
+  "floor": 1.6,
+  "mid": 0.9,
+  "steep": 0.6,
+  "north": 1.2,
+  "shade": 0.8,
+  "disturbed": 0.4,
+  "riparian": {
+   "zones": {
+    "terrace": 1.0,
+    "bank": 0.5,
+    "pond_terrace": 0.8,
+    "pond_shore": 0.4
+   },
+   "orders": [
+    1,
+    7
+   ],
+   "permanence": "any",
+   "water": "Seeks wet ground: seepy flats, swamp edges, stream terraces and the poorly drained benches of the lowland, where it outlives everything around it."
+  }
+ },
+ "relations": {
+  "eaten_by": [
+   {
+    "animal": "odocoileus_hemionus",
+    "part": "browse",
+    "seasons": [
+     "winter"
+    ]
+   }
+  ],
+  "cover_for": [
+   "odocoileus_hemionus",
+   "ursus_americanus",
+   "cyanocitta_stelleri"
+  ],
+  "shades_water": 0.7
+ },
+ "range": {
+  "elev_m": [
+   0,
+   1000
+  ],
+  "where": "the Olympic lowland, wettest on the west-side flats and swampy benches (Kalaloch, Lake Quinault, the Hoh and Queets terraces); Alaska to Humboldt County, California, and inland to the northern Rockies"
+ },
+ "stand_in": "calocedrus_decurrens",
+ "notes": "Grown from incense cedar, the library's Cupressaceae with flat scale-leaf sprays and fibrous bark, as a cedar with more drooping sprays (droop 0.55 against 0.2), redder bark and a heavier buttress. Its sprays are 15-50 cm long, glossy yellow-green above with faint white butterfly marks below (Gymnosperm Database), more pendulous than incense cedar's, which stand up edge-on. The bark strips the template draws as fibrous are right; the deep fluting of the lower trunk and the candelabra of several leaders and spike tops on old trees are approximated by the flare and the old-growth class's ragged envelope only. Deer and elk browse it hard in winter and it is a favourite winter food (drafter's knowledge; the Gymnosperm Database is silent on wildlife); the big hollow trees shelter black bears in winter, and pileated woodpeckers, Vaux's swifts and bats use them, none but the bear in the animal library. California's stands are only in the far northwest.",
+ "sources": [
+  "The Gymnosperm Database, Thuja plicata, https://www.conifers.org/cu/Thuja_plicata.php, read 2026-11-04"
+ ],
+ "authors": [
+  "Wild Earth (agent draft, 2026-11-04); needs local sign-off"
+ ]
+}

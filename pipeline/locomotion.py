@@ -73,9 +73,11 @@ def vmax_garland(mass_kg: float) -> float:
     return 10 ** (1.478 + 0.259 * lm - 0.0623 * lm * lm) / 3.6
 
 
-def resolve(code: str, tree: dict | None = None) -> dict | None:
+def resolve(code: str, tree: dict | None = None, rec: dict | None = None) -> dict | None:
+    """rec: a record not in the library (a generated trait entry, pipeline/fauna.py) with taxonomy, mass_kg, size and
+    body_plan; else the library's record for code."""
     tree = tree or load_tree()
-    rec = load_record(code)
+    rec = rec or load_record(code)
     if not rec:
         return None
     merged: dict = {}

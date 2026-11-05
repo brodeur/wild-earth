@@ -35,7 +35,7 @@ import pathlib
 ROOT = pathlib.Path(__file__).resolve().parent.parent
 LIBRARY = ROOT / "library" / "species"
 CARDS = ROOT / "library" / "plant_cards"
-VERSION = "1"
+VERSION = "2"   # 2 (2026-11-04): leaf_on_by_month follows the card's deciduous
 
 # Keys of a template that describe the template species itself, not its architecture.
 TEMPLATE_OWN = ("id", "aliases", "scientific", "common", "stature", "growth", "description", "season_notes", "status",
@@ -109,6 +109,8 @@ def build(card: dict) -> dict:
         rec["variants"] = variants
 
     crown = card.get("crown") or {}
+    if crown and "crown" not in rec:   # a ground form (grass, forb, emergent) has no crown, trunk or foliage block
+        raise ValueError(f"{card['id']}: a crown on a ground-form template ({tid}); give a ground block in patch instead")
     if crown.get("shape"):
         rec["crown"]["shape"] = crown["shape"]
     if crown.get("profile"):
@@ -119,14 +121,22 @@ def build(card: dict) -> dict:
 
     fol = card.get("foliage") or {}
     for k, v in fol.items():
-        rec["foliage"][k] = copy.deepcopy(v)
-    if card.get("deciduous") is not None and "leaf_on" not in fol:
+        rec.setdefault("foliage", {})[k] = copy.deepcopy(v)
+    # a template's month-by-month leaf-on wins over the seasons' leaf_on in the client: an evergreen card on a deciduous
+    # template (red mountain heather on Sierra gooseberry) came out bare in winter. The card's deciduous decides.
+    if card.get("deciduous") is not None and "leaf_on_by_month" not in fol and "leaf_on_by_month" in (rec.get("foliage") or {}):
+        lom = rec["foliage"]["leaf_on_by_month"]
+        if card["deciduous"] is False:
+            rec["foliage"]["leaf_on_by_month"] = [1.0] * 12
+        elif min(lom) > 0.9:   # a deciduous card on an evergreen template: a generic temperate schedule
+            rec["foliage"]["leaf_on_by_month"] = [0.0, 0.0, 0.2, 0.7, 1.0, 1.0, 1.0, 1.0, 0.9, 0.6, 0.2, 0.0]
+    if card.get("deciduous") is not None and "leaf_on" not in fol and "foliage" in rec:
         on = {"winter": 0.0, "spring": 1.0, "summer": 1.0, "fall": 0.7} if card["deciduous"] else {s: 1.0 for s in ("winter", "spring", "summer", "fall")}
         rec["foliage"]["leaf_on"] = on
 
     trunk = card.get("trunk") or {}
     for k, v in trunk.items():
-        rec["trunk"][k] = copy.deepcopy(v)
+        rec.setdefault("trunk", {})[k] = copy.deepcopy(v)
     if trunk.get("bark_rgb"):   # the age classes' own bark keeps its offset from the template's mature bark
         t0 = tpl["trunk"].get("bark_rgb")
         for v in rec.get("variants", []):
@@ -136,7 +146,7 @@ def build(card: dict) -> dict:
 
     targets = {k: v for k, v in (tpl.get("targets") or {}).items() if k not in ("from", "photos")}
     targets.update(card.get("targets") or {})
-    summer = rec["foliage"].get("colors", {}).get("summer")
+    summer = (rec.get("foliage") or {}).get("colors", {}).get("summer")
     if summer and "foliage_rg" not in (card.get("targets") or {}):
         targets["foliage_rg"], targets["foliage_bg"] = ratios(summer)
     targets["from"] = (card.get("targets") or {}).get("from") or "the trait card's values (no photographs measured)"
@@ -160,7 +170,9 @@ def build(card: dict) -> dict:
     rec["generated"] = {"by": "pipeline/plantgen.py", "version": VERSION, "card": f"library/plant_cards/{card['id']}.json",
                         "card_sha256": hashlib.sha256(blob).hexdigest()[:16], "template": tid,
                         "template_common": tpl["common"], "height_scale": round(scale, 3)}
-    order = ["id", "aliases", "scientific", "common", "form", "architectural_model", "deciduous", "height_m", "stature",
+    if card.get("regions"):
+        rec["regions"] = list(card["regions"])
+    order = ["id", "aliases", "scientific", "common", "form", "regions", "architectural_model", "deciduous", "height_m", "stature",
              "variants", "snag", "description", "season_notes", "status", "review", "habitat", "relations", "trunk", "crown", "levels",
              "foliage", "deadwood", "twigs", "lod", "targets", "generated", "notes", "sources", "authors", "license"]
     return {k: rec[k] for k in order if k in rec} | {k: v for k, v in rec.items() if k not in order}

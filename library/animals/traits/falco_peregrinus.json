@@ -1,0 +1,115 @@
+{
+ "id": "falco_peregrinus",
+ "scientific": "Falco peregrinus",
+ "common": "peregrine falcon",
+ "kind": "bird",
+ "taxonomy": {
+  "kingdom": "Animalia",
+  "phylum": "Chordata",
+  "class": "Aves",
+  "order": "Falconiformes",
+  "family": "Falconidae",
+  "genus": "Falco"
+ },
+ "body_plan": "bird",
+ "mass_kg": 0.76,
+ "size": {
+  "length_m": 0.329,
+  "shoulder_or_wingspan_m": 0.526
+ },
+ "diet": {
+  "role": [
+   "predator"
+  ],
+  "diet_tenths": {
+   "inv": 1.0,
+   "vend": 8.0,
+   "vect": 1.0,
+   "vfish": 0.0,
+   "vunk": 0.0,
+   "scav": 0.0,
+   "fruit": 0.0,
+   "nect": 0.0,
+   "seed": 0.0,
+   "planto": 0.0
+  },
+  "vertebrate_share": 0.9,
+  "mass_kg": 0.76,
+  "activity": [],
+  "source": "eltontraits (species)"
+ },
+ "senses": {
+  "sight": {
+   "range_m": 473.3
+  },
+  "sound": {
+   "range_m": 236.6
+  },
+  "scent": {
+   "range_m": 18.9
+  }
+ },
+ "rig": "bird part rig (animalModels.js RIG.bird), flierControl",
+ "locomotion": {
+  "code": "falco_peregrinus",
+  "class": "Aves",
+  "order": "Falconiformes",
+  "family": "Falconidae",
+  "body_plan": "bird",
+  "mass_kg": 0.76,
+  "length_m": 0.329,
+  "hip_m": 0.165,
+  "posture": "biped",
+  "gaits": {},
+  "walk_mps": 0.9,
+  "trot_mps": 2.01,
+  "cruise_mps": 3.05,
+  "top_mps": 5.08,
+  "stride_hz": 4.37,
+  "stride_m": 0.46,
+  "sprint_s": 3.5,
+  "recover_s": 12.3,
+  "turn_rad_s": 4.37,
+  "turn": {
+   "on": 0.45,
+   "off": 0.2,
+   "hold": 0.35,
+   "amp": [
+    0.4,
+    0.6
+   ],
+   "hz": [
+    0.7,
+    2.4
+   ]
+  },
+  "lag": {
+   "s": 0.06,
+   "max_rad": 0.35,
+   "v": [
+    0.3,
+    1.2
+   ]
+  },
+  "bend": {
+   "spine": 1.0,
+   "lead": 0.12,
+   "lead_max": 0.25
+  },
+  "flags": {
+   "head_lead": true
+  },
+  "flier": false
+ },
+ "generated": {
+  "by": "pipeline/fauna.py",
+  "at": "2026-11-05T06:16:02Z",
+  "from": [
+   "gbif taxonomy",
+   "eltontraits (species)",
+   "pipeline/locomotion.py"
+  ],
+  "note": "behaviour data without a model; review the diet, senses and size before a mesh is made"
+ },
+ "license": "CC BY-SA 4.0 (the entry); diet and mass from EltonTraits 1.0 (CC BY 4.0, credited in the tile's sources)"
+}

@@ -1,0 +1,276 @@
+{
+ "id": "acer_circinatum",
+ "scientific": "Acer circinatum",
+ "common": "vine maple",
+ "aliases": [
+  "vine_maple"
+ ],
+ "family": "Sapindaceae",
+ "form": "tree",
+ "deciduous": true,
+ "template": "acer_macrophyllum",
+ "regions": [
+  "pacific_northwest",
+  "california"
+ ],
+ "height_m": [
+  3,
+  8
+ ],
+ "stature": {
+  "typical_m": 5,
+  "tall_m": 8,
+  "record_m": null,
+  "source": "FEIS: a shrub or small tree, to about 9 m with 20-30 cm stems in the open; no record tree read; read 2026-11-04"
+ },
+ "variants_height_m": {
+  "young": [
+   1,
+   3
+  ],
+  "veteran": [
+   7,
+   11
+  ]
+ },
+ "crown": {
+  "shape": "hemispherical",
+  "profile": [
+   [
+    0.08,
+    0.34
+   ],
+   [
+    0.22,
+    0.5
+   ],
+   [
+    0.38,
+    0.58
+   ],
+   [
+    0.54,
+    0.6
+   ],
+   [
+    0.7,
+    0.55
+   ],
+   [
+    0.84,
+    0.42
+   ],
+   [
+    0.95,
+    0.22
+   ],
+   [
+    1.0,
+    0.06
+   ]
+  ],
+  "lobes": 7,
+  "lobe_depth": 0.22,
+  "asymmetry": 0.35,
+  "fill": 0.4,
+  "edge": 1.12
+ },
+ "foliage": {
+  "colors": {
+   "winter": [
+    126,
+    98,
+    80
+   ],
+   "spring": [
+    132,
+    156,
+    82
+   ],
+   "summer": [
+    96,
+    122,
+    66
+   ],
+   "fall": [
+    196,
+    72,
+    42
+   ]
+  },
+  "leaf_on": {
+   "winter": 0.0,
+   "spring": 0.8,
+   "summer": 1.0,
+   "fall": 0.6
+  },
+  "leaf_on_by_month": [
+   0.0,
+   0.0,
+   0.1,
+   0.55,
+   0.95,
+   1.0,
+   1.0,
+   1.0,
+   0.95,
+   0.7,
+   0.2,
+   0.0
+  ],
+  "leaf_shape": "lobed_large",
+  "lobes": 9,
+  "lobe_depth": 0.3,
+  "lobe_style": "palmate",
+  "leaf_size_m": 0.09,
+  "flowers": {
+   "season": "spring",
+   "months": [
+    4,
+    5
+   ],
+   "form": "cluster",
+   "rgb": [
+    190,
+    96,
+    102
+   ],
+   "size_m": 0.04,
+   "density": 0.25,
+   "before_leaves": false
+  },
+  "berries": {
+   "season": "summer",
+   "months": [
+    7,
+    9
+   ],
+   "form": "cluster",
+   "rgb": [
+    186,
+    74,
+    66
+   ],
+   "size_m": 0.04,
+   "density": 0.2
+  }
+ },
+ "trunk": {
+  "bark_rgb": [
+   112,
+   110,
+   82
+  ],
+  "bark_pattern": "smooth",
+  "stems": [
+   3,
+   9
+  ],
+  "stem_spread_deg": 40,
+  "lean_deg": 25
+ },
+ "targets": {
+  "crown_width_ratio": 1.3,
+  "crown_base_ratio": 0.1,
+  "porosity": 0.35,
+  "from": "judgement values from the drafter's reading of the sources and knowledge of the species (2026-11-04), no photographs measured; to be replaced by photo measurements: several thin, leaning, often arching stems spreading a broad, layered, open canopy of flat sprays of round leaves; wider than tall in the shade, more upright in openings (FEIS)"
+ },
+ "variant_patches": {
+  "young": {
+   "set": {
+    "trunk": {
+     "stems": [
+      2,
+      4
+     ]
+    }
+   },
+   "note": "a few slim green stems in a gap or on a streambank"
+  },
+  "veteran": {
+   "set": {
+    "trunk": {
+     "stems": [
+      6,
+      12
+     ],
+     "lean_deg": 35
+    }
+   },
+   "note": "an old clump under the conifers: long stems arching over to the ground and rooting where they touch, a tangle several metres across"
+  }
+ },
+ "description": "A small, many-stemmed maple of the rain forest understory, 3-8 m, whose thin stems lean and arch out from the clump and root where they touch the ground. Its nearly round leaves, cut into seven to nine shallow lobes, make flat, layered sprays that glow green in the shade and turn scarlet, orange or yellow in autumn.",
+ "season_notes": {
+  "winter": "Bare, twisting green-and-red stems hung with moss.",
+  "spring": "Small red-purple and white flowers in drooping clusters as the leaves unfold, April-May.",
+  "summer": "Pairs of rose-red winged seeds, their wings spread nearly straight apart, among the leaves.",
+  "fall": "Scarlet in the open and on the river bars, yellow and pale orange under the conifers; the seed ripens September-October."
+ },
+ "habitat": {
+  "classes": {
+   "mixed_forest": 1.0,
+   "conifer_forest": 0.9,
+   "riparian": 0.9
+  },
+  "floor": 1.2,
+  "mid": 1.0,
+  "steep": 1.0,
+  "north": 1.1,
+  "shade": 0.7,
+  "disturbed": 1.1,
+  "riparian": {
+   "zones": {
+    "bank": 1.0,
+    "terrace": 0.9,
+    "margin": 0.4
+   },
+   "orders": [
+    1,
+    6
+   ],
+   "permanence": "any",
+   "water": "Wants moist ground: streambanks, the terraces of the rain forest rivers, and the seepy talus and openings of the lower slopes (FEIS)."
+  }
+ },
+ "relations": {
+  "eaten_by": [
+   {
+    "animal": "odocoileus_hemionus",
+    "part": "browse",
+    "seasons": [
+     "spring",
+     "summer",
+     "winter"
+    ]
+   },
+   {
+    "animal": "cyanocitta_stelleri",
+    "part": "seeds",
+    "seasons": [
+     "fall"
+    ]
+   }
+  ],
+  "cover_for": [
+   "odocoileus_hemionus",
+   "cyanocitta_stelleri"
+  ],
+  "shades_water": 0.6
+ },
+ "range": {
+  "elev_m": [
+   0,
+   900
+  ],
+  "where": "the understory of the Olympic lowland forests, streambanks, gaps and talus; mostly below about 900 m in Washington (FEIS), British Columbia to northern California"
+ },
+ "stand_in": "acer_macrophyllum",
+ "notes": "Grown from bigleaf maple (same genus) as a small, multi-stemmed, leaning tree: stems 3-9 spread 40 degrees and leaning to 25, and a broad, low crown. Leaves 3-6 cm per FEIS, but commonly 5-12 cm across in the field (drafter); leaf_size_m 0.09 sits between. Form 'tree' with several stems rather than 'multi_stem_shrub_tree', so the template's branch counts keep their per-tree meaning. The layering (stems rooting where they touch the ground) and the hoops of arching stems are not grown. FEIS: elk and black-tailed deer browse the foliage in summer and elk the twigs in winter; squirrels and chipmunks eat the seed; birds and small mammals the buds and flowers. Only the deer and Steller's jay are in the animal library. The western hemlock / vine maple / sword fern association is one of the commonest of the Olympic lowland (FEIS).\n\nEpiphytes: in the Hoh, vine maple and bigleaf maple carry the heaviest moss of any tree (club moss Selaginella oregana, cat-tail moss, licorice fern, lichens), which is much of the rain forest's look. The generator cannot draw it: its only epiphyte is mistletoe (epiphytes.mistletoe, evergreen balls on outer limbs). An epiphyte layer would need (1) a moss mantle on the wood: a thickness added to the upper side of each limb and the trunk's lee side, by the limb's angle (thickest on near-horizontal limbs), with its own colour and a soft, lumpy silhouette; (2) hanging curtains: cards hung from the undersides of limbs, a few tens of centimetres long, swaying with the wind like the drooping needle cards; (3) ferns on the mantle: licorice fern fronds standing up from the moss, green in winter and withered in a dry summer; (4) season and wetness: brighter green in the wet season, duller and paler in August; (5) the mid and far tiers: the moss tint carried into the blobs or impostors so a mossy maple grove reads from across the valley; and (6) a per-species and per-site amount (heavy on the west-side valley floors, light on the dry east side), probably a habitat factor for the fog and rain.",
+ "sources": [
+  "FEIS, Acer circinatum, https://www.fs.usda.gov/database/feis/plants/shrub/acecir/all.html, read 2026-11-04"
+ ],
+ "authors": [
+  "Wild Earth (agent draft, 2026-11-04); needs local sign-off"
+ ]
+}

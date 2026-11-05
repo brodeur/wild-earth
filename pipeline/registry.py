@@ -282,6 +282,17 @@ def scan() -> dict:
              "playable": _client_text("playable.js"), "files": files}
     for rec in recs:
         species[_sci_key(rec.get("scientific") or rec["id"])] = animal_entry(rec, ledger, texts, beh)
+    # generated behaviour entries (pipeline/fauna.py): an animal with traits and no model
+    for p in sorted((LIB / "animals" / "traits").glob("*.json")) if (LIB / "animals" / "traits").exists() else []:
+        t = json.loads(p.read_text())
+        k = _sci_key(t.get("scientific") or t["id"])
+        if k not in species:
+            species[k] = {"id": t["id"], "scientific": t.get("scientific"), "common": t.get("common"), "kind": t.get("kind"),
+                          "fidelity": 0, "why": ["generated traits (diet, senses, size, locomotion), no model yet"],
+                          "assets": {"behaviour": {"generated": True, "file": f"library/animals/traits/{p.name}",
+                                                   "diet": bool(t.get("diet")), "locomotion": bool(t.get("locomotion"))},
+                                     "rig": {"template": t.get("rig")}},
+                          "license": t.get("license"), "tiles": []}
     # animals in the behaviour tables with no library entry
     from .species_data import SPECIES as SD
     for sp in SD:
@@ -327,7 +338,9 @@ def scan() -> dict:
         acc += q["estimate_credits"]
         q["within_budget"] = acc <= left
     summary = summarize(species)
-    return {"generated_at": now_iso(), "about": __doc__.split("\n\n")[0], "levels": LEVELS,
+    from .research import KINDS
+    return {"generated_at": now_iso(), "about": __doc__.split("\n\n")[0], "levels": LEVELS, "kinds": list(KINDS),
+            "kinds_note": "fungus is a kind with no species yet: GBIF's fungi are not fetched (a place left for them)",
             "summary": summary, "meshy": {**{k: ledger[k] for k in ("spent", "budget")}, "left": left,
                                           "estimate_note": MESHY_ESTIMATE_NOTE, "queued": meshy,
                                           "queued_credits": sum(q["estimate_credits"] for q in meshy),
@@ -394,30 +407,66 @@ def tile_report(tile: Tile) -> dict:
         e = by_id.get(code)
         animals.append({"id": code, "scientific": s.get("scientific"), "common": s.get("common"), "kind": (e or {}).get("kind"),
                         "fidelity": (e or {}).get("fidelity", 0), "present": s.get("rule"), "evidence": s.get("evidence")})
-    known = {_sci_key(e.get("scientific") or "") for e in reg["species"].values()}
+    # the fauna stage's research (species/animals.json, pipeline/fauna.py): the listed animals beyond the curated ones,
+    # and the Meshy queue with its estimates and stand-ins (before 2026-11-04 the queue was every GBIF bird and mammal)
     meshy = []
-    inv_p = tile.path("species/inventory.json")
-    for row in (read_json(inv_p) if inv_p.exists() else []):
-        if row.get("group") not in ("bird", "mammal") or not row.get("scientific"):
+    an_p = tile.path("species/animals.json")
+    an = read_json(an_p) if an_p.exists() else {}
+    seen = {a["id"] for a in animals}
+    for r in an.get("animals", []):
+        if r["id"] in seen:
             continue
-        k = _sci_key(row["scientific"])
-        if k in known or k in DOMESTIC:
-            continue
-        plan = "bird" if row["group"] == "bird" else "quadruped"
-        meshy.append({"scientific": k, "id": _id_of(k), "common": row.get("common"), "group": row["group"], "family": row.get("family"),
-                      "records": row["occurrences"], "estimate_credits": MESHY_ESTIMATE[plan],
-                      "status": "queued (not run): needs a brief in library/animals/drafts/ and Aaron's go-ahead past the budget"})
-    meshy.sort(key=lambda q: -q["records"])
+        e = by_id.get(r["id"])
+        animals.append({"id": r["id"], "scientific": r.get("scientific"), "common": r.get("common"), "kind": r.get("kind"),
+                        "fidelity": (e or {}).get("fidelity", 0), "present": "records", "why": r.get("why"),
+                        "role": r.get("role"), "traits": r.get("traits")})
+    for q in an.get("queue", []):
+        meshy.append({**q, "status": q.get("status")})
+    if not an:   # a tile whose fauna stage has not run: the old queue from the inventory
+        known = {_sci_key(e.get("scientific") or "") for e in reg["species"].values()}
+        inv_p = tile.path("species/inventory.json")
+        for row in (read_json(inv_p) if inv_p.exists() else []):
+            if row.get("group") not in ("bird", "mammal") or not row.get("scientific"):
+                continue
+            k = _sci_key(row["scientific"])
+            if k in known or k in DOMESTIC:
+                continue
+            plan = "bird" if row["group"] == "bird" else "quadruped"
+            meshy.append({"scientific": k, "id": _id_of(k), "common": row.get("common"), "kind": row["group"],
+                          "records": row["occurrences"], "estimate_credits": MESHY_ESTIMATE[plan],
+                          "status": "queued (not run): needs Aaron's go-ahead past the budget"})
+    meshy.sort(key=lambda q: -(q.get("records") or 0))
     by_level = {str(i): {"plants": sum(1 for p in plants if p["fidelity"] == i), "animals": sum(1 for a in animals if a["fidelity"] == i)}
                 for i in range(5)}
+    # the density target (research.TARGET, the home tile) and the hand edits the tile still needs
+    from .research import TARGET
+    pn = read_json(needs_p) if needs_p.exists() else {}
+    layer_of = {"tree": "tree", "shrub": "shrub"}
+    density = {k: {"target": TARGET[k], "have": sum(1 for p in plants if layer_of.get(p.get("kind"), "ground") == k and p["fidelity"] > 0)}
+               for k in ("tree", "shrub", "ground")}
+    density["animal"] = {"target": TARGET["animal"], "have": len(animals), "with_model": sum(1 for a in animals if a["fidelity"] >= 2)}
+    hands = list(pn.get("hands") or [])
+    hands += [{"id": q["id"], "kind": q.get("kind"), "what": f"a mesh (Meshy ~{q['estimate_credits']} credits) and its review",
+               "why": q.get("why", [])[:2]} for q in meshy if q.get("estimate_credits")]
+    hands += [{"id": a["id"], "kind": a.get("kind"), "what": "a review of its generated traits", "why": ["generated"]}
+              for a in animals if a.get("traits")]
     doc = {"tile": tile.tile_id, "at": now_iso(), "levels": LEVELS, "summary": {"by_level": by_level,
            "plants": len(plants), "animals_present": len(animals), "animals_queued": len(meshy),
-           "meshy_credits_queued": sum(q["estimate_credits"] for q in meshy), "cards_queued": len(cards),
-           "stand_ins": {p["id"]: p["drawn_as"] for p in plants if p["fidelity"] == 0}},
+           "meshy_credits_queued": sum(q.get("estimate_credits") or 0 for q in meshy), "cards_queued": len(cards),
+           "stand_ins": {p["id"]: p["drawn_as"] for p in plants if p["fidelity"] == 0},
+           "density": density, "hands": {"count": len(hands), "by_what": _count_what(hands)}},
            "plants": sorted(plants, key=lambda p: (-p["share"], p["id"])), "animals": animals,
-           "queue": {"cards": cards, "meshy": meshy}}
+           "queue": {"cards": cards, "meshy": meshy}, "hands": hands}
     write_json(tile.path("species/registry.json"), doc)
     return {"path": "species/registry.json", "kind": "table", **{k: doc["summary"][k] for k in ("plants", "animals_present", "animals_queued", "cards_queued")}}
+
+
+def _count_what(hands: list[dict]) -> dict:
+    out: dict = {}
+    for h in hands:
+        k = h["what"].split(" (")[0]
+        out[k] = out.get(k, 0) + 1
+    return out
 
 
 def write_registry() -> dict:
