@@ -605,8 +605,15 @@ export class Arrival {
   // the point is near the south edge) to 120 m over it. follow: another player's position { x, y, z, yaw } in the
   // flight's frame (the hub's relayed pos; docs/multiplayer.md lane 4): the flight comes in from behind them along their
   // heading and ends 6 m above and 10 m behind them, slowing to a hover. The object is read every frame, so a lead who
-  // moves on is followed (the whole path slides with them; the heading stays the plan's).
-  plan(point, follow = null) {
+  // moves on is followed (the whole path slides with them; the heading stays the plan's). behind: the point is where
+  // someone else is arriving (a joiner's, before the one who asked has a position): the flight ends 6 m above and 10 m
+  // behind the end of that one's arrival, as if following them there.
+  plan(point, follow = null, behind = false) {
+    if (behind && !follow) {
+      this.plan(point);
+      const yEnd = this.heights.at(this.ex, this.en) + END_AGL;
+      return this.plan(null, { x: this.ex, y: yEnd, z: -this.en, yaw: Math.atan2(-this.hx, this.hn) });
+    }
     const S = this.size, M = 100, clamp = THREE.MathUtils.clamp;
     this.follow = follow;
     let hx, hn, ex, en, run, yEnd = null;

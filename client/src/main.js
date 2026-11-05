@@ -155,7 +155,7 @@ function createWorld(tileId) {
     scope = w;
     return v;
   };
-  w.next = async name => { phase(name); await w.wait(yieldToMain()); };
+  w.next = async name => { phase(name); if (screenOpen && !w.dead) screen?.setProgress?.(w.tileId, name); await w.wait(yieldToMain()); };   // the home screen's bar follows the steps (title.js)
   w.sliced = (gen, label) => w.wait(runSliced(gen, label, { signal: w.abort.signal }));
   // played: the recording goes on (the listeners and elements the game adds while it is played go with it when the
   // page switches tiles), so the world's code is the scope from here on
@@ -736,7 +736,7 @@ async function buildSteps(w, { params, pending, direct = false, arrive = null })
         addEventListener('pointerdown', kick, true); addEventListener('keydown', kick, true);
       }
     }
-    arrival.plan(c.point);   // the wisp flies the arrival as the raven did
+    arrival.plan(c.point, null, !!c.lead);   // the wisp flies the arrival as the raven did; a joiner's ends behind and above the one who asked (multiplayer.js turns it to follow them)
     arrival.onDone = () => { html.classList.remove('arriving'); };
     arrival.start(c.caption || captionFor(c.point, seasonNow()));
     html.classList.add('arriving'); html.classList.remove('opening'); html.classList.remove('switching');

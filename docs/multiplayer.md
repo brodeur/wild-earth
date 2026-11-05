@@ -134,7 +134,7 @@ search    {q}                                 -> found {users[]}
 friend    {op: 'request'|'accept'|'remove'|'block'|'unblock', user}
 group     {op: 'create', name, users[]} | {op: 'add'|'remove', group, user} | {op: 'leave'|'name', group, name?}
 chat      {scope: 'group'|'tile', text}       (text <= 500 chars)
-place     {tile, group?, point?}              -> the group's members get invite {from, tile, season, point?}
+place     {tile, group?, to?, point?}         -> the group's members and the people in `to` get invite {from, tile, season, group?, point?}
                                               (point: the picker's planned arrival, tile-local {x, north}; lane 4)
 answer    {invite, join: true|false}
 room      {op: 'join'|'leave', tile}          (the client joins its tile's room when a world is entered)
@@ -388,6 +388,15 @@ together. Lane 3 needs lane 1's screen in main; lane 4 needs 1 to 3. Lane 5 is l
      "Seeing the other players" in Open; the bodies are still open); the final yaw is
      the heading at the plan, not the picker's yaw at the end; the chat's scope picker's choice is the group asked,
      with no way to ask another group without changing the chat; two invites from two groups show one dialog.
+   **The home screen redesigned (2026-11-04, branch `claude/home-map`; docs/decisions.md).** Lanes 1, 3 and 4 as they
+   stand on the earth now: the places listed on the left (search, "Most Active (global)" then "(visible)"), the
+   social panel and the sign-in on the right, the earth as a map (`mapGlobe.js`), a choice flying to 10,000 ft with
+   the tile outlined and a card naming the players there or coming (`title.peopleAt`, filled by `multiplayer.js`), and
+   the bar with Invite and Start. A choice no longer asks the group along by itself: Invite (`title.onInvite`) opens
+   a picker of groups and friends and sends `place` with `group` and/or `to`. Join chooses the place and builds it; the
+   joiner presses Start. Without the inviter's position the joiner ends behind and above the inviter's planned
+   arrival (`Arrival.plan(point, null, true)`).
+
 5. **Video and audio.** WebRTC between the members of a group, signalling over the hub (`rtc` messages
    added to the protocol then), the two toggles live, a small tile of each member's video by their avatar.
    Not before the four above are in.

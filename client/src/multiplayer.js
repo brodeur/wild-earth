@@ -12,13 +12,16 @@ import { NF } from './animalNet.js';
 // elements stand on the earth and in the world's HUD: layout() keeps them clear of the HUD's menu, its panels, the
 // game box and the key line, whichever are showing.
 //
-// Going somewhere together (lane 4, the doc's item 9): a choice of place by a player in a group (the earth's
-// title.choose, wrapped here, or the Location box's switch to another tile, main.js) sends `place` and the other
-// members get the invite dialog, top middle, on the earth and over the HUD alike: "<picker> wants to go to <place>.
-// Join · Not now". Join answers the hub and goes: on the earth the place is chosen as the player would (quietly, so no
-// invite of its own goes out) and Begins itself once built; in a world the page switches to the tile. The joiner
-// arrives in spirit form 6 m above and 10 m behind the picker, from the picker's relayed position (arrival.js plan's
-// follow); until it comes, over the point the picker planned to arrive at (carried in the invite). The picker's chat
+// Going somewhere together (lane 4, the doc's item 9; the home screen's Invite since 2026-11-04): on the earth the
+// player chooses a place and presses Invite (title.onInvite): a picker lists their groups and their friends, and the
+// chosen are sent `place` (a group, the people named, or both); in a world the Location box's switch to another tile
+// still asks the player's group along (main.js). The invited get the invite dialog, top middle, on the earth and over
+// the HUD alike: "<picker> wants to go to <place>. Join · Not now". Join answers the hub and goes: on the earth the
+// place is chosen as the player would (quietly, so no invite of its own goes out) and its world starts building; the
+// joiner presses Start when they are ready (each player starts on their own); in a world the page switches to the tile.
+// The joiner arrives in spirit form 6 m above and 10 m behind the picker, from the picker's relayed position (arrival.js
+// plan's follow); until it comes, behind and above where the picker arrives (the point carried in the invite). The
+// picker's card over the place shows who was asked, who is on the way and who is there (title.peopleAt), and the chat
 // pane says who joined and who declined. The dialog goes after a minute.
 //
 // The hub's tile room is joined when a world is entered (main.js enterWorld, through entered()) and left on a tile
@@ -48,6 +51,7 @@ const CAMERA_ICON = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" 
 const MIC_ICON = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="9" y="3" width="6" height="11" rx="3"/><path d="M5.5 11a6.5 6.5 0 0 0 13 0M12 17.5V21M9 21h6"/><path class="bar" d="M3 3l18 18"/></svg>';
 const esc = s => String(s ?? '').replace(/[&<>"]/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' })[c]);
 const r2 = v => Math.round(v * 100) / 100, r3 = v => Math.round(v * 1000) / 1000;
+const clampN = (v, a, b) => Math.min(b, Math.max(a, v));
 
 export class Multiplayer {
   // hubParam: the URL's ?hub= ('stub' for the title screen's stub, else the real hub).
@@ -65,6 +69,8 @@ export class Multiplayer {
     this.poses = new Map();  // user id -> the last position relayed from a group member in the room (memory only)
     this.switchTile = null;  // main.js: (tileId, xy, lead) switches the world played, a Join from a world
     this.unseen = false;     // an answer came while the chat was hidden (arriving or switching): the pane is shown again after
+    this.asked = new Map();  // tile id -> Map(user id -> 'asked' | 'join' | 'no'): whom this player invited there (this page only)
+    this.pickEl = null;      // the invite picker (the home screen's Invite)
     // the way back from Discord (hub.py sends the browser to /client/?signin=discord or ?signin=failed): remembered for
     // the modal and taken off the URL, signed in or not
     const u = new URL(location.href); this.back = u.searchParams.get('signin');
@@ -80,14 +86,9 @@ export class Multiplayer {
     title.onGate = t => { this.modal = new AccountModal({ title: t, back: this.back }); };
     title.onLit = user => this.signedIn(user);
     const choose = title.choose.bind(title);
-    title.choose = id => {
-      const was = title.sel; choose(id);
-      if (title.sel === id && was !== id && !this.quiet) this.chose(id, title.points?.[id] || null);
-    };
-    const setReady = title.setReady.bind(title);
-    title.setReady = id => {
-      setReady(id); const tid = id ?? title.tileId;
-      if (this.joining && tid === this.joining.tile && title.sel === tid) title.begin();   // the joiner pressed Join, not Begin
+    title.choose = id => {   // another place than the one an accepted invite named: no longer joining anyone
+      if (this.joining && id !== this.joining.tile && !this.quiet) this.joining = null;
+      this.closePick(); choose(id);
     };
     const onBegin = title.onBegin;
     title.onBegin = c => {
@@ -104,13 +105,26 @@ export class Multiplayer {
     if (!user || !this.hub || this.social) return;
     const placeName = id => this.placeName(id);
     this.social = new Social({ hub: this.hub, placeName, onSignOut: () => this.signOut() });
+    if (this.title && !this.title.closed) {   // the home screen: the social panel open on the right, Invite live, the card's players
+      this.social.setOpen(true);
+      this.title.onInvite = (tile, btn) => this.openPick(tile, btn);
+      this.title.peopleAt = tile => this.peopleAt(tile);
+      this.title.renderBar?.();
+    }
+    const refresh = () => this.title?.refreshPeople?.();
+
     this.chat = new Chat({ hub: this.hub, nameOf: id => this.social.nameOf(id), placeName });
     this.social.onLayout = this.layoutFn;
     this.mountMedia();
     const hub = this.hub;
     hub.on('invite', d => this.showInvite(d));
-    hub.on('placed', d => this.chat?.system(d.to ? `asked your group to come to ${placeName(d.tile) || d.tile}` : 'no one else in the group to ask along'));
-    hub.on('answer', d => { this.chat?.system(`${this.social.nameOf(d.from)} ${d.join ? 'joined' : 'declined'}`); this.unseen = true; });
+    hub.on('placed', d => this.chat?.system(d.to ? `asked ${d.to} ${d.to === 1 ? 'person' : 'people'} to come to ${placeName(d.tile) || d.tile}` : 'no one else to ask along'));
+    hub.on('answer', d => {
+      this.chat?.system(`${this.social.nameOf(d.from)} ${d.join ? 'joined' : 'declined'}`); this.unseen = true;
+      for (const m of this.asked.values()) if (m.has(d.from)) m.set(d.from, d.join ? 'join' : 'no');
+      this.title?.refreshPeople?.();
+    });
+    for (const t of ['presence', 'groups', 'friends', 'open']) hub.on(t, () => this.title?.refreshPeople?.());
     hub.on('err', d => { if ((d.re === 'place' || d.re === 'answer') && d.why) this.chat?.system(d.why); });
     hub.on('pos', d => this.gotPos(d));
     hub.on('presence', d => {   // a member gone offline or to another tile is no longer seen here (players.js)
@@ -119,6 +133,7 @@ export class Multiplayer {
     hub.connect();
     addEventListener('resize', this.layoutFn);
     // the HUD's menu (html.menu), the game box and the opening class change under us: keep clear of them
+    this.barObserver = new ResizeObserver(this.layoutFn); this.barObserver.observe(this.social.el.querySelector('.so-bar'));   // the friends row grows and shrinks
     this.observer = new MutationObserver(this.layoutFn);
     this.observer.observe(html, { attributes: true, attributeFilter: ['class'] });
     const game = document.getElementById('game'); if (game) this.observer.observe(game, { attributes: true, attributeFilter: ['class', 'style'] });
@@ -176,11 +191,79 @@ export class Multiplayer {
       if (title.phase !== 'lit' || title.begun) return true;   // the earth is not up yet, or is already leaving
       this.joining = { from: inv.from, tile: inv.tile, point: inv.point };
       this.quiet = true;
-      try { title.choose(inv.tile); } finally { this.quiet = false; }
-      if (title.sel === inv.tile && title.readyIds.has(inv.tile)) title.begin();   // built already (chosen before)
-      else if (title.sel !== inv.tile) this.joining = null;
+      try { title.choose(inv.tile); } finally { this.quiet = false; }   // its world starts building; the joiner presses Start
+      if (title.sel !== inv.tile) this.joining = null;
+      title.refreshPeople?.();
     } else if (this.switchTile) this.switchTile(inv.tile, inv.point, inv.from);
     return true;
+  }
+
+  // ---- the home screen's Invite ----------------------------------------------------------------------------------------
+  // Who is at or coming to a tile, for the card over the place (title.renderPeople): the friends and group members the
+  // hub says are there (their presence, when they share their place), the people this player asked (asked, on the way,
+  // not now), and, for a joiner, the one who asked them.
+  peopleAt(tile) {
+    if (!this.hub || !this.social) return [];
+    const out = new Map(), name = id => this.social.nameOf(id), me = this.hub.you?.id;
+    for (const [id, p] of this.hub.online) if (id !== me && p.state === 'tile' && p.tile === tile) out.set(id, { id, name: name(id), state: 'here' });
+    for (const [id, st] of this.asked.get(tile) || []) if (!out.has(id)) out.set(id, { id, name: name(id), state: st === 'join' ? 'coming' : st === 'no' ? 'declined' : 'asked' });
+    const j = this.joining; if (j && j.tile === tile && !out.has(j.from)) out.set(j.from, { id: j.from, name: name(j.from), state: 'invited' });
+    return [...out.values()];
+  }
+  // The picker over the Invite button: the player's groups (each asks all its members) and friends (online first), ticked
+  // and sent as one `place` per group and one for the friends not in a ticked group, each carrying the planned point.
+  openPick(tile, btn) {
+    if (this.pickEl) { this.closePick(); return; }
+    if (!this.hub || !this.social) return;
+    const hub = this.hub, me = hub.you?.id, st = id => this.social.stateOf(id);
+    const el = this.pickEl = document.createElement('div'); el.id = 'invitePick'; el.setAttribute('role', 'dialog');
+    el.setAttribute('aria-label', `invite to ${this.placeName(tile) || tile}`);
+    const groups = hub.groups.filter(g => g.members.some(m => m.id !== me));
+    const friends = this.social.friendsSorted();
+    const online = id => st(id).cls === 'on';
+    el.innerHTML = `<h3>Invite to <b>${esc(this.placeName(tile) || tile)}</b></h3>
+      ${groups.length ? `<h4>Groups</h4><div class="ip-list">${groups.map(g => {
+        const others = g.members.filter(m => m.id !== me), on = others.filter(m => online(m.id)).length;
+        return `<label class="ip-row"><input type="checkbox" data-group="${esc(g.id)}"><span class="ip-gav">${others.slice(0, 4).map(m => `<canvas data-av="${esc(m.id)}"></canvas>`).join('')}</span>
+          <span class="ip-who"><b>${esc(g.name || others.map(m => m.display || m.name).join(', '))}</b><small>${others.length} ${others.length === 1 ? 'member' : 'members'} · ${on} online</small></span></label>`;
+      }).join('')}</div>` : ''}
+      ${friends.length ? `<h4>Friends</h4><div class="ip-list">${friends.map(f => `<label class="ip-row ${online(f.id) ? 'on' : 'off'}"><input type="checkbox" data-user="${esc(f.id)}"><canvas data-av="${esc(f.id)}"></canvas>
+          <span class="ip-who"><b>${esc(f.display || f.name)}</b><small>${esc(st(f.id).text)}</small></span></label>`).join('')}</div>` : ''}
+      ${groups.length || friends.length ? '' : '<p class="ip-note">No friends or groups yet. Find people in the panel on the right, then invite them here.</p>'}
+      <div class="ip-btns"><button type="button" class="ip-cancel">Cancel</button><button type="button" class="ip-send" disabled>Invite</button></div>`;
+    for (const cv of el.querySelectorAll('canvas[data-av]')) cv.replaceWith(avatarFor(cv.dataset.av, 22));
+    const send = el.querySelector('.ip-send'), boxes = [...el.querySelectorAll('input[type=checkbox]')];
+    const sync = () => { const n = boxes.filter(b => b.checked).length; send.disabled = !n; send.textContent = n > 1 ? `Invite ${n}` : 'Invite'; };
+    for (const b of boxes) b.onchange = sync;
+    el.querySelector('.ip-cancel').onclick = () => this.closePick();
+    send.onclick = () => {
+      const gids = boxes.filter(b => b.checked && b.dataset.group).map(b => b.dataset.group);
+      const covered = new Set(hub.groups.filter(g => gids.includes(g.id)).flatMap(g => g.members.map(m => m.id)));
+      const people = boxes.filter(b => b.checked && b.dataset.user && !covered.has(b.dataset.user)).map(b => b.dataset.user);
+      const point = this.title?.points?.[tile] || null;
+      let sent = false;
+      for (const g of gids) sent = hub.place(tile, g, point) || sent;
+      if (people.length) sent = hub.place(tile, null, point, people) || sent;
+      if (sent) {
+        const m = this.asked.get(tile) || new Map(); this.asked.set(tile, m);
+        for (const id of [...covered, ...people]) if (id !== me && !m.has(id)) m.set(id, 'asked');
+        this.title?.refreshPeople?.();
+      } else this.chat?.system('not connected to the hub: the invite was not sent');
+      this.closePick();
+    };
+    el.addEventListener('keydown', e => { e.stopPropagation(); if (e.key === 'Escape') this.closePick(); });
+    el.addEventListener('keyup', e => e.stopPropagation());
+    document.body.append(el);
+    const r = btn?.getBoundingClientRect();
+    if (r) { el.style.left = `${Math.round(clampN(r.left + r.width / 2, 170, innerWidth - 170))}px`; el.style.bottom = `${Math.round(innerHeight - r.top + 10)}px`; }
+    requestAnimationFrame(() => el.classList.add('on'));
+    this.pickOut = e => { if (!el.contains(e.target) && e.target !== btn) this.closePick(); };
+    setTimeout(() => addEventListener('pointerdown', this.pickOut, true), 0);
+  }
+  closePick() {
+    const el = this.pickEl; if (!el) return;
+    this.pickEl = null; removeEventListener('pointerdown', this.pickOut, true);
+    el.classList.remove('on'); setTimeout(() => el.remove(), 250);
   }
 
   // ---- the room, and the positions -----------------------------------------------------------------------------------
@@ -195,6 +278,8 @@ export class Multiplayer {
     this.left(false);
     this.hub.enter(tileId);
     this.chat?.setRoom();
+    this.closePick();
+    if (!this.entered1) { this.entered1 = true; this.social?.setOpen(false); }   // the home screen's open panel closes in the world
     this.room = { tileId, flight: world?.flight || null, arrival: world?.arrival || null, form: world?.form || null, body: world?.body || null, caption: world?.caption || null, lead: world?.lead || null, follow: null, players: world?.players || null };
     if (this.room.players && this.social) this.room.players.nameOf = id => this.social.nameOf(id);
     if (this.room.flight) this.posTimer = setInterval(() => this.sendPos(), POS_MS);
@@ -283,8 +368,11 @@ export class Multiplayer {
     }
     let top = 12;
     if (this.media) {
-      const game = document.getElementById('game');
+      const game = document.getElementById('game'), bar = !inWorld && this.social?.el.querySelector('.so-bar')?.getBoundingClientRect();
       if (inWorld && game && !game.classList.contains('hidden')) top = Math.round(game.getBoundingClientRect().bottom + 8);
+      if (bar?.width) {   // the home screen: beside the friends row, top right (the top middle is the place's card)
+        this.media.style.left = `${Math.round(bar.left - 8)}px`; this.media.style.transform = 'translateX(-100%)'; top = Math.round(bar.top + (bar.height - 34) / 2);
+      } else { this.media.style.left = ''; this.media.style.transform = ''; }
       this.media.style.top = `${top}px`;
     }
     if (this.inviteEl) this.inviteEl.style.top = `${top + (this.media?.getBoundingClientRect().height || 34) + 10}px`;
@@ -292,8 +380,8 @@ export class Multiplayer {
 
   dispose() {
     this.left(false);
-    this.closeInvite();
-    this.observer?.disconnect(); removeEventListener('resize', this.layoutFn);
+    this.closeInvite(); this.closePick();
+    this.observer?.disconnect(); this.barObserver?.disconnect(); removeEventListener('resize', this.layoutFn);
     this.modal?.close(); this.social?.dispose(); this.chat?.dispose(); this.media?.remove();
     this.hub?.close();
     if (window.__weMp === this) delete window.__weMp;

@@ -1,14 +1,14 @@
 @import url('https://fonts.googleapis.com/css2?family=Syncopate:wght@400;700&family=DM+Sans:opsz,wght@9..40,300..700&display=swap');
-/* The title screen (src/title.js, TitleScreen; docs/multiplayer.md lane 1): its own stylesheet, like opening.css for
-   the card screen. The screen fills #opening over the page's canvas, where the shared renderer draws the stars and
-   the earth; so the root is transparent and only the words, the list and the gate are DOM. Phases on .tt-wrap:
-   phase-title (WILD EARTH over the stars while the page loads), phase-crescent (the title gone, the earth rising),
-   phase-gate (the sign-in's place: lane 3's modal, or the Explore button), phase-lit (the earth lit, the dots, the
-   list; .listed once the list is to come in), .leaving (to black before the world's first frame). The body text is
-   DM Sans; the title is Syncopate, a wide geometric face, with wide letter spacing. */
+/* The home screen (src/title.js, TitleScreen; docs/multiplayer.md lane 1, redesigned 2026-11-04): its own stylesheet.
+   The screen fills #opening over the page's canvas, where the shared renderer draws the stars, the earth and its map;
+   so the root is transparent and only the words, the list, the labels, the card and the bar are DOM. Phases on .tt-wrap:
+   phase-title (WILD EARTH over the stars while the page loads), phase-crescent (the earth rising), phase-gate (the
+   sign-in on the right, where the social panel will be), phase-lit (the map, the dots, the list on the left; .listed
+   once it is to come in), .chosen (a place chosen: the card and the bar), .zooming and .leaving (Start, to black before
+   the world's first frame). The body text is DM Sans; the title Syncopate, wide and geometric. */
 #opening.we-title { background:transparent; }
 .tt-wrap { position:absolute; inset:0; overflow:hidden; color:#d3ddd5; font-family:'DM Sans', system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
-  user-select:none; -webkit-user-select:none; touch-action:none; cursor:default; }
+  user-select:none; -webkit-user-select:none; touch-action:none; cursor:default; --side:max(20px, 2.4vw); --listw:min(330px, 30vw); }
 .tt-wrap.phase-lit { cursor:grab; }
 .tt-wrap.phase-lit.overdot { cursor:pointer; }
 .tt-wrap.dragging { cursor:grabbing !important; }
@@ -22,8 +22,8 @@
   font-size:clamp(26px, 5vw, 68px); letter-spacing:.45em; text-indent:.45em; line-height:1; color:#f3f6f1; text-shadow:0 0 24px #ffffff22; white-space:nowrap; }
 .tt-load { margin:0; font-size:12.5px; letter-spacing:.1em; color:#8fa094; min-height:1.4em; }
 
-/* the gate: where the sign-in modal (lane 3) will stand; until then a plain Explore when there is no hub */
-.tt-gate { position:absolute; left:50%; top:50%; transform:translate(-50%, -50%); display:flex; flex-direction:column; align-items:center; gap:12px; }
+/* the gate: the sign-in modal (account.js) on the right, where the social panel stands once signed in; Explore with no hub */
+.tt-gate { position:absolute; right:var(--side); top:50%; transform:translateY(-50%); display:flex; flex-direction:column; align-items:flex-end; gap:12px; }
 .tt-explore { padding:11px 30px; border:1px solid #d3ddd5a8; border-radius:999px; background:#0b0f0d99; color:#f3f6f1; font:500 14px/1 'DM Sans', system-ui, sans-serif;
   letter-spacing:.14em; text-transform:uppercase; cursor:pointer; opacity:0; transition:opacity .7s ease, background .25s ease, border-color .25s ease; backdrop-filter:blur(4px); }
 .tt-explore.on { opacity:1; }
@@ -31,69 +31,133 @@
 .tt-gate-note { margin:0; font-size:12px; color:#8fa094; letter-spacing:.04em; }
 .tt-wrap.phase-lit .tt-gate { opacity:0; pointer-events:none; transition:opacity .5s ease; }
 
-/* the name of the dot under the pointer */
+/* the names on the map: a label beside each place's dot (the busiest first, none over another), and the hovered name */
+.tt-labels { position:absolute; inset:0; pointer-events:none; }
+.tt-label { position:absolute; left:0; top:0; margin:-11px 0 0 10px; padding:2px 8px; height:22px; box-sizing:border-box; border:0; border-radius:999px; background:#0b0f0db8;
+  color:#f3f6f1; font:500 12.5px/18px 'DM Sans', system-ui, sans-serif; white-space:nowrap; cursor:pointer; pointer-events:auto; opacity:0; visibility:hidden;
+  transition:opacity .3s ease, background .2s ease, visibility 0s .3s; box-shadow:0 1px 6px #0007; }
+.tt-label.on { opacity:1; visibility:visible; transition:opacity .3s ease, background .2s ease; }
+.tt-label:hover, .tt-label.hot { background:#1f2a23f0; }
+.tt-label.sel { background:#f3f6f1; color:#0b0f0d; }
+.tt-wrap:not(.listed) .tt-label, .tt-wrap.dragging .tt-label { pointer-events:none; }
 .tt-dotname { position:absolute; left:0; top:0; pointer-events:none; padding:0 0 0 14px; font-size:13.5px; color:#f3f6f1; text-shadow:0 1px 3px #000c, 0 0 8px #0008; white-space:nowrap; margin-top:-.7em; }
 .tt-dotname[hidden] { display:none; }
+/* a place found by the search outside the built tiles */
+.tt-pin { position:absolute; left:0; top:0; display:flex; align-items:center; gap:4px; margin:-26px 0 0 -11px; pointer-events:none; color:#ffd9a8; font-size:12.5px; white-space:nowrap; text-shadow:0 1px 3px #000c; }
+.tt-pin svg { width:22px; height:26px; filter:drop-shadow(0 1px 3px #000a); }
+.tt-pin span { padding:1px 7px; border-radius:999px; background:#0b0f0db8; color:#f3f6f1; }
+.tt-pin[hidden] { display:none; }
 
-/* the places in view, over the right side: name, region, count; the chosen one holds the build's status, then Begin */
-.tt-places { position:absolute; right:max(24px, 3vw); top:50%; transform:translateY(-50%) translateX(24px); width:min(330px, 36vw); max-height:84vh; overflow-y:auto; scrollbar-width:none;
-  opacity:0; transition:opacity 1s ease, transform 1s cubic-bezier(.2, .8, .25, 1); pointer-events:none; cursor:default; }
-.tt-places::-webkit-scrollbar { display:none; }
-.tt-wrap.listed .tt-places { opacity:1; transform:translateY(-50%); pointer-events:auto; }
-.tt-wrap.leaving .tt-places { opacity:0; }
-.tt-rows { display:flex; flex-direction:column; gap:4px; }
-.tt-row { position:relative; display:block; padding:10px 14px; border-radius:10px; cursor:pointer; outline:none;
+/* the places, on the left: the search box, the heading with the sort's mode, the rows */
+.tt-places { position:absolute; left:var(--side); top:18px; bottom:118px; width:var(--listw); display:flex; flex-direction:column; gap:8px;
+  opacity:0; transform:translateX(-24px); transition:opacity 1s ease, transform 1s cubic-bezier(.2, .8, .25, 1); pointer-events:none; cursor:default; }
+.tt-wrap.listed .tt-places { opacity:1; transform:none; pointer-events:auto; }
+.tt-wrap.leaving .tt-places, .tt-wrap.zooming .tt-places { opacity:0; pointer-events:none; }
+.tt-search { position:relative; display:flex; align-items:center; flex:none; }
+.tt-search svg { position:absolute; left:13px; z-index:1; width:16px; height:16px; color:#8fa094; pointer-events:none; }
+.tt-search input { width:100%; box-sizing:border-box; padding:10px 34px 10px 36px; border:1px solid #d3ddd52e; border-radius:999px; background:#0b0f0dcc; color:#f3f6f1;
+  font:inherit; font-size:14px; outline:none; backdrop-filter:blur(6px); transition:border-color .2s ease, background .2s ease; user-select:text; -webkit-user-select:text; }
+.tt-search input::placeholder { color:#7d8d82; }
+.tt-search input:focus { border-color:#d3ddd5a0; background:#0b0f0df0; }
+.tt-search input::-webkit-search-cancel-button { display:none; }
+.tt-sclear { position:absolute; right:8px; width:22px; height:22px; padding:0; border:0; border-radius:50%; background:#ffffff14; color:#d3ddd5; font:16px/22px 'DM Sans', sans-serif; cursor:pointer; }
+.tt-sclear:hover { background:#ffffff2a; }
+.tt-sclear[hidden] { display:none; }
+.tt-head { display:flex; align-items:baseline; justify-content:space-between; gap:8px; padding:6px 14px 0; flex:none; }
+.tt-head[hidden] { display:none; }
+.tt-mode { margin:0; font-size:11px; font-weight:600; letter-spacing:.14em; text-transform:uppercase; color:#b7c4ba; }
+.tt-mode span { color:#e8dcc0; font-weight:500; letter-spacing:.08em; }
+.tt-modebtn { padding:2px 9px; border:1px solid #d3ddd52e; border-radius:999px; background:transparent; color:#8fa094; font:500 11px/1.4 'DM Sans', sans-serif; cursor:pointer; }
+.tt-modebtn:hover { color:#f3f6f1; border-color:#d3ddd5a0; }
+.tt-rows, .tt-found { display:flex; flex-direction:column; gap:3px; overflow-y:auto; scrollbar-width:none; min-height:0; padding:2px; }
+.tt-rows::-webkit-scrollbar, .tt-found::-webkit-scrollbar { display:none; }
+.tt-rows[hidden], .tt-found[hidden] { display:none; }
+.tt-row, .tt-frow { position:relative; display:block; flex:none; padding:9px 14px; border-radius:10px; cursor:pointer; outline:none; background:#0b0f0d73; backdrop-filter:blur(4px);
   transition:transform .55s cubic-bezier(.2, .8, .25, 1), background .25s ease, box-shadow .25s ease, opacity .5s ease; }
 .tt-row.in { animation:tt-in .5s ease both; }
-@keyframes tt-in { from { opacity:0; transform:translateX(16px); } to { opacity:1; transform:none; } }
-.tt-row:hover, .tt-row.hot { background:#ffffff12; }
-.tt-row:focus-visible { box-shadow:0 0 0 1px #f3f6f1 inset; }
-.tt-row.sel { background:#ffffff1e; box-shadow:0 0 0 1px #ffffff55 inset; }
-.tt-rname { display:block; font-size:17px; font-weight:400; line-height:1.2; color:#f3f6f1; }
+@keyframes tt-in { from { opacity:0; transform:translateX(-16px); } to { opacity:1; transform:none; } }
+.tt-row:hover, .tt-row.hot, .tt-frow:hover { background:#1a241ed9; }
+.tt-row:focus-visible, .tt-frow:focus-visible { box-shadow:0 0 0 1px #f3f6f1 inset; }
+.tt-row.sel { background:#24302ae6; box-shadow:0 0 0 1px #ffffff55 inset; }
+.tt-rname { display:block; font-size:16px; font-weight:400; line-height:1.2; color:#f3f6f1; }
 .tt-rregion { display:block; font-size:12px; line-height:1.35; color:#d3ddd5a8; margin-top:1px; }
 .tt-rregion:empty { display:none; }
 .tt-rcount { display:block; font-size:12px; line-height:1.3; color:#e8dcc0d8; margin-top:4px; letter-spacing:.02em; }
-.tt-rstate { display:none; align-items:center; gap:10px; margin-top:6px; min-height:18px; }   /* the status while the world builds; Begin is on the card (.tt-cardbox) */
-.tt-row.sel .tt-rstate { display:flex; }
-.tt-rstatus { flex:1; font-size:12px; color:#8fa094; }
-.tt-row.loading .tt-rstatus::before { content:''; display:inline-block; width:10px; height:10px; margin:0 8px -1px 0; border-radius:50%; border:1.5px solid #8fa094; border-top-color:transparent; animation:tt-spin 1s linear infinite; }
-@keyframes tt-spin { to { transform:rotate(360deg); } }
-.tt-begin { display:none; padding:7px 20px; border:1px solid #f3f6f1cc; border-radius:999px; background:#f3f6f1; color:#0b0f0d; font:600 12.5px/1 'DM Sans', system-ui, sans-serif;
-  letter-spacing:.12em; text-transform:uppercase; cursor:pointer; transition:transform .25s ease, background .25s ease; }
-.tt-row.ready .tt-begin { display:inline-block; animation:tt-grow .4s ease both; }
-.tt-begin:hover, .tt-begin:focus-visible { background:#fff; transform:scale(1.04); outline:none; }
-.tt-begin:disabled { opacity:.5; cursor:default; }
-@keyframes tt-grow { from { opacity:0; transform:scale(.7); } }
+.tt-fhead { margin:8px 14px 2px; font-size:10.5px; font-weight:600; letter-spacing:.12em; text-transform:uppercase; color:#8fa094; }
+.tt-fhead:first-child { margin-top:2px; }
+.tt-frow.wild .tt-rname::before { content:''; display:inline-block; width:7px; height:7px; margin:0 8px 1px 0; border-radius:50%; background:#ffd9a8; box-shadow:0 0 6px #ffd9a8; }
+.tt-fnote, .tt-empty { margin:4px 14px; font-size:12.5px; color:#8fa094; }
+.tt-empty[hidden] { display:none; }
 
-/* the chosen place's card beside the list (title.js showCard): the card screen's own markup and styles (opening.css
-   .op-tile, its cover with the wisp, Begin and the status, the lineup of the tile's animals round it); the box is a size
-   container so the card's height rule (100cqh) is the box's. It fades in with a choice and out on Begin (.zooming). */
-.tt-cardbox { position:absolute; right:calc(max(24px, 3vw) + min(330px, 36vw) + 22px); top:50%; height:min(58vh, 560px); width:calc(min(58vh, 560px) * 9 / 16); transform:translateY(-56%) translateX(16px); container-type:size; --mt:0px; --mb:0px;
-  z-index:2; opacity:0; transition:opacity .6s ease, transform .6s cubic-bezier(.2, .8, .25, 1); pointer-events:none; }
-.tt-wrap.carded .tt-cardbox { opacity:1; transform:translateY(-56%); pointer-events:auto; }
-.tt-wrap.zooming .tt-cardbox, .tt-wrap.leaving .tt-cardbox { opacity:0; transform:translateY(-56%) scale(.96); transition:opacity .5s ease, transform .5s ease; }
-.tt-card[hidden] { display:none; }
-.tt-card { cursor:default; height:100% !important; width:100%; margin-top:0 !important; }   /* the box's size, not the card row's rule */
-.tt-lineup { z-index:3; transition:opacity .5s ease; }
-.tt-wrap.zooming .tt-lineup, .tt-wrap.leaving .tt-lineup { opacity:0 !important; }
-.tt-wrap.zooming .tt-places { opacity:0; pointer-events:none; }
-/* the animals arrive in their species' soul colour (--aur, set by title.js through CardLineup): the silhouette and the
-   aurora lines take it from opening.css; the pillar of light is recoloured here */
-.tt-lineup .op-an.in::after, .tt-lineup .op-an.out::after { background:repeating-linear-gradient(90deg, #0000 0px, color-mix(in srgb, var(--aur, #e4e6e8) 55%, #fff) 1px, #0000 2px, #0000 5px),
-  repeating-linear-gradient(0deg, #0000 0px, color-mix(in srgb, var(--aur, #e4e6e8) 65%, #fff) 2px, #0000 6px),
-  linear-gradient(180deg, #0000 0%, color-mix(in srgb, var(--aur, #e4e6e8) 70%, transparent) 25%, color-mix(in srgb, var(--aur, #e4e6e8) 80%, #fff) 60%, #0000 100%); background-size:7px 100%, 100% 60px, 100% 100%; }
-/* the chosen dot as a DOM spot while Begin zooms in and the earth fades to black (title.js begin): over the fade, so the
-   dot stays; it goes with the whole screen's fade (#opening.out) as the world comes in */
-.tt-spot { position:absolute; left:0; top:0; z-index:4; width:var(--d, 24px); height:var(--d, 24px); margin:calc(var(--d, 24px) / -2) 0 0 calc(var(--d, 24px) / -2); border-radius:50%; pointer-events:none;
-  background:radial-gradient(closest-side, #ffffff 0%, #fff8ee 22%, #ffdfb3d0 40%, #ffd9a860 62%, #ffd9a800 100%); }
-.tt-spot[hidden] { display:none; }
+/* the card over the chosen place (title.js renderCard, placed each frame above the tile's north edge) */
+.tt-pcard { position:absolute; left:0; top:0; z-index:3; min-width:200px; max-width:300px; padding:12px 14px 12px; box-sizing:border-box; border-radius:12px; background:#0b0f0de6;
+  border:1px solid #d3ddd53a; backdrop-filter:blur(8px); box-shadow:0 8px 28px #000a; display:flex; flex-direction:column; gap:2px; cursor:default;
+  opacity:0; pointer-events:none; transition:opacity .45s ease; }
+.tt-pcard::after { content:''; position:absolute; left:50%; bottom:-7px; width:12px; height:12px; margin-left:-6px; transform:rotate(45deg); background:#0b0f0de6; border-right:1px solid #d3ddd53a; border-bottom:1px solid #d3ddd53a; }
+.tt-pcard.on { opacity:1; pointer-events:auto; }
+.tt-pcard.behind, .tt-wrap.zooming .tt-pcard { opacity:0; pointer-events:none; }
+.tt-pcard[hidden] { display:none; }
+.pc-name { font-size:18px; font-weight:500; color:#f3f6f1; line-height:1.2; }
+.pc-region { font-size:12px; color:#d3ddd5a8; line-height:1.35; }
+.pc-region:empty { display:none; }
+.pc-people { display:flex; align-items:center; gap:10px; margin-top:8px; padding:4px 8px 4px 4px; border:1px solid transparent; border-radius:999px; background:#ffffff0c; color:#e8dcc0;
+  font:500 12.5px/1.2 'DM Sans', sans-serif; cursor:pointer; text-align:left; align-self:flex-start; }
+.pc-people:hover:not(:disabled), .pc-people[aria-expanded=true] { border-color:#d3ddd54a; background:#ffffff16; }
+.pc-people:disabled { cursor:default; }
+.pc-avs { display:flex; align-items:center; }
+.pc-avs:empty { display:none; }
+.pc-avs .so-avatar { margin-left:-7px; box-shadow:0 0 0 2px #0b0f0d, 0 0 0 3px hsla(var(--hue), 70%, 60%, .7); }
+.pc-avs .so-avatar:first-child { margin-left:0; }
+.pc-avs .so-avatar.anon { filter:saturate(.25) brightness(.8); box-shadow:0 0 0 2px #0b0f0d; }
+.pc-avs .so-avatar[data-state=asked], .pc-avs .so-avatar[data-state=invited] { opacity:.55; }
+.pc-avs .so-avatar[data-state=coming] { animation:pc-coming 1.6s ease-in-out infinite; }
+@keyframes pc-coming { 50% { box-shadow:0 0 0 2px #0b0f0d, 0 0 0 3px hsl(var(--hue), 80%, 70%), 0 0 12px hsla(var(--hue), 80%, 60%, .8); } }
+.pc-more { margin-left:6px; font-size:11px; color:#b7c4ba; }
+.pc-list { display:flex; flex-direction:column; gap:2px; margin-top:8px; padding-top:8px; border-top:1px solid #d3ddd522; max-height:220px; overflow-y:auto; }
+.pc-list[hidden] { display:none; }
+.pc-row { display:flex; align-items:center; gap:8px; padding:3px 2px; }
+.pc-who { display:flex; flex-direction:column; line-height:1.2; min-width:0; }
+.pc-who b { font-weight:500; color:#e6ede7; font-size:13px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+.pc-who small { font-size:11px; color:#8fa094; }
+.pc-row.here small, .pc-row.coming small { color:#a9d8a4; }
+.pc-row.declined { opacity:.55; }
+.pc-others { margin:4px 2px 0; font-size:12px; color:#8fa094; }
+
+/* the bar at the bottom: Invite and Start over the loading line, with the build's step and how far */
+.tt-bar { position:absolute; left:0; right:0; bottom:0; display:flex; flex-direction:column; align-items:center; gap:8px; padding-bottom:0; pointer-events:none;
+  opacity:0; transform:translateY(16px); transition:opacity .6s ease, transform .6s cubic-bezier(.2, .8, .25, 1); }
+.tt-bar.on { opacity:1; transform:none; }
+.tt-bar.on .tt-acts { pointer-events:auto; }
+.tt-wrap.leaving .tt-bar { opacity:0; }
+.tt-acts { display:flex; gap:12px; }
+.tt-acts button { min-width:132px; padding:12px 26px; border-radius:999px; font:600 13px/1 'DM Sans', system-ui, sans-serif; letter-spacing:.14em; text-transform:uppercase; cursor:pointer;
+  transition:background .25s ease, transform .25s ease, border-color .25s ease, opacity .25s ease; }
+.tt-invite { border:1px solid #d3ddd5a8; background:#0b0f0dcc; color:#f3f6f1; backdrop-filter:blur(6px); }
+.tt-invite:hover:not(:disabled), .tt-invite:focus-visible { background:#1a241ef0; border-color:#f3f6f1; outline:none; }
+.tt-start { border:1px solid #f3f6f1cc; background:#f3f6f1; color:#0b0f0d; }
+.tt-start:hover:not(:disabled), .tt-start:focus-visible { background:#fff; transform:scale(1.03); outline:none; }
+.tt-acts button:disabled { opacity:.45; cursor:default; }
+.tt-bar.ready .tt-start { animation:tt-grow .45s ease both; box-shadow:0 0 22px #ffe2b066; }
+@keyframes tt-grow { from { transform:scale(.88); } }
+.tt-bline { display:flex; gap:10px; align-items:baseline; font-size:12px; color:#b7c4ba; letter-spacing:.03em; min-height:1.3em; text-shadow:0 1px 3px #000c; }
+.tt-bpct { color:#e8dcc0; font-variant-numeric:tabular-nums; }
+.tt-progress { align-self:stretch; height:4px; background:#ffffff14; overflow:hidden; }
+.tt-progress i { display:block; height:100%; background:linear-gradient(90deg, #a9d8a4, #ffe2b0); transform-origin:0 50%; transform:scaleX(0); }
+.tt-bar.ready .tt-progress i { background:#ffe2b0; box-shadow:0 0 10px #ffe2b0; }
+
+/* the map's credits, small, bottom left over the bar */
+.tt-attrib { position:absolute; left:var(--side); bottom:12px; margin:0; font-size:10.5px; color:#8fa094b0; letter-spacing:.02em; opacity:0; transition:opacity 1s ease; pointer-events:none; }
+.tt-attrib a { color:inherit; text-decoration:none; border-bottom:1px solid #8fa09444; }
+.tt-attrib a:hover { color:#d3ddd5; }
+.tt-wrap.listed .tt-attrib { opacity:1; pointer-events:auto; }
+.tt-wrap.leaving .tt-attrib { opacity:0; }
 
 /* to black before the world's first frame (title.js begin), then the whole screen fades (#opening.out) */
-.tt-fade { position:absolute; inset:0; background:#000; opacity:0; pointer-events:none; transition:opacity .55s ease; }
+.tt-fade { position:absolute; inset:0; background:#000; opacity:0; pointer-events:none; transition:opacity .7s ease; }
 .tt-wrap.leaving .tt-fade { opacity:1; }
 
 @media (max-width: 720px) {
-  .tt-places { right:12px; width:min(260px, 46vw); }
-  .tt-cardbox { right:calc(12px + min(260px, 46vw) + 12px); height:min(44vh, 400px); width:calc(min(44vh, 400px) * 9 / 16); }
+  .tt-wrap { --listw:min(260px, 46vw); --side:12px; }
   .tt-rname { font-size:15px; }
+  .tt-acts button { min-width:100px; padding:11px 16px; }
 }
