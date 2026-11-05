@@ -95,17 +95,25 @@ import { bodyScale, onBodyScale } from './bodyScale.js';
 // trees and pines), which terrain.js MicroPatch.node takes as the litter weight and amplitude (2 cm to 5 cm).
 
 const CELL = 2, MARGIN = 2, MOVE = 1, SHOW_MAX = 0.6, K_REACH = 300, PLAN_MS = 1.5, SALT = 0x11773;
-const KINDS = ['grit', 'stone', 'leaf', 'acorn', 'twig', 'stem', 'needle', 'cone', 'wood', 'pebble'];
+const KINDS = ['grit', 'stone', 'leaf', 'acorn', 'twig', 'stem', 'needle', 'cone', 'wood', 'pebble', 'fungus'];
 const REC = 8, AUX = 3;   // spec record: x, north, yaw, size, p0..p3; aux: rank, variant, size
 // share of the ground photo's colour each kind takes; translucency of the back (leaves and stems)
-const GROUND_MIX = { grit: 0.3, stone: 0.3, leaf: 0.2, acorn: 0, twig: 0.15, stem: 0.25, needle: 0.15, cone: 0, wood: 0.1, pebble: 0.2 };
-const TRANS = { grit: 0, stone: 0, leaf: 0.45, acorn: 0, twig: 0, stem: 0.35, needle: 0.3, cone: 0, wood: 0, pebble: 0 };
+const GROUND_MIX = { grit: 0.3, stone: 0.3, leaf: 0.2, acorn: 0, twig: 0.15, stem: 0.25, needle: 0.15, cone: 0, wood: 0.1, pebble: 0.2, fungus: 0 };
+const TRANS = { grit: 0, stone: 0, leaf: 0.45, acorn: 0, twig: 0, stem: 0.35, needle: 0.3, cone: 0, wood: 0, pebble: 0, fungus: 0.2 };
 // how far each kind's brightness follows the ground photo's (its luminance over GROUND_REF, the linear ground the
 // palettes below were set against): pebbles on pale decomposed soil are pale, on dark loam darker
 // (leaves least: the photo under a crown is dark with the crown's own shade, which the litter must not take twice)
-const GROUND_BRIGHT = { grit: 0.6, stone: 0.5, leaf: 0.15, acorn: 0.15, twig: 0.3, stem: 0.4, needle: 0.15, cone: 0.1, wood: 0.15, pebble: 0.45 }, GROUND_REF = 0.12;
+const GROUND_BRIGHT = { grit: 0.6, stone: 0.5, leaf: 0.15, acorn: 0.15, twig: 0.3, stem: 0.4, needle: 0.15, cone: 0.1, wood: 0.15, pebble: 0.45, fungus: 0 }, GROUND_REF = 0.12;
 // how much darker each kind is when soaked (weather.js wet 1): litter and wood drink water, stone only wets its skin
-const WET_DARK = { grit: 0.35, stone: 0.35, leaf: 0.45, acorn: 0.3, twig: 0.4, stem: 0.4, needle: 0.45, cone: 0.35, wood: 0.45, pebble: 0.4 };
+const WET_DARK = { grit: 0.35, stone: 0.35, leaf: 0.45, acorn: 0.3, twig: 0.4, stem: 0.4, needle: 0.45, cone: 0.35, wood: 0.45, pebble: 0.4, fungus: 0.15 };
+// Fungi (a placeholder, off by default: Litter.fungi, or ?fungi=1): fruiting bodies in the wet months, on the fallen
+// wood (brackets) and in the litter under the oaks (capped mushrooms). Each row: where, form (0 a cap on a stem, 1 a
+// bracket), months (January first), how many (on a branch, or a square metre of full oak cover), size (cap width, m),
+// sRGB colours. Aaron wants fungi eventually; these are stand-ins until the species and their seasons are researched.
+const FUNGI = [
+  { id: 'turkey_tail', on: 'wood', form: 1, months: [1, 1, 1, 0.6, 0.2, 0, 0, 0, 0, 0.2, 0.7, 1], per: 3, size: [0.025, 0.06], col: [[0.45, 0.36, 0.28], [0.32, 0.28, 0.25], [0.55, 0.47, 0.36]] },
+  { id: 'oak_litter_cap', on: 'oak', form: 0, months: [0.8, 0.6, 0.4, 0.2, 0, 0, 0, 0, 0, 0.1, 0.6, 1], per: 0.6, size: [0.03, 0.09], col: [[0.62, 0.48, 0.32], [0.7, 0.6, 0.45], [0.5, 0.36, 0.24]] },
+];
 const LEAF_CELLS = 8;   // the leaf atlas: 0 blue oak, 1 live oak, 2 valley oak, 3 black oak, 4 lanceolate, 5 elliptic, 6 bark curl, 7 palmate
 
 export const ringRadius = s => Math.min(Math.max(16 * Math.sqrt(s), 1.5), 10);
@@ -338,6 +346,21 @@ function coneGeometry() {
   return g;
 }
 
+// A mushroom: a domed cap 1 across at y 0.55-0.85, gills under it darker, on a stem (aLitNut 1: collapsed into the
+// cap's underside when the instance is a bracket, aux.y 1).
+function fungusGeometry() {
+  const cap = new THREE.LatheGeometry([[0.02, 0.55], [0.35, 0.56], [0.5, 0.6], [0.47, 0.7], [0.32, 0.8], [0.02, 0.85]].map(([x, y]) => new THREE.Vector2(x, y)), 12).toNonIndexed();
+  const stem = new THREE.CylinderGeometry(0.08, 0.1, 0.58, 7, 1, true).toNonIndexed(); stem.translate(0, 0.29, 0);
+  const cN = cap.attributes.position.count, sN = stem.attributes.position.count, pos = new Float32Array((cN + sN) * 3), col = new Float32Array((cN + sN) * 3), flag = new Float32Array(cN + sN);
+  pos.set(cap.attributes.position.array, 0); pos.set(stem.attributes.position.array, cN * 3);
+  for (let k = 0; k < cN + sN; k++) { const y = pos[k * 3 + 1], under = k < cN && y < 0.575; const c = k >= cN ? 1.15 : under ? 0.7 : 1; col.set([c, c, c], k * 3); if (k >= cN) flag[k] = 1; }
+  cap.dispose(); stem.dispose();
+  const g = new THREE.BufferGeometry();
+  g.setAttribute('position', new THREE.BufferAttribute(pos, 3)); g.setAttribute('color', new THREE.BufferAttribute(col, 3)); g.setAttribute('aLitNut', new THREE.BufferAttribute(flag, 1));
+  g.computeVertexNormals(); g.computeBoundingSphere();
+  return g;
+}
+
 // The leaf atlas, drawn on a canvas at load: LEAF_CELLS 256 px cells side by side, the blade along x (the first two
 // below; the close layer's six after them, see LEAF_CELLS). Blue oak: oblong, about
 // twice as long as wide, the margin in four or five shallow rounded lobes a side. Coast live oak: oval, cupped (the
@@ -416,7 +439,7 @@ function litterMaterial(kind, atmosphere, ring, leafTex) {
         ${RING_GLSL}
         ${GROUND_GLSL}
         ${line ? 'attribute vec3 aLitAx;' : ''}
-        ${kind === 'acorn' ? 'attribute float aLitNut;' : ''}
+        ${kind === 'acorn' || kind === 'fungus' ? 'attribute float aLitNut;' : ''}
         ${kind === 'cone' ? 'attribute vec3 aLitHook;' : ''}
         uniform float litWet;
         ${kind === 'leaf' ? 'attribute vec2 aLitUv; varying vec2 vLitUv;' : ''}`)
@@ -441,6 +464,8 @@ function litterMaterial(kind, atmosphere, ring, leafTex) {
           vLitSky = groundSkyOcclusion(groundUv(litO)) * groundContactAO(litO); }`);
     if (line) shader.vertexShader = shader.vertexShader.replace('#include <begin_vertex>',
       `vec3 transformed = aLitAx + (position - aLitAx) * aLitR.y + vec3(0.0, aLitR.y, 0.0);`);
+    if (kind === 'fungus') shader.vertexShader = shader.vertexShader.replace('#include <begin_vertex>',
+      'vec3 transformed = (aLitNut > 0.5 && aLitR.y > 0.5) ? vec3(position.x, 0.56, position.z) : position;');
     if (kind === 'cone') shader.vertexShader = shader.vertexShader.replace('#include <begin_vertex>',
       'vec3 transformed = position + aLitHook * aLitR.y;');
     if (kind === 'acorn') shader.vertexShader = shader.vertexShader.replace('#include <begin_vertex>',
@@ -544,6 +569,7 @@ export class Litter {
     this.stats = { cells: 0, planned: 0, planMs: 0, fillMs: 0, fills: 0, reseats: 0, crowns: 0 };
     for (const k of KINDS) this.stats[k] = 0;
     this.crowns = null; this.crownsV = -1;
+    this.fungi = typeof location !== 'undefined' && new URLSearchParams(location.search).get('fungi') === '1';   // the fungi placeholder (FUNGI), off by default
     this.group = new THREE.Group(); this.group.name = 'litter'; this.group.visible = false; this.group.userData.litter = this;
     scene.add(this.group);
     this.ring = { value: new THREE.Vector4(0, 0, this.R, 2.5) };
@@ -561,7 +587,7 @@ export class Litter {
       grit: stoneGeometry(0, 31), stone: stoneGeometry(1, 47), leaf: leafGeometry(), acorn: acornGeometry(),
       twig: lineGeometry({ sides: 5, rings: 7, bend: [0.06, 0.02], arch: 0, taper: 0.45, ribbon: false }),
       stem: lineGeometry({ sides: 3, rings: 7, bend: [0.05, 0.015], arch: 0.03, taper: 0.4, ribbon: false }),
-      needle: fascicleGeometry(), cone: coneGeometry(), wood: woodGeometry(), pebble: stoneGeometry(2, 63, 0),
+      needle: fascicleGeometry(), cone: coneGeometry(), wood: woodGeometry(), pebble: stoneGeometry(2, 63, 0), fungus: fungusGeometry(),
     };
     this.mats = {}; this.meshes = {};
     for (const k of KINDS) {
@@ -790,18 +816,45 @@ export class Litter {
       if (skip(x, n, u, v, r())) continue;
       const big = t.old || t.snag, q = r(), L = 0.35 + (big ? 2.8 : 1.4) * q * q, rad = Math.min(0.012 + (big ? 0.07 : 0.035) * r() * (0.5 + q), 0.4 * t.tr + 0.01);
       const fresh = r(), c = t.L.wood.map((w, i) => (w * (0.55 + 0.45 * fresh) + [0.2, 0.16, 0.13][i] * (1 - fresh) * 0.6) * (0.85 + 0.3 * r()));
-      push('wood', x, n, r() * Math.PI * 2, L, 0.12, rad / L, 0, 0, c, rad / L);
+      const yaw = r() * Math.PI * 2;
+      push('wood', x, n, yaw, L, 0.12, rad / L, 0, 0, c, rad / L);
+      // brackets along a fallen branch in the wet months (the fungi placeholder)
+      const F0 = this.fungi && FUNGI[0];
+      if (F0 && F0.months[mo] > 0 && r() < 0.6) {
+        const nb = Math.round(F0.per * F0.months[mo] * (0.5 + r()) * L);
+        for (let b = 0; b < nb; b++) {
+          const along = (r() - 0.5) * L * 0.8, side = r() < 0.5 ? -1 : 1, bx = x + Math.cos(yaw) * along - Math.sin(yaw) * side * rad * 0.9, bn = n - Math.sin(yaw) * along - Math.cos(yaw) * side * rad * 0.9;
+          const fs = F0.size[0] + (F0.size[1] - F0.size[0]) * r(), c0 = linRGB(...pick(F0.col, r()));
+          push('fungus', bx, bn, r() * Math.PI * 2, fs, rad * 1.4, 0, 0, 0, c0, 1);
+        }
+      }
+    }
+    // capped mushrooms in the oak litter (the fungi placeholder)
+    const F1 = this.fungi && FUNGI[1];
+    if (F1 && F1.months[mo] > 0) {
+      const NF = Math.round(A * F1.per * F1.months[mo] + r());
+      for (let k = 0; k < NF; k++) {
+        const { u, v, x, n, C } = candidate();
+        if (r() >= C) continue;
+        const t = this.pickTree(trees, W, r()); if (!t.L.cups) continue;
+        if (skip(x, n, u, v, r())) continue;
+        const ring = 1 + Math.floor(r() * 4);   // in small troops
+        for (let q = 0; q < ring; q++) {
+          const fs = F1.size[0] + (F1.size[1] - F1.size[0]) * r(), c0 = linRGB(...pick(F1.col, r()));
+          push('fungus', x + (r() - 0.5) * 0.15, n + (r() - 0.5) * 0.15, r() * Math.PI * 2, fs, 0, 0, 0, 0, c0, 0);
+        }
+      }
     }
     // surface roots: from boles past 12 cm, three to seven, half buried, laid in the cell holding their middle
     for (const t of trees) {
       if (t.tr < 0.12 || t.snag && t.tr < 0.2) continue;
       const rr = mulberry32(t.h), NR = 3 + Math.floor(rr() * 4) + (t.old ? 2 : 0);
       for (let k = 0; k < NR; k++) {
-        const a = (k + 0.3 + 0.4 * rr()) / NR * Math.PI * 2, L = (0.5 + 1.1 * rr()) * (0.6 + 3 * t.tr), rad = t.tr * (0.22 + 0.14 * rr());
-        const dx = Math.cos(a), dn = Math.sin(a), mid = t.tr * 0.8 + L / 2, x = t.x + dx * mid, n = t.n + dn * mid, sink = 0.45 + 0.2 * rr();
+        const a = (k + 0.3 + 0.4 * rr()) / NR * Math.PI * 2, L = (0.5 + 1.1 * rr()) * (0.6 + 3 * t.tr), rad = t.tr * (0.16 + 0.12 * rr());
+        const dx = Math.cos(a), dn = Math.sin(a), mid = t.tr * 0.8 + L / 2, x = t.x + dx * mid, n = t.n + dn * mid, sink = 0.55 + 0.25 * rr();
         if (x < x0 || x >= x0 + CELL || n < n0 || n >= n0 + CELL) continue;
         if (skip(x, n, x - x0, n - n0, 0)) continue;
-        const m = 0.8 + 0.25 * rr(), c = t.L.wood.map((w, i) => (w * 0.3 + [0.2, 0.15, 0.11][i] * 0.7) * m);
+        const m = 0.8 + 0.25 * rr(), c = t.L.wood.map((w, i) => (w * 0.15 + [0.16, 0.11, 0.075][i] * 0.85) * m);   // bark-brown, soiled
         push('wood', x, n, -a, L, sink, rad / L, 0, 0, c, rad / L);
       }
     }
@@ -991,6 +1044,10 @@ export class Litter {
           const Y = [(cr * N[0] + sr * bx) * D, (cr * N[1] + sr * by) * D, (cr * N[2] + sr * bz) * D];
           const Z = [(-sr * N[0] + cr * bx) * D, (-sr * N[1] + cr * by) * D, (-sr * N[2] + cr * bz) * D];
           put(m, q, [tx * s, ty * s, tz * s], Y, Z, x + N[0] * lift, g + N[1] * lift, -n + N[2] * lift);
+        } else if (kind === 'fungus') {
+          // upright on the ground (a cap) or a shelf at p0 up (a bracket on its branch's side)
+          const g = G(x, n), h = s * 0.8;
+          put(m, q, [cy * s, 0, sy * s], [0, h, 0], [-sy * s, 0, cy * s], x, g + p0 - (p0 > 0 ? 0.56 * h : 0.01), -n);
         } else if (kind === 'twig' || kind === 'wood') {
           const hx = cy * s / 2, hn = -sy * s / 2;   // yaw is in scene x, z: north = -z
           const g1 = G(x - hx, n - hn), g2 = G(x + hx, n + hn), gc = G(x, n);

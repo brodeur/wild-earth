@@ -2657,17 +2657,26 @@ export function leafMaterial(spec, patch = null) {
   const ndl = F.type !== 'broadleaf';
   ud.leafLight = { value: new THREE.Vector4(ndl ? 0.2 : LEAF_NORMAL_K, ndl ? (F.translucency ?? 2.5) * 0.6 : F.leaf_translucency ?? 0.5, ndl ? F.needle_wrap ?? 0.35 : 0, ndl ? 1 : 0) };
   ud.leafTint = { value: new THREE.Vector3(...(F.translucency_rgb || [1, 1.12, 0.55])) };
+  // Veins (2026-11-04, the close layer): a broadleaf's midrib and side veins pressed into its face as a normal detail
+  // within 6 m of the eye: (strength, side vein pairs, how far a side vein rises toward the tip across the half width).
+  // A compound leaf's leaflets and a lobed blade keep the same pinnate pattern; a palmate leaf has its own veins drawn.
+  const veins = F.type === 'broadleaf' ? ({ oblong_wavy: 8, elliptic_glossy: 9, lanceolate: 11, lobed: 6, lobed_large: 7, pinnate_compound: 9, oval: 8, deltoid: 7 }[F.leaf_shape] ?? 8) : 0;
+  ud.leafVein = { value: new THREE.Vector4(veins ? 1 : 0, veins, 0.55, 0) };
+  if (veins) m.defines = { ...(m.defines || {}), LEAF_VEINS: '' };
   m.color.setScalar(ud.gain);
   if (patch) patch(m);
   const cv = F.color_var || [0, 0], lv = F.leaf_on_var || 0, T = LEAF_TILE, W = 2 * T, PD = LEAF_PAD;
   chainShader(m, `leaf-level-v${cv[0]}-${cv[1]}-${lv}`, shader => {
-    Object.assign(shader.uniforms, { leafOn: ud.leafOn, leafVar: ud.leafVar, leafBase: ud.leafBase, leafLight: ud.leafLight, leafTint: ud.leafTint,
+    Object.assign(shader.uniforms, { leafOn: ud.leafOn, leafVar: ud.leafVar, leafBase: ud.leafBase, leafLight: ud.leafLight, leafTint: ud.leafTint, leafVein: ud.leafVein,
       time: windUniforms.time, windDir: windUniforms.windDir, windStrength: windUniforms.windStrength, crownSway: CROWN_SWAY, crownFlex: CROWN_FLEX });
     shader.vertexShader = shader.vertexShader
       .replace('#include <common>', `#include <common>
         attribute vec4 lC; attribute vec4 lA; attribute vec4 lN; attribute vec4 lS; attribute vec4 lK; attribute vec4 lM;
         uniform vec3 leafBase; uniform float leafVar;
         varying vec3 vLeafCol; varying vec3 vLeafNv; varying float vLeafRank; varying float vShim;
+        #ifdef LEAF_VEINS
+          varying vec2 vLeafQ; varying vec3 vLeafSdV; varying vec3 vLeafAxV;
+        #endif
         ${WIND_GLSL}
         ${LEAF_WAVE_GLSL}`)
       .replace('#include <uv_vertex>', `#include <uv_vertex>
@@ -2680,6 +2689,9 @@ export function leafMaterial(spec, patch = null) {
         vec3 leafAx = normalize(lA.xyz), leafNo = normalize(lN.xyz), leafSd = cross(leafAx, leafNo);
         float leafF = lS.x * ${LEAF_SIZE_M.toFixed(1)}, leafB = lS.y * ${LEAF_SIZE_M.toFixed(1)}, leafHW = lS.z * ${LEAF_SIZE_M.toFixed(1)};
         vec3 transformed = lC.xyz * ${(1 / LEAF_Q).toFixed(8)} + leafSd * (position.x * leafHW) + leafAx * (position.y > 0.5 ? leafF : -leafB);
+        #ifdef LEAF_VEINS
+          vLeafQ = vec2(position.x, position.y); vLeafSdV = normalMatrix * leafSd; vLeafAxV = normalMatrix * leafAx;
+        #endif
         {
           vec3 plantH = fract(modelMatrix[3].xzx * vec3(0.1031, 0.1030, 0.0973));
           float leafH = lC.w / 65534.0 + 0.5, leafG, leafS;
@@ -2700,15 +2712,34 @@ export function leafMaterial(spec, patch = null) {
         }`);
     shader.fragmentShader = shader.fragmentShader
       .replace('#include <common>', `#include <common>
-        uniform float leafOn; uniform vec4 leafLight; uniform vec3 leafTint;
+        uniform float leafOn; uniform vec4 leafLight; uniform vec3 leafTint; uniform vec4 leafVein;
         varying vec3 vLeafCol; varying vec3 vLeafNv; varying float vLeafRank; varying float vShim;
-        vec3 leafFace = vec3(0.0, 0.0, 1.0);`)
+        vec3 leafFace = vec3(0.0, 0.0, 1.0);
+        #ifdef LEAF_VEINS
+          varying vec2 vLeafQ; varying vec3 vLeafSdV; varying vec3 vLeafAxV;
+          // the vein relief at q (x across the blade -1..1, y base 0 to tip 1): the midrib, thinner to the tip, and the
+          // side veins running out and up to the margin; grooves on the upper face
+          float leafVeinH(vec2 q) {
+            float ax = abs(q.x), mid = exp(-ax * ax * 500.0) * (1.0 - 0.6 * q.y);
+            float s = q.y * leafVein.y - ax * leafVein.z * leafVein.y * 0.25;
+            float side = smoothstep(0.8, 1.0, 1.0 - abs(fract(s) - 0.5) * 2.0) * smoothstep(0.03, 0.14, ax) * (1.0 - 0.75 * ax);
+            return -(mid + 0.4 * side);
+          }
+        #endif`)
       .replace('#include <clipping_planes_fragment>', 'if (vLeafRank >= leafOn) discard;\n#include <clipping_planes_fragment>')
       .replace('#include <color_fragment>', 'diffuseColor.rgb *= vLeafCol;')
       .replace('#include <alphatest_fragment>', SHIMMER_ALPHA)
       .replace('#include <normal_fragment_begin>', THREE.ShaderChunk.normal_fragment_begin.replace('normal *= faceDirection;', '') + `
         leafFace = normalize(vLeafNv) * faceDirection;
-        normal = normalize(mix(normal, leafFace, leafLight.x));`)
+        normal = normalize(mix(normal, leafFace, leafLight.x));
+        #ifdef LEAF_VEINS
+        { float vk = leafVein.x * (1.0 - smoothstep(2.5, 6.0, length(vViewPosition))) * (1.0 - smoothstep(0.12, 0.45, fwidth(vLeafQ.y * leafVein.y)));
+          if (vk > 0.0) {
+            vec2 q = vLeafQ; float e = 0.004, h0 = leafVeinH(q), hx = leafVeinH(q + vec2(e, 0.0)), hy = leafVeinH(q + vec2(0.0, e));
+            vec3 g = (normalize(vLeafSdV) * (hx - h0) + normalize(vLeafAxV) * (hy - h0) * 0.3) / e;
+            normal = normalize(normal + faceDirection * 0.025 * vk * g);
+          } }
+        #endif`)
       .replace('#include <lights_lambert_pars_fragment>', `#include <lights_lambert_pars_fragment>
         void RE_Direct_Leaf( const in IncidentLight directLight, const in vec3 geometryPosition, const in vec3 geometryNormal, const in vec3 geometryViewDir, const in vec3 geometryClearcoatNormal, const in LambertMaterial material, inout ReflectedLight reflectedLight ) {
           float dotNL = saturate( ( dot( geometryNormal, directLight.direction ) + leafLight.z ) / ( 1.0 + leafLight.z ) );
