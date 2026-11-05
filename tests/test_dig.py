@@ -190,6 +190,31 @@ class DigTest(unittest.TestCase):
         self.assertEqual(digworld.dig_reduce(d, digworld.clean({"type": "grow", "id": "r.R", "x": x, "y": y, "z": z}), now), "not a face")
         self.assertEqual(digworld.dig_reduce(d, digworld.clean({"type": "room", "id": "r.Q", "x": x, "y": y, "z": z, "r": 0.1, "absorb": ["r.h"]}), now), "no such node")
 
+    def test_meet_and_big(self):
+        """Two diggers' tunnels meeting (dig.js digCore 'meet'): a join between their faces makes one system, its clock
+        the later of the two; and a structure past the old 1,500-node cap is taken (the carving has no per-slot buffers)."""
+        d, now = digworld.empty(), time.time()
+        x, y, z = 3000.0, 200.0, -3000.0
+        ev = [{"type": "hole", "id": "a.h", "x": x, "y": y, "z": z, "r": 0.03},
+              {"type": "dig", "from": "a.h", "id": "a.1", "seg": "a.s1", "x": x + 0.3, "y": y - 0.1, "z": z},
+              {"type": "hole", "id": "b.h", "x": x + 0.9, "y": y, "z": z, "r": 0.03},
+              {"type": "dig", "from": "b.h", "id": "b.1", "seg": "b.s1", "x": x + 0.42, "y": y - 0.1, "z": z}]
+        for e in ev:
+            self.assertIsNone(digworld.dig_reduce(d, digworld.clean(e), now), e)
+        d["seen"]["b.h"] = now + 5
+        self.assertIsNone(digworld.dig_reduce(d, digworld.clean({"type": "join", "a": "b.1", "b": "a.1", "seg": "b.s2"}), now))
+        self.assertEqual({n["sys"] for n in d["nodes"].values()}, {"b.h"})
+        self.assertEqual(d["seen"]["b.h"], round(now))   # the merged system's clock
+        self.assertNotIn("a.h", d["seen"])
+        # a long tunnel of 2,000 nodes in 2 cm steps
+        prev = "a.1"
+        for i in range(2000):
+            e = {"type": "dig", "from": prev, "id": f"c.{i}", "seg": f"c.s{i}", "x": x + 0.3, "y": y - 0.1 - 0.02 * (i % 10), "z": z - 0.02 * i}
+            self.assertIsNone(digworld.dig_reduce(d, digworld.clean(e), now), i)
+            prev = f"c.{i}"
+        self.assertGreater(len(d["nodes"]), 1500)
+        self.assertEqual(digworld.N_MAX, 5000)
+
     def test_rabbits(self):
         """A brush rabbit's burrow (6.5 cm tubes, a nest room at its end) and a jackrabbit's form (a pit of kind 'form')
         reach a second player as they are dug and are in a late joiner's welcome; a form decays as a pit does."""

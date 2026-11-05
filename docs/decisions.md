@@ -4943,3 +4943,24 @@ other tiles.
 **Found on the way, not this lane's:** the forager's food halos (forage.js) wash a translucent band across a vole's
 eye view when one sits a few centimetres off the eye.
 
+## 2026-11-04: Dig carves the soil instead of adding tubes (client/src/digCarve.js, digMesh.js; branch claude/dig-carve-0f9d58)
+
+Aaron: "is there a way instead to "remove" from a polygon? ... The user "digs" which creates a joint between these two
+surfaces, and then starts "removing" the polygon. Players will want to dig elaborate structures together." Chosen: the
+soil as a signed distance field (the drawn ground and its spoil, minus the carved air: a round cone per segment, an
+ellipsoid per room, a shaft per hole, a bowl per pit) meshed by surface nets in sparse 16 cm chunks in a Web Worker,
+cells sized by the smallest radius in reach and uniform over a joined component so neighbours share their borders
+exactly; the mouth is part of the field (the ground and spoil within 6 cm of an opening, the terrain's cut disc just
+inside it, under the spoil), so ground and tunnel wall are one surface. The world model and its events are unchanged;
+one digging rule was added on the existing `join` (a face reaching another system's node joins it), so two diggers'
+tunnels that meet are one walkable system. The caps went from 1,500 nodes and 1,200 segments to 5,000 each.
+Rejected: more neighbours in the old fragment-shader union (it can never know every capsule a loop or a crossing
+brings near, and its discard turned the early depth test off); CSG on meshes (fragile on coplanar and tangent cases,
+and the joins would need remeshing anyway); marching cubes (more triangles for the same cells, and its vertices on the
+cell edges make a 3 cm bore faceted at 1 cm); dual contouring with QEF (sharp features are not wanted in soil, and
+surface nets with one Newton step onto the analytic field are smooth and simpler); one cell size everywhere (a pit at
+1 cm is four times the triangles of the same pit at 2 cm, and most forms and pits stand alone); a smooth minimum over
+every primitive (it bulges a tunnel at every node by a quarter of the fillet: a plain minimum within a straight run).
+The player's face between the 2 cm steps is a short cone of its own, so one or a few chunks are meshed each frame
+(2.7 mm behind the drawn face at the real rate).
+

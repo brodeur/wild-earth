@@ -14,7 +14,7 @@ import re
 
 DIG_IDLE_S = 7 * 86400          # a ground hole or a tunnel system no animal has entered for a week goes
 TILE_M = 10000.0
-N_MAX, S_MAX, P_MAX = 1500, 1200, 120   # as client/src/dig.js draws them (MAX_N, MAX_S, MAX_P)
+N_MAX, S_MAX, P_MAX = 5000, 5000, 120   # as client/src/dig.js (MAX_N, MAX_S, MAX_P): the carving has no per-slot buffers (docs/game-dig.md)
 R_MIN, R_MAX, PIT_R_MAX, PIT_D_MAX = 0.01, 0.12, 1.3, 0.75
 STEP_MAX = 0.6                  # m from the node a dig starts at (the client's steps are 2 cm; a grown segment 35 cm)
 ID_RE = re.compile(r"^[A-Za-z0-9_.:-]{1,40}$")
