@@ -1,0 +1,272 @@
+{
+ "id": "pinus_contorta",
+ "scientific": "Pinus contorta subsp. murrayana",
+ "common": "lodgepole pine",
+ "aliases": [
+  "lodgepole_pine",
+  "sierra_lodgepole",
+  "tamarack_pine"
+ ],
+ "family": "Pinaceae",
+ "form": "tree",
+ "deciduous": false,
+ "template": "pinus_ponderosa",
+ "height_m": [
+  15,
+  30
+ ],
+ "stature": {
+  "typical_m": 22,
+  "tall_m": 34,
+  "record_m": 41.4,
+  "source": "typical and tall: the drafter's estimate (the Gymnosperm Database gives the subspecies to 41 m and no typical height); record: 41.4 m, 204 cm dbh, San Bernardino Mountains, measured 2019 (Gymnosperm Database); read 2026-11-04"
+ },
+ "variants_height_m": {
+  "pole": [
+   5,
+   12
+  ],
+  "old-growth": [
+   26,
+   36
+  ]
+ },
+ "crown": {
+  "shape": "conical",
+  "profile": [
+   [
+    0.3,
+    0.13
+   ],
+   [
+    0.45,
+    0.14
+   ],
+   [
+    0.6,
+    0.13
+   ],
+   [
+    0.72,
+    0.11
+   ],
+   [
+    0.84,
+    0.08
+   ],
+   [
+    0.94,
+    0.05
+   ],
+   [
+    1.0,
+    0.02
+   ]
+  ],
+  "lobes": 3,
+  "lobe_depth": 0.1,
+  "asymmetry": 0.08,
+  "fill": 0.2,
+  "edge": 1.1
+ },
+ "foliage": {
+  "colors": {
+   "winter": [
+    86,
+    90,
+    52
+   ],
+   "spring": [
+    106,
+    112,
+    62
+   ],
+   "summer": [
+    94,
+    100,
+    54
+   ],
+   "fall": [
+    92,
+    96,
+    54
+   ]
+  },
+  "leaf_size_m": 0.06
+ },
+ "trunk": {
+  "bark_rgb": [
+   140,
+   112,
+   92
+  ],
+  "bark_pattern": "platy",
+  "radius_ratio": 0.016
+ },
+ "targets": {
+  "crown_width_ratio": 0.28,
+  "crown_base_ratio": 0.35,
+  "porosity": 0.35,
+  "from": "judgement values from the drafter's reading of the sources and knowledge of the species (2026-11-04), no photographs measured; to be replaced by photo measurements: a slim, straight pole of a tree with a short narrow crown, far narrower than ponderosa; yellow-green, lighter than the other pines"
+ },
+ "variant_patches": {
+  "pole": {
+   "set": {
+    "trunk": {
+     "radius_ratio": 0.017,
+     "bark_rgb": [
+      122,
+      102,
+      88
+     ]
+    },
+    "crown": {
+     "envelope": {
+      "profile": [
+       [
+        0.05,
+        0.17
+       ],
+       [
+        0.2,
+        0.17
+       ],
+       [
+        0.35,
+        0.15
+       ],
+       [
+        0.5,
+        0.13
+       ],
+       [
+        0.65,
+        0.1
+       ],
+       [
+        0.8,
+        0.07
+       ],
+       [
+        0.93,
+        0.03
+       ],
+       [
+        1,
+        0.02
+       ]
+      ]
+     }
+    }
+   },
+   "note": "a dense young stand tree: a slim cone of yellow-green to near the ground, thin scaly bark"
+  },
+  "old-growth": {
+   "set": {
+    "trunk": {
+     "base_size": 0.45,
+     "bole_ratio": 0.45,
+     "radius_ratio": 0.02
+    },
+    "crown": {
+     "shape": "tapered_cylindrical",
+     "envelope": {
+      "profile": [
+       [
+        0.45,
+        0.13
+       ],
+       [
+        0.6,
+        0.15
+       ],
+       [
+        0.72,
+        0.15
+       ],
+       [
+        0.84,
+        0.13
+       ],
+       [
+        0.94,
+        0.09
+       ],
+       [
+        1.0,
+        0.04
+       ]
+      ]
+     }
+    }
+   },
+   "note": "an old tree of the subalpine flats: a straight, thick-for-its-kind trunk with thin scaly bark and a narrow, open, round-topped crown"
+  }
+ },
+ "description": "A straight, slender pine 15-30 m tall with short yellow-green needles in pairs, a narrow crown, and thin bark of small orange-grey to purplish scales rather than plates. It is the tree of the subalpine flats and meadow edges, about 1800-3400 m, forming pure, even stands around Tuolumne Meadows and the high lake basins, where it creeps into the meadows between fires and dies back when the water table rises.",
+ "season_notes": {
+  "winter": "Evergreen, its narrow crowns shedding the snow; trunks stand dark against the white flats.",
+  "spring": "Yellow pollen dusts the snowmelt pools and meadow edges in June-July.",
+  "summer": "Small, prickly, egg-shaped cones ripen; needleminer moths brown whole stands in some years.",
+  "fall": "The cones open and drop seed in the fall and fall themselves soon after (the Sierra form does not keep closed cones)."
+ },
+ "habitat": {
+  "classes": {
+   "conifer_forest": 1.0,
+   "riparian": 0.5,
+   "barren": 0.15,
+   "grassland": 0.15,
+   "mixed_forest": 0.1
+  },
+  "floor": 1.6,
+  "mid": 0.9,
+  "steep": 0.6,
+  "north": 1.0,
+  "shade": 0.3,
+  "disturbed": 1.2
+ },
+ "relations": {
+  "eaten_by": [
+   {
+    "animal": "cyanocitta_stelleri",
+    "part": "seeds",
+    "seasons": [
+     "fall"
+    ]
+   },
+   {
+    "animal": "odocoileus_hemionus",
+    "part": "browse",
+    "seasons": [
+     "summer"
+    ]
+   },
+   {
+    "animal": "ursus_americanus",
+    "part": "bark",
+    "seasons": [
+     "spring"
+    ]
+   }
+  ],
+  "cover_for": [
+   "odocoileus_hemionus"
+  ]
+ },
+ "range": {
+  "elev_m": [
+   1800,
+   3400
+  ],
+  "where": "subalpine flats, basins and meadow edges: Tuolumne Meadows, Tioga Pass, the Tioga Road lake basins; lower in cold-air hollows"
+ },
+ "stand_in": "pinus_ponderosa",
+ "notes": "The Sierra lodgepole (subsp. murrayana) is a single-stemmed, non-serotinous tree, unlike the Rocky Mountain lodgepole; the Gymnosperm Database notes that the largest lodgepoles of any subspecies are this one. Against the ponderosa template it needs a much thinner trunk, much narrower crown, short (4-8 cm) yellow-green paired needles in denser tufts and thin scaly bark without fissures, all set here; the dense even-aged doghair stands, dead grey stands after needleminer outbreaks, and the trees standing in meadow edges are matters for the species mix. The bark-feeding note for black bear is the drafter's knowledge (bears strip lodgepole bark for the sapwood in spring) and should be checked. Seeds feed chickarees, chipmunks and Clark's nutcracker (not in the library).",
+ "sources": [
+  "https://www.conifers.org/pi/Pinus_contorta.php",
+  "https://www.conifers.org/pi/Pinus_contorta_murrayana.php"
+ ],
+ "authors": [
+  "Wild Earth (agent draft, 2026-11-04); needs local sign-off"
+ ]
+}

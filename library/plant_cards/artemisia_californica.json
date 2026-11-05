@@ -1,0 +1,201 @@
+{
+ "id": "artemisia_californica",
+ "scientific": "Artemisia californica",
+ "common": "California sagebrush",
+ "aliases": [
+  "california_sagebrush",
+  "coastal_sagebrush"
+ ],
+ "family": "Asteraceae",
+ "form": "shrub",
+ "deciduous": false,
+ "template": "baccharis_pilularis",
+ "height_m": [
+  0.6,
+  1.6
+ ],
+ "variants_height_m": {
+  "young": [
+   0.3,
+   0.8
+  ],
+  "decadent": [
+   1.2,
+   2.0
+  ]
+ },
+ "crown": {
+  "shape": "hemispherical",
+  "profile": [
+   [
+    0.0,
+    0.35
+   ],
+   [
+    0.15,
+    0.52
+   ],
+   [
+    0.35,
+    0.62
+   ],
+   [
+    0.55,
+    0.63
+   ],
+   [
+    0.75,
+    0.55
+   ],
+   [
+    0.9,
+    0.38
+   ],
+   [
+    1.0,
+    0.15
+   ]
+  ],
+  "lobes": 6,
+  "lobe_depth": 0.14,
+  "asymmetry": 0.12,
+  "fill": 0.6,
+  "edge": 1.12
+ },
+ "foliage": {
+  "colors": {
+   "winter": [
+    120,
+    130,
+    108
+   ],
+   "spring": [
+    128,
+    138,
+    110
+   ],
+   "summer": [
+    130,
+    130,
+    114
+   ],
+   "fall": [
+    134,
+    132,
+    112
+   ]
+  },
+  "leaf_on": {
+   "winter": 1.0,
+   "spring": 1.0,
+   "summer": 0.7,
+   "fall": 0.65
+  },
+  "leaf_size_m": 0.03,
+  "leaf_shape": "lanceolate",
+  "flowers": {
+   "season": "fall",
+   "months": [
+    8,
+    11
+   ],
+   "form": "bud",
+   "rgb": [
+    172,
+    158,
+    104
+   ],
+   "size_m": 0.03,
+   "density": 0.35,
+   "before_leaves": false
+  }
+ },
+ "trunk": {
+  "bark_rgb": [
+   108,
+   100,
+   90
+  ],
+  "bark_pattern": "shreddy",
+  "stems": [
+   6,
+   14
+  ]
+ },
+ "targets": {
+  "crown_width_ratio": 1.2,
+  "crown_base_ratio": 0.05,
+  "porosity": 0.32,
+  "from": "judgement values, no photographs measured: a soft, loose, rounded shrub, more see-through than coyote brush"
+ },
+ "patch": {
+  "foliage": {
+   "ao_min": 0.72
+  }
+ },
+ "variant_patches": {
+  "young": {
+   "note": "a low, soft grey tuft among the grasses"
+  },
+  "decadent": {
+   "note": "an old shrub, the middle grey and dead, a few long leafy wands at the edge"
+  }
+ },
+ "description": "The soft, grey, sharply fragrant shrub that dominates coastal sage scrub on the sunny headlands and slopes. Its thread-thin leaves are lush in the rains and shrink and grey through the dry summer.",
+ "season_notes": {
+  "winter": "With the rains it fills out with long soft grey-green leaves.",
+  "spring": "At its greenest and fullest, the scent strongest on warm days.",
+  "summer": "The big rainy-season leaves drop and only small ones stay, the shrub turns thin and silvery.",
+  "fall": "Long sprays of tiny nodding yellowish flower heads stand over the grey foliage."
+ },
+ "habitat": {
+  "classes": {
+   "chaparral": 1.0,
+   "grassland": 0.6,
+   "barren": 0.2,
+   "oak_woodland": 0.2,
+   "mixed_forest": 0.05,
+   "conifer_forest": 0.0,
+   "riparian": 0.0
+  },
+  "floor": 0.6,
+  "mid": 1.0,
+  "steep": 1.3,
+  "north": 0.8,
+  "shade": 0.05,
+  "disturbed": 1.2
+ },
+ "relations": {
+  "eaten_by": [
+   {
+    "animal": "odocoileus_hemionus",
+    "part": "browse",
+    "seasons": [
+     "winter",
+     "spring"
+    ]
+   }
+  ],
+  "cover_for": [
+   "callipepla_californica",
+   "sylvilagus_bachmani",
+   "aphelocoma_californica"
+  ]
+ },
+ "range": {
+  "elev_m": [
+   0,
+   800
+  ],
+  "where": "coastal sage scrub from Mendocino to Baja California; the sunny headlands, bluffs and south slopes of San Francisco, Marin and the Peninsula",
+  "coastal": true
+ },
+ "stand_in": "baccharis_pilularis",
+ "notes": "Grown from coyote brush, its usual neighbour in coastal scrub and a similar rounded, many-stemmed shrub, but much greyer (b/g near 0.9 against coyote brush's 0.5), softer and more open. FEIS calls it drought-deciduous: the long leaves of the rainy season drop in summer and smaller leaves on the side shoots carry it through, so leaf_on falls to about 0.7 in summer and fall. The leaves are thread-like (2-5 cm by under 1 mm); lanceolate is the nearest broadleaf card, a filiform or ferny card would be truer. Flowers are tiny dull yellow heads on long sprays, drawn as small buds in late summer and fall (the template's foliage.flowers supports this). Deer browse it only lightly (FEIS: bitter and aromatic). Who really lives in it: dusky-footed woodrats prefer it as food, and wrentits, California thrashers, white-crowned sparrows and (south of here) California gnatcatchers nest in it; none are in the animal library. Brush rabbits and quail take cover under it.",
+ "sources": [
+  "FEIS, Artemisia californica, https://www.fs.usda.gov/database/feis/plants/shrub/artcal/all.html, read 2026-11-04"
+ ],
+ "authors": [
+  "Wild Earth (agent draft, 2026-11-04); needs local sign-off"
+ ]
+}

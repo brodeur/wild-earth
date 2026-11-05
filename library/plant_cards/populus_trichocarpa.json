@@ -1,0 +1,207 @@
+{
+ "id": "populus_trichocarpa",
+ "scientific": "Populus trichocarpa",
+ "common": "black cottonwood",
+ "aliases": [
+  "black_cottonwood",
+  "western_balsam_poplar",
+  "populus_balsamifera_trichocarpa"
+ ],
+ "family": "Salicaceae",
+ "form": "tree",
+ "deciduous": true,
+ "template": "populus_fremontii",
+ "regions": [
+  "pacific_northwest",
+  "california"
+ ],
+ "height_m": [
+  30,
+  45
+ ],
+ "stature": {
+  "typical_m": 35,
+  "tall_m": 48,
+  "record_m": null,
+  "source": "FEIS: typically about 30 m, occasionally to about 50 m; no record tree read; read 2026-11-04"
+ },
+ "variants_height_m": {
+  "young": [
+   6,
+   16
+  ],
+  "veteran": [
+   40,
+   52
+  ]
+ },
+ "crown": {
+  "shape": "cylindrical",
+  "profile": [
+   [
+    0.4,
+    0.17
+   ],
+   [
+    0.52,
+    0.23
+   ],
+   [
+    0.64,
+    0.26
+   ],
+   [
+    0.76,
+    0.24
+   ],
+   [
+    0.88,
+    0.17
+   ],
+   [
+    0.96,
+    0.09
+   ],
+   [
+    1.0,
+    0.03
+   ]
+  ],
+  "lobes": 5,
+  "lobe_depth": 0.2,
+  "asymmetry": 0.25,
+  "fill": 0.3,
+  "edge": 1.1
+ },
+ "foliage": {
+  "colors": {
+   "winter": [
+    140,
+    132,
+    112
+   ],
+   "spring": [
+    132,
+    154,
+    80
+   ],
+   "summer": [
+    72,
+    94,
+    64
+   ],
+   "fall": [
+    202,
+    168,
+    64
+   ]
+  },
+  "leaf_on": {
+   "winter": 0.0,
+   "spring": 0.9,
+   "summer": 1.0,
+   "fall": 0.6
+  },
+  "leaf_shape": "deltoid",
+  "leaf_size_m": 0.1
+ },
+ "trunk": {
+  "bark_rgb": [
+   122,
+   122,
+   116
+  ],
+  "bark_pattern": "furrowed"
+ },
+ "targets": {
+  "crown_width_ratio": 0.52,
+  "crown_base_ratio": 0.4,
+  "porosity": 0.25,
+  "from": "judgement values from the drafter's reading of the sources and knowledge of the species (2026-11-04), no photographs measured; to be replaced by photo measurements: a tall, straight grey trunk, clear for its lower half in stands (FEIS), carrying a narrow, open, upswept crown; broad and open on a lone tree on a gravel bar"
+ },
+ "variant_patches": {
+  "young": {
+   "set": {
+    "trunk": {
+     "bark_rgb": [
+      150,
+      152,
+      138
+     ],
+     "bark_pattern": "smooth_grey"
+    }
+   },
+   "note": "a fast sapling thicket on a fresh gravel bar, smooth greenish-grey bark"
+  },
+  "veteran": {
+   "note": "a river-bar giant with deeply furrowed grey bark and a broken, open crown of a few huge upswept limbs; often an eagle's perch"
+  }
+ },
+ "description": "The tallest broadleaf tree of the Northwest, 30-45 m on the Hoh and Queets bars, with a straight grey trunk that furrows deeply with age and a narrow, open crown. Its big, pointed leaves are dark glossy green above and silvery below, flickering in the river wind, and its sticky spring buds scent the valley.",
+ "season_notes": {
+  "winter": "Bare grey crowns along the river; resinous buds.",
+  "spring": "Sweet balsam smell of the buds; catkins before the leaves, April-May.",
+  "summer": "In June the female catkins release white cotton that drifts over the gravel bars and eddies.",
+  "fall": "Leaves turn yellow and fall September-October."
+ },
+ "habitat": {
+  "classes": {
+   "riparian": 1.0,
+   "mixed_forest": 0.3
+  },
+  "floor": 2.0,
+  "mid": 0.5,
+  "steep": 0.2,
+  "north": 1.0,
+  "shade": 0.1,
+  "disturbed": 1.4,
+  "riparian": {
+   "zones": {
+    "terrace": 1.0,
+    "bank": 0.8,
+    "channel": 0.3,
+    "margin": 0.5,
+    "pond_shore": 0.3
+   },
+   "orders": [
+    3,
+    7
+   ],
+   "permanence": "perennial",
+   "water": "A tree of the big rivers: gravel bars, floodplains and young terraces where floods lay down fresh, wet sand and gravel for its seed (FEIS)."
+  }
+ },
+ "relations": {
+  "eaten_by": [
+   {
+    "animal": "odocoileus_hemionus",
+    "part": "browse",
+    "seasons": [
+     "spring",
+     "summer"
+    ]
+   }
+  ],
+  "cover_for": [
+   "odocoileus_hemionus",
+   "buteo_jamaicensis",
+   "corvus_corax"
+  ],
+  "shades_water": 0.8
+ },
+ "range": {
+  "elev_m": [
+   0,
+   900
+  ],
+  "where": "the floodplains of the Hoh, Queets, Quinault, Elwha and Dungeness; Alaska to southern California and inland to the Rockies"
+ },
+ "stand_in": "populus_fremontii",
+ "notes": "Grown from Fremont cottonwood (same genus) as a taller, narrower tree with a higher crown base and darker, glossier leaves. Leaves 7-12 cm (to 20 on sprouts), ovate to deltoid with a pointed tip, dark green above, whitish-silvery below (drafter's knowledge; FEIS does not describe them); the silver undersides flickering in wind are not drawn. FEIS: Roosevelt elk took about 9% of their diet from it in one Olympic National Park study, and use it for cover; deer use it mainly for cover; beavers eat it and build with it; ruffed grouse eat the buds; bald eagles, ospreys and great blue herons nest and perch in it. Only the deer, red-tailed hawk and raven are in the animal library. The cotton drifting in June would need a particle effect.",
+ "sources": [
+  "FEIS, Populus balsamifera subsp. trichocarpa, https://www.fs.usda.gov/database/feis/plants/tree/popbalt/all.html, read 2026-11-04"
+ ],
+ "authors": [
+  "Wild Earth (agent draft, 2026-11-04); needs local sign-off"
+ ]
+}

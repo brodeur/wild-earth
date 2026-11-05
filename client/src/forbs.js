@@ -31,7 +31,7 @@ import { SEASON_LOOK } from './season.js';
 // the nearest plant to a body (needs.js names it when "food here" is one of the body's foods), speciesAround(x, z, r)
 // what grows round it.
 const FORB_R = 45, FADE = [36, 45], D0 = 18, KMIN = 0.25, REFILL = 8, CAP = 24000, FORB_PER_M2 = 1.2, STRIDE = 8;
-const T = 256, GS_MAX = 16;
+const T = 256, GS_MAX = 24;   // 24 (2026-11-04, was 16): the library's 19 California forbs and the Olympic ferns, sorrel and lupine (the atlas 512 x 6144)
 export const FORB_MAX = GS_MAX;   // the species slots (forage.js sizes its weights to it)
 const HABITAT = { 5: 1.0, 1: 0.7, 6: 0.8, 3: 0.4, 4: 0.35, 2: 0.2 };
 const CLASS_NAME = { 1: 'oak_woodland', 2: 'conifer_forest', 3: 'mixed_forest', 4: 'chaparral', 5: 'grassland', 6: 'riparian' };

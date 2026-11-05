@@ -1,0 +1,547 @@
+{
+ "id": "pinus_jeffreyi",
+ "aliases": [
+  "jeffrey_pine"
+ ],
+ "scientific": "Pinus jeffreyi",
+ "common": "Jeffrey pine",
+ "form": "tree",
+ "architectural_model": "Rauh",
+ "deciduous": false,
+ "height_m": [
+  24,
+  40
+ ],
+ "stature": {
+  "typical_m": 30,
+  "tall_m": 50,
+  "record_m": 63.1,
+  "source": "typical and tall: the Gymnosperm Database 24-61 m, narrowed by the drafter for granite sites; record: 63.09 m, a now-dead tree at Morris Meadows, Trinity Alps; the current champion 56.08 m; Yosemite's 'Smoky Jack' on the Tioga Road was 56.7 m (Gymnosperm Database); read 2026-11-04"
+ },
+ "variants": [
+  {
+   "name": "pole",
+   "weight": 0.25,
+   "height_m": [
+    8,
+    13
+   ],
+   "branches": 0.7,
+   "set": {
+    "trunk": {
+     "base_size": 0.16,
+     "bole_ratio": 0.16,
+     "bark_rgb": [
+      100,
+      80,
+      72
+     ],
+     "stubs": {
+      "count": [
+       0,
+       3
+      ]
+     },
+     "length_ratio": 1,
+     "radius_ratio": 0.022
+    },
+    "crown": {
+     "envelope": {
+      "profile": [
+       [
+        0.03,
+        0.26
+       ],
+       [
+        0.17,
+        0.26
+       ],
+       [
+        0.3,
+        0.22
+       ],
+       [
+        0.43,
+        0.18
+       ],
+       [
+        0.55,
+        0.15
+       ],
+       [
+        0.68,
+        0.12
+       ],
+       [
+        0.81,
+        0.07
+       ],
+       [
+        0.94,
+        0.03
+       ],
+       [
+        1,
+        0.03
+       ]
+      ]
+     }
+    },
+    "levels": [
+     {
+      "droop_deg": 7,
+      "upturn_deg": 14,
+      "down_angle_deg": 104,
+      "down_angle_tip_deg": 101,
+      "curve_deg": 12,
+      "length_ratio": 0.2,
+      "radius_ratio": 0.25
+     },
+     {
+      "down_angle_deg": 49,
+      "droop_deg": 6,
+      "upturn_deg": 18,
+      "length_ratio": 0.53,
+      "radius_ratio": 0.6
+     }
+    ]
+   },
+   "note": "(from the ponderosa pine template) blackjack: dark bark,     a conical crown reaching down to a quarter of the height"
+  },
+  {
+   "name": "mature",
+   "weight": 0.5,
+   "seeds": 2,
+   "note": "(from the ponderosa pine template) the file as written"
+  },
+  {
+   "name": "old-growth",
+   "weight": 0.2,
+   "height_m": [
+    34,
+    48
+   ],
+   "branches": 0.8,
+   "deadwood": {
+    "fraction": 0.12,
+    "levels": [
+     1
+    ],
+    "where": "lower",
+    "shorten": 0.5,
+    "rgb": [
+     130,
+     118,
+     104
+    ]
+   },
+   "set": {
+    "trunk": {
+     "base_size": 0.8,
+     "bole_ratio": 0.8,
+     "bark_rgb": [
+      194,
+      130,
+      110
+     ],
+     "stubs": {
+      "count": [
+       10,
+       20
+      ]
+     },
+     "length_ratio": 1,
+     "radius_ratio": 0.025
+    },
+    "crown": {
+     "envelope": {
+      "profile": [
+       [
+        0.68,
+        0.18
+       ],
+       [
+        0.74,
+        0.18
+       ],
+       [
+        0.78,
+        0.18
+       ],
+       [
+        0.82,
+        0.19
+       ],
+       [
+        0.86,
+        0.2
+       ],
+       [
+        0.9,
+        0.2
+       ],
+       [
+        0.94,
+        0.21
+       ],
+       [
+        0.98,
+        0.21
+       ],
+       [
+        1,
+        0.07
+       ]
+      ]
+     },
+     "shape": "cylindrical"
+    },
+    "levels": [
+     {
+      "droop_deg": 0,
+      "upturn_deg": 8,
+      "down_angle_deg": 87,
+      "down_angle_tip_deg": 97,
+      "curve_deg": 6,
+      "length_ratio": 0.2,
+      "radius_ratio": 0.27
+     },
+     {
+      "down_angle_deg": 57,
+      "droop_deg": -9,
+      "upturn_deg": 3,
+      "length_ratio": 0.24,
+      "radius_ratio": 0.81
+     }
+    ]
+   },
+   "note": "(from the ponderosa pine template) flat-topped,     a long clear bole of pale yellow plates,     heavy limbs"
+  }
+ ],
+ "snag": {
+  "fraction": 0.04,
+  "from": "mature",
+  "limbs": 0.3,
+  "twigs": 0,
+  "levels": 1,
+  "broken_top": [
+   0.55,
+   0.85
+  ],
+  "shorten": [
+   0.3,
+   0.8
+  ],
+  "rgb": [
+   140,
+   124,
+   108
+  ]
+ },
+ "description": "A big three-needled pine, 24-45 m here, much like ponderosa but with greyer blue-green needles, large heavy cones whose prickles turn inward, and pinkish-cinnamon bark plates that smell of vanilla or lemon in the sun. It replaces ponderosa above about 1500 m on the dry, rocky granite of the upper west slope and east of the crest, standing alone on domes and ridges where its crowns grow broad and twisted.",
+ "season_notes": {
+  "winter": "Evergreen; on exposed domes old trees are bent and broken by the wind and snow.",
+  "spring": "Pollen in June; the new candles are pale and silvery.",
+  "summer": "Second-year cones swell, purple-green, 15-30 cm long.",
+  "fall": "The cones open and drop large seeds in September; the fallen cones, prickles turned in, are gentle to pick up."
+ },
+ "status": "generated from a trait card, needs review in the lineup and local sign-off",
+ "habitat": {
+  "classes": {
+   "conifer_forest": 1.0,
+   "mixed_forest": 0.4,
+   "barren": 0.35,
+   "chaparral": 0.3
+  },
+  "floor": 0.9,
+  "mid": 1.0,
+  "steep": 1.0,
+  "north": 0.75,
+  "shade": 0.15,
+  "disturbed": 0.7
+ },
+ "relations": {
+  "eaten_by": [
+   {
+    "animal": "cyanocitta_stelleri",
+    "part": "seeds",
+    "seasons": [
+     "fall"
+    ]
+   },
+   {
+    "animal": "sciurus_griseus",
+    "part": "seeds",
+    "seasons": [
+     "summer",
+     "fall"
+    ]
+   },
+   {
+    "animal": "otospermophilus_beecheyi",
+    "part": "seeds",
+    "seasons": [
+     "fall"
+    ]
+   },
+   {
+    "animal": "ursus_americanus",
+    "part": "seeds",
+    "seasons": [
+     "fall"
+    ]
+   }
+  ],
+  "cover_for": [
+   "cyanocitta_stelleri"
+  ]
+ },
+ "trunk": {
+  "length_ratio": 1,
+  "radius_ratio": 0.021,
+  "taper": 1,
+  "flare": 1.25,
+  "bole_ratio": 0.11,
+  "base_size": 0.11,
+  "curve_deg": 4,
+  "curve_var_deg": 4,
+  "segments": 7,
+  "lean_deg": 3,
+  "stems": [
+   1,
+   1
+  ],
+  "stem_spread_deg": 0,
+  "split_prob": 0.03,
+  "split_count": 2,
+  "split_angle_deg": 12,
+  "bark_rgb": [
+   174,
+   114,
+   100
+  ],
+  "bark_pattern": "plates",
+  "twig_rgb": [
+   92,
+   74,
+   60
+  ],
+  "stubs": {
+   "count": [
+    6,
+    14
+   ],
+   "length_m": 0.5,
+   "radius_ratio": 0.12
+  },
+  "bark": {
+   "tile_m": [
+    0.7,
+    1.4
+   ],
+   "plate_m": [
+    0.2,
+    0.6
+   ],
+   "fissure": 0.95,
+   "contrast": 1.15,
+   "relief": 1.4
+  }
+ },
+ "crown": {
+  "shape": "tapered_cylindrical",
+  "envelope": {
+   "profile": [
+    [
+     0.1,
+     0.2
+    ],
+    [
+     0.25,
+     0.2
+    ],
+    [
+     0.4,
+     0.21
+    ],
+    [
+     0.55,
+     0.22
+    ],
+    [
+     0.68,
+     0.21
+    ],
+    [
+     0.8,
+     0.19
+    ],
+    [
+     0.92,
+     0.15
+    ],
+    [
+     1.0,
+     0.06
+    ]
+   ],
+   "lobes": 3,
+   "lobe_depth": 0.14,
+   "asymmetry": 0.15,
+   "fill": 0.15,
+   "edge": 1.1
+  }
+ },
+ "levels": [
+  {
+   "count": 30,
+   "whorl": 3,
+   "down_angle_deg": 114,
+   "down_angle_tip_deg": 84,
+   "down_angle_var_deg": 10,
+   "rotation_deg": 37,
+   "rotation_var_deg": 25,
+   "length_ratio": 0.2,
+   "length_var": 0.2,
+   "curve_deg": 15,
+   "curve_var_deg": 16,
+   "tropism": 0.02,
+   "droop_deg": -3,
+   "upturn_deg": 7,
+   "taper": 0.95,
+   "radius_ratio": 0.16,
+   "segments": 3
+  },
+  {
+   "count": 6,
+   "start": 0.5,
+   "down_angle_deg": 39,
+   "down_angle_var_deg": 15,
+   "rotation_deg": -90,
+   "rotation_var_deg": 30,
+   "length_ratio": 0.6,
+   "length_var": 0.3,
+   "curve_deg": 10,
+   "curve_var_deg": 10,
+   "tropism": 0.12,
+   "taper": 1,
+   "radius_ratio": 0.79,
+   "segments": 1,
+   "droop_deg": -11,
+   "upturn_deg": 11
+  }
+ ],
+ "foliage": {
+  "type": "needle",
+  "leaf_size_m": 0.22,
+  "leaf_shape": "needle_brush",
+  "cluster_m": 1.8,
+  "density": 7,
+  "start": 0.4,
+  "parent_start": 0.6,
+  "orientation": "along",
+  "needle_planes": 2,
+  "tuft_spread_deg": 22,
+  "tuft_up": 0.45,
+  "needle_normal": 0.55,
+  "needle_wrap": 0.35,
+  "translucency": 2.5,
+  "needle_scatter": 0.15,
+  "colors": {
+   "winter": [
+    80,
+    86,
+    74
+   ],
+   "spring": [
+    96,
+    104,
+    82
+   ],
+   "summer": [
+    86,
+    92,
+    78
+   ],
+   "fall": [
+    88,
+    90,
+    74
+   ]
+  },
+  "leaf_on": {
+   "winter": 1.0,
+   "spring": 1.0,
+   "summer": 1.0,
+   "fall": 1.0
+  },
+  "twist_deg": 50,
+  "clumps": {
+   "radius_m": 0.6,
+   "cards_per_clump": 2,
+   "shell": 0,
+   "flatten": 0.75,
+   "tip_bias": 1.6
+  },
+  "ao_min": 0.7,
+  "color_var": [
+   0.07,
+   0.03
+  ]
+ },
+ "twigs": {
+  "count": [
+   1,
+   2
+  ],
+  "whorl": true,
+  "length": 0.6,
+  "down_deg": 45,
+  "down_var_deg": 10,
+  "tropism": 0.2,
+  "segments": 1,
+  "radius_m": 0.014,
+  "taper": 0.4,
+  "fan_deg": 40,
+  "jitter": 0.05
+ },
+ "lod": {
+  "near_tris_budget": 2200,
+  "near_sides": [
+   8,
+   3,
+   0
+  ],
+  "mid_blobs": 5,
+  "mid_branches": 2,
+  "mid_blob_scale": 0.7,
+  "close_factor": 2,
+  "mid_planes": 1,
+  "mid_cards": 28
+ },
+ "targets": {
+  "crown_width_ratio": 0.45,
+  "crown_base_ratio": 0.4,
+  "porosity": 0.35,
+  "foliage_rg": 0.87,
+  "foliage_bg": 0.71,
+  "from": "judgement values from the drafter's reading of the sources and knowledge of the species (2026-11-04), no photographs measured; to be replaced by photo measurements: like ponderosa but a little broader and more irregular on granite; crown grey-blue-green, bark pinker"
+ },
+ "generated": {
+  "by": "pipeline/plantgen.py",
+  "version": "2",
+  "card": "library/plant_cards/pinus_jeffreyi.json",
+  "card_sha256": "557054297ec3304c",
+  "template": "pinus_ponderosa",
+  "template_common": "ponderosa pine",
+  "height_scale": 0.921
+ },
+ "notes": "Hard to tell from ponderosa at a distance; what the game can show is the bluer, greyer crown, the pinker bark, and the open, wind-shaped trees on bare granite (the wind-bent Jeffrey on Sentinel Dome, photographed by Ansel Adams and long dead, is the archetype). Its cones are larger than ponderosa's and heavy, which the generator does not draw. The bark's vanilla smell could be a field-guide line. Bears eating the large seeds is the drafter's knowledge; squirrels, chipmunks, nutcrackers and jays all harvest the seed. Elevations in the central Sierra are the drafter's knowledge; the Gymnosperm Database gives up to 3100 m typically and a 3858 m record for California.",
+ "sources": [
+  "https://www.conifers.org/pi/Pinus_jeffreyi.php"
+ ],
+ "authors": [
+  "Wild Earth (agent draft, 2026-11-04); needs local sign-off"
+ ],
+ "license": "CC BY-SA 4.0"
+}

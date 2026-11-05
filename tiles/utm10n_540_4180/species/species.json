@@ -23,7 +23,12 @@
    "gbif"
   ],
   "confidence": "unverified",
-  "occurrence_count": 1500
+  "occurrence_count": 1500,
+  "present": true,
+  "rule": "records",
+  "records_buffer": 118813,
+  "range_share": 0.4739,
+  "evidence": "118813 records within 10 km in 2011-2026 (>= 3)"
  },
  {
   "code": "buteo_jamaicensis",
@@ -49,7 +54,12 @@
    "gbif"
   ],
   "confidence": "unverified",
-  "occurrence_count": 1500
+  "occurrence_count": 1500,
+  "present": true,
+  "rule": "records",
+  "records_buffer": 80406,
+  "range_share": 0.4739,
+  "evidence": "80406 records within 10 km in 2011-2026 (>= 3)"
  },
  {
   "code": "odocoileus_hemionus",
@@ -75,7 +85,12 @@
    "gbif"
   ],
   "confidence": "unverified",
-  "occurrence_count": 197
+  "occurrence_count": 199,
+  "present": true,
+  "rule": "records",
+  "records_buffer": 1017,
+  "range_share": 0.4739,
+  "evidence": "1017 records within 10 km in 2011-2026 (>= 3)"
  },
  {
   "code": "urocyon_cinereoargenteus",
@@ -101,7 +116,12 @@
    "gbif"
   ],
   "confidence": "unverified",
-  "occurrence_count": 26
+  "occurrence_count": 26,
+  "present": true,
+  "rule": "records",
+  "records_buffer": 115,
+  "range_share": 0.4428,
+  "evidence": "115 records within 10 km in 2011-2026 (>= 3)"
  },
  {
   "code": "sciurus_griseus",
@@ -127,7 +147,12 @@
    "gbif"
   ],
   "confidence": "unverified",
-  "occurrence_count": 3
+  "occurrence_count": 3,
+  "present": true,
+  "rule": "records",
+  "records_buffer": 82,
+  "range_share": 0.1521,
+  "evidence": "82 records within 10 km in 2011-2026 (>= 3)"
  },
  {
   "code": "melanerpes_formicivorus",
@@ -153,7 +178,12 @@
    "gbif"
   ],
   "confidence": "unverified",
-  "occurrence_count": 1465
+  "occurrence_count": 1241,
+  "present": true,
+  "rule": "records",
+  "records_buffer": 8901,
+  "range_share": 0.1196,
+  "evidence": "8901 records within 10 km in 2011-2026 (>= 3)"
  },
  {
   "code": "callipepla_californica",
@@ -179,7 +209,50 @@
    "gbif"
   ],
   "confidence": "unverified",
-  "occurrence_count": 1500
+  "occurrence_count": 1500,
+  "present": true,
+  "rule": "records",
+  "records_buffer": 8778,
+  "range_share": 0.4161,
+  "evidence": "8778 records within 10 km in 2011-2026 (>= 3)"
+ },
+ {
+  "code": "oreortyx_pictus",
+  "common": "mountain quail",
+  "scientific": "Oreortyx pictus",
+  "group": "bird",
+  "role": "ambient",
+  "scale": "bird",
+  "habitat": {
+   "chaparral": 1.0,
+   "mixed": 0.8,
+   "conifer": 0.5,
+   "riparian": 0.55,
+   "oak_woodland": 0.35
+  },
+  "senses": {
+   "vision": {
+    "range_m": 300,
+    "color": "tetrachromat"
+   },
+   "hearing": {
+    "range_m": 300
+   },
+   "smell": {
+    "range_m": 20
+   }
+  },
+  "gbif_key": 2474320,
+  "sources": [
+   "gbif"
+  ],
+  "confidence": "unverified",
+  "occurrence_count": 0,
+  "present": false,
+  "rule": "absent",
+  "records_buffer": 0,
+  "range_share": 0.0,
+  "evidence": "0 records within 10 km in 2011-2026 (< 3); 0% of the tile in its range (600-3000 m on chaparral, mixed forest, conifer forest) (< 5%)"
  },
  {
   "code": "aphelocoma_californica",
@@ -205,7 +278,12 @@
    "gbif"
   ],
   "confidence": "unverified",
-  "occurrence_count": 1500
+  "occurrence_count": 1500,
+  "present": true,
+  "rule": "records",
+  "records_buffer": 87594,
+  "range_share": 0.4103,
+  "evidence": "87594 records within 10 km in 2011-2026 (>= 3)"
  },
  {
   "code": "cyanocitta_stelleri",
@@ -231,7 +309,12 @@
    "gbif"
   ],
   "confidence": "unverified",
-  "occurrence_count": 1500
+  "occurrence_count": 1500,
+  "present": true,
+  "rule": "records",
+  "records_buffer": 49170,
+  "range_share": 0.0,
+  "evidence": "49170 records within 10 km in 2011-2026 (>= 3)"
  },
  {
   "code": "cathartes_aura",
@@ -257,7 +340,12 @@
    "gbif"
   ],
   "confidence": "unverified",
-  "occurrence_count": 1500
+  "occurrence_count": 1500,
+  "present": true,
+  "rule": "records",
+  "records_buffer": 45380,
+  "range_share": 0.4739,
+  "evidence": "45380 records within 10 km in 2011-2026 (>= 3)"
  },
  {
   "code": "sylvilagus_bachmani",
@@ -283,7 +371,12 @@
    "gbif"
   ],
   "confidence": "unverified",
-  "occurrence_count": 59
+  "occurrence_count": 60,
+  "present": true,
+  "rule": "records",
+  "records_buffer": 256,
+  "range_share": 0.3918,
+  "evidence": "256 records within 10 km in 2011-2026 (>= 3)"
  },
  {
   "code": "lepus_californicus",
@@ -318,7 +411,12 @@
    "gbif"
   ],
   "confidence": "unverified",
-  "occurrence_count": 8
+  "occurrence_count": 8,
+  "present": true,
+  "rule": "records",
+  "records_buffer": 91,
+  "range_share": 0.3966,
+  "evidence": "91 records within 10 km in 2011-2026 (>= 3)"
  },
  {
   "code": "microtus_californicus",
@@ -344,7 +442,12 @@
    "gbif"
   ],
   "confidence": "unverified",
-  "occurrence_count": 166
+  "occurrence_count": 166,
+  "present": true,
+  "rule": "records",
+  "records_buffer": 141,
+  "range_share": 0.1254,
+  "evidence": "141 records within 10 km in 2011-2026 (>= 3)"
  },
  {
   "code": "canis_latrans",
@@ -370,7 +473,12 @@
    "gbif"
   ],
   "confidence": "unverified",
-  "occurrence_count": 1500
+  "occurrence_count": 1500,
+  "present": true,
+  "rule": "records",
+  "records_buffer": 3366,
+  "range_share": 0.4739,
+  "evidence": "3366 records within 10 km in 2011-2026 (>= 3)"
  },
  {
   "code": "puma_concolor",
@@ -396,7 +504,50 @@
    "gbif"
   ],
   "confidence": "unverified",
-  "occurrence_count": 1
+  "occurrence_count": 1,
+  "present": true,
+  "rule": "records",
+  "records_buffer": 8,
+  "range_share": 0.4496,
+  "evidence": "8 records within 10 km in 2011-2026 (>= 3)"
+ },
+ {
+  "code": "ursus_americanus",
+  "common": "American black bear",
+  "scientific": "Ursus americanus",
+  "group": "mammal",
+  "role": "ambient",
+  "scale": "deer",
+  "gbif_key": 2433407,
+  "habitat": {
+   "oak_woodland": 0.6,
+   "conifer": 1.0,
+   "mixed": 1.0,
+   "chaparral": 0.8,
+   "riparian": 0.8
+  },
+  "senses": {
+   "vision": {
+    "range_m": 200,
+    "color": "dichromat"
+   },
+   "hearing": {
+    "range_m": 500
+   },
+   "smell": {
+    "range_m": 2000
+   }
+  },
+  "sources": [
+   "gbif"
+  ],
+  "confidence": "unverified",
+  "occurrence_count": 0,
+  "present": false,
+  "rule": "absent",
+  "records_buffer": 2,
+  "range_share": 0.0,
+  "evidence": "2 records within 10 km in 2011-2026 (< 3); 0% of the tile in its range (800-3000 m on conifer forest, mixed forest, chaparral, riparian, oak woodland) (< 5%)"
  },
  {
   "code": "meleagris_gallopavo",
@@ -431,7 +582,12 @@
    "gbif"
   ],
   "confidence": "unverified",
-  "occurrence_count": 1020
+  "occurrence_count": 909,
+  "present": true,
+  "rule": "records",
+  "records_buffer": 3429,
+  "range_share": 0.1439,
+  "evidence": "3429 records within 10 km in 2011-2026 (>= 3)"
  },
  {
   "code": "otospermophilus_beecheyi",
@@ -465,7 +621,12 @@
    "gbif"
   ],
   "confidence": "unverified",
-  "occurrence_count": 16
+  "occurrence_count": 17,
+  "present": true,
+  "rule": "records",
+  "records_buffer": 749,
+  "range_share": 0.4229,
+  "evidence": "749 records within 10 km in 2011-2026 (>= 3)"
  },
  {
   "code": "sceloporus_occidentalis",
@@ -501,6 +662,11 @@
    "gbif"
   ],
   "confidence": "unverified",
-  "occurrence_count": 848
+  "occurrence_count": 855,
+  "present": true,
+  "rule": "records",
+  "records_buffer": 2838,
+  "range_share": 0.4739,
+  "evidence": "2838 records within 10 km in 2011-2026 (>= 3)"
  }
 ]

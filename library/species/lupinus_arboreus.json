@@ -1,0 +1,382 @@
+{
+ "id": "lupinus_arboreus",
+ "aliases": [
+  "yellow_bush_lupine",
+  "bush_lupine"
+ ],
+ "scientific": "Lupinus arboreus",
+ "common": "yellow bush lupine",
+ "form": "shrub",
+ "architectural_model": "Leeuwenberg (provisional: much-branched, flowers at the shoot ends)",
+ "deciduous": false,
+ "height_m": [
+  0.9,
+  1.8
+ ],
+ "variants": [
+  {
+   "name": "young",
+   "weight": 0.25,
+   "height_m": [
+    0.4,
+    0.9
+   ],
+   "deadwood": 0.03,
+   "set": {
+    "trunk": {
+     "stems": [
+      5,
+      9
+     ]
+    }
+   },
+   "note": "a first- or second-year plant, a small soft mound"
+  },
+  {
+   "name": "mature",
+   "weight": 0.5,
+   "seeds": 1,
+   "note": "(from the coyote brush template) the file as written: a dense, rounded, many-stemmed mound"
+  },
+  {
+   "name": "decadent",
+   "weight": 0.25,
+   "height_m": [
+    1.4,
+    2.2
+   ],
+   "crown_scale": 1.1,
+   "gnarl": 1.15,
+   "leaf_density": 0.8,
+   "deadwood": {
+    "fraction": 0.55,
+    "levels": [
+     0,
+     1
+    ],
+    "shorten": 0.8
+   },
+   "set": {
+    "trunk": {
+     "stems": [
+      10,
+      18
+     ]
+    }
+   },
+   "note": "a dying old bush (they live about seven years): grey dead stems with a few leafy shoots, often eaten from within by ghost moth larvae"
+  }
+ ],
+ "description": "A fast, short-lived evergreen lupine of the dunes and headlands, a rounded bush of soft grey-green, finger-like leaves. In spring it is covered with upright spikes of fragrant yellow pea flowers.",
+ "season_notes": {
+  "winter": "Green and growing with the rains while the dune grasses are low.",
+  "spring": "Covered in tall spikes of sweet-scented yellow flowers, loud with bees.",
+  "summer": "Hairy pods ripen and burst with a snap, throwing their seeds over the sand.",
+  "fall": "Dry pods and grey dead bushes mark the older stands among the green ones."
+ },
+ "status": "generated from a trait card, needs review in the lineup and local sign-off",
+ "habitat": {
+  "classes": {
+   "chaparral": 0.9,
+   "grassland": 0.6,
+   "barren": 0.5,
+   "oak_woodland": 0.05,
+   "mixed_forest": 0.0,
+   "conifer_forest": 0.0,
+   "riparian": 0.05
+  },
+  "floor": 0.9,
+  "mid": 1.0,
+  "steep": 0.8,
+  "north": 0.9,
+  "shade": 0.05,
+  "disturbed": 1.6
+ },
+ "relations": {
+  "eaten_by": [
+   {
+    "animal": "callipepla_californica",
+    "part": "seeds",
+    "seasons": [
+     "summer"
+    ]
+   },
+   {
+    "animal": "otospermophilus_beecheyi",
+    "part": "seeds",
+    "seasons": [
+     "summer"
+    ]
+   },
+   {
+    "animal": "sylvilagus_bachmani",
+    "part": "leaves",
+    "seasons": [
+     "winter",
+     "spring"
+    ]
+   },
+   {
+    "animal": "odocoileus_hemionus",
+    "part": "browse",
+    "seasons": [
+     "spring"
+    ]
+   }
+  ],
+  "cover_for": [
+   "sylvilagus_bachmani",
+   "callipepla_californica",
+   "microtus_californicus"
+  ]
+ },
+ "trunk": {
+  "length_ratio": 0.9,
+  "radius_ratio": 0.015,
+  "taper": 0.85,
+  "flare": 1.4,
+  "bole_ratio": 0.05,
+  "base_size": 0.04,
+  "curve_deg": 10,
+  "curve_var_deg": 16,
+  "segments": 3,
+  "lean_deg": 0,
+  "stems": [
+   3,
+   6
+  ],
+  "stem_spread_deg": 48,
+  "split_prob": 0.0,
+  "split_count": 2,
+  "split_angle_deg": 20,
+  "sinuous_deg": 8,
+  "bark_rgb": [
+   116,
+   106,
+   92
+  ],
+  "bark_pattern": "smooth",
+  "twig_rgb": [
+   116,
+   114,
+   84
+  ],
+  "bark": {
+   "tile_m": [
+    0.1,
+    0.35
+   ]
+  }
+ },
+ "crown": {
+  "shape": "hemispherical",
+  "envelope": {
+   "profile": [
+    [
+     0.0,
+     0.45
+    ],
+    [
+     0.15,
+     0.62
+    ],
+    [
+     0.35,
+     0.7
+    ],
+    [
+     0.55,
+     0.7
+    ],
+    [
+     0.75,
+     0.6
+    ],
+    [
+     0.9,
+     0.42
+    ],
+    [
+     1.0,
+     0.15
+    ]
+   ],
+   "lobes": 6,
+   "lobe_depth": 0.12,
+   "asymmetry": 0.15,
+   "fill": 0.6,
+   "edge": 1.1
+  }
+ },
+ "levels": [
+  {
+   "count": 4,
+   "start": 0.05,
+   "down_angle_deg": 51,
+   "down_angle_var_deg": 8,
+   "rotation_deg": 140,
+   "rotation_var_deg": 30,
+   "length_ratio": 0.55,
+   "length_var": 0.3,
+   "curve_deg": 14,
+   "curve_var_deg": 16,
+   "tropism": 0.05,
+   "taper": 0.9,
+   "radius_ratio": 0.6,
+   "segments": 1,
+   "droop_deg": 3
+  },
+  {
+   "count": 5,
+   "start": 0.25,
+   "down_angle_deg": 32,
+   "down_angle_var_deg": 12,
+   "rotation_deg": 140,
+   "rotation_var_deg": 30,
+   "length_ratio": 0.4,
+   "length_var": 0.3,
+   "curve_deg": 10,
+   "curve_var_deg": 18,
+   "tropism": 0.1,
+   "taper": 1.0,
+   "radius_ratio": 0.5,
+   "segments": 1
+  }
+ ],
+ "foliage": {
+  "type": "broadleaf",
+  "leaf_size_m": 0.05,
+  "leaf_shape": "palmate_compound",
+  "cluster_m": 0.34,
+  "density": 24,
+  "cards_per_m2": 13.5,
+  "start": 0.01,
+  "parent_start": 0.01,
+  "orientation": "outward",
+  "colors": {
+   "winter": [
+    108,
+    128,
+    90
+   ],
+   "spring": [
+    116,
+    142,
+    96
+   ],
+   "summer": [
+    112,
+    132,
+    96
+   ],
+   "fall": [
+    114,
+    128,
+    94
+   ]
+  },
+  "leaf_on": {
+   "winter": 1.0,
+   "spring": 1.0,
+   "summer": 1.0,
+   "fall": 1.0
+  },
+  "clumps": {
+   "radius_m": 0.25,
+   "cards_per_clump": 6,
+   "shell": 0.02,
+   "flatten": 0.85,
+   "tip_bias": 0.7
+  },
+  "ao_min": 0.74,
+  "color_var": [
+   0.08,
+   0.05
+  ],
+  "flowers": {
+   "season": "spring",
+   "months": [
+    3,
+    6
+   ],
+   "form": "candle",
+   "rgb": [
+    238,
+    214,
+    92
+   ],
+   "size_m": 0.18,
+   "density": 0.55,
+   "before_leaves": false
+  }
+ },
+ "deadwood": {
+  "fraction": 0.12,
+  "levels": [
+   0,
+   1
+  ],
+  "shorten": 0.75,
+  "rgb": [
+   138,
+   132,
+   124
+  ]
+ },
+ "twigs": {
+  "count": [
+   2,
+   3
+  ],
+  "length": 0.7,
+  "down_deg": 30,
+  "down_var_deg": 14,
+  "curve_var_deg": 22,
+  "segments": 1,
+  "radius_m": 0.004,
+  "tropism": 0.1,
+  "taper": 0.6,
+  "fan_deg": 50,
+  "jitter": 0.25
+ },
+ "lod": {
+  "near_tris_budget": 1000,
+  "near_sides": [
+   3,
+   3,
+   0
+  ],
+  "mid_blobs": 3,
+  "mid_branches": 0,
+  "mid_sides": [
+   0,
+   0
+  ],
+  "mid_cards": 24
+ },
+ "targets": {
+  "crown_width_ratio": 1.3,
+  "crown_base_ratio": 0.05,
+  "porosity": 0.18,
+  "foliage_rg": 0.7,
+  "foliage_bg": 0.51,
+  "from": "judgement values, no photographs measured: a dense rounded bush about as wide as tall or wider, leafy to the sand"
+ },
+ "generated": {
+  "by": "pipeline/plantgen.py",
+  "version": "2",
+  "card": "library/plant_cards/lupinus_arboreus.json",
+  "card_sha256": "79d694d9d89186de",
+  "template": "baccharis_pilularis",
+  "template_common": "coyote brush",
+  "height_scale": 0.771
+ },
+ "notes": "Grown from coyote brush for its rounded, low-branching shrub form, with palmate leaves (5-12 silky leaflets 2-6 cm long, Wikipedia after Jepson) in a brighter, greener grey than coyote brush and fewer, stouter stems. Flower colour is supported: foliage.flowers draws yellow candles (the racemes reach about 30 cm) from March to June; lilac-flowered plants also occur and are not drawn. The library's silver bush lupine (lupinus_albifrons) is a forb record drawn as a flat card by forbs.js, not a grown shrub, so neither template nor stand-in; coyote brush stands in. The species lives only about seven years, so stands are mixed young, mature and dead, the decadent class here carrying more grey dead stems than coyote brush's. Doubts: the native range is uncertain because it has been planted so widely; around San Francisco it is generally treated as native, while north of Point Reyes (Humboldt dunes) and in many countries it is an invasive nitrogen-fixer. Wildlife from sources read is thin: the animal list is a judgement (lupine seeds are taken by quail and ground squirrels as in the library's other lupines; voles and brush rabbits shelter under the bushes). Deer mice and the ghost moth whose larvae bore its roots are not in the animal library.",
+ "sources": [
+  "Wikipedia, Lupinus arboreus (cites Jepson eFlora tid 31731; the eFlora page itself would not load), https://en.wikipedia.org/wiki/Lupinus_arboreus, read 2026-11-04"
+ ],
+ "authors": [
+  "Wild Earth (agent draft, 2026-11-04); needs local sign-off"
+ ],
+ "license": "CC BY-SA 4.0"
+}

@@ -1,0 +1,193 @@
+{
+ "id": "ericameria_ericoides",
+ "scientific": "Ericameria ericoides",
+ "common": "mock heather",
+ "aliases": [
+  "mock_heather",
+  "california_goldenbush"
+ ],
+ "family": "Asteraceae",
+ "form": "shrub",
+ "deciduous": false,
+ "template": "adenostoma_fasciculatum",
+ "height_m": [
+  0.4,
+  1.1
+ ],
+ "variants_height_m": {
+  "young": [
+   0.2,
+   0.5
+  ],
+  "decadent": [
+   0.8,
+   1.4
+  ]
+ },
+ "crown": {
+  "shape": "hemispherical",
+  "profile": [
+   [
+    0.0,
+    0.5
+   ],
+   [
+    0.15,
+    0.68
+   ],
+   [
+    0.35,
+    0.76
+   ],
+   [
+    0.55,
+    0.75
+   ],
+   [
+    0.75,
+    0.64
+   ],
+   [
+    0.9,
+    0.44
+   ],
+   [
+    1.0,
+    0.16
+   ]
+  ],
+  "lobes": 6,
+  "lobe_depth": 0.12,
+  "asymmetry": 0.12,
+  "fill": 0.5,
+  "edge": 1.1
+ },
+ "foliage": {
+  "colors": {
+   "winter": [
+    90,
+    102,
+    70
+   ],
+   "spring": [
+    100,
+    116,
+    74
+   ],
+   "summer": [
+    96,
+    108,
+    72
+   ],
+   "fall": [
+    116,
+    112,
+    70
+   ]
+  },
+  "leaf_size_m": 0.008,
+  "tips": {
+   "spring": [
+    104,
+    118,
+    76
+   ],
+   "summer": [
+    178,
+    160,
+    78
+   ],
+   "fall": [
+    222,
+    186,
+    62
+   ],
+   "winter": [
+    146,
+    126,
+    94
+   ]
+  }
+ },
+ "trunk": {
+  "bark_rgb": [
+   110,
+   98,
+   86
+  ],
+  "bark_pattern": "shreddy",
+  "stems": [
+   10,
+   18
+  ]
+ },
+ "targets": {
+  "crown_width_ratio": 1.5,
+  "crown_base_ratio": 0.05,
+  "porosity": 0.15,
+  "from": "judgement values, no photographs measured: a low, dense, rounded dune mound wider than tall (Santa Barbara Botanic Garden listing: about 0.3-0.9 m high by 0.6-1.2 m wide)"
+ },
+ "patch": {
+  "trunk": {
+   "base_size": 0.08,
+   "stem_spread_deg": 52
+  }
+ },
+ "variant_patches": {
+  "young": {
+   "note": "a small dense tuft on open sand"
+  },
+  "decadent": {
+   "note": "an old mound half buried in sand, grey dead stems among the green"
+  }
+ },
+ "description": "A low, dense, heath-like shrub of the coastal dunes and sandy bluffs, its upright stems crowded with tiny needle-like leaves in tufts. From late summer into fall it is covered with small golden-yellow flower heads.",
+ "season_notes": {
+  "winter": "Dark green tufts on the grey dunes, last fall's flower heads brown and fluffy.",
+  "spring": "New growth freshens the green and the stems lengthen.",
+  "summer": "Buds gather at the branch tips and the first yellow heads open in August.",
+  "fall": "The mounds glow golden with flowers, alive with late bees and butterflies."
+ },
+ "habitat": {
+  "classes": {
+   "barren": 0.6,
+   "chaparral": 0.9,
+   "grassland": 0.4,
+   "oak_woodland": 0.05,
+   "mixed_forest": 0.0,
+   "conifer_forest": 0.0,
+   "riparian": 0.0
+  },
+  "floor": 1.0,
+  "mid": 1.0,
+  "steep": 0.8,
+  "north": 0.8,
+  "shade": 0.02,
+  "disturbed": 0.8
+ },
+ "relations": {
+  "eaten_by": [],
+  "cover_for": [
+   "sylvilagus_bachmani",
+   "callipepla_californica"
+  ]
+ },
+ "range": {
+  "elev_m": [
+   0,
+   150
+  ],
+  "where": "coastal dunes, sandy bluffs and coastal sage scrub from the northern Bay Area (San Francisco's dune remnants) south to the Los Angeles area",
+  "coastal": true
+ },
+ "stand_in": "adenostoma_fasciculatum",
+ "notes": "Grown from chamise for the many stems and the fascicled needle-leaf foliage (leaves about 1 cm, in comb-like fans, Wikipedia), but as a low, rounded, leafy-to-the-ground mound rather than chamise's tall open vase, and in a slightly brighter green. The wand tips (foliage.tips, as chamise) carry the season: golden yellow in fall when it flowers (Calscape: summer and fall), brown seed heads in winter. Doubts: no source read gave a firm height (Wikipedia: rarely near 1 m; nursery and Calscape listings 0.3-1.2 m), and no source read named animals that eat it, so eaten_by is empty; it gives cover to brush rabbits and quail on the dunes and nectar to insects, and white-crowned sparrows forage around it (not in the animal library). The Jepson eFlora page would not load (a verification wall), so Jepson is not cited.",
+ "sources": [
+  "Wikipedia, Ericameria ericoides, https://en.wikipedia.org/wiki/Ericameria_ericoides, read 2026-11-04",
+  "Calflora, Ericameria ericoides (coastal strand, coastal sage scrub), https://www.calflora.org/app/taxon?crn=3080, read 2026-11-04",
+  "Calscape and nursery listings for Ericameria ericoides (0.3-1.2 m, yellow summer-fall), seen in search results read 2026-11-04"
+ ],
+ "authors": [
+  "Wild Earth (agent draft, 2026-11-04); needs local sign-off"
+ ]
+}

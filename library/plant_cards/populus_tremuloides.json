@@ -1,0 +1,227 @@
+{
+ "id": "populus_tremuloides",
+ "scientific": "Populus tremuloides",
+ "common": "quaking aspen",
+ "aliases": [
+  "quaking_aspen",
+  "aspen"
+ ],
+ "family": "Salicaceae",
+ "form": "tree",
+ "deciduous": true,
+ "template": "populus_fremontii",
+ "height_m": [
+  6,
+  15
+ ],
+ "stature": {
+  "typical_m": 10,
+  "tall_m": 18,
+  "record_m": null,
+  "source": "typical: FEIS, usually under 15 m tall and 40 cm across; tall: the drafter's estimate for the best Sierra groves; no record height was read; read 2026-11-04"
+ },
+ "variants_height_m": {
+  "young": [
+   2,
+   6
+  ],
+  "veteran": [
+   14,
+   20
+  ]
+ },
+ "crown": {
+  "shape": "cylindrical",
+  "profile": [
+   [
+    0.4,
+    0.13
+   ],
+   [
+    0.52,
+    0.19
+   ],
+   [
+    0.65,
+    0.22
+   ],
+   [
+    0.78,
+    0.21
+   ],
+   [
+    0.9,
+    0.15
+   ],
+   [
+    1.0,
+    0.04
+   ]
+  ],
+  "lobes": 4,
+  "lobe_depth": 0.18,
+  "asymmetry": 0.15,
+  "fill": 0.4,
+  "edge": 1.08
+ },
+ "foliage": {
+  "colors": {
+   "winter": [
+    160,
+    158,
+    146
+   ],
+   "spring": [
+    124,
+    152,
+    82
+   ],
+   "summer": [
+    100,
+    124,
+    80
+   ],
+   "fall": [
+    204,
+    168,
+    64
+   ]
+  },
+  "leaf_on": {
+   "winter": 0.0,
+   "spring": 0.9,
+   "summer": 1.0,
+   "fall": 0.8
+  },
+  "leaf_size_m": 0.05,
+  "leaf_shape": "oval"
+ },
+ "trunk": {
+  "bark_rgb": [
+   200,
+   198,
+   184
+  ],
+  "bark_pattern": "smooth",
+  "stems": [
+   1,
+   1
+  ],
+  "lean_deg": 3,
+  "radius_ratio": 0.022,
+  "taper": 0.8,
+  "split_prob": 0.05,
+  "stem_spread_deg": 0,
+  "length_ratio": 0.75
+ },
+ "targets": {
+  "crown_width_ratio": 0.4,
+  "crown_base_ratio": 0.45,
+  "porosity": 0.3,
+  "fall_rg": 1.54,
+  "fall_bg": 0.13,
+  "from": "judgement values from the drafter's reading of the sources and knowledge of the species (2026-11-04), no photographs measured; to be replaced by photo measurements: slender, straight white trunks bare for the lower half, a short narrow rounded crown; trees stand in close clonal groves"
+ },
+ "variant_patches": {
+  "young": {
+   "set": {
+    "trunk": {
+     "split_prob": 0.02
+    }
+   },
+   "note": "a sucker thicket: thin, straight, green-white stems a few metres tall, packed close"
+  },
+  "veteran": {
+   "set": {
+    "trunk": {
+     "split_prob": 0.1,
+     "split_count": 2,
+     "lean_deg": 5
+    }
+   },
+   "note": "an old clone tree: a taller, thicker white trunk scarred black at the base, a broader crown with a few dead limbs"
+  }
+ },
+ "description": "A slender deciduous tree 6-15 m tall with smooth, chalky white to greenish bark marked by black scars and knots, and a small, narrow crown of round leaves on flattened stalks that tremble and flash in the least breeze. It grows in clonal groves, many trunks from one root system, on moist meadow edges, seeps, talus and avalanche paths of the high country, about 1800-3000 m, and turns the slopes gold in early fall.",
+ "season_notes": {
+  "winter": "Bare white trunks and grey twigs, the grove like a stand of pale poles in the snow.",
+  "spring": "Fuzzy grey catkins before the leaves, then bright yellow-green leaves in May-June.",
+  "summer": "The leaves flutter and whisper in every breeze, dark green above, pale below.",
+  "fall": "Gold, sometimes orange or red, from late September; one clone turns all at once, so groves change colour patch by patch."
+ },
+ "habitat": {
+  "classes": {
+   "riparian": 0.8,
+   "conifer_forest": 0.5,
+   "grassland": 0.2,
+   "mixed_forest": 0.2,
+   "barren": 0.1
+  },
+  "floor": 1.8,
+  "mid": 0.8,
+  "steep": 0.5,
+  "north": 1.1,
+  "shade": 0.15,
+  "disturbed": 1.3,
+  "riparian": {
+   "zones": {
+    "terrace": 1.0,
+    "bank": 0.6,
+    "pond_terrace": 0.6,
+    "pond_shore": 0.3
+   },
+   "orders": [
+    1,
+    4
+   ],
+   "permanence": "intermittent",
+   "water": "Needs moist ground through the summer: meadow edges, seeps and springs, the banks of small streams, and talus fed by snowmelt."
+  }
+ },
+ "relations": {
+  "eaten_by": [
+   {
+    "animal": "odocoileus_hemionus",
+    "part": "browse",
+    "seasons": [
+     "spring",
+     "summer",
+     "fall"
+    ]
+   },
+   {
+    "animal": "odocoileus_hemionus",
+    "part": "leaves",
+    "seasons": [
+     "summer",
+     "fall"
+    ]
+   },
+   {
+    "animal": "ursus_americanus",
+    "part": "leaves",
+    "seasons": [
+     "spring"
+    ]
+   }
+  ],
+  "cover_for": [
+   "odocoileus_hemionus"
+  ]
+ },
+ "range": {
+  "elev_m": [
+   1800,
+   3000
+  ],
+  "where": "meadow edges, seeps and avalanche paths of the upper montane and subalpine: Tioga Pass, Tuolumne Meadows' fringes, Lee Vining canyon; more on the east side"
+ },
+ "stand_in": "populus_fremontii",
+ "notes": "Unlike the Fremont cottonwood template (a broad, low-forking floodplain giant with grey furrowed bark), aspen is a slim, straight, single-trunked tree with white bark and a small, high crown; the trunk, crown and age-class patches here undo the template's forks and lean. Its form in a scene comes from the clone: dozens to hundreds of near-identical stems, all one plant, all leafing and turning together, which the species mix should place as dense patches with one fall colour per patch, not as scattered trees. Leaves are nearly round with a short point; the flattened petiole makes them quake (the generator's leaf flutter, if any, is the template's). FEIS: deer eat the leaves, buds, twigs and sprouts, and aspen groves are important hiding and fawning cover; red-breasted sapsuckers, woodpeckers and many cavity nesters use the trees (not in the library). The bear entry is the drafter's knowledge. FEIS notes red fir slopes in the Emigrant Wilderness converting to aspen after fire, and aspen among whitebark and lodgepole near Sonora Pass. The fall target ratios are the linear r/g and b/g of the card's fall colour, a judgement value.",
+ "sources": [
+  "https://www.fs.usda.gov/database/feis/plants/tree/poptre/all.html"
+ ],
+ "authors": [
+  "Wild Earth (agent draft, 2026-11-04); needs local sign-off"
+ ]
+}

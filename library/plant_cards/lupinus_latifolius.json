@@ -1,0 +1,126 @@
+{
+ "id": "lupinus_latifolius",
+ "scientific": "Lupinus latifolius var. subalpinus",
+ "common": "subalpine lupine",
+ "aliases": [
+  "subalpine_lupine",
+  "broadleaf_lupine",
+  "lupinus_arcticus_subalpinus",
+  "lupinus_latifolius_subalpinus"
+ ],
+ "family": "Fabaceae",
+ "form": "forb",
+ "deciduous": true,
+ "template": "lupinus_bicolor",
+ "regions": [
+  "pacific_northwest"
+ ],
+ "height_m": [
+  0.25,
+  0.7
+ ],
+ "patch": {
+  "lifespan": "perennial",
+  "native": true,
+  "ground": {
+   "habit": "mound",
+   "leaf": {
+    "shape": "palmate",
+    "size_m": 0.07,
+    "rgb": [
+     92,
+     124,
+     82
+    ]
+   },
+   "flower": {
+    "shape": "spike",
+    "rgb": [
+     92,
+     96,
+     196
+    ],
+    "size_m": 0.12,
+    "months": [
+     7,
+     8
+    ],
+    "per_plant": 5
+   },
+   "height_by_month": [
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.05,
+    0.45,
+    0.9,
+    1.0,
+    0.85,
+    0.5,
+    0.0,
+    0.0
+   ],
+   "dead_rgb": [
+    150,
+    132,
+    96
+   ],
+   "density": 1.2
+  }
+ },
+ "description": "The blue of the Olympic high meadows: a leafy perennial lupine, 25-70 cm, with hand-shaped leaves of five to eleven leaflets and dense spikes of blue-purple pea flowers. In late July whole slopes of Hurricane Ridge and the Bailey Range turn blue with it, mixed with paintbrush and aster.",
+ "season_notes": {
+  "winter": "Gone below ground under the snowpack.",
+  "spring": "Leaves push up through the wet ground as the snow melts in June.",
+  "summer": "Blue-purple spikes in July and August, the banner's white patch turning purple after pollination.",
+  "fall": "Hairy pods split and twist; the stalks dry tan before the first snow."
+ },
+ "habitat": {
+  "classes": {
+   "grassland": 1.0,
+   "barren": 0.5,
+   "conifer_forest": 0.2
+  },
+  "floor": 1.1,
+  "mid": 1.0,
+  "steep": 0.8,
+  "north": 0.9,
+  "shade": 0.1,
+  "disturbed": 0.8
+ },
+ "relations": {
+  "eaten_by": [
+   {
+    "animal": "odocoileus_hemionus",
+    "part": "leaves",
+    "seasons": [
+     "summer"
+    ]
+   },
+   {
+    "animal": "odocoileus_hemionus",
+    "part": "flowers",
+    "seasons": [
+     "summer"
+    ]
+   }
+  ],
+  "cover_for": []
+ },
+ "range": {
+  "elev_m": [
+   1200,
+   2000
+  ],
+  "where": "subalpine meadows and alpine ridges of the Olympic and Cascade mountains (var. subalpinus, Burke): Hurricane Ridge, Obstruction Point, Seven Lakes Basin, the Bailey Range; the species from Alaska to California"
+ },
+ "stand_in": "lupinus_bicolor",
+ "notes": "Drawn from miniature lupine (same genus, the 'mound' habit with 'palmate' leaves and a blue 'spike') as a bigger perennial with a subalpine calendar: under snow November to May, up in June, flowering July-August, the stalks dried tan by October. Burke: 0.3-2.4 m for the species (the subalpine variety is the short end), 5-11 leaflets 4-10 cm long, racemes 16-60 cm, flowers blue, purple or white, June-August, var. subalpinus in the Olympics and Cascades. Burke files the Olympic plants under Lupinus latifolius var. subalpinus; some floras (and some of Burke's photo captions) use Lupinus arcticus subsp. subalpinus for the same plants, so that name is an alias; which is current needs a local botanist. Black-tailed deer graze it; Olympic marmots eat lupine heavily, and elk and mountain goats graze the meadows; only the deer is in the animal library. The forb slot limit noted on the sword fern card applies.",
+ "sources": [
+  "Burke Herbarium image collection (WTU), Lupinus latifolius, https://burkeherbarium.org/imagecollection/taxon.php?Taxon=Lupinus%20latifolius, read 2026-11-04"
+ ],
+ "authors": [
+  "Wild Earth (agent draft, 2026-11-04); needs local sign-off"
+ ]
+}

@@ -1,0 +1,170 @@
+{
+ "tile": "utm11n_270_4180",
+ "generated": "2026-11-05T06:18:44Z",
+ "games": {
+  "acorn": {
+   "seed": 3322646924,
+   "players": [
+    "aphelocoma_californica",
+    "callipepla_californica",
+    "canis_latrans",
+    "corvus_corax",
+    "cyanocitta_stelleri",
+    "melanerpes_formicivorus",
+    "meleagris_gallopavo",
+    "odocoileus_hemionus",
+    "oreortyx_pictus",
+    "otospermophilus_beecheyi",
+    "sciurus_griseus",
+    "urocyon_cinereoargenteus",
+    "ursus_americanus"
+   ],
+   "hotspots": [
+    [
+     585.6,
+     6711.7,
+     90
+    ],
+    [
+     6411.4,
+     6441.4,
+     90
+    ],
+    [
+     915.9,
+     5810.8,
+     90
+    ],
+    [
+     1606.6,
+     5090.1,
+     90
+    ],
+    [
+     9955.0,
+     5090.1,
+     90
+    ],
+    [
+     9684.7,
+     5060.1,
+     90
+    ],
+    [
+     9864.9,
+     4970.0,
+     90
+    ],
+    [
+     9504.5,
+     4849.8,
+     90
+    ],
+    [
+     585.6,
+     6711.7,
+     90
+    ],
+    [
+     6411.4,
+     6441.4,
+     90
+    ],
+    [
+     915.9,
+     5810.8,
+     90
+    ],
+    [
+     1606.6,
+     5090.1,
+     90
+    ],
+    [
+     9955.0,
+     5090.1,
+     90
+    ],
+    [
+     9684.7,
+     5060.1,
+     90
+    ],
+    [
+     9864.9,
+     4970.0,
+     90
+    ],
+    [
+     9504.5,
+     4849.8,
+     90
+    ],
+    [
+     585.6,
+     6711.7,
+     90
+    ],
+    [
+     6411.4,
+     6441.4,
+     90
+    ],
+    [
+     915.9,
+     5810.8,
+     90
+    ],
+    [
+     1606.6,
+     5090.1,
+     90
+    ],
+    [
+     9955.0,
+     5090.1,
+     90
+    ],
+    [
+     9684.7,
+     5060.1,
+     90
+    ],
+    [
+     9864.9,
+     4970.0,
+     90
+    ],
+    [
+     9504.5,
+     4849.8,
+     90
+    ]
+   ],
+   "resource": "acorn_mast",
+   "client": "client/src/acorns.js",
+   "world": "server.py GameWorld",
+   "playable_here": true
+  },
+  "dig": {
+   "seed": 1280141453,
+   "players": [],
+   "hotspots": [],
+   "resource": "burrow",
+   "client": "client/src/dig.js",
+   "world": "digworld.py",
+   "playable_here": false
+  },
+  "carrion": {
+   "seed": 3594706315,
+   "players": [
+    "corvus_corax"
+   ],
+   "hotspots": [],
+   "resource": null,
+   "client": "client/src/carrion.js",
+   "world": "carrionworld.py",
+   "playable_here": true
+  }
+ }
+}

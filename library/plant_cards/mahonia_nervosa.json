@@ -1,0 +1,253 @@
+{
+ "id": "mahonia_nervosa",
+ "scientific": "Mahonia nervosa",
+ "common": "dwarf Oregon grape",
+ "aliases": [
+  "dwarf_oregon_grape",
+  "cascade_oregon_grape",
+  "berberis_nervosa",
+  "low_oregon_grape"
+ ],
+ "family": "Berberidaceae",
+ "form": "shrub",
+ "deciduous": false,
+ "template": "toxicodendron_diversilobum",
+ "regions": [
+  "pacific_northwest",
+  "california"
+ ],
+ "height_m": [
+  0.2,
+  0.6
+ ],
+ "variants_height_m": {
+  "low": [
+   0.1,
+   0.25
+  ],
+  "thicket": [
+   0.5,
+   1.0
+  ]
+ },
+ "crown": {
+  "shape": "hemispherical",
+  "profile": [
+   [
+    0.0,
+    0.5
+   ],
+   [
+    0.25,
+    0.6
+   ],
+   [
+    0.5,
+    0.6
+   ],
+   [
+    0.75,
+    0.5
+   ],
+   [
+    0.9,
+    0.32
+   ],
+   [
+    1.0,
+    0.1
+   ]
+  ],
+  "lobes": 6,
+  "lobe_depth": 0.12,
+  "asymmetry": 0.2,
+  "fill": 0.5,
+  "edge": 1.08
+ },
+ "foliage": {
+  "colors": {
+   "winter": [
+    104,
+    64,
+    58
+   ],
+   "spring": [
+    124,
+    116,
+    70
+   ],
+   "summer": [
+    56,
+    82,
+    52
+   ],
+   "fall": [
+    70,
+    82,
+    52
+   ]
+  },
+  "leaf_on": {
+   "winter": 1.0,
+   "spring": 1.0,
+   "summer": 1.0,
+   "fall": 1.0
+  },
+  "leaf_on_by_month": [
+   1.0,
+   1.0,
+   1.0,
+   1.0,
+   1.0,
+   1.0,
+   1.0,
+   1.0,
+   1.0,
+   1.0,
+   1.0,
+   1.0
+  ],
+  "leaf_shape": "pinnate_compound",
+  "leaflets": [
+   11,
+   17
+  ],
+  "leaflet_ratio": 0.18,
+  "leaf_size_m": 0.3,
+  "flowers": {
+   "season": "spring",
+   "months": [
+    4,
+    5
+   ],
+   "form": "candle",
+   "rgb": [
+    236,
+    206,
+    52
+   ],
+   "size_m": 0.1,
+   "density": 0.3,
+   "before_leaves": false
+  },
+  "berries": {
+   "season": "summer",
+   "months": [
+    8,
+    10
+   ],
+   "form": "cluster",
+   "rgb": [
+    66,
+    76,
+    122
+   ],
+   "size_m": 0.05,
+   "density": 0.35
+  }
+ },
+ "trunk": {
+  "bark_rgb": [
+   120,
+   96,
+   70
+  ],
+  "bark_pattern": "smooth",
+  "stems": [
+   3,
+   8
+  ],
+  "stem_spread_deg": 40
+ },
+ "targets": {
+  "crown_width_ratio": 1.4,
+  "crown_base_ratio": 0.2,
+  "porosity": 0.3,
+  "from": "judgement values from the drafter's reading of the sources and knowledge of the species (2026-11-04), no photographs measured; to be replaced by photo measurements: a knee-high tuft of long, stiff, glossy pinnate leaves fanning from short stems, in loose colonies across the forest floor"
+ },
+ "variant_patches": {
+  "low": {
+   "set": {
+    "trunk": {
+     "stems": [
+      1,
+      3
+     ]
+    }
+   },
+   "note": "a single tuft of a few leaves in deep shade"
+  },
+  "thicket": {
+   "set": {
+    "trunk": {
+     "stems": [
+      6,
+      12
+     ]
+    }
+   },
+   "note": "a dense colony on a sunnier bench or old burn"
+  }
+ },
+ "description": "A low evergreen of the conifer forest floor, 20-60 cm, whose long leaves of eleven to twenty-one glossy, spiny-toothed leaflets fan out from short stems like holly fronds. It spreads by rhizomes into loose colonies, flowers in upright yellow spikes in spring and hangs out clusters of powdery blue berries in late summer.",
+ "season_notes": {
+  "winter": "Evergreen; leaves in the open and after cold snaps turn a deep reddish-purple.",
+  "spring": "Erect spikes of bright yellow flowers, April-May; new leaves bronze.",
+  "summer": "Leathery dark-green leaves; berries swelling green.",
+  "fall": "Sour, dark blue berries with a white bloom, August to October."
+ },
+ "habitat": {
+  "classes": {
+   "conifer_forest": 1.0,
+   "mixed_forest": 0.9,
+   "oak_woodland": 0.3
+  },
+  "floor": 0.9,
+  "mid": 1.0,
+  "steep": 1.0,
+  "north": 1.1,
+  "shade": 0.8,
+  "disturbed": 0.5
+ },
+ "relations": {
+  "eaten_by": [
+   {
+    "animal": "odocoileus_hemionus",
+    "part": "browse",
+    "seasons": [
+     "winter"
+    ]
+   },
+   {
+    "animal": "odocoileus_hemionus",
+    "part": "berries",
+    "seasons": [
+     "fall"
+    ]
+   },
+   {
+    "animal": "cyanocitta_stelleri",
+    "part": "berries",
+    "seasons": [
+     "fall"
+    ]
+   }
+  ],
+  "cover_for": []
+ },
+ "range": {
+  "elev_m": [
+   0,
+   1500
+  ],
+  "where": "the floor of the Olympic lowland and montane conifer forests, drier ground than the sword fern's; British Columbia to central California, low to middle elevations (FEIS)"
+ },
+ "stand_in": "toxicodendron_diversilobum",
+ "notes": "Grown from poison oak (a low, many-stemmed shrub with compound leaves, flower spikes and berry clusters) as an evergreen with long pinnate leaves: leaflets 11-17 (FEIS 7-21), each about 0.18 of the leaf. The template's deciduous months are replaced (leaf_on_by_month all 1). The real leaflets are holly-like, spiny-toothed and glossy; the drawn ones are plain pinnate_compound leaflets. Leaves 25-45 cm (drafter's knowledge; FEIS gives no length). FEIS: black-tailed deer browse it in some areas and eat the fruit; Roosevelt elk make moderate winter use of it; white-footed voles eat the foliage; small birds and mammals eat the fruit. Only the deer and Steller's jay are in the animal library. Ranked under Berberis nervosa by some floras.",
+ "sources": [
+  "FEIS, Mahonia nervosa, https://www.fs.usda.gov/database/feis/plants/shrub/mahner/all.html, read 2026-11-04"
+ ],
+ "authors": [
+  "Wild Earth (agent draft, 2026-11-04); needs local sign-off"
+ ]
+}

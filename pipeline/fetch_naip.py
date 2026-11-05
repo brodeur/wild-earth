@@ -95,7 +95,8 @@ def fetch_naip(tile: Tile, force=False) -> dict:
     try:
         data, meta = _from_planetary_computer(tile, n)
     except Exception as e:  # noqa: BLE001
-        print(f"planetary computer failed ({e}); falling back to USGS NAIP Plus")
+        from . import runlog
+        runlog.fallback(f"Planetary Computer NAIP failed ({str(e)[:160]}); USGS NAIP Plus chips", source="usgs_naip")
         data, n, meta = _from_usgs(tile)
     profile = {
         "driver": "GTiff", "dtype": "uint8", "count": 3, "width": n, "height": n,

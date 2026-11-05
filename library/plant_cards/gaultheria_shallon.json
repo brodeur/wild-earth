@@ -1,0 +1,243 @@
+{
+ "id": "gaultheria_shallon",
+ "scientific": "Gaultheria shallon",
+ "common": "salal",
+ "aliases": [
+  "salal"
+ ],
+ "family": "Ericaceae",
+ "form": "shrub",
+ "deciduous": false,
+ "template": "frangula_californica",
+ "height_m": [
+  0.5,
+  1.8
+ ],
+ "variants_height_m": {
+  "young": [
+   0.2,
+   0.6
+  ],
+  "old": [
+   1.5,
+   2.5
+  ]
+ },
+ "crown": {
+  "shape": "hemispherical",
+  "profile": [
+   [
+    0.0,
+    0.6
+   ],
+   [
+    0.15,
+    0.78
+   ],
+   [
+    0.35,
+    0.85
+   ],
+   [
+    0.55,
+    0.82
+   ],
+   [
+    0.75,
+    0.7
+   ],
+   [
+    0.9,
+    0.48
+   ],
+   [
+    1.0,
+    0.16
+   ]
+  ],
+  "lobes": 6,
+  "lobe_depth": 0.1,
+  "asymmetry": 0.15,
+  "fill": 0.6,
+  "edge": 1.07
+ },
+ "foliage": {
+  "colors": {
+   "winter": [
+    78,
+    86,
+    58
+   ],
+   "spring": [
+    108,
+    124,
+    72
+   ],
+   "summer": [
+    80,
+    96,
+    58
+   ],
+   "fall": [
+    80,
+    92,
+    58
+   ]
+  },
+  "leaf_size_m": 0.075,
+  "flowers": {
+   "season": "spring",
+   "months": [
+    4,
+    6
+   ],
+   "form": "cluster",
+   "rgb": [
+    240,
+    222,
+    214
+   ],
+   "size_m": 0.05,
+   "density": 0.35,
+   "before_leaves": false
+  },
+  "berries": {
+   "season": "fall",
+   "months": [
+    8,
+    11
+   ],
+   "form": "cluster",
+   "rgb": [
+    46,
+    34,
+    50
+   ],
+   "size_m": 0.045,
+   "density": 0.4
+  }
+ },
+ "trunk": {
+  "bark_rgb": [
+   124,
+   92,
+   72
+  ],
+  "bark_pattern": "smooth",
+  "stems": [
+   8,
+   16
+  ]
+ },
+ "targets": {
+  "crown_width_ratio": 1.7,
+  "crown_base_ratio": 0.04,
+  "porosity": 0.1,
+  "from": "judgement values, no photographs measured: a dense, spreading, clonal thicket much wider than tall (FEIS: often nearly impenetrable)"
+ },
+ "patch": {
+  "trunk": {
+   "stem_spread_deg": 62
+  }
+ },
+ "variant_patches": {
+  "young": {
+   "note": "a low patch of a few shoots, or salal under a dense canopy"
+  },
+  "old": {
+   "note": "a tall, impenetrable thicket in a fog-belt opening or on a north-facing bluff"
+  }
+ },
+ "description": "A thicket-forming evergreen shrub of the redwood forest and the foggy north-facing scrub, spreading by underground stems into dense patches. Its leaves are large, leathery and shiny, and its dark purple berries hang in rows below the leaves in late summer.",
+ "season_notes": {
+  "winter": "Leathery leaves stay green, some bronzing where the sun reaches them; deer browse it hard.",
+  "spring": "Bright new shoots and rows of white-pink urn flowers on reddish stalks.",
+  "summer": "Flowering ends and the hairy fruits swell and darken.",
+  "fall": "Dark blue-black berries hang along the stems into December."
+ },
+ "habitat": {
+  "classes": {
+   "conifer_forest": 0.9,
+   "mixed_forest": 0.8,
+   "chaparral": 0.4,
+   "riparian": 0.3,
+   "barren": 0.1,
+   "oak_woodland": 0.1,
+   "grassland": 0.05
+  },
+  "floor": 0.8,
+  "mid": 1.0,
+  "steep": 1.2,
+  "north": 1.5,
+  "shade": 0.5,
+  "disturbed": 0.6
+ },
+ "relations": {
+  "eaten_by": [
+   {
+    "animal": "odocoileus_hemionus",
+    "part": "browse",
+    "seasons": [
+     "fall",
+     "winter"
+    ]
+   },
+   {
+    "animal": "ursus_americanus",
+    "part": "berries",
+    "seasons": [
+     "summer",
+     "fall"
+    ]
+   },
+   {
+    "animal": "urocyon_cinereoargenteus",
+    "part": "berries",
+    "seasons": [
+     "fall"
+    ]
+   },
+   {
+    "animal": "canis_latrans",
+    "part": "berries",
+    "seasons": [
+     "fall"
+    ]
+   },
+   {
+    "animal": "cyanocitta_stelleri",
+    "part": "berries",
+    "seasons": [
+     "fall"
+    ]
+   },
+   {
+    "animal": "aphelocoma_californica",
+    "part": "berries",
+    "seasons": [
+     "fall"
+    ]
+   }
+  ],
+  "cover_for": [
+   "sylvilagus_bachmani",
+   "odocoileus_hemionus"
+  ]
+ },
+ "range": {
+  "elev_m": [
+   0,
+   800
+  ],
+  "where": "Pacific coast from Alaska to the Santa Cruz Mountains, in redwood and mixed evergreen forest and on foggy bluffs and stabilised dunes; Marin, the Presidio and the Peninsula's north slopes",
+  "coastal": true
+ },
+ "stand_in": "frangula_californica",
+ "notes": "Grown from coffeeberry (an evergreen broadleaf shrub with berries) as a lower, much wider, denser plant with more stems spread further, standing in for a rhizomatous clone that the generator cannot draw as one: a real patch is many joined shoots across several metres (FEIS). Leaves are 5-10 cm, thick, leathery, shiny dark green (FEIS), a little yellower and larger than evergreen huckleberry's, which it often grows beside. Flowers white to pink urns March-July in California, berries 6-10 mm, reddish to blue-black, August to October, staying to December. Deer use it heavily in winter (FEIS), and bears and birds eat the fruit; wrentits and band-tailed pigeons are named by FEIS but are not in the animal library. Heights: FEIS gives 0.4-3 m, tallest in the fog belt; around San Francisco it is mostly knee- to chest-high.",
+ "sources": [
+  "FEIS, Gaultheria shallon, https://www.fs.usda.gov/database/feis/plants/shrub/gausha/all.html, read 2026-11-04"
+ ],
+ "authors": [
+  "Wild Earth (agent draft, 2026-11-04); needs local sign-off"
+ ]
+}

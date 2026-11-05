@@ -1,0 +1,131 @@
+{
+ "grid": {
+  "points": 3641026129,
+  "points_in_tile": 3639901829,
+  "nodes": 78754,
+  "max_depth": null,
+  "ept": {
+   "project": "CA_SierraNevada_5_2022",
+   "points": 185247678989,
+   "url": "https://usgs-lidar-public.s3.amazonaws.com/CA_SierraNevada_5_2022/ept.json"
+  },
+  "density_pts_m2": 36.4,
+  "empty_cell_fraction": 0.0027
+ },
+ "grid_seconds": 2969.8,
+ "dtm_check": {
+  "ground_cell_fraction": 0.9339,
+  "median_offset_m": -0.001,
+  "mean_offset_m": -0.001,
+  "std_m": 0.066,
+  "p05_m": -0.086,
+  "p95_m": 0.085,
+  "fraction_within_0.15_m": 0.9681,
+  "fraction_beyond_0.5_m": 0.0009,
+  "best_shift_m": {
+   "east": 0,
+   "north": 0,
+   "rms_m": 0.044
+  }
+ },
+ "canopy_10m": {
+  "p95_mean_m": 26.68,
+  "tree_cover_pct": 68.41,
+  "shrub_cover_pct": 11.0
+ },
+ "crowns": {
+  "maxima": 531665,
+  "dropped_on_osm_buildings": 3285,
+  "dropped_low_multi_return": 325,
+  "dropped_pole_like": 1914,
+  "dropped_shrub_in_shrub_canopy": 1094,
+  "dropped_on_bridges": 73,
+  "dropped_urban": 0,
+  "crowns": 524974,
+  "confidence_terms_median": {
+   "prominence": 0.968,
+   "width": 0.732,
+   "multi_return": 1.0,
+   "height": 1.0
+  },
+  "confidence_quantiles_p10_p50_p90": [
+   0.836,
+   0.899,
+   0.97
+  ],
+  "bytes": 4239828,
+  "crowns_per_ha": 52.5,
+  "max_per_index_cell": 165,
+  "height_histogram_m": {
+   "4-6": 7964,
+   "6-8": 17037,
+   "8-12": 55197,
+   "12-16": 56184,
+   "16-20": 43306,
+   "20-25": 58882,
+   "25-30": 59143,
+   "30-35": 63681,
+   "35-40": 59212,
+   "40-80": 104318
+  },
+  "height_m": {
+   "median": 26.9,
+   "p95": 50.2,
+   "max": 89.8
+  },
+  "radius_m": {
+   "median": 4.62,
+   "p95": 8.43
+  },
+  "confidence_median": 0.899,
+  "seconds": 90.8
+ },
+ "lidar_micro": {
+  "intensity": {
+   "source_has_intensity": true,
+   "p2": 22611.8,
+   "p50": 39565.6,
+   "p98": 51647.3,
+   "ground_pixel_fraction": 0.9932,
+   "filled_fraction": 0.0068
+  },
+  "roughness_cm": {
+   "p10": 1.48,
+   "p50": 2.26,
+   "p90": 3.64,
+   "p99": 6.64,
+   "clipped_fraction": 3e-05,
+   "measured_fraction": 0.9914,
+   "filled_fraction": 0.0086,
+   "with_tilt_p50": 8.02,
+   "with_tilt_p90": 15.98
+  },
+  "low_multi": {
+   "low_cell_fraction": 0.2342,
+   "share_in_low_cells_p50": 0.059,
+   "share_in_low_cells_p90": 0.429,
+   "pixels_b_over_0": 0.4382,
+   "pixels_b_over_10pct": 0.119,
+   "pixels_b_over_30pct": 0.0099,
+   "b_mean": 8.84
+  },
+  "bytes": 13985065
+ },
+ "terrain_detail": {
+  "residual_m": {
+   "mean": -0.046,
+   "std": 0.363,
+   "p50_abs": 0.198,
+   "p99_abs": 1.036,
+   "max_abs": 31.32
+  },
+  "fraction_over_0.5_m": 0.1258,
+  "clipped_fraction": 5.1e-05
+ },
+ "roughness": {
+  "median_m": 0.063,
+  "p90_m": 0.155,
+  "p99_m": 0.326
+ },
+ "products_seconds": 153.9
+}

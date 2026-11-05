@@ -1,0 +1,459 @@
+{
+ "id": "rubus_parviflorus",
+ "aliases": [
+  "thimbleberry"
+ ],
+ "scientific": "Rubus parviflorus",
+ "common": "thimbleberry",
+ "form": "shrub",
+ "regions": [
+  "pacific_northwest",
+  "california"
+ ],
+ "architectural_model": "Champagnat (provisional: erect canes from the base that arch over under their own weight and branch from the arch)",
+ "deciduous": true,
+ "height_m": [
+  1,
+  2.5
+ ],
+ "variants": [
+  {
+   "name": "young",
+   "weight": 0.25,
+   "height_m": [
+    0.4,
+    1.0
+   ],
+   "crown_scale": 0.85,
+   "branches": 0.7,
+   "set": {
+    "trunk": {
+     "stems": [
+      3,
+      6
+     ],
+     "stem_spread_deg": 36
+    }
+   },
+   "note": "a few canes from the rhizomes at a gap or roadside"
+  },
+  {
+   "name": "mature",
+   "weight": 0.5,
+   "seeds": 1,
+   "note": "(from the California wild rose template) the file as written: a rounded tangle of arching prickly canes, wider than tall"
+  },
+  {
+   "name": "old",
+   "weight": 0.25,
+   "height_m": [
+    2,
+    3
+   ],
+   "crown_scale": 1.15,
+   "gnarl": 1.2,
+   "deadwood": {
+    "fraction": 0.22,
+    "levels": [
+     0,
+     1
+    ],
+    "shorten": 0.7
+   },
+   "set": {
+    "trunk": {
+     "stems": [
+      10,
+      16
+     ],
+     "stem_spread_deg": 60
+    }
+   },
+   "note": "a dense thicket on an old burn, a slide or the edge of an alder flat"
+  }
+ ],
+ "description": "A thornless raspberry of openings and forest edges, 1-2.5 m, spreading by rhizomes into thickets under a layer of big, soft, maple-shaped leaves. It opens large white flowers like wild roses in early summer and ripens soft, shallow, bright red berries that come off the stem like a thimble.",
+ "season_notes": {
+  "winter": "Bare, pale, shreddy-barked canes.",
+  "spring": "Leaves unfold soft and fuzzy, up to 20 cm across.",
+  "summer": "White flowers 4-5 cm across in clusters of a few, then red, cap-shaped berries in July and August.",
+  "fall": "Leaves yellow; the year's fruiting canes die back."
+ },
+ "status": "generated from a trait card, needs review in the lineup and local sign-off",
+ "habitat": {
+  "classes": {
+   "mixed_forest": 0.9,
+   "riparian": 0.9,
+   "conifer_forest": 0.5,
+   "grassland": 0.2
+  },
+  "floor": 1.2,
+  "mid": 1.0,
+  "steep": 0.8,
+  "north": 1.0,
+  "shade": 0.3,
+  "disturbed": 1.6,
+  "riparian": {
+   "zones": {
+    "terrace": 1.0,
+    "bank": 0.6,
+    "pond_terrace": 0.4
+   },
+   "orders": [
+    1,
+    6
+   ],
+   "permanence": "any",
+   "water": "Cool, moist ground: streambanks, seeps and lakeshores, and the openings and edges of the moist forests (FEIS)."
+  }
+ },
+ "relations": {
+  "eaten_by": [
+   {
+    "animal": "ursus_americanus",
+    "part": "berries",
+    "seasons": [
+     "summer"
+    ]
+   },
+   {
+    "animal": "canis_latrans",
+    "part": "berries",
+    "seasons": [
+     "summer"
+    ]
+   },
+   {
+    "animal": "cyanocitta_stelleri",
+    "part": "berries",
+    "seasons": [
+     "summer"
+    ]
+   },
+   {
+    "animal": "odocoileus_hemionus",
+    "part": "browse",
+    "seasons": [
+     "spring",
+     "summer"
+    ]
+   }
+  ],
+  "cover_for": [
+   "odocoileus_hemionus"
+  ]
+ },
+ "trunk": {
+  "length_ratio": 0.85,
+  "radius_ratio": 0.009,
+  "taper": 0.8,
+  "flare": 1.15,
+  "bole_ratio": 0.06,
+  "base_size": 0.04,
+  "curve_deg": 24,
+  "curve_var_deg": 16,
+  "segments": 3,
+  "lean_deg": 8,
+  "stems": [
+   8,
+   16
+  ],
+  "stem_spread_deg": 56,
+  "split_prob": 0.0,
+  "split_count": 2,
+  "split_angle_deg": 20,
+  "sinuous_deg": 5,
+  "bark_rgb": [
+   150,
+   122,
+   94
+  ],
+  "bark_pattern": "shreddy",
+  "twig_rgb": [
+   140,
+   78,
+   64
+  ],
+  "bark": {
+   "tile_m": [
+    0.08,
+    0.25
+   ],
+   "contrast": 0.4,
+   "lichen": 0.05,
+   "relief": 0.3
+  }
+ },
+ "crown": {
+  "shape": "hemispherical",
+  "envelope": {
+   "profile": [
+    [
+     0.0,
+     0.35
+    ],
+    [
+     0.2,
+     0.5
+    ],
+    [
+     0.45,
+     0.58
+    ],
+    [
+     0.65,
+     0.56
+    ],
+    [
+     0.82,
+     0.45
+    ],
+    [
+     0.94,
+     0.27
+    ],
+    [
+     1.0,
+     0.08
+    ]
+   ],
+   "lobes": 6,
+   "lobe_depth": 0.12,
+   "asymmetry": 0.2,
+   "fill": 0.5,
+   "edge": 1.08
+  }
+ },
+ "levels": [
+  {
+   "count": 5,
+   "start": 0.05,
+   "down_angle_deg": 50,
+   "down_angle_tip_deg": 38,
+   "down_angle_var_deg": 12,
+   "rotation_deg": 140,
+   "rotation_var_deg": 30,
+   "length_ratio": 0.6,
+   "length_var": 0.3,
+   "curve_deg": 12,
+   "curve_var_deg": 16,
+   "tropism": 0.0,
+   "taper": 0.9,
+   "radius_ratio": 0.6,
+   "segments": 2,
+   "droop_deg": 10
+  },
+  {
+   "count": 4,
+   "start": 0.25,
+   "down_angle_deg": 45,
+   "down_angle_var_deg": 14,
+   "rotation_deg": 140,
+   "rotation_var_deg": 30,
+   "length_ratio": 0.4,
+   "length_var": 0.3,
+   "curve_deg": 8,
+   "curve_var_deg": 16,
+   "tropism": 0.03,
+   "taper": 1.0,
+   "radius_ratio": 0.5,
+   "segments": 1
+  }
+ ],
+ "foliage": {
+  "type": "broadleaf",
+  "leaf_size_m": 0.15,
+  "leaf_shape": "lobed_large",
+  "leaflets": [
+   5,
+   7
+  ],
+  "leaflet_ratio": 0.3,
+  "cluster_m": 0.42,
+  "density": 18,
+  "cards_per_m2": 4.5,
+  "leaf_fill": 1.6,
+  "start": 0.02,
+  "parent_start": 0.1,
+  "orientation": "outward",
+  "roll_deg": 55,
+  "colors": {
+   "winter": [
+    150,
+    120,
+    92
+   ],
+   "spring": [
+    124,
+    152,
+    80
+   ],
+   "summer": [
+    96,
+    124,
+    64
+   ],
+   "fall": [
+    178,
+    152,
+    70
+   ]
+  },
+  "leaf_on": {
+   "winter": 0.0,
+   "spring": 0.75,
+   "summer": 1.0,
+   "fall": 0.6
+  },
+  "leaf_on_by_month": [
+   0.0,
+   0.0,
+   0.1,
+   0.6,
+   0.95,
+   1.0,
+   1.0,
+   1.0,
+   0.9,
+   0.6,
+   0.2,
+   0.0
+  ],
+  "clumps": {
+   "radius_m": 0.28,
+   "cards_per_clump": 6,
+   "shell": 0.05,
+   "flatten": 0.8,
+   "tip_bias": 0.7
+  },
+  "palette": [
+   [
+    0.85,
+    [
+     1,
+     1,
+     1
+    ]
+   ],
+   [
+    0.15,
+    [
+     1.12,
+     1.08,
+     0.86
+    ]
+   ]
+  ],
+  "winter_twigs": 0.55,
+  "ao_min": 0.7,
+  "color_var": [
+   0.08,
+   0.05
+  ],
+  "leaf_on_var": 0.5,
+  "flowers": {
+   "season": "spring",
+   "months": [
+    5,
+    7
+   ],
+   "form": "cluster",
+   "rgb": [
+    246,
+    244,
+    236
+   ],
+   "size_m": 0.05,
+   "density": 0.3,
+   "before_leaves": false
+  },
+  "berries": {
+   "season": "summer",
+   "months": [
+    7,
+    8
+   ],
+   "form": "cluster",
+   "rgb": [
+    202,
+    40,
+    48
+   ],
+   "size_m": 0.02,
+   "density": 0.3
+  },
+  "lobes": 5,
+  "lobe_depth": 0.35,
+  "lobe_style": "palmate"
+ },
+ "deadwood": {
+  "fraction": 0.08,
+  "where": "inner",
+  "levels": [
+   0,
+   1
+  ],
+  "shorten": 0.75,
+  "rgb": [
+   140,
+   128,
+   118
+  ]
+ },
+ "twigs": {
+  "count": [
+   1,
+   2
+  ],
+  "length": 0.7,
+  "down_deg": 42,
+  "down_var_deg": 16,
+  "curve_var_deg": 22,
+  "segments": 1,
+  "radius_m": 0.004,
+  "taper": 0.6,
+  "droop_deg": 6,
+  "fan_deg": 50,
+  "jitter": 0.22
+ },
+ "lod": {
+  "near_tris_budget": 1300,
+  "near_sides": [
+   3,
+   3,
+   0
+  ],
+  "mid_blobs": 3,
+  "mid_branches": 0,
+  "mid_sides": [
+   0,
+   0
+  ],
+  "mid_cards": 24
+ },
+ "targets": {
+  "crown_width_ratio": 1.1,
+  "crown_base_ratio": 0.1,
+  "porosity": 0.25,
+  "foliage_rg": 0.58,
+  "foliage_bg": 0.25,
+  "from": "judgement values from the drafter's reading of the sources and knowledge of the species (2026-11-04), no photographs measured; to be replaced by photo measurements: a dense, waist- to head-high thicket of thornless canes under a continuous layer of big, soft, maple-like leaves"
+ },
+ "generated": {
+  "by": "pipeline/plantgen.py",
+  "version": "2",
+  "card": "library/plant_cards/rubus_parviflorus.json",
+  "card_sha256": "1156371a145e115e",
+  "template": "rosa_californica",
+  "template_common": "California wild rose",
+  "height_scale": 1.0
+ },
+ "notes": "Grown from California wild rose (a thicket shrub of canes with flowers and fruit) with the leaves swapped for big, palmately 3-7 lobed ones (lobed_large, 5 lobes, 15 cm; FEIS: to 20 cm long and wide). FEIS gives height to 3 m, flowers to 5 cm in clusters of 2-10 (colour not stated; white), and fruit ripening from late June to September. The rhizome thickets are not grown as one. FEIS: frugivorous birds (robins, crows, Swainson's thrushes) spread the seed, and elk and deer browse it hard enough to reduce it; bears eat the fruit (drafter's knowledge). Only the bear, coyote, deer and Steller's jay are in the animal library. The bark of the template's mature class carries over its own colour offsets.",
+ "sources": [
+  "FEIS, Rubus parviflorus, https://www.fs.usda.gov/database/feis/plants/shrub/rubpar/all.html, read 2026-11-04"
+ ],
+ "authors": [
+  "Wild Earth (agent draft, 2026-11-04); needs local sign-off"
+ ],
+ "license": "CC BY-SA 4.0"
+}

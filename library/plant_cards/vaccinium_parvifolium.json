@@ -1,0 +1,257 @@
+{
+ "id": "vaccinium_parvifolium",
+ "scientific": "Vaccinium parvifolium",
+ "common": "red huckleberry",
+ "aliases": [
+  "red_huckleberry",
+  "red_bilberry"
+ ],
+ "family": "Ericaceae",
+ "form": "shrub",
+ "deciduous": true,
+ "template": "frangula_californica",
+ "regions": [
+  "pacific_northwest",
+  "california"
+ ],
+ "height_m": [
+  1.5,
+  4
+ ],
+ "variants_height_m": {
+  "young": [
+   0.3,
+   1.0
+  ],
+  "old": [
+   3.5,
+   6
+  ]
+ },
+ "crown": {
+  "shape": "hemispherical",
+  "profile": [
+   [
+    0.0,
+    0.22
+   ],
+   [
+    0.2,
+    0.38
+   ],
+   [
+    0.45,
+    0.48
+   ],
+   [
+    0.65,
+    0.47
+   ],
+   [
+    0.82,
+    0.38
+   ],
+   [
+    0.94,
+    0.22
+   ],
+   [
+    1.0,
+    0.06
+   ]
+  ],
+  "lobes": 6,
+  "lobe_depth": 0.18,
+  "asymmetry": 0.3,
+  "fill": 0.3,
+  "edge": 1.12
+ },
+ "foliage": {
+  "colors": {
+   "winter": [
+    96,
+    132,
+    72
+   ],
+   "spring": [
+    128,
+    158,
+    82
+   ],
+   "summer": [
+    104,
+    136,
+    72
+   ],
+   "fall": [
+    170,
+    98,
+    62
+   ]
+  },
+  "leaf_on": {
+   "winter": 0.15,
+   "spring": 0.85,
+   "summer": 1.0,
+   "fall": 0.7
+  },
+  "leaf_on_by_month": [
+   0.12,
+   0.12,
+   0.3,
+   0.8,
+   1.0,
+   1.0,
+   1.0,
+   1.0,
+   0.95,
+   0.7,
+   0.35,
+   0.15
+  ],
+  "leaf_shape": "oval",
+  "leaf_size_m": 0.02,
+  "flowers": {
+   "season": "spring",
+   "months": [
+    4,
+    6
+   ],
+   "form": "bud",
+   "rgb": [
+    216,
+    196,
+    156
+   ],
+   "size_m": 0.008,
+   "density": 0.3,
+   "before_leaves": false
+  },
+  "berries": {
+   "season": "summer",
+   "months": [
+    7,
+    9
+   ],
+   "form": "bud",
+   "rgb": [
+    224,
+    58,
+    50
+   ],
+   "size_m": 0.01,
+   "density": 0.5
+  }
+ },
+ "trunk": {
+  "bark_rgb": [
+   98,
+   128,
+   70
+  ],
+  "bark_pattern": "smooth",
+  "twig_rgb": [
+   96,
+   134,
+   70
+  ],
+  "stems": [
+   3,
+   8
+  ]
+ },
+ "targets": {
+  "crown_width_ratio": 0.95,
+  "crown_base_ratio": 0.12,
+  "porosity": 0.45,
+  "from": "judgement values from the drafter's reading of the sources and knowledge of the species (2026-11-04), no photographs measured; to be replaced by photo measurements: an airy, open shrub of bright green, angled stems and small leaves in flat sprays, see-through even in summer"
+ },
+ "variant_patches": {
+  "young": {
+   "note": "a few green stems sprouting from a mossy stump or nurse log"
+  },
+  "old": {
+   "set": {
+    "trunk": {
+     "bark_rgb": [
+      122,
+      112,
+      92
+     ]
+    }
+   },
+   "note": "a tall old shrub, the lower stems grey-brown, often perched on top of a huge old stump"
+  }
+ },
+ "description": "An airy shrub of the rain forest, 1.5-4 m, built of bright green, sharply angled stems with small, thin, oval leaves, often growing out of the top of a rotting stump or nurse log. In late summer it hangs out translucent coral-red berries one by one along the twigs.",
+ "season_notes": {
+  "winter": "Mostly bare, but the green stems (and a few evergreen juvenile leaves) keep it green.",
+  "spring": "Small waxy greenish-pink urn flowers, April-June.",
+  "summer": "Bright red, tart berries about 8 mm, July-September.",
+  "fall": "Some leaves redden before falling."
+ },
+ "habitat": {
+  "classes": {
+   "conifer_forest": 1.0,
+   "mixed_forest": 0.8,
+   "riparian": 0.3
+  },
+  "floor": 1.0,
+  "mid": 1.0,
+  "steep": 0.9,
+  "north": 1.1,
+  "shade": 0.7,
+  "disturbed": 0.7
+ },
+ "relations": {
+  "eaten_by": [
+   {
+    "animal": "ursus_americanus",
+    "part": "berries",
+    "seasons": [
+     "summer"
+    ]
+   },
+   {
+    "animal": "odocoileus_hemionus",
+    "part": "browse",
+    "seasons": [
+     "fall",
+     "winter"
+    ]
+   },
+   {
+    "animal": "cyanocitta_stelleri",
+    "part": "berries",
+    "seasons": [
+     "summer"
+    ]
+   },
+   {
+    "animal": "canis_latrans",
+    "part": "berries",
+    "seasons": [
+     "summer"
+    ]
+   }
+  ],
+  "cover_for": [
+   "odocoileus_hemionus"
+  ]
+ },
+ "range": {
+  "elev_m": [
+   0,
+   1500
+  ],
+  "where": "conifer forest from sea level to about 1,500 m, west of the Cascades and Sierra (FEIS); southeast Alaska to central California"
+ },
+ "stand_in": "frangula_californica",
+ "notes": "Grown from coffeeberry (a broadleaf shrub with berries; the library has no deciduous Vaccinium) as a more open, airier shrub with tiny leaves and green stems. It is deciduous (mature leaves fall; juvenile leaves are evergreen and toothed; FEIS), so leaf_on_by_month is set rather than coffeeberry's evergreen year. Leaves 1-3 cm (drafter). Its habit of rooting on stumps, snags and nurse logs (FEIS) is the most telling thing about it and is not expressed: the generator roots plants on the ground, and it would need a 'perch' (a stump or log top) from the deadwood or nurse-log placement. Berries drawn single ('bud' form), not in clusters. FEIS: black bears seek the berries; black-tailed deer depend on it heavily in winter; it is important elk browse in fall in western Washington; thrushes, band-tailed pigeons and grouse eat the fruit; mountain beavers, raccoons and squirrels too. Only the bear, deer, Steller's jay and coyote are in the animal library.",
+ "sources": [
+  "FEIS, Vaccinium parvifolium, https://www.fs.usda.gov/database/feis/plants/shrub/vacpar/all.html, read 2026-11-04"
+ ],
+ "authors": [
+  "Wild Earth (agent draft, 2026-11-04); needs local sign-off"
+ ]
+}

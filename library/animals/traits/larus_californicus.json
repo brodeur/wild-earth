@@ -1,0 +1,116 @@
+{
+ "id": "larus_californicus",
+ "scientific": "Larus californicus",
+ "common": "california gull",
+ "kind": "bird",
+ "taxonomy": {
+  "kingdom": "Animalia",
+  "phylum": "Chordata",
+  "class": "Aves",
+  "order": "Charadriiformes",
+  "family": "Laridae",
+  "genus": "Larus"
+ },
+ "body_plan": "bird",
+ "mass_kg": 0.6834,
+ "size": {
+  "length_m": 0.317,
+  "shoulder_or_wingspan_m": 0.507
+ },
+ "diet": {
+  "role": [
+   "omnivore",
+   "scavenger"
+  ],
+  "diet_tenths": {
+   "inv": 2.0,
+   "vend": 2.0,
+   "vect": 0.0,
+   "vfish": 0.0,
+   "vunk": 0.0,
+   "scav": 2.0,
+   "fruit": 2.0,
+   "nect": 0.0,
+   "seed": 2.0,
+   "planto": 0.0
+  },
+  "vertebrate_share": 0.2,
+  "mass_kg": 0.6834,
+  "activity": [],
+  "source": "eltontraits (species)"
+ },
+ "senses": {
+  "sight": {
+   "range_m": 463.3
+  },
+  "sound": {
+   "range_m": 231.7
+  },
+  "scent": {
+   "range_m": 18.5
+  }
+ },
+ "rig": "bird part rig (animalModels.js RIG.bird), flierControl",
+ "locomotion": {
+  "code": "larus_californicus",
+  "class": "Aves",
+  "order": "Charadriiformes",
+  "family": "Laridae",
+  "body_plan": "bird",
+  "mass_kg": 0.6834,
+  "length_m": 0.317,
+  "hip_m": 0.159,
+  "posture": "biped",
+  "gaits": {},
+  "walk_mps": 0.88,
+  "trot_mps": 1.97,
+  "cruise_mps": 2.99,
+  "top_mps": 4.99,
+  "stride_hz": 4.44,
+  "stride_m": 0.44,
+  "sprint_s": 3.4,
+  "recover_s": 12.0,
+  "turn_rad_s": 4.46,
+  "turn": {
+   "on": 0.45,
+   "off": 0.2,
+   "hold": 0.35,
+   "amp": [
+    0.4,
+    0.6
+   ],
+   "hz": [
+    0.7,
+    2.4
+   ]
+  },
+  "lag": {
+   "s": 0.059,
+   "max_rad": 0.35,
+   "v": [
+    0.3,
+    1.2
+   ]
+  },
+  "bend": {
+   "spine": 1.0,
+   "lead": 0.12,
+   "lead_max": 0.25
+  },
+  "flags": {
+   "head_lead": true
+  },
+  "flier": false
+ },
+ "generated": {
+  "by": "pipeline/fauna.py",
+  "at": "2026-11-05T06:16:02Z",
+  "from": [
+   "gbif taxonomy",
+   "eltontraits (species)",
+   "pipeline/locomotion.py"
+  ],
+  "note": "behaviour data without a model; review the diet, senses and size before a mesh is made"
+ },
+ "license": "CC BY-SA 4.0 (the entry); diet and mass from EltonTraits 1.0 (CC BY 4.0, credited in the tile's sources)"
+}

@@ -1,0 +1,206 @@
+{
+ "id": "pinus_monticola",
+ "scientific": "Pinus monticola",
+ "common": "western white pine",
+ "aliases": [
+  "western_white_pine",
+  "silver_pine"
+ ],
+ "family": "Pinaceae",
+ "form": "tree",
+ "deciduous": false,
+ "template": "pinus_ponderosa",
+ "height_m": [
+  15,
+  35
+ ],
+ "stature": {
+  "typical_m": 25,
+  "tall_m": 39,
+  "record_m": 69.8,
+  "source": "typical: the drafter's estimate for Sierra trees, which are much shorter than northern ones (the Gymnosperm Database gives 30-70 m range-wide); tall: the largest tree by size, near Lake Tahoe, 39 m tall and 263 cm dbh; record height: the Idaho champion, 69.8 m (1992 measurement) (Gymnosperm Database); read 2026-11-04"
+ },
+ "variants_height_m": {
+  "pole": [
+   6,
+   12
+  ],
+  "old-growth": [
+   28,
+   40
+  ]
+ },
+ "crown": {
+  "shape": "conical",
+  "profile": [
+   [
+    0.3,
+    0.16
+   ],
+   [
+    0.45,
+    0.2
+   ],
+   [
+    0.6,
+    0.21
+   ],
+   [
+    0.75,
+    0.18
+   ],
+   [
+    0.88,
+    0.12
+   ],
+   [
+    1.0,
+    0.04
+   ]
+  ],
+  "lobes": 3,
+  "lobe_depth": 0.22,
+  "asymmetry": 0.25,
+  "fill": 0.15,
+  "edge": 1.12
+ },
+ "foliage": {
+  "colors": {
+   "winter": [
+    76,
+    88,
+    86
+   ],
+   "spring": [
+    92,
+    108,
+    100
+   ],
+   "summer": [
+    80,
+    94,
+    90
+   ],
+   "fall": [
+    80,
+    92,
+    86
+   ]
+  },
+  "leaf_size_m": 0.07
+ },
+ "trunk": {
+  "bark_rgb": [
+   126,
+   98,
+   88
+  ],
+  "bark_pattern": "checkered"
+ },
+ "targets": {
+  "crown_width_ratio": 0.4,
+  "crown_base_ratio": 0.3,
+  "porosity": 0.4,
+  "from": "judgement values from the drafter's reading of the sources and knowledge of the species (2026-11-04), no photographs measured; to be replaced by photo measurements: a narrow, open crown of well-spaced, slightly upswept limbs; old trees broad-topped and lopsided on granite; blue-green with a silvery cast"
+ },
+ "variant_patches": {
+  "pole": {
+   "set": {
+    "trunk": {
+     "bark_rgb": [
+      132,
+      128,
+      122
+     ]
+    }
+   },
+   "note": "a young tree: a narrow, open cone on a thin, smooth grey trunk"
+  },
+  "old-growth": {
+   "set": {
+    "crown": {
+     "shape": "tapered_cylindrical",
+     "envelope": {
+      "profile": [
+       [
+        0.45,
+        0.17
+       ],
+       [
+        0.6,
+        0.24
+       ],
+       [
+        0.74,
+        0.27
+       ],
+       [
+        0.86,
+        0.25
+       ],
+       [
+        0.95,
+        0.16
+       ],
+       [
+        1.0,
+        0.07
+       ]
+      ],
+      "asymmetry": 0.35,
+      "lobe_depth": 0.3
+     }
+    }
+   },
+   "note": "an old subalpine tree: a massive checkered trunk and a broad, flattened, open crown of long limbs"
+  }
+ },
+ "description": "A five-needled pine of the high country, 15-35 m here, with slender blue-green needles that catch the light silvery, long curved cones like small sugar pine cones, and a trunk whose bark breaks into small squarish dark plates like a chessboard. It grows scattered on granite slopes and ridges of the upper red fir and lodgepole forests, about 2100-3200 m, often as lone wide-crowned old trees on rock.",
+ "season_notes": {
+  "winter": "Evergreen; the open crowns let the snow through to the rock below.",
+  "spring": "Pollen in June-July as the snow melts.",
+  "summer": "The slim cones hang from the upper branches, green then brown and resin-streaked.",
+  "fall": "Cones open and drop seed in September, then fall whole; they are often sticky with white resin."
+ },
+ "habitat": {
+  "classes": {
+   "conifer_forest": 1.0,
+   "barren": 0.4
+  },
+  "floor": 0.7,
+  "mid": 1.0,
+  "steep": 1.1,
+  "north": 1.0,
+  "shade": 0.4,
+  "disturbed": 0.4
+ },
+ "relations": {
+  "eaten_by": [
+   {
+    "animal": "cyanocitta_stelleri",
+    "part": "seeds",
+    "seasons": [
+     "fall"
+    ]
+   }
+  ],
+  "cover_for": [
+   "cyanocitta_stelleri"
+  ]
+ },
+ "range": {
+  "elev_m": [
+   2100,
+   3200
+  ],
+  "where": "granite slopes of the upper montane and subalpine: May Lake, Tenaya Lake, Tioga Road, Glacier Point Road's upper end"
+ },
+ "stand_in": "pinus_ponderosa",
+ "notes": "Distinguished from the ponderosa template by its short (4-10 cm) five-needle bundles, bluer colour, narrow open crown, and above all the checkered bark of old trees, which the Gymnosperm Database calls unlike any other North American tree; the bark pattern 'checkered' is the nearest the generator has. Young trees have thin smooth grey bark (set on the pole class). Cones 10-25 cm, hanging, not drawn. Blister rust kills many in the Sierra. Seeds feed chickarees, chipmunks and nutcrackers, none in the animal library; Steller's jay stands in. Sierra elevations: the Gymnosperm Database gives about 1900-3000 m in the southern part of the range; the central Sierra belt here is the drafter's knowledge.",
+ "sources": [
+  "https://www.conifers.org/pi/Pinus_monticola.php"
+ ],
+ "authors": [
+  "Wild Earth (agent draft, 2026-11-04); needs local sign-off"
+ ]
+}

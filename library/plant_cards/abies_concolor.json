@@ -1,0 +1,177 @@
+{
+ "id": "abies_concolor",
+ "scientific": "Abies concolor var. lowiana",
+ "common": "white fir",
+ "aliases": [
+  "white_fir",
+  "sierra_white_fir",
+  "abies_lowiana"
+ ],
+ "family": "Pinaceae",
+ "form": "tree",
+ "deciduous": false,
+ "template": "pseudotsuga_menziesii",
+ "height_m": [
+  25,
+  50
+ ],
+ "stature": {
+  "typical_m": 38,
+  "tall_m": 55,
+  "record_m": 81,
+  "source": "typical and tall: the drafter's estimate for the Sierra (the Gymnosperm Database gives the species to 60 m and calls the Sierra form very large); record: 81 m near Pollock Pines, El Dorado County (Gymnosperm Database; unverified lidar trees of 80-83 m in Del Norte County); read 2026-11-04"
+ },
+ "variants_height_m": {
+  "young": [
+   4,
+   14
+  ],
+  "old-growth": [
+   45,
+   60
+  ]
+ },
+ "crown": {
+  "shape": "conical",
+  "profile": [
+   [
+    0.2,
+    0.2
+   ],
+   [
+    0.35,
+    0.22
+   ],
+   [
+    0.5,
+    0.21
+   ],
+   [
+    0.65,
+    0.17
+   ],
+   [
+    0.8,
+    0.11
+   ],
+   [
+    0.92,
+    0.06
+   ],
+   [
+    1.0,
+    0.02
+   ]
+  ],
+  "lobes": 4,
+  "lobe_depth": 0.12,
+  "asymmetry": 0.1,
+  "fill": 0.3,
+  "edge": 1.1
+ },
+ "foliage": {
+  "colors": {
+   "winter": [
+    92,
+    100,
+    90
+   ],
+   "spring": [
+    112,
+    124,
+    102
+   ],
+   "summer": [
+    98,
+    106,
+    96
+   ],
+   "fall": [
+    96,
+    104,
+    92
+   ]
+  },
+  "leaf_size_m": 0.05
+ },
+ "trunk": {
+  "bark_rgb": [
+   124,
+   118,
+   110
+  ],
+  "bark_pattern": "furrowed"
+ },
+ "targets": {
+  "crown_width_ratio": 0.42,
+  "crown_base_ratio": 0.2,
+  "porosity": 0.25,
+  "from": "judgement values from the drafter's reading of the sources and knowledge of the species (2026-11-04), no photographs measured; to be replaced by photo measurements: a spire somewhat broader and softer than red fir's, branches flat to drooping, shade-grown trees keeping live limbs low"
+ },
+ "description": "A big fir, 25-55 m here, with long, flat, pale silvery-green needles in two soft ranks along the twigs, a spire-shaped crown that flattens with age, and ash-grey bark that thickens into deep, corky furrows. It is the most common tree of the mixed conifer forest of the west slope, about 1200-2400 m, growing in the shade of sugar and ponderosa pines and incense cedar until it fills the understory where fire has been kept out.",
+ "season_notes": {
+  "winter": "Evergreen; young firs in the understory bend under the snow and spring back.",
+  "spring": "Soft pale new shoots in May-June; small reddish pollen cones under the lower branches.",
+  "summer": "Upright olive to purple cones stand on the top of the crown.",
+  "fall": "The cones break up on the tree and scatter winged seed in September-October."
+ },
+ "habitat": {
+  "classes": {
+   "mixed_forest": 1.0,
+   "conifer_forest": 0.8,
+   "riparian": 0.1
+  },
+  "floor": 1.0,
+  "mid": 1.0,
+  "steep": 0.9,
+  "north": 1.25,
+  "shade": 0.7,
+  "disturbed": 0.6
+ },
+ "relations": {
+  "eaten_by": [
+   {
+    "animal": "cyanocitta_stelleri",
+    "part": "seeds",
+    "seasons": [
+     "fall"
+    ]
+   },
+   {
+    "animal": "sciurus_griseus",
+    "part": "seeds",
+    "seasons": [
+     "fall"
+    ]
+   },
+   {
+    "animal": "odocoileus_hemionus",
+    "part": "browse",
+    "seasons": [
+     "spring",
+     "summer"
+    ]
+   }
+  ],
+  "cover_for": [
+   "cyanocitta_stelleri",
+   "odocoileus_hemionus",
+   "ursus_americanus"
+  ]
+ },
+ "range": {
+  "elev_m": [
+   1200,
+   2400
+  ],
+  "where": "the mixed conifer forest of the west slope: Yosemite Valley rim, Crane Flat, Wawona, Hetch Hetchy, below the red fir"
+ },
+ "stand_in": "pseudotsuga_menziesii",
+ "notes": "The Sierra form (var. or subsp. lowiana) has needles without the strong white bloom of the Rocky Mountain white fir, so it reads pale grey-green rather than blue; the colour here sits between the template's green and red fir's blue, and paler than both. Bark is the clearest field mark against red fir: grey and corky with yellowish-brown in the furrows, never red-purple. Needles are longer (to about 6 cm) and lie flatter in two ranks than red fir's, which a crown at game distance cannot show. Fire exclusion has made dense thickets of young white fir under the pines; the species mix should allow that. Seeds feed chickarees, chipmunks and nutcrackers (not in the library). The elevation belt is the drafter's knowledge (species range-wide 900-3400 m, Gymnosperm Database).",
+ "sources": [
+  "https://www.conifers.org/pi/Abies_concolor.php"
+ ],
+ "authors": [
+  "Wild Earth (agent draft, 2026-11-04); needs local sign-off"
+ ]
+}

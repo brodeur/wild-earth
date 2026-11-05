@@ -1,0 +1,3400 @@
+{
+ "tile": "utm11n_270_4180",
+ "regions": [
+  "california",
+  "great_basin"
+ ],
+ "communities": [
+  {
+   "source": "evt",
+   "code": 7098,
+   "name": "California Montane Woodland and Chaparral",
+   "cells": 26118,
+   "rule": "montane_woodland_chaparral",
+   "named": [
+    "quercus_chrysolepis",
+    "quercus_vacciniifolia",
+    "arctostaphylos_patula",
+    "ceanothus_cordulatus",
+    "chrysolepis_sempervirens"
+   ]
+  },
+  {
+   "source": "evt",
+   "code": 9213,
+   "name": "Sierra Nevada Cliff and Canyon",
+   "cells": 13586,
+   "rule": "sparse_rock",
+   "named": []
+  },
+  {
+   "source": "evt",
+   "code": 7028,
+   "name": "Mediterranean California Mesic Mixed Conifer Forest and Woodland",
+   "cells": 13270,
+   "rule": "mesic_mixed_conifer",
+   "named": [
+    "pinus_ponderosa",
+    "pinus_lambertiana",
+    "abies_concolor",
+    "calocedrus_decurrens",
+    "pseudotsuga_menziesii",
+    "quercus_kelloggii"
+   ]
+  },
+  {
+   "source": "evt",
+   "code": 7058,
+   "name": "Sierra Nevada Subalpine Lodgepole Pine Forest and Woodland",
+   "cells": 11295,
+   "rule": "subalpine_lodgepole",
+   "named": [
+    "pinus_contorta"
+   ]
+  },
+  {
+   "source": "evt",
+   "code": 7032,
+   "name": "Mediterranean California Red Fir Forest",
+   "cells": 11050,
+   "rule": "red_fir",
+   "named": [
+    "abies_magnifica"
+   ]
+  },
+  {
+   "source": "evt",
+   "code": 7044,
+   "name": "Northern California Mesic Subalpine Woodland",
+   "cells": 4826,
+   "rule": "mesic_subalpine",
+   "named": [
+    "pinus_albicaulis",
+    "tsuga_mertensiana",
+    "pinus_contorta",
+    "pinus_monticola",
+    "juniperus_grandis"
+   ]
+  },
+  {
+   "source": "evt",
+   "code": 9129,
+   "name": "Mediterranean California Foothill and Lower Montane Riparian Woodland",
+   "cells": 4719,
+   "rule": "riparian",
+   "named": []
+  },
+  {
+   "source": "evt",
+   "code": 7031,
+   "name": "California Montane Jeffrey Pine-(Ponderosa Pine) Woodland",
+   "cells": 4497,
+   "rule": "jeffrey_pine",
+   "named": [
+    "pinus_ponderosa",
+    "pinus_jeffreyi"
+   ]
+  },
+  {
+   "source": "evt",
+   "code": 7033,
+   "name": "Mediterranean California Subalpine Woodland",
+   "cells": 3917,
+   "rule": "subalpine_woodland",
+   "named": [
+    "pinus_albicaulis",
+    "tsuga_mertensiana",
+    "pinus_contorta",
+    "pinus_monticola",
+    "juniperus_grandis"
+   ]
+  },
+  {
+   "source": "evt",
+   "code": 9125,
+   "name": "Mediterranean California Alpine Bedrock and Scree",
+   "cells": 3355,
+   "rule": "alpine",
+   "named": [
+    "phyllodoce_breweri"
+   ]
+  },
+  {
+   "source": "evt",
+   "code": 7029,
+   "name": "Mediterranean California Mixed Oak Woodland",
+   "cells": 3113,
+   "rule": "mixed_oak",
+   "named": []
+  },
+  {
+   "source": "evt",
+   "code": 7027,
+   "name": "Mediterranean California Dry-Mesic Mixed Conifer Forest and Woodland",
+   "cells": 2392,
+   "rule": "dry_mesic_mixed_conifer",
+   "named": [
+    "pinus_ponderosa",
+    "pinus_lambertiana",
+    "abies_concolor",
+    "calocedrus_decurrens",
+    "pseudotsuga_menziesii",
+    "quercus_kelloggii"
+   ]
+  },
+  {
+   "source": "evt",
+   "code": 7137,
+   "name": "Mediterranean California Subalpine Meadow",
+   "cells": 1890,
+   "rule": "subalpine_meadow",
+   "named": []
+  },
+  {
+   "source": "evt",
+   "code": 9301,
+   "name": "California Ruderal Grassland and Meadow",
+   "cells": 1446,
+   "rule": "grassland_savanna",
+   "named": []
+  },
+  {
+   "source": "evt",
+   "code": 7292,
+   "name": "Open Water",
+   "cells": 806,
+   "rule": "open_water",
+   "named": []
+  },
+  {
+   "source": "evt",
+   "code": 7105,
+   "name": "Northern and Central California Dry-Mesic Chaparral",
+   "cells": 712,
+   "rule": "dry_mesic_chaparral",
+   "named": [
+    "adenostoma_fasciculatum",
+    "arctostaphylos_viscida",
+    "ceanothus_cuneatus"
+   ]
+  },
+  {
+   "source": "evt",
+   "code": 7071,
+   "name": "Sierra Nevada Alpine Dwarf-Shrubland",
+   "cells": 598,
+   "rule": "alpine_dwarf_shrub",
+   "named": [
+    "phyllodoce_breweri"
+   ]
+  },
+  {
+   "source": "evt",
+   "code": 7030,
+   "name": "Mediterranean California Lower Montane Conifer Forest and Woodland",
+   "cells": 469,
+   "rule": "lower_montane_conifer",
+   "named": []
+  },
+  {
+   "source": "bps",
+   "code": 619,
+   "name": "Inter-Mountain Basins Montane Riparian Systems",
+   "cells": 457,
+   "rule": "montane_riparian",
+   "named": []
+  },
+  {
+   "source": "bps",
+   "code": 590,
+   "name": "Mediterranean California Red Fir Forest-Southern Sierra",
+   "cells": 452,
+   "rule": "red_fir",
+   "named": [
+    "abies_magnifica"
+   ]
+  },
+  {
+   "source": "evt",
+   "code": 7097,
+   "name": "California Mesic Chaparral",
+   "cells": 384,
+   "rule": "mesic_chaparral",
+   "named": [
+    "adenostoma_fasciculatum",
+    "arctostaphylos_viscida",
+    "ceanothus_cuneatus"
+   ]
+  },
+  {
+   "source": "evt",
+   "code": 9629,
+   "name": "Mediterranean California Foothill and Lower Montane Riparian Shrubland",
+   "cells": 334,
+   "rule": "riparian_shrubland",
+   "named": []
+  },
+  {
+   "source": "bps",
+   "code": 584,
+   "name": "Mediterranean California Dry-Mesic Mixed Conifer Forest and Woodland",
+   "cells": 296,
+   "rule": "dry_mesic_mixed_conifer",
+   "named": [
+    "pinus_ponderosa",
+    "pinus_lambertiana",
+    "abies_concolor",
+    "calocedrus_decurrens",
+    "pseudotsuga_menziesii",
+    "quercus_kelloggii"
+   ]
+  },
+  {
+   "source": "evt",
+   "code": 9272,
+   "name": "Temperate Pacific Subalpine-Montane Wet Meadow",
+   "cells": 290,
+   "rule": "subalpine_meadow",
+   "named": []
+  },
+  {
+   "source": "bps",
+   "code": 586,
+   "name": "Mediterranean California Mixed Oak Woodland",
+   "cells": 109,
+   "rule": "mixed_oak",
+   "named": []
+  },
+  {
+   "source": "evt",
+   "code": 7011,
+   "name": "Rocky Mountain Aspen Forest and Woodland",
+   "cells": 100,
+   "rule": "aspen",
+   "named": [
+    "populus_tremuloides"
+   ]
+  },
+  {
+   "source": "bps",
+   "code": 617,
+   "name": "California Montane Riparian Systems",
+   "cells": 80,
+   "rule": "montane_riparian",
+   "named": []
+  },
+  {
+   "source": "evt",
+   "code": 7062,
+   "name": "Inter-Mountain Basins Curl-leaf Mountain Mahogany Woodland",
+   "cells": 70,
+   "rule": "curl_leaf_mahogany",
+   "named": [
+    "cercocarpus_ledifolius"
+   ]
+  },
+  {
+   "source": "bps",
+   "code": 587,
+   "name": "Mediterranean California Lower Montane Black Oak-Conifer Forest and Woodland",
+   "cells": 57,
+   "rule": "black_oak_conifer",
+   "named": [
+    "quercus_kelloggii"
+   ]
+  },
+  {
+   "source": "bps",
+   "code": 589,
+   "name": "Mediterranean California Red Fir Forest-Cascades",
+   "cells": 43,
+   "rule": "red_fir",
+   "named": [
+    "abies_magnifica"
+   ]
+  },
+  {
+   "source": "bps",
+   "code": 610,
+   "name": "Northern and Central California Dry-Mesic Chaparral",
+   "cells": 37,
+   "rule": "dry_mesic_chaparral",
+   "named": [
+    "adenostoma_fasciculatum",
+    "arctostaphylos_viscida",
+    "ceanothus_cuneatus"
+   ]
+  },
+  {
+   "source": "bps",
+   "code": 579,
+   "name": "Rocky Mountain Aspen Forest and Woodland",
+   "cells": 37,
+   "rule": "aspen",
+   "named": [
+    "populus_tremuloides"
+   ]
+  },
+  {
+   "source": "bps",
+   "code": 585,
+   "name": "Mediterranean California Mesic Mixed Conifer Forest and Woodland",
+   "cells": 28,
+   "rule": "mesic_mixed_conifer",
+   "named": [
+    "pinus_ponderosa",
+    "pinus_lambertiana",
+    "abies_concolor",
+    "calocedrus_decurrens",
+    "pseudotsuga_menziesii",
+    "quercus_kelloggii"
+   ]
+  },
+  {
+   "source": "evt",
+   "code": 7136,
+   "name": "Mediterranean California Alpine Dry Tundra",
+   "cells": 11,
+   "rule": "alpine",
+   "named": [
+    "phyllodoce_breweri"
+   ]
+  }
+ ],
+ "unread": [],
+ "needs": [
+  {
+   "id": "quercus_wislizeni",
+   "kind": "tree",
+   "why": [
+    "cover: rule montane_woodland_chaparral on California Montane Woodland and Chaparral",
+    "cover: rule sparse_rock on Sierra Nevada Cliff and Canyon",
+    "cover: rule mesic_mixed_conifer on Mediterranean California Mesic Mixed Conifer Forest and Woodland",
+    "cover: rule riparian on Mediterranean California Foothill and Lower Montane Riparian Woodland",
+    "cover: rule mixed_oak on Mediterranean California Mixed Oak Woodland",
+    "cover: rule dry_mesic_mixed_conifer on Mediterranean California Dry-Mesic Mixed Conifer Forest and Woodland",
+    "cover: rule dry_mesic_chaparral on Northern and Central California Dry-Mesic Chaparral",
+    "cover: rule lower_montane_conifer on Mediterranean California Lower Montane Conifer Forest and Woodland",
+    "cover: rule montane_riparian on Inter-Mountain Basins Montane Riparian Systems",
+    "cover: rule mesic_chaparral on California Mesic Chaparral",
+    "cover: rule riparian_shrubland on Mediterranean California Foothill and Lower Montane Riparian Shrubland",
+    "cover: rule montane_riparian on California Montane Riparian Systems",
+    "cover: rule black_oak_conifer on Mediterranean California Lower Montane Black Oak-Conifer Forest and Woodland"
+   ],
+   "cover": 0.1455,
+   "records": 0,
+   "record": true,
+   "card": false,
+   "drawn_as": "quercus_wislizeni",
+   "rank": 1
+  },
+  {
+   "id": "pinus_contorta",
+   "kind": "tree",
+   "why": [
+    "cover: rule subalpine_lodgepole on Sierra Nevada Subalpine Lodgepole Pine Forest and Woodland",
+    "named by EVT 7058 Sierra Nevada Subalpine Lodgepole Pine Forest and Woodland (11295 cells)",
+    "cover: rule red_fir on Mediterranean California Red Fir Forest",
+    "cover: rule mesic_subalpine on Northern California Mesic Subalpine Woodland",
+    "named by EVT 7044 Northern California Mesic Subalpine Woodland (4826 cells)",
+    "cover: rule subalpine_woodland on Mediterranean California Subalpine Woodland",
+    "named by EVT 7033 Mediterranean California Subalpine Woodland (3917 cells)",
+    "cover: rule subalpine_meadow on Mediterranean California Subalpine Meadow",
+    "cover: rule red_fir on Mediterranean California Red Fir Forest-Southern Sierra",
+    "cover: rule subalpine_meadow on Temperate Pacific Subalpine-Montane Wet Meadow",
+    "cover: rule aspen on Rocky Mountain Aspen Forest and Woodland",
+    "cover: rule red_fir on Mediterranean California Red Fir Forest-Cascades"
+   ],
+   "cover": 0.132,
+   "records": 0,
+   "record": true,
+   "card": true,
+   "drawn_as": "pinus_contorta",
+   "rank": 2
+  },
+  {
+   "id": "phyllodoce_breweri",
+   "kind": "shrub",
+   "why": [
+    "cover: rule subalpine_lodgepole on Sierra Nevada Subalpine Lodgepole Pine Forest and Woodland",
+    "cover: rule mesic_subalpine on Northern California Mesic Subalpine Woodland",
+    "cover: rule subalpine_woodland on Mediterranean California Subalpine Woodland",
+    "cover: rule alpine on Mediterranean California Alpine Bedrock and Scree",
+    "named by EVT 9125 Mediterranean California Alpine Bedrock and Scree (3355 cells)",
+    "cover: rule subalpine_meadow on Mediterranean California Subalpine Meadow",
+    "cover: rule alpine_dwarf_shrub on Sierra Nevada Alpine Dwarf-Shrubland",
+    "named by EVT 7071 Sierra Nevada Alpine Dwarf-Shrubland (598 cells)",
+    "cover: rule subalpine_meadow on Temperate Pacific Subalpine-Montane Wet Meadow",
+    "cover: rule alpine on Mediterranean California Alpine Dry Tundra",
+    "named by EVT 7136 Mediterranean California Alpine Dry Tundra (11 cells)"
+   ],
+   "cover": 0.131,
+   "records": 0,
+   "record": true,
+   "card": true,
+   "drawn_as": "phyllodoce_breweri",
+   "rank": 3
+  },
+  {
+   "id": "arctostaphylos_patula",
+   "kind": "shrub",
+   "why": [
+    "cover: rule montane_woodland_chaparral on California Montane Woodland and Chaparral",
+    "named by EVT 7098 California Montane Woodland and Chaparral (26118 cells)",
+    "cover: rule mesic_mixed_conifer on Mediterranean California Mesic Mixed Conifer Forest and Woodland",
+    "cover: rule subalpine_lodgepole on Sierra Nevada Subalpine Lodgepole Pine Forest and Woodland",
+    "cover: rule red_fir on Mediterranean California Red Fir Forest",
+    "cover: rule mesic_subalpine on Northern California Mesic Subalpine Woodland",
+    "cover: rule jeffrey_pine on California Montane Jeffrey Pine-(Ponderosa Pine) Woodland",
+    "cover: rule subalpine_woodland on Mediterranean California Subalpine Woodland",
+    "cover: rule dry_mesic_mixed_conifer on Mediterranean California Dry-Mesic Mixed Conifer Forest and Woodland",
+    "cover: rule lower_montane_conifer on Mediterranean California Lower Montane Conifer Forest and Woodland",
+    "cover: rule red_fir on Mediterranean California Red Fir Forest-Southern Sierra",
+    "cover: rule curl_leaf_mahogany on Inter-Mountain Basins Curl-leaf Mountain Mahogany Woodland",
+    "cover: rule black_oak_conifer on Mediterranean California Lower Montane Black Oak-Conifer Forest and Woodland",
+    "cover: rule red_fir on Mediterranean California Red Fir Forest-Cascades"
+   ],
+   "cover": 0.1277,
+   "records": 23,
+   "record": true,
+   "card": true,
+   "drawn_as": "arctostaphylos_patula",
+   "rank": 4
+  },
+  {
+   "id": "arctostaphylos_viscida",
+   "kind": "shrub",
+   "why": [
+    "cover: rule montane_woodland_chaparral on California Montane Woodland and Chaparral",
+    "cover: rule sparse_rock on Sierra Nevada Cliff and Canyon",
+    "cover: rule mesic_mixed_conifer on Mediterranean California Mesic Mixed Conifer Forest and Woodland",
+    "cover: rule riparian on Mediterranean California Foothill and Lower Montane Riparian Woodland",
+    "cover: rule mixed_oak on Mediterranean California Mixed Oak Woodland",
+    "cover: rule dry_mesic_mixed_conifer on Mediterranean California Dry-Mesic Mixed Conifer Forest and Woodland",
+    "cover: rule dry_mesic_chaparral on Northern and Central California Dry-Mesic Chaparral",
+    "named by EVT 7105 Northern and Central California Dry-Mesic Chaparral (712 cells)",
+    "cover: rule lower_montane_conifer on Mediterranean California Lower Montane Conifer Forest and Woodland",
+    "cover: rule montane_riparian on Inter-Mountain Basins Montane Riparian Systems",
+    "cover: rule mesic_chaparral on California Mesic Chaparral",
+    "named by EVT 7097 California Mesic Chaparral (384 cells)",
+    "cover: rule riparian_shrubland on Mediterranean California Foothill and Lower Montane Riparian Shrubland",
+    "cover: rule montane_riparian on California Montane Riparian Systems",
+    "cover: rule black_oak_conifer on Mediterranean California Lower Montane Black Oak-Conifer Forest and Woodland",
+    "named by BPS 610 Northern and Central California Dry-Mesic Chaparral (37 cells)"
+   ],
+   "cover": 0.1231,
+   "records": 62,
+   "record": true,
+   "card": false,
+   "drawn_as": "arctostaphylos_viscida",
+   "rank": 5
+  },
+  {
+   "id": "pinus_ponderosa",
+   "kind": "tree",
+   "why": [
+    "cover: rule montane_woodland_chaparral on California Montane Woodland and Chaparral",
+    "cover: rule mesic_mixed_conifer on Mediterranean California Mesic Mixed Conifer Forest and Woodland",
+    "named by EVT 7028 Mediterranean California Mesic Mixed Conifer Forest and Woodland (13270 cells)",
+    "cover: rule jeffrey_pine on California Montane Jeffrey Pine-(Ponderosa Pine) Woodland",
+    "named by EVT 7031 California Montane Jeffrey Pine-(Ponderosa Pine) Woodland (4497 cells)",
+    "cover: rule dry_mesic_mixed_conifer on Mediterranean California Dry-Mesic Mixed Conifer Forest and Woodland",
+    "named by EVT 7027 Mediterranean California Dry-Mesic Mixed Conifer Forest and Woodland (2392 cells)",
+    "cover: rule lower_montane_conifer on Mediterranean California Lower Montane Conifer Forest and Woodland",
+    "cover: rule montane_riparian on Inter-Mountain Basins Montane Riparian Systems",
+    "named by BPS 584 Mediterranean California Dry-Mesic Mixed Conifer Forest and Woodland (296 cells)",
+    "cover: rule montane_riparian on California Montane Riparian Systems",
+    "cover: rule black_oak_conifer on Mediterranean California Lower Montane Black Oak-Conifer Forest and Woodland",
+    "named by BPS 585 Mediterranean California Mesic Mixed Conifer Forest and Woodland (28 cells)"
+   ],
+   "cover": 0.1104,
+   "records": 66,
+   "record": true,
+   "card": false,
+   "drawn_as": "pinus_ponderosa",
+   "rank": 6
+  },
+  {
+   "id": "pinus_sabiniana",
+   "kind": "tree",
+   "why": [
+    "cover: rule montane_woodland_chaparral on California Montane Woodland and Chaparral",
+    "cover: rule sparse_rock on Sierra Nevada Cliff and Canyon",
+    "cover: rule mixed_oak on Mediterranean California Mixed Oak Woodland",
+    "cover: rule grassland_savanna on California Ruderal Grassland and Meadow",
+    "cover: rule dry_mesic_chaparral on Northern and Central California Dry-Mesic Chaparral",
+    "cover: rule lower_montane_conifer on Mediterranean California Lower Montane Conifer Forest and Woodland",
+    "cover: rule mesic_chaparral on California Mesic Chaparral",
+    "cover: rule black_oak_conifer on Mediterranean California Lower Montane Black Oak-Conifer Forest and Woodland"
+   ],
+   "cover": 0.0914,
+   "records": 0,
+   "record": true,
+   "card": false,
+   "drawn_as": "pinus_sabiniana",
+   "rank": 7
+  },
+  {
+   "id": "ceanothus_cordulatus",
+   "kind": "shrub",
+   "why": [
+    "cover: rule montane_woodland_chaparral on California Montane Woodland and Chaparral",
+    "named by EVT 7098 California Montane Woodland and Chaparral (26118 cells)",
+    "cover: rule mesic_mixed_conifer on Mediterranean California Mesic Mixed Conifer Forest and Woodland",
+    "cover: rule subalpine_lodgepole on Sierra Nevada Subalpine Lodgepole Pine Forest and Woodland",
+    "cover: rule red_fir on Mediterranean California Red Fir Forest",
+    "cover: rule jeffrey_pine on California Montane Jeffrey Pine-(Ponderosa Pine) Woodland",
+    "cover: rule dry_mesic_mixed_conifer on Mediterranean California Dry-Mesic Mixed Conifer Forest and Woodland",
+    "cover: rule lower_montane_conifer on Mediterranean California Lower Montane Conifer Forest and Woodland",
+    "cover: rule red_fir on Mediterranean California Red Fir Forest-Southern Sierra",
+    "cover: rule aspen on Rocky Mountain Aspen Forest and Woodland",
+    "cover: rule black_oak_conifer on Mediterranean California Lower Montane Black Oak-Conifer Forest and Woodland",
+    "cover: rule red_fir on Mediterranean California Red Fir Forest-Cascades"
+   ],
+   "cover": 0.0874,
+   "records": 17,
+   "record": true,
+   "card": true,
+   "drawn_as": "ceanothus_cordulatus",
+   "rank": 8
+  },
+  {
+   "id": "abies_magnifica",
+   "kind": "tree",
+   "why": [
+    "cover: rule subalpine_lodgepole on Sierra Nevada Subalpine Lodgepole Pine Forest and Woodland",
+    "cover: rule red_fir on Mediterranean California Red Fir Forest",
+    "named by EVT 7032 Mediterranean California Red Fir Forest (11050 cells)",
+    "cover: rule mesic_subalpine on Northern California Mesic Subalpine Woodland",
+    "cover: rule red_fir on Mediterranean California Red Fir Forest-Southern Sierra",
+    "named by BPS 590 Mediterranean California Red Fir Forest-Southern Sierra (452 cells)",
+    "cover: rule red_fir on Mediterranean California Red Fir Forest-Cascades",
+    "named by BPS 589 Mediterranean California Red Fir Forest-Cascades (43 cells)"
+   ],
+   "cover": 0.0831,
+   "records": 18,
+   "record": true,
+   "card": true,
+   "drawn_as": "abies_magnifica",
+   "rank": 9
+  },
+  {
+   "id": "quercus_chrysolepis",
+   "kind": "tree",
+   "why": [
+    "cover: rule montane_woodland_chaparral on California Montane Woodland and Chaparral",
+    "named by EVT 7098 California Montane Woodland and Chaparral (26118 cells)",
+    "cover: rule sparse_rock on Sierra Nevada Cliff and Canyon",
+    "cover: rule mixed_oak on Mediterranean California Mixed Oak Woodland",
+    "cover: rule dry_mesic_mixed_conifer on Mediterranean California Dry-Mesic Mixed Conifer Forest and Woodland",
+    "cover: rule dry_mesic_chaparral on Northern and Central California Dry-Mesic Chaparral",
+    "cover: rule lower_montane_conifer on Mediterranean California Lower Montane Conifer Forest and Woodland",
+    "cover: rule mesic_chaparral on California Mesic Chaparral",
+    "cover: rule black_oak_conifer on Mediterranean California Lower Montane Black Oak-Conifer Forest and Woodland"
+   ],
+   "cover": 0.0748,
+   "records": 291,
+   "record": true,
+   "card": false,
+   "drawn_as": "quercus_chrysolepis",
+   "rank": 10
+  },
+  {
+   "id": "quercus_vacciniifolia",
+   "kind": "shrub",
+   "why": [
+    "cover: rule montane_woodland_chaparral on California Montane Woodland and Chaparral",
+    "named by EVT 7098 California Montane Woodland and Chaparral (26118 cells)",
+    "cover: rule red_fir on Mediterranean California Red Fir Forest",
+    "cover: rule mesic_subalpine on Northern California Mesic Subalpine Woodland",
+    "cover: rule jeffrey_pine on California Montane Jeffrey Pine-(Ponderosa Pine) Woodland",
+    "cover: rule subalpine_woodland on Mediterranean California Subalpine Woodland",
+    "cover: rule red_fir on Mediterranean California Red Fir Forest-Southern Sierra",
+    "cover: rule red_fir on Mediterranean California Red Fir Forest-Cascades"
+   ],
+   "cover": 0.064,
+   "records": 33,
+   "record": true,
+   "card": true,
+   "drawn_as": "quercus_vacciniifolia",
+   "rank": 11
+  },
+  {
+   "id": "pinus_albicaulis",
+   "kind": "tree",
+   "why": [
+    "cover: rule subalpine_lodgepole on Sierra Nevada Subalpine Lodgepole Pine Forest and Woodland",
+    "cover: rule mesic_subalpine on Northern California Mesic Subalpine Woodland",
+    "named by EVT 7044 Northern California Mesic Subalpine Woodland (4826 cells)",
+    "cover: rule subalpine_woodland on Mediterranean California Subalpine Woodland",
+    "named by EVT 7033 Mediterranean California Subalpine Woodland (3917 cells)",
+    "cover: rule alpine on Mediterranean California Alpine Bedrock and Scree",
+    "cover: rule alpine_dwarf_shrub on Sierra Nevada Alpine Dwarf-Shrubland",
+    "cover: rule alpine on Mediterranean California Alpine Dry Tundra"
+   ],
+   "cover": 0.0584,
+   "records": 0,
+   "record": true,
+   "card": true,
+   "drawn_as": "pinus_albicaulis",
+   "rank": 12
+  },
+  {
+   "id": "adenostoma_fasciculatum",
+   "kind": "shrub",
+   "why": [
+    "cover: rule montane_woodland_chaparral on California Montane Woodland and Chaparral",
+    "cover: rule sparse_rock on Sierra Nevada Cliff and Canyon",
+    "cover: rule mixed_oak on Mediterranean California Mixed Oak Woodland",
+    "cover: rule grassland_savanna on California Ruderal Grassland and Meadow",
+    "cover: rule dry_mesic_chaparral on Northern and Central California Dry-Mesic Chaparral",
+    "named by EVT 7105 Northern and Central California Dry-Mesic Chaparral (712 cells)",
+    "cover: rule lower_montane_conifer on Mediterranean California Lower Montane Conifer Forest and Woodland",
+    "cover: rule mesic_chaparral on California Mesic Chaparral",
+    "named by EVT 7097 California Mesic Chaparral (384 cells)",
+    "cover: rule riparian_shrubland on Mediterranean California Foothill and Lower Montane Riparian Shrubland",
+    "cover: rule black_oak_conifer on Mediterranean California Lower Montane Black Oak-Conifer Forest and Woodland",
+    "named by BPS 610 Northern and Central California Dry-Mesic Chaparral (37 cells)"
+   ],
+   "cover": 0.0553,
+   "records": 0,
+   "record": true,
+   "card": false,
+   "drawn_as": "adenostoma_fasciculatum",
+   "rank": 13
+  },
+  {
+   "id": "ceanothus_cuneatus",
+   "kind": "shrub",
+   "why": [
+    "cover: rule montane_woodland_chaparral on California Montane Woodland and Chaparral",
+    "cover: rule sparse_rock on Sierra Nevada Cliff and Canyon",
+    "cover: rule mesic_mixed_conifer on Mediterranean California Mesic Mixed Conifer Forest and Woodland",
+    "cover: rule jeffrey_pine on California Montane Jeffrey Pine-(Ponderosa Pine) Woodland",
+    "cover: rule mixed_oak on Mediterranean California Mixed Oak Woodland",
+    "cover: rule dry_mesic_mixed_conifer on Mediterranean California Dry-Mesic Mixed Conifer Forest and Woodland",
+    "cover: rule grassland_savanna on California Ruderal Grassland and Meadow",
+    "cover: rule dry_mesic_chaparral on Northern and Central California Dry-Mesic Chaparral",
+    "named by EVT 7105 Northern and Central California Dry-Mesic Chaparral (712 cells)",
+    "cover: rule lower_montane_conifer on Mediterranean California Lower Montane Conifer Forest and Woodland",
+    "cover: rule mesic_chaparral on California Mesic Chaparral",
+    "named by EVT 7097 California Mesic Chaparral (384 cells)",
+    "cover: rule black_oak_conifer on Mediterranean California Lower Montane Black Oak-Conifer Forest and Woodland",
+    "named by BPS 610 Northern and Central California Dry-Mesic Chaparral (37 cells)"
+   ],
+   "cover": 0.0512,
+   "records": 0,
+   "record": true,
+   "card": false,
+   "drawn_as": "ceanothus_cuneatus",
+   "rank": 14
+  },
+  {
+   "id": "quercus_kelloggii",
+   "kind": "tree",
+   "why": [
+    "cover: rule montane_woodland_chaparral on California Montane Woodland and Chaparral",
+    "cover: rule mesic_mixed_conifer on Mediterranean California Mesic Mixed Conifer Forest and Woodland",
+    "named by EVT 7028 Mediterranean California Mesic Mixed Conifer Forest and Woodland (13270 cells)",
+    "cover: rule jeffrey_pine on California Montane Jeffrey Pine-(Ponderosa Pine) Woodland",
+    "cover: rule mixed_oak on Mediterranean California Mixed Oak Woodland",
+    "cover: rule dry_mesic_mixed_conifer on Mediterranean California Dry-Mesic Mixed Conifer Forest and Woodland",
+    "named by EVT 7027 Mediterranean California Dry-Mesic Mixed Conifer Forest and Woodland (2392 cells)",
+    "cover: rule lower_montane_conifer on Mediterranean California Lower Montane Conifer Forest and Woodland",
+    "named by BPS 584 Mediterranean California Dry-Mesic Mixed Conifer Forest and Woodland (296 cells)",
+    "cover: rule black_oak_conifer on Mediterranean California Lower Montane Black Oak-Conifer Forest and Woodland",
+    "named by BPS 587 Mediterranean California Lower Montane Black Oak-Conifer Forest and Woodland (57 cells)",
+    "named by BPS 585 Mediterranean California Mesic Mixed Conifer Forest and Woodland (28 cells)"
+   ],
+   "cover": 0.0421,
+   "records": 289,
+   "record": true,
+   "card": false,
+   "drawn_as": "quercus_kelloggii",
+   "rank": 15
+  },
+  {
+   "id": "cercocarpus_betuloides",
+   "kind": "shrub",
+   "why": [
+    "cover: rule montane_woodland_chaparral on California Montane Woodland and Chaparral",
+    "cover: rule sparse_rock on Sierra Nevada Cliff and Canyon",
+    "cover: rule mesic_mixed_conifer on Mediterranean California Mesic Mixed Conifer Forest and Woodland",
+    "cover: rule mixed_oak on Mediterranean California Mixed Oak Woodland",
+    "cover: rule dry_mesic_mixed_conifer on Mediterranean California Dry-Mesic Mixed Conifer Forest and Woodland",
+    "cover: rule dry_mesic_chaparral on Northern and Central California Dry-Mesic Chaparral",
+    "cover: rule lower_montane_conifer on Mediterranean California Lower Montane Conifer Forest and Woodland",
+    "cover: rule mesic_chaparral on California Mesic Chaparral",
+    "cover: rule black_oak_conifer on Mediterranean California Lower Montane Black Oak-Conifer Forest and Woodland"
+   ],
+   "cover": 0.0421,
+   "records": 0,
+   "record": true,
+   "card": false,
+   "drawn_as": "cercocarpus_betuloides",
+   "rank": 16
+  },
+  {
+   "id": "ceanothus_integerrimus",
+   "kind": "shrub",
+   "why": [
+    "cover: rule montane_woodland_chaparral on California Montane Woodland and Chaparral",
+    "cover: rule mesic_mixed_conifer on Mediterranean California Mesic Mixed Conifer Forest and Woodland",
+    "cover: rule dry_mesic_mixed_conifer on Mediterranean California Dry-Mesic Mixed Conifer Forest and Woodland",
+    "cover: rule dry_mesic_chaparral on Northern and Central California Dry-Mesic Chaparral",
+    "cover: rule lower_montane_conifer on Mediterranean California Lower Montane Conifer Forest and Woodland",
+    "cover: rule mesic_chaparral on California Mesic Chaparral",
+    "cover: rule black_oak_conifer on Mediterranean California Lower Montane Black Oak-Conifer Forest and Woodland"
+   ],
+   "cover": 0.04,
+   "records": 38,
+   "record": true,
+   "card": false,
+   "drawn_as": "ceanothus_integerrimus",
+   "rank": 17
+  },
+  {
+   "id": "abies_concolor",
+   "kind": "tree",
+   "why": [
+    "cover: rule mesic_mixed_conifer on Mediterranean California Mesic Mixed Conifer Forest and Woodland",
+    "named by EVT 7028 Mediterranean California Mesic Mixed Conifer Forest and Woodland (13270 cells)",
+    "cover: rule red_fir on Mediterranean California Red Fir Forest",
+    "cover: rule jeffrey_pine on California Montane Jeffrey Pine-(Ponderosa Pine) Woodland",
+    "cover: rule dry_mesic_mixed_conifer on Mediterranean California Dry-Mesic Mixed Conifer Forest and Woodland",
+    "named by EVT 7027 Mediterranean California Dry-Mesic Mixed Conifer Forest and Woodland (2392 cells)",
+    "cover: rule lower_montane_conifer on Mediterranean California Lower Montane Conifer Forest and Woodland",
+    "cover: rule red_fir on Mediterranean California Red Fir Forest-Southern Sierra",
+    "named by BPS 584 Mediterranean California Dry-Mesic Mixed Conifer Forest and Woodland (296 cells)",
+    "cover: rule aspen on Rocky Mountain Aspen Forest and Woodland",
+    "cover: rule black_oak_conifer on Mediterranean California Lower Montane Black Oak-Conifer Forest and Woodland",
+    "cover: rule red_fir on Mediterranean California Red Fir Forest-Cascades",
+    "named by BPS 585 Mediterranean California Mesic Mixed Conifer Forest and Woodland (28 cells)"
+   ],
+   "cover": 0.0385,
+   "records": 40,
+   "record": true,
+   "card": true,
+   "drawn_as": "abies_concolor",
+   "rank": 18
+  },
+  {
+   "id": "chrysolepis_sempervirens",
+   "kind": "shrub",
+   "why": [
+    "cover: rule montane_woodland_chaparral on California Montane Woodland and Chaparral",
+    "named by EVT 7098 California Montane Woodland and Chaparral (26118 cells)",
+    "cover: rule mesic_mixed_conifer on Mediterranean California Mesic Mixed Conifer Forest and Woodland",
+    "cover: rule red_fir on Mediterranean California Red Fir Forest",
+    "cover: rule dry_mesic_mixed_conifer on Mediterranean California Dry-Mesic Mixed Conifer Forest and Woodland",
+    "cover: rule lower_montane_conifer on Mediterranean California Lower Montane Conifer Forest and Woodland",
+    "cover: rule red_fir on Mediterranean California Red Fir Forest-Southern Sierra",
+    "cover: rule black_oak_conifer on Mediterranean California Lower Montane Black Oak-Conifer Forest and Woodland",
+    "cover: rule red_fir on Mediterranean California Red Fir Forest-Cascades"
+   ],
+   "cover": 0.0372,
+   "records": 34,
+   "record": true,
+   "card": true,
+   "drawn_as": "chrysolepis_sempervirens",
+   "rank": 19
+  },
+  {
+   "id": "pinus_jeffreyi",
+   "kind": "tree",
+   "why": [
+    "cover: rule red_fir on Mediterranean California Red Fir Forest",
+    "cover: rule jeffrey_pine on California Montane Jeffrey Pine-(Ponderosa Pine) Woodland",
+    "named by EVT 7031 California Montane Jeffrey Pine-(Ponderosa Pine) Woodland (4497 cells)",
+    "cover: rule red_fir on Mediterranean California Red Fir Forest-Southern Sierra",
+    "cover: rule aspen on Rocky Mountain Aspen Forest and Woodland",
+    "cover: rule curl_leaf_mahogany on Inter-Mountain Basins Curl-leaf Mountain Mahogany Woodland",
+    "cover: rule red_fir on Mediterranean California Red Fir Forest-Cascades"
+   ],
+   "cover": 0.0335,
+   "records": 17,
+   "record": true,
+   "card": true,
+   "drawn_as": "pinus_jeffreyi",
+   "rank": 20
+  },
+  {
+   "id": "tsuga_mertensiana",
+   "kind": "tree",
+   "why": [
+    "cover: rule subalpine_lodgepole on Sierra Nevada Subalpine Lodgepole Pine Forest and Woodland",
+    "cover: rule mesic_subalpine on Northern California Mesic Subalpine Woodland",
+    "named by EVT 7044 Northern California Mesic Subalpine Woodland (4826 cells)",
+    "cover: rule subalpine_woodland on Mediterranean California Subalpine Woodland",
+    "named by EVT 7033 Mediterranean California Subalpine Woodland (3917 cells)"
+   ],
+   "cover": 0.0307,
+   "records": 0,
+   "record": true,
+   "card": true,
+   "drawn_as": "tsuga_mertensiana",
+   "rank": 21
+  },
+  {
+   "id": "diplacus_aurantiacus",
+   "kind": "shrub",
+   "why": [
+    "cover: rule montane_woodland_chaparral on California Montane Woodland and Chaparral",
+    "cover: rule sparse_rock on Sierra Nevada Cliff and Canyon",
+    "cover: rule mixed_oak on Mediterranean California Mixed Oak Woodland",
+    "cover: rule grassland_savanna on California Ruderal Grassland and Meadow",
+    "cover: rule dry_mesic_chaparral on Northern and Central California Dry-Mesic Chaparral",
+    "cover: rule mesic_chaparral on California Mesic Chaparral"
+   ],
+   "cover": 0.0258,
+   "records": 0,
+   "record": true,
+   "card": false,
+   "drawn_as": "diplacus_aurantiacus",
+   "rank": 22
+  },
+  {
+   "id": "arctostaphylos_manzanita",
+   "kind": "shrub",
+   "why": [
+    "cover: rule montane_woodland_chaparral on California Montane Woodland and Chaparral",
+    "cover: rule sparse_rock on Sierra Nevada Cliff and Canyon",
+    "cover: rule mesic_mixed_conifer on Mediterranean California Mesic Mixed Conifer Forest and Woodland",
+    "cover: rule mixed_oak on Mediterranean California Mixed Oak Woodland",
+    "cover: rule dry_mesic_mixed_conifer on Mediterranean California Dry-Mesic Mixed Conifer Forest and Woodland",
+    "cover: rule dry_mesic_chaparral on Northern and Central California Dry-Mesic Chaparral",
+    "cover: rule lower_montane_conifer on Mediterranean California Lower Montane Conifer Forest and Woodland",
+    "cover: rule mesic_chaparral on California Mesic Chaparral",
+    "cover: rule black_oak_conifer on Mediterranean California Lower Montane Black Oak-Conifer Forest and Woodland"
+   ],
+   "cover": 0.0256,
+   "records": 0,
+   "record": true,
+   "card": false,
+   "drawn_as": "arctostaphylos_manzanita",
+   "rank": 23
+  },
+  {
+   "id": "symphoricarpos_albus",
+   "kind": "shrub",
+   "why": [
+    "cover: rule mesic_mixed_conifer on Mediterranean California Mesic Mixed Conifer Forest and Woodland",
+    "cover: rule riparian on Mediterranean California Foothill and Lower Montane Riparian Woodland",
+    "cover: rule mixed_oak on Mediterranean California Mixed Oak Woodland",
+    "cover: rule dry_mesic_mixed_conifer on Mediterranean California Dry-Mesic Mixed Conifer Forest and Woodland",
+    "cover: rule subalpine_meadow on Mediterranean California Subalpine Meadow",
+    "cover: rule grassland_savanna on California Ruderal Grassland and Meadow",
+    "cover: rule lower_montane_conifer on Mediterranean California Lower Montane Conifer Forest and Woodland",
+    "cover: rule montane_riparian on Inter-Mountain Basins Montane Riparian Systems",
+    "cover: rule riparian_shrubland on Mediterranean California Foothill and Lower Montane Riparian Shrubland",
+    "cover: rule subalpine_meadow on Temperate Pacific Subalpine-Montane Wet Meadow",
+    "cover: rule aspen on Rocky Mountain Aspen Forest and Woodland",
+    "cover: rule montane_riparian on California Montane Riparian Systems",
+    "cover: rule black_oak_conifer on Mediterranean California Lower Montane Black Oak-Conifer Forest and Woodland"
+   ],
+   "cover": 0.0239,
+   "records": 0,
+   "record": true,
+   "card": false,
+   "drawn_as": "symphoricarpos_albus",
+   "rank": 24
+  },
+  {
+   "id": "calocedrus_decurrens",
+   "kind": "tree",
+   "why": [
+    "cover: rule mesic_mixed_conifer on Mediterranean California Mesic Mixed Conifer Forest and Woodland",
+    "named by EVT 7028 Mediterranean California Mesic Mixed Conifer Forest and Woodland (13270 cells)",
+    "cover: rule jeffrey_pine on California Montane Jeffrey Pine-(Ponderosa Pine) Woodland",
+    "cover: rule dry_mesic_mixed_conifer on Mediterranean California Dry-Mesic Mixed Conifer Forest and Woodland",
+    "named by EVT 7027 Mediterranean California Dry-Mesic Mixed Conifer Forest and Woodland (2392 cells)",
+    "cover: rule lower_montane_conifer on Mediterranean California Lower Montane Conifer Forest and Woodland",
+    "cover: rule montane_riparian on Inter-Mountain Basins Montane Riparian Systems",
+    "named by BPS 584 Mediterranean California Dry-Mesic Mixed Conifer Forest and Woodland (296 cells)",
+    "cover: rule montane_riparian on California Montane Riparian Systems",
+    "cover: rule black_oak_conifer on Mediterranean California Lower Montane Black Oak-Conifer Forest and Woodland",
+    "named by BPS 585 Mediterranean California Mesic Mixed Conifer Forest and Woodland (28 cells)"
+   ],
+   "cover": 0.0221,
+   "records": 305,
+   "record": true,
+   "card": false,
+   "drawn_as": "calocedrus_decurrens",
+   "rank": 25
+  },
+  {
+   "id": "ribes_roezlii",
+   "kind": "shrub",
+   "why": [
+    "cover: rule montane_woodland_chaparral on California Montane Woodland and Chaparral",
+    "cover: rule mesic_mixed_conifer on Mediterranean California Mesic Mixed Conifer Forest and Woodland",
+    "cover: rule red_fir on Mediterranean California Red Fir Forest",
+    "cover: rule riparian on Mediterranean California Foothill and Lower Montane Riparian Woodland",
+    "cover: rule mixed_oak on Mediterranean California Mixed Oak Woodland",
+    "cover: rule dry_mesic_mixed_conifer on Mediterranean California Dry-Mesic Mixed Conifer Forest and Woodland",
+    "cover: rule dry_mesic_chaparral on Northern and Central California Dry-Mesic Chaparral",
+    "cover: rule lower_montane_conifer on Mediterranean California Lower Montane Conifer Forest and Woodland",
+    "cover: rule montane_riparian on Inter-Mountain Basins Montane Riparian Systems",
+    "cover: rule red_fir on Mediterranean California Red Fir Forest-Southern Sierra",
+    "cover: rule mesic_chaparral on California Mesic Chaparral",
+    "cover: rule riparian_shrubland on Mediterranean California Foothill and Lower Montane Riparian Shrubland",
+    "cover: rule montane_riparian on California Montane Riparian Systems",
+    "cover: rule black_oak_conifer on Mediterranean California Lower Montane Black Oak-Conifer Forest and Woodland",
+    "cover: rule red_fir on Mediterranean California Red Fir Forest-Cascades"
+   ],
+   "cover": 0.0202,
+   "records": 37,
+   "record": true,
+   "card": false,
+   "drawn_as": "ribes_roezlii",
+   "rank": 26
+  },
+  {
+   "id": "quercus_douglasii",
+   "kind": "tree",
+   "why": [
+    "cover: rule riparian on Mediterranean California Foothill and Lower Montane Riparian Woodland",
+    "cover: rule mixed_oak on Mediterranean California Mixed Oak Woodland",
+    "cover: rule grassland_savanna on California Ruderal Grassland and Meadow"
+   ],
+   "cover": 0.0199,
+   "records": 0,
+   "record": true,
+   "card": false,
+   "drawn_as": "quercus_douglasii",
+   "rank": 27
+  },
+  {
+   "id": "pinus_monticola",
+   "kind": "tree",
+   "why": [
+    "cover: rule subalpine_lodgepole on Sierra Nevada Subalpine Lodgepole Pine Forest and Woodland",
+    "cover: rule red_fir on Mediterranean California Red Fir Forest",
+    "cover: rule mesic_subalpine on Northern California Mesic Subalpine Woodland",
+    "named by EVT 7044 Northern California Mesic Subalpine Woodland (4826 cells)",
+    "cover: rule subalpine_woodland on Mediterranean California Subalpine Woodland",
+    "named by EVT 7033 Mediterranean California Subalpine Woodland (3917 cells)",
+    "cover: rule red_fir on Mediterranean California Red Fir Forest-Southern Sierra",
+    "cover: rule red_fir on Mediterranean California Red Fir Forest-Cascades"
+   ],
+   "cover": 0.0182,
+   "records": 10,
+   "record": true,
+   "card": true,
+   "drawn_as": "pinus_monticola",
+   "rank": 28
+  },
+  {
+   "id": "chamaebatia_foliolosa",
+   "kind": "shrub",
+   "why": [
+    "cover: rule mesic_mixed_conifer on Mediterranean California Mesic Mixed Conifer Forest and Woodland",
+    "cover: rule dry_mesic_mixed_conifer on Mediterranean California Dry-Mesic Mixed Conifer Forest and Woodland",
+    "cover: rule lower_montane_conifer on Mediterranean California Lower Montane Conifer Forest and Woodland",
+    "cover: rule black_oak_conifer on Mediterranean California Lower Montane Black Oak-Conifer Forest and Woodland"
+   ],
+   "cover": 0.0182,
+   "records": 0,
+   "record": true,
+   "card": true,
+   "drawn_as": "chamaebatia_foliolosa",
+   "rank": 29
+  },
+  {
+   "id": "artemisia_tridentata",
+   "kind": "shrub",
+   "why": [
+    "cover: rule subalpine_lodgepole on Sierra Nevada Subalpine Lodgepole Pine Forest and Woodland",
+    "cover: rule jeffrey_pine on California Montane Jeffrey Pine-(Ponderosa Pine) Woodland",
+    "cover: rule subalpine_woodland on Mediterranean California Subalpine Woodland",
+    "cover: rule alpine_dwarf_shrub on Sierra Nevada Alpine Dwarf-Shrubland",
+    "cover: rule curl_leaf_mahogany on Inter-Mountain Basins Curl-leaf Mountain Mahogany Woodland"
+   ],
+   "cover": 0.0178,
+   "records": 0,
+   "record": true,
+   "card": true,
+   "drawn_as": "artemisia_tridentata",
+   "rank": 30
+  },
+  {
+   "id": "toxicodendron_diversilobum",
+   "kind": "shrub",
+   "why": [
+    "cover: rule mesic_mixed_conifer on Mediterranean California Mesic Mixed Conifer Forest and Woodland",
+    "cover: rule riparian on Mediterranean California Foothill and Lower Montane Riparian Woodland",
+    "cover: rule mixed_oak on Mediterranean California Mixed Oak Woodland",
+    "cover: rule dry_mesic_mixed_conifer on Mediterranean California Dry-Mesic Mixed Conifer Forest and Woodland",
+    "cover: rule grassland_savanna on California Ruderal Grassland and Meadow",
+    "cover: rule dry_mesic_chaparral on Northern and Central California Dry-Mesic Chaparral",
+    "cover: rule lower_montane_conifer on Mediterranean California Lower Montane Conifer Forest and Woodland",
+    "cover: rule montane_riparian on Inter-Mountain Basins Montane Riparian Systems",
+    "cover: rule mesic_chaparral on California Mesic Chaparral",
+    "cover: rule riparian_shrubland on Mediterranean California Foothill and Lower Montane Riparian Shrubland",
+    "cover: rule montane_riparian on California Montane Riparian Systems",
+    "cover: rule black_oak_conifer on Mediterranean California Lower Montane Black Oak-Conifer Forest and Woodland"
+   ],
+   "cover": 0.0177,
+   "records": 0,
+   "record": true,
+   "card": false,
+   "drawn_as": "toxicodendron_diversilobum",
+   "rank": 31
+  },
+  {
+   "id": "pinus_lambertiana",
+   "kind": "tree",
+   "why": [
+    "cover: rule mesic_mixed_conifer on Mediterranean California Mesic Mixed Conifer Forest and Woodland",
+    "named by EVT 7028 Mediterranean California Mesic Mixed Conifer Forest and Woodland (13270 cells)",
+    "cover: rule dry_mesic_mixed_conifer on Mediterranean California Dry-Mesic Mixed Conifer Forest and Woodland",
+    "named by EVT 7027 Mediterranean California Dry-Mesic Mixed Conifer Forest and Woodland (2392 cells)",
+    "cover: rule lower_montane_conifer on Mediterranean California Lower Montane Conifer Forest and Woodland",
+    "named by BPS 584 Mediterranean California Dry-Mesic Mixed Conifer Forest and Woodland (296 cells)",
+    "cover: rule black_oak_conifer on Mediterranean California Lower Montane Black Oak-Conifer Forest and Woodland",
+    "named by BPS 585 Mediterranean California Mesic Mixed Conifer Forest and Woodland (28 cells)"
+   ],
+   "cover": 0.0169,
+   "records": 18,
+   "record": true,
+   "card": true,
+   "drawn_as": "pinus_lambertiana",
+   "rank": 32
+  },
+  {
+   "id": "pseudotsuga_menziesii",
+   "kind": "tree",
+   "why": [
+    "cover: rule mesic_mixed_conifer on Mediterranean California Mesic Mixed Conifer Forest and Woodland",
+    "named by EVT 7028 Mediterranean California Mesic Mixed Conifer Forest and Woodland (13270 cells)",
+    "cover: rule dry_mesic_mixed_conifer on Mediterranean California Dry-Mesic Mixed Conifer Forest and Woodland",
+    "named by EVT 7027 Mediterranean California Dry-Mesic Mixed Conifer Forest and Woodland (2392 cells)",
+    "cover: rule lower_montane_conifer on Mediterranean California Lower Montane Conifer Forest and Woodland",
+    "cover: rule montane_riparian on Inter-Mountain Basins Montane Riparian Systems",
+    "named by BPS 584 Mediterranean California Dry-Mesic Mixed Conifer Forest and Woodland (296 cells)",
+    "cover: rule montane_riparian on California Montane Riparian Systems",
+    "cover: rule black_oak_conifer on Mediterranean California Lower Montane Black Oak-Conifer Forest and Woodland",
+    "named by BPS 585 Mediterranean California Mesic Mixed Conifer Forest and Woodland (28 cells)"
+   ],
+   "cover": 0.0162,
+   "records": 48,
+   "record": true,
+   "card": false,
+   "drawn_as": "pseudotsuga_menziesii",
+   "rank": 33
+  },
+  {
+   "id": "cercis_occidentalis",
+   "kind": "shrub",
+   "why": [
+    "cover: rule montane_woodland_chaparral on California Montane Woodland and Chaparral",
+    "cover: rule sparse_rock on Sierra Nevada Cliff and Canyon",
+    "cover: rule mixed_oak on Mediterranean California Mixed Oak Woodland",
+    "cover: rule dry_mesic_chaparral on Northern and Central California Dry-Mesic Chaparral",
+    "cover: rule lower_montane_conifer on Mediterranean California Lower Montane Conifer Forest and Woodland",
+    "cover: rule mesic_chaparral on California Mesic Chaparral",
+    "cover: rule black_oak_conifer on Mediterranean California Lower Montane Black Oak-Conifer Forest and Woodland"
+   ],
+   "cover": 0.0139,
+   "records": 46,
+   "record": true,
+   "card": false,
+   "drawn_as": "cercis_occidentalis",
+   "rank": 34
+  },
+  {
+   "id": "heteromeles_arbutifolia",
+   "kind": "shrub",
+   "why": [
+    "cover: rule montane_woodland_chaparral on California Montane Woodland and Chaparral",
+    "cover: rule sparse_rock on Sierra Nevada Cliff and Canyon",
+    "cover: rule mixed_oak on Mediterranean California Mixed Oak Woodland",
+    "cover: rule dry_mesic_mixed_conifer on Mediterranean California Dry-Mesic Mixed Conifer Forest and Woodland",
+    "cover: rule dry_mesic_chaparral on Northern and Central California Dry-Mesic Chaparral",
+    "cover: rule lower_montane_conifer on Mediterranean California Lower Montane Conifer Forest and Woodland",
+    "cover: rule mesic_chaparral on California Mesic Chaparral",
+    "cover: rule black_oak_conifer on Mediterranean California Lower Montane Black Oak-Conifer Forest and Woodland"
+   ],
+   "cover": 0.0133,
+   "records": 0,
+   "record": true,
+   "card": false,
+   "drawn_as": "heteromeles_arbutifolia",
+   "rank": 35
+  },
+  {
+   "id": "frangula_californica",
+   "kind": "shrub",
+   "why": [
+    "cover: rule montane_woodland_chaparral on California Montane Woodland and Chaparral",
+    "cover: rule mesic_mixed_conifer on Mediterranean California Mesic Mixed Conifer Forest and Woodland",
+    "cover: rule riparian on Mediterranean California Foothill and Lower Montane Riparian Woodland",
+    "cover: rule mixed_oak on Mediterranean California Mixed Oak Woodland",
+    "cover: rule dry_mesic_mixed_conifer on Mediterranean California Dry-Mesic Mixed Conifer Forest and Woodland",
+    "cover: rule dry_mesic_chaparral on Northern and Central California Dry-Mesic Chaparral",
+    "cover: rule lower_montane_conifer on Mediterranean California Lower Montane Conifer Forest and Woodland",
+    "cover: rule mesic_chaparral on California Mesic Chaparral",
+    "cover: rule riparian_shrubland on Mediterranean California Foothill and Lower Montane Riparian Shrubland",
+    "cover: rule black_oak_conifer on Mediterranean California Lower Montane Black Oak-Conifer Forest and Woodland"
+   ],
+   "cover": 0.0132,
+   "records": 0,
+   "record": true,
+   "card": false,
+   "drawn_as": "frangula_californica",
+   "rank": 36
+  },
+  {
+   "id": "salix_lasiolepis",
+   "kind": "tree",
+   "why": [
+    "cover: rule riparian on Mediterranean California Foothill and Lower Montane Riparian Woodland",
+    "cover: rule montane_riparian on Inter-Mountain Basins Montane Riparian Systems",
+    "cover: rule riparian_shrubland on Mediterranean California Foothill and Lower Montane Riparian Shrubland",
+    "cover: rule montane_riparian on California Montane Riparian Systems"
+   ],
+   "cover": 0.0131,
+   "records": 0,
+   "record": true,
+   "card": false,
+   "drawn_as": "salix_lasiolepis",
+   "rank": 37
+  },
+  {
+   "id": "rosa_californica",
+   "kind": "shrub",
+   "why": [
+    "cover: rule riparian on Mediterranean California Foothill and Lower Montane Riparian Woodland",
+    "cover: rule mixed_oak on Mediterranean California Mixed Oak Woodland",
+    "cover: rule grassland_savanna on California Ruderal Grassland and Meadow",
+    "cover: rule montane_riparian on Inter-Mountain Basins Montane Riparian Systems",
+    "cover: rule riparian_shrubland on Mediterranean California Foothill and Lower Montane Riparian Shrubland",
+    "cover: rule aspen on Rocky Mountain Aspen Forest and Woodland",
+    "cover: rule montane_riparian on California Montane Riparian Systems"
+   ],
+   "cover": 0.0094,
+   "records": 0,
+   "record": true,
+   "card": false,
+   "drawn_as": "rosa_californica",
+   "rank": 38
+  },
+  {
+   "id": "alnus_rhombifolia",
+   "kind": "tree",
+   "why": [
+    "cover: rule riparian on Mediterranean California Foothill and Lower Montane Riparian Woodland",
+    "cover: rule montane_riparian on Inter-Mountain Basins Montane Riparian Systems",
+    "cover: rule riparian_shrubland on Mediterranean California Foothill and Lower Montane Riparian Shrubland",
+    "cover: rule montane_riparian on California Montane Riparian Systems"
+   ],
+   "cover": 0.0089,
+   "records": 0,
+   "record": true,
+   "card": false,
+   "drawn_as": "alnus_rhombifolia",
+   "rank": 39
+  },
+  {
+   "id": "ribes_malvaceum",
+   "kind": "shrub",
+   "why": [
+    "cover: rule montane_woodland_chaparral on California Montane Woodland and Chaparral",
+    "cover: rule mixed_oak on Mediterranean California Mixed Oak Woodland",
+    "cover: rule dry_mesic_chaparral on Northern and Central California Dry-Mesic Chaparral",
+    "cover: rule mesic_chaparral on California Mesic Chaparral"
+   ],
+   "cover": 0.0065,
+   "records": 0,
+   "record": true,
+   "card": false,
+   "drawn_as": "ribes_malvaceum",
+   "rank": 40
+  },
+  {
+   "id": "quercus_lobata",
+   "kind": "tree",
+   "why": [
+    "cover: rule riparian on Mediterranean California Foothill and Lower Montane Riparian Woodland",
+    "cover: rule mixed_oak on Mediterranean California Mixed Oak Woodland",
+    "cover: rule grassland_savanna on California Ruderal Grassland and Meadow"
+   ],
+   "cover": 0.0062,
+   "records": 0,
+   "record": true,
+   "card": false,
+   "drawn_as": "quercus_lobata",
+   "rank": 41
+  },
+  {
+   "id": "sambucus_nigra_caerulea",
+   "kind": "shrub",
+   "why": [
+    "cover: rule riparian on Mediterranean California Foothill and Lower Montane Riparian Woodland",
+    "cover: rule montane_riparian on Inter-Mountain Basins Montane Riparian Systems",
+    "cover: rule riparian_shrubland on Mediterranean California Foothill and Lower Montane Riparian Shrubland",
+    "cover: rule montane_riparian on California Montane Riparian Systems"
+   ],
+   "cover": 0.0062,
+   "records": 0,
+   "record": true,
+   "card": false,
+   "drawn_as": "sambucus_nigra_caerulea",
+   "rank": 42
+  },
+  {
+   "id": "rubus_ursinus",
+   "kind": "shrub",
+   "why": [
+    "cover: rule riparian on Mediterranean California Foothill and Lower Montane Riparian Woodland",
+    "cover: rule montane_riparian on Inter-Mountain Basins Montane Riparian Systems",
+    "cover: rule riparian_shrubland on Mediterranean California Foothill and Lower Montane Riparian Shrubland",
+    "cover: rule montane_riparian on California Montane Riparian Systems"
+   ],
+   "cover": 0.0059,
+   "records": 0,
+   "record": true,
+   "card": false,
+   "drawn_as": "rubus_ursinus",
+   "rank": 43
+  },
+  {
+   "id": "baccharis_pilularis",
+   "kind": "shrub",
+   "why": [
+    "cover: rule riparian on Mediterranean California Foothill and Lower Montane Riparian Woodland",
+    "cover: rule grassland_savanna on California Ruderal Grassland and Meadow"
+   ],
+   "cover": 0.005,
+   "records": 0,
+   "record": true,
+   "card": false,
+   "drawn_as": "baccharis_pilularis",
+   "rank": 44
+  },
+  {
+   "id": "arbutus_menziesii",
+   "kind": "tree",
+   "why": [
+    "cover: rule mesic_mixed_conifer on Mediterranean California Mesic Mixed Conifer Forest and Woodland",
+    "cover: rule mixed_oak on Mediterranean California Mixed Oak Woodland",
+    "cover: rule dry_mesic_mixed_conifer on Mediterranean California Dry-Mesic Mixed Conifer Forest and Woodland",
+    "cover: rule lower_montane_conifer on Mediterranean California Lower Montane Conifer Forest and Woodland",
+    "cover: rule mesic_chaparral on California Mesic Chaparral",
+    "cover: rule black_oak_conifer on Mediterranean California Lower Montane Black Oak-Conifer Forest and Woodland"
+   ],
+   "cover": 0.0041,
+   "records": 0,
+   "record": true,
+   "card": false,
+   "drawn_as": "arbutus_menziesii",
+   "rank": 45
+  },
+  {
+   "id": "juniperus_grandis",
+   "kind": "tree",
+   "why": [
+    "named by EVT 7044 Northern California Mesic Subalpine Woodland (4826 cells)",
+    "cover: rule jeffrey_pine on California Montane Jeffrey Pine-(Ponderosa Pine) Woodland",
+    "cover: rule subalpine_woodland on Mediterranean California Subalpine Woodland",
+    "named by EVT 7033 Mediterranean California Subalpine Woodland (3917 cells)",
+    "cover: rule curl_leaf_mahogany on Inter-Mountain Basins Curl-leaf Mountain Mahogany Woodland"
+   ],
+   "cover": 0.0038,
+   "records": 0,
+   "record": true,
+   "card": true,
+   "drawn_as": "juniperus_grandis",
+   "rank": 46
+  },
+  {
+   "id": "umbellularia_californica",
+   "kind": "tree",
+   "why": [
+    "cover: rule mesic_mixed_conifer on Mediterranean California Mesic Mixed Conifer Forest and Woodland",
+    "cover: rule riparian on Mediterranean California Foothill and Lower Montane Riparian Woodland",
+    "cover: rule mixed_oak on Mediterranean California Mixed Oak Woodland",
+    "cover: rule lower_montane_conifer on Mediterranean California Lower Montane Conifer Forest and Woodland",
+    "cover: rule montane_riparian on Inter-Mountain Basins Montane Riparian Systems",
+    "cover: rule mesic_chaparral on California Mesic Chaparral",
+    "cover: rule montane_riparian on California Montane Riparian Systems"
+   ],
+   "cover": 0.0037,
+   "records": 124,
+   "record": true,
+   "card": false,
+   "drawn_as": "umbellularia_californica",
+   "rank": 47
+  },
+  {
+   "id": "populus_fremontii",
+   "kind": "tree",
+   "why": [
+    "cover: rule riparian on Mediterranean California Foothill and Lower Montane Riparian Woodland",
+    "cover: rule montane_riparian on Inter-Mountain Basins Montane Riparian Systems",
+    "cover: rule montane_riparian on California Montane Riparian Systems"
+   ],
+   "cover": 0.0036,
+   "records": 0,
+   "record": true,
+   "card": false,
+   "drawn_as": "populus_fremontii",
+   "rank": 48
+  },
+  {
+   "id": "vitis_californica",
+   "kind": "shrub",
+   "why": [
+    "cover: rule riparian on Mediterranean California Foothill and Lower Montane Riparian Woodland"
+   ],
+   "cover": 0.0032,
+   "records": 0,
+   "record": true,
+   "card": false,
+   "drawn_as": "vitis_californica",
+   "rank": 49
+  },
+  {
+   "id": "salix_laevigata",
+   "kind": "tree",
+   "why": [
+    "cover: rule riparian on Mediterranean California Foothill and Lower Montane Riparian Woodland",
+    "cover: rule riparian_shrubland on Mediterranean California Foothill and Lower Montane Riparian Shrubland"
+   ],
+   "cover": 0.0029,
+   "records": 0,
+   "record": true,
+   "card": false,
+   "drawn_as": "salix_laevigata",
+   "rank": 50
+  },
+  {
+   "id": "fraxinus_latifolia",
+   "kind": "tree",
+   "why": [
+    "cover: rule riparian on Mediterranean California Foothill and Lower Montane Riparian Woodland",
+    "cover: rule montane_riparian on Inter-Mountain Basins Montane Riparian Systems",
+    "cover: rule riparian_shrubland on Mediterranean California Foothill and Lower Montane Riparian Shrubland",
+    "cover: rule montane_riparian on California Montane Riparian Systems"
+   ],
+   "cover": 0.0027,
+   "records": 0,
+   "record": true,
+   "card": false,
+   "drawn_as": "fraxinus_latifolia",
+   "rank": 51
+  },
+  {
+   "id": "cornus_sericea",
+   "kind": "shrub",
+   "why": [
+    "cover: rule riparian on Mediterranean California Foothill and Lower Montane Riparian Woodland",
+    "cover: rule montane_riparian on Inter-Mountain Basins Montane Riparian Systems",
+    "cover: rule montane_riparian on California Montane Riparian Systems"
+   ],
+   "cover": 0.0025,
+   "records": 10,
+   "record": true,
+   "card": false,
+   "drawn_as": "cornus_sericea",
+   "rank": 52
+  },
+  {
+   "id": "salix_exigua",
+   "kind": "shrub",
+   "why": [
+    "cover: rule riparian on Mediterranean California Foothill and Lower Montane Riparian Woodland",
+    "cover: rule riparian_shrubland on Mediterranean California Foothill and Lower Montane Riparian Shrubland"
+   ],
+   "cover": 0.0025,
+   "records": 0,
+   "record": true,
+   "card": false,
+   "drawn_as": "salix_exigua",
+   "rank": 53
+  },
+  {
+   "id": "aesculus_californica",
+   "kind": "tree",
+   "why": [
+    "cover: rule riparian on Mediterranean California Foothill and Lower Montane Riparian Woodland",
+    "cover: rule mixed_oak on Mediterranean California Mixed Oak Woodland",
+    "cover: rule grassland_savanna on California Ruderal Grassland and Meadow",
+    "cover: rule dry_mesic_chaparral on Northern and Central California Dry-Mesic Chaparral"
+   ],
+   "cover": 0.0022,
+   "records": 21,
+   "record": true,
+   "card": false,
+   "drawn_as": "aesculus_californica",
+   "rank": 54
+  },
+  {
+   "id": "acer_macrophyllum",
+   "kind": "tree",
+   "why": [
+    "cover: rule riparian on Mediterranean California Foothill and Lower Montane Riparian Woodland",
+    "cover: rule montane_riparian on Inter-Mountain Basins Montane Riparian Systems",
+    "cover: rule montane_riparian on California Montane Riparian Systems"
+   ],
+   "cover": 0.0021,
+   "records": 167,
+   "record": true,
+   "card": false,
+   "drawn_as": "acer_macrophyllum",
+   "rank": 55
+  },
+  {
+   "id": "juglans_hindsii",
+   "kind": "tree",
+   "why": [
+    "cover: rule riparian on Mediterranean California Foothill and Lower Montane Riparian Woodland",
+    "cover: rule montane_riparian on Inter-Mountain Basins Montane Riparian Systems",
+    "cover: rule montane_riparian on California Montane Riparian Systems"
+   ],
+   "cover": 0.002,
+   "records": 0,
+   "record": true,
+   "card": false,
+   "drawn_as": "juglans_hindsii",
+   "rank": 56
+  },
+  {
+   "id": "platanus_racemosa",
+   "kind": "tree",
+   "why": [
+    "cover: rule riparian on Mediterranean California Foothill and Lower Montane Riparian Woodland"
+   ],
+   "cover": 0.0016,
+   "records": 0,
+   "record": true,
+   "card": false,
+   "drawn_as": "platanus_racemosa",
+   "rank": 57
+  },
+  {
+   "id": "calycanthus_occidentalis",
+   "kind": "shrub",
+   "why": [
+    "cover: rule riparian on Mediterranean California Foothill and Lower Montane Riparian Woodland",
+    "cover: rule montane_riparian on Inter-Mountain Basins Montane Riparian Systems",
+    "cover: rule montane_riparian on California Montane Riparian Systems"
+   ],
+   "cover": 0.0013,
+   "records": 120,
+   "record": true,
+   "card": false,
+   "drawn_as": "calycanthus_occidentalis",
+   "rank": 58
+  },
+  {
+   "id": "populus_tremuloides",
+   "kind": "tree",
+   "why": [
+    "cover: rule aspen on Rocky Mountain Aspen Forest and Woodland",
+    "named by EVT 7011 Rocky Mountain Aspen Forest and Woodland (100 cells)",
+    "named by BPS 579 Rocky Mountain Aspen Forest and Woodland (37 cells)"
+   ],
+   "cover": 0.0011,
+   "records": 10,
+   "record": true,
+   "card": true,
+   "drawn_as": "populus_tremuloides",
+   "rank": 59
+  },
+  {
+   "id": "cephalanthus_occidentalis",
+   "kind": "shrub",
+   "why": [
+    "cover: rule riparian on Mediterranean California Foothill and Lower Montane Riparian Woodland",
+    "cover: rule riparian_shrubland on Mediterranean California Foothill and Lower Montane Riparian Shrubland"
+   ],
+   "cover": 0.0011,
+   "records": 0,
+   "record": true,
+   "card": false,
+   "drawn_as": "cephalanthus_occidentalis",
+   "rank": 60
+  },
+  {
+   "id": "cercocarpus_ledifolius",
+   "kind": "tree",
+   "why": [
+    "cover: rule curl_leaf_mahogany on Inter-Mountain Basins Curl-leaf Mountain Mahogany Woodland",
+    "named by EVT 7062 Inter-Mountain Basins Curl-leaf Mountain Mahogany Woodland (70 cells)"
+   ],
+   "cover": 0.0005,
+   "records": 0,
+   "record": true,
+   "card": true,
+   "drawn_as": "cercocarpus_ledifolius",
+   "rank": 61
+  },
+  {
+   "id": "salix_lasiandra",
+   "kind": "tree",
+   "why": [
+    "cover: rule montane_riparian on Inter-Mountain Basins Montane Riparian Systems",
+    "cover: rule montane_riparian on California Montane Riparian Systems"
+   ],
+   "cover": 0.0002,
+   "records": 0,
+   "record": true,
+   "card": false,
+   "drawn_as": "salix_lasiandra",
+   "rank": 62
+  },
+  {
+   "id": "asclepias_speciosa",
+   "kind": "forb",
+   "why": [
+    "GBIF: 415 records on the tile"
+   ],
+   "cover": 0.0,
+   "records": 415,
+   "scientific": "Asclepias speciosa",
+   "record": false,
+   "card": false,
+   "drawn_as": null,
+   "queued": "needs a trait card (library/plant_cards/): an agent's research, then automatic",
+   "rank": 63
+  },
+  {
+   "id": "pteridium_aquilinum",
+   "kind": "fern",
+   "why": [
+    "GBIF: 166 records on the tile"
+   ],
+   "cover": 0.0,
+   "records": 166,
+   "scientific": "Pteridium aquilinum",
+   "record": false,
+   "card": false,
+   "drawn_as": null,
+   "queued": "needs a trait card (library/plant_cards/): an agent's research, then automatic",
+   "rank": 64
+  },
+  {
+   "id": "penstemon_newberryi",
+   "kind": "forb",
+   "why": [
+    "GBIF: 122 records on the tile"
+   ],
+   "cover": 0.0,
+   "records": 122,
+   "scientific": "Penstemon newberryi",
+   "record": false,
+   "card": false,
+   "drawn_as": null,
+   "queued": "needs a trait card (library/plant_cards/): an agent's research, then automatic",
+   "rank": 65
+  },
+  {
+   "id": "asclepias_cordifolia",
+   "kind": "forb",
+   "why": [
+    "GBIF: 88 records on the tile"
+   ],
+   "cover": 0.0,
+   "records": 88,
+   "scientific": "Asclepias cordifolia",
+   "record": false,
+   "card": false,
+   "drawn_as": null,
+   "queued": "needs a trait card (library/plant_cards/): an agent's research, then automatic",
+   "rank": 66
+  },
+  {
+   "id": "aquilegia_formosa",
+   "kind": "forb",
+   "why": [
+    "GBIF: 66 records on the tile"
+   ],
+   "cover": 0.0,
+   "records": 66,
+   "scientific": "Aquilegia formosa",
+   "record": false,
+   "card": false,
+   "drawn_as": null,
+   "queued": "needs a trait card (library/plant_cards/): an agent's research, then automatic",
+   "rank": 67
+  },
+  {
+   "id": "rubus_leucodermis",
+   "kind": "forb",
+   "why": [
+    "GBIF: 66 records on the tile"
+   ],
+   "cover": 0.0,
+   "records": 66,
+   "scientific": "Rubus leucodermis",
+   "record": false,
+   "card": false,
+   "drawn_as": null,
+   "queued": "needs a trait card (library/plant_cards/): an agent's research, then automatic",
+   "rank": 68
+  },
+  {
+   "id": "calochortus_leichtlinii",
+   "kind": "forb",
+   "why": [
+    "GBIF: 64 records on the tile"
+   ],
+   "cover": 0.0,
+   "records": 64,
+   "scientific": "Calochortus leichtlinii",
+   "record": false,
+   "card": false,
+   "drawn_as": null,
+   "queued": "needs a trait card (library/plant_cards/): an agent's research, then automatic",
+   "rank": 69
+  },
+  {
+   "id": "draperia_systyla",
+   "kind": "forb",
+   "why": [
+    "GBIF: 64 records on the tile"
+   ],
+   "cover": 0.0,
+   "records": 64,
+   "scientific": "Draperia systyla",
+   "record": false,
+   "card": false,
+   "drawn_as": null,
+   "queued": "needs a trait card (library/plant_cards/): an agent's research, then automatic",
+   "rank": 70
+  },
+  {
+   "id": "asarum_hartwegii",
+   "kind": "forb",
+   "why": [
+    "GBIF: 59 records on the tile"
+   ],
+   "cover": 0.0,
+   "records": 59,
+   "scientific": "Asarum hartwegii",
+   "record": false,
+   "card": false,
+   "drawn_as": null,
+   "queued": "needs a trait card (library/plant_cards/): an agent's research, then automatic",
+   "rank": 71
+  },
+  {
+   "id": "lessingia_leptoclada",
+   "kind": "forb",
+   "why": [
+    "GBIF: 53 records on the tile"
+   ],
+   "cover": 0.0,
+   "records": 53,
+   "scientific": "Lessingia leptoclada",
+   "record": false,
+   "card": false,
+   "drawn_as": null,
+   "queued": "needs a trait card (library/plant_cards/): an agent's research, then automatic",
+   "rank": 72
+  },
+  {
+   "id": "potentilla_santolinoides",
+   "kind": "forb",
+   "why": [
+    "GBIF: 52 records on the tile"
+   ],
+   "cover": 0.0,
+   "records": 52,
+   "scientific": "Potentilla santolinoides",
+   "record": false,
+   "card": false,
+   "drawn_as": null,
+   "queued": "needs a trait card (library/plant_cards/): an agent's research, then automatic",
+   "rank": 73
+  },
+  {
+   "id": "streptanthus_tortuosus",
+   "kind": "forb",
+   "why": [
+    "GBIF: 52 records on the tile"
+   ],
+   "cover": 0.0,
+   "records": 52,
+   "scientific": "Streptanthus tortuosus",
+   "record": false,
+   "card": false,
+   "drawn_as": null,
+   "queued": "needs a trait card (library/plant_cards/): an agent's research, then automatic",
+   "rank": 74
+  },
+  {
+   "id": "achillea_millefolium",
+   "kind": "forb",
+   "why": [
+    "GBIF: 51 records on the tile"
+   ],
+   "cover": 0.0,
+   "records": 51,
+   "scientific": "Achillea millefolium",
+   "record": true,
+   "card": false,
+   "drawn_as": "achillea_millefolium",
+   "rank": 75
+  },
+  {
+   "id": "erythranthe_cardinalis",
+   "kind": "forb",
+   "why": [
+    "GBIF: 49 records on the tile"
+   ],
+   "cover": 0.0,
+   "records": 49,
+   "scientific": "Erythranthe cardinalis",
+   "record": false,
+   "card": false,
+   "drawn_as": null,
+   "queued": "needs a trait card (library/plant_cards/): an agent's research, then automatic",
+   "rank": 76
+  },
+  {
+   "id": "verbascum_thapsus",
+   "kind": "forb",
+   "why": [
+    "GBIF: 48 records on the tile"
+   ],
+   "cover": 0.0,
+   "records": 48,
+   "scientific": "Verbascum thapsus",
+   "record": false,
+   "card": false,
+   "drawn_as": null,
+   "queued": "needs a trait card (library/plant_cards/): an agent's research, then automatic",
+   "rank": 77
+  },
+  {
+   "id": "epilobium_canum",
+   "kind": "forb",
+   "why": [
+    "GBIF: 47 records on the tile"
+   ],
+   "cover": 0.0,
+   "records": 47,
+   "scientific": "Epilobium canum",
+   "record": false,
+   "card": false,
+   "drawn_as": null,
+   "queued": "needs a trait card (library/plant_cards/): an agent's research, then automatic",
+   "rank": 78
+  },
+  {
+   "id": "castilleja_applegatei",
+   "kind": "forb",
+   "why": [
+    "GBIF: 45 records on the tile"
+   ],
+   "cover": 0.0,
+   "records": 45,
+   "scientific": "Castilleja applegatei",
+   "record": false,
+   "card": false,
+   "drawn_as": null,
+   "queued": "needs a trait card (library/plant_cards/): an agent's research, then automatic",
+   "rank": 79
+  },
+  {
+   "id": "rubus_parviflorus",
+   "kind": "shrub",
+   "why": [
+    "GBIF: 45 records on the tile"
+   ],
+   "cover": 0.0,
+   "records": 45,
+   "scientific": "Rubus parviflorus",
+   "record": true,
+   "card": true,
+   "drawn_as": "rubus_parviflorus",
+   "rank": 80
+  },
+  {
+   "id": "calyptridium_monospermum",
+   "kind": "forb",
+   "why": [
+    "GBIF: 44 records on the tile"
+   ],
+   "cover": 0.0,
+   "records": 44,
+   "scientific": "Calyptridium monospermum",
+   "record": false,
+   "card": false,
+   "drawn_as": null,
+   "queued": "needs a trait card (library/plant_cards/): an agent's research, then automatic",
+   "rank": 81
+  },
+  {
+   "id": "pellaea_mucronata",
+   "kind": "fern",
+   "why": [
+    "GBIF: 44 records on the tile"
+   ],
+   "cover": 0.0,
+   "records": 44,
+   "scientific": "Pellaea mucronata",
+   "record": false,
+   "card": false,
+   "drawn_as": null,
+   "queued": "needs a trait card (library/plant_cards/): an agent's research, then automatic",
+   "rank": 82
+  },
+  {
+   "id": "heracleum_maximum",
+   "kind": "forb",
+   "why": [
+    "GBIF: 42 records on the tile"
+   ],
+   "cover": 0.0,
+   "records": 42,
+   "scientific": "Heracleum maximum",
+   "record": false,
+   "card": false,
+   "drawn_as": null,
+   "queued": "needs a trait card (library/plant_cards/): an agent's research, then automatic",
+   "rank": 83
+  },
+  {
+   "id": "lathyrus_latifolius",
+   "kind": "forb",
+   "why": [
+    "GBIF: 38 records on the tile"
+   ],
+   "cover": 0.0,
+   "records": 38,
+   "scientific": "Lathyrus latifolius",
+   "record": false,
+   "card": false,
+   "drawn_as": null,
+   "queued": "needs a trait card (library/plant_cards/): an agent's research, then automatic",
+   "rank": 84
+  },
+  {
+   "id": "sequoiadendron_giganteum",
+   "kind": "tree",
+   "why": [
+    "GBIF: 38 records on the tile",
+    "GBIF: 7 CC0 / CC BY records on the tile (placed by them: sequoiadendron_giganteum grows in groves)"
+   ],
+   "cover": 0.0,
+   "records": 38,
+   "scientific": "Sequoiadendron giganteum",
+   "record": true,
+   "card": true,
+   "drawn_as": "sequoiadendron_giganteum",
+   "rank": 85
+  },
+  {
+   "id": "silene_coronaria",
+   "kind": "forb",
+   "why": [
+    "GBIF: 38 records on the tile"
+   ],
+   "cover": 0.0,
+   "records": 38,
+   "scientific": "Silene coronaria",
+   "record": false,
+   "card": false,
+   "drawn_as": null,
+   "queued": "needs a trait card (library/plant_cards/): an agent's research, then automatic",
+   "rank": 86
+  },
+  {
+   "id": "cirsium_vulgare",
+   "kind": "forb",
+   "why": [
+    "GBIF: 35 records on the tile"
+   ],
+   "cover": 0.0,
+   "records": 35,
+   "scientific": "Cirsium vulgare",
+   "record": false,
+   "card": false,
+   "drawn_as": null,
+   "queued": "needs a trait card (library/plant_cards/): an agent's research, then automatic",
+   "rank": 87
+  },
+  {
+   "id": "acer_circinatum",
+   "kind": "tree",
+   "why": [
+    "GBIF: 17 records on the tile"
+   ],
+   "cover": 0.0,
+   "records": 17,
+   "scientific": "Acer circinatum",
+   "record": true,
+   "card": true,
+   "drawn_as": "acer_circinatum",
+   "rank": 88
+  },
+  {
+   "id": "claytonia_perfoliata",
+   "kind": "forb",
+   "why": [
+    "GBIF: 16 records on the tile"
+   ],
+   "cover": 0.0,
+   "records": 16,
+   "scientific": "Claytonia perfoliata",
+   "record": true,
+   "card": false,
+   "drawn_as": "claytonia_perfoliata",
+   "rank": 89
+  },
+  {
+   "id": "equisetum_hyemale",
+   "kind": "emergent",
+   "why": [
+    "GBIF: 16 records on the tile"
+   ],
+   "cover": 0.0,
+   "records": 16,
+   "scientific": "Equisetum hyemale",
+   "record": true,
+   "card": false,
+   "drawn_as": "equisetum_hyemale",
+   "rank": 90
+  },
+  {
+   "id": "artemisia_douglasiana",
+   "kind": "forb",
+   "why": [
+    "GBIF: 14 records on the tile"
+   ],
+   "cover": 0.0,
+   "records": 14,
+   "scientific": "Artemisia douglasiana",
+   "record": true,
+   "card": false,
+   "drawn_as": "artemisia_douglasiana",
+   "rank": 91
+  },
+  {
+   "id": "populus_trichocarpa",
+   "kind": "tree",
+   "why": [
+    "GBIF: 12 records on the tile"
+   ],
+   "cover": 0.0,
+   "records": 12,
+   "scientific": "Populus trichocarpa",
+   "record": true,
+   "card": true,
+   "drawn_as": "populus_trichocarpa",
+   "rank": 92
+  }
+ ],
+ "gbif_plants": [
+  {
+   "id": "cornus_nuttallii",
+   "scientific": "Cornus nuttallii",
+   "family": "Cornaceae",
+   "kind": "shrub",
+   "records": 439,
+   "known": false
+  },
+  {
+   "id": "asclepias_speciosa",
+   "scientific": "Asclepias speciosa",
+   "family": "Apocynaceae",
+   "kind": "forb",
+   "records": 415,
+   "known": false
+  },
+  {
+   "id": "calocedrus_decurrens",
+   "scientific": "Calocedrus decurrens",
+   "family": "Cupressaceae",
+   "kind": "tree",
+   "records": 305,
+   "known": true
+  },
+  {
+   "id": "quercus_chrysolepis",
+   "scientific": "Quercus chrysolepis",
+   "family": "Fagaceae",
+   "kind": "tree",
+   "records": 291,
+   "known": true
+  },
+  {
+   "id": "quercus_kelloggii",
+   "scientific": "Quercus kelloggii",
+   "family": "Fagaceae",
+   "kind": "tree",
+   "records": 289,
+   "known": true
+  },
+  {
+   "id": "sarcodes_sanguinea",
+   "scientific": "Sarcodes sanguinea",
+   "family": "Ericaceae",
+   "kind": "shrub",
+   "records": 182,
+   "known": false
+  },
+  {
+   "id": "acer_macrophyllum",
+   "scientific": "Acer macrophyllum",
+   "family": "Sapindaceae",
+   "kind": "tree",
+   "records": 167,
+   "known": true
+  },
+  {
+   "id": "pteridium_aquilinum",
+   "scientific": "Pteridium aquilinum",
+   "family": "Dennstaedtiaceae",
+   "kind": "fern",
+   "records": 166,
+   "known": false
+  },
+  {
+   "id": "umbellularia_californica",
+   "scientific": "Umbellularia californica",
+   "family": "Lauraceae",
+   "kind": "tree",
+   "records": 124,
+   "known": true
+  },
+  {
+   "id": "penstemon_newberryi",
+   "scientific": "Penstemon newberryi",
+   "family": "Plantaginaceae",
+   "kind": "forb",
+   "records": 122,
+   "known": false
+  },
+  {
+   "id": "calycanthus_occidentalis",
+   "scientific": "Calycanthus occidentalis",
+   "family": "Calycanthaceae",
+   "kind": "shrub",
+   "records": 120,
+   "known": true
+  },
+  {
+   "id": "asclepias_cordifolia",
+   "scientific": "Asclepias cordifolia",
+   "family": "Apocynaceae",
+   "kind": "forb",
+   "records": 88,
+   "known": false
+  },
+  {
+   "id": "rhododendron_occidentale",
+   "scientific": "Rhododendron occidentale",
+   "family": "Ericaceae",
+   "kind": "shrub",
+   "records": 86,
+   "known": false
+  },
+  {
+   "id": "pterospora_andromedea",
+   "scientific": "Pterospora andromedea",
+   "family": "Ericaceae",
+   "kind": "shrub",
+   "records": 71,
+   "known": false
+  },
+  {
+   "id": "aquilegia_formosa",
+   "scientific": "Aquilegia formosa",
+   "family": "Ranunculaceae",
+   "kind": "forb",
+   "records": 66,
+   "known": false
+  },
+  {
+   "id": "pinus_ponderosa",
+   "scientific": "Pinus ponderosa",
+   "family": "Pinaceae",
+   "kind": "tree",
+   "records": 66,
+   "known": true
+  },
+  {
+   "id": "rubus_leucodermis",
+   "scientific": "Rubus leucodermis",
+   "family": "Rosaceae",
+   "kind": "forb",
+   "records": 66,
+   "known": false
+  },
+  {
+   "id": "calochortus_leichtlinii",
+   "scientific": "Calochortus leichtlinii",
+   "family": "Liliaceae",
+   "kind": "forb",
+   "records": 64,
+   "known": false
+  },
+  {
+   "id": "draperia_systyla",
+   "scientific": "Draperia systyla",
+   "family": "Hydrophyllaceae",
+   "kind": "forb",
+   "records": 64,
+   "known": false
+  },
+  {
+   "id": "arctostaphylos_viscida",
+   "scientific": "Arctostaphylos viscida",
+   "family": "Ericaceae",
+   "kind": "shrub",
+   "records": 62,
+   "known": true
+  },
+  {
+   "id": "asarum_hartwegii",
+   "scientific": "Asarum hartwegii",
+   "family": "Aristolochiaceae",
+   "kind": "forb",
+   "records": 59,
+   "known": false
+  },
+  {
+   "id": "lessingia_leptoclada",
+   "scientific": "Lessingia leptoclada",
+   "family": "Asteraceae",
+   "kind": "forb",
+   "records": 53,
+   "known": false
+  },
+  {
+   "id": "streptanthus_tortuosus",
+   "scientific": "Streptanthus tortuosus",
+   "family": "Brassicaceae",
+   "kind": "forb",
+   "records": 52,
+   "known": false
+  },
+  {
+   "id": "potentilla_santolinoides",
+   "scientific": "Potentilla santolinoides",
+   "family": "Rosaceae",
+   "kind": "forb",
+   "records": 52,
+   "known": false
+  },
+  {
+   "id": "achillea_millefolium",
+   "scientific": "Achillea millefolium",
+   "family": "Asteraceae",
+   "kind": "forb",
+   "records": 51,
+   "known": true
+  },
+  {
+   "id": "erythranthe_cardinalis",
+   "scientific": "Erythranthe cardinalis",
+   "family": "Phrymaceae",
+   "kind": "forb",
+   "records": 49,
+   "known": false
+  },
+  {
+   "id": "pseudotsuga_menziesii",
+   "scientific": "Pseudotsuga menziesii",
+   "family": "Pinaceae",
+   "kind": "tree",
+   "records": 48,
+   "known": true
+  },
+  {
+   "id": "verbascum_thapsus",
+   "scientific": "Verbascum thapsus",
+   "family": "Scrophulariaceae",
+   "kind": "forb",
+   "records": 48,
+   "known": false
+  },
+  {
+   "id": "epilobium_canum",
+   "scientific": "Epilobium canum",
+   "family": "Onagraceae",
+   "kind": "forb",
+   "records": 47,
+   "known": false
+  },
+  {
+   "id": "cercis_occidentalis",
+   "scientific": "Cercis occidentalis",
+   "family": "Fabaceae",
+   "kind": "shrub",
+   "records": 46,
+   "known": true
+  },
+  {
+   "id": "castilleja_applegatei",
+   "scientific": "Castilleja applegatei",
+   "family": "Orobanchaceae",
+   "kind": "forb",
+   "records": 45,
+   "known": false
+  },
+  {
+   "id": "rubus_parviflorus",
+   "scientific": "Rubus parviflorus",
+   "family": "Rosaceae",
+   "kind": "shrub",
+   "records": 45,
+   "known": true
+  },
+  {
+   "id": "calyptridium_monospermum",
+   "scientific": "Calyptridium monospermum",
+   "family": "Montiaceae",
+   "kind": "forb",
+   "records": 44,
+   "known": false
+  },
+  {
+   "id": "pellaea_mucronata",
+   "scientific": "Pellaea mucronata",
+   "family": "Pteridaceae",
+   "kind": "fern",
+   "records": 44,
+   "known": false
+  },
+  {
+   "id": "heracleum_maximum",
+   "scientific": "Heracleum maximum",
+   "family": "Apiaceae",
+   "kind": "forb",
+   "records": 42,
+   "known": false
+  },
+  {
+   "id": "abies_concolor",
+   "scientific": "Abies concolor",
+   "family": "Pinaceae",
+   "kind": "tree",
+   "records": 40,
+   "known": true
+  },
+  {
+   "id": "sequoiadendron_giganteum",
+   "scientific": "Sequoiadendron giganteum",
+   "family": "Cupressaceae",
+   "kind": "tree",
+   "records": 38,
+   "known": true
+  },
+  {
+   "id": "ceanothus_integerrimus",
+   "scientific": "Ceanothus integerrimus",
+   "family": "Rhamnaceae",
+   "kind": "shrub",
+   "records": 38,
+   "known": true
+  },
+  {
+   "id": "lathyrus_latifolius",
+   "scientific": "Lathyrus latifolius",
+   "family": "Fabaceae",
+   "kind": "forb",
+   "records": 38,
+   "known": false
+  },
+  {
+   "id": "silene_coronaria",
+   "scientific": "Silene coronaria",
+   "family": "Caryophyllaceae",
+   "kind": "forb",
+   "records": 38,
+   "known": false
+  },
+  {
+   "id": "ribes_roezlii",
+   "scientific": "Ribes roezlii",
+   "family": "Grossulariaceae",
+   "kind": "shrub",
+   "records": 37,
+   "known": true
+  },
+  {
+   "id": "juniperus_occidentalis",
+   "scientific": "Juniperus occidentalis",
+   "family": "Cupressaceae",
+   "kind": "tree",
+   "records": 36,
+   "known": false
+  },
+  {
+   "id": "cirsium_vulgare",
+   "scientific": "Cirsium vulgare",
+   "family": "Asteraceae",
+   "kind": "forb",
+   "records": 35,
+   "known": false
+  },
+  {
+   "id": "hosackia_crassifolia",
+   "scientific": "Hosackia crassifolia",
+   "family": "Fabaceae",
+   "kind": "forb",
+   "records": 34,
+   "known": false
+  },
+  {
+   "id": "chrysolepis_sempervirens",
+   "scientific": "Chrysolepis sempervirens",
+   "family": "Fagaceae",
+   "kind": "shrub",
+   "records": 34,
+   "known": true
+  },
+  {
+   "id": "quercus_vacciniifolia",
+   "scientific": "Quercus vacciniifolia",
+   "family": "Fagaceae",
+   "kind": "shrub",
+   "records": 33,
+   "known": true
+  },
+  {
+   "id": "penstemon_laetus",
+   "scientific": "Penstemon laetus",
+   "family": "Plantaginaceae",
+   "kind": "forb",
+   "records": 33,
+   "known": false
+  },
+  {
+   "id": "sedum_obtusatum",
+   "scientific": "Sedum obtusatum",
+   "family": "Crassulaceae",
+   "kind": "forb",
+   "records": 32,
+   "known": false
+  },
+  {
+   "id": "sambucus_cerulea",
+   "scientific": "Sambucus cerulea",
+   "family": "Viburnaceae",
+   "kind": "shrub",
+   "records": 31,
+   "known": false
+  },
+  {
+   "id": "woodwardia_fimbriata",
+   "scientific": "Woodwardia fimbriata",
+   "family": "Blechnaceae",
+   "kind": "fern",
+   "records": 31,
+   "known": false
+  },
+  {
+   "id": "dudleya_cymosa",
+   "scientific": "Dudleya cymosa",
+   "family": "Crassulaceae",
+   "kind": "forb",
+   "records": 30,
+   "known": false
+  },
+  {
+   "id": "kumlienia_hystricula",
+   "scientific": "Kumlienia hystricula",
+   "family": "Ranunculaceae",
+   "kind": "forb",
+   "records": 30,
+   "known": false
+  },
+  {
+   "id": "collinsia_tinctoria",
+   "scientific": "Collinsia tinctoria",
+   "family": "Plantaginaceae",
+   "kind": "forb",
+   "records": 30,
+   "known": false
+  },
+  {
+   "id": "keckiella_breviflora",
+   "scientific": "Keckiella breviflora",
+   "family": "Plantaginaceae",
+   "kind": "forb",
+   "records": 28,
+   "known": false
+  },
+  {
+   "id": "erythranthe_erubescens",
+   "scientific": "Erythranthe erubescens",
+   "family": "Phrymaceae",
+   "kind": "forb",
+   "records": 28,
+   "known": false
+  },
+  {
+   "id": "collomia_grandiflora",
+   "scientific": "Collomia grandiflora",
+   "family": "Polemoniaceae",
+   "kind": "forb",
+   "records": 27,
+   "known": false
+  },
+  {
+   "id": "iris_missouriensis",
+   "scientific": "Iris missouriensis",
+   "family": "Iridaceae",
+   "kind": "forb",
+   "records": 27,
+   "known": false
+  },
+  {
+   "id": "digitalis_purpurea",
+   "scientific": "Digitalis purpurea",
+   "family": "Plantaginaceae",
+   "kind": "forb",
+   "records": 27,
+   "known": false
+  },
+  {
+   "id": "tragopogon_dubius",
+   "scientific": "Tragopogon dubius",
+   "family": "Asteraceae",
+   "kind": "forb",
+   "records": 27,
+   "known": false
+  },
+  {
+   "id": "brodiaea_elegans",
+   "scientific": "Brodiaea elegans",
+   "family": "Asparagaceae",
+   "kind": "forb",
+   "records": 26,
+   "known": false
+  },
+  {
+   "id": "verbena_lasiostachys",
+   "scientific": "Verbena lasiostachys",
+   "family": "Verbenaceae",
+   "kind": "forb",
+   "records": 26,
+   "known": false
+  },
+  {
+   "id": "penstemon_rostriflorus",
+   "scientific": "Penstemon rostriflorus",
+   "family": "Plantaginaceae",
+   "kind": "forb",
+   "records": 25,
+   "known": false
+  },
+  {
+   "id": "dicentra_formosa",
+   "scientific": "Dicentra formosa",
+   "family": "Papaveraceae",
+   "kind": "forb",
+   "records": 24,
+   "known": false
+  },
+  {
+   "id": "hosackia_oblongifolia",
+   "scientific": "Hosackia oblongifolia",
+   "family": "Fabaceae",
+   "kind": "forb",
+   "records": 24,
+   "known": false
+  },
+  {
+   "id": "arctostaphylos_patula",
+   "scientific": "Arctostaphylos patula",
+   "family": "Ericaceae",
+   "kind": "shrub",
+   "records": 23,
+   "known": true
+  },
+  {
+   "id": "eriogonum_nudum",
+   "scientific": "Eriogonum nudum",
+   "family": "Polygonaceae",
+   "kind": "forb",
+   "records": 22,
+   "known": false
+  },
+  {
+   "id": "claytonia_parviflora",
+   "scientific": "Claytonia parviflora",
+   "family": "Montiaceae",
+   "kind": "forb",
+   "records": 21,
+   "known": false
+  },
+  {
+   "id": "aesculus_californica",
+   "scientific": "Aesculus californica",
+   "family": "Sapindaceae",
+   "kind": "tree",
+   "records": 21,
+   "known": true
+  },
+  {
+   "id": "clarkia_rhomboidea",
+   "scientific": "Clarkia rhomboidea",
+   "family": "Onagraceae",
+   "kind": "forb",
+   "records": 21,
+   "known": false
+  },
+  {
+   "id": "lilium_parvum",
+   "scientific": "Lilium parvum",
+   "family": "Liliaceae",
+   "kind": "forb",
+   "records": 20,
+   "known": false
+  },
+  {
+   "id": "agastache_urticifolia",
+   "scientific": "Agastache urticifolia",
+   "family": "Lamiaceae",
+   "kind": "forb",
+   "records": 20,
+   "known": false
+  },
+  {
+   "id": "dryopteris_arguta",
+   "scientific": "Dryopteris arguta",
+   "family": "Dryopteridaceae",
+   "kind": "fern",
+   "records": 20,
+   "known": false
+  },
+  {
+   "id": "eriogonum_lobbii",
+   "scientific": "Eriogonum lobbii",
+   "family": "Polygonaceae",
+   "kind": "forb",
+   "records": 19,
+   "known": false
+  },
+  {
+   "id": "ribes_nevadense",
+   "scientific": "Ribes nevadense",
+   "family": "Grossulariaceae",
+   "kind": "shrub",
+   "records": 19,
+   "known": false
+  },
+  {
+   "id": "spiraea_splendens",
+   "scientific": "Spiraea splendens",
+   "family": "Rosaceae",
+   "kind": "forb",
+   "records": 19,
+   "known": false
+  },
+  {
+   "id": "apocynum_androsaemifolium",
+   "scientific": "Apocynum androsaemifolium",
+   "family": "Apocynaceae",
+   "kind": "forb",
+   "records": 19,
+   "known": false
+  },
+  {
+   "id": "eriodictyon_californicum",
+   "scientific": "Eriodictyon californicum",
+   "family": "Namaceae",
+   "kind": "forb",
+   "records": 19,
+   "known": false
+  },
+  {
+   "id": "diplacus_mephiticus",
+   "scientific": "Diplacus mephiticus",
+   "family": "Phrymaceae",
+   "kind": "forb",
+   "records": 19,
+   "known": false
+  },
+  {
+   "id": "abies_magnifica",
+   "scientific": "Abies magnifica",
+   "family": "Pinaceae",
+   "kind": "tree",
+   "records": 18,
+   "known": true
+  },
+  {
+   "id": "veratrum_californicum",
+   "scientific": "Veratrum californicum",
+   "family": "Melanthiaceae",
+   "kind": "forb",
+   "records": 18,
+   "known": false
+  },
+  {
+   "id": "lupinus_stiversii",
+   "scientific": "Lupinus stiversii",
+   "family": "Fabaceae",
+   "kind": "forb",
+   "records": 18,
+   "known": false
+  },
+  {
+   "id": "zeltnera_venusta",
+   "scientific": "Zeltnera venusta",
+   "family": "Gentianaceae",
+   "kind": "forb",
+   "records": 18,
+   "known": false
+  },
+  {
+   "id": "pinus_lambertiana",
+   "scientific": "Pinus lambertiana",
+   "family": "Pinaceae",
+   "kind": "tree",
+   "records": 18,
+   "known": true
+  },
+  {
+   "id": "bistorta_bistortoides",
+   "scientific": "Bistorta bistortoides",
+   "family": "Polygonaceae",
+   "kind": "forb",
+   "records": 17,
+   "known": false
+  },
+  {
+   "id": "nemophila_heterophylla",
+   "scientific": "Nemophila heterophylla",
+   "family": "Hydrophyllaceae",
+   "kind": "forb",
+   "records": 17,
+   "known": false
+  },
+  {
+   "id": "ceanothus_cordulatus",
+   "scientific": "Ceanothus cordulatus",
+   "family": "Rhamnaceae",
+   "kind": "shrub",
+   "records": 17,
+   "known": true
+  },
+  {
+   "id": "acer_circinatum",
+   "scientific": "Acer circinatum",
+   "family": "Sapindaceae",
+   "kind": "tree",
+   "records": 17,
+   "known": true
+  },
+  {
+   "id": "pellaea_bridgesii",
+   "scientific": "Pellaea bridgesii",
+   "family": "Pteridaceae",
+   "kind": "fern",
+   "records": 17,
+   "known": false
+  },
+  {
+   "id": "pinus_jeffreyi",
+   "scientific": "Pinus jeffreyi",
+   "family": "Pinaceae",
+   "kind": "tree",
+   "records": 17,
+   "known": true
+  },
+  {
+   "id": "equisetum_hyemale",
+   "scientific": "Equisetum hyemale",
+   "family": "Equisetaceae",
+   "kind": "emergent",
+   "records": 16,
+   "known": true
+  },
+  {
+   "id": "datura_wrightii",
+   "scientific": "Datura wrightii",
+   "family": "Solanaceae",
+   "kind": "forb",
+   "records": 16,
+   "known": false
+  },
+  {
+   "id": "lupinus_grayi",
+   "scientific": "Lupinus grayi",
+   "family": "Fabaceae",
+   "kind": "forb",
+   "records": 16,
+   "known": false
+  },
+  {
+   "id": "oenothera_elata",
+   "scientific": "Oenothera elata",
+   "family": "Onagraceae",
+   "kind": "forb",
+   "records": 16,
+   "known": false
+  },
+  {
+   "id": "chamaenerion_angustifolium",
+   "scientific": "Chamaenerion angustifolium",
+   "family": "Onagraceae",
+   "kind": "forb",
+   "records": 16,
+   "known": false
+  },
+  {
+   "id": "claytonia_perfoliata",
+   "scientific": "Claytonia perfoliata",
+   "family": "Montiaceae",
+   "kind": "forb",
+   "records": 16,
+   "known": true
+  },
+  {
+   "id": "erythranthe_laciniata",
+   "scientific": "Erythranthe laciniata",
+   "family": "Phrymaceae",
+   "kind": "forb",
+   "records": 16,
+   "known": false
+  },
+  {
+   "id": "ericameria_cuneata",
+   "scientific": "Ericameria cuneata",
+   "family": "Asteraceae",
+   "kind": "forb",
+   "records": 15,
+   "known": false
+  },
+  {
+   "id": "aspidotis_densa",
+   "scientific": "Aspidotis densa",
+   "family": "Pteridaceae",
+   "kind": "fern",
+   "records": 15,
+   "known": false
+  },
+  {
+   "id": "arctostaphylos_nevadensis",
+   "scientific": "Arctostaphylos nevadensis",
+   "family": "Ericaceae",
+   "kind": "shrub",
+   "records": 15,
+   "known": false
+  },
+  {
+   "id": "athyrium_filix_femina",
+   "scientific": "Athyrium filix-femina",
+   "family": "Athyriaceae",
+   "kind": "fern",
+   "records": 15,
+   "known": false
+  },
+  {
+   "id": "viola_purpurea",
+   "scientific": "Viola purpurea",
+   "family": "Violaceae",
+   "kind": "forb",
+   "records": 15,
+   "known": false
+  },
+  {
+   "id": "helenium_bigelovii",
+   "scientific": "Helenium bigelovii",
+   "family": "Asteraceae",
+   "kind": "forb",
+   "records": 15,
+   "known": false
+  },
+  {
+   "id": "cystopteris_fragilis",
+   "scientific": "Cystopteris fragilis",
+   "family": "Cystopteridaceae",
+   "kind": "fern",
+   "records": 14,
+   "known": false
+  },
+  {
+   "id": "selaginella_hansenii",
+   "scientific": "Selaginella hansenii",
+   "family": "Selaginellaceae",
+   "kind": "fern",
+   "records": 14,
+   "known": false
+  },
+  {
+   "id": "phoradendron_leucarpum",
+   "scientific": "Phoradendron leucarpum",
+   "family": "Viscaceae",
+   "kind": "forb",
+   "records": 14,
+   "known": false
+  },
+  {
+   "id": "artemisia_douglasiana",
+   "scientific": "Artemisia douglasiana",
+   "family": "Asteraceae",
+   "kind": "forb",
+   "records": 14,
+   "known": true
+  },
+  {
+   "id": "pedicularis_attollens",
+   "scientific": "Pedicularis attollens",
+   "family": "Orobanchaceae",
+   "kind": "forb",
+   "records": 14,
+   "known": false
+  },
+  {
+   "id": "erythranthe_moschata",
+   "scientific": "Erythranthe moschata",
+   "family": "Phrymaceae",
+   "kind": "forb",
+   "records": 14,
+   "known": false
+  },
+  {
+   "id": "erythranthe_breweri",
+   "scientific": "Erythranthe breweri",
+   "family": "Phrymaceae",
+   "kind": "forb",
+   "records": 14,
+   "known": false
+  },
+  {
+   "id": "trifolium_pratense",
+   "scientific": "Trifolium pratense",
+   "family": "Fabaceae",
+   "kind": "forb",
+   "records": 14,
+   "known": false
+  },
+  {
+   "id": "hieracium_horridum",
+   "scientific": "Hieracium horridum",
+   "family": "Asteraceae",
+   "kind": "forb",
+   "records": 13,
+   "known": false
+  },
+  {
+   "id": "dodecatheon_jeffreyanum",
+   "scientific": "Dodecatheon jeffreyanum",
+   "family": "Primulaceae",
+   "kind": "forb",
+   "records": 13,
+   "known": false
+  },
+  {
+   "id": "leptosiphon_ciliatus",
+   "scientific": "Leptosiphon ciliatus",
+   "family": "Polemoniaceae",
+   "kind": "forb",
+   "records": 13,
+   "known": false
+  },
+  {
+   "id": "equisetum_praealtum",
+   "scientific": "Equisetum praealtum",
+   "family": "Equisetaceae",
+   "kind": "fern",
+   "records": 13,
+   "known": false
+  },
+  {
+   "id": "platanthera_dilatata",
+   "scientific": "Platanthera dilatata",
+   "family": "Orchidaceae",
+   "kind": "forb",
+   "records": 12,
+   "known": false
+  },
+  {
+   "id": "goodyera_oblongifolia",
+   "scientific": "Goodyera oblongifolia",
+   "family": "Orchidaceae",
+   "kind": "forb",
+   "records": 12,
+   "known": false
+  },
+  {
+   "id": "pyrola_picta",
+   "scientific": "Pyrola picta",
+   "family": "Ericaceae",
+   "kind": "shrub",
+   "records": 12,
+   "known": false
+  },
+  {
+   "id": "phacelia_quickii",
+   "scientific": "Phacelia quickii",
+   "family": "Hydrophyllaceae",
+   "kind": "forb",
+   "records": 12,
+   "known": false
+  },
+  {
+   "id": "aconitum_columbianum",
+   "scientific": "Aconitum columbianum",
+   "family": "Ranunculaceae",
+   "kind": "forb",
+   "records": 12,
+   "known": false
+  },
+  {
+   "id": "cirsium_occidentale",
+   "scientific": "Cirsium occidentale",
+   "family": "Asteraceae",
+   "kind": "forb",
+   "records": 12,
+   "known": false
+  },
+  {
+   "id": "triteleia_ixioides",
+   "scientific": "Triteleia ixioides",
+   "family": "Asparagaceae",
+   "kind": "forb",
+   "records": 12,
+   "known": false
+  },
+  {
+   "id": "allotropa_virgata",
+   "scientific": "Allotropa virgata",
+   "family": "Ericaceae",
+   "kind": "shrub",
+   "records": 12,
+   "known": false
+  },
+  {
+   "id": "populus_trichocarpa",
+   "scientific": "Populus trichocarpa",
+   "family": "Salicaceae",
+   "kind": "tree",
+   "records": 12,
+   "known": true
+  },
+  {
+   "id": "plantago_lanceolata",
+   "scientific": "Plantago lanceolata",
+   "family": "Plantaginaceae",
+   "kind": "forb",
+   "records": 12,
+   "known": false
+  },
+  {
+   "id": "juncus_chlorocephalus",
+   "scientific": "Juncus chlorocephalus",
+   "family": "Juncaceae",
+   "kind": "emergent",
+   "records": 11,
+   "known": false
+  },
+  {
+   "id": "stachys_albens",
+   "scientific": "Stachys albens",
+   "family": "Lamiaceae",
+   "kind": "forb",
+   "records": 11,
+   "known": false
+  },
+  {
+   "id": "prunus_virginiana",
+   "scientific": "Prunus virginiana",
+   "family": "Rosaceae",
+   "kind": "forb",
+   "records": 11,
+   "known": false
+  },
+  {
+   "id": "adenocaulon_bicolor",
+   "scientific": "Adenocaulon bicolor",
+   "family": "Asteraceae",
+   "kind": "forb",
+   "records": 11,
+   "known": false
+  },
+  {
+   "id": "eriophyllum_confertiflorum",
+   "scientific": "Eriophyllum confertiflorum",
+   "family": "Asteraceae",
+   "kind": "forb",
+   "records": 11,
+   "known": false
+  },
+  {
+   "id": "anaphalis_margaritacea",
+   "scientific": "Anaphalis margaritacea",
+   "family": "Asteraceae",
+   "kind": "forb",
+   "records": 11,
+   "known": false
+  },
+  {
+   "id": "heuchera_micrantha",
+   "scientific": "Heuchera micrantha",
+   "family": "Saxifragaceae",
+   "kind": "forb",
+   "records": 11,
+   "known": false
+  },
+  {
+   "id": "corallorhiza_maculata",
+   "scientific": "Corallorhiza maculata",
+   "family": "Orchidaceae",
+   "kind": "forb",
+   "records": 10,
+   "known": false
+  },
+  {
+   "id": "allium_validum",
+   "scientific": "Allium validum",
+   "family": "Amaryllidaceae",
+   "kind": "forb",
+   "records": 10,
+   "known": false
+  },
+  {
+   "id": "phacelia_hydrophylloides",
+   "scientific": "Phacelia hydrophylloides",
+   "family": "Hydrophyllaceae",
+   "kind": "forb",
+   "records": 10,
+   "known": false
+  },
+  {
+   "id": "rubus_armeniacus",
+   "scientific": "Rubus armeniacus",
+   "family": "Rosaceae",
+   "kind": "forb",
+   "records": 10,
+   "known": false
+  },
+  {
+   "id": "populus_tremuloides",
+   "scientific": "Populus tremuloides",
+   "family": "Salicaceae",
+   "kind": "tree",
+   "records": 10,
+   "known": true
+  },
+  {
+   "id": "cornus_sericea",
+   "scientific": "Cornus sericea",
+   "family": "Cornaceae",
+   "kind": "shrub",
+   "records": 10,
+   "known": true
+  },
+  {
+   "id": "rudbeckia_hirta",
+   "scientific": "Rudbeckia hirta",
+   "family": "Asteraceae",
+   "kind": "forb",
+   "records": 10,
+   "known": false
+  },
+  {
+   "id": "asclepias_fascicularis",
+   "scientific": "Asclepias fascicularis",
+   "family": "Apocynaceae",
+   "kind": "forb",
+   "records": 10,
+   "known": false
+  },
+  {
+   "id": "rhododendron_columbianum",
+   "scientific": "Rhododendron columbianum",
+   "family": "Ericaceae",
+   "kind": "shrub",
+   "records": 10,
+   "known": false
+  },
+  {
+   "id": "pinus_monticola",
+   "scientific": "Pinus monticola",
+   "family": "Pinaceae",
+   "kind": "tree",
+   "records": 10,
+   "known": true
+  },
+  {
+   "id": "viola_macloskeyi",
+   "scientific": "Viola macloskeyi",
+   "family": "Violaceae",
+   "kind": "forb",
+   "records": 10,
+   "known": false
+  },
+  {
+   "id": "trifolium_repens",
+   "scientific": "Trifolium repens",
+   "family": "Fabaceae",
+   "kind": "forb",
+   "records": 10,
+   "known": false
+  },
+  {
+   "id": "sedum_spathulifolium",
+   "scientific": "Sedum spathulifolium",
+   "family": "Crassulaceae",
+   "kind": "forb",
+   "records": 10,
+   "known": false
+  },
+  {
+   "id": "juncus_effusus",
+   "scientific": "Juncus effusus",
+   "family": "Juncaceae",
+   "kind": "emergent",
+   "records": 9,
+   "known": true
+  },
+  {
+   "id": "quercus_vacciniifolia",
+   "scientific": "Quercus vacciniifolia",
+   "family": "Fagaceae",
+   "kind": "shrub",
+   "records": 9,
+   "known": true
+  },
+  {
+   "id": "phlox_diffusa",
+   "scientific": "Phlox diffusa",
+   "family": "Polemoniaceae",
+   "kind": "forb",
+   "records": 9,
+   "known": false
+  },
+  {
+   "id": "ipomopsis_aggregata",
+   "scientific": "Ipomopsis aggregata",
+   "family": "Polemoniaceae",
+   "kind": "forb",
+   "records": 9,
+   "known": false
+  },
+  {
+   "id": "lupinus_breweri",
+   "scientific": "Lupinus breweri",
+   "family": "Fabaceae",
+   "kind": "forb",
+   "records": 9,
+   "known": false
+  },
+  {
+   "id": "corethrogyne_filaginifolia",
+   "scientific": "Corethrogyne filaginifolia",
+   "family": "Asteraceae",
+   "kind": "forb",
+   "records": 9,
+   "known": false
+  }
+ ],
+ "generated": [],
+ "target": {
+  "tree": 21,
+  "shrub": 23,
+  "ground": 26
+ },
+ "by_layer": {
+  "tree": 35,
+  "shrub": 31,
+  "ground": 26
+ },
+ "hands": [
+  {
+   "id": "asclepias_speciosa",
+   "kind": "forb",
+   "what": "a trait card",
+   "why": [
+    "GBIF: 415 records on the tile"
+   ]
+  },
+  {
+   "id": "pteridium_aquilinum",
+   "kind": "fern",
+   "what": "a trait card",
+   "why": [
+    "GBIF: 166 records on the tile"
+   ]
+  },
+  {
+   "id": "penstemon_newberryi",
+   "kind": "forb",
+   "what": "a trait card",
+   "why": [
+    "GBIF: 122 records on the tile"
+   ]
+  },
+  {
+   "id": "asclepias_cordifolia",
+   "kind": "forb",
+   "what": "a trait card",
+   "why": [
+    "GBIF: 88 records on the tile"
+   ]
+  },
+  {
+   "id": "aquilegia_formosa",
+   "kind": "forb",
+   "what": "a trait card",
+   "why": [
+    "GBIF: 66 records on the tile"
+   ]
+  },
+  {
+   "id": "rubus_leucodermis",
+   "kind": "forb",
+   "what": "a trait card",
+   "why": [
+    "GBIF: 66 records on the tile"
+   ]
+  },
+  {
+   "id": "calochortus_leichtlinii",
+   "kind": "forb",
+   "what": "a trait card",
+   "why": [
+    "GBIF: 64 records on the tile"
+   ]
+  },
+  {
+   "id": "draperia_systyla",
+   "kind": "forb",
+   "what": "a trait card",
+   "why": [
+    "GBIF: 64 records on the tile"
+   ]
+  },
+  {
+   "id": "asarum_hartwegii",
+   "kind": "forb",
+   "what": "a trait card",
+   "why": [
+    "GBIF: 59 records on the tile"
+   ]
+  },
+  {
+   "id": "lessingia_leptoclada",
+   "kind": "forb",
+   "what": "a trait card",
+   "why": [
+    "GBIF: 53 records on the tile"
+   ]
+  },
+  {
+   "id": "potentilla_santolinoides",
+   "kind": "forb",
+   "what": "a trait card",
+   "why": [
+    "GBIF: 52 records on the tile"
+   ]
+  },
+  {
+   "id": "streptanthus_tortuosus",
+   "kind": "forb",
+   "what": "a trait card",
+   "why": [
+    "GBIF: 52 records on the tile"
+   ]
+  },
+  {
+   "id": "erythranthe_cardinalis",
+   "kind": "forb",
+   "what": "a trait card",
+   "why": [
+    "GBIF: 49 records on the tile"
+   ]
+  },
+  {
+   "id": "verbascum_thapsus",
+   "kind": "forb",
+   "what": "a trait card",
+   "why": [
+    "GBIF: 48 records on the tile"
+   ]
+  },
+  {
+   "id": "epilobium_canum",
+   "kind": "forb",
+   "what": "a trait card",
+   "why": [
+    "GBIF: 47 records on the tile"
+   ]
+  },
+  {
+   "id": "castilleja_applegatei",
+   "kind": "forb",
+   "what": "a trait card",
+   "why": [
+    "GBIF: 45 records on the tile"
+   ]
+  },
+  {
+   "id": "calyptridium_monospermum",
+   "kind": "forb",
+   "what": "a trait card",
+   "why": [
+    "GBIF: 44 records on the tile"
+   ]
+  },
+  {
+   "id": "pellaea_mucronata",
+   "kind": "fern",
+   "what": "a trait card",
+   "why": [
+    "GBIF: 44 records on the tile"
+   ]
+  },
+  {
+   "id": "heracleum_maximum",
+   "kind": "forb",
+   "what": "a trait card",
+   "why": [
+    "GBIF: 42 records on the tile"
+   ]
+  },
+  {
+   "id": "lathyrus_latifolius",
+   "kind": "forb",
+   "what": "a trait card",
+   "why": [
+    "GBIF: 38 records on the tile"
+   ]
+  },
+  {
+   "id": "silene_coronaria",
+   "kind": "forb",
+   "what": "a trait card",
+   "why": [
+    "GBIF: 38 records on the tile"
+   ]
+  },
+  {
+   "id": "cirsium_vulgare",
+   "kind": "forb",
+   "what": "a trait card",
+   "why": [
+    "GBIF: 35 records on the tile"
+   ]
+  }
+ ],
+ "summary": {
+  "needed": 92,
+  "with_record": 70,
+  "generated_now": 0,
+  "queued": 22,
+  "unread_communities": 0,
+  "by_layer": {
+   "tree": 35,
+   "shrub": 31,
+   "ground": 26
+  },
+  "meets_target": {
+   "tree": true,
+   "shrub": true,
+   "ground": true
+  },
+  "hands": 22
+ }
+}

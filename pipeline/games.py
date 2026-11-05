@@ -292,3 +292,47 @@ if __name__ == "__main__":   # the plays added to games.json files already deriv
         p = pathlib.Path(path)
         write_json(p, add_plays(read_json(p)))
         print(path, "plays:", read_json(p)["plays"])
+
+
+# The games stage's world seeds (2026-11-04, step `game_seeds`): what a fresh world of each shared game starts from on
+# this tile, so every node (and the dev server's GameWorld) begins the same. The worlds themselves start empty (server.py
+# GameWorld.empty, digworld.empty, carrionworld.empty) and the acorns are placed by the client from seed_of(tile, ...):
+# the seed records the seed numbers, who plays each game here, and where (the best cells of its resource).
+SEEDED_GAMES = {"acorn": {"resource": "acorn_mast", "client": "client/src/acorns.js", "world": "server.py GameWorld"},
+                "dig": {"resource": "burrow", "client": "client/src/dig.js", "world": "digworld.py"},
+                "carrion": {"resource": None, "client": "client/src/carrion.js", "world": "carrionworld.py"}}
+
+
+def _fnv(s: str, salt: int = 0) -> int:
+    """server.py seed_of / acorns.js seedOf: FNV-1a over the string, salted."""
+    h = (2166136261 ^ salt) & 0xFFFFFFFF
+    for ch in s:
+        h = ((h ^ ord(ch)) * 16777619) & 0xFFFFFFFF
+    return h
+
+
+def game_seeds(tile: Tile) -> dict:
+    games = read_json(tile.path("games.json"))
+    species = games.get("species", {})
+    scav = {a for a, b in (games.get("relations") or {}).get("scavenging", [])} if isinstance(games.get("relations"), dict) else set()
+    out = {"tile": tile.tile_id, "generated": now_iso(), "games": {}}
+    for name, g in SEEDED_GAMES.items():
+        players, hot = [], []
+        for code, sp in species.items():
+            for gm in sp.get("games", []):
+                if name == "dig" and "dig" in (gm.get("play") or []):
+                    players.append(code)
+                elif name == "acorn" and gm.get("resource") == g["resource"]:
+                    players.append(code)
+                elif name == "carrion" and (code in scav or "kills" in (gm.get("goal") or "") or "carrion" in (gm.get("goal") or "")):
+                    players.append(code)
+                else:
+                    continue
+                hot += [h for h in gm.get("hotspots") or []][:8]
+        players = sorted(set(players))
+        out["games"][name] = {"seed": _fnv(f"{tile.tile_id}:{name}"), "players": players, "hotspots": hot[:24],
+                              "resource": g["resource"], "client": g["client"], "world": g["world"],
+                              "playable_here": bool(players)}
+    write_json(tile.path("game_seeds.json"), out)   # not under game/: the played worlds there are git-ignored
+    return {"path": "game_seeds.json", "kind": "table",
+            "games": {n: {"players": len(v["players"]), "seed": v["seed"]} for n, v in out["games"].items()}}

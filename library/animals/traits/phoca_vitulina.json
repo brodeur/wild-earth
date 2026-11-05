@@ -1,0 +1,120 @@
+{
+ "id": "phoca_vitulina",
+ "scientific": "Phoca vitulina",
+ "common": "harbor seal",
+ "kind": "mammal",
+ "taxonomy": {
+  "kingdom": "Animalia",
+  "phylum": "Chordata",
+  "class": "Mammalia",
+  "order": "Carnivora",
+  "family": "Phocidae",
+  "genus": "Phoca"
+ },
+ "body_plan": "quadruped",
+ "mass_kg": 100.0,
+ "size": {
+  "length_m": 1.671,
+  "shoulder_or_wingspan_m": 1.036
+ },
+ "diet": {
+  "role": [
+   "predator"
+  ],
+  "diet_tenths": {
+   "inv": 2.0,
+   "vend": 0.0,
+   "vect": 0.0,
+   "vfish": 8.0,
+   "vunk": 0.0,
+   "scav": 0.0,
+   "fruit": 0.0,
+   "nect": 0.0,
+   "seed": 0.0,
+   "planto": 0.0
+  },
+  "vertebrate_share": 0.8,
+  "mass_kg": 100.0,
+  "activity": [
+   "crepuscular",
+   "diurnal"
+  ],
+  "source": "eltontraits (species)"
+ },
+ "senses": {
+  "sight": {
+   "range_m": 628.0
+  },
+  "sound": {
+   "range_m": 879.2
+  },
+  "scent": {
+   "range_m": 1255.9
+  }
+ },
+ "rig": "tools/rig_quadruped.py skeleton, gait.js / legs.js",
+ "locomotion": {
+  "code": "phoca_vitulina",
+  "class": "Mammalia",
+  "order": "Carnivora",
+  "family": "Phocidae",
+  "body_plan": "quadruped",
+  "mass_kg": 100.0,
+  "length_m": 1.671,
+  "hip_m": 1.036,
+  "posture": "digitigrade",
+  "gaits": {
+   "walk": "froude 0.5",
+   "trot": "froude 2.5",
+   "gallop": "beyond"
+  },
+  "walk_mps": 2.25,
+  "trot_mps": 5.04,
+  "cruise_mps": 9.61,
+  "top_mps": 15.51,
+  "stride_hz": 2.1,
+  "stride_m": 2.4,
+  "sprint_s": 11.9,
+  "recover_s": 41.6,
+  "turn_rad_s": 1.94,
+  "turn": {
+   "on": 0.45,
+   "off": 0.2,
+   "hold": 0.35,
+   "amp": [
+    0.4,
+    0.6
+   ],
+   "hz": [
+    0.7,
+    2.4
+   ]
+  },
+  "lag": {
+   "s": 0.17,
+   "max_rad": 0.44,
+   "v": [
+    0.3,
+    1.2
+   ]
+  },
+  "bend": {
+   "spine": 1.0,
+   "lead": 0.12,
+   "lead_max": 0.25
+  },
+  "flags": {},
+  "flier": false
+ },
+ "generated": {
+  "by": "pipeline/fauna.py",
+  "at": "2026-11-05T06:53:53Z",
+  "from": [
+   "gbif taxonomy",
+   "eltontraits (species)",
+   "pipeline/locomotion.py"
+  ],
+  "note": "behaviour data without a model; review the diet, senses and size before a mesh is made"
+ },
+ "license": "CC BY-SA 4.0 (the entry); diet and mass from EltonTraits 1.0 (CC BY 4.0, credited in the tile's sources)"
+}

@@ -1,0 +1,209 @@
+{
+ "id": "picea_sitchensis",
+ "scientific": "Picea sitchensis",
+ "common": "Sitka spruce",
+ "aliases": [
+  "sitka_spruce",
+  "tideland_spruce",
+  "coast_spruce"
+ ],
+ "family": "Pinaceae",
+ "form": "tree",
+ "deciduous": false,
+ "template": "pseudotsuga_menziesii",
+ "regions": [
+  "pacific_northwest",
+  "california"
+ ],
+ "height_m": [
+  45,
+  70
+ ],
+ "stature": {
+  "typical_m": 58,
+  "tall_m": 75,
+  "record_m": 100.2,
+  "source": "typical: the Gymnosperm Database gives about 70 m in old-growth; 58 m is the drafter's figure for the Hoh and Queets valley floors, where most canopy spruce stand 50-65 m; tall: the drafter's estimate; record: 100.2 m, Redwood National and State Parks, California (Gymnosperm Database); read 2026-11-04"
+ },
+ "variants_height_m": {
+  "young": [
+   5,
+   20
+  ],
+  "old-growth": [
+   62,
+   82
+  ]
+ },
+ "crown": {
+  "shape": "conical",
+  "profile": [
+   [
+    0.3,
+    0.2
+   ],
+   [
+    0.42,
+    0.26
+   ],
+   [
+    0.55,
+    0.27
+   ],
+   [
+    0.68,
+    0.24
+   ],
+   [
+    0.8,
+    0.18
+   ],
+   [
+    0.9,
+    0.11
+   ],
+   [
+    1.0,
+    0.03
+   ]
+  ],
+  "lobes": 5,
+  "lobe_depth": 0.14,
+  "asymmetry": 0.16,
+  "fill": 0.3,
+  "edge": 1.1
+ },
+ "foliage": {
+  "colors": {
+   "winter": [
+    76,
+    90,
+    88
+   ],
+   "spring": [
+    112,
+    130,
+    104
+   ],
+   "summer": [
+    82,
+    98,
+    94
+   ],
+   "fall": [
+    80,
+    94,
+    90
+   ]
+  },
+  "leaf_size_m": 0.02,
+  "leaf_on": {
+   "winter": 1.0,
+   "spring": 1.0,
+   "summer": 1.0,
+   "fall": 1.0
+  }
+ },
+ "trunk": {
+  "bark_rgb": [
+   112,
+   96,
+   96
+  ],
+  "bark_pattern": "plates",
+  "flare": 1.9
+ },
+ "targets": {
+  "crown_width_ratio": 0.48,
+  "crown_base_ratio": 0.3,
+  "porosity": 0.28,
+  "from": "judgement values from the drafter's reading of the sources and knowledge of the species (2026-11-04), no photographs measured; to be replaced by photo measurements: an open cone of horizontal, slightly drooping limbs, broader and more ragged than Douglas-fir; old valley-floor trees carry a broken, irregular crown on a long clear bole"
+ },
+ "variant_patches": {
+  "young": {
+   "note": "a dense, stiff blue-green cone in a windthrow gap or on a gravel bar, branches to the ground"
+  },
+  "old-growth": {
+   "set": {
+    "trunk": {
+     "flare": 2.3
+    }
+   },
+   "note": "a valley-floor giant: a buttressed, flaring base (often stilted where it grew on a nurse log), a clear bole of scaly purplish-grey plates and a broken, irregular crown"
+  }
+ },
+ "description": "The giant of the Hoh, Queets and Quinault valley floors, 50-70 m tall here on a massive flaring trunk, its thin bark flaking in purplish-grey scales. Its stiff, sharp blue-green needles stand out all round the twig and its crown is an open, ragged cone of drooping limbs hung with moss.",
+ "season_notes": {
+  "winter": "Evergreen; the crown takes the wet Pacific storms and the big trees windthrow in the floods' soft ground.",
+  "spring": "New shoots break pale yellow-green at the branch tips in May.",
+  "summer": "Papery, buff cones 5-9 cm hang near the top of the crown.",
+  "fall": "Cones open and shed winged seed; seedlings start on mossy nurse logs, not on the fern floor."
+ },
+ "habitat": {
+  "classes": {
+   "conifer_forest": 1.0,
+   "riparian": 0.8,
+   "mixed_forest": 0.6,
+   "barren": 0.05
+  },
+  "floor": 1.6,
+  "mid": 0.8,
+  "steep": 0.5,
+  "north": 1.1,
+  "shade": 0.4,
+  "disturbed": 0.6,
+  "riparian": {
+   "zones": {
+    "terrace": 1.0,
+    "bank": 0.4,
+    "pond_terrace": 0.4
+   },
+   "orders": [
+    3,
+    7
+   ],
+   "permanence": "perennial",
+   "water": "Wants constant moisture and fog: the old terraces and floodplain of the big west-side rivers, where it grows with western hemlock and bigleaf maple."
+  }
+ },
+ "relations": {
+  "eaten_by": [
+   {
+    "animal": "odocoileus_hemionus",
+    "part": "browse",
+    "seasons": [
+     "spring"
+    ]
+   },
+   {
+    "animal": "cyanocitta_stelleri",
+    "part": "seeds",
+    "seasons": [
+     "fall"
+    ]
+   }
+  ],
+  "cover_for": [
+   "odocoileus_hemionus",
+   "ursus_americanus",
+   "cyanocitta_stelleri"
+  ],
+  "shades_water": 0.6
+ },
+ "range": {
+  "elev_m": [
+   0,
+   600
+  ],
+  "where": "the west-side rain forest valleys (Hoh, Queets, Quinault, Bogachiel) and the coastal fog strip from Ruby Beach to Kalaloch; a narrow coastal belt from Alaska to Mendocino County, California",
+  "coastal": true
+ },
+ "stand_in": "pseudotsuga_menziesii",
+ "notes": "Grown from Douglas-fir (the library's only spruce-like Pinaceae architecture) as a broader, more ragged cone on a flaring base. The needles are 1.5-2.5 cm, stiff and sharp, four-angled or flattened and standing out all round the twig (a bottlebrush), not in the flat two ranks of the template's needle_flat cards, and blue-green with whitish undersides; the cones are pendant like the template's but papery and buff. The stilted roots of trees that grew on a nurse log, and the colonnades of trees in a line along a rotted log, are the Hoh's signature and are not expressed (the generator roots every tree at one point on the ground). The heavy moss on the limbs is not drawn either (see acer_circinatum's notes). Roosevelt elk browse the young shoots (Gymnosperm Database) and shape the rain forest's open understory; Douglas squirrels cut the cones, and crossbills and siskins take the seed; none is in the animal library, so the black-tailed deer (odocoileus_hemionus) and Steller's jay stand in. Below 400 m in California (Gymnosperm Database), so the 'california' region covers only the far north coast.",
+ "sources": [
+  "The Gymnosperm Database, Picea sitchensis, https://www.conifers.org/pi/Picea_sitchensis.php, read 2026-11-04"
+ ],
+ "authors": [
+  "Wild Earth (agent draft, 2026-11-04); needs local sign-off"
+ ]
+}

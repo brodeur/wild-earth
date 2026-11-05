@@ -1,0 +1,115 @@
+{
+ "id": "phalacrocorax_auritus",
+ "scientific": "Phalacrocorax auritus",
+ "common": "double-crested cormorant",
+ "kind": "bird",
+ "taxonomy": {
+  "kingdom": "Animalia",
+  "phylum": "Chordata",
+  "class": "Aves",
+  "order": "Suliformes",
+  "family": "Phalacrocoracidae",
+  "genus": "Phalacrocorax"
+ },
+ "body_plan": "bird",
+ "mass_kg": 1.8065,
+ "size": {
+  "length_m": 0.438,
+  "shoulder_or_wingspan_m": 0.701
+ },
+ "diet": {
+  "role": [
+   "predator"
+  ],
+  "diet_tenths": {
+   "inv": 0.0,
+   "vend": 0.0,
+   "vect": 0.0,
+   "vfish": 10.0,
+   "vunk": 0.0,
+   "scav": 0.0,
+   "fruit": 0.0,
+   "nect": 0.0,
+   "seed": 0.0,
+   "planto": 0.0
+  },
+  "vertebrate_share": 1.0,
+  "mass_kg": 1.8065,
+  "activity": [],
+  "source": "eltontraits (species)"
+ },
+ "senses": {
+  "sight": {
+   "range_m": 562.8
+  },
+  "sound": {
+   "range_m": 281.4
+  },
+  "scent": {
+   "range_m": 22.5
+  }
+ },
+ "rig": "bird part rig (animalModels.js RIG.bird), flierControl",
+ "locomotion": {
+  "code": "phalacrocorax_auritus",
+  "class": "Aves",
+  "order": "Suliformes",
+  "family": "Phalacrocoracidae",
+  "body_plan": "bird",
+  "mass_kg": 1.8065,
+  "length_m": 0.438,
+  "hip_m": 0.219,
+  "posture": "biped",
+  "gaits": {},
+  "walk_mps": 1.04,
+  "trot_mps": 2.32,
+  "cruise_mps": 3.52,
+  "top_mps": 5.86,
+  "stride_hz": 3.83,
+  "stride_m": 0.6,
+  "sprint_s": 4.4,
+  "recover_s": 15.3,
+  "turn_rad_s": 3.79,
+  "turn": {
+   "on": 0.45,
+   "off": 0.2,
+   "hold": 0.35,
+   "amp": [
+    0.4,
+    0.6
+   ],
+   "hz": [
+    0.7,
+    2.4
+   ]
+  },
+  "lag": {
+   "s": 0.07,
+   "max_rad": 0.35,
+   "v": [
+    0.3,
+    1.2
+   ]
+  },
+  "bend": {
+   "spine": 1.0,
+   "lead": 0.12,
+   "lead_max": 0.25
+  },
+  "flags": {
+   "head_lead": true
+  },
+  "flier": false
+ },
+ "generated": {
+  "by": "pipeline/fauna.py",
+  "at": "2026-11-05T06:04:20Z",
+  "from": [
+   "gbif taxonomy",
+   "eltontraits (species)",
+   "pipeline/locomotion.py"
+  ],
+  "note": "behaviour data without a model; review the diet, senses and size before a mesh is made"
+ },
+ "license": "CC BY-SA 4.0 (the entry); diet and mass from EltonTraits 1.0 (CC BY 4.0, credited in the tile's sources)"
+}

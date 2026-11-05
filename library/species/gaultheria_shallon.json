@@ -1,0 +1,439 @@
+{
+ "id": "gaultheria_shallon",
+ "aliases": [
+  "salal"
+ ],
+ "scientific": "Gaultheria shallon",
+ "common": "salal",
+ "form": "shrub",
+ "architectural_model": "Rauh (provisional)",
+ "deciduous": false,
+ "height_m": [
+  0.5,
+  1.8
+ ],
+ "variants": [
+  {
+   "name": "young",
+   "weight": 0.25,
+   "height_m": [
+    0.2,
+    0.6
+   ],
+   "deadwood": 0.03,
+   "set": {
+    "trunk": {
+     "stems": [
+      3,
+      6
+     ]
+    }
+   },
+   "note": "a low patch of a few shoots, or salal under a dense canopy"
+  },
+  {
+   "name": "mature",
+   "weight": 0.5,
+   "seeds": 1,
+   "note": "(from the California coffeeberry template) the file as written: a dense rounded shrub, wider than tall"
+  },
+  {
+   "name": "old",
+   "weight": 0.25,
+   "height_m": [
+    1.5,
+    2.5
+   ],
+   "crown_scale": 1.08,
+   "gnarl": 1.15,
+   "deadwood": {
+    "fraction": 0.18,
+    "levels": [
+     0,
+     1
+    ],
+    "shorten": 0.8
+   },
+   "set": {
+    "trunk": {
+     "stems": [
+      6,
+      11
+     ]
+    }
+   },
+   "note": "a tall, impenetrable thicket in a fog-belt opening or on a north-facing bluff"
+  }
+ ],
+ "description": "A thicket-forming evergreen shrub of the redwood forest and the foggy north-facing scrub, spreading by underground stems into dense patches. Its leaves are large, leathery and shiny, and its dark purple berries hang in rows below the leaves in late summer.",
+ "season_notes": {
+  "winter": "Leathery leaves stay green, some bronzing where the sun reaches them; deer browse it hard.",
+  "spring": "Bright new shoots and rows of white-pink urn flowers on reddish stalks.",
+  "summer": "Flowering ends and the hairy fruits swell and darken.",
+  "fall": "Dark blue-black berries hang along the stems into December."
+ },
+ "status": "generated from a trait card, needs review in the lineup and local sign-off",
+ "habitat": {
+  "classes": {
+   "conifer_forest": 0.9,
+   "mixed_forest": 0.8,
+   "chaparral": 0.4,
+   "riparian": 0.3,
+   "barren": 0.1,
+   "oak_woodland": 0.1,
+   "grassland": 0.05
+  },
+  "floor": 0.8,
+  "mid": 1.0,
+  "steep": 1.2,
+  "north": 1.5,
+  "shade": 0.5,
+  "disturbed": 0.6
+ },
+ "relations": {
+  "eaten_by": [
+   {
+    "animal": "odocoileus_hemionus",
+    "part": "browse",
+    "seasons": [
+     "fall",
+     "winter"
+    ]
+   },
+   {
+    "animal": "ursus_americanus",
+    "part": "berries",
+    "seasons": [
+     "summer",
+     "fall"
+    ]
+   },
+   {
+    "animal": "urocyon_cinereoargenteus",
+    "part": "berries",
+    "seasons": [
+     "fall"
+    ]
+   },
+   {
+    "animal": "canis_latrans",
+    "part": "berries",
+    "seasons": [
+     "fall"
+    ]
+   },
+   {
+    "animal": "cyanocitta_stelleri",
+    "part": "berries",
+    "seasons": [
+     "fall"
+    ]
+   },
+   {
+    "animal": "aphelocoma_californica",
+    "part": "berries",
+    "seasons": [
+     "fall"
+    ]
+   }
+  ],
+  "cover_for": [
+   "sylvilagus_bachmani",
+   "odocoileus_hemionus"
+  ]
+ },
+ "trunk": {
+  "length_ratio": 0.8,
+  "radius_ratio": 0.022,
+  "taper": 0.8,
+  "flare": 1.4,
+  "bole_ratio": 0.08,
+  "base_size": 0.02,
+  "curve_deg": 12,
+  "curve_var_deg": 14,
+  "segments": 3,
+  "lean_deg": 0,
+  "stems": [
+   8,
+   16
+  ],
+  "stem_spread_deg": 62,
+  "split_prob": 0.0,
+  "split_count": 2,
+  "split_angle_deg": 20,
+  "sinuous_deg": 8,
+  "bark_rgb": [
+   124,
+   92,
+   72
+  ],
+  "bark_pattern": "smooth",
+  "twig_rgb": [
+   130,
+   86,
+   72
+  ],
+  "bark": {
+   "tile_m": [
+    0.15,
+    0.35
+   ],
+   "contrast": 0.5,
+   "lichen": 0.3,
+   "relief": 0.35
+  }
+ },
+ "crown": {
+  "shape": "hemispherical",
+  "envelope": {
+   "profile": [
+    [
+     0.0,
+     0.6
+    ],
+    [
+     0.15,
+     0.78
+    ],
+    [
+     0.35,
+     0.85
+    ],
+    [
+     0.55,
+     0.82
+    ],
+    [
+     0.75,
+     0.7
+    ],
+    [
+     0.9,
+     0.48
+    ],
+    [
+     1.0,
+     0.16
+    ]
+   ],
+   "lobes": 6,
+   "lobe_depth": 0.1,
+   "asymmetry": 0.15,
+   "fill": 0.6,
+   "edge": 1.07
+  }
+ },
+ "levels": [
+  {
+   "count": 4,
+   "start": 0.05,
+   "down_angle_deg": 39,
+   "down_angle_var_deg": 8,
+   "rotation_deg": 140,
+   "rotation_var_deg": 30,
+   "length_ratio": 0.65,
+   "length_var": 0.25,
+   "curve_deg": 20,
+   "curve_var_deg": 14,
+   "tropism": 0.08,
+   "taper": 0.9,
+   "radius_ratio": 0.6,
+   "segments": 2,
+   "droop_deg": 3
+  },
+  {
+   "count": 4,
+   "start": 0.3,
+   "down_angle_deg": 40,
+   "down_angle_var_deg": 15,
+   "rotation_deg": 140,
+   "rotation_var_deg": 30,
+   "length_ratio": 0.45,
+   "length_var": 0.25,
+   "curve_deg": 15,
+   "curve_var_deg": 18,
+   "tropism": 0.05,
+   "taper": 1.0,
+   "radius_ratio": 0.5,
+   "segments": 1
+  }
+ ],
+ "foliage": {
+  "type": "broadleaf",
+  "leaf_size_m": 0.075,
+  "leaf_shape": "elliptic_glossy",
+  "cluster_m": 0.47,
+  "density": 22,
+  "cards_per_m2": 6.2,
+  "start": 0.0,
+  "parent_start": 0.03,
+  "orientation": "outward",
+  "roll_deg": 50,
+  "colors": {
+   "winter": [
+    78,
+    86,
+    58
+   ],
+   "spring": [
+    108,
+    124,
+    72
+   ],
+   "summer": [
+    80,
+    96,
+    58
+   ],
+   "fall": [
+    80,
+    92,
+    58
+   ]
+  },
+  "leaf_on": {
+   "winter": 1.0,
+   "spring": 1.0,
+   "summer": 1.0,
+   "fall": 1.0
+  },
+  "clumps": {
+   "radius_m": 0.32,
+   "cards_per_clump": 6,
+   "shell": 0.02,
+   "flatten": 0.74,
+   "tip_bias": 0.6
+  },
+  "palette": [
+   [
+    0.7,
+    [
+     1,
+     1,
+     1
+    ]
+   ],
+   [
+    0.25,
+    [
+     1.18,
+     1.18,
+     1.24
+    ]
+   ],
+   [
+    0.05,
+    [
+     1.35,
+     1.2,
+     0.7
+    ]
+   ]
+  ],
+  "ao_min": 0.76,
+  "color_var": [
+   0.08,
+   0.05
+  ],
+  "berries": {
+   "season": "fall",
+   "months": [
+    8,
+    11
+   ],
+   "form": "cluster",
+   "rgb": [
+    46,
+    34,
+    50
+   ],
+   "size_m": 0.045,
+   "density": 0.4
+  },
+  "flowers": {
+   "season": "spring",
+   "months": [
+    4,
+    6
+   ],
+   "form": "cluster",
+   "rgb": [
+    240,
+    222,
+    214
+   ],
+   "size_m": 0.05,
+   "density": 0.35,
+   "before_leaves": false
+  }
+ },
+ "deadwood": {
+  "fraction": 0.08,
+  "where": "inner",
+  "levels": [
+   0,
+   1
+  ],
+  "shorten": 0.7,
+  "rgb": [
+   140,
+   136,
+   128
+  ]
+ },
+ "twigs": {
+  "count": [
+   1,
+   2
+  ],
+  "length": 0.75,
+  "down_deg": 40,
+  "down_var_deg": 18,
+  "curve_var_deg": 25,
+  "segments": 1,
+  "radius_m": 0.006,
+  "taper": 0.6,
+  "fan_deg": 55,
+  "jitter": 0.22
+ },
+ "lod": {
+  "near_tris_budget": 1200,
+  "near_sides": [
+   3,
+   3,
+   0
+  ],
+  "mid_blobs": 3,
+  "mid_branches": 0,
+  "mid_sides": [
+   0,
+   0
+  ],
+  "mid_cards": 32
+ },
+ "targets": {
+  "crown_width_ratio": 1.7,
+  "crown_base_ratio": 0.04,
+  "porosity": 0.1,
+  "foliage_rg": 0.69,
+  "foliage_bg": 0.36,
+  "from": "judgement values, no photographs measured: a dense, spreading, clonal thicket much wider than tall (FEIS: often nearly impenetrable)"
+ },
+ "generated": {
+  "by": "pipeline/plantgen.py",
+  "version": "2",
+  "card": "library/plant_cards/gaultheria_shallon.json",
+  "card_sha256": "09afeb7484841ea9",
+  "template": "frangula_californica",
+  "template_common": "California coffeeberry",
+  "height_scale": 0.46
+ },
+ "notes": "Grown from coffeeberry (an evergreen broadleaf shrub with berries) as a lower, much wider, denser plant with more stems spread further, standing in for a rhizomatous clone that the generator cannot draw as one: a real patch is many joined shoots across several metres (FEIS). Leaves are 5-10 cm, thick, leathery, shiny dark green (FEIS), a little yellower and larger than evergreen huckleberry's, which it often grows beside. Flowers white to pink urns March-July in California, berries 6-10 mm, reddish to blue-black, August to October, staying to December. Deer use it heavily in winter (FEIS), and bears and birds eat the fruit; wrentits and band-tailed pigeons are named by FEIS but are not in the animal library. Heights: FEIS gives 0.4-3 m, tallest in the fog belt; around San Francisco it is mostly knee- to chest-high.",
+ "sources": [
+  "FEIS, Gaultheria shallon, https://www.fs.usda.gov/database/feis/plants/shrub/gausha/all.html, read 2026-11-04"
+ ],
+ "authors": [
+  "Wild Earth (agent draft, 2026-11-04); needs local sign-off"
+ ],
+ "license": "CC BY-SA 4.0"
+}

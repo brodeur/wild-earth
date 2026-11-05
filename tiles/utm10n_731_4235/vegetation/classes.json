@@ -1,0 +1,1696 @@
+{
+ "habitat": {
+  "1": {
+   "name": "oak_woodland",
+   "color": [
+    171,
+    150,
+    72
+   ]
+  },
+  "2": {
+   "name": "conifer_forest",
+   "color": [
+    34,
+    94,
+    58
+   ]
+  },
+  "3": {
+   "name": "mixed_forest",
+   "color": [
+    88,
+    122,
+    60
+   ]
+  },
+  "4": {
+   "name": "chaparral",
+   "color": [
+    134,
+    110,
+    92
+   ]
+  },
+  "5": {
+   "name": "grassland",
+   "color": [
+    214,
+    196,
+    120
+   ]
+  },
+  "6": {
+   "name": "riparian",
+   "color": [
+    74,
+    142,
+    118
+   ]
+  },
+  "7": {
+   "name": "water",
+   "color": [
+    70,
+    130,
+    220
+   ]
+  },
+  "8": {
+   "name": "barren",
+   "color": [
+    190,
+    185,
+    175
+   ]
+  },
+  "9": {
+   "name": "human",
+   "color": [
+    220,
+    60,
+    60
+   ]
+  }
+ },
+ "evt": {
+  "7027": {
+   "name": "Mediterranean California Dry-Mesic Mixed Conifer Forest and Woodland",
+   "phys": "Conifer",
+   "group": "Douglas-fir-Ponderosa Pine-Lodgepole Pine Forest and Woodland",
+   "habitat": "conifer_forest",
+   "color": [
+    0,
+    222,
+    0
+   ],
+   "pixels": 4703
+  },
+  "7028": {
+   "name": "Mediterranean California Mesic Mixed Conifer Forest and Woodland",
+   "phys": "Conifer",
+   "group": "Douglas-fir-Grand Fir-White Fir Forest and Woodland",
+   "habitat": "conifer_forest",
+   "color": [
+    0,
+    204,
+    0
+   ],
+   "pixels": 78759
+  },
+  "7029": {
+   "name": "Mediterranean California Mixed Oak Woodland",
+   "phys": "Hardwood",
+   "group": "Western Oak Woodland and Savanna",
+   "habitat": "oak_woodland",
+   "color": [
+    0,
+    189,
+    0
+   ],
+   "pixels": 410
+  },
+  "7030": {
+   "name": "Mediterranean California Lower Montane Conifer Forest and Woodland",
+   "phys": "Conifer",
+   "group": "Conifer-Oak Forest and Woodland",
+   "habitat": "conifer_forest",
+   "color": [
+    0,
+    189,
+    0
+   ],
+   "pixels": 1613
+  },
+  "7031": {
+   "name": "California Montane Jeffrey Pine-(Ponderosa Pine) Woodland",
+   "phys": "Conifer",
+   "group": "Ponderosa Pine Forest, Woodland and Savanna",
+   "habitat": "conifer_forest",
+   "color": [
+    0,
+    173,
+    0
+   ],
+   "pixels": 72
+  },
+  "7097": {
+   "name": "California Mesic Chaparral",
+   "phys": "Shrubland",
+   "group": "Chaparral",
+   "habitat": "chaparral",
+   "color": [
+    59,
+    30,
+    19
+   ],
+   "pixels": 124
+  },
+  "7098": {
+   "name": "California Montane Woodland and Chaparral",
+   "phys": "Shrubland",
+   "group": "Chaparral",
+   "habitat": "chaparral",
+   "color": [
+    66,
+    37,
+    24
+   ],
+   "pixels": 3752
+  },
+  "7105": {
+   "name": "Northern and Central California Dry-Mesic Chaparral",
+   "phys": "Shrubland",
+   "group": "Chaparral",
+   "habitat": "chaparral",
+   "color": [
+    99,
+    69,
+    47
+   ],
+   "pixels": 2057
+  },
+  "7114": {
+   "name": "California Lower Montane Foothill Pine Woodland and Savanna",
+   "phys": "Conifer",
+   "group": "Conifer-Oak Forest and Woodland",
+   "habitat": "mixed_forest",
+   "color": [
+    121,
+    217,
+    207
+   ],
+   "pixels": 184
+  },
+  "7260": {
+   "name": "Mediterranean California Lower Montane Black Oak Forest and Woodland",
+   "phys": "Hardwood",
+   "group": "Conifer-Oak Forest and Woodland",
+   "habitat": "oak_woodland",
+   "color": [
+    0,
+    189,
+    0
+   ],
+   "pixels": 14
+  },
+  "7261": {
+   "name": "Mediterranean California Lower Montane Black Oak-Conifer Forest and Woodland",
+   "phys": "Conifer-Hardwood",
+   "group": "Conifer-Oak Forest and Woodland",
+   "habitat": "mixed_forest",
+   "color": [
+    0,
+    189,
+    0
+   ],
+   "pixels": 17
+  },
+  "7292": {
+   "name": "Open Water",
+   "phys": "Open Water",
+   "group": "Open Water",
+   "habitat": "water",
+   "color": [
+    0,
+    0,
+    255
+   ],
+   "pixels": 306
+  },
+  "7295": {
+   "name": "Quarries-Strip Mines-Gravel Pits-Well and Wind Pads",
+   "phys": "Quarries-Strip Mines-Gravel Pits-Well and Wind Pads",
+   "group": "Quarries-Strip Mines-Gravel Pits-Well and Wind Pads",
+   "habitat": "human",
+   "color": [
+    230,
+    232,
+    250
+   ],
+   "pixels": 22
+  },
+  "7296": {
+   "name": "Developed-Low Intensity",
+   "phys": "Developed-Low Intensity",
+   "group": "Developed-Low Intensity",
+   "habitat": "human",
+   "color": [
+    255,
+    122,
+    143
+   ],
+   "pixels": 1556
+  },
+  "7297": {
+   "name": "Developed-Medium Intensity",
+   "phys": "Developed-Medium Intensity",
+   "group": "Developed-Medium Intensity",
+   "habitat": "human",
+   "color": [
+    253,
+    44,
+    79
+   ],
+   "pixels": 179
+  },
+  "7298": {
+   "name": "Developed-High Intensity",
+   "phys": "Developed-High Intensity",
+   "group": "Developed-High Intensity",
+   "habitat": "human",
+   "color": [
+    173,
+    0,
+    28
+   ],
+   "pixels": 48
+  },
+  "7299": {
+   "name": "Developed-Roads",
+   "phys": "Developed-Roads",
+   "group": "Developed-Roads",
+   "habitat": "human",
+   "color": [
+    1,
+    1,
+    1
+   ],
+   "pixels": 7865
+  },
+  "7901": {
+   "name": "Western Cool Temperate Urban Evergreen Forest",
+   "phys": "Developed",
+   "group": "Developed-Upland Evergreen Forest",
+   "habitat": "human",
+   "color": [
+    170,
+    102,
+    205
+   ],
+   "pixels": 3065
+  },
+  "7902": {
+   "name": "Western Cool Temperate Urban Mixed Forest",
+   "phys": "Developed",
+   "group": "Developed-Upland Mixed Forest",
+   "habitat": "human",
+   "color": [
+    194,
+    158,
+    215
+   ],
+   "pixels": 116
+  },
+  "7903": {
+   "name": "Western Cool Temperate Urban Herbaceous",
+   "phys": "Developed",
+   "group": "Developed-Upland Herbaceous",
+   "habitat": "human",
+   "color": [
+    202,
+    122,
+    245
+   ],
+   "pixels": 110
+  },
+  "7904": {
+   "name": "Western Cool Temperate Urban Shrubland",
+   "phys": "Developed",
+   "group": "Developed-Upland Shrubland",
+   "habitat": "human",
+   "color": [
+    207,
+    171,
+    215
+   ],
+   "pixels": 20
+  },
+  "7921": {
+   "name": "Western Cool Temperate Developed Evergreen Forest",
+   "phys": "Developed",
+   "group": "Developed-Upland Evergreen Forest",
+   "habitat": "human",
+   "color": [
+    102,
+    119,
+    205
+   ],
+   "pixels": 3363
+  },
+  "7922": {
+   "name": "Western Cool Temperate Developed Mixed Forest",
+   "phys": "Developed",
+   "group": "Developed-Upland Mixed Forest",
+   "habitat": "human",
+   "color": [
+    68,
+    79,
+    137
+   ],
+   "pixels": 61
+  },
+  "7923": {
+   "name": "Western Cool Temperate Developed Shrubland",
+   "phys": "Developed",
+   "group": "Developed-Upland Shrubland",
+   "habitat": "human",
+   "color": [
+    122,
+    142,
+    245
+   ],
+   "pixels": 25
+  },
+  "7924": {
+   "name": "Western Cool Temperate Developed Herbaceous",
+   "phys": "Developed",
+   "group": "Developed-Upland Herbaceous",
+   "habitat": "human",
+   "color": [
+    158,
+    170,
+    215
+   ],
+   "pixels": 16
+  },
+  "7960": {
+   "name": "Western Cool Temperate Orchard",
+   "phys": "Agricultural",
+   "group": "Agricultural-Orchard",
+   "habitat": "human",
+   "color": [
+    210,
+    28,
+    94
+   ],
+   "pixels": 19
+  },
+  "7961": {
+   "name": "Western Cool Temperate Vineyard",
+   "phys": "Agricultural",
+   "group": "Agricultural-Vineyard",
+   "habitat": "human",
+   "color": [
+    168,
+    0,
+    132
+   ],
+   "pixels": 75
+  },
+  "9129": {
+   "name": "Mediterranean California Foothill and Lower Montane Riparian Woodland",
+   "phys": "Riparian",
+   "group": "Western Riparian Woodland and Shrubland",
+   "habitat": "riparian",
+   "color": [
+    81,
+    180,
+    141
+   ],
+   "pixels": 1337
+  },
+  "9213": {
+   "name": "Sierra Nevada Cliff and Canyon",
+   "phys": "Sparsely Vegetated",
+   "group": "Sparse Vegetation",
+   "habitat": "barren",
+   "color": [
+    100,
+    100,
+    100
+   ],
+   "pixels": 213
+  },
+  "9272": {
+   "name": "Temperate Pacific Subalpine-Montane Wet Meadow",
+   "phys": "Riparian",
+   "group": "Inland Marshes and Prairies",
+   "habitat": "riparian",
+   "color": [
+    255,
+    127,
+    59
+   ],
+   "pixels": 175
+  },
+  "9301": {
+   "name": "California Ruderal Grassland and Meadow",
+   "phys": "Exotic Herbaceous",
+   "group": "Introduced Annual and Biennial Forbland",
+   "habitat": "grassland",
+   "color": [
+    255,
+    105,
+    46
+   ],
+   "pixels": 592
+  },
+  "9629": {
+   "name": "Mediterranean California Foothill and Lower Montane Riparian Shrubland",
+   "phys": "Riparian",
+   "group": "Western Riparian Woodland and Shrubland",
+   "habitat": "riparian",
+   "color": [
+    81,
+    180,
+    141
+   ],
+   "pixels": 21
+  }
+ },
+ "evc": {
+  "11": {
+   "name": "Open Water",
+   "pixels": 306
+  },
+  "14": {
+   "name": "Developed-Upland Evergreen Forest",
+   "pixels": 3065
+  },
+  "15": {
+   "name": "Developed-Upland Mixed Forest",
+   "pixels": 116
+  },
+  "16": {
+   "name": "Developed-Upland Herbaceous",
+   "pixels": 110
+  },
+  "17": {
+   "name": "Developed-Upland Shrubland",
+   "pixels": 20
+  },
+  "22": {
+   "name": "Developed-Low Intensity",
+   "pixels": 1556
+  },
+  "23": {
+   "name": "Developed-Medium Intensity",
+   "pixels": 179
+  },
+  "24": {
+   "name": "Developed-High Intensity",
+   "pixels": 48
+  },
+  "25": {
+   "name": "Developed-Roads",
+   "pixels": 7865
+  },
+  "32": {
+   "name": "Quarries-Strip Mines-Gravel Pits-Well and Wind Pads",
+   "pixels": 22
+  },
+  "61": {
+   "name": "NASS-Vineyard",
+   "pixels": 75
+  },
+  "100": {
+   "name": "Sparse Vegetation Canopy",
+   "pixels": 213
+  },
+  "110": {
+   "name": "Tree Cover = 10%",
+   "pixels": 1
+  },
+  "112": {
+   "name": "Tree Cover = 12%",
+   "pixels": 2
+  },
+  "113": {
+   "name": "Tree Cover = 13%",
+   "pixels": 2
+  },
+  "114": {
+   "name": "Tree Cover = 14%",
+   "pixels": 1
+  },
+  "115": {
+   "name": "Tree Cover = 15%",
+   "pixels": 311
+  },
+  "116": {
+   "name": "Tree Cover = 16%",
+   "pixels": 1
+  },
+  "117": {
+   "name": "Tree Cover = 17%",
+   "pixels": 1
+  },
+  "118": {
+   "name": "Tree Cover = 18%",
+   "pixels": 3
+  },
+  "119": {
+   "name": "Tree Cover = 19%",
+   "pixels": 2
+  },
+  "120": {
+   "name": "Tree Cover = 20%",
+   "pixels": 6
+  },
+  "121": {
+   "name": "Tree Cover = 21%",
+   "pixels": 15
+  },
+  "122": {
+   "name": "Tree Cover = 22%",
+   "pixels": 19
+  },
+  "123": {
+   "name": "Tree Cover = 23%",
+   "pixels": 24
+  },
+  "124": {
+   "name": "Tree Cover = 24%",
+   "pixels": 43
+  },
+  "125": {
+   "name": "Tree Cover = 25%",
+   "pixels": 485
+  },
+  "126": {
+   "name": "Tree Cover = 26%",
+   "pixels": 105
+  },
+  "127": {
+   "name": "Tree Cover = 27%",
+   "pixels": 146
+  },
+  "128": {
+   "name": "Tree Cover = 28%",
+   "pixels": 149
+  },
+  "129": {
+   "name": "Tree Cover = 29%",
+   "pixels": 230
+  },
+  "130": {
+   "name": "Tree Cover = 30%",
+   "pixels": 294
+  },
+  "131": {
+   "name": "Tree Cover = 31%",
+   "pixels": 352
+  },
+  "132": {
+   "name": "Tree Cover = 32%",
+   "pixels": 451
+  },
+  "133": {
+   "name": "Tree Cover = 33%",
+   "pixels": 576
+  },
+  "134": {
+   "name": "Tree Cover = 34%",
+   "pixels": 616
+  },
+  "135": {
+   "name": "Tree Cover = 35%",
+   "pixels": 1777
+  },
+  "136": {
+   "name": "Tree Cover = 36%",
+   "pixels": 762
+  },
+  "137": {
+   "name": "Tree Cover = 37%",
+   "pixels": 864
+  },
+  "138": {
+   "name": "Tree Cover = 38%",
+   "pixels": 950
+  },
+  "139": {
+   "name": "Tree Cover = 39%",
+   "pixels": 1024
+  },
+  "140": {
+   "name": "Tree Cover = 40%",
+   "pixels": 1129
+  },
+  "141": {
+   "name": "Tree Cover = 41%",
+   "pixels": 1195
+  },
+  "142": {
+   "name": "Tree Cover = 42%",
+   "pixels": 1360
+  },
+  "143": {
+   "name": "Tree Cover = 43%",
+   "pixels": 1427
+  },
+  "144": {
+   "name": "Tree Cover = 44%",
+   "pixels": 1530
+  },
+  "145": {
+   "name": "Tree Cover = 45%",
+   "pixels": 5054
+  },
+  "146": {
+   "name": "Tree Cover = 46%",
+   "pixels": 1861
+  },
+  "147": {
+   "name": "Tree Cover = 47%",
+   "pixels": 2021
+  },
+  "148": {
+   "name": "Tree Cover = 48%",
+   "pixels": 2086
+  },
+  "149": {
+   "name": "Tree Cover = 49%",
+   "pixels": 2081
+  },
+  "150": {
+   "name": "Tree Cover = 50%",
+   "pixels": 2111
+  },
+  "151": {
+   "name": "Tree Cover = 51%",
+   "pixels": 2221
+  },
+  "152": {
+   "name": "Tree Cover = 52%",
+   "pixels": 2069
+  },
+  "153": {
+   "name": "Tree Cover = 53%",
+   "pixels": 2176
+  },
+  "154": {
+   "name": "Tree Cover = 54%",
+   "pixels": 2168
+  },
+  "155": {
+   "name": "Tree Cover = 55%",
+   "pixels": 3773
+  },
+  "156": {
+   "name": "Tree Cover = 56%",
+   "pixels": 2384
+  },
+  "157": {
+   "name": "Tree Cover = 57%",
+   "pixels": 2500
+  },
+  "158": {
+   "name": "Tree Cover = 58%",
+   "pixels": 2582
+  },
+  "159": {
+   "name": "Tree Cover = 59%",
+   "pixels": 2846
+  },
+  "160": {
+   "name": "Tree Cover = 60%",
+   "pixels": 2878
+  },
+  "161": {
+   "name": "Tree Cover = 61%",
+   "pixels": 2946
+  },
+  "162": {
+   "name": "Tree Cover = 62%",
+   "pixels": 3130
+  },
+  "163": {
+   "name": "Tree Cover = 63%",
+   "pixels": 2957
+  },
+  "164": {
+   "name": "Tree Cover = 64%",
+   "pixels": 2972
+  },
+  "165": {
+   "name": "Tree Cover = 65%",
+   "pixels": 3777
+  },
+  "166": {
+   "name": "Tree Cover = 66%",
+   "pixels": 2562
+  },
+  "167": {
+   "name": "Tree Cover = 67%",
+   "pixels": 2496
+  },
+  "168": {
+   "name": "Tree Cover = 68%",
+   "pixels": 2304
+  },
+  "169": {
+   "name": "Tree Cover = 69%",
+   "pixels": 2202
+  },
+  "170": {
+   "name": "Tree Cover = 70%",
+   "pixels": 1949
+  },
+  "171": {
+   "name": "Tree Cover = 71%",
+   "pixels": 1817
+  },
+  "172": {
+   "name": "Tree Cover = 72%",
+   "pixels": 1427
+  },
+  "173": {
+   "name": "Tree Cover = 73%",
+   "pixels": 1585
+  },
+  "174": {
+   "name": "Tree Cover = 74%",
+   "pixels": 484
+  },
+  "175": {
+   "name": "Tree Cover = 75%",
+   "pixels": 571
+  },
+  "176": {
+   "name": "Tree Cover = 76%",
+   "pixels": 3
+  },
+  "177": {
+   "name": "Tree Cover = 77%",
+   "pixels": 1
+  },
+  "178": {
+   "name": "Tree Cover = 78%",
+   "pixels": 2
+  },
+  "213": {
+   "name": "Shrub Cover = 13%",
+   "pixels": 2
+  },
+  "215": {
+   "name": "Shrub Cover = 15%",
+   "pixels": 7
+  },
+  "216": {
+   "name": "Shrub Cover = 16%",
+   "pixels": 2
+  },
+  "217": {
+   "name": "Shrub Cover = 17%",
+   "pixels": 13
+  },
+  "218": {
+   "name": "Shrub Cover = 18%",
+   "pixels": 40
+  },
+  "219": {
+   "name": "Shrub Cover = 19%",
+   "pixels": 63
+  },
+  "220": {
+   "name": "Shrub Cover = 20%",
+   "pixels": 65
+  },
+  "221": {
+   "name": "Shrub Cover = 21%",
+   "pixels": 89
+  },
+  "222": {
+   "name": "Shrub Cover = 22%",
+   "pixels": 123
+  },
+  "223": {
+   "name": "Shrub Cover = 23%",
+   "pixels": 128
+  },
+  "224": {
+   "name": "Shrub Cover = 24%",
+   "pixels": 195
+  },
+  "225": {
+   "name": "Shrub Cover = 25%",
+   "pixels": 255
+  },
+  "226": {
+   "name": "Shrub Cover = 26%",
+   "pixels": 248
+  },
+  "227": {
+   "name": "Shrub Cover = 27%",
+   "pixels": 294
+  },
+  "228": {
+   "name": "Shrub Cover = 28%",
+   "pixels": 362
+  },
+  "229": {
+   "name": "Shrub Cover = 29%",
+   "pixels": 343
+  },
+  "230": {
+   "name": "Shrub Cover = 30%",
+   "pixels": 303
+  },
+  "231": {
+   "name": "Shrub Cover = 31%",
+   "pixels": 265
+  },
+  "232": {
+   "name": "Shrub Cover = 32%",
+   "pixels": 262
+  },
+  "233": {
+   "name": "Shrub Cover = 33%",
+   "pixels": 250
+  },
+  "234": {
+   "name": "Shrub Cover = 34%",
+   "pixels": 233
+  },
+  "235": {
+   "name": "Shrub Cover = 35%",
+   "pixels": 213
+  },
+  "236": {
+   "name": "Shrub Cover = 36%",
+   "pixels": 191
+  },
+  "237": {
+   "name": "Shrub Cover = 37%",
+   "pixels": 126
+  },
+  "238": {
+   "name": "Shrub Cover = 38%",
+   "pixels": 131
+  },
+  "239": {
+   "name": "Shrub Cover = 39%",
+   "pixels": 117
+  },
+  "240": {
+   "name": "Shrub Cover = 40%",
+   "pixels": 109
+  },
+  "241": {
+   "name": "Shrub Cover = 41%",
+   "pixels": 100
+  },
+  "242": {
+   "name": "Shrub Cover = 42%",
+   "pixels": 109
+  },
+  "243": {
+   "name": "Shrub Cover = 43%",
+   "pixels": 54
+  },
+  "244": {
+   "name": "Shrub Cover = 44%",
+   "pixels": 106
+  },
+  "245": {
+   "name": "Shrub Cover = 45%",
+   "pixels": 88
+  },
+  "246": {
+   "name": "Shrub Cover = 46%",
+   "pixels": 92
+  },
+  "247": {
+   "name": "Shrub Cover = 47%",
+   "pixels": 27
+  },
+  "248": {
+   "name": "Shrub Cover = 48%",
+   "pixels": 83
+  },
+  "249": {
+   "name": "Shrub Cover = 49%",
+   "pixels": 80
+  },
+  "250": {
+   "name": "Shrub Cover = 50%",
+   "pixels": 86
+  },
+  "251": {
+   "name": "Shrub Cover = 51%",
+   "pixels": 84
+  },
+  "252": {
+   "name": "Shrub Cover = 52%",
+   "pixels": 63
+  },
+  "254": {
+   "name": "Shrub Cover = 54%",
+   "pixels": 73
+  },
+  "255": {
+   "name": "Shrub Cover = 55%",
+   "pixels": 113
+  },
+  "256": {
+   "name": "Shrub Cover = 56%",
+   "pixels": 49
+  },
+  "258": {
+   "name": "Shrub Cover = 58%",
+   "pixels": 23
+  },
+  "259": {
+   "name": "Shrub Cover = 59%",
+   "pixels": 40
+  },
+  "260": {
+   "name": "Shrub Cover = 60%",
+   "pixels": 9
+  },
+  "261": {
+   "name": "Shrub Cover = 61%",
+   "pixels": 3
+  },
+  "262": {
+   "name": "Shrub Cover = 62%",
+   "pixels": 4
+  },
+  "313": {
+   "name": "Herb Cover = 13%",
+   "pixels": 1
+  },
+  "316": {
+   "name": "Herb Cover = 16%",
+   "pixels": 2
+  },
+  "317": {
+   "name": "Herb Cover = 17%",
+   "pixels": 1
+  },
+  "320": {
+   "name": "Herb Cover = 20%",
+   "pixels": 2
+  },
+  "321": {
+   "name": "Herb Cover = 21%",
+   "pixels": 1
+  },
+  "322": {
+   "name": "Herb Cover = 22%",
+   "pixels": 2
+  },
+  "323": {
+   "name": "Herb Cover = 23%",
+   "pixels": 2
+  },
+  "325": {
+   "name": "Herb Cover = 25%",
+   "pixels": 955
+  },
+  "326": {
+   "name": "Herb Cover = 26%",
+   "pixels": 2
+  },
+  "327": {
+   "name": "Herb Cover = 27%",
+   "pixels": 6
+  },
+  "329": {
+   "name": "Herb Cover = 29%",
+   "pixels": 2
+  },
+  "330": {
+   "name": "Herb Cover = 30%",
+   "pixels": 1
+  },
+  "331": {
+   "name": "Herb Cover = 31%",
+   "pixels": 3
+  },
+  "332": {
+   "name": "Herb Cover = 32%",
+   "pixels": 5
+  },
+  "334": {
+   "name": "Herb Cover = 34%",
+   "pixels": 9
+  },
+  "335": {
+   "name": "Herb Cover = 35%",
+   "pixels": 16
+  },
+  "336": {
+   "name": "Herb Cover = 36%",
+   "pixels": 25
+  },
+  "337": {
+   "name": "Herb Cover = 37%",
+   "pixels": 2
+  },
+  "338": {
+   "name": "Herb Cover = 38%",
+   "pixels": 32
+  },
+  "339": {
+   "name": "Herb Cover = 39%",
+   "pixels": 35
+  },
+  "340": {
+   "name": "Herb Cover = 40%",
+   "pixels": 36
+  },
+  "341": {
+   "name": "Herb Cover = 41%",
+   "pixels": 15
+  },
+  "342": {
+   "name": "Herb Cover = 42%",
+   "pixels": 53
+  },
+  "343": {
+   "name": "Herb Cover = 43%",
+   "pixels": 48
+  },
+  "344": {
+   "name": "Herb Cover = 44%",
+   "pixels": 51
+  },
+  "345": {
+   "name": "Herb Cover = 45%",
+   "pixels": 28
+  },
+  "346": {
+   "name": "Herb Cover = 46%",
+   "pixels": 61
+  },
+  "347": {
+   "name": "Herb Cover = 47%",
+   "pixels": 39
+  },
+  "348": {
+   "name": "Herb Cover = 48%",
+   "pixels": 45
+  },
+  "349": {
+   "name": "Herb Cover = 49%",
+   "pixels": 47
+  },
+  "350": {
+   "name": "Herb Cover = 50%",
+   "pixels": 16
+  },
+  "351": {
+   "name": "Herb Cover = 51%",
+   "pixels": 43
+  },
+  "352": {
+   "name": "Herb Cover = 52%",
+   "pixels": 25
+  },
+  "353": {
+   "name": "Herb Cover = 53%",
+   "pixels": 29
+  },
+  "354": {
+   "name": "Herb Cover = 54%",
+   "pixels": 8
+  },
+  "355": {
+   "name": "Herb Cover = 55%",
+   "pixels": 42
+  },
+  "356": {
+   "name": "Herb Cover = 56%",
+   "pixels": 19
+  },
+  "357": {
+   "name": "Herb Cover = 57%",
+   "pixels": 8
+  },
+  "358": {
+   "name": "Herb Cover = 58%",
+   "pixels": 9
+  },
+  "360": {
+   "name": "Herb Cover = 60%",
+   "pixels": 8
+  },
+  "361": {
+   "name": "Herb Cover = 61%",
+   "pixels": 7
+  },
+  "362": {
+   "name": "Herb Cover = 62%",
+   "pixels": 2
+  },
+  "364": {
+   "name": "Herb Cover = 64%",
+   "pixels": 4
+  },
+  "365": {
+   "name": "Herb Cover = 65%",
+   "pixels": 1
+  },
+  "370": {
+   "name": "Herb Cover = 70%",
+   "pixels": 1
+  },
+  "377": {
+   "name": "Herb Cover = 77%",
+   "pixels": 1
+  }
+ },
+ "evh": {
+  "11": {
+   "name": "Open Water",
+   "pixels": 306
+  },
+  "14": {
+   "name": "Developed-Upland Evergreen Forest",
+   "pixels": 3065
+  },
+  "15": {
+   "name": "Developed-Upland Mixed Forest",
+   "pixels": 116
+  },
+  "16": {
+   "name": "Developed-Upland Herbaceous",
+   "pixels": 110
+  },
+  "17": {
+   "name": "Developed-Upland Shrubland",
+   "pixels": 20
+  },
+  "22": {
+   "name": "Developed - Low Intensity",
+   "pixels": 1556
+  },
+  "23": {
+   "name": "Developed - Medium Intensity",
+   "pixels": 179
+  },
+  "24": {
+   "name": "Developed - High Intensity",
+   "pixels": 48
+  },
+  "25": {
+   "name": "Developed-Roads",
+   "pixels": 7865
+  },
+  "32": {
+   "name": "Quarries-Strip Mines-Gravel Pits-Well and Wind Pads",
+   "pixels": 22
+  },
+  "61": {
+   "name": "NASS-Vineyard",
+   "pixels": 75
+  },
+  "100": {
+   "name": "Sparse Vegetation Canopy",
+   "pixels": 213
+  },
+  "103": {
+   "name": "Tree Height = 3 meters",
+   "pixels": 3
+  },
+  "104": {
+   "name": "Tree Height = 4 meters",
+   "pixels": 6
+  },
+  "105": {
+   "name": "Tree Height = 5 meters",
+   "pixels": 12
+  },
+  "106": {
+   "name": "Tree Height = 6 meters",
+   "pixels": 61
+  },
+  "107": {
+   "name": "Tree Height = 7 meters",
+   "pixels": 223
+  },
+  "108": {
+   "name": "Tree Height = 8 meters",
+   "pixels": 535
+  },
+  "109": {
+   "name": "Tree Height = 9 meters",
+   "pixels": 628
+  },
+  "110": {
+   "name": "Tree Height = 10 meters",
+   "pixels": 841
+  },
+  "111": {
+   "name": "Tree Height = 11 meters",
+   "pixels": 1031
+  },
+  "112": {
+   "name": "Tree Height = 12 meters",
+   "pixels": 1225
+  },
+  "113": {
+   "name": "Tree Height = 13 meters",
+   "pixels": 1349
+  },
+  "114": {
+   "name": "Tree Height = 14 meters",
+   "pixels": 1347
+  },
+  "115": {
+   "name": "Tree Height = 15 meters",
+   "pixels": 1478
+  },
+  "116": {
+   "name": "Tree Height = 16 meters",
+   "pixels": 1647
+  },
+  "117": {
+   "name": "Tree Height = 17 meters",
+   "pixels": 1919
+  },
+  "118": {
+   "name": "Tree Height = 18 meters",
+   "pixels": 7767
+  },
+  "119": {
+   "name": "Tree Height = 19 meters",
+   "pixels": 3061
+  },
+  "120": {
+   "name": "Tree Height = 20 meters",
+   "pixels": 3782
+  },
+  "121": {
+   "name": "Tree Height = 21 meters",
+   "pixels": 4175
+  },
+  "122": {
+   "name": "Tree Height = 22 meters",
+   "pixels": 4721
+  },
+  "123": {
+   "name": "Tree Height = 23 meters",
+   "pixels": 4976
+  },
+  "124": {
+   "name": "Tree Height = 24 meters",
+   "pixels": 4968
+  },
+  "125": {
+   "name": "Tree Height = 25 meters",
+   "pixels": 4836
+  },
+  "126": {
+   "name": "Tree Height = 26 meters",
+   "pixels": 4608
+  },
+  "127": {
+   "name": "Tree Height = 27 meters",
+   "pixels": 4180
+  },
+  "128": {
+   "name": "Tree Height = 28 meters",
+   "pixels": 4130
+  },
+  "129": {
+   "name": "Tree Height = 29 meters",
+   "pixels": 3455
+  },
+  "130": {
+   "name": "Tree Height = 30 meters",
+   "pixels": 3320
+  },
+  "131": {
+   "name": "Tree Height = 31 meters",
+   "pixels": 2910
+  },
+  "132": {
+   "name": "Tree Height = 32 meters",
+   "pixels": 2602
+  },
+  "133": {
+   "name": "Tree Height = 33 meters",
+   "pixels": 2124
+  },
+  "134": {
+   "name": "Tree Height = 34 meters",
+   "pixels": 1889
+  },
+  "135": {
+   "name": "Tree Height = 35 meters",
+   "pixels": 1546
+  },
+  "136": {
+   "name": "Tree Height = 36 meters",
+   "pixels": 1414
+  },
+  "137": {
+   "name": "Tree Height = 37 meters",
+   "pixels": 1265
+  },
+  "138": {
+   "name": "Tree Height = 38 meters",
+   "pixels": 3712
+  },
+  "139": {
+   "name": "Tree Height = 39 meters",
+   "pixels": 2103
+  },
+  "203": {
+   "name": "Shrub Height = 0.3 meter",
+   "pixels": 44
+  },
+  "204": {
+   "name": "Shrub Height = 0.4 meter",
+   "pixels": 4
+  },
+  "205": {
+   "name": "Shrub Height = 0.5 meter",
+   "pixels": 16
+  },
+  "206": {
+   "name": "Shrub Height = 0.6 meter",
+   "pixels": 36
+  },
+  "207": {
+   "name": "Shrub Height = 0.7 meter",
+   "pixels": 68
+  },
+  "208": {
+   "name": "Shrub Height = 0.8 meter",
+   "pixels": 154
+  },
+  "209": {
+   "name": "Shrub Height = 0.9 meter",
+   "pixels": 209
+  },
+  "210": {
+   "name": "Shrub Height = 1 meter",
+   "pixels": 366
+  },
+  "211": {
+   "name": "Shrub Height = 1.1 meters",
+   "pixels": 343
+  },
+  "212": {
+   "name": "Shrub Height = 1.2 meters",
+   "pixels": 634
+  },
+  "213": {
+   "name": "Shrub Height = 1.3 meters",
+   "pixels": 622
+  },
+  "214": {
+   "name": "Shrub Height = 1.4 meters",
+   "pixels": 820
+  },
+  "215": {
+   "name": "Shrub Height = 1.5 meters",
+   "pixels": 611
+  },
+  "216": {
+   "name": "Shrub Height = 1.6 meters",
+   "pixels": 600
+  },
+  "217": {
+   "name": "Shrub Height = 1.7 meters",
+   "pixels": 368
+  },
+  "218": {
+   "name": "Shrub Height = 1.8 meters",
+   "pixels": 327
+  },
+  "219": {
+   "name": "Shrub Height = 1.9 meters",
+   "pixels": 149
+  },
+  "220": {
+   "name": "Shrub Height = 2.0 meters",
+   "pixels": 142
+  },
+  "221": {
+   "name": "Shrub Height = 2.1 meters",
+   "pixels": 76
+  },
+  "222": {
+   "name": "Shrub Height = 2.2 meters",
+   "pixels": 57
+  },
+  "223": {
+   "name": "Shrub Height = 2.3 meters",
+   "pixels": 34
+  },
+  "224": {
+   "name": "Shrub Height = 2.4 meters",
+   "pixels": 18
+  },
+  "225": {
+   "name": "Shrub Height = 2.5 meters",
+   "pixels": 7
+  },
+  "226": {
+   "name": "Shrub Height = 2.6 meters",
+   "pixels": 6
+  },
+  "227": {
+   "name": "Shrub Height = 2.7 meters",
+   "pixels": 2
+  },
+  "229": {
+   "name": "Shrub Height = 2.9 meters",
+   "pixels": 1
+  },
+  "230": {
+   "name": "Shrub Height >= 3.0 meters",
+   "pixels": 1
+  },
+  "302": {
+   "name": "Herb Height = 0.2 meter",
+   "pixels": 306
+  },
+  "303": {
+   "name": "Herb Height = 0.3 meter",
+   "pixels": 259
+  },
+  "304": {
+   "name": "Herb Height = 0.4 meter",
+   "pixels": 170
+  },
+  "305": {
+   "name": "Herb Height = 0.5 meter",
+   "pixels": 42
+  },
+  "306": {
+   "name": "Herb Height = 0.6 meter",
+   "pixels": 5
+  },
+  "307": {
+   "name": "Herb Height = 0.7 meter",
+   "pixels": 13
+  },
+  "308": {
+   "name": "Herb Height = 0.8 meter",
+   "pixels": 955
+  }
+ },
+ "bps": {
+  "11": {
+   "name": "Open Water",
+   "group": "Open Water",
+   "habitat": "water",
+   "fire_return_interval_yr": {
+    "replacement": "-9999",
+    "mixed": "-9999",
+    "surface": "-9999",
+    "all": "-9999"
+   },
+   "pixels": 306
+  },
+  "577": {
+   "name": "Inter-Mountain Basins Sparsely Vegetated Systems",
+   "group": "Sparse",
+   "habitat": "barren",
+   "fire_return_interval_yr": {
+    "replacement": "-9999",
+    "mixed": "-9999",
+    "surface": "-9999",
+    "all": "-9999"
+   },
+   "pixels": 242
+  },
+  "581": {
+   "name": "Great Basin Pinyon-Juniper Woodland",
+   "group": "Conifer",
+   "habitat": "conifer_forest",
+   "fire_return_interval_yr": {
+    "replacement": "865",
+    "mixed": "898",
+    "surface": "-9999",
+    "all": "440"
+   },
+   "pixels": 2
+  },
+  "584": {
+   "name": "Mediterranean California Dry-Mesic Mixed Conifer Forest and Woodland",
+   "group": "Conifer",
+   "habitat": "conifer_forest",
+   "fire_return_interval_yr": {
+    "replacement": "150",
+    "mixed": "35",
+    "surface": "17",
+    "all": "11"
+   },
+   "pixels": 24386
+  },
+  "585": {
+   "name": "Mediterranean California Mesic Mixed Conifer Forest and Woodland",
+   "group": "Conifer",
+   "habitat": "conifer_forest",
+   "fire_return_interval_yr": {
+    "replacement": "148",
+    "mixed": "46",
+    "surface": "33",
+    "all": "17"
+   },
+   "pixels": 62715
+  },
+  "586": {
+   "name": "Mediterranean California Mixed Oak Woodland",
+   "group": "Hardwood",
+   "habitat": "oak_woodland",
+   "fire_return_interval_yr": {
+    "replacement": "285",
+    "mixed": "33",
+    "surface": "11",
+    "all": "8"
+   },
+   "pixels": 1140
+  },
+  "587": {
+   "name": "Mediterranean California Lower Montane Black Oak-Conifer Forest and Woodland",
+   "group": "Conifer",
+   "habitat": "mixed_forest",
+   "fire_return_interval_yr": {
+    "replacement": "176",
+    "mixed": "38",
+    "surface": "15",
+    "all": "10"
+   },
+   "pixels": 2607
+  },
+  "588": {
+   "name": "California Montane Jeffrey Pine(-Ponderosa Pine) Woodland",
+   "group": "Conifer",
+   "habitat": "conifer_forest",
+   "fire_return_interval_yr": {
+    "replacement": "165",
+    "mixed": "84",
+    "surface": "11",
+    "all": "9"
+   },
+   "pixels": 12292
+  },
+  "592": {
+   "name": "Mediterranean California Mesic Serpentine Woodland and Chaparral",
+   "group": "Shrubland",
+   "habitat": "chaparral",
+   "fire_return_interval_yr": {
+    "replacement": "182",
+    "mixed": "108",
+    "surface": "-9999",
+    "all": "68"
+   },
+   "pixels": 3
+  },
+  "608": {
+   "name": "California Montane Woodland and Chaparral",
+   "group": "Shrubland",
+   "habitat": "chaparral",
+   "fire_return_interval_yr": {
+    "replacement": "92",
+    "mixed": "54",
+    "surface": "-9999",
+    "all": "34"
+   },
+   "pixels": 172
+  },
+  "610": {
+   "name": "Northern and Central California Dry-Mesic Chaparral",
+   "group": "Shrubland",
+   "habitat": "chaparral",
+   "fire_return_interval_yr": {
+    "replacement": "74",
+    "mixed": "-9999",
+    "surface": "-9999",
+    "all": "74"
+   },
+   "pixels": 114
+  },
+  "611": {
+   "name": "California Lower Montane Blue Oak-Foothill Pine Woodland and Savanna",
+   "group": "Hardwood",
+   "habitat": "oak_woodland",
+   "fire_return_interval_yr": {
+    "replacement": "128",
+    "mixed": "572",
+    "surface": "10",
+    "all": "9"
+   },
+   "pixels": 5
+  },
+  "613": {
+   "name": "Inter-Mountain Basins Montane Sagebrush Steppe",
+   "group": "Shrubland",
+   "habitat": "chaparral",
+   "fire_return_interval_yr": {
+    "replacement": "49",
+    "mixed": "-9999",
+    "surface": "-9999",
+    "all": "49"
+   },
+   "pixels": 235
+  },
+  "617": {
+   "name": "California Montane Riparian Systems",
+   "group": "Riparian",
+   "habitat": "riparian",
+   "fire_return_interval_yr": {
+    "replacement": "88",
+    "mixed": "95",
+    "surface": "-9999",
+    "all": "46"
+   },
+   "pixels": 6508
+  },
+  "618": {
+   "name": "Inter-Mountain Basins Greasewood Flat",
+   "group": "Shrubland",
+   "habitat": "chaparral",
+   "fire_return_interval_yr": {
+    "replacement": "1024",
+    "mixed": "-9999",
+    "surface": "-9999",
+    "all": "1024"
+   },
+   "pixels": 3
+  },
+  "619": {
+   "name": "Inter-Mountain Basins Montane Riparian Systems",
+   "group": "Riparian",
+   "habitat": "riparian",
+   "fire_return_interval_yr": {
+    "replacement": "378",
+    "mixed": "-9999",
+    "surface": "-9999",
+    "all": "378"
+   },
+   "pixels": 156
+  },
+  "2701": {
+   "name": "Inter-Mountain Basins Big Sagebrush Shrubland-Upland",
+   "group": "Shrubland",
+   "habitat": "chaparral",
+   "fire_return_interval_yr": {
+    "replacement": "120",
+    "mixed": "-9999",
+    "surface": "-9999",
+    "all": "120"
+   },
+   "pixels": 3
+  }
+ }
+}

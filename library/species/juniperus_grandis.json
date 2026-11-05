@@ -1,0 +1,501 @@
+{
+ "id": "juniperus_grandis",
+ "aliases": [
+  "sierra_juniper",
+  "western_juniper",
+  "juniperus_occidentalis_australis"
+ ],
+ "scientific": "Juniperus grandis",
+ "common": "Sierra juniper",
+ "form": "tree",
+ "architectural_model": "Rauh (provisional)",
+ "deciduous": false,
+ "height_m": [
+  6,
+  15
+ ],
+ "stature": {
+  "typical_m": 10,
+  "tall_m": 20,
+  "record_m": 26,
+  "source": "typical: the Gymnosperm Database 10-15 m (to 30); record: the Bennett Juniper, Stanislaus National Forest, 26 m tall, 388 cm dbh, 18 m crown, the largest known juniper (Gymnosperm Database); read 2026-11-04"
+ },
+ "variants": [
+  {
+   "name": "young",
+   "weight": 0.3,
+   "height_m": [
+    1.5,
+    5
+   ],
+   "trunk_radius": 0.85,
+   "branches": 0.8,
+   "set": {
+    "trunk": {
+     "base_size": 0.04,
+     "bole_ratio": 0.04,
+     "flare": 1.25,
+     "bark_rgb": [
+      144,
+      84,
+      62
+     ]
+    },
+    "crown": {
+     "envelope": {
+      "profile": [
+       [
+        0.05,
+        0.26
+       ],
+       [
+        0.25,
+        0.28
+       ],
+       [
+        0.45,
+        0.25
+       ],
+       [
+        0.65,
+        0.19
+       ],
+       [
+        0.85,
+        0.1
+       ],
+       [
+        1.0,
+        0.03
+       ]
+      ],
+      "lobe_depth": 0.1,
+      "asymmetry": 0.05
+     }
+    },
+    "levels": [
+     {
+      "droop_deg": 18,
+      "upturn_deg": 30
+     }
+    ]
+   },
+   "note": "a young tree in a granite crack: a dense, dark, pointed bush"
+  },
+  {
+   "name": "mature",
+   "weight": 0.5,
+   "seeds": 1,
+   "note": "(from the incense cedar template) the file as written"
+  },
+  {
+   "name": "old-growth",
+   "weight": 0.15,
+   "height_m": [
+    10,
+    20
+   ],
+   "trunk_radius": 1.4,
+   "branches": 0.75,
+   "gnarl": 1.3,
+   "deadwood": {
+    "fraction": 0.25,
+    "levels": [
+     1
+    ],
+    "where": "lower",
+    "shorten": 0.5,
+    "rgb": [
+     128,
+     112,
+     100
+    ]
+   },
+   "set": {
+    "trunk": {
+     "base_size": 0.18,
+     "bole_ratio": 0.16,
+     "flare": 2.2,
+     "stubs": {
+      "count": [
+       8,
+       16
+      ]
+     }
+    },
+    "crown": {
+     "envelope": {
+      "profile": [
+       [
+        0.3,
+        0.38
+       ],
+       [
+        0.45,
+        0.46
+       ],
+       [
+        0.6,
+        0.48
+       ],
+       [
+        0.75,
+        0.42
+       ],
+       [
+        0.88,
+        0.3
+       ],
+       [
+        1.0,
+        0.12
+       ]
+      ],
+      "lobes": 4,
+      "lobe_depth": 0.38,
+      "asymmetry": 0.4
+     },
+     "shape": "spherical"
+    }
+   },
+   "note": "an ancient on bare granite: a trunk as thick as it is short, cinnamon bark in twisted strips, a few huge contorted limbs and a broken crown with a dead silver top"
+  }
+ ],
+ "snag": {
+  "fraction": 0.05,
+  "from": "mature",
+  "height_m": [
+   16,
+   30
+  ],
+  "limbs": 0.35,
+  "twigs": 0,
+  "levels": 1,
+  "broken_top": [
+   0.6,
+   0.9
+  ],
+  "shorten": [
+   0.3,
+   0.8
+  ],
+  "rgb": [
+   150,
+   128,
+   112
+  ]
+ },
+ "description": "A squat, massive tree of bare granite, usually 6-15 m tall with a huge short trunk of cinnamon-red bark peeling in long twisted strips, thick contorted limbs, and a rounded, broken crown of dark grey-green scale leaves with blue berry-like cones. It grows alone in cracks of domes, ridges and rock benches of the high country, about 1800-3000 m, and the oldest trees, more than a thousand years old, are among the most ancient living things in the Sierra.",
+ "season_notes": {
+  "winter": "Evergreen and dark against the snow; the rock around it bare and wind-swept.",
+  "spring": "Tiny pollen cones on male trees shed yellow dust in May-June.",
+  "summer": "Last year's seed cones ripen from purple-red to dusky blue with a pale bloom.",
+  "fall": "Blue 'berries' hang on female trees into winter, eaten by birds and coyotes."
+ },
+ "status": "generated from a trait card, needs review in the lineup and local sign-off",
+ "habitat": {
+  "classes": {
+   "barren": 1.0,
+   "conifer_forest": 0.4,
+   "chaparral": 0.2
+  },
+  "floor": 0.3,
+  "mid": 0.9,
+  "steep": 1.4,
+  "north": 0.6,
+  "shade": 0.05,
+  "disturbed": 0.2
+ },
+ "relations": {
+  "eaten_by": [
+   {
+    "animal": "canis_latrans",
+    "part": "berries",
+    "seasons": [
+     "fall",
+     "winter"
+    ]
+   },
+   {
+    "animal": "cyanocitta_stelleri",
+    "part": "berries",
+    "seasons": [
+     "fall",
+     "winter"
+    ]
+   }
+  ],
+  "cover_for": [
+   "sceloporus_occidentalis"
+  ]
+ },
+ "trunk": {
+  "length_ratio": 1.0,
+  "radius_ratio": 0.07,
+  "taper": 1.3,
+  "flare": 1.8,
+  "bole_ratio": 0.08,
+  "base_size": 0.09,
+  "curve_deg": 4,
+  "curve_var_deg": 5,
+  "segments": 7,
+  "lean_deg": 6,
+  "stems": [
+   1,
+   1
+  ],
+  "stem_spread_deg": 0,
+  "split_prob": 0.06,
+  "split_count": 2,
+  "split_angle_deg": 10,
+  "split_height": 0.7,
+  "bark_rgb": [
+   158,
+   90,
+   64
+  ],
+  "bark_pattern": "shreddy",
+  "twig_rgb": [
+   112,
+   84,
+   66
+  ],
+  "stubs": {
+   "count": [
+    2,
+    6
+   ],
+   "length_m": 0.4,
+   "radius_ratio": 0.1
+  },
+  "bark": {
+   "tile_m": [
+    0.5,
+    1.2
+   ],
+   "ridge_m": 0.07,
+   "block_m": 0.6,
+   "fissure": 0.7,
+   "contrast": 1.0,
+   "relief": 1.4
+  }
+ },
+ "crown": {
+  "shape": "spherical",
+  "envelope": {
+   "profile": [
+    [
+     0.25,
+     0.3
+    ],
+    [
+     0.4,
+     0.38
+    ],
+    [
+     0.55,
+     0.4
+    ],
+    [
+     0.7,
+     0.36
+    ],
+    [
+     0.85,
+     0.26
+    ],
+    [
+     1.0,
+     0.1
+    ]
+   ],
+   "lobes": 4,
+   "lobe_depth": 0.3,
+   "asymmetry": 0.3,
+   "fill": 0.25,
+   "edge": 1.15
+  }
+ },
+ "levels": [
+  {
+   "count": 36,
+   "whorl": 0,
+   "down_angle_deg": 84,
+   "down_angle_tip_deg": 50,
+   "down_angle_var_deg": 12,
+   "rotation_deg": 140,
+   "rotation_var_deg": 25,
+   "length_ratio": 0.27,
+   "length_var": 0.25,
+   "curve_deg": 0,
+   "curve_var_deg": 14,
+   "tropism": 0.02,
+   "droop_deg": 26,
+   "upturn_deg": 34,
+   "taper": 0.95,
+   "radius_ratio": 0.3,
+   "segments": 3
+  },
+  {
+   "count": 9,
+   "start": 0.2,
+   "down_angle_deg": 50,
+   "down_angle_var_deg": 14,
+   "rotation_deg": -70,
+   "rotation_var_deg": 20,
+   "length_ratio": 0.35,
+   "length_var": 0.3,
+   "curve_deg": 6,
+   "curve_var_deg": 10,
+   "tropism": 0.05,
+   "taper": 1.0,
+   "radius_ratio": 0.5,
+   "segments": 1
+  }
+ ],
+ "foliage": {
+  "type": "scale",
+  "leaf_size_m": 0.012,
+  "leaf_shape": "needle_scale",
+  "cluster_m": 1.95,
+  "density": 12,
+  "leaf_fill": 5.0,
+  "start": 0.2,
+  "parent_start": 0.45,
+  "orientation": "along",
+  "needle_planes": 1,
+  "tuft_spread_deg": 30,
+  "tuft_up": 0.25,
+  "droop": 0.2,
+  "needle_normal": 0.45,
+  "needle_wrap": 0.4,
+  "translucency": 2.0,
+  "needle_scatter": 0.12,
+  "colors": {
+   "winter": [
+    76,
+    88,
+    72
+   ],
+   "spring": [
+    88,
+    102,
+    78
+   ],
+   "summer": [
+    80,
+    94,
+    76
+   ],
+   "fall": [
+    80,
+    92,
+    74
+   ]
+  },
+  "leaf_on": {
+   "winter": 1.0,
+   "spring": 1.0,
+   "summer": 1.0,
+   "fall": 1.0
+  },
+  "twist_deg": 20,
+  "clumps": {
+   "radius_m": 0.8,
+   "cards_per_clump": 4,
+   "shell": 0.1,
+   "flatten": 0.6,
+   "tip_bias": 1.4
+  },
+  "palette": [
+   [
+    0.85,
+    [
+     1,
+     1,
+     1
+    ]
+   ],
+   [
+    0.15,
+    [
+     1.15,
+     1.12,
+     0.8
+    ]
+   ]
+  ],
+  "ao_min": 0.7,
+  "color_var": [
+   0.07,
+   0.03
+  ]
+ },
+ "deadwood": {
+  "fraction": 0.12,
+  "where": "lower",
+  "levels": [
+   1
+  ],
+  "shorten": 0.6,
+  "rgb": [
+   128,
+   112,
+   100
+  ]
+ },
+ "twigs": {
+  "count": [
+   1,
+   2
+  ],
+  "length": 0.5,
+  "down_deg": 40,
+  "down_var_deg": 12,
+  "tropism": 0.05,
+  "segments": 1,
+  "radius_m": 0.008,
+  "taper": 0.5,
+  "fan_deg": 30,
+  "jitter": 0.08
+ },
+ "lod": {
+  "near_tris_budget": 2200,
+  "near_sides": [
+   7,
+   3,
+   0
+  ],
+  "mid_blobs": 5,
+  "mid_branches": 2,
+  "mid_blob_scale": 0.8,
+  "close_factor": 2,
+  "mid_planes": 1,
+  "mid_cards": 32
+ },
+ "targets": {
+  "crown_width_ratio": 0.75,
+  "crown_base_ratio": 0.15,
+  "porosity": 0.3,
+  "foliage_rg": 0.72,
+  "foliage_bg": 0.65,
+  "from": "judgement values from the drafter's reading of the sources and knowledge of the species (2026-11-04), no photographs measured; to be replaced by photo measurements: a squat tree nearly as wide as tall above a massive short trunk, crown rounded and broken, often a dead silver top"
+ },
+ "generated": {
+  "by": "pipeline/plantgen.py",
+  "version": "2",
+  "card": "library/plant_cards/juniperus_grandis.json",
+  "card_sha256": "898c599cb0be3380",
+  "template": "calocedrus_decurrens",
+  "template_common": "incense cedar",
+  "height_scale": 0.375
+ },
+ "notes": "Against the incense cedar template it needs to be short and fat: a trunk radius ratio three times the cedar's, a strong flare and taper, a rounded crown nearly as wide as tall, and redder, shreddier bark (set here). The contorted, sculptural limbs, the silver dead tops and stripped wood on the weather side, and the tree growing out of bare rock are what make it, and the generator can only hint at them through gnarl and deadwood in the old-growth class. Formerly treated as Juniperus occidentalis var. australis. Seed cones are fleshy and blue, eaten by robins, Townsend's solitaires and other birds (not in the library) and by coyotes; the Steller's jay entry is a stand-in. Range 1000-3000 m in California per the Gymnosperm Database; the Yosemite belt is the drafter's knowledge.",
+ "sources": [
+  "https://www.conifers.org/cu/Juniperus_grandis.php"
+ ],
+ "authors": [
+  "Wild Earth (agent draft, 2026-11-04); needs local sign-off"
+ ],
+ "license": "CC BY-SA 4.0"
+}

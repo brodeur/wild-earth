@@ -1,0 +1,181 @@
+{
+ "id": "abies_magnifica",
+ "scientific": "Abies magnifica",
+ "common": "red fir",
+ "aliases": [
+  "red_fir",
+  "silvertip",
+  "california_red_fir"
+ ],
+ "family": "Pinaceae",
+ "form": "tree",
+ "deciduous": false,
+ "template": "pseudotsuga_menziesii",
+ "height_m": [
+  30,
+  50
+ ],
+ "stature": {
+  "typical_m": 40,
+  "tall_m": 55,
+  "record_m": 80.4,
+  "source": "typical and tall: the drafter's estimate for the central Sierra (the Gymnosperm Database gives no typical height; species to about 77 m); record: 80.38 m live tree, Sequoia National Park, lidar then field-checked 2026 (Gymnosperm Database, likely var. critchfieldii); Yosemite's largest by girth 52.4 m tall; read 2026-11-04"
+ },
+ "variants_height_m": {
+  "young": [
+   5,
+   15
+  ],
+  "old-growth": [
+   45,
+   60
+  ]
+ },
+ "crown": {
+  "shape": "conical",
+  "profile": [
+   [
+    0.25,
+    0.17
+   ],
+   [
+    0.4,
+    0.19
+   ],
+   [
+    0.55,
+    0.18
+   ],
+   [
+    0.7,
+    0.15
+   ],
+   [
+    0.82,
+    0.11
+   ],
+   [
+    0.92,
+    0.06
+   ],
+   [
+    1.0,
+    0.02
+   ]
+  ],
+  "lobes": 4,
+  "lobe_depth": 0.08,
+  "asymmetry": 0.08,
+  "fill": 0.3,
+  "edge": 1.08
+ },
+ "foliage": {
+  "colors": {
+   "winter": [
+    72,
+    84,
+    84
+   ],
+   "spring": [
+    100,
+    116,
+    112
+   ],
+   "summer": [
+    76,
+    90,
+    92
+   ],
+   "fall": [
+    74,
+    88,
+    88
+   ]
+  },
+  "leaf_size_m": 0.03
+ },
+ "trunk": {
+  "bark_rgb": [
+   118,
+   70,
+   64
+  ],
+  "bark_pattern": "furrowed"
+ },
+ "targets": {
+  "crown_width_ratio": 0.38,
+  "crown_base_ratio": 0.25,
+  "porosity": 0.22,
+  "from": "judgement values from the drafter's reading of the sources and knowledge of the species (2026-11-04), no photographs measured; to be replaced by photo measurements: a narrow, very regular spire of dense horizontal tiers, narrower than Douglas-fir; stand-grown trees self-prune to a third of their height"
+ },
+ "variant_patches": {
+  "young": {
+   "set": {
+    "trunk": {
+     "bark_rgb": [
+      150,
+      142,
+      138
+     ]
+    }
+   }
+  }
+ },
+ "description": "A tall, symmetrical spire of a fir, 30-55 m here, with stiff, regularly tiered branches, dense silvery blue-green needles that curve up from the twigs, and thick bark broken into deep furrows between dark red-purple ridges. It makes nearly pure, dark forests on the snowy upper slopes above the white fir belt, about 1800-2700 m around Yosemite, and its great upright cones sit like barrels on the top branches.",
+ "season_notes": {
+  "winter": "Evergreen under deep snow; the dense tiers hold snow loads that would break most trees.",
+  "spring": "New shoots break late (June) with a silvery bloom that gives it the name silvertip.",
+  "summer": "Big upright purple-brown cones swell on the top whorls of the crown.",
+  "fall": "The cones fall apart on the branch in September-October, dropping winged seed and leaving bare spikes standing."
+ },
+ "habitat": {
+  "classes": {
+   "conifer_forest": 1.0,
+   "mixed_forest": 0.3,
+   "barren": 0.05
+  },
+  "floor": 0.9,
+  "mid": 1.0,
+  "steep": 0.8,
+  "north": 1.4,
+  "shade": 0.6,
+  "disturbed": 0.5
+ },
+ "relations": {
+  "eaten_by": [
+   {
+    "animal": "cyanocitta_stelleri",
+    "part": "seeds",
+    "seasons": [
+     "fall"
+    ]
+   },
+   {
+    "animal": "odocoileus_hemionus",
+    "part": "browse",
+    "seasons": [
+     "summer"
+    ]
+   }
+  ],
+  "cover_for": [
+   "odocoileus_hemionus",
+   "cyanocitta_stelleri"
+  ]
+ },
+ "range": {
+  "elev_m": [
+   1800,
+   2750
+  ],
+  "where": "the red fir belt of the upper west slope: Crane Flat to White Wolf, Glacier Point Road, the Tioga Road below the lodgepole flats"
+ },
+ "stand_in": "pseudotsuga_menziesii",
+ "notes": "A fir, so needles flat-ish and single on the twig and cones upright and shattering, unlike the Douglas-fir template whose cones hang. What sets it apart in a scene is the very regular, narrow tiered spire and the colour: blue-green crown, deep red-purple bark on old trees (young trees are smooth grey with resin blisters, which the template's young age class already gives). Old trees often lose their tops to snow or lightning and carry rounded, flattened crowns; the template's old-growth class approximates that. The upright cones, the snow-sculpted tiers and the clean, dark understory of a pure stand are not expressed. Red fir seeds and cones feed the Douglas squirrel (chickaree), chipmunks, Clark's nutcracker and sooty grouse, none in the animal library; Steller's jay stands in. The central Sierra elevations are the drafter's knowledge; the Gymnosperm Database gives 1400-2700 m range-wide.",
+ "sources": [
+  "https://www.conifers.org/pi/Abies_magnifica.php"
+ ],
+ "authors": [
+  "Wild Earth (agent draft, 2026-11-04); needs local sign-off"
+ ]
+}

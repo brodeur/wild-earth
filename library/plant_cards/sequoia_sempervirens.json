@@ -1,0 +1,281 @@
+{
+ "id": "sequoia_sempervirens",
+ "scientific": "Sequoia sempervirens",
+ "common": "coast redwood",
+ "aliases": [
+  "coast_redwood"
+ ],
+ "family": "Cupressaceae",
+ "form": "tree",
+ "deciduous": false,
+ "template": "pseudotsuga_menziesii",
+ "height_m": [
+  30,
+  70
+ ],
+ "stature": {
+  "typical_m": 48,
+  "tall_m": 70,
+  "record_m": 79,
+  "source": "typical: the middle of the card's 30-70 m for San Francisco and Marin ravine stands (FEIS: trees over 61 m common on good sites); tall: Muir Woods' old trees; record: the tallest Muir Woods tree, about 258 ft (79 m, NPS). The species record, Hyperion, 115.9 m in Redwood National Park (Gymnosperm Database), is far north of this region and is not the truncation here; read 2026-11-04"
+ },
+ "variants_height_m": {
+  "young": [
+   8,
+   25
+  ],
+  "old-growth": [
+   55,
+   79
+  ]
+ },
+ "crown": {
+  "shape": "conical",
+  "profile": [
+   [
+    0.3,
+    0.12
+   ],
+   [
+    0.42,
+    0.15
+   ],
+   [
+    0.55,
+    0.15
+   ],
+   [
+    0.68,
+    0.13
+   ],
+   [
+    0.8,
+    0.1
+   ],
+   [
+    0.9,
+    0.065
+   ],
+   [
+    1.0,
+    0.02
+   ]
+  ],
+  "lobes": 4,
+  "lobe_depth": 0.1,
+  "asymmetry": 0.1,
+  "fill": 0.25,
+  "edge": 1.08
+ },
+ "foliage": {
+  "colors": {
+   "winter": [
+    70,
+    82,
+    62
+   ],
+   "spring": [
+    92,
+    112,
+    70
+   ],
+   "summer": [
+    72,
+    86,
+    64
+   ],
+   "fall": [
+    72,
+    84,
+    62
+   ]
+  },
+  "leaf_size_m": 0.018
+ },
+ "trunk": {
+  "bark_rgb": [
+   124,
+   72,
+   54
+  ],
+  "bark_pattern": "fibrous",
+  "stems": [
+   1,
+   1
+  ]
+ },
+ "targets": {
+  "crown_width_ratio": 0.3,
+  "crown_base_ratio": 0.3,
+  "porosity": 0.25,
+  "from": "judgement values, no photographs measured: a stand-grown ravine redwood carries a narrow cone over a clear lower trunk (Gymnosperm Database: narrowly conic, becoming irregular with age; FEIS: self-prunes well in dense stands)"
+ },
+ "patch": {
+  "trunk": {
+   "flare": 1.9,
+   "radius_ratio": 0.026,
+   "bark": {
+    "tile_m": [
+     0.6,
+     1.6
+    ],
+    "ridge_m": 0.08,
+    "block_m": 1.0,
+    "fissure": 0.75,
+    "contrast": 1.1,
+    "lichen": 0.08,
+    "relief": 1.6
+   }
+  },
+  "snag": {
+   "fraction": 0.05,
+   "height_m": [
+    25,
+    55
+   ]
+  }
+ },
+ "variant_patches": {
+  "young": {
+   "set": {
+    "trunk": {
+     "bark_rgb": [
+      140,
+      82,
+      60
+     ],
+     "bark_pattern": "fibrous"
+    },
+    "crown": {
+     "envelope": {
+      "profile": [
+       [
+        0.05,
+        0.2
+       ],
+       [
+        0.25,
+        0.19
+       ],
+       [
+        0.45,
+        0.16
+       ],
+       [
+        0.65,
+        0.12
+       ],
+       [
+        0.82,
+        0.07
+       ],
+       [
+        1.0,
+        0.02
+       ]
+      ],
+      "lobe_depth": 0.06
+     }
+    }
+   },
+   "note": "a dense, narrow spire, branches nearly to the ground; often one of a ring of sprouts around an old stump or root crown"
+  },
+  "old-growth": {
+   "trunk_radius": 1.7,
+   "set": {
+    "crown": {
+     "envelope": {
+      "profile": [
+       [
+        0.55,
+        0.12
+       ],
+       [
+        0.66,
+        0.15
+       ],
+       [
+        0.78,
+        0.15
+       ],
+       [
+        0.88,
+        0.12
+       ],
+       [
+        0.96,
+        0.08
+       ],
+       [
+        1.0,
+        0.04
+       ]
+      ],
+      "lobes": 4,
+      "lobe_depth": 0.18,
+      "asymmetry": 0.16
+     }
+    }
+   },
+   "note": "a giant: a buttressed, fluted red-brown column clear for half its height under a narrow, ragged crown, sometimes with several reiterated tops"
+  }
+ },
+ "description": "The tallest tree on Earth, here a tall narrow spire in the fog-fed ravines of Marin and the Peninsula. Its thick, soft, red-brown bark comes away in long fibrous strips, and its flat sprays of dark needles make a deep, cool shade.",
+ "season_notes": {
+  "winter": "Rain drips through the dark sprays and tiny cones open along the twigs.",
+  "spring": "New shoot tips come in bright green against the old foliage.",
+  "summer": "Fog combs through the crowns and drips to the forest floor, the ravine stays cool and damp.",
+  "fall": "Old inner shoots brown and fall whole, carpeting the ground with rust-coloured litter."
+ },
+ "habitat": {
+  "classes": {
+   "conifer_forest": 1.0,
+   "mixed_forest": 0.5,
+   "riparian": 0.6,
+   "oak_woodland": 0.0,
+   "chaparral": 0.0,
+   "grassland": 0.0,
+   "barren": 0.0
+  },
+  "floor": 1.6,
+  "mid": 0.8,
+  "steep": 0.7,
+  "north": 1.6,
+  "shade": 0.3,
+  "disturbed": 0.3
+ },
+ "relations": {
+  "eaten_by": [
+   {
+    "animal": "odocoileus_hemionus",
+    "part": "browse",
+    "seasons": [
+     "spring"
+    ]
+   }
+  ],
+  "cover_for": [
+   "odocoileus_hemionus",
+   "sciurus_griseus",
+   "cyanocitta_stelleri"
+  ]
+ },
+ "range": {
+  "elev_m": [
+   0,
+   600
+  ],
+  "where": "fog-belt ravines, stream benches and north slopes of Marin, the San Francisco Peninsula and the Santa Cruz Mountains",
+  "coastal": true
+ },
+ "stand_in": "pseudotsuga_menziesii",
+ "notes": "Grown from the Douglas-fir template because both are tall excurrent conifers with flat needles in sprays; what changes is the red-brown fibrous bark, a darker and narrower crown (a ravine redwood is a slim cone about a third as wide as it is tall), a heavier root flare, and old trees with a clear trunk to half their height. What the generator cannot express: the fluted, buttressed base of old trees, the burls, the fire-hollowed 'goosepens', the reiterated trunks in old crowns, and above all the ring of sprouts that rises around a fallen or burned parent (FEIS: root-crown sprouts can grow 2 m in a season and a root crown carries about five crop trees); a tile placing redwoods in clumps would show this better than one tree at a time. Foliage browse by black-tailed deer is light and mostly on sprouts; FEIS records no animal that feeds on the seed or foliage to any degree, and dusky-footed woodrats (not in the animal library) strip seedling bark. The old-growth class here tops at 79 m, the tallest measured tree in Muir Woods (NPS), not the 60-90 m of the north coast giants.",
+ "sources": [
+  "FEIS, Sequoia sempervirens (Tirmenstein 1991), https://www.fs.usda.gov/database/feis/plants/tree/seqsem/all.html, read 2026-11-04",
+  "Gymnosperm Database (conifers.org), Sequoia sempervirens, https://www.conifers.org/cu/Sequoia.php, read 2026-11-04",
+  "National Park Service, Muir Woods (tallest tree about 258 ft / 79 m), via search of nps.gov, read 2026-11-04"
+ ],
+ "authors": [
+  "Wild Earth (agent draft, 2026-11-04); needs local sign-off"
+ ]
+}

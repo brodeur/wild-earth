@@ -1,0 +1,198 @@
+{
+ "id": "alnus_rubra",
+ "scientific": "Alnus rubra",
+ "common": "red alder",
+ "aliases": [
+  "red_alder",
+  "oregon_alder",
+  "western_alder"
+ ],
+ "family": "Betulaceae",
+ "form": "tree",
+ "deciduous": true,
+ "template": "alnus_rhombifolia",
+ "regions": [
+  "pacific_northwest",
+  "california"
+ ],
+ "height_m": [
+  20,
+  32
+ ],
+ "stature": {
+  "typical_m": 25,
+  "tall_m": 33,
+  "record_m": null,
+  "source": "typical and tall: FEIS, mature trees usually 24-30 m, to about 37 m; no record tree read; read 2026-11-04"
+ },
+ "variants_height_m": {
+  "young": [
+   5,
+   14
+  ],
+  "veteran": [
+   28,
+   37
+  ]
+ },
+ "crown": {
+  "shape": "spherical",
+  "profile": [
+   [
+    0.25,
+    0.2
+   ],
+   [
+    0.38,
+    0.28
+   ],
+   [
+    0.52,
+    0.32
+   ],
+   [
+    0.66,
+    0.31
+   ],
+   [
+    0.8,
+    0.25
+   ],
+   [
+    0.92,
+    0.15
+   ],
+   [
+    1.0,
+    0.04
+   ]
+  ],
+  "lobes": 6,
+  "lobe_depth": 0.16,
+  "asymmetry": 0.22,
+  "fill": 0.35,
+  "edge": 1.1
+ },
+ "foliage": {
+  "colors": {
+   "winter": [
+    128,
+    106,
+    100
+   ],
+   "spring": [
+    108,
+    134,
+    74
+   ],
+   "summer": [
+    74,
+    92,
+    60
+   ],
+   "fall": [
+    92,
+    96,
+    62
+   ]
+  },
+  "leaf_on": {
+   "winter": 0.0,
+   "spring": 0.9,
+   "summer": 1.0,
+   "fall": 0.75
+  },
+  "leaf_shape": "oval",
+  "leaf_size_m": 0.11
+ },
+ "trunk": {
+  "bark_rgb": [
+   178,
+   176,
+   168
+  ],
+  "bark_pattern": "mottled"
+ },
+ "targets": {
+  "crown_width_ratio": 0.62,
+  "crown_base_ratio": 0.35,
+  "porosity": 0.2,
+  "from": "judgement values from the drafter's reading of the sources and knowledge of the species (2026-11-04), no photographs measured; to be replaced by photo measurements: a straight, pale, mottled trunk under a broad, rounded, rather open crown; narrower and higher-based in dense young stands"
+ },
+ "variant_patches": {
+  "young": {
+   "note": "a dense, even-aged thicket of slim pale stems on a fresh gravel bar, landslide or blowdown"
+  },
+  "veteran": {
+   "note": "an old alder at the end of its short life (rarely past 100 years), leaning, its top dying back, the bark white with lichens and green with moss"
+  }
+ },
+ "description": "The pale-trunked pioneer of the river bars, floods and landslides, 20-30 m here, its smooth grey bark painted white and green with lichens and moss. Its broad crown of dark, toothed leaves comes and goes fast: the leaves fall in autumn still green or brown, and in late winter the bare crowns turn reddish with long hanging catkins.",
+ "season_notes": {
+  "winter": "Bare; the crowns turn a reddish-purple haze from the buds and catkins by February.",
+  "spring": "Long yellow-brown male catkins hang and shed pollen before the leaves, February to April.",
+  "summer": "A dense, dark-green crown; small cones ripen.",
+  "fall": "Leaves drop green or dull brown in October and November, with little colour; the woody cones release seed to the wind."
+ },
+ "habitat": {
+  "classes": {
+   "riparian": 1.0,
+   "mixed_forest": 0.8,
+   "conifer_forest": 0.3
+  },
+  "floor": 1.6,
+  "mid": 1.0,
+  "steep": 0.8,
+  "north": 1.0,
+  "shade": 0.2,
+  "disturbed": 1.6,
+  "riparian": {
+   "zones": {
+    "bank": 1.0,
+    "terrace": 1.0,
+    "margin": 0.6,
+    "channel": 0.2,
+    "pond_shore": 0.4
+   },
+   "orders": [
+    1,
+    7
+   ],
+   "permanence": "any",
+   "water": "Wants moist ground and bare mineral soil to start: the gravel bars, banks and young terraces of the rivers, and the seeps, slides and blowdowns of the lower slopes."
+  }
+ },
+ "relations": {
+  "eaten_by": [
+   {
+    "animal": "odocoileus_hemionus",
+    "part": "browse",
+    "seasons": [
+     "fall",
+     "winter",
+     "spring"
+    ]
+   }
+  ],
+  "cover_for": [
+   "odocoileus_hemionus",
+   "ursus_americanus"
+  ],
+  "shades_water": 1.0
+ },
+ "range": {
+  "elev_m": [
+   0,
+   760
+  ],
+  "where": "the Hoh, Queets, Quinault and Elwha floodplains and every disturbed lowland slope; the coast from southeast Alaska to central California, below about 760 m in Washington"
+ },
+ "stand_in": "alnus_rhombifolia",
+ "notes": "Grown from white alder (same genus) as a taller tree with a paler, lichen-mottled trunk (bark_pattern mottled, the sycamore's patches, standing in for the white crustose lichens and moss that cover it) and a broader crown. Leaves ovate, 7-15 cm, coarsely double-toothed with a margin rolled under, dark green above and rusty-hairy below (drafter's knowledge; FEIS gives no leaf description). It fixes nitrogen and builds the soil for the conifers that replace it. FEIS: elk and deer browse its leaves, twigs and buds in fall, winter and early spring; beavers eat the bark and build with the stems; redpolls, siskins and goldfinches eat the seed; deer mice too. Only the deer is in the animal library (it stands in for the elk as well). Roosevelt elk on the Hoh river bars and alder flats are the main browsers.",
+ "sources": [
+  "FEIS, Alnus rubra, https://www.fs.usda.gov/database/feis/plants/tree/alnrub/all.html, read 2026-11-04"
+ ],
+ "authors": [
+  "Wild Earth (agent draft, 2026-11-04); needs local sign-off"
+ ]
+}

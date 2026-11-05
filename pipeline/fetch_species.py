@@ -20,13 +20,17 @@ from datetime import date
 
 import numpy as np
 
-from .config import Tile, write_json
-from .http import get
+from .config import REPO_ROOT, Tile, write_json
+from .http import get, get_json_cached
 from .species_data import RANGE, SPECIES
 
 GBIF = "https://api.gbif.org/v1"
 MAX_PER_SPECIES = 1500
 CLASS_KEYS = {"bird": 212, "mammal": 359}
+# The plants the tile's records name (2026-11-04, the species registry): the vascular plants (phylum Tracheophyta),
+# most-recorded first, so a tile's needs list carries the trees and shrubs GBIF knows there (pipeline/needs.py).
+PLANT_KEYS = {"plant": ("phylumKey", 7707728)}
+PLANT_LIMIT = 120
 PRESENCE_BUFFER_M = 10_000   # records this far around the tile count for its presence
 PRESENCE_YEARS = 15          # ... over the last this many calendar years, this one included
 MIN_RECORDS = 3              # records that make a species present
@@ -34,8 +38,19 @@ MIN_RANGE_SHARE = 0.05       # share of the tile in the species' elevation band 
 POLITE_S = 0.25              # pause after each uncached GBIF count
 
 
+def _q(tile: Tile | None, path: str, params: dict, force=False) -> dict:
+    """A GBIF GET, cached (2026-11-04: occurrences, month facets and the inventory were asked again on every run, so
+    a rebuild was not repeatable and a GBIF outage failed the step). Per tile under _cache/gbif/q_<hash>.json; the
+    name matches, which do not depend on the tile, under pipeline/_cache/gbif/."""
+    import hashlib
+    key = hashlib.sha256(json.dumps([path, sorted(params.items())], default=str).encode()).hexdigest()[:20]
+    cache = (tile.path(f"_cache/gbif/q_{key}.json") if tile is not None
+             else REPO_ROOT / "pipeline" / "_cache" / "gbif" / f"q_{key}.json")
+    return get_json_cached(f"{GBIF}/{path}", params, cache, force=force, source="gbif")
+
+
 def match_key(scientific: str) -> int | None:
-    r = get(f"{GBIF}/species/match", {"name": scientific, "strict": "true"}).json()
+    r = _q(None, "species/match", {"name": scientific, "strict": "true"})
     return r.get("usageKey") if r.get("matchType") != "NONE" else None
 
 
@@ -48,8 +63,7 @@ def _bbox_params(tile: Tile) -> dict:
 def occurrences(tile: Tile, key: int) -> list[dict]:
     out, offset = [], 0
     while offset < MAX_PER_SPECIES:
-        r = get(f"{GBIF}/occurrence/search", {**_bbox_params(tile), "taxonKey": key,
-                                               "limit": 300, "offset": offset}).json()
+        r = _q(tile, "occurrence/search", {**_bbox_params(tile), "taxonKey": key, "limit": 300, "offset": offset})
         out.extend(r.get("results", []))
         if r.get("endOfRecords") or not r.get("results"):
             break
@@ -58,8 +72,7 @@ def occurrences(tile: Tile, key: int) -> list[dict]:
 
 
 def monthly_counts(tile: Tile, key: int) -> list[int]:
-    r = get(f"{GBIF}/occurrence/search", {**_bbox_params(tile), "taxonKey": key, "limit": 0,
-                                           "facet": "month", "facetLimit": 12}).json()
+    r = _q(tile, "occurrence/search", {**_bbox_params(tile), "taxonKey": key, "limit": 0, "facet": "month", "facetLimit": 12})
     counts = [0] * 12
     for fac in r.get("facets", []):
         for c in fac.get("counts", []):
@@ -70,16 +83,18 @@ def monthly_counts(tile: Tile, key: int) -> list[int]:
 
 
 def inventory(tile: Tile, limit=40) -> list[dict]:
-    """Most-recorded species of each class in the tile; seed for the local-knowledge review."""
+    """Most-recorded species of each class in the tile (birds and mammals, `limit` each) and the most-recorded
+    vascular plants (PLANT_LIMIT); seed for the local-knowledge review and for the tile's needs (pipeline/needs.py)."""
     rows = []
-    for group, ck in CLASS_KEYS.items():
-        r = get(f"{GBIF}/occurrence/search", {**_bbox_params(tile), "classKey": ck, "limit": 0,
-                                               "facet": "speciesKey", "facetLimit": limit}).json()
+    groups = [(g, ("classKey", ck), limit) for g, ck in CLASS_KEYS.items()] + [(g, kv, PLANT_LIMIT) for g, kv in PLANT_KEYS.items()]
+    for group, (rank, ck), lim in groups:
+        r = _q(tile, "occurrence/search", {**_bbox_params(tile), rank: ck, "limit": 0, "facet": "speciesKey", "facetLimit": lim})
         for fac in r.get("facets", []):
             for c in fac.get("counts", []):
-                sp = get(f"{GBIF}/species/{c['name']}").json()
+                sp = _q(None, f"species/{c['name']}", {})
                 rows.append({"gbif_key": int(c["name"]), "group": group,
                              "scientific": sp.get("canonicalName") or sp.get("scientificName"),
+                             "family": sp.get("family"), "genus": sp.get("genus"), "order": sp.get("order"),
                              "common": (sp.get("vernacularName") or "").lower() or None,
                              "occurrences": c["count"]})
     return rows
@@ -138,7 +153,10 @@ def presence(tile: Tile, keys: dict[str, int | None], force=False) -> dict[str, 
     """Per species code: present, rule, records_buffer, range_share, evidence (see the module docstring)."""
     y1 = date.today().year
     years = (y1 - PRESENCE_YEARS, y1)
-    shares = range_shares(tile)
+    # the range test is California's (species_data.RANGE: the central Sierra's life zones after Grinnell and Storer):
+    # outside California a curated species is present by its records alone, never by a California elevation band
+    from .regions import natural_regions
+    shares = range_shares(tile) if "california" in natural_regions(tile) else None
     out = {}
     for code, key in keys.items():
         n = records_near(tile, key, years, force) if key else 0

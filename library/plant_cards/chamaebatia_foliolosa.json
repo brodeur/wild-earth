@@ -1,0 +1,182 @@
+{
+ "id": "chamaebatia_foliolosa",
+ "scientific": "Chamaebatia foliolosa",
+ "common": "mountain misery",
+ "aliases": [
+  "mountain_misery",
+  "bear_clover",
+  "kitkitdizze"
+ ],
+ "family": "Rosaceae",
+ "form": "shrub",
+ "deciduous": false,
+ "template": "symphoricarpos_albus",
+ "height_m": [
+  0.2,
+  0.6
+ ],
+ "stature": {
+  "typical_m": 0.4,
+  "tall_m": 0.6,
+  "record_m": null,
+  "source": "FEIS: 0.2-0.6 m; read 2026-11-04"
+ },
+ "variants_height_m": {
+  "young": [
+   0.1,
+   0.25
+  ],
+  "old": [
+   0.45,
+   0.7
+  ]
+ },
+ "crown": {
+  "shape": "hemispherical",
+  "profile": [
+   [
+    0.0,
+    0.8
+   ],
+   [
+    0.25,
+    1.0
+   ],
+   [
+    0.5,
+    1.05
+   ],
+   [
+    0.75,
+    0.95
+   ],
+   [
+    0.9,
+    0.7
+   ],
+   [
+    1.0,
+    0.3
+   ]
+  ],
+  "lobes": 6,
+  "lobe_depth": 0.1,
+  "asymmetry": 0.1,
+  "fill": 0.6,
+  "edge": 1.05
+ },
+ "foliage": {
+  "colors": {
+   "winter": [
+    96,
+    108,
+    66
+   ],
+   "spring": [
+    118,
+    136,
+    74
+   ],
+   "summer": [
+    112,
+    128,
+    72
+   ],
+   "fall": [
+    108,
+    120,
+    70
+   ]
+  },
+  "leaf_size_m": 0.04,
+  "leaf_shape": "pinnate_compound",
+  "flowers": {
+   "season": [
+    "spring",
+    "summer"
+   ],
+   "months": [
+    5,
+    7
+   ],
+   "form": "bud",
+   "rgb": [
+    244,
+    242,
+    232
+   ],
+   "size_m": 0.015,
+   "density": 0.35,
+   "before_leaves": false
+  },
+  "berries": null
+ },
+ "trunk": {
+  "bark_rgb": [
+   110,
+   82,
+   70
+  ],
+  "bark_pattern": "smooth",
+  "stems": [
+   6,
+   14
+  ]
+ },
+ "targets": {
+  "crown_width_ratio": 1.8,
+  "crown_base_ratio": 0.05,
+  "porosity": 0.25,
+  "from": "judgement values from the drafter's reading of the sources and knowledge of the species (2026-11-04), no photographs measured; to be replaced by photo measurements: knee-high, ferny, yellow-green plants joined into a continuous carpet; each plant a flat mound much wider than tall"
+ },
+ "description": "A knee-high, sticky, strongly scented evergreen shrub with finely divided, fern-like yellow-green leaves, spreading by underground stems into continuous carpets under the open pines. It covers the forest floor of the ponderosa, sugar pine and black oak forest of the west slope, about 600-2100 m, and is crowned with small white rose-like flowers in early summer; its resinous smell fills the warm afternoon air.",
+ "season_notes": {
+  "winter": "Evergreen, the ferny carpet darkening a little under the winter sun and snow.",
+  "spring": "New, bright, sticky growth; the resinous smell starts with the warm days.",
+  "summer": "Small white five-petalled flowers with yellow centres, May-July; the scent is strongest in the heat.",
+  "fall": "Dry little seeds drop; the carpet stays green when the grass around has cured."
+ },
+ "habitat": {
+  "classes": {
+   "mixed_forest": 1.0,
+   "conifer_forest": 0.6,
+   "chaparral": 0.2,
+   "oak_woodland": 0.15
+  },
+  "floor": 0.9,
+  "mid": 1.0,
+  "steep": 0.8,
+  "north": 0.8,
+  "shade": 0.45,
+  "disturbed": 0.9
+ },
+ "relations": {
+  "eaten_by": [
+   {
+    "animal": "odocoileus_hemionus",
+    "part": "browse",
+    "seasons": [
+     "winter"
+    ]
+   }
+  ],
+  "cover_for": [
+   "oreortyx_pictus"
+  ]
+ },
+ "range": {
+  "elev_m": [
+   600,
+   2100
+  ],
+  "where": "the open pine and mixed conifer forest floor of the west slope: Wawona, Crane Flat, the Big Oak Flat Road, Hodgdon Meadow"
+ },
+ "stand_in": "symphoricarpos_albus",
+ "notes": "Unlike snowberry (the template), it is evergreen, aromatic and fern-leaved (tripinnate leaves of tiny resin-tipped segments, so 'pinnate_compound' is the nearest leaf shape), and lives as a clonal carpet rather than separate bushes: FEIS gives rhizomes longer than 25 m and understory cover of 20-90%. The species mix should place it as dense continuous patches under open canopy; at game distance it is a groundcover, which an individual-shrub generator only approximates. The template's white berries are switched off. FEIS: generally unpalatable, but black-tailed deer take it in winter (37% of winter diet on one Tuolumne County range), and mountain quail nest under it. The name kitkitdizze is from the Miwok. It reaches the lower edge of the Yosemite high tiles only (FEIS 610-2130 m).",
+ "sources": [
+  "https://www.fs.usda.gov/database/feis/plants/shrub/chafol/all.html"
+ ],
+ "authors": [
+  "Wild Earth (agent draft, 2026-11-04); needs local sign-off"
+ ]
+}

@@ -1,0 +1,259 @@
+{
+ "id": "rubus_parviflorus",
+ "scientific": "Rubus parviflorus",
+ "common": "thimbleberry",
+ "aliases": [
+  "thimbleberry"
+ ],
+ "family": "Rosaceae",
+ "form": "shrub",
+ "deciduous": true,
+ "template": "rosa_californica",
+ "regions": [
+  "pacific_northwest",
+  "california"
+ ],
+ "height_m": [
+  1,
+  2.5
+ ],
+ "variants_height_m": {
+  "young": [
+   0.4,
+   1.0
+  ],
+  "old": [
+   2,
+   3
+  ]
+ },
+ "crown": {
+  "shape": "hemispherical",
+  "profile": [
+   [
+    0.0,
+    0.35
+   ],
+   [
+    0.2,
+    0.5
+   ],
+   [
+    0.45,
+    0.58
+   ],
+   [
+    0.65,
+    0.56
+   ],
+   [
+    0.82,
+    0.45
+   ],
+   [
+    0.94,
+    0.27
+   ],
+   [
+    1.0,
+    0.08
+   ]
+  ],
+  "lobes": 6,
+  "lobe_depth": 0.12,
+  "asymmetry": 0.2,
+  "fill": 0.5,
+  "edge": 1.08
+ },
+ "foliage": {
+  "colors": {
+   "winter": [
+    150,
+    120,
+    92
+   ],
+   "spring": [
+    124,
+    152,
+    80
+   ],
+   "summer": [
+    96,
+    124,
+    64
+   ],
+   "fall": [
+    178,
+    152,
+    70
+   ]
+  },
+  "leaf_on": {
+   "winter": 0.0,
+   "spring": 0.75,
+   "summer": 1.0,
+   "fall": 0.6
+  },
+  "leaf_on_by_month": [
+   0.0,
+   0.0,
+   0.1,
+   0.6,
+   0.95,
+   1.0,
+   1.0,
+   1.0,
+   0.9,
+   0.6,
+   0.2,
+   0.0
+  ],
+  "leaf_shape": "lobed_large",
+  "lobes": 5,
+  "lobe_depth": 0.35,
+  "lobe_style": "palmate",
+  "leaf_size_m": 0.15,
+  "flowers": {
+   "season": "spring",
+   "months": [
+    5,
+    7
+   ],
+   "form": "cluster",
+   "rgb": [
+    246,
+    244,
+    236
+   ],
+   "size_m": 0.05,
+   "density": 0.3,
+   "before_leaves": false
+  },
+  "berries": {
+   "season": "summer",
+   "months": [
+    7,
+    8
+   ],
+   "form": "cluster",
+   "rgb": [
+    202,
+    40,
+    48
+   ],
+   "size_m": 0.02,
+   "density": 0.3
+  }
+ },
+ "trunk": {
+  "bark_rgb": [
+   150,
+   122,
+   94
+  ],
+  "bark_pattern": "shreddy",
+  "stems": [
+   8,
+   16
+  ]
+ },
+ "targets": {
+  "crown_width_ratio": 1.1,
+  "crown_base_ratio": 0.1,
+  "porosity": 0.25,
+  "from": "judgement values from the drafter's reading of the sources and knowledge of the species (2026-11-04), no photographs measured; to be replaced by photo measurements: a dense, waist- to head-high thicket of thornless canes under a continuous layer of big, soft, maple-like leaves"
+ },
+ "variant_patches": {
+  "young": {
+   "note": "a few canes from the rhizomes at a gap or roadside"
+  },
+  "old": {
+   "note": "a dense thicket on an old burn, a slide or the edge of an alder flat"
+  }
+ },
+ "description": "A thornless raspberry of openings and forest edges, 1-2.5 m, spreading by rhizomes into thickets under a layer of big, soft, maple-shaped leaves. It opens large white flowers like wild roses in early summer and ripens soft, shallow, bright red berries that come off the stem like a thimble.",
+ "season_notes": {
+  "winter": "Bare, pale, shreddy-barked canes.",
+  "spring": "Leaves unfold soft and fuzzy, up to 20 cm across.",
+  "summer": "White flowers 4-5 cm across in clusters of a few, then red, cap-shaped berries in July and August.",
+  "fall": "Leaves yellow; the year's fruiting canes die back."
+ },
+ "habitat": {
+  "classes": {
+   "mixed_forest": 0.9,
+   "riparian": 0.9,
+   "conifer_forest": 0.5,
+   "grassland": 0.2
+  },
+  "floor": 1.2,
+  "mid": 1.0,
+  "steep": 0.8,
+  "north": 1.0,
+  "shade": 0.3,
+  "disturbed": 1.6,
+  "riparian": {
+   "zones": {
+    "terrace": 1.0,
+    "bank": 0.6,
+    "pond_terrace": 0.4
+   },
+   "orders": [
+    1,
+    6
+   ],
+   "permanence": "any",
+   "water": "Cool, moist ground: streambanks, seeps and lakeshores, and the openings and edges of the moist forests (FEIS)."
+  }
+ },
+ "relations": {
+  "eaten_by": [
+   {
+    "animal": "ursus_americanus",
+    "part": "berries",
+    "seasons": [
+     "summer"
+    ]
+   },
+   {
+    "animal": "canis_latrans",
+    "part": "berries",
+    "seasons": [
+     "summer"
+    ]
+   },
+   {
+    "animal": "cyanocitta_stelleri",
+    "part": "berries",
+    "seasons": [
+     "summer"
+    ]
+   },
+   {
+    "animal": "odocoileus_hemionus",
+    "part": "browse",
+    "seasons": [
+     "spring",
+     "summer"
+    ]
+   }
+  ],
+  "cover_for": [
+   "odocoileus_hemionus"
+  ]
+ },
+ "range": {
+  "elev_m": [
+   0,
+   1500
+  ],
+  "where": "openings, edges, slides and streamsides of the Olympic lowland and montane forest, and subalpine thimbleberry-fireweed openings (FEIS mentions them in the North Cascades); Alaska to northern Mexico and the Great Lakes"
+ },
+ "stand_in": "rosa_californica",
+ "notes": "Grown from California wild rose (a thicket shrub of canes with flowers and fruit) with the leaves swapped for big, palmately 3-7 lobed ones (lobed_large, 5 lobes, 15 cm; FEIS: to 20 cm long and wide). FEIS gives height to 3 m, flowers to 5 cm in clusters of 2-10 (colour not stated; white), and fruit ripening from late June to September. The rhizome thickets are not grown as one. FEIS: frugivorous birds (robins, crows, Swainson's thrushes) spread the seed, and elk and deer browse it hard enough to reduce it; bears eat the fruit (drafter's knowledge). Only the bear, coyote, deer and Steller's jay are in the animal library. The bark of the template's mature class carries over its own colour offsets.",
+ "sources": [
+  "FEIS, Rubus parviflorus, https://www.fs.usda.gov/database/feis/plants/shrub/rubpar/all.html, read 2026-11-04"
+ ],
+ "authors": [
+  "Wild Earth (agent draft, 2026-11-04); needs local sign-off"
+ ]
+}

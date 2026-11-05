@@ -1,0 +1,534 @@
+{
+ "id": "pinus_lambertiana",
+ "aliases": [
+  "sugar_pine"
+ ],
+ "scientific": "Pinus lambertiana",
+ "common": "sugar pine",
+ "form": "tree",
+ "architectural_model": "Rauh",
+ "deciduous": false,
+ "height_m": [
+  30,
+  55
+ ],
+ "stature": {
+  "typical_m": 45,
+  "tall_m": 65,
+  "record_m": 78.9,
+  "source": "typical: the Gymnosperm Database 30-50 m, up to about 75; record: 78.94 m near the Rogue River, Oregon (2022); the largest living, the Mossy Creek Giant in Yosemite, is 71.6 m (Gymnosperm Database); read 2026-11-04"
+ },
+ "variants": [
+  {
+   "name": "pole",
+   "weight": 0.25,
+   "height_m": [
+    10,
+    18
+   ],
+   "branches": 0.7,
+   "set": {
+    "trunk": {
+     "base_size": 0.16,
+     "bole_ratio": 0.16,
+     "bark_rgb": [
+      108,
+      100,
+      96
+     ],
+     "stubs": {
+      "count": [
+       0,
+       3
+      ]
+     },
+     "length_ratio": 1,
+     "radius_ratio": 0.022
+    },
+    "crown": {
+     "envelope": {
+      "profile": [
+       [
+        0.03,
+        0.26
+       ],
+       [
+        0.17,
+        0.26
+       ],
+       [
+        0.3,
+        0.22
+       ],
+       [
+        0.43,
+        0.18
+       ],
+       [
+        0.55,
+        0.15
+       ],
+       [
+        0.68,
+        0.12
+       ],
+       [
+        0.81,
+        0.07
+       ],
+       [
+        0.94,
+        0.03
+       ],
+       [
+        1,
+        0.03
+       ]
+      ]
+     }
+    },
+    "levels": [
+     {
+      "droop_deg": 7,
+      "upturn_deg": 14,
+      "down_angle_deg": 104,
+      "down_angle_tip_deg": 101,
+      "curve_deg": 12,
+      "length_ratio": 0.2,
+      "radius_ratio": 0.25
+     },
+     {
+      "down_angle_deg": 49,
+      "droop_deg": 6,
+      "upturn_deg": 18,
+      "length_ratio": 0.53,
+      "radius_ratio": 0.6
+     }
+    ]
+   },
+   "note": "a young tree: a narrow, regular cone of upswept branches on a smooth grey-brown trunk"
+  },
+  {
+   "name": "mature",
+   "weight": 0.5,
+   "seeds": 2,
+   "note": "(from the ponderosa pine template) the file as written"
+  },
+  {
+   "name": "old-growth",
+   "weight": 0.2,
+   "height_m": [
+    50,
+    70
+   ],
+   "branches": 0.8,
+   "deadwood": {
+    "fraction": 0.12,
+    "levels": [
+     1
+    ],
+    "where": "lower",
+    "shorten": 0.5,
+    "rgb": [
+     130,
+     118,
+     104
+    ]
+   },
+   "set": {
+    "trunk": {
+     "base_size": 0.8,
+     "bole_ratio": 0.8,
+     "bark_rgb": [
+      154,
+      112,
+      94
+     ],
+     "stubs": {
+      "count": [
+       10,
+       20
+      ]
+     },
+     "length_ratio": 1,
+     "radius_ratio": 0.025
+    },
+    "crown": {
+     "envelope": {
+      "profile": [
+       [
+        0.6,
+        0.2
+       ],
+       [
+        0.7,
+        0.3
+       ],
+       [
+        0.8,
+        0.36
+       ],
+       [
+        0.9,
+        0.36
+       ],
+       [
+        0.97,
+        0.26
+       ],
+       [
+        1.0,
+        0.12
+       ]
+      ],
+      "lobes": 3,
+      "lobe_depth": 0.38,
+      "asymmetry": 0.45
+     },
+     "shape": "cylindrical"
+    },
+    "levels": [
+     {
+      "droop_deg": 0,
+      "upturn_deg": 8,
+      "down_angle_deg": 87,
+      "down_angle_tip_deg": 97,
+      "curve_deg": 6,
+      "length_ratio": 0.2,
+      "radius_ratio": 0.27
+     },
+     {
+      "down_angle_deg": 57,
+      "droop_deg": -9,
+      "upturn_deg": 3,
+      "length_ratio": 0.24,
+      "radius_ratio": 0.81
+     }
+    ]
+   },
+   "note": "the giant: a long clear column of a trunk and, at the top, a few huge level arms reaching far out, heavy cones hanging from their ends, the top flat and ragged"
+  }
+ ],
+ "snag": {
+  "fraction": 0.04,
+  "from": "mature",
+  "limbs": 0.3,
+  "twigs": 0,
+  "levels": 1,
+  "broken_top": [
+   0.55,
+   0.85
+  ],
+  "shorten": [
+   0.3,
+   0.8
+  ],
+  "rgb": [
+   140,
+   124,
+   108
+  ]
+ },
+ "description": "The tallest and largest pine in the world, 30-60 m here, with a long straight column of a trunk, a crown of a few enormous horizontal limbs that reach far out and droop at the ends, and the longest cones of any conifer, 25-50 cm, hanging from their tips. It grows on the deeper soils of the mixed conifer forest of the west slope, about 1200-2400 m, scattered among white fir, incense cedar and ponderosa, its flat, lopsided top rising above them all.",
+ "season_notes": {
+  "winter": "Evergreen; the long cones hang from the limb ends like ornaments.",
+  "spring": "Pollen in May-June; new cones begin as small purple knobs.",
+  "summer": "The second-year cones grow long and green, pulling the limb tips down.",
+  "fall": "The great cones open in August-September and drop large winged seeds; the fallen cones litter the forest floor all year."
+ },
+ "status": "generated from a trait card, needs review in the lineup and local sign-off",
+ "habitat": {
+  "classes": {
+   "mixed_forest": 1.0,
+   "conifer_forest": 0.6,
+   "riparian": 0.05
+  },
+  "floor": 1.1,
+  "mid": 1.0,
+  "steep": 0.8,
+  "north": 1.1,
+  "shade": 0.4,
+  "disturbed": 0.5
+ },
+ "relations": {
+  "eaten_by": [
+   {
+    "animal": "sciurus_griseus",
+    "part": "seeds",
+    "seasons": [
+     "summer",
+     "fall"
+    ]
+   },
+   {
+    "animal": "cyanocitta_stelleri",
+    "part": "seeds",
+    "seasons": [
+     "fall"
+    ]
+   },
+   {
+    "animal": "ursus_americanus",
+    "part": "seeds",
+    "seasons": [
+     "fall"
+    ]
+   },
+   {
+    "animal": "otospermophilus_beecheyi",
+    "part": "seeds",
+    "seasons": [
+     "fall"
+    ]
+   }
+  ],
+  "cover_for": [
+   "sciurus_griseus",
+   "cyanocitta_stelleri"
+  ]
+ },
+ "trunk": {
+  "length_ratio": 1,
+  "radius_ratio": 0.024,
+  "taper": 1,
+  "flare": 1.25,
+  "bole_ratio": 0.11,
+  "base_size": 0.11,
+  "curve_deg": 4,
+  "curve_var_deg": 4,
+  "segments": 7,
+  "lean_deg": 3,
+  "stems": [
+   1,
+   1
+  ],
+  "stem_spread_deg": 0,
+  "split_prob": 0.03,
+  "split_count": 2,
+  "split_angle_deg": 12,
+  "bark_rgb": [
+   134,
+   96,
+   84
+  ],
+  "bark_pattern": "furrowed",
+  "twig_rgb": [
+   92,
+   74,
+   60
+  ],
+  "stubs": {
+   "count": [
+    6,
+    14
+   ],
+   "length_m": 0.5,
+   "radius_ratio": 0.12
+  },
+  "bark": {
+   "tile_m": [
+    0.7,
+    1.4
+   ],
+   "plate_m": [
+    0.2,
+    0.6
+   ],
+   "fissure": 0.95,
+   "contrast": 1.15,
+   "relief": 1.4
+  }
+ },
+ "crown": {
+  "shape": "cylindrical",
+  "envelope": {
+   "profile": [
+    [
+     0.4,
+     0.17
+    ],
+    [
+     0.55,
+     0.23
+    ],
+    [
+     0.68,
+     0.28
+    ],
+    [
+     0.8,
+     0.3
+    ],
+    [
+     0.9,
+     0.27
+    ],
+    [
+     0.97,
+     0.18
+    ],
+    [
+     1.0,
+     0.08
+    ]
+   ],
+   "lobes": 3,
+   "lobe_depth": 0.3,
+   "asymmetry": 0.35,
+   "fill": 0.1,
+   "edge": 1.15
+  }
+ },
+ "levels": [
+  {
+   "count": 30,
+   "whorl": 3,
+   "down_angle_deg": 114,
+   "down_angle_tip_deg": 84,
+   "down_angle_var_deg": 10,
+   "rotation_deg": 37,
+   "rotation_var_deg": 25,
+   "length_ratio": 0.2,
+   "length_var": 0.2,
+   "curve_deg": 15,
+   "curve_var_deg": 16,
+   "tropism": 0.02,
+   "droop_deg": -3,
+   "upturn_deg": 7,
+   "taper": 0.95,
+   "radius_ratio": 0.16,
+   "segments": 3
+  },
+  {
+   "count": 6,
+   "start": 0.5,
+   "down_angle_deg": 39,
+   "down_angle_var_deg": 15,
+   "rotation_deg": -90,
+   "rotation_var_deg": 30,
+   "length_ratio": 0.6,
+   "length_var": 0.3,
+   "curve_deg": 10,
+   "curve_var_deg": 10,
+   "tropism": 0.12,
+   "taper": 1,
+   "radius_ratio": 0.79,
+   "segments": 1,
+   "droop_deg": -11,
+   "upturn_deg": 11
+  }
+ ],
+ "foliage": {
+  "type": "needle",
+  "leaf_size_m": 0.08,
+  "leaf_shape": "needle_brush",
+  "cluster_m": 1.8,
+  "density": 7,
+  "start": 0.4,
+  "parent_start": 0.6,
+  "orientation": "along",
+  "needle_planes": 2,
+  "tuft_spread_deg": 22,
+  "tuft_up": 0.45,
+  "needle_normal": 0.55,
+  "needle_wrap": 0.35,
+  "translucency": 2.5,
+  "needle_scatter": 0.15,
+  "colors": {
+   "winter": [
+    72,
+    84,
+    78
+   ],
+   "spring": [
+    90,
+    104,
+    90
+   ],
+   "summer": [
+    76,
+    90,
+    82
+   ],
+   "fall": [
+    78,
+    88,
+    78
+   ]
+  },
+  "leaf_on": {
+   "winter": 1.0,
+   "spring": 1.0,
+   "summer": 1.0,
+   "fall": 1.0
+  },
+  "twist_deg": 50,
+  "clumps": {
+   "radius_m": 0.6,
+   "cards_per_clump": 2,
+   "shell": 0,
+   "flatten": 0.75,
+   "tip_bias": 1.6
+  },
+  "ao_min": 0.7,
+  "color_var": [
+   0.07,
+   0.03
+  ]
+ },
+ "twigs": {
+  "count": [
+   1,
+   2
+  ],
+  "whorl": true,
+  "length": 0.6,
+  "down_deg": 45,
+  "down_var_deg": 10,
+  "tropism": 0.2,
+  "segments": 1,
+  "radius_m": 0.014,
+  "taper": 0.4,
+  "fan_deg": 40,
+  "jitter": 0.05
+ },
+ "lod": {
+  "near_tris_budget": 2200,
+  "near_sides": [
+   8,
+   3,
+   0
+  ],
+  "mid_blobs": 5,
+  "mid_branches": 2,
+  "mid_blob_scale": 0.7,
+  "close_factor": 2,
+  "mid_planes": 1,
+  "mid_cards": 28
+ },
+ "targets": {
+  "crown_width_ratio": 0.5,
+  "crown_base_ratio": 0.5,
+  "porosity": 0.45,
+  "foliage_rg": 0.71,
+  "foliage_bg": 0.83,
+  "from": "judgement values from the drafter's reading of the sources and knowledge of the species (2026-11-04), no photographs measured; to be replaced by photo measurements: a tall clear trunk with a few enormous horizontal limbs in the upper half, gaps between them, a flat or broken top; blue-green, darker than ponderosa"
+ },
+ "generated": {
+  "by": "pipeline/plantgen.py",
+  "version": "2",
+  "card": "library/plant_cards/pinus_lambertiana.json",
+  "card_sha256": "e49875732efe508b",
+  "template": "pinus_ponderosa",
+  "template_common": "ponderosa pine",
+  "height_scale": 1.223
+ },
+ "notes": "The silhouette is everything: young trees are narrow cones like other pines, but mature ones carry a handful of very long, nearly level limbs high on the trunk, so the crown is gappy, asymmetric and flat-topped, and the limb ends bend under the cones. The generator's ponderosa branching gives evenly spaced limbs; the crown profile, lobes and asymmetry here push it toward the open, one-sided form, but the few-huge-limbs architecture really needs a lower branch count and longer level-1 limbs (levels cannot be patched per index by the card). Cones 25-50 cm (Gymnosperm Database) are not drawn. Needles are short (5-10 cm), in fives, blue-green. White pine blister rust kills many. The sweet resin that gives the name is a field-guide line. Seeds are large and favoured by squirrels, chipmunks, jays and bears (the bear note is the drafter's knowledge). Central Sierra elevations are the drafter's knowledge.",
+ "sources": [
+  "https://www.conifers.org/pi/Pinus_lambertiana.php"
+ ],
+ "authors": [
+  "Wild Earth (agent draft, 2026-11-04); needs local sign-off"
+ ],
+ "license": "CC BY-SA 4.0"
+}

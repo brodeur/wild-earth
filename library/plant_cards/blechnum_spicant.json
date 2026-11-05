@@ -1,0 +1,107 @@
+{
+ "id": "blechnum_spicant",
+ "scientific": "Blechnum spicant",
+ "common": "deer fern",
+ "aliases": [
+  "deer_fern",
+  "struthiopteris_spicant",
+  "hard_fern"
+ ],
+ "family": "Blechnaceae",
+ "form": "forb",
+ "deciduous": false,
+ "template": "erodium_cicutarium",
+ "regions": [
+  "pacific_northwest",
+  "california"
+ ],
+ "height_m": [
+  0.2,
+  0.7
+ ],
+ "patch": {
+  "lifespan": "perennial",
+  "native": true,
+  "ground": {
+   "habit": "rosette",
+   "leaf": {
+    "shape": "ferny",
+    "size_m": 0.38,
+    "rgb": [
+     60,
+     98,
+     52
+    ]
+   },
+   "flower": null,
+   "height_by_month": [
+    0.85,
+    0.85,
+    0.85,
+    0.9,
+    1.0,
+    1.0,
+    1.0,
+    1.0,
+    1.0,
+    0.95,
+    0.9,
+    0.85
+   ],
+   "dead_rgb": [
+    112,
+    84,
+    56
+   ],
+   "density": 0.8
+  }
+ },
+ "description": "A neat, glossy fern of the shady, wet forest floor and stream banks, 20-70 cm, with a flat rosette of evergreen, ladder-like sterile fronds lying out around the base. From its centre rise a few stiff, upright, narrow-leafleted fertile fronds that carry the spores and wither in the fall.",
+ "season_notes": {
+  "winter": "The spreading sterile fronds stay green on the forest floor; deer and elk browse them.",
+  "spring": "New fronds uncurl, a fresh yellowish green.",
+  "summer": "The tall, dark fertile fronds stand up from the centre of each rosette.",
+  "fall": "The fertile fronds turn brown and break down."
+ },
+ "habitat": {
+  "classes": {
+   "conifer_forest": 1.0,
+   "mixed_forest": 0.8,
+   "riparian": 0.7
+  },
+  "floor": 1.2,
+  "mid": 1.0,
+  "steep": 0.9,
+  "north": 1.4,
+  "shade": 0.9,
+  "disturbed": 0.3
+ },
+ "relations": {
+  "eaten_by": [
+   {
+    "animal": "odocoileus_hemionus",
+    "part": "leaves",
+    "seasons": [
+     "winter"
+    ]
+   }
+  ],
+  "cover_for": []
+ },
+ "range": {
+  "elev_m": [
+   0,
+   1200
+  ],
+  "where": "forest understory, moist banks and seeps, sea level to mid-elevations, chiefly west of the Cascades crest (Burke); Alaska to the Santa Cruz Mountains"
+ },
+ "stand_in": "erodium_cicutarium",
+ "notes": "Drawn as a 'rosette' of 'ferny' leaves like the sword fern, smaller (0.38 m fronds) and a little brighter and glossier. The two kinds of frond are its signature and only the sterile, spreading ones are drawn: the erect fertile fronds (narrow, widely spaced pinnae; Calscape) would need a second leaf kind or the fern habit described in polystichum_munitum's notes. Burke now ranks it Struthiopteris spicant; the card keeps the familiar id and lists the new name as an alias. Calscape calls it winter-deciduous in California; in the Olympics the sterile fronds stay green through winter (drafter's knowledge), so the plant keeps 0.85 of its height in winter. Named for the deer and elk that browse it in winter (drafter's knowledge); only the deer is in the animal library. The forb slot limit noted on the sword fern card applies.",
+ "sources": [
+  "Burke Herbarium image collection (WTU), Blechnum spicant, https://burkeherbarium.org/imagecollection/taxon.php?Taxon=Blechnum%20spicant, read 2026-11-04",
+  "Calscape, Struthiopteris spicant, https://calscape.org/Struthiopteris-spicant-(Deer-Fern), read 2026-11-04"
+ ],
+ "authors": [
+  "Wild Earth (agent draft, 2026-11-04); needs local sign-off"
+ ]
+}

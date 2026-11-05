@@ -63,7 +63,8 @@ def places_or_none(tile: Tile) -> tuple[list[dict], dict | None]:
     try:
         return places(tile)
     except Exception as ex:  # noqa: BLE001
-        print(f"osm places: skipped ({str(ex)[:200]})", flush=True)
+        from . import runlog
+        runlog.fallback(f"osm places skipped: no place names this build ({str(ex)[:160]})", source="osm")
         return [], None
 
 

@@ -1,0 +1,191 @@
+{
+ "id": "ceanothus_cordulatus",
+ "scientific": "Ceanothus cordulatus",
+ "common": "mountain whitethorn",
+ "aliases": [
+  "mountain_whitethorn",
+  "snowbush"
+ ],
+ "family": "Rhamnaceae",
+ "form": "shrub",
+ "deciduous": false,
+ "template": "ceanothus_cuneatus",
+ "height_m": [
+  0.6,
+  1.5
+ ],
+ "stature": {
+  "typical_m": 1,
+  "tall_m": 1.8,
+  "record_m": null,
+  "source": "typical: FEIS 0.6-1.5 m, a low flat-topped shrub spreading to 3.7 m; tall: the drafter's estimate; read 2026-11-04"
+ },
+ "variants_height_m": {
+  "young": [
+   0.2,
+   0.5
+  ],
+  "decadent": [
+   1.2,
+   1.8
+  ]
+ },
+ "crown": {
+  "shape": "hemispherical",
+  "profile": [
+   [
+    0.0,
+    0.7
+   ],
+   [
+    0.2,
+    0.9
+   ],
+   [
+    0.45,
+    1.0
+   ],
+   [
+    0.7,
+    0.98
+   ],
+   [
+    0.88,
+    0.8
+   ],
+   [
+    1.0,
+    0.4
+   ]
+  ],
+  "lobes": 5,
+  "lobe_depth": 0.1,
+  "asymmetry": 0.12,
+  "fill": 0.5,
+  "edge": 1.06
+ },
+ "foliage": {
+  "colors": {
+   "winter": [
+    104,
+    112,
+    100
+   ],
+   "spring": [
+    116,
+    128,
+    106
+   ],
+   "summer": [
+    110,
+    120,
+    104
+   ],
+   "fall": [
+    108,
+    116,
+    102
+   ]
+  },
+  "leaf_size_m": 0.015,
+  "flowers": {
+   "season": "summer",
+   "months": [
+    6,
+    7
+   ],
+   "form": "cluster",
+   "rgb": [
+    240,
+    240,
+    236
+   ],
+   "size_m": 0.03,
+   "density": 0.6,
+   "before_leaves": false
+  }
+ },
+ "trunk": {
+  "bark_rgb": [
+   150,
+   150,
+   142
+  ],
+  "bark_pattern": "smooth_grey",
+  "stems": [
+   6,
+   14
+  ],
+  "twig_rgb": [
+   168,
+   170,
+   162
+  ]
+ },
+ "targets": {
+  "crown_width_ratio": 2.0,
+  "crown_base_ratio": 0.05,
+  "porosity": 0.2,
+  "from": "judgement values from the drafter's reading of the sources and knowledge of the species (2026-11-04), no photographs measured; to be replaced by photo measurements: a low, flat-topped, rigid mound much wider than tall, pale grey-green with whitish spiny twigs"
+ },
+ "description": "A low, flat-topped, spiny shrub knee- to waist-high and spreading wide, its stiff, pale grey-white twigs ending in sharp thorns and set with small grey-green three-veined leaves. It forms dense mounds in open pine and fir forest, on burns and on dry flats and ridges, about 1500-3000 m, and covers itself with fragrant white flower clusters in early summer.",
+ "season_notes": {
+  "winter": "Evergreen and buried under snow, which it is shaped to carry; pale stems show where it melts out.",
+  "spring": "Fresh grey-green leaves as the snow goes; deer browse the new shoots.",
+  "summer": "Foamy white, honey-scented flower clusters, June-July, then small sticky capsules.",
+  "fall": "The capsules split and fling their seeds, which can wait in the soil for a century for a fire."
+ },
+ "habitat": {
+  "classes": {
+   "chaparral": 1.0,
+   "conifer_forest": 0.7,
+   "mixed_forest": 0.3,
+   "barren": 0.3
+  },
+  "floor": 0.9,
+  "mid": 1.0,
+  "steep": 1.0,
+  "north": 0.9,
+  "shade": 0.2,
+  "disturbed": 1.5
+ },
+ "relations": {
+  "eaten_by": [
+   {
+    "animal": "odocoileus_hemionus",
+    "part": "browse",
+    "seasons": [
+     "spring",
+     "summer",
+     "fall"
+    ]
+   },
+   {
+    "animal": "oreortyx_pictus",
+    "part": "seeds",
+    "seasons": [
+     "summer",
+     "fall"
+    ]
+   }
+  ],
+  "cover_for": [
+   "oreortyx_pictus"
+  ]
+ },
+ "range": {
+  "elev_m": [
+   1500,
+   3000
+  ],
+  "where": "open pine and red fir forest, burns, dry flats and ridges: Crane Flat to White Wolf, Glacier Point Road, the Tioga Road"
+ },
+ "stand_in": "ceanothus_cuneatus",
+ "notes": "Lower, flatter and paler than buckbrush (the template), with spine-tipped grey-white twigs that make the whole mound look frosted, and leaves with three veins from the base. FEIS: an important browse and a major part of mule deer diet on Sierra summer ranges; long-eared chipmunks cache its seed, pocket gophers eat it, birds and small mammals take the fruit, dusky-footed woodrats nest in it (none of these but the deer in the library; mountain quail stands in for the seed-eating birds). It thrives on burns and logged ground and also grows under giant sequoias. Flowering May-August, about 23 days per plant (FEIS); months here are for the Yosemite high country, the drafter's estimate. FEIS range 650-3350 m.",
+ "sources": [
+  "https://www.fs.usda.gov/database/feis/plants/shrub/ceacor/all.html"
+ ],
+ "authors": [
+  "Wild Earth (agent draft, 2026-11-04); needs local sign-off"
+ ]
+}

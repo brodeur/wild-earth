@@ -1483,3 +1483,24 @@ eight trees had no `habitat` or `relations` block before and got both. The libra
 so duckweed lists no eaters and those animals are named in the notes. Not done: the local sign-off every record
 waits for, a lineup measurement of the new trees and shrubs against targets (they build without errors), and the
 emergents' far look (they fade at 120 m).
+
+## Trait cards and generated records (2026-11-04)
+
+A species a tile needs and the library lacks is grown from a trait card, `library/plant_cards/<id>.json`, by
+`pipeline/plantgen.py` (run by the build's plants step, or `python -m pipeline.plantgen --all`). The card holds only
+what makes the species itself: names, `template` (a library species of the same genus, else the same family and leaf
+type), `height_m`, `stature`, optional `variants_height_m` per age class, `crown` (shape and envelope profile),
+`foliage` (colours by season, leaf-on, leaf shape), `trunk` (bark colour and pattern, stems), `targets`, `patch` and
+`variant_patches` (any other key of the schema, deep-merged), `description`, `season_notes`, `habitat`, `relations`,
+`range`, `stand_in`, `notes`, `sources`, `authors`, and, once someone has looked at it in the lineup, `review`. The
+record written is a normal species file with a `generated` block (card, card hash, template, generator version); it is
+rewritten when the card changes, and a hand-written record is never overwritten. The registry
+(`pipeline/registry.py`) holds a generated record at fidelity 2 until its card carries a `review`.
+
+The first 29 cards (agent drafts, 2026-11-04, sources listed in each): the high Sierra set (red fir, white fir,
+lodgepole, Jeffrey, sugar, whitebark and western white pine, mountain hemlock, Sierra juniper, quaking aspen, giant
+sequoia, curl-leaf mountain mahogany; greenleaf manzanita, huckleberry oak, mountain whitethorn, bush chinquapin,
+mountain misery, red mountain heather, big sagebrush) and the coast (coast redwood, coast live oak, tanoak, Monterey
+pine, Monterey cypress; California sagebrush, yellow bush lupine, evergreen huckleberry, salal, mock heather). Jepson
+eFlora could not be read (a verification page); heights and forms rest on the Gymnosperm Database, FEIS, Silvics and
+Calscape, colours and crown proportions are judgement values with no photographs measured.

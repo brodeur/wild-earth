@@ -1,0 +1,117 @@
+{
+ "id": "pekania_pennanti",
+ "scientific": "Pekania pennanti",
+ "common": "fisher",
+ "kind": "mammal",
+ "taxonomy": {
+  "kingdom": "Animalia",
+  "phylum": "Chordata",
+  "class": "Mammalia",
+  "order": "Carnivora",
+  "family": "Mustelidae",
+  "genus": "Pekania"
+ },
+ "body_plan": "quadruped",
+ "mass_kg": 4.7365,
+ "size": {
+  "length_m": 0.605,
+  "shoulder_or_wingspan_m": 0.375
+ },
+ "diet": {
+  "role": [
+   "predator"
+  ],
+  "diet_tenths": {
+   "inv": 2.0,
+   "vend": 4.7,
+   "vect": 0.8,
+   "vfish": 1.1,
+   "vunk": 0.2,
+   "scav": 0.2,
+   "fruit": 0.7,
+   "nect": 0.0,
+   "seed": 0.0,
+   "planto": 0.1
+  },
+  "vertebrate_share": 0.69,
+  "mass_kg": 4.7365,
+  "activity": [],
+  "source": "eltontraits (family)"
+ },
+ "senses": {
+  "sight": {
+   "range_m": 341.2
+  },
+  "sound": {
+   "range_m": 477.7
+  },
+  "scent": {
+   "range_m": 682.4
+  }
+ },
+ "rig": "tools/rig_quadruped.py skeleton, gait.js / legs.js",
+ "locomotion": {
+  "code": "pekania_pennanti",
+  "class": "Mammalia",
+  "order": "Carnivora",
+  "family": "Mustelidae",
+  "body_plan": "quadruped",
+  "mass_kg": 4.7365,
+  "length_m": 0.605,
+  "hip_m": 0.375,
+  "posture": "digitigrade",
+  "gaits": {
+   "walk": "froude 0.5",
+   "trot": "froude 2.5",
+   "gallop": "beyond"
+  },
+  "walk_mps": 1.36,
+  "trot_mps": 3.03,
+  "cruise_mps": 7.25,
+  "top_mps": 11.7,
+  "stride_hz": 3.32,
+  "stride_m": 0.91,
+  "sprint_s": 5.5,
+  "recover_s": 19.4,
+  "turn_rad_s": 3.22,
+  "turn": {
+   "on": 0.45,
+   "off": 0.2,
+   "hold": 0.35,
+   "amp": [
+    0.4,
+    0.6
+   ],
+   "hz": [
+    0.7,
+    2.4
+   ]
+  },
+  "lag": {
+   "s": 0.102,
+   "max_rad": 0.44,
+   "v": [
+    0.3,
+    1.2
+   ]
+  },
+  "bend": {
+   "spine": 1.0,
+   "lead": 0.12,
+   "lead_max": 0.25
+  },
+  "flags": {},
+  "flier": false
+ },
+ "generated": {
+  "by": "pipeline/fauna.py",
+  "at": "2026-11-05T06:16:02Z",
+  "from": [
+   "gbif taxonomy",
+   "eltontraits (family)",
+   "pipeline/locomotion.py"
+  ],
+  "note": "behaviour data without a model; review the diet, senses and size before a mesh is made"
+ },
+ "license": "CC BY-SA 4.0 (the entry); diet and mass from EltonTraits 1.0 (CC BY 4.0, credited in the tile's sources)"
+}

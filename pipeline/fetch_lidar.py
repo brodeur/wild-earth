@@ -20,6 +20,7 @@ from __future__ import annotations
 
 import io
 import json
+import time
 import re
 import xml.etree.ElementTree as ET
 from concurrent.futures import ThreadPoolExecutor
@@ -183,11 +184,25 @@ def find_ept(tile: Tile, dem_project: str, cache: Path) -> dict:
     cands = [n for n in names if _stem(n) == stem] or [n for n in names if n.lower().startswith(stem)]
     tb = _tile_3857(tile)
     s = _session()
-    hits = []
+    hits, errors = [], []
     for n in cands:
-        try:
-            e = s.get(f"{EPT_BUCKET}/{n}/ept.json", timeout=60).json()
-        except Exception:  # noqa: BLE001
+        # A candidate's ept.json that cannot be read is not "no point cloud": a passing S3 error used to turn a lidar
+        # tile DEM-only for good (lidar_dem_only.json). Three tries, then the error is kept and raised below if nothing
+        # else matched; a 403/404 is a real absence.
+        e = None
+        for attempt in range(3):
+            try:
+                r = s.get(f"{EPT_BUCKET}/{n}/ept.json", timeout=60)
+                if r.status_code in (403, 404):
+                    break
+                r.raise_for_status()
+                e = r.json()
+                break
+            except Exception as ex:  # noqa: BLE001
+                if attempt == 2:
+                    errors.append(f"{n}: {str(ex)[:120]}")
+                time.sleep(2 * (attempt + 1))
+        if e is None:
             continue
         b = e.get("boundsConforming") or e["bounds"]
         if b[3] < tb[0] or b[0] > tb[2] or b[4] < tb[1] or b[1] > tb[3]:
@@ -195,6 +210,9 @@ def find_ept(tile: Tile, dem_project: str, cache: Path) -> dict:
         hits.append({"project": n, "points": e["points"], "bounds": e["bounds"], "span": e["span"],
                      "data_type": e["dataType"], "srs": e.get("srs", {}).get("horizontal"),
                      "schema": [d["name"] for d in e["schema"]], "url": f"{EPT_BUCKET}/{n}/ept.json"})
+    if not hits and errors:
+        raise RuntimeError(f"could not read {len(errors)} EPT candidate(s) for {tile.tile_id}; not concluding 'no point cloud': "
+                           + "; ".join(errors))
     if not hits:
         raise NoPointCloud(f"no EPT project matching {dem_project} (stem {stem}) overlaps {tile.tile_id}")
     out = {"dem_project": dem_project, "stem": stem, "candidates": cands, "chosen": hits[0], "overlapping": hits}

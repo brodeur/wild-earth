@@ -1,0 +1,514 @@
+{
+ "id": "tsuga_mertensiana",
+ "aliases": [
+  "mountain_hemlock"
+ ],
+ "scientific": "Tsuga mertensiana",
+ "common": "mountain hemlock",
+ "form": "tree",
+ "architectural_model": "Massart (provisional)",
+ "deciduous": false,
+ "height_m": [
+  10,
+  30
+ ],
+ "stature": {
+  "typical_m": 20,
+  "tall_m": 35,
+  "record_m": 59.1,
+  "source": "typical and tall: the drafter's estimate for the Sierra (the Gymnosperm Database gives the species to 55 m, often dwarfed in snowy subalpine sites); record: 59.1 m, Olympic National Park, 1998 (Gymnosperm Database, which warns the method may overestimate); read 2026-11-04"
+ },
+ "variants": [
+  {
+   "name": "young",
+   "weight": 0.25,
+   "height_m": [
+    2,
+    8
+   ],
+   "trunk_radius": 0.8,
+   "branches": 0.8,
+   "leaf_density": 1.3,
+   "set": {
+    "trunk": {
+     "base_size": 0.06,
+     "bole_ratio": 0.05,
+     "bark_rgb": [
+      124,
+      110,
+      110
+     ],
+     "bark_pattern": "smooth",
+     "stubs": {
+      "count": [
+       0,
+       2
+      ]
+     }
+    },
+    "crown": {
+     "envelope": {
+      "profile": [
+       [
+        0.06,
+        0.27
+       ],
+       [
+        0.25,
+        0.26
+       ],
+       [
+        0.45,
+        0.22
+       ],
+       [
+        0.65,
+        0.16
+       ],
+       [
+        0.82,
+        0.1
+       ],
+       [
+        1.0,
+        0.02
+       ]
+      ],
+      "lobe_depth": 0.06
+     }
+    },
+    "levels": [
+     {
+      "droop_deg": 20,
+      "upturn_deg": 30
+     }
+    ]
+   },
+   "note": "(from the Douglas-fir template) a dense, symmetrical spire with branches to the ground and smooth grey bark with resin blisters"
+  },
+  {
+   "name": "mature",
+   "weight": 0.5,
+   "seeds": 1,
+   "note": "(from the Douglas-fir template) the file as written"
+  },
+  {
+   "name": "old-growth",
+   "weight": 0.17,
+   "height_m": [
+    25,
+    38
+   ],
+   "trunk_radius": 1.4,
+   "branches": 0.75,
+   "gnarl": 1.2,
+   "deadwood": {
+    "fraction": 0.2,
+    "levels": [
+     1
+    ],
+    "where": "lower",
+    "shorten": 0.5,
+    "rgb": [
+     130,
+     120,
+     108
+    ]
+   },
+   "set": {
+    "trunk": {
+     "base_size": 0.2,
+     "bole_ratio": 0.18,
+     "length_ratio": 0.95,
+     "bark_rgb": [
+      112,
+      86,
+      78
+     ],
+     "stubs": {
+      "count": [
+       12,
+       24
+      ]
+     }
+    },
+    "crown": {
+     "shape": "conical",
+     "envelope": {
+      "profile": [
+       [
+        0.2,
+        0.18
+       ],
+       [
+        0.35,
+        0.2
+       ],
+       [
+        0.55,
+        0.18
+       ],
+       [
+        0.72,
+        0.14
+       ],
+       [
+        0.86,
+        0.09
+       ],
+       [
+        1.0,
+        0.03
+       ]
+      ],
+      "lobes": 4,
+      "lobe_depth": 0.16,
+      "asymmetry": 0.15
+     }
+    },
+    "levels": [
+     {
+      "droop_deg": 40,
+      "upturn_deg": 20
+     }
+    ]
+   },
+   "note": "an old tree of a snowy north slope: a dark furrowed trunk, branches drooping like skirts, the tip still nodding; often bent at the base by snow creep"
+  }
+ ],
+ "snag": {
+  "fraction": 0.06,
+  "from": "mature",
+  "height_m": [
+   22,
+   40
+  ],
+  "limbs": 0.25,
+  "twigs": 0,
+  "levels": 1,
+  "broken_top": [
+   0.5,
+   0.85
+  ],
+  "shorten": [
+   0.3,
+   0.8
+  ],
+  "rgb": [
+   146,
+   134,
+   120
+  ]
+ },
+ "description": "A graceful hemlock of the snowiest high slopes, 10-30 m here, with a narrow cone of drooping branches, a limp leader that nods over at the very top, and short blue-green needles that stand out all around the twigs like little stars. It grows on cool, north-facing slopes and in cirque basins near timberline, about 2400-3200 m, where snow lies into July, and at its highest goes down to a low, bent shrub.",
+ "season_notes": {
+  "winter": "Evergreen and deep in snow; the drooping limbs shed it and young trees lie pressed flat under it.",
+  "spring": "Purple pollen cones and small purple seed cones in June-July as the snow melts off the slope.",
+  "summer": "Small cones, 3-7 cm, hang at the branch tips and turn from purple to brown.",
+  "fall": "Cones open and release tiny winged seeds onto the early snow."
+ },
+ "status": "generated from a trait card, needs review in the lineup and local sign-off",
+ "habitat": {
+  "classes": {
+   "conifer_forest": 1.0,
+   "barren": 0.3,
+   "riparian": 0.1
+  },
+  "floor": 0.8,
+  "mid": 1.0,
+  "steep": 1.1,
+  "north": 1.8,
+  "shade": 0.6,
+  "disturbed": 0.3
+ },
+ "relations": {
+  "eaten_by": [
+   {
+    "animal": "odocoileus_hemionus",
+    "part": "browse",
+    "seasons": [
+     "summer"
+    ]
+   }
+  ],
+  "cover_for": [
+   "odocoileus_hemionus"
+  ]
+ },
+ "trunk": {
+  "length_ratio": 1.0,
+  "radius_ratio": 0.022,
+  "taper": 1.0,
+  "flare": 1.3,
+  "bole_ratio": 0.06,
+  "base_size": 0.08,
+  "curve_deg": 3,
+  "curve_var_deg": 4,
+  "segments": 8,
+  "lean_deg": 3,
+  "stems": [
+   1,
+   1
+  ],
+  "stem_spread_deg": 0,
+  "split_prob": 0.03,
+  "split_count": 2,
+  "split_angle_deg": 10,
+  "split_height": 0.75,
+  "bark_rgb": [
+   100,
+   76,
+   70
+  ],
+  "bark_pattern": "furrowed",
+  "twig_rgb": [
+   96,
+   82,
+   70
+  ],
+  "stubs": {
+   "count": [
+    6,
+    14
+   ],
+   "length_m": 0.6,
+   "radius_ratio": 0.1
+  },
+  "bark": {
+   "tile_m": [
+    0.7,
+    1.4
+   ],
+   "ridge_m": 0.1,
+   "block_m": 0.3,
+   "fissure": 0.85,
+   "contrast": 1.25,
+   "lichen": 0.15,
+   "relief": 1.7
+  }
+ },
+ "crown": {
+  "shape": "conical",
+  "envelope": {
+   "profile": [
+    [
+     0.08,
+     0.2
+    ],
+    [
+     0.25,
+     0.21
+    ],
+    [
+     0.45,
+     0.18
+    ],
+    [
+     0.65,
+     0.13
+    ],
+    [
+     0.82,
+     0.08
+    ],
+    [
+     0.94,
+     0.04
+    ],
+    [
+     1.0,
+     0.01
+    ]
+   ],
+   "lobes": 5,
+   "lobe_depth": 0.1,
+   "asymmetry": 0.1,
+   "fill": 0.35,
+   "edge": 1.08
+  }
+ },
+ "levels": [
+  {
+   "count": 30,
+   "whorl": 4,
+   "down_angle_deg": 94,
+   "down_angle_tip_deg": 55,
+   "down_angle_var_deg": 12,
+   "rotation_deg": 37,
+   "rotation_var_deg": 25,
+   "length_ratio": 0.32,
+   "length_var": 0.25,
+   "curve_deg": 0,
+   "curve_var_deg": 14,
+   "tropism": 0.0,
+   "droop_deg": 30,
+   "upturn_deg": 25,
+   "taper": 0.95,
+   "radius_ratio": 0.3,
+   "segments": 3
+  },
+  {
+   "count": 10,
+   "start": 0.2,
+   "down_angle_deg": 60,
+   "down_angle_var_deg": 15,
+   "rotation_deg": -80,
+   "rotation_var_deg": 20,
+   "length_ratio": 0.4,
+   "length_var": 0.3,
+   "curve_deg": 0,
+   "curve_var_deg": 12,
+   "tropism": -0.1,
+   "droop_deg": 15,
+   "taper": 1.0,
+   "radius_ratio": 0.5,
+   "segments": 2
+  }
+ ],
+ "foliage": {
+  "type": "needle",
+  "leaf_size_m": 0.02,
+  "leaf_shape": "needle_flat",
+  "cluster_m": 2.6,
+  "density": 18,
+  "leaf_fill": 5.0,
+  "start": 0.15,
+  "parent_start": 0.35,
+  "orientation": "along",
+  "needle_planes": 1,
+  "tuft_spread_deg": 25,
+  "tuft_up": 0.0,
+  "droop": 0.4,
+  "needle_normal": 0.5,
+  "needle_wrap": 0.4,
+  "translucency": 2.2,
+  "needle_scatter": 0.15,
+  "colors": {
+   "winter": [
+    70,
+    80,
+    76
+   ],
+   "spring": [
+    92,
+    106,
+    94
+   ],
+   "summer": [
+    74,
+    86,
+    82
+   ],
+   "fall": [
+    72,
+    84,
+    80
+   ]
+  },
+  "leaf_on": {
+   "winter": 1.0,
+   "spring": 1.0,
+   "summer": 1.0,
+   "fall": 1.0
+  },
+  "twist_deg": 40,
+  "clumps": {
+   "radius_m": 1.2,
+   "cards_per_clump": 4,
+   "shell": 0,
+   "flatten": 0.7,
+   "tip_bias": 1.5
+  },
+  "palette": [
+   [
+    0.88,
+    [
+     1,
+     1,
+     1
+    ]
+   ],
+   [
+    0.12,
+    [
+     1.18,
+     1.24,
+     0.88
+    ]
+   ]
+  ],
+  "ao_min": 0.68,
+  "color_var": [
+   0.07,
+   0.03
+  ]
+ },
+ "deadwood": {
+  "fraction": 0.18,
+  "where": "lower",
+  "levels": [
+   1
+  ],
+  "shorten": 0.6,
+  "rgb": [
+   128,
+   118,
+   106
+  ]
+ },
+ "twigs": {
+  "count": [
+   1,
+   2
+  ],
+  "length": 0.6,
+  "down_deg": 50,
+  "down_var_deg": 12,
+  "tropism": -0.2,
+  "segments": 1,
+  "radius_m": 0.008,
+  "taper": 0.5,
+  "fan_deg": 30,
+  "jitter": 0.08
+ },
+ "lod": {
+  "near_tris_budget": 3000,
+  "near_sides": [
+   6,
+   3,
+   0
+  ],
+  "mid_blobs": 12,
+  "mid_branches": 2,
+  "mid_blob_scale": 0.55,
+  "close_factor": 2,
+  "mid_planes": 1,
+  "mid_cards": 48,
+  "mid_canopy": "blobs"
+ },
+ "targets": {
+  "crown_width_ratio": 0.38,
+  "crown_base_ratio": 0.08,
+  "porosity": 0.2,
+  "foliage_rg": 0.74,
+  "foliage_bg": 0.91,
+  "from": "judgement values from the drafter's reading of the sources and knowledge of the species (2026-11-04), no photographs measured; to be replaced by photo measurements: a dense, narrow cone with drooping branch tips and a nodding leader, live branches to the ground; dark blue-green"
+ },
+ "generated": {
+  "by": "pipeline/plantgen.py",
+  "version": "2",
+  "card": "library/plant_cards/tsuga_mertensiana.json",
+  "card_sha256": "801986e08bb97df0",
+  "template": "pseudotsuga_menziesii",
+  "template_common": "Douglas-fir",
+  "height_scale": 0.513
+ },
+ "notes": "The nodding leader is the field mark (John Muir's favourite tree), and the generator has no way to bend the top few metres of the stem over; a reviewer may try a variant 'set' on the leader. Its needles radiate all round the twig rather than in two ranks, cones are small and hanging (Douglas-fir's are too, but longer and bracted). Bark dark grey to reddish-brown, deeply furrowed on larger stems (Gymnosperm Database). The deer browse line is a guess (little forage value); nothing in the animal library depends on it, though chickadees, crossbills and sooty grouse do. Sierra elevations: the Gymnosperm Database gives 2750-3050 m for the southern Sierra; the central Sierra belt is lower and is the drafter's knowledge.",
+ "sources": [
+  "https://www.conifers.org/pi/Tsuga_mertensiana.php"
+ ],
+ "authors": [
+  "Wild Earth (agent draft, 2026-11-04); needs local sign-off"
+ ],
+ "license": "CC BY-SA 4.0"
+}

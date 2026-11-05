@@ -194,6 +194,48 @@ sequenced; Parked is in the brief but deliberately not started.
   (off). Weak: no displaced trunk geometry (the bark's outline is still the polygon), galls and holes do not sway with a
   gale, needles a tone dark in deep shade; nothing of it for a body of scale 0.6 and up.
 
+- The tile pipeline as one repeatable command, and the species registry, 2026-11-04 (Aaron: "When we create a new
+  tile, we need to be going through all the steps... repeatable... anywhere on earth... generate all of the species for
+  that tile if they don't already exist... a registry of species"; docs/pipeline.md): `build_tile --all` runs a graph
+  of 22 steps with fingerprints (skips what is current, reruns what a code or input change reaches), records per step
+  its version, code hash, outputs, sources, fallbacks and coverage, stops at a failure, and ends with the licence
+  audit; NASADEM as the global DEM; every GBIF read cached. `pipeline/registry.py` scans every plant and animal asset
+  into `library/registry.json` with a fidelity level 0-4; the plants step grows each species a tile needs from its
+  trait card (29 cards: the high Sierra set and the coast), the registry step writes each tile's species at their level
+  and queues Meshy jobs with estimates (never run). Yosemite now draws red and white fir, Jeffrey, lodgepole,
+  whitebark, western white pine, hemlock, juniper and aspen over greenleaf manzanita, whitethorn and huckleberry oak;
+  San Francisco coast live oak, redwood, tanoak, Monterey pine and cypress over coyote brush, sagebrush, monkeyflower
+  and lupine (gray pine 47-63 % -> 0). A new tile, Calaveras Big Trees (`utm10n_731_4235`), built by `--all` alone.
+  Weak: generated records are not yet reviewed in the lineup (held at level 2); the riparian zone rows and the ground
+  layer are still foothill-only at Yosemite's elevations; a tile outside CONUS stops at naip and veg.
+
+- Four stages, a cost meter, research first, no California in the defaults, 2026-11-04 (later; docs/pipeline.md):
+  `--stage base|flora|fauna|games|all`; `tiles/<id>/cost.json` and `--cost`; ranked species lists per tile (cover,
+  GBIF records, every predator and scavenger from EltonTraits) to the home tile's density; generated animal traits;
+  region-tagged rules with the Pacific Northwest's own (the whole Olympic zonation) and no silent foothill fallback;
+  permanent ice; seams with built neighbours; 20 Olympic trait cards for the Hoh test (built after the merge by the
+  brief's session).
+
+## Next: the pipeline outside the US and the species queue (2026-11-04)
+
+1. A global vegetation step: ESA WorldCover 2021 (CC BY 4.0) for the classes and cover, RESOLVE Ecoregions 2017
+   (CC BY 4.0) for the community, the species-mix rules keyed on them; and a Sentinel-2 true-colour imagery step for
+   tiles outside NAIP (docs/pipeline.md, Anywhere on Earth).
+2. Review the 29 generated plant records in the lineup and add each card's `review`; tune the weakest (sugar pine's
+   few huge limbs, whitebark krummholz, red mountain heather).
+3. Elevation-aware riparian zone rows and ground layer (with the water lane): the high Sierra's willows, mountain alder,
+   meadow sedges and perennial grasses.
+4. The Meshy queue (`library/registry.json` meshy.queued): pick the first animals for Aaron's go-ahead; the
+   remaining budget is 580 credits.
+5. Grown age classes by default: a `growth` block (height and dbh by age) on every trait card, so `tools/grow_species.mjs`
+   grows each species' age classes (today only valley, blue and live oak).
+6. With the water lane: meltwater streams seeded from the ice's toes (`terrain/ice.json`), and streams continuous across
+   a seam (route each tile with its neighbour's DEM as a margin).
+7. The forbs per tile: forbs.js draws the first 24 forbs of the library; choose a tile's 24 by its ground layer.
+8. Region-neutral habitat classes (alpine heath falls in "chaparral") and resources (acorn mast by habitat class).
+9. The San Francisco cells' lidar re-streamed (`--force lidar`): their products predate multi_1m and lidar_micro, so
+   their crowns step fails loudly until then.
+
 ## Next: the visual pass, in order of effect per hour
 
 1. ~~Horizon~~ done 2026-10-23: two crossed-quad impostors with a canopy cap per

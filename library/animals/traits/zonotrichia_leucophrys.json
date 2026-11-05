@@ -1,0 +1,118 @@
+{
+ "id": "zonotrichia_leucophrys",
+ "scientific": "Zonotrichia leucophrys",
+ "common": "white-crowned sparrow",
+ "kind": "bird",
+ "taxonomy": {
+  "kingdom": "Animalia",
+  "phylum": "Chordata",
+  "class": "Aves",
+  "order": "Passeriformes",
+  "family": "Passerellidae",
+  "genus": "Zonotrichia"
+ },
+ "body_plan": "bird",
+ "mass_kg": 0.028,
+ "size": {
+  "length_m": 0.109,
+  "shoulder_or_wingspan_m": 0.174
+ },
+ "diet": {
+  "role": [
+   "herbivore"
+  ],
+  "diet_tenths": {
+   "inv": 1.0,
+   "vend": 0.0,
+   "vect": 0.0,
+   "vfish": 0.0,
+   "vunk": 0.0,
+   "scav": 0.0,
+   "fruit": 1.0,
+   "nect": 0.0,
+   "seed": 7.0,
+   "planto": 1.0
+  },
+  "vertebrate_share": 0.0,
+  "mass_kg": 0.028,
+  "activity": [],
+  "source": "eltontraits (species)"
+ },
+ "senses": {
+  "sight": {
+   "range_m": 244.6
+  },
+  "sound": {
+   "range_m": 122.3
+  },
+  "scent": {
+   "range_m": 9.8
+  }
+ },
+ "rig": "bird part rig (animalModels.js RIG.bird), flierControl",
+ "locomotion": {
+  "code": "zonotrichia_leucophrys",
+  "class": "Aves",
+  "order": "Passeriformes",
+  "family": "Passerellidae",
+  "body_plan": "bird",
+  "mass_kg": 0.028,
+  "length_m": 0.109,
+  "hip_m": 0.054,
+  "posture": "biped",
+  "gaits": {
+   "ground": "hop",
+   "flight": "flap-glide"
+  },
+  "walk_mps": 0.52,
+  "trot_mps": 1.16,
+  "cruise_mps": 1.4,
+  "top_mps": 2.34,
+  "stride_hz": 7.16,
+  "stride_m": 0.16,
+  "sprint_s": 1.5,
+  "recover_s": 5.4,
+  "turn_rad_s": 7.6,
+  "turn": {
+   "on": 0.45,
+   "off": 0.2,
+   "hold": 0.35,
+   "amp": [
+    0.4,
+    0.6
+   ],
+   "hz": [
+    0.7,
+    2.4
+   ]
+  },
+  "lag": {
+   "s": 0.035,
+   "max_rad": 0.35,
+   "v": [
+    0.3,
+    1.2
+   ]
+  },
+  "bend": {
+   "spine": 1.0,
+   "lead": 0.12,
+   "lead_max": 0.25
+  },
+  "flags": {
+   "head_lead": true
+  },
+  "flier": true
+ },
+ "generated": {
+  "by": "pipeline/fauna.py",
+  "at": "2026-11-05T06:53:53Z",
+  "from": [
+   "gbif taxonomy",
+   "eltontraits (species)",
+   "pipeline/locomotion.py"
+  ],
+  "note": "behaviour data without a model; review the diet, senses and size before a mesh is made"
+ },
+ "license": "CC BY-SA 4.0 (the entry); diet and mass from EltonTraits 1.0 (CC BY 4.0, credited in the tile's sources)"
+}

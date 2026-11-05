@@ -1,0 +1,121 @@
+{
+ "id": "phocoena_phocoena",
+ "scientific": "Phocoena phocoena",
+ "common": "harbor porpoise",
+ "kind": "mammal",
+ "taxonomy": {
+  "kingdom": "Animalia",
+  "phylum": "Chordata",
+  "class": "Mammalia",
+  "order": "Cetacea",
+  "family": "Phocoenidae",
+  "genus": "Phocoena"
+ },
+ "body_plan": "quadruped",
+ "mass_kg": 52.5,
+ "size": {
+  "length_m": 1.348,
+  "shoulder_or_wingspan_m": 0.836
+ },
+ "diet": {
+  "role": [
+   "predator"
+  ],
+  "diet_tenths": {
+   "inv": 0.0,
+   "vend": 0.0,
+   "vect": 0.0,
+   "vfish": 10.0,
+   "vunk": 0.0,
+   "scav": 0.0,
+   "fruit": 0.0,
+   "nect": 0.0,
+   "seed": 0.0,
+   "planto": 0.0
+  },
+  "vertebrate_share": 1.0,
+  "mass_kg": 52.5,
+  "activity": [
+   "nocturnal",
+   "crepuscular",
+   "diurnal"
+  ],
+  "source": "eltontraits (species)"
+ },
+ "senses": {
+  "sight": {
+   "range_m": 552.0
+  },
+  "sound": {
+   "range_m": 772.9
+  },
+  "scent": {
+   "range_m": 1104.1
+  }
+ },
+ "rig": "tools/rig_quadruped.py skeleton, gait.js / legs.js",
+ "locomotion": {
+  "code": "phocoena_phocoena",
+  "class": "Mammalia",
+  "order": "Cetacea",
+  "family": "Phocoenidae",
+  "body_plan": "quadruped",
+  "mass_kg": 52.5,
+  "length_m": 1.348,
+  "hip_m": 0.836,
+  "posture": "parasagittal",
+  "gaits": {
+   "walk": "froude 0.5",
+   "trot": "froude 2.5",
+   "gallop": "beyond"
+  },
+  "walk_mps": 2.02,
+  "trot_mps": 4.53,
+  "cruise_mps": 9.14,
+  "top_mps": 15.24,
+  "stride_hz": 2.31,
+  "stride_m": 1.96,
+  "sprint_s": 10.1,
+  "recover_s": 35.4,
+  "turn_rad_s": 2.16,
+  "turn": {
+   "on": 0.45,
+   "off": 0.2,
+   "hold": 0.35,
+   "amp": [
+    0.4,
+    0.6
+   ],
+   "hz": [
+    0.7,
+    2.4
+   ]
+  },
+  "lag": {
+   "s": 0.153,
+   "max_rad": 0.44,
+   "v": [
+    0.3,
+    1.2
+   ]
+  },
+  "bend": {
+   "spine": 1.0,
+   "lead": 0.12,
+   "lead_max": 0.25
+  },
+  "flags": {},
+  "flier": false
+ },
+ "generated": {
+  "by": "pipeline/fauna.py",
+  "at": "2026-11-05T06:53:53Z",
+  "from": [
+   "gbif taxonomy",
+   "eltontraits (species)",
+   "pipeline/locomotion.py"
+  ],
+  "note": "behaviour data without a model; review the diet, senses and size before a mesh is made"
+ },
+ "license": "CC BY-SA 4.0 (the entry); diet and mass from EltonTraits 1.0 (CC BY 4.0, credited in the tile's sources)"
+}

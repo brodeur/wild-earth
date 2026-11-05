@@ -1,0 +1,177 @@
+{
+ "id": "festuca_viridula",
+ "scientific": "Festuca viridula",
+ "common": "green fescue",
+ "aliases": [
+  "green_fescue",
+  "greenleaf_fescue",
+  "mountain_bunchgrass"
+ ],
+ "family": "Poaceae",
+ "form": "grass",
+ "deciduous": false,
+ "template": "elymus_glaucus",
+ "regions": [
+  "pacific_northwest",
+  "california"
+ ],
+ "height_m": [
+  0.4,
+  0.8
+ ],
+ "patch": {
+  "lifespan": "perennial",
+  "native": true,
+  "ground": {
+   "type": "bunch",
+   "height": 1.0,
+   "width": 0.9,
+   "palette": {
+    "winter": {
+     "root": [
+      110,
+      104,
+      82
+     ],
+     "tip": [
+      168,
+      156,
+      118
+     ],
+     "head": [
+      170,
+      156,
+      118
+     ],
+     "awn": [
+      176,
+      162,
+      124
+     ]
+    },
+    "spring": {
+     "root": [
+      86,
+      104,
+      68
+     ],
+     "tip": [
+      130,
+      150,
+      96
+     ],
+     "head": [
+      140,
+      150,
+      104
+     ],
+     "awn": [
+      150,
+      156,
+      110
+     ]
+    },
+    "summer": {
+     "root": [
+      70,
+      102,
+      60
+     ],
+     "tip": [
+      118,
+      152,
+      84
+     ],
+     "head": [
+      150,
+      136,
+      100
+     ],
+     "awn": [
+      160,
+      148,
+      108
+     ]
+    },
+    "fall": {
+     "root": [
+      118,
+      112,
+      80
+     ],
+     "tip": [
+      190,
+      172,
+      120
+     ],
+     "head": [
+      196,
+      176,
+      126
+     ],
+     "awn": [
+      204,
+      186,
+      134
+     ]
+    }
+   },
+   "heads": {
+    "shape": "panicle",
+    "months": [
+     7,
+     9
+    ]
+   },
+   "cure": 0.35
+  }
+ },
+ "description": "The bunchgrass of the dry subalpine meadows, 40-80 cm in flower, in tufts of soft, bright green, fine leaves that stay green deep into the short summer. Its open, nodding panicles turn purplish and then tawny, and by October the meadows it covers are gold.",
+ "season_notes": {
+  "winter": "Dead straw tufts pressed flat under the snow.",
+  "spring": "New green blades push up as soon as the snow melts, in June.",
+  "summer": "Fresh, bright green tufts; open panicles in July, purplish, later tawny.",
+  "fall": "The leaves cure gold and tan in September and October."
+ },
+ "habitat": {
+  "classes": {
+   "grassland": 1.0,
+   "barren": 0.6,
+   "conifer_forest": 0.2
+  },
+  "floor": 1.0,
+  "mid": 1.0,
+  "steep": 1.0,
+  "north": 0.9,
+  "shade": 0.1,
+  "disturbed": 0.6
+ },
+ "relations": {
+  "eaten_by": [
+   {
+    "animal": "odocoileus_hemionus",
+    "part": "leaves",
+    "seasons": [
+     "summer",
+     "fall"
+    ]
+   }
+  ],
+  "cover_for": []
+ },
+ "range": {
+  "elev_m": [
+   1300,
+   2100
+  ],
+  "where": "subalpine slopes, rock slides and meadows to well above timberline (Burke); the drier, early-melting meadows of the Olympics' northeast (Hurricane Ridge, Obstruction Point, Grand Valley); British Columbia to the Sierra Nevada and east to Montana"
+ },
+ "stand_in": "elymus_glaucus",
+ "notes": "Drawn from blue wildrye (the library's perennial 'bunch' grass) as a smaller, softer, greener tuft: height 1.0 of the bunch clump (about 0.6 m), cure 0.35 so it stays green through the summer palette and cures only in the fall one. Culms 40-80 cm, blades flat, 1.5-2.5 mm wide, panicle somewhat open, 6-15 cm, flowering June-July (Burke); in the Olympics' high meadows July-August. Burke does not name the Olympics; its presence and dominance in the Olympic dry grass meadows rests on the drafter's knowledge and needs local checking. The client's season curve (grass.js PALETTE: summer dry 1) is the foothills' calendar, in which grass cures in summer; under it this grass will read somewhat cured in summer despite its green summer palette, and a subalpine tile would want its own season curve (snow until June, green July-August, curing September). Black-tailed deer graze it; elk, mountain goats and Olympic marmots too; only the deer is in the animal library.",
+ "sources": [
+  "Burke Herbarium image collection (WTU), Festuca viridula, https://burkeherbarium.org/imagecollection/taxon.php?Taxon=Festuca%20viridula, read 2026-11-04"
+ ],
+ "authors": [
+  "Wild Earth (agent draft, 2026-11-04); needs local sign-off"
+ ]
+}

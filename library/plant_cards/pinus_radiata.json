@@ -1,0 +1,335 @@
+{
+ "id": "pinus_radiata",
+ "scientific": "Pinus radiata",
+ "common": "Monterey pine",
+ "aliases": [
+  "monterey_pine"
+ ],
+ "family": "Pinaceae",
+ "form": "tree",
+ "deciduous": false,
+ "template": "pinus_ponderosa",
+ "height_m": [
+  15,
+  30
+ ],
+ "stature": {
+  "typical_m": 23,
+  "tall_m": 33,
+  "record_m": 48.8,
+  "source": "typical and tall: FEIS, native trees 15-35 m, Gymnosperm Database 15-30 m; record: the tallest US tree, 48.8 m at Fortuna, California (planted, outside the native range; Gymnosperm Database); a 68.7 m planted tree in New Zealand is the world record; read 2026-11-04"
+ },
+ "variants_height_m": {
+  "pole": [
+   5,
+   12
+  ],
+  "old-growth": [
+   24,
+   34
+  ]
+ },
+ "crown": {
+  "shape": "cylindrical",
+  "profile": [
+   [
+    0.3,
+    0.22
+   ],
+   [
+    0.42,
+    0.28
+   ],
+   [
+    0.55,
+    0.31
+   ],
+   [
+    0.68,
+    0.32
+   ],
+   [
+    0.8,
+    0.3
+   ],
+   [
+    0.9,
+    0.23
+   ],
+   [
+    0.97,
+    0.13
+   ],
+   [
+    1.0,
+    0.05
+   ]
+  ],
+  "lobes": 4,
+  "lobe_depth": 0.14,
+  "asymmetry": 0.22,
+  "fill": 0.45,
+  "edge": 1.1
+ },
+ "foliage": {
+  "colors": {
+   "winter": [
+    74,
+    90,
+    56
+   ],
+   "spring": [
+    98,
+    116,
+    64
+   ],
+   "summer": [
+    78,
+    96,
+    58
+   ],
+   "fall": [
+    78,
+    94,
+    56
+   ]
+  },
+  "leaf_size_m": 0.13
+ },
+ "trunk": {
+  "bark_rgb": [
+   80,
+   68,
+   60
+  ],
+  "bark_pattern": "furrowed",
+  "stems": [
+   1,
+   1
+  ]
+ },
+ "targets": {
+  "crown_width_ratio": 0.64,
+  "crown_base_ratio": 0.3,
+  "porosity": 0.25,
+  "from": "judgement values, no photographs measured: Gymnosperm Database, broadly conic when young, becoming rounded to flat; open coastal trees are broad and irregular, while closed stands keep only a shallow crown (10-20% of height)"
+ },
+ "patch": {
+  "levels": [
+   {
+    "count": 30,
+    "whorl": 3,
+    "down_angle_deg": 92,
+    "down_angle_tip_deg": 58,
+    "down_angle_var_deg": 10,
+    "rotation_deg": 37,
+    "rotation_var_deg": 25,
+    "length_ratio": 0.36,
+    "length_var": 0.2,
+    "curve_deg": 18,
+    "curve_var_deg": 16,
+    "tropism": 0.02,
+    "droop_deg": 4,
+    "upturn_deg": 16,
+    "taper": 0.95,
+    "radius_ratio": 0.16,
+    "segments": 3
+   },
+   {
+    "count": 6,
+    "start": 0.5,
+    "down_angle_deg": 39,
+    "down_angle_var_deg": 15,
+    "rotation_deg": -90,
+    "rotation_var_deg": 30,
+    "length_ratio": 0.6,
+    "length_var": 0.3,
+    "curve_deg": 10,
+    "curve_var_deg": 10,
+    "tropism": 0.12,
+    "taper": 1,
+    "radius_ratio": 0.79,
+    "segments": 1,
+    "droop_deg": -11,
+    "upturn_deg": 11
+   }
+  ],
+  "trunk": {
+   "bark": {
+    "tile_m": [
+     0.5,
+     1.0
+    ],
+    "ridge_m": 0.05,
+    "block_m": 0.18,
+    "fissure": 0.85,
+    "contrast": 1.1,
+    "relief": 1.4
+   }
+  }
+ },
+ "variant_patches": {
+  "pole": {
+   "set": {
+    "trunk": {
+     "bark_rgb": [
+      104,
+      76,
+      60
+     ]
+    }
+   },
+   "note": "a young, broadly conical tree with branches low on the trunk and reddish bark"
+  },
+  "old-growth": {
+   "set": {
+    "trunk": {
+     "base_size": 0.4,
+     "bole_ratio": 0.35,
+     "bark_rgb": [
+      86,
+      80,
+      74
+     ]
+    },
+    "crown": {
+     "shape": "cylindrical",
+     "envelope": {
+      "profile": [
+       [
+        0.4,
+        0.26
+       ],
+       [
+        0.52,
+        0.34
+       ],
+       [
+        0.64,
+        0.38
+       ],
+       [
+        0.76,
+        0.38
+       ],
+       [
+        0.86,
+        0.34
+       ],
+       [
+        0.94,
+        0.25
+       ],
+       [
+        1.0,
+        0.1
+       ]
+      ],
+      "lobes": 4,
+      "lobe_depth": 0.2,
+      "asymmetry": 0.3
+     }
+    },
+    "levels": [
+     {
+      "droop_deg": 2,
+      "upturn_deg": 12,
+      "down_angle_deg": 84,
+      "down_angle_tip_deg": 64,
+      "curve_deg": 14,
+      "length_ratio": 0.42,
+      "radius_ratio": 0.3
+     },
+     {
+      "down_angle_deg": 50,
+      "droop_deg": -5,
+      "upturn_deg": 8,
+      "length_ratio": 0.55,
+      "radius_ratio": 0.75
+     }
+    ]
+   },
+   "note": "an old tree (the species lives about 80-150 years) with a broad, flat-topped, wind-shaped crown, heavy limbs, grey deeply furrowed bark and dead lower branches"
+  }
+ },
+ "description": "A fast-growing, short-lived pine of the foggy central coast, conical when young and later round or flat-topped and irregular. Its bright green needles come in threes, and lopsided cones stay closed on the branches for years until fire or heat opens them.",
+ "season_notes": {
+  "winter": "Rain-soaked and bright green; closed cones cling in whorls along the limbs.",
+  "spring": "Pale new candles stand at the branch tips and yellow pollen drifts in March.",
+  "summer": "Fog drips from the long needles, watering the ground beneath.",
+  "fall": "A few old cones split open in warm dry days and drop winged seeds."
+ },
+ "habitat": {
+  "classes": {
+   "conifer_forest": 1.0,
+   "mixed_forest": 0.6,
+   "oak_woodland": 0.3,
+   "chaparral": 0.2,
+   "grassland": 0.15,
+   "riparian": 0.1,
+   "barren": 0.0
+  },
+  "floor": 0.8,
+  "mid": 1.1,
+  "steep": 0.8,
+  "north": 1.2,
+  "shade": 0.1,
+  "disturbed": 1.3
+ },
+ "relations": {
+  "eaten_by": [
+   {
+    "animal": "sciurus_griseus",
+    "part": "seeds",
+    "seasons": [
+     "fall",
+     "winter"
+    ]
+   },
+   {
+    "animal": "cyanocitta_stelleri",
+    "part": "seeds",
+    "seasons": [
+     "fall",
+     "winter"
+    ]
+   },
+   {
+    "animal": "aphelocoma_californica",
+    "part": "seeds",
+    "seasons": [
+     "fall"
+    ]
+   },
+   {
+    "animal": "odocoileus_hemionus",
+    "part": "browse",
+    "seasons": [
+     "spring"
+    ]
+   }
+  ],
+  "cover_for": [
+   "cyanocitta_stelleri",
+   "sciurus_griseus",
+   "odocoileus_hemionus"
+  ]
+ },
+ "range": {
+  "elev_m": [
+   30,
+   400
+  ],
+  "where": "three native fog-belt stands (Ano Nuevo in San Mateo and Santa Cruz counties, Monterey, Cambria); planted and naturalised widely in San Francisco and Marin",
+  "coastal": true
+ },
+ "stand_in": "pinus_ponderosa",
+ "notes": "Grown from ponderosa pine (same genus, needles in bundles, excurrent young form) with a broader, lower, irregular crown, longer and more ascending limbs, brighter green needles (Gymnosperm Database: deep yellow-green, 9-15 cm, three to a bundle) and dark, narrowly ridged bark rather than ponderosa's orange plates (red-brown when young, greying with age). The pole class keeps a young tree's conical form. What the generator cannot express: the persistent, asymmetric serotinous cones clustered on the limbs for 6-20 years (could be drawn as berries if the needle path supports them; not tried), and the wind-flagging of exposed trees. Doubt: the nearest native stand is Ano Nuevo, about 80 km south of the city; the San Francisco and Marin trees are planted, so in a world without people this species belongs on the southern edge of the region. FEIS lists birds and small mammals eating the seed and deer browsing the foliage; porcupines also take the bark but are not in the animal library.",
+ "sources": [
+  "Gymnosperm Database (conifers.org), Pinus radiata, https://www.conifers.org/pi/Pinus_radiata.php, read 2026-11-04",
+  "FEIS, Pinus radiata, https://www.fs.usda.gov/database/feis/plants/tree/pinrad/all.html, read 2026-11-04"
+ ],
+ "authors": [
+  "Wild Earth (agent draft, 2026-11-04); needs local sign-off"
+ ]
+}

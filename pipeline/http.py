@@ -43,8 +43,11 @@ def post(url: str, data=None, *, timeout=300, retries=3) -> requests.Response:
 
 def download(url: str, params, dest: Path, *, force=False) -> Path:
     """Stream a large response to disk; reuse it if already present."""
+    from . import netmeter, runlog
     if dest.exists() and dest.stat().st_size > 0 and not force:
+        runlog.fetched(netmeter.source_of(url), str(dest), cached=True)
         return dest
+    runlog.fetched(netmeter.source_of(url), str(dest), cached=False)
     dest.parent.mkdir(parents=True, exist_ok=True)
     r = get(url, params, stream=True, timeout=900)
     ctype = r.headers.get("content-type", "")
@@ -66,3 +69,22 @@ def download(url: str, params, dest: Path, *, force=False) -> Path:
         raise RuntimeError(f"expected binary from {url}, got an error body: {body!r}")
     tmp.rename(dest)
     return dest
+
+
+def get_json_cached(url: str, params, cache: Path, *, force=False, source: str | None = None, timeout=300):
+    """A JSON GET answered from `cache` when it is there (and not `force`), else fetched with retries and written.
+    Only a parsed JSON answer is cached: an error status raises (http.get) and nothing is written, so a failed or
+    rate-limited request is asked again next time. runlog records the read (cached or not) against the step."""
+    import json
+    from . import runlog
+    if cache.exists() and cache.stat().st_size > 0 and not force:
+        runlog.fetched(source or url, str(cache), cached=True)
+        return json.loads(cache.read_text())
+    data = get(url, params, timeout=timeout).json()
+    cache.parent.mkdir(parents=True, exist_ok=True)
+    import os
+    tmp = cache.with_suffix(cache.suffix + f".{os.getpid()}.part")   # per process: two builds may ask the same shared query
+    tmp.write_text(json.dumps(data))
+    os.replace(tmp, cache)
+    runlog.fetched(source or url, str(cache), cached=False)
+    return data

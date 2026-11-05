@@ -281,6 +281,9 @@ def fetch_geology(tile: Tile, force=False, prefer="macrostrat") -> dict:
     if not features:
         raise RuntimeError("geology unavailable: " + "; ".join(errors))
     meta["fallback_errors"] = errors
+    if errors:
+        from . import runlog
+        runlog.fallback(f"geology: {'; '.join(errors)[:200]}", source=meta.get("source"))
 
     # Clip to the tile, group polygons into units.
     units: dict[tuple, int] = {}

@@ -1,0 +1,115 @@
+{
+ "id": "ardea_herodias",
+ "scientific": "Ardea herodias",
+ "common": "great blue/cocoi heron",
+ "kind": "bird",
+ "taxonomy": {
+  "kingdom": "Animalia",
+  "phylum": "Chordata",
+  "class": "Aves",
+  "order": "Pelecaniformes",
+  "family": "Ardeidae",
+  "genus": "Ardea"
+ },
+ "body_plan": "bird",
+ "mass_kg": 2.5234,
+ "size": {
+  "length_m": 0.49,
+  "shoulder_or_wingspan_m": 0.784
+ },
+ "diet": {
+  "role": [
+   "predator"
+  ],
+  "diet_tenths": {
+   "inv": 3.0,
+   "vend": 1.0,
+   "vect": 1.0,
+   "vfish": 5.0,
+   "vunk": 0.0,
+   "scav": 0.0,
+   "fruit": 0.0,
+   "nect": 0.0,
+   "seed": 0.0,
+   "planto": 0.0
+  },
+  "vertebrate_share": 0.7,
+  "mass_kg": 2.5234,
+  "activity": [],
+  "source": "eltontraits (species)"
+ },
+ "senses": {
+  "sight": {
+   "range_m": 601.7
+  },
+  "sound": {
+   "range_m": 300.8
+  },
+  "scent": {
+   "range_m": 24.1
+  }
+ },
+ "rig": "bird part rig (animalModels.js RIG.bird), flierControl",
+ "locomotion": {
+  "code": "ardea_herodias",
+  "class": "Aves",
+  "order": "Pelecaniformes",
+  "family": "Ardeidae",
+  "body_plan": "bird",
+  "mass_kg": 2.5234,
+  "length_m": 0.49,
+  "hip_m": 0.245,
+  "posture": "biped",
+  "gaits": {},
+  "walk_mps": 1.1,
+  "trot_mps": 2.45,
+  "cruise_mps": 3.72,
+  "top_mps": 6.2,
+  "stride_hz": 3.65,
+  "stride_m": 0.67,
+  "sprint_s": 4.7,
+  "recover_s": 16.6,
+  "turn_rad_s": 3.58,
+  "turn": {
+   "on": 0.45,
+   "off": 0.2,
+   "hold": 0.35,
+   "amp": [
+    0.4,
+    0.6
+   ],
+   "hz": [
+    0.7,
+    2.4
+   ]
+  },
+  "lag": {
+   "s": 0.074,
+   "max_rad": 0.35,
+   "v": [
+    0.3,
+    1.2
+   ]
+  },
+  "bend": {
+   "spine": 1.0,
+   "lead": 0.12,
+   "lead_max": 0.25
+  },
+  "flags": {
+   "head_lead": true
+  },
+  "flier": false
+ },
+ "generated": {
+  "by": "pipeline/fauna.py",
+  "at": "2026-11-05T06:04:20Z",
+  "from": [
+   "gbif taxonomy",
+   "eltontraits (species)",
+   "pipeline/locomotion.py"
+  ],
+  "note": "behaviour data without a model; review the diet, senses and size before a mesh is made"
+ },
+ "license": "CC BY-SA 4.0 (the entry); diet and mass from EltonTraits 1.0 (CC BY 4.0, credited in the tile's sources)"
+}
