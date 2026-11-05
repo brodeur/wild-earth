@@ -33,6 +33,17 @@ DOMESTIC = {"Homo sapiens", "Felis catus", "Canis familiaris", "Canis lupus", "B
             "Capra hircus", "Gallus gallus", "Columba livia", "Anser anser", "Mus musculus", "Rattus rattus",
             "Rattus norvegicus", "Passer domesticus", "Sus scrofa", "Oncorhynchus mykiss"}
 SYNONYMS = {"Cervus canadensis": "Cervus elaphus"}   # GBIF's name -> EltonTraits' (MSW3 lumps elk with red deer)
+# GBIF files some American animals under an Old World species it lumps them with: on a tile in the Americas (UTM zones
+# 1-24 north or south) the record is the American species, named as the library names it (2026-11-05: the Hoh's
+# "red deer" are Roosevelt elk, Cervus canadensis roosevelti; the tule elk of the SF cells likewise)
+AMERICAS = {"Cervus elaphus": "Cervus canadensis"}
+
+
+def _in_americas(tile: Tile) -> bool:
+    try:
+        return int(tile.tile_id.split("_")[0][3:-1]) <= 24
+    except (ValueError, IndexError):
+        return False
 # the rig template and the Meshy estimate per body plan (credits: a 'latest' preview 20 + a refine 10)
 PLANS = {"quadruped": ("tools/rig_quadruped.py skeleton, gait.js / legs.js", 30),
          "rodent": ("rodent part rig R (animalModels.js), the hop gait for lagomorphs", 30),
@@ -78,7 +89,7 @@ def known_animals() -> dict:
     for sid in idx:
         rec = json.loads((LIB / f"{sid}.json").read_text())
         out[sid] = {"library": True, "mesh": bool((rec.get("tiers") or {}).get("file")) or "procedural" in str(rec.get("rig") or ""),
-                    "taxonomy": rec.get("taxonomy") or {}}
+                    "taxonomy": rec.get("taxonomy") or {}, "common": rec.get("common")}
         for a in rec.get("aliases") or []:
             out.setdefault(a, out[sid])
     from .species_data import SPECIES
@@ -134,6 +145,11 @@ def make_traits(row: dict) -> dict:
 
 def animal_research(tile: Tile) -> dict:
     rows = [r for r in animal_records(tile) if " ".join(r["scientific"].split()[:2]) not in DOMESTIC]
+    if _in_americas(tile):   # GBIF's lumped names (AMERICAS): the record as the American species
+        for r in rows:
+            b = " ".join(r["scientific"].split()[:2])
+            if b in AMERICAS:
+                r["gbif_scientific"] = r["scientific"]; r["scientific"] = AMERICAS[b]; r["common"] = None
     known = known_animals()
     present = {}
     sp_p = tile.path("species/species.json")
@@ -155,6 +171,8 @@ def animal_research(tile: Tile) -> dict:
         if sid in present:
             why.append("curated and present")
         r.update(id=sid, role=role, mass_kg=(t or {}).get("mass_kg"), why=why, listed=bool(why))
+        if (known.get(sid) or {}).get("common"):   # the library's own name for an animal it has (GBIF's vernacular otherwise)
+            r["common"] = known[sid]["common"]
         if why:
             listed.append(r)
     for code, s in present.items():   # the curated animals present, even if GBIF ranks them low

@@ -1,0 +1,53 @@
+{
+  "id": "ariolimax_columbianus",
+  "aliases": [
+    "pacific_banana_slug",
+    "banana_slug"
+  ],
+  "scientific": "Ariolimax columbianus",
+  "common": "Pacific banana slug",
+  "taxonomy": {
+    "kingdom": "Animalia",
+    "phylum": "Mollusca",
+    "class": "Gastropoda",
+    "order": "Stylommatophora",
+    "family": "Ariolimacidae",
+    "genus": "Ariolimax"
+  },
+  "mass_kg": 0.08,
+  "body_plan": "gastropod",
+  "size": {
+    "length_m": 0.18,
+    "shoulder_or_wingspan_m": 0.022,
+    "note": "Adults 15-25 cm long when extended (the second-largest slug in the world), 2-3 cm across. The procedural body is 0.18 m from the tail tip to the eyestalk tips, 2.6 cm wide at the foot fringe, the mantle saddle 2.2 cm up; drawn at 0.8-1.2 (animals.js)."
+  },
+  "source": {
+    "kind": "procedural",
+    "title": "Pacific banana slug (procedural)",
+    "author": "agent (Claude) for Aaron Brodeur",
+    "file": "client/src/animalModels.js buildSlug",
+    "original": "no mesh: a body of overlapping spheres (the foot fringe, the body, the mantle saddle over the front third, the tapering tail), black blotches, two long eyestalks and two short tentacles (docs/pipeline.md: the gastropod archetype needs no Meshy model)",
+    "credits": 0,
+    "date": "2026-11-05 (UTC)",
+    "adopted_by": "client/src/animalModels.js buildSlug"
+  },
+  "license": "CC BY-SA 4.0",
+  "license_detail": {
+    "source_terms": "Written for Wild Earth; released with the project's assets under CC BY-SA 4.0.",
+    "redistribute_under_cc_by_sa": true
+  },
+  "tiers": {
+    "file": null,
+    "note": "procedural: one model, no tiers (about 400 triangles); culled beyond 15 m of the eye (animals.js CULL)"
+  },
+  "rig": "procedural (animalModels.js buildSlug, the plain part path): BODY (the foot, body and mantle), TAIL (the rear half, pivot behind the mantle) and HEAD (head and tentacles, pivot at the mantle's front); flick sways the head and eyestalks, pose -1 pulls them in (a touch). Moved by animals.js slUpdate: a crawl of about 4 mm/s in slow curves, long rests with the eyestalks swaying, withdrawn for half a minute when a body comes within 0.5 m; out in cool damp air (the salamanders' rule), under the litter on freezing or hot dry days.",
+  "status": "agent draft, needs local sign-off",
+  "accuracy_notes": "Reads as a banana slug at a few metres: olive-yellow with black blotches, a raised mantle, the tapering keeled tail, the two long eyestalks. No slime trail, no keel ridge, no breathing pore; no foot wave (the crawl is a glide of the whole body); the colour is the common yellow form (they range from green-yellow to brown and nearly white).",
+  "authors": [
+    "agent (Claude) for Aaron Brodeur (procedural model and behaviour)"
+  ],
+  "sources": [
+    "Burke, Land Snails and Slugs of the Pacific Northwest (2013): size, colour forms, the mantle and pneumostome",
+    "docs/pipeline.md (the gastropod archetype: procedural, no credits)"
+  ]
+}

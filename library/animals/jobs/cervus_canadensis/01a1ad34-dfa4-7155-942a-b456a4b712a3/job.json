@@ -1,0 +1,66 @@
+{
+  "species": "cervus_canadensis",
+  "mode": "preview",
+  "kind": "text-to-3d",
+  "task_id": "01a1ad34-dfa4-7155-942a-b456a4b712a3",
+  "endpoint": "https://api.meshy.ai/openapi/v2/text-to-3d",
+  "request": {
+    "mode": "preview",
+    "prompt": "A Roosevelt elk cow (Cervus canadensis roosevelti) of the Olympic rain forest, NOT a red deer, NOT a moose, NOT a horse. One adult female with NO antlers, standing still on all four legs, side-on neutral pose, legs long and straight with clear gaps between them, small hooves flat, head level and held up on a long neck. Realistic proportions: 1.35 m at the shoulder, 2.2 m head and body, a deep body, a long neck with a short dark mane under the throat, a long face, large upright ears, a short tail. Tan-grey body, dark chocolate brown head, neck and legs, a pale buff rump patch around the tail. No base, no ground. Game-ready.",
+    "ai_model": "latest",
+    "target_formats": [
+      "glb"
+    ],
+    "should_remesh": true,
+    "topology": "triangle",
+    "target_polycount": 20000,
+    "moderation": false
+  },
+  "prompt": "A Roosevelt elk cow (Cervus canadensis roosevelti) of the Olympic rain forest, NOT a red deer, NOT a moose, NOT a horse. One adult female with NO antlers, standing still on all four legs, side-on neutral pose, legs long and straight with clear gaps between them, small hooves flat, head level and held up on a long neck. Realistic proportions: 1.35 m at the shoulder, 2.2 m head and body, a deep body, a long neck with a short dark mane under the throat, a long face, large upright ears, a short tail. Tan-grey body, dark chocolate brown head, neck and legs, a pale buff rump patch around the tail. No base, no ground. Game-ready.",
+  "image": null,
+  "preview_job": null,
+  "estimated_credits": 20,
+  "balance_before": 2502,
+  "status": "SUCCEEDED",
+  "timestamps": {
+    "submitted": "2026-11-05T19:34:45+00:00",
+    "created_at": "2026-11-05T19:34:47+00:00",
+    "started_at": "2026-11-05T19:34:47+00:00",
+    "finished_at": "2026-11-05T19:35:25+00:00",
+    "downloaded": "2026-11-05T19:35:30+00:00"
+  },
+  "tool": "tools/meshy_generate.py",
+  "pricing_source": {
+    "url": "https://docs.meshy.ai/en/api/pricing",
+    "read": "2026-10-24"
+  },
+  "licence_note": "Generated through the Meshy API, which requires a paid plan (402 on a free plan). Meshy Terms of Use (https://www.meshy.ai/terms-of-use, last updated 2026-09-19), section 3.2: customers on a paid plan own their Customer Output to the extent permitted by law (free-plan output is owned by Meshy and offered under CC BY 4.0 with credit to Meshy). As owner, the account holder may license this model under the project's CC BY-SA 4.0 asset licence, to the extent copyright subsists in AI-generated output. Section 2.4: do not remove or alter AI-identifying metadata or watermarks Meshy embeds; carry them into adopted tiers. Section 2.5: API output is deleted by Meshy 3 days after generation, so keep this folder until the model is adopted. Credit: \"generated with Meshy (meshy.ai)\".",
+  "maintainer": "agent (Claude) for Aaron Brodeur",
+  "progress": 100,
+  "task": {
+    "id": "01a1ad34-dfa4-7155-942a-b456a4b712a3",
+    "type": "text-to-3d-preview",
+    "status": "SUCCEEDED",
+    "created_at": 1793907287607,
+    "started_at": 1793907287616,
+    "finished_at": 1793907325118,
+    "consumed_credits": 20,
+    "task_error": null
+  },
+  "credits_charged": 20,
+  "files": [
+    {
+      "file": "model.glb",
+      "bytes": 960040,
+      "sha256": "03fdccfecc97dd21671014b2987e861b1b39d4bd15ab2babbc7f975521084e56",
+      "source": "https://assets.meshy.ai/<account>/tasks/01a1ad34-dfa4-7155-942a-b456a4b712a3/output/model.glb"
+    },
+    {
+      "file": "thumbnail.png",
+      "bytes": 83302,
+      "sha256": "b6c2812facc5344a581260e682beb8053a9a701b87919650ac09076a4f36275f",
+      "source": "https://assets.meshy.ai/<account>/tasks/01a1ad34-dfa4-7155-942a-b456a4b712a3/output/preview.png"
+    }
+  ],
+  "balance_after": 2482
+}

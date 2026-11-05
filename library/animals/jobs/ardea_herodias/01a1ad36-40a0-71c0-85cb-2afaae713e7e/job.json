@@ -1,0 +1,66 @@
+{
+  "species": "ardea_herodias",
+  "mode": "preview",
+  "kind": "text-to-3d",
+  "task_id": "01a1ad36-40a0-71c0-85cb-2afaae713e7e",
+  "endpoint": "https://api.meshy.ai/openapi/v2/text-to-3d",
+  "request": {
+    "mode": "preview",
+    "prompt": "A great blue heron (Ardea herodias), one adult standing still in a neutral upright pose on two long thin legs, side-on, wings folded against the body, neck in an S-curve with the head held up, NOT flying. Realistic proportions: 1.1 m tall, 1.0 m long, very long thin yellowish-grey legs with long thin toes, a long slender neck, a long straight dagger-shaped yellow bill, a narrow body. Blue-grey body and wings, a white face and crown with a black stripe above the eye ending in thin black plumes behind the head, rusty-chestnut thighs, a grey neck with a black-and-white streaked front, long grey plumes over the lower neck and back. No base, no ground, no water. Game-ready, clean closed mesh.",
+    "ai_model": "latest",
+    "target_formats": [
+      "glb"
+    ],
+    "should_remesh": true,
+    "topology": "triangle",
+    "target_polycount": 20000,
+    "moderation": false
+  },
+  "prompt": "A great blue heron (Ardea herodias), one adult standing still in a neutral upright pose on two long thin legs, side-on, wings folded against the body, neck in an S-curve with the head held up, NOT flying. Realistic proportions: 1.1 m tall, 1.0 m long, very long thin yellowish-grey legs with long thin toes, a long slender neck, a long straight dagger-shaped yellow bill, a narrow body. Blue-grey body and wings, a white face and crown with a black stripe above the eye ending in thin black plumes behind the head, rusty-chestnut thighs, a grey neck with a black-and-white streaked front, long grey plumes over the lower neck and back. No base, no ground, no water. Game-ready, clean closed mesh.",
+  "image": null,
+  "preview_job": null,
+  "estimated_credits": 20,
+  "balance_before": 2462,
+  "status": "SUCCEEDED",
+  "timestamps": {
+    "submitted": "2026-11-05T19:36:16+00:00",
+    "created_at": "2026-11-05T19:36:17+00:00",
+    "started_at": "2026-11-05T19:36:17+00:00",
+    "finished_at": "2026-11-05T19:36:56+00:00",
+    "downloaded": "2026-11-05T19:37:00+00:00"
+  },
+  "tool": "tools/meshy_generate.py",
+  "pricing_source": {
+    "url": "https://docs.meshy.ai/en/api/pricing",
+    "read": "2026-10-24"
+  },
+  "licence_note": "Generated through the Meshy API, which requires a paid plan (402 on a free plan). Meshy Terms of Use (https://www.meshy.ai/terms-of-use, last updated 2026-09-19), section 3.2: customers on a paid plan own their Customer Output to the extent permitted by law (free-plan output is owned by Meshy and offered under CC BY 4.0 with credit to Meshy). As owner, the account holder may license this model under the project's CC BY-SA 4.0 asset licence, to the extent copyright subsists in AI-generated output. Section 2.4: do not remove or alter AI-identifying metadata or watermarks Meshy embeds; carry them into adopted tiers. Section 2.5: API output is deleted by Meshy 3 days after generation, so keep this folder until the model is adopted. Credit: \"generated with Meshy (meshy.ai)\".",
+  "maintainer": "agent (Claude) for Aaron Brodeur",
+  "progress": 100,
+  "task": {
+    "id": "01a1ad36-40a0-71c0-85cb-2afaae713e7e",
+    "type": "text-to-3d-preview",
+    "status": "SUCCEEDED",
+    "created_at": 1793907377951,
+    "started_at": 1793907377957,
+    "finished_at": 1793907416759,
+    "consumed_credits": 20,
+    "task_error": null
+  },
+  "credits_charged": 20,
+  "files": [
+    {
+      "file": "model.glb",
+      "bytes": 1110092,
+      "sha256": "e1094dce2bfc20848bf00b74bc592d9b67c7c895823832ce6e1805d81e0bdab4",
+      "source": "https://assets.meshy.ai/<account>/tasks/01a1ad36-40a0-71c0-85cb-2afaae713e7e/output/model.glb"
+    },
+    {
+      "file": "thumbnail.png",
+      "bytes": 41689,
+      "sha256": "b772a52c07644283c407c745440649e19a7c7656ace6081ad32357e864362952",
+      "source": "https://assets.meshy.ai/<account>/tasks/01a1ad36-40a0-71c0-85cb-2afaae713e7e/output/preview.png"
+    }
+  ],
+  "balance_after": 2442
+}

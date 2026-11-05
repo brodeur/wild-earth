@@ -1,5 +1,5 @@
 {
- "generated": "2026-10-28T08:02:05.535Z",
+ "generated": "2026-11-05T21:21:21.853Z",
  "generator": "client/tools/opening_sprites.html (three.js) + tools/sprite_receiver.py (PIL WebP q90)",
  "note": "Pre-rendered for the opening screen (client/src/arrival.js), which plays them with CSS only.",
  "credits": "Derived renders of the client's animal models (client/assets/*.glb, built by tools/build_*.py, and the procedural models in client/src/animalModels.js) and of the spirit's wisp (client/src/spirit.js). The models' sources, authors and licences are in docs/animal-library.md and in each tile manifest's sources; these renders carry the same credits.",
@@ -224,7 +224,197 @@
    "foot_px": 63,
    "pose": "standing",
    "bytes": 1206
+  },
+  "cervus_canadensis": {
+   "file": "cervus_canadensis.webp",
+   "width": 448,
+   "height": 473,
+   "px_per_m": 268,
+   "kind": "ground",
+   "foot_px": 450,
+   "pose": "standing",
+   "bytes": 13360
+  },
+  "lynx_rufus": {
+   "file": "lynx_rufus.webp",
+   "width": 200,
+   "height": 160,
+   "px_per_m": 268,
+   "kind": "ground",
+   "foot_px": 149,
+   "pose": "standing",
+   "bytes": 5756
+  },
+  "lontra_canadensis": {
+   "file": "lontra_canadensis.webp",
+   "width": 267,
+   "height": 94,
+   "px_per_m": 268,
+   "kind": "ground",
+   "foot_px": 82,
+   "pose": "standing",
+   "bytes": 2266
+  },
+  "lepus_americanus": {
+   "file": "lepus_americanus.webp",
+   "width": 81,
+   "height": 88,
+   "px_per_m": 268,
+   "kind": "ground",
+   "foot_px": 81,
+   "pose": "standing",
+   "bytes": 2164
+  },
+  "tamiasciurus_douglasii": {
+   "file": "tamiasciurus_douglasii.webp",
+   "width": 67,
+   "height": 46,
+   "px_per_m": 268,
+   "kind": "ground",
+   "foot_px": 40,
+   "pose": "standing",
+   "bytes": 1142
+  },
+  "tamias_townsendii": {
+   "file": "tamias_townsendii.webp",
+   "width": 63,
+   "height": 31,
+   "px_per_m": 268,
+   "kind": "ground",
+   "foot_px": 26,
+   "pose": "standing",
+   "bytes": 974
+  },
+  "peromyscus_maniculatus": {
+   "file": "peromyscus_maniculatus.webp",
+   "width": 49,
+   "height": 18,
+   "px_per_m": 268,
+   "kind": "ground",
+   "foot_px": 14,
+   "pose": "standing",
+   "bytes": 436
+  },
+  "plethodon_vehiculum": {
+   "file": "plethodon_vehiculum.webp",
+   "width": 29,
+   "height": 8,
+   "px_per_m": 268,
+   "kind": "ground",
+   "foot_px": 4,
+   "pose": "standing",
+   "bytes": 286
+  },
+  "ensatina_eschscholtzii": {
+   "file": "ensatina_eschscholtzii.webp",
+   "width": 32,
+   "height": 9,
+   "px_per_m": 268,
+   "kind": "ground",
+   "foot_px": 5,
+   "pose": "standing",
+   "bytes": 306
+  },
+  "ariolimax_columbianus": {
+   "file": "ariolimax_columbianus.webp",
+   "width": 52,
+   "height": 14,
+   "px_per_m": 268,
+   "kind": "ground",
+   "foot_px": 9,
+   "pose": "standing",
+   "bytes": 520
+  },
+  "ardea_herodias": {
+   "file": "ardea_herodias.webp",
+   "width": 247,
+   "height": 295,
+   "px_per_m": 268,
+   "kind": "ground",
+   "foot_px": 286,
+   "pose": "standing",
+   "bytes": 6468
+  },
+  "mergus_merganser": {
+   "file": "mergus_merganser.webp",
+   "width": 164,
+   "height": 85,
+   "px_per_m": 268,
+   "kind": "ground",
+   "foot_px": 57,
+   "pose": "standing",
+   "bytes": 2880
+  },
+  "corvus_brachyrhynchos": {
+   "file": "corvus_brachyrhynchos.webp",
+   "width": 114,
+   "height": 68,
+   "px_per_m": 268,
+   "kind": "ground",
+   "foot_px": 62,
+   "pose": "standing",
+   "bytes": 956
+  },
+  "troglodytes_pacificus": {
+   "file": "troglodytes_pacificus.webp",
+   "width": 26,
+   "height": 29,
+   "px_per_m": 268,
+   "kind": "bird",
+   "foot_px": 25,
+   "pose": "flying, wings up-stroke",
+   "bytes": 486
+  },
+  "perisoreus_canadensis": {
+   "file": "perisoreus_canadensis.webp",
+   "width": 77,
+   "height": 62,
+   "px_per_m": 268,
+   "kind": "bird",
+   "foot_px": 59,
+   "pose": "flying, wings up-stroke",
+   "bytes": 1078
+  },
+  "poecile_rufescens": {
+   "file": "poecile_rufescens.webp",
+   "width": 35,
+   "height": 29,
+   "px_per_m": 268,
+   "kind": "bird",
+   "foot_px": 26,
+   "pose": "flying, wings up-stroke",
+   "bytes": 520
+  },
+  "strix_varia": {
+   "file": "strix_varia.webp",
+   "width": 160,
+   "height": 172,
+   "px_per_m": 268,
+   "kind": "bird",
+   "foot_px": 165,
+   "pose": "flying, wings up-stroke",
+   "bytes": 5558
+  },
+  "megaceryle_alcyon": {
+   "file": "megaceryle_alcyon.webp",
+   "width": 78,
+   "height": 77,
+   "px_per_m": 268,
+   "kind": "bird",
+   "foot_px": 73,
+   "pose": "flying, wings up-stroke",
+   "bytes": 1596
+  },
+  "haliaeetus_leucocephalus": {
+   "file": "haliaeetus_leucocephalus.webp",
+   "width": 304,
+   "height": 212,
+   "px_per_m": 268,
+   "kind": "bird",
+   "foot_px": 126,
+   "pose": "soaring, wings flat",
+   "bytes": 4626
   }
  },
- "total_bytes": 945638
+ "total_bytes": 997016
 }

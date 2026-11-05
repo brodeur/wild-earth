@@ -1,0 +1,100 @@
+{
+  "id": "cervus_canadensis",
+  "aliases": [
+    "cervus_elaphus",
+    "roosevelt_elk",
+    "elk",
+    "wapiti",
+    "cervus_canadensis_roosevelti"
+  ],
+  "scientific": "Cervus canadensis",
+  "subspecies": "roosevelti",
+  "common": "Roosevelt elk",
+  "taxonomy": {
+    "kingdom": "Animalia",
+    "phylum": "Chordata",
+    "class": "Mammalia",
+    "order": "Artiodactyla",
+    "family": "Cervidae",
+    "genus": "Cervus"
+  },
+  "taxonomy_note": "The North American elk or wapiti, here its largest form, Roosevelt elk (C. c. roosevelti) of the Olympic Peninsula and the Pacific coast. GBIF and EltonTraits file it under Cervus elaphus (the red deer of Europe), from when the two were lumped; it is the North American elk, not the red deer, hence the alias.",
+  "mass_kg": 400,
+  "mass_kg_cow": 260,
+  "body_plan": "quadruped",
+  "size": {
+    "length_m": 2.45,
+    "shoulder_or_wingspan_m": 1.5,
+    "note": "Bull 1.50 m at the withers, ~2.45 m nose to rump along the body, ~400 kg; cow 1.30 m, ~2.1 m, ~260 kg; tail ~12 cm; a mature bull's antlers spread ~1.1 m and rise up to ~0.9 m above the poll, six points a side. The builds scale to the withers and stretch the trunk between the legs toward the length (at most 1.12x; both previews are short in the body for their height): the bull 2.39 m head and body along the top (nose, poll, neck base, withers, tail root), 2.02 m nose to rump in a straight line with the head carried forward; the cow 2.19 m along the top, 1.70 m straight (her head carried high). The bull's antlers, 1.2x the preview's, spread 1.16 m and rise 0.47 m above the poll (the preview's beams sweep out and back rather than up)."
+  },
+  "source": {
+    "kind": "meshy",
+    "title": "Roosevelt elk, bull and cow (generated)",
+    "author": "generated with Meshy (meshy.ai) by agent (Claude) for Aaron Brodeur",
+    "url": "https://www.meshy.ai",
+    "file": "library/animals/jobs/cervus_canadensis/01a1ad34-dfa4-7155-942a-b456a4b712a3/model.glb (the bull) and library/animals/jobs/cervus_canadensis/01a1ad39-d6da-72e2-a426-4eb60ac49b36/model.glb (the cow) (local, git-ignored)",
+    "original": "two text-to-3D previews, ai_model latest, triangle remesh to 20,000 faces (20,823 and 20,828 triangles, one piece each, untextured, sculpted fur on the neck). BOTH prompts asked for a cow with no antlers and BOTH came back as antlered bulls: A a heavy Roosevelt-type bull (dark shaggy mane, long beams with six or more tines, the head turned ~40 degrees to its right, the right ear fused to the underside of its beam), B a lighter, red-deer-like bull with crowned antlers (the whole animal yawed 30 degrees, the head turned ~47 degrees to its right, the neck bolt upright). So the bull is A and the cow is B with its antlers removed.",
+    "prompt": "A (01a1ad34-dfa4-7155-942a-b456a4b712a3): \"A Roosevelt elk cow (Cervus canadensis roosevelti) of the Olympic rain forest, NOT a red deer, NOT a moose, NOT a horse. One adult female with NO antlers, standing still on all four legs, side-on neutral pose, legs long and straight with clear gaps between them, small hooves flat, head level and held up on a long neck. Realistic proportions: 1.35 m at the shoulder, 2.2 m head and body, a deep body, a long neck with a short dark mane under the throat, a long face, large upright ears, a short tail. Tan-grey body, dark chocolate brown head, neck and legs, a pale buff rump patch around the tail. No base, no ground. Game-ready.\" B (01a1ad39-d6da-72e2-a426-4eb60ac49b36): \"A female elk (a cow elk, Cervus canadensis roosevelti), hornless like a deer doe: NO antlers, NO horns, the top of the head smooth and bare between two large upright ears. NOT a bull, NOT a moose, NOT a horse. One adult standing still on all four legs, side-on neutral pose, long slender legs straight with clear gaps between them, small hooves flat, head held up on a long neck. Realistic proportions: 1.3 m at the shoulder, 2.1 m head and body, a deep body, a long face, a short tail. Tan-grey body, dark chocolate brown head, neck and legs, a pale buff rump patch around the tail. No base, no ground. Game-ready.\"",
+    "reference_image": null,
+    "job_id": "01a1ad34-dfa4-7155-942a-b456a4b712a3 (bull), 01a1ad39-d6da-72e2-a426-4eb60ac49b36 (cow)",
+    "job": "library/animals/jobs/cervus_canadensis/01a1ad34-dfa4-7155-942a-b456a4b712a3/job.json and library/animals/jobs/cervus_canadensis/01a1ad39-d6da-72e2-a426-4eb60ac49b36/job.json",
+    "credits": 40,
+    "credits_detail": "20 each (job.json credits_charged)",
+    "date": "2026-11-05 (UTC)",
+    "adopted_by": "tools/build_elk.py (--sex bull from A, --sex cow from B)"
+  },
+  "license": "CC BY-SA 4.0",
+  "license_detail": {
+    "source_terms": "Meshy Terms of Use (https://www.meshy.ai/terms-of-use, last updated 2026-09-19) 3.2: paid-plan API output is owned by the account holder, who releases it with the project's assets under CC BY-SA 4.0.",
+    "redistribute_under_cc_by_sa": true,
+    "note": "Credit \"generated with Meshy (meshy.ai)\" is kept in the build script header and each GLB's asset.copyright. The files carried no Meshy metadata or watermark to carry over (Terms 2.4). Terms 2.6(xi) (no training of competing models) binds the account holder, not CC BY-SA licensees. AI output may carry little copyright in some jurisdictions; the licence covers what rights exist."
+  },
+  "tiers": {
+    "lod0": 3783,
+    "lod1": 1583,
+    "lod2": 519,
+    "antlers": "of which ~1,030 / 450 / 145 are antler (built 3,631 / 1,487 / 461; tools/rig_quadruped.py adds the leg-ring cuts)",
+    "file": "client/assets/elk_bull.glb",
+    "attributes": [
+      "POSITION",
+      "COLOR_0 (linear)",
+      "_PART",
+      "_PARTW",
+      "_PIVOT",
+      "JOINTS_0",
+      "WEIGHTS_0"
+    ],
+    "clips": "client/assets/elk_bull_clips.bin + .json (tools/bake_gait.mjs: Idle, Walk, Trot, Gallop, Bed, Eat from the leg engine; baked from the body alone, no locomotion row yet)"
+  },
+  "tiers_cow": {
+    "lod0": 3177,
+    "lod1": 1304,
+    "lod2": 404,
+    "note": "built 3,011 / 1,220 / 356; tools/rig_quadruped.py adds the leg-ring cuts",
+    "file": "client/assets/elk_cow.glb",
+    "attributes": [
+      "POSITION",
+      "COLOR_0 (linear)",
+      "_PART",
+      "_PARTW",
+      "_PIVOT",
+      "JOINTS_0",
+      "WEIGHTS_0"
+    ],
+    "clips": "client/assets/elk_cow_clips.bin + .json (tools/bake_gait.mjs: Idle, Walk, Trot, Gallop, Bed, Eat; baked from the body alone, no locomotion row yet)"
+  },
+  "sexes": "Two files, one entry: extras.sex 'bull' (client/assets/elk_bull.glb, entry key tiers) and 'cow' (client/assets/elk_cow.glb, entry key tiers_cow); extras.species 'cervus_canadensis' in both.",
+  "rig": "skinned, the standard quadruped skeleton of 20 joints (tools/rig_quadruped.py): Hips, Spine, Chest, Neck, Head, Tail1-3 and per leg UpperLeg (shoulder or hip), LowerLeg (elbow or stifle) and Foot (wrist or hock to the toe), FL FR HL HR; run with --wrist 0.45 --hock 0.55 (the rigger's unguligrade defaults, passed by hand because the locomotion tree has no elk row: extras.skin.posture still reads digitigrade until one is added and the files are rigged and baked again). Posed live by the leg engine (client/src/gait.js) near the eye, by its baked cycles beyond. The part attributes stay for the fallback: quadruped template Q, BODY 0, LEG_A 1 (left fore, right hind), LEG_B 2, TAIL 3 (the short tail, pivot at its root), HEAD 6 (neck, head, ears and the bull's antlers, pivot at the neck's root: low in the plane through the withers and the top of the brisket, so the head and neck dip to graze as one; the chest and the tops of the forelegs kept out). No TAIL_TIP. Parts found from the geometry (the tail at the top of the rump, the legs below the belly line with pivots there, the head and neck ahead of the neck-base plane); pivots and the bedded drop in extras.rig (bull drop 0.51 m, cow 0.46 m); the bull's left burr in extras.antler_burr. Skeleton: bull Neck joint (0, 1.225, 0.621) and Head (0, 1.40, 1.044), nose (0, 1.543, 1.389); cow Neck (0, 1.173, 0.452), Head (0, 1.325, 0.721), nose (0, 1.45, 0.94) (glTF axes, m).",
+  "status": "agent draft, needs local sign-off",
+  "accuracy_notes": "Generated, both from prompts that asked for a cow. The bull reads as a Roosevelt bull at every tier: heavy body, the dark chocolate neck and shaggy mane against a pale tan-grey body, dark legs, the big buff rump patch, long brown beams with ivory tips (lod2 keeps the beams and the main tines, ~145 triangles). The cow is the lighter preview with its antlers cut off and the poll smoothed bare, the throat mane pulled in, the neck longer, slimmer and carried forward, the face lengthened; she reads as a cow elk (dark head and neck, tan-grey body, buff rump) at game distance. Fixed by the build: both previews were turned on the ground and their heads turned to their right (squared and turned back); B's neck was bolt upright with a short face (pitched forward 14 degrees about its root, the face 1.15x longer); the antlers were small for a mature Roosevelt bull (1.2x). Still wrong or unchecked: the bull's antlers rise only ~0.47 m above the poll (Roosevelt beams sweep out and back; a big bull's rise ~0.9 m) and the preview has more tines than six a side (the ivory finder counts 14 and 9 local tips, some of them knobs); A's right ear is fused under its beam (coloured as head, still shaped as a lump); both trunks are short for their height (stretched the 1.12x cap; the bull's head and body measures 2.39 m along the top, the cow's 2.19 m); the cow's neck stays thick for a cow and her ears are pale on both faces; the rump patch's dark border is ragged at lod0 (per-face colour on large faces); the eye is one face each side; the cow's Eat frame still lowers the chest a little (the preview's head and neck reach 0.56 m from the neck root at 1.17 m; the bull's 0.83 m from 1.23 m); the Meshy fur shards facet the neck. Check the antler rise, the cow's neck and the tan against Hoh valley photographs.",
+  "authors": [
+    "agent (Claude) for Aaron Brodeur (generation, adoption, antler removal, recolour, tiers, rig)"
+  ],
+  "sources": [
+    "the lead's brief for this lane (2026-11-05): sizes, masses, the antler spread and rise, the palette by region",
+    "Toweill, D. E. and Thomas, J. W. (eds.), North American Elk: Ecology and Management (Smithsonian, 2002): subspecies, body and antler form, the rump patch and the cow's short throat mane",
+    "Geist, V., Deer of the World (Stackpole, 1998): wapiti versus red deer, the bull's mane and antler form",
+    "Olympic National Park (National Park Service), Roosevelt elk pages: the Olympic herds, size of the subspecies",
+    "docs/animal-library.md (Meshy terms and costs)"
+  ]
+}

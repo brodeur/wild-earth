@@ -1,0 +1,79 @@
+{
+  "id": "perisoreus_canadensis",
+  "aliases": [
+    "canada_jay",
+    "gray_jay",
+    "grey_jay",
+    "whiskey_jack"
+  ],
+  "scientific": "Perisoreus canadensis obscurus",
+  "common": "Canada jay (gray jay)",
+  "taxonomy": {
+    "kingdom": "Animalia",
+    "phylum": "Chordata",
+    "class": "Aves",
+    "order": "Passeriformes",
+    "family": "Corvidae",
+    "genus": "Perisoreus"
+  },
+  "mass_kg": 0.07,
+  "body_plan": "bird",
+  "size": {
+    "length_m": 0.29,
+    "shoulder_or_wingspan_m": 0.45,
+    "note": "Length 25-33 cm (tail 13-14 cm), wingspan about 45 cm, 60-80 g. Built 0.290 m bill to tail (0.160 m bill tip to the neck to the rump, plus a 0.130 m tail), 0.134 m tall standing; wing cards 0.45 m across."
+  },
+  "source": {
+    "kind": "meshy",
+    "title": "Canada jay (Oregon form)",
+    "author": "generated with Meshy (meshy.ai) by agent (Claude) for Aaron Brodeur",
+    "url": null,
+    "file": "library/animals/jobs/perisoreus_canadensis/01a1ad38-feb3-7224-b473-535085890e02/model.glb (local; jobs/ meshes are not tracked)",
+    "original": "Meshy text-to-3D preview, meshy-6-lite, triangle mesh, 20,800 triangles, one piece, untextured",
+    "prompt": "A Canada jay (gray jay, Perisoreus canadensis) of the Pacific Northwest, one adult bird perched with its wings folded tight against the body, side-on pose. NOT a blue jay, no crest. Realistic proportions, about 29 cm long with a long tail; a fluffy rounded body, a round head, a short stubby black bill. Soft grey back, wings and tail, a white forehead, throat and collar, a dark grey cap on the back of the head, a pale grey-white belly. Dark legs, three toes forward and one back. No base, no perch. Game-ready, clean closed mesh.",
+    "job_id": "01a1ad38-feb3-7224-b473-535085890e02",
+    "job": "library/animals/jobs/perisoreus_canadensis/01a1ad38-feb3-7224-b473-535085890e02/job.json",
+    "credits": 5,
+    "date": "2026-11-05 (UTC)",
+    "adopted_by": "tools/build_songbird.py --species perisoreus_canadensis",
+    "build": "tools/build_songbird.py"
+  },
+  "license": "CC BY-SA 4.0",
+  "license_detail": {
+    "source_terms": "Meshy Terms of Use 3.2 (https://www.meshy.ai/terms-of-use, last updated 2026-09-19): API output on a paid plan is owned by the account holder, who releases it with the project's assets under CC BY-SA 4.0. Terms 2.4: AI-identifying metadata Meshy embeds is carried over (the source GLB carried none; the adopted GLB records the source in extras.source). Terms 2.6(xi): not for training models that compete with Meshy (binds the account holder).",
+    "redistribute_under_cc_by_sa": true,
+    "note": "Credit \"generated with Meshy (meshy.ai)\" in README, the build script header and the GLB asset.copyright. AI-generated output may carry little or no copyright in some jurisdictions; the licence covers what rights exist."
+  },
+  "tiers": {
+    "lod0": 1000,
+    "lod1": 400,
+    "lod2": 120,
+    "file": "client/assets/gray_jay.glb",
+    "attributes": [
+      "POSITION",
+      "COLOR_0 (linear)",
+      "_PART",
+      "_PARTW",
+      "_PIVOT"
+    ],
+    "lod_m": [
+      12,
+      40
+    ],
+    "note": "Scaled to 0.29 m bill to tail. The preview's long fanned tail (rising to the top of the head; seen from the front it was the 'tuft' behind the crown) and the drooping primaries cut off at the rump and replaced by a long, narrow, rounded tail (13 cm, 2.2-4.2 cm wide, 8 degrees below level, faint pale tip); no crest (the preview's crown is smooth once the tail is gone); body levelled 4 degrees; generated legs replaced by black procedural legs; small dark eye; flight wing cards (rounded, faint pale tips on lod0). Colours (the Pacific 'Oregon' form, P. c. obscurus): white forehead, face, throat and collar; dark grey-brown cap from the crown down the nape, with a dark spot behind the eye; brownish-grey back, wings and tail, faint pale fringes on the folded wing (lod0); pale grey flanks and whitish-grey underparts; black bill and legs. Triangles: lod0 1,000 = 811 body + 189 legs, tail, cards and eyes; lod1 400 = 309 + 91; lod2 120 = 91 + 29. GLB 172,560 bytes."
+  },
+  "rig": "bird rig template of the Steller's jay (tools/build_stellersjay.py; drawn with client/src/animalModels.js RIG.stjay's constants): PART BODY 0, LEG_A 1 / LEG_B 2 procedural legs (pivot at the knee), TAIL 3 procedural tail (pivot at the rump), HEAD 6 (head and neck, pivot at the base of the neck), WING_L/R 4/5 and HAND_L/R 9/10 flight cards that collapse into the shoulder on pose; extras.rig {kind 'bird', wing (shoulder), tail (rump), head (neck base), length_m}; no skin",
+  "status": "agent draft, needs local sign-off",
+  "accuracy_notes": "Built 2026-11-05. Reads as a fluffy grey jay with a white face and a dark cap and nape, a short black bill and a long narrow tail; clearly not the Steller's jay. Still open: the cap's lower edge is jagged on lod1/lod2 (large faces); the white collar shows on the neck sides and throat but blends grey at the back; the legs are a little long; the eye is a small black dot (no pale eye-ring, correct for the species). A local birder should check the extent of the dark nape against Olympic birds.",
+  "authors": [
+    "agent (Claude) for Aaron Brodeur (Meshy candidate, build script, rig, tiers, entry)"
+  ],
+  "sources": [
+    "The Sibley Guide to Birds, 2nd edition (D. A. Sibley, 2014): plumage, shape and posture",
+    "Cornell Lab of Ornithology, All About Birds and Birds of the World species accounts: size, mass, wingspan, plumage",
+    "docs/animal-library.md",
+    "library/animals/README.md",
+    "tools/build_songbird.py",
+    "tools/build_stellersjay.py"
+  ]
+}

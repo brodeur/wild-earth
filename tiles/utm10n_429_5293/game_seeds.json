@@ -1,6 +1,6 @@
 {
  "tile": "utm10n_429_5293",
- "generated": "2026-11-05T09:23:56Z",
+ "generated": "2026-11-05T21:12:55Z",
  "games": {
   "acorn": {
    "seed": 794584631,
@@ -149,9 +149,46 @@
   "carrion": {
    "seed": 3496795236,
    "players": [
+    "corvus_brachyrhynchos",
     "corvus_corax"
    ],
-   "hotspots": [],
+   "hotspots": [
+    [
+     4519.5,
+     8843.8,
+     40
+    ],
+    [
+     9504.5,
+     5870.9,
+     40
+    ],
+    [
+     5660.7,
+     1876.9,
+     40
+    ],
+    [
+     105.1,
+     645.6,
+     40
+    ],
+    [
+     9924.9,
+     465.5,
+     40
+    ],
+    [
+     9594.6,
+     195.2,
+     40
+    ],
+    [
+     9624.6,
+     45.0,
+     40
+    ]
+   ],
    "resource": null,
    "client": "client/src/carrion.js",
    "world": "carrionworld.py",

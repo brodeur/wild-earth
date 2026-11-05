@@ -39,6 +39,30 @@ export const FLIERS = {
     flight: { cruise: 10, fast: 14, vmax: 26, sprint: 3, recover: 40, sink: 0.3, flap: 4, climb: 4, turn: 1.0, attachV: 7, contactG: 0.45, landH: 0.3,
       hopLen: 0.45, hopBack: 0.3, hopT: 0.45, hopH: 0.12, cam: 1.35,
       perch: { r: 0.05, h: 4, rec: rec => rec.snag || conifer(rec) || rec.scale > 0.9 }, soar: { v: 9, r: 60, lift: 0.4, teeter: true } } },
+  // ---- the Hoh rain forest batch (2026-11-05; animals.js HOH): the conifer birds on the jays' flight, the eagle on the
+  // hawk's, the crow on the procedural flying crow (air: the raven's flying model at 0.72; its ground model has no flight cards)
+  troglodytes_pacificus: { short: 'wren', common: 'Pacific wren', model: 'wren', jay: true, feet: true, span: 0.15, beat: 22, near: 0.04,
+    flight: { cruise: 5, fast: 7, vmax: 10, sprint: 3, recover: 20, sink: 1.2, flap: 6, climb: 5, turn: 3.5, attachV: 5, contactG: 0.06, landH: 0.03,
+      hopLen: 0.12, hopBack: 0.08, hopT: 0.12, hopH: 0.03, cam: 0.2 } },
+  perisoreus_canadensis: { short: 'grayjay', common: 'Canada jay', model: 'gray-jay', jay: true, feet: true, span: 0.45, beat: 10, near: 0.12,
+    flight: { cruise: 7, fast: 10, vmax: 15, sprint: 4, recover: 20, sink: 0.8, flap: 5, climb: 5, turn: 2.4, attachV: 6, contactG: 0.16, landH: 0.08,
+      hopLen: 0.3, hopBack: 0.2, hopT: 0.17, hopH: 0.06, cam: 0.45 } },
+  poecile_rufescens: { short: 'chickadee', common: 'chestnut-backed chickadee', model: 'chickadee', jay: true, feet: true, span: 0.2, beat: 20, near: 0.04,
+    flight: { cruise: 6, fast: 8, vmax: 12, sprint: 3, recover: 20, sink: 1.1, flap: 6, climb: 6, turn: 3.5, attachV: 5, contactG: 0.06, landH: 0.03,
+      hopLen: 0.1, hopBack: 0.07, hopT: 0.1, hopH: 0.03, cam: 0.22 } },
+  strix_varia: { short: 'owl', common: 'barred owl', model: 'barred-owl', jay: true, feet: true, span: 1.05, beat: 4, near: 0.15,
+    flight: { cruise: 7, fast: 10, vmax: 15, sprint: 3, recover: 30, sink: 0.6, flap: 4, climb: 4, turn: 1.8, attachV: 6, contactG: 0.25, landH: 0.15,
+      hopLen: 0.3, hopBack: 0.2, hopT: 0.3, hopH: 0.08, cam: 0.9 } },
+  megaceryle_alcyon: { short: 'kingfisher', common: 'belted kingfisher', model: 'kingfisher', jay: true, feet: true, span: 0.55, beat: 9, near: 0.1,
+    flight: { cruise: 9, fast: 13, vmax: 20, sprint: 4, recover: 20, sink: 0.9, flap: 5, climb: 5, turn: 2.4, attachV: 6, contactG: 0.12, landH: 0.06,
+      hopLen: 0.15, hopBack: 0.1, hopT: 0.15, hopH: 0.04, cam: 0.45 } },
+  haliaeetus_leucocephalus: { short: 'eagle', common: 'bald eagle', model: 'eagle', span: 2.0, beat: 2.2, near: 0.4,
+    flight: { cruise: 12, fast: 17, vmax: 40, sprint: 5, recover: 35, sink: 0.4, flap: 4, climb: 4, turn: 1.0, attachV: 8, contactG: 0.5, landH: 0.3,
+      hopLen: 0.5, hopBack: 0.3, hopT: 0.45, hopH: 0.12, cam: 1.5,
+      perch: { r: 0.06, h: 6, rec: rec => rec.snag || conifer(rec) }, soar: { v: 10, r: 70, lift: 0.5 } } },
+  corvus_brachyrhynchos: { short: 'crow', common: 'American crow', model: 'crow', air: true, jay: true, feet: true, span: 0.9, beat: 4, near: 0.12,
+    flight: { cruise: 9, fast: 13, vmax: 22, sprint: 4, recover: 25, sink: 0.8, flap: 5, climb: 5, turn: 2.2, attachV: 7, contactG: 0.15, landH: 0.08,
+      hopLen: 0.3, hopBack: 0.2, hopT: 0.2, hopH: 0.06, cam: 0.7 } },
 };
 
 export class FlierControl {
@@ -57,7 +81,7 @@ export class FlierControl {
   meshFor(name) {
     let p = this.meshes.get(name);
     if (!p) {
-      p = this.animals.playerModel(name).then(({ model, geometry }) => {
+      p = this.animals.playerModel(name, { air: !!this.S?.air }).then(({ model, geometry }) => {
         const geo = geometry.clone(), rig = hasAnim2(model);
         geo.setAttribute('aAnim', new THREE.InstancedBufferAttribute(new Float32Array(4), 4));
         if (rig) geo.setAttribute('aAnim2', new THREE.InstancedBufferAttribute(new Float32Array(4), 4));

@@ -1,0 +1,72 @@
+{
+  "id": "tamiasciurus_douglasii",
+  "aliases": [
+    "douglas_squirrel",
+    "douglas_s_squirrel",
+    "chickaree",
+    "pine_squirrel"
+  ],
+  "scientific": "Tamiasciurus douglasii",
+  "common": "Douglas squirrel",
+  "taxonomy": {
+    "kingdom": "Animalia",
+    "phylum": "Chordata",
+    "class": "Mammalia",
+    "order": "Rodentia",
+    "family": "Sciuridae",
+    "genus": "Tamiasciurus"
+  },
+  "mass_kg": 0.25,
+  "body_plan": "rodent",
+  "size": {
+    "length_m": 0.29,
+    "shoulder_or_wingspan_m": 0.06,
+    "note": "Head and body 0.16-0.19 m, tail 0.10-0.15 m, mass 0.15-0.30 kg. Built at 0.17 m head and body (nose to rump) with a 0.12 m tail along its curve; standing about 0.10 m at the back, 0.127 m to the ear tufts; 0.263 m nose to tail tip in a straight line (the tail rises)."
+  },
+  "source": {
+    "kind": "variant",
+    "title": "Douglas squirrel (variant of the western gray squirrel's Meshy mesh)",
+    "author": "variant of sciurus_griseus by agent (Claude) for Aaron Brodeur",
+    "url": "https://www.meshy.ai",
+    "file": "library/animals/jobs/sciurus_griseus/01a1719c-5a96-7616-b1c1-cc04ae57786c/model.glb (local, git-ignored; generated with Meshy (meshy.ai))",
+    "original": "the western gray squirrel's text-to-3D preview, ai_model meshy-6-lite, triangle remesh to 20,000 faces (20,850 triangles, untextured)",
+    "prompt": "(the gray squirrel's) A western gray squirrel (Sciurus griseus), single adult standing on all fours, side-on neutral pose, legs straight under the body, head level, tail held straight out behind and slightly raised, fully fluffed. Realistic proportions: 55 cm long, half of it tail; slim body; large rounded ears with no ear tufts. Silver gunmetal-grey back and flanks, pure white belly and chin with a sharp flank line, no brown or orange anywhere. Very long broad flat bushy tail, grey with a black inner band and a white fringe. Dark eye with a thin pale eye ring. No base, no ground. Game-ready, symmetric.",
+    "job_id": "01a1719c-5a96-7616-b1c1-cc04ae57786c",
+    "job": "library/animals/jobs/sciurus_griseus/01a1719c-5a96-7616-b1c1-cc04ae57786c/job.json",
+    "credits": 0,
+    "date": "2026-11-05 (UTC)",
+    "adopted_by": "tools/build_douglas_squirrel.py"
+  },
+  "license": "CC BY-SA 4.0",
+  "license_detail": {
+    "source_terms": "Meshy Terms of Use 3.2 (https://www.meshy.ai/terms-of-use, last updated 2026-09-19): API output on a paid plan is owned by the account holder, who releases it with the project's assets under CC BY-SA 4.0. Terms 2.4: AI-identifying metadata Meshy embeds is carried over (the source GLB carried none; the built GLB records the source in extras.source). Terms 2.6(xi): not for training models that compete with Meshy (binds the account holder, not CC BY-SA licensees).",
+    "redistribute_under_cc_by_sa": true,
+    "note": "A variant built from an earlier Meshy job: no new generation, no credits. Credit \"generated with Meshy (meshy.ai)\" is kept in the build script header and the GLB asset.copyright. AI-generated output may carry little or no copyright in some jurisdictions; the licence covers what rights exist."
+  },
+  "tiers": {
+    "lod0": 1500,
+    "lod1": 499,
+    "lod2": 150,
+    "file": "client/assets/douglas_squirrel.glb",
+    "attributes": [
+      "POSITION",
+      "COLOR_0 (linear)",
+      "_PART",
+      "_PARTW",
+      "_PIVOT"
+    ],
+    "note": "lod0 = body + tail (12 sides x 12 rings, 288) + eyes and ear tufts (40); lod1 = body + tail (8 x 8, 144); lod2 = body + tail (4 x 5, 40). GLB 267,440 bytes."
+  },
+  "rig": "Rodent template, exactly as client/assets/squirrel.glb (tools/build_squirrel.py) and to be loaded with its loader constants: BODY 0 (hindquarters), CHEST 7 (pivot at the lumbar), HEAD 6 (neck, head, ears; pivot at the base of the neck) and LEG_A 1 (fore pair, elbows) children of the chest, LEG_B 2 (hind pair, stifles), TAIL 3 (pivot at its root) and TAIL_TIP 8 (child of the tail, pivot 0.42 along it). Parts and weights from the same geometric regions as the gray squirrel's (scaled with the body). extras.rig keys: kind, chest, tail, tail_tip, head, fore, hind, length_m. No skin.",
+  "status": "agent draft, needs local sign-off",
+  "accuracy_notes": "Reads as a chickaree: a small, compact tree squirrel with a dark olive-brown back and crown, a rusty tinge down the mid-back, bright orange-buff throat, chest, belly, inner legs and feet, a black flank line between them, a pale buff eye ring, small ears with short dark winter tufts, and a narrower, flatter tail than the gray squirrel's (dark brown above, a black band near the edge, a pale rim of white-tipped hairs, rusty below). Still the gray squirrel's body: the pose, the haunch and the slim head are a Sciurus's, a chickaree is chunkier with a shorter face (the muzzle is only 0.92x). The black flank stripe is the one-face-wide border of the orange underside along the flank line, so it is jagged and continues a little onto the lower thigh; the real stripe is a clean line, bolder in summer. Seen side-on, the tail's pale rim shows as a light streak along its middle (the flattened plume is edge-on). Ear tufts on lod0 only (the dark tip is painted on every tier). The summer coat (brighter orange below, no tufts) would be a second colour set.",
+  "authors": [
+    "agent (Claude) for Aaron Brodeur (variant: build script, reshape, recolour, rig, tiers)"
+  ],
+  "sources": [
+    "Steele, M. A. (1999), Tamiasciurus douglasii, Mammalian Species 630 (size, pelage)",
+    "Verts, B. J. and L. N. Carraway (1998), Land Mammals of Oregon (description, measurements)",
+    "Burke Museum, Mammals of Washington: Douglas squirrel (read, not copied)",
+    "tools/build_squirrel.py and library/animals/sciurus_griseus.json (template)"
+  ]
+}

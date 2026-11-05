@@ -1,0 +1,75 @@
+{
+  "id": "lontra_canadensis",
+  "aliases": [
+    "north_american_river_otter",
+    "river_otter",
+    "otter"
+  ],
+  "scientific": "Lontra canadensis",
+  "common": "North American river otter",
+  "taxonomy": {
+    "kingdom": "Animalia",
+    "phylum": "Chordata",
+    "class": "Mammalia",
+    "order": "Carnivora",
+    "family": "Mustelidae",
+    "genus": "Lontra"
+  },
+  "mass_kg": 8,
+  "body_plan": "quadruped",
+  "size": {
+    "length_m": 1.1,
+    "shoulder_or_wingspan_m": 0.28,
+    "note": "Adults 0.89-1.30 m nose to tail tip, the tail 0.30-0.50 m (about 40% of the length, thick at the root and tapering), 5-14 kg (males larger); short legs, a long low body. Drawn at 0.28 m at the withers (0.30 m over the hips: the back arches highest there), 0.68 m nose to tail root in a straight line and a 0.42 m tail along its axis, 1.10 m overall; the belly ~7 cm off the ground, the body 16 cm across at mid-length. length_m here is total length (nose to tail tip)."
+  },
+  "source": {
+    "kind": "meshy",
+    "title": "North American river otter (generated)",
+    "author": "generated with Meshy (meshy.ai) by agent (Claude) for Aaron Brodeur",
+    "url": "https://www.meshy.ai",
+    "file": "library/animals/jobs/lontra_canadensis/01a1ad35-8f53-75f8-9682-8cb53caec1c9/model.glb (local, git-ignored)",
+    "original": "text-to-3D preview, ai_model latest (meshy-7.1), triangle remesh to 20,000 faces: 20,785 triangles, one piece, untextured, with modelled whisker strands; a chunky otter standing on all fours, the tail laid on the ground behind",
+    "prompt": "A North American river otter (Lontra canadensis), NOT a sea otter, NOT a beaver, NOT a mink. One adult standing on all four short legs on flat ground, side-on neutral pose, legs with clear gaps between them, webbed feet flat. Realistic proportions: 1.1 m long including a thick tapering tail of 40 cm that is broad at the base, a long sleek cylindrical body with the back gently arched, a broad flat head on a thick neck, small rounded ears, a blunt muzzle with a whisker pad, small eyes high on the head. Dark glossy brown fur, a paler silvery-brown throat and chin. The tail held straight out behind, touching nothing. No base, no ground, no water. Game-ready.",
+    "reference_image": null,
+    "job_id": "01a1ad35-8f53-75f8-9682-8cb53caec1c9",
+    "job": "library/animals/jobs/lontra_canadensis/01a1ad35-8f53-75f8-9682-8cb53caec1c9/job.json",
+    "credits": 20,
+    "date": "2026-11-05 (UTC)",
+    "adopted_by": "tools/build_otter.py"
+  },
+  "license": "CC BY-SA 4.0",
+  "license_detail": {
+    "source_terms": "Meshy Terms of Use (https://www.meshy.ai/terms-of-use, last updated 2026-09-19) 3.2: paid-plan API output is owned by the account holder, who releases it with the project's assets under CC BY-SA 4.0.",
+    "redistribute_under_cc_by_sa": true,
+    "note": "Credit \"generated with Meshy (meshy.ai)\" is kept in the build script header and the GLB asset.copyright. The file carried no Meshy metadata or watermark to carry over (Terms 2.4; asset.generator only). Terms 2.6(xi) (no training of competing models) binds the account holder, not CC BY-SA licensees. AI output may carry little copyright in some jurisdictions; the licence covers what rights exist."
+  },
+  "tiers": {
+    "lod0": 2799,
+    "lod1": 1260,
+    "lod2": 327,
+    "file": "client/assets/otter.glb",
+    "attributes": [
+      "POSITION",
+      "COLOR_0 (linear)",
+      "_PART",
+      "_PARTW",
+      "_PIVOT",
+      "JOINTS_0",
+      "WEIGHTS_0"
+    ],
+    "clips": "client/assets/otter_clips.bin + .json (tools/bake_gait.mjs: Idle, Walk, Trot, Gallop, Bed, Eat from the leg engine)",
+    "note": "built at ~2,400 / 1,000 / 300 triangles; the counts are after tools/rig_quadruped.py cut the leg rings"
+  },
+  "rig": "skinned, the standard quadruped skeleton of 20 joints (tools/rig_quadruped.py): Hips, Spine, Chest, Neck, Head, Tail1-3 and per leg UpperLeg (shoulder or hip), LowerLeg (elbow or stifle) and Foot (wrist or hock to the toe), FL FR HL HR; posture digitigrade (the locomotion tree has no Mustelidae row, so the Carnivora default; a river otter is semi-plantigrade, see accuracy_notes), the wrist at 0.42 and the hock at 0.5 of the elbow's and stifle's height (6.3 cm), a vertex ring cut at each joint (the build keeps vertices at ~0.85 and ~0.45 of the elbow's height through the collapse); the tail a real three-joint chain along its axis (0.38 m). Clips client/assets/otter_clips.bin + .json (tools/bake_gait.mjs, tile utm10n_429_5293; no locomotion row yet, so the body alone: walk 1.17, trot 2.62 m/s, stride 0.69 m at 3.78 Hz): Idle, Walk (0.336 m stride at 0.70 m/s), Trot (0.591 m at 1.97 m/s), Gallop (1.034 m at 4.19 m/s, transverse), Bed, Eat. Before the skin: quadruped template Q with the mountain lion's two-part tail: BODY 0, LEG_A 1 (left fore + right hind), LEG_B 2, TAIL 3 (inner half, pivot at the root), TAIL_TIP 8 (outer half, pivot mid-tail, child of TAIL in the one-level parent chain), HEAD 6 (neck, head, ears; pivot at the neck base). Parts found from the geometry (the tail cut at the rump and traced by edge distance, legs below the belly line with pivots there: elbow and stifle, head ahead of a plane half way from the neck's narrowest section to the front of the forelegs, kept off the chest). extras.rig keys kind, tail, tail_tip, head, fore, hind, length_m (as the mountain lion's); the part rig is complete for the client's swimming pose.",
+  "status": "agent draft, needs local sign-off",
+  "accuracy_notes": "Generated (one meshy-7.1 preview, 20 credits). Reads as a river otter: a long, low, sleek body (the preview's chunky trunk stretched 1.41x between the neck base and the tail root, 0.9x across), short legs with webbed, toed feet, the back arched highest over the hips, a thick neck and a broad flat head with small round ears set low, a blunt muzzle and a broad whisker pad, small dark eyes on the sculpted globes high and forward on the face, a long thick tail tapering to a point, held straight out behind on the midline and sloping gently down; dark brown back, warmer brown flanks, a paler brown belly, silvery grey-brown lips, whisker pad, chin, cheeks and throat onto the chest, dark feet, a black nose pad. Whisker strands removed. Still wrong or unchecked: vertex colour cannot show the glossy sheen of wet fur; the generator posed the forelegs a step apart (the right foreleg 6 cm ahead of the left), which the skeleton keeps; the rigger and the leg engine treat it as digitigrade (no Mustelidae row in the locomotion tree): an otter walks on most of the sole, and its fast gait is a bound or lope, not the cat's transverse gallop the clip shows; the pale face border is a jagged line of faces; the ears are the generator's small round ones; the tail root is ~5 cm across (a real one is a little broader and flatter). The client's swimming pose (the body lowered into the stream) is not checked here.",
+  "authors": [
+    "agent (Claude) for Aaron Brodeur (generation, adoption, reshaping, recolour, tiers, rig)"
+  ],
+  "sources": [
+    "Reid, Peterson Field Guide to Mammals of North America (4th ed., 2006): river otter sizes, the long tapering tail, the pale throat and chin, webbed feet",
+    "Verts & Carraway, Land Mammals of Oregon (1998) and the Washington Department of Fish and Wildlife river otter account: Pacific Northwest sizes and colour (dark glossy brown, silvery-grey lips, cheeks and throat)",
+    "Larivière & Walton, Lontra canadensis, Mammalian Species 587 (1998): measurements, mass, the dense glossy guard hair",
+    "docs/animal-library.md (Meshy terms and costs; the quadruped template and the leg engine)"
+  ]
+}

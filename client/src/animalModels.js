@@ -622,12 +622,76 @@ const RIG = {
   lizard: { amp: [0.8, 0.35, 0.4, 0], pose: [1, 0, 0, 0],
     k: { wave: 0.024, waveK: 5.03, envS: 0.2, pushPitch: 0.35, baskAbduct: 0.5, squash: 0.25, legLift: 0.4, hindK: 1.3, bend: 0.05,
       flickYaw: 0.5, tipLag: 0.6 } },
+  // ---- the Hoh rain forest batch (2026-11-05; docs/animal-library.md "The Hoh rain forest batch"). Each is drawn with its
+  // template's constants (its build script keeps that template's parts, pivots and extras.rig keys).
+  // Roosevelt elk, bull and cow (tools/build_elk.py): skinned on the leg engine (tools/rig_quadruped.py, unguligrade); the
+  // part rig's constants (the bear's template Q, the head and neck with the antlers as HEAD) only for the fallback
+  elkBull: { amp: [0.3, 0.2, 1.3, 0], pose: [0.12, 0, -0.15, 0], drop: 0.51, gait: true,
+    k: { tipLag: 0, tipWave: 0, tipCurl: 0, bob: 0.03, foreFold: 0, abduct: 0, spine: 0, sit: 0 } },
+  elkCow: { amp: [0.3, 0.2, 1.3, 0], pose: [0.12, 0, -0.15, 0], drop: 0.46, gait: true,
+    k: { tipLag: 0, tipWave: 0, tipCurl: 0, bob: 0.03, foreFold: 0, abduct: 0, spine: 0, sit: 0 } },
+  // bobcat (tools/build_bobcat.py, the lion's mesh with a stub tail): the bear's template constants, a cat's head dip
+  bobcat: { amp: [0.35, 0.2, 0.7, 0], pose: [0.35, 0.3, 0.3, 0], drop: 0.11, gait: true,
+    k: { tipLag: 0, tipWave: 0, tipCurl: 0, bob: 0.04, foreFold: 0, abduct: 0, spine: 0, sit: 0 } },
+  // river otter (tools/build_otter.py): the lion's template (the long tail with its tip as a child), low on short legs
+  otter: { amp: [0.45, 0.35, 0.6, 0], pose: [0.3, 0.3, 0.2, 0], drop: 0.03, gait: true,
+    k: { tipLag: 0.6, tipWave: 0.35, tipCurl: 0.2, bob: 0.03, foreFold: 0, abduct: 0, spine: 0, sit: 0 } },
+  // snowshoe hare (tools/build_snowshoe_hare.py, the CC0 rabbit as a hare): the brush rabbit's template and constants
+  hare: { amp: [0.85, 0.5, 0.45, 0], pose: [1, 0.25, 0.4, 0],
+    k: { spine: 0.2, spinePhase: 1.2, sit: 0.55, foreFold: 0.5, tipLag: 0, tipWave: 0, tipCurl: 0, abduct: 0, turnFore: 1 } },
+  // Douglas squirrel (tools/build_douglas_squirrel.py, the gray squirrel's mesh): the gray squirrel's constants
+  dsquirrel: { amp: [0.9, 0.5, 0.35, 0], pose: [1, 0.95, 0.75, 0],
+    k: { spine: 0.28, spinePhase: 1.2, sit: 0.7, foreFold: 1.1, tipLag: 0.7, tipWave: 0.25, tipCurl: 0.9, abduct: 0.9, turnFore: 1 } },
+  // Townsend's chipmunk (tools/build_chipmunk.py, the ground squirrel's mesh): its sit-up a little lower
+  chipmunk: { amp: [0.9, 0.5, 0.35, 0], pose: [0.4, -0.3, 0.9, 0], drop: 0.01,
+    k: { spine: 0.2, spinePhase: 1.2, sit: 1.0, foreFold: 1.8, tipLag: 0.6, tipWave: 0.3, tipCurl: 0.3, abduct: 0, turnFore: 1 } },
+  // deer mouse (tools/build_deer_mouse.py, the vole's mesh with a long tail): the vole's, the tail swinging with the flick
+  deermouse: { amp: [0.9, 0.35, 0.35, 0], pose: [1, 0.2, 0.45, 0],
+    k: { spine: 0.15, spinePhase: 1.2, sit: 0.6, foreFold: 0.8, tipLag: 0, tipWave: 0, tipCurl: 0, abduct: 0, turnFore: 1 } },
+  // the perching birds of the conifers (tools/build_songbird.py): the Steller's jay's template and constants
+  wren: { amp: [0.35, 0.45, 0.4, 1.0], pose: [1, 0.25, 0, 0.2],
+    k: { handLag: 0.7, handAmp: 0.8, bow: 0.2, spread: 0.4, collapse: 1, bob: 0.06 } },
+  grayjay: { amp: [0.35, 0.35, 0.4, 1.0], pose: [1, 0.15, 0, 0.2],
+    k: { handLag: 0.7, handAmp: 0.8, bow: 0.3, spread: 0.6, collapse: 1, bob: 0 } },
+  chickadee: { amp: [0.35, 0.35, 0.45, 1.0], pose: [1, 0.15, 0, 0.2],
+    k: { handLag: 0.7, handAmp: 0.8, bow: 0.2, spread: 0.5, collapse: 1, bob: 0.04 } },
+  owl: { amp: [0.2, 0.2, 0.5, 0.9], pose: [1, 0.1, 0, 0.2],
+    k: { handLag: 0.6, handAmp: 0.9, bow: 0.4, spread: 0.5, collapse: 1, bob: 0 } },
+  kingfisher: { amp: [0.25, 0.35, 0.5, 1.0], pose: [1, 0.2, 0, 0.2],
+    k: { handLag: 0.6, handAmp: 0.8, bow: 0.2, spread: 0.5, collapse: 1, bob: 0 } },
+  // bald eagle (tools/build_bald_eagle.py, a flight mesh on the red-tail's template): flat plank wings, slow deep beats
+  eagle: { amp: [0, 0.12, 0.3, 0.55], pose: [1, -0.2, 0, 1.3],
+    k: { handLag: 0.5, handAmp: 1.1, bow: 0.45, spread: 0.5, collapse: 0, bob: 0 } },
+  // American crow on the ground (tools/build_crow_ground.py, the ground raven's mesh): the ground raven's constants
+  crowGround: { amp: [0.55, 0.3, 0.6, 0], pose: [1, 0, 0, 0],
+    k: { handLag: 0, handAmp: 0, bow: -0.6, spread: 0, collapse: 0, bob: 0.1, ground: 1, flickLift: 0.42, flickOpen: 0.38 } },
+  // great blue heron (tools/build_heron.py, the turkey's template): a slow stalk with the head nodding, the strike a far
+  // swing of the whole neck (amp.z), the heavy flight on the wing cards
+  heron: { amp: [0.4, 0.2, 1.1, 1.0], pose: [1, 0, 0, 0.2],
+    k: { handLag: 0.6, handAmp: 0.7, bow: 0.35, spread: 0.4, collapse: 1, bob: 0.08, turnHead: 1 } },
+  // common merganser (tools/build_merganser.py): swims (the legs paddle under the water), dips its head, flies fast
+  merganser: { amp: [0.5, 0.25, 0.6, 1.0], pose: [1, 0, 0, 0.2],
+    k: { handLag: 0.5, handAmp: 0.6, bow: 0.25, spread: 0.4, collapse: 1, bob: 0.05, turnHead: 1 } },
+  // western red-backed salamander and ensatina (tools/build_salamander.py, build_ensatina.py): the reptile template, a
+  // slower, gentler sprawl with a wider wave; no push-up (animals.js never drives one)
+  salamander: { amp: [0.7, 0.3, 0.3, 0], pose: [1, 0, 0, 0],
+    k: { wave: 0.012, waveK: 5.03, envS: 0.25, pushPitch: 0.2, baskAbduct: 0.35, squash: 0.15, legLift: 0.35, hindK: 1.2, bend: 0.03,
+      flickYaw: 0.4, tipLag: 0.5 } },
+  ensatina: { amp: [0.7, 0.3, 0.3, 0], pose: [1, 0, 0, 0],
+    k: { wave: 0.012, waveK: 5.03, envS: 0.25, pushPitch: 0.2, baskAbduct: 0.35, squash: 0.15, legLift: 0.4, hindK: 1.2, bend: 0.03,
+      flickYaw: 0.4, tipLag: 0.5 } },
 };
 const urls = { jay: '../assets/scrubjay.glb', quail: '../assets/quail.glb', squirrel: '../assets/squirrel.glb',
   stjay: '../assets/stellersjay.glb', hawk: '../assets/redtail.glb', vulture: '../assets/vulture.glb',
   lion: '../assets/cougar.glb', rabbit: '../assets/rabbit.glb', jackrabbit: '../assets/jackrabbit.glb', vole: '../assets/vole.glb', ravenGround: '../assets/raven_ground.glb',
   turkey: '../assets/turkey.glb', groundSquirrel: '../assets/ground_squirrel.glb', lizard: '../assets/fence_lizard.glb',
-  bear: '../assets/bear.glb', mquail: '../assets/mountain_quail.glb' };
+  bear: '../assets/bear.glb', mquail: '../assets/mountain_quail.glb',
+  elkBull: '../assets/elk_bull.glb', elkCow: '../assets/elk_cow.glb', bobcat: '../assets/bobcat.glb', otter: '../assets/otter.glb',
+  hare: '../assets/snowshoe_hare.glb', dsquirrel: '../assets/douglas_squirrel.glb', chipmunk: '../assets/chipmunk.glb',
+  deermouse: '../assets/deer_mouse.glb', wren: '../assets/pacific_wren.glb', grayjay: '../assets/gray_jay.glb',
+  chickadee: '../assets/chickadee.glb', owl: '../assets/barred_owl.glb', kingfisher: '../assets/kingfisher.glb',
+  eagle: '../assets/bald_eagle.glb', crowGround: '../assets/crow_ground.glb', heron: '../assets/heron.glb',
+  merganser: '../assets/merganser.glb', salamander: '../assets/salamander.glb', ensatina: '../assets/ensatina.glb' };
 function rigModel(name, opts) {
   const r = RIG[name];
   return loadTiers(new URL(urls[name], import.meta.url), { amp: r.amp, pose: r.pose, drop: r.drop || 0, poseMax: r.poseMax || 1, gait: !!r.gait, rig: { name, k: { ...r.k } } }, opts)
@@ -712,6 +776,64 @@ export const loadLizardMesh = () => rigModel('lizard');
 // raven_player.glb's at its origin), so a swap keeps the body where it was.
 let ravenGround = null;
 export const loadRavenGroundMesh = () => ravenGround ||= rigModel('ravenGround', { keepNormals: true });
+// The Hoh rain forest batch (2026-11-05): the skinned quadrupeds on the leg engine, the rest on their template's part rig.
+export const loadElkBullMesh = () => rigModel('elkBull', { skin: true });
+export const loadElkCowMesh = () => rigModel('elkCow', { skin: true });
+export const loadBobcatMesh = () => rigModel('bobcat', { skin: true });
+export const loadOtterMesh = () => rigModel('otter', { skin: true });
+export const loadHareMesh = () => rigModel('hare', { skin: true });
+export const loadDouglasSquirrelMesh = () => rigModel('dsquirrel');
+export const loadChipmunkMesh = () => rigModel('chipmunk');
+export const loadDeerMouseMesh = () => rigModel('deermouse');
+export const loadWrenMesh = () => rigModel('wren');
+export const loadGrayJayMesh = () => rigModel('grayjay');
+export const loadChickadeeMesh = () => rigModel('chickadee');
+export const loadOwlMesh = () => rigModel('owl');
+export const loadKingfisherMesh = () => rigModel('kingfisher');
+export const loadEagleMesh = () => rigModel('eagle');
+// the crow on the ground: the ground raven's model, smaller (0.44 m), its body 0.157 m above the feet (extras.ground)
+export const loadCrowGroundMesh = () => rigModel('crowGround', { keepNormals: true });
+export const CROW_GROUND = { bodyY: 0.157, head: [0, 0.178, 0.1195], bill: [0, 0.1861, 0.2237] };
+export const loadHeronMesh = () => rigModel('heron');
+export const loadMerganserMesh = () => rigModel('merganser');
+export const loadSalamanderMesh = () => rigModel('salamander');
+export const loadEnsatinaMesh = () => rigModel('ensatina');
+
+// A procedural model at another size: its geometry and pivots scaled by s (the fallback a species shows while its drawn
+// mesh loads; the flying crow is the procedural raven at 0.72).
+export function scaledModel(m, s) {
+  const g = m.geometry.clone();
+  g.attributes.position.array.forEach((v, i, a) => { a[i] = v * s; });
+  const pv = g.getAttribute('aPivot'); if (pv) pv.array.forEach((v, i, a) => { a[i] = v * s; });
+  g.computeBoundingSphere(); g.computeBoundingBox();
+  return { ...m, geometry: g, drop: (m.drop || 0) * s };
+}
+
+// Pacific banana slug (Ariolimax columbianus), procedural (no mesh needed; docs/pipeline.md "gastropod"): 0.18 m long,
+// a smooth olive-yellow body with black blotches, the mantle a raised saddle over the front third, the foot fringe paler,
+// two long upper tentacles (eyestalks) and two short ones. Parts: BODY (the mantle and the middle), TAIL (the rear half,
+// pivot behind the mantle: it bends a little as it turns) and HEAD (the head and tentacles, pivot at the mantle's front:
+// it lifts and sways). The gait's phase is the foot's wave (amp.x 0: no legs); pose -1 withdraws (the head pulled in and
+// down, a curl), flick lifts and sways the head. Crawls at millimetres a second (animals.js slUpdate).
+export function buildSlug() {
+  const yel = 0xa79a3a, dark = 0x2c2a18, foot = 0xb9ae63, mantle = 0x9b8f33;
+  const head = { part: PART.HEAD, pivot: [0, 0.012, 0.045] }, tail = { part: PART.TAIL, pivot: [0, 0.012, -0.015] };
+  const p = [
+    ball({ color: yel, pos: [0, 0.012, 0.01], scale: [0.013, 0.012, 0.05] }, 8, 5),
+    ball({ color: mantle, pos: [0, 0.019, 0.032], scale: [0.012, 0.008, 0.032] }, 7, 4),            // the mantle saddle
+    ball({ color: dark, pos: [0.006, 0.02, 0.04], scale: [0.004, 0.003, 0.007] }, 5, 3),             // blotches
+    ball({ color: dark, pos: [-0.007, 0.018, 0.022], scale: [0.004, 0.003, 0.006] }, 5, 3),
+    ball({ color: foot, pos: [0, 0.004, 0.0], scale: [0.016, 0.004, 0.085] }, 8, 3),                 // the foot fringe
+    ball({ color: yel, ...tail, pos: [0, 0.01, -0.05], scale: [0.011, 0.01, 0.05] }, 7, 4),
+    ball({ color: dark, ...tail, pos: [-0.005, 0.016, -0.04], scale: [0.004, 0.003, 0.008] }, 5, 3),
+    ball({ color: dark, ...tail, pos: [0.004, 0.014, -0.065], scale: [0.003, 0.003, 0.007] }, 5, 3),
+    cone({ color: yel, ...tail, pos: [0, 0.007, -0.105], rot: [-Math.PI / 2, 0, 0], scale: [0.008, 0.02, 0.006] }),   // the pointed tail
+    ball({ color: yel, ...head, pos: [0, 0.011, 0.068], scale: [0.01, 0.009, 0.014] }, 6, 4),
+    ...mirror(s => cone({ color: dark, ...head, pos: [s * 0.004, 0.026, 0.078], rot: [0.5, 0, s * -0.25], scale: [0.0016, 0.022, 0.0016] })),   // eyestalks
+    ...mirror(s => cone({ color: dark, ...head, pos: [s * 0.005, 0.008, 0.082], rot: [1.3, 0, s * -0.4], scale: [0.0012, 0.008, 0.0012] })),
+  ];
+  return finish(p, { amp: [0, 0.25, 0.35, 0], pose: [0, -0.25, -0.6, 0] });
+}
 export const RAVEN_GROUND = { bodyY: 0.21, head: [0, 0.238, 0.16], bill: [0, 0.227, 0.327] };
 
 // A wing slab hinged at `pivot` on side s (+1 left, -1 right), raised by `dihedral` (rad) about the

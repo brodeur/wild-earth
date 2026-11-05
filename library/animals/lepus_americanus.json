@@ -1,0 +1,78 @@
+{
+  "id": "lepus_americanus",
+  "aliases": [
+    "snowshoe_hare",
+    "varying_hare",
+    "snowshoe_rabbit"
+  ],
+  "scientific": "Lepus americanus",
+  "common": "snowshoe hare",
+  "taxonomy": {
+    "kingdom": "Animalia",
+    "phylum": "Chordata",
+    "class": "Mammalia",
+    "order": "Lagomorpha",
+    "family": "Leporidae",
+    "genus": "Lepus"
+  },
+  "mass_kg": 1.4,
+  "body_plan": "rodent",
+  "size": {
+    "length_m": 0.42,
+    "shoulder_or_wingspan_m": 0.22,
+    "note": "Head and body 36-52 cm, ear 6-8 cm from the notch, hind foot 11-15 cm (large, broad and furred: the snowshoes), tail 2.5-5 cm, 0.9-1.8 kg; the Olympic lowland form (L. a. washingtoni) stays brown all winter, the montane hares turn white. The build scales head and body (nose to tail root, measured along the spine since the crouch tilts the body) to 0.42 m; crouched it stands 0.22 m at the back and 0.30 m to the ear tips; the visible ear measures 7.2 cm, the hind foot 13 cm along the sole and 4.1 cm across, the tail 3.9 cm."
+  },
+  "source": {
+    "kind": "variant",
+    "title": "Snowshoe hare (variant of the brush rabbit, from the CC0 Rabbit)",
+    "author": "variant of sylvilagus_bachmani by agent (Claude) for Aaron Brodeur; the model \"Rabbit\" by Čestmír Dammer (OpenGameArt user CDmir), made for the game Kelgar (www.kelgar.org)",
+    "url": "https://opengameart.org/content/rabbit-0",
+    "file": "https://opengameart.org/sites/default/files/rabbit-FBX.7z",
+    "original": "FBX in a 7z archive: rigged rabbit (1,700-triangle body plus alpha fur cards and whisker strands), 10 clips, 1K diffuse and normal maps; the same archive (same sha256) the brush rabbit and the jackrabbit are built from",
+    "prompt": null,
+    "reference_image": null,
+    "job_id": null,
+    "job": "library/animals/jobs/sylvilagus_bachmani/download-opengameart/job.json",
+    "variant_of": "sylvilagus_bachmani",
+    "credits": 0,
+    "date": "2026-11-05 (UTC)",
+    "adopted_by": "tools/build_snowshoe_hare.py"
+  },
+  "license": "CC BY-SA 4.0",
+  "license_detail": {
+    "source_terms": "The source is CC0 1.0: the OpenGameArt page lists \"License(s): CC0\"; the archive's License.txt reads \"License: CC0 - Public Domain\" (Čestmír Dammer). CC0 1.0: https://creativecommons.org/publicdomain/zero/1.0/.",
+    "redistribute_under_cc_by_sa": true,
+    "note": "CC0 places no conditions, so this variant (the build, the entry and client/assets/snowshoe_hare.glb) is released with the project's assets under CC BY-SA 4.0, as the brush rabbit's entry allows. Credit to Čestmír Dammer is kept anyway (build script header, GLB asset.copyright). No Meshy credits spent."
+  },
+  "tiers": {
+    "lod0": 1056,
+    "lod1": 394,
+    "lod2": 80,
+    "file": "client/assets/snowshoe_hare.glb",
+    "attributes": [
+      "POSITION",
+      "COLOR_0 (linear; the summer coat)",
+      "_COLORB (linear; the winter white coat, mixed by aAnim2.w)",
+      "_PART",
+      "_PARTW",
+      "_PIVOT",
+      "JOINTS_0",
+      "WEIGHTS_0"
+    ],
+    "clips": "client/assets/snowshoe_hare_clips.bin + .json (tools/bake_gait.mjs, the hop set: Idle, Shuffle, Bound, Run, Sit, Freeze, Form, Eat)",
+    "note": "built at ~1,000 / 350 / 80 triangles; the counts are after tools/rig_quadruped.py cut the fore leg rings"
+  },
+  "rig": "skinned, the lagomorph skeleton of 20 joints (tools/rig_quadruped.py's lagomorph path, chosen because the species is in Lagomorpha and extras.rig.kind is 'rodent'; docs/decisions.md 2026-11-02 'the rabbits rigged'): Hips, Spine, Chest, Neck, Head, Ear.L, Ear.R, Scut and per leg UpperLeg, LowerLeg, Foot (FL FR HL HR); the hind foot bone the whole long foot lying flat from the heel (the hock) to the toes, weights along the bones; the ears found where the head splits above the crown, carried joints the engine swivels and lays back; withers 0.22 m (the entry's back height). Clips client/assets/snowshoe_hare_clips.bin + .json (tools/bake_gait.mjs, the hop set, the body alone: no locomotion row yet for the Hoh tile): Idle, Shuffle (0.352 m stride at 1.03 m/s), Bound (0.599 m at 2.56 m/s), Run (1.059 m at 5.11 m/s), Sit, Freeze, Form, Eat. Before the skin: rodent template R (animalModels.js) as the brush rabbit's: BODY 0 hindquarters, CHEST 7 (pivot at the lumbar joint), HEAD 6 and LEG_A 1 (fore pair, elbows) children of the chest, LEG_B 2 (hind pair with the long hind feet, stifles), TAIL 3; from the source skin weights; extras.rig keys kind, chest, tail, head, fore, hind, length_m.",
+  "status": "agent draft, needs local sign-off",
+  "accuracy_notes": "A variant of the brush rabbit from the same CC0 model, built as the jackrabbit is (by side, so both ears are shaped about their own base). Reads as a snowshoe hare: a hare's crouch, the fore body raised 5 %, ears 7.2 cm from where they leave the head (between the brush rabbit's and the jackrabbit's), and the snowshoes: the hind feet 1.55x longer from the heel, 1.6x broader and 1.15x deeper (13 cm along the sole, 4.1 cm across), pale and plainly bigger than the brush rabbit's; a 3.9 cm tail. Summer coat (COLOR_0, the Olympic lowland coat all year): the texture's ticking on a rusty grey-brown back with a darker dorsal line, paler grey-buff flanks, buff nape, white belly, chin and inner legs, pale buff-white hind feet, brown ears with black tips and a pale rim, tail dark above and white below, dark eye with a pale ring. Winter coat (_COLORB, the montane hares): white, faintly shaded by the texture, with black ear tips (the last 1.5 cm) and the dark eye. Still wrong or unchecked: the head is the source rabbit's (a little short in the muzzle for a hare); the summer hind feet are pale all over rather than brown-topped with pale soles and edges; the snowshoes are the rabbit's foot scaled, not splayed toes; the ear tips at lod2 are a face or two; in the baked Bound the long hind feet tuck close under the body. The winter coat shows only where the client loads the file with model.variant set (animalModels.js sets it from aColorB in one loader, for the turkey hen) and drives aAnim2.w; unchecked in the client.",
+  "authors": [
+    "Čestmír Dammer (model)",
+    "agent (Claude) for Aaron Brodeur (variant: pose, reshaping, recolour, winter coat, tiers, rig)"
+  ],
+  "sources": [
+    "Verts & Carraway, Land Mammals of Oregon (1998) and Dalquest, Mammals of Washington (1948): L. a. washingtoni, the Olympic and coastal form that stays brown in winter",
+    "Reid, Peterson Field Guide to Mammals of North America (4th ed., 2006): sizes, hind foot, ear, the black-edged ear tips, summer and winter coats",
+    "Feldhamer, Thompson & Chapman, Wild Mammals of North America (2nd ed., 2003): the snowshoe hare account (moult, the furred hind feet)",
+    "https://opengameart.org/content/rabbit-0"
+  ]
+}

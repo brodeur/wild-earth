@@ -1,5 +1,5 @@
 {
- "generated_at": "2026-11-05T07:00:28Z",
+ "generated_at": "2026-11-05T21:14:41Z",
  "about": "The species registry: every species the game knows or needs, the assets it has, and how far along each is.",
  "levels": {
   "0": "none: a stand-in species is drawn in its place (plants) or nothing is (animals)",
@@ -26,33 +26,33 @@
  ],
  "kinds_note": "fungus is a kind with no species yet: GBIF's fungi are not fetched (a place left for them)",
  "summary": {
-  "species": 253,
+  "species": 269,
   "by_level": {
-   "0": 123,
+   "0": 107,
    "1": 0,
-   "2": 32,
-   "3": 21,
-   "4": 77
+   "2": 44,
+   "3": 40,
+   "4": 78
   },
   "by_kind": {
    "tree": {
-    "0": 6,
+    "0": 0,
     "1": 0,
-    "2": 18,
+    "2": 24,
     "3": 10,
     "4": 11
    },
    "forb": {
-    "0": 3,
+    "0": 2,
     "1": 0,
     "2": 0,
     "3": 1,
-    "4": 19
+    "4": 20
    },
    "shrub": {
-    "0": 6,
+    "0": 0,
     "1": 0,
-    "2": 14,
+    "2": 20,
     "3": 0,
     "4": 23
    },
@@ -71,31 +71,38 @@
     "4": 3
    },
    "bird": {
-    "0": 69,
+    "0": 68,
     "1": 0,
     "2": 0,
-    "3": 1,
+    "3": 10,
     "4": 8
    },
-   "mammal": {
-    "0": 29,
-    "1": 0,
-    "2": 0,
-    "3": 4,
-    "4": 6
-   },
-   "reptile": {
+   "gastropod": {
     "0": 0,
     "1": 0,
     "2": 0,
     "3": 1,
     "4": 0
    },
+   "mammal": {
+    "0": 27,
+    "1": 0,
+    "2": 0,
+    "3": 11,
+    "4": 6
+   },
    "amphibian": {
     "0": 5,
     "1": 0,
     "2": 0,
-    "3": 0,
+    "3": 2,
+    "4": 0
+   },
+   "reptile": {
+    "0": 0,
+    "1": 0,
+    "2": 0,
+    "3": 1,
     "4": 0
    },
    "invertebrate": {
@@ -108,9 +115,9 @@
   }
  },
  "meshy": {
-  "spent": 420,
+  "spent": 670,
   "budget": 1000,
-  "left": 580,
+  "left": 330,
   "estimate_note": "a 'latest' model preview (20) and a texture refine (10); rigging and clips by our own tools (tools/rig_quadruped.py, the bird and rodent part-rig templates), no credits",
   "queued": [
    {
@@ -178,9 +185,9 @@
     "scientific": "Junco hyemalis",
     "common": "dark-eyed junco",
     "kind": "bird",
-    "records": 79606,
+    "records": 80941,
     "why": [
-     "most recorded: 7 of its class (3% of the class's records)"
+     "most recorded: 4 of its class (5% of the class's records)"
     ],
     "body_plan": "bird",
     "rig": "bird part rig (animalModels.js RIG.bird), flierControl",
@@ -188,6 +195,8 @@
     "stand_in": "aphelocoma_californica",
     "status": "queued (not run): Meshy needs Aaron's go-ahead past the 1,000-credit budget",
     "tiles": [
+     "utm10n_429_5293",
+     "utm10n_439_5293",
      "utm10n_540_4170",
      "utm10n_540_4180",
      "utm10n_731_4235",
@@ -241,10 +250,9 @@
     "scientific": "Larus occidentalis",
     "common": "western gull",
     "kind": "bird",
-    "records": 69910,
+    "records": 69913,
     "why": [
-     "predator and scavenger",
-     "most recorded: 9 of its class (2% of the class's records)"
+     "predator and scavenger"
     ],
     "body_plan": "bird",
     "rig": "bird part rig (animalModels.js RIG.bird), flierControl",
@@ -252,8 +260,33 @@
     "stand_in": null,
     "status": "queued (not run): Meshy needs Aaron's go-ahead past the 1,000-credit budget",
     "tiles": [
+     "utm10n_429_5293",
      "utm10n_540_4170",
      "utm10n_540_4180"
+    ],
+    "within_budget": true
+   },
+   {
+    "id": "turdus_migratorius",
+    "scientific": "Turdus migratorius",
+    "common": "american robin",
+    "kind": "bird",
+    "records": 59985,
+    "why": [
+     "most recorded: 3 of its class (6% of the class's records)"
+    ],
+    "body_plan": "bird",
+    "rig": "bird part rig (animalModels.js RIG.bird), flierControl",
+    "estimate_credits": 30,
+    "stand_in": "aphelocoma_californica",
+    "status": "queued (not run): Meshy needs Aaron's go-ahead past the 1,000-credit budget",
+    "tiles": [
+     "utm10n_429_5293",
+     "utm10n_439_5293",
+     "utm10n_540_4180",
+     "utm10n_731_4235",
+     "utm11n_267_4175",
+     "utm11n_270_4180"
     ],
     "within_budget": true
    },
@@ -274,28 +307,6 @@
     "status": "queued (not run): Meshy needs Aaron's go-ahead past the 1,000-credit budget",
     "tiles": [
      "utm10n_540_4170",
-     "utm10n_540_4180",
-     "utm10n_731_4235",
-     "utm11n_267_4175",
-     "utm11n_270_4180"
-    ],
-    "within_budget": true
-   },
-   {
-    "id": "turdus_migratorius",
-    "scientific": "Turdus migratorius",
-    "common": "american robin",
-    "kind": "bird",
-    "records": 58536,
-    "why": [
-     "most recorded: 8 of its class (2% of the class's records)"
-    ],
-    "body_plan": "bird",
-    "rig": "bird part rig (animalModels.js RIG.bird), flierControl",
-    "estimate_credits": 30,
-    "stand_in": "aphelocoma_californica",
-    "status": "queued (not run): Meshy needs Aaron's go-ahead past the 1,000-credit budget",
-    "tiles": [
      "utm10n_540_4180",
      "utm10n_731_4235",
      "utm11n_267_4175",
@@ -369,7 +380,7 @@
      "utm11n_267_4175",
      "utm11n_270_4180"
     ],
-    "within_budget": true
+    "within_budget": false
    },
    {
     "id": "pelecanus_occidentalis",
@@ -389,14 +400,14 @@
      "utm10n_540_4170",
      "utm10n_540_4180"
     ],
-    "within_budget": true
+    "within_budget": false
    },
    {
     "id": "sturnus_vulgaris",
     "scientific": "Sturnus vulgaris",
     "common": "european starling",
     "kind": "bird",
-    "records": 29837,
+    "records": 29892,
     "why": [
      "scavenger"
     ],
@@ -406,20 +417,21 @@
     "stand_in": "aphelocoma_californica",
     "status": "queued (not run): Meshy needs Aaron's go-ahead past the 1,000-credit budget",
     "tiles": [
+     "utm10n_429_5293",
      "utm10n_540_4170",
      "utm10n_540_4180",
      "utm10n_731_4235",
      "utm11n_267_4175",
      "utm11n_270_4180"
     ],
-    "within_budget": true
+    "within_budget": false
    },
    {
     "id": "larus_californicus",
     "scientific": "Larus californicus",
     "common": "california gull",
     "kind": "bird",
-    "records": 28641,
+    "records": 28645,
     "why": [
      "scavenger"
     ],
@@ -429,12 +441,13 @@
     "stand_in": null,
     "status": "queued (not run): Meshy needs Aaron's go-ahead past the 1,000-credit budget",
     "tiles": [
+     "utm10n_429_5293",
      "utm10n_540_4170",
      "utm10n_540_4180",
      "utm11n_267_4175",
      "utm11n_270_4180"
     ],
-    "within_budget": true
+    "within_budget": false
    },
    {
     "id": "poecile_rufescens",
@@ -453,7 +466,7 @@
     "tiles": [
      "utm10n_540_4170"
     ],
-    "within_budget": true
+    "within_budget": false
    },
    {
     "id": "urile_penicillatus",
@@ -473,7 +486,7 @@
      "utm10n_540_4170",
      "utm10n_540_4180"
     ],
-    "within_budget": true
+    "within_budget": false
    },
    {
     "id": "egretta_thula",
@@ -493,7 +506,7 @@
      "utm10n_540_4170",
      "utm10n_540_4180"
     ],
-    "within_budget": true
+    "within_budget": false
    },
    {
     "id": "aechmophorus_occidentalis",
@@ -513,7 +526,7 @@
      "utm10n_540_4170",
      "utm10n_540_4180"
     ],
-    "within_budget": true
+    "within_budget": false
    },
    {
     "id": "nycticorax_nycticorax",
@@ -563,7 +576,7 @@
     "scientific": "Larus glaucescens",
     "common": "glaucous-winged gull",
     "kind": "bird",
-    "records": 13110,
+    "records": 13116,
     "why": [
      "predator and scavenger"
     ],
@@ -573,6 +586,7 @@
     "stand_in": null,
     "status": "queued (not run): Meshy needs Aaron's go-ahead past the 1,000-credit budget",
     "tiles": [
+     "utm10n_429_5293",
      "utm10n_540_4170",
      "utm10n_540_4180"
     ],
@@ -643,7 +657,7 @@
     "scientific": "Accipiter striatus",
     "common": "sharp-shinned hawk",
     "kind": "bird",
-    "records": 9101,
+    "records": 9115,
     "why": [
      "predator"
     ],
@@ -653,6 +667,7 @@
     "stand_in": "buteo_jamaicensis",
     "status": "queued (not run): Meshy needs Aaron's go-ahead past the 1,000-credit budget",
     "tiles": [
+     "utm10n_429_5293",
      "utm10n_540_4170",
      "utm10n_540_4180",
      "utm10n_731_4235",
@@ -1037,7 +1052,7 @@
     "scientific": "Pandion haliaetus",
     "common": "osprey",
     "kind": "bird",
-    "records": 4331,
+    "records": 4411,
     "why": [
      "predator"
     ],
@@ -1047,6 +1062,8 @@
     "stand_in": "buteo_jamaicensis",
     "status": "queued (not run): Meshy needs Aaron's go-ahead past the 1,000-credit budget",
     "tiles": [
+     "utm10n_429_5293",
+     "utm10n_439_5293",
      "utm10n_540_4170",
      "utm10n_540_4180",
      "utm10n_731_4235",
@@ -1099,7 +1116,7 @@
     "scientific": "Falco columbarius",
     "common": "merlin",
     "kind": "bird",
-    "records": 3769,
+    "records": 3777,
     "why": [
      "predator"
     ],
@@ -1109,6 +1126,7 @@
     "stand_in": null,
     "status": "queued (not run): Meshy needs Aaron's go-ahead past the 1,000-credit budget",
     "tiles": [
+     "utm10n_429_5293",
      "utm10n_540_4170",
      "utm10n_540_4180",
      "utm10n_731_4235"
@@ -1254,6 +1272,27 @@
     "within_budget": false
    },
    {
+    "id": "leuconotopicus_villosus",
+    "scientific": "Leuconotopicus villosus",
+    "common": "hairy woodpecker",
+    "kind": "bird",
+    "records": 1601,
+    "why": [
+     "most recorded: 10 of its class (3% of the class's records)"
+    ],
+    "body_plan": "bird",
+    "rig": "bird part rig (animalModels.js RIG.bird), flierControl",
+    "estimate_credits": 30,
+    "stand_in": "melanerpes_formicivorus",
+    "status": "queued (not run): Meshy needs Aaron's go-ahead past the 1,000-credit budget",
+    "tiles": [
+     "utm10n_429_5293",
+     "utm10n_439_5293",
+     "utm10n_731_4235"
+    ],
+    "within_budget": false
+   },
+   {
     "id": "batrachoseps_attenuatus",
     "scientific": "Batrachoseps attenuatus",
     "common": "california slender salamander",
@@ -1309,6 +1348,26 @@
     "status": "queued (not run): Meshy needs Aaron's go-ahead past the 1,000-credit budget",
     "tiles": [
      "utm10n_731_4235"
+    ],
+    "within_budget": false
+   },
+   {
+    "id": "regulus_satrapa",
+    "scientific": "Regulus satrapa",
+    "common": "golden-crowned kinglet",
+    "kind": "bird",
+    "records": 1064,
+    "why": [
+     "most recorded: 6 of its class (4% of the class's records)"
+    ],
+    "body_plan": "bird",
+    "rig": "bird part rig (animalModels.js RIG.bird), flierControl",
+    "estimate_credits": 30,
+    "stand_in": "aphelocoma_californica",
+    "status": "queued (not run): Meshy needs Aaron's go-ahead past the 1,000-credit budget",
+    "tiles": [
+     "utm10n_429_5293",
+     "utm10n_439_5293"
     ],
     "within_budget": false
    },
@@ -1372,21 +1431,21 @@
     "within_budget": false
    },
    {
-    "id": "leuconotopicus_villosus",
-    "scientific": "Leuconotopicus villosus",
-    "common": "hairy woodpecker",
+    "id": "anas_platyrhynchos",
+    "scientific": "Anas platyrhynchos",
+    "common": "mallard",
     "kind": "bird",
-    "records": 879,
+    "records": 919,
     "why": [
-     "most recorded: 10 of its class (3% of the class's records)"
+     "most recorded: 9 of its class (4% of the class's records)"
     ],
     "body_plan": "bird",
     "rig": "bird part rig (animalModels.js RIG.bird), flierControl",
     "estimate_credits": 30,
-    "stand_in": "melanerpes_formicivorus",
+    "stand_in": "mergus_merganser",
     "status": "queued (not run): Meshy needs Aaron's go-ahead past the 1,000-credit budget",
     "tiles": [
-     "utm10n_731_4235"
+     "utm10n_429_5293"
     ],
     "within_budget": false
    },
@@ -1646,9 +1705,9 @@
     "scientific": "Sorex monticolus",
     "common": "montane shrew",
     "kind": "mammal",
-    "records": 190,
+    "records": 191,
     "why": [
-     "scavenger"
+     "most recorded: 8 of its class (2% of the class's records)"
     ],
     "body_plan": "rodent",
     "rig": "rodent part rig R (animalModels.js), the hop gait for lagomorphs",
@@ -1656,6 +1715,7 @@
     "stand_in": null,
     "status": "queued (not run): Meshy needs Aaron's go-ahead past the 1,000-credit budget",
     "tiles": [
+     "utm10n_439_5293",
      "utm11n_267_4175",
      "utm11n_270_4180"
     ],
@@ -1784,6 +1844,26 @@
     "within_budget": false
    },
    {
+    "id": "anaxyrus_boreas",
+    "scientific": "Anaxyrus boreas",
+    "common": "western toad",
+    "kind": "amphibian",
+    "records": 116,
+    "why": [
+     "most recorded: 1 of its class (52% of the class's records)"
+    ],
+    "body_plan": "amphibian",
+    "rig": "none yet: the reptile template, hopping",
+    "estimate_credits": 25,
+    "stand_in": null,
+    "status": "queued (not run): Meshy needs Aaron's go-ahead past the 1,000-credit budget",
+    "tiles": [
+     "utm10n_439_5293",
+     "utm11n_270_4180"
+    ],
+    "within_budget": false
+   },
+   {
     "id": "sorex_vagrans",
     "scientific": "Sorex vagrans",
     "common": "vagrant shrew",
@@ -1824,6 +1904,28 @@
     "within_budget": false
    },
    {
+    "id": "aegolius_acadicus",
+    "scientific": "Aegolius acadicus",
+    "common": "northern saw-whet owl",
+    "kind": "bird",
+    "records": 102,
+    "why": [
+     "predator"
+    ],
+    "body_plan": "bird",
+    "rig": "bird part rig (animalModels.js RIG.bird), flierControl",
+    "estimate_credits": 30,
+    "stand_in": "strix_varia",
+    "status": "queued (not run): Meshy needs Aaron's go-ahead past the 1,000-credit budget",
+    "tiles": [
+     "utm10n_429_5293",
+     "utm10n_731_4235",
+     "utm11n_267_4175",
+     "utm11n_270_4180"
+    ],
+    "within_budget": false
+   },
+   {
     "id": "hydromantes_platycephalus",
     "scientific": "Hydromantes platycephalus",
     "common": "mount lyell salamander",
@@ -1839,46 +1941,6 @@
     "status": "queued (not run): Meshy needs Aaron's go-ahead past the 1,000-credit budget",
     "tiles": [
      "utm11n_267_4175"
-    ],
-    "within_budget": false
-   },
-   {
-    "id": "aegolius_acadicus",
-    "scientific": "Aegolius acadicus",
-    "common": "northern saw-whet owl",
-    "kind": "bird",
-    "records": 99,
-    "why": [
-     "predator"
-    ],
-    "body_plan": "bird",
-    "rig": "bird part rig (animalModels.js RIG.bird), flierControl",
-    "estimate_credits": 30,
-    "stand_in": null,
-    "status": "queued (not run): Meshy needs Aaron's go-ahead past the 1,000-credit budget",
-    "tiles": [
-     "utm10n_731_4235",
-     "utm11n_267_4175",
-     "utm11n_270_4180"
-    ],
-    "within_budget": false
-   },
-   {
-    "id": "anaxyrus_boreas",
-    "scientific": "Anaxyrus boreas",
-    "common": "western toad",
-    "kind": "amphibian",
-    "records": 94,
-    "why": [
-     "most recorded: 1 of its class (30% of the class's records)"
-    ],
-    "body_plan": "amphibian",
-    "rig": "none yet: the reptile template, hopping",
-    "estimate_credits": 25,
-    "stand_in": null,
-    "status": "queued (not run): Meshy needs Aaron's go-ahead past the 1,000-credit budget",
-    "tiles": [
-     "utm11n_270_4180"
     ],
     "within_budget": false
    },
@@ -1908,16 +1970,17 @@
     "scientific": "Megascops kennicottii",
     "common": "western screech-owl",
     "kind": "bird",
-    "records": 45,
+    "records": 53,
     "why": [
      "predator"
     ],
     "body_plan": "bird",
     "rig": "bird part rig (animalModels.js RIG.bird), flierControl",
     "estimate_credits": 30,
-    "stand_in": null,
+    "stand_in": "strix_varia",
     "status": "queued (not run): Meshy needs Aaron's go-ahead past the 1,000-credit budget",
     "tiles": [
+     "utm10n_429_5293",
      "utm10n_731_4235",
      "utm11n_267_4175",
      "utm11n_270_4180"
@@ -2059,6 +2122,63 @@
     "tiles": [
      "utm10n_540_4170",
      "utm10n_540_4180"
+    ],
+    "within_budget": false
+   },
+   {
+    "id": "dendragapus_fuliginosus",
+    "scientific": "Dendragapus fuliginosus",
+    "common": "sooty grouse",
+    "kind": "bird",
+    "records": 18,
+    "why": [
+     "most recorded: 4 of its class (4% of the class's records)"
+    ],
+    "body_plan": "bird",
+    "rig": "bird part rig (animalModels.js RIG.bird), flierControl",
+    "estimate_credits": 30,
+    "stand_in": "meleagris_gallopavo",
+    "status": "queued (not run): Meshy needs Aaron's go-ahead past the 1,000-credit budget",
+    "tiles": [
+     "utm10n_439_5293"
+    ],
+    "within_budget": false
+   },
+   {
+    "id": "empidonax_difficilis",
+    "scientific": "Empidonax difficilis",
+    "common": "pacific-slope flycatcher",
+    "kind": "bird",
+    "records": 17,
+    "why": [
+     "most recorded: 6 of its class (4% of the class's records)"
+    ],
+    "body_plan": "bird",
+    "rig": "bird part rig (animalModels.js RIG.bird), flierControl",
+    "estimate_credits": 30,
+    "stand_in": "aphelocoma_californica",
+    "status": "queued (not run): Meshy needs Aaron's go-ahead past the 1,000-credit budget",
+    "tiles": [
+     "utm10n_439_5293"
+    ],
+    "within_budget": false
+   },
+   {
+    "id": "ixoreus_naevius",
+    "scientific": "Ixoreus naevius",
+    "common": "varied thrush",
+    "kind": "bird",
+    "records": 16,
+    "why": [
+     "most recorded: 7 of its class (4% of the class's records)"
+    ],
+    "body_plan": "bird",
+    "rig": "bird part rig (animalModels.js RIG.bird), flierControl",
+    "estimate_credits": 30,
+    "stand_in": "aphelocoma_californica",
+    "status": "queued (not run): Meshy needs Aaron's go-ahead past the 1,000-credit budget",
+    "tiles": [
+     "utm10n_439_5293"
     ],
     "within_budget": false
    },
@@ -2216,6 +2336,44 @@
     "within_budget": false
    },
    {
+    "id": "rana_cascadae",
+    "scientific": "Rana cascadae",
+    "common": "cascades frog",
+    "kind": "amphibian",
+    "records": 5,
+    "why": [
+     "most recorded: 2 of its class (12% of the class's records)"
+    ],
+    "body_plan": "amphibian",
+    "rig": "none yet: the reptile template, hopping",
+    "estimate_credits": 25,
+    "stand_in": null,
+    "status": "queued (not run): Meshy needs Aaron's go-ahead past the 1,000-credit budget",
+    "tiles": [
+     "utm10n_439_5293"
+    ],
+    "within_budget": false
+   },
+   {
+    "id": "marmota_olympus",
+    "scientific": "Marmota olympus",
+    "common": "olympic marmot",
+    "kind": "mammal",
+    "records": 4,
+    "why": [
+     "most recorded: 4 of its class (9% of the class's records)"
+    ],
+    "body_plan": "rodent",
+    "rig": "rodent part rig R (animalModels.js), the hop gait for lagomorphs",
+    "estimate_credits": 30,
+    "stand_in": "sciurus_griseus",
+    "status": "queued (not run): Meshy needs Aaron's go-ahead past the 1,000-credit budget",
+    "tiles": [
+     "utm10n_439_5293"
+    ],
+    "within_budget": false
+   },
+   {
     "id": "strix_occidentalis",
     "scientific": "Strix occidentalis",
     "common": "spotted owl",
@@ -2273,6 +2431,25 @@
     "within_budget": false
    },
    {
+    "id": "tamias_amoenus",
+    "scientific": "Tamias amoenus",
+    "common": "yellow-pine chipmunk",
+    "kind": "mammal",
+    "records": 2,
+    "why": [
+     "most recorded: 7 of its class (4% of the class's records)"
+    ],
+    "body_plan": "rodent",
+    "rig": "rodent part rig R (animalModels.js), the hop gait for lagomorphs",
+    "estimate_credits": 30,
+    "stand_in": "sciurus_griseus",
+    "status": "queued (not run): Meshy needs Aaron's go-ahead past the 1,000-credit budget",
+    "tiles": [
+     "utm10n_439_5293"
+    ],
+    "within_budget": false
+   },
+   {
     "id": "prophysaon_andersonii",
     "scientific": "Prophysaon andersonii",
     "common": "reticulate taildropper",
@@ -2292,10 +2469,21 @@
     "within_budget": false
    }
   ],
-  "queued_credits": 3065,
+  "queued_credits": 3300,
   "rule": "queued, never run: generation past the 1,000-credit budget needs Aaron's go-ahead"
  },
  "cards_queued": [
+  {
+   "id": "achlys_triphylla",
+   "kind": "shrub",
+   "stand_in": null,
+   "why": [
+    "GBIF: 83 records on the tile"
+   ],
+   "tiles": [
+    "utm10n_429_5293"
+   ]
+  },
   {
    "id": "actaea_rubra",
    "kind": "forb",
@@ -2312,10 +2500,33 @@
    "kind": "forb",
    "stand_in": null,
    "why": [
-    "GBIF: 107 records on the tile"
+    "GBIF: 37 records on the tile"
    ],
    "tiles": [
+    "utm10n_429_5293",
     "utm10n_731_4235"
+   ]
+  },
+  {
+   "id": "adiantum_aleuticum",
+   "kind": "fern",
+   "stand_in": null,
+   "why": [
+    "GBIF: 37 records on the tile"
+   ],
+   "tiles": [
+    "utm10n_429_5293"
+   ]
+  },
+  {
+   "id": "anaphalis_margaritacea",
+   "kind": "forb",
+   "stand_in": null,
+   "why": [
+    "GBIF: 11 records on the tile"
+   ],
+   "tiles": [
+    "utm10n_439_5293"
    ]
   },
   {
@@ -2323,9 +2534,10 @@
    "kind": "forb",
    "stand_in": null,
    "why": [
-    "GBIF: 89 records on the tile"
+    "GBIF: 11 records on the tile"
    ],
    "tiles": [
+    "utm10n_439_5293",
     "utm10n_731_4235",
     "utm11n_267_4175",
     "utm11n_270_4180"
@@ -2369,6 +2581,17 @@
    ]
   },
   {
+   "id": "athyrium_filix_femina",
+   "kind": "fern",
+   "stand_in": null,
+   "why": [
+    "GBIF: 27 records on the tile"
+   ],
+   "tiles": [
+    "utm10n_429_5293"
+   ]
+  },
+  {
    "id": "bellis_perennis",
    "kind": "forb",
    "stand_in": null,
@@ -2378,6 +2601,17 @@
    "tiles": [
     "utm10n_540_4170",
     "utm10n_540_4180"
+   ]
+  },
+  {
+   "id": "boykinia_occidentalis",
+   "kind": "forb",
+   "stand_in": null,
+   "why": [
+    "GBIF: 32 records on the tile"
+   ],
+   "tiles": [
+    "utm10n_429_5293"
    ]
   },
   {
@@ -2417,6 +2651,17 @@
    ]
   },
   {
+   "id": "castilleja_parviflora",
+   "kind": "forb",
+   "stand_in": null,
+   "why": [
+    "GBIF: 10 records on the tile"
+   ],
+   "tiles": [
+    "utm10n_439_5293"
+   ]
+  },
+  {
    "id": "cirsium_vulgare",
    "kind": "forb",
    "stand_in": null,
@@ -2428,13 +2673,25 @@
    ]
   },
   {
+   "id": "claytonia_sibirica",
+   "kind": "forb",
+   "stand_in": null,
+   "why": [
+    "GBIF: 66 records on the tile"
+   ],
+   "tiles": [
+    "utm10n_429_5293"
+   ]
+  },
+  {
    "id": "clintonia_uniflora",
    "kind": "forb",
    "stand_in": null,
    "why": [
-    "GBIF: 108 records on the tile"
+    "GBIF: 12 records on the tile"
    ],
    "tiles": [
+    "utm10n_439_5293",
     "utm10n_731_4235"
    ]
   },
@@ -2458,6 +2715,30 @@
    ],
    "tiles": [
     "utm10n_540_4180"
+   ]
+  },
+  {
+   "id": "cornus_unalaschkensis",
+   "kind": "shrub",
+   "stand_in": null,
+   "why": [
+    "GBIF: 84 records on the tile"
+   ],
+   "tiles": [
+    "utm10n_429_5293",
+    "utm10n_439_5293"
+   ]
+  },
+  {
+   "id": "corydalis_scouleri",
+   "kind": "forb",
+   "stand_in": null,
+   "why": [
+    "GBIF: 28 records on the tile"
+   ],
+   "tiles": [
+    "utm10n_429_5293",
+    "utm10n_439_5293"
    ]
   },
   {
@@ -2551,6 +2832,28 @@
    ]
   },
   {
+   "id": "equisetum_braunii",
+   "kind": "fern",
+   "stand_in": null,
+   "why": [
+    "GBIF: 25 records on the tile"
+   ],
+   "tiles": [
+    "utm10n_429_5293"
+   ]
+  },
+  {
+   "id": "equisetum_telmateia",
+   "kind": "fern",
+   "stand_in": null,
+   "why": [
+    "GBIF: 47 records on the tile"
+   ],
+   "tiles": [
+    "utm10n_429_5293"
+   ]
+  },
+  {
    "id": "erigeron_glaucus",
    "kind": "forb",
    "stand_in": null,
@@ -2617,6 +2920,39 @@
     "utm10n_731_4235",
     "utm11n_267_4175",
     "utm11n_270_4180"
+   ]
+  },
+  {
+   "id": "erythranthe_dentata",
+   "kind": "forb",
+   "stand_in": null,
+   "why": [
+    "GBIF: 58 records on the tile"
+   ],
+   "tiles": [
+    "utm10n_429_5293"
+   ]
+  },
+  {
+   "id": "erythranthe_lewisii",
+   "kind": "forb",
+   "stand_in": null,
+   "why": [
+    "GBIF: 12 records on the tile"
+   ],
+   "tiles": [
+    "utm10n_439_5293"
+   ]
+  },
+  {
+   "id": "erythronium_montanum",
+   "kind": "forb",
+   "stand_in": null,
+   "why": [
+    "GBIF: 13 records on the tile"
+   ],
+   "tiles": [
+    "utm10n_439_5293"
    ]
   },
   {
@@ -2725,6 +3061,17 @@
    ]
   },
   {
+   "id": "lilium_columbianum",
+   "kind": "forb",
+   "stand_in": null,
+   "why": [
+    "GBIF: 10 records on the tile"
+   ],
+   "tiles": [
+    "utm10n_439_5293"
+   ]
+  },
+  {
    "id": "lobularia_maritima",
    "kind": "forb",
    "stand_in": null,
@@ -2747,6 +3094,17 @@
    ]
   },
   {
+   "id": "lysichiton_americanus",
+   "kind": "forb",
+   "stand_in": null,
+   "why": [
+    "GBIF: 38 records on the tile"
+   ],
+   "tiles": [
+    "utm10n_429_5293"
+   ]
+  },
+  {
    "id": "lysimachia_latifolia",
    "kind": "forb",
    "stand_in": null,
@@ -2755,6 +3113,17 @@
    ],
    "tiles": [
     "utm10n_731_4235"
+   ]
+  },
+  {
+   "id": "maianthemum_dilatatum",
+   "kind": "forb",
+   "stand_in": null,
+   "why": [
+    "GBIF: 72 records on the tile"
+   ],
+   "tiles": [
+    "utm10n_429_5293"
    ]
   },
   {
@@ -2781,6 +3150,39 @@
    ]
   },
   {
+   "id": "moneses_uniflora",
+   "kind": "shrub",
+   "stand_in": null,
+   "why": [
+    "GBIF: 41 records on the tile"
+   ],
+   "tiles": [
+    "utm10n_429_5293"
+   ]
+  },
+  {
+   "id": "monotropa_uniflora",
+   "kind": "shrub",
+   "stand_in": null,
+   "why": [
+    "GBIF: 18 records on the tile"
+   ],
+   "tiles": [
+    "utm10n_429_5293"
+   ]
+  },
+  {
+   "id": "mycelis_muralis",
+   "kind": "forb",
+   "stand_in": null,
+   "why": [
+    "GBIF: 65 records on the tile"
+   ],
+   "tiles": [
+    "utm10n_429_5293"
+   ]
+  },
+  {
    "id": "nemophila_maculata",
    "kind": "forb",
    "stand_in": null,
@@ -2789,6 +3191,17 @@
    ],
    "tiles": [
     "utm10n_731_4235"
+   ]
+  },
+  {
+   "id": "nothochelone_nemorosa",
+   "kind": "forb",
+   "stand_in": null,
+   "why": [
+    "GBIF: 13 records on the tile"
+   ],
+   "tiles": [
+    "utm10n_439_5293"
    ]
   },
   {
@@ -2862,6 +3275,17 @@
    ]
   },
   {
+   "id": "polypodium_glycyrrhiza",
+   "kind": "fern",
+   "stand_in": null,
+   "why": [
+    "GBIF: 72 records on the tile"
+   ],
+   "tiles": [
+    "utm10n_429_5293"
+   ]
+  },
+  {
    "id": "potentilla_santolinoides",
    "kind": "forb",
    "stand_in": null,
@@ -2874,16 +3298,61 @@
    ]
   },
   {
+   "id": "prosartes_smithii",
+   "kind": "forb",
+   "stand_in": null,
+   "why": [
+    "GBIF: 31 records on the tile"
+   ],
+   "tiles": [
+    "utm10n_429_5293"
+   ]
+  },
+  {
+   "id": "prunella_vulgaris",
+   "kind": "forb",
+   "stand_in": null,
+   "why": [
+    "GBIF: 86 records on the tile"
+   ],
+   "tiles": [
+    "utm10n_429_5293"
+   ]
+  },
+  {
    "id": "pteridium_aquilinum",
    "kind": "fern",
    "stand_in": null,
    "why": [
-    "GBIF: 99 records on the tile"
+    "GBIF: 140 records on the tile"
    ],
    "tiles": [
+    "utm10n_429_5293",
     "utm10n_731_4235",
     "utm11n_267_4175",
     "utm11n_270_4180"
+   ]
+  },
+  {
+   "id": "ranunculus_repens",
+   "kind": "forb",
+   "stand_in": null,
+   "why": [
+    "GBIF: 68 records on the tile"
+   ],
+   "tiles": [
+    "utm10n_429_5293"
+   ]
+  },
+  {
+   "id": "ribes_bracteosum",
+   "kind": "shrub",
+   "stand_in": null,
+   "why": [
+    "GBIF: 12 records on the tile"
+   ],
+   "tiles": [
+    "utm10n_429_5293"
    ]
   },
   {
@@ -2896,6 +3365,17 @@
    "tiles": [
     "utm11n_267_4175",
     "utm11n_270_4180"
+   ]
+  },
+  {
+   "id": "rubus_pedatus",
+   "kind": "forb",
+   "stand_in": null,
+   "why": [
+    "GBIF: 117 records on the tile"
+   ],
+   "tiles": [
+    "utm10n_429_5293"
    ]
   },
   {
@@ -2945,6 +3425,17 @@
    ]
   },
   {
+   "id": "selaginella_oregana",
+   "kind": "fern",
+   "stand_in": null,
+   "why": [
+    "GBIF: 153 records on the tile"
+   ],
+   "tiles": [
+    "utm10n_429_5293"
+   ]
+  },
+  {
    "id": "sidalcea_malviflora",
    "kind": "forb",
    "stand_in": null,
@@ -2990,6 +3481,17 @@
    ]
   },
   {
+   "id": "stachys_chamissonis",
+   "kind": "forb",
+   "stand_in": null,
+   "why": [
+    "GBIF: 37 records on the tile"
+   ],
+   "tiles": [
+    "utm10n_429_5293"
+   ]
+  },
+  {
    "id": "streptanthus_tortuosus",
    "kind": "forb",
    "stand_in": null,
@@ -3002,6 +3504,28 @@
    ]
   },
   {
+   "id": "struthiopteris_spicant",
+   "kind": "fern",
+   "stand_in": null,
+   "why": [
+    "GBIF: 184 records on the tile"
+   ],
+   "tiles": [
+    "utm10n_429_5293"
+   ]
+  },
+  {
+   "id": "tiarella_trifoliata",
+   "kind": "forb",
+   "stand_in": null,
+   "why": [
+    "GBIF: 179 records on the tile"
+   ],
+   "tiles": [
+    "utm10n_429_5293"
+   ]
+  },
+  {
    "id": "trifolium_pratense",
    "kind": "forb",
    "stand_in": null,
@@ -3010,6 +3534,17 @@
    ],
    "tiles": [
     "utm10n_731_4235"
+   ]
+  },
+  {
+   "id": "trillium_ovatum",
+   "kind": "forb",
+   "stand_in": null,
+   "why": [
+    "GBIF: 32 records on the tile"
+   ],
+   "tiles": [
+    "utm10n_429_5293"
    ]
   },
   {
@@ -3025,6 +3560,17 @@
    ]
   },
   {
+   "id": "vaccinium_ovalifolium",
+   "kind": "shrub",
+   "stand_in": null,
+   "why": [
+    "GBIF: 13 records on the tile"
+   ],
+   "tiles": [
+    "utm10n_429_5293"
+   ]
+  },
+  {
    "id": "veratrum_californicum",
    "kind": "forb",
    "stand_in": null,
@@ -3033,6 +3579,17 @@
    ],
    "tiles": [
     "utm10n_731_4235"
+   ]
+  },
+  {
+   "id": "veratrum_viride",
+   "kind": "forb",
+   "stand_in": null,
+   "why": [
+    "GBIF: 11 records on the tile"
+   ],
+   "tiles": [
+    "utm10n_439_5293"
    ]
   },
   {
@@ -3045,6 +3602,17 @@
    "tiles": [
     "utm11n_267_4175",
     "utm11n_270_4180"
+   ]
+  },
+  {
+   "id": "viola_glabella",
+   "kind": "forb",
+   "stand_in": null,
+   "why": [
+    "GBIF: 27 records on the tile"
+   ],
+   "tiles": [
+    "utm10n_429_5293"
    ]
   },
   {
@@ -3087,19 +3655,60 @@
    "scientific": "Abies amabilis",
    "common": "Pacific silver fir",
    "kind": "tree",
-   "fidelity": 0,
+   "fidelity": 2,
    "why": [
-    "a trait card, no record yet: the plants step grows it when a tile needs it"
+    "generated from its trait card on the Douglas-fir template",
+    "3 age classes, four seasons' colours",
+    "habitat and relations",
+    "held at 2 until reviewed in the lineup (would be 4)"
    ],
    "assets": {
     "model": {
-     "fidelity": 0,
-     "card": "library/plant_cards/abies_amabilis.json",
-     "stand_in": "pseudotsuga_menziesii"
+     "fidelity": 2,
+     "generator": "client/src/treegen.js LIBRARY (procedural; impostors baked by impostorBake.js)",
+     "file": "library/species/abies_amabilis.json",
+     "age_classes": [
+      "young",
+      "mature",
+      "old-growth"
+     ],
+     "impostor": true,
+     "season_colours": [
+      "fall",
+      "spring",
+      "summer",
+      "winter"
+     ],
+     "growth_curve": false,
+     "snag": true,
+     "generated": {
+      "card": "library/plant_cards/abies_amabilis.json",
+      "template": "pseudotsuga_menziesii",
+      "version": "2"
+     },
+     "reviewed": false
     }
    },
+   "provenance": {
+    "status": "generated from a trait card, needs review in the lineup and local sign-off",
+    "authors": [
+     "Wild Earth (agent draft, 2026-11-04); needs local sign-off"
+    ],
+    "sources": 1
+   },
    "license": "CC BY-SA 4.0",
-   "tiles": []
+   "tiles": [
+    {
+     "tile": "utm10n_429_5293",
+     "share": 0.2896,
+     "as": "tree"
+    },
+    {
+     "tile": "utm10n_439_5293",
+     "share": 0.4312,
+     "as": "tree"
+    }
+   ]
   },
   "Abies concolor": {
    "id": "abies_concolor",
@@ -3171,19 +3780,60 @@
    "scientific": "Abies lasiocarpa",
    "common": "subalpine fir",
    "kind": "tree",
-   "fidelity": 0,
+   "fidelity": 2,
    "why": [
-    "a trait card, no record yet: the plants step grows it when a tile needs it"
+    "generated from its trait card on the Douglas-fir template",
+    "3 age classes, four seasons' colours",
+    "habitat and relations",
+    "held at 2 until reviewed in the lineup (would be 4)"
    ],
    "assets": {
     "model": {
-     "fidelity": 0,
-     "card": "library/plant_cards/abies_lasiocarpa.json",
-     "stand_in": "pseudotsuga_menziesii"
+     "fidelity": 2,
+     "generator": "client/src/treegen.js LIBRARY (procedural; impostors baked by impostorBake.js)",
+     "file": "library/species/abies_lasiocarpa.json",
+     "age_classes": [
+      "young",
+      "mature",
+      "old-growth"
+     ],
+     "impostor": true,
+     "season_colours": [
+      "fall",
+      "spring",
+      "summer",
+      "winter"
+     ],
+     "growth_curve": false,
+     "snag": true,
+     "generated": {
+      "card": "library/plant_cards/abies_lasiocarpa.json",
+      "template": "pseudotsuga_menziesii",
+      "version": "2"
+     },
+     "reviewed": false
     }
    },
+   "provenance": {
+    "status": "generated from a trait card, needs review in the lineup and local sign-off",
+    "authors": [
+     "Wild Earth (agent draft, 2026-11-04); needs local sign-off"
+    ],
+    "sources": 1
+   },
    "license": "CC BY-SA 4.0",
-   "tiles": []
+   "tiles": [
+    {
+     "tile": "utm10n_429_5293",
+     "share": 0.0023,
+     "as": "tree"
+    },
+    {
+     "tile": "utm10n_439_5293",
+     "share": 0.0174,
+     "as": "tree"
+    }
+   ]
   },
   "Abies magnifica": {
    "id": "abies_magnifica",
@@ -3315,7 +3965,18 @@
     "sources": 1
    },
    "license": "CC BY-SA 4.0",
-   "tiles": []
+   "tiles": [
+    {
+     "tile": "utm10n_429_5293",
+     "share": 0.1404,
+     "as": "shrub"
+    },
+    {
+     "tile": "utm10n_439_5293",
+     "share": 0.1363,
+     "as": "shrub"
+    }
+   ]
   },
   "Acer macrophyllum": {
    "id": "acer_macrophyllum",
@@ -3358,6 +4019,16 @@
    },
    "license": "CC BY-SA 4.0",
    "tiles": [
+    {
+     "tile": "utm10n_429_5293",
+     "share": 0.0192,
+     "as": "tree"
+    },
+    {
+     "tile": "utm10n_439_5293",
+     "share": 0.007,
+     "as": "tree"
+    },
     {
      "tile": "utm10n_540_4170",
      "share": 0.0052,
@@ -3427,6 +4098,16 @@
    },
    "license": "CC BY-SA 4.0",
    "tiles": [
+    {
+     "tile": "utm10n_429_5293",
+     "share": 0.0855,
+     "as": "ground"
+    },
+    {
+     "tile": "utm10n_439_5293",
+     "share": 0.092,
+     "as": "ground"
+    },
     {
      "tile": "utm10n_540_4170",
      "share": 0.035,
@@ -3771,19 +4452,60 @@
    "scientific": "Alnus rubra",
    "common": "red alder",
    "kind": "tree",
-   "fidelity": 0,
+   "fidelity": 2,
    "why": [
-    "a trait card, no record yet: the plants step grows it when a tile needs it"
+    "generated from its trait card on the white alder template",
+    "3 age classes, four seasons' colours",
+    "habitat and relations",
+    "held at 2 until reviewed in the lineup (would be 4)"
    ],
    "assets": {
     "model": {
-     "fidelity": 0,
-     "card": "library/plant_cards/alnus_rubra.json",
-     "stand_in": "alnus_rhombifolia"
+     "fidelity": 2,
+     "generator": "client/src/treegen.js LIBRARY (procedural; impostors baked by impostorBake.js)",
+     "file": "library/species/alnus_rubra.json",
+     "age_classes": [
+      "young",
+      "mature",
+      "veteran"
+     ],
+     "impostor": true,
+     "season_colours": [
+      "fall",
+      "spring",
+      "summer",
+      "winter"
+     ],
+     "growth_curve": false,
+     "snag": true,
+     "generated": {
+      "card": "library/plant_cards/alnus_rubra.json",
+      "template": "alnus_rhombifolia",
+      "version": "2"
+     },
+     "reviewed": false
     }
    },
+   "provenance": {
+    "status": "generated from a trait card, needs review in the lineup and local sign-off",
+    "authors": [
+     "Wild Earth (agent draft, 2026-11-04); needs local sign-off"
+    ],
+    "sources": 1
+   },
    "license": "CC BY-SA 4.0",
-   "tiles": []
+   "tiles": [
+    {
+     "tile": "utm10n_429_5293",
+     "share": 0.0387,
+     "as": "tree"
+    },
+    {
+     "tile": "utm10n_439_5293",
+     "share": 0.0153,
+     "as": "tree"
+    }
+   ]
   },
   "Amsinckia menziesii": {
    "id": "amsinckia_menziesii",
@@ -3843,6 +4565,29 @@
      "as": "ground"
     }
    ]
+  },
+  "Anas platyrhynchos": {
+   "id": "anas_platyrhynchos",
+   "scientific": "Anas platyrhynchos",
+   "common": "mallard",
+   "kind": "bird",
+   "fidelity": 0,
+   "why": [
+    "generated traits (diet, senses, size, locomotion), no model yet"
+   ],
+   "assets": {
+    "behaviour": {
+     "generated": true,
+     "file": "library/animals/traits/anas_platyrhynchos.json",
+     "diet": true,
+     "locomotion": true
+    },
+    "rig": {
+     "template": "bird part rig (animalModels.js RIG.bird), flierControl"
+    }
+   },
+   "license": "CC BY-SA 4.0 (the entry); diet and mass from EltonTraits 1.0 (CC BY 4.0, credited in the tile's sources)",
+   "tiles": []
   },
   "Anaxyrus boreas": {
    "id": "anaxyrus_boreas",
@@ -4018,6 +4763,16 @@
    },
    "license": "CC BY-SA 4.0",
    "tiles": [
+    {
+     "tile": "utm10n_429_5293",
+     "share": 0.0001,
+     "as": "tree"
+    },
+    {
+     "tile": "utm10n_439_5293",
+     "share": 0.0013,
+     "as": "tree"
+    },
     {
      "tile": "utm10n_540_4170",
      "share": 0.0082,
@@ -4319,26 +5074,67 @@
   },
   "Ardea herodias": {
    "id": "ardea_herodias",
-   "scientific": "Ardea herodias",
-   "common": "great blue/cocoi heron",
+   "scientific": "Ardea herodias fannini (the dark resident heron of the Pacific Northwest coast)",
+   "common": "great blue heron",
    "kind": "bird",
-   "fidelity": 0,
+   "fidelity": 3,
    "why": [
-    "generated traits (diet, senses, size, locomotion), no model yet"
+    "own mesh (meshy; 2500 triangles)",
+    "rigged and animated: part rig",
+    "for 4: voice"
    ],
    "assets": {
-    "behaviour": {
-     "generated": true,
-     "file": "library/animals/traits/ardea_herodias.json",
-     "diet": true,
-     "locomotion": true
+    "mesh": {
+     "fidelity": 2,
+     "file": "client/assets/heron.glb",
+     "source": "meshy",
+     "job_id": "01a1ad36-40a0-71c0-85cb-2afaae713e7e",
+     "triangles": {
+      "lod0": 2500,
+      "lod1": 900,
+      "lod2": 298
+     }
     },
     "rig": {
-     "template": "bird part rig (animalModels.js RIG.bird), flierControl"
-    }
+     "animated": true,
+     "kind": "part rig",
+     "clips": null,
+     "leg_engine": false
+    },
+    "sound": {
+     "voice": false,
+     "where": null
+    },
+    "behaviour": {
+     "senses": true,
+     "diet": true,
+     "needs": true,
+     "calendar": true,
+     "range": true
+    },
+    "locomotion": null,
+    "playable": true
    },
-   "license": "CC BY-SA 4.0 (the entry); diet and mass from EltonTraits 1.0 (CC BY 4.0, credited in the tile's sources)",
-   "tiles": []
+   "meshy": {
+    "jobs": 1,
+    "credits": 20
+   },
+   "license": "CC BY-SA 4.0",
+   "provenance": {
+    "status": "agent draft, needs local sign-off",
+    "source": "generated with Meshy (meshy.ai) by agent (Claude) for Aaron Brodeur",
+    "url": "https://www.meshy.ai"
+   },
+   "tiles": [
+    {
+     "tile": "utm10n_429_5293",
+     "present": "records"
+    },
+    {
+     "tile": "utm10n_439_5293",
+     "present": "records"
+    }
+   ]
   },
   "Ariolimax buttoni": {
    "id": "ariolimax_buttoni",
@@ -4362,6 +5158,63 @@
    },
    "license": "CC BY-SA 4.0 (the entry); diet and mass from EltonTraits 1.0 (CC BY 4.0, credited in the tile's sources)",
    "tiles": []
+  },
+  "Ariolimax columbianus": {
+   "id": "ariolimax_columbianus",
+   "scientific": "Ariolimax columbianus",
+   "common": "Pacific banana slug",
+   "kind": "gastropod",
+   "fidelity": 3,
+   "why": [
+    "own procedural model drawn by the client (no adopted mesh yet)",
+    "rigged and animated: posed by client code",
+    "for 4: diet, voice"
+   ],
+   "assets": {
+    "mesh": {
+     "fidelity": 0,
+     "file": null,
+     "source": "procedural",
+     "job_id": null,
+     "triangles": {}
+    },
+    "rig": {
+     "animated": true,
+     "kind": "client code",
+     "clips": null,
+     "leg_engine": false
+    },
+    "sound": {
+     "voice": false,
+     "where": null
+    },
+    "behaviour": {
+     "senses": true,
+     "diet": false,
+     "needs": true,
+     "calendar": true,
+     "range": true
+    },
+    "locomotion": null,
+    "playable": false
+   },
+   "meshy": null,
+   "license": "CC BY-SA 4.0",
+   "provenance": {
+    "status": "agent draft, needs local sign-off",
+    "source": "agent (Claude) for Aaron Brodeur",
+    "url": null
+   },
+   "tiles": [
+    {
+     "tile": "utm10n_429_5293",
+     "present": "records"
+    },
+    {
+     "tile": "utm10n_439_5293",
+     "present": "records"
+    }
+   ]
   },
   "Artemisia californica": {
    "id": "artemisia_californica",
@@ -4450,6 +5303,16 @@
    },
    "license": "CC BY-SA 4.0",
    "tiles": [
+    {
+     "tile": "utm10n_429_5293",
+     "share": 0.0094,
+     "as": "ground"
+    },
+    {
+     "tile": "utm10n_439_5293",
+     "share": 0.0079,
+     "as": "ground"
+    },
     {
      "tile": "utm10n_540_4170",
      "share": 0.0067,
@@ -4916,6 +5779,14 @@
     "url": null
    },
    "tiles": [
+    {
+     "tile": "utm10n_429_5293",
+     "present": "records"
+    },
+    {
+     "tile": "utm10n_439_5293",
+     "present": "records"
+    },
     {
      "tile": "utm10n_540_4170",
      "present": "records"
@@ -5493,19 +6364,59 @@
    "scientific": "Cassiope mertensiana",
    "common": "white mountain heather",
    "kind": "shrub",
-   "fidelity": 0,
+   "fidelity": 2,
    "why": [
-    "a trait card, no record yet: the plants step grows it when a tile needs it"
+    "generated from its trait card on the red mountain heather template",
+    "3 age classes, four seasons' colours",
+    "held at 2 until reviewed in the lineup (would be 3)"
    ],
    "assets": {
     "model": {
-     "fidelity": 0,
-     "card": "library/plant_cards/cassiope_mertensiana.json",
-     "stand_in": "phyllodoce_breweri"
+     "fidelity": 2,
+     "generator": "client/src/treegen.js LIBRARY (procedural; impostors baked by impostorBake.js)",
+     "file": "library/species/cassiope_mertensiana.json",
+     "age_classes": [
+      "young",
+      "mature",
+      "old"
+     ],
+     "impostor": true,
+     "season_colours": [
+      "fall",
+      "spring",
+      "summer",
+      "winter"
+     ],
+     "growth_curve": false,
+     "snag": false,
+     "generated": {
+      "card": "library/plant_cards/cassiope_mertensiana.json",
+      "template": "phyllodoce_breweri",
+      "version": "2"
+     },
+     "reviewed": false
     }
    },
+   "provenance": {
+    "status": "generated from a trait card, needs review in the lineup and local sign-off",
+    "authors": [
+     "Wild Earth (agent draft, 2026-11-04); needs local sign-off"
+    ],
+    "sources": 2
+   },
    "license": "CC BY-SA 4.0",
-   "tiles": []
+   "tiles": [
+    {
+     "tile": "utm10n_429_5293",
+     "share": 0.0036,
+     "as": "shrub"
+    },
+    {
+     "tile": "utm10n_439_5293",
+     "share": 0.04,
+     "as": "shrub"
+    }
+   ]
   },
   "Cathartes aura": {
    "id": "cathartes_aura",
@@ -5561,6 +6472,14 @@
     "url": null
    },
    "tiles": [
+    {
+     "tile": "utm10n_429_5293",
+     "present": "records"
+    },
+    {
+     "tile": "utm10n_439_5293",
+     "present": "records"
+    },
     {
      "tile": "utm10n_540_4170",
      "present": "records"
@@ -6146,6 +7065,70 @@
    "license": "CC BY-SA 4.0 (the entry); diet and mass from EltonTraits 1.0 (CC BY 4.0, credited in the tile's sources)",
    "tiles": []
   },
+  "Cervus canadensis": {
+   "id": "cervus_canadensis",
+   "scientific": "Cervus canadensis",
+   "common": "Roosevelt elk",
+   "kind": "mammal",
+   "fidelity": 3,
+   "why": [
+    "own mesh (meshy; 3783 triangles)",
+    "rigged and animated: skinned clips, the leg engine",
+    "for 4: diet, voice"
+   ],
+   "assets": {
+    "mesh": {
+     "fidelity": 2,
+     "file": "client/assets/elk_bull.glb",
+     "source": "meshy",
+     "job_id": "01a1ad34-dfa4-7155-942a-b456a4b712a3 (bull), 01a1ad39-d6da-72e2-a426-4eb60ac49b36 (cow)",
+     "triangles": {
+      "lod0": 3783,
+      "lod1": 1583,
+      "lod2": 519
+     }
+    },
+    "rig": {
+     "animated": true,
+     "kind": "skin",
+     "clips": null,
+     "leg_engine": true
+    },
+    "sound": {
+     "voice": false,
+     "where": null
+    },
+    "behaviour": {
+     "senses": true,
+     "diet": false,
+     "needs": true,
+     "calendar": true,
+     "range": true
+    },
+    "locomotion": null,
+    "playable": true
+   },
+   "meshy": {
+    "jobs": 2,
+    "credits": 40
+   },
+   "license": "CC BY-SA 4.0",
+   "provenance": {
+    "status": "agent draft, needs local sign-off",
+    "source": "generated with Meshy (meshy.ai) by agent (Claude) for Aaron Brodeur",
+    "url": "https://www.meshy.ai"
+   },
+   "tiles": [
+    {
+     "tile": "utm10n_429_5293",
+     "present": "records"
+    },
+    {
+     "tile": "utm10n_439_5293",
+     "present": "records"
+    }
+   ]
+  },
   "Chamaebatia foliolosa": {
    "id": "chamaebatia_foliolosa",
    "scientific": "Chamaebatia foliolosa",
@@ -6409,6 +7392,16 @@
    "license": "CC BY-SA 4.0",
    "tiles": [
     {
+     "tile": "utm10n_429_5293",
+     "share": 0.059,
+     "as": "ground"
+    },
+    {
+     "tile": "utm10n_439_5293",
+     "share": 0.0567,
+     "as": "ground"
+    },
+    {
      "tile": "utm10n_540_4170",
      "share": 0.0262,
      "as": "ground"
@@ -6528,6 +7521,16 @@
    "license": "CC BY-SA 4.0",
    "tiles": [
     {
+     "tile": "utm10n_429_5293",
+     "share": 0.0133,
+     "as": "shrub"
+    },
+    {
+     "tile": "utm10n_439_5293",
+     "share": 0.004,
+     "as": "shrub"
+    },
+    {
      "tile": "utm10n_540_4170",
      "share": 0.0006,
      "as": "shrub"
@@ -6562,25 +7565,63 @@
   "Corvus brachyrhynchos": {
    "id": "corvus_brachyrhynchos",
    "scientific": "Corvus brachyrhynchos",
-   "common": "american crow",
+   "common": "American crow",
    "kind": "bird",
-   "fidelity": 0,
+   "fidelity": 3,
    "why": [
-    "generated traits (diet, senses, size, locomotion), no model yet"
+    "own mesh (variant; 1196 triangles)",
+    "rigged and animated: part rig",
+    "for 4: voice"
    ],
    "assets": {
-    "behaviour": {
-     "generated": true,
-     "file": "library/animals/traits/corvus_brachyrhynchos.json",
-     "diet": true,
-     "locomotion": true
+    "mesh": {
+     "fidelity": 2,
+     "file": "client/assets/crow_ground.glb",
+     "source": "variant",
+     "job_id": "01a171a4-7814-7301-b140-133459562f9f (mesh), 01a171a8-2db4-7256-9b99-ae6f617dea98 (texture)",
+     "triangles": {
+      "lod0": 1196,
+      "lod1": 400,
+      "lod2": 120
+     }
     },
     "rig": {
-     "template": "bird part rig (animalModels.js RIG.bird), flierControl"
-    }
+     "animated": true,
+     "kind": "part rig",
+     "clips": null,
+     "leg_engine": false
+    },
+    "sound": {
+     "voice": false,
+     "where": null
+    },
+    "behaviour": {
+     "senses": true,
+     "diet": true,
+     "needs": true,
+     "calendar": true,
+     "range": true
+    },
+    "locomotion": null,
+    "playable": true
    },
-   "license": "CC BY-SA 4.0 (the entry); diet and mass from EltonTraits 1.0 (CC BY 4.0, credited in the tile's sources)",
-   "tiles": []
+   "meshy": null,
+   "license": "CC BY-SA 4.0",
+   "provenance": {
+    "status": "agent draft, needs local sign-off",
+    "source": "variant of corvus_corax by agent (Claude) for Aaron Brodeur",
+    "url": "https://www.meshy.ai"
+   },
+   "tiles": [
+    {
+     "tile": "utm10n_429_5293",
+     "present": "records"
+    },
+    {
+     "tile": "utm10n_439_5293",
+     "present": "records"
+    }
+   ]
   },
   "Corvus corax": {
    "id": "corvus_corax",
@@ -6632,6 +7673,14 @@
     "url": "https://opengameart.org/ (\"Raven\" by Teh_Bucket, 2015; record the exact page URL at the next rebuild)"
    },
    "tiles": [
+    {
+     "tile": "utm10n_429_5293",
+     "present": "records"
+    },
+    {
+     "tile": "utm10n_439_5293",
+     "present": "records"
+    },
     {
      "tile": "utm10n_540_4170",
      "present": "records"
@@ -6721,6 +7770,14 @@
    },
    "tiles": [
     {
+     "tile": "utm10n_429_5293",
+     "present": "records"
+    },
+    {
+     "tile": "utm10n_439_5293",
+     "present": "records"
+    },
+    {
      "tile": "utm10n_540_4170",
      "present": "records"
     },
@@ -6782,6 +7839,16 @@
    "license": "CC BY-SA 4.0",
    "tiles": [
     {
+     "tile": "utm10n_429_5293",
+     "share": 0.0149,
+     "as": "ground"
+    },
+    {
+     "tile": "utm10n_439_5293",
+     "share": 0.0377,
+     "as": "ground"
+    },
+    {
      "tile": "utm10n_540_4170",
      "share": 0.0327,
      "as": "ground"
@@ -6812,6 +7879,29 @@
      "as": "ground"
     }
    ]
+  },
+  "Dendragapus fuliginosus": {
+   "id": "dendragapus_fuliginosus",
+   "scientific": "Dendragapus fuliginosus",
+   "common": "sooty grouse",
+   "kind": "bird",
+   "fidelity": 0,
+   "why": [
+    "generated traits (diet, senses, size, locomotion), no model yet"
+   ],
+   "assets": {
+    "behaviour": {
+     "generated": true,
+     "file": "library/animals/traits/dendragapus_fuliginosus.json",
+     "diet": true,
+     "locomotion": true
+    },
+    "rig": {
+     "template": "bird part rig (animalModels.js RIG.bird), flierControl"
+    }
+   },
+   "license": "CC BY-SA 4.0 (the entry); diet and mass from EltonTraits 1.0 (CC BY 4.0, credited in the tile's sources)",
+   "tiles": []
   },
   "Didelphis virginiana": {
    "id": "didelphis_virginiana",
@@ -7042,6 +8132,16 @@
    "license": "CC BY-SA 4.0",
    "tiles": [
     {
+     "tile": "utm10n_429_5293",
+     "share": 0.0811,
+     "as": "ground"
+    },
+    {
+     "tile": "utm10n_439_5293",
+     "share": 0.0894,
+     "as": "ground"
+    },
+    {
      "tile": "utm10n_540_4170",
      "share": 0.0444,
      "as": "ground"
@@ -7073,6 +8173,29 @@
     }
    ]
   },
+  "Empidonax difficilis": {
+   "id": "empidonax_difficilis",
+   "scientific": "Empidonax difficilis",
+   "common": "pacific-slope flycatcher",
+   "kind": "bird",
+   "fidelity": 0,
+   "why": [
+    "generated traits (diet, senses, size, locomotion), no model yet"
+   ],
+   "assets": {
+    "behaviour": {
+     "generated": true,
+     "file": "library/animals/traits/empidonax_difficilis.json",
+     "diet": true,
+     "locomotion": true
+    },
+    "rig": {
+     "template": "bird part rig (animalModels.js RIG.bird), flierControl"
+    }
+   },
+   "license": "CC BY-SA 4.0 (the entry); diet and mass from EltonTraits 1.0 (CC BY 4.0, credited in the tile's sources)",
+   "tiles": []
+  },
   "Enhydra lutris": {
    "id": "enhydra_lutris",
    "scientific": "Enhydra lutris",
@@ -7099,25 +8222,63 @@
   "Ensatina eschscholtzii": {
    "id": "ensatina_eschscholtzii",
    "scientific": "Ensatina eschscholtzii",
-   "common": "ensatina",
+   "common": "ensatina (Oregon ensatina, E. e. oregonensis)",
    "kind": "amphibian",
-   "fidelity": 0,
+   "fidelity": 3,
    "why": [
-    "generated traits (diet, senses, size, locomotion), no model yet"
+    "own mesh (variant; 800 triangles)",
+    "rigged and animated: part rig",
+    "for 4: diet, voice"
    ],
    "assets": {
-    "behaviour": {
-     "generated": true,
-     "file": "library/animals/traits/ensatina_eschscholtzii.json",
-     "diet": false,
-     "locomotion": true
+    "mesh": {
+     "fidelity": 2,
+     "file": "client/assets/ensatina.glb",
+     "source": "variant",
+     "job_id": "01a1ad3a-5ecd-7016-9b71-8d57ee3f76e9",
+     "triangles": {
+      "lod0": 800,
+      "lod1": 300,
+      "lod2": 80
+     }
     },
     "rig": {
-     "template": "none yet: the reptile template, hopping"
-    }
+     "animated": true,
+     "kind": "part rig",
+     "clips": null,
+     "leg_engine": false
+    },
+    "sound": {
+     "voice": false,
+     "where": null
+    },
+    "behaviour": {
+     "senses": true,
+     "diet": false,
+     "needs": true,
+     "calendar": true,
+     "range": true
+    },
+    "locomotion": null,
+    "playable": true
    },
-   "license": "CC BY-SA 4.0 (the entry); diet and mass from EltonTraits 1.0 (CC BY 4.0, credited in the tile's sources)",
-   "tiles": []
+   "meshy": null,
+   "license": "CC BY-SA 4.0",
+   "provenance": {
+    "status": "agent draft, needs local sign-off",
+    "source": "variant of plethodon_vehiculum by agent (Claude) for Aaron Brodeur",
+    "url": "https://www.meshy.ai"
+   },
+   "tiles": [
+    {
+     "tile": "utm10n_429_5293",
+     "present": "records"
+    },
+    {
+     "tile": "utm10n_439_5293",
+     "present": "records"
+    }
+   ]
   },
   "Equisetum hyemale": {
    "id": "equisetum_hyemale",
@@ -7292,6 +8453,16 @@
    },
    "license": "CC BY-SA 4.0",
    "tiles": [
+    {
+     "tile": "utm10n_429_5293",
+     "share": 0.0169,
+     "as": "ground"
+    },
+    {
+     "tile": "utm10n_439_5293",
+     "share": 0.0145,
+     "as": "ground"
+    },
     {
      "tile": "utm10n_540_4170",
      "share": 0.0057,
@@ -7755,6 +8926,16 @@
    "license": "CC BY-SA 4.0",
    "tiles": [
     {
+     "tile": "utm10n_429_5293",
+     "share": 0.112,
+     "as": "shrub"
+    },
+    {
+     "tile": "utm10n_439_5293",
+     "share": 0.0489,
+     "as": "shrub"
+    },
+    {
      "tile": "utm10n_540_4170",
      "share": 0.0025,
      "as": "shrub"
@@ -7863,23 +9044,64 @@
    "scientific": "Haliaeetus leucocephalus",
    "common": "bald eagle",
    "kind": "bird",
-   "fidelity": 0,
+   "fidelity": 3,
    "why": [
-    "generated traits (diet, senses, size, locomotion), no model yet"
+    "own mesh (variant; 2498 triangles)",
+    "rigged and animated: part rig",
+    "for 4: voice"
    ],
    "assets": {
-    "behaviour": {
-     "generated": true,
-     "file": "library/animals/traits/haliaeetus_leucocephalus.json",
-     "diet": true,
-     "locomotion": true
+    "mesh": {
+     "fidelity": 2,
+     "file": "client/assets/bald_eagle.glb",
+     "source": "variant",
+     "job_id": "01a1719d-772f-76b4-9155-823815fec267",
+     "triangles": {
+      "lod0": 2498,
+      "lod1": 900,
+      "lod2": 250
+     }
     },
     "rig": {
-     "template": "bird part rig (animalModels.js RIG.bird), flierControl"
-    }
+     "animated": true,
+     "kind": "part rig",
+     "clips": null,
+     "leg_engine": false
+    },
+    "sound": {
+     "voice": false,
+     "where": null
+    },
+    "behaviour": {
+     "senses": true,
+     "diet": true,
+     "needs": true,
+     "calendar": true,
+     "range": true
+    },
+    "locomotion": null,
+    "playable": true
    },
-   "license": "CC BY-SA 4.0 (the entry); diet and mass from EltonTraits 1.0 (CC BY 4.0, credited in the tile's sources)",
-   "tiles": []
+   "meshy": {
+    "jobs": 1,
+    "credits": 5
+   },
+   "license": "CC BY-SA 4.0",
+   "provenance": {
+    "status": "agent draft, needs local sign-off",
+    "source": "variant of buteo_jamaicensis by agent (Claude) for Aaron Brodeur",
+    "url": "https://www.meshy.ai"
+   },
+   "tiles": [
+    {
+     "tile": "utm10n_429_5293",
+     "present": "records"
+    },
+    {
+     "tile": "utm10n_439_5293",
+     "present": "records"
+    }
+   ]
   },
   "Helminthoglypta napaea": {
    "id": "helminthoglypta_napaea",
@@ -8142,6 +9364,29 @@
     "behaviour": {
      "generated": true,
      "file": "library/animals/traits/hydroprogne_caspia.json",
+     "diet": true,
+     "locomotion": true
+    },
+    "rig": {
+     "template": "bird part rig (animalModels.js RIG.bird), flierControl"
+    }
+   },
+   "license": "CC BY-SA 4.0 (the entry); diet and mass from EltonTraits 1.0 (CC BY 4.0, credited in the tile's sources)",
+   "tiles": []
+  },
+  "Ixoreus naevius": {
+   "id": "ixoreus_naevius",
+   "scientific": "Ixoreus naevius",
+   "common": "varied thrush",
+   "kind": "bird",
+   "fidelity": 0,
+   "why": [
+    "generated traits (diet, senses, size, locomotion), no model yet"
+   ],
+   "assets": {
+    "behaviour": {
+     "generated": true,
+     "file": "library/animals/traits/ixoreus_naevius.json",
      "diet": true,
      "locomotion": true
     },
@@ -8585,6 +9830,16 @@
    "license": "CC BY-SA 4.0",
    "tiles": [
     {
+     "tile": "utm10n_429_5293",
+     "share": 0.0026,
+     "as": "ground"
+    },
+    {
+     "tile": "utm10n_439_5293",
+     "share": 0.0011,
+     "as": "ground"
+    },
+    {
      "tile": "utm10n_540_4170",
      "share": 0.0002,
      "as": "ground"
@@ -8613,6 +9868,67 @@
      "tile": "utm11n_270_4180",
      "share": 0.0038,
      "as": "ground"
+    }
+   ]
+  },
+  "Lepus americanus": {
+   "id": "lepus_americanus",
+   "scientific": "Lepus americanus",
+   "common": "snowshoe hare",
+   "kind": "mammal",
+   "fidelity": 3,
+   "why": [
+    "own mesh (variant; 1056 triangles)",
+    "rigged and animated: skinned clips, the leg engine",
+    "for 4: diet, voice"
+   ],
+   "assets": {
+    "mesh": {
+     "fidelity": 2,
+     "file": "client/assets/snowshoe_hare.glb",
+     "source": "variant",
+     "job_id": null,
+     "triangles": {
+      "lod0": 1056,
+      "lod1": 394,
+      "lod2": 80
+     }
+    },
+    "rig": {
+     "animated": true,
+     "kind": "skin",
+     "clips": null,
+     "leg_engine": true
+    },
+    "sound": {
+     "voice": false,
+     "where": null
+    },
+    "behaviour": {
+     "senses": true,
+     "diet": false,
+     "needs": true,
+     "calendar": true,
+     "range": true
+    },
+    "locomotion": null,
+    "playable": true
+   },
+   "meshy": null,
+   "license": "CC BY-SA 4.0",
+   "provenance": {
+    "status": "agent draft, needs local sign-off",
+    "source": "variant of sylvilagus_bachmani by agent (Claude) for Aaron Brodeur; the model \"Rabbit\" by \u010cestm\u00edr Dammer (OpenGameArt user CDmir), made for the game Kelgar (www.kelgar.org)",
+    "url": "https://opengameart.org/content/rabbit-0"
+   },
+   "tiles": [
+    {
+     "tile": "utm10n_429_5293",
+     "present": "records"
+    },
+    {
+     "tile": "utm10n_439_5293",
+     "present": "records"
     }
    ]
   },
@@ -8745,25 +10061,66 @@
   "Lontra canadensis": {
    "id": "lontra_canadensis",
    "scientific": "Lontra canadensis",
-   "common": "north american river otter",
+   "common": "North American river otter",
    "kind": "mammal",
-   "fidelity": 0,
+   "fidelity": 3,
    "why": [
-    "generated traits (diet, senses, size, locomotion), no model yet"
+    "own mesh (meshy; 2799 triangles)",
+    "rigged and animated: skinned clips, the leg engine",
+    "for 4: diet, voice"
    ],
    "assets": {
-    "behaviour": {
-     "generated": true,
-     "file": "library/animals/traits/lontra_canadensis.json",
-     "diet": true,
-     "locomotion": true
+    "mesh": {
+     "fidelity": 2,
+     "file": "client/assets/otter.glb",
+     "source": "meshy",
+     "job_id": "01a1ad35-8f53-75f8-9682-8cb53caec1c9",
+     "triangles": {
+      "lod0": 2799,
+      "lod1": 1260,
+      "lod2": 327
+     }
     },
     "rig": {
-     "template": "tools/rig_quadruped.py skeleton, gait.js / legs.js"
-    }
+     "animated": true,
+     "kind": "skin",
+     "clips": null,
+     "leg_engine": true
+    },
+    "sound": {
+     "voice": false,
+     "where": null
+    },
+    "behaviour": {
+     "senses": true,
+     "diet": false,
+     "needs": true,
+     "calendar": true,
+     "range": true
+    },
+    "locomotion": null,
+    "playable": true
    },
-   "license": "CC BY-SA 4.0 (the entry); diet and mass from EltonTraits 1.0 (CC BY 4.0, credited in the tile's sources)",
-   "tiles": []
+   "meshy": {
+    "jobs": 1,
+    "credits": 20
+   },
+   "license": "CC BY-SA 4.0",
+   "provenance": {
+    "status": "agent draft, needs local sign-off",
+    "source": "generated with Meshy (meshy.ai) by agent (Claude) for Aaron Brodeur",
+    "url": "https://www.meshy.ai"
+   },
+   "tiles": [
+    {
+     "tile": "utm10n_429_5293",
+     "present": "records"
+    },
+    {
+     "tile": "utm10n_439_5293",
+     "present": "records"
+    }
+   ]
   },
   "Lupinus albifrons": {
    "id": "lupinus_albifrons",
@@ -8967,23 +10324,61 @@
    "scientific": "Lynx rufus",
    "common": "bobcat",
    "kind": "mammal",
-   "fidelity": 0,
+   "fidelity": 3,
    "why": [
-    "generated traits (diet, senses, size, locomotion), no model yet"
+    "own mesh (variant; 2792 triangles)",
+    "rigged and animated: skinned clips, the leg engine",
+    "for 4: voice"
    ],
    "assets": {
-    "behaviour": {
-     "generated": true,
-     "file": "library/animals/traits/lynx_rufus.json",
-     "diet": true,
-     "locomotion": true
+    "mesh": {
+     "fidelity": 2,
+     "file": "client/assets/bobcat.glb",
+     "source": "variant",
+     "job_id": "01a171bb-8cae-7690-a80d-04545b70957e",
+     "triangles": {
+      "lod0": 2792,
+      "lod1": 1288,
+      "lod2": 372
+     }
     },
     "rig": {
-     "template": "tools/rig_quadruped.py skeleton, gait.js / legs.js"
-    }
+     "animated": true,
+     "kind": "skin",
+     "clips": null,
+     "leg_engine": true
+    },
+    "sound": {
+     "voice": false,
+     "where": null
+    },
+    "behaviour": {
+     "senses": true,
+     "diet": true,
+     "needs": true,
+     "calendar": true,
+     "range": true
+    },
+    "locomotion": null,
+    "playable": true
    },
-   "license": "CC BY-SA 4.0 (the entry); diet and mass from EltonTraits 1.0 (CC BY 4.0, credited in the tile's sources)",
-   "tiles": []
+   "meshy": null,
+   "license": "CC BY-SA 4.0",
+   "provenance": {
+    "status": "agent draft, needs local sign-off",
+    "source": "variant of puma_concolor by agent (Claude) for Aaron Brodeur",
+    "url": "https://www.meshy.ai"
+   },
+   "tiles": [
+    {
+     "tile": "utm10n_429_5293",
+     "present": "records"
+    },
+    {
+     "tile": "utm10n_439_5293",
+     "present": "records"
+    }
+   ]
   },
   "Madia elegans": {
    "id": "madia_elegans",
@@ -9049,25 +10444,66 @@
    "scientific": "Mahonia nervosa",
    "common": "dwarf Oregon grape",
    "kind": "shrub",
-   "fidelity": 0,
+   "fidelity": 2,
    "why": [
-    "a trait card, no record yet: the plants step grows it when a tile needs it"
+    "generated from its trait card on the Pacific poison oak template",
+    "3 age classes, four seasons' colours",
+    "habitat and relations",
+    "held at 2 until reviewed in the lineup (would be 4)"
    ],
    "assets": {
     "model": {
-     "fidelity": 0,
-     "card": "library/plant_cards/mahonia_nervosa.json",
-     "stand_in": "toxicodendron_diversilobum"
+     "fidelity": 2,
+     "generator": "client/src/treegen.js LIBRARY (procedural; impostors baked by impostorBake.js)",
+     "file": "library/species/mahonia_nervosa.json",
+     "age_classes": [
+      "low",
+      "mature",
+      "thicket"
+     ],
+     "impostor": true,
+     "season_colours": [
+      "fall",
+      "spring",
+      "summer",
+      "winter"
+     ],
+     "growth_curve": false,
+     "snag": false,
+     "generated": {
+      "card": "library/plant_cards/mahonia_nervosa.json",
+      "template": "toxicodendron_diversilobum",
+      "version": "2"
+     },
+     "reviewed": false
     }
    },
+   "provenance": {
+    "status": "generated from a trait card, needs review in the lineup and local sign-off",
+    "authors": [
+     "Wild Earth (agent draft, 2026-11-04); needs local sign-off"
+    ],
+    "sources": 1
+   },
    "license": "CC BY-SA 4.0",
-   "tiles": []
+   "tiles": [
+    {
+     "tile": "utm10n_429_5293",
+     "share": 0.26,
+     "as": "shrub"
+    },
+    {
+     "tile": "utm10n_439_5293",
+     "share": 0.2373,
+     "as": "shrub"
+    }
+   ]
   },
-  "Megaceryle alcyon": {
-   "id": "megaceryle_alcyon",
-   "scientific": "Megaceryle alcyon",
-   "common": "belted kingfisher",
-   "kind": "bird",
+  "Marmota olympus": {
+   "id": "marmota_olympus",
+   "scientific": "Marmota olympus",
+   "common": "olympic marmot",
+   "kind": "mammal",
    "fidelity": 0,
    "why": [
     "generated traits (diet, senses, size, locomotion), no model yet"
@@ -9075,16 +10511,80 @@
    "assets": {
     "behaviour": {
      "generated": true,
-     "file": "library/animals/traits/megaceryle_alcyon.json",
+     "file": "library/animals/traits/marmota_olympus.json",
      "diet": true,
      "locomotion": true
     },
     "rig": {
-     "template": "bird part rig (animalModels.js RIG.bird), flierControl"
+     "template": "rodent part rig R (animalModels.js), the hop gait for lagomorphs"
     }
    },
    "license": "CC BY-SA 4.0 (the entry); diet and mass from EltonTraits 1.0 (CC BY 4.0, credited in the tile's sources)",
    "tiles": []
+  },
+  "Megaceryle alcyon": {
+   "id": "megaceryle_alcyon",
+   "scientific": "Megaceryle alcyon",
+   "common": "Belted kingfisher",
+   "kind": "bird",
+   "fidelity": 3,
+   "why": [
+    "own mesh (meshy; 1000 triangles)",
+    "rigged and animated: part rig",
+    "for 4: diet, voice"
+   ],
+   "assets": {
+    "mesh": {
+     "fidelity": 2,
+     "file": "client/assets/kingfisher.glb",
+     "source": "meshy",
+     "job_id": "01a1ad3b-e93c-70a8-bea3-372512334673",
+     "triangles": {
+      "lod0": 1000,
+      "lod1": 400,
+      "lod2": 120
+     }
+    },
+    "rig": {
+     "animated": true,
+     "kind": "part rig",
+     "clips": null,
+     "leg_engine": false
+    },
+    "sound": {
+     "voice": false,
+     "where": null
+    },
+    "behaviour": {
+     "senses": true,
+     "diet": false,
+     "needs": true,
+     "calendar": true,
+     "range": true
+    },
+    "locomotion": null,
+    "playable": true
+   },
+   "meshy": {
+    "jobs": 1,
+    "credits": 5
+   },
+   "license": "CC BY-SA 4.0",
+   "provenance": {
+    "status": "agent draft, needs local sign-off",
+    "source": "generated with Meshy (meshy.ai) by agent (Claude) for Aaron Brodeur",
+    "url": null
+   },
+   "tiles": [
+    {
+     "tile": "utm10n_429_5293",
+     "present": "records"
+    },
+    {
+     "tile": "utm10n_439_5293",
+     "present": "records"
+    }
+   ]
   },
   "Megaptera novaeangliae": {
    "id": "megaptera_novaeangliae",
@@ -9329,26 +10829,67 @@
   },
   "Mergus merganser": {
    "id": "mergus_merganser",
-   "scientific": "Mergus merganser",
+   "scientific": "Mergus merganser americanus",
    "common": "common merganser",
    "kind": "bird",
-   "fidelity": 0,
+   "fidelity": 3,
    "why": [
-    "generated traits (diet, senses, size, locomotion), no model yet"
+    "own mesh (meshy; 1200 triangles)",
+    "rigged and animated: part rig",
+    "for 4: diet, voice"
    ],
    "assets": {
-    "behaviour": {
-     "generated": true,
-     "file": "library/animals/traits/mergus_merganser.json",
-     "diet": true,
-     "locomotion": true
+    "mesh": {
+     "fidelity": 2,
+     "file": "client/assets/merganser.glb",
+     "source": "meshy",
+     "job_id": "01a1ad3c-fd50-7790-860b-de59283a3ab8",
+     "triangles": {
+      "lod0": 1200,
+      "lod1": 450,
+      "lod2": 150
+     }
     },
     "rig": {
-     "template": "bird part rig (animalModels.js RIG.bird), flierControl"
-    }
+     "animated": true,
+     "kind": "part rig",
+     "clips": null,
+     "leg_engine": false
+    },
+    "sound": {
+     "voice": false,
+     "where": null
+    },
+    "behaviour": {
+     "senses": true,
+     "diet": false,
+     "needs": true,
+     "calendar": true,
+     "range": true
+    },
+    "locomotion": null,
+    "playable": true
    },
-   "license": "CC BY-SA 4.0 (the entry); diet and mass from EltonTraits 1.0 (CC BY 4.0, credited in the tile's sources)",
-   "tiles": []
+   "meshy": {
+    "jobs": 1,
+    "credits": 5
+   },
+   "license": "CC BY-SA 4.0",
+   "provenance": {
+    "status": "agent draft, needs local sign-off",
+    "source": "generated with Meshy (meshy.ai) by agent (Claude) for Aaron Brodeur",
+    "url": "https://www.meshy.ai"
+   },
+   "tiles": [
+    {
+     "tile": "utm10n_429_5293",
+     "present": "records"
+    },
+    {
+     "tile": "utm10n_439_5293",
+     "present": "records"
+    }
+   ]
   },
   "Mergus serrator": {
    "id": "mergus_serrator",
@@ -9522,6 +11063,16 @@
    },
    "license": "CC BY-SA 4.0",
    "tiles": [
+    {
+     "tile": "utm10n_429_5293",
+     "share": 0.0028,
+     "as": "ground"
+    },
+    {
+     "tile": "utm10n_439_5293",
+     "share": 0.0011,
+     "as": "ground"
+    },
     {
      "tile": "utm10n_540_4170",
      "share": 0.0002,
@@ -9715,6 +11266,14 @@
    },
    "tiles": [
     {
+     "tile": "utm10n_429_5293",
+     "present": "records"
+    },
+    {
+     "tile": "utm10n_439_5293",
+     "present": "records"
+    },
+    {
      "tile": "utm10n_540_4170",
      "present": "records"
     },
@@ -9753,19 +11312,60 @@
    "scientific": "Oplopanax horridus",
    "common": "devil's club",
    "kind": "shrub",
-   "fidelity": 0,
+   "fidelity": 2,
    "why": [
-    "a trait card, no record yet: the plants step grows it when a tile needs it"
+    "generated from its trait card on the blue elderberry template",
+    "3 age classes, four seasons' colours",
+    "habitat and relations",
+    "held at 2 until reviewed in the lineup (would be 4)"
    ],
    "assets": {
     "model": {
-     "fidelity": 0,
-     "card": "library/plant_cards/oplopanax_horridus.json",
-     "stand_in": "sambucus_nigra_caerulea"
+     "fidelity": 2,
+     "generator": "client/src/treegen.js LIBRARY (procedural; impostors baked by impostorBake.js)",
+     "file": "library/species/oplopanax_horridus.json",
+     "age_classes": [
+      "young",
+      "mature",
+      "old"
+     ],
+     "impostor": true,
+     "season_colours": [
+      "fall",
+      "spring",
+      "summer",
+      "winter"
+     ],
+     "growth_curve": false,
+     "snag": false,
+     "generated": {
+      "card": "library/plant_cards/oplopanax_horridus.json",
+      "template": "sambucus_nigra_caerulea",
+      "version": "2"
+     },
+     "reviewed": false
     }
    },
+   "provenance": {
+    "status": "generated from a trait card, needs review in the lineup and local sign-off",
+    "authors": [
+     "Wild Earth (agent draft, 2026-11-04); needs local sign-off"
+    ],
+    "sources": 1
+   },
    "license": "CC BY-SA 4.0",
-   "tiles": []
+   "tiles": [
+    {
+     "tile": "utm10n_429_5293",
+     "share": 0.0349,
+     "as": "shrub"
+    },
+    {
+     "tile": "utm10n_439_5293",
+     "share": 0.026,
+     "as": "shrub"
+    }
+   ]
   },
   "Oreortyx pictus": {
    "id": "oreortyx_pictus",
@@ -9940,19 +11540,39 @@
    "scientific": "Oxalis oregana",
    "common": "redwood sorrel",
    "kind": "forb",
-   "fidelity": 0,
+   "fidelity": 4,
    "why": [
-    "a trait card, no record yet: the plants step grows it when a tile needs it"
+    "its own ground block (drawn by grass.js / forbs.js / emergents.js)",
+    "season palette or heights by month",
+    "habitat and relations"
    ],
    "assets": {
     "model": {
-     "fidelity": 0,
-     "card": "library/plant_cards/oxalis_oregana.json",
-     "stand_in": "trifolium_willdenovii"
+     "fidelity": 4,
+     "generator": "grass.js / forbs.js / emergents.js from the record's ground block",
+     "file": "library/species/oxalis_oregana.json"
     }
    },
+   "provenance": {
+    "status": "generated from a trait card, needs review in the lineup and local sign-off",
+    "authors": [
+     "Wild Earth (agent draft, 2026-11-04); needs local sign-off"
+    ],
+    "sources": 1
+   },
    "license": "CC BY-SA 4.0",
-   "tiles": []
+   "tiles": [
+    {
+     "tile": "utm10n_429_5293",
+     "share": 0.3369,
+     "as": "ground"
+    },
+    {
+     "tile": "utm10n_439_5293",
+     "share": 0.296,
+     "as": "ground"
+    }
+   ]
   },
   "Pandion haliaetus": {
    "id": "pandion_haliaetus",
@@ -10023,6 +11643,70 @@
    "license": "CC BY-SA 4.0 (the entry); diet and mass from EltonTraits 1.0 (CC BY 4.0, credited in the tile's sources)",
    "tiles": []
   },
+  "Perisoreus canadensis": {
+   "id": "perisoreus_canadensis",
+   "scientific": "Perisoreus canadensis obscurus",
+   "common": "Canada jay (gray jay)",
+   "kind": "bird",
+   "fidelity": 3,
+   "why": [
+    "own mesh (meshy; 1000 triangles)",
+    "rigged and animated: part rig",
+    "for 4: voice"
+   ],
+   "assets": {
+    "mesh": {
+     "fidelity": 2,
+     "file": "client/assets/gray_jay.glb",
+     "source": "meshy",
+     "job_id": "01a1ad38-feb3-7224-b473-535085890e02",
+     "triangles": {
+      "lod0": 1000,
+      "lod1": 400,
+      "lod2": 120
+     }
+    },
+    "rig": {
+     "animated": true,
+     "kind": "part rig",
+     "clips": null,
+     "leg_engine": false
+    },
+    "sound": {
+     "voice": false,
+     "where": null
+    },
+    "behaviour": {
+     "senses": true,
+     "diet": true,
+     "needs": true,
+     "calendar": true,
+     "range": true
+    },
+    "locomotion": null,
+    "playable": true
+   },
+   "meshy": {
+    "jobs": 1,
+    "credits": 5
+   },
+   "license": "CC BY-SA 4.0",
+   "provenance": {
+    "status": "agent draft, needs local sign-off",
+    "source": "generated with Meshy (meshy.ai) by agent (Claude) for Aaron Brodeur",
+    "url": null
+   },
+   "tiles": [
+    {
+     "tile": "utm10n_429_5293",
+     "present": "records"
+    },
+    {
+     "tile": "utm10n_439_5293",
+     "present": "records"
+    }
+   ]
+  },
   "Peromyscus boylii": {
    "id": "peromyscus_boylii",
    "scientific": "Peromyscus boylii",
@@ -10048,26 +11732,64 @@
   },
   "Peromyscus maniculatus": {
    "id": "peromyscus_maniculatus",
-   "scientific": "Peromyscus maniculatus",
-   "common": "deer mouse",
+   "scientific": "Peromyscus maniculatus (the northwestern forest form; often split as P. keeni on the Olympic coast)",
+   "common": "Deer mouse",
    "kind": "mammal",
-   "fidelity": 0,
+   "fidelity": 3,
    "why": [
-    "generated traits (diet, senses, size, locomotion), no model yet"
+    "own mesh (variant; 900 triangles)",
+    "rigged and animated: part rig",
+    "for 4: diet, voice"
    ],
    "assets": {
-    "behaviour": {
-     "generated": true,
-     "file": "library/animals/traits/peromyscus_maniculatus.json",
-     "diet": true,
-     "locomotion": true
+    "mesh": {
+     "fidelity": 2,
+     "file": "client/assets/deer_mouse.glb",
+     "source": "variant",
+     "job_id": "01a171bc-b285-71cb-9e16-dc06982a34e4",
+     "triangles": {
+      "lod0": 900,
+      "lod1": 300,
+      "lod2": 79
+     }
     },
     "rig": {
-     "template": "rodent part rig R (animalModels.js), the hop gait for lagomorphs"
-    }
+     "animated": true,
+     "kind": "part rig",
+     "clips": null,
+     "leg_engine": false
+    },
+    "sound": {
+     "voice": false,
+     "where": null
+    },
+    "behaviour": {
+     "senses": true,
+     "diet": false,
+     "needs": true,
+     "calendar": true,
+     "range": true
+    },
+    "locomotion": null,
+    "playable": true
    },
-   "license": "CC BY-SA 4.0 (the entry); diet and mass from EltonTraits 1.0 (CC BY 4.0, credited in the tile's sources)",
-   "tiles": []
+   "meshy": null,
+   "license": "CC BY-SA 4.0",
+   "provenance": {
+    "status": "agent draft, needs local sign-off",
+    "source": "variant of microtus_californicus by agent (Claude) for Aaron Brodeur",
+    "url": "https://www.meshy.ai"
+   },
+   "tiles": [
+    {
+     "tile": "utm10n_429_5293",
+     "present": "records"
+    },
+    {
+     "tile": "utm10n_439_5293",
+     "present": "records"
+    }
+   ]
   },
   "Phalacrocorax auritus": {
    "id": "phalacrocorax_auritus",
@@ -10248,38 +11970,119 @@
    "scientific": "Phyllodoce empetriformis",
    "common": "pink mountain heather",
    "kind": "shrub",
-   "fidelity": 0,
+   "fidelity": 2,
    "why": [
-    "a trait card, no record yet: the plants step grows it when a tile needs it"
+    "generated from its trait card on the red mountain heather template",
+    "3 age classes, four seasons' colours",
+    "held at 2 until reviewed in the lineup (would be 3)"
    ],
    "assets": {
     "model": {
-     "fidelity": 0,
-     "card": "library/plant_cards/phyllodoce_empetriformis.json",
-     "stand_in": "phyllodoce_breweri"
+     "fidelity": 2,
+     "generator": "client/src/treegen.js LIBRARY (procedural; impostors baked by impostorBake.js)",
+     "file": "library/species/phyllodoce_empetriformis.json",
+     "age_classes": [
+      "young",
+      "mature",
+      "old"
+     ],
+     "impostor": true,
+     "season_colours": [
+      "fall",
+      "spring",
+      "summer",
+      "winter"
+     ],
+     "growth_curve": false,
+     "snag": false,
+     "generated": {
+      "card": "library/plant_cards/phyllodoce_empetriformis.json",
+      "template": "phyllodoce_breweri",
+      "version": "2"
+     },
+     "reviewed": false
     }
    },
+   "provenance": {
+    "status": "generated from a trait card, needs review in the lineup and local sign-off",
+    "authors": [
+     "Wild Earth (agent draft, 2026-11-04); needs local sign-off"
+    ],
+    "sources": 2
+   },
    "license": "CC BY-SA 4.0",
-   "tiles": []
+   "tiles": [
+    {
+     "tile": "utm10n_429_5293",
+     "share": 0.006,
+     "as": "shrub"
+    },
+    {
+     "tile": "utm10n_439_5293",
+     "share": 0.0576,
+     "as": "shrub"
+    }
+   ]
   },
   "Picea sitchensis": {
    "id": "picea_sitchensis",
    "scientific": "Picea sitchensis",
    "common": "Sitka spruce",
    "kind": "tree",
-   "fidelity": 0,
+   "fidelity": 2,
    "why": [
-    "a trait card, no record yet: the plants step grows it when a tile needs it"
+    "generated from its trait card on the Douglas-fir template",
+    "3 age classes, four seasons' colours",
+    "habitat and relations",
+    "held at 2 until reviewed in the lineup (would be 4)"
    ],
    "assets": {
     "model": {
-     "fidelity": 0,
-     "card": "library/plant_cards/picea_sitchensis.json",
-     "stand_in": "pseudotsuga_menziesii"
+     "fidelity": 2,
+     "generator": "client/src/treegen.js LIBRARY (procedural; impostors baked by impostorBake.js)",
+     "file": "library/species/picea_sitchensis.json",
+     "age_classes": [
+      "young",
+      "mature",
+      "old-growth"
+     ],
+     "impostor": true,
+     "season_colours": [
+      "fall",
+      "spring",
+      "summer",
+      "winter"
+     ],
+     "growth_curve": false,
+     "snag": true,
+     "generated": {
+      "card": "library/plant_cards/picea_sitchensis.json",
+      "template": "pseudotsuga_menziesii",
+      "version": "2"
+     },
+     "reviewed": false
     }
    },
+   "provenance": {
+    "status": "generated from a trait card, needs review in the lineup and local sign-off",
+    "authors": [
+     "Wild Earth (agent draft, 2026-11-04); needs local sign-off"
+    ],
+    "sources": 1
+   },
    "license": "CC BY-SA 4.0",
-   "tiles": []
+   "tiles": [
+    {
+     "tile": "utm10n_429_5293",
+     "share": 0.0423,
+     "as": "tree"
+    },
+    {
+     "tile": "utm10n_439_5293",
+     "share": 0.008,
+     "as": "tree"
+    }
+   ]
   },
   "Pinus albicaulis": {
    "id": "pinus_albicaulis",
@@ -10329,6 +12132,11 @@
    },
    "license": "CC BY-SA 4.0",
    "tiles": [
+    {
+     "tile": "utm10n_439_5293",
+     "share": 0.0001,
+     "as": "tree"
+    },
     {
      "tile": "utm11n_267_4175",
      "share": 0.0132,
@@ -10818,6 +12626,16 @@
    "license": "CC BY-SA 4.0",
    "tiles": [
     {
+     "tile": "utm10n_429_5293",
+     "share": 0.0069,
+     "as": "ground"
+    },
+    {
+     "tile": "utm10n_439_5293",
+     "share": 0.0413,
+     "as": "ground"
+    },
+    {
      "tile": "utm10n_540_4170",
      "share": 0.0489,
      "as": "ground"
@@ -10907,6 +12725,70 @@
     }
    ]
   },
+  "Plethodon vehiculum": {
+   "id": "plethodon_vehiculum",
+   "scientific": "Plethodon vehiculum",
+   "common": "western red-backed salamander",
+   "kind": "amphibian",
+   "fidelity": 3,
+   "why": [
+    "own mesh (meshy; 800 triangles)",
+    "rigged and animated: part rig",
+    "for 4: diet, voice"
+   ],
+   "assets": {
+    "mesh": {
+     "fidelity": 2,
+     "file": "client/assets/salamander.glb",
+     "source": "meshy",
+     "job_id": "01a1ad3a-5ecd-7016-9b71-8d57ee3f76e9",
+     "triangles": {
+      "lod0": 800,
+      "lod1": 300,
+      "lod2": 80
+     }
+    },
+    "rig": {
+     "animated": true,
+     "kind": "part rig",
+     "clips": null,
+     "leg_engine": false
+    },
+    "sound": {
+     "voice": false,
+     "where": null
+    },
+    "behaviour": {
+     "senses": true,
+     "diet": false,
+     "needs": true,
+     "calendar": true,
+     "range": true
+    },
+    "locomotion": null,
+    "playable": true
+   },
+   "meshy": {
+    "jobs": 1,
+    "credits": 5
+   },
+   "license": "CC BY-SA 4.0",
+   "provenance": {
+    "status": "agent draft, needs local sign-off",
+    "source": "generated with Meshy (meshy.ai) by agent (Claude) for Aaron Brodeur",
+    "url": "https://www.meshy.ai"
+   },
+   "tiles": [
+    {
+     "tile": "utm10n_429_5293",
+     "present": "records"
+    },
+    {
+     "tile": "utm10n_439_5293",
+     "present": "records"
+    }
+   ]
+  },
   "Podiceps auritus": {
    "id": "podiceps_auritus",
    "scientific": "Podiceps auritus",
@@ -10956,25 +12838,66 @@
   "Poecile rufescens": {
    "id": "poecile_rufescens",
    "scientific": "Poecile rufescens",
-   "common": "chestnut-backed chickadee",
+   "common": "Chestnut-backed chickadee",
    "kind": "bird",
-   "fidelity": 0,
+   "fidelity": 3,
    "why": [
-    "generated traits (diet, senses, size, locomotion), no model yet"
+    "own mesh (meshy; 999 triangles)",
+    "rigged and animated: part rig",
+    "for 4: diet, voice"
    ],
    "assets": {
-    "behaviour": {
-     "generated": true,
-     "file": "library/animals/traits/poecile_rufescens.json",
-     "diet": true,
-     "locomotion": true
+    "mesh": {
+     "fidelity": 2,
+     "file": "client/assets/chickadee.glb",
+     "source": "meshy",
+     "job_id": "01a1ad39-ae77-7764-bea5-e718f3527f65",
+     "triangles": {
+      "lod0": 999,
+      "lod1": 399,
+      "lod2": 119
+     }
     },
     "rig": {
-     "template": "bird part rig (animalModels.js RIG.bird), flierControl"
-    }
+     "animated": true,
+     "kind": "part rig",
+     "clips": null,
+     "leg_engine": false
+    },
+    "sound": {
+     "voice": false,
+     "where": null
+    },
+    "behaviour": {
+     "senses": true,
+     "diet": false,
+     "needs": true,
+     "calendar": true,
+     "range": true
+    },
+    "locomotion": null,
+    "playable": true
    },
-   "license": "CC BY-SA 4.0 (the entry); diet and mass from EltonTraits 1.0 (CC BY 4.0, credited in the tile's sources)",
-   "tiles": []
+   "meshy": {
+    "jobs": 1,
+    "credits": 5
+   },
+   "license": "CC BY-SA 4.0",
+   "provenance": {
+    "status": "agent draft, needs local sign-off",
+    "source": "generated with Meshy (meshy.ai) by agent (Claude) for Aaron Brodeur",
+    "url": null
+   },
+   "tiles": [
+    {
+     "tile": "utm10n_429_5293",
+     "present": "records"
+    },
+    {
+     "tile": "utm10n_439_5293",
+     "present": "records"
+    }
+   ]
   },
   "Polystichum munitum": {
    "id": "polystichum_munitum",
@@ -11003,6 +12926,16 @@
    },
    "license": "CC BY-SA 4.0",
    "tiles": [
+    {
+     "tile": "utm10n_429_5293",
+     "share": 0.371,
+     "as": "ground"
+    },
+    {
+     "tile": "utm10n_439_5293",
+     "share": 0.3272,
+     "as": "ground"
+    },
     {
      "tile": "utm10n_540_4170",
      "share": 0.0139,
@@ -11205,7 +13138,18 @@
     "sources": 1
    },
    "license": "CC BY-SA 4.0",
-   "tiles": []
+   "tiles": [
+    {
+     "tile": "utm10n_429_5293",
+     "share": 0.0166,
+     "as": "tree"
+    },
+    {
+     "tile": "utm10n_439_5293",
+     "share": 0.0065,
+     "as": "tree"
+    }
+   ]
   },
   "Procyon lotor": {
    "id": "procyon_lotor",
@@ -11316,6 +13260,16 @@
    },
    "license": "CC BY-SA 4.0",
    "tiles": [
+    {
+     "tile": "utm10n_429_5293",
+     "share": 0.1945,
+     "as": "tree"
+    },
+    {
+     "tile": "utm10n_439_5293",
+     "share": 0.1439,
+     "as": "tree"
+    },
     {
      "tile": "utm10n_680_4270",
      "share": 0.0007,
@@ -11930,6 +13884,52 @@
     }
    ]
   },
+  "Rana cascadae": {
+   "id": "rana_cascadae",
+   "scientific": "Rana cascadae",
+   "common": "cascades frog",
+   "kind": "amphibian",
+   "fidelity": 0,
+   "why": [
+    "generated traits (diet, senses, size, locomotion), no model yet"
+   ],
+   "assets": {
+    "behaviour": {
+     "generated": true,
+     "file": "library/animals/traits/rana_cascadae.json",
+     "diet": false,
+     "locomotion": true
+    },
+    "rig": {
+     "template": "none yet: the reptile template, hopping"
+    }
+   },
+   "license": "CC BY-SA 4.0 (the entry); diet and mass from EltonTraits 1.0 (CC BY 4.0, credited in the tile's sources)",
+   "tiles": []
+  },
+  "Regulus satrapa": {
+   "id": "regulus_satrapa",
+   "scientific": "Regulus satrapa",
+   "common": "golden-crowned kinglet",
+   "kind": "bird",
+   "fidelity": 0,
+   "why": [
+    "generated traits (diet, senses, size, locomotion), no model yet"
+   ],
+   "assets": {
+    "behaviour": {
+     "generated": true,
+     "file": "library/animals/traits/regulus_satrapa.json",
+     "diet": true,
+     "locomotion": true
+    },
+    "rig": {
+     "template": "bird part rig (animalModels.js RIG.bird), flierControl"
+    }
+   },
+   "license": "CC BY-SA 4.0 (the entry); diet and mass from EltonTraits 1.0 (CC BY 4.0, credited in the tile's sources)",
+   "tiles": []
+  },
   "Ribes malvaceum": {
    "id": "ribes_malvaceum",
    "scientific": "Ribes malvaceum",
@@ -12196,26 +14196,78 @@
     "sources": 1
    },
    "license": "CC BY-SA 4.0",
-   "tiles": []
+   "tiles": [
+    {
+     "tile": "utm10n_429_5293",
+     "share": 0.0009,
+     "as": "shrub"
+    },
+    {
+     "tile": "utm10n_439_5293",
+     "share": 0.0047,
+     "as": "shrub"
+    }
+   ]
   },
   "Rubus spectabilis": {
    "id": "rubus_spectabilis",
    "scientific": "Rubus spectabilis",
    "common": "salmonberry",
    "kind": "shrub",
-   "fidelity": 0,
+   "fidelity": 2,
    "why": [
-    "a trait card, no record yet: the plants step grows it when a tile needs it"
+    "generated from its trait card on the California blackberry template",
+    "3 age classes, four seasons' colours",
+    "habitat and relations",
+    "held at 2 until reviewed in the lineup (would be 4)"
    ],
    "assets": {
     "model": {
-     "fidelity": 0,
-     "card": "library/plant_cards/rubus_spectabilis.json",
-     "stand_in": "rubus_ursinus"
+     "fidelity": 2,
+     "generator": "client/src/treegen.js LIBRARY (procedural; impostors baked by impostorBake.js)",
+     "file": "library/species/rubus_spectabilis.json",
+     "age_classes": [
+      "young",
+      "mature",
+      "old"
+     ],
+     "impostor": true,
+     "season_colours": [
+      "fall",
+      "spring",
+      "summer",
+      "winter"
+     ],
+     "growth_curve": false,
+     "snag": false,
+     "generated": {
+      "card": "library/plant_cards/rubus_spectabilis.json",
+      "template": "rubus_ursinus",
+      "version": "2"
+     },
+     "reviewed": false
     }
    },
+   "provenance": {
+    "status": "generated from a trait card, needs review in the lineup and local sign-off",
+    "authors": [
+     "Wild Earth (agent draft, 2026-11-04); needs local sign-off"
+    ],
+    "sources": 1
+   },
    "license": "CC BY-SA 4.0",
-   "tiles": []
+   "tiles": [
+    {
+     "tile": "utm10n_429_5293",
+     "share": 0.0716,
+     "as": "shrub"
+    },
+    {
+     "tile": "utm10n_439_5293",
+     "share": 0.039,
+     "as": "shrub"
+    }
+   ]
   },
   "Rubus ursinus": {
    "id": "rubus_ursinus",
@@ -12477,6 +14529,26 @@
    },
    "license": "CC BY-SA 4.0",
    "tiles": [
+    {
+     "tile": "utm10n_429_5293",
+     "share": 0.0051,
+     "as": "tree"
+    },
+    {
+     "tile": "utm10n_429_5293",
+     "share": 0.0086,
+     "as": "shrub"
+    },
+    {
+     "tile": "utm10n_439_5293",
+     "share": 0.0024,
+     "as": "tree"
+    },
+    {
+     "tile": "utm10n_439_5293",
+     "share": 0.0026,
+     "as": "shrub"
+    },
     {
      "tile": "utm10n_540_4170",
      "share": 0.0019,
@@ -13291,6 +15363,70 @@
    "license": "CC BY-SA 4.0 (the entry); diet and mass from EltonTraits 1.0 (CC BY 4.0, credited in the tile's sources)",
    "tiles": []
   },
+  "Strix varia": {
+   "id": "strix_varia",
+   "scientific": "Strix varia",
+   "common": "Barred owl",
+   "kind": "bird",
+   "fidelity": 3,
+   "why": [
+    "own mesh (meshy; 1399 triangles)",
+    "rigged and animated: part rig",
+    "for 4: voice"
+   ],
+   "assets": {
+    "mesh": {
+     "fidelity": 2,
+     "file": "client/assets/barred_owl.glb",
+     "source": "meshy",
+     "job_id": "01a1ad38-4e76-7191-8ddc-c7409132af60",
+     "triangles": {
+      "lod0": 1399,
+      "lod1": 499,
+      "lod2": 150
+     }
+    },
+    "rig": {
+     "animated": true,
+     "kind": "part rig",
+     "clips": null,
+     "leg_engine": false
+    },
+    "sound": {
+     "voice": false,
+     "where": null
+    },
+    "behaviour": {
+     "senses": true,
+     "diet": true,
+     "needs": true,
+     "calendar": true,
+     "range": true
+    },
+    "locomotion": null,
+    "playable": true
+   },
+   "meshy": {
+    "jobs": 1,
+    "credits": 5
+   },
+   "license": "CC BY-SA 4.0",
+   "provenance": {
+    "status": "agent draft, needs local sign-off",
+    "source": "generated with Meshy (meshy.ai) by agent (Claude) for Aaron Brodeur",
+    "url": null
+   },
+   "tiles": [
+    {
+     "tile": "utm10n_429_5293",
+     "present": "records"
+    },
+    {
+     "tile": "utm10n_439_5293",
+     "present": "records"
+    }
+   ]
+  },
   "Sturnus vulgaris": {
    "id": "sturnus_vulgaris",
    "scientific": "Sturnus vulgaris",
@@ -13432,6 +15568,16 @@
    "license": "CC BY-SA 4.0",
    "tiles": [
     {
+     "tile": "utm10n_429_5293",
+     "share": 0.0028,
+     "as": "shrub"
+    },
+    {
+     "tile": "utm10n_439_5293",
+     "share": 0.0007,
+     "as": "shrub"
+    },
+    {
      "tile": "utm10n_540_4170",
      "share": 0.0191,
      "as": "shrub"
@@ -13463,6 +15609,29 @@
     }
    ]
   },
+  "Tamias amoenus": {
+   "id": "tamias_amoenus",
+   "scientific": "Tamias amoenus",
+   "common": "yellow-pine chipmunk",
+   "kind": "mammal",
+   "fidelity": 0,
+   "why": [
+    "generated traits (diet, senses, size, locomotion), no model yet"
+   ],
+   "assets": {
+    "behaviour": {
+     "generated": true,
+     "file": "library/animals/traits/tamias_amoenus.json",
+     "diet": true,
+     "locomotion": true
+    },
+    "rig": {
+     "template": "rodent part rig R (animalModels.js), the hop gait for lagomorphs"
+    }
+   },
+   "license": "CC BY-SA 4.0 (the entry); diet and mass from EltonTraits 1.0 (CC BY 4.0, credited in the tile's sources)",
+   "tiles": []
+  },
   "Tamias quadrimaculatus": {
    "id": "tamias_quadrimaculatus",
    "scientific": "Tamias quadrimaculatus",
@@ -13486,28 +15655,127 @@
    "license": "CC BY-SA 4.0 (the entry); diet and mass from EltonTraits 1.0 (CC BY 4.0, credited in the tile's sources)",
    "tiles": []
   },
+  "Tamias townsendii": {
+   "id": "tamias_townsendii",
+   "scientific": "Tamias townsendii",
+   "common": "Townsend's chipmunk",
+   "kind": "mammal",
+   "fidelity": 3,
+   "why": [
+    "own mesh (variant; 1442 triangles)",
+    "rigged and animated: part rig",
+    "for 4: diet, voice"
+   ],
+   "assets": {
+    "mesh": {
+     "fidelity": 2,
+     "file": "client/assets/chipmunk.glb",
+     "source": "variant",
+     "job_id": "01a179c2-9f55-776f-980c-940a3bd13203",
+     "triangles": {
+      "lod0": 1442,
+      "lod1": 486,
+      "lod2": 150
+     }
+    },
+    "rig": {
+     "animated": true,
+     "kind": "part rig",
+     "clips": null,
+     "leg_engine": false
+    },
+    "sound": {
+     "voice": false,
+     "where": null
+    },
+    "behaviour": {
+     "senses": true,
+     "diet": false,
+     "needs": true,
+     "calendar": true,
+     "range": true
+    },
+    "locomotion": null,
+    "playable": true
+   },
+   "meshy": null,
+   "license": "CC BY-SA 4.0",
+   "provenance": {
+    "status": "agent draft, needs local sign-off",
+    "source": "variant of otospermophilus_beecheyi by agent (Claude) for Aaron Brodeur",
+    "url": "https://www.meshy.ai"
+   },
+   "tiles": [
+    {
+     "tile": "utm10n_429_5293",
+     "present": "records"
+    },
+    {
+     "tile": "utm10n_439_5293",
+     "present": "records"
+    }
+   ]
+  },
   "Tamiasciurus douglasii": {
    "id": "tamiasciurus_douglasii",
    "scientific": "Tamiasciurus douglasii",
-   "common": "douglas squirrel",
+   "common": "Douglas squirrel",
    "kind": "mammal",
-   "fidelity": 0,
+   "fidelity": 3,
    "why": [
-    "generated traits (diet, senses, size, locomotion), no model yet"
+    "own mesh (variant; 1500 triangles)",
+    "rigged and animated: part rig",
+    "for 4: diet, voice"
    ],
    "assets": {
-    "behaviour": {
-     "generated": true,
-     "file": "library/animals/traits/tamiasciurus_douglasii.json",
-     "diet": true,
-     "locomotion": true
+    "mesh": {
+     "fidelity": 2,
+     "file": "client/assets/douglas_squirrel.glb",
+     "source": "variant",
+     "job_id": "01a1719c-5a96-7616-b1c1-cc04ae57786c",
+     "triangles": {
+      "lod0": 1500,
+      "lod1": 499,
+      "lod2": 150
+     }
     },
     "rig": {
-     "template": "rodent part rig R (animalModels.js), the hop gait for lagomorphs"
-    }
+     "animated": true,
+     "kind": "part rig",
+     "clips": null,
+     "leg_engine": false
+    },
+    "sound": {
+     "voice": false,
+     "where": null
+    },
+    "behaviour": {
+     "senses": true,
+     "diet": false,
+     "needs": true,
+     "calendar": true,
+     "range": true
+    },
+    "locomotion": null,
+    "playable": true
    },
-   "license": "CC BY-SA 4.0 (the entry); diet and mass from EltonTraits 1.0 (CC BY 4.0, credited in the tile's sources)",
-   "tiles": []
+   "meshy": null,
+   "license": "CC BY-SA 4.0",
+   "provenance": {
+    "status": "agent draft, needs local sign-off",
+    "source": "variant of sciurus_griseus by agent (Claude) for Aaron Brodeur",
+    "url": "https://www.meshy.ai"
+   },
+   "tiles": [
+    {
+     "tile": "utm10n_429_5293",
+     "present": "records"
+    },
+    {
+     "tile": "utm10n_439_5293",
+     "present": "records"
+    }
+   ]
   },
   "Taxidea taxus": {
    "id": "taxidea_taxus",
@@ -13560,19 +15828,60 @@
    "scientific": "Thuja plicata",
    "common": "western redcedar",
    "kind": "tree",
-   "fidelity": 0,
+   "fidelity": 2,
    "why": [
-    "a trait card, no record yet: the plants step grows it when a tile needs it"
+    "generated from its trait card on the incense cedar template",
+    "3 age classes, four seasons' colours",
+    "habitat and relations",
+    "held at 2 until reviewed in the lineup (would be 4)"
    ],
    "assets": {
     "model": {
-     "fidelity": 0,
-     "card": "library/plant_cards/thuja_plicata.json",
-     "stand_in": "calocedrus_decurrens"
+     "fidelity": 2,
+     "generator": "client/src/treegen.js LIBRARY (procedural; impostors baked by impostorBake.js)",
+     "file": "library/species/thuja_plicata.json",
+     "age_classes": [
+      "young",
+      "mature",
+      "old-growth"
+     ],
+     "impostor": true,
+     "season_colours": [
+      "fall",
+      "spring",
+      "summer",
+      "winter"
+     ],
+     "growth_curve": false,
+     "snag": true,
+     "generated": {
+      "card": "library/plant_cards/thuja_plicata.json",
+      "template": "calocedrus_decurrens",
+      "version": "2"
+     },
+     "reviewed": false
     }
    },
+   "provenance": {
+    "status": "generated from a trait card, needs review in the lineup and local sign-off",
+    "authors": [
+     "Wild Earth (agent draft, 2026-11-04); needs local sign-off"
+    ],
+    "sources": 1
+   },
    "license": "CC BY-SA 4.0",
-   "tiles": []
+   "tiles": [
+    {
+     "tile": "utm10n_429_5293",
+     "share": 0.0568,
+     "as": "tree"
+    },
+    {
+     "tile": "utm10n_439_5293",
+     "share": 0.027,
+     "as": "tree"
+    }
+   ]
   },
   "Toxicodendron diversilobum": {
    "id": "toxicodendron_diversilobum",
@@ -13685,6 +15994,16 @@
    "license": "CC BY-SA 4.0",
    "tiles": [
     {
+     "tile": "utm10n_429_5293",
+     "share": 0.0062,
+     "as": "ground"
+    },
+    {
+     "tile": "utm10n_439_5293",
+     "share": 0.0307,
+     "as": "ground"
+    },
+    {
      "tile": "utm10n_540_4170",
      "share": 0.0324,
      "as": "ground"
@@ -13716,24 +16035,129 @@
     }
    ]
   },
+  "Troglodytes pacificus": {
+   "id": "troglodytes_pacificus",
+   "scientific": "Troglodytes pacificus",
+   "common": "Pacific wren",
+   "kind": "bird",
+   "fidelity": 3,
+   "why": [
+    "own mesh (meshy; 1000 triangles)",
+    "rigged and animated: part rig",
+    "for 4: diet, voice"
+   ],
+   "assets": {
+    "mesh": {
+     "fidelity": 2,
+     "file": "client/assets/pacific_wren.glb",
+     "source": "meshy",
+     "job_id": "01a1ad36-efb8-739e-b621-93b82701cc36",
+     "triangles": {
+      "lod0": 1000,
+      "lod1": 400,
+      "lod2": 120
+     }
+    },
+    "rig": {
+     "animated": true,
+     "kind": "part rig",
+     "clips": null,
+     "leg_engine": false
+    },
+    "sound": {
+     "voice": false,
+     "where": null
+    },
+    "behaviour": {
+     "senses": true,
+     "diet": false,
+     "needs": true,
+     "calendar": true,
+     "range": true
+    },
+    "locomotion": null,
+    "playable": true
+   },
+   "meshy": {
+    "jobs": 1,
+    "credits": 5
+   },
+   "license": "CC BY-SA 4.0",
+   "provenance": {
+    "status": "agent draft, needs local sign-off",
+    "source": "generated with Meshy (meshy.ai) by agent (Claude) for Aaron Brodeur",
+    "url": null
+   },
+   "tiles": [
+    {
+     "tile": "utm10n_429_5293",
+     "present": "records"
+    },
+    {
+     "tile": "utm10n_439_5293",
+     "present": "records"
+    }
+   ]
+  },
   "Tsuga heterophylla": {
    "id": "tsuga_heterophylla",
    "scientific": "Tsuga heterophylla",
    "common": "western hemlock",
    "kind": "tree",
-   "fidelity": 0,
+   "fidelity": 2,
    "why": [
-    "a trait card, no record yet: the plants step grows it when a tile needs it"
+    "generated from its trait card on the Douglas-fir template",
+    "3 age classes, four seasons' colours",
+    "habitat and relations",
+    "held at 2 until reviewed in the lineup (would be 4)"
    ],
    "assets": {
     "model": {
-     "fidelity": 0,
-     "card": "library/plant_cards/tsuga_heterophylla.json",
-     "stand_in": "pseudotsuga_menziesii"
+     "fidelity": 2,
+     "generator": "client/src/treegen.js LIBRARY (procedural; impostors baked by impostorBake.js)",
+     "file": "library/species/tsuga_heterophylla.json",
+     "age_classes": [
+      "young",
+      "mature",
+      "old-growth"
+     ],
+     "impostor": true,
+     "season_colours": [
+      "fall",
+      "spring",
+      "summer",
+      "winter"
+     ],
+     "growth_curve": false,
+     "snag": true,
+     "generated": {
+      "card": "library/plant_cards/tsuga_heterophylla.json",
+      "template": "pseudotsuga_menziesii",
+      "version": "2"
+     },
+     "reviewed": false
     }
    },
+   "provenance": {
+    "status": "generated from a trait card, needs review in the lineup and local sign-off",
+    "authors": [
+     "Wild Earth (agent draft, 2026-11-04); needs local sign-off"
+    ],
+    "sources": 1
+   },
    "license": "CC BY-SA 4.0",
-   "tiles": []
+   "tiles": [
+    {
+     "tile": "utm10n_429_5293",
+     "share": 0.3169,
+     "as": "tree"
+    },
+    {
+     "tile": "utm10n_439_5293",
+     "share": 0.283,
+     "as": "tree"
+    }
+   ]
   },
   "Tsuga mertensiana": {
    "id": "tsuga_mertensiana",
@@ -13783,6 +16207,16 @@
    },
    "license": "CC BY-SA 4.0",
    "tiles": [
+    {
+     "tile": "utm10n_429_5293",
+     "share": 0.018,
+     "as": "tree"
+    },
+    {
+     "tile": "utm10n_439_5293",
+     "share": 0.0567,
+     "as": "tree"
+    },
     {
      "tile": "utm11n_267_4175",
      "share": 0.0111,
@@ -14163,6 +16597,14 @@
    },
    "tiles": [
     {
+     "tile": "utm10n_429_5293",
+     "present": "records"
+    },
+    {
+     "tile": "utm10n_439_5293",
+     "present": "records"
+    },
+    {
      "tile": "utm10n_680_4270",
      "present": "records"
     },
@@ -14215,6 +16657,16 @@
    },
    "license": "CC BY-SA 4.0",
    "tiles": [
+    {
+     "tile": "utm10n_429_5293",
+     "share": 0.0068,
+     "as": "ground"
+    },
+    {
+     "tile": "utm10n_439_5293",
+     "share": 0.0045,
+     "as": "ground"
+    },
     {
      "tile": "utm10n_540_4170",
      "share": 0.001,
@@ -14296,6 +16748,16 @@
    "license": "CC BY-SA 4.0",
    "tiles": [
     {
+     "tile": "utm10n_429_5293",
+     "share": 0.0062,
+     "as": "shrub"
+    },
+    {
+     "tile": "utm10n_439_5293",
+     "share": 0.001,
+     "as": "shrub"
+    },
+    {
      "tile": "utm10n_540_4170",
      "share": 0.0122,
      "as": "shrub"
@@ -14312,19 +16774,60 @@
    "scientific": "Vaccinium parvifolium",
    "common": "red huckleberry",
    "kind": "shrub",
-   "fidelity": 0,
+   "fidelity": 2,
    "why": [
-    "a trait card, no record yet: the plants step grows it when a tile needs it"
+    "generated from its trait card on the California coffeeberry template",
+    "3 age classes, four seasons' colours",
+    "habitat and relations",
+    "held at 2 until reviewed in the lineup (would be 4)"
    ],
    "assets": {
     "model": {
-     "fidelity": 0,
-     "card": "library/plant_cards/vaccinium_parvifolium.json",
-     "stand_in": "frangula_californica"
+     "fidelity": 2,
+     "generator": "client/src/treegen.js LIBRARY (procedural; impostors baked by impostorBake.js)",
+     "file": "library/species/vaccinium_parvifolium.json",
+     "age_classes": [
+      "young",
+      "mature",
+      "old"
+     ],
+     "impostor": true,
+     "season_colours": [
+      "fall",
+      "spring",
+      "summer",
+      "winter"
+     ],
+     "growth_curve": false,
+     "snag": false,
+     "generated": {
+      "card": "library/plant_cards/vaccinium_parvifolium.json",
+      "template": "frangula_californica",
+      "version": "2"
+     },
+     "reviewed": false
     }
    },
+   "provenance": {
+    "status": "generated from a trait card, needs review in the lineup and local sign-off",
+    "authors": [
+     "Wild Earth (agent draft, 2026-11-04); needs local sign-off"
+    ],
+    "sources": 1
+   },
    "license": "CC BY-SA 4.0",
-   "tiles": []
+   "tiles": [
+    {
+     "tile": "utm10n_429_5293",
+     "share": 0.3396,
+     "as": "shrub"
+    },
+    {
+     "tile": "utm10n_439_5293",
+     "share": 0.4019,
+     "as": "shrub"
+    }
+   ]
   },
   "Vicia villosa": {
    "id": "vicia_villosa",

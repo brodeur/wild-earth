@@ -4,6 +4,9 @@ import {
   animalMaterial, hasAnim2, buildRaven, buildWoodpecker, loadDeerMesh, loadFoxMesh, loadCoyoteMesh, loadCougarMesh,
   loadSquirrelMesh, loadGroundSquirrelMesh, loadRabbitMesh, loadJackrabbitMesh, loadVoleMesh, loadQuailMesh, loadTurkeyMesh,
   loadLizardMesh, loadJayMesh, loadStellersJayMesh, loadRedtailMesh, loadVultureMesh, loadBearMesh, loadMountainQuailMesh,
+  loadElkCowMesh, loadBobcatMesh, loadOtterMesh, loadHareMesh, loadDouglasSquirrelMesh, loadChipmunkMesh, loadDeerMouseMesh,
+  loadWrenMesh, loadGrayJayMesh, loadChickadeeMesh, loadOwlMesh, loadKingfisherMesh, loadEagleMesh, loadCrowGroundMesh,
+  loadHeronMesh, loadMerganserMesh, loadSalamanderMesh, loadEnsatinaMesh, buildSlug,
 } from '../src/animalModels.js';
 
 // The opening screen's sprites (client/src/arrival.js plays them with CSS, so nothing on the screen animates from
@@ -20,7 +23,7 @@ import {
 // ?only=<code,...>: render just those stills (no wisp) and merge them into the index.json already published, so a new
 // species does not re-render (and re-encode) the rest.
 
-const RECV = 'http://127.0.0.1:8798';
+const RECV = new URLSearchParams(location.search).get('recv') || 'http://127.0.0.1:8798';   // ?recv=: the receiver on another port
 const N = 48, FRAME = 384, COLS = 8, ROWS = 6, LOOP_S = 1.2;     // the wisp loop
 const R = 0.45, SWELL = 0.3, HALF = 1.0, FOV = 20;                // m: the circle's radius; the frame's half-width
 const PX_PER_M = 268;                                              // the stills: the deer (1.345 m to the ear tips) ~360 px
@@ -33,6 +36,13 @@ const SPECIES = {
   callipepla_californica: [G, loadQuailMesh, 1], oreortyx_pictus: [G, loadMountainQuailMesh, 1], sceloporus_occidentalis: [G, loadLizardMesh], microtus_californicus: [G, loadVoleMesh],
   corvus_corax: [B, async () => buildRaven()], buteo_jamaicensis: [B, loadRedtailMesh, 0, 'soar'], cathartes_aura: [B, loadVultureMesh, 0, 'soar'],
   aphelocoma_californica: [B, loadJayMesh], cyanocitta_stelleri: [B, loadStellersJayMesh], melanerpes_formicivorus: [B, async () => buildWoodpecker()],
+  // the Hoh rain forest batch (2026-11-05)
+  cervus_canadensis: [G, loadElkCowMesh], lynx_rufus: [G, loadBobcatMesh], lontra_canadensis: [G, loadOtterMesh], lepus_americanus: [G, loadHareMesh],
+  tamiasciurus_douglasii: [G, loadDouglasSquirrelMesh], tamias_townsendii: [G, loadChipmunkMesh], peromyscus_maniculatus: [G, loadDeerMouseMesh],
+  plethodon_vehiculum: [G, loadSalamanderMesh], ensatina_eschscholtzii: [G, loadEnsatinaMesh], ariolimax_columbianus: [G, async () => buildSlug()],
+  ardea_herodias: [G, loadHeronMesh], mergus_merganser: [G, loadMerganserMesh], corvus_brachyrhynchos: [G, loadCrowGroundMesh],
+  troglodytes_pacificus: [B, loadWrenMesh], perisoreus_canadensis: [B, loadGrayJayMesh], poecile_rufescens: [B, loadChickadeeMesh],
+  strix_varia: [B, loadOwlMesh], megaceryle_alcyon: [B, loadKingfisherMesh], haliaeetus_leucocephalus: [B, loadEagleMesh, 0, 'soar'],
 };
 const PLAIN = {   // animalMaterial without the game's atmosphere (as the old openingScene.js did)
   patchLambert(m) {

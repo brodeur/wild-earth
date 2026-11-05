@@ -5183,3 +5183,40 @@ Left: on the steep creeks the shared level sits up to 3 m off one side's ground 
 ground's own step; fixing it is the terrain seam's, not the water's); the reroute and water of the tile built first
 must run again once its neighbour exists; tiles without a 1 m DEM (no reroute) get no crossings; meltwater is order 1
 (Strahler not recomputed below a new head); the order raise at an inflow ignores the +1 when equal orders meet.
+
+## 2026-11-05: the Hoh rain forest's animals, nineteen species on their kin's behaviour (branch worktree-agent-a8ac59863e116a3ea)
+
+Aaron: the Hoh tile "looks empty": 39 animals listed, 6 drawn. He approved the rest of the Meshy allowance (450 credits)
+for about fifteen Hoh animals, free variants first.
+
+- **Nineteen species for 120 credits** (550 -> 670 of 1,000): Roosevelt elk (bull and cow), river otter, great blue heron
+  (`latest` previews), Pacific wren, Canada jay, chestnut-backed chickadee, barred owl, belted kingfisher, common merganser,
+  western red-backed salamander (lite previews); bobcat, snowshoe hare, Douglas squirrel, Townsend's chipmunk, deer mouse,
+  American crow, ensatina, bald eagle (variants of existing sources, no credits; the eagle's own lite preview, 5 credits,
+  came back flapping and is unused); the Pacific banana slug procedural. Both elk prompts asked for a cow and came back
+  antlered, so the cow is the second bull with its antlers cut. 330 credits are left; none were needed for the rest.
+- **Kin, not new machines.** Each new slot runs an existing species' behaviour (`animals.js KIN`): elk the deer's herds
+  (bulls as the buck's variant slot), the conifer birds and the owl and kingfisher the Steller's jay's, the eagle the hawk's,
+  the crow the raven's (its air model the procedural raven at 0.72), the bobcat and otter the fox's, the hare the brush
+  rabbit's, the chipmunk and deer mouse the vole's, the salamanders the fence lizard's, the heron and mergansers the quail's
+  covey machine on the water. Per-species numbers in `HOH`. Why: fifteen hand-written machines were weeks of work; the kin
+  machines already carry the herd, the covey, the flush, the perch and the runway, and the differences that matter at
+  game distance are where, how many and when. The cost is fidelity of behaviour (no otter paddling, no owl hunting from a
+  perch, no elk rut), listed in docs/animal-library.md.
+- **Conifers for everyone.** The Steller's jays of the Hoh never spawned: the conifer index held only the two foothill
+  pines. It now takes every conifer genus, so the Olympic forest's hemlock, spruce, fir and cedar hold the jays, the
+  Douglas squirrel, the wren, the chickadees, the Canada jays and the owl.
+- **Water.** The kingfisher, otter, heron and mergansers spawn only where water runs this season (`wetCell`, water.js
+  `depthAt`) and keep to it (`waterSpot`), riding the stream ribbon's height (`surfAt`).
+- **Elk, not red deer.** GBIF and EltonTraits lump the American elk with Cervus elaphus; on American tiles (UTM zones
+  1-24) `pipeline/fauna.py` lists those records as Cervus canadensis, and a listed animal takes the library's common name.
+- **Playable**, all but the slug (groundControl.js, flierControl.js). The near bar's stills rendered for all nineteen
+  (client/tools/opening_sprites.html, now `?recv=` for a receiver on another port).
+
+Verified on the Hoh tile (`?tile=utm10n_429_5293&date=06-15`): on the river flats at (1500, 7600) the live set held 17
+elk and 2 bulls in herds, Douglas squirrels, wrens, chickadees, Canada jays, a kingfisher over the river, a bald eagle
+soaring, crows, bobcats, otters along the river, snowshoe hares, chipmunks, deer mice, salamanders, ensatinas, a heron and
+eight mergansers (one diving), banana slugs; all moving and phasing, no NaN in 2.5 s; entered the elk (walked), the crow,
+the eagle, the chickadee, the bobcat, the otter, the salamander, the merganser and the Douglas squirrel from the spirit.
+The lineup page drew all twenty models at their brief's sizes. Tests pass. Fauna and games rerun on both Hoh tiles: all
+nineteen present by their records, each at registry fidelity 3.

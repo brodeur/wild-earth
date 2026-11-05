@@ -1,0 +1,66 @@
+{
+  "species": "perisoreus_canadensis",
+  "mode": "preview",
+  "kind": "text-to-3d",
+  "task_id": "01a1ad38-feb3-7224-b473-535085890e02",
+  "endpoint": "https://api.meshy.ai/openapi/v2/text-to-3d",
+  "request": {
+    "mode": "preview",
+    "prompt": "A Canada jay (gray jay, Perisoreus canadensis) of the Pacific Northwest, one adult bird perched with its wings folded tight against the body, side-on pose. NOT a blue jay, no crest. Realistic proportions, about 29 cm long with a long tail; a fluffy rounded body, a round head, a short stubby black bill. Soft grey back, wings and tail, a white forehead, throat and collar, a dark grey cap on the back of the head, a pale grey-white belly. Dark legs, three toes forward and one back. No base, no perch. Game-ready, clean closed mesh.",
+    "ai_model": "meshy-6-lite",
+    "target_formats": [
+      "glb"
+    ],
+    "should_remesh": true,
+    "topology": "triangle",
+    "target_polycount": 20000,
+    "moderation": false
+  },
+  "prompt": "A Canada jay (gray jay, Perisoreus canadensis) of the Pacific Northwest, one adult bird perched with its wings folded tight against the body, side-on pose. NOT a blue jay, no crest. Realistic proportions, about 29 cm long with a long tail; a fluffy rounded body, a round head, a short stubby black bill. Soft grey back, wings and tail, a white forehead, throat and collar, a dark grey cap on the back of the head, a pale grey-white belly. Dark legs, three toes forward and one back. No base, no perch. Game-ready, clean closed mesh.",
+  "image": null,
+  "preview_job": null,
+  "estimated_credits": 5,
+  "balance_before": 2427,
+  "status": "SUCCEEDED",
+  "timestamps": {
+    "submitted": "2026-11-05T19:39:15+00:00",
+    "created_at": "2026-11-05T19:39:17+00:00",
+    "started_at": "2026-11-05T19:39:17+00:00",
+    "finished_at": "2026-11-05T19:39:49+00:00",
+    "downloaded": "2026-11-05T19:40:00+00:00"
+  },
+  "tool": "tools/meshy_generate.py",
+  "pricing_source": {
+    "url": "https://docs.meshy.ai/en/api/pricing",
+    "read": "2026-10-24"
+  },
+  "licence_note": "Generated through the Meshy API, which requires a paid plan (402 on a free plan). Meshy Terms of Use (https://www.meshy.ai/terms-of-use, last updated 2026-09-19), section 3.2: customers on a paid plan own their Customer Output to the extent permitted by law (free-plan output is owned by Meshy and offered under CC BY 4.0 with credit to Meshy). As owner, the account holder may license this model under the project's CC BY-SA 4.0 asset licence, to the extent copyright subsists in AI-generated output. Section 2.4: do not remove or alter AI-identifying metadata or watermarks Meshy embeds; carry them into adopted tiers. Section 2.5: API output is deleted by Meshy 3 days after generation, so keep this folder until the model is adopted. Credit: \"generated with Meshy (meshy.ai)\".",
+  "maintainer": "agent (Claude) for Aaron Brodeur",
+  "progress": 100,
+  "task": {
+    "id": "01a1ad38-feb3-7224-b473-535085890e02",
+    "type": "text-to-3d-preview",
+    "status": "SUCCEEDED",
+    "created_at": 1793907557748,
+    "started_at": 1793907557754,
+    "finished_at": 1793907589823,
+    "consumed_credits": 5,
+    "task_error": null
+  },
+  "credits_charged": 5,
+  "files": [
+    {
+      "file": "model.glb",
+      "bytes": 928316,
+      "sha256": "6bd86974bccb485e6d2d0f1d3a16c2c960807ce378759666d886e2290f799395",
+      "source": "https://assets.meshy.ai/<account>/tasks/01a1ad38-feb3-7224-b473-535085890e02/output/model.glb"
+    },
+    {
+      "file": "thumbnail.png",
+      "bytes": 42209,
+      "sha256": "604975db3555e3e91cde4d4b569ec02cc5b44e41487d1b58da71efd65f6c7ddd",
+      "source": "https://assets.meshy.ai/<account>/tasks/01a1ad38-feb3-7224-b473-535085890e02/output/preview.png"
+    }
+  ],
+  "balance_after": 2422
+}

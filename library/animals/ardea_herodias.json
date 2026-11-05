@@ -1,0 +1,77 @@
+{
+  "id": "ardea_herodias",
+  "aliases": [
+    "great_blue_heron",
+    "heron",
+    "blue_heron"
+  ],
+  "scientific": "Ardea herodias fannini (the dark resident heron of the Pacific Northwest coast)",
+  "common": "great blue heron",
+  "taxonomy": {
+    "kingdom": "Animalia",
+    "phylum": "Chordata",
+    "class": "Aves",
+    "order": "Pelecaniformes",
+    "family": "Ardeidae",
+    "genus": "Ardea"
+  },
+  "mass_kg": 2.3,
+  "body_plan": "bird",
+  "size": {
+    "length_m": 1.0,
+    "shoulder_or_wingspan_m": 1.85,
+    "note": "Length 0.97-1.37 m (bill to tail, stretched), wingspan 1.67-2.01 m, 2.1-2.5 kg; stands about 1.0-1.2 m to the crown with the neck in its resting S. The build stands the bird 1.10 m feet to crown (standing_height_m); along the body (bill tip, eye, back of the head, down the S of the neck, its base, the body's centre, tail root, tail tip) it measures 1.12 m, straight-line bill to tail in the upright pose 0.54 m. Bill 0.145 m gape to tip; belly 0.48 m above the ground; wing cards 1.85 m tip to tip.",
+    "standing_height_m": 1.1
+  },
+  "source": {
+    "kind": "meshy",
+    "title": "Great blue heron, standing",
+    "author": "generated with Meshy (meshy.ai) by agent (Claude) for Aaron Brodeur",
+    "url": "https://www.meshy.ai",
+    "file": "library/animals/jobs/ardea_herodias/01a1ad36-40a0-71c0-85cb-2afaae713e7e/model.glb (local; jobs/ meshes are not tracked)",
+    "original": "Meshy text-to-3D preview, ai_model latest (meshy-7.1), triangle remesh to 20,000 faces, 20,178 triangles, untextured",
+    "prompt": "A great blue heron (Ardea herodias), one adult standing still in a neutral upright pose on two long thin legs, side-on, wings folded against the body, neck in an S-curve with the head held up, NOT flying. Realistic proportions: 1.1 m tall, 1.0 m long, very long thin yellowish-grey legs with long thin toes, a long slender neck, a long straight dagger-shaped yellow bill, a narrow body. Blue-grey body and wings, a white face and crown with a black stripe above the eye ending in thin black plumes behind the head, rusty-chestnut thighs, a grey neck with a black-and-white streaked front, long grey plumes over the lower neck and back. No base, no ground, no water. Game-ready, clean closed mesh.",
+    "job_id": "01a1ad36-40a0-71c0-85cb-2afaae713e7e",
+    "job": "library/animals/jobs/ardea_herodias/01a1ad36-40a0-71c0-85cb-2afaae713e7e/job.json",
+    "credits": 20,
+    "date": "2026-11-05 (UTC)",
+    "adopted_by": "tools/build_heron.py"
+  },
+  "license": "CC BY-SA 4.0",
+  "license_detail": {
+    "source_terms": "Meshy Terms of Use 3.2 (https://www.meshy.ai/terms-of-use, last updated 2026-09-19): API output on a paid plan is owned by the account holder, who releases it with the project's assets under CC BY-SA 4.0. Terms 2.4: AI-identifying metadata Meshy embeds is carried over (the source GLB carried none; the built GLB records the source in extras.source). Terms 2.6(xi): not for training models that compete with Meshy (binds the account holder, not CC BY-SA licensees).",
+    "redistribute_under_cc_by_sa": true,
+    "note": "Credit \"generated with Meshy (meshy.ai)\" in the build script header and the GLB asset.copyright. AI-generated output may carry little or no copyright in some jurisdictions; the licence covers what rights exist."
+  },
+  "tiers": {
+    "lod0": 2500,
+    "lod1": 900,
+    "lod2": 298,
+    "file": "client/assets/heron.glb",
+    "attributes": [
+      "POSITION",
+      "COLOR_0 (linear)",
+      "_PART",
+      "_PARTW",
+      "_PIVOT"
+    ],
+    "lod_m": [
+      25,
+      80
+    ],
+    "note": "The generated standing heron (S-necked, folded wings, lower-neck plumes) with procedural legs (chestnut thigh, bare tibia, intertarsal joint, tarsus, three long forward toes and a hind toe) on the generated legs' lines, the bill lengthened 1.25x, black nape plumes, a yellow eye and flight cards. Triangles: lod0 2,500 = 2,236 mesh (1,000 of it neck, head and bill) + 264 legs, plumes, cards and eyes; lod1 900 = 736 (153 neck and head) + 164; lod2 298 = 236 (59) + 62. lod0 is a masked two-stage collapse of the generated mesh; lod1 and lod2 a collapse of its voxel remesh (6 and 8 mm). Tier switches suggested at 25 and 80 m (not wired). GLB 397,996 bytes."
+  },
+  "rig": "bird rig template for a big ground bird, as client/assets/turkey.glb (to wire: client/src/animalModels.js with turkey-like constants: walk with a head bob, peck = the strike, heavy flight on the cards): PART BODY 0, LEG_A 1 (left leg) / LEG_B 2 (right) procedural, pivoting at the hip, TAIL 3 (the folded wing tips and tail under them, pivot at the tail root), HEAD 6 = the whole neck and head (with the nape plumes and eyes), pivoting at the neck's base above the shoulders so the strike swings the neck forward and down, WING_L/R 4/5 arm cards (pivot at the shoulder) and HAND_L/R 9/10 hand cards (pivot at the wrist) that collapse into the shoulder on the ground (collapse 1). extras.rig keys as the turkey's plus span_m: kind 'bird', wing (shoulder [0.087, 0.724, 0.046]), tail [0, 0.394, -0.133], head (neck pivot [0, 0.754, 0.106]), hip (left [0.038, 0.533, -0.003]; the right mirrored), length_m 1.118 (along the body), height_m 1.1, span_m 1.85. Origin on the ground between the feet. No skin.",
+  "candidates": [],
+  "status": "agent draft, needs local sign-off",
+  "accuracy_notes": "Reads as a great blue heron at every tier: tall, the S-curved neck and long yellow dagger bill, the white face and crown with the broad black stripe from above the eye back to black nape plumes, grey neck streaked black and white down the front, pale lower-neck plumes, blue-grey back and folded wings with darker slate primaries, chestnut thighs and a chestnut mark at the bend of the folded wing, a dark belly streaked white, long dull yellowish-grey legs; in flight two-tone cards (blue-grey coverts, black flight feathers, chestnut at the bend). Still open: the legs and toes are procedural tubes (the generated thin legs fall apart below ~2,500 triangles) and stand where the generated ones did, so the stance is the source's (feet together, upright body slant); the generated legs and so the belly height are long (0.48 m), the tarsus about 0.27 m against a real 0.17-0.21 m; the folded wings' black shoulder patch on the breast side is drawn only as the small chestnut bend; the bill's darker culmen is a colour band, not modelled; the wing cards are flat plates with a fixed downward arch of the hand and no separated primaries; there is no neck retraction for flight (the client folds the neck by rotating HEAD, which bends at its base only, not into the flight S); lod2's neck is coarse (59 triangles). A local birder should check the leg length, the neck's resting S and the plume colours against Hoh River herons.",
+  "authors": [
+    "agent (Claude) for Aaron Brodeur (Meshy job, build script, legs, recolour, rig, tiers, entry)"
+  ],
+  "sources": [
+    "Sibley, D. A. (2014), The Sibley Guide to Birds, 2nd ed.: great blue heron (field marks of the adult, flight profile) - from the agent's knowledge, not reopened for this entry",
+    "Vennesland, R. G. and R. W. Butler (2011), Great Blue Heron (Ardea herodias), The Birds of North America / Birds of the World (measurements, mass, the Pacific race fannini) - from the agent's knowledge",
+    "Cornell Lab of Ornithology, All About Birds: Great Blue Heron (size, colour pattern) - from the agent's knowledge",
+    "tools/build_turkey.py and library/animals/meleagris_gallopavo.json (template)"
+  ]
+}

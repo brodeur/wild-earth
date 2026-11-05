@@ -583,3 +583,57 @@ flower and madia and the berries of toyon, snowberry, coffeeberry, elderberry an
 buckbrush, coyote brush, toyon, wild rose and the tall grasses; the turkey the acorns, the grass seed, poison
 oak's and elderberry's berries. The client reads it in `needs.js` (the plant under a feeding body is named: "blue
 dicks here: hold E") and `identify.js` (every plant card's "eaten by" and "shelter for" lines).
+
+## The Hoh rain forest batch (2026-11-05)
+
+The Hoh rain forest tile (`utm10n_429_5293`) listed 39 animals and drew six, all California carry-overs. Aaron approved
+the rest of the Meshy allowance for about fifteen Hoh animals. This batch adds nineteen species, drawn and animated, for
+120 credits (the ledger, `library/*/jobs/*/*/job.json`: 550 -> 670 of 1,000). Lineup:
+[lineup-hoh-animals.jpg](lineup-hoh-animals.jpg) (lod0 with vertex colours, each framed to its own size, a pole in 10 cm
+bands; the slug is procedural and is on `client/lineup_animals.html`).
+
+| species | how | credits | build | client (kin, see below) |
+|---|---|---|---|---|
+| Roosevelt elk, bull and cow | two `latest` previews; both prompts asked for a cow and both came back antlered: the cow is the second bull with its antlers cut and the mane pulled in | 40 | `build_elk.py --sex`, `rig_quadruped.py`, `bake_gait.mjs` | the deer's herds (cows and calves round a lead cow, bulls as the buck's variant slot), the leg engine |
+| river otter | `latest` preview | 20 | `build_otter.py` (the lion's template, tail and tip), skinned | the fox's walker kept to the water; it swims low where the stream is deep |
+| great blue heron | `latest` preview | 20 | `build_heron.py` (the turkey's template, procedural legs) | the quail's covey machine on the water's edge: a slow stalk, strikes, a slow heavy flush |
+| Pacific wren, Canada jay, chestnut-backed chickadee, barred owl, belted kingfisher | lite previews | 25 | `build_songbird.py --species` (the Steller's jay's template) | the Steller's jay's conifer machine with per-species heights, groups, beats; the owl roosts by day, the kingfisher perches over water and dives |
+| common merganser | lite preview | 5 | `build_merganser.py` (hen; the drake in `_COLORB`) | the covey machine on the water: swims in a knot, dives, flies fast up the river |
+| western red-backed salamander | lite preview | 5 | `build_salamander.py` (the fence lizard's reptile template) | the lizard's machine: the damp floor by a conifer's foot, no basking or push-ups, a slow walk |
+| bald eagle | the red-tail's preview (the eagle's lite preview, 5 credits, came back flapping and is not used) | 5 | `build_bald_eagle.py` (the red-tail's template, plank wings lofted) | the hawk's soaring over the valley |
+| bobcat | variant of the mountain lion's preview | 0 | `build_bobcat.py`, skinned | the fox's walker and pounce; hunts hares, mice, chipmunks, the Douglas squirrel |
+| snowshoe hare | variant of the CC0 rabbit | 0 | `build_snowshoe_hare.py`, skinned (lagomorph); winter white in `_COLORB` above 900 m | the brush rabbit's |
+| Douglas squirrel | variant of the gray squirrel's preview | 0 | `build_douglas_squirrel.py` | the gray squirrel's, on conifers |
+| Townsend's chipmunk | variant of the ground squirrel's preview | 0 | `build_chipmunk.py` | the vole's runways, by day |
+| deer mouse | variant of the vole's preview (a lofted tail) | 0 | `build_deer_mouse.py` | the vole's runways, by night |
+| American crow | variant of the ground raven | 0 | `build_crow_ground.py` | the raven's ground and air (the flying crow is the procedural raven at 0.72) |
+| ensatina | variant of the salamander | 0 | `build_ensatina.py` | as the salamander |
+| Pacific banana slug | procedural | 0 | `animalModels.js buildSlug` | its own crawl, `slUpdate` |
+
+**Kin.** `animals.js` gives every new slot the behaviour of an existing species (`KIN`), with its own mesh, numbers,
+habitat (`SUIT`, `SEASON`, the spawn rules in `rebuild`) and the per-species differences in `HOH` (group sizes, perch
+heights in the crown, wingbeat, how often a group moves on, how often it drops to the ground, the flush distance, day or
+night, water). The update dispatch, `extra()`, the spawns and the few species checks inside the machines read `KIN`; a
+variant slot's threat and alarm read its base (`BASE`). Water: `wetCell`, `waterSpot` (water.js `depthAt`) and `surfAt`
+(the stream ribbon's or pond's height, through `squirrelControl.waterAt`, wired in `main.js`). The conifers the Steller's
+jay needed were only the two foothill pines, so the Hoh's Steller's jays never spawned; `CONIFERS` is now every conifer
+genus, and the near set's other trees (alder, maple, cottonwood) are indexed for the kingfisher.
+
+**Playing.** Every new species but the slug is playable from the spirit: the walkers in `groundControl.js GROUND` (elk,
+bobcat, otter, hare, the three rodents, the salamanders, the heron, the merganser), the fliers in `flierControl.js
+FLIERS` (the four perching birds, the eagle, and the crow on its procedural flyer: `playerModel(name, { air })`).
+
+**Fauna and registry.** `species_data.py` has all nineteen (senses, habitat, an Olympic range band, perception, calendar,
+signature, needs, a few diets and alarm calls), pinned to the GBIF keys the tile's records use. `fauna.py` names GBIF's
+lumped American animals by the American species (`AMERICAS`: Cervus elaphus -> Cervus canadensis on tiles in UTM zones
+1-24) and uses the library's common name where it has one, so the elk shows as "Roosevelt elk"; the generated red deer
+traits are gone. On both Hoh tiles all nineteen are present by their records, and the registry puts each at fidelity 3
+(rigged and animated; 4 needs a voice). The registry's Meshy ledger now reads the fruit's jobs too (`library/*/jobs`).
+
+**Still wrong or open.** The bull elk's antlers rise only 0.47 m above the poll (the source's beams sweep back), and he
+keeps them all year (no cast or velvet yet); the elk bodies are a little short. The owl and the kingfisher are modelled
+upright, and are pitched level only for the jay machine's flights (the player's flier still flies them upright). The
+otter's swim is the walker lowered into the water (no paddling gait); the fish the otter, kingfisher, mergansers, heron and
+eagle eat are not in the world. The salamanders sit at a conifer's foot as a stand-in for the logs they live under. The
+deer mouse's rump is heavy; the chipmunk has no stripes on lod2; the bobcat's spots read as mottling. No voices yet. The
+camera often sits in the foliage when playing a small bird or the merganser among trees.

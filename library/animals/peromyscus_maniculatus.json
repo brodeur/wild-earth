@@ -1,0 +1,72 @@
+{
+  "id": "peromyscus_maniculatus",
+  "aliases": [
+    "deer_mouse",
+    "north_american_deer_mouse",
+    "forest_deer_mouse",
+    "peromyscus_keeni"
+  ],
+  "scientific": "Peromyscus maniculatus (the northwestern forest form; often split as P. keeni on the Olympic coast)",
+  "common": "Deer mouse",
+  "taxonomy": {
+    "kingdom": "Animalia",
+    "phylum": "Chordata",
+    "class": "Mammalia",
+    "order": "Rodentia",
+    "family": "Cricetidae",
+    "genus": "Peromyscus"
+  },
+  "mass_kg": 0.02,
+  "body_plan": "rodent",
+  "size": {
+    "length_m": 0.18,
+    "shoulder_or_wingspan_m": 0.035,
+    "note": "Head and body 0.08-0.10 m, tail 0.08-0.12 m in the northwestern forest form, mass 0.015-0.03 kg, ears about 1.6 cm. Built at 0.09 m head and body (nose to tail root) and a 0.09 m tail; 0.04 m at the back, 0.049 m to the ear tops; 0.18 m nose to tail tip."
+  },
+  "source": {
+    "kind": "variant",
+    "title": "Deer mouse (variant of the California vole's Meshy mesh)",
+    "author": "variant of microtus_californicus by agent (Claude) for Aaron Brodeur",
+    "url": "https://www.meshy.ai",
+    "file": "library/animals/jobs/microtus_californicus/01a171bc-b285-71cb-9e16-dc06982a34e4/model.glb (local, git-ignored; generated with Meshy (meshy.ai))",
+    "original": "the California vole's text-to-3D preview, ai_model meshy-6-lite, triangle remesh to 20,000 faces (the generator gave it a mouse's thin tail and rat-like ears)",
+    "prompt": "(the vole's) A California vole (Microtus californicus), a wild meadow vole, NOT a mouse, NOT a hamster. One adult on all fours in a neutral side-on pose, feet on the ground, head level. Realistic proportions: 17 cm long including a short 4.5 cm tail, stocky cylindrical body, short legs, blunt rounded face, small beady eyes, small round ears almost hidden in fur. Grizzled cinnamon-brown back with darker ticking, grey belly, grey feet, tail dark above and grey below. No whiskers as strands. No base, no ground. Game-ready.",
+    "job_id": "01a171bc-b285-71cb-9e16-dc06982a34e4",
+    "job": "library/animals/jobs/microtus_californicus/01a171bc-b285-71cb-9e16-dc06982a34e4/job.json",
+    "credits": 0,
+    "date": "2026-11-05 (UTC)",
+    "adopted_by": "tools/build_deer_mouse.py"
+  },
+  "license": "CC BY-SA 4.0",
+  "license_detail": {
+    "source_terms": "Meshy Terms of Use 3.2 (https://www.meshy.ai/terms-of-use, last updated 2026-09-19): API output on a paid plan is owned by the account holder, who releases it with the project's assets under CC BY-SA 4.0. Terms 2.4: AI-identifying metadata Meshy embeds is carried over (the source GLB carried none; the built GLB records the source in extras.source). Terms 2.6(xi): not for training models that compete with Meshy (binds the account holder, not CC BY-SA licensees).",
+    "redistribute_under_cc_by_sa": true,
+    "note": "A variant built from an earlier Meshy job: no new generation, no credits. Credit \"generated with Meshy (meshy.ai)\" is kept in the build script header and the GLB asset.copyright. AI-generated output may carry little or no copyright in some jurisdictions; the licence covers what rights exist."
+  },
+  "tiers": {
+    "lod0": 900,
+    "lod1": 300,
+    "lod2": 79,
+    "file": "client/assets/deer_mouse.glb",
+    "attributes": [
+      "POSITION",
+      "COLOR_0 (linear)",
+      "_PART",
+      "_PARTW",
+      "_PIVOT"
+    ],
+    "note": "lod0 = body + lofted tail (6 sides x 10 rings, 114) + eyes (16); lod1 = body + tail (4 x 6, 44) + eyes (16); lod2 = body + tail (3 x 3, 15). GLB 163,512 bytes."
+  },
+  "rig": "Template R as client/assets/vole.glb (tools/build_vole.py) plus a tail part, as client/assets/rabbit.glb writes it: BODY 0 (hindquarters), CHEST 7 (fore body, pivot at the lumbar: lifts to sit up and eat), LEG_A 1 (fore pair, elbows) and HEAD 6 (neck, head, ears, eyes; pivot at the neck) children of the chest, LEG_B 2 (hind pair, stifles), TAIL 3 (the lofted tail, pivot at its root, weight rising from 0 at the root to 1 by 15% along). No TAIL_TIP. extras.rig keys: kind, chest, tail, head, fore, hind, length_m (the vole's plus 'tail'). No skin. The client's vole constants have the tail amplitude at 0 (no tail part): this model needs a constant set with a tail swing.",
+  "status": "agent draft, needs local sign-off",
+  "accuracy_notes": "Reads as a deer mouse, not a vole: slim, long-legged, a pointed snout, big thin rounded ears (dusky with a pale rim), big protruding black eyes, a sharp line low on the flanks to a pure white belly, throat, chin, inner legs and feet, grey-brown back darker down the spine, and a long thin sharply bicoloured tail (dark above, white below) drooping toward the ground. Still the vole's body underneath: the rump is heavy (pear-shaped from above) for a deer mouse, and the white flank line climbs onto the back of the haunch. The tail is 3.2 mm thick at the root, so at game distance it is a line. Eyes on lod0 and lod1; lod2 is a 64-triangle body.",
+  "authors": [
+    "agent (Claude) for Aaron Brodeur (variant: build script, reshape, recolour, rig, tiers)"
+  ],
+  "sources": [
+    "Burke Museum, Mammals of Washington: deer mouse (read, not copied)",
+    "Verts, B. J. and L. N. Carraway (1998), Land Mammals of Oregon (description, measurements of the forest form)",
+    "Reid, F. A. (2006), A Field Guide to Mammals of North America (Peterson): deer mouse and Keen's mouse",
+    "tools/build_vole.py and library/animals/microtus_californicus.json (template)"
+  ]
+}

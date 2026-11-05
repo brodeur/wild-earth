@@ -1,6 +1,6 @@
 {
  "tile": "utm10n_439_5293",
- "at": "2026-11-05T09:59:11Z",
+ "at": "2026-11-05T21:14:41Z",
  "levels": {
   "0": "none: a stand-in species is drawn in its place (plants) or nothing is (animals)",
   "1": "stand-in look: another species' model with its own size and colour",
@@ -12,7 +12,7 @@
   "by_level": {
    "0": {
     "plants": 11,
-    "animals": 23
+    "animals": 13
    },
    "1": {
     "plants": 0,
@@ -24,7 +24,7 @@
    },
    "3": {
     "plants": 3,
-    "animals": 2
+    "animals": 21
    },
    "4": {
     "plants": 16,
@@ -32,9 +32,9 @@
    }
   },
   "plants": 49,
-  "animals_present": 29,
-  "animals_queued": 23,
-  "meshy_credits_queued": 650,
+  "animals_present": 38,
+  "animals_queued": 13,
+  "meshy_credits_queued": 380,
   "cards_queued": 11,
   "stand_ins": {
    "corydalis_scouleri": null,
@@ -64,17 +64,16 @@
    },
    "animal": {
     "target": 22,
-    "have": 29,
-    "with_model": 6
+    "have": 38,
+    "with_model": 25
    }
   },
   "hands": {
-   "count": 40,
+   "count": 25,
    "by_what": {
     "a trait card": 11,
     "a lexicon phrase or a species-mix rule": 1,
-    "a mesh": 22,
-    "a review of its generated traits": 6
+    "a mesh": 13
    }
   }
  },
@@ -728,6 +727,177 @@
    "evidence": "50 records within 10 km in 2011-2026 (>= 3)"
   },
   {
+   "id": "cervus_canadensis",
+   "scientific": "Cervus canadensis",
+   "common": "Roosevelt elk",
+   "kind": "mammal",
+   "fidelity": 3,
+   "present": "records",
+   "evidence": "253 records within 10 km in 2011-2026 (>= 3)"
+  },
+  {
+   "id": "tamiasciurus_douglasii",
+   "scientific": "Tamiasciurus douglasii",
+   "common": "Douglas squirrel",
+   "kind": "mammal",
+   "fidelity": 3,
+   "present": "records",
+   "evidence": "282 records within 10 km in 2011-2026 (>= 3)"
+  },
+  {
+   "id": "troglodytes_pacificus",
+   "scientific": "Troglodytes pacificus",
+   "common": "Pacific wren",
+   "kind": "bird",
+   "fidelity": 3,
+   "present": "records",
+   "evidence": "2151 records within 10 km in 2011-2026 (>= 3)"
+  },
+  {
+   "id": "perisoreus_canadensis",
+   "scientific": "Perisoreus canadensis",
+   "common": "Canada jay",
+   "kind": "bird",
+   "fidelity": 3,
+   "present": "records",
+   "evidence": "1168 records within 10 km in 2011-2026 (>= 3)"
+  },
+  {
+   "id": "poecile_rufescens",
+   "scientific": "Poecile rufescens",
+   "common": "chestnut-backed chickadee",
+   "kind": "bird",
+   "fidelity": 3,
+   "present": "records",
+   "evidence": "1380 records within 10 km in 2011-2026 (>= 3)"
+  },
+  {
+   "id": "strix_varia",
+   "scientific": "Strix varia",
+   "common": "barred owl",
+   "kind": "bird",
+   "fidelity": 3,
+   "present": "records",
+   "evidence": "154 records within 10 km in 2011-2026 (>= 3)"
+  },
+  {
+   "id": "megaceryle_alcyon",
+   "scientific": "Megaceryle alcyon",
+   "common": "belted kingfisher",
+   "kind": "bird",
+   "fidelity": 3,
+   "present": "records",
+   "evidence": "540 records within 10 km in 2011-2026 (>= 3)"
+  },
+  {
+   "id": "haliaeetus_leucocephalus",
+   "scientific": "Haliaeetus leucocephalus",
+   "common": "bald eagle",
+   "kind": "bird",
+   "fidelity": 3,
+   "present": "records",
+   "evidence": "183 records within 10 km in 2011-2026 (>= 3)"
+  },
+  {
+   "id": "corvus_brachyrhynchos",
+   "scientific": "Corvus brachyrhynchos",
+   "common": "American crow",
+   "kind": "bird",
+   "fidelity": 3,
+   "present": "records",
+   "evidence": "1438 records within 10 km in 2011-2026 (>= 3)"
+  },
+  {
+   "id": "lynx_rufus",
+   "scientific": "Lynx rufus",
+   "common": "bobcat",
+   "kind": "mammal",
+   "fidelity": 3,
+   "present": "records",
+   "evidence": "3 records within 10 km in 2011-2026 (>= 3)"
+  },
+  {
+   "id": "lontra_canadensis",
+   "scientific": "Lontra canadensis",
+   "common": "North American river otter",
+   "kind": "mammal",
+   "fidelity": 3,
+   "present": "records",
+   "evidence": "6 records within 10 km in 2011-2026 (>= 3)"
+  },
+  {
+   "id": "lepus_americanus",
+   "scientific": "Lepus americanus",
+   "common": "snowshoe hare",
+   "kind": "mammal",
+   "fidelity": 3,
+   "present": "records",
+   "evidence": "33 records within 10 km in 2011-2026 (>= 3)"
+  },
+  {
+   "id": "tamias_townsendii",
+   "scientific": "Tamias townsendii",
+   "common": "Townsend's chipmunk",
+   "kind": "mammal",
+   "fidelity": 3,
+   "present": "records",
+   "evidence": "44 records within 10 km in 2011-2026 (>= 3)"
+  },
+  {
+   "id": "peromyscus_maniculatus",
+   "scientific": "Peromyscus maniculatus",
+   "common": "deer mouse",
+   "kind": "mammal",
+   "fidelity": 3,
+   "present": "records",
+   "evidence": "3 records within 10 km in 2011-2026 (>= 3)"
+  },
+  {
+   "id": "plethodon_vehiculum",
+   "scientific": "Plethodon vehiculum",
+   "common": "western red-backed salamander",
+   "kind": "amphibian",
+   "fidelity": 3,
+   "present": "records",
+   "evidence": "26 records within 10 km in 2011-2026 (>= 3)"
+  },
+  {
+   "id": "ensatina_eschscholtzii",
+   "scientific": "Ensatina eschscholtzii",
+   "common": "ensatina",
+   "kind": "amphibian",
+   "fidelity": 3,
+   "present": "records",
+   "evidence": "20 records within 10 km in 2011-2026 (>= 3)"
+  },
+  {
+   "id": "ariolimax_columbianus",
+   "scientific": "Ariolimax columbianus",
+   "common": "Pacific banana slug",
+   "kind": "gastropod",
+   "fidelity": 3,
+   "present": "records",
+   "evidence": "628 records within 10 km in 2011-2026 (>= 3)"
+  },
+  {
+   "id": "ardea_herodias",
+   "scientific": "Ardea herodias",
+   "common": "great blue heron",
+   "kind": "bird",
+   "fidelity": 3,
+   "present": "records",
+   "evidence": "213 records within 10 km in 2011-2026 (>= 3)"
+  },
+  {
+   "id": "mergus_merganser",
+   "scientific": "Mergus merganser",
+   "common": "common merganser",
+   "kind": "bird",
+   "fidelity": 3,
+   "present": "records",
+   "evidence": "221 records within 10 km in 2011-2026 (>= 3)"
+  },
+  {
    "id": "junco_hyemalis",
    "scientific": "Junco hyemalis",
    "common": "dark-eyed junco",
@@ -739,21 +909,6 @@
    ],
    "role": [
     "herbivore"
-   ],
-   "traits": null
-  },
-  {
-   "id": "troglodytes_pacificus",
-   "scientific": "Troglodytes pacificus",
-   "common": "pacific wren",
-   "kind": "bird",
-   "fidelity": 0,
-   "present": "records",
-   "why": [
-    "most recorded: 2 of its class (5% of the class's records)"
-   ],
-   "role": [
-    "insectivore"
    ],
    "traits": null
   },
@@ -785,21 +940,6 @@
    "role": [
     "herbivore"
    ],
-   "traits": "library/animals/traits/dendragapus_fuliginosus.json"
-  },
-  {
-   "id": "poecile_rufescens",
-   "scientific": "Poecile rufescens",
-   "common": "chestnut-backed chickadee",
-   "kind": "bird",
-   "fidelity": 0,
-   "present": "records",
-   "why": [
-    "most recorded: 5 of its class (4% of the class's records)"
-   ],
-   "role": [
-    "insectivore"
-   ],
    "traits": null
   },
   {
@@ -815,7 +955,7 @@
    "role": [
     "insectivore"
    ],
-   "traits": "library/animals/traits/empidonax_difficilis.json"
+   "traits": null
   },
   {
    "id": "ixoreus_naevius",
@@ -830,7 +970,7 @@
    "role": [
     "omnivore"
    ],
-   "traits": "library/animals/traits/ixoreus_naevius.json"
+   "traits": null
   },
   {
    "id": "regulus_satrapa",
@@ -863,52 +1003,6 @@
    "traits": null
   },
   {
-   "id": "corvus_brachyrhynchos",
-   "scientific": "Corvus brachyrhynchos",
-   "common": "american crow",
-   "kind": "bird",
-   "fidelity": 0,
-   "present": "records",
-   "why": [
-    "scavenger"
-   ],
-   "role": [
-    "omnivore",
-    "scavenger"
-   ],
-   "traits": null
-  },
-  {
-   "id": "megaceryle_alcyon",
-   "scientific": "Megaceryle alcyon",
-   "common": "belted kingfisher",
-   "kind": "bird",
-   "fidelity": 0,
-   "present": "records",
-   "why": [
-    "predator"
-   ],
-   "role": [
-    "predator"
-   ],
-   "traits": null
-  },
-  {
-   "id": "strix_varia",
-   "scientific": "Strix varia",
-   "common": "barred owl",
-   "kind": "bird",
-   "fidelity": 0,
-   "present": "records",
-   "why": [
-    "predator"
-   ],
-   "role": [
-    "predator"
-   ],
-   "traits": null
-  },
-  {
    "id": "pandion_haliaetus",
    "scientific": "Pandion haliaetus",
    "common": "osprey",
@@ -924,51 +1018,6 @@
    "traits": null
   },
   {
-   "id": "mergus_merganser",
-   "scientific": "Mergus merganser",
-   "common": "common merganser",
-   "kind": "bird",
-   "fidelity": 0,
-   "present": "records",
-   "why": [
-    "predator"
-   ],
-   "role": [
-    "predator"
-   ],
-   "traits": null
-  },
-  {
-   "id": "cervus_elaphus",
-   "scientific": "Cervus elaphus",
-   "common": "red deer",
-   "kind": "mammal",
-   "fidelity": 0,
-   "present": "records",
-   "why": [
-    "most recorded: 2 of its class (18% of the class's records)"
-   ],
-   "role": [
-    "herbivore"
-   ],
-   "traits": null
-  },
-  {
-   "id": "tamiasciurus_douglasii",
-   "scientific": "Tamiasciurus douglasii",
-   "common": "douglas squirrel",
-   "kind": "mammal",
-   "fidelity": 0,
-   "present": "records",
-   "why": [
-    "most recorded: 3 of its class (11% of the class's records)"
-   ],
-   "role": [
-    "herbivore"
-   ],
-   "traits": null
-  },
-  {
    "id": "marmota_olympus",
    "scientific": "Marmota olympus",
    "common": "olympic marmot",
@@ -977,21 +1026,6 @@
    "present": "records",
    "why": [
     "most recorded: 4 of its class (9% of the class's records)"
-   ],
-   "role": [
-    "herbivore"
-   ],
-   "traits": "library/animals/traits/marmota_olympus.json"
-  },
-  {
-   "id": "lepus_americanus",
-   "scientific": "Lepus americanus",
-   "common": "snowshoe hare",
-   "kind": "mammal",
-   "fidelity": 0,
-   "present": "records",
-   "why": [
-    "most recorded: 6 of its class (4% of the class's records)"
    ],
    "role": [
     "herbivore"
@@ -1011,7 +1045,7 @@
    "role": [
     "herbivore"
    ],
-   "traits": "library/animals/traits/tamias_amoenus.json"
+   "traits": null
   },
   {
    "id": "sorex_monticolus",
@@ -1051,19 +1085,6 @@
    "present": "records",
    "why": [
     "most recorded: 2 of its class (12% of the class's records)"
-   ],
-   "role": [],
-   "traits": "library/animals/traits/rana_cascadae.json"
-  },
-  {
-   "id": "ariolimax_columbianus",
-   "scientific": "Ariolimax columbianus",
-   "common": "pacific banana slug",
-   "kind": "invertebrate",
-   "fidelity": 0,
-   "present": "records",
-   "why": [
-    "most recorded: 1 of its class (71% of the class's records)"
    ],
    "role": [],
    "traits": null
@@ -1177,21 +1198,6 @@
     "status": "queued (not run): Meshy needs Aaron's go-ahead past the 1,000-credit budget"
    },
    {
-    "id": "troglodytes_pacificus",
-    "scientific": "Troglodytes pacificus",
-    "common": "pacific wren",
-    "kind": "bird",
-    "records": 23,
-    "why": [
-     "most recorded: 2 of its class (5% of the class's records)"
-    ],
-    "body_plan": "bird",
-    "rig": "bird part rig (animalModels.js RIG.bird), flierControl",
-    "estimate_credits": 30,
-    "stand_in": "aphelocoma_californica",
-    "status": "queued (not run): Meshy needs Aaron's go-ahead past the 1,000-credit budget"
-   },
-   {
     "id": "turdus_migratorius",
     "scientific": "Turdus migratorius",
     "common": "american robin",
@@ -1237,21 +1243,6 @@
     "status": "queued (not run): Meshy needs Aaron's go-ahead past the 1,000-credit budget"
    },
    {
-    "id": "poecile_rufescens",
-    "scientific": "Poecile rufescens",
-    "common": "chestnut-backed chickadee",
-    "kind": "bird",
-    "records": 17,
-    "why": [
-     "most recorded: 5 of its class (4% of the class's records)"
-    ],
-    "body_plan": "bird",
-    "rig": "bird part rig (animalModels.js RIG.bird), flierControl",
-    "estimate_credits": 30,
-    "stand_in": "aphelocoma_californica",
-    "status": "queued (not run): Meshy needs Aaron's go-ahead past the 1,000-credit budget"
-   },
-   {
     "id": "empidonax_difficilis",
     "scientific": "Empidonax difficilis",
     "common": "pacific-slope flycatcher",
@@ -1264,21 +1255,6 @@
     "rig": "bird part rig (animalModels.js RIG.bird), flierControl",
     "estimate_credits": 30,
     "stand_in": "aphelocoma_californica",
-    "status": "queued (not run): Meshy needs Aaron's go-ahead past the 1,000-credit budget"
-   },
-   {
-    "id": "ariolimax_columbianus",
-    "scientific": "Ariolimax columbianus",
-    "common": "pacific banana slug",
-    "kind": "invertebrate",
-    "records": 17,
-    "why": [
-     "most recorded: 1 of its class (71% of the class's records)"
-    ],
-    "body_plan": "gastropod",
-    "rig": "none: procedural (a body of rings and a foot wave); no Meshy needed",
-    "estimate_credits": 0,
-    "stand_in": null,
     "status": "queued (not run): Meshy needs Aaron's go-ahead past the 1,000-credit budget"
    },
    {
@@ -1327,81 +1303,6 @@
     "status": "queued (not run): Meshy needs Aaron's go-ahead past the 1,000-credit budget"
    },
    {
-    "id": "corvus_brachyrhynchos",
-    "scientific": "Corvus brachyrhynchos",
-    "common": "american crow",
-    "kind": "bird",
-    "records": 10,
-    "why": [
-     "scavenger"
-    ],
-    "body_plan": "bird",
-    "rig": "bird part rig (animalModels.js RIG.bird), flierControl",
-    "estimate_credits": 30,
-    "stand_in": "corvus_corax",
-    "status": "queued (not run): Meshy needs Aaron's go-ahead past the 1,000-credit budget"
-   },
-   {
-    "id": "megaceryle_alcyon",
-    "scientific": "Megaceryle alcyon",
-    "common": "belted kingfisher",
-    "kind": "bird",
-    "records": 8,
-    "why": [
-     "predator"
-    ],
-    "body_plan": "bird",
-    "rig": "bird part rig (animalModels.js RIG.bird), flierControl",
-    "estimate_credits": 30,
-    "stand_in": null,
-    "status": "queued (not run): Meshy needs Aaron's go-ahead past the 1,000-credit budget"
-   },
-   {
-    "id": "cervus_elaphus",
-    "scientific": "Cervus elaphus",
-    "common": "red deer",
-    "kind": "mammal",
-    "records": 8,
-    "why": [
-     "most recorded: 2 of its class (18% of the class's records)"
-    ],
-    "body_plan": "quadruped",
-    "rig": "tools/rig_quadruped.py skeleton, gait.js / legs.js",
-    "estimate_credits": 30,
-    "stand_in": "odocoileus_hemionus",
-    "status": "queued (not run): Meshy needs Aaron's go-ahead past the 1,000-credit budget"
-   },
-   {
-    "id": "strix_varia",
-    "scientific": "Strix varia",
-    "common": "barred owl",
-    "kind": "bird",
-    "records": 5,
-    "why": [
-     "predator"
-    ],
-    "body_plan": "bird",
-    "rig": "bird part rig (animalModels.js RIG.bird), flierControl",
-    "estimate_credits": 30,
-    "stand_in": null,
-    "status": "queued (not run): Meshy needs Aaron's go-ahead past the 1,000-credit budget"
-   },
-   {
-    "id": "tamiasciurus_douglasii",
-    "scientific": "Tamiasciurus douglasii",
-    "common": "douglas squirrel",
-    "kind": "mammal",
-    "records": 5,
-    "why": [
-     "most recorded: 3 of its class (11% of the class's records)"
-    ],
-    "body_plan": "rodent",
-    "rig": "rodent part rig R (animalModels.js), the hop gait for lagomorphs",
-    "estimate_credits": 30,
-    "stand_in": "sciurus_griseus",
-    "status": "queued (not run): Meshy needs Aaron's go-ahead past the 1,000-credit budget"
-   },
-   {
     "id": "rana_cascadae",
     "scientific": "Rana cascadae",
     "common": "cascades frog",
@@ -1444,36 +1345,6 @@
     "rig": "bird part rig (animalModels.js RIG.bird), flierControl",
     "estimate_credits": 30,
     "stand_in": "buteo_jamaicensis",
-    "status": "queued (not run): Meshy needs Aaron's go-ahead past the 1,000-credit budget"
-   },
-   {
-    "id": "mergus_merganser",
-    "scientific": "Mergus merganser",
-    "common": "common merganser",
-    "kind": "bird",
-    "records": 3,
-    "why": [
-     "predator"
-    ],
-    "body_plan": "bird",
-    "rig": "bird part rig (animalModels.js RIG.bird), flierControl",
-    "estimate_credits": 30,
-    "stand_in": null,
-    "status": "queued (not run): Meshy needs Aaron's go-ahead past the 1,000-credit budget"
-   },
-   {
-    "id": "lepus_americanus",
-    "scientific": "Lepus americanus",
-    "common": "snowshoe hare",
-    "kind": "mammal",
-    "records": 2,
-    "why": [
-     "most recorded: 6 of its class (4% of the class's records)"
-    ],
-    "body_plan": "lagomorph",
-    "rig": "tools/rig_quadruped.py lagomorph path, gait.js hopStep",
-    "estimate_credits": 30,
-    "stand_in": "lepus_californicus",
     "status": "queued (not run): Meshy needs Aaron's go-ahead past the 1,000-credit budget"
    },
    {
@@ -1614,14 +1485,6 @@
    ]
   },
   {
-   "id": "troglodytes_pacificus",
-   "kind": "bird",
-   "what": "a mesh (Meshy ~30 credits) and its review",
-   "why": [
-    "most recorded: 2 of its class (5% of the class's records)"
-   ]
-  },
-  {
    "id": "turdus_migratorius",
    "kind": "bird",
    "what": "a mesh (Meshy ~30 credits) and its review",
@@ -1643,14 +1506,6 @@
    "what": "a mesh (Meshy ~30 credits) and its review",
    "why": [
     "most recorded: 4 of its class (4% of the class's records)"
-   ]
-  },
-  {
-   "id": "poecile_rufescens",
-   "kind": "bird",
-   "what": "a mesh (Meshy ~30 credits) and its review",
-   "why": [
-    "most recorded: 5 of its class (4% of the class's records)"
    ]
   },
   {
@@ -1686,46 +1541,6 @@
    ]
   },
   {
-   "id": "corvus_brachyrhynchos",
-   "kind": "bird",
-   "what": "a mesh (Meshy ~30 credits) and its review",
-   "why": [
-    "scavenger"
-   ]
-  },
-  {
-   "id": "megaceryle_alcyon",
-   "kind": "bird",
-   "what": "a mesh (Meshy ~30 credits) and its review",
-   "why": [
-    "predator"
-   ]
-  },
-  {
-   "id": "cervus_elaphus",
-   "kind": "mammal",
-   "what": "a mesh (Meshy ~30 credits) and its review",
-   "why": [
-    "most recorded: 2 of its class (18% of the class's records)"
-   ]
-  },
-  {
-   "id": "strix_varia",
-   "kind": "bird",
-   "what": "a mesh (Meshy ~30 credits) and its review",
-   "why": [
-    "predator"
-   ]
-  },
-  {
-   "id": "tamiasciurus_douglasii",
-   "kind": "mammal",
-   "what": "a mesh (Meshy ~30 credits) and its review",
-   "why": [
-    "most recorded: 3 of its class (11% of the class's records)"
-   ]
-  },
-  {
    "id": "rana_cascadae",
    "kind": "amphibian",
    "what": "a mesh (Meshy ~25 credits) and its review",
@@ -1750,22 +1565,6 @@
    ]
   },
   {
-   "id": "mergus_merganser",
-   "kind": "bird",
-   "what": "a mesh (Meshy ~30 credits) and its review",
-   "why": [
-    "predator"
-   ]
-  },
-  {
-   "id": "lepus_americanus",
-   "kind": "mammal",
-   "what": "a mesh (Meshy ~30 credits) and its review",
-   "why": [
-    "most recorded: 6 of its class (4% of the class's records)"
-   ]
-  },
-  {
    "id": "tamias_amoenus",
    "kind": "mammal",
    "what": "a mesh (Meshy ~30 credits) and its review",
@@ -1779,54 +1578,6 @@
    "what": "a mesh (Meshy ~30 credits) and its review",
    "why": [
     "most recorded: 8 of its class (2% of the class's records)"
-   ]
-  },
-  {
-   "id": "dendragapus_fuliginosus",
-   "kind": "bird",
-   "what": "a review of its generated traits",
-   "why": [
-    "generated"
-   ]
-  },
-  {
-   "id": "empidonax_difficilis",
-   "kind": "bird",
-   "what": "a review of its generated traits",
-   "why": [
-    "generated"
-   ]
-  },
-  {
-   "id": "ixoreus_naevius",
-   "kind": "bird",
-   "what": "a review of its generated traits",
-   "why": [
-    "generated"
-   ]
-  },
-  {
-   "id": "marmota_olympus",
-   "kind": "mammal",
-   "what": "a review of its generated traits",
-   "why": [
-    "generated"
-   ]
-  },
-  {
-   "id": "tamias_amoenus",
-   "kind": "mammal",
-   "what": "a review of its generated traits",
-   "why": [
-    "generated"
-   ]
-  },
-  {
-   "id": "rana_cascadae",
-   "kind": "amphibian",
-   "what": "a review of its generated traits",
-   "why": [
-    "generated"
    ]
   }
  ]

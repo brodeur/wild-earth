@@ -1,0 +1,73 @@
+{
+  "id": "corvus_brachyrhynchos",
+  "aliases": [
+    "american_crow",
+    "common_crow",
+    "crow"
+  ],
+  "scientific": "Corvus brachyrhynchos",
+  "common": "American crow",
+  "taxonomy": {
+    "kingdom": "Animalia",
+    "phylum": "Chordata",
+    "class": "Aves",
+    "order": "Passeriformes",
+    "family": "Corvidae",
+    "genus": "Corvus"
+  },
+  "mass_kg": 0.45,
+  "body_plan": "bird",
+  "size": {
+    "length_m": 0.44,
+    "shoulder_or_wingspan_m": 0.9,
+    "note": "Bill tip to tail tip 0.40-0.53 m, wingspan 0.85-1.0 m, mass 0.32-0.62 kg (the northwestern coastal birds are on the small side). The ground model is 0.44 m bill tip to tail tip standing, 0.237 m tall; the client draws the crow in the air with its scaled procedural flying model."
+  },
+  "source": {
+    "kind": "variant",
+    "title": "American crow on the ground (variant of the common raven's Meshy mesh and texture)",
+    "author": "variant of corvus_corax by agent (Claude) for Aaron Brodeur",
+    "url": "https://www.meshy.ai",
+    "file": "library/animals/jobs/corvus_corax/01a171a8-2db4-7256-9b99-ae6f617dea98/model.glb and texture_base_color.png (local, git-ignored; generated with Meshy (meshy.ai))",
+    "original": "the raven's text-to-3D preview (task 01a171a4-7814-7301-b140-133459562f9f, ai_model latest (meshy-7.1), triangle remesh to 20,000 faces, 20,310 triangles) and its refine (task 01a171a8-2db4-7256-9b99-ae6f617dea98, same geometry and UVs plus a 2048 px base-colour texture)",
+    "prompt": "(the raven's) A common raven (Corvus corax), one adult standing on flat ground, side-on neutral pose. Wings folded tight and flat against the flanks, folded primaries reaching nearly to the tail tip; body slim, about one third as wide as long. Heavy deep black bill about as long as the head, strongly curved culmen, a tuft of bristle feathers covering the nostrils on the base of the upper bill. Shaggy, pointed, bearded throat hackles. Flat crown sloping straight into the bill (Roman-nose profile), thick neck. Long graduated wedge-shaped tail, central feathers longest, pointed tip, no notch. Black scaled legs, four toes: three forward, one back, flat on the ground. All-black glossy plumage with visible feather edges. No base, no perch, no rock. Realistic, game-ready, closed, symmetric. Refine: Common raven, all-black plumage with a subtle blue-violet gloss on the back, scapulars and folded wings, each feather edge a slightly lighter black so the feather tracts read; matte black bill and nasal bristles, matte black scaled legs and toes, dark brown eye. Even, flat, unlit albedo: no baked shadows, no highlights, no ambient occlusion.",
+    "job_id": "01a171a4-7814-7301-b140-133459562f9f (mesh), 01a171a8-2db4-7256-9b99-ae6f617dea98 (texture)",
+    "job": "library/animals/jobs/corvus_corax/01a171a8-2db4-7256-9b99-ae6f617dea98/job.json",
+    "credits": 0,
+    "date": "2026-11-05 (UTC)",
+    "adopted_by": "tools/build_crow_ground.py"
+  },
+  "license": "CC BY-SA 4.0",
+  "license_detail": {
+    "source_terms": "Meshy Terms of Use 3.2 (https://www.meshy.ai/terms-of-use, last updated 2026-09-19): API output on a paid plan is owned by the account holder, who releases it with the project's assets under CC BY-SA 4.0. Terms 2.4: AI-identifying metadata Meshy embeds is carried over (the source GLB carried none; the built GLB records the source in extras.source). Terms 2.6(xi): not for training models that compete with Meshy (binds the account holder, not CC BY-SA licensees).",
+    "redistribute_under_cc_by_sa": true,
+    "note": "A variant built from an earlier Meshy job: no new generation, no credits. Credit \"generated with Meshy (meshy.ai)\" is kept in the build script header and the GLB asset.copyright. AI-generated output may carry little or no copyright in some jurisdictions; the licence covers what rights exist."
+  },
+  "tiers": {
+    "lod0": 1196,
+    "lod1": 400,
+    "lod2": 120,
+    "file": "client/assets/crow_ground.glb",
+    "attributes": [
+      "POSITION",
+      "NORMAL",
+      "COLOR_0 (linear)",
+      "_PART",
+      "_PARTW",
+      "_PIVOT",
+      "TEXCOORD_0 (lod0)"
+    ],
+    "note": "Ground (standing, walking, perched) model only. lod0 textured (512 px base-colour JPEG baked onto its own UV layout, material 0) and vertex-coloured; lod1 and lod2 vertex colour only (material 1), rebuilt from a voxel remesh then collapsed (a direct collapse to ~400 drew the feet into the belly). GLB 256,172 bytes."
+  },
+  "rig": "The bird template's ground variant, exactly as client/assets/raven_ground.glb (tools/build_raven_ground.py, RIG_GROUND: folded wings that flick, head yaw, hop) and to be loaded with its loader constants scaled: BODY 0, LEG_A 1 (left leg), LEG_B 2 (right), TAIL 3, WING_L/R 4/5 (folded wing, pivot at the shoulder), HEAD 6 (head and neck, pivot at the base of the neck), HAND_L/R 9/10 (folded primaries, pivot at the wrist). extras.rig keys as the raven's: kind, length_m, folded_wings, parts, wing, wrist, head, tail, hip_l, hip_r, note. extras.ground holds the RAVEN_GROUND-like points: bodyY 0.1568, head [0, 0.178, 0.1195] (the HEAD pivot), bill [0, 0.1861, 0.2237] (the bill tip). No skin.",
+  "status": "agent draft, needs local sign-off",
+  "accuracy_notes": "Reads as a crow beside the raven: smaller (0.44 m), a smaller, straighter, shallower bill (0.85x long, 0.75x deep about its axis, the decurved tip straightened), a smooth throat (no hackles), a smaller head with the crown domed a little, and a squarish, slightly rounded tail tip in place of the wedge; all black with a faint blue-purple gloss on the mantle, scapulars and folded wings, black bill and legs, dark eye (the raven's graded texture, the gloss tinted a little more purple). Still the raven's body: scaled to 0.44 m bill to tail after the bill and tail edits, its body is about 0.75x the raven's, so a little stout for a 0.45 kg crow (a uniform 0.71x would match the mass); the crown is still flatter than a crow's; the nasal bristles are the raven's (smaller with the bill); the hips sit 3.3 cm apart fore and aft, left from the source's stride; the source's folded wingtips reach most of the way down the tail. The squared tail tip is subtle in the side view; the raven mesh's tail was narrow from above to begin with.",
+  "authors": [
+    "agent (Claude) for Aaron Brodeur (variant: build script, reshape, recolour, rig, tiers)"
+  ],
+  "sources": [
+    "Cornell Lab of Ornithology, All About Birds: American Crow and Common Raven (identification, size; read, not copied)",
+    "Sibley, D. A. (2014), The Sibley Guide to Birds, 2nd ed.: crow and raven compared (bill, throat, tail shape)",
+    "Verbeek, N. A. M. and C. Caffrey (2002), American Crow, Birds of the World (measurements)",
+    "tools/build_raven_ground.py and library/animals/corvus_corax.json (template)"
+  ]
+}

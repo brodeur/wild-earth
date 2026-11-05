@@ -1,0 +1,77 @@
+{
+  "id": "mergus_merganser",
+  "aliases": [
+    "common_merganser",
+    "goosander",
+    "merganser"
+  ],
+  "scientific": "Mergus merganser americanus",
+  "common": "common merganser",
+  "taxonomy": {
+    "kingdom": "Animalia",
+    "phylum": "Chordata",
+    "class": "Aves",
+    "order": "Anseriformes",
+    "family": "Anatidae",
+    "genus": "Mergus"
+  },
+  "mass_kg": 1.4,
+  "body_plan": "bird",
+  "size": {
+    "length_m": 0.62,
+    "shoulder_or_wingspan_m": 0.9,
+    "note": "Length 0.54-0.71 m, wingspan 0.78-0.97 m; females 0.9-1.7 kg, males 1.2-2.1 kg. The build scales the floating bird to 0.62 m bill tip to tail tip; the origin is at the waterline: the flat underside 0.04 m below it, the back 0.10 m above it, the crown 0.24 m; bill 0.061 m from its base; the legs reach 0.084 m below the waterline (the feet); wing cards 0.90 m tip to tip. The drake (_COLORB) is drawn from the same mesh (the client may scale him about 1.1x)."
+  },
+  "source": {
+    "kind": "meshy",
+    "title": "Common merganser (female), swimming",
+    "author": "generated with Meshy (meshy.ai) by agent (Claude) for Aaron Brodeur",
+    "url": "https://www.meshy.ai",
+    "file": "library/animals/jobs/mergus_merganser/01a1ad3c-fd50-7790-860b-de59283a3ab8/model.glb (local; jobs/ meshes are not tracked)",
+    "original": "Meshy text-to-3D preview, ai_model meshy-6-lite, triangle remesh to 20,000 faces, 20,919 triangles, untextured",
+    "prompt": "A common merganser (Mergus merganser), adult female, swimming low on the water, side-on pose, wings folded, NOT a mallard, NOT a duck with a broad flat bill. No water modelled: the bird alone with a flat waterline underside. Realistic proportions: 62 cm long, a long low streamlined body, a long thin straight red bill with a small hooked tip, a rusty chestnut head with a shaggy crest hanging back from the nape, a sharp line between the rusty neck and the white chin and breast, a grey back, flanks and tail. No base. Game-ready, clean closed mesh.",
+    "job_id": "01a1ad3c-fd50-7790-860b-de59283a3ab8",
+    "job": "library/animals/jobs/mergus_merganser/01a1ad3c-fd50-7790-860b-de59283a3ab8/job.json",
+    "credits": 5,
+    "date": "2026-11-05 (UTC)",
+    "adopted_by": "tools/build_merganser.py"
+  },
+  "license": "CC BY-SA 4.0",
+  "license_detail": {
+    "source_terms": "Meshy Terms of Use 3.2 (https://www.meshy.ai/terms-of-use, last updated 2026-09-19): API output on a paid plan is owned by the account holder, who releases it with the project's assets under CC BY-SA 4.0. Terms 2.4: AI-identifying metadata Meshy embeds is carried over (the source GLB carried none; the built GLB records the source in extras.source). Terms 2.6(xi): not for training models that compete with Meshy (binds the account holder, not CC BY-SA licensees).",
+    "redistribute_under_cc_by_sa": true,
+    "note": "Credit \"generated with Meshy (meshy.ai)\" in the build script header and the GLB asset.copyright. AI-generated output may carry little or no copyright in some jurisdictions; the licence covers what rights exist."
+  },
+  "tiers": {
+    "lod0": 1200,
+    "lod1": 450,
+    "lod2": 150,
+    "file": "client/assets/merganser.glb",
+    "attributes": [
+      "POSITION",
+      "COLOR_0 (linear; female)",
+      "_PART",
+      "_PARTW",
+      "_PIVOT",
+      "_COLORB (linear; breeding male)"
+    ],
+    "lod_m": [
+      15,
+      50
+    ],
+    "note": "The generated floating female, the neck shortened 40% over its middle (the head rides lower, as when swimming) and the bill to 0.6 of its length (to ~6 cm, the small hook kept); a procedural shaggy crest (crossed blades hanging back from the nape: five on lod0, three on lod1, two on lod2), a dark eye (lod0), short orange legs with webbed feet under the rear of the body, and narrow pointed wing cards. Triangles: lod0 1,200 = 1,088 body + 112 crest, legs, cards and eyes; lod1 450 = 390 + 60; lod2 150 = 118 + 32. Tier switches suggested at 15 and 50 m (not wired). GLB 289,820 bytes."
+  },
+  "rig": "bird rig template as tools/build_quail.py / tools/build_turkey.py build it (to wire: client/src/animalModels.js; a swimmer: the instance sits at the water surface, y = 0 is the waterline): PART BODY 0, LEG_A 1 (left) / LEG_B 2 (right) short legs pivoting at the hip (hidden in the water while it swims; for a walk on a gravel bar the client raises the bird by the legs' depth, extras.rig.feet_y_m = -0.084), TAIL 3 (tail and the crossed wing tips, pivot at the tail root), HEAD 6 = neck, head and crest pivoting at the neck's base (a dive or a bill-dip swings it down), WING_L/R 4/5 arm cards (pivot at the shoulder) and HAND_L/R 9/10 hand cards (pivot at the wrist) that collapse into the shoulder at rest (collapse 1); flight: narrow pointed wings, fast shallow beats. extras.rig keys: kind 'bird', wing (shoulder [0.046, 0.084, 0.181]), tail [0, 0.049, -0.115], head (neck pivot [0, 0.077, 0.265]), hip (left [0.026, -0.006, 0.0]), length_m 0.62, span_m 0.9, waterline_m 0, draft_m 0.04, feet_y_m -0.084, variant 'breeding male in _COLORB'. No skin.",
+  "candidates": [],
+  "status": "agent draft, needs local sign-off",
+  "accuracy_notes": "Reads as a common merganser at every tier. Female (COLOR_0): rusty chestnut head, shaggy crest and upper neck sharply cut off from the white foreneck and breast, a sharply defined white chin under the bill, grey back, flanks and tail, darker grey folded primaries, white below the waterline, a thin red bill; in flight grey cards with a white square speculum behind a dark bar and dark primaries. Drake (_COLORB): dark green-black head and upper neck, white breast and flanks with a faint salmon wash, black back, grey rump and tail, black folded primaries; in flight black outer wing and a big white inner wing behind a thin black leading edge. Still open: the drake carries the female's crest blades in his head colour (the brief's choice; a real drake has a smooth rounded head) and her slimmer head; the head's green gloss is a flat dark colour; the drake's black back is a broad region rather than the narrow mantle stripe, and his grey vermiculated rump is plain grey; the female's head is uniformly rusty (no paler cheek); the legs are a thin orange tarsus and a flat web (no separate toes); the wing cards are flat with no wing-tip curve; the neck was shortened by a fixed band, so the swimming neck is still a little tall for a resting bird. A local birder should check the head height on the water and the drake's pattern against Hoh River birds.",
+  "authors": [
+    "agent (Claude) for Aaron Brodeur (Meshy job, build script, crest, legs, female and drake colours, rig, tiers, entry)"
+  ],
+  "sources": [
+    "Sibley, D. A. (2014), The Sibley Guide to Birds, 2nd ed.: common merganser (female and drake field marks, flight pattern) - from the agent's knowledge, not reopened for this entry",
+    "Pearce, J. M., M. L. Mallory and K. J. Metz (2015), Common Merganser (Mergus merganser), The Birds of North America / Birds of the World (measurements, mass, river habitat) - from the agent's knowledge",
+    "Cornell Lab of Ornithology, All About Birds: Common Merganser (size, colour pattern) - from the agent's knowledge",
+    "tools/build_quail.py, tools/build_turkey.py and tools/build_stellersjay.py (template, _COLORB, crest blades)"
+  ]
+}
