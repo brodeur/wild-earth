@@ -63,6 +63,7 @@ class Step:
     applies: Callable | None = None        # applies(tile, m) -> None, or the reason the step does not apply here
     owner: str | None = None               # the lane that owns the step's code, when it is not this one
     doc: str = ""
+    stage: str = "base"                    # base | flora | fauna | games (STAGES): --stage runs one
 
 
 # ---------------------------------------------------------------------------------------------------------------
@@ -131,6 +132,26 @@ def _water(tile, m, force):
     for k, v in build_water(tile, force).items():
         add_layer(m, tile, k, v, fetched=False)
     if "client.species_mix" in m["layers"] and tile.path("client/species_mix.json").exists():
+        # water.py writes every record's riparian rows (it has no tile's regions): keep only the species of the tile's
+        # natural regions (species_mix.riparian_rows), as the flora stage writes them
+        import json as _json
+        from .regions import natural_regions
+        from .species_mix import riparian_rows
+        p = tile.path("client/species_mix.json")
+        doc = _json.loads(p.read_text())
+        if "riparian" in doc:
+            text = p.read_text()
+            new = _json.dumps(riparian_rows(natural_regions(tile)), separators=(",", ":"))
+            start = text.index('"riparian":') + len('"riparian":')
+            depth, i = 0, start
+            while i < len(text):
+                ch = text[i]
+                depth += ch == "{"
+                depth -= ch == "}"
+                i += 1
+                if depth == 0 and ch == "}":
+                    break
+            p.write_text(text[:start] + new + text[i:])
         add_layer(m, tile, "client.species_mix", m["layers"]["client.species_mix"], fetched=False)
     m["status"]["water_banked"] = True
 
@@ -192,12 +213,15 @@ def _plants(tile, m, force):
     add_layer(m, tile, "species.plant_needs", plant_needs(tile, generate=True), fetched=False)
 
 
-def _derive(tile, m, force):
+def _terrain(tile, m, force):
+    # The base layer's client rasters (was the first half of `derive`): hillshade, terrain RGB, footprint raster, NAIP png,
+    # habitat png, the rewilded texture, heights, habitat, canopy, roads, the textures, masks and features (places,
+    # territories). Reads the banked DEM when the water step made one.
     from . import derive
     need = [k for k in ("terrain.dem", "imagery.naip", "vegetation.habitat", "vegetation.evt", "vegetation.bps",
                         "hydro.flowlines") if k not in m["layers"]]
-    if need:   # the old step logged ok and wrote nothing without these (Yosemite, 2026-10-28)
-        raise RuntimeError(f"derive needs {', '.join(need)}; run their steps first")
+    if need:   # the old derive logged ok and wrote nothing without these (Yosemite, 2026-10-28)
+        raise RuntimeError(f"terrain needs {', '.join(need)}; run their steps first")
     add_layer(m, tile, "terrain.hillshade", derive.hillshade(tile))
     add_layer(m, tile, "terrain.terrain_rgb", derive.terrain_rgb(tile))
     if "footprint.mask" in m["layers"]:
@@ -207,19 +231,64 @@ def _derive(tile, m, force):
         add_layer(m, tile, k, v)
     add_layer(m, tile, "terrain.rewilded", derive.rewilded_texture(tile))
     for k, v in derive.client_rasters(tile).items():
-        add_layer(m, tile, k, v)
+        if k != "client.mast":          # the acorn mast is the fauna stage's (resources)
+            add_layer(m, tile, k, v)
+
+
+def _species_mix(tile, m, force):
+    # The flora stage's mix per 30 m cell: trees, shrubs and the ground layer from the communities, the elevation zones,
+    # the groves and the stand-ins (pipeline/species_mix.py).
     from .species_mix import species_mix
     add_layer(m, tile, "client.species_mix", species_mix(tile))
+
+
+def _resources(tile, m, force):
+    # The fauna stage's resources (pipeline/resources.py): what an animal eats, drinks and hides in, by season; and the
+    # acorn mast raster for the acorn game (client/mast.png, written by derive.client_rasters once acorn_mast exists).
+    from . import derive
     from .resources import derive_resources
     add_layer(m, tile, "resources", derive_resources(tile))
-    if "client.mast" not in m["layers"]:
-        # client_rasters writes client/mast.png from resources/acorn_mast.tif, which derive_resources writes after it:
-        # on a fresh tile the first pass has no mast; the rasters are written again now that it exists
-        for k, v in derive.client_rasters(tile).items():
-            add_layer(m, tile, k, v)
+    mast = derive.client_rasters(tile).get("client.mast")
+    if mast:
+        add_layer(m, tile, "client.mast", mast)
+
+
+def _games(tile, m, force):
     # the species' games, classified from the calendar, perception and the resources (pipeline/games.py)
     from .games import derive_games
     add_layer(m, tile, "games", derive_games(tile), fetched=False)
+
+
+def _ice(tile, m, force):
+    # Permanent snow and ice (pipeline/ice.py): LANDFIRE's Snow-Ice cells and OSM's natural=glacier, as a base-layer mask
+    # the flora stage keeps bare and the water lane can seed meltwater from.
+    from .ice import build_ice
+    add_layer(m, tile, "terrain.ice", build_ice(tile), fetched=False)
+
+
+def _seams(tile, m, force):
+    # Where this tile borders a built tile (pipeline/seams.py): the DEM and the streams must agree along the shared edge.
+    from .seams import check_seams
+    rep = check_seams(tile)
+    m["seams"] = rep
+    bad = [f"{e['side']} with {e['neighbour']}: {e['problem']}" for e in rep.get("edges", []) if e.get("problem")]
+    if bad:
+        raise RuntimeError("seams: " + "; ".join(bad))
+
+
+def _animals(tile, m, force):
+    # The fauna stage's research (pipeline/fauna.py): every animal the tile's records name, ranked; each predator and
+    # scavenger; traits for those with no species_data entry (EltonTraits diet and mass, taxon defaults, locomotion);
+    # the Meshy queue with its estimate and the stand-in drawn meanwhile.
+    from .fauna import animal_research
+    add_layer(m, tile, "species.animals", animal_research(tile), fetched=False)
+
+
+def _game_seeds(tile, m, force):
+    # Each game's world seed (pipeline/games.py game_seeds, game_seeds.json): the acorn, dig and carrion worlds' seed number, players and
+    # hotspots, so a world started anywhere on the tile is the same for every node.
+    from .games import game_seeds
+    add_layer(m, tile, "games.seeds", game_seeds(tile), fetched=False)
 
 
 def _has_chm(tile, m):
@@ -307,80 +376,116 @@ def _species_prior(tile, m, force):
 # ---------------------------------------------------------------------------------------------------------------
 # The graph. Order is a valid topological order; `after` is what the fingerprint and the dependency check use.
 
+# The four stages (Aaron, 2026-11-04): each runnable on its own (--stage), in this order; a step reads only its own and
+# earlier stages' outputs (_check_graph). base: the ground, the water and the light; flora: what grows; fauna: what
+# lives there; games: what the animals do. registry and audit close the games stage (they read every stage).
+STAGES = ("base", "flora", "fauna", "games")
+B, F, A, G = STAGES
+
 STEPS: dict[str, Step] = {s.name: s for s in [
+    # ---------------------------------------------------------------- base
     Step("dem", "1", ["fetch_dem", "arcgis"], [], _dem, ["terrain.dem"], ["usgs_3dep", "pc_3dep_seamless", "nasadem"],
-         doc="the 5 m bare-earth DEM"),
+         doc="the 5 m bare-earth DEM", stage=B),
     Step("naip", "1", ["fetch_naip", "arcgis"], [], _naip, ["imagery.naip"], ["pc_naip", "usgs_naip"],
-         doc="present-day imagery at 2.5 m"),
-    Step("osm", "1", ["fetch_osm"], [], _osm, ["footprint.mask"], ["osm"], doc="the human footprint: buildings, roads, dams"),
+         doc="present-day imagery at 2.5 m", stage=B),
+    Step("osm", "1", ["fetch_osm"], [], _osm, ["footprint.mask"], ["osm"], doc="the human footprint: buildings, roads, dams", stage=B),
     Step("hydro", "1", ["fetch_hydro"], [], _hydro, ["hydro.flowlines", "hydro.waterbodies"], ["nhdplus_hr", "osm"],
-         owner="water lane", doc="NHD streams and waterbodies (OSM fallback)"),
+         owner="water lane", doc="NHD streams and waterbodies (OSM fallback)", stage=B),
     Step("channels", "1", ["channels"], ["dem", "hydro"], _channels, ["hydro.channels", "client.channel_depth"],
-         owner="water lane", doc="every stream routed by gravity on the DEM; NHD gives names and permanence"),
+         owner="water lane", doc="every stream routed by gravity on the DEM; NHD gives names and permanence", stage=B),
     Step("rewild_hydro", "1", ["rewild_hydro", "channels"], ["dem", "channels", "hydro", "osm"], _rewild_hydro,
          ["hydro.human_water", "terrain.dem_rewilded", "client.channel_profile"], ["osm", "native_land"],
-         owner="water lane", doc="dams breached, reservoirs drained, channels re-routed, pool-riffle profile"),
-    Step("veg", "1", ["fetch_vegetation", "habitat"], ["rewild_hydro"], _veg, ["vegetation."], ["landfire"],
-         doc="LANDFIRE EVT/EVC/EVH/BpS, habitat classes, human cells backfilled from BpS"),
-    Step("lidar", "1", ["lidar", "fetch_lidar", "urban"], ["dem", "osm", "veg"], _lidar,
+         owner="water lane", doc="dams breached, reservoirs drained, channels re-routed, pool-riffle profile", stage=B),
+    Step("landcover", "1", ["fetch_vegetation", "habitat"], ["rewild_hydro"], _veg, ["vegetation."], ["landfire"],
+         doc="LANDFIRE EVT/EVC/EVH/BpS and the habitat classes, human cells backfilled from BpS: what covers the ground, "
+             "which the base layer's erasure, substrate and textures need; the flora stage reads it for its species", stage=B),
+    Step("ice", "1", ["ice"], ["dem", "landcover"], _ice, ["terrain.ice"], ["osm"],
+         doc="permanent snow and ice: LANDFIRE Snow-Ice and OSM glaciers", stage=B),
+    Step("lidar", "1", ["lidar", "fetch_lidar", "urban"], ["dem", "osm", "landcover"], _lidar,
          ["terrain.dem_1m", "terrain.dsm_1m", "vegetation.chm_1m", "vegetation.multi_1m", "terrain.lidar_dtm_check",
-          "vegetation.canopy_height_10m", "client.canopy_height", "client.trees_lidar", "client.terrain_detail",
+          "vegetation.canopy_height_10m", "client.canopy_height", "client.terrain_detail",
           "terrain.roughness", "client.lidar_micro"], ["usgs_3dep_lidar"], applies=_lidar_applies,
-         doc="1 m ground, canopy height and crowns from the 3DEP point cloud; DEM-only from the 1 m products without one"),
+         doc="1 m ground, canopy height from the 3DEP point cloud; DEM-only from the 1 m products without one", stage=B),
     Step("water", "1", ["water"], ["dem", "rewild_hydro", "hydro", "lidar"], _water,
          ["terrain.dem_banked", "client.heights", "client.water", "hydro.water_reaches"], [], owner="water lane",
-         doc="banks, beds, levels and riparian zones"),
-    Step("ground", "1", ["ground", "fetch_soils", "fetch_geology"], ["dem", "veg", "lidar"], _ground,
+         doc="banks, beds, levels and riparian zones", stage=B),
+    Step("ground", "1", ["ground", "fetch_soils", "fetch_geology"], ["dem", "landcover", "lidar"], _ground,
          ["geology.", "soils.", "client.geology", "client.soils", "client.outcrop", "client.ground_classes"],
-         ["macrostrat", "usda_sda"], doc="geology and soils, outcrop likelihood, ground classes"),
-    Step("species", "1", ["fetch_species", "species_data", "locomotion"], ["dem", "veg"], _species,
+         ["macrostrat", "usda_sda"], doc="geology and soils, outcrop likelihood, ground classes", stage=B),
+    Step("terrain", "1", ["derive", "urban", "habitat", "fetch_places", "fetch_territories"],
+         ["dem", "naip", "osm", "hydro", "channels", "rewild_hydro", "water", "landcover", "ice"], _terrain,
+         ["terrain.hillshade", "terrain.terrain_rgb", "footprint.mask_raster", "imagery.naip_png", "vegetation.habitat_png",
+          "vegetation.habitat_present_png", "terrain.rewilded", "client.habitat", "client.canopy", "footprint.urban",
+          "client.roads", "client.texture", "client.masks", "client.imagery", "client.texture_present", "client.features"],
+         ["osm", "native_land"], doc="the base layer's client rasters, textures and place names", stage=B),
+    Step("erase", "1", ["erase_imagery", "urban"], ["naip", "osm", "landcover", "terrain", "rewild_hydro"], _erase,
+         ["client.texture_imagery"], doc="the imagery with the human footprint removed", stage=B),
+    Step("substrate", "1", ["substrate"], ["ground", "water", "dem", "lidar", "naip", "landcover", "erase", "terrain", "ice"],
+         _substrate, ["client.substrate", "client.substrate_classes"], doc="lithology, cliff morphology, exposed rock", stage=B),
+    Step("seasons", "1", ["fetch_sentinel"], ["landcover", "lidar", "naip"], _seasons,
+         ["seasons.s2_monthly", "client.season_rgb", "client.season_ndvi"], ["sentinel2_l2a"],
+         doc="Sentinel-2 monthly ground colour", stage=B),
+    Step("weather", "1", ["fetch_weather"], [], _weather, ["client.weather"], ["open_meteo"],
+         doc="last year's hourly weather at the tile centre", stage=B),
+    Step("unreal", "1", ["export_unreal"], ["dem", "landcover"], _unreal, ["unreal"], doc="the Unreal landscape export", stage=B),
+    Step("seams", "1", ["seams"], ["dem", "channels", "water"], _seams, [],
+         doc="the DEM and streams agree with every built neighbour along the shared edge", stage=B),
+    # ---------------------------------------------------------------- flora
+    Step("plants", "1", ["needs", "plantgen", "communities", "research"], ["landcover", "ice"], _plants, ["species.plant_needs"],
+         ["gbif"], library=["library/plant_cards"],
+         doc="the plants the tile needs, ranked; missing ones grown from their trait cards", stage=F),
+    Step("species_mix", "1", ["species_mix", "communities", "regions"], ["dem", "landcover", "water", "ice", "plants"],
+         _species_mix, ["client.species_mix"], library=["library/species"],
+         doc="trees, shrubs and ground layer per 30 m cell, with the unmatched communities read from their names", stage=F),
+    Step("crowns", "1", ["lidar", "urban"], ["lidar", "osm", "landcover", "terrain", "species_mix"], _crowns,
+         ["client.trees_lidar"], applies=_has_chm, doc="the lidar crowns, with the buildings, the rewilded classes and the urban mask",
+         stage=F),
+    Step("inpaint", "1", ["inpaint_crowns"], ["erase", "lidar", "crowns", "terrain"], _inpaint,
+         ["client.texture_ground", "client.texture_ground_mask"], applies=_has_chm,
+         doc="the ground-only base texture with the crowns inpainted", stage=F),
+    # ---------------------------------------------------------------- fauna
+    Step("species", "1", ["fetch_species", "species_data", "locomotion", "regions"], ["dem", "landcover"], _species,
          ["species.list", "species.occurrences", "species.seasonal", "species.inventory", "perception", "calendar",
           "locomotion", "client.species_prior"], ["gbif"], library=["library/animals"],
-         doc="GBIF records, presence, perception, calendar, locomotion, the client's density prior"),
-    Step("plants", "1", ["needs", "plantgen", "communities"], ["veg", "species"], _plants, ["species.plant_needs"], [],
-         library=["library/plant_cards"], doc="the plants the tile needs; missing ones grown from their trait cards"),
-    Step("derive", "1", ["derive", "species_mix", "resources", "games", "urban", "habitat", "fetch_places", "fetch_territories"],
-         ["dem", "naip", "osm", "hydro", "channels", "rewild_hydro", "water", "veg", "species", "plants"], _derive,
-         ["terrain.hillshade", "terrain.terrain_rgb", "footprint.mask_raster", "imagery.naip_png", "vegetation.habitat_png",
-          "vegetation.habitat_present_png", "terrain.rewilded", "client.habitat", "client.canopy", "client.mast",
-          "footprint.urban", "client.roads", "client.texture", "client.masks", "client.imagery", "client.texture_present",
-          "client.features", "client.species_mix", "resources", "games"], ["osm", "native_land"], library=["library/species"],
-         doc="the client rasters, the species mix, the resources and the games"),
-    Step("crowns", "1", ["lidar", "urban"], ["lidar", "osm", "veg", "derive"], _crowns, ["client.trees_lidar"],
-         applies=_has_chm, doc="the crown finder again, with the buildings, the rewilded classes and the urban mask"),
-    Step("erase", "1", ["erase_imagery", "urban"], ["naip", "osm", "veg", "derive", "rewild_hydro"], _erase,
-         ["client.texture_imagery"], doc="the imagery with the human footprint removed"),
-    Step("substrate", "1", ["substrate"], ["ground", "water", "dem", "lidar", "naip", "veg", "erase", "derive"], _substrate,
-         ["client.substrate", "client.substrate_classes"], doc="lithology, cliff morphology, exposed rock"),
-    Step("inpaint", "1", ["inpaint_crowns"], ["erase", "lidar", "crowns", "derive"], _inpaint,
-         ["client.texture_ground", "client.texture_ground_mask"], applies=_has_chm,
-         doc="the ground-only base texture with the crowns inpainted"),
-    Step("seasons", "1", ["fetch_sentinel"], ["veg", "lidar", "naip"], _seasons,
-         ["seasons.s2_monthly", "client.season_rgb", "client.season_ndvi"], ["sentinel2_l2a"],
-         doc="Sentinel-2 monthly ground colour"),
-    Step("weather", "1", ["fetch_weather"], [], _weather, ["client.weather"], ["open_meteo"],
-         doc="last year's hourly weather at the tile centre"),
-    Step("unreal", "1", ["export_unreal"], ["dem", "veg"], _unreal, ["unreal"], doc="the Unreal landscape export"),
-    Step("registry", "1", ["registry", "needs"], ["species", "plants", "derive"], _registry, ["species.registry"],
-         library=["library/species", "library/animals", "library/plant_cards"],
-         doc="every species the tile needs at its fidelity, the stand-ins and the queued Meshy jobs"),
-    Step("audit", "1", ["audit_licenses"], ["dem", "naip", "osm", "hydro", "channels", "rewild_hydro", "veg", "lidar", "water",
-                                           "ground", "species", "plants", "derive", "crowns", "erase", "substrate", "inpaint",
-                                           "seasons", "weather", "unreal", "registry"], _audit, [],
-         doc="the licence audit: every source credited, no CC BY-NC data in a client layer"),
+         doc="GBIF presence, perception, calendar, locomotion, the client's density prior", stage=A),
+    Step("animals", "1", ["fauna", "research", "locomotion"], ["species", "plants"], _animals, ["species.animals"], ["gbif"],
+         library=["library/animals", "data/eltontraits"],
+         doc="every animal recorded on the tile, ranked; predators and scavengers; traits for those without; the Meshy queue",
+         stage=A),
+    Step("resources", "1", ["resources", "derive"], ["dem", "hydro", "landcover", "terrain", "species_mix", "species"], _resources,
+         ["resources", "client.mast"], doc="food, water and cover per season; the acorn mast", stage=A),
+    # ---------------------------------------------------------------- games
+    Step("games", "1", ["games"], ["species", "resources", "animals"], _games, ["games"],
+         doc="every species' games: archetype, hotspots, scarcity, predators, competitors", stage=G),
+    Step("game_seeds", "1", ["games"], ["games", "resources", "species"], _game_seeds, ["games.seeds"],
+         doc="the acorn, dig and carrion worlds' seeds, players and hotspots", stage=G),
+    Step("registry", "1", ["registry", "needs", "fauna"], ["plants", "species_mix", "species", "animals"], _registry,
+         ["species.registry"], library=["library/species", "library/animals", "library/plant_cards"],
+         doc="every species the tile needs at its fidelity, the stand-ins, the queues and the hand edits left", stage=G),
+    Step("audit", "1", ["audit_licenses"], [], _audit, [], doc="the licence audit: every source credited, no CC BY-NC data in "
+                                                            "a client layer", stage=G),
 ]}
+STEPS["audit"].after = [n for n in STEPS if n != "audit"]
+ALIASES = {"veg": "landcover", "derive": "terrain"}   # old step names (--steps veg / derive keep working)
 ORDER = list(STEPS)
 # Run on request only (not part of --all): the species prior alone, as the old --steps species_prior did.
-EXTRA = {"species_prior": Step("species_prior", "1", ["derive"], ["species"], _species_prior, ["client.species_prior"])}
+EXTRA = {"species_prior": Step("species_prior", "1", ["derive"], ["species"], _species_prior, ["client.species_prior"], stage=A),
+         # the old derive: terrain, species_mix, resources and games in one call
+         }
 
 
 def _check_graph() -> None:
     seen = set()
     for n in ORDER:
+        st = STAGES.index(STEPS[n].stage)
         for d in STEPS[n].after:
             if d not in seen:
                 raise AssertionError(f"step {n} runs before its input {d}")
+            if STAGES.index(STEPS[d].stage) > st:
+                raise AssertionError(f"step {n} ({STEPS[n].stage}) reads {d} of the later stage {STEPS[d].stage}")
         seen.add(n)
+    order = [STAGES.index(STEPS[n].stage) for n in ORDER]
+    assert order == sorted(order), "ORDER must run the stages in order"
 
 
 _check_graph()
@@ -542,7 +647,14 @@ def _sources_of(m: dict, layer_names: list[str]) -> dict:
 
 
 def run_step(tile: Tile, step: Step, m: dict, force: bool, hashes: Hashes) -> dict:
+    from . import cost, netmeter
     t0 = time.time()
+    started = now_iso()
+    cpu0 = cost.rusage()
+    meter_dir = tile.dir / "_cache" / "netmeter" / f"{step.name}-{int(t0)}"
+    os.environ["WE_NETMETER_DIR"] = str(meter_dir)   # the step's worker processes write their tallies there
+    netmeter.install()
+    netmeter.reset()
     print(f"[{tile.tile_id}] {step.name} ...", flush=True)
     fp, parts = fingerprint(tile, step, m)
     reason = step.applies(tile, m) if step.applies else None
@@ -567,6 +679,7 @@ def run_step(tile: Tile, step: Step, m: dict, force: bool, hashes: Hashes) -> di
                        fallbacks=r["fallbacks"], notes=r["notes"],
                        fetched={"network": sum(1 for f in r["fetched"] if not f["cached"]),
                                 "cache": sum(1 for f in r["fetched"] if f["cached"])})
+            rec["_fetched"] = r["fetched"]
             if step.name == "audit":
                 rec["out_hash"] = _h(m.get("licence_audit", {}).get("problems"))
         ok = True
@@ -577,6 +690,31 @@ def run_step(tile: Tile, step: Step, m: dict, force: bool, hashes: Hashes) -> di
         ok = False
     runlog.end()
     rec["seconds"] = round(time.time() - t0, 1)
+    # the cost meter (pipeline/cost.py)
+    netmeter.flush()
+    os.environ.pop("WE_NETMETER_DIR", None)
+    cpu1 = cost.rusage()
+    cache: dict = {}
+    for f in rec.pop("_fetched", []) or []:
+        c = cache.setdefault(f["source"], {"hits": 0, "misses": 0})
+        c["hits" if f["cached"] else "misses"] += 1
+    disk = 0
+    for rel in (rec.get("outputs") or {}):
+        p = tile.dir / rel
+        disk += p.stat().st_size if p.is_file() else 0
+    meshy = {"spent": 0, "queued": 0, "queued_credits_est": 0}
+    if step.name == "registry":
+        rp = tile.path("species/registry.json")
+        if rp.exists():
+            sm = read_json(rp).get("summary", {})
+            meshy.update(queued=sm.get("animals_queued", 0), queued_credits_est=sm.get("meshy_credits_queued", 0))
+    cost.record_step(tile, step.name, step.stage, {
+        "started_at": started, "ended_at": now_iso(), "wall_s": rec["seconds"],
+        "cpu_self_s": round(cpu1[0] - cpu0[0], 1), "cpu_children_s": round(cpu1[1] - cpu0[1], 1),
+        "downloads": netmeter.collect(str(meter_dir)), "cache": cache, "disk_bytes": disk, "meshy": meshy,
+        "status": rec["status"]})
+    import shutil
+    shutil.rmtree(meter_dir, ignore_errors=True)
     m.setdefault("steps", {})[step.name] = rec
     m.setdefault("log", []).append({"step": step.name, "at": now_iso(), "seconds": rec["seconds"], "ok": ok,
                                     **({"error": rec["error"][:500]} if not ok else {}),
@@ -589,49 +727,93 @@ def run_step(tile: Tile, step: Step, m: dict, force: bool, hashes: Hashes) -> di
     return rec
 
 
+def resolve_names(names) -> list[str]:
+    return [ALIASES.get(n, n) for n in names]
+
+
 def build(tile: Tile, *, steps: list[str] | None = None, force: set[str] = frozenset(), keep_going=False,
-          plan_only=False, refetch=False) -> dict:
-    """Run the graph (or the named steps, in graph order), skipping the current ones. Returns the manifest."""
+          plan_only=False, refetch=False, stages: list[str] | None = None) -> dict:
+    """Run the graph (or the named steps, or the named stages, in graph order), skipping the current ones. A step whose
+    input belongs to a step not run here and never run before is blocked, naming it (run its stage first)."""
     tile.dir.mkdir(parents=True, exist_ok=True)
     m = load_manifest(tile)
+    for old, new in ALIASES.items():   # records kept under a step's old name, and fingerprints made with it
+        if old in m.get("steps", {}) and new not in m["steps"] and new in STEPS:
+            m["steps"][new] = m["steps"].pop(old)
+    for rec in m.get("steps", {}).values():
+        deps = (rec.get("parts") or {}).get("deps")
+        if deps and "veg" in deps and "landcover" not in deps:
+            deps["landcover"] = deps.pop("veg")
+            rec["fingerprint"] = _h(rec["parts"])
     from .config import GENERATOR, SPEC_VERSION
     m["spec_version"], m["generator"] = SPEC_VERSION, GENERATOR
     hashes = Hashes(tile)
-    names = [n for n in ORDER if steps is None or n in steps] + [n for n in (steps or []) if n in EXTRA]
+    steps = resolve_names(steps) if steps else None
+    force = set(resolve_names(force))
+    if stages:
+        bad = [st for st in stages if st not in STAGES]
+        if bad:
+            raise ValueError(f"unknown stage(s) {bad}; stages are {list(STAGES)} or all")
+    names = [n for n in ORDER if (steps is None or n in steps) and (not stages or STEPS[n].stage in stages)]
+    names += [n for n in (steps or []) if n in EXTRA]
     unknown = [n for n in (steps or []) if n not in STEPS and n not in EXTRA]
     if unknown:
         raise ValueError(f"unknown step(s) {unknown}; steps are {ORDER + list(EXTRA)}")
     failed: set[str] = set()
     plan = []
+    run = {"started_at": now_iso(), "stages": []}
+    cur_stage = None
     for n in names:
         step = STEPS.get(n) or EXTRA[n]
+        if step.stage != cur_stage:
+            if cur_stage is not None and run["stages"]:
+                run["stages"][-1]["ended_at"] = now_iso()
+            cur_stage = step.stage
+            run["stages"].append({"stage": cur_stage, "started_at": now_iso(), "steps_run": [], "steps_skipped": []})
         blocked = [d for d in step.after if d in failed]
-        if blocked:
+        missing = [d for d in step.after if d not in names and
+                   (m["steps"].get(d) or {}).get("status") not in ("ok", "not_applicable", "adopted", "stale")]
+        if blocked or missing:
             failed.add(n)
-            plan.append((n, f"blocked by {', '.join(blocked)}"))
+            why = (f"blocked by {', '.join(blocked)}" if blocked else
+                   f"needs {', '.join(missing)} ({', '.join(sorted({STEPS[d].stage for d in missing if d in STEPS}))} stage), never run")
+            plan.append((n, why))
             if not plan_only:
-                m["steps"].setdefault(n, {})["status"] = "blocked"
+                m["steps"].setdefault(n, {}).update(status="blocked", reason=why)
+                print(f"[{tile.tile_id}] {n} blocked: {why}", file=sys.stderr, flush=True)
+                if not keep_going and missing:
+                    break
             continue
         is_cur, why = current(tile, step, m, hashes)
         if n in force:
             why = "forced"
         elif is_cur:
             plan.append((n, "current, skipped"))
+            run["stages"][-1]["steps_skipped"].append(n)
             continue
         plan.append((n, why))
         if plan_only:
             continue
         rec = run_step(tile, step, m, refetch and n in force, hashes)
+        run["stages"][-1]["steps_run"].append(n)
         if rec["status"] == "failed":
             failed.add(n)
             if not keep_going:
                 print(f"[{tile.tile_id}] stopped at {n}: {rec.get('error', '')[:300]}", file=sys.stderr, flush=True)
                 break
     hashes.save()
+    if run["stages"]:
+        run["stages"][-1]["ended_at"] = now_iso()
+    run["ended_at"] = now_iso()
+    run["failed"] = sorted(failed)
     if plan_only:
         w = max(len(n) for n, _ in plan) if plan else 4
         for n, why in plan:
-            print(f"  {n:<{w}}  {why}")
+            print(f"  {STEPS[n].stage if n in STEPS else '':<6} {n:<{w}}  {why}")
+    else:
+        save(tile, m)
+        from . import cost
+        cost.record_run(tile, run)
     m["_failed"] = sorted(failed)
     return m
 

@@ -855,6 +855,12 @@ def build_crowns(tile: Tile) -> dict:
     if mp.exists():
         multi = _read(mp).astype(np.float32) / 255
     else:
+        st_p = tile.dir / "_cache" / GRID_DIR / "state.json"
+        if not (st_p.exists() and json.loads(st_p.read_text()).get("complete")):
+            # 2026-11-04 (the San Francisco cells): products from before multi_1m existed, and no kept grids; reading the
+            # empty grids found no crown and failed in a percentile. Say what is missing instead.
+            raise RuntimeError("crowns needs vegetation/multi_1m.tif or the kept point-cloud grids; this tile's lidar products "
+                               "predate multi_1m: `--force lidar` re-streams the point cloud (about an hour)")
         d, g = _grids(tile, "r")
         npts = np.asarray(g["npts"]).reshape(N1, N1)
         multi = np.where(npts > 0, np.asarray(g["nmulti"]).reshape(N1, N1) / np.maximum(npts, 1), 0).astype(np.float32)

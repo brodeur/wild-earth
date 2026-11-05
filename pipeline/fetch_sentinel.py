@@ -275,6 +275,11 @@ def fetch_looks(tile: Tile, force=False, workers=12) -> tuple[list[Path], dict]:
     sign = _signer(provider)
     todo = [(d, sc) for d, sc in sorted(by_date.items())
             if force or not (looks_dir / f"{d.replace('-', '')}.npz").exists()]
+    from . import runlog
+    for _ in range(len(by_date) - len(todo)):
+        runlog.fetched("sentinel2_l2a", None, cached=True)
+    for _ in range(len(todo)):
+        runlog.fetched("sentinel2_l2a", None, cached=False)
     print(f"sentinel: {len(scenes)} scenes on {len(by_date)} dates via {provider}; {len(todo)} dates to read",
           flush=True)
     t0, done, failed = time.time(), 0, []

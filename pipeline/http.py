@@ -43,8 +43,11 @@ def post(url: str, data=None, *, timeout=300, retries=3) -> requests.Response:
 
 def download(url: str, params, dest: Path, *, force=False) -> Path:
     """Stream a large response to disk; reuse it if already present."""
+    from . import netmeter, runlog
     if dest.exists() and dest.stat().st_size > 0 and not force:
+        runlog.fetched(netmeter.source_of(url), str(dest), cached=True)
         return dest
+    runlog.fetched(netmeter.source_of(url), str(dest), cached=False)
     dest.parent.mkdir(parents=True, exist_ok=True)
     r = get(url, params, stream=True, timeout=900)
     ctype = r.headers.get("content-type", "")

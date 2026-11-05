@@ -155,8 +155,11 @@ def _answer(data) -> dict:
 def overpass(query: str, cache: Path | None = None, *, force=False, budget_s: float | None = None,
              label="overpass") -> dict:
     """Run an Overpass query over the mirrors with backoff; cache the raw answer if `cache` is given."""
+    from . import runlog
     if cache is not None and cache.exists() and not force:
+        runlog.fetched("osm", str(cache), cached=True)
         return json.loads(cache.read_text())
+    runlog.fetched("osm", str(cache) if cache else None, cached=False)
     budget = OVERPASS_BUDGET_S if budget_s is None else budget_s
     t0, wait, rnd, last = time.time(), 60.0, 0, None
     while True:

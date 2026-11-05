@@ -1,6 +1,8 @@
 """Build a tile package: one command for the whole graph of steps (pipeline/steps.py, docs/pipeline.md).
 
     python -m pipeline.build_tile --tile utm10n_735_4235 --all            # every step in order; current ones skipped
+    python -m pipeline.build_tile --tile utm10n_735_4235 --stage base     # one stage: base | flora | fauna | games | all
+    python -m pipeline.build_tile --tile utm10n_735_4235 --cost           # what the tile cost: time, downloads, disk, client
     python -m pipeline.build_tile --anchor -120.31 38.27 --all            # the tile holding a point
     python -m pipeline.build_tile --tile utm10n_735_4235 --plan           # what --all would run, and why
     python -m pipeline.build_tile --tile utm10n_735_4235 --all --force derive,registry   # these whatever their state
@@ -28,7 +30,7 @@ from .config import Tile
 # Re-exported: server.py, fetch_territories and older scripts import these from here.
 from .manifest import (add_layer, add_species_prior, load_manifest, merge_edits_from_disk as _merge_edits_from_disk,  # noqa: F401
                        record_source, update_index)
-from .steps import EXTRA, ORDER, STEPS, adopt, build, status
+from .steps import ALIASES, EXTRA, ORDER, STAGES, STEPS, adopt, build, status
 
 ALL_STEPS = list(ORDER)
 
@@ -46,6 +48,8 @@ def main(argv=None) -> None:
     g.add_argument("--tile")
     mode = ap.add_mutually_exclusive_group()
     mode.add_argument("--all", action="store_true", help="the whole graph; current steps are skipped")
+    mode.add_argument("--stage", help="one or more stages, comma-separated: base, flora, fauna, games, or all")
+    mode.add_argument("--cost", action="store_true", help="print the summary of tiles/<id>/cost.json")
     mode.add_argument("--steps", help="comma-separated steps to run whatever their state")
     mode.add_argument("--plan", action="store_true", help="print what --all would run and why")
     mode.add_argument("--status", action="store_true", help="per step: ran, missing layers, stale hashes, code changed since")
@@ -65,6 +69,10 @@ def main(argv=None) -> None:
     kw = {"dem_res_m": a.dem_res, "imagery_res_m": a.imagery_res}
     tile = Tile.from_anchor(*a.anchor, **kw) if a.anchor else Tile.from_id(a.tile, **kw)
     print(f"tile {tile.tile_id} {tile.crs} bounds={tile.bounds} wgs84={tuple(round(v, 5) for v in tile.bounds_wgs84)} dir={tile.dir}")
+    if a.cost:
+        from .cost import summary
+        print(summary(tile))
+        return
     if a.status:
         rows = status(tile)
         for r in rows:
@@ -89,13 +97,25 @@ def main(argv=None) -> None:
     if a.plan:
         build(tile, plan_only=True, force=set(ORDER if a.force == "*" else [s for s in a.force.split(",") if s]))
         return
+    if a.stage:
+        stages = [x.strip() for x in a.stage.split(",") if x.strip()]
+        stages = None if "all" in stages else stages
+        force = set(ORDER) if a.force == "*" else {x.strip() for x in a.force.split(",") if x.strip()}
+        m = build(tile, stages=stages, force=force, keep_going=a.keep_going, refetch=bool(force))
+        failed = m.pop("_failed", [])
+        print("layers:", len(m["layers"]))
+        if failed:
+            print("failed or blocked steps:", failed, file=sys.stderr)
+            sys.exit(1)
+        return
     if a.steps:
         steps = [s.strip() for s in a.steps.split(",") if s.strip()]
         m = build(tile, steps=steps, force=set(steps), keep_going=a.keep_going, refetch=bool(a.force))
     else:
         if not a.all:
-            ap.error("give --all, --steps, --plan, --status or --adopt")
+            ap.error("give --all, --stage, --steps, --plan, --status, --adopt or --cost")
         force = set(ORDER) if a.force == "*" else {s.strip() for s in a.force.split(",") if s.strip()}
+        force = {ALIASES.get(x, x) for x in force}
         bad = force - set(ORDER) - set(EXTRA)
         if bad:
             ap.error(f"unknown step(s) to force: {sorted(bad)}")
