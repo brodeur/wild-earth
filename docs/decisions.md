@@ -4568,3 +4568,82 @@ admin panel itself moves into Settings. Chosen:
   played world stays the listener scope, so the new title's key guard was recorded as the world's (the scope is let go
   before the title is made).
 
+
+## 2026-11-04: water at the lowest point: every stream rerouted onto the 1 m lidar ground (pipeline/reroute.py, branch claude/water-reroute)
+
+Aaron: "We have a LIDAR map. We have a map with water paths. Currently we are using the map of water paths to path the
+water. This results in weird collisions. We need a step in the pipeline where the water is re-routed according to the
+LIDAR maps - it needs to be at the lowest point, period."
+
+What was there. The channels were already routed by gravity, not drawn from NHD (2026-10-25: D8 on the 5 m DEM, NHD
+giving only names and permanence), but at 5 m: a reach is a chain of 5 m cell centres, smoothed, and its water level
+the 5 m DEM along it. On the 1 m ground that line runs a metre to several metres off the thalweg. The new checker
+(`pipeline/water_check.py`) measured it: on the home tile only 46% of the drawn samples had their ground within 5 cm of
+the lowest ground across the channel, the water stood more than 10 cm above the ground beside it at 40% of them (the 5 m
+level is a cell average, higher than a narrow creek's bed), and the level climbed into the receiving reach at 18
+confluences (up to 2.5 m). The water step then cut a trench along the 5 m line, beside the dry creek: the "collisions".
+
+Chosen: a `reroute` step between `rewild_hydro` and `water` that keeps the 5 m network's topology and attributes and
+takes every reach's geometry from the 1 m ground (docs/tile-spec.md "Rerouting on the 1 m ground"): a corridor around
+the network, priority-flood breaching on it from the network's outlets, flow directions and accumulation, nodes
+snapped to the most accumulated cell, each reach the flow path between its nodes, the line centred on its
+cross-section's lowest run. The level comes from the 1 m ground along the new line. Found on the way, each fixed:
+
+- **Corridors touch.** In one union corridor a trace leaked over a low saddle into the next creek rather than cross a
+  high road fill (one went 3.7 km into another valley; 56 of 379 home reaches failed). Each cell now belongs to its
+  nearest reach and the flood crosses only between reaches sharing a node: the map's topology, enforced.
+- **Tributaries meet the stream just under the node.** A trace that joins the flow path within 150 m below its node has
+  arrived; one that meets the bigger stream above it stops there (the bigger stream owns the shared cells).
+- **Road fills.** Under US-50 and the old highway the 1 m trace ran down the roadside ditch at the toe of the fill to
+  wherever the crest was lowest, a rectangle around the culvert. Where a reach crosses an erased road (`roads.png`
+  >= 128 grown 10 m) its 5 m line (which breached straight through at 5 m) is cut into the 1 m ground, graded and never
+  rising: the culvert. 656 crossings on the home tile, the deepest cut 12.8 m. The raw ground there is still the fill,
+  so the checker reports the same numbers away from the roads too.
+- **The running minimum hangs on pits.** At 1 m every hole holds the level down for the rest of the reach. The level is
+  now the profile's least-squares non-increasing trend (pool adjacent violators), kept 5 cm under the lower ground at
+  the wet margin's edge, and a tributary ending under the water it flows into is raised to it.
+- **Wiggles narrower than the ribbon.** Centring each vertex alone gave 4,866 sharp turns on segments shorter than the
+  channel's width (ribbons fold there) and 4.3 times the vertices. The cross-section offsets are now median-filtered
+  and smoothed along the line, the first smoothing scales with width, the simplification too: 793 sharp turns, 2.4 times
+  the vertices.
+- **The Merced's floor.** In Yosemite Valley the river's lidar surface varies about 10 cm across 40 m, and a 2 cm "lowest
+  run" in a +-6 m window kept the line on the south bank. The window is now +-0.75 widths (to 22 m), the section smoothed
+  across, the run's tolerance 0.02 widths (2-15 cm): the line moves to the middle of the floor.
+- **Kept ponds.** A reach across a kept pond's flat water has no lowest line; its piece keeps its line (the pond is
+  drawn there).
+
+Results (`scratch/reroute/before_<tile>.json`, `after_<tile>.json`; before = the 5 m lines with the 5 m levels, as the
+water step drew them):
+
+| Tile | Bed within 5 cm of the cross-section's lowest ground | ... away from erased roads | Ground over the level by 1 m+ (clip) | Water over the bank by 10 cm+ | Level rising into the receiving reach | Shift from the 5 m line, median / p90 / max | Median distance to NHD |
+|---|---|---|---|---|---|---|---|
+| utm10n_680_4280 | 45.6% -> 88.6% | 46.4% -> 95.4% | 5.2% -> 2.5% | 39.8% -> 0.6% | 18 -> 0 (max 2.49 -> 0.0 m) | 1.08 / 5.515 / 29.9 m | 11.1 -> 11.3 m |
+| utm10n_690_4280 | 40.6% -> 85.4% | 40.5% -> 93.2% | 2.4% -> 2.4% | 43.0% -> 0.4% | 13 -> 0 (max 8.73 -> 0.0 m) | 0.959 / 3.562 / 30.9 m | 11.0 -> 10.7 m |
+| utm10n_680_4270 | 41.6% -> 91.3% | 42.0% -> 94.6% | 0.8% -> 0.6% | 45.2% -> 0.1% | 4 -> 0 (max 0.33 -> 0.0 m) | 1.112 / 3.212 / 36.0 m | 9.9 -> 9.8 m |
+| utm11n_270_4180 | 35.0% -> 78.1% | 34.7% -> 78.4% | 3.5% -> 3.1% | 40.4% -> 0.4% | 8 -> 0 (max 1.0 -> 0.0 m) | 1.608 / 9.267 / 49.2 m | 10.2 -> 10.3 m |
+
+Yosemite stays lower (78%) where the channel is a boulder field, a talus cone or a cascade on a cliff: no 5 cm
+lowest line exists across a jumble of 2 m blocks, and the level is a trend through steps there. Every tile: no level
+rising anywhere downstream. Snap shifts are small (median about 1 m); the large maxima are where
+the 5 m line had cut a corner or crossed a fill. Reaches that fell back to their 5 m line: 0, 1, 1 and 2 of about 380.
+The median distance to the NHD lines barely moves, and shouldn't: NHD is digitised at coarse scale, 10 m off the ground
+either way. Water triangles in the client: home 125k -> 180k, Placerville 136k -> 190k, Yosemite 169k -> 257k (the lines
+follow the ground's bends; the client takes a section at every vertex).
+
+Seen in the viewer (port 8788, before/after at the same poses, captures in the shared notes folder
+`reroute-captures/`): Hangtown Creek's ribbon that ran across a smooth slope now sits in the ravine; Weber Creek's lay
+on the bank and now runs in the channel; Hunchup Creek (Placerville) followed the valley's side and now its floor; below
+Yosemite Falls the outflow that ran off east of the plunge (the 5 m line's detour) now lands at the base. The falls'
+finder still finds the upper fall (414 -> 422 m) and the lower (104 -> 102 m); the tile's falls 66 -> 57 (small steps
+on the old line's corner cuts gone). No console errors, no shader failures.
+
+Refused: `utm11n_267_4175`. Its `terrain/dem.tif` is the 3DEP seamless product, not the 1 m ground averaged (std of the
+difference 13.2 m; 0.3 m on the foothill tiles, 1.0 on 270_4180), and its terrain_detail residual clips beyond +-5 m on
+36% of the tile, so the client's ground there is not the 1 m ground. Rerouted, 29% of its bed cells' levels ran past the
++-2.54 m the level byte holds against the 5 m heights (1% before). The step now refuses such a tile; 267_4175 keeps its
+5 m water until its `dem.tif` is rebuilt from `dem_1m.tif` (and every step after). San Francisco was not run.
+
+Still wrong: the ground over the level by 1 m or more on 2-3% of samples. These are the fills themselves (the raw ground
+is the road) and cascades, where the level is a trend through steps. The 1 m ground has no culverts, so a reach under a
+19 m fill still drapes over it in the client (the carve stops at 2 m). The "after" captures on Yosemite were taken
+before the hidden pane had streamed the sky and the plants, so only their water and ground compare.

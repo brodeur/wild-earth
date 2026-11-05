@@ -7,7 +7,7 @@
     python -m pipeline.build_tile --tile utm10n_680_4280 --steps seasons         # Sentinel-2 monthly colour (pipeline/fetch_sentinel.py)
     python -m pipeline.build_tile --tile utm10n_680_4280 --steps weather         # last year's hourly weather (pipeline/fetch_weather.py)
     python -m pipeline.build_tile --tile utm10n_680_4280 --steps inpaint         # ground-only base texture (pipeline/inpaint_crowns.py)
-    python -m pipeline.build_tile --tile utm10n_680_4280 --steps water           # banks, beds and riparian zones (pipeline/water.py)
+    python -m pipeline.build_tile --tile utm10n_680_4280 --steps reroute,water   # streams onto the 1 m thalweg (pipeline/reroute.py), then banks, beds and riparian zones (pipeline/water.py)
     python -m pipeline.build_tile --tile utm10n_680_4280 --steps substrate       # lithology, cliff morphology, exposed rock (pipeline/substrate.py)
 """
 from __future__ import annotations
@@ -21,7 +21,7 @@ from .config import (ATTRIBUTION_FIELDS, GENERATOR, SPEC_VERSION, TILES_DIR, Til
                      read_json, sha256, today, write_json)
 from .species_data import CALENDAR, SEASONS
 
-ALL_STEPS = ["dem", "lidar", "naip", "osm", "hydro", "channels", "rewild_hydro", "water", "veg", "ground", "substrate", "species", "derive", "crowns", "erase", "inpaint", "seasons", "weather", "unreal"]
+ALL_STEPS = ["dem", "lidar", "naip", "osm", "hydro", "channels", "rewild_hydro", "reroute", "water", "veg", "ground", "substrate", "species", "derive", "crowns", "erase", "inpaint", "seasons", "weather", "unreal"]
 
 
 def load_manifest(tile: Tile) -> dict:
@@ -116,6 +116,24 @@ def run(tile: Tile, steps: list[str], force=False) -> dict:
                 for k, v in rewild_hydro(tile, force).items():
                     add_layer(m, tile, k, v)
                 m["status"]["hydrology_rewilded"] = True
+            elif step == "reroute":
+                # Every reach moved onto the lowest ground of the 1 m lidar terrain (pipeline/reroute.py), keeping the
+                # 5 m network's topology and attributes; the depth profile, incision and client features re-derived.
+                # Run after channels / rewild_hydro (they rewrite channels.geojson at 5 m) and before water.
+                from .reroute import reroute
+                out, stats = reroute(tile)
+                for k, v in out.items():
+                    add_layer(m, tile, k, v, fetched=False)
+                ch = m["layers"].get("hydro.channels")
+                if ch:
+                    add_layer(m, tile, "hydro.channels", {**ch, "rerouted": True, "reroute": stats,
+                                                          "derived_from": sorted(set(ch.get("derived_from", []) + ["terrain.dem_1m"]))}, fetched=False)
+                prof = m["layers"].get("client.channel_profile")
+                if prof:
+                    add_layer(m, tile, "client.channel_profile", {**prof, "stats": stats["profile"],
+                                                                  "long_profile": "the 1 m ground along the rerouted lines, its non-increasing least-squares trend"},
+                              fetched=False)
+                m["status"]["channels_rerouted"] = True
             elif step == "water":
                 # The water system (pipeline/water.py): every channel and pond carved to a graded bank profile into
                 # terrain/dem_banked.tif (the client's heights and 2 m detail rebuilt from it), the bed material, the
