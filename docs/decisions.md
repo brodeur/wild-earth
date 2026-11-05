@@ -4406,3 +4406,15 @@ at near-uniform spacing over a slope and up the lower face of a granite wall.
   pond basin on Half Dome's apron (its bed stones are now kept off the steep slab, the basin ring is the terrain's);
   the talus is traced on the 30 m grid, so a cone's outline is coarse; the remaining knobs on the apron's gentler back
   are the outcrop rule's (L from the pipeline).
+
+## 2026-11-04: going down a hole is easy, the body crawls and fits the bore
+
+Aaron: a hole's entry reach should be about 1.75 times the hole so a body running for cover gets in; the avatar walks a
+few steps in; underground the rig crawls so the body never leaves the tunnel; the entrance and mound glow like the
+channel. Chosen: the reach measured from the body's front (centre to nose), not its centre, so a run ends nose first in
+the hole; the walk-in as the tunnel's own forward key for three half-lengths, so the tunnel's branching and dig rules
+need nothing new; the crawl as an input of the rabbits' hop step; and, because the drawn brush rabbit is taller and
+wider than its 6.5 cm burrow even crawling, the body drawn narrowed and lowered to the bore from measured crawl sizes.
+Rejected: widening the brush rabbit's burrow (every dug burrow is persisted at its radius, and 6.5 cm was set from the
+animal's real width); a per-frame fit from the skinned pose (the bones are posed on the GPU; a measured size per species
+is exact enough with a margin). The openings join the underground pass rather than glowing from above, as asked.

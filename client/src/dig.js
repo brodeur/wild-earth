@@ -62,6 +62,11 @@ const SLOPE_MAX = 0.6, START_PITCH = -0.55, STEP = 0.02, BEND = 0.2, SEG_MAX = 0
 const PIT_R0 = 0.1, PIT_RK = 0.45, PIT_MAX = 0.6, PIT_STEP = 0.01, PAW_AHEAD = 1.1;   // PAW_AHEAD: body half-lengths ahead of the centre
 const HOLE_CUT = 1.15, COLLAR_UP = 0.45;    // the ground's cut disc and the collar's rim, in tube radii
 const SAVE_S = 2, GLOW_T = 0.25, GLOW_L = 1.0, VISIT_MS = 3600e3;   // glow falls by e per GLOW_L m along the tunnel from a vole
+// Going down (Aaron, 2026-11-04: "if someone is running for cover, we want to make it easy to get into the hole"): a body
+// moving toward a hole goes down once its front (centre to nose) is within ENTER_K of the hole's radii, then walks
+// ENTER_WALK body half-lengths in on its own (any back key or the dig key takes over), eased from where it stood to the
+// tunnel's floor over ENTER_BLEND s.
+const ENTER_K = 1.75, ENTER_WALK = 3, ENTER_BLEND = 0.35;
 const HOLE_SEEK = 2.5, HIDE_S = [15, 40], SYS_CAP = 4, AI_WALK = 0.45, AI_FLEE = 1.0;
 const AI_DIG_P = 0.004, AI_DIG_MAX = 2, AI_DIG_HOLES = 40, AI_FORMS = 30;   // a calm AI vole's chance per pause of starting a burrow (the AI host), at most two at once, and none past forty holes in the world
 const MAX_S = 1200, MAX_N = 1500, MAX_P = 120, MAX_H = 300, MAX_R = 60;   // segments, nodes, pits, holes with a collar (digworld.py N_MAX, S_MAX, P_MAX)
@@ -71,8 +76,8 @@ const MAX_S = 1200, MAX_N = 1500, MAX_P = 120, MAX_H = 300, MAX_R = 60;   // seg
 // coyote's. The brush rabbit's burrow goes beyond the biology (it uses others' burrows and digs none: Chapman 1990; Aaron
 // asked for it): a short one, 6.5 cm in radius (the body is about 10 cm wide), 20-30 cm down, an inch a second.
 export const DIGGERS = {
-  microtus_californicus: { kind: 'tunnel', r: R_TUBE, rate: RATE, depth: 0.5, fit: 0.025 },
-  sylvilagus_bachmani: { kind: 'tunnel', r: 0.065, rate: 2 * RATE, depth: 0.32, nest: 0.11, fit: 0.055 },
+  microtus_californicus: { kind: 'tunnel', r: R_TUBE, rate: RATE, depth: 0.5, fit: 0.025, crawl: [0.04, 0.058] },
+  sylvilagus_bachmani: { kind: 'tunnel', r: 0.065, rate: 2 * RATE, depth: 0.32, nest: 0.11, fit: 0.055, crawl: [0.137, 0.137] },
   lepus_californicus: { kind: 'form', r: 0.15, r0: 0.08, depth: 0.07, rate: 0.008 },
   canis_latrans: { kind: 'pit' },
 };
@@ -345,7 +350,9 @@ const DIRT_FRAG = /* glsl */`
 // The underground view's channel (Dig.xray): the tubes, rooms and bowls drawn again from the dirt's buffers, within
 // XR_R m of the body, as a glowing translucent channel: both faces added, bright at the silhouette (the rim), faint
 // across, the union kept by the same neighbour test (no inner walls at a junction), the scent glow along an opened
-// stretch; a coyote's pit (kind 1) in a warning red. No lighting, no noise: a few ALU and the eight texel fetches.
+// stretch; a coyote's pit (kind 1) in a warning red; the holes' collars and the spoil round them and the pits' mounds
+// (kind 2, Aaron 2026-11-04: "the entrance hole and mound should also glow just like the x-ray version of the tunnel"),
+// a little brighter across so a low mound seen from above still shows. No lighting, no noise: a few ALU and the eight texel fetches.
 const XRAY_VERT = /* glsl */`
   attribute float aGlow; attribute vec4 aNb0; attribute vec4 aNb1; uniform vec3 xrAt;
   varying vec3 vPos; varying vec3 vN; varying float vGlow; varying vec4 vNb0; varying vec4 vNb1;
@@ -361,11 +368,11 @@ const XRAY_FRAG = /* glsl */`
     vec3 q = pa - ba * t; return dot(q, q) < r * r; }
   void main(){
     vec3 p = vPos;
-    if (kind == 0.0 && (inCap(vNb0.x, p) || inCap(vNb0.y, p) || inCap(vNb0.z, p) || inCap(vNb0.w, p) || inCap(vNb1.x, p) || inCap(vNb1.y, p) || inCap(vNb1.z, p) || inCap(vNb1.w, p))) discard;
+    if (kind != 1.0 && (inCap(vNb0.x, p) || inCap(vNb0.y, p) || inCap(vNb0.z, p) || inCap(vNb0.w, p) || inCap(vNb1.x, p) || inCap(vNb1.y, p) || inCap(vNb1.z, p) || inCap(vNb1.w, p))) discard;
     float ndv = abs(dot(normalize(vN), normalize(cameraPosition - p))), rim = (1.0 - ndv) * (1.0 - ndv);
     float fall = 1.0 - smoothstep(${(XR_R * 0.6).toFixed(1)}, ${XR_R.toFixed(1)}, distance(p.xz, xrAt.xz));
     vec3 base = kind == 1.0 ? vec3(1.0, 0.28, 0.16) : vec3(1.0, 0.62, 0.3);
-    vec3 col = base * (0.07 + 0.6 * rim) + glowCol * vGlow * (0.75 + 0.25 * sin(time * 3.0 + p.x * 20.0)) * (0.35 + 0.9 * rim);
+    vec3 col = base * ((kind == 2.0 ? 0.16 : 0.07) + 0.6 * rim) + glowCol * vGlow * (0.75 + 0.25 * sin(time * 3.0 + p.x * 20.0)) * (0.35 + 0.9 * rim);
     gl_FragColor = vec4(col * xrK * fall, 1.0);
   }`;
 
@@ -492,8 +499,8 @@ export class Dig {
     const mat = kind => new THREE.ShaderMaterial({ vertexShader: XRAY_VERT, fragmentShader: XRAY_FRAG,
       uniforms: { caps: this.u.caps, glowCol: this.u.glowCol, time: this.u.time, xrK: this.xu.xrK, xrAt: this.xu.xrAt, kind: { value: kind } },
       transparent: true, ...ADD, depthWrite: false, side: THREE.DoubleSide });
-    this.xray3 = [this.tubes, this.rooms, this.bowls].map(src => {
-      const m = new THREE.Mesh(src.geometry, mat(src === this.bowls ? 1 : 0)); m.name = `${src.name} xray`;
+    this.xray3 = [this.tubes, this.rooms, this.bowls, this.heaps].map(src => {
+      const m = new THREE.Mesh(src.geometry, mat(src === this.bowls ? 1 : src === this.heaps ? 2 : 0)); m.name = `${src.name} xray`;
       m.frustumCulled = false; m.layers.set(XR); m.renderOrder = 5; m.visible = false; this.scene.add(m); m.userData.src = src; return m;
     });
     // the outside dimmed toward the soil, more round the body (where the ground is looked through)
@@ -918,12 +925,18 @@ export class Dig {
   // ---- the vole underground ------------------------------------------------------------------------------
   enterHole(h) {
     const gc = this.gc, f = gc.flight; if (h.r < (DIGGERS[gc.code]?.fit ?? 0)) return;   // too narrow for this body
-    this.tun = { a: h.id, b: h.id, t: 1, prev: -1 }; this.pd.face = 0; this.pd.startDown = false;
-    // facing the first segment down
-    if (h.segs.length) { const s = this.node(this.otherEnd(h.segs[0], h)); f.yaw = Math.atan2(-(s.x - h.x), -(s.z - h.z)); }
-    gc.mode = 'tunnel'; gc.v = 0; gc.sit = 0; gc.resting = false; gc.actT = 0; this.soilAt(h.x, -h.z);
+    // on the first segment down, facing along it, carrying some of the run in (a walk in the tunnel at most 1.5 m/s)
+    const s = h.segs.length ? this.node(this.otherEnd(h.segs[0], h)) : null;
+    this.tun = s ? { a: h.id, b: s.id, t: 0, prev: -1 } : { a: h.id, b: h.id, t: 1, prev: -1 }; this.pd.face = 0; this.pd.startDown = false;
+    if (s) f.yaw = Math.atan2(-(s.x - h.x), -(s.z - h.z));
+    const en = this.enter ||= { from: new THREE.Vector3(), k: 1, left: 0 };
+    en.from.copy(f.pos); en.k = 0; en.left = s ? ENTER_WALK * gc.S.half * gc.size : 0;
+    gc.v = s ? Math.min(Math.abs(gc.v), 1.5) : 0;
+    gc.mode = 'tunnel'; gc.sit = 0; gc.resting = false; gc.actT = 0; this.soilAt(h.x, -h.z);
     gc.say('down the hole');
   }
+  // how near the body's front (the line from its centre P to its nose, L m along fx, fz) comes to the hole's centre
+  mouthGap(h, P, fx, fz, L) { const t = clamp((h.x - P.x) * fx + (h.z - P.z) * fz, 0, L); return Math.hypot(P.x + fx * t - h.x, P.z + fz * t - h.z); }
   // the nodes within L m of n along the tunnels (n's own last stretch: never a chamber's join)
   within(n, L) {
     const seen = this._within ||= new Set(), q = this._wq ||= [], dq = this._wd ||= []; seen.clear(); q.length = 0; dq.length = 0;
@@ -943,6 +956,8 @@ export class Dig {
     const gc = this.gc, f = gc.flight, P = f.pos, S = gc.S, T = this.tun, ps = gc.pose, spec = DIGGERS[gc.code] || DIGGERS.microtus_californicus;
     if (!T) { gc.mode = 'ground'; return; }
     const held = this.wantDig(gc); if (!held) this.broke = false;
+    const en = this.enter;   // walking in from the hole: forward on its own until the steps are walked, a back key or the dig key
+    if (en && en.left > 0) { if (k.fwd < 0 || held) en.left = 0; else { const kk = this._kEnter ||= {}; Object.assign(kk, k); kk.fwd = 1; k = kk; en.left -= Math.max(Math.abs(gc.v), 0.1) * dt; } }
     const dig = held && !this.broke;   // after a break-out the key must be let go before the next dig
     if (k.fwd || dig) gc.resting = false;
     f.yaw += k.turn * (this.digging ? Math.min(S.turn, spec.rate * this.mult / (R_TURN * spec.r / R_TUBE)) : S.turn) * dt;   // digging, the body turns only as the face can carry a curve
@@ -980,6 +995,11 @@ export class Dig {
     // the body on the tunnel's floor, pitched with the slope; its camera on the centreline behind (camera())
     const Q = this.axisAt(T, this._ax ||= new THREE.Vector4());
     P.set(Q.x, Q.y - Q.w * 0.85, Q.z);
+    if (en && en.k < 1) { en.k = Math.min(1, en.k + dt / ENTER_BLEND); P.lerpVectors(en.from, P, en.k * en.k * (3 - 2 * en.k)); }   // from where it stood
+    // the body kept inside the bore (Aaron, 2026-11-04): spec.crawl, the crawling body's width and height at size 1 (m),
+    // narrowed and lowered to fit the tube's inside (less a margin) from the floor it stands on, eased in going down
+    const sq = this.squeeze ||= { x: 1, y: 1 }, cw = spec.crawl, ek = en && en.k < 1 ? en.k : 1;
+    sq.x = cw ? 1 + (Math.min(1, 1.7 * Q.w / (cw[0] * gc.size)) - 1) * ek : 1; sq.y = cw ? 1 + (Math.min(1, 1.68 * Q.w / (cw[1] * gc.size)) - 1) * ek : 1;
     gc.animate(dt, Math.abs(gc.v), false);
     this.visit(this.node(T.b).sys, false);
     const A2 = this.node(T.a), B2 = this.node(T.b), dh = Math.hypot(B2.x - A2.x, B2.z - A2.z), dy = B2.y - A2.y;
@@ -1383,14 +1403,16 @@ export class Dig {
     this._C = C;
     const under = gc.on && gc.mode === 'tunnel';
     if (!under && this.tun) this.tun = null;
+    if (!under && this.enter) { this.enter.k = 1; this.enter.left = 0; }
     if (!gc.on || !gc.digging) { gc.digging = 0; this.digging = 0; }
     if (gc.on && gc.mode === 'ground' && !gc.digging) this.pit = null;
     // a tunneller on the surface walking onto a hole that fits it goes down
     const spec = gc.on ? DIGGERS[gc.code] : null;
     if (spec?.kind === 'tunnel' && gc.mode === 'ground' && Math.abs(gc.v) > 0.05) {
-      const P = gc.flight.pos, h = this.holeNear(P.x, P.z, 0.2, null, false, spec.fit);
-      if (this.outOf && Math.hypot(P.x - this.outOf.x, P.z - this.outOf.z) > this.outOf.r * 3) this.outOf = null;
-      if (h && h.segs.length && h !== this.outOf && Math.hypot(h.x - P.x, h.z - P.z) < Math.max(R_TUBE, h.r) * 1.6) { const fx = -Math.sin(gc.flight.yaw), fz = -Math.cos(gc.flight.yaw); if ((h.x - P.x) * fx + (h.z - P.z) * fz > -0.01) this.enterHole(h); }
+      const P = gc.flight.pos, fx = -Math.sin(gc.flight.yaw), fz = -Math.cos(gc.flight.yaw), L = gc.S.half * gc.size * 1.2;
+      if (this.outOf && this.mouthGap(this.outOf, P, fx, fz, L) > this.outOf.r * (ENTER_K + 1.5)) this.outOf = null;
+      const h = this.holeNear(P.x + fx * L * 0.5, P.z + fz * L * 0.5, L * 0.5 + ENTER_K * R_MAX, null, false, spec.fit);
+      if (h && h.segs.length && h !== this.outOf && (h.x - P.x) * fx + (h.z - P.z) * fz > -0.01 && this.mouthGap(h, P, fx, fz, L) < ENTER_K * h.r) this.enterHole(h);
     }
     // a jackrabbit lying in its form keeps the form's clock (the decay)
     if (spec?.kind === 'form' && gc.resting) { const P = gc.flight.pos; for (const p of w.pits) if (p.k === 'form' && Math.hypot(p.x - P.x, p.z - P.z) < p.r + 0.1) { this.visit(p.id, true); break; } }

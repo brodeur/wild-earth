@@ -326,7 +326,10 @@ function reachDip(skel, RB, Pn0, kN, cN, kH, cH, lead, groundL) {
 // (inp.ears, -1 laid back .. 1 up and alert; NaN: from the pose and the speed) swivel each on its own when up; the scut
 // (inp.twitch above 0) is cocked up over the rump, the white flash of a bolting brush rabbit. The dig (inp.dig 0..1, the
 // Dig game: dig.js): standing, the chest low and the head down, the fore feet in turn reach forward to the ground and rake
-// back under the chest at DIG_HZ, lifted and curled on the way forward; the hind feet stay planted.
+// back under the chest at DIG_HZ, lifted and curled on the way forward; the hind feet stay planted. The crawl (inp.crawl
+// 0..1, in a tunnel: dig.js; Aaron, 2026-11-04: "the animal's rigging should be a crawling type so that the body never
+// escapes the tunnel walls"): the shuffle only, no sit-up, the crouch's chest on the belly with the ears laid back, no
+// bob, lean or arch, and the feet swung low.
 const HIND = 0.55, DIG_HZ = 4.5;
 const HOP_TD = { shuffle: [0.0, 0.18, 0.55, 0.57], bound: [0.0, 0.11, 0.55, 0.58], turn: [0.0, 0.04, 0.5, 0.5] };
 const rnd = st => (st.seed = (Math.imul(st.seed || 0x9e3779b9, 1664525) + 1013904223) >>> 0) / 4294967296;
@@ -345,11 +348,12 @@ export function hopStep(skel, P, st, inp, dt) {
   st.v = damp(st.v, v, 12, dt);
   // the gait: the shuffle below P.vS, the half-bound above (hysteresis); sp: how far into the bound (the duty falls, the
   // flex and the flight grow)
-  if (st.gait === 0 && v > P.vS * 1.06) st.gait = 1; else if (st.gait >= 1 && v < P.vS * 0.92) st.gait = 0;
+  st.crawl = damp(st.crawl || 0, clamp(inp.crawl || 0, 0, 1), 8, dt); const uK = st.crawl < 0.002 ? 0 : st.crawl;
+  if (st.gait === 0 && v > P.vS * 1.06 && uK < 0.5) st.gait = 1; else if (st.gait >= 1 && (v < P.vS * 0.92 || uK >= 0.5)) st.gait = 0;
   st.gk = damp(st.gk, st.gait ? 1 : 0, 5, dt);
   const gk = st.gk, sp = clamp((v - P.vS) / (4 * P.vt), 0, 1);
   // the pose: the sit-up above 0, the crouch below (the form at -1)
-  const pose = clamp(inp.pose || 0, -1, 1);
+  const pose = uK ? Math.min(clamp(inp.pose || 0, -1, 1), -0.7 * uK) : clamp(inp.pose || 0, -1, 1);   // the crawl: no sit-up, the freeze's crouch at least
   st.sit = damp(st.sit || 0, Math.max(0, pose), 5, dt); st.crouch = damp(st.crouch, Math.max(0, -pose), 6, dt);
   const uS = ease(clamp((st.sit - 0.05) / 0.6, 0, 1)), uC = ease(clamp(st.crouch, 0, 1));
   st.dig = damp(st.dig || 0, clamp(inp.dig || 0, 0, 1), 8, dt); const uD = st.dig < 0.002 ? 0 : st.dig;
@@ -411,7 +415,7 @@ export function hopStep(skel, P, st, inp, dt) {
       const tw = toWorld([c * px + sn * pz, 0, -sn * px + c * pz + dz]); tw[1] = terrain(tw[0], tw[2]);
       // the swing's clearance: the shuffle's low step, the bound's higher fold, the turn's little hops
       const eH = 1 - (1 - F.s) * (1 - F.s), e = ease(F.s) + (Lg.fore ? 0 : (eH - ease(F.s)) * 0.6 * gk);   // the hind pair swing up quickly after the push-off
-      const lift = ((Lg.fore ? 0.5 : 0.6) * R[Lg.f][1] + (0.04 + 0.06 * gk) * st.L) * s * Math.sin(Math.PI * F.s);
+      const lift = ((Lg.fore ? 0.5 : 0.6) * R[Lg.f][1] + (0.04 + 0.06 * gk) * st.L) * s * Math.sin(Math.PI * F.s) * (1 - 0.6 * uK);
       F.x = F.lx + (tw[0] - F.lx) * e; F.z = F.lz + (tw[2] - F.lz) * e;
       F.y = Math.max(F.ly + (tw[1] - F.ly) * e, terrain(F.x, F.z)) + lift;
       if (F.s >= 1) { F.stance = true; F.x = tw[0]; F.y = tw[1]; F.z = tw[2]; }
@@ -437,9 +441,9 @@ export function hopStep(skel, P, st, inp, dt) {
   const turnUp = turning ? Math.max(0, Math.sin(TAU * st.phase)) : 0;   // the fore pair's hops round the turn lift the chest
   const flexC = hop * (flexS + (flexB - flexS) * gk), bob = hop * (bobS + (bobB - bobS) * gk), pitchC = hop * (pitchS + (pitchB - pitchS) * gk) + 0.05 * turnUp * st.tk;
   const gz = hop * (gzS + (gzB - gzS) * gk);
-  st.flex = damp(st.flex, flexC + 0.12 * uC, 14, dt); st.bob = damp(st.bob, bob, 14, dt); st.gz = damp(st.gz || 0, gz, 14, dt);
+  st.flex = damp(st.flex, (flexC + 0.12 * uC) * (1 - 0.8 * uK), 14, dt); st.bob = damp(st.bob, bob * (1 - 0.9 * uK), 14, dt); st.gz = damp(st.gz || 0, gz, 14, dt);
   // on the move the crouch leans forward: the back flatter, the hindquarters up on the hind legs, the head lower
-  st.lean = damp(st.lean || 0, hop * (0.16 + 0.2 * gk + 0.1 * sp), 4, dt);
+  st.lean = damp(st.lean || 0, hop * (0.16 + 0.2 * gk + 0.1 * sp) * (1 - uK), 4, dt);
   // the lurch: the hindquarters wait over the planted hind feet and hop up after the chest, the chest waits over the fore
   // feet and is carried on (a: the share of the body's speed a segment keeps while its feet stand; most of it in the
   // half-bound, where the flight carries the body), so the feet stay under the body at a forage
@@ -450,7 +454,7 @@ export function hopStep(skel, P, st, inp, dt) {
   st.oF = damp(st.oF || 0, lu * lurch(((st.phase - tdF) % 1 + 1) % 1, dF, (1 - aF) * st.L * dF / 2), 20, dt);
   // the crouch: the chest down onto the belly, the haunch (already on the heels) hardly (the freeze); the form a little
   // further, the whole pose sunk into the scrape
-  const belly = skel.belly, dropH = uC * 0.15 * belly, dropC = uC * 0.8 * belly, scrape = Math.max(0, (st.crouch - 0.7) / 0.3) * (0.15 * belly + 0.06 * h);
+  const belly = skel.belly, dropH = (uC * 0.15 + 0.45 * uK) * belly, dropC = (uC * 0.8 + 0.2 * uK) * belly, scrape = Math.max(0, (st.crouch - 0.7) / 0.3) * (0.15 * belly + 0.06 * h);
   // the sit-up: the trunk raised about the hips onto the hind feet, the hips up a little and back
   const sitA = 0.5 * uS, sitY = 0.1 * h * uS, sitZ = -0.08 * trunkL * uS;
   st.eatDrop = damp(st.eatDrop || 0, st.eatWant || 0, 3, dt);   // the eat's reach: the chest lowered onto the fore legs (reachDip)
@@ -505,7 +509,7 @@ export function hopStep(skel, P, st, inp, dt) {
   const lead = clamp((inp.wr || 0) * P.lead, -P.leadMax, P.leadMax);
   st.lead = damp(st.lead, lead, 8, dt);
   const tilt = st.pitch - st.flex;   // the fore segment's pitch, countered
-  const fl = inp.flick || 0, d0 = 0.35 * uC + 0.55 * uD, cN = d0 * 0.6 + 0.45 * tilt, cH = d0 * 0.5 + 0.55 * tilt;   // uD: the dig's head down
+  const fl = inp.flick || 0, d0 = 0.35 * uC + 0.55 * uD + 0.3 * uK, cN = d0 * 0.6 + 0.45 * tilt, cH = d0 * 0.5 + 0.55 * tilt;   // uD: the dig's head down
   let dip = fl * 0.9;   // sitting up, the nibble at the paws (the old dip); to a half the same
   if (fl > 0.5 && !inp.air && uS < 0.3 && uD < 0.3) {   // on all fours, past a half (not digging): the nose to the grass (reachDip), the chest lowered if it must
     const r = reachDip(skel, RB, Pn0, 0.6, cN, 0.5, cH, st.lead, groundL), u = Math.min(1, (fl - 0.5) * 2);
@@ -519,7 +523,7 @@ export function hopStep(skel, P, st, inp, dt) {
   Pj[J.Neck] = Pn0; Pj[J.Head] = Phd; E[J.Head] = nose;
   // ---- the ears: up and swivelling each on its own when alert, laid back along the neck in flight or frozen ----
   const loc = st.loc || (st.loc = {});
-  let ears = inp.ears;
+  let ears = uK > 0.5 ? -1 : inp.ears;
   if (!(ears === ears) || ears === undefined) ears = uS > 0.3 ? 1 : uC > 0.3 ? -1 : v > 0.9 * P.vt ? -1 : v > P.vS ? -0.3 : 0.4;
   st.ears = damp(st.ears ?? 0, ears, ears < (st.ears ?? 0) ? 7 : 4, dt);
   const back = clamp(-st.ears, 0, 1), alert = clamp(st.ears, 0, 1);
