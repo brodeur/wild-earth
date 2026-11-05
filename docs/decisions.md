@@ -4568,3 +4568,34 @@ admin panel itself moves into Settings. Chosen:
   played world stays the listener scope, so the new title's key guard was recorded as the world's (the scope is let go
   before the title is made).
 
+
+## 2026-11-04: what a tile costs is measured, not guessed (tools/token_meter.py)
+
+Aaron asked for a token meter or cost estimator, "to get a sense for what a fresh tile actually costs". The cost has two
+halves.
+
+**The Claude half: `tools/token_meter.py`.** It reads the transcripts Claude Code already keeps under
+`~/.claude/projects/<checkout slug>/`, including every subagent's. It sums each request's usage once, by requestId. A
+forked session's copied history counts only for its parent. Usage is priced at first-party API rates per model.
+
+- With `--since` and `--until` it prices any time window, which is how a pipeline stage's Claude work is priced.
+- With `--worktrees` it covers the lane worktrees too.
+- On the orchestrating session it gives $2,065.73 where Claude Code's own `cost-state` record says $2,069.76.
+- The dollars are API-equivalent. On a subscription they say what the work would cost, not what is billed.
+
+**The machine half** belongs to the pipeline runner (the pipeline and registry lane). Per step and stage it records, in
+`tiles/<id>/cost.json`:
+
+- wall and CPU time;
+- bytes fetched per source, and cache hits;
+- disk written;
+- the bytes a player downloads to enter the tile;
+- Meshy credits spent or queued;
+- each stage's start and end, which the token meter prices.
+
+**The one earlier data point.** The first build of `utm10n_680_4270`, on 2026-10-25, used every species and step that
+already existed. It took 59 minutes and $5.35 of Claude (an Opus agent, 84 requests), with no Meshy credits. That was
+before Lidar crowns and the Sentinel seasons were in the pipeline. The capability around it cost far more, for example
+about $90 of agent work for the 17 foothill species' files and generator.
+
+On disk a tile is 0.5–0.9 GB with its sources, and a player downloads 32–67 MB of client layers.
