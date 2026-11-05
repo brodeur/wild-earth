@@ -1,0 +1,545 @@
+{
+ "id": "picea_sitchensis",
+ "aliases": [
+  "sitka_spruce",
+  "tideland_spruce",
+  "coast_spruce"
+ ],
+ "scientific": "Picea sitchensis",
+ "common": "Sitka spruce",
+ "form": "tree",
+ "regions": [
+  "pacific_northwest",
+  "california"
+ ],
+ "architectural_model": "Massart (provisional)",
+ "deciduous": false,
+ "height_m": [
+  45,
+  70
+ ],
+ "stature": {
+  "typical_m": 58,
+  "tall_m": 75,
+  "record_m": 100.2,
+  "source": "typical: the Gymnosperm Database gives about 70 m in old-growth; 58 m is the drafter's figure for the Hoh and Queets valley floors, where most canopy spruce stand 50-65 m; tall: the drafter's estimate; record: 100.2 m, Redwood National and State Parks, California (Gymnosperm Database); read 2026-11-04"
+ },
+ "variants": [
+  {
+   "name": "young",
+   "weight": 0.25,
+   "height_m": [
+    5,
+    20
+   ],
+   "trunk_radius": 0.8,
+   "branches": 0.8,
+   "leaf_density": 1.3,
+   "set": {
+    "trunk": {
+     "base_size": 0.06,
+     "bole_ratio": 0.05,
+     "bark_rgb": [
+      136,
+      130,
+      136
+     ],
+     "bark_pattern": "smooth",
+     "stubs": {
+      "count": [
+       0,
+       2
+      ]
+     }
+    },
+    "crown": {
+     "envelope": {
+      "profile": [
+       [
+        0.06,
+        0.27
+       ],
+       [
+        0.25,
+        0.26
+       ],
+       [
+        0.45,
+        0.22
+       ],
+       [
+        0.65,
+        0.16
+       ],
+       [
+        0.82,
+        0.1
+       ],
+       [
+        1.0,
+        0.02
+       ]
+      ],
+      "lobe_depth": 0.06
+     }
+    },
+    "levels": [
+     {
+      "droop_deg": 20,
+      "upturn_deg": 30
+     }
+    ]
+   },
+   "note": "a dense, stiff blue-green cone in a windthrow gap or on a gravel bar, branches to the ground"
+  },
+  {
+   "name": "mature",
+   "weight": 0.5,
+   "seeds": 1,
+   "note": "(from the Douglas-fir template) the file as written"
+  },
+  {
+   "name": "old-growth",
+   "weight": 0.17,
+   "height_m": [
+    62,
+    82
+   ],
+   "trunk_radius": 1.4,
+   "branches": 0.75,
+   "gnarl": 1.2,
+   "deadwood": {
+    "fraction": 0.2,
+    "levels": [
+     1
+    ],
+    "where": "lower",
+    "shorten": 0.5,
+    "rgb": [
+     130,
+     120,
+     108
+    ]
+   },
+   "set": {
+    "trunk": {
+     "base_size": 0.55,
+     "bole_ratio": 0.5,
+     "length_ratio": 0.95,
+     "bark_rgb": [
+      124,
+      106,
+      104
+     ],
+     "stubs": {
+      "count": [
+       12,
+       24
+      ]
+     },
+     "flare": 2.3
+    },
+    "crown": {
+     "shape": "cylindrical",
+     "envelope": {
+      "profile": [
+       [
+        0.52,
+        0.16
+       ],
+       [
+        0.64,
+        0.2
+       ],
+       [
+        0.76,
+        0.2
+       ],
+       [
+        0.88,
+        0.16
+       ],
+       [
+        0.96,
+        0.1
+       ],
+       [
+        1.0,
+        0.05
+       ]
+      ],
+      "lobes": 4,
+      "lobe_depth": 0.18,
+      "asymmetry": 0.16
+     }
+    },
+    "levels": [
+     {
+      "droop_deg": 40,
+      "upturn_deg": 20
+     }
+    ]
+   },
+   "note": "a valley-floor giant: a buttressed, flaring base (often stilted where it grew on a nurse log), a clear bole of scaly purplish-grey plates and a broken, irregular crown"
+  }
+ ],
+ "snag": {
+  "fraction": 0.06,
+  "from": "mature",
+  "height_m": [
+   22,
+   40
+  ],
+  "limbs": 0.25,
+  "twigs": 0,
+  "levels": 1,
+  "broken_top": [
+   0.5,
+   0.85
+  ],
+  "shorten": [
+   0.3,
+   0.8
+  ],
+  "rgb": [
+   146,
+   134,
+   120
+  ]
+ },
+ "description": "The giant of the Hoh, Queets and Quinault valley floors, 50-70 m tall here on a massive flaring trunk, its thin bark flaking in purplish-grey scales. Its stiff, sharp blue-green needles stand out all round the twig and its crown is an open, ragged cone of drooping limbs hung with moss.",
+ "season_notes": {
+  "winter": "Evergreen; the crown takes the wet Pacific storms and the big trees windthrow in the floods' soft ground.",
+  "spring": "New shoots break pale yellow-green at the branch tips in May.",
+  "summer": "Papery, buff cones 5-9 cm hang near the top of the crown.",
+  "fall": "Cones open and shed winged seed; seedlings start on mossy nurse logs, not on the fern floor."
+ },
+ "status": "generated from a trait card, needs review in the lineup and local sign-off",
+ "habitat": {
+  "classes": {
+   "conifer_forest": 1.0,
+   "riparian": 0.8,
+   "mixed_forest": 0.6,
+   "barren": 0.05
+  },
+  "floor": 1.6,
+  "mid": 0.8,
+  "steep": 0.5,
+  "north": 1.1,
+  "shade": 0.4,
+  "disturbed": 0.6,
+  "riparian": {
+   "zones": {
+    "terrace": 1.0,
+    "bank": 0.4,
+    "pond_terrace": 0.4
+   },
+   "orders": [
+    3,
+    7
+   ],
+   "permanence": "perennial",
+   "water": "Wants constant moisture and fog: the old terraces and floodplain of the big west-side rivers, where it grows with western hemlock and bigleaf maple."
+  }
+ },
+ "relations": {
+  "eaten_by": [
+   {
+    "animal": "odocoileus_hemionus",
+    "part": "browse",
+    "seasons": [
+     "spring"
+    ]
+   },
+   {
+    "animal": "cyanocitta_stelleri",
+    "part": "seeds",
+    "seasons": [
+     "fall"
+    ]
+   }
+  ],
+  "cover_for": [
+   "odocoileus_hemionus",
+   "ursus_americanus",
+   "cyanocitta_stelleri"
+  ],
+  "shades_water": 0.6
+ },
+ "trunk": {
+  "length_ratio": 1.0,
+  "radius_ratio": 0.022,
+  "taper": 1.0,
+  "flare": 1.9,
+  "bole_ratio": 0.28,
+  "base_size": 0.3,
+  "curve_deg": 3,
+  "curve_var_deg": 4,
+  "segments": 8,
+  "lean_deg": 3,
+  "stems": [
+   1,
+   1
+  ],
+  "stem_spread_deg": 0,
+  "split_prob": 0.03,
+  "split_count": 2,
+  "split_angle_deg": 10,
+  "split_height": 0.75,
+  "bark_rgb": [
+   112,
+   96,
+   96
+  ],
+  "bark_pattern": "plates",
+  "twig_rgb": [
+   96,
+   82,
+   70
+  ],
+  "stubs": {
+   "count": [
+    6,
+    14
+   ],
+   "length_m": 0.6,
+   "radius_ratio": 0.1
+  },
+  "bark": {
+   "tile_m": [
+    0.7,
+    1.4
+   ],
+   "ridge_m": 0.1,
+   "block_m": 0.3,
+   "fissure": 0.85,
+   "contrast": 1.25,
+   "lichen": 0.15,
+   "relief": 1.7
+  }
+ },
+ "crown": {
+  "shape": "conical",
+  "envelope": {
+   "profile": [
+    [
+     0.3,
+     0.2
+    ],
+    [
+     0.42,
+     0.26
+    ],
+    [
+     0.55,
+     0.27
+    ],
+    [
+     0.68,
+     0.24
+    ],
+    [
+     0.8,
+     0.18
+    ],
+    [
+     0.9,
+     0.11
+    ],
+    [
+     1.0,
+     0.03
+    ]
+   ],
+   "lobes": 5,
+   "lobe_depth": 0.14,
+   "asymmetry": 0.16,
+   "fill": 0.3,
+   "edge": 1.1
+  }
+ },
+ "levels": [
+  {
+   "count": 30,
+   "whorl": 4,
+   "down_angle_deg": 94,
+   "down_angle_tip_deg": 55,
+   "down_angle_var_deg": 12,
+   "rotation_deg": 37,
+   "rotation_var_deg": 25,
+   "length_ratio": 0.32,
+   "length_var": 0.25,
+   "curve_deg": 0,
+   "curve_var_deg": 14,
+   "tropism": 0.0,
+   "droop_deg": 30,
+   "upturn_deg": 25,
+   "taper": 0.95,
+   "radius_ratio": 0.3,
+   "segments": 3
+  },
+  {
+   "count": 10,
+   "start": 0.2,
+   "down_angle_deg": 60,
+   "down_angle_var_deg": 15,
+   "rotation_deg": -80,
+   "rotation_var_deg": 20,
+   "length_ratio": 0.4,
+   "length_var": 0.3,
+   "curve_deg": 0,
+   "curve_var_deg": 12,
+   "tropism": -0.1,
+   "droop_deg": 15,
+   "taper": 1.0,
+   "radius_ratio": 0.5,
+   "segments": 2
+  }
+ ],
+ "foliage": {
+  "type": "needle",
+  "leaf_size_m": 0.02,
+  "leaf_shape": "needle_flat",
+  "cluster_m": 2.6,
+  "density": 18,
+  "leaf_fill": 5.0,
+  "start": 0.15,
+  "parent_start": 0.35,
+  "orientation": "along",
+  "needle_planes": 1,
+  "tuft_spread_deg": 25,
+  "tuft_up": 0.0,
+  "droop": 0.4,
+  "needle_normal": 0.5,
+  "needle_wrap": 0.4,
+  "translucency": 2.2,
+  "needle_scatter": 0.15,
+  "colors": {
+   "winter": [
+    76,
+    90,
+    88
+   ],
+   "spring": [
+    112,
+    130,
+    104
+   ],
+   "summer": [
+    82,
+    98,
+    94
+   ],
+   "fall": [
+    80,
+    94,
+    90
+   ]
+  },
+  "leaf_on": {
+   "winter": 1.0,
+   "spring": 1.0,
+   "summer": 1.0,
+   "fall": 1.0
+  },
+  "twist_deg": 40,
+  "clumps": {
+   "radius_m": 1.2,
+   "cards_per_clump": 4,
+   "shell": 0,
+   "flatten": 0.7,
+   "tip_bias": 1.5
+  },
+  "palette": [
+   [
+    0.88,
+    [
+     1,
+     1,
+     1
+    ]
+   ],
+   [
+    0.12,
+    [
+     1.18,
+     1.24,
+     0.88
+    ]
+   ]
+  ],
+  "ao_min": 0.68,
+  "color_var": [
+   0.07,
+   0.03
+  ]
+ },
+ "deadwood": {
+  "fraction": 0.18,
+  "where": "lower",
+  "levels": [
+   1
+  ],
+  "shorten": 0.6,
+  "rgb": [
+   128,
+   118,
+   106
+  ]
+ },
+ "twigs": {
+  "count": [
+   1,
+   2
+  ],
+  "length": 0.6,
+  "down_deg": 50,
+  "down_var_deg": 12,
+  "tropism": -0.2,
+  "segments": 1,
+  "radius_m": 0.008,
+  "taper": 0.5,
+  "fan_deg": 30,
+  "jitter": 0.08
+ },
+ "lod": {
+  "near_tris_budget": 3000,
+  "near_sides": [
+   6,
+   3,
+   0
+  ],
+  "mid_blobs": 12,
+  "mid_branches": 2,
+  "mid_blob_scale": 0.55,
+  "close_factor": 2,
+  "mid_planes": 1,
+  "mid_cards": 48,
+  "mid_canopy": "blobs"
+ },
+ "targets": {
+  "crown_width_ratio": 0.48,
+  "crown_base_ratio": 0.3,
+  "porosity": 0.28,
+  "foliage_rg": 0.69,
+  "foliage_bg": 0.92,
+  "from": "judgement values from the drafter's reading of the sources and knowledge of the species (2026-11-04), no photographs measured; to be replaced by photo measurements: an open cone of horizontal, slightly drooping limbs, broader and more ragged than Douglas-fir; old valley-floor trees carry a broken, irregular crown on a long clear bole"
+ },
+ "generated": {
+  "by": "pipeline/plantgen.py",
+  "version": "2",
+  "card": "library/plant_cards/picea_sitchensis.json",
+  "card_sha256": "9c16f867743539c1",
+  "template": "pseudotsuga_menziesii",
+  "template_common": "Douglas-fir",
+  "height_scale": 1.474
+ },
+ "notes": "Grown from Douglas-fir (the library's only spruce-like Pinaceae architecture) as a broader, more ragged cone on a flaring base. The needles are 1.5-2.5 cm, stiff and sharp, four-angled or flattened and standing out all round the twig (a bottlebrush), not in the flat two ranks of the template's needle_flat cards, and blue-green with whitish undersides; the cones are pendant like the template's but papery and buff. The stilted roots of trees that grew on a nurse log, and the colonnades of trees in a line along a rotted log, are the Hoh's signature and are not expressed (the generator roots every tree at one point on the ground). The heavy moss on the limbs is not drawn either (see acer_circinatum's notes). Roosevelt elk browse the young shoots (Gymnosperm Database) and shape the rain forest's open understory; Douglas squirrels cut the cones, and crossbills and siskins take the seed; none is in the animal library, so the black-tailed deer (odocoileus_hemionus) and Steller's jay stand in. Below 400 m in California (Gymnosperm Database), so the 'california' region covers only the far north coast.",
+ "sources": [
+  "The Gymnosperm Database, Picea sitchensis, https://www.conifers.org/pi/Picea_sitchensis.php, read 2026-11-04"
+ ],
+ "authors": [
+  "Wild Earth (agent draft, 2026-11-04); needs local sign-off"
+ ],
+ "license": "CC BY-SA 4.0"
+}

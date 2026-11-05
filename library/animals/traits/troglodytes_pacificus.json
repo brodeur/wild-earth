@@ -1,0 +1,118 @@
+{
+ "id": "troglodytes_pacificus",
+ "scientific": "Troglodytes pacificus",
+ "common": "pacific wren",
+ "kind": "bird",
+ "taxonomy": {
+  "kingdom": "Animalia",
+  "phylum": "Chordata",
+  "class": "Aves",
+  "order": "Passeriformes",
+  "family": "Troglodytidae",
+  "genus": "Troglodytes"
+ },
+ "body_plan": "bird",
+ "mass_kg": 0.0115,
+ "size": {
+  "length_m": 0.081,
+  "shoulder_or_wingspan_m": 0.13
+ },
+ "diet": {
+  "role": [
+   "insectivore"
+  ],
+  "diet_tenths": {
+   "inv": 9.4,
+   "vend": 0.0,
+   "vect": 0.1,
+   "vfish": 0.1,
+   "vunk": 0.0,
+   "scav": 0.0,
+   "fruit": 0.1,
+   "nect": 0.0,
+   "seed": 0.1,
+   "planto": 0.2
+  },
+  "vertebrate_share": 0.02,
+  "mass_kg": 0.0115,
+  "activity": [],
+  "source": "eltontraits (genus)"
+ },
+ "senses": {
+  "sight": {
+   "range_m": 204.7
+  },
+  "sound": {
+   "range_m": 102.3
+  },
+  "scent": {
+   "range_m": 8.2
+  }
+ },
+ "rig": "bird part rig (animalModels.js RIG.bird), flierControl",
+ "locomotion": {
+  "code": "troglodytes_pacificus",
+  "class": "Aves",
+  "order": "Passeriformes",
+  "family": "Troglodytidae",
+  "body_plan": "bird",
+  "mass_kg": 0.0115,
+  "length_m": 0.081,
+  "hip_m": 0.041,
+  "posture": "biped",
+  "gaits": {
+   "ground": "hop",
+   "flight": "flap-glide"
+  },
+  "walk_mps": 0.45,
+  "trot_mps": 1.0,
+  "cruise_mps": 0.92,
+  "top_mps": 1.53,
+  "stride_hz": 8.19,
+  "stride_m": 0.12,
+  "sprint_s": 1.2,
+  "recover_s": 5.0,
+  "turn_rad_s": 8.0,
+  "turn": {
+   "on": 0.45,
+   "off": 0.2,
+   "hold": 0.35,
+   "amp": [
+    0.4,
+    0.6
+   ],
+   "hz": [
+    0.7,
+    2.4
+   ]
+  },
+  "lag": {
+   "s": 0.03,
+   "max_rad": 0.35,
+   "v": [
+    0.3,
+    1.2
+   ]
+  },
+  "bend": {
+   "spine": 1.0,
+   "lead": 0.12,
+   "lead_max": 0.25
+  },
+  "flags": {
+   "head_lead": true
+  },
+  "flier": true
+ },
+ "generated": {
+  "by": "pipeline/fauna.py",
+  "at": "2026-11-05T09:23:46Z",
+  "from": [
+   "gbif taxonomy",
+   "eltontraits (genus)",
+   "pipeline/locomotion.py"
+  ],
+  "note": "behaviour data without a model; review the diet, senses and size before a mesh is made"
+ },
+ "license": "CC BY-SA 4.0 (the entry); diet and mass from EltonTraits 1.0 (CC BY 4.0, credited in the tile's sources)"
+}

@@ -1,0 +1,442 @@
+{
+ "id": "oplopanax_horridus",
+ "aliases": [
+  "devils_club",
+  "devil_s_club"
+ ],
+ "scientific": "Oplopanax horridus",
+ "common": "devil's club",
+ "form": "shrub",
+ "regions": [
+  "pacific_northwest"
+ ],
+ "architectural_model": "Champagnat (provisional: erect shoots that arch over under their own weight, new erect shoots from the arch and the base)",
+ "deciduous": true,
+ "height_m": [
+  1,
+  3
+ ],
+ "variants": [
+  {
+   "name": "young",
+   "weight": 0.25,
+   "height_m": [
+    0.3,
+    1.0
+   ],
+   "trunk_radius": 0.7,
+   "crown_scale": 0.75,
+   "branches": 0.75,
+   "set": {
+    "trunk": {
+     "stems": [
+      3,
+      5
+     ],
+     "stem_spread_deg": 16
+    }
+   },
+   "note": "a single cane with a few leaves at the top, by a seep"
+  },
+  {
+   "name": "mature",
+   "weight": 0.5,
+   "seeds": 1,
+   "note": "(from the blue elderberry template) the file as written: a broad clump of arching stems"
+  },
+  {
+   "name": "old",
+   "weight": 0.25,
+   "height_m": [
+    2.5,
+    4
+   ],
+   "trunk_radius": 1.3,
+   "crown_scale": 1.1,
+   "gnarl": 1.2,
+   "deadwood": {
+    "fraction": 0.25,
+    "levels": [
+     1,
+     2
+    ],
+    "where": "inner",
+    "rgb": [
+     140,
+     134,
+     124
+    ]
+   },
+   "set": {
+    "trunk": {
+     "stems": [
+      5,
+      9
+     ]
+    }
+   },
+   "note": "a sprawling colony of canes bent over and rooting along a wet bench, their leaves a continuous umbrella at head height"
+  }
+ ],
+ "description": "A fearsome shrub of the wettest ground, 1-3 m, whose thick canes bristle with yellow spines and lean and sprawl along seeps and streambanks. At the top of each cane spread enormous maple-like leaves, spiny on the veins, held flat to catch the forest's dim light, with a spike of scarlet berries above them in late summer.",
+ "season_notes": {
+  "winter": "Bare, crooked spiny canes, the berries gone.",
+  "spring": "Leaves open late, in May, unfolding to 20-40 cm across.",
+  "summer": "Upright pyramids of greenish-white flowers become a head of shiny scarlet berries by August.",
+  "fall": "Leaves turn yellow and drop early, in September-October."
+ },
+ "status": "generated from a trait card, needs review in the lineup and local sign-off",
+ "habitat": {
+  "classes": {
+   "riparian": 1.0,
+   "conifer_forest": 0.6,
+   "mixed_forest": 0.6
+  },
+  "floor": 1.8,
+  "mid": 0.7,
+  "steep": 0.6,
+  "north": 1.4,
+  "shade": 0.8,
+  "disturbed": 0.3,
+  "riparian": {
+   "zones": {
+    "bank": 1.0,
+    "terrace": 0.8,
+    "margin": 0.5,
+    "pond_shore": 0.4
+   },
+   "orders": [
+    1,
+    6
+   ],
+   "permanence": "any",
+   "water": "A wet-site indicator: shaded springs, seeps, streamsides and wet bottoms where water moves through the soil (FEIS)."
+  }
+ },
+ "relations": {
+  "eaten_by": [
+   {
+    "animal": "ursus_americanus",
+    "part": "berries",
+    "seasons": [
+     "summer",
+     "fall"
+    ]
+   },
+   {
+    "animal": "odocoileus_hemionus",
+    "part": "browse",
+    "seasons": [
+     "spring",
+     "summer"
+    ]
+   }
+  ],
+  "cover_for": []
+ },
+ "trunk": {
+  "length_ratio": 0.8,
+  "radius_ratio": 0.025,
+  "taper": 0.75,
+  "flare": 1.3,
+  "bole_ratio": 0.06,
+  "base_size": 0.14,
+  "curve_deg": 16,
+  "curve_var_deg": 14,
+  "segments": 3,
+  "lean_deg": 10,
+  "stems": [
+   3,
+   8
+  ],
+  "stem_spread_deg": 30,
+  "split_prob": 0.0,
+  "split_count": 2,
+  "split_angle_deg": 20,
+  "sinuous_deg": 5,
+  "bark_rgb": [
+   150,
+   128,
+   92
+  ],
+  "bark_pattern": "smooth",
+  "twig_rgb": [
+   124,
+   124,
+   96
+  ],
+  "bark": {
+   "tile_m": [
+    0.2,
+    0.45
+   ],
+   "ridge_m": 0.012,
+   "block_m": 0.035,
+   "fissure": 0.35,
+   "contrast": 0.55,
+   "lichen": 0.2,
+   "relief": 0.6
+  }
+ },
+ "crown": {
+  "shape": "inverse_conical",
+  "envelope": {
+   "profile": [
+    [
+     0.0,
+     0.2
+    ],
+    [
+     0.3,
+     0.26
+    ],
+    [
+     0.55,
+     0.36
+    ],
+    [
+     0.75,
+     0.48
+    ],
+    [
+     0.9,
+     0.5
+    ],
+    [
+     1.0,
+     0.3
+    ]
+   ],
+   "lobes": 5,
+   "lobe_depth": 0.2,
+   "asymmetry": 0.3,
+   "fill": 0.3,
+   "edge": 1.1
+  }
+ },
+ "levels": [
+  {
+   "count": 6,
+   "down_angle_deg": 55,
+   "down_angle_tip_deg": 32,
+   "down_angle_var_deg": 14,
+   "rotation_deg": 140,
+   "rotation_var_deg": 30,
+   "length_ratio": 0.9,
+   "length_var": 0.3,
+   "curve_deg": 10,
+   "curve_var_deg": 14,
+   "tropism": 0.02,
+   "taper": 0.9,
+   "radius_ratio": 0.5,
+   "segments": 2,
+   "droop_deg": 8
+  },
+  {
+   "count": 5,
+   "start": 0.22,
+   "down_angle_deg": 45,
+   "down_angle_var_deg": 12,
+   "rotation_deg": -90,
+   "rotation_var_deg": 20,
+   "length_ratio": 0.45,
+   "length_var": 0.3,
+   "curve_deg": 8,
+   "curve_var_deg": 14,
+   "tropism": 0.0,
+   "taper": 1.0,
+   "radius_ratio": 0.5,
+   "segments": 1
+  }
+ ],
+ "foliage": {
+  "type": "broadleaf",
+  "leaf_size_m": 0.3,
+  "leaflet_m": 0.09,
+  "leaf_shape": "lobed_large",
+  "cluster_m": 0.95,
+  "density": 14,
+  "cards_per_m2": 1.2,
+  "start": 0.02,
+  "parent_start": 0.18,
+  "orientation": "outward",
+  "roll_deg": 60,
+  "colors": {
+   "winter": [
+    140,
+    118,
+    90
+   ],
+   "spring": [
+    120,
+    154,
+    78
+   ],
+   "summer": [
+    84,
+    118,
+    60
+   ],
+   "fall": [
+    192,
+    170,
+    82
+   ]
+  },
+  "leaf_on": {
+   "winter": 0.0,
+   "spring": 0.6,
+   "summer": 1.0,
+   "fall": 0.5
+  },
+  "leaf_on_by_month": [
+   0.0,
+   0.0,
+   0.0,
+   0.3,
+   0.9,
+   1.0,
+   1.0,
+   1.0,
+   0.9,
+   0.6,
+   0.1,
+   0.0
+  ],
+  "clumps": {
+   "radius_m": 0.49,
+   "cards_per_clump": 7,
+   "shell": 0.25,
+   "flatten": 0.85,
+   "tip_bias": 0.6
+  },
+  "palette": [
+   [
+    0.85,
+    [
+     1,
+     1,
+     1
+    ]
+   ],
+   [
+    0.1,
+    [
+     1.08,
+     1.06,
+     1.14
+    ]
+   ],
+   [
+    0.05,
+    [
+     1.3,
+     1.22,
+     0.75
+    ]
+   ]
+  ],
+  "winter_twigs": 0.45,
+  "ao_min": 0.7,
+  "color_var": [
+   0.08,
+   0.05
+  ],
+  "leaf_on_var": 0.5,
+  "flowers": {
+   "season": "spring",
+   "months": [
+    5,
+    6
+   ],
+   "form": "candle",
+   "rgb": [
+    222,
+    226,
+    190
+   ],
+   "size_m": 0.15,
+   "density": 0.3,
+   "before_leaves": false
+  },
+  "berries": {
+   "season": "summer",
+   "months": [
+    7,
+    9
+   ],
+   "form": "cluster",
+   "rgb": [
+    212,
+    40,
+    36
+   ],
+   "size_m": 0.12,
+   "density": 0.35
+  },
+  "lobes": 7,
+  "lobe_depth": 0.35,
+  "lobe_style": "palmate"
+ },
+ "twigs": {
+  "count": [
+   2,
+   3
+  ],
+  "length": 0.6,
+  "down_deg": 40,
+  "down_var_deg": 14,
+  "curve_var_deg": 16,
+  "segments": 1,
+  "radius_m": 0.008,
+  "droop_deg": 8,
+  "fan_deg": 45,
+  "jitter": 0.2
+ },
+ "lod": {
+  "near_tris_budget": 1300,
+  "near_sides": [
+   4,
+   3,
+   0
+  ],
+  "mid_blobs": 4,
+  "mid_branches": 3,
+  "mid_sides": [
+   3,
+   3
+  ],
+  "mid_segments": [
+   2,
+   1
+  ],
+  "mid_cards": 48
+ },
+ "targets": {
+  "crown_width_ratio": 1.1,
+  "crown_base_ratio": 0.45,
+  "porosity": 0.3,
+  "foliage_rg": 0.49,
+  "foliage_bg": 0.25,
+  "fall_rg": 1.15,
+  "fall_bg": 0.5,
+  "from": "judgement values from the drafter's reading of the sources and knowledge of the species (2026-11-04), no photographs measured; to be replaced by photo measurements: a few thick, leaning, sparsely branched spiny canes, bare below, each crowned by a tier of huge flat leaves held horizontally like umbrellas"
+ },
+ "generated": {
+  "by": "pipeline/plantgen.py",
+  "version": "2",
+  "card": "library/plant_cards/oplopanax_horridus.json",
+  "card_sha256": "02814a55abb4a812",
+  "template": "sambucus_nigra_caerulea",
+  "template_common": "blue elderberry",
+  "height_scale": 0.444
+ },
+ "notes": "Grown from blue elderberry (the library's broad-leaved multi-stem shrub with big leaves and berry heads) as a 'shrub' of few, leaning canes with leaves only near their tops (crown base 0.45, an inverse cone) and huge palmately lobed leaves (lobed_large, 7 lobes, 30 cm) in place of the elder's pinnate ones. The canes' dense yellow spines and the spines on the leaf veins are not drawn; the bark colour is a pale brown-yellow for them. Its real architecture, an unbranched or little-branched cane topped by a rosette of leaves (Corner's model), is closer than the template's branching suggests; the template's level counts may need lowering after a look in the lineup. The scarlet berry head stands above the leaves; the 'candle' flower form stands in for its upright, pyramidal panicle. FEIS: deer and elk use it only lightly (Roosevelt elk about 3% of the summer diet on the Pacific coast), being prickly; bears eat the berries, and the seeds, leaves and stems. Only the bear and deer are in the animal library.",
+ "sources": [
+  "FEIS, Oplopanax horridus, https://www.fs.usda.gov/database/feis/plants/shrub/oplhor/all.html, read 2026-11-04"
+ ],
+ "authors": [
+  "Wild Earth (agent draft, 2026-11-04); needs local sign-off"
+ ],
+ "license": "CC BY-SA 4.0"
+}

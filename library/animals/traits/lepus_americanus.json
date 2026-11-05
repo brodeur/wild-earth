@@ -1,0 +1,133 @@
+{
+ "id": "lepus_americanus",
+ "scientific": "Lepus americanus",
+ "common": "snowshoe hare",
+ "kind": "mammal",
+ "taxonomy": {
+  "kingdom": "Animalia",
+  "phylum": "Chordata",
+  "class": "Mammalia",
+  "order": "Lagomorpha",
+  "family": "Leporidae",
+  "genus": "Lepus"
+ },
+ "body_plan": "lagomorph",
+ "mass_kg": 1.71,
+ "size": {
+  "length_m": 0.43,
+  "shoulder_or_wingspan_m": 0.194
+ },
+ "diet": {
+  "role": [
+   "herbivore"
+  ],
+  "diet_tenths": {
+   "inv": 0.0,
+   "vend": 0.0,
+   "vect": 0.0,
+   "vfish": 0.0,
+   "vunk": 0.0,
+   "scav": 0.0,
+   "fruit": 0.0,
+   "nect": 0.0,
+   "seed": 0.0,
+   "planto": 10.0
+  },
+  "vertebrate_share": 0.0,
+  "mass_kg": 1.71,
+  "activity": [
+   "nocturnal"
+  ],
+  "source": "eltontraits (species)"
+ },
+ "senses": {
+  "sight": {
+   "range_m": 278.3
+  },
+  "sound": {
+   "range_m": 389.6
+  },
+  "scent": {
+   "range_m": 556.6
+  }
+ },
+ "rig": "tools/rig_quadruped.py lagomorph path, gait.js hopStep",
+ "locomotion": {
+  "code": "lepus_americanus",
+  "class": "Mammalia",
+  "order": "Lagomorpha",
+  "family": "Leporidae",
+  "body_plan": "lagomorph",
+  "mass_kg": 1.71,
+  "length_m": 0.43,
+  "hip_m": 0.194,
+  "posture": "parasagittal",
+  "gaits": {
+   "walk": "froude 0.5",
+   "trot": "froude 2.5",
+   "gallop": "beyond",
+   "run": "hop"
+  },
+  "walk_mps": 0.98,
+  "trot_mps": 2.18,
+  "cruise_mps": 5.71,
+  "top_mps": 9.52,
+  "stride_hz": 3.87,
+  "stride_m": 0.56,
+  "sprint_s": 4.3,
+  "recover_s": 15.1,
+  "turn_rad_s": 3.83,
+  "turn": {
+   "on": 0.6,
+   "off": 0.2,
+   "hold": 0.35,
+   "amp": [
+    0.4,
+    0.6
+   ],
+   "hz": [
+    1.2,
+    3.5
+   ]
+  },
+  "lag": {
+   "s": 0.058,
+   "max_rad": 0.3,
+   "v": [
+    0.3,
+    1.2
+   ]
+  },
+  "bend": {
+   "spine": 1.0,
+   "lead": 0.12,
+   "lead_max": 0.25
+  },
+  "flags": {},
+  "flier": false,
+  "hop": {
+   "set": "half-bound",
+   "shuffle_froude": 1.0,
+   "flex_rad": 0.28,
+   "observe": {
+    "every": [
+     4,
+     7
+    ],
+    "longer": 1.4,
+    "higher_hip": 0.6
+   }
+  }
+ },
+ "generated": {
+  "by": "pipeline/fauna.py",
+  "at": "2026-11-05T09:23:46Z",
+  "from": [
+   "gbif taxonomy",
+   "eltontraits (species)",
+   "pipeline/locomotion.py"
+  ],
+  "note": "behaviour data without a model; review the diet, senses and size before a mesh is made"
+ },
+ "license": "CC BY-SA 4.0 (the entry); diet and mass from EltonTraits 1.0 (CC BY 4.0, credited in the tile's sources)"
+}

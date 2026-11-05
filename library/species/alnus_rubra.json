@@ -1,0 +1,459 @@
+{
+ "id": "alnus_rubra",
+ "aliases": [
+  "red_alder",
+  "oregon_alder",
+  "western_alder"
+ ],
+ "scientific": "Alnus rubra",
+ "common": "red alder",
+ "form": "tree",
+ "regions": [
+  "pacific_northwest",
+  "california"
+ ],
+ "architectural_model": "Rauh",
+ "deciduous": true,
+ "height_m": [
+  20,
+  32
+ ],
+ "stature": {
+  "typical_m": 25,
+  "tall_m": 33,
+  "record_m": null,
+  "source": "typical and tall: FEIS, mature trees usually 24-30 m, to about 37 m; no record tree read; read 2026-11-04"
+ },
+ "variants": [
+  {
+   "name": "young",
+   "weight": 0.25,
+   "height_m": [
+    5,
+    14
+   ],
+   "trunk_radius": 0.75,
+   "crown_scale": 0.95,
+   "branches": 0.8,
+   "set": {
+    "crown": {
+     "envelope": {
+      "profile": [
+       [
+        0.16,
+        0.16
+       ],
+       [
+        0.3,
+        0.26
+       ],
+       [
+        0.45,
+        0.29
+       ],
+       [
+        0.6,
+        0.27
+       ],
+       [
+        0.75,
+        0.21
+       ],
+       [
+        0.88,
+        0.13
+       ],
+       [
+        1.0,
+        0.03
+       ]
+      ]
+     }
+    }
+   },
+   "note": "a dense, even-aged thicket of slim pale stems on a fresh gravel bar, landslide or blowdown"
+  },
+  {
+   "name": "mature",
+   "weight": 0.5,
+   "seeds": 2,
+   "note": "(from the white alder template) the file as written"
+  },
+  {
+   "name": "veteran",
+   "weight": 0.17,
+   "height_m": [
+    28,
+    37
+   ],
+   "trunk_radius": 1.25,
+   "crown_scale": 1.12,
+   "gnarl": 1.25,
+   "deadwood": {
+    "fraction": 0.15,
+    "levels": [
+     1,
+     2
+    ],
+    "where": "lower"
+   },
+   "set": {
+    "trunk": {
+     "stems": [
+      1,
+      3
+     ],
+     "lean_deg": 9
+    }
+   },
+   "note": "an old alder at the end of its short life (rarely past 100 years), leaning, its top dying back, the bark white with lichens and green with moss"
+  }
+ ],
+ "snag": {
+  "fraction": 0.08,
+  "from": "mature",
+  "height_m": [
+   10,
+   18
+  ],
+  "limbs": 0.4,
+  "twigs": 0.1,
+  "levels": 1,
+  "broken_top": [
+   0.6,
+   0.9
+  ],
+  "shorten": [
+   0.35,
+   0.8
+  ],
+  "rgb": [
+   176,
+   172,
+   164
+  ]
+ },
+ "description": "The pale-trunked pioneer of the river bars, floods and landslides, 20-30 m here, its smooth grey bark painted white and green with lichens and moss. Its broad crown of dark, toothed leaves comes and goes fast: the leaves fall in autumn still green or brown, and in late winter the bare crowns turn reddish with long hanging catkins.",
+ "season_notes": {
+  "winter": "Bare; the crowns turn a reddish-purple haze from the buds and catkins by February.",
+  "spring": "Long yellow-brown male catkins hang and shed pollen before the leaves, February to April.",
+  "summer": "A dense, dark-green crown; small cones ripen.",
+  "fall": "Leaves drop green or dull brown in October and November, with little colour; the woody cones release seed to the wind."
+ },
+ "status": "generated from a trait card, needs review in the lineup and local sign-off",
+ "habitat": {
+  "classes": {
+   "riparian": 1.0,
+   "mixed_forest": 0.8,
+   "conifer_forest": 0.3
+  },
+  "floor": 1.6,
+  "mid": 1.0,
+  "steep": 0.8,
+  "north": 1.0,
+  "shade": 0.2,
+  "disturbed": 1.6,
+  "riparian": {
+   "zones": {
+    "bank": 1.0,
+    "terrace": 1.0,
+    "margin": 0.6,
+    "channel": 0.2,
+    "pond_shore": 0.4
+   },
+   "orders": [
+    1,
+    7
+   ],
+   "permanence": "any",
+   "water": "Wants moist ground and bare mineral soil to start: the gravel bars, banks and young terraces of the rivers, and the seeps, slides and blowdowns of the lower slopes."
+  }
+ },
+ "relations": {
+  "eaten_by": [
+   {
+    "animal": "odocoileus_hemionus",
+    "part": "browse",
+    "seasons": [
+     "fall",
+     "winter",
+     "spring"
+    ]
+   }
+  ],
+  "cover_for": [
+   "odocoileus_hemionus",
+   "ursus_americanus"
+  ],
+  "shades_water": 1.0
+ },
+ "trunk": {
+  "length_ratio": 0.92,
+  "radius_ratio": 0.022,
+  "taper": 0.85,
+  "flare": 1.25,
+  "bole_ratio": 0.25,
+  "base_size": 0.18,
+  "curve_deg": 4,
+  "curve_var_deg": 6,
+  "segments": 6,
+  "lean_deg": 5,
+  "stems": [
+   1,
+   2
+  ],
+  "stem_spread_deg": 10,
+  "split_prob": 0.1,
+  "split_count": 2,
+  "split_angle_deg": 16,
+  "split_height": 0.55,
+  "bark_rgb": [
+   178,
+   176,
+   168
+  ],
+  "bark_pattern": "mottled",
+  "twig_rgb": [
+   118,
+   104,
+   96
+  ],
+  "bark": {
+   "tile_m": [
+    0.3,
+    0.6
+   ],
+   "contrast": 0.5,
+   "lichen": 0.7,
+   "relief": 0.35
+  }
+ },
+ "crown": {
+  "shape": "spherical",
+  "envelope": {
+   "profile": [
+    [
+     0.25,
+     0.2
+    ],
+    [
+     0.38,
+     0.28
+    ],
+    [
+     0.52,
+     0.32
+    ],
+    [
+     0.66,
+     0.31
+    ],
+    [
+     0.8,
+     0.25
+    ],
+    [
+     0.92,
+     0.15
+    ],
+    [
+     1.0,
+     0.04
+    ]
+   ],
+   "lobes": 6,
+   "lobe_depth": 0.16,
+   "asymmetry": 0.22,
+   "fill": 0.35,
+   "edge": 1.1
+  }
+ },
+ "levels": [
+  {
+   "count": 18,
+   "down_angle_deg": 58,
+   "down_angle_tip_deg": 34,
+   "down_angle_var_deg": 12,
+   "rotation_deg": 140,
+   "rotation_var_deg": 30,
+   "length_ratio": 0.36,
+   "length_var": 0.3,
+   "curve_deg": -6,
+   "curve_var_deg": 12,
+   "tropism": 0.02,
+   "taper": 0.9,
+   "radius_ratio": 0.4,
+   "segments": 2,
+   "droop_deg": 10,
+   "upturn_deg": 0
+  },
+  {
+   "count": 11,
+   "start": 0.1,
+   "down_angle_deg": 48,
+   "down_angle_var_deg": 14,
+   "rotation_deg": -70,
+   "rotation_var_deg": 20,
+   "length_ratio": 0.5,
+   "length_var": 0.3,
+   "curve_deg": 0,
+   "curve_var_deg": 14,
+   "tropism": -0.02,
+   "taper": 1.0,
+   "radius_ratio": 0.45,
+   "segments": 2
+  }
+ ],
+ "foliage": {
+  "type": "broadleaf",
+  "leaf_size_m": 0.11,
+  "leaf_shape": "oval",
+  "cluster_m": 1.25,
+  "density": 14,
+  "leaf_fill": 3.0,
+  "start": 0.05,
+  "parent_start": 0.3,
+  "orientation": "outward",
+  "roll_deg": 30,
+  "colors": {
+   "winter": [
+    128,
+    106,
+    100
+   ],
+   "spring": [
+    108,
+    134,
+    74
+   ],
+   "summer": [
+    74,
+    92,
+    60
+   ],
+   "fall": [
+    92,
+    96,
+    62
+   ]
+  },
+  "leaf_on": {
+   "winter": 0.0,
+   "spring": 0.9,
+   "summer": 1.0,
+   "fall": 0.75
+  },
+  "clumps": {
+   "radius_m": 0.9,
+   "cards_per_clump": 7,
+   "shell": 0.15,
+   "flatten": 0.65,
+   "tip_bias": 1.3
+  },
+  "palette": [
+   [
+    0.85,
+    [
+     1,
+     1,
+     1
+    ]
+   ],
+   [
+    0.15,
+    [
+     0.82,
+     0.88,
+     0.85
+    ]
+   ]
+  ],
+  "winter_twigs": 0.5,
+  "ao_min": 0.68,
+  "catkins": {
+   "rgb": [
+    150,
+    118,
+    84
+   ],
+   "len_m": 0.07,
+   "width": 0.16,
+   "hang": true,
+   "prob": 0.3
+  },
+  "color_var": [
+   0.06,
+   0.03
+  ],
+  "leaf_on_var": 0.4
+ },
+ "deadwood": {
+  "fraction": 0.05,
+  "where": "lower",
+  "levels": [
+   1
+  ],
+  "shorten": 0.55,
+  "rgb": [
+   150,
+   146,
+   140
+  ]
+ },
+ "twigs": {
+  "count": [
+   1,
+   2
+  ],
+  "length": 0.6,
+  "down_deg": 50,
+  "down_var_deg": 15,
+  "curve_var_deg": 18,
+  "segments": 1,
+  "radius_m": 0.007,
+  "droop_deg": 8,
+  "fan_deg": 50,
+  "jitter": 0.2
+ },
+ "lod": {
+  "near_tris_budget": 2000,
+  "near_sides": [
+   6,
+   3,
+   0
+  ],
+  "mid_blobs": 5,
+  "mid_branches": 4,
+  "mid_segments": [
+   3,
+   1
+  ],
+  "mid_blob_scale": 0.85,
+  "close_factor": 2.5
+ },
+ "targets": {
+  "crown_width_ratio": 0.62,
+  "crown_base_ratio": 0.35,
+  "porosity": 0.2,
+  "foliage_rg": 0.64,
+  "foliage_bg": 0.42,
+  "from": "judgement values from the drafter's reading of the sources and knowledge of the species (2026-11-04), no photographs measured; to be replaced by photo measurements: a straight, pale, mottled trunk under a broad, rounded, rather open crown; narrower and higher-based in dense young stands"
+ },
+ "generated": {
+  "by": "pipeline/plantgen.py",
+  "version": "2",
+  "card": "library/plant_cards/alnus_rubra.json",
+  "card_sha256": "33c2a1b5b15c240f",
+  "template": "alnus_rhombifolia",
+  "template_common": "white alder",
+  "height_scale": 1.486
+ },
+ "notes": "Grown from white alder (same genus) as a taller tree with a paler, lichen-mottled trunk (bark_pattern mottled, the sycamore's patches, standing in for the white crustose lichens and moss that cover it) and a broader crown. Leaves ovate, 7-15 cm, coarsely double-toothed with a margin rolled under, dark green above and rusty-hairy below (drafter's knowledge; FEIS gives no leaf description). It fixes nitrogen and builds the soil for the conifers that replace it. FEIS: elk and deer browse its leaves, twigs and buds in fall, winter and early spring; beavers eat the bark and build with the stems; redpolls, siskins and goldfinches eat the seed; deer mice too. Only the deer is in the animal library (it stands in for the elk as well). Roosevelt elk on the Hoh river bars and alder flats are the main browsers.",
+ "sources": [
+  "FEIS, Alnus rubra, https://www.fs.usda.gov/database/feis/plants/tree/alnrub/all.html, read 2026-11-04"
+ ],
+ "authors": [
+  "Wild Earth (agent draft, 2026-11-04); needs local sign-off"
+ ],
+ "license": "CC BY-SA 4.0"
+}
