@@ -271,6 +271,15 @@
    "fissure": 0.7,
    "contrast": 1.0,
    "relief": 1.4
+  },
+  "roots": {
+   "buttress": 0.6,
+   "buttresses": [
+    5,
+    8
+   ],
+   "length": 1.2,
+   "note": "a massive flared base; the roots are shallow (1-2 m) and spread wide"
   }
  },
  "crown": {
@@ -482,7 +491,7 @@
   "by": "pipeline/plantgen.py",
   "version": "2",
   "card": "library/plant_cards/sequoiadendron_giganteum.json",
-  "card_sha256": "28f92f41b0914e7a",
+  "card_sha256": "c2adf100c7a9638f",
   "template": "calocedrus_decurrens",
   "template_common": "incense cedar",
   "height_scale": 2.321

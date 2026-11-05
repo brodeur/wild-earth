@@ -346,6 +346,18 @@
    "fissure": 0.95,
    "contrast": 1.15,
    "relief": 1.4
+  },
+  "roots": {
+   "buttresses": [
+    3,
+    4
+   ],
+   "roots": [
+    0,
+    1
+   ],
+   "length": 0.8,
+   "note": "a taproot and deep laterals: few surface roots"
   }
  },
  "crown": {
@@ -531,7 +543,7 @@
   "by": "pipeline/plantgen.py",
   "version": "2",
   "card": "library/plant_cards/pinus_jeffreyi.json",
-  "card_sha256": "557054297ec3304c",
+  "card_sha256": "bb3846998847d1fc",
   "template": "pinus_ponderosa",
   "template_common": "ponderosa pine",
   "height_scale": 0.921

@@ -291,6 +291,15 @@
    "contrast": 1.1,
    "lichen": 0.08,
    "relief": 1.6
+  },
+  "roots": {
+   "buttress": 0.7,
+   "buttresses": [
+    5,
+    8
+   ],
+   "length": 1.2,
+   "note": "a fluted, buttressed base over a shallow root plate that spreads 15-30 m"
   }
  },
  "crown": {
@@ -504,7 +513,7 @@
   "by": "pipeline/plantgen.py",
   "version": "2",
   "card": "library/plant_cards/sequoia_sempervirens.json",
-  "card_sha256": "5a052a7e7fbe0704",
+  "card_sha256": "3e61ac5b1279e6ce",
   "template": "pseudotsuga_menziesii",
   "template_common": "Douglas-fir",
   "height_scale": 1.282

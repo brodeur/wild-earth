@@ -83,7 +83,7 @@ import { bodyScale, onBodyScale } from './bodyScale.js';
 // (maple, sycamore)) at the species' size and colours, fascicles of needles (gray pine 20-30 cm, ponderosa 12-25,
 // Douglas-fir and incense cedar short), cones (gray pine's 15-25 cm hooked ones, ponderosa 8-13, Douglas-fir 5-9,
 // incense cedar 2-3), acorn caps under the oaks, twigs, and fallen branches (more under old trees, most round snags)
-// with surface roots radiating from big boles. Each kind's amount follows the cover and the species' month: the
+// (the surface roots round big boles are the trees' own since 2026-11-05: treegen.js rootGeometry). Each kind's amount follows the cover and the species' month: the
 // deciduous oaks, maple and walnut drop in October to December, the live oaks and bay in April and May, madrone its
 // leaves in June and July and its bark in July to September, buckeye in July and August (summer deciduous), the pines
 // their needles in September to November; the fresh share of the leaves (bright, uncurled) peaks then. Where a crown
@@ -852,19 +852,7 @@ export class Litter {
         }
       }
     }
-    // surface roots: from boles past 12 cm, three to seven, half buried, laid in the cell holding their middle
-    for (const t of trees) {
-      if (t.tr < 0.12 || t.snag && t.tr < 0.2) continue;
-      const rr = mulberry32(t.h), NR = 3 + Math.floor(rr() * 4) + (t.old ? 2 : 0);
-      for (let k = 0; k < NR; k++) {
-        const a = (k + 0.3 + 0.4 * rr()) / NR * Math.PI * 2, L = (0.5 + 1.1 * rr()) * (0.6 + 3 * t.tr), rad = Math.min(0.11, t.tr * (0.08 + 0.08 * rr()));
-        const dx = Math.cos(a), dn = Math.sin(a), mid = t.tr * 0.8 + L / 2, x = t.x + dx * mid, n = t.n + dn * mid, sink = 0.65 + 0.2 * rr();
-        if (x < x0 || x >= x0 + CELL || n < n0 || n >= n0 + CELL) continue;
-        if (skip(x, n, x - x0, n - n0, 0)) continue;
-        const m = 0.8 + 0.25 * rr(), c = t.L.wood.map((w, i) => (w * 0.15 + [0.16, 0.11, 0.075][i] * 0.85) * m);   // bark-brown, soiled
-        push('wood', x, n, -a, L, sink, rad / L, 0, 0, c, rad / L);
-      }
-    }
+    // (the surface roots that were laid here, 2026-11-04, are the trees' own now: treegen.js rootGeometry, drawn by the close tier)
   }
   // Rounded, water-worn pebbles 0.6-4 cm lying thick on a bar or on the dry bed and margin of a gravel or cobble reach
   // (tile.water: its bar flag, zones channel and margin, bed material); rocks.js lays the stones from 5 cm up there.

@@ -110,7 +110,8 @@ record's own fields, the others into their `set`; a `grown` note (age, dbh, crow
 | `length_ratio` | trunk (leader) length / tree height before the final fit. About 1 for pines (excurrent: the leader runs to the top), about 0.5 for oaks (decurrent: it dissolves into limbs) |
 | `radius_ratio` | dbh / height |
 | `taper` | 0 = cylinder, 1 = cone to a point at the trunk tip |
-| `flare` | base radius multiplier (root flare), in the first 0.35 m |
+| `flare` | how much the base widens (root flare): f = flare - 1 drives the near tier's lobed flare (on the ground the bole is 1 + 0.9 f wider on its buttresses), its height (r0 x (1 + 2 f) above the ground) and the surface roots' size; the mid tier takes it as one ring at a third of that height. Before 2026-11-05: the base radius multiplier in the first 0.35 m |
+| `roots` | optional (2026-11-05), the flare's and the surface roots' shape: `height` (x the flare's height), `buttress` (0-1, how much of the flare is in fins rather than round; default from f), `buttresses` (`[min, max]` fins, each continuing as a root; default 3-7), `roots` (`[min, max]` thinner roots between them; default 0-2 on boles past 30 cm), `length` (x the roots' reach beyond the flare, default r0 x (2 + 0.4 f)), `note`; `false` turns both off |
 | `bole_ratio` | straight, clear bole as a fraction of trunk length; also where a split happens. The acorn game puts stash holes on it |
 | `base_size` | fraction of the trunk bare of level-1 branches (Weber and Penn's BaseSize) |
 | `curve_deg`, `curve_var_deg`, `segments` | total bend above the bole, random bend per segment, segments above the bole |

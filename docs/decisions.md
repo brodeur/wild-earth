@@ -5183,3 +5183,78 @@ Left: on the steep creeks the shared level sits up to 3 m off one side's ground 
 ground's own step; fixing it is the terrain seam's, not the water's); the reroute and water of the tile built first
 must run again once its neighbour exists; tiles without a 1 m DEM (no reroute) get no crossings; meltwater is order 1
 (Strahler not recomputed below a new head); the order raise at an inflow ignores the +1 when equal orders meet.
+
+## 2026-11-05: root flare and surface roots, fitted to the slope (branch claude/root-flare)
+
+Aaron: "One thing to add to the tree pipeline is root flare and roots - roots don't always need to be visible, but
+especially if the tree is not on a flat surface it will have some evidence of flaring or roots." Before this a trunk
+was a cylinder sunk 0.3 m into the ground with a 0.35 m cone at its foot, nearly all of it under the soil; on a slope
+the slope bend (2026-11-01) tilted its foot to the surface and that was all.
+
+**What drives it.** The records already carried `trunk.flare` (the trait cards too): redwood and Sitka spruce 1.9,
+giant sequoia 2.0, western redcedar 2.1 (old growth 2.6), hemlock 1.4, oaks 1.3-1.4, Douglas-fir 1.3, pines 1.2-1.25.
+With f = flare - 1 and r0 the bole's radius: the flare stands r0 x (1 + 2 f) above the ground (an oak's 0.7 m, a
+mature redcedar's 2 m), is 1 + 0.9 f wider on its buttresses at the ground, and its fluting (`buttress`, how much of it
+is in fins) defaults to 1.1 (f - 0.12), so pines and oaks flare round and cedars in fins. 3-7 buttresses, each going on
+as a surface root; on boles past 30 cm up to two thinner roots between them; no roots under a 10 cm bole. An optional
+`trunk.roots` block shapes it per species (`docs/species-library.md`); set on 18 records and their cards: the
+redwoods, Sitka spruce and redcedar more and sharper buttresses, Sitka and the redwoods and the riparian trees longer
+roots, hemlock shallow and long, the pines (a taproot) three or four short ones, valley oak wide-spreading.
+
+**The shapes** (`treegen.js` `rootPlan`, `flareGeometry`, `rootGeometry`). The flare is a sleeve from the stem's
+buried foot to its top ring, which lies on the trunk tube's first ring (its vertices on that polygon's edges, its UVs,
+colours and normals taken from it), so the bark runs on with no seam and the trunk above is tubed from there; its
+radius widens as (1 - t)^3 toward the ground, lobed by the buttresses (narrower fins near the ground). A root runs from
+inside the flare to where the buttress meets the ground, then on for its length (r0 x (2 + 0.4 f), 0.65-1.35 of it),
+wandering and rising and falling a little, tapering, taller than wide where it leaves the trunk (a plank root), half
+buried by a third of its length and gone by its end: on flat ground a hint, as Aaron asked. Same bark material: the
+bark texture, parallax and moss (moss a little more on the up-facing flare and root tops by the ground). Built in the
+tree's frame without its lean, so a leaning tree's roots still lie on the ground.
+
+**The slope** (`trunkFlex`). Every tree already carries the ground's normal at its foot (vegetation.js `groundLean`,
+the 1 m heightfield a metre either side), which gives the slope and the downhill direction; nothing new is sampled.
+Drawn on flat ground, each root is moved in the vertex shader: it leaves the bent trunk's collar (uphill of the axis)
+at the foot's level and follows the ground only along its length (the share (1 - s)^2 left level, s from where it
+leaves the flare), so downhill it stands clear of a ground that falls away and then grips and enters it, and uphill it
+is under the soil the slope piles there; a downhill root is drawn steeper and shorter on the map (the props of a tree
+on a steep slope); the tip sinks a little more on a slope (a hillside is rarely the plane at the foot). The flare is
+pushed down into the soil on the uphill side and stretched down the slope on the downhill side, by its weight up the
+flare squared, after the existing bend. On a 41-degree slope of the Hoh an old redcedar stands on two or three exposed
+buttress roots on its downhill side with its uphill flank buried to a hint; a blue oak on 34 degrees on the home tile
+grips with one; on the flat a hemlock or a fir shows a modest flare and the ridges of its roots.
+
+**Wind.** The roots do not move; the flare's flex goes from none at its foot to the trunk's at its top (the flex times
+1 - its weight), so a gale bows the trunk over a still base with no seam (measured: the base region's pixels change
+0.09 against the trunk's 3.2 between two moments of a gale).
+
+**Tiers and cost.** First tried with the roots in every near trunk (to 180 m): +0.36 ms at a view from 40 m up the
+home tile, the roots a pixel there; the roots now are their own instanced mesh per tree in the close tier (on the close
+canopy's matrices, with the near instance's ground normal copied; drawn only while a tree of that set is within 97 m),
+and sink into the soil from 50 to 80 m from the eye and collapse past it (`ROOT_LOD`). The near trunk keeps the flare
+(a round flare at the trunk's own sides and one ring fewer, a fluted one 16 columns, a buttressed one 24); the mid
+trunk gets the flare as one ring; the far impostors bake as before (`buildTree(..., { roots: false })`). No sampler; one
+vertex attribute (`rootT`, of 16 slots: the near trunk uses 12). The close layer's litter roots (2026-11-04) are gone:
+the trees draw their own. GPU timer queries, a fence before each sample, 8 renders a sample, states alternated, medians
+and interquartile ranges, 1280 x 800, the machine shared (load 5-7); 'off' is each near trunk on its `roots: false`
+geometry with the shader's root code compiled out (`ROOT_FLARE_OFF`) and the close roots hidden, i.e. main's trunks:
+
+| Pose | On | Off | Triangles, draws |
+|---|---|---|---|
+| Home tile, eye 1.6 m in the oak woodland | 22.29 ms (22.05-22.36) | 22.11 (22.08-22.19) | +68 k of 10.9 M, +22 |
+| Home tile, 40 m up | 17.16 (16.93-17.92) | 17.08 (16.82-18.02) | |
+| Hoh, eye 1.6 m on the cedar slope | 39.11 (38.97-39.41) | 38.94 (38.11-39.02) | +111 k of 35.0 M, +9 |
+| Hoh, 40 m up | 42.69 (41.93-43.01) | 42.58 (41.88-43.98) | |
+
+Drawn alone at the Hoh eye pose: the close roots 0.05 ms; the near trunks 1.93 ms with the flare and 2.07 without (40 m
+up 3.12 and 3.09). Main's own page, loaded twice at the home eye pose, read 22.31 and 23.31 ms: page to page the frame
+moves by more than this change. CPU: renderer.render 3.9 against 3.8 ms (the clock's 0.1 ms grain).
+
+**Seen** at fixed cameras against main (0c3c454 on 8781, the branch on 8811, the same tile, date 10 July, hour 13):
+the Hoh's redcedars on 41 and 44 degrees, Douglas-firs on 37, a hemlock on the flat; the home tile's blue oaks on 34 and
+32, a valley oak on 24, a black oak on 27, a buckeye on 28. Captures in the shared notes folder (`root-flare-captures/`).
+
+Not done: stilt roots (a hemlock or a Sitka spruce standing on the roots that grew over a nurse log since rotted: the
+cards name it); roots do not cast shadows (the near trees' shadow is the mid trunk's, which has the flare ring); the
+slope is the plane at the foot, so on a convex brow a downhill root's tip can show above the ground for a few
+centimetres; animals do not climb on or step over roots, and a squirrel climbing the foot of a big flare climbs the
+skeleton's radius (perch.js treeWood), inside the flare's lower metre.

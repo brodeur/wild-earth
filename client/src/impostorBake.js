@@ -87,7 +87,7 @@ export function* bakeSteps(input, shared = null) {
   yield;
   for (let k = 0; k < trees.length; k++) {
     const { id, seed } = trees[k];
-    const sid = resolveSpecies(id), spec = LIBRARY[sid], t = buildTree(sid, seed, 'near');
+    const sid = resolveSpecies(id), spec = LIBRARY[sid], t = buildTree(sid, seed, 'near', { roots: false });   // the far trees as before: no flare, no roots
     geoms.push(t.trunk, t.canopy);
     // Frame: the cell spans the tree's full radius about its own base axis, and its full height.
     let r = 0, y0 = Infinity, y1 = -Infinity, cy0 = Infinity, cy1 = -Infinity;

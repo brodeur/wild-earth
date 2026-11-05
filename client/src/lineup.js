@@ -114,6 +114,7 @@ for (const id of ids) {
     {   // close: the near trunk, the twigs and the close canopy
       const t = new THREE.Mesh(b.near.trunk, g.mats.trunk), c = new THREE.Mesh(b.close.canopy, g.mats.close);
       const parts = [t, c]; if (b.close.twigs) parts.push(new THREE.Mesh(b.close.twigs, twigMat));
+      if (b.near.roots) parts.push(new THREE.Mesh(b.near.roots, g.mats.trunk));   // the surface roots, as drawn on flat ground
       for (const m of parts) { m.castShadow = m.receiveShadow = true; m.position.x = x - widths[i].cx; }
       g.close.add(...parts);
       g.tris.close.push(b.near.tris.trunk + b.close.tris.twigs + b.close.tris.canopy);

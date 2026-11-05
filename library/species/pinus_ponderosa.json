@@ -70,7 +70,8 @@
     "bark_pattern": "plates",
     "twig_rgb": [92, 74, 60],
     "stubs": {"count": [6, 14], "length_m": 0.5, "radius_ratio": 0.12},
-    "bark": {"tile_m": [0.7, 1.4], "plate_m": [0.2, 0.6], "fissure": 0.95, "contrast": 1.15, "relief": 1.4}
+    "bark": {"tile_m": [0.7, 1.4], "plate_m": [0.2, 0.6], "fissure": 0.95, "contrast": 1.15, "relief": 1.4},
+    "roots": {"buttresses": [3, 4], "roots": [0, 1], "length": 0.8, "note": "a taproot and deep laterals: few surface roots"}
   },
   "crown": {"shape": "tapered_cylindrical", "envelope": {"profile": [[0.08, 0.19], [0.25, 0.18], [0.37, 0.19], [0.48, 0.2], [0.6, 0.2], [0.71, 0.2], [0.83, 0.18], [0.94, 0.15], [1, 0.05]], "lobes": 3, "lobe_depth": 0.1, "asymmetry": 0.1, "fill": 0.15, "edge": 1.1}},
   "levels": [

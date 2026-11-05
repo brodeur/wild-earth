@@ -1,6 +1,6 @@
 import * as THREE from 'three';
 import { SPECIES, SPECIES_IDS, mulberry32, resolveSpecies } from './trees.js';
-import { buildTree, canopyMaterial, trunkMaterial, applySeasonSteps, chainShader, SLOTS, variantSlots, seasonMonth, leafTextureSteps, barkTextureSteps, leafMaterial, leafGeometrySteps, twigSway, trunkFlex, trunkLean } from './treegen.js';
+import { ROOT_LOD, buildTree, canopyMaterial, trunkMaterial, applySeasonSteps, chainShader, SLOTS, variantSlots, seasonMonth, leafTextureSteps, barkTextureSteps, leafMaterial, leafGeometrySteps, twigSway, trunkFlex, trunkLean } from './treegen.js';
 import { bodyScale, onBodyScale } from './bodyScale.js';
 import { SEASON_LOOK } from './season.js';
 import { rockKeep } from './tilepackage.js';
@@ -57,6 +57,7 @@ const NEAR_MARGIN = 60, NEAR_MOVE = 40, NEAR_CAP = { tree: 1500, shrub: 3000 };
 // matrices, faded in over the same band, drawn in every season.
 export const CLOSE_R = 90;
 const CLOSE_BAND = 20, CLOSE_MOVE = 15, CLOSE_CAP = { tree: 600, shrub: 1500 };
+const ROOT_R2 = (ROOT_LOD[1] + CLOSE_MOVE + 2) ** 2;   // the surface roots (treegen ROOT_LOD) are drawn for a close set with a tree this near
 // Leaf level (2026-10-28; treegen.js "Leaf level"): inside R_leaf of the camera each close card is replaced by its single
 // leaves (or needle tufts, or spray segments). R_leaf = 15 + 9 x clamp((1 - scale) / 0.9, 0, 1) m by the body scale
 // (bodyScale.js): a deer and the spirit 15 m (2026-10-29, Aaron: "expand the radius where I see that from 10 ft or so
@@ -523,7 +524,7 @@ export class Vegetation {
       const lean = lod === 'near' ? leanAttr(cap) : new Float32Array(cap * 2); if (lod === 'near') t.trunk.setAttribute('slopeN', lean);
       entry[lod] = { trunk, canopy, cap, n: 0, tris: t.tris.trunk + t.tris.canopy, ids: new Uint32Array(cap), seat, lean };
       if (lod === 'near') {
-        entry.stem = t.stem; entry.height = t.height;
+        entry.stem = t.stem; entry.height = t.height; entry.rootGeo = t.roots;   // the surface roots: drawn by the close tier below
         const g = t.canopy; if (!g.boundingBox) g.computeBoundingBox();
         const b = g.boundingBox; entry.radius = Math.max(0.5, (b.max.x - b.min.x + b.max.z - b.min.z) / 4);   // mean crown half-width
       }
@@ -548,7 +549,21 @@ export class Vegetation {
       closeTwigs.count = 0; closeTwigs.frustumCulled = false; closeTwigs.visible = false;
       this.group.add(closeTwigs);
     }
-    entry.close = { canopy: closeCanopy, twigs: closeTwigs, cap: ccap, n: 0, tris: c.tris.canopy, twigTris: c.tris.twigs || 0, seat: closeSeat, hand, handN: 0 };
+    // The surface roots (treegen rootGeometry) on the close instances only: past ROOT_LOD they are not drawn, so the near
+    // trunks beyond carry the flare alone. They bend to the slope as the near trunk does, so each close instance carries
+    // the near instance's slopeN too.
+    let closeRoots = null, closeLean = null;
+    if (entry.rootGeo) {
+      const g = entry.rootGeo; entry.rootGeo = null;
+      closeLean = leanAttr(ccap); g.setAttribute('slopeN', closeLean); g.setAttribute('seatDc', closeSeat);
+      releaseGeometry(g);
+      closeRoots = new THREE.InstancedMesh(g, this.barkMat[id].near, ccap);
+      closeRoots.instanceMatrix = closeCanopy.instanceMatrix;
+      closeRoots.count = 0; closeRoots.frustumCulled = false; closeRoots.visible = false;
+      closeRoots.renderOrder = 1;   // after the ground: the buried two-thirds of each root fail the depth test before their bark is shaded
+      this.group.add(closeRoots);
+    }
+    entry.close = { canopy: closeCanopy, twigs: closeTwigs, roots: closeRoots, lean: closeLean, cap: ccap, n: 0, tris: c.tris.canopy, twigTris: c.tris.twigs || 0, seat: closeSeat, hand, handN: 0 };
     this.meshes[id].push(entry);
     return entry;
   }
@@ -729,17 +744,20 @@ export class Vegetation {
     let total = 0;
     for (const [id, arr] of Object.entries(this.meshes)) for (const e of arr) {
       const src = e.near.trunk.instanceMatrix.array, c = e.close, dst = c.canopy.instanceMatrix.array, sS = e.near.seat.array, sD = c.seat.array;
-      let n = 0;
+      const lS = e.near.lean.array, lD = c.lean ? c.lean.array : null;
+      let n = 0, dMin = Infinity;
       for (let i = 0; i < e.near.n && n < c.cap; i++) {
         const o = i * 16, dx = src[o + 12] - eye.x, dy = src[o + 13] - eye.y, dz = src[o + 14] - eye.z;
         if (dx * dx + dy * dy + dz * dz > R2) continue;
         for (let k = 0; k < 16; k++) dst[n * 16 + k] = src[o + k];
-        sD[n] = sS[i]; n++;
+        sD[n] = sS[i]; if (lD) { lD[n * 2] = lS[i * 2]; lD[n * 2 + 1] = lS[i * 2 + 1]; }
+        dMin = Math.min(dMin, dx * dx + dy * dy + dz * dz); n++;
       }
-      if (n || c.n) { c.canopy.instanceMatrix.addUpdateRange(0, n * 16); c.canopy.instanceMatrix.needsUpdate = true; seatUpload(c.seat, n); }
+      if (n || c.n) { c.canopy.instanceMatrix.addUpdateRange(0, n * 16); c.canopy.instanceMatrix.needsUpdate = true; seatUpload(c.seat, n); if (c.lean) leanUpload(c.lean, n); }
       c.n = c.canopy.count = n; total += n;
       c.canopy.visible = n > 0 && (this.leafOn?.[id] ?? 1) > 0;
       if (c.twigs) { c.twigs.count = n; c.twigs.visible = n > 0; }   // bare crowns keep their twigs
+      if (c.roots) { c.roots.count = n; c.roots.visible = n > 0 && dMin < ROOT_R2; }   // a draw only while one of its trees is within the roots' reach
     }
     this.closeCount = total;
   }
