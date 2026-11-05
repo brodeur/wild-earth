@@ -473,7 +473,7 @@ async function buildSteps(w, { params, pending, direct = false, arrive = null })
   const water = w.m.water = new Water(tile, scene); await w.sliced(water.build(), 'water');   // streams, dry beds and ponds by season (water.js)
   await w.next('rocks');
   const rocks = new Rocks(tile, scene, atmosphere);   // outcrops and boulders from the geology and soils rasters (rocks.js)
-  const litter = w.m.litter = new Litter(tile, scene, { terrain, atmosphere });   // the body-scaled ring of pebbles, leaves and stems (litter.js)
+  const litter = w.m.litter = new Litter(tile, scene, { terrain, atmosphere, veg });   // the body-scaled ring of pebbles, leaves and stems (litter.js)
   await w.next('roads+flight');
   const roads = new RoadsOverlay(tile, scene);   // ghost roads, G to toggle
   const flight = new RavenFlight(camera, tile.heights, renderer.domElement);
