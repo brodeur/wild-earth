@@ -2657,17 +2657,26 @@ export function leafMaterial(spec, patch = null) {
   const ndl = F.type !== 'broadleaf';
   ud.leafLight = { value: new THREE.Vector4(ndl ? 0.2 : LEAF_NORMAL_K, ndl ? (F.translucency ?? 2.5) * 0.6 : F.leaf_translucency ?? 0.5, ndl ? F.needle_wrap ?? 0.35 : 0, ndl ? 1 : 0) };
   ud.leafTint = { value: new THREE.Vector3(...(F.translucency_rgb || [1, 1.12, 0.55])) };
+  // Veins (2026-11-04, the close layer): a broadleaf's midrib and side veins pressed into its face as a normal detail
+  // within 6 m of the eye: (strength, side vein pairs, how far a side vein rises toward the tip across the half width).
+  // A compound leaf's leaflets and a lobed blade keep the same pinnate pattern; a palmate leaf has its own veins drawn.
+  const veins = F.type === 'broadleaf' ? ({ oblong_wavy: 8, elliptic_glossy: 9, lanceolate: 11, lobed: 6, lobed_large: 7, pinnate_compound: 9, oval: 8, deltoid: 7 }[F.leaf_shape] ?? 8) : 0;
+  ud.leafVein = { value: new THREE.Vector4(veins ? 1 : 0, veins, 0.55, 0) };
+  if (veins) m.defines = { ...(m.defines || {}), LEAF_VEINS: '' };
   m.color.setScalar(ud.gain);
   if (patch) patch(m);
   const cv = F.color_var || [0, 0], lv = F.leaf_on_var || 0, T = LEAF_TILE, W = 2 * T, PD = LEAF_PAD;
   chainShader(m, `leaf-level-v${cv[0]}-${cv[1]}-${lv}`, shader => {
-    Object.assign(shader.uniforms, { leafOn: ud.leafOn, leafVar: ud.leafVar, leafBase: ud.leafBase, leafLight: ud.leafLight, leafTint: ud.leafTint,
+    Object.assign(shader.uniforms, { leafOn: ud.leafOn, leafVar: ud.leafVar, leafBase: ud.leafBase, leafLight: ud.leafLight, leafTint: ud.leafTint, leafVein: ud.leafVein,
       time: windUniforms.time, windDir: windUniforms.windDir, windStrength: windUniforms.windStrength, crownSway: CROWN_SWAY, crownFlex: CROWN_FLEX });
     shader.vertexShader = shader.vertexShader
       .replace('#include <common>', `#include <common>
         attribute vec4 lC; attribute vec4 lA; attribute vec4 lN; attribute vec4 lS; attribute vec4 lK; attribute vec4 lM;
         uniform vec3 leafBase; uniform float leafVar;
         varying vec3 vLeafCol; varying vec3 vLeafNv; varying float vLeafRank; varying float vShim;
+        #ifdef LEAF_VEINS
+          varying vec2 vLeafQ; varying vec3 vLeafSdV; varying vec3 vLeafAxV;
+        #endif
         ${WIND_GLSL}
         ${LEAF_WAVE_GLSL}`)
       .replace('#include <uv_vertex>', `#include <uv_vertex>
@@ -2680,6 +2689,9 @@ export function leafMaterial(spec, patch = null) {
         vec3 leafAx = normalize(lA.xyz), leafNo = normalize(lN.xyz), leafSd = cross(leafAx, leafNo);
         float leafF = lS.x * ${LEAF_SIZE_M.toFixed(1)}, leafB = lS.y * ${LEAF_SIZE_M.toFixed(1)}, leafHW = lS.z * ${LEAF_SIZE_M.toFixed(1)};
         vec3 transformed = lC.xyz * ${(1 / LEAF_Q).toFixed(8)} + leafSd * (position.x * leafHW) + leafAx * (position.y > 0.5 ? leafF : -leafB);
+        #ifdef LEAF_VEINS
+          vLeafQ = vec2(position.x, position.y); vLeafSdV = normalMatrix * leafSd; vLeafAxV = normalMatrix * leafAx;
+        #endif
         {
           vec3 plantH = fract(modelMatrix[3].xzx * vec3(0.1031, 0.1030, 0.0973));
           float leafH = lC.w / 65534.0 + 0.5, leafG, leafS;
@@ -2700,15 +2712,34 @@ export function leafMaterial(spec, patch = null) {
         }`);
     shader.fragmentShader = shader.fragmentShader
       .replace('#include <common>', `#include <common>
-        uniform float leafOn; uniform vec4 leafLight; uniform vec3 leafTint;
+        uniform float leafOn; uniform vec4 leafLight; uniform vec3 leafTint; uniform vec4 leafVein;
         varying vec3 vLeafCol; varying vec3 vLeafNv; varying float vLeafRank; varying float vShim;
-        vec3 leafFace = vec3(0.0, 0.0, 1.0);`)
+        vec3 leafFace = vec3(0.0, 0.0, 1.0);
+        #ifdef LEAF_VEINS
+          varying vec2 vLeafQ; varying vec3 vLeafSdV; varying vec3 vLeafAxV;
+          // the vein relief at q (x across the blade -1..1, y base 0 to tip 1): the midrib, thinner to the tip, and the
+          // side veins running out and up to the margin; grooves on the upper face
+          float leafVeinH(vec2 q) {
+            float ax = abs(q.x), mid = exp(-ax * ax * 500.0) * (1.0 - 0.6 * q.y);
+            float s = q.y * leafVein.y - ax * leafVein.z * leafVein.y * 0.25;
+            float side = smoothstep(0.8, 1.0, 1.0 - abs(fract(s) - 0.5) * 2.0) * smoothstep(0.03, 0.14, ax) * (1.0 - 0.75 * ax);
+            return -(mid + 0.4 * side);
+          }
+        #endif`)
       .replace('#include <clipping_planes_fragment>', 'if (vLeafRank >= leafOn) discard;\n#include <clipping_planes_fragment>')
       .replace('#include <color_fragment>', 'diffuseColor.rgb *= vLeafCol;')
       .replace('#include <alphatest_fragment>', SHIMMER_ALPHA)
       .replace('#include <normal_fragment_begin>', THREE.ShaderChunk.normal_fragment_begin.replace('normal *= faceDirection;', '') + `
         leafFace = normalize(vLeafNv) * faceDirection;
-        normal = normalize(mix(normal, leafFace, leafLight.x));`)
+        normal = normalize(mix(normal, leafFace, leafLight.x));
+        #ifdef LEAF_VEINS
+        { float vk = leafVein.x * (1.0 - smoothstep(2.5, 6.0, length(vViewPosition))) * (1.0 - smoothstep(0.12, 0.45, fwidth(vLeafQ.y * leafVein.y)));
+          if (vk > 0.0) {
+            vec2 q = vLeafQ; float e = 0.004, h0 = leafVeinH(q), hx = leafVeinH(q + vec2(e, 0.0)), hy = leafVeinH(q + vec2(0.0, e));
+            vec3 g = (normalize(vLeafSdV) * (hx - h0) + normalize(vLeafAxV) * (hy - h0) * 0.3) / e;
+            normal = normalize(normal + faceDirection * 0.025 * vk * g);
+          } }
+        #endif`)
       .replace('#include <lights_lambert_pars_fragment>', `#include <lights_lambert_pars_fragment>
         void RE_Direct_Leaf( const in IncidentLight directLight, const in vec3 geometryPosition, const in vec3 geometryNormal, const in vec3 geometryViewDir, const in vec3 geometryClearcoatNormal, const in LambertMaterial material, inout ReflectedLight reflectedLight ) {
           float dotNL = saturate( ( dot( geometryNormal, directLight.direction ) + leafLight.z ) / ( 1.0 + leafLight.z ) );
@@ -2723,22 +2754,144 @@ export function leafMaterial(spec, patch = null) {
   return m;
 }
 
+export const BARK_FAR = 120, BARK_FADE = 20;
+// The bark up close (2026-11-04, the close layer; docs/decisions.md "the close layer"):
+//   hex tiling   the texture is sampled three times, at random offsets per cell of a hexagonal grid over the bark
+//                (BARK_HEX cells a tile, offsets only so the grain stays upright; a tap of negligible weight is not
+//                fetched, so most pixels read one) and per tree (a hash of the instance's
+//                place), blended by the hex weights cubed times each tap's height, so plates do not ghost: the 0.5 x 1 m
+//                tile no longer repeats round a trunk.
+//   parallax     within BARK_POM m of the eye (full to 1.5 m, gone by 2.5) the dominant tap is marched along the view ray through the height field
+//                (the normal map's alpha), 6 layers head-on to 12 grazing and a secant step, to the species' fissure
+//                depth (barkTexture depth: 2 cm in a valley oak's furrows, 2 mm on a madrone), then 4 steps toward the sun:
+//                a plate's shadow falls into the fissure beside it. The height also darkens the sky light in the
+//                fissures (a cavity term) at every distance.
+//   moss, lichen moss on the north side and the foot of the trunk, in the fissures first, by the species' liking
+//                (barkTexture moss), the tile's climate (barkUniforms.barkWx.z) and the season (y: olive-brown and
+//                dormant in the dry months, green after rain); crustose lichen in pale rosettes on the plates.
+//   wet          barkWx.x: the bark darkens and deepens in colour with the ground's wetness (weather.js).
+// The three taps and the moss cost no sampler (the colour map and the normal map are the ones the bark already had).
+// barkUniforms is set by weather.js; barkSp per species: moss, lichen, depth (m).
+// A/B: material.defines.BARK_SIMPLE draws the bark as before (one tap, no parallax, moss or wet).
+const BARK_HEX = 1.6, BARK_POM = [1.5, 2.5];
+export const barkUniforms = { barkWx: { value: new THREE.Vector3(0, 0.8, 0.5) } };
+const BARK_FRAG_COMMON = /* glsl */`
+  varying float vBarkMix; varying vec4 vBarkI;
+  uniform vec3 barkWx; uniform vec4 barkSp;
+  vec2 barkHash2(vec2 p) { p = vec2(dot(p, vec2(127.1, 311.7)), dot(p, vec2(269.5, 183.3))); return fract(sin(p) * 43758.5453); }
+  float barkH3(vec3 p) { p = fract(p * 0.3183099 + 0.1); p *= 17.0; return fract(p.x * p.y * p.z * (p.x + p.y + p.z)); }
+  float barkVN(vec3 x) {
+    vec3 i = floor(x), f = fract(x); f = f * f * (3.0 - 2.0 * f);
+    return mix(mix(mix(barkH3(i), barkH3(i + vec3(1.0, 0.0, 0.0)), f.x), mix(barkH3(i + vec3(0.0, 1.0, 0.0)), barkH3(i + vec3(1.0, 1.0, 0.0)), f.x), f.y),
+               mix(mix(barkH3(i + vec3(0.0, 0.0, 1.0)), barkH3(i + vec3(1.0, 0.0, 1.0)), f.x), mix(barkH3(i + vec3(0.0, 1.0, 1.0)), barkH3(i + vec3(1.0)), f.x), f.y), f.z);
+  }
+`;
+const BARK_FRAG_MAP = /* glsl */`
+  #ifdef USE_INSTANCING
+    float barkNear = clamp((${(BARK_FAR + BARK_FADE / 2).toFixed(1)} - length(vViewPosition)) / ${BARK_FADE.toFixed(1)}, 0.0, 1.0);
+  #else
+    float barkNear = 1.0;   // single meshes (the lineup) keep their bark at any distance
+  #endif
+  float barkW = vBarkMix * barkNear;
+  vec4 barkNrmS = vec4(0.5, 0.5, 1.0, 1.0); float barkShadow = 1.0, barkHt = 0.75, barkMoss = 0.0;
+  #if defined( BARK_SIMPLE ) && defined( USE_MAP )
+  if (barkW > 0.0) { barkNrmS = texture2D(normalMap, vNormalMapUv); diffuseColor.rgb *= mix(vec3(1.0 / max(0.05, diffuse.r)), texture2D(map, vMapUv).rgb, barkW); }
+  else diffuseColor.rgb *= 1.0 / max(0.05, diffuse.r);
+  #elif defined( USE_MAP ) && defined( USE_NORMALMAP )
+  if (barkW > 0.0) {
+    float bDist = length(vViewPosition);
+    vec2 s0 = dFdx(vMapUv), s1 = dFdy(vMapUv), bUv = vMapUv + vBarkI.xy * 13.0;
+    // the hex grid (skewed triangles), its three vertices' weights and offsets
+    vec2 hs = bUv * ${BARK_HEX.toFixed(2)}, sk = vec2(hs.x - 0.57735027 * hs.y, 1.15470054 * hs.y), bid = floor(sk);
+    vec3 tq = vec3(fract(sk), 0.0); tq.z = 1.0 - tq.x - tq.y;
+    vec3 hw; vec2 v1, v2, v3;
+    if (tq.z > 0.0) { hw = vec3(tq.z, tq.y, tq.x); v1 = bid; v2 = bid + vec2(0.0, 1.0); v3 = bid + vec2(1.0, 0.0); }
+    else { hw = vec3(-tq.z, 1.0 - tq.y, 1.0 - tq.x); v1 = bid + vec2(1.0); v2 = bid + vec2(1.0, 0.0); v3 = bid + vec2(0.0, 1.0); }
+    vec2 o1 = barkHash2(v1), o2 = barkHash2(v2), o3 = barkHash2(v3);
+    vec2 oD = (hw.x >= hw.y && hw.x >= hw.z) ? o1 : (hw.y >= hw.z ? o2 : o3);
+    vec2 pOff = vec2(0.0);
+    float pomK = (1.0 - smoothstep(${BARK_POM[0].toFixed(1)}, ${BARK_POM[1].toFixed(1)}, bDist)) * step(0.0005, barkSp.z);
+    if (pomK > 0.0) {
+      vec3 bN = normalize(vNormal), bV = normalize(vViewPosition);
+      vec3 q0 = dFdx(-vViewPosition), q1 = dFdy(-vViewPosition), q1p = cross(q1, bN), q0p = cross(bN, q0);
+      float det = dot(q0, q1p);
+      if (abs(det) > 1e-14) {
+        vec3 gU = (q1p * s0.x + q0p * s1.x) / det, gV = (q1p * s0.y + q0p * s1.y) / det;   // the uv's gradients on the surface
+        float vn = max(dot(bV, bN), 0.15);
+        vec3 dT = -(bV - dot(bV, bN) * bN) / vn;
+        vec2 dUv = vec2(dot(gU, dT), dot(gV, dT)) * barkSp.z * pomK, uD = bUv + oD, uc = uD, uPrev = uD;
+        // 6 layers looking straight at the bark, 12 at a grazing view
+        float cur = 1.0, cPrev = 1.0, hPrev = 1.0, hc = textureGrad(normalMap, uc, s0, s1).a, nL = floor(mix(12.0, 6.0, vn)), dL = 1.0 / nL;
+        for (int i = 0; i < 12; i++) {
+          if (hc >= cur || float(i) >= nL) break;
+          uPrev = uc; hPrev = hc; cPrev = cur; cur -= dL; uc = uD + dUv * (1.0 - cur); hc = textureGrad(normalMap, uc, s0, s1).a;
+        }
+        float da = hc - cur, db = hPrev - cPrev, tt = clamp(da / (da - db + 1e-5), 0.0, 1.0);
+        uc = mix(uc, uPrev, tt); pOff = uc - uD;
+        float hHit = mix(hc, hPrev, tt);
+        #if NUM_DIR_LIGHTS > 0
+          vec3 bL = directionalLights[0].direction; float ln = dot(bL, bN);
+          if (ln > 0.02) {
+            vec3 lT = (bL - ln * bN) / max(ln, 0.15);
+            vec2 lUv = vec2(dot(gU, lT), dot(gV, lT)) * barkSp.z * pomK;
+            float occ = 0.0;
+            if (hHit < 0.92) for (int i = 1; i <= 4; i++) { float dh = (1.0 - hHit) * float(i) / 4.0; occ = max(occ, (textureGrad(normalMap, uc + lUv * dh, s0, s1).a - hHit - dh) * 8.0); }
+            barkShadow = 1.0 - 0.8 * clamp(occ, 0.0, 1.0) * pomK;
+          }
+        #endif
+      }
+    }
+    // a tap whose hex weight is negligible is not fetched (most pixels are well inside one cell: one tap)
+    vec3 hw4 = hw * hw * hw * hw; hw4 /= max(max(hw4.x, hw4.y), max(hw4.z, 1e-6));
+    vec4 c1 = vec4(0.0), c2 = vec4(0.0), c3 = vec4(0.0), n1 = vec4(0.0), n2 = vec4(0.0), n3 = vec4(0.0);
+    if (hw4.x > 0.02) { c1 = textureGrad(map, bUv + o1 + pOff, s0, s1); n1 = textureGrad(normalMap, bUv + o1 + pOff, s0, s1); } else hw4.x = 0.0;
+    if (hw4.y > 0.02) { c2 = textureGrad(map, bUv + o2 + pOff, s0, s1); n2 = textureGrad(normalMap, bUv + o2 + pOff, s0, s1); } else hw4.y = 0.0;
+    if (hw4.z > 0.02) { c3 = textureGrad(map, bUv + o3 + pOff, s0, s1); n3 = textureGrad(normalMap, bUv + o3 + pOff, s0, s1); } else hw4.z = 0.0;
+    vec3 wt = hw4 * (vec3(n1.a, n2.a, n3.a) + 0.1); wt /= max(max(wt.x, wt.y), max(wt.z, 1e-6));
+    wt = wt * wt * wt * wt; wt /= max(dot(wt, vec3(1.0)), 1e-5);   // nearly one tap at a time: a thin seam, no doubled cracks
+    vec3 sampledBark = c1.rgb * wt.x + c2.rgb * wt.y + c3.rgb * wt.z;
+    barkNrmS = n1 * wt.x + n2 * wt.y + n3 * wt.z; barkHt = barkNrmS.a;
+    diffuseColor.rgb *= mix(vec3(1.0 / max(0.05, diffuse.r)), sampledBark, barkW);
+    // moss on the north side and the foot, in the fissures first; lichen rosettes on the plates
+    vec3 bPw = cameraPosition + (vec4(-vViewPosition, 0.0) * viewMatrix).xyz, bNw = normalize((vec4(normalize(vNormal), 0.0) * viewMatrix).xyz);
+    float bAbove = bPw.y - vBarkI.z, clim = barkWx.z;
+    // two noises shared by the moss and the lichen (six cost a millisecond at a squirrel's eye); the bark's own height
+    // and its colour's grain break them up finer
+    float bn1 = barkSp.x + barkSp.y > 0.0 ? barkVN(bPw * 4.0) : 0.0, bn2 = barkSp.x + barkSp.y > 0.0 ? barkVN(bPw * 13.0 + 3.7) : 0.0, grain = dot(sampledBark, vec3(0.33));
+    if (barkSp.x > 0.0) {
+      float mossA = barkSp.x * (0.4 + 0.6 * clim) * (0.2 + 0.8 * smoothstep(-0.5, 0.75, -bNw.z)) * (1.0 - 0.55 * smoothstep(0.3, 3.0, bAbove)) * (0.6 + 0.4 * smoothstep(-0.6, 0.2, bNw.y));
+      barkMoss = smoothstep(0.3, 0.5, mossA * (0.5 + 1.1 * (0.6 * bn1 + 0.4 * bn2)) + 0.25 * (1.0 - barkHt)) * barkW;
+      vec3 mossC = mix(vec3(0.2, 0.17, 0.08), vec3(0.11, 0.26, 0.035), barkWx.y) * (0.7 + 0.45 * fract(grain * 7.0 + bn2 * 3.0));
+      diffuseColor.rgb = mix(diffuseColor.rgb, mossC, barkMoss);
+    }
+    if (barkSp.y > 0.0) {
+      float lich = (0.5 + 0.5 * clim) * smoothstep(0.62, 0.68, bn2 * (0.75 + 0.5 * bn1) + 0.18 * barkSp.y) * smoothstep(0.3, 0.5, barkHt) * barkW * (1.0 - barkMoss);
+      diffuseColor.rgb = mix(diffuseColor.rgb, vec3(0.36, 0.4, 0.33) * (0.85 + 0.3 * grain), 0.85 * lich);
+    }
+    // wet: darker and deeper in colour, the fissures darkest
+    float bw = barkWx.x * barkW;
+    if (bw > 0.0) { float l = dot(diffuseColor.rgb, vec3(0.2126, 0.7152, 0.0722)); diffuseColor.rgb = mix(diffuseColor.rgb, max(mix(vec3(l), diffuseColor.rgb, 1.25), 0.0) * (0.45 + 0.15 * barkHt), bw); }
+    barkNrmS.xy = mix(barkNrmS.xy, vec2(0.5), 0.6 * barkMoss);
+  } else diffuseColor.rgb *= 1.0 / max(0.05, diffuse.r);
+  #endif
+`;
 // Wood material. Without a species it is the plain vertex-colour material every species can share
 // (as before). With one, it carries that species' bark texture and normal map (barkTexture), applied
 // where the wood geometry's barkMix attribute is 1 (not on mistletoe). In the world (instanced) only
 // within BARK_FAR m of the camera: beyond it a plate or furrow is under two pixels, so the texture and
 // normal map fade out over BARK_FADE m and are then skipped (the texture is a multiplier around 1, so
-// the mean colour is unchanged).
-export const BARK_FAR = 120, BARK_FADE = 20;
+// the mean colour is unchanged). Up close: see "The bark up close" above.
 export function trunkMaterial(patch = null, spec = null) {
   const bark = spec && typeof document !== 'undefined' ? barkTexture(spec) : null;
   const m = new THREE.MeshLambertMaterial({ vertexColors: true, ...(bark ? { map: bark.map, normalMap: bark.normal, normalScale: new THREE.Vector2(1, 1).multiplyScalar(spec.trunk.bark?.relief ?? 1) } : {}) });
   if (bark) m.userData.gain = 1 / bark.map.userData.mean;
   if (bark) m.color.setScalar(m.userData.gain);
+  if (bark) m.userData.barkSp = { value: new THREE.Vector4(bark.moss, bark.lichen, bark.depth, 0) };
   if (patch) patch(m);
-  if (bark) chainShader(m, 'bark', shader => {
+  if (bark) chainShader(m, 'bark2', shader => {
+    shader.uniforms.barkWx = barkUniforms.barkWx; shader.uniforms.barkSp = m.userData.barkSp;
     shader.vertexShader = shader.vertexShader
-      .replace('#include <common>', '#include <common>\nattribute float barkMix;\nvarying float vBarkMix;')
+      .replace('#include <common>', '#include <common>\nattribute float barkMix;\nvarying float vBarkMix;\nvarying vec4 vBarkI;')
       .replace('#include <begin_vertex>', '#include <begin_vertex>\nvBarkMix = barkMix;')
       .replace('#include <uv_vertex>', `#include <uv_vertex>
       #ifdef USE_INSTANCING
@@ -2749,22 +2902,20 @@ export function trunkMaterial(patch = null, spec = null) {
         #ifdef USE_NORMALMAP
           vNormalMapUv *= barkS;
         #endif
+        { vec3 bo = (modelMatrix * vec4(instanceMatrix[3].xyz, 1.0)).xyz;   // the tree's own offset of its bark, and its foot (the instance sits 0.3 m down)
+          vBarkI = vec4(fract(sin(dot(floor(bo.xz * 10.0), vec2(12.9898, 78.233))) * 43758.5453), fract(sin(dot(floor(bo.xz * 10.0), vec2(39.3468, 11.135))) * 24634.6345), bo.y + 0.3, 0.0); }
+      #else
+        vBarkI = vec4(0.0, 0.0, (modelMatrix * vec4(0.0, 0.0, 0.0, 1.0)).y, 0.0);
       #endif`);
     shader.fragmentShader = shader.fragmentShader
-      .replace('#include <common>', '#include <common>\nvarying float vBarkMix;')
-      .replace('#include <map_fragment>', `#ifdef USE_INSTANCING
-        float barkNear = clamp((${(BARK_FAR + BARK_FADE / 2).toFixed(1)} - length(vViewPosition)) / ${BARK_FADE.toFixed(1)}, 0.0, 1.0);
-      #else
-        float barkNear = 1.0;   // single meshes (the lineup) keep their bark at any distance
-      #endif
-      float barkW = vBarkMix * barkNear;
-      #ifdef USE_MAP
-        vec3 sampledBark = barkW > 0.0 ? texture2D( map, vMapUv ).rgb : vec3( 1.0 );
-        diffuseColor.rgb *= mix( vec3( 1.0 / max( 0.05, diffuse.r ) ), sampledBark, barkW );
-      #endif`)
+      .replace('#include <common>', '#include <common>\n' + BARK_FRAG_COMMON)
+      .replace('#include <map_fragment>', BARK_FRAG_MAP)
       .replace('#include <normal_fragment_maps>', `if (barkW > 0.0) { vec3 geoNormal = normal;
-        #include <normal_fragment_maps>
-        normal = normalize(mix(geoNormal, normal, barkW)); }`);
+        ${THREE.ShaderChunk.normal_fragment_maps.replace('texture2D( normalMap, vNormalMapUv )', 'barkNrmS')}
+        normal = normalize(mix(geoNormal, normal, barkW)); }`)
+      .replace('#include <lights_fragment_end>', `#include <lights_fragment_end>
+        reflectedLight.directDiffuse *= barkShadow;
+        reflectedLight.indirectDiffuse *= mix(1.0, 0.55 + 0.45 * barkHt, barkW);`);
   });
   return m;
 }
@@ -2942,21 +3093,35 @@ export function* barkTextureSteps(spec) {
   let mx = 0, mean = 0;
   for (let i = 0; i < W * Hh; i++) { mx = Math.max(mx, col[3 * i], col[3 * i + 1], col[3 * i + 2]); mean += 0.2126 * col[3 * i] + 0.7152 * col[3 * i + 1] + 0.0722 * col[3 * i + 2]; }
   mean /= W * Hh;
-  const cImg = new ImageData(W, Hh), nImg = new ImageData(W, Hh), k = 6 * (B.relief ?? 1);
+  // The normal map carries the height field in its alpha (2026-11-04, the close layer: trunkMaterial's parallax and
+  // self-shadow read it, so the fissures get depth with no extra sampler). It is a DataTexture, its rows flipped as the
+  // canvas texture's flipY flips the colour map's: through a canvas an alpha under 255 would premultiply the normal away.
+  const cImg = new ImageData(W, Hh), nData = new Uint8Array(W * Hh * 4), k = 6 * (B.relief ?? 1);
+  let hLo = Infinity, hHi = -Infinity; for (let i = 0; i < W * Hh; i++) { hLo = Math.min(hLo, height[i]); hHi = Math.max(hHi, height[i]); }
+  const hSpan = Math.max(hHi - hLo, 1e-3);
   yield;
   for (let y = 0; y < Hh; y++) for (let x = 0; x < W; x++) {
     if (x === 0 && (y & 127) === 0) yield;
-    const i = y * W + x, o = 4 * i;
+    const i = y * W + x, o = 4 * i, on = 4 * ((Hh - 1 - y) * W + x);
     for (let c = 0; c < 3; c++) cImg.data[o + c] = Math.round(255 * Math.max(0, col[3 * i + c]) / mx);
     cImg.data[o + 3] = 255;
     const hx = height[y * W + (x + 1) % W] - height[y * W + (x + W - 1) % W], hy = height[((y + 1) % Hh) * W + x] - height[((y + Hh - 1) % Hh) * W + x];
     const nx = -hx * k, ny = hy * k, nl = Math.hypot(nx, ny, 1);
-    nImg.data[o] = Math.round(127.5 + 127.5 * nx / nl); nImg.data[o + 1] = Math.round(127.5 + 127.5 * ny / nl); nImg.data[o + 2] = Math.round(127.5 + 127.5 / nl); nImg.data[o + 3] = 255;
+    nData[on] = Math.round(127.5 + 127.5 * nx / nl); nData[on + 1] = Math.round(127.5 + 127.5 * ny / nl); nData[on + 2] = Math.round(127.5 + 127.5 / nl);
+    nData[on + 3] = Math.round(255 * (height[i] - hLo) / hSpan);   // 1 the top of a plate or ridge, 0 the deepest fissure
   }
-  const mk = img => { const cv = document.createElement('canvas'); cv.width = W; cv.height = Hh; cv.getContext('2d').putImageData(img, 0, 0);
-    const t = new THREE.CanvasTexture(cv); t.wrapS = t.wrapT = THREE.RepeatWrapping; t.colorSpace = THREE.NoColorSpace; t.anisotropy = 4; return t; };
-  const out = { map: mk(cImg), normal: mk(nImg) };
+  const cv = document.createElement('canvas'); cv.width = W; cv.height = Hh; cv.getContext('2d').putImageData(cImg, 0, 0);
+  const map = new THREE.CanvasTexture(cv); map.wrapS = map.wrapT = THREE.RepeatWrapping; map.colorSpace = THREE.NoColorSpace; map.anisotropy = 4;
+  const normal = new THREE.DataTexture(nData, W, Hh, THREE.RGBAFormat, THREE.UnsignedByteType);
+  normal.wrapS = normal.wrapT = THREE.RepeatWrapping; normal.colorSpace = THREE.NoColorSpace; normal.anisotropy = 4;
+  normal.magFilter = THREE.LinearFilter; normal.minFilter = THREE.LinearMipmapLinearFilter; normal.generateMipmaps = true; normal.needsUpdate = true;
+  const out = { map, normal };
   out.map.userData.mean = mean / mx;
+  // the fissures' depth (m) for the parallax, from the relief and the fissure width (trunk.bark.depth_m overrides), and
+  // the moss's and lichen's liking for this bark (trunk.bark.moss overrides; peeling and smooth barks keep almost none)
+  out.depth = B.depth_m ?? 0.018 * (B.relief ?? 1) * (0.3 + 0.7 * fiss);
+  out.moss = B.moss ?? Math.min(1, 0.25 + 0.6 * lich) * ({ peeling_red: 0.05, smooth: 0.1, mottled: 0.3, plates: 0.5, fibrous: 0.5, shreddy: 0.4 }[pattern] ?? 1);
+  out.lichen = lich;
   barkCache.set(spec.id, out);
   return out;
 }

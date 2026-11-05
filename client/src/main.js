@@ -54,6 +54,7 @@ import { groundUniforms } from './terrain.js';
 import { detailUniforms } from './groundDetail.js';
 import { setBodyScale } from './bodyScale.js';
 import { Litter } from './litter.js';
+import { CloseLife } from './closeLife.js';
 import { Abilities } from './abilities.js';
 
 const $ = id => document.getElementById(id);
@@ -204,7 +205,7 @@ async function disposeWorld(w, renderer) {
   m.spirit?.dispose?.();   // the souls' columns and the leaving wisps (spirit.js, 2026-11-01)
   m.carrion?.dispose?.();   // Scavenge: the carcasses' records, bones and halos (carrion.js; before the dig, whose socket it rides)
   m.dig?.dispose?.();   // the Dig game's tunnels, its socket and the terrain's cut discs (dig.js)
-  m.water?.dispose?.(); m.shadows?.dispose?.(); m.terrain?.dispose?.(); m.litter?.dispose?.(); m.scent?.dispose?.(); m.forage?.dispose?.(); m.fruit?.dispose?.(); m.sight?.dispose?.(); m.cues?.dispose?.(); m.grass?.dispose?.(); m.forbs?.dispose?.(); m.emergents?.dispose?.(); m.veg?.dispose?.(); forgetQueuedCasters();
+  m.water?.dispose?.(); m.shadows?.dispose?.(); m.terrain?.dispose?.(); m.litter?.dispose?.(); m.life?.dispose?.(); m.scent?.dispose?.(); m.forage?.dispose?.(); m.fruit?.dispose?.(); m.sight?.dispose?.(); m.cues?.dispose?.(); m.grass?.dispose?.(); m.forbs?.dispose?.(); m.emergents?.dispose?.(); m.veg?.dispose?.(); forgetQueuedCasters();
   // then its listeners and the elements it put into the page; the HUD's own words back as the page had them
   w.record(w.observer.takeRecords());
   w.observer.disconnect();
@@ -473,7 +474,7 @@ async function buildSteps(w, { params, pending, direct = false, arrive = null })
   const water = w.m.water = new Water(tile, scene); await w.sliced(water.build(), 'water');   // streams, dry beds and ponds by season (water.js)
   await w.next('rocks');
   const rocks = new Rocks(tile, scene, atmosphere);   // outcrops and boulders from the geology and soils rasters (rocks.js)
-  const litter = w.m.litter = new Litter(tile, scene, { terrain, atmosphere });   // the body-scaled ring of pebbles, leaves and stems (litter.js)
+  const litter = w.m.litter = new Litter(tile, scene, { terrain, atmosphere, veg });   // the body-scaled ring of pebbles, leaves and stems (litter.js)
   await w.next('roads+flight');
   const roads = new RoadsOverlay(tile, scene);   // ghost roads, G to toggle
   const flight = new RavenFlight(camera, tile.heights, renderer.domElement);
@@ -587,6 +588,7 @@ async function buildSteps(w, { params, pending, direct = false, arrive = null })
   // player carries or caches an acorn in a collector body (acorns.js v5); no Start button. ?game=1 shows the box at once.
   $('gameBtn').hidden = true;
   acorns.start(seasonNow());
+  const life = w.m.life = new CloseLife({ scene, veg, atmosphere, acorns });   // the woodpeckers' granaries and the oak galls near the eye (closeLife.js)
   const setGame = on => { if (on) acorns.showBox(); };
   $('hoverBtn').onclick = () => { flight.setHover(!flight.hover); renderer.domElement.focus?.(); };
   if (params.get('game') === '1') setGame(true);
@@ -743,7 +745,7 @@ async function buildSteps(w, { params, pending, direct = false, arrive = null })
   const setFov = deg => { const v = Math.min(LENS_RANGE[1], Math.max(LENS_RANGE[0], +deg || LENS_DEFAULT)); camera.fov = v; camera.updateProjectionMatrix(); return v; };
   const setHour = h => { state.hour = +h; $('time').value = state.hour; return state.hour; };
   animals.weatherTemp = () => (weather.day ? weather.fx.temp : null);   // the lizards' air (animals.js airT)
-  w.handle = window.__we = { setDate, setFov, setHour, weather, tile, flight, raven, camera, veg, terrain, far, grass, forbs, emergents, roads, scene, renderer, minimap, atmosphere, sky, acorns, identify, places, peek, setPeek, sound, animals, anet, arrival, rocks, water, waterfalls: water.waterfalls, squirrel, woodpecker, ground, flier, spirit, players, credits, sight, cues, forage, fruit, needs, dig, carrion };   // debugging handle
+  w.handle = window.__we = { setDate, setFov, setHour, weather, tile, flight, raven, camera, veg, terrain, far, grass, forbs, emergents, roads, scene, renderer, minimap, atmosphere, sky, acorns, life, identify, places, peek, setPeek, sound, animals, anet, arrival, rocks, water, waterfalls: water.waterfalls, squirrel, woodpecker, ground, flier, spirit, players, credits, sight, cues, forage, fruit, needs, dig, carrion };   // debugging handle
   const as = direct ? params.get('as') : null;
   if (!['raven', 'squirrel', 'woodpecker'].includes(as)) toSpirit();   // a spirit from the start (behind the opening screen too)
   if (!screenOpen) makeSound();
@@ -952,6 +954,7 @@ async function buildSteps(w, { params, pending, direct = false, arrive = null })
     water.update(dt, look);
     rocks.update(camera);
     litter.update(dt, camera, flight.pos);
+    life.update(camera.position);
     acorns.update(dt, camera, s);
     animals.update(dt, s, state.hour);
     if (!peek.shown) terrain.setLook(look);

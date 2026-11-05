@@ -1566,8 +1566,12 @@ class MicroPatch {
       if (sum > 1e-6) { th = q0 / sum; li = q1 / sum; gr = q2 / sum; rk = q3 / sum; }
       dry = 1 - Math.max(w.water, T.waterMask?.at(x, north) === 255 ? 1 : 0);
     }
+    // the duff under the near trees' crowns (litter.js closeDuff: their cover, more under old trees and pines) as litter,
+    // up to 2.5x its amplitude (a 2 cm swell becomes 5 cm hummocks of leaf and needle mould)
+    const duff = T.closeDuff ? T.closeDuff(x, north) : 0;
+    if (duff > 0) { const lk = Math.min(duff, 1) * (1 - rk); if (lk > li) { const f = (1 - lk) / Math.max(1 - li, 1e-6); th *= f; gr *= f; li = lk; } }
     mat[k] = MICRO_AMP.rock * rk * rough * dry; mat[k + 1] = MICRO_AMP.gravel * gr * rough * dry;
-    mat[k + 2] = MICRO_AMP.thatch * th * thatchK * dry; mat[k + 3] = MICRO_AMP.litter * li * rough * dry;
+    mat[k + 2] = MICRO_AMP.thatch * th * thatchK * dry; mat[k + 3] = MICRO_AMP.litter * li * rough * dry * (1 + duff);
     const st = smooth01(18, 35, slopeDeg), a = 2 * Math.atan2(-gn, -gx);
     mat[ks] = st > 0 ? Math.cos(a) * st : 0; mat[ks + 1] = st > 0 ? Math.sin(a) * st : 0; mat[ks + 2] = 0; mat[ks + 3] = 0;
   }

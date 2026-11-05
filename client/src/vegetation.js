@@ -421,7 +421,7 @@ export class Vegetation {
     this.tile = tile; this.scene = scene; this.group = new THREE.Group(); scene.add(this.group);
     this.radius = 1500; this.lastCenter = null; this.lastNear = null; this.count = 0; this.nearCount = 0;
     this.oaks = []; this.version = 0;   // oaks placed by the last update (acorn game) and a counter bumped per rebuild
-    this.nearPlants = []; this.nearVersion = 0;   // every plant in the near set: { id, species, x, y, z, scale, height }
+    this.nearPlants = []; this.nearVersion = 0;   // every plant in the near set: { id, species, x, y, z, scale, height, crownR, trunkR, snag }
     this.closeCount = 0; this.lastClose = null; this.closeVersion = -1;
     this.lodU = { lodEye: handover.eye, lodR: { value: NEAR_R }, closeEye: { value: new THREE.Vector3(0, 1e9, 0) }, closeR: { value: CLOSE_R },
       seatF: { value: new THREE.Vector4() }, seatB: { value: 0 }, seatOn: { value: 1 },   // the drape (SEAT_GLSL)
@@ -700,9 +700,10 @@ export class Vegetation {
           for (const k of [0, 1, 2, 8, 9, 10]) dst[n * 16 + k] *= kw;
           for (const k of [4, 5, 6]) dst[n * 16 + k] *= kh;
         }
-        // scale: the horizontal scale (a crown tree's height scale differs, crowns.js ASPECT); height: the drawn height
+        // scale: the horizontal scale (a crown tree's height scale differs, crowns.js ASPECT); height: the drawn height;
+        // crownR the drawn crown's mean half-width, trunkR the bole's radius at its foot (litter.js lays the ground under them)
         const b = n * 16, scale = Math.hypot(dst[b], dst[b + 1], dst[b + 2]), sy = Math.hypot(dst[b + 4], dst[b + 5], dst[b + 6]);
-        plants.push({ id, species, x: dst[b + 12], y: dst[b + 13] + 0.3, z: dst[b + 14], scale, height: t.height * sy, ...(q >= 0 ? { crown: q, landmark: P.landmarkOf.get(q) || null, old: !!(P.flags[q] & 1) } : {}) });
+        plants.push({ id, species, x: dst[b + 12], y: dst[b + 13] + 0.3, z: dst[b + 14], scale, height: t.height * sy, crownR: t.radius * scale, trunkR: (t.stem ? t.stem.r0 : 0.12) * scale, snag: !!t.snag, ...(q >= 0 ? { crown: q, landmark: P.landmarkOf.get(q) || null, old: !!(P.flags[q] & 1) } : {}) });
         N.n++;
       }
     }
