@@ -1,0 +1,142 @@
+{
+ "grid": {
+  "points": 1226357028,
+  "points_in_tile": 1224072040,
+  "nodes": 29885,
+  "max_depth": null,
+  "ept": {
+   "project": "USGS_LPC_WA_Olympic_Peninsula_2013_LAS_2015",
+   "points": 21439817649,
+   "url": "https://usgs-lidar-public.s3.amazonaws.com/USGS_LPC_WA_Olympic_Peninsula_2013_LAS_2015/ept.json"
+  },
+  "density_pts_m2": 12.2,
+  "empty_cell_fraction": 0.4394
+ },
+ "grid_seconds": 1032.4,
+ "dtm_check": {
+  "ground_cell_fraction": 0.2294,
+  "median_offset_m": -21.257,
+  "mean_offset_m": -21.257,
+  "std_m": 0.668,
+  "p05_m": -22.285,
+  "p95_m": -20.213,
+  "fraction_within_0.15_m": 0.2662,
+  "fraction_beyond_0.5_m": 0.3566,
+  "best_shift_m": {
+   "east": 1,
+   "north": -1,
+   "rms_m": 0.398
+  }
+ },
+ "ground_from_points": {
+  "share": 0.5457,
+  "datum_offset_m": -21.257,
+  "note": "the 5 m DEM corrected by the ground returns where no 1 m product exists (their height less the DTM check's tile-wide offset)"
+ },
+ "coverage": {
+  "covered_share": 0.5637,
+  "client_cells_covered": 0.5634,
+  "rule": "a 10 m cell with returns in a quarter of its 1 m cells; client/lidar_cover.png: a 30 m cell half covered"
+ },
+ "canopy_10m": {
+  "p95_mean_m": 38.12,
+  "tree_cover_pct": 81.26,
+  "shrub_cover_pct": 3.97,
+  "filled_from_landfire_share": 0.4363
+ },
+ "crowns": {
+  "maxima": 235844,
+  "dropped_on_osm_buildings": 10,
+  "dropped_low_multi_return": 695,
+  "dropped_pole_like": 1199,
+  "dropped_shrub_in_shrub_canopy": 62,
+  "dropped_on_bridges": 7,
+  "dropped_urban": 0,
+  "crowns": 233871,
+  "confidence_terms_median": {
+   "prominence": 0.907,
+   "width": 0.569,
+   "multi_return": 0.815,
+   "height": 1.0
+  },
+  "confidence_quantiles_p10_p50_p90": [
+   0.697,
+   0.808,
+   0.891
+  ],
+  "bytes": 1911004,
+  "crowns_per_ha": 23.4,
+  "max_per_index_cell": 97,
+  "height_histogram_m": {
+   "4-6": 1388,
+   "6-8": 1788,
+   "8-12": 3257,
+   "12-16": 4009,
+   "16-20": 4451,
+   "20-25": 9111,
+   "25-30": 11043,
+   "30-35": 16341,
+   "35-40": 19435,
+   "40-80": 156491
+  },
+  "height_m": {
+   "median": 48.7,
+   "p95": 77.0,
+   "max": 105.5
+  },
+  "radius_m": {
+   "median": 6.58,
+   "p95": 10.57
+  },
+  "confidence_median": 0.808,
+  "seconds": 60.3
+ },
+ "lidar_micro": {
+  "intensity": {
+   "source_has_intensity": true,
+   "p2": 3.0,
+   "p50": 47.0,
+   "p98": 131.8,
+   "ground_pixel_fraction": 0.5219,
+   "filled_fraction": 0.4781
+  },
+  "roughness_cm": {
+   "p10": 2.33,
+   "p50": 5.82,
+   "p90": 12.43,
+   "p99": 25.61,
+   "clipped_fraction": 0.00068,
+   "measured_fraction": 0.4005,
+   "filled_fraction": 0.5995,
+   "with_tilt_p50": 13.7,
+   "with_tilt_p90": 30.5
+  },
+  "low_multi": {
+   "low_cell_fraction": 0.0426,
+   "share_in_low_cells_p50": 0.0,
+   "share_in_low_cells_p90": 0.455,
+   "pixels_b_over_0": 0.0942,
+   "pixels_b_over_10pct": 0.0158,
+   "pixels_b_over_30pct": 0.0007,
+   "b_mean": 1.43
+  },
+  "bytes": 7921507
+ },
+ "terrain_detail": {
+  "residual_m": {
+   "mean": 0.016,
+   "std": 0.472,
+   "p50_abs": 0.055,
+   "p99_abs": 1.418,
+   "max_abs": 45.74
+  },
+  "fraction_over_0.5_m": 0.2054,
+  "clipped_fraction": 0.000176
+ },
+ "roughness": {
+  "median_m": 0.05,
+  "p90_m": 0.166,
+  "p99_m": 0.417
+ },
+ "products_seconds": 134.4
+}

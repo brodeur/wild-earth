@@ -1,0 +1,1006 @@
+{
+ "source": "copernicus_sentinel2_l2a",
+ "years": [
+  2019,
+  2026
+ ],
+ "stretch": 0.35,
+ "ndvi_range": [
+  -0.2,
+  0.9
+ ],
+ "min_looks": 3,
+ "naip_reference": {
+  "naip_year": 2023,
+  "flight_dates": [
+   "2023-08-13"
+  ],
+  "month": 8
+ },
+ "months": [
+  {
+   "month": 1,
+   "looks_dates": 27,
+   "looks_median": 0,
+   "looks_min": 0,
+   "looks_p05": 0,
+   "refused": true,
+   "filled_fraction": 0.8421,
+   "filled_pixels": 210526,
+   "classes": {
+    "conifer_forest": {
+     "srgb": [
+      0.3049,
+      0.3616,
+      0.2918
+     ],
+     "reflectance": [
+      0.0265,
+      0.0376,
+      0.0242
+     ],
+     "ndvi": 0.8,
+     "cells": 166859
+    },
+    "mixed_forest": {
+     "srgb": [
+      0.3073,
+      0.3741,
+      0.2608
+     ],
+     "reflectance": [
+      0.0269,
+      0.0404,
+      0.0194
+     ],
+     "ndvi": 0.799,
+     "cells": 1312
+    },
+    "chaparral": {
+     "srgb": [
+      0.5196,
+      0.5029,
+      0.4369
+     ],
+     "reflectance": [
+      0.0814,
+      0.0759,
+      0.0561
+     ],
+     "ndvi": 0.405,
+     "cells": 1778
+    },
+    "grassland": {
+     "srgb": [
+      0.4622,
+      0.4847,
+      0.4342
+     ],
+     "reflectance": [
+      0.0633,
+      0.0701,
+      0.0553
+     ],
+     "ndvi": 0.546,
+     "cells": 2620
+    },
+    "riparian": {
+     "srgb": [
+      0.343,
+      0.3874,
+      0.3184
+     ],
+     "reflectance": [
+      0.0337,
+      0.0435,
+      0.0289
+     ],
+     "ndvi": 0.695,
+     "cells": 4728
+    }
+   }
+  },
+  {
+   "month": 2,
+   "looks_dates": 19,
+   "looks_median": 0,
+   "looks_min": 0,
+   "looks_p05": 0,
+   "refused": true,
+   "filled_fraction": 0.84,
+   "filled_pixels": 210006,
+   "classes": {
+    "conifer_forest": {
+     "srgb": [
+      0.3066,
+      0.3635,
+      0.293
+     ],
+     "reflectance": [
+      0.0268,
+      0.0381,
+      0.0244
+     ],
+     "ndvi": 0.799,
+     "cells": 166859
+    },
+    "mixed_forest": {
+     "srgb": [
+      0.3073,
+      0.3741,
+      0.2608
+     ],
+     "reflectance": [
+      0.0269,
+      0.0404,
+      0.0194
+     ],
+     "ndvi": 0.799,
+     "cells": 1312
+    },
+    "chaparral": {
+     "srgb": [
+      0.5246,
+      0.5103,
+      0.4427
+     ],
+     "reflectance": [
+      0.0831,
+      0.0783,
+      0.0577
+     ],
+     "ndvi": 0.408,
+     "cells": 1778
+    },
+    "grassland": {
+     "srgb": [
+      0.4648,
+      0.4895,
+      0.4351
+     ],
+     "reflectance": [
+      0.064,
+      0.0715,
+      0.0556
+     ],
+     "ndvi": 0.547,
+     "cells": 2620
+    },
+    "riparian": {
+     "srgb": [
+      0.3431,
+      0.3876,
+      0.3186
+     ],
+     "reflectance": [
+      0.0337,
+      0.0435,
+      0.029
+     ],
+     "ndvi": 0.695,
+     "cells": 4728
+    }
+   }
+  },
+  {
+   "month": 3,
+   "looks_dates": 30,
+   "looks_median": 1,
+   "looks_min": 0,
+   "looks_p05": 0,
+   "refused": true,
+   "filled_fraction": 0.8279,
+   "filled_pixels": 206964,
+   "classes": {
+    "conifer_forest": {
+     "srgb": [
+      0.3084,
+      0.3654,
+      0.2945
+     ],
+     "reflectance": [
+      0.0271,
+      0.0385,
+      0.0247
+     ],
+     "ndvi": 0.799,
+     "cells": 166859
+    },
+    "mixed_forest": {
+     "srgb": [
+      0.3076,
+      0.3744,
+      0.2611
+     ],
+     "reflectance": [
+      0.027,
+      0.0405,
+      0.0194
+     ],
+     "ndvi": 0.799,
+     "cells": 1312
+    },
+    "chaparral": {
+     "srgb": [
+      0.5277,
+      0.515,
+      0.4462
+     ],
+     "reflectance": [
+      0.0842,
+      0.0799,
+      0.0587
+     ],
+     "ndvi": 0.41,
+     "cells": 1778
+    },
+    "grassland": {
+     "srgb": [
+      0.469,
+      0.4962,
+      0.4394
+     ],
+     "reflectance": [
+      0.0653,
+      0.0737,
+      0.0568
+     ],
+     "ndvi": 0.555,
+     "cells": 2620
+    },
+    "riparian": {
+     "srgb": [
+      0.3439,
+      0.3886,
+      0.3196
+     ],
+     "reflectance": [
+      0.0339,
+      0.0438,
+      0.0292
+     ],
+     "ndvi": 0.694,
+     "cells": 4728
+    }
+   }
+  },
+  {
+   "month": 4,
+   "looks_dates": 40,
+   "looks_median": 1,
+   "looks_min": 0,
+   "looks_p05": 0,
+   "refused": true,
+   "filled_fraction": 0.831,
+   "filled_pixels": 207751,
+   "classes": {
+    "conifer_forest": {
+     "srgb": [
+      0.3489,
+      0.41,
+      0.3315
+     ],
+     "reflectance": [
+      0.0349,
+      0.049,
+      0.0314
+     ],
+     "ndvi": 0.761,
+     "cells": 166859
+    },
+    "mixed_forest": {
+     "srgb": [
+      0.3187,
+      0.4326,
+      0.3088
+     ],
+     "reflectance": [
+      0.029,
+      0.0549,
+      0.0272
+     ],
+     "ndvi": 0.825,
+     "cells": 1312
+    },
+    "chaparral": {
+     "srgb": [
+      0.5467,
+      0.5384,
+      0.4646
+     ],
+     "reflectance": [
+      0.0909,
+      0.088,
+      0.0639
+     ],
+     "ndvi": 0.412,
+     "cells": 1778
+    },
+    "grassland": {
+     "srgb": [
+      0.4953,
+      0.5277,
+      0.4596
+     ],
+     "reflectance": [
+      0.0734,
+      0.0842,
+      0.0625
+     ],
+     "ndvi": 0.546,
+     "cells": 2620
+    },
+    "riparian": {
+     "srgb": [
+      0.3822,
+      0.4407,
+      0.3705
+     ],
+     "reflectance": [
+      0.0423,
+      0.0571,
+      0.0396
+     ],
+     "ndvi": 0.655,
+     "cells": 4728
+    }
+   }
+  },
+  {
+   "month": 5,
+   "looks_dates": 44,
+   "looks_median": 10,
+   "looks_min": 0,
+   "looks_p05": 0,
+   "refused": false,
+   "filled_fraction": 0.2431,
+   "filled_pixels": 60780,
+   "classes": {
+    "conifer_forest": {
+     "srgb": [
+      0.349,
+      0.4101,
+      0.3316
+     ],
+     "reflectance": [
+      0.035,
+      0.049,
+      0.0315
+     ],
+     "ndvi": 0.761,
+     "cells": 166859
+    },
+    "mixed_forest": {
+     "srgb": [
+      0.3187,
+      0.4326,
+      0.3088
+     ],
+     "reflectance": [
+      0.029,
+      0.0549,
+      0.0272
+     ],
+     "ndvi": 0.825,
+     "cells": 1312
+    },
+    "chaparral": {
+     "srgb": [
+      0.5466,
+      0.5382,
+      0.464
+     ],
+     "reflectance": [
+      0.0909,
+      0.0879,
+      0.0638
+     ],
+     "ndvi": 0.413,
+     "cells": 1778
+    },
+    "grassland": {
+     "srgb": [
+      0.4953,
+      0.5278,
+      0.4599
+     ],
+     "reflectance": [
+      0.0734,
+      0.0843,
+      0.0626
+     ],
+     "ndvi": 0.547,
+     "cells": 2620
+    },
+    "riparian": {
+     "srgb": [
+      0.3822,
+      0.4407,
+      0.3705
+     ],
+     "reflectance": [
+      0.0423,
+      0.0571,
+      0.0396
+     ],
+     "ndvi": 0.655,
+     "cells": 4728
+    }
+   }
+  },
+  {
+   "month": 6,
+   "looks_dates": 45,
+   "looks_median": 15,
+   "looks_min": 0,
+   "looks_p05": 0,
+   "refused": false,
+   "filled_fraction": 0.1526,
+   "filled_pixels": 38143,
+   "classes": {
+    "conifer_forest": {
+     "srgb": [
+      0.3361,
+      0.4136,
+      0.3197
+     ],
+     "reflectance": [
+      0.0323,
+      0.0499,
+      0.0292
+     ],
+     "ndvi": 0.786,
+     "cells": 166859
+    },
+    "mixed_forest": {
+     "srgb": [
+      0.2851,
+      0.4105,
+      0.2809
+     ],
+     "reflectance": [
+      0.0231,
+      0.0491,
+      0.0225
+     ],
+     "ndvi": 0.871,
+     "cells": 1312
+    },
+    "chaparral": {
+     "srgb": [
+      0.5458,
+      0.5408,
+      0.4668
+     ],
+     "reflectance": [
+      0.0906,
+      0.0888,
+      0.0646
+     ],
+     "ndvi": 0.421,
+     "cells": 1778
+    },
+    "grassland": {
+     "srgb": [
+      0.4915,
+      0.5304,
+      0.4594
+     ],
+     "reflectance": [
+      0.0722,
+      0.0851,
+      0.0624
+     ],
+     "ndvi": 0.563,
+     "cells": 2620
+    },
+    "riparian": {
+     "srgb": [
+      0.362,
+      0.4339,
+      0.3539
+     ],
+     "reflectance": [
+      0.0377,
+      0.0553,
+      0.036
+     ],
+     "ndvi": 0.708,
+     "cells": 4728
+    }
+   }
+  },
+  {
+   "month": 7,
+   "looks_dates": 61,
+   "looks_median": 29,
+   "looks_min": 0,
+   "looks_p05": 0,
+   "refused": false,
+   "filled_fraction": 0.1006,
+   "filled_pixels": 25160,
+   "classes": {
+    "conifer_forest": {
+     "srgb": [
+      0.3192,
+      0.4051,
+      0.3095
+     ],
+     "reflectance": [
+      0.0291,
+      0.0478,
+      0.0273
+     ],
+     "ndvi": 0.804,
+     "cells": 166859
+    },
+    "mixed_forest": {
+     "srgb": [
+      0.2793,
+      0.3831,
+      0.2616
+     ],
+     "reflectance": [
+      0.0222,
+      0.0425,
+      0.0195
+     ],
+     "ndvi": 0.87,
+     "cells": 1312
+    },
+    "chaparral": {
+     "srgb": [
+      0.541,
+      0.5382,
+      0.4669
+     ],
+     "reflectance": [
+      0.0889,
+      0.0879,
+      0.0646
+     ],
+     "ndvi": 0.427,
+     "cells": 1778
+    },
+    "grassland": {
+     "srgb": [
+      0.4816,
+      0.5224,
+      0.4548
+     ],
+     "reflectance": [
+      0.0691,
+      0.0824,
+      0.0611
+     ],
+     "ndvi": 0.573,
+     "cells": 2620
+    },
+    "riparian": {
+     "srgb": [
+      0.3486,
+      0.4112,
+      0.3352
+     ],
+     "reflectance": [
+      0.0349,
+      0.0493,
+      0.0322
+     ],
+     "ndvi": 0.725,
+     "cells": 4728
+    }
+   }
+  },
+  {
+   "month": 8,
+   "looks_dates": 63,
+   "looks_median": 25,
+   "looks_min": 0,
+   "looks_p05": 0,
+   "refused": false,
+   "filled_fraction": 0.0677,
+   "filled_pixels": 16918,
+   "classes": {
+    "conifer_forest": {
+     "srgb": [
+      0.3002,
+      0.3766,
+      0.2946
+     ],
+     "reflectance": [
+      0.0257,
+      0.041,
+      0.0247
+     ],
+     "ndvi": 0.814,
+     "cells": 166859
+    },
+    "mixed_forest": {
+     "srgb": [
+      0.2757,
+      0.3627,
+      0.2538
+     ],
+     "reflectance": [
+      0.0216,
+      0.0379,
+      0.0183
+     ],
+     "ndvi": 0.863,
+     "cells": 1312
+    },
+    "chaparral": {
+     "srgb": [
+      0.5285,
+      0.526,
+      0.4568
+     ],
+     "reflectance": [
+      0.0845,
+      0.0836,
+      0.0617
+     ],
+     "ndvi": 0.434,
+     "cells": 1778
+    },
+    "grassland": {
+     "srgb": [
+      0.4687,
+      0.5041,
+      0.4486
+     ],
+     "reflectance": [
+      0.0652,
+      0.0762,
+      0.0593
+     ],
+     "ndvi": 0.584,
+     "cells": 2620
+    },
+    "riparian": {
+     "srgb": [
+      0.3371,
+      0.3895,
+      0.3216
+     ],
+     "reflectance": [
+      0.0325,
+      0.044,
+      0.0295
+     ],
+     "ndvi": 0.729,
+     "cells": 4728
+    }
+   }
+  },
+  {
+   "month": 9,
+   "looks_dates": 47,
+   "looks_median": 19,
+   "looks_min": 0,
+   "looks_p05": 0,
+   "refused": false,
+   "filled_fraction": 0.0317,
+   "filled_pixels": 7926,
+   "classes": {
+    "conifer_forest": {
+     "srgb": [
+      0.2891,
+      0.3537,
+      0.2842
+     ],
+     "reflectance": [
+      0.0238,
+      0.0359,
+      0.023
+     ],
+     "ndvi": 0.812,
+     "cells": 166859
+    },
+    "mixed_forest": {
+     "srgb": [
+      0.2729,
+      0.3378,
+      0.2349
+     ],
+     "reflectance": [
+      0.0212,
+      0.0327,
+      0.0158
+     ],
+     "ndvi": 0.848,
+     "cells": 1312
+    },
+    "chaparral": {
+     "srgb": [
+      0.5206,
+      0.5118,
+      0.4497
+     ],
+     "reflectance": [
+      0.0817,
+      0.0788,
+      0.0596
+     ],
+     "ndvi": 0.423,
+     "cells": 1778
+    },
+    "grassland": {
+     "srgb": [
+      0.4451,
+      0.4742,
+      0.4257
+     ],
+     "reflectance": [
+      0.0584,
+      0.0668,
+      0.0531
+     ],
+     "ndvi": 0.58,
+     "cells": 2620
+    },
+    "riparian": {
+     "srgb": [
+      0.3224,
+      0.3658,
+      0.299
+     ],
+     "reflectance": [
+      0.0297,
+      0.0386,
+      0.0255
+     ],
+     "ndvi": 0.724,
+     "cells": 4728
+    }
+   }
+  },
+  {
+   "month": 10,
+   "looks_dates": 50,
+   "looks_median": 14,
+   "looks_min": 0,
+   "looks_p05": 0,
+   "refused": false,
+   "filled_fraction": 0.0701,
+   "filled_pixels": 17514,
+   "classes": {
+    "conifer_forest": {
+     "srgb": [
+      0.2571,
+      0.3096,
+      0.2482
+     ],
+     "reflectance": [
+      0.0188,
+      0.0273,
+      0.0176
+     ],
+     "ndvi": 0.838,
+     "cells": 166859
+    },
+    "mixed_forest": {
+     "srgb": [
+      0.2954,
+      0.3015,
+      0.1994
+     ],
+     "reflectance": [
+      0.0248,
+      0.0259,
+      0.0115
+     ],
+     "ndvi": 0.773,
+     "cells": 1312
+    },
+    "chaparral": {
+     "srgb": [
+      0.509,
+      0.4913,
+      0.4297
+     ],
+     "reflectance": [
+      0.0779,
+      0.0721,
+      0.0541
+     ],
+     "ndvi": 0.406,
+     "cells": 1778
+    },
+    "grassland": {
+     "srgb": [
+      0.4643,
+      0.4821,
+      0.443
+     ],
+     "reflectance": [
+      0.0639,
+      0.0693,
+      0.0578
+     ],
+     "ndvi": 0.541,
+     "cells": 2620
+    },
+    "riparian": {
+     "srgb": [
+      0.2984,
+      0.3244,
+      0.255
+     ],
+     "reflectance": [
+      0.0254,
+      0.0301,
+      0.0185
+     ],
+     "ndvi": 0.734,
+     "cells": 4728
+    }
+   }
+  },
+  {
+   "month": 11,
+   "looks_dates": 27,
+   "looks_median": 1,
+   "looks_min": 0,
+   "looks_p05": 0,
+   "refused": true,
+   "filled_fraction": 0.8435,
+   "filled_pixels": 210868,
+   "classes": {
+    "conifer_forest": {
+     "srgb": [
+      0.2565,
+      0.3091,
+      0.2476
+     ],
+     "reflectance": [
+      0.0187,
+      0.0272,
+      0.0175
+     ],
+     "ndvi": 0.838,
+     "cells": 166859
+    },
+    "mixed_forest": {
+     "srgb": [
+      0.2954,
+      0.3015,
+      0.1994
+     ],
+     "reflectance": [
+      0.0248,
+      0.0259,
+      0.0115
+     ],
+     "ndvi": 0.773,
+     "cells": 1312
+    },
+    "chaparral": {
+     "srgb": [
+      0.509,
+      0.4912,
+      0.4294
+     ],
+     "reflectance": [
+      0.0779,
+      0.0721,
+      0.0541
+     ],
+     "ndvi": 0.407,
+     "cells": 1778
+    },
+    "grassland": {
+     "srgb": [
+      0.4311,
+      0.4499,
+      0.4088
+     ],
+     "reflectance": [
+      0.0545,
+      0.0597,
+      0.0487
+     ],
+     "ndvi": 0.557,
+     "cells": 2620
+    },
+    "riparian": {
+     "srgb": [
+      0.2984,
+      0.3244,
+      0.255
+     ],
+     "reflectance": [
+      0.0254,
+      0.0301,
+      0.0185
+     ],
+     "ndvi": 0.734,
+     "cells": 4728
+    }
+   }
+  },
+  {
+   "month": 12,
+   "looks_dates": 17,
+   "looks_median": 0,
+   "looks_min": 0,
+   "looks_p05": 0,
+   "refused": true,
+   "filled_fraction": 0.8434,
+   "filled_pixels": 210859,
+   "classes": {
+    "conifer_forest": {
+     "srgb": [
+      0.2988,
+      0.355,
+      0.2885
+     ],
+     "reflectance": [
+      0.0254,
+      0.0362,
+      0.0237
+     ],
+     "ndvi": 0.802,
+     "cells": 166859
+    },
+    "mixed_forest": {
+     "srgb": [
+      0.307,
+      0.3739,
+      0.2605
+     ],
+     "reflectance": [
+      0.0269,
+      0.0404,
+      0.0193
+     ],
+     "ndvi": 0.8,
+     "cells": 1312
+    },
+    "chaparral": {
+     "srgb": [
+      0.5128,
+      0.4946,
+      0.4307
+     ],
+     "reflectance": [
+      0.0791,
+      0.0732,
+      0.0544
+     ],
+     "ndvi": 0.404,
+     "cells": 1778
+    },
+    "grassland": {
+     "srgb": [
+      0.4442,
+      0.4638,
+      0.4181
+     ],
+     "reflectance": [
+      0.0581,
+      0.0637,
+      0.0511
+     ],
+     "ndvi": 0.551,
+     "cells": 2620
+    },
+    "riparian": {
+     "srgb": [
+      0.341,
+      0.3853,
+      0.3165
+     ],
+     "reflectance": [
+      0.0333,
+      0.043,
+      0.0286
+     ],
+     "ndvi": 0.696,
+     "cells": 4728
+    }
+   }
+  }
+ ]
+}

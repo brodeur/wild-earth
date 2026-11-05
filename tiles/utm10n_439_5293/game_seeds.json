@@ -1,0 +1,161 @@
+{
+ "tile": "utm10n_439_5293",
+ "generated": "2026-11-05T09:59:11Z",
+ "games": {
+  "acorn": {
+   "seed": 1671472432,
+   "players": [
+    "corvus_corax",
+    "cyanocitta_stelleri",
+    "odocoileus_hemionus",
+    "ursus_americanus"
+   ],
+   "hotspots": [
+    [
+     705.7,
+     9985.0,
+     50
+    ],
+    [
+     855.9,
+     9985.0,
+     50
+    ],
+    [
+     1576.6,
+     9985.0,
+     50
+    ],
+    [
+     2087.1,
+     9985.0,
+     50
+    ],
+    [
+     2297.3,
+     9985.0,
+     50
+    ],
+    [
+     2447.4,
+     9985.0,
+     50
+    ],
+    [
+     2597.6,
+     9985.0,
+     50
+    ],
+    [
+     2747.7,
+     9985.0,
+     50
+    ],
+    [
+     705.7,
+     9985.0,
+     50
+    ],
+    [
+     855.9,
+     9985.0,
+     50
+    ],
+    [
+     1576.6,
+     9985.0,
+     50
+    ],
+    [
+     2087.1,
+     9985.0,
+     50
+    ],
+    [
+     2297.3,
+     9985.0,
+     50
+    ],
+    [
+     2447.4,
+     9985.0,
+     50
+    ],
+    [
+     2597.6,
+     9985.0,
+     50
+    ],
+    [
+     2747.7,
+     9985.0,
+     50
+    ],
+    [
+     705.7,
+     9985.0,
+     50
+    ],
+    [
+     855.9,
+     9985.0,
+     50
+    ],
+    [
+     1576.6,
+     9985.0,
+     50
+    ],
+    [
+     2087.1,
+     9985.0,
+     50
+    ],
+    [
+     2297.3,
+     9985.0,
+     50
+    ],
+    [
+     2447.4,
+     9985.0,
+     50
+    ],
+    [
+     2597.6,
+     9985.0,
+     50
+    ],
+    [
+     2747.7,
+     9985.0,
+     50
+    ]
+   ],
+   "resource": "acorn_mast",
+   "client": "client/src/acorns.js",
+   "world": "server.py GameWorld",
+   "playable_here": true
+  },
+  "dig": {
+   "seed": 2315800513,
+   "players": [],
+   "hotspots": [],
+   "resource": "burrow",
+   "client": "client/src/dig.js",
+   "world": "digworld.py",
+   "playable_here": false
+  },
+  "carrion": {
+   "seed": 4054351631,
+   "players": [
+    "corvus_corax"
+   ],
+   "hotspots": [],
+   "resource": null,
+   "client": "client/src/carrion.js",
+   "world": "carrionworld.py",
+   "playable_here": true
+  }
+ }
+}

@@ -1,0 +1,8621 @@
+{
+ "generated": "2026-11-05T09:59:11Z",
+ "tile_id": "utm10n_439_5293",
+ "archetypes": {
+  "gather": "find the resource's hotspots, feed, keep an eye out: the predators listed hunt here; the competitors eat the same cells",
+  "drink": "reach water on a rhythm; in summer the few sources draw every species, and the ambush predators, together",
+  "hunt": "find the prey (perception), close unseen, strike; the prey's game is its dual: evade",
+  "evade": "notice the predator before it is close (perception, the watchers' alarms), reach cover, keep the group together",
+  "cache": "store the resource in its season, recover it later; the competitors pilfer; a family's granary is defended together",
+  "shelter": "be in cover, a cavity, a burrow or a roost before dusk, a storm or a predator; the weather sets the pressure",
+  "court": "find and win a mate in the season: display, call, chase",
+  "rear": "keep the young fed and alive through the season: an escort game, collective where the young travel with the group",
+  "disperse": "leave the natal range and find an empty territory: a map-scale game",
+  "watch": "the collective's sentinel: someone looks up while the rest feed; an alarm sends everyone to cover"
+ },
+ "requests": [
+  {
+   "kind": "resource",
+   "resource": "acorn_mast",
+   "needed_by": [
+    "corvus_corax",
+    "cyanocitta_stelleri",
+    "odocoileus_hemionus",
+    "ursus_americanus"
+   ],
+   "raster": "client/res_acorn_mast.png",
+   "objects": [
+    {
+     "object": "acorns under and in the oaks",
+     "client": "acorns.js",
+     "status": "drawn"
+    }
+   ],
+   "status": "drawn"
+  },
+  {
+   "kind": "resource",
+   "resource": "grass_forbs",
+   "needed_by": [
+    "odocoileus_hemionus",
+    "ursus_americanus"
+   ],
+   "raster": "client/res_grass_forbs.png",
+   "objects": [
+    {
+     "object": "grass blades and tufts, forbs",
+     "client": "grass.js",
+     "status": "drawn"
+    }
+   ],
+   "status": "drawn"
+  },
+  {
+   "kind": "resource",
+   "resource": "browse",
+   "needed_by": [
+    "odocoileus_hemionus",
+    "ursus_americanus"
+   ],
+   "raster": "client/res_browse.png",
+   "objects": [
+    {
+     "object": "shrub and low tree foliage within reach",
+     "client": "shrubfield.js, vegetation.js",
+     "status": "drawn"
+    }
+   ],
+   "status": "drawn"
+  },
+  {
+   "kind": "resource",
+   "resource": "cover",
+   "needed_by": [
+    "corvus_corax",
+    "cyanocitta_stelleri",
+    "odocoileus_hemionus",
+    "ursus_americanus"
+   ],
+   "raster": "client/res_cover.png",
+   "objects": [
+    {
+     "object": "shrubs and trees to hide in",
+     "client": "shrubfield.js, vegetation.js",
+     "status": "drawn"
+    }
+   ],
+   "status": "drawn"
+  },
+  {
+   "kind": "resource",
+   "resource": "insects",
+   "needed_by": [
+    "corvus_corax",
+    "cyanocitta_stelleri",
+    "ursus_americanus"
+   ],
+   "raster": "client/res_insects.png",
+   "objects": [
+    {
+     "object": "insects",
+     "client": null,
+     "status": "missing"
+    }
+   ],
+   "status": "missing"
+  },
+  {
+   "kind": "resource",
+   "resource": "cavity",
+   "needed_by": [
+    "cathartes_aura"
+   ],
+   "raster": "client/res_cavity.png",
+   "objects": [
+    {
+     "object": "cavity trees and granaries",
+     "client": "acorns.js (granaries); no other cavities",
+     "status": "partial"
+    }
+   ],
+   "status": "partial"
+  },
+  {
+   "kind": "resource",
+   "resource": "cliff_or_snag",
+   "needed_by": [
+    "buteo_jamaicensis",
+    "cathartes_aura",
+    "corvus_corax"
+   ],
+   "raster": "client/res_cliff_or_snag.png",
+   "objects": [
+    {
+     "object": "snags, cliffs and tall perch trees",
+     "client": "vegetation.js (old trees), rocks.js",
+     "status": "partial"
+    }
+   ],
+   "status": "partial"
+  },
+  {
+   "kind": "resource",
+   "resource": "water",
+   "needed_by": [
+    "buteo_jamaicensis",
+    "cathartes_aura",
+    "corvus_corax",
+    "cyanocitta_stelleri",
+    "odocoileus_hemionus",
+    "ursus_americanus"
+   ],
+   "raster": "client/res_water.png",
+   "objects": [
+    {
+     "object": "water surfaces: streams, ponds",
+     "client": "water.js",
+     "status": "drawn"
+    }
+   ],
+   "status": "drawn"
+  }
+ ],
+ "relations": {
+  "predation": [],
+  "competition": {
+   "cliff_or_snag": {
+    "winter": [
+     "corvus_corax"
+    ],
+    "spring": [
+     "corvus_corax",
+     "buteo_jamaicensis"
+    ],
+    "summer": [
+     "cathartes_aura"
+    ]
+   },
+   "insects": {
+    "spring": [
+     "corvus_corax"
+    ],
+    "summer": [
+     "corvus_corax",
+     "cyanocitta_stelleri",
+     "ursus_americanus"
+    ]
+   },
+   "cover": {
+    "summer": [
+     "corvus_corax",
+     "odocoileus_hemionus",
+     "ursus_americanus"
+    ],
+    "winter": [
+     "odocoileus_hemionus",
+     "ursus_americanus"
+    ],
+    "spring": [
+     "odocoileus_hemionus",
+     "cyanocitta_stelleri",
+     "ursus_americanus"
+    ]
+   },
+   "acorn_mast": {
+    "fall": [
+     "corvus_corax",
+     "odocoileus_hemionus",
+     "cyanocitta_stelleri",
+     "ursus_americanus"
+    ],
+    "winter": [
+     "cyanocitta_stelleri"
+    ]
+   },
+   "browse": {
+    "winter": [
+     "odocoileus_hemionus"
+    ],
+    "summer": [
+     "odocoileus_hemionus",
+     "ursus_americanus"
+    ],
+    "fall": [
+     "ursus_americanus"
+    ]
+   },
+   "grass_forbs": {
+    "spring": [
+     "odocoileus_hemionus",
+     "ursus_americanus"
+    ]
+   },
+   "water": {
+    "spring": [
+     "odocoileus_hemionus"
+    ],
+    "summer": [
+     "odocoileus_hemionus"
+    ]
+   },
+   "cavity": {
+    "summer": [
+     "cathartes_aura"
+    ]
+   }
+  },
+  "scavenge": [],
+  "alarm": [],
+  "forage": [
+   [
+    "ursus_americanus",
+    "arctostaphylos_viscida",
+    "berries",
+    "browse",
+    [
+     "summer",
+     "fall"
+    ]
+   ],
+   [
+    "odocoileus_hemionus",
+    "adenostoma_fasciculatum",
+    "browse",
+    "browse",
+    [
+     "winter",
+     "spring"
+    ]
+   ],
+   [
+    "odocoileus_hemionus",
+    "salix_lasiolepis",
+    "browse",
+    "browse",
+    [
+     "spring",
+     "summer"
+    ]
+   ],
+   [
+    "odocoileus_hemionus",
+    "alnus_rhombifolia",
+    "browse",
+    "browse",
+    [
+     "spring",
+     "summer"
+    ]
+   ],
+   [
+    "odocoileus_hemionus",
+    "populus_fremontii",
+    "browse",
+    "browse",
+    [
+     "spring",
+     "summer"
+    ]
+   ],
+   [
+    "odocoileus_hemionus",
+    "quercus_lobata",
+    "acorns",
+    "acorn_mast",
+    [
+     "fall",
+     "winter"
+    ]
+   ],
+   [
+    "ursus_americanus",
+    "quercus_lobata",
+    "acorns",
+    "acorn_mast",
+    [
+     "fall"
+    ]
+   ],
+   [
+    "odocoileus_hemionus",
+    "umbellularia_californica",
+    "browse",
+    "browse",
+    [
+     "winter",
+     "spring"
+    ]
+   ],
+   [
+    "odocoileus_hemionus",
+    "acer_macrophyllum",
+    "browse",
+    "browse",
+    [
+     "spring",
+     "summer"
+    ]
+   ],
+   [
+    "odocoileus_hemionus",
+    "fraxinus_latifolia",
+    "browse",
+    "browse",
+    [
+     "spring",
+     "summer"
+    ]
+   ],
+   [
+    "ursus_americanus",
+    "heteromeles_arbutifolia",
+    "berries",
+    "browse",
+    [
+     "fall",
+     "winter"
+    ]
+   ],
+   [
+    "odocoileus_hemionus",
+    "heteromeles_arbutifolia",
+    "browse",
+    "browse",
+    [
+     "winter",
+     "spring",
+     "summer",
+     "fall"
+    ]
+   ],
+   [
+    "odocoileus_hemionus",
+    "cercis_occidentalis",
+    "browse",
+    "browse",
+    [
+     "spring",
+     "summer"
+    ]
+   ],
+   [
+    "odocoileus_hemionus",
+    "toxicodendron_diversilobum",
+    "browse",
+    "browse",
+    [
+     "spring",
+     "summer",
+     "fall"
+    ]
+   ],
+   [
+    "odocoileus_hemionus",
+    "baccharis_pilularis",
+    "browse",
+    "browse",
+    [
+     "winter"
+    ]
+   ],
+   [
+    "ursus_americanus",
+    "sambucus_nigra_caerulea",
+    "berries",
+    "browse",
+    [
+     "summer",
+     "fall"
+    ]
+   ],
+   [
+    "odocoileus_hemionus",
+    "sambucus_nigra_caerulea",
+    "browse",
+    "browse",
+    [
+     "spring",
+     "summer"
+    ]
+   ],
+   [
+    "ursus_americanus",
+    "frangula_californica",
+    "berries",
+    "browse",
+    [
+     "fall"
+    ]
+   ],
+   [
+    "odocoileus_hemionus",
+    "frangula_californica",
+    "browse",
+    "browse",
+    [
+     "winter",
+     "spring",
+     "summer",
+     "fall"
+    ]
+   ],
+   [
+    "ursus_americanus",
+    "arctostaphylos_manzanita",
+    "berries",
+    "browse",
+    [
+     "summer",
+     "fall"
+    ]
+   ],
+   [
+    "odocoileus_hemionus",
+    "arctostaphylos_manzanita",
+    "browse",
+    "browse",
+    [
+     "winter",
+     "spring"
+    ]
+   ],
+   [
+    "odocoileus_hemionus",
+    "ceanothus_cuneatus",
+    "browse",
+    "browse",
+    [
+     "winter",
+     "spring",
+     "summer",
+     "fall"
+    ]
+   ],
+   [
+    "odocoileus_hemionus",
+    "ceanothus_cuneatus",
+    "flowers",
+    "browse",
+    [
+     "spring"
+    ]
+   ],
+   [
+    "odocoileus_hemionus",
+    "ceanothus_integerrimus",
+    "browse",
+    "browse",
+    [
+     "spring",
+     "summer",
+     "fall"
+    ]
+   ],
+   [
+    "odocoileus_hemionus",
+    "ceanothus_integerrimus",
+    "flowers",
+    "browse",
+    [
+     "spring",
+     "summer"
+    ]
+   ],
+   [
+    "odocoileus_hemionus",
+    "cercocarpus_betuloides",
+    "browse",
+    "browse",
+    [
+     "winter",
+     "spring",
+     "summer",
+     "fall"
+    ]
+   ],
+   [
+    "odocoileus_hemionus",
+    "diplacus_aurantiacus",
+    "browse",
+    "browse",
+    [
+     "spring",
+     "summer"
+    ]
+   ],
+   [
+    "odocoileus_hemionus",
+    "rosa_californica",
+    "browse",
+    "browse",
+    [
+     "spring",
+     "summer"
+    ]
+   ],
+   [
+    "ursus_americanus",
+    "rosa_californica",
+    "berries",
+    "browse",
+    [
+     "fall",
+     "winter"
+    ]
+   ],
+   [
+    "cyanocitta_stelleri",
+    "rosa_californica",
+    "berries",
+    "browse",
+    [
+     "fall",
+     "winter"
+    ]
+   ],
+   [
+    "odocoileus_hemionus",
+    "symphoricarpos_albus",
+    "browse",
+    "browse",
+    [
+     "spring",
+     "summer",
+     "fall"
+    ]
+   ],
+   [
+    "ursus_americanus",
+    "ribes_roezlii",
+    "berries",
+    "browse",
+    [
+     "summer"
+    ]
+   ],
+   [
+    "cyanocitta_stelleri",
+    "ribes_roezlii",
+    "berries",
+    "browse",
+    [
+     "summer"
+    ]
+   ],
+   [
+    "odocoileus_hemionus",
+    "ribes_malvaceum",
+    "browse",
+    "browse",
+    [
+     "winter",
+     "spring"
+    ]
+   ],
+   [
+    "ursus_americanus",
+    "ribes_malvaceum",
+    "berries",
+    "browse",
+    [
+     "spring",
+     "summer"
+    ]
+   ],
+   [
+    "odocoileus_hemionus",
+    "stipa_pulchra",
+    "leaves",
+    "grass_forbs",
+    [
+     "winter",
+     "spring"
+    ]
+   ],
+   [
+    "odocoileus_hemionus",
+    "elymus_glaucus",
+    "leaves",
+    "grass_forbs",
+    [
+     "winter",
+     "spring",
+     "fall"
+    ]
+   ],
+   [
+    "odocoileus_hemionus",
+    "danthonia_californica",
+    "leaves",
+    "grass_forbs",
+    [
+     "winter",
+     "spring"
+    ]
+   ],
+   [
+    "odocoileus_hemionus",
+    "avena_fatua",
+    "leaves",
+    "grass_forbs",
+    [
+     "winter",
+     "spring"
+    ]
+   ],
+   [
+    "odocoileus_hemionus",
+    "bromus_hordeaceus",
+    "leaves",
+    "grass_forbs",
+    [
+     "winter",
+     "spring"
+    ]
+   ],
+   [
+    "odocoileus_hemionus",
+    "bromus_diandrus",
+    "leaves",
+    "grass_forbs",
+    [
+     "winter",
+     "spring"
+    ]
+   ],
+   [
+    "odocoileus_hemionus",
+    "hordeum_murinum",
+    "leaves",
+    "grass_forbs",
+    [
+     "winter"
+    ]
+   ],
+   [
+    "odocoileus_hemionus",
+    "eschscholzia_californica",
+    "leaves",
+    "grass_forbs",
+    [
+     "spring"
+    ]
+   ],
+   [
+    "odocoileus_hemionus",
+    "lupinus_bicolor",
+    "leaves",
+    "grass_forbs",
+    [
+     "spring"
+    ]
+   ],
+   [
+    "odocoileus_hemionus",
+    "claytonia_perfoliata",
+    "leaves",
+    "grass_forbs",
+    [
+     "winter",
+     "spring"
+    ]
+   ],
+   [
+    "odocoileus_hemionus",
+    "trifolium_willdenovii",
+    "leaves",
+    "grass_forbs",
+    [
+     "winter",
+     "spring"
+    ]
+   ],
+   [
+    "odocoileus_hemionus",
+    "trifolium_willdenovii",
+    "flowers",
+    "grass_forbs",
+    [
+     "spring"
+    ]
+   ],
+   [
+    "ursus_americanus",
+    "chlorogalum_pomeridianum",
+    "bulbs",
+    "grass_forbs",
+    [
+     "spring",
+     "fall"
+    ]
+   ],
+   [
+    "odocoileus_hemionus",
+    "chlorogalum_pomeridianum",
+    "leaves",
+    "grass_forbs",
+    [
+     "winter",
+     "spring"
+    ]
+   ],
+   [
+    "odocoileus_hemionus",
+    "achillea_millefolium",
+    "leaves",
+    "grass_forbs",
+    [
+     "spring",
+     "summer"
+    ]
+   ],
+   [
+    "odocoileus_hemionus",
+    "wyethia_helenioides",
+    "leaves",
+    "grass_forbs",
+    [
+     "spring"
+    ]
+   ],
+   [
+    "odocoileus_hemionus",
+    "wyethia_helenioides",
+    "flowers",
+    "grass_forbs",
+    [
+     "spring"
+    ]
+   ],
+   [
+    "ursus_americanus",
+    "dipterostemon_capitatus",
+    "bulbs",
+    "grass_forbs",
+    [
+     "spring"
+    ]
+   ],
+   [
+    "odocoileus_hemionus",
+    "dipterostemon_capitatus",
+    "flowers",
+    "grass_forbs",
+    [
+     "spring"
+    ]
+   ],
+   [
+    "odocoileus_hemionus",
+    "erodium_cicutarium",
+    "leaves",
+    "grass_forbs",
+    [
+     "winter",
+     "spring"
+    ]
+   ],
+   [
+    "odocoileus_hemionus",
+    "vicia_villosa",
+    "leaves",
+    "grass_forbs",
+    [
+     "spring"
+    ]
+   ],
+   [
+    "odocoileus_hemionus",
+    "salix_laevigata",
+    "browse",
+    "browse",
+    [
+     "spring",
+     "summer"
+    ]
+   ],
+   [
+    "odocoileus_hemionus",
+    "salix_lasiandra",
+    "browse",
+    "browse",
+    [
+     "spring",
+     "summer"
+    ]
+   ],
+   [
+    "odocoileus_hemionus",
+    "platanus_racemosa",
+    "browse",
+    "browse",
+    [
+     "spring"
+    ]
+   ],
+   [
+    "odocoileus_hemionus",
+    "salix_exigua",
+    "browse",
+    "browse",
+    [
+     "spring",
+     "summer"
+    ]
+   ],
+   [
+    "odocoileus_hemionus",
+    "cephalanthus_occidentalis",
+    "browse",
+    "browse",
+    [
+     "summer"
+    ]
+   ],
+   [
+    "odocoileus_hemionus",
+    "cornus_sericea",
+    "browse",
+    "browse",
+    [
+     "spring",
+     "summer",
+     "fall"
+    ]
+   ],
+   [
+    "ursus_americanus",
+    "cornus_sericea",
+    "berries",
+    "browse",
+    [
+     "summer",
+     "fall"
+    ]
+   ],
+   [
+    "cyanocitta_stelleri",
+    "cornus_sericea",
+    "berries",
+    "browse",
+    [
+     "summer",
+     "fall"
+    ]
+   ],
+   [
+    "ursus_americanus",
+    "rubus_ursinus",
+    "berries",
+    "browse",
+    [
+     "summer"
+    ]
+   ],
+   [
+    "cyanocitta_stelleri",
+    "rubus_ursinus",
+    "berries",
+    "browse",
+    [
+     "summer"
+    ]
+   ],
+   [
+    "odocoileus_hemionus",
+    "rubus_ursinus",
+    "browse",
+    "browse",
+    [
+     "winter",
+     "spring",
+     "summer"
+    ]
+   ],
+   [
+    "ursus_americanus",
+    "vitis_californica",
+    "berries",
+    "browse",
+    [
+     "fall"
+    ]
+   ],
+   [
+    "cyanocitta_stelleri",
+    "vitis_californica",
+    "berries",
+    "browse",
+    [
+     "fall"
+    ]
+   ],
+   [
+    "odocoileus_hemionus",
+    "vitis_californica",
+    "browse",
+    "browse",
+    [
+     "spring",
+     "summer"
+    ]
+   ],
+   [
+    "odocoileus_hemionus",
+    "carex_barbarae",
+    "leaves",
+    "grass_forbs",
+    [
+     "winter",
+     "spring"
+    ]
+   ],
+   [
+    "odocoileus_hemionus",
+    "carex_nudata",
+    "leaves",
+    "grass_forbs",
+    [
+     "summer"
+    ]
+   ],
+   [
+    "odocoileus_hemionus",
+    "artemisia_douglasiana",
+    "leaves",
+    "grass_forbs",
+    [
+     "spring"
+    ]
+   ],
+   [
+    "odocoileus_hemionus",
+    "urtica_dioica",
+    "leaves",
+    "grass_forbs",
+    [
+     "spring"
+    ]
+   ],
+   [
+    "odocoileus_hemionus",
+    "erythranthe_guttata",
+    "leaves",
+    "grass_forbs",
+    [
+     "spring",
+     "summer"
+    ]
+   ],
+   [
+    "odocoileus_hemionus",
+    "nasturtium_officinale",
+    "leaves",
+    "grass_forbs",
+    [
+     "winter",
+     "spring",
+     "summer"
+    ]
+   ],
+   [
+    "cyanocitta_stelleri",
+    "abies_concolor",
+    "seeds",
+    "grass_forbs",
+    [
+     "fall"
+    ]
+   ],
+   [
+    "odocoileus_hemionus",
+    "abies_concolor",
+    "browse",
+    "browse",
+    [
+     "spring",
+     "summer"
+    ]
+   ],
+   [
+    "cyanocitta_stelleri",
+    "abies_magnifica",
+    "seeds",
+    "grass_forbs",
+    [
+     "fall"
+    ]
+   ],
+   [
+    "odocoileus_hemionus",
+    "abies_magnifica",
+    "browse",
+    "browse",
+    [
+     "summer"
+    ]
+   ],
+   [
+    "ursus_americanus",
+    "arctostaphylos_patula",
+    "berries",
+    "browse",
+    [
+     "summer",
+     "fall"
+    ]
+   ],
+   [
+    "odocoileus_hemionus",
+    "arctostaphylos_patula",
+    "browse",
+    "browse",
+    [
+     "winter",
+     "spring"
+    ]
+   ],
+   [
+    "odocoileus_hemionus",
+    "artemisia_californica",
+    "browse",
+    "browse",
+    [
+     "winter",
+     "spring"
+    ]
+   ],
+   [
+    "odocoileus_hemionus",
+    "artemisia_tridentata",
+    "browse",
+    "browse",
+    [
+     "fall",
+     "winter"
+    ]
+   ],
+   [
+    "odocoileus_hemionus",
+    "ceanothus_cordulatus",
+    "browse",
+    "browse",
+    [
+     "spring",
+     "summer",
+     "fall"
+    ]
+   ],
+   [
+    "odocoileus_hemionus",
+    "cercocarpus_ledifolius",
+    "browse",
+    "browse",
+    [
+     "winter",
+     "spring",
+     "summer",
+     "fall"
+    ]
+   ],
+   [
+    "odocoileus_hemionus",
+    "chamaebatia_foliolosa",
+    "browse",
+    "browse",
+    [
+     "winter"
+    ]
+   ],
+   [
+    "cyanocitta_stelleri",
+    "chrysolepis_sempervirens",
+    "seeds",
+    "grass_forbs",
+    [
+     "fall"
+    ]
+   ],
+   [
+    "odocoileus_hemionus",
+    "gaultheria_shallon",
+    "browse",
+    "browse",
+    [
+     "fall",
+     "winter"
+    ]
+   ],
+   [
+    "ursus_americanus",
+    "gaultheria_shallon",
+    "berries",
+    "browse",
+    [
+     "summer",
+     "fall"
+    ]
+   ],
+   [
+    "cyanocitta_stelleri",
+    "gaultheria_shallon",
+    "berries",
+    "browse",
+    [
+     "fall"
+    ]
+   ],
+   [
+    "cyanocitta_stelleri",
+    "juniperus_grandis",
+    "berries",
+    "browse",
+    [
+     "fall",
+     "winter"
+    ]
+   ],
+   [
+    "odocoileus_hemionus",
+    "lupinus_arboreus",
+    "browse",
+    "browse",
+    [
+     "spring"
+    ]
+   ],
+   [
+    "cyanocitta_stelleri",
+    "notholithocarpus_densiflorus",
+    "acorns",
+    "acorn_mast",
+    [
+     "fall",
+     "winter"
+    ]
+   ],
+   [
+    "odocoileus_hemionus",
+    "notholithocarpus_densiflorus",
+    "acorns",
+    "acorn_mast",
+    [
+     "fall"
+    ]
+   ],
+   [
+    "odocoileus_hemionus",
+    "notholithocarpus_densiflorus",
+    "browse",
+    "browse",
+    [
+     "spring",
+     "summer"
+    ]
+   ],
+   [
+    "ursus_americanus",
+    "notholithocarpus_densiflorus",
+    "acorns",
+    "acorn_mast",
+    [
+     "fall"
+    ]
+   ],
+   [
+    "cyanocitta_stelleri",
+    "pinus_albicaulis",
+    "seeds",
+    "grass_forbs",
+    [
+     "summer",
+     "fall"
+    ]
+   ],
+   [
+    "ursus_americanus",
+    "pinus_albicaulis",
+    "seeds",
+    "grass_forbs",
+    [
+     "fall"
+    ]
+   ],
+   [
+    "cyanocitta_stelleri",
+    "pinus_contorta",
+    "seeds",
+    "grass_forbs",
+    [
+     "fall"
+    ]
+   ],
+   [
+    "odocoileus_hemionus",
+    "pinus_contorta",
+    "browse",
+    "browse",
+    [
+     "summer"
+    ]
+   ],
+   [
+    "cyanocitta_stelleri",
+    "pinus_jeffreyi",
+    "seeds",
+    "grass_forbs",
+    [
+     "fall"
+    ]
+   ],
+   [
+    "ursus_americanus",
+    "pinus_jeffreyi",
+    "seeds",
+    "grass_forbs",
+    [
+     "fall"
+    ]
+   ],
+   [
+    "cyanocitta_stelleri",
+    "pinus_lambertiana",
+    "seeds",
+    "grass_forbs",
+    [
+     "fall"
+    ]
+   ],
+   [
+    "ursus_americanus",
+    "pinus_lambertiana",
+    "seeds",
+    "grass_forbs",
+    [
+     "fall"
+    ]
+   ],
+   [
+    "cyanocitta_stelleri",
+    "pinus_monticola",
+    "seeds",
+    "grass_forbs",
+    [
+     "fall"
+    ]
+   ],
+   [
+    "cyanocitta_stelleri",
+    "pinus_radiata",
+    "seeds",
+    "grass_forbs",
+    [
+     "fall",
+     "winter"
+    ]
+   ],
+   [
+    "odocoileus_hemionus",
+    "pinus_radiata",
+    "browse",
+    "browse",
+    [
+     "spring"
+    ]
+   ],
+   [
+    "odocoileus_hemionus",
+    "populus_tremuloides",
+    "browse",
+    "browse",
+    [
+     "spring",
+     "summer",
+     "fall"
+    ]
+   ],
+   [
+    "odocoileus_hemionus",
+    "populus_tremuloides",
+    "leaves",
+    "browse",
+    [
+     "summer",
+     "fall"
+    ]
+   ],
+   [
+    "ursus_americanus",
+    "populus_tremuloides",
+    "leaves",
+    "browse",
+    [
+     "spring"
+    ]
+   ],
+   [
+    "odocoileus_hemionus",
+    "quercus_agrifolia",
+    "acorns",
+    "acorn_mast",
+    [
+     "fall"
+    ]
+   ],
+   [
+    "odocoileus_hemionus",
+    "quercus_agrifolia",
+    "browse",
+    "browse",
+    [
+     "spring",
+     "summer"
+    ]
+   ],
+   [
+    "ursus_americanus",
+    "quercus_agrifolia",
+    "acorns",
+    "acorn_mast",
+    [
+     "fall"
+    ]
+   ],
+   [
+    "ursus_americanus",
+    "quercus_vacciniifolia",
+    "acorns",
+    "acorn_mast",
+    [
+     "fall"
+    ]
+   ],
+   [
+    "odocoileus_hemionus",
+    "quercus_vacciniifolia",
+    "acorns",
+    "acorn_mast",
+    [
+     "fall"
+    ]
+   ],
+   [
+    "odocoileus_hemionus",
+    "quercus_vacciniifolia",
+    "browse",
+    "browse",
+    [
+     "spring",
+     "summer"
+    ]
+   ],
+   [
+    "cyanocitta_stelleri",
+    "quercus_vacciniifolia",
+    "acorns",
+    "acorn_mast",
+    [
+     "fall"
+    ]
+   ],
+   [
+    "odocoileus_hemionus",
+    "sequoia_sempervirens",
+    "browse",
+    "browse",
+    [
+     "spring"
+    ]
+   ],
+   [
+    "odocoileus_hemionus",
+    "sequoiadendron_giganteum",
+    "browse",
+    "browse",
+    [
+     "spring",
+     "summer"
+    ]
+   ],
+   [
+    "odocoileus_hemionus",
+    "tsuga_mertensiana",
+    "browse",
+    "browse",
+    [
+     "summer"
+    ]
+   ],
+   [
+    "ursus_americanus",
+    "vaccinium_ovatum",
+    "berries",
+    "browse",
+    [
+     "summer",
+     "fall"
+    ]
+   ],
+   [
+    "cyanocitta_stelleri",
+    "vaccinium_ovatum",
+    "berries",
+    "browse",
+    [
+     "summer",
+     "fall"
+    ]
+   ],
+   [
+    "odocoileus_hemionus",
+    "vaccinium_ovatum",
+    "browse",
+    "browse",
+    [
+     "winter",
+     "spring",
+     "summer",
+     "fall"
+    ]
+   ],
+   [
+    "ursus_americanus",
+    "rubus_parviflorus",
+    "berries",
+    "browse",
+    [
+     "summer"
+    ]
+   ],
+   [
+    "cyanocitta_stelleri",
+    "rubus_parviflorus",
+    "berries",
+    "browse",
+    [
+     "summer"
+    ]
+   ],
+   [
+    "odocoileus_hemionus",
+    "rubus_parviflorus",
+    "browse",
+    "browse",
+    [
+     "spring",
+     "summer"
+    ]
+   ],
+   [
+    "odocoileus_hemionus",
+    "populus_trichocarpa",
+    "browse",
+    "browse",
+    [
+     "spring",
+     "summer"
+    ]
+   ],
+   [
+    "odocoileus_hemionus",
+    "acer_circinatum",
+    "browse",
+    "browse",
+    [
+     "spring",
+     "summer",
+     "winter"
+    ]
+   ],
+   [
+    "cyanocitta_stelleri",
+    "acer_circinatum",
+    "seeds",
+    "grass_forbs",
+    [
+     "fall"
+    ]
+   ],
+   [
+    "odocoileus_hemionus",
+    "polystichum_munitum",
+    "leaves",
+    "grass_forbs",
+    [
+     "winter",
+     "spring"
+    ]
+   ],
+   [
+    "cyanocitta_stelleri",
+    "abies_amabilis",
+    "seeds",
+    "grass_forbs",
+    [
+     "fall"
+    ]
+   ],
+   [
+    "odocoileus_hemionus",
+    "abies_amabilis",
+    "browse",
+    "browse",
+    [
+     "winter"
+    ]
+   ],
+   [
+    "odocoileus_hemionus",
+    "tsuga_heterophylla",
+    "browse",
+    "browse",
+    [
+     "winter",
+     "spring"
+    ]
+   ],
+   [
+    "cyanocitta_stelleri",
+    "tsuga_heterophylla",
+    "seeds",
+    "grass_forbs",
+    [
+     "fall"
+    ]
+   ],
+   [
+    "odocoileus_hemionus",
+    "thuja_plicata",
+    "browse",
+    "browse",
+    [
+     "winter"
+    ]
+   ],
+   [
+    "ursus_americanus",
+    "vaccinium_parvifolium",
+    "berries",
+    "browse",
+    [
+     "summer"
+    ]
+   ],
+   [
+    "odocoileus_hemionus",
+    "vaccinium_parvifolium",
+    "browse",
+    "browse",
+    [
+     "fall",
+     "winter"
+    ]
+   ],
+   [
+    "cyanocitta_stelleri",
+    "vaccinium_parvifolium",
+    "berries",
+    "browse",
+    [
+     "summer"
+    ]
+   ],
+   [
+    "odocoileus_hemionus",
+    "mahonia_nervosa",
+    "browse",
+    "browse",
+    [
+     "winter"
+    ]
+   ],
+   [
+    "odocoileus_hemionus",
+    "mahonia_nervosa",
+    "berries",
+    "browse",
+    [
+     "fall"
+    ]
+   ],
+   [
+    "cyanocitta_stelleri",
+    "mahonia_nervosa",
+    "berries",
+    "browse",
+    [
+     "fall"
+    ]
+   ],
+   [
+    "ursus_americanus",
+    "oplopanax_horridus",
+    "berries",
+    "browse",
+    [
+     "summer",
+     "fall"
+    ]
+   ],
+   [
+    "odocoileus_hemionus",
+    "oplopanax_horridus",
+    "browse",
+    "browse",
+    [
+     "spring",
+     "summer"
+    ]
+   ],
+   [
+    "odocoileus_hemionus",
+    "alnus_rubra",
+    "browse",
+    "browse",
+    [
+     "fall",
+     "winter",
+     "spring"
+    ]
+   ],
+   [
+    "ursus_americanus",
+    "rubus_spectabilis",
+    "berries",
+    "browse",
+    [
+     "summer"
+    ]
+   ],
+   [
+    "cyanocitta_stelleri",
+    "rubus_spectabilis",
+    "berries",
+    "browse",
+    [
+     "summer"
+    ]
+   ],
+   [
+    "odocoileus_hemionus",
+    "rubus_spectabilis",
+    "browse",
+    "browse",
+    [
+     "spring",
+     "summer"
+    ]
+   ],
+   [
+    "odocoileus_hemionus",
+    "picea_sitchensis",
+    "browse",
+    "browse",
+    [
+     "spring"
+    ]
+   ],
+   [
+    "cyanocitta_stelleri",
+    "picea_sitchensis",
+    "seeds",
+    "grass_forbs",
+    [
+     "fall"
+    ]
+   ],
+   [
+    "cyanocitta_stelleri",
+    "abies_lasiocarpa",
+    "seeds",
+    "grass_forbs",
+    [
+     "fall"
+    ]
+   ],
+   [
+    "odocoileus_hemionus",
+    "abies_lasiocarpa",
+    "browse",
+    "browse",
+    [
+     "summer"
+    ]
+   ],
+   [
+    "odocoileus_hemionus",
+    "oxalis_oregana",
+    "leaves",
+    "grass_forbs",
+    [
+     "spring",
+     "summer",
+     "fall"
+    ]
+   ]
+  ],
+  "cover": [
+   [
+    "odocoileus_hemionus",
+    "salix_lasiolepis"
+   ],
+   [
+    "buteo_jamaicensis",
+    "populus_fremontii"
+   ],
+   [
+    "buteo_jamaicensis",
+    "platanus_racemosa"
+   ],
+   [
+    "cyanocitta_stelleri",
+    "abies_concolor"
+   ],
+   [
+    "odocoileus_hemionus",
+    "abies_concolor"
+   ],
+   [
+    "ursus_americanus",
+    "abies_concolor"
+   ],
+   [
+    "odocoileus_hemionus",
+    "abies_magnifica"
+   ],
+   [
+    "cyanocitta_stelleri",
+    "abies_magnifica"
+   ],
+   [
+    "odocoileus_hemionus",
+    "cercocarpus_ledifolius"
+   ],
+   [
+    "odocoileus_hemionus",
+    "gaultheria_shallon"
+   ],
+   [
+    "cyanocitta_stelleri",
+    "hesperocyparis_macrocarpa"
+   ],
+   [
+    "corvus_corax",
+    "hesperocyparis_macrocarpa"
+   ],
+   [
+    "buteo_jamaicensis",
+    "hesperocyparis_macrocarpa"
+   ],
+   [
+    "cyanocitta_stelleri",
+    "notholithocarpus_densiflorus"
+   ],
+   [
+    "odocoileus_hemionus",
+    "pinus_contorta"
+   ],
+   [
+    "cyanocitta_stelleri",
+    "pinus_jeffreyi"
+   ],
+   [
+    "cyanocitta_stelleri",
+    "pinus_lambertiana"
+   ],
+   [
+    "cyanocitta_stelleri",
+    "pinus_monticola"
+   ],
+   [
+    "cyanocitta_stelleri",
+    "pinus_radiata"
+   ],
+   [
+    "odocoileus_hemionus",
+    "pinus_radiata"
+   ],
+   [
+    "odocoileus_hemionus",
+    "populus_tremuloides"
+   ],
+   [
+    "odocoileus_hemionus",
+    "sequoia_sempervirens"
+   ],
+   [
+    "cyanocitta_stelleri",
+    "sequoia_sempervirens"
+   ],
+   [
+    "ursus_americanus",
+    "sequoiadendron_giganteum"
+   ],
+   [
+    "cyanocitta_stelleri",
+    "sequoiadendron_giganteum"
+   ],
+   [
+    "odocoileus_hemionus",
+    "tsuga_mertensiana"
+   ],
+   [
+    "odocoileus_hemionus",
+    "rubus_parviflorus"
+   ],
+   [
+    "odocoileus_hemionus",
+    "populus_trichocarpa"
+   ],
+   [
+    "buteo_jamaicensis",
+    "populus_trichocarpa"
+   ],
+   [
+    "corvus_corax",
+    "populus_trichocarpa"
+   ],
+   [
+    "odocoileus_hemionus",
+    "acer_circinatum"
+   ],
+   [
+    "cyanocitta_stelleri",
+    "acer_circinatum"
+   ],
+   [
+    "odocoileus_hemionus",
+    "polystichum_munitum"
+   ],
+   [
+    "odocoileus_hemionus",
+    "abies_amabilis"
+   ],
+   [
+    "ursus_americanus",
+    "abies_amabilis"
+   ],
+   [
+    "cyanocitta_stelleri",
+    "abies_amabilis"
+   ],
+   [
+    "odocoileus_hemionus",
+    "tsuga_heterophylla"
+   ],
+   [
+    "ursus_americanus",
+    "tsuga_heterophylla"
+   ],
+   [
+    "cyanocitta_stelleri",
+    "tsuga_heterophylla"
+   ],
+   [
+    "odocoileus_hemionus",
+    "thuja_plicata"
+   ],
+   [
+    "ursus_americanus",
+    "thuja_plicata"
+   ],
+   [
+    "cyanocitta_stelleri",
+    "thuja_plicata"
+   ],
+   [
+    "odocoileus_hemionus",
+    "vaccinium_parvifolium"
+   ],
+   [
+    "odocoileus_hemionus",
+    "alnus_rubra"
+   ],
+   [
+    "ursus_americanus",
+    "alnus_rubra"
+   ],
+   [
+    "odocoileus_hemionus",
+    "rubus_spectabilis"
+   ],
+   [
+    "ursus_americanus",
+    "rubus_spectabilis"
+   ],
+   [
+    "odocoileus_hemionus",
+    "picea_sitchensis"
+   ],
+   [
+    "ursus_americanus",
+    "picea_sitchensis"
+   ],
+   [
+    "cyanocitta_stelleri",
+    "picea_sitchensis"
+   ],
+   [
+    "odocoileus_hemionus",
+    "abies_lasiocarpa"
+   ],
+   [
+    "ursus_americanus",
+    "abies_lasiocarpa"
+   ]
+  ]
+ },
+ "resources": {
+  "acorn_mast": {
+   "winter": {
+    "scarcity": 1.0,
+    "mean": 3.7,
+    "hotspots": 0
+   },
+   "spring": {
+    "scarcity": 1.0,
+    "mean": 0.7,
+    "hotspots": 0
+   },
+   "summer": {
+    "scarcity": 1.0,
+    "mean": 0.0,
+    "hotspots": 0
+   },
+   "fall": {
+    "scarcity": 0.995,
+    "mean": 7.5,
+    "hotspots": 12
+   }
+  },
+  "grass_forbs": {
+   "winter": {
+    "scarcity": 0.988,
+    "mean": 3.1,
+    "hotspots": 12
+   },
+   "spring": {
+    "scarcity": 0.988,
+    "mean": 5.2,
+    "hotspots": 12
+   },
+   "summer": {
+    "scarcity": 1.0,
+    "mean": 1.0,
+    "hotspots": 0
+   },
+   "fall": {
+    "scarcity": 1.0,
+    "mean": 1.2,
+    "hotspots": 0
+   }
+  },
+  "browse": {
+   "winter": {
+    "scarcity": 1.0,
+    "mean": 13.4,
+    "hotspots": 12
+   },
+   "spring": {
+    "scarcity": 0.967,
+    "mean": 22.3,
+    "hotspots": 12
+   },
+   "summer": {
+    "scarcity": 0.992,
+    "mean": 15.6,
+    "hotspots": 12
+   },
+   "fall": {
+    "scarcity": 1.0,
+    "mean": 11.2,
+    "hotspots": 12
+   }
+  },
+  "cover": {
+   "winter": {
+    "scarcity": 0.302,
+    "mean": 53.7,
+    "hotspots": 12
+   },
+   "spring": {
+    "scarcity": 0.302,
+    "mean": 63.7,
+    "hotspots": 12
+   },
+   "summer": {
+    "scarcity": 0.302,
+    "mean": 63.7,
+    "hotspots": 12
+   },
+   "fall": {
+    "scarcity": 0.302,
+    "mean": 63.7,
+    "hotspots": 12
+   }
+  },
+  "insects": {
+   "winter": {
+    "scarcity": 1.0,
+    "mean": 3.0,
+    "hotspots": 0
+   },
+   "spring": {
+    "scarcity": 0.955,
+    "mean": 29.9,
+    "hotspots": 12
+   },
+   "summer": {
+    "scarcity": 0.969,
+    "mean": 23.9,
+    "hotspots": 12
+   },
+   "fall": {
+    "scarcity": 1.0,
+    "mean": 11.9,
+    "hotspots": 0
+   }
+  },
+  "cavity": {
+   "winter": {
+    "scarcity": 0.409,
+    "mean": 39.3,
+    "hotspots": 12
+   },
+   "spring": {
+    "scarcity": 0.409,
+    "mean": 39.3,
+    "hotspots": 12
+   },
+   "summer": {
+    "scarcity": 0.409,
+    "mean": 39.3,
+    "hotspots": 12
+   },
+   "fall": {
+    "scarcity": 0.409,
+    "mean": 39.3,
+    "hotspots": 12
+   }
+  },
+  "cliff_or_snag": {
+   "winter": {
+    "scarcity": 0.027,
+    "mean": 75.2,
+    "hotspots": 12
+   },
+   "spring": {
+    "scarcity": 0.027,
+    "mean": 75.2,
+    "hotspots": 12
+   },
+   "summer": {
+    "scarcity": 0.027,
+    "mean": 75.2,
+    "hotspots": 12
+   },
+   "fall": {
+    "scarcity": 0.027,
+    "mean": 75.2,
+    "hotspots": 12
+   }
+  },
+  "burrow": {
+   "winter": {
+    "scarcity": 0.988,
+    "mean": 17.0,
+    "hotspots": 12
+   },
+   "spring": {
+    "scarcity": 0.98,
+    "mean": 21.3,
+    "hotspots": 12
+   },
+   "summer": {
+    "scarcity": 0.98,
+    "mean": 21.3,
+    "hotspots": 12
+   },
+   "fall": {
+    "scarcity": 0.98,
+    "mean": 21.3,
+    "hotspots": 12
+   }
+  },
+  "water": {
+   "winter": {
+    "scarcity": 0.574,
+    "mean": 55.9,
+    "hotspots": 12
+   },
+   "spring": {
+    "scarcity": 0.574,
+    "mean": 55.9,
+    "hotspots": 12
+   },
+   "summer": {
+    "scarcity": 0.683,
+    "mean": 41.9,
+    "hotspots": 12
+   },
+   "fall": {
+    "scarcity": 0.683,
+    "mean": 41.9,
+    "hotspots": 12
+   }
+  }
+ },
+ "species": {
+  "corvus_corax": {
+   "unit": "pair",
+   "predators": [],
+   "prey": [],
+   "games": [
+    {
+     "id": "corvus_corax:winter:forage",
+     "archetype": "gather",
+     "verb": "forage",
+     "season": "winter",
+     "unit": "pair",
+     "collective": true,
+     "goal": "follow predators to kills"
+    },
+    {
+     "id": "corvus_corax:winter:court:cliff_or_snag",
+     "archetype": "court",
+     "verb": "court",
+     "season": "winter",
+     "unit": "pair",
+     "collective": true,
+     "goal": "pair up before nesting",
+     "resource": "cliff_or_snag",
+     "requires": [
+      {
+       "object": "snags, cliffs and tall perch trees",
+       "client": "vegetation.js (old trees), rocks.js",
+       "status": "partial"
+      }
+     ],
+     "raster": "client/res_cliff_or_snag.png",
+     "hotspots": [
+      [
+       6651.7,
+       9985.0,
+       90
+      ],
+      [
+       7012.0,
+       9985.0,
+       90
+      ],
+      [
+       7732.7,
+       9985.0,
+       90
+      ],
+      [
+       7882.9,
+       9985.0,
+       90
+      ],
+      [
+       8093.1,
+       9985.0,
+       90
+      ],
+      [
+       8243.2,
+       9985.0,
+       90
+      ],
+      [
+       8393.4,
+       9985.0,
+       90
+      ],
+      [
+       8693.7,
+       9985.0,
+       90
+      ],
+      [
+       9144.1,
+       9985.0,
+       90
+      ],
+      [
+       9294.3,
+       9985.0,
+       90
+      ],
+      [
+       9444.4,
+       9985.0,
+       90
+      ],
+      [
+       9774.8,
+       9985.0,
+       90
+      ]
+     ],
+     "scarcity": 0.027,
+     "competitors": []
+    },
+    {
+     "id": "corvus_corax:spring:nest:cliff_or_snag",
+     "archetype": "shelter",
+     "verb": "nest",
+     "season": "spring",
+     "unit": "pair",
+     "collective": true,
+     "goal": "build a stick nest",
+     "resource": "cliff_or_snag",
+     "requires": [
+      {
+       "object": "snags, cliffs and tall perch trees",
+       "client": "vegetation.js (old trees), rocks.js",
+       "status": "partial"
+      }
+     ],
+     "raster": "client/res_cliff_or_snag.png",
+     "hotspots": [
+      [
+       6651.7,
+       9985.0,
+       90
+      ],
+      [
+       7012.0,
+       9985.0,
+       90
+      ],
+      [
+       7732.7,
+       9985.0,
+       90
+      ],
+      [
+       7882.9,
+       9985.0,
+       90
+      ],
+      [
+       8093.1,
+       9985.0,
+       90
+      ],
+      [
+       8243.2,
+       9985.0,
+       90
+      ],
+      [
+       8393.4,
+       9985.0,
+       90
+      ],
+      [
+       8693.7,
+       9985.0,
+       90
+      ],
+      [
+       9144.1,
+       9985.0,
+       90
+      ],
+      [
+       9294.3,
+       9985.0,
+       90
+      ],
+      [
+       9444.4,
+       9985.0,
+       90
+      ],
+      [
+       9774.8,
+       9985.0,
+       90
+      ]
+     ],
+     "scarcity": 0.027,
+     "competitors": [
+      "buteo_jamaicensis"
+     ]
+    },
+    {
+     "id": "corvus_corax:spring:rear:insects",
+     "archetype": "rear",
+     "verb": "rear",
+     "season": "spring",
+     "unit": "pair",
+     "collective": true,
+     "goal": "feed nestlings",
+     "resource": "insects",
+     "requires": [
+      {
+       "object": "insects",
+       "client": null,
+       "status": "missing"
+      }
+     ],
+     "raster": "client/res_insects.png",
+     "hotspots": [
+      [
+       2237.2,
+       9985.0,
+       90
+      ],
+      [
+       2837.8,
+       9985.0,
+       90
+      ],
+      [
+       2988.0,
+       9985.0,
+       90
+      ],
+      [
+       3228.2,
+       9985.0,
+       90
+      ],
+      [
+       3378.4,
+       9985.0,
+       90
+      ],
+      [
+       3528.5,
+       9985.0,
+       90
+      ],
+      [
+       3678.7,
+       9985.0,
+       90
+      ],
+      [
+       4129.1,
+       9985.0,
+       90
+      ],
+      [
+       4279.3,
+       9985.0,
+       90
+      ],
+      [
+       4549.5,
+       9985.0,
+       90
+      ],
+      [
+       4699.7,
+       9985.0,
+       90
+      ],
+      [
+       4970.0,
+       9985.0,
+       90
+      ]
+     ],
+     "scarcity": 0.955,
+     "competitors": []
+    },
+    {
+     "id": "corvus_corax:summer:forage:insects",
+     "archetype": "gather",
+     "verb": "forage",
+     "season": "summer",
+     "unit": "pair",
+     "collective": true,
+     "resource": "insects",
+     "requires": [
+      {
+       "object": "insects",
+       "client": null,
+       "status": "missing"
+      }
+     ],
+     "raster": "client/res_insects.png",
+     "hotspots": [
+      [
+       2237.2,
+       9985.0,
+       72
+      ],
+      [
+       2837.8,
+       9985.0,
+       72
+      ],
+      [
+       2988.0,
+       9985.0,
+       72
+      ],
+      [
+       3228.2,
+       9985.0,
+       72
+      ],
+      [
+       3378.4,
+       9985.0,
+       72
+      ],
+      [
+       3528.5,
+       9985.0,
+       72
+      ],
+      [
+       3678.7,
+       9985.0,
+       72
+      ],
+      [
+       4129.1,
+       9985.0,
+       72
+      ],
+      [
+       4279.3,
+       9985.0,
+       72
+      ],
+      [
+       4549.5,
+       9985.0,
+       72
+      ],
+      [
+       4699.7,
+       9985.0,
+       72
+      ],
+      [
+       4970.0,
+       9985.0,
+       72
+      ]
+     ],
+     "scarcity": 0.969,
+     "competitors": [
+      "cyanocitta_stelleri",
+      "ursus_americanus"
+     ],
+     "plants": []
+    },
+    {
+     "id": "corvus_corax:summer:rear:cover",
+     "archetype": "rear",
+     "verb": "rear",
+     "season": "summer",
+     "unit": "pair",
+     "collective": true,
+     "goal": "fledglings",
+     "resource": "cover",
+     "requires": [
+      {
+       "object": "shrubs and trees to hide in",
+       "client": "shrubfield.js, vegetation.js",
+       "status": "drawn"
+      }
+     ],
+     "raster": "client/res_cover.png",
+     "hotspots": [
+      [
+       2837.8,
+       9804.8,
+       90
+      ],
+      [
+       1606.6,
+       9624.6,
+       90
+      ],
+      [
+       585.6,
+       9534.5,
+       90
+      ],
+      [
+       7072.1,
+       7792.8,
+       90
+      ],
+      [
+       6741.7,
+       7522.5,
+       90
+      ],
+      [
+       5150.2,
+       7492.5,
+       90
+      ],
+      [
+       8153.2,
+       7462.5,
+       90
+      ],
+      [
+       6711.7,
+       7372.4,
+       90
+      ],
+      [
+       7012.0,
+       7282.3,
+       90
+      ],
+      [
+       6651.7,
+       7192.2,
+       90
+      ],
+      [
+       6831.8,
+       7162.2,
+       90
+      ],
+      [
+       6531.5,
+       7042.0,
+       90
+      ]
+     ],
+     "scarcity": 0.302,
+     "competitors": [
+      "odocoileus_hemionus",
+      "ursus_americanus"
+     ]
+    },
+    {
+     "id": "corvus_corax:fall:forage:acorn_mast",
+     "archetype": "gather",
+     "verb": "forage",
+     "season": "fall",
+     "unit": "pair",
+     "collective": true,
+     "resource": "acorn_mast",
+     "requires": [
+      {
+       "object": "acorns under and in the oaks",
+       "client": "acorns.js",
+       "status": "drawn"
+      }
+     ],
+     "raster": "client/res_acorn_mast.png",
+     "hotspots": [
+      [
+       705.7,
+       9985.0,
+       50
+      ],
+      [
+       855.9,
+       9985.0,
+       50
+      ],
+      [
+       1576.6,
+       9985.0,
+       50
+      ],
+      [
+       2087.1,
+       9985.0,
+       50
+      ],
+      [
+       2297.3,
+       9985.0,
+       50
+      ],
+      [
+       2447.4,
+       9985.0,
+       50
+      ],
+      [
+       2597.6,
+       9985.0,
+       50
+      ],
+      [
+       2747.7,
+       9985.0,
+       50
+      ],
+      [
+       2927.9,
+       9985.0,
+       50
+      ],
+      [
+       3798.8,
+       9985.0,
+       50
+      ],
+      [
+       4039.0,
+       9985.0,
+       50
+      ],
+      [
+       4369.4,
+       9985.0,
+       50
+      ]
+     ],
+     "scarcity": 0.995,
+     "competitors": [
+      "odocoileus_hemionus",
+      "cyanocitta_stelleri",
+      "ursus_americanus"
+     ],
+     "plants": []
+    },
+    {
+     "id": "corvus_corax:fall:cache:acorn_mast",
+     "archetype": "cache",
+     "verb": "cache",
+     "season": "fall",
+     "unit": "pair",
+     "collective": true,
+     "goal": "hide food from other ravens",
+     "resource": "acorn_mast",
+     "requires": [
+      {
+       "object": "acorns under and in the oaks",
+       "client": "acorns.js",
+       "status": "drawn"
+      }
+     ],
+     "raster": "client/res_acorn_mast.png",
+     "hotspots": [
+      [
+       705.7,
+       9985.0,
+       50
+      ],
+      [
+       855.9,
+       9985.0,
+       50
+      ],
+      [
+       1576.6,
+       9985.0,
+       50
+      ],
+      [
+       2087.1,
+       9985.0,
+       50
+      ],
+      [
+       2297.3,
+       9985.0,
+       50
+      ],
+      [
+       2447.4,
+       9985.0,
+       50
+      ],
+      [
+       2597.6,
+       9985.0,
+       50
+      ],
+      [
+       2747.7,
+       9985.0,
+       50
+      ],
+      [
+       2927.9,
+       9985.0,
+       50
+      ],
+      [
+       3798.8,
+       9985.0,
+       50
+      ],
+      [
+       4039.0,
+       9985.0,
+       50
+      ],
+      [
+       4369.4,
+       9985.0,
+       50
+      ]
+     ],
+     "scarcity": 0.995,
+     "competitors": [
+      "odocoileus_hemionus",
+      "cyanocitta_stelleri",
+      "ursus_americanus"
+     ]
+    },
+    {
+     "id": "corvus_corax:winter:drink",
+     "archetype": "drink",
+     "verb": "drink",
+     "season": "winter",
+     "unit": "pair",
+     "collective": true,
+     "resource": "water",
+     "rhythm": "often",
+     "hotspots": [
+      [
+       405.4,
+       9985.0,
+       100
+      ],
+      [
+       1036.0,
+       9985.0,
+       100
+      ],
+      [
+       1606.6,
+       9985.0,
+       100
+      ],
+      [
+       1906.9,
+       9985.0,
+       100
+      ],
+      [
+       2237.2,
+       9985.0,
+       100
+      ],
+      [
+       2988.0,
+       9985.0,
+       100
+      ],
+      [
+       3138.1,
+       9985.0,
+       100
+      ],
+      [
+       3468.5,
+       9985.0,
+       100
+      ],
+      [
+       4639.6,
+       9985.0,
+       100
+      ],
+      [
+       5510.5,
+       9985.0,
+       100
+      ],
+      [
+       6351.4,
+       9985.0,
+       100
+      ],
+      [
+       6651.7,
+       9985.0,
+       100
+      ]
+     ],
+     "scarcity": 0.574,
+     "competitors": [
+      "buteo_jamaicensis",
+      "odocoileus_hemionus",
+      "cyanocitta_stelleri",
+      "cathartes_aura",
+      "ursus_americanus"
+     ]
+    },
+    {
+     "id": "corvus_corax:winter:shelter:cliff_or_snag",
+     "archetype": "shelter",
+     "verb": "shelter",
+     "season": "winter",
+     "unit": "pair",
+     "collective": true,
+     "resource": "cliff_or_snag",
+     "hotspots": [
+      [
+       6651.7,
+       9985.0,
+       90
+      ],
+      [
+       7012.0,
+       9985.0,
+       90
+      ],
+      [
+       7732.7,
+       9985.0,
+       90
+      ],
+      [
+       7882.9,
+       9985.0,
+       90
+      ],
+      [
+       8093.1,
+       9985.0,
+       90
+      ],
+      [
+       8243.2,
+       9985.0,
+       90
+      ],
+      [
+       8393.4,
+       9985.0,
+       90
+      ],
+      [
+       8693.7,
+       9985.0,
+       90
+      ],
+      [
+       9144.1,
+       9985.0,
+       90
+      ],
+      [
+       9294.3,
+       9985.0,
+       90
+      ],
+      [
+       9444.4,
+       9985.0,
+       90
+      ],
+      [
+       9774.8,
+       9985.0,
+       90
+      ]
+     ],
+     "scarcity": 0.027,
+     "competitors": [
+      "buteo_jamaicensis",
+      "cathartes_aura"
+     ]
+    },
+    {
+     "id": "corvus_corax:spring:drink",
+     "archetype": "drink",
+     "verb": "drink",
+     "season": "spring",
+     "unit": "pair",
+     "collective": true,
+     "resource": "water",
+     "rhythm": "often",
+     "hotspots": [
+      [
+       405.4,
+       9985.0,
+       100
+      ],
+      [
+       1036.0,
+       9985.0,
+       100
+      ],
+      [
+       1606.6,
+       9985.0,
+       100
+      ],
+      [
+       1906.9,
+       9985.0,
+       100
+      ],
+      [
+       2237.2,
+       9985.0,
+       100
+      ],
+      [
+       2988.0,
+       9985.0,
+       100
+      ],
+      [
+       3138.1,
+       9985.0,
+       100
+      ],
+      [
+       3468.5,
+       9985.0,
+       100
+      ],
+      [
+       4639.6,
+       9985.0,
+       100
+      ],
+      [
+       5510.5,
+       9985.0,
+       100
+      ],
+      [
+       6351.4,
+       9985.0,
+       100
+      ],
+      [
+       6651.7,
+       9985.0,
+       100
+      ]
+     ],
+     "scarcity": 0.574,
+     "competitors": [
+      "buteo_jamaicensis",
+      "odocoileus_hemionus",
+      "cyanocitta_stelleri",
+      "cathartes_aura",
+      "ursus_americanus"
+     ]
+    },
+    {
+     "id": "corvus_corax:summer:drink",
+     "archetype": "drink",
+     "verb": "drink",
+     "season": "summer",
+     "unit": "pair",
+     "collective": true,
+     "resource": "water",
+     "rhythm": "often",
+     "hotspots": [
+      [
+       1036.0,
+       9985.0,
+       100
+      ],
+      [
+       2988.0,
+       9985.0,
+       100
+      ],
+      [
+       3138.1,
+       9985.0,
+       100
+      ],
+      [
+       3468.5,
+       9985.0,
+       100
+      ],
+      [
+       4639.6,
+       9985.0,
+       100
+      ],
+      [
+       5510.5,
+       9985.0,
+       100
+      ],
+      [
+       6351.4,
+       9985.0,
+       100
+      ],
+      [
+       6651.7,
+       9985.0,
+       100
+      ],
+      [
+       8093.1,
+       9985.0,
+       100
+      ],
+      [
+       8723.7,
+       9985.0,
+       100
+      ],
+      [
+       9474.5,
+       9985.0,
+       100
+      ],
+      [
+       2807.8,
+       9955.0,
+       100
+      ]
+     ],
+     "scarcity": 0.683,
+     "competitors": [
+      "buteo_jamaicensis",
+      "odocoileus_hemionus",
+      "cyanocitta_stelleri",
+      "cathartes_aura",
+      "ursus_americanus"
+     ]
+    },
+    {
+     "id": "corvus_corax:summer:shelter:cliff_or_snag",
+     "archetype": "shelter",
+     "verb": "shelter",
+     "season": "summer",
+     "unit": "pair",
+     "collective": true,
+     "resource": "cliff_or_snag",
+     "hotspots": [
+      [
+       6651.7,
+       9985.0,
+       90
+      ],
+      [
+       7012.0,
+       9985.0,
+       90
+      ],
+      [
+       7732.7,
+       9985.0,
+       90
+      ],
+      [
+       7882.9,
+       9985.0,
+       90
+      ],
+      [
+       8093.1,
+       9985.0,
+       90
+      ],
+      [
+       8243.2,
+       9985.0,
+       90
+      ],
+      [
+       8393.4,
+       9985.0,
+       90
+      ],
+      [
+       8693.7,
+       9985.0,
+       90
+      ],
+      [
+       9144.1,
+       9985.0,
+       90
+      ],
+      [
+       9294.3,
+       9985.0,
+       90
+      ],
+      [
+       9444.4,
+       9985.0,
+       90
+      ],
+      [
+       9774.8,
+       9985.0,
+       90
+      ]
+     ],
+     "scarcity": 0.027,
+     "competitors": [
+      "buteo_jamaicensis",
+      "cathartes_aura"
+     ]
+    },
+    {
+     "id": "corvus_corax:fall:drink",
+     "archetype": "drink",
+     "verb": "drink",
+     "season": "fall",
+     "unit": "pair",
+     "collective": true,
+     "resource": "water",
+     "rhythm": "often",
+     "hotspots": [
+      [
+       1036.0,
+       9985.0,
+       100
+      ],
+      [
+       2988.0,
+       9985.0,
+       100
+      ],
+      [
+       3138.1,
+       9985.0,
+       100
+      ],
+      [
+       3468.5,
+       9985.0,
+       100
+      ],
+      [
+       4639.6,
+       9985.0,
+       100
+      ],
+      [
+       5510.5,
+       9985.0,
+       100
+      ],
+      [
+       6351.4,
+       9985.0,
+       100
+      ],
+      [
+       6651.7,
+       9985.0,
+       100
+      ],
+      [
+       8093.1,
+       9985.0,
+       100
+      ],
+      [
+       8723.7,
+       9985.0,
+       100
+      ],
+      [
+       9474.5,
+       9985.0,
+       100
+      ],
+      [
+       2807.8,
+       9955.0,
+       100
+      ]
+     ],
+     "scarcity": 0.683,
+     "competitors": [
+      "buteo_jamaicensis",
+      "odocoileus_hemionus",
+      "cyanocitta_stelleri",
+      "cathartes_aura",
+      "ursus_americanus"
+     ]
+    },
+    {
+     "id": "corvus_corax:fall:shelter:cliff_or_snag",
+     "archetype": "shelter",
+     "verb": "shelter",
+     "season": "fall",
+     "unit": "pair",
+     "collective": true,
+     "resource": "cliff_or_snag",
+     "hotspots": [
+      [
+       6651.7,
+       9985.0,
+       90
+      ],
+      [
+       7012.0,
+       9985.0,
+       90
+      ],
+      [
+       7732.7,
+       9985.0,
+       90
+      ],
+      [
+       7882.9,
+       9985.0,
+       90
+      ],
+      [
+       8093.1,
+       9985.0,
+       90
+      ],
+      [
+       8243.2,
+       9985.0,
+       90
+      ],
+      [
+       8393.4,
+       9985.0,
+       90
+      ],
+      [
+       8693.7,
+       9985.0,
+       90
+      ],
+      [
+       9144.1,
+       9985.0,
+       90
+      ],
+      [
+       9294.3,
+       9985.0,
+       90
+      ],
+      [
+       9444.4,
+       9985.0,
+       90
+      ],
+      [
+       9774.8,
+       9985.0,
+       90
+      ]
+     ],
+     "scarcity": 0.027,
+     "competitors": [
+      "buteo_jamaicensis",
+      "cathartes_aura"
+     ]
+    }
+   ]
+  },
+  "buteo_jamaicensis": {
+   "unit": "solitary",
+   "predators": [],
+   "prey": [],
+   "games": [
+    {
+     "id": "buteo_jamaicensis:winter:hunt",
+     "archetype": "hunt",
+     "verb": "hunt",
+     "season": "winter",
+     "unit": "solitary",
+     "collective": false,
+     "goal": "hunt from perches"
+    },
+    {
+     "id": "buteo_jamaicensis:spring:court",
+     "archetype": "court",
+     "verb": "court",
+     "season": "spring",
+     "unit": "solitary",
+     "collective": false,
+     "goal": "sky dance",
+     "resource": "cliff_or_snag",
+     "requires": [
+      {
+       "object": "snags, cliffs and tall perch trees",
+       "client": "vegetation.js (old trees), rocks.js",
+       "status": "partial"
+      }
+     ],
+     "raster": "client/res_cliff_or_snag.png",
+     "hotspots": [
+      [
+       6651.7,
+       9985.0,
+       90
+      ],
+      [
+       7012.0,
+       9985.0,
+       90
+      ],
+      [
+       7732.7,
+       9985.0,
+       90
+      ],
+      [
+       7882.9,
+       9985.0,
+       90
+      ],
+      [
+       8093.1,
+       9985.0,
+       90
+      ],
+      [
+       8243.2,
+       9985.0,
+       90
+      ],
+      [
+       8393.4,
+       9985.0,
+       90
+      ],
+      [
+       8693.7,
+       9985.0,
+       90
+      ],
+      [
+       9144.1,
+       9985.0,
+       90
+      ],
+      [
+       9294.3,
+       9985.0,
+       90
+      ],
+      [
+       9444.4,
+       9985.0,
+       90
+      ],
+      [
+       9774.8,
+       9985.0,
+       90
+      ]
+     ],
+     "scarcity": 0.027,
+     "competitors": [
+      "corvus_corax"
+     ]
+    },
+    {
+     "id": "buteo_jamaicensis:spring:nest:cliff_or_snag",
+     "archetype": "shelter",
+     "verb": "nest",
+     "season": "spring",
+     "unit": "solitary",
+     "collective": false,
+     "goal": "large tree or cliff",
+     "resource": "cliff_or_snag",
+     "requires": [
+      {
+       "object": "snags, cliffs and tall perch trees",
+       "client": "vegetation.js (old trees), rocks.js",
+       "status": "partial"
+      }
+     ],
+     "raster": "client/res_cliff_or_snag.png",
+     "hotspots": [
+      [
+       6651.7,
+       9985.0,
+       90
+      ],
+      [
+       7012.0,
+       9985.0,
+       90
+      ],
+      [
+       7732.7,
+       9985.0,
+       90
+      ],
+      [
+       7882.9,
+       9985.0,
+       90
+      ],
+      [
+       8093.1,
+       9985.0,
+       90
+      ],
+      [
+       8243.2,
+       9985.0,
+       90
+      ],
+      [
+       8393.4,
+       9985.0,
+       90
+      ],
+      [
+       8693.7,
+       9985.0,
+       90
+      ],
+      [
+       9144.1,
+       9985.0,
+       90
+      ],
+      [
+       9294.3,
+       9985.0,
+       90
+      ],
+      [
+       9444.4,
+       9985.0,
+       90
+      ],
+      [
+       9774.8,
+       9985.0,
+       90
+      ]
+     ],
+     "scarcity": 0.027,
+     "competitors": [
+      "corvus_corax"
+     ]
+    },
+    {
+     "id": "buteo_jamaicensis:summer:rear",
+     "archetype": "rear",
+     "verb": "rear",
+     "season": "summer",
+     "unit": "solitary",
+     "collective": false,
+     "goal": "feed chicks"
+    },
+    {
+     "id": "buteo_jamaicensis:fall:disperse",
+     "archetype": "disperse",
+     "verb": "disperse",
+     "season": "fall",
+     "unit": "solitary",
+     "collective": false,
+     "goal": "juveniles leave the territory"
+    },
+    {
+     "id": "buteo_jamaicensis:fall:hunt",
+     "archetype": "hunt",
+     "verb": "hunt",
+     "season": "fall",
+     "unit": "solitary",
+     "collective": false
+    },
+    {
+     "id": "buteo_jamaicensis:winter:drink",
+     "archetype": "drink",
+     "verb": "drink",
+     "season": "winter",
+     "unit": "solitary",
+     "collective": false,
+     "resource": "water",
+     "rhythm": "often",
+     "hotspots": [
+      [
+       405.4,
+       9985.0,
+       100
+      ],
+      [
+       1036.0,
+       9985.0,
+       100
+      ],
+      [
+       1606.6,
+       9985.0,
+       100
+      ],
+      [
+       1906.9,
+       9985.0,
+       100
+      ],
+      [
+       2237.2,
+       9985.0,
+       100
+      ],
+      [
+       2988.0,
+       9985.0,
+       100
+      ],
+      [
+       3138.1,
+       9985.0,
+       100
+      ],
+      [
+       3468.5,
+       9985.0,
+       100
+      ],
+      [
+       4639.6,
+       9985.0,
+       100
+      ],
+      [
+       5510.5,
+       9985.0,
+       100
+      ],
+      [
+       6351.4,
+       9985.0,
+       100
+      ],
+      [
+       6651.7,
+       9985.0,
+       100
+      ]
+     ],
+     "scarcity": 0.574,
+     "competitors": [
+      "corvus_corax",
+      "odocoileus_hemionus",
+      "cyanocitta_stelleri",
+      "cathartes_aura",
+      "ursus_americanus"
+     ]
+    },
+    {
+     "id": "buteo_jamaicensis:winter:shelter:cliff_or_snag",
+     "archetype": "shelter",
+     "verb": "shelter",
+     "season": "winter",
+     "unit": "solitary",
+     "collective": false,
+     "resource": "cliff_or_snag",
+     "hotspots": [
+      [
+       6651.7,
+       9985.0,
+       90
+      ],
+      [
+       7012.0,
+       9985.0,
+       90
+      ],
+      [
+       7732.7,
+       9985.0,
+       90
+      ],
+      [
+       7882.9,
+       9985.0,
+       90
+      ],
+      [
+       8093.1,
+       9985.0,
+       90
+      ],
+      [
+       8243.2,
+       9985.0,
+       90
+      ],
+      [
+       8393.4,
+       9985.0,
+       90
+      ],
+      [
+       8693.7,
+       9985.0,
+       90
+      ],
+      [
+       9144.1,
+       9985.0,
+       90
+      ],
+      [
+       9294.3,
+       9985.0,
+       90
+      ],
+      [
+       9444.4,
+       9985.0,
+       90
+      ],
+      [
+       9774.8,
+       9985.0,
+       90
+      ]
+     ],
+     "scarcity": 0.027,
+     "competitors": [
+      "corvus_corax",
+      "cathartes_aura"
+     ]
+    },
+    {
+     "id": "buteo_jamaicensis:spring:drink",
+     "archetype": "drink",
+     "verb": "drink",
+     "season": "spring",
+     "unit": "solitary",
+     "collective": false,
+     "resource": "water",
+     "rhythm": "often",
+     "hotspots": [
+      [
+       405.4,
+       9985.0,
+       100
+      ],
+      [
+       1036.0,
+       9985.0,
+       100
+      ],
+      [
+       1606.6,
+       9985.0,
+       100
+      ],
+      [
+       1906.9,
+       9985.0,
+       100
+      ],
+      [
+       2237.2,
+       9985.0,
+       100
+      ],
+      [
+       2988.0,
+       9985.0,
+       100
+      ],
+      [
+       3138.1,
+       9985.0,
+       100
+      ],
+      [
+       3468.5,
+       9985.0,
+       100
+      ],
+      [
+       4639.6,
+       9985.0,
+       100
+      ],
+      [
+       5510.5,
+       9985.0,
+       100
+      ],
+      [
+       6351.4,
+       9985.0,
+       100
+      ],
+      [
+       6651.7,
+       9985.0,
+       100
+      ]
+     ],
+     "scarcity": 0.574,
+     "competitors": [
+      "corvus_corax",
+      "odocoileus_hemionus",
+      "cyanocitta_stelleri",
+      "cathartes_aura",
+      "ursus_americanus"
+     ]
+    },
+    {
+     "id": "buteo_jamaicensis:summer:drink",
+     "archetype": "drink",
+     "verb": "drink",
+     "season": "summer",
+     "unit": "solitary",
+     "collective": false,
+     "resource": "water",
+     "rhythm": "often",
+     "hotspots": [
+      [
+       1036.0,
+       9985.0,
+       100
+      ],
+      [
+       2988.0,
+       9985.0,
+       100
+      ],
+      [
+       3138.1,
+       9985.0,
+       100
+      ],
+      [
+       3468.5,
+       9985.0,
+       100
+      ],
+      [
+       4639.6,
+       9985.0,
+       100
+      ],
+      [
+       5510.5,
+       9985.0,
+       100
+      ],
+      [
+       6351.4,
+       9985.0,
+       100
+      ],
+      [
+       6651.7,
+       9985.0,
+       100
+      ],
+      [
+       8093.1,
+       9985.0,
+       100
+      ],
+      [
+       8723.7,
+       9985.0,
+       100
+      ],
+      [
+       9474.5,
+       9985.0,
+       100
+      ],
+      [
+       2807.8,
+       9955.0,
+       100
+      ]
+     ],
+     "scarcity": 0.683,
+     "competitors": [
+      "corvus_corax",
+      "odocoileus_hemionus",
+      "cyanocitta_stelleri",
+      "cathartes_aura",
+      "ursus_americanus"
+     ]
+    },
+    {
+     "id": "buteo_jamaicensis:summer:shelter:cliff_or_snag",
+     "archetype": "shelter",
+     "verb": "shelter",
+     "season": "summer",
+     "unit": "solitary",
+     "collective": false,
+     "resource": "cliff_or_snag",
+     "hotspots": [
+      [
+       6651.7,
+       9985.0,
+       90
+      ],
+      [
+       7012.0,
+       9985.0,
+       90
+      ],
+      [
+       7732.7,
+       9985.0,
+       90
+      ],
+      [
+       7882.9,
+       9985.0,
+       90
+      ],
+      [
+       8093.1,
+       9985.0,
+       90
+      ],
+      [
+       8243.2,
+       9985.0,
+       90
+      ],
+      [
+       8393.4,
+       9985.0,
+       90
+      ],
+      [
+       8693.7,
+       9985.0,
+       90
+      ],
+      [
+       9144.1,
+       9985.0,
+       90
+      ],
+      [
+       9294.3,
+       9985.0,
+       90
+      ],
+      [
+       9444.4,
+       9985.0,
+       90
+      ],
+      [
+       9774.8,
+       9985.0,
+       90
+      ]
+     ],
+     "scarcity": 0.027,
+     "competitors": [
+      "corvus_corax",
+      "cathartes_aura"
+     ]
+    },
+    {
+     "id": "buteo_jamaicensis:fall:drink",
+     "archetype": "drink",
+     "verb": "drink",
+     "season": "fall",
+     "unit": "solitary",
+     "collective": false,
+     "resource": "water",
+     "rhythm": "often",
+     "hotspots": [
+      [
+       1036.0,
+       9985.0,
+       100
+      ],
+      [
+       2988.0,
+       9985.0,
+       100
+      ],
+      [
+       3138.1,
+       9985.0,
+       100
+      ],
+      [
+       3468.5,
+       9985.0,
+       100
+      ],
+      [
+       4639.6,
+       9985.0,
+       100
+      ],
+      [
+       5510.5,
+       9985.0,
+       100
+      ],
+      [
+       6351.4,
+       9985.0,
+       100
+      ],
+      [
+       6651.7,
+       9985.0,
+       100
+      ],
+      [
+       8093.1,
+       9985.0,
+       100
+      ],
+      [
+       8723.7,
+       9985.0,
+       100
+      ],
+      [
+       9474.5,
+       9985.0,
+       100
+      ],
+      [
+       2807.8,
+       9955.0,
+       100
+      ]
+     ],
+     "scarcity": 0.683,
+     "competitors": [
+      "corvus_corax",
+      "odocoileus_hemionus",
+      "cyanocitta_stelleri",
+      "cathartes_aura",
+      "ursus_americanus"
+     ]
+    },
+    {
+     "id": "buteo_jamaicensis:fall:shelter:cliff_or_snag",
+     "archetype": "shelter",
+     "verb": "shelter",
+     "season": "fall",
+     "unit": "solitary",
+     "collective": false,
+     "resource": "cliff_or_snag",
+     "hotspots": [
+      [
+       6651.7,
+       9985.0,
+       90
+      ],
+      [
+       7012.0,
+       9985.0,
+       90
+      ],
+      [
+       7732.7,
+       9985.0,
+       90
+      ],
+      [
+       7882.9,
+       9985.0,
+       90
+      ],
+      [
+       8093.1,
+       9985.0,
+       90
+      ],
+      [
+       8243.2,
+       9985.0,
+       90
+      ],
+      [
+       8393.4,
+       9985.0,
+       90
+      ],
+      [
+       8693.7,
+       9985.0,
+       90
+      ],
+      [
+       9144.1,
+       9985.0,
+       90
+      ],
+      [
+       9294.3,
+       9985.0,
+       90
+      ],
+      [
+       9444.4,
+       9985.0,
+       90
+      ],
+      [
+       9774.8,
+       9985.0,
+       90
+      ]
+     ],
+     "scarcity": 0.027,
+     "competitors": [
+      "corvus_corax",
+      "cathartes_aura"
+     ]
+    }
+   ]
+  },
+  "odocoileus_hemionus": {
+   "unit": "herd",
+   "predators": [],
+   "prey": [],
+   "games": [
+    {
+     "id": "odocoileus_hemionus:winter:forage:browse",
+     "archetype": "gather",
+     "verb": "forage",
+     "season": "winter",
+     "unit": "herd",
+     "collective": true,
+     "resource": "browse",
+     "requires": [
+      {
+       "object": "shrub and low tree foliage within reach",
+       "client": "shrubfield.js, vegetation.js",
+       "status": "drawn"
+      }
+     ],
+     "raster": "client/res_browse.png",
+     "hotspots": [
+      [
+       2837.8,
+       9804.8,
+       48
+      ],
+      [
+       1606.6,
+       9624.6,
+       48
+      ],
+      [
+       585.6,
+       9534.5,
+       48
+      ],
+      [
+       7072.1,
+       7792.8,
+       48
+      ],
+      [
+       6741.7,
+       7522.5,
+       48
+      ],
+      [
+       5150.2,
+       7492.5,
+       48
+      ],
+      [
+       8153.2,
+       7462.5,
+       48
+      ],
+      [
+       6711.7,
+       7372.4,
+       48
+      ],
+      [
+       7012.0,
+       7282.3,
+       48
+      ],
+      [
+       6651.7,
+       7192.2,
+       48
+      ],
+      [
+       6831.8,
+       7162.2,
+       48
+      ],
+      [
+       6531.5,
+       7042.0,
+       48
+      ]
+     ],
+     "scarcity": 1.0,
+     "competitors": [],
+     "plants": [
+      "abies_amabilis",
+      "acer_circinatum",
+      "adenostoma_fasciculatum",
+      "alnus_rubra",
+      "arctostaphylos_manzanita",
+      "arctostaphylos_patula",
+      "artemisia_californica",
+      "artemisia_tridentata",
+      "baccharis_pilularis",
+      "ceanothus_cuneatus",
+      "cercocarpus_betuloides",
+      "cercocarpus_ledifolius",
+      "chamaebatia_foliolosa",
+      "frangula_californica",
+      "gaultheria_shallon",
+      "heteromeles_arbutifolia",
+      "mahonia_nervosa",
+      "ribes_malvaceum",
+      "rubus_ursinus",
+      "thuja_plicata",
+      "tsuga_heterophylla",
+      "umbellularia_californica",
+      "vaccinium_ovatum",
+      "vaccinium_parvifolium"
+     ]
+    },
+    {
+     "id": "odocoileus_hemionus:winter:shelter:cover",
+     "archetype": "shelter",
+     "verb": "shelter",
+     "season": "winter",
+     "unit": "herd",
+     "collective": true,
+     "goal": "avoid storms and lions",
+     "resource": "cover",
+     "requires": [
+      {
+       "object": "shrubs and trees to hide in",
+       "client": "shrubfield.js, vegetation.js",
+       "status": "drawn"
+      }
+     ],
+     "raster": "client/res_cover.png",
+     "hotspots": [
+      [
+       2837.8,
+       9804.8,
+       76
+      ],
+      [
+       1606.6,
+       9624.6,
+       76
+      ],
+      [
+       585.6,
+       9534.5,
+       76
+      ],
+      [
+       7072.1,
+       7792.8,
+       76
+      ],
+      [
+       6741.7,
+       7522.5,
+       76
+      ],
+      [
+       5150.2,
+       7492.5,
+       76
+      ],
+      [
+       8153.2,
+       7462.5,
+       76
+      ],
+      [
+       6711.7,
+       7372.4,
+       76
+      ],
+      [
+       7012.0,
+       7282.3,
+       76
+      ],
+      [
+       6651.7,
+       7192.2,
+       76
+      ],
+      [
+       6831.8,
+       7162.2,
+       76
+      ],
+      [
+       6531.5,
+       7042.0,
+       76
+      ]
+     ],
+     "scarcity": 0.302,
+     "competitors": [
+      "ursus_americanus"
+     ]
+    },
+    {
+     "id": "odocoileus_hemionus:spring:forage:grass_forbs",
+     "archetype": "gather",
+     "verb": "forage",
+     "season": "spring",
+     "unit": "herd",
+     "collective": true,
+     "resource": "grass_forbs",
+     "requires": [
+      {
+       "object": "grass blades and tufts, forbs",
+       "client": "grass.js",
+       "status": "drawn"
+      }
+     ],
+     "raster": "client/res_grass_forbs.png",
+     "hotspots": [
+      [
+       6411.4,
+       9955.0,
+       90
+      ],
+      [
+       8153.2,
+       9955.0,
+       90
+      ],
+      [
+       8333.3,
+       9955.0,
+       90
+      ],
+      [
+       5450.5,
+       9774.8,
+       90
+      ],
+      [
+       1606.6,
+       9684.7,
+       90
+      ],
+      [
+       3738.7,
+       9684.7,
+       90
+      ],
+      [
+       9804.8,
+       9594.6,
+       90
+      ],
+      [
+       1606.6,
+       9534.5,
+       90
+      ],
+      [
+       9864.9,
+       9444.4,
+       90
+      ],
+      [
+       9144.1,
+       9324.3,
+       90
+      ],
+      [
+       9774.8,
+       9324.3,
+       90
+      ],
+      [
+       9744.7,
+       9174.2,
+       90
+      ]
+     ],
+     "scarcity": 0.988,
+     "competitors": [
+      "ursus_americanus"
+     ],
+     "plants": [
+      "achillea_millefolium",
+      "artemisia_douglasiana",
+      "avena_fatua",
+      "bromus_diandrus",
+      "bromus_hordeaceus",
+      "carex_barbarae",
+      "chlorogalum_pomeridianum",
+      "claytonia_perfoliata",
+      "danthonia_californica",
+      "dipterostemon_capitatus",
+      "elymus_glaucus",
+      "erodium_cicutarium",
+      "erythranthe_guttata",
+      "eschscholzia_californica",
+      "lupinus_bicolor",
+      "nasturtium_officinale",
+      "oxalis_oregana",
+      "polystichum_munitum",
+      "stipa_pulchra",
+      "trifolium_willdenovii",
+      "urtica_dioica",
+      "vicia_villosa",
+      "wyethia_helenioides"
+     ]
+    },
+    {
+     "id": "odocoileus_hemionus:spring:rear:cover",
+     "archetype": "rear",
+     "verb": "rear",
+     "season": "spring",
+     "unit": "herd",
+     "collective": true,
+     "goal": "fawn in dense cover",
+     "resource": "cover",
+     "requires": [
+      {
+       "object": "shrubs and trees to hide in",
+       "client": "shrubfield.js, vegetation.js",
+       "status": "drawn"
+      }
+     ],
+     "raster": "client/res_cover.png",
+     "hotspots": [
+      [
+       2837.8,
+       9804.8,
+       90
+      ],
+      [
+       1606.6,
+       9624.6,
+       90
+      ],
+      [
+       585.6,
+       9534.5,
+       90
+      ],
+      [
+       7072.1,
+       7792.8,
+       90
+      ],
+      [
+       6741.7,
+       7522.5,
+       90
+      ],
+      [
+       5150.2,
+       7492.5,
+       90
+      ],
+      [
+       8153.2,
+       7462.5,
+       90
+      ],
+      [
+       6711.7,
+       7372.4,
+       90
+      ],
+      [
+       7012.0,
+       7282.3,
+       90
+      ],
+      [
+       6651.7,
+       7192.2,
+       90
+      ],
+      [
+       6831.8,
+       7162.2,
+       90
+      ],
+      [
+       6531.5,
+       7042.0,
+       90
+      ]
+     ],
+     "scarcity": 0.302,
+     "competitors": [
+      "cyanocitta_stelleri",
+      "ursus_americanus"
+     ]
+    },
+    {
+     "id": "odocoileus_hemionus:spring:rear:water",
+     "archetype": "rear",
+     "verb": "rear",
+     "season": "spring",
+     "unit": "herd",
+     "collective": true,
+     "goal": "fawn in dense cover",
+     "resource": "water",
+     "requires": [
+      {
+       "object": "water surfaces: streams, ponds",
+       "client": "water.js",
+       "status": "drawn"
+      }
+     ],
+     "raster": "client/res_water.png",
+     "hotspots": [
+      [
+       405.4,
+       9985.0,
+       100
+      ],
+      [
+       1036.0,
+       9985.0,
+       100
+      ],
+      [
+       1606.6,
+       9985.0,
+       100
+      ],
+      [
+       1906.9,
+       9985.0,
+       100
+      ],
+      [
+       2237.2,
+       9985.0,
+       100
+      ],
+      [
+       2988.0,
+       9985.0,
+       100
+      ],
+      [
+       3138.1,
+       9985.0,
+       100
+      ],
+      [
+       3468.5,
+       9985.0,
+       100
+      ],
+      [
+       4639.6,
+       9985.0,
+       100
+      ],
+      [
+       5510.5,
+       9985.0,
+       100
+      ],
+      [
+       6351.4,
+       9985.0,
+       100
+      ],
+      [
+       6651.7,
+       9985.0,
+       100
+      ]
+     ],
+     "scarcity": 0.574,
+     "competitors": []
+    },
+    {
+     "id": "odocoileus_hemionus:summer:forage:browse",
+     "archetype": "gather",
+     "verb": "forage",
+     "season": "summer",
+     "unit": "herd",
+     "collective": true,
+     "resource": "browse",
+     "requires": [
+      {
+       "object": "shrub and low tree foliage within reach",
+       "client": "shrubfield.js, vegetation.js",
+       "status": "drawn"
+      }
+     ],
+     "raster": "client/res_browse.png",
+     "hotspots": [
+      [
+       2837.8,
+       9804.8,
+       56
+      ],
+      [
+       1606.6,
+       9624.6,
+       56
+      ],
+      [
+       585.6,
+       9534.5,
+       56
+      ],
+      [
+       7072.1,
+       7792.8,
+       56
+      ],
+      [
+       6741.7,
+       7522.5,
+       56
+      ],
+      [
+       5150.2,
+       7492.5,
+       56
+      ],
+      [
+       8153.2,
+       7462.5,
+       56
+      ],
+      [
+       6711.7,
+       7372.4,
+       56
+      ],
+      [
+       7012.0,
+       7282.3,
+       56
+      ],
+      [
+       6651.7,
+       7192.2,
+       56
+      ],
+      [
+       6831.8,
+       7162.2,
+       56
+      ],
+      [
+       6531.5,
+       7042.0,
+       56
+      ]
+     ],
+     "scarcity": 0.992,
+     "competitors": [
+      "ursus_americanus"
+     ],
+     "plants": [
+      "abies_concolor",
+      "abies_lasiocarpa",
+      "abies_magnifica",
+      "acer_circinatum",
+      "acer_macrophyllum",
+      "alnus_rhombifolia",
+      "ceanothus_cordulatus",
+      "ceanothus_cuneatus",
+      "ceanothus_integerrimus",
+      "cephalanthus_occidentalis",
+      "cercis_occidentalis",
+      "cercocarpus_betuloides",
+      "cercocarpus_ledifolius",
+      "cornus_sericea",
+      "diplacus_aurantiacus",
+      "frangula_californica",
+      "fraxinus_latifolia",
+      "heteromeles_arbutifolia",
+      "notholithocarpus_densiflorus",
+      "oplopanax_horridus",
+      "pinus_contorta",
+      "populus_fremontii",
+      "populus_tremuloides",
+      "populus_trichocarpa",
+      "quercus_agrifolia",
+      "quercus_vacciniifolia",
+      "rosa_californica",
+      "rubus_parviflorus",
+      "rubus_spectabilis",
+      "rubus_ursinus",
+      "salix_exigua",
+      "salix_laevigata",
+      "salix_lasiandra",
+      "salix_lasiolepis",
+      "sambucus_nigra_caerulea",
+      "sequoiadendron_giganteum",
+      "symphoricarpos_albus",
+      "toxicodendron_diversilobum",
+      "tsuga_mertensiana",
+      "vaccinium_ovatum",
+      "vitis_californica"
+     ]
+    },
+    {
+     "id": "odocoileus_hemionus:summer:forage:water",
+     "archetype": "gather",
+     "verb": "forage",
+     "season": "summer",
+     "unit": "herd",
+     "collective": true,
+     "resource": "water",
+     "requires": [
+      {
+       "object": "water surfaces: streams, ponds",
+       "client": "water.js",
+       "status": "drawn"
+      }
+     ],
+     "raster": "client/res_water.png",
+     "hotspots": [
+      [
+       1036.0,
+       9985.0,
+       100
+      ],
+      [
+       2988.0,
+       9985.0,
+       100
+      ],
+      [
+       3138.1,
+       9985.0,
+       100
+      ],
+      [
+       3468.5,
+       9985.0,
+       100
+      ],
+      [
+       4639.6,
+       9985.0,
+       100
+      ],
+      [
+       5510.5,
+       9985.0,
+       100
+      ],
+      [
+       6351.4,
+       9985.0,
+       100
+      ],
+      [
+       6651.7,
+       9985.0,
+       100
+      ],
+      [
+       8093.1,
+       9985.0,
+       100
+      ],
+      [
+       8723.7,
+       9985.0,
+       100
+      ],
+      [
+       9474.5,
+       9985.0,
+       100
+      ],
+      [
+       2807.8,
+       9955.0,
+       100
+      ]
+     ],
+     "scarcity": 0.683,
+     "competitors": [],
+     "plants": []
+    },
+    {
+     "id": "odocoileus_hemionus:summer:shelter:cover",
+     "archetype": "shelter",
+     "verb": "shelter",
+     "season": "summer",
+     "unit": "herd",
+     "collective": true,
+     "goal": "rest in shade midday",
+     "resource": "cover",
+     "requires": [
+      {
+       "object": "shrubs and trees to hide in",
+       "client": "shrubfield.js, vegetation.js",
+       "status": "drawn"
+      }
+     ],
+     "raster": "client/res_cover.png",
+     "hotspots": [
+      [
+       2837.8,
+       9804.8,
+       90
+      ],
+      [
+       1606.6,
+       9624.6,
+       90
+      ],
+      [
+       585.6,
+       9534.5,
+       90
+      ],
+      [
+       7072.1,
+       7792.8,
+       90
+      ],
+      [
+       6741.7,
+       7522.5,
+       90
+      ],
+      [
+       5150.2,
+       7492.5,
+       90
+      ],
+      [
+       8153.2,
+       7462.5,
+       90
+      ],
+      [
+       6711.7,
+       7372.4,
+       90
+      ],
+      [
+       7012.0,
+       7282.3,
+       90
+      ],
+      [
+       6651.7,
+       7192.2,
+       90
+      ],
+      [
+       6831.8,
+       7162.2,
+       90
+      ],
+      [
+       6531.5,
+       7042.0,
+       90
+      ]
+     ],
+     "scarcity": 0.302,
+     "competitors": [
+      "corvus_corax",
+      "ursus_americanus"
+     ]
+    },
+    {
+     "id": "odocoileus_hemionus:fall:court",
+     "archetype": "court",
+     "verb": "court",
+     "season": "fall",
+     "unit": "herd",
+     "collective": true,
+     "goal": "rut",
+     "resource": "grass_forbs",
+     "requires": [
+      {
+       "object": "grass blades and tufts, forbs",
+       "client": "grass.js",
+       "status": "drawn"
+      }
+     ],
+     "raster": "client/res_grass_forbs.png",
+     "hotspots": [],
+     "scarcity": 1.0,
+     "competitors": []
+    },
+    {
+     "id": "odocoileus_hemionus:fall:forage:acorn_mast",
+     "archetype": "gather",
+     "verb": "forage",
+     "season": "fall",
+     "unit": "herd",
+     "collective": true,
+     "goal": "fatten before winter",
+     "resource": "acorn_mast",
+     "requires": [
+      {
+       "object": "acorns under and in the oaks",
+       "client": "acorns.js",
+       "status": "drawn"
+      }
+     ],
+     "raster": "client/res_acorn_mast.png",
+     "hotspots": [
+      [
+       705.7,
+       9985.0,
+       50
+      ],
+      [
+       855.9,
+       9985.0,
+       50
+      ],
+      [
+       1576.6,
+       9985.0,
+       50
+      ],
+      [
+       2087.1,
+       9985.0,
+       50
+      ],
+      [
+       2297.3,
+       9985.0,
+       50
+      ],
+      [
+       2447.4,
+       9985.0,
+       50
+      ],
+      [
+       2597.6,
+       9985.0,
+       50
+      ],
+      [
+       2747.7,
+       9985.0,
+       50
+      ],
+      [
+       2927.9,
+       9985.0,
+       50
+      ],
+      [
+       3798.8,
+       9985.0,
+       50
+      ],
+      [
+       4039.0,
+       9985.0,
+       50
+      ],
+      [
+       4369.4,
+       9985.0,
+       50
+      ]
+     ],
+     "scarcity": 0.995,
+     "competitors": [
+      "corvus_corax",
+      "cyanocitta_stelleri",
+      "ursus_americanus"
+     ],
+     "plants": [
+      "notholithocarpus_densiflorus",
+      "quercus_agrifolia",
+      "quercus_lobata",
+      "quercus_vacciniifolia"
+     ]
+    },
+    {
+     "id": "odocoileus_hemionus:winter:drink",
+     "archetype": "drink",
+     "verb": "drink",
+     "season": "winter",
+     "unit": "herd",
+     "collective": true,
+     "resource": "water",
+     "rhythm": "daily",
+     "hotspots": [
+      [
+       405.4,
+       9985.0,
+       100
+      ],
+      [
+       1036.0,
+       9985.0,
+       100
+      ],
+      [
+       1606.6,
+       9985.0,
+       100
+      ],
+      [
+       1906.9,
+       9985.0,
+       100
+      ],
+      [
+       2237.2,
+       9985.0,
+       100
+      ],
+      [
+       2988.0,
+       9985.0,
+       100
+      ],
+      [
+       3138.1,
+       9985.0,
+       100
+      ],
+      [
+       3468.5,
+       9985.0,
+       100
+      ],
+      [
+       4639.6,
+       9985.0,
+       100
+      ],
+      [
+       5510.5,
+       9985.0,
+       100
+      ],
+      [
+       6351.4,
+       9985.0,
+       100
+      ],
+      [
+       6651.7,
+       9985.0,
+       100
+      ]
+     ],
+     "scarcity": 0.574,
+     "competitors": [
+      "corvus_corax",
+      "buteo_jamaicensis",
+      "cyanocitta_stelleri",
+      "cathartes_aura",
+      "ursus_americanus"
+     ]
+    },
+    {
+     "id": "odocoileus_hemionus:spring:drink",
+     "archetype": "drink",
+     "verb": "drink",
+     "season": "spring",
+     "unit": "herd",
+     "collective": true,
+     "resource": "water",
+     "rhythm": "daily",
+     "hotspots": [
+      [
+       405.4,
+       9985.0,
+       100
+      ],
+      [
+       1036.0,
+       9985.0,
+       100
+      ],
+      [
+       1606.6,
+       9985.0,
+       100
+      ],
+      [
+       1906.9,
+       9985.0,
+       100
+      ],
+      [
+       2237.2,
+       9985.0,
+       100
+      ],
+      [
+       2988.0,
+       9985.0,
+       100
+      ],
+      [
+       3138.1,
+       9985.0,
+       100
+      ],
+      [
+       3468.5,
+       9985.0,
+       100
+      ],
+      [
+       4639.6,
+       9985.0,
+       100
+      ],
+      [
+       5510.5,
+       9985.0,
+       100
+      ],
+      [
+       6351.4,
+       9985.0,
+       100
+      ],
+      [
+       6651.7,
+       9985.0,
+       100
+      ]
+     ],
+     "scarcity": 0.574,
+     "competitors": [
+      "corvus_corax",
+      "buteo_jamaicensis",
+      "cyanocitta_stelleri",
+      "cathartes_aura",
+      "ursus_americanus"
+     ]
+    },
+    {
+     "id": "odocoileus_hemionus:spring:shelter:cover",
+     "archetype": "shelter",
+     "verb": "shelter",
+     "season": "spring",
+     "unit": "herd",
+     "collective": true,
+     "resource": "cover",
+     "hotspots": [
+      [
+       2837.8,
+       9804.8,
+       90
+      ],
+      [
+       1606.6,
+       9624.6,
+       90
+      ],
+      [
+       585.6,
+       9534.5,
+       90
+      ],
+      [
+       7072.1,
+       7792.8,
+       90
+      ],
+      [
+       6741.7,
+       7522.5,
+       90
+      ],
+      [
+       5150.2,
+       7492.5,
+       90
+      ],
+      [
+       8153.2,
+       7462.5,
+       90
+      ],
+      [
+       6711.7,
+       7372.4,
+       90
+      ],
+      [
+       7012.0,
+       7282.3,
+       90
+      ],
+      [
+       6651.7,
+       7192.2,
+       90
+      ],
+      [
+       6831.8,
+       7162.2,
+       90
+      ],
+      [
+       6531.5,
+       7042.0,
+       90
+      ]
+     ],
+     "scarcity": 0.302,
+     "competitors": [
+      "cyanocitta_stelleri",
+      "ursus_americanus"
+     ]
+    },
+    {
+     "id": "odocoileus_hemionus:summer:drink",
+     "archetype": "drink",
+     "verb": "drink",
+     "season": "summer",
+     "unit": "herd",
+     "collective": true,
+     "resource": "water",
+     "rhythm": "daily",
+     "hotspots": [
+      [
+       1036.0,
+       9985.0,
+       100
+      ],
+      [
+       2988.0,
+       9985.0,
+       100
+      ],
+      [
+       3138.1,
+       9985.0,
+       100
+      ],
+      [
+       3468.5,
+       9985.0,
+       100
+      ],
+      [
+       4639.6,
+       9985.0,
+       100
+      ],
+      [
+       5510.5,
+       9985.0,
+       100
+      ],
+      [
+       6351.4,
+       9985.0,
+       100
+      ],
+      [
+       6651.7,
+       9985.0,
+       100
+      ],
+      [
+       8093.1,
+       9985.0,
+       100
+      ],
+      [
+       8723.7,
+       9985.0,
+       100
+      ],
+      [
+       9474.5,
+       9985.0,
+       100
+      ],
+      [
+       2807.8,
+       9955.0,
+       100
+      ]
+     ],
+     "scarcity": 0.683,
+     "competitors": [
+      "corvus_corax",
+      "buteo_jamaicensis",
+      "cyanocitta_stelleri",
+      "cathartes_aura",
+      "ursus_americanus"
+     ]
+    },
+    {
+     "id": "odocoileus_hemionus:fall:drink",
+     "archetype": "drink",
+     "verb": "drink",
+     "season": "fall",
+     "unit": "herd",
+     "collective": true,
+     "resource": "water",
+     "rhythm": "daily",
+     "hotspots": [
+      [
+       1036.0,
+       9985.0,
+       100
+      ],
+      [
+       2988.0,
+       9985.0,
+       100
+      ],
+      [
+       3138.1,
+       9985.0,
+       100
+      ],
+      [
+       3468.5,
+       9985.0,
+       100
+      ],
+      [
+       4639.6,
+       9985.0,
+       100
+      ],
+      [
+       5510.5,
+       9985.0,
+       100
+      ],
+      [
+       6351.4,
+       9985.0,
+       100
+      ],
+      [
+       6651.7,
+       9985.0,
+       100
+      ],
+      [
+       8093.1,
+       9985.0,
+       100
+      ],
+      [
+       8723.7,
+       9985.0,
+       100
+      ],
+      [
+       9474.5,
+       9985.0,
+       100
+      ],
+      [
+       2807.8,
+       9955.0,
+       100
+      ]
+     ],
+     "scarcity": 0.683,
+     "competitors": [
+      "corvus_corax",
+      "buteo_jamaicensis",
+      "cyanocitta_stelleri",
+      "cathartes_aura",
+      "ursus_americanus"
+     ]
+    },
+    {
+     "id": "odocoileus_hemionus:fall:shelter:cover",
+     "archetype": "shelter",
+     "verb": "shelter",
+     "season": "fall",
+     "unit": "herd",
+     "collective": true,
+     "resource": "cover",
+     "hotspots": [
+      [
+       2837.8,
+       9804.8,
+       90
+      ],
+      [
+       1606.6,
+       9624.6,
+       90
+      ],
+      [
+       585.6,
+       9534.5,
+       90
+      ],
+      [
+       7072.1,
+       7792.8,
+       90
+      ],
+      [
+       6741.7,
+       7522.5,
+       90
+      ],
+      [
+       5150.2,
+       7492.5,
+       90
+      ],
+      [
+       8153.2,
+       7462.5,
+       90
+      ],
+      [
+       6711.7,
+       7372.4,
+       90
+      ],
+      [
+       7012.0,
+       7282.3,
+       90
+      ],
+      [
+       6651.7,
+       7192.2,
+       90
+      ],
+      [
+       6831.8,
+       7162.2,
+       90
+      ],
+      [
+       6531.5,
+       7042.0,
+       90
+      ]
+     ],
+     "scarcity": 0.302,
+     "competitors": [
+      "cyanocitta_stelleri",
+      "ursus_americanus"
+     ]
+    }
+   ]
+  },
+  "cyanocitta_stelleri": {
+   "unit": "family",
+   "predators": [],
+   "prey": [],
+   "games": [
+    {
+     "id": "cyanocitta_stelleri:winter:forage:acorn_mast",
+     "archetype": "gather",
+     "verb": "forage",
+     "season": "winter",
+     "unit": "family",
+     "collective": true,
+     "goal": "recover cached acorns in conifer and mixed forest",
+     "resource": "acorn_mast",
+     "requires": [
+      {
+       "object": "acorns under and in the oaks",
+       "client": "acorns.js",
+       "status": "drawn"
+      }
+     ],
+     "raster": "client/res_acorn_mast.png",
+     "hotspots": [],
+     "scarcity": 1.0,
+     "competitors": [],
+     "plants": [
+      "notholithocarpus_densiflorus"
+     ]
+    },
+    {
+     "id": "cyanocitta_stelleri:spring:nest:cover",
+     "archetype": "shelter",
+     "verb": "nest",
+     "season": "spring",
+     "unit": "family",
+     "collective": true,
+     "goal": "bulky nest in a young conifer",
+     "resource": "cover",
+     "requires": [
+      {
+       "object": "shrubs and trees to hide in",
+       "client": "shrubfield.js, vegetation.js",
+       "status": "drawn"
+      }
+     ],
+     "raster": "client/res_cover.png",
+     "hotspots": [
+      [
+       2837.8,
+       9804.8,
+       90
+      ],
+      [
+       1606.6,
+       9624.6,
+       90
+      ],
+      [
+       585.6,
+       9534.5,
+       90
+      ],
+      [
+       7072.1,
+       7792.8,
+       90
+      ],
+      [
+       6741.7,
+       7522.5,
+       90
+      ],
+      [
+       5150.2,
+       7492.5,
+       90
+      ],
+      [
+       8153.2,
+       7462.5,
+       90
+      ],
+      [
+       6711.7,
+       7372.4,
+       90
+      ],
+      [
+       7012.0,
+       7282.3,
+       90
+      ],
+      [
+       6651.7,
+       7192.2,
+       90
+      ],
+      [
+       6831.8,
+       7162.2,
+       90
+      ],
+      [
+       6531.5,
+       7042.0,
+       90
+      ]
+     ],
+     "scarcity": 0.302,
+     "competitors": [
+      "odocoileus_hemionus",
+      "ursus_americanus"
+     ]
+    },
+    {
+     "id": "cyanocitta_stelleri:spring:court",
+     "archetype": "court",
+     "verb": "court",
+     "season": "spring",
+     "unit": "family",
+     "collective": true,
+     "resource": "cover",
+     "requires": [
+      {
+       "object": "shrubs and trees to hide in",
+       "client": "shrubfield.js, vegetation.js",
+       "status": "drawn"
+      }
+     ],
+     "raster": "client/res_cover.png",
+     "hotspots": [
+      [
+       2837.8,
+       9804.8,
+       90
+      ],
+      [
+       1606.6,
+       9624.6,
+       90
+      ],
+      [
+       585.6,
+       9534.5,
+       90
+      ],
+      [
+       7072.1,
+       7792.8,
+       90
+      ],
+      [
+       6741.7,
+       7522.5,
+       90
+      ],
+      [
+       5150.2,
+       7492.5,
+       90
+      ],
+      [
+       8153.2,
+       7462.5,
+       90
+      ],
+      [
+       6711.7,
+       7372.4,
+       90
+      ],
+      [
+       7012.0,
+       7282.3,
+       90
+      ],
+      [
+       6651.7,
+       7192.2,
+       90
+      ],
+      [
+       6831.8,
+       7162.2,
+       90
+      ],
+      [
+       6531.5,
+       7042.0,
+       90
+      ]
+     ],
+     "scarcity": 0.302,
+     "competitors": [
+      "odocoileus_hemionus",
+      "ursus_americanus"
+     ]
+    },
+    {
+     "id": "cyanocitta_stelleri:summer:rear:insects",
+     "archetype": "rear",
+     "verb": "rear",
+     "season": "summer",
+     "unit": "family",
+     "collective": true,
+     "goal": "feed nestlings",
+     "resource": "insects",
+     "requires": [
+      {
+       "object": "insects",
+       "client": null,
+       "status": "missing"
+      }
+     ],
+     "raster": "client/res_insects.png",
+     "hotspots": [
+      [
+       2237.2,
+       9985.0,
+       72
+      ],
+      [
+       2837.8,
+       9985.0,
+       72
+      ],
+      [
+       2988.0,
+       9985.0,
+       72
+      ],
+      [
+       3228.2,
+       9985.0,
+       72
+      ],
+      [
+       3378.4,
+       9985.0,
+       72
+      ],
+      [
+       3528.5,
+       9985.0,
+       72
+      ],
+      [
+       3678.7,
+       9985.0,
+       72
+      ],
+      [
+       4129.1,
+       9985.0,
+       72
+      ],
+      [
+       4279.3,
+       9985.0,
+       72
+      ],
+      [
+       4549.5,
+       9985.0,
+       72
+      ],
+      [
+       4699.7,
+       9985.0,
+       72
+      ],
+      [
+       4970.0,
+       9985.0,
+       72
+      ]
+     ],
+     "scarcity": 0.969,
+     "competitors": [
+      "corvus_corax",
+      "ursus_americanus"
+     ]
+    },
+    {
+     "id": "cyanocitta_stelleri:fall:forage:acorn_mast",
+     "archetype": "gather",
+     "verb": "forage",
+     "season": "fall",
+     "unit": "family",
+     "collective": true,
+     "resource": "acorn_mast",
+     "requires": [
+      {
+       "object": "acorns under and in the oaks",
+       "client": "acorns.js",
+       "status": "drawn"
+      }
+     ],
+     "raster": "client/res_acorn_mast.png",
+     "hotspots": [
+      [
+       705.7,
+       9985.0,
+       50
+      ],
+      [
+       855.9,
+       9985.0,
+       50
+      ],
+      [
+       1576.6,
+       9985.0,
+       50
+      ],
+      [
+       2087.1,
+       9985.0,
+       50
+      ],
+      [
+       2297.3,
+       9985.0,
+       50
+      ],
+      [
+       2447.4,
+       9985.0,
+       50
+      ],
+      [
+       2597.6,
+       9985.0,
+       50
+      ],
+      [
+       2747.7,
+       9985.0,
+       50
+      ],
+      [
+       2927.9,
+       9985.0,
+       50
+      ],
+      [
+       3798.8,
+       9985.0,
+       50
+      ],
+      [
+       4039.0,
+       9985.0,
+       50
+      ],
+      [
+       4369.4,
+       9985.0,
+       50
+      ]
+     ],
+     "scarcity": 0.995,
+     "competitors": [
+      "corvus_corax",
+      "odocoileus_hemionus",
+      "ursus_americanus"
+     ],
+     "plants": [
+      "notholithocarpus_densiflorus",
+      "quercus_vacciniifolia"
+     ]
+    },
+    {
+     "id": "cyanocitta_stelleri:fall:cache:acorn_mast",
+     "archetype": "cache",
+     "verb": "cache",
+     "season": "fall",
+     "unit": "family",
+     "collective": true,
+     "goal": "carry acorns up from the oaks and hoard them under the conifers",
+     "resource": "acorn_mast",
+     "requires": [
+      {
+       "object": "acorns under and in the oaks",
+       "client": "acorns.js",
+       "status": "drawn"
+      }
+     ],
+     "raster": "client/res_acorn_mast.png",
+     "hotspots": [
+      [
+       705.7,
+       9985.0,
+       50
+      ],
+      [
+       855.9,
+       9985.0,
+       50
+      ],
+      [
+       1576.6,
+       9985.0,
+       50
+      ],
+      [
+       2087.1,
+       9985.0,
+       50
+      ],
+      [
+       2297.3,
+       9985.0,
+       50
+      ],
+      [
+       2447.4,
+       9985.0,
+       50
+      ],
+      [
+       2597.6,
+       9985.0,
+       50
+      ],
+      [
+       2747.7,
+       9985.0,
+       50
+      ],
+      [
+       2927.9,
+       9985.0,
+       50
+      ],
+      [
+       3798.8,
+       9985.0,
+       50
+      ],
+      [
+       4039.0,
+       9985.0,
+       50
+      ],
+      [
+       4369.4,
+       9985.0,
+       50
+      ]
+     ],
+     "scarcity": 0.995,
+     "competitors": [
+      "corvus_corax",
+      "odocoileus_hemionus",
+      "ursus_americanus"
+     ]
+    },
+    {
+     "id": "cyanocitta_stelleri:winter:drink",
+     "archetype": "drink",
+     "verb": "drink",
+     "season": "winter",
+     "unit": "family",
+     "collective": true,
+     "resource": "water",
+     "rhythm": "often",
+     "hotspots": [
+      [
+       405.4,
+       9985.0,
+       100
+      ],
+      [
+       1036.0,
+       9985.0,
+       100
+      ],
+      [
+       1606.6,
+       9985.0,
+       100
+      ],
+      [
+       1906.9,
+       9985.0,
+       100
+      ],
+      [
+       2237.2,
+       9985.0,
+       100
+      ],
+      [
+       2988.0,
+       9985.0,
+       100
+      ],
+      [
+       3138.1,
+       9985.0,
+       100
+      ],
+      [
+       3468.5,
+       9985.0,
+       100
+      ],
+      [
+       4639.6,
+       9985.0,
+       100
+      ],
+      [
+       5510.5,
+       9985.0,
+       100
+      ],
+      [
+       6351.4,
+       9985.0,
+       100
+      ],
+      [
+       6651.7,
+       9985.0,
+       100
+      ]
+     ],
+     "scarcity": 0.574,
+     "competitors": [
+      "corvus_corax",
+      "buteo_jamaicensis",
+      "odocoileus_hemionus",
+      "cathartes_aura",
+      "ursus_americanus"
+     ]
+    },
+    {
+     "id": "cyanocitta_stelleri:winter:shelter:cover",
+     "archetype": "shelter",
+     "verb": "shelter",
+     "season": "winter",
+     "unit": "family",
+     "collective": true,
+     "resource": "cover",
+     "hotspots": [
+      [
+       2837.8,
+       9804.8,
+       76
+      ],
+      [
+       1606.6,
+       9624.6,
+       76
+      ],
+      [
+       585.6,
+       9534.5,
+       76
+      ],
+      [
+       7072.1,
+       7792.8,
+       76
+      ],
+      [
+       6741.7,
+       7522.5,
+       76
+      ],
+      [
+       5150.2,
+       7492.5,
+       76
+      ],
+      [
+       8153.2,
+       7462.5,
+       76
+      ],
+      [
+       6711.7,
+       7372.4,
+       76
+      ],
+      [
+       7012.0,
+       7282.3,
+       76
+      ],
+      [
+       6651.7,
+       7192.2,
+       76
+      ],
+      [
+       6831.8,
+       7162.2,
+       76
+      ],
+      [
+       6531.5,
+       7042.0,
+       76
+      ]
+     ],
+     "scarcity": 0.302,
+     "competitors": [
+      "odocoileus_hemionus",
+      "ursus_americanus"
+     ]
+    },
+    {
+     "id": "cyanocitta_stelleri:spring:drink",
+     "archetype": "drink",
+     "verb": "drink",
+     "season": "spring",
+     "unit": "family",
+     "collective": true,
+     "resource": "water",
+     "rhythm": "often",
+     "hotspots": [
+      [
+       405.4,
+       9985.0,
+       100
+      ],
+      [
+       1036.0,
+       9985.0,
+       100
+      ],
+      [
+       1606.6,
+       9985.0,
+       100
+      ],
+      [
+       1906.9,
+       9985.0,
+       100
+      ],
+      [
+       2237.2,
+       9985.0,
+       100
+      ],
+      [
+       2988.0,
+       9985.0,
+       100
+      ],
+      [
+       3138.1,
+       9985.0,
+       100
+      ],
+      [
+       3468.5,
+       9985.0,
+       100
+      ],
+      [
+       4639.6,
+       9985.0,
+       100
+      ],
+      [
+       5510.5,
+       9985.0,
+       100
+      ],
+      [
+       6351.4,
+       9985.0,
+       100
+      ],
+      [
+       6651.7,
+       9985.0,
+       100
+      ]
+     ],
+     "scarcity": 0.574,
+     "competitors": [
+      "corvus_corax",
+      "buteo_jamaicensis",
+      "odocoileus_hemionus",
+      "cathartes_aura",
+      "ursus_americanus"
+     ]
+    },
+    {
+     "id": "cyanocitta_stelleri:summer:drink",
+     "archetype": "drink",
+     "verb": "drink",
+     "season": "summer",
+     "unit": "family",
+     "collective": true,
+     "resource": "water",
+     "rhythm": "often",
+     "hotspots": [
+      [
+       1036.0,
+       9985.0,
+       100
+      ],
+      [
+       2988.0,
+       9985.0,
+       100
+      ],
+      [
+       3138.1,
+       9985.0,
+       100
+      ],
+      [
+       3468.5,
+       9985.0,
+       100
+      ],
+      [
+       4639.6,
+       9985.0,
+       100
+      ],
+      [
+       5510.5,
+       9985.0,
+       100
+      ],
+      [
+       6351.4,
+       9985.0,
+       100
+      ],
+      [
+       6651.7,
+       9985.0,
+       100
+      ],
+      [
+       8093.1,
+       9985.0,
+       100
+      ],
+      [
+       8723.7,
+       9985.0,
+       100
+      ],
+      [
+       9474.5,
+       9985.0,
+       100
+      ],
+      [
+       2807.8,
+       9955.0,
+       100
+      ]
+     ],
+     "scarcity": 0.683,
+     "competitors": [
+      "corvus_corax",
+      "buteo_jamaicensis",
+      "odocoileus_hemionus",
+      "cathartes_aura",
+      "ursus_americanus"
+     ]
+    },
+    {
+     "id": "cyanocitta_stelleri:summer:shelter:cover",
+     "archetype": "shelter",
+     "verb": "shelter",
+     "season": "summer",
+     "unit": "family",
+     "collective": true,
+     "resource": "cover",
+     "hotspots": [
+      [
+       2837.8,
+       9804.8,
+       90
+      ],
+      [
+       1606.6,
+       9624.6,
+       90
+      ],
+      [
+       585.6,
+       9534.5,
+       90
+      ],
+      [
+       7072.1,
+       7792.8,
+       90
+      ],
+      [
+       6741.7,
+       7522.5,
+       90
+      ],
+      [
+       5150.2,
+       7492.5,
+       90
+      ],
+      [
+       8153.2,
+       7462.5,
+       90
+      ],
+      [
+       6711.7,
+       7372.4,
+       90
+      ],
+      [
+       7012.0,
+       7282.3,
+       90
+      ],
+      [
+       6651.7,
+       7192.2,
+       90
+      ],
+      [
+       6831.8,
+       7162.2,
+       90
+      ],
+      [
+       6531.5,
+       7042.0,
+       90
+      ]
+     ],
+     "scarcity": 0.302,
+     "competitors": [
+      "odocoileus_hemionus",
+      "ursus_americanus"
+     ]
+    },
+    {
+     "id": "cyanocitta_stelleri:fall:drink",
+     "archetype": "drink",
+     "verb": "drink",
+     "season": "fall",
+     "unit": "family",
+     "collective": true,
+     "resource": "water",
+     "rhythm": "often",
+     "hotspots": [
+      [
+       1036.0,
+       9985.0,
+       100
+      ],
+      [
+       2988.0,
+       9985.0,
+       100
+      ],
+      [
+       3138.1,
+       9985.0,
+       100
+      ],
+      [
+       3468.5,
+       9985.0,
+       100
+      ],
+      [
+       4639.6,
+       9985.0,
+       100
+      ],
+      [
+       5510.5,
+       9985.0,
+       100
+      ],
+      [
+       6351.4,
+       9985.0,
+       100
+      ],
+      [
+       6651.7,
+       9985.0,
+       100
+      ],
+      [
+       8093.1,
+       9985.0,
+       100
+      ],
+      [
+       8723.7,
+       9985.0,
+       100
+      ],
+      [
+       9474.5,
+       9985.0,
+       100
+      ],
+      [
+       2807.8,
+       9955.0,
+       100
+      ]
+     ],
+     "scarcity": 0.683,
+     "competitors": [
+      "corvus_corax",
+      "buteo_jamaicensis",
+      "odocoileus_hemionus",
+      "cathartes_aura",
+      "ursus_americanus"
+     ]
+    },
+    {
+     "id": "cyanocitta_stelleri:fall:shelter:cover",
+     "archetype": "shelter",
+     "verb": "shelter",
+     "season": "fall",
+     "unit": "family",
+     "collective": true,
+     "resource": "cover",
+     "hotspots": [
+      [
+       2837.8,
+       9804.8,
+       90
+      ],
+      [
+       1606.6,
+       9624.6,
+       90
+      ],
+      [
+       585.6,
+       9534.5,
+       90
+      ],
+      [
+       7072.1,
+       7792.8,
+       90
+      ],
+      [
+       6741.7,
+       7522.5,
+       90
+      ],
+      [
+       5150.2,
+       7492.5,
+       90
+      ],
+      [
+       8153.2,
+       7462.5,
+       90
+      ],
+      [
+       6711.7,
+       7372.4,
+       90
+      ],
+      [
+       7012.0,
+       7282.3,
+       90
+      ],
+      [
+       6651.7,
+       7192.2,
+       90
+      ],
+      [
+       6831.8,
+       7162.2,
+       90
+      ],
+      [
+       6531.5,
+       7042.0,
+       90
+      ]
+     ],
+     "scarcity": 0.302,
+     "competitors": [
+      "odocoileus_hemionus",
+      "ursus_americanus"
+     ]
+    }
+   ]
+  },
+  "cathartes_aura": {
+   "unit": "solitary",
+   "predators": [],
+   "prey": [],
+   "games": [
+    {
+     "id": "cathartes_aura:winter:forage",
+     "archetype": "gather",
+     "verb": "forage",
+     "season": "winter",
+     "unit": "solitary",
+     "collective": false,
+     "goal": "soar and sniff out carcasses"
+    },
+    {
+     "id": "cathartes_aura:spring:forage",
+     "archetype": "gather",
+     "verb": "forage",
+     "season": "spring",
+     "unit": "solitary",
+     "collective": false
+    },
+    {
+     "id": "cathartes_aura:spring:court",
+     "archetype": "court",
+     "verb": "court",
+     "season": "spring",
+     "unit": "solitary",
+     "collective": false,
+     "goal": "ground display, wings spread",
+     "resource": "cliff_or_snag",
+     "requires": [
+      {
+       "object": "snags, cliffs and tall perch trees",
+       "client": "vegetation.js (old trees), rocks.js",
+       "status": "partial"
+      }
+     ],
+     "raster": "client/res_cliff_or_snag.png",
+     "hotspots": [
+      [
+       6651.7,
+       9985.0,
+       90
+      ],
+      [
+       7012.0,
+       9985.0,
+       90
+      ],
+      [
+       7732.7,
+       9985.0,
+       90
+      ],
+      [
+       7882.9,
+       9985.0,
+       90
+      ],
+      [
+       8093.1,
+       9985.0,
+       90
+      ],
+      [
+       8243.2,
+       9985.0,
+       90
+      ],
+      [
+       8393.4,
+       9985.0,
+       90
+      ],
+      [
+       8693.7,
+       9985.0,
+       90
+      ],
+      [
+       9144.1,
+       9985.0,
+       90
+      ],
+      [
+       9294.3,
+       9985.0,
+       90
+      ],
+      [
+       9444.4,
+       9985.0,
+       90
+      ],
+      [
+       9774.8,
+       9985.0,
+       90
+      ]
+     ],
+     "scarcity": 0.027,
+     "competitors": [
+      "corvus_corax",
+      "buteo_jamaicensis"
+     ]
+    },
+    {
+     "id": "cathartes_aura:summer:forage",
+     "archetype": "gather",
+     "verb": "forage",
+     "season": "summer",
+     "unit": "solitary",
+     "collective": false
+    },
+    {
+     "id": "cathartes_aura:summer:rear:cliff_or_snag",
+     "archetype": "rear",
+     "verb": "rear",
+     "season": "summer",
+     "unit": "solitary",
+     "collective": false,
+     "goal": "raise chicks in a cliff or snag cavity, no nest built",
+     "resource": "cliff_or_snag",
+     "requires": [
+      {
+       "object": "snags, cliffs and tall perch trees",
+       "client": "vegetation.js (old trees), rocks.js",
+       "status": "partial"
+      }
+     ],
+     "raster": "client/res_cliff_or_snag.png",
+     "hotspots": [
+      [
+       6651.7,
+       9985.0,
+       90
+      ],
+      [
+       7012.0,
+       9985.0,
+       90
+      ],
+      [
+       7732.7,
+       9985.0,
+       90
+      ],
+      [
+       7882.9,
+       9985.0,
+       90
+      ],
+      [
+       8093.1,
+       9985.0,
+       90
+      ],
+      [
+       8243.2,
+       9985.0,
+       90
+      ],
+      [
+       8393.4,
+       9985.0,
+       90
+      ],
+      [
+       8693.7,
+       9985.0,
+       90
+      ],
+      [
+       9144.1,
+       9985.0,
+       90
+      ],
+      [
+       9294.3,
+       9985.0,
+       90
+      ],
+      [
+       9444.4,
+       9985.0,
+       90
+      ],
+      [
+       9774.8,
+       9985.0,
+       90
+      ]
+     ],
+     "scarcity": 0.027,
+     "competitors": []
+    },
+    {
+     "id": "cathartes_aura:summer:rear:cavity",
+     "archetype": "rear",
+     "verb": "rear",
+     "season": "summer",
+     "unit": "solitary",
+     "collective": false,
+     "goal": "raise chicks in a cliff or snag cavity, no nest built",
+     "resource": "cavity",
+     "requires": [
+      {
+       "object": "cavity trees and granaries",
+       "client": "acorns.js (granaries); no other cavities",
+       "status": "partial"
+      }
+     ],
+     "raster": "client/res_cavity.png",
+     "hotspots": [
+      [
+       2267.3,
+       9985.0,
+       72
+      ],
+      [
+       2657.7,
+       9985.0,
+       72
+      ],
+      [
+       2867.9,
+       9985.0,
+       72
+      ],
+      [
+       3708.7,
+       9985.0,
+       72
+      ],
+      [
+       4549.5,
+       9985.0,
+       72
+      ],
+      [
+       4970.0,
+       9985.0,
+       72
+      ],
+      [
+       5360.4,
+       9985.0,
+       72
+      ],
+      [
+       5510.5,
+       9985.0,
+       72
+      ],
+      [
+       5720.7,
+       9985.0,
+       72
+      ],
+      [
+       8213.2,
+       9985.0,
+       72
+      ],
+      [
+       9474.5,
+       9985.0,
+       72
+      ],
+      [
+       1576.6,
+       9955.0,
+       72
+      ]
+     ],
+     "scarcity": 0.409,
+     "competitors": []
+    },
+    {
+     "id": "cathartes_aura:fall:forage",
+     "archetype": "gather",
+     "verb": "forage",
+     "season": "fall",
+     "unit": "solitary",
+     "collective": false,
+     "goal": "roost communally on snags"
+    },
+    {
+     "id": "cathartes_aura:winter:drink",
+     "archetype": "drink",
+     "verb": "drink",
+     "season": "winter",
+     "unit": "solitary",
+     "collective": false,
+     "resource": "water",
+     "rhythm": "often",
+     "hotspots": [
+      [
+       405.4,
+       9985.0,
+       100
+      ],
+      [
+       1036.0,
+       9985.0,
+       100
+      ],
+      [
+       1606.6,
+       9985.0,
+       100
+      ],
+      [
+       1906.9,
+       9985.0,
+       100
+      ],
+      [
+       2237.2,
+       9985.0,
+       100
+      ],
+      [
+       2988.0,
+       9985.0,
+       100
+      ],
+      [
+       3138.1,
+       9985.0,
+       100
+      ],
+      [
+       3468.5,
+       9985.0,
+       100
+      ],
+      [
+       4639.6,
+       9985.0,
+       100
+      ],
+      [
+       5510.5,
+       9985.0,
+       100
+      ],
+      [
+       6351.4,
+       9985.0,
+       100
+      ],
+      [
+       6651.7,
+       9985.0,
+       100
+      ]
+     ],
+     "scarcity": 0.574,
+     "competitors": [
+      "corvus_corax",
+      "buteo_jamaicensis",
+      "odocoileus_hemionus",
+      "cyanocitta_stelleri",
+      "ursus_americanus"
+     ]
+    },
+    {
+     "id": "cathartes_aura:winter:shelter:cliff_or_snag",
+     "archetype": "shelter",
+     "verb": "shelter",
+     "season": "winter",
+     "unit": "solitary",
+     "collective": false,
+     "resource": "cliff_or_snag",
+     "hotspots": [
+      [
+       6651.7,
+       9985.0,
+       90
+      ],
+      [
+       7012.0,
+       9985.0,
+       90
+      ],
+      [
+       7732.7,
+       9985.0,
+       90
+      ],
+      [
+       7882.9,
+       9985.0,
+       90
+      ],
+      [
+       8093.1,
+       9985.0,
+       90
+      ],
+      [
+       8243.2,
+       9985.0,
+       90
+      ],
+      [
+       8393.4,
+       9985.0,
+       90
+      ],
+      [
+       8693.7,
+       9985.0,
+       90
+      ],
+      [
+       9144.1,
+       9985.0,
+       90
+      ],
+      [
+       9294.3,
+       9985.0,
+       90
+      ],
+      [
+       9444.4,
+       9985.0,
+       90
+      ],
+      [
+       9774.8,
+       9985.0,
+       90
+      ]
+     ],
+     "scarcity": 0.027,
+     "competitors": [
+      "corvus_corax",
+      "buteo_jamaicensis"
+     ]
+    },
+    {
+     "id": "cathartes_aura:spring:drink",
+     "archetype": "drink",
+     "verb": "drink",
+     "season": "spring",
+     "unit": "solitary",
+     "collective": false,
+     "resource": "water",
+     "rhythm": "often",
+     "hotspots": [
+      [
+       405.4,
+       9985.0,
+       100
+      ],
+      [
+       1036.0,
+       9985.0,
+       100
+      ],
+      [
+       1606.6,
+       9985.0,
+       100
+      ],
+      [
+       1906.9,
+       9985.0,
+       100
+      ],
+      [
+       2237.2,
+       9985.0,
+       100
+      ],
+      [
+       2988.0,
+       9985.0,
+       100
+      ],
+      [
+       3138.1,
+       9985.0,
+       100
+      ],
+      [
+       3468.5,
+       9985.0,
+       100
+      ],
+      [
+       4639.6,
+       9985.0,
+       100
+      ],
+      [
+       5510.5,
+       9985.0,
+       100
+      ],
+      [
+       6351.4,
+       9985.0,
+       100
+      ],
+      [
+       6651.7,
+       9985.0,
+       100
+      ]
+     ],
+     "scarcity": 0.574,
+     "competitors": [
+      "corvus_corax",
+      "buteo_jamaicensis",
+      "odocoileus_hemionus",
+      "cyanocitta_stelleri",
+      "ursus_americanus"
+     ]
+    },
+    {
+     "id": "cathartes_aura:spring:shelter:cliff_or_snag",
+     "archetype": "shelter",
+     "verb": "shelter",
+     "season": "spring",
+     "unit": "solitary",
+     "collective": false,
+     "resource": "cliff_or_snag",
+     "hotspots": [
+      [
+       6651.7,
+       9985.0,
+       90
+      ],
+      [
+       7012.0,
+       9985.0,
+       90
+      ],
+      [
+       7732.7,
+       9985.0,
+       90
+      ],
+      [
+       7882.9,
+       9985.0,
+       90
+      ],
+      [
+       8093.1,
+       9985.0,
+       90
+      ],
+      [
+       8243.2,
+       9985.0,
+       90
+      ],
+      [
+       8393.4,
+       9985.0,
+       90
+      ],
+      [
+       8693.7,
+       9985.0,
+       90
+      ],
+      [
+       9144.1,
+       9985.0,
+       90
+      ],
+      [
+       9294.3,
+       9985.0,
+       90
+      ],
+      [
+       9444.4,
+       9985.0,
+       90
+      ],
+      [
+       9774.8,
+       9985.0,
+       90
+      ]
+     ],
+     "scarcity": 0.027,
+     "competitors": [
+      "corvus_corax",
+      "buteo_jamaicensis"
+     ]
+    },
+    {
+     "id": "cathartes_aura:summer:drink",
+     "archetype": "drink",
+     "verb": "drink",
+     "season": "summer",
+     "unit": "solitary",
+     "collective": false,
+     "resource": "water",
+     "rhythm": "often",
+     "hotspots": [
+      [
+       1036.0,
+       9985.0,
+       100
+      ],
+      [
+       2988.0,
+       9985.0,
+       100
+      ],
+      [
+       3138.1,
+       9985.0,
+       100
+      ],
+      [
+       3468.5,
+       9985.0,
+       100
+      ],
+      [
+       4639.6,
+       9985.0,
+       100
+      ],
+      [
+       5510.5,
+       9985.0,
+       100
+      ],
+      [
+       6351.4,
+       9985.0,
+       100
+      ],
+      [
+       6651.7,
+       9985.0,
+       100
+      ],
+      [
+       8093.1,
+       9985.0,
+       100
+      ],
+      [
+       8723.7,
+       9985.0,
+       100
+      ],
+      [
+       9474.5,
+       9985.0,
+       100
+      ],
+      [
+       2807.8,
+       9955.0,
+       100
+      ]
+     ],
+     "scarcity": 0.683,
+     "competitors": [
+      "corvus_corax",
+      "buteo_jamaicensis",
+      "odocoileus_hemionus",
+      "cyanocitta_stelleri",
+      "ursus_americanus"
+     ]
+    },
+    {
+     "id": "cathartes_aura:summer:shelter:cliff_or_snag",
+     "archetype": "shelter",
+     "verb": "shelter",
+     "season": "summer",
+     "unit": "solitary",
+     "collective": false,
+     "resource": "cliff_or_snag",
+     "hotspots": [
+      [
+       6651.7,
+       9985.0,
+       90
+      ],
+      [
+       7012.0,
+       9985.0,
+       90
+      ],
+      [
+       7732.7,
+       9985.0,
+       90
+      ],
+      [
+       7882.9,
+       9985.0,
+       90
+      ],
+      [
+       8093.1,
+       9985.0,
+       90
+      ],
+      [
+       8243.2,
+       9985.0,
+       90
+      ],
+      [
+       8393.4,
+       9985.0,
+       90
+      ],
+      [
+       8693.7,
+       9985.0,
+       90
+      ],
+      [
+       9144.1,
+       9985.0,
+       90
+      ],
+      [
+       9294.3,
+       9985.0,
+       90
+      ],
+      [
+       9444.4,
+       9985.0,
+       90
+      ],
+      [
+       9774.8,
+       9985.0,
+       90
+      ]
+     ],
+     "scarcity": 0.027,
+     "competitors": [
+      "corvus_corax",
+      "buteo_jamaicensis"
+     ]
+    },
+    {
+     "id": "cathartes_aura:fall:drink",
+     "archetype": "drink",
+     "verb": "drink",
+     "season": "fall",
+     "unit": "solitary",
+     "collective": false,
+     "resource": "water",
+     "rhythm": "often",
+     "hotspots": [
+      [
+       1036.0,
+       9985.0,
+       100
+      ],
+      [
+       2988.0,
+       9985.0,
+       100
+      ],
+      [
+       3138.1,
+       9985.0,
+       100
+      ],
+      [
+       3468.5,
+       9985.0,
+       100
+      ],
+      [
+       4639.6,
+       9985.0,
+       100
+      ],
+      [
+       5510.5,
+       9985.0,
+       100
+      ],
+      [
+       6351.4,
+       9985.0,
+       100
+      ],
+      [
+       6651.7,
+       9985.0,
+       100
+      ],
+      [
+       8093.1,
+       9985.0,
+       100
+      ],
+      [
+       8723.7,
+       9985.0,
+       100
+      ],
+      [
+       9474.5,
+       9985.0,
+       100
+      ],
+      [
+       2807.8,
+       9955.0,
+       100
+      ]
+     ],
+     "scarcity": 0.683,
+     "competitors": [
+      "corvus_corax",
+      "buteo_jamaicensis",
+      "odocoileus_hemionus",
+      "cyanocitta_stelleri",
+      "ursus_americanus"
+     ]
+    },
+    {
+     "id": "cathartes_aura:fall:shelter:cliff_or_snag",
+     "archetype": "shelter",
+     "verb": "shelter",
+     "season": "fall",
+     "unit": "solitary",
+     "collective": false,
+     "resource": "cliff_or_snag",
+     "hotspots": [
+      [
+       6651.7,
+       9985.0,
+       90
+      ],
+      [
+       7012.0,
+       9985.0,
+       90
+      ],
+      [
+       7732.7,
+       9985.0,
+       90
+      ],
+      [
+       7882.9,
+       9985.0,
+       90
+      ],
+      [
+       8093.1,
+       9985.0,
+       90
+      ],
+      [
+       8243.2,
+       9985.0,
+       90
+      ],
+      [
+       8393.4,
+       9985.0,
+       90
+      ],
+      [
+       8693.7,
+       9985.0,
+       90
+      ],
+      [
+       9144.1,
+       9985.0,
+       90
+      ],
+      [
+       9294.3,
+       9985.0,
+       90
+      ],
+      [
+       9444.4,
+       9985.0,
+       90
+      ],
+      [
+       9774.8,
+       9985.0,
+       90
+      ]
+     ],
+     "scarcity": 0.027,
+     "competitors": [
+      "corvus_corax",
+      "buteo_jamaicensis"
+     ]
+    }
+   ]
+  },
+  "ursus_americanus": {
+   "unit": "mother_and_young",
+   "predators": [],
+   "prey": [],
+   "games": [
+    {
+     "id": "ursus_americanus:winter:den:cover",
+     "archetype": "shelter",
+     "verb": "den",
+     "season": "winter",
+     "unit": "mother_and_young",
+     "collective": true,
+     "goal": "den under a fallen tree, in a rock cave or a hollow; out on a warm day",
+     "resource": "cover",
+     "requires": [
+      {
+       "object": "shrubs and trees to hide in",
+       "client": "shrubfield.js, vegetation.js",
+       "status": "drawn"
+      }
+     ],
+     "raster": "client/res_cover.png",
+     "hotspots": [
+      [
+       2837.8,
+       9804.8,
+       76
+      ],
+      [
+       1606.6,
+       9624.6,
+       76
+      ],
+      [
+       585.6,
+       9534.5,
+       76
+      ],
+      [
+       7072.1,
+       7792.8,
+       76
+      ],
+      [
+       6741.7,
+       7522.5,
+       76
+      ],
+      [
+       5150.2,
+       7492.5,
+       76
+      ],
+      [
+       8153.2,
+       7462.5,
+       76
+      ],
+      [
+       6711.7,
+       7372.4,
+       76
+      ],
+      [
+       7012.0,
+       7282.3,
+       76
+      ],
+      [
+       6651.7,
+       7192.2,
+       76
+      ],
+      [
+       6831.8,
+       7162.2,
+       76
+      ],
+      [
+       6531.5,
+       7042.0,
+       76
+      ]
+     ],
+     "scarcity": 0.302,
+     "competitors": [
+      "odocoileus_hemionus"
+     ]
+    },
+    {
+     "id": "ursus_americanus:spring:forage:grass_forbs",
+     "archetype": "gather",
+     "verb": "forage",
+     "season": "spring",
+     "unit": "mother_and_young",
+     "collective": true,
+     "goal": "new grass and sedge, winter-killed carcasses",
+     "resource": "grass_forbs",
+     "requires": [
+      {
+       "object": "grass blades and tufts, forbs",
+       "client": "grass.js",
+       "status": "drawn"
+      }
+     ],
+     "raster": "client/res_grass_forbs.png",
+     "hotspots": [
+      [
+       6411.4,
+       9955.0,
+       90
+      ],
+      [
+       8153.2,
+       9955.0,
+       90
+      ],
+      [
+       8333.3,
+       9955.0,
+       90
+      ],
+      [
+       5450.5,
+       9774.8,
+       90
+      ],
+      [
+       1606.6,
+       9684.7,
+       90
+      ],
+      [
+       3738.7,
+       9684.7,
+       90
+      ],
+      [
+       9804.8,
+       9594.6,
+       90
+      ],
+      [
+       1606.6,
+       9534.5,
+       90
+      ],
+      [
+       9864.9,
+       9444.4,
+       90
+      ],
+      [
+       9144.1,
+       9324.3,
+       90
+      ],
+      [
+       9774.8,
+       9324.3,
+       90
+      ],
+      [
+       9744.7,
+       9174.2,
+       90
+      ]
+     ],
+     "scarcity": 0.988,
+     "competitors": [
+      "odocoileus_hemionus"
+     ],
+     "plants": [
+      "chlorogalum_pomeridianum",
+      "dipterostemon_capitatus"
+     ]
+    },
+    {
+     "id": "ursus_americanus:spring:rear:cover",
+     "archetype": "rear",
+     "verb": "rear",
+     "season": "spring",
+     "unit": "mother_and_young",
+     "collective": true,
+     "goal": "sows lead cubs out of the den",
+     "resource": "cover",
+     "requires": [
+      {
+       "object": "shrubs and trees to hide in",
+       "client": "shrubfield.js, vegetation.js",
+       "status": "drawn"
+      }
+     ],
+     "raster": "client/res_cover.png",
+     "hotspots": [
+      [
+       2837.8,
+       9804.8,
+       90
+      ],
+      [
+       1606.6,
+       9624.6,
+       90
+      ],
+      [
+       585.6,
+       9534.5,
+       90
+      ],
+      [
+       7072.1,
+       7792.8,
+       90
+      ],
+      [
+       6741.7,
+       7522.5,
+       90
+      ],
+      [
+       5150.2,
+       7492.5,
+       90
+      ],
+      [
+       8153.2,
+       7462.5,
+       90
+      ],
+      [
+       6711.7,
+       7372.4,
+       90
+      ],
+      [
+       7012.0,
+       7282.3,
+       90
+      ],
+      [
+       6651.7,
+       7192.2,
+       90
+      ],
+      [
+       6831.8,
+       7162.2,
+       90
+      ],
+      [
+       6531.5,
+       7042.0,
+       90
+      ]
+     ],
+     "scarcity": 0.302,
+     "competitors": [
+      "odocoileus_hemionus",
+      "cyanocitta_stelleri"
+     ]
+    },
+    {
+     "id": "ursus_americanus:summer:forage:browse",
+     "archetype": "gather",
+     "verb": "forage",
+     "season": "summer",
+     "unit": "mother_and_young",
+     "collective": true,
+     "goal": "berries, ants and grubs under logs",
+     "resource": "browse",
+     "requires": [
+      {
+       "object": "shrub and low tree foliage within reach",
+       "client": "shrubfield.js, vegetation.js",
+       "status": "drawn"
+      }
+     ],
+     "raster": "client/res_browse.png",
+     "hotspots": [
+      [
+       2837.8,
+       9804.8,
+       56
+      ],
+      [
+       1606.6,
+       9624.6,
+       56
+      ],
+      [
+       585.6,
+       9534.5,
+       56
+      ],
+      [
+       7072.1,
+       7792.8,
+       56
+      ],
+      [
+       6741.7,
+       7522.5,
+       56
+      ],
+      [
+       5150.2,
+       7492.5,
+       56
+      ],
+      [
+       8153.2,
+       7462.5,
+       56
+      ],
+      [
+       6711.7,
+       7372.4,
+       56
+      ],
+      [
+       7012.0,
+       7282.3,
+       56
+      ],
+      [
+       6651.7,
+       7192.2,
+       56
+      ],
+      [
+       6831.8,
+       7162.2,
+       56
+      ],
+      [
+       6531.5,
+       7042.0,
+       56
+      ]
+     ],
+     "scarcity": 0.992,
+     "competitors": [
+      "odocoileus_hemionus"
+     ],
+     "plants": [
+      "arctostaphylos_manzanita",
+      "arctostaphylos_patula",
+      "arctostaphylos_viscida",
+      "cornus_sericea",
+      "gaultheria_shallon",
+      "oplopanax_horridus",
+      "ribes_malvaceum",
+      "ribes_roezlii",
+      "rubus_parviflorus",
+      "rubus_spectabilis",
+      "rubus_ursinus",
+      "sambucus_nigra_caerulea",
+      "vaccinium_ovatum",
+      "vaccinium_parvifolium"
+     ]
+    },
+    {
+     "id": "ursus_americanus:summer:forage:insects",
+     "archetype": "gather",
+     "verb": "forage",
+     "season": "summer",
+     "unit": "mother_and_young",
+     "collective": true,
+     "goal": "berries, ants and grubs under logs",
+     "resource": "insects",
+     "requires": [
+      {
+       "object": "insects",
+       "client": null,
+       "status": "missing"
+      }
+     ],
+     "raster": "client/res_insects.png",
+     "hotspots": [
+      [
+       2237.2,
+       9985.0,
+       72
+      ],
+      [
+       2837.8,
+       9985.0,
+       72
+      ],
+      [
+       2988.0,
+       9985.0,
+       72
+      ],
+      [
+       3228.2,
+       9985.0,
+       72
+      ],
+      [
+       3378.4,
+       9985.0,
+       72
+      ],
+      [
+       3528.5,
+       9985.0,
+       72
+      ],
+      [
+       3678.7,
+       9985.0,
+       72
+      ],
+      [
+       4129.1,
+       9985.0,
+       72
+      ],
+      [
+       4279.3,
+       9985.0,
+       72
+      ],
+      [
+       4549.5,
+       9985.0,
+       72
+      ],
+      [
+       4699.7,
+       9985.0,
+       72
+      ],
+      [
+       4970.0,
+       9985.0,
+       72
+      ]
+     ],
+     "scarcity": 0.969,
+     "competitors": [
+      "corvus_corax",
+      "cyanocitta_stelleri"
+     ],
+     "plants": []
+    },
+    {
+     "id": "ursus_americanus:summer:court:cover",
+     "archetype": "court",
+     "verb": "court",
+     "season": "summer",
+     "unit": "mother_and_young",
+     "collective": true,
+     "goal": "mating in June and July",
+     "resource": "cover",
+     "requires": [
+      {
+       "object": "shrubs and trees to hide in",
+       "client": "shrubfield.js, vegetation.js",
+       "status": "drawn"
+      }
+     ],
+     "raster": "client/res_cover.png",
+     "hotspots": [
+      [
+       2837.8,
+       9804.8,
+       90
+      ],
+      [
+       1606.6,
+       9624.6,
+       90
+      ],
+      [
+       585.6,
+       9534.5,
+       90
+      ],
+      [
+       7072.1,
+       7792.8,
+       90
+      ],
+      [
+       6741.7,
+       7522.5,
+       90
+      ],
+      [
+       5150.2,
+       7492.5,
+       90
+      ],
+      [
+       8153.2,
+       7462.5,
+       90
+      ],
+      [
+       6711.7,
+       7372.4,
+       90
+      ],
+      [
+       7012.0,
+       7282.3,
+       90
+      ],
+      [
+       6651.7,
+       7192.2,
+       90
+      ],
+      [
+       6831.8,
+       7162.2,
+       90
+      ],
+      [
+       6531.5,
+       7042.0,
+       90
+      ]
+     ],
+     "scarcity": 0.302,
+     "competitors": [
+      "corvus_corax",
+      "odocoileus_hemionus"
+     ]
+    },
+    {
+     "id": "ursus_americanus:summer:shelter:cover",
+     "archetype": "shelter",
+     "verb": "shelter",
+     "season": "summer",
+     "unit": "mother_and_young",
+     "collective": true,
+     "goal": "bed in shade at midday",
+     "resource": "cover",
+     "requires": [
+      {
+       "object": "shrubs and trees to hide in",
+       "client": "shrubfield.js, vegetation.js",
+       "status": "drawn"
+      }
+     ],
+     "raster": "client/res_cover.png",
+     "hotspots": [
+      [
+       2837.8,
+       9804.8,
+       90
+      ],
+      [
+       1606.6,
+       9624.6,
+       90
+      ],
+      [
+       585.6,
+       9534.5,
+       90
+      ],
+      [
+       7072.1,
+       7792.8,
+       90
+      ],
+      [
+       6741.7,
+       7522.5,
+       90
+      ],
+      [
+       5150.2,
+       7492.5,
+       90
+      ],
+      [
+       8153.2,
+       7462.5,
+       90
+      ],
+      [
+       6711.7,
+       7372.4,
+       90
+      ],
+      [
+       7012.0,
+       7282.3,
+       90
+      ],
+      [
+       6651.7,
+       7192.2,
+       90
+      ],
+      [
+       6831.8,
+       7162.2,
+       90
+      ],
+      [
+       6531.5,
+       7042.0,
+       90
+      ]
+     ],
+     "scarcity": 0.302,
+     "competitors": [
+      "corvus_corax",
+      "odocoileus_hemionus"
+     ]
+    },
+    {
+     "id": "ursus_americanus:fall:forage:acorn_mast",
+     "archetype": "gather",
+     "verb": "forage",
+     "season": "fall",
+     "unit": "mother_and_young",
+     "collective": true,
+     "goal": "fatten for the den: acorns and berries up to 20 hours a day",
+     "resource": "acorn_mast",
+     "requires": [
+      {
+       "object": "acorns under and in the oaks",
+       "client": "acorns.js",
+       "status": "drawn"
+      }
+     ],
+     "raster": "client/res_acorn_mast.png",
+     "hotspots": [
+      [
+       705.7,
+       9985.0,
+       50
+      ],
+      [
+       855.9,
+       9985.0,
+       50
+      ],
+      [
+       1576.6,
+       9985.0,
+       50
+      ],
+      [
+       2087.1,
+       9985.0,
+       50
+      ],
+      [
+       2297.3,
+       9985.0,
+       50
+      ],
+      [
+       2447.4,
+       9985.0,
+       50
+      ],
+      [
+       2597.6,
+       9985.0,
+       50
+      ],
+      [
+       2747.7,
+       9985.0,
+       50
+      ],
+      [
+       2927.9,
+       9985.0,
+       50
+      ],
+      [
+       3798.8,
+       9985.0,
+       50
+      ],
+      [
+       4039.0,
+       9985.0,
+       50
+      ],
+      [
+       4369.4,
+       9985.0,
+       50
+      ]
+     ],
+     "scarcity": 0.995,
+     "competitors": [
+      "corvus_corax",
+      "odocoileus_hemionus",
+      "cyanocitta_stelleri"
+     ],
+     "plants": [
+      "notholithocarpus_densiflorus",
+      "quercus_agrifolia",
+      "quercus_lobata",
+      "quercus_vacciniifolia"
+     ]
+    },
+    {
+     "id": "ursus_americanus:fall:forage:browse",
+     "archetype": "gather",
+     "verb": "forage",
+     "season": "fall",
+     "unit": "mother_and_young",
+     "collective": true,
+     "goal": "fatten for the den: acorns and berries up to 20 hours a day",
+     "resource": "browse",
+     "requires": [
+      {
+       "object": "shrub and low tree foliage within reach",
+       "client": "shrubfield.js, vegetation.js",
+       "status": "drawn"
+      }
+     ],
+     "raster": "client/res_browse.png",
+     "hotspots": [
+      [
+       2837.8,
+       9804.8,
+       40
+      ],
+      [
+       1606.6,
+       9624.6,
+       40
+      ],
+      [
+       585.6,
+       9534.5,
+       40
+      ],
+      [
+       7072.1,
+       7792.8,
+       40
+      ],
+      [
+       6741.7,
+       7522.5,
+       40
+      ],
+      [
+       5150.2,
+       7492.5,
+       40
+      ],
+      [
+       8153.2,
+       7462.5,
+       40
+      ],
+      [
+       6711.7,
+       7372.4,
+       40
+      ],
+      [
+       7012.0,
+       7282.3,
+       40
+      ],
+      [
+       6651.7,
+       7192.2,
+       40
+      ],
+      [
+       6831.8,
+       7162.2,
+       40
+      ],
+      [
+       6531.5,
+       7042.0,
+       40
+      ]
+     ],
+     "scarcity": 1.0,
+     "competitors": [],
+     "plants": [
+      "arctostaphylos_manzanita",
+      "arctostaphylos_patula",
+      "arctostaphylos_viscida",
+      "cornus_sericea",
+      "frangula_californica",
+      "gaultheria_shallon",
+      "heteromeles_arbutifolia",
+      "oplopanax_horridus",
+      "rosa_californica",
+      "sambucus_nigra_caerulea",
+      "vaccinium_ovatum",
+      "vitis_californica"
+     ]
+    },
+    {
+     "id": "ursus_americanus:winter:drink",
+     "archetype": "drink",
+     "verb": "drink",
+     "season": "winter",
+     "unit": "mother_and_young",
+     "collective": true,
+     "resource": "water",
+     "rhythm": "daily",
+     "hotspots": [
+      [
+       405.4,
+       9985.0,
+       100
+      ],
+      [
+       1036.0,
+       9985.0,
+       100
+      ],
+      [
+       1606.6,
+       9985.0,
+       100
+      ],
+      [
+       1906.9,
+       9985.0,
+       100
+      ],
+      [
+       2237.2,
+       9985.0,
+       100
+      ],
+      [
+       2988.0,
+       9985.0,
+       100
+      ],
+      [
+       3138.1,
+       9985.0,
+       100
+      ],
+      [
+       3468.5,
+       9985.0,
+       100
+      ],
+      [
+       4639.6,
+       9985.0,
+       100
+      ],
+      [
+       5510.5,
+       9985.0,
+       100
+      ],
+      [
+       6351.4,
+       9985.0,
+       100
+      ],
+      [
+       6651.7,
+       9985.0,
+       100
+      ]
+     ],
+     "scarcity": 0.574,
+     "competitors": [
+      "corvus_corax",
+      "buteo_jamaicensis",
+      "odocoileus_hemionus",
+      "cyanocitta_stelleri",
+      "cathartes_aura"
+     ]
+    },
+    {
+     "id": "ursus_americanus:spring:drink",
+     "archetype": "drink",
+     "verb": "drink",
+     "season": "spring",
+     "unit": "mother_and_young",
+     "collective": true,
+     "resource": "water",
+     "rhythm": "daily",
+     "hotspots": [
+      [
+       405.4,
+       9985.0,
+       100
+      ],
+      [
+       1036.0,
+       9985.0,
+       100
+      ],
+      [
+       1606.6,
+       9985.0,
+       100
+      ],
+      [
+       1906.9,
+       9985.0,
+       100
+      ],
+      [
+       2237.2,
+       9985.0,
+       100
+      ],
+      [
+       2988.0,
+       9985.0,
+       100
+      ],
+      [
+       3138.1,
+       9985.0,
+       100
+      ],
+      [
+       3468.5,
+       9985.0,
+       100
+      ],
+      [
+       4639.6,
+       9985.0,
+       100
+      ],
+      [
+       5510.5,
+       9985.0,
+       100
+      ],
+      [
+       6351.4,
+       9985.0,
+       100
+      ],
+      [
+       6651.7,
+       9985.0,
+       100
+      ]
+     ],
+     "scarcity": 0.574,
+     "competitors": [
+      "corvus_corax",
+      "buteo_jamaicensis",
+      "odocoileus_hemionus",
+      "cyanocitta_stelleri",
+      "cathartes_aura"
+     ]
+    },
+    {
+     "id": "ursus_americanus:spring:shelter:cover",
+     "archetype": "shelter",
+     "verb": "shelter",
+     "season": "spring",
+     "unit": "mother_and_young",
+     "collective": true,
+     "resource": "cover",
+     "hotspots": [
+      [
+       2837.8,
+       9804.8,
+       90
+      ],
+      [
+       1606.6,
+       9624.6,
+       90
+      ],
+      [
+       585.6,
+       9534.5,
+       90
+      ],
+      [
+       7072.1,
+       7792.8,
+       90
+      ],
+      [
+       6741.7,
+       7522.5,
+       90
+      ],
+      [
+       5150.2,
+       7492.5,
+       90
+      ],
+      [
+       8153.2,
+       7462.5,
+       90
+      ],
+      [
+       6711.7,
+       7372.4,
+       90
+      ],
+      [
+       7012.0,
+       7282.3,
+       90
+      ],
+      [
+       6651.7,
+       7192.2,
+       90
+      ],
+      [
+       6831.8,
+       7162.2,
+       90
+      ],
+      [
+       6531.5,
+       7042.0,
+       90
+      ]
+     ],
+     "scarcity": 0.302,
+     "competitors": [
+      "odocoileus_hemionus",
+      "cyanocitta_stelleri"
+     ]
+    },
+    {
+     "id": "ursus_americanus:summer:drink",
+     "archetype": "drink",
+     "verb": "drink",
+     "season": "summer",
+     "unit": "mother_and_young",
+     "collective": true,
+     "resource": "water",
+     "rhythm": "daily",
+     "hotspots": [
+      [
+       1036.0,
+       9985.0,
+       100
+      ],
+      [
+       2988.0,
+       9985.0,
+       100
+      ],
+      [
+       3138.1,
+       9985.0,
+       100
+      ],
+      [
+       3468.5,
+       9985.0,
+       100
+      ],
+      [
+       4639.6,
+       9985.0,
+       100
+      ],
+      [
+       5510.5,
+       9985.0,
+       100
+      ],
+      [
+       6351.4,
+       9985.0,
+       100
+      ],
+      [
+       6651.7,
+       9985.0,
+       100
+      ],
+      [
+       8093.1,
+       9985.0,
+       100
+      ],
+      [
+       8723.7,
+       9985.0,
+       100
+      ],
+      [
+       9474.5,
+       9985.0,
+       100
+      ],
+      [
+       2807.8,
+       9955.0,
+       100
+      ]
+     ],
+     "scarcity": 0.683,
+     "competitors": [
+      "corvus_corax",
+      "buteo_jamaicensis",
+      "odocoileus_hemionus",
+      "cyanocitta_stelleri",
+      "cathartes_aura"
+     ]
+    },
+    {
+     "id": "ursus_americanus:fall:drink",
+     "archetype": "drink",
+     "verb": "drink",
+     "season": "fall",
+     "unit": "mother_and_young",
+     "collective": true,
+     "resource": "water",
+     "rhythm": "daily",
+     "hotspots": [
+      [
+       1036.0,
+       9985.0,
+       100
+      ],
+      [
+       2988.0,
+       9985.0,
+       100
+      ],
+      [
+       3138.1,
+       9985.0,
+       100
+      ],
+      [
+       3468.5,
+       9985.0,
+       100
+      ],
+      [
+       4639.6,
+       9985.0,
+       100
+      ],
+      [
+       5510.5,
+       9985.0,
+       100
+      ],
+      [
+       6351.4,
+       9985.0,
+       100
+      ],
+      [
+       6651.7,
+       9985.0,
+       100
+      ],
+      [
+       8093.1,
+       9985.0,
+       100
+      ],
+      [
+       8723.7,
+       9985.0,
+       100
+      ],
+      [
+       9474.5,
+       9985.0,
+       100
+      ],
+      [
+       2807.8,
+       9955.0,
+       100
+      ]
+     ],
+     "scarcity": 0.683,
+     "competitors": [
+      "corvus_corax",
+      "buteo_jamaicensis",
+      "odocoileus_hemionus",
+      "cyanocitta_stelleri",
+      "cathartes_aura"
+     ]
+    },
+    {
+     "id": "ursus_americanus:fall:shelter:cover",
+     "archetype": "shelter",
+     "verb": "shelter",
+     "season": "fall",
+     "unit": "mother_and_young",
+     "collective": true,
+     "resource": "cover",
+     "hotspots": [
+      [
+       2837.8,
+       9804.8,
+       90
+      ],
+      [
+       1606.6,
+       9624.6,
+       90
+      ],
+      [
+       585.6,
+       9534.5,
+       90
+      ],
+      [
+       7072.1,
+       7792.8,
+       90
+      ],
+      [
+       6741.7,
+       7522.5,
+       90
+      ],
+      [
+       5150.2,
+       7492.5,
+       90
+      ],
+      [
+       8153.2,
+       7462.5,
+       90
+      ],
+      [
+       6711.7,
+       7372.4,
+       90
+      ],
+      [
+       7012.0,
+       7282.3,
+       90
+      ],
+      [
+       6651.7,
+       7192.2,
+       90
+      ],
+      [
+       6831.8,
+       7162.2,
+       90
+      ],
+      [
+       6531.5,
+       7042.0,
+       90
+      ]
+     ],
+     "scarcity": 0.302,
+     "competitors": [
+      "odocoileus_hemionus",
+      "cyanocitta_stelleri"
+     ]
+    }
+   ]
+  }
+ },
+ "plays": {
+  "dig": {
+   "client": "client/src/dig.js",
+   "species": []
+  }
+ }
+}

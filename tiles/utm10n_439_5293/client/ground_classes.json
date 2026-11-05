@@ -1,0 +1,375 @@
+{
+ "rock_classes": [
+  "greenstone_metavolcanic",
+  "serpentinite",
+  "slate_phyllite",
+  "schist",
+  "granitic",
+  "volcanic",
+  "sandstone_conglomerate",
+  "limestone_marble",
+  "alluvium",
+  "other"
+ ],
+ "resistance": {
+  "greenstone_metavolcanic": 0.9,
+  "granitic": 0.8,
+  "serpentinite": 0.8,
+  "schist": 0.6,
+  "slate_phyllite": 0.6,
+  "volcanic": 0.7,
+  "sandstone_conglomerate": 0.4,
+  "limestone_marble": 0.7,
+  "alluvium": 0.0,
+  "other": 0.4
+ },
+ "geology": {
+  "encoding": "client/geology.png R = unit index, G = rock class index (1-based into rock_classes)",
+  "units": {
+   "1": {
+    "name": "",
+    "rock_class": "sandstone_conglomerate",
+    "age": "Miocene to Eocene",
+    "lithology": "marine sedimentary rocks",
+    "fraction": 0.3248
+   },
+   "2": {
+    "name": "ice",
+    "rock_class": "other",
+    "age": null,
+    "lithology": "",
+    "fraction": 0.1349
+   },
+   "3": {
+    "name": "rhythmic thin- to medium-bedded sandstone and shale",
+    "rock_class": "sandstone_conglomerate",
+    "age": "Oligocene to Eocene",
+    "lithology": "marine sedimentary rocks",
+    "fraction": 0.0436
+   },
+   "4": {
+    "name": "Needles-GrayW.orWesternOlympic lith.assem.",
+    "rock_class": "sandstone_conglomerate",
+    "age": "Oligocene to Eocene",
+    "lithology": "marine sedimentary rocks",
+    "fraction": 0.3962
+   },
+   "5": {
+    "name": "alluvium",
+    "rock_class": "alluvium",
+    "age": "Quaternary",
+    "lithology": "sand,gravel",
+    "fraction": 0.0385
+   },
+   "6": {
+    "name": "",
+    "rock_class": "alluvium",
+    "age": "Pleistocene",
+    "lithology": "alluvium, drift",
+    "fraction": 0.0177
+   },
+   "7": {
+    "name": "Snag Peak block, siltstone unit of",
+    "rock_class": "sandstone_conglomerate",
+    "age": "Oligocene to Eocene",
+    "lithology": "marine sedimentary rocks",
+    "fraction": 0.0249
+   },
+   "8": {
+    "name": "alpine glacial till, Fraser-age",
+    "rock_class": "other",
+    "age": "Pleistocene",
+    "lithology": "till,",
+    "fraction": 0.0136
+   },
+   "9": {
+    "name": "Western Olympic lithic assemblage",
+    "rock_class": "sandstone_conglomerate",
+    "age": "Oligocene to Eocene",
+    "lithology": "marine sedimentary rocks",
+    "fraction": 0.005
+   },
+   "10": {
+    "name": "water",
+    "rock_class": "other",
+    "age": "Holocene",
+    "lithology": "",
+    "fraction": 0.0007
+   }
+  },
+  "source": "macrostrat"
+ },
+ "soils": {
+  "encoding": "client/soils.png R = map unit index, G = surface rock fragments %, B = depth to bedrock dm (255 none)",
+  "mapunits": {
+   "1": {
+    "musym": "7340",
+    "muname": "Skookumcreek-Bonjonpass-Mountscott complex, 0 to 100 percent slopes",
+    "component": "Skookumcreek",
+    "texture_class": "loam",
+    "texture_modifier": "gravelly",
+    "surface_texture": "Gravelly loam",
+    "rock_fragments_pct": 20.0,
+    "depth_to_bedrock_cm": 150.0,
+    "bedrock_restriction": false,
+    "rock_outcrop_pct": 0,
+    "rock_land": false,
+    "parent_material": "colluvium derived from metasedimentary rock",
+    "taxorder": "Inceptisols",
+    "drainage": "Well drained",
+    "fraction": 0.2248
+   },
+   "2": {
+    "musym": "980",
+    "muname": "Rock outcrop-Rubble land complex, 15 to 100 percent  slopes",
+    "component": "Rock outcrop",
+    "texture_class": "bedrock",
+    "texture_modifier": "none",
+    "surface_texture": "Bedrock",
+    "rock_fragments_pct": 100.0,
+    "depth_to_bedrock_cm": 0.0,
+    "bedrock_restriction": true,
+    "rock_outcrop_pct": 60.0,
+    "rock_land": true,
+    "parent_material": null,
+    "taxorder": null,
+    "drainage": null,
+    "fraction": 0.212
+   },
+   "3": {
+    "musym": "9340",
+    "muname": "Hungrycreek-Nonamecreek-Lakedilly complex, 15 to 100 percent slopes",
+    "component": "Hungrycreek",
+    "texture_class": "silt loam",
+    "texture_modifier": "gravelly",
+    "surface_texture": "Gravelly silt loam",
+    "rock_fragments_pct": 15.0,
+    "depth_to_bedrock_cm": 150.0,
+    "bedrock_restriction": false,
+    "rock_outcrop_pct": 5.0,
+    "rock_land": false,
+    "parent_material": "colluvium derived from metasedimentary rock",
+    "taxorder": "Inceptisols",
+    "drainage": "Well drained",
+    "fraction": 0.1701
+   },
+   "4": {
+    "musym": "9360",
+    "muname": "Mountmystery-Ignarcreek-Lakedilly complex, 15 to 100 percent slopes",
+    "component": "Mountmystery",
+    "texture_class": "silt loam",
+    "texture_modifier": "gravelly",
+    "surface_texture": "Gravelly silt loam",
+    "rock_fragments_pct": 15.0,
+    "depth_to_bedrock_cm": 150.0,
+    "bedrock_restriction": false,
+    "rock_outcrop_pct": 5.0,
+    "rock_land": false,
+    "parent_material": "colluvium derived from metasedimentary rock",
+    "taxorder": "Inceptisols",
+    "drainage": "Well drained",
+    "fraction": 0.1076
+   },
+   "5": {
+    "musym": "996",
+    "muname": "Ice, 0 to 100 percent slopes",
+    "component": "Ice",
+    "texture_class": "unknown",
+    "texture_modifier": "none",
+    "surface_texture": null,
+    "rock_fragments_pct": 0.0,
+    "depth_to_bedrock_cm": null,
+    "bedrock_restriction": false,
+    "rock_outcrop_pct": 10.0,
+    "rock_land": false,
+    "parent_material": null,
+    "taxorder": null,
+    "drainage": null,
+    "fraction": 0.107
+   },
+   "6": {
+    "musym": "5320",
+    "muname": "Mountdeception-Irely complex, 35 to 100 percent slopes",
+    "component": "Mountdeception",
+    "texture_class": "silt loam",
+    "texture_modifier": "very gravelly",
+    "surface_texture": "Very gravelly silt loam",
+    "rock_fragments_pct": 40.0,
+    "depth_to_bedrock_cm": 150.0,
+    "bedrock_restriction": false,
+    "rock_outcrop_pct": 0,
+    "rock_land": false,
+    "parent_material": "colluvium derived from metasedimentary rock",
+    "taxorder": "Inceptisols",
+    "drainage": "Well drained",
+    "fraction": 0.0451
+   },
+   "7": {
+    "musym": "6320",
+    "muname": "Bonjonpass-Skookumcreek-Lapoetcreek complex, 0 to 65 percent slopes",
+    "component": "Bonjonpass",
+    "texture_class": "loam",
+    "texture_modifier": "very gravelly",
+    "surface_texture": "Very gravelly loam",
+    "rock_fragments_pct": 45.0,
+    "depth_to_bedrock_cm": 150.0,
+    "bedrock_restriction": false,
+    "rock_outcrop_pct": 0,
+    "rock_land": false,
+    "parent_material": "colluvium derived from metasedimentary rock",
+    "taxorder": "Spodosols",
+    "drainage": "Well drained",
+    "fraction": 0.0375
+   },
+   "8": {
+    "musym": "4120",
+    "muname": "Irely-Mountdeception-Butlercreek complex, 0 to 60 percent slopes",
+    "component": "Irely",
+    "texture_class": "loam",
+    "texture_modifier": "gravelly",
+    "surface_texture": "Gravelly loam",
+    "rock_fragments_pct": 25.0,
+    "depth_to_bedrock_cm": 150.0,
+    "bedrock_restriction": false,
+    "rock_outcrop_pct": 0,
+    "rock_land": false,
+    "parent_material": "colluvium derived from metasedimentary rock",
+    "taxorder": "Spodosols",
+    "drainage": "Well drained",
+    "fraction": 0.0312
+   },
+   "9": {
+    "musym": "3210",
+    "muname": "Hatana-Cragcreek complex, 0 to 10 percent slopes",
+    "component": "Cragcreek",
+    "texture_class": "sandy loam",
+    "texture_modifier": "none",
+    "surface_texture": "Sandy loam",
+    "rock_fragments_pct": 5.0,
+    "depth_to_bedrock_cm": 150.0,
+    "bedrock_restriction": false,
+    "rock_outcrop_pct": 0,
+    "rock_land": false,
+    "parent_material": "alluvium",
+    "taxorder": "Inceptisols",
+    "drainage": "Well drained",
+    "fraction": 0.0249
+   },
+   "10": {
+    "musym": "3200",
+    "muname": "Muscott-Riverwash complex, 0 to 15 percent slopes",
+    "component": "Muscott",
+    "texture_class": "sandy loam",
+    "texture_modifier": "extremely gravelly",
+    "surface_texture": "Extremely gravelly sandy loam",
+    "rock_fragments_pct": 65.0,
+    "depth_to_bedrock_cm": 150.0,
+    "bedrock_restriction": false,
+    "rock_outcrop_pct": 0,
+    "rock_land": false,
+    "parent_material": "alluvium",
+    "taxorder": "Entisols",
+    "drainage": "Somewhat excessively drained",
+    "fraction": 0.0143
+   },
+   "11": {
+    "musym": "9310",
+    "muname": "Ignarcreek-Lakedilly-Marmotpass complex, 0 to 60 percent slopes",
+    "component": "Ignarcreek",
+    "texture_class": "silt loam",
+    "texture_modifier": "gravelly",
+    "surface_texture": "Gravelly silt loam",
+    "rock_fragments_pct": 25.0,
+    "depth_to_bedrock_cm": 150.0,
+    "bedrock_restriction": false,
+    "rock_outcrop_pct": 0,
+    "rock_land": false,
+    "parent_material": "colluvium derived from metasedimentary rock",
+    "taxorder": "Spodosols",
+    "drainage": "Well drained",
+    "fraction": 0.0115
+   },
+   "12": {
+    "musym": "3220",
+    "muname": "Mountmeany-Marymere complex, 0 to 10 percent slopes",
+    "component": "Mountmeany",
+    "texture_class": "silt loam",
+    "texture_modifier": "none",
+    "surface_texture": "Silt loam",
+    "rock_fragments_pct": 0.0,
+    "depth_to_bedrock_cm": 150.0,
+    "bedrock_restriction": false,
+    "rock_outcrop_pct": 0,
+    "rock_land": false,
+    "parent_material": "alluvium",
+    "taxorder": "Inceptisols",
+    "drainage": "Well drained",
+    "fraction": 0.01
+   },
+   "13": {
+    "musym": "4200",
+    "muname": "Jolleycreek-Saghalie complex, 0 to 60 percent slopes",
+    "component": "Jolleycreek",
+    "texture_class": "silt loam",
+    "texture_modifier": "none",
+    "surface_texture": "Silt loam",
+    "rock_fragments_pct": 10.0,
+    "depth_to_bedrock_cm": 150.0,
+    "bedrock_restriction": false,
+    "rock_outcrop_pct": 0,
+    "rock_land": false,
+    "parent_material": "colluvium derived from metasedimentary rock",
+    "taxorder": "Spodosols",
+    "drainage": "Well drained",
+    "fraction": 0.0039
+   }
+  }
+ },
+ "fractions": {
+  "rock_class": {
+   "sandstone_conglomerate": 0.7946,
+   "alluvium": 0.0562,
+   "other": 0.1492
+  },
+  "texture_class": {
+   "silt loam": 0.3482,
+   "loam": 0.2935,
+   "bedrock": 0.212,
+   "unknown": 0.107,
+   "sandy loam": 0.0393
+  },
+  "texture_modifier": {
+   "gravelly": 0.5452,
+   "none": 0.3578,
+   "very gravelly": 0.0826,
+   "extremely gravelly": 0.0143
+  },
+  "depth_to_bedrock": {
+   "0-25": 0.212,
+   "25-50": 0.0,
+   "50-100": 0.0,
+   "100-150": 0.0,
+   ">=150": 0.681,
+   "none_or_unknown": 0.107
+  }
+ },
+ "rock_fragments_pct": {
+  "min": 0.0,
+  "p10": 0.0,
+  "median": 20.0,
+  "p90": 100.0,
+  "max": 100.0,
+  "mean": 35.5
+ },
+ "depth_to_bedrock_cm": {
+  "min": 0.0,
+  "median": 150.0,
+  "max": 150.0
+ },
+ "outcrop": {
+  "formula": "outcrop = clip(resistance[rock_class] * shallowness * terrain * (1 - tree_cover_pct/100 * 0.5) * lidar, 0, 1); shallowness = clip((150 - depth_to_bedrock_cm) / (150 - 25), 0, 1) (0 where depth unknown); terrain = min(slope_deg / 35, 1) + 0.5 * clip(TPI_m / 1.5, 0, 1), TPI = z - mean(z, 150 m window) on the DEM averaged to 30 m; tree cover from LANDFIRE EVC; water = 0; lidar = 0.5 + min(roughness_m / 0.12, 1.5), roughness = 30 m mean of terrain/roughness_10m.tif (std of the 1 m lidar DEM about a quadratic fitted per 10 m cell)",
+  "mean": 0.0776,
+  "fraction_above_0.5": 0.0455,
+  "fraction_above_0.25": 0.1441
+ }
+}

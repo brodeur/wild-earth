@@ -1,0 +1,223 @@
+{
+ "rock_classes": [
+  "greenstone_metavolcanic",
+  "serpentinite",
+  "slate_phyllite",
+  "schist",
+  "granitic",
+  "volcanic",
+  "sandstone_conglomerate",
+  "limestone_marble",
+  "alluvium",
+  "other"
+ ],
+ "resistance": {
+  "greenstone_metavolcanic": 0.9,
+  "granitic": 0.8,
+  "serpentinite": 0.8,
+  "schist": 0.6,
+  "slate_phyllite": 0.6,
+  "volcanic": 0.7,
+  "sandstone_conglomerate": 0.4,
+  "limestone_marble": 0.7,
+  "alluvium": 0.0,
+  "other": 0.4
+ },
+ "units": {
+  "1": {
+   "name": "",
+   "lithology": "marine sedimentary rocks",
+   "age": "Miocene to Eocene",
+   "age_bottom_ma": 23.03,
+   "age_top_ma": 33.9,
+   "rock_class": "sandstone_conglomerate",
+   "rock_class_index": 7,
+   "water": false,
+   "description": null,
+   "reference": null,
+   "color": "#FEE6AA",
+   "fraction": 0.3248
+  },
+  "2": {
+   "name": "ice",
+   "lithology": "",
+   "age": null,
+   "age_bottom_ma": null,
+   "age_top_ma": null,
+   "rock_class": "other",
+   "rock_class_index": 10,
+   "water": false,
+   "description": null,
+   "reference": null,
+   "color": null,
+   "fraction": 0.1349
+  },
+  "3": {
+   "name": "rhythmic thin- to medium-bedded sandstone and shale",
+   "lithology": "marine sedimentary rocks",
+   "age": "Oligocene to Eocene",
+   "age_bottom_ma": 33.9,
+   "age_top_ma": 33.9,
+   "rock_class": "sandstone_conglomerate",
+   "rock_class_index": 7,
+   "water": false,
+   "description": null,
+   "reference": null,
+   "color": "#FDCDA1",
+   "fraction": 0.0436
+  },
+  "4": {
+   "name": "Needles-GrayW.orWesternOlympic lith.assem.",
+   "lithology": "marine sedimentary rocks",
+   "age": "Oligocene to Eocene",
+   "age_bottom_ma": 33.9,
+   "age_top_ma": 33.9,
+   "rock_class": "sandstone_conglomerate",
+   "rock_class_index": 7,
+   "water": false,
+   "description": null,
+   "reference": null,
+   "color": "#FDCDA1",
+   "fraction": 0.3962
+  },
+  "5": {
+   "name": "alluvium",
+   "lithology": "sand,gravel",
+   "age": "Quaternary",
+   "age_bottom_ma": 2.588,
+   "age_top_ma": 0,
+   "rock_class": "alluvium",
+   "rock_class_index": 9,
+   "water": false,
+   "description": null,
+   "reference": null,
+   "color": "#F9F97F",
+   "fraction": 0.0385
+  },
+  "6": {
+   "name": "",
+   "lithology": "alluvium, drift",
+   "age": "Pleistocene",
+   "age_bottom_ma": 2.588,
+   "age_top_ma": 0.0117,
+   "rock_class": "alluvium",
+   "rock_class_index": 9,
+   "water": false,
+   "description": "glacial outwash, alpine, Fraser-age",
+   "reference": null,
+   "color": "#FFF2AE",
+   "fraction": 0.0177
+  },
+  "7": {
+   "name": "Snag Peak block, siltstone unit of",
+   "lithology": "marine sedimentary rocks",
+   "age": "Oligocene to Eocene",
+   "age_bottom_ma": 33.9,
+   "age_top_ma": 33.9,
+   "rock_class": "sandstone_conglomerate",
+   "rock_class_index": 7,
+   "water": false,
+   "description": null,
+   "reference": null,
+   "color": "#FDCDA1",
+   "fraction": 0.0249
+  },
+  "8": {
+   "name": "alpine glacial till, Fraser-age",
+   "lithology": "till,",
+   "age": "Pleistocene",
+   "age_bottom_ma": 2.588,
+   "age_top_ma": 0.0117,
+   "rock_class": "other",
+   "rock_class_index": 10,
+   "water": false,
+   "description": null,
+   "reference": null,
+   "color": "#FFF2AE",
+   "fraction": 0.0136
+  },
+  "9": {
+   "name": "Western Olympic lithic assemblage",
+   "lithology": "marine sedimentary rocks",
+   "age": "Oligocene to Eocene",
+   "age_bottom_ma": 33.9,
+   "age_top_ma": 33.9,
+   "rock_class": "sandstone_conglomerate",
+   "rock_class_index": 7,
+   "water": false,
+   "description": null,
+   "reference": null,
+   "color": "#FDCDA1",
+   "fraction": 0.005
+  },
+  "10": {
+   "name": "water",
+   "lithology": "",
+   "age": "Holocene",
+   "age_bottom_ma": 0.0117,
+   "age_top_ma": 0,
+   "rock_class": "other",
+   "rock_class_index": 10,
+   "water": true,
+   "description": null,
+   "reference": null,
+   "color": "",
+   "fraction": 0.0007
+  }
+ },
+ "rules": [
+  [
+   "serpentinite",
+   "serpentin|ultramafic|peridotit|dunite|harzburgite|pyroxenite"
+  ],
+  [
+   "greenstone_metavolcanic",
+   "greenstone|meta-?volcanic|metabasalt|meta-?andesite|amphibolite|spilite"
+  ],
+  [
+   "slate_phyllite",
+   "slate|phyllite|argillite"
+  ],
+  [
+   "schist",
+   "schist|gneiss|hornfels|quartzite|metasediment"
+  ],
+  [
+   "limestone_marble",
+   "limestone|marble|dolomite|dolostone|carbonate"
+  ],
+  [
+   "granitic",
+   "granit|granodiorit|tonalit|diorit|monzonit|syenit|gabbro|trondhjemit|plutonic|intrusive|pegmatit|aplite"
+  ],
+  [
+   "volcanic",
+   "volcanic|andesit|basalt|rhyolit|dacit|tuff|pyroclastic|lahar|mudflow|latite"
+  ],
+  [
+   "alluvium",
+   "alluvi|terrace|alluvial fan|unconsolidated|colluvi|landslide|surficial|\\bgravels?\\b|\\bsands?\\b"
+  ],
+  [
+   "sandstone_conglomerate",
+   "sandstone|conglomerate|gr[ae]ywacke|siltstone|mudstone|shale|breccia|clastic|sedimentary"
+  ]
+ ],
+ "rule_notes": "first match over major lithologies, then name, then description; volcanic with bottom age >= 145.0 Ma -> greenstone_metavolcanic; clastic sedimentary with bottom age <= 2.58 Ma -> alluvium; 'water' -> other",
+ "source": {
+  "source": "macrostrat",
+  "endpoint": "https://macrostrat.org/api/v2/geologic_units/map",
+  "scale": "large",
+  "macrostrat_source_id": 19,
+  "scale_coverage_of_sample_points": {
+   "large": 25,
+   "medium": 25,
+   "small": 25,
+   "tiny": 25
+  },
+  "sample_points": 25,
+  "requests": 44,
+  "uncovered_pieces": 0,
+  "fallback_errors": []
+ }
+}

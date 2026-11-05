@@ -1,0 +1,2253 @@
+{
+ "tile": "utm10n_439_5293",
+ "regions": [
+  "pacific_northwest"
+ ],
+ "communities": [
+  {
+   "source": "evt",
+   "code": 7042,
+   "name": "North Pacific Mesic Western Hemlock-Silver Fir Forest",
+   "cells": 46646,
+   "rule": "pnw_silver_fir",
+   "named": [
+    "tsuga_heterophylla",
+    "abies_amabilis"
+   ]
+  },
+  {
+   "source": "evt",
+   "code": 7735,
+   "name": "North American Glacier and Ice Field",
+   "cells": 17573
+  },
+  {
+   "source": "evt",
+   "code": 7037,
+   "name": "North Pacific Maritime Dry-Mesic Douglas-fir-Western Hemlock Forest",
+   "cells": 12239,
+   "rule": "pnw_douglas_fir_hemlock",
+   "named": [
+    "tsuga_heterophylla",
+    "pseudotsuga_menziesii"
+   ]
+  },
+  {
+   "source": "evt",
+   "code": 7734,
+   "name": "North Pacific Alpine and Subalpine Bedrock and Scree",
+   "cells": 11382,
+   "rule": "pnw_bedrock",
+   "named": [
+    "phyllodoce_empetriformis",
+    "cassiope_mertensiana"
+   ]
+  },
+  {
+   "source": "evt",
+   "code": 7041,
+   "name": "North Pacific Mountain Hemlock Forest",
+   "cells": 5701,
+   "rule": "pnw_mountain_hemlock",
+   "named": [
+    "tsuga_mertensiana"
+   ]
+  },
+  {
+   "source": "evt",
+   "code": 7056,
+   "name": "Rocky Mountain Subalpine Mesic-Wet Spruce-Fir Forest and Woodland",
+   "cells": 3533,
+   "rule": null,
+   "named": []
+  },
+  {
+   "source": "evt",
+   "code": 7733,
+   "name": "North Pacific Montane Massive Bedrock-Cliff and Talus",
+   "cells": 2393,
+   "rule": "pnw_bedrock",
+   "named": []
+  },
+  {
+   "source": "evt",
+   "code": 7174,
+   "name": "North Pacific Dry-Mesic Silver Fir-Western Hemlock-Douglas-fir Forest",
+   "cells": 1772,
+   "rule": "pnw_silver_fir",
+   "named": [
+    "tsuga_heterophylla",
+    "pseudotsuga_menziesii",
+    "abies_amabilis"
+   ]
+  },
+  {
+   "source": "evt",
+   "code": 7038,
+   "name": "North Pacific Maritime Mesic Subalpine Parkland",
+   "cells": 1406,
+   "rule": "pnw_subalpine_parkland",
+   "named": [
+    "abies_lasiocarpa",
+    "tsuga_mertensiana",
+    "phyllodoce_empetriformis",
+    "cassiope_mertensiana"
+   ]
+  },
+  {
+   "source": "evt",
+   "code": 7039,
+   "name": "North Pacific Maritime Mesic-Wet Douglas-fir-Western Hemlock Forest",
+   "cells": 1262,
+   "rule": "pnw_douglas_fir_hemlock",
+   "named": [
+    "tsuga_heterophylla",
+    "pseudotsuga_menziesii"
+   ]
+  },
+  {
+   "source": "evt",
+   "code": 7156,
+   "name": "North Pacific Lowland Riparian Forest",
+   "cells": 1198,
+   "rule": "pnw_lowland_riparian",
+   "named": [
+    "alnus_rubra",
+    "populus_trichocarpa",
+    "rubus_spectabilis"
+   ]
+  },
+  {
+   "source": "evt",
+   "code": 7292,
+   "name": "Open Water",
+   "cells": 849,
+   "rule": "open_water",
+   "named": []
+  },
+  {
+   "source": "evt",
+   "code": 7171,
+   "name": "North Pacific Alpine and Subalpine Dry Grassland",
+   "cells": 759,
+   "rule": "pnw_alpine",
+   "named": [
+    "phyllodoce_empetriformis",
+    "cassiope_mertensiana"
+   ]
+  },
+  {
+   "source": "evt",
+   "code": 7036,
+   "name": "North Pacific Seasonal Sitka Spruce Forest",
+   "cells": 739,
+   "rule": "pnw_sitka_spruce",
+   "named": [
+    "picea_sitchensis"
+   ]
+  },
+  {
+   "source": "evt",
+   "code": 7158,
+   "name": "North Pacific Montane Riparian Woodland",
+   "cells": 688,
+   "rule": "pnw_montane_riparian",
+   "named": [
+    "alnus_rubra",
+    "populus_trichocarpa",
+    "rubus_spectabilis"
+   ]
+  },
+  {
+   "source": "evt",
+   "code": 7063,
+   "name": "North Pacific Broadleaf Landslide Forest",
+   "cells": 583,
+   "rule": "pnw_avalanche_shrub",
+   "named": []
+  },
+  {
+   "source": "evt",
+   "code": 7084,
+   "name": "North Pacific Montane Shrubland",
+   "cells": 548,
+   "rule": "pnw_avalanche_shrub",
+   "named": []
+  },
+  {
+   "source": "evt",
+   "code": 7069,
+   "name": "North Pacific Dry and Mesic Alpine Fell-field or Meadow",
+   "cells": 537,
+   "rule": "pnw_alpine",
+   "named": [
+    "phyllodoce_empetriformis",
+    "cassiope_mertensiana"
+   ]
+  },
+  {
+   "source": "evt",
+   "code": 7178,
+   "name": "North Pacific Hypermaritime Western Red-cedar-Western Hemlock Forest",
+   "cells": 331,
+   "rule": "pnw_redcedar_hemlock",
+   "named": [
+    "thuja_plicata",
+    "tsuga_heterophylla"
+   ]
+  },
+  {
+   "source": "evt",
+   "code": 7068,
+   "name": "North Pacific Dry and Mesic Alpine Dwarf-Shrubland",
+   "cells": 197,
+   "rule": "pnw_alpine",
+   "named": [
+    "phyllodoce_empetriformis",
+    "cassiope_mertensiana"
+   ]
+  },
+  {
+   "source": "evt",
+   "code": 7035,
+   "name": "North Pacific Dry Douglas-fir-(Madrone) Forest and Woodland",
+   "cells": 153,
+   "rule": "named_from_pseudotsuga_menziesii_arbutus_menziesii",
+   "named": [
+    "pseudotsuga_menziesii",
+    "arbutus_menziesii"
+   ]
+  },
+  {
+   "source": "evt",
+   "code": 7083,
+   "name": "North Pacific Avalanche Chute Shrubland",
+   "cells": 146,
+   "rule": "pnw_avalanche_shrub",
+   "named": [
+    "acer_circinatum",
+    "rubus_spectabilis",
+    "alnus_rubra"
+   ]
+  },
+  {
+   "source": "evt",
+   "code": 7662,
+   "name": "Temperate Pacific Freshwater Emergent Marsh",
+   "cells": 144,
+   "rule": null,
+   "named": [
+    "salix_lasiandra"
+   ]
+  },
+  {
+   "source": "evt",
+   "code": 9165,
+   "name": "North Pacific Hardwood-Conifer Swamp",
+   "cells": 41,
+   "rule": "pnw_lowland_riparian",
+   "named": []
+  },
+  {
+   "source": "evt",
+   "code": 9272,
+   "name": "Temperate Pacific Subalpine-Montane Wet Meadow",
+   "cells": 34,
+   "rule": null,
+   "named": [
+    "salix_lasiandra",
+    "rubus_spectabilis"
+   ]
+  },
+  {
+   "source": "evt",
+   "code": 9170,
+   "name": "North Pacific Lowland Mixed Hardwood-Conifer Forest",
+   "cells": 17,
+   "rule": "pnw_lowland_mixed",
+   "named": []
+  }
+ ],
+ "unread": [
+  {
+   "source": "evt",
+   "code": 7056,
+   "name": "Rocky Mountain Subalpine Mesic-Wet Spruce-Fir Forest and Woodland",
+   "cells": 3533
+  }
+ ],
+ "needs": [
+  {
+   "id": "abies_amabilis",
+   "kind": "tree",
+   "why": [
+    "cover: rule pnw_silver_fir on North Pacific Mesic Western Hemlock-Silver Fir Forest",
+    "named by EVT 7042 North Pacific Mesic Western Hemlock-Silver Fir Forest (46646 cells)",
+    "cover: rule pnw_mountain_hemlock on North Pacific Mountain Hemlock Forest",
+    "cover: rule pnw_silver_fir on North Pacific Dry-Mesic Silver Fir-Western Hemlock-Douglas-fir Forest",
+    "named by EVT 7174 North Pacific Dry-Mesic Silver Fir-Western Hemlock-Douglas-fir Forest (1772 cells)",
+    "cover: rule pnw_montane_riparian on North Pacific Montane Riparian Woodland",
+    "cover: rule pnw_redcedar_hemlock on North Pacific Hypermaritime Western Red-cedar-Western Hemlock Forest"
+   ],
+   "cover": 0.2344,
+   "records": 0,
+   "record": true,
+   "card": true,
+   "drawn_as": "abies_amabilis",
+   "rank": 1
+  },
+  {
+   "id": "vaccinium_parvifolium",
+   "kind": "shrub",
+   "why": [
+    "cover: rule pnw_silver_fir on North Pacific Mesic Western Hemlock-Silver Fir Forest",
+    "cover: rule pnw_douglas_fir_hemlock on North Pacific Maritime Dry-Mesic Douglas-fir-Western Hemlock Forest",
+    "cover: rule pnw_mountain_hemlock on North Pacific Mountain Hemlock Forest",
+    "cover: rule pnw_silver_fir on North Pacific Dry-Mesic Silver Fir-Western Hemlock-Douglas-fir Forest",
+    "cover: rule pnw_subalpine_parkland on North Pacific Maritime Mesic Subalpine Parkland",
+    "cover: rule pnw_douglas_fir_hemlock on North Pacific Maritime Mesic-Wet Douglas-fir-Western Hemlock Forest",
+    "cover: rule pnw_sitka_spruce on North Pacific Seasonal Sitka Spruce Forest",
+    "cover: rule pnw_avalanche_shrub on North Pacific Broadleaf Landslide Forest",
+    "cover: rule pnw_avalanche_shrub on North Pacific Montane Shrubland",
+    "cover: rule pnw_redcedar_hemlock on North Pacific Hypermaritime Western Red-cedar-Western Hemlock Forest",
+    "cover: rule pnw_avalanche_shrub on North Pacific Avalanche Chute Shrubland"
+   ],
+   "cover": 0.233,
+   "records": 0,
+   "record": true,
+   "card": true,
+   "drawn_as": "vaccinium_parvifolium",
+   "rank": 2
+  },
+  {
+   "id": "tsuga_heterophylla",
+   "kind": "tree",
+   "why": [
+    "cover: rule pnw_silver_fir on North Pacific Mesic Western Hemlock-Silver Fir Forest",
+    "named by EVT 7042 North Pacific Mesic Western Hemlock-Silver Fir Forest (46646 cells)",
+    "cover: rule pnw_douglas_fir_hemlock on North Pacific Maritime Dry-Mesic Douglas-fir-Western Hemlock Forest",
+    "named by EVT 7037 North Pacific Maritime Dry-Mesic Douglas-fir-Western Hemlock Forest (12239 cells)",
+    "cover: rule pnw_silver_fir on North Pacific Dry-Mesic Silver Fir-Western Hemlock-Douglas-fir Forest",
+    "named by EVT 7174 North Pacific Dry-Mesic Silver Fir-Western Hemlock-Douglas-fir Forest (1772 cells)",
+    "cover: rule pnw_douglas_fir_hemlock on North Pacific Maritime Mesic-Wet Douglas-fir-Western Hemlock Forest",
+    "named by EVT 7039 North Pacific Maritime Mesic-Wet Douglas-fir-Western Hemlock Forest (1262 cells)",
+    "cover: rule pnw_sitka_spruce on North Pacific Seasonal Sitka Spruce Forest",
+    "cover: rule pnw_montane_riparian on North Pacific Montane Riparian Woodland",
+    "cover: rule pnw_redcedar_hemlock on North Pacific Hypermaritime Western Red-cedar-Western Hemlock Forest",
+    "named by EVT 7178 North Pacific Hypermaritime Western Red-cedar-Western Hemlock Forest (331 cells)",
+    "cover: rule pnw_lowland_mixed on North Pacific Lowland Mixed Hardwood-Conifer Forest"
+   ],
+   "cover": 0.2024,
+   "records": 0,
+   "record": true,
+   "card": true,
+   "drawn_as": "tsuga_heterophylla",
+   "rank": 3
+  },
+  {
+   "id": "mahonia_nervosa",
+   "kind": "shrub",
+   "why": [
+    "cover: rule pnw_silver_fir on North Pacific Mesic Western Hemlock-Silver Fir Forest",
+    "cover: rule pnw_douglas_fir_hemlock on North Pacific Maritime Dry-Mesic Douglas-fir-Western Hemlock Forest",
+    "cover: rule pnw_silver_fir on North Pacific Dry-Mesic Silver Fir-Western Hemlock-Douglas-fir Forest",
+    "cover: rule pnw_douglas_fir_hemlock on North Pacific Maritime Mesic-Wet Douglas-fir-Western Hemlock Forest",
+    "cover: rule pnw_sitka_spruce on North Pacific Seasonal Sitka Spruce Forest",
+    "cover: rule pnw_redcedar_hemlock on North Pacific Hypermaritime Western Red-cedar-Western Hemlock Forest",
+    "cover: rule pnw_lowland_mixed on North Pacific Lowland Mixed Hardwood-Conifer Forest"
+   ],
+   "cover": 0.1787,
+   "records": 0,
+   "record": true,
+   "card": true,
+   "drawn_as": "mahonia_nervosa",
+   "rank": 4
+  },
+  {
+   "id": "tsuga_mertensiana",
+   "kind": "tree",
+   "why": [
+    "cover: rule pnw_bedrock on North Pacific Alpine and Subalpine Bedrock and Scree",
+    "cover: rule pnw_mountain_hemlock on North Pacific Mountain Hemlock Forest",
+    "named by EVT 7041 North Pacific Mountain Hemlock Forest (5701 cells)",
+    "cover: rule pnw_bedrock on North Pacific Montane Massive Bedrock-Cliff and Talus",
+    "cover: rule pnw_subalpine_parkland on North Pacific Maritime Mesic Subalpine Parkland",
+    "named by EVT 7038 North Pacific Maritime Mesic Subalpine Parkland (1406 cells)"
+   ],
+   "cover": 0.0999,
+   "records": 0,
+   "record": true,
+   "card": true,
+   "drawn_as": "tsuga_mertensiana",
+   "rank": 5
+  },
+  {
+   "id": "phyllodoce_empetriformis",
+   "kind": "shrub",
+   "why": [
+    "cover: rule pnw_bedrock on North Pacific Alpine and Subalpine Bedrock and Scree",
+    "named by EVT 7734 North Pacific Alpine and Subalpine Bedrock and Scree (11382 cells)",
+    "cover: rule pnw_mountain_hemlock on North Pacific Mountain Hemlock Forest",
+    "cover: rule pnw_bedrock on North Pacific Montane Massive Bedrock-Cliff and Talus",
+    "cover: rule pnw_subalpine_parkland on North Pacific Maritime Mesic Subalpine Parkland",
+    "named by EVT 7038 North Pacific Maritime Mesic Subalpine Parkland (1406 cells)",
+    "cover: rule pnw_alpine on North Pacific Alpine and Subalpine Dry Grassland",
+    "named by EVT 7171 North Pacific Alpine and Subalpine Dry Grassland (759 cells)",
+    "cover: rule pnw_alpine on North Pacific Dry and Mesic Alpine Fell-field or Meadow",
+    "named by EVT 7069 North Pacific Dry and Mesic Alpine Fell-field or Meadow (537 cells)",
+    "cover: rule pnw_alpine on North Pacific Dry and Mesic Alpine Dwarf-Shrubland",
+    "named by EVT 7068 North Pacific Dry and Mesic Alpine Dwarf-Shrubland (197 cells)"
+   ],
+   "cover": 0.0972,
+   "records": 0,
+   "record": true,
+   "card": true,
+   "drawn_as": "phyllodoce_empetriformis",
+   "rank": 6
+  },
+  {
+   "id": "abies_lasiocarpa",
+   "kind": "tree",
+   "why": [
+    "cover: rule pnw_bedrock on North Pacific Alpine and Subalpine Bedrock and Scree",
+    "cover: rule pnw_mountain_hemlock on North Pacific Mountain Hemlock Forest",
+    "cover: rule pnw_bedrock on North Pacific Montane Massive Bedrock-Cliff and Talus",
+    "cover: rule pnw_subalpine_parkland on North Pacific Maritime Mesic Subalpine Parkland",
+    "named by EVT 7038 North Pacific Maritime Mesic Subalpine Parkland (1406 cells)",
+    "cover: rule pnw_alpine on North Pacific Alpine and Subalpine Dry Grassland",
+    "cover: rule pnw_avalanche_shrub on North Pacific Broadleaf Landslide Forest",
+    "cover: rule pnw_avalanche_shrub on North Pacific Montane Shrubland",
+    "cover: rule pnw_alpine on North Pacific Dry and Mesic Alpine Fell-field or Meadow",
+    "cover: rule pnw_alpine on North Pacific Dry and Mesic Alpine Dwarf-Shrubland",
+    "cover: rule pnw_avalanche_shrub on North Pacific Avalanche Chute Shrubland"
+   ],
+   "cover": 0.095,
+   "records": 0,
+   "record": true,
+   "card": true,
+   "drawn_as": "abies_lasiocarpa",
+   "rank": 7
+  },
+  {
+   "id": "pseudotsuga_menziesii",
+   "kind": "tree",
+   "why": [
+    "cover: rule pnw_silver_fir on North Pacific Mesic Western Hemlock-Silver Fir Forest",
+    "cover: rule pnw_douglas_fir_hemlock on North Pacific Maritime Dry-Mesic Douglas-fir-Western Hemlock Forest",
+    "named by EVT 7037 North Pacific Maritime Dry-Mesic Douglas-fir-Western Hemlock Forest (12239 cells)",
+    "cover: rule pnw_silver_fir on North Pacific Dry-Mesic Silver Fir-Western Hemlock-Douglas-fir Forest",
+    "named by EVT 7174 North Pacific Dry-Mesic Silver Fir-Western Hemlock-Douglas-fir Forest (1772 cells)",
+    "cover: rule pnw_douglas_fir_hemlock on North Pacific Maritime Mesic-Wet Douglas-fir-Western Hemlock Forest",
+    "named by EVT 7039 North Pacific Maritime Mesic-Wet Douglas-fir-Western Hemlock Forest (1262 cells)",
+    "named by EVT 7035 North Pacific Dry Douglas-fir-(Madrone) Forest and Woodland (153 cells)",
+    "cover: rule pnw_lowland_mixed on North Pacific Lowland Mixed Hardwood-Conifer Forest"
+   ],
+   "cover": 0.0906,
+   "records": 0,
+   "record": true,
+   "card": false,
+   "drawn_as": "pseudotsuga_menziesii",
+   "rank": 8
+  },
+  {
+   "id": "cassiope_mertensiana",
+   "kind": "shrub",
+   "why": [
+    "cover: rule pnw_bedrock on North Pacific Alpine and Subalpine Bedrock and Scree",
+    "named by EVT 7734 North Pacific Alpine and Subalpine Bedrock and Scree (11382 cells)",
+    "cover: rule pnw_mountain_hemlock on North Pacific Mountain Hemlock Forest",
+    "cover: rule pnw_bedrock on North Pacific Montane Massive Bedrock-Cliff and Talus",
+    "cover: rule pnw_subalpine_parkland on North Pacific Maritime Mesic Subalpine Parkland",
+    "named by EVT 7038 North Pacific Maritime Mesic Subalpine Parkland (1406 cells)",
+    "cover: rule pnw_alpine on North Pacific Alpine and Subalpine Dry Grassland",
+    "named by EVT 7171 North Pacific Alpine and Subalpine Dry Grassland (759 cells)",
+    "cover: rule pnw_alpine on North Pacific Dry and Mesic Alpine Fell-field or Meadow",
+    "named by EVT 7069 North Pacific Dry and Mesic Alpine Fell-field or Meadow (537 cells)",
+    "cover: rule pnw_alpine on North Pacific Dry and Mesic Alpine Dwarf-Shrubland",
+    "named by EVT 7068 North Pacific Dry and Mesic Alpine Dwarf-Shrubland (197 cells)"
+   ],
+   "cover": 0.0886,
+   "records": 0,
+   "record": true,
+   "card": true,
+   "drawn_as": "cassiope_mertensiana",
+   "rank": 9
+  },
+  {
+   "id": "acer_circinatum",
+   "kind": "shrub",
+   "why": [
+    "cover: rule pnw_silver_fir on North Pacific Mesic Western Hemlock-Silver Fir Forest",
+    "cover: rule pnw_douglas_fir_hemlock on North Pacific Maritime Dry-Mesic Douglas-fir-Western Hemlock Forest",
+    "cover: rule pnw_silver_fir on North Pacific Dry-Mesic Silver Fir-Western Hemlock-Douglas-fir Forest",
+    "cover: rule pnw_douglas_fir_hemlock on North Pacific Maritime Mesic-Wet Douglas-fir-Western Hemlock Forest",
+    "cover: rule pnw_sitka_spruce on North Pacific Seasonal Sitka Spruce Forest",
+    "cover: rule pnw_montane_riparian on North Pacific Montane Riparian Woodland",
+    "cover: rule pnw_avalanche_shrub on North Pacific Broadleaf Landslide Forest",
+    "cover: rule pnw_avalanche_shrub on North Pacific Montane Shrubland",
+    "cover: rule pnw_avalanche_shrub on North Pacific Avalanche Chute Shrubland",
+    "named by EVT 7083 North Pacific Avalanche Chute Shrubland (146 cells)",
+    "cover: rule pnw_lowland_mixed on North Pacific Lowland Mixed Hardwood-Conifer Forest"
+   ],
+   "cover": 0.0817,
+   "records": 0,
+   "record": true,
+   "card": true,
+   "drawn_as": "acer_circinatum",
+   "rank": 10
+  },
+  {
+   "id": "oplopanax_horridus",
+   "kind": "shrub",
+   "why": [
+    "cover: rule pnw_silver_fir on North Pacific Mesic Western Hemlock-Silver Fir Forest",
+    "cover: rule pnw_silver_fir on North Pacific Dry-Mesic Silver Fir-Western Hemlock-Douglas-fir Forest",
+    "cover: rule pnw_lowland_riparian on North Pacific Lowland Riparian Forest",
+    "cover: rule pnw_sitka_spruce on North Pacific Seasonal Sitka Spruce Forest",
+    "cover: rule pnw_montane_riparian on North Pacific Montane Riparian Woodland",
+    "cover: rule pnw_lowland_riparian on North Pacific Hardwood-Conifer Swamp"
+   ],
+   "cover": 0.0535,
+   "records": 0,
+   "record": true,
+   "card": true,
+   "drawn_as": "oplopanax_horridus",
+   "rank": 11
+  },
+  {
+   "id": "thuja_plicata",
+   "kind": "tree",
+   "why": [
+    "cover: rule pnw_silver_fir on North Pacific Mesic Western Hemlock-Silver Fir Forest",
+    "cover: rule pnw_douglas_fir_hemlock on North Pacific Maritime Dry-Mesic Douglas-fir-Western Hemlock Forest",
+    "cover: rule pnw_silver_fir on North Pacific Dry-Mesic Silver Fir-Western Hemlock-Douglas-fir Forest",
+    "cover: rule pnw_douglas_fir_hemlock on North Pacific Maritime Mesic-Wet Douglas-fir-Western Hemlock Forest",
+    "cover: rule pnw_lowland_riparian on North Pacific Lowland Riparian Forest",
+    "cover: rule pnw_sitka_spruce on North Pacific Seasonal Sitka Spruce Forest",
+    "cover: rule pnw_redcedar_hemlock on North Pacific Hypermaritime Western Red-cedar-Western Hemlock Forest",
+    "named by EVT 7178 North Pacific Hypermaritime Western Red-cedar-Western Hemlock Forest (331 cells)",
+    "cover: rule pnw_lowland_riparian on North Pacific Hardwood-Conifer Swamp",
+    "cover: rule pnw_lowland_mixed on North Pacific Lowland Mixed Hardwood-Conifer Forest"
+   ],
+   "cover": 0.0395,
+   "records": 0,
+   "record": true,
+   "card": true,
+   "drawn_as": "thuja_plicata",
+   "rank": 12
+  },
+  {
+   "id": "gaultheria_shallon",
+   "kind": "shrub",
+   "why": [
+    "cover: rule pnw_douglas_fir_hemlock on North Pacific Maritime Dry-Mesic Douglas-fir-Western Hemlock Forest",
+    "cover: rule pnw_douglas_fir_hemlock on North Pacific Maritime Mesic-Wet Douglas-fir-Western Hemlock Forest",
+    "cover: rule pnw_sitka_spruce on North Pacific Seasonal Sitka Spruce Forest",
+    "cover: rule pnw_redcedar_hemlock on North Pacific Hypermaritime Western Red-cedar-Western Hemlock Forest",
+    "cover: rule pnw_lowland_mixed on North Pacific Lowland Mixed Hardwood-Conifer Forest"
+   ],
+   "cover": 0.0346,
+   "records": 0,
+   "record": true,
+   "card": true,
+   "drawn_as": "gaultheria_shallon",
+   "rank": 13
+  },
+  {
+   "id": "rubus_spectabilis",
+   "kind": "shrub",
+   "why": [
+    "cover: rule pnw_douglas_fir_hemlock on North Pacific Maritime Dry-Mesic Douglas-fir-Western Hemlock Forest",
+    "cover: rule pnw_douglas_fir_hemlock on North Pacific Maritime Mesic-Wet Douglas-fir-Western Hemlock Forest",
+    "cover: rule pnw_lowland_riparian on North Pacific Lowland Riparian Forest",
+    "named by EVT 7156 North Pacific Lowland Riparian Forest (1198 cells)",
+    "cover: rule pnw_sitka_spruce on North Pacific Seasonal Sitka Spruce Forest",
+    "cover: rule pnw_montane_riparian on North Pacific Montane Riparian Woodland",
+    "named by EVT 7158 North Pacific Montane Riparian Woodland (688 cells)",
+    "cover: rule pnw_avalanche_shrub on North Pacific Broadleaf Landslide Forest",
+    "cover: rule pnw_avalanche_shrub on North Pacific Montane Shrubland",
+    "cover: rule pnw_avalanche_shrub on North Pacific Avalanche Chute Shrubland",
+    "named by EVT 7083 North Pacific Avalanche Chute Shrubland (146 cells)",
+    "cover: rule pnw_lowland_riparian on North Pacific Hardwood-Conifer Swamp",
+    "named by EVT 9272 Temperate Pacific Subalpine-Montane Wet Meadow (34 cells)",
+    "cover: rule pnw_lowland_mixed on North Pacific Lowland Mixed Hardwood-Conifer Forest"
+   ],
+   "cover": 0.025,
+   "records": 0,
+   "record": true,
+   "card": true,
+   "drawn_as": "rubus_spectabilis",
+   "rank": 14
+  },
+  {
+   "id": "alnus_rubra",
+   "kind": "tree",
+   "why": [
+    "cover: rule pnw_douglas_fir_hemlock on North Pacific Maritime Dry-Mesic Douglas-fir-Western Hemlock Forest",
+    "cover: rule pnw_douglas_fir_hemlock on North Pacific Maritime Mesic-Wet Douglas-fir-Western Hemlock Forest",
+    "cover: rule pnw_lowland_riparian on North Pacific Lowland Riparian Forest",
+    "named by EVT 7156 North Pacific Lowland Riparian Forest (1198 cells)",
+    "cover: rule pnw_sitka_spruce on North Pacific Seasonal Sitka Spruce Forest",
+    "cover: rule pnw_montane_riparian on North Pacific Montane Riparian Woodland",
+    "named by EVT 7158 North Pacific Montane Riparian Woodland (688 cells)",
+    "cover: rule pnw_avalanche_shrub on North Pacific Broadleaf Landslide Forest",
+    "cover: rule pnw_avalanche_shrub on North Pacific Montane Shrubland",
+    "cover: rule pnw_avalanche_shrub on North Pacific Avalanche Chute Shrubland",
+    "named by EVT 7083 North Pacific Avalanche Chute Shrubland (146 cells)",
+    "cover: rule pnw_lowland_riparian on North Pacific Hardwood-Conifer Swamp",
+    "cover: rule pnw_lowland_mixed on North Pacific Lowland Mixed Hardwood-Conifer Forest"
+   ],
+   "cover": 0.0197,
+   "records": 0,
+   "record": true,
+   "card": true,
+   "drawn_as": "alnus_rubra",
+   "rank": 15
+  },
+  {
+   "id": "acer_macrophyllum",
+   "kind": "tree",
+   "why": [
+    "cover: rule pnw_douglas_fir_hemlock on North Pacific Maritime Dry-Mesic Douglas-fir-Western Hemlock Forest",
+    "cover: rule pnw_douglas_fir_hemlock on North Pacific Maritime Mesic-Wet Douglas-fir-Western Hemlock Forest",
+    "cover: rule pnw_lowland_riparian on North Pacific Lowland Riparian Forest",
+    "cover: rule pnw_sitka_spruce on North Pacific Seasonal Sitka Spruce Forest",
+    "cover: rule pnw_montane_riparian on North Pacific Montane Riparian Woodland",
+    "cover: rule pnw_lowland_riparian on North Pacific Hardwood-Conifer Swamp",
+    "cover: rule pnw_lowland_mixed on North Pacific Lowland Mixed Hardwood-Conifer Forest"
+   ],
+   "cover": 0.0084,
+   "records": 0,
+   "record": true,
+   "card": false,
+   "drawn_as": "acer_macrophyllum",
+   "rank": 16
+  },
+  {
+   "id": "picea_sitchensis",
+   "kind": "tree",
+   "why": [
+    "cover: rule pnw_lowland_riparian on North Pacific Lowland Riparian Forest",
+    "cover: rule pnw_sitka_spruce on North Pacific Seasonal Sitka Spruce Forest",
+    "named by EVT 7036 North Pacific Seasonal Sitka Spruce Forest (739 cells)",
+    "cover: rule pnw_redcedar_hemlock on North Pacific Hypermaritime Western Red-cedar-Western Hemlock Forest",
+    "cover: rule pnw_lowland_riparian on North Pacific Hardwood-Conifer Swamp"
+   ],
+   "cover": 0.0051,
+   "records": 0,
+   "record": true,
+   "card": true,
+   "drawn_as": "picea_sitchensis",
+   "rank": 17
+  },
+  {
+   "id": "populus_trichocarpa",
+   "kind": "tree",
+   "why": [
+    "cover: rule pnw_lowland_riparian on North Pacific Lowland Riparian Forest",
+    "named by EVT 7156 North Pacific Lowland Riparian Forest (1198 cells)",
+    "cover: rule pnw_montane_riparian on North Pacific Montane Riparian Woodland",
+    "named by EVT 7158 North Pacific Montane Riparian Woodland (688 cells)",
+    "cover: rule pnw_lowland_riparian on North Pacific Hardwood-Conifer Swamp"
+   ],
+   "cover": 0.004,
+   "records": 0,
+   "record": true,
+   "card": true,
+   "drawn_as": "populus_trichocarpa",
+   "rank": 18
+  },
+  {
+   "id": "salix_lasiandra",
+   "kind": "shrub",
+   "why": [
+    "cover: rule pnw_lowland_riparian on North Pacific Lowland Riparian Forest",
+    "named by EVT 7662 Temperate Pacific Freshwater Emergent Marsh (144 cells)",
+    "cover: rule pnw_lowland_riparian on North Pacific Hardwood-Conifer Swamp",
+    "named by EVT 9272 Temperate Pacific Subalpine-Montane Wet Meadow (34 cells)"
+   ],
+   "cover": 0.0029,
+   "records": 0,
+   "record": true,
+   "card": false,
+   "drawn_as": "salix_lasiandra",
+   "rank": 19
+  },
+  {
+   "id": "cornus_sericea",
+   "kind": "shrub",
+   "why": [
+    "cover: rule pnw_lowland_riparian on North Pacific Lowland Riparian Forest",
+    "cover: rule pnw_lowland_riparian on North Pacific Hardwood-Conifer Swamp"
+   ],
+   "cover": 0.0022,
+   "records": 0,
+   "record": true,
+   "card": false,
+   "drawn_as": "cornus_sericea",
+   "rank": 20
+  },
+  {
+   "id": "rubus_parviflorus",
+   "kind": "shrub",
+   "why": [
+    "cover: rule pnw_avalanche_shrub on North Pacific Broadleaf Landslide Forest",
+    "cover: rule pnw_avalanche_shrub on North Pacific Montane Shrubland",
+    "cover: rule pnw_avalanche_shrub on North Pacific Avalanche Chute Shrubland"
+   ],
+   "cover": 0.0016,
+   "records": 0,
+   "record": true,
+   "card": true,
+   "drawn_as": "rubus_parviflorus",
+   "rank": 21
+  },
+  {
+   "id": "arbutus_menziesii",
+   "kind": "tree",
+   "why": [
+    "named by EVT 7035 North Pacific Dry Douglas-fir-(Madrone) Forest and Woodland (153 cells)"
+   ],
+   "cover": 0.0007,
+   "records": 0,
+   "record": true,
+   "card": false,
+   "drawn_as": "arbutus_menziesii",
+   "rank": 22
+  },
+  {
+   "id": "pinus_albicaulis",
+   "kind": "tree",
+   "why": [
+    "cover: rule pnw_subalpine_parkland on North Pacific Maritime Mesic Subalpine Parkland"
+   ],
+   "cover": 0.0007,
+   "records": 0,
+   "record": true,
+   "card": true,
+   "drawn_as": "pinus_albicaulis",
+   "rank": 23
+  },
+  {
+   "id": "symphoricarpos_albus",
+   "kind": "shrub",
+   "why": [
+    "cover: rule pnw_lowland_riparian on North Pacific Lowland Riparian Forest",
+    "cover: rule pnw_lowland_riparian on North Pacific Hardwood-Conifer Swamp"
+   ],
+   "cover": 0.0007,
+   "records": 0,
+   "record": true,
+   "card": false,
+   "drawn_as": "symphoricarpos_albus",
+   "rank": 24
+  },
+  {
+   "id": "vaccinium_ovatum",
+   "kind": "shrub",
+   "why": [
+    "cover: rule pnw_redcedar_hemlock on North Pacific Hypermaritime Western Red-cedar-Western Hemlock Forest"
+   ],
+   "cover": 0.0006,
+   "records": 0,
+   "record": true,
+   "card": true,
+   "drawn_as": "vaccinium_ovatum",
+   "rank": 25
+  },
+  {
+   "id": "corydalis_scouleri",
+   "kind": "forb",
+   "why": [
+    "GBIF: 23 records on the tile"
+   ],
+   "cover": 0.0,
+   "records": 23,
+   "scientific": "Corydalis scouleri",
+   "record": false,
+   "card": false,
+   "drawn_as": null,
+   "queued": "needs a trait card (library/plant_cards/): an agent's research, then automatic",
+   "rank": 26
+  },
+  {
+   "id": "erythronium_montanum",
+   "kind": "forb",
+   "why": [
+    "GBIF: 13 records on the tile"
+   ],
+   "cover": 0.0,
+   "records": 13,
+   "scientific": "Erythronium montanum",
+   "record": false,
+   "card": false,
+   "drawn_as": null,
+   "queued": "needs a trait card (library/plant_cards/): an agent's research, then automatic",
+   "rank": 27
+  },
+  {
+   "id": "nothochelone_nemorosa",
+   "kind": "forb",
+   "why": [
+    "GBIF: 13 records on the tile"
+   ],
+   "cover": 0.0,
+   "records": 13,
+   "scientific": "Nothochelone nemorosa",
+   "record": false,
+   "card": false,
+   "drawn_as": null,
+   "queued": "needs a trait card (library/plant_cards/): an agent's research, then automatic",
+   "rank": 28
+  },
+  {
+   "id": "clintonia_uniflora",
+   "kind": "forb",
+   "why": [
+    "GBIF: 12 records on the tile"
+   ],
+   "cover": 0.0,
+   "records": 12,
+   "scientific": "Clintonia uniflora",
+   "record": false,
+   "card": false,
+   "drawn_as": null,
+   "queued": "needs a trait card (library/plant_cards/): an agent's research, then automatic",
+   "rank": 29
+  },
+  {
+   "id": "erythranthe_lewisii",
+   "kind": "forb",
+   "why": [
+    "GBIF: 12 records on the tile"
+   ],
+   "cover": 0.0,
+   "records": 12,
+   "scientific": "Erythranthe lewisii",
+   "record": false,
+   "card": false,
+   "drawn_as": null,
+   "queued": "needs a trait card (library/plant_cards/): an agent's research, then automatic",
+   "rank": 30
+  },
+  {
+   "id": "anaphalis_margaritacea",
+   "kind": "forb",
+   "why": [
+    "GBIF: 11 records on the tile"
+   ],
+   "cover": 0.0,
+   "records": 11,
+   "scientific": "Anaphalis margaritacea",
+   "record": false,
+   "card": false,
+   "drawn_as": null,
+   "queued": "needs a trait card (library/plant_cards/): an agent's research, then automatic",
+   "rank": 31
+  },
+  {
+   "id": "aquilegia_formosa",
+   "kind": "forb",
+   "why": [
+    "GBIF: 11 records on the tile"
+   ],
+   "cover": 0.0,
+   "records": 11,
+   "scientific": "Aquilegia formosa",
+   "record": false,
+   "card": false,
+   "drawn_as": null,
+   "queued": "needs a trait card (library/plant_cards/): an agent's research, then automatic",
+   "rank": 32
+  },
+  {
+   "id": "veratrum_viride",
+   "kind": "forb",
+   "why": [
+    "GBIF: 11 records on the tile"
+   ],
+   "cover": 0.0,
+   "records": 11,
+   "scientific": "Veratrum viride",
+   "record": false,
+   "card": false,
+   "drawn_as": null,
+   "queued": "needs a trait card (library/plant_cards/): an agent's research, then automatic",
+   "rank": 33
+  },
+  {
+   "id": "castilleja_parviflora",
+   "kind": "forb",
+   "why": [
+    "GBIF: 10 records on the tile"
+   ],
+   "cover": 0.0,
+   "records": 10,
+   "scientific": "Castilleja parviflora",
+   "record": false,
+   "card": false,
+   "drawn_as": null,
+   "queued": "needs a trait card (library/plant_cards/): an agent's research, then automatic",
+   "rank": 34
+  },
+  {
+   "id": "cornus_unalaschkensis",
+   "kind": "shrub",
+   "why": [
+    "GBIF: 10 records on the tile"
+   ],
+   "cover": 0.0,
+   "records": 10,
+   "scientific": "Cornus unalaschkensis",
+   "record": false,
+   "card": false,
+   "drawn_as": null,
+   "queued": "needs a trait card (library/plant_cards/): an agent's research, then automatic",
+   "rank": 35
+  },
+  {
+   "id": "lilium_columbianum",
+   "kind": "forb",
+   "why": [
+    "GBIF: 10 records on the tile"
+   ],
+   "cover": 0.0,
+   "records": 10,
+   "scientific": "Lilium columbianum",
+   "record": false,
+   "card": false,
+   "drawn_as": null,
+   "queued": "needs a trait card (library/plant_cards/): an agent's research, then automatic",
+   "rank": 36
+  }
+ ],
+ "gbif_plants": [
+  {
+   "id": "corydalis_scouleri",
+   "scientific": "Corydalis scouleri",
+   "family": "Papaveraceae",
+   "kind": "forb",
+   "records": 23,
+   "known": false
+  },
+  {
+   "id": "erythronium_montanum",
+   "scientific": "Erythronium montanum",
+   "family": "Liliaceae",
+   "kind": "forb",
+   "records": 13,
+   "known": false
+  },
+  {
+   "id": "nothochelone_nemorosa",
+   "scientific": "Nothochelone nemorosa",
+   "family": "Plantaginaceae",
+   "kind": "forb",
+   "records": 13,
+   "known": false
+  },
+  {
+   "id": "clintonia_uniflora",
+   "scientific": "Clintonia uniflora",
+   "family": "Liliaceae",
+   "kind": "forb",
+   "records": 12,
+   "known": false
+  },
+  {
+   "id": "erythranthe_lewisii",
+   "scientific": "Erythranthe lewisii",
+   "family": "Phrymaceae",
+   "kind": "forb",
+   "records": 12,
+   "known": false
+  },
+  {
+   "id": "aquilegia_formosa",
+   "scientific": "Aquilegia formosa",
+   "family": "Ranunculaceae",
+   "kind": "forb",
+   "records": 11,
+   "known": false
+  },
+  {
+   "id": "anaphalis_margaritacea",
+   "scientific": "Anaphalis margaritacea",
+   "family": "Asteraceae",
+   "kind": "forb",
+   "records": 11,
+   "known": false
+  },
+  {
+   "id": "veratrum_viride",
+   "scientific": "Veratrum viride",
+   "family": "Melanthiaceae",
+   "kind": "forb",
+   "records": 11,
+   "known": false
+  },
+  {
+   "id": "lilium_columbianum",
+   "scientific": "Lilium columbianum",
+   "family": "Liliaceae",
+   "kind": "forb",
+   "records": 10,
+   "known": false
+  },
+  {
+   "id": "cornus_unalaschkensis",
+   "scientific": "Cornus unalaschkensis",
+   "family": "Cornaceae",
+   "kind": "shrub",
+   "records": 10,
+   "known": false
+  },
+  {
+   "id": "castilleja_parviflora",
+   "scientific": "Castilleja parviflora",
+   "family": "Orobanchaceae",
+   "kind": "forb",
+   "records": 10,
+   "known": false
+  },
+  {
+   "id": "valeriana_sitchensis",
+   "scientific": "Valeriana sitchensis",
+   "family": "Caprifoliaceae",
+   "kind": "shrub",
+   "records": 9,
+   "known": false
+  },
+  {
+   "id": "rubus_pedatus",
+   "scientific": "Rubus pedatus",
+   "family": "Rosaceae",
+   "kind": "forb",
+   "records": 9,
+   "known": false
+  },
+  {
+   "id": "androsace_laevigata",
+   "scientific": "Androsace laevigata",
+   "family": "Primulaceae",
+   "kind": "forb",
+   "records": 9,
+   "known": false
+  },
+  {
+   "id": "phyllodoce_empetriformis",
+   "scientific": "Phyllodoce empetriformis",
+   "family": "Ericaceae",
+   "kind": "shrub",
+   "records": 9,
+   "known": true
+  },
+  {
+   "id": "tiarella_trifoliata",
+   "scientific": "Tiarella trifoliata",
+   "family": "Saxifragaceae",
+   "kind": "forb",
+   "records": 9,
+   "known": false
+  },
+  {
+   "id": "trillium_ovatum",
+   "scientific": "Trillium ovatum",
+   "family": "Melanthiaceae",
+   "kind": "forb",
+   "records": 8,
+   "known": false
+  },
+  {
+   "id": "corallorhiza_mertensiana",
+   "scientific": "Corallorhiza mertensiana",
+   "family": "Orchidaceae",
+   "kind": "forb",
+   "records": 8,
+   "known": false
+  },
+  {
+   "id": "gaultheria_shallon",
+   "scientific": "Gaultheria shallon",
+   "family": "Ericaceae",
+   "kind": "shrub",
+   "records": 8,
+   "known": true
+  },
+  {
+   "id": "rubus_spectabilis",
+   "scientific": "Rubus spectabilis",
+   "family": "Rosaceae",
+   "kind": "shrub",
+   "records": 8,
+   "known": true
+  },
+  {
+   "id": "elmera_racemosa",
+   "scientific": "Elmera racemosa",
+   "family": "Saxifragaceae",
+   "kind": "forb",
+   "records": 8,
+   "known": false
+  },
+  {
+   "id": "castilleja_miniata",
+   "scientific": "Castilleja miniata",
+   "family": "Orobanchaceae",
+   "kind": "forb",
+   "records": 8,
+   "known": false
+  },
+  {
+   "id": "adiantum_aleuticum",
+   "scientific": "Adiantum aleuticum",
+   "family": "Pteridaceae",
+   "kind": "fern",
+   "records": 7,
+   "known": false
+  },
+  {
+   "id": "alnus_rubra",
+   "scientific": "Alnus rubra",
+   "family": "Betulaceae",
+   "kind": "tree",
+   "records": 7,
+   "known": true
+  },
+  {
+   "id": "pulsatilla_occidentalis",
+   "scientific": "Pulsatilla occidentalis",
+   "family": "Ranunculaceae",
+   "kind": "forb",
+   "records": 7,
+   "known": false
+  },
+  {
+   "id": "heracleum_maximum",
+   "scientific": "Heracleum maximum",
+   "family": "Apiaceae",
+   "kind": "forb",
+   "records": 7,
+   "known": false
+  },
+  {
+   "id": "sedum_oreganum",
+   "scientific": "Sedum oreganum",
+   "family": "Crassulaceae",
+   "kind": "forb",
+   "records": 7,
+   "known": false
+  },
+  {
+   "id": "tsuga_heterophylla",
+   "scientific": "Tsuga heterophylla",
+   "family": "Pinaceae",
+   "kind": "tree",
+   "records": 6,
+   "known": true
+  },
+  {
+   "id": "ranunculus_repens",
+   "scientific": "Ranunculus repens",
+   "family": "Ranunculaceae",
+   "kind": "forb",
+   "records": 6,
+   "known": false
+  },
+  {
+   "id": "acer_circinatum",
+   "scientific": "Acer circinatum",
+   "family": "Sapindaceae",
+   "kind": "tree",
+   "records": 6,
+   "known": true
+  },
+  {
+   "id": "athyrium_americanum",
+   "scientific": "Athyrium americanum",
+   "family": "Athyriaceae",
+   "kind": "fern",
+   "records": 6,
+   "known": false
+  },
+  {
+   "id": "struthiopteris_spicant",
+   "scientific": "Struthiopteris spicant",
+   "family": "Blechnaceae",
+   "kind": "fern",
+   "records": 6,
+   "known": false
+  },
+  {
+   "id": "picea_sitchensis",
+   "scientific": "Picea sitchensis",
+   "family": "Pinaceae",
+   "kind": "tree",
+   "records": 6,
+   "known": true
+  },
+  {
+   "id": "prunella_vulgaris",
+   "scientific": "Prunella vulgaris",
+   "family": "Lamiaceae",
+   "kind": "forb",
+   "records": 6,
+   "known": false
+  },
+  {
+   "id": "achlys_triphylla",
+   "scientific": "Achlys triphylla",
+   "family": "Berberidaceae",
+   "kind": "shrub",
+   "records": 6,
+   "known": false
+  },
+  {
+   "id": "polystichum_munitum",
+   "scientific": "Polystichum munitum",
+   "family": "Dryopteridaceae",
+   "kind": "forb",
+   "records": 5,
+   "known": true
+  },
+  {
+   "id": "xanthocyparis_nootkatensis",
+   "scientific": "Xanthocyparis nootkatensis",
+   "family": "Cupressaceae",
+   "kind": "tree",
+   "records": 5,
+   "known": false
+  },
+  {
+   "id": "tsuga_mertensiana",
+   "scientific": "Tsuga mertensiana",
+   "family": "Pinaceae",
+   "kind": "tree",
+   "records": 5,
+   "known": true
+  },
+  {
+   "id": "vaccinium_ovalifolium",
+   "scientific": "Vaccinium ovalifolium",
+   "family": "Ericaceae",
+   "kind": "shrub",
+   "records": 5,
+   "known": false
+  },
+  {
+   "id": "orthilia_secunda",
+   "scientific": "Orthilia secunda",
+   "family": "Ericaceae",
+   "kind": "shrub",
+   "records": 5,
+   "known": false
+  },
+  {
+   "id": "monotropa_uniflora",
+   "scientific": "Monotropa uniflora",
+   "family": "Ericaceae",
+   "kind": "shrub",
+   "records": 5,
+   "known": false
+  },
+  {
+   "id": "malus_fusca",
+   "scientific": "Malus fusca",
+   "family": "Rosaceae",
+   "kind": "forb",
+   "records": 5,
+   "known": false
+  },
+  {
+   "id": "cirsium_edule",
+   "scientific": "Cirsium edule",
+   "family": "Asteraceae",
+   "kind": "forb",
+   "records": 5,
+   "known": false
+  },
+  {
+   "id": "mycelis_muralis",
+   "scientific": "Mycelis muralis",
+   "family": "Asteraceae",
+   "kind": "forb",
+   "records": 5,
+   "known": false
+  },
+  {
+   "id": "epilobium_luteum",
+   "scientific": "Epilobium luteum",
+   "family": "Onagraceae",
+   "kind": "forb",
+   "records": 5,
+   "known": false
+  },
+  {
+   "id": "trautvetteria_carolinensis",
+   "scientific": "Trautvetteria carolinensis",
+   "family": "Ranunculaceae",
+   "kind": "forb",
+   "records": 5,
+   "known": false
+  },
+  {
+   "id": "linnaea_borealis",
+   "scientific": "Linnaea borealis",
+   "family": "Caprifoliaceae",
+   "kind": "shrub",
+   "records": 5,
+   "known": false
+  },
+  {
+   "id": "rubus_parviflorus",
+   "scientific": "Rubus parviflorus",
+   "family": "Rosaceae",
+   "kind": "shrub",
+   "records": 5,
+   "known": true
+  },
+  {
+   "id": "chimaphila_menziesii",
+   "scientific": "Chimaphila menziesii",
+   "family": "Ericaceae",
+   "kind": "shrub",
+   "records": 5,
+   "known": false
+  },
+  {
+   "id": "empetrum_nigrum",
+   "scientific": "Empetrum nigrum",
+   "family": "Ericaceae",
+   "kind": "shrub",
+   "records": 5,
+   "known": false
+  },
+  {
+   "id": "abies_amabilis",
+   "scientific": "Abies amabilis",
+   "family": "Pinaceae",
+   "kind": "tree",
+   "records": 4,
+   "known": true
+  },
+  {
+   "id": "pseudotsuga_menziesii",
+   "scientific": "Pseudotsuga menziesii",
+   "family": "Pinaceae",
+   "kind": "tree",
+   "records": 4,
+   "known": true
+  },
+  {
+   "id": "juncus_mertensianus",
+   "scientific": "Juncus mertensianus",
+   "family": "Juncaceae",
+   "kind": "emergent",
+   "records": 4,
+   "known": false
+  },
+  {
+   "id": "prosartes_smithii",
+   "scientific": "Prosartes smithii",
+   "family": "Liliaceae",
+   "kind": "forb",
+   "records": 4,
+   "known": false
+  },
+  {
+   "id": "maianthemum_dilatatum",
+   "scientific": "Maianthemum dilatatum",
+   "family": "Asparagaceae",
+   "kind": "forb",
+   "records": 4,
+   "known": false
+  },
+  {
+   "id": "goodyera_oblongifolia",
+   "scientific": "Goodyera oblongifolia",
+   "family": "Orchidaceae",
+   "kind": "forb",
+   "records": 4,
+   "known": false
+  },
+  {
+   "id": "chimaphila_umbellata",
+   "scientific": "Chimaphila umbellata",
+   "family": "Ericaceae",
+   "kind": "shrub",
+   "records": 4,
+   "known": false
+  },
+  {
+   "id": "hemitomes_congestum",
+   "scientific": "Hemitomes congestum",
+   "family": "Ericaceae",
+   "kind": "shrub",
+   "records": 4,
+   "known": false
+  },
+  {
+   "id": "hypopitys_monotropa",
+   "scientific": "Hypopitys monotropa",
+   "family": "Ericaceae",
+   "kind": "shrub",
+   "records": 4,
+   "known": false
+  },
+  {
+   "id": "bistorta_bistortoides",
+   "scientific": "Bistorta bistortoides",
+   "family": "Polygonaceae",
+   "kind": "forb",
+   "records": 4,
+   "known": false
+  },
+  {
+   "id": "hydrophyllum_tenuipes",
+   "scientific": "Hydrophyllum tenuipes",
+   "family": "Hydrophyllaceae",
+   "kind": "forb",
+   "records": 4,
+   "known": false
+  },
+  {
+   "id": "ribes_laxiflorum",
+   "scientific": "Ribes laxiflorum",
+   "family": "Grossulariaceae",
+   "kind": "shrub",
+   "records": 4,
+   "known": false
+  },
+  {
+   "id": "delphinium_glaucum",
+   "scientific": "Delphinium glaucum",
+   "family": "Ranunculaceae",
+   "kind": "forb",
+   "records": 4,
+   "known": false
+  },
+  {
+   "id": "claytonia_sibirica",
+   "scientific": "Claytonia sibirica",
+   "family": "Montiaceae",
+   "kind": "forb",
+   "records": 4,
+   "known": false
+  },
+  {
+   "id": "cryptogramma_acrostichoides",
+   "scientific": "Cryptogramma acrostichoides",
+   "family": "Pteridaceae",
+   "kind": "fern",
+   "records": 4,
+   "known": false
+  },
+  {
+   "id": "elymus_glaucus",
+   "scientific": "Elymus glaucus",
+   "family": "Poaceae",
+   "kind": "grass",
+   "records": 4,
+   "known": true
+  },
+  {
+   "id": "chamaenerion_angustifolium",
+   "scientific": "Chamaenerion angustifolium",
+   "family": "Onagraceae",
+   "kind": "forb",
+   "records": 4,
+   "known": false
+  },
+  {
+   "id": "nuphar_polysepala",
+   "scientific": "Nuphar polysepala",
+   "family": "Nymphaeaceae",
+   "kind": "forb",
+   "records": 4,
+   "known": false
+  },
+  {
+   "id": "carex_oederi",
+   "scientific": "Carex oederi",
+   "family": "Cyperaceae",
+   "kind": "emergent",
+   "records": 4,
+   "known": false
+  },
+  {
+   "id": "selaginella_oregana",
+   "scientific": "Selaginella oregana",
+   "family": "Selaginellaceae",
+   "kind": "fern",
+   "records": 3,
+   "known": false
+  },
+  {
+   "id": "carex_mertensii",
+   "scientific": "Carex mertensii",
+   "family": "Cyperaceae",
+   "kind": "emergent",
+   "records": 3,
+   "known": false
+  },
+  {
+   "id": "maianthemum_racemosum",
+   "scientific": "Maianthemum racemosum",
+   "family": "Asparagaceae",
+   "kind": "forb",
+   "records": 3,
+   "known": false
+  },
+  {
+   "id": "dicentra_formosa",
+   "scientific": "Dicentra formosa",
+   "family": "Papaveraceae",
+   "kind": "forb",
+   "records": 3,
+   "known": false
+  },
+  {
+   "id": "sambucus_racemosa",
+   "scientific": "Sambucus racemosa",
+   "family": "Viburnaceae",
+   "kind": "shrub",
+   "records": 3,
+   "known": false
+  },
+  {
+   "id": "polemonium_pulcherrimum",
+   "scientific": "Polemonium pulcherrimum",
+   "family": "Polemoniaceae",
+   "kind": "forb",
+   "records": 3,
+   "known": false
+  },
+  {
+   "id": "hedysarum_occidentale",
+   "scientific": "Hedysarum occidentale",
+   "family": "Fabaceae",
+   "kind": "forb",
+   "records": 3,
+   "known": false
+  },
+  {
+   "id": "spiraea_splendens",
+   "scientific": "Spiraea splendens",
+   "family": "Rosaceae",
+   "kind": "forb",
+   "records": 3,
+   "known": false
+  },
+  {
+   "id": "saxifraga_bronchialis",
+   "scientific": "Saxifraga bronchialis",
+   "family": "Saxifragaceae",
+   "kind": "forb",
+   "records": 3,
+   "known": false
+  },
+  {
+   "id": "adenocaulon_bicolor",
+   "scientific": "Adenocaulon bicolor",
+   "family": "Asteraceae",
+   "kind": "forb",
+   "records": 3,
+   "known": false
+  },
+  {
+   "id": "luina_hypoleuca",
+   "scientific": "Luina hypoleuca",
+   "family": "Asteraceae",
+   "kind": "forb",
+   "records": 3,
+   "known": false
+  },
+  {
+   "id": "symphyotrichum_foliaceum",
+   "scientific": "Symphyotrichum foliaceum",
+   "family": "Asteraceae",
+   "kind": "forb",
+   "records": 3,
+   "known": false
+  },
+  {
+   "id": "castilleja_hispida",
+   "scientific": "Castilleja hispida",
+   "family": "Orobanchaceae",
+   "kind": "forb",
+   "records": 3,
+   "known": false
+  },
+  {
+   "id": "pedicularis_bracteosa",
+   "scientific": "Pedicularis bracteosa",
+   "family": "Orobanchaceae",
+   "kind": "forb",
+   "records": 3,
+   "known": false
+  },
+  {
+   "id": "acer_macrophyllum",
+   "scientific": "Acer macrophyllum",
+   "family": "Sapindaceae",
+   "kind": "tree",
+   "records": 3,
+   "known": true
+  },
+  {
+   "id": "polypodium_amorphum",
+   "scientific": "Polypodium amorphum",
+   "family": "Polypodiaceae",
+   "kind": "fern",
+   "records": 3,
+   "known": false
+  },
+  {
+   "id": "athyrium_filix_femina",
+   "scientific": "Athyrium filix-femina",
+   "family": "Athyriaceae",
+   "kind": "fern",
+   "records": 3,
+   "known": false
+  },
+  {
+   "id": "trifolium_repens",
+   "scientific": "Trifolium repens",
+   "family": "Fabaceae",
+   "kind": "forb",
+   "records": 3,
+   "known": false
+  },
+  {
+   "id": "aruncus_dioicus",
+   "scientific": "Aruncus dioicus",
+   "family": "Rosaceae",
+   "kind": "forb",
+   "records": 3,
+   "known": false
+  },
+  {
+   "id": "geum_macrophyllum",
+   "scientific": "Geum macrophyllum",
+   "family": "Rosaceae",
+   "kind": "forb",
+   "records": 3,
+   "known": false
+  },
+  {
+   "id": "salix_barclayi",
+   "scientific": "Salix barclayi",
+   "family": "Salicaceae",
+   "kind": "shrub",
+   "records": 3,
+   "known": false
+  },
+  {
+   "id": "salix_sitchensis",
+   "scientific": "Salix sitchensis",
+   "family": "Salicaceae",
+   "kind": "shrub",
+   "records": 3,
+   "known": false
+  },
+  {
+   "id": "montia_parvifolia",
+   "scientific": "Montia parvifolia",
+   "family": "Montiaceae",
+   "kind": "forb",
+   "records": 3,
+   "known": false
+  },
+  {
+   "id": "penstemon_serrulatus",
+   "scientific": "Penstemon serrulatus",
+   "family": "Plantaginaceae",
+   "kind": "forb",
+   "records": 3,
+   "known": false
+  },
+  {
+   "id": "rubus_leucodermis",
+   "scientific": "Rubus leucodermis",
+   "family": "Rosaceae",
+   "kind": "forb",
+   "records": 3,
+   "known": false
+  },
+  {
+   "id": "frangula_purshiana",
+   "scientific": "Frangula purshiana",
+   "family": "Rhamnaceae",
+   "kind": "shrub",
+   "records": 3,
+   "known": false
+  },
+  {
+   "id": "cystopteris_fragilis",
+   "scientific": "Cystopteris fragilis",
+   "family": "Cystopteridaceae",
+   "kind": "fern",
+   "records": 2,
+   "known": false
+  },
+  {
+   "id": "abies_lasiocarpa",
+   "scientific": "Abies lasiocarpa",
+   "family": "Pinaceae",
+   "kind": "tree",
+   "records": 2,
+   "known": true
+  },
+  {
+   "id": "equisetum_telmateia",
+   "scientific": "Equisetum telmateia",
+   "family": "Equisetaceae",
+   "kind": "fern",
+   "records": 2,
+   "known": false
+  },
+  {
+   "id": "luzula_parviflora",
+   "scientific": "Luzula parviflora",
+   "family": "Juncaceae",
+   "kind": "emergent",
+   "records": 2,
+   "known": false
+  },
+  {
+   "id": "vahlodea_atropurpurea",
+   "scientific": "Vahlodea atropurpurea",
+   "family": "Poaceae",
+   "kind": "grass",
+   "records": 2,
+   "known": false
+  },
+  {
+   "id": "carex_spectabilis",
+   "scientific": "Carex spectabilis",
+   "family": "Cyperaceae",
+   "kind": "emergent",
+   "records": 2,
+   "known": false
+  },
+  {
+   "id": "carex_preslii",
+   "scientific": "Carex preslii",
+   "family": "Cyperaceae",
+   "kind": "emergent",
+   "records": 2,
+   "known": false
+  },
+  {
+   "id": "carex_phaeocephala",
+   "scientific": "Carex phaeocephala",
+   "family": "Cyperaceae",
+   "kind": "emergent",
+   "records": 2,
+   "known": false
+  },
+  {
+   "id": "neottia_banksiana",
+   "scientific": "Neottia banksiana",
+   "family": "Orchidaceae",
+   "kind": "forb",
+   "records": 2,
+   "known": false
+  },
+  {
+   "id": "lysichiton_americanus",
+   "scientific": "Lysichiton americanus",
+   "family": "Araceae",
+   "kind": "forb",
+   "records": 2,
+   "known": false
+  },
+  {
+   "id": "gaultheria_ovatifolia",
+   "scientific": "Gaultheria ovatifolia",
+   "family": "Ericaceae",
+   "kind": "shrub",
+   "records": 2,
+   "known": false
+  },
+  {
+   "id": "vaccinium_parvifolium",
+   "scientific": "Vaccinium parvifolium",
+   "family": "Ericaceae",
+   "kind": "shrub",
+   "records": 2,
+   "known": true
+  },
+  {
+   "id": "rhododendron_albiflorum",
+   "scientific": "Rhododendron albiflorum",
+   "family": "Ericaceae",
+   "kind": "shrub",
+   "records": 2,
+   "known": false
+  },
+  {
+   "id": "pyrola_picta",
+   "scientific": "Pyrola picta",
+   "family": "Ericaceae",
+   "kind": "shrub",
+   "records": 2,
+   "known": false
+  },
+  {
+   "id": "moneses_uniflora",
+   "scientific": "Moneses uniflora",
+   "family": "Ericaceae",
+   "kind": "shrub",
+   "records": 2,
+   "known": false
+  },
+  {
+   "id": "rumex_acetosella",
+   "scientific": "Rumex acetosella",
+   "family": "Polygonaceae",
+   "kind": "forb",
+   "records": 2,
+   "known": false
+  },
+  {
+   "id": "galium_trifidum",
+   "scientific": "Galium trifidum",
+   "family": "Rubiaceae",
+   "kind": "forb",
+   "records": 2,
+   "known": false
+  },
+  {
+   "id": "hydrophyllum_fendleri",
+   "scientific": "Hydrophyllum fendleri",
+   "family": "Hydrophyllaceae",
+   "kind": "forb",
+   "records": 2,
+   "known": false
+  },
+  {
+   "id": "luetkea_pectinata",
+   "scientific": "Luetkea pectinata",
+   "family": "Rosaceae",
+   "kind": "forb",
+   "records": 2,
+   "known": false
+  },
+  {
+   "id": "fragaria_vesca",
+   "scientific": "Fragaria vesca",
+   "family": "Rosaceae",
+   "kind": "forb",
+   "records": 2,
+   "known": false
+  },
+  {
+   "id": "petrophytum_hendersonii",
+   "scientific": "Petrophytum hendersonii",
+   "family": "Rosaceae",
+   "kind": "forb",
+   "records": 2,
+   "known": false
+  },
+  {
+   "id": "saxifraga_cespitosa",
+   "scientific": "Saxifraga cespitosa",
+   "family": "Saxifragaceae",
+   "kind": "forb",
+   "records": 2,
+   "known": false
+  },
+  {
+   "id": "pectiantia_pentandra",
+   "scientific": "Pectiantia pentandra",
+   "family": "Saxifragaceae",
+   "kind": "forb",
+   "records": 2,
+   "known": false
+  },
+  {
+   "id": "lomatium_martindalei",
+   "scientific": "Lomatium martindalei",
+   "family": "Apiaceae",
+   "kind": "forb",
+   "records": 2,
+   "known": false
+  },
+  {
+   "id": "oplopanax_horridus",
+   "scientific": "Oplopanax horridus",
+   "family": "Araliaceae",
+   "kind": "shrub",
+   "records": 2,
+   "known": true
+  },
+  {
+   "id": "erysimum_arenicola",
+   "scientific": "Erysimum arenicola",
+   "family": "Brassicaceae",
+   "kind": "forb",
+   "records": 2,
+   "known": false
+  },
+  {
+   "id": "senecio_triangularis",
+   "scientific": "Senecio triangularis",
+   "family": "Asteraceae",
+   "kind": "forb",
+   "records": 2,
+   "known": false
+  },
+  {
+   "id": "cirsium_vulgare",
+   "scientific": "Cirsium vulgare",
+   "family": "Asteraceae",
+   "kind": "forb",
+   "records": 2,
+   "known": false
+  },
+  {
+   "id": "achillea_millefolium",
+   "scientific": "Achillea millefolium",
+   "family": "Asteraceae",
+   "kind": "forb",
+   "records": 2,
+   "known": true
+  },
+  {
+   "id": "penstemon_fruticosus",
+   "scientific": "Penstemon fruticosus",
+   "family": "Plantaginaceae",
+   "kind": "forb",
+   "records": 2,
+   "known": false
+  },
+  {
+   "id": "veronica_officinalis",
+   "scientific": "Veronica officinalis",
+   "family": "Plantaginaceae",
+   "kind": "forb",
+   "records": 2,
+   "known": false
+  },
+  {
+   "id": "chamaenerion_latifolium",
+   "scientific": "Chamaenerion latifolium",
+   "family": "Onagraceae",
+   "kind": "forb",
+   "records": 2,
+   "known": false
+  },
+  {
+   "id": "epilobium_clavatum",
+   "scientific": "Epilobium clavatum",
+   "family": "Onagraceae",
+   "kind": "forb",
+   "records": 2,
+   "known": false
+  },
+  {
+   "id": "plantago_major",
+   "scientific": "Plantago major",
+   "family": "Plantaginaceae",
+   "kind": "forb",
+   "records": 2,
+   "known": false
+  },
+  {
+   "id": "pteridium_aquilinum",
+   "scientific": "Pteridium aquilinum",
+   "family": "Dennstaedtiaceae",
+   "kind": "fern",
+   "records": 2,
+   "known": false
+  },
+  {
+   "id": "anticlea_occidentalis",
+   "scientific": "Anticlea occidentalis",
+   "family": "Melanthiaceae",
+   "kind": "forb",
+   "records": 2,
+   "known": false
+  },
+  {
+   "id": "viola_glabella",
+   "scientific": "Viola glabella",
+   "family": "Violaceae",
+   "kind": "forb",
+   "records": 2,
+   "known": false
+  },
+  {
+   "id": "mertensia_paniculata",
+   "scientific": "Mertensia paniculata",
+   "family": "Boraginaceae",
+   "kind": "forb",
+   "records": 2,
+   "known": false
+  },
+  {
+   "id": "menyanthes_trifoliata",
+   "scientific": "Menyanthes trifoliata",
+   "family": "Menyanthaceae",
+   "kind": "forb",
+   "records": 2,
+   "known": false
+  },
+  {
+   "id": "sedum_divergens",
+   "scientific": "Sedum divergens",
+   "family": "Crassulaceae",
+   "kind": "forb",
+   "records": 2,
+   "known": false
+  },
+  {
+   "id": "tolmiea_menziesii",
+   "scientific": "Tolmiea menziesii",
+   "family": "Saxifragaceae",
+   "kind": "forb",
+   "records": 2,
+   "known": false
+  },
+  {
+   "id": "actaea_rubra",
+   "scientific": "Actaea rubra",
+   "family": "Ranunculaceae",
+   "kind": "forb",
+   "records": 2,
+   "known": false
+  },
+  {
+   "id": "achlys_californica",
+   "scientific": "Achlys californica",
+   "family": "Berberidaceae",
+   "kind": "shrub",
+   "records": 2,
+   "known": false
+  },
+  {
+   "id": "eucephalus_paucicapitatus",
+   "scientific": "Eucephalus paucicapitatus",
+   "family": "Asteraceae",
+   "kind": "forb",
+   "records": 2,
+   "known": false
+  },
+  {
+   "id": "arnica_lanceolata",
+   "scientific": "Arnica lanceolata",
+   "family": "Asteraceae",
+   "kind": "forb",
+   "records": 2,
+   "known": false
+  },
+  {
+   "id": "digitalis_purpurea",
+   "scientific": "Digitalis purpurea",
+   "family": "Plantaginaceae",
+   "kind": "forb",
+   "records": 2,
+   "known": false
+  },
+  {
+   "id": "micranthes_nelsoniana",
+   "scientific": "Micranthes nelsoniana",
+   "family": "Saxifragaceae",
+   "kind": "forb",
+   "records": 2,
+   "known": false
+  },
+  {
+   "id": "rhododendron_menziesii",
+   "scientific": "Rhododendron menziesii",
+   "family": "Ericaceae",
+   "kind": "shrub",
+   "records": 2,
+   "known": false
+  },
+  {
+   "id": "erigeron_glacialis",
+   "scientific": "Erigeron glacialis",
+   "family": "Asteraceae",
+   "kind": "forb",
+   "records": 2,
+   "known": false
+  },
+  {
+   "id": "oxalis_oregana",
+   "scientific": "Oxalis oregana",
+   "family": "Oxalidaceae",
+   "kind": "forb",
+   "records": 2,
+   "known": true
+  },
+  {
+   "id": "parnassia_fimbriata",
+   "scientific": "Parnassia fimbriata",
+   "family": "Parnassiaceae",
+   "kind": "forb",
+   "records": 2,
+   "known": false
+  },
+  {
+   "id": "myriopteris_gracillima",
+   "scientific": "Myriopteris gracillima",
+   "family": "Pteridaceae",
+   "kind": "fern",
+   "records": 2,
+   "known": false
+  },
+  {
+   "id": "alnus_alnobetula",
+   "scientific": "Alnus alnobetula",
+   "family": "Betulaceae",
+   "kind": "shrub",
+   "records": 2,
+   "known": false
+  },
+  {
+   "id": "koeleria_spicata",
+   "scientific": "Koeleria spicata",
+   "family": "Poaceae",
+   "kind": "grass",
+   "records": 1,
+   "known": false
+  },
+  {
+   "id": "brewerimitella_breweri",
+   "scientific": "Brewerimitella breweri",
+   "family": "Saxifragaceae",
+   "kind": "forb",
+   "records": 1,
+   "known": false
+  }
+ ],
+ "generated": [],
+ "target": {
+  "tree": 21,
+  "shrub": 23,
+  "ground": 26
+ },
+ "by_layer": {
+  "tree": 12,
+  "shrub": 14,
+  "ground": 10
+ },
+ "hands": [
+  {
+   "id": "corydalis_scouleri",
+   "kind": "forb",
+   "what": "a trait card",
+   "why": [
+    "GBIF: 23 records on the tile"
+   ]
+  },
+  {
+   "id": "erythronium_montanum",
+   "kind": "forb",
+   "what": "a trait card",
+   "why": [
+    "GBIF: 13 records on the tile"
+   ]
+  },
+  {
+   "id": "nothochelone_nemorosa",
+   "kind": "forb",
+   "what": "a trait card",
+   "why": [
+    "GBIF: 13 records on the tile"
+   ]
+  },
+  {
+   "id": "clintonia_uniflora",
+   "kind": "forb",
+   "what": "a trait card",
+   "why": [
+    "GBIF: 12 records on the tile"
+   ]
+  },
+  {
+   "id": "erythranthe_lewisii",
+   "kind": "forb",
+   "what": "a trait card",
+   "why": [
+    "GBIF: 12 records on the tile"
+   ]
+  },
+  {
+   "id": "anaphalis_margaritacea",
+   "kind": "forb",
+   "what": "a trait card",
+   "why": [
+    "GBIF: 11 records on the tile"
+   ]
+  },
+  {
+   "id": "aquilegia_formosa",
+   "kind": "forb",
+   "what": "a trait card",
+   "why": [
+    "GBIF: 11 records on the tile"
+   ]
+  },
+  {
+   "id": "veratrum_viride",
+   "kind": "forb",
+   "what": "a trait card",
+   "why": [
+    "GBIF: 11 records on the tile"
+   ]
+  },
+  {
+   "id": "castilleja_parviflora",
+   "kind": "forb",
+   "what": "a trait card",
+   "why": [
+    "GBIF: 10 records on the tile"
+   ]
+  },
+  {
+   "id": "cornus_unalaschkensis",
+   "kind": "shrub",
+   "what": "a trait card",
+   "why": [
+    "GBIF: 10 records on the tile"
+   ]
+  },
+  {
+   "id": "lilium_columbianum",
+   "kind": "forb",
+   "what": "a trait card",
+   "why": [
+    "GBIF: 10 records on the tile"
+   ]
+  },
+  {
+   "id": "Rocky Mountain Subalpine Mesic-Wet Spruce-Fir Forest and Woodland",
+   "kind": "community",
+   "what": "a lexicon phrase or a species-mix rule",
+   "why": [
+    "3533 cells"
+   ]
+  }
+ ],
+ "summary": {
+  "needed": 36,
+  "with_record": 25,
+  "generated_now": 0,
+  "queued": 11,
+  "unread_communities": 1,
+  "by_layer": {
+   "tree": 12,
+   "shrub": 14,
+   "ground": 10
+  },
+  "meets_target": {
+   "tree": false,
+   "shrub": false,
+   "ground": false
+  },
+  "hands": 12
+ }
+}
