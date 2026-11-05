@@ -5129,3 +5129,57 @@ Flora: 4 min.
 
 Cost: 9 GB downloaded (the point cloud). A player downloads 58 MB to enter the tile.
 
+## 2026-11-05: streams continue across a tile seam; meltwater from the ice (pipeline/water_seams.py, branch claude/water-reroute)
+
+The project brief, from the seams step on the two Hoh tiles (`utm10n_429_5293`, the rain forest, and `utm10n_439_5293`,
+Mount Olympus, sharing x = 439 km): "4 stream(s) of order >= 3 cross on one side only: Hoh River (order 5) at 5301992 m
+(three times), Mount Tom Creek". Asked: a stream crossing a tile edge continues on the neighbour's side with the same
+identity, position, level, banks and zones, whichever tile is built first; meltwater streams seeded from the ice step's
+`terrain.ice` (the Blue and Hoh Glaciers' outflows); both tiles rebuilt, seams and Olympus's audit unblocked.
+
+What was wrong. The rivers did continue, but not onto the edge: each tile clips, routes and reroutes its own network,
+so the rain forest's Hoh began at its inflow seed 20 m inside the edge (the seed is inset 15 m) while Olympus's ended on
+it, with a zero-length 'kept' stub on the edge counted twice; the order was 4 on one side (the NHD seed's) and 5 on the
+other (the DEM's Strahler), the widths and levels each side's own. And on Olympus the NHD Ice Masses (FType 378: the
+Blue, White and Hubert Glaciers and 20 unnamed) were kept as ponds by the water step and drawn as lakes by the client,
+the routed lines across them marked in_waterbody.
+
+Chosen (tile-spec: Streams across seams, and meltwater):
+
+- **A crossing record per stream per edge** (`hydro/edges.json`, UTM): point on the edge line, flow tangent, name,
+  fcode, order, area, width, and the water step's level, depth and half width. The first tile built decides; a tile
+  built next to one with edges.json adopts each crossing within 60 m (the other way round): point, tangent, identity,
+  the higher order (carried down the reaches below). The line is cut back 12 m from the edge and runs straight to the
+  point. A neighbour's crossing into us with no stream of ours near starts an inflow here, traced down our 5 m flow.
+  Without a neighbour, own: the line carried on to the edge, then the lowest 1 m ground along it nearby.
+  Rejected: routing each tile with a margin of the neighbour's DEM (each tile would need the other's lidar, and two
+  margins still disagree where the lidar does), and snapping to the NHD line's crossing alone (NHD is ~10 m off the
+  ground, the 1 m thalweg is better and one side can always see it).
+- **The level is the mean of the two sides' own.** Copying one side's level was wrong by metres on the steep side
+  creeks: the rain forest's 1 m lidar at the edge against Olympus's 5 m heights clamped 2.5 m in, on slopes near 1:1,
+  differ by up to 6 m (the DEM seam check passes: the 5 m columns step as much inside). Each side records its own
+  level; the shared one is their mean, faded to each side's own over max(60 m, the move / 0.05); the half width eases
+  to width / 2 at the edge. The first tile built has only its own until the neighbour exists; the seams step names it
+  for one more `--steps reroute,water`, which converges (the mean of two fixed own levels).
+- **Ice.** terrain/ice.tif with the NHD Ice Masses: lines split at the ice's edge, the pieces on it `on_ice` (not
+  drawn), the piece below starting at the toe as `meltwater`, perennial, named for its glacier. Meltwater heads: the
+  whole tile routed on the 5 m DEM with the ice's area carried down; every first cell off the ice draining 0.05 km2 of
+  ice starts a stream to the network, unless it runs back onto the ice (a rock island in the glacier: 60 of 110 heads)
+  or meets a stream within 25 m (that stream is tagged). The first try drew 5 m D8 staircases across the Blue Glacier
+  from its nunataks: now stopped at the ice, and smoothed over 8 m. Glaciers are not ponds (water.py, features.json's
+  new `glaciers`).
+
+Results. Built 439, 429, 439 (`--steps reroute,water`), then seams on both: **pass**. The shared edge has 9 crossings
+on each side, 8 matched at 0.00 m apart, levels within 0.001 m (after one more water run each: 0.032 m before), widths and orders equal (Hoh River 5, 16.4 m wide, level
+251.90 m; Mount Tom Creek 4); the two left are order 1 and 2 heads each side thinks flows in from the other (listed,
+not failing). The own-level step across the seam: median about 1 m, at most 5.87 m. Olympus: 99 lines touched the ice
+(28.1 km now on_ice, not drawn), 20 meltwater lines added, 41 streams tagged, 41 reaches made perennial. The water
+checker before -> after (`scratch/seam/check_*`), bed within 5 cm of the cross-section's lowest ground: rain forest
+76.9% -> 76.7%, Olympus 57.7% -> 57.1%; water over the bank by 10 cm 0.11% -> 0.21% and 0.17% -> 0.21%; rises 0 -> 0
+(this work moves ends and levels near the edges; the bed fit is the reroute's). Reverse order (429 first, in a scratch
+tiles folder, then 439, 429 and 439 again with the water step alone): the seam passes the same way, 8 crossings at 0.00 m, levels within 1 mm. The points differ from the forward order's where the first tile's own point decided (Mount Tom Creek 10 m along the edge), as designed. Found on the way: a reach leaving the tile was sampled every 2.5 m from its start, so its last sample could stop 2.5 m short of the edge and miss its crossing (now the end is sampled too), and the reroute's copy of the neighbour's level went stale when the neighbour's water step ran again (the water step now reads it fresh): convergence takes water runs only, at most A, B, A, B when the second tile has crossings the first lacked.
+
+Left: on the steep creeks the shared level sits up to 3 m off one side's ground for the first tens of metres (the
+ground's own step; fixing it is the terrain seam's, not the water's); the reroute and water of the tile built first
+must run again once its neighbour exists; tiles without a 1 m DEM (no reroute) get no crossings; meltwater is order 1
+(Strahler not recomputed below a new head); the order raise at an inflow ignores the +1 when equal orders meet.

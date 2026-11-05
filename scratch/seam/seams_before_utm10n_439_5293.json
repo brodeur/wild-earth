@@ -1,0 +1,81 @@
+{
+ "edges": [
+  {
+   "side": "west",
+   "neighbour": "utm10n_429_5293",
+   "dem": {
+    "cells": 2000,
+    "median_step_m": 1.387,
+    "median_inside_step_m": 1.345,
+    "p95_step_m": 5.265,
+    "mean_offset_m": 0.354,
+    "problem": null
+   },
+   "streams": {
+    "crossings_here": 9,
+    "crossings_there": 2,
+    "unmatched": [
+     {
+      "along": 5301992.5,
+      "order": 5,
+      "name": "Hoh River"
+     },
+     {
+      "along": 5302021.5,
+      "order": 2,
+      "name": null
+     },
+     {
+      "along": 5301992.5,
+      "order": 5,
+      "name": "Hoh River"
+     },
+     {
+      "along": 5301992.5,
+      "order": 5,
+      "name": "Hoh River"
+     },
+     {
+      "along": 5301959.5,
+      "order": 1,
+      "name": null
+     },
+     {
+      "along": 5296864.5,
+      "order": 1,
+      "name": null
+     },
+     {
+      "along": 5296302.5,
+      "order": 4,
+      "name": "Mount Tom Creek"
+     },
+     {
+      "along": 5293988.5,
+      "order": 1,
+      "name": null
+     },
+     {
+      "along": 5294272.5,
+      "order": 1,
+      "name": null
+     },
+     {
+      "along": 5300156.5,
+      "order": 1,
+      "name": null
+     },
+     {
+      "along": 5299340.5,
+      "order": 1,
+      "name": null
+     }
+    ],
+    "problem": "4 stream(s) of order >= 3 cross on one side only: Hoh River (order 5) at 5301992 m, Hoh River (order 5) at 5301992 m, Hoh River (order 5) at 5301992 m, Mount Tom Creek (order 4) at 5296302 m"
+   },
+   "problem": "4 stream(s) of order >= 3 cross on one side only: Hoh River (order 5) at 5301992 m, Hoh River (order 5) at 5301992 m, Hoh River (order 5) at 5301992 m, Mount Tom Creek (order 4) at 5296302 m"
+  }
+ ],
+ "neighbours": 1,
+ "note": "0 of 1 edges agree"
+}

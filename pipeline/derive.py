@@ -436,7 +436,7 @@ def client_features(tile: Tile) -> dict | None:
         with open(p) as f:
             return json.load(f)["features"]
 
-    roads, streams, waterbodies, found = [], [], [], False
+    roads, streams, waterbodies, glaciers, found = [], [], [], [], False
     feats = load("footprint/mask.geojson")
     if feats is not None:
         found = True
@@ -456,6 +456,8 @@ def client_features(tile: Tile) -> dict | None:
         found = True
         for ft in feats:
             pr = ft.get("properties") or {}
+            if pr.get("on_ice"):    # the routed line across a glacier: no open water (pipeline/water_seams.py)
+                continue
             for line in _lines(ft.get("geometry") or {}):
                 if len(line) >= 2:
                     streams.append({"name": pr.get("name"), "fcode": pr.get("fcode"), "order": pr.get("order"),
@@ -480,8 +482,11 @@ def client_features(tile: Tile) -> dict | None:
         found = True
         for ft in feats:
             pr = ft.get("properties") or {}
+            ice_mass = str(pr.get("ftype")) == "378"   # NHD Ice Mass: a glacier, listed apart (not water for the client)
             for ring in _rings(ft.get("geometry") or {}):
-                if len(ring) >= 3:
+                if len(ring) >= 3 and ice_mass:
+                    glaciers.append({"name": pr.get("gnis_name") or pr.get("name"), "ring": local(ring)})
+                elif len(ring) >= 3:
                     waterbodies.append({"name": pr.get("gnis_name") or pr.get("name"), "fcode": pr.get("fcode"),
                                         "ring": local(ring)})
     if not found:
@@ -496,11 +501,11 @@ def client_features(tile: Tile) -> dict | None:
     terr, terr_note = territories_or_none(tile)
     path = tile.path("client/features.json")
     with open(path, "w") as f:
-        json.dump({"roads": roads, "streams": streams, "waterbodies": waterbodies, "places": places,
+        json.dump({"roads": roads, "streams": streams, "waterbodies": waterbodies, "glaciers": glaciers, "places": places,
                    "places_source": places_note, "territories": terr, "territories_source": terr_note, "size_m": TILE_SIZE_M}, f, separators=(",", ":"))
     return {"path": "client/features.json", "kind": "vector", "crs": tile.crs, "bounds": list(tile.bounds),
             "encoding": "tile-local metres [x east, north from south edge]",
-            "counts": {"roads": len(roads), "streams": len(streams), "waterbodies": len(waterbodies), "places": len(places), "territories": len(terr)},
+            "counts": {"roads": len(roads), "streams": len(streams), "waterbodies": len(waterbodies), "glaciers": len(glaciers), "places": len(places), "territories": len(terr)},
             **({"sources_used": ["native_land"]} if terr else {}),
             "streams_from": stream_source, **({"places_from": "osm"} if places_note else {}),
             "derived_from": ["footprint.mask", stream_source, "hydro.waterbodies"] + (["osm"] if places_note else [])}

@@ -46,6 +46,7 @@ tiles/<tile_id>/
   hydro/channels.geojson        derived   stream channels routed by gravity on the DEM, named and classed by NHD (see Channels); rewilded once hydrology_rewilded; moved onto the 1 m thalweg once `"rerouted": true`
   hydro/channels_present.geojson derived  the present-day routing, kept by the rewild step to judge against (see Hydrology rewilding)
   hydro/channels_5m.geojson     derived   the network as the channels step routed it on the 5 m DEM, kept by the reroute step (see Rerouting on the 1 m ground)
+  hydro/edges.json              derived   every stream crossing the tile's edges: point, tangent, identity, level at the edge, own or adopted from a neighbour (see Streams across seams, and meltwater)
   hydro/human_water.geojson     derived   every waterbody judged: human (rewilded: true) or kept, with the reasons and evidence
   hydro/osm_water.geojson       derived   OSM water polygons, dams and NID dam points (Overpass cache for the rewild step)
   terrain/dem_rewilded.tif      derived   dem.tif with the restored thalwegs carved through rewilded beds (routing only; dem.tif untouched)
@@ -93,7 +94,7 @@ tiles/<tile_id>/
   client/texture_ground.jpg     derived   texture_imagery with tree crowns (lidar CHM 3 m+) and their shadows replaced by synthesized ground of the same class, same grid (see Ground-only texture)
   client/texture_ground_mask.png derived  1000 px: share of each 10 m pixel replaced in texture_ground (255 all filled)
   client/imagery.png            derived   present-day NAIP for the mini-map, 1024 px on the metric tile grid
-  client/features.json          derived   present-day roads, streams (from hydro/channels.geojson when built), waterbodies and OSM place names (`places`: name, kind, x, north; best rank first) in tile-local metres
+  client/features.json          derived   present-day roads, streams (from hydro/channels.geojson when built; not the lines on the ice), waterbodies (not the NHD Ice Masses: `glaciers`) and OSM place names (`places`: name, kind, x, north; best rank first) in tile-local metres
   client/channel_depth.png      derived   channel incision, uint8 decimetres on the DEM grid: mean DEM on a 20 m ring minus the channel cell, 0-25 m; 0 off channel
   client/channel_profile.png    derived   RGB on the DEM grid: R thalweg water depth (2 cm), G riffle-pool index, B rewilded water beds (see Hydrology rewilding)
   client/terrain_detail.png     derived   2 m micro-relief: 8-bit grey residual of the 1 m DEM against client/heights.png, (v - 128) x 4 cm (see Lidar)
@@ -479,6 +480,47 @@ on the raw 1 m ground: the share of samples whose ground is within 5 / 15 cm of 
 the lower bank at the margin's edge, rises of the level within a reach and into the reach it joins, the distance to
 the NHD lines and from the 5 m lines; and the same away from the erased roads (under a fill the raw ground is the fill,
 not a bed). `--channels hydro/channels_5m.geojson --levels 5m` checks the tile as it was before the step.
+
+## Streams across seams, and meltwater
+
+The reroute step's last passes (`pipeline/water_seams.py`), after the lines are on the 1 m ground:
+
+- **The ice.** `terrain/ice.tif` (the ice step) with NHD's Ice Mass waterbodies (FType 378) is the ice. Every line is
+  split at the ice's edge (runs under 10 m absorbed; an off-ice run under 150 m with ice at both ends stays under the
+  ice): the pieces on it keep their feature with `on_ice: true` and are not drawn (the water step, the features and
+  the seams skip them); the piece leaving the ice starts at the toe with `meltwater: true`, `glacier` (the nearest
+  named ice mass) and FCode 46006. Glaciers are not ponds: the water step and `client/features.json` leave FType 378
+  out of the waterbodies (`features.glaciers` lists them, name and ring).
+- **Meltwater.** The whole tile is routed on the 5 m DEM (the reroute flood, breaching, to the border) with the ice's
+  area carried down the flow directions. Every first cell off the ice that 0.05 km2 of ice or more drains through is a
+  meltwater head: traced down to the drawn network or the border (a trace that runs back onto the ice, off a rock
+  island in the glacier, is dropped), the 5 m staircase smoothed over 8 m and the line centred on the low ground; a
+  head whose trace meets a stream within 25 m adds no line but tags that stream. New lines have `rerouted:
+  "meltwater"`, order 1, the area at their end. Meltwater lines, the streams they feed and every reach below them are
+  perennial (`fed_by_ice` where that changed the FCode).
+- **Seams.** Every stream crossing a tile edge is a record in `hydro/edges.json` (`crossings`, UTM in the tile's zone):
+  side, along (northing on west/east, easting on south/north), x, y on the edge line, dir (in/out of this tile),
+  tangent (the flow direction), name, fcode, order, area_km2, width, bed_width; the water step adds level, depth and
+  half_width at the edge and this tile's own level_own, depth_own; level_theirs and depth_theirs are the neighbour's
+  own. A candidate is a drawn line's free end (no other line within 3 m) within 40 m of an edge: an outflow, or a head
+  draining 0.3 km2 or more (a fresh head drains 0.15). The first tile built decides: when a built neighbour's
+  edges.json has a crossing the other way round within 60 m along the edge (the same name preferred), ours takes its
+  point, tangent, name, fcode, area, width and bed width, and the higher of the two orders (carried down the reaches
+  below an inflow; a higher order here than there is `order_over_neighbour`). Its crossings into this tile with no
+  stream of ours near start an inflow here, traced down the 5 m flow to the network. Without a neighbour the
+  crossing is our own: the line's last 15 m carried on to the edge, then the lowest 1 m ground along it within
+  clip(0.75 widths, 3, 15) m. The line is cut back to its last vertex 12 m off the edge and runs straight to the point
+  (its last 6 m along the adopted tangent). Zero-length stubs at the border are dropped.
+- **The level at a crossing** (the water step, `water_seams.edge_levels`): the shared level is the mean of the two
+  sides' own levels at the edge (the ground itself steps across a seam: metres on a steep creek, where one side has
+  the lidar and the other 5 m heights clamped 2.5 m in), each side's reach moved to it fading over max(60 m, the move /
+  0.05) and non-increasing again; the thalweg depth likewise; the half width eases to width / 2 at the edge (the
+  wander and riffle swell off over 60 m), so the bed, margin, bank and zones meet the neighbour's at one point, width
+  and height. A tile built first has only its own level until the neighbour is built; the seams step then names it
+  to run `--steps reroute,water` again, which takes the mean (and any order raised over it).
+
+The `seams` step compares the two edges.json files: matched crossings at the same point (1 m), level (0.10 m), width,
+order and name; an unmatched crossing of order 3+ fails; every mismatch names the tile to re-run.
 
 ## Water and riparian
 
