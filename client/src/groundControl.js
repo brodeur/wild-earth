@@ -672,6 +672,7 @@ export class GroundControl {
       ps.lift = this.body?.legs ? 0 : !inAir && sp > 0.05 ? S.lift(sp) * Math.max(0, Math.sin(ps.phase)) : tAmp ? S.lift(0.5) * ps.amp * Math.max(0, Math.sin(ps.phase)) : 0;   // on the leg engine the hop is the engine's
       ps.pitch = damp(ps.pitch, inAir ? 0 : (sp > 0.05 ? -S.rock * Math.cos(ps.phase) * Math.min(1, sp / 4 + 0.4) : tAmp ? -S.rock * ps.amp * Math.cos(ps.phase) : 0) + slope * (1 - Math.max(0, ps.pose)) * 0.8, 12, dt);
       ps.e0 = 0; ps.e1 = damp(ps.e1, ps.flick, 5, dt);
+      if (this.mode === 'tunnel') ps.lift = 0;   // in a tunnel the hop kept to the floor
     } else if (S.rig === 'bird') {
       const turkey = this.code === 'meleagris_gallopavo', scratching = act && turkey && this.scratch;
       // the stepping turn (PART_TURN.bird, .turkey): standing and turning, it walks in place in short steps, the feet's
@@ -756,7 +757,8 @@ export class GroundControl {
     } else { this._e.set(b.legs ? 0 : ps.pitch, yawA, ps.roll, 'YXZ'); this._qt.setFromEuler(this._e); }   // a body on the leg engine meets the slope with its legs
     if (this.qFresh) this._q.slerp(this._qt, 1 - Math.exp(-dt * 20)); else { this._q.copy(this._qt); this.qFresh = true; }
     const drop = (S.rig === 'quad' || this.code === 'otospermophilus_beecheyi') ? (b.model.drop || 0) * Math.max(0, ps.pose) * this.size : 0;
-    this._p.set(P.x, P.y + ps.lift - drop, P.z); this._s.setScalar(this.size);
+    const sqz = this.mode === 'tunnel' ? this.dig?.squeeze : null;   // in a tunnel: narrowed and lowered to its bore (dig.js)
+    this._p.set(P.x, P.y + ps.lift - drop, P.z); if (sqz) this._s.set(this.size * sqz.x, this.size * sqz.y, this.size); else this._s.setScalar(this.size);
     this._m.compose(this._p, this._q, this._s);
     this._m.toArray(m.instanceMatrix.array, 0); m.instanceMatrix.needsUpdate = true;
     const an = m.geometry.attributes.aAnim; an.array[0] = ps.phase % TAU; an.array[1] = ps.amp; an.array[2] = ps.pose; an.array[3] = ps.flick; an.needsUpdate = true;
@@ -770,6 +772,7 @@ export class GroundControl {
         L.pose = this.resting && S.rest === 'hunch' ? -1 : ps.pose;
         L.twitch = this.code === 'sylvilagus_bachmani' && L.v > 3 ? 1 : 0;
         L.dig = this.digging ? 1 : 0;   // the Dig game (dig.js): the fore feet scrabbling, the soil thrown back
+        L.crawl = this.mode === 'tunnel' ? 1 : 0;   // in a tunnel: the crawl (gait.js hopStep)
       }
       b.legs.write(L, dt, ac.array, ab.array); ac.needsUpdate = true; ab.needsUpdate = true;
     } else if (sk) {   // the skinned deer: a jump runs the gallop in the air

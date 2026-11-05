@@ -75,7 +75,41 @@ cost 3.1 ms of GPU from inside at 1920 x 1200.
   stretch, a coyote's pit in a warning red; and a soft warm glow at every other animal underground within 10 m (an AI
   vole or rabbit in a tunnel or digging, a mirror's streamed `buried`, another player's body underground: `bodySample.js`
   now flags a body in a tunnel buried). The body's depth hides the channel behind it; the front wall glows over it.
+- **The openings glow too** (Aaron, 2026-11-04: "the entrance hole and mound should also glow just like the x-ray
+  version of the tunnel"): the holes' collars, the spoil round them and the pits' mounds (the heaps buffer) are drawn
+  in the same pass under the channel's shader, a little brighter across (0.16 against the tube's 0.07) so a low mound
+  seen from above still shows; a collar's fragments inside the tunnel it opens onto are dropped as a tube's are.
 - **The hand-over**: eased in over about 0.6 s going down (a dig or a hole), out coming up; the camera never cuts.
+
+## Going down a hole, and the crawl
+
+Aaron, 2026-11-04: "The entry radius for a hole should be larger than the hole proportional to the hole by about 1.75x -
+the reason being is that if someone is running for cover, we want to make it easy to get into the hole. When entering a
+hole the avatar should walk a few steps in." And: "While inside of a hole, the animal's rigging should be a crawling type
+so that the body never escapes the tunnel walls."
+
+- **The reach** (`dig.js` update, ENTER_K): a tunneller moving toward a hole that fits it goes down once its front (the
+  line from its centre to its nose) passes within 1.75 of the hole's radii of the hole's centre. Before, its centre had
+  to be within 1.6 radii (a brush rabbit's centre within 10 cm, its body over the hole); now a running rabbit's nose
+  within 11 cm takes it (measured: down at 21.5 cm centre to centre, the nose 8.2 cm off, at 2.9 m/s). Coming up, the
+  hole is ignored until the body's front is 3.25 radii from it.
+- **The walk in** (`enterHole`, ENTER_WALK, ENTER_BLEND): the body starts on the first segment, faces down it and walks
+  three body half-lengths in by itself (a brush rabbit about 0.37 m) carrying some of its run (at most 1.5 m/s); a back
+  key or the dig key takes over. Its place is eased from where it stood to the tunnel's floor over 0.35 s (no cut).
+- **The crawl** (`gait.js` hopStep `inp.crawl`, set by `groundControl.js` in a tunnel): the shuffle only (no bound), no
+  sit-up, at least the freeze's crouch with the ears laid back, the haunch dropped by 0.45 and the chest by a further
+  0.2 of the belly's depth, the head drawn 0.3 lower, no bob, lean or arch, the feet swung at 0.4 of their height. The
+  part-rigged vole keeps its hop on the floor (no lift).
+- **The bore** (`DIGGERS[code].crawl`, the crawling body's width and height at size 1, measured): the drawn body is
+  narrowed and lowered to the tube's inside less a margin (1.7 and 1.68 of the radius across and up from the floor it
+  stands on), eased in going down; in a chamber it is full size. The brush rabbit's drawn body is wider and taller than
+  its 6.5 cm burrow even crawling (13.7 cm both ways at size 1; the burrow's inside is 12.4 cm across, 11.7 cm from the
+  floor up), so it is drawn at 0.77 x 0.77 of its size in the tube; the vole at 1 x 0.80.
+- **Measured** (2026-11-04, port 8781, an orthographic side and front render of the body alone in its own frame, still
+  and crawling): the brush rabbit 15.4 cm tall crouched, 14.1 crawling, 10.8 squeezed against 11.7 of room; 12.3 cm wide
+  squeezed against 12.4 before the side margin was widened; the vole 5.8 tall against 5.4, 5.4 squeezed before its
+  margin was raised. Not measured: the brush rabbit's feet against the round floor's sides (they are planted on it), a
+  rabbit backing out (S) over a long tunnel.
 - **From above** nothing changed: the dirt is drawn only near an opening (visPass); the camera is never inside now.
 - **The coyote digging toward a vole**: the player's vole underground sees the pit's bowl in red come down through the
   ground toward its channel, and the coyote itself dimmed above it; when the pit opens the tunnel, the opened stretch
