@@ -91,6 +91,15 @@ set, berries while the crown shows them), dimmer as the body is fed; and scent.j
 scents, one per species, with their names. A species with no rows this season (the lion, the lizard) gets none of the
 three; a new plant record with `eaten_by` gets all three on the next `derive`.
 
+The fruit (2026-11-04, `client/src/fruit.js`; decisions, "fruit on the plants"): the same rows, read for their berries
+and seeds of woody plants, put the fruit itself on the plants: a small model for each of the 19 kinds the records name
+(the berry shrubs, walnut, bay nut, maple samaras, ceanothus capsules, redbud pods; acorns stay the acorn game's), hung
+on the crowns or lying under the trees, glowing as the acorns do, within 16 m of the body and faded with the distance.
+A plant is in fruit in its species' berry months (`foliage.berries`, the months the crowns paint them), else in its
+`eaten_by` seasons, and its fruit is drawn only for a body that eats it this season; on a tile whose games have no
+forage rows (Placerville) the library's `eaten_by` stands in. A new berry record with `eaten_by` and a `foliage.berries`
+block needs a model in `KINDS` to be drawn.
+
 Scavenge (2026-11-02, `docs/game-scavenge.md`, `client/src/carrion.js`): the scavenge relation played out. Every kill
 is a carcass that decays over a real day in stages drawn on the body, with a meat store by its mass that each feed
 draws down; it is a scent ("dead animal") whose reach grows with the stage, and for the species `relations.scavenge`
