@@ -212,3 +212,12 @@ cell of 250 trees) and its age class is the one that holds that height, the top 
 is drawn with the veteran's limbs, as the lidar tiles already did from the measured crowns. The decisions log has the
 diagnosis (the class ranges, the uniform scale and the far tier's rescale capped every species) and the numbers.
 
+Also in the placement, 2026-11-05 (Aaron: "One thing to add to the tree pipeline is root flare and roots - roots don't
+always need to be visible, but especially if the tree is not on a flat surface it will have some evidence of flaring
+or roots"): the near trunk's base is a lobed flare and the trees within 80 m of the eye have surface roots, both from
+the record's `trunk.flare` and optional `trunk.roots` (`docs/species-library.md`), drawn on flat ground and fitted to
+the slope in the vertex shader from the same per-instance ground normal as the slope bend: the uphill side buried, the
+downhill side's buttresses reaching down the slope and its roots leaving the flare at the collar's level and following
+the ground only along their length, so they stand clear of it near the trunk and grip it further out (treegen.js
+`rootPlan`, `flareGeometry`, `rootGeometry`, `trunkFlex`; vegetation.js the close tier's `roots`). The decisions log
+has the shapes, the slope fit and the cost ("root flare and surface roots").

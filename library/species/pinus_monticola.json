@@ -313,6 +313,13 @@
    "fissure": 0.95,
    "contrast": 1.15,
    "relief": 1.4
+  },
+  "roots": {
+   "buttresses": [
+    3,
+    4
+   ],
+   "length": 0.85
   }
  },
  "crown": {
@@ -490,7 +497,7 @@
   "by": "pipeline/plantgen.py",
   "version": "2",
   "card": "library/plant_cards/pinus_monticola.json",
-  "card_sha256": "6b516180daebcaf5",
+  "card_sha256": "92b3263a2a38371c",
   "template": "pinus_ponderosa",
   "template_common": "ponderosa pine",
   "height_scale": 0.719

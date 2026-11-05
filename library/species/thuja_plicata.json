@@ -290,6 +290,14 @@
    "fissure": 0.7,
    "contrast": 1.0,
    "relief": 1.4
+  },
+  "roots": {
+   "buttress": 0.95,
+   "buttresses": [
+    5,
+    8
+   ],
+   "note": "the fluted, buttressed butt of an old cedar"
   }
  },
  "crown": {
@@ -501,7 +509,7 @@
   "by": "pipeline/plantgen.py",
   "version": "2",
   "card": "library/plant_cards/thuja_plicata.json",
-  "card_sha256": "c500493c0d843bbe",
+  "card_sha256": "1be2995aa97c1889",
   "template": "calocedrus_decurrens",
   "template_common": "incense cedar",
   "height_scale": 1.607

@@ -325,6 +325,13 @@
    "fissure": 0.95,
    "contrast": 1.15,
    "relief": 1.4
+  },
+  "roots": {
+   "buttresses": [
+    3,
+    4
+   ],
+   "length": 0.9
   }
  },
  "crown": {
@@ -506,7 +513,7 @@
   "by": "pipeline/plantgen.py",
   "version": "2",
   "card": "library/plant_cards/pinus_contorta.json",
-  "card_sha256": "5dac7e0a5ee9db42",
+  "card_sha256": "595b223507dd17d1",
   "template": "pinus_ponderosa",
   "template_common": "ponderosa pine",
   "height_scale": 0.647

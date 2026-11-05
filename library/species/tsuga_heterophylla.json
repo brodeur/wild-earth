@@ -300,6 +300,11 @@
    "contrast": 1.25,
    "lichen": 0.15,
    "relief": 1.7
+  },
+  "roots": {
+   "buttress": 0.45,
+   "length": 1.4,
+   "note": "shallow surface roots over the moss; often on stilt roots where its nurse log rotted away (not drawn yet)"
   }
  },
  "crown": {
@@ -513,7 +518,7 @@
   "by": "pipeline/plantgen.py",
   "version": "2",
   "card": "library/plant_cards/tsuga_heterophylla.json",
-  "card_sha256": "3dea250d7dae03f5",
+  "card_sha256": "40ffb73dc6c0fe6d",
   "template": "pseudotsuga_menziesii",
   "template_common": "Douglas-fir",
   "height_scale": 1.218

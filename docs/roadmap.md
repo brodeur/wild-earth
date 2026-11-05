@@ -200,6 +200,14 @@ sequenced; Parked is in the brief but deliberately not started.
   (off). Weak: no displaced trunk geometry (the bark's outline is still the polygon), galls and holes do not sway with a
   gale, needles a tone dark in deep shade; nothing of it for a body of scale 0.6 and up.
 
+- Root flare and surface roots, 2026-11-05 (Aaron: "especially if the tree is not on a flat surface it will have some
+  evidence of flaring or roots"; docs/decisions.md "root flare and surface roots"): each near trunk flares by its
+  record's `trunk.flare` (round on pines and oaks, fluted and buttressed on cedars, redwoods and Sitka spruce) and the
+  trees within 80 m have surface roots; both fitted to the slope from each tree's ground normal (uphill buried,
+  downhill buttressed with roots standing clear of the falling ground and gripping it), still in a gale, within the
+  noise of the frame. Weak: no stilt roots over rotted nurse logs (hemlock, Sitka spruce); the slope is the plane at the
+  foot, so a root on a convex brow can show its tip; roots cast no shadow of their own.
+
 - The tile pipeline as one repeatable command, and the species registry, 2026-11-04 (Aaron: "When we create a new
   tile, we need to be going through all the steps... repeatable... anywhere on earth... generate all of the species for
   that tile if they don't already exist... a registry of species"; docs/pipeline.md): `build_tile --all` runs a graph

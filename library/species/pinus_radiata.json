@@ -349,6 +349,13 @@
    "relief": 1.4,
    "ridge_m": 0.05,
    "block_m": 0.18
+  },
+  "roots": {
+   "buttresses": [
+    3,
+    5
+   ],
+   "length": 0.9
   }
  },
  "crown": {
@@ -534,7 +541,7 @@
   "by": "pipeline/plantgen.py",
   "version": "2",
   "card": "library/plant_cards/pinus_radiata.json",
-  "card_sha256": "853baf24c12843e7",
+  "card_sha256": "26c0222bc1625984",
   "template": "pinus_ponderosa",
   "template_common": "ponderosa pine",
   "height_scale": 0.647
