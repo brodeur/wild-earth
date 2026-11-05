@@ -123,6 +123,13 @@ sequenced; Parked is in the brief but deliberately not started.
   `emergent` form drawn by `emergents.js`; the streams drawn at their level in the carved
   channel, the dry beds rocky, the margins tinted, the gallery trees by zone.
 
+- Water at the lowest point, 2026-11-04 (pipeline/reroute.py, decisions.md "water at the lowest point"): every stream
+  moved from the 5 m routing onto the 1 m lidar thalweg (priority-flood breaching in a corridor kept to the network's
+  topology, the erased roads' culverts cut in, nodes snapped, the line centred on the lowest ground), the levels from the
+  1 m ground with no rise anywhere downstream, and a checker (pipeline/water_check.py). Beds within 5 cm of the lowest
+  ground 46% -> 89% on the home tile (95% away from the roads), water over the bank 40% -> 0.6%; Placerville, Cosumnes
+  and Yosemite 270_4180 the same way; their water passes run for the first time.
+
 - The catch, 2026-10-30 (branch claude/catch-rigging-4301f4, docs/decisions.md "the catch rigged", docs/movement.md
   "The catch"): the prey falls over 0.4 s instead of snapping onto its side (the deer's bed clip blended in fast), the
   lizard can be taken (the fox's pounce, the raven's and jay's takes). The lion's catch is a leap onto the prey's back
@@ -267,7 +274,10 @@ browser stays the renderer.
   run); the ponds' drawdown ring and basin checked in the client; the raven's frame rate
   over the creek; the emergents' far tier and their look against references (the tule and rush
   pictures read dark against the water); the stones' contrast on the dry beds from the chase
-  camera; the other tiles rebuilt with `--steps water`; a water temperature from
+  camera; `utm11n_267_4175`'s `terrain/dem.tif` rebuilt from its 1 m DEM (it is the 3DEP seamless product, 13 m std off
+  the lidar) and then `--steps reroute,water` (the reroute step refuses it until then); the San Francisco cells
+  rerouted; culverts under the fills the 1 m ground still holds (a reach under a 19 m fill drapes over it); the
+  rerouted lines' 40-50% more water triangles thinned where a reach is straight; a water temperature from
   `relations.shades_water`; the animals' crossings at the bars (deer, raven) made deliberate.
 
 - Tree bases perpendicular to the slope, 2026-11-01: each near-trunk instance carries the ground's normal at its foot;

@@ -549,7 +549,7 @@ def _gauss(v, sigma_samples):
     return gaussian_filter1d(v, sigma_samples, mode="nearest")
 
 
-def profile_along(ctx: _Ctx, z, line: LineString, area_km2: float, width: float):
+def profile_along(ctx: _Ctx, z, line: LineString, area_km2: float, width: float, zat=None):
     """Samples along a channel (downstream): (xy, depth m, riffle index t in -1..1).
 
     The long profile is the DEM bilinear every SAMPLE_M, made non-increasing downstream (the water
@@ -558,12 +558,16 @@ def profile_along(ctx: _Ctx, z, line: LineString, area_km2: float, width: float)
     max(75 m, 10 widths))
     gives t = tanh(1.1 ln((S_local + e) / (S_reach + e))), e = 0.002: a steeper step than the reach
     around it is a riffle (t > 0), a flatter stretch a pool (t < 0). Depth = mean_depth(A) x
-    exp(-0.85 t): about 2.3x the mean in the deepest pools, 0.43x on riffles."""
+    exp(-0.85 t): about 2.3x the mean in the deepest pools, 0.43x on riffles. `zat(x, north)`, when given, samples
+    the ground instead (the reroute step passes the 1 m DEM)."""
     L = line.length
     ds = np.arange(0.0, L + 1e-6, SAMPLE_M) if L > SAMPLE_M else np.array([0.0, L])
     pts = np.array([line.interpolate(d).coords[0] for d in ds])
-    zz = ctx.zat(pts[:, 0], pts[:, 1], z)
-    zz = np.minimum.accumulate(zz)
+    if zat is not None:   # the 1 m thalweg: its least-squares non-increasing trend (a running minimum hangs on pits)
+        from .reroute import isotonic_down
+        zz = isotonic_down(zat(pts[:, 0], pts[:, 1]))
+    else:
+        zz = np.minimum.accumulate(ctx.zat(pts[:, 0], pts[:, 1], z))
     sl = max(7.5, 2.5 * width) / SAMPLE_M
     zl = _gauss(zz, sl)
     zr = _gauss(zz, max(75.0, 10 * width) / SAMPLE_M)
@@ -575,8 +579,9 @@ def profile_along(ctx: _Ctx, z, line: LineString, area_km2: float, width: float)
     return pts, depth, t, S_l
 
 
-def write_profile(ctx: _Ctx, z, human, restored_lines):
-    """client/channel_profile.png (see the module docstring) and summary statistics."""
+def write_profile(ctx: _Ctx, z, human, restored_lines, zat=None, keep_b=None):
+    """client/channel_profile.png (see the module docstring) and summary statistics. The reroute step passes `zat`
+    (the 1 m ground) and `keep_b` (the B band as this step wrote it: the rewilded beds do not move with the lines)."""
     from scipy.ndimage import distance_transform_edt
     n, res = ctx.n, ctx.res
     D = np.zeros((n, n), "float32")
@@ -594,7 +599,7 @@ def write_profile(ctx: _Ctx, z, human, restored_lines):
             continue
         a = pr.get("area_km2") or 0.15
         w = pr.get("width") or 1.6 * a ** 0.45
-        pts, depth, t, _ = profile_along(ctx, z, line, a, w)
+        pts, depth, t, _ = profile_along(ctx, z, line, a, w, zat)
         stats["reaches"] += 1
         stats["samples"] += len(pts)
         tvals.append(t)
@@ -617,9 +622,9 @@ def write_profile(ctx: _Ctx, z, human, restored_lines):
     G = np.where(near, np.clip(np.round((T[ir, ic] + 1) * 127.5), 0, 255), 0).astype("uint8")
     R[near & (R == 0)] = 1                      # a channel cell always reads as wet
     # B: the rewilded beds, with the riparian corridor along the restored channel through them
-    B = np.zeros((n, n), "uint8")
+    B = np.zeros((n, n), "uint8") if keep_b is None else keep_b.astype("uint8")
     beds = [h["geom"] for h in human]
-    if beds:
+    if beds and keep_b is None:
         bed = ctx.rasterize(beds).astype(bool)
         B[bed] = 255
         corr = [ln.buffer(CORRIDOR_M) for ln in restored_lines]

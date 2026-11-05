@@ -43,8 +43,9 @@ tiles/<tile_id>/
   footprint/urban.tif           derived   dense-urban mask, uint8 0/1 on the DEM grid: a city's blocks, rewilded whole (see Footprint mask)
   hydro/flowlines.geojson       required  stream network
   hydro/waterbodies.geojson     required  lakes, ponds, reservoirs
-  hydro/channels.geojson        derived   stream channels routed by gravity on the DEM, named and classed by NHD (see Channels); rewilded once hydrology_rewilded
+  hydro/channels.geojson        derived   stream channels routed by gravity on the DEM, named and classed by NHD (see Channels); rewilded once hydrology_rewilded; moved onto the 1 m thalweg once `"rerouted": true`
   hydro/channels_present.geojson derived  the present-day routing, kept by the rewild step to judge against (see Hydrology rewilding)
+  hydro/channels_5m.geojson     derived   the network as the channels step routed it on the 5 m DEM, kept by the reroute step (see Rerouting on the 1 m ground)
   hydro/human_water.geojson     derived   every waterbody judged: human (rewilded: true) or kept, with the reasons and evidence
   hydro/osm_water.geojson       derived   OSM water polygons, dams and NID dam points (Overpass cache for the rewild step)
   terrain/dem_rewilded.tif      derived   dem.tif with the restored thalwegs carved through rewilded beds (routing only; dem.tif untouched)
@@ -357,7 +358,8 @@ routing, and is undone if it does not help). `terrain.dem_rewilded` records the 
 the deepest cut.
 
 Creek depth. `client/channel_profile.png` (RGB, DEM grid, row 0 north): along every channel, every
-2.5 m, the DEM's long profile on the rewilded DEM, made non-increasing downstream, smoothed over
+2.5 m, the DEM's long profile on the rewilded DEM, made non-increasing downstream (on a rerouted tile the 1 m
+ground along the rerouted line, its least-squares non-increasing trend: see Rerouting on the 1 m ground), smoothed over
 max(7.5 m, 2.5 water widths) for the local slope and over max(75 m, 10 widths) for the reach slope;
 t = tanh(1.1 ln((S_local + 0.002) / (S_reach + 0.002))) is the riffle-pool index (+1 riffle, -1
 pool), and the thalweg depth is 0.10 A^0.32 m (A km²) x exp(-0.85 t): about 2.3 times the reach
@@ -402,6 +404,59 @@ level over the drawn ground; creeks running this season, thalweg depth across a 
 of the drawn ribbon; 0 elsewhere) and `rewildAt(x, north)` (B), both as methods of the `Water`
 object and as module functions.
 
+## Rerouting on the 1 m ground
+
+Build step `reroute` (`pipeline/reroute.py`, after `rewild_hydro`, before `water`; `status.channels_rerouted`). Aaron
+(2026-11-04): "it needs to be at the lowest point, period." The channels step routes at 5 m and smooths the cell
+centres, so on the 1 m lidar ground a reach runs a metre to several metres off its thalweg (up a bank, through a spur's
+toe) and the water step cut a trench beside the dry creek. This step keeps the 5 m network (every reach, its order,
+area, width, NHD name and permanence) and replaces its geometry with the path water takes on `terrain/dem_1m.tif`:
+
+1. Corridor and territories: each DEM-sourced reach buffered by 25 m + its water width on the 1 m grid; each cell
+   belongs to its nearest reach (2 m distance transform), and the flood below crosses from one reach's cells to
+   another's only where the two share a node, so the water follows the map's topology and never slips over a low
+   saddle into an unrelated creek's corridor.
+2. Roads: where a reach crosses an erased road (`client/roads.png` >= 128, grown 10 m: the fill and its ditches), the
+   5 m line is cut into the 1 m ground 1.5 m either side, graded from the lowest ground at its way in to the lowest at
+   its way out (never rising): the culvert. Without it the trace runs down the ditch at the fill's toe to wherever the
+   crest is lowest.
+3. A rewilded bed's restored thalweg (`terrain/dem.tif - terrain/dem_rewilded.tif`) cut into the 1 m ground too.
+4. Conditioning: a priority-flood over the corridor from the network's outlets (border cells within 30 m of a reach
+   leaving the tile; the lowest cell near an interior outlet; the lowest cell of any part still unreached), ties first
+   come first served, breaching every pit: the path from the spill cell back to the outlet is lowered to the pit's
+   height rather than the pit filled. Flow directions are the cells each was reached from; accumulation (cells) is
+   summed down them.
+5. Snapping: every node (head, junction, waterbody crossing, outlet) moves to the most accumulated cell within 12 m
+   (4 m at a head); a reach is the flow path from its upstream node to its downstream node, or to the flow path within
+   150 m below it (a tributary meeting the stream just under the node), or an outlet within 30 m. A tributary meeting
+   the bigger stream above the node stops where it meets it. A reach inside a kept pond (`in_waterbody`) keeps its line
+   with its ends moved (`rerouted: "pond"`: the pond is drawn there); a trace that never arrives keeps its 5 m line
+   with its ends moved (`"kept"`, listed in the stats).
+6. The line: the trace resampled to 1 m, smoothed over max(1.5 m, 0.4 widths); each vertex's offset across the flow
+   to the middle of the lowest run of its cross-section (the section over +-clip(0.75 widths, 1.5, 22 m), smoothed
+   over a tenth of its span, the run within clip(0.02 widths, 2, 15 cm) of its minimum) median-filtered and smoothed
+   along the line before it is applied, then again within 1 m and 2 cm; simplified to max(0.3 m, 0.08 widths). On a
+   river whose lidar surface is flat across, the run is the whole surface and the line takes its middle.
+
+A tile whose `terrain/dem.tif` is not the 1 m ground averaged (std of the difference over 3 m; `utm11n_267_4175`,
+whose 5 m DEM is the 3DEP seamless product, 13.2 m) is refused: the client draws the 5 m heights, so water on the 1 m
+thalweg would not sit on the drawn ground. Rebuild its `dem.tif` from `dem_1m.tif` first.
+
+Outputs: `hydro/channels.geojson` (`"rerouted": true`; per reach `rerouted` true / "pond" / "kept", `snap_shift_m`
+the median distance from the 5 m line, `snap_shift_max_m`), the 5 m network kept as `hydro/channels_5m.geojson` (a
+rerun reads it while channels.geojson is marked rerouted; a channels or rewild_hydro run writes a fresh 5 m network,
+after which reroute must run again), `client/channel_profile.png` R and G rebuilt from the new lines on the 1 m long
+profile (its least-squares non-increasing trend, `reroute.isotonic_down`; B kept), `client/channel_depth.png` along the
+new lines, `client/features.json`. The manifest's `hydro.channels.reroute` holds the counts, the snap shifts, the
+conditioning's breaches, the road crossings and the 5 m / 1 m agreement.
+
+Checking: `python -m pipeline.water_check --tile <id>` samples every drawn reach as the water step does and reports,
+on the raw 1 m ground: the share of samples whose ground is within 5 / 15 cm of the cross-section's lowest ground
+(over +-max(3 m, the water half width + margin + bank)), the clip (ground over the level at the centreline), water over
+the lower bank at the margin's edge, rises of the level within a reach and into the reach it joins, the distance to
+the NHD lines and from the 5 m lines; and the same away from the erased roads (under a fill the raw ground is the fill,
+not a bed). `--channels hydro/channels_5m.geojson --levels 5m` checks the tile as it was before the step.
+
 ## Water and riparian
 
 Build step `water` (`pipeline/water.py`, after `rewild_hydro`; re-run alone with `--steps water`) builds every
@@ -415,7 +470,12 @@ Reaches. Every drawn reach of `hydro/channels.geojson` (canals 33600 left out, p
 NHD-sourced stretches within 15 m of a DEM reach left out as the client leaves them) is sampled every 2.5 m with its
 order, drainage area, width, permanence (perennial 46006/55800, intermittent 46003/33400, else ephemeral), the
 thalweg depth D and riffle-pool index t from `client/channel_profile.png` at the sample's cell, and a water level L:
-the DEM along the reach made non-increasing downstream and smoothed over max(7.5 m, 2.5 widths). The water half
+the DEM along the reach made non-increasing downstream and smoothed over max(7.5 m, 2.5 widths). On a rerouted tile
+(`manifest.layers["client.water"].stats.levels_from`) L comes from the 1 m ground along the rerouted line: its
+least-squares non-increasing trend (`reroute.isotonic_down`; a running minimum hangs on every 1 m pit and holds the
+level down for the rest of the reach), smoothed the same way, kept 5 cm under the lower ground at the edge of the wet
+margin on either side, non-increasing again; then, bigger streams first, a reach whose last level is under the level
+of a bigger reach within 6 m of its end is raised to it, so the water surface never climbs into a confluence. The water half
 width at a sample is wh = width / 2 x (1 + 0.15 t) x a slow wander along the reach (periods 41 and 17 m, 0.55-1.4),
 the local slope the smoothed gradient of L.
 
@@ -481,9 +541,9 @@ bank tree; `shrubfield.js`, `forbs.js` zoneMix with the floating duckweed on the
 nothing on a pond's mud. Nothing woody stands in a bed, a basin or a drawdown margin; on the wet margin only the
 willows (BANK) and the shrubs.
 
-Run order: after `lidar` (the 1 m ground) and `rewild_hydro` (the profile); before `derive`. A later `lidar`
-products stage rewrites terrain_detail.png without the banks: run `water` again. Known: the carve follows the
-routed centreline, which can run a metre or two off the lidar's channel on a small creek; a 5 m zone cell is wider
+Run order: after `lidar` (the 1 m ground), `rewild_hydro` (the profile) and `reroute` (the lines on the 1 m thalweg); before `derive`. A later `lidar`
+products stage rewrites terrain_detail.png without the banks: run `water` again. Known: on a tile without the reroute step the carve follows the
+5 m routed centreline, which can run a metre or two off the lidar's channel on a small creek; a 5 m zone cell is wider
 than an order-1 bed, so the margin and bed zones are one cell each along the swales.
 
 ## Geology and soils

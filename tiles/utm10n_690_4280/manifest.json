@@ -15,7 +15,7 @@
   38.73825606650576
  ],
  "size_m": 10000,
- "generated_at": "2026-11-03T23:16:12Z",
+ "generated_at": "2026-11-05T04:19:53Z",
  "generator": {
   "name": "wild-earth-pipeline",
   "version": "0.2.0"
@@ -27,7 +27,9 @@
   "vegetation_backfilled": true,
   "imagery_erased": true,
   "lidar": true,
-  "crowns_inpainted": true
+  "crowns_inpainted": true,
+  "channels_rerouted": true,
+  "water_banked": true
  },
  "layers": {
   "footprint.mask": {
@@ -465,11 +467,14 @@
    "resolution_m": 5.0,
    "encoding": "mapbox-terrain-rgb",
    "elevation_range_m": [
-    336.7909851074219,
+    336.5238037109375,
     922.87255859375
    ],
-   "sha256": "ebf10610a1b389487696d0b68ee0180de52c849d9c757d992ceb20bb2edd4aa8",
-   "bytes": 3109055
+   "derived_from": [
+    "terrain.dem_banked"
+   ],
+   "sha256": "f49579c276712d113cbbcfc0e0a9109c89664ade47735a082bd24583a2ebcc4a",
+   "bytes": 3112620
   },
   "client.habitat": {
    "path": "client/habitat.png",
@@ -609,8 +614,8 @@
     "hydro.waterbodies",
     "osm"
    ],
-   "sha256": "132e2628b2785bad0f6c25c8bfaacc2ae278998d473ddb21bbad6d556229c4c7",
-   "bytes": 626752
+   "sha256": "c242eddf67521db599bcff441958dad6e53a9345e219996705c83ba614907928",
+   "bytes": 931403
   },
   "client.roads": {
    "path": "client/roads.png",
@@ -906,10 +911,11 @@
    "kind": "vector",
    "source": "usgs_3dep",
    "derived_from": [
-    "terrain.dem",
     "hydro.flowlines",
-    "hydro.waterbodies",
     "hydro.human_water",
+    "hydro.waterbodies",
+    "terrain.dem",
+    "terrain.dem_1m",
     "terrain.dem_rewilded"
    ],
    "feature_count": 396,
@@ -1443,8 +1449,78 @@
     },
     "routed_on": "terrain/dem_rewilded.tif"
    },
-   "sha256": "d6681b36b0a197683f472434586ccdb4d7e40f918f5bdf1417da08a144a32b15",
-   "bytes": 856892
+   "sha256": "0959c39edeaec058724423e37ff33c1ba3664ab1f2f64434708654fd61c5c0c5",
+   "bytes": 1886874,
+   "rerouted": true,
+   "reroute": {
+    "reaches": 380,
+    "traced": 370,
+    "kept": 1,
+    "pond_pieces": 9,
+    "kept_reaches": [
+     {
+      "name": null,
+      "order": 1,
+      "length_m": 512.8,
+      "at": [
+       3898,
+       5348
+      ]
+     }
+    ],
+    "roads": {
+     "crossings": 735,
+     "cells_lowered": 209382,
+     "deepest_m": 13.23
+    },
+    "tributaries_stopped_at_main": 149,
+    "nhd_kept": 16,
+    "nodes": 397,
+    "nodes_unsnapped": 0,
+    "snap_shift_m": {
+     "median_of_reach_medians": 1.0,
+     "p90_of_reach_medians": 1.96,
+     "max": 146.2
+    },
+    "conditioning": {
+     "corridor_cells": 9433769,
+     "outlets": 949,
+     "unreached_parts": 6,
+     "breached_cells": 113792,
+     "breach_p99_m": 0.006,
+     "breach_max_m": 38.84
+    },
+    "dem_5m_vs_1m_std_m": 0.3,
+    "rewild_carve_cells_1m": 5525,
+    "dem_1m_nodata_filled": 0,
+    "params": {
+     "corridor_m": "25 + water width",
+     "node_r_m": 12.0,
+     "head_r_m": 4.0,
+     "hit_m": 3.0,
+     "outlet_r_m": 30.0,
+     "smooth_m": 1.5,
+     "centre_r_m": [
+      1.5,
+      22.0
+     ],
+     "centre_tol_m": 0.02,
+     "simplify_m": 0.3
+    },
+    "profile": {
+     "reaches": 395,
+     "samples": 73017,
+     "riffle_share": 0.235,
+     "pool_share": 0.178,
+     "run_share": 0.587,
+     "depth_m_p50": 0.105,
+     "depth_m_p95": 0.393,
+     "depth_m_max": 1.289,
+     "bed_cells": 4898,
+     "corridor_cells": 1151
+    },
+    "seconds": 15.0
+   }
   },
   "client.channel_depth": {
    "path": "client/channel_depth.png",
@@ -1462,9 +1538,9 @@
     "terrain.dem",
     "hydro.channels"
    ],
-   "encoding": "uint8 decimetres: mean DEM on a 20 m ring minus the channel cell, clamped 0-25 m, x10; 0 off channel",
-   "sha256": "5a89add0daf76682ba599f9b2cddbccd3828a5e415ba1f4e839f7808e8166e34",
-   "bytes": 78662
+   "encoding": "uint8 decimetres: mean DEM on a 20 m ring minus the channel cell, clamped 0-25 m, x10; 0 off channel (channel cells: the rerouted lines rasterised on the 5 m grid)",
+   "sha256": "f811e74a1bb4a358cf31136b773490c6d421fe7b95d8e22e205f751eda67699c",
+   "bytes": 84140
   },
   "geology.units": {
    "path": "geology/units.geojson",
@@ -3397,18 +3473,19 @@
    "depth_model": "mean depth 0.10 A^0.32 m (A km2) x exp(-0.85 t), t = tanh(1.1 ln((S_local + 0.002) / (S_reach + 0.002))); S_local over max(7.5 m, 2.5 widths), S_reach over max(75 m, 10 widths), on the non-increasing DEM long profile every 2.5 m",
    "stats": {
     "reaches": 395,
-    "samples": 69378,
-    "riffle_share": 0.249,
-    "pool_share": 0.194,
-    "run_share": 0.557,
-    "depth_m_p50": 0.106,
+    "samples": 73017,
+    "riffle_share": 0.235,
+    "pool_share": 0.178,
+    "run_share": 0.587,
+    "depth_m_p50": 0.105,
     "depth_m_p95": 0.393,
-    "depth_m_max": 1.315,
+    "depth_m_max": 1.289,
     "bed_cells": 4898,
     "corridor_cells": 1151
    },
-   "sha256": "29b1860e2696ce56e08a75ec8337d384fff34896705ff1212056ed17f091f8d1",
-   "bytes": 367557
+   "sha256": "55fb2b36cf9199a9b14b10a05365cca8893c65dfb4ce5cf93e3494f5cd3039ff",
+   "bytes": 369995,
+   "long_profile": "the 1 m ground along the rerouted lines, its non-increasing least-squares trend"
   },
   "client.species_prior": {
    "path": "client/species_prior.json",
@@ -3729,25 +3806,23 @@
    ],
    "pixels": 5000,
    "resolution_m": 2.0,
-   "encoding": "8-bit grey, row 0 north, pixel centres at x = 2i + 1, north = 10000 - (2j + 1): residual m = (v - 128) * 0.04 (clamped +-5.08 m) = the 1 m DEM averaged to 2 m minus client.heights decoded and interpolated bilinearly between ITS pixel centres (x = 5i + 2.5, north = 10000 - 5j - 2.5). Linear, so texture filtering interpolates it",
-   "source": "usgs_3dep_1m",
    "derived_from": [
     "terrain.dem_1m",
-    "client.heights"
+    "terrain.dem_banked"
    ],
+   "encoding": "8-bit grey, row 0 north: the 1 m ground averaged to 2 m and carved with the water system's banks, minus client/heights.png bilinear between its pixel centres, residual m = (v - 128) * 0.04, clamped +-5.08 m",
    "stats": {
     "residual_m": {
      "mean": -0.013,
-     "std": 0.325,
+     "std": 0.326,
      "p50_abs": 0.184,
-     "p99_abs": 0.938,
+     "p99_abs": 0.943,
      "max_abs": 19.07
     },
-    "fraction_over_0.5_m": 0.1133,
     "clipped_fraction": 2.5e-05
    },
-   "sha256": "a7de5a3485132f49011bffe9884d8d95fa09a32ba36b0311785426ecc047f5b1",
-   "bytes": 9858497
+   "sha256": "6fdac950e114d1f732af5990c0f0c6f9f5c27ec29c4de3c42361821b720ef865",
+   "bytes": 9906490
   },
   "terrain.roughness": {
    "path": "terrain/roughness_10m.tif",
@@ -7036,6 +7111,407 @@
    ],
    "sha256": "2201a629c4b858e7558a92d4ab5bca0263868bc3b5f6185fbd522fa3092a9b13",
    "bytes": 12062
+  },
+  "hydro.channels_5m": {
+   "path": "hydro/channels_5m.geojson",
+   "kind": "vector",
+   "derived_from": [
+    "hydro.channels"
+   ],
+   "encoding": "the channels step's network as it routed it on the 5 m DEM, before the reroute step moved it onto the 1 m ground",
+   "sha256": "d6681b36b0a197683f472434586ccdb4d7e40f918f5bdf1417da08a144a32b15",
+   "bytes": 856892
+  },
+  "terrain.dem_banked": {
+   "path": "terrain/dem_banked.tif",
+   "kind": "raster",
+   "units": "m",
+   "derived_from": [
+    "terrain.dem",
+    "hydro.channels",
+    "client.channel_profile",
+    "hydro.waterbodies",
+    "hydro.human_water"
+   ],
+   "modification": "terrain/dem.tif with every channel carved to its graded cross-section (channel bed L - D(1 - (o/wh)^2), wet margin, bank and the pond basins; cells only lowered, at most 3 m); the client's heights come from it",
+   "cells_lowered": 24639,
+   "max_cut_m": 2.0,
+   "sha256": "75b53e3a2bad243cdee7c6c68f810cb443072ff6bccfcce3f4a8e5dff030755f",
+   "bytes": 8899221
+  },
+  "client.water": {
+   "path": "client/water.png",
+   "kind": "raster",
+   "crs": "EPSG:32610",
+   "bounds": [
+    690000,
+    4280000,
+    700000,
+    4290000
+   ],
+   "pixels": 2000,
+   "resolution_m": 5.0,
+   "derived_from": [
+    "hydro.channels",
+    "client.channel_profile",
+    "hydro.waterbodies",
+    "hydro.human_water",
+    "terrain.dem_banked"
+   ],
+   "encoding": "RGB, row 0 north. R: zone (low 4 bits; 1 channel bed, 2 wet margin, 3 bank, 4 terrace, 5 pond water, 6 pond margin, 7 pond shore, 8 pond terrace) | stream order << 4 | 128 perennial. G: bed material (low 3 bits: 1 silt, 2 sand, 3 gravel, 4 cobble, 5 boulder) | 8 bar. B: water level = heights.png height at the cell + (B - 128) x 0.02 m (0: none). client/water_width.png (8-bit grey, same grid): water half width at the nearest centreline sample, 0.1 m units",
+   "files": {
+    "client/water_width.png": {
+     "sha256": "9c7a16f21778612431d59f511abbae9621af1a9c834302e89a2f5ae78cd81f0d",
+     "bytes": 113429
+    }
+   },
+   "zones": {
+    "channel": 1,
+    "margin": 2,
+    "bank": 3,
+    "terrace": 4,
+    "pond_water": 5,
+    "pond_margin": 6,
+    "pond_shore": 7,
+    "pond_terrace": 8
+   },
+   "materials": {
+    "none": 0,
+    "silt": 1,
+    "sand": 2,
+    "gravel": 3,
+    "cobble": 4,
+    "boulder": 5
+   },
+   "bank_params": {
+    "1": {
+     "margin": 0.85,
+     "margin_rise": 0.12,
+     "bank": 1.6,
+     "bank_height": 0.75,
+     "terrace": 12.0
+    },
+    "2": {
+     "margin": 1.1,
+     "margin_rise": 0.16,
+     "bank": 2.2,
+     "bank_height": 1.1,
+     "terrace": 18.0
+    },
+    "3": {
+     "margin": 1.35,
+     "margin_rise": 0.2,
+     "bank": 2.8,
+     "bank_height": 1.4499999999999997,
+     "terrace": 24.0
+    },
+    "4": {
+     "margin": 1.6,
+     "margin_rise": 0.24,
+     "bank": 3.4,
+     "bank_height": 1.7999999999999998,
+     "terrace": 30.0
+    },
+    "5": {
+     "margin": 1.85,
+     "margin_rise": 0.28,
+     "bank": 4.0,
+     "bank_height": 2.15,
+     "terrace": 36.0
+    },
+    "6": {
+     "margin": 2.1,
+     "margin_rise": 0.32,
+     "bank": 4.6,
+     "bank_height": 2.4999999999999996,
+     "terrace": 42.0
+    },
+    "7": {
+     "margin": 2.35,
+     "margin_rise": 0.36000000000000004,
+     "bank": 5.2,
+     "bank_height": 2.8499999999999996,
+     "terrace": 48.0
+    }
+   },
+   "stats": {
+    "reaches": 386,
+    "samples": 72483,
+    "skipped": {
+     "in_pond": 9,
+     "nhd_duplicate": 0
+    },
+    "zone_cells": {
+     "channel": 21959,
+     "margin": 36652,
+     "bank": 49161,
+     "terrace": 62936,
+     "pond_water": 1926,
+     "pond_margin": 657,
+     "pond_shore": 867,
+     "pond_terrace": 1855
+    },
+    "zone_area_ha": {
+     "channel": 54.9,
+     "margin": 91.63,
+     "bank": 122.9,
+     "terrace": 157.34,
+     "pond_water": 4.82,
+     "pond_margin": 1.64,
+     "pond_shore": 2.17,
+     "pond_terrace": 4.64
+    },
+    "material_cells": {
+     "silt": 3162,
+     "sand": 17496,
+     "gravel": 20310,
+     "cobble": 16213,
+     "boulder": 4880
+    },
+    "bar_cells": 84,
+    "cut": {
+     "cells": 24639,
+     "mean_m": 0.581,
+     "p95_m": 2.0,
+     "max_m": 2.0
+    },
+    "ponds": {
+     "kept": 20,
+     "intermittent": 1,
+     "basins": [
+      {
+       "id": "{A7749683-020B-40E1-9DBF-4835089F1B1E}",
+       "name": null,
+       "area_m2": 563.5,
+       "level_m": 643.87,
+       "max_depth_m": 0.6,
+       "cells": 21,
+       "intermittent": false
+      },
+      {
+       "id": "63423746",
+       "name": null,
+       "area_m2": 3929.3,
+       "level_m": 726.69,
+       "max_depth_m": 0.71,
+       "cells": 158,
+       "intermittent": false
+      },
+      {
+       "id": "63412266",
+       "name": null,
+       "area_m2": 746.3,
+       "level_m": 718.28,
+       "max_depth_m": 0.6,
+       "cells": 30,
+       "intermittent": false
+      },
+      {
+       "id": "121531069",
+       "name": null,
+       "area_m2": 2309.4,
+       "level_m": 755.54,
+       "max_depth_m": 0.64,
+       "cells": 89,
+       "intermittent": false
+      },
+      {
+       "id": "63412252",
+       "name": null,
+       "area_m2": 401.9,
+       "level_m": 752.66,
+       "max_depth_m": 0.6,
+       "cells": 16,
+       "intermittent": false
+      },
+      {
+       "id": "63412240",
+       "name": null,
+       "area_m2": 335.2,
+       "level_m": 762.37,
+       "max_depth_m": 0.6,
+       "cells": 12,
+       "intermittent": false
+      },
+      {
+       "id": "121531111",
+       "name": null,
+       "area_m2": 457.6,
+       "level_m": 644.52,
+       "max_depth_m": 0.6,
+       "cells": 19,
+       "intermittent": false
+      },
+      {
+       "id": "121531061",
+       "name": null,
+       "area_m2": 22402.8,
+       "level_m": 788.5,
+       "max_depth_m": 1.15,
+       "cells": 899,
+       "intermittent": false
+      },
+      {
+       "id": "121531068",
+       "name": null,
+       "area_m2": 293.1,
+       "level_m": 754.95,
+       "max_depth_m": 0.6,
+       "cells": 11,
+       "intermittent": false
+      },
+      {
+       "id": "63412270",
+       "name": null,
+       "area_m2": 574.4,
+       "level_m": 727.59,
+       "max_depth_m": 0.6,
+       "cells": 24,
+       "intermittent": false
+      },
+      {
+       "id": "121531066",
+       "name": null,
+       "area_m2": 16134.3,
+       "level_m": 437.13,
+       "max_depth_m": 1.04,
+       "cells": 649,
+       "intermittent": false
+      },
+      {
+       "id": "{17E5755E-DC8C-4C7A-80BE-E6F9E3FAB011}",
+       "name": null,
+       "area_m2": 2889.7,
+       "level_m": 645.1,
+       "max_depth_m": 0.67,
+       "cells": 115,
+       "intermittent": false
+      },
+      {
+       "id": "121531086",
+       "name": null,
+       "area_m2": 290.8,
+       "level_m": 667.7,
+       "max_depth_m": 0.6,
+       "cells": 10,
+       "intermittent": false
+      },
+      {
+       "id": "63423748",
+       "name": null,
+       "area_m2": 3261.6,
+       "level_m": 586.94,
+       "max_depth_m": 0.69,
+       "cells": 131,
+       "intermittent": false
+      },
+      {
+       "id": "121531114",
+       "name": null,
+       "area_m2": 2034.6,
+       "level_m": 619.15,
+       "max_depth_m": 0.63,
+       "cells": 81,
+       "intermittent": false
+      },
+      {
+       "id": "63412248",
+       "name": null,
+       "area_m2": 762.3,
+       "level_m": 777.56,
+       "max_depth_m": 0.6,
+       "cells": 30,
+       "intermittent": false
+      },
+      {
+       "id": "{87D7FEC7-3707-45E8-BC7A-7B3E427E1E7F}",
+       "name": null,
+       "area_m2": 331.5,
+       "level_m": 619.29,
+       "max_depth_m": 0.6,
+       "cells": 13,
+       "intermittent": false
+      },
+      {
+       "id": "121531079",
+       "name": null,
+       "area_m2": 5436.0,
+       "level_m": 743.93,
+       "max_depth_m": 0.77,
+       "cells": 214,
+       "intermittent": false
+      },
+      {
+       "id": "{B3FEF1A5-55FD-421D-B5AD-5DDF8A847511}",
+       "name": null,
+       "area_m2": 1514.0,
+       "level_m": 638.11,
+       "max_depth_m": 0.6,
+       "cells": 61,
+       "intermittent": true
+      }
+     ]
+    },
+    "bank_params": {
+     "1": {
+      "margin": 0.85,
+      "margin_rise": 0.12,
+      "bank": 1.6,
+      "bank_height": 0.75,
+      "terrace": 12.0
+     },
+     "2": {
+      "margin": 1.1,
+      "margin_rise": 0.16,
+      "bank": 2.2,
+      "bank_height": 1.1,
+      "terrace": 18.0
+     },
+     "3": {
+      "margin": 1.35,
+      "margin_rise": 0.2,
+      "bank": 2.8,
+      "bank_height": 1.4499999999999997,
+      "terrace": 24.0
+     },
+     "4": {
+      "margin": 1.6,
+      "margin_rise": 0.24,
+      "bank": 3.4,
+      "bank_height": 1.7999999999999998,
+      "terrace": 30.0
+     },
+     "5": {
+      "margin": 1.85,
+      "margin_rise": 0.28,
+      "bank": 4.0,
+      "bank_height": 2.15,
+      "terrace": 36.0
+     }
+    },
+    "by_order": {
+     "1": 37260,
+     "2": 17137,
+     "3": 9756,
+     "4": 2212,
+     "5": 4576,
+     "6": 1542
+    },
+    "species_mix": "32 riparian rows written into client/species_mix.json",
+    "levels_from": "terrain/dem_1m.tif along the rerouted lines"
+   },
+   "sha256": "632503b6510e7208fc23ae9c612b26db617cd95710db91ad653a8eaaa0b08ca1",
+   "bytes": 423562
+  },
+  "hydro.water_reaches": {
+   "path": "hydro/water_reaches.json",
+   "kind": "table",
+   "derived_from": [
+    "hydro.channels"
+   ],
+   "encoding": "per drawn reach: id, name, order, area_km2, width, class (0 ephemeral, 1 intermittent, 2 perennial), samples, length; the kept ponds' basins",
+   "sha256": "99997f76e50d1292252ab2d99ad190effd34803f19a8bbbe7029b5e867672661",
+   "bytes": 61742
   }
  },
  "sources": {
@@ -7628,6 +8104,30 @@
    "step": "substrate",
    "at": "2026-11-03T23:16:12Z",
    "seconds": 8.6,
+   "ok": true
+  },
+  {
+   "step": "reroute",
+   "at": "2026-11-05T03:59:16Z",
+   "seconds": 14.3,
+   "ok": true
+  },
+  {
+   "step": "water",
+   "at": "2026-11-05T03:59:33Z",
+   "seconds": 17.3,
+   "ok": true
+  },
+  {
+   "step": "reroute",
+   "at": "2026-11-05T04:19:34Z",
+   "seconds": 15.6,
+   "ok": true
+  },
+  {
+   "step": "water",
+   "at": "2026-11-05T04:19:53Z",
+   "seconds": 18.6,
    "ok": true
   }
  ]

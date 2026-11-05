@@ -50,7 +50,8 @@ creeks and silt in the small ones' pools, silt in a pond's basin and sand on its
 (|turn| over BAR_TURN) over the margin.
 
 Everything is derived from data already in the package; nothing is fetched. Re-run with --steps water; it reads
-terrain/dem.tif (never written) so a rerun starts clean. Run after `lidar` and `rewild_hydro`; a later `lidar`
+terrain/dem.tif (never written) so a rerun starts clean. Run after `lidar`, `rewild_hydro` and `reroute` (on a rerouted
+tile the levels come from the 1 m ground along the rerouted lines: stream_samples); a later `lidar`
 products stage rewrites terrain_detail.png without the banks (run water again); `derive` reads dem_banked.tif for
 heights.png when it exists.
 """
@@ -86,6 +87,8 @@ ZONE_NAMES = {v: k for k, v in ZONE.items()}
 MATERIAL = {"none": 0, "silt": 1, "sand": 2, "gravel": 3, "cobble": 4, "boulder": 5}
 BAR = 8
 LEVEL_UNIT = 0.02
+LEVEL_UNDER_BANK_M = 0.05         # a rerouted reach's level stays this far under the lower ground at the margin's edge
+JOIN_M = 6.0                      # a reach's end within this of a bigger reach flows into it
 HALF_UNIT = 0.1
 
 
@@ -127,11 +130,21 @@ def _dem_index(lines: list[tuple[LineString, dict]], r: float):
     return near
 
 
-def stream_samples(ctx: _Ctx, pond_mask: np.ndarray, profile: np.ndarray | None) -> dict:
+def stream_samples(ctx: _Ctx, pond_mask: np.ndarray, profile: np.ndarray | None, zat_level=None,
+                   channels: str = "hydro/channels.geojson") -> dict:
     """Every reach's centreline samples as flat arrays: x, y, s, tangent, turn, order, area, width, perennial,
     class (0 ephemeral, 1 intermittent, 2 perennial), level L, thalweg depth D, riffle index t, half water width wh,
-    local slope S, reach id."""
-    feats = ctx.load("hydro/channels.geojson")
+    local slope S, reach id.
+
+    `zat_level(x, north)`: the ground the level is taken from. On a rerouted tile (pipeline/reroute.py) it is the 1 m
+    ground along a line that runs on the thalweg: L is that long profile's non-increasing least-squares trend
+    (reroute.isotonic_down: a 1 m pit no longer holds the level down for the rest of the reach, as a running minimum
+    did), smoothed over max(7.5 m, 2.5 w), kept LEVEL_UNDER_BANK_M under the lower of the two grounds at the edge of
+    the wet margin (water never stands above the ground beside it), and non-increasing again. Then, bigger streams
+    first, a reach whose last level lies under the water it flows into (the lowest level of a bigger reach within
+    JOIN_M) is raised to it: the water surface does not climb into a confluence. Without zat_level, the 5 m DEM as
+    before (the levels of a tile that has not been rerouted)."""
+    feats = ctx.load(channels)
     lines = []
     for f in feats:
         pr = f["properties"]
@@ -169,9 +182,20 @@ def stream_samples(ctx: _Ctx, pond_mask: np.ndarray, profile: np.ndarray | None)
         fcode = pr.get("fcode")
         cls = 2 if fcode in PERENNIAL_FCODES else 1 if fcode in (46003, 33400) else 0
         # the level: the DEM along the line, non-increasing downstream, smoothed, non-increasing again
-        z = ctx.zat(pts[:, 0], pts[:, 1])
-        z = np.minimum.accumulate(z)
-        z = np.minimum.accumulate(_gauss(z, max(7.5, 2.5 * width) / SAMPLE_M))
+        if zat_level is not None:
+            from .reroute import isotonic_down
+            g = zat_level(pts[:, 0], pts[:, 1])
+            z = _gauss(isotonic_down(g), max(7.5, 2.5 * width) / SAMPLE_M)
+            dd = np.gradient(pts, axis=0) if len(pts) > 1 else np.array([[1.0, 0.0]])
+            dl = np.maximum(np.hypot(dd[:, 0], dd[:, 1]), 1e-6)
+            nx, ny = -dd[:, 1] / dl, dd[:, 0] / dl
+            e = width / 2 + BANK[max(1, min(7, order))]["margin"]
+            bank = np.minimum(zat_level(pts[:, 0] + nx * e, pts[:, 1] + ny * e), zat_level(pts[:, 0] - nx * e, pts[:, 1] - ny * e))
+            z = np.minimum.accumulate(np.minimum(z, bank - LEVEL_UNDER_BANK_M))
+        else:
+            z = ctx.zat(pts[:, 0], pts[:, 1])
+            z = np.minimum.accumulate(z)
+            z = np.minimum.accumulate(_gauss(z, max(7.5, 2.5 * width) / SAMPLE_M))
         S = np.maximum(0.0, -np.gradient(z, SAMPLE_M)) if len(z) > 1 else np.zeros(len(z))
         S = _gauss(S, max(10.0, 2 * width) / SAMPLE_M)
         # tangent and turn
@@ -206,7 +230,36 @@ def stream_samples(ctx: _Ctx, pond_mask: np.ndarray, profile: np.ndarray | None)
     out = {k: (np.concatenate(v) if v else np.zeros(0)) for k, v in cols.items()}
     out["reaches"] = reaches
     out["skipped"] = skipped
+    if zat_level is not None and out["x"].size:
+        out["raised_at_joins"] = join_levels(out)
     return out
+
+
+def join_levels(S: dict) -> dict:
+    """Bigger reaches first: a reach whose last level is under the lowest level of a bigger reach within JOIN_M of its
+    end is raised to it (in place; max with a constant keeps it non-increasing). Returns counts."""
+    from scipy.spatial import cKDTree
+    x, y, L, reach, area = S["x"], S["y"], S["L"], S["reach"].astype(int), S["area"]
+    kd = cKDTree(np.column_stack([x, y]))
+    ends = {}
+    for i in range(len(x)):
+        ends[reach[i]] = i
+    first = {}
+    for i in range(len(x) - 1, -1, -1):
+        first[reach[i]] = i
+    raised, most = 0, 0.0
+    for r in sorted(ends, key=lambda r: -area[ends[r]]):
+        i = ends[r]
+        nb = [j for j in kd.query_ball_point([x[i], y[i]], JOIN_M) if reach[j] != r and area[j] >= area[i]]
+        if not nb:
+            continue
+        lv = float(np.min(L[nb]))
+        if lv > L[i] + 1e-3:
+            sl = slice(first[r], i + 1)
+            most = max(most, lv - float(L[i]))
+            L[sl] = np.maximum(L[sl], lv)
+            raised += 1
+    return {"reaches": raised, "max_m": round(most, 2)}
 
 
 def nearest_sample(samples: dict, n: int, res: float):
@@ -410,7 +463,13 @@ def build_water(tile: Tile, force: bool = False) -> dict:
     profile = np.asarray(Image.open(prof_path).convert("RGB")) if prof_path.exists() else None
     ponds = kept_ponds(ctx)
     pond_mask = ctx.rasterize([p["geom"] for p in ponds]).astype(bool) if ponds else np.zeros((n, n), bool)
-    S = stream_samples(ctx, pond_mask, profile)
+    # a rerouted tile (pipeline/reroute.py): the lines run on the 1 m thalweg, and the levels come from the 1 m ground
+    fine = None
+    rerouted = bool(json.load(open(tile.path("hydro/channels.geojson"))).get("rerouted"))
+    if rerouted and tile.path("terrain/dem_1m.tif").exists():
+        from .reroute import FineDEM
+        fine = FineDEM(tile, z0)
+    S = stream_samples(ctx, pond_mask, profile, zat_level=(lambda x, y: fine.at(x, y)) if fine is not None else None)
     if S["x"].size == 0:
         raise RuntimeError("no channels: run the channels and rewild_hydro steps first")
 
@@ -487,11 +546,14 @@ def build_water(tile: Tile, force: bool = False) -> dict:
     detail_layer = None
     dem1 = tile.path("terrain/dem_1m.tif")
     if dem1.exists():
-        with rasterio.open(dem1) as src:
-            z1 = src.read(1).astype("float32")
-            nod = src.nodata
-        if nod is not None:
-            z1[z1 == nod] = np.nan
+        if fine is not None:
+            z1, fine = fine.z, None
+        else:
+            with rasterio.open(dem1) as src:
+                z1 = src.read(1).astype("float32")
+                nod = src.nodata
+            if nod is not None:
+                z1[z1 == nod] = np.nan
         n2 = z1.shape[0] // 2
         z2 = z1.reshape(n2, 2, n2, 2).mean(axis=(1, 3)).astype("float64")
         del z1
@@ -550,6 +612,7 @@ def build_water(tile: Tile, force: bool = False) -> dict:
         "bank_params": {o: BANK[o] for o in range(1, 6)},
         "by_order": {int(o): int((S["order"] == o).sum()) for o in np.unique(S["order"])},
         "species_mix": mix_note,
+        "levels_from": "terrain/dem_1m.tif along the rerouted lines" if rerouted and dem1.exists() else "terrain/dem.tif (5 m)",
     }
     write_json(tile.path("hydro/water_reaches.json"), {"reaches": S["reaches"], "ponds": pond_stats})
     out = {
