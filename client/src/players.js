@@ -28,6 +28,11 @@ import { NF } from './animalNet.js';
 //     (over it along the bottom edge), sliding along the edge as the camera turns and gone once they are in view.
 //   - on the mini-map (minimap.js), a dot in the avatar's hue, pinned at the map's rim in their direction when outside
 //     its 800 m, the name on hover: `others` here is read by the map each frame.
+//   - voice and video (voice.js, lane 5, through `media`: user id -> {video: MediaStream | null, speaking}): while a
+//     member speaks, a pulsing dot before their name (the name then shown on screen out to VIDEO_M, not only NAME_M) and
+//     a ring round their edge avatar; while their camera is on, a small rounded tile of it over them in the world,
+//     scaled with the eye's distance (VID_K / d, clamped), the name under it, and off screen the video fills their edge
+//     avatar's circle. posOf(id) is where each is drawn, for the voice's panner.
 // SLOTS wisps are built once, sharing the player's wisp's textures (no new texture units), on camera layer 2 with the
 // souls (SpiritLook.render draws that layer after the spirit's post pass, in any form, so the colours stand), and reused;
 // nothing is allocated per frame or per sample. Positions live only here and in multiplayer.js's `poses`, in memory,
@@ -45,7 +50,10 @@ const FAR = [8, 300, 8];                   // grown x1 within FAR[0] m to x FAR[
 const SCALE_SPIRIT = 0.62, SCALE_BODY = 0.34, BODY_UP = 0.7, LUM = 0.9;   // a little over the player's own resting wisp (REST_SCALE 0.5, REST_LUM 0.6): seen from further
 const LABEL_UP = 0.6;                      // m over the wisp for the name
 const HALF_M = 60, HUD_EVERY = 30;         // past HALF_M m a wisp's form is updated on alternate frames (sub-pixel detail); the HUD's bottom rows measured every HUD_EVERY frames
-const HUD_IDS = ['abilities', 'help', 'nearBar', 'chat'];   // the body's or the spirit's row with the key line, the raven's key line, the nearby bar, the chat
+const HUD_IDS = ['abilities', 'help', 'nearBar', 'chat'];
+const VIDEO_M = 400;                       // m: a member's video tile (and a speaking name) is drawn on screen within this
+const VID_K = 2600, VID_MIN = 0.36, VID_MAX = 1;   // the tile's scale: VID_K / d px wide over its 176 px, clamped
+const VID_UP = 16;                         // px: the tile's foot over the name's point   // the body's or the spirit's row with the key line, the raven's key line, the nearby bar, the chat
 const WHITE = new THREE.Color(0.9, 0.95, 1.0);
 const smooth = u => u * u * (3 - 2 * u);
 const TAU = Math.PI * 2;
@@ -64,12 +72,16 @@ export class RemotePlayers {
       w.group.name = 'player ' + i;
       this.slots.push({ i, id: null, wisp: w, name: '', hue: 0, form: 'spirit', at: 0, t: 0, dur: 0, age: 0, n: 0, rec: null, tagH: 0,
         p0: new THREE.Vector3(), p1: new THREE.Vector3(), v: new THREE.Vector3(), P: new THREE.Vector3(), yaw0: 0, yaw1: 0, yaw: 0,
-        held: 0, label: null, mark: null, markD: null, dText: '', shown: false, labelOn: false, markOn: false, markUp: false });
+        held: 0, label: null, mark: null, markD: null, dText: '', shown: false, labelOn: false, markOn: false, markUp: false,
+        D: new THREE.Vector3(), drawn: false, vid: null, vidEl: null, markVid: null, vidOn: false, stream: null, speaking: false });
     }
     this.others = Array.from({ length: SLOTS }, () => ({ on: false, x: 0, north: 0, hue: 0, name: '' }));   // the map's view of them (minimap.js)
     if (minimap) minimap.others = this.others;
     this._p = new THREE.Vector3(); this._c = new THREE.Color(); this.frame = 0;
+    this.media = new Map();   // user id -> {video, speaking} (voice.js)
   }
+  // Where the member is drawn (their wisp, or their animal's head height), or null: the voice's panner follows it.
+  posOf(id) { const s = this.slotOf(id); return s && s.drawn ? s.D : null; }
   // The HUD's bottom rows (the key line, the body's row, the nearby bar, the chat): the edge marks stand over them.
   measureHud(H) {
     let top = H;
@@ -129,6 +141,7 @@ export class RemotePlayers {
     s.id = null; s.at = Infinity; s.n = 0;
     if (s.shown) { s.wisp.update(0, s.P, 0, false, 1, 1); s.shown = false; }
     s.label?.remove(); s.mark?.remove(); s.label = s.mark = s.markD = null; s.labelOn = s.markOn = false;
+    this.video(s, null); s.drawn = false; s.speaking = false;
     this.others[s.i].on = false;
   }
 
@@ -151,6 +164,11 @@ export class RemotePlayers {
       const body = s.form !== 'spirit', rec = s.rec;
       if (rec) { p.set(rec.x, rec.y + s.tagH - LABEL_UP, rec.z); s.P.set(rec.x, rec.y, rec.z); }   // drawn as their animal (animals.js): the name over it
       else { p.copy(s.P); if (body) p.y += BODY_UP; }
+      s.D.copy(p); s.drawn = true;
+      const md = this.media.get(s.id) || null;
+      if ((md?.video || null) !== s.stream) this.video(s, md?.video || null);
+      const speaking = !!md?.speaking;
+      if (speaking !== s.speaking) { s.speaking = speaking; s.label?.classList.toggle('speaking', speaking); s.mark?.classList.toggle('speaking', speaking); s.vid?.classList.toggle('speaking', speaking); }
       const dc = p.distanceTo(camP), far = 1 + (FAR[2] - 1) * Math.min(1, Math.max(0, (dc - FAR[0]) / (FAR[1] - FAR[0])));
       const fade = s.at > STALE_S ? 1 - (s.at - STALE_S) / FADE_S : 1, grow = smooth(Math.min(1, s.age / GROW_S));
       if (rec) { if (s.shown) { s.wisp.update(0, p, 0, false, 1, 1); s.shown = false; } }
@@ -160,15 +178,22 @@ export class RemotePlayers {
       }
       // the name, while near and on screen; else the mark at the edge
       const edge = edgePlace(cam, p.x, p.y, p.z, W, H);
+      const vidOn = !!s.vid && !edge && dc <= VIDEO_M;
       if (s.label) {
-        const on = !edge && dc <= NAME_M;
-        if (on) {
+        const on = !edge && (dc <= NAME_M || ((s.speaking || vidOn) && dc <= VIDEO_M));
+        if (on || vidOn) {
           p.y += LABEL_UP; p.project(cam);
-          s.label.style.transform = `translate(${((p.x + 1) * W / 2).toFixed(0)}px, ${((1 - p.y) * H / 2).toFixed(0)}px)`;
-          s.label.style.opacity = fade.toFixed(2);
+          const x = (p.x + 1) * W / 2, y = (1 - p.y) * H / 2;
+          if (on) { s.label.style.transform = `translate(${x.toFixed(0)}px, ${y.toFixed(0)}px)`; s.label.style.opacity = fade.toFixed(2); }
+          if (vidOn) {
+            const k = Math.min(VID_MAX, Math.max(VID_MIN, VID_K / Math.max(dc, 1) / 176));
+            s.vid.style.transform = `translate(${(x - 88).toFixed(0)}px, ${(y - VID_UP - 132).toFixed(0)}px) scale(${k.toFixed(3)})`;
+            s.vid.style.opacity = fade.toFixed(2);
+          }
         }
         if (on !== s.labelOn) { s.labelOn = on; s.label.hidden = !on; }
       }
+      if (s.vid && vidOn !== s.vidOn) { s.vidOn = vidOn; s.vid.hidden = !vidOn; }
       if (s.mark) {
         const on = !!edge;
         if (on) {
@@ -183,6 +208,28 @@ export class RemotePlayers {
       const o = this.others[s.i]; o.on = true; o.x = s.P.x; o.north = -s.P.z;
     }
     this.n = n;
+  }
+  // A member's camera on (a MediaStream) or off (null): the tile in the world and the video in the edge avatar. Two
+  // elements on the one stream (the decoder is shared), so neither is moved between parents.
+  video(s, stream) {
+    s.stream = stream;
+    if (!stream) {
+      if (s.vid) { s.vidEl.srcObject = null; s.vid.remove(); }
+      if (s.markVid) { s.markVid.srcObject = null; s.markVid.remove(); }
+      s.vid = s.vidEl = s.markVid = null; s.vidOn = false; s.mark?.classList.remove('vid');
+      return;
+    }
+    const mk = () => { const v = document.createElement('video'); v.muted = true; v.playsInline = true; v.autoplay = true; v.srcObject = stream; v.play().catch(() => {}); return v; };
+    if (!s.vid && this.labelsEl) {
+      const t = s.vid = document.createElement('div'); t.className = 'pv'; t.hidden = true; t.style.setProperty('--hue', String(s.hue));
+      t.classList.toggle('speaking', s.speaking);
+      s.vidEl = mk(); t.append(s.vidEl); this.labelsEl.append(t);
+    } else if (s.vidEl) { s.vidEl.srcObject = stream; s.vidEl.play().catch(() => {}); }
+    if (s.mark) {
+      if (!s.markVid) { s.markVid = mk(); s.mark.prepend(s.markVid); }
+      else { s.markVid.srcObject = stream; s.markVid.play().catch(() => {}); }
+      s.mark.classList.add('vid');
+    }
   }
   dispose() {
     this.clear();

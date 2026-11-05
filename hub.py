@@ -22,9 +22,16 @@ member who enters the room after it is told where the sender is, and it goes wit
 (lane 4). An invite's point (the picker's planned arrival, tile-local) is relayed the same way and not kept. Nothing a
 player sends is printed: the log is the request line (server.py's), and counts. No email address is asked
 for. The Discord keys are read from the environment or .env and never printed.
+
+Voice and video (lane 5): the media goes peer to peer (WebRTC), never through the hub. The hub only relays the
+signalling, `rtc` {to, tc?, k: 'sdp'|'ice'|'state'|'bye', ...}, from a connection in a room to the addressed group
+member's connection in the same room (the rule positions follow), stamped with the sender's user and connection id;
+nothing of it is kept or printed. The ICE servers go to each signed-in client in `welcome`: public STUN, and TURN
+when TURN_URL (and TURN_USERNAME and TURN_CREDENTIAL, or TURN_SECRET for coturn's time-limited ones) are set.
 """
 from __future__ import annotations
 
+import base64
 import hashlib
 import hmac
 import json
@@ -140,6 +147,34 @@ def season_now(tile: str) -> str:
 
 
 BODY_MAX, BODY_C_MAX = 32, 8      # pos: the body's sample and constants (m_pos)
+RTC_KINDS = ("sdp", "ice", "state", "bye")
+SDP_TYPES = ("offer", "answer", "pranswer", "rollback")
+SDP_MAX, ICE_MAX = 48_000, 1_024        # an SDP and a candidate, in characters (a socket message over 64 KB closes it)
+RTC_RATE, RTC_BURST = 40.0, 120.0       # rtc's own bucket: a mesh's candidates come in bursts
+STUN_DEFAULT = ("stun:stun.l.google.com:19302", "stun:stun.cloudflare.com:3478")
+TURN_TTL_S = 12 * 3600                  # coturn's time-limited credentials (TURN_SECRET): good for this long
+ID_RE = re.compile(r"^[0-9a-f-]{36}$")
+
+
+def ice_servers() -> list:
+    """The ICE servers for a signed-in client's peer connections: public STUN, and TURN when the environment or .env
+    has it: TURN_URL (comma-separated turn:/turns: URLs) with TURN_USERNAME and TURN_CREDENTIAL (a provider's static
+    pair, as metered.ca gives), or with TURN_SECRET (coturn's static-auth-secret: a credential good for TURN_TTL_S,
+    made here per welcome, the REST API's rule). Read on each welcome; never printed."""
+    out = [{"urls": list(STUN_DEFAULT)}]
+    urls = [u.strip() for u in (env_key("TURN_URL") or "").split(",") if u.strip().startswith(("turn:", "turns:"))]
+    if not urls:
+        return out
+    secret = env_key("TURN_SECRET")
+    if secret:
+        user = f"{int(time.time()) + TURN_TTL_S}:wildearth"
+        cred = base64.b64encode(hmac.new(secret.encode(), user.encode(), hashlib.sha1).digest()).decode()
+        out.append({"urls": urls, "username": user, "credential": cred})
+    else:
+        user, cred = env_key("TURN_USERNAME"), env_key("TURN_CREDENTIAL")
+        if user and cred:
+            out.append({"urls": urls, "username": user, "credential": cred})
+    return out
 
 
 def _num(v) -> bool:
@@ -586,6 +621,7 @@ class Hub:
             cs.discard(c)
             if not cs:
                 del self.conns[c.uid]
+            c.rtc_bye()
             c.room, c.watch = None, False
             self.tell_presence(c.uid)
             self.log_online()
@@ -647,6 +683,8 @@ class HubConn(WsConn):
         self.hub, self.uid, self.th = hub, uid, th
         self.room, self.room_t, self.watch = None, 0.0, False
         self.last_pos = None                   # the last position relayed, memory only (gone with the room or the connection)
+        self.cid = secrets.token_hex(4)        # the connection's id in rtc (a user may have two tabs), memory only
+        self.rtc_tokens, self.rtc_t = RTC_BURST, time.monotonic()
         super().__init__(sock, rfile)
 
     def err(self, why: str, re_: str | None = None, field: str | None = None) -> None:
@@ -665,7 +703,7 @@ class HubConn(WsConn):
         if not self.uid:
             return
         t = m.get("t")
-        if not self.allow():
+        if not (self.rtc_allow() if t == "rtc" else self.allow()):
             return self.err("too many messages", t)
         fn = getattr(self, "m_" + t, None) if isinstance(t, str) and t.isalpha() else None
         if not fn:
@@ -685,7 +723,7 @@ class HubConn(WsConn):
         f = h.friends_msg(self.uid)
         self.send({"t": "welcome", "you": h.you(self.uid), "friends": f["friends"], "requests": f["requests"],
                    "groups": h.groups_list(self.uid, messages=True), "online": h.online_for(self.uid),
-                   "providers": h.providers()})
+                   "providers": h.providers(), "ice": ice_servers()})
 
     def m_me(self, m: dict) -> None:
         """Added to the doc's protocol: {display?, findable?, presence?: 'tile'|'online'} -> me {you}."""
@@ -940,6 +978,7 @@ class HubConn(WsConn):
             if not tile_built(m.get("tile")):
                 raise HubError(404, "no such tile", "tile")
             if self.room != m["tile"]:
+                self.rtc_bye()
                 self.last_pos = None
             self.room, self.room_t = m["tile"], time.monotonic()
             # where the group members already in this room are (their last relayed positions), so a joiner arriving
@@ -951,6 +990,7 @@ class HubConn(WsConn):
                     if c.room == self.room and c.last_pos:
                         self.send(c.last_pos)
         elif op == "leave":
+            self.rtc_bye()
             self.room, self.last_pos = None, None
         else:
             raise HubError(400, "op must be join or leave", "op")
@@ -981,6 +1021,75 @@ class HubConn(WsConn):
             for c in list(h.conns.get(u, ())):
                 if c.room == self.room:
                     c.send(out)
+
+    # -- voice and video: the signalling relay (lane 5)
+    def rtc_allow(self) -> bool:
+        now = time.monotonic()
+        self.rtc_tokens = min(RTC_BURST, self.rtc_tokens + (now - self.rtc_t) * RTC_RATE)
+        self.rtc_t = now
+        if self.rtc_tokens < 1:
+            return False
+        self.rtc_tokens -= 1
+        return True
+
+    def rtc_peers(self, to: str, tc=None) -> list:
+        """The connections an rtc from this one may reach: the user `to`'s, in this connection's room, when `to` shares a
+        group with the sender and neither blocks the other. With tc, only that connection; without, the one that
+        entered the room last (one tab answers, not two)."""
+        h, me = self.hub, self.uid
+        if not self.room or to == me or to not in h.comembers(me) or h.blocked(me, to):
+            return []
+        cs = [c for c in h.conns.get(to, ()) if c.room == self.room]
+        if tc is not None:
+            return [c for c in cs if c.cid == tc]
+        return sorted(cs, key=lambda c: c.room_t)[-1:]
+
+    def rtc_bye(self) -> None:
+        """Leaving the room (or the connection closing): the group members in it are told, so their peers close now."""
+        if not self.room:
+            return
+        h, me = self.hub, self.uid
+        for u in h.comembers(me):
+            if h.blocked(me, u):
+                continue
+            for c in list(h.conns.get(u, ())):
+                if c.room == self.room:
+                    c.send({"t": "rtc", "from": me, "fc": self.cid, "k": "bye"})
+
+    def m_rtc(self, m: dict) -> None:
+        """WebRTC signalling, relayed as positions are: to the addressed group member's connection in the same room and
+        to no one else; out of a room, or to anyone else, it goes nowhere (quietly: a peer may just have left). Never kept
+        or printed. {to, tc?, k, sdp?: {type, sdp}, ice?: {candidate, sdpMid, sdpMLineIndex} | null, mic?, cam?}"""
+        to, tc, k = m.get("to"), m.get("tc"), m.get("k")
+        if not isinstance(to, str) or not ID_RE.match(to):
+            raise HubError(400, "to must be a user id", "to")
+        if tc is not None and not (isinstance(tc, str) and re.match(r"^[0-9a-f]{8}$", tc)):
+            raise HubError(400, "tc must be a connection id", "tc")
+        if k not in RTC_KINDS:
+            raise HubError(400, "k must be sdp, ice, state or bye", "k")
+        out = {"t": "rtc", "from": self.uid, "fc": self.cid, "k": k}
+        if k == "sdp":
+            d = m.get("sdp")
+            if not (isinstance(d, dict) and d.get("type") in SDP_TYPES and isinstance(d.get("sdp", ""), str)
+                    and len(d.get("sdp", "")) <= SDP_MAX):
+                raise HubError(400, "sdp must be {type, sdp}", "sdp")
+            out["sdp"] = {"type": d["type"], "sdp": d.get("sdp", "")}
+        elif k == "ice":
+            c = m.get("ice")            # null: the end of the candidates
+            if c is not None:
+                if not isinstance(c, dict):
+                    raise HubError(400, "ice must be a candidate", "ice")
+                cand, mid, idx = c.get("candidate"), c.get("sdpMid"), c.get("sdpMLineIndex")
+                if not (isinstance(cand, str) and len(cand) <= ICE_MAX
+                        and (mid is None or (isinstance(mid, str) and len(mid) <= 64))
+                        and (idx is None or (type(idx) is int and 0 <= idx < 64))):
+                    raise HubError(400, "ice must be a candidate", "ice")
+                c = {"candidate": cand, "sdpMid": mid, "sdpMLineIndex": idx}
+            out["ice"] = c
+        elif k == "state":
+            out["mic"], out["cam"] = bool(m.get("mic")), bool(m.get("cam"))
+        for c in self.rtc_peers(to, tc):
+            c.send(out)
 
     def m_watch(self, m: dict) -> None:
         self.watch = bool(m.get("on"))

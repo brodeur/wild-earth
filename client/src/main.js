@@ -58,18 +58,19 @@ import { Abilities } from './abilities.js';
 const $ = id => document.getElementById(id);
 const html = document.documentElement;
 let screen = null, screenOpen = false;   // the opening screen (arrival.js) while it is up
-// HUD layout for the window's size (index.html, html.narrow): under 1200 x 760 px the HUD, game box and panel shrink.
-// The game box stays centred when it clears the HUD and the panel, else it moves into the gap between them, else under
-// the HUD; the panel stops above the mini-map (and scrolls), the help line wraps before the mini-map and the species
-// card sits above the help line. The body's row (abilities.js #bodyBar, bottom right, in place of the help line) rises
-// over the nearby-animals bar when the two would meet; the hunt panel and the walkers' toast stand on it, the panel
-// and the species card stop above it. Run on resize and with the HUD's text updates (the HUD's width follows its text).
+// HUD layout for the window's size (index.html, html.narrow): under 1200 x 760 px the HUD, game box and mini-map shrink.
+// The game box stays centred when it clears the controls row and the HUD (the data panel, right, under the mini-map),
+// else it moves into the gap between them, else under the controls row; the HUD stops above the body's row (and
+// scrolls), the help line wraps before the mini-map and the species card sits above the help line. The body's row
+// (abilities.js #bodyBar, bottom right, in place of the help line) rises over the nearby-animals bar when the two would
+// meet; the hunt panel and the walkers' toast stand on it, the HUD and the species card stop above it. Run on resize
+// and with the HUD's text updates. The old right-hand panel is in Settings now (#settings, which caps itself).
 function layoutHud() {
-  document.documentElement.style.setProperty('--mapH', `${$('minimap')?.offsetHeight || 0}px`);   // the panel sits under the mini-map, top right (index.html #panel)
+  document.documentElement.style.setProperty('--mapH', `${$('minimap')?.offsetHeight || 0}px`);   // the HUD sits under the mini-map, top right (index.html #hud)
   const W = innerWidth, H = innerHeight;
   html.classList.toggle('narrow', W < 1200 || H < 760);
-  const box = id => $(id).getBoundingClientRect(), pan = $('panel'), cs = getComputedStyle(pan);
-  // the panel under the mini-map (top right) scrolls within the window; the key line (bottom left) runs to the window's
+  const box = id => $(id).getBoundingClientRect(), pan = $('hud'), cs = getComputedStyle(pan);
+  // the HUD under the mini-map (top right) scrolls within the window; the key line (bottom left) runs to the window's
   // edge and, while the nearby-animals bar is up, sits above it
   const help = $('help'), hs = getComputedStyle(help), bar = $('nearBar'), row = $('bodyBar'), up = !!row && !row.hidden;
   if (up) {
@@ -80,7 +81,7 @@ function layoutHud() {
   const rr = up ? row.getBoundingClientRect() : null, rowTop = rr ? rr.top : H;
   html.style.setProperty('--barTop', `${Math.round(H - rowTop + 10)}px`);   // the toast's bottom (index.html #gcToast)
   const hn = $('hunt'); if (hn) hn.style.bottom = rr ? `${Math.round(H - rowTop + 8)}px` : '';
-  const floor = Math.min(H - 12, rowTop - 10, hn && !hn.hidden ? hn.getBoundingClientRect().top - 10 : H);   // the panel stops above the row and the hunt's lines
+  const floor = Math.min(H - 12, rowTop - 10, hn && !hn.hidden ? hn.getBoundingClientRect().top - 10 : H);   // the HUD stops above the row and the hunt's lines
   pan.style.maxHeight = `${Math.max(120, Math.floor(floor - pan.getBoundingClientRect().top - parseFloat(cs.paddingTop) - parseFloat(cs.paddingBottom)))}px`;
   help.style.maxWidth = `${Math.max(200, Math.floor(W - 14 - help.getBoundingClientRect().left - parseFloat(hs.paddingLeft) - parseFloat(hs.paddingRight)))}px`;
   help.style.bottom = bar && !bar.hidden ? `${12 + bar.offsetHeight + 10}px` : '';
@@ -88,11 +89,12 @@ function layoutHud() {
   $('speciesCard').style.bottom = `${Math.max(12, Math.round(H - under + 8))}px`;
   const g = $('game'); if (g.classList.contains('hidden')) return;
   g.style.left = g.style.top = g.style.transform = '';   // centred, as styled
-  const hud = box('hud'), pr = pan.getBoundingClientRect(), gr = g.getBoundingClientRect(), lo = hud.right + 10, hi = pr.left - 10;
+  const ctl = box('ctlRow'), pr = pan.getBoundingClientRect(), mr = $('minimap')?.getBoundingClientRect() || { width: 0 }, gr = g.getBoundingClientRect();
+  const lo = Math.max(ctl.right, $('social')?.getBoundingClientRect().right || 0) + 10, hi = Math.min(pr.left, mr.width ? mr.left : W) - 10;
   if (gr.left >= lo && gr.right <= hi) return;
   g.style.transform = 'none';
   if (hi - lo >= gr.width) g.style.left = `${Math.round(Math.min(Math.max(W / 2 - gr.width / 2, lo), hi - gr.width))}px`;
-  else { g.style.left = `${Math.round(hud.left)}px`; g.style.top = `${Math.round(hud.bottom + 8)}px`; }
+  else { g.style.left = `${Math.round(ctl.left)}px`; g.style.top = `${Math.round(ctl.bottom + 8)}px`; }
 }
 
 // Build phases, bracketed with performance marks ('we:<phase>') so a long task can be attributed to the phase it fell
@@ -137,13 +139,14 @@ function createWorld(tileId) {
   const w = { tileId, dead: false, ready: false, committed: false, abort: new AbortController(), listeners: [], nodes: new Set(), m: {},
     scene: null, tile: null, enter: null, handle: null, onPoint: null };
   const root = $('opening');
-  w.observer = new MutationObserver(recs => {
+  w.record = recs => {   // the screen's own nodes are never the world's (a title made again over it by Exit, too)
     for (const r of recs) {
       if (root && (r.target === root || root.contains(r.target))) continue;
       for (const n of r.addedNodes) if (n.nodeType === 1 && n !== root) w.nodes.add(n);
       for (const n of r.removedNodes) w.nodes.delete(n);
     }
-  });
+  };
+  w.observer = new MutationObserver(w.record);
   w.observer.observe(html, { childList: true, subtree: true });
   // every await of the build goes through wait: the listener scope is off while others run, and an abandoned world
   // stops here (ABANDONED is thrown; its caller sees w.dead and lets it go)
@@ -202,7 +205,7 @@ async function disposeWorld(w, renderer) {
   m.dig?.dispose?.();   // the Dig game's tunnels, its socket and the terrain's cut discs (dig.js)
   m.water?.dispose?.(); m.shadows?.dispose?.(); m.terrain?.dispose?.(); m.litter?.dispose?.(); m.scent?.dispose?.(); m.forage?.dispose?.(); m.sight?.dispose?.(); m.cues?.dispose?.(); m.grass?.dispose?.(); m.forbs?.dispose?.(); m.emergents?.dispose?.(); m.veg?.dispose?.(); forgetQueuedCasters();
   // then its listeners and the elements it put into the page; the HUD's own words back as the page had them
-  for (const r of w.observer.takeRecords()) { for (const n of r.addedNodes) if (n.nodeType === 1) w.nodes.add(n); for (const n of r.removedNodes) w.nodes.delete(n); }
+  w.record(w.observer.takeRecords());
   w.observer.disconnect();
   for (const [t, type, fn, opts] of w.listeners) t.removeEventListener(type, fn, opts);
   for (const n of w.nodes) if (n.isConnected) n.remove();
@@ -288,6 +291,22 @@ async function switchWorld(id, point, params, xy = null, extra = {}) {
   catch (e) { console.error(e); $('status').textContent = `error: ${e.message}`; $('status').classList.remove('hidden'); goto.say(`could not load ${id}`, true); return; }
   if (w) goto.say('');   // it entered itself (buildSteps, arrive)
 }
+// Exit to main screen (the menu under the X): the hub's room is left as a switch leaves it, the world is torn down as a
+// second choice on the earth tears one down (disposeWorld), and the title screen is made again over it (openTitle,
+// main): the earth rises, the session's sign-in is known, and a place chosen builds a world as at the start. The direct
+// paths (?skip=1, ?game=1, ?as=) have no title in the page: they load the page without them.
+let openTitle = null;
+async function exitToTitle() {
+  if (!openTitle) { location.href = location.pathname; return; }
+  html.classList.remove('menu', 'arriving', 'switching'); html.classList.add('opening');
+  $('status').classList.add('hidden');
+  mp?.left();
+  gen++; const old = world; world = null;
+  if (old && scope === old) scope = null;   // the title's listeners are the page's, not the world's going
+  renderer.setClearColor(0x000000, 1); renderer.clear();
+  openTitle();
+  if (old) { const t = performance.now(), ready = old.ready; await disposeWorld(old, renderer); window.__weDisposed = { tileId: old.tileId, ready, ms: Math.round(performance.now() - t), exit: true }; }
+}
 async function main() {
   const params = new URLSearchParams(location.search);
   const pending = urlPoint(params);   // ?lat=&lon=: a point to land at (taken off the URL below)
@@ -332,9 +351,21 @@ async function main() {
     current: () => (world?.tile && world.m.flight ? { tile: world.tile, flight: world.m.flight, ready: world.ready } : null),
     switchTile: (id, p) => { switchWorld(id, p, params); } });
   if (pending) $('gotoInput').value = `${pending.lat}, ${pending.lon}`;
-  // The menu (owner, 2026-10-27): the HUD, the help line and the panel live behind the hamburger top left (index.html
-  // #menuBtn, html.menu); open, it is an X. Closed on load.
-  $('menuBtn').onclick = () => { const on = html.classList.toggle('menu'); $('menuBtn').setAttribute('aria-expanded', String(on)); renderer.domElement.focus?.(); };
+  // The menu (owner, 2026-10-27): the HUD and the help line live behind the hamburger top left (index.html #menuBtn,
+  // html.menu); open, it is an X with a short menu under it (Aaron, 2026-11-04: "Have a way to exit to the main screen
+  // underneath the X, and also a 'Settings' page. Move the current admin panel into that area"): Settings opens the old
+  // right-hand panel (#panel, every control as it was) in a card; Exit to main screen leaves the world for the earth
+  // (exitToTitle, below). The X closes the menu and Settings with it; Esc closes Settings. Closed on load.
+  const setMenu = on => { html.classList.toggle('menu', on); $('menuBtn').setAttribute('aria-expanded', String(on)); if (!on) setSettings(false); };
+  const setSettings = on => {
+    $('settings').hidden = !on; $('settingsBtn').setAttribute('aria-expanded', String(on));
+    if (on) $('settings').querySelector('.st-close').focus({ preventScroll: true }); else if ($('settings').contains(document.activeElement)) renderer.domElement.focus?.();
+  };
+  $('menuBtn').onclick = () => { setMenu(!html.classList.contains('menu')); renderer.domElement.focus?.(); };
+  $('settingsBtn').onclick = () => setSettings($('settings').hidden);
+  $('settings').querySelector('.st-close').onclick = () => setSettings(false);
+  $('exitBtn').onclick = () => { setMenu(false); exitToTitle(); };
+  addEventListener('keydown', e => { if (e.key === 'Escape' && !$('settings').hidden) { e.stopImmediatePropagation(); setSettings(false); } }, true);
   // The lens: ?fov=<degrees, vertical> (30..110, default LENS_DEFAULT). 70 shows about 103 degrees across a widescreen,
   // a wide-angle lens; the view is undistorted only when it matches the angle the screen fills in the eye, about
   // 45-50 degrees across at a desk (under 30 vertical), so a narrower lens makes the hills loom as they do in life
@@ -373,11 +404,16 @@ async function main() {
     // the world's entry (enterWorld) and left on a switch (switchWorld); a Join from a world is a switch with the picker.
     mp = Screen === TitleScreen ? new Multiplayer({ hubParam: params.get('hub') }) : null;
     if (mp) mp.switchTile = (id, xy, lead) => { switchWorld(id, null, params, xy, { lead }); };
-    screen = new Screen({ root: $('opening'), renderer, index, tileId, pending, hub: mp ? mp.titleHub : params.get('hub'),
-      onSelect: id => { select(id); },
-      onBegin: c => { choice = c; if (world?.ready && world.tileId === c.tileId) world.enter(c, true); } });
-    mp?.attach(screen);
-    screenOpen = true;
+    // made again by Exit to main screen (exitToTitle): the same screen, facing the tile last played, signed in still
+    openTitle = (first = false) => {
+      choice = null;
+      screen = new Screen({ root: $('opening'), renderer, index, tileId: first ? tileId : lastTile(), pending: first ? pending : null, hub: mp ? mp.titleHub : params.get('hub'),
+        onSelect: id => { select(id); },
+        onBegin: c => { choice = c; if (world?.ready && world.tileId === c.tileId) world.enter(c, true); } });
+      mp?.attach(screen);
+      screenOpen = true;
+    };
+    openTitle(true);
     return;
   }
   const w = await replaceWorld(tileId, { params, pending, direct });
@@ -526,11 +562,6 @@ async function buildSteps(w, { params, pending, direct = false, arrive = null })
   $('detail').onchange = e => { veg.radius = +e.target.value; veg.update(flight.pos.x, flight.pos.z, true); };
   addEventListener('keydown', e => { if (e.code === 'KeyR') flight.reset(tile.size / 2, -tile.size / 2, 150); });
 
-  const names = Object.fromEntries((tile.species || []).map(s => [s.code, s.common]));
-  const showPerceives = code => {
-    if (code === 'spirit') { $('perceives').textContent = 'everything: a spirit perceives every animal, and none perceives it'; return; }
-    const p = tile.perception?.perceives?.[code] || []; $('perceives').textContent = p.length ? p.map(c => names[c] || c).join(', ') : 'everything (no perception matrix)'; };
-  showPerceives('corvus_corax');
 
   function applySeason() {
     const s = seasonNow(), d = dateNow(), measured = terrain.setDate(d);   // the ground's measured colour for the date
@@ -584,7 +615,7 @@ async function buildSteps(w, { params, pending, direct = false, arrive = null })
   const ground = new GroundControl({ tile, scene, camera, flight, veg, animals, atmosphere, squirrel });
   const flier = new FlierControl({ scene, camera, flight, raven, animals, atmosphere, say: t => ground.say(t) });   // the toast for a strike
   // The spirit (spirit.js): the form the player arrives in; touching an animal puts the player in that body (onBody:
-  // the observer, the perception line, the panel's way back), B or the panel button leaves it.
+  // the observer, Settings' way back), B or that button (Settings: Back to spirit form) leaves it.
   const nearBar = w.m.nearBar = new NearBar({ el: $('nearBar'), animals });   // the species within reach, in spirit form (nearBar.js)
   const needs = w.m.needs = new Needs({ tile, el: $('needs'), season: seasonNow });   // hunger and thirst in a walker (needs.js)
   // The plant under a feeding body (needs.js names it): the nearest herb within 1.5 m of the body's foods, else a food shrub
@@ -625,7 +656,7 @@ async function buildSteps(w, { params, pending, direct = false, arrive = null })
   animals.onMiss = () => ground.say('the catch misses');
   const onBody = (code, sex = null) => {
     window.__we.playerSpecies = code; window.__we.playerSex = sex;
-    animals.setObserver(code); showPerceives(code); acorns.setBody(code);   // the acorn game: collecting only in a collector body (acorns.js v5)
+    animals.setObserver(code); acorns.setBody(code);   // the acorn game: collecting only in a collector body (acorns.js v5)
     $('spiritBtn').hidden = code === 'spirit'; $('nearBar').hidden = code !== 'spirit';
     needs.setSpecies(code); hunt.setSpecies(code); setBodyScale(code);
   };
@@ -743,7 +774,7 @@ async function buildSteps(w, { params, pending, direct = false, arrive = null })
     closeScreen();
     // the hub's room is this tile from here (the tile chat, the group's positions; multiplayer.js): the spirit's position
     // goes to the group at 5 Hz, and a joiner's arrival follows the picker's
-    mp?.entered(tile.id, { flight, arrival, players, lead: c.lead || null, form: () => w.handle?.playerSpecies || 'spirit', body: (out, cst) => bodySample(w.handle, out, cst),
+    mp?.entered(tile.id, { flight, arrival, players, sound: () => w.m.sound, lead: c.lead || null, form: () => w.handle?.playerSpecies || 'spirit', body: (out, cst) => bodySample(w.handle, out, cst),
       caption: p => { const cap = $('caption'); if (cap && !cap.hidden) cap.querySelector('.cap-text').textContent = captionFor(p, seasonNow()); } });
   };
   const known = new WeakSet(), used = new WeakSet(), drawable = o => o.isMesh || o.isPoints || o.isLine || o.isSprite;   // meshes compiled ahead (below)

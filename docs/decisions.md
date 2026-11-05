@@ -4507,3 +4507,64 @@ Not verified: two real browsers (the second player was a script over `tests/wscl
 Safari (OffscreenCanvas in a worker is Safari 16.4+), a lost WebGL context on the home screen, the frame cost of the
 map (about 120 draw calls at the chosen view), and the map's look beyond the foothills, the Bay, Yosemite and Mount
 Fuji.
+
+## 2026-11-04: voice and video with the group, and the controls row
+
+Aaron: "Lets redesign the ingame menu. First, lets move the audio toggle up into the row with video and microphone"
+and "If the user is in a world with no other users, video and microphone should disappear." Built as lane 5 of
+`docs/multiplayer.md` (its Built note has the whole of it). Chosen:
+
+- **One row beside the menu button** (`index.html #ctlRow`): the sound toggle (sound.js, still N), then the
+  microphone and the camera (`client/src/voice.js`), then the self-view while the camera is on. The old greyed
+  Video and Audio toggles top middle (`#media`, "soon") are gone, and the friends row now stands right of the
+  controls row (multiplayer.js layout). The mic and camera show only while another member of the player's group is
+  in the same world, and "in the same world" is the hub's position relay (a `pos` within 6 s): the hub relays
+  positions only to group members in the same tile room, so the row needs no new presence. Alone again, they go and
+  are turned off with the devices let go: a hidden toggle left on would be a mic the player cannot see.
+- **A WebRTC mesh** (to about six) with the hub as the signalling relay: one new message, `rtc` {to, tc?, k: sdp |
+  ice | state | bye}, relayed under the positions' rule (the addressed group member, the same room, no blocks), to
+  one connection of theirs (the `tc` named, else the tab that entered the room last) so a member with two tabs
+  answers once. Its own token bucket (a mesh's candidates come in bursts). Perfect negotiation (the lower user id is
+  polite); the mic and camera toggles replace a sender's track rather than renegotiate. Rejected: an SFU now
+  (LiveKit is the next step past six); the media through the hub (it must not hold media at all).
+- **Voices in the world**: Web Audio, an HRTF panner at the member's wisp or body (inverse distance, 6 m
+  reference), on a talk bus of the soundscape that the volume and mute cover; the context stays running in a hidden
+  tab while anyone is heard (the soundscape itself stays silent there), so a friend is still heard after alt-tab.
+- **Video modest**: 320x240 at 15 fps, capped at 300 kb/s per sender; the tile is scaled by distance and turns into
+  the edge avatar off screen (two video elements on one stream rather than moving one between parents).
+- **ICE**: public STUN (Google's and Cloudflare's) by default; TURN from env (`TURN_URL` with `TURN_USERNAME` and
+  `TURN_CREDENTIAL`, or `TURN_SECRET` for coturn's time-limited credentials) handed out in the hub's `welcome`, over
+  the signed-in socket, not in the public `/api/hub/config` (an open TURN credential would be anyone's relay).
+  Peers see each other's IP addresses through ICE; the docs say so. No accounts made; what Aaron needs to set up is
+  in `docs/multiplayer.md` "TURN".
+
+## 2026-11-04: the menu under the X: Settings, Exit to main screen; the data panel on the right
+
+Aaron: "The current data panel should have its text size decreased so that it can fit underneath the admin panel on
+the right. Remove "PERCEIVES" and subsequent text from admin panel. Have a way to exit to the main screen underneath the
+X, and also a "Settings" page. Move the current admin panel into that area." Read as: the data panel is `#hud` (the
+readouts), the admin panel is `#panel` (Location, Start game, Hover, Present day, sound, Texture, Season, Time of day,
+Forest detail, Perceives), and "underneath the admin panel on the right" is where the admin panel stood, since the
+admin panel itself moves into Settings. Chosen:
+
+- **The data panel** stands in the right column under the mini-map (`top: --mapH + 24px`, 230 px wide; 212 on a narrow
+  window), at 11.5 px rows with a 1.3 line height (11 px narrow); at 1280x800 it is 322 px tall and does not scroll; on
+  a short window it scrolls above the body's row (layoutHud caps it as it capped the panel). Its title row wraps so the
+  tile id and the Data link never run off the edge.
+- **Perceives** is gone from the page and the code that wrote it with it (main.js showPerceives); the perception matrix
+  still drives the animals (animals.js setObserver).
+- **The menu under the X** (`#menuList`): Settings, then Exit to main screen, shown while the menu is open.
+- **Settings** (`#settings`): a card top middle holding `#panel` itself, every control with its id and handler as it
+  was. The X closes the menu and Settings with it (Settings is part of the menu); Esc or the card's x closes Settings
+  alone. Rejected: Settings as a full page replacing the view (the time of day and the season are adjusted while
+  looking at the world).
+- **Exit to main screen** (main.js exitToTitle): the hub's room left as a tile switch leaves it, the world torn down by
+  disposeWorld as a second choice on the earth tears one down, and the title screen made again over it through the same
+  constructor and hookup as at the start (`openTitle`, `mp.attach`), facing the tile last played: the session's
+  sign-in is known, so the earth rises lit with no sign-in; choosing a place builds a world as at the start. The direct
+  paths (?skip=1, ?game=1, ?as=) have no title in the page: Exit loads the page without them. Found in doing it: the
+  world's teardown drained its observer's pending records without the filter that skips the screen's own nodes, so a
+  title rendered in the same task as the teardown was swept as the world's (fixed: one `record` for both); and a
+  played world stays the listener scope, so the new title's key guard was recorded as the world's (the scope is let go
+  before the title is made).
+

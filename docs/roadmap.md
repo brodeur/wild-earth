@@ -336,6 +336,17 @@ browser stays the renderer.
   tile outlined and a card naming its players, a loading bar with Invite (groups or people: `place` takes `to`) and
   Start, each player starting on their own and a joiner arriving behind and above the inviter whether or not the
   inviter has entered. Next: lane 5 (video and audio over WebRTC, signalling through the hub); the players on
+
+  draw), named over the body. Voice and video (lane 5) are built (2026-11-04, branch claude/voice-video-a2143c,
+  `client/src/voice.js`): the controls row beside the menu button (sound, then the microphone and the camera, which
+  show only while another group member is in the same world), a WebRTC mesh between the group's members in the tile
+  with the hub relaying the signalling, each voice panned at the member's wisp or body through the soundscape's volume
+  and mute, a speaking dot on the name and a ring on the edge avatar, each camera a small tile over the member (or in
+  their edge avatar) and a self-view in the row; public STUN, TURN from env when Aaron sets one up (the TURN section in
+  `docs/multiplayer.md`). The menu under the X (2026-11-04, the same branch): Settings (the old right-hand panel, Perceives
+  removed) and Exit to main screen (back to the earth, signed in still); the data panel on the right under the
+  mini-map in smaller type. Next: TURN set up on the public hub (some NATs fail without it); MediaPipe cut-out figures in
+  place of the tiles; an SFU (LiveKit) past about six; a push-to-talk key; the players on
   a tile outside the group (unseen by the privacy rule until Aaron widens it); the stream's rate under many players
   and the far fliers' detail; Discord needs Aaron's application registered; Google and Apple their keys.
 

@@ -29,8 +29,9 @@ plan is at the end; each lane is held to this document and reports back against 
 6. **A group.** Create group asks for a name (optional) and lets the player add people from the list. The
    group's members are then listed in the left menu under the group's name. A member can leave; the
    creator can remove. Groups are small (sixteen at most).
-7. **Video and audio, top middle.** Two toggles, both off. They do nothing until the last lane and say so
-   on hover.
+7. **Video and audio, in the controls row.** Beside the menu button in the world, one row: the sound toggle, then
+   the microphone and the camera, both off, which show only while another member of the group is in the same world
+   (Aaron, 2026-11-04; lane 5 below). On the earth no one is in the player's world, so they are not there.
 8. **The chat, bottom left.** A chat input. Above it a translucent pane with the chat history, invisible
    until a message arrives, then fading in, and fading out again some seconds after the last one (it stays
    while the input has focus). The chat goes to the group when the player is in one, else to the players
@@ -119,6 +120,11 @@ the places list needs to say how many players are at Placerville, so the rule be
   avatar seed, nothing else; a user can be unfindable. A blocked user cannot find, friend or message the
   one who blocked them.
 - No email, no anchor, no address: the brief's rule stands (`brief.md`, `contributing.md`).
+- Voice and video (lane 5) go peer to peer and are never recorded or stored; the hub relays only the signalling
+  (SDP, ICE candidates, who has the mic and camera on), under the positions' rule, and keeps and logs none of it.
+  **Peers see each other's IP addresses**: ICE candidates carry them, so a member of the player's group in the same
+  world learns the player's public address (and local ones) once either turns on the mic or the camera. A TURN relay
+  forced for everyone (`iceTransportPolicy: 'relay'`) would hide them at the relay's cost; not done yet.
 
 ### Protocol
 
@@ -140,6 +146,8 @@ answer    {invite, join: true|false}
 room      {op: 'join'|'leave', tile}          (the client joins its tile's room when a world is entered)
 pos       {x, y, z, yaw, form}                (5 Hz, only while in a room and in a group)
 watch     {on: true|false}                    (on the earth: receive tile counts)
+rtc       {to, tc?, k: 'sdp'|'ice'|'state'|'bye', sdp?: {type, sdp}, ice?: {candidate, sdpMid, sdpMLineIndex}|null,
+           mic?, cam?}                        (WebRTC signalling to a group member in the same room; lane 5)
 ```
 
 Hub to client:
@@ -154,7 +162,12 @@ invite    {id, from, tile, season}
 pos       {user, x, y, z, yaw, form}          (from a group member in the same room; on entering a room, the
                                               last one from each group member already in it; lane 4)
 counts    {tiles: {tile_id: n}}               (every 2 s to watchers, only when changed)
+rtc       {from, fc, k, ...}                  (relayed from a group member in the same room, fc their connection's id;
+                                              k 'bye' also comes from the hub when they leave the room or close; lane 5)
 ```
+
+The `welcome` also carries `ice`, the ICE servers for voice and video (public STUN, and TURN when the hub's
+environment has it; "TURN" under lane 5).
 
 HTTP: `POST /api/hub/signup`, `POST /api/hub/signin`, `POST /api/hub/signout`, `POST /api/hub/recover`,
 `GET /api/hub/me`, `GET /api/hub/config` (which providers are on, the hub's name), `GET /api/hub/oauth/discord`
@@ -400,6 +413,97 @@ together. Lane 3 needs lane 1's screen in main; lane 4 needs 1 to 3. Lane 5 is l
 5. **Video and audio.** WebRTC between the members of a group, signalling over the hub (`rtc` messages
    added to the protocol then), the two toggles live, a small tile of each member's video by their avatar.
    Not before the four above are in.
+
+   **Built (2026-11-04, branch `claude/voice-video-a2143c`).** Aaron: "Lets redesign the ingame menu. First, lets move
+   the audio toggle up into the row with video and microphone" and "If the user is in a world with no other users,
+   video and microphone should disappear."
+   - **The row** (`client/index.html` `#ctlRow`, beside `#menuBtn`): the sound toggle (`#muteBtn`, sound.js els.mute,
+     still N), the microphone (`#micBtn`), the camera (`#camBtn`), and the self-view (`#selfView`, 46x34, mirrored,
+     160x120 on hover) while the camera is on. The friends row stands right of it (multiplayer.js layout, as the row
+     grows and shrinks). The old top-middle `#media` toggles are gone. The mic and camera show while at least one
+     group member is in the same world: a `pos` from them within 6 s (the hub relays positions only to group members
+     in the same tile room), or their signalling; a `bye` (they left the room or closed) or a presence elsewhere
+     removes them at once. Joining or leaving changes the row live. Both are off at first; the browser's prompt comes
+     with the first press only. Alone again, both turn off and the devices are let go. A refusal shows on the button
+     (amber, a "!", the reason in its title: blocked, none found, in use), not as an error; a press asks again. Off,
+     a toggle is barred; on, it is lit green; the mic glows while the player speaks (an analyser on their own mic).
+   - **Signalling** (`hub.py` `m_rtc`, `rtc_peers`, `rtc_bye`; `client/src/hub.js` `rtc`): `rtc` {to, tc?, k, ...} goes
+     to the addressed user only when they share a group with the sender, neither blocks the other, and they are in
+     the sender's room; to the connection `tc` names (each connection has a random 8-hex id, memory only, stamped on
+     what it sends as `fc`), else to the one that entered the room last, so a member with two tabs answers once. Out
+     of a room, or to anyone else, nothing goes (quietly: a peer may just have left). SDP up to 48,000 characters
+     (under the socket's 64 KB), candidates up to 1,024. Its own token bucket (40/s, 120 burst) beside the general
+     one, since a mesh's candidates come in bursts. Leaving a room, switching it, or closing sends `bye` to the group
+     members in it. Nothing of it is kept or printed. Tests: `tests/test_hub.py` test_rtc_signalling (not across
+     groups, not across tiles, not out of a room, not to oneself, one tab answers, `tc` honoured, malformed fields
+     named, `bye` on leave and close) and test_ice_servers_with_turn; test_zz checks that an SDP, a candidate's address
+     and the TURN secrets reached neither the database nor the log.
+   - **The peers** (`client/src/voice.js` `Voice`, made by multiplayer.js on sign-in, fed by gotPos, presence and the
+     room): one RTCPeerConnection per member here, made when either side first sends anything, with "perfect
+     negotiation" (the lower user id is polite and yields on a collision; the other side's tracks go into the offer's
+     m-lines, so mic and camera on both sides share two transceivers). Turning a device off replaces the sender's
+     track with none (no renegotiation) and stops it; on again replaces it back. `state` {mic, cam} tells the others
+     what is on. A failed connection restarts ICE.
+   - **Voices** play through Web Audio: a muted `<audio>` holds each remote stream (Chrome feeds a remote stream to
+     Web Audio only while a media element plays it), its source goes through a gain (x1.6) and an HRTF panner
+     (inverse distance, 6 m reference: -16 dB at 40 m, -24 dB at 100 m) kept at the member's wisp or body
+     (players.js `posOf`, 20 Hz, smoothed), into the soundscape's talk bus (`sound.js` `talkBus`: to the speakers
+     under the volume and the mute, not the compressor). While anyone is heard (`setTalking`) the context keeps
+     running in a hidden tab with the soundscape itself silent, so a friend is still heard after alt-tab.
+   - **Speaking**: an analyser per voice, over 0.018 RMS is speaking, held 350 ms; players.js draws a pulsing dot
+     before the name (the name then shown on screen out to 400 m, not only 60), a ring round the edge avatar and the
+     video tile.
+   - **Video**: 320x240 at 15 fps asked of the camera, the sender capped at 300 kb/s. players.js draws each member's
+     camera (while their `state` says it is on) as a 176x132 rounded tile in their hue over them, scaled by 2600 / d
+     px (0.36 to 1), the name under it, on screen within 400 m; off screen the video fills their edge avatar's
+     circle (48 px). Two video elements on the one stream, so neither is moved between parents.
+   - **Debugging**: `window.__weVoice` (peers, present, states, local, toggle('mic' | 'cam'), set(kind, on)).
+   - **The menu under the X** (2026-11-04, after this lane): with the menu open, Settings (the old right-hand panel)
+     and Exit to main screen, which leaves the hub's room as a switch does, tears the world down and makes the title
+     screen again, signed in still (docs/decisions.md, "the menu under the X"); the data panel (`#hud`) now stands on
+     the right under the mini-map, so the friends list opens right of the menu rather than right of the HUD.
+   - Verified in the built-in browser with two tabs as two signed-in users (vv_a on 127.0.0.1:8793, vv_b on
+     localhost:8793, so the cookies are separate; one group; the home tile), `getUserMedia` replaced in a scratch
+     harness by a canvas's captureStream (a letter on a moving disc) and an oscillator bursting 1.2 s on and off:
+     the alone state (sound only), the together state (mic and camera appearing in both tabs as the second
+     arrived), mic and camera on with real clicks (the peer connected, both directions over two sendrecv
+     transceivers; the other side's mic added later renegotiated into the existing m-line), the voice arriving at
+     the other tab in the oscillator's bursts (RMS 0.28 on, 0 off) with its panner at the member's wisp, A's camera
+     as a tile over A's wisp at 16 m (scale 0.68) with the name under it, the edge avatar filled by the video with the
+     speaking ring when A was behind, the speaking dot on the name once A's camera was off, the self-view and the lit
+     buttons, mute taking the talk bus to 0 and back, a refused mic (amber "!", "microphone blocked: allow it for this
+     site in the browser, then press again") then allowed on the next press, and B leaving the room: A's peer closed
+     and A's mic and camera turned off and hidden within 0.4 s (the `bye`). No console errors (the hub's 401 to `me`
+     before sign-in, as before). Hub tests 14 OK; all 35 server tests OK.
+   - **Not verified**: real devices and two machines across real NATs (the tabs were on one machine: host
+     candidates); TURN against a real relay; the voice heard by ear; a hidden tab keeping the voice (the pane reports
+     its background tab as visible); three or more members; the bodies' head height as the panner's point while in a
+     body; Safari and Firefox.
+   - **Next**: TURN on the public hub (below); MediaPipe selfie segmentation to draw a cut-out figure in place of the
+     tile; an SFU (LiveKit) past about six; a push-to-talk key and a per-member volume; relay-only ICE as a privacy
+     option.
+
+   **TURN: what Aaron needs to set up, and why.** STUN lets two browsers find their public addresses and connect
+   directly, which works across most home routers; it fails behind symmetric NATs (many mobile carriers, some
+   corporate and campus networks, CGNAT), where only a relay in the middle gets the media through. Without TURN those
+   players simply never connect (the peer stays "connecting", the row looks fine, no one is heard). The hub hands
+   TURN out in `welcome` when its environment (Fly secrets, or the git-ignored `.env` locally) has:
+   - `TURN_URL`: one or more comma-separated `turn:` / `turns:` URLs, e.g.
+     `turn:relay.example.org:3478?transport=udp,turns:relay.example.org:5349`;
+   - and either `TURN_USERNAME` with `TURN_CREDENTIAL` (a provider's static pair), or `TURN_SECRET` (coturn's
+     `static-auth-secret`: the hub makes a credential per welcome good for 12 hours, the TURN REST API rule).
+   Choices, cheapest effort first:
+   - **metered.ca** (Open Relay / their TURN): sign up, create a TURN credential, put its URLs, username and
+     credential in the three variables. A free tier of some gigabytes a month; static credentials (anyone who signs
+     in to the hub can read them from the welcome, so rotate them if abused).
+   - **Cloudflare Realtime TURN**: a TURN key in the Cloudflare dashboard; its credentials are short-lived and made by
+     an API call (`/v1/turn/keys/<id>/credentials/generate-ice-servers` with the key's API token), which the hub does
+     not make yet: a small addition (cached, made outside the hub's lock). Generous free allowance, global anycast.
+   - **coturn on Fly**: a second small app running coturn with `use-auth-secret` and `static-auth-secret=<TURN_SECRET>`;
+     it needs a dedicated IPv4 (`fly ips allocate-v4`, paid) because TURN listens on UDP 3478 and a relay port range,
+     and Fly's shared IPv4 does not carry UDP; set `external-ip` to that address and open the ports in `fly.toml`.
+     Most control, a fixed small monthly cost, bandwidth billed as Fly egress.
+   Video at 300 kb/s per sender relayed through TURN is about 135 MB per hour per relayed pair and direction.
 
 ## Shared animals
 
