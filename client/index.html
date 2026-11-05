@@ -216,7 +216,7 @@
   #spiritBtn { width:100%; margin-top:6px; background:#1b2733; color:#e6f0ff; border:1px solid #3a5670; border-radius:6px; padding:5px 10px; font:inherit; cursor:pointer; }
   #spiritBtn:hover { background:#22344a; } #spiritBtn[hidden] { display:none; }
   html.narrow #spiritBtn { padding:4px 8px; margin-top:5px; }
-  #game { position:fixed; left:50%; top:12px; transform:translateX(-50%); background:#0f1512bb; padding:8px 14px; border-radius:8px; min-width:240px; backdrop-filter:blur(4px); transition:background .6s; }
+  #game { position:fixed; left:14px; top:58px; box-sizing:border-box; max-width:320px; max-height:calc(100vh - 130px); overflow-y:auto; overscroll-behavior:contain; background:#0f1512bb; padding:8px 14px; border-radius:8px; min-width:200px; backdrop-filter:blur(4px); transition:background .6s; }
   #game.hidden { display:none; }
   #game h1 { font-size:13px; margin:0 0 4px; color:#ffd08a; }
   #game .row { display:flex; justify-content:space-between; gap:12px; color:#b7c4ba; }
@@ -275,6 +275,7 @@
   html.narrow #hud h1 { font-size:12px; }
   html.narrow #hud .row { gap:6px; }
   html.narrow #hud .row.wide b { max-width:132px; }
+  /* the acorn stash panel at the left edge under the menu button (Aaron, 2026-11-04: "The acorn stash panel can be moved to the side of the screen"); the open menu list overlays it, and it scrolls in a short window */
   html.narrow #game { font-size:12px; line-height:1.3; min-width:0; padding:7px 11px; }
   html.narrow #game .row { gap:8px; }
   html.narrow #gameHint { max-width:250px; }
