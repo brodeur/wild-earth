@@ -7,7 +7,8 @@ where it lives: "for both the acorn game and the dig game, I want the holes to b
 should disappear if empty after 1 month. For holes in ground, they should disappear if no animal has been inside for
 1 week. I want them to be seen by all players and animals. I want animals to do the behaviors as well."
 
-The code is `client/src/dig.js` (the game, its drawing, its shared world's client), `digworld.py` (the server's copy
+The code is `client/src/dig.js` (the game, its shared world's client), `client/src/digCarve.js` and `digMesh.js` with
+`digMesh.worker.js` (the drawing: the soil carved, below), `digworld.py` (the server's copy
 of the world and its rules), the dig channel of `server.py`'s `GameWorld`, and hooks in `groundControl.js` (the
 vole's tunnel mode, the coyote's pit), `animals.js` (the AI voles and coyotes), `abilities.js` (the slots),
 `terrain.js` and `grass.js` (the openings), `main.js` (the module in the world). Tests: `tests/test_dig.py`. The
@@ -69,16 +70,16 @@ cost 3.1 ms of GPU from inside at 1920 x 1200.
   the soil's colour (half, to 0.8 round the body: a full-screen quad), so the ground reads as looked through. The blend
   keeps the canvas's alpha (the page composites the canvas by it; a blend that lowered it undid the dimming).
 - **The channel.** The depth is cleared and, on a layer of their own (5; the lights join it, as the spirit's layer 1),
-  drawn: the player's own body, lit as in the world; the tunnels, rooms and pits within 10 m from the dirt's own
-  buffers under a cheap shader: both faces added, bright at the silhouette and faint across (a glowing translucent
-  pipe), the union kept by the dirt's neighbour test so a junction shows no inner walls, the scent glow along an opened
+  drawn: the player's own body, lit as in the world; the carved surface within 10 m (the dirt's own geometry, below)
+  under a cheap shader: both faces added, bright at the silhouette and faint across (a glowing translucent pipe), one
+  surface so a junction, a loop or a crossing shows no inner walls, the scent glow along an opened
   stretch, a coyote's pit in a warning red; and a soft warm glow at every other animal underground within 10 m (an AI
   vole or rabbit in a tunnel or digging, a mirror's streamed `buried`, another player's body underground: `bodySample.js`
   now flags a body in a tunnel buried). The body's depth hides the channel behind it; the front wall glows over it.
 - **The openings glow too** (Aaron, 2026-11-04: "the entrance hole and mound should also glow just like the x-ray
-  version of the tunnel"): the holes' collars, the spoil round them and the pits' mounds (the heaps buffer) are drawn
-  in the same pass under the channel's shader, a little brighter across (0.16 against the tube's 0.07) so a low mound
-  seen from above still shows; a collar's fragments inside the tunnel it opens onto are dropped as a tube's are.
+  version of the tunnel"): the mouths and the spoil round them and the pits' mounds are part of the carved surface and
+  drawn in the same pass, the spoil a little brighter across (0.16 against the tube's 0.07) so a low mound seen from
+  above still shows, the bare ground round a mouth faint (0.025).
 - **The hand-over**: eased in over about 0.6 s going down (a dig or a hole), out coming up; the camera never cuts.
 
 ## Going down a hole, and the crawl
@@ -188,7 +189,10 @@ A tile's tunnels are a graph, as `digworld.py` and `dig.js` both hold it:
 The face advances in 2 cm steps: while the tunnel runs straight (within 0.2 rad) and the segment is under 35 cm the
 leaf node moves (`grow`); otherwise a new node and segment (`dig`). A room absorbs the nodes within 26 cm of the face
 point (`room`): their segments to the outside end at the room, the ones among them go, and of two to the same
-outside node one stays. Every change is one of these events, applied in the server's order by the same reducer on
+outside node one stays. A face that comes within 13 cm of a node of *another* system (two diggers meeting, since
+2026-11-04) joins it (`join`) and the two systems are one; the dig stops there (let the key go, W walks on through).
+A burrow does not open into a narrower bore (a rabbit's into a vole's), and a body never walks into a branch too
+narrow for it. Every change is one of these events, applied in the server's order by the same reducer on
 both sides (`applyEvent` in dig.js, `dig_reduce` in digworld.py):
 
 ```
@@ -251,25 +255,28 @@ shows on a group member's screen (`players.js` draws a member in a body as a sma
 
 ## Drawing
 
-- **The tubes**: every segment a round cone (a tube between its nodes' radii with hemispherical ends; 12 sides, 8
-  rings) in one preallocated buffer, every room a flattened sphere in another. They are one-sided (only ever seen from
-  inside), drawn first (`renderOrder` -1), and their union is made in the fragment shader: each vertex names up to
-  eight neighbouring capsules (the segments sharing its nodes, a room, a hole's collar, any tube crossing it) whose
-  ends and radii sit in a float texture; a fragment inside a neighbour (less the mesh's chord error) is air and
-  discarded. Junctions, chambers and collars need no mesh booleans.
+- **The soil, carved** (2026-11-04; below, "Carving"): the soil is a solid and digging removes it. Every segment, room,
+  hole and pit is a primitive of the carved air, and the surface where the soil meets the air is meshed in sparse
+  chunks in a Web Worker (`digCarve.js`, `digMesh.js`), so junctions, loops, crossings, chambers joined from two sides
+  and pits breaking into tunnels are one watertight surface. Until 2026-11-04 each segment was a tube mesh and their
+  union a discard in the fragment shader against at most eight neighbours, which left inner walls and dirt across the
+  bore wherever a loop or a crossing missed a neighbour.
 - **The dirt**: the soil's colour by the tile's soils layer (`client/soils.png`: the SSURGO map unit's surface texture
-  class in `soils/classes.json`), two octaves of grain, stones by the unit's rock fragments, roots hanging from the
-  roof; dark but for the daylight down the nearest eight holes and pits (falling by e every 1.5 widths of the opening)
-  and a warm glow at the vole's whiskers. The scent glow is emissive.
-- **The openings**: the terrain is not edited. The ground's shader (`terrain.js` FRAG) discards a disc in each of the
-  eight holes and pits nearest the camera (`groundUniforms.digCuts`, no new sampler), so a hole is seen from above and
-  the sky from below; the grass's near and body tiers drop a clump rooted in one (`grass.js` inDig). A hole is a collar
-  (the tube's mouth up through the surface) and a fan of fresh, darker spoil thrown out away from the tunnel; a pit a
-  bowl and a mound; a jackrabbit's form a shallow bowl and a low fan. Underground the camera stays above (the
-  underground view, above; until 2026-11-03 it went inside on the body's line with a 4 mm near plane); the forage glow
-  and the sight marks are off there (the sound cues stay).
-- **What is drawn**: a pass four times a second (`visPass`) shows the dirt only within 60 cm of a hole or a pit (the
-  camera is always above the ground now); underground the channel is the underground view's (above).
+  class in `soils/classes.json`), two octaves of grain, stones by the unit's rock fragments, fine roots on the roof;
+  lit by what kind of surface it is (from the field, per vertex): a tunnel's wall dark but for the sky seen up the
+  nearest eight holes and pits (by the shaft's solid angle), a pit's bowl by the sky, less toward its floor, the ground
+  and spoil round a mouth as the ground is lit, fresh earth darker. The scent glow is emissive, per node, read from a
+  float texture by the node's slot.
+- **The openings**: the terrain is not edited. A mouth comes out of the field: the ground and its spoil within 6 cm of
+  an opening are meshed with the tunnel's wall as one surface, the spoil a ring round the mouth run out into a fan away
+  from the tunnel, the lip rounded. The ground's shader (`terrain.js` FRAG) discards a disc in each of the eight holes
+  and pits nearest the camera (`groundUniforms.digCuts`, no new sampler), now just inside that patch (a hole's radius
+  plus the lip, under its spoil; a pit's radius), and the patch's bare ground sits 3 mm under the terrain, which wins a
+  tie, so no seam shows; the grass's near and body tiers drop a clump rooted in one (`grass.js` inDig). Underground
+  the camera stays above (the underground view, above); the forage glow and the sight marks are off there.
+- **What is drawn**: in the world, the carved surface within 3 m of an opening and 30 m of the camera, after the
+  terrain (whose depth hides the underground before it is shaded: the carved surface has no discard); underground the
+  channel within 10 m (the underground view).
 
 ## Measured (2026-11-02, home tile, 1920 x 1200, the built-in browser)
 
@@ -377,5 +384,79 @@ the world has it.
 **Not changed:**
 - Other players' tunnels grow in 2 cm steps.
 - The coyote's pit deepens in 1 cm steps, now 5 a second.
-- The tube union is still the shader's neighbour test. That is why joins and loops can still look wrong: the carving
-  rework was proposed, not built.
+- The tube union was still the shader's neighbour test: replaced the same day by the carving (below).
+
+## Carving (2026-11-04)
+
+Aaron: "Dig is really cool. Strange things happen when geometries collide - when a tunnel loops back on itself. Right
+now it seems like we're making polygons but is there a way instead to "remove" from a polygon? What if we made a
+polygon on the underside of the earth that has the mirror polygon roof of the ground polygon. The user "digs" which
+creates a joint between these two surfaces, and then starts "removing" the polygon. Players will want to dig elaborate
+structures together." After testing the neighbour test's fix: "the geometry is a little bit better when I join two
+holes but its still a little funky", then "Yes, start the carving".
+
+**The world is unchanged**: the same graph, events and reducers on both sides (`applyEvent`, `dig_reduce`), the same
+sync. Only the drawing changed, and one digging rule (two systems that meet join, above).
+
+**The field** (`digMesh.js`). The soil's signed distance is `smax(y - G(x, z), -C(p), kL)`, negative in the soil. G is
+the drawn ground (`Heightfield.ground`: the micro patch, the fine square or the coarse mesh, as the terrain draws it)
+plus the spoil heaped on it. C, the carved air, is the minimum over every primitive: a round cone per segment between
+its nodes' radii (a tunnel enters a room at its own bore), an ellipsoid per room (r, 0.8 r, r), a vertical shaft per
+hole from its node up through its spoil, and a bowl per pit (its rim on the ground, its floor a parabola to its
+depth). Within a tunnel's straight run (cones meeting at a two-segment node) the minimum is plain, so no joint bulges;
+across runs, rooms, shafts and pits it is a smooth minimum of 1.5 cells, so junctions, doorways, the shaft's bend into
+the tunnel and a pit breaking into a tunnel are filleted. The ground and the air meet in a lip rounded over 1.2 cells.
+
+**The mesh**. Surface nets in chunks of 16 cm that exist only where a primitive reaches: a vertex per cell the surface
+crosses (the mean of its edge crossings, then one Newton step onto the field's zero), a quad per lattice edge the
+chunk owns, positions from the global lattice so two chunks compute a shared border cell bit for bit (watertight,
+checked: every edge shared by two triangles but for zero-area slivers). The cells are sized by the smallest radius in
+reach: 1 cm for a vole's 3 cm bore, 2 cm for a rabbit's burrow, a room or a form, 4 cm for a big pit, one size over
+each joined component of chunks (a vole tunnel opening into a pit meshes the pit at 1 cm) so neighbours always agree.
+Bare ground more than 6 cm from any air and under no spoil is not kept. The chunks a change reaches are meshed again,
+the nearest to the body first, in two workers (one on a machine of fewer than six cores; with none, on the main
+thread a few ms a frame); a cone whose end moved (the face growing) dirties only the chunks round its end and where
+its side swung by more than 0.3 mm. The chunks are drawn four to a side in a region of 64 cm, one draw each.
+
+**The face between the steps** (`faceAhead`): a short cone of its own from the leaf to where the face really is, so
+only its one or few chunks are meshed again each frame. Measured at the real rate (5.1 cm/s, the home tile, two
+workers): the carved tip trails the drawn face by 2.7 mm at the median, 3.5 mm at most over 9 s (about a third of a
+cell: the surface net's vertex sits inside the true cap), at 184 chunk meshings a second, about 1 ms each.
+
+**What changed besides the drawing**: `MAX_N` and `MAX_S` (and `digworld.py` `N_MAX`, `S_MAX`) from 1,500 and 1,200 to
+5,000 each, since nothing is preallocated per slot now. The price: a vole's bore costs about 6,700 triangles and 3,700
+vertices a metre (0.19 MB on the GPU, as much again in memory for the regions' rebuilds); a rabbit's at 2 cm cells
+less than half that a metre of its length. 15 m of tunnels with thirteen pits and forms on the home tile were 155,000
+triangles. A welcome of 5,000 nodes would be about 0.75 MB from the server. The joining of systems (`meet`) uses the
+existing `join` event.
+
+**Measured** (the home tile, 1280 x 800, the built-in browser; the load average 5): the carved surface's own GPU time
+with all 216 regions (141,000 triangles) drawn alone, eight draws in one timer query against hidden, the p10: 0.02 ms
+in the underground view from an orbit, 0.05 ms close up, 0.09 ms for the dirt with no terrain in front of it (in the
+frame the terrain hides nearly all of it first). `dig.update` while digging: 0.5 ms median, 1.2 ms p99, 1.8 ms at
+most (0.1 ms idle); a welcome of 2,745 chunks meshed in 0.7 s of worker time.
+
+**Verified** (port 8786 on the worktree, captures in the underground view and from the surface):
+- a vole's loop round back to its own tunnel became a chamber with clean doorways; a tunnel dug through the middle of
+  an older 34 cm segment (no node within 13 cm, so no join: the case that showed inner walls) is one crossing with
+  filleted corners and no walls across the bore;
+- two tunnels dug toward each other from two holes met and joined (one system), and the vole walked from one hole
+  through the join and out of the other;
+- a coyote's pit (30 cm, 45 cm deep) over the joined tunnel opened three segments: the bowl breaks into the tunnel
+  from both sides, seen red in the underground view with the vole in it, the tunnel's openings seen from above;
+- a brush rabbit dug its burrow, came out and ran back at it: down 16 cm from the hole's centre, walked in 0.8 m,
+  squeezed to the bore; the mouth (spoil fan, lip and burrow wall) is one surface;
+- AI voles walked a joined system node to node (6 of 7); the AI host's voles and jackrabbits dug and scraped as before;
+- no shader diagnostics (`renderer.info.programs`), no console errors; `tests/test_dig.py` test_meet_and_big (two
+  systems joined, their clock merged; a 2,000-node tunnel taken), all 42 server tests pass.
+
+**Not verified, and what still reads wrong**:
+- the AI coyote's own pit in this build (the same code path as the player's pit, which was verified);
+- two players digging one structure at once; a phone or a slower GPU; a structure near the 5,000-node cap (its memory
+  above, untested);
+- the hole's throat reads paler than a real burrow at night (the sky term at the lip); the pit's bowl is evenly lit
+  (no occlusion but its depth); a bright point can show at the sharpest crotch of a crossing in the underground view;
+- a vole tunnel meeting a rabbit's burrow draws as one opening but is not joined (the burrow does not open into the
+  narrower bore), so neither walks through;
+- when the micro patch moves, a mouth's chunks re-mesh to its new ground (the drawn ground under them changed by more
+  than 2 mm); until then the patch can show a few millimetres above or under.
