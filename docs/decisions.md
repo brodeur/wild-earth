@@ -5065,3 +5065,19 @@ density, assets by archetype, hand edits counted). docs/pipeline.md is rewritten
   is about). The forb atlas raised from 16 to 24 species so the ferns can be drawn. A generator fix found by them: an
   evergreen card on a deciduous template inherited its bare winter months.
 
+## 2026-11-04: roots in the tunnels, eaten or pulled down (client/src/digRoots.js, the `pull` event)
+
+Aaron: "showing roots hanging from the ceiling and letting players either pull the plant down or eat the roots."
+Chosen: roots generated, not stored, from what already places the plants (the forbs' deterministic candidates, the
+near set's trees and shrubs, the sward's species and density) wherever a ceiling passes under them within a rooting
+depth set by kind (the library has none: fibrous grass to 45 cm or 1 m, bulbs and corms at their depths, oaks at any
+depth a vole digs); drawn as instanced strands and bulbs with no sampler and three or four attributes. Eating goes
+through needs.js unchanged but for its source underground (what is at the nose, scored by kind), so the hunger, the
+E key and the food line are the surface's. Pulling is a world event by the plant's own id (`f:<i>.<j>.<k>`, a pure
+function of the tile's habitat grid), kept per tile and season in the dig world as the acorn game keeps its state,
+anonymous; a bulb eaten out is the same event with nothing left. Rejected: storing roots in the world (they follow
+from the plants and the tunnels, and the shared state would grow with every metre dug); pulling grass clumps (they
+have no ids: grass.js draws a field); a sampler for a root texture (the dirt's and the terrain's programs are near
+their units, and a strand is too thin to show one); tying pulls to a tunnel system's decay (a plant pulled down stays
+gone for the season, as a gopher's harvest does).
+

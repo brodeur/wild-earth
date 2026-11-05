@@ -51,7 +51,9 @@ export class Needs {
   fed(share = 1) { this.hunger = Math.min(1, this.hunger + share); }   // a catch (animals.js catchNear): a full belly; a bite at a carcass (carrion.js playerFeed): its share of one
   get slow() { return this.sp && Math.min(this.hunger, this.rhythm === 'none' ? 1 : this.thirst) < NEED_LOW ? NEED_SLOW : 1; }
   // every frame in a walker: x, north the body; acting: E held (the act); wet: wading
-  update(dt, { x, north, acting, wet }) {
+  // under: the body underground (dig.js underFood): what is at its nose there (a root, a bulb, a pulled plant) in place of
+  // the surface's rasters
+  update(dt, { x, north, acting, wet, under = null }) {
     if (!this.sp) return;
     const season = this.season(), ch = SEASON_CH[season] ?? 3;
     const foods = this.foods(season);
@@ -62,12 +64,14 @@ export class Needs {
     }
     if (this.rhythm !== 'none') this.thirst = Math.max(0, this.thirst - dt / ((NEED_T[this.rhythm] || NEED_T.often) * 60));
     let here = 0;
-    for (const r of foods) { const g = this.raster(r); if (g) here = Math.max(here, g.at(x, north, ch)); }
+    if (under) { here = under.score || 0; this.underLabel = under.label || null; }
+    else { this.underLabel = null; for (const r of foods) { const g = this.raster(r); if (g) here = Math.max(here, g.at(x, north, ch)); } }
     this.foodHere = here;
     // the plant being eaten (main.js plantHere: the herb, shrub or grass under the body among this season's food plants),
     // looked up a few times a second while there is food here
     this.plantT = (this.plantT || 0) - dt;
-    if (here >= EAT_MIN && this.plantHere && this.plantT <= 0) { this.plantT = 0.4; this.plant = this.plantHere(x, north, this.foodPlants(season)); }
+    if (under) this.plant = null;
+    else if (here >= EAT_MIN && this.plantHere && this.plantT <= 0) { this.plantT = 0.4; this.plant = this.plantHere(x, north, this.foodPlants(season)); }
     else if (here < EAT_MIN) this.plant = null;
     if (acting && here >= EAT_MIN) this.hunger = Math.min(1, this.hunger + dt * EAT_RATE * here / 100 * (this.plant ? 1.25 : 1));   // a named plant feeds a little faster
     const water = this.raster('water');
@@ -110,7 +114,7 @@ export class Needs {
     const B = this.bars; if (!B) return;
     const set = (bar, v, low, hint) => { if (!bar) return; bar.querySelector('b').style.width = `${Math.round(v * 100)}%`; bar.classList.toggle('low', low); const em = bar.querySelector('em'); if (em.textContent !== hint) em.textContent = hint; };
     const t = this.target, near = t ? `${t.resource.replace('_', ' ')} ${t.d < 1000 ? `${Math.round(t.d)} m` : `${(t.d / 1000).toFixed(1)} km`} ${t.bearing}` : '';
-    const what = this.plant && this.plantName ? this.plantName(this.plant) : null;
+    const what = this.underLabel || (this.plant && this.plantName ? this.plantName(this.plant) : null);
     const foodHint = this.carrionHint ? this.carrionHint   // a carcass at hand or in sight, with its stage (carrion.js: "a deer, two hours dead · hold E")
       : this.foodHere >= EAT_MIN ? (what ? `${what} here${this.hunger < 0.98 ? ': hold E' : ''}` : this.hunger < 0.98 ? 'food here: hold E' : 'food here') : (this.hunger < 0.6 && t && !wantWater ? near : '');
     set(B.food, this.hunger, this.hunger < NEED_LOW, foodHint);

@@ -18,12 +18,14 @@ N_MAX, S_MAX, P_MAX = 5000, 5000, 120   # as client/src/dig.js (MAX_N, MAX_S, MA
 R_MIN, R_MAX, PIT_R_MAX, PIT_D_MAX = 0.01, 0.12, 1.3, 0.75
 STEP_MAX = 0.6                  # m from the node a dig starts at (the client's steps are 2 cm; a grown segment 35 cm)
 ID_RE = re.compile(r"^[A-Za-z0-9_.:-]{1,40}$")
-TYPES = ("hole", "dig", "grow", "join", "widen", "room", "surface", "pit", "open", "visit")
+TYPES = ("hole", "dig", "grow", "join", "widen", "room", "surface", "pit", "open", "visit", "pull")
+PULL_MAX = 3000                  # plants pulled down from below in one tile and season (a pull is never a player's: no id)
+SP_RE = re.compile(r"^[a-z][a-z0-9_]{1,60}$")
 ROOM_REACH = 0.45                # m: the farthest an absorbed node lies from a room's centre
 
 
 def empty() -> dict:
-    return {"v": 1, "seq": 0, "nodes": {}, "segs": {}, "pits": {}, "seen": {}}
+    return {"v": 1, "seq": 0, "nodes": {}, "segs": {}, "pits": {}, "seen": {}, "pulls": {}}
 
 
 def _num(v, what: str, lo: float = -1e7, hi: float = 1e7) -> float:
@@ -77,6 +79,11 @@ def clean(e) -> dict:
         if not isinstance(segs, list) or not 1 <= len(segs) <= 64:
             raise ValueError("segs must be a list of 1 to 64 ids")
         out.update(pit=_id(e.get("pit"), "pit"), segs=[_id(s, "segs") for s in segs])
+    elif t == "pull":   # a plant pulled down into a tunnel from below (dig.js): its deterministic id, where it lies, what is left of it
+        sp = e.get("sp")
+        if not isinstance(sp, str) or not SP_RE.match(sp):
+            raise ValueError("sp must be a species id")
+        out.update(id=_id(e.get("id"), "id"), **xyz(), sp=sp, left=_num(e.get("left", 1), "left", 0, 1))
     elif t == "visit":
         if "sys" in e:
             out["sys"] = _id(e["sys"], "sys")
@@ -245,6 +252,20 @@ def dig_reduce(d: dict, e: dict, now: float) -> str | None:
                 _see(d, N[S[s][0]]["sys"], now)
                 ok = True
         return None if ok else "no change"
+    if t == "pull":
+        # The plant is gone from the surface for the tile and season (it lies in the tunnel as food until eaten: left
+        # falls as it is eaten). Not tied to a tunnel system: it stays when the tunnels decay.
+        U = d.setdefault("pulls", {})
+        u = U.get(e["id"])
+        if u is None:
+            if len(U) >= PULL_MAX:
+                return "full"
+            U[e["id"]] = {"x": e["x"], "y": e["y"], "z": e["z"], "sp": e["sp"], "l": e["left"]}
+            return None
+        if e["left"] >= u["l"]:
+            return "no change"
+        u["l"] = e["left"]
+        return None
     if t == "visit":
         k = e.get("sys") or e.get("pit")
         if k not in d["seen"] and k not in P and not any(n["sys"] == k for n in N.values()):

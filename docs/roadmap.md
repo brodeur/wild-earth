@@ -371,8 +371,9 @@ browser stays the renderer.
   the tunnels and (on the AI host) dig burrows; the AI coyotes dig for buried voles. 2026-11-04: the soil is carved
   (a distance field meshed in sparse chunks in a worker, `digCarve.js`, `digMesh.js`): loops, crossings, chambers and
   pits breaking into tunnels are one surface, a mouth is the ground running into the wall, two diggers' tunnels that
-  meet join, the caps raised to 5,000 nodes. Next: roots hanging from the tunnel ceilings, eaten or pulled down
-  (phase 2 of the carving lane); the vole's body lit by the dirt; the animals and bodies shared so another player's
+  meet join, the caps raised to 5,000 nodes. Roots hang from the ceilings under the grass, the herbs (soap plant's
+  bulb, blue dicks' corm), the shrubs and the oaks; E eats them, F pulls a herb down (the `pull` event, per tile and
+  season). Next: the AI voles eating roots and pulling plants; roots that slow a dig; the vole's body lit by the dirt; the animals and bodies shared so another player's
   vole is seen in the tunnel; a server check that a dig is near its digger.
 - Multiplayer, designed 2026-11-01 (`docs/multiplayer.md`, from Aaron's spec): the title on stars, the earth
   rising as a crescent, the sign-in (username and password, Discord; Google and Apple greyed until their

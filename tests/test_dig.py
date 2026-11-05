@@ -215,6 +215,36 @@ class DigTest(unittest.TestCase):
         self.assertGreater(len(d["nodes"]), 1500)
         self.assertEqual(digworld.N_MAX, 5000)
 
+    def test_pull(self):
+        """A plant pulled down from below (dig.js rootStep, digRoots.js): the `pull` event by the plant's deterministic id
+        reaches a second player, is in a late joiner's welcome and the snapshot, only ever loses what is left of it (eaten),
+        keeps no player's id, refuses a bad species id, and is the season's own (another season's world has none)."""
+        a, b = self.dig("fall"), self.dig("fall")
+        x, y, z = 6961.0, 280.0, -7033.0
+        a.send({"t": "dev", "c": 1, "e": {"type": "pull", "id": "f:232.233.41", "x": x, "y": y, "z": z, "sp": "chlorogalum_pomeridianum", "left": 1, "by": "p:secret"}})
+        mine = a.wait("dev", where=lambda m: m.get("c") == 1)
+        seen = b.wait("dev", where=lambda m: m["e"]["type"] == "pull")
+        self.assertEqual(seen["e"], mine["e"])
+        self.assertNotIn("by", seen["e"])
+        # eaten: what is left only falls
+        b.send({"t": "dev", "c": 2, "e": {"type": "pull", "id": "f:232.233.41", "x": x, "y": y, "z": z, "sp": "chlorogalum_pomeridianum", "left": 0.4}})
+        a.wait("dev", where=lambda m: m["e"]["type"] == "pull" and m["e"]["left"] == 0.4)
+        b.send({"t": "dev", "c": 3, "e": {"type": "pull", "id": "f:232.233.41", "x": x, "y": y, "z": z, "sp": "chlorogalum_pomeridianum", "left": 0.9}})
+        self.assertEqual(b.wait("drej")["why"], "no change")
+        b.send({"t": "dev", "c": 4, "e": {"type": "pull", "id": "f:1.2.3", "x": x, "y": y, "z": z, "sp": "Not A Species!"}})
+        self.assertEqual(b.wait("drej")["why"], "malformed event")
+        # a bulb eaten out from below: pulled with nothing left
+        a.send({"t": "dev", "c": 5, "e": {"type": "pull", "id": "f:232.234.7", "x": x + 0.3, "y": y, "z": z, "sp": "dipterostemon_capitatus", "left": 0}})
+        b.wait("dev", where=lambda m: m["e"].get("id") == "f:232.234.7")
+        c = self.dig("fall")
+        self.assertEqual(c.welcome["dig"]["pulls"], {"f:232.233.41": {"x": x, "y": y, "z": z, "sp": "chlorogalum_pomeridianum", "l": 0.4},
+                                                     "f:232.234.7": {"x": x + 0.3, "y": y, "z": z, "sp": "dipterostemon_capitatus", "l": 0}})
+        self.assertEqual(self.dig("winter").welcome["dig"].get("pulls", {}), {})   # per season
+        # the reducer on an old snapshot's dig (no pulls yet)
+        d = digworld.empty(); del d["pulls"]
+        self.assertIsNone(digworld.dig_reduce(d, digworld.clean({"type": "pull", "id": "f:9.9.9", "x": x, "y": y, "z": z, "sp": "stipa_pulchra"}), time.time()))
+        self.assertEqual(d["pulls"]["f:9.9.9"]["l"], 1)
+
     def test_rabbits(self):
         """A brush rabbit's burrow (6.5 cm tubes, a nest room at its end) and a jackrabbit's form (a pit of kind 'form')
         reach a second player as they are dug and are in a late joiner's welcome; a form decays as a pit does."""

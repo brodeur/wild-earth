@@ -261,6 +261,7 @@ export class Forbs {
     this.mesh = new THREE.Mesh(g, this.material); this.mesh.frustumCulled = false; this.mesh.visible = false; this.mesh.name = 'forbs'; this.mesh.renderOrder = 2;
     this.group = new THREE.Group(); this.group.name = 'forbs'; this.group.add(this.mesh); scene.add(this.group);
     this.n = 0; this.staged = []; this.on = true;
+    this.gone = null;   // the plants pulled down from below (dig.js: the world's pulls, by id `f:<i>.<j>.<k>`): not drawn
     this.buildDensity();
     this.mixCache = new Map();
   }
@@ -313,10 +314,11 @@ export class Forbs {
   cellData(i, j) {
     const key = j * this.W + i;
     let c = this.cache.get(key); if (c) return c;
-    const { habitat: hab, size, roads, waterMask: wm, water: WG, speciesMix: SM } = this.tile, res = hab.res, out = [];
+    const { habitat: hab, size, roads, waterMask: wm, water: WG, speciesMix: SM } = this.tile, res = hab.res, out = [], ks = [], gone = this.gone;
     const cellMix = this.speciesMix(i, j), N = Math.round(res * res * FORB_PER_M2);
     const ripCell = WG && SM?.rip?.size && WG.cellShare(i, j, res).some(v => v > 0);   // any riparian zone in the cell
     if (cellMix.total > 0 || ripCell) for (let k = 0; k < N; k++) {
+      if (gone?.has(`f:${i}.${j}.${k}`)) continue;
       draw(i, j, k);
       const px = (i + U[0]) * res, pn = size - (j + U[1]) * res;
       let dens = this.sample(this.dens, px, pn) * rockKeep(this.tile, px, pn);
@@ -347,12 +349,12 @@ export class Forbs {
       if (U[3] >= dens * patch * bare * verge * 0.9) continue;
       const sc = (0.75 + 0.5 * U[4]) * (0.8 + 0.3 * dens);
       const y = floatY !== null ? floatY + 0.01 : this.grass.ground(px, pn);
-      out.push(px, y, -pn, sc, sp, U[5], U[6] * Math.PI * 2, (k + 0.5) / N);
+      out.push(px, y, -pn, sc, sp, U[5], U[6] * Math.PI * 2, (k + 0.5) / N); ks.push(k);
     }
     const arr = new Float32Array(out);
     let x0 = Infinity, x1 = -Infinity, y0 = Infinity, y1 = -Infinity, z0 = Infinity, z1 = -Infinity;
     for (let o = 0; o < arr.length; o += STRIDE) { x0 = Math.min(x0, arr[o]); x1 = Math.max(x1, arr[o]); y0 = Math.min(y0, arr[o + 1]); y1 = Math.max(y1, arr[o + 1]); z0 = Math.min(z0, arr[o + 2]); z1 = Math.max(z1, arr[o + 2]); }
-    c = arr.length ? { arr, x: (x0 + x1) / 2, y: (y0 + y1) / 2 + 0.5, z: (z0 + z1) / 2, r: Math.hypot((x1 - x0) / 2 + 1, (y1 - y0) / 2 + 1, (z1 - z0) / 2 + 1) } : { arr, x: 0, y: 0, z: 0, r: 0 };
+    c = arr.length ? { arr, ks, i, j, x: (x0 + x1) / 2, y: (y0 + y1) / 2 + 0.5, z: (z0 + z1) / 2, r: Math.hypot((x1 - x0) / 2 + 1, (y1 - y0) / 2 + 1, (z1 - z0) / 2 + 1) } : { arr, x: 0, y: 0, z: 0, r: 0 };
     if (this.cache.size > 300) this.cache.clear();
     this.cache.set(key, c); return c;
   }
@@ -410,6 +412,27 @@ export class Forbs {
       if (!best || t < best.distance) best = { distance: t, species: F.id, id: `forb:${q}`, x: buf[o], z: buf[o + 2], y: buf[o + 1], point: new THREE.Vector3(buf[o], buf[o + 1] + 0.5 * H, buf[o + 2]) };
     }
     return best;
+  }
+  // Every forb whose root is within the box (x0..x1, z0..z1, scene z), with its deterministic id (`f:<i>.<j>.<k>`: the
+  // habitat cell and the candidate, the same on every page), species, place and scale: dig's roots hang theirs.
+  plantsIn(x0, z0, x1, z1, out = []) {
+    const res = this.tile.habitat.res, size = this.tile.size;
+    const i0 = Math.max(0, Math.floor(x0 / res)), i1 = Math.min(this.W - 1, Math.floor(x1 / res));
+    const j0 = Math.max(0, Math.floor((size + z0) / res)), j1 = Math.min(this.Hh - 1, Math.floor((size + z1) / res));
+    for (let j = j0; j <= j1; j++) for (let i = i0; i <= i1; i++) {
+      const c = this.cellData(i, j), a = c.arr;
+      for (let q = 0; q < a.length / STRIDE; q++) {
+        const o = q * STRIDE, x = a[o], z = a[o + 2]; if (x < x0 || x > x1 || z < z0 || z > z1) continue;
+        const F = FORB_SPECIES[a[o + 4] | 0]; if (!F) continue;
+        out.push({ id: `f:${i}.${j}.${c.ks[q]}`, species: F.id, x, y: a[o + 1], z, scale: a[o + 3] });
+      }
+    }
+    return out;
+  }
+  // a plant pulled down (dig.js): its cell placed again without it, the buffer filled again
+  forget(id) {
+    const m = /^f:(\d+)\.(\d+)\./.exec(id); if (!m) return;
+    this.cache.delete(+m[2] * this.W + +m[1]); this.last = null;
   }
   // The nearest plant to (x, z) within r m, optionally of the species in `ids` (a Set): { species, d, x, z } or null.
   nearest(x, z, r, ids = null) {
