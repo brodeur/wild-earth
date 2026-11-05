@@ -4599,3 +4599,38 @@ before Lidar crowns and the Sentinel seasons were in the pipeline. The capabilit
 about $90 of agent work for the 17 foothill species' files and generator.
 
 On disk a tile is 0.5–0.9 GB with its sources, and a player downloads 32–67 MB of client layers.
+
+## 2026-11-04: the wind moves leaves, then limbs, then trunks, by its speed
+
+Aaron: "light breezes flutter the leaves. Medium breezes make the leaves move a lot but also start pushing around the
+branches, extreme winds push the trunks". The Beaufort scale's land column says the same:
+
+| Speed | What moves |
+|---|---|
+| 2–5 m/s | leaves rustle, then move constantly |
+| 5.5–8 m/s | small branches |
+| 11–14 m/s | large branches |
+| 14 m/s and up | whole trees |
+
+Before this change, every tree motion grew with `windStrength` together and stopped growing near 11 m/s.
+
+**How the speed is read.** `windMs()` reads the speed back from `windStrength`, so no new uniform is needed and the
+console tuning still works. Three smoothsteps over `WIND_TIERS` (`treegen.js`) then drive three motions:
+
+- **Leaves, 0.3–3.5 m/s.** The flutter, the shimmer and a quick 2.2–3.5 Hz flutter of each spray. They are fully
+  moving by a gentle breeze and never move faster after that.
+- **Limbs, 4.5–12 m/s.** The crown's slow wave and each spray's own swing.
+- **Trunks, 9–19 m/s.** The whole tree's lean and rock. A 12 m tree's top bows about 0.8 m in a gale's gust.
+
+In a gale the mid-distance crowns and trunks bow as well, so the far forest moves; before, they never moved. The shadow
+casters use the same functions, so shadows follow.
+
+**Measured** on the home tile from 25 m up, as the mean pixel change over half a second with time and wind pinned:
+
+| Wind | Mean change | What moves |
+|---|---|---|
+| 3 m/s | 0.53 | nearly all leaf flutter |
+| 8 m/s | 1.71 | sprays four-fifths of it |
+| 20 m/s | 5.11 | trunks as much as sprays |
+
+Not changed: shrubs, grass and the far impostors (past about 900 m, where a 1 m lean is a pixel).

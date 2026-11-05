@@ -1,6 +1,6 @@
 import * as THREE from 'three';
 import { SPECIES, SPECIES_IDS, mulberry32, resolveSpecies } from './trees.js';
-import { buildTree, canopyMaterial, trunkMaterial, applySeasonSteps, chainShader, SLOTS, variantSlots, seasonMonth, leafTextureSteps, barkTextureSteps, leafMaterial, leafGeometrySteps, twigSway, trunkFlex } from './treegen.js';
+import { buildTree, canopyMaterial, trunkMaterial, applySeasonSteps, chainShader, SLOTS, variantSlots, seasonMonth, leafTextureSteps, barkTextureSteps, leafMaterial, leafGeometrySteps, twigSway, trunkFlex, trunkLean } from './treegen.js';
 import { bodyScale, onBodyScale } from './bodyScale.js';
 import { SEASON_LOOK } from './season.js';
 import { rockKeep } from './tilepackage.js';
@@ -436,7 +436,7 @@ export class Vegetation {
       this.offBody = off; }
     this.drape = !!tile.heights.detail; this.crownDc = null;
     const patch = this.patch = m => atmosphere.patchLambert(m);   // cloud shadow + aerial perspective
-    this.trunkMat = { near: lodPatch(trunkFlex(trunkMaterial(patch)), this.lodU, 'near'), mid: lodPatch(trunkMaterial(patch), this.lodU, 'mid') };   // shared (shadow casters use it); the near trunks flex with the limbs
+    this.trunkMat = { near: lodPatch(trunkFlex(trunkMaterial(patch)), this.lodU, 'near'), mid: lodPatch(trunkLean(trunkMaterial(patch)), this.lodU, 'mid') };   // shared (shadow casters use it); the near trunks flex with the limbs
     this.twigMat = lodPatch(twigSway(trunkMaterial(patch)), this.lodU, 'close', true);   // close twigs: plain vertex colour, dithered in like the close canopy, swaying with it
     this.barkMat = {};     // species id -> { near, mid }: the species' bark texture and normal map (treegen barkTexture)
     this.canopyMat = {};   // species id -> { near, mid, close }

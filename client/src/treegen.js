@@ -2222,13 +2222,33 @@ export function canopyMaterial(spec, lod = 'near', patch = null) {
 // little more at the outer limbs; and a little down, so a limb bends rather than tilts. A 12 m tree in a 0.5 wind
 // leans about 0.3 m at the top in a gust and 5 cm in a lull. The trunk's near tier flexes with it (trunkFlex), so the
 // crown stays on its limbs; the mid trunks beyond are still, like the mid cards. CROWN_FLEX is a uniform too.
+// The wind by strength (2026-11-04, Aaron: "light breezes flutter the leaves. Medium breezes make the leaves move a lot
+// but also start pushing around the branches, extreme winds push the trunks"; the Beaufort scale's land column says the
+// same: leaves rustle at 2-3 m/s and are in constant motion by 5, small branches move at 5.5-8, large branches at
+// 11-14, whole trees from 14 and twigs break at 17-21). Every motion above used to grow with windStrength together and
+// stop growing near 11 m/s. Now windMs() reads the speed back from windStrength (weather.js sets it from the hourly
+// wind in km/h times the gust swell; 0.12 is calm), and three smoothsteps over WIND_TIERS (m/s) drive three motions:
+// windLeaves() (0.3-3.5) the flutter, the shimmer's gate and the leaf level's turn, plus a quick per-spray flutter
+// of the cards (2.2-3.5 Hz, 1.2 cm at the outer crown), full by a gentle breeze and no faster after; windLimbs()
+// (4.5-12) the crown's slow wave and each spray's own swing (crownSwayW, as before at a strong breeze); windTrunks()
+// (9-19) the lean and rock of the whole tree (crownFlexW: 0.25 x windLimbs() + 3 x windTrunks() times CROWN_FLEX.x,
+// so a 12 m tree's top bows about 0.8 m in a gale's gust and its rock widens with the wind), and in a gale the mid
+// crowns and mid trunks bow too (shimmerVertex's mid branch, trunkLean), so the far forest moves. Measured on the home
+// tile from 25 m up (the mean pixel change over half a second, time and wind pinned): 0.53 at 3 m/s, nearly all leaf
+// flutter; 1.71 at 8 m/s, the sprays four-fifths of it; 5.11 at 20 m/s, the trunks as much as the sprays.
+export const WIND_TIERS = { leaves: [0.3, 3.5], limbs: [4.5, 12.0], trunks: [9.0, 19.0] };   // m/s: each tier's smoothstep from first motion to full
 export const CROWN_SWAY = { value: new THREE.Vector4(0.2, 3.5, 4.0, 1.6) };   // 0.35 until Aaron's "the swaying is too intense" (2026-10-29)
 export const CROWN_FLEX = { value: new THREE.Vector4(0.02, 0.4, 0.3, 0.2) };   // (0.035, 0.4, 0.4, 0.3) the same
 export const LEAF_WAVE_GLSL = `
   uniform vec4 crownSway; uniform vec4 crownFlex;
+  // the wind's speed in m/s, gusts included (weather.js windStrength inverted), and the three tiers it drives
+  float windMs() { return 2.778 * pow(max(windStrength - 0.12, 0.0) / 0.3, 1.25); }
+  float windLeaves() { return smoothstep(${WIND_TIERS.leaves[0].toFixed(1)}, ${WIND_TIERS.leaves[1].toFixed(1)}, windMs()); }
+  float windLimbs() { return smoothstep(${WIND_TIERS.limbs[0].toFixed(1)}, ${WIND_TIERS.limbs[1].toFixed(1)}, windMs()); }
+  float windTrunks() { return smoothstep(${WIND_TIERS.trunks[0].toFixed(1)}, ${WIND_TIERS.trunks[1].toFixed(1)}, windMs()); }
   float leafWave(vec3 wp, float h, out float gate, out float slow) {
     slow = smoothstep(0.15, 0.75, wNoise((wp.xz - windDir * time * 4.0) * 0.045));
-    gate = smoothstep(0.03, 0.2, windStrength) * slow;
+    gate = windLeaves() * (slow + (1.0 - slow) * 0.5 * windLimbs());   // a breeze flutters the leaves in its gusts; a strong wind keeps them going in the lulls
     return sin((dot(wp.xz, windDir) - (2.0 + 9.0 * min(windStrength, 0.6)) * time) * 0.7 + h * 1.6);   // the flutter wave's speed stops growing at 0.6 (0.8 Hz): a strong wind is heavy, not twitchy
   }
   float crownMicro(vec3 rel, float rank) {
@@ -2237,16 +2257,18 @@ export const LEAF_WAVE_GLSL = `
   }
   // the crown's wave at a point, and the card's own jitter (jit: 1 for a card or a leaf, 0 for a twig)
   vec3 crownSwayW(vec3 rel, float micro, float slow, float rank, float jit) {
-    float a0 = crownSway.x * smoothstep(0.03, 0.2, windStrength) * min(windStrength, 1.5) * (0.3 + 0.7 * slow) * min(1.0, length(rel) * 0.125);
+    float reach = min(1.0, length(rel) * 0.125);
+    float a0 = crownSway.x * (windLimbs() + 0.5 * windTrunks()) * (0.3 + 0.7 * slow) * reach;   // the limbs swing from a moderate breeze up, on the crown's slow wave
     float a = a0 * micro;
-    float h = fract(rank * 37.7 + 0.13), aj = a0 * min(windStrength, 0.5) / max(min(windStrength, 1.5), 1e-3);   // the jitter's amplitude stops growing at 0.5
-    float j = jit * crownFlex.w * aj * sin(time * (5.0 + 5.0 * h) + h * 50.0);   // 0.8-1.6 Hz
-    return vec3(windDir.x * (a + j) - windDir.y * 0.5 * j, -0.25 * a, windDir.y * (a + j) + windDir.x * 0.5 * j);
+    float h = fract(rank * 37.7 + 0.13);
+    float j = jit * crownFlex.w * a0 * sin(time * (5.0 + 5.0 * h) + h * 50.0);   // each spray's own swing, 0.8-1.6 Hz
+    float f = jit * crownSway.x * 0.06 * windLeaves() * (0.5 + 0.5 * slow) * reach * sin(time * (14.0 + 8.0 * h) + h * 50.0);   // the leaves' flutter, 2.2-3.5 Hz: all a breeze moves
+    return vec3(windDir.x * (a + j) - windDir.y * (0.5 * j + f), -0.25 * a + 0.6 * f, windDir.y * (a + j) + windDir.x * (0.5 * j + f));
   }
   // the limbs' flex: the point's displacement downwind by the lean, the gust and the crown's slow rock (plantH: 0..1)
   vec3 crownFlexW(vec3 rel, float slow, float plantH) {
     float rock = sin(time * 6.2831853 * crownFlex.y + plantH * 6.2831853);
-    float lean = crownFlex.x * smoothstep(0.03, 0.2, windStrength) * min(windStrength, 1.5) * (0.4 + 0.6 * slow) * (1.0 + crownFlex.z * rock);
+    float tk = windTrunks(), lean = crownFlex.x * (0.25 * windLimbs() + 3.0 * tk) * (0.4 + 0.6 * slow) * (1.0 + (crownFlex.z + 0.4 * tk) * rock);   // the big limbs give a little in a strong breeze; the trunks bow and rock from a fresh breeze to a gale
     float y = max(rel.y, 0.0), d = lean * y * min(y, 6.0) / 6.0 * (0.7 + 0.3 * min(1.0, length(rel.xz) * 0.25));
     return vec3(windDir.x * d, -0.5 * lean * d, windDir.y * d);
   }
@@ -2265,7 +2287,8 @@ const shimmerVertex = (k, sway) => `
           float shimH = fract(leafRank * 173.37 + dot(shimM[3].xz, vec2(0.1031, 0.1173))), shimG, shimS;
           float shimW = leafWave(shimP, shimH, shimG, shimS), shimC = crownMicro(shimR, leafRank);
           shimG *= 0.7 + 0.6 * shimC;${sway ? `
-          transformed += crownLocal(shimM, crownSwayW(shimR, shimC, shimS, leafRank, 1.0) + crownFlexW(shimR, shimS, fract(dot(shimM[3].xz, vec2(0.1031, 0.1173)))));` : ''}
+          transformed += crownLocal(shimM, crownSwayW(shimR, shimC, shimS, leafRank, 1.0) + crownFlexW(shimR, shimS, fract(dot(shimM[3].xz, vec2(0.1031, 0.1173)))));` : `
+          if (windTrunks() > 0.0) transformed += crownLocal(shimM, crownFlexW(shimR, shimS, fract(dot(shimM[3].xz, vec2(0.1031, 0.1173)))));   // far crowns bow with their trunks in a gale`}
           vShim = ${k.toFixed(2)} * (1.0 - smoothstep(900.0, 1300.0, distance(shimP, cameraPosition))) * leafShimmer(shimW, shimG, shimH); }
         #else
           vShim = 0.0;
@@ -2331,6 +2354,22 @@ export function trunkFlex(material) {
           vec3 flP = (flM * vec4(transformed, 1.0)).xyz, flR = flP - flM[3].xyz;
           float flS = smoothstep(0.15, 0.75, wNoise((flP.xz - windDir * time * 4.0) * 0.045));
           transformed += crownLocal(flM, crownFlexW(flR, flS, fract(dot(flM[3].xz, vec2(0.1031, 0.1173))))); }
+        #endif`);
+  });
+}
+// The mid trunks (past the near radius) take only the wind's lean, in a gale, so a far crown bowing in a gust stays
+// on its trunk (the near tier's slope bend needs slopeN, which the mid instances do not carry).
+export function trunkLean(material) {
+  return chainShader(material, 'trunk-lean', shader => {
+    Object.assign(shader.uniforms, { time: windUniforms.time, windDir: windUniforms.windDir, windStrength: windUniforms.windStrength, crownSway: CROWN_SWAY, crownFlex: CROWN_FLEX });
+    shader.vertexShader = shader.vertexShader
+      .replace('#include <common>', '#include <common>\n' + WIND_GLSL + LEAF_WAVE_GLSL)
+      .replace('#include <begin_vertex>', `#include <begin_vertex>
+        #ifdef USE_INSTANCING
+        if (windTrunks() > 0.0) { mat4 tlM = modelMatrix * instanceMatrix;
+          vec3 tlP = (tlM * vec4(transformed, 1.0)).xyz, tlR = tlP - tlM[3].xyz;
+          float tlS = smoothstep(0.15, 0.75, wNoise((tlP.xz - windDir * time * 4.0) * 0.045));
+          transformed += crownLocal(tlM, crownFlexW(tlR, tlS, fract(dot(tlM[3].xz, vec2(0.1031, 0.1173))))); }
         #endif`);
   });
 }
@@ -2648,7 +2687,7 @@ export function leafMaterial(spec, patch = null) {
           float leafWv = leafWave(leafP, leafH, leafG, leafS), leafC = crownMicro(leafR, lA.w * 0.5 + 0.5);
           leafG *= 0.7 + 0.6 * leafC;
           // the leaf turns about its base: with the travelling wave (more in a gust) and a small tremble of its own
-          float leafA = (0.06 + 0.4 * leafG) * min(windStrength, 0.8) * leafWv + 0.05 * min(windStrength, 0.6) * sin(time * (5.0 + 4.0 * leafH) + leafH * 40.0);   // capped: a strong wind does not thrash the leaves faster
+          float leafWL = windLeaves(), leafA = (0.06 + 0.4 * leafG) * 0.8 * leafWL * leafWv + 0.03 * leafWL * sin(time * (5.0 + 4.0 * leafH) + leafH * 40.0);   // full by a gentle breeze, and no faster after: a strong wind moves the limbs, not quicker leaves
           transformed += leafNo * (position.y * (leafF + leafB) * leafA);
           // and moves with its branch: the crown's own wave and the limbs' flex, as the card it replaces
           transformed += crownLocal(modelMatrix, crownSwayW(leafR, leafC, leafS, lA.w * 0.5 + 0.5, 1.0) + crownFlexW(leafR, leafS, fract(dot(modelMatrix[3].xz, vec2(0.1031, 0.1173)))));
