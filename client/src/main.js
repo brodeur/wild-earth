@@ -19,6 +19,7 @@ import { Needs } from './needs.js';
 import { Hunt } from './hunt.js';
 import { Scent } from './scent.js';
 import { Forage } from './forage.js';
+import { Fruit } from './fruit.js';
 import { Dig } from './dig.js';
 import { Carrion } from './carrion.js';
 import { Sight } from './sight.js';
@@ -203,7 +204,7 @@ async function disposeWorld(w, renderer) {
   m.spirit?.dispose?.();   // the souls' columns and the leaving wisps (spirit.js, 2026-11-01)
   m.carrion?.dispose?.();   // Scavenge: the carcasses' records, bones and halos (carrion.js; before the dig, whose socket it rides)
   m.dig?.dispose?.();   // the Dig game's tunnels, its socket and the terrain's cut discs (dig.js)
-  m.water?.dispose?.(); m.shadows?.dispose?.(); m.terrain?.dispose?.(); m.litter?.dispose?.(); m.scent?.dispose?.(); m.forage?.dispose?.(); m.sight?.dispose?.(); m.cues?.dispose?.(); m.grass?.dispose?.(); m.forbs?.dispose?.(); m.emergents?.dispose?.(); m.veg?.dispose?.(); forgetQueuedCasters();
+  m.water?.dispose?.(); m.shadows?.dispose?.(); m.terrain?.dispose?.(); m.litter?.dispose?.(); m.scent?.dispose?.(); m.forage?.dispose?.(); m.fruit?.dispose?.(); m.sight?.dispose?.(); m.cues?.dispose?.(); m.grass?.dispose?.(); m.forbs?.dispose?.(); m.emergents?.dispose?.(); m.veg?.dispose?.(); forgetQueuedCasters();
   // then its listeners and the elements it put into the page; the HUD's own words back as the page had them
   w.record(w.observer.takeRecords());
   w.observer.disconnect();
@@ -642,6 +643,8 @@ async function buildSteps(w, { params, pending, direct = false, arrive = null })
   hunt.scent = scent;   // the hunt panel's "scented" state (hunt.js)
   const forage = w.m.forage = new Forage({ tile, needs, forbs, shrubs: grass.shrubs, veg, grass, scene, flight, ground, squirrel, season: seasonNow });   // a forager's food plants glow and give a scent (forage.js)
   scent.plants = forage;
+  // the fruit on the plants near the body, glowing, for a body that eats it this season (fruit.js)
+  const fruit = w.m.fruit = new Fruit({ tile, scene, flight, veg, shrubs: grass.shrubs, ground, season: seasonNow });
   // Scavenge (carrion.js, docs/game-scavenge.md): every kill's carcass decays over a day in stages drawn on the body, smells
   // ("dead animal") and glows for the carrion eaters; shared through the dig channel's socket, so every player sees the same
   // carcass at the same stage. The AI's finding and feeding go through animals.scav.
@@ -656,7 +659,7 @@ async function buildSteps(w, { params, pending, direct = false, arrive = null })
   animals.onMiss = () => ground.say('the catch misses');
   const onBody = (code, sex = null) => {
     window.__we.playerSpecies = code; window.__we.playerSex = sex;
-    animals.setObserver(code); acorns.setBody(code);   // the acorn game: collecting only in a collector body (acorns.js v5)
+    animals.setObserver(code); acorns.setBody(code); fruit.setBody(code);   // the acorn game: collecting only in a collector body (acorns.js v5)
     $('spiritBtn').hidden = code === 'spirit'; $('nearBar').hidden = code !== 'spirit';
     needs.setSpecies(code); hunt.setSpecies(code); setBodyScale(code);
   };
@@ -740,7 +743,7 @@ async function buildSteps(w, { params, pending, direct = false, arrive = null })
   const setFov = deg => { const v = Math.min(LENS_RANGE[1], Math.max(LENS_RANGE[0], +deg || LENS_DEFAULT)); camera.fov = v; camera.updateProjectionMatrix(); return v; };
   const setHour = h => { state.hour = +h; $('time').value = state.hour; return state.hour; };
   animals.weatherTemp = () => (weather.day ? weather.fx.temp : null);   // the lizards' air (animals.js airT)
-  w.handle = window.__we = { setDate, setFov, setHour, weather, tile, flight, raven, camera, veg, terrain, far, grass, forbs, emergents, roads, scene, renderer, minimap, atmosphere, sky, acorns, identify, places, peek, setPeek, sound, animals, anet, arrival, rocks, water, waterfalls: water.waterfalls, squirrel, woodpecker, ground, flier, spirit, players, credits, sight, cues, forage, needs, dig, carrion };   // debugging handle
+  w.handle = window.__we = { setDate, setFov, setHour, weather, tile, flight, raven, camera, veg, terrain, far, grass, forbs, emergents, roads, scene, renderer, minimap, atmosphere, sky, acorns, identify, places, peek, setPeek, sound, animals, anet, arrival, rocks, water, waterfalls: water.waterfalls, squirrel, woodpecker, ground, flier, spirit, players, credits, sight, cues, forage, fruit, needs, dig, carrion };   // debugging handle
   const as = direct ? params.get('as') : null;
   if (!['raven', 'squirrel', 'woodpecker'].includes(as)) toSpirit();   // a spirit from the start (behind the opening screen too)
   if (!screenOpen) makeSound();
@@ -924,6 +927,7 @@ async function buildSteps(w, { params, pending, direct = false, arrive = null })
     const f = screenOpen ? arrival.hold() : squirrel.on ? squirrel.update(dt) : woodpecker.on ? woodpecker.update(dt) : ground.on ? ground.update(dt) : flier.on ? flier.update(dt) : arrival.active ? arrival.update(dt) : spirit.on ? spirit.update(dt) : flight.update(dt);
     if (ground.on || flier.on) { needs.update(dt, { x: flight.pos.x, north: -flight.pos.z, acting: ground.on && ground.actT > 0, wet: ground.on && !!ground.wet }); hunt.update(dt); scent.update(dt); }   // the games of life (needs.js, hunt.js); the smell sense (scent.js)
     else if (squirrel.on && !arrival.active) scent.update(dt);   // the gray squirrel's own control smells too (its game is the acorns, not the needs)
+    fruit.update(dt); if (peek.shown) fruit.group.visible = false;   // the fruit near the body (fruit.js)
     forage.update(dt);   // the forager's food plants lit and their halos (forage.js; off in any other body)
     dig.update(dt);   // the Dig game's world, its openings in the ground, its glow (dig.js)
     if (s !== anet.season) { anet.season = s; anet.join(tile.id, s); }   // the season's animals channel (animalNet.js)

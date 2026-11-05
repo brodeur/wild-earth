@@ -168,6 +168,15 @@ sequenced; Parked is in the brief but deliberately not started.
   the slabs read as small rectangles, El Capitan's face is still one smooth surface at a kilometre in the afternoon
   haze; no talus placed at the walls' feet; the slabs are not stood on.
 
+- Fruit on the plants, 2026-11-04 (Aaron: "For each edible fruit, render a small version of it ... glowing around the
+  plant just like we do for acorns ... visible only when I'm close"; docs/decisions.md, `client/src/fruit.js`): a
+  procedural model for each of the 19 woody fruits, nuts and seeds the records' `eaten_by` names, hanging on the crowns
+  or lying under the trees, glowing as the acorns do, in fruit by the species' berry months and only for a body that
+  eats them, within 16 m of the body. The acorn and the rose hips are Meshy models (130 credits; tools/build_fruit.py
+  decimates them and bakes their textures into colours), and the acorns near the eye are life size and on the ground
+  again. Weak: clusters on an ellipsoid rather than the twigs, no sway, nothing eaten from them yet; the herbs' seeds
+  and pine nuts not modelled; the grape, walnut and bay nut Meshy tries not adopted.
+
 ## Next: the visual pass, in order of effect per hour
 
 1. ~~Horizon~~ done 2026-10-23: two crossed-quad impostors with a canopy cap per
@@ -389,7 +398,8 @@ browser stays the renderer.
   season the herbs, the shrub impostors, the near 3D shrubs and the sward under the nose glow warm within the body's
   radius (a deer 22 m, a vole 3), brighter hungry and for the part in season, and the food plants are scents (0.35 of
   the species' reach, drawn as the animals' are, three plant slots beside the six animals); the act slot lights "ready"
-  at a named plant. Open: the trees' browse and acorns and the emergents do not glow; no part-of-plant mask on the herb
+  at a named plant. The fruit of the woody plants (2026-11-04, fruit.js) is drawn and glows near the body for a body
+  that eats it. Open: the trees' browse and the emergents do not glow; no part-of-plant mask on the herb
   pictures; a lit sward round the body rather than a pool under the nose; a forager in flight.
 
 - Geology and soils step done 2026-10-24 (Macrostrat/SGMC lithology at 1:750k, SSURGO

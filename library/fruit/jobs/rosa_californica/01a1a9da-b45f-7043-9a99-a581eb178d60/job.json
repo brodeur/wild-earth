@@ -1,0 +1,71 @@
+{
+  "species": "rosa_californica",
+  "mode": "refine",
+  "kind": "text-to-3d",
+  "task_id": "01a1a9da-b45f-7043-9a99-a581eb178d60",
+  "endpoint": "https://api.meshy.ai/openapi/v2/text-to-3d",
+  "request": {
+    "mode": "refine",
+    "preview_task_id": "01a1a9d9-a29c-70a1-afce-f5f62bfafa1e",
+    "texture_resolution": "2k",
+    "enable_pbr": false,
+    "target_formats": [
+      "glb"
+    ],
+    "texture_prompt": "California wild rose hips in autumn: glossy bright orange-red skins with soft highlights, a little darker red near the stems; the dried sepals at each tip dark brown to black; the twig and stems thin, grey-brown.",
+    "moderation": false
+  },
+  "prompt": "California wild rose hips in autumn: glossy bright orange-red skins with soft highlights, a little darker red near the stems; the dried sepals at each tip dark brown to black; the twig and stems thin, grey-brown.",
+  "image": null,
+  "preview_job": ".claude/worktrees/fruit-glow/library/fruit/jobs/rosa_californica/01a1a9d9-a29c-70a1-afce-f5f62bfafa1e",
+  "estimated_credits": 10,
+  "balance_before": 2532,
+  "status": "SUCCEEDED",
+  "timestamps": {
+    "submitted": "2026-11-05T03:57:24+00:00",
+    "created_at": "2026-11-05T03:57:26+00:00",
+    "started_at": "2026-11-05T03:57:26+00:00",
+    "finished_at": "2026-11-05T03:57:59+00:00",
+    "downloaded": "2026-11-05T03:58:11+00:00"
+  },
+  "tool": "tools/meshy_generate.py",
+  "pricing_source": {
+    "url": "https://docs.meshy.ai/en/api/pricing",
+    "read": "2026-10-24"
+  },
+  "licence_note": "Generated through the Meshy API, which requires a paid plan (402 on a free plan). Meshy Terms of Use (https://www.meshy.ai/terms-of-use, last updated 2026-09-19), section 3.2: customers on a paid plan own their Customer Output to the extent permitted by law (free-plan output is owned by Meshy and offered under CC BY 4.0 with credit to Meshy). As owner, the account holder may license this model under the project's CC BY-SA 4.0 asset licence, to the extent copyright subsists in AI-generated output. Section 2.4: do not remove or alter AI-identifying metadata or watermarks Meshy embeds; carry them into adopted tiers. Section 2.5: API output is deleted by Meshy 3 days after generation, so keep this folder until the model is adopted. Credit: \"generated with Meshy (meshy.ai)\".",
+  "maintainer": null,
+  "progress": 100,
+  "task": {
+    "id": "01a1a9da-b45f-7043-9a99-a581eb178d60",
+    "type": "text-to-3d-refine",
+    "status": "SUCCEEDED",
+    "created_at": 1793851046710,
+    "started_at": 1793851046717,
+    "finished_at": 1793851079780,
+    "consumed_credits": 10,
+    "task_error": null
+  },
+  "credits_charged": 10,
+  "files": [
+    {
+      "file": "model.glb",
+      "bytes": 3167016,
+      "sha256": "01002394655842950602a33ec6b2d9029eefa8613d013cc3ae894cdf6a41372e",
+      "source": "https://assets.meshy.ai/<account>/tasks/01a1a9da-b45f-7043-9a99-a581eb178d60/output/model.glb"
+    },
+    {
+      "file": "texture_base_color.png",
+      "bytes": 5798658,
+      "sha256": "e4be2b15f44b23863c97e50da09199b9fca315e0e5df5a59f393990d4db63b38",
+      "source": "https://assets.meshy.ai/<account>/tasks/01a1a9da-b45f-7043-9a99-a581eb178d60/output/texture_0.png"
+    },
+    {
+      "file": "thumbnail.png",
+      "bytes": 88607,
+      "sha256": "da7180af8a76306ebfeb27a1eba8d4a252ae3828bc5c6c62ea10843f5488fd33",
+      "source": "https://assets.meshy.ai/<account>/tasks/01a1a9da-b45f-7043-9a99-a581eb178d60/output/preview.png"
+    }
+  ],
+  "balance_after": 2502
+}

@@ -3,6 +3,7 @@ import { mulberry32 } from './trees.js';
 import { fieldGuide, acornSpecies, ACORNS } from './fieldguide.js';
 import { GameNet } from './net.js';
 import { trunkAt } from './animals.js';
+import { fruitModel } from './fruit.js';
 
 // Acorn stash, the raven's fall forage-and-cache loop (docs/game-acorn-stash.md).
 // Living oaks past the sapling stage near the raven carry acorns and, about one in eight, a stash hole on the trunk. Everything
@@ -401,6 +402,14 @@ export class AcornGame {
       m.count = 0; m.frustumCulled = false; (m === this.carriedNuts ? this.group : this.food).add(m);
     }
     this.carriedNuts.instanceMatrix.setUsage(THREE.DynamicDrawUsage); this.carriedGlow.instanceMatrix.setUsage(THREE.DynamicDrawUsage);
+    // The acorn's Meshy model (fruit.js fruitModel: a valley oak acorn with its warty cap, decimated, colours baked), swapped
+    // in for the procedural nut above when it arrives; the procedural one stays if it does not.
+    fruitModel('quercus_lobata').then(g => {
+      if (!g || !this.group.parent) { g?.dispose(); return; }
+      const c = g.clone();
+      g.setAttribute('aGround', this.nuts.geometry.getAttribute('aGround')); this.nuts.geometry.dispose(); this.nuts.geometry = g;
+      this.carriedNuts.geometry.dispose(); this.carriedNuts.geometry = c;
+    });
     this.acornGlow.renderOrder = this.ringGlow.renderOrder = this.carriedGlow.renderOrder = 10; this.marks.renderOrder = 2;
     this.nc = 0;
     this.tmp = new THREE.Object3D();
@@ -475,7 +484,7 @@ export class AcornGame {
     if (u.found?.parentElement) u.found.parentElement.style.display = this.manual ? 'none' : '';
     // the size of an acorn near the eye: v1's (0.3 of the far size) for the raven, about life size for a small animal
     const small = this.manual;
-    NUT_NEAR.k.value = small ? SMALL_NEAR.k : 0.3; NUT_NEAR.r.value = small ? SMALL_NEAR.r : 6;
+    NUT_NEAR.k.value = small ? SMALL_NEAR.k : 1; NUT_NEAR.r.value = small ? SMALL_NEAR.r : 6;
     this.acornGlow.material.uniforms.uSizeNear.value = small ? 0.12 : 0.5;
     this.acornGlow.material.uniforms.uNear.value = small ? 3 : 8;
     this.hud();
@@ -1216,13 +1225,14 @@ const BOARD_CSS = `
 #game .acorn-board .keys kbd { background:#1f2a23; border:1px solid #263128; border-radius:4px; padding:0 4px; color:#b7c4ba; font:inherit; }
 `;
 
-// Acorns on the ground and in the branches: v1's big glowing nuts read from the air; near the eye they shrink
-// toward life size (0.3 of the far size inside 6 m, full beyond 40 m), the ground ones settling onto the ground
-// (aGround), so a squirrel or a woodpecker at one is not dwarfed by it.
-// For a small player (squirrel, woodpecker) they shrink further, to about life size at the bill (SMALL_NEAR: 0.06 of the
-// far size, a ~5 cm nut, inside 2 m), so the acorn is not as big as the animal reaching for it.
-const NUT_NEAR = { k: { value: 0.3 }, r: { value: 6 } };
-const SMALL_NEAR = { k: 0.06, r: 2 };
+// Acorns on the ground and in the branches: v1's big glowing nuts read from the air; near the eye they shrank toward
+// life size (0.3 of the far size inside 6 m, full beyond 40 m), the ground ones settling onto the ground (aGround), and
+// for a small player (squirrel, woodpecker) further (SMALL_NEAR: 0.06 of the far size, a ~5 cm nut, inside 2 m).
+// Since 2026-10-27 the nut is life size at every distance (ACORN_R), so those factors made it a 9 mm (1.7 mm for the
+// squirrel) speck sunk 14 cm into the ground near the eye, where only its glow showed (seen 2026-11-04 with the Meshy
+// acorn): both are 1 now, and the settle is the nut's own radius, so the machinery stays for a nut drawn larger again.
+const NUT_NEAR = { k: { value: 1 }, r: { value: 6 } };
+const SMALL_NEAR = { k: 1, r: 2 };
 function nutMaterial() {
   const m = new THREE.MeshLambertMaterial({ vertexColors: true });
   m.onBeforeCompile = sh => {
@@ -1232,7 +1242,7 @@ function nutMaterial() {
         vec4 nutC = modelMatrix * instanceMatrix * vec4(0.0, 0.0, 0.0, 1.0);
         float nutK = mix(uNutK, 1.0, smoothstep(uNutR, 40.0, distance(nutC.xyz, cameraPosition)));
         transformed *= nutK;
-        transformed.y -= aGround * 0.2 * (1.0 - nutK);`);
+        transformed.y -= aGround * ${(ACORN_R * 1.1).toFixed(4)} * (1.0 - nutK);`);
   };
   m.customProgramCacheKey = () => 'acorn-nut-near';
   return m;

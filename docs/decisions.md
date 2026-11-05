@@ -4634,3 +4634,99 @@ casters use the same functions, so shadows follow.
 | 20 m/s | 5.11 | trunks as much as sprays |
 
 Not changed: shrubs, grass and the far impostors (past about 900 m, where a 1 m lean is a pixel).
+
+## 2026-11-04: fruit on the plants, glowing near the body (client/src/fruit.js, branch claude/fruit-glow)
+
+- **Why.** Aaron: "For each edible fruit, render a small version of it. Whenever a plant has fruit, show that fruit
+  glowing around the plant just like we do for acorns. Fruits/nuts should become visible only when I'm close to a plant."
+- **What counts as an edible fruit is the data.** Every part of a woody plant that a record's `eaten_by` names as
+  berries or seeds: the berries of thirteen shrubs (toyon, common and whiteleaf manzanita, coffeeberry, creek dogwood,
+  chaparral currant, Sierra gooseberry, California rose, California blackberry, blue elderberry, snowberry, poison oak,
+  wild grape) and the seeds of five trees and shrubs (black walnut, bay nut, big-leaf maple's samaras, buckbrush and
+  deerbrush capsules, redbud pods): 19 kinds (`fruit.js KINDS`). The acorns stay the acorn game's (acorns.js, untouched).
+  Not drawn: the herbs' and grasses' seeds (forbs.js and the sward already glow for them, and they are too many and too
+  small to model one by one); the buckeye's, madrone's, spicebush's, buttonbush's and mountain mahogany's fruit, which
+  the records show in the crowns but no animal's `eaten_by` names; pine nuts (no record has them as food yet).
+- **A small procedural model per kind, one instanced draw each.** Built in code from ellipsoid blobs and thin stalks
+  with vertex colours (`Builder`): a toyon's flat corymb of 16 berries, the manzanitas' little apples, a coffeeberry
+  cluster ripening black from red and green, the dogwood's white cyme, the currant's and poison oak's racemes, the
+  gooseberry's spines and dried flower tip, three rose hips with their sepals, blackberries of 16 drupelets each (one
+  reddening), the elderberry's compound umbel, a grape bunch, the walnut in its green husk, the olive-like bay nut, a
+  pair of samaras, three-lobed ceanothus capsules, flat redbud pods. Life size in the geometry, drawn larger (`SHOW_K`:
+  2.2 on a shrub, 1.4 on the ground): life size, a toyon cluster was a red speck from three metres. No Meshy credits.
+- **When a plant shows fruit.** In fruit when the species' `foliage.berries` shows this month (treegen.js `decoActive`,
+  the same test that paints the berries into the crowns and the impostors), or, with no berries block, in the seasons of
+  its `eaten_by` rows; and, as the acorns since 2026-11-03, only for a body that eats that part of that plant this
+  season (the tile's `relations.forage`, or the library's `eaten_by` on a tile with no forage rows: Placerville's games
+  predate them). The spirit and a body underground see none. On the home tile in early November a bear sees toyon,
+  whiteleaf manzanita, coffeeberry and rose hips (the grape, elderberry and manzanita are past their months), the gray
+  squirrel walnuts, bay nuts and samaras, a California quail toyon, whiteleaf manzanita, coffeeberry, rose hips,
+  snowberry, poison oak and the ceanothus and redbud seeds.
+- **Near the body only, faded.** The plants within `FRUIT_R` (16 m) of the body get fruit: the 3D shrubs and trees of
+  vegetation.js `nearPlants` and the impostor shrubs of the shrub field's cached cells (forage.js's two sources). Both
+  shaders scale the fruit and its glow by the distance from the body, full inside 10 m, gone at 16, so nothing pops and
+  nothing is drawn for the tile. The CPU rebuilds the set when the body has moved 2 m or the plants changed (0.4-1.6 ms).
+- **Where the fruit hangs.** On the crown's outline from a hash of the plant's place (the same toyon, the same
+  clusters): the 3D shrub's ellipsoid from its drawn height and `crown_width_ratio`, the impostor's own dome (root +
+  H/2, R across, H/2 tall), each kind in its band of the crown (grapes under it, elderberry umbels on top). A tree's nuts
+  lie on the ground under its crown, as the acorns do. Rejected: a third of them in the low branches as the acorns'
+  1.2-2.5 m, then in the lower crown; a walnut has no limbs at 2 m and its open, leaning crown left nuts in the sky; the
+  crowns already paint their own nuts into the leaf cards.
+- **The impostors' card.** An impostor shrub writes the depth of a flat card pulled toward the camera from its crown's
+  centre by 0.6 R, not its dome's: fruit on the dome's sides was behind the card and hidden. Each fruit on an impostor
+  carries its plant (`aPlant`: centre, R) and slides along its own view ray to just in front of the card (which keeps its
+  place on the screen, its size scaled to match); one on the far side of the dome is dropped.
+- **The glow is the acorns'.** The same billboard (a wide halo with a small hot core, additive), one per cluster or
+  nut, sized to it, tinted between the fruit's colour and the acorns' amber (a toyon's red-orange, a walnut's
+  yellow-green), level 0.42 (`fruit.k` scales it live). First at 0.7 with a bigger halo: overlapping halos on a toyon
+  blew out to a yellow wash.
+- **Cost.** No texture (the 16 units are full); attributes: the fruit 9 of 16 (position, normal, colour, instance
+  matrix, instance colour, aPlant), the glow 8. One draw per kind in fruit near the body plus one for all the glows: +2
+  draws for the bear by the oak, +4 with every kind forced on. Frame (1280 x 800, readPixels after each render, 100
+  each way, load 3.8): p10 31.0 / 31.3 ms on / off, median 33.0 / 33.2; with every kind on 32.4 / 32.0, 33.9 / 33.8;
+  the update 0.007 ms. Within the noise.
+- **Verified** in the worktree's viewer (8801) with captures from an own camera: on the home tile a bear at a toyon
+  impostor (red berry rings round the shrub, soft red-amber glow), the same camera with the bear 30 m off (no fruit, the
+  toyon only its painted berries) and beside it (toyon and coffeeberry sparkling), the chase camera at the toyon and by
+  a valley oak (the acorns' glow under the oak, whiteleaf manzanita flecked with berries beside it); the gray squirrel
+  under the walnuts (green husked nuts in the litter, glowing) and a bay laurel; on Placerville a bear at a toyon in
+  shade (fruit from the library's rows). A lineup of all 19 models. No shader diagnostics, no console errors; the
+  repeated "17 texture units" warning is main's (39 in 1.5 s with the fruit off and on alike).
+- **Weak.** A toyon impostor's dome is drawn translucent by the field's own near fade, so its clusters read against a
+  screen-door crown; the hanging clusters are placed on an ellipsoid, not on the 3D crown's twigs, and some sit inside
+  dense leaves; fruit does not sway in the wind; nothing is eaten from it (E still feeds from needs.js); a bay laurel's
+  crown hanging to the ground hides its nuts from outside; low-poly berries (20 faces) show facets within a metre.
+
+## 2026-11-04: the fruit's Meshy models: the acorn and the rose hips (tools/build_fruit.py)
+
+- **Why.** Aaron, through the orchestrating session: Meshy is allowed for the fruit, "whichever method reliably gives
+  the best result": Meshy where a real shape and texture read at a few centimetres (the acorn and its cap, walnut,
+  buckeye, pine nut or cone, wild grape, rose hips), the tiny clustered berries procedural; up to 200 credits; each
+  model decimated to a few hundred triangles because they are instanced.
+- **Generated** with `tools/meshy_generate.py` (the main checkout's copy, which reads the key from its git-ignored `.env`;
+  `--out` into `library/fruit/jobs/<id>/`, a new jobs folder with the animals' ignore rules, job.json kept): five
+  text-to-3D previews on `latest` (20 each) and three 2K texture refines (10 each): **130 credits** (balance 2,632 to
+  2,502; 550 of the 1,000 spent in all, the ledger now `library/*/jobs/*/*/job.json`).
+- **Adopted: the acorn and the rose hips.** The acorn (a slender valley oak acorn, the warty buff cap, the stem) replaces
+  the acorn game's procedural nut (`acorns.js`, the nuts on the ground and in the branches and the AI collectors' carried
+  ones), 160 triangles because the game draws every acorn within 300 m (2,400 by a valley oak: +190k triangles, the
+  frame's p10 34.8 ms either way); its nut graded from the texture's saturated red-brown toward chestnut. The rose hips
+  (three glossy hips with their dark sepals on a twig, flipped to hang) replace fruit.js's procedural spray, 360
+  triangles. `tools/build_fruit.py` (Blender 4.1): import, orient, life size, origin where the client attaches it,
+  collapse to the target (again until near it), and the texture baked into colours: each corner takes the texture at
+  the nearest point of the full-detail surface a quarter of the way to its triangle's centre, vertices split only where
+  corners clearly differ, so no sampler is drawn (POSITION, NORMAL, COLOR_0). fruit.js `fruitModel(id)` loads them once
+  a page and swaps them in; the procedural models stand in until then, or if a load fails.
+- **Rejected after generating.** The wild grape bunch (refined): at a few hundred triangles its 25 berries stalled at
+  1,082 (non-manifold where they touch) or, voxel-remeshed, collapsed to a faceted lump; the procedural bunch (20
+  triangles a berry) reads better and stays. The walnut preview came out furrowed like a shelled nut (a small pumpkin),
+  not the smooth husk on the tree, and the bay nut a plain egg: neither better than the procedural ones, so not refined.
+  Not generated: the buckeye and pine nuts, which no record names as food (so nothing would carry them), and the berry
+  clusters (procedural, as asked). A first export drew the hips and the grapes as shards: the source is split at every
+  UV seam and the weld was never written back (a line comment had swallowed the call), so the collapse made a soup.
+- **The acorns near the eye (a fix in acorns.js).** The near shrink (0.3 of the size inside 6 m; 0.06 for a squirrel or
+  woodpecker) and its settle (0.2 m) were tuned for the 70 cm nut of v1; since the nut went life size on 2026-10-27 they
+  made it a 9 mm speck (1.7 mm for the squirrel) sunk 14 cm into the ground, so near the eye only its glow showed. Both
+  factors are 1 now and the settle is the nut's own radius; seen with the Meshy acorn sitting on the ground at 15 cm.
+- **Verified** in the worktree's viewer: a lineup of the models; the rose hips hanging round a rose with their glow; the
+  acorn at 15 cm and 1.5 m under a valley oak (as the bear). No console errors, no shader diagnostics.
