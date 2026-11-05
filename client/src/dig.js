@@ -3,6 +3,7 @@ import { uniforms as atmo } from './atmosphere.js';
 import { groundUniforms } from './terrain.js';
 import { GLOW_COL } from './forage.js';
 import { Carve, holeCut } from './digCarve.js';
+import { Roots } from './digRoots.js';
 
 // Dig: a game for the vole and the coyote (Aaron, 2026-11-02: "a new game for voles and coyotes. Dig! Voles may dig
 // tunnels at a rate of .5"/s. They can create tunnel systems, big chambers etc. coyotes may dig down at a rate of .5"/s
@@ -71,6 +72,7 @@ const SAVE_S = 2, GLOW_T = 0.25, GLOW_L = 1.0, VISIT_MS = 3600e3;   // glow fall
 // ENTER_WALK body half-lengths in on its own (any back key or the dig key takes over), eased from where it stood to the
 // tunnel's floor over ENTER_BLEND s.
 const ENTER_K = 1.75, ENTER_WALK = 3, ENTER_BLEND = 0.35;
+const BULB_S = 5, PILE_S = 8, PULL_S = 1.0;   // s: eating a bulb or corm out, eating a pulled plant's heap away, pulling a herb down (rootStep)
 const HOLE_SEEK = 2.5, HIDE_S = [15, 40], SYS_CAP = 4, AI_WALK = 0.45, AI_FLEE = 1.0;
 const AI_DIG_P = 0.004, AI_DIG_MAX = 2, AI_DIG_HOLES = 40, AI_FORMS = 30;   // a calm AI vole's chance per pause of starting a burrow (the AI host), at most two at once, and none past forty holes in the world
 const MAX_S = 5000, MAX_N = 5000, MAX_P = 120;   // segments, nodes, pits (digworld.py N_MAX, S_MAX, P_MAX): carving has no per-slot buffers, so a group can build big
@@ -100,8 +102,8 @@ const SOIL_DEFAULT = [0.34, 0.24, 0.14];
 // ground; sys the id of the hole the system began at); seg: { id, a, b }; pit: { id, x, z, y0, r, depth, hx, hz,
 // open: [segId], k } (k 'form': a jackrabbit's scrape, else a coyote's pit). Ids are strings, `<tag>.<n>`: a tag of this page's and its own counter, so two players never make
 // the same id (the server refuses one it already has). Every event is anonymous.
-export const STEP_MAX = 0.6, ROOM_REACH = 0.45;   // m: the longest step a dig event may make from its node (digworld.py STEP_MAX)
-export function newWorld(tile) { return { v: 1, tile, nodes: [], segs: [], pits: [], byId: new Map() }; }
+export const STEP_MAX = 0.6, ROOM_REACH = 0.45, PULL_MAX = 3000;   // m: the longest step a dig event may make from its node (digworld.py STEP_MAX)
+export function newWorld(tile) { return { v: 1, tile, nodes: [], segs: [], pits: [], byId: new Map(), pulls: new Map() }; }
 const d3 = (a, b) => Math.hypot(a.x - b.x, a.y - b.y, a.z - b.z);
 export function applyEvent(w, e) {
   const get = id => w.byId.get(id), taken = id => w.byId.has(id);
@@ -168,6 +170,12 @@ export function applyEvent(w, e) {
       for (const id of e.segs) { const s = get(id); if (!s || s.segs || s.pit || p.open.includes(id)) continue; p.open.push(id); get(s.a).open = get(s.b).open = true; ok = true; }
       return ok;
     }
+    case 'pull': {   // a plant pulled down from below (digRoots.js): gone from the surface for the tile and season, food below
+      const u = w.pulls.get(e.id), left = clamp(e.left ?? 1, 0, 1);
+      if (!u) { if (w.pulls.size >= PULL_MAX) return false; w.pulls.set(e.id, { id: e.id, x: e.x, y: e.y, z: e.z, sp: e.sp, left }); return true; }
+      if (left >= u.left) return false;
+      u.left = left; return true;
+    }
     case 'visit': return true;   // the server's clock of the last animal inside (the decay); nothing drawn changes
     case 'decay': {   // the server removed a system or a pit no animal entered for a week
       const gone = new Set([...(e.nodes || []), ...(e.segs || []), ...(e.pits || [])]); if (!gone.size) return false;
@@ -186,12 +194,14 @@ export function toShared(w) {
   for (const n of w.nodes) nodes[n.id] = { x: n.x, y: n.y, z: n.z, r: n.r, h: n.hole ? 1 : 0, sys: n.sys, o: n.open ? 1 : 0, ...(n.room ? { k: 1 } : {}) };
   for (const s of w.segs) segs[s.id] = [s.a, s.b];
   for (const p of w.pits) pits[p.id] = { x: p.x, z: p.z, y0: p.y0, r: p.r, d: p.depth, hx: p.hx, hz: p.hz, o: [...p.open], ...(p.k ? { k: p.k } : {}) };
-  return { v: 1, nodes, segs, pits };
+  const pulls = {}; for (const u of w.pulls.values()) pulls[u.id] = { x: u.x, y: u.y, z: u.z, sp: u.sp, l: u.left };
+  return { v: 1, nodes, segs, pits, pulls };
 }
 export function fromShared(tile, d) {
   const w = newWorld(tile); if (!d) return w;
   for (const [id, n] of Object.entries(d.nodes || {})) { const o = { id, x: n.x, y: n.y, z: n.z, r: n.r, hole: !!n.h, sys: n.sys, open: !!n.o, segs: [], ...(n.k ? { room: true } : {}) }; w.nodes.push(o); w.byId.set(id, o); }
   for (const [id, [a, b]] of Object.entries(d.segs || {})) { const A = w.byId.get(a), B = w.byId.get(b); if (!A || !B) continue; const s = { id, a, b }; w.segs.push(s); w.byId.set(id, s); A.segs.push(id); B.segs.push(id); }
+  for (const [id, u] of Object.entries(d.pulls || {})) w.pulls.set(id, { id, x: u.x, y: u.y, z: u.z, sp: u.sp, left: u.l });
   for (const [id, p] of Object.entries(d.pits || {})) { const o = { id, x: p.x, z: p.z, y0: p.y0, r: p.r, depth: p.d, hx: p.hx, hz: p.hz, open: (p.o || []).filter(s => w.byId.has(s)), pit: true, k: p.k === 'form' ? 'form' : undefined }; w.pits.push(o); w.byId.set(id, o); }
   return reindex(w);
 }
@@ -284,8 +294,8 @@ export class DigNet {
 }
 
 export class Dig {
-  constructor({ tile, scene, camera, flight, ground, animals, squirrel, needs, season }) {
-    Object.assign(this, { tile, scene, camera, flight, gc: ground, animals, sq: squirrel, needs, seasonNow: season });
+  constructor({ tile, scene, camera, flight, ground, animals, squirrel, needs, season, forbs = null, veg = null, grass = null }) {
+    Object.assign(this, { tile, scene, camera, flight, gc: ground, animals, sq: squirrel, needs, seasonNow: season, forbs });
     this.heights = animals.heights;
     this.mult = 1; this.stats = { ms: 0, max: 0 }; this.time = 0;
     this.tag = Math.random().toString(36).slice(2, 8); this.n = 0;   // this page's ids: <tag>.<n> (base 36)
@@ -298,6 +308,9 @@ export class Dig {
     this.glowT = 0; this.glowOf = new Float32Array(MAX_N); this.dist = new Float32Array(MAX_N); this.heap = new Int32Array(MAX_N); this.parent = new Int32Array(MAX_N);
     this.soil = new THREE.Color(...SOIL_DEFAULT);
     this.build();
+    this.roots = new Roots(this, { forbs, veg, grass });   // the roots hanging from the ceilings (digRoots.js)
+    this.eatT = 0; this.pullT = 0; this.rootNow = null;
+    if (forbs) forbs.gone = { has: id => this.world.pulls.has(id) };   // a plant pulled down is not drawn on the surface
     this.net = new DigNet(this);
     this.onHide = () => this.save(); addEventListener('pagehide', this.onHide);
     this.soilFrom(tile);
@@ -452,10 +465,16 @@ export class Dig {
       case 'open': { this.glowT = 0; const s0 = this.node(e.segs[0]); if (s0?.a) this.flee(this.node(s0.a).sys, this.node(s0.a)); break; }   // the voles of that system run
       case 'room': this.remap(e); C.syncAll(); this.checkTun(); break;
       case 'decay': C.syncAll(); this.checkTun(); break;
+      case 'pull': this.forbs?.forget(e.id); break;
     }
+    if (e.type !== 'visit' && e.type !== 'open' && this.roots) this.roots.dirty = true;
   }
   // a whole new world (a welcome, a rebuild, a season): every primitive set again
-  adopt(w) { this.world = w; this.ahead = null; this.glowOf.fill(0); this.carve.syncAll(); this.checkTun(); }
+  adopt(w) {
+    this.world = w; this.ahead = null; this.glowOf.fill(0); this.carve.syncAll(); this.checkTun();
+    if (this.roots) this.roots.dirty = true;
+    if (this.forbs) { this.forbs.cache.clear(); this.forbs.last = null; }   // the season's pulled plants off the surface
+  }
   // a room absorbed nodes: whoever was on one is in the room now (the player's vole, the AI's walkers and diggers)
   remap(e) {
     const gone = new Set(e.absorb), to = id => (gone.has(id) ? e.id : id), T = this.tun;
@@ -661,6 +680,7 @@ export class Dig {
     const at = T.t >= 1 ? B : T.t <= 0 ? A : null;
     if (dig && at && (at === B || T.a === T.b || k.fwd <= 0)) this.digFrom(at, dt); else { this.digging = 0; gc.digging = 0; if (this.ahead) this.faceAhead(null, this.pd); }
     if (rest) this.restAt(at, spec);
+    this.rootStep(dt, k);
     // the body on the tunnel's floor, pitched with the slope; its camera on the centreline behind (camera())
     const Q = this.axisAt(T, this._ax ||= new THREE.Vector4());
     P.set(Q.x, Q.y - Q.w * 0.85, Q.z);
@@ -680,6 +700,46 @@ export class Dig {
       ps.flick = damp(ps.flick, 0.6 + 0.3 * Math.sin(this.time * 31), 12, dt);
     }
     gc.spd = Math.abs(gc.v); gc.inAir = false;
+  }
+  // The roots at the nose (digRoots.js; Aaron: "letting players either pull the plant down or eat the roots"). E held
+  // eats it (the act's nibble; needs.js fills the belly by its score through underFood): a bulb or a corm eaten out
+  // in BULB_S s takes the plant above with it (a pull, left 0), a pulled plant's heap is eaten away over PILE_S s; F held
+  // PULL_S s pulls a herb down into the tunnel by its roots (the `pull` world event: gone from the surface for everyone
+  // this season, its heap lying here as food).
+  rootStep(dt, k) {
+    const gc = this.gc, K = gc.flight.keys, it = this.rootNow;
+    if (k.fwd) { gc.actT = 0; this.eatT = this.pullT = 0; return; }
+    const eating = K.has('KeyE') && !!it;
+    gc.actT = eating ? Math.max(gc.actT, 0.3) : Math.max(0, gc.actT - dt);
+    if (eating && (it.kind === 'bulb' || it.kind === 'corm' || it.kind === 'pile') && this.needs?.hunger < 0.995) {
+      if (this.eatOf !== it.plantId) { this.eatOf = it.plantId; this.eatT = 0; }
+      this.eatT += dt;
+      if (it.kind === 'pile') {
+        const left = Math.max(0, Math.ceil((it.left - dt / PILE_S) * 10) / 10);
+        it.left = Math.max(0, it.left - dt / PILE_S);
+        if (left < (this.world.pulls.get(it.plantId)?.left ?? 0) - 0.05) { this.dispatch({ type: 'pull', id: it.plantId, x: it.x, y: it.y, z: it.z, sp: it.sp, left }); if (left <= 0) gc.say(`the ${it.label.split(',')[0]} is eaten`); }
+      } else if (this.eatT >= BULB_S) {
+        this.dispatch({ type: 'pull', id: it.plantId, x: it.x, y: it.floor ?? it.y, z: it.z, sp: it.sp, left: 0 }); this.eatT = 0;
+        gc.say(`the ${it.label} eaten from below: the plant over it is gone`);
+      }
+    } else this.eatT = 0;
+    if (K.has('KeyF') && it?.pull && it.plantId && !this.world.pulls.has(it.plantId)) {
+      if (this.pullOf !== it.plantId) { this.pullOf = it.plantId; this.pullT = 0; }
+      this.pullT += dt; gc.actT = Math.max(gc.actT, 0.3);
+      if (this.pullT >= PULL_S) {
+        const P = gc.flight.pos;
+        if (this.dispatch({ type: 'pull', id: it.plantId, x: it.x, y: Math.min(it.floor ?? P.y, P.y + 0.01), z: it.z, sp: it.sp, left: 1 })) gc.say(`pulled the ${it.label.replace(/ (roots|bulb|corm)$/, '')} down into the tunnel`);
+        this.pullT = 0;
+      }
+    } else this.pullT = 0;
+  }
+  // what the nose can eat underground (needs.js): the nearest root at it, its score and name; null above ground
+  underFood() {
+    const T = this.tun, gc = this.gc; if (!T || !gc.on) { this.rootNow = null; return null; }
+    const f = gc.flight, P = f.pos, Q = this.axisAt(T, this._ax ||= new THREE.Vector4()), L = gc.S.half * gc.size * 0.9;
+    const it = this.roots.near(P.x - Math.sin(f.yaw) * L, P.y, P.z - Math.cos(f.yaw) * L, Math.max(0.05, Q.w * 1.6), Q.w * 2.3);
+    this.rootNow = it;
+    return it ? { score: it.score, label: it.label } : { score: 0, label: null };
   }
   // X underground: the body rests (its crouch); a burrower's X at the dead end of its tunnel digs the nest out round it
   // (a room of spec.nest)
@@ -812,6 +872,7 @@ export class Dig {
     const T = this.tun; if (!T) return '';
     const Q = this.axisAt(T, this._ax ||= new THREE.Vector4()), depth = this.groundY(Q.x, Q.z) - Q.y;
     const d = `${Math.max(0, Math.round(depth * 100))} cm down`;
+    if (this.pullT > 0 && this.rootNow) return `pulling the ${this.rootNow.label.replace(/ (roots|bulb|corm)$/, '')} down · ${d}`;
     if (this.digging) { const phi = this.pd.d?.phi || 0; return `digging, ${Math.abs(phi) < 0.08 ? 'level' : (phi < 0 ? 'down ' : 'up ') + Math.round(Math.abs(phi) * 180 / Math.PI) + '°'} · ${d}`; }
     const rabbit = this.gc.code === 'sylvilagus_bachmani';
     return `${this.node(T.b)?.room ? (rabbit ? 'in the nest' : 'in a chamber') : rabbit ? 'in the burrow' : 'in the tunnel'} · ${d}`;
@@ -1122,13 +1183,15 @@ export class Dig {
     }
     this.xrBlobs();
     this.carve.update();
+    if (this.world.nodes.length) this.roots.update(dt);
     if (this.saveT >= 0 && (this.saveT -= dt) <= 0) this.save();
     const ms = performance.now() - t0; this.stats.ms += (ms - this.stats.ms) * 0.05; if (ms > this.stats.max) this.stats.max = ms;
   }
   dispose(all = true) {
     if (all) { this.save(); this.net.leave(); removeEventListener('pagehide', this.onHide); if (window.__weDig === this) delete window.__weDig; groundUniforms.digCutN.value = 0; }
     for (const m of [this.specks, this.trail, this.fade, this.blobs]) { if (!m) continue; this.scene.remove(m); m.geometry.dispose(); m.material.dispose(); }
-    this.carve?.dispose();
+    this.carve?.dispose(); this.roots?.dispose();
+    if (this.forbs?.gone) this.forbs.gone = null;
     this.xrMesh?.layers.disable(XR);
     for (const a of this.aiIn) { a.tun = null; a.buried = false; } this.aiIn.clear();
   }

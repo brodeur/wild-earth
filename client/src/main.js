@@ -638,7 +638,7 @@ async function buildSteps(w, { params, pending, direct = false, arrive = null })
   ground.needs = needs; flier.needs = needs;
   // The Dig game (dig.js, docs/game-dig.md): the tile's tunnels, chambers, holes and pits, shared through the game
   // server's world for the tile and season; the vole digs and walks them, the coyote digs pits, the AI voles use them.
-  const dig = w.m.dig = new Dig({ tile, scene, camera, flight, ground, animals, squirrel, needs, season: seasonNow });
+  const dig = w.m.dig = new Dig({ tile, scene, camera, flight, ground, animals, squirrel, needs, season: seasonNow, forbs, veg, grass });   // forbs, veg, grass: the plants whose roots hang in the tunnels (digRoots.js)
   ground.dig = dig; animals.dig = dig; dig.net.pg = PG;
   const hunt = w.m.hunt = new Hunt({ tile, animals, flight, ground, needs, el: $('hunt') });   // the hunt loop's goal and arc (hunt.js)
   const scent = w.m.scent = new Scent({ tile, animals, flight, ground, flier, scene, camera, squirrel, labels: $('scentLabels') });   // the smell sense: wisps round the head toward each scent (scent.js); the squirrel's own control smells too
@@ -927,7 +927,7 @@ async function buildSteps(w, { params, pending, direct = false, arrive = null })
     const s = seasonNow(), look = SEASON_LOOK[s], sun = sunDirection(tile.latitude, s, state.hour);
     flight.ridden = squirrel.on || woodpecker.on || ground.on;   // a drag orbits for these, steers a flight (flight.js steering)
     const f = screenOpen ? arrival.hold() : squirrel.on ? squirrel.update(dt) : woodpecker.on ? woodpecker.update(dt) : ground.on ? ground.update(dt) : flier.on ? flier.update(dt) : arrival.active ? arrival.update(dt) : spirit.on ? spirit.update(dt) : flight.update(dt);
-    if (ground.on || flier.on) { needs.update(dt, { x: flight.pos.x, north: -flight.pos.z, acting: ground.on && ground.actT > 0, wet: ground.on && !!ground.wet }); hunt.update(dt); scent.update(dt); }   // the games of life (needs.js, hunt.js); the smell sense (scent.js)
+    if (ground.on || flier.on) { needs.update(dt, { x: flight.pos.x, north: -flight.pos.z, acting: ground.on && ground.actT > 0, wet: ground.on && !!ground.wet, under: ground.on && ground.mode === 'tunnel' ? dig.underFood() : null }); hunt.update(dt); scent.update(dt); }   // the games of life (needs.js, hunt.js); the smell sense (scent.js)
     else if (squirrel.on && !arrival.active) scent.update(dt);   // the gray squirrel's own control smells too (its game is the acorns, not the needs)
     fruit.update(dt); if (peek.shown) fruit.group.visible = false;   // the fruit near the body (fruit.js)
     forage.update(dt);   // the forager's food plants lit and their halos (forage.js; off in any other body)

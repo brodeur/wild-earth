@@ -8,7 +8,7 @@ should disappear if empty after 1 month. For holes in ground, they should disapp
 1 week. I want them to be seen by all players and animals. I want animals to do the behaviors as well."
 
 The code is `client/src/dig.js` (the game, its shared world's client), `client/src/digCarve.js` and `digMesh.js` with
-`digMesh.worker.js` (the drawing: the soil carved, below), `digworld.py` (the server's copy
+`digMesh.worker.js` (the drawing: the soil carved, below), `client/src/digRoots.js` (the roots in the tunnels), `digworld.py` (the server's copy
 of the world and its rules), the dig channel of `server.py`'s `GameWorld`, and hooks in `groundControl.js` (the
 vole's tunnel mode, the coyote's pit), `animals.js` (the AI voles and coyotes), `abilities.js` (the slots),
 `terrain.js` and `grass.js` (the openings), `main.js` (the module in the world). Tests: `tests/test_dig.py`. The
@@ -206,6 +206,7 @@ both sides (`applyEvent` in dig.js, `dig_reduce` in digworld.py):
 { type: 'pit',     id, x, z, y0, r, depth, hx, hz } a pit made or deepened (hx, hz: its spoil heap)
 { type: 'open',    pit, segs }                      the pit's floor met these segments
 { type: 'visit',   sys | pit }                      an animal is inside (the decay's clock)
+{ type: 'pull',    id, x, y, z, sp, left }          a plant pulled down from below (id: the plant's own, below)
 { type: 'decay',   nodes, segs, pits }              the server's: removed (below)
 ```
 
@@ -460,3 +461,62 @@ most (0.1 ms idle); a welcome of 2,745 chunks meshed in 0.7 s of worker time.
   narrower bore), so neither walks through;
 - when the micro patch moves, a mouth's chunks re-mesh to its new ground (the drawn ground under them changed by more
   than 2 mm); until then the patch can show a few millimetres above or under.
+
+## Roots (2026-11-04)
+
+Aaron: "Another layer of this will be showing roots hanging from the ceiling and letting players either pull the plant
+down or eat the roots."
+
+**What hangs** (`client/src/digRoots.js`). Where a tunnel's or a room's ceiling passes under a plant within the depth
+its roots reach, its roots hang from the ceiling there. The library has no rooting depth, so these are set by kind:
+- **the grasses**, everywhere under the sward (`grass.js` speciesAt and its density): fine fibrous roots, one to three
+  on a 2.5 cm lattice, to 45 cm under an annual sward (wild oats, bromes, barley: most of their roots in the top 30 cm)
+  and to 1 m under a perennial bunchgrass (purple needlegrass roots past a metre and a half);
+- **the herbs** (`forbs.js`, each with its deterministic id `f:<cell i>.<cell j>.<candidate>`, the same on every
+  page): **soap plant**'s bulb (7-15 cm, brown-fibred, set 15-30 cm deep: drawn 3 cm in radius, mostly in the soil, its
+  base and roots out of the ceiling) where the tunnel passes at its depth, **blue dicks**' corm (1-2 cm, 5-15 cm deep),
+  any other herb a taproot and fine roots, to 35 cm; above or below the bulb's depth only its roots;
+- **the trees and shrubs** of the near set (`vegetation.js` nearPlants, within 1.1 times the drip line): woody roots
+  crossing under the roof and sagging between their ends, an oak's 1-2 cm (thinner away from the trunk; at any depth a
+  vole digs), a shrub's to 70 cm down, a conifer's to 1.2 m, each with a pale rootlet.
+Drawn as instanced strands (a tapered five-sided tube that hangs and curls, or sags across as a woody root: 20
+vertices, two instance attributes, no texture) and instanced bulbs (a flattened icosphere), on the world's layer and
+the underground view's, built for the tunnels within 9 m of the body when the tunnels, the pulls, the near plants or
+the forbs change or the body moves 2.5 m (0.2-3 ms, at most twice a second). Each root is a strand no longer than
+the bore.
+
+**Eating** (the food system as it was: `needs.js`). Underground, what fills the belly is what is at the nose, in
+place of the surface's resource rasters: a pulled plant's heap or a bulb (100), a corm (90), a herb's root (50),
+grass roots (35), a woody root (30). E held eats it (the nibble); the food line names it ("blue dicks corm here: hold
+E"). A bulb or corm eaten for 5 s is eaten out and takes the plant above with it (a `pull` with nothing left), and a
+vole's E digs only where there is nothing to eat at its nose, as on the surface.
+
+**Pulling the plant down** (F held 1 s with the nose at a herb's roots; the abilities row's **pull**). The plant is
+gone from the surface and lies on the tunnel's floor as a heap of its leaves, food for anyone (eaten away over 8 s of
+E), as a pocket gopher pulls plants down by their roots. It is a world event, `pull`, in both reducers (`applyEvent`,
+`digworld.py dig_reduce`): the plant's deterministic id, where it lies, its species and what is left of it (left only
+falls). It is kept in the dig world of the tile and season (`pulls` in the snapshot, the log's dig lines), so it is
+the season's own and a reload or a late joiner has it; it is not tied to a tunnel system and stays when the tunnels
+decay. No player's id is attached. Grasses, shrubs and trees are not pulled (a grass clump has no id of its own in
+`grass.js`; nothing a vole could pull is a shrub).
+
+**Verified** (the home tile, port 8786, captures in the underground view and from the surface):
+- grass roots along a vole's tunnel in the grassland; E there filled the belly (0.50 to 0.62 in 7 s, "wild oat roots");
+- a blue dicks corm in the ceiling right under its plant at 9.8 cm; eaten for 5 s (the belly at the corm's rate), the
+  pull sent and taken, the plant gone from the surface and its corm from the ceiling; still gone after a reload;
+- a soap plant's bulb at 14 cm; F pulled the plant down (the rosette gone from the surface, its heap on the floor),
+  then E ate the heap from 1 to 0.5 in 5 s, every step taken by the server;
+- a blue oak's woody roots across a tunnel 3 m from its trunk, a coffeeberry's under its crown (and no grass roots
+  under the shrub);
+- a second page (not the AI host): its welcome held both pulls and neither plant was on its surface; a pull made on
+  the first page reached it live and the nettle went from its surface too;
+- no shader diagnostics, no console errors; `tests/test_dig.py` test_pull; all 53 server tests pass (one skipped).
+
+**Not verified, and what still reads wrong**:
+- a brush rabbit eating or pulling (the same code; its reach is the bore's 1.6 radii);
+- the herbs follow the forbs as drawn this season: a blue dicks corm sleeping underground in summer (no plant drawn
+  then) has no root in the tunnel, and the forbs' candidates can be other species in another season (the pulls are
+  per season, so this never mixes);
+- roots do not stop a tunnel (the face digs through them) and an eaten grass or woody root is not used up;
+- a thick root's ends can stand a little out of a narrow bore's wall in the underground view; the AI voles do not eat
+  roots or pull plants.
