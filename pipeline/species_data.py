@@ -114,6 +114,86 @@ SPECIES = [
                  "riparian": 0.4, "barren": 0.8, "human": 0.8},
      "senses": {"vision": {"range_m": 30, "color": "tetrachromat"},
                 "hearing": {"range_m": 10}, "smell": {"range_m": 2}}},
+    # ---- the Hoh rain forest batch (2026-11-05; docs/animal-library.md "The Hoh rain forest batch"): the Olympic
+    # Peninsula's commonest and most conspicuous animals with a drawn model, each on a curated species' behaviour in the
+    # client (animals.js KIN). gbif_key pins the taxon GBIF files the tile's records under (the elk's: Cervus elaphus,
+    # which GBIF and EltonTraits lump the North American elk with; pipeline/fauna.py renames it on American tiles).
+    {"code": "cervus_canadensis", "common": "Roosevelt elk", "scientific": "Cervus canadensis",
+     "group": "mammal", "role": "ambient", "scale": "deer", "gbif_key": 2440958,
+     "habitat": {"riparian": 1.0, "grassland": 1.0, "mixed": 0.6, "conifer": 0.35, "oak_woodland": 0.5, "chaparral": 0.3},
+     "senses": {"vision": {"range_m": 500, "color": "dichromat"}, "hearing": {"range_m": 800}, "smell": {"range_m": 1000}}},
+    {"code": "tamiasciurus_douglasii", "common": "Douglas squirrel", "scientific": "Tamiasciurus douglasii",
+     "group": "mammal", "role": "ambient", "scale": "squirrel", "gbif_key": 2437281,
+     "habitat": {"conifer": 1.0, "mixed": 0.85, "riparian": 0.45},
+     "senses": {"vision": {"range_m": 150, "color": "dichromat"}, "hearing": {"range_m": 200}, "smell": {"range_m": 80}}},
+    {"code": "troglodytes_pacificus", "common": "Pacific wren", "scientific": "Troglodytes pacificus",
+     "group": "bird", "role": "ambient", "scale": "bird", "gbif_key": 9533566,
+     "habitat": {"conifer": 1.0, "mixed": 1.0, "riparian": 1.0, "chaparral": 0.3},
+     "senses": {"vision": {"range_m": 60, "color": "tetrachromat"}, "hearing": {"range_m": 150}, "smell": {"range_m": 5}}},
+    {"code": "perisoreus_canadensis", "common": "Canada jay", "scientific": "Perisoreus canadensis",
+     "group": "bird", "role": "ambient", "scale": "bird", "gbif_key": 2482436,
+     "habitat": {"conifer": 1.0, "mixed": 0.6, "riparian": 0.3},
+     "senses": {"vision": {"range_m": 300, "color": "tetrachromat"}, "hearing": {"range_m": 250}, "smell": {"range_m": 20}}},
+    {"code": "poecile_rufescens", "common": "chestnut-backed chickadee", "scientific": "Poecile rufescens",
+     "group": "bird", "role": "ambient", "scale": "bird", "gbif_key": 2487783,
+     "habitat": {"conifer": 1.0, "mixed": 1.0, "riparian": 0.7},
+     "senses": {"vision": {"range_m": 80, "color": "tetrachromat"}, "hearing": {"range_m": 150}, "smell": {"range_m": 5}}},
+    {"code": "strix_varia", "common": "barred owl", "scientific": "Strix varia",
+     "group": "bird", "role": "ambient", "scale": "bird", "gbif_key": 2497541,
+     "habitat": {"conifer": 1.0, "mixed": 1.0, "riparian": 0.9},
+     "senses": {"vision": {"range_m": 300, "color": "tetrachromat"}, "hearing": {"range_m": 400}, "smell": {"range_m": 5}}},
+    {"code": "megaceryle_alcyon", "common": "belted kingfisher", "scientific": "Megaceryle alcyon",
+     "group": "bird", "role": "ambient", "scale": "bird", "gbif_key": 2475472,
+     "habitat": {"riparian": 1.0, "water": 1.0},
+     "senses": {"vision": {"range_m": 200, "color": "tetrachromat"}, "hearing": {"range_m": 150}, "smell": {"range_m": 5}}},
+    {"code": "haliaeetus_leucocephalus", "common": "bald eagle", "scientific": "Haliaeetus leucocephalus",
+     "group": "bird", "role": "ambient", "scale": "bird", "gbif_key": 2480446,
+     "habitat": {"riparian": 1.0, "water": 1.0, "conifer": 0.5, "mixed": 0.5},
+     "senses": {"vision": {"range_m": 2500, "color": "tetrachromat"}, "hearing": {"range_m": 300}, "smell": {"range_m": 20}}},
+    {"code": "corvus_brachyrhynchos", "common": "American crow", "scientific": "Corvus brachyrhynchos",
+     "group": "bird", "role": "ambient", "scale": "bird", "gbif_key": 2482507,
+     "habitat": {"grassland": 1.0, "riparian": 1.0, "barren": 0.6, "mixed": 0.4, "conifer": 0.15, "human": 1.0},
+     "senses": {"vision": {"range_m": 800, "color": "tetrachromat"}, "hearing": {"range_m": 400}, "smell": {"range_m": 30}}},
+    {"code": "lynx_rufus", "common": "bobcat", "scientific": "Lynx rufus",
+     "group": "mammal", "role": "ambient", "scale": "fox", "gbif_key": 2435246,
+     "habitat": {"mixed": 0.9, "conifer": 0.6, "riparian": 0.9, "chaparral": 0.9, "grassland": 0.6, "oak_woodland": 0.8},
+     "senses": {"vision": {"range_m": 400, "color": "dichromat"}, "hearing": {"range_m": 500}, "smell": {"range_m": 300}}},
+    {"code": "lontra_canadensis", "common": "North American river otter", "scientific": "Lontra canadensis",
+     "group": "mammal", "role": "ambient", "scale": "fox", "gbif_key": 2433727,
+     "habitat": {"riparian": 1.0, "water": 1.0},
+     "senses": {"vision": {"range_m": 150, "color": "dichromat"}, "hearing": {"range_m": 300}, "smell": {"range_m": 400}}},
+    {"code": "lepus_americanus", "common": "snowshoe hare", "scientific": "Lepus americanus",
+     "group": "mammal", "role": "ambient", "scale": "squirrel", "gbif_key": 2436794,
+     "habitat": {"mixed": 1.0, "riparian": 1.0, "conifer": 0.7, "chaparral": 0.8},
+     "senses": {"vision": {"range_m": 200, "color": "dichromat"}, "hearing": {"range_m": 400}, "smell": {"range_m": 150}}},
+    {"code": "tamias_townsendii", "common": "Townsend's chipmunk", "scientific": "Tamias townsendii",
+     "group": "mammal", "role": "ambient", "scale": "vole", "gbif_key": 2437449,
+     "habitat": {"mixed": 1.0, "conifer": 0.8, "riparian": 0.8, "chaparral": 0.6},
+     "senses": {"vision": {"range_m": 80, "color": "dichromat"}, "hearing": {"range_m": 100}, "smell": {"range_m": 40}}},
+    {"code": "peromyscus_maniculatus", "common": "deer mouse", "scientific": "Peromyscus maniculatus",
+     "group": "mammal", "role": "ambient", "scale": "vole", "gbif_key": 2437967,
+     "habitat": {"conifer": 1.0, "mixed": 1.0, "riparian": 1.0, "chaparral": 0.8, "grassland": 0.6, "barren": 0.3},
+     "senses": {"vision": {"range_m": 20, "color": "dichromat"}, "hearing": {"range_m": 80}, "smell": {"range_m": 40}}},
+    {"code": "plethodon_vehiculum", "common": "western red-backed salamander", "scientific": "Plethodon vehiculum",
+     "group": "amphibian", "role": "ambient", "scale": "vole", "gbif_key": 2431514,
+     "habitat": {"conifer": 1.0, "mixed": 1.0, "riparian": 0.8},
+     "senses": {"vision": {"range_m": 2, "color": "tetrachromat"}, "hearing": {"range_m": 1}, "smell": {"range_m": 2}}},
+    {"code": "ensatina_eschscholtzii", "common": "ensatina", "scientific": "Ensatina eschscholtzii",
+     "group": "amphibian", "role": "ambient", "scale": "vole", "gbif_key": 2431643,
+     "habitat": {"conifer": 1.0, "mixed": 1.0, "riparian": 0.6, "chaparral": 0.4},
+     "senses": {"vision": {"range_m": 2, "color": "tetrachromat"}, "hearing": {"range_m": 1}, "smell": {"range_m": 2}}},
+    {"code": "ariolimax_columbianus", "common": "Pacific banana slug", "scientific": "Ariolimax columbianus",
+     "group": "invertebrate", "role": "ambient", "scale": "vole", "gbif_key": 2294090,
+     "habitat": {"conifer": 1.0, "mixed": 1.0, "riparian": 1.0},
+     "senses": {"vision": {"range_m": 0.5, "color": "monochromat"}, "hearing": {"range_m": 0}, "smell": {"range_m": 5}}},
+    {"code": "ardea_herodias", "common": "great blue heron", "scientific": "Ardea herodias",
+     "group": "bird", "role": "ambient", "scale": "bird", "gbif_key": 9630752,
+     "habitat": {"riparian": 1.0, "water": 1.0, "grassland": 0.3},
+     "senses": {"vision": {"range_m": 400, "color": "tetrachromat"}, "hearing": {"range_m": 200}, "smell": {"range_m": 5}}},
+    {"code": "mergus_merganser", "common": "common merganser", "scientific": "Mergus merganser",
+     "group": "bird", "role": "ambient", "scale": "bird", "gbif_key": 9537647,
+     "habitat": {"water": 1.0, "riparian": 1.0},
+     "senses": {"vision": {"range_m": 300, "color": "tetrachromat"}, "hearing": {"range_m": 200}, "smell": {"range_m": 5}}},
 ]
 
 ALL = [s["code"] for s in SPECIES]
@@ -157,6 +237,27 @@ RANGE = {
     "sceloporus_occidentalis":  {"elev_m": [0, 2700], "habitats": ["oak_woodland", "conifer_forest", "mixed_forest", "chaparral", "grassland", "riparian", "barren"]},
     "ursus_americanus":         {"elev_m": [800, 3000], "habitats": ["conifer_forest", "mixed_forest", "chaparral", "riparian", "oak_woodland"]},
     "oreortyx_pictus":          {"elev_m": [600, 3000], "habitats": ["chaparral", "mixed_forest", "conifer_forest"]},
+    # the Hoh batch: bands for the Olympic west slope (lowland rain forest to the subalpine; the outside-California rule
+    # is records first, so these only matter where a range test runs)
+    "cervus_canadensis":        {"elev_m": [0, 1800], "habitats": ["riparian", "grassland", "mixed_forest", "conifer_forest"]},
+    "tamiasciurus_douglasii":   {"elev_m": [0, 2000], "habitats": ["conifer_forest", "mixed_forest", "riparian"]},
+    "troglodytes_pacificus":    {"elev_m": [0, 1600], "habitats": ["conifer_forest", "mixed_forest", "riparian"]},
+    "perisoreus_canadensis":    {"elev_m": [300, 2000], "habitats": ["conifer_forest", "mixed_forest"]},
+    "poecile_rufescens":        {"elev_m": [0, 1500], "habitats": ["conifer_forest", "mixed_forest", "riparian"]},
+    "strix_varia":              {"elev_m": [0, 1200], "habitats": ["conifer_forest", "mixed_forest", "riparian"]},
+    "megaceryle_alcyon":        {"elev_m": [0, 1200], "habitats": ["riparian"]},
+    "haliaeetus_leucocephalus": {"elev_m": [0, 1500], "habitats": ["riparian", "conifer_forest", "mixed_forest"]},
+    "corvus_brachyrhynchos":    {"elev_m": [0, 1000], "habitats": ["grassland", "riparian", "barren", "mixed_forest"]},
+    "lynx_rufus":               {"elev_m": [0, 1800], "habitats": ["mixed_forest", "conifer_forest", "riparian", "chaparral", "grassland"]},
+    "lontra_canadensis":        {"elev_m": [0, 1200], "habitats": ["riparian"]},
+    "lepus_americanus":         {"elev_m": [0, 2000], "habitats": ["mixed_forest", "conifer_forest", "riparian", "chaparral"]},
+    "tamias_townsendii":        {"elev_m": [0, 1800], "habitats": ["mixed_forest", "conifer_forest", "riparian"]},
+    "peromyscus_maniculatus":   {"elev_m": [0, 2500], "habitats": ["conifer_forest", "mixed_forest", "riparian", "chaparral", "grassland"]},
+    "plethodon_vehiculum":      {"elev_m": [0, 1200], "habitats": ["conifer_forest", "mixed_forest", "riparian"]},
+    "ensatina_eschscholtzii":   {"elev_m": [0, 1600], "habitats": ["conifer_forest", "mixed_forest", "riparian", "chaparral"]},
+    "ariolimax_columbianus":    {"elev_m": [0, 1200], "habitats": ["conifer_forest", "mixed_forest", "riparian"]},
+    "ardea_herodias":           {"elev_m": [0, 1200], "habitats": ["riparian", "grassland"]},
+    "mergus_merganser":         {"elev_m": [0, 1200], "habitats": ["riparian"]},
 }
 
 # Who exists for whom, wherever both live. A species absent from a player's list is not rendered for them; on a tile the
@@ -229,6 +330,21 @@ PERCEPTION = {
 for _row in PERCEPTION.values():
     if "ursus_americanus" not in _row:
         _row.append("ursus_americanus")
+# The Hoh batch (2026-11-05): each sees every species (perceives_on keeps those present on a tile), and every curated
+# observer sees the batch's conspicuous animals (the elk, the bobcat, the otter, the eagle, the crow, the heron, the
+# mergansers, the owl, the jays and the squirrel); its own kin and prey see the small ones (the rows below)
+HOH = ["cervus_canadensis", "tamiasciurus_douglasii", "troglodytes_pacificus", "perisoreus_canadensis", "poecile_rufescens",
+       "strix_varia", "megaceryle_alcyon", "haliaeetus_leucocephalus", "corvus_brachyrhynchos", "lynx_rufus", "lontra_canadensis",
+       "lepus_americanus", "tamias_townsendii", "peromyscus_maniculatus", "plethodon_vehiculum", "ensatina_eschscholtzii",
+       "ariolimax_columbianus", "ardea_herodias", "mergus_merganser"]
+_HOH_BIG = ["cervus_canadensis", "tamiasciurus_douglasii", "perisoreus_canadensis", "strix_varia", "megaceryle_alcyon",
+            "haliaeetus_leucocephalus", "corvus_brachyrhynchos", "lynx_rufus", "lontra_canadensis", "ardea_herodias", "mergus_merganser"]
+for _o, _row in PERCEPTION.items():
+    for _c in (HOH if _row is ALL else _HOH_BIG):
+        if _c not in _row:
+            _row.append(_c)
+for _c in HOH:
+    PERCEPTION[_c] = ALL
 
 
 def perceives_on(present) -> dict[str, list[str]]:
@@ -399,6 +515,124 @@ CALENDAR = {
         "summer": [act("rear", "insects", "cover", goal="both parents with the brood"), act("forage", "grass_forbs", "browse", "water")],
         "fall": [act("forage", "acorn_mast", "browse", goal="family coveys walk downslope in single file")],
     },
+    # ---- the Hoh batch (2026-11-05) ----
+    # the elk: the river flats in winter, up to the subalpine meadows in summer; the rut in September-October, the bulls
+    # bugling and holding harems; calves in late May and June hidden in the ferns
+    "cervus_canadensis": {
+        "winter": [act("forage", "browse", "grass_forbs", goal="herds on the river flats, browsing vine maple and huckleberry"),
+                   act("shelter", "cover", goal="under the big spruce and hemlock in storms")],
+        "spring": [act("forage", "grass_forbs", goal="new grass and sedge on the flats"), act("rear", "cover", goal="cows calve alone in the ferns")],
+        "summer": [act("forage", "grass_forbs", "browse", "water", goal="up to the meadows; cows with calves in nursery herds")],
+        "fall": [act("court", "grass_forbs", goal="the rut: bulls bugle and gather cows"), act("forage", "browse")],
+    },
+    "tamiasciurus_douglasii": {
+        "winter": [act("forage", "cover", goal="eats from its cone middens"), act("shelter", "cavity")],
+        "spring": [act("court", goal="mating chases"), act("nest", "cavity", goal="a nest in a hollow or a ball of moss and twigs")],
+        "summer": [act("forage", "insects", "browse", goal="berries, mushrooms, buds"), act("rear", "cavity")],
+        "fall": [act("cache", "cover", goal="cuts green cones and stores them in middens")],
+    },
+    "troglodytes_pacificus": {
+        "winter": [act("forage", "insects", goal="creeps over logs and roots for spiders and insects")],
+        "spring": [act("court", "cover", goal="the male's long tumbling song from a stump"), act("nest", "cover", goal="a moss nest in a root wad")],
+        "summer": [act("rear", "insects", "cover")],
+        "fall": [act("forage", "insects")],
+    },
+    "perisoreus_canadensis": {
+        "winter": [act("forage", "cover", goal="lives on food it cached in bark and lichen")],
+        "spring": [act("nest", "cover", goal="nests in late winter in a conifer")],
+        "summer": [act("rear", "insects"), act("cache", "cover", goal="sticky food balls hidden in bark")],
+        "fall": [act("cache", "cover"), act("forage", "carrion", "insects")],
+    },
+    "poecile_rufescens": {
+        "winter": [act("forage", "insects", goal="mixed flocks gleaning the conifer crowns")],
+        "spring": [act("nest", "cavity", goal="a cavity in a snag")],
+        "summer": [act("rear", "insects", "cavity")],
+        "fall": [act("forage", "insects"), act("cache", "cover", goal="seeds tucked in bark")],
+    },
+    "strix_varia": {
+        "winter": [act("hunt", "peromyscus_maniculatus", "tamiasciurus_douglasii", goal="from a perch by night")],
+        "spring": [act("nest", "cavity", goal="a broken-top snag"), act("court", goal="the pair's duet: who cooks for you")],
+        "summer": [act("rear", "peromyscus_maniculatus", "tamias_townsendii", "plethodon_vehiculum")],
+        "fall": [act("hunt", "peromyscus_maniculatus", "lepus_americanus")],
+    },
+    "megaceryle_alcyon": {
+        "winter": [act("hunt", "water", goal="dives for fish from a perch over the river")],
+        "spring": [act("nest", "burrow", goal="digs a tunnel in a cut bank"), act("court", goal="rattling chases along the river")],
+        "summer": [act("rear", "water", goal="feeds fish to the nestlings")],
+        "fall": [act("hunt", "water")],
+    },
+    "haliaeetus_leucocephalus": {
+        "winter": [act("forage", "carrion", "water", goal="salmon carcasses along the river"), act("shelter", "cliff_or_snag", goal="roost in tall old trees")],
+        "spring": [act("nest", "cliff_or_snag", goal="a huge stick nest in an old spruce"), act("court", goal="cartwheeling display flights")],
+        "summer": [act("rear", "water", "carrion")],
+        "fall": [act("forage", "carrion", "water", goal="the salmon runs")],
+    },
+    "corvus_brachyrhynchos": {
+        "winter": [act("forage", "carrion", "insects", goal="family groups on the river bars"), act("shelter", "cover", goal="communal roosts")],
+        "spring": [act("nest", "cover", goal="a stick nest in a conifer; last year's young help")],
+        "summer": [act("rear", "insects", "carrion")],
+        "fall": [act("forage", "carrion", "browse", goal="berries and carrion")],
+    },
+    "lynx_rufus": {
+        "winter": [act("hunt", "lepus_americanus", "tamiasciurus_douglasii", goal="stalks hares at the forest edge")],
+        "spring": [act("den", "cover", goal="a den under a root wad or log pile"), act("court")],
+        "summer": [act("rear", "peromyscus_maniculatus", "tamias_townsendii"), act("hunt", "peromyscus_maniculatus")],
+        "fall": [act("hunt", "lepus_americanus", "peromyscus_maniculatus"), act("disperse", goal="kittens leave")],
+    },
+    "lontra_canadensis": {
+        "winter": [act("hunt", "water", goal="fish and crayfish in the river"), act("shelter", "burrow", goal="a den in the bank under roots")],
+        "spring": [act("den", "burrow", goal="pups born in a bank den"), act("hunt", "water")],
+        "summer": [act("rear", "water", goal="the mother teaches the pups to swim"), act("forage", "water")],
+        "fall": [act("hunt", "water", goal="the salmon runs")],
+    },
+    "lepus_americanus": {
+        "winter": [act("forage", "browse", goal="twigs and bark of young conifers and alder"), act("shelter", "cover")],
+        "spring": [act("court", goal="chases at night"), act("rear", "cover", goal="leverets in a form")],
+        "summer": [act("forage", "grass_forbs", "browse"), act("shelter", "cover")],
+        "fall": [act("forage", "browse")],
+    },
+    "tamias_townsendii": {
+        "winter": [act("shelter", "burrow", goal="torpid in its burrow through the cold weeks")],
+        "spring": [act("court", "burrow"), act("rear", "burrow")],
+        "summer": [act("forage", "browse", "insects", goal="seeds, berries and fungi along logs")],
+        "fall": [act("cache", "burrow", goal="carries seeds in its cheeks to its larder")],
+    },
+    "peromyscus_maniculatus": {
+        "winter": [act("forage", "grass_forbs", "insects", goal="seeds under the snow and litter"), act("shelter", "burrow")],
+        "spring": [act("rear", "burrow", goal="nests in logs and stumps")],
+        "summer": [act("forage", "insects", "browse")],
+        "fall": [act("cache", "burrow", goal="caches conifer seed")],
+    },
+    "plethodon_vehiculum": {
+        "winter": [act("shelter", "cover", goal="under logs and moss; out on mild wet nights")],
+        "spring": [act("forage", "insects", goal="springtails, mites and small insects on wet nights"), act("court", "cover")],
+        "summer": [act("shelter", "cover", goal="deep in rotting logs when it is dry"), act("rear", "cover", goal="eggs in a log, the female guarding")],
+        "fall": [act("forage", "insects", goal="the first rains bring them out")],
+    },
+    "ensatina_eschscholtzii": {
+        "winter": [act("shelter", "cover", goal="under logs and bark")],
+        "spring": [act("forage", "insects"), act("court", "cover")],
+        "summer": [act("shelter", "cover", goal="underground in the dry months"), act("rear", "cover", goal="eggs underground, guarded")],
+        "fall": [act("forage", "insects", goal="out with the rains")],
+    },
+    "ariolimax_columbianus": {
+        "winter": [act("shelter", "cover", goal="under logs in the cold")],
+        "spring": [act("forage", "grass_forbs", goal="leaves, fungi and dead plants"), act("court", goal="mating in a coil of slime")],
+        "summer": [act("forage", "grass_forbs"), act("shelter", "cover", goal="estivates in dry spells")],
+        "fall": [act("forage", "grass_forbs", goal="mushrooms after the rains"), act("rear", "cover", goal="eggs laid in the duff")],
+    },
+    "ardea_herodias": {
+        "winter": [act("hunt", "water", goal="stands motionless in the shallows for fish")],
+        "spring": [act("nest", "cliff_or_snag", goal="a colony of stick nests in tall trees")],
+        "summer": [act("rear", "water", goal="feeds fish and frogs to the young"), act("hunt", "peromyscus_maniculatus")],
+        "fall": [act("hunt", "water")],
+    },
+    "mergus_merganser": {
+        "winter": [act("hunt", "water", goal="flocks diving for fish in the river")],
+        "spring": [act("nest", "cavity", goal="a tree cavity near the river")],
+        "summer": [act("rear", "water", goal="the hen leads her brood downriver")],
+        "fall": [act("hunt", "water")],
+    },
 }
 
 
@@ -430,11 +664,33 @@ SIGNATURE = {
     "sceloporus_occidentalis":  {"sight": 8, "sound": 2, "scent": 5},
     "ursus_americanus":         {"sight": 150, "sound": 60, "scent": 400},
     "oreortyx_pictus":          {"sight": 60, "sound": 250, "scent": 30},   # hidden in brush; its loud "quee-ark" carries
+    "cervus_canadensis":        {"sight": 400, "sound": 300, "scent": 300},  # a bull's bugle carries a kilometre in the rut (not counted)
+    "tamiasciurus_douglasii":   {"sight": 60, "sound": 300, "scent": 30},    # its scolding chatter
+    "troglodytes_pacificus":    {"sight": 10, "sound": 300, "scent": 5},     # tiny and hidden; the song carries far
+    "perisoreus_canadensis":    {"sight": 150, "sound": 200, "scent": 5},
+    "poecile_rufescens":        {"sight": 30, "sound": 120, "scent": 5},
+    "strix_varia":              {"sight": 80, "sound": 800, "scent": 5},     # the call at night
+    "megaceryle_alcyon":        {"sight": 200, "sound": 400, "scent": 5},    # the rattle along the river
+    "haliaeetus_leucocephalus": {"sight": 1500, "sound": 200, "scent": 5},
+    "corvus_brachyrhynchos":    {"sight": 400, "sound": 600, "scent": 5},
+    "lynx_rufus":               {"sight": 50, "sound": 15, "scent": 250},
+    "lontra_canadensis":        {"sight": 100, "sound": 60, "scent": 300},
+    "lepus_americanus":         {"sight": 40, "sound": 10, "scent": 80},
+    "tamias_townsendii":        {"sight": 20, "sound": 60, "scent": 30},
+    "peromyscus_maniculatus":   {"sight": 5, "sound": 5, "scent": 40},
+    "plethodon_vehiculum":      {"sight": 1, "sound": 0, "scent": 3},
+    "ensatina_eschscholtzii":   {"sight": 1, "sound": 0, "scent": 3},
+    "ariolimax_columbianus":    {"sight": 2, "sound": 0, "scent": 5},
+    "ardea_herodias":           {"sight": 400, "sound": 150, "scent": 5},
+    "mergus_merganser":         {"sight": 300, "sound": 50, "scent": 5},
 }
 # (the black bear gives no alarm call others heed: not in ALARM_CALL)
 ALARM_CALL = {"aphelocoma_californica": 400, "cyanocitta_stelleri": 400, "melanerpes_formicivorus": 400, "corvus_corax": 700,
               "meleagris_gallopavo": 300, "callipepla_californica": 250, "otospermophilus_beecheyi": 200, "sciurus_griseus": 150,
-              "odocoileus_hemionus": 60, "oreortyx_pictus": 150}
+              "odocoileus_hemionus": 60, "oreortyx_pictus": 150,
+              # the Hoh batch: the crows' and the jays' mobbing, the chickadees' and the squirrel's scolding, the elk's bark
+              "corvus_brachyrhynchos": 500, "perisoreus_canadensis": 250, "poecile_rufescens": 100, "tamiasciurus_douglasii": 150,
+              "cervus_canadensis": 200}
 _SENSE = {"sight": "vision", "sound": "hearing", "scent": "smell"}
 _SENSES = {s["code"]: s["senses"] for s in SPECIES}
 
@@ -478,6 +734,25 @@ NEEDS = {
     "puma_concolor":            {"water": "daily", "shelter": "cover", "court": "cover"},
     "ursus_americanus":         {"water": "daily", "shelter": "cover", "court": "cover"},
     "oreortyx_pictus":          {"water": "daily", "shelter": "cover", "court": "cover"},
+    "cervus_canadensis":        {"water": "daily", "shelter": "cover", "court": "grass_forbs"},
+    "tamiasciurus_douglasii":   {"water": "often", "shelter": "cavity", "court": "cavity"},
+    "troglodytes_pacificus":    {"water": "often", "shelter": "cover", "court": "cover"},
+    "perisoreus_canadensis":    {"water": "often", "shelter": "cover", "court": "cover"},
+    "poecile_rufescens":        {"water": "often", "shelter": "cavity", "court": "cavity"},
+    "strix_varia":              {"water": "rare", "shelter": "cliff_or_snag", "court": "cavity"},
+    "megaceryle_alcyon":        {"water": "daily", "shelter": "burrow", "court": "water"},
+    "haliaeetus_leucocephalus": {"water": "often", "shelter": "cliff_or_snag", "court": "cliff_or_snag"},
+    "corvus_brachyrhynchos":    {"water": "daily", "shelter": "cover", "court": "cover"},
+    "lynx_rufus":               {"water": "often", "shelter": "cover", "court": "cover"},
+    "lontra_canadensis":        {"water": "daily", "shelter": "burrow", "court": "water"},
+    "lepus_americanus":         {"water": "rare", "shelter": "cover", "court": "cover"},
+    "tamias_townsendii":        {"water": "often", "shelter": "burrow", "court": "burrow"},
+    "peromyscus_maniculatus":   {"water": "rare", "shelter": "burrow", "court": "burrow"},
+    "plethodon_vehiculum":      {"water": "none", "shelter": "cover", "court": "cover"},
+    "ensatina_eschscholtzii":   {"water": "none", "shelter": "cover", "court": "cover"},
+    "ariolimax_columbianus":    {"water": "none", "shelter": "cover", "court": "cover"},
+    "ardea_herodias":           {"water": "daily", "shelter": "cliff_or_snag", "court": "cliff_or_snag"},
+    "mergus_merganser":         {"water": "daily", "shelter": "cavity", "court": "water"},
 }
 
 # What each predator eats among the species here (the prey's side of the calendar's hunt lists, which were written for
@@ -503,4 +778,14 @@ DIET = {
                                  "carrion": ["puma_concolor", "canis_latrans"]},
     # seeds (grass and forbs), acorns, berries (browse), and insects in spring and for the chicks; hunts nothing
     "oreortyx_pictus":          {"plants": ["grass_forbs", "acorn_mast", "browse", "insects"]},
+    # the Hoh batch (2026-11-05): the hunters of the small ones here; the fish of the river are not in the world yet
+    # (the otter's, the kingfisher's, the mergansers' and much of the heron's and the eagle's food)
+    "lynx_rufus":               {"prey": ["lepus_americanus", "peromyscus_maniculatus", "tamias_townsendii", "tamiasciurus_douglasii",
+                                          "microtus_californicus", "sylvilagus_bachmani"]},
+    "strix_varia":              {"prey": ["peromyscus_maniculatus", "tamias_townsendii", "tamiasciurus_douglasii", "plethodon_vehiculum",
+                                          "ensatina_eschscholtzii", "troglodytes_pacificus", "lepus_americanus"]},
+    "haliaeetus_leucocephalus": {"prey": ["mergus_merganser"], "carrion": ["cervus_canadensis", "odocoileus_hemionus"]},
+    "corvus_brachyrhynchos":    {"prey": ["plethodon_vehiculum", "peromyscus_maniculatus"], "carrion": ["cervus_canadensis", "lynx_rufus"]},
+    "ardea_herodias":           {"prey": ["peromyscus_maniculatus", "plethodon_vehiculum"]},
+    "perisoreus_canadensis":    {"carrion": ["cervus_canadensis", "odocoileus_hemionus"], "plants": ["insects", "browse"]},
 }

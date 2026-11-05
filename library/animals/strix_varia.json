@@ -1,0 +1,76 @@
+{
+  "id": "strix_varia",
+  "aliases": [
+    "barred_owl"
+  ],
+  "scientific": "Strix varia",
+  "common": "Barred owl",
+  "taxonomy": {
+    "kingdom": "Animalia",
+    "phylum": "Chordata",
+    "class": "Aves",
+    "order": "Strigiformes",
+    "family": "Strigidae",
+    "genus": "Strix"
+  },
+  "mass_kg": 0.7,
+  "body_plan": "bird",
+  "size": {
+    "length_m": 0.48,
+    "shoulder_or_wingspan_m": 1.05,
+    "note": "Length 43-50 cm, wingspan 99-110 cm, 0.5-1.05 kg (female larger). Built 0.500 m tall from the feet to the crown (scaled by height), perched upright, the body about 60 degrees from level; bill tip to the neck to the rump 0.433 m plus a 0.120 m visible tail (straight bill tip to tail tip 0.533 m: the upright pose bends the line through the neck, so the specimen length of 0.48 m is not a straight distance on this pose); wing cards 1.05 m across."
+  },
+  "source": {
+    "kind": "meshy",
+    "title": "Barred owl",
+    "author": "generated with Meshy (meshy.ai) by agent (Claude) for Aaron Brodeur",
+    "url": null,
+    "file": "library/animals/jobs/strix_varia/01a1ad38-4e76-7191-8ddc-c7409132af60/model.glb (local; jobs/ meshes are not tracked)",
+    "original": "Meshy text-to-3D preview, meshy-6-lite, triangle mesh, 20,850 triangles, one piece, untextured",
+    "prompt": "A barred owl (Strix varia), one adult perched upright, side-on pose, wings folded against the body. Realistic proportions: 50 cm long, a big round head with NO ear tufts, a pale grey-brown facial disc with concentric dark rings, large dark brown eyes, a small yellow hooked bill, a stocky body, a medium tail. Grey-brown plumage with white bars across the back and wings, horizontal brown bars across the upper breast and vertical brown streaks on the pale belly; feathered legs and feet with dark talons. No base, no perch, no branch. Game-ready, clean closed mesh.",
+    "job_id": "01a1ad38-4e76-7191-8ddc-c7409132af60",
+    "job": "library/animals/jobs/strix_varia/01a1ad38-4e76-7191-8ddc-c7409132af60/job.json",
+    "credits": 5,
+    "date": "2026-11-05 (UTC)",
+    "adopted_by": "tools/build_songbird.py --species strix_varia",
+    "build": "tools/build_songbird.py"
+  },
+  "license": "CC BY-SA 4.0",
+  "license_detail": {
+    "source_terms": "Meshy Terms of Use 3.2 (https://www.meshy.ai/terms-of-use, last updated 2026-09-19): API output on a paid plan is owned by the account holder, who releases it with the project's assets under CC BY-SA 4.0. Terms 2.4: AI-identifying metadata Meshy embeds is carried over (the source GLB carried none; the adopted GLB records the source in extras.source). Terms 2.6(xi): not for training models that compete with Meshy (binds the account holder).",
+    "redistribute_under_cc_by_sa": true,
+    "note": "Credit \"generated with Meshy (meshy.ai)\" in README, the build script header and the GLB asset.copyright. AI-generated output may carry little or no copyright in some jurisdictions; the licence covers what rights exist."
+  },
+  "tiers": {
+    "lod0": 1399,
+    "lod1": 499,
+    "lod2": 150,
+    "file": "client/assets/barred_owl.glb",
+    "attributes": [
+      "POSITION",
+      "COLOR_0 (linear)",
+      "_PART",
+      "_PARTW",
+      "_PIVOT"
+    ],
+    "lod_m": [
+      20,
+      60
+    ],
+    "note": "Scaled to 0.50 m tall. The preview (a good upright owl) kept: the round head with no ear tufts, widened 1.15x above the neck so it reads big and round; the body pitched 10 degrees forward to about 60 degrees from level; the generated legs and the long tail stub cut off and replaced by feathered grey-buff procedural legs with dark talons and a procedural tail (12 cm, 7-10 cm wide, rounded, pale-barred on lod0) hanging 47 degrees below level behind the feet (raised from 55 so its tip stays above the ground); large near-black eyes as forward-facing discs on the facial disc; a small yellow bill cone; broad rounded flight cards barred pale above, pale with dark bars below (lod0). Colours: grey-brown upperparts with pale bars across the back, wings and crown (face bands, lod0; fainter on lod1); the facial disc pale grey-buff with darker rings round each eye and a dark rim; a white ruff barred brown across the upper breast; the belly white streaked brown lengthwise; yellow bill. Triangles: lod0 1,399 = 1,016 body + 383 legs, tail, cards, eyes and bill; lod1 499 = 380 + 119; lod2 150 = 102 + 48 (the eyes and bill kept on every tier). GLB 279,596 bytes."
+  },
+  "rig": "bird rig template of the Steller's jay (tools/build_stellersjay.py; drawn with client/src/animalModels.js RIG.stjay's constants): PART BODY 0, LEG_A 1 / LEG_B 2 procedural legs (pivot at the knee), TAIL 3 procedural tail (pivot at the rump), HEAD 6 (head and neck, pivot at the base of the neck), WING_L/R 4/5 and HAND_L/R 9/10 flight cards that collapse into the shoulder on pose; extras.rig {kind 'bird', wing (shoulder), tail (rump), head (neck base), length_m}; no skin",
+  "status": "agent draft, needs local sign-off",
+  "accuracy_notes": "Built 2026-11-05. Reads as a barred owl: a big round tuftless head, a pale ringed face with large dark eyes and a yellow bill, grey-brown barred upperparts, a barred ruff over a streaked white belly. Still open: (1) the bird is modelled upright and the wing cards lie level in the model's frame, so in flight under RIG.stjay it would fly 'standing up' unless the client pitches the body nose-down about 50 degrees when the cards open (or a flight pose is added); (2) the facial rings and the ruff bars are per-face colour on large faces, so they read as soft mottling more than crisp rings and bars; (3) the tail angle is a compromise between the perched hang and keeping the tip off the ground; (4) the hop of RIG.stjay suits a jay, not an owl.",
+  "authors": [
+    "agent (Claude) for Aaron Brodeur (Meshy candidate, build script, rig, tiers, entry)"
+  ],
+  "sources": [
+    "The Sibley Guide to Birds, 2nd edition (D. A. Sibley, 2014): plumage, shape and posture",
+    "Cornell Lab of Ornithology, All About Birds and Birds of the World species accounts: size, mass, wingspan, plumage",
+    "docs/animal-library.md",
+    "library/animals/README.md",
+    "tools/build_songbird.py",
+    "tools/build_stellersjay.py"
+  ]
+}

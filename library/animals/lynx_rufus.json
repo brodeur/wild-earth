@@ -1,0 +1,76 @@
+{
+  "id": "lynx_rufus",
+  "aliases": [
+    "bobcat",
+    "bay_lynx",
+    "red_lynx"
+  ],
+  "scientific": "Lynx rufus",
+  "common": "bobcat",
+  "taxonomy": {
+    "kingdom": "Animalia",
+    "phylum": "Chordata",
+    "class": "Mammalia",
+    "order": "Carnivora",
+    "family": "Felidae",
+    "genus": "Lynx"
+  },
+  "mass_kg": 10,
+  "body_plan": "quadruped",
+  "size": {
+    "length_m": 0.68,
+    "shoulder_or_wingspan_m": 0.5,
+    "note": "Bobcats 0.65-1.05 m head and body (along the curve of the back), 0.45-0.58 m at the shoulder, tail 9-20 cm, 6-15 kg (males larger); the Pacific Northwest form (L. r. fasciatus) is the dark, heavily spotted one. Drawn at 0.50 m at the withers with a 14 cm stub tail; nose to tail root 0.68 m in a straight line (about 0.75 m along the back), 0.81 m overall with the stub."
+  },
+  "source": {
+    "kind": "variant",
+    "title": "Bobcat (variant of the mountain lion)",
+    "author": "variant of puma_concolor by agent (Claude) for Aaron Brodeur",
+    "url": "https://www.meshy.ai",
+    "file": "library/animals/jobs/puma_concolor/01a171bb-8cae-7690-a80d-04545b70957e/model.glb (local, git-ignored; the mountain lion's source)",
+    "original": "the mountain lion's Meshy text-to-3D preview (ai_model latest, meshy-7.1, triangle remesh to 20,000 faces: 20,840 triangles, one piece, untextured), reshaped by tools/build_bobcat.py",
+    "prompt": "A mountain lion (cougar, Puma concolor) of California, NOT an African lion, no mane, no spots. One adult male standing still, side-on neutral pose, four legs straight with clear gaps, big paws flat, head level. Realistic proportions: 75 cm at the shoulder, 1.3 m head and body, small round head, heavier neck and shoulders, long low muscular body, hindquarters a little higher than the shoulders, very long thick heavy tail (0.8 m) hanging low with the tip curving up. Plain tawny coat, cream muzzle, chin, throat and belly, black patches beside the muzzle, black backs of the ears, black tail tip. No base, no ground. Game-ready.",
+    "reference_image": null,
+    "job_id": "01a171bb-8cae-7690-a80d-04545b70957e",
+    "job": "library/animals/jobs/puma_concolor/01a171bb-8cae-7690-a80d-04545b70957e/job.json",
+    "variant_of": "puma_concolor",
+    "credits": 0,
+    "date": "2026-11-05 (UTC)",
+    "adopted_by": "tools/build_bobcat.py"
+  },
+  "license": "CC BY-SA 4.0",
+  "license_detail": {
+    "source_terms": "The source is the mountain lion's Meshy output: Meshy Terms of Use (https://www.meshy.ai/terms-of-use, last updated 2026-09-19) 3.2: paid-plan API output is owned by the account holder, who releases it with the project's assets under CC BY-SA 4.0.",
+    "redistribute_under_cc_by_sa": true,
+    "note": "Credit \"generated with Meshy (meshy.ai)\" is kept in the build script header and the GLB asset.copyright. The file carried no Meshy metadata or watermark to carry over (Terms 2.4). No new Meshy job: a variant of an owned mesh, no credits spent. AI output may carry little copyright in some jurisdictions; the licence covers what rights exist."
+  },
+  "tiers": {
+    "lod0": 2792,
+    "lod1": 1288,
+    "lod2": 372,
+    "file": "client/assets/bobcat.glb",
+    "attributes": [
+      "POSITION",
+      "COLOR_0 (linear)",
+      "_PART",
+      "_PARTW",
+      "_PIVOT",
+      "JOINTS_0",
+      "WEIGHTS_0"
+    ],
+    "clips": "client/assets/bobcat_clips.bin + .json (tools/bake_gait.mjs: Idle, Walk, Trot, Gallop, Bed, Eat from the leg engine)",
+    "note": "built at ~2,400 / 1,000 / 300 triangles; the counts are after tools/rig_quadruped.py cut the leg rings"
+  },
+  "rig": "skinned, the standard quadruped skeleton of 20 joints (tools/rig_quadruped.py): Hips, Spine, Chest, Neck, Head, Tail1-3 and per leg UpperLeg (shoulder or hip), LowerLeg (elbow or stifle) and Foot (wrist or hock to the toe), FL FR HL HR; posture digitigrade (Felidae from the locomotion tree), the wrist at 0.42 and the hock at 0.5 of the elbow's and stifle's height, a vertex ring cut at each joint (the build keeps vertices there through the collapse); the stub takes the rigger's stub path (a short chain back and down, as the bear's). Clips client/assets/bobcat_clips.bin + .json (tools/bake_gait.mjs; no locomotion row yet for the Hoh tile, so the body alone: walk 1.57, trot 3.50 m/s): Idle, Walk (0.583 m stride at 0.94 m/s), Trot (1.026 m at 2.63 m/s), Gallop (1.793 m at 5.60 m/s, transverse), Bed, Eat. Before the skin: quadruped template Q as the mountain lion's but with the bear's stub: BODY 0, LEG_A 1 (left fore + right hind), LEG_B 2, TAIL 3 (the stub, pivot at its root), HEAD 6 (neck, head, ears and tufts; pivot at the neck base); no TAIL_TIP. Parts found from the geometry (the lion's tail cut at the rump and traced along its axis, legs below the belly line with pivots there: elbow and stifle, head ahead of a plane at the neck base); extras.rig keys kind, tail, head, fore, hind, length_m.",
+  "status": "agent draft, needs local sign-off",
+  "accuracy_notes": "A variant of the mountain lion's mesh, no new generation. Reads as a bobcat at a glance: a leggy, compact cat (legs below the belly 1.04x where the lion's build has 0.9x, the trunk 0.96x), a 14 cm stub tail held back and a little down, a smaller rounder head (0.9x, the muzzle 0.85x), tall pointed ears with short black tufts, a flared ruff; dark coastal colouring: reddish-brown back, tawny grey-brown flanks, buff face sides, black spots and bars mottling the back, flanks and upper legs (drawn by coverage, so on the big flank faces they read as dark mottling rather than crisp round spots), white belly with a few spots, white chin, throat and inner legs, two bars inside each foreleg, black ear backs with a white spot, the stub barred above with a black tip and white below, a white eye ring, yellow-amber eyes, a pinkish-brown nose. Still wrong or unchecked: nose to tail root is 0.68 m in a straight line at 0.50 m at the withers (about 0.75 m along the curve of the back; a straight 0.75 m would need a longer body than a compact bobcat shows); the lion's pose stays (the left forepaw a step ahead of the right: the skeleton's fore toes are 4 cm apart fore and aft); the ruff is a modest flare and the cheek bars one dark line; the spots are not round at lod1 and lod2 (the faces are larger than a spot); on lod2 the ears are a few pale faces under the black tufts (the black ear backs are lost); the stub is a smooth capsule, not a fluffy tail. Check the spot density and the face pattern against Olympic trail-camera photos.",
+  "authors": [
+    "agent (Claude) for Aaron Brodeur (variant: reshaping, recolour, tiers, rig)"
+  ],
+  "sources": [
+    "Sunquist & Sunquist, Wild Cats of the World (2002): bobcat sizes, the stub tail, ear tufts, ruff, the bars inside the forelegs",
+    "Verts & Carraway, Land Mammals of Oregon (1998) and the Washington Department of Fish and Wildlife bobcat account: the dark, heavily spotted coastal form (L. r. fasciatus)",
+    "Reid, Peterson Field Guide to Mammals of North America (4th ed., 2006): field marks (black ear backs with a white spot, the tail barred above with a black tip above and white below)",
+    "library/animals/puma_concolor.json (the source mesh and its build)"
+  ]
+}

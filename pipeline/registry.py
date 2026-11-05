@@ -156,7 +156,7 @@ def _client_text(name: str) -> str:
 
 def meshy_ledger() -> dict:
     by = {}
-    for f in glob.glob(str(LIB / "animals" / "jobs" / "*" / "*" / "job.json")):
+    for f in glob.glob(str(LIB / "*" / "jobs" / "*" / "*" / "job.json")):   # the animals' and the fruit's jobs (library/fruit/jobs since 2026-11-04)
         d = json.loads(Path(f).read_text())
         sp = Path(f).parent.parent.name
         c = d.get("credits_charged") or 0

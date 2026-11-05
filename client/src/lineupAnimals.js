@@ -60,6 +60,26 @@ const DRAWN = {
   meleagris_gallopavo: { file: 'turkey.glb', loader: 'loadTurkeyMesh' },
   otospermophilus_beecheyi: { file: 'ground_squirrel.glb', loader: 'loadGroundSquirrelMesh' },
   sceloporus_occidentalis: { file: 'fence_lizard.glb', loader: 'loadLizardMesh' },
+  // the Hoh rain forest batch (2026-11-05)
+  cervus_canadensis: { file: 'elk_cow.glb', loader: 'loadElkCowMesh', label: 'Roosevelt elk, cow' },
+  'cervus_canadensis:bull': { file: 'elk_bull.glb', loader: 'loadElkBullMesh', species: 'cervus_canadensis', label: 'Roosevelt elk, bull' },
+  tamiasciurus_douglasii: { file: 'douglas_squirrel.glb', loader: 'loadDouglasSquirrelMesh' },
+  troglodytes_pacificus: { file: 'pacific_wren.glb', loader: 'loadWrenMesh' },
+  perisoreus_canadensis: { file: 'gray_jay.glb', loader: 'loadGrayJayMesh' },
+  poecile_rufescens: { file: 'chickadee.glb', loader: 'loadChickadeeMesh' },
+  strix_varia: { file: 'barred_owl.glb', loader: 'loadOwlMesh' },
+  megaceryle_alcyon: { file: 'kingfisher.glb', loader: 'loadKingfisherMesh' },
+  haliaeetus_leucocephalus: { file: 'bald_eagle.glb', loader: 'loadEagleMesh' },
+  corvus_brachyrhynchos: { file: 'crow_ground.glb', loader: 'loadCrowGroundMesh' },
+  lynx_rufus: { file: 'bobcat.glb', loader: 'loadBobcatMesh' },
+  lontra_canadensis: { file: 'otter.glb', loader: 'loadOtterMesh' },
+  lepus_americanus: { file: 'snowshoe_hare.glb', loader: 'loadHareMesh' },
+  tamias_townsendii: { file: 'chipmunk.glb', loader: 'loadChipmunkMesh' },
+  peromyscus_maniculatus: { file: 'deer_mouse.glb', loader: 'loadDeerMouseMesh' },
+  plethodon_vehiculum: { file: 'salamander.glb', loader: 'loadSalamanderMesh' },
+  ensatina_eschscholtzii: { file: 'ensatina.glb', loader: 'loadEnsatinaMesh' },
+  ardea_herodias: { file: 'heron.glb', loader: 'loadHeronMesh' },
+  mergus_merganser: { file: 'merganser.glb', loader: 'loadMerganserMesh' },
 };
 // Procedural models (animals.js SPECIES, which is not exported): species -> animalModels.js builder.
 const PROC = {
@@ -69,7 +89,7 @@ const PROC = {
   urocyon_cinereoargenteus: 'buildFox', canis_latrans: 'buildCoyote', puma_concolor: 'buildCougar',
   sylvilagus_bachmani: 'buildRabbit', lepus_californicus: 'buildJackrabbit', microtus_californicus: 'buildVole', cyanocitta_stelleri: 'buildStellersJay',
   meleagris_gallopavo: 'buildTurkey', otospermophilus_beecheyi: 'buildGroundSquirrel', sceloporus_occidentalis: 'buildLizard',
-  ursus_americanus: 'buildBear', oreortyx_pictus: 'buildMountainQuail',
+  ursus_americanus: 'buildBear', oreortyx_pictus: 'buildMountainQuail', ariolimax_columbianus: 'buildSlug',
 };
 // Body plan for the motion switch: quadruped, rodent (bounding pair, sits up), bird (ground bird: hops, flushes),
 // soarer (glides, flaps in bursts, perches), reptile (sprawling walk and sprint with the spine wave, basks, pushes up).
@@ -80,6 +100,11 @@ const PLAN = {
   corvus_corax: 'soarer', buteo_jamaicensis: 'soarer', cathartes_aura: 'soarer',
   meleagris_gallopavo: 'bird', otospermophilus_beecheyi: 'rodent', sceloporus_occidentalis: 'reptile', ursus_americanus: 'quadruped',
   oreortyx_pictus: 'bird',
+  cervus_canadensis: 'quadruped', 'cervus_canadensis:bull': 'quadruped', lynx_rufus: 'quadruped', lontra_canadensis: 'quadruped',
+  tamiasciurus_douglasii: 'rodent', lepus_americanus: 'rodent', tamias_townsendii: 'rodent', peromyscus_maniculatus: 'rodent',
+  troglodytes_pacificus: 'bird', perisoreus_canadensis: 'bird', poecile_rufescens: 'bird', strix_varia: 'bird', megaceryle_alcyon: 'bird',
+  ardea_herodias: 'bird', mergus_merganser: 'bird', corvus_brachyrhynchos: 'bird', haliaeetus_leucocephalus: 'soarer',
+  plethodon_vehiculum: 'reptile', ensatina_eschscholtzii: 'reptile', ariolimax_columbianus: 'rodent',
 };
 // Cycle rates (Hz) from animals.js: deer walk speed / 1.5 m at 1.1 m/s, squirrel bound 3.5, quail whirr 19 and
 // walk speed / 0.14, jay rowing 11, woodpecker 13, raven 2.6, hawk 2.4; fox, coyote and lion walk (MAMMAL walk speed
@@ -95,6 +120,11 @@ const RATE = {
   corvus_corax: { flap: 2.6 }, buteo_jamaicensis: { flap: 2.4 }, cathartes_aura: { flap: 3 },
   meleagris_gallopavo: { walk: 0.64, flap: 5 }, otospermophilus_beecheyi: { walk: 3.1, run: 11 }, sceloporus_occidentalis: { walk: 6, run: 12 },
   ursus_americanus: { walk: 1.06, run: 3.3 }, oreortyx_pictus: { walk: 2.1, flap: 19 },
+  tamiasciurus_douglasii: { walk: 3.8 }, troglodytes_pacificus: { walk: 3, flap: 22 }, perisoreus_canadensis: { walk: 2.5, flap: 10 },
+  poecile_rufescens: { walk: 3, flap: 20 }, strix_varia: { walk: 1.5, flap: 4 }, megaceryle_alcyon: { walk: 2, flap: 9 },
+  haliaeetus_leucocephalus: { flap: 2.2 }, corvus_brachyrhynchos: { walk: 2.2, flap: 4 }, tamias_townsendii: { walk: 3.5, run: 12 },
+  peromyscus_maniculatus: { walk: 6, run: 17 }, plethodon_vehiculum: { walk: 1, run: 4 }, ensatina_eschscholtzii: { walk: 1, run: 4 },
+  ardea_herodias: { walk: 0.3, flap: 2.5 }, mergus_merganser: { walk: 1.2, flap: 8 },
 };
 // Generic constants for a GLB read here (no loader in animalModels.js): the deer's amplitudes for quadrupeds,
 // the squirrel's for rodents, the jay's for birds; rig constants (RIG keys) kept small.

@@ -29,7 +29,10 @@ ARCHETYPE = {"forage": "gather", "graze": "gather", "hunt": "hunt", "cache": "ca
 UNIT = {"odocoileus_hemionus": "herd", "callipepla_californica": "covey", "meleagris_gallopavo": "flock",
         "melanerpes_formicivorus": "family", "aphelocoma_californica": "family", "cyanocitta_stelleri": "family",
         "otospermophilus_beecheyi": "colony", "corvus_corax": "pair", "puma_concolor": "mother_and_young",
-        "ursus_americanus": "mother_and_young", "oreortyx_pictus": "covey"}
+        "ursus_americanus": "mother_and_young", "oreortyx_pictus": "covey",
+        # the Hoh batch (2026-11-05; animals.js HOH)
+        "cervus_canadensis": "herd", "perisoreus_canadensis": "family", "poecile_rufescens": "flock", "corvus_brachyrhynchos": "family",
+        "lontra_canadensis": "mother_and_young", "mergus_merganser": "flock"}
 ARCHETYPES = {
     "gather": "find the resource's hotspots, feed, keep an eye out: the predators listed hunt here; the competitors eat the same cells",
     "drink": "reach water on a rhythm; in summer the few sources draw every species, and the ambush predators, together",

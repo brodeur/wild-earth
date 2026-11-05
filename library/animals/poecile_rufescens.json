@@ -1,0 +1,77 @@
+{
+  "id": "poecile_rufescens",
+  "aliases": [
+    "chestnut_backed_chickadee",
+    "chickadee"
+  ],
+  "scientific": "Poecile rufescens",
+  "common": "Chestnut-backed chickadee",
+  "taxonomy": {
+    "kingdom": "Animalia",
+    "phylum": "Chordata",
+    "class": "Aves",
+    "order": "Passeriformes",
+    "family": "Paridae",
+    "genus": "Poecile"
+  },
+  "mass_kg": 0.01,
+  "body_plan": "bird",
+  "size": {
+    "length_m": 0.115,
+    "shoulder_or_wingspan_m": 0.2,
+    "note": "Length 11-12 cm (tail about 5 cm), wingspan about 19-20 cm, 9-12 g. Built 0.115 m bill to tail (0.065 m bill tip to the neck to the rump, plus a 0.050 m tail), 0.052 m tall; wing cards 0.20 m across."
+  },
+  "source": {
+    "kind": "meshy",
+    "title": "Chestnut-backed chickadee",
+    "author": "generated with Meshy (meshy.ai) by agent (Claude) for Aaron Brodeur",
+    "url": null,
+    "file": "library/animals/jobs/poecile_rufescens/01a1ad39-ae77-7764-bea5-e718f3527f65/model.glb (local; jobs/ meshes are not tracked)",
+    "original": "Meshy text-to-3D preview, meshy-6-lite, triangle mesh, 20,824 triangles, one piece, untextured",
+    "prompt": "A chestnut-backed chickadee (Poecile rufescens), a tiny songbird about 11 cm long, one adult perched with its wings folded tight against the body, side-on pose. A round fluffy body, a big round head, a tiny short black bill, a medium-long narrow tail. A sooty dark brown cap and a black bib, bright white cheeks, a rich chestnut back and flanks, grey wings and tail, a white belly. Thin dark legs, three toes forward and one back. No base, no perch. Game-ready, clean closed mesh.",
+    "job_id": "01a1ad39-ae77-7764-bea5-e718f3527f65",
+    "job": "library/animals/jobs/poecile_rufescens/01a1ad39-ae77-7764-bea5-e718f3527f65/job.json",
+    "credits": 5,
+    "date": "2026-11-05 (UTC)",
+    "adopted_by": "tools/build_songbird.py --species poecile_rufescens",
+    "build": "tools/build_songbird.py"
+  },
+  "license": "CC BY-SA 4.0",
+  "license_detail": {
+    "source_terms": "Meshy Terms of Use 3.2 (https://www.meshy.ai/terms-of-use, last updated 2026-09-19): API output on a paid plan is owned by the account holder, who releases it with the project's assets under CC BY-SA 4.0. Terms 2.4: AI-identifying metadata Meshy embeds is carried over (the source GLB carried none; the adopted GLB records the source in extras.source). Terms 2.6(xi): not for training models that compete with Meshy (binds the account holder).",
+    "redistribute_under_cc_by_sa": true,
+    "note": "Credit \"generated with Meshy (meshy.ai)\" in README, the build script header and the GLB asset.copyright. AI-generated output may carry little or no copyright in some jurisdictions; the licence covers what rights exist."
+  },
+  "tiers": {
+    "lod0": 999,
+    "lod1": 399,
+    "lod2": 119,
+    "file": "client/assets/chickadee.glb",
+    "attributes": [
+      "POSITION",
+      "COLOR_0 (linear)",
+      "_PART",
+      "_PARTW",
+      "_PIVOT"
+    ],
+    "lod_m": [
+      6,
+      20
+    ],
+    "note": "Scaled to 0.115 m bill to tail. The preview's tail (0.65 units of 1.9, too long) cut off behind the wingtips and replaced by a narrower square tail of 5 cm, 14 degrees below level; round head and tiny bill kept; generated legs replaced by dark procedural legs; small black eye; flight wing cards (rounded, grey with pale edges on lod0). Colours: sooty dark brown cap to just below the eye and down the nape, a large black bib, bright white cheeks running back to the neck sides, rich chestnut back, rump and flanks, grey wings with pale edges and a pale lower edge to the folded wing, grey tail, white belly centre, dark legs and bill. Triangles: lod0 999 = 766 body + 233 legs, tail, cards and eyes; lod1 399 = 310 + 89; lod2 119 = 92 + 27. GLB 178,772 bytes. lod_m is a suggestion for an 11 cm bird."
+  },
+  "rig": "bird rig template of the Steller's jay (tools/build_stellersjay.py; drawn with client/src/animalModels.js RIG.stjay's constants): PART BODY 0, LEG_A 1 / LEG_B 2 procedural legs (pivot at the knee), TAIL 3 procedural tail (pivot at the rump), HEAD 6 (head and neck, pivot at the base of the neck), WING_L/R 4/5 and HAND_L/R 9/10 flight cards that collapse into the shoulder on pose; extras.rig {kind 'bird', wing (shoulder), tail (rump), head (neck base), length_m}; no skin",
+  "status": "agent draft, needs local sign-off",
+  "accuracy_notes": "Built 2026-11-05. Reads at once as a chestnut-backed chickadee: brown cap, black bib, white cheeks, chestnut back and flanks, white belly. Still open: the edges of the bib and cheeks are saw-toothed (per-face colour on a 770-face body); the tail reads thin side-on (a flat plate); no pale wing-panel detail beyond the edges.",
+  "authors": [
+    "agent (Claude) for Aaron Brodeur (Meshy candidate, build script, rig, tiers, entry)"
+  ],
+  "sources": [
+    "The Sibley Guide to Birds, 2nd edition (D. A. Sibley, 2014): plumage, shape and posture",
+    "Cornell Lab of Ornithology, All About Birds and Birds of the World species accounts: size, mass, wingspan, plumage",
+    "docs/animal-library.md",
+    "library/animals/README.md",
+    "tools/build_songbird.py",
+    "tools/build_stellersjay.py"
+  ]
+}

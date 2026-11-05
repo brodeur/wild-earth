@@ -1,0 +1,73 @@
+{
+  "id": "ensatina_eschscholtzii",
+  "aliases": [
+    "ensatina",
+    "oregon_ensatina",
+    "ensatina_eschscholtzii_oregonensis"
+  ],
+  "scientific": "Ensatina eschscholtzii",
+  "common": "ensatina (Oregon ensatina, E. e. oregonensis)",
+  "taxonomy": {
+    "kingdom": "Animalia",
+    "phylum": "Chordata",
+    "class": "Amphibia",
+    "order": "Caudata",
+    "family": "Plethodontidae",
+    "genus": "Ensatina"
+  },
+  "mass_kg": 0.005,
+  "body_plan": "amphibian",
+  "size": {
+    "length_m": 0.11,
+    "shoulder_or_wingspan_m": 0.009,
+    "note": "Adults 4-8 cm snout to vent, to ~15 cm in all, about 3-8 g; the tail constricted at its base, long legs, big protruding eyes. Drawn (the Oregon subspecies, E. e. oregonensis) at 0.055 m snout to vent and a 0.055 m tail (0.11 m straight), the trunk 1.1 cm across, the back 8.7 mm up at mid-body on legs 1.3x the red-backed salamander's, the belly ~1 mm off the ground, toe span 4.1 cm. Mass not in the brief: 5 g taken from the field-guide range. length_m here is total length (snout to tail tip); shoulder_or_wingspan_m is the back's height."
+  },
+  "source": {
+    "kind": "variant",
+    "title": "Oregon ensatina (variant of the western red-backed salamander)",
+    "author": "variant of plethodon_vehiculum by agent (Claude) for Aaron Brodeur",
+    "url": "https://www.meshy.ai",
+    "file": "library/animals/jobs/plethodon_vehiculum/01a1ad3a-5ecd-7016-9b71-8d57ee3f76e9/model.glb (local, git-ignored; the red-backed salamander's source)",
+    "original": "the red-backed salamander's Meshy text-to-3D preview (ai_model meshy-6-lite, triangle remesh to 20,000 faces: 20,946 triangles, one piece, untextured), reshaped by tools/build_ensatina.py through tools/build_salamander.py's build()",
+    "prompt": "A western red-backed salamander (Plethodon vehiculum), a small slender woodland salamander, NOT a lizard, NOT a newt, no scales, smooth moist skin. One adult walking on the ground, side-on pose, body straight, four short thin legs splayed out to the sides with small toes. Realistic proportions: 10 cm long, the round tapering tail as long as the body, a slender cylindrical body with fine grooves along the sides, a small rounded head a little wider than the neck, small dark bulging eyes. A broad straight-edged reddish-orange stripe down the back from the head to the tail tip, dark grey-black sides with fine white flecks, a grey belly. No base, no ground. Game-ready, clean closed mesh.",
+    "reference_image": null,
+    "job_id": "01a1ad3a-5ecd-7016-9b71-8d57ee3f76e9",
+    "job": "library/animals/jobs/plethodon_vehiculum/01a1ad3a-5ecd-7016-9b71-8d57ee3f76e9/job.json",
+    "variant_of": "plethodon_vehiculum",
+    "credits": 0,
+    "date": "2026-11-05 (UTC)",
+    "adopted_by": "tools/build_ensatina.py"
+  },
+  "license": "CC BY-SA 4.0",
+  "license_detail": {
+    "source_terms": "The source is the red-backed salamander's Meshy output: Meshy Terms of Use (https://www.meshy.ai/terms-of-use, last updated 2026-09-19) 3.2: paid-plan API output is owned by the account holder, who releases it with the project's assets under CC BY-SA 4.0.",
+    "redistribute_under_cc_by_sa": true,
+    "note": "Credit \"generated with Meshy (meshy.ai)\" is kept in the build script header and the GLB asset.copyright. The file carried no Meshy metadata or watermark to carry over (Terms 2.4). No new Meshy job: a variant of an owned mesh, no credits spent. AI output may carry little copyright in some jurisdictions; the licence covers what rights exist."
+  },
+  "tiers": {
+    "lod0": 800,
+    "lod1": 300,
+    "lod2": 80,
+    "file": "client/assets/ensatina.glb",
+    "attributes": [
+      "POSITION",
+      "COLOR_0 (linear)",
+      "_PART",
+      "_PARTW",
+      "_PIVOT",
+      "_BLUE (0 everywhere: no blue patches; kept so the shader path is the lizard's)"
+    ]
+  },
+  "rig": "reptile template, exactly as the western red-backed salamander's (tools/build_salamander.py; the fence lizard's template, drawn by the client with the lizard's spine wave and sprawling walk): BODY 0, LEG_A 1 (left fore, right hind) and LEG_B 2 (right fore, left hind) splayed, pivots at the shoulder and hip rings; HEAD 6 (pivot at the neck); TAIL 3 (inner half, pivot at the vent) and TAIL_TIP 8 (outer half, pivot mid-tail, child of TAIL). extras.rig (kind 'reptile'): head, tail, tail_tip, fore, hind, legs (FL FR HL HR), snout_z, vent_z, tail_end_z, belly_y, back_y, drop, blue_off and throat_off (the belly colour; nothing is blue), length_m. No skin.",
+  "status": "agent draft, needs local sign-off",
+  "accuracy_notes": "A variant of the red-backed salamander's mesh, no new generation. Reads as an ensatina: stouter and a little bigger than the red-backed (1.1 cm across), long legs (1.3x) that hold it higher, big protruding black eyes with a yellow-cream fleck above each, the tail pinched at its base and swollen behind the pinch, then tapering; plain brown to reddish-brown above finely flecked darker, slightly darker sides, yellowish-orange limb bases (the upper arms and thighs), a pale whitish-yellow belly. Still wrong or unchecked: the shape is the red-backed preview's (a slender plethodontid head, not the ensatina's broader one); the eye bulge is the generator's small eye pushed out 1.45x, so it is big but not quite the ensatina's domed eye; the belly's fine dark specks only fall on small faces and barely show; the tail constriction shows clearly on lod0 and lod1 but not on lod2; only the Oregon subspecies' plain colouring is drawn (no blotched or yellow-eyed forms).",
+  "authors": [
+    "agent (Claude) for Aaron Brodeur (variant: reshaping, recolour, tiers)"
+  ],
+  "sources": [
+    "Jones, Leonard & Olson (eds.), Amphibians of the Pacific Northwest (2005): the Oregon ensatina's plain brown colouring, yellowish-orange limb bases, pale belly with fine specks, the constricted tail base, long legs and big eyes",
+    "Stebbins, A Field Guide to Western Reptiles and Amphibians (3rd ed., 2003): ensatina sizes and subspecies",
+    "AmphibiaWeb, Ensatina eschscholtzii account: size, mass and the tail's constriction (the tail's anti-predator display)",
+    "library/animals/plethodon_vehiculum.json (the source mesh and its build)"
+  ]
+}

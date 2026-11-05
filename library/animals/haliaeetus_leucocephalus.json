@@ -1,0 +1,91 @@
+{
+  "id": "haliaeetus_leucocephalus",
+  "aliases": [
+    "bald_eagle",
+    "eagle"
+  ],
+  "scientific": "Haliaeetus leucocephalus",
+  "common": "bald eagle",
+  "taxonomy": {
+    "kingdom": "Animalia",
+    "phylum": "Chordata",
+    "class": "Aves",
+    "order": "Accipitriformes",
+    "family": "Accipitridae",
+    "genus": "Haliaeetus"
+  },
+  "mass_kg": 4.5,
+  "body_plan": "bird",
+  "size": {
+    "length_m": 0.85,
+    "shoulder_or_wingspan_m": 2.0,
+    "note": "Length 0.71-0.96 m, wingspan 1.68-2.44 m, 3-6.3 kg (females larger; northern birds larger than southern). The flight mesh is scaled to 0.85 m bill tip to tail tip and lofted to a 2.0 m span (1.99 m measured over the finger tips): head and neck project 0.16 m ahead of the wing's leading edge at the root, the tail 0.34 m behind its root (about 0.26 m visible behind the trailing edge); wing chord 0.42-0.44 m over the arm, 0.34 m at the end of the hand."
+  },
+  "source": {
+    "kind": "variant",
+    "title": "Bald eagle, soaring (variant of the red-tailed hawk's Meshy flight mesh)",
+    "author": "variant of buteo_jamaicensis by agent (Claude) for Aaron Brodeur",
+    "url": "https://www.meshy.ai",
+    "file": "library/animals/jobs/buteo_jamaicensis/01a1719d-772f-76b4-9155-823815fec267/model.glb (main checkout, local, git-ignored; generated with Meshy (meshy.ai))",
+    "original": "the red-tailed hawk's Meshy text-to-3D preview, task 01a1719d-772f-76b4-9155-823815fec267, ai_model meshy-6-lite, triangle remesh to 20,000 faces, 20,779 triangles, untextured (2026-10-25); its body, head and big hooked bill kept, the wings rebuilt",
+    "prompt": "(the red-tail's) A red-tailed hawk (Buteo jamaicensis), one adult bird soaring in mid-air, wings fully spread out flat to the sides and symmetrical, about 125 cm wingspan and 55 cm long, shaped to read from below and from above. Broad rounded wings with a straight leading edge and five separated, fingered primary feathers at each wingtip. Short, broad brick-red tail fanned wide into a rounded fan. Legs and feet tucked up under the body. Big rounded head and short hooked bill projecting ahead of the wings. Pale underwing with a dark leading-edge bar and a dark wrist mark, pale breast with a dark belly band. Not an eagle, not a falcon. Single bird, no base, no perch. Game-ready, clean closed mesh.",
+    "job_id": "01a1719d-772f-76b4-9155-823815fec267",
+    "job": "library/animals/jobs/buteo_jamaicensis/01a1719d-772f-76b4-9155-823815fec267/job.json (main checkout)",
+    "credits": 0,
+    "date": "2026-11-05 (UTC)",
+    "adopted_by": "tools/build_bald_eagle.py"
+  },
+  "license": "CC BY-SA 4.0",
+  "license_detail": {
+    "source_terms": "Meshy Terms of Use 3.2 (https://www.meshy.ai/terms-of-use, last updated 2026-09-19): API output on a paid plan is owned by the account holder, who releases it with the project's assets under CC BY-SA 4.0. Terms 2.4: AI-identifying metadata Meshy embeds is carried over (the source GLB carried none; the built GLB records the source in extras.source). Terms 2.6(xi): not for training models that compete with Meshy (binds the account holder, not CC BY-SA licensees).",
+    "redistribute_under_cc_by_sa": true,
+    "note": "A variant built from an earlier Meshy job: no new generation was used. Credit \"generated with Meshy (meshy.ai)\" is kept in the build script header and the GLB asset.copyright. AI-generated output may carry little or no copyright in some jurisdictions; the licence covers what rights exist."
+  },
+  "tiers": {
+    "lod0": 2498,
+    "lod1": 900,
+    "lod2": 250,
+    "file": "client/assets/bald_eagle.glb",
+    "attributes": [
+      "POSITION",
+      "COLOR_0 (linear)",
+      "_PART",
+      "_PARTW",
+      "_PIVOT"
+    ],
+    "lod_m": [
+      60,
+      200
+    ],
+    "note": "Ambient flight mesh as the hawk's: body, head and tail from the generated mesh (feet deleted, pitched 12 degrees nose-down, head 1.12x fuller, bill deepened, tail lifted 6 degrees, lengthened 1.12x and drawn out into a wedge, fanned 1.05x); the wings cut off at the body and lofted from our own plank plan outline on a 2 degree dihedral, blended from the cut root over the first 0.1 m, with seven slotted primaries. Triangles: lod0 2,498 = 1,850 body + 648 wings, primaries and eyes; lod1 900 = 652 + 248; lod2 250 = 122 + 128 (three stations, three rows, seven fingers, wing 2.5x thicker). Tier switches suggested at 60 and 200 m (not wired). GLB 378,412 bytes."
+  },
+  "rig": "bird rig template, flight mesh, exactly as client/assets/redtail.glb (client/src/animalModels.js RIG.hawk-like constants: soaring, flapping, stooping): PART BODY 0, TAIL 3 (pivot at the tail root), HEAD 6 (head and neck, pivot at the neck's base), WING_L/R 4/5 (the arm, pivot at the shoulder, weight ramped in over the wing root), HAND_L/R 9/10 (pivot at the wrist, weight ramped over the hand; the primaries fully HAND); collapse 0 (the wings never fold). extras.rig keys as the hawk's: kind 'bird', wing (shoulder [0.116, 0.11, 0.02]), wrist [0.5, 0.123, 0.02], tail [0, 0.021, -0.124], head [0, 0.051, 0.197], span_m 2.0, dihedral_deg 2. Origin 0.11 m below the shoulder line. No skin.",
+  "candidates": [
+    {
+      "kind": "meshy",
+      "purpose": "the eagle's own soaring flight mesh (not adopted)",
+      "job": "library/animals/jobs/haliaeetus_leucocephalus/01a1ad37-9f49-7378-98c1-23e921af6bc7/job.json",
+      "job_id": "01a1ad37-9f49-7378-98c1-23e921af6bc7",
+      "mode": "text-to-3d preview, ai_model meshy-6-lite, remeshed to triangles, target 20,000 faces",
+      "prompt": "A bald eagle (Haliaeetus leucocephalus), one adult bird soaring in mid-air, wings fully spread out flat to the sides and symmetrical, about 200 cm wingspan and 85 cm long, shaped to read from below and from above. Long broad plank-like wings with nearly parallel edges and seven separated, fingered primary feathers at each wingtip. A white head with a massive yellow hooked bill projecting well ahead of the wings, a white wedge-shaped tail of medium length, fanned. Dark chocolate-brown body and wings, yellow feet tucked up under the body. Not a hawk, not a vulture. Single bird, no base, no perch. Game-ready, clean closed mesh.",
+      "author": "generated with Meshy (meshy.ai) by agent (Claude) for Aaron Brodeur",
+      "date": "2026-11-05 (UTC)",
+      "credits": 5,
+      "raw_triangles": 20826,
+      "license": "owned by the paid account holder (Meshy Terms of Use 3.2); CC BY-SA 4.0 with the project's assets if adopted; Terms 2.6(xi): not for training models that compete with Meshy",
+      "status": "not adopted (2026-11-05)",
+      "review": "Came back flapping, not soaring: the wings raised high in a deep V on the upstroke, the body nearly upright like a perched pigeon with a plump breast, the legs and talons dangling forward, the tail hanging at about 60 degrees. The head is small-billed (a thin short hook, not the massive eagle bill). The body would need a 45 degree pitch that points the head down, a re-bent neck, the legs removed and a new tail, so the red-tail's level flight body (already long-headed with a big hooked bill) was used instead and the wings rebuilt from our own outline."
+    }
+  ],
+  "status": "agent draft, needs local sign-off",
+  "accuracy_notes": "Reads as an adult bald eagle at every tier: from below and above a dark chocolate plank-winged raptor with a white head and big yellow bill projecting well ahead and a white wedge tail; seven well-separated fingers; flat-winged (2 degrees), so it does not read as a vulture or harrier when it banks. The underwing is dark with a slightly paler grey-brown band on the flight-feather bases and a dark trailing edge. Still open: the body is the red-tail's (scaled 1.4x and reshaped), so the head and neck are a little slim for an eagle and the bill, though deepened, is the hawk's hook; the white hood ends in a ragged line where the body faces meet; the eye is a small pale-yellow octahedron (lod0 only); no feet or legs (deleted, as the hawk's); the tail is a smooth plate with no feather separation; no juvenile or subadult plumage (mottled brown and white), which is common on the Olympic Peninsula's rivers in winter; no perched model (the eagle on a snag over the Hoh would need one). A local birder should check the wing breadth and the head projection against soaring Hoh River eagles.",
+  "authors": [
+    "agent (Claude) for Aaron Brodeur (variant: build script, plan outline, recolour, rig, tiers; the rejected eagle preview)"
+  ],
+  "sources": [
+    "Sibley, D. A. (2014), The Sibley Guide to Birds, 2nd ed.: bald eagle in flight (plank wings, head and tail projection, flat soaring profile) - from the agent's knowledge, not reopened for this entry",
+    "Buehler, D. A. (2000), Bald Eagle (Haliaeetus leucocephalus), The Birds of North America / Birds of the World (measurements, mass) - from the agent's knowledge",
+    "Cornell Lab of Ornithology, All About Birds: Bald Eagle (size, field marks) - from the agent's knowledge",
+    "tools/build_redtail.py and library/animals/buteo_jamaicensis.json (template and source mesh)"
+  ]
+}

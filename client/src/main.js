@@ -611,6 +611,7 @@ async function buildSteps(w, { params, pending, direct = false, arrive = null })
   // The playable squirrel (squirrelControl.js): drives flight.pos and the camera in place of the raven when chosen.
   await w.next('controls');
   const squirrel = new SquirrelControl({ tile, scene, camera, flight, veg, animals, acorns, atmosphere, rocks, caption: $('caption') });
+  animals.waterAt = (x, z) => squirrel.waterAt(x, z);   // the water's surface for the swimmers and waders (animals.js surfAt: the otter, the mergansers, the kingfisher's dive)
   // The playable acorn woodpecker (woodpeckerControl.js): clinging, hitching and short undulating flights, the same way.
   const woodpecker = new WoodpeckerControl({ tile, scene, camera, flight, veg, animals, acorns, atmosphere, caption: $('caption') });
   // Every other animal (2026-10-26): the walkers (groundControl.js: deer, fox, coyote, lion, rabbits, vole, ground

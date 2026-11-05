@@ -1,0 +1,77 @@
+{
+  "id": "troglodytes_pacificus",
+  "aliases": [
+    "pacific_wren",
+    "winter_wren"
+  ],
+  "scientific": "Troglodytes pacificus",
+  "common": "Pacific wren",
+  "taxonomy": {
+    "kingdom": "Animalia",
+    "phylum": "Chordata",
+    "class": "Aves",
+    "order": "Passeriformes",
+    "family": "Troglodytidae",
+    "genus": "Troglodytes"
+  },
+  "mass_kg": 0.009,
+  "body_plan": "bird",
+  "size": {
+    "length_m": 0.1,
+    "shoulder_or_wingspan_m": 0.15,
+    "note": "Length 9-10 cm, wingspan 12-16 cm, 8-12 g. Built 0.100 m bill to tail (0.072 m bill tip to the neck to the rump, plus a 0.028 m tail), 0.067 m tall standing; wing cards 0.15 m across."
+  },
+  "source": {
+    "kind": "meshy",
+    "title": "Pacific wren",
+    "author": "generated with Meshy (meshy.ai) by agent (Claude) for Aaron Brodeur",
+    "url": null,
+    "file": "library/animals/jobs/troglodytes_pacificus/01a1ad36-efb8-739e-b621-93b82701cc36/model.glb (local; jobs/ meshes are not tracked)",
+    "original": "Meshy text-to-3D preview, meshy-6-lite, triangle mesh, 20,905 triangles, one piece, untextured",
+    "prompt": "A Pacific wren (Troglodytes pacificus), a tiny round dark brown songbird about 10 cm long, NOT a sparrow, NOT a mouse. One adult standing on the ground, side-on pose, body round like a ball, a very short stubby tail cocked straight up, a thin short slightly downcurved bill, a short neck, thin pale pinkish-brown legs, three toes forward and one back. Dark rufous-brown all over with fine black barring on the wings, tail and flanks, a faint pale buff eyebrow. Wings folded tight against the body. No base, no perch. Game-ready, clean closed mesh.",
+    "job_id": "01a1ad36-efb8-739e-b621-93b82701cc36",
+    "job": "library/animals/jobs/troglodytes_pacificus/01a1ad36-efb8-739e-b621-93b82701cc36/job.json",
+    "credits": 5,
+    "date": "2026-11-05 (UTC)",
+    "adopted_by": "tools/build_songbird.py --species troglodytes_pacificus",
+    "build": "tools/build_songbird.py"
+  },
+  "license": "CC BY-SA 4.0",
+  "license_detail": {
+    "source_terms": "Meshy Terms of Use 3.2 (https://www.meshy.ai/terms-of-use, last updated 2026-09-19): API output on a paid plan is owned by the account holder, who releases it with the project's assets under CC BY-SA 4.0. Terms 2.4: AI-identifying metadata Meshy embeds is carried over (the source GLB carried none; the adopted GLB records the source in extras.source). Terms 2.6(xi): not for training models that compete with Meshy (binds the account holder).",
+    "redistribute_under_cc_by_sa": true,
+    "note": "Credit \"generated with Meshy (meshy.ai)\" in README, the build script header and the GLB asset.copyright. AI-generated output may carry little or no copyright in some jurisdictions; the licence covers what rights exist."
+  },
+  "tiers": {
+    "lod0": 1000,
+    "lod1": 400,
+    "lod2": 120,
+    "file": "client/assets/pacific_wren.glb",
+    "attributes": [
+      "POSITION",
+      "COLOR_0 (linear)",
+      "_PART",
+      "_PARTW",
+      "_PIVOT"
+    ],
+    "lod_m": [
+      6,
+      20
+    ],
+    "note": "Scaled to 0.10 m bill to tail. The preview's long generic songbird tail (0.65 units) cut off at the rump and replaced by a short stubby tail (2.8 cm, rounded, 1.1-1.7 cm wide) cocked 50 degrees above level, about 60 degrees above the back line; the body behind the shoulders shortened 0.84x to a ball; the body levelled 8 degrees; generated legs replaced by pinkish-brown procedural legs; small black eye; flight wing cards (short, rounded, barred black on lod0). Colours: dark rufous-brown, darker above, the folded wings and the tail barred black, the belly and flanks barred dark and buff (face bands on lod0), a faint pale buff eyebrow, a paler warm throat, dark bill. Triangles: lod0 1,000 = 675 body + 325 legs, tail, cards and eyes; lod1 400 = 309 + 91; lod2 120 = 91 + 29. GLB 185,524 bytes. lod_m is a suggestion for a 10 cm bird."
+  },
+  "rig": "bird rig template of the Steller's jay (tools/build_stellersjay.py; drawn with client/src/animalModels.js RIG.stjay's constants): PART BODY 0, LEG_A 1 / LEG_B 2 procedural legs (pivot at the knee), TAIL 3 procedural tail (pivot at the rump), HEAD 6 (head and neck, pivot at the base of the neck), WING_L/R 4/5 and HAND_L/R 9/10 flight cards that collapse into the shoulder on pose; extras.rig {kind 'bird', wing (shoulder), tail (rump), head (neck base), length_m}; no skin",
+  "status": "agent draft, needs local sign-off",
+  "accuracy_notes": "Built 2026-11-05 from the Meshy preview, which came back as a generic long-tailed songbird. Reads as a tiny round dark-brown wren with a short cocked tail; the face-band barring on lod0 reads as a fine darker mottling on the flanks and wings rather than crisp bars (the body has about 675 faces), and is absent on lod1/lod2 (plain dark rufous-brown). Still open: the bill is the preview's, a little thick and only faintly decurved; the throat keeps a little of the preview's ruffled sculpting; the neck is short but the head sits a little high; legs are long-ish for a wren. A local birder should check the tail angle and the depth of the brown.",
+  "authors": [
+    "agent (Claude) for Aaron Brodeur (Meshy candidate, build script, rig, tiers, entry)"
+  ],
+  "sources": [
+    "The Sibley Guide to Birds, 2nd edition (D. A. Sibley, 2014): plumage, shape and posture",
+    "Cornell Lab of Ornithology, All About Birds and Birds of the World species accounts: size, mass, wingspan, plumage",
+    "docs/animal-library.md",
+    "library/animals/README.md",
+    "tools/build_songbird.py",
+    "tools/build_stellersjay.py"
+  ]
+}

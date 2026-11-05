@@ -1,6 +1,7 @@
 """Dev-only receiver for the opening screen's sprite renders (client/tools/opening_sprites.html).
 
-    .venv/bin/python tools/sprite_receiver.py            # listens on 127.0.0.1:8798
+    .venv/bin/python tools/sprite_receiver.py [port]     # listens on 127.0.0.1:8798 (or the port given; then open
+                                                         # opening_sprites.html?recv=http://127.0.0.1:<port>)
 
 The render page POSTs each PNG to /save/<name>.png; it is written under client/assets/opening/_png/ and nowhere
 else (the name is reduced to [a-z0-9_.-], no paths). POST /done converts every PNG there to WebP next to it
@@ -72,5 +73,7 @@ class Handler(BaseHTTPRequestHandler):
 
 
 if __name__ == "__main__":
-    print(f"sprite receiver on http://127.0.0.1:8798 -> {ROOT}", flush=True)
-    HTTPServer(("127.0.0.1", 8798), Handler).serve_forever()
+    import sys
+    port = int(sys.argv[1]) if len(sys.argv) > 1 else 8798
+    print(f"sprite receiver on http://127.0.0.1:{port} -> {ROOT}", flush=True)
+    HTTPServer(("127.0.0.1", port), Handler).serve_forever()

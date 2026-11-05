@@ -61,7 +61,8 @@ export const CAM_RAISE = 1.3, FRAME_Y = -0.45, CAM_PLUS = { back: 0.5, up: 0.2 }
 // steers; after HERD_IDLE s without a key the group takes back over: it goes on with its own life from where it is,
 // and the player's body walks with it as a member (herdDrive: keys synthesized toward its slot, behind the leader in
 // file or round the centre) until any key, which takes the reins back. The HUD's where line says which.
-const HERD_WORD = { odocoileus_hemionus: 'herd', callipepla_californica: 'covey', oreortyx_pictus: 'covey', meleagris_gallopavo: 'flock' };
+const HERD_WORD = { odocoileus_hemionus: 'herd', callipepla_californica: 'covey', oreortyx_pictus: 'covey', meleagris_gallopavo: 'flock',
+  cervus_canadensis: 'herd', mergus_merganser: 'flock' };
 const HERD_LEAD = 5, HERD_IDLE = 6;
 // The catch (2026-10-30, docs/movement.md "The catch"): a hunter's catch move is its family's (S.catch). 'leap' (Felidae): the
 // rush's last bound within d m of prey ahead is a leap of dur s and peak m that homes on the prey and lands with the
@@ -159,6 +160,76 @@ export const GROUND = {
     flush: { from: 2.2, v: 13, T: 2.8, peak: 3, beat: 19, up: 0.5 },
     cam: { back: 0.95, up: 0.37, look: 0.85, aimUp: 0.13, side: 0.4, clear: 0.1, near: 0.05 },
     act: { peck: true, t: 1, word: 'scratching and pecking' }, alert: { flick: -0.4 }, rest: null },
+  // ---- the Hoh rain forest batch (2026-11-05; animals.js HOH) ----
+  // Roosevelt elk: the deer's body three times over; a long trot, a heavy gallop, wades the river (the bull: model bull-elk)
+  cervus_canadensis: { short: 'elk', common: 'Roosevelt elk', model: 'elk', rig: 'quad',
+    walk: 1.4, run: 13, back: 0.8, ramp: 3.5, accel: 1.8, stop: 3, turn: 1.4, jumpH: 1.5, jumpL: 3.5, step: 0.6, wade: 1.1,
+    half: 1.0, rad: 0.45, shoulder: 1.4, stride: 1.6, trot: 4,
+    cam: { back: 6.5, up: 2.8, look: 4.5, aimUp: 1.6, side: 0.35, clear: 0.5, near: 0.3 },
+    act: { flick: 1, t: 5, word: 'grazing' }, alert: { flick: -0.4 }, rest: 'bed' },
+  // the bobcat: a cat's walk, a short explosive rush and the leap onto a hare or a mouse
+  lynx_rufus: { short: 'bobcat', common: 'bobcat', model: 'bobcat', rig: 'quad',
+    walk: 0.9, run: 13, back: 0.6, ramp: 1.0, accel: 4, stop: 6, turn: 2.4, jumpH: 1.2, jumpL: 3, step: 0.4, wade: 0.25,
+    half: 0.32, rad: 0.14, shoulder: 0.5, stride: 0.6, trot: 2.0, stalk: 0.4, catch: 'leap',
+    cam: { back: 2.5, up: 0.95, look: 1.7, aimUp: 0.4, side: 0.4, clear: 0.25, near: 0.15 },
+    act: { flick: 0.7, t: 3, word: 'sniffing' }, alert: { flick: -0.3 }, rest: 'bed' },
+  // the river otter: low and quick on land, into the river (it wades deep: animals.js lowers the AI's body to swim)
+  lontra_canadensis: { short: 'otter', common: 'river otter', model: 'otter', rig: 'quad',
+    walk: 0.8, run: 6.5, back: 0.5, ramp: 1.2, accel: 4, stop: 6, turn: 2.8, jumpH: 0.4, jumpL: 1.0, step: 0.3, wade: 3,
+    half: 0.3, rad: 0.12, shoulder: 0.28, stride: 0.34, trot: 1.8,
+    cam: { back: 2.0, up: 0.7, look: 1.4, aimUp: 0.3, side: 0.4, clear: 0.2, near: 0.12 },
+    act: { flick: 1, t: 3, word: 'nosing along the bank' }, alert: { flick: -0.3 }, rest: 'bed' },
+  // the snowshoe hare: the brush rabbit's hop on big feet, a long fast bound
+  lepus_americanus: { short: 'hare', common: 'snowshoe hare', model: 'snowshoe-hare', rig: 'rodent',
+    walk: 1.1, run: 12, back: 0.5, ramp: 1.2, accel: 5, stop: 7, turn: 3.2, jumpH: 0.5, jumpL: 1.6, step: 0.2, wade: 0.06,
+    half: 0.18, rad: 0.08, shoulder: 0.22,
+    bound: v => v > 2 ? Math.min(3, 0.6 + 0.2 * v) : 0.4, lift: v => v > 2 ? 0.15 : 0.07, rock: 0.16,
+    cam: { back: 1.3, up: 0.42, look: 1.0, aimUp: 0.2, side: 0.4, clear: 0.14, near: 0.07 },
+    act: { nibble: true, t: 3, word: 'nibbling' }, alert: { pose: 1 }, rest: 'freeze' },
+  // the Douglas squirrel on the ground (it does not climb as the player: the gray squirrel's controller is its own)
+  tamiasciurus_douglasii: { short: 'dsquirrel', common: 'Douglas squirrel', model: 'douglas-squirrel', rig: 'rodent',
+    walk: 0.6, run: 5, back: 0.4, ramp: 0.8, accel: 6, stop: 9, turn: 3.8, jumpH: 0.3, jumpL: 0.8, step: 0.15, wade: 0.02,
+    half: 0.09, rad: 0.04, shoulder: 0.08,
+    bound: v => v > 2 ? 0.45 : 0.18, lift: v => v > 2 ? 0.04 : 0.015, rock: 0.12,
+    cam: { back: 0.6, up: 0.18, look: 0.5, aimUp: 0.08, side: 0.4, clear: 0.07, near: 0.04 },
+    act: { nibble: true, t: 3, word: 'shredding a cone' }, alert: { pose: 1 }, rest: null },
+  tamias_townsendii: { short: 'chipmunk', common: "Townsend's chipmunk", model: 'chipmunk', rig: 'rodent',
+    walk: 0.5, run: 4, back: 0.4, ramp: 0.6, accel: 7, stop: 10, turn: 4, jumpH: 0.15, jumpL: 0.35, step: 0.1, wade: 0.015,
+    half: 0.07, rad: 0.035, shoulder: 0.06,
+    bound: v => v > 2 ? 0.3 : 0.14, lift: v => v > 2 ? 0.025 : 0.01, rock: 0.1,
+    cam: { back: 0.45, up: 0.14, look: 0.4, aimUp: 0.06, side: 0.4, clear: 0.05, near: 0.03 },
+    act: { nibble: true, t: 3, word: 'filling its cheeks' }, alert: { pose: 1 }, rest: null },
+  peromyscus_maniculatus: { short: 'mouse', common: 'deer mouse', model: 'deer-mouse', rig: 'rodent',
+    walk: 0.5, run: 2.5, back: 0.3, ramp: 0.5, accel: 8, stop: 12, turn: 4.5, jumpH: 0.12, jumpL: 0.25, step: 0.04, wade: 0.01,
+    half: 0.045, rad: 0.022, shoulder: 0.04,
+    bound: () => 0.1, lift: () => 0.006, rock: 0,
+    cam: { back: 0.22, up: 0.075, look: 0.25, aimUp: 0.03, side: 0.35, clear: 0.035, near: 0.02 },
+    act: { nibble: true, t: 2.5, word: 'eating seeds' }, alert: { pose: 1 }, rest: null },
+  // the salamanders: a slow sprawling walk on the reptile template, no push-ups, rest flat in the moss
+  plethodon_vehiculum: { short: 'salamander', common: 'western red-backed salamander', model: 'salamander', rig: 'lizard',
+    walk: 0.05, run: 0.25, back: 0.03, ramp: 0.5, accel: 6, stop: 10, turn: 2, jumpH: 0.01, jumpL: 0.03, step: 0.6, wade: 0.01,
+    half: 0.025, rad: 0.01, shoulder: 0.008,
+    cam: { back: 0.18, up: 0.05, look: 0.18, aimUp: 0.01, side: 0.35, clear: 0.02, near: 0.01 },
+    act: { headFlick: true, t: 0.8, word: 'nosing the moss' }, alert: { flick: -0.2 }, rest: 'bask' },
+  ensatina_eschscholtzii: { short: 'ensatina', common: 'ensatina', model: 'ensatina', rig: 'lizard',
+    walk: 0.05, run: 0.25, back: 0.03, ramp: 0.5, accel: 6, stop: 10, turn: 2, jumpH: 0.01, jumpL: 0.03, step: 0.6, wade: 0.01,
+    half: 0.028, rad: 0.012, shoulder: 0.009,
+    cam: { back: 0.2, up: 0.055, look: 0.2, aimUp: 0.01, side: 0.35, clear: 0.02, near: 0.01 },
+    act: { headFlick: true, t: 0.8, word: 'nosing the moss' }, alert: { flick: -0.2 }, rest: 'bask' },
+  // the great blue heron: a slow stalk through the shallows, the strike (E), a heavy flush on slow beats
+  ardea_herodias: { short: 'heron', common: 'great blue heron', model: 'heron', rig: 'bird',
+    walk: 0.5, run: 3, back: 0.3, ramp: 2, accel: 3, stop: 5, turn: 2, jumpH: 0.3, jumpL: 0.6, step: 0.3, wade: 0.45,
+    half: 0.3, rad: 0.12, shoulder: 0.75, stride: 0.5,
+    flush: { from: 1.5, v: 7, T: 5, peak: 6, beat: 2.5, up: 0.8 },
+    cam: { back: 3.2, up: 1.5, look: 2.2, aimUp: 0.8, side: 0.35, clear: 0.3, near: 0.15 },
+    act: { peck: true, t: 1.2, word: 'striking at a fish' }, alert: { flick: -0.4 }, rest: null },
+  // the common merganser: on a gravel bar or wading the river (wade deep: the body rides the water as the AI's does)
+  mergus_merganser: { short: 'merganser', common: 'common merganser', model: 'merganser', rig: 'bird',
+    walk: 0.6, run: 3, back: 0.3, ramp: 1, accel: 4, stop: 6, turn: 3, jumpH: 0.15, jumpL: 0.3, step: 0.15, wade: 9,
+    half: 0.2, rad: 0.1, shoulder: 0.2, stride: 0.25,
+    flush: { from: 1.5, v: 14, T: 4, peak: 2, beat: 8, up: 0.5 },
+    cam: { back: 1.7, up: 0.65, look: 1.3, aimUp: 0.25, side: 0.4, clear: 0.15, near: 0.08 },
+    act: { peck: true, t: 1, word: 'dipping its head for fish' }, alert: { flick: -0.4 }, rest: null },
 };
 // The legs (owner, 2026-10-29: "All animals should have a top speed that is not their top speed - and a sprint button
 // (shift) with a sprint meter that is appropriate for their species"): per species [cruise, sprint, recover]. cruise is
@@ -171,6 +242,9 @@ const LEGS = {
   ursus_americanus: [5.5, 5, 35], sylvilagus_bachmani: [4, 4, 30], lepus_californicus: [8, 7, 30], microtus_californicus: [1.0, 3, 15],
   otospermophilus_beecheyi: [2.8, 4, 20], sceloporus_occidentalis: [1.4, 2.5, 25], meleagris_gallopavo: [3.8, 4, 25],
   callipepla_californica: [2.8, 3, 20], oreortyx_pictus: [3.2, 3, 20],
+  cervus_canadensis: [8, 10, 40], lynx_rufus: [5, 3, 25], lontra_canadensis: [3.5, 4, 20], lepus_americanus: [6, 6, 30],
+  tamiasciurus_douglasii: [3, 4, 20], tamias_townsendii: [2.5, 4, 20], peromyscus_maniculatus: [1.4, 3, 15],
+  plethodon_vehiculum: [0.12, 2, 25], ensatina_eschscholtzii: [0.12, 2, 25], ardea_herodias: [1.5, 3, 25], mergus_merganser: [1.5, 3, 25],
 };
 for (const [code, [cruise, sprint, recover]] of Object.entries(LEGS)) Object.assign(GROUND[code], { cruise, sprint, recover });
 
@@ -321,8 +395,8 @@ export class GroundControl {
   // turkey in its roost), or in a quail's or turkey's flush (it glides on down).
   enterAt(o) {
     const f = this.flight, a = this.animals.held?.get(o.id) || this.animals.byId?.get(o.id) || null;
-    const buck = a && this.animals.meshes?.[a.sp]?.name === 'buck';
-    this.useSpecies(o.code, buck ? 'buck' : null);
+    const buck = a && this.animals.meshes?.[a.sp]?.name === 'buck', bull = a && this.animals.meshes?.[a.sp]?.name === 'bull elk';
+    this.useSpecies(o.code, buck ? 'buck' : bull ? 'bull-elk' : null);
     this.size = a?.size ?? 1; this.variant = a?.variant ?? 0; this.male = a?.male ?? 0;
     this.buck = buck ? { u1: a.u1, u2: a.u2, u3: a.u3, young: a.young || 0 } : null;
     const ps = this.pose, S = this.S;

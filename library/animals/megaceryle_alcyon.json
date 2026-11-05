@@ -1,0 +1,78 @@
+{
+  "id": "megaceryle_alcyon",
+  "aliases": [
+    "belted_kingfisher",
+    "kingfisher"
+  ],
+  "scientific": "Megaceryle alcyon",
+  "common": "Belted kingfisher",
+  "taxonomy": {
+    "kingdom": "Animalia",
+    "phylum": "Chordata",
+    "class": "Aves",
+    "order": "Coraciiformes",
+    "family": "Alcedinidae",
+    "genus": "Megaceryle"
+  },
+  "mass_kg": 0.15,
+  "body_plan": "bird",
+  "size": {
+    "length_m": 0.32,
+    "shoulder_or_wingspan_m": 0.55,
+    "note": "Length 28-35 cm, wingspan 48-58 cm, 113-178 g. Built 0.320 m bill to tail (0.250 m bill tip to the neck to the rump, plus a 0.070 m tail; straight bill tip to tail tip 0.309 m), 0.200 m tall perched; wing cards 0.55 m across."
+  },
+  "source": {
+    "kind": "meshy",
+    "title": "Belted kingfisher",
+    "author": "generated with Meshy (meshy.ai) by agent (Claude) for Aaron Brodeur",
+    "url": null,
+    "file": "library/animals/jobs/megaceryle_alcyon/01a1ad3b-e93c-70a8-bea3-372512334673/model.glb (local; jobs/ meshes are not tracked)",
+    "original": "Meshy text-to-3D preview, meshy-6-lite, triangle mesh, 20,661 triangles, one piece, untextured",
+    "prompt": "A belted kingfisher (Megaceryle alcyon), one adult perched upright with its wings folded tight, side-on pose. Realistic proportions: 32 cm long, a large head with a shaggy ragged crest at the back of the crown, a long heavy straight dagger-shaped black bill as long as the head, a stocky body, a short square tail, tiny legs. Slate blue-grey head, back and wings and a blue-grey band across the breast, a white collar around the neck, a white spot in front of the eye, white underparts; small white spots on the dark wing tips. No base, no perch. Game-ready, clean closed mesh.",
+    "job_id": "01a1ad3b-e93c-70a8-bea3-372512334673",
+    "job": "library/animals/jobs/megaceryle_alcyon/01a1ad3b-e93c-70a8-bea3-372512334673/job.json",
+    "credits": 5,
+    "date": "2026-11-05 (UTC)",
+    "adopted_by": "tools/build_songbird.py --species megaceryle_alcyon",
+    "build": "tools/build_songbird.py"
+  },
+  "license": "CC BY-SA 4.0",
+  "license_detail": {
+    "source_terms": "Meshy Terms of Use 3.2 (https://www.meshy.ai/terms-of-use, last updated 2026-09-19): API output on a paid plan is owned by the account holder, who releases it with the project's assets under CC BY-SA 4.0. Terms 2.4: AI-identifying metadata Meshy embeds is carried over (the source GLB carried none; the adopted GLB records the source in extras.source). Terms 2.6(xi): not for training models that compete with Meshy (binds the account holder).",
+    "redistribute_under_cc_by_sa": true,
+    "note": "Credit \"generated with Meshy (meshy.ai)\" in README, the build script header and the GLB asset.copyright. AI-generated output may carry little or no copyright in some jurisdictions; the licence covers what rights exist."
+  },
+  "tiers": {
+    "lod0": 1000,
+    "lod1": 400,
+    "lod2": 120,
+    "file": "client/assets/kingfisher.glb",
+    "attributes": [
+      "POSITION",
+      "COLOR_0 (linear)",
+      "_PART",
+      "_PARTW",
+      "_PIVOT",
+      "_COLORB (linear; the male)"
+    ],
+    "lod_m": [
+      12,
+      40
+    ],
+    "note": "Scaled to 0.32 m bill to tail. The preview's rock base, legs and long tail cut off; big head with the shaggy two-pointed crest and the long dagger bill kept; tiny dark procedural legs; a short square procedural tail (7 cm, 2.6-3.4 cm wide, fine white bars on lod0) at 35 degrees below level (raised from 58 so the tip stays above the ground); small black eye; flight wing cards (slate arm, black hand with a white patch at the base of the primaries on lod0, pale below). Colours: slate blue-grey head, crest, back, wings and tail; a white spot before the eye; a white chin, throat and a broad white collar right round the neck; a slate breast band; black bill with a grey base; black primaries with small white spots on the folded wing (lod0). COLOR_0 is the female (a rufous-chestnut belly band and rufous flanks), _COLORB the male (white there), as tools/build_turkey.py writes its hen. Triangles: lod0 1,000 = 701 body + 299 legs, tail, cards and eyes; lod1 400 = 315 + 85; lod2 120 = 93 + 27. GLB 251,296 bytes."
+  },
+  "rig": "bird rig template of the Steller's jay (tools/build_stellersjay.py; drawn with client/src/animalModels.js RIG.stjay's constants): PART BODY 0, LEG_A 1 / LEG_B 2 procedural legs (pivot at the knee), TAIL 3 procedural tail (pivot at the rump), HEAD 6 (head and neck, pivot at the base of the neck), WING_L/R 4/5 and HAND_L/R 9/10 flight cards that collapse into the shoulder on pose; extras.rig {kind 'bird', wing (shoulder), tail (rump), head (neck base), length_m}; no skin; aAnim2.w selects the male colour set (_COLORB), as the turkey's hen",
+  "status": "agent draft, needs local sign-off",
+  "accuracy_notes": "Built 2026-11-05. Reads as a belted kingfisher: big crested slate head, dagger bill, white collar, slate breast band and (female) the rufous belly band and flanks. Still open: (1) upright, so like the owl it would fly 'standing up' under RIG.stjay unless the client pitches it in flight; (2) the tail angle is shallower than a perched kingfisher's (35 not 55-60 degrees below level) to keep its tip off the ground when it hops; (3) the rufous band is soft-edged and its centre blends toward white on large faces; (4) the white loral spot is a few faces, a little large; (5) the hover-and-plunge dive is not in RIG.stjay.",
+  "authors": [
+    "agent (Claude) for Aaron Brodeur (Meshy candidate, build script, rig, tiers, entry)"
+  ],
+  "sources": [
+    "The Sibley Guide to Birds, 2nd edition (D. A. Sibley, 2014): plumage, shape and posture",
+    "Cornell Lab of Ornithology, All About Birds and Birds of the World species accounts: size, mass, wingspan, plumage",
+    "docs/animal-library.md",
+    "library/animals/README.md",
+    "tools/build_songbird.py",
+    "tools/build_stellersjay.py"
+  ]
+}
