@@ -91,7 +91,8 @@ def territories_or_none(tile: Tile) -> tuple[list[dict], dict | None]:
     try:
         return territories(tile)
     except Exception as ex:  # noqa: BLE001
-        print(f"native-land territories: skipped ({str(ex)[:160]})", flush=True)
+        from . import runlog
+        runlog.fallback(f"native-land territories skipped ({str(ex)[:160]})", source="native_land")
         return [], {"source": "native_land", "status": "skipped"}
 
 

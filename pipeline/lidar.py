@@ -295,7 +295,28 @@ def build_grid(tile: Tile, workers: int = 10, max_depth: int | None = None, forc
     from multiprocessing import get_context
     from .fetch_lidar import ept_nodes, find_ept
     dem_meta = find_dem_project(tile)
-    ept = find_ept(tile, dem_meta["chosen"]["project"], _src_cache(tile, "lidar_index"))["chosen"]
+    found = find_ept(tile, dem_meta["chosen"]["project"], _src_cache(tile, "lidar_index"))
+    ept = found["chosen"]
+    if len(found.get("overlapping") or []) > 1:
+        # A project's bounds are its whole box: the first that overlaps may hold nothing here (utm10n_731_4235, 2026-11-04:
+        # CA_SierraNevada_3_2022 overlapped by box and gave 54 k points, none in the tile; _5_2022 holds the tile). Take the
+        # one whose hierarchy has the most points in nodes touching the tile.
+        best, best_n = ept, -1
+        for cand in found["overlapping"]:
+            cp = _src_cache(tile, "lidar_index") / f"nodes_{cand['project']}_{max_depth if max_depth is not None else 'all'}.json"
+            if cp.exists():
+                cn = json.loads(cp.read_text())
+            else:
+                cn = ept_nodes(tile, cand, max_depth)
+                cp.write_text(json.dumps(cn))
+            n = sum(c for _, c in cn)
+            log(f"grid: EPT candidate {cand['project']}: {len(cn)} nodes touching the tile, {n / 1e6:.1f} M points")
+            if n > best_n:
+                best, best_n = cand, n
+        if best["project"] != ept["project"]:
+            from . import runlog
+            runlog.fallback(f"EPT {ept['project']} overlaps the tile by its box only; {best['project']} holds the points", product="ept")
+            ept = best
     if force:
         shutil.rmtree(tile.dir / "_cache" / GRID_DIR, ignore_errors=True)
     d, g = _grids(tile)
@@ -310,7 +331,9 @@ def build_grid(tile: Tile, workers: int = 10, max_depth: int | None = None, forc
     state["fields"] = list(GRID_FIELDS)
     if state.get("complete") and not force:
         return state
-    nodes_p = _src_cache(tile, "lidar_index") / f"nodes_{max_depth if max_depth is not None else 'all'}.json"
+    nodes_p = _src_cache(tile, "lidar_index") / f"nodes_{ept['project']}_{max_depth if max_depth is not None else 'all'}.json"
+    if state.get("ept", {}).get("project") not in (None, ept["project"]):
+        raise RuntimeError(f"{d} was built from EPT {state['ept']['project']}, not {ept['project']}; re-run with --force")
     if nodes_p.exists():
         nodes = json.loads(nodes_p.read_text())
     else:
@@ -370,6 +393,8 @@ def build_grid(tile: Tile, workers: int = 10, max_depth: int | None = None, forc
     state_p.write_text(json.dumps(state))
     if state["failed"]:
         raise RuntimeError(f"{len(state['failed'])} EPT nodes failed; re-run to retry: {list(state['failed'])[:5]}")
+    if not state["points_in_tile"]:   # fail here, not in the products' statistics on an empty grid
+        raise RuntimeError(f"EPT {ept['project']} gave {state['points']} points and none inside the tile; --force lidar after fixing the choice")
     return state
 
 
@@ -1026,12 +1051,17 @@ def build_lidar(tile: Tile, force=False, workers=10, max_depth=None, stage="all"
     dem_info = build_dem_1m(tile, force)
     stats_p = tile.dir / "terrain" / "lidar_stats.json"
     if (tile.dir / "terrain" / "lidar_dem_only.json").exists() and not force and not stats_p.exists():
+        from . import runlog
+        runlog.fallback("DEM-only (terrain/lidar_dem_only.json from an earlier run; --force lidar asks for the point cloud again)",
+                        product="dem_only")
         return build_dem_only(tile, dem_info, force)
     if stage in ("all", "grid") and (force or not stats_p.exists()):
         try:
             build_grid(tile, workers, max_depth, force)
         except NoPointCloud as e:
             log(f"no point cloud: {e}")
+            from . import runlog
+            runlog.fallback(f"no public point cloud ({str(e)[:160]}): DEM-only products from the 1 m DEM", product="dem_only")
             return build_dem_only(tile, dem_info, force)
     if stage == "grid":
         return {}

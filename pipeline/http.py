@@ -66,3 +66,21 @@ def download(url: str, params, dest: Path, *, force=False) -> Path:
         raise RuntimeError(f"expected binary from {url}, got an error body: {body!r}")
     tmp.rename(dest)
     return dest
+
+
+def get_json_cached(url: str, params, cache: Path, *, force=False, source: str | None = None, timeout=300):
+    """A JSON GET answered from `cache` when it is there (and not `force`), else fetched with retries and written.
+    Only a parsed JSON answer is cached: an error status raises (http.get) and nothing is written, so a failed or
+    rate-limited request is asked again next time. runlog records the read (cached or not) against the step."""
+    import json
+    from . import runlog
+    if cache.exists() and cache.stat().st_size > 0 and not force:
+        runlog.fetched(source or url, str(cache), cached=True)
+        return json.loads(cache.read_text())
+    data = get(url, params, timeout=timeout).json()
+    cache.parent.mkdir(parents=True, exist_ok=True)
+    tmp = cache.with_suffix(cache.suffix + ".part")
+    tmp.write_text(json.dumps(data))
+    tmp.rename(cache)
+    runlog.fetched(source or url, str(cache), cached=False)
+    return data

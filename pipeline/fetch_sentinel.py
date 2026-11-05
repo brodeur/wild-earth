@@ -250,6 +250,9 @@ def fetch_looks(tile: Tile, force=False, workers=12) -> tuple[list[Path], dict]:
             print(f"sentinel search via {prov} failed ({e})", flush=True)
     if scenes is None:
         raise RuntimeError("; ".join(errors))
+    if errors:
+        from . import runlog
+        runlog.fallback(f"sentinel search: {'; '.join(errors)[:200]}; scenes via {provider}", source=provider)
     write_json(cache / f"scenes_{provider}.json", scenes)
     # Keep scenes whose MGRS footprint overlaps the tile (the WGS84 bbox search also returns the
     # neighbouring MGRS row, which only touches the tile's corner).
@@ -288,6 +291,9 @@ def fetch_looks(tile: Tile, force=False, workers=12) -> tuple[list[Path], dict]:
             done += 1
             if done % 25 == 0 or done == len(todo):
                 print(f"  {done}/{len(todo)} dates read, {time.time() - t0:.0f}s", flush=True)
+    if failed:
+        from . import runlog
+        runlog.fallback(f"sentinel: {len(failed)} of {len(todo)} dates could not be read and are left out", dates=failed[:20])
     paths = sorted(looks_dir.glob("*.npz"))
     paths = [p for p in paths if not p.name.endswith(".tmp.npz") and p.stem[:4].isdigit()
              and f"{p.stem[:4]}-{p.stem[4:6]}-{p.stem[6:8]}" in by_date]

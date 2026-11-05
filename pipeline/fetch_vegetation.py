@@ -60,7 +60,11 @@ def _export(tile: Tile, name: str, n: int, force=False) -> np.ndarray:
                 "size": f"{n},{n}", "format": "tiff", "pixelType": "S16", "noData": NODATA,
                 "interpolation": "RSP_NearestNeighbor", "f": "image"}, raw, force=force)
             with rasterio.open(raw) as src:
-                return src.read(1).astype("int16")
+                arr = src.read(1).astype("int16")
+            if attempt:
+                from . import runlog
+                runlog.fallback(f"LANDFIRE {name} export answered on try {attempt + 1} of {EXPORT_TRIES} ({str(last)[:120]})")
+            return arr
         except Exception as e:  # noqa: BLE001
             last = e
             if raw.exists():

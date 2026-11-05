@@ -1,0 +1,731 @@
+"""The tile build as a graph of steps: one command builds a tile from nothing, and builds it again the same way.
+
+    python -m pipeline.build_tile --tile utm10n_735_4235 --all          # every step, in order; skips what is current
+    python -m pipeline.build_tile --tile utm10n_735_4235 --all --force derive,registry
+    python -m pipeline.build_tile --tile utm10n_735_4235 --plan         # what --all would run, and why
+    python -m pipeline.build_tile --tile utm11n_270_4180 --status       # which steps ran, which are missing or stale
+    python -m pipeline.build_tile --tile utm11n_270_4180 --adopt        # record a tile built before the graph
+    python -m pipeline.build_tile --anchor -120.31 38.27 --all          # a new tile from a point
+
+Each step (STEPS) declares what it is (version, the modules whose code it runs), what it needs (the steps whose
+outputs it reads: `after`), what it fetches (`sources`, with each source's region in pipeline/regions.py) and when it
+does not apply (`applies`: a DEM-only tile has no crowns to find; that is recorded as not_applicable with its reason,
+never skipped in silence). Before a step runs, its fingerprint is computed:
+
+    sha256(version, the hash of its modules' code, its parameters, every upstream step's output hash,
+           the library files it reads)
+
+and the step is skipped when its last run in the manifest has the same fingerprint and every output it recorded is
+still on disk with the hash it had. A step whose outputs come out the same as before leaves its dependents' fingerprints
+unchanged, so they are skipped too: a code change re-runs exactly the part of the graph it reaches. `--force <step>`
+runs a step whatever its fingerprint (and its fetch modules re-ask their sources); dependents re-run if its outputs
+changed.
+
+The manifest's `steps` holds, per step: version, code hash, parameters, the fingerprint and the upstream hashes it was
+made of, the output layers and files with their hashes, the sources it used (with the date they were retrieved), the
+fallbacks it took (runlog.fallback: a Planetary Computer DEM after a USGS timeout, DEM-only lidar, a LANDFIRE export
+answered on its third try), the network reads and whether they came from the cache, its status (ok, not_applicable,
+failed), when it ran and for how long. The old `log` list is kept and appended to as before.
+
+A step that fails stops the build (its dependents cannot be right), and the command exits 1; --keep-going runs the
+steps that do not depend on it.
+"""
+from __future__ import annotations
+
+import hashlib
+import json
+import os
+import subprocess
+import sys
+import time
+import traceback
+from dataclasses import dataclass, field
+from pathlib import Path
+from typing import Callable
+
+from . import regions, runlog
+from .config import REPO_ROOT, TILES_DIR, Tile, now_iso, read_json, sha256, write_json
+from .manifest import add_layer, add_species_prior, load_manifest, record_source, save
+
+PIPE = REPO_ROOT / "pipeline"
+
+
+@dataclass
+class Step:
+    name: str
+    version: str
+    modules: list[str]                     # pipeline modules (without .py) whose code the step runs
+    after: list[str]                       # steps whose outputs it reads
+    run: Callable                          # run(tile, m, force) -> None; records layers with add_layer
+    layers: list[str] = field(default_factory=list)   # the manifest layers it owns (prefixes ending in '.' match a family)
+    sources: list[str] = field(default_factory=list)  # network sources it may read (regions.COVERAGE keys)
+    library: list[str] = field(default_factory=list)  # repo folders it reads (their files' hashes join the fingerprint)
+    applies: Callable | None = None        # applies(tile, m) -> None, or the reason the step does not apply here
+    owner: str | None = None               # the lane that owns the step's code, when it is not this one
+    doc: str = ""
+
+
+# ---------------------------------------------------------------------------------------------------------------
+# The steps' bodies (moved from build_tile.run, 2026-11-04). Each records its layers with add_layer.
+
+def _dem(tile, m, force):
+    from .fetch_dem import fetch_dem
+    add_layer(m, tile, "terrain.dem", fetch_dem(tile, force))
+
+
+def _lidar(tile, m, force):
+    # Long (the point cloud streams for the better part of an hour); `python -m pipeline.lidar` runs the same stages
+    # without holding the manifest, and this step then only records them.
+    from .lidar import build_lidar
+    out = build_lidar(tile, force)
+    for k, v in out.items():
+        add_layer(m, tile, k, v)
+    # "dem_only": the 1 m DEM products alone, no point cloud in the public Entwine bucket (lidar.py)
+    m["status"]["lidar"] = True if "vegetation.chm_1m" in out else "dem_only"
+
+
+def _lidar_applies(tile, m):
+    if not regions.covers("usgs_3dep_lidar", tile):
+        return f"outside 3DEP ({', '.join(regions.region_of(tile))}): no public lidar; the 5 m base DEM carries the terrain"
+    return None
+
+
+def _naip(tile, m, force):
+    from .fetch_naip import fetch_naip
+    add_layer(m, tile, "imagery.naip", fetch_naip(tile, force))
+
+
+def _osm(tile, m, force):
+    from .fetch_osm import fetch_osm
+    add_layer(m, tile, "footprint.mask", fetch_osm(tile, force))
+
+
+def _hydro(tile, m, force):
+    from .fetch_hydro import fetch_hydro
+    out = fetch_hydro(tile, force)
+    for k, v in out.items():
+        add_layer(m, tile, k, v)
+    if any(v.get("source") == "osm" for v in out.values()):   # fetch_hydro's own OSM fallback (no fcodes, no names)
+        runlog.fallback("NHDPlus HR unavailable: streams and waterbodies from OSM (no permanence codes)", source="osm")
+
+
+def _channels(tile, m, force):
+    from .channels import build_channels
+    for k, v in build_channels(tile).items():
+        add_layer(m, tile, k, v)
+
+
+def _rewild_hydro(tile, m, force):
+    from .rewild_hydro import rewild_hydro
+    for k, v in rewild_hydro(tile, force).items():
+        add_layer(m, tile, k, v)
+    m["status"]["hydrology_rewilded"] = True
+
+
+def _water(tile, m, force):
+    # The water system (pipeline/water.py, the water lane's): every channel and pond carved to a graded bank profile
+    # into terrain/dem_banked.tif, the bed material, the water levels and the riparian zones (client/water.png), and
+    # the zone species mixes. It rewrites client/species_mix.json's riparian rows in place, so the layer is re-recorded
+    # here (its sha256 went stale on utm11n_267_4175 when the step ran alone).
+    from .water import build_water
+    for k, v in build_water(tile, force).items():
+        add_layer(m, tile, k, v, fetched=False)
+    if "client.species_mix" in m["layers"] and tile.path("client/species_mix.json").exists():
+        add_layer(m, tile, "client.species_mix", m["layers"]["client.species_mix"], fetched=False)
+    m["status"]["water_banked"] = True
+
+
+def _veg(tile, m, force):
+    from .fetch_vegetation import fetch_vegetation
+    for k, v in fetch_vegetation(tile, force).items():
+        add_layer(m, tile, k, v)
+    m["status"]["vegetation_backfilled"] = True
+
+
+def _ground(tile, m, force):
+    from .ground import build_ground
+    layers, errors = build_ground(tile, force)
+    for k, v in layers.items():
+        add_layer(m, tile, k, v)
+    if errors:
+        raise RuntimeError("; ".join(errors))
+
+
+def _substrate(tile, m, force):
+    # lithology by geology unit, how each rock breaks, and the exposed rock (pipeline/substrate.py); reads what ground,
+    # lidar, naip, veg, water, erase and derive wrote, so it runs after all of them (it ran before erase and derive in
+    # the old step list and read raw NAIP, where roofs and roads look like rock)
+    from .substrate import build_substrate
+    for k, v in build_substrate(tile).items():
+        add_layer(m, tile, k, v, fetched=False)
+
+
+def _species(tile, m, force):
+    from .fetch_species import fetch_species
+    for k, v in fetch_species(tile, force).items():
+        add_layer(m, tile, k, v)
+    from .config import TILES_DIR as TD
+    from .species_data import ALARM_CALL, CALENDAR, SEASONS, SIGNATURE, SPECIES as SPECIES_DATA, detection_matrix, perceives_on
+    # perceives: only the species present on the tile (species.json `present`, fetch_species.presence), so an absent one
+    # is neither met nor played here; detects, signatures and alarm_calls stay species-level tables
+    present = [s["code"] for s in read_json(tile.path("species/species.json")) if s.get("present", True)]
+    # senses (2026-10-29): each species' own ranges, so the client can split a notice into what is seen and heard and
+    # what is smelled
+    senses = {sp["code"]: {k: v["range_m"] for k, v in sp["senses"].items()} for sp in SPECIES_DATA}
+    write_json(tile.path("perception.json"), {"perceives": perceives_on(present), "detects": detection_matrix(), "signatures": SIGNATURE,
+                                             "senses": senses, "alarm_calls": ALARM_CALL})
+    write_json(tile.path("calendar.json"), {"seasons": SEASONS, "activities": CALENDAR})
+    add_layer(m, tile, "perception", {"path": "perception.json", "kind": "table"}, fetched=False)
+    add_layer(m, tile, "calendar", {"path": "calendar.json", "kind": "table"}, fetched=False)
+    # locomotion (2026-10-29): how each present species moves, from its taxon and its body (locomotion.py)
+    from .locomotion import write_tile as write_locomotion
+    write_locomotion(tile.tile_id, TD)
+    add_layer(m, tile, "locomotion", {"path": "locomotion.json", "kind": "table"}, fetched=False)
+    add_species_prior(m, tile)
+
+
+def _plants(tile, m, force):
+    # The tile's plant needs (pipeline/needs.py): every species its LANDFIRE communities and its GBIF records name;
+    # those with a trait card and no library record are grown now (pipeline/plantgen.py), the rest queued with the
+    # stand-in the species mix draws for them.
+    from .needs import plant_needs
+    add_layer(m, tile, "species.plant_needs", plant_needs(tile, generate=True), fetched=False)
+
+
+def _derive(tile, m, force):
+    from . import derive
+    need = [k for k in ("terrain.dem", "imagery.naip", "vegetation.habitat", "vegetation.evt", "vegetation.bps",
+                        "hydro.flowlines") if k not in m["layers"]]
+    if need:   # the old step logged ok and wrote nothing without these (Yosemite, 2026-10-28)
+        raise RuntimeError(f"derive needs {', '.join(need)}; run their steps first")
+    add_layer(m, tile, "terrain.hillshade", derive.hillshade(tile))
+    add_layer(m, tile, "terrain.terrain_rgb", derive.terrain_rgb(tile))
+    if "footprint.mask" in m["layers"]:
+        add_layer(m, tile, "footprint.mask_raster", derive.mask_raster(tile))
+    add_layer(m, tile, "imagery.naip_png", derive.naip_png(tile))
+    for k, v in derive.habitat_png(tile).items():
+        add_layer(m, tile, k, v)
+    add_layer(m, tile, "terrain.rewilded", derive.rewilded_texture(tile))
+    for k, v in derive.client_rasters(tile).items():
+        add_layer(m, tile, k, v)
+    from .species_mix import species_mix
+    add_layer(m, tile, "client.species_mix", species_mix(tile))
+    from .resources import derive_resources
+    add_layer(m, tile, "resources", derive_resources(tile))
+    if "client.mast" not in m["layers"]:
+        # client_rasters writes client/mast.png from resources/acorn_mast.tif, which derive_resources writes after it:
+        # on a fresh tile the first pass has no mast; the rasters are written again now that it exists
+        for k, v in derive.client_rasters(tile).items():
+            add_layer(m, tile, k, v)
+    # the species' games, classified from the calendar, perception and the resources (pipeline/games.py)
+    from .games import derive_games
+    add_layer(m, tile, "games", derive_games(tile), fetched=False)
+
+
+def _has_chm(tile, m):
+    if not tile.path("vegetation/chm_1m.tif").exists():
+        return "no point cloud on this tile (DEM-only lidar or none): no canopy height model, so no crowns to find or inpaint"
+    return None
+
+
+def _crowns(tile, m, force):
+    # The crown finder again, now that osm (buildings, bridges), veg (the rewilded classes) and derive (the dense-urban
+    # mask) exist. Needs vegetation/multi_1m.tif (the lidar step writes it) or the kept point-cloud grids.
+    from .lidar import build_crowns, build_dem_1m, layers as lidar_layers
+    build_crowns(tile)
+    stats = read_json(tile.path("terrain/lidar_stats.json"))
+    add_layer(m, tile, "client.trees_lidar", lidar_layers(tile, build_dem_1m(tile), stats)["client.trees_lidar"], fetched=False)
+
+
+def _erase(tile, m, force):
+    from .erase_imagery import erase_imagery
+    add_layer(m, tile, "client.texture_imagery", erase_imagery(tile), fetched=False)
+    m["status"]["imagery_erased"] = True
+
+
+def _inpaint(tile, m, force):
+    # The ground-only base texture: tree crowns (lidar CHM 3 m and taller) and their shadows synthesized from clean
+    # ground of the same class (pipeline/inpaint_crowns.py); needs erase and lidar.
+    from .inpaint_crowns import inpaint_crowns
+    info = inpaint_crowns(tile)
+    for k in ("client.texture_ground", "client.texture_ground_mask"):
+        add_layer(m, tile, k, info[k], fetched=False)
+    m["status"]["crowns_inpainted"] = True
+
+
+def _seasons(tile, m, force):
+    # Sentinel-2 L2A per calendar month (requirements-sentinel.txt); dates already read are cached under
+    # pipeline/_cache/sentinel/<tile>/looks/.
+    from .fetch_sentinel import build_seasons
+    for k, v in build_seasons(tile, force).items():
+        add_layer(m, tile, k, v)
+    src = m["layers"]["seasons.s2_monthly"]["source"]
+    m["sources"][src]["years_used"] = m["layers"]["seasons.s2_monthly"]["years"]
+
+
+def _weather(tile, m, force):
+    # Last year's hourly weather at the tile centre from Open-Meteo's archive (pipeline/fetch_weather.py); the raw
+    # answer is cached under pipeline/_cache/weather/<tile>/ per period end date.
+    from .fetch_weather import fetch_weather
+    add_layer(m, tile, "client.weather", fetch_weather(tile, force))
+
+
+def _unreal(tile, m, force):
+    from .export_unreal import export_unreal
+    add_layer(m, tile, "unreal", export_unreal(tile), fetched=False)
+
+
+def _registry(tile, m, force):
+    # The tile's species at their fidelity (pipeline/registry.py): every species the tile needs, plants and animals, the
+    # asset each has and its level, the stand-in drawn for the missing ones, the Meshy jobs queued for the animals
+    from .registry import tile_report
+    add_layer(m, tile, "species.registry", tile_report(tile), fetched=False)
+
+
+def _audit(tile, m, force):
+    # The licence audit (pipeline/audit_licenses.py), part of the build since 2026-11-04: every source carries its
+    # credit, every layer's source is listed, and the client-facing layers carry no CC BY-NC data.
+    from .audit_licenses import audit_attribution, audit
+    from .config import all_sources
+    problems, warnings = audit_attribution(m, all_sources())
+    for k, v in m["layers"].items():
+        if k.startswith("client.") and v.get("for_clients") is False:
+            problems.append(f"layer {k} is client-facing but marked for_clients false")
+    for w in warnings:
+        runlog.note(w)
+    a = audit(tile.tile_id)
+    m["licence_audit"] = {"at": now_iso(), "problems": problems, "warnings": warnings,
+                          "occurrence_records": a["records"], "non_commercial_fraction": a["non_commercial_fraction"]}
+    if problems:
+        raise RuntimeError("licence audit: " + "; ".join(problems[:6]))
+
+
+def _species_prior(tile, m, force):
+    add_species_prior(m, tile)
+
+
+# ---------------------------------------------------------------------------------------------------------------
+# The graph. Order is a valid topological order; `after` is what the fingerprint and the dependency check use.
+
+STEPS: dict[str, Step] = {s.name: s for s in [
+    Step("dem", "1", ["fetch_dem", "arcgis"], [], _dem, ["terrain.dem"], ["usgs_3dep", "pc_3dep_seamless", "nasadem"],
+         doc="the 5 m bare-earth DEM"),
+    Step("naip", "1", ["fetch_naip", "arcgis"], [], _naip, ["imagery.naip"], ["pc_naip", "usgs_naip"],
+         doc="present-day imagery at 2.5 m"),
+    Step("osm", "1", ["fetch_osm"], [], _osm, ["footprint.mask"], ["osm"], doc="the human footprint: buildings, roads, dams"),
+    Step("hydro", "1", ["fetch_hydro"], [], _hydro, ["hydro.flowlines", "hydro.waterbodies"], ["nhdplus_hr", "osm"],
+         owner="water lane", doc="NHD streams and waterbodies (OSM fallback)"),
+    Step("channels", "1", ["channels"], ["dem", "hydro"], _channels, ["hydro.channels", "client.channel_depth"],
+         owner="water lane", doc="every stream routed by gravity on the DEM; NHD gives names and permanence"),
+    Step("rewild_hydro", "1", ["rewild_hydro", "channels"], ["dem", "channels", "hydro", "osm"], _rewild_hydro,
+         ["hydro.human_water", "terrain.dem_rewilded", "client.channel_profile"], ["osm", "native_land"],
+         owner="water lane", doc="dams breached, reservoirs drained, channels re-routed, pool-riffle profile"),
+    Step("veg", "1", ["fetch_vegetation", "habitat"], ["rewild_hydro"], _veg, ["vegetation."], ["landfire"],
+         doc="LANDFIRE EVT/EVC/EVH/BpS, habitat classes, human cells backfilled from BpS"),
+    Step("lidar", "1", ["lidar", "fetch_lidar", "urban"], ["dem", "osm", "veg"], _lidar,
+         ["terrain.dem_1m", "terrain.dsm_1m", "vegetation.chm_1m", "vegetation.multi_1m", "terrain.lidar_dtm_check",
+          "vegetation.canopy_height_10m", "client.canopy_height", "client.trees_lidar", "client.terrain_detail",
+          "terrain.roughness", "client.lidar_micro"], ["usgs_3dep_lidar"], applies=_lidar_applies,
+         doc="1 m ground, canopy height and crowns from the 3DEP point cloud; DEM-only from the 1 m products without one"),
+    Step("water", "1", ["water"], ["dem", "rewild_hydro", "hydro", "lidar"], _water,
+         ["terrain.dem_banked", "client.heights", "client.water", "hydro.water_reaches"], [], owner="water lane",
+         doc="banks, beds, levels and riparian zones"),
+    Step("ground", "1", ["ground", "fetch_soils", "fetch_geology"], ["dem", "veg", "lidar"], _ground,
+         ["geology.", "soils.", "client.geology", "client.soils", "client.outcrop", "client.ground_classes"],
+         ["macrostrat", "usda_sda"], doc="geology and soils, outcrop likelihood, ground classes"),
+    Step("species", "1", ["fetch_species", "species_data", "locomotion"], ["dem", "veg"], _species,
+         ["species.list", "species.occurrences", "species.seasonal", "species.inventory", "perception", "calendar",
+          "locomotion", "client.species_prior"], ["gbif"], library=["library/animals"],
+         doc="GBIF records, presence, perception, calendar, locomotion, the client's density prior"),
+    Step("plants", "1", ["needs", "plantgen", "communities"], ["veg", "species"], _plants, ["species.plant_needs"], [],
+         library=["library/plant_cards"], doc="the plants the tile needs; missing ones grown from their trait cards"),
+    Step("derive", "1", ["derive", "species_mix", "resources", "games", "urban", "habitat", "fetch_places", "fetch_territories"],
+         ["dem", "naip", "osm", "hydro", "channels", "rewild_hydro", "water", "veg", "species", "plants"], _derive,
+         ["terrain.hillshade", "terrain.terrain_rgb", "footprint.mask_raster", "imagery.naip_png", "vegetation.habitat_png",
+          "vegetation.habitat_present_png", "terrain.rewilded", "client.habitat", "client.canopy", "client.mast",
+          "footprint.urban", "client.roads", "client.texture", "client.masks", "client.imagery", "client.texture_present",
+          "client.features", "client.species_mix", "resources", "games"], ["osm", "native_land"], library=["library/species"],
+         doc="the client rasters, the species mix, the resources and the games"),
+    Step("crowns", "1", ["lidar", "urban"], ["lidar", "osm", "veg", "derive"], _crowns, ["client.trees_lidar"],
+         applies=_has_chm, doc="the crown finder again, with the buildings, the rewilded classes and the urban mask"),
+    Step("erase", "1", ["erase_imagery", "urban"], ["naip", "osm", "veg", "derive", "rewild_hydro"], _erase,
+         ["client.texture_imagery"], doc="the imagery with the human footprint removed"),
+    Step("substrate", "1", ["substrate"], ["ground", "water", "dem", "lidar", "naip", "veg", "erase", "derive"], _substrate,
+         ["client.substrate", "client.substrate_classes"], doc="lithology, cliff morphology, exposed rock"),
+    Step("inpaint", "1", ["inpaint_crowns"], ["erase", "lidar", "crowns", "derive"], _inpaint,
+         ["client.texture_ground", "client.texture_ground_mask"], applies=_has_chm,
+         doc="the ground-only base texture with the crowns inpainted"),
+    Step("seasons", "1", ["fetch_sentinel"], ["veg", "lidar", "naip"], _seasons,
+         ["seasons.s2_monthly", "client.season_rgb", "client.season_ndvi"], ["sentinel2_l2a"],
+         doc="Sentinel-2 monthly ground colour"),
+    Step("weather", "1", ["fetch_weather"], [], _weather, ["client.weather"], ["open_meteo"],
+         doc="last year's hourly weather at the tile centre"),
+    Step("unreal", "1", ["export_unreal"], ["dem", "veg"], _unreal, ["unreal"], doc="the Unreal landscape export"),
+    Step("registry", "1", ["registry", "needs"], ["species", "plants", "derive"], _registry, ["species.registry"],
+         library=["library/species", "library/animals", "library/plant_cards"],
+         doc="every species the tile needs at its fidelity, the stand-ins and the queued Meshy jobs"),
+    Step("audit", "1", ["audit_licenses"], ["dem", "naip", "osm", "hydro", "channels", "rewild_hydro", "veg", "lidar", "water",
+                                           "ground", "species", "plants", "derive", "crowns", "erase", "substrate", "inpaint",
+                                           "seasons", "weather", "unreal", "registry"], _audit, [],
+         doc="the licence audit: every source credited, no CC BY-NC data in a client layer"),
+]}
+ORDER = list(STEPS)
+# Run on request only (not part of --all): the species prior alone, as the old --steps species_prior did.
+EXTRA = {"species_prior": Step("species_prior", "1", ["derive"], ["species"], _species_prior, ["client.species_prior"])}
+
+
+def _check_graph() -> None:
+    seen = set()
+    for n in ORDER:
+        for d in STEPS[n].after:
+            if d not in seen:
+                raise AssertionError(f"step {n} runs before its input {d}")
+        seen.add(n)
+
+
+_check_graph()
+
+
+# ---------------------------------------------------------------------------------------------------------------
+# Hashing: files by content, with a per-tile cache keyed by size and mtime so a 400 MB raster is read once.
+
+class Hashes:
+    def __init__(self, tile: Tile):
+        self.p = tile.dir / "_cache" / "hashes.json"
+        try:
+            self.d = json.loads(self.p.read_text())
+        except Exception:  # noqa: BLE001
+            self.d = {}
+        self.dirty = False
+
+    def of(self, path: Path) -> str | None:
+        if not path.exists():
+            return None
+        st = path.stat()
+        key = str(path)
+        hit = self.d.get(key)
+        if hit and hit[0] == st.st_size and hit[1] == st.st_mtime_ns:
+            return hit[2]
+        h = sha256(path)
+        self.d[key] = [st.st_size, st.st_mtime_ns, h]
+        self.dirty = True
+        return h
+
+    def save(self):
+        if self.dirty:
+            self.p.parent.mkdir(parents=True, exist_ok=True)
+            self.p.write_text(json.dumps(self.d))
+            self.dirty = False
+
+
+def _h(obj) -> str:
+    return hashlib.sha256(json.dumps(obj, sort_keys=True, default=str).encode()).hexdigest()[:16]
+
+
+_CODE: dict[str, str] = {}
+
+
+def code_hash(step: Step) -> str:
+    if step.name not in _CODE:
+        h = hashlib.sha256()
+        for mod in sorted(step.modules):
+            p = PIPE / f"{mod}.py"
+            h.update(mod.encode())
+            h.update(p.read_bytes() if p.exists() else b"(missing)")
+        _CODE[step.name] = h.hexdigest()[:16]
+    return _CODE[step.name]
+
+
+def library_hash(step: Step) -> dict:
+    out = {}
+    for rel in step.library:
+        d = REPO_ROOT / rel
+        h = hashlib.sha256()
+        for p in sorted(d.glob("*.json")) if d.exists() else []:
+            h.update(p.name.encode())
+            h.update(hashlib.sha256(p.read_bytes()).digest())
+        out[rel] = h.hexdigest()[:16]
+    return out
+
+
+def params(tile: Tile, step: Step) -> dict:
+    p = {"tile": tile.tile_id}
+    if step.name in ("dem", "derive"):
+        p["dem_res_m"] = tile.dem_res_m
+    if step.name in ("naip", "derive", "erase"):
+        p["imagery_res_m"] = tile.imagery_res_m
+    return p
+
+
+def owned_layers(step: Step, m: dict) -> list[str]:
+    """The manifest layers a step owns: its exact names, and the names under its prefixes ('vegetation.') that no
+    other step names exactly (lidar's vegetation.chm_1m is lidar's, not veg's)."""
+    claimed = {l for s in list(STEPS.values()) + list(EXTRA.values()) if s is not step for l in s.layers if not l.endswith(".")}
+    out = []
+    for name in m.get("layers", {}):
+        for pat in step.layers:
+            if name == pat or (pat.endswith(".") and name.startswith(pat) and name not in claimed):
+                out.append(name)
+                break
+    return out
+
+
+def last_writers(m: dict) -> dict:
+    """{file: the last step in graph order that recorded it}. Some files have two writers (client/heights.png: water,
+    then derive; client/terrain_detail.png: lidar, then water); only the last writer checks the file is unchanged."""
+    out = {}
+    for n in ORDER:
+        for rel in ((m.get("steps", {}).get(n) or {}).get("outputs") or {}):
+            out[rel] = n
+    return out
+
+
+def outputs_of(tile: Tile, m: dict, layer_names: list[str], hashes: Hashes) -> dict:
+    """{tile-relative path: sha256[:16]} of the layers' files (their `path` and any `files`)."""
+    out = {}
+    for name in sorted(set(layer_names)):
+        info = m["layers"].get(name) or {}
+        rels = [info.get("path")] + list((info.get("files") or {}).keys())
+        for rel in rels:
+            if rel:
+                h = hashes.of(tile.dir / rel)
+                out[rel] = h[:16] if h else None
+    return out
+
+
+def fingerprint(tile: Tile, step: Step, m: dict) -> tuple[str, dict]:
+    deps = {d: (m["steps"].get(d) or {}).get("out_hash") for d in step.after}
+    parts = {"version": step.version, "code": code_hash(step), "params": params(tile, step), "deps": deps,
+             "library": library_hash(step)}
+    return _h(parts), parts
+
+
+def current(tile: Tile, step: Step, m: dict, hashes: Hashes) -> tuple[bool, str]:
+    """(is the step's last run current, why not)."""
+    rec = m.get("steps", {}).get(step.name)
+    if not rec:
+        return False, "never run by the step graph"
+    if rec.get("status") not in ("ok", "not_applicable", "adopted"):
+        return False, f"last run {rec.get('status')}"
+    fp, parts = fingerprint(tile, step, m)
+    if rec.get("fingerprint") != fp:
+        old = rec.get("parts") or {}
+        why = [k for k in ("version", "code", "params", "library") if old.get(k) != parts[k]]
+        why += [f"input {d}" for d, h in parts["deps"].items() if (old.get("deps") or {}).get(d) != h]
+        return False, "changed: " + ", ".join(why or ["fingerprint"])
+    lw = last_writers(m)
+    for rel, h in (rec.get("outputs") or {}).items():
+        if lw.get(rel, step.name) != step.name:
+            continue   # a later step rewrites it (last_writers)
+        now = hashes.of(tile.dir / rel)
+        if now is None:
+            return False, f"output missing: {rel}"
+        if h and now[:16] != h:
+            return False, f"output changed on disk: {rel}"
+    return True, "current"
+
+
+# ---------------------------------------------------------------------------------------------------------------
+# Running
+
+def _sources_of(m: dict, layer_names: list[str]) -> dict:
+    out = {}
+    for name in layer_names:
+        info = m["layers"].get(name) or {}
+        for s in [info.get("source")] + list(info.get("sources_used") or []):
+            if s and s in m.get("sources", {}):
+                out[s] = m["sources"][s].get("retrieved")
+    return out
+
+
+def run_step(tile: Tile, step: Step, m: dict, force: bool, hashes: Hashes) -> dict:
+    t0 = time.time()
+    print(f"[{tile.tile_id}] {step.name} ...", flush=True)
+    fp, parts = fingerprint(tile, step, m)
+    reason = step.applies(tile, m) if step.applies else None
+    runlog.begin(step.name)
+    rec = {"version": step.version, "code": parts["code"], "params": parts["params"], "fingerprint": fp, "parts": parts,
+           "ran_at": now_iso(), "owner": step.owner}
+    try:
+        cov = regions.plan(tile, step.sources)
+        gaps = {s: c for s, c in cov.items() if not c["covered"]}
+        if gaps:
+            rec["coverage"] = gaps
+        if reason:
+            rec.update(status="not_applicable", reason=reason, outputs={}, out_hash=_h(["not_applicable", reason]))
+            print(f"[{tile.tile_id}] {step.name}: not applicable: {reason}", flush=True)
+        else:
+            step.run(tile, m, force)
+            r = runlog.end()
+            runlog.begin(step.name)
+            names = sorted(set(r.get("layers") or []) | set(owned_layers(step, m)) if step.name != "audit" else [])
+            outs = outputs_of(tile, m, names, hashes)
+            rec.update(status="ok", layers=names, outputs=outs, out_hash=_h(outs), sources=_sources_of(m, names),
+                       fallbacks=r["fallbacks"], notes=r["notes"],
+                       fetched={"network": sum(1 for f in r["fetched"] if not f["cached"]),
+                                "cache": sum(1 for f in r["fetched"] if f["cached"])})
+            if step.name == "audit":
+                rec["out_hash"] = _h(m.get("licence_audit", {}).get("problems"))
+        ok = True
+    except Exception as e:  # noqa: BLE001
+        traceback.print_exc()
+        r = runlog.end()
+        rec.update(status="failed", error=str(e)[:800], fallbacks=r["fallbacks"], out_hash=None)
+        ok = False
+    runlog.end()
+    rec["seconds"] = round(time.time() - t0, 1)
+    m.setdefault("steps", {})[step.name] = rec
+    m.setdefault("log", []).append({"step": step.name, "at": now_iso(), "seconds": rec["seconds"], "ok": ok,
+                                    **({"error": rec["error"][:500]} if not ok else {}),
+                                    **({"not_applicable": rec["reason"]} if rec.get("status") == "not_applicable" else {})})
+    hashes.save()
+    save(tile, m)
+    state = rec["status"] if ok else "FAILED: " + rec.get("error", "")[:300]
+    fb = f", {len(rec.get('fallbacks') or [])} fallback(s)" if rec.get("fallbacks") else ""
+    print(f"[{tile.tile_id}] {step.name} {state} in {rec['seconds']:.1f}s{fb}", flush=True)
+    return rec
+
+
+def build(tile: Tile, *, steps: list[str] | None = None, force: set[str] = frozenset(), keep_going=False,
+          plan_only=False, refetch=False) -> dict:
+    """Run the graph (or the named steps, in graph order), skipping the current ones. Returns the manifest."""
+    tile.dir.mkdir(parents=True, exist_ok=True)
+    m = load_manifest(tile)
+    from .config import GENERATOR, SPEC_VERSION
+    m["spec_version"], m["generator"] = SPEC_VERSION, GENERATOR
+    hashes = Hashes(tile)
+    names = [n for n in ORDER if steps is None or n in steps] + [n for n in (steps or []) if n in EXTRA]
+    unknown = [n for n in (steps or []) if n not in STEPS and n not in EXTRA]
+    if unknown:
+        raise ValueError(f"unknown step(s) {unknown}; steps are {ORDER + list(EXTRA)}")
+    failed: set[str] = set()
+    plan = []
+    for n in names:
+        step = STEPS.get(n) or EXTRA[n]
+        blocked = [d for d in step.after if d in failed]
+        if blocked:
+            failed.add(n)
+            plan.append((n, f"blocked by {', '.join(blocked)}"))
+            if not plan_only:
+                m["steps"].setdefault(n, {})["status"] = "blocked"
+            continue
+        is_cur, why = current(tile, step, m, hashes)
+        if n in force:
+            why = "forced"
+        elif is_cur:
+            plan.append((n, "current, skipped"))
+            continue
+        plan.append((n, why))
+        if plan_only:
+            continue
+        rec = run_step(tile, step, m, refetch and n in force, hashes)
+        if rec["status"] == "failed":
+            failed.add(n)
+            if not keep_going:
+                print(f"[{tile.tile_id}] stopped at {n}: {rec.get('error', '')[:300]}", file=sys.stderr, flush=True)
+                break
+    hashes.save()
+    if plan_only:
+        w = max(len(n) for n, _ in plan) if plan else 4
+        for n, why in plan:
+            print(f"  {n:<{w}}  {why}")
+    m["_failed"] = sorted(failed)
+    return m
+
+
+# ---------------------------------------------------------------------------------------------------------------
+# Status of a tile built before the graph, and adoption
+
+def _git_changed_after(paths: list[str], when: str, margin_h=12) -> list[str]:
+    """Commits touching `paths` more than margin_h after `when` (a run is usually committed within hours of it)."""
+    from datetime import datetime, timedelta
+    try:
+        t = datetime.fromisoformat(when.replace("Z", "+00:00")) + timedelta(hours=margin_h)
+        out = subprocess.run(["git", "-C", str(REPO_ROOT), "log", f"--after={t.isoformat()}", "--format=%h %cs %s", "--", *paths],
+                             capture_output=True, text=True, timeout=30).stdout.strip()
+        return [l[:110] for l in out.splitlines()]
+    except Exception:  # noqa: BLE001
+        return []
+
+
+def last_ok(m: dict, name: str) -> str | None:
+    at = None
+    for l in m.get("log", []):
+        if l.get("ok") and (l["step"] == name or l["step"].startswith(name + " ") or
+                            (name == "derive" and l["step"].startswith("species_mix"))):
+            at = max(at or "", l["at"])
+    return at
+
+
+def status(tile: Tile) -> list[dict]:
+    """Per step: ran (when), the layers it owns present or missing, manifest hashes that no longer match the files,
+    code changed since it ran (git), and whether the graph would run it."""
+    m = load_manifest(tile)
+    hashes = Hashes(tile)
+    rows = []
+    for n in ORDER:
+        step = STEPS[n]
+        at = (m.get("steps", {}).get(n) or {}).get("ran_at") or last_ok(m, n)
+        have = owned_layers(step, m)
+        expect = step.layers
+        if n == "lidar" and m.get("status", {}).get("lidar") == "dem_only":
+            expect = ["terrain.dem_1m", "client.terrain_detail", "terrain.roughness"]
+        missing = [l for l in expect if not l.endswith(".") and l not in m["layers"]]
+        mism = []
+        for l in have:
+            info = m["layers"][l]
+            p = tile.dir / (info.get("path") or "")
+            if info.get("sha256") and p.is_file():
+                h = hashes.of(p)
+                if h != info["sha256"]:
+                    mism.append(l)
+            elif info.get("path") and not p.exists():
+                mism.append(l + " (file missing)")
+        changed = _git_changed_after([f"pipeline/{x}.py" for x in step.modules] + step.library, at) if at else []
+        na = step.applies(tile, m) if step.applies else None
+        rows.append({"step": n, "ran": at, "layers": len(have), "missing_layers": missing if not na else [],
+                     "hash_mismatch": mism, "code_since": changed, "not_applicable": na,
+                     "graph": (m.get("steps", {}).get(n) or {}).get("status")})
+    hashes.save()
+    return rows
+
+
+def adopt(tile: Tile, refresh_stale=True) -> dict:
+    """Record a tile built before the graph as the graph's baseline: each step that ran (by the old log) and whose
+    layers are on disk gets a fingerprint from the current code, so --all re-runs only what changes from here. A step
+    whose code changed after it last ran (git, 12 h margin) or whose files no longer match their manifest hashes is
+    recorded `stale` (no fingerprint), so the next --all runs it, and then its dependents if its outputs change."""
+    m = load_manifest(tile)
+    hashes = Hashes(tile)
+    st = {r["step"]: r for r in status(tile)}
+    for n in ORDER:
+        step = STEPS[n]
+        r = st[n]
+        if (m.get("steps", {}).get(n) or {}).get("status") == "ok":
+            continue
+        names = owned_layers(step, m)
+        reason = step.applies(tile, m) if step.applies else None
+        stale = []
+        if r["code_since"]:
+            stale.append(f"code changed since it ran: {r['code_since'][0]}" + (f" (+{len(r['code_since']) - 1})" if len(r['code_since']) > 1 else ""))
+        if r["hash_mismatch"]:
+            stale.append("files differ from the manifest: " + ", ".join(r["hash_mismatch"][:4]))
+        if r["missing_layers"]:
+            stale.append("layers missing: " + ", ".join(r["missing_layers"][:4]))
+        if not r["ran"] and not reason:
+            stale.append("never ran")
+        fp, parts = fingerprint(tile, step, m)
+        rec = {"version": step.version, "code": parts["code"], "params": parts["params"], "parts": parts,
+               "ran_at": r["ran"], "adopted_at": now_iso(), "layers": names}
+        if reason:
+            rec.update(status="not_applicable", reason=reason, outputs={}, out_hash=_h(["not_applicable", reason]), fingerprint=fp)
+        elif stale and refresh_stale:
+            outs = outputs_of(tile, m, names, hashes)
+            rec.update(status="stale", stale=stale, outputs=outs, out_hash=_h(outs), fingerprint=None)
+        else:
+            outs = outputs_of(tile, m, names, hashes)
+            rec.update(status="adopted", outputs=outs, out_hash=_h(outs), fingerprint=fp, stale=stale or None)
+        m.setdefault("steps", {})[n] = rec
+    hashes.save()
+    save(tile, m)
+    return m

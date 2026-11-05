@@ -15,7 +15,9 @@ SPEC_VERSION = "0.2.0"
 GENERATOR = {"name": "wild-earth-pipeline", "version": "0.2.0"}
 USER_AGENT = "wild-earth-pipeline/0.1 (https://github.com/aaronbrodeur/wild-earth)"
 REPO_ROOT = Path(__file__).resolve().parent.parent
-TILES_DIR = REPO_ROOT / "tiles"
+# WILD_EARTH_TILES moves the tile packages (a rebuild into a scratch folder to diff against the committed tile,
+# pipeline/steps.py --out); the pipeline's shared caches stay in pipeline/_cache.
+TILES_DIR = Path(os.environ["WILD_EARTH_TILES"]).resolve() if os.environ.get("WILD_EARTH_TILES") else REPO_ROOT / "tiles"
 TILE_SIZE_M = 10_000
 
 
