@@ -27,6 +27,8 @@ export const ASSET_CREDITS = [
   { what: 'Ground: cobbles and rock', line: '"Rocks Ground 06" by Rob Tuytel, Poly Haven', url: 'https://polyhaven.com/a/rocks_ground_06', license: CC0 },
   { what: 'Ground: worn pavement', line: '"Worn Asphalt" by Amal Kumar, Poly Haven', url: 'https://polyhaven.com/a/worn_asphalt', license: CC0 },
   { what: 'The earth on the title screen (assets/earth/, twelve months at 2048 x 1024)', line: 'NASA Blue Marble: Next Generation with topography and bathymetry (2004 monthly composites), Reto Stöckli, NASA Earth Observatory; retrieved 2026-11-01 from eoimages.gsfc.nasa.gov/images/imagerecords/73000/<id>/world.topo.bathy.2004MM.3x5400x2700.jpg (ids 73580, 73605, 73630, 73655, 73701, 73726, 73751, 73776, 73801, 73826, 73884, 73909), resized', url: 'https://visibleearth.nasa.gov/collection/1484/blue-marble', license: ['public domain (NASA imagery)', 'https://www.nasa.gov/nasa-brand-center/images-and-media/'] },
+  { what: "The map on the home screen's globe (drawn in the browser from vector tiles, src/mapTiles.worker.js)", line: 'OpenFreeMap (openfreemap.org) planet vector tiles in the OpenMapTiles schema (© OpenMapTiles); map data © OpenStreetMap contributors', url: 'https://www.openstreetmap.org/copyright', license: ['ODbL 1.0 (the map data)', 'https://opendatacommons.org/licenses/odbl/'] },
+  { what: 'Place search on the home screen (src/geocode.js)', line: 'Photon by komoot (photon.komoot.io), asked from the browser; data © OpenStreetMap contributors', url: 'https://photon.komoot.io', license: ['ODbL 1.0 (the data)', 'https://opendatacommons.org/licenses/odbl/'] },
   { what: 'Icons', line: 'Lucide, © Lucide Icons and Contributors', url: 'https://lucide.dev', license: ['ISC', 'https://lucide.dev/license'] },
 ];
 

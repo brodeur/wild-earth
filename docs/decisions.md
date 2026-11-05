@@ -4406,3 +4406,92 @@ at near-uniform spacing over a slope and up the lower face of a granite wall.
   pond basin on Half Dome's apron (its bed stones are now kept off the steep slab, the basin ring is the terrain's);
   the talus is traced on the 30 m grid, so a cone's outline is coarse; the remaining knobs on the apron's gentler back
   are the outcrop rule's (L from the pipeline).
+
+## 2026-11-04: the home screen redesigned: the places on the left, the earth as a map, choosing, inviting and starting (branch claude/home-map)
+
+Aaron's spec: the list of places on the left and the social panel on the right; the list sorted by "Most Active
+(global)" on landing and "Most Active (visible)" once the earth is moved like a map; a search box that finds any place
+on earth; "basically an OpenStreetMap version of the globe that the user can zoom to"; a choice flies to a 10,000 ft
+view with the tile outlined and a card over it (the name, the players' avatars and how many, opening the list of
+them); a loading bar at the bottom with Invite and Start over it; Invite asks groups or people, an acceptor's avatar
+appears and their client loads the same tile; players start on their own; a joiner arrives in spirit form behind and
+above the one who asked. Built in `client/src/title.js` (rewritten), `mapGlobe.js`, `mapTiles.worker.js`, `mvt.js`,
+`geocode.js` (new), `multiplayer.js`, `arrival.js`, `main.js`, `hub.js`, `title.css`, `social.css`, `hub.py`.
+Decided where the words left room:
+
+- **The map is OpenFreeMap's vector tiles, drawn by us.** OpenFreeMap needs no key, sets no limit and allows any use
+  with the attribution (shown bottom left on the screen, and in the credits panel and the README); its tiles are
+  OpenStreetMap's data in the OpenMapTiles schema. A small Mapbox Vector Tile reader (`mvt.js`, no dependency) and a
+  module worker (`mapTiles.worker.js`) draw each Web Mercator tile on a 512 px OffscreenCanvas in the home screen's
+  night palette (land, landcover, parks, water; rivers, borders, roads by class; the names of places, waters and
+  peaks, each kept only when wholly inside its tile so nothing is cut at a seam), overzoomed past z14 from the z14
+  data, and send an ImageBitmap back. No buildings and no points of interest. Rejected: tile.openstreetmap.org's
+  raster tiles (a globe asks for many; the tile policy asks for light use), CARTO's and Stadia's (non-commercial
+  or keyed), Esri's (keyless use not clearly permitted), and MapLibre GL (a bundled library with its own GL context;
+  its globe would not share the page's one renderer or the spirit earth under it).
+- **The map is draped on the globe, which stays the spirit earth from space.** `MapGlobe` picks the tiles each frame
+  from a quadtree refined largest-on-screen first (a tile splits past 400 px; at most 120 drawn; culled by the
+  frustum and by an angular horizon test), each a 16 x 16 grid on the sphere positioned at its own centre for
+  precision; a tile not yet drawn shows its ancestor's picture at most two levels up (further up a name would be
+  drawn huge over the ground), else the earth's own picture under it. The Blue Marble earth is drawn at 0.996 of the
+  radius under the tiles, and the map covers it by half from space and wholly below ~100 km (`mapMixFor`). 72
+  pictures are held at most, the least recently drawn let go. Beyond the Mercator limit there is no map.
+- **The camera looks at a point from an altitude, tilting and widening as it comes down.** The earth turns so the
+  point faces the camera (yaw and pitch, as before); the camera stands `alt` earth radii from the point, straight
+  down from space and tilting north toward the horizon (to 54 degrees) with its lens widening (38 to 55 degrees)
+  between ~190 km and ~6 km, and the camera's view offset keeps the point in the middle of the space between the list
+  and the social panel. A drag moves the ground under the pointer (longitude by the latitude near the ground, a
+  globe's turn from space), with inertia; the wheel zooms toward the pointer (the point under it re-solved each
+  frame while the zoom eases); 600 m to 3.6 radii.
+- **"A 10,000 ft view of the region".** A tile is 10 km square, wider than a 3 km straight-down view shows, so the
+  chosen view is 10,000 ft over the ground just south of the tile, looking north across it at the full tilt: the
+  tile's south edge just above the bar, its north edge high in the view with the card over it; its south corners
+  run off the sides (seen from that height they would). The flight there arcs higher with the distance flown.
+- **The sort's two modes.** On landing every place is listed, the most active first: "Most Active (global)". The
+  first drag or wheel by the player lists the places on screen instead: "Most Active (visible)". The flights the
+  screen makes itself (a choice, a search inside a built place) keep the mode; a search elsewhere is a move by the
+  player and switches. A small button by the heading switches back ("show all") or forward ("in view").
+- **The search asks Photon, not Nominatim.** Nominatim's policy forbids search as you type; Photon (komoot's
+  OpenStreetMap geocoder) is built for it and asks for fair use, so the box asks after a 450 ms pause, with three
+  characters or more, one question at a time (a newer one aborts the older), and keeps this page's answers so a
+  backspace asks nothing; the page's origin goes as the Referer (a browser cannot set the User-Agent). The words go
+  to Photon alone, never to our server, and nothing is stored. The built places matching the words are listed first
+  ("Wild places"), then "Anywhere on earth". A result inside a built tile chooses that tile and makes the found point
+  the arrival's; anywhere else the earth flies there (the altitude from the result's extent or kind) and a pin
+  marks it.
+- **The card names only who the player may know is there.** The hub sends strangers' whereabouts to no one outside
+  a tile's room, so the players' row shows the friends and group members the hub's presence puts in the tile, the
+  people this player invited (asked, on the way, here, not now) and, for a joiner, the one who asked them, by name and
+  avatar; the rest of the hub's count are anonymous wisps ("2 other players wandering here"). No new hub message was
+  needed for it.
+- **Invite is a button now, and it can name people.** Lane 4 asked the group along on every choice; now a choice
+  only builds the world, and Invite opens a picker of the player's groups and friends (online first). The hub's
+  `place` takes `to: [user ids]` (friends or fellow group members, not blocked; 1 to 16) with or without a group, each
+  person asked once (`tests/test_hub.py` test_invite_people). One `place` goes per ticked group and one for the
+  people not in a ticked group. A switch from the Location box in a world still asks the group along as before.
+- **Each player starts on their own.** Join on the earth chooses the place (quietly) and its world starts building;
+  the joiner presses Start when they want (lane 4 began it by itself). The inviter's card shows the joiner on the way,
+  then there.
+- **Behind and above, always.** When the inviter is already in the world, the hub hands the joiner their last
+  position on entering the room and the arrival follows them as lane 4 built. When the inviter has not entered yet,
+  the joiner's arrival now ends 10 m behind and 6 m above where the inviter's own arrival will end (`Arrival.plan`'s
+  `behind`: the inviter's planned arrival as a still lead), so the inviter flies in to find them there, rather than
+  both ending at the same point. Verified both ways with a scripted second player: 10 m behind along the inviter's
+  heading and 6 m up, hovering, in spirit form.
+- **The bar follows the build's steps.** `main.js` tells the screen each step's name (`w.next`), and the screen
+  weighs the steps by their usual time; within a step the bar creeps toward the step's end without passing it.
+- **The card's animal lineup is gone from the home screen.** The new card stands over a map and names the players;
+  the tile's animals arriving round a big card (Aaron's refinement of 2026-11-01) would cover the map. `CardLineup`
+  is unchanged for `?cards=1`.
+- **The social panel is the right column.** On the home screen it opens on sign-in under the friends row, top right,
+  the sign-in modal stands where it will be, the chat sits bottom right and the Video and Audio toggles beside the
+  friends row (the top middle is the card's); in a world they go back where they were and the panel closes once.
+  A row's hover actions are an overlay now (they took their width while hidden and squeezed the name to nothing).
+- **Fixed on the way:** three.js sorts a Group's children by the group's own renderOrder ahead of theirs, so a
+  renderOrder on the map's group drew it over the outline and the dots; the hub tests sign up from one address and
+  passed the per-address limit with one more test, so the test server allows 40.
+
+Not verified: two real browsers (the second player was a script over `tests/wsclient.py`), touch, narrow windows,
+Safari (OffscreenCanvas in a worker is Safari 16.4+), a lost WebGL context on the home screen, the frame cost of the
+map (about 120 draw calls at the chosen view), and the map's look beyond the foothills, the Bay, Yosemite and Mount
+Fuji.

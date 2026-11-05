@@ -329,7 +329,13 @@ browser stays the renderer.
   everyone and streams them at 4 Hz under a 24 KB/s cap, the others mirror the stream through the same draw and leg
   engine, kills and flushes are ordered events, a mirror's catch is confirmed by the host, and the next page takes
   over when the host leaves. The group's members in a body are drawn as their animals (the same pool, legs and
-  draw), named over the body. Next: lane 5 (video and audio over WebRTC, signalling through the hub); the players on
+  draw), named over the body. The home screen is redesigned (2026-11-04, branch claude/home-map; docs/decisions.md):
+  the places on the left with a search box (Photon, any place on earth) and two sorts ("Most Active (global)", then
+  "(visible)" once the player moves the earth), the social panel on the right, the earth as OpenStreetMap's map from
+  OpenFreeMap's vector tiles draped on the globe down to a few hundred metres, a choice flying to 10,000 ft with the
+  tile outlined and a card naming its players, a loading bar with Invite (groups or people: `place` takes `to`) and
+  Start, each player starting on their own and a joiner arriving behind and above the inviter whether or not the
+  inviter has entered. Next: lane 5 (video and audio over WebRTC, signalling through the hub); the players on
   a tile outside the group (unseen by the privacy rule until Aaron widens it); the stream's rate under many players
   and the far fliers' detail; Discord needs Aaron's application registered; Google and Apple their keys.
 

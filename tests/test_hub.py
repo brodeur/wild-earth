@@ -68,6 +68,7 @@ class HubTest(unittest.TestCase):
         server.TILES_DIR = hub.TILES_DIR = tiles
         for k in ("DISCORD_CLIENT_ID", "DISCORD_CLIENT_SECRET", "GOOGLE_CLIENT_ID", "GOOGLE_CLIENT_SECRET", "HUB_ORIGIN"):
             os.environ.pop(k, None)
+        cls.signups_max, hub.SIGNUP_PER_ADDR = hub.SIGNUP_PER_ADDR, 40   # every test signs up from one address
         hub.configure(cls.tmp / "data", cls.tmp / ".env")
         cls.log = Tee()
         cls.redirect = contextlib.redirect_stdout(cls.log)
@@ -84,6 +85,7 @@ class HubTest(unittest.TestCase):
         cls.httpd.shutdown()
         cls.httpd.server_close()
         hub.configure(hub.REPO_ROOT / "data", hub.REPO_ROOT / ".env")
+        hub.SIGNUP_PER_ADDR = cls.signups_max
         server.TILES_DIR, hub.TILES_DIR = cls.saved
         cls.redirect.__exit__(None, None, None)
         shutil.rmtree(cls.tmp, ignore_errors=True)
@@ -449,6 +451,40 @@ class HubTest(unittest.TestCase):
         c[2].send({"t": "room", "op": "join", "tile": T2})
         c[2].none("pos")
         self.assertIsNone(hub.get().invites.get(inv["id"], {}).get("point"))   # the invite's record holds no point
+        for p in (a, b, c):
+            p[2].close()
+
+    def test_invite_people(self):
+        """The home screen's Invite: place with `to` asks friends or fellow group members by name, with or without a
+        group, each once; a stranger or a blocked user cannot be asked; the answer reaches the inviter."""
+        a, b, c = (self.player(n) for n in ("Hare_a", "Hare_b", "Hare_c"))
+        self.befriend(a, b)
+        a[2].send({"t": "place", "tile": T1, "to": [b[0]]})
+        inv = b[2].wait("invite")
+        self.assertEqual((inv["from"], inv["tile"]), (a[0], T1))
+        self.assertNotIn("group", inv)
+        self.assertEqual(a[2].wait("placed")["to"], 1)
+        b[2].send({"t": "answer", "invite": inv["id"], "join": True})
+        ans = a[2].wait("answer")
+        self.assertEqual((ans["from"], ans["join"]), (b[0], True))
+        for bad in ([c[0]], [], ["nobody"], "x"):                 # a stranger, no one, no such user, not a list
+            a[2].send({"t": "place", "tile": T1, "to": bad})
+            self.assertEqual(a[2].wait("err")["field"], "to")
+        c[2].none("invite")
+        # a group and a person in it at once: asked once
+        a[2].send({"t": "group", "op": "create", "name": "Hares", "users": [b[0]]})
+        g = b[2].wait("groups")["groups"][0]
+        a[2].drain()
+        a[2].send({"t": "place", "tile": T2, "group": g["id"], "to": [b[0]]})
+        self.assertEqual(a[2].wait("placed")["to"], 1)
+        self.assertEqual(b[2].wait("invite")["group"], g["id"])
+        b[2].none("invite")
+        # a block ends it
+        b[2].send({"t": "friend", "op": "block", "user": a[0]})
+        b[2].drain()
+        a[2].drain()
+        a[2].send({"t": "place", "tile": T1, "to": [b[0]]})
+        self.assertEqual(a[2].wait("err")["field"], "to")
         for p in (a, b, c):
             p[2].close()
 

@@ -883,22 +883,40 @@ class HubConn(WsConn):
             raise HubError(400, "scope must be group or tile", "scope")
 
     def m_place(self, m: dict) -> None:
+        """{tile, group?, to?, point?}: the invite goes to a group's members, to named people (`to`: friends or
+        fellow group members, the home screen's Invite), or both; with neither, to the sender's one group."""
         h, me = self.hub, self.uid
         tile = m.get("tile")
         if not tile_built(tile):
             raise HubError(404, "no such tile", "tile")
-        gid = m.get("group")
-        if gid is None:
-            gs = [r[0] for r in h.q("SELECT group_id FROM members WHERE user_id = ?", (me,))]
-            if len(gs) != 1:
-                raise HubError(400, "group is required (in no group, or in several)", "group")
-            gid = gs[0]
-        self._group(gid)
-        to = {u for u in h.comembers(me, gid) if not h.blocked(me, u)}
+        gid, users = m.get("group"), m.get("to")
+        to: set = set()
+        if users is not None:
+            if not isinstance(users, list) or not 1 <= len(users) <= GROUP_MAX:
+                raise HubError(400, f"to must be a list of 1 to {GROUP_MAX} users", "to")
+            mates = h.comembers(me)
+            for u in dict.fromkeys(users):
+                if not isinstance(u, str) or u == me or not h.user(u):
+                    raise HubError(404, "no such user", "to")
+                if h.blocked(me, u) or not (u in mates or h.q1(
+                        "SELECT 1 FROM friends WHERE state = 'accepted' AND ((a = ? AND b = ?) OR (a = ? AND b = ?))",
+                        (me, u, u, me))):
+                    raise HubError(403, "invite friends or group members", "to")
+                to.add(u)
+        if gid is not None or users is None:
+            if gid is None:
+                gs = [r[0] for r in h.q("SELECT group_id FROM members WHERE user_id = ?", (me,))]
+                if len(gs) != 1:
+                    raise HubError(400, "group is required (in no group, or in several)", "group")
+                gid = gs[0]
+            self._group(gid)
+            to |= {u for u in h.comembers(me, gid) if not h.blocked(me, u)}
         iid = secrets.token_hex(8)
         season = season_now(tile)
         h.invites[iid] = {"from": me, "to": to, "at": time.time()}   # memory only, and no tile kept
-        msg = {"t": "invite", "id": iid, "from": me, "group": gid, "tile": tile, "season": season}
+        msg = {"t": "invite", "id": iid, "from": me, "tile": tile, "season": season}
+        if gid is not None:
+            msg["group"] = gid
         point = m.get("point")   # the picker's planned arrival, tile-local {x, north}: relayed to the joiners, never kept
         if isinstance(point, dict):
             msg["point"] = {k: _coord(point.get(k), k) for k in ("x", "north")}

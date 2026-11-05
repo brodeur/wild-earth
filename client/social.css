@@ -180,3 +180,42 @@ html.opening #media { z-index:21; }
 .iv-btns button:hover { background:#27352c; color:#fff; }
 .iv-btns .iv-join { background:#f3f6f1; color:#0b0f0d; border-color:#f3f6f1; font-weight:600; }
 .iv-btns .iv-join:hover { background:#fff; color:#0b0f0d; }
+
+/* ---- on the home screen (title.js, redesigned 2026-11-04): the social panel is the right column, open on sign-in; the
+   chat bottom right; the places are listed on the left ---- */
+html.opening #social { left:auto; right:max(20px, 2.4vw); top:18px; }
+html.opening .so-panel, html.opening .so-dialog { left:auto; right:0; max-height:calc(100vh - 230px); }
+html.opening #chat { left:auto; right:max(20px, 2.4vw); bottom:16px; width:min(340px, calc(100vw - 28px)); }
+
+/* ---- the home screen's invite picker (src/multiplayer.js openPick): over the Invite button ---- */
+#invitePick { position:fixed; left:50%; bottom:120px; z-index:23; width:320px; max-width:calc(100vw - 28px); max-height:min(60vh, 520px); overflow-y:auto; box-sizing:border-box;
+  padding:14px 14px 12px; border-radius:12px; background:#0f1512f4; border:1px solid #3d5244; backdrop-filter:blur(8px); box-shadow:0 10px 32px #000b;
+  font:13px/1.4 'DM Sans', system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif; color:#d3ddd5; transform:translate(-50%, 8px); opacity:0;
+  transition:opacity .25s ease, transform .25s cubic-bezier(.2, .8, .25, 1); }
+#invitePick.on { opacity:1; transform:translate(-50%, 0); }
+#invitePick h3 { margin:0 0 8px; font-size:13px; font-weight:500; color:#d3ddd5; }
+#invitePick h3 b { color:#f3f6f1; font-weight:600; }
+#invitePick h4 { margin:12px 0 4px; font-size:10.5px; font-weight:600; letter-spacing:.1em; text-transform:uppercase; color:#8fa094; }
+.ip-list { display:flex; flex-direction:column; gap:2px; }
+.ip-row { display:flex; align-items:center; gap:9px; padding:5px 6px; border-radius:8px; cursor:pointer; }
+.ip-row:hover { background:#ffffff0c; }
+.ip-row input { accent-color:#a9d8a4; margin:0; }
+.ip-row.off .so-avatar { filter:saturate(.3) brightness(.7); }
+.ip-gav { display:flex; }
+.ip-gav .so-avatar { margin-left:-6px; box-shadow:0 0 0 2px #0f1512; }
+.ip-gav .so-avatar:first-child { margin-left:0; }
+.ip-who { display:flex; flex-direction:column; line-height:1.2; min-width:0; }
+.ip-who b { font-weight:500; color:#e6ede7; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+.ip-who small { font-size:11px; color:#8fa094; }
+.ip-row.on .ip-who small { color:#a9d8a4; }
+.ip-note { margin:6px 0 10px; font-size:12.5px; color:#8fa094; }
+.ip-btns { display:flex; justify-content:flex-end; gap:8px; margin-top:12px; }
+.ip-btns button { padding:6px 14px; border:1px solid #263128; border-radius:999px; background:#1f2a23; color:#d3ddd5; font:inherit; font-size:12px; cursor:pointer; }
+.ip-btns button:hover:not(:disabled) { background:#27352c; color:#fff; }
+.ip-btns .ip-send { background:#f3f6f1; color:#0b0f0d; border-color:#f3f6f1; font-weight:600; }
+.ip-btns .ip-send:disabled { opacity:.45; cursor:default; }
+/* a row's actions over its right end on hover (they took their width while hidden and squeezed the name to nothing) */
+.so-row { position:relative; }
+.so-row .so-acts { position:absolute; right:4px; top:50%; transform:translateY(-50%); padding-left:16px; background:linear-gradient(90deg, #0f151200, #0f1512 14px); pointer-events:none; }
+.so-row:hover .so-acts, .so-row:focus-within .so-acts { pointer-events:auto; }
+.so-results .so-acts, .so-ghead .so-acts { position:static; transform:none; padding:0; background:none; pointer-events:auto; }
