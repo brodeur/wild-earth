@@ -1,5 +1,5 @@
 {
- "generated": "2026-11-05T05:46:12Z",
+ "generated": "2026-11-05T06:18:44Z",
  "tile_id": "utm11n_270_4180",
  "archetypes": {
   "gather": "find the resource's hotspots, feed, keep an eye out: the predators listed hunt here; the competitors eat the same cells",
@@ -3640,6 +3640,73 @@
      "summer",
      "fall"
     ]
+   ],
+   [
+    "ursus_americanus",
+    "rubus_parviflorus",
+    "berries",
+    "browse",
+    [
+     "summer"
+    ]
+   ],
+   [
+    "canis_latrans",
+    "rubus_parviflorus",
+    "berries",
+    "browse",
+    [
+     "summer"
+    ]
+   ],
+   [
+    "cyanocitta_stelleri",
+    "rubus_parviflorus",
+    "berries",
+    "browse",
+    [
+     "summer"
+    ]
+   ],
+   [
+    "odocoileus_hemionus",
+    "rubus_parviflorus",
+    "browse",
+    "browse",
+    [
+     "spring",
+     "summer"
+    ]
+   ],
+   [
+    "odocoileus_hemionus",
+    "populus_trichocarpa",
+    "browse",
+    "browse",
+    [
+     "spring",
+     "summer"
+    ]
+   ],
+   [
+    "odocoileus_hemionus",
+    "acer_circinatum",
+    "browse",
+    "browse",
+    [
+     "spring",
+     "summer",
+     "winter"
+    ]
+   ],
+   [
+    "cyanocitta_stelleri",
+    "acer_circinatum",
+    "seeds",
+    "grass_forbs",
+    [
+     "fall"
+    ]
    ]
   ],
   "cover": [
@@ -3974,6 +4041,30 @@
    [
     "odocoileus_hemionus",
     "tsuga_mertensiana"
+   ],
+   [
+    "odocoileus_hemionus",
+    "rubus_parviflorus"
+   ],
+   [
+    "odocoileus_hemionus",
+    "populus_trichocarpa"
+   ],
+   [
+    "buteo_jamaicensis",
+    "populus_trichocarpa"
+   ],
+   [
+    "corvus_corax",
+    "populus_trichocarpa"
+   ],
+   [
+    "odocoileus_hemionus",
+    "acer_circinatum"
+   ],
+   [
+    "cyanocitta_stelleri",
+    "acer_circinatum"
    ]
   ]
  },
@@ -6330,6 +6421,7 @@
       "oreortyx_pictus"
      ],
      "plants": [
+      "acer_circinatum",
       "adenostoma_fasciculatum",
       "arctostaphylos_manzanita",
       "arctostaphylos_patula",
@@ -6824,6 +6916,7 @@
      "plants": [
       "abies_concolor",
       "abies_magnifica",
+      "acer_circinatum",
       "acer_macrophyllum",
       "alnus_rhombifolia",
       "ceanothus_cordulatus",
@@ -6842,9 +6935,11 @@
       "pinus_contorta",
       "populus_fremontii",
       "populus_tremuloides",
+      "populus_trichocarpa",
       "quercus_agrifolia",
       "quercus_vacciniifolia",
       "rosa_californica",
+      "rubus_parviflorus",
       "rubus_ursinus",
       "salix_exigua",
       "salix_laevigata",
@@ -20403,6 +20498,7 @@
       "gaultheria_shallon",
       "ribes_malvaceum",
       "ribes_roezlii",
+      "rubus_parviflorus",
       "rubus_ursinus",
       "sambucus_nigra_caerulea",
       "vaccinium_ovatum"

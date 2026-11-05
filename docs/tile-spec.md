@@ -181,7 +181,20 @@ graph: `version`, `code` (a hash of the step's modules), `params`, `fingerprint`
 stand-in or the next one named), `status` (`ok`, `not_applicable` with `reason`, `failed` with `error`, `blocked`,
 `adopted`, `stale` with `stale` reasons), `owner` (the lane that owns the step's code), `ran_at`, `seconds`. A step is
 skipped when its fingerprint and its outputs are unchanged. `log` is kept and appended as before.
-`licence_audit` holds the audit step's problems and warnings.
+`licence_audit` holds the audit step's problems and warnings. Each step record also names its `stage` (base, flora,
+fauna, games: docs/pipeline.md). `seams` (2026-11-04) holds the seams step's report: per built neighbour sharing an
+edge, the DEM's median step across the seam against inside each tile, the streams crossing on each side, and the
+problem if any.
+
+**Files beside the manifest (2026-11-04):** `cost.json` (pipeline/cost.py: per step and stage the wall and CPU time,
+downloads per source with cache hits and misses, output bytes, Meshy credits, UTC start and end; `client`, the bytes a
+player downloads; docs/pipeline.md "Reading cost.json"); `game_seeds.json` (the games stage: per shared game, acorn,
+dig and carrion, the seed, the players on this tile, the hotspots, the client module and the world);
+`terrain/ice.tif`, `terrain/ice.json` and `client/ice.png` (the ice step: permanent snow and ice, its area, sources,
+lowest elevation and toes); `species/animals.json` (the fauna stage's research: every animal recorded on the tile,
+ranked within its class, its role from EltonTraits, the listed animals, predators, scavengers, generated traits, the
+Meshy queue with estimates and stand-ins). `species/plant_needs.json` gains `rank`, `cover`, `records`, `target`,
+`by_layer` and `hands`; `species/registry.json` gains `density` and `hands` (the edits the tile still needs).
 
 A layer with `for_clients: false` (and a `for_clients_note` saying why) must not be fetched
 by a game client or copied into anything distributed: today `species.occurrences` and

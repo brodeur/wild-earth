@@ -15,7 +15,7 @@
   37.85658112570665
  ],
  "size_m": 10000,
- "generated_at": "2026-11-05T05:46:47Z",
+ "generated_at": "2026-11-05T07:00:24Z",
  "generator": {
   "name": "wild-earth-pipeline",
   "version": "0.2.0"
@@ -27,7 +27,8 @@
   "lidar": true,
   "vegetation_backfilled": true,
   "imagery_erased": true,
-  "crowns_inpainted": true
+  "crowns_inpainted": true,
+  "water_banked": true
  },
  "layers": {
   "terrain.dem": {
@@ -62,6 +63,9 @@
    "nodata": -9999.0,
    "source": "usgs_3dep_1m",
    "project": "CA_SanFrancisco_B23",
+   "projects": [
+    "CA_SanFrancisco_B23"
+   ],
    "collection": [
     "20230420",
     "20230420"
@@ -309,25 +313,23 @@
    ],
    "pixels": 5000,
    "resolution_m": 2.0,
-   "encoding": "8-bit grey, row 0 north, pixel centres at x = 2i + 1, north = 10000 - (2j + 1): residual m = (v - 128) * 0.04 (clamped +-5.08 m) = the 1 m DEM averaged to 2 m minus client.heights decoded and interpolated bilinearly between ITS pixel centres (x = 5i + 2.5, north = 10000 - 5j - 2.5). Linear, so texture filtering interpolates it",
-   "source": "usgs_3dep_1m",
    "derived_from": [
     "terrain.dem_1m",
-    "client.heights"
+    "terrain.dem_banked"
    ],
+   "encoding": "8-bit grey, row 0 north: the 1 m ground averaged to 2 m and carved with the water system's banks, minus client/heights.png bilinear between its pixel centres, residual m = (v - 128) * 0.04, clamped +-5.08 m",
    "stats": {
     "residual_m": {
-     "mean": 0.248,
-     "std": 4.032,
-     "p50_abs": 0.0,
-     "p99_abs": 2.551,
+     "mean": 0.246,
+     "std": 4.03,
+     "p50_abs": 0.019,
+     "p99_abs": 2.545,
      "max_abs": 107.32
     },
-    "fraction_over_0.5_m": 0.0427,
-    "clipped_fraction": 0.006169
+    "clipped_fraction": 0.006167
    },
-   "sha256": "b5aa22ee30d7c280956b9e250c8af57f6be4d2c15d5bd07016f192b96599aaf7",
-   "bytes": 2886139
+   "sha256": "b8744e1a7b7c27d0c6ae362d09793034a552ad8b2a4aa815ab4cce6be5834a6e",
+   "bytes": 5741625
   },
   "terrain.roughness": {
    "path": "terrain/roughness_10m.tif",
@@ -421,8 +423,8 @@
     "hydro.human_water",
     "terrain.dem_rewilded"
    ],
-   "feature_count": 370,
-   "method": "least-cost breach (<= 300 m) of depressions >= 1 m outside waterbodies (human water rewilded: not held as ponds, routed on terrain/dem_rewilded.tif), then pysheds fill + resolve_flats, D8, NHD-seeded inflow",
+   "feature_count": 350,
+   "method": "least-cost breach (<= 300 m) of depressions >= 1 m outside waterbodies (human water rewilded: not held as ponds, routed on terrain/dem_rewilded.tif), then pysheds fill + resolve_flats, D8, NHD-seeded inflow, edge leaks handed back to their NHD stream",
    "params": {
     "threshold_km2": 0.15,
     "min_reach_m": 40.0,
@@ -434,47 +436,50 @@
     "threshold_km2": 0.15,
     "seeds": 0,
     "seeds_moved": [],
+    "edge_links": 0,
+    "edge_links_detail": [],
+    "seeds_carried": [],
     "breaches": 415,
     "breach_cells": 5083,
     "unresolved_flat_cells": 5728,
-    "pruned_stubs": 18,
+    "pruned_stubs": 12,
     "interior_outlets": 0,
-    "channel_cells": 32758,
-    "dem_reaches": 344,
-    "dem_matched": 48,
-    "dem_unmatched": 296,
+    "channel_cells": 33152,
+    "dem_reaches": 325,
+    "dem_matched": 47,
+    "dem_unmatched": 278,
     "nhd_flowlines": 101,
-    "nhd_covered": 58,
-    "nhd_partial": 7,
-    "nhd_uncovered": 36,
-    "nhd_kept_reaches": 3,
-    "nhd_tips_dropped": 43,
-    "nhd_tips_length_km": 8.63,
-    "dem_length_km": 185.24,
-    "nhd_kept_length_km": 0.13,
+    "nhd_covered": 59,
+    "nhd_partial": 5,
+    "nhd_uncovered": 37,
+    "nhd_kept_reaches": 2,
+    "nhd_tips_dropped": 40,
+    "nhd_tips_length_km": 8.5,
+    "dem_length_km": 189.86,
+    "nhd_kept_length_km": 0.08,
     "nhd_length_km": 30.12,
-    "nhd_covered_length_km": 20.52,
-    "median_offset_m": 2.5,
-    "median_reach_offset_m": 3.0,
-    "p90_offset_m": 23.8,
+    "nhd_covered_length_km": 20.69,
+    "median_offset_m": 2.7,
+    "median_reach_offset_m": 2.9,
+    "p90_offset_m": 25.0,
     "in_waterbody_pieces": 19,
-    "features": 370,
+    "features": 350,
     "downhill_check": {
      "points": 200,
      "step_m": 10.0,
      "tolerance_m": 0.5,
-     "violations": 16,
-     "violation_rate": 0.08,
-     "max_rise_m": 5.84
+     "violations": 14,
+     "violation_rate": 0.07,
+     "max_rise_m": 2.44
     },
-    "max_area_km2": 45.36,
+    "max_area_km2": 64.63,
     "breach_max_m": 300.0,
     "rewilded_waterbodies": 0,
     "rewild_check": {},
     "routed_on": "terrain/dem_rewilded.tif"
    },
-   "sha256": "1f727a98a17f520cdee8bc2d94a0128cd682f2bb3522b65e83acba8382320ea4",
-   "bytes": 786701
+   "sha256": "d1d7ff775fa791f2cfbef4c2e164d7c5de8d0ac82b3cabdeabebc3bf573a76f7",
+   "bytes": 747724
   },
   "client.channel_depth": {
    "path": "client/channel_depth.png",
@@ -493,8 +498,8 @@
     "hydro.channels"
    ],
    "encoding": "uint8 decimetres: mean DEM on a 20 m ring minus the channel cell, clamped 0-25 m, x10; 0 off channel",
-   "sha256": "437032ead944fc6319d43bf1983796c036b4c671c684062ccd20bb7646a32f2e",
-   "bytes": 49353
+   "sha256": "6fd98fb5d4aa7e6642faf67446cc5fb9be7fa4452c6c9b1508c69f81c09783ca",
+   "bytes": 49038
   },
   "hydro.human_water": {
    "path": "hydro/human_water.geojson",
@@ -899,19 +904,19 @@
    "encoding": "RGB, row 0 north. R thalweg water depth, 2 cm units (0-5.1 m), 0 off channel; G riffle-pool index (0 deepest pool, 128 run, 255 riffle; local width = reach width x (1 + 0.15 (G/127.5 - 1))); B rewilded water: 255 former open water (meadow or wet flat), 160 riparian corridor within 12 m of the restored channel, 0 elsewhere. R and G are spread 4 px from each centreline.",
    "depth_model": "mean depth 0.10 A^0.32 m (A km2) x exp(-0.85 t), t = tanh(1.1 ln((S_local + 0.002) / (S_reach + 0.002))); S_local over max(7.5 m, 2.5 widths), S_reach over max(75 m, 10 widths), on the non-increasing DEM long profile every 2.5 m",
    "stats": {
-    "reaches": 370,
-    "samples": 74335,
-    "riffle_share": 0.19,
-    "pool_share": 0.295,
-    "run_share": 0.515,
-    "depth_m_p50": 0.098,
-    "depth_m_p95": 0.264,
-    "depth_m_max": 0.584,
+    "reaches": 350,
+    "samples": 76150,
+    "riffle_share": 0.193,
+    "pool_share": 0.321,
+    "run_share": 0.486,
+    "depth_m_p50": 0.106,
+    "depth_m_p95": 0.326,
+    "depth_m_max": 0.646,
     "bed_cells": 286,
     "corridor_cells": 0
    },
-   "sha256": "210d0c87ea72b73488baf0aba0e9346abe59919ba28b4ca9dad0f06666010d72",
-   "bytes": 309913
+   "sha256": "a7d3f505509a6d993ddb6bce0c9e1e6d8d23e3bca0b1ef9a439112defbb5c370",
+   "bytes": 322184
   },
   "client.features": {
    "path": "client/features.json",
@@ -926,7 +931,7 @@
    "encoding": "tile-local metres [x east, north from south edge]",
    "counts": {
     "roads": 2835,
-    "streams": 370,
+    "streams": 350,
     "waterbodies": 49,
     "places": 11,
     "territories": 0
@@ -939,8 +944,8 @@
     "hydro.waterbodies",
     "osm"
    ],
-   "sha256": "dbaebb12c7e6e265bf4bd476d2319bfdfcfe1900e87a8396b073c1bd59e2fd0c",
-   "bytes": 877091
+   "sha256": "f75050d91f3d7f8f274088ce4845180b84097fa3a4b01a281088b654fa9d7a5e",
+   "bytes": 864533
   },
   "vegetation.evt": {
    "path": "vegetation/evt.tif",
@@ -1242,17 +1247,22 @@
    "path": "species/species.json",
    "kind": "table",
    "source": "gbif",
-   "count": 18,
-   "sha256": "38f537b316e58c570b2e6c248fe1118c5e5b8a6c7134eb784e2bad8183895033",
-   "bytes": 8653
+   "count": 20,
+   "present": 18,
+   "absent": [
+    "oreortyx_pictus",
+    "ursus_americanus"
+   ],
+   "sha256": "ee5ad132c3636ba4144cebcda9a92099c79a1730e68f0d6438eebfa72ef577de",
+   "bytes": 13023
   },
   "species.occurrences": {
    "path": "species/occurrences.geojson",
    "kind": "vector",
    "source": "gbif",
-   "feature_count": 14309,
-   "sha256": "920a747d098f11f9eb2695ca81c25616762bac530a0a8a2492ec5dc1c34ff886",
-   "bytes": 6401088,
+   "feature_count": 13985,
+   "sha256": "a9ecbdb42d78a732072f8715afe18f6cabf4bb3d25205e250c12dc89fdb16031",
+   "bytes": 6263885,
    "for_clients": false,
    "for_clients_note": "per-record licences include CC BY-NC; clients read client.species_prior, built from CC0 and CC BY records only"
   },
@@ -1260,28 +1270,28 @@
    "path": "species/seasonal.json",
    "kind": "table",
    "source": "gbif",
-   "sha256": "6a12c0feae76a3dbabc8d12e35db6971453d803cf2d1b182f4a83e78693a31dc",
-   "bytes": 2243,
+   "sha256": "61b3c024fe0de4c63c40645addd42a90b288931ab815e4c4d3cceae4fb5b2f96",
+   "bytes": 2435,
    "for_clients": false
   },
   "species.inventory": {
    "path": "species/inventory.json",
    "kind": "table",
    "source": "gbif",
-   "sha256": "af5edfd6babb4b73bba960b14705dd9c00139d0b0eea9020591436557f79ca02",
-   "bytes": 11285
+   "sha256": "1165d217542d8291724b7b5d56a4b460c792ab463f1e877a016d4842e3ce58a6",
+   "bytes": 43097
   },
   "perception": {
    "path": "perception.json",
    "kind": "table",
-   "sha256": "6373175f3454aaa21dab00ef47975ee59067076822279ac8e7451ec1a84a2597",
-   "bytes": 5954
+   "sha256": "6e6754bc230f46b58825b01860ce594ceedb883ef2a84badacc2274eeba52119",
+   "bytes": 21651
   },
   "calendar": {
    "path": "calendar.json",
    "kind": "table",
-   "sha256": "db2348c8c078b73ce45b76a609bf5c9c57de5e58d119816fd162c2340197a118",
-   "bytes": 15878
+   "sha256": "eb24973810ce537a56fe3241fbac42580271ef64f2de6efd261d4bba4aba5aec",
+   "bytes": 18259
   },
   "client.species_prior": {
    "path": "client/species_prior.json",
@@ -1303,37 +1313,37 @@
     "CC BY 4.0",
     "CC0 1.0"
    ],
-   "records_used": 10331,
+   "records_used": 10528,
    "records_used_by_license": {
-    "CC0 1.0": 335,
-    "CC BY 4.0": 9996
+    "CC0 1.0": 319,
+    "CC BY 4.0": 10209
    },
    "records_excluded": {
-    "CC BY-NC 4.0": 3946
+    "CC BY-NC 4.0": 3435
    },
-   "records_outside": 32,
+   "records_outside": 22,
    "species": {
-    "aphelocoma_californica": 1178,
-    "buteo_jamaicensis": 1040,
-    "callipepla_californica": 1426,
-    "canis_latrans": 194,
-    "cathartes_aura": 1439,
-    "corvus_corax": 1206,
-    "cyanocitta_stelleri": 1136,
+    "aphelocoma_californica": 1288,
+    "buteo_jamaicensis": 1206,
+    "callipepla_californica": 1422,
+    "canis_latrans": 195,
+    "cathartes_aura": 1453,
+    "corvus_corax": 1324,
+    "cyanocitta_stelleri": 1256,
     "lepus_californicus": 1,
-    "melanerpes_formicivorus": 1433,
-    "meleagris_gallopavo": 910,
+    "melanerpes_formicivorus": 1209,
+    "meleagris_gallopavo": 801,
     "microtus_californicus": 119,
-    "odocoileus_hemionus": 49,
+    "odocoileus_hemionus": 50,
     "otospermophilus_beecheyi": 3,
     "puma_concolor": 0,
-    "sceloporus_occidentalis": 152,
+    "sceloporus_occidentalis": 156,
     "sciurus_griseus": 3,
     "sylvilagus_bachmani": 28,
     "urocyon_cinereoargenteus": 14
    },
    "datasets": 13,
-   "sha256": "e8a1d615de555e9b92de44d7eec64f1df1b77bd0682d4d0fe1e53e495cc3d4bb",
+   "sha256": "d12f0c4eaf646f5143858168aa8639b46320fcd1055c2d65c98eb459cc5e734a",
    "bytes": 242797
   },
   "terrain.hillshade": {
@@ -1352,8 +1362,8 @@
     "azimuth": 315.0,
     "altitude": 45.0
    },
-   "sha256": "e66a86afc0743dfdf39ae7fe5901bfab9df302f6fecbdbc3b85dd5375eba4e4d",
-   "bytes": 2808251
+   "sha256": "6c07e39c9ea8a61cec826def4593b4aebdd9c55094b043342f948c8de8a292cf",
+   "bytes": 2852247
   },
   "terrain.terrain_rgb": {
    "path": "terrain/terrain_rgb.png",
@@ -1372,8 +1382,8 @@
     -114.90299224853516,
     341.1461181640625
    ],
-   "sha256": "29ad56f3daeac32dd4e4638134f3122083ca4e0dce0721eb7fbdeb9b1f52d5db",
-   "bytes": 2153495
+   "sha256": "31d304cf55c3f4adf4ac43abe3efd5a60da7a88973c4749885850d6209a82b9b",
+   "bytes": 2167298
   },
   "footprint.mask_raster": {
    "path": "footprint/mask.png",
@@ -1451,8 +1461,8 @@
     "terrain.hillshade",
     "vegetation.habitat"
    ],
-   "sha256": "9f1d6e4f495803905a524a2bab37ae38f72c5c9bfcc0e88c146c6f13637d67a2",
-   "bytes": 3574934
+   "sha256": "1ca5358313b900f76b122ed97de9a909bc675e8135bd5e714ec2f840d263bc76",
+   "bytes": 3615232
   },
   "client.heights": {
    "path": "client/heights.png",
@@ -1471,8 +1481,8 @@
     -114.93179321289062,
     341.19732666015625
    ],
-   "sha256": "fc4c953af8a38dde2244b6bee04f3bddcabf25bb3a1fa01265df90e13d81de9c",
-   "bytes": 2329363
+   "sha256": "60acae0d052a173051bf0780c76ac1d490b421daa84d2057f7122e48d164f4b0",
+   "bytes": 2344114
   },
   "client.habitat": {
    "path": "client/habitat.png",
@@ -1545,8 +1555,8 @@
     "vegetation.evc",
     "footprint.mask"
    ],
-   "sha256": "b99d52db92050fd240790015ee89508c338661dbd3e6784e3162259cc20a498a",
-   "bytes": 4312048
+   "sha256": "667e031f5ad5be3c085293c9e175f8520184e91ad23df5b1ece82287c150b857",
+   "bytes": 4351262
   },
   "client.masks": {
    "path": "client/masks.png",
@@ -1717,7 +1727,8 @@
      "urtica_dioica",
      "erythranthe_guttata",
      "nasturtium_officinale",
-     "lemna_minor"
+     "lemna_minor",
+     "polystichum_munitum"
     ]
    },
    "mixes": 237,
@@ -1812,32 +1823,33 @@
      "ericameria_ericoides": 0.0022
     },
     "ground_share": {
-     "stipa_pulchra": 0.0529,
-     "elymus_glaucus": 0.0721,
-     "danthonia_californica": 0.02,
-     "avena_fatua": 0.0327,
-     "bromus_hordeaceus": 0.0361,
-     "bromus_diandrus": 0.0445,
-     "hordeum_murinum": 0.0186,
-     "eschscholzia_californica": 0.0615,
-     "lupinus_bicolor": 0.0659,
-     "lupinus_albifrons": 0.0853,
-     "claytonia_perfoliata": 0.0481,
-     "trifolium_willdenovii": 0.0198,
-     "chlorogalum_pomeridianum": 0.0595,
-     "achillea_millefolium": 0.0572,
-     "wyethia_helenioides": 0.0301,
-     "dipterostemon_capitatus": 0.0824,
-     "amsinckia_menziesii": 0.0291,
-     "erodium_cicutarium": 0.0522,
-     "vicia_villosa": 0.0199,
-     "plagiobothrys_nothofulvus": 0.028,
-     "madia_elegans": 0.0515,
-     "artemisia_douglasiana": 0.011,
-     "urtica_dioica": 0.004,
-     "erythranthe_guttata": 0.0123,
-     "nasturtium_officinale": 0.0025,
-     "lemna_minor": 0.0028
+     "stipa_pulchra": 0.0507,
+     "elymus_glaucus": 0.0599,
+     "danthonia_californica": 0.0183,
+     "avena_fatua": 0.0322,
+     "bromus_hordeaceus": 0.0351,
+     "bromus_diandrus": 0.0425,
+     "hordeum_murinum": 0.0183,
+     "eschscholzia_californica": 0.0612,
+     "lupinus_bicolor": 0.0656,
+     "lupinus_albifrons": 0.084,
+     "claytonia_perfoliata": 0.0388,
+     "trifolium_willdenovii": 0.0195,
+     "chlorogalum_pomeridianum": 0.0583,
+     "achillea_millefolium": 0.0444,
+     "wyethia_helenioides": 0.0299,
+     "dipterostemon_capitatus": 0.0803,
+     "amsinckia_menziesii": 0.0289,
+     "erodium_cicutarium": 0.0518,
+     "vicia_villosa": 0.0194,
+     "plagiobothrys_nothofulvus": 0.0278,
+     "madia_elegans": 0.0506,
+     "artemisia_douglasiana": 0.0097,
+     "urtica_dioica": 0.0032,
+     "erythranthe_guttata": 0.01,
+     "nasturtium_officinale": 0.0023,
+     "lemna_minor": 0.0026,
+     "polystichum_munitum": 0.0546
     },
     "mean_tree_density": 0.1952,
     "mean_shrub_density": 0.3636,
@@ -1872,8 +1884,8 @@
      "rewilded_meadow": 0.0
     }
    },
-   "sha256": "738fb022d7dbc41f2bf962d917e50c3148a0299fa5d7c09da46a18ed3e4490a8",
-   "bytes": 361456
+   "sha256": "62c14ad39ae9e7b876b0ffc29dc96d945f9ecfcfcee0a32e25b9541825d55950",
+   "bytes": 366234
   },
   "resources": {
    "path": "resources/resources.json",
@@ -2235,15 +2247,15 @@
    },
    "run": {
     "provider": "pc",
-    "scenes": 308,
-    "dates": 308,
-    "read_now": 308,
+    "scenes": 309,
+    "dates": 309,
+    "read_now": 0,
     "failed": [],
-    "read_seconds": 223.8,
-    "scenes_used": 304,
-    "dates_used": 304,
-    "bytes_read": 1931542151,
-    "seconds": 274.1
+    "read_seconds": 0.0,
+    "scenes_used": 305,
+    "dates_used": 305,
+    "bytes_read": 1937953499,
+    "seconds": 27.9
    },
    "naip_reference": {
     "naip_year": 2022,
@@ -2267,7 +2279,7 @@
       "oak_woodland": {
        "srgb": [
         0.3606,
-        0.3811,
+        0.381,
         0.3345
        ],
        "reflectance": [
@@ -2282,14 +2294,14 @@
        "srgb": [
         0.3018,
         0.3366,
-        0.2772
+        0.2771
        ],
        "reflectance": [
         0.0259,
         0.0324,
-        0.0219
+        0.0218
        ],
-       "ndvi": 0.772,
+       "ndvi": 0.773,
        "cells": 7809
       },
       "mixed_forest": {
@@ -2328,7 +2340,7 @@
        ],
        "reflectance": [
         0.053,
-        0.0537,
+        0.0536,
         0.0381
        ],
        "ndvi": 0.542,
@@ -2392,7 +2404,7 @@
        "srgb": [
         0.3164,
         0.3551,
-        0.2898
+        0.2897
        ],
        "reflectance": [
         0.0286,
@@ -3217,7 +3229,7 @@
       "riparian": {
        "srgb": [
         0.3965,
-        0.4204,
+        0.4203,
         0.3461
        ],
        "reflectance": [
@@ -3246,8 +3258,8 @@
     },
     {
      "month": 10,
-     "looks_dates": 29,
-     "looks_median": 28,
+     "looks_dates": 30,
+     "looks_median": 29,
      "looks_min": 0,
      "looks_p05": 17,
      "refused": false,
@@ -3256,69 +3268,69 @@
      "classes": {
       "oak_woodland": {
        "srgb": [
-        0.3886,
-        0.389,
-        0.3317
+        0.3888,
+        0.3888,
+        0.3306
        ],
        "reflectance": [
         0.0438,
         0.0438,
-        0.0315
+        0.0313
        ],
-       "ndvi": 0.62,
+       "ndvi": 0.619,
        "cells": 5526
       },
       "conifer_forest": {
        "srgb": [
-        0.3287,
-        0.3464,
-        0.2794
+        0.3288,
+        0.3462,
+        0.2781
        ],
        "reflectance": [
         0.0309,
         0.0344,
-        0.0222
+        0.022
        ],
        "ndvi": 0.729,
        "cells": 7809
       },
       "mixed_forest": {
        "srgb": [
-        0.4338,
-        0.427,
-        0.3759
+        0.4342,
+        0.4267,
+        0.3751
        ],
        "reflectance": [
-        0.0552,
-        0.0534,
-        0.0408
+        0.0553,
+        0.0533,
+        0.0406
        ],
        "ndvi": 0.476,
        "cells": 215
       },
       "chaparral": {
        "srgb": [
-        0.4519,
+        0.4522,
         0.4224,
-        0.3698
+        0.3694
        ],
        "reflectance": [
-        0.0603,
+        0.0604,
         0.0522,
-        0.0394
+        0.0393
        ],
-       "ndvi": 0.427,
+       "ndvi": 0.426,
        "cells": 27746
       },
       "grassland": {
        "srgb": [
-        0.4688,
-        0.4364,
-        0.3781
+        0.4693,
+        0.4366,
+        0.3778
        ],
        "reflectance": [
-        0.0652,
-        0.0559,
+        0.0653,
+        0.056,
         0.0413
        ],
        "ndvi": 0.423,
@@ -3326,27 +3338,27 @@
       },
       "riparian": {
        "srgb": [
-        0.3794,
+        0.3799,
         0.3951,
-        0.3214
+        0.3209
        ],
        "reflectance": [
-        0.0416,
+        0.0417,
         0.0453,
-        0.0295
+        0.0294
        ],
        "ndvi": 0.546,
        "cells": 3536
       },
       "open_grass": {
        "srgb": [
-        0.4705,
-        0.4371,
-        0.3794
+        0.471,
+        0.4373,
+        0.3792
        ],
        "reflectance": [
-        0.0657,
-        0.0561,
+        0.0659,
+        0.0562,
         0.0416
        ],
        "ndvi": 0.418,
@@ -3380,14 +3392,14 @@
       },
       "conifer_forest": {
        "srgb": [
-        0.3128,
+        0.3127,
         0.3346,
-        0.2772
+        0.2771
        ],
        "reflectance": [
         0.0279,
-        0.0321,
-        0.0219
+        0.032,
+        0.0218
        ],
        "ndvi": 0.74,
        "cells": 7809
@@ -3492,7 +3504,7 @@
        "srgb": [
         0.3152,
         0.347,
-        0.2957
+        0.2955
        ],
        "reflectance": [
         0.0283,
@@ -3534,7 +3546,7 @@
        "srgb": [
         0.4407,
         0.4294,
-        0.3725
+        0.3724
        ],
        "reflectance": [
         0.0571,
@@ -3562,7 +3574,7 @@
        "srgb": [
         0.4423,
         0.4302,
-        0.3737
+        0.3736
        ],
        "reflectance": [
         0.0576,
@@ -3575,8 +3587,8 @@
      }
     }
    ],
-   "sha256": "75a06289db24667e5c01862a7190cfea5ebe610185e4e5524b37dc27726c397b",
-   "bytes": 19612
+   "sha256": "3d49566cbd281198985f5fcfb6acf69caee02f2155ce88137d64647736047b9c",
+   "bytes": 19610
   },
   "client.season_rgb": {
    "path": "client/season_rgb.png",
@@ -3624,7 +3636,7 @@
       "oak_woodland": {
        "srgb": [
         0.3606,
-        0.3811,
+        0.381,
         0.3345
        ],
        "reflectance": [
@@ -3639,14 +3651,14 @@
        "srgb": [
         0.3018,
         0.3366,
-        0.2772
+        0.2771
        ],
        "reflectance": [
         0.0259,
         0.0324,
-        0.0219
+        0.0218
        ],
-       "ndvi": 0.772,
+       "ndvi": 0.773,
        "cells": 7809
       },
       "mixed_forest": {
@@ -3685,7 +3697,7 @@
        ],
        "reflectance": [
         0.053,
-        0.0537,
+        0.0536,
         0.0381
        ],
        "ndvi": 0.542,
@@ -3749,7 +3761,7 @@
        "srgb": [
         0.3164,
         0.3551,
-        0.2898
+        0.2897
        ],
        "reflectance": [
         0.0286,
@@ -4574,7 +4586,7 @@
       "riparian": {
        "srgb": [
         0.3965,
-        0.4204,
+        0.4203,
         0.3461
        ],
        "reflectance": [
@@ -4603,8 +4615,8 @@
     },
     {
      "month": 10,
-     "looks_dates": 29,
-     "looks_median": 28,
+     "looks_dates": 30,
+     "looks_median": 29,
      "looks_min": 0,
      "looks_p05": 17,
      "refused": false,
@@ -4613,69 +4625,69 @@
      "classes": {
       "oak_woodland": {
        "srgb": [
-        0.3886,
-        0.389,
-        0.3317
+        0.3888,
+        0.3888,
+        0.3306
        ],
        "reflectance": [
         0.0438,
         0.0438,
-        0.0315
+        0.0313
        ],
-       "ndvi": 0.62,
+       "ndvi": 0.619,
        "cells": 5526
       },
       "conifer_forest": {
        "srgb": [
-        0.3287,
-        0.3464,
-        0.2794
+        0.3288,
+        0.3462,
+        0.2781
        ],
        "reflectance": [
         0.0309,
         0.0344,
-        0.0222
+        0.022
        ],
        "ndvi": 0.729,
        "cells": 7809
       },
       "mixed_forest": {
        "srgb": [
-        0.4338,
-        0.427,
-        0.3759
+        0.4342,
+        0.4267,
+        0.3751
        ],
        "reflectance": [
-        0.0552,
-        0.0534,
-        0.0408
+        0.0553,
+        0.0533,
+        0.0406
        ],
        "ndvi": 0.476,
        "cells": 215
       },
       "chaparral": {
        "srgb": [
-        0.4519,
+        0.4522,
         0.4224,
-        0.3698
+        0.3694
        ],
        "reflectance": [
-        0.0603,
+        0.0604,
         0.0522,
-        0.0394
+        0.0393
        ],
-       "ndvi": 0.427,
+       "ndvi": 0.426,
        "cells": 27746
       },
       "grassland": {
        "srgb": [
-        0.4688,
-        0.4364,
-        0.3781
+        0.4693,
+        0.4366,
+        0.3778
        ],
        "reflectance": [
-        0.0652,
-        0.0559,
+        0.0653,
+        0.056,
         0.0413
        ],
        "ndvi": 0.423,
@@ -4683,27 +4695,27 @@
       },
       "riparian": {
        "srgb": [
-        0.3794,
+        0.3799,
         0.3951,
-        0.3214
+        0.3209
        ],
        "reflectance": [
-        0.0416,
+        0.0417,
         0.0453,
-        0.0295
+        0.0294
        ],
        "ndvi": 0.546,
        "cells": 3536
       },
       "open_grass": {
        "srgb": [
-        0.4705,
-        0.4371,
-        0.3794
+        0.471,
+        0.4373,
+        0.3792
        ],
        "reflectance": [
-        0.0657,
-        0.0561,
+        0.0659,
+        0.0562,
         0.0416
        ],
        "ndvi": 0.418,
@@ -4737,14 +4749,14 @@
       },
       "conifer_forest": {
        "srgb": [
-        0.3128,
+        0.3127,
         0.3346,
-        0.2772
+        0.2771
        ],
        "reflectance": [
         0.0279,
-        0.0321,
-        0.0219
+        0.032,
+        0.0218
        ],
        "ndvi": 0.74,
        "cells": 7809
@@ -4849,7 +4861,7 @@
        "srgb": [
         0.3152,
         0.347,
-        0.2957
+        0.2955
        ],
        "reflectance": [
         0.0283,
@@ -4891,7 +4903,7 @@
        "srgb": [
         0.4407,
         0.4294,
-        0.3725
+        0.3724
        ],
        "reflectance": [
         0.0571,
@@ -4919,7 +4931,7 @@
        "srgb": [
         0.4423,
         0.4302,
-        0.3737
+        0.3736
        ],
        "reflectance": [
         0.0576,
@@ -4940,8 +4952,8 @@
     ],
     "month": 5
    },
-   "sha256": "a174c524443e978da64700a0ffedbc2fbccd4cc87b52565e9bf9343660d70669",
-   "bytes": 5297927
+   "sha256": "c7dad6e1de9a3bb3d38a6a0e4111e48a0225293970dda5e337e8dfc90fc87cc6",
+   "bytes": 5298152
   },
   "client.season_ndvi": {
    "path": "client/season_ndvi.png",
@@ -5050,7 +5062,7 @@
     },
     {
      "month": 10,
-     "looks_median": 28,
+     "looks_median": 29,
      "looks_min": 0,
      "refused": false,
      "filled_fraction": 0.0001,
@@ -5073,8 +5085,8 @@
      "filled_pixels": 6272
     }
    ],
-   "sha256": "13deca03c0a249fe81c130310e0d45fd25ad81232cbe93ff7ccde4faaeb9f35c",
-   "bytes": 1502919
+   "sha256": "f0266235c1a68a1ee15ea443d5280a1f9fea52502ab1bfd44947ccf0be778794",
+   "bytes": 1502582
   },
   "unreal": {
    "path": "unreal/unreal.json",
@@ -5239,7 +5251,7 @@
     "geology.units",
     "geology.classes",
     "soils.mapunits",
-    "terrain.dem",
+    "terrain.dem_banked",
     "imagery.naip",
     "vegetation"
    ],
@@ -5253,9 +5265,9 @@
    "cover_source": "lidar canopy_height_10m (tree >= 4 m, shrub 0.5-4 m)",
    "photo": "client/texture_imagery.jpg (NAIP, humans erased)",
    "photo_green_ref": 0.0988,
-   "dem": "terrain/dem.tif",
-   "sha256": "afa1e7423e5417ecfdef7e89584da304dd7a92738e864160abd882c67b9e2b50",
-   "bytes": 460869
+   "dem": "terrain/dem_banked.tif",
+   "sha256": "c5a549f4741c0fc5baf038d607f2aac37bb9bf43dcc96d3d207f41b9567089a0",
+   "bytes": 460864
   },
   "client.substrate_classes": {
    "path": "client/substrate.json",
@@ -5263,19 +5275,34 @@
    "derived_from": [
     "client.substrate"
    ],
-   "sha256": "520d6bc5f8511d6876dc3b5a6795f256c8aa4c13c8f144e38ac9166634377fa4",
-   "bytes": 12301
+   "sha256": "4ead7211b1e4737e9686913457b30d28829393beef20fef810898b63e995015e",
+   "bytes": 12308
   },
   "species.plant_needs": {
    "path": "species/plant_needs.json",
    "kind": "table",
-   "needed": 61,
-   "with_record": 60,
+   "sources_used": [
+    "gbif",
+    "landfire"
+   ],
+   "needed": 88,
+   "with_record": 70,
    "generated_now": 0,
-   "queued": 1,
+   "queued": 18,
    "unread_communities": 1,
-   "sha256": "9b88c6bf573c3005b5cf3b2001f80e3dab39fe4fea1ebb7e1861031dddd16518",
-   "bytes": 35276
+   "meets_target": {
+    "tree": true,
+    "shrub": true,
+    "ground": true
+   },
+   "hands": 19,
+   "by_layer": {
+    "tree": 28,
+    "shrub": 34,
+    "ground": 26
+   },
+   "sha256": "626beb2cec992db92f1c9bcfbe757c2b15c46bca2ac60735de552c6483b6d9ad",
+   "bytes": 104350
   },
   "games": {
    "path": "games.json",
@@ -5290,19 +5317,688 @@
    "collective": 146,
    "predation_pairs": 29,
    "alarm_links": 51,
-   "plant_relations": 301,
-   "sha256": "b5b2ddea969e0ec59bac3b22305e5959196482917a89d97985907e75ca3ec533",
-   "bytes": 389564
+   "plant_relations": 308,
+   "sha256": "26763e772fe7868cd5decadabce2260e9700485a966be441db94494d1587862c",
+   "bytes": 391025
   },
   "species.registry": {
    "path": "species/registry.json",
    "kind": "table",
-   "plants": 87,
-   "animals_present": 18,
-   "animals_queued": 63,
-   "cards_queued": 1,
-   "sha256": "b5c138a94f167a4a53cf53d4bedbe5c9c73fc930fad514e5bffe89bcba8b7f59",
-   "bytes": 50244
+   "plants": 106,
+   "animals_present": 87,
+   "animals_queued": 69,
+   "cards_queued": 18,
+   "sha256": "92f7efa8febb49a57a924191dbf783ced41e03c5ed309da82334ae8d6dd4700a",
+   "bytes": 110471
+  },
+  "terrain.ice": {
+   "path": "terrain/ice.tif",
+   "kind": "raster",
+   "crs": "EPSG:32610",
+   "bounds": [
+    540000,
+    4180000,
+    550000,
+    4190000
+   ],
+   "resolution_m": 5.0,
+   "files": {
+    "client/ice.png": {},
+    "terrain/ice.json": {}
+   },
+   "sources_used": [
+    "landfire",
+    "osm"
+   ],
+   "encoding": "uint8 1 = permanent snow or ice; client/ice.png 255 = ice at 30 m",
+   "area_ha": 0.0,
+   "from_landfire_ha": 0.0,
+   "from_osm_ha": 0.0,
+   "lowest_m": null,
+   "landfire_codes": [],
+   "osm_polygons": 0,
+   "toes": 0,
+   "sha256": "0b59d689877cc814f7b3467f714f78616e8e6c6c95ae880c3da927eab1cbdc45",
+   "bytes": 18372
+  },
+  "vegetation.multi_1m": {
+   "path": "vegetation/multi_1m.tif",
+   "kind": "raster",
+   "crs": "EPSG:32610",
+   "bounds": [
+    540000,
+    4180000,
+    550000,
+    4190000
+   ],
+   "pixels": 10000,
+   "resolution_m": 1.0,
+   "encoding": "uint8: share of the cell's returns that are one of several per pulse, * 255 (vegetation echoes several times, roofs and water once); 0 where no return",
+   "source": "usgs_3dep_lpc",
+   "ept_project": "CA_SanFrancisco_1_B23",
+   "derived_from": [],
+   "for_clients": false,
+   "for_clients_note": "pipeline only (1 m, hundreds of MB)"
+  },
+  "terrain.dem_banked": {
+   "path": "terrain/dem_banked.tif",
+   "kind": "raster",
+   "units": "m",
+   "derived_from": [
+    "terrain.dem",
+    "hydro.channels",
+    "client.channel_profile",
+    "hydro.waterbodies",
+    "hydro.human_water"
+   ],
+   "modification": "terrain/dem.tif with every channel carved to its graded cross-section (channel bed L - D(1 - (o/wh)^2), wet margin, bank and the pond basins; cells only lowered, at most 3 m); the client's heights come from it",
+   "cells_lowered": 25825,
+   "max_cut_m": 2.93,
+   "sha256": "012b7cdc086948c3e730ded0399553a83d5b445f4fa67ce57d80037810154630",
+   "bytes": 9971899
+  },
+  "client.water": {
+   "path": "client/water.png",
+   "kind": "raster",
+   "crs": "EPSG:32610",
+   "bounds": [
+    540000,
+    4180000,
+    550000,
+    4190000
+   ],
+   "pixels": 2000,
+   "resolution_m": 5.0,
+   "derived_from": [
+    "hydro.channels",
+    "client.channel_profile",
+    "hydro.waterbodies",
+    "hydro.human_water",
+    "terrain.dem_banked"
+   ],
+   "encoding": "RGB, row 0 north. R: zone (low 4 bits; 1 channel bed, 2 wet margin, 3 bank, 4 terrace, 5 pond water, 6 pond margin, 7 pond shore, 8 pond terrace) | stream order << 4 | 128 perennial. G: bed material (low 3 bits: 1 silt, 2 sand, 3 gravel, 4 cobble, 5 boulder) | 8 bar. B: water level = heights.png height at the cell + (B - 128) x 0.02 m (0: none). client/water_width.png (8-bit grey, same grid): water half width at the nearest centreline sample, 0.1 m units",
+   "files": {
+    "client/water_width.png": {
+     "sha256": "a91c22450945f0ece63561c7822fce3cae5b5b2249fdde46559416c8c6781b21",
+     "bytes": 111008
+    }
+   },
+   "zones": {
+    "channel": 1,
+    "margin": 2,
+    "bank": 3,
+    "terrace": 4,
+    "pond_water": 5,
+    "pond_margin": 6,
+    "pond_shore": 7,
+    "pond_terrace": 8
+   },
+   "materials": {
+    "none": 0,
+    "silt": 1,
+    "sand": 2,
+    "gravel": 3,
+    "cobble": 4,
+    "boulder": 5
+   },
+   "bank_params": {
+    "1": {
+     "margin": 0.85,
+     "margin_rise": 0.12,
+     "bank": 1.6,
+     "bank_height": 0.75,
+     "terrace": 12.0
+    },
+    "2": {
+     "margin": 1.1,
+     "margin_rise": 0.16,
+     "bank": 2.2,
+     "bank_height": 1.1,
+     "terrace": 18.0
+    },
+    "3": {
+     "margin": 1.35,
+     "margin_rise": 0.2,
+     "bank": 2.8,
+     "bank_height": 1.4499999999999997,
+     "terrace": 24.0
+    },
+    "4": {
+     "margin": 1.6,
+     "margin_rise": 0.24,
+     "bank": 3.4,
+     "bank_height": 1.7999999999999998,
+     "terrace": 30.0
+    },
+    "5": {
+     "margin": 1.85,
+     "margin_rise": 0.28,
+     "bank": 4.0,
+     "bank_height": 2.15,
+     "terrace": 36.0
+    },
+    "6": {
+     "margin": 2.1,
+     "margin_rise": 0.32,
+     "bank": 4.6,
+     "bank_height": 2.4999999999999996,
+     "terrace": 42.0
+    },
+    "7": {
+     "margin": 2.35,
+     "margin_rise": 0.36000000000000004,
+     "bank": 5.2,
+     "bank_height": 2.8499999999999996,
+     "terrace": 48.0
+    }
+   },
+   "stats": {
+    "reaches": 333,
+    "samples": 75403,
+    "skipped": {
+     "in_pond": 17,
+     "nhd_duplicate": 0
+    },
+    "zone_cells": {
+     "channel": 14416,
+     "margin": 37353,
+     "bank": 53913,
+     "terrace": 91570,
+     "pond_water": 13025,
+     "pond_margin": 2203,
+     "pond_shore": 2978,
+     "pond_terrace": 7445
+    },
+    "zone_area_ha": {
+     "channel": 36.04,
+     "margin": 93.38,
+     "bank": 134.78,
+     "terrace": 228.93,
+     "pond_water": 32.56,
+     "pond_margin": 5.51,
+     "pond_shore": 7.45,
+     "pond_terrace": 18.61
+    },
+    "material_cells": {
+     "silt": 15663,
+     "sand": 25366,
+     "gravel": 22291,
+     "cobble": 5560,
+     "boulder": 1095
+    },
+    "bar_cells": 44,
+    "cut": {
+     "cells": 25825,
+     "mean_m": 1.245,
+     "p95_m": 2.0,
+     "max_m": 2.93
+    },
+    "ponds": {
+     "kept": 46,
+     "intermittent": 0,
+     "basins": [
+      {
+       "id": null,
+       "name": "Mountain Lake",
+       "area_m2": 19059.4,
+       "level_m": 42.04,
+       "max_depth_m": 1.09,
+       "cells": 759,
+       "intermittent": false
+      },
+      {
+       "id": null,
+       "name": "Spreckels Lake",
+       "area_m2": 24069.7,
+       "level_m": 40.94,
+       "max_depth_m": 1.18,
+       "cells": 963,
+       "intermittent": false
+      },
+      {
+       "id": null,
+       "name": null,
+       "area_m2": 846.3,
+       "level_m": 7.09,
+       "max_depth_m": 0.6,
+       "cells": 36,
+       "intermittent": false
+      },
+      {
+       "id": null,
+       "name": null,
+       "area_m2": 453.8,
+       "level_m": 3.8,
+       "max_depth_m": 0.6,
+       "cells": 19,
+       "intermittent": false
+      },
+      {
+       "id": null,
+       "name": "Main pool house",
+       "area_m2": 2548.4,
+       "level_m": 5.39,
+       "max_depth_m": 0.65,
+       "cells": 96,
+       "intermittent": false
+      },
+      {
+       "id": null,
+       "name": "Elk Glen Lake",
+       "area_m2": 6820.8,
+       "level_m": 50.85,
+       "max_depth_m": 0.81,
+       "cells": 273,
+       "intermittent": false
+      },
+      {
+       "id": null,
+       "name": "Lloyd Lake",
+       "area_m2": 5991.1,
+       "level_m": 59.65,
+       "max_depth_m": 0.79,
+       "cells": 242,
+       "intermittent": false
+      },
+      {
+       "id": null,
+       "name": "Metson Lake",
+       "area_m2": 3397.1,
+       "level_m": 56.18,
+       "max_depth_m": 0.69,
+       "cells": 135,
+       "intermittent": false
+      },
+      {
+       "id": null,
+       "name": null,
+       "area_m2": 1279.0,
+       "level_m": 113.85,
+       "max_depth_m": 0.6,
+       "cells": 50,
+       "intermittent": false
+      },
+      {
+       "id": null,
+       "name": null,
+       "area_m2": 470.7,
+       "level_m": 62.31,
+       "max_depth_m": 0.6,
+       "cells": 19,
+       "intermittent": false
+      },
+      {
+       "id": null,
+       "name": null,
+       "area_m2": 417.6,
+       "level_m": 112.96,
+       "max_depth_m": 0.6,
+       "cells": 17,
+       "intermittent": false
+      },
+      {
+       "id": null,
+       "name": null,
+       "area_m2": 54.7,
+       "level_m": 71.03,
+       "max_depth_m": 0.38,
+       "cells": 3,
+       "intermittent": false
+      },
+      {
+       "id": null,
+       "name": null,
+       "area_m2": 337.4,
+       "level_m": 71.0,
+       "max_depth_m": 0.6,
+       "cells": 12,
+       "intermittent": false
+      },
+      {
+       "id": null,
+       "name": null,
+       "area_m2": 52.9,
+       "level_m": 71.44,
+       "max_depth_m": 0.38,
+       "cells": 2,
+       "intermittent": false
+      },
+      {
+       "id": null,
+       "name": "Lily Pond",
+       "area_m2": 1838.7,
+       "level_m": 74.55,
+       "max_depth_m": 0.61,
+       "cells": 72,
+       "intermittent": false
+      },
+      {
+       "id": null,
+       "name": null,
+       "area_m2": 431.0,
+       "level_m": 77.3,
+       "max_depth_m": 0.6,
+       "cells": 18,
+       "intermittent": false
+      },
+      {
+       "id": null,
+       "name": null,
+       "area_m2": 444.7,
+       "level_m": 116.42,
+       "max_depth_m": 0.6,
+       "cells": 16,
+       "intermittent": false
+      },
+      {
+       "id": null,
+       "name": "Dwarf Conifer Pond",
+       "area_m2": 254.1,
+       "level_m": 71.01,
+       "max_depth_m": 0.6,
+       "cells": 12,
+       "intermittent": false
+      },
+      {
+       "id": null,
+       "name": "Bamboo Pond",
+       "area_m2": 288.1,
+       "level_m": 68.71,
+       "max_depth_m": 0.6,
+       "cells": 10,
+       "intermittent": false
+      },
+      {
+       "id": null,
+       "name": null,
+       "area_m2": 441.1,
+       "level_m": 74.95,
+       "max_depth_m": 0.6,
+       "cells": 17,
+       "intermittent": false
+      },
+      {
+       "id": null,
+       "name": null,
+       "area_m2": 218.3,
+       "level_m": 23.42,
+       "max_depth_m": 0.38,
+       "cells": 8,
+       "intermittent": false
+      },
+      {
+       "id": null,
+       "name": "Alvord Lake",
+       "area_m2": 689.8,
+       "level_m": 75.37,
+       "max_depth_m": 0.6,
+       "cells": 27,
+       "intermittent": false
+      },
+      {
+       "id": null,
+       "name": null,
+       "area_m2": 202.9,
+       "level_m": 66.81,
+       "max_depth_m": 0.38,
+       "cells": 6,
+       "intermittent": false
+      },
+      {
+       "id": null,
+       "name": null,
+       "area_m2": 65.9,
+       "level_m": 64.11,
+       "max_depth_m": 0.38,
+       "cells": 3,
+       "intermittent": false
+      },
+      {
+       "id": null,
+       "name": "Anelli Pond",
+       "area_m2": 135.4,
+       "level_m": 72.91,
+       "max_depth_m": 0.38,
+       "cells": 5,
+       "intermittent": false
+      },
+      {
+       "id": null,
+       "name": null,
+       "area_m2": 136.6,
+       "level_m": 73.14,
+       "max_depth_m": 0.38,
+       "cells": 5,
+       "intermittent": false
+      },
+      {
+       "id": null,
+       "name": null,
+       "area_m2": 14.0,
+       "level_m": 76.66,
+       "max_depth_m": 0.38,
+       "cells": 1,
+       "intermittent": false
+      },
+      {
+       "id": null,
+       "name": null,
+       "area_m2": 199.2,
+       "level_m": 68.12,
+       "max_depth_m": 0.6,
+       "cells": 7,
+       "intermittent": false
+      },
+      {
+       "id": null,
+       "name": null,
+       "area_m2": 55.8,
+       "level_m": 69.55,
+       "max_depth_m": 0.38,
+       "cells": 2,
+       "intermittent": false
+      },
+      {
+       "id": null,
+       "name": null,
+       "area_m2": 630.3,
+       "level_m": 56.23,
+       "max_depth_m": 0.6,
+       "cells": 24,
+       "intermittent": false
+      },
+      {
+       "id": null,
+       "name": null,
+       "area_m2": 1528.5,
+       "level_m": 3.35,
+       "max_depth_m": 0.6,
+       "cells": 62,
+       "intermittent": false
+      },
+      {
+       "id": null,
+       "name": "Blue Heron Lake",
+       "area_m2": 108910.1,
+       "level_m": 87.25,
+       "max_depth_m": 2.05,
+       "cells": 4360,
+       "intermittent": false
+      },
+      {
+       "id": null,
+       "name": "Mallard Lake",
+       "area_m2": 8014.5,
+       "level_m": 44.65,
+       "max_depth_m": 0.85,
+       "cells": 276,
+       "intermittent": false
+      },
+      {
+       "id": null,
+       "name": "Middle Lake",
+       "area_m2": 7620.0,
+       "level_m": 21.71,
+       "max_depth_m": 0.84,
+       "cells": 305,
+       "intermittent": false
+      },
+      {
+       "id": null,
+       "name": "North Lake",
+       "area_m2": 14405.3,
+       "level_m": 18.51,
+       "max_depth_m": 1.0,
+       "cells": 571,
+       "intermittent": false
+      },
+      {
+       "id": null,
+       "name": "McBean Wildfowl Pond",
+       "area_m2": 1492.6,
+       "level_m": 71.67,
+       "max_depth_m": 0.6,
+       "cells": 59,
+       "intermittent": false
+      },
+      {
+       "id": null,
+       "name": null,
+       "area_m2": 17013.2,
+       "level_m": 1.72,
+       "max_depth_m": 1.05,
+       "cells": 682,
+       "intermittent": false
+      },
+      {
+       "id": null,
+       "name": "Rodeo Lagoon",
+       "area_m2": 25086.4,
+       "level_m": 3.95,
+       "max_depth_m": 1.19,
+       "cells": 1011,
+       "intermittent": false
+      },
+      {
+       "id": null,
+       "name": "Rodeo Lagoon",
+       "area_m2": 2449.6,
+       "level_m": 3.66,
+       "max_depth_m": 0.65,
+       "cells": 208,
+       "intermittent": false
+      },
+      {
+       "id": null,
+       "name": "Rodeo Lagoon",
+       "area_m2": 122190.8,
+       "level_m": 2.83,
+       "max_depth_m": 2.15,
+       "cells": 4885,
+       "intermittent": false
+      }
+     ]
+    },
+    "bank_params": {
+     "1": {
+      "margin": 0.85,
+      "margin_rise": 0.12,
+      "bank": 1.6,
+      "bank_height": 0.75,
+      "terrace": 12.0
+     },
+     "2": {
+      "margin": 1.1,
+      "margin_rise": 0.16,
+      "bank": 2.2,
+      "bank_height": 1.1,
+      "terrace": 18.0
+     },
+     "3": {
+      "margin": 1.35,
+      "margin_rise": 0.2,
+      "bank": 2.8,
+      "bank_height": 1.4499999999999997,
+      "terrace": 24.0
+     },
+     "4": {
+      "margin": 1.6,
+      "margin_rise": 0.24,
+      "bank": 3.4,
+      "bank_height": 1.7999999999999998,
+      "terrace": 30.0
+     },
+     "5": {
+      "margin": 1.85,
+      "margin_rise": 0.28,
+      "bank": 4.0,
+      "bank_height": 2.15,
+      "terrace": 36.0
+     }
+    },
+    "by_order": {
+     "1": 40560,
+     "2": 19391,
+     "3": 11648,
+     "4": 1799,
+     "5": 2005
+    },
+    "species_mix": "32 riparian rows written into client/species_mix.json"
+   },
+   "sha256": "f2af023e072e3b248e348222749e44d1faf6bae75e7feeaffc792dc36e8569dd",
+   "bytes": 419773
+  },
+  "hydro.water_reaches": {
+   "path": "hydro/water_reaches.json",
+   "kind": "table",
+   "derived_from": [
+    "hydro.channels"
+   ],
+   "encoding": "per drawn reach: id, name, order, area_km2, width, class (0 ephemeral, 1 intermittent, 2 perennial), samples, length; the kept ponds' basins",
+   "sha256": "359e608ce198f0764a63f54ee15fb08a6aef8060dbe3c49f21b97b9791ec2908",
+   "bytes": 55538
+  },
+  "locomotion": {
+   "path": "locomotion.json",
+   "kind": "table",
+   "sha256": "045ef83f470c0d0a3e63d4cfce4bd4ed807f526179d66f6bc549a18e43072193",
+   "bytes": 20576
+  },
+  "species.animals": {
+   "path": "species/animals.json",
+   "kind": "table",
+   "sources_used": [
+    "gbif",
+    "eltontraits"
+   ],
+   "listed": 87,
+   "predators": 48,
+   "scavengers": 19,
+   "generated_traits": 5,
+   "queued": 69,
+   "queued_credits": 2030,
+   "sha256": "7f8d887d99b067554cfcda8f8ea6a2e86eb94579c8fcd798205375d0a5d03712",
+   "bytes": 141944
+  },
+  "games.seeds": {
+   "path": "game_seeds.json",
+   "kind": "table",
+   "games": {
+    "acorn": {
+     "players": 11,
+     "seed": 3920183629
+    },
+    "dig": {
+     "players": 4,
+     "seed": 977575356
+    },
+    "carrion": {
+     "players": 1,
+     "seed": 3313107030
+    }
+   },
+   "sha256": "d5c1c61aa388981573a399d906057d36ba174c867522f493c9a8f81f2104b186",
+   "bytes": 3342
   }
  },
  "sources": {
@@ -5314,7 +6010,7 @@
    "attribution": "Elevation: U.S. Geological Survey, 3D Elevation Program (3DEP)",
    "attribution_url": "https://www.usgs.gov/3d-elevation-program",
    "attribution_required": false,
-   "retrieved": "2026-10-27"
+   "retrieved": "2026-11-05"
   },
   "usgs_3dep_1m": {
    "name": "USGS 3DEP 1 m bare-earth DEM (standard 1-meter DEM tiles) via the AWS public bucket prd-tnm",
@@ -5324,7 +6020,7 @@
    "attribution": "Elevation: U.S. Geological Survey, 3D Elevation Program (3DEP) 1 m DEM",
    "attribution_url": "https://www.usgs.gov/3d-elevation-program",
    "attribution_required": false,
-   "retrieved": "2026-10-27"
+   "retrieved": "2026-11-05"
   },
   "usgs_3dep_lpc": {
    "name": "USGS 3DEP lidar point cloud as Entwine Point Tiles via the AWS public bucket usgs-lidar-public",
@@ -5334,7 +6030,7 @@
    "attribution": "Lidar: U.S. Geological Survey, 3D Elevation Program (3DEP) point cloud, Entwine Point Tiles by Hobu, Inc. on AWS Open Data",
    "attribution_url": "https://registry.opendata.aws/usgs-lidar/",
    "attribution_required": false,
-   "retrieved": "2026-10-27"
+   "retrieved": "2026-11-05"
   },
   "osm": {
    "name": "OpenStreetMap via Overpass API",
@@ -5364,7 +6060,7 @@
    "attribution": "Hydrography: U.S. Geological Survey, NHDPlus High Resolution",
    "attribution_url": "https://www.usgs.gov/national-hydrography/nhdplus-high-resolution",
    "attribution_required": false,
-   "retrieved": "2026-10-27"
+   "retrieved": "2026-11-05"
   },
   "landfire": {
    "name": "LANDFIRE LF 2025 (EVT, EVC, EVH) and LF 2016 Biophysical Settings",
@@ -5384,7 +6080,7 @@
    "attribution": "Geology: Macrostrat (macrostrat.org), CC BY 4.0, from the USGS State Geologic Map Compilation; clipped to the tile and reclassified",
    "attribution_url": "https://macrostrat.org",
    "attribution_required": true,
-   "retrieved": "2026-10-27"
+   "retrieved": "2026-11-05"
   },
   "usda_ssurgo": {
    "name": "USDA NRCS SSURGO via Soil Data Access",
@@ -5394,7 +6090,7 @@
    "attribution": "Soils: Soil Survey Staff, Natural Resources Conservation Service, U.S. Department of Agriculture, Soil Survey Geographic (SSURGO) Database",
    "attribution_url": "https://www.nrcs.usda.gov/resources/data-and-reports/soil-survey-geographic-database-ssurgo",
    "attribution_required": false,
-   "retrieved": "2026-10-27"
+   "retrieved": "2026-11-05"
   },
   "gbif": {
    "name": "GBIF occurrence API (includes iNaturalist research-grade and eBird)",
@@ -5404,7 +6100,7 @@
    "attribution": "Species occurrences: GBIF.org and its contributing datasets, including iNaturalist and eBird (CC0, CC BY 4.0 or CC BY-NC 4.0 per record)",
    "attribution_url": "https://www.gbif.org/",
    "attribution_required": true,
-   "retrieved": "2026-10-27"
+   "retrieved": "2026-11-05"
   },
   "copernicus_sentinel2_l2a": {
    "name": "Copernicus Sentinel-2 Level-2A surface reflectance via Microsoft Planetary Computer",
@@ -5414,7 +6110,7 @@
    "attribution": "Contains modified Copernicus Sentinel data 2019-2026, processed by ESA; via Microsoft Planetary Computer",
    "attribution_url": "https://planetarycomputer.microsoft.com/dataset/sentinel-2-l2a",
    "attribution_required": true,
-   "retrieved": "2026-10-27",
+   "retrieved": "2026-11-05",
    "years_used": [
     2019,
     2026
@@ -5429,6 +6125,16 @@
    "attribution_url": "https://open-meteo.com/",
    "attribution_required": true,
    "retrieved": "2026-10-27"
+  },
+  "eltontraits": {
+   "name": "EltonTraits 1.0: species-level foraging attributes of the world's birds and mammals",
+   "url": "https://esapubs.org/archive/ecol/E095/178/",
+   "license": "CC BY 4.0 (Ecological Archives' default; the record states no copyright restrictions)",
+   "license_url": "https://esapubs.org/archive/copyright.htm",
+   "attribution": "Diet and body mass: Wilman, H., Belmaker, J., Simpson, J., de la Rosa, C., Rivadeneira, M. M. and Jetz, W. (2014). EltonTraits 1.0. Ecology 95: 2027. Body masses after Smith et al. 2003 and Dunning 2007",
+   "attribution_url": "https://doi.org/10.1890/13-1917.1",
+   "attribution_required": true,
+   "retrieved": "2026-11-05"
   }
  },
  "edits": [],
@@ -5696,181 +6402,275 @@
    "at": "2026-11-05T05:46:47Z",
    "seconds": 0.2,
    "ok": true
+  },
+  {
+   "step": "osm",
+   "at": "2026-11-05T06:26:08Z",
+   "seconds": 5.1,
+   "ok": true
+  },
+  {
+   "step": "channels",
+   "at": "2026-11-05T06:28:23Z",
+   "seconds": 135.2,
+   "ok": true
+  },
+  {
+   "step": "rewild_hydro",
+   "at": "2026-11-05T06:30:40Z",
+   "seconds": 136.3,
+   "ok": true
+  },
+  {
+   "step": "landcover",
+   "at": "2026-11-05T06:30:40Z",
+   "seconds": 0.2,
+   "ok": true
+  },
+  {
+   "step": "ice",
+   "at": "2026-11-05T06:44:57Z",
+   "seconds": 857.1,
+   "ok": true
+  },
+  {
+   "step": "lidar",
+   "at": "2026-11-05T06:44:59Z",
+   "seconds": 1.8,
+   "ok": true
+  },
+  {
+   "step": "water",
+   "at": "2026-11-05T06:45:22Z",
+   "seconds": 23.1,
+   "ok": true
+  },
+  {
+   "step": "ground",
+   "at": "2026-11-05T06:45:31Z",
+   "seconds": 9.2,
+   "ok": true
+  },
+  {
+   "step": "terrain",
+   "at": "2026-11-05T06:46:09Z",
+   "seconds": 37.4,
+   "ok": true
+  },
+  {
+   "step": "erase",
+   "at": "2026-11-05T06:46:39Z",
+   "seconds": 30.8,
+   "ok": true
+  },
+  {
+   "step": "substrate",
+   "at": "2026-11-05T06:46:44Z",
+   "seconds": 4.8,
+   "ok": true
+  },
+  {
+   "step": "seasons",
+   "at": "2026-11-05T06:47:18Z",
+   "seconds": 34.2,
+   "ok": true
+  },
+  {
+   "step": "seams",
+   "at": "2026-11-05T06:47:19Z",
+   "seconds": 0.3,
+   "ok": true
+  },
+  {
+   "step": "plants",
+   "at": "2026-11-05T06:47:42Z",
+   "seconds": 23.1,
+   "ok": true
+  },
+  {
+   "step": "species_mix",
+   "at": "2026-11-05T06:47:43Z",
+   "seconds": 0.7,
+   "ok": true
+  },
+  {
+   "step": "crowns",
+   "at": "2026-11-05T06:47:43Z",
+   "seconds": 0.0,
+   "ok": false,
+   "error": "crowns needs vegetation/multi_1m.tif or the kept point-cloud grids; this tile's lidar products predate multi_1m: `--force lidar` re-streams the point cloud (about an hour)"
+  },
+  {
+   "step": "lidar",
+   "at": "2026-11-05T06:54:22Z",
+   "seconds": 2.0,
+   "ok": true
+  },
+  {
+   "step": "water",
+   "at": "2026-11-05T06:54:45Z",
+   "seconds": 22.3,
+   "ok": true
+  },
+  {
+   "step": "ground",
+   "at": "2026-11-05T06:54:53Z",
+   "seconds": 8.6,
+   "ok": true
+  },
+  {
+   "step": "terrain",
+   "at": "2026-11-05T06:55:30Z",
+   "seconds": 36.4,
+   "ok": true
+  },
+  {
+   "step": "substrate",
+   "at": "2026-11-05T06:55:34Z",
+   "seconds": 4.7,
+   "ok": true
+  },
+  {
+   "step": "seasons",
+   "at": "2026-11-05T06:56:02Z",
+   "seconds": 28.0,
+   "ok": true
+  },
+  {
+   "step": "seams",
+   "at": "2026-11-05T06:56:03Z",
+   "seconds": 0.2,
+   "ok": true
+  },
+  {
+   "step": "species_mix",
+   "at": "2026-11-05T06:56:03Z",
+   "seconds": 0.7,
+   "ok": true
+  },
+  {
+   "step": "crowns",
+   "at": "2026-11-05T06:56:03Z",
+   "seconds": 0.0,
+   "ok": false,
+   "error": "crowns needs vegetation/multi_1m.tif or the kept point-cloud grids; this tile's lidar products predate multi_1m: `--force lidar` re-streams the point cloud (about an hour)"
+  },
+  {
+   "step": "species",
+   "at": "2026-11-05T06:59:24Z",
+   "seconds": 201.0,
+   "ok": true
+  },
+  {
+   "step": "animals",
+   "at": "2026-11-05T07:00:04Z",
+   "seconds": 40.0,
+   "ok": true
+  },
+  {
+   "step": "resources",
+   "at": "2026-11-05T07:00:23Z",
+   "seconds": 19.1,
+   "ok": true
+  },
+  {
+   "step": "games",
+   "at": "2026-11-05T07:00:24Z",
+   "seconds": 0.1,
+   "ok": true
+  },
+  {
+   "step": "game_seeds",
+   "at": "2026-11-05T07:00:24Z",
+   "seconds": 0.0,
+   "ok": true
+  },
+  {
+   "step": "registry",
+   "at": "2026-11-05T07:00:24Z",
+   "seconds": 0.2,
+   "ok": true
   }
  ],
  "steps": {
   "plants": {
    "version": "1",
-   "code": "9401c582585e4a6a",
+   "code": "2d8dbf4e6b3b8fe4",
    "params": {
     "tile": "utm10n_540_4180"
    },
-   "fingerprint": "d4e9845d68c9c189",
+   "fingerprint": "d1456e08942925ad",
    "parts": {
     "version": "1",
-    "code": "9401c582585e4a6a",
+    "code": "2d8dbf4e6b3b8fe4",
     "params": {
      "tile": "utm10n_540_4180"
     },
     "deps": {
-     "veg": "b4ff936ca6edb773",
-     "species": "ed4147cb2c858e4b"
+     "landcover": "b4ff936ca6edb773",
+     "ice": "3740126781ff47f9"
     },
     "library": {
-     "library/plant_cards": "9643c69d05e4b4a5"
+     "library/plant_cards": "8155173ae63911a1"
     }
    },
-   "ran_at": "2026-11-05T05:46:46Z",
+   "ran_at": "2026-11-05T06:47:19Z",
    "owner": null,
    "status": "ok",
    "layers": [
     "species.plant_needs"
    ],
    "outputs": {
-    "species/plant_needs.json": "9b88c6bf573c3005"
+    "species/plant_needs.json": "626beb2cec992db9"
    },
-   "out_hash": "766fd55a0a81da91",
-   "sources": {},
-   "fallbacks": [],
-   "notes": [],
-   "fetched": {
-    "network": 0,
-    "cache": 2
-   },
-   "seconds": 0.3
-  },
-  "derive": {
-   "version": "1",
-   "code": "4644811dad51227e",
-   "params": {
-    "tile": "utm10n_540_4180",
-    "dem_res_m": 5.0,
-    "imagery_res_m": 2.5
-   },
-   "fingerprint": "89c048429d108b32",
-   "parts": {
-    "version": "1",
-    "code": "4644811dad51227e",
-    "params": {
-     "tile": "utm10n_540_4180",
-     "dem_res_m": 5.0,
-     "imagery_res_m": 2.5
-    },
-    "deps": {
-     "dem": "038091c3574f7e23",
-     "naip": "36aabf33612d308f",
-     "osm": "cd0cfd5275f91e75",
-     "hydro": "5c88f01e866030ec",
-     "channels": "896e7e029b4b2298",
-     "rewild_hydro": "ace3d4581912d858",
-     "water": "8d4690894c931619",
-     "veg": "b4ff936ca6edb773",
-     "species": "ed4147cb2c858e4b",
-     "plants": "376e2db5e49612a5"
-    },
-    "library": {
-     "library/species": "7def261f22f692f1"
-    }
-   },
-   "ran_at": "2026-11-05T05:39:41Z",
-   "owner": null,
-   "status": "ok",
-   "layers": [
-    "client.canopy",
-    "client.features",
-    "client.habitat",
-    "client.heights",
-    "client.imagery",
-    "client.masks",
-    "client.mast",
-    "client.roads",
-    "client.species_mix",
-    "client.texture",
-    "client.texture_present",
-    "footprint.mask_raster",
-    "footprint.urban",
-    "games",
-    "imagery.naip_png",
-    "resources",
-    "terrain.hillshade",
-    "terrain.rewilded",
-    "terrain.terrain_rgb",
-    "vegetation.habitat_png",
-    "vegetation.habitat_present_png"
-   ],
-   "outputs": {
-    "client/canopy.png": "3682c02f7cb7cefb",
-    "client/features.json": "dbaebb12c7e6e265",
-    "client/habitat.png": "a11fbc758ec822d0",
-    "client/heights.png": "fc4c953af8a38dde",
-    "client/imagery.png": "5755b2b7897cccda",
-    "client/masks.png": "f82f8e63f771f16e",
-    "client/mast.png": "32e0b9ef29cf8426",
-    "client/roads.png": "8c692be23a783b54",
-    "client/species_mix.json": "738fb022d7dbc41f",
-    "client/species_mix_index.png": "4cf764062444543d",
-    "client/species_mix_density.png": "a16abaee36f9bad5",
-    "client/texture.png": "b99d52db92050fd2",
-    "client/texture_present.jpg": "c35bb52edd1b009e",
-    "footprint/mask.png": "54c0ecf800d407a5",
-    "footprint/urban.tif": "4b9ae6d3eb5e5749",
-    "games.json": "b5b2ddea969e0ec5",
-    "imagery/naip.png": "498b04ccc56020ce",
-    "resources/resources.json": "fa9800ac755527b7",
-    "terrain/hillshade.png": "e66a86afc0743dfd",
-    "terrain/rewilded.png": "9f1d6e4f49580390",
-    "terrain/terrain_rgb.png": "29ad56f3daeac32d",
-    "vegetation/habitat.png": "7c5008ac908e931a",
-    "vegetation/habitat_present.png": "32e282b882bbdf13"
-   },
-   "out_hash": "671a7ed06f6ca4bc",
+   "out_hash": "d81e4582289cc683",
    "sources": {
-    "pc_naip": "2026-11-05",
-    "osm": "2026-11-05",
+    "gbif": "2026-10-27",
     "landfire": "2026-11-05"
    },
    "fallbacks": [],
    "notes": [],
    "fetched": {
-    "network": 0,
-    "cache": 0
+    "network": 30,
+    "cache": 123
    },
-   "seconds": 44.1
+   "seconds": 23.1
   },
   "registry": {
    "version": "1",
-   "code": "5d11fb62482430f5",
+   "code": "84fd41567bffdab3",
    "params": {
     "tile": "utm10n_540_4180"
    },
-   "fingerprint": "5a6236d9d9014c6b",
+   "fingerprint": "1dba09eddd210e97",
    "parts": {
     "version": "1",
-    "code": "5d11fb62482430f5",
+    "code": "84fd41567bffdab3",
     "params": {
      "tile": "utm10n_540_4180"
     },
     "deps": {
-     "species": "ed4147cb2c858e4b",
-     "plants": "766fd55a0a81da91",
-     "derive": "671a7ed06f6ca4bc"
+     "plants": "d81e4582289cc683",
+     "species_mix": "b3831f54a6461821",
+     "species": "a1ea58799f086044",
+     "animals": "6b6136e9afc59deb"
     },
     "library": {
-     "library/species": "7def261f22f692f1",
+     "library/species": "e224ecdd8391be3c",
      "library/animals": "25aa2d5ae1d06008",
-     "library/plant_cards": "9643c69d05e4b4a5"
+     "library/plant_cards": "8155173ae63911a1"
     }
    },
-   "ran_at": "2026-11-05T05:46:47Z",
+   "ran_at": "2026-11-05T07:00:24Z",
    "owner": null,
    "status": "ok",
    "layers": [
     "species.registry"
    ],
    "outputs": {
-    "species/registry.json": "b5c138a94f167a4a"
+    "species/registry.json": "92f7efa8febb49a5"
    },
-   "out_hash": "1e978c492ed72ff1",
+   "out_hash": "61c2bb51db02cd2f",
    "sources": {},
    "fallbacks": [],
    "notes": [],
@@ -5942,31 +6742,40 @@
   },
   "osm": {
    "version": "1",
-   "code": "73a24b84b92d90cf",
+   "code": "0908ec8b2c14bbe2",
    "params": {
     "tile": "utm10n_540_4180"
    },
+   "fingerprint": "6c352d033c5b678c",
    "parts": {
     "version": "1",
-    "code": "73a24b84b92d90cf",
+    "code": "0908ec8b2c14bbe2",
     "params": {
      "tile": "utm10n_540_4180"
     },
     "deps": {},
     "library": {}
    },
-   "ran_at": "2026-10-27T02:20:07Z",
-   "adopted_at": "2026-11-05T04:28:08Z",
+   "ran_at": "2026-11-05T06:26:03Z",
+   "owner": null,
+   "status": "ok",
    "layers": [
     "footprint.mask"
    ],
-   "status": "adopted",
    "outputs": {
     "footprint/mask.geojson": "e59a8658c4b206d1"
    },
    "out_hash": "cd0cfd5275f91e75",
-   "fingerprint": "b6d8c5ffc1d21730",
-   "stale": null
+   "sources": {
+    "osm": "2026-11-05"
+   },
+   "fallbacks": [],
+   "notes": [],
+   "fetched": {
+    "network": 0,
+    "cache": 2
+   },
+   "seconds": 5.1
   },
   "hydro": {
    "version": "1",
@@ -6004,6 +6813,7 @@
    "params": {
     "tile": "utm10n_540_4180"
    },
+   "fingerprint": "c6570e5b9f3199a7",
    "parts": {
     "version": "1",
     "code": "b46286f12cf952f2",
@@ -6016,22 +6826,28 @@
     },
     "library": {}
    },
-   "ran_at": "2026-10-27T00:51:00Z",
-   "adopted_at": "2026-11-05T04:28:08Z",
+   "ran_at": "2026-11-05T06:26:08Z",
+   "owner": "water lane",
+   "status": "ok",
    "layers": [
-    "hydro.channels",
-    "client.channel_depth"
-   ],
-   "status": "stale",
-   "stale": [
-    "code changed since it ran: 3a813a4 2026-10-28 Pipeline: a cell without a flow direction attaches to a neighbour no higher than itself bef (+1)"
+    "client.channel_depth",
+    "hydro.channels"
    ],
    "outputs": {
-    "client/channel_depth.png": "437032ead944fc63",
-    "hydro/channels.geojson": "1f727a98a17f520c"
+    "client/channel_depth.png": "6fd98fb5d4aa7e66",
+    "hydro/channels.geojson": "d1d7ff775fa791f2"
    },
-   "out_hash": "896e7e029b4b2298",
-   "fingerprint": null
+   "out_hash": "c3f0df4fea28a5c0",
+   "sources": {
+    "usgs_3dep": "2026-11-05"
+   },
+   "fallbacks": [],
+   "notes": [],
+   "fetched": {
+    "network": 0,
+    "cache": 0
+   },
+   "seconds": 135.2
   },
   "rewild_hydro": {
    "version": "1",
@@ -6039,6 +6855,7 @@
    "params": {
     "tile": "utm10n_540_4180"
    },
+   "fingerprint": "96e66703fe04935d",
    "parts": {
     "version": "1",
     "code": "a331f21f46fc3f33",
@@ -6047,125 +6864,105 @@
     },
     "deps": {
      "dem": "038091c3574f7e23",
-     "channels": "896e7e029b4b2298",
+     "channels": "c3f0df4fea28a5c0",
      "hydro": "5c88f01e866030ec",
      "osm": "cd0cfd5275f91e75"
     },
     "library": {}
    },
-   "ran_at": "2026-10-27T00:54:42Z",
-   "adopted_at": "2026-11-05T04:28:08Z",
+   "ran_at": "2026-11-05T06:28:23Z",
+   "owner": "water lane",
+   "status": "ok",
    "layers": [
+    "client.channel_depth",
+    "client.channel_profile",
+    "client.features",
+    "hydro.channels",
     "hydro.human_water",
-    "terrain.dem_rewilded",
-    "client.channel_profile"
-   ],
-   "status": "stale",
-   "stale": [
-    "code changed since it ran: 3a813a4 2026-10-28 Pipeline: a cell without a flow direction attaches to a neighbour no higher than itself bef (+1)"
+    "terrain.dem_rewilded"
    ],
    "outputs": {
-    "client/channel_profile.png": "210d0c87ea72b734",
+    "client/channel_depth.png": "6fd98fb5d4aa7e66",
+    "client/channel_profile.png": "a7d3f505509a6d99",
+    "client/features.json": "f75050d91f3d7f8f",
+    "hydro/channels.geojson": "d1d7ff775fa791f2",
     "hydro/human_water.geojson": "5eb7023ededc7662",
     "terrain/dem_rewilded.tif": "e6135db1e12f08b8"
    },
-   "out_hash": "ace3d4581912d858",
-   "fingerprint": null
-  },
-  "veg": {
-   "version": "1",
-   "code": "ab8978d634950c8f",
-   "params": {
-    "tile": "utm10n_540_4180"
+   "out_hash": "d00857f0a3d483fa",
+   "sources": {
+    "usgs_3dep": "2026-11-05",
+    "nhdplus_hr": "2026-11-05"
    },
-   "parts": {
-    "version": "1",
-    "code": "ab8978d634950c8f",
-    "params": {
-     "tile": "utm10n_540_4180"
-    },
-    "deps": {
-     "rewild_hydro": "ace3d4581912d858"
-    },
-    "library": {}
+   "fallbacks": [],
+   "notes": [],
+   "fetched": {
+    "network": 0,
+    "cache": 1
    },
-   "ran_at": "2026-10-27T00:54:47Z",
-   "adopted_at": "2026-11-05T04:28:08Z",
-   "layers": [
-    "vegetation.evt",
-    "vegetation.evc",
-    "vegetation.evh",
-    "vegetation.bps",
-    "vegetation.habitat_present",
-    "vegetation.habitat",
-    "vegetation.classes"
-   ],
-   "status": "stale",
-   "stale": [
-    "code changed since it ran: 4523eed 2026-10-27 Pipeline: a lidar collection without a public point cloud builds DEM-only products (terrain"
-   ],
-   "outputs": {
-    "vegetation/bps.tif": "63bd1926380dd99f",
-    "vegetation/classes.json": "68c1624780891bca",
-    "vegetation/evc.tif": "e239a47fae2e31fd",
-    "vegetation/evh.tif": "0d1bc04b26c10766",
-    "vegetation/evt.tif": "5907515d0053e086",
-    "vegetation/habitat.tif": "30a74904c5723acd",
-    "vegetation/habitat_present.tif": "fd4e5bb8ab8ce5a9"
-   },
-   "out_hash": "b4ff936ca6edb773",
-   "fingerprint": null
+   "seconds": 136.3
   },
   "lidar": {
    "version": "1",
-   "code": "4f0ac786c3a3f097",
+   "code": "f873888a2dd4ad15",
    "params": {
     "tile": "utm10n_540_4180"
    },
+   "fingerprint": "ac5512c25738fdbc",
    "parts": {
     "version": "1",
-    "code": "4f0ac786c3a3f097",
+    "code": "f873888a2dd4ad15",
     "params": {
      "tile": "utm10n_540_4180"
     },
     "deps": {
      "dem": "038091c3574f7e23",
      "osm": "cd0cfd5275f91e75",
-     "veg": "b4ff936ca6edb773"
+     "landcover": "b4ff936ca6edb773"
     },
     "library": {}
    },
-   "ran_at": "2026-10-27T03:07:50Z",
-   "adopted_at": "2026-11-05T04:28:08Z",
+   "ran_at": "2026-11-05T06:54:20Z",
+   "owner": null,
+   "status": "ok",
    "layers": [
+    "client.canopy_height",
+    "client.terrain_detail",
+    "client.trees_lidar",
     "terrain.dem_1m",
     "terrain.dsm_1m",
-    "vegetation.chm_1m",
     "terrain.lidar_dtm_check",
+    "terrain.roughness",
     "vegetation.canopy_height_10m",
-    "client.canopy_height",
-    "client.trees_lidar",
-    "client.terrain_detail",
-    "terrain.roughness"
-   ],
-   "status": "stale",
-   "stale": [
-    "code changed since it ran: ff928a3 2026-10-29 Yosemite re-centred: utm11n_267_4175 with the valley in the middle, and the 1 m DEM step fa (+3)",
-    "layers missing: vegetation.multi_1m, client.lidar_micro"
+    "vegetation.chm_1m",
+    "vegetation.multi_1m"
    ],
    "outputs": {
     "client/canopy_height.png": "3260ad4424dfa647",
-    "client/terrain_detail.png": "b5aa22ee30d7c280",
+    "client/terrain_detail.png": "b8744e1a7b7c27d0",
     "client/trees_lidar.bin": "d8a897f9de754965",
     "terrain/dem_1m.tif": "ba6dafd436dd6bfc",
     "terrain/dsm_1m.tif": "86629fa9500f11d3",
     "terrain/lidar_dtm_check.tif": "9f6f2a7d17ae8ded",
     "terrain/roughness_10m.tif": "3c8b52b8efcd0ca5",
     "vegetation/canopy_height_10m.tif": "01c85e1d5caf330f",
-    "vegetation/chm_1m.tif": "61c9d699cc318bb8"
+    "vegetation/chm_1m.tif": "61c9d699cc318bb8",
+    "vegetation/multi_1m.tif": null
    },
-   "out_hash": "234feb84af374adf",
-   "fingerprint": null
+   "out_hash": "fe46b015c2676b3f",
+   "sources": {
+    "usgs_3dep_lpc": "2026-11-05",
+    "usgs_3dep_1m": "2026-11-05",
+    "osm": "2026-11-05",
+    "landfire": "2026-11-05"
+   },
+   "fallbacks": [],
+   "notes": [],
+   "fetched": {
+    "network": 0,
+    "cache": 0
+   },
+   "seconds": 2.0
   },
   "water": {
    "version": "1",
@@ -6173,6 +6970,7 @@
    "params": {
     "tile": "utm10n_540_4180"
    },
+   "fingerprint": "d5ef1ea9df94eb01",
    "parts": {
     "version": "1",
     "code": "7a01da4055b4956d",
@@ -6181,27 +6979,43 @@
     },
     "deps": {
      "dem": "038091c3574f7e23",
-     "rewild_hydro": "ace3d4581912d858",
+     "rewild_hydro": "d00857f0a3d483fa",
      "hydro": "5c88f01e866030ec",
-     "lidar": "234feb84af374adf"
+     "lidar": "fe46b015c2676b3f"
     },
     "library": {}
    },
-   "ran_at": null,
-   "adopted_at": "2026-11-05T04:28:08Z",
+   "ran_at": "2026-11-05T06:54:22Z",
+   "owner": "water lane",
+   "status": "ok",
    "layers": [
-    "client.heights"
-   ],
-   "status": "stale",
-   "stale": [
-    "layers missing: terrain.dem_banked, client.water, hydro.water_reaches",
-    "never ran"
+    "client.heights",
+    "client.species_mix",
+    "client.terrain_detail",
+    "client.water",
+    "hydro.water_reaches",
+    "terrain.dem_banked"
    ],
    "outputs": {
-    "client/heights.png": "fc4c953af8a38dde"
+    "client/heights.png": "9b745e8d6ffbc25b",
+    "client/species_mix.json": "e14b19723a7b6a9e",
+    "client/species_mix_index.png": "4cf764062444543d",
+    "client/species_mix_density.png": "a16abaee36f9bad5",
+    "client/terrain_detail.png": "b8744e1a7b7c27d0",
+    "client/water.png": "f2af023e072e3b24",
+    "client/water_width.png": "a91c22450945f0ec",
+    "hydro/water_reaches.json": "359e608ce198f076",
+    "terrain/dem_banked.tif": "012b7cdc086948c3"
    },
-   "out_hash": "8d4690894c931619",
-   "fingerprint": null
+   "out_hash": "46ff7d64612655b2",
+   "sources": {},
+   "fallbacks": [],
+   "notes": [],
+   "fetched": {
+    "network": 0,
+    "cache": 0
+   },
+   "seconds": 22.3
   },
   "ground": {
    "version": "1",
@@ -6209,6 +7023,7 @@
    "params": {
     "tile": "utm10n_540_4180"
    },
+   "fingerprint": "0df932e16fe0c655",
    "parts": {
     "version": "1",
     "code": "97049cd918bc1768",
@@ -6217,24 +7032,24 @@
     },
     "deps": {
      "dem": "038091c3574f7e23",
-     "veg": "b4ff936ca6edb773",
-     "lidar": "234feb84af374adf"
+     "landcover": "b4ff936ca6edb773",
+     "lidar": "fe46b015c2676b3f"
     },
     "library": {}
    },
-   "ran_at": "2026-10-27T00:56:47Z",
-   "adopted_at": "2026-11-05T04:28:08Z",
+   "ran_at": "2026-11-05T06:54:45Z",
+   "owner": null,
+   "status": "ok",
    "layers": [
-    "geology.units",
-    "geology.classes",
     "client.geology",
-    "soils.mapunits",
-    "soils.classes",
-    "client.soils",
+    "client.ground_classes",
     "client.outcrop",
-    "client.ground_classes"
+    "client.soils",
+    "geology.classes",
+    "geology.units",
+    "soils.classes",
+    "soils.mapunits"
    ],
-   "status": "adopted",
    "outputs": {
     "client/geology.png": "c8c522af87699144",
     "client/ground_classes.json": "0c0ef850fffa3066",
@@ -6246,92 +7061,103 @@
     "soils/mapunits.geojson": "3190dafdf4f9e885"
    },
    "out_hash": "721d0b7ab5c6bc16",
-   "fingerprint": "59d015db1cf048e8",
-   "stale": null
+   "sources": {
+    "macrostrat": "2026-11-05",
+    "usda_ssurgo": "2026-11-05"
+   },
+   "fallbacks": [],
+   "notes": [],
+   "fetched": {
+    "network": 0,
+    "cache": 0
+   },
+   "seconds": 8.6
   },
   "species": {
    "version": "1",
-   "code": "351c2f380af97e9e",
+   "code": "51fbb1afa1361cd1",
    "params": {
     "tile": "utm10n_540_4180"
    },
+   "fingerprint": "977cb752a69807a4",
    "parts": {
     "version": "1",
-    "code": "351c2f380af97e9e",
+    "code": "51fbb1afa1361cd1",
     "params": {
      "tile": "utm10n_540_4180"
     },
     "deps": {
      "dem": "038091c3574f7e23",
-     "veg": "b4ff936ca6edb773"
+     "landcover": "b4ff936ca6edb773"
     },
     "library": {
      "library/animals": "25aa2d5ae1d06008"
     }
    },
-   "ran_at": "2026-10-27T01:01:07Z",
-   "adopted_at": "2026-11-05T04:28:08Z",
+   "ran_at": "2026-11-05T06:56:03Z",
+   "owner": null,
+   "status": "ok",
    "layers": [
+    "calendar",
+    "client.species_prior",
+    "locomotion",
+    "perception",
+    "species.inventory",
     "species.list",
     "species.occurrences",
-    "species.seasonal",
-    "species.inventory",
-    "perception",
-    "calendar",
-    "client.species_prior"
-   ],
-   "status": "stale",
-   "stale": [
-    "code changed since it ran: 6a6dc25 2026-11-03 Food shown by diet, and the eat reaches the food on every rig (+11)",
-    "files differ from the manifest: perception",
-    "layers missing: locomotion"
+    "species.seasonal"
    ],
    "outputs": {
-    "calendar.json": "db2348c8c078b73c",
-    "client/species_prior.json": "e8a1d615de555e9b",
-    "perception.json": "ec85417f77c46dab",
-    "species/inventory.json": "af5edfd6babb4b73",
-    "species/species.json": "38f537b316e58c57",
-    "species/occurrences.geojson": "920a747d098f11f9",
-    "species/seasonal.json": "6a12c0feae76a3db"
+    "calendar.json": "eb24973810ce537a",
+    "client/species_prior.json": "d12f0c4eaf646f51",
+    "locomotion.json": "045ef83f470c0d0a",
+    "perception.json": "6e6754bc230f46b5",
+    "species/inventory.json": "1165d217542d8291",
+    "species/species.json": "ee5ad132c3636ba4",
+    "species/occurrences.geojson": "a9ecbdb42d78a732",
+    "species/seasonal.json": "61b3c024fe0de4c6"
    },
-   "out_hash": "ed4147cb2c858e4b",
-   "fingerprint": null
+   "out_hash": "a1ea58799f086044",
+   "sources": {
+    "gbif": "2026-11-05"
+   },
+   "fallbacks": [],
+   "notes": [],
+   "fetched": {
+    "network": 82,
+    "cache": 213
+   },
+   "seconds": 201.0
   },
   "crowns": {
    "version": "1",
-   "code": "36d9533941445407",
+   "code": "e5e4fb5fe75336f5",
    "params": {
     "tile": "utm10n_540_4180"
    },
+   "fingerprint": "6bf40e1ccf3a8710",
    "parts": {
     "version": "1",
-    "code": "36d9533941445407",
+    "code": "e5e4fb5fe75336f5",
     "params": {
      "tile": "utm10n_540_4180"
     },
     "deps": {
-     "lidar": "234feb84af374adf",
+     "lidar": "fe46b015c2676b3f",
      "osm": "cd0cfd5275f91e75",
-     "veg": "b4ff936ca6edb773",
-     "derive": "08a4dd35dad8c9d2"
+     "landcover": "b4ff936ca6edb773",
+     "terrain": "e744d680ce31b866",
+     "species_mix": "b3831f54a6461821"
     },
     "library": {}
    },
-   "ran_at": null,
-   "adopted_at": "2026-11-05T04:28:08Z",
-   "layers": [
-    "client.trees_lidar"
-   ],
-   "status": "stale",
-   "stale": [
-    "never ran"
-   ],
-   "outputs": {
-    "client/trees_lidar.bin": "d8a897f9de754965"
-   },
-   "out_hash": "aaf1ebf624d8962c",
-   "fingerprint": null
+   "ran_at": "2026-11-05T06:56:03Z",
+   "owner": null,
+   "status": "failed",
+   "error": "crowns needs vegetation/multi_1m.tif or the kept point-cloud grids; this tile's lidar products predate multi_1m: `--force lidar` re-streams the point cloud (about an hour)",
+   "fallbacks": [],
+   "out_hash": null,
+   "seconds": 0.0
   },
   "erase": {
    "version": "1",
@@ -6340,6 +7166,7 @@
     "tile": "utm10n_540_4180",
     "imagery_res_m": 2.5
    },
+   "fingerprint": "e010779cbeba6f06",
    "parts": {
     "version": "1",
     "code": "4f9db0b41fd4af23",
@@ -6350,24 +7177,32 @@
     "deps": {
      "naip": "36aabf33612d308f",
      "osm": "cd0cfd5275f91e75",
-     "veg": "b4ff936ca6edb773",
-     "derive": "08a4dd35dad8c9d2",
-     "rewild_hydro": "ace3d4581912d858"
+     "landcover": "b4ff936ca6edb773",
+     "terrain": "e744d680ce31b866",
+     "rewild_hydro": "d00857f0a3d483fa"
     },
     "library": {}
    },
-   "ran_at": "2026-10-27T02:51:03Z",
-   "adopted_at": "2026-11-05T04:28:08Z",
+   "ran_at": "2026-11-05T06:46:09Z",
+   "owner": null,
+   "status": "ok",
    "layers": [
     "client.texture_imagery"
    ],
-   "status": "adopted",
    "outputs": {
     "client/texture_imagery.jpg": "49a19203bf5a30e9"
    },
    "out_hash": "74da8f54c8bc3f22",
-   "fingerprint": "59503dc563d81dd7",
-   "stale": null
+   "sources": {
+    "pc_naip": "2026-11-05"
+   },
+   "fallbacks": [],
+   "notes": [],
+   "fetched": {
+    "network": 0,
+    "cache": 0
+   },
+   "seconds": 30.8
   },
   "substrate": {
    "version": "1",
@@ -6375,6 +7210,7 @@
    "params": {
     "tile": "utm10n_540_4180"
    },
+   "fingerprint": "69b112e0879e68ea",
    "parts": {
     "version": "1",
     "code": "2e65b327a37a5d98",
@@ -6383,30 +7219,37 @@
     },
     "deps": {
      "ground": "721d0b7ab5c6bc16",
-     "water": "8d4690894c931619",
+     "water": "46ff7d64612655b2",
      "dem": "038091c3574f7e23",
-     "lidar": "234feb84af374adf",
+     "lidar": "fe46b015c2676b3f",
      "naip": "36aabf33612d308f",
-     "veg": "b4ff936ca6edb773",
+     "landcover": "b4ff936ca6edb773",
      "erase": "74da8f54c8bc3f22",
-     "derive": "08a4dd35dad8c9d2"
+     "terrain": "e744d680ce31b866",
+     "ice": "3740126781ff47f9"
     },
     "library": {}
    },
-   "ran_at": "2026-11-03T23:16:34Z",
-   "adopted_at": "2026-11-05T04:28:08Z",
+   "ran_at": "2026-11-05T06:55:30Z",
+   "owner": null,
+   "status": "ok",
    "layers": [
     "client.substrate",
     "client.substrate_classes"
    ],
-   "status": "adopted",
    "outputs": {
-    "client/substrate.png": "afa1e7423e5417ec",
-    "client/substrate.json": "520d6bc5f8511d68"
+    "client/substrate.png": "c5a549f4741c0fc5",
+    "client/substrate.json": "4ead7211b1e4737e"
    },
-   "out_hash": "30103c194fcd69e4",
-   "fingerprint": "f0d7de6ede37b785",
-   "stale": null
+   "out_hash": "5aeae54e915cfaec",
+   "sources": {},
+   "fallbacks": [],
+   "notes": [],
+   "fetched": {
+    "network": 0,
+    "cache": 0
+   },
+   "seconds": 4.7
   },
   "inpaint": {
    "version": "1",
@@ -6434,62 +7277,72 @@
     "client.texture_ground",
     "client.texture_ground_mask"
    ],
-   "status": "adopted",
+   "status": "blocked",
    "outputs": {
     "client/texture_ground.jpg": "0286d84557466622",
     "client/texture_ground_mask.png": "7e3e2cc9bc2d2115"
    },
    "out_hash": "1a8f8789ad4f1426",
    "fingerprint": "2ff765b9009c8a23",
-   "stale": null
+   "stale": null,
+   "reason": "blocked by crowns"
   },
   "seasons": {
    "version": "1",
-   "code": "a5c428b246cf45ef",
+   "code": "59bd0f94ee57fa37",
    "params": {
     "tile": "utm10n_540_4180"
    },
+   "fingerprint": "eade59d905d40cce",
    "parts": {
     "version": "1",
-    "code": "a5c428b246cf45ef",
+    "code": "59bd0f94ee57fa37",
     "params": {
      "tile": "utm10n_540_4180"
     },
     "deps": {
-     "veg": "b4ff936ca6edb773",
-     "lidar": "234feb84af374adf",
+     "landcover": "b4ff936ca6edb773",
+     "lidar": "fe46b015c2676b3f",
      "naip": "36aabf33612d308f"
     },
     "library": {}
    },
-   "ran_at": "2026-10-27T01:11:50Z",
-   "adopted_at": "2026-11-05T04:28:08Z",
+   "ran_at": "2026-11-05T06:55:34Z",
+   "owner": null,
+   "status": "ok",
    "layers": [
-    "seasons.s2_monthly",
+    "client.season_ndvi",
     "client.season_rgb",
-    "client.season_ndvi"
+    "seasons.s2_monthly"
    ],
-   "status": "adopted",
    "outputs": {
-    "client/season_ndvi.png": "13deca03c0a249fe",
-    "client/season_rgb.png": "a174c524443e978d",
-    "seasons/months.json": "75a06289db24667e",
-    "seasons/s2_01.tif": "2ca83c272cbaa302",
-    "seasons/s2_02.tif": "823c4c3c3f6eb91c",
-    "seasons/s2_03.tif": "1bd85ef9afaa1db9",
+    "client/season_ndvi.png": "f0266235c1a68a1e",
+    "client/season_rgb.png": "c7dad6e1de9a3bb3",
+    "seasons/months.json": "3d49566cbd281198",
+    "seasons/s2_01.tif": "1c4dca48f27b328d",
+    "seasons/s2_02.tif": "44a9509542d33ac0",
+    "seasons/s2_03.tif": "038281ee6cd9bf13",
     "seasons/s2_04.tif": "54e7c746bd55382f",
-    "seasons/s2_05.tif": "421207abbbd87c20",
-    "seasons/s2_06.tif": "2434a8a50631115e",
-    "seasons/s2_07.tif": "fa74bab2dc84936b",
-    "seasons/s2_08.tif": "fca075ea7949817f",
-    "seasons/s2_09.tif": "c09ac72c295aa171",
-    "seasons/s2_10.tif": "0ec89ba97e98dbb7",
-    "seasons/s2_11.tif": "af9ad6871dd87ba0",
-    "seasons/s2_12.tif": "0ade9a84d514ff7e"
+    "seasons/s2_05.tif": "017ef202594d8746",
+    "seasons/s2_06.tif": "320d20d065b91dfe",
+    "seasons/s2_07.tif": "604af555c47afcc9",
+    "seasons/s2_08.tif": "bbb6ddacec36a416",
+    "seasons/s2_09.tif": "80f7c13521538c71",
+    "seasons/s2_10.tif": "448eeaeff3e2f416",
+    "seasons/s2_11.tif": "7fcb5c2d7922d5f5",
+    "seasons/s2_12.tif": "cb7f2134a9ac18f8"
    },
-   "out_hash": "5634e44c8f6950d9",
-   "fingerprint": "be780ed901e435fd",
-   "stale": null
+   "out_hash": "3cecf3190156a0af",
+   "sources": {
+    "copernicus_sentinel2_l2a": "2026-11-05"
+   },
+   "fallbacks": [],
+   "notes": [],
+   "fetched": {
+    "network": 0,
+    "cache": 309
+   },
+   "seconds": 28.0
   },
   "weather": {
    "version": "1",
@@ -6533,7 +7386,7 @@
     },
     "deps": {
      "dem": "038091c3574f7e23",
-     "veg": "b4ff936ca6edb773"
+     "landcover": "b4ff936ca6edb773"
     },
     "library": {}
    },
@@ -6547,7 +7400,7 @@
     "unreal/unreal.json": "e2aa37fe8824b3ae"
    },
    "out_hash": "c15b6b6c8331385e",
-   "fingerprint": "f838bdcd37cd4d8f",
+   "fingerprint": "976b64d213ddec7e",
    "stale": null
   },
   "audit": {
@@ -6569,7 +7422,6 @@
      "hydro": "5c88f01e866030ec",
      "channels": "896e7e029b4b2298",
      "rewild_hydro": "ace3d4581912d858",
-     "veg": "b4ff936ca6edb773",
      "lidar": "234feb84af374adf",
      "water": "8d4690894c931619",
      "ground": "721d0b7ab5c6bc16",
@@ -6583,20 +7435,499 @@
      "seasons": "5634e44c8f6950d9",
      "weather": "02f639619b648aca",
      "unreal": "c15b6b6c8331385e",
-     "registry": "7f7ff1bf34d4de02"
+     "registry": "7f7ff1bf34d4de02",
+     "landcover": "b4ff936ca6edb773"
     },
     "library": {}
    },
    "ran_at": null,
    "adopted_at": "2026-11-05T04:28:08Z",
    "layers": [],
-   "status": "stale",
+   "status": "blocked",
    "stale": [
     "never ran"
    ],
    "outputs": {},
    "out_hash": "44136fa355b3678a",
-   "fingerprint": null
+   "fingerprint": "956f67349fc3a660",
+   "reason": "blocked by crowns, inpaint"
+  },
+  "landcover": {
+   "version": "1",
+   "code": "ab8978d634950c8f",
+   "params": {
+    "tile": "utm10n_540_4180"
+   },
+   "fingerprint": "91952ad44637483f",
+   "parts": {
+    "version": "1",
+    "code": "ab8978d634950c8f",
+    "params": {
+     "tile": "utm10n_540_4180"
+    },
+    "deps": {
+     "rewild_hydro": "d00857f0a3d483fa"
+    },
+    "library": {}
+   },
+   "ran_at": "2026-11-05T06:30:40Z",
+   "owner": null,
+   "status": "ok",
+   "layers": [
+    "vegetation.bps",
+    "vegetation.classes",
+    "vegetation.evc",
+    "vegetation.evh",
+    "vegetation.evt",
+    "vegetation.habitat",
+    "vegetation.habitat_present"
+   ],
+   "outputs": {
+    "vegetation/bps.tif": "63bd1926380dd99f",
+    "vegetation/classes.json": "68c1624780891bca",
+    "vegetation/evc.tif": "e239a47fae2e31fd",
+    "vegetation/evh.tif": "0d1bc04b26c10766",
+    "vegetation/evt.tif": "5907515d0053e086",
+    "vegetation/habitat.tif": "30a74904c5723acd",
+    "vegetation/habitat_present.tif": "fd4e5bb8ab8ce5a9"
+   },
+   "out_hash": "b4ff936ca6edb773",
+   "sources": {
+    "landfire": "2026-11-05"
+   },
+   "fallbacks": [],
+   "notes": [],
+   "fetched": {
+    "network": 0,
+    "cache": 4
+   },
+   "seconds": 0.2
+  },
+  "terrain": {
+   "version": "1",
+   "code": "1185c3a4f10f4b3c",
+   "params": {
+    "tile": "utm10n_540_4180"
+   },
+   "fingerprint": "ecf42bbbf1ae60d4",
+   "parts": {
+    "version": "1",
+    "code": "1185c3a4f10f4b3c",
+    "params": {
+     "tile": "utm10n_540_4180"
+    },
+    "deps": {
+     "dem": "038091c3574f7e23",
+     "naip": "36aabf33612d308f",
+     "osm": "cd0cfd5275f91e75",
+     "hydro": "5c88f01e866030ec",
+     "channels": "c3f0df4fea28a5c0",
+     "rewild_hydro": "d00857f0a3d483fa",
+     "water": "46ff7d64612655b2",
+     "landcover": "b4ff936ca6edb773",
+     "ice": "3740126781ff47f9"
+    },
+    "library": {}
+   },
+   "ran_at": "2026-11-05T06:54:53Z",
+   "owner": null,
+   "status": "ok",
+   "layers": [
+    "client.canopy",
+    "client.features",
+    "client.habitat",
+    "client.heights",
+    "client.imagery",
+    "client.masks",
+    "client.roads",
+    "client.texture",
+    "client.texture_present",
+    "footprint.mask_raster",
+    "footprint.urban",
+    "imagery.naip_png",
+    "terrain.hillshade",
+    "terrain.rewilded",
+    "terrain.terrain_rgb",
+    "vegetation.habitat_png",
+    "vegetation.habitat_present_png"
+   ],
+   "outputs": {
+    "client/canopy.png": "3682c02f7cb7cefb",
+    "client/features.json": "f75050d91f3d7f8f",
+    "client/habitat.png": "a11fbc758ec822d0",
+    "client/heights.png": "60acae0d052a1730",
+    "client/imagery.png": "5755b2b7897cccda",
+    "client/masks.png": "f82f8e63f771f16e",
+    "client/roads.png": "8c692be23a783b54",
+    "client/texture.png": "667e031f5ad5be3c",
+    "client/texture_present.jpg": "c35bb52edd1b009e",
+    "footprint/mask.png": "54c0ecf800d407a5",
+    "footprint/urban.tif": "4b9ae6d3eb5e5749",
+    "imagery/naip.png": "498b04ccc56020ce",
+    "terrain/hillshade.png": "6c07e39c9ea8a61c",
+    "terrain/rewilded.png": "1ca5358313b900f7",
+    "terrain/terrain_rgb.png": "31d304cf55c3f4ad",
+    "vegetation/habitat.png": "7c5008ac908e931a",
+    "vegetation/habitat_present.png": "32e282b882bbdf13"
+   },
+   "out_hash": "e744d680ce31b866",
+   "sources": {
+    "pc_naip": "2026-11-05",
+    "osm": "2026-11-05",
+    "landfire": "2026-11-05"
+   },
+   "fallbacks": [],
+   "notes": [],
+   "fetched": {
+    "network": 0,
+    "cache": 1
+   },
+   "seconds": 36.4
+  },
+  "ice": {
+   "version": "1",
+   "code": "703486a908830fa0",
+   "params": {
+    "tile": "utm10n_540_4180"
+   },
+   "fingerprint": "4431702d72a35413",
+   "parts": {
+    "version": "1",
+    "code": "703486a908830fa0",
+    "params": {
+     "tile": "utm10n_540_4180"
+    },
+    "deps": {
+     "dem": "038091c3574f7e23",
+     "landcover": "b4ff936ca6edb773"
+    },
+    "library": {}
+   },
+   "ran_at": "2026-11-05T06:30:40Z",
+   "owner": null,
+   "status": "ok",
+   "layers": [
+    "terrain.ice"
+   ],
+   "outputs": {
+    "terrain/ice.tif": "0b59d689877cc814",
+    "client/ice.png": "c12afcfb5641f344",
+    "terrain/ice.json": "1008ac9dfdb1d876"
+   },
+   "out_hash": "3740126781ff47f9",
+   "sources": {
+    "landfire": "2026-11-05",
+    "osm": "2026-11-05"
+   },
+   "fallbacks": [],
+   "notes": [],
+   "fetched": {
+    "network": 1,
+    "cache": 0
+   },
+   "seconds": 857.1
+  },
+  "seams": {
+   "version": "1",
+   "code": "e40613bd155ff6ee",
+   "params": {
+    "tile": "utm10n_540_4180"
+   },
+   "fingerprint": "fcc8d08c75e272d6",
+   "parts": {
+    "version": "1",
+    "code": "e40613bd155ff6ee",
+    "params": {
+     "tile": "utm10n_540_4180"
+    },
+    "deps": {
+     "dem": "038091c3574f7e23",
+     "channels": "c3f0df4fea28a5c0",
+     "water": "46ff7d64612655b2"
+    },
+    "library": {}
+   },
+   "ran_at": "2026-11-05T06:56:02Z",
+   "owner": null,
+   "status": "ok",
+   "layers": [],
+   "outputs": {},
+   "out_hash": "44136fa355b3678a",
+   "sources": {},
+   "fallbacks": [],
+   "notes": [],
+   "fetched": {
+    "network": 0,
+    "cache": 0
+   },
+   "seconds": 0.2
+  },
+  "species_mix": {
+   "version": "1",
+   "code": "09ce63283a213f0b",
+   "params": {
+    "tile": "utm10n_540_4180"
+   },
+   "fingerprint": "734a1c7c0c7246f0",
+   "parts": {
+    "version": "1",
+    "code": "09ce63283a213f0b",
+    "params": {
+     "tile": "utm10n_540_4180"
+    },
+    "deps": {
+     "dem": "038091c3574f7e23",
+     "landcover": "b4ff936ca6edb773",
+     "water": "46ff7d64612655b2",
+     "ice": "3740126781ff47f9",
+     "plants": "d81e4582289cc683"
+    },
+    "library": {
+     "library/species": "e224ecdd8391be3c"
+    }
+   },
+   "ran_at": "2026-11-05T06:56:03Z",
+   "owner": null,
+   "status": "ok",
+   "layers": [
+    "client.species_mix"
+   ],
+   "outputs": {
+    "client/species_mix.json": "62c14ad39ae9e7b8",
+    "client/species_mix_index.png": "4cf764062444543d",
+    "client/species_mix_density.png": "a16abaee36f9bad5"
+   },
+   "out_hash": "b3831f54a6461821",
+   "sources": {},
+   "fallbacks": [],
+   "notes": [],
+   "fetched": {
+    "network": 0,
+    "cache": 0
+   },
+   "seconds": 0.7
+  },
+  "animals": {
+   "version": "1",
+   "code": "52bac1d7ce198821",
+   "params": {
+    "tile": "utm10n_540_4180"
+   },
+   "fingerprint": "c671d28b839f53e5",
+   "parts": {
+    "version": "1",
+    "code": "52bac1d7ce198821",
+    "params": {
+     "tile": "utm10n_540_4180"
+    },
+    "deps": {
+     "species": "a1ea58799f086044",
+     "plants": "d81e4582289cc683"
+    },
+    "library": {
+     "library/animals": "25aa2d5ae1d06008",
+     "data/eltontraits": "e3b0c44298fc1c14"
+    }
+   },
+   "ran_at": "2026-11-05T06:59:24Z",
+   "owner": null,
+   "status": "ok",
+   "layers": [
+    "species.animals"
+   ],
+   "outputs": {
+    "species/animals.json": "7f8d887d99b06755"
+   },
+   "out_hash": "6b6136e9afc59deb",
+   "sources": {
+    "gbif": "2026-11-05",
+    "eltontraits": "2026-11-05"
+   },
+   "fallbacks": [],
+   "notes": [],
+   "fetched": {
+    "network": 49,
+    "cache": 215
+   },
+   "seconds": 40.0
+  },
+  "resources": {
+   "version": "1",
+   "code": "58694617710ab329",
+   "params": {
+    "tile": "utm10n_540_4180"
+   },
+   "fingerprint": "30a7e7a6ae676164",
+   "parts": {
+    "version": "1",
+    "code": "58694617710ab329",
+    "params": {
+     "tile": "utm10n_540_4180"
+    },
+    "deps": {
+     "dem": "038091c3574f7e23",
+     "hydro": "5c88f01e866030ec",
+     "landcover": "b4ff936ca6edb773",
+     "terrain": "e744d680ce31b866",
+     "species_mix": "b3831f54a6461821",
+     "species": "a1ea58799f086044"
+    },
+    "library": {}
+   },
+   "ran_at": "2026-11-05T07:00:04Z",
+   "owner": null,
+   "status": "ok",
+   "layers": [
+    "client.mast",
+    "resources"
+   ],
+   "outputs": {
+    "client/mast.png": "32e0b9ef29cf8426",
+    "resources/resources.json": "fa9800ac755527b7"
+   },
+   "out_hash": "756c33daa788b06c",
+   "sources": {},
+   "fallbacks": [],
+   "notes": [],
+   "fetched": {
+    "network": 0,
+    "cache": 1
+   },
+   "seconds": 19.1
+  },
+  "games": {
+   "version": "1",
+   "code": "8f0a31fed3ca11ba",
+   "params": {
+    "tile": "utm10n_540_4180"
+   },
+   "fingerprint": "ff7d40a093ba9cf9",
+   "parts": {
+    "version": "1",
+    "code": "8f0a31fed3ca11ba",
+    "params": {
+     "tile": "utm10n_540_4180"
+    },
+    "deps": {
+     "species": "a1ea58799f086044",
+     "resources": "756c33daa788b06c",
+     "animals": "6b6136e9afc59deb"
+    },
+    "library": {}
+   },
+   "ran_at": "2026-11-05T07:00:23Z",
+   "owner": null,
+   "status": "ok",
+   "layers": [
+    "games"
+   ],
+   "outputs": {
+    "games.json": "26763e772fe7868c"
+   },
+   "out_hash": "df6ca380e4da356e",
+   "sources": {},
+   "fallbacks": [],
+   "notes": [],
+   "fetched": {
+    "network": 0,
+    "cache": 0
+   },
+   "seconds": 0.1
+  },
+  "game_seeds": {
+   "version": "1",
+   "code": "8f0a31fed3ca11ba",
+   "params": {
+    "tile": "utm10n_540_4180"
+   },
+   "fingerprint": "986cb7146b1d3e45",
+   "parts": {
+    "version": "1",
+    "code": "8f0a31fed3ca11ba",
+    "params": {
+     "tile": "utm10n_540_4180"
+    },
+    "deps": {
+     "games": "df6ca380e4da356e",
+     "resources": "756c33daa788b06c",
+     "species": "a1ea58799f086044"
+    },
+    "library": {}
+   },
+   "ran_at": "2026-11-05T07:00:24Z",
+   "owner": null,
+   "status": "ok",
+   "layers": [
+    "games.seeds"
+   ],
+   "outputs": {
+    "game_seeds.json": "d5c1c61aa3889815"
+   },
+   "out_hash": "29da4ebbc8fb24e9",
+   "sources": {},
+   "fallbacks": [],
+   "notes": [],
+   "fetched": {
+    "network": 0,
+    "cache": 0
+   },
+   "seconds": 0.0
   }
+ },
+ "seams": {
+  "edges": [
+   {
+    "side": "south",
+    "neighbour": "utm10n_540_4170",
+    "dem": {
+     "cells": 2000,
+     "median_step_m": 0.108,
+     "median_inside_step_m": 0.106,
+     "p95_step_m": 0.931,
+     "mean_offset_m": -0.059,
+     "problem": null
+    },
+    "streams": {
+     "crossings_here": 3,
+     "crossings_there": 5,
+     "unmatched": [
+      {
+       "along": 546017.5,
+       "order": 1,
+       "name": null
+      },
+      {
+       "along": 545612.5,
+       "order": 1,
+       "name": null
+      },
+      {
+       "along": 540112.5,
+       "order": 1,
+       "name": null
+      },
+      {
+       "along": 548417.5,
+       "order": 2,
+       "name": null
+      },
+      {
+       "along": 544152.5,
+       "order": 2,
+       "name": null
+      },
+      {
+       "along": 546552.5,
+       "order": 2,
+       "name": null
+      }
+     ],
+     "problem": null
+    },
+    "problem": null
+   }
+  ],
+  "neighbours": 1,
+  "note": "1 of 1 edges agree"
  }
 }

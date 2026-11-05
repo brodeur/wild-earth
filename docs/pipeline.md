@@ -1,98 +1,129 @@
 # The tile pipeline
 
-How a tile is built from nothing, the same way every time, anywhere a source reaches; and how its species are
-found, looked up and grown. Written 2026-11-04 from an audit of `pipeline/` and every tile's manifest.
+How a tile is built from nothing, the same way every time, anywhere a source reaches; how its species are researched,
+looked up and grown; and what it costs. Written 2026-11-04 from an audit of `pipeline/` and every tile's manifest, then
+reorganised the same day into four stages (Aaron: base, flora, fauna, games, each runnable on its own and in order).
 
 Aaron's brief (2026-11-04): "When we create a new tile, we need to be going through all the steps, and making sure
 the steps are repeatable so that we can accurately depict a tile anywhere on earth. When we create a new tile, we need
 to generate all of the species for that tile if they don't already exist... a registry of species... which species
-have been created and what level of fidelity that asset is at."
+have been created and what level of fidelity that asset is at." And on the species: "the species creation pipeline
+begins with research - what are the species in this region? We are specifically looking for the most populous species
+plus all predators and scavengers... We list all the species, then we pick a species density equivalent or greater than
+the foothills and start generating assets. For each type of species try to find reusable parts, riggings, algorithms
+for creation. The goal is a pipeline that can reliably grow a new tile without many edits."
 
-## One command
+## One command, four stages
 
-    python -m pipeline.build_tile --tile utm10n_731_4235 --all         # everything, in order; current steps skipped
-    python -m pipeline.build_tile --anchor -120.30 38.28 --all          # the 10 km cell holding a point
-    python -m pipeline.build_tile --tile <id> --plan                    # what --all would run, and why
-    python -m pipeline.build_tile --tile <id> --all --force derive      # a step whatever its state (and re-fetch)
-    python -m pipeline.build_tile --tile <id> --status                  # per step: ran, missing, stale
-    python -m pipeline.build_tile --tile <id> --adopt                   # a tile built before the graph, as its baseline
-    python -m pipeline.build_tile --tile <id> --all --out /tmp/x        # into another tiles folder (WILD_EARTH_TILES)
-    python -m pipeline.registry                                         # library/registry.json from what exists
+    python -m pipeline.build_tile --tile <id> --stage all            # everything, in order; current steps skipped (= --all)
+    python -m pipeline.build_tile --tile <id> --stage base           # one stage; base, flora, fauna, games (comma-separated ok)
+    python -m pipeline.build_tile --anchor -123.93 47.86 --stage all  # the 10 km cell holding a point
+    python -m pipeline.build_tile --tile <id> --plan                 # what would run, and why, stage by stage
+    python -m pipeline.build_tile --tile <id> --stage flora --force species_mix   # a step whatever its state
+    python -m pipeline.build_tile --tile <id> --status                # per step: ran, missing, stale
+    python -m pipeline.build_tile --tile <id> --adopt                 # a tile built before the graph, as its baseline
+    python -m pipeline.build_tile --tile <id> --cost                  # what it cost: time, downloads, disk, client bytes
+    python -m pipeline.build_tile --tile <id> --all --out /tmp/x       # into another tiles folder (WILD_EARTH_TILES)
+    python -m pipeline.registry                                       # library/registry.json from what exists
+    python -m pipeline.seams <id>                                     # the seams with the built neighbours
 
-Run Python as `arch -arm64 .venv/bin/python` on this Mac (pyproj). `--steps a,b` still runs named steps whatever
-their state (the dev server's build API uses it, one step per call).
+Run Python as `arch -arm64 .venv/bin/python` on this Mac (pyproj). A stage reads only its own and earlier stages'
+outputs (asserted at import); run alone, it refuses a step whose input was never built, naming the stage to run first.
+`--steps a,b` still runs named steps whatever their state (the dev server's build API; the old names `veg` and `derive`
+map to `landcover` and `terrain`).
 
-## The step graph (pipeline/steps.py)
+| stage | steps, in order | what it makes |
+|---|---|---|
+| **base** | dem, naip, osm, hydro*, channels*, rewild_hydro*, landcover, ice, lidar, water*, ground, terrain, erase, substrate, seasons, weather, unreal, seams | the ground: elevation (5 m, 1 m where flown), imagery and its erasure, the built footprint, the hydrology rewilded and banked, permanent snow and ice, soils, geology and exposed rock, the client's terrain rasters, place names, Sentinel-2 seasons, weather; the seams with built neighbours |
+| **flora** | plants, species_mix, crowns, inpaint | the plant research (cover, records, the density target), missing species grown from their trait cards, the mix per 30 m cell (trees, shrubs, ground layer, riparian zones), the lidar crowns and the ground texture under them |
+| **fauna** | species, animals, resources | GBIF presence, perception, calendar, locomotion and the density prior for the curated animals; the animal research (every animal recorded, ranked, every predator and scavenger, traits for those without, the Meshy queue); food, water and cover by season |
+| **games** | games, game_seeds, registry, audit | each species' games; each shared game's world seed (acorn, dig, carrion); the species registry report and the licence audit that close every build |
 
-Each step declares its version, the modules whose code it runs, the steps whose outputs it reads (`after`), the
-sources it fetches and when it does not apply. The order below is a valid order of the graph (`_check_graph` asserts
-it at import).
+\* the water lane's steps, folded in unchanged (`owner: water lane`).
 
-| step | after | writes (manifest layers) | sources (licence) | where they reach / fallback |
+One departure from the brief's lists, and why: **landcover** (LANDFIRE EVT/EVC/EVH/BpS and the habitat classes) is in
+the base stage, not flora. The base layer's imagery erasure needs LANDFIRE's human classes, the substrate and the
+ground's outcrop need its cover, and the terrain textures need the habitat classes; a stage may not read a later one.
+Flora reads landcover for its species. The species mix (the communities, the unmatched ones, the ground plants) is
+flora's, as are the crowns and their inpainting.
+
+### Base
+
+| step | after | writes | sources (licence) | reach / fallback |
 |---|---|---|---|---|
-| dem | | terrain.dem (5 m) | USGS 3DEP ImageServer (PD) | US; then Planetary Computer 3DEP seamless 10 m (PD); then **NASADEM 30 m (NASA, no restrictions), global 60 N-56 S, implemented** |
-| naip | | imagery.naip (2.5 m) | Planetary Computer NAIP (PD), USGS NAIP Plus (PD) | CONUS only; outside: fails loudly. Next: Sentinel-2 true colour |
-| osm | | footprint.mask | Overpass, three mirrors (ODbL) | global |
-| hydro | | hydro.flowlines, hydro.waterbodies | NHDPlus HR (PD) | CONUS, HI, PR; fetch_hydro's own OSM fallback (recorded as a fallback); owner: water lane |
-| channels | dem, hydro | hydro.channels, client.channel_depth | | gravity routing on the DEM, global; owner: water lane |
-| rewild_hydro | dem, channels, hydro, osm | hydro.human_water, terrain.dem_rewilded, client.channel_profile, client.features | Overpass water and dams, Overpass places, Native Land | owner: water lane |
-| veg | rewild_hydro | vegetation.evt/evc/evh/bps, habitat, habitat_present, classes | LANDFIRE 2025 / BpS 2016 (PD) | CONUS (the _CONUS services); outside: fails loudly. Next: ESA WorldCover + RESOLVE ecoregions |
-| lidar | dem, osm, veg | terrain.dem_1m, vegetation.chm_1m, client.trees_lidar, client.terrain_detail, client.lidar_micro, ... | 3DEP 1 m DEM products and EPT point clouds (PD) | US, where flown; DEM-only from the 1 m products without a point cloud; **not applicable** outside the US (the 5 m base DEM carries the terrain) |
-| water | dem, rewild_hydro, hydro, lidar | terrain.dem_banked, client.water, client.heights, hydro.water_reaches | | owner: water lane (pipeline/water.py, unchanged here) |
-| ground | dem, veg, lidar | geology.*, soils.*, client.geology, client.soils, client.outcrop, client.ground_classes | Macrostrat (CC BY 4.0), USGS SGMC (PD), USDA SDA SSURGO (PD) | geology global (Macrostrat); soils US only. Next: SoilGrids 2.0 (CC BY 4.0) |
-| species | dem, veg | species.list/occurrences/seasonal/inventory, perception, calendar, locomotion, client.species_prior | GBIF (per record CC0 / CC BY / CC BY-NC) | global |
-| plants | veg, species | species.plant_needs (+ library records grown) | GBIF (cached) | global |
-| derive | dem, naip, osm, hydro, channels, rewild_hydro, water, veg, species, plants | the client rasters, client.species_mix, resources, games, client.features | Overpass places, Native Land | |
-| crowns | lidar, osm, veg, derive | client.trees_lidar | | not applicable without a canopy height model |
-| erase | naip, osm, veg, derive, rewild_hydro | client.texture_imagery | | |
-| substrate | ground, water, dem, lidar, naip, veg, erase, derive | client.substrate, client.substrate_classes | | |
-| inpaint | erase, lidar, crowns, derive | client.texture_ground, client.texture_ground_mask | | not applicable without a canopy height model |
-| seasons | veg, lidar, naip | seasons.s2_monthly, client.season_rgb, client.season_ndvi | Sentinel-2 L2A via Planetary Computer, Earth Search fallback (Copernicus terms, credit) | global |
-| weather | | client.weather | Open-Meteo ERA5 (CC BY 4.0) | global |
-| unreal | dem, veg | unreal | | |
-| registry | species, plants, derive | species.registry | | |
-| audit | every step | licence_audit in the manifest | | |
+| dem | | terrain.dem (5 m) | USGS 3DEP (PD) | US; Planetary Computer 3DEP 10 m; **NASADEM 30 m (NASA, no restrictions), global, implemented** |
+| naip | | imagery.naip | Planetary Computer / USGS NAIP (PD) | CONUS; elsewhere fails loudly (next: Sentinel-2 true colour) |
+| osm | | footprint.mask | Overpass (ODbL) | global |
+| hydro, channels, rewild_hydro, water | (water lane) | streams, beds, banks, riparian zones | NHDPlus HR (PD), OSM | NHD US; OSM fallback; routing on the DEM global |
+| landcover | rewild_hydro | vegetation.* (EVT, EVC, EVH, BpS, habitat) | LANDFIRE (PD) | CONUS; elsewhere fails loudly (next: WorldCover + RESOLVE ecoregions, CC BY 4.0) |
+| ice | dem, landcover | terrain.ice (+ client/ice.png, terrain/ice.json) | LANDFIRE Snow-Ice, OSM natural=glacier | global (OSM), US (LANDFIRE) |
+| lidar | dem, osm, landcover | 1 m DEM, CHM, roughness, terrain detail, micro | 3DEP lidar (PD) | US where flown; DEM-only; not applicable outside |
+| ground | dem, landcover, lidar | geology, soils, outcrop, ground classes | Macrostrat (CC BY 4.0), SGMC, SSURGO (PD) | geology global; soils US (next: SoilGrids, CC BY 4.0) |
+| terrain | dem ... water, landcover, ice | hillshade, heights, habitat, canopy, roads, textures, masks, features | Overpass places, Native Land | |
+| erase | naip, osm, landcover, terrain, rewild_hydro | client.texture_imagery | | |
+| substrate | ground, water, lidar, erase, terrain, ice | client.substrate | | |
+| seasons | landcover, lidar, naip | Sentinel-2 monthly colour | Sentinel-2 L2A (Copernicus terms, credit) | global |
+| weather | | client.weather | Open-Meteo (CC BY 4.0) | global |
+| unreal | dem, landcover | the Unreal export | | |
+| seams | dem, channels, water | the manifest's `seams` | | fails when the DEM steps across a seam or a stream of order 3+ crosses on one side only |
 
-What the graph fixes against the old step list (`ALL_STEPS` ran dem, lidar, naip, osm, hydro, channels, rewild_hydro,
-water, veg, ground, substrate, species, derive, crowns, erase, inpaint, seasons, weather, unreal, with a failed step
-logged and the next one run anyway):
+### Flora
 
-- `substrate` ran before `derive` and `erase` but prefers their outputs (client/habitat.png, texture_imagery.jpg); on
-  a one-pass build it read raw NAIP, where roofs and roads are grey rock. It now runs after both.
-- `lidar` found its crowns before `osm`, `veg` and `derive` existed; it now runs after osm and veg, and `crowns` (which
-  the five lidar tiles never ran through build_tile) runs after derive.
-- `derive` wrote client/mast.png from resources/acorn_mast.tif, which it wrote later in the same step: a fresh tile
-  needed derive twice. It now writes the rasters again when the mast is missing.
-- `derive` logged ok and wrote nothing without its inputs (Yosemite, 2026-10-28 03:15); it now fails, naming them.
-- `water` rewrote client/species_mix.json without re-recording the layer (its sha256 went stale on 267_4175); the step
-  wrapper re-records it.
-- `crowns` and `inpaint` decided from layer names in the manifest and logged "ok" when they skipped; they are now
-  `not_applicable` with the reason, decided by the file on disk.
-- A failed step stops the build (exit 1); `--keep-going` runs the steps that do not depend on it.
-- `audit` (the licence audit, `audit_licenses.py`) was a separate command; it is the build's last step and fails the
-  build on a missing credit or a client layer marked `for_clients: false`.
+| step | after | writes |
+|---|---|---|
+| plants | landcover, ice | species/plant_needs.json (the ranked plant list, the density target, the hand edits), species/localized.json (groves), library records grown from cards |
+| species_mix | dem, landcover, water, ice, plants | client/species_mix.json + index and density PNGs: trees, shrubs, ground layer and riparian rows per cell |
+| crowns | lidar, osm, landcover, terrain, species_mix | client.trees_lidar (not applicable without a point cloud) |
+| inpaint | erase, lidar, crowns, terrain | the ground texture under the crowns (not applicable without a point cloud) |
+
+### Fauna
+
+| step | after | writes |
+|---|---|---|
+| species | dem, landcover | species.json (presence), occurrences (pipeline-only), seasonal, inventory, perception, calendar, locomotion, client.species_prior |
+| animals | species, plants | species/animals.json (the ranked animal list, predators, scavengers, the Meshy queue, stand-ins), library/animals/traits/<id>.json for animals without an entry |
+| resources | dem, hydro, landcover, terrain, species_mix, species | the seasonal resource rasters, client.mast |
+
+### Games
+
+| step | after | writes |
+|---|---|---|
+| games | species, resources, animals | games.json |
+| game_seeds | games, resources, species | game_seeds.json: per game (acorn, dig, carrion) the seed (FNV-1a of tile and game, as server.py seed_of), the players on this tile, the hotspots, the client module and the world |
+| registry | plants, species_mix, species, animals | species/registry.json |
+| audit | every step | the manifest's licence_audit; fails on a missing credit or CC BY-NC data in a client layer |
 
 ## Repeatable: fingerprints, versions, sources, fallbacks
 
 Before a step runs: `fingerprint = sha256(version, the hash of its modules' code, its parameters, every upstream step's
 output hash, the library folders it reads)`. The step is skipped when its last record has the same fingerprint and
-every output it recorded is still on disk with the same hash (a file two steps write, client/heights.png or
-terrain_detail.png, is checked only by the last writer). A step whose outputs come out the same leaves its dependents
-current, so a code change re-runs exactly the part of the graph it reaches. File hashes are cached per tile in
-`_cache/hashes.json` by size and mtime.
+every output it recorded is still on disk with the same hash (a file two steps write is checked only by the last
+writer). A step whose outputs come out the same leaves its dependents current, so a code change re-runs exactly the part
+of the graph it reaches. The manifest's `steps` holds per step its version, code hash, parameters, fingerprint, outputs
+with their hashes, sources with their dates, the fallbacks it took (`pipeline/runlog.py`, recorded where they happen),
+network reads against cache hits, coverage gaps, status, owner, time. A failed step stops the build (`--keep-going` runs
+what does not depend on it); a step of a later stage whose input was never built is blocked, naming it.
 
-The manifest's `steps` holds per step: `version`, `code`, `params`, `fingerprint` and the `parts` it was made of,
-`layers`, `outputs` (file -> sha256 prefix), `out_hash`, `sources` (each with the date it was retrieved), `fallbacks`
-(see below), `notes`, `fetched` (network reads and cache hits), `status` (ok, not_applicable, failed, blocked, adopted,
-stale), `coverage` (sources that do not reach the tile), `ran_at`, `seconds`, and `owner` where the step's code is
-another lane's. The old `log` list is still appended.
+## Reading cost.json (the cost meter, pipeline/cost.py)
 
-Fallbacks are written where they happen (`pipeline/runlog.py`): `runlog.fallback("...")` from inside a fetch module
-lands in the step's record. Recorded today: the Planetary Computer DEM after a USGS failure and NASADEM after both, the
-USGS NAIP chips after a Planetary Computer failure, a LANDFIRE export answered on a later try, the DEM-only lidar
-products (and a tile kept DEM-only by an earlier run), an EPT point cloud chosen over another that only overlapped by
-its box, NHD replaced by OSM, Macrostrat replaced by SGMC, a Sentinel provider replaced or dates left out, places and
-territories skipped.
+`tiles/<id>/cost.json` is written after every step and at the end of every build:
+
+- `steps.<name>`: the step's last run. `started_at` / `ended_at` (UTC ISO), `wall_s`, `cpu_self_s` and `cpu_children_s`
+  (`resource.getrusage`, user + system, over the step: children are the lidar and Sentinel worker processes),
+  `downloads` (`{source: {bytes, requests}}`: every HTTP read through `requests`, the step's worker processes included,
+  counted by pipeline/netmeter.py), `cache` (`{source: {hits, misses}}`: reads answered from a cache against those that
+  went to the source), `disk_bytes` (the step's output files), `meshy` (`spent`, `queued`, `queued_credits_est`), `status`.
+- `stages.<name>`: the start and end of the stage's last run (its first step run to its last) and the sums of its steps.
+- `runs`: every build invocation, with each stage's start, end, the steps run and the steps skipped.
+- `client`: what a player downloads to enter the tile: every file under `client/` and the tables the viewer fetches
+  (manifest, perception, calendar, locomotion, games, species/species.json). An upper bound: the present-day texture is
+  fetched only on request. Reported apart from the build's disk.
+- `totals`: the sums over the steps' last runs.
+
+A rebuild from the caches shows its downloads near zero and its hits in `cache`. Not counted: reads GDAL makes itself
+(rasterio opening a Planetary Computer COG: the NAIP and DEM fallbacks, the Sentinel-2 looks); the Sentinel cache hits
+say whether the looks were read again. Claude's own work is not in the file: the stage timestamps are what
+`tools/token_meter.py` (on main, kept separate) joins to the session transcripts to price it. `--cost` prints a summary.
 
 ## Caches and retries
 
@@ -114,23 +145,114 @@ under `--force` (a newer 3DEP collection is not seen until they are deleted); th
 name, not the query; the weather cache is keyed by the day it ran (last year's weather is relative to the build date,
 so a rebuild on another day differs by design).
 
-## Anywhere on Earth (pipeline/regions.py)
+## Anywhere on Earth: no California in the defaults (pipeline/regions.py)
 
-`regions.COVERAGE` names, for every source, the region it serves and the global source that stands in. A step whose
-source does not reach the tile records the gap in `coverage`; the source's own answer still decides at run time.
+Two kinds of region. **Coverage**: `regions.COVERAGE` names, for every source, where it serves and the global source that
+stands in (the table under Base). **Natural regions**: `regions.NATURAL` (california, pacific_northwest, great_basin;
+boxes) says which tables were written for where. Every rule, table and test that was tuned for California is tagged so,
+and a tile elsewhere never falls back to it in silence:
 
-| needed | US source | global stand-in | state |
-|---|---|---|---|
-| bare-earth DEM | 3DEP (1 m lidar, 10 m seamless) | NASADEM 1" (30 m, 60 N-56 S; NASA, no restrictions) | **implemented** (`fetch_dem`, also the last fallback inside the US) |
-| point cloud | 3DEP EPT | none open | the lidar step is not applicable; the 5 m DEM carries the terrain |
-| imagery | NAIP | Sentinel-2 L2A true colour, 10 m (Copernicus terms: free, credit) | next: the seasons step already composes it; the erase step needs a 10 m variant |
-| streams | NHDPlus HR | channels.py already routes on the DEM; names and permanence from OSM waterways (ODbL, a source already); HydroRIVERS (CC BY 4.0) for large rivers | partly: fetch_hydro falls back to OSM |
-| communities | LANDFIRE EVT/BpS | ESA WorldCover 2021 10 m (CC BY 4.0) for the classes and cover, RESOLVE Ecoregions 2017 (CC BY 4.0) for the community; species_mix rules keyed on ecoregion and class | next (the largest gap) |
-| soils | SSURGO | SoilGrids 2.0 250 m (CC BY 4.0) | next |
-| geology | Macrostrat (global) | | done |
-| species, weather, seasons, OSM | global already | | done |
+- **Species-mix rules** carry a `region`. Every rule written before 2026-11-04 is California's; open water and snow and
+  ice hold anywhere; the North Pacific rules (Sitka spruce, western red-cedar and hemlock, silver fir, Douglas-fir and
+  western hemlock, mountain hemlock, subalpine parkland, alpine heath and fell-field, bedrock and scree, lowland and
+  montane riparian, avalanche chutes, lowland mixed forest) are the Pacific Northwest's. A tile matches only its own
+  region's rules.
+- **An unmatched community** is read from its name (`communities.named_species`, with a region's own reading first:
+  "alpine dwarf-shrubland" is red mountain heather in the Sierra, pink and white heather in the Olympics); failing that it
+  takes the tile's own species of the same habitat class (the tile pool); the foothill default is used in California
+  only. Outside, a community nothing can read is drawn bare and recorded as a fallback and a hand edit.
+- **The elevation zones** (gray pine to ponderosa to Jeffrey ...) and **the coast's oaks** are California's tables; the
+  Pacific Northwest has its own terrain factors (`TERRAIN_BY_REGION`: Sitka spruce and western hemlock in the valleys,
+  silver fir 600-1,200 m, mountain hemlock and subalpine fir to treeline, heath above), so one Olympic tile carries the
+  whole zonation from the Hoh's floor to Mount Olympus.
+- **The riparian zone rows and the ground layer** draw only species that grow in the tile's region (a record's
+  `regions`, from its card; the older records are California's, those that also grow in the Pacific Northwest listed in
+  `communities.ALSO_PNW`). The water step's rewrite of the riparian rows is re-filtered by the runner.
+- **The curated animals' range test** (Grinnell and Storer's Sierra life zones) applies in California only; elsewhere a
+  curated animal is present by its records alone.
+- **Permanent snow and ice** (the `ice` step: LANDFIRE Snow-Ice, OSM glaciers) is bare in the species mix whatever the
+  community; `terrain/ice.json` lists the ice's toes (where meltwater leaves it) for the water lane to seed streams from.
+  Seeding the meltwater streams is the water lane's (channels.py): not done here.
+- **Seams**: a tile's DEM and streams are checked against every built neighbour (`seams`; the two San Francisco cells:
+  the DEM steps 0.108 m across their seam against 0.106 m inside; five small streams of order 1-2 cross on one side only,
+  listed). For the two Hoh tiles at x = 439 km: both DEMs come from the same 3DEP mosaic on the same 5 m lattice, so they
+  agree; a creek routed in one tile and not the other fails the seam (the fix is the routing's: route with the
+  neighbour's DEM as a margin, the water lane).
 
-Copernicus GLO-30 was not used: its licence is its own (free, credit required), not CC.
+What remains California-shaped, named so it is not mistaken for general: the resource rasters (`habitat.RESOURCE_BASE`
+gives acorn mast by habitat class), the curated animals' calendar and perception tables (species_data.py), the
+client's own habitat-class fallback mix for a cell without a row (the species mix gives every land cell a row).
+
+## Species: research, the density target, assets by archetype
+
+### Research first (flora: plants; fauna: animals; pipeline/research.py)
+
+Every tile gets a ranked species list, written down with each species' kind, why it is on the list and its source:
+`species/plant_needs.json` (plants) and `species/animals.json` (animals). Kinds: tree, shrub, forb, grass, emergent,
+fern, moss, mammal, bird, reptile, amphibian, fish, invertebrate, and fungus (a place kept: GBIF's fungi are not
+fetched yet).
+
+- **Most populous, plants**: the cover each species holds in the tile's LANDFIRE communities (the community's cells x
+  the species-mix rule's weight for it, or the species its name names), then GBIF's 150 most-recorded vascular plants on
+  the tile (cached facet counts), the known ones first; each kind filled to the density target.
+- **Most populous, animals**: GBIF's most-recorded species per class on the tile (birds 150, mammals 80, reptiles,
+  amphibians, fish 30, land snails and slugs 20), domestic animals left out, each ranked by its share of its class's
+  records. Records follow observers (birds over mammals, the charismatic over the cryptic), so species are ranked within
+  their class, never across; a class's quota fills the target (birds 10, mammals 8, reptiles 2, amphibians 2, fish 1,
+  invertebrates 1).
+- **Every predator and scavenger**: from EltonTraits 1.0 (Wilman et al. 2014, Ecology 95:2027; birds and mammals
+  worldwide; downloaded once into `pipeline/_cache/eltontraits/`, read as data). A predator takes half or more of its
+  diet from vertebrates, a scavenger a tenth or more from carrion; a name EltonTraits files differently falls back to its
+  genus' and then its family's means (elk is its *Cervus elaphus*). Every predator and scavenger with 3 or more records
+  on the tile is listed whatever its rank.
+- **Licences**: EltonTraits is CC BY 4.0 (Ecological Archives' default; the record states no copyright restrictions),
+  credited in the tile's sources. GBIF is read as facet counts (numbers); occurrence records stay pipeline-only
+  (`for_clients: false`), and only CC0 and CC BY records place anything a client sees (the density prior, the sequoia
+  groves). No CC BY-NC data is shipped: the audit step fails the build if a client layer is marked otherwise.
+
+### The density target
+
+The home tile is the bar (research.TARGET): 21 trees, 23 shrubs, 26 ground plants and 22 animals, each with a role. A
+tile's list is filled to at least that per kind, from the top of each class; `plant_needs.json` `summary.meets_target`,
+`animals.json` `meets_target` and the registry report's `density` say whether it got there, and how many have models.
+
+### Assets by archetype
+
+Every kind is a parameter set on a shared generator or rig; a species is a file, not code.
+
+| archetype | generator / rig | what is automatic | what needs hands | cost per species |
+|---|---|---|---|---|
+| tree, shrub | `treegen.js` from a species record; `pipeline/plantgen.py` builds the record from a trait card on a template of its genus or family | the record, its age classes (the template's, rescaled), impostors, the species mix's weights, stand-ins until it exists | the trait card (an agent's research: heights, crown outline, colours, habitat, relations, sources) and a lineup review | ~12 k Claude tokens and ~1 min per card (49 cards: 584 k tokens over three agent runs); no credits; seconds to grow |
+| forb, grass, emergent, fern | `forbs.js`, `grass.js`, `emergents.js` from the record's `ground` block (plantgen, on a template of the same form) | the record, the ground layer's weights from its habitat block | the card; a fern habit (drawn as a rosette forb today) | as above; the forb atlas holds 24 species (raised from 16 for the Olympic ferns) |
+| grown age classes | `tools/grow_species.mjs` from a `growth` block (height and dbh by age) | nothing yet: only valley, blue and live oak have growth blocks | a growth block per card (Silvics curves): the next step, not done here | |
+| mammal (quadruped) | a mesh fitted to `tools/rig_quadruped.py`'s skeleton, `gait.js` / `legs.js` | traits (`library/animals/traits/`): diet and mass (EltonTraits), senses (the class's ranges scaled by size), size, locomotion (`locomotion.py` from the taxon tree and the body); the Meshy queue entry and its stand-in | the mesh (Meshy, then a review and the rig fit), the calendar, a voice | ~30 credits (a preview 20, a refine 10) |
+| rodent, lagomorph | the rodent part rig; the hop gait (gait.js hopStep) for lagomorphs | as above | as above | ~30 credits |
+| bird | the bird part rig, flierControl | as above | as above | ~30 credits |
+| reptile, amphibian | the reptile template (amphibians hop on it) | as above | the mesh; snakes need a spine-wave rig (none yet) | ~25 credits |
+| gastropod (banana slug) | none: a procedural body of rings and a foot wave | traits (a slug's foot wave: millimetres a second) | the procedural body | no credits |
+| fish | none yet: a body-wave swim rig | traits | the rig | ~25 credits |
+| fungus | none | a place in the kinds | everything | |
+
+### The registry (pipeline/registry.py)
+
+`library/registry.json` and each tile's `species/registry.json`, built by scanning (never by hand): plant records and
+cards, animal entries, generated traits, the leg engine (the GLB's `extras.skin.legs`), voices (`sound.js`), behaviour
+tables (`species_data.py`), the plants' relations (a herbivore's diet), the locomotion tree, playable bodies, and every
+tile's species mix, presence, research and queues.
+
+| level | plants (trees, shrubs; ground plants alike) | animals |
+|---|---|---|
+| 0 none | no record: a stand-in species is drawn in its place | no model (generated traits may exist; a stand-in is recorded, nothing drawn) |
+| 1 stand-in look | a record generated with only its own size and colour on the template's form | drawn with another species' mesh |
+| 2 own model | its own crown, branching and foliage (a generated record stays here until its card carries a lineup `review`) | its own mesh, not animated |
+| 3 grown / rigged | three or more age classes and four seasons' colours | rigged and animated (part rig, skin and clips, or client code) |
+| 4 full | habitat and relations | behaviour (senses, diet, calendar) and a voice |
+
+### Hand edits: the goal's measure
+
+Each tile's registry report lists `hands`: the edits a person or an agent must still make for that tile, by kind (a
+trait card to write, a community to give a lexicon phrase or a rule, a mesh to make and review, generated traits to
+review). A tile that grows without edits has none but the Meshy approvals.
 
 ## Work tiles needed that the step list did not do
 
@@ -175,46 +297,6 @@ a layer the step owns is missing. MISSING: never ran. n/a: not applicable.
 | registry, audit | MISSING (new) | | | | | | |
 
 The full table, with the commits behind each "code" flag, is in each manifest after `--adopt`, and `--status` prints it.
-
-## Species: needs, the registry and fidelity
-
-### What a tile needs (pipeline/needs.py, the plants step)
-
-The species a tile needs are every species that its LANDFIRE communities name (`pipeline/communities.py` LEXICON reads
-"Mediterranean California Red Fir Forest" as red fir, "California Coastal Closed-Cone Conifer Forest" as Monterey pine,
-Monterey cypress and bishop pine), every species the matching species-mix rule weights, every plant GBIF has 10 or more
-records of on the tile that the library, a trait card or the lexicon knows, and the species placed by their records
-(giant sequoia in its groves: `species/localized.json`, CC0 and CC BY records only). A community the lexicon cannot read
-and no rule matches is listed as `unread`: the cue to extend the lexicon for a new region.
-
-For each need: a library record, or a trait card (`library/plant_cards/<id>.json`) from which the step grows the record
-now (`pipeline/plantgen.py`: the card's heights, crown outline, leaf and bark colours by season, habitat and relations
-on the branching of a template species of the same genus or family; free, automatic, re-embedded into treegen.js), or
-neither, in which case it is queued for a card and the species mix draws its stand-in (`communities.stand_in`: the
-card's own stand-in, else the same genus, else the same family and leaf type). The species mix records every
-substitution (`species_mix.json` `substitutions`).
-
-### The registry (pipeline/registry.py, library/registry.json, tiles/<id>/species/registry.json)
-
-Built by scanning, never by hand: the plant records and cards, the animal entries (mesh tiers, source, Meshy job and
-credits, rig and clips, the leg engine read from the GLB's `extras.skin.legs`), the voices in `client/src/sound.js`, the
-behaviour tables in `species_data.py`, the plants' `relations` (a herbivore's diet), the locomotion tree, the playable
-bodies, and every tile's species mix, presence table, needs and GBIF inventory. Keyed by scientific name.
-
-Fidelity:
-
-| level | plants (trees, shrubs; ground plants alike) | animals |
-|---|---|---|
-| 0 none | no record: a stand-in species is drawn in its place | not drawn |
-| 1 stand-in look | a record generated with only its own size and colour on the template's form | drawn with another species' mesh |
-| 2 own model | its own crown, branching and foliage (hand-written, or generated with its own outline or leaf; a generated record stays at 2 until it is reviewed in the lineup and the card carries a `review`) | its own mesh, not animated |
-| 3 grown / rigged | three or more age classes and four seasons' colours (impostors are baked by the client for every tree and shrub) | rigged and animated (part rig, skin and clips, or client code) |
-| 4 full | habitat and relations (where it stands, who eats it) | behaviour (senses, a diet, a calendar) and a voice |
-
-Meshy is never run by the build: animals GBIF records on a tile with no library entry are queued in the tile report and
-in `library/registry.json` `meshy.queued`, with an estimate (a "latest" preview 20 credits and a refine 10; rigging by
-our own tools) and whether it fits what is left of the 1,000 credits (420 spent, from the jobs' `job.json`). Past the
-budget is Aaron's call.
 
 ## Proof
 
@@ -261,41 +343,40 @@ It loads in the viewer with no console error.
 Nothing differs that the inputs do not explain: the build is repeatable up to its time-relative sources, which are now
 cached (GBIF) or dated (Sentinel years, the weather period).
 
-## The registry today (2026-11-04)
+## The registry and the five tiles today (2026-11-04, after the four stages)
 
-126 species: 76 at level 4, 21 at 3, 29 at 2 (the 29 generated from cards, held until reviewed), none at 1 or 0
-(bishop pine is needed on the San Francisco cells and has no card: drawn as Monterey pine).
+`library/registry.json`: 253 species. 77 at level 4, 21 at 3, 32 at 2 (the generated plant records, held until reviewed),
+none at 1, and 123 at 0: the species the research lists and nothing has made yet (a card to write for a plant; a mesh to
+make for an animal, most with generated traits already). By kind at 0: 69 birds, 29 mammals, 5 amphibians, 4
+invertebrates (the slugs), 6 trees, 6 shrubs, 3 forbs, 1 grass. 20 Olympic trait cards wait for the Hoh tiles to grow
+them. Meshy: 420 of 1,000 credits spent; 107 animals queued across the tiles (~3,065 credits est.); nothing run.
 
-| kind | 0 | 1 | 2 | 3 | 4 |
-|---|---|---|---|---|---|
-| tree | 0 | 0 | 16 | 10 | 11 |
-| shrub | 0 | 0 | 13 | 0 | 23 |
-| grass / forb / emergent | 0 | 0 | 0 | 5 | 28 |
-| mammal | 0 | 0 | 0 | 4 | 6 |
-| bird | 0 | 0 | 0 | 1 | 8 |
-| reptile | 0 | 0 | 0 | 1 | 0 |
+| tile | plants 0/1/2/3/4 | animals 0/1/2/3/4 | trees / shrubs / ground with a model (target 21 / 23 / 26) | animals listed (target 22) | predators / scavengers | hand edits |
+|---|---|---|---|---|---|---|
+| utm10n_731_4235 Calaveras | 24/0/15/11/59 | 34/0/0/4/14 | 28 / 31 / 26 | 52 (18 with a model) | 19 / 10 | 57: 24 trait cards, 33 meshes |
+| utm11n_267_4175 Yosemite | 22/0/22/12/59 | 40/0/0/3/14 | 35 / 31 / 27 | 57 (17) | 21 / 17 | 77: 22 cards, 39 meshes, 16 trait reviews |
+| utm11n_270_4180 Yosemite | 22/0/22/12/59 | 36/0/0/3/14 | 35 / 31 / 27 | 53 (17) | 19 / 16 | 61: 22 cards, 35 meshes, 4 trait reviews |
+| utm10n_540_4170 San Francisco | 18/0/15/11/60 | 68/0/0/5/13 | 26 / 33 / 27 | 86 (18) | 46 / 18 | 134: 18 cards, 1 community, 67 meshes, 48 trait reviews |
+| utm10n_540_4180 San Francisco | 18/0/17/11/60 | 69/0/0/5/13 | 27 / 34 / 27 | 87 (18) | 48 / 19 | 92: 18 cards, 1 community, 68 meshes, 5 trait reviews |
 
-Per tile, plants (levels 0-4) and animals present (levels 0-4), animals queued for Meshy:
+Every tile meets the plant targets with modelled species; every tile lists more than 22 animals but models 17-18 of
+them, so the animal target waits on meshes (Meshy credits, Aaron's call). The hand edits are what "grow a new tile
+without many edits" measures: on Calaveras, a tile built only by the pipeline, 57, all of them a card or a mesh; no
+community needed a rule and no code changed for the tile's species (the two bugs it found were fixed in the pipeline).
 
-| tile | plants | animals | Meshy queue |
-|---|---|---|---|
-| utm11n_267_4175 | 0 / 0 / 19 / 11 / 59 | 0 / 0 / 0 / 3 / 14 | 69 (2,070 credits est.) |
-| utm11n_270_4180 | 0 / 0 / 19 / 12 / 59 | 0 / 0 / 0 / 3 / 14 | 68 (2,040) |
-| utm10n_540_4170 | 1 / 0 / 15 / 11 / 59 | 0 / 0 / 0 / 5 / 13 | 66 (1,980) |
-| utm10n_540_4180 | 1 / 0 / 16 / 11 / 59 | 0 / 0 / 0 / 5 / 13 | 63 (1,890) |
-| utm10n_731_4235 | 0 / 0 / 14 / 11 / 59 | 0 / 0 / 0 / 4 / 14 | 48 (1,440) |
-
-Meshy: 420 of the 1,000 credits spent, 580 left; 139 species queued across the tiles (4,170 credits est.), the first 19
-by records within what is left (Anna's hummingbird, song sparrow, white-crowned sparrow, dark-eyed junco, black phoebe,
-American robin, western gull, house finch, ...). Nothing was generated: that is Aaron's call.
+**What a fresh tile costs** (Calaveras, the first runs of each step): about 1.5 h of wall time, 53 min of it the lidar
+step streaming 3.76 G points with 10 workers, 21 min Sentinel-2 (860 dates), 2.5 min GBIF; about 1 GB on disk (88 MB of
+it raw-fetch cache); 75 MB a player downloads to enter it (the largest: lidar_micro 14 MB, terrain_detail 10 MB, the
+ground texture 8 MB). A rebuild from the caches: 6 min, 30 MB of downloads (the Sentinel STAC search), 1,436 cache hits
+against 26 misses. Its trait cards: ~12 k Claude tokens each; its animals: ~30 Meshy credits each.
 
 ## Next
 
 - The global vegetation source (WorldCover + RESOLVE ecoregions) and a Sentinel-2 imagery step: the two gaps that stop
-  a tile outside the US at `naip` and `veg`.
-- The riparian zone rows (water lane) and the ground layer (grasses and forbs) are still foothill-only: Yosemite's high
-  streams draw alder and cottonwood (the elevation zones do not reach the zone rows), its meadows foothill annuals.
-- Elevation zones are set for the central Sierra (37-38 N); a latitude shift (about 100 m per degree) belongs in them.
-- Cache keys for Overpass (the query) and the lidar index (`--force` should clear it).
-- games.json carries its build time, so a derive re-run changes its hash and re-runs erase and substrate behind it.
-- NHD caching in fetch_hydro (water lane's file).
+  a tile outside the US at `naip` and `landcover`.
+- Grown age classes by default: a `growth` block on every card, so `tools/grow_species.mjs` grows each species' classes.
+- With the water lane: meltwater from the ice's toes, streams continuous across a seam, elevation-aware riparian rows.
+- forbs.js choosing a tile's 24 forbs by its ground layer; region-neutral habitat classes and resource rasters.
+- Fungi: GBIF's fungi into the research (the kind is reserved), and an archetype to draw them.
+- Cache keys for Overpass (the query) and the lidar index; games.json's build time out of its hash.
+- The San Francisco cells' lidar re-streamed (`--force lidar`) so their crowns step can run.

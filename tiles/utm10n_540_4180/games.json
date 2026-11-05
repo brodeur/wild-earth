@@ -1,5 +1,5 @@
 {
- "generated": "2026-11-05T05:40:25Z",
+ "generated": "2026-11-05T07:00:24Z",
  "tile_id": "utm10n_540_4180",
  "archetypes": {
   "gather": "find the resource's hotspots, feed, keep an eye out: the predators listed hunt here; the competitors eat the same cells",
@@ -3946,6 +3946,74 @@
      "summer",
      "fall"
     ]
+   ],
+   [
+    "canis_latrans",
+    "rubus_parviflorus",
+    "berries",
+    "browse",
+    [
+     "summer"
+    ]
+   ],
+   [
+    "cyanocitta_stelleri",
+    "rubus_parviflorus",
+    "berries",
+    "browse",
+    [
+     "summer"
+    ]
+   ],
+   [
+    "odocoileus_hemionus",
+    "rubus_parviflorus",
+    "browse",
+    "browse",
+    [
+     "spring",
+     "summer"
+    ]
+   ],
+   [
+    "odocoileus_hemionus",
+    "populus_trichocarpa",
+    "browse",
+    "browse",
+    [
+     "spring",
+     "summer"
+    ]
+   ],
+   [
+    "odocoileus_hemionus",
+    "acer_circinatum",
+    "browse",
+    "browse",
+    [
+     "spring",
+     "summer",
+     "winter"
+    ]
+   ],
+   [
+    "cyanocitta_stelleri",
+    "acer_circinatum",
+    "seeds",
+    "grass_forbs",
+    [
+     "fall"
+    ]
+   ],
+   [
+    "odocoileus_hemionus",
+    "polystichum_munitum",
+    "leaves",
+    "grass_forbs",
+    [
+     "winter",
+     "spring"
+    ]
    ]
   ],
   "cover": [
@@ -4396,6 +4464,34 @@
    [
     "sylvilagus_bachmani",
     "vaccinium_ovatum"
+   ],
+   [
+    "odocoileus_hemionus",
+    "rubus_parviflorus"
+   ],
+   [
+    "odocoileus_hemionus",
+    "populus_trichocarpa"
+   ],
+   [
+    "buteo_jamaicensis",
+    "populus_trichocarpa"
+   ],
+   [
+    "corvus_corax",
+    "populus_trichocarpa"
+   ],
+   [
+    "odocoileus_hemionus",
+    "acer_circinatum"
+   ],
+   [
+    "cyanocitta_stelleri",
+    "acer_circinatum"
+   ],
+   [
+    "odocoileus_hemionus",
+    "polystichum_munitum"
    ]
   ]
  },
@@ -6748,6 +6844,7 @@
       "lepus_californicus"
      ],
      "plants": [
+      "acer_circinatum",
       "adenostoma_fasciculatum",
       "arctostaphylos_manzanita",
       "arctostaphylos_patula",
@@ -6963,6 +7060,7 @@
       "eschscholzia_californica",
       "lupinus_bicolor",
       "nasturtium_officinale",
+      "polystichum_munitum",
       "stipa_pulchra",
       "trifolium_willdenovii",
       "urtica_dioica",
@@ -7239,6 +7337,7 @@
      "plants": [
       "abies_concolor",
       "abies_magnifica",
+      "acer_circinatum",
       "acer_macrophyllum",
       "alnus_rhombifolia",
       "ceanothus_cordulatus",
@@ -7257,9 +7356,11 @@
       "pinus_contorta",
       "populus_fremontii",
       "populus_tremuloides",
+      "populus_trichocarpa",
       "quercus_agrifolia",
       "quercus_vacciniifolia",
       "rosa_californica",
+      "rubus_parviflorus",
       "rubus_ursinus",
       "salix_exigua",
       "salix_laevigata",

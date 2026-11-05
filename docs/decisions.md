@@ -4627,3 +4627,46 @@ foothill broadleaf woodland and now draws fir and pine; the Marin headlands drew
 flowering coastal scrub. Not done: the generated records' lineup reviews; the riparian rows and the ground layer at
 elevation; a global vegetation source.
 
+## 2026-11-04 (later): four stages, a cost meter, research first, and no California in the defaults
+
+Four requests from the project brief, relaying Aaron: the pipeline in four stages (base, flora, fauna, games), each
+runnable on its own and in order; no California assumptions, since the next test is two adjacent Olympic tiles from the
+Hoh Rain Forest to Mount Olympus (ice, a full zonation in one tile, a shared seam), built by the brief's session after
+the merge; a cost meter (time, downloads, disk, client bytes, Meshy credits, stage timestamps); and a species pipeline
+that begins with research (the most populous species and every predator and scavenger, to at least the home tile's
+density, assets by archetype, hand edits counted). docs/pipeline.md is rewritten around the stages.
+
+- **Landcover in the base stage**, against the brief's list (which put LANDFIRE vegetation and habitat in flora): the
+  imagery erasure, the substrate, the ground's outcrop and the terrain textures read it, and a stage may not read a later
+  one. Rejected: moving erasure and substrate to flora (they are the ground, not what grows on it), and fetching LANDFIRE
+  twice. Flora reads landcover for its species.
+- **`derive` split** into terrain (base), species_mix (flora), resources (fauna) and games: one step that touched every
+  stage could not be staged. Old names (`veg`, `derive`) still work with `--steps`.
+- **Regions as tags, not rule sets per place**: every species-mix rule, substitution table, lexicon reading and range
+  test carries the natural region it was written for (regions.NATURAL); a tile elsewhere does not match it. An
+  unmatched community is read from its name, then drawn from the tile's own species of the same habitat class, and only
+  in California from the foothill default; elsewhere a community nothing reads is drawn bare and recorded (a fallback and
+  a hand edit). Rejected: a global default mix (it would be the foothills again under another name).
+- **EltonTraits for diet and body mass**, not a hand table: 15,000 birds and mammals, CC BY 4.0 (Ecological Archives'
+  default; not CC0, as the brief assumed), so every predator and scavenger GBIF records anywhere is found without a
+  person. Thresholds: half the diet from vertebrates makes a predator (30 % called the Douglas squirrel one), a tenth from
+  carrion a scavenger.
+- **Generated animal traits are data, not species_data code**: `library/animals/traits/<id>.json` (diet, senses, size,
+  locomotion from locomotion.py), for the registry and a later client; the curated `species_data.py` animals are
+  untouched, and nothing new is drawn until a mesh is adopted.
+- **The cost meter wraps requests in every process** (netmeter.py, through pipeline/__init__.py when a step sets
+  WE_NETMETER_DIR): the lidar and Sentinel workers are separate processes. GDAL's own COG reads are not counted (no
+  hook); their caches stand in. Claude's tokens are not metered here: the stage timestamps are joined to the transcripts
+  by tools/token_meter.py, kept separate as the brief asked.
+- **Seams checked, not fixed**: the seams step fails a tile whose DEM steps across a shared edge or whose stream of order
+  3+ crosses on one side only. The two San Francisco cells pass (DEM step 0.108 m against 0.106 m inside). Making streams
+  continuous is the routing's (the water lane): routing each tile with its neighbour's DEM as a margin.
+- **Ice as a base product** (LANDFIRE Snow-Ice and OSM glaciers): bare in the species mix; its toes listed for the
+  water lane's meltwater; no client material for it yet.
+- **The Olympic species as cards only**: 20 cards (Sitka spruce, western hemlock, western redcedar, Pacific silver fir,
+  subalpine fir, red alder, vine maple, black cottonwood, salmonberry, red huckleberry, devil's club, dwarf Oregon grape,
+  thimbleberry, pink and white mountain heather, sword fern, deer fern, redwood sorrel, subalpine lupine, green fescue),
+  checked in the lineup and then their records removed, so the Hoh build grows them itself (the automatic path the test
+  is about). The forb atlas raised from 16 to 24 species so the ferns can be drawn. A generator fix found by them: an
+  evergreen card on a deciduous template inherited its bare winter months.
+

@@ -183,6 +183,13 @@ sequenced; Parked is in the brief but deliberately not started.
   Weak: generated records are not yet reviewed in the lineup (held at level 2); the riparian zone rows and the ground
   layer are still foothill-only at Yosemite's elevations; a tile outside CONUS stops at naip and veg.
 
+- Four stages, a cost meter, research first, no California in the defaults, 2026-11-04 (later; docs/pipeline.md):
+  `--stage base|flora|fauna|games|all`; `tiles/<id>/cost.json` and `--cost`; ranked species lists per tile (cover,
+  GBIF records, every predator and scavenger from EltonTraits) to the home tile's density; generated animal traits;
+  region-tagged rules with the Pacific Northwest's own (the whole Olympic zonation) and no silent foothill fallback;
+  permanent ice; seams with built neighbours; 20 Olympic trait cards for the Hoh test (built after the merge by the
+  brief's session).
+
 ## Next: the pipeline outside the US and the species queue (2026-11-04)
 
 1. A global vegetation step: ESA WorldCover 2021 (CC BY 4.0) for the classes and cover, RESOLVE Ecoregions 2017
@@ -194,6 +201,14 @@ sequenced; Parked is in the brief but deliberately not started.
    meadow sedges and perennial grasses.
 4. The Meshy queue (`library/registry.json` meshy.queued): pick the first animals for Aaron's go-ahead; the
    remaining budget is 580 credits.
+5. Grown age classes by default: a `growth` block (height and dbh by age) on every trait card, so `tools/grow_species.mjs`
+   grows each species' age classes (today only valley, blue and live oak).
+6. With the water lane: meltwater streams seeded from the ice's toes (`terrain/ice.json`), and streams continuous across
+   a seam (route each tile with its neighbour's DEM as a margin).
+7. The forbs per tile: forbs.js draws the first 24 forbs of the library; choose a tile's 24 by its ground layer.
+8. Region-neutral habitat classes (alpine heath falls in "chaparral") and resources (acorn mast by habitat class).
+9. The San Francisco cells' lidar re-streamed (`--force lidar`): their products predate multi_1m and lidar_micro, so
+   their crowns step fails loudly until then.
 
 ## Next: the visual pass, in order of effect per hour
 
