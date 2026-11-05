@@ -53,7 +53,12 @@ const wrap = a => Math.atan2(Math.sin(a), Math.cos(a));
 const clamp = (x, a, b) => x < a ? a : x > b ? b : x;
 const damp = (a, b, k, dt) => b + (a - b) * Math.exp(-k * dt);
 
-export const RATE = 0.0127;                 // m/s: half an inch a second
+// The pace (Aaron, 2026-11-04: "lets increase the dig speed of all animals, and make it continuous rather than chunks"):
+// every digger at DIG_SPEED times the first pace, half an inch a second; the vole now 5 cm/s (20 s a metre), the brush
+// rabbit 10, the coyote's pit 5 cm deeper a second, the jackrabbit's form 3.2. The face is drawn where it is, not where
+// the last 2 cm step left it (digFrom: faceAhead).
+export const DIG_SPEED = 4;
+export const RATE = 0.0127 * DIG_SPEED;     // m/s
 export const R_TUBE = 0.03, R_CHAMBER = 0.10, CHAMBER_NEAR = 0.13, WIDEN_STEP = 0.025;
 const R_MAX = R_CHAMBER;
 const VIS_OPEN = 0.6;   // m: Dig.visPass
@@ -78,7 +83,7 @@ const MAX_S = 1200, MAX_N = 1500, MAX_P = 120, MAX_H = 300, MAX_R = 60;   // seg
 export const DIGGERS = {
   microtus_californicus: { kind: 'tunnel', r: R_TUBE, rate: RATE, depth: 0.5, fit: 0.025, crawl: [0.04, 0.058] },
   sylvilagus_bachmani: { kind: 'tunnel', r: 0.065, rate: 2 * RATE, depth: 0.32, nest: 0.11, fit: 0.055, crawl: [0.137, 0.137] },
-  lepus_californicus: { kind: 'form', r: 0.15, r0: 0.08, depth: 0.07, rate: 0.008 },
+  lepus_californicus: { kind: 'form', r: 0.15, r0: 0.08, depth: 0.07, rate: 0.008 * DIG_SPEED },
   canis_latrans: { kind: 'pit' },
 };
 const BURROW = DIGGERS.sylvilagus_bachmani, FORM = DIGGERS.lepus_californicus;
@@ -990,11 +995,12 @@ export class Dig {
     }
     // the dig: from the node the body stands at, the way it faces, down the slope it looks along
     const at = T.t >= 1 ? B : T.t <= 0 ? A : null;
-    if (dig && at && (at === B || T.a === T.b || k.fwd <= 0)) this.digFrom(at, dt); else { this.digging = 0; gc.digging = 0; }
+    if (dig && at && (at === B || T.a === T.b || k.fwd <= 0)) this.digFrom(at, dt); else { this.digging = 0; gc.digging = 0; if (this.ahead) this.faceAhead(null, this.pd); }
     if (rest) this.restAt(at, spec);
     // the body on the tunnel's floor, pitched with the slope; its camera on the centreline behind (camera())
     const Q = this.axisAt(T, this._ax ||= new THREE.Vector4());
     P.set(Q.x, Q.y - Q.w * 0.85, Q.z);
+    if (this.ahead && T.t >= 1 && T.b === this.ahead.id) { P.x += this.ahead.x; P.y += this.ahead.y; P.z += this.ahead.z; }   // standing at the drawn face
     if (en && en.k < 1) { en.k = Math.min(1, en.k + dt / ENTER_BLEND); P.lerpVectors(en.from, P, en.k * en.k * (3 - 2 * en.k)); }   // from where it stood
     // the body kept inside the bore (Aaron, 2026-11-04): spec.crawl, the crawling body's width and height at size 1 (m),
     // narrowed and lowered to fit the tube's inside (less a margin) from the floor it stands on, eased in going down
@@ -1082,6 +1088,22 @@ export class Dig {
     }
     return '';
   }
+  // The face drawn where it is (2026-11-04): the world steps the face 2 cm at a time (STEP, the shared events), so the
+  // tunnel's end and the body on it would jump; between steps the player's own leaf node is drawn D.face further along
+  // the way it digs (its segment rewritten with the node moved there and put back: the world is unchanged) and the body
+  // stands there too (tunnelStep reads this.ahead). Drawing only: a step, a stop or a turn into a new node rewrites the
+  // segment where the world has it. Other players' tunnels still grow in 2 cm steps, now about 2.5 a second.
+  faceAhead(n, D) {
+    const a = this.ahead;
+    if (a && (!n || a.id !== n.id)) { const o = this.node(a.id); if (o) for (const sid of o.segs) { const s = this.world.byId.get(sid); if (s) this.writeSeg(s); } this.ahead = null; }
+    if (!n || n.hole || n.segs.length !== 1 || !(D.face > 1e-4)) { if (this.ahead && n) { for (const sid of n.segs) { const s = this.world.byId.get(sid); if (s) this.writeSeg(s); } } this.ahead = null; return; }
+    const d = this.digDir(n, D.yaw, D.pitch, D), k = Math.min(D.face, STEP);
+    const x = n.x, y = n.y, z = n.z;
+    n.x += d.x * k; n.y += d.y * k; n.z += d.z * k;
+    const s = this.world.byId.get(n.segs[0]); if (s) this.writeSeg(s);
+    n.x = x; n.y = y; n.z = z;
+    const e = this.ahead ||= { id: null, x: 0, y: 0, z: 0 }; e.id = n.id; e.x = d.x * k; e.y = d.y * k; e.z = d.z * k;
+  }
   // the player's vole digging from node n, the way it faces and looks
   digFrom(n, dt) {
     const gc = this.gc, f = gc.flight, T = this.tun, D = this.pd, spec = DIGGERS[gc.code] || DIGGERS.microtus_californicus;
@@ -1097,6 +1119,7 @@ export class Dig {
     D.at = n.id; D.prev = T.a === T.b ? null : (T.a === n.id ? T.b : T.a); D.yaw = f.yaw; D.pitch = f.pitch;
     const res = this.digCore(D, dt, false);
     if (D.at !== n.id) { T.prev = D.prev; T.a = D.prev ?? D.at; T.b = D.at; T.t = 1; }
+    this.faceAhead(res ? null : this.node(D.at), D);
     if (res === 'join') gc.say(D.joinR >= R_CHAMBER ? 'a chamber' : 'the tunnel joins; the room widens');
     if (res === 'surface') { gc.say('out into the light: W climbs out'); this.broke = true; this.digging = 0; gc.digging = 0; }
   }

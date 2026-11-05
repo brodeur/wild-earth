@@ -17,7 +17,7 @@ browser harness used to verify it: `scratch/dig_harness.js`.
 
 **As the vole.** Hold **Q** (or **E** when there is nothing to eat under the nose) standing on open ground: the vole
 starts a hole at its nose and digs down into it. From then it is in the tunnel. Held, the dig drives the face on at
-**0.5 inch a second (1.27 cm/s)**: a metre takes 80 seconds, a slow and deliberate act; the body is in the digging
+(2026-11-04: four times faster, 5.1 cm/s for the vole, 10.2 for the brush rabbit, 5.1 cm a second deeper for the coyote's pit, 3.2 for the jackrabbit's form; Aaron: "lets increase the dig speed of all animals, and make it continuous rather than chunks". Below, the first pace.) **0.5 inch a second (1.27 cm/s)**: a metre takes 80 seconds, a slow and deliberate act; the body is in the digging
 pose (nose into the face, the fore feet scrabbling, dirt thrown back). The face goes the way the vole faces and looks:
 the drag's pitch tilts it down or up (within about 34 degrees); from the surface it goes steeply in until it is a
 tunnel's width under; as deep as a vole goes (50 cm) it will only go level or up. While digging it turns no tighter
@@ -357,3 +357,25 @@ The server holds the tunnels already. Still to do: the animals themselves shared
 by everyone, as positions from the host, `docs/multiplayer.md`); the other players' bodies drawn as their species
 underground; a check on the server that a dig event's position is near the digger (it trusts the client now, as the
 acorn game trusts an acorn key); the season worlds' state flow (a tunnel dug in fall is not in the spring world).
+
+## Faster and continuous (2026-11-04)
+
+Aaron: "lets increase the dig speed of all animals, and make it continuous rather than chunks".
+
+**Speed.** `DIG_SPEED = 4` multiplies every digger's rate (`RATE` and the jackrabbit form's rate). A vole now digs a
+metre in 20 s.
+
+**Continuity.** The shared world still steps the face 2 cm at a time: those are the events the server and other
+players see, now about 2.5 a second. Between steps, the player's own tunnel end is drawn where the face really is, and
+the body stands there too (`faceAhead`). The segment is rewritten with its leaf node moved D.face along the dig
+direction, then the node is put back, so the world itself is unchanged. A step, a stop or a new node redraws it where
+the world has it.
+
+**Measured** as a vole on the home tile over 10 s of digging: a median of 5.1 cm/s, and no frame moved more than
+0.05 cm beyond the rate times the frame's time. Before, the body jumped 2 cm at each step.
+
+**Not changed:**
+- Other players' tunnels grow in 2 cm steps.
+- The coyote's pit deepens in 1 cm steps, now 5 a second.
+- The tube union is still the shader's neighbour test. That is why joins and loops can still look wrong: the carving
+  rework was proposed, not built.
