@@ -4,6 +4,7 @@ import { seasonOfDate } from './season.js';
 import { pointInTileId } from './goto.js';
 import { HubStub } from './hubStub.js';
 import { MapGlobe, TileOutline, latLonToXYZ, xyzToLatLon } from './mapGlobe.js';
+import { Relief } from './relief.js';
 import { Geocoder, MIN_CHARS } from './geocode.js';
 import { avatarFor } from './social.js';
 export { latLonToXYZ };
@@ -202,6 +203,15 @@ const DOT_FRAG = /* glsl */`
 const PIN_ICON = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 21s-6-5.4-6-11a6 6 0 0 1 12 0c0 5.6-6 11-6 11z"/><circle cx="12" cy="10" r="2.2"/></svg>';
 const SEARCH_ICON = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="M20 20l-3.5-3.5"/></svg>';
 
+// The Layers menu's choices, kept per viewer: town names off by default (the world has no towns), waters and peaks on.
+const LAYERS_KEY = 'wild-earth:map-layers';
+function loadLayers() {
+  const d = { places: false, nature: true };
+  try { const v = JSON.parse(localStorage.getItem(LAYERS_KEY) || 'null'); if (v && typeof v === 'object') return { places: !!v.places, nature: v.nature !== false }; } catch {}
+  return d;
+}
+function saveLayers(v) { try { localStorage.setItem(LAYERS_KEY, JSON.stringify(v)); } catch {} }
+
 export class TitleScreen {
   // root: #opening; renderer: the page's; index: tiles/index.json; tileId: a hint for the facing tile (?tile=), else
   // the last tile played, else the first; pending: a { lat, lon } to arrive over (its tile faces, if built); hub:
@@ -220,6 +230,7 @@ export class TitleScreen {
     this.peopleAt = null;        // multiplayer.js: tileId -> [{ id, name, state }] the players known to be there or coming
     this.user = null; this.config = null;
     this.hubParam = hub;
+    this.layers = loadLayers();   // the Layers menu: which names the map draws (per viewer, localStorage)
     this.mode = 'global';        // the list: every place ('global') or the places in view ('visible')
     this.query = ''; this.found = null; this.pin = null;
     this.places = index.tiles.map(t => {
@@ -292,12 +303,25 @@ export class TitleScreen {
           <div class="tt-progress" role="progressbar" aria-label="loading the place" aria-valuemin="0" aria-valuemax="100"><i></i></div>
         </div>
         <p class="tt-attrib">Map <a href="https://openfreemap.org" target="_blank" rel="noopener">OpenFreeMap</a> · <a href="https://www.openmaptiles.org/" target="_blank" rel="noopener">© OpenMapTiles</a> · data <a href="https://www.openstreetmap.org/copyright" target="_blank" rel="noopener">© OpenStreetMap contributors</a> · search <a href="https://photon.komoot.io" target="_blank" rel="noopener">Photon</a></p>
+        <div class="tt-layers"><button type="button" class="tt-layersbtn" aria-expanded="false">Layers</button>
+          <div class="tt-layerlist" hidden>
+            <label><input type="checkbox" data-layer="places"> Town and city names</label>
+            <label><input type="checkbox" data-layer="nature"> Water and peak names</label>
+          </div></div>
         <div class="tt-fade" aria-hidden="true"></div>
       </div>`;
     this.wrap = this.$('.tt-wrap'); this.card = this.$('.tt-pcard'); this.bar = this.$('.tt-bar'); this.list = this.$('.tt-places');
     this.wrap.style.setProperty('--hl', seasonHighlight(this.season));
     requestAnimationFrame(() => this.$('.tt-title')?.classList.add('on'));   // fades in from black
     this.$('.tt-explore').onclick = () => this.onSignedIn(null);
+    {   // the Layers menu (Aaron, 2026-11-04: "we can remove place names from the globe, or its a toggle under a Layers menu")
+      const btn = this.$('.tt-layersbtn'), list = this.$('.tt-layerlist');
+      btn.onclick = () => { list.hidden = !list.hidden; btn.setAttribute('aria-expanded', String(!list.hidden)); };
+      for (const box of list.querySelectorAll('input')) {
+        box.checked = !!this.layers[box.dataset.layer];
+        box.onchange = () => { this.layers[box.dataset.layer] = box.checked; saveLayers(this.layers); this.map?.restyle(this.layers); };
+      }
+    }
     this.$('.tt-start').onclick = () => this.begin();
     this.$('.tt-invite').onclick = e => { if (this.sel && this.onInvite) this.onInvite(this.sel, e.currentTarget); };
     this.$('.tt-modebtn').onclick = () => this.setMode(this.mode === 'global' ? 'visible' : 'global');
@@ -483,6 +507,8 @@ export class TitleScreen {
     this.atmo = new THREE.Mesh(new THREE.SphereGeometry(1.035, 96, 64), new THREE.ShaderMaterial({ uniforms: this.atmoU, vertexShader: EARTH_VERT, fragmentShader: ATMO_FRAG, side: THREE.BackSide, transparent: true, depthWrite: false, blending: THREE.AdditiveBlending }));
     this.atmo.renderOrder = 2; earth.add(this.atmo);
     this.map = new MapGlobe({ group: earth, renderer: this.renderer, sunDir });
+    this.map.restyle(this.layers);
+    this.relief = new Relief(earth, sunDir);   // the chosen place as an exaggerated relief model (relief.js)
     const n = this.places.length, dg = new THREE.BufferGeometry(), dp = new Float32Array(n * 3);
     this.places.forEach((p, i) => { dp[3 * i] = p.p0.x; dp[3 * i + 1] = p.p0.y; dp[3 * i + 2] = p.p0.z; });
     dg.setAttribute('position', new THREE.BufferAttribute(dp, 3));
@@ -651,6 +677,7 @@ export class TitleScreen {
     this.renderCard(); this.renderBar();
     this.wrap.classList.add('chosen');
     this.flyToPlace(id);
+    this.relief?.show(id);
     this.onSelect?.(id);
   }
   // The card over the place: its name, its region line, the avatars of its players and how many, which opens the list.
@@ -797,6 +824,7 @@ export class TitleScreen {
     this.map.mix = mapMixFor(A) * this.mapFade;
     this.map.root.visible = this.map.mix > 0.01;
     if (this.map.root.visible) this.map.update(cam, H);
+    this.relief?.update(dt);
     this.dotU.uLift.value = Math.min(DOT_LIFT, A * 0.01);
     const close = smooth(0.0016, 0.006, A);   // the dots give way to the outlines on the ground
     this.dotU.uFade.value = this.phase === 'lit' ? Math.min(1, this.dotU.uFade.value + dt) * (0.15 + 0.85 * close) : this.dotU.uFade.value;
@@ -908,7 +936,7 @@ export class TitleScreen {
     for (const ev of ['keydown', 'keyup']) removeEventListener(ev, this.guard, true);
     document.activeElement?.blur?.();
     if (this.hubParam && typeof this.hubParam === 'object') this.hub.watch?.(false); else this.hub?.close?.();   // a hub given from outside (multiplayer.js) lives on into the world
-    this.map.dispose();
+    this.map.dispose(); this.relief?.dispose();
     for (const p of this.places) p.outline.dispose();
     for (const o of [this.globe, this.atmo, this.dots, this.stars]) { o.geometry.dispose(); o.material.dispose(); }
     this.tex?.dispose(); this.earthU.map.value = null;

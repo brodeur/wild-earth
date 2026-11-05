@@ -10,7 +10,8 @@ import { decodeTile } from './mvt.js';
 // boundaries and roads, then the names of places, waters and peaks (each kept only when it lies wholly inside the tile,
 // so nothing is cut at a seam). No buildings and no points of interest: the places, the land and the ways across it.
 //
-// Messages in: {t: 'tile', key, z, x, y} and {t: 'drop', keys} (no longer wanted: dropped from the queue).
+// Messages in: {t: 'tile', key, z, x, y, v} and {t: 'drop', keys} (no longer wanted: dropped from the queue), and
+// {t: 'opts', places, nature} (the Layers menu, title.js: whether the names of towns and of waters and peaks are drawn).
 // Out: {t: 'tile', key, bitmap} or {t: 'tile', key, error}. Nothing a player typed or where they are goes anywhere but
 // the tile requests themselves, which are what any web map asks.
 
@@ -30,18 +31,20 @@ const tplP = fetch(TILEJSON).then(r => r.json()).then(j => { template = j.tiles[
 const data = new Map();      // 'z/x/y' of a data tile -> Promise of its decoded layers (LRU by re-insertion)
 const queue = [];            // the tiles asked for, oldest first
 let running = 0;
+const opts = { places: false, nature: true };   // the Layers menu's defaults: no town names (Aaron, 2026-11-04)
 
 onmessage = e => {
   const m = e.data;
   if (m.t === 'tile') { queue.push(m); pump(); }
+  else if (m.t === 'opts') { opts.places = !!m.places; opts.nature = !!m.nature; }
   else if (m.t === 'drop') { const k = new Set(m.keys); for (let i = queue.length - 1; i >= 0; i--) if (k.has(queue[i].key)) queue.splice(i, 1); }
 };
 
 function pump() {
   while (running < PARALLEL && queue.length) {
     const m = queue.shift(); running++;
-    draw(m).then(bitmap => postMessage({ t: 'tile', key: m.key, bitmap }, [bitmap]))
-      .catch(err => postMessage({ t: 'tile', key: m.key, error: String(err?.message || err) }))
+    draw(m).then(bitmap => postMessage({ t: 'tile', key: m.key, v: m.v, bitmap }, [bitmap]))
+      .catch(err => postMessage({ t: 'tile', key: m.key, v: m.v, error: String(err?.message || err) }))
       .finally(() => { running--; pump(); });
   }
 }
@@ -139,7 +142,7 @@ async function draw({ z, x, y }) {
     suburb: [6, 13, 14, 99, '400', false, 0], neighbourhood: [7, 14, 15, 99, '400', false, 0], island: [5, 9, 10, 99, 'italic 500', false, 0],
   };
   const places = [];
-  each('place', (f, p) => { const s = PLACE[p.class]; if (s && f.type === 1 && z >= s[1] && z <= s[3]) places.push([s[0], p.rank ?? 99, f, p, s]); });
+  if (opts.places) each('place', (f, p) => { const s = PLACE[p.class]; if (s && f.type === 1 && z >= s[1] && z <= s[3]) places.push([s[0], p.rank ?? 99, f, p, s]); });
   places.sort((a, b) => a[0] - b[0] || a[1] - b[1]);
   for (const [imp, , f, p, s] of places) {
     const xy = at(f); if (!xy) continue;
@@ -148,13 +151,13 @@ async function draw({ z, x, y }) {
     const dot = imp >= 3 && imp <= 5 && z < 12 ? (px, py) => { g.fillStyle = C.labelDim; g.beginPath(); g.arc(px, py, 3.2, 0, Math.PI * 2); g.fill(); } : null;
     label(nameOf(p), xy[0], xy[1], `${s[4]} ${size}px system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif`, imp <= 2 ? C.labelDim : C.label, { upper: s[5], spacing: s[6], mark: dot });
   }
-  each('water_name', (f, p) => {
+  if (opts.nature) each('water_name', (f, p) => {
     if (f.type !== 1) return; const xy = at(f); if (!xy) return;
     const big = p.class === 'ocean' || p.class === 'sea';
     if (big ? z > 7 : z < 9) return;
     label(nameOf(p), xy[0], xy[1], `italic 500 ${big ? 22 : 23}px system-ui, -apple-system, sans-serif`, C.waterLabel, { spacing: big ? 2 : 0 });
   });
-  if (z >= 11) each('mountain_peak', (f, p) => {
+  if (z >= 11 && opts.nature) each('mountain_peak', (f, p) => {
     if (f.type !== 1 || p.class !== 'peak' && p.class !== 'volcano') return; const xy = at(f); if (!xy) return;
     const tri = (px, py) => { g.fillStyle = C.peak; g.beginPath(); g.moveTo(px, py - 5); g.lineTo(px + 5, py + 4); g.lineTo(px - 5, py + 4); g.closePath(); g.fill(); };
     label(nameOf(p), xy[0], xy[1], `500 22px system-ui, -apple-system, sans-serif`, C.peak, { mark: tri });

@@ -4809,3 +4809,34 @@ Still wrong: the ground over the level by 1 m or more on 2-3% of samples. These 
 is the road) and cascades, where the level is a trend through steps. The 1 m ground has no culverts, so a reach under a
 19 m fill still drapes over it in the client (the carve stops at 2 m). The "after" captures on Yosemite were taken
 before the hidden pane had streamed the sky and the plants, so only their water and ground compare.
+
+## 2026-11-04: the chosen place as a relief model, and a Layers menu for the map's names
+
+Aaron: "When the user selects a tile in the start screen is it possible to quickly render an exaggerated relief map
+of the tile instead of the current flattened map tile? Also, we can remove place names from the globe, or its a
+toggle under a Layers menu".
+
+**The relief (`client/src/relief.js`).** On choosing a place, the home screen fetches three files the world then
+loads anyway, so the browser fetches them once:
+
+- `heights.png`, decoded at 192×192 with nearest sampling so the encoded heights stay whole;
+- the tree cover: the Lidar's `canopy_height.png` G where the tile has it, else LANDFIRE's `canopy.png`;
+- `water.png`, pooled at its own resolution into each cell's share of stream bed and pond.
+
+From these it builds the tile's UTM square on the globe, every vertex at its own latitude and longitude. The inverse
+UTM series is in the file and matches pyproj to 1e-7°. Each vertex is raised by its height above the tile's floor times
+an exaggeration: 1,200 m over the tile's range, clamped to 1–3. The foothills (275–657 m on the home tile) stand 3×;
+Yosemite (1,203–3,005 m) is drawn true to scale, so nothing reaches the 10,000 ft camera. Short walls drop to the map,
+so it reads as a model standing on the map.
+
+It is coloured as a relief map: dry grass to tan with height, rock above 2,200 m, snow above 2,900 m, forest green by
+cover, blue water. It is lit by the title's sun plus a fixed northwest light. It fades in over 0.8 s, and out when
+another place is chosen.
+
+**Layers.** A Layers button above the attribution opens two toggles:
+
+- **Town and city names:** off by default, since the world has no towns.
+- **Water and peak names:** on.
+
+The choice is kept per viewer in `localStorage`. `MapGlobe.restyle` asks for every picture again in the new style
+(`mapTiles.worker.js` opts) and draws the old picture until the new one comes, so the map doesn't flash.

@@ -150,6 +150,16 @@
 .tt-attrib a { color:inherit; text-decoration:none; border-bottom:1px solid #8fa09444; }
 .tt-attrib a:hover { color:#d3ddd5; }
 .tt-wrap.listed .tt-attrib { opacity:1; pointer-events:auto; }
+/* the Layers menu (title.js): above the attribution, under the places list; its list opens upward */
+.tt-layers { position:absolute; left:var(--side); bottom:40px; z-index:3; opacity:0; pointer-events:none; transition:opacity 1s ease; font-size:12px; }
+.tt-wrap.listed .tt-layers { opacity:1; pointer-events:auto; }
+.tt-wrap.leaving .tt-layers { opacity:0; pointer-events:none; }
+.tt-layersbtn { font:inherit; color:#d3ddd5; background:#0f1512cc; border:1px solid #2a352e; border-radius:7px; padding:5px 11px; cursor:pointer; backdrop-filter:blur(4px); }
+.tt-layersbtn:hover, .tt-layersbtn[aria-expanded="true"] { background:#1a241ecc; }
+.tt-layerlist { position:absolute; left:0; bottom:calc(100% + 6px); display:flex; flex-direction:column; gap:6px; padding:9px 12px; min-width:190px; background:#0f1512e6; border:1px solid #2a352e; border-radius:9px; color:#d3ddd5; backdrop-filter:blur(6px); }
+.tt-layerlist[hidden] { display:none; }
+.tt-layerlist label { display:flex; align-items:center; gap:8px; cursor:pointer; white-space:nowrap; }
+.tt-layerlist input { accent-color:#c9a86a; margin:0; }
 .tt-wrap.leaving .tt-attrib { opacity:0; }
 
 /* to black before the world's first frame (title.js begin), then the whole screen fades (#opening.out) */

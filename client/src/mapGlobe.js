@@ -82,7 +82,17 @@ export class MapGlobe {
     this.worker.onmessage = e => this.got(e.data);
     this.worker.onerror = e => { console.warn('map: the tile worker failed', e.message || e); };
     this._m = new THREE.Matrix4(); this._f = new THREE.Frustum(); this._c = new THREE.Vector3(); this._q = new THREE.Quaternion(); this._s = new THREE.Sphere();
-    this.drawn = [];
+    this.drawn = []; this.v = 0;
+  }
+  // The Layers menu (title.js): which names the worker draws. Every picture is asked for again in the new style; the old
+  // one is drawn until it comes (t.old), so the map does not flash.
+  restyle(o) {
+    this.v++; this.worker.postMessage({ t: 'opts', places: !!o.places, nature: !!o.nature });
+    for (const t of this.tiles.values()) {
+      if (t.state === 'ready') { if (t.old) { t.old.image?.close?.(); t.old.dispose(); } t.old = t.tex; t.tex = null; t.state = 'none'; }
+      else if (t.state === 'loading') { t.state = 'none'; this.asked--; }
+    }
+    this.asked = Math.max(0, this.asked);
   }
   tile(z, x, y) {
     const k = `${z}/${x}/${y}`; let t = this.tiles.get(k);
@@ -130,7 +140,7 @@ export class MapGlobe {
     const keep = new Set();
     for (const t of out) {
       let src = t, d = 0;
-      while (src && src.state !== 'ready') { if (d >= FALLBACK_UP || src.z === 0) { src = null; break; } src = this.tile(src.z - 1, src.x >> 1, src.y >> 1); d++; }
+      while (src && src.state !== 'ready' && !src.old) { if (d >= FALLBACK_UP || src.z === 0) { src = null; break; } src = this.tile(src.z - 1, src.x >> 1, src.y >> 1); d++; }
       if (!src) continue;   // nothing near enough: the earth's own picture shows until the tile comes (a far ancestor's names would be huge)
       src.used = this.frame;
       const m = t.mesh || (t.mesh = new THREE.Mesh(t.geometry(), new THREE.ShaderMaterial({
@@ -138,7 +148,7 @@ export class MapGlobe {
         vertexShader: MAP_VERT, fragmentShader: MAP_FRAG, transparent: true, depthWrite: true })));
       m.position.copy(t.center); m.renderOrder = 1; m.userData.tile = t;
       const u = m.material.uniforms, s = 1 / 2 ** d;
-      u.map.value = src.tex; u.rect.value.set((t.x - src.x * 2 ** d) * s, (t.y - src.y * 2 ** d) * s, s, s); u.mixA.value = this.mix;
+      u.map.value = src.tex || src.old; u.rect.value.set((t.x - src.x * 2 ** d) * s, (t.y - src.y * 2 ** d) * s, s, s); u.mixA.value = this.mix;
       if (m.parent !== this.root) this.root.add(m);
       t.used = this.frame; keep.add(t);
     }
@@ -149,16 +159,18 @@ export class MapGlobe {
   ask(t) {
     if (t.state !== 'none') return;
     t.state = 'loading'; this.asked++;
-    this.worker.postMessage({ t: 'tile', key: t.key, z: t.z, x: t.x, y: t.y });
+    this.worker.postMessage({ t: 'tile', key: t.key, z: t.z, x: t.x, y: t.y, v: this.v });
   }
   got(m) {
     const t = this.tiles.get(m.key);
+    if (m.v !== this.v) { m.bitmap?.close?.(); return; }   // drawn in a style since changed (restyle)
     if (t?.state === 'loading') this.asked--;
     if (this.disposed || !t || t.state !== 'loading') { m.bitmap?.close?.(); return; }
     if (m.error) { t.state = 'failed'; setTimeout(() => { if (t.state === 'failed') t.state = 'none'; }, 15000); return; }
     const tex = new THREE.Texture(m.bitmap);
     tex.flipY = false; tex.colorSpace = THREE.SRGBColorSpace; tex.anisotropy = this.anis;
     tex.minFilter = THREE.LinearMipmapLinearFilter; tex.generateMipmaps = true; tex.needsUpdate = true;
+    if (t.old) { t.old.image?.close?.(); t.old.dispose(); t.old = null; }
     t.tex = tex; t.state = 'ready'; t.used = this.frame;
   }
   // Let go of the pictures drawn longest ago past PICTURES, and the meshes of tiles not drawn for a while.
@@ -172,6 +184,7 @@ export class MapGlobe {
       for (const [k, t] of this.tiles) {
         if (t.used < this.frame - 240 && t.state !== 'loading') {
           if (t.mesh) { t.mesh.geometry.dispose(); t.mesh.material.dispose(); t.mesh = null; }
+          if (t.old) { t.old.image?.close?.(); t.old.dispose(); t.old = null; }
           if (t.state !== 'ready' && t.z > 3) this.tiles.delete(k);
         }
       }
@@ -179,7 +192,7 @@ export class MapGlobe {
   }
   dispose() {
     this.disposed = true; this.worker.terminate();
-    for (const t of this.tiles.values()) { if (t.mesh) { t.mesh.geometry.dispose(); t.mesh.material.dispose(); } if (t.tex) { t.tex.image?.close?.(); t.tex.dispose(); } }
+    for (const t of this.tiles.values()) { if (t.mesh) { t.mesh.geometry.dispose(); t.mesh.material.dispose(); } if (t.tex) { t.tex.image?.close?.(); t.tex.dispose(); } if (t.old) { t.old.image?.close?.(); t.old.dispose(); } }
     this.tiles.clear(); this.group.remove(this.root);
   }
 }
