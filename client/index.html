@@ -10,7 +10,7 @@
 </script>
 <link rel="stylesheet" href="opening.css?v=2026-10-27f">
 <link rel="stylesheet" href="title.css?v=2026-11-01">
-<link rel="stylesheet" href="social.css?v=2026-11-02">
+<link rel="stylesheet" href="social.css?v=2026-11-04">
 <style>
   html,body { margin:0; height:100%; background:#0b0f0d; color:#e6ede7; font:13px/1.4 -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif; overflow:hidden; }
   canvas { display:block; }
@@ -34,16 +34,33 @@
   #hud, #panel, #help { transition:opacity .25s ease; }
   html:not(.menu) #hud, html:not(.menu) #panel, html:not(.menu) #help { opacity:0; visibility:hidden; pointer-events:none; transition:opacity .2s ease, visibility 0s linear .2s; }
   html.opening #menuBtn { display:none; }
-  /* the mute button (sound.js els.mute; N does the same): under the menu button, a speaker, barred when muted */
-  #muteBtn { position:fixed; left:14px; top:54px; z-index:12; width:34px; height:34px; padding:0; border:0; border-radius:8px; background:#0f1512bb; backdrop-filter:blur(4px); cursor:pointer; display:flex; align-items:center; justify-content:center; color:#e6ede7; }
-  #muteBtn:hover { background:#1a241ecc; }
-  #muteBtn svg { width:18px; height:18px; display:block; }
-  #muteBtn .waves { transition:opacity .2s ease; }
-  #muteBtn .bar { opacity:0; transition:opacity .2s ease; }
+  /* the controls row beside the menu button (Aaron, 2026-11-04): the sound (sound.js els.mute; N does the same), a speaker
+     barred when muted; then the microphone and the camera (voice.js), shown only while another member of the group is in
+     the same world, off at first and barred while off, lit while on, amber when the browser refused (the reason in the
+     title); the mic glows while the player speaks; the self-view at the row's end while the camera is on */
+  #ctlRow { position:fixed; left:58px; top:12px; z-index:12; display:flex; align-items:flex-start; gap:6px; }
+  html.opening #ctlRow { display:none; }
+  html.arriving #ctlRow .ctl:not(#muteBtn), html.switching #ctlRow .ctl:not(#muteBtn) { opacity:.35; }
+  .ctl { position:relative; flex:none; width:34px; height:34px; padding:0; border:0; border-radius:8px; background:#0f1512bb; backdrop-filter:blur(4px); cursor:pointer; display:flex; align-items:center; justify-content:center; color:#e6ede7; transition:opacity .25s ease, color .2s ease, box-shadow .15s ease; }
+  .ctl[hidden] { display:none; }
+  .ctl:hover { background:#1a241ecc; }
+  .ctl svg { width:18px; height:18px; display:block; }
+  .ctl .waves { transition:opacity .2s ease; }
+  .ctl .bar { opacity:0; transition:opacity .2s ease; }
   #muteBtn.muted { color:#ffb3a3; }
   #muteBtn.muted .waves { opacity:0; }
   #muteBtn.muted .bar { opacity:1; }
-  html.opening #muteBtn { display:none; }
+  #micBtn, #camBtn { color:#8fa094; }
+  #micBtn:not(.on) .bar, #camBtn:not(.on) .bar { opacity:1; }
+  #micBtn.on, #camBtn.on { color:#9be8b4; background:#16301fcc; }
+  #micBtn.speaking { box-shadow:0 0 0 2px #9be8b4aa, 0 0 10px #9be8b480; }
+  #micBtn.denied, #camBtn.denied { color:#f0c27a; }
+  #micBtn.denied::after, #camBtn.denied::after { content:'!'; position:absolute; right:3px; top:2px; font:700 10px/1 -apple-system,BlinkMacSystemFont,sans-serif; color:#f0c27a; }
+  #micBtn.wait, #camBtn.wait { animation:ctlWait 1s ease-in-out infinite alternate; }
+  @keyframes ctlWait { from { opacity:1; } to { opacity:.45; } }
+  #selfView { flex:none; width:46px; height:34px; border-radius:8px; object-fit:cover; transform:scaleX(-1); background:#0f1512; box-shadow:0 0 0 1px #9be8b455, 0 1px 4px #0008; transition:width .2s ease, height .2s ease; }
+  #selfView:hover { width:160px; height:120px; }
+  #selfView[hidden] { display:none; }
   /* off-screen herd members (herdMarks.js): an avatar in a circle at the screen's edge nearest each member out of view */
   #herdMarks { position:fixed; inset:0; z-index:4; pointer-events:none; }
   /* heard predators and prey (soundCues.js): ring waves pulsing out at the sound's origin on the screen, or at the
@@ -69,6 +86,21 @@
   #playerLabels { position:fixed; inset:0; z-index:4; pointer-events:none; }
   .pl { position:absolute; left:0; top:0; transform:translate(-50%, -100%); font-size:11px; font-weight:600; letter-spacing:.05em; color:hsl(var(--hue, 200), 80%, 75%); text-shadow:0 1px 2px #000d, 0 0 6px #0009; white-space:nowrap; }
   .pl[hidden] { display:none; }
+  /* speaking (voice.js, players.js): a dot pulsing before the name, a ring round the edge avatar and the video tile */
+  .pl.speaking { text-shadow:0 1px 2px #000d, 0 0 8px hsla(var(--hue, 200), 85%, 65%, .9); }
+  .pl.speaking::before { content:''; display:inline-block; width:8px; height:8px; margin:0 5px 1px 0; border-radius:50%; background:currentColor; box-shadow:0 0 6px currentColor; animation:plTalk .45s ease-in-out infinite alternate; vertical-align:middle; }
+  @keyframes plTalk { from { transform:scale(.7); opacity:.7; } to { transform:scale(1.15); opacity:1; } }
+  .hm.pm.speaking { box-shadow:0 0 0 3px hsla(var(--hue, 200), 80%, 65%, .6), 0 0 12px hsla(var(--hue, 200), 80%, 65%, .7); }
+  /* a member's camera (players.js): a rounded tile over them in the world, scaled with distance (transform), the name
+     under it; off screen, the video fills their edge avatar's circle */
+  .pv { position:absolute; left:0; top:0; width:176px; height:132px; transform-origin:50% 100%; border-radius:12px; overflow:hidden; background:#0f1512; border:2px solid hsl(var(--hue, 200), 70%, 65%); box-shadow:0 2px 10px #000a; box-sizing:border-box; }
+  .pv[hidden] { display:none; }
+  .pv video { width:100%; height:100%; object-fit:cover; display:block; }
+  .pv.speaking { border-color:hsl(var(--hue, 200), 85%, 72%); box-shadow:0 0 0 2px hsla(var(--hue, 200), 80%, 65%, .6), 0 0 16px hsla(var(--hue, 200), 80%, 65%, .7); }
+  .hm.pm.vid { left:-24px; top:-24px; width:48px; height:48px; }
+  .hm.pm video { display:none; }
+  .hm.pm.vid video { display:block; width:100%; height:100%; object-fit:cover; border-radius:50%; }
+  .hm.pm.vid canvas { display:none; }
   /* the body's row (abilities.js): along the bottom right, the status bars (the needs, the legs) and the body's
      abilities, one slot each with its key in the slot's bottom right corner, the page's keys dim above them. DOM order
      abilities then status, laid out right to left; on a narrow window the status goes up a line and the slots wrap. */
@@ -250,7 +282,12 @@
 </head>
 <body>
 <button id="menuBtn" type="button" aria-label="menu" aria-expanded="false" title="menu: the readouts, the keys and the controls"><i></i><i></i><i></i></button>
-<button id="muteBtn" type="button" aria-label="mute" aria-pressed="false" title="sound on or off (N)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 9v6h4l5 4V5L8 9H4z" fill="currentColor" stroke="none"/><path class="waves" d="M15.5 8.5a5 5 0 0 1 0 7M18.5 5.5a9 9 0 0 1 0 13"/><path class="bar" d="M3 3l18 18"/></svg></button>
+<div id="ctlRow">
+<button id="muteBtn" class="ctl" type="button" aria-label="mute" aria-pressed="false" title="sound on or off (N)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 9v6h4l5 4V5L8 9H4z" fill="currentColor" stroke="none"/><path class="waves" d="M15.5 8.5a5 5 0 0 1 0 7M18.5 5.5a9 9 0 0 1 0 13"/><path class="bar" d="M3 3l18 18"/></svg></button>
+<button id="micBtn" class="ctl" type="button" aria-label="microphone" aria-pressed="false" hidden><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="9" y="3" width="6" height="11" rx="3"/><path d="M5.5 11a6.5 6.5 0 0 0 13 0M12 17.5V21M9 21h6"/><path class="bar" d="M3 3l18 18"/></svg></button>
+<button id="camBtn" class="ctl" type="button" aria-label="camera" aria-pressed="false" hidden><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="7" width="12" height="10" rx="2"/><path d="M15 11l5-3v8l-5-3"/><path class="bar" d="M3 3l18 18"/></svg></button>
+<video id="selfView" muted playsinline autoplay aria-label="your camera" title="your camera, as the group sees it (mirrored here)" hidden></video>
+</div>
 <div id="hud">
   <h1>common raven <span class="muted">· <span id="tileName">–</span></span><a id="creditsLink" href="#" role="button" aria-controls="credits" aria-expanded="false" title="data sources and credits">Data</a></h1>
   <div class="row"><span>altitude above ground</span><b id="agl">–</b></div>

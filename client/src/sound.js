@@ -59,7 +59,7 @@
 //            softer the farther the strike. The weather's wind is also a floor under the wind layer's airspeed wind.
 //
 // Audio can only start after a user gesture, so the graph is built on the first pointerdown or keydown.
-// N mutes (the context is suspended while muted or while the tab is hidden), C calls (the player's species' call); the volume and mute
+// N mutes (the context is suspended while muted or while the tab is hidden, unless the group is talking: talkBus), C calls (the player's species' call); the volume and mute
 // state persist in localStorage. Short-lived voices are disconnected by the frame loop once they end, and
 // created/disconnected node counts are kept so a leak shows up in stats().
 
@@ -284,12 +284,22 @@ export class Soundscape {
 
   _runState() {
     const ctx = this.ctx; if (!ctx) return;
-    const want = !this.muted && !document.hidden;
+    const want = !this.muted && !document.hidden, talk = !this.muted && !!this.talking;   // the group's voices go on in a hidden tab
     this.master.gain.setTargetAtTime(want ? this.volume : 0, ctx.currentTime, 0.06);
+    this.talk?.gain.setTargetAtTime(this.muted ? 0 : this.volume, ctx.currentTime, 0.06);
     clearTimeout(this._suspendT);
-    if (want) ctx.resume();
-    else this._suspendT = setTimeout(() => { if (this.muted || document.hidden) ctx.suspend(); }, 400);
+    if (want || talk) ctx.resume();
+    else this._suspendT = setTimeout(() => { if (this.muted || (document.hidden && !this.talking)) ctx.suspend(); }, 400);
   }
+  // The other players' voices (voice.js): their own bus to the speakers, under the volume and the mute but not the
+  // soundscape's compressor; null until the context has started. setTalking(true) while any voice is heard keeps the
+  // context running in a hidden tab (the soundscape itself stays silent there).
+  talkBus() {
+    if (!this.ctx) return null;
+    if (!this.talk) { this.talk = this._mk(new GainNode(this.ctx, { gain: 0 })); this.talk.connect(this.ctx.destination); this._runState(); }
+    return this.talk;
+  }
+  setTalking(on) { if (!!on === !!this.talking) return; this.talking = !!on; this._runState(); }
 
   _mk(n) { this.created++; return n; }
 

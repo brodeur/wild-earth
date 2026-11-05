@@ -1,8 +1,8 @@
 /* The social screen (docs/multiplayer.md lane 3): the sign-in modal (src/account.js, in the title screen's gate), the
-   friends row and list top left (src/social.js, #social), the chat bottom left (src/chat.js, #chat) and the Video and
-   Audio toggles top middle (src/multiplayer.js, #media). The three fixed elements stand over the title screen (#opening
-   is z 20) and stay in the world's HUD: beside the menu button once html.opening is gone, hidden with the HUD while
-   arriving or switching. The type is the title screen's: DM Sans (title.css loads it). */
+   friends row and list top left (src/social.js, #social) and the chat bottom left (src/chat.js, #chat); the microphone
+   and camera are in the controls row beside the menu button (index.html #ctlRow, src/voice.js). The two fixed elements
+   stand over the title screen (#opening is z 20) and stay in the world's HUD: right of the controls row once
+   html.opening is gone (multiplayer.js layout), hidden with the HUD while arriving or switching. The type is the title screen's: DM Sans (title.css loads it). */
 
 /* ---- the sign-in modal ---- */
 .ac-modal { width:min(360px, calc(100vw - 32px)); box-sizing:border-box; padding:22px 24px 18px; border-radius:14px; background:#0b0f0dcc; border:1px solid #d3ddd52a;
@@ -35,7 +35,7 @@
 .ac-prov svg { width:16px; height:16px; }
 .ac-prov:hover:not(.soon) { background:#ffffff18; border-color:#d3ddd5a0; }
 .ac-prov.soon { opacity:.4; cursor:default; }
-.ac-prov.soon:hover::after, .md-btn[data-soon]:hover::after { content:attr(data-soon); position:absolute; left:50%; top:calc(100% + 6px); transform:translateX(-50%); padding:3px 8px; border-radius:6px;
+.ac-prov.soon:hover::after { content:attr(data-soon); position:absolute; left:50%; top:calc(100% + 6px); transform:translateX(-50%); padding:3px 8px; border-radius:6px;
   background:#0b0f0df0; border:1px solid #d3ddd52e; color:#d3ddd5; font-size:11px; letter-spacing:.04em; white-space:nowrap; pointer-events:none; opacity:1; }
 .ac-prov.soon:hover { opacity:.6; }
 .ac-links { display:flex; justify-content:space-between; gap:12px; margin:16px 0 0; font-size:12px; }
@@ -49,14 +49,14 @@
 .ac-copy.did { color:#a9d8a4; border-color:#a9d8a4; }
 
 /* ---- shared ---- */
-#social, #chat, #media { position:fixed; z-index:21; font:13px/1.4 'DM Sans', system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif; color:#d3ddd5; transition:opacity .5s ease; }
-html.arriving #social, html.arriving #chat, html.arriving #media, html.switching #social, html.switching #chat, html.switching #media { opacity:0; pointer-events:none; }
-#social button, #chat button, #media button, .so-dialog button { font:inherit; }
+#social, #chat { position:fixed; z-index:21; font:13px/1.4 'DM Sans', system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif; color:#d3ddd5; transition:opacity .5s ease; }
+html.arriving #social, html.arriving #chat, html.switching #social, html.switching #chat { opacity:0; pointer-events:none; }
+#social button, #chat button, .so-dialog button { font:inherit; }
 .so-avatar { display:block; border-radius:50%; }
 
 /* ---- friends, top left ---- */
 #social { left:14px; top:12px; }
-html:not(.opening) #social { left:58px; }   /* beside the HUD's menu button (index.html #menuBtn, 34 px at 14 px) */
+html:not(.opening) #social { left:98px; }   /* right of the controls row (index.html #ctlRow, at 58 px beside the menu button); multiplayer.js layout sets it as the row grows */
 .so-bar { display:flex; align-items:center; gap:6px; }
 .so-avatars { display:flex; align-items:center; gap:4px; }
 .so-chip { padding:0; border:0; background:none; cursor:pointer; border-radius:50%; line-height:0; }
@@ -151,21 +151,12 @@ html:not(.opening) #social { left:58px; }   /* beside the HUD's menu button (ind
 .ch-input:disabled { color:#8fa094; cursor:default; }
 .ch-input::placeholder { color:#6f8075; }
 
-/* ---- Video and Audio, top middle ---- */
-#media { left:50%; top:12px; transform:translateX(-50%); display:flex; gap:6px; z-index:5; transition:opacity .5s ease, top .25s ease; }
-.md-btn { position:relative; width:34px; height:34px; padding:0; border:0; border-radius:8px; background:#0f1512bb; backdrop-filter:blur(4px); color:#8fa094; cursor:default; display:flex; align-items:center; justify-content:center; }
-.md-btn svg { width:18px; height:18px; }
-.md-btn .bar { opacity:.9; }
-.md-btn:hover { background:#1a241ecc; }
-.md-btn[data-soon]:hover::after { z-index:2; }
-html.opening #media { z-index:21; }
-
 @media (max-width: 720px) {
   .so-panel, .so-dialog { width:min(300px, calc(100vw - 28px)); }
   #chat { width:min(300px, calc(100vw - 28px)); }
 }
 
-/* ---- an invitation to go somewhere together (src/multiplayer.js, lane 4): top middle under the toggles, on the earth and
+/* ---- an invitation to go somewhere together (src/multiplayer.js, lane 4): top middle, on the earth and
    over the HUD alike (not hidden while arriving: a member mid-flight can still be asked) ---- */
 #invite { position:fixed; left:50%; top:60px; transform:translate(-50%, -8px); z-index:22; display:flex; align-items:center; gap:14px; max-width:calc(100vw - 28px); box-sizing:border-box;
   padding:9px 10px 9px 12px; border-radius:12px; background:#0f1512ee; border:1px solid #3d5244; backdrop-filter:blur(8px); box-shadow:0 6px 24px #0008;

@@ -329,7 +329,14 @@ browser stays the renderer.
   everyone and streams them at 4 Hz under a 24 KB/s cap, the others mirror the stream through the same draw and leg
   engine, kills and flushes are ordered events, a mirror's catch is confirmed by the host, and the next page takes
   over when the host leaves. The group's members in a body are drawn as their animals (the same pool, legs and
-  draw), named over the body. Next: lane 5 (video and audio over WebRTC, signalling through the hub); the players on
+  draw), named over the body. Voice and video (lane 5) are built (2026-11-04, branch claude/voice-video-a2143c,
+  `client/src/voice.js`): the controls row beside the menu button (sound, then the microphone and the camera, which
+  show only while another group member is in the same world), a WebRTC mesh between the group's members in the tile
+  with the hub relaying the signalling, each voice panned at the member's wisp or body through the soundscape's volume
+  and mute, a speaking dot on the name and a ring on the edge avatar, each camera a small tile over the member (or in
+  their edge avatar) and a self-view in the row; public STUN, TURN from env when Aaron sets one up (the TURN section in
+  `docs/multiplayer.md`). Next: TURN set up on the public hub (some NATs fail without it); MediaPipe cut-out figures in
+  place of the tiles; an SFU (LiveKit) past about six; a push-to-talk key; the players on
   a tile outside the group (unseen by the privacy rule until Aaron widens it); the stream's rate under many players
   and the far fliers' detail; Discord needs Aaron's application registered; Google and Apple their keys.
 

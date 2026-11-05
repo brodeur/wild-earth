@@ -743,7 +743,7 @@ async function buildSteps(w, { params, pending, direct = false, arrive = null })
     closeScreen();
     // the hub's room is this tile from here (the tile chat, the group's positions; multiplayer.js): the spirit's position
     // goes to the group at 5 Hz, and a joiner's arrival follows the picker's
-    mp?.entered(tile.id, { flight, arrival, players, lead: c.lead || null, form: () => w.handle?.playerSpecies || 'spirit', body: (out, cst) => bodySample(w.handle, out, cst),
+    mp?.entered(tile.id, { flight, arrival, players, sound: () => w.m.sound, lead: c.lead || null, form: () => w.handle?.playerSpecies || 'spirit', body: (out, cst) => bodySample(w.handle, out, cst),
       caption: p => { const cap = $('caption'); if (cap && !cap.hidden) cap.querySelector('.cap-text').textContent = captionFor(p, seasonNow()); } });
   };
   const known = new WeakSet(), used = new WeakSet(), drawable = o => o.isMesh || o.isPoints || o.isLine || o.isSprite;   // meshes compiled ahead (below)

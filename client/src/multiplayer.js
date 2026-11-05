@@ -3,14 +3,16 @@ import { AccountModal } from './account.js';
 import { Social, avatarFor } from './social.js';
 import { Chat } from './chat.js';
 import { NF } from './animalNet.js';
+import { Voice } from './voice.js';
 
 // The social screen's hookup (docs/multiplayer.md, lanes 3 and 4): one object main.js makes beside the title screen. It
 // owns the page's Hub (hub.js) for the page's life, gives the title screen the hub to ask for config, me and the counts
 // (title.js takes anything with config(), me(), watch(on), on('counts', fn) and close()), puts the sign-in modal
 // (account.js) at the title's gate, and on sign-in connects the socket and mounts the friends row and list (social.js),
-// the chat (chat.js) and the Video and Audio toggles (below; off, "soon" on hover, lane 5 makes them live). The same
-// elements stand on the earth and in the world's HUD: layout() keeps them clear of the HUD's menu, its panels, the
-// game box and the key line, whichever are showing.
+// the chat (chat.js) and voice and video with the group (voice.js: the microphone and camera toggles in the row beside
+// the menu button, index.html #ctlRow, shown while another group member is in the same world). The same elements stand
+// on the earth and in the world's HUD: layout() keeps them clear of the HUD's menu, its panels, the game box and the
+// key line, whichever are showing, and the friends row right of the controls row.
 //
 // Going somewhere together (lane 4, the doc's item 9): a choice of place by a player in a group (the earth's
 // title.choose, wrapped here, or the Location box's switch to another tile, main.js) sends `place` and the other
@@ -28,7 +30,8 @@ import { NF } from './animalNet.js';
 // `poses` for the arrival (and for debugging) and cleared when the room is left. Each relayed position also goes to the
 // world's RemotePlayers (players.js, `world.players`): the member's wisp in the world, their name, their avatar at the
 // screen's edge when out of view and their dot on the mini-map. A member the hub says is offline or in another tile is
-// dropped from it at once; one who just stops sending fades there after a few seconds.
+// dropped from it at once; one who just stops sending fades there after a few seconds. The same positions tell voice.js
+// who is here (the row's mic and camera show while anyone is) and where each voice and video tile is.
 //
 // With ?hub=stub (the title screen's own verification) nothing here is mounted: the title makes the stub itself and
 // signs in by itself. The dev paths (?skip=1, ?game=1, ?as=) never make this object.
@@ -44,8 +47,6 @@ const html = document.documentElement;
 const POS_MS = 200;             // the position relay: 5 Hz, the doc's rate
 const INVITE_MS = 60000;        // the dialog's life (the hub keeps the invite a little longer, so a late Join lands)
 const FOLLOW_WINDOW_S = 2.5;    // a joiner's arrival turns to follow the picker when the picker's position comes within this long of its start
-const CAMERA_ICON = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="7" width="12" height="10" rx="2"/><path d="M15 11l5-3v8l-5-3"/><path class="bar" d="M3 3l18 18"/></svg>';
-const MIC_ICON = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="9" y="3" width="6" height="11" rx="3"/><path d="M5.5 11a6.5 6.5 0 0 0 13 0M12 17.5V21M9 21h6"/><path class="bar" d="M3 3l18 18"/></svg>';
 const esc = s => String(s ?? '').replace(/[&<>"]/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' })[c]);
 const r2 = v => Math.round(v * 100) / 100, r3 = v => Math.round(v * 1000) / 1000;
 
@@ -55,7 +56,7 @@ export class Multiplayer {
     this.stub = hubParam === 'stub';
     this.hub = this.stub ? null : new Hub();
     this.titleHub = this.stub ? 'stub' : this.hub;   // what the title screen is given
-    this.title = null; this.modal = null; this.social = null; this.chat = null; this.media = null;
+    this.title = null; this.modal = null; this.social = null; this.chat = null; this.voice = null;
     this.observer = null; this.layoutFn = () => this.layout();
     this.invite = null; this.inviteEl = null; this.inviteT = null;   // the dialog: the invite showing, its element, its expiry
     this.joining = null;     // { from, tile, point } while a Join on the earth builds the picker's tile
@@ -106,7 +107,8 @@ export class Multiplayer {
     this.social = new Social({ hub: this.hub, placeName, onSignOut: () => this.signOut() });
     this.chat = new Chat({ hub: this.hub, nameOf: id => this.social.nameOf(id), placeName });
     this.social.onLayout = this.layoutFn;
-    this.mountMedia();
+    const $ = id => document.getElementById(id);
+    this.voice = new Voice({ hub: this.hub, row: { mic: $('micBtn'), cam: $('camBtn'), self: $('selfView') }, onRow: this.layoutFn });
     const hub = this.hub;
     hub.on('invite', d => this.showInvite(d));
     hub.on('placed', d => this.chat?.system(d.to ? `asked your group to come to ${placeName(d.tile) || d.tile}` : 'no one else in the group to ask along'));
@@ -114,7 +116,7 @@ export class Multiplayer {
     hub.on('err', d => { if ((d.re === 'place' || d.re === 'answer') && d.why) this.chat?.system(d.why); });
     hub.on('pos', d => this.gotPos(d));
     hub.on('presence', d => {   // a member gone offline or to another tile is no longer seen here (players.js)
-      if (d.state === 'offline' || (d.state === 'tile' && d.tile && this.room && d.tile !== this.room.tileId)) { this.poses.delete(d.user); this.room?.players?.drop(d.user); }
+      if (d.state === 'offline' || (d.state === 'tile' && d.tile && this.room && d.tile !== this.room.tileId)) { this.poses.delete(d.user); this.room?.players?.drop(d.user); this.voice?.gone(d.user); }
     });
     hub.connect();
     addEventListener('resize', this.layoutFn);
@@ -197,12 +199,14 @@ export class Multiplayer {
     this.chat?.setRoom();
     this.room = { tileId, flight: world?.flight || null, arrival: world?.arrival || null, form: world?.form || null, body: world?.body || null, caption: world?.caption || null, lead: world?.lead || null, follow: null, players: world?.players || null };
     if (this.room.players && this.social) this.room.players.nameOf = id => this.social.nameOf(id);
+    this.voice?.setRoom({ players: this.room.players, sound: world?.sound || null });
     if (this.room.flight) this.posTimer = setInterval(() => this.sendPos(), POS_MS);
   }
   // The world is left (a tile switch): out of the room until the next world's entry; the positions held go.
   left(tell = true) {
     clearInterval(this.posTimer); this.posTimer = null; this.fakes(0);
     this.room?.players?.clear();
+    this.voice?.setRoom(null);
     this.room = null; this.poses.clear();
     if (tell && this.hub?.room) { this.hub.enter(null); this.chat?.setRoom(); }
   }
@@ -217,6 +221,7 @@ export class Multiplayer {
   gotPos(d) {
     this.poses.set(d.user, d);
     const r = this.room; if (!r) return;
+    this.voice?.seen(d.user);
     r.players?.sample(d);
     if (!r.lead || d.user !== r.lead) return;
     const a = r.arrival; if (!a) { r.lead = null; return; }
@@ -249,17 +254,9 @@ export class Multiplayer {
     }, POS_MS);
   }
 
-  // Video and Audio, top middle (docs item 7): two toggles, off, "soon" on hover, nothing behind them until lane 5.
-  mountMedia() {
-    const el = this.media = document.createElement('div'); el.id = 'media';
-    el.innerHTML = `<button type="button" class="md-btn" aria-pressed="false" aria-disabled="true" data-soon="video: soon" title="video with your group: soon">${CAMERA_ICON}</button>
-      <button type="button" class="md-btn" aria-pressed="false" aria-disabled="true" data-soon="audio: soon" title="voice with your group: soon">${MIC_ICON}</button>`;
-    document.body.append(el);
-  }
-
-  // Keep the social list, the chat and the toggles clear of the HUD's panels when both are showing: the list right of
-  // the HUD's readouts while the menu is open, the chat above the key line, the toggles under the game box, the invite
-  // under the toggles.
+  // Keep the social list, the chat and the invite clear of the HUD's panels when both are showing: the friends row right
+  // of the controls row (which grows by the mic, the camera and the self-view while the group is here), the list right
+  // of the HUD's readouts while the menu is open, the chat above the key line, the invite under the game box.
   layout() {
     const inWorld = !html.classList.contains('opening'), menu = html.classList.contains('menu');
     const hidden = html.classList.contains('arriving') || html.classList.contains('switching');
@@ -267,6 +264,8 @@ export class Multiplayer {
     else if (this.unseen && hidden) this.chat?.show(false);
     const H = innerHeight;
     if (this.social) {
+      const row = document.getElementById('ctlRow')?.getBoundingClientRect();
+      this.social.el.style.left = inWorld && row?.width ? `${Math.round(row.right + 10)}px` : '';
       const panel = this.social.panel; panel.style.left = '';
       if (inWorld && menu && this.social.open) {
         const hud = document.getElementById('hud')?.getBoundingClientRect();
@@ -282,19 +281,16 @@ export class Multiplayer {
       this.chat.el.style.bottom = `${bottom}px`;
     }
     let top = 12;
-    if (this.media) {
-      const game = document.getElementById('game');
-      if (inWorld && game && !game.classList.contains('hidden')) top = Math.round(game.getBoundingClientRect().bottom + 8);
-      this.media.style.top = `${top}px`;
-    }
-    if (this.inviteEl) this.inviteEl.style.top = `${top + (this.media?.getBoundingClientRect().height || 34) + 10}px`;
+    const game = document.getElementById('game');
+    if (inWorld && game && !game.classList.contains('hidden')) top = Math.round(game.getBoundingClientRect().bottom + 8);
+    if (this.inviteEl) this.inviteEl.style.top = `${top + 44}px`;   // where it stood under the old top-middle toggles
   }
 
   dispose() {
     this.left(false);
     this.closeInvite();
     this.observer?.disconnect(); removeEventListener('resize', this.layoutFn);
-    this.modal?.close(); this.social?.dispose(); this.chat?.dispose(); this.media?.remove();
+    this.modal?.close(); this.social?.dispose(); this.chat?.dispose(); this.voice?.dispose();
     this.hub?.close();
     if (window.__weMp === this) delete window.__weMp;
   }

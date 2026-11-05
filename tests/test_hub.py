@@ -37,6 +37,9 @@ POS = {"x": 4321.125, "y": 287.5, "z": -1234.75, "yaw": 2.375}     # distinctive
 CHAT_GROUP = "the creek is running at the bend"
 CHAT_TILE = "anyone near the oaks today"
 PASSWORD = "acorns and oaks"
+SDP = "v=0\r\no=- 4611731400430051336 2 IN IP4 127.0.0.1\r\ns=heron-at-the-ford\r\n"   # searched for at the end
+CAND = "candidate:842163049 1 udp 1677729535 198.51.100.77 46154 typ srflx raddr 0.0.0.0 rport 0"
+TURN_SECRET = "turn-test-secret-kingfisher"
 
 
 class Tee(io.TextIOBase):
@@ -66,8 +69,10 @@ class HubTest(unittest.TestCase):
             shutil.copy(ROOT / "tiles" / t / "manifest.json", tiles / t / "manifest.json")
         cls.saved = (server.TILES_DIR, hub.TILES_DIR)
         server.TILES_DIR = hub.TILES_DIR = tiles
-        for k in ("DISCORD_CLIENT_ID", "DISCORD_CLIENT_SECRET", "GOOGLE_CLIENT_ID", "GOOGLE_CLIENT_SECRET", "HUB_ORIGIN"):
+        for k in ("DISCORD_CLIENT_ID", "DISCORD_CLIENT_SECRET", "GOOGLE_CLIENT_ID", "GOOGLE_CLIENT_SECRET", "HUB_ORIGIN",
+                  "TURN_URL", "TURN_USERNAME", "TURN_CREDENTIAL", "TURN_SECRET"):
             os.environ.pop(k, None)
+        cls.signups_saved, hub.SIGNUP_PER_ADDR = hub.SIGNUP_PER_ADDR, 60   # every test signs up from 127.0.0.1
         hub.configure(cls.tmp / "data", cls.tmp / ".env")
         cls.log = Tee()
         cls.redirect = contextlib.redirect_stdout(cls.log)
@@ -84,6 +89,7 @@ class HubTest(unittest.TestCase):
         cls.httpd.shutdown()
         cls.httpd.server_close()
         hub.configure(hub.REPO_ROOT / "data", hub.REPO_ROOT / ".env")
+        hub.SIGNUP_PER_ADDR = cls.signups_saved
         server.TILES_DIR, hub.TILES_DIR = cls.saved
         cls.redirect.__exit__(None, None, None)
         shutil.rmtree(cls.tmp, ignore_errors=True)
@@ -452,6 +458,106 @@ class HubTest(unittest.TestCase):
         for p in (a, b, c):
             p[2].close()
 
+    def test_rtc_signalling(self):
+        """Lane 5: rtc goes to the addressed group member's connection in the same room and nowhere else: not across
+        groups, not across tiles, not out of a room; one tab answers; bye on leaving; the ICE servers in welcome."""
+        a, b, c, d = (self.player(n) for n in ("Crane_a", "Crane_b", "Ibis_c", "Crane_d"))
+        self.befriend(a, b)
+        self.befriend(a, d)
+        self.befriend(a, c)                                          # a friend, but not in the group
+        a[2].send({"t": "group", "op": "create", "users": [b[0], d[0]]})
+        for p in (a, b, d):
+            p[2].wait("groups", where=lambda m: len(m["groups"]) == 1 and len(m["groups"][0]["members"]) == 3)
+        self.assertEqual(a[2].welcome["ice"], [{"urls": list(hub.STUN_DEFAULT)}])   # STUN only by default
+        offer = {"t": "rtc", "to": b[0], "k": "sdp", "sdp": {"type": "offer", "sdp": SDP}}
+        a[2].send(offer)                                             # out of a room: nowhere
+        b[2].none("rtc")
+        for p in (a, b, c):
+            p[2].send({"t": "room", "op": "join", "tile": T1})
+        d[2].send({"t": "room", "op": "join", "tile": T2})
+        time.sleep(0.2)
+        a[2].send(offer)
+        got = b[2].wait("rtc")
+        self.assertEqual((got["from"], got["k"], got["sdp"]), (a[0], "sdp", {"type": "offer", "sdp": SDP}))
+        fa = got["fc"]
+        self.assertRegex(fa, r"^[0-9a-f]{8}$")
+        # the answer to that connection; a candidate; the media state
+        b[2].send({"t": "rtc", "to": a[0], "tc": fa, "k": "sdp", "sdp": {"type": "answer", "sdp": SDP}})
+        ans = a[2].wait("rtc")
+        self.assertEqual((ans["from"], ans["sdp"]["type"]), (b[0], "answer"))
+        fb = ans["fc"]
+        ice = {"candidate": CAND, "sdpMid": "0", "sdpMLineIndex": 0}
+        b[2].send({"t": "rtc", "to": a[0], "tc": fa, "k": "ice", "ice": ice})
+        self.assertEqual(a[2].wait("rtc")["ice"], ice)
+        b[2].send({"t": "rtc", "to": a[0], "k": "ice", "ice": None})
+        self.assertIsNone(a[2].wait("rtc", where=lambda m: m["k"] == "ice")["ice"])
+        a[2].send({"t": "rtc", "to": b[0], "tc": fb, "k": "state", "mic": True, "cam": 0, "extra": "dropped"})
+        st = b[2].wait("rtc")
+        self.assertEqual(st, {"t": "rtc", "from": a[0], "fc": fa, "k": "state", "mic": True, "cam": False})
+        # not across groups (c is in the room, a friend, not in the group), not across tiles (d), not to oneself
+        for to in (c, d):
+            a[2].send({**offer, "to": to[0]})
+            to[2].none("rtc")
+        a_tab2 = self.ws(a[1])
+        a_tab2.send({"t": "room", "op": "join", "tile": T1})
+        time.sleep(0.2)
+        a[2].send({**offer, "to": a[0]})
+        a_tab2.none("rtc")
+        c[2].send({**offer, "to": a[0]})                             # c to a: not a group member either
+        a[2].none("rtc")
+        a_tab2.none("rtc")
+        # one tab answers: without tc, the tab that entered the room last; with tc, that one only
+        b[2].send({"t": "rtc", "to": a[0], "k": "sdp", "sdp": {"type": "offer", "sdp": SDP}})
+        a_tab2.wait("rtc")
+        a[2].none("rtc")
+        b[2].send({"t": "rtc", "to": a[0], "tc": fa, "k": "state", "mic": False, "cam": True})
+        self.assertTrue(a[2].wait("rtc")["cam"])
+        a_tab2.none("rtc")
+        b[2].send({"t": "rtc", "to": a[0], "tc": "00000000", "k": "bye"})   # a connection that is not there: nowhere
+        a[2].none("rtc")
+        # malformed: the field named
+        for bad, field in (({"to": "someone", "k": "bye"}, "to"), ({"to": b[0], "k": "video"}, "k"),
+                           ({"to": b[0], "k": "sdp", "sdp": {"type": "offer", "sdp": "x" * 50_000}}, "sdp"),
+                           ({"to": b[0], "k": "sdp", "sdp": "v=0"}, "sdp"),
+                           ({"to": b[0], "k": "ice", "ice": {"candidate": CAND, "sdpMLineIndex": "0"}}, "ice"),
+                           ({"to": b[0], "tc": "ZZ", "k": "bye"}, "tc")):
+            a[2].send({"t": "rtc", **bad})
+            self.assertEqual(a[2].wait("err")["field"], field)
+        # leaving the room, or closing, tells the members in it: bye
+        b[2].send({"t": "room", "op": "leave"})
+        for tab in (a[2], a_tab2):
+            self.assertEqual(tab.wait("rtc", where=lambda m: m["k"] == "bye")["from"], b[0])
+        d[2].none("rtc")
+        b[2].send({"t": "room", "op": "join", "tile": T1})
+        time.sleep(0.2)
+        a_tab2.close()
+        b[2].wait("rtc", where=lambda m: m["k"] == "bye" and m["from"] == a[0])
+        for p in (a, b, c, d):
+            p[2].close()
+
+    def test_ice_servers_with_turn(self):
+        """TURN from the environment: a static pair, or coturn's time-limited credential from TURN_SECRET."""
+        try:
+            os.environ["TURN_URL"] = "turn:turn.example.org:3478?transport=udp, turns:turn.example.org:5349, nonsense"
+            os.environ["TURN_USERNAME"], os.environ["TURN_CREDENTIAL"] = "we-static-user", "we-static-pass"
+            a = self.player("Turn_a")
+            turn = a[2].welcome["ice"][1]
+            self.assertEqual(turn, {"urls": ["turn:turn.example.org:3478?transport=udp", "turns:turn.example.org:5349"],
+                                    "username": "we-static-user", "credential": "we-static-pass"})
+            os.environ["TURN_SECRET"] = TURN_SECRET
+            w = self.ws(a[1])
+            turn = w.welcome["ice"][1]
+            expiry = int(turn["username"].split(":")[0])
+            self.assertAlmostEqual(expiry, time.time() + hub.TURN_TTL_S, delta=60)
+            import base64, hashlib, hmac
+            want = base64.b64encode(hmac.new(TURN_SECRET.encode(), turn["username"].encode(), hashlib.sha1).digest()).decode()
+            self.assertEqual(turn["credential"], want)
+            del os.environ["TURN_URL"]
+            self.assertEqual(len(self.ws(a[1]).welcome["ice"]), 1)
+        finally:
+            for k in ("TURN_URL", "TURN_USERNAME", "TURN_CREDENTIAL", "TURN_SECRET"):
+                os.environ.pop(k, None)
+
     def test_framing(self):
         """ws.py joins fragments around a ping and answers the ping."""
         a = self.player("Vole_frag")
@@ -496,13 +602,14 @@ class HubTest(unittest.TestCase):
         self.assertNotIn("email", cols)
         con.close()
         raw = db.read_bytes()
-        needles = [T1, T2, "4321.12", "4321.13", "1234.75", "287.5", "2.375", CHAT_TILE, PASSWORD, "lontra"]
+        needles = [T1, T2, "4321.12", "4321.13", "1234.75", "287.5", "2.375", CHAT_TILE, PASSWORD, "lontra",
+                   "heron-at-the-ford", "198.51.100.77"]
         for n in needles:
             self.assertNotIn(n.encode(), raw, n)
         self.assertIn(CHAT_GROUP.encode(), raw)                 # group chat is kept (7 days)
         log = self.log.text()
         self.assertIn("/api/hub/signin 200", log)
-        for n in needles[2:] + [CHAT_GROUP, "test-secret", "test-client-id"] + self.names:
+        for n in needles[2:] + [CHAT_GROUP, "test-secret", "test-client-id", TURN_SECRET, "we-static-pass"] + self.names:
             self.assertNotIn(n, log, n)
 
 
