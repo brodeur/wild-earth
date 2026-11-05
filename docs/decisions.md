@@ -4629,3 +4629,37 @@ admin panel itself moves into Settings. Chosen:
   screen-door crown; the hanging clusters are placed on an ellipsoid, not on the 3D crown's twigs, and some sit inside
   dense leaves; fruit does not sway in the wind; nothing is eaten from it (E still feeds from needs.js); a bay laurel's
   crown hanging to the ground hides its nuts from outside; low-poly berries (20 faces) show facets within a metre.
+
+## 2026-11-04: the fruit's Meshy models: the acorn and the rose hips (tools/build_fruit.py)
+
+- **Why.** Aaron, through the orchestrating session: Meshy is allowed for the fruit, "whichever method reliably gives
+  the best result": Meshy where a real shape and texture read at a few centimetres (the acorn and its cap, walnut,
+  buckeye, pine nut or cone, wild grape, rose hips), the tiny clustered berries procedural; up to 200 credits; each
+  model decimated to a few hundred triangles because they are instanced.
+- **Generated** with `tools/meshy_generate.py` (the main checkout's copy, which reads the key from its git-ignored `.env`;
+  `--out` into `library/fruit/jobs/<id>/`, a new jobs folder with the animals' ignore rules, job.json kept): five
+  text-to-3D previews on `latest` (20 each) and three 2K texture refines (10 each): **130 credits** (balance 2,632 to
+  2,502; 550 of the 1,000 spent in all, the ledger now `library/*/jobs/*/*/job.json`).
+- **Adopted: the acorn and the rose hips.** The acorn (a slender valley oak acorn, the warty buff cap, the stem) replaces
+  the acorn game's procedural nut (`acorns.js`, the nuts on the ground and in the branches and the AI collectors' carried
+  ones), 160 triangles because the game draws every acorn within 300 m (2,400 by a valley oak: +190k triangles, the
+  frame's p10 34.8 ms either way); its nut graded from the texture's saturated red-brown toward chestnut. The rose hips
+  (three glossy hips with their dark sepals on a twig, flipped to hang) replace fruit.js's procedural spray, 360
+  triangles. `tools/build_fruit.py` (Blender 4.1): import, orient, life size, origin where the client attaches it,
+  collapse to the target (again until near it), and the texture baked into colours: each corner takes the texture at
+  the nearest point of the full-detail surface a quarter of the way to its triangle's centre, vertices split only where
+  corners clearly differ, so no sampler is drawn (POSITION, NORMAL, COLOR_0). fruit.js `fruitModel(id)` loads them once
+  a page and swaps them in; the procedural models stand in until then, or if a load fails.
+- **Rejected after generating.** The wild grape bunch (refined): at a few hundred triangles its 25 berries stalled at
+  1,082 (non-manifold where they touch) or, voxel-remeshed, collapsed to a faceted lump; the procedural bunch (20
+  triangles a berry) reads better and stays. The walnut preview came out furrowed like a shelled nut (a small pumpkin),
+  not the smooth husk on the tree, and the bay nut a plain egg: neither better than the procedural ones, so not refined.
+  Not generated: the buckeye and pine nuts, which no record names as food (so nothing would carry them), and the berry
+  clusters (procedural, as asked). A first export drew the hips and the grapes as shards: the source is split at every
+  UV seam and the weld was never written back (a line comment had swallowed the call), so the collapse made a soup.
+- **The acorns near the eye (a fix in acorns.js).** The near shrink (0.3 of the size inside 6 m; 0.06 for a squirrel or
+  woodpecker) and its settle (0.2 m) were tuned for the 70 cm nut of v1; since the nut went life size on 2026-10-27 they
+  made it a 9 mm speck (1.7 mm for the squirrel) sunk 14 cm into the ground, so near the eye only its glow showed. Both
+  factors are 1 now and the settle is the nut's own radius; seen with the Meshy acorn sitting on the ground at 15 cm.
+- **Verified** in the worktree's viewer: a lineup of the models; the rose hips hanging round a rose with their glow; the
+  acorn at 15 cm and 1.5 m under a valley oak (as the bear). No console errors, no shader diagnostics.

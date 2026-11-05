@@ -1,4 +1,5 @@
 import * as THREE from 'three';
+import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
 import { SPECIES, mulberry32 } from './trees.js';
 import { decoActive, seasonMonth } from './treegen.js';
 import { FH } from './shrubfield.js';
@@ -9,7 +10,7 @@ import { FH } from './shrubfield.js';
 //
 // Every fruit, nut and seed of a woody plant that the data says an animal eats (KINDS: the berries of the thirteen
 // berry shrubs, the walnut, the bay nut, the big-leaf maple's samaras, the two ceanothus' capsules and the redbud's
-// pods) has a small procedural model built here, made life size and drawn larger (SHOW_K: a life-size toyon
+// pods) has a small model: the rose hips from Meshy (fruitModel below), the rest built here, made life size and drawn larger (SHOW_K: a life-size toyon
 // cluster is a red speck from three metres), merged into one geometry per kind (a toyon's corymb of
 // berries, a grape's bunch, a walnut in its husk), drawn as one InstancedMesh per kind with one shared material, and
 // one shared InstancedMesh of glow billboards (the acorns' halo, acorns.js glowMaterial: a wide warm halo with a small
@@ -151,7 +152,7 @@ const KINDS = {
         B.blob(c.x, c.y - R * 1.02, c.z, R * 0.25, R * 0.2, R * 0.25, [70, 40, 30], 0);   // the dried flower at its tip
       }
     } },
-  rosa_californica: { name: 'California wild rose', part: 'berries', where: 'hang', perM2: 5, ny: [-0.2, 0.9], size: 0.035,
+  rosa_californica: { name: 'California wild rose', part: 'berries', where: 'hang', perM2: 5, ny: [-0.2, 0.9], size: 0.035, show: 1.6,
     build: (B, rnd) => {
       for (let k = 0; k < 3; k++) {
         const a = k * TAU / 3 + rnd() * 0.5, c = V(Math.cos(a) * 0.009, -0.02 - rnd() * 0.006, Math.sin(a) * 0.009), col = vary([196, 62, 38], rnd);
@@ -187,7 +188,7 @@ const KINDS = {
     build: (B, r) => corymb(B, r, { n: 4, r: 0.0062, w: 0.008, drop: 0.016, dome: -0.2, cols: [[238, 236, 230], [244, 242, 238], [226, 228, 226]], detail: 1 }) },
   toxicodendron_diversilobum: { name: 'poison oak', part: 'berries', where: 'hang', perM2: 3, ny: [-0.4, 0.7], size: 0.035,
     build: (B, r) => raceme(B, r, { n: 9, r: 0.0029, L: 0.045, sway: 0.4, cols: [[214, 202, 164], [222, 210, 170], [200, 190, 150]] }) },
-  vitis_californica: { name: 'California wild grape', part: 'berries', where: 'hang', perM2: 2.5, ny: [-0.7, 0.2], size: 0.06,
+  vitis_californica: { name: 'California wild grape', part: 'berries', where: 'hang', perM2: 2.5, ny: [-0.7, 0.2], size: 0.06, show: 1.6,
     build: (B, rnd) => {
       B.stalk(V(0, 0, 0), V(0.004, -0.02, 0), 0.0012, [110, 96, 60]);
       const n = 24;
@@ -232,6 +233,24 @@ function capsules(B, rnd, col) {   // a cluster of small three-lobed capsules (c
   }
 }
 export const FRUIT_KINDS = KINDS;
+
+// The Meshy models (Aaron, 2026-11-04: Meshy where a real shape and texture read at a few centimetres; the tiny
+// clustered berries stay procedural): the rose hips and the acorn (acorns.js), each a Meshy
+// text-to-3D model decimated to a few hundred triangles with its texture baked into vertex colours by
+// tools/build_fruit.py (no sampler at draw time). The grape bunch stays procedural: at a few hundred triangles the
+// Meshy bunch's 25 berries collapsed to a lump. Loaded once per page; each caller gets its own clone, and the
+// procedural model above stands in until it arrives, or for good if it fails.
+const MODEL_URL = { quercus_lobata: '../assets/fruit/quercus_lobata.glb', rosa_californica: '../assets/fruit/rosa_californica.glb' };
+const modelCache = new Map();
+export function fruitModel(id) {
+  if (!MODEL_URL[id]) return Promise.resolve(null);
+  let p = modelCache.get(id);
+  if (!p) modelCache.set(id, p = new GLTFLoader().loadAsync(new URL(MODEL_URL[id], import.meta.url).href).then(gltf => {
+    let geo = null; gltf.scene.traverse(o => { if (o.isMesh && !geo) geo = o.geometry; });
+    return geo;
+  }).catch(err => { console.warn(`fruit: the ${id} model did not load; the procedural one stays`, err); return null; }));
+  return p.then(g => g && g.clone());
+}
 const KIND_IDS = Object.keys(KINDS);
 
 // Each kind's geometry: three hashed variants merged side by side would be heavier; one model per kind, each instance
@@ -348,6 +367,13 @@ export class Fruit {
     this.glow.count = 0; this.glow.frustumCulled = false; this.glow.renderOrder = 10; this.glow.name = 'fruit glow';
     this.group.add(this.glow);
     this.tint = new Map(KIND_IDS.map(id => [id, kindColor(id)]));
+    this.models = new Map();   // kind id -> its loaded Meshy geometry (fruitModel), swapped in when it arrives
+    for (const id of KIND_IDS) fruitModel(id).then(g => {
+      if (!g || this.disposed) { g?.dispose(); return; }
+      this.models.set(id, g);
+      const m = this.meshes.get(id); if (!m) return;
+      g.setAttribute('aPlant', m.geometry.getAttribute('aPlant')); m.geometry.dispose(); m.geometry = g;
+    });
     this.tmp = new THREE.Object3D(); this.col = new THREE.Color(); this.gcol = new THREE.Color();
   }
   // the body the player is in (main.js onBody): a species code, or 'spirit'
@@ -383,7 +409,7 @@ export class Fruit {
   mesh(id) {
     let m = this.meshes.get(id);
     if (!m) {
-      const g = fruitGeometry(id);
+      const g = this.models.get(id) || fruitGeometry(id);
       g.setAttribute('aPlant', new THREE.InstancedBufferAttribute(new Float32Array(CAP * 4), 4).setUsage(THREE.DynamicDrawUsage));
       m = new THREE.InstancedMesh(g, this.mat, CAP);
       m.instanceMatrix.setUsage(THREE.DynamicDrawUsage); m.setColorAt(0, new THREE.Color()); m.instanceColor.setUsage(THREE.DynamicDrawUsage);
@@ -466,15 +492,15 @@ export class Fruit {
           fy = Math.max(fy, hts.groundXZ(fx, fz) + 0.06);
           rotX = (rnd() - 0.5) * 0.4; rotZ = (rnd() - 0.5) * 0.4;
         }
-        t.position.set(fx, fy, fz); t.rotation.set(rotX, yaw, rotZ); t.scale.setScalar(SHOW_K[K.where] * (0.9 + 0.2 * rnd())); t.updateMatrix();
+        t.position.set(fx, fy, fz); t.rotation.set(rotX, yaw, rotZ); t.scale.setScalar((K.show ?? SHOW_K[K.where]) * (0.9 + 0.2 * rnd())); t.updateMatrix();
         m.setMatrixAt(k, t.matrix);
         const pa = m.geometry.attributes.aPlant.array, pg = this.gPlant.array, pc = p.y + p.cy;
         pa[k * 4] = p.x; pa[k * 4 + 1] = pc; pa[k * 4 + 2] = p.z; pa[k * 4 + 3] = p.imp;
         this.col.setRGB(tint, tint, tint); m.setColorAt(k, this.col);
         if (ng < GLOW_CAP) {   // its glow: at the cluster's centre, the size of the cluster (a nut's: a little larger)
-          const o = ng * 16, gy = fy + (K.where === 'tree' ? 0.04 : -K.size * 0.5 * SHOW_K.hang);
+          const o = ng * 16, gy = fy + (K.where === 'tree' ? 0.04 : -K.size * 0.5 * (K.show ?? SHOW_K.hang));
           gm.fill(0, o, o + 16); gm[o] = gm[o + 5] = gm[o + 10] = gm[o + 15] = 1; gm[o + 12] = fx; gm[o + 13] = gy; gm[o + 14] = fz;
-          gs[ng] = Math.max(0.12, K.size * 1.7 * SHOW_K[K.where]);
+          gs[ng] = Math.max(0.12, K.size * 1.7 * (K.show ?? SHOW_K[K.where]));
           pg[ng * 4] = p.x; pg[ng * 4 + 1] = pc; pg[ng * 4 + 2] = p.z; pg[ng * 4 + 3] = p.imp;
           this.gcol.copy(base).lerp(GLOW_AMBER, 0.45).multiplyScalar(0.8 + 0.4 * tint);
           gc[ng * 3] = this.gcol.r; gc[ng * 3 + 1] = this.gcol.g; gc[ng * 3 + 2] = this.gcol.b;
@@ -501,8 +527,9 @@ export class Fruit {
   }
   counts() { const o = {}; for (const [id, m] of this.meshes) if (m.count) o[id] = m.count; o.glow = this.glow.count; o.plants = this.nPlants; return o; }
   dispose() {
-    this.group.removeFromParent();
+    this.disposed = true; this.group.removeFromParent();
     for (const m of this.meshes.values()) m.geometry.dispose();
+    for (const g of this.models.values()) g.dispose();
     this.meshes.clear(); this.mat.dispose(); this.glow.geometry.dispose(); this.glow.material.dispose();
   }
 }

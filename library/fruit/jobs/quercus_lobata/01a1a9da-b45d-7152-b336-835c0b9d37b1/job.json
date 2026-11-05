@@ -1,0 +1,71 @@
+{
+  "species": "quercus_lobata",
+  "mode": "refine",
+  "kind": "text-to-3d",
+  "task_id": "01a1a9da-b45d-7152-b336-835c0b9d37b1",
+  "endpoint": "https://api.meshy.ai/openapi/v2/text-to-3d",
+  "request": {
+    "mode": "refine",
+    "preview_task_id": "01a1a9d9-a29e-7424-9ac3-1d791c8d84ce",
+    "texture_resolution": "2k",
+    "enable_pbr": false,
+    "target_formats": [
+      "glb"
+    ],
+    "texture_prompt": "A ripe valley oak acorn: the nut smooth and glossy, warm chestnut brown, darker toward the tip with faint fine vertical streaks; the cap matte, pale grey-brown to buff, its knobby warty scales lighter on top and shadowed between; the little stem grey-brown.",
+    "moderation": false
+  },
+  "prompt": "A ripe valley oak acorn: the nut smooth and glossy, warm chestnut brown, darker toward the tip with faint fine vertical streaks; the cap matte, pale grey-brown to buff, its knobby warty scales lighter on top and shadowed between; the little stem grey-brown.",
+  "image": null,
+  "preview_job": ".claude/worktrees/fruit-glow/library/fruit/jobs/quercus_lobata/01a1a9d9-a29e-7424-9ac3-1d791c8d84ce",
+  "estimated_credits": 10,
+  "balance_before": 2532,
+  "status": "SUCCEEDED",
+  "timestamps": {
+    "submitted": "2026-11-05T03:57:24+00:00",
+    "created_at": "2026-11-05T03:57:26+00:00",
+    "started_at": "2026-11-05T03:57:26+00:00",
+    "finished_at": "2026-11-05T03:57:56+00:00",
+    "downloaded": "2026-11-05T03:58:15+00:00"
+  },
+  "tool": "tools/meshy_generate.py",
+  "pricing_source": {
+    "url": "https://docs.meshy.ai/en/api/pricing",
+    "read": "2026-10-24"
+  },
+  "licence_note": "Generated through the Meshy API, which requires a paid plan (402 on a free plan). Meshy Terms of Use (https://www.meshy.ai/terms-of-use, last updated 2026-09-19), section 3.2: customers on a paid plan own their Customer Output to the extent permitted by law (free-plan output is owned by Meshy and offered under CC BY 4.0 with credit to Meshy). As owner, the account holder may license this model under the project's CC BY-SA 4.0 asset licence, to the extent copyright subsists in AI-generated output. Section 2.4: do not remove or alter AI-identifying metadata or watermarks Meshy embeds; carry them into adopted tiers. Section 2.5: API output is deleted by Meshy 3 days after generation, so keep this folder until the model is adopted. Credit: \"generated with Meshy (meshy.ai)\".",
+  "maintainer": null,
+  "progress": 100,
+  "task": {
+    "id": "01a1a9da-b45d-7152-b336-835c0b9d37b1",
+    "type": "text-to-3d-refine",
+    "status": "SUCCEEDED",
+    "created_at": 1793851046936,
+    "started_at": 1793851046942,
+    "finished_at": 1793851076555,
+    "consumed_credits": 10,
+    "task_error": null
+  },
+  "credits_charged": 10,
+  "files": [
+    {
+      "file": "model.glb",
+      "bytes": 3707460,
+      "sha256": "b66b043317335b630389e274f91db328e8352a8017f0c19887a5299ca1fa46f1",
+      "source": "https://assets.meshy.ai/<account>/tasks/01a1a9da-b45d-7152-b336-835c0b9d37b1/output/model.glb"
+    },
+    {
+      "file": "texture_base_color.png",
+      "bytes": 6429809,
+      "sha256": "92c65a14a82a0445e37f7788c31ade3852ca8b5c43c93fd6c6b1d1c9c753e171",
+      "source": "https://assets.meshy.ai/<account>/tasks/01a1a9da-b45d-7152-b336-835c0b9d37b1/output/texture_0.png"
+    },
+    {
+      "file": "thumbnail.png",
+      "bytes": 63497,
+      "sha256": "a75bbfd8c25b583d629850261913083906749e944f5cc9626447953950313d90",
+      "source": "https://assets.meshy.ai/<account>/tasks/01a1a9da-b45d-7152-b336-835c0b9d37b1/output/preview.png"
+    }
+  ],
+  "balance_after": 2502
+}

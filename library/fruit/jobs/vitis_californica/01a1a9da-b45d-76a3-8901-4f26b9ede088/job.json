@@ -1,0 +1,71 @@
+{
+  "species": "vitis_californica",
+  "mode": "refine",
+  "kind": "text-to-3d",
+  "task_id": "01a1a9da-b45d-76a3-8901-4f26b9ede088",
+  "endpoint": "https://api.meshy.ai/openapi/v2/text-to-3d",
+  "request": {
+    "mode": "refine",
+    "preview_task_id": "01a1a9d9-a29d-764b-b191-9fdfc84f900f",
+    "texture_resolution": "2k",
+    "enable_pbr": false,
+    "target_formats": [
+      "glb"
+    ],
+    "texture_prompt": "Ripe California wild grapes: dusky deep purple to blue-black berries covered with a pale powdery bluish waxy bloom, a few still reddish-purple; the stems green-brown and woody.",
+    "moderation": false
+  },
+  "prompt": "Ripe California wild grapes: dusky deep purple to blue-black berries covered with a pale powdery bluish waxy bloom, a few still reddish-purple; the stems green-brown and woody.",
+  "image": null,
+  "preview_job": ".claude/worktrees/fruit-glow/library/fruit/jobs/vitis_californica/01a1a9d9-a29d-764b-b191-9fdfc84f900f",
+  "estimated_credits": 10,
+  "balance_before": 2532,
+  "status": "SUCCEEDED",
+  "timestamps": {
+    "submitted": "2026-11-05T03:57:24+00:00",
+    "created_at": "2026-11-05T03:57:26+00:00",
+    "started_at": "2026-11-05T03:57:26+00:00",
+    "finished_at": "2026-11-05T03:58:03+00:00",
+    "downloaded": "2026-11-05T03:58:14+00:00"
+  },
+  "tool": "tools/meshy_generate.py",
+  "pricing_source": {
+    "url": "https://docs.meshy.ai/en/api/pricing",
+    "read": "2026-10-24"
+  },
+  "licence_note": "Generated through the Meshy API, which requires a paid plan (402 on a free plan). Meshy Terms of Use (https://www.meshy.ai/terms-of-use, last updated 2026-09-19), section 3.2: customers on a paid plan own their Customer Output to the extent permitted by law (free-plan output is owned by Meshy and offered under CC BY 4.0 with credit to Meshy). As owner, the account holder may license this model under the project's CC BY-SA 4.0 asset licence, to the extent copyright subsists in AI-generated output. Section 2.4: do not remove or alter AI-identifying metadata or watermarks Meshy embeds; carry them into adopted tiers. Section 2.5: API output is deleted by Meshy 3 days after generation, so keep this folder until the model is adopted. Credit: \"generated with Meshy (meshy.ai)\".",
+  "maintainer": null,
+  "progress": 100,
+  "task": {
+    "id": "01a1a9da-b45d-76a3-8901-4f26b9ede088",
+    "type": "text-to-3d-refine",
+    "status": "SUCCEEDED",
+    "created_at": 1793851046701,
+    "started_at": 1793851046708,
+    "finished_at": 1793851083967,
+    "consumed_credits": 10,
+    "task_error": null
+  },
+  "credits_charged": 10,
+  "files": [
+    {
+      "file": "model.glb",
+      "bytes": 3759368,
+      "sha256": "97b3775c97c982783c15976a593af035758d2e749b7c2a599ef31e235934c4c7",
+      "source": "https://assets.meshy.ai/<account>/tasks/01a1a9da-b45d-76a3-8901-4f26b9ede088/output/model.glb"
+    },
+    {
+      "file": "texture_base_color.png",
+      "bytes": 6206219,
+      "sha256": "b2f2a8401ea79b5a0d3e6b19f37adf7cc3d06bdf8e622345f5141018d7fa486a",
+      "source": "https://assets.meshy.ai/<account>/tasks/01a1a9da-b45d-76a3-8901-4f26b9ede088/output/texture_0.png"
+    },
+    {
+      "file": "thumbnail.png",
+      "bytes": 100100,
+      "sha256": "6e2d62a567f4e773a7d138a0469c10e1c8f33205fc9af79ac02b4371cbc7c9bf",
+      "source": "https://assets.meshy.ai/<account>/tasks/01a1a9da-b45d-76a3-8901-4f26b9ede088/output/preview.png"
+    }
+  ],
+  "balance_after": 2502
+}

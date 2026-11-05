@@ -98,7 +98,8 @@ on the crowns or lying under the trees, glowing as the acorns do, within 16 m of
 A plant is in fruit in its species' berry months (`foliage.berries`, the months the crowns paint them), else in its
 `eaten_by` seasons, and its fruit is drawn only for a body that eats it this season; on a tile whose games have no
 forage rows (Placerville) the library's `eaten_by` stands in. A new berry record with `eaten_by` and a `foliage.berries`
-block needs a model in `KINDS` to be drawn.
+block needs a model in `KINDS` to be drawn. The acorn and the rose hips are Meshy models baked to vertex colours
+(`tools/build_fruit.py`, `client/assets/fruit/`); the rest are procedural.
 
 Scavenge (2026-11-02, `docs/game-scavenge.md`, `client/src/carrion.js`): the scavenge relation played out. Every kill
 is a carcass that decays over a real day in stages drawn on the body, with a meat store by its mass that each feed

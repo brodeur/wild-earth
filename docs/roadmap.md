@@ -172,8 +172,10 @@ sequenced; Parked is in the brief but deliberately not started.
   plant just like we do for acorns ... visible only when I'm close"; docs/decisions.md, `client/src/fruit.js`): a
   procedural model for each of the 19 woody fruits, nuts and seeds the records' `eaten_by` names, hanging on the crowns
   or lying under the trees, glowing as the acorns do, in fruit by the species' berry months and only for a body that
-  eats them, within 16 m of the body. Weak: clusters on an ellipsoid rather than the twigs, no sway, nothing eaten
-  from them yet; the herbs' seeds and pine nuts not modelled.
+  eats them, within 16 m of the body. The acorn and the rose hips are Meshy models (130 credits; tools/build_fruit.py
+  decimates them and bakes their textures into colours), and the acorns near the eye are life size and on the ground
+  again. Weak: clusters on an ellipsoid rather than the twigs, no sway, nothing eaten from them yet; the herbs' seeds
+  and pine nuts not modelled; the grape, walnut and bay nut Meshy tries not adopted.
 
 ## Next: the visual pass, in order of effect per hour
 

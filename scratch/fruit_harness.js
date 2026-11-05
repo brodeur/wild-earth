@@ -63,17 +63,25 @@ window.__fr = (() => {
 // A lineup of every fruit model (fruit.js fruitGeometry, from a fresh import so edits show without a reload), k times
 // life size, in rows on the ground at (x0, z0), the vegetation hidden; returns the ids in order.
 window.__frLineup = async (x0, z0, k = 3, cols = 5, step = 0.34) => {
+  const THREE_IBA = window.__we.fruit.gPlant.constructor;
   const we = window.__we, F = we.fruit, mod = await import('/client/src/fruit.js?v=' + Date.now()), ids = Object.keys(mod.FRUIT_KINDS);
   F.t = 1e9; F.update = () => {}; F.U.body.value.set(x0, z0, 100, 200); F.glow.count = 0;
   for (const m of F.meshes.values()) { m.count = 0; m.visible = false; }
   const t = F.tmp, h = we.tile.heights;
-  ids.forEach((id, i) => {
+  for (const [i, id] of ids.entries()) {
     const m = F.mesh(id); m.geometry.dispose();
-    const g = mod.fruitGeometry(id); g.setAttribute('aPlant', new (m.geometry.attributes.aPlant.constructor)(new Float32Array(m.geometry.attributes.aPlant.array.length), 4)); m.geometry = g;
+    const g = (await mod.fruitModel(id)) || mod.fruitGeometry(id); g.setAttribute('aPlant', new (m.geometry.attributes.aPlant.constructor)(new Float32Array(m.geometry.attributes.aPlant.array.length), 4)); m.geometry = g;
     const r = Math.floor(i / cols), c = i % cols, x = x0 + c * step, z = z0 + r * step, hang = mod.FRUIT_KINDS[id].where !== 'tree';
     t.position.set(x, h.groundXZ(x, z) + (hang ? 0.12 * k : 0.005), z); t.rotation.set(0, 0.5, 0); t.scale.setScalar(k); t.updateMatrix();
     m.setMatrixAt(0, t.matrix); m.setColorAt(0, F.col.setRGB(1, 1, 1)); m.instanceMatrix.needsUpdate = true; m.instanceColor.needsUpdate = true; m.count = 1; m.visible = true;
-  });
+  }
+  const ag = await mod.fruitModel('quercus_lobata');   // the acorn (acorns.js's model), at the end of the rows
+  if (ag) {
+    ag.setAttribute('aPlant', new THREE_IBA(new Float32Array(4), 4));
+    const am = window.__frAcorn ??= new (F.glow.constructor)(ag, F.mat, 1); am.geometry = ag; am.frustumCulled = false; F.group.add(am);
+    const i = ids.length, r = Math.floor(i / cols), c = i % cols, x = x0 + c * step, z = z0 + r * step;
+    t.position.set(x, h.groundXZ(x, z) + 0.02 * k, z); t.rotation.set(0, 0.5, 0); t.scale.setScalar(k); t.updateMatrix(); am.setMatrixAt(0, t.matrix); am.instanceMatrix.needsUpdate = true;
+  }
   for (const o of [we.veg, we.far]) o.group.visible = false; we.grass.shrubs.enabled = false;
   return ids;
 };
