@@ -748,6 +748,28 @@ against the 1 m DEM, median offset 0.00 m, std 0.04 m, best shift 0 m; the 1 m D
 1/3 arc-second (10 m) seamless DEM, mean difference 0.00 m, std 0.19 m after a 4 m registration shift
 of the 10 m product, cells more than 1 m apart on ridge crests, canyon floors and road cuts.
 
+
+**Partial and missing coverage (2026-11-04, the Hoh).** A tile may touch up to four 10 km product cells; any of them may
+have no 1 m DEM (fetch_lidar.NoDem, cached as `{"none": true}`), and the point cloud may cover only part of the tile or
+none of it. Then:
+
+- `terrain/dem_1m.tif` is the 1 m products where they exist and the 5 m DEM resampled bilinearly elsewhere;
+  `terrain/dem_1m_source.tif` (uint8, 1 = a 1 m product) marks which, `terrain/dem_1m_coverage.json` gives the shares
+  and each cell's project, and the `terrain.dem_1m` layer carries `coverage`.
+- The point cloud is found through the DEM cells' projects and through the TNM Access API's LPC products over the tile
+  (`lidar_index/lpc_projects.json`: a collection flown before the 1 m DEM program, like the Olympic Peninsula's of 2013,
+  has a point cloud and no 1 m DEM). Where the 1 m DEM is the 5 m fill, the ground is corrected by the point cloud's
+  own ground returns (their mean height less the DEM, smoothed over 2 m): `lidar_stats.json` `ground_from_points`.
+- `client/lidar_cover.png` (layer `client.lidar_cover`, L on the habitat grid): 255 where the point cloud reaches (a
+  10 m cell with returns in a quarter of its 1 m cells; a 30 m cell half covered). The client draws a covered cell's
+  trees from the crown list and an uncovered cell's from its species mix (crowns.js `crownCell`); a crown tile without
+  the raster is covered everywhere, as before. Beyond the point cloud, `vegetation/canopy_height_10m.tif` and
+  `client/canopy_height.png` are LANDFIRE's tree and shrub cover (EVC) and height (EVH), so every reader of the canopy
+  keeps working; `lidar_stats.json` `coverage` and `canopy_10m.filled_from_landfire_share` give the shares, and the
+  manifest's `status.lidar_coverage` `{dem_1m, point_cloud}`; `status.lidar` is `"partial"` under 98 %.
+- No point inside the tile (no collection, or only a collection's box): the DEM-only path, as on Yosemite; with no
+  1 m product either, its products are made from the 5 m fill (terrain detail near zero).
+
 ## Habitat classes
 
 `habitat.tif` collapses LANDFIRE into nine classes gameplay and rendering can reason

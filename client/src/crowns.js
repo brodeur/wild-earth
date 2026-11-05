@@ -34,6 +34,10 @@ import { drain } from './slice.js';
 
 export const CROWN_LAYER = 'client.trees_lidar';
 export const hasCrowns = tile => !!tile?.manifest?.layers?.[CROWN_LAYER];
+// Whether habitat cell (i, j) stands on the lidar's crowns (2026-11-04, a part-lidar tile: the Hoh's point cloud covers
+// ~65 % of utm10n_429_5293): a crown tile's cell is covered unless client/lidar_cover.png says the point cloud does not
+// reach it; there the cell draws its trees from its species mix, as a tile without lidar does.
+export const crownCell = (tile, crowns, i, j) => crowns && (!tile.lidarCover || tile.lidarCover.channel(i, j, 0) >= 128);
 
 const REACH = 1.4;                // a species can stand on a crown up to 1.4 x the top of its tallest class's height range
 export const SCALE = [0.4, 3];    // the drawn tree's height scale, clamped (1.7 until 2026-11-02; stature.js's giants on a rare

@@ -139,7 +139,10 @@ def find_dem_project(tile: Tile, cache: Path) -> dict:
     """Every 1 m project with this tile's cell, newest collection first; cached in cache/projects.json."""
     p = cache / "projects.json"
     if p.exists():
-        return json.loads(p.read_text())
+        d = json.loads(p.read_text())
+        if d.get("none"):   # a cell no project covers, asked before (the answer is cached like a found one)
+            raise NoDem(f"no 3DEP 1 m DEM project covers {tile.tile_id} (cached {d.get('checked')})")
+        return d
     try:
         projects, via = _projects_from_tnm(tile), "tnm_access_api"
     except Exception as e:  # noqa: BLE001
@@ -148,12 +151,52 @@ def find_dem_project(tile: Tile, cache: Path) -> dict:
     if not projects:
         projects, via = _projects_from_bucket(tile), "bucket_listing"
     if not projects:
-        raise RuntimeError(f"no 3DEP 1 m DEM project covers {tile.tile_id}")
+        if via is not None:   # both the API and the bucket said none; an API failure with an empty listing is not cached
+            from datetime import date
+            write_json(p, {"none": True, "checked": date.today().isoformat(), "found_via": via})
+        raise NoDem(f"no 3DEP 1 m DEM project covers {tile.tile_id}")
     metas = sorted((_dem_meta(tile, pr) for pr in projects),
                    key=lambda m: m.get("collection_end") or "", reverse=True)
     out = {"found_via": via, "chosen": metas[0], "candidates": metas}
     write_json(p, out)
     return out
+
+
+LPC_DATASET = "Lidar Point Cloud (LPC)"
+
+
+def lpc_projects(tile: Tile, cache: Path) -> list[str]:
+    """The point-cloud collections over the tile, from the TNM Access API's LPC products (2026-11-04: a collection
+    flown before the 1 m DEM program, the Olympic Peninsula's of 2013, has a point cloud and no 1 m DEM, so the point
+    cloud cannot be found through the DEM's project name). Their sub-project names first (the EPT bucket names a
+    collection by them), then the project names; cached in cache/lpc_projects.json."""
+    p = cache / "lpc_projects.json"
+    if p.exists():
+        return json.loads(p.read_text())
+    w, s, e, n = tile.bounds_wgs84
+    subs, projs, offset = [], [], 0
+    while True:
+        r = get(TNM_API, {"datasets": LPC_DATASET, "bbox": f"{w},{s},{e},{n}", "outputFormat": "JSON", "max": 500,
+                          "offset": offset}, timeout=180, retries=3).json()
+        items = r.get("items", [])
+        for it in items:
+            m = re.search(r"/LPC/Projects/([^/]+)/(?:([^/]+)/)?(?:LAZ|laz)/", it.get("downloadURL") or "")
+            if m:
+                if m.group(2) and m.group(2) not in subs:
+                    subs.append(m.group(2))
+                if m.group(1) not in projs:
+                    projs.append(m.group(1))
+        offset += len(items)
+        if not items or offset >= int(r.get("total") or 0) or offset > 5000:
+            break
+    out = subs + [x for x in projs if x not in subs]
+    write_json(p, out)
+    return out
+
+
+class NoDem(RuntimeError):
+    """No 1 m DEM product for a 10 km cell (the TNM API and the bucket both say so): the lidar step fills that part of
+    the tile from the 5 m DEM (2026-11-04, the Hoh: one of the four cells of utm10n_429_5293 has no project)."""
 
 
 class NoPointCloud(RuntimeError):
@@ -182,6 +225,9 @@ def find_ept(tile: Tile, dem_project: str, cache: Path) -> dict:
     names = [x.strip("/") for x in prefixes]
     stem = _stem(dem_project)
     cands = [n for n in names if _stem(n) == stem] or [n for n in names if n.lower().startswith(stem)]
+    if not cands:   # an LPC project name (lpc_projects): the EPT's name holds it ('USGS_LPC_WA_Olympic_Peninsula_2013_LAS_2015')
+        key = dem_project.lower()
+        cands = [n for n in names if key in n.lower()]
     tb = _tile_3857(tile)
     s = _session()
     hits, errors = [], []

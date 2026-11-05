@@ -19,9 +19,14 @@ from .http import post
 
 MIRRORS = [
     "https://overpass-api.de/api/interpreter",
+    "https://lz4.overpass-api.de/api/interpreter",      # overpass-api.de's other servers: a separate queue when the main is busy
+    "https://z.overpass-api.de/api/interpreter",
     "https://overpass.kumi.systems/api/interpreter",
     "https://overpass.private.coffee/api/interpreter",
+    "https://maps.mail.ru/osm/tools/overpass/api/interpreter",
 ]
+CONNECT_S, READ_S = 15, 200   # a dead mirror costs 15 s, not the old 240 (the Hoh's osm step: 1,721 s, 2026-11-04)
+MIRROR_STATE = Path(__file__).resolve().parent / "_cache" / "overpass_mirrors.json"   # when each last answered or failed
 
 ROAD_HALF_WIDTH = {
     "motorway": 18, "motorway_link": 8, "trunk": 14, "trunk_link": 7, "primary": 10,
@@ -162,22 +167,43 @@ def overpass(query: str, cache: Path | None = None, *, force=False, budget_s: fl
     runlog.fetched("osm", str(cache) if cache else None, cached=False)
     budget = OVERPASS_BUDGET_S if budget_s is None else budget_s
     t0, wait, rnd, last = time.time(), 60.0, 0, None
+    try:
+        state = json.loads(MIRROR_STATE.read_text())
+    except Exception:  # noqa: BLE001
+        state = {}
+
+    def note(url, ok):
+        state.setdefault(url, {})["ok" if ok else "fail"] = time.time()
+        try:
+            MIRROR_STATE.parent.mkdir(parents=True, exist_ok=True)
+            MIRROR_STATE.write_text(json.dumps(state))
+        except OSError:
+            pass
     while True:
         rnd += 1
-        for url in MIRRORS:
+        # the mirror that answered most recently first; one that failed in the last ten minutes last
+        order = sorted(MIRRORS, key=lambda u: (time.time() - (state.get(u, {}).get("fail") or 0) < 600,
+                                               -(state.get(u, {}).get("ok") or 0)))
+        for url in order:
             try:
-                data = _answer(post(url, {"data": query}, timeout=240, retries=1).json())
+                data = _answer(post(url, {"data": query}, timeout=(CONNECT_S, READ_S), retries=1).json())
             except Exception as ex:  # noqa: BLE001
                 last = ex
+                if "SSL" not in str(ex) and "ssl" not in str(ex):   # curl only for a TLS failure (another TLS stack)
+                    note(url, False)
+                    print(f"{label}: round {rnd} {url} failed: {str(ex)[:160]}", flush=True)
+                    continue
                 try:
-                    out = subprocess.run(["curl", "-s", "-f", "-m", "230", "-A", USER_AGENT, url,
-                                          "--data-urlencode", f"data={query}"],
-                                         capture_output=True, timeout=240, check=True).stdout
+                    out = subprocess.run(["curl", "-s", "-f", "--connect-timeout", str(CONNECT_S), "-m", str(READ_S), "-A",
+                                          USER_AGENT, url, "--data-urlencode", f"data={query}"],
+                                         capture_output=True, timeout=READ_S + 10, check=True).stdout
                     data = _answer(json.loads(out))
                 except Exception as ex2:  # noqa: BLE001
                     last = f"{str(ex)[:160]} / curl: {str(ex2)[:120]}"
+                    note(url, False)
                     print(f"{label}: round {rnd} {url} failed: {last}", flush=True)
                     continue
+            note(url, True)
             if cache is not None:
                 cache.parent.mkdir(parents=True, exist_ok=True)
                 cache.write_text(json.dumps(data))

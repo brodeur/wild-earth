@@ -4,7 +4,7 @@ import { buildTree, canopyMaterial, trunkMaterial, applySeasonSteps, chainShader
 import { bodyScale, onBodyScale } from './bodyScale.js';
 import { SEASON_LOOK } from './season.js';
 import { rockKeep } from './tilepackage.js';
-import { hasCrowns, loadCrowns, planCrownsSteps, oldClassOf, crownId, crownOf, SCALE, ASPECT } from './crowns.js';
+import { hasCrowns, crownCell, loadCrowns, planCrownsSteps, oldClassOf, crownId, crownOf, SCALE, ASPECT } from './crowns.js';
 import { stature, siteFactor, emergentOf, drawTree } from './stature.js';
 import { runSliced, drain } from './slice.js';
 import { releaseGeometry } from './gpuRelease.js';
@@ -590,8 +590,9 @@ export class Vegetation {
       const cx = (i + 0.5) * res, cn = size - (j + 0.5) * res;
       if (Math.hypot(cx - x, cn - north) > r) continue;
       const plan = cellPlan(tile, i, j); if (!plan) continue;
-      const { rnd, nTrees, nShrubs, treeMix, shrubMix } = plan, nRip = riparianExtra(tile, i, j, crowns);
-      const kE = crowns ? -1 : emergentOf(i, j, nTrees + nRip);   // the cell's emergent, as an index among its trees (stature.js)
+      const cc = crownCell(tile, crowns, i, j);   // this cell's trees are the lidar's crowns (a part-lidar tile: not beyond the point cloud)
+      const { rnd, nTrees, nShrubs, treeMix, shrubMix } = plan, nRip = riparianExtra(tile, i, j, cc);
+      const kE = cc ? -1 : emergentOf(i, j, nTrees + nRip);   // the cell's emergent, as an index among its trees (stature.js)
       let site = -1;   // the cell's site factor (stature.js), once a canopy tree needs it
       for (let k = 0; k < nTrees + nShrubs + nRip; k++) {
         const isTree = k < nTrees || k >= nTrees + nShrubs, rip = k >= nTrees + nShrubs;
@@ -604,7 +605,7 @@ export class Vegetation {
         name = zoneSpecies(tile, i, j, k, isTree, name, px, pn);   // a bank, terrace or pond-shore plant takes its zone's species
         const sid = resolveSpecies(name), variants = this.slots[sid]; if (!variants) continue;
         let v = Math.floor(vdraw * variants.length);   // slot draw as before: VARIANTS slots, weighted by class
-        if (isTree && crowns) continue;   // after the draws, so the shrubs stand where they always did
+        if (isTree && cc) continue;   // after the draws, so the shrubs stand where they always did
         const st = isTree ? stature(sid) : null;
         if (st && st.canopy[v]) {   // a canopy tree: its height from the curve, its class (and so its slot) from the height
           if (site < 0) site = siteFactor(tile, i, j);
