@@ -569,7 +569,7 @@ export async function loadTile(tileId, base = '../tiles/', { signal = null } = {
   for (const k of ['client.heights', 'client.texture', 'client.habitat', 'client.canopy', 'client.masks'])
     if (!L[k]) throw new Error(`tile ${id} lacks ${k}; run the derive step`);
   const MX = L['client.species_mix'], mixFiles = MX?.files || {};
-  const [heights, texture, habitat, canopy, masks, species, perception, calendar, games, locomotion, imagery, features, roads, imageryTexture, mast, mixIndex, mixJson, mixDensity, outcrop, geology, soils, groundClasses, profile, speciesPrior, detail, canopyHeight, groundTexture, seasonImage, lidarMicro, waterImg, waterWidthImg, substrate, substrateInfo] = await Promise.all([
+  const [heights, texture, habitat, canopy, masks, species, perception, calendar, games, locomotion, imagery, features, roads, imageryTexture, mast, mixIndex, mixJson, mixDensity, outcrop, geology, soils, groundClasses, profile, speciesPrior, detail, canopyHeight, groundTexture, seasonImage, lidarMicro, waterImg, waterWidthImg, substrate, substrateInfo, lidarCover] = await Promise.all([
     loadImageData(dir + L['client.heights'].path, signal), loadImageData(dir + L['client.texture'].path, signal),
     loadImageData(dir + L['client.habitat'].path, signal), loadImageData(dir + L['client.canopy'].path, signal),
     loadImageData(dir + L['client.masks'].path, signal),
@@ -622,6 +622,9 @@ export async function loadTile(tileId, base = '../tiles/', { signal = null } = {
     // grid, and the lithologies' cliff morphology; optional (terrain.js then keeps the older cliff rule)
     L['client.substrate'] ? loadImageData(dir + L['client.substrate'].path, signal).catch(e => { if (!signal?.aborted) console.warn('substrate:', e.message); return null; }) : null,
     L['client.substrate_classes'] ? fetch(dir + L['client.substrate_classes'].path, { signal }).then(r => r.ok ? r.json() : null).catch(() => null) : null,
+    // where the point cloud reaches (tile-spec "Lidar", 2026-11-04): 255 on the habitat grid where the lidar's crowns
+    // stand; optional (absent: every cell of a crown tile is covered, as before)
+    L['client.lidar_cover'] ? loadImageData(dir + L['client.lidar_cover'].path, signal).catch(() => null) : null,
   ]);
   if (signal?.aborted) throw aborted(signal);
   if (features) markRewilded(features, m);
@@ -647,6 +650,8 @@ export async function loadTile(tileId, base = '../tiles/', { signal = null } = {
     substrate: substrate && substrateInfo ? new Grid8(substrate, size) : null, substrateInfo: substrate ? substrateInfo : null,
     // lidar canopy (client/canopy_height.png, 10 m): R p95 canopy height x 0.25 m, G tree cover %, B shrub cover %; null without the lidar step
     canopyHeight: canopyHeight ? new Grid8(canopyHeight, size) : null,
+    // the lidar's reach on the habitat grid (client/lidar_cover.png R 255 = crowns real here), or null (all of a crown tile)
+    lidarCover: lidarCover && lidarCover.width === habitat.width ? new Grid8(lidarCover, size) : null,
     // lidar micro (client/lidar_micro.png, 2 m, RGB as loadLidarMicro): { width, height, data, channels }, or null
     lidarMicro: lidarMicro && lidarMicro.width === lidarMicro.height ? lidarMicro : null,
     // per-cell species weights and density multipliers (null: vegetation falls back to the class mix)

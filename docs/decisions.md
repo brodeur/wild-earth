@@ -5081,3 +5081,51 @@ have no ids: grass.js draws a field); a sampler for a root texture (the dirt's a
 their units, and a strand is too thin to show one); tying pulls to a tunnel system's decay (a plant pulled down stays
 gone for the season, as a gopher's harvest does).
 
+## 2026-11-04 (night): a part-lidar tile, and Overpass when every mirror is down
+
+The Hoh test (the brief's session, on main: `utm10n_429_5293 --stage base`) stopped at lidar: "no 3DEP 1 m DEM project
+covers utm10n_420_5290". In fact none of the tile's four product cells has a 1 m DEM: the Olympic Peninsula was flown in
+2013, before the 1 m DEM program, and has only its point cloud (USGS_LPC_WA_Olympic_Peninsula_2013_LAS_2015, 21 G
+points; about 65 % of the tile); Mount Olympus's tile has neither.
+
+- **Fill, do not fail**: a cell without a 1 m product is the 5 m DEM resampled, marked in `dem_1m_source.tif`; a stage
+  never fails because one block is missing.
+- **Find the point cloud by its own collection** (TNM's LPC products over the tile), not through the DEM's project name
+  (the old route: a tile whose DEM is missing never looked for its point cloud).
+- **The ground from the point cloud** where the 1 m DEM is the fill: the ground returns' mean height less the DEM,
+  smoothed over 2 m. Rejected: the 5 m DEM as the ground under the canopy (metres of error on the Hoh's valley walls
+  become false canopy height).
+- **Crowns where the point cloud is, the species mix beyond**: `client/lidar_cover.png` per 30 m cell, read by
+  vegetation.js and impostors.js (crowns.js `crownCell`); the canopy raster filled from LANDFIRE beyond, so substrate,
+  seasons, relief and the shrub counts need no change. Rejected: a crown tile treeless where the point cloud stops
+  (what the client did), and scattering LANDFIRE trees under the real crowns.
+- **No point in the tile is DEM-only**, not a failure (a collection's box overlapping Mount Olympus).
+- **Overpass**: every public mirror was down at once (overpass-api.de and its lz4 and z servers 502, kumi and
+  private.coffee timing out, mail.ru 504). The mirrors grow to six, a dead one costs 15 s to connect instead of 240,
+  curl is tried only after a TLS failure (the reason it was there), and the mirror that last answered goes first
+  (`pipeline/_cache/overpass_mirrors.json`). An outage still waits out the hour's budget; the next step, if outages
+  recur, is the OSM API's map call for a rural tile (0.25 square degrees, 50,000 nodes) as a last resort.
+
+Tested on utm10n_429_5293 in the worktree (base, then flora). Base: every step ok in 36 min.
+- **lidar** (20 min): the 1 m DEM is 0 % products and 100 % the 5 m fill. The point cloud
+  (1.34 G points, 29,885 nodes, 9 GB streamed) covers 56 % of the tile.
+- **The ground and the datum**: the point cloud's ground corrects the fill on 55 % of the tile. That needed one more
+  fix found by the test: the collection is ellipsoidal, 21.26 m below NAVD88 here, so the correction subtracts the DTM
+  check's offset. The first run lowered the DEM by 21 m and clipped 55 % of the terrain detail; after the fix the
+  detail's residual has a mean of 0.016 m and a std of 0.47 m.
+- **Crowns and the client**: 207,433 crowns where the point cloud reaches. The client draws the mix's trees beyond
+  them, and the forest runs unbroken across the edge.
+
+Flora: 4 min.
+- **The mix**: western hemlock 32 %, Pacific silver fir 29 %, Douglas-fir 19 %, western redcedar 6 %, Sitka spruce 4 %
+  and red alder 4 % over red huckleberry, dwarf Oregon grape, vine maple and salal; sword fern 37 % and redwood sorrel
+  34 % of the ground. No foothill species.
+- **Grown with no hands**: 13 Olympic species, from their cards (the records were not kept, so main's build grows them
+  again).
+- **Hand edits: 32.** 30 trait cards for species GBIF ranks on the tile, and 2 communities read from the tile pool:
+  "Rocky Mountain Subalpine Mesic-Wet Spruce-Fir" and "Southern Vancouverian Lowland Ruderal Grassland".
+- **The tree target is not met: 12 of 21.** A temperate rain forest has fewer tree species than the foothills; the
+  target was the foothills'.
+
+Cost: 9 GB downloaded (the point cloud). A player downloads 58 MB to enter the tile.
+

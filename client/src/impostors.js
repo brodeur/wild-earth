@@ -3,7 +3,7 @@ import { uniforms as atmo, ATMOSPHERE_GLSL } from './atmosphere.js';
 import { SPECIES, SPECIES_IDS, mulberry32, resolveSpecies } from './trees.js';
 import { VARIANTS, pick, hash, variantSeed, handover, cellPlan, placementSkip, placePlant, monthFor, crownPlan, rareSpecies, drawnSeed, tileSpecies, zoneSpecies, riparianExtra } from './vegetation.js';
 import { variantSlots, leafOnAt, treeWood } from './treegen.js';
-import { hasCrowns, SCALE } from './crowns.js';
+import { hasCrowns, crownCell, SCALE } from './crowns.js';
 import { stature, siteFactor, emergentOf, drawTree } from './stature.js';
 import { bakeSteps, VIEWS, SIDE_VIEWS, ALPHA_REF } from './impostorBake.js';
 import { drain } from './slice.js';
@@ -476,8 +476,9 @@ export class Impostors {
     for (let j = 0; j < hab.img.height; j++) for (let i = 0; i < hab.img.width; i++) {
       if (i === 0 && (j & 3) === 0) yield;
       const plan = cellPlan(tile, i, j); if (!plan) continue;
-      const { rnd, nTrees, nShrubs, treeMix, shrubMix } = plan, nRip = riparianExtra(tile, i, j, crowns);
-      const kE = crowns ? -1 : emergentOf(i, j, nTrees + nRip);   // the cell's emergent (stature.js), as in Vegetation.update
+      const cc = crownCell(tile, crowns, i, j);   // as Vegetation.update: crowns where the point cloud reaches, the mix beyond
+      const { rnd, nTrees, nShrubs, treeMix, shrubMix } = plan, nRip = riparianExtra(tile, i, j, cc);
+      const kE = cc ? -1 : emergentOf(i, j, nTrees + nRip);   // the cell's emergent (stature.js), as in Vegetation.update
       let site = -1;
       for (let k = 0; k < nTrees + nShrubs + nRip; k++) {
         const isTree = k < nTrees || k >= nTrees + nShrubs, rip = k >= nTrees + nShrubs;
@@ -488,7 +489,7 @@ export class Impostors {
         if (rip) { const at = tile.water.woodyPoint(i, j, res, hash(k, i + j * 4096, 61) / 4294967296); if (!at) continue; px = at[0] + (hash(k, i, 63) / 4294967296 - 0.5) * 5; pn = at[1] + (hash(k, j, 67) / 4294967296 - 0.5) * 5; }
         name = zoneSpecies(tile, i, j, k, isTree, name, px, pn);   // the near forest's zone species (vegetation.js)
         if (!resolveSpecies(name)) continue;
-        if (isTree && crowns) {   // trees are the crowns'; while the plan loads, count the cell draws as the atlas estimate
+        if (isTree && cc) {   // trees are the crowns'; while the plan loads, count the cell draws as the atlas estimate
           if (!crownPlan) { const sid = resolveSpecies(name), c = spCount[sid] || (spCount[sid] = { tree: 0, shrub: 0 }); c.tree++; }
           continue;
         }

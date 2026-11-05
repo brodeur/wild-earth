@@ -147,18 +147,49 @@ def dem_cells(tile: Tile) -> list[Tile]:
     return cells
 
 
-def build_dem_1m(tile: Tile, force=False) -> dict:
-    from .fetch_lidar import find_dem_project
-    from .http import download
+def cell_metas(tile: Tile) -> list:
+    """The 1 m DEM projects of each product cell the tile touches; None for a cell no project covers (fetch_lidar.NoDem)."""
+    from .fetch_lidar import NoDem, find_dem_project
     cells = dem_cells(tile)
-    metas = [find_dem_project(c, _src_cache(tile, "lidar_index" if len(cells) == 1 else f"lidar_index_{c.easting_km}_{c.northing_km}")) for c in cells]
-    meta, chosen = metas[0], metas[0]["chosen"]
+    metas = []
+    for c in cells:
+        try:
+            metas.append(find_dem_project(c, _src_cache(tile, "lidar_index" if len(cells) == 1 else f"lidar_index_{c.easting_km}_{c.northing_km}")))
+        except NoDem as e:
+            log(f"dem: {e}")
+            metas.append(None)
+    return cells, metas
+
+
+def _fill_from_5m(tile: Tile, z: np.ndarray) -> float:
+    """Fill the 1 m grid's NODATA cells from the 5 m DEM (terrain/dem.tif) resampled bilinearly; the share filled."""
+    hole = z == NODATA
+    if not hole.any():
+        return 0.0
+    with rasterio.open(tile.path("terrain/dem.tif")) as src:
+        z5 = src.read(1, out_shape=(N1, N1), resampling=Resampling.bilinear).astype("float32")
+        nd = src.nodata
+    ok = hole & (z5 != nd) & np.isfinite(z5)
+    z[ok] = z5[ok]
+    return float(hole.mean())
+
+
+def build_dem_1m(tile: Tile, force=False) -> dict:
+    from .http import download
+    cells, metas = cell_metas(tile)
+    have = [m for m in metas if m]
+    meta = have[0] if have else {"found_via": None, "chosen": {"project": None, "collection_begin": None, "collection_end": None},
+                                 "candidates": []}
+    chosen = meta["chosen"]
     out = tile.path("terrain/dem_1m.tif")
+    cov_p = tile.path("terrain/dem_1m_coverage.json")
     if force or not out.exists():
         raw_dir = _src_cache(tile, "lidar_dem1m")
         x0, y0, x1, y1 = tile.bounds
         z = np.full((N1, N1), NODATA, dtype="float32")
         for cell, cm in zip(cells, metas):   # each product covers its cell plus an apron: paste the overlap with the tile
+            if cm is None:
+                continue                  # no product for this cell: the 5 m DEM fills it below
             cx0, cy0, cx1, cy1 = cell.bounds
             ox0, oy0, ox1, oy1 = max(x0, cx0), max(y0, cy0), min(x1, cx1), min(y1, cy1)
             w, h = int(round(ox1 - ox0)), int(round(oy1 - oy0))
@@ -184,16 +215,29 @@ def build_dem_1m(tile: Tile, force=False) -> dict:
                     break
                 log(f"dem: {raw.name} covers {(part != NODATA).mean():.0%} of the cell's overlap; trying the next collection")
             r0, c0 = int(round(y1 - oy1)), int(round(ox0 - x0))   # rows run from the tile's north edge
-            z[r0:r0 + h, c0:c0 + w] = part
+            z[r0:r0 + h, c0:c0 + w] = np.where(part != NODATA, part, z[r0:r0 + h, c0:c0 + w])
+        # partial and missing coverage (2026-11-04, the Hoh): what no 1 m product holds is the 5 m DEM, resampled; the
+        # source mask (1 product, 0 filled) lets the products stage correct the filled ground from the point cloud
+        _write(tile.path("terrain/dem_1m_source.tif"), (z != NODATA).astype(np.uint8), tile, nodata=None, predictor=2)
+        filled = _fill_from_5m(tile, z)
+        write_json(cov_p, {"share_1m": round(1 - filled, 4), "share_5m_fill": round(filled, 4),
+                           "cells": [{"cell": c.tile_id, "project": (m or {}).get("used") or ((m or {}).get("chosen") or {}).get("project")}
+                                     for c, m in zip(cells, metas)]})
+        if filled:
+            from . import runlog
+            runlog.fallback(f"1 m DEM covers {1 - filled:.0%} of the tile; the rest is the 5 m DEM resampled"
+                            + (" (no 1 m product at all)" if filled > 0.999 else ""), product="dem_1m_partial", share_1m=round(1 - filled, 4))
         _write(out, z, tile)
         with rasterio.open(out, "r+") as dst:
             dst.build_overviews([2, 4, 8, 16], Resampling.average)
-        shutil.rmtree(raw_dir)          # the raw product is the same 1 m cell plus an apron
+        shutil.rmtree(raw_dir, ignore_errors=True)   # the raw product is the same 1 m cell plus an apron
     z = _read(out)
     v = z != NODATA
+    cov = read_json(cov_p) if cov_p.exists() else {"share_1m": 1.0}
     return {"path": "terrain/dem_1m.tif", "kind": "raster", "crs": tile.crs,
             "bounds": list(tile.bounds), "pixels": N1, "resolution_m": 1.0, "units": "m (NAVD88)", "nodata": NODATA,
-            "source": "usgs_3dep_1m", "project": chosen["project"], "projects": [m.get("used", m["chosen"]["project"]) for m in metas],
+            "source": "usgs_3dep_1m" if have else "usgs_3dep", "project": chosen["project"],
+            "projects": [m.get("used", m["chosen"]["project"]) for m in have], "coverage": cov,
             "collection": [chosen["collection_begin"], chosen["collection_end"]], "found_via": meta["found_via"],
             "other_collections": [c["project"] for c in meta["candidates"][1:]],
             "for_clients": False, "for_clients_note": "pipeline only; clients read client.heights (5 m) and client.terrain_detail",
@@ -294,10 +338,38 @@ def _grids(tile: Tile, mode="r+"):
 def build_grid(tile: Tile, workers: int = 10, max_depth: int | None = None, force=False) -> dict:
     from multiprocessing import get_context
     from .fetch_lidar import ept_nodes, find_ept
-    dem_meta = find_dem_project(tile)
-    found = find_ept(tile, dem_meta["chosen"]["project"], _src_cache(tile, "lidar_index"))
+    from .fetch_lidar import NoPointCloud
+    # the point cloud from any product cell's projects (2026-11-04: the tile's own centre may have none)
+    projects = []
+    for m in cell_metas(tile)[1]:
+        for c in ([m["chosen"]] + m["candidates"]) if m else []:
+            if c["project"] not in projects:
+                projects.append(c["project"])
+    from .fetch_lidar import lpc_projects
+    try:   # the point-cloud collections themselves (TNM LPC products), for a collection with no 1 m DEM
+        for pr in lpc_projects(tile, _src_cache(tile, "lidar_index")):
+            if pr not in projects:
+                projects.append(pr)
+    except Exception as ex:  # noqa: BLE001
+        log(f"grid: TNM LPC search failed ({str(ex)[:120]}); the DEM projects alone")
+    if not projects:
+        raise NoPointCloud(f"no 1 m DEM or point-cloud collection over {tile.tile_id}")
+    found, errs = None, []
+    for pr in projects:
+        try:
+            f = find_ept(tile, pr, _src_cache(tile, f"lidar_index/ept_{pr}"))
+        except NoPointCloud as e:
+            errs.append(str(e)[:120])
+            continue
+        if found is None:
+            found = f
+        else:
+            seen = {h["project"] for h in found["overlapping"]}
+            found["overlapping"] += [h for h in f["overlapping"] if h["project"] not in seen]
+    if found is None:
+        raise NoPointCloud("; ".join(errs[:3]))
     ept = found["chosen"]
-    if len(found.get("overlapping") or []) > 1:
+    if len(found.get("overlapping") or []) >= 1:
         # A project's bounds are its whole box: the first that overlaps may hold nothing here (utm10n_731_4235, 2026-11-04:
         # CA_SierraNevada_3_2022 overlapped by box and gave 54 k points, none in the tile; _5_2022 holds the tile). Take the
         # one whose hierarchy has the most points in nodes touching the tile.
@@ -313,6 +385,8 @@ def build_grid(tile: Tile, workers: int = 10, max_depth: int | None = None, forc
             log(f"grid: EPT candidate {cand['project']}: {len(cn)} nodes touching the tile, {n / 1e6:.1f} M points")
             if n > best_n:
                 best, best_n = cand, n
+        if best_n <= 0:   # no node of any candidate holds a point over the tile (Mount Olympus beside the 2013 collection)
+            raise NoPointCloud(f"no point of {', '.join(c['project'] for c in found['overlapping'])} falls on {tile.tile_id}")
         if best["project"] != ept["project"]:
             from . import runlog
             runlog.fallback(f"EPT {ept['project']} overlaps the tile by its box only; {best['project']} holds the points", product="ept")
@@ -393,8 +467,8 @@ def build_grid(tile: Tile, workers: int = 10, max_depth: int | None = None, forc
     state_p.write_text(json.dumps(state))
     if state["failed"]:
         raise RuntimeError(f"{len(state['failed'])} EPT nodes failed; re-run to retry: {list(state['failed'])[:5]}")
-    if not state["points_in_tile"]:   # fail here, not in the products' statistics on an empty grid
-        raise RuntimeError(f"EPT {ept['project']} gave {state['points']} points and none inside the tile; --force lidar after fixing the choice")
+    if not state["points_in_tile"]:   # a collection whose box overlaps the tile with no point inside it: no point cloud here
+        raise NoPointCloud(f"EPT {ept['project']} gave {state['points']} points and none inside the tile")
     return state
 
 
@@ -437,18 +511,57 @@ def dtm_check(tile: Tile, dem: np.ndarray, g: dict) -> tuple[float, dict]:
     return off, stats
 
 
-def canopy_10m(tile: Tile, chm: np.ndarray) -> dict:
+def coverage(tile: Tile, npts: np.ndarray) -> tuple[np.ndarray, dict]:
+    """Where the point cloud reaches (2026-11-04, a part-lidar tile: the Hoh's Olympic Peninsula collection covers
+    ~65 % of utm10n_429_5293): a 10 m cell is covered when a quarter of its 1 m cells have a return. Writes
+    client/lidar_cover.png on the habitat grid (30 m, 255 = the lidar's crowns stand there; elsewhere the client draws
+    the cell's trees from its species mix) and returns the 10 m mask and the shares."""
+    k = 10
+    n = N1 // k
+    share = (npts > 0).reshape(n, k, n, k).mean(axis=(1, 3))
+    cov10 = share >= 0.25
+    with rasterio.open(tile.path("vegetation/habitat.tif")) as src:
+        hw = src.width
+    from rasterio.enums import Resampling as R_
+    from rasterio.io import MemoryFile
+    prof = _profile(n, tile, dtype="float32")
+    with MemoryFile() as mf:
+        with mf.open(**{**prof, "nodata": None}) as ds:
+            ds.write(cov10.astype("float32"), 1)
+            c30 = ds.read(1, out_shape=(hw, hw), resampling=R_.average)
+    Image.fromarray(np.where(c30 >= 0.5, 255, 0).astype("uint8"), "L").save(tile.path("client/lidar_cover.png"), optimize=True)
+    return cov10, {"covered_share": round(float(cov10.mean()), 4), "client_cells_covered": round(float((c30 >= 0.5).mean()), 4),
+                   "rule": "a 10 m cell with returns in a quarter of its 1 m cells; client/lidar_cover.png: a 30 m cell half covered"}
+
+
+def canopy_10m(tile: Tile, chm: np.ndarray, cov10: np.ndarray | None = None) -> dict:
     k = 10
     n = N1 // k
     blocks = chm.reshape(n, k, n, k).transpose(0, 2, 1, 3).reshape(n, n, k * k)
     p95 = np.percentile(blocks, 95, axis=2).astype(np.float32)
     tree = (blocks >= TREE_MIN_H).mean(axis=2).astype(np.float32) * 100
     shrub = ((blocks >= SHRUB_MIN_H) & (blocks < TREE_MIN_H)).mean(axis=2).astype(np.float32) * 100
+    filled = 0.0
+    if cov10 is not None and not cov10.all():
+        # beyond the point cloud: LANDFIRE's cover and height (EVC 101-199 tree cover %, 201-299 shrub cover %; EVH
+        # 101-199 tree height m), so every reader of the canopy (substrate, seasons, relief, the shrub counts) sees a
+        # canopy there rather than bare ground
+        from rasterio.enums import Resampling as R_
+        with rasterio.open(tile.path("vegetation/evc.tif")) as src:
+            evc = src.read(1, out_shape=(n, n), resampling=R_.nearest).astype(np.float32)
+        with rasterio.open(tile.path("vegetation/evh.tif")) as src:
+            evh = src.read(1, out_shape=(n, n), resampling=R_.nearest).astype(np.float32)
+        lf_tree = np.where((evc >= 101) & (evc <= 199), evc - 100, 0)
+        lf_shrub = np.where((evc >= 201) & (evc <= 299), evc - 200, 0)
+        lf_h = np.where((evh >= 101) & (evh <= 199), evh - 100, np.where((evh >= 201) & (evh <= 299), (evh - 200) * 0.5, 0))
+        u = ~cov10
+        p95, tree, shrub = np.where(u, lf_h, p95), np.where(u, lf_tree, tree), np.where(u, lf_shrub, shrub)
+        filled = float(u.mean())
     _write(tile.path("vegetation/canopy_height_10m.tif"), np.stack([p95, tree, shrub]), tile)
     rgb = np.stack([np.clip(np.round(p95 * 4), 0, 255), np.round(tree), np.round(shrub)], -1).astype(np.uint8)
     Image.fromarray(rgb, "RGB").save(tile.path("client/canopy_height.png"), optimize=True)
     return {"p95_mean_m": round(float(p95.mean()), 2), "tree_cover_pct": round(float(tree.mean()), 2),
-            "shrub_cover_pct": round(float(shrub.mean()), 2)}
+            "shrub_cover_pct": round(float(shrub.mean()), 2), "filled_from_landfire_share": round(filled, 4)}
 
 
 def _osm_buildings(tile: Tile) -> np.ndarray:
@@ -885,6 +998,32 @@ def build_products(tile: Tile, force=False, keep_grids=False) -> dict:
     stats["grid"]["density_pts_m2"] = round(state["points_in_tile"] / (N1 * N1), 1)
     off, stats["dtm_check"] = dtm_check(tile, dem, g)
     log(f"products: dtm check {stats['dtm_check']}")
+    # Where the 1 m DEM is the 5 m DEM resampled (no 1 m product: the Olympic Peninsula's 2013 collection), the ground is
+    # the point cloud's own: its ground returns' mean height (gsum / gcnt) less the DEM, smoothed over 2 m and added
+    # where they are dense enough. Without this the canopy over a steep slope carries the 5 m DEM's metres of error.
+    src_p = tile.path("terrain/dem_1m_source.tif")
+    if src_p.exists():
+        from scipy.ndimage import gaussian_filter
+        fill = _read(src_p) == 0
+        if fill.any():
+            gc = np.asarray(g["gcnt"]).reshape(N1, N1).astype(np.float32)
+            gs = np.asarray(g["gsum"]).reshape(N1, N1).astype(np.float32)
+            w = (gc > 0).astype(np.float32)
+            # gsum / gcnt is the ground's height in the point cloud's own vertical datum: less the tile-wide offset the
+            # DTM check measured (the Olympic Peninsula's 2013 collection is ellipsoidal, -21.3 m against the DEM's
+            # NAVD88: the geoid there), so only the ground's shape corrects the DEM, never the datum
+            resid = np.where((gc > 0) & (dem != NODATA), gs / np.maximum(gc, 1) - dem - np.float32(off), 0).astype(np.float32)
+            rs = gaussian_filter(resid * w, 2.0)
+            del resid
+            ws = gaussian_filter(w, 2.0)
+            use = fill & (ws > 0.05) & (dem != NODATA)
+            dem = np.where(use, dem + rs / np.maximum(ws, 1e-6), dem).astype(np.float32)
+            del gc, gs, w, rs, ws
+            _write(tile.path("terrain/dem_1m.tif"), dem, tile)
+            stats["ground_from_points"] = {"share": round(float(use.mean()), 4), "datum_offset_m": round(float(off), 3),
+                                           "note": "the 5 m DEM corrected by the ground returns where no 1 m product exists "
+                                                   "(their height less the DTM check's tile-wide offset)"}
+            log(f"products: ground from the point cloud's ground returns on {use.mean():.0%} of the tile")
     dsm = np.asarray(g["dsm"]).reshape(N1, N1).copy()
     npts = np.asarray(g["npts"]).reshape(N1, N1)
     stats["grid"]["empty_cell_fraction"] = round(float((npts == 0).mean()), 4)
@@ -899,7 +1038,13 @@ def build_products(tile: Tile, force=False, keep_grids=False) -> dict:
            nodata=None, predictor=2)
     log("products: dsm, chm written")
     from scipy.ndimage import median_filter
-    stats["canopy_10m"] = canopy_10m(tile, median_filter(chm, size=3))   # 3x3 median: wires out
+    cov10, stats["coverage"] = coverage(tile, npts)
+    if stats["coverage"]["covered_share"] < 0.98:
+        from . import runlog
+        runlog.fallback(f"the point cloud covers {stats['coverage']['covered_share']:.0%} of the tile: crowns there, the canopy "
+                        "elsewhere from LANDFIRE and the trees from the species mix (client/lidar_cover.png)",
+                        product="lidar_partial", covered=stats["coverage"]["covered_share"])
+    stats["canopy_10m"] = canopy_10m(tile, median_filter(chm, size=3), cov10)   # 3x3 median: wires out
     multi = np.where(npts > 0, np.asarray(g["nmulti"]).reshape(N1, N1) / np.maximum(npts, 1), 0).astype(np.float32)
     _write(tile.path("vegetation/multi_1m.tif"), np.round(multi * 255).astype(np.uint8), tile, nodata=None, predictor=2)
     stats["crowns"] = crowns(tile, chm, multi)
@@ -992,6 +1137,11 @@ def layers(tile: Tile, dem_info: dict, stats: dict) -> dict:
                               "encoding": "float32: std of the 1 m DEM about its least-squares quadratic within the 10 m cell",
                               "source": "usgs_3dep_1m", "derived_from": ["terrain.dem_1m"], "stats": stats["roughness"]},
     }
+    if "coverage" in stats:             # the point cloud's reach (2026-11-04): crowns real inside, the mix's trees outside
+        L["client.lidar_cover"] = {"path": "client/lidar_cover.png", "kind": "raster", **grid, "resolution_m": 30.0,
+                                   "encoding": "L on the habitat grid: 255 = the lidar's crowns stand in this cell (the client "
+                                               "draws no cell trees there), 0 = no point cloud (the client draws the cell's "
+                                               "trees from its species mix)", **pc_src, "stats": stats["coverage"]}
     if "lidar_micro" in stats:          # tiles whose grids were streamed with GRID_VERSION 2 or later
         L["client.lidar_micro"] = {
             "path": "client/lidar_micro.png", "kind": "raster", **grid, "pixels": N1 // MICRO_RES,
@@ -1038,12 +1188,12 @@ def build_dem_only(tile: Tile, dem_info: dict, force=False) -> dict:
                                               "residual m = (v - 128) * 0.04 (clamped +-5.08 m) = the 1 m DEM averaged to 2 m minus "
                                               "client.heights decoded and interpolated bilinearly between ITS pixel centres "
                                               "(x = 5i + 2.5, north = 10000 - 5j - 2.5). Linear, so texture filtering interpolates it",
-                                  "source": "usgs_3dep_1m", "derived_from": ["terrain.dem_1m", "client.heights"],
+                                  "source": dem_info.get("source", "usgs_3dep_1m"), "derived_from": ["terrain.dem_1m", "client.heights"],
                                   "stats": stats["terrain_detail"]},
         "terrain.roughness": {"path": "terrain/roughness_10m.tif", "kind": "raster", **grid, "pixels": N1 // ROUGH_RES,
                               "resolution_m": float(ROUGH_RES), "units": "m", "nodata": NODATA,
                               "encoding": "float32: std of the 1 m DEM about its least-squares quadratic within the 10 m cell",
-                              "source": "usgs_3dep_1m", "derived_from": ["terrain.dem_1m"], "stats": stats["roughness"]},
+                              "source": dem_info.get("source", "usgs_3dep_1m"), "derived_from": ["terrain.dem_1m"], "stats": stats["roughness"]},
     }
     L["terrain.dem_1m"]["tile_key"] = dem_tile_name(tile)
     L["terrain.dem_1m"]["point_cloud"] = "none in the public Entwine bucket (DEM-only products)"

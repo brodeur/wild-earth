@@ -83,6 +83,12 @@ def _lidar(tile, m, force):
         add_layer(m, tile, k, v)
     # "dem_only": the 1 m DEM products alone, no point cloud in the public Entwine bucket (lidar.py)
     m["status"]["lidar"] = True if "vegetation.chm_1m" in out else "dem_only"
+    # how much of the tile each part reaches (2026-11-04): the 1 m DEM products, and the point cloud (crowns real there)
+    cov = (out.get("terrain.dem_1m") or {}).get("coverage") or {}
+    pc = ((out.get("client.lidar_cover") or {}).get("stats") or {}).get("covered_share")
+    m["status"]["lidar_coverage"] = {"dem_1m": cov.get("share_1m", 1.0), "point_cloud": pc if pc is not None else (1.0 if m["status"]["lidar"] is True else 0.0)}
+    if m["status"]["lidar"] is True and pc is not None and pc < 0.98:
+        m["status"]["lidar"] = "partial"
 
 
 def _lidar_applies(tile, m):
@@ -436,7 +442,7 @@ STEPS: dict[str, Step] = {s.name: s for s in [
     Step("lidar", "1", ["lidar", "fetch_lidar", "urban"], ["dem", "osm", "landcover"], _lidar,
          ["terrain.dem_1m", "terrain.dsm_1m", "vegetation.chm_1m", "vegetation.multi_1m", "terrain.lidar_dtm_check",
           "vegetation.canopy_height_10m", "client.canopy_height", "client.terrain_detail",
-          "terrain.roughness", "client.lidar_micro"], ["usgs_3dep_lidar"], applies=_lidar_applies,
+          "terrain.roughness", "client.lidar_micro", "client.lidar_cover"], ["usgs_3dep_lidar"], applies=_lidar_applies,
          doc="1 m ground, canopy height from the 3DEP point cloud; DEM-only from the 1 m products without one", stage=B),
     Step("reroute", "1", ["reroute", "rewild_hydro"], ["dem", "channels", "rewild_hydro", "hydro", "lidar"], _reroute, ["hydro.channels_5m"],
          applies=_reroute_applies, owner="water lane", doc="every stream onto the 1 m lidar thalweg", stage=B),

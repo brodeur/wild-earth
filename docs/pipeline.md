@@ -57,7 +57,7 @@ flora's, as are the crowns and their inpainting.
 | hydro, channels, rewild_hydro, water | (water lane) | streams, beds, banks, riparian zones | NHDPlus HR (PD), OSM | NHD US; OSM fallback; routing on the DEM global |
 | landcover | rewild_hydro | vegetation.* (EVT, EVC, EVH, BpS, habitat) | LANDFIRE (PD) | CONUS; elsewhere fails loudly (next: WorldCover + RESOLVE ecoregions, CC BY 4.0) |
 | ice | dem, landcover | terrain.ice (+ client/ice.png, terrain/ice.json) | LANDFIRE Snow-Ice, OSM natural=glacier | global (OSM), US (LANDFIRE) |
-| lidar | dem, osm, landcover | 1 m DEM, CHM, roughness, terrain detail, micro | 3DEP lidar (PD) | US where flown; DEM-only; not applicable outside |
+| lidar | dem, osm, landcover | 1 m DEM, CHM, roughness, terrain detail, micro, lidar_cover | 3DEP 1 m DEM and point clouds (PD); TNM LPC search | US where flown; missing 1 m cells filled from the 5 m DEM and corrected by the point cloud's ground; the point cloud where it reaches (`client/lidar_cover.png`), LANDFIRE's canopy and the mix's trees beyond; DEM-only without a point; not applicable outside the US |
 | ground | dem, landcover, lidar | geology, soils, outcrop, ground classes | Macrostrat (CC BY 4.0), SGMC, SSURGO (PD) | geology global; soils US (next: SoilGrids, CC BY 4.0) |
 | terrain | dem ... water, landcover, ice | hillshade, heights, habitat, canopy, roads, textures, masks, features | Overpass places, Native Land | |
 | erase | naip, osm, landcover, terrain, rewild_hydro | client.texture_imagery | | |
