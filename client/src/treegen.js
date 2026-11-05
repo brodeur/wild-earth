@@ -2757,12 +2757,13 @@ export function leafMaterial(spec, patch = null) {
 export const BARK_FAR = 120, BARK_FADE = 20;
 // The bark up close (2026-11-04, the close layer; docs/decisions.md "the close layer"):
 //   hex tiling   the texture is sampled three times, at random offsets per cell of a hexagonal grid over the bark
-//                (BARK_HEX cells a tile, offsets only so the grain stays upright) and per tree (a hash of the instance's
+//                (BARK_HEX cells a tile, offsets only so the grain stays upright; a tap of negligible weight is not
+//                fetched, so most pixels read one) and per tree (a hash of the instance's
 //                place), blended by the hex weights cubed times each tap's height, so plates do not ghost: the 0.5 x 1 m
 //                tile no longer repeats round a trunk.
-//   parallax     within BARK_POM m of the eye the dominant tap is marched along the view ray through the height field
-//                (the normal map's alpha), 12 layers and a secant step, to the species' fissure depth (barkTexture
-//                depth: 2 cm in a valley oak's furrows, 2 mm on a madrone), and then marched 6 steps toward the sun:
+//   parallax     within BARK_POM m of the eye (full to 1.5 m, gone by 2.5) the dominant tap is marched along the view ray through the height field
+//                (the normal map's alpha), 6 layers head-on to 12 grazing and a secant step, to the species' fissure
+//                depth (barkTexture depth: 2 cm in a valley oak's furrows, 2 mm on a madrone), then 4 steps toward the sun:
 //                a plate's shadow falls into the fissure beside it. The height also darkens the sky light in the
 //                fissures (a cavity term) at every distance.
 //   moss, lichen moss on the north side and the foot of the trunk, in the fissures first, by the species' liking
@@ -2772,7 +2773,7 @@ export const BARK_FAR = 120, BARK_FADE = 20;
 // The three taps and the moss cost no sampler (the colour map and the normal map are the ones the bark already had).
 // barkUniforms is set by weather.js; barkSp per species: moss, lichen, depth (m).
 // A/B: material.defines.BARK_SIMPLE draws the bark as before (one tap, no parallax, moss or wet).
-const BARK_HEX = 1.6, BARK_POM = [2.0, 3.5];
+const BARK_HEX = 1.6, BARK_POM = [1.5, 2.5];
 export const barkUniforms = { barkWx: { value: new THREE.Vector3(0, 0.8, 0.5) } };
 const BARK_FRAG_COMMON = /* glsl */`
   varying float vBarkMix; varying vec4 vBarkI;
@@ -2819,10 +2820,11 @@ const BARK_FRAG_MAP = /* glsl */`
         float vn = max(dot(bV, bN), 0.15);
         vec3 dT = -(bV - dot(bV, bN) * bN) / vn;
         vec2 dUv = vec2(dot(gU, dT), dot(gV, dT)) * barkSp.z * pomK, uD = bUv + oD, uc = uD, uPrev = uD;
-        float cur = 1.0, cPrev = 1.0, hPrev = 1.0, hc = textureGrad(normalMap, uc, s0, s1).a;
+        // 6 layers looking straight at the bark, 12 at a grazing view
+        float cur = 1.0, cPrev = 1.0, hPrev = 1.0, hc = textureGrad(normalMap, uc, s0, s1).a, nL = floor(mix(12.0, 6.0, vn)), dL = 1.0 / nL;
         for (int i = 0; i < 12; i++) {
-          if (hc >= cur) break;
-          uPrev = uc; hPrev = hc; cPrev = cur; cur -= 1.0 / 12.0; uc = uD + dUv * (1.0 - cur); hc = textureGrad(normalMap, uc, s0, s1).a;
+          if (hc >= cur || float(i) >= nL) break;
+          uPrev = uc; hPrev = hc; cPrev = cur; cur -= dL; uc = uD + dUv * (1.0 - cur); hc = textureGrad(normalMap, uc, s0, s1).a;
         }
         float da = hc - cur, db = hPrev - cPrev, tt = clamp(da / (da - db + 1e-5), 0.0, 1.0);
         uc = mix(uc, uPrev, tt); pOff = uc - uD;
@@ -2833,15 +2835,19 @@ const BARK_FRAG_MAP = /* glsl */`
             vec3 lT = (bL - ln * bN) / max(ln, 0.15);
             vec2 lUv = vec2(dot(gU, lT), dot(gV, lT)) * barkSp.z * pomK;
             float occ = 0.0;
-            for (int i = 1; i <= 6; i++) { float dh = (1.0 - hHit) * float(i) / 6.0; occ = max(occ, (textureGrad(normalMap, uc + lUv * dh, s0, s1).a - hHit - dh) * 8.0); }
+            if (hHit < 0.92) for (int i = 1; i <= 4; i++) { float dh = (1.0 - hHit) * float(i) / 4.0; occ = max(occ, (textureGrad(normalMap, uc + lUv * dh, s0, s1).a - hHit - dh) * 8.0); }
             barkShadow = 1.0 - 0.8 * clamp(occ, 0.0, 1.0) * pomK;
           }
         #endif
       }
     }
-    vec4 c1 = textureGrad(map, bUv + o1 + pOff, s0, s1), c2 = textureGrad(map, bUv + o2 + pOff, s0, s1), c3 = textureGrad(map, bUv + o3 + pOff, s0, s1);
-    vec4 n1 = textureGrad(normalMap, bUv + o1 + pOff, s0, s1), n2 = textureGrad(normalMap, bUv + o2 + pOff, s0, s1), n3 = textureGrad(normalMap, bUv + o3 + pOff, s0, s1);
-    vec3 wt = hw * hw * hw * hw * (vec3(n1.a, n2.a, n3.a) + 0.1); wt /= max(max(wt.x, wt.y), max(wt.z, 1e-6));
+    // a tap whose hex weight is negligible is not fetched (most pixels are well inside one cell: one tap)
+    vec3 hw4 = hw * hw * hw * hw; hw4 /= max(max(hw4.x, hw4.y), max(hw4.z, 1e-6));
+    vec4 c1 = vec4(0.0), c2 = vec4(0.0), c3 = vec4(0.0), n1 = vec4(0.0), n2 = vec4(0.0), n3 = vec4(0.0);
+    if (hw4.x > 0.02) { c1 = textureGrad(map, bUv + o1 + pOff, s0, s1); n1 = textureGrad(normalMap, bUv + o1 + pOff, s0, s1); } else hw4.x = 0.0;
+    if (hw4.y > 0.02) { c2 = textureGrad(map, bUv + o2 + pOff, s0, s1); n2 = textureGrad(normalMap, bUv + o2 + pOff, s0, s1); } else hw4.y = 0.0;
+    if (hw4.z > 0.02) { c3 = textureGrad(map, bUv + o3 + pOff, s0, s1); n3 = textureGrad(normalMap, bUv + o3 + pOff, s0, s1); } else hw4.z = 0.0;
+    vec3 wt = hw4 * (vec3(n1.a, n2.a, n3.a) + 0.1); wt /= max(max(wt.x, wt.y), max(wt.z, 1e-6));
     wt = wt * wt * wt * wt; wt /= max(dot(wt, vec3(1.0)), 1e-5);   // nearly one tap at a time: a thin seam, no doubled cracks
     vec3 sampledBark = c1.rgb * wt.x + c2.rgb * wt.y + c3.rgb * wt.z;
     barkNrmS = n1 * wt.x + n2 * wt.y + n3 * wt.z; barkHt = barkNrmS.a;
@@ -2849,16 +2855,18 @@ const BARK_FRAG_MAP = /* glsl */`
     // moss on the north side and the foot, in the fissures first; lichen rosettes on the plates
     vec3 bPw = cameraPosition + (vec4(-vViewPosition, 0.0) * viewMatrix).xyz, bNw = normalize((vec4(normalize(vNormal), 0.0) * viewMatrix).xyz);
     float bAbove = bPw.y - vBarkI.z, clim = barkWx.z;
+    // two noises shared by the moss and the lichen (six cost a millisecond at a squirrel's eye); the bark's own height
+    // and its colour's grain break them up finer
+    float bn1 = barkSp.x + barkSp.y > 0.0 ? barkVN(bPw * 4.0) : 0.0, bn2 = barkSp.x + barkSp.y > 0.0 ? barkVN(bPw * 13.0 + 3.7) : 0.0, grain = dot(sampledBark, vec3(0.33));
     if (barkSp.x > 0.0) {
       float mossA = barkSp.x * (0.4 + 0.6 * clim) * (0.2 + 0.8 * smoothstep(-0.5, 0.75, -bNw.z)) * (1.0 - 0.55 * smoothstep(0.3, 3.0, bAbove)) * (0.6 + 0.4 * smoothstep(-0.6, 0.2, bNw.y));
-      float mn = 0.6 * barkVN(bPw * 4.0) + 0.4 * barkVN(bPw * 13.0);
-      barkMoss = smoothstep(0.3, 0.5, mossA * (0.5 + 1.1 * mn) + 0.25 * (1.0 - barkHt)) * barkW;
-      vec3 mossC = mix(vec3(0.2, 0.17, 0.08), vec3(0.11, 0.26, 0.035), barkWx.y) * (0.75 + 0.5 * barkVN(bPw * 45.0));
+      barkMoss = smoothstep(0.3, 0.5, mossA * (0.5 + 1.1 * (0.6 * bn1 + 0.4 * bn2)) + 0.25 * (1.0 - barkHt)) * barkW;
+      vec3 mossC = mix(vec3(0.2, 0.17, 0.08), vec3(0.11, 0.26, 0.035), barkWx.y) * (0.7 + 0.45 * fract(grain * 7.0 + bn2 * 3.0));
       diffuseColor.rgb = mix(diffuseColor.rgb, mossC, barkMoss);
     }
     if (barkSp.y > 0.0) {
-      float lich = (0.5 + 0.5 * clim) * smoothstep(0.62, 0.68, barkVN(bPw * 9.0 + 3.7) * (0.75 + 0.5 * barkVN(bPw * 1.3)) + 0.18 * barkSp.y) * smoothstep(0.3, 0.5, barkHt) * barkW * (1.0 - barkMoss);
-      diffuseColor.rgb = mix(diffuseColor.rgb, vec3(0.36, 0.4, 0.33) * (0.85 + 0.3 * barkVN(bPw * 70.0)), 0.85 * lich);
+      float lich = (0.5 + 0.5 * clim) * smoothstep(0.62, 0.68, bn2 * (0.75 + 0.5 * bn1) + 0.18 * barkSp.y) * smoothstep(0.3, 0.5, barkHt) * barkW * (1.0 - barkMoss);
+      diffuseColor.rgb = mix(diffuseColor.rgb, vec3(0.36, 0.4, 0.33) * (0.85 + 0.3 * grain), 0.85 * lich);
     }
     // wet: darker and deeper in colour, the fissures darkest
     float bw = barkWx.x * barkW;

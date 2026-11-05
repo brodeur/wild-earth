@@ -442,7 +442,8 @@ function litterMaterial(kind, atmosphere, ring, leafTex) {
         ${kind === 'acorn' || kind === 'fungus' ? 'attribute float aLitNut;' : ''}
         ${kind === 'cone' ? 'attribute vec3 aLitHook;' : ''}
         uniform float litWet;
-        ${kind === 'leaf' ? 'attribute vec2 aLitUv; varying vec2 vLitUv;' : ''}`)
+        ${kind === 'leaf' ? 'attribute vec2 aLitUv; varying vec2 vLitUv;' : ''}
+        ${kind === 'wood' ? 'varying vec2 vLitWood;' : ''}`)
       // the ring first thing in main(): an instance outside it costs a few instructions per vertex
       .replace('#include <uv_vertex>', `vLitSky = 1.0;
         vec3 litO = (modelMatrix * vec4(instanceMatrix[3].xyz, 1.0)).xyz;
@@ -463,7 +464,8 @@ function litterMaterial(kind, atmosphere, ring, leafTex) {
           vColor.rgb *= c;
           vLitSky = groundSkyOcclusion(groundUv(litO)) * groundContactAO(litO); }`);
     if (line) shader.vertexShader = shader.vertexShader.replace('#include <begin_vertex>',
-      `vec3 transformed = aLitAx + (position - aLitAx) * aLitR.y + vec3(0.0, aLitR.y, 0.0);`);
+      `vec3 transformed = aLitAx + (position - aLitAx) * aLitR.y + vec3(0.0, aLitR.y, 0.0);
+       ${kind === 'wood' ? 'vLitWood = vec2(position.x * aLitR.z, atan(position.z - aLitAx.z, position.y - aLitAx.y));' : ''}`);
     if (kind === 'fungus') shader.vertexShader = shader.vertexShader.replace('#include <begin_vertex>',
       'vec3 transformed = (aLitNut > 0.5 && aLitR.y > 0.5) ? vec3(position.x, 0.56, position.z) : position;');
     if (kind === 'cone') shader.vertexShader = shader.vertexShader.replace('#include <begin_vertex>',
@@ -473,12 +475,17 @@ function litterMaterial(kind, atmosphere, ring, leafTex) {
     shader.fragmentShader = shader.fragmentShader
       .replace('#include <common>', `#include <common>
         uniform float litTrans; varying float vLitSky;
-        ${kind === 'leaf' ? 'uniform sampler2D litLeaf; varying vec2 vLitUv;' : ''}`)
+        ${kind === 'leaf' ? 'uniform sampler2D litLeaf; varying vec2 vLitUv;' : ''}
+        ${kind === 'wood' ? 'varying vec2 vLitWood;' : ''}`)
       .replace('#include <lights_fragment_end>', `#include <lights_fragment_end>
         reflectedLight.indirectDiffuse *= vLitSky;
         #if NUM_DIR_LIGHTS > 0
           if (litTrans > 0.0) reflectedLight.directDiffuse += litTrans * max(-dot(normal, directionalLights[0].direction), 0.0) * directionalLights[0].color * BRDF_Lambert(diffuseColor.rgb);
         #endif`);
+    // bark on the fallen wood and the roots: furrows along it that wander, a few to the round (no texture: the unit is free)
+    if (kind === 'wood') shader.fragmentShader = shader.fragmentShader.replace('#include <map_fragment>',
+      `{ float fur = sin(vLitWood.y * 7.0 + 1.6 * sin(vLitWood.x * 9.0) + 0.5 * sin(vLitWood.x * 37.0 + vLitWood.y * 3.0));
+         diffuseColor.rgb *= 0.55 + 0.45 * smoothstep(-0.3, 0.75, fur) * (0.85 + 0.15 * sin(vLitWood.x * 113.0)); }`);
     if (kind === 'leaf') shader.fragmentShader = shader.fragmentShader.replace('#include <map_fragment>',
       '{ vec4 lt = texture2D(litLeaf, vLitUv); if (lt.a < 0.5) discard; diffuseColor.rgb *= lt.rgb; }');
   });
@@ -850,8 +857,8 @@ export class Litter {
       if (t.tr < 0.12 || t.snag && t.tr < 0.2) continue;
       const rr = mulberry32(t.h), NR = 3 + Math.floor(rr() * 4) + (t.old ? 2 : 0);
       for (let k = 0; k < NR; k++) {
-        const a = (k + 0.3 + 0.4 * rr()) / NR * Math.PI * 2, L = (0.5 + 1.1 * rr()) * (0.6 + 3 * t.tr), rad = t.tr * (0.16 + 0.12 * rr());
-        const dx = Math.cos(a), dn = Math.sin(a), mid = t.tr * 0.8 + L / 2, x = t.x + dx * mid, n = t.n + dn * mid, sink = 0.55 + 0.25 * rr();
+        const a = (k + 0.3 + 0.4 * rr()) / NR * Math.PI * 2, L = (0.5 + 1.1 * rr()) * (0.6 + 3 * t.tr), rad = Math.min(0.11, t.tr * (0.08 + 0.08 * rr()));
+        const dx = Math.cos(a), dn = Math.sin(a), mid = t.tr * 0.8 + L / 2, x = t.x + dx * mid, n = t.n + dn * mid, sink = 0.65 + 0.2 * rr();
         if (x < x0 || x >= x0 + CELL || n < n0 || n >= n0 + CELL) continue;
         if (skip(x, n, x - x0, n - n0, 0)) continue;
         const m = 0.8 + 0.25 * rr(), c = t.L.wood.map((w, i) => (w * 0.15 + [0.16, 0.11, 0.075][i] * 0.85) * m);   // bark-brown, soiled
