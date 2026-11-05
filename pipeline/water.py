@@ -160,6 +160,9 @@ def stream_samples(ctx: _Ctx, pond_mask: np.ndarray, profile: np.ndarray | None,
     reaches = []
     skipped = {"in_pond": 0, "nhd_duplicate": 0}
     for rid, (line, pr) in enumerate(lines):
+        if pr.get("on_ice"):    # the routed line across a glacier (pipeline/water_seams.py): no open water
+            skipped["on_ice"] = skipped.get("on_ice", 0) + 1
+            continue
         if pr.get("in_waterbody"):
             m = line.interpolate(0.5, normalized=True)
             c, r = int(np.clip(m.x // res, 0, n - 1)), int(np.clip((TILE_SIZE_M - m.y) // res, 0, n - 1))
@@ -168,6 +171,8 @@ def stream_samples(ctx: _Ctx, pond_mask: np.ndarray, profile: np.ndarray | None,
                 continue
         L = line.length
         ds = np.arange(0.0, L + 1e-6, SAMPLE_M) if L > SAMPLE_M else np.array([0.0, L])
+        if L - ds[-1] > 0.25:    # the line's end too (a stream leaving the tile ends on the edge: its crossing's level)
+            ds = np.append(ds, L)
         pts = np.array([line.interpolate(d).coords[0] for d in ds])
         if pr.get("source") == "nhd" and near_dem is not None:
             keep = np.array([not near_dem(x, y) for x, y in pts])
@@ -231,6 +236,8 @@ def stream_samples(ctx: _Ctx, pond_mask: np.ndarray, profile: np.ndarray | None,
     out["reaches"] = reaches
     out["skipped"] = skipped
     if zat_level is not None and out["x"].size:
+        from .water_seams import edge_levels
+        out["edges"] = edge_levels(out, ctx.tile)
         out["raised_at_joins"] = join_levels(out)
     return out
 
@@ -316,6 +323,8 @@ def kept_ponds(ctx: _Ctx) -> list[dict]:
     out = []
     for f in ctx.load("hydro/waterbodies.geojson"):
         pr = f["properties"]
+        if str(pr.get("ftype")) == "378":   # NHD Ice Mass: a glacier, not a pond (pipeline/water_seams.py: its streams)
+            continue
         g = ctx.local(shape(f["geometry"]))
         if g.is_empty or g.area < 4:
             continue
@@ -614,6 +623,9 @@ def build_water(tile: Tile, force: bool = False) -> dict:
         "species_mix": mix_note,
         "levels_from": "terrain/dem_1m.tif along the rerouted lines" if rerouted and dem1.exists() else "terrain/dem.tif (5 m)",
     }
+    if S.get("edges") and S["edges"].get("crossings"):
+        from .water_seams import record_levels
+        stats["edges"] = {**S["edges"], **record_levels(tile, S)}
     write_json(tile.path("hydro/water_reaches.json"), {"reaches": S["reaches"], "ponds": pond_stats})
     out = {
         "terrain.dem_banked": {

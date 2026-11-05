@@ -690,6 +690,28 @@ def reroute(tile: Tile) -> dict:
         pr.update(rerouted=how, snap_shift_m=round(float(np.median(sh)), 2), snap_shift_max_m=round(float(sh.max()), 1),
                   length_m=round(ln.length, 1))
         new_feats[e["k"]] = {"type": "Feature", "geometry": mapping(ctx.wgs(ln)), "properties": pr}
+
+    # 4b. the ice, meltwater from its toes, and the tile's seams (pipeline/water_seams.py)
+    from . import water_seams as WS
+    items = []
+    for k, f in enumerate(new_feats):
+        g = ctx.local(shape(f["geometry"])) if f.get("geometry") else None
+        items.append({"line": g, "pr": dict(f["properties"]), "k": k})
+    flow5 = []
+
+    def flow_fn():
+        if not flow5:
+            flow5.append(WS.Flow5(tile))
+        return flow5[0]
+    ice, masses = WS.ice_mask(tile, ctx)
+    ice_stats = melt_stats = None
+    if ice is not None:
+        ice_stats = WS.clip_ice(items, ice, ctx.res, masses)
+        melt_stats = WS.meltwater(items, ice, masses, flow_fn(), dem, ctx)
+    crossings, seam_stats = WS.seams_pass(tile, ctx, dem, items, flow_fn)
+    WS.write_edges(tile, crossings, seam_stats)
+    new_feats = [{"type": "Feature", "properties": it["pr"],
+                  "geometry": mapping(ctx.wgs(it["line"])) if it["line"] is not None else None} for it in items]
     for f in new_feats:
         f["geometry"]["coordinates"] = [[round(a, 7), round(b, 7)] for a, b, *_ in f["geometry"]["coordinates"]] \
             if f["geometry"]["type"] == "LineString" else f["geometry"]["coordinates"]
@@ -697,7 +719,7 @@ def reroute(tile: Tile) -> dict:
     write_json(ch_path, {**{k: v for k, v in doc.items() if k != "features"}, "rerouted": True, "features": new_feats})
 
     # 5. downstream of the line: profile R, G (B kept), channel_depth, features.json
-    lines_new = [ctx.local(shape(new_feats[e["k"]]["geometry"])) for e in edges]
+    lines_new = [it["line"] for it in items if WS._is_line(it) and not it["pr"].get("on_ice")]
     pstats = write_profile_fine(tile, ctx, dem)
     from .channels import channel_depth
     ch5 = ctx.rasterize([ln for ln in lines_new], dtype="uint8").astype(bool)
@@ -720,11 +742,17 @@ def reroute(tile: Tile) -> dict:
         "params": {"corridor_m": f"{CORRIDOR_M:g} + water width", "node_r_m": NODE_R_M, "head_r_m": HEAD_R_M,
                    "hit_m": HIT_M, "outlet_r_m": OUTLET_R_M, "smooth_m": SMOOTH_M, "centre_r_m": list(CENTRE_R_M),
                    "centre_tol_m": CENTRE_TOL_M, "simplify_m": SIMPLIFY_M},
-        "profile": pstats, "seconds": round(time.time() - t0, 1),
+        "profile": pstats, "ice": ice_stats, "meltwater": melt_stats, "seams": seam_stats,
+        "seconds": round(time.time() - t0, 1),
     }
     print("reroute:", json.dumps({k: v for k, v in stats.items() if k not in ("kept_reaches", "params")}))
     out = {"hydro.channels_5m": {"path": FIVE_M, "kind": "vector", "derived_from": ["hydro.channels"],
                                  "encoding": "the channels step's network as it routed it on the 5 m DEM, before the reroute step moved it onto the 1 m ground"},
+           "hydro.edges": {"path": WS.EDGES, "kind": "table", "derived_from": ["hydro.channels", "terrain.dem_1m"],
+                           "crossings": len(crossings),
+                           "encoding": "every stream crossing a tile edge (UTM): side, along, x, y, dir in/out, tangent, name, fcode, "
+                                       "order, area_km2, width, bed_width, level, depth, half_width (the water step's), source own "
+                                       "or neighbour <id> (pipeline/water_seams.py)"},
            "client.channel_depth": {"path": "client/channel_depth.png", "kind": "raster", "crs": tile.crs, "bounds": list(tile.bounds),
                                     "pixels": ctx.n, "resolution_m": ctx.res, "derived_from": ["terrain.dem", "hydro.channels"],
                                     "encoding": "uint8 decimetres: mean DEM on a 20 m ring minus the channel cell, clamped 0-25 m, x10; 0 off channel "

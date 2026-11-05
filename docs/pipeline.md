@@ -65,7 +65,7 @@ flora's, as are the crowns and their inpainting.
 | seasons | landcover, lidar, naip | Sentinel-2 monthly colour | Sentinel-2 L2A (Copernicus terms, credit) | global |
 | weather | | client.weather | Open-Meteo (CC BY 4.0) | global |
 | unreal | dem, landcover | the Unreal export | | |
-| seams | dem, channels, water | the manifest's `seams` | | fails when the DEM steps across a seam or a stream of order 3+ crosses on one side only |
+| seams | dem, channels, water | the manifest's `seams` | | fails when the DEM steps across a seam, a stream of order 3+ crosses on one side only, or a matched crossing differs (point, level, width, order, name), naming the tile to re-run `--steps reroute,water` |
 
 ### Flora
 
@@ -171,13 +171,16 @@ and a tile elsewhere never falls back to it in silence:
 - **The curated animals' range test** (Grinnell and Storer's Sierra life zones) applies in California only; elsewhere a
   curated animal is present by its records alone.
 - **Permanent snow and ice** (the `ice` step: LANDFIRE Snow-Ice, OSM glaciers) is bare in the species mix whatever the
-  community; `terrain/ice.json` lists the ice's toes (where meltwater leaves it) for the water lane to seed streams from.
-  Seeding the meltwater streams is the water lane's (channels.py): not done here.
+  community; `terrain/ice.json` lists the ice's toes. The reroute step (`water_seams.py`, tile-spec: Streams across
+  seams, and meltwater) cuts every line at the ice's edge (the routed lines across a glacier are `on_ice`, not drawn),
+  starts meltwater streams where 0.05 km2 of ice drains off it, and makes the streams below perennial; the NHD Ice
+  Masses are no longer ponds (the water step) or water in the client (`features.glaciers`).
 - **Seams**: a tile's DEM and streams are checked against every built neighbour (`seams`; the two San Francisco cells:
   the DEM steps 0.108 m across their seam against 0.106 m inside; five small streams of order 1-2 cross on one side only,
   listed). For the two Hoh tiles at x = 439 km: both DEMs come from the same 3DEP mosaic on the same 5 m lattice, so they
-  agree; a creek routed in one tile and not the other fails the seam (the fix is the routing's: route with the
-  neighbour's DEM as a margin, the water lane).
+  agree. Each stream crossing an edge is a record in `hydro/edges.json`: the first tile built decides, a neighbour built
+  later adopts its point, tangent, identity and depth, the higher order, and the mean of the two sides' own levels;
+  the first tile then runs `--steps reroute,water` once more to take the mean (the seams step names it).
 
 What remains California-shaped, named so it is not mistaken for general: the resource rasters (`habitat.RESOURCE_BASE`
 gives acorn mast by habitat class), the curated animals' calendar and perception tables (species_data.py), the
@@ -375,7 +378,7 @@ against 26 misses. Its trait cards: ~12 k Claude tokens each; its animals: ~30 M
 - The global vegetation source (WorldCover + RESOLVE ecoregions) and a Sentinel-2 imagery step: the two gaps that stop
   a tile outside the US at `naip` and `landcover`.
 - Grown age classes by default: a `growth` block on every card, so `tools/grow_species.mjs` grows each species' classes.
-- With the water lane: meltwater from the ice's toes, streams continuous across a seam, elevation-aware riparian rows.
+- With the water lane: elevation-aware riparian rows (meltwater and streams across seams: done, 2026-11-05).
 - forbs.js choosing a tile's 24 forbs by its ground layer; region-neutral habitat classes and resource rasters.
 - Fungi: GBIF's fungi into the research (the kind is reserved), and an archetype to draw them.
 - Cache keys for Overpass (the query) and the lidar index; games.json's build time out of its hash.

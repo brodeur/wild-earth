@@ -1,0 +1,143 @@
+{
+ "edges": [
+  {
+   "side": "west",
+   "neighbour": "utm10n_429_5293",
+   "dem": {
+    "cells": 2000,
+    "median_step_m": 1.387,
+    "median_inside_step_m": 1.345,
+    "p95_step_m": 5.265,
+    "mean_offset_m": 0.354,
+    "problem": null
+   },
+   "streams": {
+    "method": "edges.json",
+    "crossings_here": 9,
+    "crossings_there": 9,
+    "matched": [
+     {
+      "along": 5293991.5,
+      "name": null,
+      "order": [
+       1,
+       1
+      ],
+      "offset_m": 0.0,
+      "level_diff_m": 0.0,
+      "width_diff_m": 0.0,
+      "own_level_step_m": 4.96
+     },
+     {
+      "along": 5294277.36,
+      "name": null,
+      "order": [
+       2,
+       2
+      ],
+      "offset_m": 0.0,
+      "level_diff_m": 0.0,
+      "width_diff_m": 0.0,
+      "own_level_step_m": 6.56
+     },
+     {
+      "along": 5296292.71,
+      "name": "Mount Tom Creek",
+      "order": [
+       4,
+       4
+      ],
+      "offset_m": 0.0,
+      "level_diff_m": -0.001,
+      "width_diff_m": 0.0,
+      "own_level_step_m": -0.56
+     },
+     {
+      "along": 5296858.11,
+      "name": null,
+      "order": [
+       1,
+       1
+      ],
+      "offset_m": 0.0,
+      "level_diff_m": 0.0,
+      "width_diff_m": 0.0,
+      "own_level_step_m": 2.23
+     },
+     {
+      "along": 5299343.87,
+      "name": null,
+      "order": [
+       1,
+       1
+      ],
+      "offset_m": 0.0,
+      "level_diff_m": 0.001,
+      "width_diff_m": 0.0,
+      "own_level_step_m": -0.83
+     },
+     {
+      "along": 5301959.5,
+      "name": null,
+      "order": [
+       1,
+       1
+      ],
+      "offset_m": 0.0,
+      "level_diff_m": 0.0,
+      "width_diff_m": 0.0,
+      "own_level_step_m": 0.05
+     },
+     {
+      "along": 5301992.26,
+      "name": "Hoh River",
+      "order": [
+       5,
+       5
+      ],
+      "offset_m": 0.0,
+      "level_diff_m": 0.0,
+      "width_diff_m": 0.0,
+      "own_level_step_m": 0.18
+     },
+     {
+      "along": 5302018.5,
+      "name": null,
+      "order": [
+       2,
+       2
+      ],
+      "offset_m": 0.0,
+      "level_diff_m": 0.0,
+      "width_diff_m": 0.0,
+      "own_level_step_m": 0.7
+     }
+    ],
+    "max_offset_m": 0.0,
+    "max_level_diff_m": 0.001,
+    "max_own_level_step_m": 6.56,
+    "unmatched": [
+     {
+      "along": 5302176.5,
+      "name": null,
+      "order": 2,
+      "dir": "in",
+      "side": "here"
+     },
+     {
+      "along": 5301792.35,
+      "name": null,
+      "order": 1,
+      "dir": "in",
+      "side": "there"
+     }
+    ],
+    "rerun": null,
+    "problem": null
+   },
+   "problem": null
+  }
+ ],
+ "neighbours": 1,
+ "note": "1 of 1 edges agree"
+}

@@ -130,6 +130,12 @@ sequenced; Parked is in the brief but deliberately not started.
   ground 46% -> 89% on the home tile (95% away from the roads), water over the bank 40% -> 0.6%; Placerville, Cosumnes
   and Yosemite 270_4180 the same way; their water passes run for the first time.
 
+- Streams across seams and meltwater from the ice, 2026-11-05 (pipeline/water_seams.py, decisions.md "streams continue
+  across a tile seam"): every stream crossing a tile edge is a record in hydro/edges.json; the first tile built decides,
+  a neighbour adopts its point, tangent, identity and the higher order, the level is the mean of the two sides' own;
+  lines on the ice are `on_ice` (not drawn), meltwater streams start at the toes, and glaciers are no longer ponds.
+  The two Hoh tiles' seam passes (8 crossings matched at 0.00 m, levels within 1 mm); Olympus's audit runs.
+
 - The catch, 2026-10-30 (branch claude/catch-rigging-4301f4, docs/decisions.md "the catch rigged", docs/movement.md
   "The catch"): the prey falls over 0.4 s instead of snapping onto its side (the deer's bed clip blended in fast), the
   lizard can be taken (the fox's pounce, the raven's and jay's takes). The lion's catch is a leap onto the prey's back
@@ -328,7 +334,9 @@ browser stays the renderer.
   pictures read dark against the water); the stones' contrast on the dry beds from the chase
   camera; `utm11n_267_4175`'s `terrain/dem.tif` rebuilt from its 1 m DEM (it is the 3DEP seamless product, 13 m std off
   the lidar) and then `--steps reroute,water` (the reroute step refuses it until then); the San Francisco cells
-  rerouted; culverts under the fills the 1 m ground still holds (a reach under a 19 m fill drapes over it); the
+  rerouted (and their seam made with edges.json); the terrain's own step across a seam on steep creeks (up to 6 m
+  between the Hoh tiles: the shared water level sits up to 3 m off one side's ground near the edge); crossings for
+  tiles without a 1 m DEM (no reroute step); Strahler order recomputed below meltwater heads and inflows; culverts under the fills the 1 m ground still holds (a reach under a 19 m fill drapes over it); the
   rerouted lines' 40-50% more water triangles thinned where a reach is straight; a water temperature from
   `relations.shades_water`; the animals' crossings at the bars (deer, raven) made deliberate.
 

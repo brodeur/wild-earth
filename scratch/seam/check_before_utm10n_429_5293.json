@@ -1,0 +1,118 @@
+{
+ "tile": "utm10n_429_5293",
+ "channels": "hydro/channels.geojson",
+ "levels": "1m",
+ "rerouted": true,
+ "samples": 71112,
+ "reaches": 316,
+ "length_km": 177.8,
+ "bed_gap": {
+  "within_5cm": 0.769,
+  "within_15cm": 0.865,
+  "median_m": 0.008,
+  "p95_m": 0.488,
+  "max_m": 15.7
+ },
+ "clip": {
+  "over_25cm": 0.164,
+  "over_1m": 0.0102,
+  "p95_m": 0.517,
+  "max_m": 15.13
+ },
+ "above_bank": {
+  "over_10cm": 0.0011,
+  "samples_over_10cm": 79,
+  "max_m": 0.68
+ },
+ "rises": {
+  "within_reach": 0,
+  "within_max_m": 0.0,
+  "into_receiving_reach_over_5cm": 0,
+  "reach_ends_checked": 279,
+  "into_max_m": 0.0
+ },
+ "nhd_offset": {
+  "median_m": 7.454,
+  "p90_m": 36.012,
+  "max_m": 100.0
+ },
+ "shift_from_5m": {
+  "median_m": 1.278,
+  "p90_m": 7.945,
+  "p99_m": 27.165,
+  "max_m": 38.4
+ },
+ "off_roads": {
+  "samples": 71053,
+  "share": 0.999,
+  "bed_within_5cm": 0.769,
+  "bed_within_15cm": 0.865,
+  "clip_over_25cm": 0.164,
+  "clip_over_1m": 0.0101,
+  "above_bank_over_10cm": 0.0011
+ },
+ "worst_gap": [
+  {
+   "x": 5777.1,
+   "north": 626.4,
+   "gap_m": 15.7,
+   "order": 2
+  },
+  {
+   "x": 5777.3,
+   "north": 624.0,
+   "gap_m": 15.43,
+   "order": 2
+  },
+  {
+   "x": 5777.3,
+   "north": 621.5,
+   "gap_m": 14.72,
+   "order": 2
+  },
+  {
+   "x": 5776.0,
+   "north": 628.7,
+   "gap_m": 14.65,
+   "order": 2
+  },
+  {
+   "x": 5777.8,
+   "north": 655.2,
+   "gap_m": 14.04,
+   "order": 2
+  }
+ ],
+ "worst_clip": [
+  {
+   "x": 5777.1,
+   "north": 626.4,
+   "clip_m": 15.13,
+   "order": 2
+  },
+  {
+   "x": 5777.3,
+   "north": 624.0,
+   "clip_m": 14.46,
+   "order": 2
+  },
+  {
+   "x": 5776.0,
+   "north": 628.7,
+   "clip_m": 14.35,
+   "order": 2
+  },
+  {
+   "x": 5777.3,
+   "north": 621.5,
+   "clip_m": 13.74,
+   "order": 2
+  },
+  {
+   "x": 5777.3,
+   "north": 619.0,
+   "clip_m": 12.95,
+   "order": 2
+  }
+ ]
+}

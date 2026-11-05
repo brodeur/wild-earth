@@ -1,0 +1,128 @@
+{
+ "edges": [
+  {
+   "side": "east",
+   "neighbour": "utm10n_439_5293",
+   "dem": {
+    "cells": 2000,
+    "median_step_m": 1.387,
+    "median_inside_step_m": 1.345,
+    "p95_step_m": 5.265,
+    "mean_offset_m": -0.354,
+    "problem": null
+   },
+   "streams": {
+    "method": "edges.json",
+    "crossings_here": 7,
+    "crossings_there": 9,
+    "matched": [
+     {
+      "along": 5293991.5,
+      "name": null,
+      "order": [
+       1,
+       1
+      ],
+      "offset_m": 0.0,
+      "level_diff_m": 0.0,
+      "width_diff_m": 0.0
+     },
+     {
+      "along": 5294273.58,
+      "name": null,
+      "order": [
+       2,
+       1
+      ],
+      "offset_m": 0.0,
+      "level_diff_m": 0.0,
+      "width_diff_m": 0.0
+     },
+     {
+      "along": 5296303.29,
+      "name": "Mount Tom Creek",
+      "order": [
+       4,
+       4
+      ],
+      "offset_m": 0.0,
+      "level_diff_m": 0.0,
+      "width_diff_m": 0.0
+     },
+     {
+      "along": 5296860.96,
+      "name": null,
+      "order": [
+       1,
+       1
+      ],
+      "offset_m": 0.0,
+      "level_diff_m": 0.0,
+      "width_diff_m": 0.0
+     },
+     {
+      "along": 5299341.6,
+      "name": null,
+      "order": [
+       1,
+       1
+      ],
+      "offset_m": 0.0,
+      "level_diff_m": 0.0,
+      "width_diff_m": 0.0
+     },
+     {
+      "along": 5301992.35,
+      "name": "Hoh River",
+      "order": [
+       5,
+       5
+      ],
+      "offset_m": 0.0,
+      "level_diff_m": 0.0,
+      "width_diff_m": 0.0
+     }
+    ],
+    "max_offset_m": 0.0,
+    "max_level_diff_m": 0.0,
+    "unmatched": [
+     {
+      "along": 5301792.35,
+      "name": null,
+      "order": 1,
+      "dir": "in",
+      "side": "here"
+     },
+     {
+      "along": 5301959.5,
+      "name": null,
+      "order": 1,
+      "dir": "out",
+      "side": "there"
+     },
+     {
+      "along": 5302018.5,
+      "name": null,
+      "order": 2,
+      "dir": "out",
+      "side": "there"
+     },
+     {
+      "along": 5302176.5,
+      "name": null,
+      "order": 2,
+      "dir": "in",
+      "side": "there"
+     }
+    ],
+    "rerun": [
+     "utm10n_439_5293"
+    ],
+    "problem": "unnamed at 5294274 m: order 2 here, 1 there (re-run --steps reroute,water on utm10n_439_5293)"
+   },
+   "problem": "unnamed at 5294274 m: order 2 here, 1 there (re-run --steps reroute,water on utm10n_439_5293)"
+  }
+ ],
+ "neighbours": 1,
+ "note": "0 of 1 edges agree"
+}

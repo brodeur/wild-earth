@@ -191,6 +191,9 @@ def _water(tile, m, force):
                     break
             p.write_text(text[:start] + new + text[i:])
         add_layer(m, tile, "client.species_mix", m["layers"]["client.species_mix"], fetched=False)
+    if "hydro.edges" in m["layers"] and tile.path("hydro/edges.json").exists():
+        # water.py writes the level, depth and half width at each crossing into the reroute step's hydro/edges.json
+        add_layer(m, tile, "hydro.edges", m["layers"]["hydro.edges"], fetched=False)
     m["status"]["water_banked"] = True
 
 
@@ -444,9 +447,10 @@ STEPS: dict[str, Step] = {s.name: s for s in [
           "vegetation.canopy_height_10m", "client.canopy_height", "client.terrain_detail",
           "terrain.roughness", "client.lidar_micro", "client.lidar_cover"], ["usgs_3dep_lidar"], applies=_lidar_applies,
          doc="1 m ground, canopy height from the 3DEP point cloud; DEM-only from the 1 m products without one", stage=B),
-    Step("reroute", "1", ["reroute", "rewild_hydro"], ["dem", "channels", "rewild_hydro", "hydro", "lidar"], _reroute, ["hydro.channels_5m"],
-         applies=_reroute_applies, owner="water lane", doc="every stream onto the 1 m lidar thalweg", stage=B),
-    Step("water", "1", ["water"], ["dem", "rewild_hydro", "reroute", "hydro", "lidar"], _water,
+    Step("reroute", "1", ["reroute", "rewild_hydro", "water_seams"], ["dem", "channels", "rewild_hydro", "hydro", "lidar", "ice"],
+         _reroute, ["hydro.channels_5m", "hydro.edges"], applies=_reroute_applies, owner="water lane",
+         doc="every stream onto the 1 m lidar thalweg; meltwater from the ice's toes; streams continued across the seams", stage=B),
+    Step("water", "1", ["water", "water_seams"], ["dem", "rewild_hydro", "reroute", "hydro", "lidar"], _water,
          ["terrain.dem_banked", "client.heights", "client.water", "hydro.water_reaches"], [], owner="water lane",
          doc="banks, beds, levels and riparian zones", stage=B),
     Step("ground", "1", ["ground", "fetch_soils", "fetch_geology"], ["dem", "landcover", "lidar"], _ground,
