@@ -1,6 +1,7 @@
 import * as THREE from 'three';
 import { windUniforms } from './wind.js';
 import { groundUniforms } from './terrain.js';
+import { barkUniforms } from './treegen.js';
 import { uniforms as atmo } from './atmosphere.js';
 
 // Weather (owner: "Every day has weather. The weather is today's weather for the square. Picking a season picks a
@@ -120,6 +121,16 @@ function zoneToday(tz) {
   } catch { const d = new Date(); return [d.getFullYear(), d.getMonth() + 1, d.getDate()]; }
 }
 
+// The moss's green by month (January first): green through the rains, dormant from June to September (the foothills)
+const MOSS_GREEN = [1, 1, 1, 0.85, 0.55, 0.25, 0.1, 0.1, 0.15, 0.4, 0.8, 1];
+// The tile's wetness for the bark's moss and lichen, 0..1: its weather file's mean yearly precipitation, 300 mm none,
+// 1500 mm full (the home tile's 950 mm: 0.54); 0.5 without one
+function climateWet(tile) {
+  const st = tile.manifest?.layers?.['client.weather']?.stats;
+  if (!st?.precip_mm_total || !st.days) return 0.5;
+  const mm = st.precip_mm_total / st.days * 365;
+  return Math.min(Math.max((mm - 300) / 1200, 0), 1);
+}
 export class Weather {
   constructor({ tile, scene, renderer, camera }) {
     this.tile = tile; this.camera = camera;
@@ -272,6 +283,10 @@ export class Weather {
     windUniforms.windStrength.value = (0.12 + 0.3 * Math.pow(wind / 10, 0.8)) * fx.gust;
     windUniforms.windDir.value.set(this._to[0], this._to[1]);
     groundUniforms.wxGround.value.set(fx.wet, fx.snowCover, fx.snowGrass);
+    // the bark (treegen.js barkUniforms): wet with the ground; the moss green in the wet months and within days of rain,
+    // olive-brown and dormant in the dry ones; the tile's climate from its weather file's mean yearly precipitation
+    const mo = this.day ? this.day.m - 1 : new Date().getMonth();
+    barkUniforms.barkWx.value.set(fx.wet, Math.max(MOSS_GREEN[mo], Math.min(1, fx.wet * 1.5)), this.climate ??= climateWet(this.tile));
     // lightning: a flash every 8-40 s in a thunderstorm hour, two or three flickers, the rumble 1-10 s after
     fx.flash = 0;
     if (code >= 95) {
